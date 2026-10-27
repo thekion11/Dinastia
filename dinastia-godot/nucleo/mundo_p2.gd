@@ -1,5 +1,5 @@
 extends "res://nucleo/mundo_p1.gd"
-## [Capa 2/9 de `mundo.gd`] tiene_desafio, _norm_nombre, es_clasico, mi_club, _demarcacion_al_azar, _bolsa_extra … (+12)
+## [Capa 2/10 de `mundo.gd`] tiene_desafio, _norm_nombre, es_clasico, mi_club, club_de_la_copa, _demarcacion_al_azar … (+13)
 
 func tiene_desafio(k: String) -> bool:
 	return desafios.has(k)
@@ -400,6 +400,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	ciudad = Ciudad.new(self)
 	comercial.generar_ofertas_zona(mi_club(), roles.multiplicador_sponsor() if roles != null else 1.0)
 	comercial.generar_ofertas_naming(mi_club())
+	citas.semana(self, semana)   ## fase 4: las citas de la primera semana
 	## Y con las marcas ya en la mesa desde el primer dia: si las ofertas solo se
 	## abrieran en la pretemporada siguiente, la primera temporada entera se
 	## jugaria con el pecho en blanco y sin ese ingreso.

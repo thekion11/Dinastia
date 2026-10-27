@@ -1,5 +1,5 @@
 extends Node
-## [Capa 1/7 de `sonido.gd`] la base: constantes, el catálogo y los instrumentos (_tono, _ruido, _mezclar…)
+## [Capa 1/7 de `sonido.gd`] _tono, _lienzo, _mezclar, _ruido, _cantico, _bombo … (+1)
 
 ## (Sin `class_name`: este script ES el autoload `Sonido`, y Godot rechaza una
 ## clase global que se llame igual que un singleton — "Class Sonido hides an

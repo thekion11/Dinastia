@@ -1,5 +1,5 @@
 extends "res://visor/explorador_ciudad_p1.gd"
-## [Capa 2/6 de `explorador_ciudad.gd`] buscar_libre, es_tactil, _gesto_propio, _hablar_con_vecino, _fundido, _bajo_tierra … (+5)
+## [Capa 2/6 de `explorador_ciudad.gd`] _choca_moviles, _rect_coche, _dentro_rect, _huella, buscar_libre, es_tactil … (+9)
 
 
 ## LOS QUE SE MUEVEN: coches y vecinos del tráfico. Una vez por fotograma de

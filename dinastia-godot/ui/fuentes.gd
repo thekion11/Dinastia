@@ -21,7 +21,7 @@ extends RefCounted
 ## y el mismo MSDF de `project.godot`: solo se le cuelga la cadena de respaldo.
 
 ## Familias que el juego trae dentro: nombre (el que se escribe en
-## `Principal.TIPOGRAFIAS`) → archivo.
+## `PantallaAjustes.TIPOGRAFIAS`) → archivo.
 const PROPIAS := {
 	"Inter": "res://assets/fuentes/Inter-Variable.ttf",
 	"Barlow Condensed": "res://assets/fuentes/BarlowCondensed-Regular.ttf",
@@ -92,7 +92,7 @@ static func _recortar_alto(f: FontFile, base: Font) -> void:
 		f.set_cache_ascent(0, t, t * minf(fa, ra))
 		f.set_cache_descent(0, t, t * minf(fd, rd))
 
-## Fuente para una lista de nombres (la de `Principal.TIPOGRAFIAS`): si el
+## Fuente para una lista de nombres (la de `PantallaAjustes.TIPOGRAFIAS`): si el
 ## primero es propio se usa el archivo y el resto de nombres va al sistema como
 ## repuesto; si no, todo se pide al sistema. Siempre con la cadena de respaldo.
 static func para(nombres: Array) -> Font:

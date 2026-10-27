@@ -1,6 +1,6 @@
 class_name Escudo
 extends "res://ui/escudo_p1.gd"
-## [Capa 2/2 de `escudo.gd`] textura, limpiar_cache
+## [Capa 2/2 de `escudo.gd`] textura, _guardar, textura_mono, limpiar_cache
 
 ## El escudo ya rasterizado, listo para meter en un TextureRect.
 ##

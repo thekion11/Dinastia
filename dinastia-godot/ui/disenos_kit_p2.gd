@@ -1,5 +1,5 @@
 extends "res://ui/disenos_kit_p1.gd"
-## [Capa 2/5 de `disenos_kit.gd`] fórmulas 1-31
+## [Capa 2/5 de `disenos_kit.gd`] _fam_franjas, _fam_aros, _fam_banda, _fam_panos_v, _fam_bloques_h, _fam_franja_pecho … (+25)
 ## LAS FÓRMULAS DE LAS FAMILIAS DE CAMISETA (espejo de `visor/equipacion_q.gdshader`). Cada una recibe la
 ## fila del diseño `d` (parámetros a, b, c, d = d[3..6]; colores que usa = d[7]), los 5 colores y (u, v) del
 ## torso, y devuelve el color. No se llaman a mano: `color_en` (capa 4) las busca en la tabla FORMULAS.

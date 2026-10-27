@@ -29,7 +29,7 @@ enum { MEDIO, ALTO, ULTRA }
 ## MEDIO, pero eso SI pierde calidad (sin SSAO ni glow). Segundo intento,
 ## el bueno: ALTO se aligero por dentro (sombra 600m/4096 -> 420m/2048, MSAA
 ## x4 -> x2 -ver `sol()`/`aplicar_viewport()` mas abajo-) en vez de bajar de
-## nivel. Medido con `pruebas/medir_rendimiento.gd` antes/despues, ver LEEME.md.
+## nivel. Medido con `pruebas/medir_rendimiento.gd` antes/despues, ver LEEME.md del historial de git.
 static var elegida: int = ALTO
 ## Bajar efectos durante el partido si los FPS caen de 40 (ver
 ## `RendimientoAdaptativo`). Encendido por defecto; se apaga en Ajustes.
@@ -225,7 +225,7 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 	## DDR3-: 4 cortes se mantienen en ALTO (la calidad de sombra SI se nota),
 	## pero la distancia baja de 600 a 420m -sombra nitida donde de verdad se
 	## juega, no hasta el fondo de una tribuna que la camara raras veces
-	## encuadra entera-. Medido con `pruebas/medir_rendimiento.gd`, ver LEEME.md.
+	## encuadra entera-. Medido con `pruebas/medir_rendimiento.gd`, ver LEEME.md del historial de git.
 	luz.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS if nivel >= ALTO \
 		else DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	luz.directional_shadow_max_distance = 420.0 if nivel >= ALTO else 320.0

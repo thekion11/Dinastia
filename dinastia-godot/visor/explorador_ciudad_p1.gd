@@ -1,5 +1,5 @@
 extends Node3D
-## [Capa 1/6 de `explorador_ciudad.gd`] _raton_en_primera_persona, _sentado_fp, construir_obstaculos, _indexar_obstaculos, _indexar_circulos, _buscar_anim … (+9)
+## [Capa 1/6 de `explorador_ciudad.gd`] _raton_en_primera_persona, _sentado_fp, construir_obstaculos, _huellas_de_torres, _indexar_obstaculos, _indexar_circulos … (+12)
 
 ## RECORRER LA CIUDAD (7-10-2026, pedido: «la ciudad debe ser real,
 ## interactiva… conducir, caminar, interactuar con NPC»). Dos modos:
@@ -159,6 +159,9 @@ var _hasta_paso := 0.0
 
 ## MI CAMINATA (14-10-2026): estilo elegido en ⚙ Ajustes de la ciudad. Cada uno
 ## es [clip, velocidad de reproducción]. Correr y quieto no cambian.
+## Metros por segundo que recorre el pie apoyado en cada clip (sonda_movimiento, 26-10): con esto
+## `speed_scale = velocidad real / natural` y el pie no patina.
+const VEL_NATURAL_CLIP := {"caminar": 1.02, "caminar_normal": 1.02, "caminar_agachado": 0.7, "caminar_trote": 1.75, "correr": 3.97}
 const ESTILOS_CAMINATA := {
 	"formal": ["caminar", 1.0],
 	"normal": ["caminar_normal", 1.0],
@@ -235,6 +238,8 @@ const _INT_ORIGEN := Vector3(0.0, -400.0, 0.0)
 var _int: InteriorInstalacion = null
 var _int_raiz: Node3D = null
 var _int_circulos := PackedVector3Array()
+## LA VIDA EN 3D (fase 3, 26-10-2026): reloj, casa, comidas, móvil y calabozo; null sin partida.
+var vida: VidaCiudad = null
 var _calle_pos := Vector3.ZERO
 var _calle_rumbo := 0.0
 

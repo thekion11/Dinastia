@@ -59,7 +59,7 @@ const BARRA_ALTO := 9
 ## VESTIDO (21-9-2026, mismo dia): `VestidorQ.vestir()` -pieza "Peasant" del
 ## pack gratis "Modular Character Outfits - Fantasy", mismo esqueleto,
 ## coloreada al color del club, no foto real (el UV no la soporta de forma
-## confiable, ver LEEME.md)-. Bandera para volver atras en una linea si hace
+## confiable, ver LEEME.md del historial de git)-. Bandera para volver atras en una linea si hace
 ## falta.
 const USAR_MODELO_Q := true
 

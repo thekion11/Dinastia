@@ -1,5 +1,5 @@
 extends "res://nucleo/partido_p1.gd"
-## [Capa 2/3 de `partido.gd`] _aporte_tarjeta, _init, valoraciones, mejor_del_partido, preparar, chequear_invasion … (+10)
+## [Capa 2/3 de `partido.gd`] _contar_penal, _aporte_tarjeta, _init, valoraciones, mejor_del_partido, preparar … (+13)
 
 ## Lo que pasó y cómo llegaban (ver `RastroPartido`).
 var rastro: RastroPartido

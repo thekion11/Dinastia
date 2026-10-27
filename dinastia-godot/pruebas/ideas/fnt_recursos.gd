@@ -37,10 +37,10 @@ func _probar() -> void:
 		if not hay:
 			falta += s
 	_comprobar(falta == "", "los símbolos de la interfaz salen de fuentes propias aunque el sistema no tenga emojis (faltan: «%s»)" % falta)
-	var est := Fuentes.para(Principal.TIPOGRAFIAS["estrecha"][1])
+	var est := Fuentes.para(PantallaAjustes.TIPOGRAFIAS["estrecha"][1])
 	_comprobar(est is FontFile and (est as FontFile).get_font_name() == "Barlow Condensed" and est.fallbacks.size() >= 4,
 		"«Estrecha» es Barlow Condensed propia con el sistema y la cadena de respaldo detrás")
-	var tit := Fuentes.para(Principal.TIPOGRAFIAS["titular"][1])
+	var tit := Fuentes.para(PantallaAjustes.TIPOGRAFIAS["titular"][1])
 	_comprobar(tit is FontFile and (tit as FontFile).get_font_name() == "Bebas Neue", "«De titular» es Bebas Neue propia (ya no depende de Impact)")
 	var dj := Fuentes.del_juego()
 	_comprobar(dj is FontVariation and (dj as FontVariation).base_font == ThemeDB.fallback_font and dj.fallbacks == Fuentes.repuesto(),

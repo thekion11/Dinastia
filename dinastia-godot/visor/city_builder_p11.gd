@@ -209,7 +209,7 @@ func build(d: Dictionary) -> void:
 			var m4 := (mi as MeshInstance3D).mesh
 			if m4 is ArrayMesh and Optimizar._tris(m4) > 1500:
 				nombres[m4.resource_name] = int(nombres.get(m4.resource_name, 0)) + 1
-		print("TORRES vestidas ", n_torres, "  mallas pesadas: ", nombres)
+		Registro.depurar("TORRES", "vestidas %d  mallas pesadas: %s" % [n_torres, str(nombres)])
 	if OS.get_environment("SIN_OPTIMIZAR") == "":
 		Optimizar.primitivas(self)
 		Optimizar.trocear(self)

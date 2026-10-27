@@ -1,5 +1,5 @@
 extends "res://ui/principal_p4.gd"
-## [Capa 5/17 de `principal.gd`] _ver_estadio_propio, _ver_estadio_con_carga, _dato, _miles, _pintar_estadio
+## [Capa 5/17 de `principal.gd`] _ver_estadio_propio, _ver_estadio_con_carga, _dato, _aire_cifra, _miles, _pintar_estadio
 
 func _ver_estadio_propio() -> void:
 	_fundido_entrada()
@@ -252,7 +252,7 @@ func _pintar_estadio(c: Club) -> void:
 
 	## LOS TERCIOS: estilos mixtos DENTRO de una misma tribuna (18/22-9-2026,
 	## Fase 3 de "el estadio por MÓDULOS", la última de las tres). El spike del
-	## 18-9 confirmó que el corte se sostiene visualmente -ver LEEME.md-, esta
+	## 18-9 confirmó que el corte se sostiene visualmente -ver LEEME.md del historial de git-, esta
 	## es la pantalla real. Interruptor PROPIO, independiente del de arriba: se
 	## puede mezclar por tercios una tribuna sin haber activado "Personalizar
 	## cada tribuna" en ninguna, y viceversa. Reusa el mismo selector

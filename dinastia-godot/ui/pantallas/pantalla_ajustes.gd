@@ -1,6 +1,160 @@
 class_name PantallaAjustes
 extends "res://ui/pantallas/pantalla_ajustes_p1.gd"
-## [Capa 2/2 de `pantalla_ajustes.gd`] _pintar_fondos_ajustes, _pintar_ajustes
+## [Capa 2/2 de `pantalla_ajustes.gd`] fuente_de, _pintar_tipografia, _pintar_ranuras, _pintar_fondos_ajustes, _pintar_ajustes
+
+## AJUSTES DEL JUGADOR (fase 0, paso 2): esta clase es la DUEÑA de las
+## tipografías, el límite de fotogramas, las ranuras manuales y la sección
+## abierta. Antes vivían repartidos por cuatro capas de `Principal`; ahí solo
+## quedan puentes (`_tipografia`, `_fps_elegido`, `_secc_ajustes`, `_fuente_de`).
+
+## LAS SECCIONES DE AJUSTES. La pantalla llegó a medir 1.700 px de alto: para
+## llegar al tamaño de letra había que bajar por delante del mezclador, de los
+## veinticuatro fondos, de los diez climas y de las nueve paletas.
+##
+## No se quita ni una opción —son justo lo que hace falta que haya— pero se
+## reparten en seis grupos y solo se pinta el que estás mirando. De paso se
+## pinta seis veces menos en cada refresco.
+const SECCIONES_AJUSTES := [
+	["audio", "🔊 Sonido y música"],
+	["aspecto", "🎨 Aspecto"],
+	["pantalla", "🖥 Pantalla"],
+	["juego", "🎮 Juego"],
+	["acceso", "♿ Accesibilidad"],
+	["partida", "💾 Partida"],
+]
+
+var seccion: String = "audio"
+
+## LA TIPOGRAFIA. Siete, y la primera es la de siempre.
+##
+## Cada entrada es una lista de nombres que resuelve `Fuentes.para()`
+## (`ui/fuentes.gd`): si el primero es una fuente PROPIA del juego
+## (`assets/fuentes/`, OFL) se usa el archivo y el resto queda de repuesto del
+## sistema; si no, se piden al sistema por nombre como antes («Segoe UI» de
+## Windows, «Helvetica Neue» de macOS, el genérico al final).
+##
+## LOS EMOJI (26-10-2026): antes se colgaban «Segoe UI Emoji» y compañía, que
+## no existen en Android ni en Web. Ahora toda tipografía, «Del juego» incluida,
+## lleva la cadena de `Fuentes.repuesto()`: emojis en color del sistema si los
+## hay y, si no, Noto Emoji + Noto Sans Symbols 2 propias.
+const TIPOGRAFIAS := {
+	"juego":     ["Del juego (por defecto)", []],
+	"sistema":   ["Del sistema", ["Segoe UI", "Helvetica Neue", "Cantarell", "sans-serif"]],
+	"diario":    ["De diario (serif)", ["Georgia", "Times New Roman", "Liberation Serif", "serif"]],
+	"estrecha":  ["Estrecha (cabe más)", ["Barlow Condensed", "Arial Narrow", "Roboto Condensed", "DejaVu Sans Condensed", "sans-serif"]],
+	"redonda":   ["Redonda y grande", ["Verdana", "Tahoma", "DejaVu Sans", "sans-serif"]],
+	"informe":   ["De informe (mono)", ["Consolas", "Menlo", "DejaVu Sans Mono", "monospace"]],
+	"titular":   ["De titular", ["Bebas Neue", "Impact", "Haettenschweiler", "DejaVu Sans Bold", "sans-serif"]],
+}
+
+## Los nombres de repuesto para los simbolos: los emojis en color del sistema.
+## Se conserva por compatibilidad; la cadena completa (con las propias) es
+## `Fuentes.repuesto()`.
+const REPUESTO_SIMBOLOS := Fuentes.EMOJI_SISTEMA
+
+var tipografia: String = "juego"
+static var _fuentes: Dictionary = {}
+
+## EL LÍMITE DE FOTOGRAMAS. En un portátil, dejar el juego a 300 fps calienta la
+## máquina para dibujar la misma tabla trescientas veces por segundo. Treinta
+## basta para una interfaz; sesenta para el estadio en 3D.
+const FPS_OPCIONES := [30, 60, 120, 0]
+var fps_elegido: int = 60
+
+## LAS TRES RANURAS MANUALES de `vAjustes()`. `Partida` guarda por NOMBRE desde
+## el porte —`guardar(m, nombre)`, `listar()`, `borrar()`— y el juego solo usaba
+## una ranura fija: toda esa capacidad estaba escrita y era inalcanzable.
+##
+## Tres y no más porque tres es lo que se usa de verdad: la partida en curso,
+## una copia antes de una decisión gorda, y una vieja por si acaso.
+const RANURAS := ["ranura1", "ranura2", "ranura3"]
+
+func fuente_de(clave: String) -> Font:
+	if not TIPOGRAFIAS.has(clave):
+		return null
+	if _fuentes.has(clave):
+		return _fuentes[clave]
+	## «Del juego» es la de fábrica con la cadena de respaldo (`ui/fuentes.gd`).
+	if clave == "juego":
+		_fuentes[clave] = Fuentes.del_juego()
+		return _fuentes[clave]
+	var f := Fuentes.para((TIPOGRAFIAS[clave] as Array)[1])
+	## Sin esto, un texto pequeno con una serif se ve sucio: la rejilla de pixeles
+	## y los remates finos pelean, y a 10 px gana la rejilla.
+	f.set("antialiasing", TextServer.FONT_ANTIALIASING_GRAY)
+	f.set("subpixel_positioning", TextServer.SUBPIXEL_POSITIONING_AUTO)
+	_fuentes[clave] = f
+	return f
+
+func _pintar_tipografia() -> void:
+	var lt := p._texto(10, Principal.COL_SUAVE)
+	lt.text = Idiomas.t("Tipografia")
+	p._lista_ajustes.add_child(lt)
+	var flow := HFlowContainer.new()
+	flow.add_theme_constant_override("h_separation", 4)
+	flow.add_theme_constant_override("v_separation", 4)
+	p._lista_ajustes.add_child(flow)
+	for k: String in TIPOGRAFIAS:
+		var clave := k
+		var b := Button.new()
+		b.text = String((TIPOGRAFIAS[k] as Array)[0])
+		b.add_theme_font_size_override("font_size", 10)
+		b.toggle_mode = true
+		b.button_pressed = tipografia == clave
+		b.clip_text = true
+		b.custom_minimum_size = Vector2(132, 24)
+		## Cada boton se escribe CON su fuente: se elige mirando, igual que las
+		## paletas. Un nombre de fuente no dice nada; verla, si.
+		var f := fuente_de(clave)
+		if f != null:
+			b.add_theme_font_override("font", f)
+		b.pressed.connect(func() -> void:
+			tipografia = clave
+			p._aplicar_aspecto()
+			p._refrescar())
+		flow.add_child(b)
+
+func _pintar_ranuras() -> void:
+	var t := p._texto(11, Principal.COL_SUAVE)
+	t.text = Idiomas.t("RANURAS DE GUARDADO")
+	p._lista_ajustes.add_child(t)
+	var ex := p._texto(10, Principal.COL_SUAVE)
+	ex.text = Idiomas.t("Aparte del autoguardado. Sirven para dejar una copia antes de una decisión de la que no se vuelve.")
+	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	p._lista_ajustes.add_child(ex)
+	## Se lista una vez y se busca en memoria: `Partida.listar()` abre y lee la
+	## cabecera de cada fichero, y llamarlo tres veces sería leer el disco tres
+	## veces para pintar tres filas.
+	var guardadas := {}
+	for f: Dictionary in Partida.listar():
+		guardadas[String(f.get("fichero", ""))] = f
+	for i in RANURAS.size():
+		var nombre := String(RANURAS[i])
+		var hay: Dictionary = guardadas.get(nombre, {})
+		var fila := HBoxContainer.new()
+		fila.add_theme_constant_override("separation", 6)
+		p._lista_ajustes.add_child(fila)
+		var et := p._texto(12, Principal.COL_TEXTO if not hay.is_empty() else Principal.COL_SUAVE)
+		et.text = Idiomas.t("Ranura %d") % (i + 1)
+		et.custom_minimum_size = Vector2(70, 0)
+		fila.add_child(et)
+		var desc := p._texto(11, Principal.COL_SUAVE)
+		desc.text = Idiomas.t("%s · %d, semana %d") % [String(hay.get("club", "")), int(hay.get("anio", 0)), int(hay.get("semana", 0))] if not hay.is_empty() else Idiomas.t("vacía")
+		desc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		desc.clip_text = true
+		fila.add_child(desc)
+		var bg := Button.new()
+		bg.text = Idiomas.t("Guardar")
+		bg.add_theme_font_size_override("font_size", 11)
+		bg.pressed.connect(func() -> void: p._partida.guardar_en(nombre))
+		fila.add_child(bg)
+		var bc := Button.new()
+		bc.text = Idiomas.t("Cargar")
+		bc.add_theme_font_size_override("font_size", 11)
+		bc.disabled = hay.is_empty()
+		bc.pressed.connect(func() -> void: p._partida.cargar_de(nombre))
+		fila.add_child(bc)
+	p._lista_ajustes.add_child(HSeparator.new())
 
 ## El selector de los veinticuatro fondos. Estaba suelto dentro de
 ## `_pintar_ajustes()`; sale a su función para que la sección de aspecto se lea.
@@ -26,7 +180,7 @@ func _pintar_fondos_ajustes() -> void:
 	var fila_estilo := HFlowContainer.new()
 	fila_estilo.add_theme_constant_override("h_separation", 4)
 	p._lista_ajustes.add_child(fila_estilo)
-	for e: Array in Principal.ESTILOS_MENU:
+	for e: Array in EstilosMenu.ESTILOS_MENU:
 		var clave := String(e[0])
 		var be := Button.new()
 		be.text = String(e[1])
@@ -80,22 +234,22 @@ func _pintar_ajustes() -> void:
 	chips.add_theme_constant_override("h_separation", 4)
 	chips.add_theme_constant_override("v_separation", 4)
 	p._lista_ajustes.add_child(chips)
-	for s: Array in Principal.SECCIONES_AJUSTES:
+	for s: Array in SECCIONES_AJUSTES:
 		var clave := String(s[0])
 		var b := Button.new()
 		b.text = String(s[1])
 		b.add_theme_font_size_override("font_size", 11)
 		b.toggle_mode = true
-		b.button_pressed = p._secc_ajustes == clave
+		b.button_pressed = seccion == clave
 		b.clip_text = true
 		b.custom_minimum_size = Vector2(126, 26)
 		b.pressed.connect(func() -> void:
-			p._secc_ajustes = clave
+			seccion = clave
 			_pintar_ajustes())
 		chips.add_child(b)
 	p._lista_ajustes.add_child(HSeparator.new())
 
-	match p._secc_ajustes:
+	match seccion:
 		"audio":
 			var t1 := p._texto(11, Principal.COL_SUAVE)
 			t1.text = Idiomas.t("SONIDO")
@@ -140,7 +294,7 @@ func _pintar_ajustes() -> void:
 		"acceso":
 			_pintar_accesibilidad()
 		"partida":
-			p._pintar_ranuras()
+			_pintar_ranuras()
 			_pintar_traspaso_partida()
 			AjustesRegistro.pintar(p)
 			var t2 := p._texto(11, Principal.COL_SUAVE)

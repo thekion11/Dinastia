@@ -105,6 +105,8 @@ static func _caja(col: Color, r: int) -> StyleBoxFlat:
 ## conducir a lo bestia, 21-10-2026), en lugar de la calle.
 var _nota := ""
 var _t_nota := 0.0
+## «Martes 10:40» del reloj de la partida (lo pone `VidaCiudad`); vacío = sin reloj.
+var reloj_texto := ""
 func notificar(texto: String, segundos := 3.5) -> void:
 	_nota = texto
 	_t_nota = segundos
@@ -115,7 +117,7 @@ func poner(modo: String, km_h: float, maxima: float, calle: String, metros: floa
 	_vel.text = str(int(round(km_h)))
 	_barra.max_value = maxima
 	_barra.value = km_h
-	_icono.text = Idiomas.t({"correr": "🏃 Carrera", "coche": "🚗 Conduciendo", "tren": "🚇 Metro"}.get(modo, "🚶 A pie"))
+	_icono.text = ((reloj_texto + "  ") if reloj_texto != "" else "") + Idiomas.t({"correr": "🏃 Carrera", "coche": "🚗 Conduciendo", "tren": "🚇 Metro"}.get(modo, "🚶 A pie"))
 	_calle.text = ("📍 " + calle) if calle != "" else ""
 	if _t_nota > 0.0:
 		_calle.text = _nota

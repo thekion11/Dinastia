@@ -1,5 +1,5 @@
 extends "res://visor/estadio_partes_tribuna.gd"
-## [Capa 10/12 de `stadium_builder.gd`] _preparar_obra, _tribunas, _tribuna_de
+## [Capa 1/3 de `stadium_builder.gd`] _preparar_obra, _tribunas, _tribuna_de, _levantar_tribuna
 ##
 ## FASE 0 (25-10-2026): esto era `build_1`, 365 líneas de un tirón que devolvían un Array de 13
 ## posiciones. Ahora se parte por zonas: aquí se prepara la obra (forma, medidas, materiales compartidos)

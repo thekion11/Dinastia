@@ -1,6 +1,6 @@
 class_name CreadorPersonaje
 extends "res://ui/componentes/creador_personaje_p1.gd"
-## [Capa 2/2 de `creador_personaje.gd`] _montar y el teclado.
+## [Capa 2/2 de `creador_personaje.gd`] _montar, _unhandled_input
 
 func _montar() -> void:
 	var fondo := ColorRect.new()

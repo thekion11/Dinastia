@@ -1,5 +1,5 @@
 extends "res://nucleo/mundo_p4.gd"
-## [Capa 5/9 de `mundo.gd`, tramo a] La semana, fases 1-4: contexto de los partidos, el once,
+## [Capa 5/10 de `mundo.gd`] _semana_contexto_de_partidos, _semana_once_antes_de_jugar, _semana_jugar_ligas, _semana_caja_y_plantillas, _finanzas_de_la_semana, _cobrar_la_jornada … (+3)
 ## la jornada de liga y la caja y el plantel de cada club.
 ##
 ## `avanzar_semana()` (en `mundo_p5.gd`) era un solo bloque de ~550 líneas partido a la fuerza en

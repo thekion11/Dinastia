@@ -1,5 +1,5 @@
 extends "res://nucleo/prensa_p4_p1.gd"
-## [Capa 5/8 de `prensa.gd`] los eventos del despacho, segunda tanda (vestuario, árbitros y cantera),
+## [Capa 5/8 de `prensa.gd`] _ev_tunel, _ev_viral, _ev_capitan, _ev_silencio, _ev_cambio_posicion, _ev_sponsor_rueda … (+9)
 ## la tabla de despacho y `resolver`
 
 ## Juegos mentales en el túnel: provocar al DT enciende al equipo y a veces se filtra; dejarle un recado

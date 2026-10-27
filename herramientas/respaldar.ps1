@@ -93,7 +93,7 @@ Write-Host ("respaldo listo: {0}" -f $destino) -ForegroundColor Green
 #  "el disco tiene tan poco, antes tenia cerca de 13 gigas").
 #
 #  Esta era la regla desde siempre ("un solo respaldo, no una pila de
-#  copias" -ver ROADMAP.md, LEEME.md, la memoria del proyecto-), pero el
+#  copias" -ver docs/PLAN_DEL_LUNES.md, LEEME.md del historial de git, la memoria del proyecto-), pero el
 #  script NUNCA borro nada: solo creaba una carpeta nueva cada vez, y borrar
 #  la anterior quedaba en manos de quien lo llamara, a mano, cada vez. Se
 #  salto varias rondas seguidas (una sesion nocturna sola + esta misma

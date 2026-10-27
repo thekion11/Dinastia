@@ -87,6 +87,7 @@ func mostrar(p: String, crear_club: bool, mundo: Mundo) -> void:
 	if crear_club:
 		_nota(Idiomas.t("Fundarás tu propio club en %s.") % PaisDatos.nombre(p),
 			Idiomas.t("Los clubes que ya existen no se muestran: el tuyo empieza de cero."))
+		_rivales(_clubes_de(p, mundo))
 		return
 	var rot := Tema.rotulo(Idiomas.t("Elige tu club"))
 	rot.add_theme_color_override("font_color", Tema.ORO)
@@ -97,6 +98,38 @@ func mostrar(p: String, crear_club: bool, mundo: Mundo) -> void:
 		clubes_listados.append(c.nombre)
 	if not clubes.is_empty():
 		_marcar(clubes[0])
+
+## Al fundar un club la ficha quedaba medio vacía (captura del 26-10). Regla del guion
+## (etapa 3): «si creas un club, no se muestran los demás»; por eso aquí NO hay ningún
+## club con nombre ni escudo: solo las cifras de la liga en la que entrarás.
+func _rivales(clubes: Array[Club]) -> void:
+	if clubes.is_empty():
+		return
+	_cuerpo.add_child(HSeparator.new())
+	var suma_rep := 0
+	var suma_aforo := 0
+	var mejor := 0
+	for c: Club in clubes:
+		suma_rep += c.rep
+		suma_aforo += c.estadio_aforo
+		mejor = maxi(mejor, c.rep)
+	_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.ORO, Idiomas.t("LA LIGA QUE TE ESPERA")))
+	var datos := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO,
+		Idiomas.t("%d clubes · reputación media %d · estadios de %s de media") % [
+			clubes.size(), int(round(float(suma_rep) / clubes.size())), _miles(int(round(float(suma_aforo) / clubes.size())))])
+	datos.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_cuerpo.add_child(datos)
+	var tope := Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE, Idiomas.t("El más fuerte llega a %d de reputación. Los conocerás cuando empiece el campeonato.") % mejor)
+	tope.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_cuerpo.add_child(tope)
+
+static func _miles(n: int) -> String:
+	var s := str(n)
+	var salida := ""
+	while s.length() > 3:
+		salida = "." + s.substr(s.length() - 3) + salida
+		s = s.substr(0, s.length() - 3)
+	return s + salida
 
 func _nota(titulo: String, texto: String) -> void:
 	var t := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, titulo)

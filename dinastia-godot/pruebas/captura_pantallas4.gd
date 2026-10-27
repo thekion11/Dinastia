@@ -1,5 +1,5 @@
 extends Node
-## Comprueba las cuatro pantallas que el LEEME.md daba por "sin portar todavia"
+## Comprueba las cuatro pantallas que el LEEME.md del historial de git daba por "sin portar todavia"
 ## (entrenamiento, federacion, estadio propio, rol/cargo) pero que ya estan
 ## escritas en principal.gd. Si cargan sin reventar y con contenido visible,
 ## la documentacion estaba desactualizada, no el codigo.

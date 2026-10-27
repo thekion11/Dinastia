@@ -1,5 +1,5 @@
 extends Control
-## (Parte 1 de 2 de `ocasion_jugable.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `ocasion_jugable.gd`, conserva la clase.)
+## [Capa 1/2 de `ocasion_jugable.gd`] encendida, guardar, configurar, congela, activa, _lado_de … (+17)
 
 ## LA OCASIÓN JUGABLE, EN EL ESTADIO (26-10-2026, fila 14 de la propuesta de la sesión 4).
 ##

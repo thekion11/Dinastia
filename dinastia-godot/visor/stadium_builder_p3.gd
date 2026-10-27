@@ -1,5 +1,5 @@
 extends "res://visor/stadium_builder_p2.gd"
-## [Capa 3/12 de `stadium_builder.gd`] _banquillos_detalle, _tunel, geom_de_forma, _un_camarografo, _camarografos, _escudo_cancha
+## [Capa 3/10 de `estadio_partes_tribuna.gd`] _banquillos_detalle, _tunel, geom_de_forma, _un_camarografo, _camarografos, _escudo_cancha … (+4)
 
 ## `tipo` (16-9-2026, Fase 2 "Componentes"), catalogo `EST_BANQUILLOS`. El
 ## default ("cristal") es la burbuja de siempre, asi que un rival sigue igual.
@@ -120,7 +120,7 @@ static func _tunel(root: Node3D, tipo: String = "central", est: Dictionary = {},
 	## "esquina" desplaza toda la boca hacia el lado del corner en vez del
 	## centro del lateral -los otros 4 tipos siguen centrados como siempre.
 	var x_off := 24.0 if tipo == "esquina" else 0.0
-	## BUG REAL ENCONTRADO Y CORREGIDO (21-9-2026, ver LEEME.md): la mole con
+	## BUG REAL ENCONTRADO Y CORREGIDO (21-9-2026, ver LEEME.md del historial de git): la mole con
 	## Z=45.0 quedaba DENTRO del campo -el arco esta en Z=52.5 (`MEDIO_LARGO`
 	## de match_playback.gd/control_partido.gd) y la caja, de 6m de fondo,
 	## llegaba hasta Z=48: a 4.5m de la linea de gol, encima del area chica-.

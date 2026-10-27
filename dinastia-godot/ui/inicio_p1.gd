@@ -1,5 +1,5 @@
 extends Control
-## [Capa 1/3 de `inicio.gd`] rotacion, _textura_de, _brillo_de, _leer_ajuste, _texto, _construir_banner … (+11)
+## [Capa 1/3 de `inicio.gd`] rotacion, _textura_de, _brillo_de, _leer_ajuste, _texto, _construir_banner … (+9)
 
 ## LA PANTALLA DE TÍTULO: portada + partida en curso («Continuar») + «Nuevo juego»
 ## + perfil, álbum y ajustes de la partida nueva (nombre, dificultad, base de datos),

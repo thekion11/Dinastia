@@ -24,7 +24,7 @@ Salidas (en `assets/characters/quaternius/`):
 
 Como se decide cada zona: el modelo esta en pose T, de pie, con los pies en
 y=0. Las alturas se midieron sobre los vertices (ver el historial de
-`LEEME.md`, 25-9-2026): tobillo ~0,09 m, rodilla ~0,50, cadera ~0,95,
+`LEEME.md` del historial de git, 25-9-2026): tobillo ~0,09 m, rodilla ~0,50, cadera ~0,95,
 hombro ~1,45, base del cuello ~1,53; los brazos salen en horizontal desde
 |x|~0,20 y la mano empieza en |x|~0,75.
 

@@ -1,6 +1,6 @@
 class_name PantallaPersonaje
 extends "res://ui/entrada/personaje_p1.gd"
-## [Capa 2/2 de `personaje.gd`] la pantalla: estudio 3D y ficha a la izquierda,
+## [Capa 2/2 de `personaje.gd`] _ready, _columna_estudio, _ficha, _columna_editor, _botonera, _boton … (+7)
 ## Aspecto / Datos a la derecha, la botonera y la CONFIRMACIÓN.
 ##
 ## Estética propia de la etapa: fondo de estudio con el foco del color del

@@ -1,5 +1,5 @@
 extends "res://visor/motor_jugable_p7.gd"
-## [Capa 8/12 de `motor_jugable.gd`] _forma, _zona_de_llegada, _ia_ataque_sin_balon, _gatillo_presion, _linea_defensiva, _ia_defensa … (+7)
+## [Capa 8/12 de `motor_jugable.gd`] _forma, _zona_de_llegada, _ia_ataque_sin_balon, _gatillo_presion, _linea_defensiva, _ia_defensa … (+10)
 
 ## La forma del equipo: la posición de la formación, movida con el balón.
 func _forma(p: Dictionary, en_posesion: bool) -> Vector3:

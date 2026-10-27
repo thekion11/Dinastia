@@ -1,5 +1,5 @@
 extends Node
-## Aisla si el aliasing de la tribuna (ver LEEME.md 21-9-2026) es un problema
+## Aisla si el aliasing de la tribuna (ver LEEME.md del historial de git 21-9-2026) es un problema
 ## de la textura en si, o algo ligado al MOVIMIENTO de camara/juego -sin tocar
 ## nada, solo abrir la vista y capturar apenas esta lista, camara quieta.
 

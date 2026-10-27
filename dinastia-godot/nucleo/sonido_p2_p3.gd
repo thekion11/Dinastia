@@ -1,5 +1,5 @@
 extends "res://nucleo/sonido_p2_p2.gd"
-## [Capa 4/7 de `sonido.gd`] recetas de la grada, el clima y la ciudad
+## [Capa 4/7 de `sonido.gd`] _receta_murmullo, _receta_ovacion, _receta_tambor, _receta_trompeta, _receta_abucheo, _receta_aplauso … (+39)
 
 # --- La grada ----------------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 class_name PanelMercado
 extends "res://ui/componentes/panel_mercado_p1.gd"
-## [Capa 2/2 de `panel_mercado.gd`] _pintar_filtros, _fila_ajuste, _pintar_mesa_negociacion, _pintar_termometro, _pintar_resultado_ronda, pintar, inicializar
+## [Capa 2/2 de `panel_mercado.gd`] _pintar_filtros, _con_foco, _fila_ajuste, _rejilla_ajustes, _pintar_mesa_negociacion, _pintar_termometro … (+5)
 
 ## El botón que tenía el foco antes de repintar (su meta «foco»). Cada «+» de la
 ## mesa repinta el panel entero; sin esto, con teclado o mando el foco se perdía

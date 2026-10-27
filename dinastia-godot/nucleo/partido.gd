@@ -1,6 +1,6 @@
 class_name Partido
 extends "res://nucleo/partido_p2.gd"
-## [Capa 3/3 de `partido.gd`] simular_minuto, _por_id, gol_externo, anular_gol_externo, remate_externo, tarjeta_externa … (+14)
+## [Capa 3/3 de `partido.gd`] simular_minuto, _por_id, gol_externo, anular_gol_externo, remate_externo, tarjeta_externa … (+16)
 
 func simular_minuto() -> void:
 	if terminado_ya:

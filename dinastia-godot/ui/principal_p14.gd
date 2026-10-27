@@ -313,30 +313,3 @@ func _reconstruir_grupos() -> void:
 	_actualizar_fila_grupos()
 	_reconstruir_fila_sub()
 	_pintar_dias()
-
-func _siguiente_diseno() -> void:
-	if not _rotar_diseno:
-		return
-	_diseno_i = (_diseno_i + 1) % DISENOS_CENTRAL.size()
-	var d: Array = DISENOS_CENTRAL[_diseno_i]
-	## Un fundido corto para que el cambio se lea como una transición y no
-	## como un parpadeo.
-	var velo := ColorRect.new()
-	velo.color = Color(0, 0, 0, 0)
-	velo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	velo.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(velo)
-	var tw := create_tween()
-	tw.tween_property(velo, "color:a", 0.55, 0.35)
-	tw.tween_callback(func() -> void:
-		_paleta = String(d[0])
-		_estilo_menu = String(d[1])
-		_forma_tarjeta = String(d[2])
-		_fondo_elegido = String(d[3])
-		_aplicar_aspecto()
-		_aplicar_fondo()
-		_reconstruir_grupos()
-		if mundo != null:
-			_refrescar())
-	tw.tween_property(velo, "color:a", 0.0, 0.45)
-	tw.tween_callback(velo.queue_free)

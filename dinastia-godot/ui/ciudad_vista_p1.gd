@@ -407,12 +407,15 @@ func _interactuar_en_ciudad(k: String) -> void:
 	if juego != "":
 		_abrir_minijuego(juego)
 
-func explorar(modo: String) -> void:
+## `desde`: dónde aparecer; sin él, el punto de siempre (la avenida sur en coche,
+## la plaza a pie). El prólogo (fase 2) empieza en la acera frente a la puerta del club.
+func explorar(modo: String, desde: Vector3 = Vector3.INF) -> void:
 	if _explorador != null:
 		return
 	_explorador = ExploradorCiudad.new()
 	_raiz3d.add_child(_explorador)
-	var desde := Vector3(0, 0, CityBuilder.RING_Z_SUR) if modo == "coche" else Vector3(0, 0, -440)
+	if desde == Vector3.INF:
+		desde = Vector3(0, 0, CityBuilder.RING_Z_SUR) if modo == "coche" else Vector3(0, 0, -440)
 	_explorador.iniciar(_ciudad, modo, desde, club.nombre if club != null else "", String(animo.get("estado", "normal")))
 	_explorador.salir.connect(_dejar_de_explorar)
 	_explorador.interactuar.connect(_interactuar_en_ciudad)

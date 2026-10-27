@@ -1,5 +1,5 @@
 extends PanelContainer
-## [Capa 1/4 de `telefono.gd`] crear, _hora, _decir, _widget_informe, _insignia, _icono_app … (+13)
+## [Capa 1/4 de `telefono.gd`] crear, _hora, _decir, _t_icono, _frase, _widget_informe … (+16)
 
 ## TU MÓVIL, COMO UN MÓVIL (28-9-2026). Pantalla de inicio con tu fondo, la
 ## hora y las apps; la barra de abajo vuelve al inicio desde cualquier app.
@@ -25,11 +25,12 @@ const APPS := [
 	["tribuna", "Tribuna", "📣", "3a6df0"], ["mensajes", "Mensajes", "💬", "27ae60"],
 	["noticias", "Noticias", "📰", "e67e22"], ["banco", "Banco", "🏦", "16a085"],
 	["calendario", "Calendario", "📅", "e74c3c"], ["fotos", "Fotos", "🖼️", "d4a92a"],
+	["agenda", "Agenda", "🕒", "8e5ac8"],
 	["ajustes", "Ajustes", "⚙️", "6c7a89"],
 ]
 ## [emoji, color de arriba, color de abajo] de la "foto" de cada tipo.
 const FOTOS := {
-	"entreno": ["📸", "3f8f4a", "1d4a26"], "hinchada": ["🙌", "club", "club2"],
+	"paseo": ["📷", "club", "club2"], "entreno": ["📸", "3f8f4a", "1d4a26"], "hinchada": ["🙌", "club", "club2"],
 	"victoria": ["🥳", "e0b53a", "8a5a12"], "familia": ["👨‍👩‍👧", "e59a6a", "7a3f2a"],
 	"cantera": ["🌱", "6fbf5a", "2a5a22"], "indirecta": ["🌶️", "d8452f", "5a1a12"],
 	"partido": ["⚽", "club", "club2"], "club": ["🏟️", "club", "club2"],
@@ -61,6 +62,9 @@ static func crear(mundo: Mundo, noticias: Array = []) -> Telefono:
 	return t
 
 func _hora() -> String:
+	## La hora de la partida (fase 3): el reloj único manda también en la barra del móvil.
+	if m != null and m.reloj != null and m.reloj.semana >= 0:
+		return m.reloj.texto_hora()
 	return "%02d:%02d" % [18 + (m.semana % 4), (m.semana * 7) % 60]
 
 ## EL AVISO DE ARRIBA (pulido 25-10-2026): una píldora con filo de color (dorado si salió bien, rojo

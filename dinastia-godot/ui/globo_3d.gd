@@ -51,6 +51,8 @@ var _sobre := ""
 
 var _pines: Dictionary = {}      ## pais -> MeshInstance3D
 var _rotulos: Dictionary = {}    ## pais -> Label3D
+## Un vecino a menos de esto (radio del globo = 1) se esconde: no pisa al elegido.
+const SEPARACION_ROTULO := 0.24
 var _pulsado_en := Vector2.ZERO
 var _movido := 0.0
 
@@ -395,10 +397,13 @@ func _process(delta: float) -> void:
 			_lon_obj -= _giro_idle * delta
 			lon -= _giro_idle * delta
 	_orientar_pivote(lon, lat)
+	## El elegido lleva su nombre completo; los vecinos (ARG, URU) se le montaban encima.
+	var sel: Label3D = _rotulos.get(pais_actual)
 	for p: String in _rotulos:
 		var r: Label3D = _rotulos[p]
 		var z := r.global_position.z
-		r.visible = z > 0.45
+		var pisa := sel != null and r != sel and r.global_position.distance_to(sel.global_position) < SEPARACION_ROTULO
+		r.visible = z > 0.45 and not pisa
 		r.modulate = Color("ffd24d") if p == pais_actual else Color(1, 1, 1, clampf((z - 0.45) * 3.0, 0.0, 0.9))
 	if _marcador.visible and pais_actual != "":
 		var c: Vector2 = GLOBO_PAIS.get(pais_actual, Vector2.ZERO)
