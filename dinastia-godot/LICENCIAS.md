@@ -117,9 +117,9 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 
 ## Pendiente antes de vender
 
-1. ~~Reemplazar `coche1.fbx`/`coche2.fbx` por coches Kenney~~ hecho el 25-9-2026.
-2. Confirmar licencia o reemplazar los modelos 🟡 de Sketchfab (`complejo_residencial`, `arco_entrada`,
+1. Confirmar licencia o reemplazar los modelos 🟡 de Sketchfab (`complejo_residencial`, `arco_entrada`,
    `asientos_lod`) y los `.obj` sin origen anotado (`estadio`, `farola`, `vagabond`).
-3. Guardar la prueba de licencia del mocap (Gumroad) y del podio (Meshy).
-4. Añadir una pantalla de créditos: Kenney y Quaternius no lo exigen (CC0) pero lo agradecen;
-   Meshy gratis y Wikimedia sí lo exigen si algo de eso llegara a publicarse.
+2. Guardar la prueba de licencia del mocap (Gumroad) y del podio (Meshy).
+3. La base «ficticia» (`datos/tablas.json` → `REALES`, 256 clubes) son las plantillas reales con el nombre
+   retocado letra a letra («Fernando de Paul» → «Fernando de Peol») y la misma edad, media, posición y
+   nacionalidad. Viaja en los builds públicos. ¿Basta para el derecho de imagen? Lo decide el dueño (M-421).
