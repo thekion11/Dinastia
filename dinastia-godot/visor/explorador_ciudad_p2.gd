@@ -206,11 +206,8 @@ func _hablar_con_vecino(v: Dictionary) -> void:
 	var gesto := "saludo_mano" if turno != 1 else "charla"
 	for ap: AnimationPlayer in nodo.find_children("*", "AnimationPlayer", true, false):
 		var lib := ap.get_animation_library("")
-		if lib != null and not lib.has_animation(gesto):
-			var esq := FutbolistaQ.esqueleto_de(nodo)
-			var clip: Animation = AnimQuaternius.cargar_real(String(AnimExtra.UAL[gesto]), str(ap.get_path_to(esq)) if esq != null else "")
-			if clip != null:
-				lib.add_animation(gesto, clip)
+		if lib != null:
+			AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(nodo), gesto)
 		if lib != null and lib.has_animation(gesto):
 			ap.play(gesto, 0.2)
 			get_tree().create_timer(6.0).timeout.connect(func() -> void:
