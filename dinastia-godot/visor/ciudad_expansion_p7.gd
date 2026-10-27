@@ -103,12 +103,7 @@ func _instalacion(uso: String, r: Rect2) -> void:
 			CiudadArcade.montar(b, c, w, f)
 		"gasolinera":
 			nombre = "Gasolinera"
-			b._caja_en(c + Vector3(0, 6.0, 0), Vector3(w * 0.5, 0.6, f * 0.4), b._mat_simple(Color(0.9, 0.9, 0.9), 0.5))
-			for sx: float in [-1.0, 1.0]:
-				for sz: float in [-1.0, 1.0]:
-					b._cil_en(c + Vector3(sx * w * 0.18, 3.0, sz * f * 0.12), 0.3, 6.0, _mat["claro"])
-			b._caja_en(c + Vector3(0, 1.0, 0), Vector3(1.2, 2.0, 2.0), b._mat_simple(Color(0.85, 0.2, 0.15), 0.5))
-			b._caja_en(c + Vector3(-w * 0.35, 2.5, -f * 0.3), Vector3(10.0, 5.0, 8.0), _mat["claro"])
+			CiudadGasolinera.montar(self, c, w, f)
 		"villa_moderna":
 			nombre = "Villa moderna"
 			_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(w, 0.06, f))
