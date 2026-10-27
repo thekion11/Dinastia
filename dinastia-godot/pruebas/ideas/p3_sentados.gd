@@ -91,6 +91,7 @@ func _probar_async() -> void:
 			if gs._saliendo.size() >= 1:
 				var ds: Dictionary = (gs._saliendo[0] as Dictionary)["d"]
 				_comprobar((ds["anim"] as AnimationPlayer).current_animation == "levantarse", "con el clip «levantarse»")
+				_comprobar(absf(GenteSentada.raiz_levantarse(0.0, 1.0, 0.2) - 1.45) < 0.001 and absf(GenteSentada.raiz_levantarse(1.0, 1.0, 0.2) - 0.2) < 0.001, "la raíz compensa el clip: sube 0,45 m al empezar y acaba en el suelo")
 				gs._salidas(1.1)
 				_comprobar((ds["anim"] as AnimationPlayer).current_animation == "caminar", "y echa a andar")
 				gs._salidas(12.0)

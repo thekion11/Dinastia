@@ -3,16 +3,19 @@ extends Node3D
 var _n := 0
 var _d: Dictionary
 var _sacados := 0
+var _raiz := 0.0
+var _t0 := -1
 
 func _ready() -> void:
 	AjustesCiudad.guardar("tutorial_visto", true)
 	Mini3D.caja(self, Vector3(0, -0.1, 0), Vector3(40, 0.2, 40), Mini3D.mat(Color(0.5, 0.5, 0.48)))
-	Mini3D.caja(self, Vector3(0, 0.45, -0.1), Vector3(1.8, 0.1, 0.5), Mini3D.mat(Color(0.45, 0.32, 0.2)))
-	Mini3D.caja(self, Vector3(0, 0.25, -0.1), Vector3(1.7, 0.4, 0.1), Mini3D.mat(Color(0.3, 0.3, 0.3)))
+	Mini3D.caja(self, Vector3(0, 0.75, -0.1), Vector3(1.8, 0.06, 0.5), Mini3D.mat(Color(0.45, 0.32, 0.2)))
+	Mini3D.caja(self, Vector3(0, 0.37, -0.1), Vector3(1.7, 0.74, 0.1), Mini3D.mat(Color(0.3, 0.3, 0.3)))
 	_d = PeatonVida.nuevo(self, 90)
 	var n: Node3D = _d["nodo"]
 	var cadera := MetroCiudad.altura_cadera(n)
-	n.position = Vector3(0, 0.5 + 0.08 - cadera * 0.99, 0.15)
+	_raiz = 0.78 + 0.08 - cadera * 0.99
+	n.position = Vector3(0, _raiz, 0.15)
 	n.rotation.y = 0.0
 	Mini3D.anim(_d, "sentado", "")
 	AnimExtra.asegurar(_d["anim"], FutbolistaQ.esqueleto_de(n), "levantarse")
@@ -37,18 +40,23 @@ func _ready() -> void:
 func _process(_dt: float) -> void:
 	_n += 1
 	var n: Node3D = _d["nodo"]
+	## Misma compensación de raíz que `GenteSentada._salidas` (el reloj es el de los fotogramas: 1/30 s).
 	if _n == 20:
 		_foto()
 		Mini3D.anim(_d, "levantarse", "")
-	if _n in [30, 40, 50]:
+		_t0 = _n
+	if _t0 >= 0 and _n - _t0 <= 31:
+		n.position.y = GenteSentada.raiz_levantarse(float(_n - _t0) / 31.0, _raiz, 0.0)
+	if _n in [28, 36, 44]:
 		_foto()
-	if _n == 50:
+	if _n == 52:
+		n.position.y = 0.0
 		Mini3D.anim(_d, "caminar", "")
-	if _n in [65, 85]:
+	if _n in [70, 90]:
 		n.position += Vector3(0.9, 0, 0.5)
 		n.rotation.y = 1.2
 		_foto()
-	if _n > 90:
+	if _n > 92:
 		get_tree().quit()
 
 func _foto() -> void:
