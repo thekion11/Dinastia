@@ -24,3 +24,15 @@ func _probar() -> void:
 	var a := DetalleFachada.montar(ex, Vector3(0, 0, 0), Basis.IDENTITY, 4.8, 3, 4, 3.0, 1, 123)
 	var c := DetalleFachada.montar(ex, Vector3(0, 0, 0), Basis.IDENTITY, 4.8, 3, 4, 3.0, 1, 123)
 	_comprobar(a == c, "la semilla fija los detalles (%d = %d)" % [a, c])
+	## Tejados por tipo: entre 24 bloques salen al menos tres de los cuatro, y los altos no llevan teja.
+	var tipos := 0
+	for t in 4:
+		if int(ex.cuenta.get("tejado_%d" % t, 0)) > 0:
+			tipos += 1
+	_comprobar(tipos >= 3, "hay %d tipos de tejado distintos (plano, dos aguas, depósito, jardín)" % tipos)
+	var alto_ok := true
+	for sem in 200:
+		if TejadoTipo.tipo_de(sem, 6) == TejadoTipo.DOS_AGUAS:
+			alto_ok = false
+	_comprobar(alto_ok, "un bloque de 6 pisos nunca lleva tejado a dos aguas")
+	_comprobar(TejadoTipo.tipo_de(77, 3) == TejadoTipo.tipo_de(77, 3), "el tipo es estable por semilla")
