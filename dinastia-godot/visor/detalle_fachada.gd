@@ -34,6 +34,24 @@ static func montar(ex: CiudadExpansion, frente: Vector3, rot: Basis, s: float, w
 			var y := yc - (0.18 if mitad == 0 else 0.0)
 			ex._mod_caja(frente + rot * Vector3(cx, y, 0.1), Vector3(ancho * 0.5, 0.05, 0.05), rot, oscuro)
 		n += 1
+	## ARRIATES Y MACETAS a pie de fachada (S5, patios y jardines a nivel de calle): tierra, matas y flores en una franja de 0,55 m
+	## pegada a la pared, a un lado y a veces al otro de la puerta; no estorban a quien camina por la acera.
+	var x_p := (float(puerta_i) - float(w - 1) * 0.5) * s
+	for lado_a: float in [-1.0, 1.0]:
+		if r.randf() < 0.55:
+			var cx := x_p + lado_a * s * (0.78 + r.randf() * 0.12)
+			if absf(cx) > ancho * 0.5 - 1.2:
+				continue
+			var largo_a := 1.6 + r.randf() * 1.0
+			ex._mod_caja(frente + rot * Vector3(cx, 0.17, 0.34), Vector3(largo_a, 0.34, 0.55), rot, Color(0.38, 0.27, 0.19))
+			for k in r.randi_range(3, 5):
+				var tam := 0.45 + r.randf() * 0.4
+				var px := cx + (float(k) / 4.0 - 0.5) * largo_a * 0.85
+				ex._mod_caja(frente + rot * Vector3(px, 0.34 + tam * 0.5, 0.34), Vector3(tam, tam, tam * 0.8), rot * Basis(Vector3.UP, r.randf() * PI), Color(0.17 + r.randf() * 0.1, 0.38 + r.randf() * 0.15, 0.16))
+				if r.randf() < 0.6:
+					ex._mod_caja(frente + rot * Vector3(px + 0.05, 0.34 + tam + 0.06, 0.34), Vector3(0.16, 0.16, 0.16), rot, COLORES_TAG[r.randi() % COLORES_TAG.size()])
+			ex.cuenta["arriates"] = int(ex.cuenta.get("arriates", 0)) + 1
+			n += 1
 	## Carteles junto a la puerta.
 	var lado := -1.0 if r.randf() < 0.5 else 1.0
 	var x_puerta := (float(puerta_i) - float(w - 1) * 0.5) * s

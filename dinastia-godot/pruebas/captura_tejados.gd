@@ -38,11 +38,16 @@ func _ready() -> void:
 	add_child(_cam)
 	_cam.position = Vector3(33, 34, 38)
 	_cam.look_at(Vector3(33, 6, -4), Vector3.UP)
+	set_meta("cam", _cam)
 	_cam.make_current()
 
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 12:
 		get_viewport().get_texture().get_image().save_png("/tmp/tejados_0.png")
+		_cam.position = Vector3(44, 2.0, 30)   ## a pie de calle: puertas, arriates, carteles, aires y grafitis
+		_cam.look_at(Vector3(44, 1.6, 0), Vector3.UP)
+	if _n == 24:
+		get_viewport().get_texture().get_image().save_png("/tmp/tejados_1.png")
 		print("FIN. 0 fallos")
 		get_tree().quit()
