@@ -11,10 +11,10 @@ extends Node3D
 
 const RUTA := "res://assets/kenney/tren/"
 const S := 2.4                               ## escala del kit (vía de 1 m → 2,4 m)
-const CICLO := 222.0                          ## 86 s llegando desde el horizonte, 30 s parado, 86 s saliendo y un respiro
-const LLEGADA := 86.0
+const CICLO := 240.0                          ## 96 s llegando desde el horizonte, 30 s parado, 96 s saliendo y un respiro
+const LLEGADA := 96.0
 const ESPERA := 30.0
-const SALIDA := 86.0
+const SALIDA := 96.0
 const VIA_X := 8.0
 const LARGO_TUNEL := 26.0
 
