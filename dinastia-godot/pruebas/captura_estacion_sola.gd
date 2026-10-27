@@ -13,12 +13,17 @@ func _ready() -> void:
 	add_child(b)
 	var m := StandardMaterial3D.new()
 	m.albedo_color = Color(0.8, 0.8, 0.78)
-	_est = EstacionCentral.montar(b, Vector3(0, 0.0, 0), 96.0, 96.0, {"claro": m, "vidrio": m, "piedra": m})
+	## En su sitio de verdad (110, −550) y con el terreno: así se ve la vía exterior sobre la loma del norte.
+	var org := Vector3(110, 0.2, -550)
+	for t in b._terreno():
+		b.add_child(t)
+	_est = EstacionCentral.montar(b, org, 96.0, 96.0, {"claro": m, "vidrio": m, "piedra": m})
 	EstacionCentral.reloj = null
 	_est._t = float(OS.get_environment("ESTACION_T")) if OS.get_environment("ESTACION_T") != "" else 21.0
 	var z1: float = _est._trenes[0]["z1"]
-	_vistas = [[Vector3(-14, 9, z1 + 16), Vector3(0, 1, z1 - 8)], [Vector3(22, 7, z1 - 9), Vector3(-6, 1.5, z1 - 9)],
-		[Vector3(24, 6, -672), Vector3(-8, 2, -706)], [Vector3(70, 30, -470), Vector3(0, 0, -700)]]
+	_vistas = [[org + Vector3(-14, 9, z1 + 16), org + Vector3(0, 1, z1 - 8)], [org + Vector3(22, 7, z1 - 9), org + Vector3(-6, 1.5, z1 - 9)],
+		[Vector3(110, 14, -1425), Vector3(110, 1, -1620)],                       ## desde la autopista (cubierta a 8 m) mirando al tramo abierto
+		[Vector3(150, 6, -1560), Vector3(110, 1, -1640)], [Vector3(60, 4, -1520), Vector3(110, 1.5, -1600)]]
 	var sol := DirectionalLight3D.new()
 	sol.rotation_degrees = Vector3(-50, 30, 0)
 	add_child(sol)
@@ -31,7 +36,7 @@ func _ready() -> void:
 	we.environment = env
 	add_child(we)
 	_cam = Camera3D.new()
-	_cam.far = 1500.0
+	_cam.far = 3000.0
 	add_child(_cam)
 	_cam.make_current()
 
