@@ -177,6 +177,7 @@ func _a_la_lesion(j: Jugador, semanas: int, minuto: int) -> void:
 		return
 	if j.club_id == club.id:
 		Sonido.toca("lesion_grave" if semanas >= 6 else "lesion")
+	_banca_lesion(j.club_id == club.id)
 	_suceso({
 		"min": minuto,
 		"t": "lesion",
@@ -299,6 +300,10 @@ func _anular_gol_motor(de_local: bool, autor: String) -> void:
 ## protestan los que están de pie (los sentados se quedan sentados, ver abajo).
 func _banca_protesta(es_local: bool) -> void:
 	_banca_gesto(es_local, "discutir_arbitro", 2.6, "protestar")
+
+## M-102 (27-10): el banquillo del lesionado se lleva las manos a la cabeza (los sentados sin levantarse; los de pie, el gesto de lamento).
+func _banca_lesion(es_local: bool) -> void:
+	_banca_gesto(es_local, "lamento", 3.5, "manos_cabeza")
 
 ## Los avisos del motor que merecen rótulo (los goles ya tienen el suyo).
 func _al_aviso_motor(texto: String) -> void:

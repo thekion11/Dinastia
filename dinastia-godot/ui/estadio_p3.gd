@@ -293,7 +293,7 @@ func _nodo_de(id: String) -> Node3D:
 func _banca_gesto(es_local: bool, clip: String, dura: float, otro := "") -> void:
 	## Los sentados festejan o protestan SIN levantarse (26-10, `BanquilloVivo`:
 	## medio cuerpo de Mesh2Motion sobre la cadera de «sentado»). Ambos banquillos.
-	BanquilloVivo.reaccionar(_raiz3d, "gol" if clip == "celebrar" else "protesta", es_local, dura)
+	BanquilloVivo.reaccionar(_raiz3d, "gol" if clip == "celebrar" else ("lesion" if clip == "lamento" else "protesta"), es_local, dura)
 	for f: Dictionary in _en_banca:
 		if bool(f.get("es_local", false)) != es_local:
 			continue

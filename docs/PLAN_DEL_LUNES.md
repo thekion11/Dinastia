@@ -836,7 +836,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-097 | P2 | PARCIAL | Retarget con pies que patinan | IK de piernas solo en la ciudad (`AnimQuaternius._ik_pierna`); sin foot locking en partido |
 | M-099 | P2 | PARCIAL | Cuerpos sin colisión entre brazos/piernas (solapes sólo en XZ) | cuerpos que se empujan y duelos en el motor (`MotorJugable._cuerpos`, 17-10), en 2D; sin cápsulas 3D |
 | M-101 | P2 | PARCIAL | Celebraciones por rasgo (ya) pero sólo 2/3 propias | carrera al córner y abrazo (`_ia_celebracion`); sin 10 por rasgo ni coreografías |
-| M-102 | P2 | PARCIAL | Sin reacciones de banquillo coordinadas | celebra el gol (`_banca_celebra`); 21-10: protesta la roja de uno de los suyos (`_banca_protesta`); falta la lesión |
+| M-102 | P2 | PARCIAL | Sin reacciones de banquillo coordinadas | celebra el gol (`_banca_celebra`); 21-10: protesta la roja de uno de los suyos (`_banca_protesta`); 27-10: se llevan las manos a la cabeza (o brazos cruzados / inquietos) ante la lesión de uno de los suyos (`_banca_lesion`, `BanquilloVivo.LESIONES`; sentados sin levantarse y de pie con «lamento»; `ideas/vat_hinchada` comprueba los clips; SIN captura en partido, solo prueba) |
 | M-103 | P2 | PARCIAL | Lesiones sin animación específica | clip de dolor (`AnimQuaternius`); sin camilla ni médicos en campo |
 | M-108 | P2 | SIN VERIFICAR | Mascotas con animación limitada | `MascotaQ` tiene animaciones propias; no se comprobó si son 6 ni si hay rutas |
 | M-109 | P2 | PARCIAL | Niños de ceremonia con una misma malla | niños con cuerpos de peatones variados (`CeremoniaPartido`); sin comprobar variedad de malla |
