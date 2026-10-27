@@ -553,6 +553,7 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 ### Detectados en pruebas y aún sin cerrar
 
 - **Puntería del tiro sin el pulido** (27-10): con `TIRO_PULIDO` apagado por defecto (solo con `PMOT_TIRO=1`), un tirador de 97 desde 20 m cae a ±0,09 m de donde apunta: el error solo depende de (1 − tiro). Decidir si se enciende el pulido de puntería (baja los goles a ~2 por partido) o se da un suelo de error a todos.
+- **Capturas de noche en Forward+** (27-10): en este contenedor (Vulkan por software) la ciudad con las farolas encendidas (103 luces, 49 farolas de 46 m) pasa de 14,5 GB y el sistema mata la captura, desde las 18:20; también con el código de antes de S5. Mediodía y mañana caben (~7 GB). La noche se revisa en Compatibility o en hardware real; medir FPS de noche en el PC del dueño (§1).
 - **Frenada del coche** (27-10, `pmov_conduccion`): de 72 km/h a cero en 0,82 s (~24 m/s², 2,4 g; un coche real, ~1 g) y, sin pedales, pierde ~5,8 m/s² (de 54 km/h se para en ~4 s). Arcade a propósito o demasiado brusco: decidirlo jugándolo.
 - **Roles por jugador** (como los PlayStyles de FC 26) con efecto en el motor.
 - **Red del arco**: onda más ancha y lenta (17-10), techo sin asomar por el larguero. **Cartel del cuarto árbitro**: 20-10 a tamaño real (0,92 × 0,62 m), dígitos con halo, mango y por encima de la cabeza. Desde la toma abierta de TV sigue siendo pequeño (como en la tele de verdad, que corta a un primer plano): pendiente un corte de cámara al cartel.
@@ -623,7 +624,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-294 | P2 | PARCIAL | Comparador de jugadores existe; sin comparativa de club/estadio | comparador de jugadores; sin club/estadio |
 | M-295 | P2 | SIN VERIFICAR | Sin gráficos históricos (valor, forma) en ficha | «crecimiento por temporada» en la ficha; sin gráficos verificados |
 | M-296 | P2 | PARCIAL | Notificaciones (`Aviso`) sin centro de notificaciones | bandeja de correo; sin filtros |
-| M-297 | P2 | PENDIENTE | Tutorial: ciudad y controles; falta tutorial de gestión (primer mes) | sin tutorial de gestión |
 | M-299 | P2 | PARCIAL | Sin confirmaciones consistentes para acciones destructivas… | `CuadroDialogo` en despacho/principal; no uniforme en vender/despedir |
 | M-300 | P2 | PENDIENTE | Sin deshacer en acciones de pizarra | sin deshacer en pizarra |
 | M-302 | P2 | PENDIENTE | Sin tema claro/alto contraste | sin tema claro/alto contraste |

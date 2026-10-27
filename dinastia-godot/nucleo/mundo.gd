@@ -27,6 +27,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	## Un club nuevo, retos nuevos (los del anterior no valen aquí).
 	retos_semana.activos = []
 	retos_semana.generar(self)
+	mentor_mes.empezar()
 	return d
 
 func nueva_temporada() -> Dictionary:
