@@ -5,10 +5,12 @@ extends Node
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/presupuesto_partido.tscn      (MEDIR=1 solo imprime la tabla)
 ## Los números son los del cuadro visible desde la cámara del partido (con recorte de visibilidad y niveles de detalle), no los de toda la escena.
 const MARGEN := 1.15   ## lo que se mide más un 15 % es el techo que se escribe en el presupuesto
-## categoría: [triángulos máx., llamadas de dibujo máx.]. Los de aquí abajo se fijaron con la primera medición (ver el doc) y bajan, no suben.
+## categoría: [triángulos máx., llamadas de dibujo máx.]: lo medido el 27-10 más un 15 % (ver `docs/04_auditorias/presupuesto_partido.md`). Bajan, no suben:
+## quien suba un techo tiene que decir por qué en el doc. «estadio» INCLUYE a «publico» y «butacas» (son MultiMesh de las tribunas), así que las categorías no suman el total.
+## «extras», «cesped» y «balon» miden 0 o casi con la cámara del saque (fuera de cuadro o demasiado pequeños): sus techos son holguras, no medidas.
 const PRESUPUESTO := {
-	"total": [0, 0], "jugadores": [0, 0], "publico": [0, 0], "butacas": [0, 0], "estadio": [0, 0], "entorno": [0, 0],
-	"extras": [0, 0], "cesped": [0, 0], "balon": [0, 0],
+	"total": [2953334, 2444], "jugadores": [79904, 63], "publico": [889910, 23], "butacas": [1786659, 20], "estadio": [2767256, 240],
+	"entorno": [591987, 1983], "extras": [60000, 40], "cesped": [100, 8], "balon": [4000, 10],
 }
 const CATEGORIAS := ["jugadores", "publico", "butacas", "estadio", "entorno", "extras", "cesped", "balon"]
 var _n := 0
