@@ -13,7 +13,7 @@ static var _correas: ArrayMesh = null
 
 ## Camino de una correa (x positivo = lado derecho del peatón; se refleja para el otro): por la espalda, sobre el hombro, por el pecho,
 ## se mete en el costado del torso (a la vista solo queda el tramo del hombro al pecho) y vuelve por la espalda al fondo de la mochila.
-const CAMINO := [Vector3(0.10, 0.10, -0.178), Vector3(0.115, 0.20, -0.141), Vector3(0.12, 0.30, -0.03), Vector3(0.12, 0.25, 0.062),
+const CAMINO := [Vector3(0.10, 0.10, -0.178), Vector3(0.11, 0.18, -0.141), Vector3(0.115, 0.245, -0.03), Vector3(0.115, 0.215, 0.062),
 	Vector3(0.12, 0.20, 0.091), Vector3(0.12, 0.12, 0.117), Vector3(0.12, 0.05, 0.134), Vector3(0.12, 0.0, 0.116), Vector3(0.12, -0.02, 0.0),
 	Vector3(0.15, -0.04, -0.09), Vector3(0.13, -0.10, -0.16)]
 
@@ -47,24 +47,38 @@ static func _malla_correas() -> ArrayMesh:
 		return _correas
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var caja := BoxMesh.new()
-	caja.size = Vector3(0.04, 0.01, 1.0)   ## banda plana: 4 cm de ancho y 1 cm de grosor
+	var pts: Array[Vector3] = []
+	for k in CAMINO.size() - 1:   ## Catmull-Rom: la correa es una curva suave, no un zigzag de tramos rectos
+		var p0: Vector3 = CAMINO[maxi(k - 1, 0)]
+		var p1: Vector3 = CAMINO[k]
+		var p2: Vector3 = CAMINO[k + 1]
+		var p3: Vector3 = CAMINO[mini(k + 2, CAMINO.size() - 1)]
+		for j in 4:
+			var t := j / 4.0
+			pts.append(0.5 * (2.0 * p1 + (p2 - p0) * t + (2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * t * t + (3.0 * p1 - p0 - 3.0 * p2 + p3) * t * t * t))
+	pts.append(CAMINO[CAMINO.size() - 1])
 	for lado in [1.0, -1.0]:
-		for k in CAMINO.size() - 1:
-			var a: Vector3 = CAMINO[k]
-			var b: Vector3 = CAMINO[k + 1]
-			a.x *= lado
-			b.x *= lado
-			var largo := a.distance_to(b)
-			var dir := (b - a) / largo
-			## El grosor mira hacia fuera del torso (desde su eje vertical).
-			var medio := (a + b) * 0.5
-			var fuera := Vector3(medio.x, 0.0, medio.z).normalized()
-			var z := dir
-			var x := fuera.cross(z).normalized()
-			var y := z.cross(x).normalized()
-			var base := Basis(x, y, z * 1.0).scaled_local(Vector3(1, 1, largo + 0.012))
-			st.append_from(caja, 0, Transform3D(base, medio))
+		## Cinta continua: cara exterior, cara interior y dos cantos; 4 cm de ancho y 1 cm de grosor.
+		var cs: Array[Array] = []
+		for k in pts.size():
+			var c := pts[k]
+			c.x *= lado
+			var t := (pts[mini(k + 1, pts.size() - 1)] - pts[maxi(k - 1, 0)])
+			t.x *= lado
+			t = t.normalized()
+			var fuera := Vector3(c.x, 0.0, c.z).normalized()
+			var lado_v := t.cross(fuera).normalized()
+			var n := lado_v.cross(t).normalized()
+			cs.append([c + n * 0.005 + lado_v * 0.02, c + n * 0.005 - lado_v * 0.02, c - n * 0.005 - lado_v * 0.02, c - n * 0.005 + lado_v * 0.02])
+		for k in pts.size() - 1:
+			for e in 4:   ## 0 exterior, 1 canto, 2 interior, 3 canto
+				var e2 := (e + 1) % 4
+				var a0: Vector3 = cs[k][e]
+				var a1: Vector3 = cs[k][e2]
+				var b0: Vector3 = cs[k + 1][e]
+				var b1: Vector3 = cs[k + 1][e2]
+				for v in [a0, a1, b1, a0, b1, b0]:
+					st.add_vertex(v)
 	st.generate_normals()
 	_correas = st.commit()
 	return _correas
