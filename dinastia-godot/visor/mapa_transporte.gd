@@ -82,6 +82,7 @@ func _draw() -> void:
 	draw_rect(Rect2(0, 50, size.x, 2), Color(0.45, 0.9, 1.0))
 	_t(Vector2(24, 35), NOMBRES_MODO[modo], 26, Color(0.45, 0.9, 1.0))
 	_t(Vector2(size.x - 24, 35), "N: cambiar de vista · Esc: cerrar", 16, GRIS, 400.0, HORIZONTAL_ALIGNMENT_RIGHT)
+	_ocupado.clear()
 	_base()
 	if modo != 2:
 		_autobuses()
@@ -116,7 +117,6 @@ func _base() -> void:
 	draw_rect(Rect2(_origen, Vector2(_lado, _lado)), Color(0.3, 0.4, 0.45), false, 2.0)
 
 func _hitos() -> void:
-	_ocupado.clear()
 	var estadio := _p(CityBuilder.ESTADIO_EN)
 	draw_rect(Rect2(estadio - Vector2(6, 4), Vector2(12, 8)), Color(0.2, 0.9, 0.4))
 	_t(estadio + Vector2(9, 5), "Estadio", 13)
@@ -128,14 +128,18 @@ func _hitos() -> void:
 			var r: Rect2 = bl["rect"]
 			var p := _p(Vector3(r.get_center().x, 0, r.get_center().y))
 			draw_circle(p, 3.5, Color(0.95, 0.95, 0.9))
-			var pos := p + Vector2(6, 4)
 			var ancho := ThemeDB.fallback_font.get_string_size(String(CLAVES[uso]), HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
-			var caja := Rect2(pos - Vector2(0, 12), Vector2(ancho, 14))
-			for q: Rect2 in _ocupado:
-				if q.intersects(caja):
-					pos.y += 16.0
-					caja = Rect2(pos - Vector2(0, 12), Vector2(ancho, 14))
-			_ocupado.append(caja)
+			## Se prueba a la derecha, a la izquierda, arriba y abajo hasta dar con un hueco que no pise otra etiqueta ni una insignia.
+			var pos := p + Vector2(6, 4)
+			for d: Vector2 in [Vector2(6, 4), Vector2(-ancho - 6.0, 4), Vector2(6, -14), Vector2(-ancho - 6.0, -14), Vector2(6, 22), Vector2(-ancho - 6.0, 22), Vector2(6, -30), Vector2(6, 40)]:
+				var caja := Rect2(p + d - Vector2(0, 12), Vector2(ancho, 14))
+				var choca := false
+				for q: Rect2 in _ocupado:
+					choca = choca or q.intersects(caja)
+				pos = p + d
+				if not choca:
+					break
+			_ocupado.append(Rect2(pos - Vector2(0, 12), Vector2(ancho, 14)))
 			_t(pos, String(CLAVES[uso]), 12, Color(0.85, 0.88, 0.9))
 
 # ============================================================================ LÍNEAS
@@ -146,6 +150,7 @@ func _poli(pts: PackedVector3Array, col: Color, ancho: float, cerrada: bool = tr
 		draw_line(_p(pts[i]), _p(pts[(i + 1) % n]), col, ancho, true)
 
 func _insignia(p: Vector2, texto: String, col: Color) -> void:
+	_ocupado.append(Rect2(p - Vector2(14, 14), Vector2(28, 28)))
 	draw_circle(p, 13.0, Color.WHITE)
 	draw_circle(p, 11.0, col)
 	_t(p + Vector2(-14, 6), texto, 16 if texto.length() < 2 else 13, Color.WHITE, 28.0, HORIZONTAL_ALIGNMENT_CENTER)
