@@ -76,3 +76,6 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     parada, cuadrícula de recorridos en blanco, QR y franja roja abajo). El CÓDIGO del paradero sirve en una APP del móvil: qué micros
     pasan, en cuánto llegan y su patente. Recorridos: números por SECTOR (100: 122, 150, 190; 200: 203, 217, 278…), sufijo «c» =
     sentido contrario, «e» = alternativa (rara); hay también recorridos tipo «C02», «C09c».
+17. (27-10 noche) RECORRIDOS SOBRE EL MAPA: los recorridos Red se crean a partir del mapa real de la ciudad (calles y líneas de
+    `CiudadExpansion`, el mapa de transporte), y de ahí salen los paraderos (en las paradas de cada recorrido), su NOMBRE (la calle y
+    la que cruza), su código PA####, los números de recorrido (por sector, con su «c») y las patentes de los buses.
