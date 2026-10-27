@@ -360,7 +360,7 @@ func a_dic() -> Dictionary:
 		"emergencia": emergencia.duplicate(),
 		"inyecciones": _inyecciones, "anio_inyecciones": _anio_inyecciones,
 		"inyecciones_totales": inyecciones_totales,
-		"patrimonio": patrimonio, "cartera": cartera.a_dict(), "peluches": peluches.a_dict(), "licencia": licencia,
+		"patrimonio": patrimonio, "cartera": cartera.a_dict(), "peluches": peluches.a_dict(), "presets_tactica": presets_tactica.a_dict(), "crisis_pendiente": crisis_pendiente.duplicate(true), "licencia": licencia,
 		"bienes": bienes.duplicate(), "sem_trabajadas": semanas_trabajadas,
 		"filosofia": filosofia.duplicate(),
 		"estilos": _estilos_contados.duplicate(),
@@ -401,11 +401,12 @@ func desde_dic(d: Dictionary) -> void:
 	cantera = (d.get("cantera", {}) as Dictionary).duplicate(true)
 	emergencia = (d.get("emergencia", {}) as Dictionary).duplicate()
 	_inyecciones = int(d.get("inyecciones", 0))
-	_anio_inyecciones = int(d.get("anio_inyecciones", 0))
-	inyecciones_totales = int(d.get("inyecciones_totales", 0))
+	_anio_inyecciones = int(d.get("anio_inyecciones", 0)); inyecciones_totales = int(d.get("inyecciones_totales", 0))
 	patrimonio = int(d.get("patrimonio", 0))
 	cartera.desde_dict(d.get("cartera", {}))
 	peluches.desde_dict(d.get("peluches", {}))
+	presets_tactica.desde_dict(d.get("presets_tactica", {}))
+	crisis_pendiente = (d.get("crisis_pendiente", []) as Array).duplicate(true)
 	licencia = int(d.get("licencia", 0))
 	bienes = (d.get("bienes", {}) as Dictionary).duplicate()
 	semanas_trabajadas = int(d.get("sem_trabajadas", 0))

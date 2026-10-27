@@ -3,8 +3,8 @@ extends RefCounted
 ## LOS PELUCHES COLECCIONABLES (27-10-2026, pieza D de `PLAN_DEL_LUNES.md` §2.2h; decisión del dueño: los peluches dan LOGROS). Tres máquinas de garra en
 ## UNA sala del centro comercial; cada intento cuesta una moneda de 1 € del EFECTIVO (no de la tarjeta). Lo que cae a la salida va al álbum del DT
 ## (`Roles.peluches`, con su estantería en la vivienda y su resumen en el móvil). Un LOGRO por serie completa y otro por la colección entera.
-## `PELUCHES` es la TABLA donde se enchufan los modelos: `modelo` vacío = peluche de relleno hecho con esferas (`PelucheModelo`); cuando lleguen los 14
-## modelos del regalo del dueño (en el Drive, pendientes de subir), basta poner su ruta en `modelo` y su escala en `escala`. Sin azar global: el campo de
+## `PELUCHES` es la TABLA donde se enchufan los modelos: `modelo` vacío = peluche de relleno hecho con esferas (`PelucheModelo`). Desde el 27-10 son los
+## 15 modelos del regalo del dueño («Claw Machine Free», carpeta del Drive), reducidos a texturas de 512 px en `assets/peluches/`. Sin azar global: el campo de
 ## cada partida sale de una semilla (día, máquina, intento) y la tirada de un `RandomNumberGenerator` propio.
 const MONEDA := 1
 const RADIO_AGARRE := 0.14        ## fracción del ancho del campo: a más distancia del centro del peluche, menos probabilidad
@@ -12,27 +12,29 @@ const FALLO_EXTRA := 0.05         ## cada intento fallido seguido suma esto a la
 const MAX_EXTRA := 0.25
 
 const SERIES := {
-	"bosque": "Amigos del bosque", "granja": "La granja", "mar": "Fondo del mar", "fantasia": "Fantasía",
+	"casa": "En casa", "bosque": "Amigos del bosque", "sabana": "La sabana", "granja": "La granja", "mar": "Fondo del mar",
+	"fantasia": "Fantasía",
 }
-## PENDIENTE (orden del líder, 27-10): cuando lleguen los modelos .glb del Drive, la vista de la garra (hoy 2D, dibujada con `draw_*` en
-## `PanelPeluches._pintar`) pasa a 3D (un SubViewport con los `modelo` de esta tabla); mientras `modelo` esté vacío se sigue dibujando el relleno.
+## La garra se ve en 3D (`VistaGarra3D`) con los `modelo` de esta tabla; sin modelos, `PanelPeluches` dibuja el relleno en 2D.
 ## id, nombre, serie, peso (1 ligero … 4 pesado), máquina (0-2), forma (cómo se dibuja el relleno), color, modelo (ruta .glb, "" = relleno), escala del modelo.
 const PELUCHES := [
-	{"id": "oso", "nombre": "Oso pardo", "serie": "bosque", "peso": 3, "maquina": 0, "forma": "oso", "color": Color(0.55, 0.36, 0.22), "modelo": "", "escala": 1.0},
-	{"id": "zorro", "nombre": "Zorrito", "serie": "bosque", "peso": 2, "maquina": 0, "forma": "puntas", "color": Color(0.93, 0.5, 0.18), "modelo": "", "escala": 1.0},
-	{"id": "ciervo", "nombre": "Cervatillo", "serie": "bosque", "peso": 2, "maquina": 0, "forma": "puntas", "color": Color(0.82, 0.66, 0.42), "modelo": "", "escala": 1.0},
-	{"id": "buho", "nombre": "Búho", "serie": "bosque", "peso": 2, "maquina": 0, "forma": "puntas", "color": Color(0.5, 0.42, 0.36), "modelo": "", "escala": 1.0},
-	{"id": "pollito", "nombre": "Pollito", "serie": "granja", "peso": 1, "maquina": 0, "forma": "bola", "color": Color(1.0, 0.88, 0.25), "modelo": "", "escala": 1.0},
-	{"id": "cerdito", "nombre": "Cerdito", "serie": "granja", "peso": 2, "maquina": 1, "forma": "oso", "color": Color(0.98, 0.7, 0.75), "modelo": "", "escala": 1.0},
-	{"id": "vaca", "nombre": "Vaquita", "serie": "granja", "peso": 3, "maquina": 1, "forma": "oso", "color": Color(0.94, 0.94, 0.92), "modelo": "", "escala": 1.0},
-	{"id": "pulpo", "nombre": "Pulpo", "serie": "mar", "peso": 2, "maquina": 1, "forma": "bola", "color": Color(0.62, 0.38, 0.8), "modelo": "", "escala": 1.0},
-	{"id": "pinguino", "nombre": "Pingüino", "serie": "mar", "peso": 2, "maquina": 1, "forma": "bola", "color": Color(0.16, 0.18, 0.24), "modelo": "", "escala": 1.0},
-	{"id": "ballena", "nombre": "Ballenita", "serie": "mar", "peso": 4, "maquina": 1, "forma": "bola", "color": Color(0.3, 0.55, 0.9), "modelo": "", "escala": 1.0},
-	{"id": "cangrejo", "nombre": "Cangrejo", "serie": "mar", "peso": 2, "maquina": 2, "forma": "puntas", "color": Color(0.9, 0.22, 0.18), "modelo": "", "escala": 1.0},
-	{"id": "dragon", "nombre": "Dragoncito", "serie": "fantasia", "peso": 4, "maquina": 2, "forma": "puntas", "color": Color(0.3, 0.72, 0.4), "modelo": "", "escala": 1.0},
-	{"id": "unicornio", "nombre": "Unicornio", "serie": "fantasia", "peso": 3, "maquina": 2, "forma": "puntas", "color": Color(0.84, 0.66, 0.95), "modelo": "", "escala": 1.0},
-	{"id": "fantasma", "nombre": "Fantasmita", "serie": "fantasia", "peso": 1, "maquina": 2, "forma": "bola", "color": Color(0.96, 0.96, 1.0), "modelo": "", "escala": 1.0},
+	{"id": "oso", "nombre": "Oso pardo", "serie": "bosque", "peso": 3, "maquina": 0, "forma": "oso", "color": Color(0.55, 0.36, 0.22), "modelo": "res://assets/peluches/bear.glb", "escala": 0.55},
+	{"id": "zorro", "nombre": "Zorrito", "serie": "bosque", "peso": 2, "maquina": 0, "forma": "puntas", "color": Color(0.93, 0.5, 0.18), "modelo": "res://assets/peluches/fox.glb", "escala": 0.55},
+	{"id": "koala", "nombre": "Koala", "serie": "bosque", "peso": 2, "maquina": 0, "forma": "oso", "color": Color(0.6, 0.6, 0.64), "modelo": "res://assets/peluches/koala.glb", "escala": 0.55},
+	{"id": "panda", "nombre": "Panda", "serie": "bosque", "peso": 3, "maquina": 1, "forma": "oso", "color": Color(0.95, 0.95, 0.95), "modelo": "res://assets/peluches/panda.glb", "escala": 0.55},
+	{"id": "perro", "nombre": "Perrito", "serie": "casa", "peso": 2, "maquina": 0, "forma": "oso", "color": Color(0.8, 0.6, 0.38), "modelo": "res://assets/peluches/dog.glb", "escala": 0.55},
+	{"id": "gato", "nombre": "Gatito", "serie": "casa", "peso": 1, "maquina": 0, "forma": "puntas", "color": Color(0.95, 0.7, 0.4), "modelo": "res://assets/peluches/cat.glb", "escala": 0.55},
+	{"id": "conejo", "nombre": "Conejito", "serie": "casa", "peso": 1, "maquina": 1, "forma": "puntas", "color": Color(0.96, 0.92, 0.9), "modelo": "res://assets/peluches/rabbit.glb", "escala": 0.55},
+	{"id": "pollito", "nombre": "Pollito", "serie": "granja", "peso": 1, "maquina": 1, "forma": "bola", "color": Color(1.0, 0.88, 0.25), "modelo": "res://assets/peluches/chick.glb", "escala": 0.55},
+	{"id": "cerdito", "nombre": "Cerdito", "serie": "granja", "peso": 2, "maquina": 1, "forma": "oso", "color": Color(0.98, 0.7, 0.75), "modelo": "res://assets/peluches/pig.glb", "escala": 0.55},
+	{"id": "leon", "nombre": "Leoncito", "serie": "sabana", "peso": 3, "maquina": 1, "forma": "oso", "color": Color(0.92, 0.68, 0.3), "modelo": "res://assets/peluches/lion.glb", "escala": 0.55},
+	{"id": "elefante", "nombre": "Elefantito", "serie": "sabana", "peso": 4, "maquina": 2, "forma": "oso", "color": Color(0.62, 0.66, 0.74), "modelo": "res://assets/peluches/elephant.glb", "escala": 0.55},
+	{"id": "cocodrilo", "nombre": "Cocodrilo", "serie": "sabana", "peso": 3, "maquina": 2, "forma": "puntas", "color": Color(0.36, 0.66, 0.32), "modelo": "res://assets/peluches/crocodile.glb", "escala": 0.55},
+	{"id": "pinguino", "nombre": "Pingüino", "serie": "mar", "peso": 2, "maquina": 2, "forma": "bola", "color": Color(0.16, 0.18, 0.24), "modelo": "res://assets/peluches/penguin.glb", "escala": 0.55},
+	{"id": "tiburon", "nombre": "Tiburoncito", "serie": "mar", "peso": 3, "maquina": 2, "forma": "puntas", "color": Color(0.45, 0.6, 0.78), "modelo": "res://assets/peluches/shark.glb", "escala": 0.55},
+	{"id": "unicornio", "nombre": "Unicornio", "serie": "fantasia", "peso": 4, "maquina": 2, "forma": "puntas", "color": Color(0.84, 0.66, 0.95), "modelo": "res://assets/peluches/unicorn.glb", "escala": 0.55},
 ]
+
 const LOGRO_TODO := "coleccion"
 
 var conseguidos: Dictionary = {}   ## id -> veces que ha caído

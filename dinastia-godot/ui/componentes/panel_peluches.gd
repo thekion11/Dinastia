@@ -35,6 +35,7 @@ var _logros_nuevos: Array = []
 var _rng := RandomNumberGenerator.new()
 var _caja := Control.new()
 var _botones := HBoxContainer.new()
+var _vista: VistaGarra3D          ## la máquina en 3D (`vista_garra3d.gd`) si los peluches tienen modelo; si no, el dibujo 2D de siempre
 
 static func abrir(capa: CanvasLayer, roles_: Roles, dia_: int, maquina_: int, pos: Vector3, quien: Node) -> PanelPeluches:
 	var p := PanelPeluches.new()
@@ -63,6 +64,8 @@ func _montar() -> void:
 	_caja.custom_minimum_size = Vector2(440, 462)
 	_caja.draw.connect(_pintar)
 	v.add_child(_caja)
+	if ResourceLoader.exists(String(Peluches.PELUCHES[0].get("modelo", ""))):
+		_vista = VistaGarra3D.en(_caja, CAMPO)
 	_botones.alignment = BoxContainer.ALIGNMENT_CENTER
 	_botones.add_theme_constant_override("separation", 10)
 	v.add_child(_botones)
@@ -163,6 +166,8 @@ func _process(delta: float) -> void:
 		SALE:
 			if _t >= T_SALIDA:
 				_terminar()
+	if _vista != null:
+		_vista.actualizar(self)
 	_caja.queue_redraw()
 
 ## Mueve la garra `d` (−1..1 en cada eje) durante `delta` segundos, sin salirse del cristal.
@@ -219,6 +224,9 @@ func _peluche(c: Vector2, d: Dictionary, r: float) -> void:
 
 func _pintar() -> void:
 	_caja.draw_rect(Rect2(Vector2.ZERO, _caja.size), Color(0.08, 0.1, 0.16))
+	if _vista != null:
+		_textos()
+		return
 	_caja.draw_rect(CAMPO, Color(0.3, 0.42, 0.55, 0.35))
 	_caja.draw_rect(CAMPO, Color(0.7, 0.85, 1.0), false, 3.0)
 	_caja.draw_rect(Rect2(CAMPO.position + Vector2(0, CAMPO.size.y - 50), Vector2(70, 50)), Color(0.9, 0.5, 0.15, 0.55))      ## la salida
@@ -261,6 +269,9 @@ func _pintar() -> void:
 	if fase == SALE and _gana != "":
 		var q := clampf(_t / T_SALIDA, 0.0, 1.0)
 		_peluche(_punto(Vector2(0.09, 0.9)) + Vector2(0, q * 24.0), Peluches.def(_gana), 22.0 * (1.0 - q * 0.3))
+	_textos()
+
+func _textos() -> void:
 	## Todo lo que es texto SE PARTE en líneas (en alemán, ruso... una frase no cabe en 420 px): `draw_string` la cortaba.
 	_caja.draw_multiline_string(ThemeDB.fallback_font, Vector2(14, 334), _saldo_texto(), HORIZONTAL_ALIGNMENT_LEFT, 420, 15, 2, Color(1, 0.9, 0.6))
 	_caja.draw_multiline_string(ThemeDB.fallback_font, Vector2(14, 382), _mensaje, HORIZONTAL_ALIGNMENT_LEFT, 420, 15, MAX_LINEAS, Color.WHITE)
