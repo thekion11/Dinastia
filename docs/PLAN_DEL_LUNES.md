@@ -524,7 +524,6 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 ### Semana 8 (1-12 → 7-12) — Ultra pulido de todo
 - [ ] Recorrido pantalla por pantalla: textos cortados, colores, tamaños, traducciones.
 - [ ] Recorrido de cada etapa 1–6 con capturas.
-- [ ] Accesibilidad: tamaño de letra global y modo daltónico están en la rama de la sesión 2 (falta fusionar y la petición 3 de §9 para que lleguen a `Tema`); subtítulos solo si hay voces.
 
 ### Semana 9 (8-12 → 15-12) — Auditoría y lanzamiento
 - [ ] Auditoría completa y prueba larga de 10 temporadas.
