@@ -437,7 +437,7 @@ func _ia_portador(p: Dictionary) -> void:
 	## pase (y más verticalidad, fila 18), más a menudo.
 	if dist_arco < 48.0:
 		var hueco := _companero_al_hueco(p)
-		if not hueco.is_empty() and _rng.randf() < 0.45 + 0.15 * float(_tac(bool(p["es_local"]), "verticalidad")) + float(p["attr"]["pas"]) * 0.3:
+		if not hueco.is_empty() and _rng.randf() < 0.6 + 0.2 * float(_tac(bool(p["es_local"]), "verticalidad") - 1) + float(p["attr"]["pas"]) * 0.3:
 			_pasar_a(p, hueco, false, true)
 			return
 	## Pasar si hay presión o un compañero mejor situado.
