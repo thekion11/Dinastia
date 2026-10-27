@@ -29,7 +29,8 @@ func _ready() -> void:
 	var vid := StandardMaterial3D.new()
 	vid.albedo_color = Color(0.4, 0.6, 0.7, 0.6)
 	vid.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	_est = EstacionCentral.montar(b, Vector3(0, 0.2, 0), 96.0, 96.0, {"claro": mat, "vidrio": vid, "piedra": mat})
+	var ex := CiudadExpansion.new(b)
+	_est = EstacionCentral.montar(b, Vector3(0, 0.2, 0), 96.0, 96.0, {"claro": mat, "vidrio": vid, "piedra": mat}, ex)
 	var sol := DirectionalLight3D.new()
 	sol.rotation_degrees = Vector3(-50, 30, 0)
 	add_child(sol)
