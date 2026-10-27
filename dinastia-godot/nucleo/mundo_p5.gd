@@ -21,6 +21,7 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 	_semana_once_antes_de_jugar()
 	var jugaron_en_casa := _semana_jugar_ligas(ya_jugado)
 	_semana_caja_y_plantillas(jugaron_en_casa)
+	CrisisCaja.semana(self)   ## multas, recortes de patrocinio y obras que se encarecen (M-208)
 	_retos_tras_partido(ya_jugado)
 	_semana_memoria_del_partido(ya_jugado)
 	_semana_mercado()
