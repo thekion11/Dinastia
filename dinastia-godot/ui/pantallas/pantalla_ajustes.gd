@@ -330,6 +330,15 @@ func _pintar_ajustes() -> void:
 			ac.text = Idiomas.t("DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).")
 			ac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_ajustes.add_child(ac)
+			## 1098 (27-10-2026): la privacidad, en corto. La completa, para las tiendas: docs/05_referencia/POLITICA_DE_PRIVACIDAD.md.
+			p._lista_ajustes.add_child(HSeparator.new())
+			var t5 := p._texto(11, Principal.COL_SUAVE)
+			t5.text = Idiomas.t("PRIVACIDAD")
+			p._lista_ajustes.add_child(t5)
+			var pv := p._texto(11, Principal.COL_TEXTO)
+			pv.text = Idiomas.t("DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.")
+			pv.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			p._lista_ajustes.add_child(pv)
 			## M-309: créditos y licencias de lo que no es propio.
 			p._lista_ajustes.add_child(HSeparator.new())
 			var t4 := p._texto(11, Principal.COL_SUAVE)
