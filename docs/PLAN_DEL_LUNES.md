@@ -355,9 +355,12 @@ paseo iba a 1,7 m/s (patinaba ×1,7; agachado ×2,4; correr ×1,3-1,5): ahora `s
 (persigue el rumbo, `lerp_angle` a 9/s) y la mezcla al pararse dura 0,4 s. P3 (27-10, pasada 1): inventario del pack UAL = 43 clips; los
 de conversación y asiento estaban mapeados en `AnimExtra.UAL` pero solo los futbolistas los cargaban. `AnimExtra.asegurar`
 carga un clip en cualquier cuerpo al momento; ahora HABLAN con el clip de charla el mentor del prólogo, las personas de las
-citas (mientras dura el cuadro) y la familia en casa (4 s). Falta P3: sentarse de verdad (butaca, sofá, banquillo:
-`sentarse`/`sentado`/`levantarse`), vecinos (hoy siguen con el paso de andar al charlar), abrir puertas, escaleras; y P4
-(piel/pelo/ropa). Falta el veredicto del dueño sobre estas pasadas.
+citas (mientras dura el cuadro) y la familia en casa (4 s). P3 pasada 2 (27-10): los bancos de acera y de parada registran asientos
+(`CityBuilder.asientos`) y `GenteSentada` (`visor/gente_sentada.gd`, cuelga de `VidaCiudad`) sienta hasta 6 peatones con el clip
+«sentado» en los asientos a < 55 m (ocupación estable por hash de asiento y hora); el DT en el sofá encadena «sentarse» → «sentado»
+y se queda así hasta dar un paso (`_gesto_propio(gesto, luego)`); los vecinos ya charlaban con clip (6 s). Prueba `p3_sentados`;
+capturas antes/después `docs/04_auditorias/capturas_personajes/p3_sentados_{antes,despues}.jpg`. Falta P3: butacas del estadio y
+banquillo fuera del partido, abrir puertas, escaleras; y P4 (piel/pelo/ropa). Falta el veredicto del dueño sobre estas pasadas.
 
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 

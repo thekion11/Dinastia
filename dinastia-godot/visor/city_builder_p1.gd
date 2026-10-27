@@ -90,6 +90,8 @@ var expansion: CiudadExpansion
 ## modo a pie / al volante (`ExploradorCiudad`).
 var huellas: Array[Rect2] = []
 var etiquetas: Array = []          ## [{pos:Vector3, texto:String, nivel:int}]
+## Asientos públicos (bancos de acera y de parada): {p: Vector3 del asiento, giro: float}. `GenteSentada` sienta gente ahí (P3).
+var asientos: Array[Dictionary] = []
 ## LO QUE SE PUEDE TOCAR EN EL MAPA (plan maestro B7): cada instalación, su
 ## solar si todavía no existe, y el estadio. `VistaCiudad` proyecta `pos` a la
 ## pantalla para saber qué se clicó (el mapa no tiene colisiones).
