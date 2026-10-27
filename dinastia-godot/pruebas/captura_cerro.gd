@@ -17,10 +17,16 @@ func _ready() -> void:
 	var cima := _tele.cima
 	_tele._t = Teleferico.VIAJE * 0.42
 	_tele._poner_cabinas(_tele._t)
+	_tele.set_process(false)   ## quieto: las tomas son de una misma posición de las cabinas
 	var cab: Vector3 = _tele.cabinas[0].position
+	var dir_c := Vector3(cima.x - base.x, 0, cima.z - base.z).normalized()
+	var lado_c := Vector3(dir_c.z, 0, -dir_c.x)
 	_vistas = [[Vector3(700, 420, 500), Vector3(1900, 140, 900)], [Vector3(base.x - 40, 14, base.z - 30), base + Vector3(0, 6, 0)],
 		[cima + Vector3(-40, 14, 30), cima + Vector3(0, 6, 0)], [cab + Vector3(-30, 8, 30), cab + Vector3(0, -3, 0)],
-		[cima + Vector3(-60, 40, 90), cima + Vector3(0, -60, -120)]]
+		[cima + Vector3(-60, 40, 90), cima + Vector3(0, -60, -120)],
+		[cab + lado_c * 13.0 - dir_c * 5.0 + Vector3(0, -3.0, 0), cab + Vector3(0, -4.5, 0)],   ## la cabina de cerca, de lado
+		[cab + Vector3(0, -4.8, 0), cima + Vector3(0, 6, 0)],                           ## desde dentro de la cabina, mirando a la estación de arriba
+		[Vector3(_tele.puntos[3].x + 16, TelefericoFlora.altura_malla(b, _tele.puntos[3].x + 16, _tele.puntos[3].z + 12) + 2.0, _tele.puntos[3].z + 12), _tele.puntos[3] + Vector3(0, -3, 0)]]   ## desde abajo, una torre
 	var sol := DirectionalLight3D.new()
 	sol.rotation_degrees = Vector3(-40, 40, 0)
 	add_child(sol)
