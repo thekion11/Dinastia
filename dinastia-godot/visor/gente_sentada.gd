@@ -19,6 +19,7 @@ var cuerpos: Dictionary = {}   ## índice del asiento → {d: Dictionary (Peaton
 var _rng := RandomNumberGenerator.new()
 var _t := 0.0
 var _parados := {}     ## autobús (id) → segundos que lleva parado en una parada
+var _figurantes: Array = []   ## los que suben y bajan del autobús ({d, a, b, t, dur, sube})
 var _eventos: Array[Vector3] = []   ## dónde subieron y bajaron pasajeros (a los 3 s de parar el autobús)
 
 static func crear(v: VidaCiudad) -> GenteSentada:
@@ -31,6 +32,7 @@ static func crear(v: VidaCiudad) -> GenteSentada:
 	return s
 
 func _process(delta: float) -> void:
+	_mover_figurantes(delta)
 	if expl == null or not is_instance_valid(expl) or expl.cuerpo == null or expl.cb == null:
 		return
 	_t -= delta
@@ -70,6 +72,7 @@ func vigilar_buses() -> void:
 			_parados[id] = float(_parados.get(id, 0.0)) + 1.0
 			if float(_parados[id]) == 3.0:
 				_eventos.append((v["nodo"] as Node3D).global_position)
+				embarque(v["nodo"])
 				if _eventos.size() > 40:
 					_eventos.pop_front()
 		else:
@@ -121,6 +124,58 @@ func _sentar(i: int, asiento: Dictionary) -> void:
 	(d["anim"] as AnimationPlayer).seek(_rng.randf() * 0.8, true)
 	cuerpos[i] = {"d": d, "p": p}
 
+## A los 3 s de parar, SUBEN dos (los sentados más cercanos, o alguien que llega por la acera) y BAJAN dos: caminan de verdad
+## hasta/desde la puerta delantera del autobús (lado derecho) y desaparecen al llegar.
+func embarque(bus: Node3D) -> void:
+	if expl == null or expl.cb == null or _figurantes.size() >= 6:
+		return
+	var puerta: Vector3 = bus.global_transform * Vector3(1.5, 0.0, 4.6)
+	var der: Vector3 = bus.global_transform.basis.x.normalized()
+	var delante: Vector3 = bus.global_transform.basis.z.normalized()
+	var suben := 0
+	for i: int in cuerpos.keys():
+		if suben >= 2:
+			break
+		var c: Dictionary = cuerpos[i]
+		var p: Vector3 = c["p"]
+		if Vector2(p.x - puerta.x, p.z - puerta.z).length() < 16.0:
+			_quitar(i)
+			_figurante(Vector3(p.x, 0.0, p.z), puerta, true)
+			suben += 1
+	if suben == 0:
+		_figurante(puerta + der * 3.5 - delante * 9.0, puerta, true)
+	_figurante(puerta, puerta + der * 3.5 + delante * 7.0, false)
+	_figurante(puerta, puerta + der * 4.5 - delante * 6.0, false)
+
+func _figurante(a: Vector3, b: Vector3, sube: bool) -> void:
+	_rng.seed = 9100 + _figurantes.size() * 31 + int(a.x + a.z)
+	var d := PeatonQ.crear(_rng)
+	if d.is_empty():
+		return
+	var n: Node3D = d["nodo"]
+	expl.cb.add_child(n)
+	PeatonQ.terminar(d)
+	a.y = 0.2
+	b.y = 0.2
+	n.position = a
+	n.rotation.y = atan2(b.x - a.x, b.z - a.z)
+	Mini3D.anim(d, "caminar", "")
+	_figurantes.append({"d": d, "a": a, "b": b, "t": 0.0, "dur": maxf(a.distance_to(b) / 1.4, 0.5), "sube": sube})
+
+func _mover_figurantes(delta: float) -> void:
+	for k in range(_figurantes.size() - 1, -1, -1):
+		var f: Dictionary = _figurantes[k]
+		var n: Node3D = (f["d"] as Dictionary)["nodo"]
+		if not is_instance_valid(n):
+			_figurantes.remove_at(k)
+			continue
+		f["t"] = float(f["t"]) + delta
+		var u := clampf(float(f["t"]) / float(f["dur"]), 0.0, 1.0)
+		n.position = (f["a"] as Vector3).lerp(f["b"], u)
+		if u >= 1.0:
+			n.queue_free()
+			_figurantes.remove_at(k)
+
 func _quitar(i: int) -> void:
 	var c: Dictionary = cuerpos.get(i, {})
 	if not c.is_empty():
@@ -130,5 +185,9 @@ func _quitar(i: int) -> void:
 	cuerpos.erase(i)
 
 func _quitar_todos() -> void:
+	for f: Dictionary in _figurantes:
+		if is_instance_valid((f["d"] as Dictionary)["nodo"]):
+			((f["d"] as Dictionary)["nodo"] as Node).queue_free()
+	_figurantes.clear()
 	for i: int in cuerpos.keys():
 		_quitar(i)
