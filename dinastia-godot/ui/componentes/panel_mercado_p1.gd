@@ -170,7 +170,8 @@ func _pintar_ofertas_recibidas(_mio: Club) -> void:
 		if es_clausula or puede_vender:
 			var ba := Button.new()
 			ba.text = Idiomas.t("Aceptar")
-			ba.pressed.connect(func() -> void: oferta_respondida.emit(idx, true))
+			## Vender no tiene vuelta atrás desde aquí: segundo toque para confirmar (M-299).
+			DobleToque.conectar(ba, Idiomas.t("¿Vender? Toca otra vez"), func() -> void: oferta_respondida.emit(idx, true))
 			fila.add_child(ba)
 		if es_clausula:
 			var lc := _lbl(10, COL_ORO)
