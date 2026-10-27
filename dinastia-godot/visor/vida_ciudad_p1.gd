@@ -40,6 +40,7 @@ var citas_3d: CitasCiudad = null
 ## Gente sentada en los bancos de la ciudad (P3, pasada 2).
 var sentados: GenteSentada = null
 var puertas: PuertaVida = null
+var escaparates: EscaparateVida = null
 var escaleras: EscaleraVida = null
 var paraguas: ParaguasVida = null
 var pasajeros: PasajerosBus = null
@@ -86,6 +87,7 @@ static func enganchar(e: ExploradorCiudad, v: VistaCiudad, m: Mundo) -> VidaCiud
 		s.citas_3d = CitasCiudad.crear(s)
 	s.sentados = GenteSentada.crear(s)
 	s.puertas = PuertaVida.crear(s)
+	s.escaparates = EscaparateVida.crear(s)
 	s.escaleras = EscaleraVida.crear(s)
 	s.paraguas = ParaguasVida.crear(s)
 	s.pasajeros = PasajerosBus.crear(s)
