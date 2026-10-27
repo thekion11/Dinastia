@@ -23,12 +23,14 @@ var _textos := {}
 var _largos := {}
 var _donde := ""
 var _espera := -1
+var _idioma_antes := ""
 
 func _ready() -> void:
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 	## Después de abrir: la principal carga el idioma de las preferencias guardadas.
 	if OS.get_environment("RECORRIDO_IDIOMA") != "":
+		_idioma_antes = Idiomas.idioma
 		Idiomas.idioma = OS.get_environment("RECORRIDO_IDIOMA")
 
 func _process(_d: float) -> void:
@@ -85,6 +87,10 @@ func _process(_d: float) -> void:
 			h.queue_free()
 	if _cola.is_empty():
 		print("RECORRIDO: %d pantallas, %d botones" % [_pantallas, _botones])
+		## Ajustes guarda las preferencias al pintarse: sin esto, el idioma de la prueba quedaba como el del juego.
+		if _idioma_antes != "":
+			Idiomas.idioma = _idioma_antes
+			_p.call("_guardar_preferencias")
 		var ruta := OS.get_environment("RECORRIDO_TEXTOS")
 		if ruta != "":
 			var f := FileAccess.open(ruta, FileAccess.WRITE)
