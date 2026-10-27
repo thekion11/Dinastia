@@ -4,6 +4,11 @@ extends RefCounted
 ## sus miembros se usan como `p.x` y `Principal` conserva puentes de una línea con los nombres de siempre.
 
 var p: Principal
+## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
+## Para no repetir el aviso del cierre de mercado cada vez que se repinta.
+var _mercado_avisado: int = -1
+var _saldo_mostrado := -1
+var _dia_pintado: int = -1
 
 func _init(principal: Principal) -> void:
 	p = principal
@@ -50,12 +55,12 @@ func _refrescar() -> void:
 	## derecha, en grande. Aquí queda lo que de verdad es contexto.
 	## La caja CUENTA hasta su nuevo valor (plan maestro B11): un cobro o un
 	## pago se ve moverse, y late una vez.
-	if p._saldo_mostrado != -1 and p._saldo_mostrado != c.saldo and p._lbl_caja.is_inside_tree():
-		Animar.contar(p._lbl_caja, float(p._saldo_mostrado), float(c.saldo), func(v: float) -> String: return p._dinero(int(v)))
+	if _saldo_mostrado != -1 and _saldo_mostrado != c.saldo and p._lbl_caja.is_inside_tree():
+		Animar.contar(p._lbl_caja, float(_saldo_mostrado), float(c.saldo), func(v: float) -> String: return p._dinero(int(v)))
 		Animar.pulso(p._lbl_caja, 1.06)
 	else:
 		p._lbl_caja.text = p._dinero(c.saldo)
-	p._saldo_mostrado = c.saldo
+	_saldo_mostrado = c.saldo
 	p._lbl_fecha.text = Idiomas.t("%s  ·  semana %d") % [p.fecha_larga(), p.mundo.semana]
 	p._sub.text = Idiomas.t("%s  ·  Jornada %d de %d  ·  Sueldos %s/sem  ·  Media %.1f%s") % [
 		liga.nombre, liga.jornada_actual, liga.jornadas(),
@@ -178,8 +183,8 @@ func _avanzar_semana() -> void:
 	## EL CIERRE DEL MERCADO TIENE QUE NOTARSE. Un mercado que cierra en
 	## silencio es un boton que un dia deja de funcionar; avisado con dos
 	## semanas, es una fecha limite y cambia como se juega esa quincena.
-	if p.mundo.mercado_abierto() and p.mundo.semanas_de_mercado() <= 2 and p._mercado_avisado != p.mundo.semana:
-		p._mercado_avisado = p.mundo.semana
+	if p.mundo.mercado_abierto() and p.mundo.semanas_de_mercado() <= 2 and _mercado_avisado != p.mundo.semana:
+		_mercado_avisado = p.mundo.semana
 		var q := p.mundo.semanas_de_mercado()
 		Aviso.mostrar(p, "mercado", "⏳", "El mercado cierra",
 			"Queda%s %d semana%s para el cierre. Lo que no fiches ahora, no lo fichas hasta la próxima ventana." % [
@@ -250,8 +255,8 @@ func _pintar_dias() -> void:
 			b.tooltip_text = "\n".join(fechas_dia.map(func(fd: Dictionary) -> String: return String(fd["nombre"])))
 		b.button_pressed = es_hoy
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		if es_hoy and p._dia_pintado != p._dia_semana:
-			p._dia_pintado = p._dia_semana
+		if es_hoy and _dia_pintado != p._dia_semana:
+			_dia_pintado = p._dia_semana
 			(func() -> void: Animar.pulso(b, 1.1)).call_deferred()
 		if dia_de_partido and not es_hoy:
 			b.add_theme_color_override("font_color", p._color_de_paleta(p.COL_ORO))

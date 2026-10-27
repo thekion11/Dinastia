@@ -4,6 +4,8 @@ extends RefCounted
 ## sus miembros se usan como `p.x` y `Principal` conserva puentes de una línea con los nombres de siempre.
 
 var p: Principal
+## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
+var _clubes_pais := ""
 
 func _init(principal: Principal) -> void:
 	p = principal
@@ -81,8 +83,8 @@ func _ver_ciudad_con_carga() -> void:
 ## plantillas que ya existen.
 func _pintar_clubes() -> void:
 	p._limpiar(p._lista_clubes)
-	if p._clubes_pais == "":
-		p._clubes_pais = p.mundo.mi_club().pais
+	if _clubes_pais == "":
+		_clubes_pais = p.mundo.mi_club().pais
 	p._ui_plantel._pintar_rivalidades()
 
 	var paises: Array[String] = []
@@ -104,17 +106,17 @@ func _pintar_clubes() -> void:
 		var bp := Button.new()
 		bp.text = pais
 		bp.toggle_mode = true
-		bp.button_pressed = pais == p._clubes_pais
+		bp.button_pressed = pais == _clubes_pais
 		bp.add_theme_font_size_override("font_size", 11)
 		bp.pressed.connect(func() -> void:
-			p._clubes_pais = pais
+			_clubes_pais = pais
 			p._clubes_ficha = null
 			_pintar_clubes())
 		fila_pais.add_child(bp)
 	p._lista_clubes.add_child(HSeparator.new())
 
 	for l in p.mundo.ligas:
-		if l.pais != p._clubes_pais:
+		if l.pais != _clubes_pais:
 			continue
 		var tl := p._texto(12, p.COL_ORO)
 		tl.text = l.nombre
@@ -153,7 +155,7 @@ func _pintar_clubes() -> void:
 
 	if p._clubes_ficha != null:
 		p._ui_plantel._pintar_ficha_club(p._clubes_ficha)
-	p._ui_plantel._pintar_goleadores(p._clubes_pais)
+	p._ui_plantel._pintar_goleadores(_clubes_pais)
 ## La barra de cinco -un botón por grupo, con el mismo icono que `#tabs` del
 ## HTML-. Se toca una sola vez; el submenú de abajo cambia solo.
 ## CUÁNTO HAY SIN RESOLVER EN CADA BLOQUE. Todo sale de datos que el motor ya

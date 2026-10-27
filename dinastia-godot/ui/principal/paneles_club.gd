@@ -4,6 +4,12 @@ extends RefCounted
 ## sus miembros se usan como `p.x` y `Principal` conserva puentes de una línea con los nombres de siempre.
 
 var p: Principal
+## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
+## LA DECISIÓN, CONTADA COMO UN ACONTECIMIENTO (25-9-2026, plan maestro B4).
+## A la izquierda, la cara de quien está en el lío -o el icono grande del tema
+## si no hay un jugador-; suena y late la primera vez que aparece; y al firmar,
+## la consecuencia sale en un aviso además del registro.
+var _decision_mostrada := ""
 
 func _init(principal: Principal) -> void:
 	p = principal
@@ -139,8 +145,8 @@ func _pintar_decision(e: Dictionary) -> void:
 			CuadroDialogo.respuesta(b as Button)
 			(b as Button).add_theme_font_size_override("font_size", 16)
 	var clave := "%s|%s" % [String(e.get("id", "")), pid]
-	if clave != p._decision_mostrada:
-		p._decision_mostrada = clave
+	if clave != _decision_mostrada:
+		_decision_mostrada = clave
 		Sonido.toca("notificacion" if Sonido.NOMBRES.has("notificacion") else "cambio", Sonido.Bus.INTERFAZ)
 		var caja := v.get_parent() as Control
 		if caja != null:
