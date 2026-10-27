@@ -68,3 +68,51 @@ func _probar_suavidad(est: EstacionCentral) -> void:
 	var pit_frenando := absf((est._trenes[0]["nodo"] as Node3D).rotation.x)
 	_comprobar(pit_frenando <= 0.02 + 0.0001, "el cabeceo está acotado (%.4f rad)" % pit_frenando)
 	_comprobar(z_ant <= float(est._trenes[0]["z0"]) + 0.01, "arranca desde dentro del túnel")
+	_probar_pasajeros(est)
+
+## F-3b: pasajeros que bajan y suben del tren (PasajerosEstacion).
+func _probar_pasajeros(est: EstacionCentral) -> void:
+	_linea("· Pasajeros")
+	EstacionCentral.reloj = null
+	est._process(0.0)
+	_comprobar(est._gente.size() == 8, "ocho pasajeros (cuatro por tren) creados al primer tren con servicio (%d)" % est._gente.size())
+	var z1: float = est._trenes[0]["z1"]
+	var sx: float = (est._trenes[0]["nodo"] as Node3D).position.x
+	var zf := est.z_vestibulo
+	var bajan := 0
+	var suben := 0
+	var en_anden := true
+	var u := 0.0
+	while u < EstacionCentral.CICLO:
+		for k in PasajerosEstacion.PLAN.size():
+			var e := PasajerosEstacion.estado(k, sx, z1, zf, u)
+			if bool(e["visible"]):
+				var p: Vector3 = e["p"]
+				en_anden = en_anden and absf(p.x - sx) <= 8.0 and p.z <= zf + 0.01 and p.z >= z1 - 17.0 and is_equal_approx(p.y, PasajerosEstacion.ALTO_ANDEN)
+		u += 0.25
+	for k in PasajerosEstacion.PLAN.size():
+		var baja: bool = PasajerosEstacion.PLAN[k][1]
+		var llega := EstacionCentral.LLEGADA + float(PasajerosEstacion.PLAN[k][2])
+		var antes := PasajerosEstacion.estado(k, sx, z1, zf, llega - 0.5)
+		var justo := PasajerosEstacion.estado(k, sx, z1, zf, llega + 0.01)
+		if baja:
+			bajan += 1 if (not bool(antes["visible"]) and bool(justo["visible"])) else 0
+		else:
+			var a_puerta := PasajerosEstacion.estado(k, sx, z1, zf, llega - 0.02)
+			var p2: Vector3 = a_puerta["p"]
+			var z_puerta := z1 + float(PasajerosEstacion.PUERTAS[int(PasajerosEstacion.PLAN[k][0])])
+			suben += 1 if (bool(antes["visible"]) and absf(p2.z - z_puerta) < 0.2 and not bool(justo["visible"])) else 0
+	_comprobar(bajan == 2, "dos pasajeros aparecen en las puertas cuando el tren para y se bajan (%d)" % bajan)
+	_comprobar(suben == 2, "dos llegan a la puerta justo cuando para y suben (%d)" % suben)
+	_comprobar(en_anden, "todos andan por el andén (a su altura, entre el tren y el vestíbulo)")
+	var sin_tren := PasajerosEstacion.estado(0, sx, z1, zf, EstacionCentral.CICLO - 1.0)
+	_comprobar(not bool(sin_tren["visible"]), "con la vía vacía no hay nadie en el andén")
+	var rj := Reloj.new()
+	EstacionCentral.reloj = rj
+	rj.minuto = 3 * 60
+	est._process(0.0)
+	var algun_visible := false
+	for g: Dictionary in est._gente:
+		algun_visible = algun_visible or (g["nodo"] as Node3D).visible
+	_comprobar(not algun_visible, "de madrugada (03:00) no hay pasajeros")
+	EstacionCentral.reloj = null

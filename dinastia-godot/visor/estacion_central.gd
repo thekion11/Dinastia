@@ -27,6 +27,8 @@ var _min_vista := -1
 var _seg_min := 0.0                      ## [{nodo, fase, z0, z1}]
 var _t := 0.0
 var cuenta := {}
+var z_vestibulo := 0.0                   ## z (local) donde los pasajeros entran al vestíbulo
+var _gente: Array = []                   ## los pasajeros (`PasajerosEstacion`), creados al primer tren con servicio
 
 ## `c` centro del bloque (y = suelo), `w` x `f` su tamaño; `mats` = materiales de la ciudad (claro, vidrio, piedra).
 static func montar(b: CityBuilder, c: Vector3, w: float, f: float, mats: Dictionary, ex: CiudadExpansion = null) -> EstacionCentral:
@@ -152,6 +154,7 @@ func _construir(b: CityBuilder, w: float, f: float, mats: Dictionary, ex: Ciudad
 	_rotulo(Vector3(w * 0.33, 4.4, z_front + 3.4), "TAXIS · AUTOBUSES", 0.012)
 	## Los trenes: tres coches (cabina, vagón, cabina vuelta) por vía; la segunda desfasada media vuelta.
 	var z_parada := z_tope - 3.0
+	z_vestibulo = z_tope + 2.0
 	var z_dentro := z_h0 + 20.0
 	var i := 0
 	for sx: float in [-VIA_X, VIA_X]:
@@ -229,3 +232,6 @@ func _process(delta: float) -> void:
 		var vel := absf(float(p["v"]))
 		n.rotation.x = clampf(-float(p["a"]) * 0.01, -0.02, 0.02)
 		n.rotation.z = sin(_t * 6.0 + float(i) * 2.0) * 0.0025 * clampf(vel / 6.0, 0.0, 1.0)
+	if _gente.is_empty() and bool(tp["servicio"]) and not _trenes.is_empty():
+		_gente = PasajerosEstacion.crear(self)
+	PasajerosEstacion.actualizar(self, _gente, _trenes, float(tp["t"]), bool(tp["servicio"]))
