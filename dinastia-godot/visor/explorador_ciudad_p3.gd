@@ -436,6 +436,10 @@ func _animar_dt(v: float) -> void:
 	if quiere == "parado" and absf(v) > 0.05 and _anim.has_animation("caminar"):
 		var est: Array = ESTILOS_CAMINATA.get(estilo_caminata(), ESTILOS_CAMINATA["formal"])
 		quiere = String(est[0]) if _anim.has_animation(String(est[0])) else "caminar"
+	## GIRAR CON EL CUERPO (P1 «MEJORAR», 27-10): quieto pero girando sobre ti, los pies dan pasitos (el clip a ritmo lento).
+	if quiere == "parado" and modo == "pie" and absf(angle_difference(cuerpo.rotation.y, rumbo)) > 0.45 and _anim.has_animation("caminar"):
+		quiere = "caminar"
+		v = 0.8
 	## SIN PATINAR (26-10-2026, §2.2e P2): el clip corre a la velocidad real dividida por la
 	## suya natural (lo que avanza el pie apoyado, medido con `pruebas/sonda_movimiento`).
 	if quiere != "parado":

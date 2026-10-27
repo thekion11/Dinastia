@@ -46,3 +46,25 @@ func _probar() -> void:
 		j.goles = 9
 	var fl: Dictionary = m.roles._ficha_liga()
 	_comprobar((fl["goleadores"] as Array).size() == 3 and String(fl["final"]).contains(club.nombre), "el título de liga guarda los tres máximos goleadores del plantel")
+	## La planta 3: las vitrinas del museo ampliado también se pueden mirar, y siguen el mismo orden de hitos.
+	MuseoAmpliado.vitrinas.clear()
+	MuseoAmpliado.vitrinas.append({"p": Vector3(30, 8, 40), "k": SalasClub.MAX_SALA})
+	_comprobar(MuseoVitrinas.cercana(Vector3(30.2, 8, 40.1))["k"] == SalasClub.MAX_SALA, "las vitrinas de la planta 3 se reconocen")
+	var m2 := Mundo.new()
+	m2.generar(["CHI"], 4711)
+	for i in 8:
+		m2.anio = 2030 + (7 - i)   ## títulos conquistados en orden inverso: la lista de hitos los ordena por año
+		m2.roles.sumar_trofeo("Título %d" % i)
+	var h := MuseoVitrinas.hitos(m2)
+	_comprobar(h.size() == 8 and int(h[0]["anio"]) < int(h[7]["anio"]), "los hitos salen por orden de año (%d..%d)" % [int(h[0]["anio"]), int(h[7]["anio"])])
+	_comprobar(String(MuseoVitrinas.ficha(SalasClub.MAX_SALA, m2)["titulo"]) == String(h[SalasClub.MAX_SALA]["titulo"]), "la primera vitrina de la planta 3 enseña el hito 7")
+	## La Copa también suma trofeo (decisión del dueño).
+	var antes := m2.roles.trofeos.size()
+	var copa := Copa.new("Copa Test")
+	m2.copa = copa
+	var mi: Club = m2.ligas[0].clubes[0]
+	copa.campeon = mi
+	copa.historial.append({"ronda": "Final", "resultados": [{"local": mi, "visita": m2.ligas[0].clubes[1], "gl": 2, "gv": 1, "penales": [], "pasa": mi, "ronda": "Final"}]})
+	_comprobar(m2._final_de_copa(copa).contains("2-1"), "la final de la copa se escribe en una línea (%s)" % m2._final_de_copa(copa))
+	_comprobar(antes == 8, "(sin la copa aún hay 8 títulos)")
+
