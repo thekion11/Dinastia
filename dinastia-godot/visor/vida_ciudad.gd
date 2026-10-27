@@ -293,6 +293,11 @@ func abrir_telefono() -> void:
 	raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_capa_tel.add_child(raiz)
 	var pop := Telefono.abrir(raiz, mundo)
+	## La app «Red» busca el paradero más cercano al DT.
+	for n in pop.find_children("*", "PanelContainer", true, false):
+		if n is Telefono and is_instance_valid(expl.cuerpo):
+			(n as Telefono).en_la_calle = true
+			(n as Telefono).posicion_dt = expl.cuerpo.global_position
 	expl.pausar(true)
 	pop.tree_exited.connect(func() -> void:
 		if is_instance_valid(expl):

@@ -119,22 +119,19 @@ static func _quad(p: Node3D, tex: Texture2D, pos: Vector3, tam: Vector2, giro_y 
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	p.add_child(mi)
 
-## El código del paradero («PA» + 3 o 4 cifras) y sus recorridos, deterministas por `semilla`.
-static func codigo(semilla: int) -> String:
-	return "PA%d" % (100 + absi(hash([semilla, 11])) % 9000)
+## El código del paradero («PA» + 4 cifras, la primera es el sector) y sus recorridos: los da la tabla `RecorridosRed`, la
+## misma que lee la app «Red» del móvil. `sector` 0 = el del origen (las pruebas montan el paradero ahí).
+static func codigo(semilla: int, sector: int = 0) -> String:
+	return RecorridosRed.codigo(semilla, sector if sector > 0 else RecorridosRed.sector_de(Vector3.ZERO))
 
-static func recorridos(semilla: int) -> Array[String]:
-	var cat := ["201", "210", "219", "301", "307", "405", "418", "506", "514", "B14", "C07", "I09", "D12", "N433"]
-	var out: Array[String] = []
-	var n := 3 + absi(hash([semilla, 5])) % 3
-	var k := absi(hash([semilla, 3]))
-	for i in n:
-		var r: String = cat[(k + i * 5) % cat.size()]
-		if not out.has(r):
-			out.append(r)
-	return out
+static func recorridos(semilla: int, sector: int = 0) -> Array[String]:
+	return RecorridosRed.recorridos(codigo(semilla, sector))
 
 static func montar(raiz: Node3D, ancho: float, semilla: int) -> void:
+	## El sector sale de dónde está (la zona de la ciudad); la app encuentra el paradero por el grupo y la meta.
+	var cod := codigo(semilla, RecorridosRed.sector_de(raiz.global_position if raiz.is_inside_tree() else raiz.position))
+	raiz.add_to_group("paradero_red")
+	raiz.set_meta("codigo_red", cod)
 	var gris := _mat(GRIS, 0.45, 0.5)
 	var oscuro := _mat(Color(0.2, 0.21, 0.23), 0.5, 0.5)
 	var vidrio := _mat(Color(0.7, 0.84, 0.9, 0.32), 0.1, 0.2)
@@ -180,11 +177,11 @@ static func montar(raiz: Node3D, ancho: float, semilla: int) -> void:
 	_caja(cartel, Vector3(0, 2.55, 0.03), Vector3(0.56, 1.0, 0.04), _mat(Color(0.97, 0.97, 0.96), 0.5))
 	_caja(cartel, Vector3(0, 2.96, 0.056), Vector3(0.56, 0.17, 0.02), _mat(VERDE, 0.5))
 	_texto(cartel, "PARADERO", Vector3(0, 2.96, 0.07), 62, Color.WHITE)
-	_texto(cartel, codigo(semilla), Vector3(0, 2.76, 0.07), 108, Color(0.1, 0.1, 0.12))
+	_texto(cartel, cod, Vector3(0, 2.76, 0.07), 108, Color(0.1, 0.1, 0.12))
 	_quad(cartel, qr(), Vector3(0.0, 2.42, 0.07), Vector2(0.24, 0.24))
-	var rs := recorridos(semilla)
+	var rs := RecorridosRed.recorridos(cod)
 	for i in rs.size():
-		var col: Color = COLORES_RUTA[absi(hash([rs[i], 2])) % COLORES_RUTA.size()]
+		var col: Color = RecorridosRed.color(rs[i])
 		var xr := -0.19 + float(i % 3) * 0.19
 		var yr := 2.2 - float(i / 3) * 0.12
 		_caja(cartel, Vector3(xr, yr, 0.056), Vector3(0.17, 0.1, 0.02), _mat(col, 0.5))
