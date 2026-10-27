@@ -28,6 +28,11 @@ func _init(principal: Principal) -> void:
 	p = principal
 
 func _al_elegir_club(indice: int) -> void:
+	var veto := p.mundo.motivo_sin_cambiar_de_club(String(p._selector.get_item_metadata(indice)))
+	if veto != "":
+		p._escribir("[color=#c9a227]%s[/color]" % veto)
+		_llenar_selector()   ## el desplegable vuelve a tu club
+		return
 	p.mundo.tomar_el_mando(String(p._selector.get_item_metadata(indice)))
 	## tomar_el_mando() crea una Seleccion nueva -la del pais de este club-, asi
 	## que hay que volver a engancharle el aviso de noticias.
@@ -52,6 +57,10 @@ func _llenar_selector() -> void:
 			i += 1
 
 func _tomar_club(id: String) -> void:
+	var veto := p.mundo.motivo_sin_cambiar_de_club(id)
+	if veto != "":
+		p._escribir("[color=#c9a227]%s[/color]" % veto)
+		return
 	p.mundo.tomar_el_mando(id)
 	p._conectar_noticias()
 	p._seleccionado = null
