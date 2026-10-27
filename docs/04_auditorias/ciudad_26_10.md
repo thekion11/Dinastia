@@ -72,7 +72,6 @@ Horas = estimación de una persona con el catálogo `Modulos` ya hecho; las piez
 | **P1-4** | **Fachada del centro comercial**: puertas dobles, escaparates en dos plantas, marquesina y rótulo SOBRE la pared; aparcamiento con plazas y farolas | `mini_mercado/` + `kit_edificios/` (paredes con ventana y puerta animada) | 6 |
 | **P1-5** | Servicios (comisaría, hospital, ayuntamiento, escuela, instituto, cine, universidad): **plantilla de fachada** con zócalo, ventanas por pisos, puerta con marquesina y un rótulo en la pared | `edificios_modulares/` (bloques, ventanas, tejados) + `kit_edificios/` | 12 (≈1,5 por edificio) |
 | **P1-6** | **Estación**: andén, vías y un tren parado; unir la boca de metro más cercana con una pasarela | `tren/` (103 piezas) | 6 |
-| **P2-8** | **Mercado**: puestos con toldos y cajas | `mini_mercado/` + `comida/` | 4 |
 | **P2-11** | **Casa Grande**: una casa grande de verdad (mansión de 3 volúmenes con porche) y los bloques de pisos fuera | `suburbano/` + `edificios_modulares/` | 5 |
 | **P2-12** | **Barrios**: variar las casas (≥10 tipos) y rellenar las parcelas de césped vacías; bajos comerciales en «torres» y «pisos» | `suburbano/` (21 casas) + `edificios_modulares/` | 8 |
 | **P3-13** | **Variantes** de gasolinera y de parque (3 cada una) | `Modulos.tomar/unir` | 4 |
@@ -114,6 +113,7 @@ Capturas antes / después en `docs/04_auditorias/capturas_ciudad_c2/` (`<zona>_<
   [bomberos](capturas_ciudad_c2/bomberos_aerea_antes.jpg) → [aérea](capturas_ciudad_c2/bomberos_aerea_despues.jpg) · [pie](capturas_ciudad_c2/bomberos_pie_despues.jpg);
   [cocheras](capturas_ciudad_c2/cocheras_aerea_antes.jpg) → [aérea](capturas_ciudad_c2/cocheras_aerea_despues.jpg) · [pie](capturas_ciudad_c2/cocheras_pie_despues.jpg);
   [desguace](capturas_ciudad_c2/desguace_aerea_antes.jpg) → [aérea](capturas_ciudad_c2/desguace_aerea_despues.jpg) · [pie](capturas_ciudad_c2/desguace_pie_despues.jpg). Pendiente: el pie de bomberos cae dentro de un camión (la toma, no el modelo); sin rótulo sobre la fachada ni bandas de seguridad.
+- **Mercado (P2-8).** `CiudadMercado` (`visor/ciudad_mercado.gd`): fachada modular con marquesina en la nave, hilera de seis puestos (`montana_rusa/stall-*`) delante y cuatro a los lados, cajas de fruta apiladas y barriles. Antes: [aérea](capturas_ciudad_c2/mercado_aerea_antes.jpg) · [pie](capturas_ciudad_c2/mercado_pie_antes.jpg); después: [aérea](capturas_ciudad_c2/mercado_aerea_despues.jpg) · [pie](capturas_ciudad_c2/mercado_pie_despues.jpg). Pendiente: gente comprando, la bóveda verde sigue lisa y la entrada no se lee como puerta.
 - **Centro comercial (P1-4, parte) y plantilla de fachada (P1-5, primera pieza).** `FachadaModular` (`visor/fachada_modular.gd`) viste una cara con piezas de
   `edificios_modulares`: escaparates en planta baja, entrada de tres módulos con marquesina, tres pisos de ventanas y cornisa; se reutiliza en los demás singulares
   (`FachadaModular.montar(ex, x, z_frente, y0, ancho, pisos)`). Las recreativas de peluches pasan de 7 en fila a 3 junto a la puerta. Antes:
