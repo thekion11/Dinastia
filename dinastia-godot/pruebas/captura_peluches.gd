@@ -7,6 +7,8 @@ var _vistas := 0
 var _estado := 0
 
 func _ready() -> void:
+	if OS.get_environment("CAPTURA_IDIOMA") != "":
+		Idiomas.idioma = OS.get_environment("CAPTURA_IDIOMA")   ## p. ej. «de»: el alemán es el que más se alarga
 	var capa := CanvasLayer.new()
 	add_child(capa)
 	var fondo := ColorRect.new()
