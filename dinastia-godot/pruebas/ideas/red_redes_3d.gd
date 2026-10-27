@@ -32,8 +32,21 @@ func _probar() -> void:
 	_comprobar(lampara.albedo_color.r > 0.5 and lampara.albedo_color.g < 0.3, "con el corte la lámpara se pone roja")
 	_comprobar(v.fraccion_luz() < 1.0, "y la fracción de ciudad con luz baja")
 	ex.redes = v
+	ex._farolas()
 	ex.encender(1.0)
-	_comprobar(true, "encender con un apagón no falla")
+	var sin: Vector2i = sec
+	var con := Vector2i(4, 4) if sin != Vector2i(4, 4) else Vector2i(0, 0)
+	_comprobar(ex._farolas_sec.size() >= 20, "las farolas van por sectores (%d)" % ex._farolas_sec.size())
+	_comprobar(float((ex._farolas_sec[sin]["luz"] as StandardMaterial3D).emission_energy_multiplier) == 0.0 \
+		and float((ex._farolas_sec[con]["luz"] as StandardMaterial3D).emission_energy_multiplier) > 2.0, "de noche, las farolas del sector sin luz se apagan y las demás no")
+	_comprobar((ex._farolas_sec[sin]["charco"] as StandardMaterial3D).albedo_color.a == 0.0 and float((ex._farolas_sec[sin]["cono"] as ShaderMaterial).get_shader_parameter("fuerza")) == 0.0, "y también su charco de luz y su haz")
+	v.modelo.reparar("luz", sin)
+	v.modelo.recalcular()
+	ex.encender(1.0)
+	_comprobar(float((ex._farolas_sec[sin]["luz"] as StandardMaterial3D).emission_energy_multiplier) > 2.0, "al volver la corriente se encienden otra vez")
+	v.modelo.averiar("luz", sin)
+	v.modelo.recalcular()
+	v.refrescar()
 	v.modelo.pasar(5, 14, 0.5, 25.0)
 	v.refrescar()
 	_comprobar((v._aguas[Vector2i(1, 1)] as MeshInstance3D).visible, "una tormenta cubre de agua los sectores desbordados")
