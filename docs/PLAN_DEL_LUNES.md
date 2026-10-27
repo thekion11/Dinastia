@@ -287,6 +287,18 @@ da el +5 %; la entrevista mueve ±2 de moral; publicar una foto suma seguidores;
 y nada más; las citas caducan el domingo sin castigo. Captura `f4p_captura_personas` (mensaje con «Ir», patrocinador en su
 sede, agente en el bar, asamblea, foto publicada).
 
+### 2.2f Redes de la ciudad: luz, agua, drenaje y gasolineras (pedido del dueño, 27-10) — CONSTRUIDO, falta mirarlo
+`nucleo/redes_ciudad.gd` (modelo por horas, 25 sectores de 6x6 celdas; prueba `_probar_redes_ciudad` del banco) y
+`visor/redes_ciudad_vista.gd` (dibujo; prueba `ideas/red_redes_3d`). Cuelga de `CiudadExpansion.redes`; `VidaCiudad` lo avanza
+cada hora del `Reloj` con el clima de la semana (viento mueve el parque eólico, lluvia llena los colectores).
+- Luz: parque eólico + central de respaldo; en hora punta sin viento se cortan sectores por turno (el hospital no); torres de
+  alta tensión, subestación, transformadores con lámpara verde/roja y farolas que bajan con la fracción sin corriente.
+- Agua: potabilizadora → depósito; sin luz o con rotura el sector pierde presión. Drenaje: sumideros y tapas; tormenta o
+  sumideros atascados inundan el sector (lámina de agua). Gas: 3 gasolineras con depósito y cisterna; E en el surtidor = 45 l, 63 €, 10 min.
+- PENDIENTE: captura con la cámara real (no hay GPU en este contenedor); averías visibles (obras, cuadrilla, camión cisterna);
+  apagón por sector en farolas y ventanas (hoy las farolas bajan todas a la vez); aviso en el móvil con `resumen()`; cables con caída;
+  guardar el estado de las redes en la partida; coche con depósito real que dependa del repostaje.
+
 ### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
 
 Palabras del dueño: *«hay partes de la ciudad sin detalles y muy mejorables; los personajes se mueven de forma
