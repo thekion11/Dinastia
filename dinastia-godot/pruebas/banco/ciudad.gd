@@ -353,3 +353,50 @@ func _probar_cajero() -> void:
 	_comprobar(not is_instance_valid(p3) or p3.is_queued_for_deletion(), "la tecla ✕ cierra el cajero")
 	_comprobar(CajeroCiudad.banco_de("cajero_1") == CajeroCiudad.banco_de("cajero_1") and not CajeroCiudad.servicio(null, "surtidor_0"), "cada cajero tiene un banco fijo y el gancho ignora lo que no es cajero")
 	capa.queue_free()
+
+## LA MÁQUINA EXPENDEDORA y EL BALÓN SUELTO (semana 6 del plan).
+func _probar_expendedora_balon() -> void:
+	_titulo("LA MÁQUINA EXPENDEDORA Y EL BALÓN SUELTO")
+	_comprobar(Expendedora.elegir(30, 10)["id"] == "bebida" and Expendedora.elegir(80, 70)["id"] == "snack" and Expendedora.elegir(80, 10)["id"] == "agua", "la expendedora da bebida al cansado, bocadillo al hambriento y agua al resto")
+	var n := Necesidades.new()
+	n.energia_m = 30 * Necesidades.ESCALA
+	n.animar(15)
+	_comprobar(n.energia() == 45, "animar sube la energía en puntos sin gastar tiempo")
+	n.animar(500)
+	_comprobar(n.energia() == 100, "y no pasa de 100")
+	_comprobar(not ExpendedoraCiudad.servicio(null, "cajero_1") and not ComercioCiudad.servicio(null, "surtidor_0"), "el gancho único ignora lo que no es comercio")
+	## El balón: patada, rozamiento, bote y bordes.
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var jug := Node3D.new()
+	raiz.add_child(jug)
+	var b := BalonSuelto.new()
+	b.jugador = jug
+	b.limites = Rect2(-20.0, -20.0, 40.0, 40.0)
+	raiz.add_child(b)
+	b.position = Vector3(0.5, ExploradorCiudad.altura_suelo(0.5, 0.0) + BalonSuelto.RADIO, 0.0)
+	jug.position = Vector3(-0.3, 0.0, 0.0)
+	b._physics_process(1.0 / 60.0)          ## la primera vez solo apunta dónde está el jugador
+	jug.position = Vector3(-0.1, 0.0, 0.0)  ## andando hacia +X a 12 m/s de desplazamiento por tick
+	b._physics_process(1.0 / 60.0)
+	_comprobar(b.patadas == 1 and b.vel.x > 3.0, "andar hacia el balón lo patea hacia delante")
+	for i in 600:
+		b._physics_process(1.0 / 60.0)
+	_comprobar(absf(b.vel.x) < 0.1 and b.position.x > 3.0 and b.position.y < 0.6, "rueda, rebota y se para a los pocos segundos")
+	b.position = Vector3(19.9, 0.5, 0.0)
+	b.vel = Vector3(10.0, 0.0, 0.0)
+	b._physics_process(1.0 / 30.0)
+	_comprobar(b.position.x <= 20.0 and b.vel.x < 0.0, "rebota en el borde del parque")
+	b.vel = Vector3.ZERO
+	b.position = Vector3(0.5, 5.0, 0.0)
+	for i in 200:
+		b._physics_process(1.0 / 60.0)
+	_comprobar(b.position.y < 0.6, "cae al suelo por la gravedad")
+	var patadas0 := b.patadas
+	b.activo = func() -> bool: return false
+	jug.position = b.position + Vector3(-0.3, 0.0, 0.0)
+	b._physics_process(1.0 / 60.0)
+	jug.position = b.position + Vector3(-0.1, 0.0, 0.0)
+	b._physics_process(1.0 / 60.0)
+	_comprobar(b.patadas == patadas0, "en coche (modo distinto de «pie») no se patea")
+	raiz.queue_free()

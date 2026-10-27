@@ -6075,7 +6075,11 @@
   "No tienes efectivo que ingresar.": "You have no cash to deposit.",
   "Cajero": "ATM",
   "Ingreso": "Deposit",
-  "Peluche": "Plush toy"
+  "Peluche": "Plush toy",
+  "Máquina expendedora": "Vending machine",
+  "Bebida energética": "Energy drink",
+  "Bocadillo envasado": "Packaged sandwich",
+  "Botella de agua": "Bottle of water"
  },
  "pt": {
   "Historia": "História",
@@ -12153,7 +12157,11 @@
   "No tienes efectivo que ingresar.": "Não tens dinheiro para depositar.",
   "Cajero": "Multibanco",
   "Ingreso": "Depósito",
-  "Peluche": "Peluche"
+  "Peluche": "Peluche",
+  "Máquina expendedora": "Máquina de venda automática",
+  "Bebida energética": "Bebida energética",
+  "Bocadillo envasado": "Sandes embalada",
+  "Botella de agua": "Garrafa de água"
  },
  "patrones": [
   [
@@ -23843,7 +23851,11 @@
   "No tienes efectivo que ingresar.": "Vous n'avez pas de liquide à déposer.",
   "Cajero": "Distributeur",
   "Ingreso": "Dépôt",
-  "Peluche": "Peluche"
+  "Peluche": "Peluche",
+  "Máquina expendedora": "Distributeur automatique",
+  "Bebida energética": "Boisson énergisante",
+  "Bocadillo envasado": "Sandwich emballé",
+  "Botella de agua": "Bouteille d'eau"
  },
  "it": {
   "Historia": "Storia",
@@ -29921,7 +29933,11 @@
   "No tienes efectivo que ingresar.": "Non hai contanti da versare.",
   "Cajero": "Sportello",
   "Ingreso": "Versamento",
-  "Peluche": "Peluche"
+  "Peluche": "Peluche",
+  "Máquina expendedora": "Distributore automatico",
+  "Bebida energética": "Bevanda energetica",
+  "Bocadillo envasado": "Panino confezionato",
+  "Botella de agua": "Bottiglia d'acqua"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35999,7 +36015,11 @@
   "No tienes efectivo que ingresar.": "Du hast kein Bargeld zum Einzahlen.",
   "Cajero": "Geldautomat",
   "Ingreso": "Einzahlung",
-  "Peluche": "Plüschtier"
+  "Peluche": "Plüschtier",
+  "Máquina expendedora": "Verkaufsautomat",
+  "Bebida energética": "Energy-Drink",
+  "Bocadillo envasado": "Verpacktes Sandwich",
+  "Botella de agua": "Flasche Wasser"
  },
  "ca": {
   "Historia": "Història",
@@ -42077,7 +42097,11 @@
   "No tienes efectivo que ingresar.": "No tens efectiu per ingressar.",
   "Cajero": "Caixer",
   "Ingreso": "Ingrés",
-  "Peluche": "Peluix"
+  "Peluche": "Peluix",
+  "Máquina expendedora": "Màquina expenedora",
+  "Bebida energética": "Beguda energètica",
+  "Bocadillo envasado": "Entrepà envasat",
+  "Botella de agua": "Ampolla d'aigua"
  },
  "pl": {
   "Club": "Klub",
@@ -48434,7 +48458,11 @@
   "No tienes efectivo que ingresar.": "Nie masz gotówki do wpłaty.",
   "Cajero": "Bankomat",
   "Ingreso": "Wpłata",
-  "Peluche": "Pluszak"
+  "Peluche": "Pluszak",
+  "Máquina expendedora": "Automat sprzedający",
+  "Bebida energética": "Napój energetyczny",
+  "Bocadillo envasado": "Kanapka w opakowaniu",
+  "Botella de agua": "Butelka wody"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54791,6 +54819,10 @@
   "No tienes efectivo que ingresar.": "Yatıracak nakdin yok.",
   "Cajero": "ATM",
   "Ingreso": "Yatırma",
-  "Peluche": "Peluş"
+  "Peluche": "Peluş",
+  "Máquina expendedora": "Otomat",
+  "Bebida energética": "Enerji içeceği",
+  "Bocadillo envasado": "Paketli sandviç",
+  "Botella de agua": "Su şişesi"
  }
 }
