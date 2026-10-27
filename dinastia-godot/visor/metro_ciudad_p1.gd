@@ -21,13 +21,16 @@ extends Node3D
 const ALTO_VIADUCTO := 11.0
 const PROF_TUNEL := -12.0
 const VEL := 16.0          ## m/s de crucero (~58 km/h)
-const ACEL := 1.2          ## m/s²
+const ACEL := 1.2          ## m/s² (máxima)
+const PLAN := 1.0          ## m/s² con la que se planea cada frenada (margen sobre ACEL)
+const TIRON := 1.0         ## m/s³: lo que puede cambiar la aceleración por segundo
 const PARADA := 7.0        ## s con las puertas abiertas
 
 ## Un tren sobre una línea recta de estaciones (posiciones `s` a lo largo).
 class Tren:
 	var s := 0.0
 	var v := 0.0
+	var a := 0.0           ## aceleración actual (con rampa)
 	var sentido := 1.0
 	var espera := 0.0
 	var largo := 0.0
@@ -70,15 +73,18 @@ class Tren:
 			sentido = -sentido
 			return
 		var dist := absf(objetivo - s)
-		var frenada := v * v / (2.0 * ACEL)
-		if dist <= frenada + 0.3:
-			v = maxf(0.0, v - ACEL * delta)
-		else:
-			v = minf(VEL, v + ACEL * delta)
+		## Perfil de parada (27-10-2026, pieza F-2): velocidad máxima desde la que aún se frena a PLAN hasta la estación,
+		## y la aceleración sube y baja con rampa (TIRON m/s³) en vez de saltar de 0 a ±ACEL.
+		var tope := sqrt(2.0 * PLAN * maxf(dist - 0.3, 0.0))
+		var obj := minf(VEL, tope)
+		var ganancia := 1.0 / delta if tope < VEL else 3.0
+		a = move_toward(a, clampf((obj - v) * ganancia, -ACEL, ACEL), TIRON * delta)
+		v = clampf(v + a * delta, 0.0, VEL)
 		var paso := v * delta
-		if paso >= dist or dist < 0.6:
+		if paso >= dist or dist < 0.35:
 			s = objetivo
 			v = 0.0
+			a = 0.0
 			espera = PARADA
 			paradas_hechas += 1
 			ultima_parada = objetivo
