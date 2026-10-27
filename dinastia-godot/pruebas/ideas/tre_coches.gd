@@ -28,3 +28,17 @@ func _probar() -> void:
 	var m2 := ((otro.get_children().filter(func(n): return n is MeshInstance3D and (n as MeshInstance3D).mesh is QuadMesh)[0]) as MeshInstance3D).material_override
 	_comprobar(m1 != m2, "dos coches seguidos llevan placas distintas")
 	otro.free()
+	## La cabina por dentro y el tren del metro.
+	var cab := Node3D.new()
+	add_child(cab)
+	var r := CabinaCoche.montar(cab)
+	_comprobar(r["volante"] is Node3D and r["kmh"] is Label3D and cab.get_child_count() > 40, "la cabina tiene volante, velocímetro y %d piezas (salpicadero, esferas, pantalla, puertas, techo)" % cab.get_child_count())
+	var tren := Node3D.new()
+	add_child(tren)
+	TrenDetalle.vestir(tren, Color(0.85, 0.15, 0.15), 1.0, "L1")
+	var ruedas := 0
+	for h in tren.get_children():
+		if h is MeshInstance3D and (h as MeshInstance3D).mesh is CylinderMesh:
+			ruedas += 1
+	_comprobar(ruedas == 3 * 2 * 2 * 2, "tres coches con dos bogies de dos ejes y cuatro ruedas (%d ruedas)" % ruedas)
+	_comprobar(TrenDetalle.carroceria().metallic > 0.5, "la carrocería es de acero inoxidable (metálica), no un blanco liso")
