@@ -102,8 +102,9 @@ class Tren:
 
 ## LOS NOMBRES DE LAS ESTACIONES (de norte a sur / de oeste a este).
 const NOMBRES := {
-	"Línea 1": ["Alto Norte", "Mercado Este", "Cine", "Transbordo", "Hospital", "Ensanche", "Puerta Sur"],
-	"Línea 2": ["Ribera Oeste", "Puerto", "Talleres", "Plaza Mayor", "Estación Central", "Ópera", "Transbordo"],
+	## (27-10-2026: «Transbordo» en el cruce de verdad: la 1 en x = 660 y la 2 en z = -660 se cortan en la 2.ª estación de la 1 y la 6.ª de la 2.)
+	"Línea 1": ["Alto Norte", "Transbordo", "Cine", "Mercado Este", "Hospital", "Ensanche", "Puerta Sur"],
+	"Línea 2": ["Ribera Oeste", "Puerto", "Talleres", "Plaza Mayor", "Estación Central", "Transbordo", "Ópera"],
 }
 const ANDEN_LAT := 4.0      ## centro de cada andén lateral (a cada lado de la vía)
 const ANDEN_ANCHO := 4.0

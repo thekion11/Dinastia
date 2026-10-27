@@ -6012,7 +6012,16 @@
   "Museo ampliado": "Extended museum",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Out of fuel: the car won't start until you refuel at a pump (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Less than 15% fuel left: find a pump (E).",
-  "Tienes el depósito lleno.": "Your tank is full."
+  "Tienes el depósito lleno.": "Your tank is full.",
+  "Deja el coche y sube a pie.": "Leave the car and go up on foot.",
+  "⛰ Mirador del Cerro  ·  W/S/A/D para moverte · V: vista · E: interactuar · Esc: volver al mapa": "⛰ Hill viewpoint  ·  W/S/A/D to move · V: view · E: interact · Esc: back to the map",
+  "Teleférico del Cerro": "Hill cable car",
+  "Doce minutos de ascenso entre nubes y cables. Desde la cima, la ciudad entera cabe en la mano.": "Twelve minutes climbing among clouds and cables. From the top, the whole city fits in your hand.",
+  "Telescopio": "Telescope",
+  "Ahí abajo: el estadio, el río, las dos líneas de metro y los autobuses dando vueltas. Se oye muy lejos el rumor de la ciudad.": "Down there: the stadium, the river, the two metro lines and the buses going round. The city's hum sounds very far away.",
+  "Teleférico: subir al Cerro": "Cable car: go up the hill",
+  "Teleférico: bajar a la ciudad": "Cable car: go down to the city",
+  "Mirar por el telescopio": "Look through the telescope"
  },
  "pt": {
   "Historia": "História",
@@ -12027,7 +12036,16 @@
   "Museo ampliado": "Museu ampliado",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Sem gasolina: o carro não liga até você abastecer numa bomba (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Menos de 15% de gasolina: procure uma bomba (E).",
-  "Tienes el depósito lleno.": "O tanque já está cheio."
+  "Tienes el depósito lleno.": "O tanque já está cheio.",
+  "Deja el coche y sube a pie.": "Deixe o carro e suba a pé.",
+  "⛰ Mirador del Cerro  ·  W/S/A/D para moverte · V: vista · E: interactuar · Esc: volver al mapa": "⛰ Mirante do Morro  ·  W/S/A/D para andar · V: vista · E: interagir · Esc: voltar ao mapa",
+  "Teleférico del Cerro": "Teleférico do Morro",
+  "Doce minutos de ascenso entre nubes y cables. Desde la cima, la ciudad entera cabe en la mano.": "Doze minutos de subida entre nuvens e cabos. Do topo, a cidade inteira cabe na mão.",
+  "Telescopio": "Telescópio",
+  "Ahí abajo: el estadio, el río, las dos líneas de metro y los autobuses dando vueltas. Se oye muy lejos el rumor de la ciudad.": "Lá embaixo: o estádio, o rio, as duas linhas de metrô e os ônibus dando voltas. O rumor da cidade soa muito longe.",
+  "Teleférico: subir al Cerro": "Teleférico: subir ao Morro",
+  "Teleférico: bajar a la ciudad": "Teleférico: descer para a cidade",
+  "Mirar por el telescopio": "Olhar pelo telescópio"
  },
  "patrones": [
   [
@@ -23654,7 +23672,16 @@
   "Museo ampliado": "Musée agrandi",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Panne sèche : la voiture ne démarre pas tant que tu n'as pas fait le plein à une pompe (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Moins de 15 % de carburant : cherche une pompe (E).",
-  "Tienes el depósito lleno.": "Ton réservoir est plein."
+  "Tienes el depósito lleno.": "Ton réservoir est plein.",
+  "Deja el coche y sube a pie.": "Laisse la voiture et monte à pied.",
+  "⛰ Mirador del Cerro  ·  W/S/A/D para moverte · V: vista · E: interactuar · Esc: volver al mapa": "⛰ Belvédère de la colline  ·  W/S/A/D pour bouger · V : vue · E : interagir · Échap : retour à la carte",
+  "Teleférico del Cerro": "Télécabine de la colline",
+  "Doce minutos de ascenso entre nubes y cables. Desde la cima, la ciudad entera cabe en la mano.": "Douze minutes de montée entre nuages et câbles. Du sommet, toute la ville tient dans la main.",
+  "Telescopio": "Télescope",
+  "Ahí abajo: el estadio, el río, las dos líneas de metro y los autobuses dando vueltas. Se oye muy lejos el rumor de la ciudad.": "Là-bas : le stade, la rivière, les deux lignes de métro et les bus qui tournent. La rumeur de la ville semble très lointaine.",
+  "Teleférico: subir al Cerro": "Télécabine : monter à la colline",
+  "Teleférico: bajar a la ciudad": "Télécabine : redescendre en ville",
+  "Mirar por el telescopio": "Regarder dans le télescope"
  },
  "it": {
   "Historia": "Storia",
@@ -29669,7 +29696,16 @@
   "Museo ampliado": "Museo ampliato",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Senza benzina: l'auto non parte finché non fai rifornimento a una pompa (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Meno del 15% di benzina: cerca una pompa (E).",
-  "Tienes el depósito lleno.": "Il serbatoio è già pieno."
+  "Tienes el depósito lleno.": "Il serbatoio è già pieno.",
+  "Deja el coche y sube a pie.": "Lascia l'auto e sali a piedi.",
+  "⛰ Mirador del Cerro  ·  W/S/A/D para moverte · V: vista · E: interactuar · Esc: volver al mapa": "⛰ Belvedere del Colle  ·  W/S/A/D per muoverti · V: vista · E: interagire · Esc: torna alla mappa",
+  "Teleférico del Cerro": "Funivia del Colle",
+  "Doce minutos de ascenso entre nubes y cables. Desde la cima, la ciudad entera cabe en la mano.": "Dodici minuti di salita tra nuvole e cavi. Dalla cima, l'intera città sta in una mano.",
+  "Telescopio": "Telescopio",
+  "Ahí abajo: el estadio, el río, las dos líneas de metro y los autobuses dando vueltas. Se oye muy lejos el rumor de la ciudad.": "Laggiù: lo stadio, il fiume, le due linee della metro e gli autobus che girano. Il brusio della città sembra lontanissimo.",
+  "Teleférico: subir al Cerro": "Funivia: salire al Colle",
+  "Teleférico: bajar a la ciudad": "Funivia: scendere in città",
+  "Mirar por el telescopio": "Guardare nel telescopio"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35684,7 +35720,16 @@
   "Museo ampliado": "Erweitertes Museum",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Kein Benzin: das Auto springt erst an, wenn du an einer Zapfsäule tankst (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Weniger als 15 % Benzin: such eine Zapfsäule (E).",
-  "Tienes el depósito lleno.": "Dein Tank ist voll."
+  "Tienes el depósito lleno.": "Dein Tank ist voll.",
+  "Deja el coche y sube a pie.": "Lass das Auto stehen und geh zu Fuß hinauf.",
+  "⛰ Mirador del Cerro  ·  W/S/A/D para moverte · V: vista · E: interactuar · Esc: volver al mapa": "⛰ Aussichtspunkt am Berg  ·  W/S/A/D zum Bewegen · V: Ansicht · E: interagieren · Esc: zurück zur Karte",
+  "Teleférico del Cerro": "Bergseilbahn",
+  "Doce minutos de ascenso entre nubes y cables. Desde la cima, la ciudad entera cabe en la mano.": "Zwölf Minuten Aufstieg zwischen Wolken und Seilen. Vom Gipfel passt die ganze Stadt in deine Hand.",
+  "Telescopio": "Teleskop",
+  "Ahí abajo: el estadio, el río, las dos líneas de metro y los autobuses dando vueltas. Se oye muy lejos el rumor de la ciudad.": "Da unten: das Stadion, der Fluss, die beiden U-Bahn-Linien und die kreisenden Busse. Das Summen der Stadt klingt weit entfernt.",
+  "Teleférico: subir al Cerro": "Seilbahn: auf den Berg fahren",
+  "Teleférico: bajar a la ciudad": "Seilbahn: hinunter in die Stadt",
+  "Mirar por el telescopio": "Durch das Teleskop schauen"
  },
  "ca": {
   "Historia": "Història",
@@ -41699,7 +41744,16 @@
   "Museo ampliado": "Museu ampliat",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Sense gasolina: el cotxe no arrenca fins que repostis en un sortidor (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Et queda menys del 15 % de gasolina: busca un sortidor (E).",
-  "Tienes el depósito lleno.": "Tens el dipòsit ple."
+  "Tienes el depósito lleno.": "Tens el dipòsit ple.",
+  "Deja el coche y sube a pie.": "Deixa el cotxe i puja a peu.",
+  "⛰ Mirador del Cerro  ·  W/S/A/D para moverte · V: vista · E: interactuar · Esc: volver al mapa": "⛰ Mirador del Turó  ·  W/S/A/D per moure't · V: vista · E: interactuar · Esc: tornar al mapa",
+  "Teleférico del Cerro": "Telefèric del Turó",
+  "Doce minutos de ascenso entre nubes y cables. Desde la cima, la ciudad entera cabe en la mano.": "Dotze minuts de pujada entre núvols i cables. Des del cim, tota la ciutat cap a la mà.",
+  "Telescopio": "Telescopi",
+  "Ahí abajo: el estadio, el río, las dos líneas de metro y los autobuses dando vueltas. Se oye muy lejos el rumor de la ciudad.": "Allà baix: l'estadi, el riu, les dues línies de metro i els autobusos donant voltes. El rumor de la ciutat se sent molt lluny.",
+  "Teleférico: subir al Cerro": "Telefèric: pujar al Turó",
+  "Teleférico: bajar a la ciudad": "Telefèric: baixar a la ciutat",
+  "Mirar por el telescopio": "Mirar pel telescopi"
  },
  "pl": {
   "Club": "Klub",
@@ -47993,7 +48047,16 @@
   "Museo ampliado": "Rozbudowane muzeum",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Brak paliwa: auto nie ruszy, dopóki nie zatankujesz przy dystrybutorze (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Zostało mniej niż 15% paliwa: znajdź dystrybutor (E).",
-  "Tienes el depósito lleno.": "Masz pełny bak."
+  "Tienes el depósito lleno.": "Masz pełny bak.",
+  "Deja el coche y sube a pie.": "Zostaw samochód i wejdź pieszo.",
+  "⛰ Mirador del Cerro  ·  W/S/A/D para moverte · V: vista · E: interactuar · Esc: volver al mapa": "⛰ Punkt widokowy na wzgórzu  ·  W/S/A/D – ruch · V: widok · E: użyj · Esc: wróć do mapy",
+  "Teleférico del Cerro": "Kolejka linowa na wzgórze",
+  "Doce minutos de ascenso entre nubes y cables. Desde la cima, la ciudad entera cabe en la mano.": "Dwanaście minut wspinaczki wśród chmur i lin. Ze szczytu całe miasto mieści się w dłoni.",
+  "Telescopio": "Teleskop",
+  "Ahí abajo: el estadio, el río, las dos líneas de metro y los autobuses dando vueltas. Se oye muy lejos el rumor de la ciudad.": "Tam w dole: stadion, rzeka, dwie linie metra i krążące autobusy. Szum miasta brzmi bardzo daleko.",
+  "Teleférico: subir al Cerro": "Kolejka: wjedź na wzgórze",
+  "Teleférico: bajar a la ciudad": "Kolejka: zjedź do miasta",
+  "Mirar por el telescopio": "Spójrz przez teleskop"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54287,6 +54350,15 @@
   "Museo ampliado": "Genişletilmiş müze",
   "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Benzin bitti: bir pompada yakıt almadan araba çalışmaz (E).",
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Yakıtın %15'in altına düştü: bir pompa bul (E).",
-  "Tienes el depósito lleno.": "Deponuz dolu."
+  "Tienes el depósito lleno.": "Deponuz dolu.",
+  "Deja el coche y sube a pie.": "Arabayı bırak ve yürüyerek çık.",
+  "⛰ Mirador del Cerro  ·  W/S/A/D para moverte · V: vista · E: interactuar · Esc: volver al mapa": "⛰ Tepe seyir noktası  ·  W/S/A/D hareket · V: görünüm · E: etkileşim · Esc: haritaya dön",
+  "Teleférico del Cerro": "Tepe teleferiği",
+  "Doce minutos de ascenso entre nubes y cables. Desde la cima, la ciudad entera cabe en la mano.": "Bulutlar ve halatlar arasında on iki dakikalık yükseliş. Zirveden bütün şehir avucunun içine sığıyor.",
+  "Telescopio": "Teleskop",
+  "Ahí abajo: el estadio, el río, las dos líneas de metro y los autobuses dando vueltas. Se oye muy lejos el rumor de la ciudad.": "Aşağıda: stadyum, nehir, iki metro hattı ve dönüp duran otobüsler. Şehrin uğultusu çok uzaktan geliyor.",
+  "Teleférico: subir al Cerro": "Teleferik: tepeye çık",
+  "Teleférico: bajar a la ciudad": "Teleferik: şehre in",
+  "Mirar por el telescopio": "Teleskoptan bak"
  }
 }

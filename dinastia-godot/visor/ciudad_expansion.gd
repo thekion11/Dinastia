@@ -152,6 +152,8 @@ func construir() -> void:
 	_parque_eolico()
 	_deposito_agua()
 	redes = RedesCiudadVista.crear(self, 20261027)
+	tele_nodo = Teleferico.montar(b)
+	teleferico = tele_nodo.datos()
 	_volcar_lotes()
 
 ## Un bloque alto hecho con el mismo modelo apilado planta sobre planta (en
@@ -336,7 +338,7 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 		for p: Vector3 in l["paradas"]:
 			paradas.append(t.s_mas_cercano(id2, p))
 		var largo2 := t.largo_de(id2)
-		var col_bus := Color(0.85, 0.15, 0.12) if String(l["nombre"]).contains("10") else Color(0.15, 0.4, 0.8)
+		var col_bus := MapaTransporte.color_linea(String(l["nombre"]).get_slice(" ", 1)).darkened(0.1)
 		for k in 2:
 			var num := String(l["nombre"]).get_slice(" ", 1)
 			var nb: Node3D = CityBuilder.autobus(col_bus, "%s · %s" % [num, String(l.get("destino", "CIRCULAR"))], num)

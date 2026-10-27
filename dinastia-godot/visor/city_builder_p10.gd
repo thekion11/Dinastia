@@ -143,7 +143,7 @@ static func autobus(col: Color, destino: String = "", numero: String = "") -> No
 			ln.modulate = Color.WHITE
 			ln.outline_size = 14
 			ln.outline_modulate = Color(0.05, 0.05, 0.08)
-			ln.position = Vector3(lado * 1.29, 1.0, 3.2)
+			ln.position = Vector3(lado * 1.29, 1.15, -2.25)   ## entre la puerta trasera y la rueda trasera (no sobre la rueda)
 			ln.rotation.y = lado * PI * 0.5
 			raiz.add_child(ln)
 		var lt := Label3D.new()
