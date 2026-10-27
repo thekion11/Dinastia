@@ -28,84 +28,13 @@ func _responder(i: int) -> void:
 
 # --- las tres pestañas nuevas ----------------------------------------------
 
-## EL MUSEO DEL CLUB. `Instalaciones` deja construirlo y cobra ingresos por él
-## desde el porte, pero no tenía CONTENIDO: se pagaba un edificio cuyo interior
-## no existía en ninguna pantalla.
-##
-## Las piezas no se guardan aparte: se deducen de lo que el club ya tiene
-## anotado —trofeos, récords, goleadores— igual que el salón de la fama. Una
-## lista paralela sería otro sitio más que mantener al día.
-func _pintar_museo(lg: Logros) -> void:
-	if mundo.obras == null or mundo.obras.nivel("museo") <= 0:
-		return
-	var piezas := lg.piezas_del_museo()
-	_lista_logros.add_child(HSeparator.new())
-	var t := _texto(11, COL_SUAVE)
-	t.text = Idiomas.t("🏛️ MUSEO DEL CLUB  ·  nivel %d  ·  %d pieza(s)") % [mundo.obras.nivel("museo"), piezas.size()]
-	_lista_logros.add_child(t)
-	if piezas.is_empty():
-		var vac := _texto(11, COL_SUAVE)
-		vac.text = Idiomas.t("El museo está construido pero las vitrinas están vacías. Gana algo y se irán llenando solas.")
-		vac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		_lista_logros.add_child(vac)
-	else:
-		for p: Dictionary in piezas:
-			var l := _texto(12, COL_ORO)
-			l.text = "%s  %s" % [String(p["icono"]), String(p["titulo"])]
-			_lista_logros.add_child(l)
-			var d := _texto(10, COL_SUAVE)
-			d.text = "     %s" % String(p["detalle"])
-			d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			_lista_logros.add_child(d)
+## Puentes (fase 6, paso 7): viven en `ui/principal/vistas_menu.gd`.
+func _pintar_museo(lg: Logros) -> void: _vistas._pintar_museo(lg)
+func _marca(nombre: String, color_hex: String, alto: int = 28) -> Control: return _vistas._marca(nombre, color_hex, alto)
+func _ver_ciudad_explorando(modo: String) -> void: _vistas._ver_ciudad_explorando(modo)
 
-	## EL COMPARADOR DE GENERACIONES. No compara jugadores uno a uno —eso sería
-	## inventarse datos de gente retirada— sino la media del mejor plantel que
-	## has tenido contra la del de ahora, que es la pregunta de verdad.
-	var comp: Dictionary = lg.comparador_de_generaciones()
-	if comp.is_empty():
-		return
-	var tc := _texto(11, COL_SUAVE)
-	tc.text = Idiomas.t("⚖️ AQUEL EQUIPO Y ESTE")
-	_lista_logros.add_child(tc)
-	_dato("Tu mejor plantilla", "%d  ·  quedó %d.º  ·  figura: %s" % [
-		int(comp["anio"]), int(comp["puesto"]), String(comp["mvp"])], COL_ORO, _lista_logros)
-	_dato("Media del plantel de hoy", "%.1f" % float(comp["media_actual"]), COL_TEXTO, _lista_logros)
 
-## EL LOGO DE UN SPONSOR, mismo patrón que `_escudo()` de arriba: la textura
-## de `Marca` debajo y las iniciales encima con el color de contraste que
-## corresponda. Antes de esto un sponsor era solo una palabra pintada del
-## color de la tabla -ver la nota de `Marca` para el porqué-.
-func _marca(nombre: String, color_hex: String, alto: int = 28) -> Control:
-	var caja := Control.new()
-	caja.custom_minimum_size = Vector2(alto, alto)
-	var t := TextureRect.new()
-	t.texture = Marca.textura(nombre, color_hex, alto)
-	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	t.set_anchors_preset(Control.PRESET_FULL_RECT)
-	caja.add_child(t)
-	var l := Label.new()
-	l.text = Marca.iniciales(nombre)
-	l.add_theme_font_size_override("font_size", maxi(8, alto / 2 - 2))
-	l.add_theme_color_override("font_color", _tinta(Color(color_hex)))
-	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	l.set_anchors_preset(Control.PRESET_FULL_RECT)
-	caja.add_child(l)
-	return caja
 
-## Abre la ciudad y arranca directamente el paseo ("pie") o la conducción ("coche").
-func _ver_ciudad_explorando(modo: String) -> void:
-	## Fase 3: sin coche propio (o en el taller) se sale a pie, y la vida se engancha al paseo.
-	var transp := VidaCiudad.transporte(mundo)
-	if modo == "coche" and not bool(transp["coche"]):
-		Aviso.mostrar(self, "vida", "🚌", Idiomas.t("Sin coche esta semana"), Idiomas.t(String(transp["motivo"])))
-		modo = "pie"
-	await _ver_ciudad_con_carga()
-	for h in get_children():
-		if h is VistaCiudad:
-			(h as VistaCiudad).explorar(modo)
-			VidaCiudad.enganchar((h as VistaCiudad)._explorador, h as VistaCiudad, mundo)
 
 func _aplicar_vista_compacta() -> void:
 	var sep := SEPARACION_COMPACTA if _vista_compacta else SEPARACION_NORMAL

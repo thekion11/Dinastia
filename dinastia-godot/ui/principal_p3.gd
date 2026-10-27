@@ -183,28 +183,11 @@ func _acento_de(c: Club) -> Color:
 		col.s = 0.45
 	return col.lightened(0.15) if col.get_luminance() < 0.35 else col
 
-func _aplicar_fondo() -> void:
-	if _clima != null:
-		_clima.modo = _clima_elegido
-		_clima.interactivo = _clima_interactivo
-		_clima.ajustar_area(size if size.x > 0.0 else Vector2(1280, 720))
-		_clima.aplicar()
-	if _fondo_escena == null:
-		return
-	## EL FONDO ROTATIVO. El usuario pidió poder elegir entre uno fijo o que
-	## "vaya cambiando". La rotación NO usa `Azar` -eso movería la simulación
-	## entera, la trampa que ya costó una depuración con el feed de redes-:
-	## sale de la semana de juego, que da un fondo distinto cada domingo,
-	## siempre el mismo para la misma partida.
-	if _fondo_elegido == ROTAR_FONDO:
-		var nombres: Array = Fondo.NOMBRES
-		if nombres.is_empty():
-			_fondo_escena.texture = null
-			return
-		var i := (mundo.semana if mundo != null else 0) % nombres.size()
-		_fondo_escena.texture = Fondo.textura(String(nombres[i]))
-		return
-	_fondo_escena.texture = Fondo.textura(_fondo_elegido) if _fondo_elegido != "" else null
+## Puentes (fase 6, paso 7): viven en `ui/principal/tema_menu.gd`.
+func _aplicar_fondo() -> void: _tema_menu._aplicar_fondo()
+func _con_contraste(c: Color) -> Color: return _tema_menu._con_contraste(c)
+func _color_de_paleta(c: Color) -> Color: return _tema_menu._color_de_paleta(c)
+
 
 ## La fecha de cualquier día (0 = lunes) de la semana en curso.
 func fecha_del_dia(dia: int) -> Dictionary:
@@ -257,46 +240,7 @@ func _pal_panel() -> Color:
 	c.a = 1.0 if _paleta == "contraste" else 0.94
 	return c
 
-func _con_contraste(c: Color) -> Color:
-	var lf := _pal_panel().get_luminance()
-	## Con contraste alto, el salto mínimo de luminosidad es mayor.
-	var salto := 0.6 if _paleta == "contraste" else SALTO_LUMA
-	if absf(lf - c.get_luminance()) >= salto:
-		return c
-	var destino := Color.BLACK if lf > 0.5 else Color.WHITE
-	var r := c
-	## Ocho pasos y se para. Si un color no llega ni al octavo -un gris exacto del
-	## mismo tono que el panel- se devuelve el ultimo, que ya es lo mas separado
-	## que se puede sin dejar de ser el mismo color.
-	for i in 8:
-		r = r.lerp(destino, 0.18)
-		if absf(lf - r.get_luminance()) >= salto:
-			return r
-	return r
 
-## Las dos mil llamadas a `_texto()` del juego piden COL_TEXTO o COL_SUAVE, que
-## son claros porque el fondo por defecto es oscuro. Con una paleta CLARA -papel,
-## cuaderno- ese texto quedaria blanco sobre blanco, invisible. Se traduce aqui,
-## en el unico sitio por el que pasan todas las etiquetas, en vez de tocar dos mil
-## llamadas: los colores con significado propio -el oro de un titulo, el rojo de
-## una deuda- pasan de largo sin tocarse, que para eso son ellos los que informan.
-func _color_de_paleta(c: Color) -> Color:
-	if _paleta == "bosque":
-		return c
-	if c == COL_TEXTO:
-		return _pal_texto()
-	if c == COL_SUAVE:
-		return _pal_suave()
-	## Los de FONDO son los de la paleta, no se «contrastan» (s3: pasaban por el
-	## empuje de abajo, pensado para letras, y las píldoras salían gris claro con
-	## letra blanca en cualquier paleta que no fuera la de por defecto).
-	if c == COL_PANEL:
-		return _pal_panel()
-	if c == COL_FONDO:
-		return _ui_ajustes._color_pal(1, COL_FONDO)
-	if c == COL_BORDE:
-		return _ui_ajustes._pal_borde()
-	return _con_contraste(c)
 
 ## Puente: la píldora la viste `EstilosMenu.pildora()` con el estilo activo.
 func _pildora(texto: String, tam: int = 12, alto: int = 32) -> Button:

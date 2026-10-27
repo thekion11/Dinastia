@@ -234,7 +234,7 @@ func _pintar_carrera(r: Roles) -> void:
 		p._lista_club.add_child(bi)
 	if r.puede_vender_club():
 		var bv := Button.new()
-		bv.text = Idiomas.t("¿SEGURO? Vender el club") if p._confirmar_venta_club else Idiomas.t("🏷️ Vender el club")
+		bv.text = Idiomas.t("¿SEGURO? Vender el club") if _confirmar_venta_club else Idiomas.t("🏷️ Vender el club")
 		bv.pressed.connect(_vender_club)
 		p._lista_club.add_child(bv)
 
@@ -263,11 +263,11 @@ func _inyectar_capital() -> void:
 	p._refrescar()
 
 func _vender_club() -> void:
-	if not p._confirmar_venta_club:
-		p._confirmar_venta_club = true
+	if not _confirmar_venta_club:
+		_confirmar_venta_club = true
 		p._refrescar()
 		return
-	p._confirmar_venta_club = false
+	_confirmar_venta_club = false
 	var problema := p.mundo.roles.vender_club()
 	if problema != "":
 		p._escribir("[color=#e05555]%s.[/color]" % problema)

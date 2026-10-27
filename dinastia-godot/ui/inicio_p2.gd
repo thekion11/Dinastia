@@ -189,7 +189,7 @@ func _no_se_pudo_abrir() -> void:
 ## Entra a una partida cargada (fase 3, bloque 7): con el prólogo visto y la vida encendida,
 ## en 3D (la oficina, o tu casa el lunes a las 08:00); si no, el menú central de siempre.
 func _entrar_en(m: Mundo) -> void:
-	Principal.mundo_a_cargar = m
+	PedidoPartida.mundo_a_cargar = m
 	var d := VidaCiudad.arranque_3d(m)
 	if d != "":
 		PrologoDT.directo = d

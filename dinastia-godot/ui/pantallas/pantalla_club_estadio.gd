@@ -138,19 +138,19 @@ func _pintar_estadio(c: Club) -> void:
 			var lado: String = EstadioPropio.LADOS_BANDEJA[i]
 			sel_lado.add_item(String(etiquetas_lado.get(lado, lado.capitalize())))
 			sel_lado.set_item_metadata(i, lado)
-			if lado == p._bandeja_actual:
+			if lado == _bandeja_actual:
 				sel_lado.select(i)
 		sel_lado.item_selected.connect(func(idx: int) -> void:
-			p._bandeja_actual = String(sel_lado.get_item_metadata(idx))
+			_bandeja_actual = String(sel_lado.get_item_metadata(idx))
 			_pintar_estadio(c))
 		fila_lado.add_child(sel_lado)
-		_fila_diseno_estadio(e, perf, "bandeja_%s_asientoP" % p._bandeja_actual)
-		_fila_diseno_estadio(e, perf, "bandeja_%s_techo" % p._bandeja_actual)
-		_fila_diseno_estadio(e, perf, "bandeja_%s_col1" % p._bandeja_actual)
-		_fila_diseno_estadio(e, perf, "bandeja_%s_col2" % p._bandeja_actual)
+		_fila_diseno_estadio(e, perf, "bandeja_%s_asientoP" % _bandeja_actual)
+		_fila_diseno_estadio(e, perf, "bandeja_%s_techo" % _bandeja_actual)
+		_fila_diseno_estadio(e, perf, "bandeja_%s_col1" % _bandeja_actual)
+		_fila_diseno_estadio(e, perf, "bandeja_%s_col2" % _bandeja_actual)
 		## Cada anillo de esta tribuna, por separado (28-9-2026).
 		for n_an in mini(5, maxi(1, int(perf.get("niveles", 1)))):
-			_fila_diseno_estadio(e, perf, "anillo_%s_%d" % [p._bandeja_actual, n_an + 1])
+			_fila_diseno_estadio(e, perf, "anillo_%s_%d" % [_bandeja_actual, n_an + 1])
 
 	## LOS TERCIOS: estilos mixtos DENTRO de una misma tribuna (18/22-9-2026,
 	## Fase 3 de "el estadio por MÓDULOS", la última de las tres). El spike del
@@ -158,7 +158,7 @@ func _pintar_estadio(c: Club) -> void:
 	## es la pantalla real. Interruptor PROPIO, independiente del de arriba: se
 	## puede mezclar por tercios una tribuna sin haber activado "Personalizar
 	## cada tribuna" en ninguna, y viceversa. Reusa el mismo selector
-	## `p._bandeja_actual` que el bloque de arriba -es la misma pregunta ("¿qué
+	## `_bandeja_actual` que el bloque de arriba -es la misma pregunta ("¿qué
 	## tribuna estoy mirando?") para las dos reformas, no hace falta un
 	## segundo estado que se pueda desincronizar del primero.
 	_fila_interruptor_estadio(e.ajustes, "personalizar_tramos", "Mezclar patrones por tercios",
@@ -179,14 +179,14 @@ func _pintar_estadio(c: Club) -> void:
 			var lado_t: String = EstadioPropio.LADOS_BANDEJA[i]
 			sel_lado_t.add_item(String(etiquetas_lado_t.get(lado_t, lado_t.capitalize())))
 			sel_lado_t.set_item_metadata(i, lado_t)
-			if lado_t == p._bandeja_actual:
+			if lado_t == _bandeja_actual:
 				sel_lado_t.select(i)
 		sel_lado_t.item_selected.connect(func(idx: int) -> void:
-			p._bandeja_actual = String(sel_lado_t.get_item_metadata(idx))
+			_bandeja_actual = String(sel_lado_t.get_item_metadata(idx))
 			_pintar_estadio(c))
 		fila_lado_t.add_child(sel_lado_t)
 		for tercio in [1, 2, 3]:
-			_fila_diseno_estadio(e, perf, "tramo_%s_%d" % [p._bandeja_actual, tercio])
+			_fila_diseno_estadio(e, perf, "tramo_%s_%d" % [_bandeja_actual, tercio])
 
 	## Los dos interruptores. No son desplegables y por eso se quedaron fuera
 	## del catálogo: la pista de atletismo aleja la grada del campo y le quita

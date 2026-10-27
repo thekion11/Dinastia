@@ -1,54 +1,11 @@
 extends "res://ui/principal_p4.gd"
 ## [Capa 5/17 de `principal.gd`] _ver_estadio_propio, _ver_estadio_con_carga, _dato, _aire_cifra, _miles, _pintar_estadio
 
-func _ver_estadio_propio() -> void:
-	_fundido_entrada()
-	var c := mundo.mi_club()
-	if c == null:
-		return
-	var f := Finanzas.new(c)
-	var gente := float(f.asistencia()) / float(maxi(c.estadio_aforo, 1))
-	## VistaEstadio pinta el 3D DIRECTO en el viewport raíz y a propósito no
-	## trae ningún fondo opaco -es lo que deja ver el estadio de verdad, ver
-	## el comentario en `estadio.gd::_construir()`-, pero eso significa que
-	## cualquier Control que siga encima -la barra superior, las pestañas,
-	## esta misma lista de Estadio- lo tapa entero: en un mismo viewport los
-	## Control se pintan SIEMPRE sobre el 3D, sin importar el orden en que se
-	## añadieron los nodos. `partido_vivo._ver_estadio()` no tiene este
-	## problema porque su propia pantalla ya deja hueco de sobra; esta sí
-	## está cubierta de paneles, así que hay que esconderlos a mano mientras
-	## el visor está abierto y devolverlos tal cual al volver -guardando
-	## cuáles estaban visibles, no asumiendo que todos lo estaban-.
-	var ocultados: Array = []
-	for h in get_children():
-		if h is CanvasItem and (h as CanvasItem).visible:
-			(h as CanvasItem).visible = false
-			ocultados.append(h)
-	var vista := VistaEstadio.new()
-	## Sin partido la pantalla gigante enseña bienvenida + tabla + goleadores,
-	## que es lo que hace un estadio de verdad un día entre semana. Va antes de
-	## `abrir()`, que es donde se monta.
-	vista.datos_pantalla = _datos_pantalla_estadio(c)
-	add_child(vista)
-	vista.abrir(c, clampf(gente, 0.05, 1.0), null, null, mundo.perfil_estadio_de(c),
-		Comercial.color_balon(mundo.comercial.balon, c))
-	vista.cerrado.connect(func() -> void:
-		vista.queue_free()
-		for h in ocultados:
-			if is_instance_valid(h):
-				(h as CanvasItem).visible = true)
+## Puentes (fase 6, paso 7): viven en `ui/principal/vistas_menu.gd`.
+func _ver_estadio_propio() -> void: _vistas._ver_estadio_propio()
+func _ver_estadio_con_carga() -> void: _vistas._ver_estadio_con_carga()
 
-## Con pantalla de carga y consejos: se pinta ANTES de empezar a construir.
-func _ver_estadio_con_carga() -> void:
-	PantallaCarga.club = mundo.mi_club() if mundo != null else null
-	var carga := PantallaCarga.mostrar(self, Idiomas.t("Levantando el estadio…"))
-	await get_tree().process_frame
-	await get_tree().process_frame
-	_ver_estadio_propio()
-	## Si algo la cerró mientras se esperaba (otra pantalla encima, o el
-	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).
-	if is_instance_valid(carga):
-		carga.cerrar()
+
 
 ## `padre` por defecto es `_ficha` -de ahí salió esta función, para la ficha
 ## del jugador-, pero cualquier otra pestaña con la misma "etiqueta … valor"

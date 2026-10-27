@@ -62,7 +62,7 @@ func _ready() -> void:
 	var m := Mundo.new()
 	m.generar([], SEMILLA)
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
-	Principal.mundo_pregenerado = m
+	PedidoPartida.mundo_pregenerado = m
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 	DirAccess.make_dir_recursive_absolute(SALIDA)
