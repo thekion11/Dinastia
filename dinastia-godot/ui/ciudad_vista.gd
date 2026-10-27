@@ -201,3 +201,9 @@ func _gui_input(ev: InputEvent) -> void:
 			_dist = clampf(_dist - 60.0, 120.0, 2600.0)
 		elif ev.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			_dist = clampf(_dist + 60.0, 120.0, 2600.0)
+
+func _alternar_giro() -> void:
+	_girando = not _girando
+
+func alternar_ciclo() -> void:
+	_ciclo_activo = not _ciclo_activo
