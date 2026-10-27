@@ -783,6 +783,34 @@
     "ancho": 0.17,
     "color": "#2a2a30"
    }
+  },
+  "liga:CHI": {
+   "copa": 1,
+   "alto": 1.2,
+   "ancho": 1.0,
+   "pie": 1.1,
+   "metal": "#e8b838",
+   "brillo": 0.6,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.13,
+    "ancho": 0.22,
+    "color": "#b01c2a"
+   }
+  },
+  "copa:CHI": {
+   "copa": 2,
+   "alto": 1.05,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.08,
+    "ancho": 0.17,
+    "color": "#1d2a4a"
+   }
   }
  }
 }
