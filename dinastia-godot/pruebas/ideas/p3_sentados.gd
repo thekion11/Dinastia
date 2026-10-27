@@ -80,6 +80,21 @@ func _probar_async() -> void:
 		_comprobar((dl["anim"] as AnimationPlayer).current_animation in ["sentarse", "sentado"], "y se sienta (clip «%s»)" % (dl["anim"] as AnimationPlayer).current_animation)
 		gs._llegadas(3.0)
 		_comprobar(gs._llegando.is_empty(), "al terminar queda como el resto de sentados")
+		## Cuando deja el asiento a la vista, se levanta («levantarse») y se va andando, no desaparece de golpe.
+		for v in 12:
+			if not gs.ocupado(i_ok):
+				break
+			gs._eventos.append(p)   ## un autobús que para cerca cambia quién está sentado (hash)
+		if not gs.ocupado(i_ok):
+			gs.revisar()
+			_comprobar(gs._saliendo.size() >= 1 and not gs.cuerpos.has(i_ok), "al quedar libre el asiento a la vista, el ocupante se levanta (saliendo %d, cuerpos %s, estado %s)" % [gs._saliendo.size(), str(gs.cuerpos.has(i_ok)), str(_e.estado)])
+			if gs._saliendo.size() >= 1:
+				var ds: Dictionary = (gs._saliendo[0] as Dictionary)["d"]
+				_comprobar((ds["anim"] as AnimationPlayer).current_animation == "levantarse", "con el clip «levantarse»")
+				gs._salidas(1.1)
+				_comprobar((ds["anim"] as AnimationPlayer).current_animation == "caminar", "y echa a andar")
+				gs._salidas(12.0)
+				_comprobar(gs._saliendo.is_empty(), "se aleja por la acera y desaparece")
 	_e.cuerpo.position = p + Vector3(200.0, 0, 0)
 	gs.revisar()
 	## Esperar con vida (P3, pasada 3): tres variantes y el móvil en la mano.
