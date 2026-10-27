@@ -45,4 +45,7 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     Fusionar a `main` los PR #12 y #13: concedido («funciona»). Borrar capturas e informes viejos de `dinastia-godot/`: concedido
     (hecho: `pruebas/capturas` y `docs/informes_extraidos`); `marca/` se CONSERVA (tiene el logo para la animación de la intro).
     Red para Wikimedia/banderas: todavía no. El dueño está cerca de su tope de uso: trabajar en bloques pequeños, guardar y empujar a menudo.
-
+12. (27-10) Veredicto del dueño sobre las pasadas visuales P1-P3: «MEJORAR». Regalos de Drive: licencia libre y gratuita confirmada
+    por él. Órdenes nuevas: el MUSEO tiene que poder EXTENDERSE (por eso el ascensor) con una animación de expansión; la CIUDAD
+    ENTERA más completa: muchas partes sin rellenar y RECURSOS SIN USAR (inventario en `docs/04_auditorias/recursos_sin_usar.md`).
+    «Lo del museo y rellenar ciudad» va a la sesión ejecutora.

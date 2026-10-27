@@ -171,6 +171,54 @@ static func _brazos_al_cuerpo(anim: Animation, ang: float) -> Animation:
 			anim.track_set_key_value(t, k, q * giro)
 	return anim
 
+## PIERNAS NATURALES DE PIE (27-10-2026, plan §2.2e P1 pasada 3, medido con `pruebas/sonda_movimiento.tscn`):
+## el «Idle» del pack es una postura de superhéroe: pies a 0,66 m (0,35 de la altura; humano 0,20-0,30) y
+## rodilla a 156° (humano > 170°). Se giran los muslos hacia dentro (`cadera` grados, eje del mundo Z, la
+## mirada) y se estiran las rodillas (`rodilla` grados, eje del mundo X), con cada giro pasado al marco del
+## hueso por su reposo global; y la pelvis sube `alza` m para que el pie, más largo en vertical, no se hunda.
+static func _piernas_naturales(anim: Animation, esq: Skeleton3D, cadera: float, rodilla: float, alza: float) -> Animation:
+	var giros := {
+		"thigh_l": Vector3(0, 0, -deg_to_rad(cadera)), "thigh_r": Vector3(0, 0, deg_to_rad(cadera)),
+		"calf_l": Vector3(deg_to_rad(rodilla), 0, 0), "calf_r": Vector3(deg_to_rad(rodilla), 0, 0),
+	}
+	var subida := false
+	for t in anim.get_track_count():
+		var ruta := str(anim.track_get_path(t))
+		var hueso := ruta.get_slice(":", ruta.get_slice_count(":") - 1)
+		## La pista de posición de la RAÍZ del esqueleto (sea «root» o «pelvis»): sube todo el cuerpo.
+		if anim.track_get_type(t) == Animation.TYPE_POSITION_3D and alza != 0.0 and esq.find_bone(hueso) >= 0 \
+				and esq.get_bone_parent(esq.find_bone(hueso)) < 0:
+			for k in anim.track_get_key_count(t):
+				var pos: Vector3 = anim.track_get_key_value(t, k)
+				anim.track_set_key_value(t, k, pos + Vector3(0, alza, 0))
+			subida = true
+			continue
+		if anim.track_get_type(t) != Animation.TYPE_ROTATION_3D or not giros.has(hueso):
+			continue
+		var i := esq.find_bone(hueso)
+		if i < 0:
+			continue
+		var eje_mundo: Vector3 = giros[hueso]
+		var w := Basis.from_euler(eje_mundo)
+		var rg := esq.get_bone_global_rest(i).basis
+		var delta := Quaternion(rg.inverse() * w * rg).normalized()
+		for k in anim.track_get_key_count(t):
+			var q: Quaternion = anim.track_get_key_value(t, k)
+			anim.track_set_key_value(t, k, q * delta)
+	## Sin pista de posición de la raíz en el clip: se crea con el reposo más el alza.
+	if alza != 0.0 and not subida and esq.get_bone_count() > 0:
+		var raiz := 0
+		for i in esq.get_bone_count():
+			if esq.get_bone_parent(i) < 0:
+				raiz = i
+				break
+		var ruta_raiz := str(anim.track_get_path(0))
+		var prefijo := ruta_raiz.substr(0, ruta_raiz.rfind(":"))
+		var t2 := anim.add_track(Animation.TYPE_POSITION_3D)
+		anim.track_set_path(t2, NodePath("%s:%s" % [prefijo, esq.get_bone_name(raiz)]))
+		anim.position_track_insert_key(t2, 0.0, esq.get_bone_rest(raiz).origin + Vector3(0, alza, 0))
+	return anim
+
 static func sentado(esq: Skeleton3D, prefijo: String) -> Animation:
 	var a := _nueva(3.4, true)
 	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [1.7, Vector3(0, 0.01, 0)], [3.4, Vector3.ZERO]], prefijo)
@@ -276,6 +324,12 @@ static func cabezazo(esq: Skeleton3D, prefijo: String) -> Animation:
 	_pierna_anat(a, esq, "d", [[0.0, 10, 25, 0], [0.45, 5, 18, 25], [0.8, 12, 30, 5], [1.0, 0, RODILLA_REPOSO, 0]], prefijo)
 	return a
 
+## Grados y metros de `_piernas_naturales` para «parado» (ajustados con la sonda).
+const PIERNAS_CADERA := 12.0
+const PIERNAS_RODILLA := -14.0
+const PIERNAS_ALZA := 0.04
+const PIERNAS_CADERA_ANDAR := 5.0
+
 static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales: bool) -> AnimationLibrary:
 	var lib := AnimationLibrary.new()
 	var a_mano := {
@@ -292,9 +346,12 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 			real = _relajar_dedos(real, esq, 0.5)
 			if clave == "parado":
 				real = _brazos_al_cuerpo(real, -0.2)
+				real = _piernas_naturales(real, esq, PIERNAS_CADERA, PIERNAS_RODILLA, PIERNAS_ALZA)
 			## Los pies que no patinan (25-10-2026): el trote y el sprint con
 			## el pie de apoyo a la velocidad del cuerpo (`AnimPasos`).
 			else:
+				## Y andando: el paso del pack es ancho (tobillos a 0,24 m; humano 0,08-0,12).
+				real = _piernas_naturales(real, esq, PIERNAS_CADERA_ANDAR, 0.0, 0.0)
 				real = AnimPasos.preparar(clave, real, esq)
 		lib.add_animation(clave, real if real != null else a_mano[clave])
 	## EL TROTE HACIA ATRÁS DE VERDAD (25-10-2026). Era el trote hacia delante
@@ -312,7 +369,7 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 	for clave: String in CLIP_CAMINATA:
 		var extra: Animation = cargar_real(String(CLIP_CAMINATA[clave]), prefijo)
 		if extra != null:
-			lib.add_animation(clave, _relajar_dedos(extra, esq, 0.5))
+			lib.add_animation(clave, _piernas_naturales(_relajar_dedos(extra, esq, 0.5), esq, PIERNAS_CADERA_ANDAR, 0.0, 0.0))
 	## "sentado" no tiene equivalente en la Universal Animation Library
 	## (ninguno de los 43 clips gratis es una pose sentada) -se queda a mano,
 	## sin intentar `cargar_real()` primero.

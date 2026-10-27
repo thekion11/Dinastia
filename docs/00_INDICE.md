@@ -14,3 +14,6 @@ Regla: **un tema = un documento. Lo pendiente vive en UN solo sitio: [`PLAN_DEL_
 Fuera de `docs/`: `CLAUDE.md` (reglas y órdenes vigentes), `material/` (originales de packs), `herramientas/` (scripts), `dinastia-godot/` (el juego).
 
 Borrado el 24-10 (sigue en el historial de git, p. ej. `git log --diff-filter=D -- docs`): diario `LEEME`, `ROADMAP`, `MEGAPLAN` (fases 1-6 y reestructuración), `ESTADO_MEJORAS`, `PENDIENTES`, auditorías e informes anteriores, comparaciones, planes de ruta/etapas/metas, informes extraídos, capturas y vídeos viejos.
+**Comentarios del código que citan «ROADMAP», «MEGAPLAN», «LEEME.md» o «PENDIENTES»** (77 en `nucleo/`, `visor/`, `ui/`, medido el 27-10) son
+etiquetas de procedencia, no lecturas pendientes: los textos están en `git show 68d32dfc^:dinastia-godot/ROADMAP.md` (igual con
+`MEGAPLAN.md`, `LEEME.md`, `PENDIENTES.md`) y en `git show 449c1558^:docs/06_historial/LEEME_diario_2026-09_a_2026-10.md`.

@@ -110,18 +110,9 @@ func _instalacion(uso: String, r: Rect2) -> void:
 		"villa_moderna":
 			nombre = "Villa moderna"
 			_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(w, 0.06, f))
-			var esc := load(CityBuilder.RUTA_OFICINA_DT) as PackedScene
-			if esc != null:
-				var n0: Node3D = esc.instantiate()
-				var raiz := Node3D.new()
-				b.add_child(raiz)
-				raiz.add_child(n0)
-				var caja := b._caja_de(n0)
-				n0.position = -Vector3(caja.position.x + caja.size.x * 0.5, caja.position.y, caja.position.z + caja.size.z * 0.5)
-				var s := minf((w - 12.0) / maxf(caja.size.x, 0.01), (f - 12.0) / maxf(caja.size.z, 0.01))
-				raiz.scale = Vector3.ONE * s
-				raiz.position = c
-				cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
+			## Una casa a escala humana con piezas del kit suburbano (`CiudadVilla`): el `oficina_dt.glb` que había
+			## traía una semiesfera de cielo de 103 m y salía una cúpula.
+			cuenta["edificios"] = int(cuenta.get("edificios", 0)) + CiudadVilla.montar(self, c, w, f)
 		"desguace":
 			nombre = "Desguace"
 			_lote("solar", Vector3(c.x, 0.26, c.z), Vector3(w, 0.05, f))

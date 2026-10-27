@@ -36,6 +36,8 @@ var vista: VistaCiudad
 var casa: CasaDT = null
 ## Las citas en persona en 3D (fase 4): flecha, cuerpos y charla.
 var citas_3d: CitasCiudad = null
+## Gente sentada en los bancos de la ciudad (P3, pasada 2).
+var sentados: GenteSentada = null
 var en_casa := false
 var _punto_casa := {}
 var _acum := 0.0
@@ -66,6 +68,12 @@ static func enganchar(e: ExploradorCiudad, v: VistaCiudad, m: Mundo) -> VidaCiud
 	s._sincronizar_luz()
 	if m.citas != null:
 		s.citas_3d = CitasCiudad.crear(s)
+	s.sentados = GenteSentada.crear(s)
+	## Arranque 3D tras recuperar la copia de un guardado dañado: el aviso se ve aquí (el registro del
+	## menú central, donde iba antes, no se abre hasta mucho después).
+	if Partida.cargada_de_respaldo:
+		Partida.cargada_de_respaldo = false
+		s._decir(Idiomas.t("Guardado recuperado"), Idiomas.t("El último guardado estaba dañado: se recuperó la copia anterior."))
 	return s
 
 ## ¿Se puede salir en coche esta semana? {coche, motivo}. Con «micro» no hay coche
@@ -329,6 +337,8 @@ func usar_interior() -> bool:
 			return false
 		if String(_punto_casa["clave"]) == "cama":
 			expl._fundido()
+		elif String(_punto_casa["clave"]) == "sofa":
+			expl._gesto_propio("sentarse", "sentado")   ## se sienta y se QUEDA sentado hasta moverse (§2.2e P3)
 		_decir(String(r["titulo"]), String(r["texto"]))
 		if String(_punto_casa["clave"]) == "cama":
 			_tras_dormir()
