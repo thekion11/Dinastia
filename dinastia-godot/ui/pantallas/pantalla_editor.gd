@@ -34,7 +34,7 @@ func _pintar_editor_csv(ed: Editor) -> void:
 
 	var caja := TextEdit.new()
 	caja.text = _ed_csv
-	caja.placeholder_text = Idiomas.t("C0lo-C0lo;Arturo Vidal;MED;38;79\nB0ca Juni0rs;Edinson Cavani;DEL;39;80;URU;80")
+	caja.placeholder_text = "Andino FC;Tomás Herrera;MED;28;75\nPuerto Sur;Iván Quiroga;DEL;24;80;URU;80"
 	caja.custom_minimum_size = Vector2(0, 120)
 	caja.add_theme_font_size_override("font_size", 11)
 	caja.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY

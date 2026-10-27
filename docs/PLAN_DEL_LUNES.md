@@ -25,6 +25,7 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 - [ ] Probar Foundry/Azure (200 USD, 30 días) y decidir si se usa.
 - [ ] Abrir la red a Wikimedia/banderas (necesario para las caras que faltan: ~906 de 2.125 y escudos).
 - [ ] **Perfil de FPS en hardware real** (M-337, P0): PC modesto (Intel UHD) y móvil; aquí solo hay render por software.
+- [ ] DECIDIR (27-10): la base «ficticia» `tablas.json` → `REALES` son las plantillas reales con el nombre retocado letra a letra («Fernando de Paul» → «Fernando de Peol», «Arturo Vidal» → «Arturo Bedal») y la misma edad, media, posición y nacionalidad; viaja en los builds públicos. ¿Se queda así, se alteran también edades/medias/países, o se generan plantillas nuevas? (derecho de imagen, M-421). Los nombres reales escritos tal cual ya no viajan: lo comprueba `herramientas/revisar_build_publico.py` en `especiales.sh todo`.
 - [ ] Política de privacidad (27-10, escrita en `docs/05_referencia/POLITICA_DE_PRIVACIDAD.md`, es y en): publicarla en una dirección web fija para las tiendas y poner tu correo de contacto donde dice «[correo de contacto]».
 - [ ] Builds, keystore, licencias, derechos de imagen, música y voces (🔒). Cambiar la contraseña del keystore (la vieja sigue en el historial). Confirmar la fuente de los modelos 🟡 (Sketchfab, Meshy, mocap de Gumroad, Canva).
 - [ ] Subir los binarios pesados (`recursos/`, `marca/`, `material/`) al Drive con `herramientas/drive_subir.ps1` y verificar. Respaldo de texto: `docs/05_referencia/RESPALDO_DRIVE.md`.
@@ -948,7 +949,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-337 | P0 | 🔒 DUEÑO | No hay perfil en hardware real (R-01) | perfil en hardware real |
 | M-341 | P1 | 🔒 DUEÑO | Sombras: 4 cortes en ALTO; sin ahorro medible al bajar (probado),… | coste de sombras en GPU real |
 | M-419 | P1 | 🔒 DUEÑO | `.git` 5,5 GB con punteros LFS antiguos (D-03) | historial/LFS: decisión del dueño |
-| M-420 | P1 | PENDIENTE | Builds públicos sin datos reales (caras, fotos): comprobar con… | sin prueba del .pck |
 | M-421 | P1 | 🔒 DUEÑO | Derechos de imagen de jugadores reales (decisión del dueño) | derechos de imagen |
 | M-313 | P2 | PENDIENTE | `Sonido._sintetizar` 1.000 líneas: efectos sintetizados sin editor | `_sintetizar` sigue monolítica |
 | M-314 | P2 | PENDIENTE | Sin mezcla dinámica (ducking de música en diálogo/gol) | sin ducking |
