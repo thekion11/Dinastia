@@ -335,6 +335,23 @@ Hoy: una sala en la planta 2 (`EdificioClub.PLANTAS`), 2-6 vitrinas según el ni
    antes/después desde la cámara real. Veredicto del dueño.
 Lo hace la sesión ejecutora («lo del museo» es suyo); la líder revisa las capturas.
 
+### 2.2g Redes de la ciudad y subsuelo (sesión 3): luz, agua, drenaje y gasolineras (pedido del dueño, 27-10) — CONSTRUIDO, falta mirarlo
+`nucleo/redes_ciudad.gd` (modelo por horas, 25 sectores de 6x6 celdas; prueba `_probar_redes_ciudad` del banco) y
+`visor/redes_ciudad_vista.gd` (dibujo; prueba `ideas/red_redes_3d`). Cuelga de `CiudadExpansion.redes`; `VidaCiudad` lo avanza
+cada hora del `Reloj` con el clima de la semana (viento mueve el parque eólico, lluvia llena los colectores).
+- Luz: parque eólico + central de respaldo; en hora punta sin viento se cortan sectores por turno (el hospital no); torres de
+  alta tensión, subestación, transformadores con lámpara verde/roja y farolas que bajan con la fracción sin corriente.
+- Agua: potabilizadora → depósito; sin luz o con rotura el sector pierde presión. Drenaje: sumideros y tapas; tormenta o
+  sumideros atascados inundan el sector (lámina de agua). Gas: 3 gasolineras con depósito y cisterna; E en el surtidor = 45 l, 63 €, 10 min.
+- SUBSUELO (easter egg, pedido del dueño 27-10): cinco tapas de alcantarilla con aro de óxido (E de pie sobre ellas) bajan a
+  `visor/subsuelo_ciudad*.gd`: colector con canal de agua y ratas, galerías de luz (armarios con el estado de 4 sectores), agua y gas,
+  sala de control (pantalla con `resumen()`, botón de reparar averías y palanca roja que corta la luz del sector de arriba) y un
+  cuarto olvidado. Estado `subsuelo` del explorador; capturas en `docs/04_auditorias/capturas_subsuelo/` (escena `pruebas/captura_subsuelo`,
+  corre con `xvfb-run … --rendering-driver opengl3`, SIN_LUZ=1 para el modo emergencia). Hecho en Compatibility: falta mirarlo en Forward+.
+- PENDIENTE: texturas y detalle del subsuelo (paredes lisas), sonido ambiente y goteo; averías visibles (obras, cuadrilla, camión cisterna);
+  apagón por sector en farolas y ventanas (hoy las farolas bajan todas a la vez); aviso en el móvil con `resumen()`; cables con caída;
+  guardar el estado de las redes en la partida; coche con depósito real que dependa del repostaje.
+
 ### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
 
 Palabras del dueño: *«hay partes de la ciudad sin detalles y muy mejorables; los personajes se mueven de forma
