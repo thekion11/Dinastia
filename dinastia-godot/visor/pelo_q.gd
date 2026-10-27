@@ -149,6 +149,9 @@ static func poner(d: Dictionary, corte: String, color: Color, barba: bool) -> No
 	var desde_cabeza := esq.get_bone_global_rest(hueso).affine_inverse()
 	var piezas: Array = []
 	var fila: Array = DE_CORTE.get(corte, ["Hair_SimpleParted", 1.0])
+	## El corte rapado de una MUJER usa su propia malla del pack (`Hair_BuzzedFemale`, que estaba sin usar): la de hombre no asienta en su cabeza.
+	if String(d.get("cuerpo", "male")) == "female" and String(fila[0]) == "Hair_Buzzed":
+		fila = ["Hair_BuzzedFemale", float(fila[1])]
 	if String(fila[0]) != "":
 		piezas.append([String(fila[0]), float(fila[1])])
 	if barba:

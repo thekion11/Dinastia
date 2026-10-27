@@ -6162,7 +6162,16 @@
   "Malos consejos": "Bad advice",
   "El mentor a veces te dice lo contrario de lo que conviene": "The mentor sometimes tells you the opposite of what's best",
   "Directiva impaciente": "Impatient board",
-  "La confianza de la directiva baja un 50 % más deprisa": "Board confidence drops 50% faster"
+  "La confianza de la directiva baja un 50 % más deprisa": "Board confidence drops 50% faster",
+  "Vitrina libre": "Empty display case",
+  "Aquí irá el próximo título del club.": "The club's next title will go here.",
+  "Año": "Year",
+  "Final": "Final",
+  "Goleadores": "Scorers",
+  "Sin datos": "No data",
+  "Arrastra el ratón o A/D para girar la copa": "Drag the mouse or press A/D to rotate the cup",
+  "E: ver el trofeo": "E: look at the trophy",
+  "Campeón de liga con %s": "League champions with %s"
  },
  "pt": {
   "Historia": "História",
@@ -12327,7 +12336,16 @@
   "Malos consejos": "Maus conselhos",
   "El mentor a veces te dice lo contrario de lo que conviene": "O mentor às vezes diz o contrário do que convém",
   "Directiva impaciente": "Direção impaciente",
-  "La confianza de la directiva baja un 50 % más deprisa": "A confiança da direção desce 50 % mais depressa"
+  "La confianza de la directiva baja un 50 % más deprisa": "A confiança da direção desce 50 % mais depressa",
+  "Vitrina libre": "Vitrine livre",
+  "Aquí irá el próximo título del club.": "Aqui irá o próximo título do clube.",
+  "Año": "Ano",
+  "Final": "Final",
+  "Goleadores": "Artilheiros",
+  "Sin datos": "Sem dados",
+  "Arrastra el ratón o A/D para girar la copa": "Arraste o rato ou A/D para girar a taça",
+  "E: ver el trofeo": "E: ver o troféu",
+  "Campeón de liga con %s": "Campeão da liga com %s"
  },
  "patrones": [
   [
@@ -24104,7 +24122,16 @@
   "Malos consejos": "Mauvais conseils",
   "El mentor a veces te dice lo contrario de lo que conviene": "Le mentor te dit parfois le contraire de ce qu'il faut",
   "Directiva impaciente": "Direction impatiente",
-  "La confianza de la directiva baja un 50 % más deprisa": "La confiance de la direction baisse 50 % plus vite"
+  "La confianza de la directiva baja un 50 % más deprisa": "La confiance de la direction baisse 50 % plus vite",
+  "Vitrina libre": "Vitrine libre",
+  "Aquí irá el próximo título del club.": "Le prochain titre du club sera ici.",
+  "Año": "Année",
+  "Final": "Finale",
+  "Goleadores": "Buteurs",
+  "Sin datos": "Pas de données",
+  "Arrastra el ratón o A/D para girar la copa": "Fais glisser la souris ou A/D pour tourner la coupe",
+  "E: ver el trofeo": "E : voir le trophée",
+  "Campeón de liga con %s": "Champion de ligue avec %s"
  },
  "it": {
   "Historia": "Storia",
@@ -30269,7 +30296,16 @@
   "Malos consejos": "Cattivi consigli",
   "El mentor a veces te dice lo contrario de lo que conviene": "A volte il mentore ti dice il contrario di ciò che conviene",
   "Directiva impaciente": "Dirigenza impaziente",
-  "La confianza de la directiva baja un 50 % más deprisa": "La fiducia della dirigenza scende il 50 % più in fretta"
+  "La confianza de la directiva baja un 50 % más deprisa": "La fiducia della dirigenza scende il 50 % più in fretta",
+  "Vitrina libre": "Vetrina libera",
+  "Aquí irá el próximo título del club.": "Qui andrà il prossimo titolo del club.",
+  "Año": "Anno",
+  "Final": "Finale",
+  "Goleadores": "Marcatori",
+  "Sin datos": "Nessun dato",
+  "Arrastra el ratón o A/D para girar la copa": "Trascina il mouse o A/D per ruotare la coppa",
+  "E: ver el trofeo": "E: guarda il trofeo",
+  "Campeón de liga con %s": "Campione di campionato con %s"
  },
  "de": {
   "Historia": "Geschichte",
@@ -36434,7 +36470,16 @@
   "Malos consejos": "Schlechte Ratschläge",
   "El mentor a veces te dice lo contrario de lo que conviene": "Der Mentor rät dir manchmal das Gegenteil von dem, was richtig ist",
   "Directiva impaciente": "Ungeduldiger Vorstand",
-  "La confianza de la directiva baja un 50 % más deprisa": "Das Vertrauen des Vorstands sinkt 50 % schneller"
+  "La confianza de la directiva baja un 50 % más deprisa": "Das Vertrauen des Vorstands sinkt 50 % schneller",
+  "Vitrina libre": "Freie Vitrine",
+  "Aquí irá el próximo título del club.": "Hier kommt der nächste Titel des Vereins hin.",
+  "Año": "Jahr",
+  "Final": "Finale",
+  "Goleadores": "Torschützen",
+  "Sin datos": "Keine Daten",
+  "Arrastra el ratón o A/D para girar la copa": "Maus ziehen oder A/D drücken, um den Pokal zu drehen",
+  "E: ver el trofeo": "E: Pokal ansehen",
+  "Campeón de liga con %s": "Meister mit %s"
  },
  "ca": {
   "Historia": "Història",
@@ -42599,7 +42644,16 @@
   "Malos consejos": "Mals consells",
   "El mentor a veces te dice lo contrario de lo que conviene": "El mentor de vegades et diu el contrari del que convé",
   "Directiva impaciente": "Directiva impacient",
-  "La confianza de la directiva baja un 50 % más deprisa": "La confiança de la directiva baixa un 50 % més de pressa"
+  "La confianza de la directiva baja un 50 % más deprisa": "La confiança de la directiva baixa un 50 % més de pressa",
+  "Vitrina libre": "Vitrina lliure",
+  "Aquí irá el próximo título del club.": "Aquí anirà el proper títol del club.",
+  "Año": "Any",
+  "Final": "Final",
+  "Goleadores": "Golejadors",
+  "Sin datos": "Sense dades",
+  "Arrastra el ratón o A/D para girar la copa": "Arrossega el ratolí o A/D per girar la copa",
+  "E: ver el trofeo": "E: veure el trofeu",
+  "Campeón de liga con %s": "Campió de lliga amb %s"
  },
  "pl": {
   "Club": "Klub",
@@ -49043,7 +49097,16 @@
   "Malos consejos": "Złe rady",
   "El mentor a veces te dice lo contrario de lo que conviene": "Mentor czasem radzi odwrotnie, niż należy",
   "Directiva impaciente": "Niecierpliwy zarząd",
-  "La confianza de la directiva baja un 50 % más deprisa": "Zaufanie zarządu spada o 50% szybciej"
+  "La confianza de la directiva baja un 50 % más deprisa": "Zaufanie zarządu spada o 50% szybciej",
+  "Vitrina libre": "Wolna gablota",
+  "Aquí irá el próximo título del club.": "Tu trafi następny tytuł klubu.",
+  "Año": "Rok",
+  "Final": "Finał",
+  "Goleadores": "Strzelcy",
+  "Sin datos": "Brak danych",
+  "Arrastra el ratón o A/D para girar la copa": "Przeciągnij myszą lub A/D, aby obrócić puchar",
+  "E: ver el trofeo": "E: obejrzyj trofeum",
+  "Campeón de liga con %s": "Mistrz ligi z %s"
  },
  "tr": {
   "Club": "Kulüp",
@@ -55487,6 +55550,15 @@
   "Malos consejos": "Kötü tavsiyeler",
   "El mentor a veces te dice lo contrario de lo que conviene": "Mentor bazen doğru olanın tersini söyler",
   "Directiva impaciente": "Sabırsız yönetim",
-  "La confianza de la directiva baja un 50 % más deprisa": "Yönetimin güveni %50 daha hızlı düşer"
+  "La confianza de la directiva baja un 50 % más deprisa": "Yönetimin güveni %50 daha hızlı düşer",
+  "Vitrina libre": "Boş vitrin",
+  "Aquí irá el próximo título del club.": "Kulübün bir sonraki unvanı buraya gelecek.",
+  "Año": "Yıl",
+  "Final": "Final",
+  "Goleadores": "Golcüler",
+  "Sin datos": "Veri yok",
+  "Arrastra el ratón o A/D para girar la copa": "Kupayı döndürmek için fareyi sürükle veya A/D",
+  "E: ver el trofeo": "E: kupaya bak",
+  "Campeón de liga con %s": "%s ile lig şampiyonu"
  }
 }

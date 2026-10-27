@@ -31,10 +31,6 @@ func _mover_en_estadio(delta: float) -> void:
 		## Arriba de la escalera mecánica: la calle.
 		_subir_de_la_galeria()
 		return
-	if _planta == 0 and local.z > float((_est["puerta"] as Vector3).z) + 1.0:
-		## Cruzada la puerta, ya en la calle.
-		_salir_del_estadio()
-		return
 	## Colisión del cuerpo entero (paredes, muebles, gente): `ColisionClub`.
 	## La puerta a la calle es la excepción: cruzarla saca del estadio.
 	if _planta == 0 and local.z > float((_est["puerta"] as Vector3).z) + 0.5:
@@ -63,6 +59,9 @@ func _mover_en_estadio(delta: float) -> void:
 		_aviso.text = Idiomas.t("E: hablar con %s (%s)") % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]
 		_zona_est = nombre
 		_aviso_hablar = true
+	elif not MuseoVitrinas.cercana(cuerpo.position - CityBuilder.ESTADIO_EN).is_empty():
+		_aviso.text = Idiomas.t("E: ver el trofeo")
+		_zona_est = "·vitrina"
 	elif RecorridoClub.junto_a_la_grada(cuerpo.position - CityBuilder.ESTADIO_EN, _planta):
 		_aviso.text = Idiomas.t("E: sentarse en la grada")
 		_zona_est = "·grada"
@@ -150,6 +149,8 @@ func _usar() -> void:
 			cuerpo.visible = false
 			_hinchas_quitados = RecorridoClub.despejar_hinchas(cb, cuerpo.global_position + Vector3(0, 0.5, 0))
 			_aviso.text = Idiomas.t("En la grada. A/D: mirar alrededor · E: levantarse")
+			return
+		if MuseoVitrinas.usar(self, loc):
 			return
 		var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
 		var g: Dictionary = pe.cercano(cuerpo.position - CityBuilder.ESTADIO_EN, _planta) if pe != null else {}
