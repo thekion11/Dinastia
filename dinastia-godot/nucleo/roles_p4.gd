@@ -360,7 +360,7 @@ func a_dic() -> Dictionary:
 		"emergencia": emergencia.duplicate(),
 		"inyecciones": _inyecciones, "anio_inyecciones": _anio_inyecciones,
 		"inyecciones_totales": inyecciones_totales,
-		"patrimonio": patrimonio, "cartera": cartera.a_dict(), "peluches": peluches.a_dict(), "licencia": licencia,
+		"patrimonio": patrimonio, "cartera": cartera.a_dict(), "peluches": peluches.a_dict(), "crisis_pendiente": crisis_pendiente.duplicate(true), "licencia": licencia,
 		"bienes": bienes.duplicate(), "sem_trabajadas": semanas_trabajadas,
 		"filosofia": filosofia.duplicate(),
 		"estilos": _estilos_contados.duplicate(),
@@ -406,6 +406,7 @@ func desde_dic(d: Dictionary) -> void:
 	patrimonio = int(d.get("patrimonio", 0))
 	cartera.desde_dict(d.get("cartera", {}))
 	peluches.desde_dict(d.get("peluches", {}))
+	crisis_pendiente = (d.get("crisis_pendiente", []) as Array).duplicate(true)
 	licencia = int(d.get("licencia", 0))
 	bienes = (d.get("bienes", {}) as Dictionary).duplicate()
 	semanas_trabajadas = int(d.get("sem_trabajadas", 0))

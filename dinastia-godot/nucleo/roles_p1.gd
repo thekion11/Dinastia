@@ -288,6 +288,7 @@ const COMPRAS_DT := [
 ]
 
 var patrimonio: int = 0
+var crisis_pendiente: Array = []   ## golpes de caja ya avisados y aún sin cobrar (`crisis_caja.gd`)
 var peluches := Peluches.new()   ## el álbum de peluches de las recreativas y sus logros (`peluches.gd`)
 var cartera := CarteraDT.new()   ## efectivo, tarjeta y movimientos; la CUENTA es `patrimonio` (ver `cartera_dt.gd`)
 var licencia: int = 0            ## 0 ninguna, 1 B, 2 A, 3 PRO
