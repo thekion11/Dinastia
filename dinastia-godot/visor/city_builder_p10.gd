@@ -62,10 +62,7 @@ static func autobus(col: Color, destino: String = "", numero: String = "") -> No
 	var blanco := StandardMaterial3D.new()
 	blanco.albedo_color = Color(0.94, 0.94, 0.92)
 	blanco.roughness = 0.4
-	var vidrio := StandardMaterial3D.new()
-	vidrio.albedo_color = Color(0.12, 0.16, 0.2)
-	vidrio.roughness = 0.08
-	vidrio.metallic = 0.6
+	var vidrio := InteriorBus.vidrio()
 	var goma := StandardMaterial3D.new()
 	goma.albedo_color = Color(0.06, 0.06, 0.06)
 	goma.roughness = 0.9
@@ -124,6 +121,7 @@ static func autobus(col: Color, destino: String = "", numero: String = "") -> No
 			r.rotation.z = PI * 0.5
 			r.position = Vector3(xr, 0.5, zr)
 			raiz.add_child(r)
+	InteriorBus.montar(raiz)
 	if destino != "":
 		var l := Label3D.new()
 		l.text = destino

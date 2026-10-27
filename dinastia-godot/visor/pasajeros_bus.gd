@@ -108,6 +108,7 @@ func parada(bus: Node3D) -> void:
 		var n: Node3D = (fig["d"] as Dictionary)["nodo"]
 		_andar(fig, n.position, puerta, true, bus)
 	bus.set_meta("pasajeros", abordo)
+	InteriorBus.actualizar(bus)
 
 func _andar(fig: Dictionary, a: Vector3, b: Vector3, sube: bool, bus: Node3D) -> void:
 	var d: Dictionary = fig["d"]
@@ -136,6 +137,7 @@ func _mover(delta: float) -> void:
 				if abordo.size() < MAX_ABORDO:
 					abordo.append(int(f["semilla"]))
 				bus.set_meta("pasajeros", abordo)
+				InteriorBus.actualizar(bus)
 			n.queue_free()
 			_andando.remove_at(k)
 
