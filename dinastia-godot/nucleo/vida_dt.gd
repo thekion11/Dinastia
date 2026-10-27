@@ -70,6 +70,12 @@ var pendiente: Dictionary = {}   ## asunto de la vida abierto
 var perfil: Dictionary = {}      ## {pareja, hijos:[...], mascota}
 var historial: Array = []        ## [{anio, semana, texto}], lo más nuevo primero
 var bienvenida: bool = false
+## EL DEPÓSITO DEL COCHE (27-10-2026): se gasta al conducir por la ciudad en 3D (`VidaCiudad.gasolina_tick`), vacío no arranca
+## y se llena en los surtidores. `aviso_comb` = la semana (año*100+semana) del último aviso de «menos del 15 %».
+const DEPOSITO_L := 45.0
+const L_POR_KM := 2.5
+var combustible: float = DEPOSITO_L
+var aviso_comb: int = -1
 ## LOS PRECIOS SIGUEN AL SUELDO (recorrido D4): con precios fijos, casa y auto
 ## costaban el 4% de lo que cobra un DT de club grande y no había decisión.
 ## `escala` = sueldo semanal / 2.800 (un departamento y un auto usado son
@@ -311,10 +317,16 @@ func resolver(op: String, roles: Roles, c: Club, prensa: Prensa, anio: int, sem:
 	noticia.emit("🏠 Mi vida", r)
 	return r
 
+func gastar_combustible(metros: float) -> void:
+	combustible = maxf(0.0, combustible - metros / 1000.0 * L_POR_KM)
+
+func fraccion_comb() -> float:
+	return combustible / DEPOSITO_L
+
 func a_dic() -> Dictionary:
 	return {"viv": vivienda, "tr": transporte, "bal": balance, "es": estres, "fam": familia,
 		"sea": semanas_estres_alto, "oc": ocio_semana, "baja": baja_hasta, "pend": pendiente,
-		"perfil": perfil, "hist": historial, "bienv": bienvenida}
+		"perfil": perfil, "hist": historial, "bienv": bienvenida, "comb": snappedf(combustible, 0.01), "avc": aviso_comb}
 
 func desde_dic(d: Dictionary) -> void:
 	vivienda = String(d.get("viv", "depto"))
@@ -329,3 +341,5 @@ func desde_dic(d: Dictionary) -> void:
 	perfil = (d.get("perfil", {}) as Dictionary).duplicate(true)
 	historial = (d.get("hist", []) as Array).duplicate(true)
 	bienvenida = bool(d.get("bienv", false))
+	combustible = clampf(float(d.get("comb", DEPOSITO_L)), 0.0, DEPOSITO_L)
+	aviso_comb = int(d.get("avc", -1))
