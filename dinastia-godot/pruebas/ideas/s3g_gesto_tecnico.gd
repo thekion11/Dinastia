@@ -61,6 +61,18 @@ func _clima() -> void:
 	_comprobar(GestoTecnico.factor_clima(m, true) > GestoTecnico.factor_clima(m, false) * 1.1, "con tormenta, lo que va por el aire sufre más (%.2f frente a %.2f)" % [GestoTecnico.factor_clima(m, true), GestoTecnico.factor_clima(m, false)])
 	GestoTecnico.fijar_clima(m, "nieve")
 	_comprobar(float(m.get("_roce_clima")) > 1.0, "con nieve el balón frena antes (roce %.2f)" % float(m.get("_roce_clima")))
+	## La dificultad de la CPU (8 categorías del dueño): solo toca el error de SUS gestos.
+	m.control_equipo = 0
+	GestoTecnico.fijar_clima(m, "noche")
+	var cpu := {"es_local": false}
+	var mio := {"es_local": true}
+	var errores := {}
+	for nivel: String in ["practicante", "debutante", "ultimate"]:
+		m.dificultad_cpu = nivel
+		errores[nivel] = GestoTecnico.factor(m, cpu, false)
+	_comprobar(float(errores["practicante"]) > 1.0 and is_equal_approx(float(errores["debutante"]), 1.0) and float(errores["ultimate"]) < 1.0,
+		"la CPU falla más en Practicante (%.2f), igual en Debutante y menos en Ultimate (%.2f)" % [float(errores["practicante"]), float(errores["ultimate"])])
+	_comprobar(is_equal_approx(GestoTecnico.factor(m, mio, false), 1.0), "y a tu equipo no le cambia nada")
 	m.queue_free()
 
 ## En el motor de verdad: el mismo pase rodando llega más lejos con lluvia que con nieve.

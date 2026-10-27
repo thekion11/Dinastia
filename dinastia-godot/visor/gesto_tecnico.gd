@@ -78,6 +78,13 @@ static func factor_clima(m: Object, por_el_aire: bool) -> float:
 	var f := _fila(m)
 	return float(f[0]) * (float(f[1]) if por_el_aire else 1.0)
 
+## El multiplicador completo del error de un gesto: el clima y, si `p` es de la CPU, su dificultad (`error`).
+static func factor(m: Object, p: Dictionary, por_el_aire: bool) -> float:
+	var f := factor_clima(m, por_el_aire)
+	if int(m.call("equipo_cpu")) == (0 if bool(p.get("es_local", true)) else 1):
+		f *= float((MotorJugable.DIFICULTADES.get(String(m.get("dificultad_cpu")), {}) as Dictionary).get("error", 1.0))
+	return f
+
 ## Cuánto se le resbala al portero (multiplica su probabilidad de blocar en vez de rechazar).
 static func agarre(m: Object) -> float:
 	return float(_fila(m)[2])

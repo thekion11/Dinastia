@@ -211,22 +211,22 @@ var _celebra_anim := "celebrar"
 
 # ---------------------------------------------------------------- dificultad
 ## DIFICULTAD DE LA CPU (20-10-2026, pedido del dueño). Como en FC: solo toca al
-## equipo que maneja la CPU frente al tuyo. «profesional» es el motor de
-## siempre (todo lo calibrado). Cada nivel cambia la calidad de sus jugadores
-## (`attr`), lo que piensa el que lleva el balón (`pausa`) y la presión.
-## (La «pausa» del portador NO se usa como dificultad: pensar más con el balón
-## hace que conduzca más hasta el área y tire MÁS. Se probó jugando: contra
-## «Principiante» la CPU tiraba 7 veces. Queda en 1,0 para todos.)
-const DIFICULTADES := {
-	"principiante": {"nombre": "Principiante", "attr": 0.75, "pausa": 1.0, "presion": -1},
-	"amateur": {"nombre": "Amateur", "attr": 0.85, "pausa": 1.0, "presion": -1},
-	"semipro": {"nombre": "Semiprofesional", "attr": 0.94, "pausa": 1.0, "presion": 0},
-	"profesional": {"nombre": "Profesional", "attr": 1.0, "pausa": 1.0, "presion": 0},
-	"clase_mundial": {"nombre": "Clase mundial", "attr": 1.06, "pausa": 1.0, "presion": 1},
-	"leyenda": {"nombre": "Leyenda", "attr": 1.12, "pausa": 1.0, "presion": 1},
+## equipo que maneja la CPU frente al tuyo. Cada nivel cambia la calidad de sus jugadores (`attr`),
+## la presión y el error de sus tiros y pases (`error`, en `GestoTecnico.factor`).
+## (La «pausa» NO es dificultad: pensar más con el balón hace que conduzca y tire MÁS; contra el nivel
+## más bajo la CPU tiraba 7 veces. Queda en 1,0 para todos.)
+const DIFICULTADES := {   ## 8 categorías del dueño (27-10); «debutante» = el motor calibrado de siempre (antes «profesional»)
+	"practicante": {"nombre": "Practicante", "attr": 0.72, "pausa": 1.0, "presion": -1, "error": 1.35},
+	"cadete": {"nombre": "Cadete", "attr": 0.84, "pausa": 1.0, "presion": -1, "error": 1.18},
+	"debutante": {"nombre": "Debutante", "attr": 1.0, "pausa": 1.0, "presion": 0, "error": 1.0},
+	"semiprofesional": {"nombre": "Semiprofesional", "attr": 1.03, "pausa": 1.0, "presion": 0, "error": 0.95},
+	"profesional": {"nombre": "Profesional", "attr": 1.06, "pausa": 1.0, "presion": 1, "error": 0.9},
+	"experto": {"nombre": "Experto", "attr": 1.09, "pausa": 1.0, "presion": 1, "error": 0.86},
+	"maestro": {"nombre": "Maestro", "attr": 1.13, "pausa": 1.0, "presion": 1, "error": 0.81},
+	"ultimate": {"nombre": "Ultimate", "attr": 1.18, "pausa": 1.0, "presion": 1, "error": 0.75},
 }
-const ORDEN_DIFICULTAD := ["principiante", "amateur", "semipro", "profesional", "clase_mundial", "leyenda"]
-var dificultad_cpu := "profesional"
+const ORDEN_DIFICULTAD := ["practicante", "cadete", "debutante", "semiprofesional", "profesional", "experto", "maestro", "ultimate"]
+var dificultad_cpu := "debutante"
 ## Qué equipo es la CPU (0 local, 1 visita). -1 = el contrario al que manejas
 ## (si no manejas a nadie, ninguno: CPU contra CPU juegan igual).
 var equipo_cpu_fijo := -1
