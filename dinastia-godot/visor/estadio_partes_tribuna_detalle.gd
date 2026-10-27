@@ -140,6 +140,8 @@ static func vestir_escaleras(root: Node3D, mat_baranda: Material) -> void:
 		multi(deck, "CantosPasillo", cantos_pasillo(escalones, StadiumBuilder.PASO_FILA + 0.02), mat_canto())
 		if not plano:
 			multi(deck, "ZancasPasillo", zancas_pasillo(escalones, tam, lateral), mat_zanca())
+			if absf(deck.position.y - y_bandeja0) > 0.1:
+				multi(deck, "BarandasPasillo", barandas_pasillo(escalones, tam, lateral), mat_baranda)
 		if plano or deck.get_parent() != root or absf(deck.position.y - y_bandeja0) > 0.1:
 			continue
 		## Escaleras de acceso: desde el primer peldaño de cada pasillo (fila 0).
@@ -193,6 +195,38 @@ static func zancas_pasillo(escalones: Array[Transform3D], tam: Vector3, lateral:
 		for lado: float in [-1.0, 1.0]:
 			var centro := (p0 + p1) * 0.5 + perp * lado * 0.68 + Vector3(0, 0.3, 0)
 			out.append(Transform3D(Basis(x * 0.14, y * 0.5, z * longitud), centro))
+	return out
+
+## BARANDA SOBRE LAS ZANCAS DE LAS BANDEJAS ALTAS (27-10-2026, orden del líder: donde la caída es peligrosa): un pasamanos fino a 0,45 m sobre
+## cada zanca, con un poste cada ~2 m (más uno en cada punta). Mismas medidas de pasillo que `zancas_pasillo`, en el espacio del deck.
+static func barandas_pasillo(escalones: Array[Transform3D], tam: Vector3, lateral: bool) -> Array[Transform3D]:
+	var out: Array[Transform3D] = []
+	var largo: float = tam.z if lateral else tam.x
+	var cuantas: int = maxi(1, int(largo / StadiumBuilder.PASO_BUTACA))
+	var por_fila := 0
+	for c in cuantas:
+		if StadiumBuilder.es_pasillo(c, cuantas):
+			por_fila += 1
+	if por_fila == 0 or escalones.size() < por_fila * 2:
+		return out
+	var filas := escalones.size() / por_fila
+	var perp := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
+	for k in por_fila:
+		var p0 := escalones[k].origin
+		var p1 := escalones[(filas - 1) * por_fila + k].origin
+		var eje := p1 - p0
+		var longitud := eje.length() + StadiumBuilder.PASO_FILA
+		var z := eje.normalized()
+		var y := z.cross(perp).normalized()
+		if y.y < 0.0:
+			y = -y
+		for lado: float in [-1.0, 1.0]:
+			var base := (p0 + p1) * 0.5 + perp * lado * 0.68 + Vector3(0, 0.3, 0)
+			out.append(Transform3D(Basis(perp * 0.05, y * 0.05, z * longitud), base + y * 0.7))
+			var n_postes := maxi(2, int(longitud / 2.0) + 1)
+			for j in n_postes:
+				var t := float(j) / float(n_postes - 1)
+				out.append(Transform3D(Basis(perp * 0.045, y * 0.45, z * 0.045), base + z * (t - 0.5) * (longitud - 0.2) + y * 0.475))
 	return out
 
 ## Los peldaños de los pasillos de un deck, en su espacio, fila a fila (la fila 0
