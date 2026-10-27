@@ -106,6 +106,7 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.directiva.temporadas = int(dd.get("temporadas", 0))
 		m.directiva.despedido_ya = bool(dd.get("despedido", false))
 		m.directiva.desde_dic(dd.get("consejeros", {}))
+		DesafiosDificultad.aplicar(m)
 		m.directiva.trofeos.clear()
 		for t: String in dd.get("trofeos", []):
 			m.directiva.trofeos.append(t)

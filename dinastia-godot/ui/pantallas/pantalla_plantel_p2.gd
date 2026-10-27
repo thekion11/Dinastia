@@ -223,7 +223,7 @@ func _pintar_desafios() -> void:
 	var tt := p._texto(11, Principal.COL_SUAVE)
 	tt.text = Idiomas.t("LOS OCHO DESAFÍOS")
 	p._lista_desafios.add_child(tt)
-	var tabla: Variant = Datos.tabla("DESAFIOS")
+	var tabla: Variant = DesafiosDificultad.todos()
 	if not (tabla is Array):
 		return
 	for fila: Array in (tabla as Array):

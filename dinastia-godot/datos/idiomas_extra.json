@@ -6150,7 +6150,19 @@
   "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 Unlocks after winning %d titles (you have %d).",
   "🔒 Se abre al ganar tu primer título.": "🔒 Unlocks after winning your first title.",
   "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 Unlocks after completing %d seasons (you have %d).",
-  "🔒 Se abre al completar tu primera temporada.": "🔒 Unlocks after completing your first season."
+  "🔒 Se abre al completar tu primera temporada.": "🔒 Unlocks after completing your first season.",
+  "Mala racha": "Bad luck streak",
+  "Más lesiones durante toda la temporada": "More injuries throughout the season",
+  "Retos exigentes": "Tough challenges",
+  "Los retos de la semana más difíciles y con menos premio": "Harder weekly challenges with smaller rewards",
+  "Poca ayuda": "Little help",
+  "Sin el mentor que te aconseja el primer mes": "No mentor advising you in the first month",
+  "Asistentes torpes": "Clumsy assistants",
+  "Tus ojeadores fallan el doble al estimar la media de un jugador": "Your scouts are twice as wrong when estimating a player's rating",
+  "Malos consejos": "Bad advice",
+  "El mentor a veces te dice lo contrario de lo que conviene": "The mentor sometimes tells you the opposite of what's best",
+  "Directiva impaciente": "Impatient board",
+  "La confianza de la directiva baja un 50 % más deprisa": "Board confidence drops 50% faster"
  },
  "pt": {
   "Historia": "História",
@@ -12303,7 +12315,19 @@
   "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 Abre ao ganhar %d títulos (tem %d).",
   "🔒 Se abre al ganar tu primer título.": "🔒 Abre ao ganhar o seu primeiro título.",
   "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 Abre ao completar %d épocas (tem %d).",
-  "🔒 Se abre al completar tu primera temporada.": "🔒 Abre ao completar a sua primeira época."
+  "🔒 Se abre al completar tu primera temporada.": "🔒 Abre ao completar a sua primeira época.",
+  "Mala racha": "Má fase",
+  "Más lesiones durante toda la temporada": "Mais lesões durante toda a época",
+  "Retos exigentes": "Desafios exigentes",
+  "Los retos de la semana más difíciles y con menos premio": "Desafios da semana mais difíceis e com menos prémio",
+  "Poca ayuda": "Pouca ajuda",
+  "Sin el mentor que te aconseja el primer mes": "Sem o mentor que o aconselha no primeiro mês",
+  "Asistentes torpes": "Assistentes desastrados",
+  "Tus ojeadores fallan el doble al estimar la media de un jugador": "Os seus olheiros erram o dobro ao estimar a média de um jogador",
+  "Malos consejos": "Maus conselhos",
+  "El mentor a veces te dice lo contrario de lo que conviene": "O mentor às vezes diz o contrário do que convém",
+  "Directiva impaciente": "Direção impaciente",
+  "La confianza de la directiva baja un 50 % más deprisa": "A confiança da direção desce 50 % mais depressa"
  },
  "patrones": [
   [
@@ -24068,7 +24092,19 @@
   "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 Se débloque après %d titres (tu en as %d).",
   "🔒 Se abre al ganar tu primer título.": "🔒 Se débloque après ton premier titre.",
   "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 Se débloque après %d saisons (tu en as %d).",
-  "🔒 Se abre al completar tu primera temporada.": "🔒 Se débloque après ta première saison."
+  "🔒 Se abre al completar tu primera temporada.": "🔒 Se débloque après ta première saison.",
+  "Mala racha": "Série noire",
+  "Más lesiones durante toda la temporada": "Plus de blessures toute la saison",
+  "Retos exigentes": "Défis exigeants",
+  "Los retos de la semana más difíciles y con menos premio": "Défis de la semaine plus durs et moins récompensés",
+  "Poca ayuda": "Peu d'aide",
+  "Sin el mentor que te aconseja el primer mes": "Sans le mentor qui te conseille le premier mois",
+  "Asistentes torpes": "Assistants maladroits",
+  "Tus ojeadores fallan el doble al estimar la media de un jugador": "Tes recruteurs se trompent deux fois plus en estimant la note d'un joueur",
+  "Malos consejos": "Mauvais conseils",
+  "El mentor a veces te dice lo contrario de lo que conviene": "Le mentor te dit parfois le contraire de ce qu'il faut",
+  "Directiva impaciente": "Direction impatiente",
+  "La confianza de la directiva baja un 50 % más deprisa": "La confiance de la direction baisse 50 % plus vite"
  },
  "it": {
   "Historia": "Storia",
@@ -30221,7 +30257,19 @@
   "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 Si sblocca vincendo %d titoli (ne hai %d).",
   "🔒 Se abre al ganar tu primer título.": "🔒 Si sblocca vincendo il tuo primo titolo.",
   "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 Si sblocca completando %d stagioni (ne hai %d).",
-  "🔒 Se abre al completar tu primera temporada.": "🔒 Si sblocca completando la tua prima stagione."
+  "🔒 Se abre al completar tu primera temporada.": "🔒 Si sblocca completando la tua prima stagione.",
+  "Mala racha": "Periodo nero",
+  "Más lesiones durante toda la temporada": "Più infortuni per tutta la stagione",
+  "Retos exigentes": "Sfide impegnative",
+  "Los retos de la semana más difíciles y con menos premio": "Sfide della settimana più difficili e con premi minori",
+  "Poca ayuda": "Poco aiuto",
+  "Sin el mentor que te aconseja el primer mes": "Senza il mentore che ti consiglia il primo mese",
+  "Asistentes torpes": "Assistenti maldestri",
+  "Tus ojeadores fallan el doble al estimar la media de un jugador": "I tuoi osservatori sbagliano il doppio nel valutare un giocatore",
+  "Malos consejos": "Cattivi consigli",
+  "El mentor a veces te dice lo contrario de lo que conviene": "A volte il mentore ti dice il contrario di ciò che conviene",
+  "Directiva impaciente": "Dirigenza impaziente",
+  "La confianza de la directiva baja un 50 % más deprisa": "La fiducia della dirigenza scende il 50 % più in fretta"
  },
  "de": {
   "Historia": "Geschichte",
@@ -36374,7 +36422,19 @@
   "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 Wird nach %d Titeln freigeschaltet (du hast %d).",
   "🔒 Se abre al ganar tu primer título.": "🔒 Wird nach deinem ersten Titel freigeschaltet.",
   "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 Wird nach %d Saisons freigeschaltet (du hast %d).",
-  "🔒 Se abre al completar tu primera temporada.": "🔒 Wird nach deiner ersten Saison freigeschaltet."
+  "🔒 Se abre al completar tu primera temporada.": "🔒 Wird nach deiner ersten Saison freigeschaltet.",
+  "Mala racha": "Pechsträhne",
+  "Más lesiones durante toda la temporada": "Mehr Verletzungen in der ganzen Saison",
+  "Retos exigentes": "Harte Herausforderungen",
+  "Los retos de la semana más difíciles y con menos premio": "Schwerere Wochenaufgaben mit weniger Prämie",
+  "Poca ayuda": "Wenig Hilfe",
+  "Sin el mentor que te aconseja el primer mes": "Ohne den Mentor, der dich im ersten Monat berät",
+  "Asistentes torpes": "Ungeschickte Assistenten",
+  "Tus ojeadores fallan el doble al estimar la media de un jugador": "Deine Scouts liegen bei der Gesamtwertung doppelt so oft daneben",
+  "Malos consejos": "Schlechte Ratschläge",
+  "El mentor a veces te dice lo contrario de lo que conviene": "Der Mentor rät dir manchmal das Gegenteil von dem, was richtig ist",
+  "Directiva impaciente": "Ungeduldiger Vorstand",
+  "La confianza de la directiva baja un 50 % más deprisa": "Das Vertrauen des Vorstands sinkt 50 % schneller"
  },
  "ca": {
   "Historia": "Història",
@@ -42527,7 +42587,19 @@
   "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 S'obre en guanyar %d títols (en portes %d).",
   "🔒 Se abre al ganar tu primer título.": "🔒 S'obre en guanyar el teu primer títol.",
   "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 S'obre en completar %d temporades (en portes %d).",
-  "🔒 Se abre al completar tu primera temporada.": "🔒 S'obre en completar la teva primera temporada."
+  "🔒 Se abre al completar tu primera temporada.": "🔒 S'obre en completar la teva primera temporada.",
+  "Mala racha": "Mala ratxa",
+  "Más lesiones durante toda la temporada": "Més lesions durant tota la temporada",
+  "Retos exigentes": "Reptes exigents",
+  "Los retos de la semana más difíciles y con menos premio": "Reptes de la setmana més difícils i amb menys premi",
+  "Poca ayuda": "Poca ajuda",
+  "Sin el mentor que te aconseja el primer mes": "Sense el mentor que t'aconsella el primer mes",
+  "Asistentes torpes": "Assistents maldestres",
+  "Tus ojeadores fallan el doble al estimar la media de un jugador": "Els teus ulls de mercat fallen el doble en estimar la mitjana d'un jugador",
+  "Malos consejos": "Mals consells",
+  "El mentor a veces te dice lo contrario de lo que conviene": "El mentor de vegades et diu el contrari del que convé",
+  "Directiva impaciente": "Directiva impacient",
+  "La confianza de la directiva baja un 50 % más deprisa": "La confiança de la directiva baixa un 50 % més de pressa"
  },
  "pl": {
   "Club": "Klub",
@@ -48959,7 +49031,19 @@
   "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 Odblokowuje się po %d tytułach (masz %d).",
   "🔒 Se abre al ganar tu primer título.": "🔒 Odblokowuje się po pierwszym tytule.",
   "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 Odblokowuje się po %d sezonach (masz %d).",
-  "🔒 Se abre al completar tu primera temporada.": "🔒 Odblokowuje się po pierwszym sezonie."
+  "🔒 Se abre al completar tu primera temporada.": "🔒 Odblokowuje się po pierwszym sezonie.",
+  "Mala racha": "Zła passa",
+  "Más lesiones durante toda la temporada": "Więcej kontuzji przez cały sezon",
+  "Retos exigentes": "Wymagające wyzwania",
+  "Los retos de la semana más difíciles y con menos premio": "Trudniejsze wyzwania tygodnia i mniejsze nagrody",
+  "Poca ayuda": "Mało pomocy",
+  "Sin el mentor que te aconseja el primer mes": "Bez mentora doradzającego w pierwszym miesiącu",
+  "Asistentes torpes": "Niezdarni asystenci",
+  "Tus ojeadores fallan el doble al estimar la media de un jugador": "Twoi skauci mylą się dwa razy bardziej przy ocenie zawodnika",
+  "Malos consejos": "Złe rady",
+  "El mentor a veces te dice lo contrario de lo que conviene": "Mentor czasem radzi odwrotnie, niż należy",
+  "Directiva impaciente": "Niecierpliwy zarząd",
+  "La confianza de la directiva baja un 50 % más deprisa": "Zaufanie zarządu spada o 50% szybciej"
  },
  "tr": {
   "Club": "Kulüp",
@@ -55391,6 +55475,18 @@
   "🔒 Se abre al ganar %d títulos (llevas %d).": "🔒 %d kupa kazanınca açılır (şu an %d).",
   "🔒 Se abre al ganar tu primer título.": "🔒 İlk kupanı kazanınca açılır.",
   "🔒 Se abre al completar %d temporadas (llevas %d).": "🔒 %d sezon tamamlayınca açılır (şu an %d).",
-  "🔒 Se abre al completar tu primera temporada.": "🔒 İlk sezonunu tamamlayınca açılır."
+  "🔒 Se abre al completar tu primera temporada.": "🔒 İlk sezonunu tamamlayınca açılır.",
+  "Mala racha": "Kötü seri",
+  "Más lesiones durante toda la temporada": "Sezon boyunca daha fazla sakatlık",
+  "Retos exigentes": "Zorlu görevler",
+  "Los retos de la semana más difíciles y con menos premio": "Daha zor ve daha az ödüllü haftalık görevler",
+  "Poca ayuda": "Az yardım",
+  "Sin el mentor que te aconseja el primer mes": "İlk ay sana tavsiye veren mentor yok",
+  "Asistentes torpes": "Beceriksiz yardımcılar",
+  "Tus ojeadores fallan el doble al estimar la media de un jugador": "Gözlemcilerin oyuncu reytingini iki kat yanlış tahmin eder",
+  "Malos consejos": "Kötü tavsiyeler",
+  "El mentor a veces te dice lo contrario de lo que conviene": "Mentor bazen doğru olanın tersini söyler",
+  "Directiva impaciente": "Sabırsız yönetim",
+  "La confianza de la directiva baja un 50 % más deprisa": "Yönetimin güveni %50 daha hızlı düşer"
  }
 }

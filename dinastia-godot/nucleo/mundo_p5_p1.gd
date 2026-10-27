@@ -33,6 +33,7 @@ func _semana_contexto_de_partidos() -> void:
 	if estadio != null:
 		Partido.ctx_cesped_local = lerpf(1.0, Partido.ctx_cesped_local, estadio.factor_desgaste_cesped())
 		Partido.ctx_lesion_local = estadio.factor_lesion()
+	Partido.ctx_lesion_mio = DesafiosDificultad.LESIONES if tiene_desafio("mala_racha") else 1.0
 	## La moda de la era, para todos los dibujos que existen. Se calcula una vez
 	## por semana y no dentro del bucle de fuerzas, que corre miles de veces.
 	Partido.ctx_analisis = consumir_analisis()

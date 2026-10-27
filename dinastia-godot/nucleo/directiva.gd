@@ -22,6 +22,7 @@ const INICIAL := 55
 
 var club: Club
 var confianza: int = INICIAL
+var impaciencia := 1.0   ## cuánto más deprisa baja la confianza (1,5 con «directiva impaciente»)
 var meta_puesto: int = 8
 var objetivo: String = ""
 var temporadas: int = 0
@@ -182,6 +183,8 @@ func _fijar_objetivo(rank: int) -> void:
 func mover_confianza(delta: int, motivo: String) -> void:
 	if despedido_ya:
 		return
+	if delta < 0 and impaciencia != 1.0:   ## el desafío «directiva impaciente» (DesafiosDificultad)
+		delta = int(round(float(delta) * impaciencia))
 	var antes := confianza
 	confianza = clampi(confianza + delta, 0, 100)
 	if confianza != antes:
