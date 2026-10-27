@@ -220,6 +220,11 @@ func _conectar_1() -> void:
 					Aviso.mostrar(p, "dinero", "🎟️", "Pasas de ronda",
 						"%s superada. Cada eliminatoria que se gana es taquilla y premio." % nombre_ronda, "ronda_superada")
 					return)
+	_conectar_1_2()
+	_conectar_1_3()
+
+## (Trozo 2 de `_conectar_1`, partida por responsabilidad: fase 6, §4 del plan.)
+func _conectar_1_2() -> void:
 	## Lo mismo para Champions/Libertadores -mismo bug, sin arreglar hasta hoy
 	## (14-9-2026): ver `_conectar_mi_continental()`, llamada desde
 	## `_conectar_sorteos()` mas abajo porque comparten el mismo ciclo de vida
@@ -346,6 +351,9 @@ func _conectar_1() -> void:
 		p.mundo.federacion.escandalo.connect(func(funa: int, motivo: String) -> void:
 			if p.mundo.prensa != null:
 				p.mundo.prensa._mover_funa(funa))
+
+## (Trozo 3 de `_conectar_1`, partida por responsabilidad: fase 6, §4 del plan.)
+func _conectar_1_3() -> void:
 	## `cesiones` vive desde `generar()`, igual que `federacion` -ver el
 	## comentario de `federacion.movimiento` más abajo-, así que sus tres
 	## señales necesitan el mismo candado o se duplican al cambiar de club.

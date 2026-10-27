@@ -285,6 +285,11 @@ func _ver_ficha(j: Jugador) -> void:
 			func() -> void: p._rescindir(j, int((p.mundo.cantera.coste_rescision(j) as Dictionary)["total"])))
 		(p as Principal)._traducir_pantalla(p._ficha)
 		return
+	_ver_ficha_2(j, mio)
+	_ver_ficha_3(j)
+
+## (Trozo 2 de `_ver_ficha`, partida por responsabilidad: fase 6, §4 del plan.)
+func _ver_ficha_2(j: Jugador, mio: Club) -> void:
 	## SEGUIR A UN OBJETIVO. Va aquí arriba, junto a comparar, porque son la
 	## misma clase de gesto: apuntar a alguien para volver a él más tarde.
 	if p.mundo.ojeadores != null:
@@ -405,6 +410,9 @@ func _ver_ficha(j: Jugador) -> void:
 				_ver_ficha(j))
 			p._ficha.add_child(bp)
 
+
+## (Trozo 3 de `_ver_ficha`, partida por responsabilidad: fase 6, §4 del plan.)
+func _ver_ficha_3(j: Jugador) -> void:
 	## `HISTORIA` del HTML: la biografía se enseña siempre, sea o no tuyo -a
 	## diferencia de `perfilHumano()`, que es cosa del vestuario propio y solo
 	## se ve en `_pintar_vida_personal_ficha()`.
