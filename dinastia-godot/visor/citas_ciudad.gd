@@ -166,7 +166,7 @@ func usar() -> bool:
 	_abierta = cerca_id
 	var per: PrologoMentor = cuerpos.get(cerca_id)
 	if per != null and is_instance_valid(per):
-		per.gesto()
+		per.hablar(true)
 		expl._hablando_con = per
 		expl._t_burbuja = 120.0
 		expl._colocar_camara(1.0)
@@ -187,6 +187,7 @@ func _responder(i: int) -> void:
 	expl._t_burbuja = 0.0
 	expl._hablando_con = null
 	if cuerpos.has(id) and is_instance_valid(cuerpos[id]):
+		(cuerpos[id] as PrologoMentor).hablar(false)
 		(cuerpos[id] as PrologoMentor).adelantarse(expl.cuerpo.position + Vector3(4.0, 0, 4.0))
 		var per: Node = cuerpos[id]
 		get_tree().create_timer(2.5).timeout.connect(func() -> void:

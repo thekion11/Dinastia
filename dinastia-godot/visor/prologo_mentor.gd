@@ -130,6 +130,17 @@ func _mirar_hacia(p: Vector3) -> void:
 	if Vector2(v.x, v.z).length() > 0.01:
 		rotation.y = atan2(v.x, v.z)
 
+## Hablar: el clip de charla de la UAL (brazos y cabeza vivos) mientras dura el cuadro
+## de diálogo; al terminar vuelve a «parado». (§2.2e P3, 27-10-2026)
+func hablar(si: bool) -> void:
+	if anim == null:
+		return
+	if si:
+		if AnimExtra.asegurar(anim, FutbolistaQ.esqueleto_de(self), "charla"):
+			anim.play("charla", 0.3)
+	else:
+		_animar("parado")
+
 func _animar(nombre_anim: String) -> void:
 	if anim != null and anim.has_animation(nombre_anim) and anim.current_animation != nombre_anim:
 		anim.play(nombre_anim, 0.3)

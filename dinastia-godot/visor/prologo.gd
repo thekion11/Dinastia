@@ -197,6 +197,7 @@ func _hablar() -> void:
 	frase_i += 1
 	if frase_i >= frases.size():
 		dialogo.cerrar()
+		mentor.hablar(false)
 		explorador._t_burbuja = 0.0
 		explorador.pausar(false)
 		_tras_hablar()
@@ -209,7 +210,7 @@ func _hablar() -> void:
 	explorador._colocar_camara(1.0)
 	mentor.mirar_a(explorador.cuerpo.position)
 	if frase_i == 0:
-		mentor.gesto()
+		mentor.hablar(true)
 	dialogo.decir(mentor.nombre, frases[frase_i], Color(club.color1).lerp(Color.WHITE, 0.35), frase_i, frases.size())
 
 ## Lo que pasa cuando el mentor termina de hablar en este paso.
