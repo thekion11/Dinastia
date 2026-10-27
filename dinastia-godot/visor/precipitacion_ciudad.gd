@@ -29,6 +29,8 @@ static func montar(padre: Node, clima: String, nivel: int = Calidad.elegida) -> 
 	## El reparto: un tercio junto a la cámara (lo que pasa por delante del objetivo) y el resto alrededor.
 	cerca.amount = clampi(cerca.amount, 200, presupuesto / 3)
 	alrededor.amount = clampi(alrededor.amount, 300, presupuesto - cerca.amount)
+	_resaltar(cerca, true)
+	_resaltar(alrededor, false)
 	cerca.position = Vector3(0, 2.0, 0)
 	cerca.visibility_aabb = AABB(Vector3(-20, -30, -20), Vector3(40, 40, 40))
 	alrededor.position = Vector3(0, 9.0, 0)
@@ -48,3 +50,10 @@ static func particulas(cont: Node) -> int:
 	for p: GPUParticles3D in cont.find_children("*", "GPUParticles3D", true, false):
 		n += p.amount
 	return n
+
+## Gotas más largas y claras que en el partido (sin subir el tope): en una calle ancha la lluvia fina no se leía.
+static func _resaltar(p: GPUParticles3D, cerca: bool) -> void:
+	var malla := p.draw_pass_1 as QuadMesh
+	malla.size = Vector2(0.02, 1.0) if cerca else Vector2(0.06, 2.2)
+	var mat := malla.material as StandardMaterial3D
+	mat.albedo_color = Color(0.90, 0.94, 1.0, 0.5 if cerca else 0.75)

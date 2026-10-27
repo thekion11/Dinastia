@@ -20,6 +20,7 @@ static var _mango: CylinderMesh = null
 static var _mats: Array[StandardMaterial3D] = []
 
 var expl: ExploradorCiudad
+var vista   ## VistaCiudad (sin tipar: dependencia circular)
 var mundo   ## Mundo (sin tipar: evita una dependencia circular con VidaCiudad)
 var _lluvia: Node3D = null   ## la lluvia de la ciudad (`PrecipitacionCiudad`), montada mientras el clima es lluvioso
 var _t := 2.0
@@ -29,6 +30,7 @@ static func crear(v: VidaCiudad) -> ParaguasVida:
 	var s := ParaguasVida.new()
 	s.name = "ParaguasVivos"
 	s.expl = v.expl
+	s.vista = v.vista
 	s.mundo = v.mundo
 	v.add_child(s)
 	return s
@@ -49,6 +51,19 @@ func _process(delta: float) -> void:
 	var clima: String = mundo.clima()
 	tick(trafico.get("_vehiculos"), llueve(clima), cb.get("puertas_vida"), _cuenta)
 	_actualizar_lluvia(clima, cb)
+	_actualizar_clima_y_sonido(clima)
+
+## El tiempo de la semana llega al cielo y al sol (`ClimaCiudad`) y la lluvia suena en la calle (ruido de lluvia cada 3 s por el bus de ambiente).
+var _sonido_en := 0.0
+func _actualizar_clima_y_sonido(clima: String) -> void:
+	if vista != null and is_instance_valid(vista) and String(vista.get("clima_actual")) != clima:
+		vista.set("clima_actual", clima)
+		vista.call("_aplicar_hora")
+	if llueve(clima):
+		_sonido_en -= 1.5
+		if _sonido_en <= 0.0:
+			_sonido_en = 3.0
+			Sonido.toca("lluvia_fuerte" if clima == "tormenta" else "lluvia_ambiente", Sonido.Bus.AMBIENTE)
 
 ## Monta la lluvia (y moja el suelo) cuando el clima es lluvioso y la quita al escampar.
 func _actualizar_lluvia(clima: String, cb: Object) -> void:
