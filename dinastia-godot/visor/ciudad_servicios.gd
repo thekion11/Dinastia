@@ -81,3 +81,29 @@ static func fachada(ex: CiudadExpansion, uso: String, c: Vector3, w: float, f: f
 		return
 	var d: Array = FACHADAS[uso]
 	FachadaModular.montar(ex, c.x, c.z + float(d[0]) + f * float(d[1]), 0.3, w * float(d[2]), int(d[3]))
+
+## Pórtico cívico (ayuntamiento y universidad): cuatro columnas bajo el borde de la marquesina y una escalinata ancha al frente.
+## Piezas de `kit_edificios` (CC0). Sin azar: no toca `_rng`.
+const PORTICO := ["ayuntamiento", "universidad"]
+const KIT_EDIF := "res://assets/kenney/kit_edificios/%s.glb"
+
+static func _pieza_edif(ex: CiudadExpansion, nombre: String, pos: Vector3, tam: Vector3, giro := 0.0) -> void:
+	var k: Dictionary = ex._malla_kit(KIT_EDIF % nombre)
+	if k.is_empty():
+		return
+	var mi := MeshInstance3D.new()
+	mi.mesh = k["malla"]
+	mi.transform = Transform3D(Basis(Vector3.UP, giro).scaled(tam), pos)
+	ex.b.add_child(mi)
+
+static func portico(ex: CiudadExpansion, uso: String, c: Vector3, w: float, f: float) -> void:
+	if not PORTICO.has(uso):
+		return
+	var d: Array = FACHADAS[uso]
+	var zf: float = c.z + float(d[0]) + f * float(d[1])
+	var ancho := FachadaModular.MODULO * 3.0
+	var zc := zf + 3.6
+	for dx in [-0.5, -1.0 / 6.0, 1.0 / 6.0, 0.5]:
+		_pieza_edif(ex, "column-wide", Vector3(c.x + float(dx) * ancho, 0.3, zc), Vector3(1.6, 1.55, 1.6))
+	## La escalinata sube hacia el edificio: la pieza corta (1,3 × 1,3 × 2) estirada a todo el ancho de las puertas.
+	_pieza_edif(ex, "stairs-closed-short", Vector3(c.x, 0.0, zc + 1.2), Vector3(ancho / 1.3 * 0.8, 0.55, 1.5), PI)
