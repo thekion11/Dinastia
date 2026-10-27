@@ -34,6 +34,7 @@ func _supermercado() -> void:
 	for k in 3:
 		_caminante([Vector3(-8.0, 0, 3.0 - float(k) * 3.0), Vector3(0.4, 0, 3.0 - float(k) * 3.0), Vector3(0.4, 0, -0.1 - float(k) * 3.0), Vector3(-8.0, 0, -0.1 - float(k) * 3.0)], _calle())
 	_planta(Vector3(8.4, 0, 6.4))
+	InteriorComercioExtra.supermercado(self)
 	_cartel("🛒 " + _sala_nombre().to_upper(), Vector3(0, 3.25, -6.95), 40)
 
 ## Un puesto del mercado: mostrador de 2,6 m con cajas de género, toldo de
@@ -213,6 +214,7 @@ func _tienda_calle() -> void:
 		_poner("mini_mercado/shopping-basket", Vector3(2.6 + float(k) * 0.05, float(k) * 0.12, 4.3), 0.1 * float(k), null, neutro)
 	_poner("mini_arcade/vending-machine", Vector3(-6.3, 0, 2.6), PI * 0.5, 2.2)
 	_trabajador(Vector3(-2.0, 0, -1.45), PI * 0.5, false, ["charla", "brazos_jarra"], _calle())
+	InteriorComercioExtra.tienda_calle(self)
 	for k in 3:
 		_caminante([Vector3(-5.6, 0, 1.4 + float(k) * 0.4), Vector3(1.4, 0, 1.4 + float(k) * 0.4), Vector3(1.4, 0, -1.45), Vector3(-5.6, 0, -1.45)], _calle())
 

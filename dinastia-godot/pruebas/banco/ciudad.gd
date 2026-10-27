@@ -428,3 +428,19 @@ func _probar_expendedora_balon() -> void:
 	b._physics_process(1.0 / 60.0)
 	_comprobar(b.patadas == patadas0, "en coche (modo distinto de «pie») no se patea")
 	raiz.queue_free()
+
+## 27-10: género en supermercado y farmacia (InteriorComercioExtra).
+func _probar_comercio_lleno() -> void:
+	_titulo("CIUDAD: SUPERMERCADO Y FARMACIA CON GÉNERO")
+	var faltan: Array = []
+	for n: String in InteriorComercioExtra.GENERO + InteriorComercioExtra.MEDICINA:
+		if not ResourceLoader.exists("res://assets/kenney/%s.glb" % n):
+			faltan.append(n)
+	_comprobar(faltan.is_empty(), "los modelos del género existen %s" % str(faltan))
+	for k: String in ["edificio_mercado", "edificio_tienda|Farmacia"]:
+		var raiz := Node3D.new()
+		var sala := InteriorInstalacion.en_mundo(raiz, k)
+		_comprobar(sala != null and raiz.get_child_count() > 40, "%s se monta llena (%d nodos)" % [k, raiz.get_child_count()])
+		if sala != null:
+			sala.free()
+		raiz.free()
