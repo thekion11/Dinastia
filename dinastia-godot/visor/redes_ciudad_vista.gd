@@ -26,6 +26,7 @@ var bocas: Array = []                        ## [{pos, sector}] tapas por las qu
 var surtidores: Array = []                   ## [{id, pos, sector, pantalla}]
 var cuenta := {}
 var _lamparas := {}                          ## sector -> material de la lámpara de sus transformadores
+var _cuadrillas := {}                        ## sector -> camión y conos de la cuadrilla (solo con una avería abierta)
 var _aguas := {}                             ## sector -> lámina de inundación
 var _gris: StandardMaterial3D
 var _acero: StandardMaterial3D
@@ -114,6 +115,7 @@ func _calles() -> void:
 		lista.assign(por_sector[sec])
 		e._multimesh(BoxMesh.new(), m, lista, Vector3.ONE)
 	_bocas(candidatas)
+	_cuadrillas_montar(candidatas)
 	cuenta["tapas"] = tapas.size()
 	cuenta["sumideros"] = rejillas.size()
 	cuenta["hidrantes"] = hidrantes.size()
@@ -145,6 +147,48 @@ func _bocas(candidatas: Array) -> void:
 	cil.rings = 0
 	e._multimesh(cil, b._mat_simple(Color(0.42, 0.24, 0.14), 0.8), oxido, Vector3.ONE)
 	cuenta["bocas"] = bocas.size()
+
+## LAS CUADRILLAS (27-10): un camión con conos y baliza junto a la tapa más cercana al centro de cada sector; solo se ve
+## mientras hay una avería abierta en él y desaparece al repararse (`refrescar`).
+func _cuadrillas_montar(candidatas: Array) -> void:
+	var camion := load("res://assets/ciudad/kenney_cars/delivery-flat.glb") as PackedScene
+	var cono := load("res://assets/ciudad/kenney_cars/cone.glb") as PackedScene
+	var lado := float(RedesCiudad.LADO_SECTOR) * CiudadExpansion.CELDA
+	var baliza := b._mat_simple(Color(1.0, 0.55, 0.05), 0.4, 3.0)
+	for sec in RedesCiudad.sectores():
+		var centro := Vector3((float(sec.x * RedesCiudad.LADO_SECTOR - 12) - 0.5) * CiudadExpansion.CELDA + lado * 0.5, 0, \
+			(float(sec.y * RedesCiudad.LADO_SECTOR - 12) - 0.5) * CiudadExpansion.CELDA + lado * 0.5)
+		var mejor := Vector3.INF
+		for c: Vector3 in candidatas:
+			if mejor == Vector3.INF or c.distance_squared_to(centro) < mejor.distance_squared_to(centro):
+				mejor = c
+		if mejor == Vector3.INF:
+			continue
+		var grupo := Node3D.new()
+		grupo.name = "Cuadrilla_%d_%d" % [sec.x, sec.y]
+		grupo.position = mejor
+		grupo.visible = false
+		if camion != null:
+			var t: Node3D = camion.instantiate()
+			t.scale = Vector3.ONE * 2.6
+			t.position = Vector3(0, 0.3, 0)
+			grupo.add_child(t)
+		var luz := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = Vector3(0.5, 0.25, 0.5)
+		luz.mesh = bm
+		luz.material_override = baliza
+		luz.position = Vector3(0, 3.6, 0)
+		grupo.add_child(luz)
+		if cono != null:
+			for k in 4:
+				var c3: Node3D = cono.instantiate()
+				c3.scale = Vector3.ONE * 2.0
+				c3.position = Vector3(-4.5 + float(k) * 3.0, 0.45, 5.0)
+				grupo.add_child(c3)
+		b.add_child(grupo)
+		_cuadrillas[sec] = grupo
+	cuenta["cuadrillas"] = _cuadrillas.size()
 
 # ============================================================================ INSTALACIONES
 
@@ -330,6 +374,8 @@ func refrescar() -> void:
 		var ok := modelo.hay_luz(sec)
 		m.albedo_color = Color(0.1, 0.8, 0.2) if ok else Color(0.9, 0.1, 0.1)
 		m.emission = m.albedo_color
+	for sec: Vector2i in _cuadrillas:
+		(_cuadrillas[sec] as Node3D).visible = modelo.hay_averia(sec)
 	for sec: Vector2i in _aguas:
 		(_aguas[sec] as MeshInstance3D).visible = bool(modelo.inundado.get(sec, false))
 	for s: Dictionary in surtidores:
