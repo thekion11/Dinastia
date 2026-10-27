@@ -395,6 +395,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	vida = VidaDT.new()
 	maestria = Maestria.new()
 	banco = Banco.new()
+	banco.dueno = weakref(self)   ## para que el banco sepa de los desafíos («Sin dinero»)
 	auspicio = Auspicio.new(self)
 	comercial = Comercial.new(self)
 	ciudad = Ciudad.new(self)
