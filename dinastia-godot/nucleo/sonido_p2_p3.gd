@@ -224,3 +224,19 @@ func _receta_claxon(alto: float, largo: float) -> PackedFloat32Array:
 	var m := _tono(415.0 * alto, 0.45 * largo, 0.16, "cuadrada")
 	_mezclar(m, _tono(523.0 * alto, 0.45 * largo, 0.12, "cuadrada"))
 	return m
+
+## La sirena de emergencias: un lamento que sube de 640 a 1000 Hz y vuelve en 1,6 s (un periodo entero, para repetirla sin salto).
+## Ondas casi cuadradas con un poco de seno: suena a bocina de coche patrulla, no a pitido de reloj.
+func _receta_sirena(alto: float, largo: float) -> PackedFloat32Array:
+	var dur := 1.6
+	var n := int(dur * float(FRECUENCIA))
+	var m := PackedFloat32Array()
+	m.resize(n)
+	var fase := 0.0
+	for i in n:
+		var t := float(i) / float(n)
+		var hz := (820.0 + 180.0 * -cos(TAU * t)) * alto * (0.97 + 0.03 * largo)
+		fase += hz * TAU / float(FRECUENCIA)
+		var onda := 0.6 * sin(fase) + 0.25 * sin(2.0 * fase) + 0.12 * sin(3.0 * fase)
+		m[i] = onda * 0.2
+	return m

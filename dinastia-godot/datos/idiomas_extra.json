@@ -6171,7 +6171,19 @@
   "Sin datos": "No data",
   "Arrastra el ratón o A/D para girar la copa": "Drag the mouse or press A/D to rotate the cup",
   "E: ver el trofeo": "E: look at the trophy",
-  "Campeón de liga con %s": "League champions with %s"
+  "Campeón de liga con %s": "League champions with %s",
+  "🔥 Incendio en una calle del centro: salen los bomberos.": "🔥 Fire on a downtown street: the firefighters are on their way.",
+  "🚑 Accidente en la calle: salen la ambulancia y la policía.": "🚑 Street accident: the ambulance and the police are on their way.",
+  "🚓 Robo en un comercio: la policía va de camino.": "🚓 Robbery at a shop: the police are on their way.",
+  "🔥 El fuego está apagado. Los bomberos vuelven al parque.": "🔥 The fire is out. The firefighters head back to the station.",
+  "🚑 Heridos atendidos. La calle vuelve a estar libre.": "🚑 The injured have been treated. The street is clear again.",
+  "🚓 La policía detuvo al sospechoso.": "🚓 The police arrested the suspect.",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo (pagada en %s).": "🚓 Fine of €%d for running a red light (paid by %s).",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo: no pudiste pagarla y queda anotada.": "🚓 Fine of €%d for running a red light: you couldn't pay it, so it's on record.",
+  "Los bomberos apagan un incendio en el centro": "Firefighters put out a fire downtown",
+  "Sin heridos: el fuego no pasó de la acera.": "No injuries: the fire never left the sidewalk.",
+  "Un incendio tarda en apagarse por falta de agua": "A fire takes longer to put out for lack of water",
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Firefighters waited for pressure in the sector's mains: “the pipes need fixing.”"
  },
  "pt": {
   "Historia": "História",
@@ -12345,7 +12357,19 @@
   "Sin datos": "Sem dados",
   "Arrastra el ratón o A/D para girar la copa": "Arraste o rato ou A/D para girar a taça",
   "E: ver el trofeo": "E: ver o troféu",
-  "Campeón de liga con %s": "Campeão da liga com %s"
+  "Campeón de liga con %s": "Campeão da liga com %s",
+  "🔥 Incendio en una calle del centro: salen los bomberos.": "🔥 Incêndio numa rua do centro: os bombeiros estão a caminho.",
+  "🚑 Accidente en la calle: salen la ambulancia y la policía.": "🚑 Acidente na rua: a ambulância e a polícia estão a caminho.",
+  "🚓 Robo en un comercio: la policía va de camino.": "🚓 Assalto a uma loja: a polícia está a caminho.",
+  "🔥 El fuego está apagado. Los bomberos vuelven al parque.": "🔥 O fogo está apagado. Os bombeiros regressam ao quartel.",
+  "🚑 Heridos atendidos. La calle vuelve a estar libre.": "🚑 Feridos assistidos. A rua volta a estar livre.",
+  "🚓 La policía detuvo al sospechoso.": "🚓 A polícia deteve o suspeito.",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo (pagada en %s).": "🚓 Multa de %d € por avançar o semáforo vermelho (paga em %s).",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo: no pudiste pagarla y queda anotada.": "🚓 Multa de %d € por avançar o semáforo vermelho: não conseguiste pagar e fica registada.",
+  "Los bomberos apagan un incendio en el centro": "Bombeiros apagam um incêndio no centro",
+  "Sin heridos: el fuego no pasó de la acera.": "Sem feridos: o fogo não passou do passeio.",
+  "Un incendio tarda en apagarse por falta de agua": "Um incêndio demora a ser apagado por falta de água",
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Os bombeiros esperaram por pressão na rede do setor: «é preciso arranjar as canalizações»."
  },
  "patrones": [
   [
@@ -24131,7 +24155,19 @@
   "Sin datos": "Pas de données",
   "Arrastra el ratón o A/D para girar la copa": "Fais glisser la souris ou A/D pour tourner la coupe",
   "E: ver el trofeo": "E : voir le trophée",
-  "Campeón de liga con %s": "Champion de ligue avec %s"
+  "Campeón de liga con %s": "Champion de ligue avec %s",
+  "🔥 Incendio en una calle del centro: salen los bomberos.": "🔥 Incendie dans une rue du centre : les pompiers interviennent.",
+  "🚑 Accidente en la calle: salen la ambulancia y la policía.": "🚑 Accident dans la rue : l'ambulance et la police sont en route.",
+  "🚓 Robo en un comercio: la policía va de camino.": "🚓 Vol dans un commerce : la police est en route.",
+  "🔥 El fuego está apagado. Los bomberos vuelven al parque.": "🔥 Le feu est éteint. Les pompiers rentrent à la caserne.",
+  "🚑 Heridos atendidos. La calle vuelve a estar libre.": "🚑 Les blessés sont pris en charge. La rue est de nouveau dégagée.",
+  "🚓 La policía detuvo al sospechoso.": "🚓 La police a arrêté le suspect.",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo (pagada en %s).": "🚓 Amende de %d € pour avoir grillé un feu rouge (payée en %s).",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo: no pudiste pagarla y queda anotada.": "🚓 Amende de %d € pour avoir grillé un feu rouge : vous n'avez pas pu la payer, elle est enregistrée.",
+  "Los bomberos apagan un incendio en el centro": "Les pompiers éteignent un incendie en centre-ville",
+  "Sin heridos: el fuego no pasó de la acera.": "Aucun blessé : le feu n'a pas quitté le trottoir.",
+  "Un incendio tarda en apagarse por falta de agua": "Un incendie met du temps à être éteint faute d'eau",
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Les pompiers ont attendu la pression du réseau du secteur : « il faut réparer les canalisations »."
  },
  "it": {
   "Historia": "Storia",
@@ -30305,7 +30341,19 @@
   "Sin datos": "Nessun dato",
   "Arrastra el ratón o A/D para girar la copa": "Trascina il mouse o A/D per ruotare la coppa",
   "E: ver el trofeo": "E: guarda il trofeo",
-  "Campeón de liga con %s": "Campione di campionato con %s"
+  "Campeón de liga con %s": "Campione di campionato con %s",
+  "🔥 Incendio en una calle del centro: salen los bomberos.": "🔥 Incendio in una strada del centro: partono i vigili del fuoco.",
+  "🚑 Accidente en la calle: salen la ambulancia y la policía.": "🚑 Incidente in strada: partono l'ambulanza e la polizia.",
+  "🚓 Robo en un comercio: la policía va de camino.": "🚓 Rapina in un negozio: la polizia sta arrivando.",
+  "🔥 El fuego está apagado. Los bomberos vuelven al parque.": "🔥 L'incendio è spento. I vigili del fuoco tornano in caserma.",
+  "🚑 Heridos atendidos. La calle vuelve a estar libre.": "🚑 Feriti soccorsi. La strada è di nuovo libera.",
+  "🚓 La policía detuvo al sospechoso.": "🚓 La polizia ha arrestato il sospettato.",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo (pagada en %s).": "🚓 Multa di %d € per aver passato il semaforo rosso (pagata con %s).",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo: no pudiste pagarla y queda anotada.": "🚓 Multa di %d € per aver passato il semaforo rosso: non hai potuto pagarla e resta registrata.",
+  "Los bomberos apagan un incendio en el centro": "I vigili del fuoco spengono un incendio in centro",
+  "Sin heridos: el fuego no pasó de la acera.": "Nessun ferito: il fuoco non ha lasciato il marciapiede.",
+  "Un incendio tarda en apagarse por falta de agua": "Un incendio tarda a spegnersi per mancanza d'acqua",
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "I vigili del fuoco hanno atteso la pressione nella rete del settore: «bisogna riparare le tubature»."
  },
  "de": {
   "Historia": "Geschichte",
@@ -36479,7 +36527,19 @@
   "Sin datos": "Keine Daten",
   "Arrastra el ratón o A/D para girar la copa": "Maus ziehen oder A/D drücken, um den Pokal zu drehen",
   "E: ver el trofeo": "E: Pokal ansehen",
-  "Campeón de liga con %s": "Meister mit %s"
+  "Campeón de liga con %s": "Meister mit %s",
+  "🔥 Incendio en una calle del centro: salen los bomberos.": "🔥 Brand in einer Straße der Innenstadt: Die Feuerwehr rückt aus.",
+  "🚑 Accidente en la calle: salen la ambulancia y la policía.": "🚑 Unfall auf der Straße: Rettungswagen und Polizei sind unterwegs.",
+  "🚓 Robo en un comercio: la policía va de camino.": "🚓 Raub in einem Geschäft: Die Polizei ist unterwegs.",
+  "🔥 El fuego está apagado. Los bomberos vuelven al parque.": "🔥 Das Feuer ist gelöscht. Die Feuerwehr fährt zur Wache zurück.",
+  "🚑 Heridos atendidos. La calle vuelve a estar libre.": "🚑 Die Verletzten sind versorgt. Die Straße ist wieder frei.",
+  "🚓 La policía detuvo al sospechoso.": "🚓 Die Polizei hat den Verdächtigen festgenommen.",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo (pagada en %s).": "🚓 Bußgeld von %d € fürs Überfahren einer roten Ampel (bezahlt mit %s).",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo: no pudiste pagarla y queda anotada.": "🚓 Bußgeld von %d € fürs Überfahren einer roten Ampel: Du konntest nicht zahlen, es wird vermerkt.",
+  "Los bomberos apagan un incendio en el centro": "Feuerwehr löscht Brand in der Innenstadt",
+  "Sin heridos: el fuego no pasó de la acera.": "Keine Verletzten: Das Feuer blieb auf dem Gehweg.",
+  "Un incendio tarda en apagarse por falta de agua": "Brand wird wegen Wassermangels nur langsam gelöscht",
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Die Feuerwehr wartete auf Druck im Netz des Sektors: „Die Rohre müssen repariert werden.“"
  },
  "ca": {
   "Historia": "Història",
@@ -42653,7 +42713,19 @@
   "Sin datos": "Sense dades",
   "Arrastra el ratón o A/D para girar la copa": "Arrossega el ratolí o A/D per girar la copa",
   "E: ver el trofeo": "E: veure el trofeu",
-  "Campeón de liga con %s": "Campió de lliga amb %s"
+  "Campeón de liga con %s": "Campió de lliga amb %s",
+  "🔥 Incendio en una calle del centro: salen los bomberos.": "🔥 Incendi en un carrer del centre: surten els bombers.",
+  "🚑 Accidente en la calle: salen la ambulancia y la policía.": "🚑 Accident al carrer: surten l'ambulància i la policia.",
+  "🚓 Robo en un comercio: la policía va de camino.": "🚓 Robatori en un comerç: la policia va de camí.",
+  "🔥 El fuego está apagado. Los bomberos vuelven al parque.": "🔥 El foc està apagat. Els bombers tornen al parc.",
+  "🚑 Heridos atendidos. La calle vuelve a estar libre.": "🚑 Ferits atesos. El carrer torna a estar lliure.",
+  "🚓 La policía detuvo al sospechoso.": "🚓 La policia va detenir el sospitós.",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo (pagada en %s).": "🚓 Multa de %d € per saltar-te un semàfor en vermell (pagada amb %s).",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo: no pudiste pagarla y queda anotada.": "🚓 Multa de %d € per saltar-te un semàfor en vermell: no la vas poder pagar i queda anotada.",
+  "Los bomberos apagan un incendio en el centro": "Els bombers apaguen un incendi al centre",
+  "Sin heridos: el fuego no pasó de la acera.": "Sense ferits: el foc no va passar de la vorera.",
+  "Un incendio tarda en apagarse por falta de agua": "Un incendi triga a apagar-se per falta d'aigua",
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Els bombers van esperar pressió a la xarxa del sector: «cal arreglar les canonades»."
  },
  "pl": {
   "Club": "Klub",
@@ -49106,7 +49178,19 @@
   "Sin datos": "Brak danych",
   "Arrastra el ratón o A/D para girar la copa": "Przeciągnij myszą lub A/D, aby obrócić puchar",
   "E: ver el trofeo": "E: obejrzyj trofeum",
-  "Campeón de liga con %s": "Mistrz ligi z %s"
+  "Campeón de liga con %s": "Mistrz ligi z %s",
+  "🔥 Incendio en una calle del centro: salen los bomberos.": "🔥 Pożar na ulicy w centrum: strażacy ruszają na miejsce.",
+  "🚑 Accidente en la calle: salen la ambulancia y la policía.": "🚑 Wypadek na ulicy: karetka i policja są w drodze.",
+  "🚓 Robo en un comercio: la policía va de camino.": "🚓 Napad na sklep: policja jest w drodze.",
+  "🔥 El fuego está apagado. Los bomberos vuelven al parque.": "🔥 Pożar ugaszony. Strażacy wracają do remizy.",
+  "🚑 Heridos atendidos. La calle vuelve a estar libre.": "🚑 Ranni opatrzeni. Ulica jest znowu wolna.",
+  "🚓 La policía detuvo al sospechoso.": "🚓 Policja zatrzymała podejrzanego.",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo (pagada en %s).": "🚓 Mandat %d € za przejechanie na czerwonym świetle (zapłacony: %s).",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo: no pudiste pagarla y queda anotada.": "🚓 Mandat %d € za przejechanie na czerwonym świetle: nie mogłeś zapłacić, wpis zostaje.",
+  "Los bomberos apagan un incendio en el centro": "Strażacy ugasili pożar w centrum",
+  "Sin heridos: el fuego no pasó de la acera.": "Bez rannych: ogień nie wyszedł poza chodnik.",
+  "Un incendio tarda en apagarse por falta de agua": "Pożar gaszono dłużej z powodu braku wody",
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Strażacy czekali na ciśnienie w sieci sektora: „trzeba naprawić rury”."
  },
  "tr": {
   "Club": "Kulüp",
@@ -55559,6 +55643,18 @@
   "Sin datos": "Veri yok",
   "Arrastra el ratón o A/D para girar la copa": "Kupayı döndürmek için fareyi sürükle veya A/D",
   "E: ver el trofeo": "E: kupaya bak",
-  "Campeón de liga con %s": "%s ile lig şampiyonu"
+  "Campeón de liga con %s": "%s ile lig şampiyonu",
+  "🔥 Incendio en una calle del centro: salen los bomberos.": "🔥 Merkezde bir sokakta yangın: itfaiye yola çıktı.",
+  "🚑 Accidente en la calle: salen la ambulancia y la policía.": "🚑 Sokakta kaza: ambulans ve polis yola çıktı.",
+  "🚓 Robo en un comercio: la policía va de camino.": "🚓 Bir dükkânda soygun: polis yolda.",
+  "🔥 El fuego está apagado. Los bomberos vuelven al parque.": "🔥 Yangın söndürüldü. İtfaiye istasyona dönüyor.",
+  "🚑 Heridos atendidos. La calle vuelve a estar libre.": "🚑 Yaralılara müdahale edildi. Sokak yeniden açık.",
+  "🚓 La policía detuvo al sospechoso.": "🚓 Polis şüpheliyi gözaltına aldı.",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo (pagada en %s).": "🚓 Kırmızı ışık ihlali için %d € ceza (ödeme: %s).",
+  "🚓 Multa de %d € por saltarte un semáforo en rojo: no pudiste pagarla y queda anotada.": "🚓 Kırmızı ışık ihlali için %d € ceza: ödeyemedin, kayda geçti.",
+  "Los bomberos apagan un incendio en el centro": "İtfaiye merkezdeki yangını söndürdü",
+  "Sin heridos: el fuego no pasó de la acera.": "Yaralı yok: yangın kaldırımın ötesine geçmedi.",
+  "Un incendio tarda en apagarse por falta de agua": "Su yetersizliği yüzünden yangın geç söndürüldü",
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "İtfaiye sektör şebekesinde basıncı bekledi: «boruların onarılması gerek»."
  }
 }

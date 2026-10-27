@@ -121,7 +121,9 @@ const NOMBRES := ["silbato", "gol", "gol_rival", "roja", "amarilla",
 	## --- Recorridos a pie (etapa 1, 8-10-2026): se pedían y no existían ---
 	"puerta", "paso",
 	## --- Coches (21-10-2026): el choque y el claxon de la ciudad ---
-	"choque_coche", "claxon"]
+	"choque_coche", "claxon",
+	## --- Emergencias (27-10-2026): la sirena que sube y baja de policía, bomberos y ambulancia ---
+	"sirena"]
 
 ## Un tono con envolvente exponencial de caída, que es la que suena natural: el
 ## sonido arranca de golpe y se apaga deprisa al principio y despacio al final.
