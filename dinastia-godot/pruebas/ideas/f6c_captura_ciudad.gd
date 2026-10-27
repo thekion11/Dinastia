@@ -91,8 +91,9 @@ func _process(_d: float) -> void:
 		if _aerea:
 			_v.set("_objetivo", Vector3(centro.x, 8.0, centro.z))
 			_v.set("_objetivo_deseado", Vector3(centro.x, 8.0, centro.z))
-			_v.set("_dist", DIST_AEREA)
-			_v.set("_alto", ALTURA_AEREA)
+			## ALTO=45 DISTA=40: una aérea cercana (por defecto 120 m de alto, a 70).
+			_v.set("_dist", float(OS.get_environment("DISTA")) if OS.get_environment("DISTA") != "" else DIST_AEREA)
+			_v.set("_alto", float(OS.get_environment("ALTO")) if OS.get_environment("ALTO") != "" else ALTURA_AEREA)
 			_v.set("_ang", 0.6)
 		else:
 			## Frente al lado de la manzana que mira hacia fuera de la ciudad (el eje dominante),
