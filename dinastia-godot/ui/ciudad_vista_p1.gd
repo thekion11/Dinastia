@@ -142,6 +142,8 @@ func _aplicar_hora() -> void:
 	## compensa con más energía de sol y más rebote del cielo (fill), sin luces extra: el contraste entre caras al sol y a la sombra se conserva.
 	var bajo: float = (1.0 - smoothstep(0.1, 0.6, altura)) * clampf(altura * 8.0, 0.0, 1.0)
 	var dorada: float = clampf(1.0 - absf(altura - 0.14) * 3.2, 0.0, 1.0)
+	## NIEBLA DE LA MAÑANA (S5): a primera hora el aire de la ciudad lleva bruma que se levanta hacia las 9.
+	var bruma: float = clampf(1.0 - absf(_hora - 6.8) / 2.4, 0.0, 1.0)
 	## Las farolas y las ventanas se encienden al caer el sol (antes de la noche cerrada), no cuando ya es de noche.
 	var anochecer: float = clampf((0.06 - altura) * 7.0, 0.0, 1.0) if _hora > 12.0 else 0.0
 
@@ -217,7 +219,14 @@ func _aplicar_hora() -> void:
 			_env.ambient_light_sky_contribution = 0.3
 		if _env.fog_enabled:
 			_env.fog_light_color = Color(0.16, 0.13, 0.14).lerp(Color(0.78, 0.80, 0.84), dia).lerp(Color(0.95, 0.70, 0.50), dorada * 0.6)
-			_env.fog_density = lerpf(0.00016, 0.00026, dorada)   ## calima de la hora dorada
+			_env.fog_density = lerpf(0.00016, 0.00026, dorada) * (1.0 + bruma * 1.6)   ## calima de la hora dorada y bruma de la mañana
+
+	## Con niebla volumétrica (calidad ULTRA) el aire toma el color de la hora: oscuro de noche (no «brilla»), ámbar al ocaso,
+	## y espesa de mañana. La densidad base es la de `ciudad_vista.gd` (0,0006).
+	if _env != null and _env.volumetric_fog_enabled:
+		var aire_dia := Color(0.90, 0.91, 0.94)
+		_env.volumetric_fog_albedo = Color(0.10, 0.11, 0.18).lerp(aire_dia, dia).lerp(Color(1.0, 0.72, 0.5), dorada * 0.55)
+		_env.volumetric_fog_density = 0.0006 * (1.0 + bruma * 1.4 + dorada * 0.5) * lerpf(0.6, 1.0, dia)
 
 	## Y las luces de la ciudad: farolas y ventanas encendidas cuando cae el sol.
 	if _ciudad != null:
