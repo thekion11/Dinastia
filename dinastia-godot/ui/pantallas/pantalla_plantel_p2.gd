@@ -320,7 +320,7 @@ func _pintar_ficha_club(club: Club) -> void:
 	t.text = Idiomas.t("%s  ·  reputación %d  ·  aforo %s") % [club.nombre, club.rep, p._miles(club.estadio_aforo)]
 	p._lista_clubes.add_child(t)
 	var hi_c := _historia_de(club)
-	for linea: String in ["📜 " + HistoriaClub.resumen(hi_c), HistoriaClub.texto_historia(hi_c), HistoriaClub.texto_clasicos(hi_c)]:
+	for linea: String in ["📜 " + HistoriaClub.resumen(hi_c), HistoriaClub.texto_historia(hi_c), HistoriaClub.texto_clasicos(hi_c), HistoriaClub.texto_palmares(hi_c)]:
 		if linea.strip_edges() == "":
 			continue
 		var hist := p._texto(11, Principal.COL_TEXTO)

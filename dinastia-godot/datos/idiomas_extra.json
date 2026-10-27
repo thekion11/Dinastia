@@ -6466,7 +6466,11 @@
   "Sin servicio a esta hora. Los recorridos vuelven a pasar desde las 05:30.": "No service at this hour. Routes run again from 05:30.",
   "Tiempos estimados según el horario de cada recorrido.": "Estimated times based on each route's timetable.",
   "⚠️ El código es «PA» y cuatro cifras, como en el poste.": "⚠️ The code is «PA» plus four digits, as on the sign post.",
-  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Get within 40 m of a bus stop or type the PA code from its sign post."
+  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Get within 40 m of a bus stop or type the PA code from its sign post.",
+  "Veces campeón": "Times champion",
+  "Años": "Years",
+  "último": "last",
+  "Palmarés": "Honours"
  },
  "pt": {
   "Historia": "História",
@@ -12935,7 +12939,11 @@
   "Sin servicio a esta hora. Los recorridos vuelven a pasar desde las 05:30.": "Sem serviço neste horário. As linhas voltam a passar a partir das 05:30.",
   "Tiempos estimados según el horario de cada recorrido.": "Tempos estimados segundo o horário de cada linha.",
   "⚠️ El código es «PA» y cuatro cifras, como en el poste.": "⚠️ O código é «PA» e quatro algarismos, como no poste.",
-  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Chegue a menos de 40 m de uma parada ou digite o código PA do poste."
+  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Chegue a menos de 40 m de uma parada ou digite o código PA do poste.",
+  "Veces campeón": "Vezes campeão",
+  "Años": "Anos",
+  "último": "último",
+  "Palmarés": "Palmarés"
  },
  "patrones": [
   [
@@ -25115,7 +25123,11 @@
   "Sin servicio a esta hora. Los recorridos vuelven a pasar desde las 05:30.": "Pas de service à cette heure. Les lignes reprennent à partir de 05:30.",
   "Tiempos estimados según el horario de cada recorrido.": "Temps estimés d'après l'horaire de chaque ligne.",
   "⚠️ El código es «PA» y cuatro cifras, como en el poste.": "⚠️ Le code est «PA» suivi de quatre chiffres, comme sur le poteau.",
-  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Approchez-vous à moins de 40 m d'un arrêt ou saisissez le code PA du poteau."
+  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Approchez-vous à moins de 40 m d'un arrêt ou saisissez le code PA du poteau.",
+  "Veces campeón": "Titres",
+  "Años": "Années",
+  "último": "dernier",
+  "Palmarés": "Palmarès"
  },
  "it": {
   "Historia": "Storia",
@@ -31584,7 +31596,11 @@
   "Sin servicio a esta hora. Los recorridos vuelven a pasar desde las 05:30.": "Nessun servizio a quest'ora. Le linee ripassano dalle 05:30.",
   "Tiempos estimados según el horario de cada recorrido.": "Tempi stimati in base all'orario di ogni linea.",
   "⚠️ El código es «PA» y cuatro cifras, como en el poste.": "⚠️ Il codice è «PA» più quattro cifre, come sul palo.",
-  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Avvicinati a meno di 40 m da una fermata o scrivi il codice PA del palo."
+  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Avvicinati a meno di 40 m da una fermata o scrivi il codice PA del palo.",
+  "Veces campeón": "Volte campione",
+  "Años": "Anni",
+  "último": "ultimo",
+  "Palmarés": "Albo d'oro"
  },
  "de": {
   "Historia": "Geschichte",
@@ -38053,7 +38069,11 @@
   "Sin servicio a esta hora. Los recorridos vuelven a pasar desde las 05:30.": "Um diese Uhrzeit kein Betrieb. Die Linien fahren ab 05:30 wieder.",
   "Tiempos estimados según el horario de cada recorrido.": "Geschätzte Zeiten nach dem Fahrplan jeder Linie.",
   "⚠️ El código es «PA» y cuatro cifras, como en el poste.": "⚠️ Der Code ist «PA» und vier Ziffern, wie am Mast.",
-  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Geh auf weniger als 40 m an eine Haltestelle heran oder gib den PA-Code vom Mast ein."
+  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Geh auf weniger als 40 m an eine Haltestelle heran oder gib den PA-Code vom Mast ein.",
+  "Veces campeón": "Titel",
+  "Años": "Jahre",
+  "último": "zuletzt",
+  "Palmarés": "Titel"
  },
  "ca": {
   "Historia": "Història",
@@ -44522,7 +44542,11 @@
   "Sin servicio a esta hora. Los recorridos vuelven a pasar desde las 05:30.": "Sense servei a aquesta hora. Els recorreguts tornen a passar des de les 05:30.",
   "Tiempos estimados según el horario de cada recorrido.": "Temps estimats segons l'horari de cada recorregut.",
   "⚠️ El código es «PA» y cuatro cifras, como en el poste.": "⚠️ El codi és «PA» i quatre xifres, com al pal.",
-  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Apropa't a menys de 40 m d'una parada o escriu el codi PA del pal."
+  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Apropa't a menys de 40 m d'una parada o escriu el codi PA del pal.",
+  "Veces campeón": "Vegades campió",
+  "Años": "Anys",
+  "último": "últim",
+  "Palmarés": "Palmarès"
  },
  "pl": {
   "Club": "Klub",
@@ -51270,7 +51294,11 @@
   "Sin servicio a esta hora. Los recorridos vuelven a pasar desde las 05:30.": "O tej porze brak kursów. Linie znów jeżdżą od 05:30.",
   "Tiempos estimados según el horario de cada recorrido.": "Czasy szacowane według rozkładu każdej linii.",
   "⚠️ El código es «PA» y cuatro cifras, como en el poste.": "⚠️ Kod to «PA» i cztery cyfry, jak na słupku.",
-  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Podejdź na mniej niż 40 m do przystanku lub wpisz kod PA ze słupka."
+  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Podejdź na mniej niż 40 m do przystanku lub wpisz kod PA ze słupka.",
+  "Veces campeón": "Tytuły",
+  "Años": "Lata",
+  "último": "ostatni",
+  "Palmarés": "Trofea"
  },
  "tr": {
   "Club": "Kulüp",
@@ -58018,6 +58046,10 @@
   "Sin servicio a esta hora. Los recorridos vuelven a pasar desde las 05:30.": "Bu saatte sefer yok. Hatlar 05:30'dan itibaren yeniden çalışır.",
   "Tiempos estimados según el horario de cada recorrido.": "Süreler her hattın tarifesine göre tahminidir.",
   "⚠️ El código es «PA» y cuatro cifras, como en el poste.": "⚠️ Kod, direkteki gibi «PA» ve dört rakamdır.",
-  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Bir durağa 40 m'den yakın ol ya da direkteki PA kodunu yaz."
+  "Acércate a menos de 40 m de un paradero o escribe el código PA del poste.": "Bir durağa 40 m'den yakın ol ya da direkteki PA kodunu yaz.",
+  "Veces campeón": "Şampiyonluk",
+  "Años": "Yıllar",
+  "último": "son",
+  "Palmarés": "Kupalar"
  }
 }

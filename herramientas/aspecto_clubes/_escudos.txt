@@ -32,6 +32,10 @@ Inter Miami|escudo|liso||IM|#f7b5cd|#14171c
 LAFC|escudo|liso||LAFC|#14171c|#c39e6d
 LA Galaxy|circulo|liso|estrella||#0b2f66|#ffd100
 Real Madrid|circulo|liso|corona||#ffffff|#febe10
+Barcelona|escudo|franjas||FCB/#f5c400|#a50044|#004d98
+Juventus|ovalo|franjas||J/#d8b45a|#14171c|#ffffff
+Milan|escudo|franjas||ACM/#ffffff|#d50032|#14171c
+Atlético Madrid|escudo|franjas|oso||#d50032|#ffffff|#0b2f66
 Sevilla|ovalo|liso||SFC|#ffffff|#d50032
 Villarreal|circulo|liso||VCF|#ffd100|#0b3d91
 Arsenal|escudo|liso|canon||#d50032|#ffffff
