@@ -428,3 +428,31 @@ func _probar_expendedora_balon() -> void:
 	b._physics_process(1.0 / 60.0)
 	_comprobar(b.patadas == patadas0, "en coche (modo distinto de «pie») no se patea")
 	raiz.queue_free()
+
+## EL PARQUE LLENO (relleno de la ciudad): bancos, mesas de pícnic y papeleras sin tocar el azar.
+func _probar_parque_lleno() -> void:
+	_titulo("EL PARQUE LLENO (bancos, mesas de pícnic y papeleras sin tocar el azar)")
+	var cb := CityBuilder.new()
+	add_child(cb)
+	var ex := CiudadExpansion.new(cb)
+	var antes := ex._rng.state
+	var hijos := cb.get_child_count()
+	CiudadParque.rellenar(ex, Rect2(-60.0, -50.0, 120.0, 100.0), Vector3.ZERO)
+	var nuevos := cb.get_child_count() - hijos
+	_comprobar(nuevos >= 40, "un parque de 120 × 100 m recibe más de 40 piezas (bancos, mesas, sillas, comida y papeleras): %d" % nuevos)
+	_comprobar(ex._rng.state == antes, "y no consume el azar de la ciudad")
+	var cb2 := CityBuilder.new()
+	add_child(cb2)
+	var ex2 := CiudadExpansion.new(cb2)
+	var h2 := cb2.get_child_count()
+	CiudadParque.rellenar(ex2, Rect2(-60.0, -50.0, 120.0, 100.0), Vector3.ZERO)
+	_comprobar(cb2.get_child_count() - h2 == nuevos, "dos parques iguales reciben lo mismo")
+	var cb3 := CityBuilder.new()
+	add_child(cb3)
+	var ex3 := CiudadExpansion.new(cb3)
+	var h3 := cb3.get_child_count()
+	CiudadParque.rellenar(ex3, Rect2(-14.0, -14.0, 28.0, 28.0), Vector3.ZERO)
+	_comprobar(cb3.get_child_count() - h3 < nuevos, "un parque pequeño recibe menos piezas")
+	cb.queue_free()
+	cb2.queue_free()
+	cb3.queue_free()
