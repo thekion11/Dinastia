@@ -406,3 +406,24 @@ func _probar_parque_lleno() -> void:
 	cb.queue_free()
 	cb2.queue_free()
 	cb3.queue_free()
+
+func _probar_cancha_patos() -> void:
+	_titulo("LA CANCHA DE PENALES Y LOS PATOS (sin tocar el azar)")
+	var cb := CityBuilder.new()
+	add_child(cb)
+	var ex := CiudadExpansion.new(cb)
+	var antes := ex._rng.state
+	var r := Rect2(-60.0, -50.0, 120.0, 100.0)
+	var cc := CiudadCancha.centro(r, Vector3.ZERO, false)
+	var cc_lago := CiudadCancha.centro(r, Vector3.ZERO, true)
+	_comprobar(cc.distance_to(cc_lago) > 20.0, "con lago la cancha va en otro cuadrante (no pisa los juegos)")
+	_comprobar(CiudadCancha.ocupa(cc, cc) and not CiudadCancha.ocupa(cc, cc + Vector3(30, 0, 0)), "la cancha reserva su sitio y no más")
+	var hijos := cb.get_child_count()
+	CiudadCancha.montar(ex, cc)
+	var cancha := cb.get_child_count() - hijos
+	_comprobar(cancha >= 30, "cancha con rayas, áreas, dos porterías con red y balón: %d piezas" % cancha)
+	hijos = cb.get_child_count()
+	CiudadCancha.patos(ex, Vector3(20, 0, 20), 8.0)
+	var patos := cb.get_child_count() - hijos
+	_comprobar(patos >= 4 and patos <= 12, "entre 4 y 12 patos en el lago: %d" % patos)
+	_comprobar(ex._rng.state == antes, "no consume el azar de la ciudad")
