@@ -88,6 +88,7 @@ func _process(delta_real: float) -> void:
 		## pasa; con los dos ya a distinto lado, no se frenan.
 		if es_peaton:
 			_lateral(v, delta)
+			_mirar_delante(v, s0, delta)
 		if _peatones_ruta.has(ruta) and es_peaton:
 			for o: Dictionary in _peatones_ruta[ruta]:
 				if o == v:
@@ -166,6 +167,27 @@ func _lateral(v: Dictionary, delta: float) -> void:
 	var obj := float(v.get("lat_obj", 0.0))
 	if lat != obj:
 		v["lat"] = move_toward(lat, obj, VEL_LATERAL * delta)
+
+## MOBILIARIO DELANTE (27-10-2026, plan §4): cuatro veces por segundo el peatón mira 1,2 m por
+## delante en su carril; si hay un banco, una papelera o una farola (`libre_fn`), se abre a un lado
+## libre como al adelantar. Sin `libre_fn` (pruebas, mapa de lejos) no mira nada.
+const MIRA_CADA := 0.25
+const MIRA_DELANTE := 1.2
+
+func _mirar_delante(v: Dictionary, s: float, delta: float) -> void:
+	if not libre_fn.is_valid():
+		return
+	var t := float(v.get("t_mira", randf() * MIRA_CADA)) - delta
+	if t > 0.0:
+		v["t_mira"] = t
+		return
+	v["t_mira"] = MIRA_CADA
+	var par: Array = (_rutas[int(v["ruta"])] as Ruta).en(s)
+	var dir: Vector3 = par[1]
+	var lat := float(v.get("lat", 0.0))
+	var q: Vector3 = par[0] + Vector3(dir.z, 0, -dir.x) * lat + dir * MIRA_DELANTE
+	if not bool(libre_fn.call(q)):
+		_esquivar(v, lat, 1.0)
 
 ## Se abre a un lado (primero `preferido`: +1 fuera, -1 dentro) a `LADO_ESQUIVA`
 ## de `de_lat` (el lado del que estorba), si ese carril está libre un par de
