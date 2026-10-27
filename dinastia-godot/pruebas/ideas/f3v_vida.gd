@@ -225,6 +225,15 @@ func _probar_async() -> void:
 			_m.roles.cartera.efectivo = 80
 			_v.usar_surtidor("surtidor_0")
 			_comprobar(_m.vida.combustible > 40.0 and _m.roles.cartera.efectivo < 80 and gas0 > 0.0, "con efectivo paga en efectivo")
+	## Sin cartera (mundo sin roles) la gasolina no sale gratis: la paga el club como antes.
+	if _v != null and _v._redes() != null and _m.mi_club() != null and not _v._redes().surtidor(0).is_empty():
+		var roles_guardados: Roles = _m.roles
+		_m.roles = null
+		_m.vida.combustible = 5.0
+		var saldo_sin := _m.mi_club().saldo
+		_v.usar_surtidor("surtidor_0")
+		_comprobar(_m.vida.combustible > 40.0 and _m.mi_club().saldo < saldo_sin, "sin cartera repostar lo paga el club (nunca sale gratis)")
+		_m.roles = roles_guardados
 	## LA TIENDA DE LA GASOLINERA: compra según el hambre, la paga el DT y el club no.
 	if _v != null and _m.roles != null and _m.necesidades != null:
 		_m.roles.patrimonio = 100
