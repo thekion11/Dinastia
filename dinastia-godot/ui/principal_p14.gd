@@ -34,19 +34,9 @@ func _al_cambiar_pestana(_idx: int) -> void:
 	## El contenido de la pestaña entra escalonado (plan maestro B11).
 	_animar_pestana.call_deferred()
 
-func _bloque(padre: VBoxContainer, titulo: String, ratio: float) -> VBoxContainer:
-	var caja := _panel()
-	caja.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	caja.size_flags_stretch_ratio = ratio
-	padre.add_child(caja)
-	var v := VBoxContainer.new()
-	v.set_anchors_preset(Control.PRESET_FULL_RECT)
-	v.offset_left = 12; v.offset_top = 10; v.offset_right = -12; v.offset_bottom = -10
-	caja.add_child(v)
-	var t := _texto(11, COL_SUAVE); t.text = titulo
-	t.set_meta("titulo_bloque", true)
-	v.add_child(t)
-	return v
+## Puentes (fase 6, paso 7): viven en `ui/principal/piezas_ui.gd`.
+func _bloque(padre: VBoxContainer, titulo: String, ratio: float) -> VBoxContainer: return _piezas._bloque(padre, titulo, ratio)
+
 
 ## Repinta el lienzo. Solo hace falta al cambiar de paleta: el resto se aplica
 ## solo al reconstruir las pantallas.
