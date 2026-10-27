@@ -91,6 +91,7 @@ func _industrial(r: Rect2) -> void:
 		## ×4: a ×9 parecía una torre de refrigeración de 25 m de ancho.
 		if _pieza_kit(RUTA_IND + "chimney-large.glb", pc, 4.0, 0.0) == null:
 			b._cil_en(c + Vector3(-r.size.x * 0.38, 14.0, r.size.y * 0.3), 1.4, 28.0, b._mat_simple(Color(0.55, 0.3, 0.25), 0.8))
+	CiudadIndustrial.rellenar(self, r)
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
 
 func _cd(pos: Vector3, tam: Vector3, col: Color) -> void:

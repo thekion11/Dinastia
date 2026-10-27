@@ -11,11 +11,14 @@ const TOPE := 0.31   ## cara superior de la losa
 static func montar(ex: CiudadExpansion, c: Vector3, w: float, f: float) -> void:
 	var b := ex.b
 	var y := TOPE
-	## Bancos en anillo, mirando a la fuente.
+	## Bancos en anillo, mirando a la fuente (el de 0,4 m a ×2,5: ~1 m de ancho y ~1,2 m de alto).
 	for k in 10:
 		var ang := TAU * float(k) / 10.0
 		var p := c + Vector3(cos(ang) * 13.0, 0, sin(ang) * 13.0)
-		ex._pieza_kit(BANCO, Vector3(p.x, y, p.z), ex._escala_ancho(BANCO, 2.2), -ang - PI * 0.5)
+		## Dos asientos del kit juntos por cada puesto del anillo (el modelo es de una plaza: ~0,4 m de ancho).
+		for d: float in [-0.55, 0.55]:
+			var q := p + Vector3(-sin(ang), 0, cos(ang)) * d
+			ex._pieza_kit(BANCO, Vector3(q.x, y, q.z), ex._escala_ancho(BANCO, 1.0), -ang - PI * 0.5)
 	## Farolas en un anillo exterior: poste, brazo y luminaria encendida.
 	var poste := b._mat_simple(Color(0.16, 0.17, 0.2), 0.5)
 	var luz := b._mat_simple(Color(1.0, 0.95, 0.8), 0.4, 1.4)
