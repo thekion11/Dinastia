@@ -232,3 +232,39 @@ func _probar_redes_ciudad() -> void:
 	a2.pasar(500, 6, 0.5, 0.0)
 	_comprobar(a1.luz == a2.luz and a1.cortes == a2.cortes and a1.agua_nivel == a2.agua_nivel, "la misma semilla da las mismas averías")
 	_comprobar(not a1.resumen().is_empty(), "el resumen cuenta las cuatro redes")
+
+## LA CARTERA DEL DT (pieza A de §2.2h): efectivo, tarjeta con PIN y límite, cajero, bloqueo y guardado.
+func _probar_cartera_dt() -> void:
+	_titulo("LA CARTERA DEL DT (efectivo, tarjeta, cajero y guardado)")
+	var m := Mundo.new()
+	var r := Roles.new(m)
+	r.patrimonio = 1000
+	var c := r.cartera
+	_comprobar(c.total(r) == 1000 and c.efectivo == 0 and c.pin_inicial, "empieza sin efectivo y con el PIN de fábrica")
+	_comprobar(c.pagar_efectivo(5, "Café", 1) == "saldo", "sin efectivo no se paga en efectivo")
+	_comprobar(c.pagar_tarjeta(r, 50, "Gasolina", "0000", 1) == "" and r.patrimonio == 950 and c.gastado_dia == 50, "con tarjeta sale de la cuenta")
+	_comprobar(c.pagar_tarjeta(r, 560, "Reloj", "0000", 1) == "limite" and r.patrimonio == 950, "el límite diario de la tarjeta (600 €) corta el pago")
+	_comprobar(c.pagar_tarjeta(r, 560, "Reloj", "0000", 2) == "" and r.patrimonio == 390, "al día siguiente vuelve a haber límite")
+	_comprobar(c.retirar(r, 100, "0000", 2, 2) == "" and c.efectivo == 100 and r.patrimonio == 288, "el cajero pasa dinero al bolsillo con su comisión")
+	_comprobar(c.total(r) == 388, "bolsillo + cuenta = total (menos la comisión)")
+	_comprobar(c.pagar_efectivo(30, "Peluche", 2) == "" and c.efectivo == 70, "se paga en efectivo del bolsillo")
+	_comprobar(c.ingresar(r, 70, 2) == "" and c.efectivo == 0 and r.patrimonio == 358, "el cajero ingresa el efectivo en la cuenta")
+	_comprobar(c.retirar(r, 600, "0000", 3) == "limite", "el cajero limita a 500 € al día")
+	_comprobar(c.cambiar_pin("1111", "4321") == "pin" and c.cambiar_pin("0000", "43") == "importe" and c.cambiar_pin("0000", "4321") == "" and not c.pin_inicial, "cambiar el PIN pide el viejo y 4 cifras")
+	_comprobar(c.pagar_tarjeta(r, 10, "A", "0000", 3) == "pin" and c.pagar_tarjeta(r, 10, "A", "0000", 3) == "pin" and c.pagar_tarjeta(r, 10, "A", "0000", 3) == "bloqueada", "tres PIN erróneos bloquean la tarjeta")
+	_comprobar(c.pagar_tarjeta(r, 10, "A", "4321", 3) == "bloqueada", "bloqueada no paga ni con el PIN bueno")
+	c.desbloquear()
+	_comprobar(c.pagar_tarjeta(r, 10, "A", "4321", 3) == "", "el banco la desbloquea")
+	for i in 40:
+		c.efectivo += 1
+		c.pagar_efectivo(1, "x", 4)
+	_comprobar(c.movimientos.size() == CarteraDT.MAX_MOV, "solo se guardan los últimos 30 movimientos")
+	## Guardado: ida y vuelta por JSON y partida vieja.
+	var r2 := Roles.new(m)
+	r2.desde_dic(JSON.parse_string(JSON.stringify(r.a_dic())))
+	_comprobar(r2.cartera.pin == "4321" and not r2.cartera.pin_inicial and r2.cartera.movimientos.size() == CarteraDT.MAX_MOV and r2.patrimonio == r.patrimonio, "la cartera se guarda y se carga")
+	var r3 := Roles.new(m)
+	var d: Dictionary = r.a_dic()
+	d.erase("cartera")
+	r3.desde_dic(d)
+	_comprobar(r3.cartera.efectivo == 0 and r3.cartera.pin == "0000" and r3.cartera.pin_inicial, "una partida vieja sin cartera empieza vacía y con el PIN de fábrica")
