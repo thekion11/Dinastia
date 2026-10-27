@@ -28,6 +28,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	retos_semana.activos = []
 	retos_semana.generar(self)
 	mentor_mes.empezar()
+	DesafiosDificultad.aplicar(self)
 	return d
 
 func nueva_temporada() -> Dictionary:

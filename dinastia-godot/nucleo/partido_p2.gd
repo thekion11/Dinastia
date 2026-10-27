@@ -425,7 +425,7 @@ func _incidencias() -> void:
 			tarjeta.emit(l, roja, minuto)
 	## Una sola tirada siempre: la superficie cambia la probabilidad, no cuántas
 	## veces se consulta `Azar`.
-	var f_sup := ctx_lesion_local if local != null and local.id == ctx_club_id else 1.0
+	var f_sup := (ctx_lesion_local if local != null and local.id == ctx_club_id else 1.0) * (ctx_lesion_mio if (local != null and local.id == ctx_club_id) or (visita != null and visita.id == ctx_club_id) else 1.0)
 	if Azar.suerte(0.0024 * f_sup):
 		var h := _alguien(_todos)
 		if h != null:
