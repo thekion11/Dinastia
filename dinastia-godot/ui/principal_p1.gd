@@ -356,6 +356,10 @@ var _registro: RichTextLabel
 var _estilos := EstilosMenu.new(self)
 ## Hubs contextuales y carril de chips: `Hubs` (`ui/menu/hubs.gd`, fase 6 paso 5).
 var _hubs := Hubs.new(self)
+## Elegir club: `PantallaElegirClub` (fase 6, paso 4).
+var _ui_elegir_club := PantallaElegirClub.new(self)
+## La jornada de partido (dirigir, cerrar, jugar temporada): `JornadaPartido` (fase 6, paso 7).
+var _jornada := JornadaPartido.new(self)
 var _estilo_menu: String:
 	get: return _estilos.estilo
 	set(v): _estilos.estilo = v
