@@ -2134,11 +2134,9 @@ Peticiones a zonas que no eran suyas (la 14, partir `banco_p25.gd`, ya está hec
 Defectos a la vista que dejó anotados: ninguno pendiente (el de «Forma del escudo» ya estaba aplicado el 26-10).
 
 Auditoría de fuentes y de presentación del texto (26-10, sesión fnt). Lo de traducción es para S1:
-- **93 claves con solo en y pt** (faltan fr, it, de, ca, pl, tr): son los titulares de imprevistos y avisos («Apelación ACOGIDA», «Cedido a préstamo», «¡Clausulazo!», «Polémica en redes»…). En 6 idiomas caen al castellano. Lista: claves de `en` que no están en `fr`.
 - **150 claves que no aparecen literalmente en el código ni en los datos**: casi todas se componen en tiempo de ejecución (icono + texto, «✔  …», «·····  Jefe médico», «sí   Construir»), así que NO son claves muertas seguras. Hay restos claros, como «Estrecha (cabe mas)» sin tilde, que es el nombre viejo de la tipografía. Antes de borrar nada: un barrido que registre en partida qué claves se piden de verdad.
 - **Caídas por formato**: no hay ninguna clave cuyos `%s`/`%d` no casen con su traducción. Los 42 avisos que salen al comparar son «%» de porcentaje literal («12% más»), no marcadores. La única llamada que formatea DENTRO de `Idiomas.t` es `ui/principal/rueda_prensa.gd:414` (`Idiomas.t("%s %s" % …)`, icono + texto); funciona porque `t` separa el icono, pero lo limpio es `Idiomas.t(datos[1])` (zona de la rueda de prensa).
 - **Nombres propios con la misma forma en todos los idiomas**: las leyes laborales (Arbeitszeitgesetz, Fair Labor Standards Act…), DINASTÍA, VAR, Valparaíso. Están bien; no hay que traducirlos.
-- **Texto que no cabe**: en `ui/componentes/ficha_jugador_info.gd:_dato` el valor «pertenece a «Los históricos»» se corta con «…» ya en castellano (165/149 px; en alemán, 195/161). Se puede leer en la ayuda emergente; dar más ancho al valor cuando la etiqueta es corta.
 - **El registro «Qué pasa»** («Mundo nuevo. Semilla …») queda en el idioma en que se escribió: son entradas guardadas, no rótulos. Está bien así, pero conviene saberlo.
 
 ## 10. Huecos y mejoras propuestas
