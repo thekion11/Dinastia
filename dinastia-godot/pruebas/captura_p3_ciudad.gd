@@ -6,7 +6,8 @@ var _n := 0
 var _p: Node
 var _v: VistaCiudad
 var _e: ExploradorCiudad
-const POR_ESCENA := 14
+var _vida: VidaCiudad
+const POR_ESCENA := 40
 
 func _ready() -> void:
 	_p = load("res://escenas/principal.tscn").instantiate()
@@ -31,7 +32,7 @@ func _process(_d: float) -> void:
 		_v.call("_aplicar_hora")
 		_v.explorar("pie")
 		_e = _v.get("_explorador")
-		VidaCiudad.enganchar(_e, _v, _p.get("mundo"))
+		_vida = VidaCiudad.enganchar(_e, _v, _p.get("mundo"))
 		return
 	if _n < 8:
 		return
@@ -44,18 +45,19 @@ func _process(_d: float) -> void:
 		print("FIN. 0 fallos")
 		get_tree().quit()
 		return
-	if f == 0:
+	if f == 0 or f == POR_ESCENA / 2:
 		match k:
 			0:
-				var pv: PuertaVida = _e.vida.puertas
+				var pv: PuertaVida = _vida.puertas
 				var i := 0
 				var p: Vector3 = b.puertas_vida[i]["p"]
 				var nn: Vector3 = b.puertas_vida[i]["n"]
 				_plantar(p, nn + nn.cross(Vector3.UP) * 0.5, 10.0)
-				pv.iniciar(i, true)
-				pv._mover(5.6)
+				if f != 0:
+					pv.iniciar(i, true)
+					pv._mover(5.6)
 			1:
-				var ev: EscaleraVida = _e.vida.escaleras
+				var ev: EscaleraVida = _vida.escaleras
 				var j := -1
 				for q in b.escaleras.size():
 					var e: Dictionary = b.escaleras[q]
@@ -67,8 +69,9 @@ func _process(_d: float) -> void:
 					var pie: Vector3 = b.escaleras[j]["pie"]
 					var cima: Vector3 = b.escaleras[j]["cima"]
 					_plantar(pie, Vector3(pie.x - cima.x, 0, pie.z - cima.z) + Vector3(1, 0, 0), 9.0)
-					ev.iniciar(j, true)
-					ev._mover(float(b.escaleras[j]["n"]) * EscaleraVida.V_PASO * 0.45)
+					if f != 0:
+						ev.iniciar(j, true)
+						ev._mover(float(b.escaleras[j]["n"]) * EscaleraVida.V_PASO * 0.45)
 			2:
 				var banco := CityBuilder.ESTADIO_EN + Vector3(35.0, 0.0, -20.4)
 				_plantar(banco, Vector3(-1, 0, 0.35), 9.0)
