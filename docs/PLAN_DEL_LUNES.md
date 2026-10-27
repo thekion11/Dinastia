@@ -19,16 +19,13 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 
 ## 1. Lunes 26-10 — del dueño
 
-- [ ] **Borrar 8 ramas y la etiqueta `latest`** (el clon pesa 1,33 GiB hasta entonces). Con `git clone --single-branch --branch main` ya sale ligero.
-  `git push origin --delete ccr-54306f57-jlcywg claude/godot-project-review-o1dvr1 claude/inspiring-allen-8vu29s claude/sweet-turing-tysv99 borrar-ccr-54306f57-jlcywg borrar-claude-godot-project-review-o1dvr1 borrar-claude-inspiring-allen-8vu29s borrar-claude-sweet-turing-tysv99` y `git push origin --delete latest`. La rama `respaldo-historia-2026-10-24` (= `main` antes de reescribir): dejarla 1-2 semanas y borrarla. GitHub conserva `refs/pull/*` con objetos viejos.
+- [ ] **Borrar la etiqueta `latest`** (las 8 ramas viejas ya no están, 27-10): `git push origin --delete latest`.
 - [ ] **Quitar documentos y capturas viejos del historial de `main`**: ya reescrito en la rama de trabajo (530 rutas fuera, 802 → 682 MiB, árbol idéntico); falta empujarlo a `main` (el clasificador de permisos bloqueó el empuje forzado): añadir una regla de Bash o ejecutar tú, desde un clon espejo reescrito, `git push --force-with-lease=main:2f97059740f0b995ddc1b391ea3282eb26e345bd origin main:main`. Las ramas viejas y `respaldo-historia-2026-10-24` conservan todo lo borrado.
 - [ ] Probar Foundry/Azure (200 USD, 30 días) y decidir si se usa.
 - [ ] Abrir la red a Wikimedia/banderas (necesario para las caras que faltan: ~906 de 2.125 y escudos).
-- [ ] CI `compilar.yml`: ruta y preset ya corregidos; falta imagen de Godot **4.7** (la 4.3 no abre el proyecto) y la configuración de exportación.
 - [ ] **Perfil de FPS en hardware real** (M-337, P0): PC modesto (Intel UHD) y móvil; aquí solo hay render por software.
 - [ ] Builds, keystore, licencias, derechos de imagen, música y voces (🔒). Cambiar la contraseña del keystore (la vieja sigue en el historial). Confirmar la fuente de los modelos 🟡 (Sketchfab, Meshy, mocap de Gumroad, Canva).
 - [ ] Subir los binarios pesados (`recursos/`, `marca/`, `material/`) al Drive con `herramientas/drive_subir.ps1` y verificar. Respaldo de texto: `docs/05_referencia/RESPALDO_DRIVE.md`.
-- [ ] Decidir: «el bloqueo» (modos que se desbloquean jugando) como opción en Ajustes, «Todo abierto» por defecto.
 
 ## 2. El guion: fases 0–6 (reestructuración)
 
@@ -521,7 +518,7 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 
 ### Semana 7 (24-11 → 30-11) — Tutorial y primera hora de juego
 - [ ] Indicaciones sobre la pantalla: hay resaltado y flecha sobre el control de cada misión (27-10); falta acortar los textos más largos del mentor (medir en la primera hora con jugadores nuevos).
-- [ ] Desbloqueo opcional de modos (ver «el bloqueo»).
+- [ ] Desbloqueo opcional de modos: ACEPTADO por el dueño (27-10), opción en Ajustes con «Todo abierto» por defecto; lo construye el líder.
 - [ ] Pruebas de la primera hora: qué ve un jugador nuevo, sin perderse.
 
 ### Semana 8 (1-12 → 7-12) — Ultra pulido de todo
