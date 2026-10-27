@@ -133,6 +133,10 @@ func guardar() -> void:
 		p._escribir("[color=#e05555]No se pudo guardar.[/color]")
 
 func cargar() -> void:
+	var veto := Partida.motivo_sin_cargar(p.mundo)
+	if veto != "":
+		p._escribir("[color=#c9a227]%s[/color]" % veto)
+		return
 	var m := Partida.cargar(RANURA)
 	if m == null:
 		p._escribir("[color=#c9a227]No hay ninguna partida guardada todavía.[/color]")
@@ -149,6 +153,10 @@ func guardar_en(nombre: String) -> void:
 	p._refrescar()
 
 func cargar_de(nombre: String) -> void:
+	var veto := Partida.motivo_sin_cargar(p.mundo)
+	if veto != "":
+		p._escribir("[color=#c9a227]%s[/color]" % veto)
+		return
 	var m := Partida.cargar(nombre)
 	if m == null:
 		p._escribir("[color=#c9a227]Esa ranura está vacía.[/color]")
@@ -163,7 +171,7 @@ func cargar_de(nombre: String) -> void:
 ## propósito -uno por semana durante toda una carrera sería puro ruido en el
 ## registro-, en la misma ranura que ya usa el botón "Guardar".
 func autoguardar_si_toca() -> void:
-	if p._autoguardado and Partida.guardar(p.mundo, RANURA):
+	if (p._autoguardado or p.mundo.tiene_desafio("sinRecarga")) and Partida.guardar(p.mundo, RANURA):
 		_indicador_guardado()
 
 ## Si el guardado principal estaba roto y se recuperó la copia (guardado
@@ -225,6 +233,10 @@ func apuntar_deshacer(motivo: String) -> void:
 		pila_deshacer.pop_front()
 
 func deshacer() -> void:
+	var veto := Partida.motivo_sin_cargar(p.mundo)   ## deshacer también es volver atrás: «Sin red» lo prohíbe
+	if veto != "":
+		p._escribir("[color=#c9a227]%s[/color]" % veto)
+		return
 	if pila_deshacer.is_empty():
 		p._escribir("[color=#c9a227]No hay nada que deshacer.[/color]")
 		return

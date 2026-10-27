@@ -358,7 +358,22 @@ static func instantanea(m: Mundo) -> Dictionary:
 
 	return datos
 
+## EL DESAFÍO «SIN RED» (27-10-2026, fila 971): con él no se puede volver a un guardado anterior. Hay UNA sola ranura (la principal, `partida`):
+## guardar en cualquier otra la reutiliza, así que no quedan guardados viejos a los que volver; y mientras se juega no se carga ninguno (el ciclo de
+## partida lo comprueba con `motivo_sin_cargar`). Se guarda siempre solo cada semana (`autoguardar_si_toca`).
+const RANURA_UNICA := "partida"
+
+static func ranura_para(m: Mundo, nombre: String) -> String:
+	return RANURA_UNICA if m != null and m.tiene_desafio("sinRecarga") else nombre
+
+## "" si se puede cargar; si no, el motivo (ya traducido).
+static func motivo_sin_cargar(m: Mundo) -> String:
+	if m != null and m.tiene_desafio("sinRecarga"):
+		return Idiomas.t("Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.")
+	return ""
+
 static func guardar(m: Mundo, nombre: String) -> bool:
+	nombre = ranura_para(m, nombre)
 	var t0 := Time.get_ticks_msec()
 	var datos := instantanea(m)
 	var crudo := JSON.stringify(datos).to_utf8_buffer()
