@@ -3,7 +3,7 @@ extends Node
 ## de `CiudadExpansion` (plaza mayor, ayuntamiento, estación, mercado, cine, hospital…, y un
 ## ejemplar de cada barrio y distrito). Solo fotografía: no cambia la ciudad.
 ##   herramientas/captura.sh res://pruebas/ideas/f6c_captura_ciudad.tscn     (Forward+)
-##   LADO=sur  la toma a pie desde el sur · ZONAS=cine,hospital   solo esas · HORA=11 · SALIDA=ciudad_26_10 (carpeta de pruebas/capturas)
+##   TERRENOS=ribera compra esos terrenos · TOMA=x,z,ancho,fondo una toma suelta (parcela) · LADO=sur|norte|este|oeste  la toma a pie desde el sur · ZONAS=cine,hospital   solo esas · HORA=11 · SALIDA=ciudad_26_10 (carpeta de pruebas/capturas)
 ## Sin pantalla (headless) no hace nada y termina en «FIN. 0 fallos»: `ideas.sh todo` lo salta.
 const ESPERA_AEREA := 50   ## fotogramas para que la cámara orbital llegue (se mueve con suavizado)
 const ESPERA_PIE := 14     ## y la del paseo
@@ -41,6 +41,9 @@ func _process(_d: float) -> void:
 	if _p == null:
 		return
 	_n += 1
+	if _n == 5 and OS.get_environment("TERRENOS") != "":
+		for t: String in OS.get_environment("TERRENOS").split(",", false):
+			_p.mundo.ciudad.terrenos.append(t)
 	if _n == 6:
 		_p.call("_ver_ciudad_propia")
 		for h in _p.get_children():
@@ -51,6 +54,9 @@ func _process(_d: float) -> void:
 		_v.set("_hora", float(OS.get_environment("HORA")) if OS.get_environment("HORA") != "" else 11.0)
 		_v.call("_aplicar_hora")
 		_elegir_tomas()
+		if OS.get_environment("TOMA") != "":
+			var q := OS.get_environment("TOMA").split_floats(",")
+			_tomas = [{"nombre": "toma", "rect": Rect2(q[0] - q[2] * 0.5, q[1] - q[3] * 0.5, q[2], q[3]), "celda": Vector2i.ZERO, "zona": ""}]
 		print("f6c: %d zonas" % _tomas.size())
 		if OS.get_environment("SOLO") == "pie":   ## repetir solo las tomas a pie
 			_aerea = false
@@ -94,8 +100,9 @@ func _process(_d: float) -> void:
 			var fuera := Vector2(r.get_center().x, r.get_center().y)
 			var dir := fuera.normalized() if fuera.length() > 1.0 else Vector2(0, 1)
 			var normal := Vector2(signf(dir.x), 0.0) if absf(dir.x) > absf(dir.y) else Vector2(0.0, signf(dir.y))
-			if OS.get_environment("LADO") == "sur":   ## LADO=sur: el frente de la manzana que da al sur (+Z)
-				normal = Vector2(0.0, 1.0)
+			var lado: Dictionary = {"sur": Vector2(0, 1), "norte": Vector2(0, -1), "este": Vector2(1, 0), "oeste": Vector2(-1, 0)}
+			if lado.has(OS.get_environment("LADO")):   ## LADO=sur|norte|este|oeste: el frente de la manzana que da a ese lado
+				normal = lado[OS.get_environment("LADO")]
 			var pos := Vector3(r.get_center().x + normal.x * (r.size.x * 0.5 + _dist_pie()), 0.0, r.get_center().y + normal.y * (r.size.y * 0.5 + _dist_pie()))
 			var rumbo := atan2(-normal.x, -normal.y)   ## forward = (sin, cos): mirando hacia la manzana
 			_e.cuerpo.position = pos
