@@ -366,59 +366,7 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 ## la pone el nodo, no una cuenta a mano.
 static func _vomitorios(deck: MeshInstance3D, largo: float, fondo: float,
 		lateral: bool) -> void:
-	## Uno cada ~26 m, que es el reparto real de un graderío.
-	var cuantas: int = clampi(int(largo / 26.0), 2, 6)
-	## Al borde de arriba y POR DEBAJO del borde del telón (0,32), para que las
-	## dos capas no compitan -ver la nota de `_telones()`-.
-	## Los accesos están en el borde ALTO de la rampa: depende de cómo esté girada la tribuna (ver `_butacas`).
-	var sentido: float = 1.0 if (deck.basis * (Vector3(1, 0, 0) if lateral else Vector3(0, 0, 1))).y >= 0.0 else -1.0
-	var d: float = sentido * (fondo * 0.5 - 1.45)
-	## ACCESOS CON CUERPO (27-10-2026, «mejorar los accesos»): antes era un plano oscuro. Ahora cada vomitorio es una boca de hormigón con dintel
-	## y jambas, el hueco negro con fondo, un rótulo verde de SALIDA encendido y el descansillo claro delante. Tres MultiMesh por grada
-	## (hormigón, hueco, rótulo): sin nodos por vomitorio.
-	var hormigon: Array[Transform3D] = []
-	var hueco: Array[Transform3D] = []
-	var rotulo: Array[Transform3D] = []
-	for k in cuantas:
-		var centro: float = -largo * 0.5 + largo * (float(k) + 0.5) / float(cuantas)
-		_caja_vom(hueco, d + sentido * 0.55, 1.2, centro, 2.5, 2.4, 1.5, lateral)
-		_caja_vom(hormigon, d + sentido * 0.2, 2.62, centro, 3.3, 0.36, 0.7, lateral)       ## dintel
-		for lado: float in [-1.0, 1.0]:
-			_caja_vom(hormigon, d + sentido * 0.2, 1.3, centro + lado * 1.45, 0.34, 2.6, 0.7, lateral)   ## jambas
-		_caja_vom(hormigon, d - sentido * 0.75, 0.33, centro, 3.4, 0.06, 1.3, lateral)     ## descansillo
-		_caja_vom(rotulo, d - sentido * 0.17, 3.05, centro, 1.3, 0.28, 0.05, lateral)
-	_multi_vom(deck, "VomitoriosHormigon", hormigon, null, Color(0.62, 0.62, 0.6), 0.0)
-	_multi_vom(deck, "VomitoriosHueco", hueco, null, Color(0.025, 0.03, 0.035), 0.0)
-	_multi_vom(deck, "VomitoriosRotulo", rotulo, null, Color(0.1, 0.85, 0.35), 1.6)
-
-## Una caja en espacio del deck: `dep` sobre el eje del fondo, `y` el centro, `a` a lo largo; `an`/`al`/`pr`: ancho, alto, profundidad.
-static func _caja_vom(lista: Array[Transform3D], dep: float, y: float, a: float, an: float, al: float, pr: float, lateral: bool) -> void:
-	var pos := Vector3(dep, 0.3 + y, a) if lateral else Vector3(a, 0.3 + y, dep)
-	var tam := Vector3(pr, al, an) if lateral else Vector3(an, al, pr)
-	lista.append(Transform3D(Basis.from_scale(tam), pos))
-
-static func _multi_vom(deck: MeshInstance3D, nombre: String, ts: Array[Transform3D], _tex: Texture2D, col: Color, brillo: float) -> void:
-	if ts.is_empty():
-		return
-	var mm := MultiMesh.new()
-	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.mesh = BoxMesh.new()
-	mm.instance_count = ts.size()
-	for i in ts.size():
-		mm.set_instance_transform(i, ts[i])
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = col
-	mat.roughness = 0.95 if brillo == 0.0 else 0.4
-	if brillo > 0.0:
-		mat.emission_enabled = true
-		mat.emission = col
-		mat.emission_energy_multiplier = brillo
-	var mi := MultiMeshInstance3D.new()
-	mi.name = nombre
-	mi.multimesh = mm
-	mi.material_override = mat
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	deck.add_child(mi)
+	VomitoriosGrada.montar(deck, largo, fondo, lateral)
 
 ## Un bastidor de focos en `centro`, apuntando a `mira`, con `cols` × `filas`
 ## proyectores (sus transformaciones se suman a `proyectores`).
