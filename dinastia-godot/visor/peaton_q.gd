@@ -319,8 +319,7 @@ static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pe
 		if h != null:
 			## 26-10-2026: 5 cm más abajo; en las mujeres (más bajas de hombros)
 			## asomaba por encima del hombro como una tabla detrás del cuello.
-			_pieza(h, _caja(Vector3(0.26, 0.3, 0.13)), _m(col), Vector3(0, -0.03, -0.16))
-			_pieza(h, _caja(Vector3(0.22, 0.13, 0.05)), _m(col.darkened(0.2)), Vector3(0, -0.1, -0.25))
+			MochilaQ.poner(h, col)
 	elif acc < 0.42:
 		## Bolso colgado de la cadera.
 		var derecha := rng.randf() < 0.5
