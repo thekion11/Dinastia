@@ -53,7 +53,7 @@ func _redondear(puntos: PackedVector3Array, radio: float) -> PackedVector3Array:
 ## agrandada medía 6 m de alto. Este se arma con piezas: 12 m de largo, 3,1 de
 ## alto y 2,55 de ancho, con franja de ventanas, parabrisas, dos puertas,
 ## rótulo de destino encendido, ruedas y el color de la línea. Mira a +Z.
-static func autobus(col: Color, destino: String = "") -> Node3D:
+static func autobus(col: Color, destino: String = "", numero: String = "") -> Node3D:
 	var raiz := Node3D.new()
 	var pintura := StandardMaterial3D.new()
 	pintura.albedo_color = col
@@ -133,6 +133,36 @@ static func autobus(col: Color, destino: String = "") -> Node3D:
 		l.outline_size = 0
 		l.position = Vector3(0, 2.85, 6.04)
 		raiz.add_child(l)
+	## EL NÚMERO DE LA LÍNEA (27-10-2026): grande en los dos costados y detrás, más las dos placas.
+	if numero != "":
+		for lado: float in [-1.0, 1.0]:
+			var ln := Label3D.new()
+			ln.text = numero
+			ln.font_size = 120
+			ln.pixel_size = 0.011
+			ln.modulate = Color.WHITE
+			ln.outline_size = 14
+			ln.outline_modulate = Color(0.05, 0.05, 0.08)
+			ln.position = Vector3(lado * 1.29, 1.0, 3.2)
+			ln.rotation.y = lado * PI * 0.5
+			raiz.add_child(ln)
+		var lt := Label3D.new()
+		lt.text = numero
+		lt.font_size = 110
+		lt.pixel_size = 0.012
+		lt.outline_size = 12
+		lt.position = Vector3(0, 2.3, -6.04)
+		lt.rotation.y = PI
+		raiz.add_child(lt)
+	var quad := QuadMesh.new()
+	quad.size = Vector2(0.52, 0.13)
+	for lado2 in 2:
+		var pl := MeshInstance3D.new()
+		pl.mesh = quad
+		pl.material_override = CocheDetalle.placa(hash(destino) + lado2 * 5)
+		pl.position = Vector3(0, 0.62, 6.04 if lado2 == 0 else -6.04)
+		pl.rotation.y = 0.0 if lado2 == 0 else PI
+		raiz.add_child(pl)
 	return raiz
 
 ## Un peatón de verdad (`PeatonQ`: hombre o mujer del paquete Quaternius, con
@@ -254,7 +284,7 @@ func _trafico() -> void:
 		## que el tráfico normal.
 		for i in range(2):
 			if true:
-				var bus: Node3D = autobus(Color(0.95, 0.75, 0.15), "ESTADIO")
+				var bus: Node3D = autobus(Color(0.95, 0.75, 0.15), "5 · ESTADIO", "5")
 				t.agregar_vehiculo(bus, id_ex, rng.randf_range(200.0, 2000.0),
 					9.0, 0.0, 0.0)
 				## Paran 10 s en cada una de las cuatro marquesinas del anillo (`_paradas_bus`).
