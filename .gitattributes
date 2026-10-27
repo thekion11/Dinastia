@@ -54,3 +54,5 @@ dinastia-godot/assets/ciudad/kaykit/*.gltf -filter -diff -merge
 dinastia-godot/assets/ciudad/trofeo.glb -filter -diff -merge binary
 # Máquina de peluches del centro comercial (regalo del dueño, 27-10; re-exportada con Godot, texturas 256 px, <1 MB): archivo normal.
 dinastia-godot/assets/ciudad/maquina_peluches.glb -filter -diff -merge binary
+# Los 15 peluches y la máquina de garra («Claw Machine Free», regalo del dueño en el Drive, 27-10-2026; texturas reducidas a 512 px, 1,6 MB): archivos normales.
+dinastia-godot/assets/peluches/*.glb -filter -diff -merge binary
