@@ -6399,7 +6399,19 @@
   "%s pierde parte de su patrocinio": "%s loses part of its sponsorship",
   "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "The main sponsor cuts its contribution: the club's cash takes a %s hit.",
   "La obra del estadio se encarece": "The stadium works get more expensive",
-  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Materials go up and the builder claims %s more. You have to pay to keep the works going."
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Materials go up and the builder claims %s more. You have to pay to keep the works going.",
+  "Ponle un nombre al preset.": "Give the preset a name.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "You already have %d presets: delete one before saving another.",
+  "Ese preset no existe.": "That preset doesn't exist.",
+  "PRESETS DE PIZARRA": "TACTICS BOARD PRESETS",
+  "Nombre del preset": "Preset name",
+  "Guardar pizarra": "Save board",
+  "Pizarra guardada como «%s».": "Board saved as “%s”.",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "You haven't saved any yet. Set the board how you like it, name it and save it.",
+  "Cargar este preset: %s": "Load this preset: %s",
+  "Pizarra «%s» cargada.": "Board “%s” loaded.",
+  "Borrar este preset": "Delete this preset",
+  "Preset «%s» borrado.": "Preset “%s” deleted."
  },
  "pt": {
   "Historia": "História",
@@ -12801,7 +12813,19 @@
   "%s pierde parte de su patrocinio": "%s perde parte do patrocínio",
   "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "O patrocinador principal reduz a sua contribuição: o cofre ressente-se em %s.",
   "La obra del estadio se encarece": "A obra do estádio fica mais cara",
-  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Os materiais sobem e o construtor exige mais %s. É preciso pagar para não parar a obra."
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Os materiais sobem e o construtor exige mais %s. É preciso pagar para não parar a obra.",
+  "Ponle un nombre al preset.": "Dá um nome ao preset.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "Já tens %d presets: apaga algum antes de gravar outro.",
+  "Ese preset no existe.": "Esse preset não existe.",
+  "PRESETS DE PIZARRA": "PRESETS DA PRANCHETA",
+  "Nombre del preset": "Nome do preset",
+  "Guardar pizarra": "Gravar prancheta",
+  "Pizarra guardada como «%s».": "Prancheta gravada como «%s».",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "Ainda não gravaste nenhuma. Deixa a prancheta como gostas, dá-lhe um nome e grava-a.",
+  "Cargar este preset: %s": "Carregar este preset: %s",
+  "Pizarra «%s» cargada.": "Prancheta «%s» carregada.",
+  "Borrar este preset": "Apagar este preset",
+  "Preset «%s» borrado.": "Preset «%s» apagado."
  },
  "patrones": [
   [
@@ -24914,7 +24938,19 @@
   "%s pierde parte de su patrocinio": "%s perd une partie de son sponsoring",
   "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "Le sponsor principal réduit sa contribution : la caisse perd %s.",
   "La obra del estadio se encarece": "Les travaux du stade coûtent plus cher",
-  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Les matériaux montent et le constructeur réclame %s de plus. Il faut payer pour ne pas arrêter le chantier."
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Les matériaux montent et le constructeur réclame %s de plus. Il faut payer pour ne pas arrêter le chantier.",
+  "Ponle un nombre al preset.": "Donne un nom au preset.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "Tu as déjà %d presets : supprime-en un avant d'en enregistrer un autre.",
+  "Ese preset no existe.": "Ce preset n'existe pas.",
+  "PRESETS DE PIZARRA": "PRESETS DE TABLEAU",
+  "Nombre del preset": "Nom du preset",
+  "Guardar pizarra": "Enregistrer le tableau",
+  "Pizarra guardada como «%s».": "Tableau enregistré sous « %s ».",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "Tu n'en as encore enregistré aucun. Règle le tableau comme tu veux, donne-lui un nom et enregistre-le.",
+  "Cargar este preset: %s": "Charger ce preset : %s",
+  "Pizarra «%s» cargada.": "Tableau « %s » chargé.",
+  "Borrar este preset": "Supprimer ce preset",
+  "Preset «%s» borrado.": "Preset « %s » supprimé."
  },
  "it": {
   "Historia": "Storia",
@@ -31316,7 +31352,19 @@
   "%s pierde parte de su patrocinio": "%s perde parte della sponsorizzazione",
   "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "Lo sponsor principale taglia il contributo: la cassa perde %s.",
   "La obra del estadio se encarece": "I lavori dello stadio costano di più",
-  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "I materiali salgono e l'impresa chiede %s in più. Bisogna pagare per non fermare i lavori."
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "I materiali salgono e l'impresa chiede %s in più. Bisogna pagare per non fermare i lavori.",
+  "Ponle un nombre al preset.": "Dai un nome al preset.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "Hai già %d preset: eliminane uno prima di salvarne un altro.",
+  "Ese preset no existe.": "Quel preset non esiste.",
+  "PRESETS DE PIZARRA": "PRESET DELLA LAVAGNA",
+  "Nombre del preset": "Nome del preset",
+  "Guardar pizarra": "Salva lavagna",
+  "Pizarra guardada como «%s».": "Lavagna salvata come «%s».",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "Non ne hai ancora salvata nessuna. Imposta la lavagna come vuoi, dalle un nome e salvala.",
+  "Cargar este preset: %s": "Carica questo preset: %s",
+  "Pizarra «%s» cargada.": "Lavagna «%s» caricata.",
+  "Borrar este preset": "Elimina questo preset",
+  "Preset «%s» borrado.": "Preset «%s» eliminato."
  },
  "de": {
   "Historia": "Geschichte",
@@ -37718,7 +37766,19 @@
   "%s pierde parte de su patrocinio": "%s verliert einen Teil seines Sponsorings",
   "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "Der Hauptsponsor kürzt seinen Beitrag: Die Kasse verliert %s.",
   "La obra del estadio se encarece": "Der Stadionumbau wird teurer",
-  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Die Materialpreise steigen, der Bauunternehmer verlangt %s mehr. Man muss zahlen, damit die Arbeiten weitergehen."
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Die Materialpreise steigen, der Bauunternehmer verlangt %s mehr. Man muss zahlen, damit die Arbeiten weitergehen.",
+  "Ponle un nombre al preset.": "Gib dem Preset einen Namen.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "Du hast schon %d Presets: Lösche eines, bevor du ein neues speicherst.",
+  "Ese preset no existe.": "Dieses Preset gibt es nicht.",
+  "PRESETS DE PIZARRA": "TAKTIKTAFEL-PRESETS",
+  "Nombre del preset": "Name des Presets",
+  "Guardar pizarra": "Tafel speichern",
+  "Pizarra guardada como «%s».": "Taktiktafel gespeichert als „%s“.",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "Du hast noch keine gespeichert. Stell die Tafel nach deinem Geschmack ein, gib ihr einen Namen und speichere sie.",
+  "Cargar este preset: %s": "Dieses Preset laden: %s",
+  "Pizarra «%s» cargada.": "Taktiktafel „%s“ geladen.",
+  "Borrar este preset": "Dieses Preset löschen",
+  "Preset «%s» borrado.": "Preset „%s“ gelöscht."
  },
  "ca": {
   "Historia": "Història",
@@ -44120,7 +44180,19 @@
   "%s pierde parte de su patrocinio": "%s perd part del patrocini",
   "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "El patrocinador principal retalla l'aportació: la caixa en pateix %s.",
   "La obra del estadio se encarece": "L'obra de l'estadi s'encareix",
-  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Els materials pugen i el constructor reclama %s més. Cal pagar per no aturar l'obra."
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Els materials pugen i el constructor reclama %s més. Cal pagar per no aturar l'obra.",
+  "Ponle un nombre al preset.": "Posa-li un nom al preset.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "Ja tens %d presets: esborra'n algun abans de desar-ne un altre.",
+  "Ese preset no existe.": "Aquest preset no existeix.",
+  "PRESETS DE PIZARRA": "PRESETS DE PISSARRA",
+  "Nombre del preset": "Nom del preset",
+  "Guardar pizarra": "Desa la pissarra",
+  "Pizarra guardada como «%s».": "Pissarra desada com a «%s».",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "Encara no n'has desat cap. Deixa la pissarra com t'agrada, posa-li nom i desa-la.",
+  "Cargar este preset: %s": "Carrega aquest preset: %s",
+  "Pizarra «%s» cargada.": "Pissarra «%s» carregada.",
+  "Borrar este preset": "Esborra aquest preset",
+  "Preset «%s» borrado.": "Preset «%s» esborrat."
  },
  "pl": {
   "Club": "Klub",
@@ -50801,7 +50873,19 @@
   "%s pierde parte de su patrocinio": "%s traci część sponsoringu",
   "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "Główny sponsor obcina wpłatę: kasa traci %s.",
   "La obra del estadio se encarece": "Przebudowa stadionu drożeje",
-  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Materiały drożeją, wykonawca żąda %s więcej. Trzeba zapłacić, by nie wstrzymać budowy."
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Materiały drożeją, wykonawca żąda %s więcej. Trzeba zapłacić, by nie wstrzymać budowy.",
+  "Ponle un nombre al preset.": "Nadaj presetowi nazwę.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "Masz już %d presetów: usuń któryś, zanim zapiszesz kolejny.",
+  "Ese preset no existe.": "Taki preset nie istnieje.",
+  "PRESETS DE PIZARRA": "PRESETY TABLICY",
+  "Nombre del preset": "Nazwa presetu",
+  "Guardar pizarra": "Zapisz tablicę",
+  "Pizarra guardada como «%s».": "Tablicę zapisano jako „%s”.",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "Nie zapisałeś jeszcze żadnego. Ustaw tablicę po swojemu, nadaj nazwę i zapisz.",
+  "Cargar este preset: %s": "Wczytaj ten preset: %s",
+  "Pizarra «%s» cargada.": "Wczytano tablicę „%s”.",
+  "Borrar este preset": "Usuń ten preset",
+  "Preset «%s» borrado.": "Usunięto preset „%s”."
  },
  "tr": {
   "Club": "Kulüp",
@@ -57482,6 +57566,18 @@
   "%s pierde parte de su patrocinio": "%s sponsorluğunun bir kısmını kaybediyor",
   "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "Ana sponsor katkısını azalttı: kasa %s kaybediyor.",
   "La obra del estadio se encarece": "Stadyum inşaatı pahalılaştı",
-  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Malzemeler yükseldi, müteahhit %s daha fazla istiyor. İnşaat durmasın diye ödemek gerek."
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Malzemeler yükseldi, müteahhit %s daha fazla istiyor. İnşaat durmasın diye ödemek gerek.",
+  "Ponle un nombre al preset.": "Preset'e bir ad ver.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "Zaten %d presetin var: yenisini kaydetmeden önce birini sil.",
+  "Ese preset no existe.": "Böyle bir preset yok.",
+  "PRESETS DE PIZARRA": "TAKTİK TAHTASI PRESETLERİ",
+  "Nombre del preset": "Preset adı",
+  "Guardar pizarra": "Tahtayı kaydet",
+  "Pizarra guardada como «%s».": "Tahta «%s» olarak kaydedildi.",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "Henüz hiç kaydetmedin. Tahtayı istediğin gibi ayarla, bir ad ver ve kaydet.",
+  "Cargar este preset: %s": "Bu preseti yükle: %s",
+  "Pizarra «%s» cargada.": "«%s» tahtası yüklendi.",
+  "Borrar este preset": "Bu preseti sil",
+  "Preset «%s» borrado.": "«%s» preseti silindi."
  }
 }
