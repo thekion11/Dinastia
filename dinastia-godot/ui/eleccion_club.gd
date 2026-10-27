@@ -38,12 +38,12 @@ func _ready() -> void:
 	_mundo = Mundo.new()
 	_mundo.generar([], 0)
 	## UN RETO (26-9-2026): el club lo elige el propio reto, y a jugar.
-	if Principal.reto_pedido != "":
-		var id := Principal.reto_pedido
-		Principal.reto_pedido = ""
+	if PedidoPartida.reto_pedido != "":
+		var id := PedidoPartida.reto_pedido
+		PedidoPartida.reto_pedido = ""
 		if Retos.montar(_mundo, id) != null:
-			Principal.mundo_pregenerado = _mundo
-			Principal.desafios_elegidos = []
+			PedidoPartida.mundo_pregenerado = _mundo
+			PedidoPartida.desafios_elegidos = []
 			get_tree().change_scene_to_file.call_deferred("res://escenas/principal.tscn")
 			return
 	_construir()
@@ -172,7 +172,7 @@ func _construir_fundar(raiz: VBoxContainer) -> void:
 	_campo_estadio.placeholder_text = Idiomas.t("Nombre del estadio")
 	_campo_estadio.custom_minimum_size = Vector2(170, 32)
 	fila.add_child(_campo_estadio)
-	if Principal.fundar_pedido:
+	if PedidoPartida.fundar_pedido:
 		e.border_color = COL_ACENTO
 		e.set_border_width_all(2)
 		t.text = Idiomas.t("🛠️ FUNDA TU CLUB")
@@ -193,12 +193,12 @@ func _fundar() -> void:
 	var nombre := _campo_nombre_club.text.strip_edges()
 	if nombre == "":
 		return
-	Principal.fundar_pedido = false
+	PedidoPartida.fundar_pedido = false
 	var club := _mundo.fundar_club(nombre, _pais_actual, "#" + _col1.color.to_html(false), "#" + _col2.color.to_html(false), _campo_estadio.text.strip_edges())
 	if club == null:
 		return
-	Principal.mundo_pregenerado = _mundo
-	Principal.desafios_elegidos = _desafios.duplicate()
+	PedidoPartida.mundo_pregenerado = _mundo
+	PedidoPartida.desafios_elegidos = _desafios.duplicate()
 	get_tree().change_scene_to_file("res://escenas/principal.tscn")
 
 ## Los desafíos: reglas extra, opcionales, que multiplican el puntaje final
@@ -340,8 +340,8 @@ func _limpiar(n: Node) -> void:
 
 func _elegir_club(c: Club) -> void:
 	_mundo.tomar_el_mando(c.id)
-	Principal.mundo_pregenerado = _mundo
-	Principal.desafios_elegidos = _desafios.duplicate()
+	PedidoPartida.mundo_pregenerado = _mundo
+	PedidoPartida.desafios_elegidos = _desafios.duplicate()
 	get_tree().change_scene_to_file("res://escenas/principal.tscn")
 
 ## C14: la ficha del país en una línea -capital, ligas, nivel del fútbol en el

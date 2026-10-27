@@ -27,9 +27,9 @@ func _ready() -> void:
 	var m := Mundo.new()
 	m.generar(["CHI", "ARG"], 4242)
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
-	Principal.mundo_pregenerado = m
-	Principal.modo_elegido = "dt"
-	Principal.dt_nombre_elegido = "Míster"
+	PedidoPartida.mundo_pregenerado = m
+	PedidoPartida.modo_elegido = "dt"
+	PedidoPartida.dt_nombre_elegido = "Míster"
 	PrologoDT.rapido = false
 	_p = (load("res://escenas/prologo.tscn") as PackedScene).instantiate()
 	add_child(_p)

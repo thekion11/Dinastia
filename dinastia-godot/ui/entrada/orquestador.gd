@@ -7,7 +7,7 @@ extends Control
 ## decide cuál toca, se funde de una a otra (nunca dos a la vez: la anterior se libera
 ## antes de enseñar la siguiente), se guarda lo elegido y se puede volver atrás.
 ## Al final, `OrquestadorMundo.preparar()` crea la partida con el MISMO camino de siempre
-## (`Principal.mundo_pregenerado`, como `ui/eleccion_club.gd`) y se pasa a Principal.
+## (`PedidoPartida.mundo_pregenerado`, como `ui/eleccion_club.gd`) y se pasa a Principal.
 ##
 ## CONTRATO de cada pantalla (no cambiarlo: lo cumplen siete pantallas hechas en paralelo):
 ##   extends Control, a pantalla completa

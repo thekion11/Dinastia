@@ -47,9 +47,9 @@ func _probar_async() -> void:
 	_comprobar(sin_traducir.is_empty(), "todas las frases del mentor están traducidas %s" % [sin_traducir])
 	## --- el mundo y la escena --------------------------------------------------------
 	_m = _mundo(4242)
-	Principal.mundo_pregenerado = _m
-	Principal.modo_elegido = "dt"
-	Principal.dt_nombre_elegido = "Míster Prueba"
+	PedidoPartida.mundo_pregenerado = _m
+	PedidoPartida.modo_elegido = "dt"
+	PedidoPartida.dt_nombre_elegido = "Míster Prueba"
 	PrologoDT.rapido = true
 	_p = (load("res://escenas/prologo.tscn") as PackedScene).instantiate()
 	add_child(_p)
@@ -139,9 +139,9 @@ func _probar_async() -> void:
 	## Guardar y cargar conservan la marca.
 	var datos := Partida.instantanea(_m)
 	_comprobar(bool(datos.get("prologo_visto", false)), "la instantánea guarda prologo_visto")
-	Principal.mundo_pregenerado = null
-	Principal.mundo_a_cargar = null
-	Principal.modo_elegido = ""
+	PedidoPartida.mundo_pregenerado = null
+	PedidoPartida.mundo_a_cargar = null
+	PedidoPartida.modo_elegido = ""
 	PrologoDT.rapido = false
 
 ## Avanza el cuadro de diálogo hasta que el mentor termina (como pulsar E).

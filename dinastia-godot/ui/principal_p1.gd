@@ -56,48 +56,14 @@ const NOMBRES_ATRIBUTOS := {
 	"div": "Estirada", "par": "Paradas", "saq": "Saque", "ref": "Reflejos", "vel": "Salidas", "pos": "Colocación",
 }
 
-## La pantalla de inicio deja aquí la partida cargada antes de cambiar de
-## escena -no hay otra forma de pasarle un argumento a una escena que arranca
-## sola por `run/main_scene`-. Si sigue vacía, se entra con mundo nuevo.
-static var mundo_a_cargar: Mundo = null
-## Lo mismo, pero para el modo de carrera elegido en la pantalla previa
-## (`ui/seleccion_modo.gd`). Vacío = el DT clásico de siempre, para que abrir
-## `principal.tscn` directo -como sigue haciendo el banco de capturas- no
-## dependa de haber pasado por esa pantalla.
-static var modo_elegido: String = ""
-## La tarjeta "Tutorial" del menú: la próxima carrera arranca con el recorrido
-## guiado aunque ya se haya visto (ver `ui/componentes/tutorial.gd`).
-static var tutorial_pedido: bool = false
-## "Crear tu Club" desde el menú: la elección de club abre con el panel de
-## fundar arriba y destacado (26-9-2026).
-static var fundar_pedido: bool = false
-## El reto elegido en el menú (`Retos`): la elección de club lo monta sola.
-static var reto_pedido: String = ""
-static var dt_nombre_elegido: String = "Míster"
-static var dificultad_elegida: String = "normal"
-## Del asistente completo (`ui/eleccion_club.gd`): el mundo YA generado -las 24
-## ligas- y con `tomar_el_mando()` ya hecho sobre el club que se eligió a mano.
-## A esto solo le falta aplicar dificultad y modo, que es lo que hace
-## `_arrancar_con()`. Se comprueba ANTES que `mundo_a_cargar` en `_ready()`
-## porque son mutuamente excluyentes -nunca deberían venir los dos a la vez-
-## y da igual el orden real; se listan así porque es el camino más nuevo.
-static var mundo_pregenerado: Mundo = null
-## Los desafíos marcados en `ui/eleccion_club.gd`, paso 5 del asistente del
-## HTML. Vacío = partida normal, igual que los demás canales.
-static var desafios_elegidos: Array[String] = []
+## Lo que dejan pedido las pantallas previas (mundo a cargar, modo, dificultad...): `PedidoPartida`.
 
 var mundo: Mundo
 var _seleccionado: Jugador
-## Si alguna vez se tradujo a otro idioma en esta sesión. Mientras siga en
-## falso y el idioma sea castellano, `_traducir_pantalla` no recorre nada -es
-## la mayoría de las partidas, que nunca tocan el selector de idioma-.
-var _traduccion_activa := false
 ## Id del jugador con la rescisión a medio confirmar -"doble toque" del HTML,
 ## como vender el club o borrar la partida: la primera pulsación solo avisa,
 ## la segunda ejecuta-. Se limpia sola en cuanto se ve otra ficha.
 var _confirmar_rescision_id: String = ""
-## El mismo doble toque, para "Vender el club" -`vista.confVender` del HTML-.
-var _confirmar_venta_club: bool = false
 ## `Q.comp` del HTML: hasta tres jugadores -tuyos o de cualquier club- puestos
 ## a comparar desde su ficha. Vive solo en memoria, como en el HTML -no es
 ## parte de la partida, se vacía sola al cerrar el juego-.
@@ -147,9 +113,6 @@ var _lista_habilidades: VBoxContainer
 var _secc_vida: String = "bienestar"
 ## `vGente()`: las diez personas que llevan aquí más años que tú.
 var _lista_gente: VBoxContainer
-## La retirada no se puede deshacer, así que el boton pide confirmacion como el
-## de vender el club: primero avisa, y solo el segundo clic la ejecuta.
-var _confirmar_retiro: bool = false
 var _lista_finanzas: VBoxContainer
 var _lista_camarin: VBoxContainer
 var _lista_partido: VBoxContainer
@@ -176,7 +139,6 @@ var _autoguardado := false
 ## `Mundo` que prueba a fondo "GUARDAR Y CARGAR"-.
 var _bandeja: Array[Dictionary] = []
 const BANDEJA_MAX := 60
-var _correo_filtro := "todo"
 
 ## Los cinco grupos del HTML (`TABS_ORDEN`/`subsDe()`: club/plantel/partido/
 ## finanzas/mundo), portados como agrupación de verdad y no solo de nombre:

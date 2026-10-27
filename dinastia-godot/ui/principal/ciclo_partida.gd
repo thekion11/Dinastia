@@ -66,44 +66,44 @@ func nueva() -> void:
 
 ## El camino compartido entre "Nueva partida directa" (arriba) y "vengo del
 ## asistente con un mundo ya generado y un club ya elegido"
-## (`ui/eleccion_club.gd`, que deja `Principal.mundo_pregenerado`): aplicar
+## (`ui/eleccion_club.gd`, que deja `PedidoPartida.mundo_pregenerado`): aplicar
 ## dificultad y modo, conectar el registro, y pintar. Separado para no repetir
 ## estas seis líneas en dos sitios que tenían que estar siempre de acuerdo.
 func arrancar_con(m: Mundo) -> void:
 	p.mundo = m
 	p._fin_partida_avisado = false
-	m.dificultad = Principal.dificultad_elegida
+	m.dificultad = PedidoPartida.dificultad_elegida
 	## La dificultad: aquí escala la caja inicial («plata» del HTML: hasta 60% más en
 	## fácil o 45% menos en leyenda). Premios («prem») y pretensiones salariales («pide»)
 	## y el tope del valor de la IA los aplica el núcleo con Mundo.factor_dificultad().
 	var dif: Variant = Datos.tabla("DIF")
-	if dif is Dictionary and (dif as Dictionary).has(Principal.dificultad_elegida):
-		var plata := float((dif as Dictionary)[Principal.dificultad_elegida].get("plata", 1.0))
+	if dif is Dictionary and (dif as Dictionary).has(PedidoPartida.dificultad_elegida):
+		var plata := float((dif as Dictionary)[PedidoPartida.dificultad_elegida].get("plata", 1.0))
 		m.mi_club().saldo = int(round(float(m.mi_club().saldo) * plata))
 	## Los desafíos: "pobreza" pisaría la caja de la dificultad si fuera antes,
 	## así que van después -es la letra pequeña ganándole a la general, como en
 	## el HTML, donde `aplicarDesafios()` también corre después de fijar el
 	## saldo por dificultad.
-	if not Principal.desafios_elegidos.is_empty():
-		m.desafios = Principal.desafios_elegidos.duplicate()
+	if not PedidoPartida.desafios_elegidos.is_empty():
+		m.desafios = PedidoPartida.desafios_elegidos.duplicate()
 		m.aplicar_desafios()
-		Principal.desafios_elegidos = []
+		PedidoPartida.desafios_elegidos = []
 	## El modo de carrera elegido en la pantalla previa. Si viene vacío -se
 	## abrió esta escena directo, sin pasar por seleccion_modo.gd, como hacen
 	## los bancos de prueba y las capturas- se queda el DT clásico de siempre.
-	if Principal.modo_elegido != "":
-		m.roles.arrancar(Principal.modo_elegido, Principal.dt_nombre_elegido)
+	if PedidoPartida.modo_elegido != "":
+		m.roles.arrancar(PedidoPartida.modo_elegido, PedidoPartida.dt_nombre_elegido)
 		## FONDO DE INVERSIÓN (26-9-2026): el fondo arranca con su propia caja.
-		if Principal.modo_elegido == "fondo" and m.mi_club() != null:
+		if PedidoPartida.modo_elegido == "fondo" and m.mi_club() != null:
 			m.fondo = FondoInversion.new()
 			m.fondo.caja = int(round(Eco.ref_caja(70.0) * 2.5))
-		Principal.modo_elegido = ""
+		PedidoPartida.modo_elegido = ""
 	_adoptar(m)
 	p._escribir("[color=#8ea595]Mundo nuevo.[/color] Semilla [color=#3fa06a]%d[/color]" % m.semilla)
 	p._refrescar()
 
 ## Una partida ya leída del disco (la ranura principal, o la que deja la
-## pantalla de inicio en `Principal.mundo_a_cargar`).
+## pantalla de inicio en `PedidoPartida.mundo_a_cargar`).
 func entrar_cargada(m: Mundo) -> void:
 	_adoptar(m)
 	p._escribir("[color=#3fa06a]Partida cargada:[/color] %s, %d, semana %d." % [

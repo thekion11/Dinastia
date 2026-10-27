@@ -4,6 +4,10 @@ extends RefCounted
 ## sus miembros se usan como `p.x` y `Principal` conserva puentes de una línea con los nombres de siempre.
 
 var p: Principal
+## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
+## Lo acumulado del desliz en curso. Se reinicia al levantar el dedo.
+var _arrastre_x: float = 0.0
+var _arrastre_y: float = 0.0
 
 func _init(principal: Principal) -> void:
 	p = principal
@@ -13,8 +17,8 @@ func _input(evento: InputEvent) -> void:
 	## pestañas de detrás. No se consume el evento: Q y E sueltas también son
 	## «pestaña» y hay campos de texto en el móvil donde hay que poder teclearlas.
 	if _capa_modal_encima():
-		p._arrastre_x = 0.0
-		p._arrastre_y = 0.0
+		_arrastre_x = 0.0
+		_arrastre_y = 0.0
 		return
 	## CON EL PANEL LATERAL ENCIMA (mapa de metas 23) los mismos botones
 	## navegan ESE menú y no el central de detrás: L1/R1 pasan de submenú,
@@ -33,8 +37,8 @@ func _input(evento: InputEvent) -> void:
 		elif evento.is_action_pressed("dinastia_bloque_anterior"):
 			p._menu_lateral.menu_vecino(-1)
 			p.get_viewport().set_input_as_handled()
-		p._arrastre_x = 0.0
-		p._arrastre_y = 0.0
+		_arrastre_x = 0.0
+		_arrastre_y = 0.0
 		return
 	## Un desliz que empieza sobre el riel es del panel (abrirlo), no del menú.
 	if evento is InputEventScreenDrag and (evento as InputEventScreenDrag).position.x < MenuLateral.ANCHO_RIEL + 30.0:
@@ -78,15 +82,15 @@ func _input(evento: InputEvent) -> void:
 	## sin querer: tiene que ser un gesto claramente lateral.
 	elif evento is InputEventScreenDrag:
 		var dr := evento as InputEventScreenDrag
-		p._arrastre_x += dr.relative.x
-		p._arrastre_y += absf(dr.relative.y)
-		if absf(p._arrastre_x) > 90.0 and absf(p._arrastre_x) > p._arrastre_y * 1.6:
-			p._bloque_vecino(-1 if p._arrastre_x > 0.0 else 1)
-			p._arrastre_x = 0.0
-			p._arrastre_y = 0.0
+		_arrastre_x += dr.relative.x
+		_arrastre_y += absf(dr.relative.y)
+		if absf(_arrastre_x) > 90.0 and absf(_arrastre_x) > _arrastre_y * 1.6:
+			p._bloque_vecino(-1 if _arrastre_x > 0.0 else 1)
+			_arrastre_x = 0.0
+			_arrastre_y = 0.0
 	elif evento is InputEventScreenTouch and not (evento as InputEventScreenTouch).pressed:
-		p._arrastre_x = 0.0
-		p._arrastre_y = 0.0
+		_arrastre_x = 0.0
+		_arrastre_y = 0.0
 ## ¿Hay una capa modal tapando el menú? Con el móvil u otro popup abierto, los
 ## gatillos y Ctrl+Q/E no deben cambiar la pestaña escondida detrás.
 func _capa_modal_encima() -> bool:

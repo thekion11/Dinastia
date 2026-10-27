@@ -116,10 +116,6 @@ var _rueda_pop: Control = null
 
 
 
-## Qué tribuna se está editando cuando "Personalizar cada tribuna" está activo.
-## Solo estado de interfaz -no se guarda, como `_secc_ajustes`-: al volver a
-## esta pantalla siempre se empieza mirando la tribuna Sur.
-var _bandeja_actual: String = "sur"
 
 ## Los nombres bonitos de cada campo. `campo.capitalize()` daba "Cespedtono" y
 ## "Escudodonde", que es lo que pasa cuando una clave interna se enseña tal cual.
@@ -184,8 +180,6 @@ const VACIO_RECORDS := {
 	"records": "📈 Las rachas y las marcas del club se registran desde el primer partido.",
 }
 
-var _ed_censura: bool = true
-var _ed_csv: String = ""
 
 ## `vAjustes()` del HTML tiene más de veinte controles, pero la mayoría no
 ## tienen NADA a lo que engancharse en Godot todavía -tamaño de texto, paleta
@@ -222,9 +216,6 @@ var _fps_elegido: int:
 ## que deja trabajar.
 var _modo_experto: bool = false
 var _favoritos: Array[String] = []
-## Que año del archivo de planteles está desplegado. Cero, ninguno: si se
-## abrieran todos a la vez, veinte temporadas serían seiscientas filas.
-var _plantel_abierto: int = 0
 const FAVORITOS_MAX := 6
 
 ## `vAjustesDispositivo()`: lo que depende de la máquina, no de la partida.
@@ -350,6 +341,3 @@ const MANDO_BLOQUES := [
 	["dinastia_bloque_siguiente", JOY_AXIS_TRIGGER_RIGHT],
 ]
 
-## Lo acumulado del desliz en curso. Se reinicia al levantar el dedo.
-var _arrastre_x: float = 0.0
-var _arrastre_y: float = 0.0

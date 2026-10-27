@@ -1,6 +1,9 @@
 class_name PantallaEditor
 extends "res://ui/pantallas/pantalla_editor_p1.gd"
 ## [Capa 2/2 de `pantalla_editor.gd`] _pintar_editor_csv, _pintar_editor, _importar_csv, _exportar_csv
+## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
+var _ed_censura: bool = true
+var _ed_csv: String = ""
 
 ## EL IMPORTADOR. Formato del HTML sin tocar, para que una base hecha para el
 ## HTML se pueda pegar aquí tal cual.
@@ -23,19 +26,19 @@ func _pintar_editor_csv(ed: Editor) -> void:
 	etc.tooltip_text = Idiomas.t("Sustituye algunas letras por números, como hace el resto del juego con los nombres generados.")
 	fila.add_child(etc)
 	var bc := Button.new()
-	bc.text = "SÍ" if p._ed_censura else "NO"
+	bc.text = "SÍ" if _ed_censura else "NO"
 	bc.pressed.connect(func() -> void:
-		p._ed_censura = not p._ed_censura
+		_ed_censura = not _ed_censura
 		p._refrescar())
 	fila.add_child(bc)
 
 	var caja := TextEdit.new()
-	caja.text = p._ed_csv
+	caja.text = _ed_csv
 	caja.placeholder_text = Idiomas.t("C0lo-C0lo;Arturo Vidal;MED;38;79\nB0ca Juni0rs;Edinson Cavani;DEL;39;80;URU;80")
 	caja.custom_minimum_size = Vector2(0, 120)
 	caja.add_theme_font_size_override("font_size", 11)
 	caja.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
-	caja.text_changed.connect(func() -> void: p._ed_csv = caja.text)
+	caja.text_changed.connect(func() -> void: _ed_csv = caja.text)
 	p._lista_editor.add_child(caja)
 
 	var bi := Button.new()
@@ -47,7 +50,7 @@ func _pintar_editor_csv(ed: Editor) -> void:
 	bp.text = Idiomas.t("📋 Pegar desde el portapapeles")
 	bp.add_theme_font_size_override("font_size", 11)
 	bp.pressed.connect(func() -> void:
-		p._ed_csv = DisplayServer.clipboard_get()
+		_ed_csv = DisplayServer.clipboard_get()
 		p._refrescar())
 	p._lista_editor.add_child(bp)
 
@@ -91,10 +94,10 @@ func _pintar_editor() -> void:
 	_pintar_editor_csv(ed)
 
 func _importar_csv(ed: Editor) -> void:
-	if p._ed_csv.strip_edges() == "":
+	if _ed_csv.strip_edges() == "":
 		p._escribir("[color=#c9a227]No hay nada que importar.[/color]")
 		return
-	var r := ed.importar_csv(p._ed_csv, p._ed_censura)
+	var r := ed.importar_csv(_ed_csv, _ed_censura)
 	if r.has("error"):
 		p._escribir("[color=#e05555]No se pudo importar: %s.[/color]" % String(r["error"]))
 		p._refrescar()
