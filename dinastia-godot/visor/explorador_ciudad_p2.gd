@@ -118,19 +118,25 @@ static func es_tactil() -> bool:
 	return DisplayServer.is_touchscreen_available() or OS.get_environment("TACTIL") != ""
 
 ## Un gesto de tu personaje (saludar, charlar) y vuelta a estar parado.
-func _gesto_propio(gesto: String) -> void:
+## Con `luego` (P3, 27-10): el gesto se reproduce una vez y encadena ese bucle (p. ej.
+## «sentarse» → «sentado») hasta que te muevas; sin `luego`, dura lo que el clip (≤ 3 s).
+func _gesto_propio(gesto: String, luego: String = "") -> void:
 	if _anim == null or not AnimExtra.UAL.has(gesto):
 		return
-	var lib := _anim.get_animation_library("")
-	if lib != null and not lib.has_animation(gesto):
-		var esq := FutbolistaQ.esqueleto_de(cuerpo)
-		var clip: Animation = AnimQuaternius.cargar_real(String(AnimExtra.UAL[gesto]), str(_anim.get_path_to(esq)) if esq != null else "")
-		if clip != null:
-			lib.add_animation(gesto, clip)
-	if _anim.has_animation(gesto):
-		_anim.speed_scale = 1.0
-		_anim.play(gesto, 0.25)
-		_t_gesto_propio = minf(_anim.get_animation(gesto).length, 3.0)
+	var esq := FutbolistaQ.esqueleto_de(cuerpo)
+	AnimExtra.asegurar(_anim, esq, gesto)
+	if not _anim.has_animation(gesto):
+		return
+	_anim.speed_scale = 1.0
+	_anim.play(gesto, 0.25)
+	_t_gesto_propio = minf(_anim.get_animation(gesto).length, 3.0)
+	if luego != "" and AnimExtra.UAL.has(luego):
+		AnimExtra.asegurar(_anim, esq, luego)
+		if _anim.has_animation(luego):
+			_anim.get_animation(gesto).loop_mode = Animation.LOOP_NONE
+			_anim.clear_queue()
+			_anim.queue(luego)
+			_t_gesto_propio = 1.0e6   ## se queda así hasta el primer paso
 
 func _hablar_con_vecino(v: Dictionary) -> void:
 	var nodo: Node3D = v["nodo"]

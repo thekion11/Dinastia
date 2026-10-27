@@ -206,6 +206,8 @@ func _mobiliario_urbano() -> void:
 				bancos_a.append(Transform3D(rb * Basis.from_scale(Vector3(1.9, 0.45, 0.07)), pb + Vector3(0, 1.0, 0) + lat * lado * 0.25))
 				bancos_p.append(Transform3D(rb * Basis.from_scale(Vector3(0.08, 0.45, 0.45)), pb + Vector3(0, 0.5, 0) + dir * 0.8))
 				bancos_p.append(Transform3D(rb * Basis.from_scale(Vector3(0.08, 0.45, 0.45)), pb + Vector3(0, 0.5, 0) - dir * 0.8))
+				for sx: float in [-0.5, 0.5]:
+					b.asientos.append({"p": pb + dir * sx + Vector3(0, 0.79, 0), "giro": atan2(-lat.x * lado, -lat.z * lado)})
 			if q % 3 == 0:
 				var ph := a + dir * (largo * (f + 0.06)) + lat * -lado * (ancho * 0.5 + 0.7)
 				hidrantes.append(Transform3D(Basis.from_scale(Vector3(0.3, 0.75, 0.3)), ph + Vector3(0, 0.62, 0)))
