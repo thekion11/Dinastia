@@ -6037,7 +6037,8 @@
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "That is €%d: from €100 the card asks for the PIN. Withdraw cash at an ATM.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "The card has reached today's spending limit.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Not enough money: it is €%d and you have no cash or card balance.",
-  "FOTO DE EQUIPO": "TEAM PHOTO"
+  "FOTO DE EQUIPO": "TEAM PHOTO",
+  "LOS LANZADORES": "THE PENALTY TAKERS"
  },
  "pt": {
   "Historia": "História",
@@ -12077,7 +12078,8 @@
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "São %d €: a partir de 100 € o cartão pede o PIN. Levanta dinheiro num multibanco.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "O cartão atingiu o limite de gastos de hoje.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Não chega o dinheiro: são %d € e não tens dinheiro nem saldo no cartão.",
-  "FOTO DE EQUIPO": "FOTO DA EQUIPE"
+  "FOTO DE EQUIPO": "FOTO DA EQUIPE",
+  "LOS LANZADORES": "OS BATEDORES"
  },
  "patrones": [
   [
@@ -23729,7 +23731,8 @@
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "Cela fait %d € : à partir de 100 € la carte demande le code. Retirez des espèces à un distributeur.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "La carte a atteint sa limite de dépense du jour.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Pas assez d'argent : il faut %d € et vous n'avez ni espèces ni solde sur la carte.",
-  "FOTO DE EQUIPO": "PHOTO D'ÉQUIPE"
+  "FOTO DE EQUIPO": "PHOTO D'ÉQUIPE",
+  "LOS LANZADORES": "LES TIREURS"
  },
  "it": {
   "Historia": "Storia",
@@ -29769,7 +29772,8 @@
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "Sono %d €: da 100 € la carta chiede il PIN. Preleva contanti a uno sportello.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "La carta ha raggiunto il limite di spesa di oggi.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Non hai abbastanza soldi: sono %d € e non hai contanti né saldo sulla carta.",
-  "FOTO DE EQUIPO": "FOTO DI SQUADRA"
+  "FOTO DE EQUIPO": "FOTO DI SQUADRA",
+  "LOS LANZADORES": "I RIGORISTI"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35809,7 +35813,8 @@
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "Das sind %d €: ab 100 € verlangt die Karte die PIN. Hebe Bargeld am Automaten ab.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "Die Karte hat das heutige Ausgabenlimit erreicht.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Das Geld reicht nicht: Es sind %d € und du hast weder Bargeld noch Kartenguthaben.",
-  "FOTO DE EQUIPO": "MANNSCHAFTSFOTO"
+  "FOTO DE EQUIPO": "MANNSCHAFTSFOTO",
+  "LOS LANZADORES": "DIE SCHÜTZEN"
  },
  "ca": {
   "Historia": "Història",
@@ -41849,7 +41854,8 @@
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "Són %d €: a partir de 100 € la targeta demana el PIN. Treu efectiu en un caixer.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "La targeta ha arribat al límit de despesa d'avui.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "No et arriba els diners: són %d € i no tens efectiu ni saldo a la targeta.",
-  "FOTO DE EQUIPO": "FOTO D'EQUIP"
+  "FOTO DE EQUIPO": "FOTO D'EQUIP",
+  "LOS LANZADORES": "ELS LLANÇADORS"
  },
  "pl": {
   "Club": "Klub",
@@ -48168,7 +48174,8 @@
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "To %d €: od 100 € karta wymaga PIN-u. Wypłać gotówkę w bankomacie.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "Karta osiągnęła dzisiejszy limit wydatków.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Brakuje pieniędzy: to %d €, a nie masz gotówki ani środków na karcie.",
-  "FOTO DE EQUIPO": "ZDJĘCIE DRUŻYNY"
+  "FOTO DE EQUIPO": "ZDJĘCIE DRUŻYNY",
+  "LOS LANZADORES": "STRZELCY"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54487,6 +54494,7 @@
   "Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.": "%d €: 100 €'dan sonra kart PIN ister. ATM'den nakit çek.",
   "La tarjeta ha llegado al límite de gasto de hoy.": "Kart bugünkü harcama limitine ulaştı.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Para yetmiyor: %d € ve ne nakdin ne de kart bakiyen var.",
-  "FOTO DE EQUIPO": "TAKIM FOTOĞRAFI"
+  "FOTO DE EQUIPO": "TAKIM FOTOĞRAFI",
+  "LOS LANZADORES": "PENALTI ATICILARI"
  }
 }

@@ -264,7 +264,8 @@ func _paso_tanda(delta: float) -> void:
 	_actualizar_balon_visual(delta)
 	match fase:
 		"entrar":
-			if _t_estado > 2.5:
+			## 4 s y no 2,5: lo que tarda la tele en presentar a los lanzadores (`PresentacionTanda`).
+			if _t_estado > 4.0:
 				_siguiente_penal()
 		"preparar":
 			## El portero en la línea, mirando al lanzador.
