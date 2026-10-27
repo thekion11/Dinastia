@@ -102,6 +102,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 						return true
 					else:
 						alcance *= 1.1  ## Eligió bien: se anticipa un poco.
+				if TIRO_PULIDO: prob *= (1.0 - PARADA_LEJOS * pow(clampf(lat / maxf(alcance, 0.1), 0.0, 1.0), 2.0)) * clampf(1.15 - vel_balon.length() / 90.0, 0.7, 1.0)   ## lejos del cuerpo o muy fuerte cuesta más (27-10)
 				if lat < alcance and _rng.randf() < prob:
 					_parada(p, cruce_gk, lat > 1.2)
 					return true
