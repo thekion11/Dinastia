@@ -3,7 +3,7 @@ extends "res://ui/principal_p4.gd"
 
 ## Puentes (fase 6, paso 7): viven en `ui/principal/vistas_menu.gd`.
 func _ver_estadio_propio() -> void: _vistas._ver_estadio_propio()
-func _ver_estadio_con_carga() -> void: _vistas._ver_estadio_con_carga()
+func _ver_estadio_con_carga() -> void: await _vistas._ver_estadio_con_carga()
 
 
 
