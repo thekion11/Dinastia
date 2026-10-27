@@ -198,17 +198,12 @@ func _finta_ia(p: Dictionary, rival: Dictionary, fwd: Vector3, lado: float, sp: 
 	## Tras la finta decide con calma (no la suelta en mitad del gesto).
 	_decision_en = maxf(_decision_en, t + 0.45)
 
-## EL REGATE DE LA IA (15-10-2026, H-11 / M-443). Antes la finta solo se
-## probaba con un rival a menos de 1,8 m y DESPUÉS de tirar, centrar o pasar,
-## y con la entrada saltando a 1,25 m casi nunca llegaba: 0 en un partido. Ahora
-## se decide al VER venir al defensor: en carrera, con un rival delante a 1,5-3,6
-## m, una sola tirada por duelo (no cada fotograma). Las ganas crecen con el
-## regate (nada por debajo de 35, ~2 de cada 5 duelos con 65 y 3 de cada 5
-## con 85 o más) y bajan en el propio tercio. La salida es hacia el lado
-## contrario del defensor, con un empujón lateral de verdad (velocidad, no
-## teletransporte); el defensor se la come según regate contra defensa y, si
-## pica, queda clavado un momento (no puede entrar). Si no pica, la entrada
-## normal decide (con la bonificación de `regate_hasta`).
+## EL REGATE DE LA IA (15-10-2026, H-11 / M-443). Antes la finta solo se probaba con un rival a menos de 1,8 m
+## y DESPUÉS de tirar, centrar o pasar: 0 en un partido. Ahora se decide al VER venir al defensor (en carrera,
+## rival delante a 1,5-3,6 m, una tirada por duelo). Las ganas crecen con el regate (nada bajo 35, ~2 de 5 duelos
+## con 65, 3 de 5 con 85+) y bajan en el propio tercio. Sale al lado contrario del defensor con un empujón de
+## verdad; el defensor se la come según regate contra defensa y, si pica, queda clavado (no puede entrar). Si
+## no pica, decide la entrada normal (con la bonificación de `regate_hasta`).
 func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> bool:
 	if rival.is_empty() or bool(p["por"]) or t < float(p["regate_hasta"]) + 0.6:
 		return false
@@ -288,6 +283,10 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 			destino.y = clampf(1.4 + _rng.randf_range(-error, error) * 0.4, 0.8, 2.6)
 			vh = clampf(9.0 + lejos * 0.32, 10.0, 17.0)
 			loft = clampf(lejos * 0.28, 3.5, 7.5)
+		"raso":
+			## LT + B: el tiro raso, pegado al césped y al palo (semana 3, 27-10-2026).
+			destino.y = clampf(0.18 + _rng.randf_range(0.0, error) * 0.25, 0.12, 0.5)
+			vh *= 0.92
 		"potente":
 			## LB + RB + B: el cañonazo; apuntado a mano, castiga el mal apunte.
 			vh += 9.0

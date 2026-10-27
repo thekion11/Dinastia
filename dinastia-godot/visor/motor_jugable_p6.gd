@@ -123,8 +123,13 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 		poseedor = {}
 		ultimo_toque = p
 		_offside = {}
-		vel_balon = (pos(p) - pos(victima)).normalized() * 3.0 + Vector3(_rng.randf_range(-2, 2), 0, 0)
 		victima["enfriar"] = 0.6
+		## ROBO LIMPIO (semana 3, 27-10-2026: «menos rebotes al defender»): de pie, el buen defensor se
+		## queda el balón; antes siempre quedaba suelto rebotando, y el rechace lo recogía cualquiera.
+		if not barrida and _rng.randf() < 0.25 + def_ * 0.45:
+			_tomar(p)
+		else:
+			vel_balon = (pos(p) - pos(victima)).normalized() * 3.0 + Vector3(_rng.randf_range(-2, 2), 0, 0)
 	## FALTAS (17-10-2026): había ~4 por partido; una entrada que no llega al
 	## balón acaba en falta más a menudo (sobre todo si el defensor es agresivo).
 	elif r < exito + (0.28 if barrida else 0.13) + float(p.get("agresividad", 0.5)) * 0.06:
