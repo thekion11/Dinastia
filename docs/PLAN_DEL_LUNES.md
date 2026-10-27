@@ -365,8 +365,12 @@ era 0,24 m (humano 0,08-0,12): 5° de muslo hacia dentro en caminar/trote/correr
 y se queda así hasta dar un paso (`_gesto_propio(gesto, luego)`); los vecinos ya charlaban con clip (6 s). Prueba `p3_sentados`;
 capturas antes/después `docs/04_auditorias/capturas_personajes/p3_sentados_{antes,despues}.jpg`. P3 pasada 3 (27-10, ESPERAR): cuando un peatón se para por su cuenta ya no se queda siempre quieto: la mitad mira el móvil
 (clip «Idle_Torch» del pack con un móvil en la palma, `PeatonVida`), un cuarto habla por teléfono y el resto espera; captura
-`p3_espera_movil.jpg`. Falta P3: butacas del estadio y
-banquillo fuera del partido, abrir puertas, escaleras; y P4 (piel/pelo/ropa). VEREDICTO DEL DUEÑO (27-10): «MEJORAR» (P1-P3 no bastan: seguir subiendo anatomía, movimiento, animaciones y acabado; la C2 de ciudad sigue hasta agotar P0 y P1).
+`p3_espera_movil.jpg`. P4 pasada 1 (27-10, ROPA y PIEL): el shader del cuerpo aplanaba el relieve de la ropa de calle a 0,06
+para tapar el músculo y borraba las arrugas y el tejido; ahora quita el músculo (como en la equipación) y deja la profundidad
+en 0,4 (`p4_ropa_despues.jpg`; antes = `p1_postura_despues.jpg`). La piel desnuda iba con rugosidad y especular de tela
+(brillo plástico en nariz y labios): ahora rugosidad 0,76, especular 0,14 y subsuperficie 0,22 (`p4_cara_{antes,despues}.jpg`; en la captura el cambio es SUTIL: el
+brillo que queda en nariz y labios viene de la luz de borde `RIM` y de la cara de frente al sol; pendiente revisarlo con la cámara real).
+Falta P3: butacas del estadio y banquillo fuera del partido, abrir puertas, escaleras; y P4: pelo (mechones poligonales). VEREDICTO DEL DUEÑO (27-10): «MEJORAR» (P1-P3 no bastan: seguir subiendo anatomía, movimiento, animaciones y acabado; la C2 de ciudad sigue hasta agotar P0 y P1).
 
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 
