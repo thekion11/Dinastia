@@ -62,6 +62,23 @@ func _probar_aspecto() -> void:
 		_comprobar(mal == 0, "todos tienen escudo, camiseta y butacas y se dibujan (%d con fallo)" % mal)
 		_comprobar(sin_siglas == 0, "siglas: las del club real en el pack y ninguna en la base ficticia (%d mal)" % sin_siglas)
 		_comprobar(repetidos.size() >= 300, "el aspecto no se repite de un club a otro (%d distintos de 384)" % repetidos.size())
+		## Las figuras y letras de los escudos más conocidos (escudos v2).
+		var con_motivo := 0
+		var distintos := {}
+		for n: String in nombres:
+			var cc := Club.new()
+			cc.id = "z_" + n
+			cc.nombre = n
+			cc.color1 = "#336699"
+			cc.color2 = "#ffffff"
+			if AspectoClub.emblema(cc) != "" or AspectoClub.letras(cc) != "":
+				con_motivo += 1
+				var capa := EscudoEmblemas.capa_de(cc, cc.color_escudo1())
+				if capa == "" or not capa.contains("<"):
+					con_motivo -= 1000
+				distintos[Escudo.svg_de(cc)] = true
+		_comprobar(con_motivo >= 60, "al menos 60 escudos con figura o letras propias (%d)" % con_motivo)
+		_comprobar(distintos.size() == con_motivo, "cada escudo con motivo sale distinto (%d de %d)" % [distintos.size(), con_motivo])
 		## El uniforme propio del jugador manda sobre el del club real.
 		var yo := Club.new()
 		yo.id = "yo"
@@ -72,4 +89,12 @@ func _probar_aspecto() -> void:
 		_comprobar(yo.color_kit1() == "#123456", "el color de camiseta que elige el jugador manda")
 		yo.esc_color1 = "#654321"
 		_comprobar(yo.color_escudo1() == "#654321", "el color de escudo que elige el jugador manda")
+	var prueba := Club.new()
+	prueba.id = "p"
+	prueba.nombre = "Arsenal"
+	EscudoEmblemas.activo = false
+	_comprobar(EscudoEmblemas.capa_de(prueba, "#d50032") == "", "apagadas las figuras no se dibuja nada")
+	EscudoEmblemas.activo = true
+	_comprobar(EscudoEmblemas.letras_svg("CABJ", 32.0, 33.0, 38.0, 24.0, "#ffffff", "#000000").contains("<path"), "las letras salen en trazos vectoriales")
+	_comprobar(EscudoEmblemas.letras_svg("¿?", 32.0, 33.0, 38.0, 24.0, "#fff", "#000").count("<path") == 0, "una letra que no existe no rompe el dibujo")
 	Datos.usar_base_real(false)
