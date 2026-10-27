@@ -138,6 +138,7 @@ func _responder_oferta_mercado(indice: int, aceptar: bool) -> void:
 	var j: Jugador    = o["jugador"]
 	var co: Club      = o.get("club")
 	if aceptar:
+		p._partida.apuntar_deshacer("vender a %s" % j.nombre)
 		## `responder_oferta()`: `aceptar_oferta()` no existió nunca y el botón
 		## del panel de mercado rompía (lo encontró el recorrido de pantallas).
 		p.mundo.mercado.responder_oferta(indice, true)
