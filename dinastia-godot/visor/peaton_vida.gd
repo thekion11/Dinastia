@@ -59,11 +59,7 @@ static func gesto(nodo: Node3D, g: String) -> void:
 		var lib := ap.get_animation_library("")
 		if lib == null:
 			continue
-		if not lib.has_animation(g) and AnimExtra.UAL.has(g):
-			var esq := FutbolistaQ.esqueleto_de(nodo)
-			var clip: Animation = AnimQuaternius.cargar_real(String(AnimExtra.UAL[g]), str(ap.get_path_to(esq)) if esq != null else "")
-			if clip != null:
-				lib.add_animation(g, clip)
+		AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(nodo), g)   ## (con la variante sin «_Loop» del pack: la «charla» nunca se cargaba)
 		if lib.has_animation(g):
 			ap.play(g, 0.3)
 

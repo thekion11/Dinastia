@@ -383,11 +383,7 @@ func _gesto(v: Dictionary, gesto: String) -> void:
 		var lib := ap.get_animation_library("")
 		if lib == null:
 			continue
-		if not lib.has_animation(gesto) and AnimExtra.UAL.has(gesto):
-			var esq := FutbolistaQ.esqueleto_de(nodo)
-			var clip: Animation = AnimQuaternius.cargar_real(String(AnimExtra.UAL[gesto]), str(ap.get_path_to(esq)) if esq != null else "")
-			if clip != null:
-				lib.add_animation(gesto, clip)
+		AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(nodo), gesto)
 		if lib.has_animation(gesto):
 			ap.play(gesto, 0.3)
 

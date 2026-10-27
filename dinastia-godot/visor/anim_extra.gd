@@ -110,8 +110,8 @@ static func asegurar(ap: AnimationPlayer, esq: Skeleton3D, clave: String) -> boo
 		a = AnimQuaternius.cargar_real(nombre_ual.trim_suffix("_Loop"), prefijo)
 	if a == null:
 		return false
-	if not nombre_ual.ends_with("Loop"):
-		a.loop_mode = Animation.LOOP_NONE
+	## Un clip «…_Loop» se repite aunque en el pack se guarde sin el sufijo (la charla y el baile se quedaban en la última pose).
+	a.loop_mode = Animation.LOOP_LINEAR if nombre_ual.ends_with("Loop") else Animation.LOOP_NONE
 	lib.add_animation(clave, a)
 	return true
 
