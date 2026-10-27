@@ -136,12 +136,12 @@ static func _obra(nodo: Node3D, caja: Rect2, y0: float, ctx: Dictionary) -> void
 	var cx := caja.get_center().x
 	for fila in 3:
 		var z := caja.position.y + 1.0 + float(fila) * (caja.size.y - 2.0) / 2.0
-		for col in 5:
-			var x := caja.position.x + 1.0 + float(col) * (caja.size.x - 2.0) / 4.0
+		for col in 6:
+			var x := caja.position.x + 1.0 + float(col) * (caja.size.x - 2.0) / 5.0
 			TunelVestuario._caja(nodo, Vector3(x, y0 + 1.5, z), Vector3(0.08, 3.0, 0.08), acero, false)
-			if col < 4:
-				TunelVestuario._caja(nodo, Vector3(x + (caja.size.x - 2.0) / 8.0, y0 + 1.1, z), Vector3((caja.size.x - 2.0) / 4.0, 0.06, 0.08), acero, false)
-				TunelVestuario._caja(nodo, Vector3(x + (caja.size.x - 2.0) / 8.0, y0 + 2.1, z), Vector3((caja.size.x - 2.0) / 4.0, 0.06, 0.08), tablon, false)
+			if col < 5:
+				TunelVestuario._caja(nodo, Vector3(x + (caja.size.x - 2.0) / 10.0, y0 + 1.1, z), Vector3((caja.size.x - 2.0) / 5.0, 0.06, 0.08), acero, false)
+				TunelVestuario._caja(nodo, Vector3(x + (caja.size.x - 2.0) / 10.0, y0 + 2.1, z), Vector3((caja.size.x - 2.0) / 5.0, 0.06, 0.08), tablon, false)
 	TunelVestuario._caja(nodo, Vector3(cx, y0 + 1.5, caja.position.y + 0.9), Vector3(caja.size.x - 1.0, 3.0, 0.03), lona, false)
 	var semanas := int(((ctx.get("obras", {}) as Dictionary).get("museo", 1)))
 	TunelVestuario._rotulo(nodo, Idiomas.t("EN OBRA · faltan %d semanas") % semanas, Vector3(cx, y0 + 2.4, caja.position.y + 0.85), 0.0, 36, Color(1.0, 0.85, 0.2))
