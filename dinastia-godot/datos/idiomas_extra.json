@@ -5926,7 +5926,19 @@
   "Ya hay una rueda abierta: respóndela en el PC.": "A press conference is already open: answer it on the PC.",
   "Ya convocaste una rueda esta semana.": "You already called a press conference this week.",
   "📣 Convocar rueda de prensa": "📣 Call a press conference",
-  "Rueda convocada: la respondes en el PC.": "Conference called: you answer it on the PC."
+  "Rueda convocada: la respondes en el PC.": "Conference called: you answer it on the PC.",
+  "el salón de actos": "the assembly hall",
+  "Asamblea de socios": "Members' assembly",
+  "convoca la asamblea: los socios votan la presidencia y tú hablas": "calls the assembly: the members vote on the presidency and you speak",
+  "Seguro · Este proyecto va a ganar: pido vuestro voto para seguir igual.": "Confident · This project will win: I ask for your vote to keep it going.",
+  "Evasivo · No es momento de cambios; ya veremos cómo acaba la temporada.": "Evasive · This is no time for changes; let's see how the season ends.",
+  "Humilde · Los socios mandan; yo seguiré trabajando con quien elijan.": "Humble · The members decide; I'll keep working with whoever they choose.",
+  "La asamblea respalda al presidente": "The assembly backs the president",
+  "%d %% de los votos. El proyecto sigue; la directiva te lo agradece (+2 de confianza).": "%d%% of the votes. The project goes on; the board thanks you (+2 trust).",
+  "Nuevo presidente": "New president",
+  "%d %% de los votos: los socios eligen otra presidencia. Tú sigues; %s empieza de cero contigo (confianza 50).": "%d%% of the votes: the members choose a new presidency. You stay; %s starts from scratch with you (trust 50).",
+  "Cambio en la presidencia tras la asamblea": "Change at the top after the assembly",
+  "Los socios votaron el cambio; el entrenador sigue.": "The members voted for change; the manager stays."
  },
  "pt": {
   "Historia": "História",
@@ -11855,7 +11867,19 @@
   "Ya hay una rueda abierta: respóndela en el PC.": "Já há uma conferência aberta: responde no PC.",
   "Ya convocaste una rueda esta semana.": "Já convocaste uma conferência esta semana.",
   "📣 Convocar rueda de prensa": "📣 Convocar conferência de imprensa",
-  "Rueda convocada: la respondes en el PC.": "Conferência convocada: respondes no PC."
+  "Rueda convocada: la respondes en el PC.": "Conferência convocada: respondes no PC.",
+  "el salón de actos": "o salão nobre",
+  "Asamblea de socios": "Assembleia de sócios",
+  "convoca la asamblea: los socios votan la presidencia y tú hablas": "convoca a assembleia: os sócios votam a presidência e tu falas",
+  "Seguro · Este proyecto va a ganar: pido vuestro voto para seguir igual.": "Seguro · Este projeto vai ganhar: peço o vosso voto para continuar.",
+  "Evasivo · No es momento de cambios; ya veremos cómo acaba la temporada.": "Evasivo · Não é altura de mudanças; logo se vê como acaba a época.",
+  "Humilde · Los socios mandan; yo seguiré trabajando con quien elijan.": "Humilde · Os sócios mandam; continuarei a trabalhar com quem escolherem.",
+  "La asamblea respalda al presidente": "A assembleia apoia o presidente",
+  "%d %% de los votos. El proyecto sigue; la directiva te lo agradece (+2 de confianza).": "%d %% dos votos. O projeto continua; a direção agradece-te (+2 de confiança).",
+  "Nuevo presidente": "Novo presidente",
+  "%d %% de los votos: los socios eligen otra presidencia. Tú sigues; %s empieza de cero contigo (confianza 50).": "%d %% dos votos: os sócios escolhem outra presidência. Tu ficas; %s começa do zero contigo (confiança 50).",
+  "Cambio en la presidencia tras la asamblea": "Mudança na presidência após a assembleia",
+  "Los socios votaron el cambio; el entrenador sigue.": "Os sócios votaram a mudança; o treinador fica."
  },
  "patrones": [
   [
@@ -23396,7 +23420,19 @@
   "Ya hay una rueda abierta: respóndela en el PC.": "Une conférence est déjà ouverte : réponds-y sur le PC.",
   "Ya convocaste una rueda esta semana.": "Tu as déjà convoqué une conférence cette semaine.",
   "📣 Convocar rueda de prensa": "📣 Convoquer une conférence de presse",
-  "Rueda convocada: la respondes en el PC.": "Conférence convoquée : tu y réponds sur le PC."
+  "Rueda convocada: la respondes en el PC.": "Conférence convoquée : tu y réponds sur le PC.",
+  "el salón de actos": "la salle des assemblées",
+  "Asamblea de socios": "Assemblée des membres",
+  "convoca la asamblea: los socios votan la presidencia y tú hablas": "convoque l'assemblée : les membres votent la présidence et tu prends la parole",
+  "Seguro · Este proyecto va a ganar: pido vuestro voto para seguir igual.": "Sûr · Ce projet va gagner : je demande votre vote pour continuer ainsi.",
+  "Evasivo · No es momento de cambios; ya veremos cómo acaba la temporada.": "Évasif · Ce n'est pas le moment de changer ; on verra comment finit la saison.",
+  "Humilde · Los socios mandan; yo seguiré trabajando con quien elijan.": "Humble · Les membres décident ; je continuerai à travailler avec qui ils choisiront.",
+  "La asamblea respalda al presidente": "L'assemblée soutient le président",
+  "%d %% de los votos. El proyecto sigue; la directiva te lo agradece (+2 de confianza).": "%d %% des voix. Le projet continue ; la direction te remercie (+2 de confiance).",
+  "Nuevo presidente": "Nouveau président",
+  "%d %% de los votos: los socios eligen otra presidencia. Tú sigues; %s empieza de cero contigo (confianza 50).": "%d %% des voix : les membres choisissent une autre présidence. Tu restes ; %s repart de zéro avec toi (confiance 50).",
+  "Cambio en la presidencia tras la asamblea": "Changement à la présidence après l'assemblée",
+  "Los socios votaron el cambio; el entrenador sigue.": "Les membres ont voté le changement ; l'entraîneur reste."
  },
  "it": {
   "Historia": "Storia",
@@ -29325,7 +29361,19 @@
   "Ya hay una rueda abierta: respóndela en el PC.": "C'è già una conferenza aperta: rispondi sul PC.",
   "Ya convocaste una rueda esta semana.": "Hai già convocato una conferenza questa settimana.",
   "📣 Convocar rueda de prensa": "📣 Convocare una conferenza stampa",
-  "Rueda convocada: la respondes en el PC.": "Conferenza convocata: rispondi sul PC."
+  "Rueda convocada: la respondes en el PC.": "Conferenza convocata: rispondi sul PC.",
+  "el salón de actos": "la sala delle assemblee",
+  "Asamblea de socios": "Assemblea dei soci",
+  "convoca la asamblea: los socios votan la presidencia y tú hablas": "convoca l'assemblea: i soci votano la presidenza e tu parli",
+  "Seguro · Este proyecto va a ganar: pido vuestro voto para seguir igual.": "Sicuro · Questo progetto vincerà: chiedo il vostro voto per continuare così.",
+  "Evasivo · No es momento de cambios; ya veremos cómo acaba la temporada.": "Evasivo · Non è il momento di cambiare; vediamo come finisce la stagione.",
+  "Humilde · Los socios mandan; yo seguiré trabajando con quien elijan.": "Umile · Decidono i soci; continuerò a lavorare con chi scelgano.",
+  "La asamblea respalda al presidente": "L'assemblea sostiene il presidente",
+  "%d %% de los votos. El proyecto sigue; la directiva te lo agradece (+2 de confianza).": "%d %% dei voti. Il progetto continua; la dirigenza ti ringrazia (+2 di fiducia).",
+  "Nuevo presidente": "Nuovo presidente",
+  "%d %% de los votos: los socios eligen otra presidencia. Tú sigues; %s empieza de cero contigo (confianza 50).": "%d %% dei voti: i soci scelgono un'altra presidenza. Tu resti; %s riparte da zero con te (fiducia 50).",
+  "Cambio en la presidencia tras la asamblea": "Cambio alla presidenza dopo l'assemblea",
+  "Los socios votaron el cambio; el entrenador sigue.": "I soci hanno votato il cambiamento; l'allenatore resta."
  },
  "de": {
   "Historia": "Geschichte",
@@ -35254,7 +35302,19 @@
   "Ya hay una rueda abierta: respóndela en el PC.": "Es läuft schon eine Pressekonferenz: beantworte sie am PC.",
   "Ya convocaste una rueda esta semana.": "Du hast diese Woche schon eine Pressekonferenz einberufen.",
   "📣 Convocar rueda de prensa": "📣 Pressekonferenz einberufen",
-  "Rueda convocada: la respondes en el PC.": "Pressekonferenz einberufen: du beantwortest sie am PC."
+  "Rueda convocada: la respondes en el PC.": "Pressekonferenz einberufen: du beantwortest sie am PC.",
+  "el salón de actos": "der Versammlungssaal",
+  "Asamblea de socios": "Mitgliederversammlung",
+  "convoca la asamblea: los socios votan la presidencia y tú hablas": "beruft die Versammlung ein: die Mitglieder stimmen über die Präsidentschaft ab und du sprichst",
+  "Seguro · Este proyecto va a ganar: pido vuestro voto para seguir igual.": "Sicher · Dieses Projekt wird gewinnen: ich bitte um eure Stimme, um so weiterzumachen.",
+  "Evasivo · No es momento de cambios; ya veremos cómo acaba la temporada.": "Ausweichend · Keine Zeit für Veränderungen; mal sehen, wie die Saison endet.",
+  "Humilde · Los socios mandan; yo seguiré trabajando con quien elijan.": "Bescheiden · Die Mitglieder entscheiden; ich arbeite weiter, mit wem auch immer sie wählen.",
+  "La asamblea respalda al presidente": "Die Versammlung stützt den Präsidenten",
+  "%d %% de los votos. El proyecto sigue; la directiva te lo agradece (+2 de confianza).": "%d %% der Stimmen. Das Projekt geht weiter; der Vorstand dankt dir (+2 Vertrauen).",
+  "Nuevo presidente": "Neuer Präsident",
+  "%d %% de los votos: los socios eligen otra presidencia. Tú sigues; %s empieza de cero contigo (confianza 50).": "%d %% der Stimmen: die Mitglieder wählen eine neue Präsidentschaft. Du bleibst; %s fängt mit dir bei null an (Vertrauen 50).",
+  "Cambio en la presidencia tras la asamblea": "Wechsel an der Spitze nach der Versammlung",
+  "Los socios votaron el cambio; el entrenador sigue.": "Die Mitglieder stimmten für den Wechsel; der Trainer bleibt."
  },
  "ca": {
   "Historia": "Història",
@@ -41183,7 +41243,19 @@
   "Ya hay una rueda abierta: respóndela en el PC.": "Ja hi ha una roda oberta: respon-la al PC.",
   "Ya convocaste una rueda esta semana.": "Ja has convocat una roda aquesta setmana.",
   "📣 Convocar rueda de prensa": "📣 Convocar roda de premsa",
-  "Rueda convocada: la respondes en el PC.": "Roda convocada: la respons al PC."
+  "Rueda convocada: la respondes en el PC.": "Roda convocada: la respons al PC.",
+  "el salón de actos": "el saló d'actes",
+  "Asamblea de socios": "Assemblea de socis",
+  "convoca la asamblea: los socios votan la presidencia y tú hablas": "convoca l'assemblea: els socis voten la presidència i tu parles",
+  "Seguro · Este proyecto va a ganar: pido vuestro voto para seguir igual.": "Segur · Aquest projecte guanyarà: demano el vostre vot per seguir igual.",
+  "Evasivo · No es momento de cambios; ya veremos cómo acaba la temporada.": "Evasiu · No és moment de canvis; ja veurem com acaba la temporada.",
+  "Humilde · Los socios mandan; yo seguiré trabajando con quien elijan.": "Humil · Els socis manen; seguiré treballant amb qui triïn.",
+  "La asamblea respalda al presidente": "L'assemblea dona suport al president",
+  "%d %% de los votos. El proyecto sigue; la directiva te lo agradece (+2 de confianza).": "%d %% dels vots. El projecte segueix; la directiva t'ho agraeix (+2 de confiança).",
+  "Nuevo presidente": "Nou president",
+  "%d %% de los votos: los socios eligen otra presidencia. Tú sigues; %s empieza de cero contigo (confianza 50).": "%d %% dels vots: els socis trien una altra presidència. Tu segueixes; %s comença de zero amb tu (confiança 50).",
+  "Cambio en la presidencia tras la asamblea": "Canvi a la presidència després de l'assemblea",
+  "Los socios votaron el cambio; el entrenador sigue.": "Els socis van votar el canvi; l'entrenador segueix."
  },
  "pl": {
   "Club": "Klub",
@@ -47391,7 +47463,19 @@
   "Ya hay una rueda abierta: respóndela en el PC.": "Konferencja już trwa: odpowiedz na PC.",
   "Ya convocaste una rueda esta semana.": "W tym tygodniu już zwołałeś konferencję.",
   "📣 Convocar rueda de prensa": "📣 Zwołaj konferencję prasową",
-  "Rueda convocada: la respondes en el PC.": "Konferencja zwołana: odpowiadasz na PC."
+  "Rueda convocada: la respondes en el PC.": "Konferencja zwołana: odpowiadasz na PC.",
+  "el salón de actos": "sala zgromadzeń",
+  "Asamblea de socios": "Walne zgromadzenie członków",
+  "convoca la asamblea: los socios votan la presidencia y tú hablas": "zwołuje zgromadzenie: członkowie głosują nad prezesurą, a ty przemawiasz",
+  "Seguro · Este proyecto va a ganar: pido vuestro voto para seguir igual.": "Pewnie · Ten projekt wygra: proszę o wasz głos, by kontynuować.",
+  "Evasivo · No es momento de cambios; ya veremos cómo acaba la temporada.": "Wymijająco · To nie czas na zmiany; zobaczymy, jak skończy się sezon.",
+  "Humilde · Los socios mandan; yo seguiré trabajando con quien elijan.": "Skromnie · Członkowie decydują; będę pracował z tym, kogo wybiorą.",
+  "La asamblea respalda al presidente": "Zgromadzenie popiera prezesa",
+  "%d %% de los votos. El proyecto sigue; la directiva te lo agradece (+2 de confianza).": "%d%% głosów. Projekt trwa; zarząd dziękuje (+2 zaufania).",
+  "Nuevo presidente": "Nowy prezes",
+  "%d %% de los votos: los socios eligen otra presidencia. Tú sigues; %s empieza de cero contigo (confianza 50).": "%d%% głosów: członkowie wybierają nową prezesurę. Zostajesz; %s zaczyna z tobą od zera (zaufanie 50).",
+  "Cambio en la presidencia tras la asamblea": "Zmiana prezesa po zgromadzeniu",
+  "Los socios votaron el cambio; el entrenador sigue.": "Członkowie zagłosowali za zmianą; trener zostaje."
  },
  "tr": {
   "Club": "Kulüp",
@@ -53599,6 +53683,18 @@
   "Ya hay una rueda abierta: respóndela en el PC.": "Zaten açık bir basın toplantısı var: PC'de yanıtla.",
   "Ya convocaste una rueda esta semana.": "Bu hafta zaten bir basın toplantısı düzenledin.",
   "📣 Convocar rueda de prensa": "📣 Basın toplantısı düzenle",
-  "Rueda convocada: la respondes en el PC.": "Toplantı düzenlendi: PC'de yanıtlıyorsun."
+  "Rueda convocada: la respondes en el PC.": "Toplantı düzenlendi: PC'de yanıtlıyorsun.",
+  "el salón de actos": "toplantı salonu",
+  "Asamblea de socios": "Üyeler genel kurulu",
+  "convoca la asamblea: los socios votan la presidencia y tú hablas": "genel kurulu topluyor: üyeler başkanlığı oyluyor ve sen konuşuyorsun",
+  "Seguro · Este proyecto va a ganar: pido vuestro voto para seguir igual.": "Kendinden emin · Bu proje kazanacak: aynı yolda devam için oyunuzu istiyorum.",
+  "Evasivo · No es momento de cambios; ya veremos cómo acaba la temporada.": "Kaçamak · Değişiklik zamanı değil; sezonun nasıl biteceğini görelim.",
+  "Humilde · Los socios mandan; yo seguiré trabajando con quien elijan.": "Mütevazı · Karar üyelerin; kimi seçerlerse onunla çalışmaya devam ederim.",
+  "La asamblea respalda al presidente": "Genel kurul başkanı destekliyor",
+  "%d %% de los votos. El proyecto sigue; la directiva te lo agradece (+2 de confianza).": "Oyların %%%d'si. Proje sürüyor; yönetim teşekkür ediyor (+2 güven).",
+  "Nuevo presidente": "Yeni başkan",
+  "%d %% de los votos: los socios eligen otra presidencia. Tú sigues; %s empieza de cero contigo (confianza 50).": "Oyların %%%d'si: üyeler yeni bir başkanlık seçiyor. Sen kalıyorsun; %s seninle sıfırdan başlıyor (güven 50).",
+  "Cambio en la presidencia tras la asamblea": "Genel kurul sonrası başkanlıkta değişim",
+  "Los socios votaron el cambio; el entrenador sigue.": "Üyeler değişime oy verdi; teknik direktör kalıyor."
  }
 }
