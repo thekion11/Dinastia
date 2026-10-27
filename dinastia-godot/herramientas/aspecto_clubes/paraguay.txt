@@ -1,0 +1,16 @@
+Olimpia|clasico|aro|OL|franja_pecho|#ffffff|#000000|#000000|#000000
+Cerro Porteño|escudo|franjas|CP|franjas|#00246b|#d50032|#00246b|#00246b
+Libertad|circulo|liso|LI|franjas|#ffffff|#000000|#000000|#ffffff
+Guarani|clasico|franjas|GU|franjas|#ffd100|#000000|#000000|#000000
+Nacional (P)|escudo|franjas|NA|tercios_h|#ffffff|#0038a8|#0038a8|#ffffff
+Sol de América|hex|franjas|SA|franjas|#0038a8|#ffffff|#ffffff|#0038a8
+Luqueño|clasico|franjas|LU|franjas|#0038a8|#ffd100|#0038a8|#0038a8
+Doce de Octubre|rombo|franjas|DO|franjas|#d50032|#0038a8|#0038a8|#d50032
+Tacuari|penta|franjas|TA|franjas|#d50032|#ffffff|#d50032|#d50032
+Gral. Caballero|circulo|franjas|GC|franjas|#d50032|#000000|#000000|#d50032
+Ameliano|banderin|franjas|AM|franjas|#5c2d91|#ffffff|#5c2d91|#5c2d91
+Trinidense|ovalo|franjas|TR|franjas|#d50032|#ffffff|#ffffff|#d50032
+2 de Mayo|clasico|liso|DM|liso|#ffd100|#0038a8|#0038a8|#ffd100
+Rubio Ñu|escudo|franjas|RÑ|franjas|#00843d|#ffffff|#ffffff|#00843d
+Fernando Mora|hex|franjas|FM|franjas|#75aadb|#ffd100|#75aadb|#75aadb
+Resistencia|circulo|franjas|RS|franjas|#000000|#ffd100|#000000|#000000

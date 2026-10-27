@@ -1,0 +1,33 @@
+# nombre|forma|patrón|siglas|camiseta|k1|k2|pantalón|medias|esc1|esc2|butaca1|butaca2
+Colo-Colo|circulo|aro|CC|liso|#ffffff|#000000|#000000|#000000|#ffffff|#000000|#ffffff|#000000
+U. de Chile|circulo|aro|U|liso|#003da5|#d50032|#003da5|#003da5|#003da5|#d50032
+U. Católica|escudo|cruz|UC|franja_pecho|#ffffff|#0b2f66|#0b2f66|#ffffff|#0b2f66|#ffffff
+Coquimbo Unido|clasico|franjas|CU|franjas|||#000000|#000000
+Cobresal|hex|liso|CS|liso|||#ffffff|#ff6a13
+Palestino|clasico|mitad|CP|franjas_tricolor
+Unión Española|escudo|mitad|UE|liso|||#0b2f66|#d50032
+Audax Italiano|banderin|franjas|AI|liso|||#ffffff|#00843d
+Huachipato|penta|franjas|HU|franjas|||#000000|#000000
+Ñublense|rombo|liso|ÑU|liso|||#ffffff|#d50032
+O'Higgins|clasico|cuartos|OH|liso|||#00b5e2|#00b5e2
+Everton|escudo|liso|EV|liso|#ffd100|#0033a0|#0033a0|#ffd100
+D. Iquique|clasico|ondas|DI|liso|||#ffffff|#00a3e0
+U. La Calera|escudo|liso|LC|liso|||#ffffff|#d50032
+La Serena|circulo|sol|LS|liso|#7b1e3a|#ffd100|#7b1e3a|#7b1e3a
+D. Limache|escudo|liso|DL|liso
+Cobreloa|clasico|liso|CL|liso|||#ffffff|#ff8200
+S. Wanderers|escudo|franjas|SW|franjas|||#ffffff|#00693e
+U. de Concepción|escudo|liso|UCO|liso|||#003087|#ffb81c
+Rangers|clasico|franjas|RA|franjas|||#000000|#000000
+Magallanes|clasico|liso|MG|liso|||#ffffff|#87ceeb
+Curicó Unido|escudo|liso|CUR|liso|||#ffffff|#d50032
+Antofagasta|escudo|banda|DA|liso|||#ffffff|#0077c8
+D. Concepción|rombo|liso|DC|liso|||#ffd100|#5f259f
+Stgo. Morning|clasico|franjas|SM|franjas
+San Luis|escudo|liso|SL|liso|||#0033a0|#ffb81c
+D. Temuco|clasico|liso|DT|liso|||#ffffff|#00843d
+D. Copiapó|clasico|liso|CO|liso|||#ffffff|#d50032
+San Marcos|hex|liso|SM|liso|||#ffffff|#0072ce
+Recoleta|rombo|franjas|RE|franjas|#ffd100|#000000|#000000|#000000
+Santa Cruz|clasico|liso|SC|liso|||#ffffff|#7ba4db
+Pto. Montt|escudo|liso|PM|liso|||#ffffff|#00b140
