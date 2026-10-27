@@ -56,7 +56,7 @@ func _probar_subsuelo(b: CityBuilder, v: RedesCiudadVista) -> void:
 			tapas += 1
 	_comprobar(tapas == 5, "cada una es un punto de E")
 	var s := SubsueloCiudad.crear(b, v)
-	_comprobar(not s.visible and s.rects.size() == 8, "el subsuelo se levanta oculto, con 8 huecos")
+	_comprobar(not s.visible and s.rects.size() == 10, "el subsuelo se levanta oculto, con 10 huecos")
 	_comprobar(s.libre(Vector2(-1.5, -1.5)) and not s.libre(Vector2(-20.0, 0.0)), "se aparece en el pozo y la roca no se pisa")
 	## Todo conectado: desde el pozo se llega a cada punto de interés (relleno por la rejilla de 0,5 m).
 	var visto := {}
@@ -75,9 +75,12 @@ func _probar_subsuelo(b: CityBuilder, v: RedesCiudadVista) -> void:
 		var q: Vector2 = p["pos"]
 		if not visto.has(Vector2i(roundi(q.x * 2.0), roundi(q.y * 2.0))):
 			sin_llegar += 1
-	_comprobar(sin_llegar == 0 and s.puntos.size() == 4, "las %d interacciones (salir, reparar, palanca, tele) son alcanzables a pie" % s.puntos.size())
+			_linea("  sin llegar: %s %s" % [p["k"], q])
+	_comprobar(sin_llegar == 0 and s.puntos.size() == 5 + v.modelo.edificios.size(), "las %d interacciones (salir, mandos, disyuntor, tele y una acometida por edificio) son alcanzables a pie" % s.puntos.size())
 	_comprobar(visto.has(Vector2i(210, 0)), "y el cuarto olvidado del fondo también")
-	_comprobar(s.get_child_count() > 150, "paredes, tuberías y cables levantados (%d piezas)" % s.get_child_count())
+	_comprobar(s._acometidas.size() == v.modelo.edificios.size() and v.modelo.edificios.size() >= 15, "un armario de acometida por cada edificio real (%d)" % s._acometidas.size())
+	_comprobar(s._paneles.size() == 3, "el centro de mando tiene sus tres pantallas")
+	_comprobar(s.get_child_count() > 400, "paredes, tuberías y cables levantados (%d piezas)" % s.get_child_count())
 	var cam := s.encajar_camara(SubsueloCiudad.ORIGEN + Vector3(-40.0, 9.0, 0.0), SubsueloCiudad.ORIGEN + Vector3(0, 1.0, 0))
 	_comprobar(cam.y <= SubsueloCiudad.ORIGEN.y + SubsueloCiudad.ALTO and cam.x > SubsueloCiudad.ORIGEN.x - 6.0, "la cámara no se sale de los túneles")
 	## Los mandos de la sala de control actúan sobre las redes.
@@ -88,4 +91,9 @@ func _probar_subsuelo(b: CityBuilder, v: RedesCiudadVista) -> void:
 	v.modelo.averiar("agua", Vector2i(1, 1))
 	v.modelo.averiar("luz", Vector2i(3, 3))
 	_comprobar(s.usar(e, "sub_reparar") and not v.modelo.esta_averiado("agua", Vector2i(1, 1)) and v.modelo.hay_luz(Vector2i(3, 3)), "el botón verde arregla todas las averías")
+	v.modelo.evento._empezar(v.modelo)
+	_comprobar(s.usar(e, "sub_reparar") and v.modelo.evento.activo, "con el disyuntor saltado, reparar no basta")
+	_comprobar(s.usar(e, "sub_disyuntor") and v.modelo.evento.rearmado and s.usar(e, "sub_reparar") and not v.modelo.evento.activo, "rearmar en el cuadro general y reconectar en la sala resuelve el evento")
+	var ed0: Dictionary = v.modelo.edificios[0]
+	_comprobar(s.usar(e, "sub_edif_0") and bool(ed0["aislado"]) and s.usar(e, "sub_edif_0") and not bool(ed0["aislado"]), "cada armario aísla y restablece su edificio")
 	_comprobar(not s.usar(e, "sub_inventada"), "una orden desconocida no hace nada")

@@ -317,6 +317,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"vida": m.vida.a_dic() if m.vida != null else {},
 		"reloj": m.reloj.a_dic(), "necesidades": m.necesidades.a_dic(),   ## fase 0
 		"citas": m.citas.a_dic(),   ## fase 4
+		"redes_ciudad": m.redes_ciudad.a_dic() if m.redes_ciudad != null else {},   ## redes de la ciudad (partida vieja: sin clave)
 		"afinidad": m.afinidad.a_dic(),   ## fase 4, bloque 7
 		"imprevistos": m.imprevistos.a_dic(),
 		"maestria": m.maestria.a_dic() if m.maestria != null else {},

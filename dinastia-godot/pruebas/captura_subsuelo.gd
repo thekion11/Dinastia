@@ -2,13 +2,15 @@ extends Node
 ## Capturas del subsuelo de la ciudad (easter egg) desde siete puntos. NO corre con --headless:
 ##   herramientas/captura.sh res://pruebas/captura_subsuelo.tscn [--compat]
 ## Sale en /tmp/captura_subsuelo_N.png (variable CAPTURA_SALIDA para otra carpeta).
+## EVENTO=1 dispara el apagón de tormenta (baliza, cuadro general con chispas, pantalla de alertas).
 ## SIN_LUZ=1 deja sin corriente el sector de la entrada (lámparas de emergencia en rojo).
 
 const PUNTOS := [
-	[Vector3(-2.5, 1.7, 0.0), Vector3(20, 1.5, 0)], [Vector3(20, 1.7, 0.0), Vector3(45, 1.5, 0)],
-	[Vector3(21, 1.7, -5.0), Vector3(21, 2.0, -30)], [Vector3(33, 1.7, 6.0), Vector3(33, 2.0, 30)],
-	[Vector3(47, 1.7, -5.0), Vector3(47, 2.0, -30)], [Vector3(62, 2.0, 4.0), Vector3(75, 2.0, -6)],
-	[Vector3(92, 1.6, 0.0), Vector3(108, 1.2, 0)]]
+	[Vector3(-2.5, 1.7, 0.0), Vector3(20, 1.5, 0)], [Vector3(21, 1.7, -22.0), Vector3(21, 1.6, -32)],
+	[Vector3(71, 2.0, 7.0), Vector3(71, 2.8, -9)], [Vector3(71, 1.8, 12.5), Vector3(78, 1.2, 36)],
+	[Vector3(84, 1.7, 33.0), Vector3(70, 1.3, 15.5)], [Vector3(33, 1.7, 6.0), Vector3(33, 2.0, 30)],
+	[Vector3(92, 1.6, 0.0), Vector3(108, 1.2, 0)], [Vector3(64, 2.0, 5.0), Vector3(71, 1.0, -9)], [Vector3(64.5, 2.3, -3.0), Vector3(64.5, 2.5, -9.6)],
+	[Vector3(71, 2.3, -3.0), Vector3(71, 2.5, -9.6)], [Vector3(77.5, 2.3, -3.0), Vector3(77.5, 2.5, -9.6)]]
 
 var _n := 0
 var _cam: Camera3D
@@ -23,6 +25,12 @@ func _ready() -> void:
 	ex.armar_transporte()
 	var v := RedesCiudadVista.crear(ex, 5)
 	_sub = SubsueloCiudad.crear(b, v)
+	v.modelo.averias_azar = false
+	v.modelo.pasar(20, 8, 0.6, 0.0, "despejado")
+	if OS.get_environment("EVENTO") == "1":
+		v.modelo.evento._empezar(v.modelo)
+		v.modelo.pasar(1, 21, 0.9, 12.0, "tormenta")
+		v.refrescar()
 	_sub.visible = true
 	if OS.get_environment("SIN_LUZ") == "1":
 		v.modelo.averiar("luz", _sub.sector_entrada)

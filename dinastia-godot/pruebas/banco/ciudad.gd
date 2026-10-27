@@ -146,6 +146,70 @@ func _probar_redes_ciudad() -> void:
 	g.gas[1] = 100.0
 	g.pasar(1, 9, 0.5, 0.0)
 	_comprobar(float(g.gas[1]) > 5000.0, "una gasolinera casi vacía recibe la cisterna")
+	## EDIFICIOS REALES: consumen de su sector, el hospital tiene generador y aislar uno baja la demanda.
+	var ed := RedesCiudad.new(7)
+	ed.averias_azar = false
+	ed.registrar_edificio("hospital", Vector3(550.0, 0, -110.0))
+	ed.registrar_edificio("estadio", Vector3(0.0, 0, 0.0), "Estadio X")
+	ed.registrar_edificio("inventado", Vector3.ZERO)
+	_comprobar(ed.edificios.size() == 2 and ed.edificios[0]["sector"] == RedesCiudad.sector_de(Vector2i(5, -1)), "los edificios se conectan al sector donde están (y los usos raros se ignoran)")
+	var dem0 := ed.demanda_sector(RedesCiudad.sector_en(0.0, 0.0))
+	ed.edificios[1]["aislado"] = true
+	_comprobar(ed.demanda_sector(RedesCiudad.sector_en(0.0, 0.0)) < dem0 - 1.5, "aislar el estadio le quita 1,8 MW a su sector")
+	ed.averiar("luz", RedesCiudad.sector_de(Vector2i(5, -1)))
+	ed.recalcular()
+	_comprobar(bool(ed.estado_edificio(ed.edificios[0])["luz"]) and not bool(ed.estado_edificio(ed.edificios[1])["luz"]), "con el sector a oscuras el hospital sigue (generador) y el estadio aislado no")
+	## EL EVENTO DEL APAGÓN: tormenta a las 20:00, hay que rearmar el disyuntor y luego reconectar.
+	var ev := RedesCiudad.new(21)
+	ev.averias_azar = false
+	var dias := 0
+	while not ev.evento.activo and dias < 60:
+		ev.pasar(1, 20, 0.9, 10.0, "tormenta")
+		dias += 1
+	_comprobar(ev.evento.activo and ev.evento.sectores.size() == 2 and ev.evento.sectores[0] != ev.evento.sectores[1], "una semana de tormenta provoca el apagón (a los %d días de probar)" % dias)
+	_comprobar(not ev.hay_luz(ev.evento.sectores[0]) and not ev.hay_luz(ev.evento.sectores[1]), "dos sectores se quedan sin luz")
+	_comprobar(ev.reparar_todo() == 0 and not ev.hay_luz(ev.evento.sectores[0]), "el botón de reparar no arregla el disyuntor general")
+	_comprobar(ev.evento.reconectar(ev) == "falta_rearmar" and ev.evento.rearmar() == "ok" and ev.evento.rearmar() == "ya", "primero se rearma (una sola vez) y solo entonces se reconecta")
+	_comprobar(ev.evento.reconectar(ev) == "ok" and not ev.evento.activo and ev.hay_luz(Vector2i(2, 2)) and ev.evento.resueltos == 1, "reconectar devuelve la luz y cuenta como resuelto por el jugador")
+	var tipos: Array = []
+	for a: Dictionary in ev.evento.tomar_avisos():
+		tipos.append(a["tipo"])
+	_comprobar(tipos == ["inicio", "resuelto"] and not ev.registro.is_empty(), "el evento deja avisos (móvil y prensa) y líneas en el registro")
+	while not ev.evento.activo and dias < 120:
+		ev.pasar(1, 20, 0.9, 10.0, "tormenta")
+		dias += 1
+	ev.pasar(1, 8, 0.5, 0.0, "tormenta")
+	_comprobar(not ev.evento.activo and ev.evento.por_cuadrilla == 1 and ev.hay_luz(Vector2i(2, 2)), "si nadie baja, la cuadrilla lo arregla a las 08:00")
+	_comprobar(ev.historial.size() > 0 and ev.historial.size() <= RedesCiudad.HISTORIAL_MAX, "el historial de 24 horas alimenta las curvas del centro de mando")
+	## GUARDADO: ida y vuelta por JSON (con evento a medias, averías, aislados y gas) y partida vieja sin redes.
+	var gd := RedesCiudad.new(33)
+	gd.averias_azar = false
+	gd.registrar_edificio("hospital", Vector3(550.0, 0, -110.0))
+	gd.registrar_edificio("estadio", Vector3(0.0, 0, 0.0))
+	gd.pasar(30, 6, 0.8, 9.0, "tormenta")
+	gd.evento._empezar(gd)
+	gd.evento.rearmar()
+	gd.averiar("agua", Vector2i(4, 0))
+	gd.edificios[1]["aislado"] = true
+	gd.repostar(1, Vector2i(2, 2), 300.0)
+	var vuelta := RedesCiudad.new(1)
+	vuelta.desde_dic(JSON.parse_string(JSON.stringify(gd.a_dic())))
+	vuelta.recibir_edificios([{"id": 0, "nombre": "H", "uso": "hospital", "pos": Vector3.ZERO, "sector": Vector2i(3, 1), "kw": 900, "m3h": 60, "generador": true, "aislado": false},
+		{"id": 1, "nombre": "E", "uso": "estadio", "pos": Vector3.ZERO, "sector": Vector2i(2, 2), "kw": 1800, "m3h": 40, "generador": false, "aislado": false}])
+	_comprobar(vuelta.horas == gd.horas and is_equal_approx(vuelta.agua_nivel, gd.agua_nivel) and vuelta.esta_averiado("agua", Vector2i(4, 0)), "el guardado devuelve el reloj, el depósito y las averías")
+	_comprobar(vuelta.evento.activo == gd.evento.activo and vuelta.evento.rearmado and vuelta.evento.sectores == gd.evento.sectores, "y el evento del apagón a medias (con el disyuntor ya rearmado)")
+	_comprobar(vuelta.edificios[1]["aislado"] and not vuelta.edificios[0]["aislado"] and is_equal_approx(float(vuelta.gas[1]), float(gd.gas[1])), "y los edificios aislados y las existencias de gas")
+	_comprobar(vuelta.luz == gd.luz and vuelta.inundado == gd.inundado and vuelta.historial.size() == gd.historial.size(), "y la luz, las inundaciones y las curvas son las mismas")
+	var vieja := RedesCiudad.new(5)
+	vieja.desde_dic({})
+	_comprobar(vieja.horas == 0 and vieja.fraccion_luz() == 1.0, "una partida vieja sin redes se queda con las redes nuevas")
+	var mu := Mundo.new()
+	mu.generar(["CHI"], 3131)
+	mu.tomar_el_mando(mu.ligas[0].clubes[0].id)
+	_comprobar(Partida.desde_instantanea(Partida.instantanea(mu)).redes_ciudad == null, "una partida sin redes pisadas se guarda y se carga sin ellas")
+	mu.redes_ciudad = gd
+	var mu2 := Partida.desde_instantanea(JSON.parse_string(JSON.stringify(Partida.instantanea(mu))))
+	_comprobar(mu2.redes_ciudad != null and mu2.redes_ciudad.horas == gd.horas and mu2.redes_ciudad.evento.activo, "la partida completa guarda y carga las redes")
 	## Determinista: misma semilla, mismas averías.
 	var a1 := RedesCiudad.new(11)
 	var a2 := RedesCiudad.new(11)
