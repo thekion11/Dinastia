@@ -34,7 +34,7 @@ func _acelerar_y_tope() -> void:
 	var e := _explorador()
 	_durante(e, Vector2(0, 1), 1.0)
 	var v1 := e.vel
-	_comprobar(v1 > 8.0 and v1 < 20.0, "en un segundo a fondo pasa de 0 a %.1f m/s (%.0f km/h)" % [v1, v1 * 3.6])
+	_comprobar(v1 > 4.0 and v1 < 10.0, "en un segundo a fondo pasa de 0 a %.1f m/s (%.0f km/h)" % [v1, v1 * 3.6])
 	_durante(e, Vector2(0, 1), 1.0)
 	var v2 := e.vel
 	_comprobar(v2 - v1 < v1, "el segundo segundo gana menos que el primero (%.1f frente a %.1f): la potencia cae con la velocidad" % [v2 - v1, v1])
@@ -48,10 +48,19 @@ func _frenar_y_marcha_atras() -> void:
 	var e := _explorador()
 	e.vel = 20.0
 	var t := 0.0
-	while e.vel > 0.5 and t < 5.0:
+	var a_ant := 0.0
+	var salto := 0.0   ## el mayor cambio de deceleración de un fotograma a otro (el tirón)
+	while e.vel > 0.5 and t < 6.0:
+		var v0 := e.vel
 		e._conducir(Vector2(0, -1), DT)
+		var a := (v0 - e.vel) / DT
+		salto = maxf(salto, absf(a - a_ant))
+		a_ant = a
 		t += DT
-	_comprobar(t < 1.2, "a 72 km/h, frenando a fondo, se para en %.2f s" % t)
+	var g := 20.0 / t / 9.81
+	_comprobar(t > 2.0 and t < 3.0, "a 72 km/h, frenando a fondo, se para en %.2f s (antes 0,82 s)" % t)
+	_comprobar(g > 0.6 and g < 1.05, "la frenada media es de %.2f g (antes ~2,4 g)" % g)
+	_comprobar(salto < 1.0, "sin tirones: la deceleración cambia %.2f m/s² como mucho entre fotogramas" % salto)
 	_comprobar(e.vel >= 0.0, "frenar no le hace saltar a marcha atrás de golpe (%.2f m/s)" % e.vel)
 	_durante(e, Vector2(0, -1), 3.0)
 	_comprobar(e.vel < -3.0 and e.vel >= -8.0, "ya parado, seguir frenando es marcha atrás, con tope de 8 m/s (%.2f)" % e.vel)
