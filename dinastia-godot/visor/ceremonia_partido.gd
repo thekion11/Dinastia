@@ -75,6 +75,23 @@ func _entrar_en(fase: int) -> void:
 		4:
 			if is_instance_valid(_carta):
 				_carta.queue_free()
+			_foto_guardado = CeremoniaFoto.colocar(_jugadores, _anim_de)
+			for g: Array in _foto_guardado:
+				_destinos.erase(g[0])   ## quien no llegó a su sitio no sale andando de la foto
+			if is_instance_valid(_mascota):
+				_mascota.visible = false
+			_flash = CeremoniaFoto.luz(_raiz)
+			_carta = _rotulo_foto()
+			_ver_ninos(false)   ## los niños se quedan fuera de la foto
+		5:
+			if is_instance_valid(_carta):
+				_carta.queue_free()
+			CeremoniaFoto.devolver(_foto_guardado, _jugadores, _anim_de)
+			_ver_ninos(true)
+			if is_instance_valid(_mascota):
+				_mascota.visible = true
+			if is_instance_valid(_flash):
+				_flash.queue_free()
 			_preparar_sorteo()
 
 ## Cada uno sigue su camino a paso de ceremonia; el niño va a su lado.
@@ -130,8 +147,14 @@ func _camara(fase: int) -> void:
 			_cam.global_position = foco + Vector3(9.0, 2.6, -7.0)
 			_cam.look_at(foco + Vector3(0, -0.2, 2.0), Vector3.UP)
 		4:
+			## La foto: de frente al grupo, a la altura de los fotógrafos, con los flashes.
+			_cam.fov = 40.0
+			_cam.global_position = CeremoniaFoto.CAMARA
+			_cam.look_at(CeremoniaFoto.MIRA, Vector3.UP)
+			CeremoniaFoto.destellar(_flash, _t - (INICIO_SORTEO - T_FOTO))
+		5:
 			## Plano medio del círculo central, con un leve travelling.
-			var f4 := clampf((_t - T_VUELO - T_SALIDA - T_FILA * 2.0) / T_SORTEO, 0.0, 1.0)
+			var f4 := clampf((_t - INICIO_SORTEO) / T_SORTEO, 0.0, 1.0)
 			_cam.fov = 38.0
 			_cam.global_position = Vector3(lerpf(4.6, 3.9, f4), 1.7, lerpf(1.3, 0.7, f4))
 			_cam.look_at(Vector3(0.0, 1.25, 0.0), Vector3.UP)
@@ -141,6 +164,32 @@ func _camara(fase: int) -> void:
 			var z := lado * lerpf(1.5, 13.5, f3)
 			_cam.global_position = Vector3(17.0, 2.2, z + lado * 1.5)
 			_cam.look_at(Vector3(11.0, 1.35, z), Vector3.UP)
+
+func _ver_ninos(si: bool) -> void:
+	for k: Dictionary in _ninos:
+		if is_instance_valid(k.get("nodo")):
+			(k["nodo"] as Node3D).visible = si
+
+## El rótulo de la foto: escudo y «foto de equipo».
+func _rotulo_foto() -> Control:
+	var caja := PanelContainer.new()
+	caja.add_theme_stylebox_override("panel", Tema.caja(_estilo.get("fondo", Color(0.03, 0.05, 0.12, 0.88)), Tema.RADIO_GRANDE, _estilo.get("borde", Color(1, 1, 1, 0.18))))
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 14)
+	caja.add_child(h)
+	h.add_child(_escudo(_local, 48))
+	var v := VBoxContainer.new()
+	v.alignment = BoxContainer.ALIGNMENT_CENTER
+	h.add_child(v)
+	v.add_child(Tema.etiqueta(13, _estilo.get("acento", Tema.ORO), Idiomas.t("FOTO DE EQUIPO")))
+	v.add_child(Tema.etiqueta(20, Tema.TEXTO, Nombres.visible(_local.nombre)))
+	_ui.add_child(caja)
+	caja.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+	caja.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	caja.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	caja.offset_bottom = -54
+	Animar.aparecer(caja, 0.25, 0.3)
+	return caja
 
 ## El rótulo del sorteo: escudo y «elige campo».
 func _rotulo_sorteo(quien: Club) -> Control:
@@ -170,7 +219,7 @@ func _anim_gesto(ap: Variant, nombre: String) -> void:
 
 ## La moneda sube girando y cae en la mano del árbitro; luego, el apretón.
 func _sorteo() -> void:
-	var s := _t - (T_VUELO + T_SALIDA + T_FILA * 2.0)
+	var s := _t - INICIO_SORTEO
 	if is_instance_valid(_moneda):
 		var mano := Vector3(-0.3, 1.1, 0.0)
 		var u := clampf((s - 0.3) / 1.3, 0.0, 1.0)
@@ -207,6 +256,8 @@ func _process(delta: float) -> void:
 		fase = 3
 	if _t >= T_VUELO + T_SALIDA + T_FILA * 2.0:
 		fase = 4
+	if _t >= INICIO_SORTEO:
+		fase = 5
 	if _t >= T_FIN:
 		terminar()
 		return
@@ -214,7 +265,7 @@ func _process(delta: float) -> void:
 		_entrar_en(fase)
 	_caminar(delta)
 	_camara(fase)
-	if fase == 4:
+	if fase == 5:
 		_sorteo()
 
 func _unhandled_input(e: InputEvent) -> void:

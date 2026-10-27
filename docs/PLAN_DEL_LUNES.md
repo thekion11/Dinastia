@@ -509,7 +509,6 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 ### Semana 3 (27-10 → 2-11) — Partido II: porteros, pases y presets
 
 ### Semana 4 (3-11 → 9-11) — Partido III: espectáculo
-- [ ] Salida del túnel, himno, foto de equipo, saque inicial con cámara de TV.
 - [ ] Prórroga completa y tanda con presentación.
 - [ ] Ayudas del modo jugable (indicador de pase, cámara «Be a Pro» ajustable).
 
