@@ -191,8 +191,8 @@ static func zancas_pasillo(escalones: Array[Transform3D], tam: Vector3, lateral:
 		if y.y < 0.0:
 			y = -y
 		for lado: float in [-1.0, 1.0]:
-			var centro := (p0 + p1) * 0.5 + perp * lado * 0.69 + Vector3(0, 0.22, 0) + y * 0.0
-			out.append(Transform3D(Basis(x * 0.12, y * 0.34, z * longitud), centro))
+			var centro := (p0 + p1) * 0.5 + perp * lado * 0.68 + Vector3(0, 0.3, 0)
+			out.append(Transform3D(Basis(x * 0.14, y * 0.5, z * longitud), centro))
 	return out
 
 ## Los peldaños de los pasillos de un deck, en su espacio, fila a fila (la fila 0
