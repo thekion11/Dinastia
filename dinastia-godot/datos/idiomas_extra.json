@@ -6140,7 +6140,12 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Colour 1 of your club at the bottom, colour 2 in the middle and a mix of both at the top.",
   "Franjas iguales": "Equal stripes",
   "Los dos colores en franjas, igual en todos los niveles.": "Both colours in stripes, the same on every level.",
-  "Color de las butacas por nivel": "Seat colour by level"
+  "Color de las butacas por nivel": "Seat colour by level",
+  "Practicante": "Trainee",
+  "Cadete": "Cadet",
+  "Debutante": "Rookie",
+  "Experto": "Expert",
+  "Ultimate": "Ultimate"
  },
  "pt": {
   "Historia": "História",
@@ -12283,7 +12288,12 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Em baixo a cor 1 do seu clube, no meio a 2 e em cima uma mistura das duas.",
   "Franjas iguales": "Listras iguais",
   "Los dos colores en franjas, igual en todos los niveles.": "As duas cores em listras, igual em todos os níveis.",
-  "Color de las butacas por nivel": "Cor das cadeiras por nível"
+  "Color de las butacas por nivel": "Cor das cadeiras por nível",
+  "Practicante": "Praticante",
+  "Cadete": "Cadete",
+  "Debutante": "Estreante",
+  "Experto": "Especialista",
+  "Ultimate": "Ultimate"
  },
  "patrones": [
   [
@@ -24038,7 +24048,12 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "En bas la couleur 1 de ton club, au milieu la 2 et en haut un mélange des deux.",
   "Franjas iguales": "Rayures identiques",
   "Los dos colores en franjas, igual en todos los niveles.": "Les deux couleurs en rayures, pareil à tous les niveaux.",
-  "Color de las butacas por nivel": "Couleur des sièges par niveau"
+  "Color de las butacas por nivel": "Couleur des sièges par niveau",
+  "Practicante": "Stagiaire",
+  "Cadete": "Cadet",
+  "Debutante": "Débutant",
+  "Experto": "Expert",
+  "Ultimate": "Ultimate"
  },
  "it": {
   "Historia": "Storia",
@@ -30181,7 +30196,12 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "In basso il colore 1 del tuo club, in mezzo il 2 e in alto un misto dei due.",
   "Franjas iguales": "Strisce uguali",
   "Los dos colores en franjas, igual en todos los niveles.": "I due colori a strisce, uguale a tutti i livelli.",
-  "Color de las butacas por nivel": "Colore dei sedili per livello"
+  "Color de las butacas por nivel": "Colore dei sedili per livello",
+  "Practicante": "Praticante",
+  "Cadete": "Cadetto",
+  "Debutante": "Esordiente",
+  "Experto": "Esperto",
+  "Ultimate": "Ultimate"
  },
  "de": {
   "Historia": "Geschichte",
@@ -36324,7 +36344,12 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Unten Farbe 1 deines Vereins, in der Mitte Farbe 2 und oben eine Mischung aus beiden.",
   "Franjas iguales": "Gleiche Streifen",
   "Los dos colores en franjas, igual en todos los niveles.": "Beide Farben in Streifen, auf allen Ebenen gleich.",
-  "Color de las butacas por nivel": "Sitzfarbe pro Ebene"
+  "Color de las butacas por nivel": "Sitzfarbe pro Ebene",
+  "Practicante": "Anfänger",
+  "Cadete": "Kadett",
+  "Debutante": "Debütant",
+  "Experto": "Experte",
+  "Ultimate": "Ultimate"
  },
  "ca": {
   "Historia": "Història",
@@ -42467,7 +42492,12 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "A baix el color 1 del teu club, al mig el 2 i a dalt una barreja dels dos.",
   "Franjas iguales": "Franges iguals",
   "Los dos colores en franjas, igual en todos los niveles.": "Els dos colors en franges, igual a tots els nivells.",
-  "Color de las butacas por nivel": "Color de les butaques per nivell"
+  "Color de las butacas por nivel": "Color de les butaques per nivell",
+  "Practicante": "Practicant",
+  "Cadete": "Cadet",
+  "Debutante": "Debutant",
+  "Experto": "Expert",
+  "Ultimate": "Ultimate"
  },
  "pl": {
   "Club": "Klub",
@@ -48889,7 +48919,12 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Na dole kolor 1 twojego klubu, w środku 2, a na górze mieszanka obu.",
   "Franjas iguales": "Jednakowe pasy",
   "Los dos colores en franjas, igual en todos los niveles.": "Oba kolory w pasy, tak samo na każdym poziomie.",
-  "Color de las butacas por nivel": "Kolor krzesełek wg poziomu"
+  "Color de las butacas por nivel": "Kolor krzesełek wg poziomu",
+  "Practicante": "Praktykant",
+  "Cadete": "Kadet",
+  "Debutante": "Debiutant",
+  "Experto": "Ekspert",
+  "Ultimate": "Ultimate"
  },
  "tr": {
   "Club": "Kulüp",
@@ -55311,6 +55346,11 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Altta kulübünün 1. rengi, ortada 2. renk ve üstte ikisinin karışımı.",
   "Franjas iguales": "Eşit çizgiler",
   "Los dos colores en franjas, igual en todos los niveles.": "İki renk çizgili, her katta aynı.",
-  "Color de las butacas por nivel": "Kata göre koltuk rengi"
+  "Color de las butacas por nivel": "Kata göre koltuk rengi",
+  "Practicante": "Acemi",
+  "Cadete": "Genç",
+  "Debutante": "Çaylak",
+  "Experto": "Uzman",
+  "Ultimate": "Ultimate"
  }
 }
