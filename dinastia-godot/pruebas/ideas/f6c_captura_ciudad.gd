@@ -9,7 +9,7 @@ const ESPERA_AEREA := 50   ## fotogramas para que la cámara orbital llegue (se 
 const ESPERA_PIE := 14     ## y la del paseo
 const ALTURA_AEREA := 120.0
 const DIST_AEREA := 70.0
-const DIST_PIE := 30.0     ## del borde de la manzana al fotógrafo
+const DIST_PIE := 16.0     ## del borde de la manzana al fotógrafo: en mitad de la calle de enfrente
 var _p: Node
 var _v: VistaCiudad
 var _e: ExploradorCiudad
@@ -48,6 +48,11 @@ func _process(_d: float) -> void:
 		_v.call("_aplicar_hora")
 		_elegir_tomas()
 		print("f6c: %d zonas" % _tomas.size())
+		if OS.get_environment("SOLO") == "pie":   ## repetir solo las tomas a pie
+			_aerea = false
+			_v.explorar("pie")
+			_e = _v.get("_explorador")
+			_e.primera_persona = true
 		if OS.get_environment("DEPURAR") != "":
 			var ex := (_v.get("_ciudad") as CityBuilder).expansion
 			for t: Dictionary in _tomas:
@@ -65,6 +70,7 @@ func _process(_d: float) -> void:
 			_k = 0
 			_v.explorar("pie")
 			_e = _v.get("_explorador")
+			_e.primera_persona = true   ## sin el cuerpo delante de la fachada
 		else:
 			get_tree().quit()
 			return
@@ -79,10 +85,13 @@ func _process(_d: float) -> void:
 			_v.set("_alto", ALTURA_AEREA)
 			_v.set("_ang", 0.6)
 		else:
+			## Frente al lado de la manzana que mira hacia fuera de la ciudad (el eje dominante),
+			## en mitad de la calle de enfrente y mirando de frente a la fachada.
 			var fuera := Vector2(r.get_center().x, r.get_center().y)
 			var dir := fuera.normalized() if fuera.length() > 1.0 else Vector2(0, 1)
-			var pos := Vector3(r.get_center().x + dir.x * (r.size.x * 0.5 + DIST_PIE), 0.0, r.get_center().y + dir.y * (r.size.y * 0.5 + DIST_PIE))
-			var rumbo := atan2(-dir.x, -dir.y)   ## mirando hacia la manzana (hacia dentro)
+			var normal := Vector2(signf(dir.x), 0.0) if absf(dir.x) > absf(dir.y) else Vector2(0.0, signf(dir.y))
+			var pos := Vector3(r.get_center().x + normal.x * (r.size.x * 0.5 + DIST_PIE), 0.0, r.get_center().y + normal.y * (r.size.y * 0.5 + DIST_PIE))
+			var rumbo := atan2(-normal.x, -normal.y)   ## forward = (sin, cos): mirando hacia la manzana
 			_e.cuerpo.position = pos
 			_e.cuerpo.position.y = _e.altura_suelo(pos.x, pos.z)
 			_e.set("rumbo", rumbo)
