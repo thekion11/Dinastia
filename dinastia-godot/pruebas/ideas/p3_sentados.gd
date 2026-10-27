@@ -66,6 +66,22 @@ func _probar_async() -> void:
 	_e.cuerpo.position = p + Vector3(200.0, 0, 0)
 	gs.revisar()
 	_comprobar(not gs.cuerpos.has(i_ok), "al alejarte, se va")
+	## Quien llega MIENTRAS miras (el asiento estaba libre y ahora no) viene andando, se vuelve y se sienta; no aparece sentado de golpe.
+	_e.cuerpo.position = p + Vector3(8.0, -0.79, 0)
+	gs._visto[i_ok] = false
+	gs.revisar()
+	_comprobar(gs.cuerpos.has(i_ok) and gs._llegando.size() == 1, "quien llega mientras miras viene andando hasta el banco")
+	if gs._llegando.size() == 1:
+		var dl: Dictionary = (gs._llegando[0] as Dictionary)["d"]
+		var nl: Node3D = dl["nodo"]
+		_comprobar(nl.position.distance_to(Vector3(p.x, nl.position.y, p.z)) > 2.5 and (dl["anim"] as AnimationPlayer).current_animation == "caminar", "empieza a unos 3 m del asiento, andando")
+		gs._llegadas(4.0)
+		_comprobar(int((gs._llegando[0] as Dictionary)["fase"]) == 1 and nl.position.distance_to(Vector3(p.x, nl.position.y, p.z)) < 0.3, "llega al asiento")
+		_comprobar((dl["anim"] as AnimationPlayer).current_animation in ["sentarse", "sentado"], "y se sienta (clip «%s»)" % (dl["anim"] as AnimationPlayer).current_animation)
+		gs._llegadas(3.0)
+		_comprobar(gs._llegando.is_empty(), "al terminar queda como el resto de sentados")
+	_e.cuerpo.position = p + Vector3(200.0, 0, 0)
+	gs.revisar()
 	## Esperar con vida (P3, pasada 3): tres variantes y el móvil en la mano.
 	_comprobar(PeatonVida.variante(0.1) == 0 and PeatonVida.variante(0.6) == 1 and PeatonVida.variante(0.9) == 2, "la espera tiene tres variantes (móvil, llamada, quieto)")
 	var rng_p := RandomNumberGenerator.new()
