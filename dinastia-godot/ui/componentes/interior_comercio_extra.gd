@@ -54,3 +54,14 @@ static func tienda_calle(ins: Node) -> void:
 		var verde := Color(0.1, 0.7, 0.35)
 		Mini3D.caja(ins.get("_raiz"), Vector3(0, 2.55, -4.9), Vector3(0.9, 0.26, 0.05), Mini3D.mat(verde, 0.6))
 		Mini3D.caja(ins.get("_raiz"), Vector3(0, 2.55, -4.9), Vector3(0.26, 0.9, 0.05), Mini3D.mat(verde, 0.6))
+
+## Oficina de calle: la mitad de delante (antes suelo vacío) con cuatro
+## puestos más en dos filas, plantas y una cola de carpetas en el suelo.
+static func oficina(ins: Node) -> void:
+	for z: float in [2.6, 4.7]:
+		for x: float in [-4.5, -1.5]:
+			ins.call("_puesto", Vector3(x, 0, z), 0.0)
+	ins.call("_planta", Vector3(-7.2, 0, 4.9))
+	ins.call("_planta", Vector3(0.6, 0, 5.2), false)
+	for k in 3:
+		ins.call("_poner", "cardboardBoxClosed", Vector3(-7.4 + 0.5 * float(k), 0, 3.4), 0.3 * float(k))
