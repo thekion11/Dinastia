@@ -6051,7 +6051,8 @@
   "No pierdas el próximo partido": "Don't lose the next match",
   "Marca dos goles o más": "Score two goals or more",
   "Marca tres goles o más": "Score three goals or more",
-  "No encajes más de un gol": "Concede no more than one goal"
+  "No encajes más de un gol": "Concede no more than one goal",
+  "Lo demás, por mi cuenta ▸": "I'll do the rest myself ▸"
  },
  "pt": {
   "Historia": "História",
@@ -12105,7 +12106,8 @@
   "No pierdas el próximo partido": "Não percas o próximo jogo",
   "Marca dos goles o más": "Marca dois golos ou mais",
   "Marca tres goles o más": "Marca três golos ou mais",
-  "No encajes más de un gol": "Não sofras mais de um golo"
+  "No encajes más de un gol": "Não sofras mais de um golo",
+  "Lo demás, por mi cuenta ▸": "O resto, por minha conta ▸"
  },
  "patrones": [
   [
@@ -23771,7 +23773,8 @@
   "No pierdas el próximo partido": "Ne perds pas le prochain match",
   "Marca dos goles o más": "Marque deux buts ou plus",
   "Marca tres goles o más": "Marque trois buts ou plus",
-  "No encajes más de un gol": "N'encaisse pas plus d'un but"
+  "No encajes más de un gol": "N'encaisse pas plus d'un but",
+  "Lo demás, por mi cuenta ▸": "Le reste, je m'en charge ▸"
  },
  "it": {
   "Historia": "Storia",
@@ -29825,7 +29828,8 @@
   "No pierdas el próximo partido": "Non perdere la prossima partita",
   "Marca dos goles o más": "Segna due gol o più",
   "Marca tres goles o más": "Segna tre gol o più",
-  "No encajes más de un gol": "Non subire più di un gol"
+  "No encajes más de un gol": "Non subire più di un gol",
+  "Lo demás, por mi cuenta ▸": "Il resto, da solo ▸"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35879,7 +35883,8 @@
   "No pierdas el próximo partido": "Verliere das nächste Spiel nicht",
   "Marca dos goles o más": "Erziele zwei Tore oder mehr",
   "Marca tres goles o más": "Erziele drei Tore oder mehr",
-  "No encajes más de un gol": "Kassiere höchstens ein Tor"
+  "No encajes más de un gol": "Kassiere höchstens ein Tor",
+  "Lo demás, por mi cuenta ▸": "Den Rest mache ich selbst ▸"
  },
  "ca": {
   "Historia": "Història",
@@ -41933,7 +41938,8 @@
   "No pierdas el próximo partido": "No perdis el pròxim partit",
   "Marca dos goles o más": "Marca dos gols o més",
   "Marca tres goles o más": "Marca tres gols o més",
-  "No encajes más de un gol": "No encaixis més d'un gol"
+  "No encajes más de un gol": "No encaixis més d'un gol",
+  "Lo demás, por mi cuenta ▸": "La resta, pel meu compte ▸"
  },
  "pl": {
   "Club": "Klub",
@@ -48266,7 +48272,8 @@
   "No pierdas el próximo partido": "Nie przegraj następnego meczu",
   "Marca dos goles o más": "Strzel dwa gole lub więcej",
   "Marca tres goles o más": "Strzel trzy gole lub więcej",
-  "No encajes más de un gol": "Strać najwyżej jednego gola"
+  "No encajes más de un gol": "Strać najwyżej jednego gola",
+  "Lo demás, por mi cuenta ▸": "Resztę zrobię sam ▸"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54599,6 +54606,7 @@
   "No pierdas el próximo partido": "Sonraki maçı kaybetme",
   "Marca dos goles o más": "İki veya daha fazla gol at",
   "Marca tres goles o más": "Üç veya daha fazla gol at",
-  "No encajes más de un gol": "Birden fazla gol yeme"
+  "No encajes más de un gol": "Birden fazla gol yeme",
+  "Lo demás, por mi cuenta ▸": "Gerisini ben hallederim ▸"
  }
 }
