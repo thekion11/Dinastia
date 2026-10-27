@@ -19,6 +19,8 @@ var hud: PrologoHud
 ## id de cita → PrologoMentor en su sitio.
 var cuerpos: Dictionary = {}
 var cerca_id := ""
+## Los futbolistas del vestuario en horario (fase 5, bloque 1).
+var vestuario: VestuarioVivo = null
 var _abierta := ""
 var _t := 0.0
 
@@ -38,6 +40,7 @@ func _ready() -> void:
 	if hud._saltar != null:
 		hud._saltar.visible = false
 	hud.flecha(false)
+	vestuario = VestuarioVivo.crear(self)
 
 func _process(delta: float) -> void:
 	if mundo == null or mundo.citas == null or expl == null or not is_instance_valid(expl) or expl.cuerpo == null:
@@ -158,6 +161,8 @@ func _buscar_cerca() -> void:
 
 ## La E del explorador: true si la cita se quedó con ella.
 func usar() -> bool:
+	if cerca_id == "" and _abierta == "" and vestuario != null and vestuario.usar():
+		return true
 	if cerca_id == "" or _abierta != "":
 		return false
 	var ct := mundo.citas.por_id(cerca_id)

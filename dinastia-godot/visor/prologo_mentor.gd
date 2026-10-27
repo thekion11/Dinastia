@@ -35,11 +35,12 @@ func crear(look: Dictionary, c1: Color, c2: Color) -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(String(look.get("semilla", nombre)))
 	var asp := PersonajeDT.aleatorio(rng)
-	## Traje oscuro con corbata: es alguien del club, no un paseante.
-	asp["ropa"] = "traje"
-	asp["c_ropa"] = "#1c2233"
-	asp["c_ropa2"] = "#f2f2f2"
-	asp["corbata"] = true
+	## Traje oscuro con corbata: es alguien del club, no un paseante (o el chándal del club
+	## si `look["ropa"]` lo pide: los futbolistas del vestuario, fase 5).
+	asp["ropa"] = String(look.get("ropa", "traje"))
+	asp["c_ropa"] = String(look.get("c_ropa", "#1c2233"))
+	asp["c_ropa2"] = String(look.get("c_ropa2", "#f2f2f2"))
+	asp["corbata"] = asp["ropa"] == "traje"
 	asp["gorra"] = false
 	if bool(look.get("canas", false)):
 		asp["color_pelo"] = "#b9b9b9"
