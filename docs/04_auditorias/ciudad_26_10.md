@@ -104,5 +104,13 @@ Capturas antes / después en `docs/04_auditorias/capturas_ciudad_c2/` (`<zona>_<
   (radio 0,13), está en el cuadrante sur-este lejos de los puestos y parterres, a ras de suelo con orilla de arena, y los árboles se colocan fuera del
   agua y de su orilla. Antes: [aérea](capturas_ciudad_c2/parque_lago_aerea_antes.jpg) · [pie](capturas_ciudad_c2/parque_lago_pie_antes.jpg);
   después: [aérea](capturas_ciudad_c2/parque_lago_aerea_despues.jpg) · [pie](capturas_ciudad_c2/parque_lago_pie_despues.jpg).
-- **Aviso relacionado, sin tocar:** `CityBuilder._casa_ribera` (`city_builder_p7.gd`) usa el mismo `oficina_dt.glb` y escala por altura
-  (22 m); con la semiesfera de 52 m de alto dentro de la medida, es muy probable que ese edificio tenga el mismo defecto (cúpula). Pendiente de comprobar con una captura.
+- **Casa de la ribera.** Confirmado: mismo defecto (una cúpula blanca de ~25 m en la parcela). `CityBuilder._casa_ribera` quita ahora la semiesfera de cielo
+  antes de medir y la casa moderna real sale a 22 m. Antes: [aérea](capturas_ciudad_c2/casa_ribera_aerea_antes.jpg) · [pie](capturas_ciudad_c2/casa_ribera_pie_antes.jpg);
+  después: [aérea](capturas_ciudad_c2/casa_ribera_aerea_despues.jpg) · [pie](capturas_ciudad_c2/casa_ribera_pie_despues.jpg). Pendiente: el modelo trae una losa de «roca» que
+  sobresale de la parcela (se ve en la aérea), y en la toma a pie del sur la tapa un árbol.
+- **Centro comercial (P1-4, parte) y plantilla de fachada (P1-5, primera pieza).** `FachadaModular` (`visor/fachada_modular.gd`) viste una cara con piezas de
+  `edificios_modulares`: escaparates en planta baja, entrada de tres módulos con marquesina, tres pisos de ventanas y cornisa; se reutiliza en los demás singulares
+  (`FachadaModular.montar(ex, x, z_frente, y0, ancho, pisos)`). Las recreativas de peluches pasan de 7 en fila a 3 junto a la puerta. Antes:
+  [aérea](capturas_ciudad_c2/centro_comercial_aerea_antes.jpg) · [pie](capturas_ciudad_c2/centro_comercial_pie_antes.jpg); después:
+  [aérea](capturas_ciudad_c2/centro_comercial_aerea_despues.jpg) · [pie](capturas_ciudad_c2/centro_comercial_pie_despues.jpg). Pendiente del centro comercial: rótulo
+  sobre la fachada, aparcamiento con plazas y farolas, las puertas no se leen como puertas (solo ventanales) y las otras tres caras siguen lisas.
