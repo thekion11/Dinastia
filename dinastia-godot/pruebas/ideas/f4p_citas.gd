@@ -87,6 +87,12 @@ func _probar() -> void:
 	var seg0 := int(m.redes.cuentas["dt"]["seguidores"])
 	var pub := m.redes.publicar(m, "paseo", ["#MiCiudad"])
 	_comprobar(not pub.has("error") and String(pub.get("tipo", "")) == "paseo" and int(m.redes.cuentas["dt"]["seguidores"]) >= seg0, "una foto del paseo se publica en Tribuna y suma seguidores")
+	## Convocar una rueda de prensa desde el móvil: una por semana, y no si ya hay una abierta.
+	m.prensa.entrevista = {}
+	_comprobar(m.citas.convocar_rueda(m) == "" and m.prensa.hay_rueda(), "convocar abre una rueda de prensa")
+	_comprobar(m.citas.convocar_rueda(m) != "", "con una abierta no se convoca otra")
+	m.prensa.entrevista = {}
+	_comprobar(m.citas.convocar_rueda(m) != "", "y solo una extra por semana")
 	## Caducan el domingo sin castigo.
 	m.semana = sem_voto + 1
 	var saldo := c.saldo

@@ -284,6 +284,8 @@ func usar_interior() -> bool:
 			return false
 		if String(_punto_casa["clave"]) == "cama":
 			expl._fundido()
+		elif String(_punto_casa["clave"]) == "sofa":
+			expl._gesto_propio("sentarse")   ## se sienta de verdad (clip de la UAL, §2.2e P3)
 		_decir(String(r["titulo"]), String(r["texto"]))
 		if String(_punto_casa["clave"]) == "cama":
 			_tras_dormir()

@@ -5921,7 +5921,12 @@
   "¡Ya era hora, %s! Le guardé un café.": "About time, %s! I saved you a coffee.",
   "Buenas, %s. ¿Todo bien por el club?": "Hello, %s. Everything fine around the club?",
   "Hola, %s. Aquí andamos, como siempre.": "Hi, %s. Same as ever around here.",
-  "Qué tal, %s. Pase, pase.": "How are you, %s. Come in, come in."
+  "Qué tal, %s. Pase, pase.": "How are you, %s. Come in, come in.",
+  "No hay prensa en esta partida.": "There is no press in this game.",
+  "Ya hay una rueda abierta: respóndela en el PC.": "A press conference is already open: answer it on the PC.",
+  "Ya convocaste una rueda esta semana.": "You already called a press conference this week.",
+  "📣 Convocar rueda de prensa": "📣 Call a press conference",
+  "Rueda convocada: la respondes en el PC.": "Conference called: you answer it on the PC."
  },
  "pt": {
   "Historia": "História",
@@ -11845,7 +11850,12 @@
   "¡Ya era hora, %s! Le guardé un café.": "Já era tempo, %s! Guardei-lhe um café.",
   "Buenas, %s. ¿Todo bien por el club?": "Boas, %s. Tudo bem pelo clube?",
   "Hola, %s. Aquí andamos, como siempre.": "Olá, %s. Por aqui, como sempre.",
-  "Qué tal, %s. Pase, pase.": "Como está, %s. Entre, entre."
+  "Qué tal, %s. Pase, pase.": "Como está, %s. Entre, entre.",
+  "No hay prensa en esta partida.": "Não há imprensa nesta partida.",
+  "Ya hay una rueda abierta: respóndela en el PC.": "Já há uma conferência aberta: responde no PC.",
+  "Ya convocaste una rueda esta semana.": "Já convocaste uma conferência esta semana.",
+  "📣 Convocar rueda de prensa": "📣 Convocar conferência de imprensa",
+  "Rueda convocada: la respondes en el PC.": "Conferência convocada: respondes no PC."
  },
  "patrones": [
   [
@@ -23381,7 +23391,12 @@
   "¡Ya era hora, %s! Le guardé un café.": "Il était temps, %s ! Je vous ai gardé un café.",
   "Buenas, %s. ¿Todo bien por el club?": "Bonjour, %s. Tout va bien au club ?",
   "Hola, %s. Aquí andamos, como siempre.": "Bonjour, %s. Nous voilà, comme toujours.",
-  "Qué tal, %s. Pase, pase.": "Comment allez-vous, %s ? Entrez, entrez."
+  "Qué tal, %s. Pase, pase.": "Comment allez-vous, %s ? Entrez, entrez.",
+  "No hay prensa en esta partida.": "Pas de presse dans cette partie.",
+  "Ya hay una rueda abierta: respóndela en el PC.": "Une conférence est déjà ouverte : réponds-y sur le PC.",
+  "Ya convocaste una rueda esta semana.": "Tu as déjà convoqué une conférence cette semaine.",
+  "📣 Convocar rueda de prensa": "📣 Convoquer une conférence de presse",
+  "Rueda convocada: la respondes en el PC.": "Conférence convoquée : tu y réponds sur le PC."
  },
  "it": {
   "Historia": "Storia",
@@ -29305,7 +29320,12 @@
   "¡Ya era hora, %s! Le guardé un café.": "Era ora, %s! Le ho tenuto da parte un caffè.",
   "Buenas, %s. ¿Todo bien por el club?": "Buongiorno, %s. Tutto bene al club?",
   "Hola, %s. Aquí andamos, como siempre.": "Salve, %s. Qui si va avanti, come sempre.",
-  "Qué tal, %s. Pase, pase.": "Come va, %s. Entri, entri."
+  "Qué tal, %s. Pase, pase.": "Come va, %s. Entri, entri.",
+  "No hay prensa en esta partida.": "Non c'è stampa in questa partita.",
+  "Ya hay una rueda abierta: respóndela en el PC.": "C'è già una conferenza aperta: rispondi sul PC.",
+  "Ya convocaste una rueda esta semana.": "Hai già convocato una conferenza questa settimana.",
+  "📣 Convocar rueda de prensa": "📣 Convocare una conferenza stampa",
+  "Rueda convocada: la respondes en el PC.": "Conferenza convocata: rispondi sul PC."
  },
  "de": {
   "Historia": "Geschichte",
@@ -35229,7 +35249,12 @@
   "¡Ya era hora, %s! Le guardé un café.": "Na endlich, %s! Ich habe Ihnen einen Kaffee aufgehoben.",
   "Buenas, %s. ¿Todo bien por el club?": "Hallo, %s. Alles in Ordnung im Verein?",
   "Hola, %s. Aquí andamos, como siempre.": "Hallo, %s. Wir sind da, wie immer.",
-  "Qué tal, %s. Pase, pase.": "Wie geht's, %s. Kommen Sie nur herein."
+  "Qué tal, %s. Pase, pase.": "Wie geht's, %s. Kommen Sie nur herein.",
+  "No hay prensa en esta partida.": "In diesem Spielstand gibt es keine Presse.",
+  "Ya hay una rueda abierta: respóndela en el PC.": "Es läuft schon eine Pressekonferenz: beantworte sie am PC.",
+  "Ya convocaste una rueda esta semana.": "Du hast diese Woche schon eine Pressekonferenz einberufen.",
+  "📣 Convocar rueda de prensa": "📣 Pressekonferenz einberufen",
+  "Rueda convocada: la respondes en el PC.": "Pressekonferenz einberufen: du beantwortest sie am PC."
  },
  "ca": {
   "Historia": "Història",
@@ -41153,7 +41178,12 @@
   "¡Ya era hora, %s! Le guardé un café.": "Ja era hora, %s! Li he guardat un cafè.",
   "Buenas, %s. ¿Todo bien por el club?": "Bones, %s. Tot bé pel club?",
   "Hola, %s. Aquí andamos, como siempre.": "Hola, %s. Aquí anem fent, com sempre.",
-  "Qué tal, %s. Pase, pase.": "Com va, %s. Passi, passi."
+  "Qué tal, %s. Pase, pase.": "Com va, %s. Passi, passi.",
+  "No hay prensa en esta partida.": "No hi ha premsa en aquesta partida.",
+  "Ya hay una rueda abierta: respóndela en el PC.": "Ja hi ha una roda oberta: respon-la al PC.",
+  "Ya convocaste una rueda esta semana.": "Ja has convocat una roda aquesta setmana.",
+  "📣 Convocar rueda de prensa": "📣 Convocar roda de premsa",
+  "Rueda convocada: la respondes en el PC.": "Roda convocada: la respons al PC."
  },
  "pl": {
   "Club": "Klub",
@@ -47356,7 +47386,12 @@
   "¡Ya era hora, %s! Le guardé un café.": "Najwyższy czas, %s! Kawa na pana czeka.",
   "Buenas, %s. ¿Todo bien por el club?": "Dzień dobry, %s. Wszystko w porządku w klubie?",
   "Hola, %s. Aquí andamos, como siempre.": "Witam, %s. Jak zawsze, jakoś leci.",
-  "Qué tal, %s. Pase, pase.": "Jak się pan ma, %s. Proszę, proszę."
+  "Qué tal, %s. Pase, pase.": "Jak się pan ma, %s. Proszę, proszę.",
+  "No hay prensa en esta partida.": "W tej rozgrywce nie ma prasy.",
+  "Ya hay una rueda abierta: respóndela en el PC.": "Konferencja już trwa: odpowiedz na PC.",
+  "Ya convocaste una rueda esta semana.": "W tym tygodniu już zwołałeś konferencję.",
+  "📣 Convocar rueda de prensa": "📣 Zwołaj konferencję prasową",
+  "Rueda convocada: la respondes en el PC.": "Konferencja zwołana: odpowiadasz na PC."
  },
  "tr": {
   "Club": "Kulüp",
@@ -53559,6 +53594,11 @@
   "¡Ya era hora, %s! Le guardé un café.": "Çok şükür, %s! Size bir kahve ayırdım.",
   "Buenas, %s. ¿Todo bien por el club?": "Merhaba, %s. Kulüpte her şey yolunda mı?",
   "Hola, %s. Aquí andamos, como siempre.": "Merhaba, %s. Burada her zamanki gibi idare ediyoruz.",
-  "Qué tal, %s. Pase, pase.": "Nasılsınız, %s. Buyurun, buyurun."
+  "Qué tal, %s. Pase, pase.": "Nasılsınız, %s. Buyurun, buyurun.",
+  "No hay prensa en esta partida.": "Bu oyunda basın yok.",
+  "Ya hay una rueda abierta: respóndela en el PC.": "Zaten açık bir basın toplantısı var: PC'de yanıtla.",
+  "Ya convocaste una rueda esta semana.": "Bu hafta zaten bir basın toplantısı düzenledin.",
+  "📣 Convocar rueda de prensa": "📣 Basın toplantısı düzenle",
+  "Rueda convocada: la respondes en el PC.": "Toplantı düzenlendi: PC'de yanıtlıyorsun."
  }
 }

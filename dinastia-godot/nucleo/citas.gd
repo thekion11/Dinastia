@@ -40,6 +40,8 @@ var lista: Array[Dictionary] = []
 var objetivo := ""
 ## La semana (abs) en que el agente te dejó algo a deber (bloque 3: −5 % en su próxima mesa).
 var favor_agente := -1
+## La semana (abs) en que convocaste una rueda de prensa extra desde el móvil (máximo una).
+var rueda_semana := -1
 var _n := 0
 
 static func _h(t: String) -> int:
@@ -236,10 +238,23 @@ func resolver(m: Mundo, id: String, opcion: int) -> Dictionary:
 				m.prensa._mover_relacion(String(f[0]), -2)
 	return {"titulo": String(ct["quien"]), "texto": Idiomas.t("«El alcalde lo recordará.» El club apoya al gobierno en la próxima rueda; la prensa crítica toma nota (−2 de relación).")}
 
+## Convocar una rueda de prensa desde el móvil (§2.2d bloque 6): una extra por semana, con
+## el guion neutro de siempre; se responde en el PC como cualquier rueda. "" = convocada.
+func convocar_rueda(m: Mundo) -> String:
+	if m == null or m.prensa == null:
+		return "No hay prensa en esta partida."
+	if m.prensa.hay_rueda():
+		return "Ya hay una rueda abierta: respóndela en el PC."
+	if rueda_semana == m.anio * 60 + m.semana:
+		return "Ya convocaste una rueda esta semana."
+	rueda_semana = m.anio * 60 + m.semana
+	m.prensa.abrir_rueda(false, true)
+	return ""
+
 # ======================================================================== GUARDADO
 
 func a_dic() -> Dictionary:
-	return {"lista": lista.duplicate(true), "objetivo": objetivo, "favor_agente": favor_agente, "n": _n}
+	return {"lista": lista.duplicate(true), "objetivo": objetivo, "favor_agente": favor_agente, "rueda": rueda_semana, "n": _n}
 
 func desde_dic(d: Dictionary) -> void:
 	lista.clear()
@@ -248,4 +263,5 @@ func desde_dic(d: Dictionary) -> void:
 			lista.append(ct as Dictionary)
 	objetivo = String(d.get("objetivo", ""))
 	favor_agente = int(d.get("favor_agente", -1))
+	rueda_semana = int(d.get("rueda", -1))
 	_n = int(d.get("n", 0))
