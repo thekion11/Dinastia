@@ -379,3 +379,17 @@ func _cuerpos() -> void:
 			if acerca > 0.0:
 				pa["vel"] = va - nrm * acerca * mb / (ma + mb)
 				pb["vel"] = vb + nrm * acerca * ma / (ma + mb)
+
+## LOS PRESETS DE JUEGO (semana 3, 27-10-2026). «Realista» es el motor calibrado con las sondas (la
+## puntería, las faltas y las ocasiones del fútbol de verdad); «Arcade» perdona: pases y tiros con un
+## 30 % menos de error y la mitad de faltas, para jugar a gusto con mando sin pelearse con el motor.
+const PRESETS := {
+	"realista": {"nombre": "Realista", "error": 1.0, "faltas": 1.0},
+	"arcade": {"nombre": "Arcade", "error": 0.7, "faltas": 0.5},
+}
+const ORDEN_PRESETS := ["realista", "arcade"]
+
+func fijar_preset(clave: String) -> void:
+	var pr: Dictionary = PRESETS.get(clave, PRESETS["realista"])
+	preset_error = float(pr["error"])
+	preset_faltas = float(pr["faltas"])

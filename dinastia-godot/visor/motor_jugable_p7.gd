@@ -257,7 +257,7 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	## El error crece con la distancia: desde 25 m se falla mucho más que
 	## dentro del área (la sonda medía 8 de cada 10 tiros entre los palos).
 	var lejos := Vector2(pos(p).x - arco.x, pos(p).z - arco.z).length()
-	var error := ((1.0 - tec) * 2.6 + maxf(0.0, fuerza - 0.8) * 2.5) * (0.55 + lejos / 26.0) * (1.25 if _manual_tiro else 1.0) * _error_extra
+	var error := ((1.0 - tec) * 2.6 + maxf(0.0, fuerza - 0.8) * 2.5) * (0.55 + lejos / 26.0) * (1.25 if _manual_tiro else 1.0) * _error_extra * preset_error
 	var clase := String(saque.get("tipo", "pie")) if estado == "saque" else "pie"
 	## LA PUNTERÍA DE VERDAD (25-10-2026). La sonda medía 3 de cada 4 tiros entre
 	## los palos (en el fútbol, 1 de cada 3; en FC, la mitad) y el portero los

@@ -6023,7 +6023,10 @@
   "Teleférico: bajar a la ciudad": "Cable car: go down to the city",
   "Mirar por el telescopio": "Look through the telescope",
   "¡Despeja de puño!": "Punched clear!",
-  "Tiro raso (pegado al césped)": "Low shot (along the ground)"
+  "Tiro raso (pegado al césped)": "Low shot (along the ground)",
+  "🎮 Estilo de juego: ": "🎮 Game style: ",
+  "Realista": "Realistic",
+  "Arcade": "Arcade"
  },
  "pt": {
   "Historia": "História",
@@ -12049,7 +12052,10 @@
   "Teleférico: bajar a la ciudad": "Teleférico: descer para a cidade",
   "Mirar por el telescopio": "Olhar pelo telescópio",
   "¡Despeja de puño!": "Soca para longe!",
-  "Tiro raso (pegado al césped)": "Chute rasteiro (rente à grama)"
+  "Tiro raso (pegado al césped)": "Chute rasteiro (rente à grama)",
+  "🎮 Estilo de juego: ": "🎮 Estilo de jogo: ",
+  "Realista": "Realista",
+  "Arcade": "Arcade"
  },
  "patrones": [
   [
@@ -23687,7 +23693,10 @@
   "Teleférico: bajar a la ciudad": "Télécabine : redescendre en ville",
   "Mirar por el telescopio": "Regarder dans le télescope",
   "¡Despeja de puño!": "Il dégage du poing !",
-  "Tiro raso (pegado al césped)": "Frappe rasante (au ras du sol)"
+  "Tiro raso (pegado al césped)": "Frappe rasante (au ras du sol)",
+  "🎮 Estilo de juego: ": "🎮 Style de jeu : ",
+  "Realista": "Réaliste",
+  "Arcade": "Arcade"
  },
  "it": {
   "Historia": "Storia",
@@ -29713,7 +29722,10 @@
   "Teleférico: bajar a la ciudad": "Funivia: scendere in città",
   "Mirar por el telescopio": "Guardare nel telescopio",
   "¡Despeja de puño!": "Respinge di pugno!",
-  "Tiro raso (pegado al césped)": "Tiro rasoterra (radente al prato)"
+  "Tiro raso (pegado al césped)": "Tiro rasoterra (radente al prato)",
+  "🎮 Estilo de juego: ": "🎮 Stile di gioco: ",
+  "Realista": "Realistico",
+  "Arcade": "Arcade"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35739,7 +35751,10 @@
   "Teleférico: bajar a la ciudad": "Seilbahn: hinunter in die Stadt",
   "Mirar por el telescopio": "Durch das Teleskop schauen",
   "¡Despeja de puño!": "Mit der Faust geklärt!",
-  "Tiro raso (pegado al césped)": "Flacher Schuss (am Boden entlang)"
+  "Tiro raso (pegado al césped)": "Flacher Schuss (am Boden entlang)",
+  "🎮 Estilo de juego: ": "🎮 Spielstil: ",
+  "Realista": "Realistisch",
+  "Arcade": "Arcade"
  },
  "ca": {
   "Historia": "Història",
@@ -41765,7 +41780,10 @@
   "Teleférico: bajar a la ciudad": "Telefèric: baixar a la ciutat",
   "Mirar por el telescopio": "Mirar pel telescopi",
   "¡Despeja de puño!": "Allunya de puny!",
-  "Tiro raso (pegado al césped)": "Xut arran de terra (enganxat a la gespa)"
+  "Tiro raso (pegado al césped)": "Xut arran de terra (enganxat a la gespa)",
+  "🎮 Estilo de juego: ": "🎮 Estil de joc: ",
+  "Realista": "Realista",
+  "Arcade": "Arcade"
  },
  "pl": {
   "Club": "Klub",
@@ -48070,7 +48088,10 @@
   "Teleférico: bajar a la ciudad": "Kolejka: zjedź do miasta",
   "Mirar por el telescopio": "Spójrz przez teleskop",
   "¡Despeja de puño!": "Wybija pięściami!",
-  "Tiro raso (pegado al césped)": "Strzał po ziemi (przy murawie)"
+  "Tiro raso (pegado al césped)": "Strzał po ziemi (przy murawie)",
+  "🎮 Estilo de juego: ": "🎮 Styl gry: ",
+  "Realista": "Realistyczny",
+  "Arcade": "Zręcznościowy"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54375,6 +54396,9 @@
   "Teleférico: bajar a la ciudad": "Teleferik: şehre in",
   "Mirar por el telescopio": "Teleskoptan bak",
   "¡Despeja de puño!": "Yumrukla uzaklaştırdı!",
-  "Tiro raso (pegado al césped)": "Yerden şut (çime yakın)"
+  "Tiro raso (pegado al césped)": "Yerden şut (çime yakın)",
+  "🎮 Estilo de juego: ": "🎮 Oyun tarzı: ",
+  "Realista": "Gerçekçi",
+  "Arcade": "Arcade"
  }
 }

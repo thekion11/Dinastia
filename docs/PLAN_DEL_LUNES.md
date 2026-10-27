@@ -463,7 +463,6 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 - [ ] Prueba en el banco: con presión alta se recupera más arriba (medido).
 
 ### Semana 3 (27-10 → 2-11) — Partido II: porteros, pases y presets
-- [ ] Preset Arcade / Realista.
 - [ ] Recorrido de la etapa 5 (física): balón, choques, objetos que no se atraviesan.
 
 ### Semana 4 (3-11 → 9-11) — Partido III: espectáculo
@@ -522,6 +521,7 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 
 ### Detectados en pruebas y aún sin cerrar
 
+- **Dispersión del tiro casi nula en la sonda** (27-10): 60 tiros al centro desde 20 m con `_tirar` caen a 0,04 m de media del centro del arco, en Realista y en Arcade; con el error de la fórmula deberían abrirse ~0,3-0,7 m. Mirar si `_tirar` aplica el error o si `_patear` lo corrige (s3p_salida_centros lo midió y se quitó la medida).
 - **Roles por jugador** (como los PlayStyles de FC 26) con efecto en el motor.
 - **Red del arco**: onda más ancha y lenta (17-10), techo sin asomar por el larguero. **Cartel del cuarto árbitro**: 20-10 a tamaño real (0,92 × 0,62 m), dígitos con halo, mango y por encima de la cabeza. Desde la toma abierta de TV sigue siendo pequeño (como en la tele de verdad, que corta a un primer plano): pendiente un corte de cámara al cartel.
 - Desmarques de ruptura (los peatones: §2.4).
