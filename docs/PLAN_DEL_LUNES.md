@@ -490,7 +490,7 @@ Fuera de alcance: multijugador online (requiere servidor).
 | Partido jugable | básico completo | táctica en vivo, porteros, presets, cinemáticas, ayudas |
 | Interfaz | mucha información | coherencia de estilo, diálogos (hecho el 13-10), accesibilidad (texto grande, daltónicos) |
 | Audio | 🔒 música del dueño | efectos de interfaz y ambiente revisados |
-| Guardado | copias rotativas, huella y versiones (`pruebas/ideas/sav_guardado.gd`) | aviso visible al jugador si se corrompe (hoy solo `push_warning`) |
+| Guardado | copias rotativas, huella y versiones (`pruebas/ideas/sav_guardado.gd`); aviso visible si se recupera la copia (menú y arranque 3D) o si no se puede abrir (27-10) | topes de memoria en historiales (M-400) |
 | Legal | política ficticia | licencias de recursos y caras reales (🔒 del dueño) |
 | Tienda | — | iconos, capturas, descripción, clasificación por edad (🔒 del dueño) |
 
@@ -517,10 +517,8 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 - [ ] Colisiones de la ciudad fuera del club (peatones, mobiliario, edificios): revisar como en `ColisionClub`.
 - [ ] 506 frases visibles sin traducir en 8 idiomas (`docs/05_referencia/textos_sin_traducir.txt`); la prueba de paridad debe exigir 0.
 - [ ] C++/GDExtension solo si el perfil en hardware real lo pide.
-- [ ] Guardado: aviso al jugador si el archivo está dañado y ofrecer la copia; topes de memoria en historiales (M-400).
-- [ ] 16 `print` sueltos en código del juego (auditoría 3, §2): quitarlos o pasarlos a un registro con nivel.
+- [ ] Guardado: topes de memoria en historiales (M-400).
 - [ ] 23 imágenes ≥ 2048 px que no lo necesitan: bajarlas a 2048 (auditoría 3, §4; no las caras sin tu OK).
-- [ ] Código y comentarios que citan documentos borrados (ROADMAP, LEEME, MEGAPLAN…): apuntarlos a `PLAN_DEL_LUNES.md`.
 
 ## 5. Mejoras abiertas del catálogo (356)
 

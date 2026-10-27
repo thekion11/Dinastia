@@ -69,6 +69,11 @@ static func enganchar(e: ExploradorCiudad, v: VistaCiudad, m: Mundo) -> VidaCiud
 	if m.citas != null:
 		s.citas_3d = CitasCiudad.crear(s)
 	s.sentados = GenteSentada.crear(s)
+	## Arranque 3D tras recuperar la copia de un guardado dañado: el aviso se ve aquí (el registro del
+	## menú central, donde iba antes, no se abre hasta mucho después).
+	if Partida.cargada_de_respaldo:
+		Partida.cargada_de_respaldo = false
+		s._decir(Idiomas.t("Guardado recuperado"), Idiomas.t("El último guardado estaba dañado: se recuperó la copia anterior."))
 	return s
 
 ## ¿Se puede salir en coche esta semana? {coche, motivo}. Con «micro» no hay coche

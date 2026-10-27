@@ -5962,7 +5962,10 @@
   "El físico va bien; los minutos ya llegarán.": "Fitness is fine; the minutes will come.",
   "Míster, necesito minutos. Así no puedo.": "Boss, I need minutes. I can't go on like this.",
   "Hay cosas en el vestuario que no me gustan.": "There are things in the dressing room I don't like.",
-  "¿Puedo hablar con usted después del entrenamiento?": "Can I talk to you after training?"
+  "¿Puedo hablar con usted después del entrenamiento?": "Can I talk to you after training?",
+  "No se pudo abrir la partida: el guardado y sus copias están dañados. Si exportaste una, puedes importarla.": "The game could not be opened: the save and its backups are damaged. If you exported one, you can import it.",
+  "Guardado recuperado": "Save recovered",
+  "El último guardado estaba dañado: se recuperó la copia anterior.": "The last save was damaged: the previous backup was recovered."
  },
  "pt": {
   "Historia": "História",
@@ -11927,7 +11930,10 @@
   "El físico va bien; los minutos ya llegarán.": "O físico vai bem; os minutos hão de chegar.",
   "Míster, necesito minutos. Así no puedo.": "Míster, preciso de minutos. Assim não dá.",
   "Hay cosas en el vestuario que no me gustan.": "Há coisas no balneário de que não gosto.",
-  "¿Puedo hablar con usted después del entrenamiento?": "Posso falar consigo depois do treino?"
+  "¿Puedo hablar con usted después del entrenamiento?": "Posso falar consigo depois do treino?",
+  "No se pudo abrir la partida: el guardado y sus copias están dañados. Si exportaste una, puedes importarla.": "Não foi possível abrir a partida: o salvamento e as suas cópias estão danificados. Se exportou uma, pode importá-la.",
+  "Guardado recuperado": "Salvamento recuperado",
+  "El último guardado estaba dañado: se recuperó la copia anterior.": "O último salvamento estava danificado: recuperou-se a cópia anterior."
  },
  "patrones": [
   [
@@ -23504,7 +23510,10 @@
   "El físico va bien; los minutos ya llegarán.": "Le physique va bien ; les minutes viendront.",
   "Míster, necesito minutos. Así no puedo.": "Coach, j'ai besoin de temps de jeu. Comme ça je ne peux pas.",
   "Hay cosas en el vestuario que no me gustan.": "Il y a des choses dans le vestiaire qui ne me plaisent pas.",
-  "¿Puedo hablar con usted después del entrenamiento?": "Je peux vous parler après l'entraînement ?"
+  "¿Puedo hablar con usted después del entrenamiento?": "Je peux vous parler après l'entraînement ?",
+  "No se pudo abrir la partida: el guardado y sus copias están dañados. Si exportaste una, puedes importarla.": "Impossible d'ouvrir la partie : la sauvegarde et ses copies sont endommagées. Si vous en avez exporté une, vous pouvez l'importer.",
+  "Guardado recuperado": "Sauvegarde récupérée",
+  "El último guardado estaba dañado: se recuperó la copia anterior.": "La dernière sauvegarde était endommagée : la copie précédente a été récupérée."
  },
  "it": {
   "Historia": "Storia",
@@ -29469,7 +29478,10 @@
   "El físico va bien; los minutos ya llegarán.": "Il fisico va bene; i minuti arriveranno.",
   "Míster, necesito minutos. Así no puedo.": "Mister, ho bisogno di minuti. Così non posso.",
   "Hay cosas en el vestuario que no me gustan.": "Ci sono cose nello spogliatoio che non mi piacciono.",
-  "¿Puedo hablar con usted después del entrenamiento?": "Posso parlarle dopo l'allenamento?"
+  "¿Puedo hablar con usted después del entrenamiento?": "Posso parlarle dopo l'allenamento?",
+  "No se pudo abrir la partida: el guardado y sus copias están dañados. Si exportaste una, puedes importarla.": "Impossibile aprire la partita: il salvataggio e le sue copie sono danneggiati. Se ne hai esportata una, puoi importarla.",
+  "Guardado recuperado": "Salvataggio recuperato",
+  "El último guardado estaba dañado: se recuperó la copia anterior.": "L'ultimo salvataggio era danneggiato: è stata recuperata la copia precedente."
  },
  "de": {
   "Historia": "Geschichte",
@@ -35434,7 +35446,10 @@
   "El físico va bien; los minutos ya llegarán.": "Die Fitness stimmt; die Minuten kommen schon.",
   "Míster, necesito minutos. Así no puedo.": "Trainer, ich brauche Spielzeit. So geht es nicht.",
   "Hay cosas en el vestuario que no me gustan.": "In der Kabine gibt es Dinge, die mir nicht gefallen.",
-  "¿Puedo hablar con usted después del entrenamiento?": "Kann ich nach dem Training mit Ihnen reden?"
+  "¿Puedo hablar con usted después del entrenamiento?": "Kann ich nach dem Training mit Ihnen reden?",
+  "No se pudo abrir la partida: el guardado y sus copias están dañados. Si exportaste una, puedes importarla.": "Der Spielstand konnte nicht geöffnet werden: Der Speicherstand und seine Sicherungen sind beschädigt. Wenn du einen exportiert hast, kannst du ihn importieren.",
+  "Guardado recuperado": "Speicherstand wiederhergestellt",
+  "El último guardado estaba dañado: se recuperó la copia anterior.": "Der letzte Speicherstand war beschädigt: Die vorherige Sicherung wurde wiederhergestellt."
  },
  "ca": {
   "Historia": "Història",
@@ -41399,7 +41414,10 @@
   "El físico va bien; los minutos ya llegarán.": "El físic va bé; els minuts ja arribaran.",
   "Míster, necesito minutos. Así no puedo.": "Míster, necessito minuts. Així no puc.",
   "Hay cosas en el vestuario que no me gustan.": "Hi ha coses al vestidor que no m'agraden.",
-  "¿Puedo hablar con usted después del entrenamiento?": "Puc parlar amb vostè després de l'entrenament?"
+  "¿Puedo hablar con usted después del entrenamiento?": "Puc parlar amb vostè després de l'entrenament?",
+  "No se pudo abrir la partida: el guardado y sus copias están dañados. Si exportaste una, puedes importarla.": "No s'ha pogut obrir la partida: el desament i les seves còpies estan malmesos. Si n'has exportat una, la pots importar.",
+  "Guardado recuperado": "Desament recuperat",
+  "El último guardado estaba dañado: se recuperó la copia anterior.": "L'últim desament estava malmès: s'ha recuperat la còpia anterior."
  },
  "pl": {
   "Club": "Klub",
@@ -47643,7 +47661,10 @@
   "El físico va bien; los minutos ya llegarán.": "Fizycznie jest dobrze; minuty przyjdą.",
   "Míster, necesito minutos. Así no puedo.": "Trenerze, potrzebuję minut. Tak się nie da.",
   "Hay cosas en el vestuario que no me gustan.": "W szatni dzieją się rzeczy, które mi się nie podobają.",
-  "¿Puedo hablar con usted después del entrenamiento?": "Mogę z panem porozmawiać po treningu?"
+  "¿Puedo hablar con usted después del entrenamiento?": "Mogę z panem porozmawiać po treningu?",
+  "No se pudo abrir la partida: el guardado y sus copias están dañados. Si exportaste una, puedes importarla.": "Nie udało się otworzyć gry: zapis i jego kopie są uszkodzone. Jeśli wyeksportowałeś jakiś, możesz go zaimportować.",
+  "Guardado recuperado": "Zapis odzyskany",
+  "El último guardado estaba dañado: se recuperó la copia anterior.": "Ostatni zapis był uszkodzony: przywrócono poprzednią kopię."
  },
  "tr": {
   "Club": "Kulüp",
@@ -53887,6 +53908,9 @@
   "El físico va bien; los minutos ya llegarán.": "Fizik iyi; süre de gelir.",
   "Míster, necesito minutos. Así no puedo.": "Hocam, süreye ihtiyacım var. Böyle olmaz.",
   "Hay cosas en el vestuario que no me gustan.": "Soyunma odasında hoşlanmadığım şeyler var.",
-  "¿Puedo hablar con usted después del entrenamiento?": "Antrenmandan sonra sizinle konuşabilir miyim?"
+  "¿Puedo hablar con usted después del entrenamiento?": "Antrenmandan sonra sizinle konuşabilir miyim?",
+  "No se pudo abrir la partida: el guardado y sus copias están dañados. Si exportaste una, puedes importarla.": "Oyun açılamadı: kayıt ve yedekleri bozuk. Dışa aktardığın bir kayıt varsa onu içe aktarabilirsin.",
+  "Guardado recuperado": "Kayıt kurtarıldı",
+  "El último guardado estaba dañado: se recuperó la copia anterior.": "Son kayıt bozuktu: önceki yedek kurtarıldı."
  }
 }
