@@ -295,7 +295,12 @@ cada hora del `Reloj` con el clima de la semana (viento mueve el parque eólico,
   alta tensión, subestación, transformadores con lámpara verde/roja y farolas que bajan con la fracción sin corriente.
 - Agua: potabilizadora → depósito; sin luz o con rotura el sector pierde presión. Drenaje: sumideros y tapas; tormenta o
   sumideros atascados inundan el sector (lámina de agua). Gas: 3 gasolineras con depósito y cisterna; E en el surtidor = 45 l, 63 €, 10 min.
-- PENDIENTE: captura con la cámara real (no hay GPU en este contenedor); averías visibles (obras, cuadrilla, camión cisterna);
+- SUBSUELO (easter egg, pedido del dueño 27-10): cinco tapas de alcantarilla con aro de óxido (E de pie sobre ellas) bajan a
+  `visor/subsuelo_ciudad*.gd`: colector con canal de agua y ratas, galerías de luz (armarios con el estado de 4 sectores), agua y gas,
+  sala de control (pantalla con `resumen()`, botón de reparar averías y palanca roja que corta la luz del sector de arriba) y un
+  cuarto olvidado. Estado `subsuelo` del explorador; capturas en `docs/04_auditorias/capturas_subsuelo/` (escena `pruebas/captura_subsuelo`,
+  corre con `xvfb-run … --rendering-driver opengl3`, SIN_LUZ=1 para el modo emergencia). Hecho en Compatibility: falta mirarlo en Forward+.
+- PENDIENTE: texturas y detalle del subsuelo (paredes lisas), sonido ambiente y goteo; averías visibles (obras, cuadrilla, camión cisterna);
   apagón por sector en farolas y ventanas (hoy las farolas bajan todas a la vez); aviso en el móvil con `resumen()`; cables con caída;
   guardar el estado de las redes en la partida; coche con depósito real que dependa del repostaje.
 

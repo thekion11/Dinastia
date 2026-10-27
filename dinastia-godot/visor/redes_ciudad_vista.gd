@@ -22,6 +22,7 @@ const SEPARACION_TORRES := 90.0
 var modelo: RedesCiudad
 var e: CiudadExpansion
 var b: CityBuilder
+var bocas: Array = []                        ## [{pos, sector}] tapas por las que se baja al subsuelo
 var surtidores: Array = []                   ## [{id, pos, sector, pantalla}]
 var cuenta := {}
 var _lamparas := {}                          ## sector -> material de la lámpara de sus transformadores
@@ -64,6 +65,7 @@ func _calles() -> void:
 	var hidrantes: Array[Transform3D] = []
 	var cajas: Array[Transform3D] = []
 	var por_sector := {}                     ## sector -> lámparas de transformador
+	var candidatas: Array = []
 	var i := 0
 	for t: Dictionary in e.tramos:
 		i += 1
@@ -81,6 +83,7 @@ func _calles() -> void:
 		var mid := (a + c) * 0.5
 		var sec := RedesCiudad.sector_en(mid.x, mid.z)
 		tapas.append(Transform3D(Basis.from_scale(Vector3(0.9, 0.05, 0.9)), mid + lado * ancho * 0.25 + Vector3(0, SUELO, 0)))
+		candidatas.append(mid + lado * ancho * 0.25)
 		var rej := Vector3(0.5, 0.05, 0.9) if vertical else Vector3(0.9, 0.05, 0.5)
 		for f: float in [0.3, 0.7]:
 			for s: float in [-1.0, 1.0]:
@@ -109,10 +112,38 @@ func _calles() -> void:
 		var lista: Array[Transform3D] = []
 		lista.assign(por_sector[sec])
 		e._multimesh(BoxMesh.new(), m, lista, Vector3.ONE)
+	_bocas(candidatas)
 	cuenta["tapas"] = tapas.size()
 	cuenta["sumideros"] = rejillas.size()
 	cuenta["hidrantes"] = hidrantes.size()
 	cuenta["transformadores"] = cajas.size()
+
+## Las tapas «buenas» (easter egg): la más cercana al centro de cinco sectores. Se distinguen por un
+## aro de óxido; de pie sobre una, E baja al subsuelo (`SubsueloCiudad`).
+func _bocas(candidatas: Array) -> void:
+	var lado := float(RedesCiudad.LADO_SECTOR) * CiudadExpansion.CELDA
+	var oxido: Array[Transform3D] = []
+	for sec: Vector2i in [Vector2i(2, 2), Vector2i(2, 1), Vector2i(1, 2), Vector2i(3, 2), Vector2i(2, 3)]:
+		var centro := Vector3((float(sec.x * RedesCiudad.LADO_SECTOR - 12) - 0.5) * CiudadExpansion.CELDA + lado * 0.5, 0, \
+			(float(sec.y * RedesCiudad.LADO_SECTOR - 12) - 0.5) * CiudadExpansion.CELDA + lado * 0.5)
+		var mejor := Vector3.INF
+		for c: Vector3 in candidatas:
+			if mejor == Vector3.INF or c.distance_squared_to(centro) < mejor.distance_squared_to(centro):
+				mejor = c
+		if mejor == Vector3.INF:
+			continue
+		bocas.append({"pos": mejor, "sector": sec})
+		oxido.append(Transform3D(Basis.from_scale(Vector3(1.15, 0.05, 1.15)), mejor + Vector3(0, SUELO - 0.01, 0)))
+		b.puntos_clic.append({"k": "alcantarilla_%d" % (bocas.size() - 1), "n": "Bajar por la alcantarilla", "pos": mejor, \
+			"estado": "ciudad", "radio": 3.0})
+	var cil := CylinderMesh.new()
+	cil.top_radius = 0.5
+	cil.bottom_radius = 0.5
+	cil.height = 1.0
+	cil.radial_segments = 12
+	cil.rings = 0
+	e._multimesh(cil, b._mat_simple(Color(0.42, 0.24, 0.14), 0.8), oxido, Vector3.ONE)
+	cuenta["bocas"] = bocas.size()
 
 # ============================================================================ INSTALACIONES
 

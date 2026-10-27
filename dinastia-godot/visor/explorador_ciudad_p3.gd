@@ -84,6 +84,8 @@ func _colocar_camara(delta: float) -> void:
 		deseo.x = clampf(deseo.x, _INT_ORIGEN.x - t.x * 0.5 + 0.3, _INT_ORIGEN.x + t.x * 0.5 - 0.3)
 		deseo.z = clampf(deseo.z, _INT_ORIGEN.z - t.z * 0.5 + 0.3, _INT_ORIGEN.z + t.z * 0.5 - 0.3)
 		deseo.y = minf(deseo.y, _INT_ORIGEN.y + t.y - 0.3)
+	elif estado == "subsuelo" and sub != null:
+		deseo = sub.encajar_camara(deseo, cuerpo.position)
 	elif estado == "calle":
 		## La cámara no se mete dentro de los edificios: si el punto de detrás
 		## cae en una huella, se acerca al personaje hasta el último sitio libre

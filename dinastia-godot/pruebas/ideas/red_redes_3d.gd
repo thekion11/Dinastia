@@ -41,3 +41,51 @@ func _probar() -> void:
 	var pm: StandardMaterial3D = s["pantalla"]
 	_comprobar(pm.emission_energy_multiplier > 0.0 or not v.modelo.hay_luz(s["sector"]), "la pantalla del surtidor sigue a la corriente")
 	b.queue_free()
+	_probar_subsuelo(b, v)
+
+class FalsoExplorador:
+	var vida = null
+	var _aviso := Label.new()
+
+func _probar_subsuelo(b: CityBuilder, v: RedesCiudadVista) -> void:
+	_linea("· Subsuelo (easter egg)")
+	_comprobar(v.bocas.size() == 5, "cinco tapas de alcantarilla con aro de óxido (%d)" % v.bocas.size())
+	var tapas := 0
+	for pc: Dictionary in b.puntos_clic:
+		if String(pc["k"]).begins_with("alcantarilla_"):
+			tapas += 1
+	_comprobar(tapas == 5, "cada una es un punto de E")
+	var s := SubsueloCiudad.crear(b, v)
+	_comprobar(not s.visible and s.rects.size() == 8, "el subsuelo se levanta oculto, con 8 huecos")
+	_comprobar(s.libre(Vector2(-1.5, -1.5)) and not s.libre(Vector2(-20.0, 0.0)), "se aparece en el pozo y la roca no se pisa")
+	## Todo conectado: desde el pozo se llega a cada punto de interés (relleno por la rejilla de 0,5 m).
+	var visto := {}
+	var cola: Array[Vector2i] = [Vector2i(-3, -3)]
+	visto[Vector2i(-3, -3)] = true
+	while not cola.is_empty():
+		var c: Vector2i = cola.pop_back()
+		for d: Vector2i in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var n := c + d
+			if visto.has(n) or not s.libre(Vector2(float(n.x), float(n.y)) * 0.5):
+				continue
+			visto[n] = true
+			cola.append(n)
+	var sin_llegar := 0
+	for p: Dictionary in s.puntos:
+		var q: Vector2 = p["pos"]
+		if not visto.has(Vector2i(roundi(q.x * 2.0), roundi(q.y * 2.0))):
+			sin_llegar += 1
+	_comprobar(sin_llegar == 0 and s.puntos.size() == 4, "las %d interacciones (salir, reparar, palanca, tele) son alcanzables a pie" % s.puntos.size())
+	_comprobar(visto.has(Vector2i(210, 0)), "y el cuarto olvidado del fondo también")
+	_comprobar(s.get_child_count() > 150, "paredes, tuberías y cables levantados (%d piezas)" % s.get_child_count())
+	var cam := s.encajar_camara(SubsueloCiudad.ORIGEN + Vector3(-40.0, 9.0, 0.0), SubsueloCiudad.ORIGEN + Vector3(0, 1.0, 0))
+	_comprobar(cam.y <= SubsueloCiudad.ORIGEN.y + SubsueloCiudad.ALTO and cam.x > SubsueloCiudad.ORIGEN.x - 6.0, "la cámara no se sale de los túneles")
+	## Los mandos de la sala de control actúan sobre las redes.
+	var e := FalsoExplorador.new()
+	s.sector_entrada = Vector2i(2, 2)
+	_comprobar(s.usar(e, "sub_cortar") and not v.modelo.hay_luz(Vector2i(2, 2)), "la palanca roja deja sin luz el sector de arriba")
+	_comprobar(s.usar(e, "sub_cortar") and v.modelo.hay_luz(Vector2i(2, 2)), "y al volver a subirla la recupera")
+	v.modelo.averiar("agua", Vector2i(1, 1))
+	v.modelo.averiar("luz", Vector2i(3, 3))
+	_comprobar(s.usar(e, "sub_reparar") and not v.modelo.esta_averiado("agua", Vector2i(1, 1)) and v.modelo.hay_luz(Vector2i(3, 3)), "el botón verde arregla todas las averías")
+	_comprobar(not s.usar(e, "sub_inventada"), "una orden desconocida no hace nada")
