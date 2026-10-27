@@ -66,7 +66,9 @@ func _mover_balon(delta: float) -> void:
 			_palos_y_lineas(previa)
 		return
 	var p := balon.position
-	var en_aire := p.y > R + 0.02 or vel_balon.y > 0.2
+	## Bajando también está en el aire (27-10-2026, s3f): a menos de 2 cm del suelo y cayendo a 3 m/s se
+	## daba por rodando, perdía la velocidad vertical y el bote «moría» (uno de cada tres a 60 fps).
+	var en_aire := p.y > R + 0.02 or absf(vel_balon.y) > 0.2
 	if en_aire:
 		var magnus := giro_balon.cross(vel_balon) * 0.012
 		vel_balon += (Vector3(0, -G, 0) + magnus - vel_balon * ARRASTRE) * delta
