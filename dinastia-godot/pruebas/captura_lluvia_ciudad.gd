@@ -60,15 +60,19 @@ func _process(_d: float) -> void:
 		get_viewport().get_texture().get_image().save_png("/tmp/lluvia_ciudad_lluvia.png")
 		print("MEMORIA despues ", _rss_mb(), " MB, partículas ", PrecipitacionCiudad.particulas(_vida.paraguas._lluvia))
 	if f == 61:
-		## De cerca: un peatón con paraguas cruzando a 2,5 m delante del jugador (se ve la mano y el brazo).
-		var ped := PeatonVida.nuevo(b, 777)
-		var nodo: Node3D = ped["nodo"]
+		## De cerca: dos peatones con paraguas cruzando ante la cámara, uno en cada sentido (se ve la mano y el brazo de uno de los dos).
+		_e.cuerpo.visible = false
 		var adelante := Vector3(sin(float(_e.get("rumbo"))), 0, cos(float(_e.get("rumbo"))))
 		var lado := Vector3.UP.cross(adelante)
-		nodo.position = _e.cuerpo.position + adelante * 2.6
-		nodo.rotation.y = atan2(-lado.x, -lado.z)   ## camina de derecha a izquierda ante la cámara: enseña su lado derecho (el de la mano del paraguas)
-		set_meta("ped", ped)
-		ParaguasVida.tick([{"nodo": nodo, "peaton": true, "vel": 1.4, "anim": ped["anim"]}], true, [], 1)
+		var lista: Array = []
+		for k in 2:
+			var ped := PeatonVida.nuevo(b, 777 + k)
+			var nodo: Node3D = ped["nodo"]
+			var sg := 1.0 if k == 0 else -1.0
+			nodo.position = _e.cuerpo.position + adelante * 3.4 + lado * sg * 1.1
+			nodo.rotation.y = atan2(lado.x * sg, lado.z * sg)
+			lista.append({"nodo": nodo, "peaton": true, "vel": 1.4, "anim": ped["anim"]})
+		ParaguasVida.tick(lista, true, [], 1)
 	if f == 100:
 		get_viewport().get_texture().get_image().save_png("/tmp/lluvia_ciudad_cerca.png")
 		print("FIN. 0 fallos")
