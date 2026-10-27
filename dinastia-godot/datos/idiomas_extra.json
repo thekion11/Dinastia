@@ -6411,7 +6411,8 @@
   " Tu consejero lo rebajó.": " Your advisor got it reduced.",
   "Por «irregularidades administrativas»: %s de sanción.": "For “administrative irregularities”: a %s penalty.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "The main sponsor cuts its contribution: the club's cash loses %s.",
-  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "The builder claims %s more. You have to pay to keep the works going."
+  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "The builder claims %s more. You have to pay to keep the works going.",
+  "La obra del estadio se complica": "The stadium works get complicated"
  },
  "pt": {
   "Historia": "História",
@@ -12825,7 +12826,8 @@
   " Tu consejero lo rebajó.": " O teu consultor reduziu-o.",
   "Por «irregularidades administrativas»: %s de sanción.": "Por «irregularidades administrativas»: %s de sanção.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "O patrocinador principal corta a contribuição: o cofre perde %s.",
-  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "O construtor exige mais %s. É preciso pagar para não parar a obra."
+  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "O construtor exige mais %s. É preciso pagar para não parar a obra.",
+  "La obra del estadio se complica": "A obra do estádio complica-se"
  },
  "patrones": [
   [
@@ -24950,7 +24952,8 @@
   " Tu consejero lo rebajó.": " Ton conseiller l'a fait baisser.",
   "Por «irregularidades administrativas»: %s de sanción.": "Pour « irrégularités administratives » : %s de sanction.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "Le sponsor principal réduit sa contribution : la caisse perd %s.",
-  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "Le constructeur réclame %s de plus. Il faut payer pour ne pas arrêter le chantier."
+  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "Le constructeur réclame %s de plus. Il faut payer pour ne pas arrêter le chantier.",
+  "La obra del estadio se complica": "Les travaux du stade se compliquent"
  },
  "it": {
   "Historia": "Storia",
@@ -31364,7 +31367,8 @@
   " Tu consejero lo rebajó.": " Il tuo consulente l'ha ridotta.",
   "Por «irregularidades administrativas»: %s de sanción.": "Per «irregolarità amministrative»: %s di sanzione.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "Lo sponsor principale taglia il contributo: la cassa perde %s.",
-  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "L'impresa chiede %s in più. Bisogna pagare per non fermare i lavori."
+  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "L'impresa chiede %s in più. Bisogna pagare per non fermare i lavori.",
+  "La obra del estadio se complica": "I lavori dello stadio si complicano"
  },
  "de": {
   "Historia": "Geschichte",
@@ -37778,7 +37782,8 @@
   " Tu consejero lo rebajó.": " Dein Berater hat es gesenkt.",
   "Por «irregularidades administrativas»: %s de sanción.": "Wegen „administrativer Unregelmäßigkeiten“: %s Strafe.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "Der Hauptsponsor kürzt seinen Beitrag: Die Kasse verliert %s.",
-  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "Der Bauunternehmer verlangt %s mehr. Man muss zahlen, damit die Arbeiten weitergehen."
+  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "Der Bauunternehmer verlangt %s mehr. Man muss zahlen, damit die Arbeiten weitergehen.",
+  "La obra del estadio se complica": "Der Stadionumbau wird kompliziert"
  },
  "ca": {
   "Historia": "Història",
@@ -44192,7 +44197,8 @@
   " Tu consejero lo rebajó.": " El teu assessor l'ha rebaixat.",
   "Por «irregularidades administrativas»: %s de sanción.": "Per «irregularitats administratives»: %s de sanció.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "El patrocinador principal retalla l'aportació: la caixa perd %s.",
-  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "El constructor reclama %s més. Cal pagar per no aturar l'obra."
+  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "El constructor reclama %s més. Cal pagar per no aturar l'obra.",
+  "La obra del estadio se complica": "L'obra de l'estadi es complica"
  },
  "pl": {
   "Club": "Klub",
@@ -50885,7 +50891,8 @@
   " Tu consejero lo rebajó.": " Twój doradca to zmniejszył.",
   "Por «irregularidades administrativas»: %s de sanción.": "Za „nieprawidłowości administracyjne”: kara %s.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "Główny sponsor obcina wpłatę: kasa traci %s.",
-  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "Wykonawca żąda %s więcej. Trzeba zapłacić, by nie wstrzymać budowy."
+  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "Wykonawca żąda %s więcej. Trzeba zapłacić, by nie wstrzymać budowy.",
+  "La obra del estadio se complica": "Przebudowa stadionu się komplikuje"
  },
  "tr": {
   "Club": "Kulüp",
@@ -57578,6 +57585,7 @@
   " Tu consejero lo rebajó.": " Danışmanın bunu düşürdü.",
   "Por «irregularidades administrativas»: %s de sanción.": "«İdari usulsüzlükler» nedeniyle %s ceza.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "Ana sponsor katkısını azalttı: kasa %s kaybediyor.",
-  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "Müteahhit %s daha fazla istiyor. İnşaat durmasın diye ödemek gerek."
+  "El constructor reclama %s más. Hay que pagar para no parar la obra.": "Müteahhit %s daha fazla istiyor. İnşaat durmasın diye ödemek gerek.",
+  "La obra del estadio se complica": "Stadyum inşaatı karmaşıklaşıyor"
  }
 }
