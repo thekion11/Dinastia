@@ -361,6 +361,7 @@ var _ui_elegir_club := PantallaElegirClub.new(self)
 ## La jornada de partido (dirigir, cerrar, jugar temporada): `JornadaPartido` (fase 6, paso 7).
 var _jornada := JornadaPartido.new(self)
 var _construccion := ConstruirMenu.new(self)
+var _avance := AvanceSemana.new(self)
 var _estilo_menu: String:
 	get: return _estilos.estilo
 	set(v): _estilos.estilo = v
