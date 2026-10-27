@@ -98,6 +98,10 @@ static func lista(mundo: Mundo, modo: String) -> Array[Dictionary]:
 		var local: bool = par[0] == c
 		var rival: Club = par[1] if local else par[0]
 		out.append({"icono": "⚽", "texto": "Próximo: %s %s" % ["vs" if local else "en casa de", Nombres.visible(rival.nombre)], "hecho": false})
+	## Los retos de la semana para ese partido (`RetosSemana`, semana 6 del plan).
+	if mundo.retos_semana != null:
+		for rt: Dictionary in mundo.retos_semana.activos:
+			out.append({"icono": "🎯", "texto": Idiomas.t(String(rt["texto"])), "hecho": false, "reto": true})
 	var hechas := misiones_hechas(modo)
 	var guion := Tutorial.guion(modo, Tutorial.contexto(mundo, c.nombre))
 	for p: Dictionary in guion["pasos"]:
