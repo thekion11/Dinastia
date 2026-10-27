@@ -6003,7 +6003,10 @@
   "Vuelve la luz en la ciudad sin explicación": "Power returns to the city with no explanation",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Neighbours talk of a “sewer angel”. Nobody knows who went down to fix it.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Power cut: %d sectors in the dark.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Flooding: %d sectors with water in the street."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Flooding: %d sectors with water in the street.",
+  "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Out of fuel: the car won't start until you refuel at a pump (E).",
+  "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Less than 15% fuel left: find a pump (E).",
+  "Tienes el depósito lleno.": "Your tank is full."
  },
  "pt": {
   "Historia": "História",
@@ -12009,7 +12012,10 @@
   "Vuelve la luz en la ciudad sin explicación": "A luz volta à cidade sem explicação",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Os vizinhos falam de um «anjo dos esgotos». Ninguém sabe quem desceu para consertar.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Corte de luz: %d setores no escuro.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inundação: %d setores com água na rua."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inundação: %d setores com água na rua.",
+  "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Sem gasolina: o carro não liga até você abastecer numa bomba (E).",
+  "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Menos de 15% de gasolina: procure uma bomba (E).",
+  "Tienes el depósito lleno.": "O tanque já está cheio."
  },
  "patrones": [
   [
@@ -23627,7 +23633,10 @@
   "Vuelve la luz en la ciudad sin explicación": "Le courant revient dans la ville sans explication",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Les voisins parlent d'un « ange des égouts ». Personne ne sait qui est descendu réparer.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Coupure de courant : %d secteurs dans le noir.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inondation : %d secteurs avec de l'eau dans la rue."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inondation : %d secteurs avec de l'eau dans la rue.",
+  "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Panne sèche : la voiture ne démarre pas tant que tu n'as pas fait le plein à une pompe (E).",
+  "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Moins de 15 % de carburant : cherche une pompe (E).",
+  "Tienes el depósito lleno.": "Ton réservoir est plein."
  },
  "it": {
   "Historia": "Storia",
@@ -29633,7 +29642,10 @@
   "Vuelve la luz en la ciudad sin explicación": "La luce torna in città senza spiegazioni",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "I vicini parlano di un «angelo delle fogne». Nessuno sa chi sia sceso a ripararlo.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Blackout: %d settori al buio.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Allagamento: %d settori con acqua in strada."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Allagamento: %d settori con acqua in strada.",
+  "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Senza benzina: l'auto non parte finché non fai rifornimento a una pompa (E).",
+  "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Meno del 15% di benzina: cerca una pompa (E).",
+  "Tienes el depósito lleno.": "Il serbatoio è già pieno."
  },
  "de": {
   "Historia": "Geschichte",
@@ -35639,7 +35651,10 @@
   "Vuelve la luz en la ciudad sin explicación": "Der Strom kehrt ohne Erklärung in die Stadt zurück",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Die Nachbarn sprechen von einem „Kanalengel“. Niemand weiß, wer hinabgestiegen ist.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Stromausfall: %d Sektoren im Dunkeln.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Überschwemmung: %d Sektoren mit Wasser auf der Straße."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Überschwemmung: %d Sektoren mit Wasser auf der Straße.",
+  "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Kein Benzin: das Auto springt erst an, wenn du an einer Zapfsäule tankst (E).",
+  "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Weniger als 15 % Benzin: such eine Zapfsäule (E).",
+  "Tienes el depósito lleno.": "Dein Tank ist voll."
  },
  "ca": {
   "Historia": "Història",
@@ -41645,7 +41660,10 @@
   "Vuelve la luz en la ciudad sin explicación": "Torna la llum a la ciutat sense explicació",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Els veïns parlen d'un «àngel de les clavegueres». Ningú sap qui va baixar a arreglar-ho.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Tall de llum: %d sectors a les fosques.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inundació: %d sectors amb aigua al carrer."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inundació: %d sectors amb aigua al carrer.",
+  "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Sense gasolina: el cotxe no arrenca fins que repostis en un sortidor (E).",
+  "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Et queda menys del 15 % de gasolina: busca un sortidor (E).",
+  "Tienes el depósito lleno.": "Tens el dipòsit ple."
  },
  "pl": {
   "Club": "Klub",
@@ -47930,7 +47948,10 @@
   "Vuelve la luz en la ciudad sin explicación": "Prąd wraca do miasta bez wyjaśnienia",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Sąsiedzi mówią o „aniele kanałów”. Nikt nie wie, kto zszedł to naprawić.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Przerwa w dostawie prądu: %d sektorów bez światła.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Podtopienia: %d sektorów z wodą na ulicy."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Podtopienia: %d sektorów z wodą na ulicy.",
+  "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Brak paliwa: auto nie ruszy, dopóki nie zatankujesz przy dystrybutorze (E).",
+  "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Zostało mniej niż 15% paliwa: znajdź dystrybutor (E).",
+  "Tienes el depósito lleno.": "Masz pełny bak."
  },
  "tr": {
   "Club": "Kulüp",
@@ -54215,6 +54236,9 @@
   "Vuelve la luz en la ciudad sin explicación": "Şehre elektrik açıklamasız geri geldi",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Komşular bir “kanalizasyon meleği”nden söz ediyor. Kimin inip onardığını kimse bilmiyor.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Elektrik kesintisi: %d sektör karanlıkta.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Su baskını: %d sektörde sokaklar su altında."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Su baskını: %d sektörde sokaklar su altında.",
+  "⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E).": "⛽ Benzin bitti: bir pompada yakıt almadan araba çalışmaz (E).",
+  "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Yakıtın %15'in altına düştü: bir pompa bul (E).",
+  "Tienes el depósito lleno.": "Deponuz dolu."
  }
 }
