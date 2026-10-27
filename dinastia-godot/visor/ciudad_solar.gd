@@ -33,10 +33,10 @@ static func montar(ex: CiudadExpansion, r: Rect2) -> void:
 			var z := c.z + (float(fila) - 1.2) * f * 0.2
 			_suelto(ex, ruta, Vector3(x, Y + 0.2, z), 4.2, PI)
 	## Subestación (caseta con transformadores) junto a la entrada sur, y valla.
-	_suelto(ex, IND % "building-n", Vector3(c.x + w * 0.32, Y, c.z + f * 0.42), 4.5, PI)
-	_suelto(ex, IND % "building-b", Vector3(c.x - w * 0.32, Y, c.z + f * 0.42), 3.5, PI)
+	_suelto(ex, IND % "building-n", Vector3(c.x + w * 0.32, Y, c.z + f * 0.42), 6.5, PI)
+	_suelto(ex, IND % "building-b", Vector3(c.x - w * 0.32, Y, c.z + f * 0.42), 5.0, PI)
 	for k in 2:
-		_suelto(ex, IND % "windmill-low", Vector3(c.x + (float(k) - 0.5) * w * 0.5, Y, c.z - f * 0.44), 9.0, float(k) * 1.1)
+		_suelto(ex, IND % "windmill-low", Vector3(c.x + (float(k) - 0.5) * w * 0.5, Y, c.z - f * 0.44), 17.0, float(k) * 1.1)
 	var valla := b._mat_simple(Color(0.34, 0.36, 0.38), 0.6)
 	b._caja_en(Vector3(c.x, 1.0, c.z - f * 0.5 + 1.0), Vector3(w - 2.0, 2.0, 0.12), valla)
 	b._caja_en(Vector3(c.x, 1.0, c.z + f * 0.5 - 1.0), Vector3(w - 2.0, 2.0, 0.12), valla)
