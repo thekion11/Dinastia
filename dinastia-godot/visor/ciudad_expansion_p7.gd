@@ -97,9 +97,9 @@ func _instalacion(uso: String, r: Rect2) -> void:
 		"centro_comercial":
 			nombre = "Centro Comercial"
 			b._caja_en(c + Vector3(0, 8.0, -f * 0.1), Vector3(w * 0.9, 16.0, f * 0.55), _mat["claro"])
-			b._caja_en(c + Vector3(0, 7.0, -f * 0.1 + f * 0.275 + 0.2), Vector3(w * 0.7, 10.0, 0.2), _mat["vidrio"])
 			_lote("asfalto", c + Vector3(0, 0.25, f * 0.32), Vector3(w * 0.9, 0.1, f * 0.3))
-			## Una fila de máquinas de peluches ante la fachada de vidrio (regalo del dueño, `CiudadArcade`).
+			## Fachada real (escaparates, entrada con marquesina, pisos y cornisa) y las recreativas junto a la puerta.
+			FachadaModular.montar(self, c.x, c.z + f * 0.175, c.y + 0.3, w * 0.9, 4)
 			CiudadArcade.montar(b, c, w, f)
 		"gasolinera":
 			nombre = "Gasolinera"
