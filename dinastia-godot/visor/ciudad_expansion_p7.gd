@@ -47,8 +47,6 @@ func _instalacion(uso: String, r: Rect2) -> void:
 			b._caja_en(c + Vector3(0, 9.0, -6.0), Vector3(w * 0.8, 18.0, f * 0.55), _mat["piedra"])
 			b._caja_en(c + Vector3(0, 26.0, -6.0), Vector3(9.0, 16.0, 9.0), _mat["piedra"])
 			b._cil_en(c + Vector3(0, 36.0, -6.0), 4.0, 4.0, b._mat_simple(Color(0.35, 0.5, 0.45), 0.4), 0.2)
-			for k in 8:
-				b._cil_en(c + Vector3(-w * 0.34 + float(k) * w * 0.097, 7.0, f * 0.24), 0.8, 14.0, _mat["piedra"])
 			_bandera_mastil(c + Vector3(0, 0, f * 0.4))
 		"estacion_central":
 			nombre = "Estación Central"
@@ -187,6 +185,11 @@ func _dibujar_bloque(bl: Dictionary) -> void:
 			_casas(r)
 		"lejano":
 			_lejanos.append(r)
+		"obra":
+			## Como el parque solar: lejana apuntada para no mover el azar.
+			_lejanos.append(r)
+			_sin_lejano.append(r)
+			CiudadObra.montar(self, r)
 		"parque_solar":
 			## Como la feria: se apunta como lejana para consumir el mismo azar (`_edificios_lejanos`).
 			_lejanos.append(r)
@@ -362,6 +365,7 @@ func _bocas_metro() -> void:
 				_lote("acera", p + Vector3(0, -0.2 - float(s) * 0.35, -2.5 + float(s) * 0.9), Vector3(2.6, 0.2, 0.9))
 			for lado: float in [-1.0, 1.0]:
 				b._caja_en(p + Vector3(lado * 1.7, 0.6, 0), Vector3(0.12, 1.0, 7.0), b._mat_simple(Color(0.55, 0.56, 0.58), 0.3))
+			EscaleraVida.registrar(b, p + Vector3(0, -1.85, 2.9), p + Vector3(0, -0.05, -2.5), 6)
 			_cartel_m(p + Vector3(2.4, 0, -3.0), col)
 			n += 1
 	cuenta["bocas_metro"] = n

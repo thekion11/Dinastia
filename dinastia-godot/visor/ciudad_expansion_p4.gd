@@ -428,4 +428,5 @@ func _bloque_modular(frente: Vector3, giro: float, semilla: int, ancho_max: floa
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
 	cuenta["bloques_modulares"] = int(cuenta.get("bloques_modulares", 0)) + 1
 	_puertas_mod.append(puerta)
+	PuertaVida.registrar(b, puerta + rot * Vector3(0, 0, 0.2), rot * Vector3(0, 0, 1))
 	return puerta

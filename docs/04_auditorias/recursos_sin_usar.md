@@ -13,7 +13,7 @@ Regla: lo que se use entra por `herramientas`/`Modulos`/`_pieza_kit` con escala 
 | `kenney/tren` | 94 | vías y trenes para más líneas (la Estación Central ya usa 3 piezas) |
 | `ciudad/kenney_roads` | 88 | pilares de puente, rotondas y cruces (riesgo con semáforos: decisión consciente, ver plan §5 F0) |
 | `kenney/edificios_modulares` | 82 | la «plantilla de fachada» de los singulares (centro comercial, cocheras, ayuntamiento, universidad) |
-| `kenney/kit_edificios` | 66 | manzanas industriales y «oeste pisos» vacías, solares |
+| `kenney/kit_edificios` | 66 | solares (parte ya usada: columnas, escaleras y la obra de la periferia) |
 | `kenney/muebles` | 56 | interiores (despacho, casa del DT, hospital, comisaría, museo ampliado) |
 | `kenney/mini_mercado` | 3 | mercado y tiendas del centro comercial |
 | `kenney/mini_arcade` | 2 | sala de juegos del centro comercial |
