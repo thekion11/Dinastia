@@ -214,7 +214,7 @@ func _refrescar() -> void:
 	_perezoso(_lista_logros, _ui_club_vida._pintar_logros)
 	_perezoso(_lista_entren, _ui_club_vida._pintar_entrenamiento.bind(c))
 	_perezoso(_lista_fed, _pintar_federacion.bind(c))
-	_perezoso(_lista_estadio, _pintar_estadio.bind(c))
+	_perezoso(_lista_estadio, _ui_club_estadio._pintar_estadio.bind(c))
 	_perezoso(_lista_seleccion, _ui_cantera._pintar_seleccion.bind(c))
 	_perezoso(_lista_cantera, _ui_cantera._pintar_cantera.bind(c))
 	_perezoso(_lista_contratos, _ui_cantera._pintar_contratos.bind(c))
@@ -229,7 +229,7 @@ func _refrescar() -> void:
 	## cuatro siempre, aunque solo una se vea.
 	_perezoso(_lista_gente, _ui_gente._pintar_gente)
 	_perezoso(_lista_finanzas, _ui_finanzas._pintar_finanzas.bind(c))
-	_perezoso(_lista_camarin, _pintar_camarin.bind(c))
+	_perezoso(_lista_camarin, _ui_finanzas._pintar_camarin.bind(c))
 	_perezoso(_lista_ciudad, _ui_ciudad._pintar_ciudad.bind(c))
 	_perezoso(_lista_editor, _ui_editor._pintar_editor)
 	_perezoso(_lista_glosario, _ui_opciones._pintar_glosario)

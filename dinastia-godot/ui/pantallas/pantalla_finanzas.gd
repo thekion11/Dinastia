@@ -272,3 +272,137 @@ func _vender_club() -> void:
 	if problema != "":
 		p._escribir("[color=#e05555]%s.[/color]" % problema)
 	p._refrescar()
+
+## La pestaña CAMARÍN: cámaras, clima, clanes, salud mental y jerarquía (desde `Principal`, 27-10).
+func _pintar_camarin(c: Club) -> void:
+	p._limpiar(p._lista_camarin)
+	var v := p.mundo.vestuario
+	if v == null:
+		return
+	## LAS CÁMARAS. Si aceptaste el documental, el vestuario está grabado y a la
+	## gente le incomoda. Va lo primero porque explica caídas de moral que si no
+	## parecerían salidas de la nada.
+	if p.mundo.prensa != null and p.mundo.prensa.hay_camaras():
+		var cam := p._texto(12, p.COL_ORO)
+		cam.text = Idiomas.t("🎥 Hay cámaras en el vestuario %d semana(s) más. A los más sensibles del plantel les incomoda.") % p.mundo.prensa.semanas_documental
+		cam.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		p._lista_camarin.add_child(cam)
+	var pl := c.plantilla
+	var moral := 60
+	var ansi := 0
+	if not pl.is_empty():
+		var sm := 0
+		var sa := 0
+		for j in pl:
+			sm += j.moral
+			sa += v.ansiedad(j)
+		moral = int(round(float(sm) / float(pl.size())))
+		ansi = int(round(float(sa) / float(pl.size())))
+	var cap: Jugador = null
+	for j in pl:
+		if j.capitan:
+			cap = j
+			break
+
+	var t := p._texto(11, p.COL_SUAVE)
+	t.text = Idiomas.t("CLIMA DEL VESTUARIO")
+	p._lista_camarin.add_child(t)
+	var gr := GridContainer.new()
+	gr.columns = 4
+	gr.add_theme_constant_override("h_separation", 14)
+	p._lista_camarin.add_child(gr)
+	for par in [["Moral media", str(moral)], ["Ansiedad media", str(ansi)],
+			["Capitán", p._ui_cantera._apellido(cap.nombre) if cap else "—"], ["Grupos", str(v.camarillas.size())]]:
+		var col := VBoxContainer.new()
+		gr.add_child(col)
+		var et := p._texto(10, p.COL_SUAVE)
+		et.text = String(par[0])
+		col.add_child(et)
+		var va := p._texto(15, p.COL_ROJO if (String(par[0]) == "Ansiedad media" and ansi > 50) else p.COL_TEXTO)
+		va.text = String(par[1])
+		col.add_child(va)
+	p._lista_camarin.add_child(HSeparator.new())
+	p._pintar_porque_moral(c)
+
+	var tc := p._texto(11, p.COL_SUAVE)
+	tc.text = Idiomas.t("CLANES Y CAMARILLAS")
+	p._lista_camarin.add_child(tc)
+	if v.camarillas.is_empty():
+		var vc := p._texto(12, p.COL_SUAVE)
+		vc.text = Idiomas.t("Todavía no hay grupos definidos en el vestuario.")
+		p._lista_camarin.add_child(vc)
+	for cl: Dictionary in v.camarillas:
+		var humor := int(cl.get("humor", 0))
+		var lider: Jugador = p.mundo.jugador_por_id(String(cl.get("lider", "")))
+		var miembros: Array = cl.get("miembros", [])
+		var en_mi_club := 0
+		var nombres: Array[String] = []
+		for id in miembros:
+			var jm := p.mundo.jugador_por_id(String(id))
+			if jm != null and jm.club_id == c.id:
+				en_mi_club += 1
+				if nombres.size() < 7:
+					nombres.append(p._ui_cantera._apellido(jm.nombre))
+		var estado_txt := "enojados" if humor < -25 else ("contentos" if humor > 15 else "neutrales")
+		var estado_col := p.COL_ROJO if humor < -25 else (p.COL_VERDE if humor > 15 else p.COL_ORO)
+		var fila := VBoxContainer.new()
+		p._lista_camarin.add_child(fila)
+		var cab := HBoxContainer.new()
+		cab.add_theme_constant_override("separation", 8)
+		fila.add_child(cab)
+		var nom := p._texto(12, p.COL_TEXTO)
+		nom.text = (Idiomas.t("%s  ·  %d jugador") if en_mi_club == 1 else Idiomas.t("%s  ·  %d jugadores")) % [String(cl.get("nombre", "")), en_mi_club]
+		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		cab.add_child(nom)
+		var et2 := p._texto(11, estado_col)
+		et2.text = estado_txt
+		cab.add_child(et2)
+		var lid := p._texto(11, p.COL_SUAVE)
+		lid.text = Idiomas.t("Líder: %s  ·  %s") % [lider.nombre if lider else "—", ", ".join(nombres)]
+		lid.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		fila.add_child(lid)
+		if humor < -10:
+			var cid := String(cl.get("id", ""))
+			p._boton("🕊️ Mediar con el grupo", func() -> void: _mediar_clan(cid), fila)
+		p._lista_camarin.add_child(HSeparator.new())
+
+	var en_riesgo: Array[Jugador] = []
+	for j in pl:
+		if v.ansiedad(j) >= 48:
+			en_riesgo.append(j)
+	en_riesgo.sort_custom(func(a: Jugador, b: Jugador) -> bool: return v.ansiedad(a) > v.ansiedad(b))
+	var tm := p._texto(11, p.COL_SUAVE)
+	tm.text = Idiomas.t("🧠 SALUD MENTAL")
+	p._lista_camarin.add_child(tm)
+	if en_riesgo.is_empty():
+		var vm := p._texto(12, p.COL_SUAVE)
+		vm.text = Idiomas.t("Nadie está pasándolo mal ahora mismo.")
+		p._lista_camarin.add_child(vm)
+	for j: Jugador in en_riesgo:
+		var est: Dictionary = v.estado_mental(j)
+		var filaj := HBoxContainer.new()
+		filaj.add_theme_constant_override("separation", 8)
+		p._lista_camarin.add_child(filaj)
+		var nomj := p._texto(12, p.COL_TEXTO)
+		nomj.text = Idiomas.t("%s  ·  %s  ·  %d años") % [j.nombre, j.pos_e, j.edad]
+		nomj.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		filaj.add_child(nomj)
+		var etj := p._texto(11, Color(String(est.get("color", "#8ea595"))))
+		etj.text = "%s  %d" % [String(est.get("txt", "")), v.ansiedad(j)]
+		filaj.add_child(etj)
+		p._boton("Terapia", func() -> void: _dar_terapia_mental(j), filaj)
+		p._boton("Descanso mental", func() -> void: _pedir_descanso_mental(j), filaj)
+	p._lista_camarin.add_child(HSeparator.new())
+
+	var th := p._texto(11, p.COL_SUAVE)
+	th.text = Idiomas.t("JERARQUÍA INTERNA")
+	p._lista_camarin.add_child(th)
+	var jerarquia := pl.duplicate()
+	jerarquia.sort_custom(func(a: Jugador, b: Jugador) -> bool:
+		var va2 := float(a.ovr) + float(a.edad) * 1.6 + (25.0 if a.capitan else 0.0)
+		var vb2 := float(b.ovr) + float(b.edad) * 1.6 + (25.0 if b.capitan else 0.0)
+		return va2 > vb2)
+	for i in mini(10, jerarquia.size()):
+		var jj: Jugador = jerarquia[i]
+		var etiqueta := "referente" if i < 3 else ("influyente" if i < 6 else "periférico")
+		p._dato("%d.  %s%s" % [i + 1, "ⓒ " if jj.capitan else "", jj.nombre], "%d  ·  %s" % [jj.ovr, etiqueta], p.COL_TEXTO, p._lista_camarin)
