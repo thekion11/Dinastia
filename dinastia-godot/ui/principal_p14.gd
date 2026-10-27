@@ -1,5 +1,5 @@
 extends "res://ui/principal_p13.gd"
-## [Capa 13/17 de `principal.gd`] _enviar_oferta_negociacion, _al_ajustar_rol_neg, _al_ajustar_campo_neg, _indice_grupo, _paso_pagina, _animar_pagina … (+14)
+## [Capa 14/17 de `principal.gd`] _enviar_oferta_negociacion, _al_ajustar_rol_neg, _al_ajustar_campo_neg y los puentes a `Hubs` (carril y hubs)
 
 func _enviar_oferta_negociacion() -> void:
 	var n := mundo.mercado.negociacion
@@ -72,191 +72,6 @@ func _al_ajustar_campo_neg(campo: String, delta: int) -> void:
 	mundo.mercado.negociacion.ajustar(campo, delta)
 	_refrescar()
 
-func _indice_grupo(gid: String) -> int:
-	for i in GRUPOS.size():
-		if String(GRUPOS[i]["id"]) == gid:
-			return i
-	return 0
-
-func _paso_pagina(v: float) -> void:
-	if _marco_paginas == null:
-		return
-	_marco_paginas.add_theme_constant_override("margin_left", int(v))
-	_marco_paginas.add_theme_constant_override("margin_right", int(-v))
-
-func _animar_pagina(direccion: int) -> void:
-	if _marco_paginas == null or direccion == 0:
-		return
-	var desde := 46.0 * float(direccion)
-	_paso_pagina(desde)
-	_marco_paginas.modulate.a = 0.25
-	var tw := create_tween().set_parallel(true)
-	tw.tween_method(_paso_pagina, desde, 0.0, 0.20).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tw.tween_property(_marco_paginas, "modulate:a", 1.0, 0.20)
-
-func _actualizar_fila_grupos() -> void:
-	for i in _fila_grupos.get_child_count():
-		var b: Button = _fila_grupos.get_child(i)
-		b.button_pressed = (String(GRUPOS[i]["id"]) == _grupo_actual)
-
-func _grupo_por_id(gid: String) -> Dictionary:
-	for g: Dictionary in GRUPOS:
-		if String(g["id"]) == gid:
-			return g
-	return {}
-
-func _seccion_activa(chip: Dictionary) -> bool:
-	var secc := String(chip.get("secc", ""))
-	if secc == "":
-		return true
-	match String(chip["tab"]):
-		"Club": return _secc_club == secc
-		"Gente": return _secc_gente == secc
-		"Ajustes": return _secc_ajustes == secc
-		"Récords": return _secc_records == secc
-		"Redes": return _secc_redes == secc
-		"Vida": return _secc_vida == secc
-	return true
-
-## Abre un chip: primero fija la sección dentro de la pestaña -si el chip
-## trae `secc`- y después salta a la pestaña. El orden importa: al revés, la
-## pestaña se pintaría con la sección vieja y habría que repintar dos veces.
-func _ir_a_chip(chip: Dictionary) -> void:
-	var secc := String(chip.get("secc", ""))
-	## «Equipación» es su propia pantalla, entera: el diseñador.
-	if secc == "kits" and mundo != null and mundo.mi_club() != null:
-		var dz := DisenadorKit.abrir(self, mundo)
-		dz.cerrado.connect(_refrescar)
-		return
-	if secc != "":
-		match String(chip["tab"]):
-			"Club": _secc_club = secc
-			"Gente": _secc_gente = secc
-			"Ajustes": _secc_ajustes = secc
-			"Récords": _secc_records = secc
-			"Redes": _secc_redes = secc
-			"Vida": _secc_vida = secc
-	_ir_a_pestana(String(chip["tab"]))
-	## OJO: `_elegir_grupo("central")` corre dentro de `_construir()`, cuando
-	## `mundo` todavía es null -la escena se arma antes de que le pasen la
-	## partida-. Sin este candado, arrancar el juego tiraba "Nonexistent
-	## function 'mi_club' in base 'Nil'" antes de pintar nada.
-	if mundo != null:
-		_refrescar()
-
-## EL CARRIL DE CHIPS (nivel 2). Un chip queda marcado cuando coinciden LAS
-## DOS cosas: su pestaña y su sección. Sin mirar la sección, los cinco chips
-## que comparten la pestaña "Club" se encenderían todos a la vez.
-func _reconstruir_fila_sub() -> void:
-	_limpiar(_fila_sub)
-	var titulo_actual := ""
-	if _pestanas.get_tab_count() > 0:
-		titulo_actual = _pestanas.get_tab_title(_pestanas.current_tab)
-	for chip: Dictionary in _chips_del_carril(titulo_actual):
-		var b := _pildora(Idiomas.t(String(chip["label"])), 12, 30)
-		b.button_pressed = (String(chip["tab"]) == titulo_actual) and _seccion_activa(chip)
-		var destino := chip
-		b.pressed.connect(func() -> void: _ir_a_chip(destino))
-		_fila_sub.add_child(b)
-		## LA CASCADA. Cada chip entra un pelo después que el anterior -35 ms-,
-		## así el carril "se abre" en vez de aparecer de golpe. Es lo que hace
-		## que cambiar de bloque se sienta un gesto y no un parpadeo. El
-		## desfase es corto a propósito: con 10 chips el último entra a los
-		## 350 ms, todavía antes de que la mano llegue a tocar nada.
-		b.modulate.a = 0.0
-		var tw := create_tween()
-		tw.tween_interval(0.035 * float(_fila_sub.get_child_count() - 1))
-		tw.tween_property(b, "modulate:a", 1.0, 0.14)
-	## La chuleta «?» de las pantallas con más cifras, al final del carril.
-	AyudaPestana.anadir(_fila_sub, titulo_actual)
-
-## Los chips del carril para la pestaña abierta (s3, «primera hora»): los de su
-## bloque; y si es de un hub contextual (Finanzas, Mercado, Copa...) que no está en
-## el bloque, los de ese hub -antes se quedaba el carril del bloque anterior, sin
-## ningún chip marcado, como si la pestaña no existiera-.
-func _chips_del_carril(titulo: String) -> Array:
-	var del_grupo: Array = _grupo_por_id(_grupo_actual).get("tabs", [])
-	for ch: Dictionary in del_grupo:
-		if String(ch["tab"]) == titulo:
-			return del_grupo
-	for h: String in HUBS:
-		var tabs: Array = HUBS[h]["tabs"]
-		if tabs.has(titulo):
-			var out: Array = []
-			for t: String in tabs:
-				out.append({"tab": t, "label": t})
-			return out
-	return del_grupo
-
-## Cambia de bloque maestro: entra siempre por su primer chip -índice 0-, que
-## es lo que pidió el usuario ("al cambiar de pestaña madre, el nivel 2 se
-## reinicia al primer chip").
-func _elegir_grupo(gid: String) -> void:
-	var antes := _indice_grupo(_grupo_actual)
-	var ahora := _indice_grupo(gid)
-	if gid != _grupo_actual:
-		_animar_pagina(1 if ahora > antes else -1)
-	_grupo_actual = gid
-	_actualizar_fila_grupos()
-	_reconstruir_fila_sub()
-	var chips: Array = _grupo_por_id(gid).get("tabs", [])
-	if not chips.is_empty():
-		_ir_a_chip(chips[0])
-
-func _construir_grupos() -> void:
-	for g: Dictionary in GRUPOS:
-		## En "compacto" el bloque va SOLO con su icono: seis iconos ocupan un
-		## tercio de la fila y dejan el ancho para los chips, que es donde de
-		## verdad hay que leer. El tooltip guarda el nombre entero.
-		var rotulo := String(g["icono"]) if _estilo_menu == "compacto" \
-			else "%s  %s" % [String(g["icono"]), String(g["nombre"])]
-		## EL AVISO DE NOVEDAD. Un punto al lado del bloque que tiene algo sin
-		## resolver -correo sin leer, un representante esperando, contratos que
-		## vencen-. Es lo que convierte la barra en un tablero: sin esto hay
-		## que entrar a los seis bloques para descubrir dónde pasa algo.
-		var pend := _pendientes_de_grupo(String(g["id"]))
-		if pend > 0:
-			rotulo += "  ●"
-		var b := _pildora(rotulo, 13, 38)
-		b.tooltip_text = String(g["nombre"])
-		## YA NO se recortan ni se estiran: la barra vive a ancho completo de
-		## pantalla, no dentro de la columna del medio, así que los seis
-		## rótulos entran enteros y cada píldora mide lo que mide su texto.
-		var gid := String(g["id"])
-		b.pressed.connect(func() -> void: _elegir_grupo(gid))
-		## Los que ahora tienen menú propio en el panel lateral no se ven arriba
-		## (siguen existiendo: la navegación y el tutorial van por índice).
-		b.visible = not MenuLateral.EN_PANEL.has(gid)
-		_fila_grupos.add_child(b)
-
-## De qué bloque maestro es una pestaña. Con los hubs contextuales hay
-## pestañas que NO pertenecen a ningún bloque -Táctica, Mercado, Copa...-: esas
-## devuelven "" y la barra de arriba se queda como esté, sin saltar a otro
-## bloque a la fuerza.
-## FALLA VISUAL ARREGLADA (26-9-2026, recorrido D4): varias pestañas viven en
-## más de un grupo -"Club" está en CENTRAL (Mi Carrera) y en CLUB
-## (Infraestructura, Directorio); "Estadio" en CLUB y en OPERACIONES-, y esto
-## devolvía siempre el PRIMER grupo: entrabas por CLUB › Infraestructura y el
-## menú encendía CENTRAL. Ahora manda, por orden: el grupo en el que ya estás si
-## tiene esa pestaña; si no, el grupo cuyo chip coincide con la sección abierta;
-## y solo al final, el primero que la tenga.
-func _grupo_de_pestana(titulo: String) -> String:
-	for g: Dictionary in GRUPOS:
-		if String(g["id"]) != _grupo_actual:
-			continue
-		for chip: Dictionary in (g["tabs"] as Array):
-			if String(chip["tab"]) == titulo and _seccion_activa(chip):
-				return String(g["id"])
-	for g: Dictionary in GRUPOS:
-		for chip: Dictionary in (g["tabs"] as Array):
-			if String(chip["tab"]) == titulo and chip.has("secc") and _seccion_activa(chip):
-				return String(g["id"])
-	for g: Dictionary in GRUPOS:
-		for chip: Dictionary in (g["tabs"] as Array):
-			if String(chip["tab"]) == titulo:
-				return String(g["id"])
-	return ""
-
 func _animar_pestana() -> void:
 	var pag := _pestanas.get_current_tab_control()
 	if pag == null:
@@ -313,3 +128,17 @@ func _reconstruir_grupos() -> void:
 	_actualizar_fila_grupos()
 	_reconstruir_fila_sub()
 	_pintar_dias()
+
+## Puentes (fase 6, paso 5): hubs y carril viven en `Hubs` (`ui/menu/hubs.gd`).
+func _abrir_hub(clave: String) -> void: _hubs.abrir(clave)
+func _indice_grupo(gid: String) -> int: return _hubs.indice_grupo(gid)
+func _animar_pagina(direccion: int) -> void: _hubs.animar_pagina(direccion)
+func _actualizar_fila_grupos() -> void: _hubs.actualizar_fila_grupos()
+func _grupo_por_id(gid: String) -> Dictionary: return _hubs.grupo_por_id(gid)
+func _seccion_activa(chip: Dictionary) -> bool: return _hubs.seccion_activa(chip)
+func _ir_a_chip(chip: Dictionary) -> void: _hubs.ir_a_chip(chip)
+func _reconstruir_fila_sub() -> void: _hubs.reconstruir_fila_sub()
+func _chips_del_carril(titulo: String) -> Array: return _hubs.chips_del_carril(titulo)
+func _elegir_grupo(gid: String) -> void: _hubs.elegir_grupo(gid)
+func _construir_grupos() -> void: _hubs.construir_grupos()
+func _grupo_de_pestana(titulo: String) -> String: return _hubs.grupo_de_pestana(titulo)

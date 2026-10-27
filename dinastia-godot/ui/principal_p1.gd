@@ -354,6 +354,8 @@ var _registro: RichTextLabel
 ## Los puentes conservan `_estilo_menu` y `_rotar_diseno` para Ajustes,
 ## `preferencias.gd` y las capas que pintan píldoras.
 var _estilos := EstilosMenu.new(self)
+## Hubs contextuales y carril de chips: `Hubs` (`ui/menu/hubs.gd`, fase 6 paso 5).
+var _hubs := Hubs.new(self)
 var _estilo_menu: String:
 	get: return _estilos.estilo
 	set(v): _estilos.estilo = v
