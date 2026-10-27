@@ -1,0 +1,16 @@
+W. Casablanca|circulo|liso|WAC|liso|#d50032|#ffffff|#ffffff|#d50032
+Raja C.|escudo|franjas|RCA|franjas|#00843d|#ffffff|#00843d|#00843d
+AS FAR|clasico|liso|FAR|liso
+RS Berkane|hex|liso|RSB|liso
+Maghreb Fès|rombo|liso|MAS|liso
+MC Oujda|escudo|liso|MCO|liso
+FUS Rabat|circulo|liso|FUS|liso
+Hassania A.|clasico|liso|HAS|liso
+Olympic Safi|ovalo|liso|OCS|liso
+Chabab MA|escudo|liso|CMA|liso
+Jeunesse S.|hex|liso|JSS|liso
+SCC Mohammédia|clasico|liso|SCC|liso
+Ittihad Tanger|rombo|liso|IRT|liso
+Renaissance Z.|circulo|liso|RZ|liso
+Unión Touarga|escudo|liso|UTS|liso
+COD Meknès|clasico|liso|COD|liso

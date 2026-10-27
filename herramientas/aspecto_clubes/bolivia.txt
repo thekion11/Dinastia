@@ -1,0 +1,16 @@
+Bolivar|clasico|liso|BO|liso|#75aadb|#ffffff|#75aadb|#75aadb
+The Strongest|escudo|franjas|ST|franjas|#ffd100|#000000|#000000|#000000
+Always Ready|hex|franjas|AR|franjas|#d50032|#ffffff|#ffffff|#d50032
+Blooming|circulo|franjas|BL|franjas|#75aadb|#ffffff|#ffffff|#75aadb
+Oriente P.|rombo|franjas|OP|franjas|#00843d|#ffffff|#ffffff|#00843d
+Wilstermann|ovalo|liso|JW|liso|#d50032|#0038a8|#0038a8|#d50032
+San José|clasico|liso|SJ|liso|#ff7a00|#ffffff|#ffffff|#ff7a00
+Guabira|escudo|liso|GU|liso|#d50032|#ffffff|#ffffff|#d50032
+Tomayapo|penta|liso|TO|liso|#7a1f2b|#ffd100|#ffd100|#7a1f2b
+Nac. Potosí|banderin|franjas|NP|franjas|#d50032|#ffffff|#ffffff|#d50032
+Aurora|hex|liso|AU|liso|#75aadb|#ffffff|#ffffff|#75aadb
+Indep. Petrolero|clasico|liso|IP|liso|#00843d|#ffffff|#ffffff|#00843d
+R. Santa Cruz|escudo|liso|RS|liso|#d50032|#00843d|#00843d|#d50032
+Palmaflor|rombo|liso|PA|liso|#5c2d91|#ffd100|#ffd100|#5c2d91
+Vaca Diez|circulo|liso|VD|liso|#00843d|#ffd100|#ffd100|#00843d
+Univ. de Vinto|ovalo|liso|UV|liso|#0038a8|#ffffff|#ffffff|#0038a8

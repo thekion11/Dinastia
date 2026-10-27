@@ -1,0 +1,16 @@
+Paris SG|circulo|liso|PSG|franja_central|#004170|#d50032|#004170|#d50032
+Marsella|circulo|liso|OM|liso|#ffffff|#2faee0|#ffffff|#ffffff
+Lyon|escudo|liso|OL|liso|#ffffff|#d50032|#ffffff|#ffffff
+Monaco|escudo|rombos|AS|diagonal_partida|#d50032|#ffffff|#ffffff|#d50032
+Lille|escudo|florlis|LIL|liso|#d50032|#0a2240|#ffffff|#d50032
+Niza|escudo|franjas|NIC|franjas|#d50032|#000000|#000000|#d50032
+Rennes|escudo|franjas|REN|franjas|#d50032|#000000|#000000|#d50032
+Lens|escudo|liso|RCL|liso|#ffd100|#d50032|#d50032|#ffd100
+Nantes|escudo|liso|FCN|liso|#ffd100|#00954c|#00954c|#ffd100
+Estrasburgo|escudo|liso|RCS|liso|#0067b1|#ffffff|#ffffff|#0067b1
+Toulouse|escudo|liso|TFC|liso|#5c2d91|#ffffff|#ffffff|#5c2d91
+Montpellier|escudo|liso|MHS|liso|#0a2240|#ff7a00|#0a2240|#0a2240
+Brest|circulo|franjas|SB|franjas|#d50032|#ffffff|#ffffff|#d50032
+Reims|escudo|liso|REI|liso|#d50032|#ffffff|#ffffff|#d50032
+Lorient|escudo|liso|FCL|liso|#ff7a00|#000000|#000000|#ff7a00
+Auxerre|circulo|franjas|AJA|franjas|#ffffff|#0067b1|#ffffff|#ffffff

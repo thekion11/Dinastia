@@ -50,7 +50,6 @@ Los encabezados del plan dan cifras viejas (F0 «33» tiene 23 filas, F1 «36» 
 - M-200: Policía y multas (pieza E, aprobada por el dueño 27-10).
 
 **Interfaz**
-- 1040: Tutorial por capas que se activa al usar cada sistema (tabla «lanzable»).
 - M-438: Botones con tamaño mínimo en móvil.
 - M-433: Controles táctiles completos en el partido (hoy solo en la ciudad).
 - M-462: Iconos con emoji (💾 ↺ ● ✔ ▸) que pueden salir como cuadros: probar glifos o cambiarlos.
