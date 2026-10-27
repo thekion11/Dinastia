@@ -333,7 +333,8 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			_mod(nodo, "computerScreen", Vector3(cx, sobre, cz - 0.85), 0.0)
 			_mod(nodo, "computerKeyboard", Vector3(cx, sobre, cz - 0.45), 0.0)
 			_mod(nodo, "lampSquareTable", Vector3(cx + 0.75, sobre, cz - 0.8), 0.0)
-			_mod(nodo, "chairDesk", Vector3(cx, y0, cz + 0.25), PI, true)
+			if SillonOficina.poner(nodo, Vector3(cx, y0, cz + 0.25), PI) == null:   ## el sillón del Drive; sin él, el del kit
+				_mod(nodo, "chairDesk", Vector3(cx, y0, cz + 0.25), PI, true)
 			_mod(nodo, "bookcaseOpen", Vector3(caja.position.x + 0.3, y0, cz - 0.4), PI * 0.5, true)
 			_mod(nodo, "books", Vector3(caja.position.x + 0.3, y0 + 0.9, cz - 0.4), PI * 0.5)
 			_mod(nodo, "loungeSofa", Vector3(caja.end.x - 0.55, y0, cz + 0.6), -PI * 0.5, true, null, {"carpet": c1.lerp(Color(0.15, 0.15, 0.17), 0.35)})
@@ -344,7 +345,8 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 		"Despacho del presidente":
 			TunelVestuario._caja(nodo, Vector3(cx, y0 + 0.78, cz - 0.3), Vector3(2.6, 0.1, 1.1), TunelVestuario._mat(Color(0.3, 0.18, 0.1), 0.4), true)
 			TunelVestuario._caja(nodo, Vector3(cx, y0 + 0.38, cz - 0.3), Vector3(2.5, 0.76, 1.0), TunelVestuario._mat(Color(0.3, 0.18, 0.1), 0.4), false)
-			TunelVestuario._caja(nodo, Vector3(cx, y0 + 0.6, cz + 0.6), Vector3(0.7, 1.2, 0.7), TunelVestuario._mat(Color(0.35, 0.1, 0.1), 0.5), true)
+			if SillonOficina.poner(nodo, Vector3(cx, y0, cz + 0.6), PI) == null:   ## el sillón del Drive; sin él, la caja roja de antes
+				TunelVestuario._caja(nodo, Vector3(cx, y0 + 0.6, cz + 0.6), Vector3(0.7, 1.2, 0.7), TunelVestuario._mat(Color(0.35, 0.1, 0.1), 0.5), true)
 			for k in 2:
 				var mastil := TunelVestuario._caja(nodo, Vector3(caja.position.x + 0.6 + k * 0.6, y0 + 1.2, caja.position.y + 0.5), Vector3(0.05, 2.4, 0.05), Texturas.metal(Color(0.8, 0.7, 0.3), 0.3), false)
 				mastil.name = "Mastil"

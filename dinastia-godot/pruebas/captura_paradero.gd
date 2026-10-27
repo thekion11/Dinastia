@@ -1,5 +1,5 @@
 extends Node3D
-## El paradero de Santiago (ParaderoRed) con la cámara a pie. ANTES=1 dibuja la marquesina de antes (techo negro, trasera de cristal, banca verde).
+## El paradero de la Red (ParaderoRed, como las fotos del dueño) con la cámara a pie. ANTES=1 dibuja la marquesina de la primera versión inventada (techo negro, trasera de cristal, banca verde).
 ##   → /tmp/paradero_<antes|despues>_N.png  (0 = de frente a 7 m, 1 = el poste del cartel de cerca, 2 = 3/4 desde la calle)
 var _n := 0
 var _cam: Camera3D
@@ -22,7 +22,7 @@ func _ready() -> void:
 			Mini3D.caja(raiz, Vector3(lado * 3.5, 1.5, 1.3), Vector3(0.22, 3.0, 0.22), metal)
 		Mini3D.caja(raiz, Vector3(0, 0.61, -0.9), Vector3(5.4, 0.16, 0.7), acento)
 	else:
-		ParaderoRed.montar(raiz, 7.5, 1234)
+		ParaderoRed.montar(raiz, 3.8, 1234, "Av. Los Presidentes", 200)
 	var sol := DirectionalLight3D.new()
 	sol.rotation_degrees = Vector3(-50, -30, 0)
 	add_child(sol)
@@ -54,8 +54,8 @@ func _vista(i: int) -> void:
 			_cam.position = Vector3(0, 1.7, 4.2)
 			_cam.look_at(Vector3(0, 1.4, -3.0), Vector3.UP)
 		1:
-			_cam.position = Vector3(5.5, 1.7, 1.8)
-			_cam.look_at(Vector3(4.6, 2.3, -2.1), Vector3.UP)
+			_cam.position = Vector3(-2.2, 1.8, 0.9)
+			_cam.look_at(Vector3(-3.1, 2.0, -2.1), Vector3.UP)   ## el cartel del poste de cerca
 		_:
 			_cam.position = Vector3(-5.0, 1.7, 3.0)
 			_cam.look_at(Vector3(0.5, 1.2, -3.0), Vector3.UP)
