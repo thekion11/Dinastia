@@ -4,7 +4,8 @@ extends RefCounted
 ## viven en la fila de `ESTADIO_CLUB` del pack real (privado, con los nombres retocados); esto solo los lee. Campos de la fila que usa:
 ## Viven en la tabla `ASPECTO_CLUB` (una fila por club, clave = nombre del pack) y, para escudo y camiseta, en la de `ESTADIO_CLUB` de antes; manda la nueva.
 ##   escudo   [forma, patrón]           (ya existía: ver `Escudo.FORMAS` y `Escudo.PATRONES`)
-##   esc      [color1, color2]          colores del escudo (si no, los del club)
+##   esc      [color1, color2, (color3)] colores del escudo (si no, los del club); el tercero, para los tricolores
+##   emblema  figura de `EscudoEmblemas` (canon, ave, corona…)   letras  texto dibujado sobre el escudo (hasta 4)
 ##   siglas   «CC»                       las letras del escudo (si no, las mayúsculas del nombre)
 ##   camiseta diseño de `DisenosKit`     (ya existía)
 ##   kit      {c1, c2, pant, med}        colores de la camiseta, el pantalón y las medias (hex con #); lo que falte sale como siempre
@@ -34,3 +35,10 @@ static func siglas(c: Club) -> String:
 static func kit(c: Club, campo: String) -> String:
 	var k: Variant = fila(c).get("kit", {})
 	return String((k as Dictionary).get(campo, "")) if k is Dictionary else ""
+
+## La figura sencilla del escudo (clave de `EscudoEmblemas.FIGURAS`) y las letras que lleva encima («U», «OM», «CABJ»); "" si no tiene.
+static func emblema(c: Club) -> String:
+	return String(fila(c).get("emblema", ""))
+
+static func letras(c: Club) -> String:
+	return String(fila(c).get("letras", ""))
