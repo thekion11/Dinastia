@@ -295,6 +295,12 @@ func _casa_ribera(centro: Vector3) -> void:
 	var raiz := Node3D.new()
 	add_child(raiz)
 	raiz.add_child(n)
+	## El glb trae una semiesfera de cielo de 103 m (la misma de la villa): medida con ella, la casa salía
+	## diminuta bajo una cúpula. Se quita antes de medir.
+	for m: MeshInstance3D in _mallas_de(n):
+		if m.mesh != null and (m.transform * m.mesh.get_aabb()).size.length() > 60.0:
+			m.get_parent().remove_child(m)
+			m.free()
 	var caja := _caja_de(n)
 	var alto: float = caja.size.y
 	var escala := (22.0 / alto) if alto > 0.001 else 1.0
