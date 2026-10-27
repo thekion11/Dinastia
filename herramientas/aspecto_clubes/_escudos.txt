@@ -1,0 +1,70 @@
+# Retoques de ESCUDO de los clubes más conocidos (orden 15, escudos v2): nombre|forma|patrón|emblema|letras[/color]|esc1|esc2|esc3
+# esc1 = campo, esc2 = figura o motivo, esc3 = tercer paño de los tricolores. Lo vacío se queda como en la fila del club.
+Colo-Colo|circulo|liso|cacique||#ffffff|#14171c
+U. de Chile|circulo|liso||U|#0038a8|#d50032
+U. Católica|escudo|cruz|||#0b2f66|#ffffff
+Palestino|clasico|tercios_v|||#d50032|#007a33|#ffffff
+Boca Juniors|clasico|banda_h||CABJ/#0b3d91|#0b3d91|#ffd100
+River Plate|escudo|banda||CARP/#14171c|#ffffff|#d50032
+Independiente|ovalo|liso||CAI|#d50032|#ffffff
+Flamengo|ovalo|franjas||CRF|#d50032|#14171c
+Palmeiras|circulo|liso||P|#006437|#ffffff
+Corinthians|clasico|liso|ancla||#ffffff|#14171c
+Santos|circulo|aro||SFC|#ffffff|#14171c
+Sao Paulo|escudo|tercios_h||SP/#14171c|#ffffff|#d50032|#14171c
+Gremio|escudo|tercios_v|||#ffffff|#0d80bf|#14171c
+Fluminense|escudo|tercios_v|||#ffffff|#00843d|#7a1f2b
+Botafogo|circulo|liso|estrella||#14171c|#ffffff
+Vasco|clasico|liso|cruz||#14171c|#ffffff
+Cruzeiro|ovalo|liso|estrellas3||#0038a8|#ffffff
+Internacional|ovalo|liso||SCI|#d50032|#ffffff
+Nacional|escudo|tercios_h||CN/#14171c|#ffffff|#0038a8|#d50032
+Millonarios|escudo|liso||MFC|#0038a8|#ffffff
+Universitario|circulo|aro||U|#7a1f2b|#f5ecd0
+Sporting Cristal|circulo|liso||SC|#75aadb|#ffffff
+LDU Quito|circulo|liso||LDU|#ffffff|#0b2f66
+Barcelona SC|escudo|liso||BSC|#ffd100|#14171c
+America|ovalo|liso|aguila||#ffd100|#00246b
+Tigres UANL|circulo|liso|leon||#ffd100|#0038a8
+Cruz Azul|circulo|liso|cruz||#0038a8|#ffffff
+Pumas UNAM|escudo|liso|leon||#00246b|#ffd100
+Inter Miami|escudo|liso||IM|#f7b5cd|#14171c
+LAFC|escudo|liso||LAFC|#14171c|#c39e6d
+LA Galaxy|circulo|liso|estrella||#0b2f66|#ffd100
+Real Madrid|circulo|liso|corona||#ffffff|#febe10
+Barcelona|escudo|franjas||FCB/#f5c400|#a50044|#004d98
+Juventus|ovalo|franjas||J/#d8b45a|#14171c|#ffffff
+Milan|escudo|franjas||ACM/#ffffff|#d50032|#14171c
+Atlético Madrid|escudo|franjas|oso||#d50032|#ffffff|#0b2f66
+Sevilla|ovalo|liso||SFC|#ffffff|#d50032
+Villarreal|circulo|liso||VCF|#ffd100|#0b3d91
+Arsenal|escudo|liso|canon||#d50032|#ffffff
+Liverpool|escudo|liso|ave||#c8102e|#ffffff
+Chelsea|circulo|liso|leon||#034694|#ffffff
+Manchester Utd|circulo|aro|tridente||#d50032|#14171c
+City de Manch.|circulo|aro|aguila||#6caddf|#ffffff
+Tottenham|escudo|liso|ave||#ffffff|#132257
+West Ham|escudo|liso|torre||#7a263a|#1bb1e7
+Everton FC|ovalo|liso|torre||#003399|#ffffff
+Inter|circulo|aro||IM|#14171c|#0067b1
+Napoli|circulo|liso||N|#199fda|#ffffff
+Roma|escudo|liso|lobo||#8e1f2f|#f0bc42
+Lazio|circulo|liso|aguila||#75aadb|#ffffff
+Fiorentina|escudo|liso|flor_lis||#5c2d91|#ffffff
+Dortmund|circulo|liso||BVB|#fde100|#14171c
+Leipzig|circulo|liso|cuernos||#ffffff|#dd0741
+Leverkusen|circulo|liso||B04|#d50032|#ffffff
+Paris SG|circulo|liso||PSG|#004170|#d50032
+Marsella|circulo|liso||OM|#ffffff|#2faee0
+Lyon|escudo|liso|leon||#ffffff|#d50032
+Al-Hilal|circulo|liso|media_luna||#0038a8|#ffffff
+Al-Nassr|circulo|liso|estrella||#ffd100|#0038a8
+Al-ittihad|circulo|liso|leon||#14171c|#ffd100
+Al-ahli SA|escudo|liso|aguila||#00843d|#ffffff
+Al Ahly|circulo|liso|aguila||#d50032|#ffffff
+Zamalek|escudo|liso||ZSC|#ffffff|#d50032
+W. Casablanca|circulo|liso||WAC|#d50032|#ffffff
+Raja C.|circulo|liso|aguila||#00843d|#ffffff
+Kaizer Chiefs|escudo|liso|cacique||#ffd100|#14171c
+Orlando Pirates|circulo|liso|ancla||#14171c|#ffffff
+Mamelodi S.|circulo|liso|sol||#ffd100|#0b3d91
