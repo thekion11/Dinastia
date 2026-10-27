@@ -257,6 +257,11 @@ func _trafico() -> void:
 				var bus: Node3D = autobus(Color(0.95, 0.75, 0.15), "ESTADIO")
 				t.agregar_vehiculo(bus, id_ex, rng.randf_range(200.0, 2000.0),
 					9.0, 0.0, 0.0)
+				## Paran 10 s en cada una de las cuatro marquesinas del anillo (`_paradas_bus`).
+				var paradas_s: Array = []
+				for pp: Vector3 in paradas_bus_pos:
+					paradas_s.append(t.s_mas_cercano(id_ex, pp))
+				t.agregar_paradas_al_ultimo(paradas_s, 10.0)
 
 	## 2) LA AVENIDA DE ACCESO y 3) LA CALLE DEL BARRIO: circuitos estrechos
 	## -se baja por un carril y se sube por el otro-, que es lo que hace que un

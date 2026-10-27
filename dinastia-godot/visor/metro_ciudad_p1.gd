@@ -236,7 +236,10 @@ func _caja(padre: Node3D, pos: Vector3, tam: Vector3, m: Material) -> MeshInstan
 	return mi
 
 func _viaducto(a: Vector3, b: Vector3, col: Color) -> void:
-	var hormigon := _mat(Color(0.72, 0.71, 0.68), 0.8)
+	var hormigon := _mat(Color(0.8, 0.79, 0.76), 0.85)   ## hormigón con manchas (el ruido del subsuelo), triplanar
+	hormigon.albedo_texture = SubsueloDetalle._ruido(41, 0.04, FastNoiseLite.TYPE_SIMPLEX_SMOOTH)
+	hormigon.uv1_triplanar = true
+	hormigon.uv1_scale = Vector3(0.1, 0.1, 0.1)
 	var largo := a.distance_to(b)
 	var m := (a + b) * 0.5
 	var vertical := absf(a.x - b.x) < 0.1
