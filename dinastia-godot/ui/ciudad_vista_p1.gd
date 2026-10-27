@@ -138,6 +138,9 @@ func _aplicar_hora() -> void:
 	var rasante: float = clampf(1.0 - absf(altura) * 3.4, 0.0, 1.0)
 	## HORA DORADA (S5, 27-10-2026): el sol bajo (unos 7° de altura, ~17:30 y ~6:30) dura más que el instante en que toca el
 	## horizonte; ahí la luz es ámbar, las sombras largas y el aire se vuelve calima cálida.
+	## Sol bajo (poco después del amanecer y antes del ocaso): el suelo recibe solo `altura` del haz y quedaba casi negro. Se
+	## compensa con más energía de sol y más rebote del cielo (fill), sin luces extra: el contraste entre caras al sol y a la sombra se conserva.
+	var bajo: float = (1.0 - smoothstep(0.1, 0.6, altura)) * clampf(altura * 8.0, 0.0, 1.0)
 	var dorada: float = clampf(1.0 - absf(altura - 0.14) * 3.2, 0.0, 1.0)
 	## Las farolas y las ventanas se encienden al caer el sol (antes de la noche cerrada), no cuando ya es de noche.
 	var anochecer: float = clampf((0.06 - altura) * 7.0, 0.0, 1.0) if _hora > 12.0 else 0.0
@@ -169,7 +172,7 @@ func _aplicar_hora() -> void:
 		## lavados, casi blancos. El sol de mediodía quema, pero la cámara de
 		## este juego no es una cámara real sin diafragma. Y 0,30 de noche, no
 		## 0,06: con 0,06 no se veía el suelo.
-		_sol.light_energy = lerpf(0.34, 1.15, dia) + dorada * 0.3
+		_sol.light_energy = lerpf(0.34, 1.15, dia) + dorada * 0.3 + bajo * 1.1
 		_sol.shadow_enabled = dia > 0.05
 
 	if _cielo != null:
@@ -196,7 +199,7 @@ func _aplicar_hora() -> void:
 		## De noche hay que abrir el diafragma o no se ve nada; de día cerrarlo
 		## o se quema. Es exactamente lo que hace una cámara de verdad.
 		_env.tonemap_exposure = lerpf(1.40, 1.02, dia)
-		_env.ambient_light_energy = lerpf(0.9, 1.0, dia) + dorada * 0.3
+		_env.ambient_light_energy = lerpf(0.9, 1.0, dia) + dorada * 0.3 + bajo * 0.55
 		## En el renderizador de compatibilidad (móvil, web) el cielo con shader
 		## propio no da luz ambiente: lo que queda a la sombra -la espalda de la
 		## grada, la copa de los árboles- salía NEGRO a mediodía. Ahí la luz
