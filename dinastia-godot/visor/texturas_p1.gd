@@ -82,7 +82,10 @@ static func hormigon(tinte: Color, semilla: int = 11) -> StandardMaterial3D:
 	m.normal_scale = 0.55
 	## Rugosidad NO uniforme: es lo que impide que la pared entera brille igual.
 	m.roughness = 0.92
-	m.roughness_texture = _tex_ruido(0.02, semilla + 11, false, 3)
+	## 27-10-2026: el ruido crudo (de 0 a 1) multiplicaba la rugosidad: las manchas oscuras bajaban a ~0,05 y el hormigón de las explanadas
+	## (gasolinera, desguace, cocheras…) brillaba como agua, con reflejos blancos y azules a pleno día. Se remapea a 0,72-1 (como `asfalto_mate`):
+	## sigue sin ser uniforme, pero nunca espejo.
+	m.roughness_texture = _ruido_claro(0.02, semilla + 11, 3, 0.72)
 	m.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
 	m.metallic = 0.02
 	m.metallic_specular = 0.35
