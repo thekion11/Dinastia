@@ -128,3 +128,72 @@ func _pedir_informe_medico(j: Jugador) -> void:
 		return
 	(p as Principal)._refrescar()
 	(p as Principal)._ver_ficha(j)
+
+func _enviar_oferta_negociacion() -> void:
+	var n := p.mundo.mercado.negociacion
+	if n == null:
+		return
+	var j := n.jugador
+	var res := n.enviar_oferta()
+	p._negociacion_ultimo = res
+	var tipo := String(res.get("tipo", ""))
+	match tipo:
+		"sin_caja":
+			p._escribir("[color=#e05555]%s[/color] %s" % [Idiomas.t("No te alcanza:"),
+				Idiomas.t("la parte fija más la comisión cuesta %s.") % p._dinero(int(res.get("hace_falta", 0)))])
+		"club_pide_mas":
+			## Plantillas con `Idiomas.t` (s3): `prefiere` y `motivo` ya llegan traducidos del núcleo.
+			p._escribir("[color=#c9a227]%s[/color] %s" % [
+				Idiomas.t("↩️ Contraoferta de %s.") % ((p.mundo.clubes.get(j.club_id) as Club).nombre if p.mundo.clubes.has(j.club_id) else Idiomas.t("el club")),
+				Idiomas.t("Faltan unos %s y prefieren %s.") % [p._dinero(int(res.get("falta", 0))), String(res.get("prefiere", ""))]])
+		"rota":
+			p._escribir("[color=#e05555]❌ Negociación rota.[/color] El club se levantó de la mesa por %s." % j.nombre)
+			p.mundo.mercado.cerrar_negociacion()
+		"rival_traspaso", "rival_firma":
+			var rc: Club = res.get("club")
+			p._escribir("[color=#e05555]💥 Fichaje perdido:[/color] %s cerró el traspaso de %s por %s mientras seguías negociando." % [
+				rc.nombre if rc else "otro club", j.nombre, p._dinero(int(res.get("precio", 0)))])
+			p.mundo.mercado.cerrar_negociacion()
+		"jugador_no":
+			p._escribir("[color=#c9a227]%s[/color] %s" % [Idiomas.t("%s todavía no firma.") % j.nombre, String(res.get("motivo", ""))])
+		"jugador_rota":
+			p._escribir("[color=#e05555]%s[/color] %s %s" % [Idiomas.t("❌ %s dice que no.") % j.nombre, String(res.get("motivo", "")),
+				Idiomas.t("No se sienta a hablar de él por un tiempo.")])
+			p.mundo.mercado.cerrar_negociacion()
+		"cerrado":
+			var r: Dictionary = res.get("resumen", {})
+			Sonido.toca("fichaje")
+			p._escribir("[color=#4caf6d][b]✅ Fichaje cerrado:[/b][/color] %s firma por %d temporadas con ficha de %s/semana." % [
+				j.nombre, int(r.get("anios", n.anios)), p._dinero(int(r.get("sueldo", n.sueldo)))])
+			p.mundo.mercado.cerrar_negociacion()
+			p._negociacion_ultimo = {}
+	p._refrescar()
+
+## "TU CARRERA" de `vDirectorio()`: el prestigio y la vitrina te siguen de club
+## en club -a diferencia de `Directiva.trofeos`, que se quedan en el que
+## dejas-, más las dos escaleras (ayudante→DT, DT→director→dueño) y lo que
+## trae cada peldaño: un entrenador empleado que puedes cambiar, o -siendo
+## dueño- meter capital propio y vender el club. Toda esta lógica ya estaba
+## escrita y probada en `Roles`; no había ninguna pantalla que la mostrara.
+
+# ---------------------------------------------------------------------------
+#  HANDLERS DE SEÑALES — PanelMercado
+#  Los conecta _construir(); los ejecuta Principal porque son los únicos
+#  que tienen acceso a `mundo` para modificarlo.
+# ---------------------------------------------------------------------------
+## Ajusta el rol prometido en la negociación activa. La señal `"__clausula__"`
+## es el caso especial de alternar la cláusula de rescisión.
+func _al_ajustar_rol_neg(rol: String) -> void:
+	if p.mundo == null or p.mundo.mercado.negociacion == null:
+		return
+	if rol == "__clausula__":
+		p.mundo.mercado.negociacion.alternar_clausula()
+	else:
+		p.mundo.mercado.negociacion.ajustar_rol(rol)
+	p._refrescar()
+## Ajusta un campo numérico de la negociación activa (fijo, cuotas, bonos…).
+func _al_ajustar_campo_neg(campo: String, delta: int) -> void:
+	if p.mundo == null or p.mundo.mercado.negociacion == null:
+		return
+	p.mundo.mercado.negociacion.ajustar(campo, delta)
+	p._refrescar()

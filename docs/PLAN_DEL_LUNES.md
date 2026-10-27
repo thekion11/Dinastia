@@ -120,10 +120,10 @@ cambiar su comportamiento**, y el banco entero debe seguir en 0 fallos.
 
 | Paso | Se extrae | Va a | Riesgo |
 |---|---|---|---|
-| 7 | Lo que queda: **`MenuCentral`**, la cáscara que abre el PC de la oficina (EN CURSO 27-10: jornada de partido en `ui/principal/jornada_partido.gd`; ficha del jugador en `PantallaFicha`; montaje de la pantalla en `ui/principal/construir_menu.gd`; refresco y avance de semana en `AvanceSemana`; federación, fichajes y paneles del club en `FederacionMenu`, `AccionesFichaje` y `PanelesClub`) | `ui/menu_central.gd` | alto: depende de 1-6 |
+| 7 | Lo que queda: **`MenuCentral`**, la cáscara que abre el PC de la oficina (EN CURSO 27-10: jornada de partido en `ui/principal/jornada_partido.gd`; ficha del jugador en `PantallaFicha`; montaje de la pantalla en `ui/principal/construir_menu.gd`; refresco y avance de semana en `AvanceSemana`; federación, fichajes y paneles del club en `FederacionMenu`, `AccionesFichaje` y `PanelesClub`; tema, temporada y vistas en `TemaMenu`, `AccionesTemporada` y `VistasMenu`) | `ui/menu_central.gd` | alto: depende de 1-6 |
 
 Pasos 4, 5 y 6 HECHOS el 27-10 (elegir club en `PantallaElegirClub`; `Hubs` en `ui/menu/hubs.gd`; estadio, finanzas, ciudad, identidad y camarín pintan desde sus `ui/pantallas/*`; `Principal` conserva puentes de una línea).
-Meta: `Principal` pasa de 6.867 (3.165 el 27-10) a < 1.500 líneas y las 157 variables de miembro se reparten
+Meta: `Principal` pasa de 6.867 (2.365 el 27-10) a < 1.500 líneas y las 157 variables de miembro se reparten
 por clases. Cada paso es un commit pequeño con su banco.
 
 #### 7.2 Contratos y aislamiento
