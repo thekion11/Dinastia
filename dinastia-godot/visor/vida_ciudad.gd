@@ -60,6 +60,23 @@ func usar_surtidor(k: String) -> bool:
 	Sonido.toca("clic", Sonido.Bus.EFECTOS)
 	return true
 
+## E ante el mostrador de la tienda de la gasolinera: compra lo que pide el hambre y lo paga el DT (efectivo o tarjeta sin contacto).
+func usar_tienda() -> bool:
+	var it := TiendaGasolinera.elegir(mundo.necesidades.hambre() if mundo.necesidades != null else 50)
+	var cartera: CarteraDT = mundo.roles.cartera if mundo.roles != null else null
+	if cartera == null:
+		return false
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	var r := cartera.cobrar(mundo.roles, int(it["precio"]), String(it["nombre"]), dia)
+	if String(r["error"]) != "":
+		_decir(Idiomas.t("Tienda de la gasolinera"), CarteraDT.texto_error(String(r["error"]), int(it["precio"])))
+		return true
+	if mundo.necesidades != null:
+		mundo.necesidades.picar(int(it["hambre"]))
+	_decir(Idiomas.t("Tienda de la gasolinera"), Idiomas.t("%s por %d € (%s).") % [Idiomas.t(String(it["nombre"])), int(it["precio"]), Idiomas.t(String(r["via"]))])
+	Sonido.toca("clic", Sonido.Bus.EFECTOS)
+	return true
+
 func _comer(texto: String) -> void:
 	mundo.reloj.avanzar_minutos(30, "comer")
 	_decir(Idiomas.t("Comer"), texto)

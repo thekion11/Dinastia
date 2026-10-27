@@ -225,6 +225,19 @@ func _probar_async() -> void:
 			_m.roles.cartera.efectivo = 80
 			_v.usar_surtidor("surtidor_0")
 			_comprobar(_m.vida.combustible > 40.0 and _m.roles.cartera.efectivo < 80 and gas0 > 0.0, "con efectivo paga en efectivo")
+	## LA TIENDA DE LA GASOLINERA: compra según el hambre, la paga el DT y el club no.
+	if _v != null and _m.roles != null and _m.necesidades != null:
+		_m.roles.patrimonio = 100
+		_m.roles.cartera.efectivo = 0
+		_m.necesidades.hambre_m = 80 * Necesidades.ESCALA
+		var club_t := _m.mi_club().saldo if _m.mi_club() != null else 0
+		_v.usar_tienda()
+		_comprobar(_m.necesidades.hambre() < 80 and _m.roles.patrimonio == 96, "la tienda vende un bocadillo (4 €, con tarjeta) y baja el hambre")
+		_comprobar((_m.mi_club().saldo if _m.mi_club() != null else 0) == club_t, "y el club no paga la compra")
+		_m.roles.patrimonio = 0
+		var h_antes := _m.necesidades.hambre()
+		_v.usar_tienda()
+		_comprobar(_m.necesidades.hambre() == h_antes, "sin dinero no se lleva nada")
 	tel.queue_free()
 	PedidoPartida.mundo_pregenerado = null
 	PedidoPartida.mundo_a_cargar = null
