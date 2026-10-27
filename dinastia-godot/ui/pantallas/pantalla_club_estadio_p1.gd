@@ -8,6 +8,18 @@ extends RefCounted
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
 var p: Principal
+## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
+## LOS ESTILOS COMPLETOS DEL ESTADIO -"✨ ESTILOS COMPLETOS" de
+## `vEstadioDiseno()`-. `EstadioPropio.presets()` traía los ocho estilos del
+## HTML (bombonera, catedral inglesa, arena moderna...) con su coste ya
+## calculado, y NINGUNA pantalla lo llamaba: el patrón de siempre, sistema
+## escrito sin botón. Van también "🎲 Sorpréndeme" y "↺ Volver a fábrica".
+##
+## Sorpréndeme PROPONE y no aplica: en el HTML era gratis y automático, aquí
+## una reforma cuesta, y nadie paga una obra que no ha visto. Y solo toca
+## `Azar` al PULSAR -es una decisión del jugador-: pedir la propuesta en cada
+## repintado consumiría números y movería la simulación entera.
+var _propuesta_estadio: Dictionary = {}
 
 func _init(principal: Principal) -> void:
 	p = principal
@@ -41,7 +53,7 @@ func _pintar_estilos_estadio(c: Club) -> void:
 	sorpresa.text = Idiomas.t("🎲 Sorpréndeme")
 	sorpresa.add_theme_font_size_override("font_size", 11)
 	sorpresa.pressed.connect(func() -> void:
-		p._propuesta_estadio = p.mundo.estadio.aleatorio(p.mundo.mi_club(), p.mundo.obras)
+		_propuesta_estadio = p.mundo.estadio.aleatorio(p.mundo.mi_club(), p.mundo.obras)
 		p._refrescar())
 	fila.add_child(sorpresa)
 	var fabrica := Button.new()
@@ -49,10 +61,10 @@ func _pintar_estilos_estadio(c: Club) -> void:
 	fabrica.add_theme_font_size_override("font_size", 11)
 	fabrica.pressed.connect(_estadio_de_fabrica)
 	fila.add_child(fabrica)
-	if not p._propuesta_estadio.is_empty():
-		var coste_prop := e.presupuesto(c, p._propuesta_estadio, p.mundo.obras)
+	if not _propuesta_estadio.is_empty():
+		var coste_prop := e.presupuesto(c, _propuesta_estadio, p.mundo.obras)
 		var prop := p._texto(11, Principal.COL_ORO)
-		prop.text = Idiomas.t("Propuesta: %s. Coste %s.") % [_resumen_propuesta(p._propuesta_estadio), p._dinero(coste_prop)]
+		prop.text = Idiomas.t("Propuesta: %s. Coste %s.") % [_resumen_propuesta(_propuesta_estadio), p._dinero(coste_prop)]
 		prop.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_estadio.add_child(prop)
 		var fila2 := HBoxContainer.new()
@@ -66,7 +78,7 @@ func _pintar_estilos_estadio(c: Club) -> void:
 		var no := Button.new()
 		no.text = Idiomas.t("Descartar")
 		no.pressed.connect(func() -> void:
-			p._propuesta_estadio = {}
+			_propuesta_estadio = {}
 			p._refrescar())
 		fila2.add_child(no)
 
@@ -81,14 +93,14 @@ func _aplicar_estilo_estadio(clave: String) -> void:
 	p._refrescar()
 
 func _aplicar_propuesta_estadio() -> void:
-	var cambios := p._propuesta_estadio
+	var cambios := _propuesta_estadio
 	var coste := p.mundo.estadio.presupuesto(p.mundo.mi_club(), cambios, p.mundo.obras)
 	var problema := p.mundo.estadio.reformar(p.mundo.mi_club(), cambios, p.mundo.obras)
 	if problema != "":
 		p._escribir("[color=#e05555]No se puede: %s.[/color]" % problema)
 	else:
 		p._escribir("[color=#4caf6d]Estadio sorpresa construido.[/color] Coste %s." % p._dinero(coste))
-		p._propuesta_estadio = {}
+		_propuesta_estadio = {}
 	p._refrescar()
 
 ## "↺ Volver a fábrica": los valores de `EST_DEF` como una reforma más. Solo

@@ -40,22 +40,6 @@ func _ayudante(n: Node) -> Node:
 ## efecto, sin tapar ningún control de debajo.
 static var _brillo_panel: Texture2D = null
 
-## ELEGIR CLUB: MAPA DEL PAÍS Y ESCUDOS, no un desplegable de 383 líneas.
-##
-## «La forma de elegir el club debe estar mejor visualmente; cuando se selecciona
-## un país debe aparecer un mapa y enmarcar el país que seleccionaste, y ahí se
-## despliegan los clubes». Del documento de instrucciones.
-##
-## Hasta ahora era un `OptionButton` con los trescientos ochenta y tres clubes
-## del mundo en una lista plana: para encontrar el tuyo había que bajar por un
-## menú interminable, y todos se veían exactamente igual.
-##
-## AHORA SON DOS PASOS. Primero el país -con su silueta dibujada y el número de
-## clubes-, y dentro los clubes de ese país con su escudo, su reputación, su
-## división y su aforo, que es lo que de verdad se compara al elegir dónde
-## empezar. El desplegable de arriba sigue existiendo para cambiar rápido.
-var _dlg_club: Window = null
-var _pais_elegido: String = ""
 
 ## LOS CINCO MODOS DE MIRAR UN PARTIDO (plan maestro B2): [clave, rótulo, qué es].
 const MODOS_SIMULACION := [
@@ -67,8 +51,6 @@ const MODOS_SIMULACION := [
 ]
 const SECCION_SIMULACION := "simulacion"
 
-## Para no repetir el aviso del cierre de mercado cada vez que se repinta.
-var _mercado_avisado: int = -1
 
 ## El registro es texto enriquecido y no pasa por el traductor de etiquetas:
 ## se traduce cada tramo de texto entre etiquetas BBCode (título y cuerpo de
@@ -96,11 +78,6 @@ var _pendientes := {}   ## Control -> Callable
 ## NOTARSE sin leer un texto que lo diga.
 
 
-## Por qué columna se ordena el plantel y en qué sentido. `vJugadores()` del
-## HTML deja ordenar por seis columnas; aquí se guarda entre repintados para que
-## avanzar una semana no te devuelva al orden por media.
-var _orden_plantel: String = "ovr"
-var _orden_plantel_desc: bool = true
 
 ## La pestaña del club: lo que te exige la directiva y el cuerpo técnico que
 ## puedes contratar. Es la pantalla donde se gasta el dinero que no va a fichajes.
@@ -137,23 +114,7 @@ var _aviso_abierto: int = 0
 const _PrincipalRuedaPrensa := preload("res://ui/principal/rueda_prensa.gd")
 var _rueda_pop: Control = null
 
-## LA DECISIÓN, CONTADA COMO UN ACONTECIMIENTO (25-9-2026, plan maestro B4).
-## A la izquierda, la cara de quien está en el lío -o el icono grande del tema
-## si no hay un jugador-; suena y late la primera vez que aparece; y al firmar,
-## la consecuencia sale en un aviso además del registro.
-var _decision_mostrada := ""
 
-## LOS ESTILOS COMPLETOS DEL ESTADIO -"✨ ESTILOS COMPLETOS" de
-## `vEstadioDiseno()`-. `EstadioPropio.presets()` traía los ocho estilos del
-## HTML (bombonera, catedral inglesa, arena moderna...) con su coste ya
-## calculado, y NINGUNA pantalla lo llamaba: el patrón de siempre, sistema
-## escrito sin botón. Van también "🎲 Sorpréndeme" y "↺ Volver a fábrica".
-##
-## Sorpréndeme PROPONE y no aplica: en el HTML era gratis y automático, aquí
-## una reforma cuesta, y nadie paga una obra que no ha visto. Y solo toca
-## `Azar` al PULSAR -es una decisión del jugador-: pedir la propuesta en cada
-## repintado consumiría números y movería la simulación entera.
-var _propuesta_estadio: Dictionary = {}
 
 ## Qué tribuna se está editando cuando "Personalizar cada tribuna" está activo.
 ## Solo estado de interfaz -no se guarda, como `_secc_ajustes`-: al volver a
@@ -223,27 +184,8 @@ const VACIO_RECORDS := {
 	"records": "📈 Las rachas y las marcas del club se registran desde el primer partido.",
 }
 
-## `GLOSARIO` del HTML (`juego.js`, 20 términos): tabla estática, ya exportada
-## en `datos/tablas.json` como cualquier otra -no se transcribe a mano-. Sin
-## búsqueda por ahora: con 20 entradas una lista fija se lee entera de un
-## vistazo, y el proyecto no tenía hasta hoy ningún campo de texto interactivo
-## que replicar con fidelidad.
-## `vEditor()`: LA ÚNICA PANTALLA QUE NO JUEGA.
-##
-## Cambia los DATOS: nombres de club, colores, reputación, aforo, y de cada
-## jugador su nombre, media, techo, edad, dorsal, puesto, rasgo, atributos y
-## cara. Y un importador de CSV para meter una liga entera de golpe.
-##
-## POR QUÉ ESTÁ. El mundo se genera solo y los nombres van censurados letra a
-## número. Quien quiera SU liga —los nombres bien escritos, las plantillas que
-## él conoce— tiene que poder escribirla, y a mano son cuatrocientos clubes.
-var _editor: Editor
-var _ed_filtro: String = ""
-var _ed_club: String = ""
-var _ed_jugador: String = ""
 var _ed_censura: bool = true
 var _ed_csv: String = ""
-var _ed_confirmar_regen: String = ""
 
 ## `vAjustes()` del HTML tiene más de veinte controles, pero la mayoría no
 ## tienen NADA a lo que engancharse en Godot todavía -tamaño de texto, paleta

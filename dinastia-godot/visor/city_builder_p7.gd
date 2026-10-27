@@ -76,7 +76,9 @@ func _paradas_bus() -> void:
 	acento.albedo_color = _color_club("c1", Color(0.2, 0.5, 0.3))
 	acento.roughness = 0.5
 
+	paradas_bus_pos.clear()
 	for s in sitios:
+		paradas_bus_pos.append(s["p"])
 		var raiz := Node3D.new()
 		raiz.position = s["p"]
 		raiz.rotation.y = float(s["a"])

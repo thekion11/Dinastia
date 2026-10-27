@@ -8,6 +8,11 @@ extends RefCounted
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
 var p: Principal
+## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
+var _ed_filtro: String = ""
+var _ed_club: String = ""
+var _ed_jugador: String = ""
+var _ed_confirmar_regen: String = ""
 
 func _init(principal: Principal) -> void:
 	p = principal
@@ -156,27 +161,27 @@ func _pintar_editor_clubes(ed: Editor) -> void:
 	t.text = Idiomas.t("CLUBES")
 	p._lista_editor.add_child(t)
 	var busca := LineEdit.new()
-	busca.text = p._ed_filtro
+	busca.text = _ed_filtro
 	busca.placeholder_text = Idiomas.t("Buscar en todo el mundo… (vacío: los de tu país)")
 	busca.add_theme_font_size_override("font_size", 12)
 	busca.text_submitted.connect(func(x: String) -> void:
-		p._ed_filtro = x.strip_edges()
+		_ed_filtro = x.strip_edges()
 		p._refrescar())
 	p._lista_editor.add_child(busca)
 
 	var mio := p.mundo.mi_club()
 	var lista: Array[Club] = []
 	for c: Club in p.mundo.clubes.values():
-		if p._ed_filtro == "":
+		if _ed_filtro == "":
 			if mio != null and c.pais == mio.pais:
 				lista.append(c)
-		elif Nombres.limpiar(c.nombre).to_lower().contains(p._ed_filtro.to_lower()):
+		elif Nombres.limpiar(c.nombre).to_lower().contains(_ed_filtro.to_lower()):
 			lista.append(c)
 	lista.sort_custom(func(a: Club, b: Club) -> bool: return a.rep > b.rep)
 
 	for i in mini(30, lista.size()):
 		var c2: Club = lista[i]
-		var abierto := p._ed_club == c2.id
+		var abierto := _ed_club == c2.id
 		var fila := HBoxContainer.new()
 		fila.add_theme_constant_override("separation", 6)
 		p._lista_editor.add_child(fila)
@@ -193,8 +198,8 @@ func _pintar_editor_clubes(ed: Editor) -> void:
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.clip_text = true
 		b.pressed.connect(func() -> void:
-			p._ed_club = "" if abierto else c2.id
-			p._ed_confirmar_regen = ""
+			_ed_club = "" if abierto else c2.id
+			_ed_confirmar_regen = ""
 			p._refrescar())
 		fila.add_child(b)
 		if not abierto:
@@ -232,16 +237,16 @@ func _pintar_editor_clubes(ed: Editor) -> void:
 		_fila_mas_menos("Aforo", p._miles(c2.estadio_aforo),
 			func(d: int) -> void: ed.mover_aforo(c2, d * 5000), p._lista_editor)
 		var br := Button.new()
-		var pidiendo := p._ed_confirmar_regen == c2.id
+		var pidiendo := _ed_confirmar_regen == c2.id
 		br.text = Idiomas.t("¿SEGURO? Se pierde la plantilla entera") if pidiendo else Idiomas.t("🎲 Regenerar plantel")
 		br.add_theme_font_size_override("font_size", 11)
 		br.add_theme_color_override("font_color", p._color_de_paleta(Principal.COL_ROJO if pidiendo else Principal.COL_TEXTO))
 		br.pressed.connect(func() -> void:
 			if not pidiendo:
-				p._ed_confirmar_regen = c2.id
+				_ed_confirmar_regen = c2.id
 				p._refrescar()
 				return
-			p._ed_confirmar_regen = ""
+			_ed_confirmar_regen = ""
 			var p_local := ed.regenerar_plantel(c2)
 			if p_local != "":
 				p._escribir("[color=#e05555]No se puede: %s.[/color]" % p_local)
@@ -428,7 +433,7 @@ func _pintar_editor_jugadores(ed: Editor) -> void:
 	p._lista_editor.add_child(t)
 	for j: Jugador in c.plantilla:
 		var quien := j
-		var abierto := p._ed_jugador == j.id
+		var abierto := _ed_jugador == j.id
 		var b := Button.new()
 		b.text = Idiomas.t("%s%s  ·  %s  ·  %d años  ·  media %d") % ["▾ " if abierto else "▸ ",
 			j.nombre, j.pos_e, j.edad, j.ovr]
@@ -438,7 +443,7 @@ func _pintar_editor_jugadores(ed: Editor) -> void:
 		b.add_theme_color_override("font_color", p._color_de_paleta(Principal.COL_ORO if abierto else Principal.COL_TEXTO))
 		b.clip_text = true
 		b.pressed.connect(func() -> void:
-			p._ed_jugador = "" if abierto else quien.id
+			_ed_jugador = "" if abierto else quien.id
 			p._refrescar())
 		p._lista_editor.add_child(b)
 		if abierto:

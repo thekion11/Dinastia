@@ -120,11 +120,10 @@ cambiar su comportamiento**, y el banco entero debe seguir en 0 fallos.
 
 | Paso | Se extrae | Va a | Riesgo |
 |---|---|---|---|
-| 4 | Elegir club (mapa, países, escudos) | pasa a ser la **fase 2** del nuevo menú inicial | se rehace de todos modos |
-| 7 | Lo que queda: **`MenuCentral`**, la cáscara que abre el PC de la oficina | `ui/menu_central.gd` | alto: depende de 1-6 |
+| 7 | Lo que queda: **`MenuCentral`**, la cáscara que abre el PC de la oficina (EN CURSO 27-10: jornada de partido en `ui/principal/jornada_partido.gd`; ficha del jugador en `PantallaFicha`; montaje de la pantalla en `ui/principal/construir_menu.gd`; refresco y avance de semana en `AvanceSemana`; federación, fichajes y paneles del club en `FederacionMenu`, `AccionesFichaje` y `PanelesClub`; tema, temporada y vistas en `TemaMenu`, `AccionesTemporada` y `VistasMenu`) | `ui/menu_central.gd` | alto: depende de 1-6 |
 
-Pasos 5 y 6 HECHOS el 27-10 (`Hubs` en `ui/menu/hubs.gd`; estadio, finanzas, ciudad, identidad y camarín pintan desde sus `ui/pantallas/*`; `Principal` conserva puentes de una línea).
-Meta: `Principal` pasa de 6.867 (4.830 el 27-10) a < 1.500 líneas y las 157 variables de miembro se reparten
+Pasos 4, 5 y 6 HECHOS el 27-10 (elegir club en `PantallaElegirClub`; `Hubs` en `ui/menu/hubs.gd`; estadio, finanzas, ciudad, identidad y camarín pintan desde sus `ui/pantallas/*`; `Principal` conserva puentes de una línea).
+Meta: `Principal` pasa de 6.867 (2.303 el 27-10) a < 1.500 líneas y las 157 variables de miembro se reparten
 por clases. Cada paso es un commit pequeño con su banco.
 
 #### 7.2 Contratos y aislamiento
@@ -352,6 +351,8 @@ cada hora del `Reloj` con el clima de la semana (viento mueve el parque eólico,
 - Hecho 27-10 (3.ª pasada): las redes se GUARDAN en la partida (`Mundo.redes_ciudad`, clave `redes_ciudad`; partida vieja = nuevas; ida y vuelta
   probada) y el móvil avisa de cortes e inundaciones nuevos.
 - Hecho 27-10: coche con depósito real (`VidaDT.combustible`, 45 l, 2,5 l/km; se guarda): vacío no arranca hasta repostar con E en un surtidor; aviso en el móvil al bajar del 15 % (una vez por semana, `aviso_comb` guardado). Las averías se guardan (`cortes`); la cuadrilla se deriva de ellas.
+- Hecho 27-10 (transporte): en los andenes del metro la gente de pie espera con el móvil, hablando por teléfono o quieta (`PeatonVida.en_anden`); los pilares y el tablero del viaducto son de hormigón con manchas; los autobuses del anillo paran 10 s en las 4 marquesinas (`CityBuilder.paradas_bus_pos`) y a los 3 s de parar sube y baja gente en los bancos de al lado (`GenteSentada.vigilar_buses`: cambia quién está sentado, sin animación de subir/bajar todavía). Prueba `ideas/tre_transporte`. PENDIENTE: animar el embarque (caminar hasta la puerta del autobús) y capturas.
+- Hecho 27-10: ESTACIÓN CENTRAL real (`visor/estacion_central.gd`, kit `kenney/tren`): vestíbulo con bóveda, andén isla con marquesina, dos vías con topes y túnel cubierto al norte; dos trenes de 3 coches que entran, esperan, retroceden al túnel y dejan la vía vacía (ciclo de 70 s reales ≈ 10 min de juego, desfasados). Capturas en `docs/04_auditorias/capturas_estacion/` (Compatibility). Retoques 2.ª pasada: boca de túnel oscura con marco de hormigón texturado, fachada con puertas de cristal (`FachadaModular`), reloj de fachada con la hora del juego, parada de taxis y marquesina; trenes por el RELOJ (sin servicio 01-05 h) y pasajeros sentados en los bancos del andén (`GenteSentada`). PENDIENTE: vía de salida real fuera de la ciudad y pasajeros de pie que suban/bajen.
 - Hecho 27-10: averías visibles: una cuadrilla (camión, conos y baliza) junto a la tapa central de cada sector con avería abierta; desaparece al repararse (`RedesCiudadVista._cuadrillas`).
 - Hecho: sonido ambiente del subsuelo con efectos ya existentes (zumbido «noche_estadio» y gotas «clic_suave»; sonidos propios, pendientes).
 - PENDIENTE: camión cisterna;
