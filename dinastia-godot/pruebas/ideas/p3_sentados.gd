@@ -61,6 +61,8 @@ func _probar_async() -> void:
 		var n: Node3D = d["nodo"]
 		_comprobar((d["anim"] as AnimationPlayer).current_animation == "sentado", "con el clip «sentado»")
 		_comprobar(n.position.y < p.y - 0.3 and n.position.y > p.y - 1.2, "con la cadera a la altura del asiento (raíz a %.2f bajo el asiento)" % (p.y - n.position.y))
+	var en_banco := Vector3(p.x, p.y - 0.79, p.z)
+	_comprobar(not _e.libre_total(en_banco, 0.3) if _e.has_method("libre_total") else _e._choca_circulos(en_banco, 0.3), "el banco es sólido: no se atraviesa andando")
 	_e.cuerpo.position = p + Vector3(200.0, 0, 0)
 	gs.revisar()
 	_comprobar(not gs.cuerpos.has(i_ok), "al alejarte, se va")

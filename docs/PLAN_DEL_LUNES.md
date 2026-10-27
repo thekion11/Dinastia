@@ -514,7 +514,7 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 - [ ] `_process`: `dibujo_mando`/`MandoGiratorio` con setters y `queue_redraw()` están en la rama de la sesión 2 (falta fusionar); oclusión en más zonas de la ciudad.
 - [ ] 53 escenas de prueba sin ninguna mención: decidir cuáles se borran (§0). La fase 0 dio prueba a 30 módulos: repasar si queda alguno de `visor/`/`nucleo/` sin prueba directa.
 - [ ] `MotorLibre` es prototipo (el juego usa `MotorJugable`): decidir si se borra.
-- [ ] Colisiones de la ciudad fuera del club (peatones, mobiliario, edificios): revisar como en `ColisionClub`.
+- [ ] Colisiones de la ciudad fuera del club: edificios, postes, troncos e hidrantes ya chocan (`Optimizar.obstaculos`, todo lo estático ≥ 0,9 m) y los bancos desde el 27-10 (`CityBuilder.asientos`); falta revisar papeleras y contenedores bajos y que los peatones no se crucen con mobiliario.
 - [ ] 506 frases visibles sin traducir en 8 idiomas (`docs/05_referencia/textos_sin_traducir.txt`); la prueba de paridad debe exigir 0.
 - [ ] C++/GDExtension solo si el perfil en hardware real lo pide.
 - [ ] Guardado: topes de memoria en historiales (M-400).

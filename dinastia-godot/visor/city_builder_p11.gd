@@ -221,6 +221,11 @@ func build(d: Dictionary) -> void:
 		Optimizar.distancias(self)
 		_marca("opt_distancias")
 		circulos = Optimizar.obstaculos(self, ExploradorCiudad.construir_obstaculos(self))
+		## Los bancos (asiento a 0,75 m y respaldo bajo) quedaban por debajo del umbral de 0,9 m y se
+		## atravesaban andando (27-10-2026, plan §4 colisiones): un círculo por asiento registrado.
+		for a: Dictionary in asientos:
+			var pa: Vector3 = a["p"]
+			circulos.append(Vector3(pa.x, pa.z, 0.42))
 		_marca("obstaculos")
 		OclusoresCiudad.montar(self)
 		_marca("oclusores")
