@@ -24,7 +24,13 @@ var _lamparas: Array[StandardMaterial3D] = []
 var _luces: Array[OmniLight3D] = []
 var _armarios: Array = []                    ## [{sector, lampara, rotulo}]
 var _agua: StandardMaterial3D
-var _pantalla: Label3D
+var _paneles: Array = []                    ## [{vp, panel}] las pantallas del centro de mando
+var _acometidas: Array = []                 ## [{ed, luz, agua, rotulo}] un armario por edificio real
+var _baliza: OmniLight3D
+var _baliza_mat: StandardMaterial3D
+var _disyuntor_mat: StandardMaterial3D
+var _chispas: StandardMaterial3D
+var _origen_calle := Vector3.ZERO            ## la tapa por la que se bajó (para rumbo y distancia a los edificios)
 var _rotulo_agua: Label3D
 var _rotulo_gas: Label3D
 var _ratas: Array = []
@@ -77,6 +83,7 @@ static func servicio(e, k: String) -> bool:
 func entrar(e, idx: int) -> void:
 	if idx >= 0 and idx < redes.bocas.size():
 		sector_entrada = redes.bocas[idx]["sector"]
+		_origen_calle = redes.bocas[idx]["pos"]
 	e._fundido()
 	e._calle_pos = e.cuerpo.position
 	e._calle_rumbo = e.rumbo
@@ -168,33 +175,10 @@ func paso(e, delta: float) -> void:
 	e._aviso.text = ("E: %s" % Idiomas.t(String(e._cerca["n"]))) if not e._cerca.is_empty() else ""
 
 func usar(e, k: String) -> bool:
-	match k:
-		"sub_salir":
-			salir(e)
-		"sub_reparar":
-			var n := redes.modelo.reparar_todo()
-			redes.refrescar()
-			_actualizar()
-			_decir(e, Idiomas.t("Cuadro de mando"), Idiomas.t("La cuadrilla sale a arreglar: %d averías reparadas.") % n if n > 0 else Idiomas.t("Todo en orden: no hay averías."))
-		"sub_cortar":
-			var m := redes.modelo
-			if m.esta_averiado("luz", sector_entrada):
-				m.reparar("luz", sector_entrada)
-				_decir(e, Idiomas.t("Palanca roja"), Idiomas.t("Vuelves a subir la palanca: el sector recupera la luz."))
-			else:
-				m.averiar("luz", sector_entrada)
-				_decir(e, Idiomas.t("Palanca roja"), Idiomas.t("¡Clac! El sector de arriba se queda sin luz. Los vecinos no sabrán por qué."))
-			m.recalcular()
-			redes.refrescar()
-			if e.vida != null:
-				e.vida._sincronizar_luz()
-			_actualizar()
-		"sub_secreto":
-			_decir(e, Idiomas.t("Cuarto olvidado"), Idiomas.t("Una tele vieja con el escudo del club y una nota: «Los de arriba juegan; los de abajo hacemos que enciendan las luces». Nadie más lo sabe.") if not _secreto_visto else Idiomas.t("Sigue ahí, con la tele encendida. Es vuestro secreto."))
-			_secreto_visto = true
-		_:
-			return false
-	return true
+	if k == "sub_salir":
+		salir(e)
+		return true
+	return SubsueloMando.usar(self, e, k)
 
 func _decir(e, titulo: String, texto: String) -> void:
 	if e.vida != null:
@@ -242,12 +226,7 @@ func _actualizar() -> void:
 		(a["lampara"] as StandardMaterial3D).albedo_color = Color(0.1, 0.8, 0.2) if ok else Color(0.9, 0.1, 0.1)
 		(a["lampara"] as StandardMaterial3D).emission = (a["lampara"] as StandardMaterial3D).albedo_color
 		(a["rotulo"] as Label3D).text = "SECTOR %d·%d\n%s" % [sec.x, sec.y, "CON LUZ" if ok else "SIN LUZ"]
-	if _pantalla != null:
-		var t := "ESTADO DE LA CIUDAD\n"
-		for linea in m.resumen():
-			t += linea + "\n"
-		t += "Sector de la entrada: %d·%d (%s)" % [sector_entrada.x, sector_entrada.y, "con luz" if luz else "SIN LUZ"]
-		_pantalla.text = t
+	SubsueloMando.actualizar(self)
 	_rotulo_agua.text = "💧 AGUA POTABLE\nDepósito %d%%" % roundi(m.agua_nivel / RedesCiudad.AGUA_DEPOSITO * 100.0)
 	var g := "🔥 GAS · NO FUMAR\n"
 	for id in m.gas:
@@ -354,6 +333,7 @@ func _textura_agua() -> ImageTexture:
 func construir() -> void:
 	_concreto = _mat(Color(0.34, 0.35, 0.34), 0.9)
 	_suelo = _mat(Color(0.22, 0.22, 0.22), 0.7)
+	SubsueloDetalle.materiales(self)
 	_agua = _mat(Color(0.5, 0.75, 0.7), 0.1)
 	_agua.albedo_texture = _textura_agua()
 	_agua.uv1_scale = Vector3(14, 1, 1)
@@ -368,14 +348,17 @@ func construir() -> void:
 	_hueco(60, -10, 22, 20)
 	_hueco(82, -1.5, 16, 3)
 	_hueco(98, -5, 12, 10)
+	_hueco(69, 10, 4, 4)
+	_hueco(56, 14, 40, 24)
 	_paredes()
 	_pozo()
 	_colector()
 	(self as SubsueloCiudad)._galeria_electrica()
 	(self as SubsueloCiudad)._galeria_agua()
 	(self as SubsueloCiudad)._galeria_gas()
-	(self as SubsueloCiudad)._sala_control()
 	(self as SubsueloCiudad)._cuarto_olvidado()
+	SubsueloMando.montar(self)
+	SubsueloDetalle.montar(self)
 	for i in 4:
 		var rata := Node3D.new()
 		_caja_en(rata, Vector3(0.32, 0.12, 0.14), _mat(Color(0.12, 0.1, 0.09)), Vector3.ZERO)
