@@ -137,7 +137,7 @@ func _pintar_records() -> void:
 		for i in range(pls.size() - 1, maxi(-1, pls.size() - 9), -1):
 			var p_local: Dictionary = pls[i]
 			var anio_p := int(p_local.get("anio", 0))
-			var abierto := p._plantel_abierto == anio_p
+			var abierto := _plantel_abierto == anio_p
 			var bp := Button.new()
 			bp.text = Idiomas.t("%s%d  ·  %dº  ·  MVP: %s") % ["▾ " if abierto else "▸ ", anio_p,
 				int(p_local.get("puesto", 0)), String(p_local.get("mvp", "—"))]
@@ -146,7 +146,7 @@ func _pintar_records() -> void:
 			bp.add_theme_font_size_override("font_size", 12)
 			bp.add_theme_color_override("font_color", p._color_de_paleta(Principal.COL_ORO if abierto else Principal.COL_TEXTO))
 			bp.pressed.connect(func() -> void:
-				p._plantel_abierto = 0 if p._plantel_abierto == anio_p else anio_p
+				_plantel_abierto = 0 if _plantel_abierto == anio_p else anio_p
 				p._refrescar())
 			p._lista_records.add_child(bp)
 			if not abierto:

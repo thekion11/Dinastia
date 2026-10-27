@@ -9,6 +9,10 @@ extends RefCounted
 
 var p: Principal
 ## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
+## Qué tribuna se está editando cuando "Personalizar cada tribuna" está activo.
+## Solo estado de interfaz -no se guarda, como `_secc_ajustes`-: al volver a
+## esta pantalla siempre se empieza mirando la tribuna Sur.
+var _bandeja_actual: String = "sur"
 ## LOS ESTILOS COMPLETOS DEL ESTADIO -"✨ ESTILOS COMPLETOS" de
 ## `vEstadioDiseno()`-. `EstadioPropio.presets()` traía los ocho estilos del
 ## HTML (bombonera, catedral inglesa, arena moderna...) con su coste ya

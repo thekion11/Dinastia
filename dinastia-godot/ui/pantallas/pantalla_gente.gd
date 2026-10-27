@@ -94,14 +94,14 @@ func _pintar_correo() -> void:
 	var b_todo := Button.new()
 	b_todo.text = Idiomas.t("Todo (%d)") % p._bandeja.size()
 	b_todo.toggle_mode = true
-	b_todo.button_pressed = p._correo_filtro == "todo"
-	b_todo.pressed.connect(func() -> void: p._correo_filtro = "todo"; _pintar_correo())
+	b_todo.button_pressed = _correo_filtro == "todo"
+	b_todo.pressed.connect(func() -> void: _correo_filtro = "todo"; _pintar_correo())
 	filtros.add_child(b_todo)
 	var b_nuevas := Button.new()
 	b_nuevas.text = Idiomas.t("Sin leer (%d)") % sin_leer
 	b_nuevas.toggle_mode = true
-	b_nuevas.button_pressed = p._correo_filtro == "nuevas"
-	b_nuevas.pressed.connect(func() -> void: p._correo_filtro = "nuevas"; _pintar_correo())
+	b_nuevas.button_pressed = _correo_filtro == "nuevas"
+	b_nuevas.pressed.connect(func() -> void: _correo_filtro = "nuevas"; _pintar_correo())
 	filtros.add_child(b_nuevas)
 	if sin_leer > 0:
 		var b_todas := Button.new()
@@ -125,7 +125,7 @@ func _pintar_correo() -> void:
 	## tamaño mínimo es el del texto, no el de sus hijos.
 	var alguna := false
 	for it3: Dictionary in p._bandeja:
-		if p._correo_filtro == "nuevas" and bool(it3["leida"]):
+		if _correo_filtro == "nuevas" and bool(it3["leida"]):
 			continue
 		alguna = true
 		var leida := bool(it3["leida"])

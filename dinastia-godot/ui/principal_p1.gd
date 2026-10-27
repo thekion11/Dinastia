@@ -88,16 +88,10 @@ static var desafios_elegidos: Array[String] = []
 
 var mundo: Mundo
 var _seleccionado: Jugador
-## Si alguna vez se tradujo a otro idioma en esta sesión. Mientras siga en
-## falso y el idioma sea castellano, `_traducir_pantalla` no recorre nada -es
-## la mayoría de las partidas, que nunca tocan el selector de idioma-.
-var _traduccion_activa := false
 ## Id del jugador con la rescisión a medio confirmar -"doble toque" del HTML,
 ## como vender el club o borrar la partida: la primera pulsación solo avisa,
 ## la segunda ejecuta-. Se limpia sola en cuanto se ve otra ficha.
 var _confirmar_rescision_id: String = ""
-## El mismo doble toque, para "Vender el club" -`vista.confVender` del HTML-.
-var _confirmar_venta_club: bool = false
 ## `Q.comp` del HTML: hasta tres jugadores -tuyos o de cualquier club- puestos
 ## a comparar desde su ficha. Vive solo en memoria, como en el HTML -no es
 ## parte de la partida, se vacía sola al cerrar el juego-.
@@ -147,9 +141,6 @@ var _lista_habilidades: VBoxContainer
 var _secc_vida: String = "bienestar"
 ## `vGente()`: las diez personas que llevan aquí más años que tú.
 var _lista_gente: VBoxContainer
-## La retirada no se puede deshacer, así que el boton pide confirmacion como el
-## de vender el club: primero avisa, y solo el segundo clic la ejecuta.
-var _confirmar_retiro: bool = false
 var _lista_finanzas: VBoxContainer
 var _lista_camarin: VBoxContainer
 var _lista_partido: VBoxContainer
@@ -176,7 +167,6 @@ var _autoguardado := false
 ## `Mundo` que prueba a fondo "GUARDAR Y CARGAR"-.
 var _bandeja: Array[Dictionary] = []
 const BANDEJA_MAX := 60
-var _correo_filtro := "todo"
 
 ## Los cinco grupos del HTML (`TABS_ORDEN`/`subsDe()`: club/plantel/partido/
 ## finanzas/mundo), portados como agrupación de verdad y no solo de nombre:
