@@ -682,7 +682,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-197 | P2 | PENDIENTE | Autopista sin peajes ni estaciones | sin peajes |
 | M-198 | P2 | PENDIENTE | Aeropuerto/estación de tren inexistentes (no hay viajes) | sin viajes/aeropuerto |
 | M-199 | P2 | PARCIAL | Sin señales de tráfico reales (límites, ceda) | 27-10: multa de 90 € por semáforo en rojo con policía a la vista; sin límites de velocidad |
-| M-200 | P2 | PENDIENTE | Sin policía/multas | sin policía |
 | M-203 | P2 | PENDIENTE | Sin colisión/oclusión de sonido en interiores | sin filtro de sonido en interiores |
 | M-204 | P2 | PENDIENTE | LOD de edificios lejanos con ventanas (cristal) pero sin siluetas… | sin impostores de edificios |
 | M-205 | P2 | PENDIENTE | `ciudad_expansion.gd` 2.321 líneas y `city_builder.gd` 4.687 | `ciudad_expansion.gd` creció a 3.569 líneas |
@@ -714,7 +713,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-213 | P2 | PARCIAL | Sin agentes con personalidad reflejada en comisiones (hay 4 perfiles) | perfiles de agente (`MesaAgente.PERFIL`); sin historial |
 | M-214 | P2 | PENDIENTE | Cesiones con opción de compra obligatoria sin seguimiento de… | cesiones sin bonus por partidos |
 | M-216 | P2 | SIN VERIFICAR | Fichajes de IA entre clubes poco visibles | no se comprobó la noticia semanal de traspasos de IA |
-| M-217 | P2 | PENDIENTE | Sin fichajes libres por fin de contrato anticipados (precontrato) | sin precontratos |
 | M-218 | P2 | PARCIAL | Sin límite de fair play financiero explícito (hay aviso) | tope salarial con administrador (`Insolvencia`); sin ratio salarial general |
 | M-220 | P2 | PARCIAL | Sin intereses variables según reputación y mercado | préstamos con tasas por tipo (`Banco`); no dinámicas |
 | M-221 | P2 | SIN VERIFICAR | Impuestos y derechos de TV simplificados | derechos de TV con multiplicador; no se comprobó el reparto por país |
@@ -742,7 +740,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-257 | P2 | PENDIENTE | Historia del club generada; sin línea de tiempo interactiva | sin línea de tiempo |
 | M-258 | P2 | PENDIENTE | Documental de temporada: guion fijo | documental con guion fijo |
 | M-259 | P2 | PARCIAL | Clima en partidos con efecto menor | el clima reduce las llegadas (`Partido.clima`); sin efecto en balón ni desgaste |
-| M-260 | P2 | PENDIENTE | Dificultad: 3 niveles simples | sin dificultad adaptativa |
 | M-261 | P2 | PENDIENTE | Sin modo historia/campaña guiada | sin modo historia |
 | M-361 | P2 | SIN VERIFICAR | `tablas.json` en una línea (D-04) | no se revisó `tablas.json` |
 | M-362 | P2 | PENDIENTE | `ESTADIO_CLUB` por nombre (frágil con leetspeak) | `ESTADIO_CLUB` por nombre |
@@ -1137,7 +1134,6 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 - 229. Modo sandbox sin presión de despido
 
 **20. Extras y Sistemas Meta**
-- 233. Dificultad ajustable (finanzas, presión mediática, etc.)
 - 237. Estadísticas exportables de tu carrera
 - 244. Notificaciones push de eventos importantes
 - 246. Sistema de logros ocultos/easter eggs
@@ -1847,14 +1843,11 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 
 **49. Modos de Juego y Desafíos**
 - 947. Modo empezar desde abajo con un club amateur — _No existe un club amateur ni división inferior a Segunda para empezar desde abajo_
-- 951. Modo sin dinero: presupuesto cero toda la partida — _El texto promete 'sin créditos bancarios' pero Banco.pedir no lo comprueba; el presupuesto es bajo solo al inicio, no 'cero toda la partida'_
 - 954. Modo clásico eterno: ganar todos los derbis de la temporada — _El desafío castiga perder, no exige ganar todos los derbis de la temporada_
-- 956. Modo leyenda: treinta temporadas en el mismo club — _ui/eleccion_club.gd:207 admite que 'leyenda30' y 'sinRecarga' son solo un aviso: no se hacen cumplir_
 - 957. Modo dinastía familiar centrado en hijos y nietos — _No es un modo de juego centrado en la familia con objetivos de generaciones_
 - 958. Modo presidente: solo decisiones institucionales — _No hay un modo 'presidente' solo institucional (la junta/accionistas existen como sistema)_
 - 964. Escenario: evitar el descenso con el peor plantel de la liga — _No es 'evitar el descenso con el peor plantel' (la meta del reto es terminar entre los ocho primeros)_
 - 968. Modo rápido de una sola temporada — _No hay un modo 'una sola temporada' con final y puntaje propio_
-- 971. Modo realista con carrera irreversible — _La restricción de recarga es solo un aviso (no se hace cumplir)_
 - 972. Dificultad ajustable por sistema (finanzas, mercado, IA rival) — _Global (3 niveles), no ajustable por sistema (finanzas/mercado/IA rival) y solo se aplica a la caja inicial_
 - 980. Modo espectador de una liga completamente simulada — _No hay modo espectador de una liga sin gestor_
 - 981. Modo solo simulación: ver evolucionar el mundo sin intervenir — _Siempre hay un club propio; no hay modo sin club que observe el mundo_
