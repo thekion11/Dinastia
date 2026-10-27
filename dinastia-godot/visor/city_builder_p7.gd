@@ -60,12 +60,13 @@ func _terminal_buses() -> void:
 ## el estadio, el centro comercial, la zona industrial y el barrio.
 func _paradas_bus() -> void:
 	var sitios := [
-		{"p": Vector3(RING_X - 13.0, 0, -170.0), "a": -PI * 0.5, "n": "Estadio"},
-		{"p": Vector3(-RING_X + 13.0, 0, 110.0), "a": PI * 0.5, "n": "Centro comercial"},
-		{"p": Vector3(RING_X - 13.0, 0, 140.0), "a": -PI * 0.5, "n": "Zona industrial"},
-		{"p": Vector3(BARRIO_EN.x + 13.0, 0, RING_Z_SUR + 60.0), "a": -PI * 0.5, "n": "Barrio"},
+		{"p": Vector3(RING_X - 13.0, 0, -170.0), "a": -PI * 0.5, "n": "Estadio", "sector": 300},
+		{"p": Vector3(-RING_X + 13.0, 0, 110.0), "a": PI * 0.5, "n": "Centro comercial", "sector": 100},
+		{"p": Vector3(RING_X - 13.0, 0, 140.0), "a": -PI * 0.5, "n": "Zona industrial", "sector": 400},
+		{"p": Vector3(BARRIO_EN.x + 13.0, 0, RING_Z_SUR + 60.0), "a": -PI * 0.5, "n": "Barrio", "sector": 200},
 	]
 	paradas_bus_pos.clear()
+	ParaderoRed.registro.clear()
 	for s in sitios:
 		paradas_bus_pos.append(s["p"])
 		esperas_bus.append(s["p"])
@@ -73,9 +74,9 @@ func _paradas_bus() -> void:
 		raiz.position = s["p"]
 		raiz.rotation.y = float(s["a"])
 		add_child(raiz)
-		## PARADERO COMO LOS DE SANTIAGO (27-10-2026): marquesina gris, trasera con pósters, banca de láminas y poste con código «PA…».
-		ParaderoRed.montar(raiz, 7.5, int(s["p"].x * 7.0 + s["p"].z))
-		for xs: float in [-1.8, 0.0, 1.8]:
+		## PARADERO DE LA RED (27-10-2026), como en las fotos del dueño: techo blanco con costillas rojas, cabecera negra «Paradero de Red Movilidad | Parada N», panel con póster, banca de láminas y poste con el cartel negro.
+		ParaderoRed.montar(raiz, 3.8, int(s["p"].x * 7.0 + s["p"].z), String(s["n"]), int(s.get("sector", 0)))
+		for xs: float in ParaderoRed.asientos_x():
 			asientos.append({"p": (s["p"] as Vector3) + Basis(Vector3.UP, float(s["a"])) * Vector3(xs, GenteSentada.ASIENTO_CIUDAD + 0.04, -0.9), "giro": float(s["a"])})
 		_cartel(s["p"] + Vector3(0, 0, -6.0), "🚌 " + String(s["n"]), true)
 

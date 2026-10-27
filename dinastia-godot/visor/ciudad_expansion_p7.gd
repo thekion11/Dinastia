@@ -391,7 +391,7 @@ func _marquesinas_bus() -> void:
 			var raiz_p := Node3D.new()
 			raiz_p.position = q
 			b.add_child(raiz_p)
-			ParaderoRed.montar(raiz_p, 3.6, int(q.x * 5.0 + q.z))
+			ParaderoRed.montar(raiz_p, 3.8, int(q.x * 5.0 + q.z), "", RecorridosRed.sector_de(Vector3(q.x, 0.0, q.z)))   ## nombre y sector, de la tabla común
 			n += 1
 	cuenta["paradas_bus"] = n
 
