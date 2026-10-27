@@ -77,13 +77,20 @@ func _probar_suavidad(t: Teleferico) -> void:
 func _probar_visual(t: Teleferico, b: CityBuilder) -> void:
 	_linea("· Aspecto del teleférico")
 	var cab := TelefericoCabina.montar(Color.RED)
-	_comprobar(cab.get_child_count() >= 40, "la cabina tiene %d piezas (pinza, brazo, techo, ventanas por los cuatro lados, puerta y viajeros)" % cab.get_child_count())
+	add_child(cab)   ## en el árbol, para que los viajeros salgan vestidos
+	TelefericoCabina.poblar(cab, 5)
+	_comprobar(cab.get_child_count() >= 33, "la cabina tiene %d piezas (pinza, brazo, techo, ventanas por los cuatro lados, puerta y viajeros)" % cab.get_child_count())
 	var cristales := 0
 	for n in cab.get_children():
 		var mi := n as MeshInstance3D
 		if mi != null and mi.material_override is StandardMaterial3D and (mi.material_override as StandardMaterial3D).transparency == BaseMaterial3D.TRANSPARENCY_ALPHA:
 			cristales += 1
 	_comprobar(cristales >= 5, "con cristal por los cuatro lados y el lucernario (%d paneles)" % cristales)
+	var viajeros := 0
+	for n2 in cab.get_children():
+		if not (n2 is MeshInstance3D):
+			viajeros += 1
+	_comprobar(viajeros == TelefericoCabina.N_VIAJEROS, "los %d viajeros son personas de la ciudad (Mini3D.persona), no cápsulas (%d)" % [TelefericoCabina.N_VIAJEROS, viajeros])
 	cab.free()
 	var raiz := Node3D.new()
 	add_child(raiz)

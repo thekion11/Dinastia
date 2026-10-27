@@ -167,6 +167,7 @@ func _construir(b: CityBuilder) -> void:
 	for lado2 in 2:
 		var cab := TelefericoCabina.montar(Color(0.75, 0.15, 0.12) if lado2 == 0 else Color(0.9, 0.6, 0.1))
 		add_child(cab)
+		TelefericoCabina.poblar(cab, 2710 + lado2)    ## ya en el árbol: así `PeatonQ` los viste
 		cab.rotation.y = giro + PI * 0.5
 		cab.scale = Vector3.ONE * 1.8                 ## grandes: se ven desde la ciudad
 		cabinas.append(cab)
