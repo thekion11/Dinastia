@@ -13,8 +13,8 @@ static var _correas: ArrayMesh = null
 
 ## Camino de una correa (x positivo = lado derecho del peatón; se refleja para el otro): por la espalda, sobre el hombro, por el pecho,
 ## bajo el brazo y de vuelta al fondo de la mochila.
-const CAMINO := [Vector3(0.10, 0.12, -0.19), Vector3(0.115, 0.20, -0.14), Vector3(0.125, 0.245, -0.02), Vector3(0.125, 0.20, 0.10),
-	Vector3(0.12, 0.06, 0.16), Vector3(0.12, -0.10, 0.155), Vector3(0.165, -0.12, 0.07), Vector3(0.17, -0.12, -0.06), Vector3(0.13, -0.12, -0.16)]
+const CAMINO := [Vector3(0.10, 0.12, -0.15), Vector3(0.115, 0.20, -0.13), Vector3(0.125, 0.245, -0.02), Vector3(0.125, 0.19, 0.06),
+	Vector3(0.12, 0.08, 0.14), Vector3(0.13, 0.01, 0.14), Vector3(0.175, 0.0, 0.07), Vector3(0.18, -0.02, -0.06), Vector3(0.13, -0.12, -0.14)]
 
 ## Caja de lados `t` con las esquinas y aristas redondeadas a `r`: se subdivide y cada vértice se lleva al punto más cercano de la caja
 ## interior (reducida en r) más r en la dirección de su normal.
@@ -73,13 +73,13 @@ static func poner(h: Node3D, col: Color) -> void:
 	if _cuerpo == null:
 		_cuerpo = caja_redonda(Vector3(0.28, 0.36, 0.15), RADIO)
 		_bolsillo = caja_redonda(Vector3(0.20, 0.15, 0.07), 0.025)
-	PeatonQ._pieza(h, _cuerpo, PeatonQ._m(col, 0.75), Vector3(0, -0.03, -0.225))
-	PeatonQ._pieza(h, _bolsillo, PeatonQ._m(col.darkened(0.2), 0.75), Vector3(0, -0.10, -0.31))
+	PeatonQ._pieza(h, _cuerpo, PeatonQ._m(col, 0.75), Vector3(0, -0.03, -0.19))
+	PeatonQ._pieza(h, _bolsillo, PeatonQ._m(col.darkened(0.2), 0.75), Vector3(0, -0.10, -0.275))
 	## El asa de arriba: un arco pequeño.
 	var asa := TorusMesh.new()
 	asa.inner_radius = 0.022
 	asa.outer_radius = 0.03
 	asa.rings = 10
 	asa.ring_segments = 6
-	PeatonQ._pieza(h, asa, PeatonQ._m(col.darkened(0.35), 0.6), Vector3(0, 0.155, -0.225), Vector3(90, 0, 0)).scale = Vector3(1.4, 1.4, 0.5)
+	PeatonQ._pieza(h, asa, PeatonQ._m(col.darkened(0.35), 0.6), Vector3(0, 0.155, -0.19), Vector3(90, 0, 0)).scale = Vector3(1.4, 1.4, 0.5)
 	PeatonQ._pieza(h, _malla_correas(), PeatonQ._m(col.darkened(0.3), 0.7), Vector3.ZERO)
