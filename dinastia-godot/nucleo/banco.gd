@@ -48,6 +48,13 @@ const TASA_BONO := 0.005
 const CUOTAS_BONO := 52
 
 var prestamos: Array = []      ## {banco, deuda, cuota, restan, tasa, renegociado, bono}
+var dueno: WeakRef             ## el `Mundo` (lo pone él al crearlo); sin él no hay desafíos que comprobar
+
+## El desafío «Sin dinero» promete «sin créditos bancarios»: aquí se hace cumplir (antes solo bajaba el saldo inicial). El bono social
+## (`emitir_bono`) no es un banco: sigue disponible.
+func sin_creditos() -> bool:
+	var m: Mundo = dueno.get_ref() as Mundo if dueno != null else null
+	return m != null and m.tiene_desafio("pobreza")
 var semanas_en_rojo: int = 0
 var liquidado_ya: bool = false
 
@@ -100,6 +107,8 @@ func estado(c: Club) -> Dictionary:
 
 ## Pedir un crédito. Devuelve "" si se hizo, o el motivo por el que no.
 func pedir(i: int, c: Club) -> String:
+	if sin_creditos():
+		return Idiomas.t("el desafío «Sin dinero» te cierra todas las ventanillas (solo te queda el bono social)")
 	if prestamos.size() >= MAX_PRESTAMOS:
 		return "ya tienes dos líneas de deuda abiertas"
 	if en_mora():
