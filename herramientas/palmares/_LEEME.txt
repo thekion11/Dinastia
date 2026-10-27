@@ -1,0 +1,4 @@
+# PALMARÉS REAL DE LOS CLUBES (orden 15 f, 27-10-2026). Un archivo por competición (<clave>.txt); cada línea «año club» con el AÑO EN QUE SE GANÓ (el de la final)
+# y el nombre limpio del club en el pack real. Solo están los clubes del juego, y solo los títulos que se saben con seguridad: lo que falta, falta.
+# Claves: liga:<PAÍS> · copa:<PAÍS> · conf:<lib|sud|ucl|uel|asia|afr|oce|conc> · mundial.
+# ESTADO: escrito de memoria por la sesión ejecutora; POR VERIFICAR por el dueño o con una fuente (Wikipedia, RSSSF) antes de darlo por bueno.

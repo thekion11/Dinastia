@@ -128,6 +128,10 @@ static func capa_de(c: Club, fondo: String) -> String:
 	var acento := AspectoClub.esc(c, 1, "")
 	if acento == "" or absf(Color(acento).get_luminance() - Color(fondo).get_luminance()) < 0.28:
 		acento = tinta
+	## Con tercer color y figura, ese color es el de la figura (Atlético: oso azul sobre las rayas rojas y blancas).
+	var tercero := AspectoClub.esc(c, 2, "")
+	if fig != "" and tercero != "":
+		acento = tercero
 	var out := ""
 	if color_letras != "":
 		tinta = color_letras
