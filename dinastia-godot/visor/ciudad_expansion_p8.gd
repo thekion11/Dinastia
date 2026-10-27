@@ -216,12 +216,13 @@ func _mobiliario_urbano() -> void:
 			if q % 2 == 1:
 				var pb := a + dir * (largo * (f + 0.12)) + lat * lado * (ancho * 0.5 + 3.2)
 				var rb := Basis(Vector3.UP, giro + (PI * 0.5 if lado > 0.0 else -PI * 0.5))
-				bancos_a.append(Transform3D(rb * Basis.from_scale(Vector3(1.9, 0.08, 0.5)), pb + Vector3(0, 0.75, 0)))
-				bancos_a.append(Transform3D(rb * Basis.from_scale(Vector3(1.9, 0.45, 0.07)), pb + Vector3(0, 1.0, 0) + lat * lado * 0.25))
-				bancos_p.append(Transform3D(rb * Basis.from_scale(Vector3(0.08, 0.45, 0.45)), pb + Vector3(0, 0.5, 0) + dir * 0.8))
-				bancos_p.append(Transform3D(rb * Basis.from_scale(Vector3(0.08, 0.45, 0.45)), pb + Vector3(0, 0.5, 0) - dir * 0.8))
+				## ALTURA REAL DE UN BANCO (27-10-2026, orden del líder): el tablero a 0,45 m de la acera (que está a 0,2), no a 0,59.
+				bancos_a.append(Transform3D(rb * Basis.from_scale(Vector3(1.9, 0.08, 0.5)), pb + Vector3(0, 0.61, 0)))
+				bancos_a.append(Transform3D(rb * Basis.from_scale(Vector3(1.9, 0.45, 0.07)), pb + Vector3(0, 0.86, 0) + lat * lado * 0.25))
+				bancos_p.append(Transform3D(rb * Basis.from_scale(Vector3(0.08, 0.41, 0.45)), pb + Vector3(0, 0.41, 0) + dir * 0.8))
+				bancos_p.append(Transform3D(rb * Basis.from_scale(Vector3(0.08, 0.41, 0.45)), pb + Vector3(0, 0.41, 0) - dir * 0.8))
 				for sx: float in [-0.5, 0.5]:
-					b.asientos.append({"p": pb + dir * sx + Vector3(0, 0.79, 0), "giro": atan2(-lat.x * lado, -lat.z * lado)})
+					b.asientos.append({"p": pb + dir * sx + Vector3(0, GenteSentada.ASIENTO_CIUDAD, 0), "giro": atan2(-lat.x * lado, -lat.z * lado)})
 			if q % 3 == 0:
 				var ph := a + dir * (largo * (f + 0.06)) + lat * -lado * (ancho * 0.5 + 0.7)
 				hidrantes.append(Transform3D(Basis.from_scale(Vector3(0.3, 0.75, 0.3)), ph + Vector3(0, 0.62, 0)))
