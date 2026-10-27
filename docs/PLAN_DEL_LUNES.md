@@ -1880,7 +1880,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 1034. Resumen del día al avanzar el calendario — _No hay un 'resumen del día' formal al avanzar un día_
 - 1037. Sugerencias contextuales desactivables — _No todas las sugerencias son desactivables individualmente_
 - 1039. Ayuda contextual desplegable en cada pantalla — _No hay ayuda contextual desplegable uniforme por pantalla_
-- 1040. Tutorial por capas que se activa al usar cada sistema — _Es un tutorial inicial lineal, no se activa por primer uso de cada sistema_
 - 1042. Pantalla de inicio personalizable con widgets — _El tablero es fijo; no consume WIDGETS ni se personaliza_
 - 1046. Widget de lesionados y suspendidos — _No hay tarjeta de lesionados en el tablero de inicio_
 - 1050. Consumo de batería optimizado por diseño — _No hay un modo de batería explícito_
