@@ -42,8 +42,8 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 | **1 — Entrada** | APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»): capturas en `docs/04_auditorias/capturas_fase1/` | las fases 0-5 como pantallas completas |
 | **2 — Prólogo 3D** | CONSTRUIDO el 26-10 (`escenas/prologo.tscn`, `visor/prologo*.gd`, `visor/pc_oficina.gd`; prueba `pruebas/ideas/f2p_prologo`, capturas `docs/04_auditorias/capturas_fase2/`). APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»); límites en §2.2b | de «Nuevo juego» hasta tu primer día |
 | **3 — Vida** | CONSTRUIDO el 26-10 (`visor/vida_ciudad.gd` + `visor/casa_dt.gd`, agenda del móvil, arranque en casa/oficina; pruebas `pruebas/ideas/f3v_vida` y `f3c_casa`, capturas `docs/04_auditorias/capturas_fase3/`). APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»); límites en §2.2c | un día completo jugable en 3D |
-| **4 — Personas** | CONSTRUIDA el 27-10 (`nucleo/citas.gd`, `visor/citas_ciudad.gd`, `nucleo/afinidad_club.gd`; Agenda con «Ir» y «Convocar rueda»; pruebas `f4p_citas`, `f4p_personas`, `f4r_rutinas`; capturas `docs/04_auditorias/capturas_fase4/`). Falta tu aprobación jugándola y lo anotado en §2.2d «Límites» | negociaciones en persona |
-| **5 — Club ampliado** | CONSTRUIDA el 27-10 (`nucleo/citas.gd`: ramas, copas y celebración; `visor/vestuario_vivo.gd`: futbolistas con nombre junto a su taquilla de 10 a 12; pruebas `f5c_club` y `f4p_personas`; capturas `docs/04_auditorias/capturas_fase5/`). Falta tu aprobación y lo anotado en §2.2f «Límites» | |
+| **4 — Personas** | CONSTRUIDA el 27-10 (`nucleo/citas.gd`, `visor/citas_ciudad.gd`, `nucleo/afinidad_club.gd`; Agenda con «Ir» y «Convocar rueda»; pruebas `f4p_citas`, `f4p_personas`, `f4r_rutinas`; capturas `docs/04_auditorias/capturas_fase4/`). Sin aprobar aún (27-10: «mejorar»); límites en §2.2d | negociaciones en persona |
+| **5 — Club ampliado** | CONSTRUIDA el 27-10 (`nucleo/citas.gd`: ramas, copas y celebración; `visor/vestuario_vivo.gd`: futbolistas con nombre junto a su taquilla de 10 a 12; pruebas `f5c_club` y `f4p_personas`; capturas `docs/04_auditorias/capturas_fase5/`). Sin aprobar aún (27-10: «mejorar»); límites en §2.2f | |
 | **6 — Pulido y auditoría** | pasos 4-7 de 7.1, limpieza del repo, vídeo | cierre y MEGAPLAN siguiente |
 
 Cada fase tiene un documento de estado y se pasa a `main` con un PR cuando lo pidas.
@@ -355,12 +355,15 @@ paseo iba a 1,7 m/s (patinaba ×1,7; agachado ×2,4; correr ×1,3-1,5): ahora `s
 (persigue el rumbo, `lerp_angle` a 9/s) y la mezcla al pararse dura 0,4 s. P3 (27-10, pasada 1): inventario del pack UAL = 43 clips; los
 de conversación y asiento estaban mapeados en `AnimExtra.UAL` pero solo los futbolistas los cargaban. `AnimExtra.asegurar`
 carga un clip en cualquier cuerpo al momento; ahora HABLAN con el clip de charla el mentor del prólogo, las personas de las
-citas (mientras dura el cuadro) y la familia en casa (4 s). P3 pasada 2 (27-10): los bancos de acera y de parada registran asientos
+citas (mientras dura el cuadro) y la familia en casa (4 s). P1 pasada 3 (27-10, POSTURA): el «Idle» del pack era una postura de superhéroe; medido con la sonda: pies a 0,66 m
+(0,35 de la altura; humano 0,20-0,30), rodilla 156° (humano > 170°). `AnimQuaternius._piernas_naturales` gira los muslos 12°
+hacia dentro, estira la rodilla 14° y sube la raíz 4 cm (el pie vuelve a su altura): ahora tobillos a 0,17 m entre sí, rodilla
+169°, pie a 0,087 m (antes 0,09). Capturas `p1_postura_{antes,despues}.jpg`. P3 pasada 2 (27-10): los bancos de acera y de parada registran asientos
 (`CityBuilder.asientos`) y `GenteSentada` (`visor/gente_sentada.gd`, cuelga de `VidaCiudad`) sienta hasta 6 peatones con el clip
 «sentado» en los asientos a < 55 m (ocupación estable por hash de asiento y hora); el DT en el sofá encadena «sentarse» → «sentado»
 y se queda así hasta dar un paso (`_gesto_propio(gesto, luego)`); los vecinos ya charlaban con clip (6 s). Prueba `p3_sentados`;
 capturas antes/después `docs/04_auditorias/capturas_personajes/p3_sentados_{antes,despues}.jpg`. Falta P3: butacas del estadio y
-banquillo fuera del partido, abrir puertas, escaleras; y P4 (piel/pelo/ropa). Falta el veredicto del dueño sobre estas pasadas.
+banquillo fuera del partido, abrir puertas, escaleras; y P4 (piel/pelo/ropa). VEREDICTO DEL DUEÑO (27-10): «MEJORAR» (P1-P3 no bastan: seguir subiendo anatomía, movimiento, animaciones y acabado; la C2 de ciudad sigue hasta agotar P0 y P1).
 
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 
