@@ -3,12 +3,14 @@ extends RefCounted
 ## LA CABINA DEL TELEFÉRICO (27-10-2026, el dueño: «cabina de verdad: ventanas por los cuatro lados, techo, brazo de suspensión con la
 ## pinza al cable, puerta y gente dentro»). Origen en el cable. De arriba abajo: carro con la PINZA y dos ruedas, brazo vertical
 ## con horquilla, techo con un lucernario, un zócalo de color con la PUERTA, ventanas de cristal por los cuatro lados entre cuatro
-## montantes, suelo y siete viajeros (cápsula + cabeza, ropa de colores). Tamaño base 2,5 × 1,9 m; `Teleferico` la escala ×1,8.
+## montantes, suelo y, con `poblar`, cuatro viajeros (`Mini3D.persona`: personas de verdad, no cápsulas). Tamaño base 2,5 × 1,9 m; `Teleferico` la escala ×1,8.
 
 const ANCHO := 2.5                ## a lo largo del cable (x local)
 const FONDO := 1.9                ## a lo ancho (z local)
 const Y_TECHO := -1.6
 const Y_SUELO := -3.4
+const N_VIAJEROS := 4
+const ESCALA_MUNDO := 1.8         ## `Teleferico` escala la cabina ×1,8
 
 static func _caja(raiz: Node3D, pos: Vector3, tam: Vector3, mat: Material, giro: Vector3 = Vector3.ZERO) -> void:
 	var mi := MeshInstance3D.new()
@@ -85,31 +87,23 @@ static func montar(color: Color) -> Node3D:
 		_caja(raiz, Vector3(dx2, y_v - 0.1, FONDO * 0.5 + 0.06), Vector3(0.025, 0.16, 0.03), acero)
 	for dx3: float in [-0.5, 0.5]:
 		_caja(raiz, Vector3(dx3, y_v, FONDO * 0.5 + 0.03), Vector3(0.05, alto_v - 0.05, 0.02), oscuro)
-	## Los viajeros: cápsula de cuerpo y esfera de cabeza, en grupos separados.
-	var gente := [[-0.8, -0.3, Color(0.8, 0.2, 0.2)], [-0.35, 0.4, Color(0.2, 0.45, 0.8)], [0.1, -0.35, Color(0.9, 0.75, 0.2)], [0.55, 0.3, Color(0.25, 0.65, 0.35)],
-		[0.85, -0.2, Color(0.9, 0.9, 0.9)], [-0.1, 0.1, Color(0.6, 0.3, 0.7)], [0.3, 0.55, Color(0.95, 0.5, 0.15)]]
-	var piel := [Color(0.9, 0.72, 0.58), Color(0.62, 0.43, 0.3), Color(0.8, 0.6, 0.45), Color(0.4, 0.28, 0.2)]
-	for i in gente.size():
-		var g: Array = gente[i]
-		var alto_p := 1.15 + float(i % 3) * 0.06
-		var cuerpo := MeshInstance3D.new()
-		var cap := CapsuleMesh.new()
-		cap.radius = 0.15
-		cap.height = alto_p
-		cap.radial_segments = 8
-		cap.rings = 3
-		cuerpo.mesh = cap
-		cuerpo.material_override = _mat(g[2], 0.8)
-		cuerpo.position = Vector3(float(g[0]), Y_SUELO + 0.07 + alto_p * 0.5, float(g[1]) * 0.5)
-		raiz.add_child(cuerpo)
-		var cabeza := MeshInstance3D.new()
-		var sp := SphereMesh.new()
-		sp.radius = 0.11
-		sp.height = 0.22
-		sp.radial_segments = 8
-		sp.rings = 4
-		cabeza.mesh = sp
-		cabeza.material_override = _mat(piel[i % piel.size()], 0.8)
-		cabeza.position = Vector3(float(g[0]), Y_SUELO + 0.07 + alto_p + 0.08, float(g[1]) * 0.5)
-		raiz.add_child(cabeza)
 	return raiz
+
+## Los viajeros: personas de verdad (`Mini3D.persona`, las mismas de la ciudad), de pie en el suelo de la cabina y a la escala humana
+## real (la cabina va ×1,8 en el mundo, así que aquí ×1/1,8), mirando a sitios distintos. HAY QUE LLAMARLA con la cabina YA EN EL
+## ÁRBOL: `PeatonQ.terminar` no viste a nadie si el nodo aún no está en él (salían en ropa interior).
+static func poblar(raiz: Node3D, semilla: int) -> int:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = semilla
+	var sitios := [[-0.85, -0.45, 0.6], [-0.3, 0.4, -2.4], [0.35, -0.35, 2.2], [0.85, 0.3, -0.5], [0.0, 0.0, 3.5]]
+	var hechos := 0
+	for i in N_VIAJEROS:
+		var g: Array = sitios[i % sitios.size()]
+		var d := Mini3D.persona(raiz, rng, Vector3(float(g[0]), Y_SUELO + 0.07, float(g[1])))
+		if d.is_empty():
+			continue
+		var n: Node3D = d["nodo"]
+		n.scale = Vector3.ONE / ESCALA_MUNDO
+		n.rotation.y = float(g[2])
+		hechos += 1
+	return hechos
