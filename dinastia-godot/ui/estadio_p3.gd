@@ -190,6 +190,8 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 			["⏯ Normal", func() -> void: _fijar_ritmo("normal")],
 			["🐢 Largo (FC)", func() -> void: _fijar_ritmo("largo")]])
 		_btn_dificultad = _cajon.boton(_texto_dificultad(), _ciclar_dificultad_cpu)
+		var b_preset: Button = _cajon.boton(_texto_preset(), func() -> void: pass)
+		b_preset.pressed.connect(func() -> void: _ciclar_preset(b_preset))
 		_btn_velocidad = _cajon.boton("⏱", _ciclar_velocidad)
 		## SIMULAR EL RESTO (28-9-2026, informe externo: "falta el botón de
 		## simular el partido entero"). Existía en la pantalla de texto, que

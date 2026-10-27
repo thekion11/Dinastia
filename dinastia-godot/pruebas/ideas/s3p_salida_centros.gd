@@ -67,6 +67,16 @@ func _probar() -> void:
 	var barrida := _robos(motor, true)
 	_linea("  (entradas con éxito: de pie se la queda en %d %%, con barrida en %d %%)" % [limpio, barrida])
 	_comprobar(limpio >= 30 and limpio <= 85 and barrida == 0, "de pie, el defensor se queda el balón a veces (%d %%); con barrida, nunca (%d %%)" % [limpio, barrida])
+	## Preset Arcade frente a Realista: menos error de pase y tiro y menos faltas.
+	motor.fijar_preset("realista")
+	var err_r := motor.preset_error
+	var falta_r := motor._escala_falta()
+	motor.fijar_preset("arcade")
+	var err_a := motor.preset_error
+	var falta_a := motor._escala_falta()
+	motor.fijar_preset("realista")
+	_comprobar(err_a < err_r and falta_a < falta_r, "Arcade: error de pase y tiro ×%.2f (Realista ×%.2f) y faltas ×%.2f (×%.2f)" % [err_a, err_r, falta_a, falta_r])
+	_comprobar(MotorJugable.PRESETS.has(VistaEstadio.preset_guardado()), "el preset guardado es válido («%s»)" % VistaEstadio.preset_guardado())
 	## Un rato de partido con centros de verdad no rompe nada.
 	motor.autopiloto = true
 	motor._saque_de_centro(true)

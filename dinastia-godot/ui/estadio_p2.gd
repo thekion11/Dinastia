@@ -255,6 +255,27 @@ func _fijar_dificultad_cpu(nivel: String) -> void:
 		_btn_dificultad.text = _texto_dificultad()
 	_mostrar_banner_gol(Idiomas.t("CPU: ") + Idiomas.t(String(MotorJugable.DIFICULTADES[nivel]["nombre"])), true)
 
+## EL PRESET DE JUEGO (semana 3, 27-10-2026): Realista o Arcade, guardado como la dificultad.
+static func preset_guardado() -> String:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	var d := String(cfg.get_value(CajonAjustes.SECCION, "preset_juego", "realista"))
+	return d if MotorJugable.PRESETS.has(d) else "realista"
+
+func _texto_preset() -> String:
+	return Idiomas.t("🎮 Estilo de juego: ") + Idiomas.t(String(MotorJugable.PRESETS[preset_guardado()]["nombre"]))
+
+func _ciclar_preset(boton: Button) -> void:
+	var orden: Array = MotorJugable.ORDEN_PRESETS
+	var nuevo := String(orden[(orden.find(preset_guardado()) + 1) % orden.size()])
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	cfg.set_value(CajonAjustes.SECCION, "preset_juego", nuevo)
+	cfg.save(CajonAjustes.RUTA)
+	if _motor != null:
+		_motor.fijar_preset(nuevo)
+	boton.text = _texto_preset()
+
 ## Pasa al siguiente nivel (vuelve al primero tras «Leyenda»).
 func _ciclar_dificultad_cpu() -> void:
 	var orden: Array = MotorJugable.ORDEN_DIFICULTAD

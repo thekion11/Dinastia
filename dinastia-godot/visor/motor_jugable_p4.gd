@@ -128,13 +128,17 @@ func _empujar(p: Dictionary, dir: Vector3, fuerza: float, freno: float, dur: flo
 ## minuto = 180 s la mitad) había 3/4 de los duelos de la sonda (240 s) y la IA
 ## amagaba ~13 veces por partido en vez de ~20. Las ganas de cada duelo se
 ## multiplican por lo que falta de césped para que salgan las mismas por 90'.
+## EL PRESET DE JUEGO (semana 3, 27-10-2026; `fijar_preset`): «arcade» afina pases y tiros y pita menos.
+var preset_error := 1.0
+var preset_faltas := 1.0
+
 func _escala_ritmo() -> float:
 	return clampf(MITAD_CALIBRADA / maxf(duracion_mitad, 1.0), 0.6, 2.0)
 
 ## Las faltas de duelo se reparten por segundo de césped: con partidos más
 ## cortos hay menos choques y cada uno pesa más (como las fintas).
 func _escala_falta() -> float:
-	return _escala_ritmo()
+	return _escala_ritmo() * preset_faltas
 
 ## ¿`victima` iba sola hacia el arco? Cerca del arco rival (35 m), de cara a él
 ## y sin ningún defensor de campo (aparte de `menos`) entre ella y la portería.

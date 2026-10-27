@@ -132,7 +132,7 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 			vel_balon = (pos(p) - pos(victima)).normalized() * 3.0 + Vector3(_rng.randf_range(-2, 2), 0, 0)
 	## FALTAS (17-10-2026): había ~4 por partido; una entrada que no llega al
 	## balón acaba en falta más a menudo (sobre todo si el defensor es agresivo).
-	elif r < exito + (0.28 if barrida else 0.13) + float(p.get("agresividad", 0.5)) * 0.06:
+	elif r < exito + ((0.28 if barrida else 0.13) + float(p.get("agresividad", 0.5)) * 0.06) * preset_faltas:
 		_falta(p, victima, 0.25, "", "deslizante" if barrida else "de_pie")
 
 # ---------------------------------------------------------------- disputas
@@ -396,7 +396,7 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 	destino += guia
 	## Nadie pasa perfecto: el error crece con la distancia, con la presión y
 	## cuanto peor es el pase del que la toca.
-	var error := ((1.0 - float(p["attr"]["pas"])) * dist * 0.22 + (1.2 if _presion(p) < 2.0 else 0.0) * (1.4 - float(p["attr"]["pas"]))) * _error_extra
+	var error := ((1.0 - float(p["attr"]["pas"])) * dist * 0.22 + (1.2 if _presion(p) < 2.0 else 0.0) * (1.4 - float(p["attr"]["pas"]))) * _error_extra * preset_error
 	destino += Vector3(_rng.randf_range(-error, error), 0, _rng.randf_range(-error, error))
 	## POR ABAJO SIEMPRE QUE SE PUEDA (13-10-2026): con «cualquier rival cerca
 	## de la línea = por arriba» la sonda medía el balón en el aire el 64 % del
