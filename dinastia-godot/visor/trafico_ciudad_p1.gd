@@ -221,6 +221,10 @@ func agregar_vehiculo(nodo: Node3D, ruta: int, s: float, vel: float,
 		"alto": alto, "giro": giro_base, "peaton": peaton,
 	})
 	if peaton:
+		## Sin patinar (26-10, §2.2e P2): el clip de andar recorre 1,0 m/s con el pie apoyado.
+		for ap in nodo.find_children("*", "AnimationPlayer", true, false):
+			if (ap as AnimationPlayer).current_animation == "caminar":
+				(ap as AnimationPlayer).speed_scale = clampf(vel / 1.0, 0.5, 1.8)
 		if not _peatones_ruta.has(ruta):
 			registrar_ruta_gente(ruta)
 		(_peatones_ruta[ruta] as Array).append(_vehiculos[_vehiculos.size() - 1])

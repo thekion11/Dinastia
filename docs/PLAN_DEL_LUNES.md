@@ -39,11 +39,11 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 
 | Fase | Contenido | Entregable |
 |---|---|---|
-| **1 — Entrada** | recorrido con la cámara real HECHO el 26-10 (`docs/04_auditorias/capturas_fase1/`, 8 tomas Forward+; arreglos: rótulos del globo, rivales en la ficha de país, tarjetas de entrada al campeonato); solo falta tu aprobación (§0) | las fases 0-5 como pantallas completas |
-| **2 — Prólogo 3D** | CONSTRUIDO el 26-10 (`escenas/prologo.tscn`, `visor/prologo*.gd`, `visor/pc_oficina.gd`; prueba `pruebas/ideas/f2p_prologo`, capturas `docs/04_auditorias/capturas_fase2/`). Falta tu aprobación jugándolo y lo anotado en §2.2b «Límites» | de «Nuevo juego» hasta tu primer día |
-| **3 — Vida** | CONSTRUIDO el 26-10 (`visor/vida_ciudad.gd` + `visor/casa_dt.gd`, agenda del móvil, arranque en casa/oficina; pruebas `pruebas/ideas/f3v_vida` y `f3c_casa`, capturas `docs/04_auditorias/capturas_fase3/`). Falta tu aprobación jugándolo y lo anotado en §2.2c «Límites» | un día completo jugable en 3D |
-| **4 — Personas** | EN CONSTRUCCIÓN desde el 26-10: bloques 1-4 y parte del 6 hechos (`nucleo/citas.gd`, `visor/citas_ciudad.gd`, Agenda con «Ir», favor del agente en `Negociacion`, entrevista de contratación, fotos a Tribuna; pruebas `f4p_citas` y `f4p_personas`; capturas `docs/04_auditorias/capturas_fase4/`); el bloque 7 lo hace la sesión ejecutora; faltan asamblea/elecciones y «convocar rueda» (§2.2d) | negociaciones en persona |
-| **5 — Club ampliado** | vestuario con nombres, otros deportes, trofeos y celebraciones | |
+| **1 — Entrada** | APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»): capturas en `docs/04_auditorias/capturas_fase1/` | las fases 0-5 como pantallas completas |
+| **2 — Prólogo 3D** | CONSTRUIDO el 26-10 (`escenas/prologo.tscn`, `visor/prologo*.gd`, `visor/pc_oficina.gd`; prueba `pruebas/ideas/f2p_prologo`, capturas `docs/04_auditorias/capturas_fase2/`). APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»); límites en §2.2b | de «Nuevo juego» hasta tu primer día |
+| **3 — Vida** | CONSTRUIDO el 26-10 (`visor/vida_ciudad.gd` + `visor/casa_dt.gd`, agenda del móvil, arranque en casa/oficina; pruebas `pruebas/ideas/f3v_vida` y `f3c_casa`, capturas `docs/04_auditorias/capturas_fase3/`). APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»); límites en §2.2c | un día completo jugable en 3D |
+| **4 — Personas** | CONSTRUIDA el 27-10 (`nucleo/citas.gd`, `visor/citas_ciudad.gd`, `nucleo/afinidad_club.gd`; Agenda con «Ir» y «Convocar rueda»; pruebas `f4p_citas`, `f4p_personas`, `f4r_rutinas`; capturas `docs/04_auditorias/capturas_fase4/`). Falta tu aprobación jugándola y lo anotado en §2.2d «Límites» | negociaciones en persona |
+| **5 — Club ampliado** | CONSTRUIDA el 27-10 (`nucleo/citas.gd`: ramas, copas y celebración; `visor/vestuario_vivo.gd`: futbolistas con nombre junto a su taquilla de 10 a 12; pruebas `f5c_club` y `f4p_personas`; capturas `docs/04_auditorias/capturas_fase5/`). Falta tu aprobación y lo anotado en §2.2f «Límites» | |
 | **6 — Pulido y auditoría** | pasos 4-7 de 7.1, limpieza del repo, vídeo | cierre y MEGAPLAN siguiente |
 
 Cada fase tiene un documento de estado y se pasa a `main` con un PR cuando lo pidas.
@@ -121,11 +121,10 @@ cambiar su comportamiento**, y el banco entero debe seguir en 0 fallos.
 | Paso | Se extrae | Va a | Riesgo |
 |---|---|---|---|
 | 4 | Elegir club (mapa, países, escudos) | pasa a ser la **fase 2** del nuevo menú inicial | se rehace de todos modos |
-| 5 | Hubs contextuales y carril de chips | `ui/menu/hubs.gd` | medio |
-| 6 | Estadio, finanzas, identidad, camarín (`_pintar_*`) | `ui/pantallas/*` (ya hay una por tema) | medio |
 | 7 | Lo que queda: **`MenuCentral`**, la cáscara que abre el PC de la oficina | `ui/menu_central.gd` | alto: depende de 1-6 |
 
-Meta: `Principal` pasa de 6.867 a < 1.500 líneas y las 157 variables de miembro se reparten
+Pasos 5 y 6 HECHOS el 27-10 (`Hubs` en `ui/menu/hubs.gd`; estadio, finanzas, ciudad, identidad y camarín pintan desde sus `ui/pantallas/*`; `Principal` conserva puentes de una línea).
+Meta: `Principal` pasa de 6.867 (4.830 el 27-10) a < 1.500 líneas y las 157 variables de miembro se reparten
 por clases. Cada paso es un commit pequeño con su banco.
 
 #### 7.2 Contratos y aislamiento
@@ -277,15 +276,49 @@ dialogo`), la flecha del HUD del prólogo y el reloj (`Reloj`, `VidaCiudad`).
   tonos: seguro +2 de moral, evasivo −1, humilde +1. Si no vas, caduca sin efecto. El cuerpo es genérico (cara por nombre),
   no el modelo del jugador (fase 5).
 - Bloque 6 (parte): las fotos del modo foto se publican desde la app Fotos como «paseo» en `Redes` (tipo nuevo, +seguidores).
-- Pendiente: asamblea/elecciones del club, «convocar rueda de prensa» desde el móvil, el favor en `MesaAgente`; los sitios de
-  la ciudad son fijos (no hay «sede» propia por marca). El bloque 7 (rutinas y afinidad del personal) lo construye la sesión
-  ejecutora (tarea 6).
+- «Convocar rueda de prensa» desde la Agenda del móvil (`Citas.convocar_rueda`: una extra por semana, guion neutro, se
+  responde en el PC). Bloque 7 hecho por la ejecutora (`nucleo/afinidad_club.gd`, saludos por tramo en el pasillo).
+- Asamblea de socios (bloque 6, 27-10): el sábado de la semana 3 cada 4 temporadas (o cualquier temporada con la confianza
+  < 25), en el salón de actos; tres discursos; votos = 40 + (ánimo de la grada − 50) × 0,5 + (confianza − 50) × 0,3 + tono
+  (seguro ±, humilde + si la grada está en contra); perder cambia al presidente de la `Junta` y la confianza vuelve a 50 (tú
+  sigues); ganar da +2. Determinista, sin `Azar`.
+- Pendiente de la fase 4: el favor del agente en `MesaAgente` (los representantes de la cantera); los sitios de la ciudad son
+  fijos (no hay «sede» propia por marca); las personas de las citas usan el cuerpo genérico (cara por nombre).
 
 **Pruebas (modelo V).** Idea `f4p_personas`: un asunto de la junta genera una cita con mensaje y aparece en la Agenda; a la hora,
 la persona está en su sitio (fuera de hora, no); negociar en persona aplica −5 %/+10 y por PC no; firmar una zona en persona
 da el +5 %; la entrevista mueve ±2 de moral; publicar una foto suma seguidores; la asamblea cambia el presidente al perder
 y nada más; las citas caducan el domingo sin castigo. Captura `f4p_captura_personas` (mensaje con «Ir», patrocinador en su
 sede, agente en el bar, asamblea, foto publicada).
+
+### 2.2f Fase 5 — Club ampliado: DISEÑO (27-10, compuerta 2; construir en este orden)
+
+**Lo que ya existe y se enlaza:** taquillas con dorsal y nombre de la plantilla (`TunelVestuario`), museo con una copa por
+título (`SalasClub.museo`, `ctx["titulos"]` en `Principal`), ramas de otros deportes que juegan su temporada y dejan palmarés
+(`Hinchada.RAMAS`, `temporada_ramas`, `palmares_ramas`), trofeos de la directiva (`Directiva.trofeos`), citas en persona
+(`Citas`), cuerpos genéricos (`PrologoMentor`) y los clips de la UAL (`AnimExtra.asegurar`).
+
+| # | Bloque | Qué hace | Regla |
+|---|---|---|---|
+| 1 | Vestuario con vida | Laborables de 10 a 12 (reloj), 3-5 futbolistas con cuerpo junto a su taquilla (nombre y dorsal de la plantilla real; cara por nombre, no el modelo del jugador hasta tener retratos 3D en el paseo); E = frase según su moral y rol; «charla» de la UAL | solo textos: nada cambia en el partido |
+| 2 | Las ramas como personas | Una cita por temporada (semana 5) con la coordinadora de cada rama abierta: pide presupuesto (10 % del coste anual) o visibilidad (un partido en el estadio); aceptar sube la fuerza de la rama esa temporada (+0,06 en `temporada_ramas`) y cuesta caja; negar no castiga | ficticio; sin religión ni política |
+| 3 | Trofeos de verdad | El museo cuenta también los títulos de las ramas (puesto 1 en `palmares_ramas`); cada título nuevo añade su copa y una placa con el año | el museo lee `ctx["titulos"]` + ramas |
+| 4 | Celebraciones | Título de liga o copa del primer equipo: cita «celebración» el lunes siguiente en el museo con el presidente (copa nueva, foto para Tribuna) y, en el estadio, vuelta olímpica de la plantilla con confeti al entrar al campo esa semana; título de una rama: la rama celebra en el museo y sale en portada | una vez por título; reversible |
+
+**Hecho el 27-10:** bloque 1 `VestuarioVivo` (colgado de `CitasCiudad`): laborables de 10 a 12, 4 futbolistas (dorsal más bajo)
+en chándal del club junto a las taquillas, nombre y «dorsal · puesto» en el rótulo, E = frase por moral (3 tramos × 3) con el
+clip de charla; fuera de horario el vestuario queda vacío. Límite: cara por nombre (no el retrato 3D del jugador) y posiciones
+aproximadas a lo largo de las paredes, no taquilla por taquilla.
+**Bloques 2-4:** cita «rama» en la semana 5 por cada rama abierta (coordinadora ficticia, +10 % del coste
+anual → `Hinchada.bono_rama` = +0,06 de fuerza esa temporada); el museo cuenta las copas de las ramas (`Principal._ctx_club`);
+cita «celebración» el lunes siguiente a un trofeo nuevo del primer equipo (presidente en el museo; levantar la copa publica
+«victoria» en Tribuna y sube 3 el ánimo). Límites: no hay todavía vuelta olímpica en el campo ni celebración 3D de las ramas
+(bloque 4, parte); el presupuesto de la rama no tiene efecto visible fuera del puesto final.
+
+**Pruebas (modelo V).** Idea `f5c_club`: en horario de vestuario hay cuerpos con nombres de la plantilla y fuera de horario
+no; la cita de la rama cuesta caja y sube la fuerza; un título de rama suma una copa al museo; el título del primer equipo
+crea la cita «celebración» y la vuelta olímpica se activa una sola vez. Captura `f5c_captura_club` (vestuario con gente,
+museo con copas, celebración).
 
 ### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
 
@@ -304,6 +337,30 @@ fase 6 (pulido) adelantado y se hace por PASADAS con captura antes/después y ve
 | P4 | Profundidad y calidad | piel con subsuperficie suave, pelo con capas, ropa con arrugas normales, sombras de contacto, LOD sin saltos | captura de transmisión + de cerca |
 
 Compuerta: el dueño ve cada pasada y dice «estamos» o «mejorar». Nada se quita sin avisar.
+
+**Pasada 1 de P1 y P2 (26-10 noche), medida con `pruebas/sonda_movimiento.tscn` (complexión neutra, determinista):**
+
+| Medida (fracción de la altura) | humano | antes | después |
+|---|---|---|---|
+| cabezas de altura | 7,5 | 7,6 | 7,9 (hombre) · 7,4 (mujer) |
+| hombro→muñeca | 0,34 | 0,27 | 0,29 (−15 %) |
+| antebrazo / brazo | 0,80 | 0,97 · 1,04 | 0,78 · 0,83 |
+| pantorrilla / muslo | 0,95 | 1,07 · 1,14 | 0,98 · 1,04 |
+| anchura de hombros | 0,245 | 0,23 · 0,17 | 0,21 · 0,19 (pasada 2: el brazo se desplaza hacia fuera por la clavícula, `HOMBROS_FUERA`; captura `peatones_pasada2_hombros.jpg`) |
+
+Cambios: `PersonajeDT.ANATOMIA` (húmero ×1,15, muslo ×1,05, pantorrilla ×0,96) para DT, futbolistas y peatones. Los hombros se
+resolvieron en la pasada 2 desplazando el hueso del brazo (escalar la clavícula estiraba el brazo). Movimiento: el pie apoyado de «caminar» recorre 1,0 m/s y el
+paseo iba a 1,7 m/s (patinaba ×1,7; agachado ×2,4; correr ×1,3-1,5): ahora `speed_scale = velocidad real / natural del clip`
+(`ExploradorCiudad.VEL_NATURAL_CLIP`) y los peatones del tráfico igual (`TraficoCiudad.agregar_vehiculo`). Hecho también: el cuerpo gira con inercia
+(persigue el rumbo, `lerp_angle` a 9/s) y la mezcla al pararse dura 0,4 s. P3 (27-10, pasada 1): inventario del pack UAL = 43 clips; los
+de conversación y asiento estaban mapeados en `AnimExtra.UAL` pero solo los futbolistas los cargaban. `AnimExtra.asegurar`
+carga un clip en cualquier cuerpo al momento; ahora HABLAN con el clip de charla el mentor del prólogo, las personas de las
+citas (mientras dura el cuadro) y la familia en casa (4 s). P3 pasada 2 (27-10): los bancos de acera y de parada registran asientos
+(`CityBuilder.asientos`) y `GenteSentada` (`visor/gente_sentada.gd`, cuelga de `VidaCiudad`) sienta hasta 6 peatones con el clip
+«sentado» en los asientos a < 55 m (ocupación estable por hash de asiento y hora); el DT en el sofá encadena «sentarse» → «sentado»
+y se queda así hasta dar un paso (`_gesto_propio(gesto, luego)`); los vecinos ya charlaban con clip (6 s). Prueba `p3_sentados`;
+capturas antes/después `docs/04_auditorias/capturas_personajes/p3_sentados_{antes,despues}.jpg`. Falta P3: butacas del estadio y
+banquillo fuera del partido, abrir puertas, escaleras; y P4 (piel/pelo/ropa). Falta el veredicto del dueño sobre estas pasadas.
 
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 

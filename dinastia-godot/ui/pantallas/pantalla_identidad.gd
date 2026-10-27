@@ -133,3 +133,123 @@ func _pintar_kits(co: Comercial, c: Club) -> void:
 			co.tipografia = clave
 			p._refrescar())
 		flow_t.add_child(b2)
+
+## La sección IDENTIDAD VISUAL: diseñador, vista previa, colores, uniforme (desde `Principal`, 27-10).
+func _pintar_identidad(c: Club) -> void:
+
+	## EL DISEÑADOR DE EQUIPACIÓN (26-9-2026): 70 diseños, 5 colores, pantalón,
+	## medias, 30 botines, accesorios y color de números, con vista 3D.
+	var bd := Button.new()
+	bd.text = Idiomas.t("🎽  Abrir el diseñador de equipación")
+	bd.custom_minimum_size = Vector2(0, 44)
+	bd.add_theme_font_size_override("font_size", 16)
+	bd.pressed.connect(func() -> void:
+		var dz := DisenadorKit.abrir(p, p.mundo)
+		dz.cerrado.connect(p._refrescar))
+	p._lista_gente.add_child(bd)
+	p._lista_gente.add_child(HSeparator.new())
+	var t := p._texto(11, p.COL_SUAVE)
+	t.text = Idiomas.t("🎨 IDENTIDAD VISUAL")
+	p._lista_gente.add_child(t)
+	if not p._modo_experto:
+		var ex := p._texto(10, p.COL_SUAVE)
+		ex.text = Idiomas.t("Cada cosa se pinta por separado: el uniforme no arrastra el color del menú ni el del escudo. Lo que no toques, lo hereda del club.")
+		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		p._lista_gente.add_child(ex)
+
+	## LA VISTA PREVIA. Escudo y camiseta juntos, con lo que hay puesto ahora
+	## mismo: sin esto hay que salir de la pantalla para ver si acertaste.
+	var previa := HBoxContainer.new()
+	previa.add_theme_constant_override("separation", 14)
+	previa.alignment = BoxContainer.ALIGNMENT_CENTER
+	p._lista_gente.add_child(previa)
+	## EL ESCUDO CON SUS INICIALES (o su símbolo): `p._escudo()` es el mismo que
+	## se ve en el resto del juego. Antes iba solo la textura, sin las letras, y
+	## la vista previa no enseñaba el escudo tal como sale en la tabla.
+	var esc_img := p._escudo(c, 54)
+	esc_img.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	previa.add_child(esc_img)
+	var kit_img := TextureRect.new()
+	kit_img.texture = Jersey.textura_procedural(c.color_kit1(), c.color_kit2(),
+		Jersey.kit_de(c, c.kit_estilo), 58)
+	kit_img.custom_minimum_size = Vector2(58, 58)
+	kit_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	kit_img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	previa.add_child(kit_img)
+	## LA MUESTRA DEL ACENTO como una ficha redondeada con borde, centrada en
+	## la fila: un ColorRect suelto se estiraba al alto de la fila y parecía un
+	## rectángulo blanco cuando el acento es claro.
+	var muestra_ui := Panel.new()
+	var caja_acento := StyleBoxFlat.new()
+	caja_acento.bg_color = p._acento_de(c)
+	caja_acento.set_corner_radius_all(10)
+	caja_acento.set_border_width_all(2)
+	caja_acento.border_color = Color(1, 1, 1, 0.35)
+	muestra_ui.add_theme_stylebox_override("panel", caja_acento)
+	muestra_ui.custom_minimum_size = Vector2(40, 40)
+	muestra_ui.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	muestra_ui.tooltip_text = Idiomas.t("Color de acento (botones y menú)")
+	previa.add_child(muestra_ui)
+
+	_fila_color_identidad(c, "1 · Color principal del club", "color1")
+	_fila_color_identidad(c, "1 · Color secundario del club", "color2")
+
+	var tk := p._texto(11, p.COL_ACENTO)
+	tk.text = Idiomas.t("2 · UNIFORME%s") % ("" if c.kit_color1 == "" and c.kit_color2 == "" else Idiomas.t("  ·  propio"))
+	p._lista_gente.add_child(tk)
+	_fila_color_identidad(c, "Color 1 de la camiseta", "kit_color1")
+	_fila_color_identidad(c, "Color 2 de la camiseta", "kit_color2")
+	_rejilla_identidad(c, "kit_estilo", Jersey.KITS, "Diseño")
+	_boton_heredar(c, ["kit_color1", "kit_color2"], "Volver a los colores del club")
+
+	var te := p._texto(11, p.COL_ACENTO)
+	te.text = Idiomas.t("3 · ESCUDO%s") % ("" if c.esc_color1 == "" and c.esc_color2 == "" else Idiomas.t("  ·  propio"))
+	p._lista_gente.add_child(te)
+	_fila_color_identidad(c, "Fondo del escudo", "esc_color1")
+	_fila_color_identidad(c, "Borde y patrón", "esc_color2")
+	_rejilla_identidad(c, "esc_forma", Escudo.FORMAS, "Forma del escudo")
+	_rejilla_identidad(c, "esc_patron", Escudo.PATRONES, "Patrón interior")
+	## "ESC_SIM" del HTML: un emoji en vez de las iniciales. El campo llevaba
+	## semanas guardándose -`Club.esc_simbolo` ya viaja en el guardado- sin que
+	## `Escudo` lo leyera ni hubiera dónde elegirlo. `Datos.tabla("ESC_SIM")`
+	## trae un "" propio en el índice 0 -el mismo "por sorteo" que ya antepone
+	## `_rejilla_identidad`-, así que se recorta para no duplicar ese botón.
+	var lista_sim: Array = Datos.tabla("ESC_SIM")
+	_rejilla_identidad(c, "esc_simbolo",
+		lista_sim.slice(1) if lista_sim != null and lista_sim.size() > 1 else [], "Símbolo (reemplaza las iniciales)")
+	if not p._modo_experto:
+		var ee := p._texto(10, p.COL_SUAVE)
+		ee.text = Idiomas.t("Veintiseis formas × treinta patrones × dos colores: miles de escudos distintos.")
+		ee.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		p._lista_gente.add_child(ee)
+	_boton_heredar(c, ["esc_color1", "esc_color2"], "Volver a los colores del club")
+	_rejilla_especiales(c)
+
+	var tu := p._texto(11, p.COL_ACENTO)
+	tu.text = Idiomas.t("4 · INTERFAZ%s") % ("" if c.ui_acento == "" else Idiomas.t("  ·  propia"))
+	p._lista_gente.add_child(tu)
+	_fila_color_identidad(c, "Color de acento (botones y menú)", "ui_acento")
+	_boton_heredar(c, ["ui_acento"], "Usar el color del club")
+
+	var b_todo := Button.new()
+	b_todo.text = Idiomas.t("🎨 Igualar todo a los colores del club")
+	b_todo.add_theme_font_size_override("font_size", 11)
+	b_todo.pressed.connect(func() -> void:
+		c.igualar_identidad()
+		Escudo.limpiar_cache()
+		p._refrescar())
+	p._lista_gente.add_child(b_todo)
+
+	## LAS TRES CAMISETAS. Vivían dentro del chip "Comercial" -Club→Equipación
+	## solo tenía una VISTA PREVIA sin controles, y el editor de verdad estaba
+	## enterrado junto a proveedor/zonas/naming, sin relación temática-. Un
+	## editor de camiseta es identidad visual, así que se pinta aquí, donde ya
+	## está el resto del escudo y los colores del club.
+	if p.mundo.comercial != null:
+		p._lista_gente.add_child(HSeparator.new())
+		_pintar_kits(p.mundo.comercial, c)
+
+## EL ARCHIVO DE PORTADAS. Se escribían después de cada partido grande y se
+## perdían al cambiar de pantalla. Juntas se leen como la hemeroteca del ciclo:
+## de un vistazo se ve si el año fue de titulares buenos o de titulares malos.
+## LA ENTREVISTA AL PASO (C6): si esta semana te paró un medio nuevo.

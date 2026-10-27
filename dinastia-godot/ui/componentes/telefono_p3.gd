@@ -164,6 +164,15 @@ func _agenda() -> void:
 		b.pressed.connect(_adelantar.bind(String(par[0])))
 		_cuerpo.add_child(b)
 	_cuerpo.add_child(_nota(Idiomas.t("El tiempo adelantado sigue tu rutina: duermes y comes como siempre.")))
+	## Convocar una rueda de prensa extra (fase 4, bloque 6): una por semana.
+	if m.citas != null:
+		var rp := Button.new()
+		rp.text = Idiomas.t("📣 Convocar rueda de prensa")
+		rp.custom_minimum_size = Vector2(0, 40)
+		rp.pressed.connect(func() -> void:
+			var motivo := m.citas.convocar_rueda(m)
+			_decir(Idiomas.t("Rueda convocada: la respondes en el PC.") if motivo == "" else Idiomas.t(motivo)))
+		_cuerpo.add_child(rp)
 
 ## Entrenamiento (laborables a las 10:00), partido (sábado) y rueda de prensa (viernes).
 func _proximos(r: Reloj) -> Array[String]:

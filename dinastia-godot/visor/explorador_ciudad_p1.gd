@@ -159,6 +159,9 @@ var _hasta_paso := 0.0
 
 ## MI CAMINATA (14-10-2026): estilo elegido en ⚙ Ajustes de la ciudad. Cada uno
 ## es [clip, velocidad de reproducción]. Correr y quieto no cambian.
+## Metros por segundo que recorre el pie apoyado en cada clip (sonda_movimiento, 26-10): con esto
+## `speed_scale = velocidad real / natural` y el pie no patina.
+const VEL_NATURAL_CLIP := {"caminar": 1.02, "caminar_normal": 1.02, "caminar_agachado": 0.7, "caminar_trote": 1.75, "correr": 3.97}
 const ESTILOS_CAMINATA := {
 	"formal": ["caminar", 1.0],
 	"normal": ["caminar_normal", 1.0],

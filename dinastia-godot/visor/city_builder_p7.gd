@@ -122,6 +122,8 @@ func _paradas_bus() -> void:
 		banco.material_override = acento
 		banco.position = Vector3(0, 0.75, -0.9)
 		raiz.add_child(banco)
+		for xs: float in [-1.8, 0.0, 1.8]:
+			asientos.append({"p": (s["p"] as Vector3) + Basis(Vector3.UP, float(s["a"])) * Vector3(xs, 0.83, -0.9), "giro": float(s["a"])})
 		_cartel(s["p"] + Vector3(0, 0, -6.0), "🚌 " + String(s["n"]), true)
 
 	_terminal_buses()

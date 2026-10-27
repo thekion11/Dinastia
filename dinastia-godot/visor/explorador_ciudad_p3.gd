@@ -430,7 +430,11 @@ func _animar_dt(v: float) -> void:
 	if quiere == "parado" and absf(v) > 0.05 and _anim.has_animation("caminar"):
 		var est: Array = ESTILOS_CAMINATA.get(estilo_caminata(), ESTILOS_CAMINATA["formal"])
 		quiere = String(est[0]) if _anim.has_animation(String(est[0])) else "caminar"
-		vel_anim = float(est[1])
+	## SIN PATINAR (26-10-2026, §2.2e P2): el clip corre a la velocidad real dividida por la
+	## suya natural (lo que avanza el pie apoyado, medido con `pruebas/sonda_movimiento`).
+	if quiere != "parado":
+		vel_anim = clampf(absf(v) / float(VEL_NATURAL_CLIP.get(quiere, 1.0)), 0.5, 2.0)
 	if _anim.current_animation != quiere and _anim.has_animation(quiere):
-		_anim.play(quiere, 0.25)
+		## Mezcla más larga al parar (el cuerpo frena) y corta al arrancar.
+		_anim.play(quiere, 0.4 if quiere == "parado" else 0.25)
 	_anim.speed_scale = vel_anim

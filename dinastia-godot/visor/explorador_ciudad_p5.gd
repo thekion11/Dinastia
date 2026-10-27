@@ -145,7 +145,8 @@ func _andar_solo(delta: float) -> void:
 		_auto.pop_front()
 		return
 	rumbo = atan2(hacia.x, hacia.z)
-	cuerpo.rotation.y = rumbo
+	## Giro con inercia (26-10, §2.2e P2): el cuerpo persigue el rumbo en vez de saltar a él.
+	cuerpo.rotation.y = lerp_angle(cuerpo.rotation.y, rumbo, 1.0 - exp(-9.0 * delta))
 	cuerpo.position += hacia / d * minf(d, VEL_PIE * delta)
 	_animar_dt(VEL_PIE)
 	## La cámara se queda donde estaba (detrás, en la calle) y le sigue con
@@ -310,7 +311,8 @@ func _physics_process(delta: float) -> void:
 	for _k in trozos:
 		if not _mover_un_trozo(paso_total / float(trozos), r):
 			break
-	cuerpo.rotation.y = rumbo
+	## Giro con inercia (26-10, §2.2e P2): el cuerpo persigue el rumbo en vez de saltar a él.
+	cuerpo.rotation.y = lerp_angle(cuerpo.rotation.y, rumbo, 1.0 - exp(-9.0 * delta))
 	if modo == "coche":
 		cuerpo.rotation.x = _cabeceo
 		cuerpo.rotation.z = _balanceo
