@@ -43,7 +43,7 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 | **2 — Prólogo 3D** | CONSTRUIDO el 26-10 (`escenas/prologo.tscn`, `visor/prologo*.gd`, `visor/pc_oficina.gd`; prueba `pruebas/ideas/f2p_prologo`, capturas `docs/04_auditorias/capturas_fase2/`). APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»); límites en §2.2b | de «Nuevo juego» hasta tu primer día |
 | **3 — Vida** | CONSTRUIDO el 26-10 (`visor/vida_ciudad.gd` + `visor/casa_dt.gd`, agenda del móvil, arranque en casa/oficina; pruebas `pruebas/ideas/f3v_vida` y `f3c_casa`, capturas `docs/04_auditorias/capturas_fase3/`). APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»); límites en §2.2c | un día completo jugable en 3D |
 | **4 — Personas** | CONSTRUIDA el 27-10 (`nucleo/citas.gd`, `visor/citas_ciudad.gd`, `nucleo/afinidad_club.gd`; Agenda con «Ir» y «Convocar rueda»; pruebas `f4p_citas`, `f4p_personas`, `f4r_rutinas`; capturas `docs/04_auditorias/capturas_fase4/`). Falta tu aprobación jugándola y lo anotado en §2.2d «Límites» | negociaciones en persona |
-| **5 — Club ampliado** | vestuario con nombres, otros deportes, trofeos y celebraciones | |
+| **5 — Club ampliado** | EN CONSTRUCCIÓN desde el 27-10: bloques 2-4 hechos en `nucleo/citas.gd` (ramas que piden presupuesto, copas de las ramas en el museo, celebración del trofeo); falta el bloque 1 (vestuario con vida) y la captura; prueba `f5c_club` | |
 | **6 — Pulido y auditoría** | pasos 4-7 de 7.1, limpieza del repo, vídeo | cierre y MEGAPLAN siguiente |
 
 Cada fase tiene un documento de estado y se pasa a `main` con un PR cuando lo pidas.
@@ -291,6 +291,31 @@ la persona está en su sitio (fuera de hora, no); negociar en persona aplica −
 da el +5 %; la entrevista mueve ±2 de moral; publicar una foto suma seguidores; la asamblea cambia el presidente al perder
 y nada más; las citas caducan el domingo sin castigo. Captura `f4p_captura_personas` (mensaje con «Ir», patrocinador en su
 sede, agente en el bar, asamblea, foto publicada).
+
+### 2.2f Fase 5 — Club ampliado: DISEÑO (27-10, compuerta 2; construir en este orden)
+
+**Lo que ya existe y se enlaza:** taquillas con dorsal y nombre de la plantilla (`TunelVestuario`), museo con una copa por
+título (`SalasClub.museo`, `ctx["titulos"]` en `Principal`), ramas de otros deportes que juegan su temporada y dejan palmarés
+(`Hinchada.RAMAS`, `temporada_ramas`, `palmares_ramas`), trofeos de la directiva (`Directiva.trofeos`), citas en persona
+(`Citas`), cuerpos genéricos (`PrologoMentor`) y los clips de la UAL (`AnimExtra.asegurar`).
+
+| # | Bloque | Qué hace | Regla |
+|---|---|---|---|
+| 1 | Vestuario con vida | Laborables de 10 a 12 (reloj), 3-5 futbolistas con cuerpo junto a su taquilla (nombre y dorsal de la plantilla real; cara por nombre, no el modelo del jugador hasta tener retratos 3D en el paseo); E = frase según su moral y rol; «charla» de la UAL | solo textos: nada cambia en el partido |
+| 2 | Las ramas como personas | Una cita por temporada (semana 5) con la coordinadora de cada rama abierta: pide presupuesto (10 % del coste anual) o visibilidad (un partido en el estadio); aceptar sube la fuerza de la rama esa temporada (+0,06 en `temporada_ramas`) y cuesta caja; negar no castiga | ficticio; sin religión ni política |
+| 3 | Trofeos de verdad | El museo cuenta también los títulos de las ramas (puesto 1 en `palmares_ramas`); cada título nuevo añade su copa y una placa con el año | el museo lee `ctx["titulos"]` + ramas |
+| 4 | Celebraciones | Título de liga o copa del primer equipo: cita «celebración» el lunes siguiente en el museo con el presidente (copa nueva, foto para Tribuna) y, en el estadio, vuelta olímpica de la plantilla con confeti al entrar al campo esa semana; título de una rama: la rama celebra en el museo y sale en portada | una vez por título; reversible |
+
+**Hecho el 27-10 (bloques 2-4):** cita «rama» en la semana 5 por cada rama abierta (coordinadora ficticia, +10 % del coste
+anual → `Hinchada.bono_rama` = +0,06 de fuerza esa temporada); el museo cuenta las copas de las ramas (`Principal._ctx_club`);
+cita «celebración» el lunes siguiente a un trofeo nuevo del primer equipo (presidente en el museo; levantar la copa publica
+«victoria» en Tribuna y sube 3 el ánimo). Límites: no hay todavía vuelta olímpica en el campo ni celebración 3D de las ramas
+(bloque 4, parte); el presupuesto de la rama no tiene efecto visible fuera del puesto final.
+
+**Pruebas (modelo V).** Idea `f5c_club`: en horario de vestuario hay cuerpos con nombres de la plantilla y fuera de horario
+no; la cita de la rama cuesta caja y sube la fuerza; un título de rama suma una copa al museo; el título del primer equipo
+crea la cita «celebración» y la vuelta olímpica se activa una sola vez. Captura `f5c_captura_club` (vestuario con gente,
+museo con copas, celebración).
 
 ### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
 
