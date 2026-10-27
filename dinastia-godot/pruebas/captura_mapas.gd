@@ -9,6 +9,8 @@ var _mapa: MapaTransporte
 func _ready() -> void:
 	var b := CityBuilder.new()
 	add_child(b)
+	for tm in b._terreno():
+		b.add_child(tm)   ## con el terreno de verdad (la cima del cerro queda a ~400 m)
 	var ex := CiudadExpansion.new(b)
 	ex.armar_red()
 	ex.armar_bloques()
