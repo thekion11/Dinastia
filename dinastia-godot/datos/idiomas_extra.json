@@ -6140,7 +6140,16 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Colour 1 of your club at the bottom, colour 2 in the middle and a mix of both at the top.",
   "Franjas iguales": "Equal stripes",
   "Los dos colores en franjas, igual en todos los niveles.": "Both colours in stripes, the same on every level.",
-  "Color de las butacas por nivel": "Seat colour by level"
+  "Color de las butacas por nivel": "Seat colour by level",
+  "Vitrina libre": "Empty display case",
+  "Aquí irá el próximo título del club.": "The club's next title will go here.",
+  "Año": "Year",
+  "Final": "Final",
+  "Goleadores": "Scorers",
+  "Sin datos": "No data",
+  "Arrastra el ratón o A/D para girar la copa": "Drag the mouse or press A/D to rotate the cup",
+  "E: ver el trofeo": "E: look at the trophy",
+  "Campeón de liga con %s": "League champions with %s"
  },
  "pt": {
   "Historia": "História",
@@ -12283,7 +12292,16 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Em baixo a cor 1 do seu clube, no meio a 2 e em cima uma mistura das duas.",
   "Franjas iguales": "Listras iguais",
   "Los dos colores en franjas, igual en todos los niveles.": "As duas cores em listras, igual em todos os níveis.",
-  "Color de las butacas por nivel": "Cor das cadeiras por nível"
+  "Color de las butacas por nivel": "Cor das cadeiras por nível",
+  "Vitrina libre": "Vitrine livre",
+  "Aquí irá el próximo título del club.": "Aqui irá o próximo título do clube.",
+  "Año": "Ano",
+  "Final": "Final",
+  "Goleadores": "Artilheiros",
+  "Sin datos": "Sem dados",
+  "Arrastra el ratón o A/D para girar la copa": "Arraste o rato ou A/D para girar a taça",
+  "E: ver el trofeo": "E: ver o troféu",
+  "Campeón de liga con %s": "Campeão da liga com %s"
  },
  "patrones": [
   [
@@ -24038,7 +24056,16 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "En bas la couleur 1 de ton club, au milieu la 2 et en haut un mélange des deux.",
   "Franjas iguales": "Rayures identiques",
   "Los dos colores en franjas, igual en todos los niveles.": "Les deux couleurs en rayures, pareil à tous les niveaux.",
-  "Color de las butacas por nivel": "Couleur des sièges par niveau"
+  "Color de las butacas por nivel": "Couleur des sièges par niveau",
+  "Vitrina libre": "Vitrine libre",
+  "Aquí irá el próximo título del club.": "Le prochain titre du club sera ici.",
+  "Año": "Année",
+  "Final": "Finale",
+  "Goleadores": "Buteurs",
+  "Sin datos": "Pas de données",
+  "Arrastra el ratón o A/D para girar la copa": "Fais glisser la souris ou A/D pour tourner la coupe",
+  "E: ver el trofeo": "E : voir le trophée",
+  "Campeón de liga con %s": "Champion de ligue avec %s"
  },
  "it": {
   "Historia": "Storia",
@@ -30181,7 +30208,16 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "In basso il colore 1 del tuo club, in mezzo il 2 e in alto un misto dei due.",
   "Franjas iguales": "Strisce uguali",
   "Los dos colores en franjas, igual en todos los niveles.": "I due colori a strisce, uguale a tutti i livelli.",
-  "Color de las butacas por nivel": "Colore dei sedili per livello"
+  "Color de las butacas por nivel": "Colore dei sedili per livello",
+  "Vitrina libre": "Vetrina libera",
+  "Aquí irá el próximo título del club.": "Qui andrà il prossimo titolo del club.",
+  "Año": "Anno",
+  "Final": "Finale",
+  "Goleadores": "Marcatori",
+  "Sin datos": "Nessun dato",
+  "Arrastra el ratón o A/D para girar la copa": "Trascina il mouse o A/D per ruotare la coppa",
+  "E: ver el trofeo": "E: guarda il trofeo",
+  "Campeón de liga con %s": "Campione di campionato con %s"
  },
  "de": {
   "Historia": "Geschichte",
@@ -36324,7 +36360,16 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Unten Farbe 1 deines Vereins, in der Mitte Farbe 2 und oben eine Mischung aus beiden.",
   "Franjas iguales": "Gleiche Streifen",
   "Los dos colores en franjas, igual en todos los niveles.": "Beide Farben in Streifen, auf allen Ebenen gleich.",
-  "Color de las butacas por nivel": "Sitzfarbe pro Ebene"
+  "Color de las butacas por nivel": "Sitzfarbe pro Ebene",
+  "Vitrina libre": "Freie Vitrine",
+  "Aquí irá el próximo título del club.": "Hier kommt der nächste Titel des Vereins hin.",
+  "Año": "Jahr",
+  "Final": "Finale",
+  "Goleadores": "Torschützen",
+  "Sin datos": "Keine Daten",
+  "Arrastra el ratón o A/D para girar la copa": "Maus ziehen oder A/D drücken, um den Pokal zu drehen",
+  "E: ver el trofeo": "E: Pokal ansehen",
+  "Campeón de liga con %s": "Meister mit %s"
  },
  "ca": {
   "Historia": "Història",
@@ -42467,7 +42512,16 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "A baix el color 1 del teu club, al mig el 2 i a dalt una barreja dels dos.",
   "Franjas iguales": "Franges iguals",
   "Los dos colores en franjas, igual en todos los niveles.": "Els dos colors en franges, igual a tots els nivells.",
-  "Color de las butacas por nivel": "Color de les butaques per nivell"
+  "Color de las butacas por nivel": "Color de les butaques per nivell",
+  "Vitrina libre": "Vitrina lliure",
+  "Aquí irá el próximo título del club.": "Aquí anirà el proper títol del club.",
+  "Año": "Any",
+  "Final": "Final",
+  "Goleadores": "Golejadors",
+  "Sin datos": "Sense dades",
+  "Arrastra el ratón o A/D para girar la copa": "Arrossega el ratolí o A/D per girar la copa",
+  "E: ver el trofeo": "E: veure el trofeu",
+  "Campeón de liga con %s": "Campió de lliga amb %s"
  },
  "pl": {
   "Club": "Klub",
@@ -48889,7 +48943,16 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Na dole kolor 1 twojego klubu, w środku 2, a na górze mieszanka obu.",
   "Franjas iguales": "Jednakowe pasy",
   "Los dos colores en franjas, igual en todos los niveles.": "Oba kolory w pasy, tak samo na każdym poziomie.",
-  "Color de las butacas por nivel": "Kolor krzesełek wg poziomu"
+  "Color de las butacas por nivel": "Kolor krzesełek wg poziomu",
+  "Vitrina libre": "Wolna gablota",
+  "Aquí irá el próximo título del club.": "Tu trafi następny tytuł klubu.",
+  "Año": "Rok",
+  "Final": "Finał",
+  "Goleadores": "Strzelcy",
+  "Sin datos": "Brak danych",
+  "Arrastra el ratón o A/D para girar la copa": "Przeciągnij myszą lub A/D, aby obrócić puchar",
+  "E: ver el trofeo": "E: obejrzyj trofeum",
+  "Campeón de liga con %s": "Mistrz ligi z %s"
  },
  "tr": {
   "Club": "Kulüp",
@@ -55311,6 +55374,15 @@
   "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos.": "Altta kulübünün 1. rengi, ortada 2. renk ve üstte ikisinin karışımı.",
   "Franjas iguales": "Eşit çizgiler",
   "Los dos colores en franjas, igual en todos los niveles.": "İki renk çizgili, her katta aynı.",
-  "Color de las butacas por nivel": "Kata göre koltuk rengi"
+  "Color de las butacas por nivel": "Kata göre koltuk rengi",
+  "Vitrina libre": "Boş vitrin",
+  "Aquí irá el próximo título del club.": "Kulübün bir sonraki unvanı buraya gelecek.",
+  "Año": "Yıl",
+  "Final": "Final",
+  "Goleadores": "Golcüler",
+  "Sin datos": "Veri yok",
+  "Arrastra el ratón o A/D para girar la copa": "Kupayı döndürmek için fareyi sürükle veya A/D",
+  "E: ver el trofeo": "E: kupaya bak",
+  "Campeón de liga con %s": "%s ile lig şampiyonu"
  }
 }

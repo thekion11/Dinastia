@@ -57,6 +57,8 @@ const TROFEO_ESCALA := 0.75
 static var _trofeo: Mesh = null
 static var _trofeo_mat: Material = null
 static var _trofeo_probado := false
+## Dónde está cada vitrina del museo de la planta 2 ({p: suelo bajo ella, k: el título que enseña}); `MuseoVitrinas` las busca con la E.
+static var vitrinas: Array[Dictionary] = []
 
 static func _cargar_trofeo() -> void:
 	if _trofeo_probado:
@@ -138,16 +140,18 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 	lote.caja(m["cojin"], _en(Vector3(cx, y0 + 0.04, caja.get_center().y)), Vector3(1.1, 0.01, caja.size.y - 0.5))
 	## Las vitrinas, alternando lado, en el tramo libre (ni la puerta ni el fondo).
 	## Capacidad real: una vitrina por título (hasta seis); el nivel de obra da el mínimo. Del séptimo en adelante, la planta 3.
-	var vitrinas := clampi(maxi(titulos, 2 + nivel_museo / 2), 2, MAX_SALA)
-	var por_lado := int(ceil(float(vitrinas) / 2.0))
+	var n_vitrinas := clampi(maxi(titulos, 2 + nivel_museo / 2), 2, MAX_SALA)
+	var por_lado := int(ceil(float(n_vitrinas) / 2.0))
+	vitrinas.clear()
 	var z0 := caja.position.y + 1.7
 	var z1 := caja.end.y - 1.6
-	for k in vitrinas:
+	for k in n_vitrinas:
 		var lado := -1.0 if k % 2 == 0 else 1.0
 		var i := k / 2
 		var pz := z0 + (z1 - z0) * (float(i) + 0.5) / float(por_lado)
 		var px := (caja.position.x + 0.45) if lado < 0.0 else (caja.end.x - 0.45)
 		vitrina(lote, nodo, m, base, vidrio, Vector3(px, y0, pz))
+		vitrinas.append({"p": Vector3(px, y0, pz), "k": k})
 		if k < titulos:
 			copa(lote, Vector3(px, y0 + 1.0, pz), oro, m["madera"])
 		else:

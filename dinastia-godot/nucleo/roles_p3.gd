@@ -370,9 +370,12 @@ func _reputacion_de_temporada() -> void:
 
 ## Un título a la vitrina de la CARRERA. `Directiva.trofeos` se queda en el club
 ## que dejas; esta lista te sigue de club en club y es la que abre los ascensos.
-func sumar_trofeo(titulo: String) -> void:
+## `ficha` (opcional, 27-10-2026): {final, goleadores} que enseña la vitrina del museo (`VisorTrofeo`).
+func sumar_trofeo(titulo: String, ficha: Dictionary = {}) -> void:
 	var m := _mundo()
-	trofeos.append({"anio": m.anio if m != null else 0, "titulo": titulo})
+	var t := {"anio": m.anio if m != null else 0, "titulo": titulo}
+	t.merge(ficha)
+	trofeos.append(t)
 	_rep("ganador", 8, "Título: %s" % titulo)
 	sumar_prestigio(3)
 	## Al museo de todas tus carreras, y un sobre de cromos.
