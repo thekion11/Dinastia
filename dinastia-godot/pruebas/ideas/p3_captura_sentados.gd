@@ -60,7 +60,7 @@ func _ready() -> void:
 	var p: Vector3 = a["p"]
 	var giro := float(a["giro"])
 	var frente := Vector3(sin(giro), 0, cos(giro))
-	_e.cuerpo.position = _e.buscar_libre(p + frente * 3.2 + Vector3(0, -0.79, 0))
+	_e.cuerpo.position = _e.buscar_libre(p + frente * 3.2 + Vector3(0, -0.45, 0))
 	_e.rumbo = giro + PI
 	_e.cuerpo.rotation.y = _e.rumbo
 	if antes:
