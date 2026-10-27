@@ -6203,7 +6203,8 @@
   "Cangrejo": "Crab",
   "Dragoncito": "Little dragon",
   "Unicornio": "Unicorn",
-  "Fantasmita": "Little ghost"
+  "Fantasmita": "Little ghost",
+  "%s ve su amarilla número %d de la temporada: se pierde el próximo partido.": "%s gets yellow card number %d of the season: he misses the next match."
  },
  "pt": {
   "Historia": "História",
@@ -12409,7 +12410,8 @@
   "Cangrejo": "Caranguejo",
   "Dragoncito": "Dragãozinho",
   "Unicornio": "Unicórnio",
-  "Fantasmita": "Fantasminha"
+  "Fantasmita": "Fantasminha",
+  "%s ve su amarilla número %d de la temporada: se pierde el próximo partido.": "%s vê o cartão amarelo número %d da temporada: perde o próximo jogo."
  },
  "patrones": [
   [
@@ -24227,7 +24229,8 @@
   "Cangrejo": "Crabe",
   "Dragoncito": "Petit dragon",
   "Unicornio": "Licorne",
-  "Fantasmita": "Petit fantôme"
+  "Fantasmita": "Petit fantôme",
+  "%s ve su amarilla número %d de la temporada: se pierde el próximo partido.": "%s reçoit son carton jaune numéro %d de la saison : il manquera le prochain match."
  },
  "it": {
   "Historia": "Storia",
@@ -30433,7 +30436,8 @@
   "Cangrejo": "Granchio",
   "Dragoncito": "Draghetto",
   "Unicornio": "Unicorno",
-  "Fantasmita": "Fantasmino"
+  "Fantasmita": "Fantasmino",
+  "%s ve su amarilla número %d de la temporada: se pierde el próximo partido.": "%s riceve il cartellino giallo numero %d della stagione: salta la prossima partita."
  },
  "de": {
   "Historia": "Geschichte",
@@ -36639,7 +36643,8 @@
   "Cangrejo": "Krabbe",
   "Dragoncito": "Drachenbaby",
   "Unicornio": "Einhorn",
-  "Fantasmita": "Gespensterchen"
+  "Fantasmita": "Gespensterchen",
+  "%s ve su amarilla número %d de la temporada: se pierde el próximo partido.": "%s sieht die gelbe Karte Nummer %d der Saison: Er verpasst das nächste Spiel."
  },
  "ca": {
   "Historia": "Història",
@@ -42845,7 +42850,8 @@
   "Cangrejo": "Cranc",
   "Dragoncito": "Dracó petit",
   "Unicornio": "Unicorn",
-  "Fantasmita": "Fantasmeta"
+  "Fantasmita": "Fantasmeta",
+  "%s ve su amarilla número %d de la temporada: se pierde el próximo partido.": "%s veu la targeta groga número %d de la temporada: es perd el proper partit."
  },
  "pl": {
   "Club": "Klub",
@@ -49330,7 +49336,8 @@
   "Cangrejo": "Krab",
   "Dragoncito": "Smoczek",
   "Unicornio": "Jednorożec",
-  "Fantasmita": "Duszek"
+  "Fantasmita": "Duszek",
+  "%s ve su amarilla número %d de la temporada: se pierde el próximo partido.": "%s dostaje %d. żółtą kartkę w sezonie: opuści następny mecz."
  },
  "tr": {
   "Club": "Kulüp",
@@ -55815,6 +55822,7 @@
   "Cangrejo": "Yengeç",
   "Dragoncito": "Küçük ejderha",
   "Unicornio": "Tek boynuzlu at",
-  "Fantasmita": "Küçük hayalet"
+  "Fantasmita": "Küçük hayalet",
+  "%s ve su amarilla número %d de la temporada: se pierde el próximo partido.": "%s sezonun %d. sarı kartını görüyor: bir sonraki maçı kaçıracak."
  }
 }
