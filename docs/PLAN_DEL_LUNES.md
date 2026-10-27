@@ -463,7 +463,6 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 - [ ] Prueba en el banco: con presión alta se recupera más arriba (medido).
 
 ### Semana 3 (27-10 → 2-11) — Partido II: porteros, pases y presets
-- [ ] Recorrido de la etapa 5 (física): balón, choques, objetos que no se atraviesan.
 
 ### Semana 4 (3-11 → 9-11) — Partido III: espectáculo
 - [ ] Salida del túnel, himno, foto de equipo, saque inicial con cámara de TV.

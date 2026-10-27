@@ -13,15 +13,21 @@ func _probar_fisica_motor() -> void:
 	var bprev := Vector3.INF
 	var c := {"vel": 0, "giro": 0, "tiron": 0, "tele": 0, "muestras": 0}
 	var dt := 1.0 / 30.0
+	var en_juego_antes := false
 	for _f in 1200:
 		motor.paso(dt * 0.5)
 		motor.paso(dt * 0.5)
+		## Recolocar para un saque (tras un gol, todos a su sitio) no es correr: solo cuenta en juego,
+		## como el balón (27-10-2026: con un gol dentro de la muestra salían 22 «carreras» de 300 m/s).
+		var en_juego := motor.estado == "juego"
+		var cuenta := en_juego and en_juego_antes
+		en_juego_antes = en_juego
 		for p: Dictionary in motor.jugadores:
 			var nd: Node3D = p["node"]
 			var id := nd.get_instance_id()
 			var pa := nd.position
 			c["muestras"] += 1
-			if prev.has(id):
+			if prev.has(id) and cuenta:
 				var vel: Vector3 = (pa - prev[id]) / dt
 				vel.y = 0.0
 				if vel.length() > 10.5:
