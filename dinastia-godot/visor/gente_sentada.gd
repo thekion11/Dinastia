@@ -15,6 +15,10 @@ const SE_VE := 38.0     ## a menos de esto, quien deja el asiento se levanta y s
 ## En «Sitting_Idle» la pelvis queda a 1,05 m de la raíz y en «Sitting_Enter/Exit» a 0,60 (medido con la sonda de raíz del 27-10): para que no se
 ## hunda en el banco al sentarse o levantarse, la raíz sube COMPENSA durante esos clips (y vuelve a la altura de sentado o de suelo al acabar).
 const COMPENSA := 0.45
+## Altura (en el mundo) del asiento de un banco de acera: 0,2 de acera + 0,45 de banco real (antes 0,79: pies colgando 28 cm; 27-10-2026).
+const ASIENTO_CIUDAD := 0.65
+## Con el asiento a 0,45 m la pelvis de «Sitting_Idle» deja los tobillos a ~14 cm del suelo: se baja la raíz 4 cm para que las suelas apoyen.
+const PIES_AL_SUELO := 0.04
 const OCUPACION := 0.45   ## fracción de asientos cercanos con alguien
 
 var vida: VidaCiudad
@@ -140,7 +144,7 @@ func _sentar(i: int, asiento: Dictionary, llegando := false) -> void:
 	n.rotation.y = float(asiento["giro"])
 	var cadera := MetroCiudad.altura_cadera(n)
 	if cadera > 0.0:
-		n.position.y = p.y + 0.08 - cadera * 0.99
+		n.position.y = p.y + 0.08 - cadera * 0.99 - PIES_AL_SUELO
 	cuerpos[i] = {"d": d, "p": p}
 	if llegando:
 		## LLEGA ANDANDO (P3 «MEJORAR»): desde 3,2 m por delante del banco, de cara al asiento; al llegar se vuelve y se sienta.
