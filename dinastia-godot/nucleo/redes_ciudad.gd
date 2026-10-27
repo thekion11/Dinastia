@@ -18,7 +18,18 @@ const LADO_SECTOR := 6                       ## celdas por sector
 const N_SECTORES := 5                        ## 5x5 (la rejilla va de -12 a 12)
 const MW_EOLICO := 1.5                       ## por molino con viento pleno (10 molinos)
 const MW_CENTRAL := 20.0                     ## central de respaldo
-const MW_SECTOR := 0.9                       ## demanda media de un sector
+const MW_SECTOR := 0.9                       ## demanda de un sector sin edificios registrados
+const MW_CASAS := 0.55                       ## demanda de las casas de un sector (el resto son sus edificios)
+## Edificios de verdad: uso → [nombre, kW, m3/h de agua, ¿generador propio?]
+const CONSUMO := {"hospital": ["Hospital", 900, 60, true], "estadio": ["Estadio del club", 1800, 40, false],
+	"ayuntamiento": ["Ayuntamiento", 250, 8, false], "comisaria": ["Comisaría", 180, 6, true], "bomberos": ["Bomberos", 200, 10, true],
+	"escuela": ["Escuela", 150, 12, false], "instituto": ["Instituto", 170, 14, false], "universidad": ["Universidad", 420, 30, false],
+	"mercado": ["Mercado", 220, 14, false], "centro_comercial": ["Centro comercial", 700, 25, false], "cine": ["Cine", 240, 5, false],
+	"estacion_central": ["Estación central", 500, 12, false], "gasolinera": ["Gasolinera", 90, 3, false], "puerto": ["Puerto", 600, 20, false],
+	"cocheras": ["Cocheras de autobuses", 160, 6, false], "feria": ["Parque de atracciones", 550, 18, false], "casa_grande": ["La Casa Grande", 120, 9, false],
+	"universidad_lab": ["Laboratorio", 0, 0, false]}
+const REGISTRO_MAX := 14
+const HISTORIAL_MAX := 24
 const SECTOR_PLANTA := Vector2i(0, 2)        ## sector de la potabilizadora (oeste): sin luz allí no hay bombeo
 const AGUA_DEPOSITO := 12000.0               ## m3
 const AGUA_PRODUCCION := 520.0               ## m3/h de la potabilizadora
@@ -39,6 +50,13 @@ var agua_nivel := AGUA_DEPOSITO * 0.8
 var colector := {}                           ## sector -> mm acumulados
 var inundado := {}                           ## sector -> bool
 var gas := {}                                ## id gasolinera -> litros
+var edificios: Array = []                    ## [{id, nombre, uso, sector, pos, kw, m3h, generador, aislado}]
+var historial: Array = []                    ## [{gen, dem, agua, lluvia, sin_luz}] una por hora, las últimas 24
+var registro: Array = []                     ## líneas «20:00 …» del centro de mando
+var evento := EventoApagon.new()
+var clima := ""
+var _luz_antes := {}
+var _aislados_guardados: Array = []
 var averias_azar := true                     ## false en las pruebas: solo las averías puestas a mano
 var hora_dia := 0                            ## la última hora simulada (0..23)
 var generacion := 0.0
@@ -121,7 +139,8 @@ static func curva(hora: int) -> float:
 # ============================================================================ SIMULACIÓN
 
 ## Avanza `n` horas de juego a la hora `hora` del día. `v` viento 0..1 y `ll` lluvia mm/h.
-func pasar(n: int, hora: int, v: float, ll: float) -> void:
+func pasar(n: int, hora: int, v: float, ll: float, clima_: String = "") -> void:
+	clima = clima_
 	viento = clampf(v, 0.0, 1.0)
 	lluvia = maxf(ll, 0.0)
 	for k in maxi(n, 1):
@@ -130,11 +149,13 @@ func pasar(n: int, hora: int, v: float, ll: float) -> void:
 
 func _hora(h: int) -> void:
 	hora_dia = h
+	evento.tick(self, h, clima)
 	_averias_al_azar()
 	_electricidad(h)
 	_agua(h)
 	_drenaje()
 	_gasolineras(h)
+	_apuntar()
 
 func _averias_al_azar() -> void:
 	for sec in sectores():
@@ -146,7 +167,7 @@ func _averias_al_azar() -> void:
 			averiar("agua", sec)
 		## Una avería se repara sola con el tiempo (cuadrillas municipales).
 		for red: String in ["luz", "agua", "drenaje"]:
-			if esta_averiado(red, sec) and _azar(red + "_rep", sec) < 0.18:
+			if esta_averiado(red, sec) and _azar(red + "_rep", sec) < 0.18 and not (red == "luz" and evento.activo and sec in evento.sectores):
 				reparar(red, sec)
 
 func _electricidad(h: int) -> void:
@@ -154,7 +175,7 @@ func _electricidad(h: int) -> void:
 	demanda = 0.0
 	var pedidos: Array = []
 	for sec in sectores():
-		var pide := MW_SECTOR * curva(h)
+		var pide := demanda_sector(sec) * curva(h)
 		pedidos.append([sec, pide])
 		demanda += pide
 	## Reparto: primero el hospital, luego por turno rotatorio según la hora.
@@ -166,6 +187,53 @@ func _electricidad(h: int) -> void:
 		luz[sec] = ok
 		if ok:
 			libre -= float(p[1])
+
+## MW de un sector a media carga: sus casas más los edificios que tiene conectados (y no aislados).
+func demanda_sector(sec: Vector2i) -> float:
+	if edificios.is_empty():
+		return MW_SECTOR
+	var mw := MW_CASAS
+	for ed: Dictionary in edificios:
+		if ed["sector"] == sec and not bool(ed["aislado"]):
+			mw += float(ed["kw"]) / 1000.0
+	return mw
+
+## Conecta un edificio real a las redes de su sector.
+func registrar_edificio(uso: String, pos: Vector3, nombre: String = "") -> void:
+	if not CONSUMO.has(uso):
+		return
+	var c: Array = CONSUMO[uso]
+	edificios.append({"id": edificios.size(), "nombre": nombre if nombre != "" else String(c[0]), "uso": uso, "pos": pos,
+		"sector": sector_en(pos.x, pos.z), "kw": int(c[1]), "m3h": int(c[2]), "generador": bool(c[3]), "aislado": false})
+
+## Cómo está un edificio: {luz, agua, inundado, aislado, kw}. Con generador propio no depende de la red eléctrica.
+func estado_edificio(ed: Dictionary) -> Dictionary:
+	var sec: Vector2i = ed["sector"]
+	var aislado := bool(ed["aislado"])
+	var con_luz := not aislado and (hay_luz(sec) or bool(ed["generador"]))
+	return {"luz": con_luz, "agua": not aislado and hay_agua(sec), "inundado": bool(inundado.get(sec, false)), "aislado": aislado,
+		"kw": int(ed["kw"]) if con_luz else 0}
+
+func anotar(texto: String) -> void:
+	registro.push_front("%02d:00 %s" % [hora_dia, texto])
+	if registro.size() > REGISTRO_MAX:
+		registro.resize(REGISTRO_MAX)
+
+## Guarda la hora en la gráfica y deja en el registro lo que cambió desde la hora anterior.
+func _apuntar() -> void:
+	var sin := 0
+	for sec in sectores():
+		var ok: bool = luz[sec]
+		if not ok:
+			sin += 1
+		if _luz_antes.has(sec) and bool(_luz_antes[sec]) != ok and not es_hospital(sec):
+			anotar("Sector %d·%d %s" % [sec.x, sec.y, "recupera la luz" if ok else "SIN LUZ"])
+		_luz_antes[sec] = ok
+	if sectores_inundados() > 0 and lluvia > 0.0:
+		anotar("%d sectores con agua en la calle" % sectores_inundados())
+	historial.append({"gen": generacion, "dem": demanda, "agua": agua_nivel / AGUA_DEPOSITO, "lluvia": lluvia, "sin_luz": sin})
+	if historial.size() > HISTORIAL_MAX:
+		historial.pop_front()
 
 func _prioridad(sec: Vector2i, h: int) -> int:
 	if es_hospital(sec):
@@ -195,8 +263,13 @@ func recalcular() -> void:
 func reparar_todo() -> int:
 	var n := 0
 	for red: String in cortes:
-		n += (cortes[red] as Dictionary).size()
-		(cortes[red] as Dictionary).clear()
+		var d: Dictionary = cortes[red]
+		for sec in d.keys():
+			## El disyuntor general saltado no se arregla desde el botón: hay que rearmarlo en la galería.
+			if red == "luz" and evento.activo and not evento.rearmado and sec in evento.sectores:
+				continue
+			d.erase(sec)
+			n += 1
 	recalcular()
 	return n
 
@@ -215,6 +288,61 @@ func _gasolineras(h: int) -> void:
 		if v < GAS_DEPOSITO * 0.2:
 			v += GAS_DEPOSITO * 0.5          ## llega la cisterna
 		gas[id] = clampf(v, 0.0, GAS_DEPOSITO)
+
+# ============================================================================ PARTIDA
+
+func a_dic() -> Dictionary:
+	var c := {}
+	for red: String in cortes:
+		c[red] = (cortes[red] as Dictionary).keys().map(func(s: Vector2i) -> Array: return [s.x, s.y])
+	var col: Array = []
+	for sec in sectores():
+		col.append(snappedf(float(colector[sec]), 0.01))
+	var aislados: Array = []
+	for ed: Dictionary in edificios:
+		if bool(ed["aislado"]):
+			aislados.append(int(ed["id"]))
+	return {"v": 1, "semilla": semilla, "horas": horas, "hora_dia": hora_dia, "agua": agua_nivel, "cortes": c, "colector": col,
+		"gas": [gas[0], gas[1], gas[2]], "historial": historial.duplicate(true), "registro": registro.duplicate(), "aislados": aislados,
+		"evento": evento.a_dic(), "clima": clima, "viento": viento, "lluvia": lluvia}
+
+## Carga una instantánea (partida vieja sin redes = `{}`: se queda como nueva). Los edificios no se guardan (salen de la
+## ciudad): `recibir_edificios` los vuelve a conectar y aplica los aislados.
+func desde_dic(d: Dictionary) -> void:
+	if d.is_empty():
+		return
+	semilla = int(d.get("semilla", semilla))
+	horas = int(d.get("horas", 0))
+	hora_dia = int(d.get("hora_dia", 0))
+	agua_nivel = clampf(float(d.get("agua", agua_nivel)), 0.0, AGUA_DEPOSITO)
+	for red: String in ["luz", "agua", "drenaje"]:
+		(cortes[red] as Dictionary).clear()
+		for p: Variant in (d.get("cortes", {}) as Dictionary).get(red, []):
+			if p is Array and (p as Array).size() == 2:
+				(cortes[red] as Dictionary)[Vector2i(int(p[0]), int(p[1]))] = true
+	var col: Array = d.get("colector", [])
+	var i := 0
+	for sec in sectores():
+		colector[sec] = float(col[i]) if i < col.size() else 0.0
+		inundado[sec] = float(colector[sec]) >= COLECTOR
+		i += 1
+	var g: Array = d.get("gas", [])
+	for id in mini(g.size(), 3):
+		gas[id] = clampf(float(g[id]), 0.0, GAS_DEPOSITO)
+	historial = (d.get("historial", []) as Array).duplicate(true)
+	registro = (d.get("registro", []) as Array).duplicate()
+	_aislados_guardados = (d.get("aislados", []) as Array).map(func(x: Variant) -> int: return int(x))
+	evento.desde_dic(d.get("evento", {}))
+	clima = String(d.get("clima", ""))
+	viento = float(d.get("viento", viento))
+	lluvia = float(d.get("lluvia", 0.0))
+	recibir_edificios(edificios)
+
+func recibir_edificios(lista: Array) -> void:
+	edificios = lista
+	for ed: Dictionary in edificios:
+		ed["aislado"] = int(ed["id"]) in _aislados_guardados
+	recalcular()
 
 # ============================================================================ CONSULTAS
 

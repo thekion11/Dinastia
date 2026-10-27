@@ -348,9 +348,19 @@ cada hora del `Reloj` con el clima de la semana (viento mueve el parque eólico,
   sala de control (pantalla con `resumen()`, botón de reparar averías y palanca roja que corta la luz del sector de arriba) y un
   cuarto olvidado. Estado `subsuelo` del explorador; capturas en `docs/04_auditorias/capturas_subsuelo/` (escena `pruebas/captura_subsuelo`,
   corre con `xvfb-run … --rendering-driver opengl3`, SIN_LUZ=1 para el modo emergencia). Hecho en Compatibility: falta mirarlo en Forward+.
-- PENDIENTE: texturas y detalle del subsuelo (paredes lisas), sonido ambiente y goteo; averías visibles (obras, cuadrilla, camión cisterna);
-  apagón por sector en farolas y ventanas (hoy las farolas bajan todas a la vez); aviso en el móvil con `resumen()`; cables con caída;
-  guardar el estado de las redes en la partida; coche con depósito real que dependa del repostaje.
+- CENTRO DE MANDO Y EVENTO (27-10, 2.ª pasada): tres pantallas reales (`visor/panel_mando.gd`: mapa sinóptico, curvas de 24 h, alertas
+  y tabla de edificios) en la sala de control; sala de acometidas con un armario por edificio REAL (19: club, hospital, ayuntamiento…;
+  consumo, luz, agua, rumbo y distancia desde la tapa; E aísla/restablece) y esos edificios consumen de verdad en `RedesCiudad`
+  (hospital, comisaría y bomberos con generador). EVENTO «Apagón de tormenta» (`nucleo/evento_apagon.gd`): semana de tormenta, 20:00,
+  60 %: dos sectores sin luz; móvil avisa, abajo hay que REARMAR el cuadro general (galería eléctrica) y RECONECTAR (botón verde) →
+  titular «bien»; si nadie baja, la cuadrilla arregla a las 08:00 (titular «mal»). Detalle: hormigón texturado, franjas de peligro,
+  abrazaderas, charcos, extintores, salidas, marcos por red, ventiladores y goteras. Capturas con `EVENTO=1` en la escena de captura.
+  PENDIENTE: los edificios de la superficie no cambian de aspecto con el corte (solo farolas); sonido ambiente; Forward+.
+- Hecho 27-10 (3.ª pasada): las redes se GUARDAN en la partida (`Mundo.redes_ciudad`, clave `redes_ciudad`; partida vieja = nuevas; ida y vuelta
+  probada) y el móvil avisa de cortes e inundaciones nuevos.
+- PENDIENTE: sonido ambiente del subsuelo; averías visibles (obras, cuadrilla, camión cisterna);
+  apagón por sector en farolas y ventanas (hoy las farolas bajan todas a la vez); cables con caída;
+  coche con depósito real que dependa del repostaje.
 
 ### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
 

@@ -49,6 +49,7 @@ func montar() -> void:
 	_potabilizadora()
 	_depuradora()
 	_alta_tension()
+	_edificios()
 	_gasolineras()
 	_inundaciones()
 	refrescar()
@@ -244,6 +245,27 @@ func _alta_tension() -> void:
 		anterior = puntas
 	cuenta["torres"] = n + 1
 
+# ============================================================================ EDIFICIOS
+
+## Los edificios de la ciudad (los de `ESPECIALES`) se CONECTAN al modelo: cada uno consume luz y agua de SU sector.
+func _edificios() -> void:
+	var vistos := {}
+	var gas_n := 0
+	modelo.registrar_edificio("estadio", CityBuilder.ESTADIO_EN, String(b.datos.get("club", {}).get("estadioNom", "Estadio del club")))
+	for bl: Dictionary in e.bloques:
+		var uso := String(bl["uso"])
+		if not RedesCiudad.CONSUMO.has(uso) or (vistos.has(uso) and uso != "gasolinera"):
+			continue
+		vistos[uso] = true
+		var r: Rect2 = bl["rect"]
+		var nombre := ""
+		if uso == "gasolinera":
+			gas_n += 1
+			nombre = "Gasolinera %d" % gas_n
+		modelo.registrar_edificio(uso, Vector3(r.get_center().x, 0, r.get_center().y), nombre)
+	cuenta["edificios_conectados"] = modelo.edificios.size()
+	modelo.recalcular()
+
 # ============================================================================ GASOLINERAS
 
 func _gasolineras() -> void:
@@ -287,8 +309,20 @@ func _inundaciones() -> void:
 ## Una hora de juego (`Reloj.hora_cambiada`): el clima de la semana manda viento y lluvia.
 func hora_cambiada(hora: int, clima: String) -> void:
 	var t := RedesCiudad.tiempo_de(clima, hora)
-	modelo.pasar(1, hora, float(t["viento"]), float(t["lluvia"]))
+	modelo.pasar(1, hora, float(t["viento"]), float(t["lluvia"]), clima)
 	refrescar()
+
+## La partida manda: el estado de las redes es el de `Mundo.redes_ciudad` (los edificios son los de ESTA ciudad).
+func adoptar(m: RedesCiudad) -> void:
+	if m == null or m == modelo:
+		return
+	m.recibir_edificios(modelo.edificios)
+	modelo = m
+	refrescar()
+
+## Lo que el evento del apagón quiere contar al jugador ({tipo, texto}).
+func tomar_avisos() -> Array:
+	return modelo.evento.tomar_avisos()
 
 func refrescar() -> void:
 	for sec: Vector2i in _lamparas:
