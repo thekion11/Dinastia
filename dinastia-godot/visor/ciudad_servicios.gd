@@ -107,3 +107,4 @@ static func portico(ex: CiudadExpansion, uso: String, c: Vector3, w: float, f: f
 		_pieza_edif(ex, "column-wide", Vector3(c.x + float(dx) * ancho, 0.3, zc), Vector3(1.6, 1.55, 1.6))
 	## La escalinata sube hacia el edificio: la pieza corta (1,3 × 1,3 × 2) estirada a todo el ancho de las puertas.
 	_pieza_edif(ex, "stairs-closed-short", Vector3(c.x, 0.0, zc + 1.2), Vector3(ancho / 1.3 * 0.8, 0.55, 1.5), PI)
+	EscaleraVida.registrar(ex.b, Vector3(c.x, 0.3, zc + 2.7), Vector3(c.x, 1.0, zc - 0.3), 4)   ## sube hacia las puertas (peldaños medidos del kit)
