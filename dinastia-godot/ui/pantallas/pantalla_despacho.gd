@@ -168,7 +168,7 @@ func _pintar_solicitud_plantel() -> void:
 	t.text = Idiomas.t("TE BUSCA UN JUGADOR")
 	marco.add_child(t)
 	var txt := p._texto(13, Principal.COL_TEXTO)
-	txt.text = Idiomas.t("%s (%d años, media %d) %s") % [j.nombre, j.edad, j.ovr, String(d[1]).to_lower()]
+	txt.text = Idiomas.t("%s (%d años, media %d) %s") % [j.nombre, j.edad, j.ovr, Idiomas.t(String(d[1]).to_lower())]
 	txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	marco.add_child(txt)
 	var fila := HBoxContainer.new()

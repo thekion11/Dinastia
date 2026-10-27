@@ -131,6 +131,12 @@ func _t(frase: String, prof: int) -> String:
 			dr = _patron(resto, prof)
 		if dr != "":
 			return frase.substr(0, ini0) + dr
+	## Una cita entera entre comillas (27-10-2026): «Hay materia prima…» es la misma frase que sin ellas.
+	if frase.length() > 2 and frase.begins_with("«") and frase.ends_with("»"):
+		var dentro := frase.substr(1, frase.length() - 2)
+		var td := _t(dentro, prof + 1)
+		if td != dentro:
+			return "«" + td + "»"
 	## Por oraciones: la narración a veces pega varias frases en un mismo
 	## texto («Pregunta. Tardaste en contestar: en la sala se notó.»).
 	if prof < 2 and frase.length() > 30 and (frase.contains(". ") or frase.contains("! ") or frase.contains("? ")):

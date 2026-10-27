@@ -310,7 +310,7 @@ func _pintar_logros() -> void:
 		l.text = "%s %s  ·  %s" % [String(f["icono"]), String(f["titulo"]), marca]
 		p._lista_logros.add_child(l)
 		var d := p._texto(11, Principal.COL_BORDE if f["pendiente"] else Principal.COL_SUAVE)
-		d.text = "     " + String(f["descripcion"]) + (Idiomas.t("   (su sistema aún no está portado)") if f["pendiente"] else "")
+		d.text = "     " + Idiomas.t(String(f["descripcion"])) + (Idiomas.t("   (su sistema aún no está portado)") if f["pendiente"] else "")
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_logros.add_child(d)
 	## Los treinta a largo plazo, con su progreso (26-10-2026).
