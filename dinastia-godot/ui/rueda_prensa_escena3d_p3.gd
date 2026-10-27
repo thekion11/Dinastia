@@ -239,11 +239,9 @@ func _poner_pose(i: int, pose: String) -> void:
 	if ap == null:
 		return
 	var lib := ap.get_animation_library("")
-	if lib != null and not ap.has_animation(pose) and AnimExtra.UAL.has(pose) and _sala[i].get("esq") != null:
-		var clip: Animation = AnimQuaternius.cargar_real(String(AnimExtra.UAL[pose]), str(ap.get_path_to(_sala[i]["esq"])))
-		if clip != null:
-			clip.loop_mode = Animation.LOOP_LINEAR
-			lib.add_animation(pose, clip)
+	if lib != null and not ap.has_animation(pose) and _sala[i].get("esq") != null:
+		if AnimExtra.asegurar(ap, _sala[i]["esq"], pose):
+			ap.get_animation(pose).loop_mode = Animation.LOOP_LINEAR
 	if ap.has_animation(pose):
 		ap.play(pose, 0.4)
 

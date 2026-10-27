@@ -437,11 +437,8 @@ func _gesticular_dt(delta: float) -> void:
 	var gesto: String = GESTOS_PRENSA[_rng_dt.randi() % GESTOS_PRENSA.size()]
 	if ap != null:
 		var lib := ap.get_animation_library("")
-		if lib != null and not lib.has_animation(gesto) and AnimExtra.UAL.has(gesto):
-			var esq: Skeleton3D = _dt_3d.get("esqueleto")
-			var clip: Animation = AnimQuaternius.cargar_real(String(AnimExtra.UAL[gesto]), str(ap.get_path_to(esq)))
-			if clip != null:
-				lib.add_animation(gesto, clip)
+		if lib != null:
+			AnimExtra.asegurar(ap, _dt_3d.get("esqueleto"), gesto)
 		if ap.has_animation(gesto):
 			ap.play(gesto, 0.3)
 			ap.queue("parado")

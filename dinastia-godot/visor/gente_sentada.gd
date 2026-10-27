@@ -11,6 +11,7 @@ extends Node
 const MAXIMO := 6
 const CERCA := 55.0
 const LEJOS := 75.0
+const SE_VE := 38.0     ## a menos de esto, quien deja el asiento se levanta y se va andando
 const OCUPACION := 0.45   ## fracción de asientos cercanos con alguien
 
 var vida: VidaCiudad
@@ -20,6 +21,7 @@ var _rng := RandomNumberGenerator.new()
 var _t := 0.0
 var _parados := {}     ## autobús (id) → segundos que lleva parado en una parada
 var _visto := {}      ## asiento → si estaba ocupado la última vez que lo miré de cerca (solo quien llega MIENTRAS miras camina hasta el banco)
+var _saliendo: Array = []   ## {d, t, fase, a, b}: quien deja el asiento a la vista se levanta («levantarse») y se va andando
 var _llegando: Array = []   ## {i, d, a, b, t, dur, fase}: quien llega andando, se vuelve y se sienta
 var _eventos: Array[Vector3] = []   ## dónde subieron y bajaron pasajeros (a los 3 s de parar el autobús)
 
@@ -34,6 +36,7 @@ static func crear(v: VidaCiudad) -> GenteSentada:
 
 func _process(delta: float) -> void:
 	_llegadas(delta)
+	_salidas(delta)
 	if expl == null or not is_instance_valid(expl) or expl.cuerpo == null or expl.cb == null:
 		return
 	_t -= delta
@@ -89,8 +92,15 @@ func revisar() -> void:
 	for i: int in cuerpos.keys():
 		var c: Dictionary = cuerpos[i]
 		var p: Vector3 = c["p"]
-		if Vector2(p.x, p.z).distance_to(yo) > LEJOS or not ocupado(i):
+		var dist := Vector2(p.x, p.z).distance_to(yo)
+		if dist > LEJOS:
 			_quitar(i)
+		elif not ocupado(i):
+			## A la vista: se levanta y se va andando (el clip «levantarse» del pack); lejos o de lado, desaparece sin más.
+			if dist < SE_VE and not _llegando.any(func(l: Dictionary) -> bool: return int(l["i"]) == i):
+				_levantar(i)
+			else:
+				_quitar(i)
 	## Y se sientan los que faltan, los asientos más cercanos primero.
 	var candidatos: Array = []
 	var asientos: Array = expl.cb.asientos
@@ -172,6 +182,51 @@ func embarque(bus: Node3D) -> void:
 	if vida != null and vida.pasajeros != null:
 		vida.pasajeros.parada(bus)
 
+## El que está en el asiento `i` se levanta (clip «levantarse», 1 s) y camina 9 m por la acera; el asiento queda libre ya.
+func _levantar(i: int) -> void:
+	var c: Dictionary = cuerpos.get(i, {})
+	cuerpos.erase(i)
+	_visto.erase(i)
+	if c.is_empty():
+		return
+	var d: Dictionary = c["d"]
+	var n: Node3D = d["nodo"]
+	var ap: AnimationPlayer = d["anim"]
+	if not is_instance_valid(n) or not AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(n), "levantarse"):
+		if is_instance_valid(n):
+			n.queue_free()
+		return
+	Mini3D.anim(d, "levantarse", "")
+	var lado := Vector3(cos(n.rotation.y), 0, -sin(n.rotation.y)) * (1.0 if i % 2 == 0 else -1.0)
+	var fuera := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
+	_saliendo.append({"d": d, "t": 0.0, "fase": 0, "a": n.position, "b": n.position + fuera * 1.5 + lado * 8.0})
+
+## Quien se levanta: tras el clip se vuelve hacia la acera y camina; al llegar a su destino desaparece.
+func _salidas(delta: float) -> void:
+	for k in range(_saliendo.size() - 1, -1, -1):
+		var s: Dictionary = _saliendo[k]
+		var d: Dictionary = s["d"]
+		var n: Node3D = d["nodo"]
+		if not is_instance_valid(n):
+			_saliendo.remove_at(k)
+			continue
+		s["t"] = float(s["t"]) + delta
+		if int(s["fase"]) == 0:
+			if float(s["t"]) >= 1.0:
+				s["fase"] = 1
+				s["t"] = 0.0
+				Mini3D.anim(d, "caminar", "")
+				(d["anim"] as AnimationPlayer).speed_scale = 1.3 / MovimientoNatural.NATURAL
+		else:
+			var a: Vector3 = s["a"]
+			var b: Vector3 = s["b"]
+			var u := clampf(float(s["t"]) * 1.3 / a.distance_to(b), 0.0, 1.0)
+			n.position = a.lerp(b, u)
+			n.rotation.y = MovimientoNatural.girar(n.rotation.y, atan2(b.x - a.x, b.z - a.z), delta * 1.5)
+			if u >= 1.0:
+				n.queue_free()
+				_saliendo.remove_at(k)
+
 func _quitar(i: int) -> void:
 	_visto.erase(i)
 	var c: Dictionary = cuerpos.get(i, {})
@@ -182,5 +237,10 @@ func _quitar(i: int) -> void:
 	cuerpos.erase(i)
 
 func _quitar_todos() -> void:
+	for s: Dictionary in _saliendo:
+		var ns: Node = (s["d"] as Dictionary).get("nodo")
+		if ns != null and is_instance_valid(ns):
+			ns.queue_free()
+	_saliendo.clear()
 	for i: int in cuerpos.keys():
 		_quitar(i)
