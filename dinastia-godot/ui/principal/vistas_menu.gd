@@ -275,3 +275,51 @@ func _ver_ciudad_explorando(modo: String) -> void:
 		if h is VistaCiudad:
 			(h as VistaCiudad).explorar(modo)
 			VidaCiudad.enganchar((h as VistaCiudad)._explorador, h as VistaCiudad, p.mundo)
+
+func _ver_estadio_propio() -> void:
+	p._fundido_entrada()
+	var c := p.mundo.mi_club()
+	if c == null:
+		return
+	var f := Finanzas.new(c)
+	var gente := float(f.asistencia()) / float(maxi(c.estadio_aforo, 1))
+	## VistaEstadio pinta el 3D DIRECTO en el viewport raíz y a propósito no
+	## trae ningún fondo opaco -es lo que deja ver el estadio de verdad, ver
+	## el comentario en `estadio.gd::_construir()`-, pero eso significa que
+	## cualquier Control que siga encima -la barra superior, las pestañas,
+	## esta misma lista de Estadio- lo tapa entero: en un mismo viewport los
+	## Control se pintan SIEMPRE sobre el 3D, sin importar el orden en que se
+	## añadieron los nodos. `partido_vivo._ver_estadio()` no tiene este
+	## problema porque su propia pantalla ya deja hueco de sobra; esta sí
+	## está cubierta de paneles, así que hay que esconderlos a mano mientras
+	## el visor está abierto y devolverlos tal cual al volver -guardando
+	## cuáles estaban visibles, no asumiendo que todos lo estaban-.
+	var ocultados: Array = []
+	for h in p.get_children():
+		if h is CanvasItem and (h as CanvasItem).visible:
+			(h as CanvasItem).visible = false
+			ocultados.append(h)
+	var vista := VistaEstadio.new()
+	## Sin partido la pantalla gigante enseña bienvenida + tabla + goleadores,
+	## que es lo que hace un estadio de verdad un día entre semana. Va antes de
+	## `abrir()`, que es donde se monta.
+	vista.datos_pantalla = p._datos_pantalla_estadio(c)
+	p.add_child(vista)
+	vista.abrir(c, clampf(gente, 0.05, 1.0), null, null, p.mundo.perfil_estadio_de(c),
+		Comercial.color_balon(p.mundo.comercial.balon, c))
+	vista.cerrado.connect(func() -> void:
+		vista.queue_free()
+		for h in ocultados:
+			if is_instance_valid(h):
+				(h as CanvasItem).visible = true)
+## Con pantalla de carga y consejos: se pinta ANTES de empezar a construir.
+func _ver_estadio_con_carga() -> void:
+	PantallaCarga.club = p.mundo.mi_club() if p.mundo != null else null
+	var carga := PantallaCarga.mostrar(p, Idiomas.t("Levantando el estadio…"))
+	await p.get_tree().process_frame
+	await p.get_tree().process_frame
+	_ver_estadio_propio()
+	## Si algo la cerró mientras se esperaba (otra pantalla encima, o el
+	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).
+	if is_instance_valid(carga):
+		carga.cerrar()

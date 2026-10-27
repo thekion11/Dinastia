@@ -149,3 +149,47 @@ func _responder_oferta_mercado(indice: int, aceptar: bool) -> void:
 		p.mundo.mercado.responder_oferta(indice, false)
 		p._escribir("Oferta por %s rechazada." % j.nombre)
 	p._refrescar()
+
+func _preparar_mando() -> void:
+	for par: Array in Principal.MANDO_BOTONES:
+		var accion := String(par[0])
+		if not InputMap.has_action(accion):
+			InputMap.add_action(accion)
+		var ev := InputEventJoypadButton.new()
+		ev.button_index = par[1]
+		if not InputMap.action_has_event(accion, ev):
+			InputMap.action_add_event(accion, ev)
+	## El stick izquierdo, además de la cruceta: en un mando moderno la gente
+	## usa el stick y se queda mirando por qué no pasa nada.
+	for eje: Array in [["ui_up", JOY_AXIS_LEFT_Y, -1.0], ["ui_down", JOY_AXIS_LEFT_Y, 1.0],
+			["ui_left", JOY_AXIS_LEFT_X, -1.0], ["ui_right", JOY_AXIS_LEFT_X, 1.0]]:
+		var ev2 := InputEventJoypadMotion.new()
+		ev2.axis = eje[1]
+		ev2.axis_value = eje[2]
+		if not InputMap.action_has_event(String(eje[0]), ev2):
+			InputMap.action_add_event(String(eje[0]), ev2)
+	for par2: Array in Principal.MANDO_PESTANAS:
+		var accion2 := String(par2[0])
+		if not InputMap.has_action(accion2):
+			InputMap.add_action(accion2)
+		var eb := InputEventJoypadButton.new()
+		eb.button_index = par2[1]
+		if not InputMap.action_has_event(accion2, eb):
+			InputMap.action_add_event(accion2, eb)
+		var et := InputEventKey.new()
+		et.keycode = par2[2]
+		if not InputMap.action_has_event(accion2, et):
+			InputMap.action_add_event(accion2, et)
+	for par3: Array in Principal.MANDO_BLOQUES:
+		var accion3 := String(par3[0])
+		if not InputMap.has_action(accion3):
+			InputMap.add_action(accion3)
+		var ea := InputEventJoypadMotion.new()
+		ea.axis = par3[1]
+		ea.axis_value = 1.0
+		if not InputMap.action_has_event(accion3, ea):
+			InputMap.action_add_event(accion3, ea)
+	## Los atajos del menú central y las teclas que el jugador reasignó en
+	## Ajustes → Accesibilidad (s3).
+	AtajosCentrales.registrar()
+	TeclasInterfaz.aplicar()

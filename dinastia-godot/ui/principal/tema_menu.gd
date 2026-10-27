@@ -248,3 +248,137 @@ func _datos_pantalla_estadio(local: Club, comp: String = "liga") -> Dictionary:
 	## sale vacía y la pantalla simplemente no rota a ese panel.
 	d["goleadores"] = _goleadores_de(l.clubes)
 	return d
+
+func _panel() -> PanelContainer:
+	var panel := PanelContainer.new()
+	var e := StyleBoxFlat.new()
+	## La paleta y la forma elegidas en Ajustes. Se leen aqui, en el unico sitio
+	## por el que pasan todas las tarjetas del juego, para que cambiarlas repinte
+	## la interfaz entera sin tocar ni una pantalla.
+	e.bg_color = p._pal_panel()
+	e.border_color = p._ui_ajustes._pal_borde()
+	var forma: Array = Principal.FORMAS_TARJETA.get(p._forma_tarjeta, ["", 8, 1])
+	e.set_border_width_all(int(forma[2]))
+	e.set_corner_radius_all(int(forma[1]))
+	panel.add_theme_stylebox_override("panel", e)
+	## Marcada como tarjeta del juego. Media interfaz -las columnas, la cabecera,
+	## la ficha- se construye UNA vez y luego solo se le cambia el contenido, asi
+	## que cambiar de paleta no la tocaba: se queda esta marca para poder ir a
+	## buscarlas y repintarlas sin reconstruir la pantalla entera.
+	panel.set_meta("tarjeta", true)
+	## El adorno del borde -escuadras, filete, cinta-. Va aqui y no en el
+	## StyleBox porque un StyleBox solo sabe pintar un borde entero y uniforme.
+	if p._marca_tarjeta != "ninguno":
+		var mk := MarcaPanel.new()
+		mk.poner(p._marca_tarjeta, p.COL_ACENTO)
+		panel.add_child(mk)
+	if not p._brillo_tarjetas:
+		return panel
+	var brillo := TextureRect.new()
+	brillo.texture = p._textura_brillo_panel()
+	brillo.set_anchors_preset(Control.PRESET_FULL_RECT)
+	brillo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	## SIN esto, TextureRect pide como mínimo el tamaño NATIVO de la textura
+	## (128px de alto) y estira el panel entero para dárselo -el brillo
+	## crecía la tarjeta en vez de solo pintarla-.
+	brillo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	brillo.stretch_mode = TextureRect.STRETCH_SCALE
+	panel.add_child(brillo)
+	return panel
+
+func _con_scroll(padre: VBoxContainer) -> VBoxContainer:
+	var s := ScrollContainer.new()
+	s.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	## AUTO y no DISABLED (etapa 1, 2.ª pasada): desactivado, una fila más ancha
+	## que la columna AGRANDABA la columna entera y sacaba la ficha del jugador
+	## de la pantalla (Editor, Libres). Ahora lo que no cabe se desplaza dentro.
+	s.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	padre.add_child(s)
+	var lista := VBoxContainer.new()
+	lista.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lista.add_theme_constant_override("separation", 2)
+	s.add_child(lista)
+	return lista
+func _columna(padre: HBoxContainer, titulo: String, ratio: float) -> VBoxContainer:
+	var caja := _panel()
+	caja.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	caja.size_flags_stretch_ratio = ratio
+	padre.add_child(caja)
+	var v := VBoxContainer.new()
+	v.set_anchors_preset(Control.PRESET_FULL_RECT)
+	v.offset_left = 12; v.offset_top = 10; v.offset_right = -12; v.offset_bottom = -10
+	caja.add_child(v)
+	var t := p._texto(11, p.COL_SUAVE); t.text = titulo
+	t.clip_text = true
+	v.add_child(t)
+	## Se deja a mano el último título creado para las columnas cuyo encabezado
+	## cambia solo -la de la izquierda dice "PRIMERA DIVISION" o "COPA
+	## LIBERTADORES · CUARTOS" según lo que se juegue el domingo-.
+	p._ultimo_titulo_columna = t
+	## `v` es la caja entera de la columna, por debajo del scroll: quien quiera
+	## poner algo FIJO al pie -un botón que no se vaya con el desplazamiento-
+	## lo cuelga de aquí.
+	p._ultima_caja_columna = v
+	return _con_scroll(v)
+
+func _aplicar_fondo() -> void:
+	if p._clima != null:
+		p._clima.modo = p._clima_elegido
+		p._clima.interactivo = p._clima_interactivo
+		p._clima.ajustar_area(p.size if p.size.x > 0.0 else Vector2(1280, 720))
+		p._clima.aplicar()
+	if p._fondo_escena == null:
+		return
+	## EL FONDO ROTATIVO. El usuario pidió poder elegir entre uno fijo o que
+	## "vaya cambiando". La rotación NO usa `Azar` -eso movería la simulación
+	## entera, la trampa que ya costó una depuración con el feed de redes-:
+	## sale de la semana de juego, que da un fondo distinto cada domingo,
+	## siempre el mismo para la misma partida.
+	if p._fondo_elegido == Principal.ROTAR_FONDO:
+		var nombres: Array = Fondo.NOMBRES
+		if nombres.is_empty():
+			p._fondo_escena.texture = null
+			return
+		var i := (p.mundo.semana if p.mundo != null else 0) % nombres.size()
+		p._fondo_escena.texture = Fondo.textura(String(nombres[i]))
+		return
+	p._fondo_escena.texture = Fondo.textura(p._fondo_elegido) if p._fondo_elegido != "" else null
+func _con_contraste(c: Color) -> Color:
+	var lf := p._pal_panel().get_luminance()
+	## Con contraste alto, el salto mínimo de luminosidad es mayor.
+	var salto := 0.6 if p._paleta == "contraste" else Principal.SALTO_LUMA
+	if absf(lf - c.get_luminance()) >= salto:
+		return c
+	var destino := Color.BLACK if lf > 0.5 else Color.WHITE
+	var r := c
+	## Ocho pasos y se para. Si un color no llega ni al octavo -un gris exacto del
+	## mismo tono que el panel- se devuelve el ultimo, que ya es lo mas separado
+	## que se puede sin dejar de ser el mismo color.
+	for i in 8:
+		r = r.lerp(destino, 0.18)
+		if absf(lf - r.get_luminance()) >= salto:
+			return r
+	return r
+## Las dos mil llamadas a `_texto()` del juego piden COL_TEXTO o COL_SUAVE, que
+## son claros porque el fondo por defecto es oscuro. Con una paleta CLARA -papel,
+## cuaderno- ese texto quedaria blanco sobre blanco, invisible. Se traduce aqui,
+## en el unico sitio por el que pasan todas las etiquetas, en vez de tocar dos mil
+## llamadas: los colores con significado propio -el oro de un titulo, el rojo de
+## una deuda- pasan de largo sin tocarse, que para eso son ellos los que informan.
+func _color_de_paleta(c: Color) -> Color:
+	if p._paleta == "bosque":
+		return c
+	if c == p.COL_TEXTO:
+		return p._pal_texto()
+	if c == p.COL_SUAVE:
+		return p._pal_suave()
+	## Los de FONDO son los de la paleta, no se «contrastan» (s3: pasaban por el
+	## empuje de abajo, pensado para letras, y las píldoras salían gris claro con
+	## letra blanca en cualquier paleta que no fuera la de por defecto).
+	if c == p.COL_PANEL:
+		return p._pal_panel()
+	if c == p.COL_FONDO:
+		return p._ui_ajustes._color_pal(1, p.COL_FONDO)
+	if c == p.COL_BORDE:
+		return p._ui_ajustes._pal_borde()
+	return _con_contraste(c)
