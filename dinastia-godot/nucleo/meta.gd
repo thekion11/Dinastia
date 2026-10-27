@@ -69,6 +69,7 @@ static func color_rareza(r: String) -> Color:
 static func fin_de_temporada(m: Mundo) -> void:
 	var d := leer()
 	d["sobres"] = int(d["sobres"]) + 1
+	d["temporadas"] = int(d.get("temporadas", 0)) + 1   ## para «el bloqueo» de modos (DesbloqueoModos)
 	d["legado"] = _foto_del_mundo(m)
 	guardar(d)
 

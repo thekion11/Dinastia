@@ -233,7 +233,7 @@ func _montar(duracion_mitad: float) -> void:
 		_camarografos.balon = balon
 	motor = MotorJugable.new()
 	add_child(motor)
-	motor.duracion_mitad = duracion_mitad
+	motor.duracion_mitad = duracion_mitad; GestoTecnico.fijar_clima(motor, String(perfil.get("clima", "")))   ## el clima pesa en el juego
 	motor.preparar(lista, balon, yo.id if yo != null else "", hash(local.id + visita.id))
 	## La cabeza de cada jugador sigue al balón (M-098, como en el modo DT).
 	MiradaBalon.poner(motor.jugadores, balon)

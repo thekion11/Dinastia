@@ -33,7 +33,7 @@ func fundar_club(nombre_club: String, pais: String, col1: String = "", col2: Str
 ## desafíos activos entre sí, tal cual el HTML.
 func multiplicador_desafios() -> float:
 	var m := 1.0
-	var tabla: Variant = Datos.tabla("DESAFIOS")
+	var tabla: Variant = DesafiosDificultad.todos()
 	if not (tabla is Array):
 		return m
 	for k: String in desafios:

@@ -31,7 +31,8 @@ func generar(m: Mundo) -> void:
 	var c := m.mi_club()
 	var semanal := float(maxi(c.masa_salarial(), 1000))
 	var h := absi(hash([m.anio, m.semana, c.id]))
-	var orden: Array = range(CATALOGO.size())
+	var duros := m.tiene_desafio("retos_duros")   ## DesafiosDificultad: solo los difíciles y menos premio
+	var orden: Array = range(CATALOGO.size()) if not duros else [1, 2, 5]
 	for i in orden.size():
 		var j := (h / (i + 1) + i * 7) % orden.size()
 		var tmp: int = orden[i]
@@ -39,7 +40,8 @@ func generar(m: Mundo) -> void:
 		orden[j] = tmp
 	for k in 3:
 		var r: Array = CATALOGO[orden[k]]
-		activos.append({"id": String(r[0]), "texto": String(r[1]), "premio": maxi(int(round(semanal * float(r[2]) / 100.0 / 1000.0)) * 1000, 1000)})
+		var pct := float(r[2]) * (DesafiosDificultad.PREMIO_RETOS if duros else 1.0)
+		activos.append({"id": String(r[0]), "texto": String(r[1]), "premio": maxi(int(round(semanal * pct / 100.0 / 1000.0)) * 1000, 1000)})
 	if m.prensa != null:
 		m.prensa.noticia.emit(Idiomas.t("Retos de la semana"), "\n".join(activos.map(func(a: Dictionary) -> String:
 			return "🎯 %s (%d €)" % [Idiomas.t(String(a["texto"])), int(a["premio"])])))

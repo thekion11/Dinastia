@@ -213,7 +213,9 @@ func _normal_rejilla(alturas: Array, i: int, j: int, paso: float) -> Vector3:
 	var dz: float = (h.call(i, j + 1) - h.call(i, j - 1)) / (2.0 * paso)
 	return Vector3(-dx, 1.0, -dz).normalized()
 
-func _terreno() -> Array[MeshInstance3D]:
+## El ruido que define el relieve (compartido por la malla del terreno y por `altura_en`). Aparte de `_terreno` para poder leer alturas SIN construir la
+## malla (27-10-2026: la vía del tren y el teleférico las piden al montar la ciudad, y `altura_en` daba 0 si el terreno aún no se había construido).
+func _preparar_ruido() -> void:
 	var ruido := FastNoiseLite.new()
 	ruido.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	ruido.seed = 20260912
@@ -226,6 +228,11 @@ func _terreno() -> Array[MeshInstance3D]:
 	detalle.frequency = 0.0035
 	_ruido_terreno = ruido
 	_ruido_detalle = detalle
+
+func _terreno() -> Array[MeshInstance3D]:
+	_preparar_ruido()
+	var ruido := _ruido_terreno
+	var detalle := _ruido_detalle
 
 	var paso := TERRENO_LADO / float(TERRENO_CELDAS)
 	var mitad := TERRENO_LADO * 0.5

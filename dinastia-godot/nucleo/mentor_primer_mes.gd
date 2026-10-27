@@ -24,10 +24,10 @@ func empezar() -> void:
 ## dicho ("" si ninguno), para las pruebas.
 func tras_semana(m: Mundo, gf: int, gc: int) -> String:
 	var c := m.mi_club()
-	if not activo or c == null or semana_al_mando >= SEMANAS:
+	if not activo or c == null or semana_al_mando >= SEMANAS or m.tiene_desafio("poca_ayuda"):
 		return ""
 	semana_al_mando += 1
-	var consejo := consejo_de(semana_al_mando, c, gf, gc, m.directiva)
+	var consejo := consejo_de(semana_al_mando, c, gf, gc, m.directiva, DesafiosDificultad.consejo_enganoso(m, semana_al_mando))
 	if consejo.is_empty() or dados.has(consejo[0]):
 		return ""
 	dados.append(consejo[0])
@@ -37,17 +37,18 @@ func tras_semana(m: Mundo, gf: int, gc: int) -> String:
 		activo = false
 	return String(consejo[0])
 
-## [id, título, texto ya traducido] del consejo de la semana `n` (vacío si no toca ninguno).
-static func consejo_de(n: int, c: Club, gf: int, gc: int, dir: Directiva) -> Array:
+## [id, título, texto ya traducido] del consejo de la semana `n` (vacío si no toca ninguno). `engana`: el
+## desafío «malos consejos»: el mentor dice lo contrario de lo que conviene (sin cansados, contratos o apuros).
+static func consejo_de(n: int, c: Club, gf: int, gc: int, dir: Directiva, engana := false) -> Array:
 	match n:
 		1:
 			return ["partido", "Tu primera semana", _texto_partido(gf, gc)]
 		2:
-			return ["carga", "La carga de trabajo", _texto_carga(c)]
+			return ["carga", "La carga de trabajo", _texto_carga(c, engana)]
 		3:
-			return ["contratos", "Los contratos", _texto_contratos(c)]
+			return ["contratos", "Los contratos", _texto_contratos(c, engana)]
 		4:
-			return ["caja", "La caja y la confianza", _texto_caja(c, dir)]
+			return ["caja", "La caja y la confianza", _texto_caja(c, dir, engana)]
 	return []
 
 static func _texto_partido(gf: int, gc: int) -> String:
@@ -62,33 +63,35 @@ static func _texto_partido(gf: int, gc: int) -> String:
 		r = Idiomas.t("Se perdió el primero (%d-%d). Nadie gana la liga en la primera fecha: busca en el informe qué falló antes de cambiarlo todo.") % [gf, gc]
 	return r + "\n\n" + Idiomas.t("Y cada semana tienes tres retos en tus objetivos (🎯): cumplirlos llena la caja.")
 
-static func _texto_carga(c: Club) -> String:
+static func _texto_carga(c: Club, engana := false) -> String:
 	var cansados: Array = []
 	for j: Jugador in c.plantilla:
 		if j.lesion <= 0 and j.fisico < FISICO_BAJO:
 			cansados.append(j)
 	cansados.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.fisico < b.fisico)
-	if cansados.is_empty():
+	if cansados.is_empty() or engana:
 		return Idiomas.t("El grupo está fresco. Es el momento de apretar en el entrenamiento: lo que cargues ahora se nota en marzo.")
 	var nombres: Array = cansados.slice(0, 3).map(func(j: Jugador) -> String: return "%s (%d%%)" % [j.nombre, j.fisico])
 	return Idiomas.t("Hay %d jugadores sin piernas: %s. Baja la carga del entrenamiento o rótalos; un cansado se lesiona.") % [cansados.size(), ", ".join(nombres)]
 
-static func _texto_contratos(c: Club) -> String:
+static func _texto_contratos(c: Club, engana := false) -> String:
 	var vencen: Array = []
 	for j: Jugador in c.plantilla:
 		if j.anios_contrato <= 1:
 			vencen.append(j)
 	vencen.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
-	if vencen.is_empty():
+	if vencen.is_empty() or engana:
 		return Idiomas.t("Nadie de la plantilla acaba contrato esta temporada. Aun así, revisa los sueldos: un contrato largo y caro pesa años.")
 	var nombres: Array = vencen.slice(0, 3).map(func(j: Jugador) -> String: return "%s (%d)" % [j.nombre, j.ovr])
 	return Idiomas.t("A %d jugadores se les acaba el contrato esta temporada; los mejores, %s. Renueva a tiempo o en verano se van gratis.") % [vencen.size(), ", ".join(nombres)]
 
-static func _texto_caja(c: Club, dir: Directiva) -> String:
+static func _texto_caja(c: Club, dir: Directiva, engana := false) -> String:
 	var sueldos := maxi(c.masa_salarial(), 1)
-	var semanas := int(float(c.saldo) / float(sueldos))
+	var semanas := int(float(c.saldo) / float(sueldos)) * (4 if engana else 1)
+	if engana:
+		semanas = maxi(semanas, SEMANAS_DE_CAJA * 3)
 	var t: String
-	if c.saldo < 0:
+	if c.saldo < 0 and not engana:
 		t = Idiomas.t("La caja está en rojo (%s). Antes de fichar, vende o recorta sueldos: un club en rojo acaba con el banco en la puerta.") % Eco.dinero(c.saldo)
 	elif semanas < SEMANAS_DE_CAJA:
 		t = Idiomas.t("Con la caja (%s) se pagan unas %d semanas de sueldos. Es poco: cuida cada fichaje.") % [Eco.dinero(c.saldo), semanas]
