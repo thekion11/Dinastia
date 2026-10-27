@@ -62,3 +62,22 @@ static func desguace(ex: CiudadExpansion, c: Vector3, w: float, f: float) -> voi
 	for k in 8:
 		var q := c + Vector3(w * 0.34 + float(k % 2) * 1.6, 0.2 + float(k / 4) * 1.0, -f * 0.3 + float((k / 2) % 2) * 2.4 + float(k / 4) * 0.4)
 		_coche(ex, EXTRA % "debris-tire", q, 3.0, float(k) * 0.9)
+
+## LA PLANTILLA DE FACHADA EN LOS SERVICIOS (P1-5): cada edificio (caja lisa de la auditoría) recibe la piel de `FachadaModular` en su cara sur:
+## [desplazamiento z del frente del volumen respecto al centro, fracción del ancho, pisos]. Los adornos que estaban pegados a la pared
+## (cruz, neón, franja) se adelantan `FachadaModular.FONDO` en `ciudad_expansion_p7.gd` para no quedar bajo la piel.
+const FACHADAS := {
+	"ayuntamiento": [-6.0, 0.275, 0.8, 4],
+	"hospital": [-8.0, 0.2, 0.8, 6],
+	"comisaria": [0.0, 0.3, 0.7, 3],
+	"escuela": [0.0, -0.05, 0.8, 3],
+	"instituto": [0.0, -0.05, 0.8, 3],
+	"cine": [0.0, 0.35, 0.7, 4],
+	"universidad": [0.0, 0.025, 0.85, 5],
+}
+
+static func fachada(ex: CiudadExpansion, uso: String, c: Vector3, w: float, f: float) -> void:
+	if not FACHADAS.has(uso):
+		return
+	var d: Array = FACHADAS[uso]
+	FachadaModular.montar(ex, c.x, c.z + float(d[0]) + f * float(d[1]), 0.3, w * float(d[2]), int(d[3]))
