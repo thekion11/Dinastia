@@ -82,6 +82,8 @@ static func _cargar_trofeo() -> void:
 		if mat is StandardMaterial3D:
 			_trofeo_mat = mat.duplicate()
 			(_trofeo_mat as StandardMaterial3D).metallic = 0.5
+			## Las asas del modelo son láminas de una sola cara: sin esto, la del lado opuesto desaparece de espaldas (se veía UNA asa).
+			(_trofeo_mat as StandardMaterial3D).cull_mode = BaseMaterial3D.CULL_DISABLED
 
 ## Una copa con su peana, `p` es la base. Con el modelo del trofeo, esa malla; si falta el
 ## archivo, la procedimental: pie, tallo, copa abierta y dos asas.
