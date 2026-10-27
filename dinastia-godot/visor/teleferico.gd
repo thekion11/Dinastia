@@ -12,7 +12,7 @@ const VIAJE := 120.0                         ## segundos reales de una subida
 const ESPERA := 10.0
 const CICLO := (VIAJE + ESPERA) * 2.0
 const ALTO_CABLE := 11.0
-const N_TORRES := 5
+const N_TORRES := 8
 
 var base := Vector3.ZERO                     ## suelo de la estación de abajo
 var cima := Vector3.ZERO                     ## suelo de la estación de arriba
@@ -92,12 +92,31 @@ func _estacion(b: CityBuilder, suelo: Vector3, giro: float, nombre: String, mats
 	rueda.rotation.x = PI * 0.5
 	rueda.position = Vector3(0, ALTO_CABLE - 0.8, -4.5)
 	base_n.add_child(rueda)
+	## Andén cubierto delante, con marquesina sobre cuatro columnas, y el rótulo grande sobre la fachada.
+	for par in [[Vector3(0, 0.25, 9.8), Vector3(22, 0.5, 8), mats["losa"]], [Vector3(0, 5.4, 9.8), Vector3(23, 0.4, 8.8), mats["tejado"]],
+			[Vector3(0, 9.4, 2.4), Vector3(17, 2.2, 0.4), mats["acero"]]]:
+		var mi2 := MeshInstance3D.new()
+		var bm2 := BoxMesh.new()
+		bm2.size = par[1]
+		mi2.mesh = bm2
+		mi2.material_override = par[2]
+		mi2.position = par[0]
+		base_n.add_child(mi2)
+	for cx: float in [-10.0, 10.0]:
+		for cz: float in [6.4, 13.2]:
+			var col := MeshInstance3D.new()
+			var bc := BoxMesh.new()
+			bc.size = Vector3(0.5, 5.0, 0.5)
+			col.mesh = bc
+			col.material_override = mats["acero"]
+			col.position = Vector3(cx, 2.9, cz)
+			base_n.add_child(col)
 	var l := Label3D.new()
 	l.text = nombre
 	l.font_size = 64
-	l.pixel_size = 0.016
-	l.outline_size = 10
-	l.position = Vector3(0, 4.4, 4.7)
+	l.pixel_size = 0.03
+	l.outline_size = 12
+	l.position = Vector3(0, 9.4, 2.7)
 	base_n.add_child(l)
 
 func _construir(b: CityBuilder) -> void:
@@ -122,8 +141,7 @@ func _construir(b: CityBuilder) -> void:
 		var suelo_p := b.altura_en(p.x, p.z)
 		p.y = maxf(p.y, suelo_p + ALTO_CABLE + 4.0)
 		puntos.append(p)
-		_caja(b, Vector3(p.x, (suelo_p + p.y) * 0.5 - 2.0, p.z), Vector3(1.6, p.y - suelo_p + 4.0, 1.6), mats["acero"])
-		_caja(b, Vector3(p.x, p.y + 0.4, p.z), Vector3(7.0, 0.5, 0.5), mats["acero"], giro + PI * 0.5)
+		TelefericoPaisaje.torre(self, b, p, giro, mats["acero"])
 	puntos.append(cable_cima)
 	var lateral := Vector3(dir.z, 0, -dir.x) * 2.5
 	for lado: float in [-1.0, 1.0]:
@@ -148,7 +166,9 @@ func _construir(b: CityBuilder) -> void:
 			mi.position = par[0]
 			cab.add_child(mi)
 		cab.rotation.y = giro + PI * 0.5
+		cab.scale = Vector3.ONE * 1.8                 ## grandes: se ven desde la ciudad
 		cabinas.append(cab)
+	TelefericoPaisaje.montar(self, b, base, cima)
 	mirador = MiradorCerro.new()
 	mirador.configurar(self, b, giro)
 	b.puntos_clic.append({"k": "tele_base", "n": "Teleférico: subir al Cerro", "pos": base + dir * -9.0, "estado": "ciudad", "radio": 22.0, "alcance": 8.0})

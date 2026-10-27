@@ -30,3 +30,5 @@ func _probar() -> void:
 	var m := t.mirador
 	_comprobar(m.libre(Vector2(t.cima.x, t.cima.z + 15.0)) and not m.libre(Vector2(t.cima.x, t.cima.z)) and not m.libre(Vector2(t.cima.x + 60.0, t.cima.z)), "en el mirador se anda por la plataforma: no por la estación ni fuera de la barandilla")
 	_comprobar(m.puntos.size() == 2 and t.datos()["nombre"] == "Teleférico del Cerro", "dos interacciones arriba (bajar y telescopio) y datos para el mapa")
+	_comprobar(int(t.get_meta("pinos", 0)) >= 600 and int(t.get_meta("rocas", 0)) >= 50 and int(t.get_meta("camino", 0)) >= 80, "paisaje del cerro: %d pinos, %d rocas y un camino en zigzag de %d tramos" % [t.get_meta("pinos", 0), t.get_meta("rocas", 0), t.get_meta("camino", 0)])
+	_comprobar(Teleferico.N_TORRES >= 8 and t.cabinas[0].scale.x > 1.5, "ocho torres en A y cabinas grandes (se ven desde la ciudad)")
