@@ -1,15 +1,16 @@
 class_name PeloDrive
 extends RefCounted
-## PEINADOS DEL DRIVE DEL DUEÑO (27-10-2026, «nv toufa», 105 peinados en un OBJ de 122 MB): se eligieron 12, se decimaron a ~800 triángulos
+## PEINADOS DEL DRIVE DEL DUEÑO (27-10-2026, «nv toufa», 105 peinados en un OBJ de 122 MB): se eligieron 12, se decimaron a ~4500 triángulos
 ## (`herramientas/pelo_drive_extraer.py` y `pelo_drive_a_res.gd`; ~20 KB cada uno, `.res` fuera de LFS) y aquí se ajustan a la cabeza de
 ## Quaternius. Cada malla viene normalizada: ancho 1,0, y = 0 en lo más alto, centrada en x y z. El ajuste (escala por el ancho, altura de la
 ## coronilla y fondo) sale de medir la cabeza del cuerpo (`HEAD` ±9 cm de ancho, coronilla a +21 cm del hueso en el masculino).
-## Licencia: pendiente de confirmar por el dueño (el pack «nv toufa» no trae texto de licencia; son sus regalos de Drive).
+## Licencia: confirmada por el dueño (regalos de Drive). Regla: un peinado entra solo si de cerca se ve MEJOR que el de Quaternius.
 const CARPETA := "res://assets/ciudad_personajes_pelo_drive/"
 const RUTA := "res://assets/characters/pelo_drive/pelo_%03d.res"
 ## Hombres y mujeres: los 11 que quedaron bien sobre la cabeza tras probar 30 de los 105 (el modelo del pack mira a -z: se gira 180°).
-const HOMBRES := [73, 74, 77, 79, 80, 68]
-const MUJERES := [28, 60, 117, 33, 36]   ## (las de coleta, trenzas y flequillo largo quedaron fuera: sin masa de pelo o tapaban los ojos)
+const HOMBRES := [80, 68]   ## (rizado y flequillo despeinado: de cerca se ven mejor que el corte de Quaternius al que sustituyen)
+## Revisión 27-10 (hoja antes/después, 1,5 m, frente/3/4/perfil): los otros 9 se descartaron (parecen casco, tapan los ojos o dejan huecos).
+const MUJERES := []
 ## [ancho que ocupa el peinado, altura de su parte alta sobre el hueso Head, desplazamiento en z] según el cuerpo (en m).
 const AJUSTE_M := [0.215, 0.255, 0.008]
 const AJUSTE_F := [0.200, 0.235, 0.004]
@@ -21,6 +22,8 @@ static func elegir(semilla: int, mujer: bool) -> int:
 	if absi(hash([semilla, 41])) % 100 >= PROB or OS.get_environment("SIN_PELO_DRIVE") != "":   ## (SIN_PELO_DRIVE=1: para medir antes/después)
 		return -1
 	var lista: Array = MUJERES if mujer else HOMBRES
+	if lista.is_empty():
+		return -1
 	return int(lista[absi(hash([semilla, 43])) % lista.size()])
 
 static var _mallas: Dictionary = {}
