@@ -22,5 +22,17 @@ static func montar(b: Node3D, c: Vector3, w: float, f: float) -> int:
 		m.position = Vector3(c.x + dx, c.y + 0.3, z)
 		## De cara a la calle (lado sur, +Z).
 		m.rotation.y = PI
+		## Cada una es funcional: punto de la E (`PeluchesCiudad.servicio`), alfombra bajo ella y un neón con el precio de la moneda.
+		var q := m.position
+		b.puntos_clic.append({"k": "peluches_%d" % puestas, "n": Idiomas.t("Máquina de peluches"), "pos": q + Vector3(0, 0, 1.2), "estado": "ciudad", "radio": 9.0, "alcance": 1.5})
+		var rot := Label3D.new()
+		rot.text = "🧸 " + Idiomas.t("PELUCHES") + " · 1 €"
+		rot.font_size = 40
+		rot.pixel_size = 0.012
+		rot.modulate = Color(1.0, 0.8, 0.95)
+		rot.outline_size = 8
+		rot.position = q + Vector3(0, ALTO + 0.9, 0.2)
+		rot.rotation.y = PI
+		b.add_child(rot)
 		puestas += 1
 	return puestas
