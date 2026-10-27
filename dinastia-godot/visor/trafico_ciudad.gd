@@ -71,6 +71,10 @@ func _process(delta_real: float) -> void:
 					tope = minf(tope, sqrt(2.0 * PLAN * maxf(d - 0.3, 0.0)))
 					frena = true
 					break
+		## SIRENAS (27-10-2026, pieza E): ante un vehículo de emergencia con la sirena puesta, coches y buses frenan (con su rampa de siempre).
+		if suave and not sirenas.is_empty() and sirena_cerca((v["nodo"] as Node3D).position):
+			tope = 0.0
+			frena = true
 		if v.has("faros") and bool(v["frena"]) != frena:
 			v["frena"] = frena
 			var fm: MeshInstance3D = v["faros"]
@@ -214,6 +218,17 @@ func _lateral(v: Dictionary, delta: float) -> void:
 ## MOBILIARIO DELANTE (27-10-2026, plan §4): cuatro veces por segundo el peatón mira 1,2 m por
 ## delante en su carril; si hay un banco, una papelera o una farola (`libre_fn`), se abre a un lado
 ## libre como al adelantar. Sin `libre_fn` (pruebas, mapa de lejos) no mira nada.
+## Los vehículos de emergencia con la sirena encendida (los registra `ServiciosVida`) y a qué distancia hacen parar al tráfico: a 55 m
+## frenando a FRENADA da tiempo de parar a 14 m/s, y vale también para el que cruza por una bocacalle.
+static var sirenas: Array[Node3D] = []
+const RADIO_SIRENA := 55.0
+
+static func sirena_cerca(p: Vector3) -> bool:
+	for s: Node3D in sirenas:
+		if is_instance_valid(s) and Vector2(s.position.x - p.x, s.position.z - p.z).length() < RADIO_SIRENA:
+			return true
+	return false
+
 const MIRA_CADA := 0.25
 const MIRA_DELANTE := 1.2
 

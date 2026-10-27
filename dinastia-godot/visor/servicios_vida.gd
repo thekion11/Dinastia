@@ -144,6 +144,10 @@ func _barra(v: Dictionary) -> void:
 
 func _sirena(v: Dictionary, on: bool) -> void:
 	var nodo: Node3D = v["nodo"]
+	if on and not TraficoCiudad.sirenas.has(nodo):
+		TraficoCiudad.sirenas.append(nodo)   ## el tráfico frena ante la sirena
+	elif not on:
+		TraficoCiudad.sirenas.erase(nodo)
 	var p := nodo.get_node_or_null("Sirena") as AudioStreamPlayer3D
 	if not on:
 		if p != null:
@@ -181,12 +185,17 @@ func _poner_patrulla() -> void:
 	v["vel"] = V_PATRULLA
 	v["luces_on"] = false
 
+func _exit_tree() -> void:
+	for v in vehiculos:
+		TraficoCiudad.sirenas.erase(v["nodo"])
+
 func _process(delta: float) -> void:
 	t += delta
 	var i := vehiculos.size() - 1
 	while i >= 0:
 		if not _mover(vehiculos[i], delta):
 			var n: Node3D = vehiculos[i]["nodo"]
+			TraficoCiudad.sirenas.erase(n)
 			if is_instance_valid(n):
 				n.queue_free()
 			vehiculos.remove_at(i)
