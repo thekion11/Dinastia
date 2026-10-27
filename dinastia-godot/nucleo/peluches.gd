@@ -19,21 +19,21 @@ const SERIES := {
 ## `PanelPeluches._pintar`) pasa a 3D (un SubViewport con los `modelo` de esta tabla); mientras `modelo` esté vacío se sigue dibujando el relleno.
 ## id, nombre, serie, peso (1 ligero … 4 pesado), máquina (0-2), forma (cómo se dibuja el relleno), color, modelo (ruta .glb, "" = relleno), escala del modelo.
 const PELUCHES := [
-	{"id": "oso", "nombre": "Oso pardo", "serie": "bosque", "peso": 3, "maquina": 0, "forma": "oso", "color": Color(0.55, 0.36, 0.22), "modelo": "res://assets/peluches/bear.glb", "escala": 0.75},
-	{"id": "zorro", "nombre": "Zorrito", "serie": "bosque", "peso": 2, "maquina": 0, "forma": "puntas", "color": Color(0.93, 0.5, 0.18), "modelo": "res://assets/peluches/fox.glb", "escala": 0.75},
-	{"id": "koala", "nombre": "Koala", "serie": "bosque", "peso": 2, "maquina": 0, "forma": "oso", "color": Color(0.6, 0.6, 0.64), "modelo": "res://assets/peluches/koala.glb", "escala": 0.75},
-	{"id": "panda", "nombre": "Panda", "serie": "bosque", "peso": 3, "maquina": 1, "forma": "oso", "color": Color(0.95, 0.95, 0.95), "modelo": "res://assets/peluches/panda.glb", "escala": 0.75},
-	{"id": "perro", "nombre": "Perrito", "serie": "casa", "peso": 2, "maquina": 0, "forma": "oso", "color": Color(0.8, 0.6, 0.38), "modelo": "res://assets/peluches/dog.glb", "escala": 0.75},
-	{"id": "gato", "nombre": "Gatito", "serie": "casa", "peso": 1, "maquina": 0, "forma": "puntas", "color": Color(0.95, 0.7, 0.4), "modelo": "res://assets/peluches/cat.glb", "escala": 0.75},
-	{"id": "conejo", "nombre": "Conejito", "serie": "casa", "peso": 1, "maquina": 1, "forma": "puntas", "color": Color(0.96, 0.92, 0.9), "modelo": "res://assets/peluches/rabbit.glb", "escala": 0.75},
-	{"id": "pollito", "nombre": "Pollito", "serie": "granja", "peso": 1, "maquina": 1, "forma": "bola", "color": Color(1.0, 0.88, 0.25), "modelo": "res://assets/peluches/chick.glb", "escala": 0.75},
-	{"id": "cerdito", "nombre": "Cerdito", "serie": "granja", "peso": 2, "maquina": 1, "forma": "oso", "color": Color(0.98, 0.7, 0.75), "modelo": "res://assets/peluches/pig.glb", "escala": 0.75},
-	{"id": "leon", "nombre": "Leoncito", "serie": "sabana", "peso": 3, "maquina": 1, "forma": "oso", "color": Color(0.92, 0.68, 0.3), "modelo": "res://assets/peluches/lion.glb", "escala": 0.75},
-	{"id": "elefante", "nombre": "Elefantito", "serie": "sabana", "peso": 4, "maquina": 2, "forma": "oso", "color": Color(0.62, 0.66, 0.74), "modelo": "res://assets/peluches/elephant.glb", "escala": 0.75},
-	{"id": "cocodrilo", "nombre": "Cocodrilo", "serie": "sabana", "peso": 3, "maquina": 2, "forma": "puntas", "color": Color(0.36, 0.66, 0.32), "modelo": "res://assets/peluches/crocodile.glb", "escala": 0.75},
-	{"id": "pinguino", "nombre": "Pingüino", "serie": "mar", "peso": 2, "maquina": 2, "forma": "bola", "color": Color(0.16, 0.18, 0.24), "modelo": "res://assets/peluches/penguin.glb", "escala": 0.75},
-	{"id": "tiburon", "nombre": "Tiburoncito", "serie": "mar", "peso": 3, "maquina": 2, "forma": "puntas", "color": Color(0.45, 0.6, 0.78), "modelo": "res://assets/peluches/shark.glb", "escala": 0.75},
-	{"id": "unicornio", "nombre": "Unicornio", "serie": "fantasia", "peso": 4, "maquina": 2, "forma": "puntas", "color": Color(0.84, 0.66, 0.95), "modelo": "res://assets/peluches/unicorn.glb", "escala": 0.75},
+	{"id": "oso", "nombre": "Oso pardo", "serie": "bosque", "peso": 3, "maquina": 0, "forma": "oso", "color": Color(0.55, 0.36, 0.22), "modelo": "res://assets/peluches/bear.glb", "escala": 0.55},
+	{"id": "zorro", "nombre": "Zorrito", "serie": "bosque", "peso": 2, "maquina": 0, "forma": "puntas", "color": Color(0.93, 0.5, 0.18), "modelo": "res://assets/peluches/fox.glb", "escala": 0.55},
+	{"id": "koala", "nombre": "Koala", "serie": "bosque", "peso": 2, "maquina": 0, "forma": "oso", "color": Color(0.6, 0.6, 0.64), "modelo": "res://assets/peluches/koala.glb", "escala": 0.55},
+	{"id": "panda", "nombre": "Panda", "serie": "bosque", "peso": 3, "maquina": 1, "forma": "oso", "color": Color(0.95, 0.95, 0.95), "modelo": "res://assets/peluches/panda.glb", "escala": 0.55},
+	{"id": "perro", "nombre": "Perrito", "serie": "casa", "peso": 2, "maquina": 0, "forma": "oso", "color": Color(0.8, 0.6, 0.38), "modelo": "res://assets/peluches/dog.glb", "escala": 0.55},
+	{"id": "gato", "nombre": "Gatito", "serie": "casa", "peso": 1, "maquina": 0, "forma": "puntas", "color": Color(0.95, 0.7, 0.4), "modelo": "res://assets/peluches/cat.glb", "escala": 0.55},
+	{"id": "conejo", "nombre": "Conejito", "serie": "casa", "peso": 1, "maquina": 1, "forma": "puntas", "color": Color(0.96, 0.92, 0.9), "modelo": "res://assets/peluches/rabbit.glb", "escala": 0.55},
+	{"id": "pollito", "nombre": "Pollito", "serie": "granja", "peso": 1, "maquina": 1, "forma": "bola", "color": Color(1.0, 0.88, 0.25), "modelo": "res://assets/peluches/chick.glb", "escala": 0.55},
+	{"id": "cerdito", "nombre": "Cerdito", "serie": "granja", "peso": 2, "maquina": 1, "forma": "oso", "color": Color(0.98, 0.7, 0.75), "modelo": "res://assets/peluches/pig.glb", "escala": 0.55},
+	{"id": "leon", "nombre": "Leoncito", "serie": "sabana", "peso": 3, "maquina": 1, "forma": "oso", "color": Color(0.92, 0.68, 0.3), "modelo": "res://assets/peluches/lion.glb", "escala": 0.55},
+	{"id": "elefante", "nombre": "Elefantito", "serie": "sabana", "peso": 4, "maquina": 2, "forma": "oso", "color": Color(0.62, 0.66, 0.74), "modelo": "res://assets/peluches/elephant.glb", "escala": 0.55},
+	{"id": "cocodrilo", "nombre": "Cocodrilo", "serie": "sabana", "peso": 3, "maquina": 2, "forma": "puntas", "color": Color(0.36, 0.66, 0.32), "modelo": "res://assets/peluches/crocodile.glb", "escala": 0.55},
+	{"id": "pinguino", "nombre": "Pingüino", "serie": "mar", "peso": 2, "maquina": 2, "forma": "bola", "color": Color(0.16, 0.18, 0.24), "modelo": "res://assets/peluches/penguin.glb", "escala": 0.55},
+	{"id": "tiburon", "nombre": "Tiburoncito", "serie": "mar", "peso": 3, "maquina": 2, "forma": "puntas", "color": Color(0.45, 0.6, 0.78), "modelo": "res://assets/peluches/shark.glb", "escala": 0.55},
+	{"id": "unicornio", "nombre": "Unicornio", "serie": "fantasia", "peso": 4, "maquina": 2, "forma": "puntas", "color": Color(0.84, 0.66, 0.95), "modelo": "res://assets/peluches/unicorn.glb", "escala": 0.55},
 ]
 
 const LOGRO_TODO := "coleccion"
