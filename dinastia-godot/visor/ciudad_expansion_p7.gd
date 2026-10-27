@@ -40,6 +40,8 @@ func _instalacion(uso: String, r: Rect2) -> void:
 				for sz: float in [-1.0, 1.0]:
 					esquinas.append(c + Vector3(sx * w * 0.36, -0.2, sz * f * 0.36))
 			_arboles_en(esquinas, 1.0)
+			## Bancos, farolas, puestos, soportales con cafés y terrazas (`CiudadPlaza`).
+			CiudadPlaza.montar(self, c, w, f)
 		"ayuntamiento":
 			nombre = "Ayuntamiento"
 			b._caja_en(c + Vector3(0, 9.0, -6.0), Vector3(w * 0.8, 18.0, f * 0.55), _mat["piedra"])
