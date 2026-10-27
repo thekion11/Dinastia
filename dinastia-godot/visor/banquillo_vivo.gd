@@ -26,11 +26,13 @@ const CLIPS := {
 	"sentado_festeja": "festeja_dos", "sentado_festeja_puno": "festeja_puno",
 	"sentado_festeja_brazo": "festeja_brazo", "sentado_protesta": "enfado",
 	"sentado_rechazo": "rechazo", "sentado_charla_m2m": "charla", "sentado_escucha": "escucha",
-	"sentado_cruzados": "cruzados", "sentado_nervioso": "asiente",
+	"sentado_cruzados": "cruzados", "sentado_nervioso": "asiente", "sentado_manos_cabeza": "manos_cabeza",
 }
 const REPOSOS := ["sentado_charla_m2m", "sentado_escucha", "sentado_cruzados", "sentado"]
 const FESTEJOS := ["sentado_festeja", "sentado_festeja_puno", "sentado_festeja_brazo"]
 const PROTESTAS := ["sentado_protesta", "sentado_rechazo"]
+## Ante la lesión de uno de los suyos (M-102, 27-10-2026): las manos a la cabeza, de brazos cruzados o inquietos.
+const LESIONES := ["sentado_manos_cabeza", "sentado_manos_cabeza", "sentado_cruzados", "sentado_nervioso"]
 
 static var _lib: AnimationLibrary = null
 static var _probada := false
@@ -143,6 +145,7 @@ static func reaccionar(raiz: Node, tipo: String, es_local: bool, dura := 3.2) ->
 		match tipo:
 			"gol": clip = FESTEJOS[semilla % FESTEJOS.size()]
 			"protesta": clip = PROTESTAS[semilla % PROTESTAS.size()]
+			"lesion": clip = LESIONES[semilla % LESIONES.size()]
 			_: clip = REPOSOS[semilla % REPOSOS.size()]
 		if not ap.has_animation(clip):
 			continue
@@ -150,7 +153,7 @@ static func reaccionar(raiz: Node, tipo: String, es_local: bool, dura := 3.2) ->
 		## Cada uno a su ritmo: no es una coreografía.
 		ap.seek(fmod(float(semilla) * 0.137, ap.current_animation_length), true)
 		n += 1
-		if tipo == "gol" or tipo == "protesta":
+		if tipo == "gol" or tipo == "protesta" or tipo == "lesion":
 			var reposo: String = REPOSOS[(semilla / 3) % REPOSOS.size()]
 			ap.get_tree().create_timer(dura + float(semilla % 5) * 0.15).timeout.connect(func() -> void:
 				if is_instance_valid(ap) and ap.has_animation(reposo) and ap.current_animation == clip:

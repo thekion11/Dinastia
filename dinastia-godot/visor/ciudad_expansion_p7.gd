@@ -387,9 +387,11 @@ func _marquesinas_bus() -> void:
 			else:
 				q = Vector3(p.x, 0, snappedf(p.z, CELDA) + signf(dir.z if dir.z != 0.0 else 1.0) * (ANCHO_AV * 0.5 + ACERA * 0.6))
 			b.esperas_bus.append(q + Vector3(0, 0.24, 0.3))
-			b._caja_en(q + Vector3(0, 2.6, 0), Vector3(3.5, 0.15, 1.6), _mat["claro"])
-			b._caja_en(q + Vector3(0, 1.3, -0.7), Vector3(3.5, 2.4, 0.08), _mat["vidrio"])
-			b._caja_en(q + Vector3(0, 0.55, -0.3), Vector3(2.8, 0.15, 0.5), _mat["tronco"])
+			## Paradero como los de Santiago (`ParaderoRed`): marquesina gris, pósters de recorridos, banca de láminas y poste con código «PA…».
+			var raiz_p := Node3D.new()
+			raiz_p.position = q
+			b.add_child(raiz_p)
+			ParaderoRed.montar(raiz_p, 3.6, int(q.x * 5.0 + q.z))
 			n += 1
 	cuenta["paradas_bus"] = n
 

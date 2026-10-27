@@ -181,6 +181,9 @@ const POSES_PUBLICO := ["quieto", "charla", "aplaude", "aplaude_arriba", "puno",
 ## al centro de cada MultiMesh, por eso los tramos.
 const LOD_PUBLICO := 55.0
 const TRAMOS_PUBLICO := 3
+## Las filas altas (malla «lejos» siempre): a menos de esto del trozo se ven con la malla «medio» (8 trozos por bandeja).
+const LIMITE_ALTAS := 26.0
+const TRAMOS_ALTAS := 8
 
 ## EL HINCHA DE LAS PRIMERAS FILAS (29-9-2026). Pedido del usuario al ver el
 ## partido jugable de la Carrera de Jugador ("ese público se ve horrible"):
