@@ -247,6 +247,9 @@ func encender_luces(noche: float) -> void:
 	var f: float = clampf(noche, 0.0, 1.0)
 	for mt in _mats_torre:
 		mt.set_shader_parameter("noche", f)
+		if expansion != null and expansion.textura_luz != null:   ## apagón por sector (§2.2g)
+			mt.set_shader_parameter("luz_sectores", expansion.textura_luz)
+			mt.set_shader_parameter("usa_sectores", true)
 	StadiumBuilder.encender_conos(f)
 	for l in _farolas_luz:
 		if is_instance_valid(l):

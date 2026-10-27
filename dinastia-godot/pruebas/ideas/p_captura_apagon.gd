@@ -45,7 +45,7 @@ func _ready() -> void:
 		print("sin redes")
 		get_tree().quit()
 		return
-	ex.encender(1.0)
+	cb.encender_luces(1.0)
 	await _esperar(1.5)
 	await _foto("encendido")
 	## Corta los sectores alrededor del punto mirado (no el del hospital).
@@ -58,7 +58,7 @@ func _ready() -> void:
 				continue
 			ex.redes.modelo.luz[s] = false
 			cortados += 1
-	ex.encender(1.0)
+	cb.encender_luces(1.0)
 	print("sectores cortados: ", cortados, " desde ", base)
 	await _esperar(1.0)
 	await _foto("cortado")
