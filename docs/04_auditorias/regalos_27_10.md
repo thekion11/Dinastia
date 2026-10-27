@@ -12,7 +12,7 @@ midieron con Godot 4.7.2; **no se ha subido ningún zip ni binario >1 MB al repo
 | **gold+trophy.glb** | 157 KB | 3 copas iguales (2.132 triángulos, ~710 por copa), 1 material, textura 128×128, copa 0,43 × 0,63 × 0,30 m | Museo del club | **INTEGRADA** (una copa, `assets/ciudad/trofeo.glb`, 52 KB, ver abajo) |
 | gold+trophy.fbx | 117 KB | la misma malla sin textura | — | Descartado: duplicado del glb |
 | Chair.glb | 64 MB | 117.744 triángulos, 3 materiales, texturas **4096²**, 0,63 × 0,98 × 0,59 m | despacho del DT | Útil pero hay que decimar en Blender (dueño): 117 k triángulos y 4 k de textura no caben (hay una silla en `muebles/`) |
-| Claw_Machine_Free_glb.zip | 9,5 MB | 19 glb: máquina `Toy_Claw_01` (11.825 triángulos, 21 mallas, 7 materiales, texturas 2048², 1,35 × 2,98 × 1,2 m), 14 peluches (≈1–2 k triángulos, 1024², ~550 KB cada uno) y 4 `ColorSet` (84 triángulos, 2048²) | centro comercial / sala de juegos | **Candidata (c)**: máquina re-exportada con texturas ≤1024 |
+| Claw_Machine_Free_glb.zip | 9,5 MB | 19 glb: máquina `Toy_Claw_01` (11.825 triángulos, 21 mallas, 7 materiales, texturas 2048², 1,35 × 2,98 × 1,2 m), 14 peluches (≈1–2 k triángulos, 1024², ~550 KB cada uno) y 4 `ColorSet` (84 triángulos, 2048²) | centro comercial / sala de juegos | **INTEGRADA (c)**: `Toy_Claw_01` re-exportada con Godot (texturas 256 px, **893 KB**, `assets/ciudad/maquina_peluches.glb`), 7 máquinas ante la fachada del centro comercial (`CiudadArcade`). Los peluches y `ColorSet` no se usan |
 | grass.blend | 14 MB | Blender ≥3.0 (zstd) | césped del estadio | Solo anotado: no se importa sin Blender; el césped del juego es shader propio |
 | stadium_light.blend | 21 MB | Blender ≥3.0 (zstd) | focos del estadio | Solo anotado: sin Blender; los focos ya existen en `StadiumBuilder` |
 | TV+Room+by+Deline.3DS | 23 MB | 3DS válido, formato antiguo | casa del DT | Solo anotado: Godot no importa `.3DS`; habría que convertirlo en Blender (dueño) |
@@ -32,6 +32,12 @@ midieron con Godot 4.7.2; **no se ha subido ningún zip ni binario >1 MB al repo
 | Antes | Después |
 |---|---|
 | [museo_antes.jpg](capturas_regalos/museo_antes.jpg) | [museo_despues_trofeo.jpg](capturas_regalos/museo_despues_trofeo.jpg) |
+
+## La máquina de peluches, integrada
+Re-exportada con `GLTFDocument` (texturas a 256 px: con 512 pesaba 1,5 MB; con 256, 893 KB < 1 MB). `CiudadArcade.montar` la instancia entera
+(21 mallas), 7 unidades de 2,8 m, a 2,2 m de la fachada de vidrio. Se ve mejor de cerca; desde la calle son pequeñas frente a una fachada de
+16 m (la fachada del centro comercial sigue siendo un P1 de la auditoría de la ciudad). Capturas: [pie](capturas_regalos/centro_comercial_maquinas_pie.jpg) · [aérea](capturas_regalos/centro_comercial_maquinas_aerea.jpg).
+Herramienta: `f6c_captura_ciudad` admite ahora `LADO=sur` y `DIST=<m>` para la toma a pie.
 
 ## Pendiente del dueño (Blender)
 Decimar `Chair.glb` (a <10 k triángulos y texturas ≤1024), `books_and_mugs.obj`, y convertir `grass.blend`, `stadium_light.blend` y
