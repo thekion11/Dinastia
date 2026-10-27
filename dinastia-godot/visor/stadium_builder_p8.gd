@@ -27,17 +27,19 @@ static func _focos(root: Node3D, tipo: String, dx: float, dz: float, alto: float
 			for sz in [1.0, -1.0]:
 				var base := Vector3(sx * (dx + 5.0), 0, sz * (dz + 6.0))
 				var h := alto + 12.0
-				var pole := MeshInstance3D.new()
-				var cm := CylinderMesh.new()
-				cm.height = h
-				cm.top_radius = 0.35
-				cm.bottom_radius = 0.55
-				pole.mesh = cm
-				pole.position = base + Vector3(0, h / 2.0, 0)
-				pole.material_override = mat
-				root.add_child(pole)
-				var cima := base + Vector3(0, h + 0.6, 0)
-				_cabeza_foco(root, cima, Vector3(base.x * 0.2, 0.0, base.z * 0.2), Vector2(6.4, 2.6), 6, 3, bastidor, proyectores)
+				## TORRE DEL DRIVE (27-10-2026): el modelo de regalo; sin él, el poste de cilindro y la cabeza de cajas de siempre.
+				if not TorreFocos.montar(root, base, h + 1.2, Vector3(base.x * 0.2, 0.0, base.z * 0.2), luz):
+					var pole := MeshInstance3D.new()
+					var cm := CylinderMesh.new()
+					cm.height = h
+					cm.top_radius = 0.35
+					cm.bottom_radius = 0.55
+					pole.mesh = cm
+					pole.position = base + Vector3(0, h / 2.0, 0)
+					pole.material_override = mat
+					root.add_child(pole)
+					var cima := base + Vector3(0, h + 0.6, 0)
+					_cabeza_foco(root, cima, Vector3(base.x * 0.2, 0.0, base.z * 0.2), Vector2(6.4, 2.6), 6, 3, bastidor, proyectores)
 				_cono_de_luz(root, base + Vector3(0, h - 0.6, 0), Vector3(0, 0.3, 0), 7.0, luz)
 	if tipo == "corona" or tipo == "mixto" or tipo == "halo":
 		## BUG REAL (23-9-2026): la corona se repartia sobre una ELIPSE
