@@ -20,8 +20,8 @@ func _process(_d: float) -> void:
 		_guardar("res://pruebas/capturas/pantalla_modo.png")
 		## Simula el clic: mismo efecto que _elegir("ayudante") sin depender de
 		## encontrar el boton exacto en el arbol.
-		Principal.modo_elegido = "ayudante"
-		Principal.dt_nombre_elegido = "Prueba Banco"
+		PedidoPartida.modo_elegido = "ayudante"
+		PedidoPartida.dt_nombre_elegido = "Prueba Banco"
 	if _n == ESPERA + 2:
 		_pantalla.queue_free()
 		_pantalla = load("res://escenas/principal.tscn").instantiate()

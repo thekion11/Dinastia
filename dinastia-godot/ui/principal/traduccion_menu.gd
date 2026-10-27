@@ -4,6 +4,11 @@ extends RefCounted
 ## sus miembros se usan como `p.x` y `Principal` conserva puentes de una línea con los nombres de siempre.
 
 var p: Principal
+## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
+## Si alguna vez se tradujo a otro idioma en esta sesión. Mientras siga en
+## falso y el idioma sea castellano, `_traducir_pantalla` no recorre nada -es
+## la mayoría de las partidas, que nunca tocan el selector de idioma-.
+var _traduccion_activa := false
 
 func _init(principal: Principal) -> void:
 	p = principal
@@ -39,10 +44,10 @@ func _origen_de(texto: String) -> String:
 	return o if o != "" else texto
 func _traducir_pantalla(n: Node) -> void:
 	if n == p:
-		if Idiomas.idioma == "es" and not p._traduccion_activa:
+		if Idiomas.idioma == "es" and not _traduccion_activa:
 			return
 		if Idiomas.idioma != "es":
-			p._traduccion_activa = true
+			_traduccion_activa = true
 	if n is Label:
 		var l := n as Label
 		var actual := l.text

@@ -25,7 +25,7 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 3:
-		_comprobar(Principal.mundo_a_cargar == null, "_ready() consume mundo_a_cargar (no se reusa en la siguiente apertura)")
+		_comprobar(PedidoPartida.mundo_a_cargar == null, "_ready() consume mundo_a_cargar (no se reusa en la siguiente apertura)")
 		var mundo_final = _pantalla.get("mundo")
 		_comprobar(mundo_final != null, "Principal termino con un mundo puesto")
 		if mundo_final != null:
@@ -36,7 +36,7 @@ func _process(_d: float) -> void:
 		_arrancar_modo_y_dificultad()
 	if _n == 6:
 		var mundo_final2 = _pantalla.get("mundo")
-		_comprobar(Principal.modo_elegido == "", "_ready() consume modo_elegido igual que mundo_a_cargar")
+		_comprobar(PedidoPartida.modo_elegido == "", "_ready() consume modo_elegido igual que mundo_a_cargar")
 		_comprobar(mundo_final2 != null and mundo_final2.roles.rol == "ayudante",
 			"seleccion_modo.gd -> Principal aplica el rol elegido (ayudante)")
 		_comprobar(mundo_final2 != null and mundo_final2.roles.nombre == "Prueba Banco",
@@ -56,7 +56,7 @@ func _process(_d: float) -> void:
 		_arrancar_desde_eleccion_club()
 	if _n == 9:
 		var mundo_final3 = _pantalla.get("mundo")
-		_comprobar(Principal.mundo_pregenerado == null, "_ready() consume mundo_pregenerado igual que los otros dos canales")
+		_comprobar(PedidoPartida.mundo_pregenerado == null, "_ready() consume mundo_pregenerado igual que los otros dos canales")
 		_comprobar(mundo_final3 == _mundo_elegido, "Principal usa el MISMO mundo que eleccion_club.gd generó y eligió, no uno nuevo")
 		_comprobar(mundo_final3 != null and mundo_final3.mi_club_id == _club_elegido_id,
 			"se queda con el club que se eligió a mano, no el primero de Chile")
@@ -99,7 +99,7 @@ func _probar_deteccion_de_partida() -> void:
 	_comprobar(inicio_con.call("_hay_partida"), "con guardado, _hay_partida() da true")
 	inicio_con.free()
 
-## Principal.mundo_a_cargar es el unico canal para pasarle una partida ya
+## PedidoPartida.mundo_a_cargar es el unico canal para pasarle una partida ya
 ## cargada a la escena que arranca sola por run/main_scene. Si _ready() no lo
 ## mirara, "Continuar" cargaria el fichero y aun asi acabarias con un mundo
 ## nuevo sin darte cuenta -el fallo mas dificil de notar que hay aqui.
@@ -109,7 +109,7 @@ func _arrancar_carga_desde_inicio() -> void:
 	if cargado == null:
 		_cerrar()
 		return
-	Principal.mundo_a_cargar = cargado
+	PedidoPartida.mundo_a_cargar = cargado
 	_pantalla = load("res://escenas/principal.tscn").instantiate()
 	add_child(_pantalla)
 
@@ -117,15 +117,15 @@ func _arrancar_carga_desde_inicio() -> void:
 ## Principal cuando arranca un mundo nuevo (no uno cargado). Mismo canal de
 ## variables estaticas que mundo_a_cargar, mismo riesgo si nadie los mirara.
 func _arrancar_modo_y_dificultad() -> void:
-	Principal.modo_elegido = "ayudante"
-	Principal.dt_nombre_elegido = "Prueba Banco"
-	Principal.dificultad_elegida = "leyenda"
+	PedidoPartida.modo_elegido = "ayudante"
+	PedidoPartida.dt_nombre_elegido = "Prueba Banco"
+	PedidoPartida.dificultad_elegida = "leyenda"
 	_pantalla = load("res://escenas/principal.tscn").instantiate()
 	add_child(_pantalla)
 
 ## El tercer canal: `ui/eleccion_club.gd` genera el mundo ENTERO y hace
 ## `tomar_el_mando()` sobre el club que se eligió a mano -no el primero de
-## Chile-, y dice deja el resultado en `Principal.mundo_pregenerado` para que
+## Chile-, y dice deja el resultado en `PedidoPartida.mundo_pregenerado` para que
 ## `_ready()` lo recoja y solo le aplique dificultad y modo encima.
 func _arrancar_desde_eleccion_club() -> void:
 	_mundo_elegido = Mundo.new()
@@ -135,11 +135,11 @@ func _arrancar_desde_eleccion_club() -> void:
 	var club: Club = _mundo_elegido.ligas[0].clubes[7]
 	_club_elegido_id = club.id
 	_mundo_elegido.tomar_el_mando(club.id)
-	Principal.modo_elegido = "dir"
-	Principal.dt_nombre_elegido = "Prueba Asistente"
-	Principal.dificultad_elegida = "normal"
-	Principal.desafios_elegidos = ["pobreza"]
-	Principal.mundo_pregenerado = _mundo_elegido
+	PedidoPartida.modo_elegido = "dir"
+	PedidoPartida.dt_nombre_elegido = "Prueba Asistente"
+	PedidoPartida.dificultad_elegida = "normal"
+	PedidoPartida.desafios_elegidos = ["pobreza"]
+	PedidoPartida.mundo_pregenerado = _mundo_elegido
 	_pantalla = load("res://escenas/principal.tscn").instantiate()
 	add_child(_pantalla)
 

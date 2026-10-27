@@ -10,7 +10,7 @@ extends Node
 ## estadio sigue siendo EL MISMO al levantarte), y la capa lleva un botón
 ## «Levantarse» y Esc (si Principal no tiene nada modal abierto) para apagarlo.
 ##
-## Principal no sabe que es una capa: arranca con `Principal.mundo_pregenerado`
+## Principal no sabe que es una capa: arranca con `PedidoPartida.mundo_pregenerado`
 ## como cuando era la escena entera. Por eso el prólogo NO borra esa estática.
 
 signal encendido

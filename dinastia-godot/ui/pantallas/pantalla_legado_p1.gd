@@ -8,6 +8,13 @@ extends RefCounted
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
 var p: Principal
+## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
+## Que año del archivo de planteles está desplegado. Cero, ninguno: si se
+## abrieran todos a la vez, veinte temporadas serían seiscientas filas.
+var _plantel_abierto: int = 0
+## La retirada no se puede deshacer, así que el boton pide confirmacion como el
+## de vender el club: primero avisa, y solo el segundo clic la ejecuta.
+var _confirmar_retiro: bool = false
 
 func _init(principal: Principal) -> void:
 	p = principal
