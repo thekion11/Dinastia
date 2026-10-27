@@ -415,7 +415,7 @@ func jugar_supercopa() -> Dictionary:
 		if logros != null:
 			logros.celebrar_titulo(nombre)
 		if roles != null:
-			roles.sumar_trofeo(nombre)
+			roles.sumar_trofeo(nombre, {"final": "%s %d-%d %s" % [a.nombre, gl, gv, b.nombre]})
 	if prensa != null:
 		prensa.noticia.emit(nombre,
 			"%s %d-%d %s. %s levanta el primer título del año." % [a.nombre, gl, gv, b.nombre, gana.nombre])
