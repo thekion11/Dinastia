@@ -59,6 +59,7 @@ Los encabezados del plan dan cifras viejas (F0 «33» tiene 23 filas, F1 «36» 
 **Gestión**
 - 233: Dificultades fuera del partido (finanzas, prensa, mercado) junto a las 8 de la CPU.
 - M-217: Precontratos: el mercado los promete y no existen (hacerlos o quitar el texto).
+- 956: Desafío «leyenda30» solo avisa: hacerlo cumplir o quitarlo.
 - 971: «Sin recarga» solo avisa: bloquear de verdad la carga o quitarlo.
 - 951: «Sin dinero» promete sin créditos y `Banco.pedir` no lo comprueba.
 - M-208: Balance: el grande sin gestionar se hace rico (caja casi monótona); faltan crisis.

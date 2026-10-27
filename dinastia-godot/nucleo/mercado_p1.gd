@@ -30,6 +30,8 @@ var ofertas_recibidas: Array[Dictionary] = []
 ## La mesa de negociación abierta, si hay una -`G.negoc` del HTML-. Solo una a
 ## la vez, como en el original: abrir otra reemplaza la que hubiera.
 var negociacion: Negociacion = null
+## Precontratos del DT con jugadores de otros clubes en su último año ({id, sueldo, anios}); ver `Precontratos`.
+var precontratos: Array[Dictionary] = []
 
 ## OJO: referencia DEBIL al mundo, no fuerte.
 ##
@@ -424,7 +426,10 @@ func a_dic() -> Dictionary:
 			"monto": int(o["monto"]), "semana": int(o["semana"]), "clausula": bool(o["clausula"]),
 			"abs": int(o.get("abs", 0)),
 		})
-	return {"ofertas_recibidas": lista}
+	var pre: Array = []
+	for e: Dictionary in precontratos:
+		pre.append({"id": String(e["id"]), "sueldo": int(e["sueldo"]), "anios": int(e["anios"])})
+	return {"ofertas_recibidas": lista, "precontratos": pre}
 
 func _jugador_por_id(id: String) -> Jugador:
 	if id == "":

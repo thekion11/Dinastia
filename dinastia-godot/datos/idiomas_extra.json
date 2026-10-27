@@ -6382,7 +6382,17 @@
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Football Manager · Godot engine. Generated club and player names use letter→number substitution; the real data that does carry names and images comes from freely licensed sources. The music and match effects are synthesised by the game itself; the few recorded interface sounds are public domain (CC0).",
   ": foto de ": ": photo by ",
   "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "“No safety net” challenge: you can't load earlier saves. The game saves itself every week.",
-  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Legend mode: you can't change clubs. Only if you get sacked."
+  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Legend mode: you can't change clubs. Only if you get sacked.",
+  "ese jugador no existe": "that player doesn't exist",
+  "ya está libre: ficha como libre, sin precontrato": "he's already a free agent: sign him as a free agent, no pre-contract needed",
+  "Aún le quedan %d años de contrato: el precontrato solo vale en su último año.": "He still has %d years on his contract: a pre-contract only works in his final year.",
+  "Los precontratos se firman en el último semestre de su contrato (desde la semana %d).": "Pre-contracts are signed in the last six months of his contract (from week %d).",
+  "Ya tienes un precontrato firmado con él.": "You already have a pre-contract signed with him.",
+  "%s no se compromete: prefiere esperar a ver qué ofertas le llegan.": "%s won't commit: he prefers to wait and see what offers come in.",
+  "📝 Precontrato firmado: llegará sin traspaso al acabar su contrato (ficha %s a la semana).": "📝 Pre-contract signed: he'll arrive with no transfer fee when his contract ends (wage %s a week).",
+  "📝 Precontrato (llega gratis al acabar su contrato)": "📝 Pre-contract (arrives free when his contract ends)",
+  "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "You settle his wage now; at the season change he joins your club with no transfer fee.",
+  "Precontrato firmado con %s.": "Pre-contract signed with %s."
  },
  "pt": {
   "Historia": "História",
@@ -12767,7 +12777,17 @@
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Fútbol Manager · motor Godot. Os nomes gerados de clubes e jogadores usam substituição letra→número; os dados reais com nome e imagem vêm de fontes com licença livre. A música e os efeitos da partida são sintetizados pelo próprio jogo; os poucos sons de interface gravados são de domínio público (CC0).",
   ": foto de ": ": foto de ",
   "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Desafio «Sem rede»: não podes carregar gravações anteriores. O jogo grava sozinho todas as semanas.",
-  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Modo lenda: não podes mudar de clube. Só se fores despedido."
+  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Modo lenda: não podes mudar de clube. Só se fores despedido.",
+  "ese jugador no existe": "esse jogador não existe",
+  "ya está libre: ficha como libre, sin precontrato": "já está livre: contrata-o como livre, sem pré-contrato",
+  "Aún le quedan %d años de contrato: el precontrato solo vale en su último año.": "Ainda lhe restam %d anos de contrato: o pré-contrato só vale no último ano.",
+  "Los precontratos se firman en el último semestre de su contrato (desde la semana %d).": "Os pré-contratos assinam-se no último semestre do contrato (a partir da semana %d).",
+  "Ya tienes un precontrato firmado con él.": "Já tens um pré-contrato assinado com ele.",
+  "%s no se compromete: prefiere esperar a ver qué ofertas le llegan.": "%s não se compromete: prefere esperar para ver que ofertas lhe chegam.",
+  "📝 Precontrato firmado: llegará sin traspaso al acabar su contrato (ficha %s a la semana).": "📝 Pré-contrato assinado: chega sem transferência quando acabar o contrato (salário %s por semana).",
+  "📝 Precontrato (llega gratis al acabar su contrato)": "📝 Pré-contrato (chega de graça quando acabar o contrato)",
+  "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Fechas já o salário; na mudança de época chega ao teu clube sem pagar transferência.",
+  "Precontrato firmado con %s.": "Pré-contrato assinado com %s."
  },
  "patrones": [
   [
@@ -24863,7 +24883,17 @@
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Fútbol Manager · moteur Godot. Les noms de clubs et de joueurs générés utilisent une substitution lettre→chiffre ; les données réelles avec nom et image proviennent de sources sous licence libre. La musique et les effets du match sont synthétisés par le jeu lui-même ; les quelques sons d'interface enregistrés sont dans le domaine public (CC0).",
   ": foto de ": " : photo de ",
   "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Défi « Sans filet » : tu ne peux pas charger de sauvegardes antérieures. La partie se sauvegarde toute seule chaque semaine.",
-  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Mode légende : tu ne peux pas changer de club. Seulement si tu es viré."
+  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Mode légende : tu ne peux pas changer de club. Seulement si tu es viré.",
+  "ese jugador no existe": "ce joueur n'existe pas",
+  "ya está libre: ficha como libre, sin precontrato": "il est déjà libre : signe-le comme libre, sans précontrat",
+  "Aún le quedan %d años de contrato: el precontrato solo vale en su último año.": "Il lui reste encore %d ans de contrat : le précontrat ne vaut que pour sa dernière année.",
+  "Los precontratos se firman en el último semestre de su contrato (desde la semana %d).": "Les précontrats se signent durant le dernier semestre du contrat (à partir de la semaine %d).",
+  "Ya tienes un precontrato firmado con él.": "Tu as déjà un précontrat signé avec lui.",
+  "%s no se compromete: prefiere esperar a ver qué ofertas le llegan.": "%s ne s'engage pas : il préfère attendre de voir quelles offres arrivent.",
+  "📝 Precontrato firmado: llegará sin traspaso al acabar su contrato (ficha %s a la semana).": "📝 Précontrat signé : il arrivera sans indemnité à la fin de son contrat (salaire %s par semaine).",
+  "📝 Precontrato (llega gratis al acabar su contrato)": "📝 Précontrat (arrive gratuitement à la fin de son contrat)",
+  "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Tu fixes dès maintenant son salaire ; au changement de saison il rejoint ton club sans indemnité.",
+  "Precontrato firmado con %s.": "Précontrat signé avec %s."
  },
  "it": {
   "Historia": "Storia",
@@ -31248,7 +31278,17 @@
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Fútbol Manager · motore Godot. I nomi generati di club e calciatori usano la sostituzione lettera→numero; i dati reali con nome e immagine provengono da fonti con licenza libera. La musica e gli effetti della partita sono sintetizzati dal gioco stesso; i pochi suoni d'interfaccia registrati sono di pubblico dominio (CC0).",
   ": foto de ": ": foto di ",
   "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Sfida «Senza rete»: non puoi caricare salvataggi precedenti. La partita si salva da sola ogni settimana.",
-  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Modalità leggenda: non puoi cambiare club. Solo se vieni esonerato."
+  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Modalità leggenda: non puoi cambiare club. Solo se vieni esonerato.",
+  "ese jugador no existe": "quel giocatore non esiste",
+  "ya está libre: ficha como libre, sin precontrato": "è già svincolato: tesseralo come svincolato, senza precontratto",
+  "Aún le quedan %d años de contrato: el precontrato solo vale en su último año.": "Gli restano ancora %d anni di contratto: il precontratto vale solo nell'ultimo anno.",
+  "Los precontratos se firman en el último semestre de su contrato (desde la semana %d).": "I precontratti si firmano nell'ultimo semestre del contratto (dalla settimana %d).",
+  "Ya tienes un precontrato firmado con él.": "Hai già un precontratto firmato con lui.",
+  "%s no se compromete: prefiere esperar a ver qué ofertas le llegan.": "%s non si impegna: preferisce aspettare di vedere quali offerte arrivano.",
+  "📝 Precontrato firmado: llegará sin traspaso al acabar su contrato (ficha %s a la semana).": "📝 Precontratto firmato: arriverà a parametro zero alla scadenza del contratto (ingaggio %s a settimana).",
+  "📝 Precontrato (llega gratis al acabar su contrato)": "📝 Precontratto (arriva gratis alla scadenza del contratto)",
+  "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Chiudi subito il suo ingaggio; al cambio di stagione arriva al tuo club senza pagare il cartellino.",
+  "Precontrato firmado con %s.": "Precontratto firmato con %s."
  },
  "de": {
   "Historia": "Geschichte",
@@ -37633,7 +37673,17 @@
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Fútbol Manager · Godot-Engine. Erzeugte Vereins- und Spielernamen nutzen eine Buchstabe→Zahl-Ersetzung; die echten Daten mit Namen und Bild stammen aus frei lizenzierten Quellen. Musik und Spieleffekte erzeugt das Spiel selbst; die wenigen aufgenommenen Oberflächenklänge sind gemeinfrei (CC0).",
   ": foto de ": ": Foto von ",
   "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Herausforderung „Ohne Netz“: Du kannst keine früheren Spielstände laden. Das Spiel speichert jede Woche von selbst.",
-  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Legendenmodus: Du kannst den Verein nicht wechseln. Nur wenn du entlassen wirst."
+  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Legendenmodus: Du kannst den Verein nicht wechseln. Nur wenn du entlassen wirst.",
+  "ese jugador no existe": "diesen Spieler gibt es nicht",
+  "ya está libre: ficha como libre, sin precontrato": "er ist schon vereinslos: verpflichte ihn ablösefrei, ohne Vorvertrag",
+  "Aún le quedan %d años de contrato: el precontrato solo vale en su último año.": "Er hat noch %d Jahre Vertrag: Ein Vorvertrag gilt nur im letzten Jahr.",
+  "Los precontratos se firman en el último semestre de su contrato (desde la semana %d).": "Vorverträge werden im letzten Halbjahr des Vertrags unterschrieben (ab Woche %d).",
+  "Ya tienes un precontrato firmado con él.": "Du hast schon einen Vorvertrag mit ihm unterschrieben.",
+  "%s no se compromete: prefiere esperar a ver qué ofertas le llegan.": "%s legt sich nicht fest: Er wartet lieber ab, welche Angebote kommen.",
+  "📝 Precontrato firmado: llegará sin traspaso al acabar su contrato (ficha %s a la semana).": "📝 Vorvertrag unterschrieben: Er kommt ablösefrei, wenn sein Vertrag ausläuft (Gehalt %s pro Woche).",
+  "📝 Precontrato (llega gratis al acabar su contrato)": "📝 Vorvertrag (kommt kostenlos, wenn sein Vertrag ausläuft)",
+  "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Du legst sein Gehalt jetzt fest; zum Saisonwechsel kommt er ablösefrei zu deinem Verein.",
+  "Precontrato firmado con %s.": "Vorvertrag mit %s unterschrieben."
  },
  "ca": {
   "Historia": "Història",
@@ -44018,7 +44068,17 @@
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Fútbol Manager · motor Godot. Els noms generats de clubs i futbolistes fan servir substitució lletra→número; les dades reals amb nom i imatge vénen de fonts amb llicència lliure. La música i els efectes del partit els sintetitza el mateix joc; els pocs sons d'interfície enregistrats són de domini públic (CC0).",
   ": foto de ": ": foto de ",
   "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Desafiament «Sense xarxa»: no pots carregar guardats anteriors. La partida es guarda sola cada setmana.",
-  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Mode llegenda: no pots canviar de club. Només si et despatxen."
+  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Mode llegenda: no pots canviar de club. Només si et despatxen.",
+  "ese jugador no existe": "aquest jugador no existeix",
+  "ya está libre: ficha como libre, sin precontrato": "ja és lliure: ficha'l com a lliure, sense precontracte",
+  "Aún le quedan %d años de contrato: el precontrato solo vale en su último año.": "Encara li queden %d anys de contracte: el precontracte només val en el seu últim any.",
+  "Los precontratos se firman en el último semestre de su contrato (desde la semana %d).": "Els precontractes se signen en l'últim semestre del contracte (des de la setmana %d).",
+  "Ya tienes un precontrato firmado con él.": "Ja tens un precontracte signat amb ell.",
+  "%s no se compromete: prefiere esperar a ver qué ofertas le llegan.": "%s no es compromet: prefereix esperar a veure quines ofertes li arriben.",
+  "📝 Precontrato firmado: llegará sin traspaso al acabar su contrato (ficha %s a la semana).": "📝 Precontracte signat: arribarà sense traspàs quan acabi el contracte (fitxa %s a la setmana).",
+  "📝 Precontrato (llega gratis al acabar su contrato)": "📝 Precontracte (arriba gratis quan acabi el contracte)",
+  "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Tanques ja la seva fitxa; al canvi de temporada arriba al teu club sense pagar traspàs.",
+  "Precontrato firmado con %s.": "Precontracte signat amb %s."
  },
  "pl": {
   "Club": "Klub",
@@ -50682,7 +50742,17 @@
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Fútbol Manager · silnik Godot. Generowane nazwy klubów i piłkarzy używają zamiany litera→cyfra; prawdziwe dane z nazwiskiem i wizerunkiem pochodzą ze źródeł na wolnej licencji. Muzykę i efekty meczu syntezuje sama gra; nieliczne nagrane dźwięki interfejsu są w domenie publicznej (CC0).",
   ": foto de ": ": zdjęcie: ",
   "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Wyzwanie „Bez siatki”: nie możesz wczytywać wcześniejszych zapisów. Gra zapisuje się sama co tydzień.",
-  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Tryb legendy: nie możesz zmienić klubu. Tylko jeśli cię zwolnią."
+  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Tryb legendy: nie możesz zmienić klubu. Tylko jeśli cię zwolnią.",
+  "ese jugador no existe": "taki zawodnik nie istnieje",
+  "ya está libre: ficha como libre, sin precontrato": "jest już wolnym zawodnikiem: podpisz go jako wolnego, bez przedwstępnej umowy",
+  "Aún le quedan %d años de contrato: el precontrato solo vale en su último año.": "Zostało mu jeszcze %d lat kontraktu: umowa przedwstępna działa tylko w ostatnim roku.",
+  "Los precontratos se firman en el último semestre de su contrato (desde la semana %d).": "Umowy przedwstępne podpisuje się w ostatnim półroczu kontraktu (od tygodnia %d).",
+  "Ya tienes un precontrato firmado con él.": "Masz już z nim podpisaną umowę przedwstępną.",
+  "%s no se compromete: prefiere esperar a ver qué ofertas le llegan.": "%s się nie zobowiązuje: woli poczekać na inne oferty.",
+  "📝 Precontrato firmado: llegará sin traspaso al acabar su contrato (ficha %s a la semana).": "📝 Umowa przedwstępna podpisana: przyjdzie bez odstępnego po wygaśnięciu kontraktu (pensja %s tygodniowo).",
+  "📝 Precontrato (llega gratis al acabar su contrato)": "📝 Umowa przedwstępna (przyjdzie za darmo po wygaśnięciu kontraktu)",
+  "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Ustalasz jego pensję teraz; na zmianę sezonu dołącza do twojego klubu bez odstępnego.",
+  "Precontrato firmado con %s.": "Podpisano umowę przedwstępną z %s."
  },
  "tr": {
   "Club": "Kulüp",
@@ -57346,6 +57416,16 @@
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Fútbol Manager · Godot motoru. Üretilen kulüp ve oyuncu adları harf→rakam değişimi kullanır; adı ve görseli olan gerçek veriler özgür lisanslı kaynaklardan gelir. Müzik ve maç efektlerini oyunun kendisi sentezler; kaydedilmiş birkaç arayüz sesi kamu malıdır (CC0).",
   ": foto de ": ": fotoğraf: ",
   "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "«Ağsız» meydan okuması: önceki kayıtları yükleyemezsin. Oyun her hafta kendiliğinden kaydedilir.",
-  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Efsane modu: kulüp değiştiremezsin. Sadece kovulursan."
+  "Modo leyenda: no puedes cambiar de club. Solo si te despiden.": "Efsane modu: kulüp değiştiremezsin. Sadece kovulursan.",
+  "ese jugador no existe": "bu oyuncu yok",
+  "ya está libre: ficha como libre, sin precontrato": "zaten serbest: ön sözleşme olmadan serbest olarak transfer et",
+  "Aún le quedan %d años de contrato: el precontrato solo vale en su último año.": "Sözleşmesinin %d yılı daha var: ön sözleşme yalnızca son yılında geçerli.",
+  "Los precontratos se firman en el último semestre de su contrato (desde la semana %d).": "Ön sözleşmeler sözleşmenin son altı ayında imzalanır (%d. haftadan itibaren).",
+  "Ya tienes un precontrato firmado con él.": "Onunla zaten imzalanmış bir ön sözleşmen var.",
+  "%s no se compromete: prefiere esperar a ver qué ofertas le llegan.": "%s söz vermiyor: hangi tekliflerin geleceğini görmek için beklemeyi tercih ediyor.",
+  "📝 Precontrato firmado: llegará sin traspaso al acabar su contrato (ficha %s a la semana).": "📝 Ön sözleşme imzalandı: sözleşmesi bitince bonservissiz gelecek (haftalık maaş %s).",
+  "📝 Precontrato (llega gratis al acabar su contrato)": "📝 Ön sözleşme (sözleşmesi bitince bedelsiz gelir)",
+  "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Maaşını şimdi belirliyorsun; sezon geçişinde bonservis ödemeden kulübüne katılır.",
+  "Precontrato firmado con %s.": "%s ile ön sözleşme imzalandı."
  }
 }
