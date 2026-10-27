@@ -521,7 +521,7 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 
 ### Detectados en pruebas y aún sin cerrar
 
-- **Dispersión del tiro casi nula en la sonda** (27-10): 60 tiros al centro desde 20 m con `_tirar` caen a 0,04 m de media del centro del arco, en Realista y en Arcade; con el error de la fórmula deberían abrirse ~0,3-0,7 m. Mirar si `_tirar` aplica el error o si `_patear` lo corrige (s3p_salida_centros lo midió y se quitó la medida).
+- **Puntería del tiro sin el pulido** (27-10): con `TIRO_PULIDO` apagado por defecto (solo con `PMOT_TIRO=1`), un tirador de 97 desde 20 m cae a ±0,09 m de donde apunta: el error solo depende de (1 − tiro). Decidir si se enciende el pulido de puntería (baja los goles a ~2 por partido) o se da un suelo de error a todos.
 - **Roles por jugador** (como los PlayStyles de FC 26) con efecto en el motor.
 - **Red del arco**: onda más ancha y lenta (17-10), techo sin asomar por el larguero. **Cartel del cuarto árbitro**: 20-10 a tamaño real (0,92 × 0,62 m), dígitos con halo, mango y por encima de la cabeza. Desde la toma abierta de TV sigue siendo pequeño (como en la tele de verdad, que corta a un primer plano): pendiente un corte de cámara al cartel.
 - Desmarques de ruptura (los peatones: §2.4).
