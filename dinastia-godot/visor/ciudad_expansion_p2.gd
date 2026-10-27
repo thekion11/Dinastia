@@ -176,7 +176,7 @@ func _linea_bus(nombre: String, esquinas: Array) -> Dictionary:
 		var cuantas := int(largo / 330.0)
 		for q in range(1, cuantas + 1):
 			paradas.append(a.lerp(c, float(q) / float(cuantas + 1)))
-	return {"nombre": nombre, "destino": {"Bus 10": "CIRCULAR CENTRO", "Bus 22": "CIRCULAR EXTERIOR"}.get(nombre, "CIRCULAR"), "puntos": sal, "paradas": paradas}
+	return {"nombre": nombre, "destino": {"Bus 10": "CIRCULAR CENTRO", "Bus 22": "CIRCULAR EXTERIOR", "Bus 7": "BARRIO ESTE", "Bus 3": "PUERTO Y OESTE"}.get(nombre, "CIRCULAR"), "puntos": sal, "paradas": paradas}
 
 ## Dos líneas de metro (en datos: estaciones en cruces) y dos de autobús.
 func armar_transporte() -> void:
@@ -195,6 +195,9 @@ func armar_transporte() -> void:
 	lineas_bus = [
 		_linea_bus("Bus 10", [Vector2(NUC_X0, NUC_Z0), Vector2(NUC_X1, NUC_Z0), Vector2(NUC_X1, NUC_Z1), Vector2(NUC_X0, NUC_Z1)]),
 		_linea_bus("Bus 22", [Vector2(-660, -990), Vector2(990, -990), Vector2(990, 990), Vector2(-660, 990)]),
+		## Dos líneas de barrio (27-10-2026): la 7 por el Este (por las avenidas x = 660/990, z = 0/660) y la 3 por el Oeste y el puerto.
+		_linea_bus("Bus 7", [Vector2(660, 0), Vector2(990, 0), Vector2(990, 660), Vector2(660, 660)]),
+		_linea_bus("Bus 3", [Vector2(-990, -330), Vector2(-660, -330), Vector2(-660, 330), Vector2(-990, 330)]),
 	]
 
 func _cargar_modelos() -> void:

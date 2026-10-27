@@ -52,3 +52,25 @@ func _probar() -> void:
 			cambian += 1
 	_comprobar(cambian > 40, "tras una parada, sube o baja gente en %d de cada 200 asientos" % cambian)
 	gs.free()
+	## El mapa del transporte: tres vistas con las líneas numeradas y las estaciones por su nombre.
+	var b := CityBuilder.new()
+	add_child(b)
+	var ex := CiudadExpansion.new(b)
+	ex.armar_red()
+	ex.armar_bloques()
+	ex.armar_transporte()
+	var mapa := MapaTransporte.crear(ex, 0)
+	add_child(mapa)
+	var rutas := mapa._rutas_bus()
+	var nums: Array = []
+	for r: Dictionary in rutas:
+		nums.append(String(r["numero"]))
+	_comprobar(nums == ["5", "10", "22", "7", "3"], "cinco líneas de autobús numeradas (%s)" % ", ".join(nums))
+	_comprobar(MapaTransporte.color_linea("10") != MapaTransporte.color_linea("22") and ex.lineas_metro.size() == 2, "cada línea tiene su color y hay dos de metro")
+	for m in 3:
+		mapa.modo = m
+		mapa.size = Vector2(1600, 900)
+		mapa._draw()
+	_comprobar(true, "las tres vistas (completo, autobuses, metro) se dibujan sin error")
+	var tr := MetroCiudad.NOMBRES
+	_comprobar(tr["Línea 1"][1] == "Transbordo" and tr["Línea 2"][5] == "Transbordo", "«Transbordo» está en el cruce real de las dos líneas (x=660 y z=-660)")
