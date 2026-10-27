@@ -185,6 +185,11 @@ func _dibujar_bloque(bl: Dictionary) -> void:
 			_casas(r)
 		"lejano":
 			_lejanos.append(r)
+		"parque_solar":
+			## Como la feria: se apunta como lejana para consumir el mismo azar (`_edificios_lejanos`).
+			_lejanos.append(r)
+			_sin_lejano.append(r)
+			CiudadSolar.montar(self, r)
 		"feria":
 			## Antes era una manzana lejana: se sigue apuntando para que el azar de
 			## `_edificios_lejanos` se consuma igual (no se mueve nada más).
