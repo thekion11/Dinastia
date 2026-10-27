@@ -340,8 +340,8 @@ func perfil_estadio() -> Dictionary:
 		var ap := GuinosEstadio.apodo(p)
 		if ap != "":
 			p["apodo"] = ap
-	var asi: Variant = AspectoClub.fila(self).get("asientos", [])   ## orden 15 (manda sobre el estadio): las butacas del club real aunque no tenga estadio propio
-	if asi is Array and (asi as Array).size() >= 2:
+	var asi: Variant = AspectoClub.fila(self).get("asientos", [])   ## orden 15: las butacas del club real si su estadio no trae las suyas
+	if asi is Array and (asi as Array).size() >= 2 and not r.has("asientos"):
 		p["asiento1"] = String(asi[0])
 		p["asiento2"] = String(asi[1])
 	return p
