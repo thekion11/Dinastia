@@ -1,13 +1,13 @@
 class_name ViaEstacion
 extends RefCounted
 ## LA VÍA QUE SALE DE LA CIUDAD (27-10-2026, pieza F-3c, pedido del líder: «una vía que salga de la ciudad hacia el horizonte, con
-## el tren entrando y saliendo»). Las dos vías de la Estación Central siguen BAJO TIERRA hasta el borde norte (el viaducto del
-## metro ocupa el aire) y allí salen a la luz por una boca de túnel (`Z_BOCA_A`), corren a cielo abierto 300 m (balasto,
+## el tren entrando y saliendo»). Las dos vías de la Estación Central siguen BAJO TIERRA hasta pasada la autopista del anillo (z mundo ≈ −1480:
+## así NO cruzan a nivel ninguna calle —Almendros, Rocío, Alameda, Constitución—, ni la rampa ni los pilares de la autopista) y allí salen a la luz por una boca de túnel (`Z_BOCA_A`), corren a cielo abierto 200 m (balasto,
 ## traviesas, carriles y pórticos de catenaria) y se meten en otro túnel en el horizonte (`Z_BOCA_B`). Todo en coordenadas
 ## LOCALES de la estación (z negativa = al norte). El tren sale de la boca lejana, cruza el tramo abierto, desaparece en la boca
 ## cercana y reaparece por la boca del andén; mientras va bajo tierra se oculta (`visible_en`).
-const Z_BOCA_A := -540.0          ## la boca cercana (borde de la ciudad); el túnel se extiende 36 m hacia el sur
-const Z_BOCA_B := -840.0          ## la boca lejana (el horizonte); el túnel se extiende 36 m hacia el norte
+const Z_BOCA_A := -930.0          ## la boca cercana (más allá de la autopista: z mundo ≈ −1480); el túnel se extiende 36 m hacia el sur
+const Z_BOCA_B := -1130.0         ## la boca lejana (el horizonte); el túnel se extiende 36 m hacia el norte
 const LARGO_BOCA := 36.0
 const VIA_X := 8.0
 const Y_VIA := 0.25

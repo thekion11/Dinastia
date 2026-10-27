@@ -30,11 +30,11 @@ func _probar() -> void:
 	rj.minuto = 3 * 60
 	est._process(0.0)
 	_comprobar(not (est._trenes[0]["nodo"] as Node3D).visible and not (est._trenes[1]["nodo"] as Node3D).visible, "de madrugada (03:00) no hay servicio")
-	rj.minuto = 608   ## 10:08: t = 3648 s → 96 s del ciclo del tren 1 (parado en el andén)
+	rj.minuto = 577   ## 09:37: t = 3462 s → 102 s del ciclo del tren 1 (parado en el andén)
 	est._process(0.0)
-	_comprobar((est._trenes[0]["nodo"] as Node3D).visible and est._reloj_rotulo.text == "10:08", "a las 10:08 hay trenes y el reloj de la fachada marca la hora del juego")
+	_comprobar((est._trenes[0]["nodo"] as Node3D).visible and est._reloj_rotulo.text == "09:37", "a las 09:37 hay trenes y el reloj de la fachada marca la hora del juego")
 	var antes := est.posicion_tren(0, (rj.dia * 1440 + rj.minuto) * 6.0)
-	rj.minuto = 609
+	rj.minuto = 578
 	est._process(0.0)
 	_comprobar(float((est._trenes[0]["nodo"] as Node3D).position.z) != float(antes["z"]) or bool(antes["parado"]), "el ciclo avanza con los minutos del reloj del juego")
 	EstacionCentral.reloj = null
@@ -122,7 +122,7 @@ func _probar_pasajeros(est: EstacionCentral) -> void:
 func _probar_via_exterior(est: EstacionCentral) -> void:
 	_linea("· Vía exterior")
 	var info: Dictionary = est.get_meta("via_exterior", {})
-	_comprobar(not info.is_empty() and float(info["z_a"]) - float(info["z_b"]) >= 250.0 and int(info["porticos"]) >= 3, "tramo abierto de %.0f m con %d pórticos de catenaria" % [float(info["z_a"]) - float(info["z_b"]), int(info["porticos"])])
+	_comprobar(not info.is_empty() and float(info["z_a"]) - float(info["z_b"]) >= 190.0 and int(info["porticos"]) >= 3, "tramo abierto de %.0f m con %d pórticos de catenaria" % [float(info["z_a"]) - float(info["z_b"]), int(info["porticos"])])
 	var largo := est.largo_del_tren
 	_comprobar(largo > 15.0 and largo < 30.0, "el tren mide %.1f m (tres coches)" % largo)
 	_comprobar(ViaEstacion.visible_en(ViaEstacion.Z_BOCA_B - 5.0, largo, est.z_tunel_anden), "empieza dentro del túnel del horizonte, a la vista (dentro de su boca)")
@@ -141,3 +141,8 @@ func _probar_via_exterior(est: EstacionCentral) -> void:
 			abierto += 0.5
 		z_ant = z
 	_comprobar(abierto > 5.0 and abierto < 40.0, "el tren recorre el tramo exterior en %.1f s (se le ve venir)" % abierto)
+	## 27-10 (revisión del líder: la vía cruzaba tres calles a nivel): ahora va por el subsuelo hasta pasada la autopista del anillo.
+	var z_estacion := -5.0 * CiudadExpansion.CELDA
+	var borde_autopista := -(Autopista.R + Autopista.ANCHO * 0.5)
+	_comprobar(z_estacion + ViaEstacion.Z_BOCA_A + ViaEstacion.LARGO_BOCA < borde_autopista, "la boca cercana (con su túnel) queda más allá del borde norte de la autopista (z %.0f < %.0f): ninguna calle se cruza a nivel" % [z_estacion + ViaEstacion.Z_BOCA_A + ViaEstacion.LARGO_BOCA, borde_autopista])
+	_comprobar(not ViaEstacion.visible_en(-250.0, est.largo_del_tren, est.z_tunel_anden) and not ViaEstacion.visible_en(-700.0, est.largo_del_tren, est.z_tunel_anden), "y por debajo de las calles (y de la autopista) el tren no se ve, no pisa ninguna")
