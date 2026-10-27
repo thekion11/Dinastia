@@ -122,7 +122,7 @@ func _construir(b: CityBuilder, w: float, f: float, mats: Dictionary, ex: Ciudad
 	b._boveda(position + Vector3(0, 13.0, z_v), w * 0.85, f * 0.3, b._mat_simple(Color(0.5, 0.62, 0.7), 0.3), 0.3)
 	var z_front := z_v + f * 0.15
 	if ex != null:
-		FachadaModular.montar(ex, position.x, position.z + z_front, position.y, w * 0.85, 3, true)   ## puertas de cristal y marquesina
+		FachadaModular.montar(ex, position.x, position.z + z_front, position.y, w * 0.85, 3, true, true)   ## puertas de cristal y marquesina
 	else:
 		_caja(b, Vector3(0, 5.0, z_front + 0.1), Vector3(w * 0.6, 7.0, 0.2), mats["vidrio"])
 	_rotulo(Vector3(0, 15.0, z_front + 0.8), "ESTACIÓN CENTRAL", 0.035)
