@@ -312,6 +312,14 @@ func hora_cambiada(hora: int, clima: String) -> void:
 	modelo.pasar(1, hora, float(t["viento"]), float(t["lluvia"]), clima)
 	refrescar()
 
+## La partida manda: el estado de las redes es el de `Mundo.redes_ciudad` (los edificios son los de ESTA ciudad).
+func adoptar(m: RedesCiudad) -> void:
+	if m == null or m == modelo:
+		return
+	m.recibir_edificios(modelo.edificios)
+	modelo = m
+	refrescar()
+
 ## Lo que el evento del apagón quiere contar al jugador ({tipo, texto}).
 func tomar_avisos() -> Array:
 	return modelo.evento.tomar_avisos()

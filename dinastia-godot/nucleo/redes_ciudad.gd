@@ -56,6 +56,7 @@ var registro: Array = []                     ## líneas «20:00 …» del centro
 var evento := EventoApagon.new()
 var clima := ""
 var _luz_antes := {}
+var _aislados_guardados: Array = []
 var averias_azar := true                     ## false en las pruebas: solo las averías puestas a mano
 var hora_dia := 0                            ## la última hora simulada (0..23)
 var generacion := 0.0
@@ -287,6 +288,61 @@ func _gasolineras(h: int) -> void:
 		if v < GAS_DEPOSITO * 0.2:
 			v += GAS_DEPOSITO * 0.5          ## llega la cisterna
 		gas[id] = clampf(v, 0.0, GAS_DEPOSITO)
+
+# ============================================================================ PARTIDA
+
+func a_dic() -> Dictionary:
+	var c := {}
+	for red: String in cortes:
+		c[red] = (cortes[red] as Dictionary).keys().map(func(s: Vector2i) -> Array: return [s.x, s.y])
+	var col: Array = []
+	for sec in sectores():
+		col.append(snappedf(float(colector[sec]), 0.01))
+	var aislados: Array = []
+	for ed: Dictionary in edificios:
+		if bool(ed["aislado"]):
+			aislados.append(int(ed["id"]))
+	return {"v": 1, "semilla": semilla, "horas": horas, "hora_dia": hora_dia, "agua": agua_nivel, "cortes": c, "colector": col,
+		"gas": [gas[0], gas[1], gas[2]], "historial": historial.duplicate(true), "registro": registro.duplicate(), "aislados": aislados,
+		"evento": evento.a_dic(), "clima": clima, "viento": viento, "lluvia": lluvia}
+
+## Carga una instantánea (partida vieja sin redes = `{}`: se queda como nueva). Los edificios no se guardan (salen de la
+## ciudad): `recibir_edificios` los vuelve a conectar y aplica los aislados.
+func desde_dic(d: Dictionary) -> void:
+	if d.is_empty():
+		return
+	semilla = int(d.get("semilla", semilla))
+	horas = int(d.get("horas", 0))
+	hora_dia = int(d.get("hora_dia", 0))
+	agua_nivel = clampf(float(d.get("agua", agua_nivel)), 0.0, AGUA_DEPOSITO)
+	for red: String in ["luz", "agua", "drenaje"]:
+		(cortes[red] as Dictionary).clear()
+		for p: Variant in (d.get("cortes", {}) as Dictionary).get(red, []):
+			if p is Array and (p as Array).size() == 2:
+				(cortes[red] as Dictionary)[Vector2i(int(p[0]), int(p[1]))] = true
+	var col: Array = d.get("colector", [])
+	var i := 0
+	for sec in sectores():
+		colector[sec] = float(col[i]) if i < col.size() else 0.0
+		inundado[sec] = float(colector[sec]) >= COLECTOR
+		i += 1
+	var g: Array = d.get("gas", [])
+	for id in mini(g.size(), 3):
+		gas[id] = clampf(float(g[id]), 0.0, GAS_DEPOSITO)
+	historial = (d.get("historial", []) as Array).duplicate(true)
+	registro = (d.get("registro", []) as Array).duplicate()
+	_aislados_guardados = (d.get("aislados", []) as Array).map(func(x: Variant) -> int: return int(x))
+	evento.desde_dic(d.get("evento", {}))
+	clima = String(d.get("clima", ""))
+	viento = float(d.get("viento", viento))
+	lluvia = float(d.get("lluvia", 0.0))
+	recibir_edificios(edificios)
+
+func recibir_edificios(lista: Array) -> void:
+	edificios = lista
+	for ed: Dictionary in edificios:
+		ed["aislado"] = int(ed["id"]) in _aislados_guardados
+	recalcular()
 
 # ============================================================================ CONSULTAS
 

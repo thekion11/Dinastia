@@ -356,9 +356,11 @@ cada hora del `Reloj` con el clima de la semana (viento mueve el parque eólico,
   titular «bien»; si nadie baja, la cuadrilla arregla a las 08:00 (titular «mal»). Detalle: hormigón texturado, franjas de peligro,
   abrazaderas, charcos, extintores, salidas, marcos por red, ventiladores y goteras. Capturas con `EVENTO=1` en la escena de captura.
   PENDIENTE: los edificios de la superficie no cambian de aspecto con el corte (solo farolas); sonido ambiente; Forward+.
-- PENDIENTE: texturas y detalle del subsuelo (paredes lisas), sonido ambiente y goteo; averías visibles (obras, cuadrilla, camión cisterna);
-  apagón por sector en farolas y ventanas (hoy las farolas bajan todas a la vez); aviso en el móvil con `resumen()`; cables con caída;
-  guardar el estado de las redes en la partida; coche con depósito real que dependa del repostaje.
+- Hecho 27-10 (3.ª pasada): las redes se GUARDAN en la partida (`Mundo.redes_ciudad`, clave `redes_ciudad`; partida vieja = nuevas; ida y vuelta
+  probada) y el móvil avisa de cortes e inundaciones nuevos.
+- PENDIENTE: sonido ambiente del subsuelo; averías visibles (obras, cuadrilla, camión cisterna);
+  apagón por sector en farolas y ventanas (hoy las farolas bajan todas a la vez); cables con caída;
+  coche con depósito real que dependa del repostaje.
 
 ### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
 
