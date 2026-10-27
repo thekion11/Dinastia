@@ -12,6 +12,9 @@ const MAXIMO := 6
 const CERCA := 55.0
 const LEJOS := 75.0
 const SE_VE := 38.0     ## a menos de esto, quien deja el asiento se levanta y se va andando
+## En «Sitting_Idle» la pelvis queda a 1,05 m de la raíz y en «Sitting_Enter/Exit» a 0,60 (medido con la sonda de raíz del 27-10): para que no se
+## hunda en el banco al sentarse o levantarse, la raíz sube COMPENSA durante esos clips (y vuelve a la altura de sentado o de suelo al acabar).
+const COMPENSA := 0.45
 const OCUPACION := 0.45   ## fracción de asientos cercanos con alguien
 
 var vida: VidaCiudad
@@ -143,11 +146,13 @@ func _sentar(i: int, asiento: Dictionary, llegando := false) -> void:
 		## LLEGA ANDANDO (P3 «MEJORAR»): desde 3,2 m por delante del banco, de cara al asiento; al llegar se vuelve y se sienta.
 		var fuera := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
 		var a := p + fuera * 3.2
-		a.y = n.position.y
+		var raiz := n.position.y
+		var suelo := ExploradorCiudad.altura_suelo(p.x, p.z)
+		a.y = suelo
 		n.position = a
 		n.rotation.y = atan2(-fuera.x, -fuera.z)
 		Mini3D.anim(d, "caminar", "")
-		_llegando.append({"i": i, "d": d, "a": a, "b": Vector3(p.x, a.y, p.z) + fuera * 0.15, "t": 0.0, "dur": 3.2 / 1.3, "fase": 0, "giro": float(asiento["giro"])})
+		_llegando.append({"i": i, "d": d, "a": a, "raiz": raiz, "suelo": suelo, "b": Vector3(p.x, a.y, p.z) + fuera * 0.15, "t": 0.0, "dur": 3.2 / 1.3, "fase": 0, "giro": float(asiento["giro"])})
 		return
 	Mini3D.anim(d, "sentado", "")
 	(d["anim"] as AnimationPlayer).seek(_rng.randf() * 0.8, true)
@@ -174,7 +179,9 @@ func _llegadas(delta: float) -> void:
 				Mini3D.anim(d, "sentarse" if ap.has_animation("sentarse") else "sentado", "sentado")
 		else:
 			n.rotation.y = MovimientoNatural.girar(n.rotation.y, float(s["giro"]), delta)
-			if float(s["t"]) > 1.6:
+			var ts := float(s["t"])
+			n.position.y = raiz_sentarse(ts / 1.3, float(s["raiz"]), float(s["suelo"])) if ts < 1.3 else float(s["raiz"])
+			if ts > 1.6:
 				_llegando.remove_at(k)
 
 ## A los 3 s de parar el autobús, sube y baja gente de verdad (`PasajerosBus`); los sentados cercanos a la puerta se levantan y suben.
@@ -199,7 +206,9 @@ func _levantar(i: int) -> void:
 	Mini3D.anim(d, "levantarse", "")
 	var lado := Vector3(cos(n.rotation.y), 0, -sin(n.rotation.y)) * (1.0 if i % 2 == 0 else -1.0)
 	var fuera := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
-	_saliendo.append({"d": d, "t": 0.0, "fase": 0, "a": n.position, "b": n.position + fuera * 1.5 + lado * 8.0})
+	var suelo := ExploradorCiudad.altura_suelo(n.position.x, n.position.z)
+	var a := Vector3(n.position.x, suelo, n.position.z)
+	_saliendo.append({"d": d, "t": 0.0, "fase": 0, "a": a, "b": a + fuera * 1.5 + lado * 8.0, "raiz": n.position.y, "suelo": suelo})
 
 ## Quien se levanta: tras el clip se vuelve hacia la acera y camina; al llegar a su destino desaparece.
 func _salidas(delta: float) -> void:
@@ -212,9 +221,11 @@ func _salidas(delta: float) -> void:
 			continue
 		s["t"] = float(s["t"]) + delta
 		if int(s["fase"]) == 0:
+			n.position.y = raiz_levantarse(float(s["t"]) / 1.03, float(s["raiz"]), float(s["suelo"]))
 			if float(s["t"]) >= 1.0:
 				s["fase"] = 1
 				s["t"] = 0.0
+				n.position.y = float(s["suelo"])
 				Mini3D.anim(d, "caminar", "")
 				(d["anim"] as AnimationPlayer).speed_scale = 1.3 / MovimientoNatural.NATURAL
 		else:
@@ -226,6 +237,14 @@ func _salidas(delta: float) -> void:
 			if u >= 1.0:
 				n.queue_free()
 				_saliendo.remove_at(k)
+
+## Altura de la raíz a lo largo de «levantarse» (u 0→1): de la altura de sentado (+compensación) al suelo.
+static func raiz_levantarse(u: float, raiz_sentado: float, suelo: float) -> float:
+	return lerpf(raiz_sentado + COMPENSA, suelo, smoothstep(0.0, 1.0, u))
+
+## Y a lo largo de «sentarse»: del suelo a la altura de sentado (+compensación).
+static func raiz_sentarse(u: float, raiz_sentado: float, suelo: float) -> float:
+	return lerpf(suelo, raiz_sentado + COMPENSA, smoothstep(0.0, 1.0, u))
 
 func _quitar(i: int) -> void:
 	_visto.erase(i)
