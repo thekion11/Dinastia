@@ -3,6 +3,8 @@ extends RefCounted
 ## LA CARTERA DEL DT (27-10-2026, pieza A de `PLAN_DEL_LUNES.md` §2.2h; OK del líder: el dinero de la ciudad sale del BOLSILLO DEL DT, no del club).
 ## La CUENTA es `Roles.patrimonio` (todo lo que ya cobra y gasta el DT sigue funcionando); aquí se suma el EFECTIVO en el bolsillo, la TARJETA de
 ## débito (PIN de 4 cifras, límite diario, bloqueo tras tres PIN erróneos) y los últimos movimientos. Todo en euros y ficticio.
+## UNIDADES: la cartera habla en EUROS de pantalla; `Roles.patrimonio` va en puntos internos (1 punto = `Eco.ECO` = 12 EUR). `cargo_pend` (0..11 €) guarda lo
+## ya gastado del punto en curso, así cada euro cuenta sin tocar la economía del resto del juego.
 ## Los métodos devuelven "" si salió bien o un CÓDIGO de error ("bloqueada", "pin", "limite", "saldo", "importe"); la pantalla lo traduce con `Idiomas.t`.
 const LIMITE_TARJETA := 600      ## € al día con tarjeta
 const LIMITE_CAJERO := 500       ## € al día retirados en cajero
@@ -11,6 +13,7 @@ const MAX_MOV := 30
 const MAX_FALLOS := 3
 
 var efectivo: int = 0
+var cargo_pend: int = 0          ## € ya gastados del punto interno en curso (0..11)
 var pin: String = "0000"
 var pin_inicial: bool = true     ## sigue el PIN de fábrica: el cajero avisa de cambiarlo
 var bloqueada: bool = false
@@ -20,9 +23,29 @@ var gastado_dia: int = 0
 var retirado_dia: int = 0
 var movimientos: Array = []      ## {"dia", "concepto", "importe", "via"}; importe negativo = sale dinero
 
-## Dinero total del DT: bolsillo + cuenta.
+static func unidad() -> int:
+	return int(Eco.ECO)
+
+## Euros que hay en la cuenta (el patrimonio en euros menos lo ya gastado del punto en curso).
+func cuenta_eur(roles: Roles) -> int:
+	return roles.patrimonio * unidad() - cargo_pend
+
+## Dinero total del DT en euros: bolsillo + cuenta.
 func total(roles: Roles) -> int:
-	return efectivo + roles.patrimonio
+	return efectivo + cuenta_eur(roles)
+
+func _debitar(roles: Roles, eur: int) -> void:
+	cargo_pend += eur
+	var u := unidad()
+	roles.patrimonio -= cargo_pend / u
+	cargo_pend = cargo_pend % u
+
+func _abonar(roles: Roles, eur: int) -> void:
+	cargo_pend -= eur
+	var u := unidad()
+	while cargo_pend < 0:
+		cargo_pend += u
+		roles.patrimonio += 1
 
 func _dia(dia: int) -> void:
 	if dia != dia_gasto:
@@ -63,11 +86,11 @@ func _cargo_tarjeta(roles: Roles, importe: int, concepto: String, dia: int, simu
 	_dia(dia)
 	if gastado_dia + importe > LIMITE_TARJETA:
 		return "limite"
-	if roles.patrimonio < importe:
+	if cuenta_eur(roles) < importe:
 		return "saldo"
 	if simular:
 		return ""
-	roles.patrimonio -= importe
+	_debitar(roles, importe)
 	gastado_dia += importe
 	_apunta(dia, concepto, -importe, "tarjeta")
 	return ""
@@ -111,10 +134,10 @@ func retirar(roles: Roles, importe: int, pin_dado: String, dia: int, comision :=
 	_dia(dia)
 	if retirado_dia + importe > LIMITE_CAJERO:
 		return "limite"
-	if roles.patrimonio < importe + comision:
+	if cuenta_eur(roles) < importe + comision:
 		return "saldo"
 	fallos_pin = 0
-	roles.patrimonio -= importe + comision
+	_debitar(roles, importe + comision)
 	efectivo += importe
 	retirado_dia += importe
 	_apunta(dia, "Cajero", -importe - comision, "cajero")
@@ -127,9 +150,25 @@ func ingresar(roles: Roles, importe: int, dia: int) -> String:
 	if efectivo < importe:
 		return "saldo"
 	efectivo -= importe
-	roles.patrimonio += importe
+	_abonar(roles, importe)
 	_apunta(dia, "Ingreso", importe, "cajero")
 	return ""
+
+## Comprueba un PIN tecleado en un cajero: "" bien, "pin" mal (cuenta el fallo), "bloqueada" si ya estaba o se bloquea ahora.
+func comprobar_pin(pin_dado: String) -> String:
+	if bloqueada:
+		return "bloqueada"
+	if pin_dado == pin:
+		fallos_pin = 0
+		return ""
+	fallos_pin += 1
+	if fallos_pin >= MAX_FALLOS:
+		bloqueada = true
+		return "bloqueada"
+	return "pin"
+
+func intentos_restantes() -> int:
+	return maxi(0, MAX_FALLOS - fallos_pin)
 
 func cambiar_pin(viejo: String, nuevo: String) -> String:
 	if bloqueada:
@@ -149,12 +188,13 @@ func desbloquear() -> void:
 	fallos_pin = 0
 
 func a_dict() -> Dictionary:
-	return {"efectivo": efectivo, "pin": pin, "pin_inicial": pin_inicial, "bloqueada": bloqueada, "fallos": fallos_pin,
+	return {"efectivo": efectivo, "cargo": cargo_pend, "pin": pin, "pin_inicial": pin_inicial, "bloqueada": bloqueada, "fallos": fallos_pin,
 		"dia": dia_gasto, "gastado": gastado_dia, "retirado": retirado_dia, "mov": movimientos.duplicate(true)}
 
 ## Partida vieja (diccionario vacío): efectivo 0 y PIN de fábrica.
 func desde_dict(d: Dictionary) -> void:
 	efectivo = int(d.get("efectivo", 0))
+	cargo_pend = int(d.get("cargo", 0))
 	pin = String(d.get("pin", "0000"))
 	pin_inicial = bool(d.get("pin_inicial", true))
 	bloqueada = bool(d.get("bloqueada", false))

@@ -225,6 +225,57 @@ func _probar_async() -> void:
 			_m.roles.cartera.efectivo = 80
 			_v.usar_surtidor("surtidor_0")
 			_comprobar(_m.vida.combustible > 40.0 and _m.roles.cartera.efectivo < 80 and gas0 > 0.0, "con efectivo paga en efectivo")
+	## Sin cartera (mundo sin roles) la gasolina no sale gratis: la paga el club como antes.
+	if _v != null and _v._redes() != null and _m.mi_club() != null and not _v._redes().surtidor(0).is_empty():
+		var roles_guardados: Roles = _m.roles
+		_m.roles = null
+		_m.vida.combustible = 5.0
+		var saldo_sin := _m.mi_club().saldo
+		_v.usar_surtidor("surtidor_0")
+		_comprobar(_m.vida.combustible > 40.0 and _m.mi_club().saldo < saldo_sin, "sin cartera repostar lo paga el club (nunca sale gratis)")
+		_m.roles = roles_guardados
+	## LOS CAJEROS están puestos en la ciudad y la E abre el panel.
+	if _v != null and _e != null and _e.cb != null and _m.roles != null:
+		var kc := ""
+		for pc: Dictionary in _e.cb.puntos_clic:
+			if String(pc.get("k", "")).begins_with("cajero_"):
+				kc = String(pc["k"])
+				break
+		_comprobar(kc != "", "hay cajeros automáticos puestos en la ciudad")
+		if kc != "":
+			_v.usar_cajero(kc)
+			_comprobar(is_instance_valid(_v._panel_cajero) and _v._panel_cajero.is_inside_tree(), "la E ante un cajero abre el panel")
+			if is_instance_valid(_v._panel_cajero):
+				_v._panel_cajero.free()
+	## LA EXPENDEDORA cobra de la cartera y sube la energía; el balón suelto del parque aparece.
+	if _v != null and _m.roles != null and _m.necesidades != null:
+		_m.roles.patrimonio = 100
+		_m.roles.cartera.cargo_pend = 0
+		_m.roles.cartera.efectivo = 0
+		_m.necesidades.energia_m = 30 * Necesidades.ESCALA
+		_v.usar_expendedora()
+		_comprobar(_m.necesidades.energia() == 45 and _m.roles.cartera.cuenta_eur(_m.roles) == 1197, "la expendedora cobra 3 € de la cartera y sube la energía de 30 a 45")
+		_m.roles.patrimonio = 0
+		_m.necesidades.energia_m = 30 * Necesidades.ESCALA
+		_v.usar_expendedora()
+		_comprobar(_m.necesidades.energia() == 30, "sin dinero la expendedora no da nada")
+	if _v != null:
+		_v.poner_balon()
+		_comprobar(is_instance_valid(_v._balon) and _v._balon.is_inside_tree(), "hay un balón suelto en el parque más cercano")
+	## LA TIENDA DE LA GASOLINERA: compra según el hambre, la paga el DT y el club no.
+	if _v != null and _m.roles != null and _m.necesidades != null:
+		_m.roles.patrimonio = 100
+		_m.roles.cartera.cargo_pend = 0
+		_m.roles.cartera.efectivo = 0
+		_m.necesidades.hambre_m = 80 * Necesidades.ESCALA
+		var club_t := _m.mi_club().saldo if _m.mi_club() != null else 0
+		_v.usar_tienda()
+		_comprobar(_m.necesidades.hambre() < 80 and _m.roles.cartera.cuenta_eur(_m.roles) == 1196, "la tienda vende un bocadillo (4 €, con tarjeta) y baja el hambre")
+		_comprobar((_m.mi_club().saldo if _m.mi_club() != null else 0) == club_t, "y el club no paga la compra")
+		_m.roles.patrimonio = 0
+		var h_antes := _m.necesidades.hambre()
+		_v.usar_tienda()
+		_comprobar(_m.necesidades.hambre() == h_antes, "sin dinero no se lleva nada")
 	tel.queue_free()
 	PedidoPartida.mundo_pregenerado = null
 	PedidoPartida.mundo_a_cargar = null
