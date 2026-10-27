@@ -320,20 +320,13 @@ no; la cita de la rama cuesta caja y sube la fuerza; un título de rama suma una
 crea la cita «celebración» y la vuelta olímpica se activa una sola vez. Captura `f5c_captura_club` (vestuario con gente,
 museo con copas, celebración).
 
-#### 2.2f-bis El museo que crece (orden del dueño 27-10: «el museo se va a tener que extender, por eso el ascensor; animación de expansión») — DISEÑO
-Hoy: una sala en la planta 2 (`EdificioClub.PLANTAS`), 2-6 vitrinas según el nivel de obra `museo`, una copa por título
-(`EdificioClubSalas.museo`, trofeo real del regalo). Qué se construye, en este orden:
-1. **Capacidad real**: vitrinas = títulos (hasta llenar la sala, 6); al 7.º título el museo «se queda chico» y aparece la obra
-   «Ampliar el museo» en Club → Obras (coste según nivel; 3 semanas).
-2. **Planta nueva por el ascensor**: al terminar la obra, `PLANTAS` gana la planta 3 «Museo ampliado» (sala entera: vitrinas a
-   los dos lados, pared de camisetas por década, panel de hitos de `roles.trofeos` con año y título, balón de la primera copa);
-   el ascensor ya la lista. La planta 2 conserva las 6 primeras copas; las siguientes van arriba. Guardado: solo el nivel de obra.
-3. **Animación de expansión**: mientras dura la obra, andamios y lona en la fachada de esa planta (ya hay andamios en reformas)
-   y, al entrar por primera vez tras terminar, un fundido corto con el rótulo «Museo ampliado · %d títulos» y las copas que
-   se iluminan una a una (0,15 s cada una).
-4. Prueba `f5c_club` ampliada (7 títulos → obra disponible; obra hecha → planta 3 existe y el ascensor llega) + captura
-   antes/después desde la cámara real. Veredicto del dueño.
-Lo hace la sesión ejecutora («lo del museo» es suyo); la líder revisa las capturas.
+#### 2.2f-bis El museo que crece (orden del dueño 27-10) — HECHO, falta el veredicto del dueño
+Construido en tres pasos (`MuseoAmpliado`, `MuseoAmpliadoAnim`, `SalasClub.vitrina`; prueba `f5c_club` ampliada; capturas `f5d_captura_museo` en `docs/04_auditorias/capturas_museo/`):
+la sala de la planta 2 tiene una vitrina por título hasta seis; con el museo a nivel 5 (obra «Museo del club» de siempre, no una obra nueva) el ascensor
+suma la planta 3 «Museo ampliado» (copas del séptimo título en adelante, panel de hitos, camisetas por década, balón de la primera copa); mientras la obra del
+nivel 5 está en marcha la planta 3 sale con andamios y lona; la primera vez que se entra tras terminarla, el rótulo «Museo ampliado · N títulos» y las copas
+se iluminan una a una (lo visto se guarda en los ajustes, no en la partida). A mejorar si el dueño lo pide: fundido de pantalla real, pared de camisetas con
+equipaciones de verdad por década y más de 10 copas en la planta 3.
 
 ### 2.2g Redes de la ciudad y subsuelo (sesión 3): luz, agua, drenaje y gasolineras (pedido del dueño, 27-10) — CONSTRUIDO, falta mirarlo
 `nucleo/redes_ciudad.gd` (modelo por horas, 25 sectores de 6x6 celdas; prueba `_probar_redes_ciudad` del banco) y

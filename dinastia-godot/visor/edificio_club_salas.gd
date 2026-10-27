@@ -48,6 +48,8 @@ static func _esfera(r: float) -> SphereMesh:
 	sm.rings = 7
 	return sm
 
+## Vitrinas de la sala de la planta 2; los títulos que no caben van a la planta 3 (`MuseoAmpliado`).
+const MAX_SALA := 6
 const TROFEO := "res://assets/ciudad/trofeo.glb"
 const TROFEO_ESCALA := 0.75
 ## La copa del regalo del dueño (27-10), cargada una sola vez: malla y material (metal medio,
@@ -99,26 +101,44 @@ static func copa(lote: PiezasVestuario.Lote, p: Vector3, oro: Material, peana: M
 		asa.ring_segments = 6
 		lote.malla(oro, Transform3D(Basis(Vector3.FORWARD, PI / 2.0), p + Vector3(s * 0.15, 0.37, 0)), asa)
 
-static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, titulos: int, nivel_museo: int) -> PiezasVestuario.Lote:
-	var lote := PiezasVestuario.Lote.new()
-	var m := PiezasVestuario.materiales(c1, c2)
-	var oro: StandardMaterial3D = Texturas.metal(Color(0.95, 0.78, 0.3), 0.22)
-	var base := TunelVestuario._mat(Color(0.1, 0.1, 0.12), 0.4)
-	## Vidrio de vitrina de verdad, transparente (`Texturas.cristal` es el de
-	## las ventanas de fachada: opaco y encendido, tapaba la copa).
+## Una vitrina con su peana, vidrio, cantoneras, tira de luz y caja de choque; `p` es el suelo bajo ella (`Lote` + `m` de `PiezasVestuario.materiales`).
+static func vitrina(lote: PiezasVestuario.Lote, nodo: Node3D, m: Dictionary, base: Material, vidrio: Material, p: Vector3) -> void:
+	lote.caja(base, _en(Vector3(p.x, p.y + 0.5, p.z)), Vector3(0.7, 1.0, 0.7))
+	lote.caja(m["placa"], _en(Vector3(p.x, p.y + 0.98, p.z)), Vector3(0.74, 0.04, 0.74))
+	lote.caja(vidrio, _en(Vector3(p.x, p.y + 1.45, p.z)), Vector3(0.68, 0.9, 0.68))
+	## Cantoneras de acero en las cuatro aristas del vidrio: el techo de la
+	## vitrina se apoya en algo que se ve (sin ellas, con el vidrio casi
+	## invisible, la tapa parecía una losa flotando a 2 m).
+	for e in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
+		lote.caja(m["metal"], _en(Vector3(p.x + e.x * 0.345, p.y + 1.445, p.z + e.y * 0.345)), Vector3(0.03, 0.9, 0.03))
+	lote.caja(base, _en(Vector3(p.x, p.y + 1.92, p.z)), Vector3(0.74, 0.06, 0.74))
+	lote.caja(m["tira"], _en(Vector3(p.x, p.y + 1.885, p.z)), Vector3(0.5, 0.01, 0.5))
+	_choque(nodo, Vector3(p.x, p.y + 1.0, p.z), Vector3(0.74, 2.0, 0.74))
+
+## Vidrio de vitrina de verdad, transparente (`Texturas.cristal` es el de las ventanas de fachada: opaco y encendido, tapaba la copa).
+static func vidrio_vitrina() -> StandardMaterial3D:
 	var vidrio := StandardMaterial3D.new()
 	vidrio.albedo_color = Color(0.86, 0.93, 1.0, 0.16)
 	vidrio.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	vidrio.roughness = 0.04
 	vidrio.metallic_specular = 0.9
 	vidrio.cull_mode = BaseMaterial3D.CULL_DISABLED
+	return vidrio
+
+static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, titulos: int, nivel_museo: int) -> PiezasVestuario.Lote:
+	var lote := PiezasVestuario.Lote.new()
+	var m := PiezasVestuario.materiales(c1, c2)
+	var oro: StandardMaterial3D = Texturas.metal(Color(0.95, 0.78, 0.3), 0.22)
+	var base := TunelVestuario._mat(Color(0.1, 0.1, 0.12), 0.4)
+	var vidrio := vidrio_vitrina()
 	var cuero := TunelVestuario._mat(Color(0.45, 0.28, 0.14), 0.6)
 	var cx := caja.get_center().x
 	## La alfombra del recorrido, de la puerta al fondo, con ribete.
 	lote.caja(m["placa"], _en(Vector3(cx, y0 + 0.035, caja.get_center().y)), Vector3(1.3, 0.01, caja.size.y - 0.3))
 	lote.caja(m["cojin"], _en(Vector3(cx, y0 + 0.04, caja.get_center().y)), Vector3(1.1, 0.01, caja.size.y - 0.5))
 	## Las vitrinas, alternando lado, en el tramo libre (ni la puerta ni el fondo).
-	var vitrinas := clampi(2 + nivel_museo / 2, 2, 6)
+	## Capacidad real: una vitrina por título (hasta seis); el nivel de obra da el mínimo. Del séptimo en adelante, la planta 3.
+	var vitrinas := clampi(maxi(titulos, 2 + nivel_museo / 2), 2, MAX_SALA)
 	var por_lado := int(ceil(float(vitrinas) / 2.0))
 	var z0 := caja.position.y + 1.7
 	var z1 := caja.end.y - 1.6
@@ -127,17 +147,7 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 		var i := k / 2
 		var pz := z0 + (z1 - z0) * (float(i) + 0.5) / float(por_lado)
 		var px := (caja.position.x + 0.45) if lado < 0.0 else (caja.end.x - 0.45)
-		lote.caja(base, _en(Vector3(px, y0 + 0.5, pz)), Vector3(0.7, 1.0, 0.7))
-		lote.caja(m["placa"], _en(Vector3(px, y0 + 0.98, pz)), Vector3(0.74, 0.04, 0.74))
-		lote.caja(vidrio, _en(Vector3(px, y0 + 1.45, pz)), Vector3(0.68, 0.9, 0.68))
-		## Cantoneras de acero en las cuatro aristas del vidrio: el techo de la
-		## vitrina se apoya en algo que se ve (sin ellas, con el vidrio casi
-		## invisible, la tapa parecía una losa flotando a 2 m).
-		for e in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
-			lote.caja(m["metal"], _en(Vector3(px + e.x * 0.345, y0 + 1.445, pz + e.y * 0.345)), Vector3(0.03, 0.9, 0.03))
-		lote.caja(base, _en(Vector3(px, y0 + 1.92, pz)), Vector3(0.74, 0.06, 0.74))
-		lote.caja(m["tira"], _en(Vector3(px, y0 + 1.885, pz)), Vector3(0.5, 0.01, 0.5))
-		_choque(nodo, Vector3(px, y0 + 1.0, pz), Vector3(0.74, 2.0, 0.74))
+		vitrina(lote, nodo, m, base, vidrio, Vector3(px, y0, pz))
 		if k < titulos:
 			copa(lote, Vector3(px, y0 + 1.0, pz), oro, m["madera"])
 		else:
