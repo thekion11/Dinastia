@@ -624,7 +624,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 |---|---|---|---|---|
 | M-279 | P1 | PENDIENTE | 27 módulos de `visor/` y 8 de `nucleo/` sin referencia directa en… | los módulos siguen sin prueba directa |
 | M-280 | P1 | PENDIENTE | 105 módulos de UI/visor sin referencia en banco/pruebas | sin prueba visual automática |
-| M-433 | P1 | PARCIAL | Controles táctiles sólo en la ciudad (cruceta/E) | 21-10: en PC ya no salen la cruceta ni «Salir» al pasear (estadio y ciudad) y la E solo aparece si hay algo con lo que interactuar (`ExploradorCiudad.es_tactil`); el partido sigue sin controles táctil |
 | M-283 | P2 | PENDIENTE | Sin subtítulos/indicadores visuales de sonido | sin avisos visuales de sonido |
 | M-284 | P2 | PENDIENTE | Sin modo lectura de pantalla (TTS) | sin TTS |
 | M-285 | P2 | PARCIAL | Navegación por mando en menús (panel de controles sí) | navegación con mando en el panel de controles; no en todos los menús |

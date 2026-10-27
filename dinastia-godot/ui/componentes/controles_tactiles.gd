@@ -50,7 +50,7 @@ func centro_de(nombre: String) -> Vector2:
 	return size - Vector2(RADIO_BOTON * 1.6, RADIO_BOTON * 1.6) - Vector2(float(b[2]), float(b[3])) * RADIO_BOTON * 2.5 * Vector2(1.0, 1.0)
 
 func centro_reposo() -> Vector2:
-	return Vector2(RADIO_STICK + 40.0, size.y - RADIO_STICK - 40.0)
+	return Vector2(RADIO_STICK + 40.0, size.y - RADIO_STICK - 110.0)   ## por encima de la ficha del jugador (abajo a la izquierda)
 
 func _boton_en(pos: Vector2) -> String:
 	for n: String in BOTONES:
