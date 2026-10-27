@@ -1,6 +1,6 @@
 extends Node
 ## PRESUPUESTO DE TRIÁNGULOS Y LLAMADAS DE DIBUJO DEL PARTIDO (M-338, 27-10-2026). Abre un partido jugable de verdad, lo deja correr unos fotogramas y mide con el
-## renderizador (`Viewport.get_rendering_info`) lo que cuesta cada CATEGORÍA: se apaga una por una y lo que baja es lo suyo. Compara con el presupuesto escrito
+## renderizador (`Viewport.get_render_info`) lo que cuesta cada CATEGORÍA: se apaga una por una y lo que baja es lo suyo. Compara con el presupuesto escrito
 ## (`PRESUPUESTO`, y `docs/04_auditorias/presupuesto_partido.md`) y FALLA si alguna se pasa. Necesita pantalla (sin ella, el renderizador no cuenta nada: no hace nada).
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/presupuesto_partido.tscn      (MEDIR=1 solo imprime la tabla)
 ## Los números son los del cuadro visible desde la cámara del partido (con recorte de visibilidad y niveles de detalle), no los de toda la escena.
@@ -71,8 +71,8 @@ func _recoger() -> void:
 
 func _info() -> Dictionary:
 	var vp: Viewport = _pj._vp
-	return {"tri": vp.get_rendering_info(Viewport.RENDERING_INFO_TYPE_VISIBLE, Viewport.RENDERING_INFO_PRIMITIVES_IN_FRAME),
-		"llamadas": vp.get_rendering_info(Viewport.RENDERING_INFO_TYPE_VISIBLE, Viewport.RENDERING_INFO_DRAW_CALLS_IN_FRAME)}
+	return {"tri": vp.get_render_info(Viewport.RENDER_INFO_TYPE_VISIBLE, Viewport.RENDER_INFO_PRIMITIVES_IN_FRAME),
+		"llamadas": vp.get_render_info(Viewport.RENDER_INFO_TYPE_VISIBLE, Viewport.RENDER_INFO_DRAW_CALLS_IN_FRAME)}
 
 func _medir() -> Dictionary:
 	await RenderingServer.frame_post_draw
