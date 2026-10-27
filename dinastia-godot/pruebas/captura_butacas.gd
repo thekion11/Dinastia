@@ -27,8 +27,13 @@ func _ready() -> void:
 	Partido.ctx_club_id = m.mi_club_id
 	var par := m.proximo_partido()
 	if OS.get_environment("VIVO") == "1":
-		par[0].color1 = "#d6246e"   ## un club de colores vivos: el color por nivel se tiene que ver
+		## Un club de colores vivos (rosa y celeste) que juega en casa: el color por nivel se tiene que ver. Se elige uno sin estadio real.
+		par = [m.ligas[0].clubes[4], m.ligas[0].clubes[5]]
+		par[0].color1 = "#d6246e"
 		par[0].color2 = "#12a4d6"
+		par[0].kit_color1 = ""
+		par[0].kit_color2 = ""
+		print("PERFIL ", par[0].perfil_estadio().get("asiento1"), " ", par[0].perfil_estadio().get("asiento2"))
 	var partido := Partido.new(par[0], par[1])
 	_vista = VistaEstadio.new()
 	add_child(_vista)

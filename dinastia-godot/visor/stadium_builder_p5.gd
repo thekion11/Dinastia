@@ -128,6 +128,12 @@ static func _malla_butaca_lejos() -> Mesh:
 	for k in 3:
 		var x := -0.55 + float(k) * 0.5
 		st.append_from(respaldo, 0, Transform3D(Basis(Vector3(1, 0, 0), -0.14), Vector3(x, 0.58, -0.20)))
+	## Los reposabrazos entre asiento y asiento (27-10-2026): dos listones a 50 cm del suelo; con ellos la fila se lee como butacas separadas
+	## y no como un banco corrido (+48 vértices por grupo de tres).
+	var brazo := BoxMesh.new()
+	brazo.size = Vector3(0.05, 0.05, 0.32)
+	for xb in [-0.30, 0.20]:
+		st.append_from(brazo, 0, Transform3D(Basis(), Vector3(xb, 0.50, -0.02)))
 	var viga := BoxMesh.new()
 	viga.size = Vector3(1.40, 0.30, 0.06)
 	st.append_from(viga, 0, Transform3D(Basis(), Vector3(-0.05, 0.20, -0.08)))

@@ -12,7 +12,6 @@ const MAX_RESGUARDADOS := 5
 const COLORES := [Color(0.16, 0.2, 0.34), Color(0.5, 0.12, 0.14), Color(0.1, 0.1, 0.12), Color(0.18, 0.38, 0.3), Color(0.8, 0.62, 0.15), Color(0.55, 0.55, 0.58)]
 const NOMBRE := "Paraguas"
 const ALTO_COPA := 0.75   ## del puño a la copa (mango y copa en el eje de los dedos)
-const CORRECCION_EJE := Vector3(0.0, 0.0, 35.0)   ## grados, medidos con la captura
 const POSE_BRAZO := Vector3(35.0, -14.0, 105.0)   ## brazo derecho: adelante, costado; codo (grados): el antebrazo casi vertical
 
 static var _canopy: CylinderMesh = null
@@ -146,9 +145,17 @@ static func abrir(nodo: Node3D, color_i: int) -> Node3D:
 		raiz.position = Vector3(0.14, 1.98, 0.0)
 		nodo.add_child(raiz)
 	## El eje del paraguas se endereza respecto al hueso de la mano (el eje de los dedos no queda vertical con el codo flexionado).
-	var eje := Node3D.new()
+	var eje: Node3D
+	if raiz is BoneAttachment3D:
+		## En la mano pero SIEMPRE derecho (27-10-2026, «inclinados 45°»): el eje del hueso se inclina con el brazo, así que el mango
+		## sale de la mano y apunta hacia arriba por el aire (`Sigue`), con la copa casi sobre la cabeza.
+		var sg := Sigue.new()
+		sg.cuerpo = nodo
+		sg.top_level = true
+		eje = sg
+	else:
+		eje = Node3D.new()
 	eje.name = "Eje"
-	eje.rotation_degrees = CORRECCION_EJE if raiz is BoneAttachment3D else Vector3.ZERO
 	raiz.add_child(eje)
 	var copa := MeshInstance3D.new()
 	copa.mesh = _canopy
@@ -226,3 +233,21 @@ static func _animacion_paraguas(ap: AnimationPlayer, esq: Skeleton3D) -> Animati
 	AnimQuaternius._pista(a, esq, "brazo_d", [[0.0, v_brazo], [a.length, v_brazo]], pre)
 	AnimQuaternius._pista(a, esq, "antebrazo_d", [[0.0, v_codo], [a.length, v_codo]], pre)
 	return a
+
+## El mango vertical: sale de la mano y sube hacia un punto del eje del cuerpo (60 % del camino de la mano al eje): como mucho unos 12° de
+## inclinación, y la copa queda casi centrada sobre la cabeza. Un nodo por paraguas abierto (solo mientras llueve).
+class Sigue:
+	extends Node3D
+	var cuerpo: Node3D
+	const AFINAR := 0.6
+
+	func _process(_d: float) -> void:
+		var mano := get_parent() as Node3D
+		if mano == null or cuerpo == null or not is_instance_valid(cuerpo):
+			return
+		var p := mano.global_position
+		var c := cuerpo.global_position
+		var arriba := Vector3(lerpf(p.x, c.x, AFINAR) - p.x, ParaguasVida.ALTO_COPA, lerpf(p.z, c.z, AFINAR) - p.z).normalized()
+		var x := Vector3.UP.cross(arriba)
+		x = x.normalized() if x.length() > 0.001 else Vector3.RIGHT
+		global_transform = Transform3D(Basis(x, arriba, x.cross(arriba).normalized()), p)
