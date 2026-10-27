@@ -6,6 +6,7 @@ extends PanelContainer
 ## máquina, el explorador no mueve al DT (`juego_abierto`), porque comparten teclas. Se cierra con Esc o si el DT se aleja.
 const DISTANCIA_MAX := 7.0
 const CAMPO := Rect2(14, 8, 412, 300)     ## el cristal, en píxeles del panel
+const MAX_LINEAS := 4                      ## líneas del mensaje de abajo (la altura del panel las reserva)
 const VEL_GARRA := 0.55                    ## fracción del campo por segundo
 const T_BAJA := 0.9
 const T_CIERRA := 0.45
@@ -59,7 +60,7 @@ func _montar() -> void:
 	v.add_theme_constant_override("separation", 6)
 	add_child(v)
 	v.add_child(CuadroDialogo.placa("🧸 " + Idiomas.t("Máquina de peluches")))
-	_caja.custom_minimum_size = Vector2(440, 420)
+	_caja.custom_minimum_size = Vector2(440, 462)
 	_caja.draw.connect(_pintar)
 	v.add_child(_caja)
 	_botones.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -260,8 +261,6 @@ func _pintar() -> void:
 	if fase == SALE and _gana != "":
 		var q := clampf(_t / T_SALIDA, 0.0, 1.0)
 		_peluche(_punto(Vector2(0.09, 0.9)) + Vector2(0, q * 24.0), Peluches.def(_gana), 22.0 * (1.0 - q * 0.3))
-	_caja.draw_string(ThemeDB.fallback_font, Vector2(14, 334), _saldo_texto(), HORIZONTAL_ALIGNMENT_LEFT, 380, 15, Color(1, 0.9, 0.6))
-	var ys := 362.0
-	for linea: String in _mensaje.split("\n"):
-		_caja.draw_string(ThemeDB.fallback_font, Vector2(14, ys), linea, HORIZONTAL_ALIGNMENT_LEFT, 420, 15, Color.WHITE)
-		ys += 20.0
+	## Todo lo que es texto SE PARTE en líneas (en alemán, ruso... una frase no cabe en 420 px): `draw_string` la cortaba.
+	_caja.draw_multiline_string(ThemeDB.fallback_font, Vector2(14, 334), _saldo_texto(), HORIZONTAL_ALIGNMENT_LEFT, 420, 15, 2, Color(1, 0.9, 0.6))
+	_caja.draw_multiline_string(ThemeDB.fallback_font, Vector2(14, 382), _mensaje, HORIZONTAL_ALIGNMENT_LEFT, 420, 15, MAX_LINEAS, Color.WHITE)
