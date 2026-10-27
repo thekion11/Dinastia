@@ -6124,7 +6124,15 @@
   "¿Vender? Toca otra vez": "Sell? Tap again",
   "¿Cesarlo? Toca otra vez": "Let him go? Tap again",
   "Borrar la partida guardada": "Delete the saved game",
-  "¿Borrar la partida? Toca otra vez": "Delete the game? Tap again"
+  "¿Borrar la partida? Toca otra vez": "Delete the game? Tap again",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: buy from the vending machine",
+  "BANCO ANDINO": "ANDEAN BANK",
+  "Ventanilla del banco": "Bank counter",
+  "Desbloquear la tarjeta": "Unblock the card",
+  "Tarjeta desbloqueada.": "Card unblocked.",
+  "Restablecer el PIN": "Reset the PIN",
+  "PIN restablecido.": "PIN reset.",
+  "Últimos movimientos": "Latest transactions"
  },
  "pt": {
   "Historia": "História",
@@ -12251,7 +12259,15 @@
   "¿Vender? Toca otra vez": "Vender? Toque outra vez",
   "¿Cesarlo? Toca otra vez": "Dispensá-lo? Toque outra vez",
   "Borrar la partida guardada": "Apagar o jogo guardado",
-  "¿Borrar la partida? Toca otra vez": "Apagar o jogo? Toque outra vez"
+  "¿Borrar la partida? Toca otra vez": "Apagar o jogo? Toque outra vez",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: comprar na máquina",
+  "BANCO ANDINO": "BANCO ANDINO",
+  "Ventanilla del banco": "Balcão do banco",
+  "Desbloquear la tarjeta": "Desbloquear o cartão",
+  "Tarjeta desbloqueada.": "Cartão desbloqueado.",
+  "Restablecer el PIN": "Repor o PIN",
+  "PIN restablecido.": "PIN reposto.",
+  "Últimos movimientos": "Últimos movimentos"
  },
  "patrones": [
   [
@@ -23990,7 +24006,15 @@
   "¿Vender? Toca otra vez": "Vendre ? Touche encore",
   "¿Cesarlo? Toca otra vez": "Le remercier ? Touche encore",
   "Borrar la partida guardada": "Supprimer la partie sauvegardée",
-  "¿Borrar la partida? Toca otra vez": "Supprimer la partie ? Touche encore"
+  "¿Borrar la partida? Toca otra vez": "Supprimer la partie ? Touche encore",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E : acheter au distributeur",
+  "BANCO ANDINO": "BANQUE ANDINE",
+  "Ventanilla del banco": "Guichet de la banque",
+  "Desbloquear la tarjeta": "Débloquer la carte",
+  "Tarjeta desbloqueada.": "Carte débloquée.",
+  "Restablecer el PIN": "Réinitialiser le code PIN",
+  "PIN restablecido.": "Code PIN réinitialisé.",
+  "Últimos movimientos": "Derniers mouvements"
  },
  "it": {
   "Historia": "Storia",
@@ -30117,7 +30141,15 @@
   "¿Vender? Toca otra vez": "Vendere? Tocca di nuovo",
   "¿Cesarlo? Toca otra vez": "Sollevarlo? Tocca di nuovo",
   "Borrar la partida guardada": "Elimina la partita salvata",
-  "¿Borrar la partida? Toca otra vez": "Eliminare la partita? Tocca di nuovo"
+  "¿Borrar la partida? Toca otra vez": "Eliminare la partita? Tocca di nuovo",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: compra dal distributore",
+  "BANCO ANDINO": "BANCA ANDINA",
+  "Ventanilla del banco": "Sportello della banca",
+  "Desbloquear la tarjeta": "Sblocca la carta",
+  "Tarjeta desbloqueada.": "Carta sbloccata.",
+  "Restablecer el PIN": "Reimposta il PIN",
+  "PIN restablecido.": "PIN reimpostato.",
+  "Últimos movimientos": "Ultimi movimenti"
  },
  "de": {
   "Historia": "Geschichte",
@@ -36244,7 +36276,15 @@
   "¿Vender? Toca otra vez": "Verkaufen? Nochmal tippen",
   "¿Cesarlo? Toca otra vez": "Entlassen? Nochmal tippen",
   "Borrar la partida guardada": "Gespeichertes Spiel löschen",
-  "¿Borrar la partida? Toca otra vez": "Spiel löschen? Nochmal tippen"
+  "¿Borrar la partida? Toca otra vez": "Spiel löschen? Nochmal tippen",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: am Automaten kaufen",
+  "BANCO ANDINO": "ANDENBANK",
+  "Ventanilla del banco": "Bankschalter",
+  "Desbloquear la tarjeta": "Karte entsperren",
+  "Tarjeta desbloqueada.": "Karte entsperrt.",
+  "Restablecer el PIN": "PIN zurücksetzen",
+  "PIN restablecido.": "PIN zurückgesetzt.",
+  "Últimos movimientos": "Letzte Buchungen"
  },
  "ca": {
   "Historia": "Història",
@@ -42371,7 +42411,15 @@
   "¿Vender? Toca otra vez": "Vendre? Toca un altre cop",
   "¿Cesarlo? Toca otra vez": "Cessar-lo? Toca un altre cop",
   "Borrar la partida guardada": "Esborrar la partida desada",
-  "¿Borrar la partida? Toca otra vez": "Esborrar la partida? Toca un altre cop"
+  "¿Borrar la partida? Toca otra vez": "Esborrar la partida? Toca un altre cop",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: comprar a la màquina",
+  "BANCO ANDINO": "BANC ANDÍ",
+  "Ventanilla del banco": "Finestreta del banc",
+  "Desbloquear la tarjeta": "Desbloquejar la targeta",
+  "Tarjeta desbloqueada.": "Targeta desbloquejada.",
+  "Restablecer el PIN": "Restablir el PIN",
+  "PIN restablecido.": "PIN restablert.",
+  "Últimos movimientos": "Últims moviments"
  },
  "pl": {
   "Club": "Klub",
@@ -48777,7 +48825,15 @@
   "¿Vender? Toca otra vez": "Sprzedać? Dotknij ponownie",
   "¿Cesarlo? Toca otra vez": "Odwołać go? Dotknij ponownie",
   "Borrar la partida guardada": "Usuń zapisaną grę",
-  "¿Borrar la partida? Toca otra vez": "Usunąć grę? Dotknij ponownie"
+  "¿Borrar la partida? Toca otra vez": "Usunąć grę? Dotknij ponownie",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: kup w automacie",
+  "BANCO ANDINO": "BANK ANDYJSKI",
+  "Ventanilla del banco": "Okienko banku",
+  "Desbloquear la tarjeta": "Odblokuj kartę",
+  "Tarjeta desbloqueada.": "Karta odblokowana.",
+  "Restablecer el PIN": "Zresetuj PIN",
+  "PIN restablecido.": "PIN zresetowany.",
+  "Últimos movimientos": "Ostatnie operacje"
  },
  "tr": {
   "Club": "Kulüp",
@@ -55183,6 +55239,14 @@
   "¿Vender? Toca otra vez": "Satılsın mı? Tekrar dokun",
   "¿Cesarlo? Toca otra vez": "Görevden alınsın mı? Tekrar dokun",
   "Borrar la partida guardada": "Kayıtlı oyunu sil",
-  "¿Borrar la partida? Toca otra vez": "Oyun silinsin mi? Tekrar dokun"
+  "¿Borrar la partida? Toca otra vez": "Oyun silinsin mi? Tekrar dokun",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: otomattan satın al",
+  "BANCO ANDINO": "ANDİN BANKASI",
+  "Ventanilla del banco": "Banka gişesi",
+  "Desbloquear la tarjeta": "Kartın blokesini kaldır",
+  "Tarjeta desbloqueada.": "Kartın blokesi kaldırıldı.",
+  "Restablecer el PIN": "PIN'i sıfırla",
+  "PIN restablecido.": "PIN sıfırlandı.",
+  "Últimos movimientos": "Son hareketler"
  }
 }

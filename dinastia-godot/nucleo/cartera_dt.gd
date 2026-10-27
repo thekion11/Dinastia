@@ -182,6 +182,15 @@ func cambiar_pin(viejo: String, nuevo: String) -> String:
 	fallos_pin = 0
 	return ""
 
+## En la ventanilla el banco te identifica: pone un PIN nuevo de 4 cifras sin pedir el actual y quita el bloqueo.
+func restablecer_pin(nuevo: String) -> String:
+	if nuevo.length() != 4 or not nuevo.is_valid_int():
+		return "importe"
+	pin = nuevo
+	pin_inicial = false
+	desbloquear()
+	return ""
+
 ## El banco la desbloquea (una llamada, sin coste): vuelve a contar los fallos.
 func desbloquear() -> void:
 	bloqueada = false
