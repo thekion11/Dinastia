@@ -10,6 +10,7 @@ var _vida: VidaCiudad
 const POR_ESCENA := 40
 
 func _ready() -> void:
+	AjustesCiudad.guardar("tutorial_visto", true)   ## sin el tutorial de la primera visita
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 
