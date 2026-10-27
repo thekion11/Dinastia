@@ -6215,7 +6215,8 @@
   "Los bomberos apagan un incendio en el centro": "Firefighters put out a fire downtown",
   "Sin heridos: el fuego no pasó de la acera.": "No injuries: the fire never left the sidewalk.",
   "Un incendio tarda en apagarse por falta de agua": "A fire takes longer to put out for lack of water",
-  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Firefighters waited for pressure in the sector's mains: “the pipes need fixing.”"
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Firefighters waited for pressure in the sector's mains: “the pipes need fixing.”",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "“No safety net” challenge: you can't load earlier saves. The game saves itself every week."
  },
  "pt": {
   "Historia": "História",
@@ -12433,7 +12434,8 @@
   "Los bomberos apagan un incendio en el centro": "Bombeiros apagam um incêndio no centro",
   "Sin heridos: el fuego no pasó de la acera.": "Sem feridos: o fogo não passou do passeio.",
   "Un incendio tarda en apagarse por falta de agua": "Um incêndio demora a ser apagado por falta de água",
-  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Os bombeiros esperaram por pressão na rede do setor: «é preciso arranjar as canalizações»."
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Os bombeiros esperaram por pressão na rede do setor: «é preciso arranjar as canalizações».",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Desafio «Sem rede»: não podes carregar gravações anteriores. O jogo grava sozinho todas as semanas."
  },
  "patrones": [
   [
@@ -24263,7 +24265,8 @@
   "Los bomberos apagan un incendio en el centro": "Les pompiers éteignent un incendie en centre-ville",
   "Sin heridos: el fuego no pasó de la acera.": "Aucun blessé : le feu n'a pas quitté le trottoir.",
   "Un incendio tarda en apagarse por falta de agua": "Un incendie met du temps à être éteint faute d'eau",
-  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Les pompiers ont attendu la pression du réseau du secteur : « il faut réparer les canalisations »."
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Les pompiers ont attendu la pression du réseau du secteur : « il faut réparer les canalisations ».",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Défi « Sans filet » : tu ne peux pas charger de sauvegardes antérieures. La partie se sauvegarde toute seule chaque semaine."
  },
  "it": {
   "Historia": "Storia",
@@ -30481,7 +30484,8 @@
   "Los bomberos apagan un incendio en el centro": "I vigili del fuoco spengono un incendio in centro",
   "Sin heridos: el fuego no pasó de la acera.": "Nessun ferito: il fuoco non ha lasciato il marciapiede.",
   "Un incendio tarda en apagarse por falta de agua": "Un incendio tarda a spegnersi per mancanza d'acqua",
-  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "I vigili del fuoco hanno atteso la pressione nella rete del settore: «bisogna riparare le tubature»."
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "I vigili del fuoco hanno atteso la pressione nella rete del settore: «bisogna riparare le tubature».",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Sfida «Senza rete»: non puoi caricare salvataggi precedenti. La partita si salva da sola ogni settimana."
  },
  "de": {
   "Historia": "Geschichte",
@@ -36699,7 +36703,8 @@
   "Los bomberos apagan un incendio en el centro": "Feuerwehr löscht Brand in der Innenstadt",
   "Sin heridos: el fuego no pasó de la acera.": "Keine Verletzten: Das Feuer blieb auf dem Gehweg.",
   "Un incendio tarda en apagarse por falta de agua": "Brand wird wegen Wassermangels nur langsam gelöscht",
-  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Die Feuerwehr wartete auf Druck im Netz des Sektors: „Die Rohre müssen repariert werden.“"
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Die Feuerwehr wartete auf Druck im Netz des Sektors: „Die Rohre müssen repariert werden.“",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Herausforderung „Ohne Netz“: Du kannst keine früheren Spielstände laden. Das Spiel speichert jede Woche von selbst."
  },
  "ca": {
   "Historia": "Història",
@@ -42917,7 +42922,8 @@
   "Los bomberos apagan un incendio en el centro": "Els bombers apaguen un incendi al centre",
   "Sin heridos: el fuego no pasó de la acera.": "Sense ferits: el foc no va passar de la vorera.",
   "Un incendio tarda en apagarse por falta de agua": "Un incendi triga a apagar-se per falta d'aigua",
-  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Els bombers van esperar pressió a la xarxa del sector: «cal arreglar les canonades»."
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Els bombers van esperar pressió a la xarxa del sector: «cal arreglar les canonades».",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Desafiament «Sense xarxa»: no pots carregar guardats anteriors. La partida es guarda sola cada setmana."
  },
  "pl": {
   "Club": "Klub",
@@ -49414,7 +49420,8 @@
   "Los bomberos apagan un incendio en el centro": "Strażacy ugasili pożar w centrum",
   "Sin heridos: el fuego no pasó de la acera.": "Bez rannych: ogień nie wyszedł poza chodnik.",
   "Un incendio tarda en apagarse por falta de agua": "Pożar gaszono dłużej z powodu braku wody",
-  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Strażacy czekali na ciśnienie w sieci sektora: „trzeba naprawić rury”."
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "Strażacy czekali na ciśnienie w sieci sektora: „trzeba naprawić rury”.",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Wyzwanie „Bez siatki”: nie możesz wczytywać wcześniejszych zapisów. Gra zapisuje się sama co tydzień."
  },
  "tr": {
   "Club": "Kulüp",
@@ -55911,6 +55918,7 @@
   "Los bomberos apagan un incendio en el centro": "İtfaiye merkezdeki yangını söndürdü",
   "Sin heridos: el fuego no pasó de la acera.": "Yaralı yok: yangın kaldırımın ötesine geçmedi.",
   "Un incendio tarda en apagarse por falta de agua": "Su yetersizliği yüzünden yangın geç söndürüldü",
-  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "İtfaiye sektör şebekesinde basıncı bekledi: «boruların onarılması gerek»."
+  "Los bomberos esperaron presión en la red del sector: «hay que arreglar las tuberías».": "İtfaiye sektör şebekesinde basıncı bekledi: «boruların onarılması gerek».",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "«Ağsız» meydan okuması: önceki kayıtları yükleyemezsin. Oyun her hafta kendiliğinden kaydedilir."
  }
 }
