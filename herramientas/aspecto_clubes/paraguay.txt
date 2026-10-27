@@ -2,7 +2,7 @@ Olimpia|clasico|aro|OL|franja_pecho|#ffffff|#000000|#000000|#000000
 Cerro Porteño|escudo|franjas|CP|franjas|#00246b|#d50032|#00246b|#00246b
 Libertad|circulo|liso|LI|franjas|#ffffff|#000000|#000000|#ffffff
 Guarani|clasico|franjas|GU|franjas|#ffd100|#000000|#000000|#000000
-Nacional (P)|escudo|franjas|NA|tercios_h|#ffffff|#0038a8|#0038a8|#ffffff
+Nacional (P)|banderin|franjas|NA|tercios_h|#ffffff|#0038a8|#0038a8|#ffffff
 Sol de América|hex|franjas|SA|franjas|#0038a8|#ffffff|#ffffff|#0038a8
 Luqueño|clasico|franjas|LU|franjas|#0038a8|#ffd100|#0038a8|#0038a8
 Doce de Octubre|rombo|franjas|DO|franjas|#d50032|#0038a8|#0038a8|#d50032
