@@ -359,6 +359,50 @@ cada hora del `Reloj` con el clima de la semana (viento mueve el parque eólico,
   sus farolas Y LAS VENTANAS de esos sectores se apagan y el resto sigue (`capturas_subsuelo/forward_apagon_ciudad_{antes,despues}.jpg`):
   `fachada_torre.gdshader` lee un mapa 5x5 de corriente (`CiudadExpansion.textura_luz`, una textura compartida: sin draw calls nuevos)
   en las torres del núcleo y en los edificios lejanos. Las casas y piezas del kit con ventanas propias no siguen aún al sector.
+### 2.2h Dinero en la ciudad: cartera, bancos, cajeros, gasolinera «por arriba», peluches, servicios públicos y coches (pedido del dueño, 27-10) — SOLO DISEÑO, sin código hasta el OK del líder
+Pedido del dueño (27-10): máquinas de peluches solo en UNA zona y que FUNCIONEN (él trae más decoración de ese estilo); la gasolinera «por arriba»
+(lo que vende) funcional y unida al coche, con la sesión de redes haciendo el sistema de gas «por debajo»; sistema de pago con tarjeta física,
+bancos y cajeros; policía, bomberos y servicios públicos; mejorar el sistema de coches. Esto es lo que hay hoy y cómo se parte en piezas.
+
+**Lo que ya existe (medido el 27-10)**
+- Repostar: `VidaCiudad.usar_surtidor` (E ante un surtidor) pide `redes.modelo.repostar(id, sector, litros) -> {litros, coste}` (sesión de redes, 1,4 €/l, sin
+  corriente no hay bomba), avanza 10 min y COBRA AL CLUB (`mundo.mi_club().mover_saldo`), no al bolsillo del DT. Depósito `VidaDT.combustible` (45 l, 2,5 l/km).
+- Dinero personal: `Roles.patrimonio` (casa, transporte y mudanzas lo gastan en `VidaDT`). Dinero del club: `Club.saldo`. Hoy NO hay efectivo, tarjeta ni cuenta.
+- Gasolinera visual (`CiudadGasolinera`): marquesina, islas, tienda con fachada y mástil de precio; la tienda es decorado (no se entra ni se compra).
+- Peluches: `CiudadArcade` pone 3 máquinas (`maquina_peluches.glb`, 893 KB) ante el centro comercial; son decorado. Los 14 peluches del zip NO están en el repo.
+- Servicios: `CiudadServicios` pone bomberos (2 camiones + ambulancia), comisaría y hospital como edificios; ningún vehículo sale, no hay incidentes.
+
+**Decisiones del dueño (propuesta mía entre paréntesis; 1 y 2 aprobadas por el líder el 27-10; 3-5 esperan al dueño)**
+1. ¿De quién es el dinero de la gasolina y las compras? (DEL BOLSILLO DEL DT: `Roles.patrimonio`; el club paga solo lo del club). Hoy cobra al club: es un fallo de diseño.
+2. ¿Moneda única en euros y una sola cartera? (sí; efectivo + una cuenta + una tarjeta de débito; crédito más adelante).
+3. ¿Los peluches se pagan con fichas o con dinero? (monedas de 1 €; sale del efectivo, no de la tarjeta, para empujar a usar el cajero).
+4. ¿Qué zona de recreativas se queda? (la del centro comercial; las otras dos máquinas se quitan, pasan a una sola sala con 3 máquinas funcionales).
+5. ¿Los peluches nuevos (14 del zip) se suben al repo reducidos a 256 px (~100 KB cada uno, como la máquina)? (sí: es una subida de binarios nueva; hace falta su OK por la regla de LFS; van fuera de LFS con excepción).
+
+**Piezas, en orden de construcción** (cada una = una entrega pequeña con prueba en el banco, captura Forward+ y traducciones con `sumar_traducciones.py`)
+- **A. Cartera — HECHA el 27-10 (modelo + guardado + `_probar_cartera_dt`; falta la pantalla «Cartera» del móvil y el objeto en la mano)** (`nucleo/cartera_dt.gd`, sin visor): efectivo, saldo de cuenta, tarjeta (número, PIN de 4 cifras, bloqueada sí/no, límite diario), movimientos (últimos 30).
+  Guardado en la partida (clave nueva, partida vieja = efectivo = 0 y cuenta = `patrimonio` actual). Prueba: ida y vuelta, no se puede gastar más de lo que hay, `patrimonio` = efectivo + cuenta.
+  La tarjeta física: objeto en la mano del DT (modelo simple, textura con el escudo del club) que se ve en el móvil (pantalla «Cartera»).
+- **B. Bancos y cajeros** (`visor/ciudad_banco.gd`): una sucursal con fachada modular y cajeros en la fachada y en la gasolinera, el centro comercial y la estación. E en el cajero:
+  retirar / ingresar / ver saldo / cambiar PIN; límite diario; comisión si el cajero es de otro banco (3 bancos ficticios, nombres inventados); sin corriente en el sector (`redes`) el
+  cajero muestra «fuera de servicio». Interior de la sucursal (mostrador y ventanilla) solo si sobra tiempo.
+- **C. Gasolinera por arriba — HECHO el surtidor (27-10: cobra efectivo y, si no, tarjeta sin contacto ≤100 €, ya no al club; `VidaCiudad.usar_surtidor`); FALTA la tienda con caja y la pantalla de PIN** (`visor/gasolinera_tienda.gd`): E en la tienda abre una caja: comprar lo del surtido (`kenney/comida`: bebidas, bollería, bocadillos; sube la «energía» del DT un poco),
+  pagar con tarjeta (PIN) o efectivo. El surtidor deja de cobrar al club y cobra con la misma caja; elegir combustible (dos precios, que salen de las existencias de `redes`).
+  CONTRATO con la sesión de redes: ella conserva `repostar(id, sector, litros) -> {litros, coste}` y los precios; yo solo hago la pantalla, el cobro y la tienda. Si cambia esa firma, me avisa.
+- **D. Peluches** (`visor/peluches_juego.gd` + `ciudad_arcade.gd`): UNA sala, tres máquinas. E ante la máquina: meter moneda (1 €), mover la garra con A/D/W/S, bajar con espacio;
+  la garra agarra con probabilidad que baja con el peso/tamaño del peluche y sube un poco en cada intento fallido (para no ser imposible); el premio cae al buzón y va a un
+  baúl en casa del DT. Los 14 peluches del zip (reducidos) se reparten en las tres máquinas; las decoraciones nuevas del dueño se suman con una tabla (`PELUCHES`).
+- **E. Policía y bomberos** (`nucleo/incidentes_ciudad.gd` + `visor/servicios_vida.gd`): un incidente cada cierto tiempo (robo, incendio, accidente) con una sirena y un titular en el móvil;
+  salen un coche patrulla / un camión / una ambulancia desde su edificio (ya existen los vehículos) por las calles hasta el sitio y vuelven. Multas: pasarse un semáforo en rojo con
+  el coche del DT = multa pagada de la cartera (si hay policía a la vista). El incendio se apaga con el camión; si la red de agua del sector falla, tarda más (une con `redes`).
+- **F. Coches mejor**: primero una AUDITORÍA del coche actual (`motor_jugable*`, `trafico_ciudad*`: cuántos sub-pasos, colisiones, aparcar, marchas) y de los peatones; luego tres mejoras
+  pequeñas elegidas por el dueño (frenada/derrape, daños visibles, aparcar entre dos coches, gasolina con luz de reserva, radio). No se diseña más hasta tener la auditoría.
+
+**Reparto entre sesiones**: redes (sesión 3) = modelo del gas/luz/agua; yo = todo lo de arriba (cartera, banco, tienda, peluches, servicios); estación y `kit tren` = sesión 3.
+**Riesgos**: (1) nada de esto debe consumir `_rng` de la ciudad (hash de la posición, como los rellenos); (2) todo script < 450 líneas; (3) el guardado: cada pieza lleva clave propia
+y partida vieja = valores por defecto; (4) la economía del club no se toca (`Club.saldo`): solo se separa el bolsillo del DT; (5) PIN y tarjeta son ficticios, sin datos reales.
+**Pregunta de arranque**: ¿empiezo por A+B (cartera y cajeros, base de todo) o por D (peluches, lo más visible)? Recomiendo A → C → B → D → E → F.
+
 ### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
 
 Palabras del dueño: *«hay partes de la ciudad sin detalles y muy mejorables; los personajes se mueven de forma
@@ -409,7 +453,7 @@ para tapar el músculo y borraba las arrugas y el tejido; ahora quita el múscul
 en 0,4 (`p4_ropa_despues.jpg`; antes = `p1_postura_despues.jpg`). La piel desnuda iba con rugosidad y especular de tela
 (brillo plástico en nariz y labios): ahora rugosidad 0,76, especular 0,14 y subsuperficie 0,22 (`p4_cara_{antes,despues}.jpg`; en la captura el cambio es SUTIL: el
 brillo que queda en nariz y labios viene de la luz de borde `RIM` y de la cara de frente al sol; pendiente revisarlo con la cámara real).
-Falta P3: butacas del estadio y banquillo fuera del partido, abrir puertas, escaleras; y P4: pelo (mechones poligonales). PROBADO Y DESCARTADO (27-10): suavizar las normales de las 4 mallas de pelo del pack
+P3 HECHO 27-10 (`ideas/p3_puertas`, `p3_escaleras`, `p3_banquillo_tour`): vecinos que abren las puertas de las entradas (`PuertaVida`: llegan, tienden la mano, la hoja gira, entran/salen), gente que sube y baja escaleras peldaño a peldaño con el ciclo de paso ajustado (`EscaleraVida`: bocas del metro, escalinata del ayuntamiento, estación del teleférico) y los 5 mejores suplentes sentados en el banquillo local de la visita al estadio (`BanquilloTour`). La grada de la visita ya lleva hinchada (35 % de ocupación, VAT). Falta P3: capturas de escaleras en Forward+, clips propios de abrir puerta/subir escalón (el pack gratuito solo trae «Interact»), peatones que entran en tiendas pequeñas (no tienen puerta registrada); y P4: pelo (mechones poligonales). PROBADO Y DESCARTADO (27-10): suavizar las normales de las 4 mallas de pelo del pack
 (promedio por vértice) empeora: las tarjetas de mechón comparten vértices y salen manchas claras/oscuras; el pelo pide mallas
 mejores (o más cortes del pack de Quaternius), no un cambio de sombreado. VEREDICTO DEL DUEÑO (27-10): «MEJORAR» (P1-P3 no bastan: seguir subiendo anatomía, movimiento, animaciones y acabado; la C2 de ciudad sigue hasta agotar P0 y P1).
 

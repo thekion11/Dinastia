@@ -118,6 +118,17 @@ func _estacion(b: CityBuilder, suelo: Vector3, giro: float, nombre: String, mats
 	l.outline_size = 12
 	l.position = Vector3(0, 9.4, 2.7)
 	base_n.add_child(l)
+	## Escalera lateral del suelo (-0,2) a la losa (1,2): 6 peldaños que `EscaleraVida` hace subir y bajar a la gente.
+	for s in 6:
+		var alto_s := 1.4 * float(s + 1) / 6.0
+		var peld := MeshInstance3D.new()
+		var bp := BoxMesh.new()
+		bp.size = Vector3(0.4, alto_s, 2.6)
+		peld.mesh = bp
+		peld.material_override = mats["losa"]
+		peld.position = Vector3(13.4 - 0.4 * float(s), -0.2 + alto_s * 0.5, 0.0)
+		base_n.add_child(peld)
+	EscaleraVida.registrar(b, suelo + base_n.basis * Vector3(13.6, -0.2, 0), suelo + base_n.basis * Vector3(11.4, 1.2, 0), 6)
 
 func _construir(b: CityBuilder) -> void:
 	base = _suelo(b, BASE_XZ)

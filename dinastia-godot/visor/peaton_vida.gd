@@ -41,6 +41,18 @@ static func en_anden(d: Dictionary, r: float) -> int:
 	movil(d, true)
 	return k
 
+## Un peatón suelto del pack (vestido, con pelo y andando) hijo de `padre`; `semilla` lo hace estable. {} si no hay modelo.
+static func nuevo(padre: Node, semilla: int) -> Dictionary:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = semilla
+	var d := PeatonQ.crear(rng)
+	if d.is_empty():
+		return d
+	padre.add_child(d["nodo"])
+	PeatonQ.terminar(d)
+	Mini3D.anim(d, "caminar", "")
+	return d
+
 ## Pone un clip del pack de gestos (lo carga la primera vez), como `TraficoCiudad._gesto`.
 static func gesto(nodo: Node3D, g: String) -> void:
 	for ap: AnimationPlayer in nodo.find_children("*", "AnimationPlayer", true, false):

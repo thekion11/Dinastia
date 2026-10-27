@@ -80,11 +80,11 @@ static func fachada(ex: CiudadExpansion, uso: String, c: Vector3, w: float, f: f
 	if not FACHADAS.has(uso):
 		return
 	var d: Array = FACHADAS[uso]
-	FachadaModular.montar(ex, c.x, c.z + float(d[0]) + f * float(d[1]), 0.3, w * float(d[2]), int(d[3]))
+	FachadaModular.montar(ex, c.x, c.z + float(d[0]) + f * float(d[1]), 0.3, w * float(d[2]), int(d[3]), true, true)
 
-## Pórtico cívico (ayuntamiento y universidad): cuatro columnas bajo el borde de la marquesina y una escalinata ancha al frente.
-## Piezas de `kit_edificios` (CC0). Sin azar: no toca `_rng`.
-const PORTICO := ["ayuntamiento", "universidad"]
+## Pórtico cívico (ayuntamiento y universidad): zócalo con escalinata de 6 peldaños, seis columnas de dos pisos (~8,6 m), entablamento
+## con el rótulo y frontón triangular. Columnas de `kit_edificios` (CC0); el resto, piedra lisa. Sin azar: no toca `_rng`.
+const PORTICO := {"ayuntamiento": "Ayuntamiento", "universidad": "Universidad"}
 const KIT_EDIF := "res://assets/kenney/kit_edificios/%s.glb"
 
 static func _pieza_edif(ex: CiudadExpansion, nombre: String, pos: Vector3, tam: Vector3, giro := 0.0) -> void:
@@ -101,9 +101,38 @@ static func portico(ex: CiudadExpansion, uso: String, c: Vector3, w: float, f: f
 		return
 	var d: Array = FACHADAS[uso]
 	var zf: float = c.z + float(d[0]) + f * float(d[1])
-	var ancho := FachadaModular.MODULO * 3.0
-	var zc := zf + 3.6
-	for dx in [-0.5, -1.0 / 6.0, 1.0 / 6.0, 0.5]:
-		_pieza_edif(ex, "column-wide", Vector3(c.x + float(dx) * ancho, 0.3, zc), Vector3(1.6, 1.55, 1.6))
-	## La escalinata sube hacia el edificio: la pieza corta (1,3 × 1,3 × 2) estirada a todo el ancho de las puertas.
-	_pieza_edif(ex, "stairs-closed-short", Vector3(c.x, 0.0, zc + 1.2), Vector3(ancho / 1.3 * 0.8, 0.55, 1.5), PI)
+	var b: CityBuilder = ex.b
+	var ancho := FachadaModular.MODULO * 3.6
+	var piedra: Material = ex._mat["piedra"]
+	const SUELO := 0.3
+	const ZOC := 1.5      ## altura de la tarima del pórtico
+	const FONDO_P := 5.4  ## fondo de la tarima desde la fachada
+	b._caja_en(Vector3(c.x, (SUELO + ZOC) * 0.5, zf + 1.6 + FONDO_P * 0.5), Vector3(ancho, ZOC - SUELO, FONDO_P), piedra)
+	for i in 6:   ## escalinata: 6 peldaños de 0,2 m que bajan hacia la plaza
+		var cima := ZOC - 0.2 * float(i + 1)
+		b._caja_en(Vector3(c.x, (SUELO + cima) * 0.5, zf + 1.6 + FONDO_P + 0.3 + float(i) * 0.6), Vector3(ancho, cima - SUELO, 0.6), piedra)
+	var zc := zf + 1.6 + FONDO_P - 0.9
+	var alto_col := 2.4 * 3.6
+	for k in 6:
+		_pieza_edif(ex, "column-wide", Vector3(c.x + (float(k) / 5.0 - 0.5) * (ancho - 2.4), ZOC, zc), Vector3(2.2, 3.6, 2.2))
+	var y_fr := ZOC + alto_col
+	b._caja_en(Vector3(c.x, y_fr + 0.6, zf + 1.6 + FONDO_P * 0.5), Vector3(ancho + 1.0, 1.2, FONDO_P), piedra)   ## entablamento y techo
+	var fronton := MeshInstance3D.new()
+	var prisma := PrismMesh.new()
+	prisma.size = Vector3(ancho + 1.0, 3.2, 0.8)
+	fronton.mesh = prisma
+	fronton.material_override = piedra
+	fronton.position = Vector3(c.x, y_fr + 1.2 + 1.6, zf + 1.6 + FONDO_P - 0.4)
+	fronton.name = "Fronton"
+	b.add_child(fronton)
+	var rotulo := Label3D.new()
+	rotulo.text = Idiomas.t(String(PORTICO[uso]))
+	rotulo.font_size = 96
+	rotulo.pixel_size = 0.02
+	rotulo.modulate = Color(0.25, 0.2, 0.12)
+	rotulo.outline_size = 0
+	rotulo.position = Vector3(c.x, y_fr + 0.6, zf + 1.6 + FONDO_P + 0.02)
+	rotulo.name = "RotuloPortico"
+	b.add_child(rotulo)
+	## La escalinata para la gente (EscaleraVida, sesión 3): del pie, en la plaza, a la tarima del pórtico.
+	EscaleraVida.registrar(ex.b, Vector3(c.x, SUELO, zf + 1.6 + FONDO_P + 0.3 + 6.0 * 0.6), Vector3(c.x, ZOC, zf + 1.6 + FONDO_P - 0.3), 6)
