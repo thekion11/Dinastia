@@ -404,6 +404,7 @@ func _bloque_modular(frente: Vector3, giro: float, semilla: int, ancho_max: floa
 				var t := Transform3D(rot * Basis(Vector3.UP, g) * Basis.from_scale(Vector3.ONE * s),
 					frente + rot * Vector3(lx, float(p) * PISO_MOD, lz))
 				_mod(pieza, t, pared, extra)
+	cuenta["detalles_fachada"] = int(cuenta.get("detalles_fachada", 0)) + DetalleFachada.montar(self, frente, rot, s, w, pisos, PISO_MOD, puerta_i, semilla)
 	## Azotea: cornisa con parapeto, el suelo de grava, equipos de aire y la
 	## caseta de la escalera.
 	var ancho := float(w) * s

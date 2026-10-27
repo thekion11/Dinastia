@@ -152,11 +152,12 @@ func _aplicar_hora() -> void:
 		## bonito de foto y horrible para mirar un mapa-. La luz nunca baja de
 		## 8°: de noche sigue viniendo de arriba, pero muy floja y azulada, que
 		## es exactamente lo que hace la luna.
-		var altura_luz: float = maxf(altura, 0.14)
+		## Con el sol ya bien dirigido (27-10), la luna sube a unos 40° para que la noche conserve luz sobre el suelo.
+		var altura_luz: float = altura if altura >= 0.14 else lerpf(0.14, 0.9, clampf((0.14 - altura) / 0.5, 0.0, 1.0))
 		var base := Basis.IDENTITY
 		base = base.rotated(Vector3.UP, deg_to_rad(-42.0))
 		base = base.rotated(Vector3(cos(deg_to_rad(-42.0)), 0, -sin(deg_to_rad(-42.0))),
-			-asin(clampf(altura_luz, -1.0, 1.0)) - PI * 0.5)
+			-asin(clampf(altura_luz, -1.0, 1.0)))   ## 27-10: sin el «− PI/2» de antes (el sol estaba INVERTIDO: vertical al amanecer, horizontal a mediodía)
 		_sol.transform.basis = base
 		var sol_dia := Color(1.0, 0.97, 0.90)
 		var sol_rasante := Color(1.0, 0.62, 0.34)
@@ -168,7 +169,7 @@ func _aplicar_hora() -> void:
 		## lavados, casi blancos. El sol de mediodía quema, pero la cámara de
 		## este juego no es una cámara real sin diafragma. Y 0,30 de noche, no
 		## 0,06: con 0,06 no se veía el suelo.
-		_sol.light_energy = lerpf(0.24, 1.15, dia) + dorada * 0.12
+		_sol.light_energy = lerpf(0.34, 1.15, dia) + dorada * 0.3
 		_sol.shadow_enabled = dia > 0.05
 
 	if _cielo != null:
@@ -195,7 +196,7 @@ func _aplicar_hora() -> void:
 		## De noche hay que abrir el diafragma o no se ve nada; de día cerrarlo
 		## o se quema. Es exactamente lo que hace una cámara de verdad.
 		_env.tonemap_exposure = lerpf(1.40, 1.02, dia)
-		_env.ambient_light_energy = lerpf(0.62, 1.0, dia)
+		_env.ambient_light_energy = lerpf(0.62, 1.0, dia) + dorada * 0.3
 		## En el renderizador de compatibilidad (móvil, web) el cielo con shader
 		## propio no da luz ambiente: lo que queda a la sombra -la espalda de la
 		## grada, la copa de los árboles- salía NEGRO a mediodía. Ahí la luz

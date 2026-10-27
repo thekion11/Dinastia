@@ -6,10 +6,14 @@ var _n := 0
 var _p: Node
 var _v: VistaCiudad
 var _e: ExploradorCiudad
-const HORAS := [7.0, 12.0, 17.4, 18.3, 21.5]
+var HORAS := [7.0, 12.0, 17.4, 18.3, 21.5]   ## HORAS=17.4,21.5 para repetir solo algunas
 const POR_ESCENA := 24
 
 func _ready() -> void:
+	if OS.get_environment("HORAS") != "":
+		HORAS = []
+		for t in OS.get_environment("HORAS").split(","):
+			HORAS.append(float(t))
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 
