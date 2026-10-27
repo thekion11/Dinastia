@@ -21,7 +21,8 @@ func _ready() -> void:
 			MochilaQ.poner(h, col)
 		var n := d["nodo"] as Node3D
 		n.position = Vector3(-1.1 + float(k) * 1.1, 0, 0)
-		Mini3D.anim(d, "parado", "")
+		Mini3D.anim(d, "caminar", "")
+		(d["anim"] as AnimationPlayer).seek(0.15 * float(k), true)
 	var sol := DirectionalLight3D.new()
 	sol.rotation_degrees = Vector3(-50, 20, 0)
 	add_child(sol)
