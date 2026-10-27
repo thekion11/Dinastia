@@ -222,6 +222,7 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 	if m.logros != null:
 		m.logros.desde_dic(datos.get("logros", {}))
 	m.retos_semana.desde_dic(datos.get("retos_semana", {}))
+	m.mentor_mes.desde_dic(datos.get("mentor_mes", {}))
 	MercadoDT.de(m).desde_dic(m, datos.get("mercado_dt", {}))
 	m.ojeados = datos.get("ojeados", {})
 	m.libro_financiero.clear()
