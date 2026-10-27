@@ -31,7 +31,7 @@ func _responder(i: int) -> void:
 ## Puentes (fase 6, paso 7): viven en `ui/principal/vistas_menu.gd`.
 func _pintar_museo(lg: Logros) -> void: _vistas._pintar_museo(lg)
 func _marca(nombre: String, color_hex: String, alto: int = 28) -> Control: return _vistas._marca(nombre, color_hex, alto)
-func _ver_ciudad_explorando(modo: String) -> void: _vistas._ver_ciudad_explorando(modo)
+func _ver_ciudad_explorando(modo: String) -> void: await _vistas._ver_ciudad_explorando(modo)
 
 
 

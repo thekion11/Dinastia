@@ -52,7 +52,13 @@ var _idioma_antes := ""
 var _cambiadas: Array[String] = []
 var _nuevas: Array[String] = []
 
+## Las preferencias de la máquina (paleta, tarjetas, fondo, diseño rotativo) las dejan cambiadas
+## las pruebas de Ajustes: la foto se hace con las de serie y las del jugador se devuelven al acabar.
+const RESPALDO_PREFS := Principal.PREFS + ".visual_respaldo"
+
 func _ready() -> void:
+	if FileAccess.file_exists(Principal.PREFS):
+		DirAccess.rename_absolute(Principal.PREFS, RESPALDO_PREFS)
 	AjustesCiudad.guardar("tutorial_visto", true)
 	## Sin fundidos a medias en la foto: animaciones reducidas (solo en memoria, no se
 	## guarda en los ajustes del jugador) y el reloj a ×10 para los fundidos que no
@@ -219,7 +225,9 @@ static func mapa(a: Image, b: Image) -> Image:
 func _terminar() -> void:
 	if _idioma_antes != "" and _idioma_antes != Idiomas.idioma:
 		Idiomas.idioma = _idioma_antes
-		_p._guardar_preferencias()
+	if FileAccess.file_exists(RESPALDO_PREFS):
+		DirAccess.remove_absolute(Principal.PREFS)
+		DirAccess.rename_absolute(RESPALDO_PREFS, Principal.PREFS)
 	if get_viewport().get_visible_rect().size != Vector2(1280, 720):
 		print("AVISO: las referencias se hicieron a 1280×720; esta ventana es %s" % str(get_viewport().get_visible_rect().size))
 	print("")

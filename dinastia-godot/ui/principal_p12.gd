@@ -15,7 +15,7 @@ func _apuntar_partido_en_curso(p: Partido) -> void: _jornada._apuntar_partido_en
 func _seguir_tras_partido(p: Partido) -> void: _jornada._seguir_tras_partido(p)
 func _cerrar_partido_dirigido(p: Partido) -> void: _jornada._cerrar_partido_dirigido(p)
 func _perfil_con_clima(p: Partido) -> Dictionary: return _jornada._perfil_con_clima(p)
-func _dirigir() -> void: _jornada._dirigir()
+func _dirigir() -> void: await _jornada._dirigir()
 func _jugar_temporada() -> void: _jornada._jugar_temporada()
 
 ## Una fila de jugador que se puede pulsar. El botón va en la primera celda y
