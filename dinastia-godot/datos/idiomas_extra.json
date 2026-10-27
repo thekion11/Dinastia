@@ -6104,7 +6104,8 @@
   "Tarjeta desbloqueada.": "Card unblocked.",
   "Restablecer el PIN": "Reset the PIN",
   "PIN restablecido.": "PIN reset.",
-  "Últimos movimientos": "Latest transactions"
+  "Últimos movimientos": "Latest transactions",
+  "Barrita de cereales": "Cereal bar"
  },
  "pt": {
   "Historia": "História",
@@ -12211,7 +12212,8 @@
   "Tarjeta desbloqueada.": "Cartão desbloqueado.",
   "Restablecer el PIN": "Repor o PIN",
   "PIN restablecido.": "PIN reposto.",
-  "Últimos movimientos": "Últimos movimentos"
+  "Últimos movimientos": "Últimos movimentos",
+  "Barrita de cereales": "Barra de cereais"
  },
  "patrones": [
   [
@@ -23930,7 +23932,8 @@
   "Tarjeta desbloqueada.": "Carte débloquée.",
   "Restablecer el PIN": "Réinitialiser le code PIN",
   "PIN restablecido.": "Code PIN réinitialisé.",
-  "Últimos movimientos": "Derniers mouvements"
+  "Últimos movimientos": "Derniers mouvements",
+  "Barrita de cereales": "Barre de céréales"
  },
  "it": {
   "Historia": "Storia",
@@ -30037,7 +30040,8 @@
   "Tarjeta desbloqueada.": "Carta sbloccata.",
   "Restablecer el PIN": "Reimposta il PIN",
   "PIN restablecido.": "PIN reimpostato.",
-  "Últimos movimientos": "Ultimi movimenti"
+  "Últimos movimientos": "Ultimi movimenti",
+  "Barrita de cereales": "Barretta ai cereali"
  },
  "de": {
   "Historia": "Geschichte",
@@ -36144,7 +36148,8 @@
   "Tarjeta desbloqueada.": "Karte entsperrt.",
   "Restablecer el PIN": "PIN zurücksetzen",
   "PIN restablecido.": "PIN zurückgesetzt.",
-  "Últimos movimientos": "Letzte Buchungen"
+  "Últimos movimientos": "Letzte Buchungen",
+  "Barrita de cereales": "Müsliriegel"
  },
  "ca": {
   "Historia": "Història",
@@ -42251,7 +42256,8 @@
   "Tarjeta desbloqueada.": "Targeta desbloquejada.",
   "Restablecer el PIN": "Restablir el PIN",
   "PIN restablecido.": "PIN restablert.",
-  "Últimos movimientos": "Últims moviments"
+  "Últimos movimientos": "Últims moviments",
+  "Barrita de cereales": "Barreta de cereals"
  },
  "pl": {
   "Club": "Klub",
@@ -48637,7 +48643,8 @@
   "Tarjeta desbloqueada.": "Karta odblokowana.",
   "Restablecer el PIN": "Zresetuj PIN",
   "PIN restablecido.": "PIN zresetowany.",
-  "Últimos movimientos": "Ostatnie operacje"
+  "Últimos movimientos": "Ostatnie operacje",
+  "Barrita de cereales": "Baton zbożowy"
  },
  "tr": {
   "Club": "Kulüp",
@@ -55023,6 +55030,7 @@
   "Tarjeta desbloqueada.": "Kartın blokesi kaldırıldı.",
   "Restablecer el PIN": "PIN'i sıfırla",
   "PIN restablecido.": "PIN sıfırlandı.",
-  "Últimos movimientos": "Son hareketler"
+  "Últimos movimientos": "Son hareketler",
+  "Barrita de cereales": "Tahıl barı"
  }
 }

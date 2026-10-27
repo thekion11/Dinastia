@@ -365,6 +365,18 @@ func _probar_cajero() -> void:
 	_comprobar(r4.cartera.pin == "5678" and not r4.cartera.bloqueada and r4.cartera.fallos_pin == 0 and not r4.cartera.pin_inicial, "restablecer el PIN en ventanilla pone el nuevo, no pide el actual y desbloquea la tarjeta")
 	_comprobar(r4.cartera.restablecer_pin("12") == "importe" and r4.cartera.pin == "5678", "un PIN de menos de 4 cifras no se acepta")
 	_comprobar(not BancoCiudad.servicio(null, "cajero_1"), "el gancho del banco ignora lo que no es banco")
+	## La caja de la tienda: un botón por artículo y el mensaje que devuelve la compra.
+	var comprados: Array = []
+	var pt := PanelTienda.abrir(capa, "Tienda", TiendaGasolinera.SURTIDO, func(it: Dictionary) -> String:
+		comprados.append(String(it["id"]))
+		return "ok " + String(it["id"]), func() -> String: return "saldo", Vector3.ZERO, null)
+	var n_boton := 0
+	for h in pt._caja.get_children():
+		if h is Button:
+			n_boton += 1
+	_comprobar(n_boton == TiendaGasolinera.SURTIDO.size() + 1, "la caja de la tienda tiene un botón por artículo y «Salir»")
+	pt.comprar(TiendaGasolinera.SURTIDO[1])
+	_comprobar(comprados == ["bolleria"] and pt._aviso == "ok bolleria", "comprar llama a la compra y enseña su mensaje")
 	capa.queue_free()
 
 ## LA MÁQUINA EXPENDEDORA y EL BALÓN SUELTO (semana 6 del plan).
