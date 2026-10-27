@@ -84,6 +84,7 @@ func _instalacion(uso: String, r: Rect2) -> void:
 			for k in 3:
 				b._caja_en(c + Vector3(-w * 0.22 + float(k) * w * 0.22, 3.5, f * 0.3 + 0.1), Vector3(w * 0.17, 6.0, 0.2), b._mat_simple(Color(0.85, 0.85, 0.85), 0.4))
 			b._caja_en(c + Vector3(w * 0.3, 11.0, -f * 0.2), Vector3(5.0, 22.0, 5.0), b._mat_simple(Color(0.75, 0.2, 0.15), 0.6))
+			CiudadServicios.bomberos(self, c, w, f)
 		"escuela", "instituto":
 			nombre = "Escuela" if uso == "escuela" else "Instituto"
 			var lad := b._mat_simple(Color(0.7, 0.42, 0.32), 0.85)
@@ -123,6 +124,7 @@ func _instalacion(uso: String, r: Rect2) -> void:
 			if caja2 != null:
 				for k in 6:
 					_kit(caja2, c + Vector3(-w * 0.35 + float(k % 3) * 3.0, float(k / 3) * 2.2, -f * 0.3), Vector3.ONE * 2.2, 0.0)
+			CiudadServicios.desguace(self, c, w, f)
 		"granja":
 			nombre = "Granja urbana"
 			_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(w, 0.06, f))
@@ -143,6 +145,7 @@ func _instalacion(uso: String, r: Rect2) -> void:
 				n.position = c + Vector3(-w * 0.3 + float(k) * w * 0.2, 0.2, f * 0.3)
 				n.name = "Bus"
 				b.add_child(n)
+			CiudadServicios.cocheras(self, c, w, f)
 		_:
 			b._caja_en(c + Vector3(0, 6.0, 0), Vector3(w * 0.7, 12.0, f * 0.6), _mat["claro"])
 	if nombre != "":
