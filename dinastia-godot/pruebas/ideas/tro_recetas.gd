@@ -12,7 +12,7 @@ func _ready() -> void:
 func _probar_trofeos() -> void:
 	_titulo("TROFEOS · UNA COPA POR COMPETICIÓN")
 	var ids := TrofeosReales.ids()
-	_comprobar(ids.size() == 54, "54 recetas: 22 ligas, 22 copas, 8 continentales, el Mundial y la genérica (%d)" % ids.size())
+	_comprobar(ids.size() == 56, "56 recetas: 23 ligas, 23 copas, 8 continentales, el Mundial y la genérica (%d)" % ids.size())
 	_comprobar(TrofeoModelo.disponible(), "el modelo base de las copas está")
 	var distintas := {}
 	var mal := 0
@@ -49,7 +49,7 @@ func _probar_trofeos() -> void:
 					base_grande += 1
 	_comprobar(base_grande == 0, "ninguna base pasa mucho del pie de su copa (%d demasiado anchas)" % base_grande)
 	_comprobar(mal == 0, "todas se arman: tienen copa y una altura razonable (%d mal)" % mal)
-	_comprobar(distintas.size() == 54, "ninguna receta repite a otra (%d distintas)" % distintas.size())
+	_comprobar(distintas.size() == 56, "ninguna receta repite a otra (%d distintas)" % distintas.size())
 	for real: bool in [true, false]:
 		Datos.usar_base_real(real)
 		var etiqueta := "REAL" if real else "FICTICIA"
@@ -69,6 +69,7 @@ func _probar_trofeos() -> void:
 		_comprobar(fallos == 0, "base %s: cada liga, copa y torneo encuentra su receta (%d sin encontrar)" % [etiqueta, fallos])
 	Datos.usar_base_real(false)
 	_comprobar(TrofeosReales.id_de("Liga", "ENG") == "liga:ENG", "«Liga» a secas sale por el país del club")
+	_comprobar(TrofeosReales.id_de("Primera División", "CHI") == "liga:CHI" and TrofeosReales.receta("liga:CHI") != TrofeosReales.receta("generico"), "la liga de Chile tiene la suya")
 	_comprobar(TrofeosReales.id_de("Mundial de Clubes", "") == "mundial", "el Mundial de Clubes tiene la suya")
 	_comprobar(TrofeosReales.id_de("Reto: Algo", "ARG") == "generico", "un título sin competición usa la copa genérica")
 	## El museo y el visor las usan.
