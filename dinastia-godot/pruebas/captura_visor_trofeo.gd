@@ -15,4 +15,9 @@ func _process(_d: float) -> void:
 	_n += 1
 	if _n == 40:
 		get_viewport().get_texture().get_image().save_png("/tmp/visor_trofeo.png")
-		get_tree().quit()
+		if OS.get_environment("GIROS") != "1":
+			get_tree().quit()
+	if OS.get_environment("GIROS") == "1" and _n in [60, 80, 100, 120]:
+		get_viewport().get_texture().get_image().save_png("/tmp/visor_trofeo_%d.png" % _n)
+		if _n == 120:
+			get_tree().quit()
