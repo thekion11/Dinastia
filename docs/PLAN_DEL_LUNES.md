@@ -580,8 +580,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-403 | P1 | PARCIAL | 8 módulos de `nucleo/` sin referencia en pruebas:… | Logros y Negociación cubiertos de forma indirecta (`_probar_logros`, `_probar_negociacion`); los otros 6 no |
-| M-404 | P1 | PENDIENTE | 27 módulos de `visor/` sin referencia: `Ambience`, `Autopista`,… | solo `CameraRig` aparece en el banco |
+| M-404 | P1 | PARCIAL | Módulos de `visor/` sin prueba directa | medido el 27-10: 22 de 131, casi todos rellenos de ciudad (`CiudadMercado`, `CiudadSolar`, `FachadaModular`…) que solo se ejercitan al construir la ciudad en las sondas `p3_*`/`tre_*`; falta una sonda que compruebe que cada relleno deja piezas |
 | M-379 | P2 | PENDIENTE | 64 funciones > 120 líneas (Q-01): `Sonido._sintetizar` 1.000,… | funciones largas sin partir |
 | M-382 | P2 | PENDIENTE | Sin análisis estático | sin gdlint |
 | M-383 | P2 | PENDIENTE | Tipado: muchos `Dictionary` sin forma (jugadores del motor) | sin `JugadorMotor` tipado |
@@ -602,8 +601,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-406 | P2 | PENDIENTE | `Retrato3D` no se ejercita en headless | sin prueba con xvfb |
 | M-407 | P2 | PENDIENTE | Sin pruebas de conducción/ciudad (V-06) | sin prueba de conducción |
 | M-408 | P2 | PARCIAL | Sin pruebas de minijuegos 3D | `prueba_minijuegos_nuevos` (2D); minijuegos 3D sin prueba |
-| M-409 | P2 | PARCIAL | Sin pruebas de menús/UI de integración (abrir cada pantalla sin error) | `_probar_carga_de_ui` en el banco; sin recorrido por pestañas |
-| M-410 | P2 | PENDIENTE | Sin pruebas de rendimiento con umbrales | sin umbrales de rendimiento |
+| M-410 | P2 | PARCIAL | Pruebas de rendimiento con umbrales | la simulación tiene umbral (`eq_diez_temporadas`, EQ_MODO=rendimiento: la semana del año 20 < 2× la del año 1 + 20 ms) y el banco mide ms por paso del motor; faltan umbrales de FPS en hardware real (dueño) |
 | M-413 | P2 | PENDIENTE | `auditoria_clubes`/`auditoria_datos` no están en el banco | auditorías fuera del banco |
 | M-414 | P2 | PENDIENTE | Resultados de sondas (calidad/táctica/simetría) sin umbrales | sondas sin umbrales |
 | M-416 | P2 | PENDIENTE | Sin CI en GitHub Actions | sin GitHub Actions |
