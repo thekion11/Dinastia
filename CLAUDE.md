@@ -70,3 +70,9 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     colores; los TROFEOS que tenga hoy cada club, modelados a partir del trofeo base del Drive (`gold+trophy.glb`) y modificados
     para parecerse; sus datos guardados en la historia del club. POSICIONES: se quedan en español en todos los idiomas.
     Política de privacidad: publicarla después. PARADEROS: que se parezcan a los de Chile (forma y carteles).
+16. (27-10 noche) PELO y PERSONAJES del Drive: licencia confirmada por el dueño. PARADEROS «Red» (nombre basado en Red Movilidad, permitido):
+    modelo real en las fotos del dueño (techo blanco con tirantes rojos, cabecera negra «Paradero de Red Movilidad | Parada N» con
+    remates rojos y logo, panel publicitario Red, banca de láminas, papelero; POSTE con cartel NEGRO: iconos arriba, nombre de la
+    parada, cuadrícula de recorridos en blanco, QR y franja roja abajo). El CÓDIGO del paradero sirve en una APP del móvil: qué micros
+    pasan, en cuánto llegan y su patente. Recorridos: números por SECTOR (100: 122, 150, 190; 200: 203, 217, 278…), sufijo «c» =
+    sentido contrario, «e» = alternativa (rara); hay también recorridos tipo «C02», «C09c».

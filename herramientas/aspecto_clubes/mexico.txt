@@ -1,0 +1,16 @@
+America|ovalo|liso|AME|liso|#ffd100|#00246b|#00246b|#ffd100
+Tigres UANL|circulo|liso|TIG|franja_pecho|#ffd100|#0038a8|#0038a8|#ffd100
+Monterrey|escudo|franjas|MTY|franjas|#0038a8|#ffffff|#0038a8|#0038a8
+Guadalajara|clasico|franjas|CHI|franjas|#d50032|#ffffff|#0038a8|#d50032
+Cruz Azul|circulo|cruz|CAZ|liso|#0038a8|#ffffff|#0038a8|#0038a8
+Pachuca|escudo|franjas|PAC|franjas|#ffffff|#0038a8|#ffffff|#ffffff
+Toluca|hex|liso|TOL|liso|#d50032|#ffffff|#ffffff|#d50032
+Santos Laguna|escudo|franjas|SAN|franjas|#00843d|#ffffff|#ffffff|#00843d
+Pumas UNAM|escudo|liso|PUM|liso|#00246b|#ffd100|#00246b|#00246b
+Leon|clasico|liso|LEO|liso
+Atlas|circulo|franjas|ATL|franjas|#d50032|#000000|#000000|#d50032
+Necaxa|rombo|franjas|NEC|franjas
+Puebla|escudo|franjas|PUE|franjas
+Tijuana|hex|franjas|TIJ|franjas
+Queretaro|clasico|franjas|QUE|franjas|#ffffff|#00246b
+Mazatlán|ovalo|liso|MAZ|liso

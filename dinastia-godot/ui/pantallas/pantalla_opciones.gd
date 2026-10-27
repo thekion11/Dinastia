@@ -259,6 +259,22 @@ func _pintar_qol() -> void:
 		p._modo_experto = not p._modo_experto
 		p._refrescar())
 	fila.add_child(b)
+	## Tutorial por capas (fila 1040): una tarjeta de ayuda la primera vez que se abre cada pantalla; se apaga aquí y se puede volver a empezar.
+	var capas := CheckButton.new()
+	capas.text = Idiomas.t("Ayudas al estrenar cada pantalla")
+	capas.tooltip_text = Idiomas.t("La primera vez que abres Táctica, Entrenar, Finanzas, Mercado… sale una tarjeta con lo esencial.")
+	capas.button_pressed = CapasTutorial.activas()
+	capas.add_theme_font_size_override("font_size", 11)
+	capas.toggled.connect(func(si: bool) -> void: CapasTutorial.poner_activas(si))
+	p._lista_ajustes.add_child(capas)
+	var otra_vez := Button.new()
+	otra_vez.text = Idiomas.t("Volver a ver todas las ayudas")
+	otra_vez.add_theme_font_size_override("font_size", 11)
+	otra_vez.pressed.connect(func() -> void:
+		CapasTutorial.reiniciar()
+		p._escribir("[color=#c9a227]%s[/color]" % Idiomas.t("Las ayudas por pantalla vuelven a salir desde cero."))
+		p._refrescar())
+	p._lista_ajustes.add_child(otra_vez)
 	if not p._modo_experto:
 		var ex := p._texto(10, Principal.COL_SUAVE)
 		ex.text = Idiomas.t("Con el modo experto encendido desaparecen las notas explicativas como esta.")

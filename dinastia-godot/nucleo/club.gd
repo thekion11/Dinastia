@@ -340,6 +340,10 @@ func perfil_estadio() -> Dictionary:
 		var ap := GuinosEstadio.apodo(p)
 		if ap != "":
 			p["apodo"] = ap
+	var asi: Variant = AspectoClub.fila(self).get("asientos", [])   ## orden 15: las butacas del club real si su estadio no trae las suyas
+	if asi is Array and (asi as Array).size() >= 2 and not r.has("asientos"):
+		p["asiento1"] = String(asi[0])
+		p["asiento2"] = String(asi[1])
 	return p
 
 ## La fila de ESTADIO_CLUB de este club (estadio, colores y escudo del real), o {}.
@@ -400,16 +404,16 @@ var esc_especial: String = ""
 var ui_acento: String = ""
 
 func color_kit1() -> String:
-	return kit_color1 if kit_color1 != "" else color1
+	return kit_color1 if kit_color1 != "" else AspectoClub.kit(self, "c1") if AspectoClub.kit(self, "c1") != "" else color1
 
 func color_kit2() -> String:
-	return kit_color2 if kit_color2 != "" else color2
+	return kit_color2 if kit_color2 != "" else AspectoClub.kit(self, "c2") if AspectoClub.kit(self, "c2") != "" else color2
 
 func color_escudo1() -> String:
-	return esc_color1 if esc_color1 != "" else color1
+	return esc_color1 if esc_color1 != "" else AspectoClub.esc(self, 0, color1)
 
 func color_escudo2() -> String:
-	return esc_color2 if esc_color2 != "" else color2
+	return esc_color2 if esc_color2 != "" else AspectoClub.esc(self, 1, color2)
 
 func color_acento() -> String:
 	return ui_acento if ui_acento != "" else color1
