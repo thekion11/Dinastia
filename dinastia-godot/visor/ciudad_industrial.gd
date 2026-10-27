@@ -36,7 +36,7 @@ static func rellenar(ex: CiudadExpansion, r: Rect2) -> void:
 		var rc: String = CAMIONES[(h + k) % CAMIONES.size()]
 		ex._pieza_kit(rc, c + Vector3(-w * 0.34 + float(k) * w * 0.26, Y, f * 0.2), 2.6, PI * 0.5 * float(1 + 2 * (k % 2)))
 	for k in 6:
-		ex._pieza_kit(CAJA, c + Vector3(w * 0.12 + float(k % 3) * 2.4, Y + float(k / 3) * 2.2, f * 0.1), 2.2, 0.0)
+		ex._pieza_kit(CAJA, c + Vector3(w * 0.12 + float(k % 3) * 0.75, Y + float(k / 3) * 0.6, f * 0.1), 0.85, 0.0)
 	## Valla de tela metálica en norte, este y oeste (con la entrada al sur).
 	var valla := b._mat_simple(Color(0.34, 0.36, 0.38), 0.6)
 	var ix := w * 0.5 - 1.5
