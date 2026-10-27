@@ -91,3 +91,65 @@ func _probar_no_atravesar_paredes() -> void:
 	_comprobar(ex.cuerpo.position.x < 5.5, "si ya estás dentro de algo fijo (al salir del metro) se te deja salir")
 	ex.cuerpo.free()
 	ex.free()
+
+## LAS REDES DE LA CIUDAD (27-10-2026): luz, agua, drenaje y gasolineras.
+func _probar_redes_ciudad() -> void:
+	_titulo("REDES DE LA CIUDAD: LUZ, AGUA, DRENAJE Y GAS")
+	var r := RedesCiudad.new(7)
+	r.averias_azar = false
+	_comprobar(r.sectores().size() == 25 and r.fraccion_luz() == 1.0, "25 sectores y todos con luz al empezar")
+	_comprobar(RedesCiudad.sector_en(0.0, 0.0) == Vector2i(2, 2) and RedesCiudad.sector_en(-1320.0, -1320.0) == Vector2i(0, 0) \
+		and RedesCiudad.sector_en(1320.0, 1320.0) == Vector2i(4, 4), "cada punto del mapa cae en su sector")
+	## LUZ: de madrugada sobra energía; en hora punta y sin viento se cortan sectores, menos el del hospital.
+	r.pasar(1, 3, 0.5, 0.0)
+	_comprobar(r.fraccion_luz() == 1.0, "de madrugada hay luz en toda la ciudad")
+	r.pasar(1, 20, 0.0, 0.0)
+	_comprobar(r.fraccion_luz() < 1.0, "a las 20:00 sin viento faltan %.0f MW y se cortan sectores" % (r.demanda - r.generacion))
+	_comprobar(r.hay_luz(RedesCiudad.sector_de(Vector2i(5, -1))), "el hospital nunca se queda a oscuras")
+	r.pasar(1, 20, 1.0, 0.0)
+	_comprobar(r.fraccion_luz() == 1.0, "con viento pleno vuelve la luz en hora punta")
+	r.averiar("luz", Vector2i(1, 1))
+	r.pasar(1, 3, 0.5, 0.0)
+	_comprobar(not r.hay_luz(Vector2i(1, 1)) and r.hay_luz(Vector2i(1, 2)), "un transformador averiado deja sin luz solo su sector")
+	_comprobar(not r.hay_agua(Vector2i(1, 1)), "y sin luz no hay presión en el agua de ese sector")
+	r.reparar("luz", Vector2i(1, 1))
+	r.pasar(1, 3, 0.5, 0.0)
+	_comprobar(r.hay_luz(Vector2i(1, 1)) and r.hay_agua(Vector2i(1, 1)), "al repararlo vuelven la luz y el agua")
+	## AGUA: una rotura corta solo su ramal; el depósito se mantiene con la potabilizadora.
+	r.averiar("agua", Vector2i(3, 3))
+	r.pasar(1, 9, 0.5, 0.0)
+	_comprobar(not r.hay_agua(Vector2i(3, 3)) and r.hay_agua(Vector2i(3, 2)), "una tubería rota corta el agua de su sector")
+	r.agua_nivel = 0.0
+	r.pasar(1, 9, 0.5, 0.0)
+	_comprobar(r.agua_nivel > 0.0, "la potabilizadora vuelve a llenar un depósito vacío")
+	## DRENAJE: un chaparrón desborda los colectores y se vacían al parar.
+	var d := RedesCiudad.new(7)
+	d.averias_azar = false
+	d.pasar(5, 14, 0.5, 25.0)
+	_comprobar(d.sectores_inundados() == 25, "cinco horas de 25 mm/h inundan la ciudad entera")
+	d.pasar(8, 10, 0.5, 0.0)
+	_comprobar(d.sectores_inundados() == 0, "ocho horas sin lluvia y los colectores desaguan")
+	d.averiar("drenaje", Vector2i(2, 2))
+	d.pasar(10, 12, 0.5, 8.0)
+	_comprobar(d.inundado[Vector2i(2, 2)] and not d.inundado[Vector2i(2, 3)], "con 8 mm/h solo se inunda el sector de los sumideros atascados")
+	_comprobar(RedesCiudad.tiempo_de("tormenta", 15)["lluvia"] > RedesCiudad.tiempo_de("lluvia", 15)["lluvia"] \
+		and RedesCiudad.tiempo_de("despejado", 15)["lluvia"] == 0.0, "el clima de la semana manda la lluvia")
+	## GAS: se reposta, baja el depósito, la cisterna repone y sin luz no hay bomba.
+	var g := RedesCiudad.new(7)
+	g.averias_azar = false
+	var antes: float = g.gas[0]
+	var rep := g.repostar(0, Vector2i(2, 2), 45.0)
+	_comprobar(float(rep["litros"]) == 45.0 and int(rep["coste"]) == 63 and float(g.gas[0]) == antes - 45.0, "45 l cuestan 63 € y salen del depósito")
+	g.averiar("luz", Vector2i(2, 2))
+	g.pasar(1, 3, 0.5, 0.0)
+	_comprobar(int(g.repostar(0, Vector2i(2, 2), 45.0)["coste"]) == 0, "sin corriente las bombas no sirven")
+	g.gas[1] = 100.0
+	g.pasar(1, 9, 0.5, 0.0)
+	_comprobar(float(g.gas[1]) > 5000.0, "una gasolinera casi vacía recibe la cisterna")
+	## Determinista: misma semilla, mismas averías.
+	var a1 := RedesCiudad.new(11)
+	var a2 := RedesCiudad.new(11)
+	a1.pasar(500, 6, 0.5, 0.0)
+	a2.pasar(500, 6, 0.5, 0.0)
+	_comprobar(a1.luz == a2.luz and a1.cortes == a2.cortes and a1.agua_nivel == a2.agua_nivel, "la misma semilla da las mismas averías")
+	_comprobar(not a1.resumen().is_empty(), "el resumen cuenta las cuatro redes")

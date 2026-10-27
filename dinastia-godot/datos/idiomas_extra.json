@@ -5921,7 +5921,10 @@
   "¡Ya era hora, %s! Le guardé un café.": "About time, %s! I saved you a coffee.",
   "Buenas, %s. ¿Todo bien por el club?": "Hello, %s. Everything fine around the club?",
   "Hola, %s. Aquí andamos, como siempre.": "Hi, %s. Same as ever around here.",
-  "Qué tal, %s. Pase, pase.": "How are you, %s. Come in, come in."
+  "Qué tal, %s. Pase, pase.": "How are you, %s. Come in, come in.",
+  "Gasolinera": "Petrol station",
+  "Sin corriente (o sin existencias): las bombas no funcionan.": "No power (or no stock): the pumps are not working.",
+  "Depósito lleno: %d l por %d €.": "Tank full: %d l for %d €."
  },
  "pt": {
   "Historia": "História",
@@ -11845,7 +11848,10 @@
   "¡Ya era hora, %s! Le guardé un café.": "Já era tempo, %s! Guardei-lhe um café.",
   "Buenas, %s. ¿Todo bien por el club?": "Boas, %s. Tudo bem pelo clube?",
   "Hola, %s. Aquí andamos, como siempre.": "Olá, %s. Por aqui, como sempre.",
-  "Qué tal, %s. Pase, pase.": "Como está, %s. Entre, entre."
+  "Qué tal, %s. Pase, pase.": "Como está, %s. Entre, entre.",
+  "Gasolinera": "Posto de gasolina",
+  "Sin corriente (o sin existencias): las bombas no funcionan.": "Sem energia (ou sem estoque): as bombas não funcionam.",
+  "Depósito lleno: %d l por %d €.": "Tanque cheio: %d l por %d €."
  },
  "patrones": [
   [
@@ -23381,7 +23387,10 @@
   "¡Ya era hora, %s! Le guardé un café.": "Il était temps, %s ! Je vous ai gardé un café.",
   "Buenas, %s. ¿Todo bien por el club?": "Bonjour, %s. Tout va bien au club ?",
   "Hola, %s. Aquí andamos, como siempre.": "Bonjour, %s. Nous voilà, comme toujours.",
-  "Qué tal, %s. Pase, pase.": "Comment allez-vous, %s ? Entrez, entrez."
+  "Qué tal, %s. Pase, pase.": "Comment allez-vous, %s ? Entrez, entrez.",
+  "Gasolinera": "Station-service",
+  "Sin corriente (o sin existencias): las bombas no funcionan.": "Pas de courant (ou plus de stock) : les pompes ne fonctionnent pas.",
+  "Depósito lleno: %d l por %d €.": "Réservoir plein : %d l pour %d €."
  },
  "it": {
   "Historia": "Storia",
@@ -29305,7 +29314,10 @@
   "¡Ya era hora, %s! Le guardé un café.": "Era ora, %s! Le ho tenuto da parte un caffè.",
   "Buenas, %s. ¿Todo bien por el club?": "Buongiorno, %s. Tutto bene al club?",
   "Hola, %s. Aquí andamos, como siempre.": "Salve, %s. Qui si va avanti, come sempre.",
-  "Qué tal, %s. Pase, pase.": "Come va, %s. Entri, entri."
+  "Qué tal, %s. Pase, pase.": "Come va, %s. Entri, entri.",
+  "Gasolinera": "Distributore",
+  "Sin corriente (o sin existencias): las bombas no funcionan.": "Senza corrente (o senza scorte): le pompe non funzionano.",
+  "Depósito lleno: %d l por %d €.": "Serbatoio pieno: %d l per %d €."
  },
  "de": {
   "Historia": "Geschichte",
@@ -35229,7 +35241,10 @@
   "¡Ya era hora, %s! Le guardé un café.": "Na endlich, %s! Ich habe Ihnen einen Kaffee aufgehoben.",
   "Buenas, %s. ¿Todo bien por el club?": "Hallo, %s. Alles in Ordnung im Verein?",
   "Hola, %s. Aquí andamos, como siempre.": "Hallo, %s. Wir sind da, wie immer.",
-  "Qué tal, %s. Pase, pase.": "Wie geht's, %s. Kommen Sie nur herein."
+  "Qué tal, %s. Pase, pase.": "Wie geht's, %s. Kommen Sie nur herein.",
+  "Gasolinera": "Tankstelle",
+  "Sin corriente (o sin existencias): las bombas no funcionan.": "Kein Strom (oder kein Vorrat): die Zapfsäulen funktionieren nicht.",
+  "Depósito lleno: %d l por %d €.": "Tank voll: %d l für %d €."
  },
  "ca": {
   "Historia": "Història",
@@ -41153,7 +41168,10 @@
   "¡Ya era hora, %s! Le guardé un café.": "Ja era hora, %s! Li he guardat un cafè.",
   "Buenas, %s. ¿Todo bien por el club?": "Bones, %s. Tot bé pel club?",
   "Hola, %s. Aquí andamos, como siempre.": "Hola, %s. Aquí anem fent, com sempre.",
-  "Qué tal, %s. Pase, pase.": "Com va, %s. Passi, passi."
+  "Qué tal, %s. Pase, pase.": "Com va, %s. Passi, passi.",
+  "Gasolinera": "Gasolinera",
+  "Sin corriente (o sin existencias): las bombas no funcionan.": "Sense corrent (o sense existències): les bombes no funcionen.",
+  "Depósito lleno: %d l por %d €.": "Dipòsit ple: %d l per %d €."
  },
  "pl": {
   "Club": "Klub",
@@ -47356,7 +47374,10 @@
   "¡Ya era hora, %s! Le guardé un café.": "Najwyższy czas, %s! Kawa na pana czeka.",
   "Buenas, %s. ¿Todo bien por el club?": "Dzień dobry, %s. Wszystko w porządku w klubie?",
   "Hola, %s. Aquí andamos, como siempre.": "Witam, %s. Jak zawsze, jakoś leci.",
-  "Qué tal, %s. Pase, pase.": "Jak się pan ma, %s. Proszę, proszę."
+  "Qué tal, %s. Pase, pase.": "Jak się pan ma, %s. Proszę, proszę.",
+  "Gasolinera": "Stacja benzynowa",
+  "Sin corriente (o sin existencias): las bombas no funcionan.": "Brak prądu (lub zapasów): dystrybutory nie działają.",
+  "Depósito lleno: %d l por %d €.": "Bak pełny: %d l za %d €."
  },
  "tr": {
   "Club": "Kulüp",
@@ -53559,6 +53580,9 @@
   "¡Ya era hora, %s! Le guardé un café.": "Çok şükür, %s! Size bir kahve ayırdım.",
   "Buenas, %s. ¿Todo bien por el club?": "Merhaba, %s. Kulüpte her şey yolunda mı?",
   "Hola, %s. Aquí andamos, como siempre.": "Merhaba, %s. Burada her zamanki gibi idare ediyoruz.",
-  "Qué tal, %s. Pase, pase.": "Nasılsınız, %s. Buyurun, buyurun."
+  "Qué tal, %s. Pase, pase.": "Nasılsınız, %s. Buyurun, buyurun.",
+  "Gasolinera": "Benzin istasyonu",
+  "Sin corriente (o sin existencias): las bombas no funcionan.": "Elektrik yok (ya da stok yok): pompalar çalışmıyor.",
+  "Depósito lleno: %d l por %d €.": "Depo dolu: %d l, %d €."
  }
 }

@@ -176,6 +176,8 @@ func _usar() -> void:
 		return
 	if _cerca.is_empty():
 		return
+	if _cerca["tipo"] == "lugar" and vida != null and vida.usar_surtidor(String(_cerca["k"])):
+		return
 	if _cerca["tipo"] == "lugar" and vida != null and vida.es_mi_casa(String(_cerca["k"])):
 		vida.entrar_casa()
 		return

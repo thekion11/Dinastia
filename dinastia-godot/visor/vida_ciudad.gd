@@ -128,6 +128,10 @@ func _al_pasar_tiempo(_minutos: int, _actividad: String) -> void:
 
 ## Cada hora de horas extra: +1 de preparación (balance) y +1 de estrés (`VidaDT`).
 func _al_cambiar_hora(hora: int, _dia: int) -> void:
+	var redes := _redes()
+	if redes != null:
+		redes.hora_cambiada(hora, mundo.clima())
+		_sincronizar_luz()
 	if mundo.vida == null or actividad_actual() != "horas_extra":
 		return
 	mundo.vida.balance = clampi(mundo.vida.balance + 1, 0, 100)
@@ -205,6 +209,31 @@ func usar_en_estadio(zona: String) -> bool:
 	if zona != ZONA_COMEDOR:
 		return false
 	_comer(Idiomas.t("Comes con el plantel en el comedor del club. Media hora de charla y plato caliente."))
+	return true
+
+## Las redes de la ciudad (luz, agua, drenaje, gas), si la ciudad ya está levantada.
+func _redes() -> RedesCiudadVista:
+	if expl == null or expl.cb == null or expl.cb.expansion == null:
+		return null
+	return expl.cb.expansion.redes
+
+## E ante un surtidor: 45 l a 1,4 €/l, 10 minutos. Sin corriente en el sector, no hay bomba.
+func usar_surtidor(k: String) -> bool:
+	var redes := _redes()
+	if not k.begins_with("surtidor_") or redes == null:
+		return false
+	var s := redes.surtidor(int(k.get_slice("_", 1)))
+	if s.is_empty():
+		return false
+	var r := redes.modelo.repostar(int(s["id"]), s["sector"], 45.0)
+	if int(r["coste"]) <= 0:
+		_decir(Idiomas.t("Gasolinera"), Idiomas.t("Sin corriente (o sin existencias): las bombas no funcionan."))
+		return true
+	mundo.reloj.avanzar_minutos(10, "libre")
+	if mundo.mi_club() != null:
+		mundo.mi_club().mover_saldo(-int(r["coste"]))
+	_decir(Idiomas.t("Gasolinera"), Idiomas.t("Depósito lleno: %d l por %d €.") % [roundi(float(r["litros"])), int(r["coste"])])
+	Sonido.toca("clic", Sonido.Bus.EFECTOS)
 	return true
 
 func _comer(texto: String) -> void:
