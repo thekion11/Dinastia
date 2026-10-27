@@ -92,6 +92,8 @@ var huellas: Array[Rect2] = []
 var etiquetas: Array = []          ## [{pos:Vector3, texto:String, nivel:int}]
 ## Asientos públicos (bancos de acera y de parada): {p: Vector3 del asiento, giro: float}. `GenteSentada` sienta gente ahí (P3).
 var asientos: Array[Dictionary] = []
+var escaleras: Array[Dictionary] = []   ## {pie, cima, n} de las escaleras por donde `EscaleraVida` hace subir y bajar gente
+var puertas_vida: Array[Dictionary] = []   ## {p, n} de las entradas por donde `PuertaVida` hace entrar y salir vecinos
 var paradas_bus_pos: Array[Vector3] = []   ## dónde están las marquesinas del anillo (los autobuses paran junto a ellas)
 ## LO QUE SE PUEDE TOCAR EN EL MAPA (plan maestro B7): cada instalación, su
 ## solar si todavía no existe, y el estadio. `VistaCiudad` proyecta `pos` a la

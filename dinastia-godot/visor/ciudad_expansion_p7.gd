@@ -362,6 +362,7 @@ func _bocas_metro() -> void:
 				_lote("acera", p + Vector3(0, -0.2 - float(s) * 0.35, -2.5 + float(s) * 0.9), Vector3(2.6, 0.2, 0.9))
 			for lado: float in [-1.0, 1.0]:
 				b._caja_en(p + Vector3(lado * 1.7, 0.6, 0), Vector3(0.12, 1.0, 7.0), b._mat_simple(Color(0.55, 0.56, 0.58), 0.3))
+			EscaleraVida.registrar(b, p + Vector3(0, -1.85, 2.9), p + Vector3(0, -0.05, -2.5), 6)
 			_cartel_m(p + Vector3(2.4, 0, -3.0), col)
 			n += 1
 	cuenta["bocas_metro"] = n
