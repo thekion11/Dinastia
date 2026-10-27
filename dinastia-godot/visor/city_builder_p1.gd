@@ -135,6 +135,10 @@ const TERRENO_CELDAS := 160          ## 121x121 vértices: suficiente para que l
 const LLANO_RADIO := 1480.0          ## dentro de esto, altura 0 garantizada
 const LLANO_TRANSICION := 520.0      ## y esto es lo que tarda en empezar a subir
 const TERRENO_ALTURA := 78.0
+## EL CERRO (27-10-2026): una montaña en las afueras (sureste) para el teleférico; se suma al relieve de ruido.
+const MONTE_CENTRO := Vector2(2300.0, 1300.0)
+const MONTE_ALTURA := 420.0
+const MONTE_RADIO := 520.0
 
 ## Se guardan para poder preguntar la altura en cualquier punto DESPUÉS de
 ## generar la malla: lo que se plante fuera del llano -los edificios del

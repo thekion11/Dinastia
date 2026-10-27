@@ -173,7 +173,8 @@ func _altura_terreno(x: float, z: float, ruido: FastNoiseLite, detalle: FastNois
 	t = t * t * (3.0 - 2.0 * t)
 	var h: float = ruido.get_noise_2d(x, z) * TERRENO_ALTURA
 	h += detalle.get_noise_2d(x, z) * 6.0
-	return h * t
+	var dm := Vector2(x, z).distance_to(MONTE_CENTRO)
+	return h * t + MONTE_ALTURA * exp(-dm * dm / (2.0 * MONTE_RADIO * MONTE_RADIO)) * t
 
 ## Cesped generado por codigo: dos verdes mezclados con ruido menudo. Sin una
 ## textura, una explanada de 520 m de un solo color se lee como un papel pintado.

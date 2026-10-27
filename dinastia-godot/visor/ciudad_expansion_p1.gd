@@ -285,6 +285,8 @@ var _farola_luz: StandardMaterial3D
 var _farola_charco: StandardMaterial3D
 
 var _farola_cono: ShaderMaterial = null
+var tele_nodo: Teleferico          ## el teleférico del cerro (27-10-2026)
+var teleferico := {}               ## sus datos para el mapa: {nombre, base, cima, color}
 var _farolas_sec := {}      ## sector -> {luz, charco, cono}: materiales propios de las farolas de cada sector
 
 ## Los edificios lejanos: cajas con ventanas en un solo MultiMesh.
