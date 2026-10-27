@@ -41,3 +41,8 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 10. (26-10 noche) Calidad visual: ciudad por zonas (detalle, construcción, coherencia) y personajes (anatomía, movimiento natural,
     más animaciones, profundidad) por PASADAS con captura antes/después y veredicto del dueño; plan en `PLAN_DEL_LUNES.md` §2.2e.
     La sesión líder (session_016d4XAEpSpuptrGg8J4Wene) manda y reparte; la ejecutora (session_01VUJiyfwiM2ZPT2H3gaDzqg) nunca queda parada.
+11. (26-10 noche, decisiones del dueño) Fases 1-3 APROBADAS sin jugarlas aún, dejando constancia de que a futuro hay que pulirlas.
+    Fusionar a `main` los PR #12 y #13: concedido («funciona»). Borrar capturas e informes viejos de `dinastia-godot/`: concedido
+    (hecho: `pruebas/capturas` y `docs/informes_extraidos`); `marca/` se CONSERVA (tiene el logo para la animación de la intro).
+    Red para Wikimedia/banderas: todavía no. El dueño está cerca de su tope de uso: trabajar en bloques pequeños, guardar y empujar a menudo.
+

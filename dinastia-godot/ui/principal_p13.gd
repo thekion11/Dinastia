@@ -1,5 +1,5 @@
 extends "res://ui/principal_p12.gd"
-## [Capa 12/17 de `principal.gd`] _nueva_temporada, _al_elegir_calendario, _abrir_hub, _buscar_global, _textura_brillo_panel, _panel … (+5)
+## [Capa 13/17 de `principal.gd`] _nueva_temporada, _al_elegir_calendario, _buscar_global, _textura_brillo_panel, _panel … (+4); los hubs están en `Hubs`
 
 func _nueva_temporada() -> void:
 	if mundo.temporada_en_curso():
@@ -87,58 +87,6 @@ func _al_elegir_calendario(id: int) -> void:
 		1: _avanzar_semana()
 		2: _jugar_temporada()
 		3: _nueva_temporada()
-
-## UN HUB CONTEXTUAL. Se abre tocando la zona de la pantalla que ya habla de
-## eso -el plantel, el marcador, la caja, la tabla- y ofrece sus pestañas como
-## botones grandes. No es una pestaña más: es una puerta, y por eso se cierra
-## sola en cuanto eliges.
-func _abrir_hub(clave: String) -> void:
-	var hub: Dictionary = HUBS.get(clave, {})
-	if hub.is_empty():
-		return
-	var capa := PanelContainer.new()
-	capa.set_anchors_preset(Control.PRESET_FULL_RECT)
-	var estilo := StyleBoxFlat.new()
-	estilo.bg_color = Color(COL_FONDO.r, COL_FONDO.g, COL_FONDO.b, 0.93)
-	capa.add_theme_stylebox_override("panel", estilo)
-	add_child(capa)
-
-	var caja := VBoxContainer.new()
-	caja.alignment = BoxContainer.ALIGNMENT_CENTER
-	caja.add_theme_constant_override("separation", 10)
-	capa.add_child(caja)
-	var t := _texto(20, COL_ORO)
-	t.text = String(hub["titulo"])
-	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	caja.add_child(t)
-	var flow := HFlowContainer.new()
-	flow.alignment = FlowContainer.ALIGNMENT_CENTER
-	flow.add_theme_constant_override("h_separation", 8)
-	flow.add_theme_constant_override("v_separation", 8)
-	caja.add_child(flow)
-	for titulo: String in (hub["tabs"] as Array):
-		var b := Button.new()
-		b.text = titulo
-		b.custom_minimum_size = Vector2(180, 44)
-		b.add_theme_font_size_override("font_size", 14)
-		var destino := titulo
-		b.pressed.connect(func() -> void:
-			capa.queue_free()
-			_ir_a_pestana(destino)
-			_refrescar())
-		flow.add_child(b)
-	var cerrar := Button.new()
-	cerrar.text = Idiomas.t("✕  Cerrar")
-	cerrar.custom_minimum_size = Vector2(0, 34)
-	cerrar.pressed.connect(func() -> void: capa.queue_free())
-	caja.add_child(cerrar)
-	## La entrada con un desliz corto hacia arriba: es lo que hace que el hub
-	## se sienta una capa que sube y no un cambio de pantalla seco.
-	caja.modulate.a = 0.0
-	caja.position.y += 18.0
-	var tw := create_tween().set_parallel(true)
-	tw.tween_property(caja, "modulate:a", 1.0, 0.16)
-	tw.tween_property(caja, "position:y", caja.position.y - 18.0, 0.16).set_trans(Tween.TRANS_CUBIC)
 
 # --- acciones ---------------------------------------------------------------
 

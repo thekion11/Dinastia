@@ -91,3 +91,27 @@ static func celebracion(ap: AnimationPlayer, rasgo: String, id_jugador: String, 
 				return n
 		return "celebrar"
 	return elegida
+
+## Carga UN clip de la UAL en el AnimationPlayer de un cuerpo si aún no lo tiene (las
+## personas del prólogo, las citas, la familia y los vecinos no pasan por `extender`).
+## Devuelve true si el clip existe tras la llamada. (§2.2e P3, 27-10-2026)
+static func asegurar(ap: AnimationPlayer, esq: Skeleton3D, clave: String) -> bool:
+	if ap == null or not UAL.has(clave):
+		return false
+	if ap.has_animation(clave):
+		return true
+	var lib := ap.get_animation_library("")
+	if lib == null:
+		return false
+	var prefijo := str(ap.get_path_to(esq)) if esq != null else ""
+	var nombre_ual := String(UAL[clave])
+	var a: Animation = AnimQuaternius.cargar_real(nombre_ual, prefijo)
+	if a == null and nombre_ual.ends_with("_Loop"):
+		a = AnimQuaternius.cargar_real(nombre_ual.trim_suffix("_Loop"), prefijo)
+	if a == null:
+		return false
+	if not nombre_ual.ends_with("Loop"):
+		a.loop_mode = Animation.LOOP_NONE
+	lib.add_animation(clave, a)
+	return true
+
