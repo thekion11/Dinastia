@@ -35,7 +35,9 @@ func _probar_async() -> void:
 	await _frames(2)
 	var asientos: Array = _e.cb.asientos
 	_comprobar(asientos.size() >= 20, "la ciudad registra asientos públicos (%d)" % asientos.size())
+	Partida.cargada_de_respaldo = true   ## como si se hubiera recuperado la copia de un guardado dañado
 	_v = VidaCiudad.enganchar(_e, _vista, _m)
+	_comprobar(not Partida.cargada_de_respaldo and _v != null and _v._cuadro != null, "copia recuperada: el arranque 3D lo avisa en pantalla")
 	var gs := _v.sentados if _v != null else null
 	_comprobar(gs != null, "la vida monta la gente sentada")
 	if gs == null or asientos.is_empty():

@@ -176,8 +176,15 @@ func _dinero(n: int) -> String:
 func _continuar() -> void:
 	var m := _mundo_guardado if _mundo_guardado != null else Partida.cargar("partida")
 	if m == null:
+		_no_se_pudo_abrir()
 		return
 	_entrar_en(m)
+
+## Si el guardado y TODAS sus copias están dañados (27-10-2026, plan §4): antes el botón no hacía
+## nada y el jugador no sabía por qué; ahora se le dice y se le ofrece importar una exportada.
+func _no_se_pudo_abrir() -> void:
+	if _archivo_ui != null:
+		_archivo_ui._avisar(Idiomas.t("No se pudo abrir la partida: el guardado y sus copias están dañados. Si exportaste una, puedes importarla."))
 
 ## Entra a una partida cargada (fase 3, bloque 7): con el prólogo visto y la vida encendida,
 ## en 3D (la oficina, o tu casa el lunes a las 08:00); si no, el menú central de siempre.
@@ -213,6 +220,7 @@ func _poner_botones_archivo() -> void:
 func _abrir_partida(nombre: String) -> void:
 	var m := Partida.cargar(nombre)
 	if m == null:
+		_no_se_pudo_abrir()
 		return
 	_entrar_en(m)
 
