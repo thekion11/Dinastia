@@ -3,7 +3,8 @@
 Lee `herramientas/aspecto_clubes/*.txt` (una línea por club, campos separados por «|», vacío = el valor de siempre) y lo entrega a
 `base_ficticia.py`, que lo vuelca en la tabla `ASPECTO_CLUB` del pack real (clave = nombre del pack) y de la base ficticia (clave = nombre
 ficticio, SIN siglas: son las del club real). Línea:
-  nombre|forma|patrón|siglas|camiseta|k1|k2|pantalón|medias|esc1|esc2|butaca1|butaca2
+  nombre|forma|patrón|siglas|camiseta|k1|k2|pantalón|medias|esc1|esc2|butaca1|butaca2|emblema|letras|esc3
+  emblema: figura de `EscudoEmblemas.FIGURAS` · letras: hasta 4, dibujadas en vectores sobre el escudo · esc3: tercer color (tricolores)
   forma/patrón: `Escudo.FORMAS`/`PATRONES` · camiseta: clave de `DisenosKit.DISENOS` · k1/k2: colores de la camiseta · esc1/esc2: del escudo
   (si no, k1/k2 y luego los del club) · butaca1/butaca2: del estadio (si no, los del escudo).
 Solo, comprueba los .txt contra el pack:   python3 herramientas/aspecto_clubes.py
@@ -18,7 +19,7 @@ UNLEET = {"0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "8": "b", "9": "g"}
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 GODOT = os.path.join(RAIZ, "dinastia-godot")
 DATOS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "aspecto_clubes")
-CAMPOS = ["forma", "patron", "siglas", "camiseta", "k1", "k2", "pant", "med", "esc1", "esc2", "asi1", "asi2"]
+CAMPOS = ["forma", "patron", "siglas", "camiseta", "k1", "k2", "pant", "med", "esc1", "esc2", "asi1", "asi2", "emblema", "letras", "esc3"]
 HEX = re.compile(r"^#[0-9a-fA-F]{6}$")
 
 
@@ -49,18 +50,26 @@ def listas(src: str, nombre: str) -> set:
     return set(re.findall(r'"(\w+)"', t[a:b + 1]))
 
 
+def figuras_y_letras():
+    t = open(os.path.join(GODOT, "ui/escudo_emblemas.gd"), encoding="utf-8").read()
+    figs = set(re.findall(r'^\t"(\w+)": \'<', t, re.M))
+    letras = set(re.findall(r'^\t"(.)": \[\[', t, re.M))
+    return figs, letras
+
+
 def filas(clubes_limpios: set):
     """{nombre limpio: fila} de todos los .txt, y la lista de fallos."""
     formas = listas("ui/escudo_p1.gd", "const FORMAS")
     patrones = listas("ui/escudo_p1.gd", "const PATRONES")
     kits = disenos()
+    figs, abc = figuras_y_letras()
     nuevo, fallos = {}, []
-    for f in sorted(glob.glob(os.path.join(DATOS, "*.txt"))):
+    for f in sorted(glob.glob(os.path.join(DATOS, "[!_]*.txt"))):
         for n, linea in enumerate(open(f, encoding="utf-8").read().splitlines(), 1):
             if not linea.strip() or linea.startswith("#"):
                 continue
             v = [x.strip() for x in linea.split("|")]
-            v += [""] * (13 - len(v))
+            v += [""] * (16 - len(v))
             real = v[0]
             malo = None
             if real not in clubes_limpios:
@@ -73,14 +82,18 @@ def filas(clubes_limpios: set):
                 malo = "patrón «%s»" % v[2]
             elif v[4] and v[4] not in kits:
                 malo = "camiseta «%s»" % v[4]
-            elif any(x and not HEX.match(x) for x in v[5:13]):
+            elif any(x and not HEX.match(x) for x in v[5:13] + [v[15]]):
                 malo = "color mal escrito"
+            elif v[13] and v[13] not in figs:
+                malo = "emblema «%s»" % v[13]
+            elif len(v[14]) > 4 or any(ch not in abc for ch in v[14].upper()):
+                malo = "letras «%s»" % v[14]
             elif len(v[3]) > 3:
                 malo = "siglas largas"
             if malo:
                 fallos.append("%s:%d %s: %s" % (os.path.basename(f), n, real, malo))
                 continue
-            d = dict(zip(CAMPOS, v[1:13]))
+            d = dict(zip(CAMPOS, v[1:16]))
             fila = {}
             if d["forma"] or d["patron"]:
                 fila["escudo"] = [d["forma"], d["patron"]]
@@ -93,12 +106,57 @@ def filas(clubes_limpios: set):
                 fila["kit"] = k
             esc = [d["esc1"] or d["k1"], d["esc2"] or d["k2"]]
             if esc[0] and esc[1]:
-                fila["esc"] = esc
+                fila["esc"] = esc + ([d["esc3"]] if d["esc3"] else [])
+            if d["emblema"]:
+                fila["emblema"] = d["emblema"]
+            if d["letras"]:
+                fila["letras"] = d["letras"]
             asi = [d["asi1"] or esc[0], d["asi2"] or esc[1]]
             if asi[0] and asi[1]:
                 fila["asientos"] = asi
             nuevo[real] = fila
+    retoques(nuevo, clubes_limpios, formas, patrones, figs, abc, fallos)
     return nuevo, fallos
+
+
+def retoques(nuevo: dict, clubes_limpios: set, formas: set, patrones: set, figs: set, abc: set, fallos: list) -> None:
+    """`_escudos.txt`: nombre|forma|patrón|emblema|letras[/color]|esc1|esc2|esc3. Lo que traiga pisa lo del escudo de la fila del club."""
+    ruta = os.path.join(DATOS, "_escudos.txt")
+    if not os.path.exists(ruta):
+        return
+    for n, linea in enumerate(open(ruta, encoding="utf-8").read().splitlines(), 1):
+        if not linea.strip() or linea.startswith("#"):
+            continue
+        v = [x.strip() for x in linea.split("|")]
+        v += [""] * (8 - len(v))
+        real = v[0]
+        texto = v[4].split("/")[0]
+        color = v[4].split("/")[1] if "/" in v[4] else ""
+        malo = None
+        if real not in nuevo:
+            malo = "club sin fila"
+        elif v[1] and v[1] not in formas:
+            malo = "forma «%s»" % v[1]
+        elif v[2] and v[2] not in patrones:
+            malo = "patrón «%s»" % v[2]
+        elif v[3] and v[3] not in figs:
+            malo = "emblema «%s»" % v[3]
+        elif len(texto) > 4 or any(ch not in abc for ch in texto.upper()):
+            malo = "letras «%s»" % v[4]
+        elif any(x and not HEX.match(x) for x in v[5:8] + [color]):
+            malo = "color mal escrito"
+        if malo:
+            fallos.append("_escudos.txt:%d %s: %s" % (n, real, malo))
+            continue
+        fila = nuevo[real]
+        esc0 = fila.get("escudo", ["", ""])
+        fila["escudo"] = [v[1] or esc0[0], v[2] or esc0[1]]
+        if v[3]:
+            fila["emblema"] = v[3]
+        if v[4]:
+            fila["letras"] = texto + ("/" + color if color else "")
+        if v[5] and v[6]:
+            fila["esc"] = [v[5], v[6]] + ([v[7]] if v[7] else [])
 
 
 def tablas(CLUBES: dict, limpiar_fn, nombres_pack: list):
@@ -114,7 +172,12 @@ def tablas(CLUBES: dict, limpiar_fn, nombres_pack: list):
     pack = {n: nuevo[limpiar_fn(n)] for n in nombres_pack}
     fic = {}
     for real, fila in nuevo.items():
-        f = {k: v for k, v in fila.items() if k != "siglas"}
+        f = {k: v for k, v in fila.items() if k not in ("siglas", "letras")}
+        if fila.get("letras"):
+            # En la base ficticia las letras son las iniciales del nombre ficticio (no las del club real), con el mismo color.
+            ini = "".join(ch for ch in CLUBES[real] if ch.isupper() and (ch in "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"))[:3]
+            if ini:
+                f["letras"] = ini + ("/" + fila["letras"].split("/")[1] if "/" in fila["letras"] else "")
         fic[CLUBES[real]] = f
     return fic, pack
 
