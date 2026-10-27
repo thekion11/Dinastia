@@ -54,3 +54,12 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     hacer más realistas autos, metro y bus, crear el tren y mejorar el teleférico. TIRO_PULIDO: ENCENDIDO, pero hay que pulirlo más.
     ESTADIOS: separar un poco a los aficionados en las butacas, subir la calidad de las butacas, mejorar los accesos y colorear las
     butacas por nivel según el color del club (y elegible en la personalización del menú inicial).
+14. (27-10 tarde, decisiones del dueño) SÍ a clasificar las ~1.200 ideas (lanzamiento / después / descartar). `main` limpio y las
+    ramas viejas: el dueño dice que ya lo hizo (verificar). PANTALLA DE ENTRADA nueva: APROBADA. «EL BLOQUEO» de modos: ACEPTADO
+    (opción en Ajustes). Las 53 escenas de prueba sin mención: ver qué se puede REUTILIZAR antes de borrar. PEATONES: SÍ suben al
+    bus y a los demás transportes. DIFICULTAD DE LA CPU en 8 categorías: Practicante, Cadete, DEBUTANTE (la normal), Semiprofesional,
+    Profesional, Experto, Maestro, Ultimate; y además dificultades fuera del partido (eventos, probabilidades, retos, poca ayuda,
+    asistentes deficientes, malos consejos y otras). POLICÍA Y BOMBEROS: sí. MUSEO: mejorarlo más y poder INTERACTUAR con los
+    trofeos. PELO: usar los cortes y personajes del Drive. Pasadas visuales P1-P3: repetir «MEJORAR». PELUCHES: sí a las
+    propuestas (monedas de 1 € del efectivo, una sala en el centro comercial, subir los 14 peluches reducidos fuera de LFS) y además
+    COLECCIONABLES que den LOGROS. FPS en PC y móvil: cuando el dueño tenga el equipo listo. Pasto: traerlo del Drive.
