@@ -21,6 +21,7 @@ var mirador: MiradorCerro
 var cabinas: Array[Node3D] = []
 var _largos: PackedFloat32Array = []
 var _t := 0.0
+var _balanceo := [{"th": 0.0, "om": 0.0, "d": 0.0}, {"th": 0.0, "om": 0.0, "d": 0.0}]
 var cuenta := {}
 
 static func montar(b: CityBuilder) -> Teleferico:
@@ -199,16 +200,30 @@ func _en_cable(d: float, lado: float) -> Vector3:
 	return puntos[i].lerp(puntos[i + 1], f) + Vector3(dir.z, 0, -dir.x) * 2.5 * lado
 
 ## Fracción (0..1) del recorrido de la cabina que sale de abajo en el instante `t` del ciclo (sube, espera, baja, espera).
+## Perfil quíntico (27-10-2026, pieza F-4): velocidad Y aceleración nulas al arrancar y al llegar, antes cúbico (la aceleración
+## saltaba al salir de la estación).
 static func avance(t: float) -> float:
 	var u := fposmod(t, CICLO)
 	if u < VIAJE:
-		var k := u / VIAJE
-		return k * k * (3.0 - 2.0 * k)
+		return _quintico(u / VIAJE)
 	if u < VIAJE + ESPERA:
 		return 1.0
 	if u < 2.0 * VIAJE + ESPERA:
+		return 1.0 - _quintico((u - VIAJE - ESPERA) / VIAJE)
+	return 0.0
+
+static func _quintico(k: float) -> float:
+	return k * k * k * (10.0 - 15.0 * k + 6.0 * k * k)
+
+## Segunda derivada de `avance` respecto al tiempo (por segundo²): lo que acelera la cabina que sube, con signo.
+static func avance_acel(t: float) -> float:
+	var u := fposmod(t, CICLO)
+	if u < VIAJE:
+		var k := u / VIAJE
+		return (60.0 * k - 180.0 * k * k + 120.0 * k * k * k) / (VIAJE * VIAJE)
+	if u >= VIAJE + ESPERA and u < 2.0 * VIAJE + ESPERA:
 		var k2 := (u - VIAJE - ESPERA) / VIAJE
-		return 1.0 - k2 * k2 * (3.0 - 2.0 * k2)
+		return -(60.0 * k2 - 180.0 * k2 * k2 + 120.0 * k2 * k2 * k2) / (VIAJE * VIAJE)
 	return 0.0
 
 func _poner_cabinas(t: float) -> void:
@@ -217,9 +232,40 @@ func _poner_cabinas(t: float) -> void:
 	cabinas[0].position = _en_cable(largo * f, -1.0)
 	cabinas[1].position = _en_cable(largo * (1.0 - f), 1.0)
 
+## BALANCEO (27-10-2026): cada cabina cuelga de su pinza como un péndulo de `LARGO_PERIODO` m (T ≈ 5,7 s) amortiguado: la
+## aceleración a lo largo del cable la inclina hacia atrás al arrancar y hacia delante al frenar, y al pasar por una torre
+## recibe un pequeño tirón que se apaga solo; además, un vaivén lateral muy suave. `th` es el ángulo hacia atrás (rad).
+const COLGADO := 8.0
+const AMORTIGUA := 0.35
+const LIMITE_BALANCEO := 0.12
+
+func _balancear(t: float, delta: float) -> void:
+	var largo := _largos[_largos.size() - 1]
+	var f_acel := avance_acel(t) * largo
+	var d0 := largo * avance(t)
+	for i in 2:
+		var d := d0 if i == 0 else largo - d0
+		var a_cable := f_acel if i == 0 else -f_acel
+		var sw: Dictionary = _balanceo[i]
+		var pasada := 0.0
+		for q in range(1, _largos.size() - 1):
+			if (float(sw["d"]) - _largos[q]) * (d - _largos[q]) < 0.0:
+				pasada = 0.03 * signf(d - float(sw["d"]))
+		sw["d"] = d
+		var th := float(sw["th"])
+		var om := float(sw["om"]) + pasada
+		var paso := minf(delta, 0.05)
+		om += (a_cable / COLGADO - 9.8 / COLGADO * th - AMORTIGUA * om) * paso
+		th = clampf(th + om * paso, -LIMITE_BALANCEO, LIMITE_BALANCEO)
+		sw["th"] = th
+		sw["om"] = om
+		cabinas[i].rotation.z = th
+		cabinas[i].rotation.x = sin(t * 0.7 + float(i) * 2.4) * 0.012
+
 func _process(delta: float) -> void:
 	_t += delta
 	_poner_cabinas(_t)
+	_balancear(_t, delta)
 
 ## E en una estación del teleférico: sube al mirador o baja a la ciudad (con fundido y 12 minutos de juego).
 static func usar(e, k: String) -> bool:
