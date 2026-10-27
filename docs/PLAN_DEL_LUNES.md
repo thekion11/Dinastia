@@ -506,10 +506,6 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 - [ ] La IA cambia de verdad: altura del bloque, distancia entre líneas, quién sube.
 - [ ] Prueba en el banco: con presión alta se recupera más arriba (medido).
 
-### Semana 3 (27-10 → 2-11) — Partido II: porteros, pases y presets
-
-### Semana 4 (3-11 → 9-11) — Partido III: espectáculo
-
 ### Semana 5 (10-11 → 16-11) — Ciudad hacia «look GTA» posible
 - [ ] Paleta por barrio y desgaste en fachadas y asfalto.
 - [ ] Farolas cálidas, hora dorada, niebla y cielo revisados.
