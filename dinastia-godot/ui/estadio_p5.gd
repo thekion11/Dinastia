@@ -145,6 +145,9 @@ func _montar_motor() -> void:
 	## La dificultad de la CPU (20-10-2026): la última elegida.
 	_motor.dificultad_cpu = dificultad_cpu_guardada()
 	_motor.fijar_preset(preset_guardado())
+	_motor.indicador_pase = _pref("indicador_pase", true)
+	if _rig != null:
+		_rig.pro_distancia = float(CameraRig.PRO_DISTANCIAS[pro_camara_guardada()])
 	## Si jugaste tú el último partido, vuelves a jugar (se recuerda).
 	if _pref("control_equipo", false) and _mi_lado >= 0 and not practica:
 		_alternar_control_motor.call_deferred()

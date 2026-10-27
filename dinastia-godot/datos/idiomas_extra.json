@@ -6038,7 +6038,10 @@
   "La tarjeta ha llegado al límite de gasto de hoy.": "The card has reached today's spending limit.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Not enough money: it is €%d and you have no cash or card balance.",
   "FOTO DE EQUIPO": "TEAM PHOTO",
-  "LOS LANZADORES": "THE PENALTY TAKERS"
+  "LOS LANZADORES": "THE PENALTY TAKERS",
+  "🎯 Indicador de pase (a quién va el balón)": "🎯 Pass indicator (who gets the ball)",
+  "🎥 Pro: cerca": "🎥 Pro: close",
+  "Lejos": "Far"
  },
  "pt": {
   "Historia": "História",
@@ -12079,7 +12082,10 @@
   "La tarjeta ha llegado al límite de gasto de hoy.": "O cartão atingiu o limite de gastos de hoje.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Não chega o dinheiro: são %d € e não tens dinheiro nem saldo no cartão.",
   "FOTO DE EQUIPO": "FOTO DA EQUIPE",
-  "LOS LANZADORES": "OS BATEDORES"
+  "LOS LANZADORES": "OS BATEDORES",
+  "🎯 Indicador de pase (a quién va el balón)": "🎯 Indicador de passe (para quem vai a bola)",
+  "🎥 Pro: cerca": "🎥 Pro: perto",
+  "Lejos": "Longe"
  },
  "patrones": [
   [
@@ -23732,7 +23738,10 @@
   "La tarjeta ha llegado al límite de gasto de hoy.": "La carte a atteint sa limite de dépense du jour.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Pas assez d'argent : il faut %d € et vous n'avez ni espèces ni solde sur la carte.",
   "FOTO DE EQUIPO": "PHOTO D'ÉQUIPE",
-  "LOS LANZADORES": "LES TIREURS"
+  "LOS LANZADORES": "LES TIREURS",
+  "🎯 Indicador de pase (a quién va el balón)": "🎯 Indicateur de passe (qui reçoit le ballon)",
+  "🎥 Pro: cerca": "🎥 Pro : près",
+  "Lejos": "Loin"
  },
  "it": {
   "Historia": "Storia",
@@ -29773,7 +29782,10 @@
   "La tarjeta ha llegado al límite de gasto de hoy.": "La carta ha raggiunto il limite di spesa di oggi.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Non hai abbastanza soldi: sono %d € e non hai contanti né saldo sulla carta.",
   "FOTO DE EQUIPO": "FOTO DI SQUADRA",
-  "LOS LANZADORES": "I RIGORISTI"
+  "LOS LANZADORES": "I RIGORISTI",
+  "🎯 Indicador de pase (a quién va el balón)": "🎯 Indicatore di passaggio (a chi va il pallone)",
+  "🎥 Pro: cerca": "🎥 Pro: vicina",
+  "Lejos": "Lontana"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35814,7 +35826,10 @@
   "La tarjeta ha llegado al límite de gasto de hoy.": "Die Karte hat das heutige Ausgabenlimit erreicht.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Das Geld reicht nicht: Es sind %d € und du hast weder Bargeld noch Kartenguthaben.",
   "FOTO DE EQUIPO": "MANNSCHAFTSFOTO",
-  "LOS LANZADORES": "DIE SCHÜTZEN"
+  "LOS LANZADORES": "DIE SCHÜTZEN",
+  "🎯 Indicador de pase (a quién va el balón)": "🎯 Passanzeige (wer den Ball bekommt)",
+  "🎥 Pro: cerca": "🎥 Pro: nah",
+  "Lejos": "Weit"
  },
  "ca": {
   "Historia": "Història",
@@ -41855,7 +41870,10 @@
   "La tarjeta ha llegado al límite de gasto de hoy.": "La targeta ha arribat al límit de despesa d'avui.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "No et arriba els diners: són %d € i no tens efectiu ni saldo a la targeta.",
   "FOTO DE EQUIPO": "FOTO D'EQUIP",
-  "LOS LANZADORES": "ELS LLANÇADORS"
+  "LOS LANZADORES": "ELS LLANÇADORS",
+  "🎯 Indicador de pase (a quién va el balón)": "🎯 Indicador de passada (a qui va la pilota)",
+  "🎥 Pro: cerca": "🎥 Pro: a prop",
+  "Lejos": "Lluny"
  },
  "pl": {
   "Club": "Klub",
@@ -48175,7 +48193,10 @@
   "La tarjeta ha llegado al límite de gasto de hoy.": "Karta osiągnęła dzisiejszy limit wydatków.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Brakuje pieniędzy: to %d €, a nie masz gotówki ani środków na karcie.",
   "FOTO DE EQUIPO": "ZDJĘCIE DRUŻYNY",
-  "LOS LANZADORES": "STRZELCY"
+  "LOS LANZADORES": "STRZELCY",
+  "🎯 Indicador de pase (a quién va el balón)": "🎯 Wskaźnik podania (kto dostanie piłkę)",
+  "🎥 Pro: cerca": "🎥 Pro: blisko",
+  "Lejos": "Daleko"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54495,6 +54516,9 @@
   "La tarjeta ha llegado al límite de gasto de hoy.": "Kart bugünkü harcama limitine ulaştı.",
   "No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.": "Para yetmiyor: %d € ve ne nakdin ne de kart bakiyen var.",
   "FOTO DE EQUIPO": "TAKIM FOTOĞRAFI",
-  "LOS LANZADORES": "PENALTI ATICILARI"
+  "LOS LANZADORES": "PENALTI ATICILARI",
+  "🎯 Indicador de pase (a quién va el balón)": "🎯 Pas göstergesi (top kime gidiyor)",
+  "🎥 Pro: cerca": "🎥 Pro: yakın",
+  "Lejos": "Uzak"
  }
 }

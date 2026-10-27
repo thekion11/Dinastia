@@ -192,6 +192,11 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_btn_dificultad = _cajon.boton(_texto_dificultad(), _ciclar_dificultad_cpu)
 		var b_preset: Button = _cajon.boton(_texto_preset(), func() -> void: pass)
 		b_preset.pressed.connect(func() -> void: _ciclar_preset(b_preset))
+		_cajon.interruptor("🎯 Indicador de pase (a quién va el balón)", _pref("indicador_pase", true), func(si: bool) -> void:
+			_guardar_pref("indicador_pase", si)
+			if _motor != null:
+				_motor.indicador_pase = si)
+		_cajon.fila([["🎥 Pro: cerca", func() -> void: _fijar_pro_camara("cerca")], ["Normal", func() -> void: _fijar_pro_camara("normal")], ["Lejos", func() -> void: _fijar_pro_camara("lejos")]])
 		_btn_velocidad = _cajon.boton("⏱", _ciclar_velocidad)
 		## SIMULAR EL RESTO (28-9-2026, informe externo: "falta el botón de
 		## simular el partido entero"). Existía en la pantalla de texto, que

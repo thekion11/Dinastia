@@ -394,3 +394,28 @@ func fijar_preset(clave: String) -> void:
 	var pr: Dictionary = PRESETS.get(clave, PRESETS["realista"])
 	preset_error = float(pr["error"])
 	preset_faltas = float(pr["faltas"])
+
+## EL INDICADOR DE PASE (semana 4, 27-10-2026, ayudas del modo jugable): con el balón en tus pies, la flecha
+## amarilla de los saques marca a quién iría el pase ahora mismo (el mismo compañero que elige Pase con el
+## stick), para jugar sin adivinar. Se apaga en el cajón ⚙ del estadio (`indicador_pase`).
+var indicador_pase := true
+var _t_indicador := 0.0
+var _receptor_auto := false
+
+func _indicar_pase(delta: float) -> void:
+	if not indicador_pase or usuario.is_empty() or poseedor != usuario or estado != "juego":
+		if _receptor_auto:
+			_receptor_marcado = {}
+			_receptor_auto = false
+			_dibujar_receptor()
+		return
+	_t_indicador -= delta
+	if _t_indicador <= 0.0:
+		_t_indicador = 0.12
+		var n: Node3D = usuario["node"]
+		var mundo := _a_mundo(Mando.movimiento(), dir_ataque(bool(usuario["es_local"])))
+		var dir := mundo.normalized() if mundo.length() > 0.1 else Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
+		_receptor_marcado = _companero_en_direccion(usuario, dir)
+		_receptor_auto = true
+	_dibujar_receptor()
+
