@@ -17,4 +17,4 @@ static func elegir(hambre: int) -> Dictionary:
 		return SURTIDO[0]
 	if hambre >= 15:
 		return SURTIDO[1]
-	return SURTIDO[2]
+	return SURTIDO[3]
