@@ -7,16 +7,13 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 ## 0. Lo que espera una decisión tuya (lista corta)
 
 Sin esto, las filas que dependen de ello no avanzan. El detalle está en la sección que se cita.
+- **Decididas por el dueño (27-10 tarde)** (CLAUDE.md orden 14): pantalla de entrada APROBADA; «el bloqueo» de modos ACEPTADO; las 53 escenas de prueba: reutilizar lo que sirva; peatones SÍ en bus y transportes; dificultad de la CPU en 8 categorías (Practicante, Cadete, Debutante = normal, Semiprofesional, Profesional, Experto, Maestro, Ultimate) más dificultades fuera del partido; policía y bomberos SÍ; peluches SÍ y coleccionables con logros; museo con trofeos interactivos; pelo con lo del Drive; clasificar las ~1.200 ideas.
+- **Regalos del Drive**: el contenedor no puede bajarlos (`grass.blend` 14 MB, personajes 182 MB y 129 MB, peluches): compartir la carpeta «Dinastia_respaldo_2026-10-24» como «cualquiera con el enlace: lector».
 - **Decididas por el dueño (26-10):** logros de racha: **cuentan jugando y simulando**; «Siempre, todo el partido» apaga ese lado del plan: **se queda así**; versión **0.9.0**; reparto de la TV 50/50: **sí**; taquilla ×3,5: **sí**; **por ahora sin pago** (nada de monedas ni gacha); banderas **detalladas** (flag-icons, MIT); narración hablada: **después del lanzamiento**; filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`: **todas al plan**; fuentes OFL, silbato VCSL y CI: **sí**; modelo B (MakeHuman): **pulirlo más** (fase 4 traje, fase 5 cuerpo) antes de integrar; rueda de prensa: **compararla con la competencia y completarla**.
 - **Decididas por el dueño (26-10):** logros de racha: **cuentan jugando y simulando**; «Siempre, todo el partido» apaga ese lado del plan: **se queda así**; versión **0.9.0**; reparto de la TV 50/50: **sí**; taquilla ×3,5: **sí**; **por ahora sin pago** (nada de monedas ni gacha); banderas **detalladas** (flag-icons, MIT); narración hablada: **después del lanzamiento**; filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`: **todas al plan** (hechas en la sesión 5: la 14 entera, la parte del partido de la 4 y el núcleo de la 18, ver `docs/04_auditorias/sesion_5.md`; de la 4 queda «en finanzas, cada ingreso y gasto con su origen»; de la 18, la interfaz de la pizarra con las dos fases y los roles, y que la IA use roles); fuentes OFL, silbato VCSL y CI: **sí**; modelo B (MakeHuman): **pulirlo más** (fase 4 traje, fase 5 cuerpo) antes de integrar; rueda de prensa: **compararla con la competencia y completarla**.
-- **Aprobar la pantalla de entrada** como escena principal (`Inicio.flujo_nuevo`, hoy `true` en código): verla en juego real y decir sí o no (§8).
-- **Empujar `main` reescrito** y **borrar las 8 ramas y `latest`** (§1); cuándo fusionar a `main` la rama actual y la de la sesión 2 (§9).
+- **`main` reescrito y etiqueta `latest`**: las 8 ramas viejas ya no están (27-10); siguen la etiqueta `latest` y la historia vieja de `main` (502 objetos de capturas e informes): empujarlo necesita un *force push* que solo puede hacer el dueño (§1). Cuándo fusionar a `main` la rama actual (§9).
 - **Foundry/Azure** sí o no; **abrir la red a Wikimedia** (caras y escudos que faltan) (§1).
-- **«El bloqueo»** de modos: opción en Ajustes con «Todo abierto» por defecto, sí o no (§1).
 - **Texturas de caras**: permiso para probar BC7 en una muestra y medir ΔE de piel (§4).
-- **53 escenas de prueba sin mención**: cuáles se borran (§4).
-- **Carrera de Jugador**: cuánto subir la dificultad de la CPU en ese modo (§2.4).
-- **Peatones**: subir al autobús y tomar coches del tráfico (dijiste «no por ahora»; el transporte público del guion lo vuelve a pedir) (§2.4).
 - **20 decisiones de producto** (monetización y estética) (§7, final) y las prioridades de «Huecos y mejoras propuestas» (§10).
 - Solo tuyo, sin decisión de diseño: FPS en hardware real, builds, keystore (cambiar contraseña), licencias, derechos de imagen, música y voces, binarios al Drive (§1).
 
@@ -491,7 +488,6 @@ la liga pero empiezas peor. Los dos son recuperables, ninguno es un castigo defi
 
 De `PENDIENTES.md` (traspaso al 21-10):
 - **Fusionar a `main`**: nada de la rama actual (ni de la sesión 2, §9) está en `main` aún.
-- **Carrera de Jugador**: dificultad de la CPU en ese modo (¡con cuidado!), más eventos.
 - **Partido**: roles por jugador (PlayStyles), más desmarques de ruptura, cartel del 4.º
   árbitro con corte de cámara, red del arco.
 - **Gente del club y ciudad en primeras filas** (M-040) y mejor variedad (M-033).
