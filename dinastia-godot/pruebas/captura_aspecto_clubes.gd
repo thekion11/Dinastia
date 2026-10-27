@@ -21,6 +21,8 @@ func _ready() -> void:
 	Datos.tabla("EQUIP_REAL").clear()   ## sin las fotos privadas de equipaciones: lo que ve el build público
 	if OS.get_environment("ASPECTO") == "0":
 		Datos.tabla("ASPECTO_CLUB").clear()
+	if OS.get_environment("EMBLEMAS") == "0":
+		EscudoEmblemas.activo = false
 	var i := 0
 	for n: String in CLUBES:
 		var c: Club = por_nombre.get(n)
@@ -55,7 +57,7 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_f += 1
 	if _f == 12:
-		var ruta := "/tmp/aspecto_%s.png" % ("antes" if OS.get_environment("ASPECTO") == "0" else "despues")
+		var ruta := "/tmp/aspecto_%s.png" % ("antes" if OS.get_environment("ASPECTO") == "0" or OS.get_environment("EMBLEMAS") == "0" else "despues")
 		get_viewport().get_texture().get_image().save_png(ruta)
 		print("FIN. 0 fallos")
 		get_tree().quit()

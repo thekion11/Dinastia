@@ -8,14 +8,14 @@ static var activo := true   ## las pruebas y las capturas lo apagan para ver el 
 
 const FIGURAS := {
 	"canon": '<path d="M3 21 L28 10 L32 17 L7 29 Z" fill="{F}"/><circle cx="13" cy="29" r="7" fill="{F}"/><circle cx="13" cy="29" r="2.4" fill="{D}"/><circle cx="31" cy="13" r="4" fill="{F}"/>',
-	"ave": '<path d="M5 33 C5 20 14 13 22 14 L29 7 L33 8 L30 14 L26 17 C30 24 27 33 15 36 L9 38 Z" fill="{F}"/><path d="M16 22 C20 22 24 26 24 31 C19 30 16 27 16 22 Z" fill="{D}"/>',
-	"aguila": '<path d="M20 6 L23 15 L38 9 L32 23 L24 24 L24 33 L20 29 L16 33 L16 24 L8 23 L2 9 L17 15 Z" fill="{F}"/><circle cx="20" cy="11" r="3" fill="{D}"/>',
+	"ave": '<circle cx="14" cy="11" r="5" fill="{F}"/><path d="M10 10 L2 12 L10 14 Z" fill="{F}"/><path d="M16 14 C26 14 31 20 33 28 L39 25 L37 34 L28 36 C20 36 15 31 14 23 C13 19 12 17 13 14 Z" fill="{F}"/><path d="M19 22 C23 22 27 26 27 31 C22 31 19 28 19 22 Z" fill="{D}"/><path d="M22 36 V39 M27 36 V39" stroke="{F}" stroke-width="2.2"/><circle cx="14" cy="10" r="1.3" fill="{D}"/>',
+	"aguila": '<path d="M20 13 C17 6 8 3 1 7 C3 11 3 14 5 18 C6 15 8 14 11 15 C10 18 12 20 14 21 C14 24 16 26 18 26 L16 37 L20 34 L24 37 L22 26 C24 26 26 24 26 21 C28 20 30 18 29 15 C32 14 34 15 35 18 C37 14 37 11 39 7 C32 3 23 6 20 13 Z" fill="{F}"/><path d="M20 15 L17 10 L20 4 L23 10 Z" fill="{F}"/><path d="M20 4 L24 7 L20 8 Z" fill="{D}"/>',
 	"corona": '<path d="M4 30 L4 13 L12 21 L20 7 L28 21 L36 13 L36 30 Z" fill="{F}"/><rect x="4" y="31" width="32" height="5" fill="{F}"/><circle cx="20" cy="22" r="2.5" fill="{D}"/>',
 	"media_luna": '<path d="M27 3 A17 17 0 1 0 27 37 A12.5 15 0 1 1 27 3 Z" fill="{F}"/><path d="M31 13 L32.6 17.4 L37 17.5 L33.6 20.3 L34.8 24.6 L31 22 L27.2 24.6 L28.4 20.3 L25 17.5 L29.4 17.4 Z" fill="{F}"/>',
 	"torre": '<path d="M8 37 L8 11 L12.5 11 L12.5 6 L17 6 L17 11 L23 11 L23 6 L27.5 6 L27.5 11 L32 11 L32 37 Z" fill="{F}"/><path d="M16 37 L16 28 A4 4 0 0 1 24 28 L24 37 Z" fill="{D}"/>',
 	"estrella": '<path d="M20 2 L25 14.5 L38.5 15.4 L28.2 24 L31.5 37 L20 29.8 L8.5 37 L11.8 24 L1.5 15.4 L15 14.5 Z" fill="{F}"/>',
 	"estrellas3": '<path d="M20 4 L22.6 10.6 L29.6 11 L24.2 15.5 L26 22.4 L20 18.6 L14 22.4 L15.8 15.5 L10.4 11 L17.4 10.6 Z" fill="{F}"/><path d="M8 20 L10.6 26.6 L17.6 27 L12.2 31.5 L14 38.4 L8 34.6 L2 38.4 L3.8 31.5 L-1.6 27 L5.4 26.6 Z" fill="{F}"/><path d="M32 20 L34.6 26.6 L41.6 27 L36.2 31.5 L38 38.4 L32 34.6 L26 38.4 L27.8 31.5 L22.4 27 L29.4 26.6 Z" fill="{F}"/>',
-	"cacique": '<path d="M7 20 L9 3 L15 13 Z M14 12 L20 0 L26 12 Z M25 13 L31 3 L33 20 Z" fill="{F}"/><path d="M9 20 Q9 12 20 12 Q31 12 31 20 L31 27 Q31 38 20 38 Q9 38 9 27 Z" fill="{F}"/><path d="M12 22 L17 22 M23 22 L28 22" stroke="{D}" stroke-width="2"/><path d="M20 24 L18 30 L22 30 Z" fill="{D}"/>',
+	"cacique": '<g fill="{F}"><ellipse cx="20" cy="9" rx="3.2" ry="9" transform="rotate(0 20 24)"/><ellipse cx="20" cy="9" rx="3.2" ry="9" transform="rotate(-32 20 24)"/><ellipse cx="20" cy="9" rx="3.2" ry="9" transform="rotate(32 20 24)"/><ellipse cx="20" cy="9" rx="3.2" ry="9" transform="rotate(-62 20 24)"/><ellipse cx="20" cy="9" rx="3.2" ry="9" transform="rotate(62 20 24)"/><circle cx="20" cy="25" r="11.5"/></g><path d="M8.5 22 H31.5" stroke="{D}" stroke-width="3.6"/><circle cx="15.5" cy="27" r="1.5" fill="{D}"/><circle cx="24.5" cy="27" r="1.5" fill="{D}"/><path d="M16 32 Q20 35 24 32" stroke="{D}" stroke-width="1.8" fill="none"/>',
 	"oso": '<circle cx="9" cy="9" r="5.5" fill="{F}"/><circle cx="31" cy="9" r="5.5" fill="{F}"/><circle cx="20" cy="22" r="14" fill="{F}"/><ellipse cx="20" cy="27" rx="6.5" ry="5" fill="{D}"/><circle cx="14" cy="18" r="1.8" fill="{D}"/><circle cx="26" cy="18" r="1.8" fill="{D}"/><circle cx="20" cy="25" r="2" fill="{F}"/>',
 	"ancla": '<path d="M18 3 H22 V9 H27 V13 H22 V30 C28 29 31 25 32 21 L28.5 22 L34 15.5 L38 23 L34.5 22.5 C32.5 31 27 37 20 37 C13 37 7.5 31 5.5 22.5 L2 23 L6 15.5 L11.5 22 L8 21 C9 25 12 29 18 30 V13 H13 V9 H18 Z" fill="{F}"/>',
 	"balon": '<circle cx="20" cy="20" r="17" fill="{F}"/><path d="M20 11 L28 17 L25 26 L15 26 L12 17 Z" fill="{D}"/><path d="M20 11 V3 M28 17 L36 14 M25 26 L31 33 M15 26 L9 33 M12 17 L4 14" stroke="{D}" stroke-width="2.2"/>',
@@ -116,6 +116,10 @@ static func capa_de(c: Club, fondo: String) -> String:
 		return ""
 	var fig := AspectoClub.emblema(c)
 	var letras := AspectoClub.letras(c)
+	var color_letras := ""
+	if letras.contains("/"):   ## «CABJ/#0b3d91»: las letras con su color
+		color_letras = letras.get_slice("/", 1)
+		letras = letras.get_slice("/", 0)
 	if fig == "" and letras == "":
 		return ""
 	var claro := Color(fondo).get_luminance() > 0.5
@@ -125,11 +129,15 @@ static func capa_de(c: Club, fondo: String) -> String:
 	if acento == "" or absf(Color(acento).get_luminance() - Color(fondo).get_luminance()) < 0.28:
 		acento = tinta
 	var out := ""
+	if color_letras != "":
+		tinta = color_letras
+		borde = "#ffffff" if Color(color_letras).get_luminance() < 0.5 else "#14171c"
 	if fig != "" and letras != "":
 		out += figura_svg(fig, 32.0, 25.0, 25.0, acento, fondo)
 		out += letras_svg(letras, 32.0, 49.0, 30.0, 11.0, tinta, borde)
 	elif fig != "":
 		out += figura_svg(fig, 32.0, 33.0, 32.0, acento, fondo)
 	else:
-		out += letras_svg(letras, 32.0, 33.0, 38.0, 24.0, acento, borde if acento == tinta else ("#14171c" if Color(acento).get_luminance() > 0.5 else "#ffffff"))
+		var col := color_letras if color_letras != "" else acento
+		out += letras_svg(letras, 32.0, 33.0, 38.0, 24.0, col, "#14171c" if Color(col).get_luminance() > 0.5 else "#ffffff")
 	return out
