@@ -13,6 +13,9 @@ uniform vec4 horizon_color : source_color = vec4(0.78, 0.86, 0.94, 1.0);
 uniform vec4 ground_horizon_color : source_color = vec4(0.62, 0.70, 0.62, 1.0);
 uniform vec4 ground_bottom_color : source_color = vec4(0.36, 0.47, 0.36, 1.0);
 uniform float energy_multiplier = 1.0;
+// El halo del sol se calcula con la energía «nominal» de la luz, no con la que se le suma al suelo con el sol bajo (28-10: sin esto el cielo
+// de la hora dorada salía lavado). `ciudad_vista_p1._aplicar_hora` lo pone.
+uniform float halo_escala = 1.0;
 // 0 = mediodia, 1 = noche cerrada. Una sola variable en vez de reconstruir el
 // "dia"/"rasante" de fuera: el shader solo necesita saber cuanto apagar el
 // azul y cuanto encender las estrellas.
@@ -54,7 +57,7 @@ void sky() {
 		float sol_dot = dot(EYEDIR, -LIGHT0_DIRECTION);
 		float disco = smoothstep(0.9993, 0.9998, sol_dot);
 		float halo = pow(max(sol_dot, 0.0), 340.0) * 0.6;
-		col += LIGHT0_COLOR * LIGHT0_ENERGY * (disco * 2.2 + halo) * (1.0 - noche_cantidad * 0.7);
+		col += LIGHT0_COLOR * LIGHT0_ENERGY * halo_escala * (disco * 2.2 + halo) * (1.0 - noche_cantidad * 0.7);
 	} else {
 		// LA TRAMPA QUE YA HABÍA COSTADO UNA RONDA ANTES (ver `ciudad_vista.gd`):
 		// el terreno real no cubre toda la esfera de mirada, así que la mayor
