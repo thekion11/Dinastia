@@ -352,6 +352,19 @@ func _probar_cajero() -> void:
 	p3._tecla("✕")
 	_comprobar(not is_instance_valid(p3) or p3.is_queued_for_deletion(), "la tecla ✕ cierra el cajero")
 	_comprobar(CajeroCiudad.banco_de("cajero_1") == CajeroCiudad.banco_de("cajero_1") and not CajeroCiudad.servicio(null, "surtidor_0"), "cada cajero tiene un banco fijo y el gancho ignora lo que no es cajero")
+	## La ventanilla del banco: sin PIN, restablece el PIN y quita el bloqueo.
+	var r4 := Roles.new(m)
+	r4.patrimonio = 10
+	r4.cartera.bloqueada = true
+	r4.cartera.fallos_pin = 3
+	var p4 := PanelCajero.abrir(capa, r4.cartera, r4, 1, "Banco Andino", 0, Vector3.ZERO, null, true)
+	_comprobar(p4._estado == "menu" and p4.ventanilla, "la ventanilla abre directamente el menú, sin pedir PIN")
+	p4._estado = "pin_nuevo"
+	for t in ["5", "6", "7", "8"]:
+		p4._tecla(t)
+	_comprobar(r4.cartera.pin == "5678" and not r4.cartera.bloqueada and r4.cartera.fallos_pin == 0 and not r4.cartera.pin_inicial, "restablecer el PIN en ventanilla pone el nuevo, no pide el actual y desbloquea la tarjeta")
+	_comprobar(r4.cartera.restablecer_pin("12") == "importe" and r4.cartera.pin == "5678", "un PIN de menos de 4 cifras no se acepta")
+	_comprobar(not BancoCiudad.servicio(null, "cajero_1"), "el gancho del banco ignora lo que no es banco")
 	capa.queue_free()
 
 ## LA MÁQUINA EXPENDEDORA y EL BALÓN SUELTO (semana 6 del plan).

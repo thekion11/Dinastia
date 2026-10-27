@@ -49,6 +49,8 @@ static func montar(ex: CiudadExpansion, c: Vector3, w: float, f: float) -> void:
 		x += FachadaModular.MODULO
 	## Un cajero bajo los soportales.
 	CajeroCiudad.montar(ex, Vector3(c.x + 3.2, y + 0.1, zn + 2.4), 0.0)
+	## La sucursal del banco: una ventanilla bajo los soportales, al oeste del cajero.
+	CiudadBanco.montar(ex, c.x - 9.6, y, zn)
 	## Terrazas con sombrilla delante de los soportales (los colores de la feria).
 	var tela := [Color(0.85, 0.2, 0.2), Color(0.95, 0.8, 0.2), Color(0.2, 0.5, 0.85), Color(0.25, 0.65, 0.35)]
 	var blanco := b._mat_simple(Color(0.95, 0.95, 0.93), 0.5)

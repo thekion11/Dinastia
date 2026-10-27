@@ -234,6 +234,19 @@ func _probar_async() -> void:
 		_v.usar_surtidor("surtidor_0")
 		_comprobar(_m.vida.combustible > 40.0 and _m.mi_club().saldo < saldo_sin, "sin cartera repostar lo paga el club (nunca sale gratis)")
 		_m.roles = roles_guardados
+	## LA VENTANILLA DEL BANCO está en la plaza y la E abre el panel de la sucursal.
+	if _v != null and _e != null and _e.cb != null and _m.roles != null:
+		var kb := ""
+		for pc: Dictionary in _e.cb.puntos_clic:
+			if String(pc.get("k", "")).begins_with("banco_"):
+				kb = String(pc["k"])
+				break
+		_comprobar(kb != "", "hay una sucursal bancaria (ventanilla) en la plaza mayor")
+		if kb != "":
+			_v.usar_banco(kb)
+			_comprobar(is_instance_valid(_v._panel_cajero) and _v._panel_cajero.ventanilla, "la E ante la ventanilla abre el panel en modo sucursal")
+			if is_instance_valid(_v._panel_cajero):
+				_v._panel_cajero.free()
 	## LOS CAJEROS están puestos en la ciudad y la E abre el panel.
 	if _v != null and _e != null and _e.cb != null and _m.roles != null:
 		var kc := ""
