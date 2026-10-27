@@ -168,7 +168,7 @@ static func silueta(forma: String) -> String:
 ## [forma, patrón] del escudo del club real al que representa (tabla ESTADIO_CLUB,
 ## campo «escudo», `herramientas/estadios_reales.py`), o [].
 static func _rasgo_real(c: Club) -> Array:
-	var r: Variant = c.fila_estadio_real().get("escudo", [])
+	var r: Variant = AspectoClub.fila(c).get("escudo", [])
 	return r if r is Array else []
 
 ## djb2 sobre el id, el mismo hash que usa el resto del proyecto para que un
@@ -221,6 +221,8 @@ static func simbolo_de(c: Club) -> String:
 ## Las dos letras que van encima del escudo. Solo mayúsculas y dígitos, como en
 ## el HTML: "U. de Chile" da "UC", "Colo-Colo" da "CC".
 static func iniciales(c: Club) -> String:
+	if AspectoClub.siglas(c) != "":
+		return AspectoClub.siglas(c)
 	var s := ""
 	for i in c.nombre.length():
 		var ch := c.nombre[i]

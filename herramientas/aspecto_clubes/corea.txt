@@ -1,0 +1,16 @@
+Ulsan HD|clasico|liso|UH|liso
+Jeonbuk M.|escudo|liso|JM|liso
+Pohang S.|hex|franjas|PS|franjas|#d50032|#000000
+FC Seoul|circulo|franjas|FS|franjas|#d50032|#000000
+Incheon Utd|ovalo|franjas|IU|franjas
+Daejeon H.|rombo|liso|DH|liso
+Gangwon FC|clasico|liso|GW|liso
+Suon FC|escudo|franjas|SF|franjas
+Gwangju FC|circulo|liso|GJ|liso
+Jeju United|penta|liso|JU|liso
+Daegu FC|hex|liso|DF|liso|#75aadb|#ffffff
+Gimcheon|clasico|liso|GS|liso
+Seongnam|escudo|liso|SN|liso
+Busan IPark|circulo|franjas|BI|franjas
+Ansan G.|rombo|liso|AG|liso
+Ch. Citizen|ovalo|liso|CC|liso

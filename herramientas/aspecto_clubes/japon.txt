@@ -1,0 +1,16 @@
+Kawasaki F.|circulo|liso|KF|liso|#00a0e9|#000000|#0a5cb8|#00a0e9
+Yokohama FM|escudo|franjas|YM|aros_tricolor|#0038a8|#d50032|#ffffff|#0038a8
+Kashima A.|circulo|liso|KA|liso|||#ffffff|#7a1f2b
+Urawa Reds|circulo|liso|UR|liso|||#000000|#d50032
+Vissel Kobe|clasico|liso|VK|liso|||#7a1f2b|#7a1f2b
+Gamba Osaka|escudo|franjas|GO|franjas|||#000000|#0038a8
+FC Tokio|ovalo|franjas|FT|franjas|||#0038a8|#d50032
+Sanfrecce H.|hex|liso|SH|liso|||#5c2d91|#5c2d91
+Cerezo Osaka|circulo|liso|CO|liso|||#00246b|#e3007f
+Nagoya G.|rombo|liso|NG|liso|||#d50032|#d50032
+Konsadole S.|escudo|franjas|CS|franjas|||#000000|#d50032
+Avispa F.|penta|liso|AF|liso|||#00246b|#00246b
+Shimonoseki|clasico|liso|SH|liso
+Kyoto S.|hex|liso|KS|liso|||#5c2d91|#5c2d91
+Albirex N.|circulo|liso|AN|liso|||#0038a8|#ff7a00
+Shonan B.|escudo|liso|SB|liso|||#00954c|#00954c
