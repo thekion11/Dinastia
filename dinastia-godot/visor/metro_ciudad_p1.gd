@@ -162,6 +162,7 @@ const BANCO_FONDO := 0.15
 const RADIO_GENTE := 75.0   ## a esta distancia de la cámara se llena el andén
 
 static var _escenas := {}
+var expendedoras: Array[Vector3] = []   ## dónde hay máquinas expendedoras en los andenes (la E las compra: `ExploradorCiudad._usar_en_anden`)
 var _sitios: Array = []     ## [{centro, clave, sitios: [{p, giro, sentado, pareja}]}]
 var _gente_clave := ""
 var _gente: Node3D

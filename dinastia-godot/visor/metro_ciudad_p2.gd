@@ -20,6 +20,13 @@ func _kenney(clave: String, pos: Vector3, mira: Vector3, padre: Node3D = null, r
 	(padre if padre != null else self).add_child(n)
 	return n
 
+## ¿Hay una máquina expendedora a `radio` m (en planta) de `p`?
+func expendedora_cerca(p: Vector3, radio := 2.2) -> bool:
+	for q: Vector3 in expendedoras:
+		if Vector2(q.x - p.x, q.z - p.z).length() < radio and absf(q.y - p.y) < 3.0:
+			return true
+	return false
+
 ## Una caja de tamaño `t` (x = ancho, z = grosor) puesta de cara a lo largo de `lon`.
 static func _tam_lon(lon: Vector3, t: Vector3) -> Vector3:
 	return t if absf(lon.z) > 0.5 else Vector3(t.z, t.y, t.x)
@@ -36,6 +43,7 @@ func _amueblar_anden(p: Vector3, fondo: Vector3, hacia: Vector3, lon: Vector3, y
 	var ancho := (ANDEN_ANCHO - 0.15) if elevada else (2.0 + 8.0 - 0.45 - 2.0)
 	var sitios: Array = []
 	## Máquinas de billetes y expendedora, al lado del plano de la red.
+	expendedoras.append(en.call(0.65, -25.6))
 	_kenney("expendedora", en.call(0.65, -25.6), hacia)
 	_kenney("billetes", en.call(0.5, -23.6), hacia)
 	_kenney("billetes", en.call(0.5, -22.6), hacia)

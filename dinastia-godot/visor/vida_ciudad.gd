@@ -2,6 +2,7 @@ class_name VidaCiudad
 extends "res://visor/vida_ciudad_p1.gd"
 ## (Parte 2 de 2 de `vida_ciudad.gd`.)
 
+var _mq_estadio := false
 var _balon: BalonSuelto
 var _panel_cajero: PanelCajero   ## el panel del cajero abierto, si lo hay
 
@@ -66,6 +67,14 @@ func usar_surtidor(k: String) -> bool:
 	return true
 
 ## El balón suelto del parque más cercano al DT (una sola vez, la primera que se le ve): se patea a pie. Ver `BalonSuelto`.
+func poner_extras() -> void:
+	poner_balon()
+	## Una máquina expendedora en el exterior, junto a la puerta del club del estadio (una sola vez).
+	if not _mq_estadio and expl != null and expl.cb != null and not expl._est.is_empty():
+		_mq_estadio = true
+		var pu: Vector3 = CityBuilder.ESTADIO_EN + (expl._est["puerta"] as Vector3)
+		ExpendedoraCiudad.montar(expl.cb, Vector3(pu.x - 6.0, 0.2, pu.z + 1.0), 0.0)
+
 func poner_balon() -> void:
 	if is_instance_valid(_balon) or expl == null or expl.cb == null or expl.cb.expansion == null or expl.cuerpo == null:
 		return
