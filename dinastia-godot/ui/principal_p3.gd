@@ -350,6 +350,11 @@ func _contexto_edificio(c: Club) -> Dictionary:
 	if mundo.club_dentro != null:
 		dentro = {"vestuario": mundo.club_dentro.vestuario, "sala_prensa": mundo.club_dentro.sala_prensa, "palco": mundo.club_dentro.palco}
 	var titulos := mundo.roles.trofeos.size() if mundo.roles != null else 0
+	## Fase 5: los títulos de las ramas (otros deportes) también tienen su copa en el museo.
+	if mundo.hinchada != null:
+		for rr: Dictionary in mundo.hinchada.palmares_ramas:
+			if int(rr.get("puesto", 9)) == 1:
+				titulos += 1
 	var pres := ""
 	if mundo.junta != null:
 		pres = String(mundo.junta.presidente.get("nombre", ""))

@@ -30,7 +30,12 @@ const TIPOS := {
 	"entrevista": {"icono": "🤝", "dia": -1, "hora": 10, "donde": "estadio", "lugar": "Oficina del DT", "planta": 1, "nombre_lugar": "tu oficina"},
 	## Bloque 6: la asamblea de socios (cada 4 temporadas, o con la confianza por los suelos), el sábado en el salón de actos.
 	"asamblea": {"icono": "🗳️", "dia": 5, "hora": 11, "donde": "estadio", "lugar": "Sala de prensa", "planta": 2, "nombre_lugar": "el salón de actos"},
+	## Fase 5: las ramas de otros deportes piden presupuesto (semana 5) y el presidente presenta cada trofeo nuevo en el museo.
+	"rama": {"icono": "🏅", "dia": 2, "hora": 17, "donde": "estadio", "lugar": "Museo del club", "planta": 2, "nombre_lugar": "el museo del club"},
+	"celebracion": {"icono": "🏆", "dia": 0, "hora": 10, "donde": "estadio", "lugar": "Museo del club", "planta": 2, "nombre_lugar": "el museo del club"},
 }
+const RAMA_SEMANA := 5
+const RAMA_EXTRA := 0.10   ## del coste anual de la rama
 const ASAMBLEA_SEMANA := 3
 const CONFIANZA_ASAMBLEA := 25
 ## Lo que mueve la moral del recién llegado cada tono de la entrevista (seguro, evasivo, humilde).
@@ -48,6 +53,8 @@ var favor_agente := -1
 var rueda_semana := -1
 ## El año en que ya hubo asamblea (una por temporada como mucho).
 var asamblea_anio := -1
+## Cuántos trofeos del DT se habían celebrado ya (−1 = aún sin mirar).
+var _trofeos_vistos := -1
 var _n := 0
 
 static func _h(t: String) -> int:
@@ -110,11 +117,34 @@ func semana(m: Mundo, prox: int = -1) -> void:
 		var pres := String(m.junta.presidente.get("nombre", "Presidente")) if m.junta != null else "Presidente"
 		_nueva(m, prox, "asamblea", pres, Idiomas.t("Asamblea de socios"), Idiomas.t("convoca la asamblea: los socios votan la presidencia y tú hablas"), "")
 		nuevas += 1
+	## Las ramas de otros deportes (fase 5): su coordinadora pide presupuesto extra en la semana 5.
+	if m.hinchada != null and prox == RAMA_SEMANA:
+		for f: Array in Hinchada.RAMAS:
+			var clave := String(f[0])
+			if nuevas >= MAX_SEMANA or not m.hinchada.tiene_rama(clave) or _hay_clave("rama", prox, clave):
+				continue
+			_nueva(m, prox, "rama", nombre_ficticio("rama|" + clave + c.id), Idiomas.t("Coordinadora de %s") % Idiomas.t(String(f[2])),
+				Idiomas.t("pide un presupuesto extra para la rama (%s)") % Eco.dinero(int(float(f[3]) * RAMA_EXTRA)), clave)
+			nuevas += 1
+	## Un trofeo nuevo del primer equipo: el presidente lo presenta en el museo el lunes.
+	if m.roles != null:
+		var tro := m.roles.trofeos.size()
+		if _trofeos_vistos >= 0 and tro > _trofeos_vistos and nuevas < MAX_SEMANA and not _hay("celebracion", prox):
+			var pres := String(m.junta.presidente.get("nombre", "Presidente")) if m.junta != null else "Presidente"
+			_nueva(m, prox, "celebracion", pres, Idiomas.t("Presidente de %s") % c.nombre, Idiomas.t("te espera para presentar el trofeo nuevo en el museo"), "")
+			nuevas += 1
+		_trofeos_vistos = tro
 	## La semana antes de la votación, el gabinete del alcalde pide apoyo.
 	if nuevas < MAX_SEMANA and m.politica != null and prox == Politica.semana_votacion(c.pais) - 1 and not _hay("politica", prox):
 		_nueva(m, prox, "politica", Politica.nombre_ficticio(c.pais, "gabinete%d" % m.anio), Idiomas.t("Jefe de gabinete del alcalde"),
 			Idiomas.t("pide el apoyo público del club antes de la votación"), c.pais)
 		nuevas += 1
+
+func _hay_clave(tipo: String, sem: int, clave: String) -> bool:
+	for ct: Dictionary in lista:
+		if String(ct["tipo"]) == tipo and int(ct["semana"]) == sem and String(ct["clave"]) == clave and String(ct["estado"]) == "pendiente":
+			return true
+	return false
 
 func _hay(tipo: String, sem: int) -> bool:
 	for ct: Dictionary in lista:
@@ -188,6 +218,10 @@ func opciones(m: Mundo, ct: Dictionary) -> Array[String]:
 			return [Idiomas.t("Firmar aquí mismo (+5 % de renta)"), Idiomas.t("Lo pienso; sigue en el PC")]
 		"agente":
 			return [Idiomas.t("Escuchar lo que ofrece"), Idiomas.t("No hago tratos en la calle")]
+		"rama":
+			return [Idiomas.t("Aprobar el presupuesto extra"), Idiomas.t("Este año no")]
+		"celebracion":
+			return [Idiomas.t("Levantar la copa y foto para Tribuna"), Idiomas.t("Celebrarlo en privado")]
 		"asamblea":
 			return [Idiomas.t("Seguro · Este proyecto va a ganar: pido vuestro voto para seguir igual."),
 				Idiomas.t("Evasivo · No es momento de cambios; ya veremos cómo acaba la temporada."),
@@ -247,6 +281,25 @@ func resolver(m: Mundo, id: String, opcion: int) -> Dictionary:
 				[Idiomas.t("con ganas de demostrar"), Idiomas.t("sin saber qué esperar"), Idiomas.t("sintiéndose uno más")][clampi(opcion, 0, 2)], d]}
 		"asamblea":
 			return _asamblea(m, c, opcion)
+		"rama":
+			if opcion != 0 or m.hinchada == null:
+				return {"titulo": String(ct["quien"]), "texto": Idiomas.t("«Lo entiendo. Seguiremos con lo que hay.»")}
+			var coste := 0
+			for f: Array in Hinchada.RAMAS:
+				if String(f[0]) == String(ct["clave"]):
+					coste = int(float(f[3]) * RAMA_EXTRA)
+			if c.saldo < coste:
+				return {"titulo": String(ct["quien"]), "texto": Idiomas.t("No hay caja para el extra (%s).") % Eco.dinero(coste)}
+			c.mover_saldo(-coste)
+			m.hinchada.bono_rama[String(ct["clave"])] = m.anio
+			return {"titulo": Idiomas.t("Presupuesto aprobado"), "texto": Idiomas.t("%s para la rama esta temporada: jugará más fuerte.") % Eco.dinero(coste)}
+		"celebracion":
+			if m.prensa != null:
+				m.prensa.animo = clampi(m.prensa.animo + 3, 0, 100)
+			if opcion == 0 and m.redes != null:
+				m.redes.publicar(m, "victoria", [Redes.hashtag_club(c), "#Campeones"])
+				return {"titulo": Idiomas.t("¡Campeones!"), "texto": Idiomas.t("La copa ya está en la vitrina y la foto en Tribuna. La grada está en una nube (+3 de ánimo).")}
+			return {"titulo": Idiomas.t("¡Campeones!"), "texto": Idiomas.t("La copa ya está en la vitrina. La grada está en una nube (+3 de ánimo).")}
 	## política
 	if opcion != 0 or m.politica == null:
 		return {"titulo": String(ct["quien"]), "texto": Idiomas.t("«Lo entiendo. El fútbol es de todos.»")}
@@ -305,7 +358,7 @@ func convocar_rueda(m: Mundo) -> String:
 # ======================================================================== GUARDADO
 
 func a_dic() -> Dictionary:
-	return {"lista": lista.duplicate(true), "objetivo": objetivo, "favor_agente": favor_agente, "rueda": rueda_semana, "asamblea": asamblea_anio, "n": _n}
+	return {"lista": lista.duplicate(true), "objetivo": objetivo, "favor_agente": favor_agente, "rueda": rueda_semana, "asamblea": asamblea_anio, "trofeos": _trofeos_vistos, "n": _n}
 
 func desde_dic(d: Dictionary) -> void:
 	lista.clear()
@@ -316,4 +369,5 @@ func desde_dic(d: Dictionary) -> void:
 	favor_agente = int(d.get("favor_agente", -1))
 	rueda_semana = int(d.get("rueda", -1))
 	asamblea_anio = int(d.get("asamblea", -1))
+	_trofeos_vistos = int(d.get("trofeos", -1))
 	_n = int(d.get("n", 0))
