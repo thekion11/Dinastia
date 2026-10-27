@@ -352,7 +352,8 @@ func _bloque_modular(frente: Vector3, giro: float, semilla: int, ancho_max: floa
 	var w := 4 if ancho_max >= 4.0 * s and hr.randf() < 0.6 else 3
 	var d := 3 if fondo_max >= 3.0 * s and hr.randf() < 0.55 else 2
 	var pisos := hr.randi_range(3, 7)
-	var col: Array = COLORES_PISOS[hr.randi() % COLORES_PISOS.size()]
+	var fam: Array = FAMILIAS_BARRIO[posmod(int(floorf(frente.x / (CELDA * 6.0))) * 2 + int(floorf(frente.z / (CELDA * 6.0))) * 3, FAMILIAS_BARRIO.size())]
+	var col: Array = COLORES_PISOS[int(fam[hr.randi() % fam.size()])]
 	var toldo := hr.randi() % 5
 	var estilo: Array = ESTILOS_MOD[hr.randi() % ESTILOS_MOD.size()]
 	var tienda := hr.randf() < 0.55

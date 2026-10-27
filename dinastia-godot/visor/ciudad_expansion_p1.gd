@@ -210,6 +210,9 @@ const COLORES_PISOS := [
 	[Color(0.9, 0.76, 0.6), Color(0.45, 0.36, 0.3)], [Color(0.62, 0.68, 0.8), Color(0.94, 0.94, 0.93)],
 	[Color(0.93, 0.77, 0.7), Color(0.6, 0.34, 0.3)], [Color(0.98, 0.9, 0.62), Color(0.42, 0.4, 0.38)],
 ]
+## PALETA POR BARRIO (S5, 27-10-2026): cada sector de la ciudad (6 × 6 manzanas) pertenece a una de tres familias de color, de
+## modo que un barrio se lee de un vistazo: ocres y crema, terracota y ladrillo, o grises y azules fríos. Índices de COLORES_PISOS.
+const FAMILIAS_BARRIO := [[0, 1, 6, 9], [3, 4, 8], [2, 5, 7]]
 ## Estilos de fachada: la pieza de los módulos pares y la de los impares.
 const ESTILOS_MOD := [
 	["building-windows-sills", "building-windows-sills"],

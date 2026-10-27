@@ -1,12 +1,12 @@
 extends Node
-## LUZ DE LA CIUDAD con la cámara real (S5 «look GTA», 27-10-2026): la misma calle a 7:00, 12:00, 18:20 (hora dorada) y 21:30.
+## LUZ DE LA CIUDAD con la cámara real (S5 «look GTA», 27-10-2026): la misma calle a 7:00, 12:00, 17:24 (hora dorada), 18:20 (anochecer) y 21:30.
 ## Salen en $PREFIJO_N.png (PREFIJO por defecto /tmp/luz). Para el antes/después: PREFIJO=/tmp/luz_antes y /tmp/luz_despues.
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_luz_ciudad.tscn
 var _n := 0
 var _p: Node
 var _v: VistaCiudad
 var _e: ExploradorCiudad
-const HORAS := [7.0, 12.0, 18.3, 21.5]
+const HORAS := [7.0, 12.0, 17.4, 18.3, 21.5]
 const POR_ESCENA := 24
 
 func _ready() -> void:
@@ -35,9 +35,10 @@ func _process(_d: float) -> void:
 		print("FIN. 0 fallos")
 		get_tree().quit()
 		return
+	## La hora se fija en CADA fotograma: la vida de la ciudad la vuelve a poner con el reloj de la partida.
+	_v.set("_hora", HORAS[k])
+	_v.call("_aplicar_hora")
 	if f == 0:
-		_v.set("_hora", HORAS[k])
-		_v.call("_aplicar_hora")
 		var b: CityBuilder = _e.cb
 		var p: Vector3 = b.puertas_vida[0]["p"]
 		var nn: Vector3 = b.puertas_vida[0]["n"]
