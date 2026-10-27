@@ -12,9 +12,9 @@ static var _bolsillo: ArrayMesh = null
 static var _correas: ArrayMesh = null
 
 ## Camino de una correa (x positivo = lado derecho del peatón; se refleja para el otro): por la espalda, sobre el hombro, por el pecho,
-## bajo el brazo y de vuelta al fondo de la mochila.
+## se mete en el costado del torso (a la vista solo queda el tramo del hombro al pecho) y vuelve por la espalda al fondo de la mochila.
 const CAMINO := [Vector3(0.10, 0.12, -0.15), Vector3(0.115, 0.20, -0.13), Vector3(0.125, 0.245, -0.02), Vector3(0.125, 0.19, 0.06),
-	Vector3(0.12, 0.08, 0.14), Vector3(0.13, 0.01, 0.14), Vector3(0.175, 0.0, 0.07), Vector3(0.18, -0.02, -0.06), Vector3(0.13, -0.12, -0.14)]
+	Vector3(0.12, 0.08, 0.14), Vector3(0.12, 0.01, 0.15), Vector3(0.12, -0.01, 0.0), Vector3(0.15, -0.04, -0.09), Vector3(0.13, -0.10, -0.15)]
 
 ## Caja de lados `t` con las esquinas y aristas redondeadas a `r`: se subdivide y cada vértice se lleva al punto más cercano de la caja
 ## interior (reducida en r) más r en la dirección de su normal.
