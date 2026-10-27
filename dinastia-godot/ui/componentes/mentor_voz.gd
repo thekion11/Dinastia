@@ -69,8 +69,8 @@ func _montar(mundo: Mundo, titulo: String, texto: String) -> void:
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	h.add_child(v)
 	v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "%s · %s" % [String(m["nombre"]), String(m["cargo"])]))
-	v.add_child(Tema.etiqueta(Tema.TAM_DESTACADO, Tema.ORO, titulo))
-	var t := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "«%s»" % texto)
+	v.add_child(Tema.etiqueta(Tema.TAM_DESTACADO, Tema.ORO, Idiomas.t(titulo)))
+	var t := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "«%s»" % Idiomas.t(texto))
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	t.custom_minimum_size = Vector2(ANCHO - 110.0, 0)
 	v.add_child(t)

@@ -217,7 +217,7 @@ func revisar_presidencia(anio: int) -> bool:
 	noticia.emit("🏛️ Elecciones en la federación",
 		"%s %s la presidencia (corriente %s) hasta %d. %s Empujará: %s." % [
 			nombre, "renueva" if reelegido else "gana", String(a[0]).to_lower(), anio + MANDATO_ANIOS,
-			String(a[2]), ", ".join(PackedStringArray((a[1] as Array).map(func(x: String) -> String: return _titulo_mocion(x))))])
+			String(a[2]), ", ".join(PackedStringArray((a[1] as Array).map(func(x: String) -> String: return Idiomas.t(_titulo_mocion(x)))))])
 	return true
 
 func agenda_empuja(id_mocion: String) -> bool:

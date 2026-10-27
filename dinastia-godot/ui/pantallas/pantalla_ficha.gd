@@ -210,7 +210,7 @@ func _ver_ficha(j: Jugador) -> void:
 			p._dato("Derechos de formación", "%d%% para %s" % [
 				int(round(pct * 100.0)), formador.nombre if formador else Idiomas.t("su club formador")],
 				Principal.COL_ORO)
-	p._dato("Sueldo actual", p._dinero(j.sueldo) + " / semana", Principal.COL_TEXTO)
+	p._dato("Sueldo actual", Idiomas.t("%s / semana") % p._dinero(j.sueldo), Principal.COL_TEXTO)
 	## El detalle de la baja -antes solo decía "lesión, N semanas" o
 	## "sancionado" a secas-: `Medico.diagnostico()` ya sabe el TIPO exacto
 	## (esguince, rotura...) desde que se porta el parte médico, y `j.suspension`
@@ -316,7 +316,7 @@ func _ver_ficha_2(j: Jugador, mio: Club) -> void:
 	var d: Dictionary = p.mundo.mercado.deseo_de_venir(j, mio)
 	var ficha_pide := p.mundo.mercado.ficha_que_pide(j, mio)
 	p._dato("Piden por él", p._dinero(pedido), Principal.COL_TEXTO if pedido <= mio.saldo else Principal.COL_ROJO)
-	p._dato("Pide de ficha", p._dinero(ficha_pide) + " / semana", Principal.COL_TEXTO)
+	p._dato("Pide de ficha", Idiomas.t("%s / semana") % p._dinero(ficha_pide), Principal.COL_TEXTO)
 	p._dato("Ganas de venir", "%d%%" % int(float(d["p"]) * 100.0),
 		Principal.COL_VERDE if float(d["p"]) > 0.6 else (Principal.COL_ORO if float(d["p"]) > 0.35 else Principal.COL_ROJO))
 	for r: Dictionary in d["razones"]:

@@ -369,5 +369,5 @@ func ficha_pais(p: String, ligas_del_pais: Array[Liga], total_clubes: int) -> St
 		partes.append("el grande: %s" % mejor.nombre)
 	partes.append("%s %s" % [Clima.icono(clima), String(clima.get("texto", ""))])
 	if not prox.is_empty():
-		partes.append("%s %s (%d/%d)" % [Calendario.icono(String(prox[0]["tipo"])), String(prox[0]["nombre"]), int(prox[0]["dia"]), int(prox[0]["mes"])])
+		partes.append("%s %s (%d/%d)" % [Calendario.icono(String(prox[0]["tipo"])), Idiomas.t(String(prox[0]["nombre"])), int(prox[0]["dia"]), int(prox[0]["mes"])])
 	return "  ·  ".join(partes)

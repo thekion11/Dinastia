@@ -327,7 +327,7 @@ func _pintar_ajustes() -> void:
 			t3.text = Idiomas.t("ACERCA DE")
 			p._lista_ajustes.add_child(t3)
 			var ac := p._texto(11, Principal.COL_SUAVE)
-			ac.text = Idiomas.t("DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y todos los efectos están sintetizados por el propio juego: no hay ni un fichero de audio.")
+			ac.text = Idiomas.t("DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).")
 			ac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_ajustes.add_child(ac)
 			## M-309: créditos y licencias de lo que no es propio.
@@ -344,6 +344,7 @@ func _pintar_ajustes() -> void:
 			fotos.text = Idiomas.t("Las fotos de futbolistas reales (solo en la versión privada) llevan su autor y su licencia bajo el retrato, en la ficha del jugador.")
 			fotos.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_ajustes.add_child(fotos)
+			_creditos_fotos()
 
 	## Esta pantalla se repinta sola al tocar una pestaña de sección, sin pasar
 	## por `_refrescar()`, asi que se traduce aqui tambien.
@@ -351,3 +352,29 @@ func _pintar_ajustes() -> void:
 	## Cada cambio de esta pantalla vuelve a pintarla; guardar aqui recoge los
 	## ajustes sin tener que colgar un guardado de cada boton.
 	p._guardar_preferencias()
+
+## M-425 (27-10-2026): con las fotos reales, su lista entera (autor, licencia y Wikidata de cada una), que piden
+## CC BY y CC BY-SA. Se despliega con un botón: son más de mil líneas.
+func _creditos_fotos() -> void:
+	var lineas := Creditos.fotos()
+	if lineas.is_empty():
+		return
+	var caja := VBoxContainer.new()
+	var b := p._boton(Idiomas.t("Ver los créditos de las %d fotos") % lineas.size(), func() -> void:
+		caja.visible = not caja.visible, p._lista_ajustes)
+	b.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	caja.visible = false
+	p._lista_ajustes.add_child(caja)
+	var cab := p._texto(10, Principal.COL_SUAVE)
+	cab.text = Idiomas.t("Fotos de Wikimedia Commons (commons.wikimedia.org), recortadas alrededor de la cara y reducidas a 256 × 256 por DINASTÍA. Cada una conserva su licencia original, indicada junto al autor. Textos de las licencias: creativecommons.org/licenses. Dominio público: sin restricciones.")
+	cab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	caja.add_child(cab)
+	## Un RichTextLabel y no un Label: el traductor de pantallas solo toca Button y Label, y nombres, autores y
+	## licencias no se traducen. Trae su propio desplazamiento.
+	var lista := RichTextLabel.new()
+	lista.bbcode_enabled = false
+	lista.custom_minimum_size.y = 320
+	lista.add_theme_font_size_override("normal_font_size", 10)
+	lista.add_theme_color_override("default_color", Principal.COL_TEXTO)
+	lista.text = "\n".join(lineas).replace(": foto de ", Idiomas.t(": foto de "))
+	caja.add_child(lista)

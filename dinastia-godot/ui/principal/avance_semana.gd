@@ -202,7 +202,7 @@ func _avanzar_semana() -> void:
 				var col := "#4caf6d" if gf > gc else ("#e05555" if gf < gc else "#8ea595")
 				visto["txt"] = "[color=%s]J%d  %s %d-%d %s[/color]  [color=#8ea595]%s[/color]" % [
 					col, liga.jornada_actual, mio.nombre, gf, gc, rival.nombre,
-					"en casa" if casa else "fuera"]
+					Idiomas.t("en casa" if casa else "fuera")]
 	liga.jornada_terminada.connect(oyente)
 	p.mundo.avanzar_semana()
 	liga.jornada_terminada.disconnect(oyente)
@@ -252,7 +252,7 @@ func _pintar_dias() -> void:
 			marca += " " + Calendario.icono(String(fd["tipo"]))
 		var b := p._pildora("%s %d%s%s" % [Principal.DIAS_LARGOS[i], int(p.fecha_del_dia(i).get("day", 1)), marca, "  ⚽" if dia_de_partido else ""], 11, 26)
 		if not fechas_dia.is_empty():
-			b.tooltip_text = "\n".join(fechas_dia.map(func(fd: Dictionary) -> String: return String(fd["nombre"])))
+			b.tooltip_text = "\n".join(fechas_dia.map(func(fd: Dictionary) -> String: return Idiomas.t(String(fd["nombre"]))))
 		b.button_pressed = es_hoy
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if es_hoy and _dia_pintado != p._dia_semana:

@@ -75,6 +75,8 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 | Mini Market 1.0 (20 piezas; guardado, aún sin usar) | `assets/kenney/mini_mercado/` | Kenney | 🟢 CC0 (`assets/kenney/mini_mercado/License.txt`) |
 | Food Kit 2.0 (200 piezas; guardado, aún sin usar) | `assets/kenney/comida/` | Kenney | 🟢 CC0 (`assets/kenney/comida/License.txt`) |
 | Mini Arcade 1.2 (20 piezas; guardado, aún sin usar) | `assets/kenney/mini_arcade/` | Kenney | 🟢 CC0 (`assets/kenney/mini_arcade/License.txt`) |
+| City Builder Bits (bloques de la Casa Grande) | `assets/ciudad/kaykit/` | Kay Lousberg (KayKit) | 🟢 CC0 (`assets/ciudad/kaykit/LICENSE.txt`) |
+| Clips de medio cuerpo del público y de los personajes | `assets/characters/quaternius/anims_m2m/` | Mesh2Motion (Scott Petrovic) | 🟢 CC0 (`anims_m2m/LICENCIA.md`) |
 | City Kit Roads (95 piezas; guardado, aún sin usar) | `assets/ciudad/kenney_roads/` | Kenney | 🟢 CC0 (`assets/ciudad/kenney_roads/LICENCIA_Kenney_CC0.txt`) |
 | 21 animaciones de fútbol (mocap) | `assets/characters/quaternius/anims_futbol/` | "Free mocap pack 05: Soccer", Anderson Rohr (Gumroad) | 🟡 `LEEME.md` dice "uso comercial libre", pero el zip no trae licencia. **Guardar una captura de la página de Gumroad con los términos.** |
 | Coches `coche1.fbx`, `coche2.fbx` | `assets/ciudad/` | Probablemente `recursos/modelos3d/gt-racing-2-montreal.zip` (Sketchfab). El nombre apunta a un modelo sacado de un juego comercial | 🔴 ya no se usan (el aparcamiento es solo Kenney) y están excluidos |
@@ -98,7 +100,10 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 | Texturas de la Tierra (globo) | `recursos/tierra/` | 🟡 muy probablemente NASA Blue Marble / Black Marble (dominio público). Anotar la fuente |
 | Fronteras del globo (`fronteras4k.png`) | `recursos/tierra/` | ✅ Natural Earth, `ne_50m_admin_0_boundary_lines_land` (dominio público, naturalearthdata.com), rasterizadas por nosotros |
 | 205 efectos de sonido y 6 piezas de música | sintetizados por código (`nucleo/sonido.gd`, `nucleo/musica.gd`) | 🟢 propio |
-| Tipografía | fuente por defecto de Godot / fuentes del sistema | 🟢 |
+| Tipografía: Inter, Barlow Condensed, Bebas Neue, Cinzel, Gelasio, Noto Sans Symbols/Symbols 2, Noto Emoji, Noto Sans JP, Noto Sans Math, Noto Sans Mono | `assets/fuentes/` | 🟢 SIL Open Font License 1.1 (`assets/fuentes/OFL_*.txt`, viajan en el build) |
+| Sonidos de interfaz (clics, avisos) | `audio/ui/` | 🟢 CC0: Kenney y VCSL (`audio/ui/LICENCIA_*.txt`); subida autorizada por el dueño el 26-10 |
+| Banderas | `assets/banderas/` | 🟢 flag-icons, MIT (`LICENSE_flag-icons_MIT.txt`: hay que conservar el aviso, viaja en el build) |
+| Complementos Antialiased Line2D y Debug Menu | `addons/` | 🟢 MIT (`addons/LICENCIAS_TERCEROS.txt`) |
 | Caras de jugadores y DT | dibujadas por código (`ui/cara.gd`, `ui/cara_dt.gd`) | 🟢 propio |
 
 ## 5. Otros nombres propios

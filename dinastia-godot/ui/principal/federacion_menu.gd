@@ -37,7 +37,7 @@ func _pintar_federacion(c: Club) -> void:
 		tp.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_fed.add_child(tp)
 		var lema := p._texto(11, p.COL_SUAVE)
-		lema.text = String(ag[2]) + Idiomas.t(" Sus propuestas salen antes en la asamblea y hace campaña por ellas.")
+		lema.text = Idiomas.t(String(ag[2])) + Idiomas.t(" Sus propuestas salen antes en la asamblea y hace campaña por ellas.")
 		lema.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_fed.add_child(lema)
 	p._ui_club_vida._pintar_gobierno(c)
