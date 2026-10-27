@@ -518,7 +518,7 @@ Fuera de alcance: multijugador online (requiere servidor).
 | Partido jugable | básico completo | táctica en vivo, porteros, presets, cinemáticas, ayudas |
 | Interfaz | mucha información | coherencia de estilo, diálogos (hecho el 13-10), accesibilidad (texto grande, daltónicos) |
 | Audio | 🔒 música del dueño | efectos de interfaz y ambiente revisados |
-| Guardado | copias rotativas, huella y versiones (`pruebas/ideas/sav_guardado.gd`); aviso visible si se recupera la copia (menú y arranque 3D) o si no se puede abrir (27-10) | topes de memoria en historiales (M-400) |
+| Guardado | copias rotativas, huella y versiones (`pruebas/ideas/sav_guardado.gd`); aviso visible si se recupera la copia (menú y arranque 3D) o si no se puede abrir (27-10); topes de historiales VERIFICADOS el 27-10 con `pruebas/sonda_memoria.tscn` (6 temporadas: 0,54 → 1,10 MB; todas las listas con tope: pubs 80, libres 80, portadas 60, mensajes 60, libro 60, posts 50, historial y moral del jugador 12; lo que crece, ~56 KB/temporada, es `clubes`) | medir 30 temporadas y desglosar `clubes` si el guardado pasa de 3 MB |
 | Legal | política ficticia | licencias de recursos y caras reales (🔒 del dueño) |
 | Tienda | — | iconos, capturas, descripción, clasificación por edad (🔒 del dueño) |
 
@@ -545,7 +545,6 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 - [ ] Colisiones de la ciudad fuera del club: edificios, postes, troncos e hidrantes ya chocan (`Optimizar.obstaculos`, todo lo estático ≥ 0,9 m) y los bancos desde el 27-10 (`CityBuilder.asientos`); falta revisar papeleras y contenedores bajos y que los peatones no se crucen con mobiliario.
 - [ ] 506 frases visibles sin traducir en 8 idiomas (`docs/05_referencia/textos_sin_traducir.txt`); la prueba de paridad debe exigir 0.
 - [ ] C++/GDExtension solo si el perfil en hardware real lo pide.
-- [ ] Guardado: topes de memoria en historiales (M-400).
 - [ ] 23 imágenes ≥ 2048 px que no lo necesitan: bajarlas a 2048 (auditoría 3, §4; no las caras sin tu OK).
 
 ## 5. Mejoras abiertas del catálogo (356)
@@ -574,7 +573,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-396 | P2 | PENDIENTE | Convenciones: mezcla de español/inglés en nombres | sin guía de estilo |
 | M-397 | P2 | PENDIENTE | Comentarios muy extensos (valioso pero ruidoso) | sin ADRs |
 | M-398 | P2 | PENDIENTE | Sin documentación de arquitectura actualizada (`LEEME.md`) | LEEME sin diagrama |
-| M-400 | P2 | SIN VERIFICAR | Sin límites de memoria en historiales (noticias, prensa) | no se revisaron topes de historiales |
 | M-401 | P2 | PENDIENTE | Dependencia de nombres de nodo (`find_child`) frágil | sin cambio |
 | M-402 | P2 | PENDIENTE | Duplicación de carga de JSON (`Datos` 212 tablas) | sin carga perezosa |
 | M-406 | P2 | PENDIENTE | `Retrato3D` no se ejercita en headless | sin prueba con xvfb |
