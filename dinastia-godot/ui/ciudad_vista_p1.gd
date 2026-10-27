@@ -196,14 +196,14 @@ func _aplicar_hora() -> void:
 		## De noche hay que abrir el diafragma o no se ve nada; de día cerrarlo
 		## o se quema. Es exactamente lo que hace una cámara de verdad.
 		_env.tonemap_exposure = lerpf(1.40, 1.02, dia)
-		_env.ambient_light_energy = lerpf(0.62, 1.0, dia) + dorada * 0.3
+		_env.ambient_light_energy = lerpf(0.9, 1.0, dia) + dorada * 0.3
 		## En el renderizador de compatibilidad (móvil, web) el cielo con shader
 		## propio no da luz ambiente: lo que queda a la sombra -la espalda de la
 		## grada, la copa de los árboles- salía NEGRO a mediodía. Ahí la luz
 		## ambiente va como color, el del cielo de esa hora.
 		## De noche, el reflejo cálido de las farolas sobre la ciudad (como el
 		## sodio de una ciudad real), no un azul puro que lo tiñe todo.
-		_env.ambient_light_color = Color(0.24, 0.21, 0.22).lerp(Color(0.62, 0.68, 0.74), dia).lerp(Color(0.74, 0.62, 0.52), dorada * 0.35)
+		_env.ambient_light_color = Color(0.25, 0.25, 0.3).lerp(Color(0.62, 0.68, 0.74), dia).lerp(Color(0.74, 0.62, 0.52), dorada * 0.35)
 		if Calidad.es_compatibilidad():
 			_env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 		else:
