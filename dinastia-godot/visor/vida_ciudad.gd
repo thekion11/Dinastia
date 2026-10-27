@@ -8,7 +8,24 @@ func _redes() -> RedesCiudadVista:
 		return null
 	return expl.cb.expansion.redes
 
-## E ante un surtidor: 45 l a 1,4 €/l, 10 minutos. Sin corriente en el sector, no hay bomba.
+## El depósito del coche (solo en coche y en la calle): gasta con la distancia, avisa al bajar del 15 % (una vez por semana)
+## y vacío el coche no arranca hasta repostar en un surtidor (E).
+func gasolina_tick(delta: float) -> void:
+	if mundo.vida == null or String(expl.modo) != "coche" or String(expl.estado) != "calle":
+		return
+	var vd := mundo.vida
+	vd.gastar_combustible(absf(expl.vel) * delta)
+	_t_vacio -= delta
+	if vd.combustible <= 0.01:
+		expl.vel = 0.0
+		if _t_vacio <= 0.0:
+			_t_vacio = 20.0
+			_notificar(Idiomas.t("⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E)."))
+	elif vd.fraccion_comb() < 0.15 and vd.aviso_comb != mundo.anio * 100 + mundo.semana:
+		vd.aviso_comb = mundo.anio * 100 + mundo.semana
+		_notificar(Idiomas.t("⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E)."))
+
+## E ante un surtidor: llena el depósito del coche a 1,4 €/l (10 minutos). Sin corriente en el sector, no hay bomba.
 func usar_surtidor(k: String) -> bool:
 	var redes := _redes()
 	if not k.begins_with("surtidor_") or redes == null:
@@ -16,11 +33,17 @@ func usar_surtidor(k: String) -> bool:
 	var s := redes.surtidor(int(k.get_slice("_", 1)))
 	if s.is_empty():
 		return false
-	var r := redes.modelo.repostar(int(s["id"]), s["sector"], 45.0)
+	var falta := VidaDT.DEPOSITO_L - mundo.vida.combustible if mundo.vida != null else 45.0
+	if falta < 1.0:
+		_decir(Idiomas.t("Gasolinera"), Idiomas.t("Tienes el depósito lleno."))
+		return true
+	var r := redes.modelo.repostar(int(s["id"]), s["sector"], falta)
 	if int(r["coste"]) <= 0:
 		_decir(Idiomas.t("Gasolinera"), Idiomas.t("Sin corriente (o sin existencias): las bombas no funcionan."))
 		return true
 	mundo.reloj.avanzar_minutos(10, "libre")
+	if mundo.vida != null:
+		mundo.vida.combustible = minf(VidaDT.DEPOSITO_L, mundo.vida.combustible + float(r["litros"]))
 	if mundo.mi_club() != null:
 		mundo.mi_club().mover_saldo(-int(r["coste"]))
 	_decir(Idiomas.t("Gasolinera"), Idiomas.t("Depósito lleno: %d l por %d €.") % [roundi(float(r["litros"])), int(r["coste"])])

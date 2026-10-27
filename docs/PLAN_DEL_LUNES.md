@@ -358,11 +358,12 @@ cada hora del `Reloj` con el clima de la semana (viento mueve el parque eólico,
   PENDIENTE: los edificios de la superficie no cambian de aspecto con el corte (solo farolas); sonido ambiente; Forward+.
 - Hecho 27-10 (3.ª pasada): las redes se GUARDAN en la partida (`Mundo.redes_ciudad`, clave `redes_ciudad`; partida vieja = nuevas; ida y vuelta
   probada) y el móvil avisa de cortes e inundaciones nuevos.
+- Hecho 27-10: coche con depósito real (`VidaDT.combustible`, 45 l, 2,5 l/km; se guarda): vacío no arranca hasta repostar con E en un surtidor; aviso en el móvil al bajar del 15 % (una vez por semana, `aviso_comb` guardado). Las averías se guardan (`cortes`); la cuadrilla se deriva de ellas.
 - Hecho 27-10: averías visibles: una cuadrilla (camión, conos y baliza) junto a la tapa central de cada sector con avería abierta; desaparece al repararse (`RedesCiudadVista._cuadrillas`).
 - Hecho: sonido ambiente del subsuelo con efectos ya existentes (zumbido «noche_estadio» y gotas «clic_suave»; sonidos propios, pendientes).
 - PENDIENTE: camión cisterna;
   apagón por sector en las VENTANAS (las farolas ya van por sector desde el 27-10: `ciudad_expansion._farolas_sec`, capturas `apagon_sector_*`); cables con caída;
-  coche con depósito real que dependa del repostaje.
+  
 
 ### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
 
