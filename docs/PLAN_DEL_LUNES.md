@@ -115,16 +115,11 @@ Fase 0 CERRADA el 26-10 (pasos 1-3 hechos: noticias, sorteos, preferencias, cicl
 #### 7. Código menos delicado (cómo se hace y cómo se comprueba)
 
 #### 7.1 Partir `principal.gd` sin romperlo
-Método «estrangulador»: cada paso mueve un grupo de funciones a su propia clase, **sin
-cambiar su comportamiento**, y el banco entero debe seguir en 0 fallos.
-
-| Paso | Se extrae | Va a | Riesgo |
-|---|---|---|---|
-| 7 | Lo que queda: **`MenuCentral`**, la cáscara que abre el PC de la oficina (EN CURSO 27-10: jornada de partido en `ui/principal/jornada_partido.gd`; ficha del jugador en `PantallaFicha`; montaje de la pantalla en `ui/principal/construir_menu.gd`; refresco y avance de semana en `AvanceSemana`; federación, fichajes y paneles del club en `FederacionMenu`, `AccionesFichaje` y `PanelesClub`; tema, temporada y vistas en `TemaMenu`, `AccionesTemporada` y `VistasMenu`; traducción y atajos en `TraduccionMenu` y `AtajosMenu`) | `ui/menu_central.gd` | alto: depende de 1-6 |
-
-Pasos 4, 5 y 6 HECHOS el 27-10 (elegir club en `PantallaElegirClub`; `Hubs` en `ui/menu/hubs.gd`; estadio, finanzas, ciudad, identidad y camarín pintan desde sus `ui/pantallas/*`; `Principal` conserva puentes de una línea).
-Meta: `Principal` pasa de 6.867 (1.763 el 27-10) a < 1.500 líneas y las 157 variables de miembro se reparten
-por clases. Cada paso es un commit pequeño con su banco.
+Pasos 1-7 HECHOS el 27-10: `Principal` pasó de 6.867 a 1.438 líneas (meta < 1.500) con puentes de una línea; lo extraído vive en
+`ui/pantallas/*`, `ui/menu/hubs.gd` y `ui/principal/*` (`ConstruirMenu`, `AvanceSemana`, `JornadaPartido`, `TemaMenu`, `PiezasUI`, `TablasMenu`,
+`PedidoPartida`…), y 26 variables se mudaron a la clase que las usa. Queda: las ~105 variables de miembro compartidas (widgets que monta
+`ConstruirMenu` y preferencias) siguen en `Principal`; repartirlas exige que cada pantalla reciba sus widgets en `abrir(contexto)` (§7.2).
+Renombrar la cáscara a `MenuCentral` cuando el PC de la oficina sea la única entrada.
 
 #### 7.2 Contratos y aislamiento
 - **Un contrato por pantalla:** `abrir(contexto)`, `cerrar()` y una señal; nada de que una

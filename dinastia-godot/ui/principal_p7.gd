@@ -21,14 +21,9 @@ func _ir_a_pestana(titulo: String) -> void:
 ## Puente (fase 6, paso 6): la pestaña Ciudad la pinta `PantallaCiudad`.
 func _pintar_ciudad(c: Club) -> void: _ui_ciudad._pintar_ciudad(c)
 
-func _celda(g: GridContainer, texto: String, color: Color, derecha: bool = false, tam: int = 12) -> Label:
-	var l := _texto(tam, color)
-	l.text = texto
-	if derecha:
-		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	g.add_child(l)
-	return l
+## Puentes (fase 6, paso 7): viven en `ui/principal/piezas_ui.gd`.
+func _celda(g: GridContainer, texto: String, color: Color, derecha: bool = false, tam: int = 12) -> Label: return _piezas._celda(g, texto, color, derecha, tam)
+
 
 
 

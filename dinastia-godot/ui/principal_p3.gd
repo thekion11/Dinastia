@@ -19,46 +19,9 @@ extends "res://ui/principal_p2.gd"
 # identidad (`_acento_de()`); lo que cambia aquí es el FONDO, el panel y el
 # borde, que es el lienzo sobre el que se pinta ese acento.
 
-## clave -> [nombre, fondo, panel, borde, texto, texto suave]
-const PALETAS := {
-	"bosque":   ["Bosque (por defecto)", "0c1510", "141c16", "ffffff12", "e9eeea", "8ea595"],
-	"pizarra":  ["Pizarra", "10141a", "181d25", "ffffff14", "e8ecf2", "8e97a5"],
-	"carbon":   ["Carbón", "0e0e10", "17171a", "ffffff10", "ececec", "9a9a9e"],
-	"vino":     ["Vino", "17090d", "231218", "ffffff14", "f2e8ea", "a88e93"],
-	"marino":   ["Marino", "081420", "0f2030", "ffffff14", "e6eef5", "8ba0b0"],
-	"tierra":   ["Tierra", "16110b", "221a12", "ffffff12", "f0e9df", "a8917a"],
-	"papel":    ["Papel (claro)", "e8e5dd", "f5f3ec", "00000018", "1e2420", "5a6259"],
-	"cuaderno": ["Cuaderno de gestión", "e3e0d4", "f2efe3", "00000022", "23281f", "60664f"],
-	"neon":     ["Neón", "0a0612", "150d22", "ffffff18", "efe8ff", "9c8fb8"],
-	## CONTRASTE ALTO (s3, 26-10-2026; accesibilidad básica): negro puro, texto
-	## blanco, el suave casi blanco y bordes marcados. Se enciende también desde
-	## Ajustes → Accesibilidad (`AjustesAcceso.contraste`).
-	"contraste": ["Contraste alto", "000000", "000000", "ffffffb0", "ffffff", "d8e0dc"],
-	## LAS SEIS DE GEMINI (`ModuloEsteticaUI` del documento "Visual gemini" en
-	## Drive, 11-9-2026): a diferencia de las nueve de arriba -que solo cambian
-	## de tinte y dejan el borde en blanco/negro translúcido, neutro- estas
-	## traen un borde de un color saturado propio, que es justo lo que se ve
-	## en las capturas que mandó el usuario. Se integran como seis paletas MÁS,
-	## no como un sistema aparte: la nota de arriba ("las paletas no pisan el
-	## color del club") sigue valiendo -el acento del club sigue viniendo de
-	## `COL_ACENTO`/`_con_contraste()`, esto solo tiñe fondo/panel/borde-.
-	"esports":    ["eSports", "0d1620", "121b27", "10b981cc", "e8f5ee", "7fae95"],
-	"ejecutivo":  ["Ejecutivo", "141a26", "1b2333", "f59e0bcc", "f5ecd9", "b3a37f"],
-	"cibernetico":["Cibernético", "0d0818", "150f24", "00e5ffcc", "eafcff", "8fb8c2"],
-	"transmision":["Transmisión", "0c1220", "121a2c", "ef4444cc", "fbecec", "c28f8f"],
-	"pizarra_gr": ["Pizarra gris", "0e131c", "141a24", "374151", "e6e9ee", "8b93a0"],
-	"minimo":     ["Mínimo", "0a0c10", "0f1216", "1f2937", "e3e6e8", "7a828c"],
-}
+const PALETAS := TablasMenu.PALETAS
 
-## Cuánto se redondean las tarjetas. Es el detalle que más cambia el «carácter»
-## de una interfaz sin tocar un solo color.
-const FORMAS_TARJETA := {
-	"redonda":  ["Redondeada", 8, 1],
-	"suave":    ["Muy suave", 14, 1],
-	"recta":    ["Recta", 0, 1],
-	"marcada":  ["Borde marcado", 6, 2],
-	"sinborde": ["Sin borde", 8, 0],
-}
+const FORMAS_TARJETA := TablasMenu.FORMAS_TARJETA
 
 var _paleta: String = "bosque"
 ## "Velocidad de partido por defecto" de `vAjustes()`: índice de
@@ -137,51 +100,17 @@ var _secc_ajustes: String:
 # nadie.
 const PREFS := "user://preferencias.cfg"
 
-## LA PESTAÑA "GENTE", PARTIDA EN SUBMENÚS (10-9-2026). Antes cuatro funciones
-## sin relación -personas de carne y hueso, identidad visual, explotación
-## comercial, y "el club por dentro" (vestuario/prensa/palco)- se apilaban las
-## cuatro seguidas bajo un nombre que solo describe a la primera: nadie que
-## busque "cambiar el patrocinador de la camiseta" mira en una pestaña
-## llamada "Gente". Mismo mecanismo de chips que ya usa Ajustes
-## (`SECCIONES_AJUSTES`), clonado en vez de inventar uno nuevo.
-const SECCIONES_GENTE := [
-	["personas", "👥 Personas"],
-	["identidad", "🎨 Identidad y camiseta"],
-	["comercial", "💰 Comercial"],
-	["interno", "🚪 El club por dentro"],
-]
+const SECCIONES_GENTE := TablasMenu.SECCIONES_GENTE
 var _secc_gente: String = "personas"
 
-## Tres pantallas del HTML compartían un solo chip y una sola lista: `vSocial`
-## (feed + funa + gabinete de comunicación), `vPrensa` (periodistas, medios
-## propios, vocero, derechos de TV, portadas, año contado) y `vDebate` (mesa
-## de televisión, ranking de entrenadores, el influencer que mueve seguidores).
-## Se pinta TODO seguido, como siempre, y esto esconde lo que no toca -mismo
-## truco que `_filtrar_records()`, apoyado en que cada sección empieza con un
-## Label de título conocido-. El bloque de arriba de todo -seguidores, funa,
-## ánimo, prestigio DT- no lleva título propio y por eso se ve siempre: es la
-## cabecera de la pantalla, no una sección.
-const SECC_REDES := {
-	"redes": ["GABINETE DE COMUNICACIÓN", "LO QUE SE DICE"],
-	"prensa": ["🎙️ LA PRENSA", "📡 MEDIOS PROPIOS", "🎤 QUIÉN DA LA CARA",
-		"📺 DERECHOS DE TELEVISIÓN", "🗞️ ARCHIVO DE PORTADAS", "📖 EL AÑO CONTADO"],
-	"debate": ["📺 MESA DE DEBATE", "🏅 RANKING DE ENTRENADORES", "📱 LO QUE DICEN LOS QUE MUEVEN MASAS"],
-}
+const SECC_REDES := TablasMenu.SECC_REDES
 var _secc_redes: String = "redes"
 
-func _acento_de(c: Club) -> Color:
-	if c == null:
-		return Color("3fa06a")
-	## El acento va POR SEPARADO del color del club si se ha elegido uno: es la
-	## cuarta capa de la identidad -club, uniforme, escudo e interfaz-.
-	var col := Color(c.color_acento())
-	if col.get_luminance() < 0.10:
-		return Color("e0e0e0")
-	## Y si el color del club es muy apagado, se le sube la saturacion: un acento
-	## que no se distingue del texto normal no es un acento.
-	if col.s < 0.25:
-		col.s = 0.45
-	return col.lightened(0.15) if col.get_luminance() < 0.35 else col
+## Puentes (fase 6, paso 7): viven en `PiezasUI`.
+func _limpiar(n: Node) -> void: _piezas._limpiar(n)
+func _traducir_bbcode(bb: String) -> String: return _piezas._traducir_bbcode(bb)
+func _acento_de(c: Club) -> Color: return _piezas._acento_de(c)
+
 
 ## Puentes (fase 6, paso 7): viven en `ui/principal/tema_menu.gd`.
 func _aplicar_fondo() -> void: _tema_menu._aplicar_fondo()
@@ -206,25 +135,6 @@ func fecha_larga() -> String:
 	return "%s %d de %s de %d" % [String(DIAS_LARGOS[idx]).to_lower(), int(f["day"]),
 		MESES_LARGOS[int(f["month"]) - 1], int(f["year"])]
 
-func _limpiar(n: Node) -> void:
-	for h in n.get_children():
-		n.remove_child(h)
-		h.queue_free()
-
-
-# ---------------------------------------------------------------------------
-#  EL TEMA DE LA PALETA
-# ---------------------------------------------------------------------------
-#
-# `_panel()` pinta las tarjetas que crea el juego, pero NO pinta lo que dibuja
-# Godot por su cuenta: el fondo de las pestañas, los botones, los desplegables,
-# las barras. Eso sale del tema oscuro que trae el motor de fábrica, y con una
-# paleta clara quedaba la mitad de arriba en crema y la mitad de abajo en gris
-# oscuro, con el texto ya traducido a oscuro y por tanto ilegible.
-#
-# Se arregla en el sitio donde se arregla de verdad: un `Theme` colgado de la
-# raíz. Baja por todos los hijos de golpe, así que las nueve paletas valen para
-# la interfaz entera sin tocar ni una pantalla.
 
 ## Mezcla dos colores. Los tonos de los botones -reposo, encima, pulsado- no se
 ## escriben a mano nueve veces: se derivan del panel y del texto de cada paleta,
@@ -252,21 +162,6 @@ func _bbcode_accesible(t: String) -> String:
 		return t
 	return t.replace("#4caf6d", "#56b4e9").replace("#e05555", "#d55e00").replace("#c9a227", "#e69f00")
 
-func _traducir_bbcode(bb: String) -> String:
-	if Idiomas.idioma == "es":
-		return bb
-	if _re_tramos_bb == null:
-		_re_tramos_bb = RegEx.create_from_string("\\]([^\\[]+)")
-	var salida := bb
-	for m: RegExMatch in _re_tramos_bb.search_all(bb):
-		var tramo := m.get_string(1)
-		var limpio := tramo.strip_edges()
-		if limpio == "":
-			continue
-		var tr_ := Idiomas.t(limpio)
-		if tr_ != limpio:
-			salida = salida.replace(tramo, tramo.replace(limpio, tr_))
-	return salida
 
 func _escribir(bbcode: String) -> void:
 	_registro.append_text(_bbcode_accesible(_traducir_bbcode(bbcode)) + "\n")

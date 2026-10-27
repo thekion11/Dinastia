@@ -5,17 +5,10 @@ extends "res://ui/principal_p3.gd"
 func _fuente_de(clave: String) -> Font:
 	return _ui_ajustes.fuente_de(clave)
 
-func _caja(fondo: Color, borde: Color, radio: int, grosor: int) -> StyleBoxFlat:
-	var e := StyleBoxFlat.new()
-	e.bg_color = fondo
-	e.border_color = borde
-	e.set_border_width_all(grosor)
-	e.set_corner_radius_all(radio)
-	e.content_margin_left = 8
-	e.content_margin_right = 8
-	e.content_margin_top = 4
-	e.content_margin_bottom = 4
-	return e
+## Puentes (fase 6, paso 7): viven en `ui/principal/piezas_ui.gd`.
+func _caja(fondo: Color, borde: Color, radio: int, grosor: int) -> StyleBoxFlat: return _piezas._caja(fondo, borde, radio, grosor)
+func _boton(texto: String, accion: Callable, padre: Node = null) -> Button: return _piezas._boton(texto, accion, padre)
+
 
 ## Los cuatro colores del lienzo. Se leen a través de estas funciones y no de la
 ## constante para que cambiar de paleta repinte todo de una vez.
@@ -64,28 +57,6 @@ func _texto(tam: int, color: Color) -> Label:
 	l.add_theme_color_override("font_color", _color_accesible(_color_de_paleta(color)))
 	return l
 
-func _boton(texto: String, accion: Callable, padre: Node = null) -> Button:
-	var b := Button.new()
-	b.text = texto
-	b.custom_minimum_size = Vector2(0, 32)
-	## Un Button pide de ancho mínimo lo que mida su texto, y varios botones
-	## largos en fila desbordan la ventana sin dar ningún error: solo se ve en
-	## una captura. Con `clip_text` la fila puede encoger; el tooltip guarda el
-	## texto entero para cuando no quepa.
-	b.clip_text = true
-	b.tooltip_text = texto
-	## Con `clip_text` a secas un botón puede encoger hasta CERO y desaparecer:
-	## la primera vez que se probó esto, la fila entera de acciones se quedó en
-	## siete rayas de un píxel. El mínimo garantiza que siempre se lea algo.
-	b.custom_minimum_size.x = 92
-	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	## Y el reparto del ancho va POR LARGO DEL ROTULO. Todos los botones de la
-	## fila expandian igual, asi que "Guardar" sobraba sitio mientras "Temporada
-	## siguiente" se quedaba en "Temporada s". Con esto cada uno pide lo suyo.
-	b.size_flags_stretch_ratio = clampf(float(texto.length()) / 12.0, 0.95, 1.9)
-	b.pressed.connect(accion)
-	(padre if padre != null else _botones).add_child(b)
-	return b
 
 ## Puentes (fase 6, paso 7): viven en `FederacionMenu`.
 func _votar(opcion: String) -> void: _federacion._votar(opcion)

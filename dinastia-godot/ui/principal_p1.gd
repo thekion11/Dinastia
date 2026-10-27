@@ -49,12 +49,7 @@ const COL_VERDE := Tema.BIEN
 const COL_ROJO := Tema.MAL
 const COL_ORO := Tema.ORO
 
-## Los nombres largos de cada atributo -`AT_LARGO` en vistas.js-, compartidos
-## entre la ficha y el comparador para no mantener la misma tabla dos veces.
-const NOMBRES_ATRIBUTOS := {
-	"rit": "Ritmo", "tir": "Tiro", "pas": "Pase", "reg": "Regate", "def": "Defensa", "fis": "Físico",
-	"div": "Estirada", "par": "Paradas", "saq": "Saque", "ref": "Reflejos", "vel": "Salidas", "pos": "Colocación",
-}
+const NOMBRES_ATRIBUTOS := TablasMenu.NOMBRES_ATRIBUTOS
 
 ## Lo que dejan pedido las pantallas previas (mundo a cargar, modo, dificultad...): `PedidoPartida`.
 
@@ -328,6 +323,7 @@ var _acciones_temporada := AccionesTemporada.new(self)
 var _vistas := VistasMenu.new(self)
 var _traduccion := TraduccionMenu.new(self)
 var _atajos := AtajosMenu.new(self)
+var _piezas := PiezasUI.new(self)
 var _estilo_menu: String:
 	get: return _estilos.estilo
 	set(v): _estilos.estilo = v
