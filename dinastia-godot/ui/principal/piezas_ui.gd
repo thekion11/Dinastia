@@ -85,7 +85,8 @@ func _boton(texto: String, accion: Callable, padre: Node = null) -> Button:
 	## Y el reparto del ancho va POR LARGO DEL ROTULO. Todos los botones de la
 	## fila expandian igual, asi que "Guardar" sobraba sitio mientras "Temporada
 	## siguiente" se quedaba en "Temporada s". Con esto cada uno pide lo suyo.
-	b.size_flags_stretch_ratio = clampf(float(texto.length()) / 12.0, 0.95, 1.9)
+	## Por el rótulo YA TRADUCIDO (M-467): en alemán «Verlängern» mide casi el doble que «Renovar».
+	b.size_flags_stretch_ratio = clampf(float(Idiomas.t(texto).length()) / 12.0, 0.95, 1.9)
 	b.pressed.connect(accion)
 	(padre if padre != null else p._botones).add_child(b)
 	return b
