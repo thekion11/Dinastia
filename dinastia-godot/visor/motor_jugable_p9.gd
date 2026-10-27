@@ -240,6 +240,8 @@ func _control_usuario(delta: float) -> void:
 				_mods_carga = "rosca"
 			elif lb and _mods_carga == "":
 				_mods_carga = "vaselina"
+			elif lt and _mods_carga == "":
+				_mods_carga = "raso"
 			## AMAGO DE TIRO: con la carga en marcha, Pase o Centro lo cancela.
 			if Input.is_action_just_pressed("jugar_pase") or Input.is_action_just_pressed("jugar_centro"):
 				cargando = false

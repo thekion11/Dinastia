@@ -18,7 +18,8 @@ const ZONA_HASTA := 11.0
 
 ## Adónde va a por el centro (Vector3.INF si no sale).
 static func punto(m: Object, gk: Dictionary) -> Vector3:
-	if not (m.get("poseedor") as Dictionary).is_empty():
+	## Un tiro no es un centro: a ese lo espera bajo palos (`_reaccion_portero`); salir le dejaba el arco vacío.
+	if not (m.get("poseedor") as Dictionary).is_empty() or not (m.get("_tiro_vivo") as Dictionary).is_empty():
 		gk["centro_hasta"] = 0.0
 		return Vector3.INF
 	var t: float = m.get("t")
@@ -45,7 +46,16 @@ static func punto(m: Object, gk: Dictionary) -> Vector3:
 	var a: Dictionary = gk["attr"]
 	var vel_salida := 4.8 + float(a.get("rit", 0.5)) * 2.2
 	var desde: Vector3 = m.call("pos", gk)
-	var llega := Vector2(c.x - desde.x, c.z - desde.z).length() / vel_salida <= tc + 0.1
+	var t_gk := Vector2(c.x - desde.x, c.z - desde.z).length() / vel_salida
+	var llega := t_gk <= tc + 0.1
+	## Y antes que el rival más cercano a la caída (corriendo a 7 m/s): si un delantero llega primero,
+	## salir le deja el arco vacío al cabezazo, así que se queda bajo palos.
+	for q: Dictionary in m.get("jugadores"):
+		if bool(q["es_local"]) != bool(gk["es_local"]):
+			var pq: Vector3 = m.call("pos", q)
+			if Vector2(c.x - pq.x, c.z - pq.z).length() / 7.0 < t_gk + 0.15:
+				llega = false
+				break
 	var rng: RandomNumberGenerator = m.get("_rng")
 	if not llega or rng.randf() > 0.35 + float(a.get("pos", 0.5)) * 0.55:
 		return Vector3.INF

@@ -6022,7 +6022,8 @@
   "Teleférico: subir al Cerro": "Cable car: go up the hill",
   "Teleférico: bajar a la ciudad": "Cable car: go down to the city",
   "Mirar por el telescopio": "Look through the telescope",
-  "¡Despeja de puño!": "Punched clear!"
+  "¡Despeja de puño!": "Punched clear!",
+  "Tiro raso (pegado al césped)": "Low shot (along the ground)"
  },
  "pt": {
   "Historia": "História",
@@ -12047,7 +12048,8 @@
   "Teleférico: subir al Cerro": "Teleférico: subir ao Morro",
   "Teleférico: bajar a la ciudad": "Teleférico: descer para a cidade",
   "Mirar por el telescopio": "Olhar pelo telescópio",
-  "¡Despeja de puño!": "Soca para longe!"
+  "¡Despeja de puño!": "Soca para longe!",
+  "Tiro raso (pegado al césped)": "Chute rasteiro (rente à grama)"
  },
  "patrones": [
   [
@@ -23684,7 +23686,8 @@
   "Teleférico: subir al Cerro": "Télécabine : monter à la colline",
   "Teleférico: bajar a la ciudad": "Télécabine : redescendre en ville",
   "Mirar por el telescopio": "Regarder dans le télescope",
-  "¡Despeja de puño!": "Il dégage du poing !"
+  "¡Despeja de puño!": "Il dégage du poing !",
+  "Tiro raso (pegado al césped)": "Frappe rasante (au ras du sol)"
  },
  "it": {
   "Historia": "Storia",
@@ -29709,7 +29712,8 @@
   "Teleférico: subir al Cerro": "Funivia: salire al Colle",
   "Teleférico: bajar a la ciudad": "Funivia: scendere in città",
   "Mirar por el telescopio": "Guardare nel telescopio",
-  "¡Despeja de puño!": "Respinge di pugno!"
+  "¡Despeja de puño!": "Respinge di pugno!",
+  "Tiro raso (pegado al césped)": "Tiro rasoterra (radente al prato)"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35734,7 +35738,8 @@
   "Teleférico: subir al Cerro": "Seilbahn: auf den Berg fahren",
   "Teleférico: bajar a la ciudad": "Seilbahn: hinunter in die Stadt",
   "Mirar por el telescopio": "Durch das Teleskop schauen",
-  "¡Despeja de puño!": "Mit der Faust geklärt!"
+  "¡Despeja de puño!": "Mit der Faust geklärt!",
+  "Tiro raso (pegado al césped)": "Flacher Schuss (am Boden entlang)"
  },
  "ca": {
   "Historia": "Història",
@@ -41759,7 +41764,8 @@
   "Teleférico: subir al Cerro": "Telefèric: pujar al Turó",
   "Teleférico: bajar a la ciudad": "Telefèric: baixar a la ciutat",
   "Mirar por el telescopio": "Mirar pel telescopi",
-  "¡Despeja de puño!": "Allunya de puny!"
+  "¡Despeja de puño!": "Allunya de puny!",
+  "Tiro raso (pegado al césped)": "Xut arran de terra (enganxat a la gespa)"
  },
  "pl": {
   "Club": "Klub",
@@ -48063,7 +48069,8 @@
   "Teleférico: subir al Cerro": "Kolejka: wjedź na wzgórze",
   "Teleférico: bajar a la ciudad": "Kolejka: zjedź do miasta",
   "Mirar por el telescopio": "Spójrz przez teleskop",
-  "¡Despeja de puño!": "Wybija pięściami!"
+  "¡Despeja de puño!": "Wybija pięściami!",
+  "Tiro raso (pegado al césped)": "Strzał po ziemi (przy murawie)"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54367,6 +54374,7 @@
   "Teleférico: subir al Cerro": "Teleferik: tepeye çık",
   "Teleférico: bajar a la ciudad": "Teleferik: şehre in",
   "Mirar por el telescopio": "Teleskoptan bak",
-  "¡Despeja de puño!": "Yumrukla uzaklaştırdı!"
+  "¡Despeja de puño!": "Yumrukla uzaklaştırdı!",
+  "Tiro raso (pegado al césped)": "Yerden şut (çime yakın)"
  }
 }

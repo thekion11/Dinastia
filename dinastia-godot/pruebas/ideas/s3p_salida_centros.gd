@@ -26,6 +26,16 @@ func _probar() -> void:
 	_comprobar(lejos == 0, "al que cae a 16 m, fuera de su zona, no sale (%d)" % lejos)
 	var abierto := _salidas(motor, gk, Vector3(30, 1.0, -40), Vector2(19.0, -47.0))
 	_comprobar(abierto == 0, "al que cae abierto, a 19 m del centro del arco, tampoco (%d)" % abierto)
+	## Con un delantero rival esperando justo donde cae, no sale (le dejaría el arco vacío al cabezazo).
+	var nueve: Dictionary = {}
+	for q: Dictionary in motor.jugadores:
+		if not bool(q["es_local"]) and not bool(q["por"]):
+			nueve = q
+	var antes: Vector3 = (nueve["node"] as Node3D).position
+	(nueve["node"] as Node3D).position = Vector3(2.0, 0, -45.0)
+	var ganado := _salidas(motor, gk, Vector3(25, 1.0, -40), Vector2(2.0, -46.0))
+	(nueve["node"] as Node3D).position = antes
+	_comprobar(ganado == 0, "si un delantero llega antes a la caída, no sale (%d)" % ganado)
 	_centro(motor, gk, Vector3(25, 1.0, -40), Vector2(2.0, -46.0))
 	motor.poseedor = motor.jugadores[5]
 	_comprobar(SalidaPortero.punto(motor, gk) == Vector3.INF, "con el balón en un pie (dueño), no sale")
@@ -47,6 +57,16 @@ func _probar() -> void:
 				despeja += 1
 	_linea("  (debajo del balón: atrapa %d, despeja %d)" % [atrapa, despeja])
 	_comprobar(atrapa + despeja > 0 and atrapa > 0, "debajo del balón lo atrapa (%d) o lo despeja (%d)" % [atrapa, despeja])
+	## El tiro raso (LT + tiro): va pegado al césped; el normal, a media altura.
+	var raso := _altura_tiro(motor, "raso")
+	var normal := _altura_tiro(motor, "")
+	_comprobar(raso < 0.8 and raso < normal, "el tiro raso no pasa de 0,8 m (%.2f m; el normal, %.2f m)" % [raso, normal])
+	## Robo limpio: de 300 entradas de pie con éxito, el defensor se queda el balón en una parte;
+	## la barrida lo deja siempre suelto.
+	var limpio := _robos(motor, false)
+	var barrida := _robos(motor, true)
+	_linea("  (entradas con éxito: de pie se la queda en %d %%, con barrida en %d %%)" % [limpio, barrida])
+	_comprobar(limpio >= 30 and limpio <= 85 and barrida == 0, "de pie, el defensor se queda el balón a veces (%d %%); con barrida, nunca (%d %%)" % [limpio, barrida])
 	## Un rato de partido con centros de verdad no rompe nada.
 	motor.autopiloto = true
 	motor._saque_de_centro(true)
@@ -54,6 +74,58 @@ func _probar() -> void:
 		motor.paso(1.0 / 30.0)
 	_comprobar(motor.pos(gk).distance_to(arco) < 25.0, "tras 30 s de partido el portero sigue cerca de su arco (%.1f m)" % motor.pos(gk).distance_to(arco))
 	raiz.queue_free()
+
+## Altura máxima media de 20 tiros desde 18 m con el modificador `mod`, carga 0,9.
+func _altura_tiro(motor: MotorJugable, mod: String) -> float:
+	var tirador: Dictionary = {}
+	for p: Dictionary in motor.jugadores:
+		if not bool(p["por"]) and bool(p["es_local"]):
+			tirador = p
+	var suma := 0.0
+	for i in 20:
+		motor.estado = "juego"
+		motor._tiro_vivo = {}
+		(tirador["node"] as Node3D).position = Vector3(2.0, 0, 34.5)
+		motor.balon.position = Vector3(2.0, 0.11, 35.0)
+		motor._tomar(tirador)
+		motor._mod_tiro = mod
+		motor._tirar(tirador, Vector2(0.4, 0.0), 0.9)
+		var alto := 0.0
+		for k in 50:
+			motor.paso(1.0 / 60.0)
+			alto = maxf(alto, motor.balon.position.y)
+		suma += alto
+	return suma / 20.0
+
+## De las entradas que salen bien, en qué % el defensor se queda con el balón.
+func _robos(motor: MotorJugable, barrida: bool) -> int:
+	var atac: Dictionary = {}
+	var defe: Dictionary = {}
+	for p: Dictionary in motor.jugadores:
+		if not bool(p["por"]):
+			if bool(p["es_local"]):
+				atac = p
+			else:
+				defe = p
+	var ok := 0
+	var suyo := 0
+	for i in 300:
+		motor.estado = "juego"
+		motor._tiro_vivo = {}
+		(atac["node"] as Node3D).position = Vector3(0, 0, 0)
+		(defe["node"] as Node3D).position = Vector3(0, 0, 0.9)
+		motor.balon.position = Vector3(0, 0.11, 0.3)
+		motor.poseedor = {}
+		motor._tomar(atac)
+		atac["regate_hasta"] = 0.0
+		motor._entrada(defe, barrida)
+		if motor.poseedor != atac:
+			if motor.poseedor == defe:
+				suyo += 1
+				ok += 1
+			elif motor.ultimo_toque == defe and motor.estado == "juego":
+				ok += 1
+	return int(100.0 * suyo / maxf(ok, 1))
 
 ## Lanza un centro desde `b` que baja a la altura de las manos en `destino` (x, z) a los T_CAIDA s.
 func _centro(motor: MotorJugable, gk: Dictionary, b: Vector3, destino: Vector2) -> void:
