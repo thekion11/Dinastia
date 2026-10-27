@@ -83,6 +83,7 @@ func _una(semilla: int, temporadas: int, grande: bool) -> void:
 	var f := f0
 	var perdida_primera := 0.0
 	var en_primera := 0
+	var bajadas := 0   ## temporadas en que la caja bajó (con las crisis de `CrisisCaja` no sube en línea recta)
 	for t in temporadas:
 		var caja_antes := yo.saldo
 		var div_antes := yo.division
@@ -92,6 +93,8 @@ func _una(semilla: int, temporadas: int, grande: bool) -> void:
 		## La foto de plantillas y contratos, tras el cierre (renovaciones, retiros, cantera).
 		var g: float = f["gpp"]
 		f = _foto(m, g)
+		if yo.saldo < caja_antes:
+			bajadas += 1
 		_linea("  t%-2d " % (t + 1) + _texto(f))
 		_revisar(f, f0, t + 1, fallos)
 		if div_antes == 1:
@@ -101,6 +104,7 @@ func _una(semilla: int, temporadas: int, grande: bool) -> void:
 	var ref := Eco.ref_caja(yo.rep)
 	if grande:
 		var crece := float(yo.saldo - caja0) / float(temporadas)
+		_comprobar(bajadas >= 1 or temporadas < 5, "%s: la caja del grande no sube en línea recta (bajó en %d de %d temporadas)" % [et, bajadas, temporadas])
 		_comprobar(crece < ref * 0.75, "%s: la caja del grande no se dispara sola (%.2f M/temporada; ref %.2f M)" % [et, crece / 1e6, ref / 1e6])
 	else:
 		var media := perdida_primera / maxf(1.0, float(en_primera))

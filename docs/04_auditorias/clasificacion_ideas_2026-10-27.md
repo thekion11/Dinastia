@@ -61,7 +61,6 @@ Los encabezados del plan dan cifras viejas (F0 «33» tiene 23 filas, F1 «36» 
 - 956: Desafío «leyenda30» solo avisa: hacerlo cumplir o quitarlo.
 - 971: «Sin recarga» solo avisa: bloquear de verdad la carga o quitarlo.
 - 951: «Sin dinero» promete sin créditos y `Banco.pedir` no lo comprueba.
-- M-208: Balance: el grande sin gestionar se hace rico (caja casi monótona); faltan crisis.
 
 **Estabilidad**
 - 1094: Migraciones de guardado entre versiones (que las partidas sobrevivan a las actualizaciones).

@@ -6393,7 +6393,13 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "You settle his wage now; at the season change he joins your club with no transfer fee.",
   "Precontrato firmado con %s.": "Pre-contract signed with %s.",
   "PRIVACIDAD": "PRIVACY",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA does not connect to the internet: it has no accounts, ads or usage statistics, and sends nothing to anyone. What it saves (games, settings, the error log and the profile picture you choose) stays on this device, in the game's folder, and only leaves it if you copy and send it yourself."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA does not connect to the internet: it has no accounts, ads or usage statistics, and sends nothing to anyone. What it saves (games, settings, the error log and the profile picture you choose) stays on this device, in the game's folder, and only leaves it if you copy and send it yourself.",
+  "La federación multa a %s": "The federation fines %s",
+  "Por «irregularidades administrativas»: %s de sanción. Recurrir llevaría más de lo que cuesta.": "For “administrative irregularities”: a %s penalty. Appealing would cost more than it's worth.",
+  "%s pierde parte de su patrocinio": "%s loses part of its sponsorship",
+  "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "The main sponsor cuts its contribution: the club's cash takes a %s hit.",
+  "La obra del estadio se encarece": "The stadium works get more expensive",
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Materials go up and the builder claims %s more. You have to pay to keep the works going."
  },
  "pt": {
   "Historia": "História",
@@ -12789,7 +12795,13 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Fechas já o salário; na mudança de época chega ao teu clube sem pagar transferência.",
   "Precontrato firmado con %s.": "Pré-contrato assinado com %s.",
   "PRIVACIDAD": "PRIVACIDADE",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA não se conecta à internet: não tem contas, anúncios nem estatísticas de uso, e não envia nada a ninguém. O que salva (partidas, ajustes, o registro de erros e a foto de perfil que você escolher) fica neste dispositivo, na pasta do jogo, e só sai daqui se você copiar e enviar."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA não se conecta à internet: não tem contas, anúncios nem estatísticas de uso, e não envia nada a ninguém. O que salva (partidas, ajustes, o registro de erros e a foto de perfil que você escolher) fica neste dispositivo, na pasta do jogo, e só sai daqui se você copiar e enviar.",
+  "La federación multa a %s": "A federação multa o %s",
+  "Por «irregularidades administrativas»: %s de sanción. Recurrir llevaría más de lo que cuesta.": "Por «irregularidades administrativas»: %s de sanção. Recorrer custaria mais do que vale.",
+  "%s pierde parte de su patrocinio": "%s perde parte do patrocínio",
+  "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "O patrocinador principal reduz a sua contribuição: o cofre ressente-se em %s.",
+  "La obra del estadio se encarece": "A obra do estádio fica mais cara",
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Os materiais sobem e o construtor exige mais %s. É preciso pagar para não parar a obra."
  },
  "patrones": [
   [
@@ -24896,7 +24908,13 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Tu fixes dès maintenant son salaire ; au changement de saison il rejoint ton club sans indemnité.",
   "Precontrato firmado con %s.": "Précontrat signé avec %s.",
   "PRIVACIDAD": "CONFIDENTIALITÉ",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA ne se connecte pas à internet : pas de compte, pas de publicité ni de statistiques d'utilisation, et rien n'est envoyé à personne. Ce qu'il enregistre (parties, réglages, journal d'erreurs et la photo de profil que tu choisis) reste sur cet appareil, dans le dossier du jeu, et n'en sort que si tu le copies et l'envoies toi-même."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA ne se connecte pas à internet : pas de compte, pas de publicité ni de statistiques d'utilisation, et rien n'est envoyé à personne. Ce qu'il enregistre (parties, réglages, journal d'erreurs et la photo de profil que tu choisis) reste sur cet appareil, dans le dossier du jeu, et n'en sort que si tu le copies et l'envoies toi-même.",
+  "La federación multa a %s": "La fédération sanctionne %s d'une amende",
+  "Por «irregularidades administrativas»: %s de sanción. Recurrir llevaría más de lo que cuesta.": "Pour « irrégularités administratives » : %s de sanction. Faire appel coûterait plus cher que ça ne rapporte.",
+  "%s pierde parte de su patrocinio": "%s perd une partie de son sponsoring",
+  "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "Le sponsor principal réduit sa contribution : la caisse perd %s.",
+  "La obra del estadio se encarece": "Les travaux du stade coûtent plus cher",
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Les matériaux montent et le constructeur réclame %s de plus. Il faut payer pour ne pas arrêter le chantier."
  },
  "it": {
   "Historia": "Storia",
@@ -31292,7 +31310,13 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Chiudi subito il suo ingaggio; al cambio di stagione arriva al tuo club senza pagare il cartellino.",
   "Precontrato firmado con %s.": "Precontratto firmato con %s.",
   "PRIVACIDAD": "PRIVACY",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA non si connette a internet: non ha account, pubblicità né statistiche d'uso, e non invia nulla a nessuno. Ciò che salva (partite, impostazioni, il registro degli errori e la foto profilo che scegli) resta su questo dispositivo, nella cartella del gioco, ed esce da qui solo se lo copi e lo invii tu."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA non si connette a internet: non ha account, pubblicità né statistiche d'uso, e non invia nulla a nessuno. Ciò che salva (partite, impostazioni, il registro degli errori e la foto profilo che scegli) resta su questo dispositivo, nella cartella del gioco, ed esce da qui solo se lo copi e lo invii tu.",
+  "La federación multa a %s": "La federazione multa il %s",
+  "Por «irregularidades administrativas»: %s de sanción. Recurrir llevaría más de lo que cuesta.": "Per «irregolarità amministrative»: %s di sanzione. Il ricorso costerebbe più di quanto vale.",
+  "%s pierde parte de su patrocinio": "%s perde parte della sponsorizzazione",
+  "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "Lo sponsor principale taglia il contributo: la cassa perde %s.",
+  "La obra del estadio se encarece": "I lavori dello stadio costano di più",
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "I materiali salgono e l'impresa chiede %s in più. Bisogna pagare per non fermare i lavori."
  },
  "de": {
   "Historia": "Geschichte",
@@ -37688,7 +37712,13 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Du legst sein Gehalt jetzt fest; zum Saisonwechsel kommt er ablösefrei zu deinem Verein.",
   "Precontrato firmado con %s.": "Vorvertrag mit %s unterschrieben.",
   "PRIVACIDAD": "DATENSCHUTZ",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA verbindet sich nicht mit dem Internet: keine Konten, keine Werbung, keine Nutzungsstatistiken, und es wird nichts an irgendwen gesendet. Was gespeichert wird (Spielstände, Einstellungen, das Fehlerprotokoll und das Profilbild, das du wählst), bleibt auf diesem Gerät im Spielordner und verlässt es nur, wenn du es selbst kopierst und verschickst."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA verbindet sich nicht mit dem Internet: keine Konten, keine Werbung, keine Nutzungsstatistiken, und es wird nichts an irgendwen gesendet. Was gespeichert wird (Spielstände, Einstellungen, das Fehlerprotokoll und das Profilbild, das du wählst), bleibt auf diesem Gerät im Spielordner und verlässt es nur, wenn du es selbst kopierst und verschickst.",
+  "La federación multa a %s": "Der Verband bestraft %s mit einer Geldstrafe",
+  "Por «irregularidades administrativas»: %s de sanción. Recurrir llevaría más de lo que cuesta.": "Wegen „administrativer Unregelmäßigkeiten“: %s Strafe. Ein Einspruch würde mehr kosten, als er bringt.",
+  "%s pierde parte de su patrocinio": "%s verliert einen Teil seines Sponsorings",
+  "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "Der Hauptsponsor kürzt seinen Beitrag: Die Kasse verliert %s.",
+  "La obra del estadio se encarece": "Der Stadionumbau wird teurer",
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Die Materialpreise steigen, der Bauunternehmer verlangt %s mehr. Man muss zahlen, damit die Arbeiten weitergehen."
  },
  "ca": {
   "Historia": "Història",
@@ -44084,7 +44114,13 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Tanques ja la seva fitxa; al canvi de temporada arriba al teu club sense pagar traspàs.",
   "Precontrato firmado con %s.": "Precontracte signat amb %s.",
   "PRIVACIDAD": "PRIVADESA",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA no es connecta a internet: no té comptes, anuncis ni estadístiques d'ús, i no envia res a ningú. El que desa (partides, ajustos, el registre d'errors i la foto de perfil que triïs) es queda en aquest dispositiu, a la carpeta del joc, i només en surt si tu ho copies i ho envies."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA no es connecta a internet: no té comptes, anuncis ni estadístiques d'ús, i no envia res a ningú. El que desa (partides, ajustos, el registre d'errors i la foto de perfil que triïs) es queda en aquest dispositiu, a la carpeta del joc, i només en surt si tu ho copies i ho envies.",
+  "La federación multa a %s": "La federació multa el %s",
+  "Por «irregularidades administrativas»: %s de sanción. Recurrir llevaría más de lo que cuesta.": "Per «irregularitats administratives»: %s de sanció. Recórrer costaria més del que val.",
+  "%s pierde parte de su patrocinio": "%s perd part del patrocini",
+  "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "El patrocinador principal retalla l'aportació: la caixa en pateix %s.",
+  "La obra del estadio se encarece": "L'obra de l'estadi s'encareix",
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Els materials pugen i el constructor reclama %s més. Cal pagar per no aturar l'obra."
  },
  "pl": {
   "Club": "Klub",
@@ -50759,7 +50795,13 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Ustalasz jego pensję teraz; na zmianę sezonu dołącza do twojego klubu bez odstępnego.",
   "Precontrato firmado con %s.": "Podpisano umowę przedwstępną z %s.",
   "PRIVACIDAD": "PRYWATNOŚĆ",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA nie łączy się z internetem: nie ma kont, reklam ani statystyk użycia i niczego nikomu nie wysyła. To, co zapisuje (rozgrywki, ustawienia, dziennik błędów i wybrane przez ciebie zdjęcie profilowe), zostaje na tym urządzeniu, w folderze gry, i opuszcza je tylko wtedy, gdy sam to skopiujesz i wyślesz."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA nie łączy się z internetem: nie ma kont, reklam ani statystyk użycia i niczego nikomu nie wysyła. To, co zapisuje (rozgrywki, ustawienia, dziennik błędów i wybrane przez ciebie zdjęcie profilowe), zostaje na tym urządzeniu, w folderze gry, i opuszcza je tylko wtedy, gdy sam to skopiujesz i wyślesz.",
+  "La federación multa a %s": "Federacja nakłada karę na %s",
+  "Por «irregularidades administrativas»: %s de sanción. Recurrir llevaría más de lo que cuesta.": "Za „nieprawidłowości administracyjne”: kara %s. Odwołanie kosztowałoby więcej, niż warto.",
+  "%s pierde parte de su patrocinio": "%s traci część sponsoringu",
+  "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "Główny sponsor obcina wpłatę: kasa traci %s.",
+  "La obra del estadio se encarece": "Przebudowa stadionu drożeje",
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Materiały drożeją, wykonawca żąda %s więcej. Trzeba zapłacić, by nie wstrzymać budowy."
  },
  "tr": {
   "Club": "Kulüp",
@@ -57434,6 +57476,12 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Maaşını şimdi belirliyorsun; sezon geçişinde bonservis ödemeden kulübüne katılır.",
   "Precontrato firmado con %s.": "%s ile ön sözleşme imzalandı.",
   "PRIVACIDAD": "GİZLİLİK",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA internete bağlanmaz: hesap, reklam ya da kullanım istatistiği yoktur ve kimseye hiçbir şey göndermez. Kaydettikleri (oyunlar, ayarlar, hata kaydı ve seçtiğin profil fotoğrafı) bu cihazda, oyunun klasöründe kalır ve yalnızca sen kopyalayıp gönderirsen buradan çıkar."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA internete bağlanmaz: hesap, reklam ya da kullanım istatistiği yoktur ve kimseye hiçbir şey göndermez. Kaydettikleri (oyunlar, ayarlar, hata kaydı ve seçtiğin profil fotoğrafı) bu cihazda, oyunun klasöründe kalır ve yalnızca sen kopyalayıp gönderirsen buradan çıkar.",
+  "La federación multa a %s": "Federasyon %s kulübüne para cezası verdi",
+  "Por «irregularidades administrativas»: %s de sanción. Recurrir llevaría más de lo que cuesta.": "«İdari usulsüzlükler» nedeniyle %s ceza. İtiraz etmek, değerinden pahalıya gelir.",
+  "%s pierde parte de su patrocinio": "%s sponsorluğunun bir kısmını kaybediyor",
+  "El patrocinador principal recorta su aportación: se resiente la caja en %s.": "Ana sponsor katkısını azalttı: kasa %s kaybediyor.",
+  "La obra del estadio se encarece": "Stadyum inşaatı pahalılaştı",
+  "Suben los materiales y el constructor reclama %s más. Hay que pagar para no parar la obra.": "Malzemeler yükseldi, müteahhit %s daha fazla istiyor. İnşaat durmasın diye ödemek gerek."
  }
 }
