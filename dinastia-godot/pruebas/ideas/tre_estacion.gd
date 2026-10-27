@@ -30,11 +30,11 @@ func _probar() -> void:
 	rj.minuto = 3 * 60
 	est._process(0.0)
 	_comprobar(not (est._trenes[0]["nodo"] as Node3D).visible and not (est._trenes[1]["nodo"] as Node3D).visible, "de madrugada (03:00) no hay servicio")
-	rj.minuto = 600
+	rj.minuto = 608   ## 10:08: t = 3648 s → 96 s del ciclo del tren 1 (parado en el andén)
 	est._process(0.0)
-	_comprobar((est._trenes[0]["nodo"] as Node3D).visible and est._reloj_rotulo.text == "10:00", "a las 10:00 hay trenes y el reloj de la fachada marca la hora del juego")
+	_comprobar((est._trenes[0]["nodo"] as Node3D).visible and est._reloj_rotulo.text == "10:08", "a las 10:08 hay trenes y el reloj de la fachada marca la hora del juego")
 	var antes := est.posicion_tren(0, (rj.dia * 1440 + rj.minuto) * 6.0)
-	rj.minuto = 601
+	rj.minuto = 609
 	est._process(0.0)
 	_comprobar(float((est._trenes[0]["nodo"] as Node3D).position.z) != float(antes["z"]) or bool(antes["parado"]), "el ciclo avanza con los minutos del reloj del juego")
 	EstacionCentral.reloj = null
@@ -61,7 +61,7 @@ func _probar_suavidad(est: EstacionCentral) -> void:
 		t += dt
 	_comprobar(amax < 2.0, "acelera y frena como mucho a %.2f m/s²" % amax)
 	_comprobar(tiron < 0.6, "con tirón máximo de %.2f m/s³ (nada de saltos)" % tiron)
-	_comprobar(vmax > 4.0 and vmax < 20.0, "entra a %.1f m/s (%.0f km/h) y no más" % [vmax, vmax * 3.6])
+	_comprobar(vmax > 10.0 and vmax < 40.0, "entra a %.1f m/s (%.0f km/h) y no más" % [vmax, vmax * 3.6])
 	var cerca := est.posicion_tren(0, EstacionCentral.LLEGADA - 0.01)
 	_comprobar(absf(float(cerca["v"])) < 0.01 and absf(float(cerca["a"])) < 0.001, "al parar, velocidad y aceleración llegan a cero (v %.3f, a %.4f)" % [float(cerca["v"]), float(cerca["a"])])
 	est._process(0.0)
@@ -116,3 +116,28 @@ func _probar_pasajeros(est: EstacionCentral) -> void:
 		algun_visible = algun_visible or (g["nodo"] as Node3D).visible
 	_comprobar(not algun_visible, "de madrugada (03:00) no hay pasajeros")
 	EstacionCentral.reloj = null
+	_probar_via_exterior(est)
+
+## F-3c: la vía que sale de la ciudad (ViaEstacion): tramo abierto, dos bocas y el tren que se oculta bajo tierra.
+func _probar_via_exterior(est: EstacionCentral) -> void:
+	_linea("· Vía exterior")
+	var info: Dictionary = est.get_meta("via_exterior", {})
+	_comprobar(not info.is_empty() and float(info["z_a"]) - float(info["z_b"]) >= 250.0 and int(info["porticos"]) >= 3, "tramo abierto de %.0f m con %d pórticos de catenaria" % [float(info["z_a"]) - float(info["z_b"]), int(info["porticos"])])
+	var largo := est.largo_del_tren
+	_comprobar(largo > 15.0 and largo < 30.0, "el tren mide %.1f m (tres coches)" % largo)
+	_comprobar(ViaEstacion.visible_en(ViaEstacion.Z_BOCA_B - 5.0, largo, est.z_tunel_anden), "empieza dentro del túnel del horizonte, a la vista (dentro de su boca)")
+	_comprobar(ViaEstacion.visible_en((ViaEstacion.Z_BOCA_A + ViaEstacion.Z_BOCA_B) * 0.5, largo, est.z_tunel_anden), "a cielo abierto en el tramo exterior")
+	_comprobar(not ViaEstacion.visible_en(-300.0, largo, est.z_tunel_anden), "por el subsuelo (entre las dos bocas de la ciudad) no se ve")
+	_comprobar(ViaEstacion.visible_en(est.z_tunel_anden + largo + 1.0, largo, est.z_tunel_anden), "y reaparece ya dentro del túnel del andén")
+	var z0: float = est._trenes[0]["z0"]
+	_comprobar(z0 < ViaEstacion.Z_BOCA_B and z0 - largo > ViaEstacion.Z_BOCA_B - ViaEstacion.LARGO_BOCA, "arranca con todo el tren dentro de la boca lejana (z %.0f)" % z0)
+	var abierto := 0.0
+	var u := 0.0
+	var z_ant := float(est.posicion_tren(0, 0.0)["z"])
+	while u < EstacionCentral.LLEGADA:
+		u += 0.5
+		var z := float(est.posicion_tren(0, u)["z"])
+		if z > ViaEstacion.Z_BOCA_B and z < ViaEstacion.Z_BOCA_A:
+			abierto += 0.5
+		z_ant = z
+	_comprobar(abierto > 5.0 and abierto < 40.0, "el tren recorre el tramo exterior en %.1f s (se le ve venir)" % abierto)

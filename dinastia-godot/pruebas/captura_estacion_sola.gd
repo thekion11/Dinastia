@@ -17,7 +17,8 @@ func _ready() -> void:
 	EstacionCentral.reloj = null
 	_est._t = float(OS.get_environment("ESTACION_T")) if OS.get_environment("ESTACION_T") != "" else 21.0
 	var z1: float = _est._trenes[0]["z1"]
-	_vistas = [[Vector3(-14, 9, z1 + 16), Vector3(0, 1, z1 - 8)], [Vector3(22, 7, z1 - 9), Vector3(-6, 1.5, z1 - 9)]]
+	_vistas = [[Vector3(-14, 9, z1 + 16), Vector3(0, 1, z1 - 8)], [Vector3(22, 7, z1 - 9), Vector3(-6, 1.5, z1 - 9)],
+		[Vector3(24, 6, -672), Vector3(-8, 2, -706)], [Vector3(70, 30, -470), Vector3(0, 0, -700)]]
 	var sol := DirectionalLight3D.new()
 	sol.rotation_degrees = Vector3(-50, 30, 0)
 	add_child(sol)
@@ -30,7 +31,7 @@ func _ready() -> void:
 	we.environment = env
 	add_child(we)
 	_cam = Camera3D.new()
-	_cam.far = 400.0
+	_cam.far = 1500.0
 	add_child(_cam)
 	_cam.make_current()
 
