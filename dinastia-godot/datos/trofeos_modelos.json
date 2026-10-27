@@ -1,0 +1,788 @@
+{
+ "formato": 1,
+ "recetas": {
+  "liga:ARG": {
+   "copa": 1,
+   "alto": 1.2,
+   "ancho": 1.0,
+   "pie": 1.2,
+   "metal": "#e8b838",
+   "brillo": 0.6,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.14,
+    "ancho": 0.24,
+    "color": "#2a4d8f"
+   }
+  },
+  "liga:BRA": {
+   "copa": 1,
+   "alto": 1.3,
+   "ancho": 1.1,
+   "pie": 1.0,
+   "metal": "#e8b838",
+   "brillo": 0.65,
+   "base": {
+    "forma": "cil",
+    "alto": 0.08,
+    "ancho": 0.2,
+    "color": "#1f6b3a"
+   }
+  },
+  "liga:URU": {
+   "copa": 2,
+   "alto": 1.1,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "caja",
+    "alto": 0.1,
+    "ancho": 0.18,
+    "color": "#3a2a20"
+   },
+   "extras": [
+    "anillo"
+   ]
+  },
+  "liga:PAR": {
+   "copa": 2,
+   "alto": 1.0,
+   "ancho": 1.1,
+   "pie": 1.0,
+   "metal": "#e8b838",
+   "brillo": 0.6,
+   "base": {
+    "forma": "cil",
+    "alto": 0.1,
+    "ancho": 0.19,
+    "color": "#b01c2a"
+   }
+  },
+  "liga:COL": {
+   "copa": 1,
+   "alto": 1.0,
+   "ancho": 0.95,
+   "pie": 1.3,
+   "metal": "#e8b838",
+   "brillo": 0.55,
+   "base": {
+    "forma": "piramide",
+    "alto": 0.12,
+    "ancho": 0.22,
+    "color": "#d6a620"
+   }
+  },
+  "liga:PER": {
+   "copa": 2,
+   "alto": 1.2,
+   "ancho": 0.9,
+   "pie": 1.0,
+   "metal": "#e8b838",
+   "brillo": 0.6,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.12,
+    "ancho": 0.2,
+    "color": "#b01c2a"
+   }
+  },
+  "liga:ECU": {
+   "copa": 1,
+   "alto": 1.1,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#e8b838",
+   "brillo": 0.55,
+   "base": {
+    "forma": "cil",
+    "alto": 0.1,
+    "ancho": 0.19,
+    "color": "#2a4d8f"
+   }
+  },
+  "liga:BOL": {
+   "copa": 2,
+   "alto": 1.0,
+   "ancho": 1.0,
+   "pie": 1.2,
+   "metal": "#e8b838",
+   "brillo": 0.55,
+   "base": {
+    "forma": "caja",
+    "alto": 0.1,
+    "ancho": 0.18,
+    "color": "#1f6b3a"
+   }
+  },
+  "liga:ESP": {
+   "copa": 2,
+   "alto": 1.25,
+   "ancho": 0.95,
+   "pie": 0.9,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.1,
+    "ancho": 0.17,
+    "color": "#1a1a1f"
+   }
+  },
+  "liga:ENG": {
+   "copa": 1,
+   "alto": 1.35,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#e8b838",
+   "brillo": 0.65,
+   "base": {
+    "forma": "cil",
+    "alto": 0.12,
+    "ancho": 0.2,
+    "color": "#1f7a4a"
+   },
+   "extras": [
+    "corona"
+   ]
+  },
+  "liga:ITA": {
+   "copa": 1,
+   "alto": 1.2,
+   "ancho": 1.1,
+   "pie": 1.1,
+   "metal": "#e8b838",
+   "brillo": 0.65,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.14,
+    "ancho": 0.21,
+    "color": "#202024"
+   },
+   "extras": [
+    "tapa"
+   ]
+  },
+  "liga:GER": {
+   "copa": 3,
+   "alto": 0.7,
+   "ancho": 1.1,
+   "pie": 1.2,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.05,
+    "ancho": 0.3,
+    "color": "#d8dadd"
+   }
+  },
+  "liga:FRA": {
+   "copa": 2,
+   "alto": 1.15,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "caja",
+    "alto": 0.1,
+    "ancho": 0.18,
+    "color": "#1d2a4a"
+   }
+  },
+  "liga:JPN": {
+   "copa": 3,
+   "alto": 1.1,
+   "ancho": 1.0,
+   "pie": 1.3,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "piramide",
+    "alto": 0.14,
+    "ancho": 0.24,
+    "color": "#202024"
+   }
+  },
+  "liga:KOR": {
+   "copa": 2,
+   "alto": 1.0,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#e8b838",
+   "brillo": 0.6,
+   "base": {
+    "forma": "cil",
+    "alto": 0.1,
+    "ancho": 0.19,
+    "color": "#b01c2a"
+   }
+  },
+  "liga:KSA": {
+   "copa": 1,
+   "alto": 1.25,
+   "ancho": 1.05,
+   "pie": 1.0,
+   "metal": "#e8b838",
+   "brillo": 0.65,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.12,
+    "ancho": 0.22,
+    "color": "#1f6b3a"
+   },
+   "extras": [
+    "corona"
+   ]
+  },
+  "liga:EGY": {
+   "copa": 1,
+   "alto": 1.1,
+   "ancho": 1.0,
+   "pie": 1.4,
+   "metal": "#e8b838",
+   "brillo": 0.6,
+   "base": {
+    "forma": "piramide",
+    "alto": 0.14,
+    "ancho": 0.24,
+    "color": "#b01c2a"
+   }
+  },
+  "liga:MAR": {
+   "copa": 2,
+   "alto": 1.15,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#e8b838",
+   "brillo": 0.6,
+   "base": {
+    "forma": "cil",
+    "alto": 0.1,
+    "ancho": 0.19,
+    "color": "#b01c2a"
+   }
+  },
+  "liga:RSA": {
+   "copa": 2,
+   "alto": 1.0,
+   "ancho": 1.05,
+   "pie": 1.0,
+   "metal": "#e8b838",
+   "brillo": 0.6,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.1,
+    "ancho": 0.2,
+    "color": "#1a1a1f"
+   },
+   "extras": [
+    "esfera"
+   ]
+  },
+  "liga:AUS": {
+   "copa": 3,
+   "alto": 0.9,
+   "ancho": 1.2,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "caja",
+    "alto": 0.08,
+    "ancho": 0.22,
+    "color": "#1d2a4a"
+   }
+  },
+  "liga:MEX": {
+   "copa": 1,
+   "alto": 1.25,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#e8b838",
+   "brillo": 0.65,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.13,
+    "ancho": 0.21,
+    "color": "#1f6b3a"
+   }
+  },
+  "liga:USA": {
+   "copa": 3,
+   "alto": 0.85,
+   "ancho": 1.1,
+   "pie": 1.2,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "caja",
+    "alto": 0.12,
+    "ancho": 0.22,
+    "color": "#2a4d8f"
+   }
+  },
+  "copa:ARG": {
+   "copa": 1,
+   "alto": 1.0,
+   "ancho": 0.9,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.08,
+    "ancho": 0.18,
+    "color": "#2a4d8f"
+   }
+  },
+  "copa:BRA": {
+   "copa": 1,
+   "alto": 1.1,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#e8b838",
+   "brillo": 0.65,
+   "base": {
+    "forma": "caja",
+    "alto": 0.08,
+    "ancho": 0.18,
+    "color": "#1f6b3a"
+   }
+  },
+  "copa:URU": {
+   "copa": 2,
+   "alto": 0.95,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.07,
+    "ancho": 0.17,
+    "color": "#3a2a20"
+   }
+  },
+  "copa:PAR": {
+   "copa": 2,
+   "alto": 0.95,
+   "ancho": 1.0,
+   "pie": 1.1,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.07,
+    "ancho": 0.17,
+    "color": "#b01c2a"
+   }
+  },
+  "copa:COL": {
+   "copa": 1,
+   "alto": 0.95,
+   "ancho": 1.0,
+   "pie": 1.1,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "caja",
+    "alto": 0.07,
+    "ancho": 0.17,
+    "color": "#d6a620"
+   }
+  },
+  "copa:PER": {
+   "copa": 2,
+   "alto": 1.0,
+   "ancho": 0.9,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.07,
+    "ancho": 0.17,
+    "color": "#b01c2a"
+   }
+  },
+  "copa:ECU": {
+   "copa": 1,
+   "alto": 0.95,
+   "ancho": 0.95,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.07,
+    "ancho": 0.17,
+    "color": "#2a4d8f"
+   }
+  },
+  "copa:BOL": {
+   "copa": 2,
+   "alto": 0.95,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "caja",
+    "alto": 0.07,
+    "ancho": 0.17,
+    "color": "#1f6b3a"
+   }
+  },
+  "copa:ESP": {
+   "copa": 1,
+   "alto": 1.25,
+   "ancho": 1.15,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.14,
+    "ancho": 0.22,
+    "color": "#7a1f2b"
+   },
+   "extras": [
+    "tapa"
+   ]
+  },
+  "copa:ENG": {
+   "copa": 1,
+   "alto": 1.3,
+   "ancho": 1.1,
+   "pie": 0.9,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.12,
+    "ancho": 0.2,
+    "color": "#1a1a1f"
+   },
+   "extras": [
+    "tapa"
+   ]
+  },
+  "copa:ITA": {
+   "copa": 1,
+   "alto": 1.15,
+   "ancho": 1.1,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.1,
+    "ancho": 0.2,
+    "color": "#2a4d8f"
+   }
+  },
+  "copa:GER": {
+   "copa": 1,
+   "alto": 1.2,
+   "ancho": 1.2,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.12,
+    "ancho": 0.22,
+    "color": "#1a1a1f"
+   }
+  },
+  "copa:FRA": {
+   "copa": 2,
+   "alto": 1.1,
+   "ancho": 1.1,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.1,
+    "ancho": 0.19,
+    "color": "#1d2a4a"
+   }
+  },
+  "copa:JPN": {
+   "copa": 3,
+   "alto": 1.0,
+   "ancho": 1.0,
+   "pie": 1.2,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "piramide",
+    "alto": 0.12,
+    "ancho": 0.22,
+    "color": "#7a1f2b"
+   }
+  },
+  "copa:KOR": {
+   "copa": 2,
+   "alto": 0.95,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.07,
+    "ancho": 0.17,
+    "color": "#2a4d8f"
+   }
+  },
+  "copa:KSA": {
+   "copa": 1,
+   "alto": 1.1,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.1,
+    "ancho": 0.2,
+    "color": "#1f6b3a"
+   }
+  },
+  "copa:EGY": {
+   "copa": 2,
+   "alto": 1.05,
+   "ancho": 1.0,
+   "pie": 1.2,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "piramide",
+    "alto": 0.1,
+    "ancho": 0.2,
+    "color": "#b01c2a"
+   }
+  },
+  "copa:MAR": {
+   "copa": 1,
+   "alto": 1.0,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.08,
+    "ancho": 0.18,
+    "color": "#b01c2a"
+   }
+  },
+  "copa:RSA": {
+   "copa": 2,
+   "alto": 0.95,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.07,
+    "ancho": 0.17,
+    "color": "#1a1a1f"
+   }
+  },
+  "copa:AUS": {
+   "copa": 3,
+   "alto": 0.85,
+   "ancho": 1.1,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "caja",
+    "alto": 0.07,
+    "ancho": 0.2,
+    "color": "#1d2a4a"
+   }
+  },
+  "copa:MEX": {
+   "copa": 1,
+   "alto": 1.0,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.1,
+    "ancho": 0.19,
+    "color": "#1f6b3a"
+   }
+  },
+  "copa:USA": {
+   "copa": 1,
+   "alto": 1.2,
+   "ancho": 1.05,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.13,
+    "ancho": 0.2,
+    "color": "#1d2a4a"
+   },
+   "extras": [
+    "tapa"
+   ]
+  },
+  "conf:lib": {
+   "copa": 1,
+   "alto": 1.35,
+   "ancho": 1.1,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.14,
+    "ancho": 0.24,
+    "color": "#15151a"
+   },
+   "extras": [
+    "anillo"
+   ]
+  },
+  "conf:sud": {
+   "copa": 2,
+   "alto": 1.2,
+   "ancho": 1.05,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.12,
+    "ancho": 0.21,
+    "color": "#2a4d8f"
+   }
+  },
+  "conf:ucl": {
+   "copa": 1,
+   "alto": 1.45,
+   "ancho": 1.25,
+   "pie": 0.8,
+   "metal": "#cfd6dd",
+   "brillo": 0.5
+  },
+  "conf:uel": {
+   "copa": 1,
+   "alto": 1.3,
+   "ancho": 1.1,
+   "pie": 0.9,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "cil",
+    "alto": 0.1,
+    "ancho": 0.19,
+    "color": "#15151a"
+   }
+  },
+  "conf:asia": {
+   "copa": 2,
+   "alto": 1.2,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.12,
+    "ancho": 0.2,
+    "color": "#7a1f2b"
+   },
+   "extras": [
+    "esfera"
+   ]
+  },
+  "conf:afr": {
+   "copa": 1,
+   "alto": 1.4,
+   "ancho": 0.95,
+   "pie": 1.2,
+   "metal": "#e8b838",
+   "brillo": 0.65,
+   "base": {
+    "forma": "caja",
+    "alto": 0.12,
+    "ancho": 0.2,
+    "color": "#1f6b3a"
+   }
+  },
+  "conf:oce": {
+   "copa": 3,
+   "alto": 1.0,
+   "ancho": 1.2,
+   "pie": 1.1,
+   "metal": "#cfd6dd",
+   "brillo": 0.5,
+   "base": {
+    "forma": "piramide",
+    "alto": 0.12,
+    "ancho": 0.22,
+    "color": "#2a4d8f"
+   }
+  },
+  "conf:conc": {
+   "copa": 1,
+   "alto": 1.25,
+   "ancho": 1.05,
+   "pie": 1.0,
+   "metal": "#e8b838",
+   "brillo": 0.65,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.12,
+    "ancho": 0.21,
+    "color": "#2a4d8f"
+   }
+  },
+  "mundial": {
+   "copa": 1,
+   "alto": 1.55,
+   "ancho": 1.15,
+   "pie": 1.0,
+   "metal": "#e8b838",
+   "brillo": 0.7,
+   "base": {
+    "forma": "escalon",
+    "alto": 0.18,
+    "ancho": 0.25,
+    "color": "#15151a"
+   },
+   "extras": [
+    "esfera"
+   ]
+  },
+  "generico": {
+   "copa": 2,
+   "alto": 1.0,
+   "ancho": 1.0,
+   "pie": 1.0,
+   "metal": "#e8b838",
+   "brillo": 0.6,
+   "base": {
+    "forma": "cil",
+    "alto": 0.08,
+    "ancho": 0.17,
+    "color": "#2a2a30"
+   }
+  }
+ }
+}

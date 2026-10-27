@@ -52,6 +52,8 @@ static func _esfera(r: float) -> SphereMesh:
 const MAX_SALA := 6
 const TROFEO := "res://assets/ciudad/trofeo.glb"
 const TROFEO_ESCALA := 0.75
+## Lo que mide, en metros, una copa de receta en su vitrina (la del modelo base mide unos 0,45).
+const ALTO_VITRINA := 0.5
 ## La copa del regalo del dueño (27-10), cargada una sola vez: malla y material (metal medio,
 ## sin entorno que reflejar el metal pleno sale negro). Sin archivo, `_trofeo` queda null.
 static var _trofeo: Mesh = null
@@ -87,8 +89,15 @@ static func _cargar_trofeo() -> void:
 
 ## Una copa con su peana, `p` es la base. Con el modelo del trofeo, esa malla; si falta el
 ## archivo, la procedimental: pie, tallo, copa abierta y dos asas.
-static func copa(lote: PiezasVestuario.Lote, p: Vector3, oro: Material, peana: Material) -> void:
+static func copa(lote: PiezasVestuario.Lote, p: Vector3, oro: Material, peana: Material, receta: Dictionary = {}) -> void:
 	lote.caja(peana, _en(p + Vector3(0, 0.04, 0)), Vector3(0.24, 0.08, 0.24))
+	## La copa de SU competición (orden 15 e): receta de `TrofeosReales` armada con `TrofeoModelo`.
+	if not receta.is_empty() and TrofeoModelo.disponible():
+		var pz := TrofeoModelo.partes(receta)
+		var esc := ALTO_VITRINA / maxf(float(pz["alto"]), 0.01)
+		for d: Dictionary in pz["partes"]:
+			lote.malla(d["mat"], Transform3D(Basis.from_scale(Vector3.ONE * esc), p + Vector3(0, 0.08, 0) + (d["pos"] as Vector3) * esc), d["mesh"])
+		return
 	_cargar_trofeo()
 	if _trofeo != null and _trofeo_mat != null:
 		var xf := Transform3D(Basis.from_scale(Vector3.ONE * TROFEO_ESCALA), p + Vector3(0, 0.08, 0))
@@ -129,7 +138,7 @@ static func vidrio_vitrina() -> StandardMaterial3D:
 	vidrio.cull_mode = BaseMaterial3D.CULL_DISABLED
 	return vidrio
 
-static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, titulos: int, nivel_museo: int) -> PiezasVestuario.Lote:
+static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, titulos: int, nivel_museo: int, hitos: Array = [], pais := "") -> PiezasVestuario.Lote:
 	var lote := PiezasVestuario.Lote.new()
 	var m := PiezasVestuario.materiales(c1, c2)
 	var oro: StandardMaterial3D = Texturas.metal(Color(0.95, 0.78, 0.3), 0.22)
@@ -155,7 +164,7 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 		vitrina(lote, nodo, m, base, vidrio, Vector3(px, y0, pz))
 		vitrinas.append({"p": Vector3(px, y0, pz), "k": k})
 		if k < titulos:
-			copa(lote, Vector3(px, y0 + 1.0, pz), oro, m["madera"])
+			copa(lote, Vector3(px, y0 + 1.0, pz), oro, m["madera"], TrofeosReales.para_titulo(String((hitos[k] as Dictionary).get("titulo", "")), pais) if k < hitos.size() else {})
 		else:
 			## Aún sin copa: un balón de cuero antiguo en su soporte.
 			lote.malla(m["metal"], _en(Vector3(px, y0 + 1.05, pz)), _cilindro(0.06, 0.08, 0.06))

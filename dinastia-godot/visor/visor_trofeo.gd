@@ -34,7 +34,7 @@ func construir(ficha: Dictionary) -> void:
 	sv.own_world_3d = true
 	sv.transparent_bg = false
 	cont.add_child(sv)
-	_escena(sv, bool(ficha.get("vacia", false)))
+	_escena(sv, bool(ficha.get("vacia", false)), ficha.get("receta", {}))
 	var col := VBoxContainer.new()
 	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	col.add_theme_constant_override("separation", 8)
@@ -75,7 +75,7 @@ func _dato(clave: String, valor: String) -> Control:
 	return v
 
 ## La copa, un foco cálido y otro frío de contraluz, cámara delante.
-func _escena(sv: SubViewport, vacia: bool) -> void:
+func _escena(sv: SubViewport, vacia: bool, receta: Dictionary = {}) -> void:
 	var env := Environment.new()
 	env.background_mode = Environment.BG_COLOR
 	env.background_color = Color(0.06, 0.08, 0.1)
@@ -95,6 +95,12 @@ func _escena(sv: SubViewport, vacia: bool) -> void:
 	sv.add_child(contra)
 	_pivote = Node3D.new()
 	sv.add_child(_pivote)
+	if not vacia and not receta.is_empty() and TrofeoModelo.disponible():
+		var pieza := TrofeoModelo.nodo(receta, 1.55)
+		pieza.position = Vector3(0, -0.775, 0)
+		_pivote.add_child(pieza)
+		_camara(sv)
+		return
 	var mi := MeshInstance3D.new()
 	SalasClub._cargar_trofeo()
 	if SalasClub._trofeo != null and SalasClub._trofeo_mat != null and not vacia:
@@ -111,6 +117,9 @@ func _escena(sv: SubViewport, vacia: bool) -> void:
 		mi.mesh = SalasClub._cilindro(0.3, 0.12, 1.2) if not vacia else SalasClub._esfera(0.3)
 		mi.material_override = Texturas.metal(Color(0.95, 0.78, 0.3), 0.22)
 	_pivote.add_child(mi)
+	_camara(sv)
+
+func _camara(sv: SubViewport) -> void:
 	var cam := Camera3D.new()
 	cam.position = Vector3(0, 0.15, 3.0)
 	cam.fov = 40.0
