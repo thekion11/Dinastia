@@ -67,6 +67,7 @@ static func enganchar(e: ExploradorCiudad, v: VistaCiudad, m: Mundo) -> VidaCiud
 	s.vista = v
 	e.add_child(s)
 	e.vida = s
+	PeluchesCiudad.album = m.roles.peluches if m.roles != null else null   ## la estantería del álbum en la vivienda
 	EstacionCentral.reloj = m.reloj   ## los trenes de la estación van por el reloj del juego
 	m.reloj.tiempo_pasado.connect(s._al_pasar_tiempo)
 	m.reloj.hora_cambiada.connect(s._al_cambiar_hora)

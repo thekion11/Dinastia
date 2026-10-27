@@ -289,11 +289,11 @@ func _probar_cartera_dt() -> void:
 	mm.roles.cartera.efectivo = 12
 	mm.roles.cartera.pagar_efectivo(2, "Café", 1)
 	var filas := TelefonoCartera.filas(mm)
-	_comprobar(filas.size() == 4 and String(filas[0][0]).contains("Efectivo") and String(filas[3][0]).contains("Café"), "el móvil enseña efectivo, tarjeta, PIN de fábrica y el último movimiento")
+	_comprobar(filas.size() == 5 and String(filas[0][0]).contains("Efectivo") and String(filas[3][0]).contains("Café") and String(filas[4][0]).contains("peluches"), "el móvil enseña efectivo, tarjeta, PIN de fábrica, el último movimiento y el álbum de peluches")
 	_comprobar(String(filas[3][1]).contains("2"), "y el importe del movimiento")
 	mm.roles.cartera.bloqueada = true
 	mm.roles.cartera.pin_inicial = false
-	_comprobar(TelefonoCartera.filas(mm).size() == 3, "bloqueada y con PIN propio: sin la fila del PIN")
+	_comprobar(TelefonoCartera.filas(mm).size() == 4, "bloqueada y con PIN propio: sin la fila del PIN")
 	_comprobar(TelefonoCartera.filas(Mundo.new()).is_empty(), "sin roles el móvil no enseña cartera")
 	## Guardado: ida y vuelta por JSON y partida vieja.
 	var r2 := Roles.new(m)

@@ -380,6 +380,8 @@ func _cruzar_puerta() -> void:
 	_aviso.text = ""
 
 func _entrada() -> Vector2:
+	if bool(get_meta("juego_abierto", false)):
+		return Vector2.ZERO   ## una máquina de peluches abierta usa las mismas teclas
 	var x := float(Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT)) - float(Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT))
 	var y := float(Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP)) - float(Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN))
 	var jx := Input.get_joy_axis(0, JOY_AXIS_LEFT_X)

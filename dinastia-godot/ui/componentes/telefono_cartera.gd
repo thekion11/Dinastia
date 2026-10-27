@@ -22,4 +22,9 @@ static func filas(m: Mundo) -> Array:
 		var mv: Dictionary = c.movimientos[i]
 		var importe := int(mv["importe"])
 		r.append(["🧾 " + Idiomas.t(String(mv["concepto"])), ("+" if importe > 0 else "") + Eco.dinero_euros(float(importe)), Tema.BIEN if importe > 0 else Tema.SUAVE])
+	## El álbum de peluches de las recreativas y sus logros.
+	var pe: Peluches = m.roles.peluches
+	r.append(["🧸 " + Idiomas.t("Álbum de peluches"), Idiomas.t("%d de %d") % [pe.distintos(), Peluches.PELUCHES.size()], Tema.TEXTO])
+	for l: String in pe.logros:
+		r.append(["🏆 " + Peluches.nombre_logro(l), "", Tema.ORO])
 	return r
