@@ -40,6 +40,7 @@ var colector := {}                           ## sector -> mm acumulados
 var inundado := {}                           ## sector -> bool
 var gas := {}                                ## id gasolinera -> litros
 var averias_azar := true                     ## false en las pruebas: solo las averías puestas a mano
+var hora_dia := 0                            ## la última hora simulada (0..23)
 var generacion := 0.0
 var demanda := 0.0
 
@@ -58,6 +59,7 @@ func reiniciar() -> void:
 		inundado[sec] = false
 	for id in 3:
 		gas[id] = GAS_DEPOSITO * 0.7
+	recalcular()
 
 static func sectores() -> Array[Vector2i]:
 	var r: Array[Vector2i] = []
@@ -127,6 +129,7 @@ func pasar(n: int, hora: int, v: float, ll: float) -> void:
 		_hora(posmod(hora + k, 24))
 
 func _hora(h: int) -> void:
+	hora_dia = h
 	_averias_al_azar()
 	_electricidad(h)
 	_agua(h)
@@ -177,8 +180,25 @@ func _agua(h: int) -> void:
 	var produce := AGUA_PRODUCCION * (1.0 if hay_luz(SECTOR_PLANTA) else 0.0)
 	gasto = minf(gasto, agua_nivel + produce)
 	agua_nivel = clampf(agua_nivel + produce - gasto, 0.0, AGUA_DEPOSITO)
+	_presiones()
+
+func _presiones() -> void:
 	for sec in sectores():
 		presion[sec] = agua_nivel > AGUA_DEPOSITO * 0.02 and not esta_averiado("agua", sec) and bool(luz[sec])
+
+## Recalcula luz y presión con las averías de ahora, sin avanzar el reloj.
+func recalcular() -> void:
+	_electricidad(hora_dia)
+	_presiones()
+
+## La cuadrilla arregla todo de golpe (lo hace el cuadro de mando del subsuelo). Devuelve cuántas averías había.
+func reparar_todo() -> int:
+	var n := 0
+	for red: String in cortes:
+		n += (cortes[red] as Dictionary).size()
+		(cortes[red] as Dictionary).clear()
+	recalcular()
+	return n
 
 func _drenaje() -> void:
 	for sec in sectores():
