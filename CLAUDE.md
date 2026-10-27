@@ -63,3 +63,10 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     trofeos. PELO: usar los cortes y personajes del Drive. Pasadas visuales P1-P3: repetir «MEJORAR». PELUCHES: sí a las
     propuestas (monedas de 1 € del efectivo, una sala en el centro comercial, subir los 14 peluches reducidos fuera de LFS) y además
     COLECCIONABLES que den LOGROS. FPS en PC y móvil: cuando el dueño tenga el equipo listo. Pasto: traerlo del Drive.
+15. (27-10 noche, decisiones del dueño) LICENCIAS: el dueño las tiene todas y no se usan fotos de personas en lo público
+    (M-421/M-424 cerrados). Carpeta del Drive compartida como lector (pasto, trofeo base, pelo, personaje, foco, garra, silla, sala TV).
+    BASE «FICTICIA» DE CLUBES: se queda como está y se COMPLETA: mismas estadísticas físicas y carrera de cada jugador, nombre un
+    poco modificado pero reconocible; clubes igual; ESCUDOS que se parezcan más al real; uniformes base iguales; estadio con sus
+    colores; los TROFEOS que tenga hoy cada club, modelados a partir del trofeo base del Drive (`gold+trophy.glb`) y modificados
+    para parecerse; sus datos guardados en la historia del club. POSICIONES: se quedan en español en todos los idiomas.
+    Política de privacidad: publicarla después. PARADEROS: que se parezcan a los de Chile (forma y carteles).

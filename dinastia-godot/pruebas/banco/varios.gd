@@ -317,7 +317,7 @@ func _probar_peluches() -> void:
 	for p: Dictionary in Peluches.PELUCHES:
 		ids[String(p["id"])] = true
 		series[String(p["serie"])] = true
-	_comprobar(Peluches.PELUCHES.size() == 14 and ids.size() == 14 and series.size() == Peluches.SERIES.size(), "tabla: 14 peluches con ids distintos en %d series" % series.size())
+	_comprobar(Peluches.PELUCHES.size() == 15 and ids.size() == 15 and series.size() == Peluches.SERIES.size(), "tabla: 15 peluches con ids distintos en %d series" % series.size())
 	_comprobar(Peluches.de_maquina(0).size() >= 3 and Peluches.de_maquina(1).size() >= 3 and Peluches.de_maquina(2).size() >= 3, "cada una de las tres máquinas trae al menos tres peluches")
 	var c1 := Peluches.campo(1, 77)
 	var c2 := Peluches.campo(1, 77)
@@ -330,7 +330,7 @@ func _probar_peluches() -> void:
 	_comprobar(c1.size() >= 5 and str(c1) == str(c2) and not solape and not ajeno, "el campo (%d peluches) sale de la semilla, sin solapes y solo con los de su máquina" % c1.size())
 	var pe := Peluches.new()
 	var ligero := Peluches.def("pollito")
-	var pesado := Peluches.def("ballena")
+	var pesado := Peluches.def("elefante")
 	_comprobar(pe.probabilidad(ligero, 0.0) > pe.probabilidad(pesado, 0.0) and pe.probabilidad(ligero, 0.0) > pe.probabilidad(ligero, 0.1), "agarra mejor lo ligero y lo que tiene la garra encima")
 	_comprobar(pe.probabilidad(ligero, Peluches.RADIO_AGARRE + 0.01) == 0.0, "fuera del radio no hay agarre")
 	var p0 := pe.probabilidad(pesado, 0.05)
@@ -358,14 +358,14 @@ func _probar_peluches() -> void:
 	var todos: Array = []
 	for p: Dictionary in Peluches.PELUCHES:
 		todos.append_array(album.conseguir(String(p["id"])))
-	_comprobar(album.completa() and album.logros.size() == Peluches.SERIES.size() + 1 and album.logros.has(Peluches.LOGRO_TODO) and todos.has(Peluches.LOGRO_TODO), "con los 14: un logro por serie y otro por la colección entera (%d logros)" % album.logros.size())
+	_comprobar(album.completa() and album.logros.size() == Peluches.SERIES.size() + 1 and album.logros.has(Peluches.LOGRO_TODO) and todos.has(Peluches.LOGRO_TODO), "con los 15: un logro por serie y otro por la colección entera (%d logros)" % album.logros.size())
 	var mundo_p := Mundo.new()
 	var roles := Roles.new(mundo_p)
-	roles.peluches.conseguir("dragon")
+	roles.peluches.conseguir("unicornio")
 	roles.peluches.fallos_seguidos = 2
 	var copia := Roles.new(mundo_p)
 	copia.desde_dic(roles.a_dic())
-	_comprobar(copia.peluches.tiene("dragon") and copia.peluches.fallos_seguidos == 2, "el álbum se guarda y se carga con la partida")
+	_comprobar(copia.peluches.tiene("unicornio") and copia.peluches.fallos_seguidos == 2, "el álbum se guarda y se carga con la partida")
 	var vieja := Roles.new(mundo_p)
 	var d: Dictionary = roles.a_dic()
 	d.erase("peluches")
@@ -411,8 +411,8 @@ func _probar_peluches() -> void:
 	_comprobar(not PeluchesCiudad.servicio(null, "cajero_1"), "el gancho de la E ignora lo que no es una máquina de peluches")
 	for p: Dictionary in Peluches.PELUCHES:
 		var n := PelucheModelo.montar(p)
-		if String(p["id"]) in ["oso", "ballena", "dragon"]:
-			_comprobar(n.get_child_count() >= 7, "el peluche «%s» se dibuja (%d piezas)" % [String(p["id"]), n.get_child_count()])
+		## Desde el 27-10, cada uno con su modelo del regalo del dueño (sin modelo, el relleno de esferas tiene ≥ 7 piezas).
+		_comprobar(ResourceLoader.exists(String(p["modelo"])) and n.get_child_count() == 1 and n.get_child(0).find_children("*", "MeshInstance3D", true, false).size() >= 1, "el peluche «%s» carga su modelo" % String(p["id"]))
 		n.free()
 	## La estantería del álbum en la vivienda: más peluches ganados, más peluches en la balda.
 	PeluchesCiudad.album = Peluches.new()
@@ -421,7 +421,7 @@ func _probar_peluches() -> void:
 	var sin_nada := r0.get_child_count()
 	PeluchesCiudad.album.conseguir("oso")
 	PeluchesCiudad.album.conseguir("pollito")
-	PeluchesCiudad.album.conseguir("dragon")
+	PeluchesCiudad.album.conseguir("unicornio")
 	var r1 := Node3D.new()
 	var sala1 := InteriorInstalacion.en_mundo(r1, "edificio_vivienda")
 	_comprobar(r1.get_child_count() == sin_nada + 3, "la estantería de la vivienda enseña los peluches ganados (%d → %d nodos)" % [sin_nada, r1.get_child_count()])
