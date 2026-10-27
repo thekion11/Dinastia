@@ -211,9 +211,11 @@ func _tarjeta_arbitral(arr: Array[Jugador], plantilla: String, arbitro_nombre: S
 	j.amarillas += 1
 	var roja := j.amarillas % 2 == 0 and Azar.suerte(0.18)
 	if roja:
-		j.suspension = maxi(j.suspension, 1)
+		Disciplina.sanciona(j)
 	decision_arbitral.emit(Idiomas.t(plantilla) % [arbitro_nombre, j.nombre], minuto)
 	tarjeta.emit(j, roja, minuto)
+	if not roja and Disciplina.acumula(j):
+		decision_arbitral.emit(Disciplina.frase(j), minuto)
 
 ## El goleador no se sortea plano: se pondera por lo cerca del area que juega y
 ## por su pegada. Si se sortea plano, los centrales marcan tanto como los nueves

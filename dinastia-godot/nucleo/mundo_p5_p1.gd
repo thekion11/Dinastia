@@ -256,8 +256,8 @@ func _semana_del_plantel(c: Club) -> void:
 	for j in c.plantilla:
 		if j.lesion > 0:
 			j.lesion -= 1
-		if j.suspension > 0:
-			j.suspension -= 1
+		if j.suspension > 0 and j.susp_semana != Jugador.semana_global:
+			j.suspension -= 1   ## la que cayó en el partido de ESTA semana se cumple en el de la próxima (`Disciplina.sanciona`)
 		## El preparador fisico se nota aqui: tu plantel pierde menos forma. Es
 		## un solo numero, pero es el que hace que contratarlo no sea un boton
 		## de gastar dinero.
