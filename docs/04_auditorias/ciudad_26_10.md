@@ -69,7 +69,6 @@ Horas = estimación de una persona con el catálogo `Modulos` ya hecho; las piez
 
 | # | Mejora | Pieza / método | Horas |
 |---|---|---|---:|
-| **P0-3** | Gasolinera: **surtidores visibles** fuera de la marquesina, rótulo de precios y el solar acotado | primitivas + `kenney_roads` (conos/vallas) | 3 |
 | **P1-4** | **Fachada del centro comercial**: puertas dobles, escaparates en dos plantas, marquesina y rótulo SOBRE la pared; aparcamiento con plazas y farolas | `mini_mercado/` + `kit_edificios/` (paredes con ventana y puerta animada) | 6 |
 | **P1-5** | Servicios (comisaría, hospital, ayuntamiento, escuela, instituto, cine, universidad): **plantilla de fachada** con zócalo, ventanas por pisos, puerta con marquesina y un rótulo en la pared | `edificios_modulares/` (bloques, ventanas, tejados) + `kit_edificios/` | 12 (≈1,5 por edificio) |
 | **P1-6** | **Estación**: andén, vías y un tren parado; unir la boca de metro más cercana con una pasarela | `tren/` (103 piezas) | 6 |
@@ -108,6 +107,8 @@ Capturas antes / después en `docs/04_auditorias/capturas_ciudad_c2/` (`<zona>_<
   antes de medir y la casa moderna real sale a 22 m. Antes: [aérea](capturas_ciudad_c2/casa_ribera_aerea_antes.jpg) · [pie](capturas_ciudad_c2/casa_ribera_pie_antes.jpg);
   después: [aérea](capturas_ciudad_c2/casa_ribera_aerea_despues.jpg) · [pie](capturas_ciudad_c2/casa_ribera_pie_despues.jpg). Después de esta primera pasada se vio que las losas de roca flotaban y que había un árbol en mitad de la calzada; segunda pasada: se quitan las losas de terreno y rocas del glb (planas, por debajo de cero) y la casa se apoya en y=0, y el colocador de árboles (`_arbolado`) ya no planta sobre las calles de la ciudad grande ni sobre las del núcleo (`_vias`) — el fallo era general, la orla de cada parcela caía justo sobre las calles de acceso. Primera pasada (con rocas y árbol): [aérea](capturas_ciudad_c2/casa_ribera_aerea_intermedio.jpg) · [pie](capturas_ciudad_c2/casa_ribera_pie_intermedio.jpg).
   sobresale de la parcela (se ve en la aérea), y en la toma a pie del sur la tapa un árbol.
+- **Gasolinera (P0-3).** `CiudadGasolinera` (`visor/ciudad_gasolinera.gd`): marquesina con faldón rojo, banda luminosa y cuatro pilares; islas de hormigón con bordillo rojo bajo los surtidores (que siguen siendo los de `RedesCiudad`, con su «Repostar»: no se tocan); tienda al fondo con `FachadaModular`; poste de precios en la esquina. Antes:
+  [aérea](capturas_ciudad_c2/gasolinera_aerea_antes.jpg) · [pie](capturas_ciudad_c2/gasolinera_pie_antes.jpg); después: [aérea](capturas_ciudad_c2/gasolinera_aerea_despues.jpg) · [pie](capturas_ciudad_c2/gasolinera_pie_despues.jpg). Pendiente: el cartel de precios no se lee desde la aérea (solo el rótulo), el solar no tiene vallas ni conos, y no hay coches repostando.
 - **Centro comercial (P1-4, parte) y plantilla de fachada (P1-5, primera pieza).** `FachadaModular` (`visor/fachada_modular.gd`) viste una cara con piezas de
   `edificios_modulares`: escaparates en planta baja, entrada de tres módulos con marquesina, tres pisos de ventanas y cornisa; se reutiliza en los demás singulares
   (`FachadaModular.montar(ex, x, z_frente, y0, ancho, pisos)`). Las recreativas de peluches pasan de 7 en fila a 3 junto a la puerta. Antes:
