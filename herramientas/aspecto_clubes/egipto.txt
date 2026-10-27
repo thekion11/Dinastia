@@ -1,0 +1,16 @@
+Al Ahly|circulo|liso|AHL|liso|#d50032|#ffffff|#ffffff|#d50032
+Zamalek|escudo|liso|ZAM|liso|#ffffff|#d50032|#ffffff|#ffffff
+Pyramids|clasico|liso|PYR|liso
+Ismaiiy|hex|franjas|ISM|franjas|#ffd100|#0038a8
+Al Masry|rombo|liso|MAS|liso
+Ceramica C.|ovalo|liso|CER|liso
+Fut. Rise|escudo|liso|FUT|liso
+National Bank|clasico|liso|NBE|liso
+ENPPi|circulo|liso|ENP|liso
+Pharco|hex|liso|PHA|liso
+Smouha|escudo|liso|SMO|liso
+El Gouna|rombo|liso|GOU|liso
+Baladiyat|clasico|liso|BAL|liso
+Talaea|circulo|liso|TAL|liso
+Al Mokawloon|ovalo|liso|MOK|liso
+ZED FC|escudo|liso|ZED|liso

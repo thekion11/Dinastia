@@ -1,0 +1,16 @@
+Inter Miami|escudo|liso|MIA|liso|#f7b5cd|#000000|#000000|#f7b5cd
+LAFC|escudo|franjas|LAF|franjas|#000000|#c39e6d|#000000|#000000
+Seattle S.|circulo|liso|SEA|liso
+Columbus Crew|clasico|liso|CLB|liso
+Philadelphia U.|escudo|liso|PHI|franja_pecho|#0a2240|#ffd100|#0a2240|#0a2240
+Atlanta Utd|hex|franjas|ATL|franjas
+LA Galaxy|circulo|liso|LAG|liso|#ffffff|#ffd100|#ffffff|#ffffff
+NY City FC|circulo|liso|NYC|liso
+N. England R.|escudo|liso|NER|liso
+Austin FC|clasico|liso|ATX|liso
+Portland T.|rombo|liso|POR|liso
+Orlando City|ovalo|liso|ORL|liso
+FC Cincinnati|hex|liso|CIN|liso
+Nashville SC|clasico|liso|NSH|liso
+St. Louis City|escudo|liso|STL|liso
+Charlotte FC|circulo|liso|CLT|liso

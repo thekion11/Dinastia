@@ -1,0 +1,16 @@
+Melbourne City|circulo|liso|MCY|liso|#75aadb|#ffffff
+Sidney FC|escudo|liso|SFC|liso|#75aadb|#00246b
+Melbourne V.|clasico|chevron|MVC|v_ancha|#00246b|#ffffff
+C. Coast M.|hex|liso|CCM|liso
+W. Sidney W.|escudo|franjas|WSW|franjas|#d50032|#000000
+Adelaide Utd|rombo|liso|AUD|liso
+Brisbane R.|ovalo|liso|BRI|liso
+Wellington P.|clasico|liso|WEL|liso
+Macarthur FC|escudo|liso|MAC|liso
+Newcastle J.|hex|liso|NJ|liso
+Perth Glory|circulo|liso|PG|liso
+W. United|rombo|liso|WU|liso
+Auckland FC|clasico|liso|AUC|liso
+Canberra Utd|escudo|liso|CAN|liso
+Geelong FC|ovalo|franjas|GEE|franjas
+Darwin City|hex|liso|DAR|liso

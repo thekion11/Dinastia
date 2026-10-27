@@ -1,0 +1,16 @@
+Mamelodi S.|circulo|liso|MS|liso|#ffd100|#00843d|#0038a8|#ffd100
+Orlando Pirates|escudo|liso|OP|liso|#000000|#ffffff|#000000|#000000
+Kaizer Chiefs|clasico|liso|KC|liso|#ffd100|#000000|#000000|#ffd100
+Stelleribosch|hex|liso|ST|liso
+Sekhukhune|rombo|liso|SE|liso
+Cape Town City|ovalo|liso|CT|liso
+Supersport Utd|escudo|liso|SS|liso
+Richards Bay|clasico|liso|RB|liso
+Golden Arrows|circulo|liso|GA|liso
+Polokwane|hex|liso|PC|liso
+Chippa Utd|escudo|liso|CU|liso
+AmaZalu|clasico|liso|AZ|liso
+Ts. Galaxie|rombo|liso|TS|liso
+Maritzburg|ovalo|liso|MU|liso
+Casric Stars|escudo|liso|CS|liso
+Magesi FC|clasico|liso|MA|liso

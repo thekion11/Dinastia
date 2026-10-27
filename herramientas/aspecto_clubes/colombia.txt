@@ -1,0 +1,16 @@
+Atl. Nacional|circulo|franjas|AN|franjas|#00843d|#ffffff|#ffffff|#00843d
+Millonarios|escudo|liso|MI|liso|#0038a8|#ffffff|#0038a8|#0038a8
+America de Cali|clasico|liso|AC|liso|#d50032|#ffffff|#ffffff|#d50032
+Junior|hex|franjas|JU|franjas|#d50032|#ffffff|#0038a8|#d50032
+Santa Fe|banderin|liso|SF|liso|#d50032|#ffffff|#ffffff|#d50032
+Dep. Cali|rombo|franjas|DC|franjas|#00843d|#ffffff|#ffffff|#00843d
+Tolima|clasico|liso|TO|liso|#7a1f2b|#ffd100|#ffd100|#7a1f2b
+DIM Medellin|circulo|liso|DM|liso|#d50032|#0038a8|#0038a8|#d50032
+Once Caldas|escudo|franjas|OC|franjas|#ffffff|#00843d|#00843d|#ffffff
+Bucaramanga|penta|liso|BU|liso|#ffd100|#00843d|#00843d|#ffd100
+Pereira|ovalo|liso|PE|liso|#ffd100|#d50032|#d50032|#ffd100
+La Equidad|hex|liso|EQ|liso|#00843d|#ffffff|#ffffff|#00843d
+Envigado|clasico|liso|EN|liso|#ff7a00|#ffffff|#ffffff|#ff7a00
+Alianza FC|escudo|liso|AF|liso|#0038a8|#ffffff|#ffffff|#0038a8
+Fortaleza C.|rombo|liso|FC|liso|#d50032|#ffd100|#ffd100|#d50032
+Boyacá Chicó|circulo|franjas|BC|franjas|#ffffff|#00843d|#00843d|#ffffff
