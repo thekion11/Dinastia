@@ -59,3 +59,35 @@ func _probar() -> void:
 	var c2 := Citas.new()
 	c2.desde_dic(d)
 	_comprobar(c2._trofeos_vistos == m.citas._trofeos_vistos, "lo celebrado sobrevive a guardar y cargar")
+	## EL MUSEO QUE CRECE (27-10): capacidad real en la planta 2 y planta 3 «Museo ampliado» por el ascensor.
+	var ctx0 := EdificioClub.ctx
+	var hitos: Array = []
+	for k in 9:
+		hitos.append({"anio": 1990 + k * 3, "titulo": "Liga"})
+	EdificioClub.ctx = {"inst": {"museo": 3}, "titulos": 9, "hitos": hitos}
+	_comprobar(not EdificioClub.plantas().has(3), "con el museo a nivel 3 el ascensor no llega a la planta 3")
+	var sala := Node3D.new()
+	SalasClub.museo(sala, Rect2(0.0, 0.0, 3.6, 6.0), 0.0, Color("#c01020"), Color("#f2f2f2"), 9, 3)
+	var cuerpos := sala.find_children("*", "StaticBody3D", false, false).size()
+	_comprobar(cuerpos == SalasClub.MAX_SALA, "con 9 títulos la sala de la planta 2 llena sus %d vitrinas y no más (%d)" % [SalasClub.MAX_SALA, cuerpos])
+	sala.free()
+	EdificioClub.ctx = {"inst": {"museo": 4}, "obras": {"museo": 2}, "titulos": 9, "hitos": hitos}
+	_comprobar(MuseoAmpliado.en_obra(EdificioClub.ctx) and EdificioClub.plantas().has(3), "la obra que lleva el museo a nivel 5 ya deja la planta 3 (en obra)")
+	var dt := TunelVestuario.datos({"forma": "cuenco"}, 2)
+	var asc3 := false
+	for z: Dictionary in dt["zonas"]:
+		if int(z.get("planta", 0)) == 3 and String(z["nombre"]) == "Ascensor":
+			asc3 = true
+	_comprobar(asc3, "el ascensor para en la planta 3")
+	var raiz := Node3D.new()
+	TunelVestuario.montar(raiz, {"forma": "cuenco", "club_nombre": "Mi Club"}, 2, null)
+	_comprobar(raiz.find_child("AnimMuseoAmpliado", true, false) == null, "en obra no hay copas que iluminar")
+	raiz.free()
+	EdificioClub.ctx = {"inst": {"museo": 5}, "titulos": 9, "hitos": hitos}
+	_comprobar(MuseoAmpliado.terminada(EdificioClub.ctx) and EdificioClub.nombre_planta(3) == "Museo ampliado", "terminada la obra, la planta 3 se llama «Museo ampliado»")
+	var raiz2 := Node3D.new()
+	TunelVestuario.montar(raiz2, {"forma": "cuenco", "club_nombre": "Mi Club"}, 2, null)
+	var anim := raiz2.find_child("AnimMuseoAmpliado", true, false) as MuseoAmpliadoAnim
+	_comprobar(anim != null and anim.copas.size() == 3, "la planta 3 lleva una copa por título del séptimo en adelante (3 de 9): %d" % (anim.copas.size() if anim != null else -1))
+	raiz2.free()
+	EdificioClub.ctx = ctx0
