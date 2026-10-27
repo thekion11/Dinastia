@@ -29,6 +29,8 @@ func _pisos(r: Rect2) -> void:
 					"pos": Vector3(puerta.x, 0, zf + fila * 2.6), "estado": "ciudad", "radio": 6.0})
 			else:
 				_kit(esc, pos_p, tam, 0.0 if fila > 0.0 else PI, true)
+	if not modular:
+		CiudadOeste.rellenar(self, r)
 	## El patio entre las dos hileras: césped, un camino y árboles.
 	_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(r.size.x * 0.82, 0.06, r.size.y * 0.2))
 	_lote("solar", Vector3(c.x, 0.3, c.z), Vector3(r.size.x * 0.82, 0.06, 2.4))
