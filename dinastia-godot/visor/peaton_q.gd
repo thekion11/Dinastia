@@ -116,6 +116,8 @@ static func terminar(d: Dictionary) -> void:
 			continue
 		(mi as MeshInstance3D).visibility_range_end = 120.0
 		(mi as MeshInstance3D).visibility_range_end_margin = 20.0
+		## Sin saltos (P4): al llegar al límite el peatón se disuelve con tramado en los 20 m del margen en vez de desaparecer de golpe.
+		(mi as MeshInstance3D).visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	sombra_contacto(nodo)
 
 ## SOMBRA DE CONTACTO (P4, 27-10-2026). La sombra del sol solo llega a unos metros: más lejos los peatones «flotaban» sobre la acera. Una
@@ -152,6 +154,7 @@ static func sombra_contacto(nodo: Node3D) -> MeshInstance3D:
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.visibility_range_end = 70.0
 	mi.visibility_range_end_margin = 10.0
+	mi.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	nodo.add_child(mi)
 	return mi
 
