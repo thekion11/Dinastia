@@ -6,6 +6,23 @@ extends RefCounted
 ## en ella; `Principal` conserva puentes de una línea con los nombres de siempre.
 
 var p: Principal
+## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
+## ELEGIR CLUB: MAPA DEL PAÍS Y ESCUDOS, no un desplegable de 383 líneas.
+##
+## «La forma de elegir el club debe estar mejor visualmente; cuando se selecciona
+## un país debe aparecer un mapa y enmarcar el país que seleccionaste, y ahí se
+## despliegan los clubes». Del documento de instrucciones.
+##
+## Hasta ahora era un `OptionButton` con los trescientos ochenta y tres clubes
+## del mundo en una lista plana: para encontrar el tuyo había que bajar por un
+## menú interminable, y todos se veían exactamente igual.
+##
+## AHORA SON DOS PASOS. Primero el país -con su silueta dibujada y el número de
+## clubes-, y dentro los clubes de ese país con su escudo, su reputación, su
+## división y su aforo, que es lo que de verdad se compara al elegir dónde
+## empezar. El desplegable de arriba sigue existiendo para cambiar rápido.
+var _dlg_club: Window = null
+var _pais_elegido: String = ""
 
 func _init(principal: Principal) -> void:
 	p = principal
@@ -39,9 +56,9 @@ func _tomar_club(id: String) -> void:
 	p._conectar_noticias()
 	p._seleccionado = null
 	_llenar_selector()
-	if p._dlg_club != null and is_instance_valid(p._dlg_club):
-		p._dlg_club.queue_free()
-		p._dlg_club = null
+	if _dlg_club != null and is_instance_valid(_dlg_club):
+		_dlg_club.queue_free()
+		_dlg_club = null
 	p._escribir("[color=#3fa06a][b]Tomas el mando de %s.[/b][/color] %s" % [
 		p.mundo.mi_club().nombre, p.mundo.directiva.objetivo if p.mundo.directiva != null else ""])
 	p._refrescar()
@@ -70,15 +87,15 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 		b.text = "%s  (%d)" % [String(nombres.get(pais, pais)) if nombres != null else pais, int(por_pais[pais])]
 		b.add_theme_font_size_override("font_size", 11)
 		b.toggle_mode = true
-		b.button_pressed = p._pais_elegido == pais
+		b.button_pressed = _pais_elegido == pais
 		b.clip_text = true
 		b.custom_minimum_size = Vector2(120, 26)
 		b.pressed.connect(func() -> void:
-			p._pais_elegido = pais
+			_pais_elegido = pais
 			_pintar_elegir_club(col))
 		flow.add_child(b)
 
-	if p._pais_elegido == "":
+	if _pais_elegido == "":
 		return
 
 	## EL MAPA. Se pinta con el color del club que ya diriges, para que el país
@@ -105,13 +122,13 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 	colm.add_theme_constant_override("separation", 6)
 	marco.add_child(colm)
 	var tn := p._texto(13, p.COL_TEXTO)
-	tn.text = String(nombres.get(p._pais_elegido, p._pais_elegido)) if nombres != null else p._pais_elegido
+	tn.text = String(nombres.get(_pais_elegido, _pais_elegido)) if nombres != null else _pais_elegido
 	tn.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	colm.add_child(tn)
 	var lienzo := Control.new()
 	lienzo.custom_minimum_size = Vector2(200, 240)
 	colm.add_child(lienzo)
-	var pol := MapaPais.poligono(p._pais_elegido, Vector2(200, 240))
+	var pol := MapaPais.poligono(_pais_elegido, Vector2(200, 240))
 	if pol.size() >= 3:
 		var forma := Polygon2D.new()
 		forma.polygon = pol
@@ -143,7 +160,7 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 
 	var clubes: Array[Club] = []
 	for l2: Liga in p.mundo.ligas:
-		if l2.pais == p._pais_elegido:
+		if l2.pais == _pais_elegido:
 			for c2: Club in l2.clubes:
 				clubes.append(c2)
 	clubes.sort_custom(func(a: Club, b: Club) -> bool: return a.rep > b.rep)
@@ -176,37 +193,37 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 		f.add_child(d)
 
 func _abrir_elegir_club() -> void:
-	if p._dlg_club != null and is_instance_valid(p._dlg_club):
+	if _dlg_club != null and is_instance_valid(_dlg_club):
 		## Fuera del árbol YA, no al final del cuadro: si no, durante ese cuadro
 		## hay dos ventanas exclusivas y Godot se queja (visto en el recorrido).
-		p._dlg_club.exclusive = false
-		p._dlg_club.hide()
-		if p._dlg_club.get_parent() != null:
-			p._dlg_club.get_parent().remove_child(p._dlg_club)
-		p._dlg_club.queue_free()
-	p._dlg_club = Window.new()
-	p._dlg_club.title = Idiomas.t("Elegir club")
-	p._dlg_club.size = Vector2i(880, 620)
-	p._dlg_club.transient = true
-	p._dlg_club.exclusive = true
-	p._dlg_club.close_requested.connect(func() -> void:
-		p._dlg_club.queue_free()
-		p._dlg_club = null)
-	p.add_child(p._dlg_club)
+		_dlg_club.exclusive = false
+		_dlg_club.hide()
+		if _dlg_club.get_parent() != null:
+			_dlg_club.get_parent().remove_child(_dlg_club)
+		_dlg_club.queue_free()
+	_dlg_club = Window.new()
+	_dlg_club.title = Idiomas.t("Elegir club")
+	_dlg_club.size = Vector2i(880, 620)
+	_dlg_club.transient = true
+	_dlg_club.exclusive = true
+	_dlg_club.close_requested.connect(func() -> void:
+		_dlg_club.queue_free()
+		_dlg_club = null)
+	p.add_child(_dlg_club)
 	var fondo := ColorRect.new()
 	fondo.color = p._pal_fondo()
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	p._dlg_club.add_child(fondo)
+	_dlg_club.add_child(fondo)
 	var caja := MarginContainer.new()
 	caja.set_anchors_preset(Control.PRESET_FULL_RECT)
 	caja.add_theme_constant_override("margin_left", 14)
 	caja.add_theme_constant_override("margin_right", 14)
 	caja.add_theme_constant_override("margin_top", 12)
 	caja.add_theme_constant_override("margin_bottom", 12)
-	p._dlg_club.add_child(caja)
+	_dlg_club.add_child(caja)
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 8)
 	caja.add_child(col)
-	p._pais_elegido = p.mundo.mi_club().pais if p.mundo.mi_club() != null else ""
+	_pais_elegido = p.mundo.mi_club().pais if p.mundo.mi_club() != null else ""
 	_pintar_elegir_club(col)
-	p._dlg_club.popup_centered()
+	_dlg_club.popup_centered()

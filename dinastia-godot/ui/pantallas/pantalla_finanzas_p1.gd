@@ -9,6 +9,9 @@ extends RefCounted
 ## La pestaña entera de cuentas (`_pintar_finanzas`) llegó aquí el 27-10 (fase 6, paso 6).
 
 var p: Principal
+## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
+## El mismo doble toque, para "Vender el club" -`vista.confVender` del HTML-.
+var _confirmar_venta_club: bool = false
 
 func _init(principal: Principal) -> void:
 	p = principal
