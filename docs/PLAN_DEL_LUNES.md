@@ -2187,3 +2187,5 @@ Filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`, aprobadas p
 | 14 | **Ocasiones jugables en el partido del DT**: en las 3-6 llegadas claras, pausa y eliges pase, conducción o tiro con la cámara a pie de campo | alta | L | `nucleo/partido*.gd`, `nucleo/motor_libre.gd` (`tomar_control`), `ui/partido_vivo*.gd`, `visor/control_partido.gd` | pendiente |
 
 Exportar e importar la partida (fila 30 de la propuesta, §10 «Guardado en la nube») ya está hecho: Ajustes → Partida (`ui/pantallas/pantalla_ajustes_p1.gd`, `_exportar_partida` y `_importar_partida`). Queda la nube.
+
+- (27-10) Paradero Red rehecho según las fotos del dueño (`visor/paradero_red.gd`, tabla `datos/paraderos_red.json`); la sesión líder conecta `RecorridosRed` al cartel al unir. Correas de mochila planas pegadas al torso (falta captura de frente). Sillón de oficina en despacho DT/presidente (`visor/sillon_oficina.gd`; faltan capturas sin avatar). Pelo Drive a ~4500 tris: falta revisar los 11 peinados uno a uno (hoja antes/después) antes de usarlos en futbolistas. Pasto: pendiente.

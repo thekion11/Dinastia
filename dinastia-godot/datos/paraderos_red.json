@@ -1,0 +1,92 @@
+{
+ "_nota": "Tabla de recorridos de la Red por sector (27-10-2026). La centena del número es el sector. Sufijo «c» = sentido contrario, «e» = alternativa (muy rara); los «C##» son alimentadores. La app del móvil la lee; el juego la lleva en visor/paradero_red.gd (SECTORES, ALIMENTADORES).",
+ "sectores": {
+  "100": [
+   "101",
+   "107",
+   "111",
+   "122",
+   "126",
+   "133",
+   "150",
+   "164",
+   "175",
+   "190"
+  ],
+  "200": [
+   "201",
+   "203",
+   "209",
+   "214",
+   "217",
+   "226",
+   "231",
+   "249",
+   "262",
+   "278"
+  ],
+  "300": [
+   "301",
+   "304",
+   "308",
+   "312",
+   "319",
+   "325",
+   "336",
+   "348",
+   "357",
+   "391"
+  ],
+  "400": [
+   "401",
+   "405",
+   "411",
+   "418",
+   "421",
+   "427",
+   "433",
+   "445",
+   "458",
+   "467"
+  ],
+  "500": [
+   "501",
+   "503",
+   "506",
+   "511",
+   "514",
+   "519",
+   "524",
+   "532",
+   "547",
+   "563"
+  ]
+ },
+ "alimentadores": [
+  "C02",
+  "C09",
+  "C11",
+  "C14",
+  "C21",
+  "C27",
+  "C33",
+  "C37",
+  "C41"
+ ],
+ "reglas": {
+  "sufijo_c": 0.35,
+  "sufijo_e": 0.03,
+  "alimentador": 0.22,
+  "recorridos_por_paradero": [
+   4,
+   6
+  ]
+ },
+ "zonas": {
+  "Estadio": 300,
+  "Centro comercial": 100,
+  "Zona industrial": 400,
+  "Barrio": 200,
+  "Centro de la ciudad": 500
+ }
+}

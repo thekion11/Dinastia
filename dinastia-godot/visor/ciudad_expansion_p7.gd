@@ -391,7 +391,7 @@ func _marquesinas_bus() -> void:
 			var raiz_p := Node3D.new()
 			raiz_p.position = q
 			b.add_child(raiz_p)
-			ParaderoRed.montar(raiz_p, 3.6, int(q.x * 5.0 + q.z))
+			ParaderoRed.montar(raiz_p, 3.8, int(q.x * 5.0 + q.z), "Línea %s" % String(l.get("nombre", "")), ParaderoRed.sector_de(q.x, q.z))
 			n += 1
 	cuenta["paradas_bus"] = n
 
