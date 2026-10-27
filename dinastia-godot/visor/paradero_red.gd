@@ -177,7 +177,13 @@ static func montar(raiz: Node3D, ancho: float, semilla: int) -> void:
 	var cartel := Node3D.new()
 	cartel.position = Vector3(xp, 0, 0.9)
 	m.add_child(cartel)
-	_caja(cartel, Vector3(0, 2.55, 0.03), Vector3(0.56, 1.0, 0.04), _mat(Color(0.97, 0.97, 0.96), 0.5))
+	## La placa del cartel con un poco de luz propia (de noche se lee, como los carteles iluminados de Santiago).
+	var placa := StandardMaterial3D.new()
+	placa.albedo_color = Color(0.97, 0.97, 0.96)
+	placa.emission_enabled = true
+	placa.emission = Color(0.97, 0.97, 0.96)
+	placa.emission_energy_multiplier = 0.5
+	_caja(cartel, Vector3(0, 2.55, 0.03), Vector3(0.56, 1.0, 0.04), placa)
 	_caja(cartel, Vector3(0, 2.96, 0.056), Vector3(0.56, 0.17, 0.02), _mat(VERDE, 0.5))
 	_texto(cartel, "PARADERO", Vector3(0, 2.96, 0.07), 62, Color.WHITE)
 	_texto(cartel, codigo(semilla), Vector3(0, 2.76, 0.07), 108, Color(0.1, 0.1, 0.12))

@@ -26,11 +26,19 @@ func _ready() -> void:
 	var sol := DirectionalLight3D.new()
 	sol.rotation_degrees = Vector3(-50, -30, 0)
 	add_child(sol)
+	if OS.get_environment("NOCHE") == "1":   ## de noche: sol casi apagado, ambiente azul oscuro y una farola cerca
+		sol.light_energy = 0.05
+		var farola := OmniLight3D.new()
+		farola.position = Vector3(-3.0, 4.5, -1.0)
+		farola.omni_range = 14.0
+		farola.light_energy = 2.0
+		farola.light_color = Color(1.0, 0.85, 0.6)
+		add_child(farola)
 	var env := Environment.new()
 	env.background_mode = Environment.BG_COLOR
-	env.background_color = Color(0.62, 0.74, 0.88)
+	env.background_color = Color(0.62, 0.74, 0.88) if OS.get_environment("NOCHE") != "1" else Color(0.02, 0.03, 0.06)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.65, 0.66, 0.7)
+	env.ambient_light_color = Color(0.65, 0.66, 0.7) if OS.get_environment("NOCHE") != "1" else Color(0.06, 0.07, 0.12)
 	var we := WorldEnvironment.new()
 	we.environment = env
 	add_child(we)
@@ -54,7 +62,7 @@ func _vista(i: int) -> void:
 
 func _process(_d: float) -> void:
 	_n += 1
-	var tag := "antes" if OS.get_environment("ANTES") == "1" else "despues"
+	var tag := ("antes" if OS.get_environment("ANTES") == "1" else "despues") + ("_noche" if OS.get_environment("NOCHE") == "1" else "")
 	for i in 3:
 		if _n == 20 + i * 10:
 			get_viewport().get_texture().get_image().save_png("/tmp/paradero_%s_%d.png" % [tag, i])
