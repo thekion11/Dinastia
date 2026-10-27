@@ -63,6 +63,8 @@ const ESPECIALES := {
 	Vector2i(4, 8): "villa_moderna", Vector2i(-8, 1): "desguace", Vector2i(-2, 9): "granja",
 	## El parque de atracciones (16-10-2026), junto a la universidad, en las afueras.
 	Vector2i(5, 9): "feria",
+	## El parque solar de la periferia este (27-10-2026).
+	Vector2i(9, 3): "parque_solar",
 }
 
 var b: CityBuilder
