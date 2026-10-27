@@ -102,7 +102,6 @@ var _confirmar_venta_club: bool = false
 ## a comparar desde su ficha. Vive solo en memoria, como en el HTML -no es
 ## parte de la partida, se vacía sola al cerrar el juego-.
 var _comparar_ids: Array[String] = []
-var _libres_filtro := "todos"
 ## El resultado de la última ronda enviada en la mesa de negociación, para
 ## poder mostrarlo bajo el panel hasta la próxima ronda -Negociacion.
 ## enviar_oferta() devuelve el qué pasó, pero no lo guarda: aquí es donde vive
@@ -114,7 +113,6 @@ var _fin_partida_avisado := false
 
 var _cabecera: Label
 var _lbl_caja: Label
-var _saldo_mostrado := -1
 var _lbl_fecha: Label
 var _escudo_cabecera: Control
 var _sub: Label
@@ -166,7 +164,6 @@ var _lista_premios: VBoxContainer
 var _lista_clubes: VBoxContainer
 var _lista_desafios: VBoxContainer
 var _lista_tactica: VBoxContainer
-var _clubes_pais := ""
 var _clubes_ficha: Club = null
 var _autoguardado := false
 ## `vCorreo()` del HTML lee `G.noticias`, poblado por su función
@@ -337,7 +334,6 @@ const MESES_CORTOS := ["ene", "feb", "mar", "abr", "may", "jun",
 ## La temporada arranca el 1 de febrero, como el calendario chileno.
 const DIA_INICIO_TEMPORADA := {"mes": 2, "dia": 1}
 var _dia_semana: int = 0
-var _dia_pintado: int = -1
 var _ficha: VBoxContainer
 var _registro: RichTextLabel
 
