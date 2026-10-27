@@ -91,6 +91,19 @@ func _anatomia(cuerpo: String, d: Dictionary) -> void:
 		"antebrazo_sobre_brazo": codo.distance_to(mano) / maxf(hombro_i.distance_to(codo), 0.001),
 		"pantorrilla_sobre_muslo": rodilla.distance_to(pie) / maxf(cadera.distance_to(rodilla), 0.001),
 	}
+	## POSTURA de pie («parado», a mitad del clip): separación de los pies y ángulo de la rodilla (humano relajado: pies a
+	## 0,20-0,30 m para 1,78 m de altura; rodilla casi recta, > 170°).
+	if ap != null and ap.has_animation("parado"):
+		ap.play("parado")
+		ap.seek(0.5, true)
+		esq.force_update_all_bone_transforms()
+		var fi := _pos(esq, "foot_l")
+		var fd := _pos(esq, "foot_r")
+		var ca := _pos(esq, "thigh_l")
+		var ro := _pos(esq, "calf_l")
+		var rodilla_ang := rad_to_deg((ca - ro).angle_to(fi - ro))
+		print("  POSTURA parado: pies a %.2f m (%.2f de la altura) · rodilla %.0f° · tobillos a %.2f m del eje · pie a %.3f m del suelo" % [fi.distance_to(fd), fi.distance_to(fd) / h, rodilla_ang, absf(fi.x - fd.x) * 0.5, fi.y])
+		ap.pause()
 	print("\n=== ANATOMÍA %s · altura %.2f m · %.1f cabezas ===" % [cuerpo, h, 1.0 / maxf(medidas["cabeza"], 0.001)])
 	for k: String in medidas:
 		var v: float = medidas[k]
