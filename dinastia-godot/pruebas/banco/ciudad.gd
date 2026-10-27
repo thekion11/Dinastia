@@ -233,22 +233,24 @@ func _probar_redes_ciudad() -> void:
 	_comprobar(a1.luz == a2.luz and a1.cortes == a2.cortes and a1.agua_nivel == a2.agua_nivel, "la misma semilla da las mismas averías")
 	_comprobar(not a1.resumen().is_empty(), "el resumen cuenta las cuatro redes")
 
-## LA CARTERA DEL DT (pieza A de §2.2h): efectivo, tarjeta con PIN y límite, cajero, bloqueo y guardado.
+## LA CARTERA DEL DT (pieza A de §2.2h): efectivo, tarjeta con PIN y límite, cajero, bloqueo, unidades (€ de pantalla sobre puntos internos) y guardado.
 func _probar_cartera_dt() -> void:
 	_titulo("LA CARTERA DEL DT (efectivo, tarjeta, cajero y guardado)")
 	var m := Mundo.new()
 	var r := Roles.new(m)
-	r.patrimonio = 1000
+	r.patrimonio = 100   ## 100 puntos internos = 1.200 € de pantalla
 	var c := r.cartera
-	_comprobar(c.total(r) == 1000 and c.efectivo == 0 and c.pin_inicial, "empieza sin efectivo y con el PIN de fábrica")
+	_comprobar(c.total(r) == 1200 and c.efectivo == 0 and c.pin_inicial, "100 puntos internos son 1.200 € y empieza sin efectivo y con el PIN de fábrica")
 	_comprobar(c.pagar_efectivo(5, "Café", 1) == "saldo", "sin efectivo no se paga en efectivo")
-	_comprobar(c.pagar_tarjeta(r, 50, "Gasolina", "0000", 1) == "" and r.patrimonio == 950 and c.gastado_dia == 50, "con tarjeta sale de la cuenta")
-	_comprobar(c.pagar_tarjeta(r, 560, "Reloj", "0000", 1) == "limite" and r.patrimonio == 950, "el límite diario de la tarjeta (600 €) corta el pago")
-	_comprobar(c.pagar_tarjeta(r, 560, "Reloj", "0000", 2) == "" and r.patrimonio == 390, "al día siguiente vuelve a haber límite")
-	_comprobar(c.retirar(r, 100, "0000", 2, 2) == "" and c.efectivo == 100 and r.patrimonio == 288, "el cajero pasa dinero al bolsillo con su comisión")
-	_comprobar(c.total(r) == 388, "bolsillo + cuenta = total (menos la comisión)")
+	_comprobar(c.pagar_tarjeta(r, 50, "Gasolina", "0000", 1) == "" and c.cuenta_eur(r) == 1150 and c.gastado_dia == 50, "con tarjeta sale de la cuenta (en euros)")
+	_comprobar(r.patrimonio == 96 and c.cargo_pend == 2, "y el patrimonio interno baja en puntos enteros con el resto apuntado")
+	_comprobar(c.pagar_tarjeta(r, 560, "Reloj", "0000", 1) == "limite" and c.cuenta_eur(r) == 1150, "el límite diario de la tarjeta (600 €) corta el pago")
+	_comprobar(c.pagar_tarjeta(r, 560, "Reloj", "0000", 2) == "" and c.cuenta_eur(r) == 590, "al día siguiente vuelve a haber límite")
+	_comprobar(c.retirar(r, 100, "0000", 2, 2) == "" and c.efectivo == 100 and c.cuenta_eur(r) == 488, "el cajero pasa dinero al bolsillo con su comisión")
+	_comprobar(c.total(r) == 588, "bolsillo + cuenta = total (menos la comisión)")
 	_comprobar(c.pagar_efectivo(30, "Peluche", 2) == "" and c.efectivo == 70, "se paga en efectivo del bolsillo")
-	_comprobar(c.ingresar(r, 70, 2) == "" and c.efectivo == 0 and r.patrimonio == 358, "el cajero ingresa el efectivo en la cuenta")
+	_comprobar(c.ingresar(r, 70, 2) == "" and c.efectivo == 0 and c.cuenta_eur(r) == 558, "el cajero ingresa el efectivo en la cuenta")
+	_comprobar(r.patrimonio * 12 - c.cargo_pend == 558 and c.cargo_pend >= 0 and c.cargo_pend < 12, "el resto del punto interno siempre queda entre 0 y 11 €")
 	_comprobar(c.retirar(r, 600, "0000", 3) == "limite", "el cajero limita a 500 € al día")
 	_comprobar(c.cambiar_pin("1111", "4321") == "pin" and c.cambiar_pin("0000", "43") == "importe" and c.cambiar_pin("0000", "4321") == "" and not c.pin_inicial, "cambiar el PIN pide el viejo y 4 cifras")
 	_comprobar(c.pagar_tarjeta(r, 10, "A", "0000", 3) == "pin" and c.pagar_tarjeta(r, 10, "A", "0000", 3) == "pin" and c.pagar_tarjeta(r, 10, "A", "0000", 3) == "bloqueada", "tres PIN erróneos bloquean la tarjeta")
@@ -262,25 +264,43 @@ func _probar_cartera_dt() -> void:
 	## Cobro en el comercio (surtidor, tienda): efectivo primero, luego tarjeta sin contacto hasta 100 €.
 	var m2 := Mundo.new()
 	var rc := Roles.new(m2)
-	rc.patrimonio = 500
+	rc.patrimonio = 40   ## 480 €
 	var cc := rc.cartera
-	_comprobar(cc.puede_cobrar(rc, 63, 9) == "" and rc.patrimonio == 500, "se puede cobrar con la tarjeta sin tocar nada (simulación)")
+	_comprobar(cc.puede_cobrar(rc, 63, 9) == "" and cc.cuenta_eur(rc) == 480, "se puede cobrar con la tarjeta sin tocar nada (simulación)")
 	var cob := cc.cobrar(rc, 63, "Gasolina", 9)
-	_comprobar(cob["error"] == "" and cob["via"] == "tarjeta" and rc.patrimonio == 437, "sin efectivo cobra la tarjeta sin contacto")
+	_comprobar(cob["error"] == "" and cob["via"] == "tarjeta" and cc.cuenta_eur(rc) == 417, "sin efectivo cobra la tarjeta sin contacto")
 	cc.efectivo = 80
 	cob = cc.cobrar(rc, 63, "Gasolina", 9)
-	_comprobar(cob["via"] == "efectivo" and cc.efectivo == 17 and rc.patrimonio == 437, "con efectivo suficiente cobra el efectivo")
+	_comprobar(cob["via"] == "efectivo" and cc.efectivo == 17 and cc.cuenta_eur(rc) == 417, "con efectivo suficiente cobra el efectivo")
 	_comprobar(cc.puede_cobrar(rc, 150, 9) == "pin", "más de 100 € con tarjeta exige PIN (no hay pantalla de PIN en el comercio)")
-	rc.patrimonio = 10
-	_comprobar(cc.puede_cobrar(rc, 63, 9) == "saldo", "sin saldo no se cobra")
-	_comprobar(cc.puede_cobrar(rc, 63, 9) == "saldo" and CarteraDT.texto_error("saldo", 63).contains("63"), "el texto del error dice el importe")
+	rc.patrimonio = 0
+	cc.cargo_pend = 0
+	cc.efectivo = 0
+	_comprobar(cc.puede_cobrar(rc, 63, 9) == "saldo" and CarteraDT.texto_error("saldo", 63).contains("63"), "sin saldo no se cobra y el texto dice el importe")
+	rc.patrimonio = 1
+	_comprobar(cc.cobrar(rc, 5, "A", 10)["error"] == "" and cc.cuenta_eur(rc) == 7 and cc.cobrar(rc, 8, "A", 10)["error"] == "saldo" and cc.cobrar(rc, 7, "A", 10)["error"] == "" and rc.patrimonio == 0 and cc.cargo_pend == 0, "con un solo punto interno se gasta euro a euro hasta quedar a cero")
+	cc.efectivo = 14
+	cc.ingresar(rc, 14, 10)
+	_comprobar(rc.patrimonio == 2 and cc.cargo_pend == 10 and cc.cuenta_eur(rc) == 14, "ingresar 14 € suma puntos internos y deja el resto")
 	_comprobar(TiendaGasolinera.elegir(80)["id"] == "bocadillo" and TiendaGasolinera.elegir(20)["id"] == "bolleria" and TiendaGasolinera.elegir(5)["id"] == "cafe", "la tienda de la gasolinera vende según el hambre")
+	## Las filas de la app Banco del móvil.
+	var mm := Mundo.new()
+	mm.roles = Roles.new(mm)
+	mm.roles.cartera.efectivo = 12
+	mm.roles.cartera.pagar_efectivo(2, "Café", 1)
+	var filas := TelefonoCartera.filas(mm)
+	_comprobar(filas.size() == 4 and String(filas[0][0]).contains("Efectivo") and String(filas[3][0]).contains("Café"), "el móvil enseña efectivo, tarjeta, PIN de fábrica y el último movimiento")
+	_comprobar(String(filas[3][1]).contains("2"), "y el importe del movimiento")
+	mm.roles.cartera.bloqueada = true
+	mm.roles.cartera.pin_inicial = false
+	_comprobar(TelefonoCartera.filas(mm).size() == 3, "bloqueada y con PIN propio: sin la fila del PIN")
+	_comprobar(TelefonoCartera.filas(Mundo.new()).is_empty(), "sin roles el móvil no enseña cartera")
 	## Guardado: ida y vuelta por JSON y partida vieja.
 	var r2 := Roles.new(m)
 	r2.desde_dic(JSON.parse_string(JSON.stringify(r.a_dic())))
-	_comprobar(r2.cartera.pin == "4321" and not r2.cartera.pin_inicial and r2.cartera.movimientos.size() == CarteraDT.MAX_MOV and r2.patrimonio == r.patrimonio, "la cartera se guarda y se carga")
+	_comprobar(r2.cartera.pin == "4321" and not r2.cartera.pin_inicial and r2.cartera.movimientos.size() == CarteraDT.MAX_MOV and r2.patrimonio == r.patrimonio and r2.cartera.cargo_pend == r.cartera.cargo_pend, "la cartera se guarda y se carga")
 	var r3 := Roles.new(m)
 	var d: Dictionary = r.a_dic()
 	d.erase("cartera")
 	r3.desde_dic(d)
-	_comprobar(r3.cartera.efectivo == 0 and r3.cartera.pin == "0000" and r3.cartera.pin_inicial, "una partida vieja sin cartera empieza vacía y con el PIN de fábrica")
+	_comprobar(r3.cartera.efectivo == 0 and r3.cartera.pin == "0000" and r3.cartera.pin_inicial and r3.cartera.cargo_pend == 0, "una partida vieja sin cartera empieza vacía y con el PIN de fábrica")

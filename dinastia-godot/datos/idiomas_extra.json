@@ -6041,7 +6041,13 @@
   "Bocadillo": "Sandwich",
   "Bollería": "Pastry",
   "Café": "Coffee",
-  "%s por %d € (%s).": "%s for €%d (%s)."
+  "%s por %d € (%s).": "%s for €%d (%s).",
+  "👛 Efectivo en el bolsillo": "👛 Cash in your pocket",
+  "💳 Tarjeta": "💳 Card",
+  "bloqueada: pasa por el banco": "blocked: go to the bank",
+  "activa · te quedan %s hoy": "active · %s left today",
+  "🔐 PIN": "🔐 PIN",
+  "es el de fábrica (0000): cámbialo en un cajero": "it is the factory one (0000): change it at an ATM"
  },
  "pt": {
   "Historia": "História",
@@ -12085,7 +12091,13 @@
   "Bocadillo": "Sandes",
   "Bollería": "Pastelaria",
   "Café": "Café",
-  "%s por %d € (%s).": "%s por %d € (%s)."
+  "%s por %d € (%s).": "%s por %d € (%s).",
+  "👛 Efectivo en el bolsillo": "👛 Dinheiro no bolso",
+  "💳 Tarjeta": "💳 Cartão",
+  "bloqueada: pasa por el banco": "bloqueado: passa pelo banco",
+  "activa · te quedan %s hoy": "ativo · restam %s hoje",
+  "🔐 PIN": "🔐 PIN",
+  "es el de fábrica (0000): cámbialo en un cajero": "é o de fábrica (0000): muda-o num multibanco"
  },
  "patrones": [
   [
@@ -23741,7 +23753,13 @@
   "Bocadillo": "Sandwich",
   "Bollería": "Viennoiserie",
   "Café": "Café",
-  "%s por %d € (%s).": "%s pour %d € (%s)."
+  "%s por %d € (%s).": "%s pour %d € (%s).",
+  "👛 Efectivo en el bolsillo": "👛 Espèces en poche",
+  "💳 Tarjeta": "💳 Carte",
+  "bloqueada: pasa por el banco": "bloquée : passez à la banque",
+  "activa · te quedan %s hoy": "active · il reste %s aujourd'hui",
+  "🔐 PIN": "🔐 Code PIN",
+  "es el de fábrica (0000): cámbialo en un cajero": "c'est celui d'usine (0000) : changez-le à un distributeur"
  },
  "it": {
   "Historia": "Storia",
@@ -29785,7 +29803,13 @@
   "Bocadillo": "Panino",
   "Bollería": "Brioche",
   "Café": "Caffè",
-  "%s por %d € (%s).": "%s per %d € (%s)."
+  "%s por %d € (%s).": "%s per %d € (%s).",
+  "👛 Efectivo en el bolsillo": "👛 Contanti in tasca",
+  "💳 Tarjeta": "💳 Carta",
+  "bloqueada: pasa por el banco": "bloccata: passa in banca",
+  "activa · te quedan %s hoy": "attiva · restano %s oggi",
+  "🔐 PIN": "🔐 PIN",
+  "es el de fábrica (0000): cámbialo en un cajero": "è quello di fabbrica (0000): cambialo a uno sportello"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35829,7 +35853,13 @@
   "Bocadillo": "Sandwich",
   "Bollería": "Gebäck",
   "Café": "Kaffee",
-  "%s por %d € (%s).": "%s für %d € (%s)."
+  "%s por %d € (%s).": "%s für %d € (%s).",
+  "👛 Efectivo en el bolsillo": "👛 Bargeld in der Tasche",
+  "💳 Tarjeta": "💳 Karte",
+  "bloqueada: pasa por el banco": "gesperrt: geh zur Bank",
+  "activa · te quedan %s hoy": "aktiv · heute noch %s",
+  "🔐 PIN": "🔐 PIN",
+  "es el de fábrica (0000): cámbialo en un cajero": "es ist die Werks-PIN (0000): ändere sie am Automaten"
  },
  "ca": {
   "Historia": "Història",
@@ -41873,7 +41903,13 @@
   "Bocadillo": "Entrepà",
   "Bollería": "Brioixeria",
   "Café": "Cafè",
-  "%s por %d € (%s).": "%s per %d € (%s)."
+  "%s por %d € (%s).": "%s per %d € (%s).",
+  "👛 Efectivo en el bolsillo": "👛 Efectiu a la butxaca",
+  "💳 Tarjeta": "💳 Targeta",
+  "bloqueada: pasa por el banco": "bloquejada: passa pel banc",
+  "activa · te quedan %s hoy": "activa · et queden %s avui",
+  "🔐 PIN": "🔐 PIN",
+  "es el de fábrica (0000): cámbialo en un cajero": "és el de fàbrica (0000): canvia'l en un caixer"
  },
  "pl": {
   "Club": "Klub",
@@ -48196,7 +48232,13 @@
   "Bocadillo": "Kanapka",
   "Bollería": "Wypiek",
   "Café": "Kawa",
-  "%s por %d € (%s).": "%s za %d € (%s)."
+  "%s por %d € (%s).": "%s za %d € (%s).",
+  "👛 Efectivo en el bolsillo": "👛 Gotówka w kieszeni",
+  "💳 Tarjeta": "💳 Karta",
+  "bloqueada: pasa por el banco": "zablokowana: idź do banku",
+  "activa · te quedan %s hoy": "aktywna · dziś zostało %s",
+  "🔐 PIN": "🔐 PIN",
+  "es el de fábrica (0000): cámbialo en un cajero": "to PIN fabryczny (0000): zmień go w bankomacie"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54519,6 +54561,12 @@
   "Bocadillo": "Sandviç",
   "Bollería": "Hamur işi",
   "Café": "Kahve",
-  "%s por %d € (%s).": "%s, %d € (%s)."
+  "%s por %d € (%s).": "%s, %d € (%s).",
+  "👛 Efectivo en el bolsillo": "👛 Cebindeki nakit",
+  "💳 Tarjeta": "💳 Kart",
+  "bloqueada: pasa por el banco": "bloke: bankaya uğra",
+  "activa · te quedan %s hoy": "aktif · bugün %s kaldı",
+  "🔐 PIN": "🔐 PIN",
+  "es el de fábrica (0000): cámbialo en un cajero": "fabrika PIN'i (0000): ATM'den değiştir"
  }
 }

@@ -14,6 +14,7 @@ func _banco() -> void:
 		filas.append(["⏳ Semanas de sueldos en caja", str(sem) if sem < 999 else "999+", Tema.BIEN if sem > 20 else (Tema.ORO if sem > 6 else Color("e5534b"))])
 	if m.roles != null:
 		filas.append(["👤 Tu patrimonio", Cesiones.dinero(m.roles.patrimonio), Tema.TEXTO])
+	filas.append_array(TelefonoCartera.filas(m))
 	if m.fondo != null:
 		filas.append(["💼 Tu fondo de inversión", Cesiones.dinero(m.fondo.valor_total(m)), Tema.ORO])
 	for f: Array in filas:
