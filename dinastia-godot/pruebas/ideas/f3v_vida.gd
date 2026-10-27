@@ -204,6 +204,27 @@ func _probar_async() -> void:
 	tel._adelantar("partido")
 	_comprobar(_m.reloj.dia == 5 and _m.reloj.hora() == VidaCiudad.HORA_PARTIDO, "y pasado el partido, no salta a la semana siguiente")
 	_comprobar(absf(_vista._hora - _m.reloj.hora_decimal()) < 0.01, "la luz de la ciudad siguió al móvil")
+	## EL SURTIDOR COBRA AL BOLSILLO DEL DT (pieza C de §2.2h), no al club.
+	if _v != null and _v._redes() != null and _m.roles != null:
+		var sr := _v._redes()
+		var surt: Dictionary = sr.surtidor(0)
+		if not surt.is_empty():
+			var club_saldo := _m.mi_club().saldo if _m.mi_club() != null else 0
+			_m.vida.combustible = 5.0
+			_m.roles.patrimonio = 500
+			_m.roles.cartera.efectivo = 0
+			var gas0: float = sr.modelo.gas[int(surt["id"])]
+			_v.usar_surtidor("surtidor_0")
+			_comprobar(_m.vida.combustible > 40.0 and _m.roles.patrimonio < 500, "repostar cobra de la cuenta del DT con la tarjeta sin contacto")
+			_comprobar((_m.mi_club().saldo if _m.mi_club() != null else 0) == club_saldo, "y el club no paga la gasolina")
+			_m.vida.combustible = 5.0
+			_m.roles.patrimonio = 0
+			var gas1: float = sr.modelo.gas[int(surt["id"])]
+			_v.usar_surtidor("surtidor_0")
+			_comprobar(_m.vida.combustible == 5.0 and is_equal_approx(float(sr.modelo.gas[int(surt["id"])]), gas1), "sin dinero no echa gasolina ni gasta existencias")
+			_m.roles.cartera.efectivo = 80
+			_v.usar_surtidor("surtidor_0")
+			_comprobar(_m.vida.combustible > 40.0 and _m.roles.cartera.efectivo < 80 and gas0 > 0.0, "con efectivo paga en efectivo")
 	tel.queue_free()
 	PedidoPartida.mundo_pregenerado = null
 	PedidoPartida.mundo_a_cargar = null

@@ -37,6 +37,15 @@ func usar_surtidor(k: String) -> bool:
 	if falta < 1.0:
 		_decir(Idiomas.t("Gasolinera"), Idiomas.t("Tienes el depósito lleno."))
 		return true
+	## El DT paga de SU bolsillo (efectivo y, si no alcanza, la tarjeta sin contacto), no el club. Se mira ANTES de echar gasolina.
+	var cartera: CarteraDT = mundo.roles.cartera if mundo.roles != null else null
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	if cartera != null:
+		var tope := roundi(minf(falta, float(redes.modelo.gas.get(int(s["id"]), 0.0))) * RedesCiudad.PRECIO_LITRO)
+		var motivo := cartera.puede_cobrar(mundo.roles, tope, dia)
+		if motivo != "" and tope > 0:
+			_decir(Idiomas.t("Gasolinera"), CarteraDT.texto_error(motivo, tope))
+			return true
 	var r := redes.modelo.repostar(int(s["id"]), s["sector"], falta)
 	if int(r["coste"]) <= 0:
 		_decir(Idiomas.t("Gasolinera"), Idiomas.t("Sin corriente (o sin existencias): las bombas no funcionan."))
@@ -44,9 +53,10 @@ func usar_surtidor(k: String) -> bool:
 	mundo.reloj.avanzar_minutos(10, "libre")
 	if mundo.vida != null:
 		mundo.vida.combustible = minf(VidaDT.DEPOSITO_L, mundo.vida.combustible + float(r["litros"]))
-	if mundo.mi_club() != null:
-		mundo.mi_club().mover_saldo(-int(r["coste"]))
-	_decir(Idiomas.t("Gasolinera"), Idiomas.t("Depósito lleno: %d l por %d €.") % [roundi(float(r["litros"])), int(r["coste"])])
+	var via := ""
+	if cartera != null:
+		via = String(cartera.cobrar(mundo.roles, int(r["coste"]), "Gasolina", dia)["via"])
+	_decir(Idiomas.t("Gasolinera"), Idiomas.t("Depósito lleno: %d l por %d € (%s).") % [roundi(float(r["litros"])), int(r["coste"]), Idiomas.t(via if via != "" else "efectivo")])
 	Sonido.toca("clic", Sonido.Bus.EFECTOS)
 	return true
 
