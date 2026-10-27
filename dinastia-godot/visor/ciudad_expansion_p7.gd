@@ -52,7 +52,7 @@ func _instalacion(uso: String, r: Rect2) -> void:
 			_bandera_mastil(c + Vector3(0, 0, f * 0.4))
 		"estacion_central":
 			nombre = "Estación Central"
-			EstacionCentral.montar(b, c, w, f, _mat)   ## estación de cabecera con trenes (27-10-2026)
+			EstacionCentral.montar(b, c, w, f, _mat, self)   ## estación de cabecera con trenes (27-10-2026)
 			_cartel_m(c + Vector3(w * 0.4, 0, f * 0.45), Color(0.85, 0.15, 0.15))
 		"mercado":
 			nombre = "Mercado"
