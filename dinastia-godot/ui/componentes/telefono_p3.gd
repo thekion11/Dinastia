@@ -26,6 +26,10 @@ static func restaurar_marcas(raiz: Node) -> void:
 ## Qué hacer cuando, ya en la pantalla de inicio, se pide «atrás». Lo pone quien abre el móvil.
 var al_cerrar: Callable
 var _tw_app: Tween
+## La app «Red» (`AppRed`): dónde está el DT si el móvil se abrió en la calle (lo pone `VidaCiudad`) y el código escrito.
+var en_la_calle := false
+var posicion_dt := Vector3.ZERO
+var codigo_red := ""
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel") and is_visible_in_tree() and atras():
@@ -202,3 +206,7 @@ func _adelantar(que: String) -> void:
 	r.avanzar_con_rutina(mins)
 	Sonido.toca("clic", Sonido.Bus.EFECTOS)
 	(self as Telefono).abrir_app("agenda")
+
+## La app «Red»: paradero cercano o código escrito, y las próximas llegadas (`AppRed`, `RecorridosRed`).
+func _red() -> void:
+	AppRed.pintar(self as Telefono)

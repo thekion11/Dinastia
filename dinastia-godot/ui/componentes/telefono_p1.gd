@@ -25,7 +25,7 @@ const APPS := [
 	["tribuna", "Tribuna", "📣", "3a6df0"], ["mensajes", "Mensajes", "💬", "27ae60"],
 	["noticias", "Noticias", "📰", "e67e22"], ["banco", "Banco", "🏦", "16a085"],
 	["calendario", "Calendario", "📅", "e74c3c"], ["fotos", "Fotos", "🖼️", "d4a92a"],
-	["agenda", "Agenda", "🕒", "8e5ac8"],
+	["agenda", "Agenda", "🕒", "8e5ac8"], ["red", "Red", "🚏", "d7182a"],
 	["ajustes", "Ajustes", "⚙️", "6c7a89"],
 ]
 ## [emoji, color de arriba, color de abajo] de la "foto" de cada tipo.
@@ -175,8 +175,8 @@ func _icono_app(a: Array) -> Control:
 		ins.add_theme_stylebox_override("normal", sbi)
 		ins.position = Vector2(46, -4)
 		b.add_child(ins)
-	var nom := Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, String(a[1]) if a[0] == "tribuna" else Idiomas.t(String(a[1])))
-	if a[0] == "tribuna":
+	var nom := Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, String(a[1]) if a[0] in ["tribuna", "red"] else Idiomas.t(String(a[1])))
+	if a[0] in ["tribuna", "red"]:
 		nom.set_meta("marca_sin_traducir", nom.text)
 	nom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	col.add_child(nom)
