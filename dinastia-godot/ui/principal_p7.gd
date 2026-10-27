@@ -214,129 +214,17 @@ func _actualizar_badges() -> void:
 		b.text = rotulo
 
 
-func _reconvertir(j: Jugador, pe: String) -> void:
-	var posd: Dictionary = (Datos.tabla("POSD") as Dictionary).get(pe, {})
-	var r := j.reconvertir(pe)
-	if r.is_empty():
-		return
-	_partida.apuntar_deshacer("reconvertir a %s de %s" % [j.nombre, pe])
-	var d := int(r["despues"]) - int(r["antes"])
-	_escribir("[color=#c9a227]🔁 Reconversión:[/color] %s pasa a jugar de %s. Su media queda en %d (%s%d). Necesita %d semana(s) para asentarse en el puesto." % [
-		j.nombre, String(posd.get("n", pe)).to_lower(), r["despues"], "+" if d >= 0 else "", d, int(r["semanas"])])
-	(self as Principal)._refrescar()
-	(self as Principal)._ver_ficha(j)
-
-func _listar_transferible(j: Jugador) -> void:
-	mundo.mercado.listar_transferible(j)
-	_escribir("[color=#c9a227]En venta:[/color] %s queda listado como transferible. Se lo tomó mal, pero a partir de ahora van a llegar ofertas por él." % j.nombre)
-	(self as Principal)._refrescar()
-
-## Doble toque: la primera pulsación solo arma la confirmación y repinta el
-## botón con la advertencia -"vista.confResc" del HTML-. La segunda, con el
-## mismo jugador todavía armado, ejecuta de verdad.
-func _rescindir(j: Jugador, total: int) -> void:
-	if _confirmar_rescision_id != j.id:
-		_confirmar_rescision_id = j.id
-		(self as Principal)._ver_ficha(j)
-		return
-	_confirmar_rescision_id = ""
-	var mio := mundo.mi_club()
-	if mio == null or total > mio.saldo:
-		return
-	_partida.apuntar_deshacer("rescindir a %s" % j.nombre)
-	## Y queda apuntado que fue tuyo: si lo ficha un rival, el dia que se crucen
-	## juega con la cuenta pendiente encima.
-	Partido.marcar_ex(j, mio.id)
-	## El golpe de moral a la plantilla, con más peso si era capitán -HTML añade
-	## también "ídolo" (`j.idolo>=62`), que Godot no tiene portado todavía; el
-	## capitanazgo solo es una aproximación honesta, no el mismo cálculo-. Se
-	## mide ANTES de soltarlo: una vez fuera del club ya no es capitán de nadie.
-	var pesado := j.capitan
-	mio.mover_saldo(-total)
-	mio.soltar(j)
-	j.club_id = ""
-	j.transferible = false
-	j.capitan = false
-	var golpe := Azar.ent(7, 13) if pesado else Azar.ent(1, 4)
-	var clan: Dictionary = mundo.vestuario.clan_de(j) if mundo.vestuario != null else {}
-	var miembros: Array = clan.get("miembros", [])
-	for x in mio.plantilla:
-		var cerca: bool = miembros.has(x.id)
-		x.moral = clampi(x.moral - golpe * (2 if cerca else 1), 10, 99)
-	if not clan.is_empty():
-		clan["humor"] = clampi(int(clan.get("humor", 0)) - Azar.ent(10, 25), -100, 100)
-	## El agente no olvida quién le rompió un contrato: la misma confianza que
-	## `Cantera` ya consulta al ofertar por cualquiera de sus representados.
-	if mundo.cantera != null:
-		var nombre_agente := String(mundo.cantera.agente_de(j).get("nombre", ""))
-		if nombre_agente != "":
-			mundo.cantera.confianza_agentes[nombre_agente] = mundo.cantera.confianza_de(nombre_agente) - 2
-	if mundo.prensa != null:
-		mundo.prensa.animo = clampi(mundo.prensa.animo - (Azar.ent(8, 16) if pesado else Azar.ent(1, 4)), 0, 100)
-		if pesado:
-			mundo.prensa.funa = clampi(mundo.prensa.funa + Azar.ent(10, 20), 0, 100)
-	_escribir("[color=#e05555][b]Rescindido:[/b][/color] %s deja el club. Finiquito y comisión: %s." % [j.nombre, _dinero(total)])
-	_seleccionado = null
-	(self as Principal)._refrescar()
-
-## "" si se puede fichar/ceder a `j`, o el motivo exacto por el que no -el rol
-## primero (ver `Roles.motivo_bloqueo`), y si el rol deja, los desafíos
-## activos: "cantera" lo cierra del todo, "local" solo si `j` es extranjero.
-## Un solo sitio para las tres puertas -ficha, clausulazo, ceder- que antes
-## repetían la misma condición cada una a su manera.
-func _motivo_fichaje_bloqueado(j: Jugador) -> String:
-	## LA VENTANA DE MERCADO, la primera puerta de todas. Va aqui porque este es
-	## el unico punto por el que pasan la ficha, el clausulazo y las cesiones: si
-	## se comprobara en cada pantalla, tarde o temprano una se quedaria sin
-	## comprobar y se ficharia en marzo.
-	## EL EXPEDIENTE DE FAIR PLAY cierra el mercado de PAGO, no el mercado
-	## entero: se puede seguir fichando libres, que es exactamente lo que hace un
-	## club sancionado de verdad.
-	if mundo.federacion != null and not mundo.federacion.puede_pagar_traspaso() and j != null and j.club_id != "":
-		return "Sancionado por fair play financiero: esta ventana solo puedes fichar agentes libres."
-	## EN MORA CON EL BANCO. `Banco.estado()` ya prometía "Fichajes inhibidos"
-	## a partir de la cuarta semana en rojo, y nada lo hacía cumplir: se podía
-	## fichar con normalidad con un veedor concursal encima. Misma frontera
-	## que el fair play de arriba -bloquea el mercado de PAGO, no los libres-.
-	if mundo.banco != null and mundo.banco.en_mora() and j != null and j.club_id != "":
-		return "En mora con el banco (%d semanas en rojo): esta ventana solo puedes fichar agentes libres." % mundo.banco.semanas_en_rojo
-	if not mundo.mercado_abierto():
-		return "Mercado cerrado. Vuelve a abrir en %d semanas: hasta entonces, la plantilla es la que hay." % mundo.semanas_hasta_mercado()
-	if mundo.roles != null and not mundo.roles.puede_fichar():
-		return String(mundo.roles.motivo_bloqueo("fichar"))
-	if mundo.tiene_desafio("cantera"):
-		return "Desafío «solo canteranos»: el mercado te queda vetado. Todo refuerzo tiene que salir de tu academia."
-	if mundo.tiene_desafio("local") and j != null and j.pais != mundo.mi_club().pais:
-		return "Desafío «un solo país»: no puedes fichar extranjeros."
-	return ""
-
-## El intento de fichaje pasa por las tres puertas en orden y cuenta cuál se
-## cerró. Decir solo "no se pudo" sería inútil: lo que hace que la siguiente
-## oferta sea mejor es saber si falló el precio, la ficha o las ganas.
-func _intentar_fichar(j: Jugador, monto: int, sueldo: int) -> void:
-	var mio := mundo.mi_club()
-	if monto > mio.saldo:
-		_escribir("[color=#e05555]No hay caja: piden %s y tienes %s.[/color]" % [_dinero(monto), _dinero(mio.saldo)])
-		return
-	if not mundo.mercado.club_acepta(j, monto):
-		_escribir("[color=#e05555]%s rechaza los %s por %s.[/color]" % [
-			mundo.clubes[j.club_id].nombre, _dinero(monto), j.nombre])
-		return
-	if not mundo.mercado.jugador_firma(j, mio, sueldo):
-		_escribir("[color=#c9a227]%s no firma: el club aceptó, pero él no se ve aquí.[/color]" % j.nombre)
-		return
-	mundo.mercado.fichar(j, mio, monto, sueldo, 3)
-	Sonido.toca("fichaje")
-	_escribir("[color=#4caf6d]FICHADO: %s por %s (%s/semana).[/color]" % [
-		j.nombre, _dinero(monto), _dinero(sueldo)])
-	(self as Principal)._refrescar()
+## Puentes (fase 6, paso 7): viven en `AccionesFichaje`.
+func _reconvertir(j: Jugador, pe: String) -> void: _acciones_fichaje._reconvertir(j, pe)
+func _listar_transferible(j: Jugador) -> void: _acciones_fichaje._listar_transferible(j)
+func _rescindir(j: Jugador, total: int) -> void: _acciones_fichaje._rescindir(j, total)
+func _motivo_fichaje_bloqueado(j: Jugador) -> String: return _acciones_fichaje._motivo_fichaje_bloqueado(j)
+func _intentar_fichar(j: Jugador, monto: int, sueldo: int) -> void: _acciones_fichaje._intentar_fichar(j, monto, sueldo)
+func _pedir_informe_medico(j: Jugador) -> void: _acciones_fichaje._pedir_informe_medico(j)
 
 
-func _pedir_informe_medico(j: Jugador) -> void:
-	var mio := mundo.mi_club()
-	var problema := mundo.medico.informe(j, mio, mundo.anio)
-	if problema != "":
-		_escribir("[color=#e05555]No se pudo pedir el informe: %s.[/color]" % problema)
-		return
-	(self as Principal)._refrescar()
-	(self as Principal)._ver_ficha(j)
+
+
+
+
+

@@ -362,6 +362,9 @@ var _ui_elegir_club := PantallaElegirClub.new(self)
 var _jornada := JornadaPartido.new(self)
 var _construccion := ConstruirMenu.new(self)
 var _avance := AvanceSemana.new(self)
+var _federacion := FederacionMenu.new(self)
+var _acciones_fichaje := AccionesFichaje.new(self)
+var _paneles_club := PanelesClub.new(self)
 var _estilo_menu: String:
 	get: return _estilos.estilo
 	set(v): _estilos.estilo = v
