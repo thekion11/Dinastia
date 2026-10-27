@@ -15,8 +15,7 @@ const SERIES := {
 	"casa": "En casa", "bosque": "Amigos del bosque", "sabana": "La sabana", "granja": "La granja", "mar": "Fondo del mar",
 	"fantasia": "Fantasía",
 }
-## PENDIENTE (orden del líder, 27-10): cuando lleguen los modelos .glb del Drive, la vista de la garra (hoy 2D, dibujada con `draw_*` en
-## `PanelPeluches._pintar`) pasa a 3D (un SubViewport con los `modelo` de esta tabla); mientras `modelo` esté vacío se sigue dibujando el relleno.
+## La garra se ve en 3D (`VistaGarra3D`) con los `modelo` de esta tabla; sin modelos, `PanelPeluches` dibuja el relleno en 2D.
 ## id, nombre, serie, peso (1 ligero … 4 pesado), máquina (0-2), forma (cómo se dibuja el relleno), color, modelo (ruta .glb, "" = relleno), escala del modelo.
 const PELUCHES := [
 	{"id": "oso", "nombre": "Oso pardo", "serie": "bosque", "peso": 3, "maquina": 0, "forma": "oso", "color": Color(0.55, 0.36, 0.22), "modelo": "res://assets/peluches/bear.glb", "escala": 0.55},
