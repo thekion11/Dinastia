@@ -148,6 +148,7 @@ func _instalacion(uso: String, r: Rect2) -> void:
 		_:
 			b._caja_en(c + Vector3(0, 6.0, 0), Vector3(w * 0.7, 12.0, f * 0.6), _mat["claro"])
 	CiudadServicios.fachada(self, uso, c, w, f)
+	CiudadServicios.portico(self, uso, c, w, f)
 	if nombre != "":
 		b._rotulo(c + Vector3(0, 30.0, 0), nombre, Color(1, 1, 1), 22)
 		b.puntos_clic.append({"k": "ciudad_" + uso, "n": nombre, "pos": c, "estado": "ciudad"})
