@@ -253,4 +253,6 @@ func _retos_tras_partido(ya: Partido) -> void:
 	if gf >= 0:
 		retos_semana.evaluar(self, gf, gc)
 	retos_semana.generar(self)
+	if mentor_mes != null:
+		mentor_mes.tras_semana(self, gf, gc)
 

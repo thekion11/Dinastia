@@ -15,6 +15,7 @@ var banco := ""
 var comision := 0                 ## € por retirar en un cajero de otro banco
 var cajero_pos := Vector3.ZERO
 var jugador: Node3D
+var ventanilla := false           ## en la sucursal: sin PIN, desbloquea y restablece el PIN, enseña los movimientos y no da efectivo
 
 var _estado := "pin"              ## pin | menu | pin_actual (cambiar PIN: el de ahora) | pin_nuevo
 var _tecleado := ""
@@ -22,7 +23,7 @@ var _pin_valido := ""             ## el PIN que acaba de validarse (para las ope
 var _aviso := ""
 var _caja := VBoxContainer.new()
 
-static func abrir(capa: CanvasLayer, c: CarteraDT, r: Roles, dia_: int, banco_: String, comision_: int, pos: Vector3, quien: Node3D) -> PanelCajero:
+static func abrir(capa: CanvasLayer, c: CarteraDT, r: Roles, dia_: int, banco_: String, comision_: int, pos: Vector3, quien: Node3D, ventanilla_ := false) -> PanelCajero:
 	var p := PanelCajero.new()
 	p.cartera = c
 	p.roles = r
@@ -31,6 +32,9 @@ static func abrir(capa: CanvasLayer, c: CarteraDT, r: Roles, dia_: int, banco_: 
 	p.comision = comision_
 	p.cajero_pos = pos
 	p.jugador = quien
+	p.ventanilla = ventanilla_
+	if ventanilla_:
+		p._estado = "menu"
 	p.set_anchors_preset(Control.PRESET_CENTER)
 	p.offset_left = -230
 	p.offset_right = 230
@@ -66,7 +70,7 @@ func _pintar() -> void:
 		av.add_theme_color_override("font_color", Color(1.0, 0.8, 0.35))
 		_caja.add_child(av)
 	if _estado == "menu":
-		_pintar_menu()
+		(_pintar_ventanilla() if ventanilla else _pintar_menu())
 	else:
 		_pintar_teclado()
 
@@ -98,6 +102,48 @@ func _pintar_teclado() -> void:
 		b.add_theme_font_size_override("font_size", 24)
 		b.pressed.connect(_tecla.bind(t))
 		rejilla.add_child(b)
+
+func _pintar_ventanilla() -> void:
+	var saldos := Label.new()
+	saldos.text = "%s: %s\n%s: %s" % [Idiomas.t("Cuenta"), _euros(cartera.cuenta_eur(roles)), Idiomas.t("En el bolsillo"), _euros(cartera.efectivo)]
+	saldos.add_theme_font_size_override("font_size", 20)
+	_caja.add_child(saldos)
+	if cartera.bloqueada:
+		var bd := Button.new()
+		bd.text = Idiomas.t("Desbloquear la tarjeta")
+		bd.pressed.connect(func() -> void:
+			cartera.desbloquear()
+			_aviso = Idiomas.t("Tarjeta desbloqueada.")
+			_pintar())
+		_caja.add_child(bd)
+	var br := Button.new()
+	br.text = Idiomas.t("Restablecer el PIN")
+	br.pressed.connect(func() -> void:
+		_estado = "pin_nuevo"
+		_tecleado = ""
+		_aviso = ""
+		_pintar())
+	_caja.add_child(br)
+	var bi := Button.new()
+	bi.text = Idiomas.t("Ingresar todo el efectivo (%s)") % _euros(cartera.efectivo)
+	bi.disabled = cartera.efectivo <= 0
+	bi.pressed.connect(ingresar_todo)
+	_caja.add_child(bi)
+	var cab := Label.new()
+	cab.text = Idiomas.t("Últimos movimientos")
+	cab.add_theme_font_size_override("font_size", 16)
+	_caja.add_child(cab)
+	var n := cartera.movimientos.size()
+	for i in range(n - 1, maxi(-1, n - 6), -1):
+		var mv: Dictionary = cartera.movimientos[i]
+		var fila := Label.new()
+		fila.text = "%s  %s" % [Idiomas.t(String(mv["concepto"])), _euros(int(mv["importe"]))]
+		fila.add_theme_font_size_override("font_size", 15)
+		_caja.add_child(fila)
+	var bs := Button.new()
+	bs.text = Idiomas.t("Salir")
+	bs.pressed.connect(salir)
+	_caja.add_child(bs)
 
 func _pintar_menu() -> void:
 	var saldos := Label.new()
@@ -169,9 +215,9 @@ func _validar() -> void:
 				_estado = "menu" if not cartera.bloqueada else "pin"
 				_aviso = Idiomas.t("PIN incorrecto.") if not cartera.bloqueada else Idiomas.t("Tarjeta bloqueada. Pasa por el banco para desbloquearla.")
 		"pin_nuevo":
-			if cartera.cambiar_pin(_pin_valido, tec) == "":
+			if (cartera.restablecer_pin(tec) if ventanilla else cartera.cambiar_pin(_pin_valido, tec)) == "":
 				_pin_valido = tec
-				_aviso = Idiomas.t("PIN cambiado.")
+				_aviso = Idiomas.t("PIN restablecido.") if ventanilla else Idiomas.t("PIN cambiado.")
 			else:
 				_aviso = Idiomas.t("No se pudo cambiar el PIN.")
 			_estado = "menu"

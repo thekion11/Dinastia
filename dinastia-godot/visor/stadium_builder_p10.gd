@@ -56,6 +56,12 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	_tm("club")
 	EstadioExtras.construir(root, est, dx, dz, alto, niveles, mi)
 	_tm("extras")
+	## La grada del club de casa: rayas, bufandas y gorras con SUS colores y pieles de su país. Antes solo lo
+	## hacían el partido y la visita al estadio; en la ciudad y en la cinemática de fichaje salía el verde por
+	## defecto del sombreador (27-10-2026, visto en la captura P3 del banquillo de un club negro y blanco).
+	if mi != null:
+		OlaGrada.colores_club(root, Color(mi.color1), Color(mi.color2))
+		OlaGrada.piel_de_pais(root, mi.pais)
 	if OS.get_environment("SIN_SOMBRA_UNICA") == "":
 		_sombra_unica(root)
 		_tm("sombra")

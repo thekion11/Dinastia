@@ -103,6 +103,8 @@ func _mover_en_anden(delta: float) -> void:
 		_aviso.text = Idiomas.t("🚇 Tren en el andén, puertas abiertas · E para subir")
 	else:
 		_aviso.text = Idiomas.t("Próximo tren: %s · E: salir a la calle") % ("llegando" if eta < 20.0 else "%d s" % int(eta))
+	if metro.expendedora_cerca(cuerpo.position):
+		_aviso.text = Idiomas.t("🥤 E: comprar en la máquina expendedora")
 
 func _viajar(delta: float) -> void:
 	var l := metro.linea(_linea)
