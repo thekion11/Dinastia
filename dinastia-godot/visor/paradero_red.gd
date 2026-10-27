@@ -1,23 +1,29 @@
 class_name ParaderoRed
 extends RefCounted
-## EL PARADERO COMO LOS DE SANTIAGO DE CHILE (27-10-2026, orden del dueño: «son hermosos: que se reconozcan»). Referencia (de memoria; las
-## webs de Red/DTPM no se pueden abrir desde el contenedor): el paradero de la Red Metropolitana de Movilidad (ex Transantiago) es una
-## marquesina de acero gris con el techo plano de poco vuelo, panel trasero translúcido con los mapas de recorrido en póster, panel lateral
-## de cristal, banca de láminas metálicas corrida, y APARTE un poste con el cartel del paradero: franja verde con «PARADERO», el CÓDIGO
-## grande («PA» y tres o cuatro cifras), un QR, y los recorridos que paran ahí en cajitas de color. El techo lleva una franja burdeos
-## con el rótulo «Red». Todo en el marco local de la marquesina: la banca a z = −0,9, la trasera a z = −1,4 y el frente abierto a +z.
-##   ParaderoRed.montar(raiz, ancho, semilla)   (raiz = nodo en el suelo, ya girado; ancho = largo de la marquesina)
-const GRIS := Color(0.43, 0.45, 0.48)
-const BURDEOS := Color(0.55, 0.10, 0.28)
-const VERDE := Color(0.0, 0.56, 0.36)
-const COLORES_RUTA := [Color(0.0, 0.5, 0.75), Color(0.85, 0.35, 0.1), Color(0.0, 0.6, 0.35), Color(0.55, 0.2, 0.6), Color(0.8, 0.15, 0.2)]
+## EL PARADERO DE LA RED (Red Movilidad, Santiago de Chile), COMO EN LAS FOTOS DEL DUEÑO (`docs/04_auditorias/referencias/paradero_red_{1,2,cartel}.jpg`,
+## 27-10-2026). Marquesina de postes de acero gris oscuro con el TECHO plano BLANCO y costillas ROJAS por debajo; bajo el techo, la CABECERA: una banda
+## NEGRA a todo lo largo con «Paradero de Red Movilidad | Parada N» en blanco y remates ROJOS en los extremos (con el logo «Red»); entre los dos postes
+## de un lado, el panel publicitario enmarcado con el póster rojo y blanco de Red y, delante, la banca de láminas gris claro con su barra de apoyo;
+## un papelero gris claro al lado. APARTE, el POSTE con el CARTEL NEGRO: iconos de bus arriba a la izquierda, esquina roja con «Red» arriba a la derecha,
+## nombre de la parada, cuadrícula de 2 columnas con los recorridos en blanco (cajitas con línea divisoria), QR abajo a la izquierda y franja roja abajo.
+## Los recorridos, el nombre de la parada y el código «PA####» salen de `RecorridosRed` (la misma tabla que lee la app «Red» del móvil); todo queda en `registro`.
+##   ParaderoRed.montar(raiz, ancho, semilla, nombre, sector)   (raiz = nodo en el suelo, ya girado; la banca queda a z = −0,9 y el frente abierto a +z)
+const ROJO := Color(0.78, 0.09, 0.20)
+const NEGRO := Color(0.08, 0.08, 0.10)
+const POSTE := Color(0.21, 0.22, 0.25)
+const BLANCO := Color(0.95, 0.95, 0.96)
+const GRIS_CLARO := Color(0.78, 0.80, 0.82)
 
+## Los recorridos que paran en cada sector de la ciudad (números de la Red: la centena es el sector). Es la tabla que usará la app del móvil.
+
+## Todos los paraderos montados: [{codigo, nombre, sector, parada, recorridos: [String], x, z}].
+static var registro: Array[Dictionary] = []
 static var _mats: Dictionary = {}
 static var _qr: ImageTexture = null
-static var _afiche: Dictionary = {}
+static var _anuncio: ImageTexture = null
 
-static func _mat(c: Color, rug := 0.6, metal := 0.0, sin_luz := false) -> StandardMaterial3D:
-	var k := "%s|%.2f|%.2f|%s" % [c.to_html(true), rug, metal, str(sin_luz)]
+static func _mat(c: Color, rug := 0.6, metal := 0.0) -> StandardMaterial3D:
+	var k := "%s|%.2f|%.2f" % [c.to_html(true), rug, metal]
 	if not _mats.has(k):
 		var m := StandardMaterial3D.new()
 		m.albedo_color = c
@@ -25,23 +31,34 @@ static func _mat(c: Color, rug := 0.6, metal := 0.0, sin_luz := false) -> Standa
 		m.metallic = metal
 		if c.a < 1.0:
 			m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		if sin_luz:
-			m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		_mats[k] = m
 	return _mats[k]
 
-static func _caja(p: Node3D, pos: Vector3, tam: Vector3, m: Material) -> MeshInstance3D:
+## Material con luz propia (carteles iluminados): el color también se emite.
+static func _luz(c: Color, energia := 0.5) -> StandardMaterial3D:
+	var k := "luz|%s|%.2f" % [c.to_html(true), energia]
+	if not _mats.has(k):
+		var m := StandardMaterial3D.new()
+		m.albedo_color = c
+		m.emission_enabled = true
+		m.emission = c
+		m.emission_energy_multiplier = energia
+		_mats[k] = m
+	return _mats[k]
+
+static func _caja(p: Node3D, pos: Vector3, tam: Vector3, m: Material, giro := Vector3.ZERO) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	var b := BoxMesh.new()
 	b.size = tam
 	mi.mesh = b
 	mi.material_override = m
 	mi.position = pos
+	mi.rotation_degrees = giro
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if tam.y < 0.2 and tam.x < 0.6 else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 	p.add_child(mi)
 	return mi
 
-static func _texto(p: Node3D, txt: String, pos: Vector3, tam_px: int, col: Color, giro_y := 0.0) -> Label3D:
+static func _texto(p: Node3D, txt: String, pos: Vector3, tam_px: int, col: Color, ancla := HORIZONTAL_ALIGNMENT_CENTER) -> Label3D:
 	var l := Label3D.new()
 	l.text = txt
 	l.font_size = tam_px
@@ -50,61 +67,12 @@ static func _texto(p: Node3D, txt: String, pos: Vector3, tam_px: int, col: Color
 	l.outline_size = 0
 	l.shaded = false
 	l.double_sided = false
+	l.horizontal_alignment = ancla
 	l.position = pos
-	l.rotation.y = giro_y
 	p.add_child(l)
 	return l
 
-## Un QR de mentira pero con pinta de QR: tres marcas de esquina y el resto a hash (determinista, 25 × 25).
-static func qr() -> ImageTexture:
-	if _qr != null:
-		return _qr
-	var n := 25
-	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
-	img.fill(Color.WHITE)
-	for y in n:
-		for x in n:
-			var en_marca := (x < 8 and y < 8) or (x >= n - 8 and y < 8) or (x < 8 and y >= n - 8)
-			if en_marca:
-				var mx := x % (n - 8) if x >= n - 8 else x
-				var my := y - (n - 8) if y >= n - 8 else y
-				if x >= n - 8:
-					mx = x - (n - 8)
-				var borde := mx == 0 or mx == 6 or my == 0 or my == 6
-				var centro := mx >= 2 and mx <= 4 and my >= 2 and my <= 4
-				img.set_pixel(x, y, Color.BLACK if (borde or centro) and mx < 7 and my < 7 else Color.WHITE)
-			elif absi(hash([x, y, 77])) % 100 < 48:
-				img.set_pixel(x, y, Color.BLACK)
-	_qr = ImageTexture.create_from_image(img)
-	return _qr
-
-## El póster del mapa de recorridos: fondo claro, tres líneas de colores con paradas, el río. 48 × 72.
-static func afiche(variante: int) -> ImageTexture:
-	var v := variante % 3
-	if _afiche.has(v):
-		return _afiche[v]
-	var w := 48
-	var h := 72
-	var img := Image.create(w, h, false, Image.FORMAT_RGB8)
-	img.fill(Color(0.94, 0.95, 0.93))
-	for y in range(0, 7):
-		for x in w:
-			img.set_pixel(x, y, BURDEOS)
-	for l in 3:
-		var c: Color = COLORES_RUTA[(l + v) % COLORES_RUTA.size()]
-		var x0 := 8 + l * 14
-		for y in range(10, h - 4):
-			var xx := x0 + int(round(sin(float(y) * 0.12 + float(l + v)) * 4.0))
-			for dx in 2:
-				img.set_pixel(clampi(xx + dx, 0, w - 1), y, c)
-			if y % 11 == 0:
-				for dy in 3:
-					for dx in range(-2, 4):
-						img.set_pixel(clampi(xx + dx, 0, w - 1), clampi(y + dy, 0, h - 1), Color(0.1, 0.1, 0.12))
-	_afiche[v] = ImageTexture.create_from_image(img)
-	return _afiche[v]
-
-static func _quad(p: Node3D, tex: Texture2D, pos: Vector3, tam: Vector2, giro_y := 0.0) -> void:
+static func _quad(p: Node3D, tex: Texture2D, pos: Vector3, tam: Vector2) -> void:
 	var mi := MeshInstance3D.new()
 	var q := QuadMesh.new()
 	q.size = tam
@@ -115,74 +83,159 @@ static func _quad(p: Node3D, tex: Texture2D, pos: Vector3, tam: Vector2, giro_y 
 	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mi.material_override = m
 	mi.position = pos
-	mi.rotation.y = giro_y
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	p.add_child(mi)
 
+## Un QR de mentira pero con pinta de QR: tres marcas de esquina y el resto a hash (determinista, 25 × 25).
+static func qr() -> ImageTexture:
+	if _qr != null:
+		return _qr
+	var n := 25
+	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
+	img.fill(Color.WHITE)
+	for y in n:
+		for x in n:
+			var marca := (x < 7 and y < 7) or (x >= n - 7 and y < 7) or (x < 7 and y >= n - 7)
+			if marca:
+				var mx := x if x < 7 else x - (n - 7)
+				var my := y if y < 7 else y - (n - 7)
+				var borde := mx == 0 or mx == 6 or my == 0 or my == 6
+				var centro := mx >= 2 and mx <= 4 and my >= 2 and my <= 4
+				img.set_pixel(x, y, Color.BLACK if (borde or centro) else Color.WHITE)
+			elif absi(hash([x, y, 77])) % 100 < 48:
+				img.set_pixel(x, y, Color.BLACK)
+	_qr = ImageTexture.create_from_image(img)
+	return _qr
+
+## El póster del panel publicitario: rojo y blanco de Red (una ola blanca sobre el rojo), 64 × 48.
+static func anuncio() -> ImageTexture:
+	if _anuncio != null:
+		return _anuncio
+	var w := 64
+	var h := 48
+	var img := Image.create(w, h, false, Image.FORMAT_RGB8)
+	for y in h:
+		for x in w:
+			var ola := 0.45 + 0.12 * sin(float(x) * 0.18) + 0.0035 * float(x)
+			img.set_pixel(x, y, ROJO if float(y) / float(h) < ola else Color(0.97, 0.97, 0.98))
+	for x in range(8, 56):   ## la fila de buses
+		for y in range(26, 32):
+			if x % 9 != 0:
+				img.set_pixel(x, y, Color(0.25, 0.26, 0.3))
+	_anuncio = ImageTexture.create_from_image(img)
+	return _anuncio
+
 ## El código del paradero («PA» + 4 cifras, la primera es el sector) y sus recorridos: los da la tabla `RecorridosRed`, la
-## misma que lee la app «Red» del móvil. `sector` 0 = el del origen (las pruebas montan el paradero ahí).
+## misma que lee la app «Red» del móvil, así que el cartel y la app dicen siempre lo mismo. `sector` 0 = el del origen.
 static func codigo(semilla: int, sector: int = 0) -> String:
 	return RecorridosRed.codigo(semilla, sector if sector > 0 else RecorridosRed.sector_de(Vector3.ZERO))
 
 static func recorridos(semilla: int, sector: int = 0) -> Array[String]:
 	return RecorridosRed.recorridos(codigo(semilla, sector))
 
-static func montar(raiz: Node3D, ancho: float, semilla: int) -> void:
-	## El sector sale de dónde está (la zona de la ciudad); la app encuentra el paradero por el grupo y la meta.
-	var cod := codigo(semilla, RecorridosRed.sector_de(raiz.global_position if raiz.is_inside_tree() else raiz.position))
+## Dónde (x local) quedan los dos asientos de la banca, para que `GenteSentada` sepa dónde sentar.
+static func asientos_x() -> Array[float]:
+	return [0.5, 1.2]
+
+static func montar(raiz: Node3D, ancho: float, semilla: int, nombre := "", sector := 0) -> void:
+	var w := 3.8   ## el paradero real mide ~3,6 m: se ignora un ancho mayor (los de 7,5 m eran de la versión inventada)
+	var parada := 1 + absi(hash([semilla, 17])) % 9
+	var donde := raiz.global_position if raiz.is_inside_tree() else raiz.position
+	var sec := sector if sector > 0 else RecorridosRed.sector_de(donde)
+	var cod := codigo(semilla, sec)
+	var rs := RecorridosRed.recorridos(cod)
+	if nombre == "":
+		nombre = RecorridosRed.nombre_parada(cod)
+	## La app encuentra el paradero por el grupo y la meta.
 	raiz.add_to_group("paradero_red")
 	raiz.set_meta("codigo_red", cod)
-	var gris := _mat(GRIS, 0.45, 0.5)
-	var oscuro := _mat(Color(0.2, 0.21, 0.23), 0.5, 0.5)
-	var vidrio := _mat(Color(0.7, 0.84, 0.9, 0.32), 0.1, 0.2)
+	registro.append({"codigo": cod, "nombre": nombre, "sector": sec, "parada": parada, "recorridos": rs, "x": donde.x, "z": donde.z})
+	var poste := _mat(POSTE, 0.45, 0.5)
+	var negro := _mat(NEGRO, 0.4)
+	var rojo := _mat(ROJO, 0.5)
+	var blanco := _mat(BLANCO, 0.5)
 	var m := raiz
-	## Techo plano de poco vuelo, con la franja burdeos «Red» por delante y el canto gris.
-	var techo := _caja(m, Vector3(0, 2.72, -0.1), Vector3(ancho + 0.3, 0.1, 2.6), gris)
-	techo.rotation_degrees.x = -2.0
-	_caja(m, Vector3(0, 2.66, 1.17), Vector3(ancho + 0.32, 0.22, 0.05), _mat(BURDEOS, 0.5))
-	_texto(m, "Red", Vector3(-ancho * 0.5 + 0.55, 2.66, 1.205), 120, Color.WHITE)
-	## Postes: dos en cada extremo (trasero y delantero) y uno trasero cada ~3,5 m.
-	var tramos := maxi(1, int(round(ancho / 3.5)))
-	for i in tramos + 1:
-		var x := -ancho * 0.5 + ancho * float(i) / float(tramos)
-		_caja(m, Vector3(x, 1.33, -1.34), Vector3(0.09, 2.66, 0.09), oscuro)
+	## Postes: dos en el lado de la banca y el panel (x = −0,2 y x = +w/2), y uno en el extremo abierto; delanteros y traseros.
+	var xs: Array[float] = [-w * 0.5, -0.2, w * 0.5]
+	for x: float in xs:
+		_caja(m, Vector3(x, 1.2, -1.3), Vector3(0.1, 2.4, 0.1), poste)
+		_caja(m, Vector3(x, 1.2, 1.05), Vector3(0.1, 2.4, 0.1), poste)
+	## Techo plano blanco de poco vuelo y costillas ROJAS por debajo (una sobre cada fila de postes y una diagonal por tramo).
+	var techo := _caja(m, Vector3(0, 2.62, -0.1), Vector3(w + 0.5, 0.07, 2.95), blanco)
+	techo.rotation_degrees.x = -3.0
+	for x: float in xs:
+		_caja(m, Vector3(x, 2.5, -0.1), Vector3(0.11, 0.1, 2.5), rojo, Vector3(-3.0, 0, 0))
+	for i in 2:
+		var xc: float = (xs[i] + xs[i + 1]) * 0.5
+		_caja(m, Vector3(xc, 2.52, -0.1), Vector3(0.08, 0.07, 2.7), rojo, Vector3(-3.0, 12.0 if i == 0 else -12.0, 0))
+	## Cabecera bajo el techo: banda negra con el texto, remates rojos con el logo «Red».
+	_caja(m, Vector3(0, 2.36, 1.1), Vector3(w + 0.1, 0.3, 0.06), negro)
 	for lado in [-1.0, 1.0]:
-		_caja(m, Vector3(lado * ancho * 0.5, 1.33, 1.1), Vector3(0.09, 2.66, 0.09), oscuro)
-	## Trasera: cristal arriba y pósters de recorridos abajo (uno por tramo); lateral de cristal en un extremo.
-	_caja(m, Vector3(0, 1.85, -1.4), Vector3(ancho, 1.4, 0.04), vidrio)
-	_caja(m, Vector3(0, 0.55, -1.4), Vector3(ancho, 1.1, 0.04), _mat(Color(0.82, 0.84, 0.86), 0.5, 0.2))
-	for i in tramos:
-		var xc := -ancho * 0.5 + ancho * (float(i) + 0.5) / float(tramos)
-		_quad(m, afiche(semilla + i), Vector3(xc, 1.15, -1.375), Vector2(0.9, 1.35))
-	_caja(m, Vector3(ancho * 0.5, 1.45, -0.15), Vector3(0.04, 2.3, 2.4), vidrio)
-	## Banca corrida de láminas metálicas (el tablero a 0,45 m de la acera, como los bancos de la ciudad).
-	for z in [-1.07, -0.9, -0.73]:
-		_caja(m, Vector3(0, 0.67, z), Vector3(ancho * 0.72, 0.04, 0.14), gris)
-	for x in [-ancho * 0.34, 0.0, ancho * 0.34]:
-		_caja(m, Vector3(x, 0.4, -0.9), Vector3(0.06, 0.55, 0.5), oscuro)
-	## El poste con el cartel del paradero, a un lado.
-	var xp := ancho * 0.5 + 0.9
+		_caja(m, Vector3(lado * (w * 0.5 + 0.04), 2.36, 1.1), Vector3(0.4, 0.34, 0.07), rojo)
+	_texto(m, "Paradero de Red Movilidad", Vector3(-0.5, 2.36, 1.14), 84, Color.WHITE)
+	_texto(m, "|", Vector3(0.95, 2.36, 1.14), 84, Color(0.6, 0.6, 0.65))
+	_texto(m, "Parada %d" % parada, Vector3(1.4, 2.36, 1.14), 84, Color.WHITE)
+	_texto(m, "Red", Vector3(w * 0.5 + 0.04, 2.38, 1.15), 70, Color.WHITE)
+	## Panel publicitario enmarcado (entre los postes del lado de la banca) con el póster de Red.
+	var cx := (xs[1] + xs[2]) * 0.5
+	_caja(m, Vector3(cx, 1.5, -1.3), Vector3(w * 0.5 - 0.2, 1.05, 0.08), negro)
+	_quad(m, anuncio(), Vector3(cx, 1.5, -1.254), Vector2(w * 0.5 - 0.42, 0.88))
+	_texto(m, "Red", Vector3(cx - 0.55, 1.78, -1.248), 60, Color.WHITE)
+	## Banca de láminas gris claro con su barra de apoyo.
+	var bx := cx
+	for z in [-1.06, -0.9, -0.74]:
+		_caja(m, Vector3(bx, 0.67, z), Vector3(w * 0.5 - 0.4, 0.04, 0.12), _mat(GRIS_CLARO, 0.5, 0.3))
+	for x in [bx - 0.8, bx + 0.8]:
+		_caja(m, Vector3(x, 0.4, -0.9), Vector3(0.05, 0.55, 0.4), poste)
+	_caja(m, Vector3(bx, 0.98, -1.18), Vector3(w * 0.5 - 0.4, 0.04, 0.05), _mat(GRIS_CLARO, 0.5, 0.3))
+	## Papelero gris claro, en el extremo del lado de la banca.
+	var xb := w * 0.5 + 0.75
+	for dx in [-0.22, 0.22]:
+		_caja(m, Vector3(xb + dx, 0.55, 0.3), Vector3(0.04, 1.1, 0.04), _mat(GRIS_CLARO, 0.5, 0.3))
+	_caja(m, Vector3(xb, 0.7, 0.3), Vector3(0.44, 0.45, 0.3), _mat(GRIS_CLARO, 0.55))
+	## El poste con el cartel negro, a la izquierda de la marquesina.
+	var xp := -w * 0.5 - 1.2
 	var cil := CylinderMesh.new()
-	cil.top_radius = 0.04
-	cil.bottom_radius = 0.045
-	cil.height = 3.1
+	cil.top_radius = 0.035
+	cil.bottom_radius = 0.04
+	cil.height = 2.7
 	var pm := MeshInstance3D.new()
 	pm.mesh = cil
-	pm.material_override = oscuro
-	pm.position = Vector3(xp, 1.55, 0.9)
+	pm.material_override = poste
+	pm.position = Vector3(xp, 1.35, 0.9)
 	m.add_child(pm)
-	var cartel := Node3D.new()
-	cartel.position = Vector3(xp, 0, 0.9)
-	m.add_child(cartel)
-	_caja(cartel, Vector3(0, 2.55, 0.03), Vector3(0.56, 1.0, 0.04), _mat(Color(0.97, 0.97, 0.96), 0.5))
-	_caja(cartel, Vector3(0, 2.96, 0.056), Vector3(0.56, 0.17, 0.02), _mat(VERDE, 0.5))
-	_texto(cartel, "PARADERO", Vector3(0, 2.96, 0.07), 62, Color.WHITE)
-	_texto(cartel, cod, Vector3(0, 2.76, 0.07), 108, Color(0.1, 0.1, 0.12))
-	_quad(cartel, qr(), Vector3(0.0, 2.42, 0.07), Vector2(0.24, 0.24))
-	var rs := RecorridosRed.recorridos(cod)
+	_cartel(m, Vector3(xp, 0, 0.9), nombre, rs, cod)
+
+## El cartel negro: bus (arriba izquierda), esquina roja «Red» (arriba derecha), nombre, 2 columnas de recorridos con su divisoria, QR y franja roja.
+static func _cartel(m: Node3D, pos: Vector3, nombre: String, rs: Array[String], cod := "") -> void:
+	var c := Node3D.new()
+	c.position = pos
+	m.add_child(c)
+	var ancho := 0.62
+	var alto := 1.0
+	var yc := 2.1
+	_caja(c, Vector3(0, yc, 0.03), Vector3(ancho, alto, 0.04), _mat(NEGRO, 0.45))
+	var z := 0.056
+	## Icono de bus (cuadrado blanco con ventanilla negra y dos ruedas) arriba a la izquierda.
+	_caja(c, Vector3(-0.23, yc + 0.4, z), Vector3(0.09, 0.075, 0.01), _luz(Color.WHITE))
+	_caja(c, Vector3(-0.23, yc + 0.41, z + 0.006), Vector3(0.07, 0.04, 0.01), _mat(NEGRO, 0.5))
+	## Esquina roja con «Red» arriba a la derecha.
+	_caja(c, Vector3(0.2, yc + 0.39, z), Vector3(0.22, 0.2, 0.01), _luz(ROJO, 0.6))
+	_texto(c, "Red", Vector3(0.2, yc + 0.41, z + 0.008), 66, Color.WHITE)
+	## El nombre de la parada.
+	_texto(c, nombre if nombre != "" else "Paradero", Vector3(-0.02, yc + 0.27, z + 0.004), 34, Color(0.85, 0.86, 0.9))
+	## El código del paradero, el que se escribe en la app «Red» del móvil para ver qué micros vienen.
+	if cod != "":
+		_texto(c, cod, Vector3(-0.08, yc + 0.4, z + 0.006), 40, Color.WHITE)
+	## Cuadrícula de 2 columnas: cajitas con la línea divisoria entre filas y en el centro.
+	var filas := ceili(float(rs.size()) / 2.0)
+	for f in filas + 1:
+		_caja(c, Vector3(0, yc + 0.2 - float(f) * 0.13, z + 0.002), Vector3(ancho - 0.06, 0.004, 0.004), _luz(Color(0.75, 0.76, 0.8), 0.3))
+	_caja(c, Vector3(0, yc + 0.2 - float(filas) * 0.065, z + 0.002), Vector3(0.004, 0.13 * float(filas), 0.004), _luz(Color(0.75, 0.76, 0.8), 0.3))
 	for i in rs.size():
-		var col: Color = RecorridosRed.color(rs[i])
-		var xr := -0.19 + float(i % 3) * 0.19
-		var yr := 2.2 - float(i / 3) * 0.12
-		_caja(cartel, Vector3(xr, yr, 0.056), Vector3(0.17, 0.1, 0.02), _mat(col, 0.5))
-		_texto(cartel, rs[i], Vector3(xr, yr, 0.07), 44, Color.WHITE)
+		var col := i % 2
+		var fila := i / 2
+		_texto(c, rs[i], Vector3(-0.15 + 0.3 * float(col), yc + 0.2 - 0.065 - float(fila) * 0.13, z + 0.004), 58, Color.WHITE)
+	## QR abajo a la izquierda y franja roja abajo.
+	_quad(c, qr(), Vector3(-0.2, yc - 0.37, z + 0.002), Vector2(0.12, 0.12))
+	_caja(c, Vector3(0, yc - 0.48, z), Vector3(ancho - 0.02, 0.05, 0.01), _luz(ROJO, 0.6))
