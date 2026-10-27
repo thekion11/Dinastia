@@ -703,7 +703,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
 | M-207 | P1 | PENDIENTE | Plantillas de 25 en todos los clubes (C-05) | plantillas de 25 |
-| M-208 | P1 | PARCIAL | Caja del club propio crece de forma casi monótona (prueba larga:… | 20-10: el mantenimiento de instalaciones (M-227) es un coste que crece con el club; faltan crisis |
+| M-208 | P1 | HECHO (27-10) | Caja del club propio crece de forma casi monótona (prueba larga:… | 20-10: el mantenimiento de instalaciones (M-227) es un coste que crece con el club; 27-10: crisis de caja (`CrisisCaja`: multa, recorte de patrocinio, obra que se encarece; crecen con la caja y no caen seguidas) |
 | M-210 | P1 | PARCIAL | Mercado: precios por reputación sin burbujas ni crisis | eras con precios (`Eras`, `_probar_eras_y_precios`); sin burbujas |
 | M-219 | P1 | PARCIAL | `Banco` e `Insolvencia` existen pero con pocos eventos de gravedad | administrador, tope salarial, venta de lo que sobra, refundación (`Insolvencia`); sin descenso administrativo |
 | M-235 | P1 | PARCIAL | Lesiones: duración y recaídas ok; sin prevención visible (carga… | carga y riesgo en `Medico` (l.244-254); indicador por jugador sin confirmar |
@@ -2135,7 +2135,7 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 943, 1051, 1055, 1072, 1075, 1076, 1077, 1078, 1079, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090, 1099, 1100
 
 ## 8. Hallazgos de la tanda de pulido (25-10), sin arreglar
-- Balance (medido por `pruebas/ideas/eq_diez_temporadas.gd`, especial `todo`; 10 temporadas × 3 semillas): **el grande sin gestionar se hace rico** (rep 88→96, sueldos 17-27 % de los ingresos, caja 6,6→65-95 M en 10 años; pasa M-208 porque su referencia sube con la rep). El chico sin gestionar pierde ~1-2 M/año también en Primera (resultado previsto −1,1 a −1,7 M): es estructural, no del descenso. s303 GRANDE da «último año 11 %» en t1 (rango 12-38 %).
+- Balance (medido por `pruebas/ideas/eq_diez_temporadas.gd`, especial `todo`; 10 temporadas × 3 semillas): el grande sin gestionar se hacía rico (rep 88→96, sueldos 17-27 % de los ingresos, caja 6,6→65-95 M en 10 años); 27-10: con `CrisisCaja` termina en 13-35 M y baja en 1-4 de las 10 temporadas. El chico sin gestionar pierde ~1-2 M/año también en Primera (resultado previsto −1,1 a −1,7 M): es estructural, no del descenso. s303 GRANDE da «último año 11 %» en t1 (rango 12-38 %).
 - `Mundo.generar(["CHI"], semilla)` da el MISMO mundo en t0 con 101, 202 y 303 (la semilla solo cambia la simulación): ¿buscado?
 - Pantalla de entrada: pendiente de tu aprobación como escena principal (`Inicio.flujo_nuevo`, §0).
 - Carrera/partido jugable: el portero que no llega a un tiro ya se estira hacia el balón y queda batido (27-10, `MotorJugable._reaccion_portero`); falta verlo con la cámara real en un gol y decidir si la estirada fallida necesita un clip «batido» propio.
