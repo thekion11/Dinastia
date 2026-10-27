@@ -312,7 +312,13 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	## mismas poses). El maniquí de 26 triángulos queda solo para calidad MEDIO.
 	var reales_lejos := _hinchas_horneados("lejos")
 	if not reales_lejos.is_empty() and not hinchas_xf.is_empty() and Calidad.elegida >= Calidad.ALTO:
-		_montar_horneados(deck, "PersonasLejos", reales_lejos, hinchas_xf, hinchas_col)
+		## HINCHAS DEFORMADOS DE CERCA (27-10-2026, revisión del líder): la malla «lejos» (~70 vértices) es la decimación más basta y de
+		## cerca son triángulos con púas. Las filas altas la usan para todo, así que quien pasea por una bandeja alta (la visita al estadio)
+		## las veía así. Ahora, a menos de `LIMITE_ALTAS` m del trozo (8 trozos por bandeja) se cambia a la malla «medio».
+		if not reales_medio.is_empty():
+			_montar_publico_lod(deck, "PersonasLejos", reales_medio, hinchas_xf, hinchas_col, LIMITE_ALTAS, TRAMOS_ALTAS)
+		else:
+			_montar_horneados(deck, "PersonasLejos", reales_lejos, hinchas_xf, hinchas_col)
 		return
 	if not det_xf.is_empty():
 		var mmd := MultiMesh.new()
