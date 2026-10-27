@@ -331,7 +331,10 @@ func _arbolado() -> void:
 		var fo: float = float(pp["fondo"]) * 0.5 + 9.0
 		for i in range(16):
 			var t2: float = float(i) / 16.0 * TAU
-			sitios.append(Vector3(c2.x + cos(t2) * an, 0, c2.y + sin(t2) * fo))
+			var q2 := Vector3(c2.x + cos(t2) * an, 0, c2.y + sin(t2) * fo)
+			## La orla cae a 9 m del solar, justo donde pasan las calles de acceso del núcleo (`_vias`, que `expansion` no conoce).
+			if not _en_frente_urbano(q2.x, q2.z):
+				sitios.append(q2)
 
 	## NINGÚN árbol sobre una calle de la ciudad grande (ni su acera): la orla de las parcelas y el arbolado suelto se
 	## colocaban sin mirar la rejilla de `expansion`, y salía un árbol en mitad de la calzada (casa de la ribera).
