@@ -6026,7 +6026,10 @@
   "Tiro raso (pegado al césped)": "Low shot (along the ground)",
   "🎮 Estilo de juego: ": "🎮 Game style: ",
   "Realista": "Realistic",
-  "Arcade": "Arcade"
+  "Arcade": "Arcade",
+  "Ayuntamiento": "Town Hall",
+  "Universidad": "University",
+  "Obras": "Roadworks"
  },
  "pt": {
   "Historia": "História",
@@ -12055,7 +12058,10 @@
   "Tiro raso (pegado al césped)": "Chute rasteiro (rente à grama)",
   "🎮 Estilo de juego: ": "🎮 Estilo de jogo: ",
   "Realista": "Realista",
-  "Arcade": "Arcade"
+  "Arcade": "Arcade",
+  "Ayuntamiento": "Câmara Municipal",
+  "Universidad": "Universidade",
+  "Obras": "Obras"
  },
  "patrones": [
   [
@@ -23696,7 +23702,10 @@
   "Tiro raso (pegado al césped)": "Frappe rasante (au ras du sol)",
   "🎮 Estilo de juego: ": "🎮 Style de jeu : ",
   "Realista": "Réaliste",
-  "Arcade": "Arcade"
+  "Arcade": "Arcade",
+  "Ayuntamiento": "Hôtel de ville",
+  "Universidad": "Université",
+  "Obras": "Chantier"
  },
  "it": {
   "Historia": "Storia",
@@ -29725,7 +29734,10 @@
   "Tiro raso (pegado al césped)": "Tiro rasoterra (radente al prato)",
   "🎮 Estilo de juego: ": "🎮 Stile di gioco: ",
   "Realista": "Realistico",
-  "Arcade": "Arcade"
+  "Arcade": "Arcade",
+  "Ayuntamiento": "Municipio",
+  "Universidad": "Università",
+  "Obras": "Cantiere"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35754,7 +35766,10 @@
   "Tiro raso (pegado al césped)": "Flacher Schuss (am Boden entlang)",
   "🎮 Estilo de juego: ": "🎮 Spielstil: ",
   "Realista": "Realistisch",
-  "Arcade": "Arcade"
+  "Arcade": "Arcade",
+  "Ayuntamiento": "Rathaus",
+  "Universidad": "Universität",
+  "Obras": "Baustelle"
  },
  "ca": {
   "Historia": "Història",
@@ -41783,7 +41798,10 @@
   "Tiro raso (pegado al césped)": "Xut arran de terra (enganxat a la gespa)",
   "🎮 Estilo de juego: ": "🎮 Estil de joc: ",
   "Realista": "Realista",
-  "Arcade": "Arcade"
+  "Arcade": "Arcade",
+  "Ayuntamiento": "Ajuntament",
+  "Universidad": "Universitat",
+  "Obras": "Obres"
  },
  "pl": {
   "Club": "Klub",
@@ -48091,7 +48109,10 @@
   "Tiro raso (pegado al césped)": "Strzał po ziemi (przy murawie)",
   "🎮 Estilo de juego: ": "🎮 Styl gry: ",
   "Realista": "Realistyczny",
-  "Arcade": "Zręcznościowy"
+  "Arcade": "Zręcznościowy",
+  "Ayuntamiento": "Ratusz",
+  "Universidad": "Uniwersytet",
+  "Obras": "Budowa"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54399,6 +54420,9 @@
   "Tiro raso (pegado al césped)": "Yerden şut (çime yakın)",
   "🎮 Estilo de juego: ": "🎮 Oyun tarzı: ",
   "Realista": "Gerçekçi",
-  "Arcade": "Arcade"
+  "Arcade": "Arcade",
+  "Ayuntamiento": "Belediye",
+  "Universidad": "Üniversite",
+  "Obras": "İnşaat"
  }
 }
