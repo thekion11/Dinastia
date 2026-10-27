@@ -31,6 +31,7 @@ func _process(_d: float) -> void:
 		_v.call("_aplicar_hora")
 		_v.explorar("pie")
 		_e = _v.get("_explorador")
+		VidaCiudad.enganchar(_e, _v, _p.get("mundo"))
 		return
 	if _n < 8:
 		return
