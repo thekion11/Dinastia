@@ -34,6 +34,26 @@ const TEXTOS := {
 		"«Piden» es lo que quiere el otro club; «Perciben» es cuánto vale tu oferta para ellos.",
 		"Fijo, cuotas y bonos reparten el pago: las cuotas alivian la caja de hoy pero pesan después.",
 	],
+	"Entrenar": [
+		"Elige el foco del entrenamiento de la semana: sube lo que trabajas, pero cansa más a la plantilla.",
+		"Los jóvenes mejoran más rápido; los veteranos aguantan menos carga. Reparte según la edad.",
+		"Si ves muchos fundidos o lesiones, baja la intensidad antes del partido importante.",
+	],
+	"Enfermería": [
+		"Aquí están los lesionados y cuántas semanas les quedan; un jugador cansado se lesiona más.",
+		"El informe médico te dice el riesgo de recaída antes de poner a alguien tocado.",
+		"Un buen preparador físico y la rotación reducen las lesiones: no lo dejes para cuando ya duelen.",
+	],
+	"Camarín": [
+		"El clima del vestuario sube o baja con los resultados, los minutos y los grupos de amigos o rivales.",
+		"Los capitanes y los veteranos sostienen el ambiente: cuida de quién sale del once.",
+		"Un jugador descontento rinde menos y acaba pidiendo salir: hablar a tiempo cuesta menos que fichar.",
+	],
+	"Contratos": [
+		"Aquí ves quién termina contrato este año: sin renovar, se va gratis al acabar la temporada.",
+		"Renovar cuesta una prima y una ficha nueva; negociar con tiempo sale más barato.",
+		"En el mercado puedes pactar un precontrato con un jugador en su último año de contrato.",
+	],
 	"Cantera": [
 		"La academia (10-16 años) prepara a los que llegarán: invertir en ella mejora las camadas.",
 		"Cada año sale una camada nueva; los que están listos pueden debutar con el primer equipo.",

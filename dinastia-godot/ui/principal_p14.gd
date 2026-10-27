@@ -23,6 +23,7 @@ func _animar_pestana() -> void:
 func _al_cambiar_pestana(_idx: int) -> void:
 	vista_cambiada.emit()
 	var titulo := _pestanas.get_tab_title(_pestanas.current_tab)
+	CapaTutorialUI.al_cambiar_pestana(self, titulo)   ## tutorial por capas: la ayuda de cada sistema la primera vez (fila 1040)
 	var gid := _grupo_de_pestana(titulo)
 	## "" = pestaña de hub contextual (Táctica, Mercado, Copa...). No pertenece
 	## a ningún bloque maestro, así que la barra de arriba se queda donde
