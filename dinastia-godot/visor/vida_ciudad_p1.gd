@@ -121,7 +121,7 @@ static func arranque_3d(m: Mundo) -> String:
 func _process(delta: float) -> void:
 	if expl == null or not is_instance_valid(expl) or expl.cuerpo == null:
 		return
-	call("poner_balon")   ## el balón suelto del parque (una sola vez; ver `VidaCiudad.poner_balon`)
+	call("poner_extras")   ## el balón del parque y la máquina del estadio (una sola vez cada uno; ver `VidaCiudad.poner_extras`)
 	if _t_cuadro > 0.0:
 		_t_cuadro -= delta
 		if _t_cuadro <= 0.0 and _cuadro != null:
@@ -233,6 +233,8 @@ func _punto_ciudad(k: String) -> Vector3:
 
 ## E en una sala del estadio: el comedor del plantel da de comer. true si lo usó.
 func usar_en_estadio(zona: String) -> bool:
+	if zona == "Sala de prensa" and EdificioClub.expendedora_cerca((self as VidaCiudad).expl.cuerpo.position - CityBuilder.ESTADIO_EN):
+		return (self as VidaCiudad).usar_expendedora()   ## la máquina del pasillo de la sala de prensa
 	if zona != ZONA_COMEDOR:
 		return false
 	(self as VidaCiudad)._comer(Idiomas.t("Comes con el plantel en el comedor del club. Media hora de charla y plato caliente."))

@@ -186,6 +186,8 @@ func _subir_al_tren(k: int) -> void:
 	_luz_cam.visible = true
 
 func _usar_en_anden() -> void:
+	if metro.expendedora_cerca(cuerpo.position) and vida != null and vida.usar_expendedora():   ## la máquina del andén: cobra la cartera
+		return
 	var k := metro.tren_parado_en(_linea, _idx)
 	if k >= 0:
 		_subir_al_tren(k)

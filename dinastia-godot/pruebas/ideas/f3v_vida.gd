@@ -234,6 +234,19 @@ func _probar_async() -> void:
 		_v.usar_surtidor("surtidor_0")
 		_comprobar(_m.vida.combustible > 40.0 and _m.mi_club().saldo < saldo_sin, "sin cartera repostar lo paga el club (nunca sale gratis)")
 		_m.roles = roles_guardados
+	## LA VENTANILLA DEL BANCO está en la plaza y la E abre el panel de la sucursal.
+	if _v != null and _e != null and _e.cb != null and _m.roles != null:
+		var kb := ""
+		for pc: Dictionary in _e.cb.puntos_clic:
+			if String(pc.get("k", "")).begins_with("banco_"):
+				kb = String(pc["k"])
+				break
+		_comprobar(kb != "", "hay una sucursal bancaria (ventanilla) en la plaza mayor")
+		if kb != "":
+			_v.usar_banco(kb)
+			_comprobar(is_instance_valid(_v._panel_cajero) and _v._panel_cajero.ventanilla, "la E ante la ventanilla abre el panel en modo sucursal")
+			if is_instance_valid(_v._panel_cajero):
+				_v._panel_cajero.free()
 	## LOS CAJEROS están puestos en la ciudad y la E abre el panel.
 	if _v != null and _e != null and _e.cb != null and _m.roles != null:
 		var kc := ""
@@ -247,6 +260,15 @@ func _probar_async() -> void:
 			_comprobar(is_instance_valid(_v._panel_cajero) and _v._panel_cajero.is_inside_tree(), "la E ante un cajero abre el panel")
 			if is_instance_valid(_v._panel_cajero):
 				_v._panel_cajero.free()
+	## Las expendedoras puestas: ciudad (centro comercial, gasolineras, estación, estadio) y andenes del metro.
+	if _v != null and _e != null and _e.cb != null:
+		_v.poner_extras()
+		var n_mq := 0
+		for pc: Dictionary in _e.cb.puntos_clic:
+			if String(pc.get("k", "")).begins_with("expendedora_"):
+				n_mq += 1
+		_comprobar(n_mq >= 5, "hay expendedoras en la ciudad: centro comercial, gasolineras, estación y estadio (%d)" % n_mq)
+		_comprobar(_e.metro != null and not _e.metro.expendedoras.is_empty() and _e.metro.expendedora_cerca(_e.metro.expendedoras[0]) and not _e.metro.expendedora_cerca(_e.metro.expendedoras[0] + Vector3(10, 0, 0)), "los andenes del metro tienen su máquina y se detecta a menos de 2,2 m")
 	## LA EXPENDEDORA cobra de la cartera y sube la energía; el balón suelto del parque aparece.
 	if _v != null and _m.roles != null and _m.necesidades != null:
 		_m.roles.patrimonio = 100
