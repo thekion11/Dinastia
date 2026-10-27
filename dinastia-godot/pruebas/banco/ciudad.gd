@@ -304,3 +304,52 @@ func _probar_cartera_dt() -> void:
 	d.erase("cartera")
 	r3.desde_dic(d)
 	_comprobar(r3.cartera.efectivo == 0 and r3.cartera.pin == "0000" and r3.cartera.pin_inicial and r3.cartera.cargo_pend == 0, "una partida vieja sin cartera empieza vacía y con el PIN de fábrica")
+
+## EL CAJERO AUTOMÁTICO (pieza B de §2.2h): teclado de PIN, retirar, ingresar, cambiar el PIN, comisión y bloqueo.
+func _probar_cajero() -> void:
+	_titulo("EL CAJERO AUTOMÁTICO (PIN, retirar, ingresar y cambiar el PIN)")
+	var m := Mundo.new()
+	var r := Roles.new(m)
+	r.patrimonio = 100   ## 1.200 €
+	var capa := CanvasLayer.new()
+	add_child(capa)
+	var p := PanelCajero.abrir(capa, r.cartera, r, 1, "Banco de prueba", 0, Vector3.ZERO, null)
+	for t in ["1", "1", "1", "1"]:
+		p._tecla(t)
+	_comprobar(p._estado == "pin" and r.cartera.fallos_pin == 1 and r.cartera.intentos_restantes() == 2, "un PIN malo no abre el cajero y cuenta el fallo")
+	for t in ["0", "0", "0", "0"]:
+		p._tecla(t)
+	_comprobar(p._estado == "menu" and r.cartera.fallos_pin == 0, "el PIN bueno abre el menú y borra los fallos")
+	p.retirar(50)
+	_comprobar(r.cartera.efectivo == 50 and r.cartera.cuenta_eur(r) == 1150, "retirar 50 € pasa dinero de la cuenta al bolsillo")
+	p.ingresar_todo()
+	_comprobar(r.cartera.efectivo == 0 and r.cartera.cuenta_eur(r) == 1200, "ingresar devuelve el efectivo a la cuenta")
+	p.retirar(200)
+	p.retirar(200)
+	p.retirar(200)
+	p.retirar(200)
+	_comprobar(r.cartera.efectivo == 400 and r.cartera.retirado_dia == 450, "el límite del cajero (500 € al día) corta la tercera retirada de 200 (ya van 450)")
+	p._estado = "pin_actual"
+	for t in ["0", "0", "0", "0"]:
+		p._tecla(t)
+	_comprobar(p._estado == "pin_nuevo", "cambiar el PIN pide primero el actual")
+	for t in ["4", "3", "2", "1"]:
+		p._tecla(t)
+	_comprobar(r.cartera.pin == "4321" and p._estado == "menu" and not r.cartera.pin_inicial, "y luego el nuevo de cuatro cifras")
+	var r2 := Roles.new(m)
+	r2.patrimonio = 100
+	var p2 := PanelCajero.abrir(capa, r2.cartera, r2, 1, "Caja ajena", 2, Vector3.ZERO, null)
+	for t in ["0", "0", "0", "0"]:
+		p2._tecla(t)
+	p2.retirar(20)
+	_comprobar(r2.cartera.efectivo == 20 and r2.cartera.cuenta_eur(r2) == 1178, "un cajero de otro banco cobra 2 € de comisión")
+	var r3 := Roles.new(m)
+	var p3 := PanelCajero.abrir(capa, r3.cartera, r3, 1, "Caja", 0, Vector3.ZERO, null)
+	for i in 3:
+		for t in ["9", "9", "9", "9"]:
+			p3._tecla(t)
+	_comprobar(r3.cartera.bloqueada and p3._estado == "pin", "tres PIN malos bloquean la tarjeta y no se abre el menú")
+	p3._tecla("✕")
+	_comprobar(not is_instance_valid(p3) or p3.is_queued_for_deletion(), "la tecla ✕ cierra el cajero")
+	_comprobar(CajeroCiudad.banco_de("cajero_1") == CajeroCiudad.banco_de("cajero_1") and not CajeroCiudad.servicio(null, "surtidor_0"), "cada cajero tiene un banco fijo y el gancho ignora lo que no es cajero")
+	capa.queue_free()

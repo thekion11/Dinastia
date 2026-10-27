@@ -234,6 +234,19 @@ func _probar_async() -> void:
 		_v.usar_surtidor("surtidor_0")
 		_comprobar(_m.vida.combustible > 40.0 and _m.mi_club().saldo < saldo_sin, "sin cartera repostar lo paga el club (nunca sale gratis)")
 		_m.roles = roles_guardados
+	## LOS CAJEROS están puestos en la ciudad y la E abre el panel.
+	if _v != null and _e != null and _e.cb != null and _m.roles != null:
+		var kc := ""
+		for pc: Dictionary in _e.cb.puntos_clic:
+			if String(pc.get("k", "")).begins_with("cajero_"):
+				kc = String(pc["k"])
+				break
+		_comprobar(kc != "", "hay cajeros automáticos puestos en la ciudad")
+		if kc != "":
+			_v.usar_cajero(kc)
+			_comprobar(is_instance_valid(_v._panel_cajero) and _v._panel_cajero.is_inside_tree(), "la E ante un cajero abre el panel")
+			if is_instance_valid(_v._panel_cajero):
+				_v._panel_cajero.free()
 	## LA TIENDA DE LA GASOLINERA: compra según el hambre, la paga el DT y el club no.
 	if _v != null and _m.roles != null and _m.necesidades != null:
 		_m.roles.patrimonio = 100
