@@ -146,3 +146,27 @@ func _probar_via_exterior(est: EstacionCentral) -> void:
 	var borde_autopista := -(Autopista.R + Autopista.ANCHO * 0.5)
 	_comprobar(z_estacion + ViaEstacion.Z_BOCA_A + ViaEstacion.LARGO_BOCA < borde_autopista, "la boca cercana (con su túnel) queda más allá del borde norte de la autopista (z %.0f < %.0f): ninguna calle se cruza a nivel" % [z_estacion + ViaEstacion.Z_BOCA_A + ViaEstacion.LARGO_BOCA, borde_autopista])
 	_comprobar(not ViaEstacion.visible_en(-250.0, est.largo_del_tren, est.z_tunel_anden) and not ViaEstacion.visible_en(-700.0, est.largo_del_tren, est.z_tunel_anden), "y por debajo de las calles (y de la autopista) el tren no se ve, no pisa ninguna")
+	## 27-10 (revisión del líder: ¿enterrada o flotando?): la vía exterior sigue la altura del terreno (la misma función que lo pinta).
+	var bb := CityBuilder.new()
+	add_child(bb)
+	var est2 := EstacionCentral.montar(bb, Vector3(110, 0.2, -550), 96.0, 96.0, {"claro": StandardMaterial3D.new(), "vidrio": StandardMaterial3D.new(), "piedra": StandardMaterial3D.new()})
+	var prf := est2.perfil_via
+	var por_debajo := 0.0
+	var flotando := 0.0
+	var z_t := ViaEstacion.Z_BOCA_B
+	while z_t <= ViaEstacion.Z_BOCA_A:
+		var terreno := TelefericoFlora.altura_malla(bb, 110.0, -550.0 + z_t) - 0.2
+		var via := ViaEstacion.altura(prf, z_t)
+		por_debajo = maxf(por_debajo, terreno - via)
+		flotando = maxf(flotando, via - maxf(terreno, 0.0))
+		z_t += 5.0
+	_comprobar(not prf.is_empty() and prf.size() >= 20, "perfil de la vía exterior: %d muestras cada %.0f m" % [prf.size(), ViaEstacion.PASO_PERFIL])
+	_comprobar(por_debajo < 0.6, "la vía nunca queda enterrada (como mucho %.2f m por debajo del terreno del eje)" % por_debajo)
+	_comprobar(flotando < 1.5, "ni flota sobre él (como mucho %.2f m por encima: el terraplén la sujeta)" % flotando)
+	var maximo := float((est2.get_meta("via_exterior") as Dictionary)["perfil_max"])
+	_comprobar(maximo >= 0.0 and maximo < 6.0, "la loma del norte sube %.2f m sobre el andén y la vía la sigue" % maximo)
+	est2.posicion_tren(0, 0.0)
+	est2._t = 1.0
+	est2._process(0.0)
+	_comprobar(absf((est2._trenes[0]["nodo"] as Node3D).position.y - (EstacionCentral.Y_TREN + ViaEstacion.altura(prf, float(est2.posicion_tren(0, 1.0)["z"])))) < 0.01, "el tren va a la cota de la vía en cada punto")
+	bb.queue_free()
