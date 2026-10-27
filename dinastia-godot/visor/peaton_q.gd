@@ -116,6 +116,44 @@ static func terminar(d: Dictionary) -> void:
 			continue
 		(mi as MeshInstance3D).visibility_range_end = 120.0
 		(mi as MeshInstance3D).visibility_range_end_margin = 20.0
+	sombra_contacto(nodo)
+
+## SOMBRA DE CONTACTO (P4, 27-10-2026). La sombra del sol solo llega a unos metros: más lejos los peatones «flotaban» sobre la acera. Una
+## mancha redonda y suave bajo los pies, compartida por todos (una malla y un material), la mantiene anclada. Se ve hasta 70 m.
+static var _malla_contacto: QuadMesh = null
+static var _mat_contacto: StandardMaterial3D = null
+
+static func sombra_contacto(nodo: Node3D) -> MeshInstance3D:
+	if _malla_contacto == null:
+		var g := Gradient.new()
+		g.offsets = PackedFloat32Array([0.0, 0.55, 1.0])
+		g.colors = PackedColorArray([Color(0, 0, 0, 0.5), Color(0, 0, 0, 0.28), Color(0, 0, 0, 0)])
+		var tex := GradientTexture2D.new()
+		tex.gradient = g
+		tex.fill = GradientTexture2D.FILL_RADIAL
+		tex.fill_from = Vector2(0.5, 0.5)
+		tex.fill_to = Vector2(1.0, 0.5)
+		tex.width = 64
+		tex.height = 64
+		_mat_contacto = StandardMaterial3D.new()
+		_mat_contacto.albedo_texture = tex
+		_mat_contacto.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_mat_contacto.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		_mat_contacto.cull_mode = BaseMaterial3D.CULL_DISABLED
+		_mat_contacto.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_DISABLED
+		_malla_contacto = QuadMesh.new()
+		_malla_contacto.size = Vector2(1.1, 1.1)
+		_malla_contacto.orientation = PlaneMesh.FACE_Y
+		_malla_contacto.material = _mat_contacto
+	var mi := MeshInstance3D.new()
+	mi.name = "Contacto"
+	mi.mesh = _malla_contacto
+	mi.position = Vector3(0, 0.03, 0)
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mi.visibility_range_end = 70.0
+	mi.visibility_range_end_margin = 10.0
+	nodo.add_child(mi)
+	return mi
 
 
 ## COMPLEXIÓN Y ACCESORIOS (etapa 4, 12-10-2026). Todos los peatones eran el
