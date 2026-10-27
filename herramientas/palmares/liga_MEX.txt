@@ -1,0 +1,50 @@
+1991 America
+1991 Pumas UNAM
+1992 Leon
+1996 Santos Laguna
+1997 Cruz Azul
+1997 Guadalajara
+1998 Toluca
+1999 Pachuca
+1999 Toluca
+2000 Toluca
+2001 Pachuca
+2001 Santos Laguna
+2002 America
+2002 Toluca
+2003 Monterrey
+2003 Pachuca
+2004 Pumas UNAM
+2005 America
+2005 Toluca
+2006 Guadalajara
+2006 Pachuca
+2007 Pachuca
+2008 Santos Laguna
+2008 Toluca
+2009 Monterrey
+2009 Pumas UNAM
+2010 Monterrey
+2010 Toluca
+2011 Pumas UNAM
+2011 Tigres UANL
+2012 Santos Laguna
+2013 America
+2013 Leon
+2014 America
+2014 Leon
+2015 Tigres UANL
+2016 Pachuca
+2016 Tigres UANL
+2017 Guadalajara
+2017 Tigres UANL
+2018 America
+2018 Leon
+2019 Monterrey
+2019 Tigres UANL
+2021 Cruz Azul
+2021 Monterrey
+2022 Pachuca
+2023 America
+2023 Tigres UANL
+2024 America
