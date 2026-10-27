@@ -34,13 +34,13 @@ func _ready() -> void:
 	add_child(we)
 	var cam := Camera3D.new()
 	add_child(cam)
-	cam.position = Vector3(0, 2.2, 5.5)
-	cam.look_at(Vector3(0, 1.3, -1), Vector3.UP)
+	cam.position = Vector3(-1.0, 1.9, 4.2)
+	cam.look_at(Vector3(-1.0, 1.4, -2.0), Vector3.UP)
 	cam.make_current()
 
 func _process(_d: float) -> void:
 	_n += 1
-	if _n == 20:
+	if _n == 40:
 		var tag := "lluvia" if OS.get_environment("LLUVIA") == "1" else ("antes" if OS.get_environment("ANTES") == "1" else "despues")
 		get_viewport().get_texture().get_image().save_png("/tmp/contacto_%s.png" % tag)
 		get_tree().quit()
