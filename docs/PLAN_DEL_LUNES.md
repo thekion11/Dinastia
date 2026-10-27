@@ -602,7 +602,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-407 | P2 | PENDIENTE | Sin pruebas de conducción/ciudad (V-06) | sin prueba de conducción |
 | M-408 | P2 | PARCIAL | Sin pruebas de minijuegos 3D | `prueba_minijuegos_nuevos` (2D); minijuegos 3D sin prueba |
 | M-410 | P2 | PARCIAL | Pruebas de rendimiento con umbrales | la simulación tiene umbral (`eq_diez_temporadas`, EQ_MODO=rendimiento: la semana del año 20 < 2× la del año 1 + 20 ms) y el banco mide ms por paso del motor; faltan umbrales de FPS en hardware real (dueño) |
-| M-413 | P2 | PENDIENTE | `auditoria_clubes`/`auditoria_datos` no están en el banco | auditorías fuera del banco |
 | M-414 | P2 | PENDIENTE | Resultados de sondas (calidad/táctica/simetría) sin umbrales | sondas sin umbrales |
 | M-416 | P2 | PENDIENTE | Sin CI en GitHub Actions | sin GitHub Actions |
 | M-417 | P2 | PENDIENTE | `herramientas/banco.sh` sólo bash | sin unificar |
