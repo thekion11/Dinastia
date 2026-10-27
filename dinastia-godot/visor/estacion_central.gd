@@ -11,10 +11,10 @@ extends Node3D
 
 const RUTA := "res://assets/kenney/tren/"
 const S := 2.4                               ## escala del kit (vía de 1 m → 2,4 m)
-const CICLO := 70.0
-const LLEGADA := 14.0
+const CICLO := 222.0                          ## 86 s llegando desde el horizonte, 30 s parado, 86 s saliendo y un respiro
+const LLEGADA := 86.0
 const ESPERA := 30.0
-const SALIDA := 14.0
+const SALIDA := 86.0
 const VIA_X := 8.0
 const LARGO_TUNEL := 26.0
 
@@ -27,6 +27,8 @@ var _min_vista := -1
 var _seg_min := 0.0                      ## [{nodo, fase, z0, z1}]
 var _t := 0.0
 var cuenta := {}
+var z_tunel_anden := 0.0                 ## z donde empieza el túnel del andén (el tren va por el subsuelo antes)
+var largo_del_tren := 0.0
 var z_vestibulo := 0.0                   ## z (local) donde los pasajeros entran al vestíbulo
 var _gente: Array = []                   ## los pasajeros (`PasajerosEstacion`), creados al primer tren con servicio
 
@@ -155,7 +157,9 @@ func _construir(b: CityBuilder, w: float, f: float, mats: Dictionary, ex: Ciudad
 	## Los trenes: tres coches (cabina, vagón, cabina vuelta) por vía; la segunda desfasada media vuelta.
 	var z_parada := z_tope - 3.0
 	z_vestibulo = z_tope + 2.0
-	var z_dentro := z_h0 + 20.0
+	var z_dentro := ViaEstacion.Z_BOCA_B - 10.0     ## dentro del túnel del horizonte (la vía exterior: `ViaEstacion`)
+	ViaEstacion.montar(self, b, beton)
+	z_tunel_anden = z_h0
 	var i := 0
 	for sx: float in [-VIA_X, VIA_X]:
 		var tren := Node3D.new()
@@ -172,6 +176,7 @@ func _construir(b: CityBuilder, w: float, f: float, mats: Dictionary, ex: Ciudad
 			n.position = Vector3(0, 0, -largo_tren - float(coche[1]) * S * 0.5)
 			tren.add_child(n)
 			largo_tren += float(coche[1]) * S + 0.3
+		largo_del_tren = largo_tren - 0.3
 		_trenes.append({"nodo": tren, "fase": float(i) * CICLO * 0.5, "z0": z_dentro, "z1": z_parada})
 		i += 1
 	cuenta["trenes"] = _trenes.size()
@@ -226,7 +231,7 @@ func _process(delta: float) -> void:
 	for i in _trenes.size():
 		var p := posicion_tren(i, float(tp["t"]))
 		var n: Node3D = _trenes[i]["nodo"]
-		n.visible = bool(p["visible"]) and bool(tp["servicio"])
+		n.visible = bool(p["visible"]) and bool(tp["servicio"]) and ViaEstacion.visible_en(float(p["z"]), largo_del_tren, z_tunel_anden)
 		n.position.z = float(p["z"])
 		## La caja se inclina con la frenada y la arrancada (cabeceo) y se mece un poco al rodar (balanceo).
 		var vel := absf(float(p["v"]))
