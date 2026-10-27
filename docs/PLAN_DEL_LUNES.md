@@ -537,7 +537,6 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 - [ ] `_process`: `dibujo_mando`/`MandoGiratorio` con setters y `queue_redraw()` están en la rama de la sesión 2 (falta fusionar); oclusión en más zonas de la ciudad.
 - [ ] 53 escenas de prueba sin ninguna mención: decidir cuáles se borran (§0). La fase 0 dio prueba a 30 módulos: repasar si queda alguno de `visor/`/`nucleo/` sin prueba directa.
 - [ ] `MotorLibre` es prototipo (el juego usa `MotorJugable`): decidir si se borra.
-- [ ] Colisiones de la ciudad fuera del club: edificios, postes, troncos e hidrantes ya chocan (`Optimizar.obstaculos`, todo lo estático ≥ 0,9 m) y los bancos desde el 27-10 (`CityBuilder.asientos`); medido el 27-10 (`pruebas/ideas/p4_mobiliario_bajo`): de 10.550 piezas estáticas de 0,4-0,9 m, el 95,9 % ya choca (círculo o rectángulo); las 437 restantes son macetas del interior del club, cajas del metro, papeleras de la feria y ruedas de coches del tráfico (dinámicos). Falta: que los PEATONES esquiven el mobiliario (hoy solo choca el DT).
 - [ ] C++/GDExtension solo si el perfil en hardware real lo pide.
 - [ ] 23 imágenes ≥ 2048 px que no lo necesitan: bajarlas a 2048 (auditoría 3, §4; no las caras sin tu OK).
 
