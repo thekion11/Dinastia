@@ -35,9 +35,10 @@ static func montar(ex: CiudadExpansion, centro: Vector3, rot: Basis, ancho: floa
 			ex._mod_caja(centro + rot * Vector3(0, y0 + subida, 0), Vector3(ancho + 0.6, 0.22, 0.4), rot, TEJA.darkened(0.25))
 			## Hastiales escalonados en los dos extremos (el triángulo de pared bajo el tejado).
 			for lado_x: float in [1.0, -1.0]:
-				for k in 3:
-					var f := 1.0 - float(k) / 3.0
-					ex._mod_caja(centro + rot * Vector3(lado_x * ancho * 0.5, y0 + subida * (float(k) + 0.5) / 3.0, 0), Vector3(0.3, subida / 3.0, fondo * f), rot, Color(0.9, 0.86, 0.78))
+				var pasos := 6
+				for k in pasos:
+					var f := 1.0 - float(k + 1) / float(pasos)   ## el escalón cabe bajo la teja: no asoma dentado
+					ex._mod_caja(centro + rot * Vector3(lado_x * (ancho * 0.5 - 0.15), y0 + subida * (float(k) + 0.5) / float(pasos), 0), Vector3(0.3, subida / float(pasos), maxf(fondo * f, 0.2)), rot, Color(0.9, 0.86, 0.78))
 		DEPOSITO:
 			var gris := Color(0.55, 0.57, 0.6)
 			var ox := (r.randf() - 0.5) * ancho * 0.4
