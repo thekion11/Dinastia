@@ -31,6 +31,30 @@ static func esperar(trafico: Object, v: Dictionary, r: float) -> int:
 			trafico._animar(v, "parado")
 	return k
 
+## En los andenes del metro: quien espera de pie mira el móvil, llama o se queda quieto (`variante(r)`).
+static func en_anden(d: Dictionary, r: float) -> int:
+	var k := variante(r)
+	if k == 2:
+		Mini3D.anim(d, "parado", "")
+		return k
+	gesto(d["nodo"], "mirar_movil" if k == 0 else "charla")
+	movil(d, true)
+	return k
+
+## Pone un clip del pack de gestos (lo carga la primera vez), como `TraficoCiudad._gesto`.
+static func gesto(nodo: Node3D, g: String) -> void:
+	for ap: AnimationPlayer in nodo.find_children("*", "AnimationPlayer", true, false):
+		var lib := ap.get_animation_library("")
+		if lib == null:
+			continue
+		if not lib.has_animation(g) and AnimExtra.UAL.has(g):
+			var esq := FutbolistaQ.esqueleto_de(nodo)
+			var clip: Animation = AnimQuaternius.cargar_real(String(AnimExtra.UAL[g]), str(ap.get_path_to(esq)) if esq != null else "")
+			if clip != null:
+				lib.add_animation(g, clip)
+		if lib.has_animation(g):
+			ap.play(g, 0.3)
+
 ## Un móvil (caja oscura con pantalla clara) colgado del hueso de la mano derecha, o quitado.
 static func movil(v: Dictionary, poner: bool) -> void:
 	var nodo: Node3D = v.get("nodo")
