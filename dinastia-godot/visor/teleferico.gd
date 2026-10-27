@@ -130,6 +130,7 @@ func _estacion(b: CityBuilder, suelo: Vector3, giro: float, nombre: String, mats
 		peld.position = Vector3(13.4 - 0.4 * float(s), -0.2 + alto_s * 0.5, 0.0)
 		base_n.add_child(peld)
 	EscaleraVida.registrar(b, suelo + base_n.basis * Vector3(13.6, -0.2, 0), suelo + base_n.basis * Vector3(11.4, 1.2, 0), 6)
+	cuenta["detalles_estacion"] = int(cuenta.get("detalles_estacion", 0)) + TelefericoEstacion.detalles(base_n)
 
 func _construir(b: CityBuilder) -> void:
 	base = _suelo(b, BASE_XZ)
@@ -153,7 +154,7 @@ func _construir(b: CityBuilder) -> void:
 		var suelo_p := b.altura_en(p.x, p.z)
 		p.y = maxf(p.y, suelo_p + ALTO_CABLE + 4.0)
 		puntos.append(p)
-		TelefericoPaisaje.torre(self, b, p, giro, mats["acero"])
+		TelefericoTorre.montar(self, b, p, giro)
 	puntos.append(cable_cima)
 	var lateral := Vector3(dir.z, 0, -dir.x) * 2.5
 	for lado: float in [-1.0, 1.0]:
@@ -162,21 +163,10 @@ func _construir(b: CityBuilder) -> void:
 	_largos = PackedFloat32Array([0.0])
 	for i in puntos.size() - 1:
 		_largos.append(_largos[i] + puntos[i].distance_to(puntos[i + 1]))
-	## Las dos cabinas (una por cable): rojas con cristal.
-	var roja := b._mat_simple(Color(0.75, 0.15, 0.12), 0.4)
-	var vid := b._mat_simple(Color(0.2, 0.3, 0.4), 0.1)
+	## Las dos cabinas (una por cable): carro con pinza, brazo, techo, ventanas por los cuatro lados, puerta y viajeros.
 	for lado2 in 2:
-		var cab := Node3D.new()
+		var cab := TelefericoCabina.montar(Color(0.75, 0.15, 0.12) if lado2 == 0 else Color(0.9, 0.6, 0.1))
 		add_child(cab)
-		for par in [[Vector3(0, -2.4, 0), Vector3(3.4, 0.3, 2.6), roja], [Vector3(0, -3.4, 0), Vector3(3.4, 1.9, 2.6), vid], [Vector3(0, -4.6, 0), Vector3(3.5, 0.5, 2.7), roja],
-				[Vector3(0, -2.0, 0), Vector3(0.18, 2.0, 0.18), mats["acero"]]]:
-			var mi := MeshInstance3D.new()
-			var bm := BoxMesh.new()
-			bm.size = par[1]
-			mi.mesh = bm
-			mi.material_override = par[2]
-			mi.position = par[0]
-			cab.add_child(mi)
 		cab.rotation.y = giro + PI * 0.5
 		cab.scale = Vector3.ONE * 1.8                 ## grandes: se ven desde la ciudad
 		cabinas.append(cab)

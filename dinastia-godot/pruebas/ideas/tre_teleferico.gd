@@ -33,6 +33,7 @@ func _probar() -> void:
 	_comprobar(int(t.get_meta("pinos", 0)) >= 600 and int(t.get_meta("rocas", 0)) >= 50 and int(t.get_meta("camino", 0)) >= 80, "paisaje del cerro: %d pinos, %d rocas y un camino en zigzag de %d tramos" % [t.get_meta("pinos", 0), t.get_meta("rocas", 0), t.get_meta("camino", 0)])
 	_comprobar(Teleferico.N_TORRES >= 8 and t.cabinas[0].scale.x > 1.5, "ocho torres en A y cabinas grandes (se ven desde la ciudad)")
 	_probar_suavidad(t)
+	_probar_visual(t, b)
 
 ## F-4: perfil suave (aceleración nula en los extremos, sin saltos) y cabinas que se balancean sin pasarse.
 func _probar_suavidad(t: Teleferico) -> void:
@@ -71,3 +72,32 @@ func _probar_suavidad(t: Teleferico) -> void:
 		th_max = maxf(th_max, absf((t.cabinas[0] as Node3D).rotation.z))
 	_comprobar(th_max > 0.002 and th_max <= Teleferico.LIMITE_BALANCEO + 1e-6, "las cabinas se balancean (hasta %.3f rad) sin pasarse del límite" % th_max)
 	_comprobar(absf((t.cabinas[0] as Node3D).rotation.z) < 0.03, "y al acabar el ciclo están casi quietas (%.4f rad)" % absf((t.cabinas[0] as Node3D).rotation.z))
+
+## F-4b (27-10): lo VISUAL del teleférico: cabina con ventanas y viajeros, torres de celosía, ladera con flora y rocas, estaciones con detalles.
+func _probar_visual(t: Teleferico, b: CityBuilder) -> void:
+	_linea("· Aspecto del teleférico")
+	var cab := TelefericoCabina.montar(Color.RED)
+	_comprobar(cab.get_child_count() >= 40, "la cabina tiene %d piezas (pinza, brazo, techo, ventanas por los cuatro lados, puerta y viajeros)" % cab.get_child_count())
+	var cristales := 0
+	for n in cab.get_children():
+		var mi := n as MeshInstance3D
+		if mi != null and mi.material_override is StandardMaterial3D and (mi.material_override as StandardMaterial3D).transparency == BaseMaterial3D.TRANSPARENCY_ALPHA:
+			cristales += 1
+	_comprobar(cristales >= 5, "con cristal por los cuatro lados y el lucernario (%d paneles)" % cristales)
+	cab.free()
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var p := t.puntos[3]
+	var piezas := TelefericoTorre.montar(raiz, b, p, 0.5)
+	_comprobar(piezas >= 100 and raiz.get_child_count() == 3, "cada torre es de celosía (%d barras y ruedas en %d mallas)" % [piezas, raiz.get_child_count()])
+	raiz.queue_free()
+	_comprobar(int(t.get_meta("arbustos", 0)) >= 1000 and int(t.get_meta("caducos", 0)) >= 100, "la ladera tiene %d arbustos y %d árboles de hoja caduca" % [t.get_meta("arbustos", 0), t.get_meta("caducos", 0)])
+	var paso := CityBuilder.TERRENO_LADO / float(CityBuilder.TERRENO_CELDAS)
+	var x0 := -CityBuilder.TERRENO_LADO * 0.5 + 60.0 * paso
+	var z0 := -CityBuilder.TERRENO_LADO * 0.5 + 100.0 * paso
+	_comprobar(is_equal_approx(TelefericoFlora.altura_malla(b, x0, z0), b.altura_en(x0, z0)), "la altura de la malla coincide con el terreno en los vértices de la rejilla")
+	var medio := TelefericoFlora.altura_malla(b, x0 + paso * 0.5, z0 + paso * 0.5)
+	var h_a := b.altura_en(x0 + paso, z0)
+	var h_b := b.altura_en(x0, z0 + paso)
+	_comprobar(is_equal_approx(medio, (h_a + h_b) * 0.5), "y entre vértices sigue el triángulo de la malla (lo que se ve), no la curva")
+	_comprobar(int(t.cuenta.get("detalles_estacion", 0)) >= 100, "las dos estaciones suman %d detalles (ventanas, puerta, línea amarilla, barandilla, bancos, farolas)" % int(t.cuenta.get("detalles_estacion", 0)))
