@@ -426,7 +426,7 @@ func _hueco_urbano(eje: Vector3, afuera: Vector3, fondo: float) -> bool:
 
 func altura_en(x: float, z: float) -> float:
 	if _ruido_terreno == null:
-		return 0.0
+		_preparar_ruido()
 	return _altura_terreno(x, z, _ruido_terreno, _ruido_detalle)
 
 func _rect_de(c: Vector3, dir: Vector3, ancho: float, fondo: float) -> Rect2:
