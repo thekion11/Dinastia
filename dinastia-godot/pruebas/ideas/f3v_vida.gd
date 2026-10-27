@@ -237,6 +237,7 @@ func _probar_async() -> void:
 	## LA TIENDA DE LA GASOLINERA: compra según el hambre, la paga el DT y el club no.
 	if _v != null and _m.roles != null and _m.necesidades != null:
 		_m.roles.patrimonio = 100
+		_m.roles.cartera.cargo_pend = 0
 		_m.roles.cartera.efectivo = 0
 		_m.necesidades.hambre_m = 80 * Necesidades.ESCALA
 		var club_t := _m.mi_club().saldo if _m.mi_club() != null else 0
