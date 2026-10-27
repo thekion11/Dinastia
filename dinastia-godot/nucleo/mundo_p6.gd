@@ -255,6 +255,9 @@ func _cerrar_campeonato() -> Dictionary:
 		entrenamiento.repartir_puntos(mi_club())
 	if copa != null and copa.campeon == mi_club() and logros != null:
 		logros.celebrar_titulo(copa.nombre)
+	## La COPA es un título: va a la vitrina de la carrera (y al museo) con la final que se jugó (decisión del dueño, 27-10-2026).
+	if copa != null and copa.campeon == mi_club() and roles != null:
+		roles.sumar_trofeo(copa.nombre, {"final": _final_de_copa(copa)})
 	if directiva != null and not directiva.despedido_ya and mi_puesto > 0:
 		resumen["directiva"] = directiva.tras_temporada(mi_puesto, mi_puesto == 1,
 			copa != null and copa.campeon == mi_club())
@@ -290,6 +293,20 @@ func _cerrar_campeonato() -> Dictionary:
 			if prensa != null:
 				prensa.noticia.emit(String(rr["titulo"]), String(rr["texto"]))
 	return resumen
+
+## La final de la copa, en una línea: «A 2-1 B» (con penales si los hubo).
+func _final_de_copa(c: Copa) -> String:
+	if c.historial.is_empty():
+		return ""
+	var rs: Array = (c.historial.back() as Dictionary).get("resultados", [])
+	if rs.is_empty():
+		return ""
+	var r: Dictionary = rs[0]
+	var txt := "%s %d-%d %s" % [(r["local"] as Club).nombre, int(r["gl"]), int(r["gv"]), (r["visita"] as Club).nombre]
+	var pen: Array = r.get("penales", [])
+	if pen.size() >= 2:
+		txt += " (%d-%d pen.)" % [int(pen[0]), int(pen[1])]
+	return txt
 
 ## Cierra la temporada: cumpleanos, retiros y un campeonato nuevo.
 ## EL QUE SIGUE, RETASADO (26-10-2026, `pruebas/ideas/eq_diez_temporadas.gd`). El cumpleaños y el año de

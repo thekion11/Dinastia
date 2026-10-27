@@ -175,8 +175,14 @@ func _process(delta_real: float) -> void:
 			if float(v.get("espera", 0.0)) > 0.0:
 				vact = 0.0   ## llegó a la parada: está quieto mientras sube y baja la gente
 			v["vact"] = vact
+		if es_peaton and hay_jugador and nivel == 0:
+			var nv2: Node3D = v["nodo"]
+			if is_instance_valid(nv2):
+				MovimientoNatural.mirada(v, jugador, nv2.position.distance_squared_to(pj), delta)
+		if es_peaton:
+			avance = MovimientoNatural.marcha(v, avance, float(v["vel"]) * delta, delta)
 		v["s"] = s0 + avance
-		_colocar(v)
+		_colocar(v, delta)
 
 ## ESQUIVAR (pmov, 26-10-2026): los peatones ya no solo esperan. `lat` es lo que
 ## se apartan de su línea (positivo, hacia fuera de la manzana); se mueve

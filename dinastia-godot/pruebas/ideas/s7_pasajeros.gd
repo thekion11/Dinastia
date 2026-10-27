@@ -54,3 +54,15 @@ func _probar() -> void:
 		lleno.append(k)
 	tope.set_meta("pasajeros", lleno)
 	_comprobar(PasajerosBus.MAX_ABORDO == 10, "el autobús admite como mucho 10 a bordo")
+	## La gente se ve DENTRO: tantas siluetas como pasajeros, y los cristales dejan ver.
+	var real := CityBuilder.autobus(Color(0.2, 0.4, 0.7))
+	add_child(real)
+	var vid := (real.get_child(1) as MeshInstance3D).material_override as StandardMaterial3D
+	_comprobar(vid.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA and vid.albedo_color.a < 0.5, "los cristales del autobús son semitransparentes")
+	real.set_meta("pasajeros", [3, 9, 12])
+	InteriorBus.actualizar(real)
+	var vis := 0
+	for k in InteriorBus.PLAZAS:
+		if (real.get_node("Interior/Plaza%d/Persona" % k) as Node3D).visible:
+			vis += 1
+	_comprobar(vis == 3, "tres pasajeros, tres siluetas sentadas (%d)" % vis)
