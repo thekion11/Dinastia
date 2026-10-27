@@ -618,7 +618,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-277 | P1 | PARCIAL | 274 textos en español directamente en `ui/` (I-02), concentrados… | ✅ 15-10: 1.132 textos envueltos; quedan ~15 (M-447) |
 | M-279 | P1 | PENDIENTE | 27 módulos de `visor/` y 8 de `nucleo/` sin referencia directa en… | los módulos siguen sin prueba directa |
 | M-280 | P1 | PENDIENTE | 105 módulos de UI/visor sin referencia en banco/pruebas | sin prueba visual automática |
 | M-433 | P1 | PARCIAL | Controles táctiles sólo en la ciudad (cruceta/E) | 21-10: en PC ya no salen la cruceta ni «Salir» al pasear (estadio y ciudad) y la E solo aparece si hay algo con lo que interactuar (`ExploradorCiudad.es_tactil`); el partido sigue sin controles táctil |
@@ -1910,7 +1909,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 
 **53. Monetización y Modelo Indie**
 - 1081. Sin cajas de recompensa ni azar pagado — _Existe una mecánica tipo 'sobre'; la promesa 'sin cajas de recompensa' es válida mientras no se pague_
-- 1094. Compromiso de que las partidas guardadas sobrevivan a las actualizaciones — _No hay migraciones entre versiones del esquema; compromiso solo en la intención_
 - 1095. Compatibilidad hacia atrás de las bases de datos — _Sin versionado de bases de datos_
 
 ### No existen (173)
