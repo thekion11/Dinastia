@@ -34,6 +34,10 @@ static func poner(padre: Node) -> ControlesTactiles:
 	var c := ControlesTactiles.new()
 	c.name = "ControlesTactiles"
 	padre.add_child(c)
+	## La línea de ayuda de teclado y mando («SIN BALÓN: Espacio/A contener…») sobra en el móvil y tapa: se deja transparente (orden del líder, 27-10).
+	var ayuda: Variant = padre.get("_ayuda")
+	if ayuda is CanvasItem:
+		(ayuda as CanvasItem).modulate.a = 0.0
 	return c
 
 func _ready() -> void:
