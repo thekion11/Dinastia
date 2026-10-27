@@ -64,7 +64,7 @@ const ESPECIALES := {
 	## El parque de atracciones (16-10-2026), junto a la universidad, en las afueras.
 	Vector2i(5, 9): "feria",
 	## El parque solar de la periferia este (27-10-2026).
-	Vector2i(9, 3): "parque_solar",
+	Vector2i(9, 3): "parque_solar", Vector2i(9, -2): "obra",
 }
 
 var b: CityBuilder

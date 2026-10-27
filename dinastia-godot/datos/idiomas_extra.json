@@ -6014,7 +6014,8 @@
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Less than 15% fuel left: find a pump (E).",
   "Tienes el depósito lleno.": "Your tank is full.",
   "Ayuntamiento": "Town Hall",
-  "Universidad": "University"
+  "Universidad": "University",
+  "Obras": "Roadworks"
  },
  "pt": {
   "Historia": "História",
@@ -12031,7 +12032,8 @@
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Menos de 15% de gasolina: procure uma bomba (E).",
   "Tienes el depósito lleno.": "O tanque já está cheio.",
   "Ayuntamiento": "Câmara Municipal",
-  "Universidad": "Universidade"
+  "Universidad": "Universidade",
+  "Obras": "Obras"
  },
  "patrones": [
   [
@@ -23660,7 +23662,8 @@
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Moins de 15 % de carburant : cherche une pompe (E).",
   "Tienes el depósito lleno.": "Ton réservoir est plein.",
   "Ayuntamiento": "Hôtel de ville",
-  "Universidad": "Université"
+  "Universidad": "Université",
+  "Obras": "Chantier"
  },
  "it": {
   "Historia": "Storia",
@@ -29677,7 +29680,8 @@
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Meno del 15% di benzina: cerca una pompa (E).",
   "Tienes el depósito lleno.": "Il serbatoio è già pieno.",
   "Ayuntamiento": "Municipio",
-  "Universidad": "Università"
+  "Universidad": "Università",
+  "Obras": "Cantiere"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35694,7 +35698,8 @@
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Weniger als 15 % Benzin: such eine Zapfsäule (E).",
   "Tienes el depósito lleno.": "Dein Tank ist voll.",
   "Ayuntamiento": "Rathaus",
-  "Universidad": "Universität"
+  "Universidad": "Universität",
+  "Obras": "Baustelle"
  },
  "ca": {
   "Historia": "Història",
@@ -41711,7 +41716,8 @@
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Et queda menys del 15 % de gasolina: busca un sortidor (E).",
   "Tienes el depósito lleno.": "Tens el dipòsit ple.",
   "Ayuntamiento": "Ajuntament",
-  "Universidad": "Universitat"
+  "Universidad": "Universitat",
+  "Obras": "Obres"
  },
  "pl": {
   "Club": "Klub",
@@ -48007,7 +48013,8 @@
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Zostało mniej niż 15% paliwa: znajdź dystrybutor (E).",
   "Tienes el depósito lleno.": "Masz pełny bak.",
   "Ayuntamiento": "Ratusz",
-  "Universidad": "Uniwersytet"
+  "Universidad": "Uniwersytet",
+  "Obras": "Budowa"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54303,6 +54310,7 @@
   "⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E).": "⛽ Yakıtın %15'in altına düştü: bir pompa bul (E).",
   "Tienes el depósito lleno.": "Deponuz dolu.",
   "Ayuntamiento": "Belediye",
-  "Universidad": "Üniversite"
+  "Universidad": "Üniversite",
+  "Obras": "İnşaat"
  }
 }
