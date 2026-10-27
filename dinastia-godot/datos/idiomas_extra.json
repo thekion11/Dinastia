@@ -6424,7 +6424,16 @@
   "Por «irregularidades administrativas»: %s de sanción.": "For “administrative irregularities”: a %s penalty.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "The main sponsor cuts its contribution: the club's cash loses %s.",
   "El constructor reclama %s más. Hay que pagar para no parar la obra.": "The builder claims %s more. You have to pay to keep the works going.",
-  "La obra del estadio se complica": "The stadium works get complicated"
+  "La obra del estadio se complica": "The stadium works get complicated",
+  "Koala": "Koala",
+  "Panda": "Panda",
+  "Perrito": "Puppy",
+  "Gatito": "Kitten",
+  "Conejito": "Bunny",
+  "Leoncito": "Lion cub",
+  "Elefantito": "Baby elephant",
+  "Tiburoncito": "Little shark",
+  "La sabana": "The savanna"
  },
  "pt": {
   "Historia": "História",
@@ -12851,7 +12860,16 @@
   "Por «irregularidades administrativas»: %s de sanción.": "Por «irregularidades administrativas»: %s de sanção.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "O patrocinador principal corta a contribuição: o cofre perde %s.",
   "El constructor reclama %s más. Hay que pagar para no parar la obra.": "O construtor exige mais %s. É preciso pagar para não parar a obra.",
-  "La obra del estadio se complica": "A obra do estádio complica-se"
+  "La obra del estadio se complica": "A obra do estádio complica-se",
+  "Koala": "Coala",
+  "Panda": "Panda",
+  "Perrito": "Cachorrinho",
+  "Gatito": "Gatinho",
+  "Conejito": "Coelhinho",
+  "Leoncito": "Leãozinho",
+  "Elefantito": "Elefantinho",
+  "Tiburoncito": "Tubarãozinho",
+  "La sabana": "A savana"
  },
  "patrones": [
   [
@@ -24989,7 +25007,16 @@
   "Por «irregularidades administrativas»: %s de sanción.": "Pour « irrégularités administratives » : %s de sanction.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "Le sponsor principal réduit sa contribution : la caisse perd %s.",
   "El constructor reclama %s más. Hay que pagar para no parar la obra.": "Le constructeur réclame %s de plus. Il faut payer pour ne pas arrêter le chantier.",
-  "La obra del estadio se complica": "Les travaux du stade se compliquent"
+  "La obra del estadio se complica": "Les travaux du stade se compliquent",
+  "Koala": "Koala",
+  "Panda": "Panda",
+  "Perrito": "Petit chien",
+  "Gatito": "Chaton",
+  "Conejito": "Petit lapin",
+  "Leoncito": "Lionceau",
+  "Elefantito": "Éléphanteau",
+  "Tiburoncito": "Petit requin",
+  "La sabana": "La savane"
  },
  "it": {
   "Historia": "Storia",
@@ -31416,7 +31443,16 @@
   "Por «irregularidades administrativas»: %s de sanción.": "Per «irregolarità amministrative»: %s di sanzione.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "Lo sponsor principale taglia il contributo: la cassa perde %s.",
   "El constructor reclama %s más. Hay que pagar para no parar la obra.": "L'impresa chiede %s in più. Bisogna pagare per non fermare i lavori.",
-  "La obra del estadio se complica": "I lavori dello stadio si complicano"
+  "La obra del estadio se complica": "I lavori dello stadio si complicano",
+  "Koala": "Koala",
+  "Panda": "Panda",
+  "Perrito": "Cagnolino",
+  "Gatito": "Gattino",
+  "Conejito": "Coniglietto",
+  "Leoncito": "Leoncino",
+  "Elefantito": "Elefantino",
+  "Tiburoncito": "Squaletto",
+  "La sabana": "La savana"
  },
  "de": {
   "Historia": "Geschichte",
@@ -37843,7 +37879,16 @@
   "Por «irregularidades administrativas»: %s de sanción.": "Wegen „administrativer Unregelmäßigkeiten“: %s Strafe.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "Der Hauptsponsor kürzt seinen Beitrag: Die Kasse verliert %s.",
   "El constructor reclama %s más. Hay que pagar para no parar la obra.": "Der Bauunternehmer verlangt %s mehr. Man muss zahlen, damit die Arbeiten weitergehen.",
-  "La obra del estadio se complica": "Der Stadionumbau wird kompliziert"
+  "La obra del estadio se complica": "Der Stadionumbau wird kompliziert",
+  "Koala": "Koala",
+  "Panda": "Panda",
+  "Perrito": "Hündchen",
+  "Gatito": "Kätzchen",
+  "Conejito": "Häschen",
+  "Leoncito": "Löwenbaby",
+  "Elefantito": "Elefantenbaby",
+  "Tiburoncito": "Haifischchen",
+  "La sabana": "Die Savanne"
  },
  "ca": {
   "Historia": "Història",
@@ -44270,7 +44315,16 @@
   "Por «irregularidades administrativas»: %s de sanción.": "Per «irregularitats administratives»: %s de sanció.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "El patrocinador principal retalla l'aportació: la caixa perd %s.",
   "El constructor reclama %s más. Hay que pagar para no parar la obra.": "El constructor reclama %s més. Cal pagar per no aturar l'obra.",
-  "La obra del estadio se complica": "L'obra de l'estadi es complica"
+  "La obra del estadio se complica": "L'obra de l'estadi es complica",
+  "Koala": "Coala",
+  "Panda": "Panda",
+  "Perrito": "Gosset",
+  "Gatito": "Gatet",
+  "Conejito": "Conillet",
+  "Leoncito": "Lleonet",
+  "Elefantito": "Elefantet",
+  "Tiburoncito": "Tauronet",
+  "La sabana": "La sabana"
  },
  "pl": {
   "Club": "Klub",
@@ -50976,7 +51030,16 @@
   "Por «irregularidades administrativas»: %s de sanción.": "Za „nieprawidłowości administracyjne”: kara %s.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "Główny sponsor obcina wpłatę: kasa traci %s.",
   "El constructor reclama %s más. Hay que pagar para no parar la obra.": "Wykonawca żąda %s więcej. Trzeba zapłacić, by nie wstrzymać budowy.",
-  "La obra del estadio se complica": "Przebudowa stadionu się komplikuje"
+  "La obra del estadio se complica": "Przebudowa stadionu się komplikuje",
+  "Koala": "Koala",
+  "Panda": "Panda",
+  "Perrito": "Piesek",
+  "Gatito": "Kotek",
+  "Conejito": "Króliczek",
+  "Leoncito": "Lwiątko",
+  "Elefantito": "Słonik",
+  "Tiburoncito": "Rekinek",
+  "La sabana": "Sawanna"
  },
  "tr": {
   "Club": "Kulüp",
@@ -57682,6 +57745,15 @@
   "Por «irregularidades administrativas»: %s de sanción.": "«İdari usulsüzlükler» nedeniyle %s ceza.",
   "El patrocinador principal recorta su aportación: la caja pierde %s.": "Ana sponsor katkısını azalttı: kasa %s kaybediyor.",
   "El constructor reclama %s más. Hay que pagar para no parar la obra.": "Müteahhit %s daha fazla istiyor. İnşaat durmasın diye ödemek gerek.",
-  "La obra del estadio se complica": "Stadyum inşaatı karmaşıklaşıyor"
+  "La obra del estadio se complica": "Stadyum inşaatı karmaşıklaşıyor",
+  "Koala": "Koala",
+  "Panda": "Panda",
+  "Perrito": "Köpekçik",
+  "Gatito": "Kedicik",
+  "Conejito": "Tavşancık",
+  "Leoncito": "Aslancık",
+  "Elefantito": "Filcik",
+  "Tiburoncito": "Köpekbalığı yavrusu",
+  "La sabana": "Savan"
  }
 }
