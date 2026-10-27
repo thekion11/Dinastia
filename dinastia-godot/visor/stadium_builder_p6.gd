@@ -29,6 +29,7 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 		tmp.free()
 	if malla == null:
 		return
+	malla = RespaldoCurvo.curvar(malla)   ## respaldos cóncavos (antes planos)
 
 	## Largo de la tribuna y fondo del graderio, en el espacio LOCAL del deck (que
 	## ya viene inclinado, asi que las butacas heredan la pendiente gratis).

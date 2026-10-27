@@ -50,6 +50,8 @@ func _process(_d: float) -> void:
 		(cl as CanvasLayer).visible = false
 	var k := (_n - 20) / POR_VISTA
 	var f := (_n - 20) % POR_VISTA
+	if OS.get_environment("SOLO") != "":   ## SOLO=3: una sola vista (las capturas del estadio completo son lentas)
+		k = int(OS.get_environment("SOLO")) if k == 0 else VISTAS.size()
 	if k >= VISTAS.size():
 		print("FIN. 0 fallos")
 		get_tree().quit()
