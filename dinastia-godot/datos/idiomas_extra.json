@@ -6120,7 +6120,11 @@
   "La directiva observa, sin más": "The board is watching, nothing more",
   "La directiva empieza a impacientarse": "The board is growing impatient",
   "Tu puesto está en el aire": "Your job is hanging by a thread",
-  "Estás despedido": "You're sacked"
+  "Estás despedido": "You're sacked",
+  "¿Vender? Toca otra vez": "Sell? Tap again",
+  "¿Cesarlo? Toca otra vez": "Let him go? Tap again",
+  "Borrar la partida guardada": "Delete the saved game",
+  "¿Borrar la partida? Toca otra vez": "Delete the game? Tap again"
  },
  "pt": {
   "Historia": "História",
@@ -12243,7 +12247,11 @@
   "La directiva observa, sin más": "A direção observa, nada mais",
   "La directiva empieza a impacientarse": "A direção começa a impacientar-se",
   "Tu puesto está en el aire": "O seu lugar está em risco",
-  "Estás despedido": "Está despedido"
+  "Estás despedido": "Está despedido",
+  "¿Vender? Toca otra vez": "Vender? Toque outra vez",
+  "¿Cesarlo? Toca otra vez": "Dispensá-lo? Toque outra vez",
+  "Borrar la partida guardada": "Apagar o jogo guardado",
+  "¿Borrar la partida? Toca otra vez": "Apagar o jogo? Toque outra vez"
  },
  "patrones": [
   [
@@ -23978,7 +23986,11 @@
   "La directiva observa, sin más": "La direction observe, sans plus",
   "La directiva empieza a impacientarse": "La direction commence à s'impatienter",
   "Tu puesto está en el aire": "Ton poste ne tient qu'à un fil",
-  "Estás despedido": "Tu es viré"
+  "Estás despedido": "Tu es viré",
+  "¿Vender? Toca otra vez": "Vendre ? Touche encore",
+  "¿Cesarlo? Toca otra vez": "Le remercier ? Touche encore",
+  "Borrar la partida guardada": "Supprimer la partie sauvegardée",
+  "¿Borrar la partida? Toca otra vez": "Supprimer la partie ? Touche encore"
  },
  "it": {
   "Historia": "Storia",
@@ -30101,7 +30113,11 @@
   "La directiva observa, sin más": "La dirigenza osserva, niente di più",
   "La directiva empieza a impacientarse": "La dirigenza comincia a spazientirsi",
   "Tu puesto está en el aire": "Il tuo posto è in bilico",
-  "Estás despedido": "Sei licenziato"
+  "Estás despedido": "Sei licenziato",
+  "¿Vender? Toca otra vez": "Vendere? Tocca di nuovo",
+  "¿Cesarlo? Toca otra vez": "Sollevarlo? Tocca di nuovo",
+  "Borrar la partida guardada": "Elimina la partita salvata",
+  "¿Borrar la partida? Toca otra vez": "Eliminare la partita? Tocca di nuovo"
  },
  "de": {
   "Historia": "Geschichte",
@@ -36224,7 +36240,11 @@
   "La directiva observa, sin más": "Der Vorstand beobachtet, mehr nicht",
   "La directiva empieza a impacientarse": "Der Vorstand wird ungeduldig",
   "Tu puesto está en el aire": "Dein Job steht auf der Kippe",
-  "Estás despedido": "Du bist entlassen"
+  "Estás despedido": "Du bist entlassen",
+  "¿Vender? Toca otra vez": "Verkaufen? Nochmal tippen",
+  "¿Cesarlo? Toca otra vez": "Entlassen? Nochmal tippen",
+  "Borrar la partida guardada": "Gespeichertes Spiel löschen",
+  "¿Borrar la partida? Toca otra vez": "Spiel löschen? Nochmal tippen"
  },
  "ca": {
   "Historia": "Història",
@@ -42347,7 +42367,11 @@
   "La directiva observa, sin más": "La directiva observa, sense més",
   "La directiva empieza a impacientarse": "La directiva comença a impacientar-se",
   "Tu puesto está en el aire": "El teu lloc penja d'un fil",
-  "Estás despedido": "Estàs acomiadat"
+  "Estás despedido": "Estàs acomiadat",
+  "¿Vender? Toca otra vez": "Vendre? Toca un altre cop",
+  "¿Cesarlo? Toca otra vez": "Cessar-lo? Toca un altre cop",
+  "Borrar la partida guardada": "Esborrar la partida desada",
+  "¿Borrar la partida? Toca otra vez": "Esborrar la partida? Toca un altre cop"
  },
  "pl": {
   "Club": "Klub",
@@ -48749,7 +48773,11 @@
   "La directiva observa, sin más": "Zarząd obserwuje, nic więcej",
   "La directiva empieza a impacientarse": "Zarząd zaczyna się niecierpliwić",
   "Tu puesto está en el aire": "Twoja posada wisi na włosku",
-  "Estás despedido": "Jesteś zwolniony"
+  "Estás despedido": "Jesteś zwolniony",
+  "¿Vender? Toca otra vez": "Sprzedać? Dotknij ponownie",
+  "¿Cesarlo? Toca otra vez": "Odwołać go? Dotknij ponownie",
+  "Borrar la partida guardada": "Usuń zapisaną grę",
+  "¿Borrar la partida? Toca otra vez": "Usunąć grę? Dotknij ponownie"
  },
  "tr": {
   "Club": "Kulüp",
@@ -55151,6 +55179,10 @@
   "La directiva observa, sin más": "Yönetim izliyor, o kadar",
   "La directiva empieza a impacientarse": "Yönetimin sabrı tükenmeye başlıyor",
   "Tu puesto está en el aire": "Koltuğun pamuk ipliğine bağlı",
-  "Estás despedido": "Kovuldun"
+  "Estás despedido": "Kovuldun",
+  "¿Vender? Toca otra vez": "Satılsın mı? Tekrar dokun",
+  "¿Cesarlo? Toca otra vez": "Görevden alınsın mı? Tekrar dokun",
+  "Borrar la partida guardada": "Kayıtlı oyunu sil",
+  "¿Borrar la partida? Toca otra vez": "Oyun silinsin mi? Tekrar dokun"
  }
 }

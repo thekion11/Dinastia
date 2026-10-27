@@ -553,6 +553,7 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 ### Detectados en pruebas y aún sin cerrar
 
 - **Puntería del tiro sin el pulido** (27-10): con `TIRO_PULIDO` apagado por defecto (solo con `PMOT_TIRO=1`), un tirador de 97 desde 20 m cae a ±0,09 m de donde apunta: el error solo depende de (1 − tiro). Decidir si se enciende el pulido de puntería (baja los goles a ~2 por partido) o se da un suelo de error a todos.
+- **Táctica sin contrapartida** (27-10, `sonda_motor_dt` ESCENARIO=tactica N=6, umbrales M-414): el local ofensivo (presión y línea altas) tira 12,8 y concede 6,2; el defensivo tira 3,0 y concede 9,8 (y encaja 2,0 goles frente a 1,7). Presionar arriba no deja la espalda libre y el bloque bajo no protege: ofensivo siempre gana. Falta el coste de la línea alta (balones a la espalda, contras) y que el bloque bajo quite tiros.
 - **Capturas de noche en Forward+** (27-10): en este contenedor (Vulkan por software) la ciudad con las farolas encendidas (103 luces, 49 farolas de 46 m) pasa de 14,5 GB y el sistema mata la captura, desde las 18:20; también con el código de antes de S5. Mediodía y mañana caben (~7 GB). La noche se revisa en Compatibility o en hardware real; medir FPS de noche en el PC del dueño (§1).
 - **Frenada del coche** (27-10, `pmov_conduccion`): de 72 km/h a cero en 0,82 s (~24 m/s², 2,4 g; un coche real, ~1 g) y, sin pedales, pierde ~5,8 m/s² (de 54 km/h se para en ~4 s). Arcade a propósito o demasiado brusco: decidirlo jugándolo.
 - **Roles por jugador** (como los PlayStyles de FC 26) con efecto en el motor.
@@ -600,7 +601,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-406 | P2 | PENDIENTE | `Retrato3D` no se ejercita en headless | sin prueba con xvfb |
 | M-408 | P2 | PARCIAL | Sin pruebas de minijuegos 3D | `prueba_minijuegos_nuevos` (2D); minijuegos 3D sin prueba |
 | M-410 | P2 | PARCIAL | Pruebas de rendimiento con umbrales | la simulación tiene umbral (`eq_diez_temporadas`, EQ_MODO=rendimiento: la semana del año 20 < 2× la del año 1 + 20 ms) y el banco mide ms por paso del motor; faltan umbrales de FPS en hardware real (dueño) |
-| M-414 | P2 | PENDIENTE | Resultados de sondas (calidad/táctica/simetría) sin umbrales | sondas sin umbrales |
 | M-416 | P2 | PENDIENTE | Sin CI en GitHub Actions | sin GitHub Actions |
 | M-417 | P2 | PENDIENTE | `herramientas/banco.sh` sólo bash | sin unificar |
 | M-418 | P2 | PENDIENTE | Sin informes de cobertura | sin cobertura |
@@ -624,7 +624,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-294 | P2 | PARCIAL | Comparador de jugadores existe; sin comparativa de club/estadio | comparador de jugadores; sin club/estadio |
 | M-295 | P2 | SIN VERIFICAR | Sin gráficos históricos (valor, forma) en ficha | «crecimiento por temporada» en la ficha; sin gráficos verificados |
 | M-296 | P2 | PARCIAL | Notificaciones (`Aviso`) sin centro de notificaciones | bandeja de correo; sin filtros |
-| M-299 | P2 | PARCIAL | Sin confirmaciones consistentes para acciones destructivas… | `CuadroDialogo` en despacho/principal; no uniforme en vender/despedir |
 | M-300 | P2 | PENDIENTE | Sin deshacer en acciones de pizarra | sin deshacer en pizarra |
 | M-302 | P2 | PENDIENTE | Sin tema claro/alto contraste | sin tema claro/alto contraste |
 | M-303 | P2 | PARCIAL | Cursor/hover sin feedback sonoro consistente en todos los… | `BotonFx` en todos los botones; pestañas/listas sin sonido |

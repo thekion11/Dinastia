@@ -298,7 +298,9 @@ func _actualizar_continuar() -> void:
 	var bx := Button.new()
 	bx.text = "✕"
 	bx.custom_minimum_size = Vector2(32, 32)
-	bx.pressed.connect(_borrar_partida)
+	bx.tooltip_text = Idiomas.t("Borrar la partida guardada")
+	## Borra la partida ENTERA y no hay vuelta: segundo toque para confirmar (M-299, 27-10-2026).
+	DobleToque.conectar(bx, Idiomas.t("¿Borrar la partida? Toca otra vez"), _borrar_partida)
 	botones.add_child(bx)
 
 ## Cada 30 s: la siguiente variante, fundida encima de la actual (1,4 s).
