@@ -6097,7 +6097,14 @@
   "Bebida energética": "Energy drink",
   "Bocadillo envasado": "Packaged sandwich",
   "Botella de agua": "Bottle of water",
-  "🥤 E: comprar en la máquina expendedora": "🥤 E: buy from the vending machine"
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: buy from the vending machine",
+  "BANCO ANDINO": "ANDEAN BANK",
+  "Ventanilla del banco": "Bank counter",
+  "Desbloquear la tarjeta": "Unblock the card",
+  "Tarjeta desbloqueada.": "Card unblocked.",
+  "Restablecer el PIN": "Reset the PIN",
+  "PIN restablecido.": "PIN reset.",
+  "Últimos movimientos": "Latest transactions"
  },
  "pt": {
   "Historia": "História",
@@ -12197,7 +12204,14 @@
   "Bebida energética": "Bebida energética",
   "Bocadillo envasado": "Sandes embalada",
   "Botella de agua": "Garrafa de água",
-  "🥤 E: comprar en la máquina expendedora": "🥤 E: comprar na máquina"
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: comprar na máquina",
+  "BANCO ANDINO": "BANCO ANDINO",
+  "Ventanilla del banco": "Balcão do banco",
+  "Desbloquear la tarjeta": "Desbloquear o cartão",
+  "Tarjeta desbloqueada.": "Cartão desbloqueado.",
+  "Restablecer el PIN": "Repor o PIN",
+  "PIN restablecido.": "PIN reposto.",
+  "Últimos movimientos": "Últimos movimentos"
  },
  "patrones": [
   [
@@ -23909,7 +23923,14 @@
   "Bebida energética": "Boisson énergisante",
   "Bocadillo envasado": "Sandwich emballé",
   "Botella de agua": "Bouteille d'eau",
-  "🥤 E: comprar en la máquina expendedora": "🥤 E : acheter au distributeur"
+  "🥤 E: comprar en la máquina expendedora": "🥤 E : acheter au distributeur",
+  "BANCO ANDINO": "BANQUE ANDINE",
+  "Ventanilla del banco": "Guichet de la banque",
+  "Desbloquear la tarjeta": "Débloquer la carte",
+  "Tarjeta desbloqueada.": "Carte débloquée.",
+  "Restablecer el PIN": "Réinitialiser le code PIN",
+  "PIN restablecido.": "Code PIN réinitialisé.",
+  "Últimos movimientos": "Derniers mouvements"
  },
  "it": {
   "Historia": "Storia",
@@ -30009,7 +30030,14 @@
   "Bebida energética": "Bevanda energetica",
   "Bocadillo envasado": "Panino confezionato",
   "Botella de agua": "Bottiglia d'acqua",
-  "🥤 E: comprar en la máquina expendedora": "🥤 E: compra dal distributore"
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: compra dal distributore",
+  "BANCO ANDINO": "BANCA ANDINA",
+  "Ventanilla del banco": "Sportello della banca",
+  "Desbloquear la tarjeta": "Sblocca la carta",
+  "Tarjeta desbloqueada.": "Carta sbloccata.",
+  "Restablecer el PIN": "Reimposta il PIN",
+  "PIN restablecido.": "PIN reimpostato.",
+  "Últimos movimientos": "Ultimi movimenti"
  },
  "de": {
   "Historia": "Geschichte",
@@ -36109,7 +36137,14 @@
   "Bebida energética": "Energy-Drink",
   "Bocadillo envasado": "Verpacktes Sandwich",
   "Botella de agua": "Flasche Wasser",
-  "🥤 E: comprar en la máquina expendedora": "🥤 E: am Automaten kaufen"
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: am Automaten kaufen",
+  "BANCO ANDINO": "ANDENBANK",
+  "Ventanilla del banco": "Bankschalter",
+  "Desbloquear la tarjeta": "Karte entsperren",
+  "Tarjeta desbloqueada.": "Karte entsperrt.",
+  "Restablecer el PIN": "PIN zurücksetzen",
+  "PIN restablecido.": "PIN zurückgesetzt.",
+  "Últimos movimientos": "Letzte Buchungen"
  },
  "ca": {
   "Historia": "Història",
@@ -42209,7 +42244,14 @@
   "Bebida energética": "Beguda energètica",
   "Bocadillo envasado": "Entrepà envasat",
   "Botella de agua": "Ampolla d'aigua",
-  "🥤 E: comprar en la máquina expendedora": "🥤 E: comprar a la màquina"
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: comprar a la màquina",
+  "BANCO ANDINO": "BANC ANDÍ",
+  "Ventanilla del banco": "Finestreta del banc",
+  "Desbloquear la tarjeta": "Desbloquejar la targeta",
+  "Tarjeta desbloqueada.": "Targeta desbloquejada.",
+  "Restablecer el PIN": "Restablir el PIN",
+  "PIN restablecido.": "PIN restablert.",
+  "Últimos movimientos": "Últims moviments"
  },
  "pl": {
   "Club": "Klub",
@@ -48588,7 +48630,14 @@
   "Bebida energética": "Napój energetyczny",
   "Bocadillo envasado": "Kanapka w opakowaniu",
   "Botella de agua": "Butelka wody",
-  "🥤 E: comprar en la máquina expendedora": "🥤 E: kup w automacie"
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: kup w automacie",
+  "BANCO ANDINO": "BANK ANDYJSKI",
+  "Ventanilla del banco": "Okienko banku",
+  "Desbloquear la tarjeta": "Odblokuj kartę",
+  "Tarjeta desbloqueada.": "Karta odblokowana.",
+  "Restablecer el PIN": "Zresetuj PIN",
+  "PIN restablecido.": "PIN zresetowany.",
+  "Últimos movimientos": "Ostatnie operacje"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54967,6 +55016,13 @@
   "Bebida energética": "Enerji içeceği",
   "Bocadillo envasado": "Paketli sandviç",
   "Botella de agua": "Su şişesi",
-  "🥤 E: comprar en la máquina expendedora": "🥤 E: otomattan satın al"
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: otomattan satın al",
+  "BANCO ANDINO": "ANDİN BANKASI",
+  "Ventanilla del banco": "Banka gişesi",
+  "Desbloquear la tarjeta": "Kartın blokesini kaldır",
+  "Tarjeta desbloqueada.": "Kartın blokesi kaldırıldı.",
+  "Restablecer el PIN": "PIN'i sıfırla",
+  "PIN restablecido.": "PIN sıfırlandı.",
+  "Últimos movimientos": "Son hareketler"
  }
 }

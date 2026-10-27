@@ -111,6 +111,20 @@ func usar_cajero(k: String) -> bool:
 	_panel_cajero = PanelCajero.abrir(expl._capa, mundo.roles.cartera, mundo.roles, dia, Idiomas.t(String(banco["nombre"])), int(banco["comision"]), pos, expl.cuerpo)
 	return true
 
+## E ante la ventanilla del banco: el panel de la sucursal (desbloquear, restablecer el PIN, movimientos).
+func usar_banco(k: String) -> bool:
+	if mundo.roles == null:
+		return false
+	if is_instance_valid(_panel_cajero):
+		return true
+	var pos := Vector3.ZERO
+	for pc: Dictionary in expl.cb.puntos_clic:
+		if String(pc.get("k", "")) == k:
+			pos = pc["pos"]
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	_panel_cajero = PanelCajero.abrir(expl._capa, mundo.roles.cartera, mundo.roles, dia, Idiomas.t("Banco Andino"), 0, pos, expl.cuerpo, true)
+	return true
+
 ## E ante una máquina expendedora: compra lo que pide el cansancio o el hambre y lo cobra la cartera del DT (sin gastar tiempo).
 func usar_expendedora() -> bool:
 	if mundo.roles == null or mundo.necesidades == null:
