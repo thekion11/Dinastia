@@ -65,3 +65,29 @@ static func oficina(ins: Node) -> void:
 	ins.call("_planta", Vector3(0.6, 0, 5.2), false)
 	for k in 3:
 		ins.call("_poner", "cardboardBoxClosed", Vector3(-7.4 + 0.5 * float(k), 0, 3.4), 0.3 * float(k))
+
+## Estanterías del archivo (cuatro armarios abiertos contra la pared del fondo):
+## libros y cajas en tres baldas cada uno. Sin azar.
+static func archivo(ins: Node, x0: float, z: float, paso: float, n: int) -> void:
+	var m := ins.call("_medida", "bookcaseClosedWide") as Vector3
+	for k in n:
+		var cx := x0 + float(k) * paso
+		for t in 3:
+			var y := m.y * (0.17 + 0.265 * float(t))
+			var llenos := 3 + (k + t) % 2
+			for i in llenos:
+				var x := cx - m.x * 0.38 + (float(i) + 0.5) * m.x * 0.76 / float(llenos)
+				var cosa := "books" if (i + k + t) % 3 != 2 else "cardboardBoxClosed"
+				ins.call("_poner", cosa, Vector3(x, y, z + 0.05), 0.15 * float(i + t), 0.55 if cosa != "books" else null)
+
+## Corrillo de tres vecinos charlando en círculo (frente a la fuente de agua).
+static func corrillo(ins: Node, centro: Vector3) -> void:
+	for k in 3:
+		var ang := TAU * float(k) / 3.0 + 0.5
+		var p := centro + Vector3(cos(ang), 0, sin(ang)) * 0.75
+		ins.call("_trabajador", p, atan2(-cos(ang), -sin(ang)), false, ["charla", "brazos_jarra", "cruzar_brazos"], ins.call("_calle"))
+	## Fuente de agua: pie, garrafa azul y grifo.
+	var r: Node3D = ins.get("_raiz")
+	var f := centro + Vector3(2.2, 0, -0.2)
+	Mini3D.caja(r, f + Vector3(0, 0.5, 0), Vector3(0.38, 1.0, 0.38), Mini3D.mat(Color(0.85, 0.87, 0.9), 0.4))
+	Mini3D.cilindro(r, f + Vector3(0, 1.3, 0), 0.17, 0.5, Mini3D.mat(Color(0.5, 0.75, 0.95, 1.0), 0.2))
