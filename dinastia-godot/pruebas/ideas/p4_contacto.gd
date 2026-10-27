@@ -17,3 +17,13 @@ func _probar() -> void:
 		_comprobar(absf(ca.position.y - 0.03) < 0.001, "queda a ras del suelo")
 		var tex := ((ca.mesh as QuadMesh).material as StandardMaterial3D).albedo_texture as GradientTexture2D
 		_comprobar(tex != null and tex.gradient.colors[0].a > 0.3 and tex.gradient.colors[2].a == 0.0, "es un degradado radial: oscuro al centro, transparente en el borde")
+	## LOD sin saltos: las mallas del peatón se disuelven al llegar a su límite de distancia.
+	var con_fade := 0
+	var total := 0
+	for mi in (a["nodo"] as Node3D).find_children("*", "MeshInstance3D", true, false):
+		var m := mi as MeshInstance3D
+		if m.visibility_range_end > 0.0 and not String(m.name).begins_with("Eyebrows"):
+			total += 1
+			if m.visibility_range_fade_mode == GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF:
+				con_fade += 1
+	_comprobar(total > 0 and con_fade == total, "todas las mallas con alcance se disuelven (%d de %d)" % [con_fade, total])
