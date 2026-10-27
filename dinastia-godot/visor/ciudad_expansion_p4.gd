@@ -140,6 +140,7 @@ func _parque(r: Rect2, lago: bool) -> void:
 	_arboles_en(pts, 1.0)
 	var nombre := "Parque del Lago" if lago else String(NOMBRES_PARQUE[absi(int(c.x * 7.0 + c.z * 13.0)) % NOMBRES_PARQUE.size()])
 	_detalles_parque(r, c, nombre, lago)
+	CiudadParque.rellenar(self, r, c)   ## bancos, mesas de pícnic y papeleras a lo largo de los paseos
 	b._rotulo(c + Vector3(0, 14, 0), "🌳 " + nombre, Color(0.7, 1.0, 0.7), 20)
 	b.puntos_clic.append({"k": "ciudad_parque_lago" if lago else "ciudad_parque", "n": "Parque · penales con los chicos", "pos": c, "estado": "ciudad"})
 
