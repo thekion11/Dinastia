@@ -328,6 +328,7 @@ static func cabezazo(esq: Skeleton3D, prefijo: String) -> Animation:
 const PIERNAS_CADERA := 12.0
 const PIERNAS_RODILLA := -14.0
 const PIERNAS_ALZA := 0.04
+const PIERNAS_CADERA_ANDAR := 5.0
 
 static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales: bool) -> AnimationLibrary:
 	var lib := AnimationLibrary.new()
@@ -349,6 +350,8 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 			## Los pies que no patinan (25-10-2026): el trote y el sprint con
 			## el pie de apoyo a la velocidad del cuerpo (`AnimPasos`).
 			else:
+				## Y andando: el paso del pack es ancho (tobillos a 0,24 m; humano 0,08-0,12).
+				real = _piernas_naturales(real, esq, PIERNAS_CADERA_ANDAR, 0.0, 0.0)
 				real = AnimPasos.preparar(clave, real, esq)
 		lib.add_animation(clave, real if real != null else a_mano[clave])
 	## EL TROTE HACIA ATRÁS DE VERDAD (25-10-2026). Era el trote hacia delante
@@ -366,7 +369,7 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 	for clave: String in CLIP_CAMINATA:
 		var extra: Animation = cargar_real(String(CLIP_CAMINATA[clave]), prefijo)
 		if extra != null:
-			lib.add_animation(clave, _relajar_dedos(extra, esq, 0.5))
+			lib.add_animation(clave, _piernas_naturales(_relajar_dedos(extra, esq, 0.5), esq, PIERNAS_CADERA_ANDAR, 0.0, 0.0))
 	## "sentado" no tiene equivalente en la Universal Animation Library
 	## (ninguno de los 43 clips gratis es una pose sentada) -se queda a mano,
 	## sin intentar `cargar_real()` primero.

@@ -358,7 +358,8 @@ carga un clip en cualquier cuerpo al momento; ahora HABLAN con el clip de charla
 citas (mientras dura el cuadro) y la familia en casa (4 s). P1 pasada 3 (27-10, POSTURA): el «Idle» del pack era una postura de superhéroe; medido con la sonda: pies a 0,66 m
 (0,35 de la altura; humano 0,20-0,30), rodilla 156° (humano > 170°). `AnimQuaternius._piernas_naturales` gira los muslos 12°
 hacia dentro, estira la rodilla 14° y sube la raíz 4 cm (el pie vuelve a su altura): ahora tobillos a 0,17 m entre sí, rodilla
-169°, pie a 0,087 m (antes 0,09). Capturas `p1_postura_{antes,despues}.jpg`. P3 pasada 2 (27-10): los bancos de acera y de parada registran asientos
+169°, pie a 0,087 m (antes 0,09). Capturas `p1_postura_{antes,despues}.jpg`. Y ANDANDO (misma pasada): el ancho de paso del pack
+era 0,24 m (humano 0,08-0,12): 5° de muslo hacia dentro en caminar/trote/correr → 0,09-0,12 m (`PIERNAS_CADERA_ANDAR`). P3 pasada 2 (27-10): los bancos de acera y de parada registran asientos
 (`CityBuilder.asientos`) y `GenteSentada` (`visor/gente_sentada.gd`, cuelga de `VidaCiudad`) sienta hasta 6 peatones con el clip
 «sentado» en los asientos a < 55 m (ocupación estable por hash de asiento y hora); el DT en el sofá encadena «sentarse» → «sentado»
 y se queda así hasta dar un paso (`_gesto_propio(gesto, luego)`); los vecinos ya charlaban con clip (6 s). Prueba `p3_sentados`;

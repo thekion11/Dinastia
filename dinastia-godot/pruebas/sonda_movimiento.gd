@@ -127,6 +127,7 @@ func _clips(cuerpo: String, d: Dictionary) -> void:
 		var largo := ap.current_animation_length
 		var dt := 1.0 / 60.0
 		var vels: Array[float] = []
+		var anchos: Array[float] = []   ## separación lateral de los tobillos (ancho de paso)
 		var antes_i := Vector3.INF
 		var antes_d := Vector3.INF
 		var t := 0.0
@@ -135,6 +136,7 @@ func _clips(cuerpo: String, d: Dictionary) -> void:
 			esq.force_update_all_bone_transforms()
 			var pi := _pos(esq, "foot_l")
 			var pd := _pos(esq, "foot_r")
+			anchos.append(absf(pi.x - pd.x))
 			if antes_i != Vector3.INF:
 				var apoyado_i := pi.y <= pd.y
 				var p0: Vector3 = antes_i if apoyado_i else antes_d
@@ -146,5 +148,7 @@ func _clips(cuerpo: String, d: Dictionary) -> void:
 		vels.sort()
 		var natural: float = vels[vels.size() / 2] if not vels.is_empty() else 0.0
 		var juego: float = VELOCIDADES[clip]
-		print("  %-16s natural %.2f m/s · juego %.2f m/s · patina ×%.2f · largo %.2f s" % [clip, natural, juego, juego / maxf(natural, 0.01), largo])
+		anchos.sort()
+		var ancho: float = anchos[anchos.size() / 2] if not anchos.is_empty() else 0.0
+		print("  %-16s natural %.2f m/s · juego %.2f m/s · patina ×%.2f · largo %.2f s · ancho de paso %.2f m (humano 0,08-0,12)" % [clip, natural, juego, juego / maxf(natural, 0.01), largo, ancho])
 	ap.stop()
