@@ -12,6 +12,7 @@ func _probar() -> void:
 	var n := int(ex.cuenta.get("detalles_fachada", 0))
 	_comprobar(n >= 20, "los bloques modulares llevan aires, cables, carteles y grafitis (%d)" % n)
 	_comprobar(int(ex.cuenta.get("bloques_modulares", 0)) == 24, "se levantaron los bloques modulares (%d)" % int(ex.cuenta.get("bloques_modulares", 0)))
+	_comprobar(int(ex.cuenta.get("arriates", 0)) >= 8, "los bloques llevan arriates con matas y flores a pie de fachada (%d)" % int(ex.cuenta.get("arriates", 0)))
 	## Las tres familias de color cubren los diez pares y no se pisan.
 	var vistos := {}
 	for fam: Array in CiudadExpansion.FAMILIAS_BARRIO:
