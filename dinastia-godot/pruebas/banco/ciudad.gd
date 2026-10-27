@@ -364,6 +364,9 @@ func _probar_expendedora_balon() -> void:
 	_comprobar(n.energia() == 45, "animar sube la energía en puntos sin gastar tiempo")
 	n.animar(500)
 	_comprobar(n.energia() == 100, "y no pasa de 100")
+	EdificioClub.expendedoras[Vector3i(5, 0, 5)] = Vector3(5.0, 0.0, 5.0)
+	_comprobar(EdificioClub.expendedora_cerca(Vector3(5.6, 0.0, 5.0)) and not EdificioClub.expendedora_cerca(Vector3(9.0, 0.0, 5.0)), "la máquina de la sala de prensa se detecta a menos de 2,2 m")
+	EdificioClub.expendedoras.erase(Vector3i(5, 0, 5))
 	_comprobar(not ExpendedoraCiudad.servicio(null, "cajero_1") and not ComercioCiudad.servicio(null, "surtidor_0"), "el gancho único ignora lo que no es comercio")
 	## El balón: patada, rozamiento, bote y bordes.
 	var raiz := Node3D.new()

@@ -81,6 +81,15 @@ static func contexto_de(mundo: Mundo, c: Club) -> Dictionary:
 		## Por referencia: lo que decores en el 3D se guarda en la partida.
 		"interiores": mundo.interiores}
 
+## Máquinas expendedoras del complejo (posición en el marco del estadio): la E las compra en `VidaCiudad.usar_en_estadio`.
+static var expendedoras := {}
+
+static func expendedora_cerca(loc: Vector3, radio := 2.2) -> bool:
+	for q: Vector3 in expendedoras.values():
+		if Vector2(q.x - loc.x, q.z - loc.z).length() < radio:
+			return true
+	return false
+
 ## [planta, nombre corto, [[sala, x0 relativo, x1 relativo], ...]]
 const PLANTAS := [
 	[-2, "Estacionamiento", [["Estacionamiento", -8.0, 3.0], ["Cuarto de máquinas", 3.0, 8.0]]],
@@ -377,6 +386,10 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			if tipo == "television":
 				for k in 3:
 					TunelVestuario._caja(nodo, Vector3(caja.position.x + 1.5 + k * 2.2, y0 + 1.5, caja.end.y - 0.5), Vector3(0.4, 0.3, 0.6), oscuro, false)
+			## Una máquina expendedora en el pasillo, pegada a la pared del fondo (cobra de la cartera: `VidaCiudad.usar_en_estadio`).
+			var pos_mq := Vector3(caja.end.x - 0.6, y0, caja.get_center().y)
+			nodo.add_child(ExpendedoraCiudad.nodo(pos_mq, -PI * 0.5))
+			expendedoras[Vector3i(roundi(pos_mq.x), 0, roundi(pos_mq.z))] = pos_mq
 		"Museo ampliado":
 			MuseoAmpliado.montar(nodo, caja, y0, c1, c2, ctx)
 		"Comedor del plantel":
