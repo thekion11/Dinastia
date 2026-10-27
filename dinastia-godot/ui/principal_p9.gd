@@ -120,9 +120,7 @@ func _refrescar() -> void:
 	PersonajeDT.del_usuario = mundo.roles.aspecto_3d()
 	PersonajeDT.club_usuario = c.id if c != null else ""
 	## El edificio del club (estadio 2.0) también necesita saber del mundo.
-	if c != null:
-		EdificioClub.ctx = _contexto_edificio(c)
-		EdificioClub.mundo_ref = weakref(mundo)
+	EdificioClub.fijar_ctx(mundo, c)
 	## Entrenadora: si tu personaje es mujer, toda la interfaz te trata como tal.
 	Genero.fijar(String(PersonajeDT.aspecto(PersonajeDT.del_usuario)["cuerpo"]) == "female")
 	var liga := _liga_de(c)
@@ -216,7 +214,7 @@ func _refrescar() -> void:
 	_perezoso(_lista_logros, _ui_club_vida._pintar_logros)
 	_perezoso(_lista_entren, _ui_club_vida._pintar_entrenamiento.bind(c))
 	_perezoso(_lista_fed, _pintar_federacion.bind(c))
-	_perezoso(_lista_estadio, _pintar_estadio.bind(c))
+	_perezoso(_lista_estadio, _ui_club_estadio._pintar_estadio.bind(c))
 	_perezoso(_lista_seleccion, _ui_cantera._pintar_seleccion.bind(c))
 	_perezoso(_lista_cantera, _ui_cantera._pintar_cantera.bind(c))
 	_perezoso(_lista_contratos, _ui_cantera._pintar_contratos.bind(c))
@@ -230,9 +228,9 @@ func _refrescar() -> void:
 	## sección, solo se pinta la que está activa- en vez de apilarse las
 	## cuatro siempre, aunque solo una se vea.
 	_perezoso(_lista_gente, _ui_gente._pintar_gente)
-	_perezoso(_lista_finanzas, _pintar_finanzas.bind(c))
-	_perezoso(_lista_camarin, _pintar_camarin.bind(c))
-	_perezoso(_lista_ciudad, _pintar_ciudad.bind(c))
+	_perezoso(_lista_finanzas, _ui_finanzas._pintar_finanzas.bind(c))
+	_perezoso(_lista_camarin, _ui_finanzas._pintar_camarin.bind(c))
+	_perezoso(_lista_ciudad, _ui_ciudad._pintar_ciudad.bind(c))
 	_perezoso(_lista_editor, _ui_editor._pintar_editor)
 	_perezoso(_lista_glosario, _ui_opciones._pintar_glosario)
 	_perezoso(_lista_ajustes, _ui_ajustes._pintar_ajustes)

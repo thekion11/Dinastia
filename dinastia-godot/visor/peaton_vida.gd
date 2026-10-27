@@ -1,0 +1,68 @@
+class_name PeatonVida
+extends RefCounted
+## LA ESPERA CON VIDA DE LOS PEATONES (calidad visual P3, pasada 3, 27-10-2026). Plan §2.2e: *«esperar
+## (3 variantes)»*. Cuando un peatón se detiene por su cuenta (`TraficoCiudad`), ya no se queda siempre
+## en «parado»: la mitad mira el móvil (clip «Idle_Torch» del pack, el brazo levantado delante, con un
+## móvil en la mano derecha), un cuarto habla por teléfono (clip de charla, móvil en la mano) y el resto
+## espera quieto. Al reanudar la marcha el móvil se guarda. Todo estático: no guarda estado.
+
+const PROB_MOVIL := 0.5
+const PROB_LLAMADA := 0.25
+const NOMBRE_MOVIL := "Movil"
+
+## Elige y pone la variante de espera: 0 = mira el móvil, 1 = llamada, 2 = quieto.
+static func variante(r: float) -> int:
+	if r < PROB_MOVIL:
+		return 0
+	if r < PROB_MOVIL + PROB_LLAMADA:
+		return 1
+	return 2
+
+static func esperar(trafico: Object, v: Dictionary, r: float) -> int:
+	var k := variante(r)
+	match k:
+		0:
+			trafico._gesto(v, "mirar_movil")
+			movil(v, true)
+		1:
+			trafico._gesto(v, "charla")
+			movil(v, true)
+		_:
+			trafico._animar(v, "parado")
+	return k
+
+## Un móvil (caja oscura con pantalla clara) colgado del hueso de la mano derecha, o quitado.
+static func movil(v: Dictionary, poner: bool) -> void:
+	var nodo: Node3D = v.get("nodo")
+	if nodo == null or not is_instance_valid(nodo):
+		return
+	var esq: Skeleton3D = FutbolistaQ.esqueleto_de(nodo)
+	if esq == null:
+		return
+	var viejo := esq.find_child(NOMBRE_MOVIL, false, false)
+	if not poner:
+		if viejo != null:
+			viejo.queue_free()
+		return
+	if viejo != null or esq.find_bone("hand_r") < 0:
+		return
+	var anc := BoneAttachment3D.new()
+	anc.name = NOMBRE_MOVIL
+	anc.bone_name = "hand_r"
+	esq.add_child(anc)
+	var mi := MeshInstance3D.new()
+	var caja := BoxMesh.new()
+	caja.size = Vector3(0.07, 0.14, 0.008)
+	mi.mesh = caja
+	mi.material_override = Mini3D.mat(Color(0.08, 0.08, 0.09), 0.35)
+	## En la palma (medido en el esqueleto: los dedos salen por +Y del hueso de la mano a 0,115 m; el
+	## pulgar hacia −X/+Z, así que la palma mira a +Z): el móvil a media mano, pantalla hacia la palma.
+	mi.position = Vector3(-0.01, 0.075, 0.03)
+	anc.add_child(mi)
+	var pantalla := MeshInstance3D.new()
+	var pm := BoxMesh.new()
+	pm.size = Vector3(0.06, 0.12, 0.002)
+	pantalla.mesh = pm
+	pantalla.material_override = Mini3D.mat(Color(0.75, 0.85, 0.95), 0.2, 0.6)
+	pantalla.position = Vector3(-0.01, 0.075, 0.035)
+	anc.add_child(pantalla)

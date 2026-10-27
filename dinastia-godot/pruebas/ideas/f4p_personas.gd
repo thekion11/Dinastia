@@ -96,5 +96,26 @@ func _probar_async() -> void:
 		_m.reloj.minuto = int(cj["hora"]) * 60
 		_c._revisar_cuerpos()
 		_comprobar(not _c.cuerpos.has(String(cj["id"])), "desde la calle no se ve al presidente en su despacho")
+	## Fase 5, bloque 1: el vestuario con vida (laborables de 10 a 12, en la planta 0 del club).
+	var vest := _c.vestuario
+	_comprobar(vest != null, "las citas 3D montan el vestuario con vida")
+	if vest != null:
+		_e._entrar_al_estadio()
+		_m.reloj.dia = 1
+		_m.reloj.minuto = 10 * 60 + 30
+		vest.revisar()
+		await _frames(2)
+		_comprobar(vest.cuerpos.size() == VestuarioVivo.CUANTOS, "en horario hay %d futbolistas junto a las taquillas" % VestuarioVivo.CUANTOS)
+		if not vest.cuerpos.is_empty():
+			var c0: Dictionary = vest.cuerpos[0]
+			var jug: PrologoMentor = c0["nodo"]
+			_comprobar(jug.nombre == Nombres.visible((c0["jugador"] as Jugador).nombre), "con el nombre de la plantilla (%s)" % jug.nombre)
+			_e.cuerpo.position = jug.position + Vector3(0, 0, 1.0)
+			vest._buscar_cerca()
+			_comprobar(not vest.cerca.is_empty() and _c.usar(), "a su lado la E habla con él")
+		_m.reloj.minuto = 14 * 60
+		vest.revisar()
+		_comprobar(vest.cuerpos.is_empty(), "fuera de horario el vestuario queda vacío")
+		_e._salir_del_estadio()
 	Principal.mundo_pregenerado = null
 	Principal.mundo_a_cargar = null

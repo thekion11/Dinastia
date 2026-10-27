@@ -109,18 +109,23 @@ func _parque(r: Rect2, lago: bool) -> void:
 	## Caminos en cruz.
 	_lote("acera", Vector3(c.x, 0.1, c.z), Vector3(r.size.x, 0.1, 4.0))
 	_lote("acera", Vector3(c.x, 0.1, c.z), Vector3(4.0, 0.1, r.size.y))
+	## El lago (27-10): más pequeño, en el cuadrante sur-este y a ras de suelo, con orilla de arena, para que ni los
+	## puestos, ni los parterres, ni los árboles caigan dentro (antes era un disco azul elevado encima de todo).
+	var lago_c := c + Vector3(r.size.x * 0.27, 0, r.size.y * 0.30)
+	var lago_r := minf(r.size.x, r.size.y) * 0.13
 	if lago:
-		var l := MeshInstance3D.new()
-		var cm := CylinderMesh.new()
-		cm.top_radius = minf(r.size.x, r.size.y) * 0.3
-		cm.bottom_radius = cm.top_radius
-		cm.height = 0.2
-		cm.radial_segments = 32
-		l.mesh = cm
-		l.material_override = _mat["agua"]
-		l.position = c + Vector3(r.size.x * 0.18, 0.18, r.size.y * 0.18)
-		l.scale = Vector3(1.4, 1, 1)
-		b.add_child(l)
+		for capa: Array in [[lago_r + 1.4, 0.115, b._mat_simple(Color(0.80, 0.74, 0.55), 0.95)], [lago_r, 0.13, _mat["agua"]]]:
+			var l := MeshInstance3D.new()
+			var cm := CylinderMesh.new()
+			cm.top_radius = float(capa[0])
+			cm.bottom_radius = cm.top_radius
+			cm.height = 0.2
+			cm.radial_segments = 32
+			l.mesh = cm
+			l.material_override = capa[2]
+			l.position = Vector3(lago_c.x, float(capa[1]) - 0.1, lago_c.z)
+			l.scale = Vector3(1.3, 1, 1)
+			b.add_child(l)
 	var pts: Array = []
 	for k in 40:
 		var p := c + Vector3(_rng.randf_range(-0.46, 0.46) * r.size.x, 0, _rng.randf_range(-0.46, 0.46) * r.size.y)
@@ -129,6 +134,8 @@ func _parque(r: Rect2, lago: bool) -> void:
 			continue
 		if p.x < c.x - r.size.x * 0.1 and p.z < c.z - r.size.y * 0.1 and not lago:
 			continue
+		if lago and pow((p.x - lago_c.x) / ((lago_r + 4.0) * 1.3), 2.0) + pow((p.z - lago_c.z) / (lago_r + 4.0), 2.0) < 1.0:
+			continue   ## fuera del agua y de su orilla
 		pts.append(p)
 	_arboles_en(pts, 1.0)
 	var nombre := "Parque del Lago" if lago else String(NOMBRES_PARQUE[absi(int(c.x * 7.0 + c.z * 13.0)) % NOMBRES_PARQUE.size()])

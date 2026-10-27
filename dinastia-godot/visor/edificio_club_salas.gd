@@ -48,9 +48,46 @@ static func _esfera(r: float) -> SphereMesh:
 	sm.rings = 7
 	return sm
 
-## Una copa con su peana: pie, tallo, copa abierta y dos asas. `p` es la base.
+const TROFEO := "res://assets/ciudad/trofeo.glb"
+const TROFEO_ESCALA := 0.75
+## La copa del regalo del dueño (27-10), cargada una sola vez: malla y material (metal medio,
+## sin entorno que reflejar el metal pleno sale negro). Sin archivo, `_trofeo` queda null.
+static var _trofeo: Mesh = null
+static var _trofeo_mat: Material = null
+static var _trofeo_probado := false
+
+static func _cargar_trofeo() -> void:
+	if _trofeo_probado:
+		return
+	_trofeo_probado = true
+	if not ResourceLoader.exists(TROFEO):
+		return
+	var ps := load(TROFEO) as PackedScene
+	if ps == null:
+		return
+	var raiz := ps.instantiate()
+	var pila: Array = [raiz]
+	while not pila.is_empty() and _trofeo == null:
+		var n: Node = pila.pop_back()
+		if n is MeshInstance3D and (n as MeshInstance3D).mesh != null:
+			_trofeo = (n as MeshInstance3D).mesh
+		pila.append_array(n.get_children())
+	raiz.free()
+	if _trofeo != null:
+		var mat := _trofeo.surface_get_material(0)
+		if mat is StandardMaterial3D:
+			_trofeo_mat = mat.duplicate()
+			(_trofeo_mat as StandardMaterial3D).metallic = 0.5
+
+## Una copa con su peana, `p` es la base. Con el modelo del trofeo, esa malla; si falta el
+## archivo, la procedimental: pie, tallo, copa abierta y dos asas.
 static func copa(lote: PiezasVestuario.Lote, p: Vector3, oro: Material, peana: Material) -> void:
 	lote.caja(peana, _en(p + Vector3(0, 0.04, 0)), Vector3(0.24, 0.08, 0.24))
+	_cargar_trofeo()
+	if _trofeo != null and _trofeo_mat != null:
+		var xf := Transform3D(Basis.from_scale(Vector3.ONE * TROFEO_ESCALA), p + Vector3(0, 0.08, 0))
+		lote.malla(_trofeo_mat, xf, _trofeo)
+		return
 	lote.malla(oro, _en(p + Vector3(0, 0.11, 0)), _cilindro(0.06, 0.08, 0.06))
 	lote.malla(oro, _en(p + Vector3(0, 0.2, 0)), _cilindro(0.025, 0.035, 0.12))
 	lote.malla(oro, _en(p + Vector3(0, 0.36, 0)), _cilindro(0.14, 0.05, 0.2))
