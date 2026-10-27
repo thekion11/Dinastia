@@ -299,59 +299,9 @@ func _cabina_3d(ver: bool) -> void:
 		_cabina = Node3D.new()
 		_cabina.name = "Cabina"
 		camara.add_child(_cabina)
-		var oscuro := StandardMaterial3D.new()
-		oscuro.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		oscuro.albedo_color = Color(0.2, 0.21, 0.23)
-		oscuro.roughness = 0.85
-		var gris := StandardMaterial3D.new()
-		gris.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		gris.albedo_color = Color(0.36, 0.37, 0.4)
-		gris.roughness = 0.6
-		var piel := StandardMaterial3D.new()
-		piel.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		piel.albedo_color = Color(0.07, 0.07, 0.08)
-		piel.roughness = 0.5
-		## Medidas desde los ojos (x a la derecha, y arriba, -z adelante): el
-		## conductor va 0,34 m a la izquierda del centro, el coche mide 1,8 m.
-		## El salpicadero: su borde de arriba queda 17 cm bajo los ojos.
-		_caja_cabina(Vector3(1.8, 0.3, 0.6), Vector3(0.34, -0.32, -0.88), Vector3.ZERO, oscuro)
-		_caja_cabina(Vector3(0.34, 0.2, 0.5), Vector3(0.34, -0.42, -0.5), Vector3.ZERO, gris)
-		## Los pilares delanteros, del salpicadero al techo, y el borde del techo.
-		_barra_cabina(Vector3(-0.52, -0.17, -0.95), Vector3(-0.47, 0.3, -0.38), 0.07, oscuro)
-		_barra_cabina(Vector3(1.2, -0.17, -0.95), Vector3(1.15, 0.3, -0.38), 0.07, oscuro)
-		_barra_cabina(Vector3(-0.5, 0.36, -0.38), Vector3(1.18, 0.36, -0.38), 0.04, oscuro)
-		## El retrovisor, arriba al centro del parabrisas.
-		_caja_cabina(Vector3(0.15, 0.045, 0.02), Vector3(0.36, 0.3, -0.48), Vector3(0, -12, 0), gris)
-		## El volante: aro, buje y radios; gira con `_volante`.
-		_cabina_volante = Node3D.new()
-		_cabina_volante.position = Vector3(0.0, -0.3, -0.5)
-		_cabina.add_child(_cabina_volante)
-		var aro := MeshInstance3D.new()
-		var tm := TorusMesh.new()
-		tm.inner_radius = 0.165
-		tm.outer_radius = 0.195
-		tm.rings = 24
-		tm.ring_segments = 8
-		aro.mesh = tm
-		aro.material_override = piel
-		_cabina_volante.add_child(aro)
-		for ang: float in [0.0, 120.0, 240.0]:
-			var radio := MeshInstance3D.new()
-			var bm := BoxMesh.new()
-			bm.size = Vector3(0.025, 0.02, 0.17)
-			radio.mesh = bm
-			radio.material_override = gris
-			radio.rotation_degrees = Vector3(0, ang, 0)
-			radio.position = Vector3(sin(deg_to_rad(ang)), 0, cos(deg_to_rad(ang))) * 0.085
-			_cabina_volante.add_child(radio)
-		var buje := MeshInstance3D.new()
-		var cm := CylinderMesh.new()
-		cm.top_radius = 0.05
-		cm.bottom_radius = 0.05
-		cm.height = 0.04
-		buje.mesh = cm
-		buje.material_override = gris
-		_cabina_volante.add_child(buje)
+		## El salpicadero, los pilares, el techo y el volante: `CabinaCoche` (27-10-2026).
+		var cab := CabinaCoche.montar(_cabina)
+		_cabina_volante = cab["volante"]
 		## Los brazos: manga oscura y mano color piel.
 		var manga := StandardMaterial3D.new()
 		manga.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
@@ -381,18 +331,7 @@ func _cabina_3d(ver: bool) -> void:
 			mn.scale = Vector3(1.0, 0.8, 1.35)
 			_cabina.add_child(mn)
 			_cabina_manos.append(mn)
-		## El velocímetro, en el cuadro tras el volante.
-		_cabina_kmh = Label3D.new()
-		_cabina_kmh.font_size = 48
-		_cabina_kmh.pixel_size = 0.0012
-		_cabina_kmh.modulate = Color(0.55, 0.95, 0.75)
-		_cabina_kmh.outline_size = 0
-		## En la consola del centro (tras el volante quedaba tapado).
-		_cabina_kmh.position = Vector3(0.3, -0.13, -0.66)
-		_cabina_kmh.rotation_degrees = Vector3(-35, -18, 0)
-		_cabina_kmh.pixel_size = 0.0010
-		_cabina_kmh.no_depth_test = false
-		_cabina.add_child(_cabina_kmh)
+		_cabina_kmh = cab["kmh"]
 		for h in _cabina.find_children("*", "GeometryInstance3D", true, false):
 			(h as GeometryInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_cabina.visible = true

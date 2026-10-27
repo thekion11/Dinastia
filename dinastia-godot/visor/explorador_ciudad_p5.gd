@@ -262,7 +262,7 @@ func _buscar_cerca() -> void:
 func _physics_process(delta: float) -> void:
 	if cuerpo == null:
 		return
-	if estado in ["anden", "estadio", "interior", "puerta", "subsuelo"]:
+	if estado in ["anden", "estadio", "interior", "puerta", "subsuelo", "cima"]:
 		_actualizar_mano("pie", 0.0, 1.0, 0.0)
 	if estado == "anden":
 		_mover_en_anden(delta)
@@ -278,6 +278,9 @@ func _physics_process(delta: float) -> void:
 		return
 	if estado == "subsuelo":
 		sub.paso(self, delta)
+		return
+	if estado == "cima":
+		cb.expansion.tele_nodo.mirador.paso(self, delta)
 		return
 	if estado == "puerta":
 		_andar_solo(delta)
@@ -371,9 +374,14 @@ func _unhandled_input(ev: InputEvent) -> void:
 			_usar()
 		return
 	var k := (ev as InputEventKey).keycode
-	if k == KEY_ESCAPE:
+	if k == KEY_ESCAPE and MapaTransporte.cerrar(self):   ## Esc cierra el mapa del transporte si está abierto
+		get_viewport().set_input_as_handled()
+	elif k == KEY_ESCAPE:
 		get_viewport().set_input_as_handled()
 		salir.emit()
+	elif k == KEY_N:   ## el mapa del transporte público (completo / autobuses / metro)
+		get_viewport().set_input_as_handled()
+		MapaTransporte.alternar(self)
 	elif k == KEY_E:
 		get_viewport().set_input_as_handled()
 		_usar()

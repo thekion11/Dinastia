@@ -346,6 +346,7 @@ func _crear_cuerpo() -> Node3D:
 		if esc != null:
 			var c: Node3D = esc.instantiate()
 			c.scale = Vector3.ONE * 1.65
+			CocheDetalle.vestir(c, c.scale, 7)   ## pintura de coche, placas, faros y retrovisores
 			raiz.add_child(c)
 		return raiz
 	## TU PERSONAJE (estadio 2.0): el DT con el aspecto que elegiste, si hay.
