@@ -14,6 +14,12 @@ func _ready() -> void:
 		n.rotation.y = 0.5 * float(k)
 		if OS.get_environment("ANTES") == "1":
 			n.get_node("Contacto").queue_free()
+	if OS.get_environment("LLUVIA") == "1":
+		var lista: Array = []
+		for ch in get_children():
+			if ch is Node3D and ch.name != "Suelo" and ch.get_node_or_null("Contacto") != null:
+				lista.append({"nodo": ch, "peaton": true, "vel": 1.4})
+		ParaguasVida.tick(lista, true, [], 1)
 	var sol := DirectionalLight3D.new()
 	sol.rotation_degrees = Vector3(-55, 30, 0)
 	sol.shadow_enabled = false   ## como pasa más allá del alcance de la sombra
@@ -28,13 +34,13 @@ func _ready() -> void:
 	add_child(we)
 	var cam := Camera3D.new()
 	add_child(cam)
-	cam.position = Vector3(0, 3.5, 9)
-	cam.look_at(Vector3(0, 0.6, -1), Vector3.UP)
+	cam.position = Vector3(0, 2.2, 5.5)
+	cam.look_at(Vector3(0, 1.3, -1), Vector3.UP)
 	cam.make_current()
 
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 20:
-		var tag := "antes" if OS.get_environment("ANTES") == "1" else "despues"
+		var tag := "lluvia" if OS.get_environment("LLUVIA") == "1" else ("antes" if OS.get_environment("ANTES") == "1" else "despues")
 		get_viewport().get_texture().get_image().save_png("/tmp/contacto_%s.png" % tag)
 		get_tree().quit()
