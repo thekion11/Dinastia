@@ -62,6 +62,36 @@ func _paso_estadio() -> void:
 		rej.add_child(b)
 		botones.append(b)
 	_grupo(botones)
+	## EL COLOR DE LAS BUTACAS POR NIVEL (27-10-2026): se elige aquí y se puede cambiar luego en Club → Estadio → La grada.
+	_seccion(Idiomas.t("Color de las butacas"), Idiomas.t("Cómo se reparten los colores de tu club por la grada. Es pintura: se puede cambiar cuando quieras."))
+	var rej2 := GridContainer.new()
+	rej2.columns = 2
+	rej2.add_theme_constant_override("h_separation", 8)
+	rej2.add_theme_constant_override("v_separation", 8)
+	_contenido.add_child(rej2)
+	var niveles: Array = []
+	for o: Array in [["por_nivel", "🎨", "Un color por nivel", "Abajo el color 1 de tu club, en medio el 2 y arriba una mezcla de los dos."],
+			["uniforme", "▦", "Franjas iguales", "Los dos colores en franjas, igual en todos los niveles."]]:
+		var clave := String(o[0])
+		var b := _opcion("", datos.asiento_nivel == clave, func() -> void:
+			datos.asiento_nivel = clave
+			_cambio(), Vector2(0, 74))
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var v := VBoxContainer.new()
+		v.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 10)
+		v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		b.add_child(v)
+		var t := Tema.etiqueta(15, Tema.TEXTO, "%s  %s" % [String(o[1]), Idiomas.t(String(o[2]))])
+		t.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		v.add_child(t)
+		var d := Tema.etiqueta(11, Tema.SUAVE, Idiomas.t(String(o[3])))
+		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		d.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		d.max_lines_visible = 2
+		v.add_child(d)
+		rej2.add_child(b)
+		niveles.append(b)
+	_grupo(niveles)
 
 ## Una tarjeta-botón: icono y nombre arriba, la descripción debajo.
 func _tarjeta(icono: String, titulo: String, desc: String, elegido: bool, clave: String) -> Button:

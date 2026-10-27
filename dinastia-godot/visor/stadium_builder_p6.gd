@@ -1,6 +1,21 @@
 extends "res://visor/stadium_builder_p5.gd"
 ## [Capa 6/10 de `estadio_partes_tribuna.gd`] _butacas, _vomitorios, _cabeza_foco
 
+## Ocupación máxima de una grada (un estadio «lleno» tiene siempre alguna butaca libre).
+const TOPE_OCUPACION := 0.86
+
+## Los dos colores de las franjas de un anillo: abajo el color 1 con toques del 2, en medio el 2 con toques del 1 y arriba una variante
+## (la mezcla de los dos, algo más oscura) con toques del 1. `nivel` 0 = el de abajo.
+static func colores_de_nivel(c1: Color, c2: Color, nivel: int) -> Array[Color]:
+	match nivel:
+		0:
+			return [c1, c1.lerp(c2, 0.22)]
+		1:
+			return [c2, c2.lerp(c1, 0.22)]
+		_:
+			var v := c1.lerp(c2, 0.5).darkened(0.12)
+			return [v, v.lerp(c1, 0.3)]
+
 static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dictionary,
 		ocupacion: float, alto: float = 6.5, rake: float = 0.0, bandeja: int = 0) -> void:
 	var esc := load(RUTA_BUTACAS)
@@ -99,6 +114,17 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	rng.seed = int(largo * 100.0) + filas
 	var c1 := Color(str(est.get("asiento1", "#1f5f3d")))
 	var c2 := Color(str(est.get("asiento2", "#e8e8e8")))
+	## COLOR POR NIVEL (27-10-2026, decisión del dueño): con `asientoNivel = "por_nivel"` (por defecto) el anillo de abajo lleva el color 1 del
+	## club, el del medio el color 2 y el de arriba una variante (mezcla de los dos); las franjas de grupos de tres se conservan con el otro
+	## color como toque. `"uniforme"` deja las franjas c1/c2 de siempre en todos los anillos. Si el anillo ya tiene color propio
+	## (`niveles` de la tribuna) manda ese: `est["asiento1"]` ya viene cambiado.
+	var modo_nivel := str(est.get("asientoNivel", "por_nivel"))
+	var base_i1 := c1
+	var base_i2 := c2
+	if modo_nivel == "por_nivel":
+		var par := colores_de_nivel(c1, c2, bandeja)
+		base_i1 = par[0]
+		base_i2 = par[1]
 	## Paleta de ropa de hincha: neutros de siempre + los dos colores del club
 	## para que se lea "hinchada local", no una multitud generica.
 	## M-047 (20-10): unos 6 de cada 10 con la camiseta del club (sus colores,
@@ -144,7 +170,7 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 				base = base.rotated(eje_rake, -rake)
 			## Franjas de color del club, con alguna butaca desparejada: una grada
 			## de un solo tono se lee como una alfombra pintada.
-			var col: Color = c1 if (c / 3) % 2 == 0 else c2
+			var col: Color = base_i1 if (c / 3) % 2 == 0 else base_i2
 			if rng.randf() < 0.04:
 				col = col.lightened(0.25)
 			col = col.darkened(rng.randf() * 0.12)
@@ -176,16 +202,24 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 			## Un hincha por asiento ocupado. Las filas pegadas al césped de la
 			## bandeja de abajo llevan el hincha de detalle; el resto, el barato.
 			var cerca := bandeja == 0 and f < filas_detalle
+			var vecino := false   ## el asiento de al lado de este grupo ya lleva a alguien
 			for k in (3 if cerca else por_grupo):
-				if rng.randf() >= ocupacion:
+				if rng.randf() >= minf(ocupacion, TOPE_OCUPACION):
+					vecino = false
 					continue
+				## HUECO ENTRE PERSONAS (27-10-2026, «se ven mal tan juntos»): a quien tiene vecino a su lado le toca dejar libre el
+				## asiento una de cada tres veces, y la ocupación no pasa del 86 %: siempre hay alguna butaca vacía.
+				if vecino and rng.randf() < 0.34:
+					vecino = false
+					continue
+				vecino = true
 				var desp := (float(k) - 0.5 * float((3 if cerca else por_grupo) - 1)) * 0.48
 				var jit := Vector3(rng.randf_range(-0.04, 0.04), 0, rng.randf_range(-0.04, 0.04))
 				## NO TODOS MIDEN LO MISMO: ±10% de talla, gratis en la matriz.
 				var talla := rng.randf_range(0.9, 1.08)
 				## NI TODOS IGUAL DE ANCHOS (25-10-2026): delgados y corpulentos, de un
 				## hash del sitio (no del `rng`: el resto de la grada sale igual).
-				var ancho := 0.9 + 0.22 * fposmod(sin(p.x * 12.9898 + p.z * 78.233 + float(k) * 3.1) * 43758.5453, 1.0)
+				var ancho := 0.78 + 0.2 * fposmod(sin(p.x * 12.9898 + p.z * 78.233 + float(k) * 3.1) * 43758.5453, 1.0)
 				var base_h := Basis().rotated(Vector3.UP, giro + rng.randf_range(-0.15, 0.15)).scaled(Vector3(talla * ancho, talla, talla * ancho))
 				if rake != 0.0:
 					base_h = base_h.rotated(eje_rake, -rake)
@@ -229,7 +263,10 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 		var mat_l := StandardMaterial3D.new()
 		mat_l.vertex_color_use_as_albedo = true
 		mat_l.albedo_color = Color(0.9, 0.9, 0.9)
-		mat_l.roughness = 0.55
+		mat_l.roughness = 0.5
+		mat_l.clearcoat_enabled = true
+		mat_l.clearcoat = 0.25
+		mat_l.clearcoat_roughness = 0.4
 		mil.material_override = mat_l
 		mil.name = "ButacasLejos"
 		mil.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -238,8 +275,12 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var mat := StandardMaterial3D.new()
 	mat.vertex_color_use_as_albedo = true
 	mat.albedo_color = Color(0.9, 0.9, 0.9)
-	mat.roughness = 0.55
+	## Plástico de butaca con brillo suave de barniz (calidad de material, 27-10-2026): el respaldo y el asiento recogen la luz del sol bajo.
+	mat.roughness = 0.45
 	mat.metallic = 0.05
+	mat.clearcoat_enabled = true
+	mat.clearcoat = 0.3
+	mat.clearcoat_roughness = 0.35
 	var mi := MultiMeshInstance3D.new()
 	mi.multimesh = mm
 	mi.material_override = mat
@@ -325,24 +366,59 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 ## la pone el nodo, no una cuenta a mano.
 static func _vomitorios(deck: MeshInstance3D, largo: float, fondo: float,
 		lateral: bool) -> void:
-	var boca := StandardMaterial3D.new()
-	boca.albedo_color = Color(0.035, 0.04, 0.05)
-	boca.roughness = 1.0
 	## Uno cada ~26 m, que es el reparto real de un graderío.
 	var cuantas: int = clampi(int(largo / 26.0), 2, 6)
 	## Al borde de arriba y POR DEBAJO del borde del telón (0,32), para que las
 	## dos capas no compitan -ver la nota de `_telones()`-.
-	var d: float = fondo * 0.5 - 1.45
+	## Los accesos están en el borde ALTO de la rampa: depende de cómo esté girada la tribuna (ver `_butacas`).
+	var sentido: float = 1.0 if (deck.basis * (Vector3(1, 0, 0) if lateral else Vector3(0, 0, 1))).y >= 0.0 else -1.0
+	var d: float = sentido * (fondo * 0.5 - 1.45)
+	## ACCESOS CON CUERPO (27-10-2026, «mejorar los accesos»): antes era un plano oscuro. Ahora cada vomitorio es una boca de hormigón con dintel
+	## y jambas, el hueco negro con fondo, un rótulo verde de SALIDA encendido y el descansillo claro delante. Tres MultiMesh por grada
+	## (hormigón, hueco, rótulo): sin nodos por vomitorio.
+	var hormigon: Array[Transform3D] = []
+	var hueco: Array[Transform3D] = []
+	var rotulo: Array[Transform3D] = []
 	for k in cuantas:
 		var centro: float = -largo * 0.5 + largo * (float(k) + 0.5) / float(cuantas)
-		var m := MeshInstance3D.new()
-		var pm := PlaneMesh.new()
-		pm.size = Vector2(2.6, 3.0) if lateral else Vector2(3.0, 2.6)
-		m.mesh = pm
-		m.position = Vector3(d, 0.30, centro) if lateral else Vector3(centro, 0.30, d)
-		m.material_override = boca
-		m.name = "Vomitorio_%d" % k
-		deck.add_child(m)
+		_caja_vom(hueco, d + sentido * 0.55, 1.2, centro, 2.5, 2.4, 1.5, lateral)
+		_caja_vom(hormigon, d + sentido * 0.2, 2.62, centro, 3.3, 0.36, 0.7, lateral)       ## dintel
+		for lado: float in [-1.0, 1.0]:
+			_caja_vom(hormigon, d + sentido * 0.2, 1.3, centro + lado * 1.45, 0.34, 2.6, 0.7, lateral)   ## jambas
+		_caja_vom(hormigon, d - sentido * 0.75, 0.33, centro, 3.4, 0.06, 1.3, lateral)     ## descansillo
+		_caja_vom(rotulo, d - sentido * 0.17, 3.05, centro, 1.3, 0.28, 0.05, lateral)
+	_multi_vom(deck, "VomitoriosHormigon", hormigon, null, Color(0.62, 0.62, 0.6), 0.0)
+	_multi_vom(deck, "VomitoriosHueco", hueco, null, Color(0.025, 0.03, 0.035), 0.0)
+	_multi_vom(deck, "VomitoriosRotulo", rotulo, null, Color(0.1, 0.85, 0.35), 1.6)
+
+## Una caja en espacio del deck: `dep` sobre el eje del fondo, `y` el centro, `a` a lo largo; `an`/`al`/`pr`: ancho, alto, profundidad.
+static func _caja_vom(lista: Array[Transform3D], dep: float, y: float, a: float, an: float, al: float, pr: float, lateral: bool) -> void:
+	var pos := Vector3(dep, 0.3 + y, a) if lateral else Vector3(a, 0.3 + y, dep)
+	var tam := Vector3(pr, al, an) if lateral else Vector3(an, al, pr)
+	lista.append(Transform3D(Basis.from_scale(tam), pos))
+
+static func _multi_vom(deck: MeshInstance3D, nombre: String, ts: Array[Transform3D], _tex: Texture2D, col: Color, brillo: float) -> void:
+	if ts.is_empty():
+		return
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = BoxMesh.new()
+	mm.instance_count = ts.size()
+	for i in ts.size():
+		mm.set_instance_transform(i, ts[i])
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = col
+	mat.roughness = 0.95 if brillo == 0.0 else 0.4
+	if brillo > 0.0:
+		mat.emission_enabled = true
+		mat.emission = col
+		mat.emission_energy_multiplier = brillo
+	var mi := MultiMeshInstance3D.new()
+	mi.name = nombre
+	mi.multimesh = mm
+	mi.material_override = mat
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	deck.add_child(mi)
 
 ## Un bastidor de focos en `centro`, apuntando a `mira`, con `cols` × `filas`
 ## proyectores (sus transformaciones se suman a `proyectores`).

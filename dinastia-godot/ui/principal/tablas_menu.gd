@@ -27,7 +27,7 @@ const ETIQUETAS_ESTADIO := {
 	"cesped": "Corte del césped", "cespedTono": "Tono del césped",
 	"lineaCol": "Color de las líneas", "arcoCol": "Color de los arcos",
 	"redCol": "Color de las redes", "redTipo": "Tejido de la red",
-	"asientoP": "Butacas", "banderas": "Banderas", "escudoDonde": "Dónde va el escudo",
+	"asientoP": "Butacas", "asientoNivel": "Color de las butacas por nivel", "banderas": "Banderas", "escudoDonde": "Dónde va el escudo",
 	"corner": "Banderines de córner", "banquillo": "Banquillos", "tunel": "Túnel",
 	"clima": "Clima", "sonidoGol": "Sonido del gol",
 	"fachada": "Fachada", "fachadaCol": "Color de la fachada", "techoCol": "Color del techo",
