@@ -6393,7 +6393,19 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "You settle his wage now; at the season change he joins your club with no transfer fee.",
   "Precontrato firmado con %s.": "Pre-contract signed with %s.",
   "PRIVACIDAD": "PRIVACY",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA does not connect to the internet: it has no accounts, ads or usage statistics, and sends nothing to anyone. What it saves (games, settings, the error log and the profile picture you choose) stays on this device, in the game's folder, and only leaves it if you copy and send it yourself."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA does not connect to the internet: it has no accounts, ads or usage statistics, and sends nothing to anyone. What it saves (games, settings, the error log and the profile picture you choose) stays on this device, in the game's folder, and only leaves it if you copy and send it yourself.",
+  "Ponle un nombre al preset.": "Give the preset a name.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "You already have %d presets: delete one before saving another.",
+  "Ese preset no existe.": "That preset doesn't exist.",
+  "PRESETS DE PIZARRA": "TACTICS BOARD PRESETS",
+  "Nombre del preset": "Preset name",
+  "Guardar pizarra": "Save board",
+  "Pizarra guardada como «%s».": "Board saved as “%s”.",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "You haven't saved any yet. Set the board how you like it, name it and save it.",
+  "Cargar este preset: %s": "Load this preset: %s",
+  "Pizarra «%s» cargada.": "Board “%s” loaded.",
+  "Borrar este preset": "Delete this preset",
+  "Preset «%s» borrado.": "Preset “%s” deleted."
  },
  "pt": {
   "Historia": "História",
@@ -12789,7 +12801,19 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Fechas já o salário; na mudança de época chega ao teu clube sem pagar transferência.",
   "Precontrato firmado con %s.": "Pré-contrato assinado com %s.",
   "PRIVACIDAD": "PRIVACIDADE",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA não se conecta à internet: não tem contas, anúncios nem estatísticas de uso, e não envia nada a ninguém. O que salva (partidas, ajustes, o registro de erros e a foto de perfil que você escolher) fica neste dispositivo, na pasta do jogo, e só sai daqui se você copiar e enviar."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA não se conecta à internet: não tem contas, anúncios nem estatísticas de uso, e não envia nada a ninguém. O que salva (partidas, ajustes, o registro de erros e a foto de perfil que você escolher) fica neste dispositivo, na pasta do jogo, e só sai daqui se você copiar e enviar.",
+  "Ponle un nombre al preset.": "Dá um nome ao preset.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "Já tens %d presets: apaga algum antes de gravar outro.",
+  "Ese preset no existe.": "Esse preset não existe.",
+  "PRESETS DE PIZARRA": "PRESETS DA PRANCHETA",
+  "Nombre del preset": "Nome do preset",
+  "Guardar pizarra": "Gravar prancheta",
+  "Pizarra guardada como «%s».": "Prancheta gravada como «%s».",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "Ainda não gravaste nenhuma. Deixa a prancheta como gostas, dá-lhe um nome e grava-a.",
+  "Cargar este preset: %s": "Carregar este preset: %s",
+  "Pizarra «%s» cargada.": "Prancheta «%s» carregada.",
+  "Borrar este preset": "Apagar este preset",
+  "Preset «%s» borrado.": "Preset «%s» apagado."
  },
  "patrones": [
   [
@@ -24896,7 +24920,19 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Tu fixes dès maintenant son salaire ; au changement de saison il rejoint ton club sans indemnité.",
   "Precontrato firmado con %s.": "Précontrat signé avec %s.",
   "PRIVACIDAD": "CONFIDENTIALITÉ",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA ne se connecte pas à internet : pas de compte, pas de publicité ni de statistiques d'utilisation, et rien n'est envoyé à personne. Ce qu'il enregistre (parties, réglages, journal d'erreurs et la photo de profil que tu choisis) reste sur cet appareil, dans le dossier du jeu, et n'en sort que si tu le copies et l'envoies toi-même."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA ne se connecte pas à internet : pas de compte, pas de publicité ni de statistiques d'utilisation, et rien n'est envoyé à personne. Ce qu'il enregistre (parties, réglages, journal d'erreurs et la photo de profil que tu choisis) reste sur cet appareil, dans le dossier du jeu, et n'en sort que si tu le copies et l'envoies toi-même.",
+  "Ponle un nombre al preset.": "Donne un nom au preset.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "Tu as déjà %d presets : supprime-en un avant d'en enregistrer un autre.",
+  "Ese preset no existe.": "Ce preset n'existe pas.",
+  "PRESETS DE PIZARRA": "PRESETS DE TABLEAU",
+  "Nombre del preset": "Nom du preset",
+  "Guardar pizarra": "Enregistrer le tableau",
+  "Pizarra guardada como «%s».": "Tableau enregistré sous « %s ».",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "Tu n'en as encore enregistré aucun. Règle le tableau comme tu veux, donne-lui un nom et enregistre-le.",
+  "Cargar este preset: %s": "Charger ce preset : %s",
+  "Pizarra «%s» cargada.": "Tableau « %s » chargé.",
+  "Borrar este preset": "Supprimer ce preset",
+  "Preset «%s» borrado.": "Preset « %s » supprimé."
  },
  "it": {
   "Historia": "Storia",
@@ -31292,7 +31328,19 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Chiudi subito il suo ingaggio; al cambio di stagione arriva al tuo club senza pagare il cartellino.",
   "Precontrato firmado con %s.": "Precontratto firmato con %s.",
   "PRIVACIDAD": "PRIVACY",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA non si connette a internet: non ha account, pubblicità né statistiche d'uso, e non invia nulla a nessuno. Ciò che salva (partite, impostazioni, il registro degli errori e la foto profilo che scegli) resta su questo dispositivo, nella cartella del gioco, ed esce da qui solo se lo copi e lo invii tu."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA non si connette a internet: non ha account, pubblicità né statistiche d'uso, e non invia nulla a nessuno. Ciò che salva (partite, impostazioni, il registro degli errori e la foto profilo che scegli) resta su questo dispositivo, nella cartella del gioco, ed esce da qui solo se lo copi e lo invii tu.",
+  "Ponle un nombre al preset.": "Dai un nome al preset.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "Hai già %d preset: eliminane uno prima di salvarne un altro.",
+  "Ese preset no existe.": "Quel preset non esiste.",
+  "PRESETS DE PIZARRA": "PRESET DELLA LAVAGNA",
+  "Nombre del preset": "Nome del preset",
+  "Guardar pizarra": "Salva lavagna",
+  "Pizarra guardada como «%s».": "Lavagna salvata come «%s».",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "Non ne hai ancora salvata nessuna. Imposta la lavagna come vuoi, dalle un nome e salvala.",
+  "Cargar este preset: %s": "Carica questo preset: %s",
+  "Pizarra «%s» cargada.": "Lavagna «%s» caricata.",
+  "Borrar este preset": "Elimina questo preset",
+  "Preset «%s» borrado.": "Preset «%s» eliminato."
  },
  "de": {
   "Historia": "Geschichte",
@@ -37688,7 +37736,19 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Du legst sein Gehalt jetzt fest; zum Saisonwechsel kommt er ablösefrei zu deinem Verein.",
   "Precontrato firmado con %s.": "Vorvertrag mit %s unterschrieben.",
   "PRIVACIDAD": "DATENSCHUTZ",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA verbindet sich nicht mit dem Internet: keine Konten, keine Werbung, keine Nutzungsstatistiken, und es wird nichts an irgendwen gesendet. Was gespeichert wird (Spielstände, Einstellungen, das Fehlerprotokoll und das Profilbild, das du wählst), bleibt auf diesem Gerät im Spielordner und verlässt es nur, wenn du es selbst kopierst und verschickst."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA verbindet sich nicht mit dem Internet: keine Konten, keine Werbung, keine Nutzungsstatistiken, und es wird nichts an irgendwen gesendet. Was gespeichert wird (Spielstände, Einstellungen, das Fehlerprotokoll und das Profilbild, das du wählst), bleibt auf diesem Gerät im Spielordner und verlässt es nur, wenn du es selbst kopierst und verschickst.",
+  "Ponle un nombre al preset.": "Gib dem Preset einen Namen.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "Du hast schon %d Presets: Lösche eines, bevor du ein neues speicherst.",
+  "Ese preset no existe.": "Dieses Preset gibt es nicht.",
+  "PRESETS DE PIZARRA": "TAKTIKTAFEL-PRESETS",
+  "Nombre del preset": "Name des Presets",
+  "Guardar pizarra": "Tafel speichern",
+  "Pizarra guardada como «%s».": "Taktiktafel gespeichert als „%s“.",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "Du hast noch keine gespeichert. Stell die Tafel nach deinem Geschmack ein, gib ihr einen Namen und speichere sie.",
+  "Cargar este preset: %s": "Dieses Preset laden: %s",
+  "Pizarra «%s» cargada.": "Taktiktafel „%s“ geladen.",
+  "Borrar este preset": "Dieses Preset löschen",
+  "Preset «%s» borrado.": "Preset „%s“ gelöscht."
  },
  "ca": {
   "Historia": "Història",
@@ -44084,7 +44144,19 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Tanques ja la seva fitxa; al canvi de temporada arriba al teu club sense pagar traspàs.",
   "Precontrato firmado con %s.": "Precontracte signat amb %s.",
   "PRIVACIDAD": "PRIVADESA",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA no es connecta a internet: no té comptes, anuncis ni estadístiques d'ús, i no envia res a ningú. El que desa (partides, ajustos, el registre d'errors i la foto de perfil que triïs) es queda en aquest dispositiu, a la carpeta del joc, i només en surt si tu ho copies i ho envies."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA no es connecta a internet: no té comptes, anuncis ni estadístiques d'ús, i no envia res a ningú. El que desa (partides, ajustos, el registre d'errors i la foto de perfil que triïs) es queda en aquest dispositiu, a la carpeta del joc, i només en surt si tu ho copies i ho envies.",
+  "Ponle un nombre al preset.": "Posa-li un nom al preset.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "Ja tens %d presets: esborra'n algun abans de desar-ne un altre.",
+  "Ese preset no existe.": "Aquest preset no existeix.",
+  "PRESETS DE PIZARRA": "PRESETS DE PISSARRA",
+  "Nombre del preset": "Nom del preset",
+  "Guardar pizarra": "Desa la pissarra",
+  "Pizarra guardada como «%s».": "Pissarra desada com a «%s».",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "Encara no n'has desat cap. Deixa la pissarra com t'agrada, posa-li nom i desa-la.",
+  "Cargar este preset: %s": "Carrega aquest preset: %s",
+  "Pizarra «%s» cargada.": "Pissarra «%s» carregada.",
+  "Borrar este preset": "Esborra aquest preset",
+  "Preset «%s» borrado.": "Preset «%s» esborrat."
  },
  "pl": {
   "Club": "Klub",
@@ -50759,7 +50831,19 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Ustalasz jego pensję teraz; na zmianę sezonu dołącza do twojego klubu bez odstępnego.",
   "Precontrato firmado con %s.": "Podpisano umowę przedwstępną z %s.",
   "PRIVACIDAD": "PRYWATNOŚĆ",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA nie łączy się z internetem: nie ma kont, reklam ani statystyk użycia i niczego nikomu nie wysyła. To, co zapisuje (rozgrywki, ustawienia, dziennik błędów i wybrane przez ciebie zdjęcie profilowe), zostaje na tym urządzeniu, w folderze gry, i opuszcza je tylko wtedy, gdy sam to skopiujesz i wyślesz."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA nie łączy się z internetem: nie ma kont, reklam ani statystyk użycia i niczego nikomu nie wysyła. To, co zapisuje (rozgrywki, ustawienia, dziennik błędów i wybrane przez ciebie zdjęcie profilowe), zostaje na tym urządzeniu, w folderze gry, i opuszcza je tylko wtedy, gdy sam to skopiujesz i wyślesz.",
+  "Ponle un nombre al preset.": "Nadaj presetowi nazwę.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "Masz już %d presetów: usuń któryś, zanim zapiszesz kolejny.",
+  "Ese preset no existe.": "Taki preset nie istnieje.",
+  "PRESETS DE PIZARRA": "PRESETY TABLICY",
+  "Nombre del preset": "Nazwa presetu",
+  "Guardar pizarra": "Zapisz tablicę",
+  "Pizarra guardada como «%s».": "Tablicę zapisano jako „%s”.",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "Nie zapisałeś jeszcze żadnego. Ustaw tablicę po swojemu, nadaj nazwę i zapisz.",
+  "Cargar este preset: %s": "Wczytaj ten preset: %s",
+  "Pizarra «%s» cargada.": "Wczytano tablicę „%s”.",
+  "Borrar este preset": "Usuń ten preset",
+  "Preset «%s» borrado.": "Usunięto preset „%s”."
  },
  "tr": {
   "Club": "Kulüp",
@@ -57434,6 +57518,18 @@
   "Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.": "Maaşını şimdi belirliyorsun; sezon geçişinde bonservis ödemeden kulübüne katılır.",
   "Precontrato firmado con %s.": "%s ile ön sözleşme imzalandı.",
   "PRIVACIDAD": "GİZLİLİK",
-  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA internete bağlanmaz: hesap, reklam ya da kullanım istatistiği yoktur ve kimseye hiçbir şey göndermez. Kaydettikleri (oyunlar, ayarlar, hata kaydı ve seçtiğin profil fotoğrafı) bu cihazda, oyunun klasöründe kalır ve yalnızca sen kopyalayıp gönderirsen buradan çıkar."
+  "DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA internete bağlanmaz: hesap, reklam ya da kullanım istatistiği yoktur ve kimseye hiçbir şey göndermez. Kaydettikleri (oyunlar, ayarlar, hata kaydı ve seçtiğin profil fotoğrafı) bu cihazda, oyunun klasöründe kalır ve yalnızca sen kopyalayıp gönderirsen buradan çıkar.",
+  "Ponle un nombre al preset.": "Preset'e bir ad ver.",
+  "Ya tienes %d presets: borra alguno antes de guardar otro.": "Zaten %d presetin var: yenisini kaydetmeden önce birini sil.",
+  "Ese preset no existe.": "Böyle bir preset yok.",
+  "PRESETS DE PIZARRA": "TAKTİK TAHTASI PRESETLERİ",
+  "Nombre del preset": "Preset adı",
+  "Guardar pizarra": "Tahtayı kaydet",
+  "Pizarra guardada como «%s».": "Tahta «%s» olarak kaydedildi.",
+  "Aún no has guardado ninguna. Deja la pizarra como te gusta, ponle nombre y guárdala.": "Henüz hiç kaydetmedin. Tahtayı istediğin gibi ayarla, bir ad ver ve kaydet.",
+  "Cargar este preset: %s": "Bu preseti yükle: %s",
+  "Pizarra «%s» cargada.": "«%s» tahtası yüklendi.",
+  "Borrar este preset": "Bu preseti sil",
+  "Preset «%s» borrado.": "«%s» preseti silindi."
  }
 }

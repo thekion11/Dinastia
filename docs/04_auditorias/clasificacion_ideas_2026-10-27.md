@@ -87,7 +87,6 @@ Los encabezados del plan dan cifras viejas (F0 «33» tiene 23 filas, F1 «36» 
 **Partido**
 - M-128: Portero con salidas aéreas y algo más seguro (pasada final del motor).
 - M-131: Perfiles de ayuda Arcade / Semi / Manual (las ayudas sueltas ya existen).
-- 382: Presets de formación/táctica con nombre (la tabla de «lanzable» pide presets).
 - M-096: Mezcla entre clips del partido variable, no fija 0,25 s (movimiento natural).
 - M-097: Pies que patinan en el partido: bloqueo de pies como en la ciudad.
 - M-038: Hinchas de la grada cortados en la cadera: fallo visible desde la TV.
