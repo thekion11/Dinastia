@@ -6,6 +6,7 @@ extends RefCounted
 ## Los métodos devuelven "" si salió bien o un CÓDIGO de error ("bloqueada", "pin", "limite", "saldo", "importe"); la pantalla lo traduce con `Idiomas.t`.
 const LIMITE_TARJETA := 600      ## € al día con tarjeta
 const LIMITE_CAJERO := 500       ## € al día retirados en cajero
+const SIN_PIN := 100             ## € hasta los que la tarjeta paga sin PIN (sin contacto)
 const MAX_MOV := 30
 const MAX_FALLOS := 3
 
@@ -54,16 +55,46 @@ func pagar_tarjeta(roles: Roles, importe: int, concepto: String, pin_dado: Strin
 			bloqueada = true
 			return "bloqueada"
 		return "pin"
+	fallos_pin = 0
+	return _cargo_tarjeta(roles, importe, concepto, dia)
+
+## El cargo en sí (ya validado el PIN o el sin contacto): límite diario y saldo de la cuenta.
+func _cargo_tarjeta(roles: Roles, importe: int, concepto: String, dia: int, simular := false) -> String:
 	_dia(dia)
 	if gastado_dia + importe > LIMITE_TARJETA:
 		return "limite"
 	if roles.patrimonio < importe:
 		return "saldo"
-	fallos_pin = 0
+	if simular:
+		return ""
 	roles.patrimonio -= importe
 	gastado_dia += importe
 	_apunta(dia, concepto, -importe, "tarjeta")
 	return ""
+
+## ¿Se podría cobrar `importe` (efectivo y, si no, tarjeta sin contacto)? "" = sí; si no, el código del motivo. No toca nada.
+func puede_cobrar(roles: Roles, importe: int, dia: int) -> String:
+	if importe <= 0:
+		return "importe"
+	if efectivo >= importe:
+		return ""
+	if bloqueada:
+		return "bloqueada"
+	if importe > SIN_PIN:
+		return "pin"
+	return _cargo_tarjeta(roles, importe, "", dia, true)
+
+## Cobra en el comercio sin pantalla de PIN: primero el efectivo del bolsillo y, si no alcanza, la tarjeta sin contacto (hasta `SIN_PIN` €).
+## Devuelve {"error": "" o código, "via": "efectivo" | "tarjeta"}.
+func cobrar(roles: Roles, importe: int, concepto: String, dia: int) -> Dictionary:
+	var motivo := puede_cobrar(roles, importe, dia)
+	if motivo != "":
+		return {"error": motivo, "via": ""}
+	if efectivo >= importe:
+		pagar_efectivo(importe, concepto, dia)
+		return {"error": "", "via": "efectivo"}
+	_cargo_tarjeta(roles, importe, concepto, dia)
+	return {"error": "", "via": "tarjeta"}
 
 ## Cajero: pasa dinero de la cuenta al bolsillo (con comisión si el cajero es de otro banco).
 func retirar(roles: Roles, importe: int, pin_dado: String, dia: int, comision := 0) -> String:
@@ -132,3 +163,18 @@ func desde_dict(d: Dictionary) -> void:
 	gastado_dia = int(d.get("gastado", 0))
 	retirado_dia = int(d.get("retirado", 0))
 	movimientos = (d.get("mov", []) as Array).duplicate(true)
+
+## Clave de día para los límites diarios.
+static func clave_dia(anio: int, semana: int, dia: int) -> int:
+	return anio * 1000 + semana * 10 + dia
+
+## Texto (ya traducido) de un código de error, para el cuadro del comercio.
+static func texto_error(codigo: String, importe: int) -> String:
+	match codigo:
+		"bloqueada":
+			return Idiomas.t("Tarjeta bloqueada: pasa por el banco para desbloquearla.")
+		"pin":
+			return Idiomas.t("Son %d €: a partir de 100 € la tarjeta pide el PIN. Saca efectivo en un cajero.") % importe
+		"limite":
+			return Idiomas.t("La tarjeta ha llegado al límite de gasto de hoy.")
+	return Idiomas.t("No te llega el dinero: son %d € y no tienes efectivo ni saldo en la tarjeta.") % importe

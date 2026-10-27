@@ -259,6 +259,21 @@ func _probar_cartera_dt() -> void:
 		c.efectivo += 1
 		c.pagar_efectivo(1, "x", 4)
 	_comprobar(c.movimientos.size() == CarteraDT.MAX_MOV, "solo se guardan los últimos 30 movimientos")
+	## Cobro en el comercio (surtidor, tienda): efectivo primero, luego tarjeta sin contacto hasta 100 €.
+	var m2 := Mundo.new()
+	var rc := Roles.new(m2)
+	rc.patrimonio = 500
+	var cc := rc.cartera
+	_comprobar(cc.puede_cobrar(rc, 63, 9) == "" and rc.patrimonio == 500, "se puede cobrar con la tarjeta sin tocar nada (simulación)")
+	var cob := cc.cobrar(rc, 63, "Gasolina", 9)
+	_comprobar(cob["error"] == "" and cob["via"] == "tarjeta" and rc.patrimonio == 437, "sin efectivo cobra la tarjeta sin contacto")
+	cc.efectivo = 80
+	cob = cc.cobrar(rc, 63, "Gasolina", 9)
+	_comprobar(cob["via"] == "efectivo" and cc.efectivo == 17 and rc.patrimonio == 437, "con efectivo suficiente cobra el efectivo")
+	_comprobar(cc.puede_cobrar(rc, 150, 9) == "pin", "más de 100 € con tarjeta exige PIN (no hay pantalla de PIN en el comercio)")
+	rc.patrimonio = 10
+	_comprobar(cc.puede_cobrar(rc, 63, 9) == "saldo", "sin saldo no se cobra")
+	_comprobar(cc.puede_cobrar(rc, 63, 9) == "saldo" and CarteraDT.texto_error("saldo", 63).contains("63"), "el texto del error dice el importe")
 	## Guardado: ida y vuelta por JSON y partida vieja.
 	var r2 := Roles.new(m)
 	r2.desde_dic(JSON.parse_string(JSON.stringify(r.a_dic())))
