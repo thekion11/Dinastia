@@ -130,3 +130,5 @@ Capturas antes / después en `docs/04_auditorias/capturas_ciudad_c2/` (`<zona>_<
   sobre la fachada, aparcamiento con plazas y farolas, las puertas no se leen como puertas (solo ventanales) y las otras tres caras siguen lisas.
 
 **Interiores de comercio (27-10).** Supermercado y farmacia: género sobre las góndolas, carros y cestas con compra, bolsas junto a las cajas y cruz verde en la farmacia (`ui/componentes/interior_comercio_extra.gd`, sin tocar el `_rng`). Capturas `capturas_ciudad_c2/c25_*.jpg`; prueba `_probar_comercio_lleno`. Oficinas: cuatro puestos más en la mitad de delante, plantas y cajas (`c26_oficina.jpg`).
+
+**Oficina, repaso del líder (27-10).** Estanterías del archivo con libros y cajas, la mesa de reuniones con ropa distinta por persona (`variar` en `_mesa_con_sillas`), el corrillo de tres charlando junto a una fuente de agua en vez de la fila rígida, y fuera las sillas arrimadas a la pared. Captura `capturas_ciudad_c2/c29_oficina.jpg`.

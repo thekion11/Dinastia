@@ -260,7 +260,7 @@ func _cartel(texto: String, pos: Vector3, tam: int = 64, col: Color = Color.WHIT
 ## Mesa con sillas a lo largo de sus dos lados largos (X local) y gente sentada
 ## con probabilidad `ocupa`; un plato (y lo que se pida) delante de cada silla.
 func _mesa_con_sillas(p: Vector3, giro: float, mesa: String, escala_mesa: Variant, por_lado: int, silla: String,
-		ocupa: float, deporte: Array = [], plato: String = "comida/plate", encima: Array = [], tonos_silla: Dictionary = {}) -> void:
+		ocupa: float, deporte: Array = [], plato: String = "comida/plate", encima: Array = [], tonos_silla: Dictionary = {}, variar: bool = false) -> void:
 	_poner(mesa, p, giro, escala_mesa)
 	var m := _medida(mesa, escala_mesa)
 	var f := Vector3(sin(giro), 0, cos(giro))
@@ -271,7 +271,7 @@ func _mesa_con_sillas(p: Vector3, giro: float, mesa: String, escala_mesa: Varian
 			## La silla mira a la mesa: la de −Z, hacia +Z (giro), y al revés.
 			var c := p + lado * x + f * (s * (m.z * 0.5 + 0.2))
 			var g := giro if s < 0.0 else giro + PI
-			_asiento(silla, c, g, [0.0] if _rng.randf() < ocupa else [], deporte, null, tonos_silla)
+			_asiento(silla, c, g, [0.0] if _rng.randf() < ocupa else [], _calle() if variar else deporte, null, tonos_silla)
 			var sobre := p + lado * x + f * (s * (m.z * 0.5 - 0.22)) + Vector3(0, m.y, 0)
 			if plato != "":
 				_poner(plato, sobre, 0.0)
@@ -342,11 +342,15 @@ func _oficina() -> void:
 		_puesto(Vector3(x, 0, -3.4), 0.0)
 		_asiento("chair", Vector3(x + 0.25, 0, -2.45), PI, [0.0] if _rng.randf() < 0.5 else [], _calle(), null, {"wood": Color(0.25, 0.27, 0.32)})
 	## La cola de vecinos esperando turno.
-	for k in 3:
-		_trabajador(Vector3(1.6 + float(k) * 0.1, 0, -0.9 + float(k) * 0.8), PI, false, ["charla", "brazos_jarra", "cruzar_brazos"], _calle())
+	if ayto:
+		for k in 3:
+			_trabajador(Vector3(1.6 + float(k) * 0.1, 0, -0.9 + float(k) * 0.8), PI, false, ["charla", "brazos_jarra", "cruzar_brazos"], _calle())
+	else:
+		InteriorComercioExtra.corrillo(self, Vector3(-0.2, 0, 0.6))
 	## Archivo al fondo.
 	for k in 4:
 		_poner("bookcaseClosedWide", Vector3(-7.0 + float(k) * 1.62, 0, -5.75), 0.0, null, {"wood": Color(0.7, 0.72, 0.74)})
+	InteriorComercioExtra.archivo(self, -7.0, -5.75, 1.62, 4)
 	_poner("cardboardBoxClosed", Vector3(-0.2, 0, -5.6), 0.3)
 	_poner("cardboardBoxClosed", Vector3(0.25, 0, -5.65), -0.2)
 	if ayto:
@@ -360,7 +364,7 @@ func _oficina() -> void:
 	else:
 		_cartel("💼 " + _sala_nombre().to_upper(), Vector3(4.2, 2.55, -5.95), 32)
 		InteriorComercioExtra.oficina(self)
-		_mesa_con_sillas(Vector3(4.6, 0, 1.6), 0.0, "table", 2.2, 2, "chairModernCushion", 0.5, _calle(), "", ["laptop", "books", "comida/cup-coffee"])
+		_mesa_con_sillas(Vector3(4.6, 0, 1.6), 0.0, "table", 2.2, 2, "chairModernCushion", 0.5, _calle(), "", ["laptop", "books", "comida/cup-coffee"], {}, true)
 		_pantalla(Vector3(7.96, 1.7, 1.6), Vector2(1.5, 0.85), Color(0.3, 0.5, 0.75), -PI * 0.5)
 	## Dos puestos más contra la pared izquierda.
 	for z: float in [-0.4, 1.8]:
@@ -368,7 +372,7 @@ func _oficina() -> void:
 	## Zona de espera a la derecha (ayuntamiento) o al fondo.
 	for k in 4:
 		var z := -1.2 + float(k) * 0.62
-		if ayto or k < 2:
+		if ayto:
 			_asiento("chairCushion", Vector3(7.45, 0, z - (0.0 if ayto else 2.0)), -PI * 0.5, [0.0] if _rng.randf() < 0.45 else [], _calle())
 	_poner("mini_arcade/vending-machine", Vector3(7.3, 0, 4.9), -PI * 0.5, 2.2)
 	_planta(Vector3(-7.4, 0, 5.4))
