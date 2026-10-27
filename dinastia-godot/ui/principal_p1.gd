@@ -364,6 +364,8 @@ var _paneles_club := PanelesClub.new(self)
 var _tema_menu := TemaMenu.new(self)
 var _acciones_temporada := AccionesTemporada.new(self)
 var _vistas := VistasMenu.new(self)
+var _traduccion := TraduccionMenu.new(self)
+var _atajos := AtajosMenu.new(self)
 var _estilo_menu: String:
 	get: return _estilos.estilo
 	set(v): _estilos.estilo = v
