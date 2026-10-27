@@ -8,7 +8,15 @@ var p: Principal
 func _init(principal: Principal) -> void:
 	p = principal
 
+## Monta la pantalla entera en cuatro partes (fase 6, §4: era una sola función de 403 líneas).
 func _construir() -> void:
+	_montar_fondo()
+	var raiz := _montar_cabecera()
+	_montar_carril(raiz)
+	_montar_columnas(raiz)
+
+## El fondo, el tema de la paleta, el clima y el velo de lectura de la cabecera.
+func _montar_fondo() -> void:
 	## El fondo. Debajo va el color plano de siempre -si la textura fallara al
 	## rasterizar, la pantalla sigue siendo legible en vez de quedarse en negro-
 	## y encima la escena elegida en Ajustes.
@@ -64,6 +72,9 @@ func _construir() -> void:
 	velo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	p.add_child(velo)
 
+
+## La raíz vertical, la cabecera (escudo, club, dinero, fecha) y la barra de botones.
+func _montar_cabecera() -> VBoxContainer:
 	var raiz := VBoxContainer.new()
 	raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
 	raiz.add_theme_constant_override("separation", 10)
@@ -219,6 +230,10 @@ func _construir() -> void:
 	p._fila_grupos = HBoxContainer.new()
 	p._fila_grupos.add_theme_constant_override("separation", 6)
 	raiz.add_child(p._fila_grupos)
+	return raiz
+
+## El carril de chips y la fila de días.
+func _montar_carril(raiz: VBoxContainer) -> void:
 	## EL CARRIL DE CHIPS (nivel 2), en un `ScrollContainer` horizontal: en
 	## Android se arrastra con el dedo y en PC se desplaza con L2/R2. Vertical
 	## apagado, o al primer chip alto la barra empieza a crecer hacia abajo.
@@ -239,6 +254,9 @@ func _construir() -> void:
 	p._fila_dias.add_theme_constant_override("separation", 4)
 	raiz.add_child(p._fila_dias)
 
+
+## Las tres columnas: clasificación, pestañas (plantel, mercado...) y ficha con el registro.
+func _montar_columnas(raiz: VBoxContainer) -> void:
 	var columnas := HBoxContainer.new()
 	columnas.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	columnas.add_theme_constant_override("separation", 12)
