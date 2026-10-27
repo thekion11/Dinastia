@@ -275,6 +275,7 @@ func _vivienda() -> void:
 		_poner("bookcaseOpen", Vector3(-5.74, 0, z), PI * 0.5)
 		for k in 3:
 			_poner("books", Vector3(-5.74, 0.42 + float(k) * 0.5, z + _rng.randf_range(-0.15, 0.15)), PI * 0.5)
+	PeluchesCiudad.estanteria(self)   ## el álbum de peluches ganados
 	_planta(Vector3(-5.4, 0, 2.2))
 	_ventana(-1.0, -2.4)
 	_cuadro(Vector3(-3.2, 2.05, -4.47), Vector2(1.2, 0.6), Color.from_hsv(_rng.randf(), 0.35, 0.75))

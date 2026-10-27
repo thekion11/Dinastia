@@ -288,6 +288,7 @@ const COMPRAS_DT := [
 ]
 
 var patrimonio: int = 0
+var peluches := Peluches.new()   ## el álbum de peluches de las recreativas y sus logros (`peluches.gd`)
 var cartera := CarteraDT.new()   ## efectivo, tarjeta y movimientos; la CUENTA es `patrimonio` (ver `cartera_dt.gd`)
 var licencia: int = 0            ## 0 ninguna, 1 B, 2 A, 3 PRO
 var bienes: Dictionary = {}      ## clave -> true, para lo que no es licencia

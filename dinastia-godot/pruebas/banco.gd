@@ -166,6 +166,7 @@ const SECCIONES := [
 	"_probar_edificio_club",
 	"_probar_personal_estadio",
 	"_probar_sancion_dt",
+	"_probar_peluches",
 	"_probar_interiores_club",
 	"_probar_galeria_club",
 	"_probar_reforma_con_obra",
