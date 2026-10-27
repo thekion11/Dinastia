@@ -372,7 +372,7 @@ bancos y cajeros; policía, bomberos y servicios públicos; mejorar el sistema d
 - Peluches: `CiudadArcade` pone 3 máquinas (`maquina_peluches.glb`, 893 KB) ante el centro comercial; son decorado. Los 14 peluches del zip NO están en el repo.
 - Servicios: `CiudadServicios` pone bomberos (2 camiones + ambulancia), comisaría y hospital como edificios; ningún vehículo sale, no hay incidentes.
 
-**Decisiones del dueño (propuesta mía entre paréntesis)**
+**Decisiones del dueño (propuesta mía entre paréntesis; 1 y 2 aprobadas por el líder el 27-10; 3-5 esperan al dueño)**
 1. ¿De quién es el dinero de la gasolina y las compras? (DEL BOLSILLO DEL DT: `Roles.patrimonio`; el club paga solo lo del club). Hoy cobra al club: es un fallo de diseño.
 2. ¿Moneda única en euros y una sola cartera? (sí; efectivo + una cuenta + una tarjeta de débito; crédito más adelante).
 3. ¿Los peluches se pagan con fichas o con dinero? (monedas de 1 €; sale del efectivo, no de la tarjeta, para empujar a usar el cajero).
@@ -380,13 +380,13 @@ bancos y cajeros; policía, bomberos y servicios públicos; mejorar el sistema d
 5. ¿Los peluches nuevos (14 del zip) se suben al repo reducidos a 256 px (~100 KB cada uno, como la máquina)? (sí: es una subida de binarios nueva; hace falta su OK por la regla de LFS; van fuera de LFS con excepción).
 
 **Piezas, en orden de construcción** (cada una = una entrega pequeña con prueba en el banco, captura Forward+ y traducciones con `sumar_traducciones.py`)
-- **A. Cartera** (`nucleo/cartera_dt.gd`, sin visor): efectivo, saldo de cuenta, tarjeta (número, PIN de 4 cifras, bloqueada sí/no, límite diario), movimientos (últimos 30).
+- **A. Cartera — HECHA el 27-10 (modelo + guardado + `_probar_cartera_dt`; falta la pantalla «Cartera» del móvil y el objeto en la mano)** (`nucleo/cartera_dt.gd`, sin visor): efectivo, saldo de cuenta, tarjeta (número, PIN de 4 cifras, bloqueada sí/no, límite diario), movimientos (últimos 30).
   Guardado en la partida (clave nueva, partida vieja = efectivo = 0 y cuenta = `patrimonio` actual). Prueba: ida y vuelta, no se puede gastar más de lo que hay, `patrimonio` = efectivo + cuenta.
   La tarjeta física: objeto en la mano del DT (modelo simple, textura con el escudo del club) que se ve en el móvil (pantalla «Cartera»).
 - **B. Bancos y cajeros** (`visor/ciudad_banco.gd`): una sucursal con fachada modular y cajeros en la fachada y en la gasolinera, el centro comercial y la estación. E en el cajero:
   retirar / ingresar / ver saldo / cambiar PIN; límite diario; comisión si el cajero es de otro banco (3 bancos ficticios, nombres inventados); sin corriente en el sector (`redes`) el
   cajero muestra «fuera de servicio». Interior de la sucursal (mostrador y ventanilla) solo si sobra tiempo.
-- **C. Gasolinera por arriba** (`visor/gasolinera_tienda.gd`): E en la tienda abre una caja: comprar lo del surtido (`kenney/comida`: bebidas, bollería, bocadillos; sube la «energía» del DT un poco),
+- **C. Gasolinera por arriba — HECHO el surtidor (27-10: cobra efectivo y, si no, tarjeta sin contacto ≤100 €, ya no al club; `VidaCiudad.usar_surtidor`); FALTA la tienda con caja y la pantalla de PIN** (`visor/gasolinera_tienda.gd`): E en la tienda abre una caja: comprar lo del surtido (`kenney/comida`: bebidas, bollería, bocadillos; sube la «energía» del DT un poco),
   pagar con tarjeta (PIN) o efectivo. El surtidor deja de cobrar al club y cobra con la misma caja; elegir combustible (dos precios, que salen de las existencias de `redes`).
   CONTRATO con la sesión de redes: ella conserva `repostar(id, sector, litros) -> {litros, coste}` y los precios; yo solo hago la pantalla, el cobro y la tienda. Si cambia esa firma, me avisa.
 - **D. Peluches** (`visor/peluches_juego.gd` + `ciudad_arcade.gd`): UNA sala, tres máquinas. E ante la máquina: meter moneda (1 €), mover la garra con A/D/W/S, bajar con espacio;
