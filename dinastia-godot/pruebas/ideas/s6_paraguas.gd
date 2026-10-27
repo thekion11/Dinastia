@@ -20,8 +20,10 @@ func _probar() -> void:
 	_comprobar(is_equal_approx(float(lista[0]["vel"]), 1.4 * ParaguasVida.FACTOR_PRISA) and not lista[12].has("vel0"), "caminan un 25 %% más rápido y el coche no cambia (%.2f)" % float(lista[0]["vel"]))
 	ParaguasVida.tick(lista, true, [], 2)
 	_comprobar(is_equal_approx(float(lista[0]["vel"]), 1.4 * ParaguasVida.FACTOR_PRISA), "el repaso siguiente no acelera dos veces")
-	var cop := (lista[0]["nodo"] as Node3D).get_node(ParaguasVida.NOMBRE) as Node3D
-	_comprobar(cop.position.y > 1.8 and cop.get_child_count() == 2, "el paraguas está sobre la cabeza (copa y mango)")
+	var cop := (lista[0]["nodo"] as Node3D).find_child(ParaguasVida.NOMBRE, true, false) as Node3D
+	_comprobar(cop is BoneAttachment3D and (cop as BoneAttachment3D).bone_name == "hand_r" and cop.get_child_count() == 1 and cop.get_child(0).get_child_count() == 2, "el paraguas va en la mano derecha (copa y mango)")
+	var ap0: AnimationPlayer = lista[0]["anim"]
+	_comprobar(ap0.has_animation("caminar_paraguas") and ap0.current_animation == "caminar_paraguas", "con el paraguas el brazo derecho va levantado (caminar_paraguas)")
 	## Resguardo: junto a una entrada, con el paso de los repasos alguno se para bajo la marquesina (máx. 5) y cierra el paraguas.
 	var puertas := [{"p": Vector3(0, 0, 0), "n": Vector3(0, 0, 1)}, {"p": Vector3(12, 0, 0), "n": Vector3(0, 0, 1)}, {"p": Vector3(24, 0, 0), "n": Vector3(0, 0, 1)}]
 	for c in 40:
@@ -30,12 +32,12 @@ func _probar() -> void:
 	for v in lista:
 		if bool(v.get("resguardo", false)) and bool(v.get("pausa", false)):
 			parados += 1
-			_comprobar((v["nodo"] as Node3D).get_node_or_null(ParaguasVida.NOMBRE) == null, "el resguardado lleva el paraguas cerrado")
+			_comprobar((v["nodo"] as Node3D).find_child(ParaguasVida.NOMBRE, true, false) == null, "el resguardado lleva el paraguas cerrado")
 	_comprobar(parados >= 1 and parados <= ParaguasVida.MAX_RESGUARDADOS, "se resguardan %d (de 1 a %d)" % [parados, ParaguasVida.MAX_RESGUARDADOS])
 	## Al escampar se recoge todo.
 	ParaguasVida.tick(lista, false, puertas, 99)
 	var abiertos := 0
 	for v in lista:
-		if v["nodo"].get_node_or_null(ParaguasVida.NOMBRE) != null:
+		if v["nodo"].find_child(ParaguasVida.NOMBRE, true, false) != null:
 			abiertos += 1
 	_comprobar(abiertos == 0 and is_equal_approx(float(lista[0]["vel"]), 1.4) and not lista[0].has("vel0"), "al escampar se guardan los paraguas y vuelve la velocidad")
