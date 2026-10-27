@@ -7,7 +7,7 @@ extends SubViewport
 ## estar una visualización de los puntos de la competencia... máximos
 ## goleadores... o el resultado que van". La primera pasada (22-9) dejó un
 ## `SubViewport` con un `Label` "0 - 0" y el nombre de los clubes CORTADO a
-## media palabra -está documentado en `LEEME.md` como "empezado, no cerrado"-.
+## media palabra -está documentado en `LEEME.md` del historial de git como "empezado, no cerrado"-.
 ## Esto es la segunda pasada, ya con el video de referencia del usuario
 ## (`marca/referencia/ejemplo-partido.mp4`, Soccer Manager 2026) delante:
 ##

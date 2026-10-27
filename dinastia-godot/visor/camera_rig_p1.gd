@@ -1,5 +1,5 @@
 extends Node3D
-## [Capa 1/2 de `camera_rig.gd`] _add, build_for, current_name, _efectos, altura_segura, amortiguar, _transmision, _process, switch_to
+## [Capa 1/2 de `camera_rig.gd`] _add, build_for, current_name, _efectos, altura_segura, amortiguar … (+6)
 
 ## Sistema multicámara profesional para el estadio y partido 3D.
 ## Soporta 9 tipos de cámara (incluyendo Primera Persona POV, Pro Tercera Persona,
@@ -56,7 +56,7 @@ var _fov_base_golpe := -1.0
 
 
 # --- LA TRANSMISIÓN INTELIGENTE (16-10-2026) ----------------------------------
-## Pendiente desde el vídeo de FC 26 (COMPARACION_FC26_VIDEO.md, «cámaras»): el
+## Pendiente desde el vídeo de FC 26 (COMPARACION_FC26_VIDEO.md del historial de git, «cámaras»): el
 ## plano de la tele se ACERCA cuando la jugada entra en el área o hay ocasión,
 ## se ABRE en los contraataques y en los balones largos, ANTICIPA hacia dónde va
 ## el balón y no da tirones: zona muerta, amortiguador crítico (sin rebote) y

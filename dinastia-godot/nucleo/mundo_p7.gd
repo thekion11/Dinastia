@@ -1,5 +1,5 @@
 extends "res://nucleo/mundo_p6.gd"
-## [Capa 8/9 de `mundo.gd`] nueva_temporada, perfil_estadio_de, estacion, clima, campana_lanzada_este_anio, lanzar_campana … (+11)
+## [Capa 9/10 de `mundo.gd`] cerrar_temporada, nueva_temporada, perfil_estadio_de, estacion, clima, campana_lanzada_este_anio … (+13)
 
 ## Cerrar la temporada ES pasar a la siguiente: premios, ascensos y `anio + 1`
 ## en el núcleo. Antes `cerrar_temporada()` dejaba el año quieto (diez cierres

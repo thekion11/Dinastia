@@ -279,6 +279,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		## club (equipaciones reales, plantillas) siga cuadrando.
 		"base_real": Datos.base_real,
 		"desafios": m.desafios, "dificultad": m.dificultad, "vref": m.valor_ia_ref,
+		"prologo_visto": m.prologo_visto,
 		"reto": m.reto,
 		"fondo": m.fondo.a_dic() if m.fondo != null else {},
 		"clubes": [],
@@ -315,6 +316,8 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"contratos": m.contratos.a_dic() if m.contratos != null else {},
 		"vida": m.vida.a_dic() if m.vida != null else {},
 		"reloj": m.reloj.a_dic(), "necesidades": m.necesidades.a_dic(),   ## fase 0
+		"citas": m.citas.a_dic(),   ## fase 4
+		"afinidad": m.afinidad.a_dic(),   ## fase 4, bloque 7
 		"imprevistos": m.imprevistos.a_dic(),
 		"maestria": m.maestria.a_dic() if m.maestria != null else {},
 		"banco": m.banco.a_dic() if m.banco != null else {},

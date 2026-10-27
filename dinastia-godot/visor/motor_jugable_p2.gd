@@ -1,5 +1,5 @@
 extends "res://visor/motor_jugable_p1.gd"
-## [Capa 2/12 de `motor_jugable.gd`] _preparar_uno, dir_ataque, _orientar_formaciones, _poner_usuario, pos, _elegir_lanzador … (+29)
+## [Capa 2/12 de `motor_jugable.gd`] _preparar_uno, dir_ataque, _orientar_formaciones, _poner_usuario, pos, _elegir_lanzador … (+30)
 
 func _preparar_uno(p: Dictionary) -> void:
 	var jd: Dictionary = p.get("jugador", {})

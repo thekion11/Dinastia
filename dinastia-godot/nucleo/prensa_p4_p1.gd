@@ -1,5 +1,5 @@
 extends "res://nucleo/prensa_p3.gd"
-## [Capa 4/8 de `prensa.gd`] Decision y los eventos del despacho, primera tanda (contratos, dueños y caja)
+## [Capa 4/8 de `prensa.gd`] _ev_fondo_presiona, _ev_retiro_joven, _ev_virus_fifa, _ev_filtracion_agente, _ev_hostil, _ev_comercial … (+10)
 ##
 ## FASE 0 (25-10-2026): `resolver` era un `match` de ~370 líneas por id de evento, troceado en dos tramos
 ## que se pasaban ocho valores en un Array. Ahora cada evento es una función `_ev_<id>(d)` que recibe la

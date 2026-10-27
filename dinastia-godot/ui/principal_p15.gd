@@ -400,11 +400,7 @@ func _construir() -> void:
 	raiz.offset_left = 18.0 + MenuLateral.ANCHO_RIEL
 	_menu_lateral = MenuLateral.crear(self)
 	add_child(_menu_lateral)
-	_reloj_diseno = Timer.new()
-	_reloj_diseno.wait_time = ROTAR_CADA
-	_reloj_diseno.autostart = true
-	_reloj_diseno.timeout.connect(_siguiente_diseno)
-	add_child(_reloj_diseno)
+	_estilos.montar_reloj()
 
 ## EL TUTORIAL vive en `ui/principal/guia_tutorial.gd` (fase 0). Estos cuatro
 ## puentes son el contrato con `ui/componentes/tutorial.gd`, que los llama por

@@ -1,5 +1,5 @@
 extends "res://visor/stadium_builder_p10_p1.gd"
-## [Capa 11/12 de `stadium_builder.gd`] build y las zonas del recinto: _esquinas, _vallas, _fachada_y_escudo
+## [Capa 2/3 de `stadium_builder.gd`] build, _esquinas, _vallas, _fachada_y_escudo
 ##
 ## FASE 0 (25-10-2026): `build` era `build_1` + `build_2` pasándose 13 valores en un Array y 17
 ## parámetros sueltos. Ahora es la lista de zonas en el orden en que se levantan, todas sobre la misma

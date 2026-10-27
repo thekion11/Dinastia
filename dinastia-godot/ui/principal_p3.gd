@@ -78,23 +78,11 @@ var _marca_tarjeta: String = "esquinas"
 ## mandárselo a alguien por chat.
 const FICHERO_EXPORTADO := "user://dinastia-exportada.txt"
 
-## LAS SECCIONES DE AJUSTES. La pantalla llegó a medir 1.700 px de alto: para
-## llegar al tamaño de letra había que bajar por delante del mezclador, de los
-## veinticuatro fondos, de los diez climas y de las nueve paletas.
-##
-## No se quita ni una opción —son justo lo que hace falta que haya— pero se
-## reparten en seis grupos y solo se pinta el que estás mirando. De paso se
-## pinta seis veces menos en cada refresco.
-const SECCIONES_AJUSTES := [
-	["audio", "🔊 Sonido y música"],
-	["aspecto", "🎨 Aspecto"],
-	["pantalla", "🖥 Pantalla"],
-	["juego", "🎮 Juego"],
-	["acceso", "♿ Accesibilidad"],
-	["partida", "💾 Partida"],
-]
-
-var _secc_ajustes: String = "audio"
+## La sección de Ajustes abierta vive en `PantallaAjustes.seccion` (fase 0,
+## paso 2); el puente conserva `p._secc_ajustes` para los chips y las pruebas.
+var _secc_ajustes: String:
+	get: return _ui_ajustes.seccion
+	set(v): _ui_ajustes.seccion = v
 
 ## `vCorreo()` del HTML: bandeja filtrable sobre `G.noticias`. Aquí lee
 ## `_bandeja`, que `_anotar()` llena en paralelo a cada `_escribir()` de
@@ -310,43 +298,9 @@ func _color_de_paleta(c: Color) -> Color:
 		return _ui_ajustes._pal_borde()
 	return _con_contraste(c)
 
+## Puente: la píldora la viste `EstilosMenu.pildora()` con el estilo activo.
 func _pildora(texto: String, tam: int = 12, alto: int = 32) -> Button:
-	var b := Button.new()
-	b.text = texto
-	b.toggle_mode = true
-	if _estilo_menu == "compacto":
-		tam = maxi(10, tam - 1)
-		alto = maxi(22, alto - 4)
-	b.add_theme_font_size_override("font_size", tam)
-	b.custom_minimum_size = Vector2(float(texto.length()) * (float(tam) * 0.62) + 30.0, alto)
-	## "barra" = esquinas rectas y una línea de acento debajo del activo, que
-	## es como se veían las pestañas antes de que todo fuera cápsulas.
-	var radio := 3 if _estilo_menu == "barra" else int(alto / 2)
-	var reposo := StyleBoxFlat.new()
-	reposo.bg_color = _mezcla(_color_de_paleta(COL_PANEL), _color_de_paleta(COL_TEXTO), 0.07)
-	reposo.border_color = _color_de_paleta(COL_BORDE)
-	reposo.set_border_width_all(1)
-	reposo.set_corner_radius_all(radio)
-	reposo.content_margin_left = 14
-	reposo.content_margin_right = 14
-	var encima := reposo.duplicate() as StyleBoxFlat
-	encima.bg_color = _mezcla(_color_de_paleta(COL_PANEL), _color_de_paleta(COL_TEXTO), 0.18)
-	var activa := StyleBoxFlat.new()
-	activa.bg_color = _color_de_paleta(COL_TEXTO)
-	activa.set_corner_radius_all(radio)
-	activa.content_margin_left = 14
-	activa.content_margin_right = 14
-	b.add_theme_stylebox_override("normal", reposo)
-	b.add_theme_stylebox_override("hover", encima)
-	b.add_theme_stylebox_override("focus", encima)
-	b.add_theme_stylebox_override("pressed", activa)
-	b.add_theme_color_override("font_color", _color_de_paleta(COL_TEXTO))
-	b.add_theme_color_override("font_hover_color", _color_de_paleta(COL_TEXTO))
-	## La píldora activa lleva letra OSCURA sobre fondo claro: es el mismo
-	## truco del HTML y lo que hace que no haga falta ningún subrayado.
-	b.add_theme_color_override("font_pressed_color", _color_de_paleta(COL_FONDO))
-	b.add_theme_color_override("font_hover_pressed_color", _color_de_paleta(COL_FONDO))
-	return b
+	return _estilos.pildora(texto, tam, alto)
 
 ## Lo mismo para el registro, que pinta con BBCode y no pasa por `_texto()`.
 func _bbcode_accesible(t: String) -> String:

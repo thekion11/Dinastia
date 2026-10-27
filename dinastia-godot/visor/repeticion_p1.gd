@@ -1,5 +1,5 @@
 extends Node
-## (Parte 1 de 2 de `repeticion.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `repeticion.gd`, conserva la clase.)
+## [Capa 1/2 de `repeticion.gd`] setup, _process, segundos_guardados, reproducir, saltar, cortar … (+14)
 
 ## LA REPETICIÓN (25-9-2026, plan maestro B3; realización de TV el 25-10-2026, M-134/M-135).
 ## Como en una transmisión: tras el gol (o a pedido), la jugada otra vez, con cortes entre

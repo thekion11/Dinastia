@@ -1,5 +1,5 @@
 extends Control
-## [Capa 1/2 de `entrada_campeonato.gd`] Las piezas visuales de la pantalla de ENTRADA AL CAMPEONATO:
+## [Capa 1/2 de `entrada_campeonato.gd`] _caja, _etq, _color_tono, _boton, _insignia, _fila_cifra … (+3)
 ## tarjetas, cifras, botones y la capa de confirmación. La lógica (qué cifras, qué opción, qué se emite)
 ## vive en la capa 2; las reglas en `nucleo/entrada_campeonato.gd`.
 
@@ -82,7 +82,7 @@ func _fila_cifra(grid: GridContainer, rotulo: String, valor: String, tono: Tono,
 	v.add_theme_constant_override("separation", 0)
 	v.add_child(_etq(Tema.TAM_DESTACADO + 1, _color_tono(tono), valor, true))
 	if nota != "":
-		v.add_child(_etq(Tema.TAM_CUERPO - 1, COL_SUAVE, nota, true))
+		v.add_child(_etq(Tema.TAM_CUERPO - 2, COL_SUAVE, nota, true))
 	grid.add_child(v)
 
 func _vaciar(n: Node) -> void:

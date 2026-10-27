@@ -1,5 +1,5 @@
 extends "res://ui/disenos_kit_p2.gd"
-## [Capa 3/5 de `disenos_kit.gd`] fórmulas 32-62
+## [Capa 3/5 de `disenos_kit.gd`] _acento, _fam_marmol, _fam_fragmentos, _fam_mangas, _fam_diagonal_partida, _fam_relampago … (+26)
 ## Las fórmulas 32-62 (las 43-62 llevan un acento; ver la capa 2 para la convención).
 
 ## El acento de las familias 43-62: el color 2 en los de tres colores (d = 1) y el 1 en los de dos (d = 0).

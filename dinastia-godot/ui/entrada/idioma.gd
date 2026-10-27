@@ -1,6 +1,6 @@
 class_name PantallaIdioma
 extends "res://ui/entrada/idioma_p1.gd"
-## [Capa 2/2 de `idioma.gd`] la lógica: foco, elección, confirmación, volver y sonido.
+## [Capa 2/2 de `idioma.gd`] configurar, _ready, codigos, codigo_enfocado, tarjeta, confirmacion … (+16)
 ##
 ## LA PANTALLA DEL IDIOMA (fase 1 del MEGAPLAN, etapa 1 del flujo de entrada;
 ## 25-10-2026). La primera decisión del jugador, antes del menú de modos: en qué

@@ -1,6 +1,6 @@
 class_name Repeticion
 extends "res://visor/repeticion_p1.gd"
-## (Parte 2 de 2 de `repeticion.gd`.)
+## [Capa 2/2 de `repeticion.gd`] _punto_anim, _terminar
 
 ## El punto de la animación entre dos cuadros (dando la vuelta si es un ciclo).
 static func _punto_anim(ap: AnimationPlayer, anim: String, pa: float, anim_b: String, pb: float, f: float, dt: float) -> float:

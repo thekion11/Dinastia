@@ -290,6 +290,8 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	## Fase 0: el día/hora y las necesidades del DT (silencioso: cargar no pasa el tiempo).
 	m.reloj.desde_dic(datos.get("reloj", {}))
 	m.necesidades.desde_dic(datos.get("necesidades", {}))
+	m.citas.desde_dic(datos.get("citas", {}))
+	m.afinidad.desde_dic(datos.get("afinidad", {}))
 	m.imprevistos.desde_dic(datos.get("imprevistos", {}))
 	m.horario = String(datos.get("horario", "tarde"))
 	m.campana = (datos.get("campana", {}) as Dictionary).duplicate()
@@ -303,6 +305,7 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	for k in datos.get("desafios", []):
 		m.desafios.append(String(k))
 	m.dificultad = String(datos.get("dificultad", "normal"))   ## guardados viejos: normal
+	m.prologo_visto = bool(datos.get("prologo_visto", true))   ## guardados viejos: ya jugaban, sin prólogo
 	m.valor_ia_ref = float(datos.get("vref", 0.0))
 
 	for d: Dictionary in datos["clubes"]:

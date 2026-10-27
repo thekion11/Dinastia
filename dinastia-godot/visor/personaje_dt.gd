@@ -1,6 +1,6 @@
 class_name PersonajeDT
 extends "res://visor/personaje_dt_p1.gd"
-## [Capa 2/2 de `personaje_dt.gd`] _accesorios, crear, poner_en_banda, personal_estadio, adelgazar, aspecto_futbolista … (+1)
+## [Capa 3/3 de `personaje_dt.gd`] _accesorios, crear, _cejas, parado_persona, poner_en_banda, gestos_banda … (+4)
 
 # -----------------------------------------------------------------------------
 #  ACCESORIOS

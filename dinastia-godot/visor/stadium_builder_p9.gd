@@ -1,5 +1,5 @@
 extends "res://visor/stadium_builder_p8.gd"
-## [Capa 9/12 de `stadium_builder.gd`] _sombra_unica
+## [Capa 9/10 de `estadio_partes_tribuna.gd`] _sombra_unica
 
 ## UNA SOLA MALLA PARA LAS SOMBRAS (16-10-2026, `pruebas/medir_partido` con
 ## ARBOL=1: el sol eran ~190 de las ~450 llamadas del plano de TV). Cada pieza

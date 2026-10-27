@@ -31,3 +31,7 @@ entregas/
 # Capturas de pruebas: se regeneran con las escenas captura_*; las que citan los documentos siguen en git (23-10)
 dinastia-godot/pruebas/capturas/*
 !dinastia-godot/pruebas/capturas/.gdignore
+
+# Godot importa AUDITORIA_CLUBES.csv como traducciones al correr el banco: derivados, no fuente.
+dinastia-godot/AUDITORIA_CLUBES.*.translation
+dinastia-godot/AUDITORIA_CLUBES.csv.import

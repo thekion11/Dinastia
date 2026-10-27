@@ -1,5 +1,5 @@
 extends "res://ui/rueda_prensa_escena3d_p1.gd"
-## [Capa 2/3 de `rueda_prensa_escena3d.gd`] _mallas_de, _montar_podio_generado, _montar_podio_procedural, _montar_ocultador_podio, _montar_podio, _montar_dt_generico … (+8)
+## [Capa 2/4 de `rueda_prensa_escena3d.gd`] _mallas_de, _montar_podio_generado, _montar_podio_procedural, _montar_ocultador_podio, _montar_podio, _montar_dt_generico … (+8)
 
 var _contexto: Dictionary = {}
 var _col_club1 := Color(0.12, 0.13, 0.16)

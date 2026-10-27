@@ -38,3 +38,11 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 7. LFS (26-10): el dueño autorizó subir los sonidos de interfaz (CC0) y los PNG del logo. Desde este contenedor GitHub rechaza las subidas a LFS: archivos pequeños van fuera de LFS con una excepción en .gitattributes (ya hecha para audio/ui/*.ogg). Nada más sin preguntar.
 8. Avisos (26-10): avisar al dueño con un evento de Google Calendar (recordatorio emergente a los 0 min, título «Dinastía: …») cuando haya una pregunta para él, se acaben las tareas, o la otra sesión pida algo o termine. La notificación push no le llega.
 9. Sesiones (26-10): coordina y reparte la sesión «Sesiones abiertas» (session_01Vh9g2WJE8b9XRhTkoJQkJC). La sesión de trabajo principal (session_01MtJBCsXzXVcDXqPJ2uAkHW, rama ccr-76d707c5-dwse9h) evalúa, trabaja, une ramas y pregunta ante dudas; las dos se consultan como balanza. Nadie queda parado: al terminar, auditar o pulir del plan.
+10. (26-10 noche) Calidad visual: ciudad por zonas (detalle, construcción, coherencia) y personajes (anatomía, movimiento natural,
+    más animaciones, profundidad) por PASADAS con captura antes/después y veredicto del dueño; plan en `PLAN_DEL_LUNES.md` §2.2e.
+    La sesión líder (session_016d4XAEpSpuptrGg8J4Wene) manda y reparte; la ejecutora (session_01VUJiyfwiM2ZPT2H3gaDzqg) nunca queda parada.
+11. (26-10 noche, decisiones del dueño) Fases 1-3 APROBADAS sin jugarlas aún, dejando constancia de que a futuro hay que pulirlas.
+    Fusionar a `main` los PR #12 y #13: concedido («funciona»). Borrar capturas e informes viejos de `dinastia-godot/`: concedido
+    (hecho: `pruebas/capturas` y `docs/informes_extraidos`); `marca/` se CONSERVA (tiene el logo para la animación de la intro).
+    Red para Wikimedia/banderas: todavía no. El dueño está cerca de su tope de uso: trabajar en bloques pequeños, guardar y empujar a menudo.
+

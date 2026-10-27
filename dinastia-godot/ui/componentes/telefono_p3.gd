@@ -1,5 +1,5 @@
 extends "res://ui/componentes/telefono_p2.gd"
-## [Capa 3/4 de `telefono.gd`] atras, _unhandled_input, _tras_abrir, enfocar, _estilo_aviso, animar_pop
+## [Capa 3/4 de `telefono.gd`] restaurar_marcas, _unhandled_input, atras, _tras_abrir, enfocar, _estilo_aviso … (+4)
 
 ## PULIDO DEL MÓVIL (25-10-2026, paquete uite):
 ##   - TECLADO Y MANDO: Esc / B da un paso atrás (del chat a Mensajes, de una pestaña de Tribuna a su
@@ -115,3 +115,81 @@ static func animar_pop(pop: Control, tel: Control, entrando: bool, luego: Callab
 	tw.tween_property(tel, "scale", Vector2.ONE if entrando else Vector2(0.96, 0.96), 0.22 if entrando else 0.14)
 	if luego.is_valid():
 		tw.chain().tween_callback(luego)
+
+# --- agenda (fase 3 del plan del lunes, 26-10-2026) ------------------------------------------------
+## Día y hora del reloj de la partida, lo próximo que toca y «Adelantar» con la rutina
+## (`Reloj.avanzar_con_rutina`: duermes y comes como siempre, así el hambre no se dispara).
+
+func _agenda() -> void:
+	_titulo_app("Agenda")
+	var r: Reloj = m.reloj
+	r._al_dia()
+	var caja := PanelContainer.new()
+	caja.add_theme_stylebox_override("panel", Tema.caja(TARJETA, 12, TARJETA))
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 4)
+	caja.add_child(v)
+	var hora := Tema.etiqueta(46, Tema.TEXTO, r.texto_hora())
+	hora.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(hora)
+	var dia := Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO, "%s · %s %d" % [Idiomas.t(VidaCiudad.DIAS[clampi(r.dia, 0, 6)]), Idiomas.t("Semana"), m.semana])
+	dia.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(dia)
+	_cuerpo.add_child(caja)
+	_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, Idiomas.t("LO PRÓXIMO")))
+	for linea: String in _proximos(r):
+		_cuerpo.add_child(_nota(linea))
+	## Las citas en persona (fase 4): quién, cuándo y «Ir» (la flecha del paseo te lleva).
+	if m.citas != null and not m.citas.pendientes().is_empty():
+		_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, Idiomas.t("CITAS")))
+		for ct: Dictionary in m.citas.pendientes():
+			var fila := HBoxContainer.new()
+			fila.add_theme_constant_override("separation", 8)
+			var txt := _nota("%s · %s\n%s" % [String(ct["quien"]), String(ct["cargo"]), m.citas.cuando(ct)])
+			txt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			fila.add_child(txt)
+			var ir := Button.new()
+			ir.text = Idiomas.t("Guiando") if m.citas.objetivo == String(ct["id"]) else Idiomas.t("Ir")
+			ir.custom_minimum_size = Vector2(90, 40)
+			ir.pressed.connect(func() -> void:
+				m.citas.objetivo = "" if m.citas.objetivo == String(ct["id"]) else String(ct["id"])
+				(self as Telefono).abrir_app("agenda"))
+			fila.add_child(ir)
+			_cuerpo.add_child(fila)
+	_cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, Idiomas.t("ADELANTAR")))
+	for par: Array in [["1h", "⏩ Una hora"], ["manana", "🌅 Hasta mañana a las 08:00"], ["partido", "⚽ Hasta el partido"]]:
+		var b := Button.new()
+		b.text = Idiomas.t(String(par[1]))
+		b.custom_minimum_size = Vector2(0, 40)
+		b.pressed.connect(_adelantar.bind(String(par[0])))
+		_cuerpo.add_child(b)
+	_cuerpo.add_child(_nota(Idiomas.t("El tiempo adelantado sigue tu rutina: duermes y comes como siempre.")))
+
+## Entrenamiento (laborables a las 10:00), partido (sábado) y rueda de prensa (viernes).
+func _proximos(r: Reloj) -> Array[String]:
+	var sal: Array[String] = []
+	if r.dia <= 4:
+		sal.append(Idiomas.t("Entrenamiento: %s a las 10:00") % (Idiomas.t("hoy") if r.hora() < 10 else Idiomas.t("mañana")))
+	var prox := m.proximo_partido()
+	if prox.size() >= 2 and r.dia <= 5:
+		sal.append(Idiomas.t("Partido: sábado a las %02d:00 · %s - %s") % [VidaCiudad.HORA_PARTIDO, (prox[0] as Club).nombre, (prox[1] as Club).nombre])
+	if r.dia <= 4:
+		sal.append(Idiomas.t("Rueda de prensa: viernes a las 12:00"))
+	if sal.is_empty():
+		sal.append(Idiomas.t("Fin de semana: nada en la agenda. Descansa."))
+	return sal
+
+func _adelantar(que: String) -> void:
+	var r: Reloj = m.reloj
+	var ahora := r.dia * Reloj.MINUTOS_DIA + r.minuto
+	var mins := 0
+	match que:
+		"1h": mins = Reloj.MINUTOS_HORA
+		"manana": mins = (r.dia + 1) * Reloj.MINUTOS_DIA + Reloj.HORA_INICIO * Reloj.MINUTOS_HORA - ahora
+		"partido": mins = 5 * Reloj.MINUTOS_DIA + VidaCiudad.HORA_PARTIDO * Reloj.MINUTOS_HORA - ahora
+	if mins <= 0:
+		_decir(Idiomas.t("Ya pasó esta semana: la semana avanza en el PC o durmiendo el domingo."))
+		return
+	r.avanzar_con_rutina(mins)
+	Sonido.toca("clic", Sonido.Bus.EFECTOS)
+	(self as Telefono).abrir_app("agenda")

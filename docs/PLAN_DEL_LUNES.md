@@ -39,11 +39,10 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 
 | Fase | Contenido | Entregable |
 |---|---|---|
-| **0 — Cimientos** | pasos 2-3 de 7.1 (el banco ya está partido por grupo, 26-10) (la fase 0 ya sacó noticias, sorteos, preferencias, ciclo de partida y tutorial) | juego igual, código más ordenado |
-| **1 — Entrada** | las 7 pantallas están construidas; falta tu aprobación de la entrada (§0) y su recorrido con la cámara real | las fases 0-5 como pantallas completas |
-| **2 — Prólogo 3D** | aparición fuera del estadio, mentor guía, directivos con oficina, sala de prensa nueva, rueda de prensa con gestos, oficina con PC | de «Nuevo juego» hasta tu primer día |
-| **3 — Vida** | casa y familia, jornada y horas extra, días libres, teléfono, citas, eventos de ciudad, transporte público, cárcel | un día completo jugable en 3D |
-| **4 — Personas** | directiva, patrocinadores, políticos, entrevistas, fichajes en la ciudad, redes y fotos, elecciones | negociaciones en persona |
+| **1 — Entrada** | APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»): capturas en `docs/04_auditorias/capturas_fase1/` | las fases 0-5 como pantallas completas |
+| **2 — Prólogo 3D** | CONSTRUIDO el 26-10 (`escenas/prologo.tscn`, `visor/prologo*.gd`, `visor/pc_oficina.gd`; prueba `pruebas/ideas/f2p_prologo`, capturas `docs/04_auditorias/capturas_fase2/`). APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»); límites en §2.2b | de «Nuevo juego» hasta tu primer día |
+| **3 — Vida** | CONSTRUIDO el 26-10 (`visor/vida_ciudad.gd` + `visor/casa_dt.gd`, agenda del móvil, arranque en casa/oficina; pruebas `pruebas/ideas/f3v_vida` y `f3c_casa`, capturas `docs/04_auditorias/capturas_fase3/`). APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»); límites en §2.2c | un día completo jugable en 3D |
+| **4 — Personas** | EN CONSTRUCCIÓN desde el 26-10: bloques 1-4 y parte del 6 hechos (`nucleo/citas.gd`, `visor/citas_ciudad.gd`, Agenda con «Ir», favor del agente en `Negociacion`, entrevista de contratación, fotos a Tribuna; pruebas `f4p_citas` y `f4p_personas`; capturas `docs/04_auditorias/capturas_fase4/`); el bloque 7 lo hace la sesión ejecutora; faltan asamblea/elecciones y «convocar rueda» (§2.2d) | negociaciones en persona |
 | **5 — Club ampliado** | vestuario con nombres, otros deportes, trofeos y celebraciones | |
 | **6 — Pulido y auditoría** | pasos 4-7 de 7.1, limpieza del repo, vídeo | cierre y MEGAPLAN siguiente |
 
@@ -111,6 +110,8 @@ ser el mundo en el que vives.
 
 ### 2.2 Fase 0 real: separar `Principal` (validado por el dueño)
 
+Fase 0 CERRADA el 26-10 (pasos 1-3 hechos: noticias, sorteos, preferencias, ciclo de partida, tutorial, Ajustes → `PantallaAjustes`, estilos → `EstilosMenu`; prueba `pruebas/ideas/f0_cimientos`). Quedan los pasos 4-7, que son de la fase 6.
+
 #### 7. Código menos delicado (cómo se hace y cómo se comprueba)
 
 #### 7.1 Partir `principal.gd` sin romperlo
@@ -119,8 +120,6 @@ cambiar su comportamiento**, y el banco entero debe seguir en 0 fallos.
 
 | Paso | Se extrae | Va a | Riesgo |
 |---|---|---|---|
-| 2 | Ajustes: tipografía, idioma, FPS, música, acento, ranuras (leer/guardar ya está en `ui/principal/preferencias.gd`) | `ui/pantallas/pantalla_ajustes.gd` (ya existe, absorbe) | medio |
-| 3 | Estilos de menú, píldoras, rotación de estética cada 10 min | `ui/menu/estilos_menu.gd` | bajo |
 | 4 | Elegir club (mapa, países, escudos) | pasa a ser la **fase 2** del nuevo menú inicial | se rehace de todos modos |
 | 5 | Hubs contextuales y carril de chips | `ui/menu/hubs.gd` | medio |
 | 6 | Estadio, finanzas, identidad, camarín (`_pintar_*`) | `ui/pantallas/*` (ya hay una por tema) | medio |
@@ -147,6 +146,182 @@ por clases. Cada paso es un commit pequeño con su banco.
 
 ---
 
+
+### 2.2b Fase 2 — Prólogo 3D: DISEÑO (26-10, compuerta 2 del método; construir en este orden)
+
+**Flujo.** Al confirmar el personaje, `OrquestadorMundo.preparar()` devuelve la escena `escenas/prologo.tscn`
+(`PrologoDT`) en vez de `principal.tscn` para los modos con club (dt, deportivo, ayudante, interinato, cantera,
+dueño, jeque, crear, fondo); Retos, Tutorial y Carrera de Jugador siguen como hoy. «Saltar prólogo» con
+confirmación (y `PROLOGO=0` para pruebas); al terminar se marca `prologo_visto` en la partida y se autoguarda.
+
+**Escena.** La ciudad real del club (misma semilla y estadio que ya usa la ciudad) con `ExploradorCiudad` a pie.
+| # | Paso | Qué pasa | Pieza que se reutiliza |
+|---|---|---|---|
+| 1 | Llegada | Plano de presentación (cámara baja del cielo, rótulo «Ciudad · Club», 4 s) y apareces en la acera frente a la puerta del club; el mentor (`Tutorial.mentor_de`) y el portero esperan | `EntradaClub`, `PersonalEstadio` (portero), `CuadroDialogo` |
+| 2 | Moverse | El mentor enseña a moverse: 4 tarjetas (moverse, correr, cámara/primera persona, E) con las teclas reales (`Mando.corto_de`); aro en el suelo + flecha hacia el siguiente punto; cada punto se cumple al llegar (1,5 m) | tutorial de la ciudad, `MovilMano` |
+| 3 | Recorrido | El mentor camina delante por las plantas del edificio (vestuario, túnel, campo, −1 enfermería y utilería, +1 despacho del presidente y sala de vídeo, +2 sala de prensa y comedor) y en cada sala dice 1-2 frases; el personal está en su puesto y saluda. **Tu oficina no se enseña aún** | `ExploradorEstadio`, `EdificioClub.PLANTAS`, `RecorridoClub.SALUDOS`, `ColisionClub` (ruta del mentor por la rejilla) |
+| 4 | Directiva | En el despacho del presidente te presenta a la `Junta` (presidente + 2 directivos con cuerpo); una pregunta con 2 respuestas (ambiciosa / prudente) fija la primera impresión (confianza ±3) y queda en «Qué pasa» | `Junta`, `PersonalEstadio` (presidente), `CuadroDialogo.respuesta` |
+| 5 | Prensa | Sala de prensa física (planta 2) → `RuedaPrensaEscena3D` de presentación con 3 preguntas de la rueda previa; el DT GESTICULA según el tono (seguro: manos abiertas; evasivo: mano al cuello; humilde: manos juntas) | `RuedaPrensaEscena3D._montar_gesto_dt`, `ui/principal/rueda_prensa.gd` |
+| 6 | Tu oficina | El mentor te entrega la Oficina del DT («aquí mandas tú»); el PC de la mesa es interactivo: E → el menú central (`Principal`) se abre como capa encima del 3D (`PcOficina`); Esc o «Apagar» vuelve a la silla | sala «Oficina del DT» de `EdificioClub`, `Principal` (como capa, no como escena) |
+| 7 | Cierre | Autoguardado, logro «Primer día», `prologo_visto`; la siguiente carga arranca en la oficina (la casa es de la fase 3) | `Partida`, `Logros` |
+
+**Reglas.** Nada superpuesto: un cuadro de diálogo a la vez; el jugador siempre puede moverse salvo en el plano
+de presentación. Mentor y directivos son ficticios (nombres de `Tutorial.mentor_de` / `Junta`). Textos con
+`Idiomas.t` y traducción a los 8 idiomas con `sumar_traducciones.py`. Scripts nuevos < 450 líneas:
+`visor/prologo.gd` (orquestación de pasos), `visor/prologo_mentor.gd` (NPC guía que sigue puntos),
+`visor/pc_oficina.gd` (el PC que abre y cierra Principal), `visor/prologo_pasos.gd` (texto de cada paso).
+
+**Hecho el 26-10 y límites honestos (lo que se verá al jugar):**
+- El mentor no busca camino por el edificio: habla, «se adelanta» (da tres pasos y se esfuma) y te espera ya en la
+  sala siguiente; la flecha del HUD y el aro en el suelo te llevan (con el ascensor si cambia la planta).
+- Mientras el mentor habla el personaje se queda quieto (frases cortas); todo lo demás es libre.
+- En la rueda de presentación el DT gesticula al responder con los gestos del plató de siempre (no hay aún una pose
+  distinta por tono: seguro/evasivo/humilde solo cambian el texto y la relación con la prensa, ±2 por respuesta).
+- La directiva son el presidente del personal del club más dos accionistas de la `Junta` con cuerpo; una pregunta,
+  dos respuestas (+3 / +1 de confianza).
+- El PC enciende `Principal` como capa (el mundo 3D se esconde y se congela, no se destruye); la segunda vez lo
+  retoma como partida cargada para no volver a escalar la caja por la dificultad. Pendiente: que al salir del
+  juego desde el PC se guarde (hoy guarda al avanzar la semana y al encenderlo la primera vez).
+- Logro «Primer día»: no se añadió (la API de `Logros` no tiene alta de logros sueltos; queda para la fase 5).
+- Rendimiento: la ciudad entera queda cargada bajo el menú central; en gama baja habrá que medirlo (fase 6).
+- (26-10, tarde) El mentor del modo DT es el presidente REAL de la junta (antes salían dos presidentes distintos en el
+  despacho); la cabecera de la rueda de presentación se aclara con el color del club; al encender el PC ya no sale la guía
+  antigua del taxi (contaba otro primer día).
+
+**Pruebas (modelo V).** Idea `f2p_prologo`: los 7 pasos en modo sin pantalla (cada punto del recorrido es
+alcanzable con la rejilla de `ColisionClub`; el PC abre `Principal` y lo cierra sin dejar nodos; `prologo_visto`
+queda en la partida; saltar funciona). Captura `f2p_captura_prologo` (7 tomas Forward+ con la cámara del paseo).
+Compuerta de aceptación: capturas al dueño.
+
+### 2.2c Fase 3 — Vida en 3D: DISEÑO (26-10, compuerta 2; construir en este orden)
+
+**Lo que ya existe y se enlaza (no se duplica):** `Reloj` (día y hora dentro de la semana; la semana la sigue
+mandando `Mundo.avanzar_semana()`), `Necesidades` (energía y hambre, modo completa/ligera/apagada en Ajustes → Vida),
+`VidaDT` (vivienda, transporte, familia, estrés, ocio semanal), la Casa Grande de la ciudad (`CiudadExpansion._casa_grande`),
+`CasaEscena3D`, el móvil (`Telefono`, `MovilMano`), el paseo (a pie, coche, metro, bus, interiores) y el PC de la oficina (fase 2).
+
+| # | Bloque | Qué hace | Regla |
+|---|---|---|---|
+| 1 | Reloj vivo | La hora de la ciudad (`VistaCiudad._hora`, sol y farolas) ES la del `Reloj`; al caminar pasa el tiempo (1 min real = 10 min de juego; esperar en un banco ×6; dormir salta a las 08:00). El móvil enseña día y hora | el reloj nunca avanza la semana solo: al llegar al domingo noche o al pulsar «Avanzar semana» en el PC, `Mundo.avanzar_semana()` como siempre (misma huella) |
+| 2 | Jornada | 09-18 en el club cuenta como trabajo (tasas de `Necesidades`); después de las 18, horas extra: +preparación (`VidaDT.balance`) y +estrés; sábado y domingo sin partido = día libre | lo que ya hace `VidaDT` semana a semana, ahora alimentado por horas de verdad |
+| 3 | Necesidades aplicadas | Comer: comedor del plantel (planta 2), tu casa o un kiosco de la ciudad; dormir: tu cama. Energía < 20 → `factor_riesgo` entra en la semana (`probabilidad_de_fallo`, ya escrito) y el médico avisa; energía 0 en la calle → despiertas en casa con estrés y un titular | sin castigos definitivos; «Vida: ligera/apagada» lo suaviza o lo quita |
+| 4 | Casa y familia | Entrar a tu casa (la Casa Grande hoy; la vivienda de `VidaDT` después): salón, cocina, dormitorio; pareja, hijos y mascota con cuerpo (`VidaDT.perfil`) y 2-3 frases según `familia`; cama (dormir), mesa (comer), sofá (ocio de la semana) | gente ficticia; nada de religión ni política |
+| 5 | Teléfono | App «Agenda»: día, hora, próximo entrenamiento/partido/rueda; «Adelantar»: 1 h, hasta mañana, hasta el partido; mensajes que piden ir a un sitio (la fase 4 los llena) | el teléfono adelanta el reloj con la rutina (`Reloj.RUTINA`) para que las necesidades no se disparen |
+| 6 | Transporte y sucesos | Coche propio según `VidaDT.transporte` (con «micro», solo bus y metro); avería semanal por hash → transporte público; conducir a lo loco (3 choques con multa) → noche en el calabozo: lunes con −3 de confianza y titular | todo reversible en una temporada |
+| 7 | Arranque del día | Tras el prólogo, cada carga empieza en la oficina; con la casa hecha, cada lunes empiezas en casa a las 08:00 y vas al club como quieras (o «ir directo» desde el móvil) | «Vida: apagada» = empiezas en la oficina con el PC |
+
+**Hecho el 26-10 y límites honestos (lo que se verá al jugar):**
+- Reloj vivo: `VidaCiudad` (colgado del explorador cuando hay partida) hace pasar 1 minuto de juego cada 6 s reales
+  mientras paseas (en pausa, PC o móvil no corre); la luz de la ciudad (`VistaCiudad._hora`) ES la del reloj y la vuelta
+  de 2 minutos queda apagada. La hora va en el HUD («🕒 Martes 10:40») y en el móvil de la mano. «Esperar en un banco ×6»
+  no está (no hay bancos usables); el móvil lo cubre con «Adelantar».
+- Jornada: en el club de lunes a viernes 09-18 cuenta como trabajo y 18-23 como horas extra (+1 preparación y +1 estrés
+  por hora); el fin de semana en el club es libre (no distingue aún día de partido).
+- Comer: comedor del plantel (planta 2, E), tu casa (mesa) o un bar/panadería/mercado de la ciudad (E dentro cuando no
+  hay nadie al lado; se sale por la puerta). Dormir: tu cama (salta a las 08:00). Energía a cero fuera de la cama →
+  despiertas en casa con +6 de estrés y un titular pendiente; los avisos de cansancio/hambre salen por el móvil.
+- Casa: la Casa Grande se abre por dentro con E desde la verja (`CasaDT`: salón de la vivienda de los interiores +
+  dormitorio, pareja/hijos/mascota de `VidaDT.perfil`, 2-3 frases por estado de la familia, +1 de familia la primera charla
+  del día). Es la Casa Grande para todos: la vivienda de `VidaDT` (pensión… mansión) todavía no cambia la casa 3D.
+- Teléfono: la T del paseo abre el móvil de siempre con la app «Agenda» (día, hora, próximo entrenamiento/partido/rueda;
+  adelantar 1 h / hasta mañana 08:00 / hasta el partido, siempre con la rutina de `Reloj`: no dispara el hambre). No hay
+  todavía mensajes que te citen a un sitio (fase 4).
+- Transporte y sucesos: «Conducir» del menú sale a pie si `VidaDT.transporte` es «micro» o si toca avería (1 semana de
+  cada 8, por hash); 3 multas por conducción temeraria = noche en el calabozo (−3 de confianza y +4 de estrés una vez por
+  semana, titular, amanece a las 08:00). No hay comisaría 3D: es un fundido.
+- Semana: dormir el domingo por la noche llama a `Mundo.avanzar_semana()` (el mismo camino que el PC) y amanece el lunes;
+  si el PC estaba encendido alguna vez, su menú se refresca. La huella se compara por procesos (`huella_mundo.tscn`): dos
+  mundos iguales avanzados en un mismo proceso no coinciden ni desde el menú (estado estático del motor).
+- Arranque del día: «Continuar» y «Abrir partida» con el prólogo visto entran en 3D: el lunes a las 08:00 en tu casa, el
+  resto del tiempo en la oficina con el PC; con «Vida: apagada» siempre la oficina. La ciudad tarda en construirse
+  (pantalla de carga): en gama baja habrá que medirlo (fase 6).
+
+**Pruebas (modelo V).** Idea `f3v_vida`: al caminar el reloj avanza; comer y dormir mueven las necesidades; dormir el domingo
+avanza la semana con la MISMA huella que el menú (`huella_mundo`); la casa tiene a la familia y sus tres usos; el móvil
+adelanta sin disparar el hambre; la avería saca el coche y el calabozo resta confianza una vez. Captura `f3v_captura_vida`
+(casa por dentro, familia, cama, comedor, móvil con agenda, amanecer en la ciudad).
+
+### 2.2d Fase 4 — Personas en persona: DISEÑO (26-10, compuerta 2; construir en este orden)
+
+**Lo que ya existe y se enlaza (no se duplica):** `Junta` (presidente y accionistas, `resolver(op)`), `Comercial` (ofertas de
+zona y proveedor: `generar_ofertas_zona`, `firmar_zona`), `MercadoAvanzado` y `Negociacion` (ofertas por jugador),
+`MesaAgente` (regateo con 4 perfiles), `Politica` (gobiernos ficticios por país, `semana_votacion`), `Prensa` (ruedas,
+titular pendiente), `Redes` (`publicar`, `responder`), `ModoFoto`, el móvil (`Movil.chats()`, Mensajes, Agenda), las
+personas con cuerpo del prólogo (`PrologoMentor`: nombre, cargo, semilla) y del estadio (`PersonalEstadio`, `RecorridoClub.
+dialogo`), la flecha del HUD del prólogo y el reloj (`Reloj`, `VidaCiudad`).
+
+| # | Bloque | Qué hace | Regla |
+|---|---|---|---|
+| 1 | Citas y mensajes | `nucleo/citas.gd`: una cita = {quién, dónde (sala del estadio o punto de la ciudad), día y hora, asunto, tipo}. Nacen de lo que ya pasa cada semana: asunto de la `Junta` → el presidente en su despacho; oferta de zona de `Comercial` → el patrocinador en su sede (un `edificio_oficina` con rótulo); oferta de `MercadoAvanzado` → el agente en un bar; semana de votación de `Politica` → el funcionario en el ayuntamiento; semana con rueda → la entrevista en el plató. Llegan por Mensajes del móvil («Ir» = flecha del HUD) y salen en la Agenda | máximo 3 citas por semana y 1 por persona; si no vas, la cita caduca el domingo sin castigo (la oferta sigue su curso por el PC como hoy) |
+| 2 | Personas con cuerpo y horario | Cada cita pone a la persona con cuerpo en su sitio solo en su horario (`Reloj`: 10-18 laborables; el agente de 18 a 22 en el bar); fuera de hora, el sitio está vacío y el móvil lo dice | gente ficticia (nombres de la `Junta`, `Comercial`, `MesaAgente`, `Politica.nombre_ficticio`); misma semilla = misma cara siempre |
+| 3 | Negociar en persona | En la cita, el mismo `Negociacion`/`MesaAgente` de siempre con `CuadroDialogo` y opciones. En persona: el precio pedido baja un 5 % y la probabilidad de aceptar sube 10 puntos; por mensaje/PC, como hoy | nunca mejor que el tope del club ni por encima de la caja; una negociación por cita |
+| 4 | Entrevistas de contratación | Al fichar a un jugador o a alguien del staff, entrevista de 3 preguntas en tu oficina (tonos seguro/evasivo/humilde, como la presentación): afinidad inicial ±2 de moral y el grupo del `Vestuario` al que entra | opcional: «Saltar» = fichaje como hoy, sin bono ni castigo |
+| 5 | Patrocinadores y políticos | Firmar una zona en persona: +5 % de renta esa temporada (`Comercial.firmar_zona` con bono) si llegas a la hora. Votación: el funcionario pide apoyo público; aceptar = declaración en la rueda (+relación con el gobierno de `Politica`, −2 con la prensa crítica); negarse = nada | política 100 % ficticia; sin partidos ni personas reales |
+| 6 | Redes, fotos y elecciones del club | Foto del `ModoFoto` → la app Fotos la publica en `Redes` con hashtags; «Convocar rueda de prensa» desde el móvil (máximo 1 extra por semana). Elecciones del club cada 4 temporadas (o con confianza < 25): asamblea en el salón de actos con 3 discursos (tonos) y voto de socios + junta; perder = sigues de DT con otro presidente (nuevo `Junta.presidente`, objetivo nuevo) | nada definitivo: no te echan por las elecciones |
+| 7 | Rutinas y vida de las personas | Los directivos pasan por el estadio en su horario (despacho, palco los sábados); el personal del club saluda por nombre y recuerda la última charla (`PersonalEstadio` + afinidad 0-100 que sube por charla diaria y baja por semanas sin hablar) | afinidad solo cambia textos y una frase de pasillo; sin efectos en el partido |
+
+**Hecho el 26-10 (bloques 1-4 y parte del 6) y límites honestos:**
+- `Citas` nace cada semana en `Mundo._semana_modulos_del_club` (y en la primera al generar): junta abierta → presidente en su
+  despacho (martes 11:00); zona con ofertas → la marca que más paga en el centro comercial (miércoles 16:00); superagente →
+  terraza de la Plaza Mayor (jueves 19:00); semana antes de la votación → gabinete del alcalde en el ayuntamiento (viernes 12:00).
+  Máximo 3 por semana, 1 por tipo; caducan al cambiar de semana; mensaje en el móvil y fila en la Agenda con «Ir».
+- En 3D (`CitasCiudad`, colgado de `VidaCiudad`): flecha del HUD del prólogo hacia la cita marcada (dice «entra al estadio» /
+  «sal a la calle» / la planta); la persona (cuerpo `PrologoMentor`, misma cara por nombre) aparece solo en su hora (2 h) y
+  si estás en su mismo mundo a < 90 m; E a < 2,2 m abre el panel de dos respuestas; al responder se va andando.
+- Resolver = lo de siempre + bono: junta `Junta.resolver` +1 de confianza; patrocinio `firmar_zona` +5 % de renta; agente deja
+  un «favor» (`Citas.favor_agente`, el −5 % en su próxima mesa se aplica en el bloque 3); política: apoyo anotado en el
+  gobierno y −2 con la prensa crítica.
+- Bloque 3: con el favor del agente de la semana, `Negociacion` divide lo pedido por 0,95 y baja el umbral 0,10
+  (`descuento_persona`, `bono_persona`); `MesaAgente` (los representantes de la cantera) no lo aplica aún.
+- Bloque 4: al cerrar un fichaje (`Negociacion._cerrar_fichaje`) el nuevo te cita mañana a las 10:00 en tu oficina; tres
+  tonos: seguro +2 de moral, evasivo −1, humilde +1. Si no vas, caduca sin efecto. El cuerpo es genérico (cara por nombre),
+  no el modelo del jugador (fase 5).
+- Bloque 6 (parte): las fotos del modo foto se publican desde la app Fotos como «paseo» en `Redes` (tipo nuevo, +seguidores).
+- Pendiente: asamblea/elecciones del club, «convocar rueda de prensa» desde el móvil, el favor en `MesaAgente`; los sitios de
+  la ciudad son fijos (no hay «sede» propia por marca). El bloque 7 (rutinas y afinidad del personal) lo construye la sesión
+  ejecutora (tarea 6).
+
+**Pruebas (modelo V).** Idea `f4p_personas`: un asunto de la junta genera una cita con mensaje y aparece en la Agenda; a la hora,
+la persona está en su sitio (fuera de hora, no); negociar en persona aplica −5 %/+10 y por PC no; firmar una zona en persona
+da el +5 %; la entrevista mueve ±2 de moral; publicar una foto suma seguidores; la asamblea cambia el presidente al perder
+y nada más; las citas caducan el domingo sin castigo. Captura `f4p_captura_personas` (mensaje con «Ir», patrocinador en su
+sede, agente en el bar, asamblea, foto publicada).
+
+### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
+
+Palabras del dueño: *«hay partes de la ciudad sin detalles y muy mejorables; los personajes se mueven de forma
+antinatural, sus partes del cuerpo no son anatómicamente correctas, falta profundidad y calidad de los personajes; mejorar
+y agregar animaciones; analizar toda la ciudad, mejorar la construcción y cuidar la coherencia»*. Entra como trabajo de la
+fase 6 (pulido) adelantado y se hace por PASADAS con captura antes/después y veredicto del dueño en cada una.
+
+| # | Pasada | Qué | Cómo se mide |
+|---|---|---|---|
+| C1 | Auditoría de la ciudad | recorrido por zonas con capturas (paseo y aérea), lista priorizada de huecos, cajas lisas, incoherencias (sesión ejecutora, tarea 7) | `docs/04_auditorias/ciudad_26_10.md` + `capturas_ciudad/` |
+| C2 | Construcción y coherencia | fachadas reales donde hay cajas (centro comercial, cocheras, estación), aceras y cruces continuos, rótulos sobre algo, escalas unificadas, piezas Kenney donde falten | capturas antes/después por zona |
+| P1 | Anatomía | medir el cuerpo base (`PersonajeDT`, `VestidorQ`): proporciones cabeza/tronco/brazos/piernas frente a un humano medio (7,5 cabezas), hombros, cuello, manos; corregir escalas por hueso | hoja de medidas + captura frontal/lateral |
+| P2 | Movimiento natural | pasos sin patinar (velocidad de clip = velocidad real), giro con inercia, transición caminar↔correr↔parar con mezcla, peso en los brazos, mirada; en peatones y en el DT | `pruebas/sonda_movimiento.tscn` (deslizamiento de pies en cm) + vídeo corto |
+| P3 | Más animaciones | sentarse, esperar (3 variantes), hablar con gestos, abrir puerta, subir escalera, saludar; usar los 333 clips del pack antes de crear nuevos | inventario de clips usados/sin usar |
+| P4 | Profundidad y calidad | piel con subsuperficie suave, pelo con capas, ropa con arrugas normales, sombras de contacto, LOD sin saltos | captura de transmisión + de cerca |
+
+Compuerta: el dueño ve cada pasada y dice «estamos» o «mejorar». Nada se quita sin avisar.
+
+**Pasada 1 de P1 y P2 (26-10 noche), medida con `pruebas/sonda_movimiento.tscn` (complexión neutra, determinista):**
+
+| Medida (fracción de la altura) | humano | antes | después |
+|---|---|---|---|
+| cabezas de altura | 7,5 | 7,6 | 7,9 (hombre) · 7,4 (mujer) |
+| hombro→muñeca | 0,34 | 0,27 | 0,29 (−15 %) |
+| antebrazo / brazo | 0,80 | 0,97 · 1,04 | 0,78 · 0,83 |
+| pantorrilla / muslo | 0,95 | 1,07 · 1,14 | 0,98 · 1,04 |
+| anchura de hombros | 0,245 | 0,23 · 0,17 | 0,19 · 0,14 (PENDIENTE) |
+
+Cambios: `PersonajeDT.ANATOMIA` (húmero ×1,15, muslo ×1,05, pantorrilla ×0,96) para DT, futbolistas y peatones. Los hombros
+quedan pendientes: la clavícula va en diagonal y el sistema de escalas por ejes del mundo también estira el brazo; hay que
+escalarla en ejes locales compensando al hijo (siguiente pasada). Movimiento: el pie apoyado de «caminar» recorre 1,0 m/s y el
+paseo iba a 1,7 m/s (patinaba ×1,7; agachado ×2,4; correr ×1,3-1,5): ahora `speed_scale = velocidad real / natural del clip`
+(`ExploradorCiudad.VEL_NATURAL_CLIP`) y los peatones del tráfico igual (`TraficoCiudad.agregar_vehiculo`). Hecho también: el cuerpo gira con inercia
+(persigue el rumbo, `lerp_angle` a 9/s) y la mezcla al pararse dura 0,4 s. Falta: más clips (P3), piel/pelo/ropa (P4) y el
+veredicto del dueño sobre esta pasada.
 
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 
@@ -1856,7 +2031,7 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - Carrera: falta la animación de parada del portero en modo jugador.
 - Licencias 🟡 que quedan (sesión 6, `docs/04_auditorias/sesion_6.md`): `persona_realista.glb` → relevo de MakeHuman (CC0) ya enganchado en `visor/persona_mh.gd`: falta que el dueño suba por LFS `assets/personas/persona_mh_cuerpo.glb` y `persona_mh_ropa.glb` (generar con `herramientas/makehuman/mh_generar.py <datos> <Quaternius.gltf> persona_mh m` y renombrar) cuando el traje esté pulido (bajo de la chaqueta dentado, cejas manchadas), y luego excluir `persona_realista*` de las exportaciones públicas; `anims_futbol/` → la vía barata es guardar la captura de la página de Gumroad (dueño); CMU sirve de licencia pero exige retargetear BVH en Blender y no trae regates; `vagabond.obj` (velero), `arco_entrada`, `asientos_lod`, `podio_prensa` y las insignias de Canva siguen sin confirmar.
 
-- Primera hora (informe onb, 26-10), lo que queda: `grab_focus` diferido en pantallas de la entrada sin comprobar que sigan en el árbol (`ui/entrada/*`, zona de la sesión principal). Lo demás (cabecera con ayudas, objetivos que ceden la ficha, reabrir el tutorial, carril de chips de los hubs) lo cerró la sesión 3.
+- Primera hora (informe onb, 26-10): cerrado el 26-10 (todo `grab_focus` diferido de `ui/entrada/*` pasa por `FocoSeguro.dar`, que comprueba que el control siga en el árbol; el resto es síncrono o va con `is_inside_tree()`). Lo demás (cabecera con ayudas, objetivos que ceden la ficha, reabrir el tutorial, carril de chips de los hubs) lo cerró la sesión 3.
 
 - Más países jugables (fila 26 s4, sesión 6): medido por `pruebas/ideas/s6_paises.gd`: el juego conoce 86 países (banderas) y tiene liga en 23. Hecho: nombre de los 86 en los 9 idiomas (CLDR, `datos/paises.json`, `Paises`). Falta para hacerlos jugables: liga y clubes ficticios (`herramientas/base_ficticia.py`), bolsas de nombres propias para 62 (faker por locale, MIT) y regiones (GeoNames) más allá de ESP/EUS.
 
@@ -1866,8 +2041,7 @@ Informe: `docs/04_auditorias/sesion_2.md` en esa rama. Al fusionar: reaplicar `d
 Peticiones a zonas que no eran suyas (la 14, partir `banco_p25.gd`, ya está hecha: 67 líneas):
 12. Tilde en `nucleo/prensa_p4_p1.gd:27` «mas corta»: la frase es clave de `datos/narracion_traducida*.json`; cambiarla exige renombrar la clave y regenerar (`extraer_narracion.py` + `montar_narracion.py`), y hoy esa regeneración cambia ~8.000 líneas de `narracion*.json` (revisar antes por qué).
 
-Defectos a la vista que dejó anotados:
-- «Forma» del escudo en `ui/entrada/config_club_pasos.gd:149`: pasar a la clave `Forma del escudo` (ya traducida); «Forma» queda para la forma física.
+Defectos a la vista que dejó anotados: ninguno pendiente (el de «Forma del escudo» ya estaba aplicado el 26-10).
 
 Auditoría de fuentes y de presentación del texto (26-10, sesión fnt). Lo de traducción es para S1:
 - **93 claves con solo en y pt** (faltan fr, it, de, ca, pl, tr): son los titulares de imprevistos y avisos («Apelación ACOGIDA», «Cedido a préstamo», «¡Clausulazo!», «Polémica en redes»…). En 6 idiomas caen al castellano. Lista: claves de `en` que no están en `fr`.

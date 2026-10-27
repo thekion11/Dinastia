@@ -1,5 +1,5 @@
 extends "res://nucleo/prensa_p2.gd"
-## [Capa 3/8 de `prensa.gd`] _fatigar_por_viaje, _mover_funa, _pagar, _ceder
+## [Capa 3/8 de `prensa.gd`] _fatigar_por_viaje, _mover_funa, _pagar, _ceder, _para_mostrar
 
 ## El precio de un viaje largo: los que vinieron de fuera llegan sin piernas.
 func _fatigar_por_viaje(mio: Club) -> void:

@@ -1,5 +1,5 @@
 extends "res://ui/principal_p8.gd"
-## [Capa 9/17 de `principal.gd`] _traducir_pantalla, _refrescar, _avanzar_semana, _avanzar_dia, _pintar_dias, _exit_tree … (+1)
+## [Capa 9/17 de `principal.gd`] _origen_de, _traducir_pantalla, _refrescar, _avanzar_semana, _avanzar_dia, _pintar_dias … (+2)
 
 ## LA MÚSICA. Seis piezas sintetizadas, como todo el audio del juego: ni un solo
 ## fichero, ni una licencia de terceros que arrastrar en el paquete.

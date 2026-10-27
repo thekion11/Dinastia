@@ -1,6 +1,6 @@
 class_name CityBuilder
 extends "res://visor/city_builder_p11.gd"
-## [Capa 12/12 de `city_builder.gd`] _distritos, _casa_gigante, mostrar_rotulos
+## [Capa 12/12 de `city_builder.gd`] _distritos, _casa_gigante, asfalto_mate, mostrar_rotulos
 
 func _distritos() -> void:
 	var comercial: Array[PackedScene] = []
@@ -112,7 +112,7 @@ func _casa_gigante(centro: Vector3, tam: Vector2) -> void:
 	var z0 := centro.z - tam.y * 0.5
 	_caja_en(Vector3(centro.x, 0.06, z0 + 5.0), Vector3(6.0, 0.1, 10.0), losa)
 	_rotulo(centro + Vector3(0, alto_max + 6.0, 0), "🏰 La Casa Grande", Color(1, 0.92, 0.7), 22)
-	puntos_clic.append({"k": "casa_grande", "n": "La Casa Grande", "pos": centro, "estado": "ciudad"})
+	puntos_clic.append({"k": "casa_grande", "n": "La Casa Grande", "pos": centro, "estado": "ciudad", "alcance": 14.0})
 
 ## ASFALTO MATE DE CALLE (26-10-2026, pciu). `Texturas.asfalto()` multiplica la
 ## rugosidad por un ruido de negro a blanco: media ~0,4, con manchas casi espejo.

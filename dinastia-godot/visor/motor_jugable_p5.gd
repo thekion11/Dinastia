@@ -251,7 +251,7 @@ func _pitar_offside(p: Dictionary) -> bool:
 	if not adelantado:
 		return false
 	if OS.get_environment("DEPURAR_OFF") != "":
-		print("OFFSIDE de %s(%s) tras %s de %s (por=%s z=%.1f) hace %.1fs, recibe en z=%.1f" % [String(p.get("slot_code","")), _rol(p),
+		Registro.depurar("OFFSIDE", "de %s(%s) tras %s de %s (por=%s z=%.1f) hace %.1fs, recibe en z=%.1f" % [String(p.get("slot_code","")), _rol(p),
 			String(_offside_previo.get("anim", "")), String(_offside_previo.get("de", "")), str(_offside_previo.get("por", false)),
 			float(_offside_previo.get("z", 0.0)), t - float(_offside_previo.get("t", 0.0)), pos(p).z * dir_ataque(bool(p["es_local"]))])
 	fueras_de_juego[0 if bool(p["es_local"]) else 1] += 1
@@ -291,7 +291,7 @@ func _tomar(p: Dictionary) -> void:
 		if (0 if bool(p["es_local"]) else 1) == _pase_eq:
 			pases_ok[_pase_eq] += 1
 		elif OS.get_environment("DEPURAR_PASES") != "" and not pase_a.is_empty():
-			print("PASE PERDIDO: recibía %s a %.1f m del balón; lo cortó %s a %.1f m; balón a %.1f m/s, alto %.1f" % [
+			Registro.depurar("PASE PERDIDO", "recibía %s a %.1f m del balón; lo cortó %s a %.1f m; balón a %.1f m/s, alto %.1f" % [
 				String(pase_a.get("slot_code", "")), pos(pase_a).distance_to(balon.position), String(p.get("slot_code", "")),
 				pos(p).distance_to(balon.position), vel_balon.length(), balon.position.y])
 		_pase_eq = -1

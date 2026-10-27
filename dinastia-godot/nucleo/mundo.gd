@@ -1,6 +1,6 @@
 class_name Mundo
 extends "res://nucleo/mundo_p7.gd"
-## [Capa 9/9 de `mundo.gd`] ranking_tactico, puede_analizar, analizar_rival, nueva_temporada (tope del valor)
+## [Capa 10/10 de `mundo.gd`] tope_valor_ia, tomar_el_mando, nueva_temporada, valor_medio_ia, ranking_tactico, puede_analizar … (+2)
 
 ## EL TOPE DEL VALOR DE LA IA SEGÚN LA DIFICULTAD (26-10, decisión del dueño). En diez temporadas el valor
 ## medio del mercado de la IA sube ×1,36-×1,45 por el asentamiento del mundo generado (`eq_diez_temporadas`).

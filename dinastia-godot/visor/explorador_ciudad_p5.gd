@@ -1,5 +1,5 @@
 extends "res://visor/explorador_ciudad_p4.gd"
-## [Capa 5/6 de `explorador_ciudad.gd`] edificio_en, pausar, _actualizar_mano, _mover_en_anden, _viajar, _choca_mueble … (+7)
+## [Capa 5/6 de `explorador_ciudad.gd`] edificio_en, pausar, _actualizar_mano, _mover_en_anden, _viajar, _andar_solo … (+5)
 
 ## Factor de densidad de peatones del club (−1 = sin leer todavía).
 var _densidad_gente: float = -1.0
@@ -132,75 +132,6 @@ func _viajar(delta: float) -> void:
 	else:
 		_aviso.text = Idiomas.t("Próxima estación: %s · E: %s") % [prox, Idiomas.t("no bajar") if _bajar_en_proxima else Idiomas.t("bajar en la próxima")]
 
-func _choca_mueble(rel: Vector3) -> bool:
-	var p := _INT_ORIGEN + rel
-	for c: Vector3 in _int_circulos:
-		var dx := p.x - c.x
-		var dz := p.z - c.y
-		var rr := c.z + 0.35
-		if dx * dx + dz * dz < rr * rr:
-			return true
-	return false
-
-func _mover_en_interior(delta: float) -> void:
-	if not is_instance_valid(_int):
-		_salir_del_edificio()
-		return
-	var e := _entrada()
-	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
-	var objetivo := (3.4 if corre else 1.6) * clampf(e.y, -0.5, 1.0)
-	_vel_pie = move_toward(_vel_pie, objetivo, (7.0 if absf(objetivo) > absf(_vel_pie) else 12.0) * delta)
-	vel = _vel_pie
-	rumbo -= e.x * delta * 2.6
-	var t := _int.tam_sala()
-	var rel := cuerpo.position - _INT_ORIGEN
-	var nueva := rel + Vector3(sin(rumbo), 0, cos(rumbo)) * vel * delta
-	## La puerta: pasar de la línea del hueco (|x| < 1,4) sale a la calle.
-	if nueva.z > t.z * 0.5 - 0.2 and absf(nueva.x) < 1.4:
-		_salir_del_edificio()
-		return
-	nueva.x = clampf(nueva.x, -t.x * 0.5 + 0.7, t.x * 0.5 - 0.7)
-	nueva.z = clampf(nueva.z, -t.z * 0.5 + 0.7, t.z * 0.5 - 0.7)
-	## Contra el mobiliario: se desliza por ejes, como en la calle.
-	if _choca_mueble(nueva):
-		if not _choca_mueble(Vector3(nueva.x, 0, rel.z)):
-			nueva.z = rel.z
-		elif not _choca_mueble(Vector3(rel.x, 0, nueva.z)):
-			nueva.x = rel.x
-		else:
-			nueva = rel
-			_vel_pie = 0.0
-	cuerpo.position = _INT_ORIGEN + Vector3(nueva.x, 0.05, nueva.z)
-	cuerpo.rotation.y = rumbo
-	if _es_dt:
-		_animar_dt(vel)
-	elif _anim != null:
-		_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
-	_colocar_camara(delta)
-	_hud.text = Idiomas.t("🏠 %s  ·  W/S/A/D para moverte · V: vista · E o la puerta: salir") % String(_int.call("_sala_nombre"))
-	## ¿Alguien de la sala a mano para charlar?
-	_int_cerca = {}
-	var mejor := 1.9
-	for lista: Array in [_int.get("_fijos"), _int.get("_caminantes")]:
-		for f: Dictionary in lista:
-			var d: Dictionary = f["d"]
-			var n: Node3D = d.get("nodo")
-			if n == null or not is_instance_valid(n):
-				continue
-			var dist := Vector2(n.global_position.x - cuerpo.position.x, n.global_position.z - cuerpo.position.z).length()
-			if dist < mejor:
-				mejor = dist
-				if not f.has("charla"):
-					f["charla"] = {"nodo": n}
-				_int_cerca = f["charla"]
-	_aviso.text = Idiomas.t("E: charlar") if not _int_cerca.is_empty() else ""
-	if _t_burbuja > 0.0:
-		_t_burbuja -= delta
-		if _t_burbuja <= 0.0:
-			_burbuja.visible = false
-			if _cuadro != null:
-				_cuadro.cerrar()
-
 func _andar_solo(delta: float) -> void:
 	if _auto.is_empty():
 		_entrar_al_estadio()
@@ -214,7 +145,8 @@ func _andar_solo(delta: float) -> void:
 		_auto.pop_front()
 		return
 	rumbo = atan2(hacia.x, hacia.z)
-	cuerpo.rotation.y = rumbo
+	## Giro con inercia (26-10, §2.2e P2): el cuerpo persigue el rumbo en vez de saltar a él.
+	cuerpo.rotation.y = lerp_angle(cuerpo.rotation.y, rumbo, 1.0 - exp(-9.0 * delta))
 	cuerpo.position += hacia / d * minf(d, VEL_PIE * delta)
 	_animar_dt(VEL_PIE)
 	## La cámara se queda donde estaba (detrás, en la calle) y le sigue con
@@ -309,8 +241,10 @@ func _buscar_cerca() -> void:
 		for pc: Dictionary in cb.puntos_clic:
 			var q: Vector3 = pc["pos"]
 			var d := Vector2(q.x - p.x, q.z - p.z).length()
-			if d < mejor and d < float(pc.get("radio", 99.0)):
-				mejor = d
+			## Un punto puede pedir alcance extra (la Casa Grande: su centro queda lejos de la verja).
+			var de := d - float(pc.get("alcance", 0.0))
+			if de < mejor and d < float(pc.get("radio", 99.0)):
+				mejor = de
 				_cerca = {"tipo": "lugar", "k": String(pc["k"]), "n": String(pc["n"])}
 	## Cualquier fachada de manzana: se puede entrar (etapa 6). El tipo y el
 	## nombre salen del tramo de calle, así que son siempre los mismos.
@@ -377,7 +311,8 @@ func _physics_process(delta: float) -> void:
 	for _k in trozos:
 		if not _mover_un_trozo(paso_total / float(trozos), r):
 			break
-	cuerpo.rotation.y = rumbo
+	## Giro con inercia (26-10, §2.2e P2): el cuerpo persigue el rumbo en vez de saltar a él.
+	cuerpo.rotation.y = lerp_angle(cuerpo.rotation.y, rumbo, 1.0 - exp(-9.0 * delta))
 	if modo == "coche":
 		cuerpo.rotation.x = _cabeceo
 		cuerpo.rotation.z = _balanceo
@@ -409,6 +344,8 @@ func _physics_process(delta: float) -> void:
 		VEL_COCHE * 3.6 if modo == "coche" else VEL_CORRER * 3.6, absf(vel) * delta)
 	_hud.text = (Idiomas.t("🚗 Conduciendo") if modo == "coche" else Idiomas.t("🚶 A pie")) + Idiomas.t("  ·  %d km/h  ·  W/S/A/D o mando · %sE: interactuar · Esc: volver al mapa") % [
 		int(absf(vel) * 3.6), "" if modo == "coche" else Idiomas.t("Mayús: correr · V: vista · ")]
+	if vida != null:
+		_hud.text = "🕒 %s · %s" % [vida.etiqueta_hora(), _hud.text]
 	## Dónde estás: el nombre de la calle (o el cruce).
 	if cb != null and cb.expansion != null:
 		var calle := cb.expansion.nombre_calle_en(cuerpo.position)
@@ -437,6 +374,9 @@ func _unhandled_input(ev: InputEvent) -> void:
 	elif k == KEY_E:
 		get_viewport().set_input_as_handled()
 		_usar()
+	elif k == KEY_T and vida != null:
+		get_viewport().set_input_as_handled()
+		vida.abrir_telefono()
 	elif k == KEY_V and modo == "coche" and estado == "calle":
 		cam_coche = (cam_coche + 1) % 3
 		_aviso.text = [Idiomas.t("Cámara: tercera persona"), Idiomas.t("Cámara: capó"), Idiomas.t("Cámara: primera persona")][cam_coche]

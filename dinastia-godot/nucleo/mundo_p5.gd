@@ -1,5 +1,5 @@
 extends "res://nucleo/mundo_p5_p2.gd"
-## [Capa 6/9 de `mundo.gd`] La semana, fases 14-21 (módulos del club, banco, ingresos comerciales,
+## [Capa 7/10 de `mundo.gd`] avanzar_semana, _semana_modulos_del_club, _semana_banco, _semana_ingresos_comerciales, _semana_enfermeria, _semana_entrenamiento … (+3)
 ## enfermería, entrenamiento, federación y plantel, continental y copa) y el guion `avanzar_semana`.
 
 ## Avanza una semana: jornada, dinero, mercado y recuperación, en ese orden.
@@ -70,6 +70,10 @@ func _semana_modulos_del_club() -> void:
 	if vida != null and mi_club() != null and roles != null:
 		vida.semana(mi_club(), roles, anio, semana, _resultado_semana)
 		_resultado_semana = 2
+	if citas != null and mi_club() != null:
+		citas.semana(self)   ## fase 4: las citas de la semana que empieza
+	if afinidad != null:
+		afinidad.semana(anio, semana)   ## fase 4, bloque 7: −1 a quien no habló esta semana
 
 ## FASE 15 · EL BANCO: sobregiro, liquidación e insolvencia.
 func _semana_banco() -> void:

@@ -1,5 +1,5 @@
 extends RefCounted
-## [Capa 1/2 de `pantalla_editor.gd`] _init, _texto_con, _pintar_editor_competiciones, _fila_mas_menos, _pintar_editor_clubes, _rejilla_editor … (+6)
+## [Capa 1/2 de `pantalla_editor.gd`] _init, _texto_con, _par, _letra_12, _pintar_editor_competiciones, _fila_mas_menos … (+6)
 
 ## EL EDITOR: competiciones, clubes, jugadores y CSV.
 ##

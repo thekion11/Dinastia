@@ -1,6 +1,6 @@
 class_name MandoGiratorio
 extends "res://ui/componentes/mando_giratorio_p1.gd"
-## [Capa 2/2 de `mando_giratorio.gd`] _ready, _process, _reiniciar, _gui_input, _cortar, _columna … (+1)
+## [Capa 2/2 de `mando_giratorio.gd`] _ready, _process, _reiniciar, _gui_input, _lineas, _cortar … (+2)
 
 ## La capa de las etiquetas va ENCIMA del 3D: dibujadas en el propio control
 ## quedaban debajo del `SubViewportContainer` y el mando tapaba sus textos.
