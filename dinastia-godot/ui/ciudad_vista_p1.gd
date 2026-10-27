@@ -126,6 +126,7 @@ func _saturacion_animo() -> float:
 ## el cambio de color va siempre con la altura del sol, que es lo que pasa de
 ## verdad.
 func _aplicar_hora() -> void:
+	var sol_nominal := 1.0   ## energía nominal / real del sol: el halo del cielo no debe crecer con el refuerzo del sol bajo
 	## La gente del club del estadio trabaja de 8 a 21 h.
 	PersonalEstadio.hora = _hora
 	## Altura del sol: -1 a medianoche, +1 a mediodía. El seno hace justo esta
@@ -174,7 +175,9 @@ func _aplicar_hora() -> void:
 		## lavados, casi blancos. El sol de mediodía quema, pero la cámara de
 		## este juego no es una cámara real sin diafragma. Y 0,30 de noche, no
 		## 0,06: con 0,06 no se veía el suelo.
-		_sol.light_energy = lerpf(0.34, 1.15, dia) + dorada * 0.3 + bajo * 1.1
+		var energia_nominal: float = lerpf(0.34, 1.15, dia) + dorada * 0.3
+		_sol.light_energy = energia_nominal + bajo * 1.1
+		sol_nominal = energia_nominal / maxf(_sol.light_energy, 0.01)
 		_sol.shadow_enabled = dia > 0.05
 
 	if _cielo != null:
@@ -185,8 +188,8 @@ func _aplicar_hora() -> void:
 		var hor_dia := Color(0.78, 0.86, 0.94)
 		var hor_rasante := Color(0.98, 0.62, 0.34)
 		var hor_noche := Color(0.11, 0.14, 0.26)
-		_cielo.set_shader_parameter("top_color", top_noche.lerp(top_dia, dia))
-		var horizonte := hor_dia.lerp(hor_rasante, clampf(rasante + dorada * 0.45, 0.0, 1.0))
+		_cielo.set_shader_parameter("top_color", top_noche.lerp(top_dia, dia).lerp(Color(0.50, 0.40, 0.66), dorada * 0.4))   ## malva en lo alto con el sol bajo
+		var horizonte := hor_dia.lerp(hor_rasante, clampf(rasante + dorada * 0.75, 0.0, 1.0))
 		_cielo.set_shader_parameter("horizon_color", hor_noche.lerp(horizonte, clampf(dia + rasante, 0.0, 1.0)))
 		## El suelo del cielo sigue al césped -ver la nota de arriba- pero se
 		## apaga de noche, o el horizonte quedaría verde fosforito a las 3 AM.
@@ -196,6 +199,7 @@ func _aplicar_hora() -> void:
 		## Las estrellas son del cielo nocturno cerrado, no de todo lo que no
 		## sea "pleno día": con `1.0-dia` asomaban ya a media tarde.
 		_cielo.set_shader_parameter("noche_cantidad", noche)
+		_cielo.set_shader_parameter("halo_escala", sol_nominal)
 
 	if _env != null:
 		## De noche hay que abrir el diafragma o no se ve nada; de día cerrarlo
