@@ -58,3 +58,5 @@ dinastia-godot/assets/ciudad/maquina_peluches.glb -filter -diff -merge binary
 dinastia-godot/assets/peluches/*.glb -filter -diff -merge binary
 # El trofeo base del dueño (gold+trophy.glb del Drive, 3 copas de ~700 caras, 157 KB, 27-10-2026): archivo normal. Los trofeos de cada club salen de él.
 dinastia-godot/assets/trofeos/*.glb -filter -diff -merge binary
+# Las dos matas de hierba silvestre del grass.blend del dueño (Drive, 27-10-2026; texturas a 512 px, 590 KB): archivos normales.
+dinastia-godot/assets/pasto/*.glb -filter -diff -merge binary
