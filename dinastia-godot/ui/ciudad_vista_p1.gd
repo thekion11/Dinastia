@@ -188,8 +188,8 @@ func _aplicar_hora() -> void:
 		var hor_dia := Color(0.78, 0.86, 0.94)
 		var hor_rasante := Color(0.98, 0.62, 0.34)
 		var hor_noche := Color(0.11, 0.14, 0.26)
-		_cielo.set_shader_parameter("top_color", top_noche.lerp(top_dia, dia))
-		var horizonte := hor_dia.lerp(hor_rasante, clampf(rasante + dorada * 0.45, 0.0, 1.0))
+		_cielo.set_shader_parameter("top_color", top_noche.lerp(top_dia, dia).lerp(Color(0.50, 0.40, 0.66), dorada * 0.4))   ## malva en lo alto con el sol bajo
+		var horizonte := hor_dia.lerp(hor_rasante, clampf(rasante + dorada * 0.75, 0.0, 1.0))
 		_cielo.set_shader_parameter("horizon_color", hor_noche.lerp(horizonte, clampf(dia + rasante, 0.0, 1.0)))
 		## El suelo del cielo sigue al césped -ver la nota de arriba- pero se
 		## apaga de noche, o el horizonte quedaría verde fosforito a las 3 AM.
