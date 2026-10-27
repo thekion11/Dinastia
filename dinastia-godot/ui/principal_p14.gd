@@ -1,76 +1,13 @@
 extends "res://ui/principal_p13.gd"
 ## [Capa 14/17 de `principal.gd`] _enviar_oferta_negociacion, _al_ajustar_rol_neg, _al_ajustar_campo_neg y los puentes a `Hubs` (carril y hubs)
 
-func _enviar_oferta_negociacion() -> void:
-	var n := mundo.mercado.negociacion
-	if n == null:
-		return
-	var j := n.jugador
-	var res := n.enviar_oferta()
-	_negociacion_ultimo = res
-	var tipo := String(res.get("tipo", ""))
-	match tipo:
-		"sin_caja":
-			_escribir("[color=#e05555]%s[/color] %s" % [Idiomas.t("No te alcanza:"),
-				Idiomas.t("la parte fija más la comisión cuesta %s.") % _dinero(int(res.get("hace_falta", 0)))])
-		"club_pide_mas":
-			## Plantillas con `Idiomas.t` (s3): `prefiere` y `motivo` ya llegan traducidos del núcleo.
-			_escribir("[color=#c9a227]%s[/color] %s" % [
-				Idiomas.t("↩️ Contraoferta de %s.") % ((mundo.clubes.get(j.club_id) as Club).nombre if mundo.clubes.has(j.club_id) else Idiomas.t("el club")),
-				Idiomas.t("Faltan unos %s y prefieren %s.") % [_dinero(int(res.get("falta", 0))), String(res.get("prefiere", ""))]])
-		"rota":
-			_escribir("[color=#e05555]❌ Negociación rota.[/color] El club se levantó de la mesa por %s." % j.nombre)
-			mundo.mercado.cerrar_negociacion()
-		"rival_traspaso", "rival_firma":
-			var rc: Club = res.get("club")
-			_escribir("[color=#e05555]💥 Fichaje perdido:[/color] %s cerró el traspaso de %s por %s mientras seguías negociando." % [
-				rc.nombre if rc else "otro club", j.nombre, _dinero(int(res.get("precio", 0)))])
-			mundo.mercado.cerrar_negociacion()
-		"jugador_no":
-			_escribir("[color=#c9a227]%s[/color] %s" % [Idiomas.t("%s todavía no firma.") % j.nombre, String(res.get("motivo", ""))])
-		"jugador_rota":
-			_escribir("[color=#e05555]%s[/color] %s %s" % [Idiomas.t("❌ %s dice que no.") % j.nombre, String(res.get("motivo", "")),
-				Idiomas.t("No se sienta a hablar de él por un tiempo.")])
-			mundo.mercado.cerrar_negociacion()
-		"cerrado":
-			var r: Dictionary = res.get("resumen", {})
-			Sonido.toca("fichaje")
-			_escribir("[color=#4caf6d][b]✅ Fichaje cerrado:[/b][/color] %s firma por %d temporadas con ficha de %s/semana." % [
-				j.nombre, int(r.get("anios", n.anios)), _dinero(int(r.get("sueldo", n.sueldo)))])
-			mundo.mercado.cerrar_negociacion()
-			_negociacion_ultimo = {}
-	_refrescar()
+## Puentes (fase 6, paso 7): viven en `ui/principal/acciones_fichaje.gd`.
+func _enviar_oferta_negociacion() -> void: _acciones_fichaje._enviar_oferta_negociacion()
+func _al_ajustar_rol_neg(rol: String) -> void: _acciones_fichaje._al_ajustar_rol_neg(rol)
+func _al_ajustar_campo_neg(campo: String, delta: int) -> void: _acciones_fichaje._al_ajustar_campo_neg(campo, delta)
 
-## "TU CARRERA" de `vDirectorio()`: el prestigio y la vitrina te siguen de club
-## en club -a diferencia de `Directiva.trofeos`, que se quedan en el que
-## dejas-, más las dos escaleras (ayudante→DT, DT→director→dueño) y lo que
-## trae cada peldaño: un entrenador empleado que puedes cambiar, o -siendo
-## dueño- meter capital propio y vender el club. Toda esta lógica ya estaba
-## escrita y probada en `Roles`; no había ninguna pantalla que la mostrara.
 
-# ---------------------------------------------------------------------------
-#  HANDLERS DE SEÑALES — PanelMercado
-#  Los conecta _construir(); los ejecuta Principal porque son los únicos
-#  que tienen acceso a `mundo` para modificarlo.
-# ---------------------------------------------------------------------------
 
-## Ajusta el rol prometido en la negociación activa. La señal `"__clausula__"`
-## es el caso especial de alternar la cláusula de rescisión.
-func _al_ajustar_rol_neg(rol: String) -> void:
-	if mundo == null or mundo.mercado.negociacion == null:
-		return
-	if rol == "__clausula__":
-		mundo.mercado.negociacion.alternar_clausula()
-	else:
-		mundo.mercado.negociacion.ajustar_rol(rol)
-	_refrescar()
-
-## Ajusta un campo numérico de la negociación activa (fijo, cuotas, bonos…).
-func _al_ajustar_campo_neg(campo: String, delta: int) -> void:
-	if mundo == null or mundo.mercado.negociacion == null:
-		return
-	mundo.mercado.negociacion.ajustar(campo, delta)
-	_refrescar()
 
 func _animar_pestana() -> void:
 	var pag := _pestanas.get_current_tab_control()

@@ -8,23 +8,30 @@ extends RefCounted
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
 var p: Principal
+## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
+## Por qué columna se ordena el plantel y en qué sentido. `vJugadores()` del
+## HTML deja ordenar por seis columnas; aquí se guarda entre repintados para que
+## avanzar una semana no te devuelva al orden por media.
+var _orden_plantel: String = "ovr"
+var _orden_plantel_desc: bool = true
+var _libres_filtro := "todos"
 
 func _init(principal: Principal) -> void:
 	p = principal
 
 func _pintar_plantel(c: Club) -> void:
-	PanelPlantel.pintar(p._lista_plantel, c, p.mundo, p._orden_plantel, p._orden_plantel_desc, p.COL_ACENTO,
+	PanelPlantel.pintar(p._lista_plantel, c, p.mundo, _orden_plantel, _orden_plantel_desc, p.COL_ACENTO,
 		func(color: Color) -> Color: return p._color_de_paleta(color),
 		func(g: GridContainer, j: Jugador, columnas: Array, colores: Array) -> void:
 			p._fila_jugador(g, j, columnas, colores),
 		func(clave: String) -> void:
 			## Nombre y posición se leen de la A a la Z; los números, de mayor a
 			## menor. Es lo que uno espera sin pensarlo.
-			if p._orden_plantel == clave:
-				p._orden_plantel_desc = not p._orden_plantel_desc
+			if _orden_plantel == clave:
+				_orden_plantel_desc = not _orden_plantel_desc
 			else:
-				p._orden_plantel = clave
-				p._orden_plantel_desc = clave not in ["nombre", "pos"]
+				_orden_plantel = clave
+				_orden_plantel_desc = clave not in ["nombre", "pos"]
 			p._refrescar())
 	## Planificador, tablón de la liga y banquillos calientes (filas 19-21 s4, 26-10-2026).
 	PanelPlanificacion.pintar(p._lista_plantel, p.mundo, p._texto, Callable())
@@ -69,15 +76,15 @@ func _pintar_libres(c: Club) -> void:
 	var b_todos := Button.new()
 	b_todos.text = Idiomas.t("Todos")
 	b_todos.toggle_mode = true
-	b_todos.button_pressed = p._libres_filtro == "todos"
-	b_todos.pressed.connect(func() -> void: p._libres_filtro = "todos"; _pintar_libres(c))
+	b_todos.button_pressed = _libres_filtro == "todos"
+	b_todos.pressed.connect(func() -> void: _libres_filtro = "todos"; _pintar_libres(c))
 	filtros.add_child(b_todos)
 	for dem: String in Datos.posd().keys():
 		var bd := Button.new()
 		bd.text = dem
 		bd.toggle_mode = true
-		bd.button_pressed = p._libres_filtro == dem
-		bd.pressed.connect(func() -> void: p._libres_filtro = dem; _pintar_libres(c))
+		bd.button_pressed = _libres_filtro == dem
+		bd.pressed.connect(func() -> void: _libres_filtro = dem; _pintar_libres(c))
 		filtros.add_child(bd)
 	p._lista_libres.add_child(HSeparator.new())
 
@@ -89,7 +96,7 @@ func _pintar_libres(c: Club) -> void:
 		p._lista_libres.add_child(HSeparator.new())
 
 	var lista := p.mundo.libres.filter(func(j: Jugador) -> bool:
-		return p._libres_filtro == "todos" or j.pos_e == p._libres_filtro)
+		return _libres_filtro == "todos" or j.pos_e == _libres_filtro)
 	if lista.is_empty():
 		var nada := p._texto(12, Principal.COL_SUAVE)
 		nada.text = Idiomas.t("No hay agentes libres de ese puesto ahora mismo.")

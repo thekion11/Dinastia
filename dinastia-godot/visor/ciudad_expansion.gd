@@ -338,7 +338,8 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 		var largo2 := t.largo_de(id2)
 		var col_bus := Color(0.85, 0.15, 0.12) if String(l["nombre"]).contains("10") else Color(0.15, 0.4, 0.8)
 		for k in 2:
-			var nb: Node3D = CityBuilder.autobus(col_bus, String(l["nombre"]).to_upper())
+			var num := String(l["nombre"]).get_slice(" ", 1)
+			var nb: Node3D = CityBuilder.autobus(col_bus, "%s · %s" % [num, String(l.get("destino", "CIRCULAR"))], num)
 			t.agregar_vehiculo(nb, id2, largo2 * float(k) * 0.5, 9.0, 0.0, 0.0)
 			t.agregar_paradas_al_ultimo(paradas, 7.0)
 			t.marcar_cola_al_ultimo()
