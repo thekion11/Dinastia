@@ -358,8 +358,9 @@ cada hora del `Reloj` con el clima de la semana (viento mueve el parque eólico,
   PENDIENTE: los edificios de la superficie no cambian de aspecto con el corte (solo farolas); sonido ambiente; Forward+.
 - Hecho 27-10 (3.ª pasada): las redes se GUARDAN en la partida (`Mundo.redes_ciudad`, clave `redes_ciudad`; partida vieja = nuevas; ida y vuelta
   probada) y el móvil avisa de cortes e inundaciones nuevos.
-- PENDIENTE: sonido ambiente del subsuelo; averías visibles (obras, cuadrilla, camión cisterna);
-  apagón por sector en farolas y ventanas (hoy las farolas bajan todas a la vez); cables con caída;
+- Hecho: sonido ambiente del subsuelo con efectos ya existentes (zumbido «noche_estadio» y gotas «clic_suave»; sonidos propios, pendientes).
+- PENDIENTE: averías visibles (obras, cuadrilla, camión cisterna);
+  apagón por sector en las VENTANAS (las farolas ya van por sector desde el 27-10: `ciudad_expansion._farolas_sec`, capturas `apagon_sector_*`); cables con caída;
   coche con depósito real que dependa del repostaje.
 
 ### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
