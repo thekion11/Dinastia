@@ -363,7 +363,9 @@ era 0,24 m (humano 0,08-0,12): 5° de muslo hacia dentro en caminar/trote/correr
 (`CityBuilder.asientos`) y `GenteSentada` (`visor/gente_sentada.gd`, cuelga de `VidaCiudad`) sienta hasta 6 peatones con el clip
 «sentado» en los asientos a < 55 m (ocupación estable por hash de asiento y hora); el DT en el sofá encadena «sentarse» → «sentado»
 y se queda así hasta dar un paso (`_gesto_propio(gesto, luego)`); los vecinos ya charlaban con clip (6 s). Prueba `p3_sentados`;
-capturas antes/después `docs/04_auditorias/capturas_personajes/p3_sentados_{antes,despues}.jpg`. Falta P3: butacas del estadio y
+capturas antes/después `docs/04_auditorias/capturas_personajes/p3_sentados_{antes,despues}.jpg`. P3 pasada 3 (27-10, ESPERAR): cuando un peatón se para por su cuenta ya no se queda siempre quieto: la mitad mira el móvil
+(clip «Idle_Torch» del pack con un móvil en la palma, `PeatonVida`), un cuarto habla por teléfono y el resto espera; captura
+`p3_espera_movil.jpg`. Falta P3: butacas del estadio y
 banquillo fuera del partido, abrir puertas, escaleras; y P4 (piel/pelo/ropa). VEREDICTO DEL DUEÑO (27-10): «MEJORAR» (P1-P3 no bastan: seguir subiendo anatomía, movimiento, animaciones y acabado; la C2 de ciudad sigue hasta agotar P0 y P1).
 
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)

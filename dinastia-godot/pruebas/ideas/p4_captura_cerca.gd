@@ -74,5 +74,16 @@ func _ready() -> void:
 	_cam.position = Vector3(0, 1.1, -3.4)
 	_cam.look_at(Vector3(0, 1.0, 0), Vector3.UP)
 	await _foto("cuerpo")
+	## El de la izquierda mira el móvil; el de la derecha habla por teléfono (P3, pasada 3).
+	var d_izq: Dictionary = cuerpos[0]
+	AnimExtra.asegurar(d_izq["anim"], d_izq["esqueleto"], "mirar_movil")
+	Mini3D.anim(d_izq, "mirar_movil", "")
+	PeatonVida.movil({"nodo": d_izq["nodo"]}, true)
+	var d_der: Dictionary = cuerpos[cuerpos.size() - 1]
+	AnimExtra.asegurar(d_der["anim"], d_der["esqueleto"], "charla")
+	Mini3D.anim(d_der, "charla", "")
+	PeatonVida.movil({"nodo": d_der["nodo"]}, true)
+	await get_tree().create_timer(1.2).timeout
+	await _foto("espera")
 	print("capturas hechas")
 	get_tree().quit()

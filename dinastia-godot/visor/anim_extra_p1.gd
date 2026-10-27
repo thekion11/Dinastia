@@ -29,6 +29,7 @@ const UAL := {
 	"atarse_botin": "Fixing_Kneeling", "baile": "Dance_Loop", "charla": "Idle_Talking_Loop",
 	"empujar": "Push_Loop", "saludo_mano": "Interact", "recoger_balon": "PickUp_Table",
 	"caminar_formal": "Walk_Formal_Loop", "sentarse": "Sitting_Enter", "levantarse": "Sitting_Exit",
+	"mirar_movil": "Idle_Torch",
 	"sentado_charla": "Sitting_Talking_Loop", "sentado": "Sitting_Idle_Loop", "pedir_con_brazo": "Spell_Simple_Shoot",
 	"brazos_al_frente": "Spell_Simple_Enter", "puno_al_aire": "Punch_Jab", "trotar_atras": "Jog_Fwd_Loop",
 }

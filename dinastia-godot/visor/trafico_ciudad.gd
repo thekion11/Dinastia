@@ -38,6 +38,7 @@ func _process(delta_real: float) -> void:
 			v["espera"] = float(v["espera"]) - delta
 			if float(v["espera"]) <= 0.0 and v.has("pausa"):
 				v.erase("pausa")
+				PeatonVida.movil(v, false)
 				_animar(v, "caminar")
 			continue
 		## NPCs CON VIDA (etapa 1): de vez en cuando un peatón se detiene a mirar
@@ -46,7 +47,7 @@ func _process(delta_real: float) -> void:
 		if es_peaton and randf() < 0.0004 * delta * 60.0:
 			v["espera"] = randf_range(3.0, 9.0)
 			v["pausa"] = true
-			_animar(v, "parado")
+			PeatonVida.esperar(self, v, randf())
 			continue
 		var avance := float(v["vel"]) * delta
 		var ruta := int(v["ruta"])

@@ -62,6 +62,24 @@ func _probar_async() -> void:
 	_e.cuerpo.position = p + Vector3(200.0, 0, 0)
 	gs.revisar()
 	_comprobar(not gs.cuerpos.has(i_ok), "al alejarte, se va")
+	## Esperar con vida (P3, pasada 3): tres variantes y el móvil en la mano.
+	_comprobar(PeatonVida.variante(0.1) == 0 and PeatonVida.variante(0.6) == 1 and PeatonVida.variante(0.9) == 2, "la espera tiene tres variantes (móvil, llamada, quieto)")
+	var rng_p := RandomNumberGenerator.new()
+	rng_p.seed = 5
+	var dp := PeatonQ.crear(rng_p)
+	if not dp.is_empty():
+		add_child(dp["nodo"])
+		PeatonQ.terminar(dp)
+		var vv := {"nodo": dp["nodo"]}
+		PeatonVida.movil(vv, true)
+		var esqp: Skeleton3D = FutbolistaQ.esqueleto_de(dp["nodo"])
+		_comprobar(esqp != null and esqp.find_child("Movil", false, false) != null, "el móvil cuelga de la mano derecha")
+		PeatonVida.movil(vv, true)
+		_comprobar(esqp.find_children("Movil", "", false, false).size() == 1, "y no se duplica")
+		PeatonVida.movil(vv, false)
+		await _frames(1)
+		_comprobar(esqp.find_child("Movil", false, false) == null, "al reanudar la marcha se guarda")
+		_comprobar(AnimExtra.asegurar(dp["anim"], esqp, "mirar_movil"), "el clip de mirar el móvil existe en el pack")
 	## El DT en el sofá: sentarse y quedarse sentado.
 	_e._gesto_propio("sentarse", "sentado")
 	_comprobar(_e._anim != null and _e._anim.current_animation == "sentarse" and _e._anim.get_queue().has("sentado"), "«sentarse» encadena «sentado»")
