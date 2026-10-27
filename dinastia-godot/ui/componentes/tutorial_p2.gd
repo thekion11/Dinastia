@@ -149,6 +149,8 @@ func _colocar() -> void:
 	var obj := _objetivo()
 	if obj == null:
 		_marco.visible = false
+		if _flecha != null:
+			_flecha.visible = false
 		_poner_sombras(Rect2(pantalla * 0.5, Vector2.ZERO), pantalla, true)
 		_tarjeta.position = Vector2((pantalla.x - _tarjeta.size.x) * 0.5, maxf(8.0, pantalla.y - _tarjeta.size.y - 28.0))
 		return
@@ -159,6 +161,7 @@ func _colocar() -> void:
 	## El latido: el borde respira para que el ojo lo encuentre.
 	_marco.modulate.a = 0.65 + 0.35 * sin(_t * 5.0)
 	_poner_sombras(r, pantalla, false)
+	_flecha_mision(r)
 	## La tarjeta debajo del objetivo si cabe; si no, encima; si tampoco, al
 	## lado. Siempre dentro de la pantalla.
 	var ts := _tarjeta.size
@@ -172,6 +175,25 @@ func _colocar() -> void:
 	pos.x = clampf(pos.x, 8.0, maxf(8.0, pantalla.x - ts.x - 8.0))
 	pos.y = clampf(pos.y, 8.0, maxf(8.0, pantalla.y - ts.y - 8.0))
 	_tarjeta.position = pos
+
+## LA FLECHA DE LA MISIÓN (semana 7 del plan, 27-10-2026): un triángulo dorado que bota sobre el control que
+## hay que tocar (debajo si el control está pegado arriba), mientras la misión no esté cumplida.
+var _flecha: Polygon2D
+
+func _flecha_mision(r: Rect2) -> void:
+	if _flecha == null:
+		_flecha = Polygon2D.new()
+		_flecha.polygon = PackedVector2Array([Vector2(-13, -16), Vector2(13, -16), Vector2(0, 0)])
+		_flecha.color = COL_ORO
+		add_child(_flecha)
+	var mision := paso_actual().has("mision") and not _cumplidas.has(_i)
+	_flecha.visible = mision
+	if not mision:
+		return
+	var arriba := r.position.y > 40.0
+	var bote := absf(sin(_t * 5.0)) * 7.0
+	_flecha.scale = Vector2(1.0, 1.0 if arriba else -1.0)
+	_flecha.position = Vector2(r.get_center().x, r.position.y - 4.0 - bote) if arriba else Vector2(r.get_center().x, r.end.y + 4.0 + bote)
 
 func _mostrar(i: int) -> void:
 	if i >= _pasos.size():
