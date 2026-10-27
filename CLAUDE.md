@@ -49,3 +49,8 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     por él. Órdenes nuevas: el MUSEO tiene que poder EXTENDERSE (por eso el ascensor) con una animación de expansión; la CIUDAD
     ENTERA más completa: muchas partes sin rellenar y RECURSOS SIN USAR (inventario en `docs/04_auditorias/recursos_sin_usar.md`).
     «Lo del museo y rellenar ciudad» va a la sesión ejecutora.
+13. (27-10, decisiones del dueño) TÁCTICA: sí, pero en la pasada FINAL del motor, junto con lo visual, la IA de la CPU, el
+    comportamiento, el físico, el pasto (regalo `grass.blend` en Drive, a evaluar), las físicas y más sonidos. VEHÍCULOS: suavizar y
+    hacer más realistas autos, metro y bus, crear el tren y mejorar el teleférico. TIRO_PULIDO: ENCENDIDO, pero hay que pulirlo más.
+    ESTADIOS: separar un poco a los aficionados en las butacas, subir la calidad de las butacas, mejorar los accesos y colorear las
+    butacas por nivel según el color del club (y elegible en la personalización del menú inicial).
