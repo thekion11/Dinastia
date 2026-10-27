@@ -359,6 +359,7 @@ func _oficina() -> void:
 		_poner("mini_arcade/ticket-machine", Vector3(-3.6, 0, 5.0), PI)
 	else:
 		_cartel("💼 " + _sala_nombre().to_upper(), Vector3(4.2, 2.55, -5.95), 32)
+		InteriorComercioExtra.oficina(self)
 		_mesa_con_sillas(Vector3(4.6, 0, 1.6), 0.0, "table", 2.2, 2, "chairModernCushion", 0.5, _calle(), "", ["laptop", "books", "comida/cup-coffee"])
 		_pantalla(Vector3(7.96, 1.7, 1.6), Vector2(1.5, 0.85), Color(0.3, 0.5, 0.75), -PI * 0.5)
 	## Dos puestos más contra la pared izquierda.
