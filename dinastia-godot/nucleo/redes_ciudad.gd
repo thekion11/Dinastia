@@ -346,6 +346,13 @@ func recibir_edificios(lista: Array) -> void:
 
 # ============================================================================ CONSULTAS
 
+## ¿Hay alguna avería abierta (luz, agua o drenaje) en el sector? Es lo que atiende la cuadrilla del 3D.
+func hay_averia(sec: Vector2i) -> bool:
+	for red: String in cortes:
+		if (cortes[red] as Dictionary).has(sec):
+			return true
+	return false
+
 func hay_luz(sec: Vector2i) -> bool:
 	return bool(luz.get(sec, true))
 

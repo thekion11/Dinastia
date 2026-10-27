@@ -358,11 +358,15 @@ cada hora del `Reloj` con el clima de la semana (viento mueve el parque eólico,
   PENDIENTE: los edificios de la superficie no cambian de aspecto con el corte (solo farolas); sonido ambiente; Forward+.
 - Hecho 27-10 (3.ª pasada): las redes se GUARDAN en la partida (`Mundo.redes_ciudad`, clave `redes_ciudad`; partida vieja = nuevas; ida y vuelta
   probada) y el móvil avisa de cortes e inundaciones nuevos.
+- Hecho 27-10: averías visibles: una cuadrilla (camión, conos y baliza) junto a la tapa central de cada sector con avería abierta; desaparece al repararse (`RedesCiudadVista._cuadrillas`).
 - Hecho: sonido ambiente del subsuelo con efectos ya existentes (zumbido «noche_estadio» y gotas «clic_suave»; sonidos propios, pendientes).
-- PENDIENTE: averías visibles (obras, cuadrilla, camión cisterna);
+- PENDIENTE: camión cisterna;
   apagón por sector en las VENTANAS (las farolas ya van por sector desde el 27-10: `ciudad_expansion._farolas_sec`, capturas `apagon_sector_*`); cables con caída;
   coche con depósito real que dependa del repostaje.
 
+- FORWARD+ DEL APAGÓN VISTO (27-10, líder): `pruebas/ideas/p_captura_apagon.tscn`, de noche y con la ciudad entera; con 4 sectores cortados
+  sus farolas se apagan y el resto sigue (`capturas_subsuelo/forward_apagon_ciudad_{antes,despues}.jpg`). Las VENTANAS siguen encendidas:
+  falta la máscara por sector en `city_builder_p4._ventanas_mat` (cercanas) y en el shader de `ciudad_expansion_p7` (lejanas), midiendo draw calls.
 ### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
 
 Palabras del dueño: *«hay partes de la ciudad sin detalles y muy mejorables; los personajes se mueven de forma
@@ -2118,7 +2122,7 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - Balance (medido por `pruebas/ideas/eq_diez_temporadas.gd`, especial `todo`; 10 temporadas × 3 semillas): **el grande sin gestionar se hace rico** (rep 88→96, sueldos 17-27 % de los ingresos, caja 6,6→65-95 M en 10 años; pasa M-208 porque su referencia sube con la rep). El chico sin gestionar pierde ~1-2 M/año también en Primera (resultado previsto −1,1 a −1,7 M): es estructural, no del descenso. s303 GRANDE da «último año 11 %» en t1 (rango 12-38 %).
 - `Mundo.generar(["CHI"], semilla)` da el MISMO mundo en t0 con 101, 202 y 303 (la semilla solo cambia la simulación): ¿buscado?
 - Pantalla de entrada: pendiente de tu aprobación como escena principal (`Inicio.flujo_nuevo`, §0).
-- Carrera: falta la animación de parada del portero en modo jugador.
+- Carrera/partido jugable: el portero que no llega a un tiro ya se estira hacia el balón y queda batido (27-10, `MotorJugable._reaccion_portero`); falta verlo con la cámara real en un gol y decidir si la estirada fallida necesita un clip «batido» propio.
 - Licencias 🟡 que quedan (sesión 6, `docs/04_auditorias/sesion_6.md`): `persona_realista.glb` → relevo de MakeHuman (CC0) ya enganchado en `visor/persona_mh.gd`: falta que el dueño suba por LFS `assets/personas/persona_mh_cuerpo.glb` y `persona_mh_ropa.glb` (generar con `herramientas/makehuman/mh_generar.py <datos> <Quaternius.gltf> persona_mh m` y renombrar) cuando el traje esté pulido (bajo de la chaqueta dentado, cejas manchadas), y luego excluir `persona_realista*` de las exportaciones públicas; `anims_futbol/` → la vía barata es guardar la captura de la página de Gumroad (dueño); CMU sirve de licencia pero exige retargetear BVH en Blender y no trae regates; `vagabond.obj` (velero), `arco_entrada`, `asientos_lod`, `podio_prensa` y las insignias de Canva siguen sin confirmar.
 
 - Primera hora (informe onb, 26-10): cerrado el 26-10 (todo `grab_focus` diferido de `ui/entrada/*` pasa por `FocoSeguro.dar`, que comprueba que el control siga en el árbol; el resto es síncrono o va con `is_inside_tree()`). Lo demás (cabecera con ayudas, objetivos que ceden la ficha, reabrir el tutorial, carril de chips de los hubs) lo cerró la sesión 3.

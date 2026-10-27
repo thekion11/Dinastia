@@ -75,9 +75,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 		if tz > 0.0 and tz < 1.6:
 			var cruce := b + vel_balon * tz
 			cruce.y = b.y + vel_balon.y * tz - 0.5 * G * tz * tz
-			## UNA decisión por disparo (13-10-2026): antes se tiraba el dado en
-			## cada fotograma del vuelo -20 o 30 oportunidades- y el portero lo
-			## paraba casi todo (8 de cada 10 en la sonda).
+			## UNA decisión por disparo (13-10): con un dado por fotograma lo paraba casi todo (8 de 10).
 			if absf(cruce.x) < PALO + 0.8 and cruce.y < LARGUERO + 0.4 and int(p.get("_patada_vista", -1)) != _n_patada:
 				## El usuario aún no eligió: se espera (sin gastar la decisión).
 				if manual and absf(guia) < 0.3 and tz > 0.55:
@@ -86,14 +84,11 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 				if PULIDO and String(_tiro_vivo.get("clase", "")) == "penal":
 					_penal_en_juego(p, cruce)
 					return true
-				## Alcance de la estirada: hasta ~3 m con un gran portero, y menos
-				## cuanto menos tiempo tiene para reaccionar (antes llegaba a 4 m
-				## en cualquier tiro). Arriba, a la escuadra, cuesta más.
+				## Alcance: hasta ~3 m con un gran portero, menos con menos tiempo; a la escuadra cuesta más.
 				var alcance: float = (1.1 + float(p["attr"]["div"]) * 2.0 + float(p["attr"]["ref"]) * 0.8) * clampf((tz - 0.1) * 2.4, 0.3, 1.0)
 				if cruce.y > 1.8:
 					alcance *= 0.85
-				## El alcance se mide donde está ÉL (adelantado tapa más ángulo),
-				## no en la línea de gol.
+				## El alcance se mide donde está ÉL (adelantado tapa más ángulo), no en la línea de gol.
 				var tg := clampf((pos(p).z - b.z) / vel_balon.z, 0.0, tz)
 				var cruce_gk := b + vel_balon * tg
 				cruce_gk.y = b.y + vel_balon.y * tg - 0.5 * G * tg * tg
@@ -112,6 +107,10 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 						alcance *= 1.1  ## Eligió bien: se anticipa un poco.
 				if lat < alcance and _rng.randf() < prob:
 					_parada(p, cruce_gk, lat > 1.2)
+					return true
+				## NO LLEGA (27-10, §8): se estira hacia el balón y queda batido (antes miraba quieto el gol).
+				if lat > 0.6:
+					_anim(p, "estirada_media_%s" % ("izq" if (cruce_gk.x - pos(p).x) * dir_ataque(bool(p["es_local"])) > 0.0 else "der"), true)
 					return true
 	return false
 
