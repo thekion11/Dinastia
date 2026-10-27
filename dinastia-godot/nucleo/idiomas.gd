@@ -23,6 +23,7 @@ func _cargar_extra() -> void:
 
 func _ready() -> void:
 	_cargar_extra()
+	TextoQueCabe.vigilar(get_tree())
 func _ordinales(texto: String) -> String:
 	if idioma == "fr":
 		if _re_ord_fr == null:

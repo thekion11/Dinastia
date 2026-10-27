@@ -151,7 +151,7 @@ func _pintar_embajador(d: Directiva) -> void:
 			nom2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			fila2.add_child(nom2)
 			var costo := 400000 + int(l.get("nivel", 80)) * 8000
-			p._boton("Firmar  %s" % p._dinero(costo), func() -> void: _contratar_embajador(l), fila2)
+			p._boton(Idiomas.t("Firmar  %s") % p._dinero(costo), func() -> void: _contratar_embajador(l), fila2)
 	p._lista_club.add_child(HSeparator.new())
 
 ## EL DIRECTORIO: quién te puso ahí, qué te pide y cuánto te aguanta.

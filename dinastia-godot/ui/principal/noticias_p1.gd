@@ -218,7 +218,7 @@ func _conectar_1() -> void:
 				var gano: Club = r.get("pasa")
 				if gano == p.mundo.mi_club():
 					Aviso.mostrar(p, "dinero", "🎟️", "Pasas de ronda",
-						"%s superada. Cada eliminatoria que se gana es taquilla y premio." % nombre_ronda, "ronda_superada")
+						Idiomas.t("%s superada.") % Idiomas.t(nombre_ronda) + " " + Idiomas.t("Cada eliminatoria que se gana es taquilla y premio."), "ronda_superada")
 					return)
 	_conectar_1_2()
 	_conectar_1_3()
@@ -277,8 +277,8 @@ func _conectar_1_2() -> void:
 				## rutina; perder a alguien un mes y medio cambia la temporada,
 				## y es justo lo que se pasa por alto leyendo el registro.
 				if semanas >= 6:
-					Aviso.mostrar(p, "alerta", "🚑", "Lesión grave: %s" % j.nombre,
-						"%s. Se pierde %d semanas." % [tipo, semanas], "medico_parte")
+					Aviso.mostrar(p, "alerta", "🚑", Idiomas.t("Lesión grave: %s") % j.nombre,
+						Idiomas.t("%s. Se pierde %d semanas.") % [tipo, semanas], "medico_parte")
 				## LA VENTANA DE EMERGENCIA. `Roles.gd` lo deja escrito en su propio
 				## comentario -"quien lleve las lesiones la abre llamando a
 				## abrir_emergencia()"- y nadie la llamaba: perder a un titular 12+
