@@ -6096,7 +6096,8 @@
   "Máquina expendedora": "Vending machine",
   "Bebida energética": "Energy drink",
   "Bocadillo envasado": "Packaged sandwich",
-  "Botella de agua": "Bottle of water"
+  "Botella de agua": "Bottle of water",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: buy from the vending machine"
  },
  "pt": {
   "Historia": "História",
@@ -12195,7 +12196,8 @@
   "Máquina expendedora": "Máquina de venda automática",
   "Bebida energética": "Bebida energética",
   "Bocadillo envasado": "Sandes embalada",
-  "Botella de agua": "Garrafa de água"
+  "Botella de agua": "Garrafa de água",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: comprar na máquina"
  },
  "patrones": [
   [
@@ -23906,7 +23908,8 @@
   "Máquina expendedora": "Distributeur automatique",
   "Bebida energética": "Boisson énergisante",
   "Bocadillo envasado": "Sandwich emballé",
-  "Botella de agua": "Bouteille d'eau"
+  "Botella de agua": "Bouteille d'eau",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E : acheter au distributeur"
  },
  "it": {
   "Historia": "Storia",
@@ -30005,7 +30008,8 @@
   "Máquina expendedora": "Distributore automatico",
   "Bebida energética": "Bevanda energetica",
   "Bocadillo envasado": "Panino confezionato",
-  "Botella de agua": "Bottiglia d'acqua"
+  "Botella de agua": "Bottiglia d'acqua",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: compra dal distributore"
  },
  "de": {
   "Historia": "Geschichte",
@@ -36104,7 +36108,8 @@
   "Máquina expendedora": "Verkaufsautomat",
   "Bebida energética": "Energy-Drink",
   "Bocadillo envasado": "Verpacktes Sandwich",
-  "Botella de agua": "Flasche Wasser"
+  "Botella de agua": "Flasche Wasser",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: am Automaten kaufen"
  },
  "ca": {
   "Historia": "Història",
@@ -42203,7 +42208,8 @@
   "Máquina expendedora": "Màquina expenedora",
   "Bebida energética": "Beguda energètica",
   "Bocadillo envasado": "Entrepà envasat",
-  "Botella de agua": "Ampolla d'aigua"
+  "Botella de agua": "Ampolla d'aigua",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: comprar a la màquina"
  },
  "pl": {
   "Club": "Klub",
@@ -48581,7 +48587,8 @@
   "Máquina expendedora": "Automat sprzedający",
   "Bebida energética": "Napój energetyczny",
   "Bocadillo envasado": "Kanapka w opakowaniu",
-  "Botella de agua": "Butelka wody"
+  "Botella de agua": "Butelka wody",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: kup w automacie"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54959,6 +54966,7 @@
   "Máquina expendedora": "Otomat",
   "Bebida energética": "Enerji içeceği",
   "Bocadillo envasado": "Paketli sandviç",
-  "Botella de agua": "Su şişesi"
+  "Botella de agua": "Su şişesi",
+  "🥤 E: comprar en la máquina expendedora": "🥤 E: otomattan satın al"
  }
 }
