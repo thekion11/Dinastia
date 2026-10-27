@@ -111,6 +111,7 @@ func _jugar(a: Club, b: Club, semilla: int, tac: Array = [{}, {}], cansancio := 
 	motor.cansancio_real = cansancio
 	motor.tarjetas_reales = true
 	motor.preparar(lista, ball, "", semilla)
+	GestoTecnico.fijar_clima(motor, OS.get_environment("CLIMA"))   ## CLIMA=lluvia|nieve|tormenta|niebla (27-10)
 	## SIN_DUELOS=1 / SIN_CUERPOS=1: para medir qué cambia cada parte.
 	motor.duelos_activos = OS.get_environment("SIN_DUELOS") == ""
 	motor.cuerpos_activos = OS.get_environment("SIN_CUERPOS") == ""

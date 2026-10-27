@@ -15,7 +15,7 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 	p["vel"] = Vector3(hacia_x * (3.4 if estirada else 2.0), 0, 0)
 	p["objetivo"] = Vector3(pos(p).x + hacia_x, 0, pos(p).z)
 	var fuerza := vel_balon.length()
-	if not estirada and fuerza < 22.0 and _rng.randf() < float(p["attr"]["par"]) * 0.9:
+	if not estirada and fuerza < 22.0 and _rng.randf() < float(p["attr"]["par"]) * 0.9 * GestoTecnico.agarre(self):
 		_tomar(p)
 		## El balón va a las manos desde donde estaba (antes saltaba a ellas
 		## en un fotograma: «teletransporte» de hasta 2 m en la sonda, M-114).
@@ -254,11 +254,11 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 ## palo; `fuerza` ∈ [0, 1] es la carga. Mucha fuerza sin técnica se va alta.
 func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	var arco := _arco_rival(p)
-	var tec := float(p["attr"]["tir"])
+	var tec := GestoTecnico.tiro(p, _mod_tiro)   ## cada tiro pesa sus atributos (27-10)
 	## El error crece con la distancia: desde 25 m se falla mucho más que
 	## dentro del área (la sonda medía 8 de cada 10 tiros entre los palos).
 	var lejos := Vector2(pos(p).x - arco.x, pos(p).z - arco.z).length()
-	var error := ((1.0 - tec) * 2.6 + maxf(0.0, fuerza - 0.8) * 2.5) * (0.55 + lejos / 26.0) * (1.25 if _manual_tiro else 1.0) * _error_extra * preset_error
+	var error := ((1.0 - tec) * 2.6 + maxf(0.0, fuerza - 0.8) * 2.5) * (0.55 + lejos / 26.0) * (1.25 if _manual_tiro else 1.0) * _error_extra * preset_error * GestoTecnico.factor_pie(p, pos(p), arco) * GestoTecnico.factor_clima(self, _mod_tiro == "vaselina")
 	var clase := String(saque.get("tipo", "pie")) if estado == "saque" else "pie"
 	## LA PUNTERÍA DE VERDAD (25-10-2026). La sonda medía 3 de cada 4 tiros entre
 	## los palos (en el fútbol, 1 de cada 3; en FC, la mitad) y el portero los
