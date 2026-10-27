@@ -60,12 +60,9 @@ func _penal_en_juego(gk: Dictionary, cruce: Vector3) -> void:
 		gk["vel"] = Vector3(float(lado) * 6.0, 0, 0)
 		gk["objetivo"] = Vector3(pos(gk).x + float(lado) * 2.2, 0, pos(gk).z)
 
-## TIRO QUE VIENE: ¿llega a tapar? (sacado de `_ia_portero` el 25-10-2026 para
-## que el portero de la Carrera lo use desde `_control_usuario`). Devuelve true
-## si el portero ya actuó (parada o penal). `manual`: lo maneja el usuario, que
-## elige el lado con el stick (`guia`, X del mundo: 0 = no eligió). Mientras no
-## elige se espera a medio segundo del arco y la reacción automática es más floja; si
-## elige el lado equivocado no llega.
+## TIRO QUE VIENE: ¿llega a tapar? (de `_ia_portero`, 25-10, para el portero de la Carrera en `_control_usuario`).
+## Devuelve true si ya actuó (parada o penal). `manual`: lo maneja el usuario, que elige lado con el stick (`guia`,
+## X del mundo, 0 = no eligió); sin elegir espera a medio segundo y reacciona más flojo; si elige mal no llega.
 func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 	var b := balon.position
 	var arco := _arco_propio(p)
@@ -135,6 +132,10 @@ func _ia_portero(p: Dictionary) -> Vector3:
 	## Tiro que viene: ¿llega a tapar?
 	if _reaccion_portero(p):
 		return pos(p)
+	var sc := SalidaPortero.punto(self, p)   ## un centro que cae en su zona: sale a por él (semana 3)
+	if sc != Vector3.INF:
+		p["correr"] = true
+		return pos(p) if SalidaPortero.atrapar(self, p) else sc
 	## Balón suelto en su área y él llega antes: sale a por él.
 	if poseedor.is_empty() and _en_su_area(p, b) and b.y < 2.0:
 		var suyo := true

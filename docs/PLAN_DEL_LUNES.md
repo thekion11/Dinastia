@@ -463,7 +463,6 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 - [ ] Prueba en el banco: con presión alta se recupera más arriba (medido).
 
 ### Semana 3 (27-10 → 2-11) — Partido II: porteros, pases y presets
-- [ ] Portero que se coloca según el ángulo del tiro y sale a los centros.
 - [ ] Tiro bajo, pase al hueco con elección del receptor, menos rebotes al defender.
 - [ ] Preset Arcade / Realista.
 - [ ] Recorrido de la etapa 5 (física): balón, choques, objetos que no se atraviesan.
