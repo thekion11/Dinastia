@@ -11,6 +11,8 @@ static func montar(ex: CiudadExpansion, c: Vector3, w: float, f: float) -> void:
 	var blanco := b._mat_simple(Color(0.93, 0.93, 0.94), 0.5)
 	var rojo := b._mat_simple(Color(0.82, 0.14, 0.12), 0.5)
 	var hormigon := b._mat_simple(Color(0.62, 0.62, 0.6), 0.9)
+	## El asfalto del solar brilla como agua con el sol (rugosidad baja): bajo la marquesina y las islas, una losa de hormigón seco y mate.
+	b._caja_en(c + Vector3(0, 0.3, 0), Vector3(w * 0.85, 0.1, f * 0.62), b._mat_simple(Color(0.6, 0.6, 0.58), 1.0))
 	var ancho_m := minf(w * 0.5, 40.0)
 	var fondo_m := minf(f * 0.4, 20.0)
 	## Marquesina: losa fina, faldón rojo y banda inferior luminosa, sobre cuatro pilares.
