@@ -19,7 +19,17 @@ func tope_valor_ia() -> float:
 	return float(TOPE_VALOR_IA.get(dificultad, TOPE_VALOR_IA["normal"]))
 
 ## La referencia se toma al empezar la partida (guardados viejos: en su primer cierre).
+## MODO LEYENDA (27-10-2026, fila 956): «treinta temporadas en el mismo club, sin cambiarte». Mientras el desafío siga en pie no se puede coger otro
+## club; solo si te echan (`despedido_ya`) puedes irte, y entonces la leyenda se rompe (`tomar_el_mando` la quita: ya no multiplica el puntaje).
+## "" si se puede; si no, el motivo (ya traducido).
+func motivo_sin_cambiar_de_club(club_id: String) -> String:
+	if tiene_desafio("leyenda30") and mi_club_id != "" and club_id != mi_club_id and not (directiva != null and directiva.despedido_ya):
+		return Idiomas.t("Modo leyenda: no puedes cambiar de club. Solo si te despiden.")
+	return ""
+
 func tomar_el_mando(club_id: String) -> Directiva:
+	if tiene_desafio("leyenda30") and mi_club_id != "" and club_id != mi_club_id:
+		desafios.erase("leyenda30")   ## te fuiste (te echaron): ya no es una leyenda de un solo club
 	var d := super(club_id)
 	Finanzas.fijar_medias_tv(ligas)
 	if valor_ia_ref <= 0.0:
