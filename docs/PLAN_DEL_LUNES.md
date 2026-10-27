@@ -458,6 +458,15 @@ P3 HECHO 27-10 (`ideas/p3_puertas`, `p3_escaleras`, `p3_banquillo_tour`): vecino
 (promedio por vértice) empeora: las tarjetas de mechón comparten vértices y salen manchas claras/oscuras; el pelo pide mallas
 mejores (o más cortes del pack de Quaternius), no un cambio de sombreado. VEREDICTO DEL DUEÑO (27-10): «MEJORAR» (P1-P3 no bastan: seguir subiendo anatomía, movimiento, animaciones y acabado; la C2 de ciudad sigue hasta agotar P0 y P1).
 
+#### 2.2h Butacas y aficionados (decisión del dueño 27-10) — HECHO, falta Forward+
+`StadiumBuilder._butacas` (hueco entre hinchas: tope de ocupación 86 %, quien tiene vecino deja el asiento libre 1 de cada 3, cuerpos algo más
+delgados; barniz en el plástico de la butaca), `colores_de_nivel` (abajo color 1, en medio color 2, arriba una mezcla; `est["asientoNivel"]`
+= `por_nivel` por defecto o `uniforme`), `_vomitorios` (boca de hormigón con dintel y jambas, hueco negro, rótulo de SALIDA y descansillo, en
+3 MultiMesh por grada) y la opción elegible en el diseñador (Club → Estadio → La grada, `EST_NIVELES`) y en el menú inicial (paso Estadio,
+`ConfigClubDatos.asiento_nivel`). Prueba `ideas/e1_butacas`; capturas `docs/04_auditorias/capturas_estadio/butacas_{antes,despues}_{1,2}.jpg`
+(cámara alta de TV y tribuna; en Compatibility; la de partido cercana y Forward+ las repite el líder). PENDIENTE: butaca con otra malla
+(respaldo y reposabrazos) y accesos con escaleras propias en las bandejas altas.
+
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 
 #### 9.1 Propuesta para la fase 4 (entrar al campeonato) — cifras VALIDADAS por el dueño el 24-10
