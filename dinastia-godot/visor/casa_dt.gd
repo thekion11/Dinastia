@@ -291,6 +291,15 @@ func _charla(clave: String, nombre: String) -> Dictionary:
 			if String(c["clave"]) == clave:
 				nombre = String(c["nombre"])
 				break
+	## Quien habla gesticula unos segundos (clip de charla de la UAL) y vuelve a lo suyo.
+	for c: Dictionary in cuerpos:
+		if String(c["nombre"]) == nombre and c.get("anim") != null and is_instance_valid(c["anim"]):
+			var ap: AnimationPlayer = c["anim"]
+			if AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(c["nodo"]), "charla"):
+				ap.play("charla", 0.3)
+				get_tree().create_timer(4.0).timeout.connect(func() -> void:
+					if is_instance_valid(ap) and ap.current_animation == "charla" and ap.has_animation("parado"):
+						ap.play("parado", 0.4))
 	var tramo := "contenta" if v.familia >= 70 else ("normal" if v.familia >= 40 else "dolida")
 	var lista: Array = FRASES[tramo]
 	var hoy := "%d|%d|%d" % [mundo.reloj.anio, mundo.reloj.semana, mundo.reloj.dia]

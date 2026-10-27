@@ -319,8 +319,12 @@ Cambios: `PersonajeDT.ANATOMIA` (húmero ×1,15, muslo ×1,05, pantorrilla ×0,9
 resolvieron en la pasada 2 desplazando el hueso del brazo (escalar la clavícula estiraba el brazo). Movimiento: el pie apoyado de «caminar» recorre 1,0 m/s y el
 paseo iba a 1,7 m/s (patinaba ×1,7; agachado ×2,4; correr ×1,3-1,5): ahora `speed_scale = velocidad real / natural del clip`
 (`ExploradorCiudad.VEL_NATURAL_CLIP`) y los peatones del tráfico igual (`TraficoCiudad.agregar_vehiculo`). Hecho también: el cuerpo gira con inercia
-(persigue el rumbo, `lerp_angle` a 9/s) y la mezcla al pararse dura 0,4 s. Falta: más clips (P3), piel/pelo/ropa (P4) y el
-veredicto del dueño sobre esta pasada.
+(persigue el rumbo, `lerp_angle` a 9/s) y la mezcla al pararse dura 0,4 s. P3 (27-10, pasada 1): inventario del pack UAL = 43 clips; los
+de conversación y asiento estaban mapeados en `AnimExtra.UAL` pero solo los futbolistas los cargaban. `AnimExtra.asegurar`
+carga un clip en cualquier cuerpo al momento; ahora HABLAN con el clip de charla el mentor del prólogo, las personas de las
+citas (mientras dura el cuadro) y la familia en casa (4 s). Falta P3: sentarse de verdad (butaca, sofá, banquillo:
+`sentarse`/`sentado`/`levantarse`), vecinos (hoy siguen con el paso de andar al charlar), abrir puertas, escaleras; y P4
+(piel/pelo/ropa). Falta el veredicto del dueño sobre estas pasadas.
 
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 
