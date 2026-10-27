@@ -12,6 +12,7 @@ func _kenney_calles() -> void:
 	var postes := 0
 	var brazos := 0
 	var carteles := 0
+	var cables: Array[Transform3D] = []
 	for t: Dictionary in tramos:
 		if bool(t["puente"]):
 			continue
@@ -44,6 +45,20 @@ func _kenney_calles() -> void:
 			var giro2 := 0.0 if vertical else PI * 0.5
 			if _prop_kenney("electricity-pole", pos2, giro2, 9.0) != null:
 				postes += 1
+				## S5 (27-10-2026): la línea sigue por la calle con dos postes más y el cable combado entre ellos (los tres cables
+				## de cada travesaño, en un solo MultiMesh).
+				var dir_c := Vector3(0, 0, 1) if vertical else Vector3(1, 0, 0)
+				var ant := pos2
+				for paso: float in [-1.0, 1.0]:
+					ant = pos2
+					for k in 2:
+						var sig := ant + dir_c * 38.0 * paso
+						if absf((sig - m).dot(dir_c)) > largo * 0.5 - 14.0:
+							break
+						if _prop_kenney("electricity-pole", sig, giro2, 9.0) != null:
+							postes += 1
+							_cable_entre(ant, sig, cables)
+						ant = sig
 	## Carteles colgantes sobre la calzada en cada cruce con semáforo.
 	for p: Vector3 in cruces_semaforo:
 		var esq := p + Vector3(ANCHO_AV * 0.5 + ACERA * 0.6, 0.24, -ANCHO_AV * 0.5 - ACERA * 0.6)
@@ -58,6 +73,8 @@ func _kenney_calles() -> void:
 						_mat_cartel = _mat_poste_farola(malla)
 					(mi as MeshInstance3D).material_override = _mat_cartel
 			carteles += 1
+	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.06, 0.06, 0.07), 0.8), cables, Vector3.ONE)
+	cuenta["cables_postes"] = cables.size()
 	cuenta["kenney_brazos"] = brazos
 	cuenta["kenney_postes"] = postes
 	cuenta["kenney_carteles"] = carteles
@@ -389,3 +406,23 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 		b._un_peaton(t, rng, int(rutas_g[rng.randi() % rutas_g.size()]), rng.randf() * 300.0)
 		n_p += 1
 	cuenta["peatones"] = n_p
+
+## Cable combado entre dos postes (S5): tres hilos (uno por brazo del travesaño) en tramos rectos de ~5 m que bajan hasta la flecha
+## de 0,7 m a media luz y suben. Los extremos cuelgan de la punta del poste (4,8 m) y de los brazos del travesaño (±2,2 m).
+func _cable_entre(a: Vector3, c: Vector3, ts: Array[Transform3D]) -> void:
+	var lateral := Vector3(0, 0, 1) if absf((c - a).x) > absf((c - a).z) else Vector3(1, 0, 0)
+	for hilo: float in [-2.2, 0.0, 2.2]:
+		var desv := lateral * hilo
+		var n := 8
+		for i in n:
+			var f0 := float(i) / float(n)
+			var f1 := float(i + 1) / float(n)
+			var p0 := a.lerp(c, f0) + desv
+			var p1 := a.lerp(c, f1) + desv
+			p0.y = a.y + 4.5 - 0.7 * sin(f0 * PI)
+			p1.y = a.y + 4.5 - 0.7 * sin(f1 * PI)
+			var largo := p0.distance_to(p1)
+			var z_eje := (p1 - p0).normalized()
+			var x_eje := Vector3.UP.cross(z_eje).normalized()
+			var y_eje := z_eje.cross(x_eje)
+			ts.append(Transform3D(Basis(x_eje * 0.06, y_eje * 0.06, z_eje * largo), (p0 + p1) * 0.5))
