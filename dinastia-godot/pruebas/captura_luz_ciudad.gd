@@ -10,6 +10,7 @@ var HORAS := [7.0, 12.0, 17.4, 18.3, 21.5]   ## HORAS=17.4,21.5 para repetir sol
 const POR_ESCENA := 24
 
 func _ready() -> void:
+	AjustesCiudad.guardar("tutorial_visto", true)   ## sin el tutorial de la primera visita
 	if OS.get_environment("HORAS") != "":
 		HORAS = []
 		for t in OS.get_environment("HORAS").split(","):

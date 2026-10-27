@@ -418,6 +418,8 @@ func _bloque_modular(frente: Vector3, giro: float, semilla: int, ancho_max: floa
 	for sx: float in [-1.0, 1.0]:
 		_mod_caja(centro + rot * Vector3(sx * (ancho * 0.5 + 0.1), 0, 0) + Vector3(0, alto + 0.6, 0), Vector3(0.3, 0.75, fondo), rot, remate_srgb)
 	_mod_caja(centro + Vector3(0, alto + 0.26, 0), Vector3(ancho - 0.2, 0.06, fondo - 0.2), rot, Color(0.46, 0.45, 0.43))
+	var tipo_tejado := TejadoTipo.montar(self, centro, rot, ancho, fondo, alto, pisos, semilla)
+	cuenta["tejado_%d" % tipo_tejado] = int(cuenta.get("tejado_%d" % tipo_tejado, 0)) + 1
 	var caseta := rot * Vector3((hr.randf() - 0.5) * ancho * 0.4, 0, (hr.randf() - 0.5) * fondo * 0.3)
 	_mod_caja(centro + caseta + Vector3(0, alto + 1.4, 0), Vector3(2.6, 2.4, 2.6), rot, (col[0] as Color).darkened(0.08))
 	_mod_caja(centro + caseta + Vector3(0, alto + 2.68, 0), Vector3(3.0, 0.16, 3.0), rot, remate_srgb)
