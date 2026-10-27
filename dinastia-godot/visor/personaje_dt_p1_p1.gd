@@ -110,19 +110,24 @@ const ANATOMIA := {
 	"thigh_l": Vector3(1.0, 1.05, 1.0), "thigh_r": Vector3(1.0, 1.05, 1.0),
 	"calf_l": Vector3(1.0, 0.96, 1.0), "calf_r": Vector3(1.0, 0.96, 1.0),
 }
-## Los hombros de la mujer (−30 %) quedan PENDIENTES: la clavícula va en diagonal (eje X local = (0,49, 0, 0,87)) y
-## escalarla por ejes del mundo también estira el brazo; hace falta tratarla en ejes locales con compensación del hijo.
+## HOMBROS (pasada 2): la clavícula va en diagonal y escalarla deforma el brazo; en su lugar el hueso del
+## brazo se DESPLAZA hacia fuera a lo largo de la clavícula (posición de pose × factor). Medido: hombre
+## 0,19 → ~0,22 de la altura, mujer 0,14 → ~0,20 (humano 0,245). El guardián lo repone cada fotograma.
+const HOMBROS_FUERA := {"male": 1.14, "female": 1.40}
 
 const ASPECTO_NEUTRO := {"complexion": 0.0, "hombros": 0.0, "barriga": 0.0, "piernas": 0.0, "cabeza": 0.0}
 
 class _Escalas extends Node:
 	var esq: Skeleton3D
 	var escalas: Dictionary
+	var posiciones: Dictionary = {}   ## hueso → posición de pose (los hombros, §2.2e)
 	func _process(_d: float) -> void:
 		if esq == null:
 			return
 		for i: int in escalas:
 			esq.set_bone_pose_scale(i, escalas[i])
+		for i: int in posiciones:
+			esq.set_bone_pose_position(i, posiciones[i])
 
 ## Uno al azar (para "Aleatorio" y para el DT rival).
 static func aleatorio(rng: RandomNumberGenerator) -> Dictionary:
@@ -250,6 +255,14 @@ static func _cuerpo(d: Dictionary, a: Dictionary, con_guardian := true) -> void:
 		var s := esq.get_bone_pose_scale(i)
 		if not s.is_equal_approx(Vector3.ONE):
 			guardian.escalas[i] = s
+	## Hombros hacia fuera (ver HOMBROS_FUERA) más lo que pida la complexión («hombros»).
+	var fuera: float = float(HOMBROS_FUERA.get(String(d.get("cuerpo", "male")), 1.14)) * (1.0 + 0.1 * float(a.get("hombros", 0.0)))
+	for lado: String in ["upperarm_l", "upperarm_r"]:
+		var i := esq.find_bone(lado)
+		if i >= 0:
+			var p := esq.get_bone_rest(i).origin * fuera
+			esq.set_bone_pose_position(i, p)
+			guardian.posiciones[i] = p
 	guardian.process_priority = 100
 	(d["nodo"] as Node3D).add_child(guardian)
 

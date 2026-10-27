@@ -313,11 +313,10 @@ Compuerta: el dueño ve cada pasada y dice «estamos» o «mejorar». Nada se qu
 | hombro→muñeca | 0,34 | 0,27 | 0,29 (−15 %) |
 | antebrazo / brazo | 0,80 | 0,97 · 1,04 | 0,78 · 0,83 |
 | pantorrilla / muslo | 0,95 | 1,07 · 1,14 | 0,98 · 1,04 |
-| anchura de hombros | 0,245 | 0,23 · 0,17 | 0,19 · 0,14 (PENDIENTE) |
+| anchura de hombros | 0,245 | 0,23 · 0,17 | 0,21 · 0,19 (pasada 2: el brazo se desplaza hacia fuera por la clavícula, `HOMBROS_FUERA`; captura `peatones_pasada2_hombros.jpg`) |
 
-Cambios: `PersonajeDT.ANATOMIA` (húmero ×1,15, muslo ×1,05, pantorrilla ×0,96) para DT, futbolistas y peatones. Los hombros
-quedan pendientes: la clavícula va en diagonal y el sistema de escalas por ejes del mundo también estira el brazo; hay que
-escalarla en ejes locales compensando al hijo (siguiente pasada). Movimiento: el pie apoyado de «caminar» recorre 1,0 m/s y el
+Cambios: `PersonajeDT.ANATOMIA` (húmero ×1,15, muslo ×1,05, pantorrilla ×0,96) para DT, futbolistas y peatones. Los hombros se
+resolvieron en la pasada 2 desplazando el hueso del brazo (escalar la clavícula estiraba el brazo). Movimiento: el pie apoyado de «caminar» recorre 1,0 m/s y el
 paseo iba a 1,7 m/s (patinaba ×1,7; agachado ×2,4; correr ×1,3-1,5): ahora `speed_scale = velocidad real / natural del clip`
 (`ExploradorCiudad.VEL_NATURAL_CLIP`) y los peatones del tráfico igual (`TraficoCiudad.agregar_vehiculo`). Hecho también: el cuerpo gira con inercia
 (persigue el rumbo, `lerp_angle` a 9/s) y la mezcla al pararse dura 0,4 s. Falta: más clips (P3), piel/pelo/ropa (P4) y el
