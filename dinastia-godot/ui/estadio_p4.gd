@@ -331,6 +331,18 @@ func _al_empezar_tanda() -> void:
 	_mostrar_banner_gol("🥅 " + Idiomas.t("TANDA DE PENALES"), false)
 	if _rig != null:
 		_rig.plano_tanda = true
+	## La presentación: los cinco lanzadores de cada equipo, en orden (semana 4, 27-10-2026).
+	var orden: Array = _motor.tanda.get("orden", [[], []])
+	PresentacionTanda.crear(self, partido.local, partido.visita, (orden[0] as Array).map(_nombre_motor), (orden[1] as Array).map(_nombre_motor))
+
+## El nombre visible de un jugador del motor (su `Jugador` o, si no, su puesto).
+func _nombre_motor(p: Dictionary) -> String:
+	var jg: Variant = p.get("jugador")
+	if jg is Jugador:
+		return Nombres.visible((jg as Jugador).nombre)
+	if jg is Dictionary:
+		return Nombres.visible(String((jg as Dictionary).get("nombre", p.get("slot_code", ""))))
+	return String(p.get("slot_code", ""))
 
 # --- los insertos de la realización (25-10-2026) -------------------------------------
 
