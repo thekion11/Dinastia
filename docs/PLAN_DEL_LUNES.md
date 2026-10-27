@@ -555,6 +555,7 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 ### Detectados en pruebas y aún sin cerrar
 
 - **Puntería del tiro sin el pulido** (27-10): con `TIRO_PULIDO` apagado por defecto (solo con `PMOT_TIRO=1`), un tirador de 97 desde 20 m cae a ±0,09 m de donde apunta: el error solo depende de (1 − tiro). Decidir si se enciende el pulido de puntería (baja los goles a ~2 por partido) o se da un suelo de error a todos.
+- **Frenada del coche** (27-10, `pmov_conduccion`): de 72 km/h a cero en 0,82 s (~24 m/s², 2,4 g; un coche real, ~1 g) y, sin pedales, pierde ~5,8 m/s² (de 54 km/h se para en ~4 s). Arcade a propósito o demasiado brusco: decidirlo jugándolo.
 - **Roles por jugador** (como los PlayStyles de FC 26) con efecto en el motor.
 - **Red del arco**: onda más ancha y lenta (17-10), techo sin asomar por el larguero. **Cartel del cuarto árbitro**: 20-10 a tamaño real (0,92 × 0,62 m), dígitos con halo, mango y por encima de la cabeza. Desde la toma abierta de TV sigue siendo pequeño (como en la tele de verdad, que corta a un primer plano): pendiente un corte de cámara al cartel.
 - Desmarques de ruptura (los peatones: §2.4).
@@ -599,7 +600,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-401 | P2 | PENDIENTE | Dependencia de nombres de nodo (`find_child`) frágil | sin cambio |
 | M-402 | P2 | PENDIENTE | Duplicación de carga de JSON (`Datos` 212 tablas) | sin carga perezosa |
 | M-406 | P2 | PENDIENTE | `Retrato3D` no se ejercita en headless | sin prueba con xvfb |
-| M-407 | P2 | PENDIENTE | Sin pruebas de conducción/ciudad (V-06) | sin prueba de conducción |
 | M-408 | P2 | PARCIAL | Sin pruebas de minijuegos 3D | `prueba_minijuegos_nuevos` (2D); minijuegos 3D sin prueba |
 | M-410 | P2 | PARCIAL | Pruebas de rendimiento con umbrales | la simulación tiene umbral (`eq_diez_temporadas`, EQ_MODO=rendimiento: la semana del año 20 < 2× la del año 1 + 20 ms) y el banco mide ms por paso del motor; faltan umbrales de FPS en hardware real (dueño) |
 | M-414 | P2 | PENDIENTE | Resultados de sondas (calidad/táctica/simetría) sin umbrales | sondas sin umbrales |
@@ -612,7 +612,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
 | M-277 | P1 | PARCIAL | 274 textos en español directamente en `ui/` (I-02), concentrados… | ✅ 15-10: 1.132 textos envueltos; quedan ~15 (M-447) |
-| M-278 | P1 | PENDIENTE | `ui/principal.gd` 6.655 líneas (y 3 funciones >330) | `principal.gd` con 6.777 líneas |
 | M-279 | P1 | PENDIENTE | 27 módulos de `visor/` y 8 de `nucleo/` sin referencia directa en… | los módulos siguen sin prueba directa |
 | M-280 | P1 | PENDIENTE | 105 módulos de UI/visor sin referencia en banco/pruebas | sin prueba visual automática |
 | M-433 | P1 | PARCIAL | Controles táctiles sólo en la ciudad (cruceta/E) | 21-10: en PC ya no salen la cruceta ni «Salir» al pasear (estadio y ciudad) y la E solo aparece si hay algo con lo que interactuar (`ExploradorCiudad.es_tactil`); el partido sigue sin controles táctil |
