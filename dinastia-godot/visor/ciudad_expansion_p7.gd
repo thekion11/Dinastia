@@ -102,6 +102,7 @@ func _instalacion(uso: String, r: Rect2) -> void:
 			FachadaModular.montar(self, c.x, c.z + f * 0.175, c.y + 0.3, w * 0.9, 4)
 			CiudadArcade.montar(b, c, w, f)
 			CajeroCiudad.montar(self, Vector3(c.x + 8.0, c.y + 0.3, c.z + f * 0.175 + FachadaModular.FONDO + 0.6), 0.0)
+			ExpendedoraCiudad.montar(b, Vector3(c.x + 10.5, c.y + 0.3, c.z + f * 0.175 + FachadaModular.FONDO + 0.6), 0.0)
 		"gasolinera":
 			nombre = "Gasolinera"
 			CiudadGasolinera.montar(self, c, w, f)

@@ -247,6 +247,21 @@ func _probar_async() -> void:
 			_comprobar(is_instance_valid(_v._panel_cajero) and _v._panel_cajero.is_inside_tree(), "la E ante un cajero abre el panel")
 			if is_instance_valid(_v._panel_cajero):
 				_v._panel_cajero.free()
+	## LA EXPENDEDORA cobra de la cartera y sube la energía; el balón suelto del parque aparece.
+	if _v != null and _m.roles != null and _m.necesidades != null:
+		_m.roles.patrimonio = 100
+		_m.roles.cartera.cargo_pend = 0
+		_m.roles.cartera.efectivo = 0
+		_m.necesidades.energia_m = 30 * Necesidades.ESCALA
+		_v.usar_expendedora()
+		_comprobar(_m.necesidades.energia() == 45 and _m.roles.cartera.cuenta_eur(_m.roles) == 1197, "la expendedora cobra 3 € de la cartera y sube la energía de 30 a 45")
+		_m.roles.patrimonio = 0
+		_m.necesidades.energia_m = 30 * Necesidades.ESCALA
+		_v.usar_expendedora()
+		_comprobar(_m.necesidades.energia() == 30, "sin dinero la expendedora no da nada")
+	if _v != null:
+		_v.poner_balon()
+		_comprobar(is_instance_valid(_v._balon) and _v._balon.is_inside_tree(), "hay un balón suelto en el parque más cercano")
 	## LA TIENDA DE LA GASOLINERA: compra según el hambre, la paga el DT y el club no.
 	if _v != null and _m.roles != null and _m.necesidades != null:
 		_m.roles.patrimonio = 100

@@ -146,6 +146,11 @@ func picar(puntos: int) -> void:
 	hambre_m = clampi(hambre_m - maxi(puntos, 0) * ESCALA, 0, MAXIMO)
 	_revisar_umbrales()
 
+## Un golpe de energía al paso (una bebida energética, un café): sube la energía sin gastar tiempo.
+func animar(puntos: int) -> void:
+	energia_m = clampi(energia_m + maxi(puntos, 0) * ESCALA, 0, MAXIMO)
+	_revisar_umbrales()
+
 ## Cambia el modo de vida. Al apagarla, el DT vuelve a la rutina (descansado y
 ## comido) y los avisos se apagan; al pasar a ligera, se suben los topes.
 func poner_modo(m: String) -> void:

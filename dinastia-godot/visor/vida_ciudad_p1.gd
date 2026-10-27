@@ -121,6 +121,7 @@ static func arranque_3d(m: Mundo) -> String:
 func _process(delta: float) -> void:
 	if expl == null or not is_instance_valid(expl) or expl.cuerpo == null:
 		return
+	call("poner_balon")   ## el balón suelto del parque (una sola vez; ver `VidaCiudad.poner_balon`)
 	if _t_cuadro > 0.0:
 		_t_cuadro -= delta
 		if _t_cuadro <= 0.0 and _cuadro != null:
