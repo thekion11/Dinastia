@@ -93,7 +93,7 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 		var d := int(h.get("anio", 0)) / 10 * 10
 		if not decadas.has(d):
 			decadas.append(d)
-	for k in mini(maxi(decadas.size(), 2), 4):
+	for k in mini(maxi(decadas.size(), 2), 3):
 		var px := caja.position.x + caja.size.x * (float(k) + 0.5) / 4.0
 		var pz := caja.position.y - 0.13
 		lote.caja(base, SalasClub._en(Vector3(px, y0 + 1.55, pz)), Vector3(0.95, 1.15, 0.05))
@@ -102,16 +102,17 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 		PiezasVestuario.camiseta(lote, SalasClub._en(Vector3(px, y0 + 1.6, pz + 0.06)), m["cam2"] if alterna else m["cam1"], m["cam1"] if alterna else m["cam2"])
 		if k < decadas.size():
 			TunelVestuario._rotulo(nodo, "%ds" % int(decadas[k]), Vector3(px, y0 + 1.07, pz + 0.07), 0.0, 22, Color(0.12, 0.12, 0.14))
-	## El panel de hitos y el balón de la primera copa, al fondo y al centro.
+	## El panel de hitos y el balón de la primera copa, en el cuarto hueco de la pared del fondo.
+	var px4 := caja.position.x + caja.size.x * 0.875
 	var texto := Idiomas.t("HITOS DEL CLUB")
 	for h: Dictionary in hs.slice(0, 12):
 		texto += "\n%d · %s" % [int(h.get("anio", 0)), Idiomas.t(String(h.get("titulo", "")))]
-	TunelVestuario._rotulo(nodo, texto, Vector3(cx, y0 + 2.1, caja.position.y - 0.1), 0.0, 22, Color(1.0, 0.86, 0.45))
+	TunelVestuario._rotulo(nodo, texto, Vector3(px4, y0 + 1.75, caja.position.y - 0.1), 0.0, 17, Color(1.0, 0.86, 0.45))
 	if not hs.is_empty():
-		lote.malla(m["metal"], SalasClub._en(Vector3(cx, y0 + 0.4, caja.position.y + 0.7)), SalasClub._cilindro(0.1, 0.14, 0.8))
-		lote.malla(TunelVestuario._mat(Color(0.45, 0.28, 0.14), 0.6), SalasClub._en(Vector3(cx, y0 + 0.92, caja.position.y + 0.7)), SalasClub._esfera(0.13))
+		lote.malla(m["metal"], SalasClub._en(Vector3(px4, y0 + 0.4, caja.position.y + 0.7)), SalasClub._cilindro(0.1, 0.14, 0.8))
+		lote.malla(TunelVestuario._mat(Color(0.45, 0.28, 0.14), 0.6), SalasClub._en(Vector3(px4, y0 + 0.92, caja.position.y + 0.7)), SalasClub._esfera(0.13))
 		TunelVestuario._rotulo(nodo, Idiomas.t("Primer título") + " · %d" % int((hs[0] as Dictionary).get("anio", 0)),
-			Vector3(cx, y0 + 0.55, caja.position.y + 0.86), 0.0, 14, Color(0.9, 0.9, 0.85))
+			Vector3(px4, y0 + 0.5, caja.position.y + 0.86), 0.0, 14, Color(0.9, 0.9, 0.85))
 	lote.caja(m["cam1"], SalasClub._en(Vector3(cx, y0 + 2.7, caja.position.y - 0.14)), Vector3(caja.size.x, 0.3, 0.02))
 	lote.montar(nodo, "MuseoAmpliado")
 	SalasClub._luces_museo(nodo, caja, y0, cx)
