@@ -8,8 +8,7 @@ Capturas en `docs/04_auditorias/capturas_ciudad/` (`<zona>_aerea.jpg`, `<zona>_p
 1. **Los edificios singulares son cajas con un adorno** (centro comercial, comisaría, ayuntamiento, universidad, escuela,
    cocheras, hospital, bomberos): desde el aire se leen por el rótulo, pero **a pie son una pared lisa**, sin puerta,
    escaparates, marquesina ni rótulo en la fachada.
-2. **Dos fallos que son errores, no estética:** la «Villa moderna» es una **cúpula blanca de ~75 m** que se come la manzana,
-   y el «Parque del Lago» tiene un **disco azul plano por encima de los árboles y bancos** (los objetos se ven «dentro» del agua).
+2. **Los dos errores de construcción están cerrados** en la pasada C2 (la «Villa moderna» era una cúpula y el lago flotaba sobre los árboles): ver el final del documento.
 3. **Grandes superficies vacías:** gasolineras, desguace, plaza mayor, barrios industriales (un edificio y una fila de contenedores
    por manzana) y las parcelas de césped del sur.
 4. **Repetición:** `gasolinera` ×3 y `parque` ×5 son idénticos; los barrios «pisos» y «torres» repiten bloque y ventanas.
@@ -41,8 +40,8 @@ Leyenda: **V** = vacío o caja lisa · **D** = desentona · **I** = incoherencia
 | **Desguace** ([aérea](capturas_ciudad/desguace_aerea.jpg) · [pie](capturas_ciudad/desguace_pie.jpg)) | Solar de asfalto, un montón de piezas pequeñas y una máquina | **V** el 95 % del solar vacío; sin valla ni chatarra apilada |
 | **Escuela / Instituto** ([escuela](capturas_ciudad/escuela_aerea.jpg) · [instituto](capturas_ciudad/instituto_aerea.jpg)) | Caja naranja en L y patio verde; **los dos son el mismo modelo** (misma rama de código) | **V** sin ventanas visibles ni valla; el patio es un rectángulo verde sin canchas; **D** el naranja liso |
 | **Universidad** ([aérea](capturas_ciudad/universidad_aerea.jpg) · [pie](capturas_ciudad/universidad_pie.jpg)) | Caja crema larga con un cono azul y césped | **V** sin escalinata ni columnas; **D** el cono flota sobre un tejado plano |
-| **Villa moderna** ([aérea](capturas_ciudad/villa_moderna_aerea.jpg) · [pie](capturas_ciudad/villa_moderna_pie.jpg)) | **Una cúpula blanca de ~75 m** | **ERROR**: la rama instancia `oficina_dt.glb` escalado al solar y lo que se ve es una cúpula, no una villa |
-| **Parque del Lago** ([aérea](capturas_ciudad/parque_lago_aerea.jpg) · [pie](capturas_ciudad/parque_lago_pie.jpg)) | Parque con caminos, un disco azul, árboles, bancos y casetas | **ERROR**: el «lago» es un plano azul a la altura de los árboles y los bancos; se ven encima del agua |
+| **Villa moderna** ([aérea](capturas_ciudad_c2/villa_moderna_aerea_despues.jpg) · [pie](capturas_ciudad_c2/villa_moderna_pie_despues.jpg)) | Casa de dos plantas con ala y cochera (kit suburbano), acceso de coches, camino de losas y árboles | **V** el solar de 83 m sigue siendo mucho césped para tres edificios pequeños; sin piscina ni cerca |
+| **Parque del Lago** ([aérea](capturas_ciudad_c2/parque_lago_aerea_despues.jpg) · [pie](capturas_ciudad_c2/parque_lago_pie_despues.jpg)) | Parque con caminos, estanque con orilla de arena, árboles, bancos, parterres y puestos | **V** el estanque no tiene patos, embarcadero ni vegetación de orilla |
 | **Parque** ([aérea](capturas_ciudad/parque_aerea.jpg) · [pie](capturas_ciudad/parque_pie.jpg)) | Cruz de caminos, fuente, columpios, árboles y casetas | Bien resuelto; **repetido ×5** sin variaciones |
 | **Feria** ([aérea](capturas_ciudad/feria_aerea.jpg) · [pie](capturas_ciudad/feria_pie.jpg)) | Noria, montaña rusa, casetas, edificio morado y árboles | **La mejor zona.** **D** el edificio morado es una caja lisa |
 | **Puerto** ([aérea](capturas_ciudad/puerto_aerea.jpg) · [pie](capturas_ciudad/puerto_pie.jpg)) | Almacén marrón, grúa amarilla, 3 veleros, 2 puentes de piedra y contenedores | Bien; **V** el almacén es una caja sin puertas |
@@ -70,8 +69,6 @@ Horas = estimación de una persona con el catálogo `Modulos` ya hecho; las piez
 
 | # | Mejora | Pieza / método | Horas |
 |---|---|---|---:|
-| **P0-1** | Arreglar la **Villa moderna** (cúpula): ver qué mesh de `assets/ciudad/oficina_dt.glb` domina el AABB y usar una villa real o `suburbano/building-type-*` grandes | `suburbano/` + `Modulos.unir` | 2 |
-| **P0-2** | Arreglar el **lago** del parque: bajar el plano de agua bajo el césped (o hundir el césped) y sacar bancos y árboles de la superficie | corrección de alturas en `_parque` | 1 |
 | **P0-3** | Gasolinera: **surtidores visibles** fuera de la marquesina, rótulo de precios y el solar acotado | primitivas + `kenney_roads` (conos/vallas) | 3 |
 | **P1-4** | **Fachada del centro comercial**: puertas dobles, escaparates en dos plantas, marquesina y rótulo SOBRE la pared; aparcamiento con plazas y farolas | `mini_mercado/` + `kit_edificios/` (paredes con ventana y puerta animada) | 6 |
 | **P1-5** | Servicios (comisaría, hospital, ayuntamiento, escuela, instituto, cine, universidad): **plantilla de fachada** con zócalo, ventanas por pisos, puerta con marquesina y un rótulo en la pared | `edificios_modulares/` (bloques, ventanas, tejados) + `kit_edificios/` | 12 (≈1,5 por edificio) |
@@ -85,12 +82,27 @@ Horas = estimación de una persona con el catálogo `Modulos` ya hecho; las piez
 | **P3-13** | **Variantes** de gasolinera y de parque (3 cada una) | `Modulos.tomar/unir` | 4 |
 | **P3-14** | **Paleta** única para los singulares (sacar rosa/morado/verde saturados) | ajuste de materiales en `ciudad_expansion_p7.gd` | 1 |
 | **P3-15** | Granja: cultivos distintos, vallas e invernadero | `suburbano/` vallas + `comida/` | 3 |
-| | **Total** | | **≈ 67** |
+| | **Total** | | **≈ 64** |
 
-Orden recomendado: P0 (6 h, quita los fallos visibles) → P1-4 y P1-5 (la plantilla de fachada sirve a 8 edificios) → P1-6/7 →
+Orden recomendado: P0-3 (3 h, la gasolinera) → P1-4 y P1-5 (la plantilla de fachada sirve a 8 edificios) → P1-6/7 →
 P2 por zona. Cada pasada, con captura antes y después desde `f6c_captura_ciudad` y veredicto del dueño (§2.2e del plan).
 
 ## Pendiente de esta auditoría
 - No se midieron las rutas (semáforos sin cruce, aceras cortadas, calles sin salida): hace falta un recorrido en coche/metro que no
   cabe en las tomas por manzana. Se vio, en la toma del sur, una avenida que termina en césped junto al río.
 - Las tomas son de día (11:00); la noche (farolas, ventanas, rótulos encendidos) no se ha revisado.
+
+## Pasada C2 (27-10): fallos de construcción arreglados
+Capturas antes / después en `docs/04_auditorias/capturas_ciudad_c2/` (`<zona>_<aerea|pie>_<antes|despues>.jpg`, mismo guion, 11:00, Forward+).
+
+- **Villa moderna.** Causa: `oficina_dt.glb` trae una semiesfera de cielo de 103 × 52 × 103 m (`Sphere`); al medir la caja para escalar el modelo al solar,
+  la semiesfera mandaba y salía una cúpula de ~75 m. Ahora `CiudadVilla` (`visor/ciudad_villa.gd`) arma una casa de dos plantas
+  (máx. 11,5 m) con tres piezas del kit suburbano, acceso de coches, camino de losas hasta la calle y árboles. Antes:
+  [aérea](capturas_ciudad_c2/villa_moderna_aerea_antes.jpg) · [pie](capturas_ciudad_c2/villa_moderna_pie_antes.jpg);
+  después: [aérea](capturas_ciudad_c2/villa_moderna_aerea_despues.jpg) · [pie](capturas_ciudad_c2/villa_moderna_pie_despues.jpg).
+- **Lago del parque.** Era un cilindro de radio 0,3 del parque (×1,4) elevado 0,18 m, encima de árboles, bancos y puestos. Ahora es más pequeño
+  (radio 0,13), está en el cuadrante sur-este lejos de los puestos y parterres, a ras de suelo con orilla de arena, y los árboles se colocan fuera del
+  agua y de su orilla. Antes: [aérea](capturas_ciudad_c2/parque_lago_aerea_antes.jpg) · [pie](capturas_ciudad_c2/parque_lago_pie_antes.jpg);
+  después: [aérea](capturas_ciudad_c2/parque_lago_aerea_despues.jpg) · [pie](capturas_ciudad_c2/parque_lago_pie_despues.jpg).
+- **Aviso relacionado, sin tocar:** `CityBuilder._casa_ribera` (`city_builder_p7.gd`) usa el mismo `oficina_dt.glb` y escala por altura
+  (22 m); con la semiesfera de 52 m de alto dentro de la medida, es muy probable que ese edificio tenga el mismo defecto (cúpula). Pendiente de comprobar con una captura.
