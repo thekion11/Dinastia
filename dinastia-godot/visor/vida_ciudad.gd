@@ -2,6 +2,9 @@ class_name VidaCiudad
 extends "res://visor/vida_ciudad_p1.gd"
 ## (Parte 2 de 2 de `vida_ciudad.gd`.)
 
+var _balon: BalonSuelto
+var _panel_cajero: PanelCajero   ## el panel del cajero abierto, si lo hay
+
 ## Las redes de la ciudad (luz, agua, drenaje, gas), si la ciudad ya está levantada.
 func _redes() -> RedesCiudadVista:
 	if expl == null or expl.cb == null or expl.cb.expansion == null:
@@ -56,7 +59,79 @@ func usar_surtidor(k: String) -> bool:
 	var via := ""
 	if cartera != null:
 		via = String(cartera.cobrar(mundo.roles, int(r["coste"]), "Gasolina", dia)["via"])
+	elif mundo.mi_club() != null:
+		mundo.mi_club().mover_saldo(-maxi(1, roundi(float(r["coste"]) / Eco.ECO)))   ## sin cartera (partida sin roles) paga el club (puntos internos): nunca gratis
 	_decir(Idiomas.t("Gasolinera"), Idiomas.t("Depósito lleno: %d l por %d € (%s).") % [roundi(float(r["litros"])), int(r["coste"]), Idiomas.t(via if via != "" else "efectivo")])
+	Sonido.toca("clic", Sonido.Bus.EFECTOS)
+	return true
+
+## El balón suelto del parque más cercano al DT (una sola vez, la primera que se le ve): se patea a pie. Ver `BalonSuelto`.
+func poner_balon() -> void:
+	if is_instance_valid(_balon) or expl == null or expl.cb == null or expl.cb.expansion == null or expl.cuerpo == null:
+		return
+	var mejor: Rect2
+	var d_mejor := INF
+	for bl: Dictionary in expl.cb.expansion.bloques:
+		if String(bl["uso"]) == "parque":
+			var r: Rect2 = bl["rect"]
+			var d := r.get_center().distance_to(Vector2(expl.cuerpo.position.x, expl.cuerpo.position.z))
+			if d < d_mejor:
+				d_mejor = d
+				mejor = r
+	if d_mejor == INF:
+		return
+	_balon = BalonSuelto.new()
+	_balon.jugador = expl.cuerpo
+	_balon.activo = func() -> bool: return String(expl.modo) == "pie"
+	_balon.limites = mejor.grow(-3.0)
+	_balon.position = Vector3(mejor.get_center().x + 3.0, 1.0, mejor.get_center().y + 3.0)
+	expl.cb.add_child(_balon)
+
+## E ante un cajero: abre el panel de PIN y operaciones (retirar, ingresar, cambiar el PIN) con la cartera del DT.
+func usar_cajero(k: String) -> bool:
+	if mundo.roles == null:
+		return false
+	if is_instance_valid(_panel_cajero):
+		return true
+	var banco := CajeroCiudad.banco_de(k)
+	var pos := Vector3.ZERO
+	for pc: Dictionary in expl.cb.puntos_clic:
+		if String(pc.get("k", "")) == k:
+			pos = pc["pos"]
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	_panel_cajero = PanelCajero.abrir(expl._capa, mundo.roles.cartera, mundo.roles, dia, Idiomas.t(String(banco["nombre"])), int(banco["comision"]), pos, expl.cuerpo)
+	return true
+
+## E ante una máquina expendedora: compra lo que pide el cansancio o el hambre y lo cobra la cartera del DT (sin gastar tiempo).
+func usar_expendedora() -> bool:
+	if mundo.roles == null or mundo.necesidades == null:
+		return false
+	var it := Expendedora.elegir(mundo.necesidades.energia(), mundo.necesidades.hambre())
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	var r := mundo.roles.cartera.cobrar(mundo.roles, int(it["precio"]), String(it["nombre"]), dia)
+	if String(r["error"]) != "":
+		_decir(Idiomas.t("Máquina expendedora"), CarteraDT.texto_error(String(r["error"]), int(it["precio"])))
+		return true
+	mundo.necesidades.animar(int(it["energia"]))
+	mundo.necesidades.picar(int(it["hambre"]))
+	_decir(Idiomas.t("Máquina expendedora"), Idiomas.t("%s por %d € (%s).") % [Idiomas.t(String(it["nombre"])), int(it["precio"]), Idiomas.t(String(r["via"]))])
+	Sonido.toca("clic", Sonido.Bus.EFECTOS)
+	return true
+
+## E ante el mostrador de la tienda de la gasolinera: compra lo que pide el hambre y lo paga el DT (efectivo o tarjeta sin contacto).
+func usar_tienda() -> bool:
+	var it := TiendaGasolinera.elegir(mundo.necesidades.hambre() if mundo.necesidades != null else 50)
+	var cartera: CarteraDT = mundo.roles.cartera if mundo.roles != null else null
+	if cartera == null:
+		return false
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	var r := cartera.cobrar(mundo.roles, int(it["precio"]), String(it["nombre"]), dia)
+	if String(r["error"]) != "":
+		_decir(Idiomas.t("Tienda de la gasolinera"), CarteraDT.texto_error(String(r["error"]), int(it["precio"])))
+		return true
+	if mundo.necesidades != null:
+		mundo.necesidades.picar(int(it["hambre"]))
+	_decir(Idiomas.t("Tienda de la gasolinera"), Idiomas.t("%s por %d € (%s).") % [Idiomas.t(String(it["nombre"])), int(it["precio"]), Idiomas.t(String(r["via"]))])
 	Sonido.toca("clic", Sonido.Bus.EFECTOS)
 	return true
 
