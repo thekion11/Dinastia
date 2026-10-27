@@ -1,0 +1,16 @@
+Peñarol|circulo|franjas|PE|franjas|#ffd100|#000000|#000000|#000000
+Nacional|escudo|franjas|NA|liso|#ffffff|#0038a8|#0038a8|#ffffff|#0038a8|#d50032
+Defensor|clasico|liso|DS|liso|#5c2d91|#ffffff|#ffffff|#5c2d91
+Danubio|hex|banda|DA|sash|#ffffff|#000000|#ffffff|#ffffff
+Wanderers|clasico|franjas|MW|franjas|#000000|#ffffff|#000000|#000000
+Liverpool M.|circulo|franjas|LI|franjas|#0038a8|#000000|#000000|#000000
+River (U)|escudo|banda|RP|sash|#d50032|#ffffff|#d50032|#d50032
+Cerro (U)|banderin|liso|CE|liso|#75aadb|#ffffff|#ffffff|#75aadb
+Boston River|rombo|franjas|BR|franjas|#00843d|#ffffff|#00843d|#00843d
+Racing (U)|clasico|liso|RA|liso|#00843d|#ffffff|#ffffff|#00843d
+Progreso|penta|franjas|PR|franjas|#ffd100|#d50032|#d50032|#d50032
+Fénix|ovalo|liso|FE|liso|#5c2d91|#ffffff|#5c2d91|#5c2d91
+Plaza Colonia|hex|franjas|PC|franjas|#ffffff|#00843d|#00843d|#ffffff
+Montevideo C.|escudo|liso|MC|liso|#75aadb|#0038a8|#0038a8|#75aadb
+Juventud|clasico|liso|JU|liso|#d50032|#ffffff|#ffffff|#d50032
+Rentistas|circulo|franjas|RE|franjas|#d50032|#ffffff|#0038a8|#d50032

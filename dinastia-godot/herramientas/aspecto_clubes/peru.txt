@@ -1,0 +1,16 @@
+Universitario|circulo|aro|U|liso|#f5ecd0|#7a1f2b|#7a1f2b|#f5ecd0|#7a1f2b|#f5ecd0|#f5ecd0|#7a1f2b
+Alianza Lima|escudo|franjas|AL|franjas|#00246b|#ffffff|#00246b|#00246b
+Sporting Cristal|clasico|liso|SC|liso|#75aadb|#ffffff|#75aadb|#75aadb
+Melgar|hex|franjas|FM|franjas|#d50032|#000000|#000000|#d50032
+Cienciano|rombo|liso|CI|liso|#d50032|#ffffff|#ffffff|#d50032
+Sport Boys|ovalo|liso|SB|liso|#ff7a99|#000000|#000000|#ff7a99
+Municipal|banderin|franjas|MU|franjas|#d50032|#ffffff|#ffffff|#d50032
+Cusco FC|clasico|franjas|CU|franjas|#ffd100|#0038a8|#0038a8|#ffd100
+C. Vallejo|escudo|franjas|CV|franjas|#0038a8|#d50032|#0038a8|#0038a8
+Atl. Grau|circulo|franjas|AG|franjas|#ffd100|#000000|#000000|#ffd100
+Garcilaso|penta|liso|CG|liso|#d50032|#0038a8|#0038a8|#d50032
+AD Tarma|hex|liso|AT|liso|#75aadb|#ffffff|#ffffff|#75aadb
+UTC Cajamarca|clasico|liso|UT|liso|#ffd100|#00246b|#00246b|#ffd100
+Binacional|escudo|franjas|BI|franjas|#0038a8|#ffffff|#ffffff|#0038a8
+Ayacucho|rombo|liso|AY|liso|#ff7a00|#ffffff|#ffffff|#ff7a00
+Chankas|ovalo|liso|CH|liso|#5c2d91|#ffffff|#ffffff|#5c2d91
