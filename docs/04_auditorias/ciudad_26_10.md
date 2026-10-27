@@ -130,3 +130,5 @@ Capturas antes / después en `docs/04_auditorias/capturas_ciudad_c2/` (`<zona>_<
   sobre la fachada, aparcamiento con plazas y farolas, las puertas no se leen como puertas (solo ventanales) y las otras tres caras siguen lisas.
 
 **Interiores de comercio (27-10).** Supermercado y farmacia: género sobre las góndolas, carros y cestas con compra, bolsas junto a las cajas y cruz verde en la farmacia (`ui/componentes/interior_comercio_extra.gd`, sin tocar el `_rng`). Capturas `capturas_ciudad_c2/c25_*.jpg`; prueba `_probar_comercio_lleno`. Oficinas: cuatro puestos más en la mitad de delante, plantas y cajas (`c26_oficina.jpg`).
+
+**Cancha de penales y patos (27-10).** En cada parque, en el cuadrante libre, una cancha de 16 × 9 m con rayas, áreas, puntos de penal, dos porterías con red y balón (`visor/ciudad_cancha.gd`; los árboles la esquivan sin tocar el azar); en el lago, 4 bandadas de patos de primitivas. Captura aérea `capturas_ciudad_c2/c28_parques_cancha_patos.jpg` (la toma a pie se cuelga en este contenedor: queda pendiente verla de cerca). Prueba `_probar_cancha_patos`.
