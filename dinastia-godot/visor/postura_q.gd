@@ -5,12 +5,17 @@ extends SkeletonModifier3D
 ## animación, así vale para andar, esperar o gesticular) suma a cada persona, según su semilla:
 ##   - MANOS RELAJADAS: los dedos se doblan un poco, más en la falange del medio y la punta, y el pulgar menos;
 ##   - HOMBROS: caídos y algo adelantados, cada persona en su medida (los de más edad, más encogidos);
-##   - CUELLO: la cabeza adelantada una pizca (de 3 a 14° repartidos entre dorsal, cuello y cabeza), como la gente que va mirando por dónde pisa.
+##   - CUELLO: el tronco y el cuello adelantados una pizca (de 1 a 6°, hasta 14° en 1 de cada 12), como la gente que va mirando por dónde pisa.
+## LA MIRADA AL FRENTE (revisión del líder, 27-10): el adelanto del cuello es leve (1-6°) y la cabeza se NIVELA: tras sumar la inclinación
+## del cuerpo se mide hacia dónde mira y se corrige un 85 % del cabeceo, así que se mira a la altura del horizonte aunque el clip incline el
+## tronco. Solo 1 de cada 12 personas (`PROB_BAJA`) conserva la cabeza gacha de verdad (la del móvil, la que va pensando).
 ## Son rotaciones fijas sobre la pose: unas 24 asignaciones de hueso por fotograma y solo para los peatones que se dibujan.
 const DEDOS := ["index", "middle", "ring", "pinky"]
 ## Doblez (grados) de la 1.ª, 2.ª y 3.ª falange de un dedo y del pulgar, a media relajación.
 const CURVA := [14.0, 22.0, 16.0]
 const CURVA_PULGAR := [6.0, 8.0, 6.0]
+const PROB_BAJA := 0.08
+const NIVELA := 0.85
 
 static var eje_dedos := Vector3.RIGHT
 static var eje_hombro := Vector3.FORWARD
@@ -18,6 +23,8 @@ static var eje_cuello := Vector3.RIGHT
 
 var _huesos: PackedInt32Array = PackedInt32Array()
 var _giros: Array[Quaternion] = []
+var _cabeza := -1
+var _nivelar := true
 
 ## Pone el modificador a la persona `nodo` (una vez). `semilla` fija sus medidas.
 static func poner(nodo: Node, semilla: int) -> PosturaQ:
@@ -34,7 +41,9 @@ func configurar(esq: Skeleton3D, semilla: int) -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = semilla ^ 0x51ed
 	var relaja := rng.randf_range(0.6, 1.4)
-	var cuello := rng.randf_range(3.0, 14.0)
+	_nivelar = rng.randf() >= PROB_BAJA
+	var cuello := rng.randf_range(1.0, 6.0) if _nivelar else rng.randf_range(6.0, 14.0)
+	_cabeza = esq.find_bone("Head")
 	var hombro := rng.randf_range(4.0, 12.0)
 	_anadir(esq, "spine_03", eje_cuello, cuello * 0.3)
 	_anadir(esq, "neck_01", eje_cuello, cuello * 0.4)
@@ -61,3 +70,18 @@ func _process_modification() -> void:
 		return
 	for k in _huesos.size():
 		esq.set_bone_pose_rotation(_huesos[k], esq.get_bone_pose_rotation(_huesos[k]) * _giros[k])
+	if _nivelar and _cabeza >= 0:
+		_nivelar_cabeza(esq)
+
+## Cabeceo de la cabeza respecto al reposo (+ = mira abajo) en el espacio del esqueleto.
+func cabeceo(esq: Skeleton3D) -> float:
+	var q := esq.get_bone_global_pose(_cabeza).basis * esq.get_bone_global_rest(_cabeza).basis.inverse()
+	return asin(clampf((q * Vector3.BACK).y, -1.0, 1.0)) * -1.0
+
+func _nivelar_cabeza(esq: Skeleton3D) -> void:
+	var ang := cabeceo(esq)   ## > 0: mira hacia abajo
+	var padre := esq.get_bone_parent(_cabeza)
+	var g := esq.get_bone_global_pose(_cabeza).basis
+	var nuevo := Basis(Vector3.RIGHT, -ang * NIVELA) * g   ## girar sobre X del esqueleto: +θ baja la mirada
+	var local := esq.get_bone_global_pose(padre).basis.inverse() * nuevo
+	esq.set_bone_pose_rotation(_cabeza, local.get_rotation_quaternion())
