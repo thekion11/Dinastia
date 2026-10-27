@@ -318,4 +318,14 @@ static func _dato(padre: Node, etiqueta: String, valor: String, color: Color, pa
 	b.tooltip_text = valor
 	b.mouse_filter = Control.MOUSE_FILTER_PASS
 	h.add_child(b)
+	## El ancho se reparte según lo que mide cada texto (27-10-2026, hallazgo de fuentes): con 1,2 : 1 fijo,
+	## «pertenece a «Los históricos»» se cortaba aunque la etiqueta de al lado fuera corta.
+	var fuente: Font = a.get_theme_font("font")
+	if fuente == null:
+		fuente = ThemeDB.fallback_font
+	var wa := fuente.get_string_size(a.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
+	var wb := fuente.get_string_size(valor, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
+	if wa + wb > 0.0:
+		a.size_flags_stretch_ratio = clampf(wa / (wa + wb), 0.25, 0.7) * 2.0
+		b.size_flags_stretch_ratio = 2.0 - a.size_flags_stretch_ratio
 	padre.add_child(h)
