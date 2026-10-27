@@ -289,12 +289,6 @@ func _boton(padre: Node, texto: String, accion: Callable) -> void:
 	b.pressed.connect(accion)
 	padre.add_child(b)
 
-func _alternar_giro() -> void:
-	_girando = not _girando
-
-func alternar_ciclo() -> void:
-	_ciclo_activo = not _ciclo_activo
-
 func _dejar_de_explorar() -> void:
 	if _explorador == null:
 		return
