@@ -58,6 +58,36 @@ var _obj_cache: Array[Jugador] = []
 # ── HELPERS DE UI ─────────────────────────────────────────────────────────
 ## Label con tamaño y color. Se usa la paleta de instancia (no constantes)
 ## para que el componente herede el tema del club activo.
+## PRECONTRATO (M-217): en la mesa de un jugador en su último año, el DT puede firmar con él ahora y que llegue gratis al acabar su contrato.
+func _pintar_precontrato(j: Jugador) -> void:
+	if j == null:
+		return
+	var ya := Precontratos.de(_mundo, j.id)
+	if not ya.is_empty():
+		var t := _lbl(11, COL_VERDE)
+		t.text = Idiomas.t("📝 Precontrato firmado: llegará sin traspaso al acabar su contrato (ficha %s a la semana).") % _dinero(int(ya["sueldo"]))
+		t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		add_child(t)
+		return
+	if j.anios_contrato > 1:
+		return
+	var no := Precontratos.motivo(_mundo, j)
+	var b := Button.new()
+	b.text = Idiomas.t("📝 Precontrato (llega gratis al acabar su contrato)")
+	b.add_theme_font_size_override("font_size", 11)
+	b.disabled = no != ""
+	b.tooltip_text = no if no != "" else Idiomas.t("Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.")
+	b.pressed.connect(func() -> void:
+		var r := Precontratos.firmar(_mundo, j)
+		escrito.emit(("[color=#4caf6d]%s[/color]" % (Idiomas.t("Precontrato firmado con %s.") % j.nombre)) if r == "" else ("[color=#e05555]%s[/color]" % r))
+		refrescar_pedido.emit())
+	add_child(b)
+	if no != "":
+		var m := _lbl(10, COL_SUAVE)
+		m.text = no
+		m.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		add_child(m)
+
 func _lbl(tam: int, color: Color) -> Label:
 	var l := Label.new()
 	l.add_theme_font_size_override("font_size", tam)

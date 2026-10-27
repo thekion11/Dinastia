@@ -35,6 +35,9 @@ func nueva_temporada() -> Dictionary:
 	if valor_ia_ref <= 0.0:
 		valor_ia_ref = valor_medio_ia()
 	var r := super()
+	var llegados := Precontratos.llegan(self)   ## los precontratos del DT entran ya con la plantilla repuesta
+	if not llegados.is_empty():
+		r["precontratos"] = llegados.size()
 	Finanzas.fijar_medias_tv(ligas)
 	## La cláusula de descenso alcanza a los que llegan mientras el club siga abajo.
 	for c: Club in clubes.values():
