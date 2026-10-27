@@ -128,3 +128,5 @@ Capturas antes / después en `docs/04_auditorias/capturas_ciudad_c2/` (`<zona>_<
   [aérea](capturas_ciudad_c2/centro_comercial_aerea_antes.jpg) · [pie](capturas_ciudad_c2/centro_comercial_pie_antes.jpg); después:
   [aérea](capturas_ciudad_c2/centro_comercial_aerea_despues.jpg) · [pie](capturas_ciudad_c2/centro_comercial_pie_despues.jpg). Pendiente del centro comercial: rótulo
   sobre la fachada, aparcamiento con plazas y farolas, las puertas no se leen como puertas (solo ventanales) y las otras tres caras siguen lisas.
+
+**Interiores de comercio (27-10).** Supermercado y farmacia: género sobre las góndolas, carros y cestas con compra, bolsas junto a las cajas y cruz verde en la farmacia (`ui/componentes/interior_comercio_extra.gd`, sin tocar el `_rng`). Capturas `capturas_ciudad_c2/c25_*.jpg`; prueba `_probar_comercio_lleno`. Oficinas: cuatro puestos más en la mitad de delante, plantas y cajas (`c26_oficina.jpg`).
