@@ -2,3 +2,6 @@
 # y el nombre limpio del club en el pack real. Solo están los clubes del juego, y solo los títulos que se saben con seguridad: lo que falta, falta.
 # Claves: liga:<PAÍS> · copa:<PAÍS> · conf:<lib|sud|ucl|uel|asia|afr|oce|conc> · mundial.
 # ESTADO: escrito de memoria por la sesión ejecutora; POR VERIFICAR por el dueño o con una fuente (Wikipedia, RSSSF) antes de darlo por bueno.
+# CONTRASTE PENDIENTE: todo este palmarés se contrasta con Wikipedia/RSSSF en cuanto el dueño abra el acceso a la red. Con varios torneos al año (Apertura y
+# Clausura, Transición…) un club solo cuenta una vez por año en estos archivos. Chile (liga_CHI.txt) corregido el 27-10 con los datos del líder
+# (2018 U. Católica, 2023 Huachipato, y los años con dos campeones: 1997, 2002, 2005…); lo que no esté seguro, se quita antes que adivinarlo.
