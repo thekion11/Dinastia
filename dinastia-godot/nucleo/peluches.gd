@@ -14,6 +14,8 @@ const MAX_EXTRA := 0.25
 const SERIES := {
 	"bosque": "Amigos del bosque", "granja": "La granja", "mar": "Fondo del mar", "fantasia": "Fantasía",
 }
+## PENDIENTE (orden del líder, 27-10): cuando lleguen los modelos .glb del Drive, la vista de la garra (hoy 2D, dibujada con `draw_*` en
+## `PanelPeluches._pintar`) pasa a 3D (un SubViewport con los `modelo` de esta tabla); mientras `modelo` esté vacío se sigue dibujando el relleno.
 ## id, nombre, serie, peso (1 ligero … 4 pesado), máquina (0-2), forma (cómo se dibuja el relleno), color, modelo (ruta .glb, "" = relleno), escala del modelo.
 const PELUCHES := [
 	{"id": "oso", "nombre": "Oso pardo", "serie": "bosque", "peso": 3, "maquina": 0, "forma": "oso", "color": Color(0.55, 0.36, 0.22), "modelo": "", "escala": 1.0},
