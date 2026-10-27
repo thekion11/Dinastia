@@ -2,6 +2,8 @@ class_name VidaCiudad
 extends "res://visor/vida_ciudad_p1.gd"
 ## (Parte 2 de 2 de `vida_ciudad.gd`.)
 
+var _panel_cajero: PanelCajero   ## el panel del cajero abierto, si lo hay
+
 ## Las redes de la ciudad (luz, agua, drenaje, gas), si la ciudad ya está levantada.
 func _redes() -> RedesCiudadVista:
 	if expl == null or expl.cb == null or expl.cb.expansion == null:
@@ -60,6 +62,21 @@ func usar_surtidor(k: String) -> bool:
 		mundo.mi_club().mover_saldo(-maxi(1, roundi(float(r["coste"]) / Eco.ECO)))   ## sin cartera (partida sin roles) paga el club (puntos internos): nunca gratis
 	_decir(Idiomas.t("Gasolinera"), Idiomas.t("Depósito lleno: %d l por %d € (%s).") % [roundi(float(r["litros"])), int(r["coste"]), Idiomas.t(via if via != "" else "efectivo")])
 	Sonido.toca("clic", Sonido.Bus.EFECTOS)
+	return true
+
+## E ante un cajero: abre el panel de PIN y operaciones (retirar, ingresar, cambiar el PIN) con la cartera del DT.
+func usar_cajero(k: String) -> bool:
+	if mundo.roles == null:
+		return false
+	if is_instance_valid(_panel_cajero):
+		return true
+	var banco := CajeroCiudad.banco_de(k)
+	var pos := Vector3.ZERO
+	for pc: Dictionary in expl.cb.puntos_clic:
+		if String(pc.get("k", "")) == k:
+			pos = pc["pos"]
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	_panel_cajero = PanelCajero.abrir(expl._capa, mundo.roles.cartera, mundo.roles, dia, Idiomas.t(String(banco["nombre"])), int(banco["comision"]), pos, expl.cuerpo)
 	return true
 
 ## E ante el mostrador de la tienda de la gasolinera: compra lo que pide el hambre y lo paga el DT (efectivo o tarjeta sin contacto).

@@ -154,6 +154,22 @@ func ingresar(roles: Roles, importe: int, dia: int) -> String:
 	_apunta(dia, "Ingreso", importe, "cajero")
 	return ""
 
+## Comprueba un PIN tecleado en un cajero: "" bien, "pin" mal (cuenta el fallo), "bloqueada" si ya estaba o se bloquea ahora.
+func comprobar_pin(pin_dado: String) -> String:
+	if bloqueada:
+		return "bloqueada"
+	if pin_dado == pin:
+		fallos_pin = 0
+		return ""
+	fallos_pin += 1
+	if fallos_pin >= MAX_FALLOS:
+		bloqueada = true
+		return "bloqueada"
+	return "pin"
+
+func intentos_restantes() -> int:
+	return maxi(0, MAX_FALLOS - fallos_pin)
+
 func cambiar_pin(viejo: String, nuevo: String) -> String:
 	if bloqueada:
 		return "bloqueada"
