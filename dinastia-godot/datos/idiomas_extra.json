@@ -6380,7 +6380,8 @@
   "Ver los créditos de las %d fotos": "Show the credits for the %d photos",
   "Fotos de Wikimedia Commons (commons.wikimedia.org), recortadas alrededor de la cara y reducidas a 256 × 256 por DINASTÍA. Cada una conserva su licencia original, indicada junto al autor. Textos de las licencias: creativecommons.org/licenses. Dominio público: sin restricciones.": "Photos from Wikimedia Commons (commons.wikimedia.org), cropped around the face and scaled down to 256 × 256 by DINASTÍA. Each keeps its original licence, shown next to the author. Licence texts: creativecommons.org/licenses. Public domain: no restrictions.",
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Football Manager · Godot engine. Generated club and player names use letter→number substitution; the real data that does carry names and images comes from freely licensed sources. The music and match effects are synthesised by the game itself; the few recorded interface sounds are public domain (CC0).",
-  ": foto de ": ": photo by "
+  ": foto de ": ": photo by ",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "“No safety net” challenge: you can't load earlier saves. The game saves itself every week."
  },
  "pt": {
   "Historia": "História",
@@ -12763,7 +12764,8 @@
   "Ver los créditos de las %d fotos": "Ver os créditos das %d fotos",
   "Fotos de Wikimedia Commons (commons.wikimedia.org), recortadas alrededor de la cara y reducidas a 256 × 256 por DINASTÍA. Cada una conserva su licencia original, indicada junto al autor. Textos de las licencias: creativecommons.org/licenses. Dominio público: sin restricciones.": "Fotos do Wikimedia Commons (commons.wikimedia.org), recortadas em volta do rosto e reduzidas a 256 × 256 pela DINASTÍA. Cada uma mantém sua licença original, indicada junto ao autor. Textos das licenças: creativecommons.org/licenses. Domínio público: sem restrições.",
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Fútbol Manager · motor Godot. Os nomes gerados de clubes e jogadores usam substituição letra→número; os dados reais com nome e imagem vêm de fontes com licença livre. A música e os efeitos da partida são sintetizados pelo próprio jogo; os poucos sons de interface gravados são de domínio público (CC0).",
-  ": foto de ": ": foto de "
+  ": foto de ": ": foto de ",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Desafio «Sem rede»: não podes carregar gravações anteriores. O jogo grava sozinho todas as semanas."
  },
  "patrones": [
   [
@@ -24857,7 +24859,8 @@
   "Ver los créditos de las %d fotos": "Voir les crédits des %d photos",
   "Fotos de Wikimedia Commons (commons.wikimedia.org), recortadas alrededor de la cara y reducidas a 256 × 256 por DINASTÍA. Cada una conserva su licencia original, indicada junto al autor. Textos de las licencias: creativecommons.org/licenses. Dominio público: sin restricciones.": "Photos de Wikimedia Commons (commons.wikimedia.org), recadrées autour du visage et réduites à 256 × 256 par DINASTÍA. Chacune conserve sa licence d'origine, indiquée à côté de l'auteur. Textes des licences : creativecommons.org/licenses. Domaine public : sans restriction.",
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Fútbol Manager · moteur Godot. Les noms de clubs et de joueurs générés utilisent une substitution lettre→chiffre ; les données réelles avec nom et image proviennent de sources sous licence libre. La musique et les effets du match sont synthétisés par le jeu lui-même ; les quelques sons d'interface enregistrés sont dans le domaine public (CC0).",
-  ": foto de ": " : photo de "
+  ": foto de ": " : photo de ",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Défi « Sans filet » : tu ne peux pas charger de sauvegardes antérieures. La partie se sauvegarde toute seule chaque semaine."
  },
  "it": {
   "Historia": "Storia",
@@ -31240,7 +31243,8 @@
   "Ver los créditos de las %d fotos": "Vedi i crediti delle %d foto",
   "Fotos de Wikimedia Commons (commons.wikimedia.org), recortadas alrededor de la cara y reducidas a 256 × 256 por DINASTÍA. Cada una conserva su licencia original, indicada junto al autor. Textos de las licencias: creativecommons.org/licenses. Dominio público: sin restricciones.": "Foto da Wikimedia Commons (commons.wikimedia.org), ritagliate intorno al viso e ridotte a 256 × 256 da DINASTÍA. Ognuna conserva la licenza originale, indicata accanto all'autore. Testi delle licenze: creativecommons.org/licenses. Pubblico dominio: senza restrizioni.",
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Fútbol Manager · motore Godot. I nomi generati di club e calciatori usano la sostituzione lettera→numero; i dati reali con nome e immagine provengono da fonti con licenza libera. La musica e gli effetti della partita sono sintetizzati dal gioco stesso; i pochi suoni d'interfaccia registrati sono di pubblico dominio (CC0).",
-  ": foto de ": ": foto di "
+  ": foto de ": ": foto di ",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Sfida «Senza rete»: non puoi caricare salvataggi precedenti. La partita si salva da sola ogni settimana."
  },
  "de": {
   "Historia": "Geschichte",
@@ -37623,7 +37627,8 @@
   "Ver los créditos de las %d fotos": "Nachweise der %d Fotos anzeigen",
   "Fotos de Wikimedia Commons (commons.wikimedia.org), recortadas alrededor de la cara y reducidas a 256 × 256 por DINASTÍA. Cada una conserva su licencia original, indicada junto al autor. Textos de las licencias: creativecommons.org/licenses. Dominio público: sin restricciones.": "Fotos aus Wikimedia Commons (commons.wikimedia.org), von DINASTÍA um das Gesicht zugeschnitten und auf 256 × 256 verkleinert. Jedes behält seine ursprüngliche Lizenz, die neben dem Urheber steht. Lizenztexte: creativecommons.org/licenses. Gemeinfrei: ohne Einschränkungen.",
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Fútbol Manager · Godot-Engine. Erzeugte Vereins- und Spielernamen nutzen eine Buchstabe→Zahl-Ersetzung; die echten Daten mit Namen und Bild stammen aus frei lizenzierten Quellen. Musik und Spieleffekte erzeugt das Spiel selbst; die wenigen aufgenommenen Oberflächenklänge sind gemeinfrei (CC0).",
-  ": foto de ": ": Foto von "
+  ": foto de ": ": Foto von ",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Herausforderung „Ohne Netz“: Du kannst keine früheren Spielstände laden. Das Spiel speichert jede Woche von selbst."
  },
  "ca": {
   "Historia": "Història",
@@ -44006,7 +44011,8 @@
   "Ver los créditos de las %d fotos": "Veure els crèdits de les %d fotos",
   "Fotos de Wikimedia Commons (commons.wikimedia.org), recortadas alrededor de la cara y reducidas a 256 × 256 por DINASTÍA. Cada una conserva su licencia original, indicada junto al autor. Textos de las licencias: creativecommons.org/licenses. Dominio público: sin restricciones.": "Fotos de Wikimedia Commons (commons.wikimedia.org), retallades al voltant de la cara i reduïdes a 256 × 256 per DINASTÍA. Cadascuna conserva la seva llicència original, indicada al costat de l'autor. Textos de les llicències: creativecommons.org/licenses. Domini públic: sense restriccions.",
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Fútbol Manager · motor Godot. Els noms generats de clubs i futbolistes fan servir substitució lletra→número; les dades reals amb nom i imatge vénen de fonts amb llicència lliure. La música i els efectes del partit els sintetitza el mateix joc; els pocs sons d'interfície enregistrats són de domini públic (CC0).",
-  ": foto de ": ": foto de "
+  ": foto de ": ": foto de ",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Desafiament «Sense xarxa»: no pots carregar guardats anteriors. La partida es guarda sola cada setmana."
  },
  "pl": {
   "Club": "Klub",
@@ -50668,7 +50674,8 @@
   "Ver los créditos de las %d fotos": "Pokaż autorów %d zdjęć",
   "Fotos de Wikimedia Commons (commons.wikimedia.org), recortadas alrededor de la cara y reducidas a 256 × 256 por DINASTÍA. Cada una conserva su licencia original, indicada junto al autor. Textos de las licencias: creativecommons.org/licenses. Dominio público: sin restricciones.": "Zdjęcia z Wikimedia Commons (commons.wikimedia.org), przycięte wokół twarzy i zmniejszone do 256 × 256 przez DINASTÍA. Każde zachowuje swoją pierwotną licencję, podaną obok autora. Teksty licencji: creativecommons.org/licenses. Domena publiczna: bez ograniczeń.",
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Fútbol Manager · silnik Godot. Generowane nazwy klubów i piłkarzy używają zamiany litera→cyfra; prawdziwe dane z nazwiskiem i wizerunkiem pochodzą ze źródeł na wolnej licencji. Muzykę i efekty meczu syntezuje sama gra; nieliczne nagrane dźwięki interfejsu są w domenie publicznej (CC0).",
-  ": foto de ": ": zdjęcie: "
+  ": foto de ": ": zdjęcie: ",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "Wyzwanie „Bez siatki”: nie możesz wczytywać wcześniejszych zapisów. Gra zapisuje się sama co tydzień."
  },
  "tr": {
   "Club": "Kulüp",
@@ -57330,6 +57337,7 @@
   "Ver los créditos de las %d fotos": "%d fotoğrafın künyesini göster",
   "Fotos de Wikimedia Commons (commons.wikimedia.org), recortadas alrededor de la cara y reducidas a 256 × 256 por DINASTÍA. Cada una conserva su licencia original, indicada junto al autor. Textos de las licencias: creativecommons.org/licenses. Dominio público: sin restricciones.": "Wikimedia Commons (commons.wikimedia.org) fotoğrafları; DINASTÍA tarafından yüz çevresinden kırpılıp 256 × 256 boyutuna küçültüldü. Her biri, yazarın yanında belirtilen özgün lisansını korur. Lisans metinleri: creativecommons.org/licenses. Kamu malı: kısıtlama yok.",
   "DINASTÍA Fútbol Manager · motor Godot. Los nombres de clubes y futbolistas generados usan sustitución letra→número; los datos reales que sí tienen nombre e imagen vienen de fuentes con licencia libre. La música y los efectos del partido están sintetizados por el propio juego; los pocos sonidos de interfaz grabados son de dominio público (CC0).": "DINASTÍA Fútbol Manager · Godot motoru. Üretilen kulüp ve oyuncu adları harf→rakam değişimi kullanır; adı ve görseli olan gerçek veriler özgür lisanslı kaynaklardan gelir. Müzik ve maç efektlerini oyunun kendisi sentezler; kaydedilmiş birkaç arayüz sesi kamu malıdır (CC0).",
-  ": foto de ": ": fotoğraf: "
+  ": foto de ": ": fotoğraf: ",
+  "Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.": "«Ağsız» meydan okuması: önceki kayıtları yükleyemezsin. Oyun her hafta kendiliğinden kaydedilir."
  }
 }
