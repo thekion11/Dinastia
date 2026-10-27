@@ -19,10 +19,14 @@ const COL_VERDE := Tema.ACENTO
 const COL_ROJO := Tema.MAL
 
 ## `ir`: Callable(pestaña: String). `ficha`: Callable(j: Jugador).
+const ANCHO_TARJETA := 190.0
+
 static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, liga: Liga, ir: Callable, ficha: Callable) -> void:
 	raiz.add_child(_tarjeta_partido(c, mundo, liga, ir))
-	var g := GridContainer.new()
-	g.columns = 3
+	## M-307 (27-10-2026): un flujo y no una rejilla de 3 columnas. En la columna central de 16:9 (≈460 px)
+	## las tres tarjetas no cabían y la fila se salía por la derecha (nombres, competición y estadio cortados):
+	## ahora caben las que quepan por fila (2 en 16:9, 3 en pantallas anchas) y cada una ocupa su parte.
+	var g := HFlowContainer.new()
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 8)
 	g.add_theme_constant_override("v_separation", 8)
@@ -42,7 +46,7 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, liga: Liga, ir: C
 ## la hace pulsable entera. Devuelve [tarjeta, vbox de contenido, botón].
 static func _caja_tarjeta(ir: Callable, destino: String, alto: float = 112.0) -> Array:
 	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(0, alto)
+	panel.custom_minimum_size = Vector2(ANCHO_TARJETA, alto)
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var e := StyleBoxFlat.new()
 	e.bg_color = COL_TARJETA
