@@ -17,7 +17,7 @@ func tras_temporada(resumen: Dictionary = {}) -> Dictionary:
 		_rep("ganador", -3, "No cumpliste el objetivo de la temporada")
 	_reputacion_de_temporada()
 	if int(resumen.get("puesto", 0)) == 1:
-		sumar_trofeo("Liga")
+		sumar_trofeo("Liga", _ficha_liga())
 	if es_cantera():
 		_chequeo_cantera()
 	var siguiente := puede_ascender()
@@ -25,6 +25,20 @@ func tras_temporada(resumen: Dictionary = {}) -> Dictionary:
 		"rol": rol, "prestigio": prestigio, "trofeos": trofeos.size(),
 		"temporadas": temporadas, "puede_ascender_a": siguiente,
 	}
+
+## Lo que guarda la vitrina del título de liga: cómo se cerró y los tres máximos goleadores del plantel esa temporada.
+func _ficha_liga() -> Dictionary:
+	var m := _mundo()
+	var mi := m.mi_club() if m != null else null
+	if mi == null:
+		return {}
+	var orden: Array = mi.plantilla.duplicate()
+	orden.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.goles > b.goles)
+	var gol: Array[String] = []
+	for j: Jugador in orden.slice(0, 3):
+		if j.goles > 0:
+			gol.append("%s (%d)" % [Nombres.visible(j.nombre), j.goles])
+	return {"final": Idiomas.t("Campeón de liga con %s") % mi.nombre, "goleadores": gol}
 
 func ayudante_ascendido() -> bool:
 	return bool(ayudante.get("ascendido", false))
