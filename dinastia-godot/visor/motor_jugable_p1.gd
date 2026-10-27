@@ -266,8 +266,9 @@ const UMBRAL_ROJA := 7.0
 ## PULIDO DEL 25-10-2026 (sondas): PMOT=0 vuelve al motor de antes para medir
 ## antes/después con las mismas semillas.
 static var PULIDO := OS.get_environment("PMOT") != "0"
-## Puntería y cabezazos más realistas: medido, baja los goles a ~2 (apagado; PMOT_TIRO=1).
-static var TIRO_PULIDO := PULIDO and OS.get_environment("PMOT_TIRO") == "1"
+## Puntería, cabezazos y paradas más realistas (PMOT_TIRO=0 lo apaga). PARADA_LEJOS: cuánto cuesta parar lo ajustado.
+static var TIRO_PULIDO := PULIDO and OS.get_environment("PMOT_TIRO") != "0"   ## encendido por decisión del dueño (27-10)
+static var PARADA_LEJOS := float(OS.get_environment("PMOT_PLEJOS")) if OS.get_environment("PMOT_PLEJOS") != "" else 0.5
 ## Error extra por metro de distancia del tiro y desde dónde apunta la IA (fracción del palo).
 static var PUNTERIA := float(OS.get_environment("PMOT_PUNT")) if OS.get_environment("PMOT_PUNT") != "" else 0.045
 static var PALO_TIRO := float(OS.get_environment("PMOT_PALO")) if OS.get_environment("PMOT_PALO") != "" else 0.7
