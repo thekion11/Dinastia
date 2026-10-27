@@ -26,8 +26,8 @@ func _exit_tree() -> void:
 	CarreraJugadorUI.mundo = null
 	Trabajadores.actual = null
 	Partido.ctx_medico = null
-	mundo_a_cargar = null
-	mundo_pregenerado = null
+	PedidoPartida.mundo_a_cargar = null
+	PedidoPartida.mundo_pregenerado = null
 
 ## Puentes (fase 6, paso 7): viven en `ui/principal/acciones_temporada.gd`.
 func _preparar_mando() -> void: _acciones_temporada._preparar_mando()

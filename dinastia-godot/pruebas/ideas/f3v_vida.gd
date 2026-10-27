@@ -205,5 +205,5 @@ func _probar_async() -> void:
 	_comprobar(_m.reloj.dia == 5 and _m.reloj.hora() == VidaCiudad.HORA_PARTIDO, "y pasado el partido, no salta a la semana siguiente")
 	_comprobar(absf(_vista._hora - _m.reloj.hora_decimal()) < 0.01, "la luz de la ciudad siguió al móvil")
 	tel.queue_free()
-	Principal.mundo_pregenerado = null
-	Principal.mundo_a_cargar = null
+	PedidoPartida.mundo_pregenerado = null
+	PedidoPartida.mundo_a_cargar = null

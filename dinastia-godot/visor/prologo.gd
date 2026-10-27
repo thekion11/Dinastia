@@ -10,7 +10,7 @@ extends Control
 ## Reutiliza el mundo que ya existe (`VistaCiudad` + `ExploradorCiudad`): aquí
 ## solo se decide QUÉ TOCA (el paso del guion de `PrologoPasos`), dónde espera
 ## el mentor y cuándo hablas. Esta escena la abre `OrquestadorMundo.preparar()`
-## con `Principal.mundo_pregenerado` ya listo, y NO lo consume: lo necesita
+## con `PedidoPartida.mundo_pregenerado` ya listo, y NO lo consume: lo necesita
 ## `Principal` cuando enciendas el PC.
 
 signal terminado
@@ -50,7 +50,7 @@ var _guardado_al_encender := false
 var _listo := false
 
 func _ready() -> void:
-	mundo = Principal.mundo_pregenerado if Principal.mundo_pregenerado != null else Principal.mundo_a_cargar
+	mundo = PedidoPartida.mundo_pregenerado if PedidoPartida.mundo_pregenerado != null else PedidoPartida.mundo_a_cargar
 	club = mundo.mi_club() if mundo != null else null
 	if club == null or mundo.obras == null or mundo.ciudad == null:
 		## Sin mundo que recorrer (una prueba vieja, un guardado raro): al menú de siempre.

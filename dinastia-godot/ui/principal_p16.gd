@@ -14,14 +14,14 @@ func _ready() -> void:
 	if ContadorFps.visible_pref:
 		ContadorFps.poner(get_tree(), true)
 	_construir()
-	if Principal.mundo_a_cargar != null:
-		var cargada := Principal.mundo_a_cargar
-		Principal.mundo_a_cargar = null
+	if PedidoPartida.mundo_a_cargar != null:
+		var cargada := PedidoPartida.mundo_a_cargar
+		PedidoPartida.mundo_a_cargar = null
 		_partida.entrar_cargada(cargada)
-	elif Principal.mundo_pregenerado != null:
-		var m := Principal.mundo_pregenerado
-		Principal.mundo_pregenerado = null
-		var modo := Principal.modo_elegido if Principal.modo_elegido != "" else "dt"
+	elif PedidoPartida.mundo_pregenerado != null:
+		var m := PedidoPartida.mundo_pregenerado
+		PedidoPartida.mundo_pregenerado = null
+		var modo := PedidoPartida.modo_elegido if PedidoPartida.modo_elegido != "" else "dt"
 		_partida.arrancar_con(m)
 		if not m.prologo_visto:   ## tras el prólogo 3D la guía del taxi sobra (26-10)
 			_guia.quizas(modo)

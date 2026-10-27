@@ -117,5 +117,5 @@ func _probar_async() -> void:
 		vest.revisar()
 		_comprobar(vest.cuerpos.is_empty(), "fuera de horario el vestuario queda vacío")
 		_e._salir_del_estadio()
-	Principal.mundo_pregenerado = null
-	Principal.mundo_a_cargar = null
+	PedidoPartida.mundo_pregenerado = null
+	PedidoPartida.mundo_a_cargar = null

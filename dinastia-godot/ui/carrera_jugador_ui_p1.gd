@@ -269,7 +269,7 @@ func _ser_entrenador(c: Club) -> void:
 		return
 	Partida.guardar(mundo, GUARDADO)
 	Partida.guardar(mundo, "partida")
-	Principal.mundo_a_cargar = mundo
+	PedidoPartida.mundo_a_cargar = mundo
 	get_tree().change_scene_to_file("res://escenas/principal.tscn")
 
 func _retiro_final() -> void:
