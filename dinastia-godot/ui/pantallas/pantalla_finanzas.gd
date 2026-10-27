@@ -1,15 +1,6 @@
 class_name PantallaFinanzas
-extends RefCounted
-## FINANZAS, CAMARÍN Y ROL: las cuentas, el vestuario, la equipación, las directrices y la carrera en el club.
-##
-## Sale de `ui/principal.gd` (mapa de metas 15: el archivo pasaba de
-## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
-## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
-
-var p: Principal
-
-func _init(principal: Principal) -> void:
-	p = principal
+extends "res://ui/pantallas/pantalla_finanzas_p1.gd"
+## [Capa 2/2 de `pantalla_finanzas.gd`] camarín (clanes, salud mental), directrices, rol y carrera
 
 func _mediar_clan(clan_id: String) -> void:
 	var r := p.mundo.vestuario.mediar(clan_id)

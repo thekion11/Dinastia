@@ -228,9 +228,9 @@ func _refrescar() -> void:
 	## sección, solo se pinta la que está activa- en vez de apilarse las
 	## cuatro siempre, aunque solo una se vea.
 	_perezoso(_lista_gente, _ui_gente._pintar_gente)
-	_perezoso(_lista_finanzas, _pintar_finanzas.bind(c))
+	_perezoso(_lista_finanzas, _ui_finanzas._pintar_finanzas.bind(c))
 	_perezoso(_lista_camarin, _pintar_camarin.bind(c))
-	_perezoso(_lista_ciudad, _pintar_ciudad.bind(c))
+	_perezoso(_lista_ciudad, _ui_ciudad._pintar_ciudad.bind(c))
 	_perezoso(_lista_editor, _ui_editor._pintar_editor)
 	_perezoso(_lista_glosario, _ui_opciones._pintar_glosario)
 	_perezoso(_lista_ajustes, _ui_ajustes._pintar_ajustes)
