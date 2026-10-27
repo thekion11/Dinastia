@@ -120,9 +120,7 @@ func _refrescar() -> void:
 	PersonajeDT.del_usuario = mundo.roles.aspecto_3d()
 	PersonajeDT.club_usuario = c.id if c != null else ""
 	## El edificio del club (estadio 2.0) también necesita saber del mundo.
-	if c != null:
-		EdificioClub.ctx = _contexto_edificio(c)
-		EdificioClub.mundo_ref = weakref(mundo)
+	EdificioClub.fijar_ctx(mundo, c)
 	## Entrenadora: si tu personaje es mujer, toda la interfaz te trata como tal.
 	Genero.fijar(String(PersonajeDT.aspecto(PersonajeDT.del_usuario)["cuerpo"]) == "female")
 	var liga := _liga_de(c)

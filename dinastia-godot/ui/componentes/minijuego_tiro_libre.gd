@@ -207,8 +207,9 @@ func _poner_balon() -> void:
 		pn.position = Vector3(0.6, 0, 0.3)
 		pn.rotation = Vector3.ZERO
 		Mini3D.anim(_portero, "portero_listo", "")
+	## La barrera se cubre con los brazos al frente («muralla» no es un clip: la barrera se quedaba quieta, hallazgo del 26-10).
 	for d: Dictionary in _barrera:
-		Mini3D.anim(d, "muralla", "")
+		Mini3D.anim(d, "brazos_al_frente", "")
 
 func _pintar_marcador() -> void:
 	_marcador.text = Idiomas.t("Tiros libres  ·  %d de %d  ·  goles: %d  ·  récord: %d") % [_tiros, TIROS, _goles, record]

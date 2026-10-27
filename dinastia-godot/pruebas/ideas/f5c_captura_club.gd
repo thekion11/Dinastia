@@ -43,6 +43,7 @@ func _ready() -> void:
 	_vista = VistaCiudad.new()
 	add_child(_vista)
 	_vista.animo = CiudadAnimo.de(_m, club)
+	EdificioClub.fijar_ctx(_m, club)
 	var perfil := _m.perfil_estadio_de(club)
 	_vista.abrir(club, _m.obras, _m.ciudad, perfil)
 	_vista.explorar("pie", Vector3(0, 0, -440))

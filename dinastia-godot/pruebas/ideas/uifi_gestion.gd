@@ -113,7 +113,10 @@ func _probar() -> void:
 	_comprobar(_hay(lista, "(hoy)") and not _hay(lista, "(mes 0)"), "si lo más bajo es la caja de hoy, dice «hoy» y no «mes 0»")
 	var lista2b := VBoxContainer.new()
 	add_child(lista2b)
-	PanelFinanzas.pintar_balance_y_caja(lista2b, c, m, {"resultado": -(c.saldo + 12000000) * 2, "total_ingresos": 1000, "total_gastos": 9000}, _paleta())
+	## El flujo de caja se proyecta con los diccionarios por concepto («ingresos»/«gastos»), no con los totales:
+	## un gasto anual mayor que la caja deja algún mes en negativo (hallazgo del 26-10: la prueba pasaba totales sueltos).
+	PanelFinanzas.pintar_balance_y_caja(lista2b, c, m, {"resultado": -(c.saldo + 12000000) * 2, "total_ingresos": 1000, "total_gastos": 9000,
+		"ingresos": {"Taquilla": 0, "Socios": 1000}, "gastos": {"Sueldos": (c.saldo + 12000000) * 2}}, _paleta())
 	_comprobar(_hay(lista2b, "se queda en negativo"), "con la caja en negativo avisa del mes")
 	var g := GraficoFinanzas.flujo([100, 50, -20] as Array[int], _paleta())
 	g.size = Vector2(300, 150)
