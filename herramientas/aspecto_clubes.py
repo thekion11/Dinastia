@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """ORDEN 15 (27-10-2026): el aspecto de cada club real (escudo, uniforme, butacas) parecido al de verdad, sin copiarlo.
-Lee `herramientas/aspecto_clubes/*.txt` (una línea por club, campos separados por «|», vacío = el valor de siempre) y los vuelca en la tabla
-`ASPECTO_CLUB` de `datos/pack_real.json` (privado, con los nombres retocados). Línea:
+Lee `herramientas/aspecto_clubes/*.txt` (una línea por club, campos separados por «|», vacío = el valor de siempre) y lo entrega a
+`base_ficticia.py`, que lo vuelca en la tabla `ASPECTO_CLUB` del pack real (clave = nombre del pack) y de la base ficticia (clave = nombre
+ficticio, SIN siglas: son las del club real). Línea:
   nombre|forma|patrón|siglas|camiseta|k1|k2|pantalón|medias|esc1|esc2|butaca1|butaca2
   forma/patrón: `Escudo.FORMAS`/`PATRONES` · camiseta: clave de `DisenosKit.DISENOS` · k1/k2: colores de la camiseta · esc1/esc2: del escudo
   (si no, k1/k2 y luego los del club) · butaca1/butaca2: del estadio (si no, los del escudo).
-   cd dinastia-godot && python3 herramientas/aspecto_clubes.py [--comprobar]
-Termina con «ASPECTO: N clubes, M fallos». Con --comprobar no escribe."""
+Solo, comprueba los .txt contra el pack:   python3 herramientas/aspecto_clubes.py
+Termina con «ASPECTO: N clubes, M fallos»."""
 import glob
 import json
 import os
@@ -14,7 +15,9 @@ import re
 import sys
 
 UNLEET = {"0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "8": "b", "9": "g"}
-RUTA = "datos/pack_real.json"
+RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+GODOT = os.path.join(RAIZ, "dinastia-godot")
+DATOS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "aspecto_clubes")
 CAMPOS = ["forma", "patron", "siglas", "camiseta", "k1", "k2", "pant", "med", "esc1", "esc2", "asi1", "asi2"]
 HEX = re.compile(r"^#[0-9a-fA-F]{6}$")
 
@@ -34,41 +37,35 @@ def limpiar(n: str) -> str:
 
 
 def disenos() -> set:
-    t = open("ui/disenos_kit_p1.gd", encoding="utf-8").read()
+    t = open(os.path.join(GODOT, "ui/disenos_kit_p1.gd"), encoding="utf-8").read()
     a = t.index("const DISENOS")
     return set(re.findall(r'^\t\["(\w+)", "', t[a:t.index("\n]", a)], re.M))
 
 
 def listas(src: str, nombre: str) -> set:
-    t = open(src, encoding="utf-8").read()
+    t = open(os.path.join(GODOT, src), encoding="utf-8").read()
     a = t.index(nombre)
     b = t.index("]", t.index("[", a))
     return set(re.findall(r'"(\w+)"', t[a:b + 1]))
 
 
-def main() -> int:
-    comprobar = "--comprobar" in sys.argv
-    pack = json.load(open(RUTA, encoding="utf-8"))
-    tablas = pack["tablas"]
-    clubes = [c[0] for c in tablas["DATA_P1"] + tablas["DATA_P2"]]
-    clubes += [c[0] for l in tablas["PAISES_LIGAS"].values() for c in l["clubes"]]
-    por_limpio = {limpiar(n): n for n in clubes}
+def filas(clubes_limpios: set):
+    """{nombre limpio: fila} de todos los .txt, y la lista de fallos."""
     formas = listas("ui/escudo_p1.gd", "const FORMAS")
     patrones = listas("ui/escudo_p1.gd", "const PATRONES")
     kits = disenos()
-    nuevo, fallos, vistos = {}, 0, set()
-    for f in sorted(glob.glob("herramientas/aspecto_clubes/*.txt")):
+    nuevo, fallos = {}, []
+    for f in sorted(glob.glob(os.path.join(DATOS, "*.txt"))):
         for n, linea in enumerate(open(f, encoding="utf-8").read().splitlines(), 1):
             if not linea.strip() or linea.startswith("#"):
                 continue
             v = [x.strip() for x in linea.split("|")]
             v += [""] * (13 - len(v))
             real = v[0]
-            clave = por_limpio.get(real)
             malo = None
-            if clave is None:
+            if real not in clubes_limpios:
                 malo = "club desconocido"
-            elif real in vistos:
+            elif real in nuevo:
                 malo = "repetido"
             elif v[1] and v[1] not in formas:
                 malo = "forma «%s»" % v[1]
@@ -81,10 +78,8 @@ def main() -> int:
             elif len(v[3]) > 3:
                 malo = "siglas largas"
             if malo:
-                print("FALLO %s:%d %s: %s" % (os.path.basename(f), n, real, malo))
-                fallos += 1
+                fallos.append("%s:%d %s: %s" % (os.path.basename(f), n, real, malo))
                 continue
-            vistos.add(real)
             d = dict(zip(CAMPOS, v[1:13]))
             fila = {}
             if d["forma"] or d["patron"]:
@@ -102,15 +97,39 @@ def main() -> int:
             asi = [d["asi1"] or esc[0], d["asi2"] or esc[1]]
             if asi[0] and asi[1]:
                 fila["asientos"] = asi
-            nuevo[clave] = fila
-    falta = [n for n in clubes if n not in nuevo]
-    print("ASPECTO: %d de %d clubes con aspecto; sin él: %d" % (len(nuevo), len(clubes), len(falta)))
-    if fallos == 0 and not comprobar:
-        tablas["ASPECTO_CLUB"] = nuevo
-        with open(RUTA, "w", encoding="utf-8", newline="") as fh:
-            fh.write(json.dumps(pack, ensure_ascii=False, separators=(",", ":")))
-    print("ASPECTO: %d clubes, %d fallos" % (len(nuevo), fallos))
-    return 1 if fallos else 0
+            nuevo[real] = fila
+    return nuevo, fallos
+
+
+def tablas(CLUBES: dict, limpiar_fn, nombres_pack: list):
+    """(tabla de la base ficticia, tabla del pack) para `base_ficticia.py`. Falla si falta un club o hay un error."""
+    nuevo, fallos = filas(set(CLUBES))
+    falta = [n for n in CLUBES if n not in nuevo]
+    if fallos or falta:
+        for e in fallos:
+            print("ERROR aspecto_clubes:", e)
+        if falta:
+            print("ERROR aspecto_clubes: sin aspecto:", falta)
+        sys.exit(1)
+    pack = {n: nuevo[limpiar_fn(n)] for n in nombres_pack}
+    fic = {}
+    for real, fila in nuevo.items():
+        f = {k: v for k, v in fila.items() if k != "siglas"}
+        fic[CLUBES[real]] = f
+    return fic, pack
+
+
+def main() -> int:
+    pack = json.load(open(os.path.join(GODOT, "datos/pack_real.json"), encoding="utf-8"))["tablas"]
+    nombres = [c[0] for c in pack["DATA_P1"] + pack["DATA_P2"]]
+    nombres += [c[0] for l in pack["PAISES_LIGAS"].values() for c in l["clubes"]]
+    nuevo, fallos = filas({limpiar(n) for n in nombres})
+    for e in fallos:
+        print("FALLO", e)
+    falta = [n for n in nombres if limpiar(n) not in nuevo]
+    print("ASPECTO: %d de %d clubes con aspecto; sin él: %d" % (len(nuevo), len(nombres), len(falta)))
+    print("ASPECTO: %d clubes, %d fallos" % (len(nuevo), len(fallos) + len(falta)))
+    return 1 if fallos or falta else 0
 
 
 if __name__ == "__main__":
