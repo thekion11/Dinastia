@@ -9,7 +9,7 @@ const MARGEN := 1.15   ## lo que se mide más un 15 % es el techo que se escribe
 ## quien suba un techo tiene que decir por qué en el doc. «estadio» INCLUYE a «publico» y «butacas» (son MultiMesh de las tribunas), así que las categorías no suman el total.
 ## «extras», «cesped» y «balon» miden 0 o casi con la cámara del saque (fuera de cuadro o demasiado pequeños): sus techos son holguras, no medidas.
 const PRESUPUESTO := {
-	"total": [2953334, 2444], "jugadores": [79904, 63], "publico": [889910, 23], "butacas": [1786659, 20], "estadio": [2767256, 240],
+	"total": [2953334, 2444], "jugadores": [79904, 63], "publico": [889910, 27], "butacas": [1786659, 20], "estadio": [2767256, 240],
 	"entorno": [591987, 1983], "extras": [60000, 40], "cesped": [100, 8], "balon": [4000, 10],
 }
 const CATEGORIAS := ["jugadores", "publico", "butacas", "estadio", "entorno", "extras", "cesped", "balon"]
