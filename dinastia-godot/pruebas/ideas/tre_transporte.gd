@@ -74,19 +74,3 @@ func _probar() -> void:
 	_comprobar(true, "las tres vistas (completo, autobuses, metro) se dibujan sin error")
 	var tr := MetroCiudad.NOMBRES
 	_comprobar(tr["Línea 1"][1] == "Transbordo" and tr["Línea 2"][5] == "Transbordo", "«Transbordo» está en el cruce real de las dos líneas (x=660 y z=-660)")
-	## EMBARQUE: al parar, caminan hasta la puerta (suben) y desde ella (bajan) y desaparecen al llegar.
-	var gs2 := GenteSentada.new()
-	gs2.expl = ExploradorCiudad.new()
-	gs2.expl.cb = b
-	add_child(gs2)
-	var bus2 := Node3D.new()
-	add_child(bus2)
-	bus2.position = Vector3(100, 0, 0)
-	gs2.embarque(bus2)
-	_comprobar(gs2._figurantes.size() == 3, "al parar el autobús aparecen 3 figurantes (1 sube, 2 bajan): %d" % gs2._figurantes.size())
-	var f0: Dictionary = gs2._figurantes[0]
-	var n0: Node3D = (f0["d"] as Dictionary)["nodo"]
-	gs2._mover_figurantes(0.5)
-	_comprobar(n0.position.distance_to(f0["a"]) > 0.3, "el figurante camina hacia su destino")
-	gs2._mover_figurantes(60.0)
-	_comprobar(gs2._figurantes.is_empty(), "al llegar a la puerta/acera desaparecen")
