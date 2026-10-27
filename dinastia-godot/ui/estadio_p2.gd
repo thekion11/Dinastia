@@ -276,6 +276,21 @@ func _ciclar_preset(boton: Button) -> void:
 		_motor.fijar_preset(nuevo)
 	boton.text = _texto_preset()
 
+## La distancia de la cámara «Pro» (semana 4): cerca, normal o lejos; se guarda como el preset.
+static func pro_camara_guardada() -> String:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	var d := String(cfg.get_value(CajonAjustes.SECCION, "pro_camara", "normal"))
+	return d if CameraRig.PRO_DISTANCIAS.has(d) else "normal"
+
+func _fijar_pro_camara(clave: String) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	cfg.set_value(CajonAjustes.SECCION, "pro_camara", clave)
+	cfg.save(CajonAjustes.RUTA)
+	if _rig != null:
+		_rig.pro_distancia = float(CameraRig.PRO_DISTANCIAS[clave])
+
 ## Pasa al siguiente nivel (vuelve al primero tras «Leyenda»).
 func _ciclar_dificultad_cpu() -> void:
 	var orden: Array = MotorJugable.ORDEN_DIFICULTAD

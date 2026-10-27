@@ -77,6 +77,23 @@ func _probar() -> void:
 	motor.fijar_preset("realista")
 	_comprobar(err_a < err_r and falta_a < falta_r, "Arcade: error de pase y tiro ×%.2f (Realista ×%.2f) y faltas ×%.2f (×%.2f)" % [err_a, err_r, falta_a, falta_r])
 	_comprobar(MotorJugable.PRESETS.has(VistaEstadio.preset_guardado()), "el preset guardado es válido («%s»)" % VistaEstadio.preset_guardado())
+	## Semana 4: el indicador de pase marca a un compañero con el balón en tus pies; apagado, a nadie.
+	var yo: Dictionary = {}
+	for p: Dictionary in motor.jugadores:
+		if bool(p["es_local"]) and not bool(p["por"]):
+			yo = p
+	motor.estado = "juego"
+	motor.usuario = yo
+	motor._tomar(yo)
+	motor.indicador_pase = true
+	motor._indicar_pase(0.2)
+	var marcado: Dictionary = motor._receptor_marcado
+	_comprobar(not marcado.is_empty() and marcado != yo and bool(marcado["es_local"]), "con el balón, la flecha marca a un compañero (%s)" % String(marcado.get("slot_code", "?")))
+	motor.indicador_pase = false
+	motor._indicar_pase(0.2)
+	_comprobar(motor._receptor_marcado.is_empty(), "con el indicador apagado, la flecha se va")
+	motor.usuario = {}
+	_comprobar(CameraRig.PRO_DISTANCIAS["lejos"] > CameraRig.PRO_DISTANCIAS["normal"] and CameraRig.PRO_DISTANCIAS["normal"] == 4.2, "cámara Pro: cerca, normal (4,2 m, la de siempre) y lejos")
 	## Un rato de partido con centros de verdad no rompe nada.
 	motor.autopiloto = true
 	motor._saque_de_centro(true)

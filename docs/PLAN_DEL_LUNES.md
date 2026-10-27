@@ -509,7 +509,6 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 ### Semana 3 (27-10 → 2-11) — Partido II: porteros, pases y presets
 
 ### Semana 4 (3-11 → 9-11) — Partido III: espectáculo
-- [ ] Ayudas del modo jugable (indicador de pase, cámara «Be a Pro» ajustable).
 
 ### Semana 5 (10-11 → 16-11) — Ciudad hacia «look GTA» posible
 - [ ] Paleta por barrio y desgaste en fachadas y asfalto.
