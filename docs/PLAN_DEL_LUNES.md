@@ -389,9 +389,8 @@ bancos y cajeros; policía, bomberos y servicios públicos; mejorar el sistema d
   (`visor/peluches_juego.gd` + `ciudad_arcade.gd`): UNA sala, tres máquinas. E ante la máquina: meter moneda (1 €), mover la garra con A/D/W/S, bajar con espacio;
   la garra agarra con probabilidad que baja con el peso/tamaño del peluche y sube un poco en cada intento fallido (para no ser imposible); el premio cae al buzón y va a un
   baúl en casa del DT. Los 14 peluches del zip (reducidos) se reparten en las tres máquinas; las decoraciones nuevas del dueño se suman con una tabla (`PELUCHES`).
-- **E. Policía y bomberos** (`nucleo/incidentes_ciudad.gd` + `visor/servicios_vida.gd`): un incidente cada cierto tiempo (robo, incendio, accidente) con una sirena y un titular en el móvil;
-  salen un coche patrulla / un camión / una ambulancia desde su edificio (ya existen los vehículos) por las calles hasta el sitio y vuelven. Multas: pasarse un semáforo en rojo con
-  el coche del DT = multa pagada de la cartera (si hay policía a la vista). El incendio se apaga con el camión; si la red de agua del sector falla, tarda más (une con `redes`).
+- **E. Policía y bomberos** — HECHO (27-10, ver `ciudad_26_10.md`). Falta: que el tráfico de las avenidas ceda el paso a las sirenas (hoy los coches no se apartan), verlo
+  en la ciudad ENTERA con la cámara del juego (solo hay capturas de calles de prueba) y que el accidente y el robo tengan más detalle (peatones mirando, un sospechoso).
 - **F. Coches mejor**: primero una AUDITORÍA del coche actual (`motor_jugable*`, `trafico_ciudad*`: cuántos sub-pasos, colisiones, aparcar, marchas) y de los peatones; luego tres mejoras
   pequeñas elegidas por el dueño (frenada/derrape, daños visibles, aparcar entre dos coches, gasolina con luz de reserva, radio). No se diseña más hasta tener la auditoría.
 

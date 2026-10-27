@@ -26,6 +26,8 @@ func _instalacion(uso: String, r: Rect2) -> void:
 	var w := r.size.x
 	var f := r.size.y
 	var nombre := ""
+	if uso in ["comisaria", "bomberos", "hospital"]:
+		ServiciosVida.registrar(uso, c, w, f)   ## de aquí salen los vehículos de emergencia (pieza E)
 	match uso:
 		"plaza_mayor":
 			nombre = "Plaza Mayor"
