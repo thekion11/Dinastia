@@ -92,7 +92,7 @@ static func terminar(d: Dictionary) -> void:
 		kit["dis"] = "liso"
 	VestidorQ.vestir_equipacion(d, c1, c2, "liso", piel, pelo_col, pant, pant, true, kit, 0)
 	var corte: String = CORTES_M[rng.randi() % CORTES_M.size()] if mujer else CORTES_H[rng.randi() % CORTES_H.size()]
-	PeloQ.poner(d, corte, pelo_col, not mujer and rng.randf() < 0.35)
+	PeloQ.poner(d, corte, pelo_col, not mujer and rng.randf() < 0.35, PeloDrive.elegir(int(d["semilla"]), mujer))
 	PosturaQ.poner(nodo, int(d["semilla"]))
 	## Cara de la biblioteca modular para los hombres (13-10-2026): mezclas de
 	## varias caras, nunca la de nadie; sin ella todos tenían la mandíbula del
