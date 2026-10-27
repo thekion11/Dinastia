@@ -336,7 +336,10 @@ func _asentar(d: Dictionary, s: Dictionary, e: Dictionary) -> void:
 		if cadera > 0.0:
 			n.position.y = p.y + BANCO_ASIENTO + 0.08 - cadera * 0.99
 	var charla := bool(s.get("charla", false))
-	Mini3D.anim(d, "sentado" if sentado else ("charla" if charla else "parado"), "")
+	if sentado or charla:
+		Mini3D.anim(d, "sentado" if sentado else "charla", "")
+	else:
+		PeatonVida.en_anden(d, _rng_gente.randf())   ## de pie esperando: móvil, llamada o quieto
 	(d["anim"] as AnimationPlayer).seek(_rng_gente.randf() * 0.8, true)
 	_fijos_gente.append({"d": d, "charla": charla, "t": _rng_gente.randf_range(2.0, 8.0), "s": s, "e": e})
 
