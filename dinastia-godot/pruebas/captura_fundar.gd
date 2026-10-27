@@ -24,7 +24,7 @@ func _process(_d: float) -> void:
 		## instanciar principal.tscn como hijo, igual que el resto de capturas.
 		var mun: Mundo = _pantalla.get("_mundo")
 		mun.fundar_club("Atlético Prueba", "CHI")
-		Principal.mundo_pregenerado = mun
+		PedidoPartida.mundo_pregenerado = mun
 	if _n == ESPERA + 2:
 		_pantalla.queue_free()
 		_pantalla = load("res://escenas/principal.tscn").instantiate()

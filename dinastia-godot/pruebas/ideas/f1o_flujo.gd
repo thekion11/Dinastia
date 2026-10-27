@@ -9,6 +9,8 @@ var _cancelado := false
 
 func _probar() -> void:
 	_titulo("FASE 1 · ENTRADA: orquestador de etapas 0-6")
+	## La entrada se prueba hasta Principal; el prólogo 3D de la fase 2 tiene su propia prueba (f2p_prologo).
+	OrquestadorMundo.sin_prologo = true
 	OrquestadorEntrada.ruta_prefs = "user://f1o_entrada_prueba.cfg"
 	OrquestadorMundo.ruta_preferencias = "user://f1o_preferencias_prueba.cfg"
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(OrquestadorEntrada.ruta_prefs))
@@ -23,8 +25,8 @@ func _probar() -> void:
 	_flujo_jugador()
 	Idiomas.idioma = idioma_antes
 	Genero.fijar(mujer_antes)
-	Principal.mundo_pregenerado = null
-	Principal.modo_elegido = ""
+	PedidoPartida.mundo_pregenerado = null
+	PedidoPartida.modo_elegido = ""
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(OrquestadorEntrada.ruta_prefs))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(OrquestadorMundo.ruta_preferencias))
 
@@ -120,7 +122,7 @@ func _flujo_reemplazar() -> void:
 	Idiomas.idioma = "es"
 	_comprobar(String(_resultado.get("escena", "")) == OrquestadorMundo.PRINCIPAL, "termina en Principal")
 	var m: Mundo = _resultado.get("mundo")
-	_comprobar(m != null and Principal.mundo_pregenerado == m, "la partida pasa a Principal por `mundo_pregenerado`")
+	_comprobar(m != null and PedidoPartida.mundo_pregenerado == m, "la partida pasa a Principal por `mundo_pregenerado`")
 	if m == null:
 		return
 	var c := m.mi_club()
@@ -139,12 +141,12 @@ func _flujo_reemplazar() -> void:
 		"la casa y la mascota de la configuración")
 	_comprobar(String((m.roles.look.get("p3d", {}) as Dictionary).get("cuerpo", "")) == "female" and int(m.roles.look.get("barba", 1)) == 0,
 		"el aspecto del personaje (3D y retrato: una entrenadora no lleva barba)")
-	_comprobar(Principal.dt_nombre_elegido == "Ana Prueba" and Principal.modo_elegido == "dt" and Principal.dificultad_elegida == "facil",
+	_comprobar(PedidoPartida.dt_nombre_elegido == "Ana Prueba" and PedidoPartida.modo_elegido == "dt" and PedidoPartida.dificultad_elegida == "facil",
 		"nombre, modo y dificultad (la del menú viejo) llegan a Principal")
 	_comprobar(String((OrquestadorMundo.ultima_eleccion.get("config", {}) as Dictionary).get("densidad", "")) == "alta"
 		and not OrquestadorMundo.ultima_eleccion.has("mundo"), "lo demás de la configuración queda a mano para las fases siguientes")
 	## Lo que haría `Principal._arrancar_con()`: el rol no pisa el aspecto ni el nombre.
-	m.roles.arrancar(Principal.modo_elegido, Principal.dt_nombre_elegido)
+	m.roles.arrancar(PedidoPartida.modo_elegido, PedidoPartida.dt_nombre_elegido)
 	_comprobar(m.roles.nombre == "Ana Prueba" and m.roles.look.has("p3d"), "al arrancar el rol se conservan nombre y aspecto")
 	o.queue_free()
 
@@ -207,9 +209,9 @@ func _flujo_pagar() -> void:
 	_comprobar(juega and baja.tabla_puntos.has(c.id) if c != null else false, "el calendario y la tabla lo incluyen")
 	_comprobar(m != null and m.directiva.confianza == 40 and m.prensa.animo == 60 - 15, "confianza 40 y ánimo de la afición −15")
 	## La etapa 6 de verdad emite su propio formato (`PersonajeDatos`): se aplica con su «aplicar».
-	_comprobar(Principal.dt_nombre_elegido == "Paula Pago" and m != null
+	_comprobar(PedidoPartida.dt_nombre_elegido == "Paula Pago" and m != null
 		and String((m.roles.look.get("perfil", {}) as Dictionary).get("apellido", "")) == "Pago" and int(m.roles.look.get("edad", 0)) == 51,
-		"personaje con nombre completo, edad y perfil (%s)" % Principal.dt_nombre_elegido)
+		"personaje con nombre completo, edad y perfil (%s)" % PedidoPartida.dt_nombre_elegido)
 	o.queue_free()
 
 func _personaje_real() -> Dictionary:
@@ -233,7 +235,7 @@ func _flujo_club_existente() -> void:
 	_comprobar(not pasos.has("entrada"), "sin crear club no hay etapa de entrada al campeonato (%s)" % ", ".join(pasos))
 	var m: Mundo = _resultado.get("mundo")
 	_comprobar(m != null and m.mi_club_id == elegido.id and m.clubes.size() == mini.clubes.size(), "diriges el club elegido en el globo")
-	_comprobar(Principal.modo_elegido == "dir" and Principal.dificultad_elegida == "normal", "modo Director Deportivo, dificultad normal")
+	_comprobar(PedidoPartida.modo_elegido == "dir" and PedidoPartida.dificultad_elegida == "normal", "modo Director Deportivo, dificultad normal")
 	o.queue_free()
 
 func _flujo_jugador() -> void:

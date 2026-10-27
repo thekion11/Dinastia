@@ -44,9 +44,9 @@ func abrir(modo: String = "") -> void:
 ## Arranca el recorrido la primera vez que alguien empieza una carrera, o
 ## siempre si se pidió desde la tarjeta "Tutorial" del menú.
 func quizas(modo: String) -> void:
-	if not Principal.tutorial_pedido and Tutorial.visto():
+	if not PedidoPartida.tutorial_pedido and Tutorial.visto():
 		return
-	Principal.tutorial_pedido = false
+	PedidoPartida.tutorial_pedido = false
 	abrir(modo)
 
 ## El control que señala el paso `clave` (o null si no existe).

@@ -91,5 +91,5 @@ func _probar_async() -> void:
 	_comprobar(_e._t_gesto_propio > 1000.0, "el gesto dura hasta que te muevas")
 	_e._gesto_propio("saludo_mano")
 	_comprobar(_e._t_gesto_propio <= 3.0, "un gesto suelto sigue durando lo que su clip")
-	Principal.mundo_pregenerado = null
-	Principal.mundo_a_cargar = null
+	PedidoPartida.mundo_pregenerado = null
+	PedidoPartida.mundo_a_cargar = null
