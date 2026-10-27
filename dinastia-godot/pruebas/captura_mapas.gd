@@ -13,8 +13,8 @@ func _ready() -> void:
 	ex.armar_red()
 	ex.armar_bloques()
 	ex.armar_transporte()
-	if OS.get_environment("TELEFERICO") == "1" and ex.get("teleferico") != null:
-		pass
+	ex.tele_nodo = Teleferico.montar(b)
+	ex.teleferico = ex.tele_nodo.datos()
 	_mapa = MapaTransporte.crear(ex, 0)
 	add_child(_mapa)
 

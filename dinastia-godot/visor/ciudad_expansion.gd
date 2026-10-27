@@ -152,6 +152,8 @@ func construir() -> void:
 	_parque_eolico()
 	_deposito_agua()
 	redes = RedesCiudadVista.crear(self, 20261027)
+	tele_nodo = Teleferico.montar(b)
+	teleferico = tele_nodo.datos()
 	_volcar_lotes()
 
 ## Un bloque alto hecho con el mismo modelo apilado planta sobre planta (en

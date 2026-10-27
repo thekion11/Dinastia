@@ -70,6 +70,8 @@ static func _mat(c: Color, rug: float = 0.85, emi: float = 0.0) -> StandardMater
 static func servicio(e, k: String) -> bool:
 	if k.begins_with("surtidor_"):
 		return e.vida != null and e.vida.usar_surtidor(k)
+	if k.begins_with("tele_"):
+		return Teleferico.usar(e, k)
 	if k.begins_with("sub_"):
 		return e.sub != null and e.sub.usar(e, k)
 	if not k.begins_with("alcantarilla_"):

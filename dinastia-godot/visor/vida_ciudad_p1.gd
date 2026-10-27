@@ -198,7 +198,7 @@ func _desmayo() -> void:
 	if _desmayo_en_curso or mundo.necesidades == null:
 		return
 	_desmayo_en_curso = true
-	if String(expl.estado) in ["anden", "tren", "puerta", "subsuelo"]:
+	if String(expl.estado) in ["anden", "tren", "puerta", "subsuelo", "cima"]:
 		_desmayo_en_curso = false
 		return
 	expl._fundido()

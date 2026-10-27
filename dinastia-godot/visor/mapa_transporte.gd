@@ -211,16 +211,20 @@ func _metro() -> void:
 func _teleferico() -> void:
 	if teleferico.is_empty():
 		return
+	## El cerro queda fuera del plano de la ciudad: se dibuja la estación de abajo y una flecha hacia la cima.
 	var col: Color = teleferico.get("color", Color(0.95, 0.6, 0.1))
-	var a := _p(teleferico["base"])
-	var b := _p(teleferico["cima"])
-	draw_line(a, b, col, 4.0, true)
+	var base: Vector3 = teleferico["base"]
+	var cima: Vector3 = teleferico["cima"]
+	var a := _p(Vector3(minf(base.x, LIMITE - 20.0), 0, base.z))
+	var dir := Vector2(cima.x - base.x, cima.z - base.z)
+	var b2 := a + dir.normalized() * 70.0
+	draw_line(a, b2, col, 4.0, true)
+	draw_line(b2, b2 + (-dir.normalized()).rotated(0.45) * 14.0, col, 4.0, true)
+	draw_line(b2, b2 + (-dir.normalized()).rotated(-0.45) * 14.0, col, 4.0, true)
 	draw_circle(a, 7.0, Color.WHITE)
-	draw_circle(b, 7.0, Color.WHITE)
 	draw_circle(a, 4.5, col)
-	draw_circle(b, 4.5, col)
-	_insignia((a + b) * 0.5, "T", col)
-	_t(b + Vector2(10, 4), "Cerro · cima", 13)
+	_insignia(a + Vector2(-26, -4), "T", col)
+	_t(b2 + Vector2(8, 16), "Cerro (%.1f km al SE)" % (dir.length() / 1000.0), 13)
 
 # ============================================================================ LEYENDA
 
@@ -247,7 +251,8 @@ func _leyenda() -> void:
 		_t(Vector2(x, y), "TELEFÉRICO", 18, Color(0.45, 0.9, 1.0))
 		y += 30.0
 		_insignia(Vector2(x + 14.0, y - 5.0), "T", teleferico.get("color", Color(0.95, 0.6, 0.1)))
-		_t(Vector2(x + 36.0, y), String(teleferico.get("nombre", "Teleférico del Cerro")), 15)
+		var desnivel := float((teleferico["cima"] as Vector3).y - (teleferico["base"] as Vector3).y)
+		_t(Vector2(x + 36.0, y), "%s · +%d m" % [String(teleferico.get("nombre", "Teleférico del Cerro")), roundi(desnivel)], 15)
 		y += 36.0
 	_t(Vector2(x, size.y - 60.0), "● estación   ■ parada   ┅ subterránea   ━ elevada", 14, GRIS)
 	_t(Vector2(x, size.y - 36.0), "Transbordo en el cruce de las líneas 1 y 2.", 14, GRIS)
