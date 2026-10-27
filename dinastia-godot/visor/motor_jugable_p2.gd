@@ -19,6 +19,7 @@ func _preparar_uno(p: Dictionary) -> void:
 	p["regate_hasta"] = 0.0
 	p["anim_actual"] = ""
 	p["por"] = String(p.get("slot_code", "")) == "POR"
+	p["pie"] = String(jd.get("pie", "D")); p["pierna_debil"] = int(jd.get("pierna_debil", 3))
 	_rasgos_duelo(p, jd)
 
 static func dir_ataque(es_local: bool) -> float:

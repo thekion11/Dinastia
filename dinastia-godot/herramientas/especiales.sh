@@ -26,6 +26,8 @@ pasa "todos los scripts compilan" "godot --headless --path . --script res://prue
 # 2b. Las auditorías de datos y de clubes (base ficticia y real; ~9 s cada una; catálogo M-413, 27-10-2026)
 pasa "auditoría de datos" "godot --headless --path . res://pruebas/auditoria_datos.tscn" "0 hallazgos"
 pasa "auditoría de clubes" "godot --headless --path . res://pruebas/auditoria_clubes.tscn" "FIN. 0 fallos"
+# 2c. Las partidas guardadas de versiones viejas siguen abriendo (1094, 27-10)
+pasa "partidas viejas abren" "godot --headless --path . res://pruebas/ideas/sav_fosiles.tscn" "FIN. 0 fallos"
 # 3. Colisiones del club (paredes, muebles, gente, barreras invisibles)
 pasa "colisiones del club" "godot --headless --path . res://pruebas/prueba_colisiones_club.tscn" "FIN. 0 fallos"
 # 4. Partido con el motor real (acta = césped) y control del equipo
@@ -34,6 +36,11 @@ pasa "control del equipo" "godot --headless --path . res://pruebas/prueba_contro
 # 5. Modos de juego y menú de la ciudad a pie
 pasa "modos de juego" "godot --headless --path . res://pruebas/prueba_modos.tscn" "0 fallos"
 pasa "menú ciudad a pie" "godot --headless --path . res://pruebas/prueba_menu_ciudad_pie.tscn" "0 fallos"
+# 5b. Pruebas viejas que nadie lanzaba y siguen pasando (reutilizadas el 27-10, orden 14 del dueño)
+pasa "contador de FPS" "godot --headless --path . res://pruebas/prueba_contador_fps.tscn" "FIN CONTADOR FPS. 0 fallos"
+pasa "dominadas" "godot --headless --path . res://pruebas/prueba_dominadas.tscn" "DOMINADAS: 0 fallos"
+pasa "minijuegos nuevos" "godot --headless --path . res://pruebas/prueba_minijuegos_nuevos.tscn" "FIN MINIJUEGOS NUEVOS. 0 fallos"
+pasa "motor jugable (unidad)" "godot --headless --path . res://pruebas/prueba_motor_jugable.tscn" "FIN MOTOR. 0 fallos"
 # 6. Todas las pantallas y botones de la interfaz (lento)
 if [ "$1" = "todo" ]; then
   # Balance del mundo a largo plazo (10 temporadas x 3 semillas, ~3,5 min) y rendimiento en 20 (~1,5 min)
@@ -42,6 +49,8 @@ if [ "$1" = "todo" ]; then
   # El motor del partido nota la calidad y la pizarra (sonda_motor_dt con umbrales, M-414; 6 partidos por escenario, ~7 min)
   pasa "motor: el mejor gana al peor" "ESCENARIO=calidad N=6 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
   pasa "motor: la pizarra se nota" "ESCENARIO=tactica N=6 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
+  pasa "ceremonia de carrera" "godot --headless --path . res://pruebas/prueba_carrera_ceremonia.tscn" "FIN. 0 fallos"
+  pasa "práctica" "godot --headless --path . res://pruebas/prueba_practica.tscn" "FIN PRÁCTICA. 0 fallos"
   pasa "recorrido de todas las pantallas" "godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "RECORRIDO: [0-9]+ pantallas"
   # 20 pantallas clave contra sus referencias (pruebas/visual/visual.gd; ~1,5 min). Necesita Vulkan
   # (lavapipe sin GPU); sin él se salta. Tras un cambio visual QUERIDO: herramientas/visual.sh referencias.

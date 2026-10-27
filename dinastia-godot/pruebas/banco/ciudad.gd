@@ -289,11 +289,11 @@ func _probar_cartera_dt() -> void:
 	mm.roles.cartera.efectivo = 12
 	mm.roles.cartera.pagar_efectivo(2, "Café", 1)
 	var filas := TelefonoCartera.filas(mm)
-	_comprobar(filas.size() == 4 and String(filas[0][0]).contains("Efectivo") and String(filas[3][0]).contains("Café"), "el móvil enseña efectivo, tarjeta, PIN de fábrica y el último movimiento")
+	_comprobar(filas.size() == 5 and String(filas[0][0]).contains("Efectivo") and String(filas[3][0]).contains("Café") and String(filas[4][0]).contains("peluches"), "el móvil enseña efectivo, tarjeta, PIN de fábrica, el último movimiento y el álbum de peluches")
 	_comprobar(String(filas[3][1]).contains("2"), "y el importe del movimiento")
 	mm.roles.cartera.bloqueada = true
 	mm.roles.cartera.pin_inicial = false
-	_comprobar(TelefonoCartera.filas(mm).size() == 3, "bloqueada y con PIN propio: sin la fila del PIN")
+	_comprobar(TelefonoCartera.filas(mm).size() == 4, "bloqueada y con PIN propio: sin la fila del PIN")
 	_comprobar(TelefonoCartera.filas(Mundo.new()).is_empty(), "sin roles el móvil no enseña cartera")
 	## Guardado: ida y vuelta por JSON y partida vieja.
 	var r2 := Roles.new(m)
@@ -428,3 +428,19 @@ func _probar_expendedora_balon() -> void:
 	b._physics_process(1.0 / 60.0)
 	_comprobar(b.patadas == patadas0, "en coche (modo distinto de «pie») no se patea")
 	raiz.queue_free()
+
+## 27-10: género en supermercado y farmacia (InteriorComercioExtra).
+func _probar_comercio_lleno() -> void:
+	_titulo("CIUDAD: SUPERMERCADO, FARMACIA Y OFICINA LLENOS")
+	var faltan: Array = []
+	for n: String in InteriorComercioExtra.GENERO + InteriorComercioExtra.MEDICINA:
+		if not ResourceLoader.exists("res://assets/kenney/%s.glb" % n):
+			faltan.append(n)
+	_comprobar(faltan.is_empty(), "los modelos del género existen %s" % str(faltan))
+	for k: String in ["edificio_mercado", "edificio_tienda|Farmacia", "edificio_oficina"]:
+		var raiz := Node3D.new()
+		var sala := InteriorInstalacion.en_mundo(raiz, k)
+		_comprobar(sala != null and raiz.get_child_count() > 40, "%s se monta llena (%d nodos)" % [k, raiz.get_child_count()])
+		if sala != null:
+			sala.free()
+		raiz.free()

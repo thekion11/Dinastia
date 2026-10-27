@@ -191,6 +191,7 @@ var _tactil_vec := Vector2.ZERO
 ## coche girar más cerrado, como al derrapar), el volante se mueve suave y la
 ## carrocería se inclina en curvas y al acelerar o frenar.
 var _volante := 0.0
+var _pedal := 0.0              ## acelerador (+) o freno (−) ya suavizado
 var _ui_volante: Control
 var _cabeceo := 0.0
 var _balanceo := 0.0

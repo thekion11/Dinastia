@@ -308,3 +308,125 @@ func _probar_porque_moral() -> void:
 	_comprobar(j1 != null and j1.historial_moral.size() == j0.historial_moral.size(), "el historial de moral se guarda y se carga")
 	var sat: Dictionary = m.vestuario.satisfaccion_de(j0)
 	_comprobar(sat.has("min") and sat.has("rend") and sat.has("tact") and sat.has("inst"), "el Camarín puede leer lo que pesa en la satisfacción")
+
+## 27-10 (pieza D): los peluches coleccionables, la máquina funcional y sus logros.
+func _probar_peluches() -> void:
+	_titulo("PELUCHES: TABLA, PARTIDA, ÁLBUM Y LOGROS")
+	var ids := {}
+	var series := {}
+	for p: Dictionary in Peluches.PELUCHES:
+		ids[String(p["id"])] = true
+		series[String(p["serie"])] = true
+	_comprobar(Peluches.PELUCHES.size() == 14 and ids.size() == 14 and series.size() == Peluches.SERIES.size(), "tabla: 14 peluches con ids distintos en %d series" % series.size())
+	_comprobar(Peluches.de_maquina(0).size() >= 3 and Peluches.de_maquina(1).size() >= 3 and Peluches.de_maquina(2).size() >= 3, "cada una de las tres máquinas trae al menos tres peluches")
+	var c1 := Peluches.campo(1, 77)
+	var c2 := Peluches.campo(1, 77)
+	var solape := false
+	var ajeno := false
+	for i in c1.size():
+		ajeno = ajeno or int(Peluches.def(String(c1[i]["id"]))["maquina"]) != 1
+		for j in range(i + 1, c1.size()):
+			solape = solape or Vector2(float(c1[i]["x"]) - float(c1[j]["x"]), float(c1[i]["y"]) - float(c1[j]["y"])).length() < 0.2
+	_comprobar(c1.size() >= 5 and str(c1) == str(c2) and not solape and not ajeno, "el campo (%d peluches) sale de la semilla, sin solapes y solo con los de su máquina" % c1.size())
+	var pe := Peluches.new()
+	var ligero := Peluches.def("pollito")
+	var pesado := Peluches.def("ballena")
+	_comprobar(pe.probabilidad(ligero, 0.0) > pe.probabilidad(pesado, 0.0) and pe.probabilidad(ligero, 0.0) > pe.probabilidad(ligero, 0.1), "agarra mejor lo ligero y lo que tiene la garra encima")
+	_comprobar(pe.probabilidad(ligero, Peluches.RADIO_AGARRE + 0.01) == 0.0, "fuera del radio no hay agarre")
+	var p0 := pe.probabilidad(pesado, 0.05)
+	pe.fallos_seguidos = 3
+	_comprobar(pe.probabilidad(pesado, 0.05) > p0 and pe.probabilidad(pesado, 0.05) <= 0.95, "cada fallo seguido sube la probabilidad (nunca es imposible ni segura)")
+	pe.fallos_seguidos = 0
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5
+	var campo_a: Array = [{"id": "oso", "x": 0.5, "y": 0.5}]
+	var aire := pe.intento(campo_a, 0.05, 0.05, rng)
+	_comprobar(int(aire["indice"]) == -1 and not bool(aire["exito"]) and pe.fallos_seguidos == 1, "cerrar la garra en el aire falla y cuenta como intento fallido")
+	pe.fallos_seguidos = 0
+	var aciertos := 0
+	for i in 400:
+		pe.fallos_seguidos = 0
+		if bool(pe.intento(campo_a, 0.5, 0.5, rng)["exito"]):
+			aciertos += 1
+	_comprobar(aciertos > 160 and aciertos < 320, "un oso (peso 3) justo debajo de la garra se agarra en torno al 50-60 %% (%d de 400)" % aciertos)
+	var album := Peluches.new()
+	var nuevos: Array = []
+	for p: Dictionary in Peluches.de_serie("bosque"):
+		nuevos = album.conseguir(String(p["id"]))
+	_comprobar(nuevos == ["serie_bosque"] and album.serie_completa("bosque") and not album.completa(), "completar una serie da su logro (y solo ese)")
+	_comprobar(album.conseguir("oso").is_empty() and int(album.conseguidos["oso"]) == 2, "repetir un peluche no repite el logro (y cuenta las veces)")
+	var todos: Array = []
+	for p: Dictionary in Peluches.PELUCHES:
+		todos.append_array(album.conseguir(String(p["id"])))
+	_comprobar(album.completa() and album.logros.size() == Peluches.SERIES.size() + 1 and album.logros.has(Peluches.LOGRO_TODO) and todos.has(Peluches.LOGRO_TODO), "con los 14: un logro por serie y otro por la colección entera (%d logros)" % album.logros.size())
+	var mundo_p := Mundo.new()
+	var roles := Roles.new(mundo_p)
+	roles.peluches.conseguir("dragon")
+	roles.peluches.fallos_seguidos = 2
+	var copia := Roles.new(mundo_p)
+	copia.desde_dic(roles.a_dic())
+	_comprobar(copia.peluches.tiene("dragon") and copia.peluches.fallos_seguidos == 2, "el álbum se guarda y se carga con la partida")
+	var vieja := Roles.new(mundo_p)
+	var d: Dictionary = roles.a_dic()
+	d.erase("peluches")
+	vieja.desde_dic(d)
+	_comprobar(vieja.peluches.distintos() == 0, "una partida vieja (sin álbum) empieza con el álbum vacío")
+	## La máquina: monedas del efectivo y partidas hasta ganar.
+	var panel := PanelPeluches.new()
+	panel.roles = Roles.new(mundo_p)
+	panel.dia = 3
+	panel.maquina = 0
+	panel._montar()
+	panel.roles.cartera.efectivo = 0
+	panel._insertar()
+	_comprobar(panel.fase == PanelPeluches.ESPERA and panel.roles.cartera.efectivo == 0, "sin monedas en el bolsillo la máquina no arranca")
+	panel.roles.cartera.efectivo = 60
+	var gano := 0
+	var jugadas := 0
+	for k in 50:
+		panel._insertar()
+		if panel.fase != PanelPeluches.MOVER:
+			break
+		jugadas += 1
+		var objetivo: Dictionary = panel.campo[k % panel.campo.size()]
+		panel.garra = Vector2(float(objetivo["x"]), float(objetivo["y"]))
+		panel.soltar()
+		var pasos := 0
+		while panel.fase != PanelPeluches.FIN and pasos < 200:
+			panel._process(0.1)
+			pasos += 1
+		if panel._gana != "":
+			gano += 1
+	_comprobar(jugadas == 50 and panel.roles.cartera.efectivo == 60 - jugadas * Peluches.MONEDA, "cada partida cuesta una moneda del efectivo (%d partidas, quedan %d €)" % [jugadas, panel.roles.cartera.efectivo])
+	_comprobar(gano >= 10 and panel.roles.peluches.distintos() >= 3, "apuntando bien se gana a menudo (%d de %d) y el álbum crece (%d distintos)" % [gano, jugadas, panel.roles.peluches.distintos()])
+	panel.free()
+	var cb := CityBuilder.new()
+	add_child(cb)
+	var puestas := CiudadArcade.montar(cb, Vector3(0, 0.12, 0), 80.0, 60.0)
+	var puntos := 0
+	for pc: Dictionary in cb.puntos_clic:
+		if String(pc.get("k", "")).begins_with("peluches_"):
+			puntos += 1
+	_comprobar(puestas == 3 and puntos == 3, "la sala del centro comercial tiene 3 máquinas y las tres son puntos de la E (%d)" % puntos)
+	_comprobar(not PeluchesCiudad.servicio(null, "cajero_1"), "el gancho de la E ignora lo que no es una máquina de peluches")
+	for p: Dictionary in Peluches.PELUCHES:
+		var n := PelucheModelo.montar(p)
+		if String(p["id"]) in ["oso", "ballena", "dragon"]:
+			_comprobar(n.get_child_count() >= 7, "el peluche «%s» se dibuja (%d piezas)" % [String(p["id"]), n.get_child_count()])
+		n.free()
+	## La estantería del álbum en la vivienda: más peluches ganados, más peluches en la balda.
+	PeluchesCiudad.album = Peluches.new()
+	var r0 := Node3D.new()
+	var sala0 := InteriorInstalacion.en_mundo(r0, "edificio_vivienda")
+	var sin_nada := r0.get_child_count()
+	PeluchesCiudad.album.conseguir("oso")
+	PeluchesCiudad.album.conseguir("pollito")
+	PeluchesCiudad.album.conseguir("dragon")
+	var r1 := Node3D.new()
+	var sala1 := InteriorInstalacion.en_mundo(r1, "edificio_vivienda")
+	_comprobar(r1.get_child_count() == sin_nada + 3, "la estantería de la vivienda enseña los peluches ganados (%d → %d nodos)" % [sin_nada, r1.get_child_count()])
+	PeluchesCiudad.album = null
+	for x: Node in [sala0, sala1, r0, r1]:
+		if x != null:
+			x.free()
+	cb.queue_free()

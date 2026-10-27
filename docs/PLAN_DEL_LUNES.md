@@ -7,31 +7,26 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 ## 0. Lo que espera una decisión tuya (lista corta)
 
 Sin esto, las filas que dependen de ello no avanzan. El detalle está en la sección que se cita.
+- **Decididas por el dueño (27-10 tarde)** (CLAUDE.md orden 14): pantalla de entrada APROBADA; «el bloqueo» de modos ACEPTADO; las 53 escenas de prueba: reutilizar lo que sirva; peatones SÍ en bus y transportes; dificultad de la CPU en 8 categorías (Practicante, Cadete, Debutante = normal, Semiprofesional, Profesional, Experto, Maestro, Ultimate) más dificultades fuera del partido; policía y bomberos SÍ; peluches SÍ y coleccionables con logros; museo con trofeos interactivos; pelo con lo del Drive; clasificar las ~1.200 ideas.
+- **Clasificación de las 1.201 ideas** (27-10): `docs/04_auditorias/clasificacion_ideas_2026-10-27.md`. 68 para el lanzamiento y 43 que hay que verificar jugando (unas 26-32 sesiones-día, 9-11 días con 3 sesiones); 731 después, 296 a verificar después, 63 descartadas y 20 de decisión del dueño. Revisarla y aprobarla.
+- **Regalos del Drive**: el contenedor no puede bajarlos (`grass.blend` 14 MB, personajes 182 MB y 129 MB, peluches): compartir la carpeta «Dinastia_respaldo_2026-10-24» como «cualquiera con el enlace: lector».
 - **Decididas por el dueño (26-10):** logros de racha: **cuentan jugando y simulando**; «Siempre, todo el partido» apaga ese lado del plan: **se queda así**; versión **0.9.0**; reparto de la TV 50/50: **sí**; taquilla ×3,5: **sí**; **por ahora sin pago** (nada de monedas ni gacha); banderas **detalladas** (flag-icons, MIT); narración hablada: **después del lanzamiento**; filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`: **todas al plan**; fuentes OFL, silbato VCSL y CI: **sí**; modelo B (MakeHuman): **pulirlo más** (fase 4 traje, fase 5 cuerpo) antes de integrar; rueda de prensa: **compararla con la competencia y completarla**.
 - **Decididas por el dueño (26-10):** logros de racha: **cuentan jugando y simulando**; «Siempre, todo el partido» apaga ese lado del plan: **se queda así**; versión **0.9.0**; reparto de la TV 50/50: **sí**; taquilla ×3,5: **sí**; **por ahora sin pago** (nada de monedas ni gacha); banderas **detalladas** (flag-icons, MIT); narración hablada: **después del lanzamiento**; filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`: **todas al plan** (hechas en la sesión 5: la 14 entera, la parte del partido de la 4 y el núcleo de la 18, ver `docs/04_auditorias/sesion_5.md`; de la 4 queda «en finanzas, cada ingreso y gasto con su origen»; de la 18, la interfaz de la pizarra con las dos fases y los roles, y que la IA use roles); fuentes OFL, silbato VCSL y CI: **sí**; modelo B (MakeHuman): **pulirlo más** (fase 4 traje, fase 5 cuerpo) antes de integrar; rueda de prensa: **compararla con la competencia y completarla**.
-- **Aprobar la pantalla de entrada** como escena principal (`Inicio.flujo_nuevo`, hoy `true` en código): verla en juego real y decir sí o no (§8).
-- **Empujar `main` reescrito** y **borrar las 8 ramas y `latest`** (§1); cuándo fusionar a `main` la rama actual y la de la sesión 2 (§9).
+- **`main` reescrito y etiqueta `latest`**: las 8 ramas viejas ya no están (27-10); siguen la etiqueta `latest` y la historia vieja de `main` (502 objetos de capturas e informes): empujarlo necesita un *force push* que solo puede hacer el dueño (§1). Cuándo fusionar a `main` la rama actual (§9).
 - **Foundry/Azure** sí o no; **abrir la red a Wikimedia** (caras y escudos que faltan) (§1).
-- **«El bloqueo»** de modos: opción en Ajustes con «Todo abierto» por defecto, sí o no (§1).
 - **Texturas de caras**: permiso para probar BC7 en una muestra y medir ΔE de piel (§4).
-- **53 escenas de prueba sin mención**: cuáles se borran (§4).
-- **Carrera de Jugador**: cuánto subir la dificultad de la CPU en ese modo (§2.4).
-- **Peatones**: subir al autobús y tomar coches del tráfico (dijiste «no por ahora»; el transporte público del guion lo vuelve a pedir) (§2.4).
 - **20 decisiones de producto** (monetización y estética) (§7, final) y las prioridades de «Huecos y mejoras propuestas» (§10).
 - Solo tuyo, sin decisión de diseño: FPS en hardware real, builds, keystore (cambiar contraseña), licencias, derechos de imagen, música y voces, binarios al Drive (§1).
 
 ## 1. Lunes 26-10 — del dueño
 
-- [ ] **Borrar 8 ramas y la etiqueta `latest`** (el clon pesa 1,33 GiB hasta entonces). Con `git clone --single-branch --branch main` ya sale ligero.
-  `git push origin --delete ccr-54306f57-jlcywg claude/godot-project-review-o1dvr1 claude/inspiring-allen-8vu29s claude/sweet-turing-tysv99 borrar-ccr-54306f57-jlcywg borrar-claude-godot-project-review-o1dvr1 borrar-claude-inspiring-allen-8vu29s borrar-claude-sweet-turing-tysv99` y `git push origin --delete latest`. La rama `respaldo-historia-2026-10-24` (= `main` antes de reescribir): dejarla 1-2 semanas y borrarla. GitHub conserva `refs/pull/*` con objetos viejos.
+- [ ] **Borrar la etiqueta `latest`** (las 8 ramas viejas ya no están, 27-10): `git push origin --delete latest`.
 - [ ] **Quitar documentos y capturas viejos del historial de `main`**: ya reescrito en la rama de trabajo (530 rutas fuera, 802 → 682 MiB, árbol idéntico); falta empujarlo a `main` (el clasificador de permisos bloqueó el empuje forzado): añadir una regla de Bash o ejecutar tú, desde un clon espejo reescrito, `git push --force-with-lease=main:2f97059740f0b995ddc1b391ea3282eb26e345bd origin main:main`. Las ramas viejas y `respaldo-historia-2026-10-24` conservan todo lo borrado.
 - [ ] Probar Foundry/Azure (200 USD, 30 días) y decidir si se usa.
 - [ ] Abrir la red a Wikimedia/banderas (necesario para las caras que faltan: ~906 de 2.125 y escudos).
-- [ ] CI `compilar.yml`: ruta y preset ya corregidos; falta imagen de Godot **4.7** (la 4.3 no abre el proyecto) y la configuración de exportación.
 - [ ] **Perfil de FPS en hardware real** (M-337, P0): PC modesto (Intel UHD) y móvil; aquí solo hay render por software.
 - [ ] Builds, keystore, licencias, derechos de imagen, música y voces (🔒). Cambiar la contraseña del keystore (la vieja sigue en el historial). Confirmar la fuente de los modelos 🟡 (Sketchfab, Meshy, mocap de Gumroad, Canva).
 - [ ] Subir los binarios pesados (`recursos/`, `marca/`, `material/`) al Drive con `herramientas/drive_subir.ps1` y verificar. Respaldo de texto: `docs/05_referencia/RESPALDO_DRIVE.md`.
-- [ ] Decidir: «el bloqueo» (modos que se desbloquean jugando) como opción en Ajustes, «Todo abierto» por defecto.
 
 ## 2. El guion: fases 0–6 (reestructuración)
 
@@ -390,12 +385,12 @@ bancos y cajeros; policía, bomberos y servicios públicos; mejorar el sistema d
   pagar con tarjeta (PIN) o efectivo. El surtidor deja de cobrar al club y cobra con la misma caja; elegir combustible (dos precios, que salen de las existencias de `redes`).
   CONTRATO con la sesión de redes: ella conserva `repostar(id, sector, litros) -> {litros, coste}` y los precios; yo solo hago la pantalla, el cobro y la tienda. Si cambia esa firma, me avisa.
 - **Semana 6 (27-10, pedido del líder): MÁQUINAS EXPENDEDORAS y BALÓN SUELTO — HECHO en el centro comercial y la gasolinera** (`visor/expendedora_ciudad.gd`, `nucleo/expendedora.gd`, `Necesidades.animar`: cobran de `CarteraDT` y suben la energía; gancho único `ComercioCiudad.servicio`). Balón suelto en el parque más cercano (`visor/balon_suelto.gd`: gravedad, bote, rozamiento, rebote en los bordes; se patea andando, no en coche). **Hechas también (27-10, tras el OK del líder): andenes del metro (`MetroCiudad.expendedoras` + `_usar_en_anden`), estación central (junto a las puertas), estadio (exterior a la izquierda de la puerta del club y en el pasillo de la sala de prensa, `EdificioClub.expendedoras` + `VidaCiudad.usar_en_estadio`).** Capturas: `capturas_ciudad_c2/expendedora_estadio_exterior.jpg` y `expendedora_sala_prensa.jpg`. Pendiente: ver la de la estación a pie y el aviso «E: comprar» en la calle y en el estadio (en el metro ya sale).
-- **D. Peluches** (`visor/peluches_juego.gd` + `ciudad_arcade.gd`): UNA sala, tres máquinas. E ante la máquina: meter moneda (1 €), mover la garra con A/D/W/S, bajar con espacio;
+- **D. Peluches — HECHA la parte jugable (27-10)**: `nucleo/peluches.gd` (tabla `PELUCHES` de 14 con series, máquina, peso, forma, color y `modelo`/`escala` donde enchufar los .glb del dueño; álbum y 5 logros: uno por serie y uno por la colección; guardado en `Roles`), `ui/componentes/panel_peluches.gd` (vista cenital de la garra: moneda de 1 € del EFECTIVO, A/D/W/S o flechas, espacio; probabilidad por peso y distancia, con ayuda tras cada fallo), `visor/peluches_ciudad.gd` (puntos `peluches_0..2` en las 3 máquinas de `ciudad_arcade.gd`, gancho de la E, estantería del álbum en la vivienda) y `visor/peluche_modelo.gd` (relleno con esferas hasta tener los modelos); resumen y logros en la app Banco del móvil. Falta: los 14 modelos reales (cuando el dueño pueda bajarlos del Drive y se apruebe subirlos reducidos) y ver la sala en la ciudad entera. Diseño original:
+  (`visor/peluches_juego.gd` + `ciudad_arcade.gd`): UNA sala, tres máquinas. E ante la máquina: meter moneda (1 €), mover la garra con A/D/W/S, bajar con espacio;
   la garra agarra con probabilidad que baja con el peso/tamaño del peluche y sube un poco en cada intento fallido (para no ser imposible); el premio cae al buzón y va a un
   baúl en casa del DT. Los 14 peluches del zip (reducidos) se reparten en las tres máquinas; las decoraciones nuevas del dueño se suman con una tabla (`PELUCHES`).
-- **E. Policía y bomberos** (`nucleo/incidentes_ciudad.gd` + `visor/servicios_vida.gd`): un incidente cada cierto tiempo (robo, incendio, accidente) con una sirena y un titular en el móvil;
-  salen un coche patrulla / un camión / una ambulancia desde su edificio (ya existen los vehículos) por las calles hasta el sitio y vuelven. Multas: pasarse un semáforo en rojo con
-  el coche del DT = multa pagada de la cartera (si hay policía a la vista). El incendio se apaga con el camión; si la red de agua del sector falla, tarda más (une con `redes`).
+- **E. Policía y bomberos** — HECHO (27-10, ver `ciudad_26_10.md`). Falta: verlo
+  en la ciudad ENTERA con la cámara del juego (solo hay capturas de calles de prueba) y que el accidente y el robo tengan más detalle (peatones mirando, un sospechoso).
 - **F. Coches mejor**: primero una AUDITORÍA del coche actual (`motor_jugable*`, `trafico_ciudad*`: cuántos sub-pasos, colisiones, aparcar, marchas) y de los peatones; luego tres mejoras
   pequeñas elegidas por el dueño (frenada/derrape, daños visibles, aparcar entre dos coches, gasolina con luz de reserva, radio). No se diseña más hasta tener la auditoría.
 
@@ -490,7 +485,6 @@ la liga pero empiezas peor. Los dos son recuperables, ninguno es un castigo defi
 
 De `PENDIENTES.md` (traspaso al 21-10):
 - **Fusionar a `main`**: nada de la rama actual (ni de la sesión 2, §9) está en `main` aún.
-- **Carrera de Jugador**: dificultad de la CPU en ese modo (¡con cuidado!), más eventos.
 - **Partido**: roles por jugador (PlayStyles), más desmarques de ruptura, cartel del 4.º
   árbitro con corte de cámara, red del arco.
 - **Gente del club y ciudad en primeras filas** (M-040) y mejor variedad (M-033).
@@ -524,7 +518,7 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 
 ### Semana 7 (24-11 → 30-11) — Tutorial y primera hora de juego
 - [ ] Indicaciones sobre la pantalla: hay resaltado y flecha sobre el control de cada misión (27-10); falta acortar los textos más largos del mentor (medir en la primera hora con jugadores nuevos).
-- [ ] Desbloqueo opcional de modos (ver «el bloqueo»).
+
 - [ ] Pruebas de la primera hora: qué ve un jugador nuevo, sin perderse.
 
 ### Semana 8 (1-12 → 7-12) — Ultra pulido de todo
@@ -560,11 +554,17 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 
 ### Detectados en pruebas y aún sin cerrar
 
-- **Puntería del tiro sin el pulido** (27-10): con `TIRO_PULIDO` apagado por defecto (solo con `PMOT_TIRO=1`), un tirador de 97 desde 20 m cae a ±0,09 m de donde apunta: el error solo depende de (1 − tiro). Decidir si se enciende el pulido de puntería (baja los goles a ~2 por partido) o se da un suelo de error a todos.
+- **`PeatonQ.terminar` no viste a nadie si el nodo aún no está en el árbol** (27-10, ejecutora; salían en ropa interior en las cabinas del teleférico): `terminar` hace `if not nodo.is_inside_tree(): return` y `Mini3D.persona` no avisa. Solución aplicada en `TelefericoCabina.poblar`: crear las personas con el padre YA en el árbol. Pendiente: que `terminar` pida la ropa en `_ready` o avise (`push_warning`) para que no vuelva a pasar en otra escena.
+- **TIRO_PULIDO** (dueño 27-10: encender y pulir más). ENCENDIDO el 27-10 (`PMOT_TIRO=0` lo apaga). Medido con el mismo once a los dos lados, 6 partidos: encendido tal cual daba 0,8 goles por partido porque el portero paraba el 89 % de lo que iba dentro; con la parada que cuesta más lejos del cuerpo y con tiros fuertes (`PARADA_LEJOS` 0,5) quedan 2,3 goles, 20 % de conversión y 59 % de paradas (real: ~2,7, ~11 % y ~70 %). Queda para la pasada final del motor: más tiros por partido (hoy ~12; real ~25), el portero algo más seguro y el pie malo.
+- **Aviso de «Unexpected NUL character» al cargar `PantallaModos`** (27-10): tres avisos de Godot al cargar el menú de modos (también sin los cambios del día). No viene de los `preload` de texto de `menu_modos*`: buscar qué recurso o JSON lleva un byte nulo.
 - **Pelo de los peatones** (27-10, P4): los mechones se ven duros; suavizar normales empeora. Arreglarlo pide cambiar las mallas de pelo (Quaternius trae más cortes): decisión de aspecto del dueño.
+- **Cada gesto con su habilidad, su pie y su clima** (dueño 27-10, HECHO la base: `GestoTecnico`, sonda `s3g_gesto_tecnico`): rosca, vaselina, raso, potente, cabezazo y los pases corto, tenso, al hueco y largo pesan sus atributos; la pierna débil (1-5 estrellas) suma hasta un 48 % de error; el clima del partido (lluvia, tormenta, nieve, niebla) cambia el error, el agarre del portero y lo que rueda el balón. Medido (6 partidos): 2,3 goles en seco, 2,5 con lluvia, 2,7 con nieve. Para la pasada final: rasgos del jugador (los «PlayStyles»), viento en lo que va por el aire, calor y altura en el cansancio, y un ajuste fino con N grande.
+- **PASADA FINAL DEL MOTOR (decisión del dueño, 27-10)**: al final del plan, junta la contrapartida táctica (abajo), lo visual, la IA de la CPU, el comportamiento, el físico, el pasto nuevo (`grass.blend` del Drive, 13,9 MB; el contenedor no lo puede bajar porque es privado: el dueño lo comparte «cualquiera con el enlace» o lo exporta a .glb; Blender ya está listo como `bpy` 5.0.1 para convertirlo), las físicas y más sonidos.
 - **Táctica sin contrapartida** (27-10, `sonda_motor_dt` ESCENARIO=tactica N=6, umbrales M-414): el local ofensivo (presión y línea altas) tira 12,8 y concede 6,2; el defensivo tira 3,0 y concede 9,8 (y encaja 2,0 goles frente a 1,7). Presionar arriba no deja la espalda libre y el bloque bajo no protege: ofensivo siempre gana. Falta el coste de la línea alta (balones a la espalda, contras) y que el bloque bajo quite tiros. Probado y revertido el 27-10: doblar el peso de la línea sin balón y filtrar más contra línea alta EMPEORA (el bloque bajo pierde 6 de 6 y concede 11 tiros); la causa parece la pasividad de mentalidad 0 + presión 0 (regala el balón). Pide una pasada propia con N grande.
+- **Capturas de la ciudad en Forward+ ya no caben** (27-10 tarde): con todo lo sumado hoy (pasajeros, cables, detalles, lluvia, parques) la captura de mediodía también pasa del límite de memoria del contenedor y la mata el sistema. Revisar en Compatibility aquí (posiciones y composición) y la luz en el PC del dueño; o bajar la calidad a MEDIO en `captura_luz_ciudad`.
 - **Capturas de noche en Forward+** (27-10): en este contenedor (Vulkan por software) la ciudad con las farolas encendidas (103 luces, 49 farolas de 46 m) pasa de 14,5 GB y el sistema mata la captura, desde las 18:20; también con el código de antes de S5. Mediodía y mañana caben (~7 GB). La noche se revisa en Compatibility o en hardware real; medir FPS de noche en el PC del dueño (§1).
-- **Frenada del coche** (27-10, `pmov_conduccion`): de 72 km/h a cero en 0,82 s (~24 m/s², 2,4 g; un coche real, ~1 g) y, sin pedales, pierde ~5,8 m/s² (de 54 km/h se para en ~4 s). Arcade a propósito o demasiado brusco: decidirlo jugándolo.
+- **Vehículos más suaves y realistas** (dueño 27-10, ejecutora, pieza F): frenada (hoy 72 km/h → 0 en 0,82 s, ~2,4 g; `pmov_conduccion`), aceleración y giro de autos, metro y bus; crear el tren; mejorar el teleférico.
+- **Butacas y aficionados** (dueño 27-10, sesión 3): separar un poco a los hinchas (se ven muy juntos), subir la calidad de las butacas, mejorar los accesos y colorear las butacas por nivel según el color del club, elegible en la personalización del menú inicial.
 - **Roles por jugador** (como los PlayStyles de FC 26) con efecto en el motor.
 - **Red del arco**: onda más ancha y lenta (17-10), techo sin asomar por el larguero. **Cartel del cuarto árbitro**: 20-10 a tamaño real (0,92 × 0,62 m), dígitos con halo, mango y por encima de la cabeza. Desde la toma abierta de TV sigue siendo pequeño (como en la tele de verdad, que corta a un primer plano): pendiente un corte de cámara al cartel.
 - Desmarques de ruptura (los peatones: §2.4).
@@ -576,7 +576,7 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 - [ ] Capas `_pN` (233 archivos): repartir por responsabilidad real hasta que la herencia en cadena ya no haga falta (`docs/05_referencia/indice_de_capas.md`).
 - [ ] Texturas (medido el 24-10): de las 3.103 sin pérdida, 2.535 son caras reales (prohibido tocarlas sin tu OK), 494 iconos de botones y 40 escudos especiales; el resto ya está comprimido. Hecho: 4 texturas normal/roughness de personajes a 1024 px (−48 MB estimados). DECISIÓN DEL DUEÑO: probar BC7 de alta calidad en una muestra de caras y medir ΔE de piel antes de generalizar; identificar ~24 texturas dinámicas de 1024² sin nombre (~100 MB); reapuntar 38 duplicados (ahorra disco, no VRAM).
 - [ ] Oclusión en más zonas de la ciudad (`OclusoresCiudad`); el `_process` de `dibujo_mando`/`MandoGiratorio` ya solo pinta cuando cambia (comprobado el 27-10).
-- [ ] 53 escenas de prueba sin ninguna mención: decidir cuáles se borran (§0). La fase 0 dio prueba a 30 módulos: repasar si queda alguno de `visor/`/`nucleo/` sin prueba directa.
+- [ ] Escenas de prueba que nadie lanza (27-10, orden 14: reutilizar antes de borrar). Contadas de nuevo: 354 en `pruebas/` sin mención, casi todas capturas y diagnósticos que se lanzan a mano (se quedan). De las 14 `prueba_*`: 6 siguen pasando y ya corren en `especiales.sh` (contador de FPS, dominadas, minijuegos nuevos, motor jugable; ceremonia de carrera y práctica en `todo`). Rotas, a arreglar o retirar: `prueba_repeticion` (solo graba 4,2 s: ¿fallo real de la repetición?), `prueba_descanso_3d` (falla en la fase 2, minuto 48), `prueba_intro` (el partido no arranca tras el vuelo corto; la ceremonia lo sustituyó el 13-10 y la prueba se cuelga con pantalla), `prueba_casa_kenney` (captura sin pantalla). Sin veredicto propio: `prueba_alineacion_indebida`, `prueba_carrera_flujo`, `prueba_ciudad_modelos` (inventario). Fase 0: repasar si queda algún módulo de `visor/`/`nucleo/` sin prueba directa.
 - [ ] `MotorLibre` es prototipo (el juego usa `MotorJugable`): decidir si se borra.
 - [ ] C++/GDExtension solo si el perfil en hardware real lo pide.
 - [ ] 23 imágenes ≥ 2048 px que no lo necesitan: bajarlas a 2048 (auditoría 3, §4; no las caras sin tu OK).
@@ -618,7 +618,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-277 | P1 | PARCIAL | 274 textos en español directamente en `ui/` (I-02), concentrados… | ✅ 15-10: 1.132 textos envueltos; quedan ~15 (M-447) |
 | M-279 | P1 | PENDIENTE | 27 módulos de `visor/` y 8 de `nucleo/` sin referencia directa en… | los módulos siguen sin prueba directa |
 | M-280 | P1 | PENDIENTE | 105 módulos de UI/visor sin referencia en banco/pruebas | sin prueba visual automática |
 | M-433 | P1 | PARCIAL | Controles táctiles sólo en la ciudad (cruceta/E) | 21-10: en PC ya no salen la cruceta ni «Salir» al pasear (estadio y ciudad) y la E solo aparece si hay algo con lo que interactuar (`ExploradorCiudad.es_tactil`); el partido sigue sin controles táctil |
@@ -861,7 +860,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-459 | P2 | PENDIENTE | Cinco idiomas de los nueve nacieron con frases que luego se… | sin flujo único |
 | M-460 | P2 | PENDIENTE | Las traducciones nuevas (552) están hechas a mano sin revisión nativa | sin marcar |
 | M-461 | P2 | PENDIENTE | Las cadenas con `%s`/`%d` dependen del orden de argumentos; en… | sin placeholders con nombre |
-| M-462 | P2 | PENDIENTE | Etiquetas de botón con emoji/caracteres (💾 ↺ ● ✔ ▸ ◯) pueden no… | sin prueba de glifos |
 | M-463 | P2 | PENDIENTE | `Idiomas.t` devuelve la clave si falta (silencioso) | sin registro de clave faltante |
 | M-464 | P2 | PENDIENTE | No existe un informe de «frases por pantalla»: no se sabe qué… | sin informe por pantalla |
 | M-466 | P2 | PENDIENTE | `datos/idiomas_extra.json` se reescribe entero con cada ampliación… | un solo archivo |
@@ -1911,7 +1909,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 
 **53. Monetización y Modelo Indie**
 - 1081. Sin cajas de recompensa ni azar pagado — _Existe una mecánica tipo 'sobre'; la promesa 'sin cajas de recompensa' es válida mientras no se pague_
-- 1094. Compromiso de que las partidas guardadas sobrevivan a las actualizaciones — _No hay migraciones entre versiones del esquema; compromiso solo en la intención_
 - 1095. Compatibilidad hacia atrás de las bases de datos — _Sin versionado de bases de datos_
 
 ### No existen (173)

@@ -11,11 +11,12 @@ extends Node3D
 
 const RUTA := "res://assets/kenney/tren/"
 const S := 2.4                               ## escala del kit (vía de 1 m → 2,4 m)
-const CICLO := 70.0
-const LLEGADA := 14.0
+const CICLO := 240.0                          ## 96 s llegando desde el horizonte, 30 s parado, 96 s saliendo y un respiro
+const LLEGADA := 96.0
 const ESPERA := 30.0
-const SALIDA := 14.0
+const SALIDA := 96.0
 const VIA_X := 8.0
+const Y_TREN := 0.25 + 0.36 * S              ## altura del tren sobre la vía en el andén
 const LARGO_TUNEL := 26.0
 
 ## El reloj de la partida (lo pone `VidaCiudad.enganchar`); null = tiempo real.
@@ -27,6 +28,11 @@ var _min_vista := -1
 var _seg_min := 0.0                      ## [{nodo, fase, z0, z1}]
 var _t := 0.0
 var cuenta := {}
+var perfil_via := PackedFloat32Array()   ## altura del terreno a lo largo de la vía exterior (`ViaEstacion.perfil`)
+var z_tunel_anden := 0.0                 ## z donde empieza el túnel del andén (el tren va por el subsuelo antes)
+var largo_del_tren := 0.0
+var z_vestibulo := 0.0                   ## z (local) donde los pasajeros entran al vestíbulo
+var _gente: Array = []                   ## los pasajeros (`PasajerosEstacion`), creados al primer tren con servicio
 
 ## `c` centro del bloque (y = suelo), `w` x `f` su tamaño; `mats` = materiales de la ciudad (claro, vidrio, piedra).
 static func montar(b: CityBuilder, c: Vector3, w: float, f: float, mats: Dictionary, ex: CiudadExpansion = null) -> EstacionCentral:
@@ -152,11 +158,14 @@ func _construir(b: CityBuilder, w: float, f: float, mats: Dictionary, ex: Ciudad
 	_rotulo(Vector3(w * 0.33, 4.4, z_front + 3.4), "TAXIS · AUTOBUSES", 0.012)
 	## Los trenes: tres coches (cabina, vagón, cabina vuelta) por vía; la segunda desfasada media vuelta.
 	var z_parada := z_tope - 3.0
-	var z_dentro := z_h0 + 20.0
+	z_vestibulo = z_tope + 2.0
+	var z_dentro := ViaEstacion.Z_BOCA_B - 10.0     ## dentro del túnel del horizonte (la vía exterior: `ViaEstacion`)
+	perfil_via = ViaEstacion.montar(self, b, beton)
+	z_tunel_anden = z_h0
 	var i := 0
 	for sx: float in [-VIA_X, VIA_X]:
 		var tren := Node3D.new()
-		tren.position = Vector3(sx, 0.25 + 0.36 * S, z_dentro)
+		tren.position = Vector3(sx, Y_TREN, z_dentro)
 		add_child(tren)
 		var largo_tren := 0.0
 		for coche in [["train-electric-city-a", 2.4, 0.0], ["train-electric-city-b", 2.7, 0.0], ["train-electric-city-a", 2.4, PI]]:
@@ -169,6 +178,7 @@ func _construir(b: CityBuilder, w: float, f: float, mats: Dictionary, ex: Ciudad
 			n.position = Vector3(0, 0, -largo_tren - float(coche[1]) * S * 0.5)
 			tren.add_child(n)
 			largo_tren += float(coche[1]) * S + 0.3
+		largo_del_tren = largo_tren - 0.3
 		_trenes.append({"nodo": tren, "fase": float(i) * CICLO * 0.5, "z0": z_dentro, "z1": z_parada})
 		i += 1
 	cuenta["trenes"] = _trenes.size()
@@ -183,21 +193,27 @@ func _rotulo(pos: Vector3, texto: String, tam: float) -> void:
 	l.position = pos
 	add_child(l)
 
-## Dónde está el morro del tren `i` en el instante `t` del ciclo (y si está a la vista).
+## Dónde está el morro del tren `i` en el instante `t` del ciclo (y si está a la vista), con su velocidad `v` y su
+## aceleración `a` a lo largo de la vía. Perfil cúbico (27-10-2026, pieza F-3): llega frenando con aceleración que se
+## anula justo al parar (sin tirón de parada) y sale arrancando suave, en vez del cuadrático de antes.
 func posicion_tren(i: int, t: float) -> Dictionary:
 	var tr: Dictionary = _trenes[i]
 	var u := fposmod(t + float(tr["fase"]), CICLO)
 	var z0: float = tr["z0"]
 	var z1: float = tr["z1"]
+	var dz := z1 - z0
 	if u < LLEGADA:
 		var k := u / LLEGADA
-		return {"z": lerpf(z0, z1, 1.0 - (1.0 - k) * (1.0 - k)), "visible": true, "parado": false}
+		var r := 1.0 - k
+		return {"z": z0 + dz * (1.0 - r * r * r), "visible": true, "parado": false,
+			"v": dz * 3.0 * r * r / LLEGADA, "a": -dz * 6.0 * r / (LLEGADA * LLEGADA)}
 	if u < LLEGADA + ESPERA:
-		return {"z": z1, "visible": true, "parado": true}
+		return {"z": z1, "visible": true, "parado": true, "v": 0.0, "a": 0.0}
 	if u < LLEGADA + ESPERA + SALIDA:
 		var k2 := (u - LLEGADA - ESPERA) / SALIDA
-		return {"z": lerpf(z1, z0, k2 * k2), "visible": true, "parado": false}
-	return {"z": z0, "visible": false, "parado": false}
+		return {"z": z1 - dz * k2 * k2 * k2, "visible": true, "parado": false,
+			"v": -dz * 3.0 * k2 * k2 / SALIDA, "a": -dz * 6.0 * k2 / (SALIDA * SALIDA)}
+	return {"z": z0, "visible": false, "parado": false, "v": 0.0, "a": 0.0}
 
 ## El instante del ciclo (en «segundos de juego»: 1 min de juego = 6 s) y si hay servicio (de 01:00 a 05:00, no).
 func _tiempo() -> Dictionary:
@@ -217,5 +233,13 @@ func _process(delta: float) -> void:
 	for i in _trenes.size():
 		var p := posicion_tren(i, float(tp["t"]))
 		var n: Node3D = _trenes[i]["nodo"]
-		n.visible = bool(p["visible"]) and bool(tp["servicio"])
+		n.visible = bool(p["visible"]) and bool(tp["servicio"]) and ViaEstacion.visible_en(float(p["z"]), largo_del_tren, z_tunel_anden)
 		n.position.z = float(p["z"])
+		n.position.y = Y_TREN + ViaEstacion.altura(perfil_via, float(p["z"]))   ## sigue el terraplén de la vía exterior
+		## La caja se inclina con la frenada y la arrancada (cabeceo) y se mece un poco al rodar (balanceo).
+		var vel := absf(float(p["v"]))
+		n.rotation.x = clampf(-float(p["a"]) * 0.01, -0.02, 0.02)
+		n.rotation.z = sin(_t * 6.0 + float(i) * 2.0) * 0.0025 * clampf(vel / 6.0, 0.0, 1.0)
+	if _gente.is_empty() and bool(tp["servicio"]) and not _trenes.is_empty():
+		_gente = PasajerosEstacion.crear(self)
+	PasajerosEstacion.actualizar(self, _gente, _trenes, float(tp["t"]), bool(tp["servicio"]))

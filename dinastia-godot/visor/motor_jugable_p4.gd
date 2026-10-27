@@ -3,6 +3,9 @@ extends "res://visor/motor_jugable_p3.gd"
 
 # ---------------------------------------------------------------- balón
 
+var clima := ""            ## la clave de `Clima` del partido (GestoTecnico.fijar_clima)
+var _roce_clima := 1.0     ## lluvia: el balón resbala más; nieve: frena antes
+
 func _mover_balon(delta: float) -> void:
 	if not poseedor.is_empty():
 		var n: Node3D = poseedor["node"]
@@ -53,7 +56,7 @@ func _mover_balon(delta: float) -> void:
 			var h := Vector3(vel_balon.x, 0, vel_balon.z)
 			var v := h.length()
 			if v > 0.0:
-				h = h / v * maxf(0.0, v - (v * ROCE_SUELO + ROCE_FIJO) * delta)
+				h = h / v * maxf(0.0, v - (v * ROCE_SUELO + ROCE_FIJO) * _roce_clima * delta)
 			vel_balon = Vector3(h.x, 0.0, h.z)
 			balon.position += vel_balon * delta
 			balon.position.y = R
@@ -76,7 +79,7 @@ func _mover_balon(delta: float) -> void:
 		var h := Vector3(vel_balon.x, 0, vel_balon.z)
 		var v := h.length()
 		if v > 0.0:
-			var nv := maxf(0.0, v - (v * ROCE_SUELO + ROCE_FIJO) * delta)
+			var nv := maxf(0.0, v - (v * ROCE_SUELO + ROCE_FIJO) * _roce_clima * delta)
 			h = h / v * nv
 		vel_balon = Vector3(h.x, 0.0, h.z)
 		giro_balon *= 0.97

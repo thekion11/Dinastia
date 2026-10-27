@@ -228,13 +228,13 @@ func _construir_desafios(raiz: VBoxContainer) -> void:
 	_fila_desafios.add_theme_constant_override("h_separation", 6)
 	_fila_desafios.add_theme_constant_override("v_separation", 6)
 	v.add_child(_fila_desafios)
-	var tabla: Variant = Datos.tabla("DESAFIOS")
+	var tabla: Variant = DesafiosDificultad.todos()
 	if tabla is Array:
 		for fila: Array in (tabla as Array):
 			var k := String(fila[0])
 			var b := Button.new()
-			b.text = "%s %s  ×%s" % [String(fila[1]), String(fila[2]), str(fila[4])]
-			b.tooltip_text = String(fila[3])
+			b.text = "%s %s  ×%s" % [String(fila[1]), Idiomas.t(String(fila[2])), str(fila[4])]
+			b.tooltip_text = Idiomas.t(String(fila[3]))
 			b.toggle_mode = true
 			b.add_theme_font_size_override("font_size", 11)
 			b.pressed.connect(func() -> void: _alternar_desafio(k))
@@ -249,7 +249,7 @@ func _alternar_desafio(k: String) -> void:
 	else:
 		_desafios.append(k)
 	var mult := 1.0
-	var tabla: Variant = Datos.tabla("DESAFIOS")
+	var tabla: Variant = DesafiosDificultad.todos()
 	if tabla is Array:
 		for fila: Array in (tabla as Array):
 			if _desafios.has(String(fila[0])):

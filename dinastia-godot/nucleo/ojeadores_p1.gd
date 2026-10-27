@@ -256,6 +256,8 @@ func _error_bruto(nivel: float) -> int:
 func _error_de(nivel: float) -> int:
 	var base := _error_bruto(nivel)
 	var m := _mundo()
+	if m != null and m.tiene_desafio("asistentes_torpes"):   ## DesafiosDificultad: el doble y nunca exacto
+		return maxi(2, base * 2)
 	if base > 0 and m != null and m.entrenamiento != null and m.entrenamiento.ojeo_preciso():
 		return maxi(1, int(round(float(base) / 2.0)))
 	return base
@@ -266,9 +268,9 @@ func _error_de(nivel: float) -> int:
 ## de su país sumado encima.
 func ovr_aproximado(j: Jugador) -> int:
 	var nivel := nivel_de(j)
-	if nivel >= 3.0:
-		return j.ovr
 	var err := _error_de(nivel)
+	if err == 0:
+		return j.ovr
 	var h := 0
 	for i in j.id.length():
 		h += j.id.unicode_at(i)

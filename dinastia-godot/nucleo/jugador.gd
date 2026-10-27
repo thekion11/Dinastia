@@ -102,6 +102,7 @@ func anotar_moral(real: int, motivo: String) -> void:
 var fisico: int = 100
 var lesion: int = 0            ## semanas que le quedan fuera
 var suspension: int = 0
+var susp_semana: int = -1      ## `semana_global` en que le cayó una sanción de partido: esa misma semana no se descuenta (`Disciplina.sanciona`)
 var amarillas: int = 0
 ## Semanas que le quedan rindiendo por debajo tras una reconversion de puesto
 ## -j.adapt del HTML-. Solo es un contador para avisar en la ficha: la

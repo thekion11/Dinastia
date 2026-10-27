@@ -55,6 +55,7 @@ var _desmayo_en_curso := false
 var _t_vacio := 0.0
 var _redes_sin_luz := 0
 var _redes_inundados := 0
+var servicios: ServiciosVida   ## policía, bomberos y ambulancia (pieza E)
 
 # ========================================================================== ENGANCHE
 
@@ -68,6 +69,7 @@ static func enganchar(e: ExploradorCiudad, v: VistaCiudad, m: Mundo) -> VidaCiud
 	s.vista = v
 	e.add_child(s)
 	e.vida = s
+	PeluchesCiudad.album = m.roles.peluches if m.roles != null else null   ## la estantería del álbum en la vivienda
 	EstacionCentral.reloj = m.reloj   ## los trenes de la estación van por el reloj del juego
 	m.reloj.tiempo_pasado.connect(s._al_pasar_tiempo)
 	m.reloj.hora_cambiada.connect(s._al_cambiar_hora)
@@ -91,6 +93,7 @@ static func enganchar(e: ExploradorCiudad, v: VistaCiudad, m: Mundo) -> VidaCiud
 	s.escaleras = EscaleraVida.crear(s)
 	s.paraguas = ParaguasVida.crear(s)
 	s.pasajeros = PasajerosBus.crear(s)
+	s.servicios = ServiciosVida.crear(s)
 	## Arranque 3D tras recuperar la copia de un guardado dañado: el aviso se ve aquí (el registro del
 	## menú central, donde iba antes, no se abre hasta mucho después).
 	if Partida.cargada_de_respaldo:
@@ -159,7 +162,9 @@ func _al_pasar_tiempo(_minutos: int, _actividad: String) -> void:
 	_sincronizar_luz()
 
 ## Cada hora de horas extra: +1 de preparación (balance) y +1 de estrés (`VidaDT`).
-func _al_cambiar_hora(hora: int, _dia: int) -> void:
+func _al_cambiar_hora(hora: int, dia: int) -> void:
+	if servicios != null:
+		servicios.al_cambiar_hora(hora, dia)
 	var redes := (self as VidaCiudad)._redes()
 	if redes != null:
 		redes.hora_cambiada(hora, mundo.clima())
