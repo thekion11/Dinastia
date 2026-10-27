@@ -29,7 +29,9 @@ const ISO := {
 	"NED": "nl", "NGA": "ng", "NOR": "no", "NZL": "nz", "PAN": "pa", "PAR": "py", "PER": "pe", "POL": "pl",
 	"POR": "pt", "QAT": "qa", "ROU": "ro", "RSA": "za", "SCO": "gb-sct", "SEN": "sn", "SRB": "rs", "SUI": "ch",
 	"SUR": "sr", "SVK": "sk", "SVN": "si", "SWE": "se", "TOG": "tg", "TRI": "tt", "TUN": "tn", "TUR": "tr",
-	"UKR": "ua", "URU": "uy", "USA": "us", "UZB": "uz", "VEN": "ve", "WAL": "gb-wls", "ZAM": "zm"
+	"UKR": "ua", "URU": "uy", "USA": "us", "UZB": "uz", "VEN": "ve", "WAL": "gb-wls", "ZAM": "zm",
+	## 27-10-2026: las 15 nacionalidades de jugadores que no tenían bandera, en PNG del paquete del dueño («Todas las banderas del mundo»).
+	"BDI": "bi", "CAF": "cf", "GNB": "gw", "GNQ": "gq", "HAI": "ht", "JOR": "jo", "KOS": "xk", "MAD": "mg", "MLT": "mt", "PAL": "ps", "PHI": "ph", "RUS": "ru", "SLV": "sv", "SYR": "sy", "ZIM": "zw",
 }
 
 static func textura(codigo: String) -> ImageTexture:
@@ -49,6 +51,8 @@ static func _detallada(codigo: String) -> Image:
 	if solo_dibujo or not ISO.has(codigo):
 		return null
 	var ruta := "res://assets/banderas/%s.svg" % ISO[codigo]
+	if not ResourceLoader.exists(ruta):
+		ruta = ruta.get_basename() + ".png"
 	if not ResourceLoader.exists(ruta):
 		return null
 	var tex := load(ruta) as Texture2D

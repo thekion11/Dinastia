@@ -71,9 +71,20 @@ func _probar() -> void:
 	# --- banderas ---
 	var faltan: Array = []
 	for cod: String in Banderas.ISO:
-		if not ResourceLoader.exists("res://assets/banderas/%s.svg" % Banderas.ISO[cod]):
+		var base := "res://assets/banderas/%s" % Banderas.ISO[cod]
+		if not ResourceLoader.exists(base + ".svg") and not ResourceLoader.exists(base + ".png"):
 			faltan.append(cod)
-	_comprobar(faltan.is_empty(), "hay SVG para los %d países de la tabla (faltan %s)" % [Banderas.ISO.size(), str(faltan)])
+	_comprobar(faltan.is_empty(), "hay bandera (SVG o PNG) para los %d países de la tabla (faltan %s)" % [Banderas.ISO.size(), str(faltan)])
+	## 27-10-2026: también toda nacionalidad de los jugadores de la base (15 no tenían y salían con el dibujo de respaldo).
+	var nac_sin: Array = []
+	var reales: Dictionary = Datos.tabla("REALES")
+	for club: String in reales:
+		for j: String in reales[club]:
+			var pais := j.get_slice("|", j.get_slice_count("|") - 1)
+			if not Banderas.ISO.has(pais) and not nac_sin.has(pais):
+				nac_sin.append(pais)
+	_comprobar(nac_sin.is_empty(), "toda nacionalidad de jugador tiene su bandera (sin ella: %s)" % str(nac_sin))
+	_comprobar(Banderas._detallada("RUS") != null and Banderas._detallada("MLT") != null, "las banderas en PNG se cargan (Rusia, Malta)")
 	var bandera: Dictionary = Datos.tabla("BANDERA")
 	var sin_iso: Array = []
 	for cod: String in bandera:
