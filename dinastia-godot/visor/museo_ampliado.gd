@@ -12,6 +12,9 @@ const PLANTA := 3
 const SALA := "Museo ampliado"
 const POR_LADO := 5
 
+## Dónde está cada vitrina de la planta 3 ({p, k}: k = su lugar en la lista de hitos, empieza en `SalasClub.MAX_SALA`); `MuseoVitrinas` las busca.
+static var vitrinas: Array[Dictionary] = []
+
 static func lista() -> Array:
 	return [PLANTA, SALA, [[SALA, -8.0, 8.0]]]
 
@@ -71,6 +74,7 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 	var cx := caja.get_center().x
 	var hs := hitos(ctx)
 	var copas: Array = []
+	vitrinas.clear()
 	lote.caja(m["placa"], SalasClub._en(Vector3(cx, y0 + 0.035, caja.get_center().y)), Vector3(1.6, 0.01, caja.size.y - 0.3))
 	lote.caja(m["cojin"], SalasClub._en(Vector3(cx, y0 + 0.04, caja.get_center().y)), Vector3(1.4, 0.01, caja.size.y - 0.5))
 	## Vitrinas de los dos lados con las copas del séptimo título en adelante.
@@ -83,6 +87,7 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 		var pz := z0 + (z1 - z0) * (float(k / 2) + 0.5) / float(por_lado)
 		var px := (caja.position.x + 0.45) if lado < 0.0 else (caja.end.x - 0.45)
 		SalasClub.vitrina(lote, nodo, m, base, vidrio, Vector3(px, y0, pz))
+		vitrinas.append({"p": Vector3(px, y0, pz), "k": SalasClub.MAX_SALA + k})
 		copas.append(_copa(nodo, Vector3(px, y0 + 1.0, pz), m["madera"]))
 		var h: Dictionary = hs[SalasClub.MAX_SALA + k]
 		TunelVestuario._rotulo(nodo, "%s · %d" % [Idiomas.t(String(h.get("titulo", ""))), int(h.get("anio", 0))],
