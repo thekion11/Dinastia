@@ -646,7 +646,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-435 | P2 | PENDIENTE | Sin gatillos analógicos para potencia de pase | sin gatillos analógicos |
 | M-436 | P2 | PENDIENTE | Sin giroscopio para cámara en primera persona (móvil) | sin giroscopio |
 | M-437 | P2 | PARCIAL | Sin detección de dispositivo para cambiar iconos en tiempo real… | `dispositivo_detectado` en panel de controles y `ControlFC`; guía del partido sin comprobar |
-| M-438 | P2 | PENDIENTE | UI de móvil: botones pequeños | sin tamaño mínimo |
+| M-438 | P2 | PENDIENTE | UI de móvil: botones pequeños. Medido el 27-10: un botón de 32 px en un teléfono apaisado (~68 mm de alto, 720 px lógicos) mide ~3 mm; al zoom máximo (140 %) ~4,2 mm; Android pide ~7,6 mm (48 dp). No se arregla con escala: a ×1,8 las pantallas de 1280 × 720 no caben. Propuesta: modo móvil con una columna (lista lateral → pestañas), botones de 64 px y el zoom por defecto a 120 % al primer arranque en móvil. Necesita probarse en un teléfono (dueño). | sin tamaño mínimo |
 | M-439 | P2 | PENDIENTE | Orientación vertical no soportada | sin vertical |
 | M-440 | P2 | PENDIENTE | Sin modo una mano | sin modo una mano |
 | M-441 | P2 | PENDIENTE | Sin soporte de teclado en pantalla para nombres | sin teclado en pantalla |
