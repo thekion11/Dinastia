@@ -30,3 +30,13 @@ func _probar() -> void:
 	var esc := DetalleGrada.escalones_de(MeshInstance3D.new(), tam, false, deg_to_rad(StadiumBuilder.RAKE_GRADOS))
 	var z := DetalleGrada.zancas_pasillo(esc, tam, false)
 	_comprobar(z.size() >= 2 and z.size() % 2 == 0, "una tribuna de prueba da %d zancas" % z.size())
+	## La baranda de las bandejas altas: pasamanos y postes sobre cada zanca (y ninguna en la baja, que ya tiene sus escaleras).
+	var b := DetalleGrada.barandas_pasillo(esc, tam, false)
+	_comprobar(b.size() >= 2 * 2 * 3 and b.size() % 2 == 0, "una tribuna de prueba da %d piezas de baranda (pasamanos y postes)" % b.size())
+	var con_baranda := 0
+	for n2: Node in raiz.find_children("BarandasPasillo", "MultiMeshInstance3D", true, false):
+		var deck2 := n2.get_parent() as MeshInstance3D
+		_comprobar(deck2.position.y > y0 + 0.5, "la baranda solo cuelga de bandejas altas")
+		con_baranda += 1
+	_comprobar(con_baranda > 0, "hay barandas en las bandejas altas (%d decks)" % con_baranda)
+

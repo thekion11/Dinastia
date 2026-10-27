@@ -118,9 +118,9 @@ func _construir(b: CityBuilder, w: float, f: float, mats: Dictionary, ex: Ciudad
 		var z := z_a0 + 3.0 + float(k) * (largo_a - 6.0) / 3.0
 		for sx: float in [-5.5, 5.5]:
 			_caja(b, Vector3(sx, 3.9, z), Vector3(0.4, 7.0, 0.4), acero)
-		_caja(b, Vector3(0, 1.4, z + 2.0), Vector3(0.8, 0.5, 3.0), b._mat_simple(Color(0.4, 0.28, 0.18), 0.8))   ## banco
+		_caja(b, Vector3(0, 1.125, z + 2.0), Vector3(0.8, 0.45, 3.0), b._mat_simple(Color(0.4, 0.28, 0.18), 0.8))   ## banco (asiento a 0,45 m del andén)
 		for dz: float in [-0.8, 0.8]:
-			b.asientos.append({"p": position + Vector3(0, 1.65, z + 2.0 + dz), "giro": PI * 0.5})   ## los pasajeros (`GenteSentada`)
+			b.asientos.append({"p": position + Vector3(0, 1.35, z + 2.0 + dz), "giro": PI * 0.5})   ## los pasajeros (`GenteSentada`)
 	_rotulo(Vector3(0, 6.6, z_a0 + 4.0), "ANDÉN 1 ◄ ► ANDÉN 2", 0.008)
 	## El vestíbulo: fachada de cristal, bóveda y el nombre.
 	var z_v := f * 0.30
