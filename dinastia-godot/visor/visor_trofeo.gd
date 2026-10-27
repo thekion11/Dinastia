@@ -45,7 +45,12 @@ func construir(ficha: Dictionary) -> void:
 	else:
 		var anio := int(ficha.get("anio", 0))
 		col.add_child(_dato(Idiomas.t("Competición"), String(ficha.get("titulo", ""))))
-		col.add_child(_dato(Idiomas.t("Año"), str(anio) if anio > 0 else Idiomas.t("Sin datos")))
+		var anios: Array = ficha.get("anios", []) as Array
+		if anios.size() > 1:
+			col.add_child(_dato(Idiomas.t("Veces campeón"), str(anios.size())))
+			col.add_child(_dato(Idiomas.t("Años"), ", ".join(anios.map(func(x: Variant) -> String: return str(int(x))))))
+		else:
+			col.add_child(_dato(Idiomas.t("Año"), str(anio) if anio > 0 else Idiomas.t("Sin datos")))
 		var fin := String(ficha.get("final", ""))
 		col.add_child(_dato(Idiomas.t("Final"), fin if fin != "" else Idiomas.t("Sin datos")))
 		var gol: Array = ficha.get("goleadores", []) as Array

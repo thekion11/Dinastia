@@ -39,6 +39,7 @@ import historia_clubes
 import jugadores_guino
 import estadios_reales
 import aspecto_clubes
+import palmares_clubes
 import json
 import os
 import sys
@@ -664,6 +665,12 @@ def main():
     hist_base, hist_pack = historia_clubes.tablas(CLUBES, limpiar)
     fic.update(hist_base)
     real.update(hist_pack)
+    # El palmarés real de cada club (`palmares_clubes.py`) cuelga de su fila de historia.
+    pal_fic, pal_real = palmares_clubes.tablas(CLUBES)
+    for nom, pal in pal_fic.items():
+        fic["HISTORIA_CLUBES"][nom]["palmares"] = pal
+    for nom, pal in pal_real.items():
+        real["HISTORIA_CLUBES"][nom]["palmares"] = pal
     base.pop("HISTORIA_REAL", None)
     fic["DATA_P1"] = renombrar(real["DATA_P1"])
     fic["DATA_P2"] = renombrar(real["DATA_P2"])

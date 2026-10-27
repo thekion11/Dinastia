@@ -56,14 +56,8 @@ static func contexto_de(mundo: Mundo, c: Club) -> Dictionary:
 	var dentro := {}
 	if mundo.club_dentro != null:
 		dentro = {"vestuario": mundo.club_dentro.vestuario, "sala_prensa": mundo.club_dentro.sala_prensa, "palco": mundo.club_dentro.palco}
-	var titulos := mundo.roles.trofeos.size() if mundo.roles != null else 0
-	## Fase 5: los títulos de las ramas (otros deportes) también tienen su copa en el museo.
-	if mundo.hinchada != null:
-		for rr: Dictionary in mundo.hinchada.palmares_ramas:
-			if int(rr.get("puesto", 9)) == 1:
-				titulos += 1
-	## Los hitos (año y título) para el museo ampliado: los trofeos del club y los títulos de las ramas.
-	var hitos: Array = []
+	## Los hitos (año y título) del museo: el palmarés real del club (orden 15 f), los trofeos de tu carrera y los títulos de las ramas (otros deportes).
+	var hitos: Array = HistoriaClub.hitos_palmares(c)
 	if mundo.roles != null:
 		for t: Dictionary in mundo.roles.trofeos:
 			hitos.append({"anio": int(t.get("anio", 0)), "titulo": String(t.get("titulo", ""))})
@@ -71,6 +65,7 @@ static func contexto_de(mundo: Mundo, c: Club) -> Dictionary:
 		for rr2: Dictionary in mundo.hinchada.palmares_ramas:
 			if int(rr2.get("puesto", 9)) == 1:
 				hitos.append({"anio": int(rr2.get("anio", 0)), "titulo": String(rr2.get("rama", ""))})
+	var titulos := hitos.size()
 	var pres := ""
 	if mundo.junta != null:
 		pres = String(mundo.junta.presidente.get("nombre", ""))

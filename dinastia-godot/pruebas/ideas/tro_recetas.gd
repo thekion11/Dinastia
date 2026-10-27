@@ -26,6 +26,28 @@ func _probar_trofeos() -> void:
 		if (p["partes"] as Array).is_empty() or float(p["alto"]) < 0.3 or not tiene_copa:
 			mal += 1
 			print("  (receta mal armada: %s)" % id)
+	var no_caben := 0
+	for id2: String in ids:
+		var pz := TrofeoModelo.partes(TrofeosReales.receta(id2))
+		var esc := TrofeoModelo.escala_para(pz, SalasClub.ALTO_VITRINA, SalasClub.ANCHO_VITRINA)
+		if float(pz["alto"]) * esc > SalasClub.ALTO_VITRINA + 0.001 or float(pz["ancho"]) * esc > SalasClub.ANCHO_VITRINA + 0.001:
+			no_caben += 1
+	_comprobar(no_caben == 0, "todas caben en su vitrina, también las bandejas anchas (%d se salen)" % no_caben)
+	var base_grande := 0
+	for id3: String in ids:
+		var rr := TrofeosReales.receta(id3)
+		var bb: Dictionary = rr.get("base", {})
+		if bb.is_empty():
+			continue
+		var i3 := int(rr.get("copa", 1)) - 1
+		var pie_r := float(TrofeoModelo.PIE[i3]) * float(rr.get("pie", 1.0)) * (0.7 if i3 == 1 else 1.0)
+		var partes3: Array = TrofeoModelo.partes(rr)["partes"]
+		for d3: Dictionary in partes3.slice(0, 2):   ## la base son las primeras piezas (una, o dos si es escalonada)
+			var m3: Mesh = d3["mesh"]
+			if (m3 is CylinderMesh and (m3 as CylinderMesh).bottom_radius > pie_r * 0.9) or (m3 is BoxMesh and (m3 as BoxMesh).size.x > pie_r * 0.75 * 2.0):
+				if not bool(d3["copa"]):
+					base_grande += 1
+	_comprobar(base_grande == 0, "ninguna base pasa mucho del pie de su copa (%d demasiado anchas)" % base_grande)
 	_comprobar(mal == 0, "todas se arman: tienen copa y una altura razonable (%d mal)" % mal)
 	_comprobar(distintas.size() == 54, "ninguna receta repite a otra (%d distintas)" % distintas.size())
 	for real: bool in [true, false]:

@@ -13,6 +13,8 @@ const NODOS := ["gold_trophy1", "gold_trophy2", "gold_trophy3"]
 ## Radio de la boca y alto de cada copa del modelo (medidos con `captura_trofeo_base`).
 const BOCA := [0.23, 0.215, 0.29]
 const ALTO_COPA := [0.667, 0.627, 0.478]
+## Radio del pie de cada copa (la décima parte de abajo): la base no puede pasar mucho de él.
+const PIE := [0.211, 0.204, 0.188]
 
 static var _meshes: Array = []
 static var _tex: Image = null
@@ -64,11 +66,18 @@ static func _copa_mesh(i: int, alto: float, ancho: float, pie: float) -> ArrayMe
 		var v := vs[k]
 		var t := clampf(v.y / h, 0.0, 1.0)
 		var s := lerpf(pie, ancho, smoothstep(0.30, 0.55, t))
-		vs[k] = Vector3(v.x * s, v.y * alto, v.z * s)
+		var y := v.y
+		if i == 1:   ## el pedestal de serie de la copa 2, más bajo (ver `_alto`)
+			y = y * 0.6 if y < 0.4 * h else y - 0.16 * h
+		vs[k] = Vector3(v.x * s, y * alto, v.z * s)
 	a[Mesh.ARRAY_VERTEX] = vs
 	var m := ArrayMesh.new()
 	m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, a)
 	return m
+
+## Lo que mide de alto la copa `i` del modelo ya retocada.
+static func _alto(i: int) -> float:
+	return float(ALTO_COPA[i]) * (0.84 if i == 1 else 1.0)
 
 static func _mat_liso(c: Color, metal: float, rug: float) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
@@ -112,8 +121,13 @@ static func partes(receta: Dictionary) -> Dictionary:
 	var salida: Array = []
 	var y0 := 0.0
 	var forma := String(base.get("forma", ""))
-	var b_alto := float(base.get("alto", 0.0))
-	var b_ancho := float(base.get("ancho", 0.0))
+	## La base no se desboca (orden del líder, 27-10): como mucho 0,88 veces el pie de la copa (0,72 si es una caja, que es más ancha por la diagonal)
+	## y un 15 % de lo que mide la copa.
+	## La copa 2 trae un pedestal grande de serie (casi la mitad de su alto): se afina para que no parezca un bloque (orden del líder, 27-10).
+	var pie_f := float(receta.get("pie", 1.0)) * (0.7 if i == 1 else 1.0)
+	var pie_r := float(PIE[i]) * pie_f
+	var b_ancho := minf(float(base.get("ancho", 0.0)), pie_r * (0.72 if forma == "caja" else 0.88))
+	var b_alto := minf(float(base.get("alto", 0.0)), _alto(i) * alto * 0.15)
 	var mat_base := _mat_liso(color_base, 0.25, 0.45)
 	match forma:
 		"cil":
@@ -129,8 +143,8 @@ static func partes(receta: Dictionary) -> Dictionary:
 			_parte(salida, _cilindro(b_ancho * 0.45, b_ancho, b_alto), mat_base, Vector3(0, b_alto * 0.5, 0))
 	if forma != "":
 		y0 = b_alto
-	_parte(salida, _copa_mesh(i, alto, ancho, float(receta.get("pie", 1.0))), mat_copa, Vector3(0, y0, 0), true)
-	var y_boca := y0 + float(ALTO_COPA[i]) * alto
+	_parte(salida, _copa_mesh(i, alto, ancho, pie_f), mat_copa, Vector3(0, y0, 0), true)
+	var y_boca := y0 + _alto(i) * alto
 	var r_boca := float(BOCA[i]) * ancho
 	var mat_metal := _mat_liso(metal, float(receta.get("brillo", 0.55)), 0.3)
 	var extras: Array = receta.get("extras", [])
@@ -157,10 +171,16 @@ static func partes(receta: Dictionary) -> Dictionary:
 		var to := TorusMesh.new()
 		to.inner_radius = 0.045
 		to.outer_radius = 0.075
-		_parte(salida, to, mat_metal, Vector3(0, y0 + float(ALTO_COPA[i]) * alto * 0.3, 0))
-	var r := {"partes": salida, "alto": y_boca}
+		_parte(salida, to, mat_metal, Vector3(0, y0 + _alto(i) * alto * 0.3, 0))
+	## El ancho total (el mayor radio de la boca o de la base, por dos): para encajar la pieza en una vitrina.
+	var radio := maxf(r_boca * 1.12, b_ancho if forma != "" else 0.0)
+	var r := {"partes": salida, "alto": y_boca, "ancho": radio * 2.0}
 	_cache[clave] = r
 	return r
+
+## La escala que mete la pieza en un hueco de `alto_max` × `ancho_max` metros sin pasarse de ninguna de las dos medidas.
+static func escala_para(p: Dictionary, alto_max: float, ancho_max: float) -> float:
+	return minf(alto_max / maxf(float(p["alto"]), 0.01), ancho_max / maxf(float(p.get("ancho", 0.1)), 0.01))
 
 ## Un Node3D con la pieza entera, de `alto_final` metros (para el visor y las pruebas).
 static func nodo(receta: Dictionary, alto_final: float) -> Node3D:

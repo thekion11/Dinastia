@@ -1,0 +1,65 @@
+1960 Peñarol
+1961 Peñarol
+1962 Santos
+1963 Santos
+1964 Independiente
+1965 Independiente
+1966 Peñarol
+1967 Racing Club
+1968 Estudiantes
+1969 Estudiantes
+1970 Estudiantes
+1971 Nacional
+1972 Independiente
+1973 Independiente
+1974 Independiente
+1975 Independiente
+1976 Cruzeiro
+1977 Boca Juniors
+1978 Boca Juniors
+1979 Olimpia
+1980 Nacional
+1981 Flamengo
+1982 Peñarol
+1983 Gremio
+1984 Independiente
+1986 River Plate
+1987 Peñarol
+1988 Nacional
+1989 Atl. Nacional
+1990 Olimpia
+1991 Colo-Colo
+1992 Sao Paulo
+1993 Sao Paulo
+1994 Vélez
+1995 Gremio
+1996 River Plate
+1997 Cruzeiro
+1998 Vasco
+1999 Palmeiras
+2000 Boca Juniors
+2001 Boca Juniors
+2002 Olimpia
+2003 Boca Juniors
+2004 Once Caldas
+2005 Sao Paulo
+2006 Internacional
+2007 Boca Juniors
+2008 LDU Quito
+2009 Estudiantes
+2010 Internacional
+2011 Santos
+2012 Corinthians
+2013 Atl. Mineiro
+2014 San Lorenzo
+2015 River Plate
+2016 Atl. Nacional
+2017 Gremio
+2018 River Plate
+2019 Flamengo
+2020 Palmeiras
+2021 Palmeiras
+2022 Flamengo
+2023 Fluminense
+2024 Botafogo
+2025 Flamengo
