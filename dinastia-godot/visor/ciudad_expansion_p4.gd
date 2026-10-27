@@ -126,6 +126,8 @@ func _parque(r: Rect2, lago: bool) -> void:
 			l.position = Vector3(lago_c.x, float(capa[1]) - 0.1, lago_c.z)
 			l.scale = Vector3(1.3, 1, 1)
 			b.add_child(l)
+		CiudadCancha.patos(self, lago_c, lago_r)
+	var cancha := CiudadCancha.centro(r, c, lago)
 	var pts: Array = []
 	for k in 40:
 		var p := c + Vector3(_rng.randf_range(-0.46, 0.46) * r.size.x, 0, _rng.randf_range(-0.46, 0.46) * r.size.y)
@@ -134,12 +136,15 @@ func _parque(r: Rect2, lago: bool) -> void:
 			continue
 		if p.x < c.x - r.size.x * 0.1 and p.z < c.z - r.size.y * 0.1 and not lago:
 			continue
+		if CiudadCancha.ocupa(cancha, p):
+			continue
 		if lago and pow((p.x - lago_c.x) / ((lago_r + 4.0) * 1.3), 2.0) + pow((p.z - lago_c.z) / (lago_r + 4.0), 2.0) < 1.0:
 			continue   ## fuera del agua y de su orilla
 		pts.append(p)
 	_arboles_en(pts, 1.0)
 	var nombre := "Parque del Lago" if lago else String(NOMBRES_PARQUE[absi(int(c.x * 7.0 + c.z * 13.0)) % NOMBRES_PARQUE.size()])
 	_detalles_parque(r, c, nombre, lago)
+	CiudadCancha.montar(self, cancha)
 	CiudadParque.rellenar(self, r, c)   ## bancos, mesas de pícnic y papeleras a lo largo de los paseos
 	b._rotulo(c + Vector3(0, 14, 0), "🌳 " + nombre, Color(0.7, 1.0, 0.7), 20)
 	b.puntos_clic.append({"k": "ciudad_parque_lago" if lago else "ciudad_parque", "n": "Parque · penales con los chicos", "pos": c, "estado": "ciudad"})
