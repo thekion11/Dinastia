@@ -165,16 +165,21 @@ func _kit_apilado(esc: PackedScene, pos: Vector3, s: float, pisos: int, giro: fl
 
 ## 0 de día, 1 de noche: guirnaldas, farolas y ventanas lejanas.
 func encender(noche: float) -> void:
-	## Los apagones bajan las farolas (fracción de la ciudad sin corriente).
-	var red := redes.fraccion_luz() if redes != null else 1.0
 	for m in _bombillas:
 		m.emission_energy_multiplier = lerpf(0.15, 1.4, noche)
 	if _farola_luz != null:
-		_farola_luz.emission_energy_multiplier = lerpf(0.0, 2.6, noche) * red
+		_farola_luz.emission_energy_multiplier = lerpf(0.0, 2.6, noche)
 	if _farola_charco != null:
-		_farola_charco.albedo_color.a = lerpf(0.0, 0.62, noche) * red
+		_farola_charco.albedo_color.a = lerpf(0.0, 0.62, noche)
 	if _farola_cono != null:
-		_farola_cono.set_shader_parameter("fuerza", lerpf(0.0, 0.22, noche) * red)
+		_farola_cono.set_shader_parameter("fuerza", lerpf(0.0, 0.22, noche))
+	## Apagón por sectores: las farolas de un sector sin corriente no se encienden (las del resto, sí).
+	for sec: Vector2i in _farolas_sec:
+		var f := 1.0 if redes == null or redes.modelo.hay_luz(sec) else 0.0
+		var fs: Dictionary = _farolas_sec[sec]
+		(fs["luz"] as StandardMaterial3D).emission_energy_multiplier = lerpf(0.0, 2.6, noche) * f
+		(fs["charco"] as StandardMaterial3D).albedo_color.a = lerpf(0.0, 0.62, noche) * f
+		(fs["cono"] as ShaderMaterial).set_shader_parameter("fuerza", lerpf(0.0, 0.22, noche) * f)
 	if _ventanas_lejanas != null:
 		_ventanas_lejanas.set_shader_parameter("noche", noche)
 

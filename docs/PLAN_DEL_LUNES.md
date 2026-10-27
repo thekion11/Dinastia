@@ -358,8 +358,9 @@ cada hora del `Reloj` con el clima de la semana (viento mueve el parque eólico,
   PENDIENTE: los edificios de la superficie no cambian de aspecto con el corte (solo farolas); sonido ambiente; Forward+.
 - Hecho 27-10 (3.ª pasada): las redes se GUARDAN en la partida (`Mundo.redes_ciudad`, clave `redes_ciudad`; partida vieja = nuevas; ida y vuelta
   probada) y el móvil avisa de cortes e inundaciones nuevos.
-- PENDIENTE: sonido ambiente del subsuelo; averías visibles (obras, cuadrilla, camión cisterna);
-  apagón por sector en farolas y ventanas (hoy las farolas bajan todas a la vez); cables con caída;
+- Hecho: sonido ambiente del subsuelo con efectos ya existentes (zumbido «noche_estadio» y gotas «clic_suave»; sonidos propios, pendientes).
+- PENDIENTE: averías visibles (obras, cuadrilla, camión cisterna);
+  apagón por sector en las VENTANAS (las farolas ya van por sector desde el 27-10: `ciudad_expansion._farolas_sec`, capturas `apagon_sector_*`); cables con caída;
   coche con depósito real que dependa del repostaje.
 
 ### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
@@ -517,7 +518,7 @@ Fuera de alcance: multijugador online (requiere servidor).
 | Partido jugable | básico completo | táctica en vivo, porteros, presets, cinemáticas, ayudas |
 | Interfaz | mucha información | coherencia de estilo, diálogos (hecho el 13-10), accesibilidad (texto grande, daltónicos) |
 | Audio | 🔒 música del dueño | efectos de interfaz y ambiente revisados |
-| Guardado | copias rotativas, huella y versiones (`pruebas/ideas/sav_guardado.gd`); aviso visible si se recupera la copia (menú y arranque 3D) o si no se puede abrir (27-10) | topes de memoria en historiales (M-400) |
+| Guardado | copias rotativas, huella y versiones (`pruebas/ideas/sav_guardado.gd`); aviso visible si se recupera la copia (menú y arranque 3D) o si no se puede abrir (27-10); topes de historiales VERIFICADOS el 27-10 con `pruebas/sonda_memoria.tscn` (6 temporadas: 0,54 → 1,10 MB; todas las listas con tope: pubs 80, libres 80, portadas 60, mensajes 60, libro 60, posts 50, historial y moral del jugador 12; lo que crece, ~56 KB/temporada, es `clubes`) | medir 30 temporadas y desglosar `clubes` si el guardado pasa de 3 MB |
 | Legal | política ficticia | licencias de recursos y caras reales (🔒 del dueño) |
 | Tienda | — | iconos, capturas, descripción, clasificación por edad (🔒 del dueño) |
 
@@ -544,7 +545,6 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 - [ ] Colisiones de la ciudad fuera del club: edificios, postes, troncos e hidrantes ya chocan (`Optimizar.obstaculos`, todo lo estático ≥ 0,9 m) y los bancos desde el 27-10 (`CityBuilder.asientos`); falta revisar papeleras y contenedores bajos y que los peatones no se crucen con mobiliario.
 - [ ] 506 frases visibles sin traducir en 8 idiomas (`docs/05_referencia/textos_sin_traducir.txt`); la prueba de paridad debe exigir 0.
 - [ ] C++/GDExtension solo si el perfil en hardware real lo pide.
-- [ ] Guardado: topes de memoria en historiales (M-400).
 - [ ] 23 imágenes ≥ 2048 px que no lo necesitan: bajarlas a 2048 (auditoría 3, §4; no las caras sin tu OK).
 
 ## 5. Mejoras abiertas del catálogo (356)
@@ -573,7 +573,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-396 | P2 | PENDIENTE | Convenciones: mezcla de español/inglés en nombres | sin guía de estilo |
 | M-397 | P2 | PENDIENTE | Comentarios muy extensos (valioso pero ruidoso) | sin ADRs |
 | M-398 | P2 | PENDIENTE | Sin documentación de arquitectura actualizada (`LEEME.md`) | LEEME sin diagrama |
-| M-400 | P2 | SIN VERIFICAR | Sin límites de memoria en historiales (noticias, prensa) | no se revisaron topes de historiales |
 | M-401 | P2 | PENDIENTE | Dependencia de nombres de nodo (`find_child`) frágil | sin cambio |
 | M-402 | P2 | PENDIENTE | Duplicación de carga de JSON (`Datos` 212 tablas) | sin carga perezosa |
 | M-406 | P2 | PENDIENTE | `Retrato3D` no se ejercita en headless | sin prueba con xvfb |
@@ -2135,11 +2134,9 @@ Peticiones a zonas que no eran suyas (la 14, partir `banco_p25.gd`, ya está hec
 Defectos a la vista que dejó anotados: ninguno pendiente (el de «Forma del escudo» ya estaba aplicado el 26-10).
 
 Auditoría de fuentes y de presentación del texto (26-10, sesión fnt). Lo de traducción es para S1:
-- **93 claves con solo en y pt** (faltan fr, it, de, ca, pl, tr): son los titulares de imprevistos y avisos («Apelación ACOGIDA», «Cedido a préstamo», «¡Clausulazo!», «Polémica en redes»…). En 6 idiomas caen al castellano. Lista: claves de `en` que no están en `fr`.
 - **150 claves que no aparecen literalmente en el código ni en los datos**: casi todas se componen en tiempo de ejecución (icono + texto, «✔  …», «·····  Jefe médico», «sí   Construir»), así que NO son claves muertas seguras. Hay restos claros, como «Estrecha (cabe mas)» sin tilde, que es el nombre viejo de la tipografía. Antes de borrar nada: un barrido que registre en partida qué claves se piden de verdad.
 - **Caídas por formato**: no hay ninguna clave cuyos `%s`/`%d` no casen con su traducción. Los 42 avisos que salen al comparar son «%» de porcentaje literal («12% más»), no marcadores. La única llamada que formatea DENTRO de `Idiomas.t` es `ui/principal/rueda_prensa.gd:414` (`Idiomas.t("%s %s" % …)`, icono + texto); funciona porque `t` separa el icono, pero lo limpio es `Idiomas.t(datos[1])` (zona de la rueda de prensa).
 - **Nombres propios con la misma forma en todos los idiomas**: las leyes laborales (Arbeitszeitgesetz, Fair Labor Standards Act…), DINASTÍA, VAR, Valparaíso. Están bien; no hay que traducirlos.
-- **Texto que no cabe**: en `ui/componentes/ficha_jugador_info.gd:_dato` el valor «pertenece a «Los históricos»» se corta con «…» ya en castellano (165/149 px; en alemán, 195/161). Se puede leer en la ayuda emergente; dar más ancho al valor cuando la etiqueta es corta.
 - **El registro «Qué pasa»** («Mundo nuevo. Semilla …») queda en el idioma en que se escribió: son entradas guardadas, no rótulos. Está bien así, pero conviene saberlo.
 
 ## 10. Huecos y mejoras propuestas
