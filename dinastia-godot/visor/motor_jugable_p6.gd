@@ -316,7 +316,8 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 			var dl := cerca.distance_to(pos(r))
 			if dl < 2.2:
 				riesgo += (2.2 - dl) * 2.4
-		var nota := progreso * (CHISPA_AVANCE * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) \
+		var nota := progreso * (CHISPA_AVANCE * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1) \
+				+ 0.03 * float(_tac(bool(p["es_local"]), "verticalidad") - 1)) \
 			+ minf(libre, 10.0) * 0.18 - riesgo - dist * 0.02
 		## Un buen pasador ve el fuera de juego: con más visión (pase) casi
 		## nunca se la da a un compañero adelantado.
