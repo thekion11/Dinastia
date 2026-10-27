@@ -7,6 +7,7 @@ func _pintar_tactica(c: Club) -> void:
 	## interruptores se tocan una vez cada varias semanas; el once se mira cada
 	## domingo.
 	_pintar_pizarron(c)
+	PresetsTacticaUI.pintar(p, c)   ## presets de pizarra con nombre (fila 382)
 	var t := p._texto(11, Principal.COL_SUAVE)
 	t.text = Idiomas.t("FORMACIÓN")
 	p._lista_tactica.add_child(t)
