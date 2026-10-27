@@ -73,12 +73,15 @@ class Tren:
 			sentido = -sentido
 			return
 		var dist := absf(objetivo - s)
-		## Perfil de parada (27-10-2026, pieza F-2): velocidad máxima desde la que aún se frena a PLAN hasta la estación,
-		## y la aceleración sube y baja con rampa (TIRON m/s³) en vez de saltar de 0 a ±ACEL.
+		## Perfil de parada (F-2): velocidad máxima desde la que aún se frena a PLAN hasta la estación; la aceleración sube y baja con rampa (TIRON m/s³).
 		var tope := sqrt(2.0 * PLAN * maxf(dist - 0.3, 0.0))
 		var obj := minf(VEL, tope)
 		var ganancia := 1.0 / delta if tope < VEL else 3.0
-		a = move_toward(a, clampf((obj - v) * ganancia, -ACEL, ACEL), TIRON * delta)
+		var a_pedida := clampf((obj - v) * ganancia, -ACEL, ACEL)   ## con rampa, no de golpe
+		## Crucero sin chocar con el tope (tirón de 13 m/s³): quitar `a` con rampa suma `a²/(2·TIRON)` de velocidad; si ya llega a `obj`, se quita YA.
+		if a > 0.0 and v + a * a / (2.0 * TIRON) >= obj:
+			a_pedida = minf(a_pedida, 0.0)
+		a = move_toward(a, a_pedida, TIRON * delta)
 		v = clampf(v + a * delta, 0.0, VEL)
 		var paso := v * delta
 		if paso >= dist or dist < 0.35:
