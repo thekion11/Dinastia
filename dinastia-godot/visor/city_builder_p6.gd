@@ -341,6 +341,7 @@ static func instanciar_coche(par: Dictionary, rng: RandomNumberGenerator = null)
 	var modelo: Node3D = (par["esc"] as PackedScene).instantiate()
 	if not bool(par.get("fbx", false)):
 		modelo.scale = escala_real(par["esc"])
+		CocheDetalle.vestir(modelo, modelo.scale)   ## pintura de coche, placas, faros y retrovisores (27-10-2026)
 		return modelo
 	var raiz := Node3D.new()
 	raiz.add_child(modelo)

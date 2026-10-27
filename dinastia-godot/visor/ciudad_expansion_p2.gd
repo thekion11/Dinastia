@@ -176,7 +176,7 @@ func _linea_bus(nombre: String, esquinas: Array) -> Dictionary:
 		var cuantas := int(largo / 330.0)
 		for q in range(1, cuantas + 1):
 			paradas.append(a.lerp(c, float(q) / float(cuantas + 1)))
-	return {"nombre": nombre, "puntos": sal, "paradas": paradas}
+	return {"nombre": nombre, "destino": {"Bus 10": "CIRCULAR CENTRO", "Bus 22": "CIRCULAR EXTERIOR"}.get(nombre, "CIRCULAR"), "puntos": sal, "paradas": paradas}
 
 ## Dos líneas de metro (en datos: estaciones en cruces) y dos de autobús.
 func armar_transporte() -> void:

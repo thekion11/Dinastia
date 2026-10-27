@@ -18,6 +18,8 @@ var expl: ExploradorCiudad
 var cuerpos: Dictionary = {}   ## índice del asiento → {d: Dictionary (PeatonQ), p: Vector3}
 var _rng := RandomNumberGenerator.new()
 var _t := 0.0
+var _parados := {}     ## autobús (id) → segundos que lleva parado en una parada
+var _eventos: Array[Vector3] = []   ## dónde subieron y bajaron pasajeros (a los 3 s de parar el autobús)
 
 static func crear(v: VidaCiudad) -> GenteSentada:
 	var s := GenteSentada.new()
@@ -39,9 +41,42 @@ func _process(delta: float) -> void:
 ## ¿Este asiento tiene a alguien a esta hora? (estable por hash)
 func ocupado(i: int) -> bool:
 	var hora := vida.mundo.reloj.hora() if vida != null and vida.mundo != null and vida.mundo.reloj != null else 12
-	return float(absi(("%d|%d" % [i, hora]).hash()) % 1000) / 1000.0 < OCUPACION
+	## Cada vez que un autobús para junto al asiento, suben y bajan pasajeros: cambia quién está sentado.
+	var visitas := 0
+	if expl != null and expl.cb != null and i < expl.cb.asientos.size():
+		visitas = visitas_cerca(expl.cb.asientos[i]["p"])
+	return hay_alguien(i, hora, visitas)
+
+## Cuántas veces ha parado un autobús a menos de 16 m de `p`.
+func visitas_cerca(p: Vector3) -> int:
+	var n := 0
+	for ev: Vector3 in _eventos:
+		if Vector2(ev.x - p.x, ev.z - p.z).length() < 16.0:
+			n += 1
+	return n
+
+static func hay_alguien(i: int, hora: int, visitas: int) -> bool:
+	return float(absi(hash([i, hora, visitas])) % 1000) / 1000.0 < OCUPACION   ## (hash de array: mezcla bien; el de cadena solo cambia 1 con un carácter distinto)
+
+## Un autobús que lleva 3 s parado en su parada deja una huella: ahí «suben y bajan» pasajeros.
+func vigilar_buses() -> void:
+	if expl == null or expl.trafico == null:
+		return
+	for v: Dictionary in expl.trafico._vehiculos:
+		if not v.has("paradas") or not is_instance_valid(v["nodo"]):
+			continue
+		var id := (v["nodo"] as Node3D).get_instance_id()
+		if float(v.get("espera", 0.0)) > 0.0:
+			_parados[id] = float(_parados.get(id, 0.0)) + 1.0
+			if float(_parados[id]) == 3.0:
+				_eventos.append((v["nodo"] as Node3D).global_position)
+				if _eventos.size() > 40:
+					_eventos.pop_front()
+		else:
+			_parados.erase(id)
 
 func revisar() -> void:
+	vigilar_buses()
 	if String(expl.estado) != "calle":
 		_quitar_todos()
 		return
