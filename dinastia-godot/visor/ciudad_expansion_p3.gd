@@ -291,6 +291,7 @@ func _paseo_rio(r: Rect2) -> void:
 		for k in 5:
 			pts.append(Vector3(x0 + lado * 10.0, 0, r.position.y + r.size.y * (float(k) + 0.5) / 5.0))
 		_arboles_en(pts, 0.9)
+		PastoCiudad.orilla(b, x0, lado, r.position.y, r.end.y)
 
 func _puerto(r: Rect2) -> void:
 	_paseo_rio(r)
