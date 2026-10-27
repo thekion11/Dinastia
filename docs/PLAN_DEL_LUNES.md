@@ -656,7 +656,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
 | M-167 | P1 | PENDIENTE | Calzadas = cajas de asfalto con marcas propias; Kenney sólo… | calzadas propias; losetas Kenney no usadas |
-| M-171 | P1 | PARCIAL | Tráfico sin comportamiento complejo (adelantar, ceder en cruce) | cola y frenado en rojo (`TraficoCiudad`); sin adelantar |
+| M-171 | P1 | PARCIAL | Tráfico sin comportamiento complejo (adelantar, ceder en cruce) | 27-10: cola, frenado en rojo, prioridad de la derecha en los cruces y adelantar al autobús parado (`TraficoCiudad`); falta adelantar a coches lentos y rotondas |
 | M-263 | P1 | PENDIENTE | Eventos únicos (13) y control real; pocos días de «vida» entre… | sin agenda semanal |
 | M-168 | P2 | PENDIENTE | Sin rotondas | sin rotondas |
 | M-170 | P2 | PENDIENTE | Sin semáforos peatonales con botón | sin botón peatonal |
@@ -680,9 +680,8 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-196 | P2 | PENDIENTE | Botes sin sonido/estela | sin estela de botes |
 | M-197 | P2 | PENDIENTE | Autopista sin peajes ni estaciones | sin peajes |
 | M-198 | P2 | PENDIENTE | Aeropuerto/estación de tren inexistentes (no hay viajes) | sin viajes/aeropuerto |
-| M-199 | P2 | PENDIENTE | Sin señales de tráfico reales (límites, ceda) | sin límites de velocidad con multa |
+| M-199 | P2 | PARCIAL | Sin señales de tráfico reales (límites, ceda) | 27-10: multa de 90 € por semáforo en rojo con policía a la vista; sin límites de velocidad |
 | M-200 | P2 | PENDIENTE | Sin policía/multas | sin policía |
-| M-201 | P2 | PENDIENTE | Sin accidentes/eventos aleatorios | sin eventos de calle |
 | M-203 | P2 | PENDIENTE | Sin colisión/oclusión de sonido en interiores | sin filtro de sonido en interiores |
 | M-204 | P2 | PENDIENTE | LOD de edificios lejanos con ventanas (cristal) pero sin siluetas… | sin impostores de edificios |
 | M-205 | P2 | PENDIENTE | `ciudad_expansion.gd` 2.321 líneas y `city_builder.gd` 4.687 | `ciudad_expansion.gd` creció a 3.569 líneas |
