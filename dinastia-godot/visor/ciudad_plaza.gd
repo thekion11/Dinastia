@@ -57,3 +57,10 @@ static func montar(ex: CiudadExpansion, c: Vector3, w: float, f: float) -> void:
 		b._cil_en(Vector3(tx, y + 0.74, tz), 0.55, 0.06, blanco)
 		var cono := b._cil_en(Vector3(tx, y + 2.45, tz), 1.5, 0.5, b._mat_simple(tela[(h + q) % tela.size()], 0.7), 0.0)
 		cono.name = "Sombrilla"
+		## Lo que hay sobre la mesa (piezas de `comida`, CC0; `_pieza_kit` no consume `_rng`).
+		var platos := ["croissant", "cup-coffee", "cake", "glass-wine", "donut-sprinkles", "cup-tea", "cupcake", "bread"]
+		for j in 2:
+			var nombre: String = platos[(q + j * 3) % platos.size()]
+			ex._pieza_kit("res://assets/kenney/comida/%s.glb" % nombre, Vector3(tx + (-0.22 if j == 0 else 0.22), y + 0.78, tz + 0.1), 4.0, float(q * 70 + j * 140) * PI / 180.0)
+			## Y una silla a cada lado, mirando a la mesa.
+			ex._pieza_kit("res://assets/kenney/muebles/chairRounded.glb", Vector3(tx + (-1.0 if j == 0 else 1.0), y, tz), 1.0, PI * 0.5 if j == 0 else -PI * 0.5)
