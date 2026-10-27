@@ -285,6 +285,7 @@ var _farola_luz: StandardMaterial3D
 var _farola_charco: StandardMaterial3D
 
 var _farola_cono: ShaderMaterial = null
+var _farolas_sec := {}      ## sector -> {luz, charco, cono}: materiales propios de las farolas de cada sector
 
 ## Los edificios lejanos: cajas con ventanas en un solo MultiMesh.
 var _lejanos: Array[Rect2] = []

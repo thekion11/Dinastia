@@ -295,19 +295,23 @@ func _casa_ribera(centro: Vector3) -> void:
 	var raiz := Node3D.new()
 	add_child(raiz)
 	raiz.add_child(n)
-	## El glb trae una semiesfera de cielo de 103 m (la misma de la villa): medida con ella, la casa salía
-	## diminuta bajo una cúpula. Se quita antes de medir.
+	## El glb trae una semiesfera de cielo de 103 m (la misma de la villa) y, bajo el suelo de la casa, losas de terreno y
+	## rocas (planas, con su borde por debajo de cero): medida con ellas la casa salía diminuta bajo una cúpula y, ya sin
+	## cúpula, las rocas flotaban delante. Se quitan antes de medir.
 	for m: MeshInstance3D in _mallas_de(n):
-		if m.mesh != null and (m.transform * m.mesh.get_aabb()).size.length() > 60.0:
+		if m.mesh == null:
+			continue
+		var a := m.transform * m.mesh.get_aabb()
+		var plana := a.position.y < -0.5 and a.size.y < maxf(a.size.x, a.size.z) * 0.5
+		if a.size.length() > 60.0 or plana:
 			m.get_parent().remove_child(m)
 			m.free()
 	var caja := _caja_de(n)
 	var alto: float = caja.size.y
 	var escala := (22.0 / alto) if alto > 0.001 else 1.0
 	raiz.scale = Vector3.ONE * escala
-	## El origen del modelo no está en su base (el AABB empieza por debajo de
-	## cero): sin corregirlo queda medio enterrado.
-	raiz.position = centro + Vector3(0, -caja.position.y * escala, 0)
+	## El suelo de la casa está en y=0 del modelo (el AABB baja de cero por una luna de cristal): se apoya ahí.
+	raiz.position = centro
 	raiz.rotation.y = PI * 0.5
 
 func vestir_torre(n: Node, semilla: int) -> void:
