@@ -262,7 +262,7 @@ func _buscar_cerca() -> void:
 func _physics_process(delta: float) -> void:
 	if cuerpo == null:
 		return
-	if estado in ["anden", "estadio", "interior", "puerta"]:
+	if estado in ["anden", "estadio", "interior", "puerta", "subsuelo"]:
 		_actualizar_mano("pie", 0.0, 1.0, 0.0)
 	if estado == "anden":
 		_mover_en_anden(delta)
@@ -275,6 +275,9 @@ func _physics_process(delta: float) -> void:
 		return
 	if estado == "interior":
 		_mover_en_interior(delta)
+		return
+	if estado == "subsuelo":
+		sub.paso(self, delta)
 		return
 	if estado == "puerta":
 		_andar_solo(delta)
