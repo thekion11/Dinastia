@@ -62,11 +62,21 @@ static func contexto_de(mundo: Mundo, c: Club) -> Dictionary:
 		for rr: Dictionary in mundo.hinchada.palmares_ramas:
 			if int(rr.get("puesto", 9)) == 1:
 				titulos += 1
+	## Los hitos (año y título) para el museo ampliado: los trofeos del club y los títulos de las ramas.
+	var hitos: Array = []
+	if mundo.roles != null:
+		for t: Dictionary in mundo.roles.trofeos:
+			hitos.append({"anio": int(t.get("anio", 0)), "titulo": String(t.get("titulo", ""))})
+	if mundo.hinchada != null:
+		for rr2: Dictionary in mundo.hinchada.palmares_ramas:
+			if int(rr2.get("puesto", 9)) == 1:
+				hitos.append({"anio": int(rr2.get("anio", 0)), "titulo": String(rr2.get("rama", ""))})
 	var pres := ""
 	if mundo.junta != null:
 		pres = String(mundo.junta.presidente.get("nombre", ""))
 	return {"inst": mundo.obras.niveles.duplicate() if mundo.obras != null else {}, "dentro": dentro,
-		"plantilla": pl, "titulos": titulos, "presidente": pres,
+		"plantilla": pl, "titulos": titulos, "presidente": pres, "hitos": hitos,
+		"obras": mundo.obras.obras.duplicate() if mundo.obras != null else {},
 		"gente": mundo.gente.fichas.duplicate(true) if mundo.gente != null else {},
 		## Por referencia: lo que decores en el 3D se guarda en la partida.
 		"interiores": mundo.interiores}
@@ -105,14 +115,21 @@ const DECO_MODULAR := {
 static func nombre_planta(p: int) -> String:
 	if p == 0:
 		return "Vestuario y túnel"
-	for f: Array in PLANTAS:
+	for f: Array in todas():
 		if int(f[0]) == p:
 			return String(f[1])
 	return ""
 
+## Las plantas que hay ahora: las de siempre y, con el museo a nivel 5 (o su obra en marcha), la 3 «Museo ampliado».
+static func todas() -> Array:
+	var sal: Array = PLANTAS.duplicate()
+	if MuseoAmpliado.existe(ctx):
+		sal.append(MuseoAmpliado.lista())
+	return sal
+
 static func plantas() -> Array:
 	var sal: Array = [0]
-	for f: Array in PLANTAS:
+	for f: Array in todas():
 		sal.append(int(f[0]))
 	sal.sort()
 	return sal
@@ -128,7 +145,7 @@ static func zonas(x0: float, z_out: float, z_fin: float) -> Array:
 		sal.append({"nombre": "Ascensor", "planta": p, "techo": ALTO_LIBRE,
 			"r": Rect2(x0 + ASC_X0, z_fin - 1.7, ASC_X1 - ASC_X0, 1.4)})
 	var z_tabique := z_fin - PASILLO - 0.1
-	for f: Array in PLANTAS:
+	for f: Array in todas():
 		var p := int(f[0])
 		sal.append({"nombre": "Pasillo", "planta": p, "techo": ALTO_LIBRE,
 			"r": Rect2(x0 - TunelVestuario.VEST_MEDIO + 0.4, z_tabique + 0.3, TunelVestuario.VEST_MEDIO * 2.0 - 0.8, PASILLO - 0.6)})
@@ -196,7 +213,7 @@ static func _suelo_de(sala: String) -> Color:
 			return Color(0.42, 0.44, 0.46)
 		"Enfermería":
 			return Color(0.78, 0.86, 0.88)
-		"Oficina del DT", "Despacho del presidente", "Museo del club", "Comedor del plantel":
+		"Oficina del DT", "Despacho del presidente", "Museo del club", "Museo ampliado", "Comedor del plantel":
 			return Color(0.55, 0.38, 0.24)
 		"Sala de vídeo", "Sala de prensa":
 			return Color(0.25, 0.27, 0.33)
@@ -360,6 +377,8 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			if tipo == "television":
 				for k in 3:
 					TunelVestuario._caja(nodo, Vector3(caja.position.x + 1.5 + k * 2.2, y0 + 1.5, caja.end.y - 0.5), Vector3(0.4, 0.3, 0.6), oscuro, false)
+		"Museo ampliado":
+			MuseoAmpliado.montar(nodo, caja, y0, c1, c2, ctx)
 		"Comedor del plantel":
 			## Mesa larga con sillas, la barra con la comida y la campana.
 			## (21-10-2026) Mesas y sillas de verdad, con platos y vasos; las sillas

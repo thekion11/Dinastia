@@ -6003,7 +6003,12 @@
   "Vuelve la luz en la ciudad sin explicación": "Power returns to the city with no explanation",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Neighbours talk of a “sewer angel”. Nobody knows who went down to fix it.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Power cut: %d sectors in the dark.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Flooding: %d sectors with water in the street."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Flooding: %d sectors with water in the street.",
+  "HITOS DEL CLUB": "CLUB MILESTONES",
+  "Primer título": "First title",
+  "EN OBRA · faltan %d semanas": "UNDER CONSTRUCTION · %d weeks left",
+  "Museo ampliado · %d títulos": "Extended museum · %d titles",
+  "Museo ampliado": "Extended museum"
  },
  "pt": {
   "Historia": "História",
@@ -12009,7 +12014,12 @@
   "Vuelve la luz en la ciudad sin explicación": "A luz volta à cidade sem explicação",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Os vizinhos falam de um «anjo dos esgotos». Ninguém sabe quem desceu para consertar.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Corte de luz: %d setores no escuro.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inundação: %d setores com água na rua."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inundação: %d setores com água na rua.",
+  "HITOS DEL CLUB": "MARCOS DO CLUBE",
+  "Primer título": "Primeiro título",
+  "EN OBRA · faltan %d semanas": "EM OBRAS · faltam %d semanas",
+  "Museo ampliado · %d títulos": "Museu ampliado · %d títulos",
+  "Museo ampliado": "Museu ampliado"
  },
  "patrones": [
   [
@@ -23627,7 +23637,12 @@
   "Vuelve la luz en la ciudad sin explicación": "Le courant revient dans la ville sans explication",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Les voisins parlent d'un « ange des égouts ». Personne ne sait qui est descendu réparer.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Coupure de courant : %d secteurs dans le noir.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inondation : %d secteurs avec de l'eau dans la rue."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inondation : %d secteurs avec de l'eau dans la rue.",
+  "HITOS DEL CLUB": "TEMPS FORTS DU CLUB",
+  "Primer título": "Premier titre",
+  "EN OBRA · faltan %d semanas": "EN TRAVAUX · %d semaines restantes",
+  "Museo ampliado · %d títulos": "Musée agrandi · %d titres",
+  "Museo ampliado": "Musée agrandi"
  },
  "it": {
   "Historia": "Storia",
@@ -29633,7 +29648,12 @@
   "Vuelve la luz en la ciudad sin explicación": "La luce torna in città senza spiegazioni",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "I vicini parlano di un «angelo delle fogne». Nessuno sa chi sia sceso a ripararlo.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Blackout: %d settori al buio.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Allagamento: %d settori con acqua in strada."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Allagamento: %d settori con acqua in strada.",
+  "HITOS DEL CLUB": "TAPPE DEL CLUB",
+  "Primer título": "Primo titolo",
+  "EN OBRA · faltan %d semanas": "IN LAVORI · mancano %d settimane",
+  "Museo ampliado · %d títulos": "Museo ampliato · %d titoli",
+  "Museo ampliado": "Museo ampliato"
  },
  "de": {
   "Historia": "Geschichte",
@@ -35639,7 +35659,12 @@
   "Vuelve la luz en la ciudad sin explicación": "Der Strom kehrt ohne Erklärung in die Stadt zurück",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Die Nachbarn sprechen von einem „Kanalengel“. Niemand weiß, wer hinabgestiegen ist.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Stromausfall: %d Sektoren im Dunkeln.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Überschwemmung: %d Sektoren mit Wasser auf der Straße."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Überschwemmung: %d Sektoren mit Wasser auf der Straße.",
+  "HITOS DEL CLUB": "MEILENSTEINE DES VEREINS",
+  "Primer título": "Erster Titel",
+  "EN OBRA · faltan %d semanas": "IM UMBAU · noch %d Wochen",
+  "Museo ampliado · %d títulos": "Erweitertes Museum · %d Titel",
+  "Museo ampliado": "Erweitertes Museum"
  },
  "ca": {
   "Historia": "Història",
@@ -41645,7 +41670,12 @@
   "Vuelve la luz en la ciudad sin explicación": "Torna la llum a la ciutat sense explicació",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Els veïns parlen d'un «àngel de les clavegueres». Ningú sap qui va baixar a arreglar-ho.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Tall de llum: %d sectors a les fosques.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inundació: %d sectors amb aigua al carrer."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Inundació: %d sectors amb aigua al carrer.",
+  "HITOS DEL CLUB": "FITES DEL CLUB",
+  "Primer título": "Primer títol",
+  "EN OBRA · faltan %d semanas": "EN OBRES · falten %d setmanes",
+  "Museo ampliado · %d títulos": "Museu ampliat · %d títols",
+  "Museo ampliado": "Museu ampliat"
  },
  "pl": {
   "Club": "Klub",
@@ -47930,7 +47960,12 @@
   "Vuelve la luz en la ciudad sin explicación": "Prąd wraca do miasta bez wyjaśnienia",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Sąsiedzi mówią o „aniele kanałów”. Nikt nie wie, kto zszedł to naprawić.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Przerwa w dostawie prądu: %d sektorów bez światła.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Podtopienia: %d sektorów z wodą na ulicy."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Podtopienia: %d sektorów z wodą na ulicy.",
+  "HITOS DEL CLUB": "KAMIENIE MILOWE KLUBU",
+  "Primer título": "Pierwszy tytuł",
+  "EN OBRA · faltan %d semanas": "W BUDOWIE · zostało %d tyg.",
+  "Museo ampliado · %d títulos": "Rozbudowane muzeum · %d tytułów",
+  "Museo ampliado": "Rozbudowane muzeum"
  },
  "tr": {
   "Club": "Kulüp",
@@ -54215,6 +54250,11 @@
   "Vuelve la luz en la ciudad sin explicación": "Şehre elektrik açıklamasız geri geldi",
   "Los vecinos hablan de un «ángel de las alcantarillas». Nadie sabe quién bajó a arreglarlo.": "Komşular bir “kanalizasyon meleği”nden söz ediyor. Kimin inip onardığını kimse bilmiyor.",
   "🔌 Corte de luz: %d sectores a oscuras.": "🔌 Elektrik kesintisi: %d sektör karanlıkta.",
-  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Su baskını: %d sektörde sokaklar su altında."
+  "🌧 Inundación: %d sectores con agua en la calle.": "🌧 Su baskını: %d sektörde sokaklar su altında.",
+  "HITOS DEL CLUB": "KULÜBÜN DÖNÜM NOKTALARI",
+  "Primer título": "İlk şampiyonluk",
+  "EN OBRA · faltan %d semanas": "İNŞAATTA · %d hafta kaldı",
+  "Museo ampliado · %d títulos": "Genişletilmiş müze · %d unvan",
+  "Museo ampliado": "Genişletilmiş müze"
  }
 }
