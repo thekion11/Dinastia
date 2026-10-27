@@ -10,6 +10,8 @@ const TIPOS := ["multa", "patrocinio", "obra"]
 
 ## Qué pasa esta semana, si pasa algo: {tipo, importe}. `saldo` y `ref` son los de tu club (`Eco.ref_caja(rep)`).
 static func tirada(semilla: int, anio: int, semana: int, saldo: int, ref: float) -> Dictionary:
+	if float(saldo) < ref * 0.3:
+		return {}   ## un club sin caja no se multa más: bastante tiene
 	var h := absi(hash(Vector3i(semilla, anio, semana)))
 	var rica := clampf(float(saldo) / maxf(1.0, ref * 3.0), 0.0, 2.5)   ## 1 = tres referencias de caja
 	var p := POR_SEMANA * clampf(0.4 + rica, 0.4, 2.0)
@@ -29,10 +31,23 @@ static func concepto(tipo: String) -> String:
 		_:
 			return "Sobrecoste de obra"
 
+## ¿Hubo ya un golpe en las últimas `ENFRIAMIENTO` semanas? Así nunca caen cuatro seguidos (medido: una temporada con cuatro se llevaba 11 M).
+const ENFRIAMIENTO := 6
+
+static func reciente(m: Mundo) -> bool:
+	var nombres := TIPOS.map(func(t: String) -> String: return concepto(t))
+	for k in range(m.libro_financiero.size() - 1, maxi(-1, m.libro_financiero.size() - 25), -1):
+		var e: Dictionary = m.libro_financiero[k]
+		if int(e["anio"]) == m.anio and nombres.has(String(e["concepto"])) and m.semana - int(e["semana"]) < ENFRIAMIENTO:
+			return true
+	return false
+
 ## Se llama una vez por semana (`Mundo.avanzar_semana`). Cobra el golpe, lo apunta en el libro de movimientos y lo cuenta en la prensa. Devuelve lo que pasó.
 static func semana(m: Mundo) -> Dictionary:
 	var c := m.mi_club()
 	if c == null:
+		return {}
+	if reciente(m):
 		return {}
 	var t := tirada(m.semilla, m.anio, m.semana, c.saldo, Eco.ref_caja(float(c.rep)))
 	if t.is_empty():
