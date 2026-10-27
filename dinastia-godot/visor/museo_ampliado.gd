@@ -43,8 +43,27 @@ static func _mat_oro_vivo() -> StandardMaterial3D:
 	return m
 
 ## Una copa suelta (nodo propio, con su material para poder iluminarla): el trofeo real si está, o una copa de cilindros.
-static func _copa(nodo: Node3D, p: Vector3, madera: Material) -> MeshInstance3D:
+static func _copa(nodo: Node3D, p: Vector3, madera: Material, receta: Dictionary = {}) -> MeshInstance3D:
 	TunelVestuario._caja(nodo, p + Vector3(0, 0.04, 0), Vector3(0.24, 0.08, 0.24), madera, false)
+	## La copa de su competición (orden 15 e): las piezas de la receta; la que se ilumina es la copa en sí (la última del montaje).
+	if not receta.is_empty() and TrofeoModelo.disponible():
+		var pz := TrofeoModelo.partes(receta)
+		var esc := SalasClub.ALTO_VITRINA / maxf(float(pz["alto"]), 0.01)
+		var principal: MeshInstance3D = null
+		for d: Dictionary in pz["partes"]:
+			var pieza := MeshInstance3D.new()
+			pieza.mesh = d["mesh"]
+			pieza.material_override = (d["mat"] as Material).duplicate()
+			pieza.scale = Vector3.ONE * esc
+			pieza.position = p + Vector3(0, 0.08, 0) + (d["pos"] as Vector3) * esc
+			var mm := pieza.material_override as StandardMaterial3D
+			mm.emission_enabled = true
+			mm.emission = Color(1.0, 0.82, 0.35)
+			mm.emission_energy_multiplier = 0.0
+			nodo.add_child(pieza)
+			if bool(d.get("copa", false)):
+				principal = pieza
+		return principal
 	var mi := MeshInstance3D.new()
 	SalasClub._cargar_trofeo()
 	if SalasClub._trofeo != null and SalasClub._trofeo_mat != null:
@@ -88,8 +107,8 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 		var px := (caja.position.x + 0.45) if lado < 0.0 else (caja.end.x - 0.45)
 		SalasClub.vitrina(lote, nodo, m, base, vidrio, Vector3(px, y0, pz))
 		vitrinas.append({"p": Vector3(px, y0, pz), "k": SalasClub.MAX_SALA + k})
-		copas.append(_copa(nodo, Vector3(px, y0 + 1.0, pz), m["madera"]))
 		var h: Dictionary = hs[SalasClub.MAX_SALA + k]
+		copas.append(_copa(nodo, Vector3(px, y0 + 1.0, pz), m["madera"], TrofeosReales.para_titulo(String(h.get("titulo", "")), String(ctx.get("pais", "")))))
 		TunelVestuario._rotulo(nodo, "%s · %d" % [Idiomas.t(String(h.get("titulo", ""))), int(h.get("anio", 0))],
 			Vector3(px - lado * 0.38, y0 + 1.2, pz), -lado * PI / 2.0, 14, Color(0.12, 0.12, 0.14))
 	## Camisetas por década en la pared del fondo (la del ascensor queda a un lado).

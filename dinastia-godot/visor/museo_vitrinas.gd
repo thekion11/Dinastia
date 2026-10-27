@@ -41,8 +41,10 @@ static func ficha(k: int, mundo: Object) -> Dictionary:
 	if k < 0 or k >= lista.size():
 		return {"vacia": true, "titulo": Idiomas.t("Vitrina libre")}
 	var t: Dictionary = lista[k]
+	var club: Variant = mundo.call("mi_club") if mundo.has_method("mi_club") else null
 	return {"vacia": false, "titulo": String(t.get("titulo", "")), "anio": int(t.get("anio", 0)),
-		"final": String(t.get("final", "")), "goleadores": t.get("goleadores", [])}
+		"final": String(t.get("final", "")), "goleadores": t.get("goleadores", []),
+		"receta": TrofeosReales.para_titulo(String(t.get("titulo", "")), String(club.get("pais")) if club != null else "")}
 
 ## E ante una vitrina: abre el visor. true si se abrió.
 static func usar(e: Object, loc: Vector3) -> bool:
