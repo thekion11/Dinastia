@@ -39,7 +39,7 @@ static func pintar(lista: VBoxContainer, m: Mundo, al_cambiar: Callable) -> void
 			fila.add_child(et)
 			var bv := Button.new()
 			bv.text = Idiomas.t("Vender todo")
-			bv.pressed.connect(func() -> void:
+			DobleToque.conectar(bv, Idiomas.t("¿Vender todo? Toca otra vez"), func() -> void:   ## idea 1027
 				var r := f.vender(m, c, 1.0)
 				aviso.text = r
 				if r == "":
