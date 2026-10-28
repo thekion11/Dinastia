@@ -64,6 +64,14 @@ func _process(_d: float) -> void:
 							hacia += 1
 						elif cs < -0.5:
 							lejos += 1
+		var mochilas := 0
+		for v2: Dictionary in traf._vehiculos:
+			if bool(v2.get("peaton", false)) and is_instance_valid(v2["nodo"]) and (v2["nodo"] as Node3D).visible:
+				var esq := FutbolistaQ.esqueleto_de(v2["nodo"])
+				for c in (esq.get_children() if esq != null else []):
+					if c is BoneAttachment3D and (c as BoneAttachment3D).bone_name == "spine_03" and c.get_child_count() > 0 and (c as Node3D).visible:
+						mochilas += 1
+		print("mochilas visibles: ", mochilas)
 		print("gente %02d h: %d visibles de %d a 70 m (hacia el trabajo %d, de vuelta %d)" % [int(_horas[_i]), cerca, total, hacia, lejos])
 		get_viewport().get_texture().get_image().save_png("/tmp/rutina_%s_%02d.png" % ["antes" if OS.get_environment("RUTINA_PEATONES") == "0" else "despues", int(_horas[_i])])
 		_i += 1

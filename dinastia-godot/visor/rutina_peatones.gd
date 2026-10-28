@@ -57,6 +57,13 @@ static func lleva_maletin(h: float, coseno: float, i: int) -> bool:
 	var rumbo_ok := (h < 12.0 and coseno > 0.3) or (h >= 12.0 and coseno < -0.3)
 	return punta > 0.35 and rumbo_ok and posmod(hash([i, 97]), 3) == 0
 
+## ¿Lleva mochila a la espalda? En las horas de colegio (entrada de 7 a 9, salida de 13 a 15,5) la lleva más de la mitad; de día, uno de cada cinco;
+## de noche casi nadie. Estable por peatón (`hash`).
+static func lleva_mochila(h: float, i: int) -> bool:
+	var cole := maxf(pico(h, 8.0, 1.0), pico(h, 14.3, 1.3))
+	var prob := lerpf(0.2 * dia(h) + 0.06, 0.6, cole)
+	return float(posmod(hash([i, 131]), 1000)) / 1000.0 < prob
+
 ## Ritmo de paso: 1 normal, hasta 1,25 en hora punta y hasta 0,85 paseando.
 static func prisa(h: float, sector: int) -> float:
 	if sector == 600:
@@ -99,6 +106,10 @@ static func tick(vehiculos: Array, hora: float) -> Dictionary:
 			v["vel"] = float(v["vel"]) / f_viejo * f_nuevo
 			v["rut_f"] = f_nuevo
 		v["rut_pausa"] = pausa(hora, sector)
+		var con_mochila := lleva_mochila(hora, i) and not lleva_maletin(hora, rumbo.dot(al_trabajo), i)
+		if not v.has("mochila_hora") or con_mochila != bool(v["mochila_hora"]):
+			v["mochila_hora"] = con_mochila
+			PeatonVida.mochila(v, con_mochila)
 		var con_maletin := lleva_maletin(hora, rumbo.dot(al_trabajo), i)
 		if con_maletin != bool(v.get("maletin", false)):
 			v["maletin"] = con_maletin
