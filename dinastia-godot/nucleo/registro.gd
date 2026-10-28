@@ -24,7 +24,7 @@ const TOPE_SESION := 4000
 const LINEAS_INFORME := 200
 ## M-430 (28-10-2026): ADÓNDE SE MANDA EL INFORME. Lo pone el dueño (el mismo correo que la política de privacidad);
 ## mientras esté vacío, el juego dice que el contacto llegará con la versión publicada.
-const CONTACTO := ""
+const CONTACTO := "nottinghamdayblue@gmail.com"
 
 ## Errores (ERROR, SCRIPT, SHADER) que dejó la sesión ANTERIOR: al arrancar, la pantalla principal ofrece copiar el informe.
 var errores_previos := 0

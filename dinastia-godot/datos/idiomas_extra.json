@@ -6632,7 +6632,8 @@
   "Paletas, fondos y estilo del menú.": "Palettes, backgrounds and menu style.",
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Language, currency, match speed, conveniences and the manager's life.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Text, colours, contrast, sound cues and keys.",
-  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Slots, export, autosave, error report, privacy and credits."
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Slots, export, autosave, error report, privacy and credits.",
+  "Mándalo a: %s": "Send it to: %s"
  },
  "pt": {
   "Historia": "História",
@@ -13267,7 +13268,8 @@
   "Paletas, fondos y estilo del menú.": "Paletas, fundos e estilo do menu.",
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Idioma, moeda, velocidade da partida, comodidades e vida do técnico.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Texto, cores, contraste, avisos de som e teclas.",
-  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Espaços, exportar, salvamento automático, relatório de erros, privacidade e créditos."
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Espaços, exportar, salvamento automático, relatório de erros, privacidade e créditos.",
+  "Mándalo a: %s": "Envie para: %s"
  },
  "patrones": [
   [
@@ -25635,7 +25637,8 @@
   "Paletas, fondos y estilo del menú.": "Palettes, fonds et style du menu.",
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Langue, monnaie, vitesse du match, confort et vie de l'entraîneur.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Texte, couleurs, contraste, indications sonores et touches.",
-  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Emplacements, export, sauvegarde auto, rapport d'erreurs, confidentialité et crédits."
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Emplacements, export, sauvegarde auto, rapport d'erreurs, confidentialité et crédits.",
+  "Mándalo a: %s": "Envoyez-le à : %s"
  },
  "it": {
   "Historia": "Storia",
@@ -32270,7 +32273,8 @@
   "Paletas, fondos y estilo del menú.": "Palette, sfondi e stile del menu.",
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Lingua, valuta, velocità della partita, comodità e vita dell'allenatore.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Testo, colori, contrasto, avvisi sonori e tasti.",
-  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Slot, esporta, salvataggio automatico, rapporto errori, privacy e crediti."
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Slot, esporta, salvataggio automatico, rapporto errori, privacy e crediti.",
+  "Mándalo a: %s": "Mandalo a: %s"
  },
  "de": {
   "Historia": "Geschichte",
@@ -38905,7 +38909,8 @@
   "Paletas, fondos y estilo del menú.": "Paletten, Hintergründe und Menüstil.",
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Sprache, Währung, Spieltempo, Komfort und das Leben des Trainers.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Text, Farben, Kontrast, Tonhinweise und Tasten.",
-  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Speicherplätze, Export, Autospeichern, Fehlerbericht, Datenschutz und Mitwirkende."
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Speicherplätze, Export, Autospeichern, Fehlerbericht, Datenschutz und Mitwirkende.",
+  "Mándalo a: %s": "Schick ihn an: %s"
  },
  "ca": {
   "Historia": "Història",
@@ -45540,7 +45545,8 @@
   "Paletas, fondos y estilo del menú.": "Paletes, fons i estil del menú.",
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Idioma, moneda, velocitat del partit, comoditats i vida del DT.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Text, colors, contrast, avisos de so i tecles.",
-  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Ranures, exportar, desament automàtic, informe d'errors, privadesa i crèdits."
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Ranures, exportar, desament automàtic, informe d'errors, privadesa i crèdits.",
+  "Mándalo a: %s": "Envia'l a: %s"
  },
  "pl": {
   "Club": "Klub",
@@ -52452,7 +52458,8 @@
   "Paletas, fondos y estilo del menú.": "Palety, tła i styl menu.",
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Język, waluta, tempo meczu, udogodnienia i życie trenera.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Tekst, kolory, kontrast, sygnały dźwięków i klawisze.",
-  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Sloty, eksport, autozapis, raport błędów, prywatność i twórcy."
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Sloty, eksport, autozapis, raport błędów, prywatność i twórcy.",
+  "Mándalo a: %s": "Wyślij na: %s"
  },
  "tr": {
   "Club": "Kulüp",
@@ -59364,6 +59371,7 @@
   "Paletas, fondos y estilo del menú.": "Paletler, arka planlar ve menü stili.",
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Dil, para birimi, maç hızı, kolaylıklar ve teknik direktörün hayatı.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Metin, renkler, kontrast, ses uyarıları ve tuşlar.",
-  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Kayıt yuvaları, dışa aktarma, otomatik kayıt, hata raporu, gizlilik ve emeği geçenler."
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Kayıt yuvaları, dışa aktarma, otomatik kayıt, hata raporu, gizlilik ve emeği geçenler.",
+  "Mándalo a: %s": "Gönder: %s"
  }
 }

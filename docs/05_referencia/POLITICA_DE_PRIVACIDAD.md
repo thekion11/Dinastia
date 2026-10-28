@@ -1,8 +1,8 @@
 # Política de privacidad de DINASTÍA
 
 Para la ficha de las tiendas (Google Play, Steam, itch.io), que piden un enlace público a este texto
-(idea 1098, 27-10-2026). **Pendiente del dueño:** publicarla en una dirección web fija y poner el correo
-de contacto donde dice «[correo de contacto]». Si el juego cambia (conexión a internet, cuentas,
+(idea 1098, 27-10-2026). Correo de contacto puesto el 28-10 (el mismo que sale en el informe de fallos,
+`Registro.CONTACTO`). **Pendiente del dueño:** publicarla en una dirección web fija. Si el juego cambia (conexión a internet, cuentas,
 anuncios, estadísticas de uso, compras), esta política hay que reescribirla ANTES de publicar ese cambio.
 
 Comprobado en el código el 27-10-2026: no hay ninguna conexión de red (ni `HTTPRequest`, ni sockets, ni
@@ -35,7 +35,7 @@ se borra todo.
 **Cambios.** Si una versión futura cambia algo de esto, lo diremos aquí y en las notas de esa versión
 antes de publicarla.
 
-**Contacto.** [correo de contacto]
+**Contacto.** nottinghamdayblue@gmail.com
 
 ---
 
@@ -63,4 +63,4 @@ deleting its folder removes all of it.
 **Changes.** If a future version changes any of this, we will say so here and in that version's
 release notes before publishing it.
 
-**Contact.** [correo de contacto]
+**Contact.** nottinghamdayblue@gmail.com

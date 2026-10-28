@@ -31,7 +31,7 @@ func _probar() -> void:
 	var inf := Registro.informe(30)
 	_comprobar(inf.begins_with("INFORME DE FALLOS"), "el informe empieza con su cabecera")
 	_comprobar(inf.contains("Godot 4.") and inf.contains(OS.get_name()) and inf.contains("idioma"), "el informe lleva versión, SO e idioma")
-	_comprobar(inf.split("\n").size() <= 30 + 3, "el informe se limita a las últimas N líneas")
+	_comprobar(inf.split("\n").size() <= 30 + 4, "el informe se limita a las últimas N líneas (cabecera: título, sistema, contacto, separador)")
 	## Rotación: más de 256 KB pasan a registro.1.txt.
 	var grande := "x".repeat(1000)
 	for i in 300:
