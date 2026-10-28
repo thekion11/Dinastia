@@ -10,7 +10,7 @@ extends RefCounted
 ## del móvil); todo queda en `registro`.
 ##   ParaderoRed.montar(raiz, ancho, semilla, nombre, sector, codigo)   (raiz = nodo en el suelo, ya girado; la banca queda a z = −0,9 y el frente abierto
 ##   a +z). Con `codigo` (un paradero del mapa) se usa ese; sin él, `semilla` elige uno real del sector (pruebas y capturas sueltas).
-const ROJO := Color(0.78, 0.09, 0.20)
+const ROJO := Color(0.70, 0.03, 0.11)   ## rojo Red (con el sol y el cielo azul, el anterior se veía rosa)
 const NEGRO := Color(0.08, 0.08, 0.10)
 const POSTE := Color(0.21, 0.22, 0.25)
 const BLANCO := Color(0.95, 0.95, 0.96)
@@ -29,6 +29,7 @@ static func _mat(c: Color, rug := 0.6, metal := 0.0) -> StandardMaterial3D:
 		m.albedo_color = c
 		m.roughness = rug
 		m.metallic = metal
+		m.metallic_specular = 0.25   ## plástico mate: sin reflejo del cielo que lo lava
 		if c.a < 1.0:
 			m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		_mats[k] = m
@@ -159,7 +160,7 @@ static func montar(raiz: Node3D, ancho: float, semilla: int, nombre := "", secto
 	registro.append({"codigo": cod, "nombre": nombre, "sector": sec, "parada": parada, "recorridos": rs, "x": donde.x, "z": donde.z})
 	var poste := _mat(POSTE, 0.45, 0.5)
 	var negro := _mat(NEGRO, 0.4)
-	var rojo := _mat(ROJO, 0.5)
+	var rojo := _mat(ROJO, 0.85)
 	var blanco := _mat(BLANCO, 0.5)
 	var m := raiz
 	## Postes: dos en el lado de la banca y el panel (x = −0,2 y x = +w/2), y uno en el extremo abierto; delanteros y traseros.
@@ -227,7 +228,7 @@ static func _cartel(m: Node3D, pos: Vector3, nombre: String, rs: Array[String], 
 	_caja(c, Vector3(-0.23, yc + 0.4, z), Vector3(0.09, 0.075, 0.01), _luz(Color.WHITE))
 	_caja(c, Vector3(-0.23, yc + 0.41, z + 0.006), Vector3(0.07, 0.04, 0.01), _mat(NEGRO, 0.5))
 	## Esquina roja con «Red» arriba a la derecha.
-	_caja(c, Vector3(0.2, yc + 0.39, z), Vector3(0.22, 0.2, 0.01), _luz(ROJO, 0.6))
+	_caja(c, Vector3(0.2, yc + 0.39, z), Vector3(0.22, 0.2, 0.01), _luz(ROJO, 0.3))
 	_texto(c, "Red", Vector3(0.2, yc + 0.41, z + 0.008), 66, Color.WHITE)
 	## El nombre de la parada.
 	_texto(c, nombre if nombre != "" else "Paradero", Vector3(-0.02, yc + 0.27, z + 0.004), 34, Color(0.85, 0.86, 0.9))
@@ -245,4 +246,4 @@ static func _cartel(m: Node3D, pos: Vector3, nombre: String, rs: Array[String], 
 		_texto(c, rs[i], Vector3(-0.15 + 0.3 * float(col), yc + 0.2 - 0.065 - float(fila) * 0.13, z + 0.004), 58, Color.WHITE)
 	## QR abajo a la izquierda y franja roja abajo.
 	_quad(c, qr(), Vector3(-0.2, yc - 0.37, z + 0.002), Vector2(0.12, 0.12))
-	_caja(c, Vector3(0, yc - 0.48, z), Vector3(ancho - 0.02, 0.05, 0.01), _luz(ROJO, 0.6))
+	_caja(c, Vector3(0, yc - 0.48, z), Vector3(ancho - 0.02, 0.05, 0.01), _luz(ROJO, 0.3))

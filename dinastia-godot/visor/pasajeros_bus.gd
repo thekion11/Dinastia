@@ -78,8 +78,10 @@ func _liberar(fig: Dictionary) -> void:
 func parada(bus: Node3D) -> void:
 	if expl == null or expl.cb == null or _andando.size() >= 8:
 		return
-	var puerta: Vector3 = bus.global_transform * Vector3(-1.5, 0.0, 4.6)   ## puerta del lado de la acera (derecha del bus, −X)
-	var der: Vector3 = -bus.global_transform.basis.x.normalized()   ## hacia la acera
+	var puerta: Vector3 = bus.global_transform * Vector3(lado_puerta() * 1.5, 0.0, 4.6)   ## puerta del lado de la acera (derecha del bus, −X)
+	var dentro1: Vector3 = bus.global_transform * Vector3(lado_puerta() * 0.9, 0.55, 4.6)   ## el escalón y el pasillo, ya dentro
+	var dentro2: Vector3 = bus.global_transform * Vector3(lado_puerta() * 0.3, 0.55, 3.7)
+	var der: Vector3 = bus.global_transform.basis.x.normalized() * lado_puerta()   ## hacia la acera
 	var delante: Vector3 = bus.global_transform.basis.z.normalized()
 	var abordo: Array = bus.get_meta("pasajeros", [])
 	## BAJAN: la misma persona que subió antes (misma semilla), por la puerta, y se va andando por la acera.
@@ -88,7 +90,7 @@ func parada(bus: Node3D) -> void:
 		var fig := _persona(sem, puerta)
 		if not fig.is_empty():
 			var destino := puerta + der * (3.5 + 1.2 * float(k)) + delante * (7.0 - 12.0 * float(k))
-			_andar(fig, puerta, destino, false, bus)
+			_andar(fig, [dentro2, dentro1, puerta, destino], false, bus)   ## baja: del pasillo al escalón, a la acera y se va
 	## SUBEN: los de la marquesina más cercana a la puerta; si allí no esperaba nadie, llega alguien por la acera.
 	var subir: Array = []
 	var esperas: Array[Vector3] = expl.cb.esperas_bus
@@ -106,19 +108,30 @@ func parada(bus: Node3D) -> void:
 			subir.append(llega)
 	for fig: Dictionary in subir:
 		var n: Node3D = (fig["d"] as Dictionary)["nodo"]
-		_andar(fig, n.position, puerta, true, bus)
+		_andar(fig, [n.position, puerta, dentro1, dentro2], true, bus)   ## sube: a la puerta, el escalón y se adentra en el pasillo
 	bus.set_meta("pasajeros", abordo)
 	InteriorBus.actualizar(bus)
 
-func _andar(fig: Dictionary, a: Vector3, b: Vector3, sube: bool, bus: Node3D) -> void:
+func _andar(fig: Dictionary, pts: Array, sube: bool, bus: Node3D) -> void:
 	var d: Dictionary = fig["d"]
 	var n: Node3D = d["nodo"]
-	a.y = 0.2
-	b.y = 0.2
-	n.position = a
-	n.rotation.y = atan2(b.x - a.x, b.z - a.z)
+	var largo := 0.0
+	var ruta: Array[Vector3] = []
+	for i in pts.size():
+		var p: Vector3 = pts[i]
+		if absf(p.y - 0.55) > 0.01:
+			p.y = 0.2
+		ruta.append(p)
+		if i > 0:
+			largo += ruta[i - 1].distance_to(p)
+	n.position = ruta[0]
+	n.rotation.y = atan2(ruta[1].x - ruta[0].x, ruta[1].z - ruta[0].z)
 	Mini3D.anim(d, "caminar", "")
-	_andando.append({"d": d, "semilla": int(fig["semilla"]), "a": a, "b": b, "t": 0.0, "dur": maxf(a.distance_to(b) / 1.4, 0.5), "sube": sube, "bus": bus})
+	_andando.append({"d": d, "semilla": int(fig["semilla"]), "ruta": ruta, "t": 0.0, "dur": maxf(largo / 1.4, 0.5), "largo": largo, "sube": sube, "bus": bus})
+
+## Lado de la puerta en el modelo del autobús (−1: el de la acera; BUS_PUERTA_ANTIGUA=1 pone el de antes, +1, para las capturas «antes»).
+static func lado_puerta() -> float:
+	return 1.0 if OS.get_environment("BUS_PUERTA_ANTIGUA") != "" else -1.0
 
 func _mover(delta: float) -> void:
 	for k in range(_andando.size() - 1, -1, -1):
@@ -129,7 +142,18 @@ func _mover(delta: float) -> void:
 			continue
 		f["t"] = float(f["t"]) + delta
 		var u := clampf(float(f["t"]) / float(f["dur"]), 0.0, 1.0)
-		n.position = (f["a"] as Vector3).lerp(f["b"], u)
+		var ruta: Array = f["ruta"]
+		var resto := u * float(f["largo"])
+		for i in ruta.size() - 1:
+			var seg: float = (ruta[i] as Vector3).distance_to(ruta[i + 1])
+			if resto <= seg or i == ruta.size() - 2:
+				var q := clampf(resto / maxf(seg, 0.001), 0.0, 1.0)
+				n.position = (ruta[i] as Vector3).lerp(ruta[i + 1], q)
+				if seg > 0.05:
+					var dir: Vector3 = (ruta[i + 1] as Vector3) - (ruta[i] as Vector3)
+					n.rotation.y = lerp_angle(n.rotation.y, atan2(dir.x, dir.z), 0.25)
+				break
+			resto -= seg
 		if u >= 1.0:
 			var bus := f["bus"] as Node3D
 			if bool(f["sube"]) and bus != null and is_instance_valid(bus):

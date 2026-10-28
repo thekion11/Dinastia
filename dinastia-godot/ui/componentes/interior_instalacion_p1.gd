@@ -47,6 +47,8 @@ const SALAS_EDIFICIO := {
 	## Comercios con sala propia (27-10-2026, M-186).
 	"edificio_farmacia": ["farmacia", "Farmacia"], "edificio_banco": ["banco", "Banco"], "edificio_hotel": ["hotel", "Hotel"],
 	"edificio_ferreteria": ["ferreteria", "Ferretería"], "edificio_floristeria": ["floristeria", "Floristería"],
+	"edificio_correos": ["correos", "Correos"], "edificio_deportes": ["deportes", "Deportes"], "edificio_pizzeria": ["pizzeria", "Pizzería"],
+	"edificio_heladeria": ["heladeria", "Heladería"],
 }
 
 var clave := ""
