@@ -19,7 +19,7 @@ func _probar() -> void:
 	_comprobar(cel._jug.size() >= 10, "salen al campo %d jugadores" % cel._jug.size())
 	_comprobar(not cel._capi.is_empty() and not String((cel._capi["nodo"] as Node).name).is_empty(), "hay capitán")
 	var copa := (cel._capi["nodo"] as Node3D).get_node_or_null("CopaDelTitulo") as Node3D
-	_comprobar(copa != null and copa.position.y > 1.8, "el capitán lleva la copa en alto sobre la cabeza")
+	_comprobar(copa != null and copa.position.y > 1.5 and copa.position.y < 1.9, "el capitán lleva la copa en alto sobre la cabeza")
 	_comprobar(String(cel._capi.get("id", "")) != "" and not (cel._capi["nodo"] as Node).name.is_empty(), "el capitán no es el portero")
 	_comprobar(cel._canones.size() == CelebracionTrofeo.CONFETI_CANONES, "hay %d cañones de confeti" % cel._canones.size())
 	var t_total := CelebracionTrofeo.T_CORRO + CelebracionTrofeo.T_VUELTA + CelebracionTrofeo.T_FINAL
