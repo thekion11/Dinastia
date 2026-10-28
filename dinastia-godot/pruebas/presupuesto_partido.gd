@@ -101,6 +101,8 @@ func _process(_d: float) -> void:
 		_pj = PartidoJugable.abrir(_ui, CarreraJugadorUI.mundo, _ui.carrera, par[0], par[1], 120.0)
 	if _n == 120 and _fase == 0:
 		_fase = 1
+		## El mundo se congela (tiempo a cero) para que cada cuadro sea el mismo: sin esto la cámara y los jugadores se mueven entre una medida y la otra.
+		Engine.time_scale = 0.0
 		_medir_todo()
 
 func _medir_todo() -> void:
@@ -137,5 +139,6 @@ func _medir_todo() -> void:
 		print("  (techos sugeridos = medido + %d %%)" % int((MARGEN - 1.0) * 100))
 		for cat: String in ["total"] + CATEGORIAS:
 			print("  \"%s\": [%d, %d]," % [cat, int(ceil(float(_medidas[cat]["tri"]) * MARGEN)), int(ceil(float(_medidas[cat]["llamadas"]) * MARGEN))])
+	Engine.time_scale = 1.0
 	print("===== FIN. %d fallos =====" % _fallos)
 	get_tree().quit(0 if _fallos == 0 else 1)
