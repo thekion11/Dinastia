@@ -55,6 +55,36 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 			led.emission_energy_multiplier = 1.5
 			mi.material_override = led
 		raiz.add_child(mi)
+	## Faros delanteros y luces traseras (rojas, con un resplandor suave: de noche `TraficoCiudad.faros` pone los de verdad).
+	var luz_d := StandardMaterial3D.new()
+	luz_d.albedo_color = Color(1.0, 0.97, 0.85)
+	luz_d.emission_enabled = true
+	luz_d.emission = Color(1.0, 0.95, 0.8)
+	luz_d.emission_energy_multiplier = 0.6
+	var luz_t := StandardMaterial3D.new()
+	luz_t.albedo_color = Color(0.85, 0.05, 0.05)
+	luz_t.emission_enabled = true
+	luz_t.emission = Color(0.9, 0.05, 0.05)
+	luz_t.emission_energy_multiplier = 0.5
+	for xl: float in [-0.95, 0.95]:
+		for par: Array in [[6.045, luz_d, Vector3(0.34, 0.16, 0.03)], [-6.045, luz_t, Vector3(0.12, 0.5, 0.03)]]:
+			var lz := MeshInstance3D.new()
+			var lm := BoxMesh.new()
+			lm.size = par[2]
+			lz.mesh = lm
+			lz.material_override = par[1]
+			lz.position = Vector3(xl if float(par[0]) > 0.0 else xl * 1.18, 0.85 if float(par[0]) > 0.0 else 1.2, par[0])
+			raiz.add_child(lz)
+	## Montantes negros entre las ventanas (la franja de cristal se lee como ventanas separadas) y marco de las puertas.
+	for k in 8:
+		for lado_m: float in [-1.0, 1.0]:
+			var mt := MeshInstance3D.new()
+			var mmz := BoxMesh.new()
+			mmz.size = Vector3(0.05, 1.4, 0.07)
+			mt.mesh = mmz
+			mt.material_override = negro
+			mt.position = Vector3(lado_m * 1.27, 2.3, -5.4 + float(k) * 1.5429)
+			raiz.add_child(mt)
 	## Parabrisas inclinado (la parte de arriba retrasada 14°), con su marco.
 	var pb := MeshInstance3D.new()
 	var pbm := BoxMesh.new()
@@ -106,7 +136,7 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 		raiz.add_child(pu)
 	## Ruedas a escala (neumático de 0,46 m de radio con su llanta) y los pasos de rueda: un arco negro alrededor de cada una, en el costado.
 	for zr: float in [3.8, -3.6]:
-		for xr: float in [-1.12, 1.12]:
+		for xr: float in [-1.18, 1.18]:
 			var r := MeshInstance3D.new()
 			var cm := CylinderMesh.new()
 			cm.top_radius = 0.46
@@ -138,7 +168,7 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 			arco.mesh = am
 			arco.material_override = negro
 			arco.rotation.z = PI * 0.5
-			arco.position = Vector3(signf(xr) * 1.282, 0.62, zr)
+			arco.position = Vector3(signf(xr) * 1.29, 0.62, zr)
 			raiz.add_child(arco)
 	InteriorBus.montar(raiz)
 	if destino != "":
@@ -156,7 +186,7 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 			var ln := Label3D.new()
 			ln.text = numero
 			ln.font_size = 120
-			ln.pixel_size = 0.011
+			ln.pixel_size = 0.008
 			ln.modulate = Color.WHITE
 			ln.outline_size = 14
 			ln.outline_modulate = Color(0.05, 0.05, 0.08)
