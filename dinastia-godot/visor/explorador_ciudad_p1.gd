@@ -146,7 +146,7 @@ const SALA_DE_ROTULO := {
 	"Banco": "edificio_banco", "Correos": "edificio_correos", "Peluquería": "edificio_peluqueria",
 	"Librería": "edificio_libreria", "Supermercado": "edificio_mercado", "Pizzería": "edificio_pizzeria",
 	"Hotel": "edificio_hotel", "Deportes": "edificio_deportes", "Bar": "edificio_bar",
-	"Floristería": "edificio_floristeria", "Ferretería": "edificio_ferreteria", "Peña del club": "edificio_bar",
+	"Floristería": "edificio_floristeria", "Ferretería": "edificio_ferreteria", "Peña del club": "edificio_pena",
 	"Heladería": "edificio_heladeria",
 }
 

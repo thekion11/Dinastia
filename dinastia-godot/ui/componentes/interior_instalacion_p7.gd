@@ -300,3 +300,47 @@ func _heladeria() -> void:
 		_asiento("chair", p + Vector3(0.7, 0, 0), -PI * 0.5, [0.0], _calle() if int(p.z * 10.0) % 2 == 0 else [])
 	_planta(Vector3(-3.4, 0, 2.4))
 	_cartel("🍦 " + _sala_nombre().to_upper(), Vector3(0, 2.8, -2.95), 34, Color(0.95, 0.4, 0.6))
+
+## Peña del club (10 × 7 m): bufandas y banderines con los colores del club, la barra con taburetes, la tele con el partido, el estante de trofeos
+## y mesas con hinchas. Los colores salen de `_c1` y `_c2` (los del club cuando la sala se abre con club).
+func _pena() -> void:
+	_tonos_sala = _MADERA_OSCURA
+	var delantal := [_c1, Color(0.15, 0.15, 0.18), true]
+	_sala(Vector3(10, 3.2, 7), Color(0.5, 0.34, 0.24), Color(0.93, 0.9, 0.84), "parquet", _c1)
+	## Pared del fondo: banderines en cuerda, bufandas colgadas y el escudo grande.
+	for k in 9:
+		var x := -4.0 + float(k)
+		Mini3D.caja(_raiz, Vector3(x, 2.55 - 0.07 * absf(float(k) - 4.0) * 0.0, -3.45), Vector3(0.42, 0.3, 0.02), Mini3D.mat(_c1 if k % 2 == 0 else _c2, 0.8))
+	for k in 6:
+		Mini3D.caja(_raiz, Vector3(-4.2 + float(k) * 1.6, 1.7, -3.46), Vector3(0.22, 1.0, 0.02), Mini3D.mat(_c1 if k % 2 == 0 else _c2, 0.9))
+		Mini3D.caja(_raiz, Vector3(-4.2 + float(k) * 1.6, 1.7, -3.455), Vector3(0.22, 0.14, 0.02), Mini3D.mat(_c2 if k % 2 == 0 else _c1, 0.9))
+	Mini3D.cilindro(_raiz, Vector3(0.0, 1.9, -3.46), 0.55, 0.04, Mini3D.mat(_c2, 0.6)).rotation.x = PI * 0.5
+	Mini3D.cilindro(_raiz, Vector3(0.0, 1.9, -3.44), 0.42, 0.04, Mini3D.mat(_c1, 0.6)).rotation.x = PI * 0.5
+	## Barra, taburetes y el camarero.
+	_poner("desk", Vector3(-2.6, 0, -2.2), 0.0, 1.8)
+	_poner("desk", Vector3(-1.0, 0, -2.2), 0.0, 1.8)
+	_trabajador(Vector3(-1.8, 0, -3.0), 0.0, false, ["charla", "saludo_mano"], delantal)
+	for k in 4:
+		_asiento("stoolBar", Vector3(-3.0 + float(k) * 0.9, 0, -1.3), PI, [0.0], _calle() if k != 2 else [])
+	_poner("comida/soda-bottle", Vector3(-2.6, _alto("desk", 1.8), -2.2), 0.0, 0.8)
+	_poner("comida/glass", Vector3(-1.2, _alto("desk", 1.8), -2.2), 0.0, 1.0)
+	## La tele con el partido y el estante de trofeos y camisetas firmadas.
+	_poner("cabinetTelevision", Vector3(3.0, 0, -3.1), 0.0, 1.3)
+	_poner("televisionModern", Vector3(3.0, _alto("cabinetTelevision", 1.3), -3.1), 0.0, 1.5)
+	_poner("bookcaseClosedDoors", Vector3(4.5, 0, -1.6), -PI * 0.5, 1.1)
+	for k in 3:
+		_poner("comida/cup", Vector3(4.6, 0.62 + float(k) * 0.42, -1.1 - float(k) * 0.35), 0.0, 0.9, {"*": Color(0.95, 0.78, 0.2)})
+	## Mesas con hinchas, la dianas y el futbolín al lado de la puerta.
+	for p: Vector3 in [Vector3(0.6, 0, 0.2), Vector3(-3.0, 0, 1.8), Vector3(2.6, 0, 1.4)]:
+		_poner("table", p, 0.0, 1.2)
+		var top := _alto("table", 1.2)
+		Mini3D.caja(_raiz, p + Vector3(0, top + 0.01, 0), Vector3(0.9, 0.02, 0.9), Mini3D.mat(_c1, 0.9))
+		_poner("comida/mug", p + Vector3(0.2, top + 0.02, 0.1), 0.0, 0.7)
+		_poner("comida/mug", p + Vector3(-0.25, top + 0.02, -0.15), 0.0, 0.7)
+		_asiento("chair", p + Vector3(-0.8, 0, 0), PI * 0.5, [0.0], _calle())
+		_asiento("chair", p + Vector3(0.8, 0, 0), -PI * 0.5, [0.0], _calle())
+	Mini3D.cilindro(_raiz, Vector3(-4.8, 1.6, 0.5), 0.3, 0.03, Mini3D.mat(Color(0.1, 0.1, 0.12), 0.7)).rotation.z = PI * 0.5
+	Mini3D.cilindro(_raiz, Vector3(-4.78, 1.6, 0.5), 0.2, 0.03, Mini3D.mat(_c1, 0.7)).rotation.z = PI * 0.5
+	Mini3D.cilindro(_raiz, Vector3(-4.76, 1.6, 0.5), 0.07, 0.03, Mini3D.mat(_c2, 0.7)).rotation.z = PI * 0.5
+	_planta(Vector3(4.5, 0, 2.8))
+	_cartel("⚽ " + _sala_nombre().to_upper(), Vector3(0, 2.95, -3.45), 30, _c2)
