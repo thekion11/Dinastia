@@ -587,7 +587,6 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 - [ ] Texturas (medido el 24-10): de las 3.103 sin pérdida, 2.535 son caras reales (prohibido tocarlas sin tu OK), 494 iconos de botones y 40 escudos especiales; el resto ya está comprimido. Hecho: 4 texturas normal/roughness de personajes a 1024 px (−48 MB estimados). DECISIÓN DEL DUEÑO: probar BC7 de alta calidad en una muestra de caras y medir ΔE de piel antes de generalizar; identificar ~24 texturas dinámicas de 1024² sin nombre (~100 MB); reapuntar 38 duplicados (ahorra disco, no VRAM).
 - [ ] Oclusión en más zonas de la ciudad (`OclusoresCiudad`); el `_process` de `dibujo_mando`/`MandoGiratorio` ya solo pinta cuando cambia (comprobado el 27-10).
 - [ ] Escenas de prueba que nadie lanza (27-10, orden 14: reutilizar antes de borrar). Contadas de nuevo: 354 en `pruebas/` sin mención, casi todas capturas y diagnósticos que se lanzan a mano (se quedan). De las 14 `prueba_*`: 6 siguen pasando y ya corren en `especiales.sh` (contador de FPS, dominadas, minijuegos nuevos, motor jugable; ceremonia de carrera y práctica en `todo`). Rotas, a arreglar o retirar: `prueba_repeticion` (solo graba 4,2 s: ¿fallo real de la repetición?), `prueba_descanso_3d` (falla en la fase 2, minuto 48), `prueba_intro` (el partido no arranca tras el vuelo corto; la ceremonia lo sustituyó el 13-10 y la prueba se cuelga con pantalla), `prueba_casa_kenney` (captura sin pantalla). Sin veredicto propio: `prueba_alineacion_indebida`, `prueba_carrera_flujo`, `prueba_ciudad_modelos` (inventario). Fase 0: repasar si queda algún módulo de `visor/`/`nucleo/` sin prueba directa.
-- [ ] `MotorLibre` es prototipo (el juego usa `MotorJugable`): decidir si se borra.
 - [ ] C++/GDExtension solo si el perfil en hardware real lo pide.
 - [ ] 23 imágenes ≥ 2048 px que no lo necesitan: bajarlas a 2048 (auditoría 3, §4; no las caras sin tu OK).
 
@@ -609,7 +608,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-387 | P2 | PENDIENTE | Mensajes de error silenciosos (`return` sin aviso) | sin registro de errores |
 | M-388 | P2 | PENDIENTE | Constantes mágicas (balance) dispersas | sin archivo de balance |
 | M-391 | P2 | PENDIENTE | Duplicación entre `MatchPlayback` y `MotorJugable` | duplicación sin retirar |
-| M-392 | P2 | PENDIENTE | `MotorLibre` prototipo (546 líneas) sin uso claro | `MotorLibre` sigue (545 líneas); 20-10: con la base ficticia da 12,5 goles de media entre iguales (su prueba fija ahora la base real para no depender del orden) |
+| M-392 | P3 | PARCIAL | `MotorLibre` (567 líneas): NO es código muerto | 28-10: lo usa `OcasionesDT.lectura` (las ocasiones jugables del partido del DT: lee la jugada y propone pase, conducción o tiro). Lo que sobra es su prueba `_probar_motor_libre`, la más lenta del banco (38 s de 129): acortarla (menos partidos simulados con los mismos umbrales) |
 | M-393 | P2 | PENDIENTE | Código de pruebas mezclado con herramientas (`herramientas/*.ps1`) | sin separar |
 | M-394 | P2 | PENDIENTE | Herramientas `.exe`/`.cs` binarias en repo | `herramientas/*.exe` siguen en el repo |
 | M-396 | P2 | PENDIENTE | Convenciones: mezcla de español/inglés en nombres | sin guía de estilo |
