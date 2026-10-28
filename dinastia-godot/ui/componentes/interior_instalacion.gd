@@ -224,6 +224,7 @@ func _construir_sala() -> void:
 		"deportes": _deportes()
 		"pizzeria": _pizzeria()
 		"heladeria": _heladeria()
+		"pena": _pena()
 	_vaciar_lotes()
 	## De vuelta al valor de siempre: los minijuegos y la ciudad lo usan.
 	Mini3D.sala_deportiva = true
