@@ -28,6 +28,10 @@ func _ready() -> void:
 		print("===== FIN. 0 fallos =====")
 		get_tree().quit()
 		return
+	## REBAJAS=0 enciende lo de antes de las rebajas #1-#3 (para medir y fotografiar el «antes»).
+	if OS.get_environment("REBAJAS") == "0":
+		StadiumBuilder.butaca_detalle_filas = 99
+		EntornoEstadio.optimizar_partido = false
 	PartidoJugable.con_ceremonia = false
 	CarreraJugadorUI.mundo = null
 	_ui = load("res://escenas/carrera_jugador.tscn").instantiate()
@@ -103,12 +107,18 @@ func _medir_todo() -> void:
 	_recoger()
 	_base = await _medir()
 	_medidas["total"] = _base
+	## Referencia de FPS en ESTA máquina (renderizado por software si no hay GPU): no entra en el presupuesto, solo se imprime.
+	var t0 := Time.get_ticks_usec()
+	for k in 40:
+		await RenderingServer.frame_post_draw
+	var fps := 40.0 / (float(Time.get_ticks_usec() - t0) / 1000000.0)
 	for cat: String in CATEGORIAS:
 		_apagar(_grupos[cat], false)
 		var m := await _medir()
 		_apagar(_grupos[cat], true)
 		_medidas[cat] = {"tri": maxi(0, int(_base["tri"]) - int(m["tri"])), "llamadas": maxi(0, int(_base["llamadas"]) - int(m["llamadas"]))}
 	print("")
+	print("FPS de referencia en esta máquina (%s): %.2f" % [RenderingServer.get_video_adapter_name(), fps])
 	print("PRESUPUESTO DEL PARTIDO (cuadro visible desde la cámara del partido)")
 	print("  %-10s %12s %10s   %12s %10s" % ["categoría", "triángulos", "llamadas", "techo tri.", "techo ll."])
 	var medir := OS.get_environment("MEDIR") != ""
