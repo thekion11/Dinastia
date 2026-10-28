@@ -78,8 +78,8 @@ func _liberar(fig: Dictionary) -> void:
 func parada(bus: Node3D) -> void:
 	if expl == null or expl.cb == null or _andando.size() >= 8:
 		return
-	var puerta: Vector3 = bus.global_transform * Vector3(1.5, 0.0, 4.6)
-	var der: Vector3 = bus.global_transform.basis.x.normalized()
+	var puerta: Vector3 = bus.global_transform * Vector3(-1.5, 0.0, 4.6)   ## puerta del lado de la acera (derecha del bus, −X)
+	var der: Vector3 = -bus.global_transform.basis.x.normalized()   ## hacia la acera
 	var delante: Vector3 = bus.global_transform.basis.z.normalized()
 	var abordo: Array = bus.get_meta("pasajeros", [])
 	## BAJAN: la misma persona que subió antes (misma semilla), por la puerta, y se va andando por la acera.
