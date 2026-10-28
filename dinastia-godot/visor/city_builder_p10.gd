@@ -91,7 +91,7 @@ static func autobus(col: Color, destino: String = "", numero: String = "") -> No
 			led.emission_energy_multiplier = 1.5
 			mi.material_override = led
 		raiz.add_child(mi)
-	## Pilares entre ventanas y las dos puertas (lado derecho, +X).
+	## Pilares entre ventanas y las dos puertas: en el lado de la ACERA (el derecho del autobús, que mira a +Z: −X; antes en +X, el lado de la calzada).
 	for k in 7:
 		var pil := MeshInstance3D.new()
 		var bm2 := BoxMesh.new()
@@ -106,7 +106,7 @@ static func autobus(col: Color, destino: String = "", numero: String = "") -> No
 		bm3.size = Vector3(0.06, 2.3, 1.2)
 		pu.mesh = bm3
 		pu.material_override = vidrio
-		pu.position = Vector3(1.29, 1.55, zp)
+		pu.position = Vector3(-1.29, 1.55, zp)
 		raiz.add_child(pu)
 	## Ruedas.
 	for zr: float in [3.8, -3.6]:
