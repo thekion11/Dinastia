@@ -600,7 +600,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
 | M-404 | P1 | PARCIAL | Módulos de `visor/` sin prueba directa | medido el 27-10: 22 de 131, casi todos rellenos de ciudad (`CiudadMercado`, `CiudadSolar`, `FachadaModular`…) que solo se ejercitan al construir la ciudad en las sondas `p3_*`/`tre_*`; falta una sonda que compruebe que cada relleno deja piezas |
-| M-379 | P2 | PARCIAL | 70 funciones > 120 líneas (medido 28-10): las 5 peores eran `_butacas` 354, `_control_usuario` 274, `Estadio._construir` 254, `_piscina` 239, `_estacion` 233 | 28-10: partidas `_butacas` (stadium_builder_p6: paleta, poblar, hinchas, montar; hash idéntico de todos los MultiMesh en 2 calidades × 3 clubes), `Estadio._construir` (HUD y cajón aparte) y `_piscina` (8 zonas; mismo árbol de nodos). Quedan 67; `_control_usuario` (sensación de juego) sin tocar |
+| M-379 | P2 | PARCIAL | 70 funciones > 120 líneas (medido 28-10): las 5 peores eran `_butacas` 354, `_control_usuario` 274, `Estadio._construir` 254, `_piscina` 239, `_estacion` 233 | 28-10: partidas `_butacas` (stadium_builder_p6: paleta, poblar, hinchas, montar; hash idéntico de todos los MultiMesh en 2 calidades × 3 clubes), `Estadio._construir` (HUD y cajón aparte) y `_piscina` (8 zonas; mismo árbol de nodos). `_control_usuario` partido con la huella de `igualdad_motor` idéntica. Quedan 66 (siguientes: `_estacion` 233, `_ver_ficha` 212, `_pintar_dispositivo` 211) |
 | M-382 | P2 | PENDIENTE | Sin análisis estático | sin gdlint |
 | M-383 | P2 | PENDIENTE | Tipado: muchos `Dictionary` sin forma (jugadores del motor) | sin `JugadorMotor` tipado |
 | M-384 | P2 | PARCIAL | `Mundo` 2.921 líneas, `Roles` 2.065, `Prensa` 2.541: acoplamiento alto | sin extraer servicios (28-10: ya en capas de <450 líneas; queda repartir por responsabilidad) |
@@ -828,7 +828,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-109 | P2 | PARCIAL | Niños de ceremonia con una misma malla | niños con cuerpos de peatones variados (`CeremoniaPartido`); sin comprobar variedad de malla |
 | M-110 | P2 | PENDIENTE | Sin voces/murmullos de jugadores | sin voces de jugadores |
 | M-112 | P2 | PENDIENTE | Sin avatar del usuario en el estadio como jugador (carrera) con su… | la Carrera de Jugador no usa el cuerpo del creador |
-| M-444 | P2 | PENDIENTE | Fuga de texturas GL al cerrar `prueba_carrera_flujo` | fuga de texturas sin arreglar (INFORME_INTERNO H-12) |
+| M-444 | P2 | PARCIAL | Fuga de texturas GL al cerrar `prueba_carrera_flujo` | 28-10: acotada a «al cerrar el partido jugable» (2 texturas de 256², solo al apagar); añadidas cachés a `Cierre.CACHES`; sin resolver |
 | M-445 | P2 | PENDIENTE | Pruebas que no caben en 5 min con render por software (`intro`,… | sin modo rápido del arnés (H-13) |
 | M-448 | P2 | PENDIENTE | `auditoria_clubes` tarda ~8 min y `auditoria_datos` ~1 min | sin muestra |
 | M-449 | P2 | PENDIENTE | Los informes (`AUDITORIA_CLUBES.csv`) se regeneran a mano | sin CI nocturno |
@@ -895,9 +895,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-339 | P1 | PENDIENTE | Césped en capas ≈ 230 k tris/57 llamadas | capas del césped hasta 46 m sin LOD extra |
 | M-343 | P2 | PARCIAL | Draw calls 700 | sombras en 8 mallas por sector (741→691) y 630 llamadas; sin atlas |
 | M-344 | P2 | PARCIAL | Overdraw en grada por butacas y personas | 21-10: oclusión en la CIUDAD (`OclusoresCiudad`, 1.120 paredes): −16 % de llamadas a pie de calle (12.128 → 10.192 en 4 calles, `medir_oclusion`); en la grada del estadio sigue sin `OccluderInstance3D |
-| M-345 | P2 | PARCIAL | Culling por trozos de MultiMesh | 28-10: hecho en la grada (8 trozos por bandeja, −3,3 % tris); falta en la ciudad |
 | M-346 | P2 | PARCIAL | Texturas con compresión (s3tc en PC); sin variantes móviles… | 21-10: revisado: las texturas grandes de 3D ya están en VRAM (s3tc) y limitadas (ropa 4K → 1024); las 3.103 sin comprimir son caras reales, iconos 2D y paletas de Kenney, que se dejan sin pérdida a pr |
-| M-347 | P2 | PARCIAL | VRAM del partido | 28-10: 603 → 311 MB (ruidos a 512 y compartidos); volver a medir en hardware real |
 | M-348 | P2 | PARCIAL | Primera construcción del estadio | 28-10: 7,5-9,4 s → 2,6-2,8 s (animaciones en hilo + jugadores precalentados en el menú); segunda apertura 1,4 s; sin caché en disco |
 | M-349 | P2 | PENDIENTE | Generación de `Mundo` (384 clubes) y `Reales.aplicar`: medir… | sin `WorkerThreadPool` |
 | M-351 | P2 | PENDIENTE | Hilos: ¿se usan para IA/ciudad? | sin hilos para tráfico/peatones (solo LOD del tráfico) |

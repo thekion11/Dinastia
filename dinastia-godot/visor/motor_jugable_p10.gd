@@ -392,3 +392,45 @@ func _ejecutar_saque_ia(p: Dictionary, tipo: String, lugar: Vector3) -> void:
 			else:
 				_patear(p, pos(p) + Vector3(0, 0, dir_ataque(bool(p["es_local"])) * 8.0), 10.0)
 	_reanudar()
+
+func _fuera_del_area(p: Dictionary) -> Vector3:
+	var o := _forma(p, false)
+	var lugar: Vector3 = saque["lugar"]
+	var arco_z := signf(lugar.z) * LARGO
+	if absf(o.z - arco_z) < AREA_Z + 1.0:
+		o.z = arco_z - signf(arco_z) * (AREA_Z + 2.0)
+	return o
+
+## Córner y falta: los que atacan entran al área (primer palo, segundo palo,
+## punto de penal, frontal) y los que defienden los marcan; en las faltas
+## cercanas, cuatro hacen barrera a 9,15 m.
+func _pos_balon_parado(p: Dictionary, lugar: Vector3, saca_local: bool) -> Vector3:
+	var ataca := bool(p["es_local"]) == saca_local
+	var arco_z := LARGO * dir_ataque(saca_local)
+	## Las x se escriben para atacar hacia -Z y se reflejan para +Z (como el
+	## catálogo de jugadas): los dos equipos ocupan el área igual.
+	var ex := -signf(arco_z)
+	var zonas := [Vector3(-2.5 * ex, 0, arco_z - signf(arco_z) * 5.0), Vector3(3.0 * ex, 0, arco_z - signf(arco_z) * 6.5),
+		Vector3(0, 0, arco_z - signf(arco_z) * 11.0), Vector3(-6.0 * ex, 0, arco_z - signf(arco_z) * 9.0),
+		Vector3(6.5 * ex, 0, arco_z - signf(arco_z) * 10.0), Vector3(0, 0, arco_z - signf(arco_z) * 18.0)]
+	var i := absi(String(p.get("id", "")).hash()) % zonas.size()
+	if ataca:
+		if _rol(p) in ["DFC", "DC", "ED", "EI", "MC"]:
+			return zonas[i]
+		return _forma(p, true)
+	## Defensores: barrera en las faltas cercanas.
+	var dist_arco := Vector2(lugar.x, lugar.z - arco_z).length()
+	if String(saque["tipo"]) == "falta" and dist_arco < 32.0 and _rol(p) in ["DC", "ED", "EI", "MC"]:
+		var hacia := (Vector3(0, 0, arco_z) - lugar).normalized()
+		var lado := Vector3(hacia.z, 0, -hacia.x)
+		var k := float(i % 4) - 1.5
+		return lugar + hacia * 9.15 + lado * k * 0.7
+	return zonas[i] + Vector3(0.8 * ex, 0, 0)
+
+func _ia_portero_saque(p: Dictionary) -> Vector3:
+	var arco := _arco_propio(p)
+	return arco + Vector3(0, 0, dir_ataque(bool(p["es_local"])) * 0.8)
+
+## EL CÍRCULO DE SERENIDAD del penal: late entre grande (1) y chico (0).
+func serenidad() -> float:
+	return 0.5 + 0.5 * cos(_t_estado * 3.4)
