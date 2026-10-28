@@ -341,7 +341,11 @@ func _malla_kit(ruta: String) -> Dictionary:
 		var mis := inst.find_children("*", "MeshInstance3D", true, false)
 		if not mis.is_empty() and (mis[0] as MeshInstance3D).mesh != null:
 			var m: Mesh = (mis[0] as MeshInstance3D).mesh
-			r = {"malla": m, "caja": m.get_aabb()}
+			## (28-10) «simple»: una sola malla colgando de la raíz sin transformación propia (todo el kit de
+			## edificios de Kenney): `_kit` la pone como `MeshInstance3D` directa, sin instanciar la escena.
+			var simple: bool = mis.size() == 1 and mis[0].get_parent() == inst \
+				and (mis[0] as MeshInstance3D).transform.is_equal_approx(Transform3D()) and mis[0].get_child_count() == 0
+			r = {"malla": m, "caja": m.get_aabb(), "simple": simple}
 		inst.free()
 	_mallas_kit[ruta] = r
 	return r

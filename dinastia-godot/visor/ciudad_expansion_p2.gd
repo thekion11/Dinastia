@@ -224,6 +224,44 @@ func _mat_det(clave: String, c: Color, rug: float) -> StandardMaterial3D:
 		_mats_det[clave] = b._mat_simple(c, rug)
 	return _mats_det[clave]
 
+## (28-10) Una caja de detalle de edificio girada: se apunta y se vuelca en `_volcar_lotes_det`.
+func _lote_det(clave: String, centro: Vector3, tam: Vector3, giro: float) -> void:
+	if not _lotes_det.has(clave):
+		_lotes_det[clave] = [] as Array[Transform3D]
+	(_lotes_det[clave] as Array).append(Transform3D(Basis(Vector3.UP, giro) * Basis.from_scale(tam), centro))
+
+## (28-10) Los detalles de edificio, un MultiMesh por clave y celda de 100 m (como hace `Optimizar.trocear`,
+## que a estos no los toca: el nombre «Edificios…» lo evita). Los chicos de azotea (equipos y depósito)
+## llevan el mismo corte de distancia (320 m) que `Optimizar.distancias` daba a cada caja suelta.
+const CORTE_DET := {"equipo": 320.0, "deposito": 320.0}
+func _volcar_lotes_det() -> void:
+	for clave: String in _lotes_det:
+		var por_celda := {}
+		for t: Transform3D in _lotes_det[clave]:
+			var k := Vector2i(floori(t.origin.x / 100.0), floori(t.origin.z / 100.0))
+			if not por_celda.has(k):
+				por_celda[k] = [] as Array[Transform3D]
+			(por_celda[k] as Array).append(t)
+		var malla: Mesh
+		if clave == "deposito":
+			var cm := CylinderMesh.new()
+			cm.top_radius = 0.9
+			cm.bottom_radius = 0.9
+			cm.height = 1.8
+			malla = cm
+		else:
+			malla = BoxMesh.new()
+		var corte: float = float(CORTE_DET.get(clave, 0.0))
+		for k: Vector2i in por_celda:
+			var lista: Array[Transform3D] = []
+			lista.assign(por_celda[k])
+			var mi := _multimesh(malla, _mats_det[clave], lista, Vector3.ONE)
+			mi.name = "EdificiosDet_" + clave
+			if corte > 0.0:
+				mi.visibility_range_end = corte
+				mi.visibility_range_end_margin = corte * 0.1
+	_lotes_det.clear()
+
 ## LOS APOYOS DEL PUENTE (16-10-2026, «los tableros flotan o tienen apoyos
 ## pobres»). Antes: tres machones de hormigón de solo el 70 % del ancho, así que
 ## los arcos de piedra de las dos caras nacían en el aire, y bajo las rampas no
@@ -266,9 +304,12 @@ func _apoyos_puente(rx: float, z: float, ancho: float, agua0: float, agua1: floa
 		b._caja_en(Vector3(xa + rampa * 0.5, 0.3, z), Vector3(rampa, 0.6, fondo + 0.2), sillar_osc)
 	cuenta["pilas_puente"] = int(cuenta.get("pilas_puente", 0)) + 3
 
-func _multimesh(malla: Mesh, mat: Material, ts: Array[Transform3D], _esc: Vector3, colores: Array[Color] = []) -> void:
+## (28-10) El material de los MultiMesh con color por vértice es uno solo para toda la ciudad (B7).
+static var _mat_colores: StandardMaterial3D = null
+
+func _multimesh(malla: Mesh, mat: Material, ts: Array[Transform3D], _esc: Vector3, colores: Array[Color] = []) -> MultiMeshInstance3D:
 	if ts.is_empty():
-		return
+		return null
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.use_colors = not colores.is_empty()
@@ -286,11 +327,13 @@ func _multimesh(malla: Mesh, mat: Material, ts: Array[Transform3D], _esc: Vector
 	if mat != null:
 		mi.material_override = mat
 	elif mm.use_colors:
-		var m2 := StandardMaterial3D.new()
-		m2.vertex_color_use_as_albedo = true
-		m2.roughness = 0.8
-		mi.material_override = m2
+		if _mat_colores == null:
+			_mat_colores = StandardMaterial3D.new()
+			_mat_colores.vertex_color_use_as_albedo = true
+			_mat_colores.roughness = 0.8
+		mi.material_override = _mat_colores
 	b.add_child(mi)
+	return mi
 
 ## Altura del suelo del puente en x (rampas y tablero), para la balaustrada.
 func _altura_puente(x: float, rx: float, agua0: float, agua1: float, rampa: float) -> float:
