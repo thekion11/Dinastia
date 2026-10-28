@@ -595,7 +595,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
 | M-404 | P1 | PARCIAL | Módulos de `visor/` sin prueba directa | medido el 27-10: 22 de 131, casi todos rellenos de ciudad (`CiudadMercado`, `CiudadSolar`, `FachadaModular`…) que solo se ejercitan al construir la ciudad en las sondas `p3_*`/`tre_*`; falta una sonda que compruebe que cada relleno deja piezas |
-| M-379 | P2 | PENDIENTE | 64 funciones > 120 líneas (Q-01): `Sonido._sintetizar` 1.000,… | funciones largas sin partir |
+| M-379 | P2 | PARCIAL | 70 funciones > 120 líneas (medido 28-10): las 5 peores eran `_butacas` 354, `_control_usuario` 274, `Estadio._construir` 254, `_piscina` 239, `_estacion` 233 | 28-10: partidas `_butacas` (stadium_builder_p6: paleta, poblar, hinchas, montar; hash idéntico de todos los MultiMesh en 2 calidades × 3 clubes), `Estadio._construir` (HUD y cajón aparte) y `_piscina` (8 zonas; mismo árbol de nodos). Quedan 67; `_control_usuario` (sensación de juego) sin tocar |
 | M-382 | P2 | PENDIENTE | Sin análisis estático | sin gdlint |
 | M-383 | P2 | PENDIENTE | Tipado: muchos `Dictionary` sin forma (jugadores del motor) | sin `JugadorMotor` tipado |
 | M-384 | P2 | PENDIENTE | `Mundo` 2.921 líneas, `Roles` 2.065, `Prensa` 2.541: acoplamiento alto | sin extraer servicios |
