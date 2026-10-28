@@ -6474,7 +6474,14 @@
   "Ese paradero no existe": "That bus stop does not exist",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Check the code on the pole: «PA» and four digits.",
   "Tiempos según la posición real de cada bus.": "Times based on each bus's real position.",
-  "¡CAMPEONES!": "CHAMPIONS!"
+  "¡CAMPEONES!": "CHAMPIONS!",
+  "ofensivo": "attacking",
+  "defensivo": "defensive",
+  "motivador": "motivator",
+  "pizarron": "tactician",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio": "The city is celebrating: more people on the streets and at the stadium",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio.": "The city is celebrating: more people on the streets and at the stadium.",
+  "Los primeros cinco metros no se los gana nadie": "Nobody beats us over the first five metres"
  },
  "pt": {
   "Historia": "História",
@@ -12951,7 +12958,14 @@
   "Ese paradero no existe": "Essa paragem não existe",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Confirma o código do poste: «PA» e quatro algarismos.",
   "Tiempos según la posición real de cada bus.": "Tempos segundo a posição real de cada autocarro.",
-  "¡CAMPEONES!": "CAMPEÕES!"
+  "¡CAMPEONES!": "CAMPEÕES!",
+  "ofensivo": "ofensivo",
+  "defensivo": "defensivo",
+  "motivador": "motivador",
+  "pizarron": "estrategista",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio": "A cidade está em festa: mais gente nas ruas e no estádio",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio.": "A cidade está em festa: mais gente nas ruas e no estádio.",
+  "Los primeros cinco metros no se los gana nadie": "Os primeiros cinco metros ninguém nos ganha"
  },
  "patrones": [
   [
@@ -18662,6 +18676,28 @@
    "$1 $2",
    "$1 $2",
    "$1 $2"
+  ],
+  [
+   "^(.+) deja el banquillo tras una racha que la directiva no aguantó\\. Llega (.+) \\((.+)\\)\\.$",
+   "$1 leaves the dugout after a run the board could not stomach. In comes $2 ($3).",
+   "$1 deixa o banco após uma sequência que a diretoria não aguentou. Chega $2 ($3).",
+   "$1 quitte le banc après une série que la direction n'a pas supportée. Arrive $2 ($3).",
+   "$1 lascia la panchina dopo una serie che la società non ha sopportato. Arriva $2 ($3).",
+   "$1 muss nach einer Serie gehen, die der Vorstand nicht hinnahm. Neu kommt $2 ($3).",
+   "$1 deixa la banqueta després d'una ratxa que la directiva no va aguantar. Arriba $2 ($3).",
+   "$1 odchodzi z ławki po serii, której zarząd nie zniósł. Przychodzi $2 ($3).",
+   "$1, yönetimin kaldıramadığı bir serinin ardından görevi bıraktı. Yerine $2 ($3) geldi."
+  ],
+  [
+   "^Diez semanas más de trabajo en el banquillo\\. Tienes (\\d+) punto\\(s\\) por gastar en tu árbol de carrera\\.$",
+   "Ten more weeks of work on the bench. You have $1 point(s) to spend on your career tree.",
+   "Mais dez semanas de trabalho no banco. Você tem $1 ponto(s) para gastar na sua árvore de carreira.",
+   "Dix semaines de plus sur le banc. Tu as $1 point(s) à dépenser dans ton arbre de carrière.",
+   "Altre dieci settimane di lavoro in panchina. Hai $1 punto/i da spendere nel tuo albero di carriera.",
+   "Zehn weitere Wochen auf der Bank. Du hast $1 Punkt(e) für deinen Karrierebaum.",
+   "Deu setmanes més de feina a la banqueta. Tens $1 punt(s) per gastar al teu arbre de carrera.",
+   "Kolejne dziesięć tygodni pracy na ławce. Masz $1 pkt do wydania w drzewku kariery.",
+   "Kulübede on hafta daha. Kariyer ağacında harcayacak $1 puanın var."
   ]
  ],
  "fr": {
@@ -25139,7 +25175,14 @@
   "Ese paradero no existe": "Cet arrêt n'existe pas",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Vérifie le code sur le poteau : «PA» et quatre chiffres.",
   "Tiempos según la posición real de cada bus.": "Temps selon la position réelle de chaque bus.",
-  "¡CAMPEONES!": "CHAMPIONS !"
+  "¡CAMPEONES!": "CHAMPIONS !",
+  "ofensivo": "offensif",
+  "defensivo": "défensif",
+  "motivador": "motivateur",
+  "pizarron": "tacticien",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio": "La ville est en fête : plus de monde dans les rues et au stade",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio.": "La ville est en fête : plus de monde dans les rues et au stade.",
+  "Los primeros cinco metros no se los gana nadie": "Sur les cinq premiers mètres, personne ne nous bat"
  },
  "it": {
   "Historia": "Storia",
@@ -31616,7 +31659,14 @@
   "Ese paradero no existe": "Questa fermata non esiste",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Controlla il codice sul palo: «PA» e quattro cifre.",
   "Tiempos según la posición real de cada bus.": "Tempi secondo la posizione reale di ogni autobus.",
-  "¡CAMPEONES!": "CAMPIONI!"
+  "¡CAMPEONES!": "CAMPIONI!",
+  "ofensivo": "offensivo",
+  "defensivo": "difensivo",
+  "motivador": "motivatore",
+  "pizarron": "tattico",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio": "La città è in festa: più gente per strada e allo stadio",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio.": "La città è in festa: più gente per strada e allo stadio.",
+  "Los primeros cinco metros no se los gana nadie": "Nei primi cinque metri non ci batte nessuno"
  },
  "de": {
   "Historia": "Geschichte",
@@ -38093,7 +38143,14 @@
   "Ese paradero no existe": "Diese Haltestelle gibt es nicht",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Prüfe den Code am Mast: «PA» und vier Ziffern.",
   "Tiempos según la posición real de cada bus.": "Zeiten nach der echten Position jedes Busses.",
-  "¡CAMPEONES!": "MEISTER!"
+  "¡CAMPEONES!": "MEISTER!",
+  "ofensivo": "offensiv",
+  "defensivo": "defensiv",
+  "motivador": "Motivator",
+  "pizarron": "Taktiker",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio": "Die Stadt feiert: mehr Leute auf den Straßen und im Stadion",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio.": "Die Stadt feiert: mehr Leute auf den Straßen und im Stadion.",
+  "Los primeros cinco metros no se los gana nadie": "Die ersten fünf Meter gewinnt keiner gegen uns"
  },
  "ca": {
   "Historia": "Història",
@@ -44570,7 +44627,14 @@
   "Ese paradero no existe": "Aquesta parada no existeix",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Revisa el codi del pal: «PA» i quatre xifres.",
   "Tiempos según la posición real de cada bus.": "Temps segons la posició real de cada bus.",
-  "¡CAMPEONES!": "CAMPIONS!"
+  "¡CAMPEONES!": "CAMPIONS!",
+  "ofensivo": "ofensiu",
+  "defensivo": "defensiu",
+  "motivador": "motivador",
+  "pizarron": "estrateg",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio": "La ciutat és de festa: més gent al carrer i a l'estadi",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio.": "La ciutat és de festa: més gent al carrer i a l'estadi.",
+  "Los primeros cinco metros no se los gana nadie": "Els primers cinc metres no ens els guanya ningú"
  },
  "pl": {
   "Club": "Klub",
@@ -51326,7 +51390,14 @@
   "Ese paradero no existe": "Taki przystanek nie istnieje",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Sprawdź kod na słupku: «PA» i cztery cyfry.",
   "Tiempos según la posición real de cada bus.": "Czasy według rzeczywistej pozycji każdego autobusu.",
-  "¡CAMPEONES!": "MISTRZOWIE!"
+  "¡CAMPEONES!": "MISTRZOWIE!",
+  "ofensivo": "ofensywny",
+  "defensivo": "defensywny",
+  "motivador": "motywator",
+  "pizarron": "taktyk",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio": "Miasto świętuje: więcej ludzi na ulicach i na stadionie",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio.": "Miasto świętuje: więcej ludzi na ulicach i na stadionie.",
+  "Los primeros cinco metros no se los gana nadie": "Pierwszych pięciu metrów nikt nam nie odbierze"
  },
  "tr": {
   "Club": "Kulüp",
@@ -58082,6 +58153,13 @@
   "Ese paradero no existe": "Böyle bir durak yok",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Direkteki kodu kontrol et: «PA» ve dört rakam.",
   "Tiempos según la posición real de cada bus.": "Süreler her otobüsün gerçek konumuna göre.",
-  "¡CAMPEONES!": "ŞAMPİYONLAR!"
+  "¡CAMPEONES!": "ŞAMPİYONLAR!",
+  "ofensivo": "hücumcu",
+  "defensivo": "savunmacı",
+  "motivador": "motive edici",
+  "pizarron": "taktisyen",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio": "Şehir bayramda: sokaklarda ve stadyumda daha çok insan var",
+  "La ciudad está de fiesta: más gente en la calle y en el estadio.": "Şehir bayramda: sokaklarda ve stadyumda daha çok insan var.",
+  "Los primeros cinco metros no se los gana nadie": "İlk beş metrede kimse bizi geçemez"
  }
 }
