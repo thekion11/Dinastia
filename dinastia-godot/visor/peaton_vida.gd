@@ -135,3 +135,22 @@ static func maletin(v: Dictionary, poner: bool) -> void:
 	asa.material_override = cuero
 	asa.position = Vector3(0.0, 0.14, 0.02)
 	anc.add_child(asa)
+
+## Mochila a la espalda puesta o quitada (visible/oculta). Si el peatón no traía ninguna y hay que ponérsela, se le cuelga una de `MochilaQ`.
+static func mochila(v: Dictionary, poner: bool) -> void:
+	var nodo: Node3D = v.get("nodo")
+	if nodo == null or not is_instance_valid(nodo):
+		return
+	var esq: Skeleton3D = FutbolistaQ.esqueleto_de(nodo)
+	if esq == null:
+		return
+	for c in esq.get_children():
+		if c is BoneAttachment3D and (c as BoneAttachment3D).bone_name == "spine_03" and c.get_child_count() > 0:
+			(c as Node3D).visible = poner
+			return
+	if not poner or esq.find_bone("spine_03") < 0:
+		return
+	var h := PeatonQ._en_hueso(esq, "spine_03", 1.0 / maxf(esq.global_transform.basis.get_scale().y, 0.01))
+	if h != null:
+		var cols: Array[Color] = [Color(0.2, 0.3, 0.6), Color(0.7, 0.2, 0.2), Color(0.15, 0.15, 0.18), Color(0.2, 0.5, 0.35), Color(0.85, 0.6, 0.15)]
+		MochilaQ.poner(h, cols[posmod(hash(v.get("id", 0)), cols.size())])

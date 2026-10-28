@@ -91,3 +91,15 @@ func _probar() -> void:
 		if RutinaPeatones.lleva_maletin(8.0, 0.9, k):
 			con += 1
 	_comprobar(con > 70 and con < 130, "más o menos uno de cada tres lo lleva (%d de 300)" % con)
+	## Mochilas: más en las horas de colegio, casi ninguna de noche.
+	var cole := 0
+	var comida := 0
+	var noche := 0
+	for k in 400:
+		if RutinaPeatones.lleva_mochila(8.0, k):
+			cole += 1
+		if RutinaPeatones.lleva_mochila(11.0, k):
+			comida += 1
+		if RutinaPeatones.lleva_mochila(2.0, k):
+			noche += 1
+	_comprobar(cole > 180 and comida < 140 and noche < 60, "mochilas: colegio %d, media mañana %d, madrugada %d (de 400)" % [cole, comida, noche])
