@@ -6470,7 +6470,8 @@
   "Veces campeón": "Times champion",
   "Años": "Years",
   "último": "last",
-  "Palmarés": "Honours"
+  "Palmarés": "Honours",
+  "¡CAMPEONES!": "CHAMPIONS!"
  },
  "pt": {
   "Historia": "História",
@@ -12943,7 +12944,8 @@
   "Veces campeón": "Vezes campeão",
   "Años": "Anos",
   "último": "último",
-  "Palmarés": "Palmarés"
+  "Palmarés": "Palmarés",
+  "¡CAMPEONES!": "CAMPEÕES!"
  },
  "patrones": [
   [
@@ -25127,7 +25129,8 @@
   "Veces campeón": "Titres",
   "Años": "Années",
   "último": "dernier",
-  "Palmarés": "Palmarès"
+  "Palmarés": "Palmarès",
+  "¡CAMPEONES!": "CHAMPIONS !"
  },
  "it": {
   "Historia": "Storia",
@@ -31600,7 +31603,8 @@
   "Veces campeón": "Volte campione",
   "Años": "Anni",
   "último": "ultimo",
-  "Palmarés": "Albo d'oro"
+  "Palmarés": "Albo d'oro",
+  "¡CAMPEONES!": "CAMPIONI!"
  },
  "de": {
   "Historia": "Geschichte",
@@ -38073,7 +38077,8 @@
   "Veces campeón": "Titel",
   "Años": "Jahre",
   "último": "zuletzt",
-  "Palmarés": "Titel"
+  "Palmarés": "Titel",
+  "¡CAMPEONES!": "MEISTER!"
  },
  "ca": {
   "Historia": "Història",
@@ -44546,7 +44551,8 @@
   "Veces campeón": "Vegades campió",
   "Años": "Anys",
   "último": "últim",
-  "Palmarés": "Palmarès"
+  "Palmarés": "Palmarès",
+  "¡CAMPEONES!": "CAMPIONS!"
  },
  "pl": {
   "Club": "Klub",
@@ -51298,7 +51304,8 @@
   "Veces campeón": "Tytuły",
   "Años": "Lata",
   "último": "ostatni",
-  "Palmarés": "Trofea"
+  "Palmarés": "Trofea",
+  "¡CAMPEONES!": "MISTRZOWIE!"
  },
  "tr": {
   "Club": "Kulüp",
@@ -58050,6 +58057,7 @@
   "Veces campeón": "Şampiyonluk",
   "Años": "Yıllar",
   "último": "son",
-  "Palmarés": "Kupalar"
+  "Palmarés": "Kupalar",
+  "¡CAMPEONES!": "ŞAMPİYONLAR!"
  }
 }
