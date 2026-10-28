@@ -4,13 +4,18 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## ESTADO AL CIERRE DEL 28-10 (para retomar el lunes)
+
+- **Rama**: todo unido en `claude/dazzling-rubin-v7rfyi` (líder). Banco «FIN. 0 fallos», especiales «todo en orden», prueba visual en 0 fallos (referencias al día), ningún script de más de 450 líneas. Registro detallado del 27-28-10: `docs/04_auditorias/CIERRE_2026-10-28.md`.
+- **Sesiones**: la ejecutora cierra con un PR final y su resumen en `docs/04_auditorias/rendimiento.md` («ESTADO AL CIERRE 28-10»); la sesión 3 con `docs/04_auditorias/sesion_3_cierre_28-10.md`. El líder une ambos antes de parar.
+- **Para el lunes, primero**: unir lo último de las dos sesiones si quedó algo; repasar las correcciones de ciudad que pidió el líder (bus, paraderos de noche, semáforo peatonal, teleférico, lavado, lluvia); seguir con §2.2e (pasadas visuales) y las filas P1 de esta lista.
+- **Del dueño**: §0 y §1 (FPS en hardware real, builds, keystore, publicar la política de privacidad, red a Wikimedia).
+
 ## 0. Lo que espera una decisión tuya (lista corta)
 
 Sin esto, las filas que dependen de ello no avanzan. El detalle está en la sección que se cita.
 - **Decididas por el dueño (27-10 tarde)** (CLAUDE.md orden 14): pantalla de entrada APROBADA; «el bloqueo» de modos ACEPTADO; las 53 escenas de prueba: reutilizar lo que sirva; peatones SÍ en bus y transportes; dificultad de la CPU en 8 categorías (Practicante, Cadete, Debutante = normal, Semiprofesional, Profesional, Experto, Maestro, Ultimate) más dificultades fuera del partido; policía y bomberos SÍ; peluches SÍ y coleccionables con logros; museo con trofeos interactivos; pelo con lo del Drive; clasificar las ~1.200 ideas.
 - **Clasificación de las 1.201 ideas** (27-10): `docs/04_auditorias/clasificacion_ideas_2026-10-27.md`. 68 para el lanzamiento y 43 que hay que verificar jugando (unas 26-32 sesiones-día, 9-11 días con 3 sesiones); 731 después, 296 a verificar después, 63 descartadas y 20 de decisión del dueño. Revisarla y aprobarla.
-- **Regalos del Drive**: el contenedor no puede bajarlos (`grass.blend` 14 MB, personajes 182 MB y 129 MB, peluches): compartir la carpeta «Dinastia_respaldo_2026-10-24» como «cualquiera con el enlace: lector».
-- **Decididas por el dueño (26-10):** logros de racha: **cuentan jugando y simulando**; «Siempre, todo el partido» apaga ese lado del plan: **se queda así**; versión **0.9.0**; reparto de la TV 50/50: **sí**; taquilla ×3,5: **sí**; **por ahora sin pago** (nada de monedas ni gacha); banderas **detalladas** (flag-icons, MIT); narración hablada: **después del lanzamiento**; filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`: **todas al plan**; fuentes OFL, silbato VCSL y CI: **sí**; modelo B (MakeHuman): **pulirlo más** (fase 4 traje, fase 5 cuerpo) antes de integrar; rueda de prensa: **compararla con la competencia y completarla**.
 - **Decididas por el dueño (26-10):** logros de racha: **cuentan jugando y simulando**; «Siempre, todo el partido» apaga ese lado del plan: **se queda así**; versión **0.9.0**; reparto de la TV 50/50: **sí**; taquilla ×3,5: **sí**; **por ahora sin pago** (nada de monedas ni gacha); banderas **detalladas** (flag-icons, MIT); narración hablada: **después del lanzamiento**; filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`: **todas al plan** (hechas en la sesión 5: la 14 entera, la parte del partido de la 4 y el núcleo de la 18, ver `docs/04_auditorias/sesion_5.md`; de la 4 queda «en finanzas, cada ingreso y gasto con su origen»; de la 18, la interfaz de la pizarra con las dos fases y los roles, y que la IA use roles); fuentes OFL, silbato VCSL y CI: **sí**; modelo B (MakeHuman): **pulirlo más** (fase 4 traje, fase 5 cuerpo) antes de integrar; rueda de prensa: **compararla con la competencia y completarla**.
 - **`main` reescrito y etiqueta `latest`**: las 8 ramas viejas ya no están (27-10); siguen la etiqueta `latest` y la historia vieja de `main` (502 objetos de capturas e informes): empujarlo necesita un *force push* que solo puede hacer el dueño (§1). Cuándo fusionar a `main` la rama actual (§9).
 - **Foundry/Azure** sí o no; **abrir la red a Wikimedia** (caras y escudos que faltan) (§1).
@@ -25,7 +30,7 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 - [ ] Probar Foundry/Azure (200 USD, 30 días) y decidir si se usa.
 - [ ] Abrir la red a Wikimedia/banderas (necesario para las caras que faltan: ~906 de 2.125 y escudos).
 - [ ] **Perfil de FPS en hardware real** (M-337, P0): PC modesto (Intel UHD) y móvil; aquí solo hay render por software.
-- [ ] Política de privacidad (27-10, escrita en `docs/05_referencia/POLITICA_DE_PRIVACIDAD.md`, es y en): publicarla en una dirección web fija para las tiendas y poner tu correo de contacto donde dice «[correo de contacto]».
+- [ ] Política de privacidad (`docs/05_referencia/POLITICA_DE_PRIVACIDAD.md`, es y en, con tu correo desde el 28-10): publicarla en una dirección web fija para las tiendas.
 - [ ] Builds, keystore, licencias, derechos de imagen, música y voces (🔒). Cambiar la contraseña del keystore (la vieja sigue en el historial). Confirmar la fuente de los modelos 🟡 (Sketchfab, Meshy, mocap de Gumroad, Canva).
 - [ ] Subir los binarios pesados (`recursos/`, `marca/`, `material/`) al Drive con `herramientas/drive_subir.ps1` y verificar. Respaldo de texto: `docs/05_referencia/RESPALDO_DRIVE.md`.
 

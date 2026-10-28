@@ -79,3 +79,6 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 17. (27-10 noche) RECORRIDOS SOBRE EL MAPA: los recorridos Red se crean a partir del mapa real de la ciudad (calles y líneas de
     `CiudadExpansion`, el mapa de transporte), y de ahí salen los paraderos (en las paradas de cada recorrido), su NOMBRE (la calle y
     la que cruza), su código PA####, los números de recorrido (por sector, con su «c») y las patentes de los buses.
+18. (28-10) CIERRE hasta el lunes: tras la limpieza de código y lo pendiente de las sesiones, guardar todo y dejar registros
+    al limpio. Registro: `docs/04_auditorias/CIERRE_2026-10-28.md`; estado para retomar arriba de `PLAN_DEL_LUNES.md`.
+    Correo de contacto del dueño (informe de fallos y privacidad): en `Registro.CONTACTO`.
