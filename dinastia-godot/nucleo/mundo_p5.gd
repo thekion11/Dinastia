@@ -42,6 +42,7 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 	_semana_copa(ya_jugado)
 	semana += 1
 	Jugador.semana_global = anio * 100 + semana
+	PrecalentarCaras.del_mundo(self)   ## M-348: los onces del próximo partido, de uno en uno en el menú
 	semana_avanzada.emit(semana, anio)
 
 ## FASE 14 · LOS MÓDULOS SEMANALES DEL CLUB: redes, mercado avanzado, fondo, cantera,

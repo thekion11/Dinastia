@@ -18,9 +18,19 @@ func _ready() -> void:
 			if ResourceLoader.exists(r):
 				_guardados.append(load(r))
 		var id := PrecalentarAnim.lanzar()
-		while not WorkerThreadPool.is_task_completed(id):
+		while not PrecalentarAnim.terminado():
 			await get_tree().process_frame
 		WorkerThreadPool.wait_for_task_completion(id)
+	## CARAS=1: los dos onces del partido ya precalentados (sin espera entre uno y otro: mide lo que cuesta DESPUÉS, no el ritmo en el menú).
+	if OS.get_environment("CARAS") != "":
+		PrecalentarCaras.presupuesto_ms = 0.0
+		PrecalentarCaras.por_fotograma = 80
+		var t0 := Time.get_ticks_msec()
+		var par0 := _mundo.proximo_partido()
+		PrecalentarCaras.partido(par0[0], par0[1])
+		while is_instance_valid(PrecalentarCaras._activa):
+			await get_tree().process_frame
+		print("MEDIDA jugadores precalentados: %d, en %d ms" % [PrecalentarCaras._hechos.size(), Time.get_ticks_msec() - t0])
 	_listo = true
 	CityBuilder._medir_tiempos = OS.get_environment("TIEMPOS") != ""
 
