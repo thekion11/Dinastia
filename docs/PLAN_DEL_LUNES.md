@@ -10,6 +10,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - **Sesiones**: la ejecutora cierra con un PR final y su resumen en `docs/04_auditorias/rendimiento.md` («ESTADO AL CIERRE 28-10»); la sesión 3 con `docs/04_auditorias/sesion_3_cierre_28-10.md`. El líder une ambos antes de parar.
 - **Para el lunes, primero**: unir lo último de las dos sesiones si quedó algo; repasar las correcciones de ciudad que pidió el líder (bus, paraderos de noche, semáforo peatonal, teleférico, lavado, lluvia); seguir con §2.2e (pasadas visuales) y las filas P1 de esta lista.
 - **Del dueño**: §0 y §1 (FPS en hardware real, builds, keystore, publicar la política de privacidad, red a Wikimedia).
+- **Auditoría de código del 28-10**: lo arreglado y lo pendiente (materiales sin compartir, vías sin conectar, probables del guardado, `MotorLibre`) está en `CIERRE_2026-10-28.md` §«Auditoría»; las órdenes sin completar y los fallos abiertos, en sus dos secciones siguientes.
 
 ## 0. Lo que espera una decisión tuya (lista corta)
 
