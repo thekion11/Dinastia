@@ -158,9 +158,23 @@ static func teclas(p: Principal) -> void:
 		p._refrescar())
 	p._lista_ajustes.add_child(r)
 
-## Subtítulos: no hay interruptor porque no hay voces, y eso se dice en vez de
-## dejar que el jugador lo busque.
+## Subtítulos: no hay voces (se dice), pero los sonidos con significado pueden salir escritos (M-283, `AvisosSonido`).
 static func nota_subtitulos(p: Principal) -> void:
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	p._lista_ajustes.add_child(fila)
+	var et := p._texto(12, Principal.COL_TEXTO)
+	et.text = Idiomas.t("Avisos visuales de sonido")
+	et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	et.tooltip_text = Idiomas.t("El silbato, los goles, la grada, las tarjetas o la sirena salen escritos abajo de la pantalla, también con el sonido apagado.")
+	fila.add_child(et)
+	var b := Button.new()
+	b.text = "SÍ" if AvisosSonido.activo() else "NO"
+	b.pressed.connect(func() -> void:
+		AvisosSonido.fijar(not AvisosSonido.activo())
+		Sonido.toca("silbato", Sonido.Bus.INTERFAZ)
+		p._refrescar())
+	fila.add_child(b)
 	var l := p._texto(10, Principal.COL_SUAVE)
 	l.text = Idiomas.t("Subtítulos: el juego no tiene voces. La narración del partido, la prensa y el vestuario ya salen siempre escritos.")
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
