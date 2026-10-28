@@ -146,3 +146,110 @@ func _floristeria() -> void:
 	_trabajador(Vector3(1.6, 0, 1.6), PI * 0.5, false, ["charla"], _calle())
 	_ventana(-1.0, 0.8, 1.4)
 	_cartel("🌷 " + _sala_nombre().to_upper(), Vector3(0, 2.8, -3.95), 32, Color(1.0, 0.85, 0.9))
+
+## Correos (12 × 8 m): mostrador con dos ventanillas y su cola con cordones, la pared de casillas postales, paquetes apilados y el buzón.
+func _correos() -> void:
+	_tonos_sala = _MADERA_CLARA
+	var uniforme := [Color(0.95, 0.8, 0.2), Color(0.2, 0.25, 0.4), true]
+	_sala(Vector3(12, 3.2, 8), Color(0.74, 0.72, 0.68), Color(0.93, 0.92, 0.88), "losa", Color(0.95, 0.8, 0.2))
+	for k in 3:
+		_poner("bookcaseClosedWide", Vector3(-4.0 + float(k) * 4.0, 0, -3.75), 0.0)
+		for j in 6:
+			Mini3D.caja(_raiz, Vector3(-4.8 + float(k) * 4.0 + float(j % 3) * 0.55, 0.7 + float(j / 3) * 0.5, -3.52), Vector3(0.4, 0.34, 0.03), Mini3D.mat(Color(0.75, 0.78, 0.82), 0.4, 0.0))
+	for x: float in [-1.5, 1.5]:
+		_poner("desk", Vector3(x, 0, -1.4), 0.0, 1.5)
+		_trabajador(Vector3(x, 0, -2.3), 0.0, false, ["charla", "saludo_mano"], uniforme)
+		_poner("computerScreen", Vector3(x, _alto("desk", 1.5), -1.6), 0.0, 0.8)
+	for k in 4:
+		_poner("cardboardBoxClosed", Vector3(-5.2, float(k % 2) * 0.55, -2.0 + float(k / 2) * 0.7), 0.15 * float(k), 1.0)
+	_poner("cardboardBoxClosed", Vector3(5.0, 0, -2.4), 0.3, 1.4)
+	var acero := Mini3D.mat(Color(0.75, 0.76, 0.8), 0.3, 0.7)
+	var cinta := Mini3D.mat(Color(0.8, 0.15, 0.15), 0.8)
+	for k in 3:
+		Mini3D.cilindro(_raiz, Vector3(-1.0 + float(k) * 1.0, 0.45, 0.8), 0.04, 0.9, acero)
+		if k < 2:
+			Mini3D.caja(_raiz, Vector3(-0.5 + float(k) * 1.0, 0.75, 0.8), Vector3(0.95, 0.04, 0.03), cinta)
+	_trabajador(Vector3(0.0, 0, 0.2), PI, false, ["charla", "brazos_jarra"], _calle())
+	_trabajador(Vector3(-1.8, 0, 0.1), PI, false, ["charla"], _calle())
+	## El buzón rojo junto a la puerta.
+	Mini3D.caja(_raiz, Vector3(5.2, 0.55, 3.0), Vector3(0.5, 1.1, 0.4), Mini3D.mat(Color(0.8, 0.1, 0.1), 0.5))
+	Mini3D.cilindro(_raiz, Vector3(5.2, 1.12, 3.0), 0.25, 0.4, Mini3D.mat(Color(0.8, 0.1, 0.1), 0.5))
+	_planta(Vector3(-5.5, 0, 3.4))
+	_cartel("✉️ " + _sala_nombre().to_upper(), Vector3(0, 2.8, -3.95), 32, Color(1.0, 0.9, 0.4))
+
+## Tienda de deportes (14 × 10 m): perchas de camisetas por colores, el expositor de balones y botas y la caja.
+func _deportes() -> void:
+	_tonos_sala = _MADERA_CLARA
+	_sala(Vector3(14, 3.4, 10), Color(0.62, 0.64, 0.66), Color(0.94, 0.94, 0.95), "losa", Color(0.15, 0.4, 0.7))
+	var tonos: Array[Color] = [Color(0.85, 0.15, 0.15), Color(0.15, 0.4, 0.85), Color(0.95, 0.8, 0.15), Color(0.2, 0.65, 0.35), Color(0.9, 0.9, 0.92)]
+	for k in 4:
+		_perchero(Vector3(-5.2 + float(k) * 3.4, 0, -4.65), 0.0, 2.8, tonos[k % 5], tonos[(k + 2) % 5])
+	_perchero(Vector3(-6.6, 0, -1.0), PI * 0.5, 2.6, tonos[1], tonos[4])
+	_perchero(Vector3(-6.6, 0, 2.0), PI * 0.5, 2.6, tonos[3], tonos[0])
+	for k in 3:
+		_poner("bookcaseOpenLow", Vector3(6.72, 0, -2.4 + float(k) * 1.2), -PI * 0.5)
+		for b in 2:
+			Mini3D.esfera(_raiz, Vector3(6.72, 0.9, -2.7 + float(k) * 1.2 + float(b) * 0.45), 0.11, Mini3D.mat(Color.WHITE if (k + b) % 2 == 0 else tonos[k], 0.5))
+	for x: float in [-2.0, 1.2]:
+		_poner("table", Vector3(x, 0, -1.2), 0.0, 2.0)
+		for i in 5:
+			Mini3D.caja(_raiz, Vector3(x - 0.5 + float(i) * 0.25, _alto("table", 2.0) + 0.06, -1.2), Vector3(0.2, 0.1, 0.3), Mini3D.mat(tonos[i % 5].lightened(0.1), 0.8))
+	for k in 4:
+		Mini3D.caja(_raiz, Vector3(2.5 + float(k) * 0.5, 0.2, 3.9), Vector3(0.38, 0.22, 0.26), Mini3D.mat(tonos[k % 5], 0.7))
+	_caja_cobro(Vector3(4.6, 0, 2.6), PI * 0.5, [Color(0.15, 0.4, 0.85), Color(0.15, 0.15, 0.2), true], true)
+	_trabajador(Vector3(-3.2, 0, 1.0), PI * 0.3, false, ["charla", "senalar_adelante"], [Color(0.15, 0.4, 0.85), Color(0.15, 0.15, 0.2), true])
+	_caminante([Vector3(-5.0, 0, 3.4), Vector3(1.0, 0, 3.4), Vector3(1.0, 0, 1.0), Vector3(-5.0, 0, 1.0)], _calle())
+	_planta(Vector3(-6.4, 0, 4.4))
+	_cartel("⚽ " + _sala_nombre().to_upper(), Vector3(0, 2.95, -4.95), 36, Color(1.0, 0.95, 0.6))
+
+## Pizzería (13 × 9 m): comedor con mesas de mantel y comensales, el horno con campana y el mostrador con las pizzas.
+func _pizzeria() -> void:
+	_tonos_sala = _MADERA_OSCURA
+	var delantal := [Color(0.95, 0.95, 0.95), Color(0.2, 0.2, 0.22), true]
+	_sala(Vector3(13, 3.2, 9), Color(0.55, 0.3, 0.2), Color(0.95, 0.88, 0.75), "parquet", Color(0.7, 0.18, 0.15))
+	_poner("kitchenStove", Vector3(-4.6, 0, -3.8), 0.0, 1.3)
+	_poner("hoodLarge", Vector3(-4.6, 1.9, -3.9), 0.0, 1.3)
+	_poner("kitchenCabinet", Vector3(-3.1, 0, -3.8), 0.0, 1.3)
+	_poner("kitchenFridgeLarge", Vector3(-6.0, 0, -3.8), 0.0, 1.2)
+	_trabajador(Vector3(-4.2, 0, -2.9), PI, false, ["charla", "brazos_jarra"], delantal)
+	_poner("desk", Vector3(0.6, 0, -3.1), 0.0, 1.8)
+	for k in 3:
+		_poner("comida/pizza", Vector3(-0.2 + float(k) * 0.8, _alto("desk", 1.8), -3.1), 0.4 * float(k), 1.2)
+	_poner("comida/pizza-box", Vector3(2.0, _alto("desk", 1.8), -3.1), 0.2, 1.1)
+	_trabajador(Vector3(0.6, 0, -4.0), 0.0, false, ["saludo_mano", "charla"], delantal)
+	for p: Vector3 in [Vector3(-3.0, 0, 0.0), Vector3(1.0, 0, 0.5), Vector3(4.6, 0, 0.0), Vector3(-1.5, 0, 3.0), Vector3(3.2, 0, 3.0)]:
+		_poner("tableCloth", p, 0.0, 1.2, {"*": Color(0.85, 0.2, 0.2) if int(p.x) % 2 == 0 else Color(0.95, 0.95, 0.9)})
+		_poner("comida/pizza", p + Vector3(0, _alto("tableCloth", 1.2), 0), 0.3, 1.0)
+		_poner("comida/soda-glass", p + Vector3(0.35, _alto("tableCloth", 1.2), 0.2), 0.0, 1.0)
+		_asiento("chair", p + Vector3(-0.8, 0, 0), PI * 0.5, [0.0], _calle())
+		_asiento("chair", p + Vector3(0.8, 0, 0), -PI * 0.5, [0.0], _calle())
+	_poner("mini_arcade/vending-machine", Vector3(5.8, 0, -3.9), 0.0, 2.2)
+	_planta(Vector3(-6.0, 0, 3.8))
+	_ventana(1.0, 0.8, 1.4)
+	_cartel("🍕 " + _sala_nombre().to_upper(), Vector3(0.5, 2.8, -4.45), 34, Color(1.0, 0.85, 0.6))
+
+## Heladería (10 × 7 m): la vitrina de cubetas de colores, los conos, la barra con taburetes y una mesita al sol.
+func _heladeria() -> void:
+	_tonos_sala = _MADERA_CLARA
+	var delantal := [Color(0.98, 0.7, 0.8), Color(0.95, 0.95, 0.95), true]
+	_sala(Vector3(10, 3.2, 7), Color(0.92, 0.88, 0.84), Color(0.98, 0.9, 0.92), "losa", Color(0.5, 0.85, 0.8))
+	var sabores: Array[Color] = [Color(0.95, 0.45, 0.6), Color(0.45, 0.8, 0.6), Color(0.45, 0.3, 0.2), Color(0.98, 0.9, 0.5), Color(0.95, 0.95, 0.9), Color(0.55, 0.65, 0.95)]
+	Mini3D.caja(_raiz, Vector3(0, 0.55, -2.3), Vector3(5.0, 1.1, 0.9), Mini3D.mat(Color(0.95, 0.95, 0.97), 0.3))
+	Mini3D.caja(_raiz, Vector3(0, 1.2, -2.3), Vector3(4.9, 0.3, 0.85), Mini3D.mat(Color(0.75, 0.9, 0.95, 0.55), 0.1))
+	for k in 6:
+		Mini3D.cilindro(_raiz, Vector3(-2.0 + float(k) * 0.8, 1.14, -2.3), 0.3, 0.12, Mini3D.mat(sabores[k], 0.6))
+		Mini3D.esfera(_raiz, Vector3(-2.0 + float(k) * 0.8, 1.26, -2.3), 0.22, Mini3D.mat(sabores[k].lightened(0.15), 0.6))
+	_trabajador(Vector3(-0.6, 0, -3.2), 0.0, false, ["charla", "saludo_mano"], delantal)
+	_trabajador(Vector3(1.5, 0, -3.2), 0.0, false, ["charla"], delantal)
+	for x: float in [-0.9, 0.0, 0.9]:
+		_poner("comida/ice-cream-cne", Vector3(x, 1.28, -1.7), 0.0, 1.4)
+	_poner("mini_mercado/cash-register", Vector3(2.0, 1.1, -2.3), 0.0, 0.7)
+	for k in 3:
+		_asiento("stoolBar", Vector3(-1.4 + float(k) * 1.0, 0, -0.6), 0.0, [0.0], _calle() if k != 1 else [])
+	_poner("tableCoffeeGlass", Vector3(3.2, 0, 1.6), 0.0, 1.0)
+	_asiento("chair", Vector3(2.4, 0, 1.6), -PI * 0.5, [0.0], _calle())
+	_asiento("chair", Vector3(4.0, 0, 1.6), PI * 0.5, [0.0], _calle())
+	_poner("comida/sundae", Vector3(3.2, _alto("tableCoffeeGlass"), 1.6), 0.0, 1.2)
+	_planta(Vector3(-4.3, 0, 2.8))
+	_ventana(-1.0, 0.8, 1.2)
+	_cartel("🍦 " + _sala_nombre().to_upper(), Vector3(0, 2.8, -3.45), 34, Color(0.95, 0.4, 0.6))
