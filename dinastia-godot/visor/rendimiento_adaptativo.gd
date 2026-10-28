@@ -43,6 +43,10 @@ var _t_muestra := 0.0
 var _muestras: Array[float] = []
 
 func _process(delta: float) -> void:
+	avanzar(delta, Engine.get_frames_per_second())
+
+## Un paso de reloj con los FPS que se le den (público para probar los umbrales en el banco sin depender de la máquina).
+func avanzar(delta: float, fps: float) -> void:
 	if not activo or escalon >= ESCALONES.size():
 		return
 	_t += delta
@@ -52,7 +56,7 @@ func _process(delta: float) -> void:
 	if _t_muestra < 1.0:
 		return
 	_t_muestra = 0.0
-	_muestras.append(Engine.get_frames_per_second())
+	_muestras.append(fps)
 	if _muestras.size() > MUESTRAS:
 		_muestras.pop_front()
 	if _muestras.size() < MUESTRAS:
