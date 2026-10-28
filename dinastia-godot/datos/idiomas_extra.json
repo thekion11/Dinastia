@@ -6584,7 +6584,11 @@
   "Todos los temas": "All topics",
   "Plantel": "Squad",
   "Vida": "Life",
-  "Otros": "Other"
+  "Otros": "Other",
+  "TU CARRERA": "YOUR CAREER",
+  "Partidos": "Matches",
+  "G-E-P": "W-D-L",
+  "% victorias": "Win %"
  },
  "pt": {
   "Historia": "História",
@@ -13171,7 +13175,11 @@
   "Todos los temas": "Todos os temas",
   "Plantel": "Elenco",
   "Vida": "Vida",
-  "Otros": "Outros"
+  "Otros": "Outros",
+  "TU CARRERA": "SUA CARREIRA",
+  "Partidos": "Jogos",
+  "G-E-P": "V-E-D",
+  "% victorias": "% vitórias"
  },
  "patrones": [
   [
@@ -25491,7 +25499,11 @@
   "Todos los temas": "Tous les sujets",
   "Plantel": "Effectif",
   "Vida": "Vie",
-  "Otros": "Autres"
+  "Otros": "Autres",
+  "TU CARRERA": "TA CARRIÈRE",
+  "Partidos": "Matchs",
+  "G-E-P": "V-N-D",
+  "% victorias": "% victoires"
  },
  "it": {
   "Historia": "Storia",
@@ -32078,7 +32090,11 @@
   "Todos los temas": "Tutti i temi",
   "Plantel": "Rosa",
   "Vida": "Vita",
-  "Otros": "Altro"
+  "Otros": "Altro",
+  "TU CARRERA": "LA TUA CARRIERA",
+  "Partidos": "Partite",
+  "G-E-P": "V-N-P",
+  "% victorias": "% vittorie"
  },
  "de": {
   "Historia": "Geschichte",
@@ -38665,7 +38681,11 @@
   "Todos los temas": "Alle Themen",
   "Plantel": "Kader",
   "Vida": "Leben",
-  "Otros": "Sonstiges"
+  "Otros": "Sonstiges",
+  "TU CARRERA": "DEINE KARRIERE",
+  "Partidos": "Spiele",
+  "G-E-P": "S-U-N",
+  "% victorias": "Siegquote"
  },
  "ca": {
   "Historia": "Història",
@@ -45252,7 +45272,11 @@
   "Todos los temas": "Tots els temes",
   "Plantel": "Plantilla",
   "Vida": "Vida",
-  "Otros": "Altres"
+  "Otros": "Altres",
+  "TU CARRERA": "LA TEVA CARRERA",
+  "Partidos": "Partits",
+  "G-E-P": "G-E-P",
+  "% victorias": "% victòries"
  },
  "pl": {
   "Club": "Klub",
@@ -52117,7 +52141,10 @@
   "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Cofa ostatnią zmianę taktyki lub składu (do 20).",
   "Todos los temas": "Wszystkie tematy",
   "Vida": "Życie",
-  "Otros": "Inne"
+  "Otros": "Inne",
+  "Partidos": "Mecze",
+  "G-E-P": "Z-R-P",
+  "% victorias": "% zwycięstw"
  },
  "tr": {
   "Club": "Kulüp",
@@ -58982,6 +59009,9 @@
   "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Taktikte veya ilk on birde yapılan son değişikliği geri alır (20'ye kadar).",
   "Todos los temas": "Tüm konular",
   "Vida": "Yaşam",
-  "Otros": "Diğer"
+  "Otros": "Diğer",
+  "Partidos": "Maçlar",
+  "G-E-P": "G-B-M",
+  "% victorias": "Galibiyet %"
  }
 }
