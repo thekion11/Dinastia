@@ -8,7 +8,7 @@ extends RefCounted
 const CARPETA := "res://assets/ciudad_personajes_pelo_drive/"
 const RUTA := "res://assets/characters/pelo_drive/pelo_%03d.res"
 ## Hombres y mujeres: los 11 que quedaron bien sobre la cabeza tras probar 30 de los 105 (el modelo del pack mira a -z: se gira 180°).
-const HOMBRES := [80, 68]   ## (rizado y flequillo despeinado: de cerca se ven mejor que el corte de Quaternius al que sustituyen)
+const HOMBRES := [80, 68, 59]   ## (rizado, flequillo despeinado y rizado corto: de cerca se ven mejor que el corte de Quaternius al que sustituyen)
 ## Revisión 27-10 (hoja antes/después, 1,5 m, frente/3/4/perfil): los otros 9 se descartaron (parecen casco, tapan los ojos o dejan huecos).
 const MUJERES := []
 ## [ancho que ocupa el peinado, altura de su parte alta sobre el hueso Head, desplazamiento en z] según el cuerpo (en m).
