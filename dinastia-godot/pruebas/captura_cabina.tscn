@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" path="res://pruebas/captura_cabina.gd" id="1"]
 
-[node name="Captura" type="Node"]
+[node name="P" type="Node"]
 script = ExtResource("1")
