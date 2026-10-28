@@ -47,7 +47,7 @@ func _poblar() -> void:
 			while lista.size() < ESPERAN:
 				var k := lista.size()
 				var sem := semilla(i, k, _ronda)
-				var fig := _persona(sem, p + Vector3(-0.9 + 1.8 * float(k), 0.0, 0.6))
+				var fig := _persona(sem, sitio_espera(p, k))
 				if fig.is_empty():
 					break
 				PeatonVida.en_anden(fig["d"], float(posmod(hash([sem, 5]), 100)) / 100.0)
@@ -56,6 +56,20 @@ func _poblar() -> void:
 			for fig: Dictionary in _esperando[i]:
 				_liberar(fig)
 			_esperando.erase(i)
+
+## Dónde espera la persona `k` de la parada en `p`: BAJO EL TECHO del paradero (en su sistema local, entre la banca y el frente), no en medio
+## de la acera. Sin paradero a menos de 3 m (las pruebas, paradas sueltas), el sitio de siempre.
+func sitio_espera(p: Vector3, k: int) -> Vector3:
+	var mejor: Node3D = null
+	var dm := 3.0
+	for n: Node in get_tree().get_nodes_in_group("paradero_red") if is_inside_tree() else []:
+		var d := Vector2((n as Node3D).global_position.x - p.x, (n as Node3D).global_position.z - p.z).length()
+		if d < dm:
+			dm = d
+			mejor = n as Node3D
+	if mejor == null:
+		return p + Vector3(-0.9 + 1.8 * float(k), 0.0, 0.6)
+	return mejor.global_transform * Vector3(-1.3 + 0.9 * float(k), 0.0, 0.2)
 
 static func semilla(parada: int, k: int, ronda: int) -> int:
 	return 6100 + posmod(hash([parada, k, ronda]), 90000)

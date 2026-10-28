@@ -8,6 +8,7 @@ extends Node
 ## Los paraderos (`montar_paraderos`) se montan desde la misma fuente, mirando a la calle, en la acera de su sentido.
 
 const VEL := 9.0
+const PUERTA_ADELANTE := 4.6   ## m del centro del bus a su puerta delantera (`AutobusModelo`)
 const ESPERA := 7.0
 const ARRANQUE_Y_FRENADA := 4.0   ## segundos que se pierden en cada parada además de la espera (frena y vuelve a arrancar)
 const CARRIL_AV := 6.0
@@ -82,8 +83,11 @@ static func montar(ex: CiudadExpansion, t: TraficoCiudad) -> int:
 		for cod: String in vuelta["paraderos"]:
 			if not paradas.has(cod):
 				paradas[cod] = t.s_mas_cercano(id, RecorridosMapa.paradero(cod)["pos"])
-		lista.assign(paradas.values())
 		var largo := t.largo_de(id)
+		## El bus para con su PUERTA DELANTERA frente al paradero: el centro del bus queda PUERTA_ADELANTE m antes del punto del paradero.
+		for cod: String in paradas:
+			paradas[cod] = fposmod(float(paradas[cod]) - PUERTA_ADELANTE, largo)
+		lista.assign(paradas.values())
 		var cuantos := clampi(roundi(largo / 5000.0), 1, 3)
 		var col := RecorridosRed.color(num)
 		for k in cuantos:
