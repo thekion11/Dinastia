@@ -10,7 +10,9 @@ const ALCANCE := 170.0
 const VEL := 1.4
 const PUERTA := Vector3(0.0, 0.5, 4.7)      ## puerta de la estación, local (+Z = hacia el andén)
 const ANDEN := Vector3(0.0, 0.5, 12.5)      ## borde exterior del andén
-const PLAZA := Vector3(7.0, 0.0, 22.0)      ## hacia dónde se van los que bajan
+const RAMPA_ALTA := Vector3(0.0, 0.5, 13.9)  ## entrada de la barandilla, arriba de la rampa
+const RAMPA_BAJA := Vector3(0.0, -0.2, 18.2) ## pie de la rampa, sobre el camino
+const PLAZA := Vector3(0.0, -0.2, 29.0)      ## fin del camino, hacia donde se van los que bajan
 
 var tele: Teleferico
 var estacion: Node3D             ## la estación de abajo (su transform orienta puerta y andén)
@@ -68,15 +70,22 @@ func _salir(k: int, baja: bool) -> void:
 	var lado := -0.9 + 1.8 * float(k)
 	var pts: Array[Vector3] = []
 	if baja:
-		pts = [_mundo(estacion, PUERTA + Vector3(lado, 0, 0)), _mundo(estacion, ANDEN + Vector3(lado, 0, 0)), _mundo(estacion, PLAZA + Vector3(lado * 2.0, 0, 0))]
+		pts = _ruta([PUERTA + Vector3(lado, 0, 0), ANDEN + Vector3(lado * 0.8, 0, 0), RAMPA_ALTA + Vector3(lado * 0.8, 0, 0), RAMPA_BAJA + Vector3(lado * 0.8, 0, 0), PLAZA + Vector3(lado, 0, 0)])
 	else:
-		pts = [_mundo(estacion, PLAZA + Vector3(lado * 2.5, 0, 0)), _mundo(estacion, ANDEN + Vector3(lado, 0, 0)), _mundo(estacion, PUERTA + Vector3(lado, 0, 0))]
+		pts = _ruta([PLAZA + Vector3(lado, 0, 0), RAMPA_BAJA + Vector3(lado * 0.8, 0, 0), RAMPA_ALTA + Vector3(lado * 0.8, 0, 0), ANDEN + Vector3(lado * 0.8, 0, 0), PUERTA + Vector3(lado, 0, 0)])
 	var largo := 0.0
 	for i in pts.size() - 1:
 		largo += pts[i].distance_to(pts[i + 1])
 	var n: Node3D = d["nodo"]
 	n.position = pts[0]
 	_andando.append({"d": d, "ruta": pts, "t": 0.0, "dur": maxf(largo / VEL, 0.5), "largo": largo})
+
+## Los puntos locales de la estación pasados a mundo.
+func _ruta(locales: Array) -> Array[Vector3]:
+	var r: Array[Vector3] = []
+	for l: Vector3 in locales:
+		r.append(_mundo(estacion, l))
+	return r
 
 func _mover(delta: float) -> void:
 	for k in range(_andando.size() - 1, -1, -1):

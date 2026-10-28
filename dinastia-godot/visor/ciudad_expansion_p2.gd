@@ -199,7 +199,7 @@ func _materiales() -> void:
 	var asf: StandardMaterial3D = CityBuilder.asfalto_mate(Texturas.asfalto(Color(0.44, 0.435, 0.43)).duplicate(), 0.85)
 	_mat["asfalto"] = asf
 	## Etapa 4: acera de baldosa con juntas y solar de hormigón, no colores lisos.
-	_mat["acera"] = Texturas.baldosa(Color(0.62, 0.61, 0.58), 53)
+	_mat["acera"] = CityBuilder.mojable(Texturas.baldosa(Color(0.62, 0.61, 0.58), 53))
 	_mat["solar"] = Texturas.hormigon(Color(0.42, 0.42, 0.41), 29)
 	_mat["linea"] = b._mat_simple(Color(0.92, 0.9, 0.82), 0.7)
 	_mat["cesped"] = Texturas.cesped(Color(0.27, 0.48, 0.24), 37)

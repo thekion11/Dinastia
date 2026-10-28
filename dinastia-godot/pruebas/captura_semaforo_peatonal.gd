@@ -33,8 +33,8 @@ func _process(_d: float) -> void:
 		_sem.t = [1.0, Semaforos.VERDE - 1.0, Semaforos.VERDE + 5.0][i]
 		_sem._aplicar()
 		var hacia := Vector3(b.x, 0, b.z).normalized()
-		cam.global_position = b + Vector3(-5.0, 0.6, 7.5)
-		cam.look_at(b + Vector3(0, 1.2, 0), Vector3.UP)
+		cam.global_position = b + Vector3(-0.5, 1.6, -3.0)
+		cam.look_at(b + Vector3(-0.3, 1.3, 0), Vector3.UP)
 		cam.fov = 55.0
 	if (_n - 12) % 6 == 4:
 		get_viewport().get_texture().get_image().save_png("/tmp/semped_%d.png" % i)
