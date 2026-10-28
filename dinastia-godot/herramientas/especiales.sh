@@ -60,6 +60,7 @@ pasa "controles táctiles del partido" "godot --headless --path . res://pruebas/
 if [ "$1" = "todo" ]; then
 # 6a. Presupuesto de triángulos y llamadas de dibujo del partido (M-338): con pantalla virtual; ~5 min
 if command -v xvfb-run >/dev/null; then
+pasa "troceo de la grada sin butacas perdidas" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_troceo_grada.tscn" "FIN. 0 fallos"
 pasa "presupuesto del partido" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/presupuesto_partido.tscn" "FIN. 0 fallos"
 fi
   # Balance del mundo a largo plazo (10 temporadas x 3 semillas, ~3,5 min) y rendimiento en 20 (~1,5 min)

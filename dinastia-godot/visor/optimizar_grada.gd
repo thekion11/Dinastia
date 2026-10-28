@@ -7,10 +7,11 @@ extends RefCounted
 
 const NOMBRES := ["ButacasCerca", "ButacasLejos", "Hinchada", "HinchadaCerca"]
 const MIN_INSTANCIAS := 600
+static var activo := true   ## las comprobaciones de «antes» (imágenes sin trocear) lo apagan
 
 ## Parte los MultiMesh grandes de la grada colgados de `raiz`. Devuelve cuántos partió.
 static func trocear(raiz: Node, tramos := 8) -> int:
-	if DisplayServer.get_name() == "headless":
+	if not activo or DisplayServer.get_name() == "headless":
 		return 0   ## sin pantalla los MultiMesh no guardan sus datos
 	var hechos := 0
 	for nombre: String in NOMBRES:
