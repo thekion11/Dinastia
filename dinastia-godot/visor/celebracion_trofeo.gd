@@ -59,6 +59,9 @@ func _montar() -> void:
 		var d := {"nodo": n, "anim": f["anim"], "base": n.position, "extra": 0.0, "id": String(f["id"]), "i": k,
 			"capi": bool((f["jugador"] as Dictionary).get("capitan", false)) and String(f.get("slot_code", "")) != "POR"}
 		_preparar_clips(d)
+		var rot := n.get_node_or_null(NodePath(PlayerSpawner.ROTULO))
+		if rot != null:
+			(rot as Node3D).visible = false   ## sin nombres flotando: es una foto de equipo
 		_jug.append(d)
 		if d["capi"]:
 			_capi = d
@@ -299,10 +302,10 @@ func _vuelta(t: float) -> void:
 		_disparar([int(t / 4.0) % CONFETI_CANONES, (int(t / 4.0) + 3) % CONFETI_CANONES])
 	if t <= T_VUELTA:
 		var tang := (_en_elipse(ang0 - (u + 0.01) * TAU) - cap_pos).normalized()
-		var dentro := Vector3(cap_pos.x, 0, cap_pos.z).normalized() * -7.0
-		_cam.global_position = cap_pos + tang * 9.0 + dentro + Vector3(0, 1.8, 0)
+		var dentro := Vector3(cap_pos.x, 0, cap_pos.z).normalized() * -4.5
+		_cam.global_position = cap_pos + tang * 6.0 + dentro + Vector3(0, 1.7, 0)
 		_cam.look_at(cap_pos + tang * -2.0 + Vector3(0, 1.7, 0), Vector3.UP)
-		_cam.fov = 50.0
+		_cam.fov = 40.0
 	else:
 		var s := (t - T_VUELTA) / T_FINAL
 		var a := lerpf(0.2, 1.3, s)
