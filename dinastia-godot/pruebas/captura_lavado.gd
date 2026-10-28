@@ -25,7 +25,7 @@ func _process(_d: float) -> void:
 	var t: Vector3 = _l.get_meta("tunel")
 	var ap: Vector3 = _l.get_meta("aparcamiento")
 	var cam: Camera3D = _vista.get("_camara")
-	var vistas := [[t + Vector3(0.5, 2.0, -21), t + Vector3(0, 1.8, 0)], [t + Vector3(28, 20, -6), (t + ap) * 0.5], [ap + Vector3(14, 3.0, -8), ap + Vector3(-2, 0.8, 0)]]
+	var vistas := [[t + Vector3(2.5, 2.2, -19), t + Vector3(0, 1.0, -4)], [t + Vector3(28, 20, -6), (t + ap) * 0.5], [ap + Vector3(14, 3.0, -8), ap + Vector3(-2, 0.8, 0)], [ap + Vector3(0, 22, 9.0), ap + Vector3(0, 0, 9.1)]]
 	var i := (_n - 12) / 6
 	if i >= vistas.size():
 		get_tree().quit()

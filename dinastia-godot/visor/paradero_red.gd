@@ -22,6 +22,14 @@ static var _mats: Dictionary = {}
 static var _qr: ImageTexture = null
 static var _anuncio: ImageTexture = null
 
+## Es de noche en la ciudad (lo pone `TraficoCiudad.faros`): las luces de los paraderos nacen encendidas o apagadas según esto.
+static var noche := false
+
+## Enciende o apaga la luz de todos los paraderos montados.
+static func encender(arbol: SceneTree, si: bool) -> void:
+	noche = si
+	arbol.call_group("luz_paradero", "set_visible", si)
+
 static func _mat(c: Color, rug := 0.6, metal := 0.0) -> StandardMaterial3D:
 	var k := "%s|%.2f|%.2f" % [c.to_html(true), rug, metal]
 	if not _mats.has(k):
@@ -178,6 +186,20 @@ static func montar(raiz: Node3D, ancho: float, semilla: int, nombre := "", secto
 		_caja(m, Vector3(xc, 2.52, -0.1), Vector3(0.08, 0.07, 2.7), rojo, Vector3(-3.0, 12.0 if i == 0 else -12.0, 0))
 	## Tubo fluorescente bajo el techo (emisivo: de noche el paradero se ve encendido; de día no se nota).
 	_caja(m, Vector3(0.3, 2.47, 0.1), Vector3(w * 0.7, 0.03, 0.1), _luz(Color(0.95, 0.97, 1.0), 1.6))
+	## Y una luz de verdad bajo el techo (28-10): ilumina banca, suelo y cartel; solo de noche (`encender`), sin sombras y con desvanecido por distancia.
+	var foco := OmniLight3D.new()
+	foco.name = "LuzParadero"
+	foco.position = Vector3(0.3, 2.3, 0.1)
+	foco.omni_range = 5.0
+	foco.light_energy = 3.2
+	foco.light_color = Color(0.95, 0.97, 1.0)
+	foco.shadow_enabled = false
+	foco.distance_fade_enabled = true
+	foco.distance_fade_begin = 45.0
+	foco.distance_fade_length = 15.0
+	foco.visible = noche
+	foco.add_to_group("luz_paradero")
+	m.add_child(foco)
 	## Cabecera bajo el techo: banda negra con el texto, remates rojos con el logo «Red».
 	_caja(m, Vector3(0, 2.36, 1.1), Vector3(w + 0.1, 0.3, 0.06), negro)
 	for lado in [-1.0, 1.0]:

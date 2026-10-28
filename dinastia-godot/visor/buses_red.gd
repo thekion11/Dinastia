@@ -104,6 +104,7 @@ static func montar(ex: CiudadExpansion, t: TraficoCiudad) -> int:
 			lp.outline_size = 6
 			lp.position = Vector3(0, 0.62, -6.07)
 			lp.rotation.y = PI
+			lp.double_sided = false
 			lp.visibility_range_end = 40.0
 			nb.add_child(lp)
 			t.agregar_vehiculo(nb, id, largo * float(k) / float(cuantos), VEL, 0.0, 0.0)
