@@ -6484,7 +6484,12 @@
   "Los primeros cinco metros no se los gana nadie": "Nobody beats us over the first five metres",
   "E: pedir el verde para cruzar": "E: press for the green to cross",
   "Ya puedes cruzar.": "You can cross now.",
-  "Pedido: el hombrecito se pone verde en unos segundos.": "Requested: the walk signal turns green in a few seconds."
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Requested: the walk signal turns green in a few seconds.",
+  "Máquina de billetes": "Ticket machine",
+  "Tarjeta Red": "Red card",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Top-up of €%d (%s). Red card balance: €%d.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Fare: -€%d · Red card balance: €%d",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "No balance (€%d): the fare is €%d. Top up the card at a metro ticket machine."
  },
  "pt": {
   "Historia": "História",
@@ -12971,7 +12976,12 @@
   "Los primeros cinco metros no se los gana nadie": "Os primeiros cinco metros ninguém nos ganha",
   "E: pedir el verde para cruzar": "E: pedir o verde para atravessar",
   "Ya puedes cruzar.": "Já pode atravessar.",
-  "Pedido: el hombrecito se pone verde en unos segundos.": "Pedido feito: o boneco fica verde em poucos segundos."
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Pedido feito: o boneco fica verde em poucos segundos.",
+  "Máquina de billetes": "Máquina de bilhetes",
+  "Tarjeta Red": "Cartão Red",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Recarga de %d € (%s). Saldo do cartão Red: %d €.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Passagem: -%d € · saldo do cartão Red: %d €",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Sem saldo (%d €): a passagem custa %d €. Recarregue o cartão numa máquina de bilhetes do metro."
  },
  "patrones": [
   [
@@ -25191,7 +25201,12 @@
   "Los primeros cinco metros no se los gana nadie": "Sur les cinq premiers mètres, personne ne nous bat",
   "E: pedir el verde para cruzar": "E : demander le vert pour traverser",
   "Ya puedes cruzar.": "Vous pouvez traverser.",
-  "Pedido: el hombrecito se pone verde en unos segundos.": "Demande faite : le piéton passe au vert dans quelques secondes."
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Demande faite : le piéton passe au vert dans quelques secondes.",
+  "Máquina de billetes": "Distributeur de billets",
+  "Tarjeta Red": "Carte Red",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Recharge de %d € (%s). Solde de la carte Red : %d €.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Trajet : -%d € · solde de la carte Red : %d €",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Solde insuffisant (%d €) : le trajet coûte %d €. Rechargez la carte à un distributeur du métro."
  },
  "it": {
   "Historia": "Storia",
@@ -31678,7 +31693,12 @@
   "Los primeros cinco metros no se los gana nadie": "Nei primi cinque metri non ci batte nessuno",
   "E: pedir el verde para cruzar": "E: chiedi il verde per attraversare",
   "Ya puedes cruzar.": "Puoi attraversare.",
-  "Pedido: el hombrecito se pone verde en unos segundos.": "Richiesto: l'omino diventa verde tra pochi secondi."
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Richiesto: l'omino diventa verde tra pochi secondi.",
+  "Máquina de billetes": "Biglietteria automatica",
+  "Tarjeta Red": "Carta Red",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Ricarica di %d € (%s). Saldo della carta Red: %d €.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Corsa: -%d € · saldo della carta Red: %d €",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Saldo insufficiente (%d €): la corsa costa %d €. Ricarica la carta a una biglietteria del metro."
  },
  "de": {
   "Historia": "Geschichte",
@@ -38165,7 +38185,12 @@
   "Los primeros cinco metros no se los gana nadie": "Die ersten fünf Meter gewinnt keiner gegen uns",
   "E: pedir el verde para cruzar": "E: Grün zum Überqueren anfordern",
   "Ya puedes cruzar.": "Du kannst jetzt gehen.",
-  "Pedido: el hombrecito se pone verde en unos segundos.": "Angefordert: Das Ampelmännchen wird in wenigen Sekunden grün."
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Angefordert: Das Ampelmännchen wird in wenigen Sekunden grün.",
+  "Máquina de billetes": "Fahrkartenautomat",
+  "Tarjeta Red": "Red-Karte",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Aufladung von %d € (%s). Guthaben der Red-Karte: %d €.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Fahrt: -%d € · Guthaben der Red-Karte: %d €",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Kein Guthaben (%d €): die Fahrt kostet %d €. Lade die Karte an einem U-Bahn-Automaten auf."
  },
  "ca": {
   "Historia": "Història",
@@ -44652,7 +44677,12 @@
   "Los primeros cinco metros no se los gana nadie": "Els primers cinc metres no ens els guanya ningú",
   "E: pedir el verde para cruzar": "E: demanar el verd per creuar",
   "Ya puedes cruzar.": "Ja pots creuar.",
-  "Pedido: el hombrecito se pone verde en unos segundos.": "Demanat: el ninot es posa verd en uns segons."
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Demanat: el ninot es posa verd en uns segons.",
+  "Máquina de billetes": "Màquina de bitllets",
+  "Tarjeta Red": "Targeta Red",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Recàrrega de %d € (%s). Saldo de la targeta Red: %d €.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Passatge: -%d € · saldo de la targeta Red: %d €",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Sense saldo (%d €): el passatge costa %d €. Recarrega la targeta en una màquina de bitllets del metro."
  },
  "pl": {
   "Club": "Klub",
@@ -51418,7 +51448,12 @@
   "Los primeros cinco metros no se los gana nadie": "Pierwszych pięciu metrów nikt nam nie odbierze",
   "E: pedir el verde para cruzar": "E: poproś o zielone, by przejść",
   "Ya puedes cruzar.": "Możesz już przejść.",
-  "Pedido: el hombrecito se pone verde en unos segundos.": "Zgłoszone: za kilka sekund zapali się zielone."
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Zgłoszone: za kilka sekund zapali się zielone.",
+  "Máquina de billetes": "Automat biletowy",
+  "Tarjeta Red": "Karta Red",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Doładowanie %d € (%s). Saldo karty Red: %d €.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Przejazd: -%d € · saldo karty Red: %d €",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Brak środków (%d €): przejazd kosztuje %d €. Doładuj kartę w automacie metra."
  },
  "tr": {
   "Club": "Kulüp",
@@ -58184,6 +58219,11 @@
   "Los primeros cinco metros no se los gana nadie": "İlk beş metrede kimse bizi geçemez",
   "E: pedir el verde para cruzar": "E: geçmek için yeşil iste",
   "Ya puedes cruzar.": "Artık geçebilirsin.",
-  "Pedido: el hombrecito se pone verde en unos segundos.": "İstendi: yaya ışığı birkaç saniye içinde yeşile dönecek."
+  "Pedido: el hombrecito se pone verde en unos segundos.": "İstendi: yaya ışığı birkaç saniye içinde yeşile dönecek.",
+  "Máquina de billetes": "Bilet makinesi",
+  "Tarjeta Red": "Red kartı",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "%d € yükleme (%s). Red kart bakiyesi: %d €.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Bilet: -%d € · Red kart bakiyesi: %d €",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Bakiye yok (%d €): bilet %d €. Kartı metro bilet makinesinde yükleyin."
  }
 }

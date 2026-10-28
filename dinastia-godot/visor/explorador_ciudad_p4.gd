@@ -188,7 +188,7 @@ func _usar() -> void:
 		return
 	if _cerca["tipo"] == "boton_peatonal":   ## M-170: pide el verde peatonal
 		return cb.expansion.semaforos.pedir_con_aviso(self)
-	if _cerca["tipo"] == "metro":
+	if _cerca["tipo"] == "metro" and (vida == null or vida.cobrar_pasaje("metro")):   ## M-182: el pasaje sale de la tarjeta Red
 		_entrar_al_anden(_cerca["acc"])
 		return
 	if _cerca["tipo"] == "puerta_estadio":
