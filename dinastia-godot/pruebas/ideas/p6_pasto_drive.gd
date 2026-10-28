@@ -45,3 +45,17 @@ func _probar() -> void:
 	add_child(raiz3)
 	PastoCiudad.parque(raiz3, r, c, func(p: Vector3) -> bool: return cancha.has_point(Vector2(p.x, p.z)))
 	_comprobar(raiz3.get_child_count() == raiz2.get_child_count(), "reparto determinista (mismos nodos con la misma semilla)")
+	## Flores (M-193): una de cada dos matas lleva un ramillete de 9; las cabezas llevan color por instancia.
+	var raiz4 := Node3D.new()
+	add_child(raiz4)
+	var pts4: Array = []
+	for i in 200:
+		pts4.append(Vector3(float(i % 20) * 3.0, 0.1, float(i / 20) * 3.0))
+	var nf := PastoCiudad.flores(raiz4, pts4, 5)
+	_comprobar(nf > 700 and nf < 1100, "una de cada dos matas lleva su ramillete de 9 flores (%d flores de 200 matas)" % nf)
+	var con_color := 0
+	for h in raiz4.get_children():
+		if h is MultiMeshInstance3D and (h as MultiMeshInstance3D).multimesh.use_colors:
+			con_color += 1
+			_comprobar((h as MultiMeshInstance3D).visibility_range_end == PastoCiudad.DISTANCIA_FLORES, "las flores se ocultan a %.0f m" % PastoCiudad.DISTANCIA_FLORES)
+	_comprobar(con_color >= 2, "las cabezas llevan color propio (%d celdas)" % con_color)

@@ -20,6 +20,15 @@ func _kenney(clave: String, pos: Vector3, mira: Vector3, padre: Node3D = null, r
 	(padre if padre != null else self).add_child(n)
 	return n
 
+var billeteras: Array[Vector3] = []   ## dónde hay máquinas de billetes en los andenes
+
+## ¿Hay una máquina de billetes a `radio` m (en planta) de `p`?
+func billetes_cerca(p: Vector3, radio := 2.6) -> bool:
+	for q: Vector3 in billeteras:
+		if Vector2(q.x - p.x, q.z - p.z).length() < radio and absf(q.y - p.y) < 3.0:
+			return true
+	return false
+
 ## ¿Hay una máquina expendedora a `radio` m (en planta) de `p`?
 func expendedora_cerca(p: Vector3, radio := 2.2) -> bool:
 	for q: Vector3 in expendedoras:
@@ -47,6 +56,7 @@ func _amueblar_anden(p: Vector3, fondo: Vector3, hacia: Vector3, lon: Vector3, y
 	_kenney("expendedora", en.call(0.65, -25.6), hacia)
 	_kenney("billetes", en.call(0.5, -23.6), hacia)
 	_kenney("billetes", en.call(0.5, -22.6), hacia)
+	billeteras.append(en.call(0.5, -23.1))   ## M-182: la E aquí recarga la tarjeta Red
 	## Bancos de espaldas a la pared, papeleras entre ellos y plantas grandes.
 	for f: float in [-12.0, -4.0, 4.0, 12.0]:
 		## El banco del kit mira a su -Z (el respaldo queda en +Z): de espaldas a

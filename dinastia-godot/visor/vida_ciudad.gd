@@ -141,6 +141,32 @@ func usar_expendedora() -> bool:
 	Sonido.toca("clic", Sonido.Bus.EFECTOS)
 	return true
 
+## E ante una máquina de billetes del metro: recarga la tarjeta Red con `CarteraDT.RECARGA` € de la cartera (M-182).
+func usar_billetes() -> bool:
+	if mundo.roles == null:
+		return false
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	var c := mundo.roles.cartera
+	var r := c.recargar_transporte(mundo.roles, CarteraDT.RECARGA, dia)
+	if String(r["error"]) != "":
+		_decir(Idiomas.t("Máquina de billetes"), CarteraDT.texto_error(String(r["error"]), CarteraDT.RECARGA))
+		return true
+	_decir(Idiomas.t("Máquina de billetes"), Idiomas.t("Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.") % [CarteraDT.RECARGA, Idiomas.t(String(r["via"])), c.saldo_transporte])
+	Sonido.toca("clic", Sonido.Bus.EFECTOS)
+	return true
+
+## Cobra un pasaje (`metro`, `bus`, `teleferico`) de la tarjeta Red. false (con aviso) si no hay saldo: no se sube (M-182).
+func cobrar_pasaje(tipo: String) -> bool:
+	if mundo.roles == null:
+		return true
+	var c := mundo.roles.cartera
+	var tarifa := int(CarteraDT.TARIFAS.get(tipo, 1))
+	if c.pagar_pasaje(tipo) == "":
+		expl._aviso.text = Idiomas.t("Pasaje: -%d € · saldo de la tarjeta Red: %d €") % [tarifa, c.saldo_transporte]
+		return true
+	_decir(Idiomas.t("Tarjeta Red"), Idiomas.t("Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.") % [c.saldo_transporte, tarifa])
+	return false
+
 ## E ante el mostrador de la tienda de la gasolinera: abre la caja con el surtido (`PanelTienda`); cada compra pasa por `comprar_surtido`.
 func usar_tienda() -> bool:
 	if mundo.roles == null:

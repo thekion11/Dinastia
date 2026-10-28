@@ -41,6 +41,7 @@ func armar_red() -> void:
 			continue
 		if k.x % 3 == 0 or k.y % 3 == 0 or _es_borde(p):
 			cruces_semaforo.append(p)
+	CiudadRotonda.quitar_semaforo(cruces_semaforo)   ## el cruce de la rotonda (M-168) ya no lleva semáforo
 	cuenta["tramos"] = tramos.size()
 	cuenta["semaforos"] = cruces_semaforo.size()
 	_armar_brazos()

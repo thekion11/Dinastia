@@ -232,6 +232,11 @@ func _buscar_cerca() -> void:
 				_cerca = {"tipo": "metro", "acc": a, "n": "Ⓜ %s · %s" % [a["linea"], a["nombre"]]}
 				_aviso.text = Idiomas.t("E: entrar al metro (%s, estación %s)") % [a["linea"], a["nombre"]]
 				return
+	## El botón de un semáforo peatonal (M-170).
+	if modo == "pie" and cb.expansion != null and cb.expansion.semaforos != null and cb.expansion.semaforos.boton_cerca(p) < INF:
+		_cerca = {"tipo": "boton_peatonal", "n": "Botón de cruce"}
+		_aviso.text = Idiomas.t("E: pedir el verde para cruzar")
+		return
 	if modo == "pie" and trafico != null:
 		for v: Dictionary in trafico._vehiculos:
 			var n: Node3D = v["nodo"]

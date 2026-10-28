@@ -152,6 +152,7 @@ static func parque(raiz: Node3D, r: Rect2, c: Vector3, evita: Callable, arboles:
 		for j in 3:   ## manchón: la mata y dos vecinas a menos de un metro
 			var g := absi(hash([semilla, i, j, 3]))
 			pts.append(p + (Vector3(float(g % 100) / 50.0 - 1.0, 0.0, float((g / 100) % 100) / 50.0 - 1.0) if j > 0 else Vector3.ZERO))
+	flores(raiz, pts, semilla)
 	return sembrar(raiz, pts, semilla)
 
 ## Orilla del río: matas a lo largo del paseo (x0 = pie del agua, `lado` = ±1 hacia fuera), entre z0 y z1.
@@ -202,4 +203,81 @@ static func rect(raiz: Node3D, r: Rect2, y: float, dens: float, evita: Callable)
 		for j in 3:
 			var g := absi(hash([semilla, i, j, 3]))
 			pts.append(p + (Vector3(float(g % 100) / 50.0 - 1.0, 0.0, float((g / 100) % 100) / 50.0 - 1.0) if j > 0 else Vector3.ZERO))
+	flores(raiz, pts, semilla)
 	return sembrar(raiz, pts, semilla)
+
+## FLORES (M-193, 28-10-2026): manchones de flores de colores (tallo verde y cabeza redonda de cinco colores) junto a algunas de las matas: cada
+## cuarta mata del parque es el centro de un ramillete de 6 flores. MultiMesh por celdas, con corte a `DISTANCIA_FLORES` m; las cabezas llevan color por instancia.
+const DISTANCIA_FLORES := 38.0
+const COLORES_FLOR: Array[Color] = [Color(0.92, 0.2, 0.3), Color(0.98, 0.85, 0.2), Color(0.95, 0.5, 0.75), Color(0.65, 0.4, 0.9), Color(0.98, 0.98, 0.95)]
+static var flores_sembradas := 0
+
+static func flores(raiz: Node3D, puntos: Array, semilla: int) -> int:
+	if apagado() or puntos.is_empty() or OS.get_environment("SIN_FLORES") != "":   ## SIN_FLORES=1: para las capturas «antes»
+		return 0
+	var celdas: Dictionary = {}
+	for i in puntos.size():
+		if posmod(hash([semilla, i, 211]), 2) != 0:
+			continue
+		var p: Vector3 = puntos[i]
+		var k := Vector2i(floori(p.x / CELDA), floori(p.z / CELDA))
+		if not celdas.has(k):
+			celdas[k] = []
+		(celdas[k] as Array).append([p, i])
+	var tallo := CylinderMesh.new()
+	tallo.top_radius = 0.012
+	tallo.bottom_radius = 0.018
+	tallo.height = 0.4
+	tallo.radial_segments = 4
+	var cabeza := SphereMesh.new()
+	cabeza.radius = 0.13
+	cabeza.height = 0.17
+	cabeza.radial_segments = 6
+	cabeza.rings = 3
+	var m_tallo := StandardMaterial3D.new()
+	m_tallo.albedo_color = Color(0.2, 0.5, 0.2)
+	m_tallo.roughness = 0.9
+	var m_cab := StandardMaterial3D.new()
+	m_cab.vertex_color_use_as_albedo = true
+	m_cab.roughness = 0.7
+	var n := 0
+	for k: Vector2i in celdas:
+		var lista: Array = celdas[k]
+		var ts: Array[Transform3D] = []
+		var cols: Array[Color] = []
+		for par: Array in lista:
+			var centro: Vector3 = par[0]
+			var color := COLORES_FLOR[posmod(hash([semilla, par[1], 5]), COLORES_FLOR.size())]
+			for j in 9:
+				var h := absi(hash([semilla, par[1], j, 9]))
+				var o := Vector3(float(h % 100) / 100.0 - 0.5, 0.0, float((h / 100) % 100) / 100.0 - 0.5) * 1.2
+				var esc := 0.8 + float((h / 10000) % 50) / 100.0
+				ts.append(Transform3D(Basis.from_scale(Vector3.ONE * esc), centro + o))
+				cols.append(color.lightened(float((h / 500000) % 30) / 100.0 - 0.1))
+		if ts.is_empty():
+			continue
+		var mm_t := MultiMesh.new()
+		mm_t.transform_format = MultiMesh.TRANSFORM_3D
+		mm_t.mesh = tallo
+		mm_t.instance_count = ts.size()
+		var mm_c := MultiMesh.new()
+		mm_c.transform_format = MultiMesh.TRANSFORM_3D
+		mm_c.use_colors = true
+		mm_c.mesh = cabeza
+		mm_c.instance_count = ts.size()
+		for i in ts.size():
+			var t := ts[i]
+			mm_t.set_instance_transform(i, Transform3D(t.basis, t.origin + Vector3(0, 0.2 * t.basis.get_scale().y, 0)))
+			mm_c.set_instance_transform(i, Transform3D(t.basis, t.origin + Vector3(0, 0.42 * t.basis.get_scale().y, 0)))
+			mm_c.set_instance_color(i, cols[i])
+		for par2: Array in [[mm_t, m_tallo], [mm_c, m_cab]]:
+			var mi := MultiMeshInstance3D.new()
+			mi.name = "FloresCiudad"
+			mi.multimesh = par2[0]
+			mi.material_override = par2[1]
+			mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			mi.visibility_range_end = DISTANCIA_FLORES
+			raiz.add_child(mi)
+		n += ts.size()
+	flores_sembradas += n
+	return n

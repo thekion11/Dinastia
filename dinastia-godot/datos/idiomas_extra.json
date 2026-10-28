@@ -6642,7 +6642,15 @@
   "Goles a favor": "Goals for",
   "Goles en contra": "Goals against",
   "Puntos": "Points",
-  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Matchday: the league's. Wages: what you pay the squad each week. Average: your starting XI's. Objective and confidence: what the board expects and how much it trusts you (at 12 or below, you can be sacked)."
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Matchday: the league's. Wages: what you pay the squad each week. Average: your starting XI's. Objective and confidence: what the board expects and how much it trusts you (at 12 or below, you can be sacked).",
+  "E: pedir el verde para cruzar": "E: press for the green to cross",
+  "Ya puedes cruzar.": "You can cross now.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Requested: the walk signal turns green in a few seconds.",
+  "Máquina de billetes": "Ticket machine",
+  "Tarjeta Red": "Red card",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Top-up of €%d (%s). Red card balance: €%d.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Fare: -€%d · Red card balance: €%d",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "No balance (€%d): the fare is €%d. Top up the card at a metro ticket machine."
  },
  "pt": {
   "Historia": "História",
@@ -13287,7 +13295,15 @@
   "Goles a favor": "Gols pró",
   "Goles en contra": "Gols contra",
   "Puntos": "Pontos",
-  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Rodada: a da liga. Salários: o que você paga por semana ao elenco. Média: a do time titular. Objetivo e confiança: o que a diretoria espera e quanto confia em você (com 12 ou menos, você pode ser demitido)."
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Rodada: a da liga. Salários: o que você paga por semana ao elenco. Média: a do time titular. Objetivo e confiança: o que a diretoria espera e quanto confia em você (com 12 ou menos, você pode ser demitido).",
+  "E: pedir el verde para cruzar": "E: pedir o verde para atravessar",
+  "Ya puedes cruzar.": "Já pode atravessar.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Pedido feito: o boneco fica verde em poucos segundos.",
+  "Máquina de billetes": "Máquina de bilhetes",
+  "Tarjeta Red": "Cartão Red",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Recarga de %d € (%s). Saldo do cartão Red: %d €.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Passagem: -%d € · saldo do cartão Red: %d €",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Sem saldo (%d €): a passagem custa %d €. Recarregue o cartão numa máquina de bilhetes do metro."
  },
  "patrones": [
   [
@@ -25665,7 +25681,15 @@
   "Goles a favor": "Buts marqués",
   "Goles en contra": "Buts encaissés",
   "Puntos": "Points",
-  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Journée : celle du championnat. Salaires : ce que tu paies chaque semaine à l'effectif. Moyenne : celle du onze. Objectif et confiance : ce que la direction attend et sa confiance en toi (à 12 ou moins, tu peux être renvoyé)."
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Journée : celle du championnat. Salaires : ce que tu paies chaque semaine à l'effectif. Moyenne : celle du onze. Objectif et confiance : ce que la direction attend et sa confiance en toi (à 12 ou moins, tu peux être renvoyé).",
+  "E: pedir el verde para cruzar": "E : demander le vert pour traverser",
+  "Ya puedes cruzar.": "Vous pouvez traverser.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Demande faite : le piéton passe au vert dans quelques secondes.",
+  "Máquina de billetes": "Distributeur de billets",
+  "Tarjeta Red": "Carte Red",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Recharge de %d € (%s). Solde de la carte Red : %d €.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Trajet : -%d € · solde de la carte Red : %d €",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Solde insuffisant (%d €) : le trajet coûte %d €. Rechargez la carte à un distributeur du métro."
  },
  "it": {
   "Historia": "Storia",
@@ -32310,7 +32334,15 @@
   "Goles a favor": "Gol fatti",
   "Goles en contra": "Gol subiti",
   "Puntos": "Punti",
-  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Giornata: quella del campionato. Stipendi: quanto paghi ogni settimana alla rosa. Media: quella dell'undici. Obiettivo e fiducia: cosa si aspetta la società e quanto si fida di te (a 12 o meno, puoi essere esonerato)."
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Giornata: quella del campionato. Stipendi: quanto paghi ogni settimana alla rosa. Media: quella dell'undici. Obiettivo e fiducia: cosa si aspetta la società e quanto si fida di te (a 12 o meno, puoi essere esonerato).",
+  "E: pedir el verde para cruzar": "E: chiedi il verde per attraversare",
+  "Ya puedes cruzar.": "Puoi attraversare.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Richiesto: l'omino diventa verde tra pochi secondi.",
+  "Máquina de billetes": "Biglietteria automatica",
+  "Tarjeta Red": "Carta Red",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Ricarica di %d € (%s). Saldo della carta Red: %d €.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Corsa: -%d € · saldo della carta Red: %d €",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Saldo insufficiente (%d €): la corsa costa %d €. Ricarica la carta a una biglietteria del metro."
  },
  "de": {
   "Historia": "Geschichte",
@@ -38955,7 +38987,15 @@
   "Goles a favor": "Erzielte Tore",
   "Goles en contra": "Gegentore",
   "Puntos": "Punkte",
-  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Spieltag: der der Liga. Gehälter: was du dem Kader pro Woche zahlst. Schnitt: der der Startelf. Ziel und Vertrauen: was der Vorstand erwartet und wie sehr er dir vertraut (bei 12 oder weniger droht die Entlassung)."
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Spieltag: der der Liga. Gehälter: was du dem Kader pro Woche zahlst. Schnitt: der der Startelf. Ziel und Vertrauen: was der Vorstand erwartet und wie sehr er dir vertraut (bei 12 oder weniger droht die Entlassung).",
+  "E: pedir el verde para cruzar": "E: Grün zum Überqueren anfordern",
+  "Ya puedes cruzar.": "Du kannst jetzt gehen.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Angefordert: Das Ampelmännchen wird in wenigen Sekunden grün.",
+  "Máquina de billetes": "Fahrkartenautomat",
+  "Tarjeta Red": "Red-Karte",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Aufladung von %d € (%s). Guthaben der Red-Karte: %d €.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Fahrt: -%d € · Guthaben der Red-Karte: %d €",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Kein Guthaben (%d €): die Fahrt kostet %d €. Lade die Karte an einem U-Bahn-Automaten auf."
  },
  "ca": {
   "Historia": "Història",
@@ -45600,7 +45640,15 @@
   "Goles a favor": "Gols a favor",
   "Goles en contra": "Gols en contra",
   "Puntos": "Punts",
-  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Jornada: la de la lliga. Sous: el que pagues cada setmana a la plantilla. Mitjana: la de l'onze. Objectiu i confiança: el que espera la directiva i quant confia en tu (amb 12 o menys, et poden acomiadar)."
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Jornada: la de la lliga. Sous: el que pagues cada setmana a la plantilla. Mitjana: la de l'onze. Objectiu i confiança: el que espera la directiva i quant confia en tu (amb 12 o menys, et poden acomiadar).",
+  "E: pedir el verde para cruzar": "E: demanar el verd per creuar",
+  "Ya puedes cruzar.": "Ja pots creuar.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Demanat: el ninot es posa verd en uns segons.",
+  "Máquina de billetes": "Màquina de bitllets",
+  "Tarjeta Red": "Targeta Red",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Recàrrega de %d € (%s). Saldo de la targeta Red: %d €.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Passatge: -%d € · saldo de la targeta Red: %d €",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Sense saldo (%d €): el passatge costa %d €. Recarrega la targeta en una màquina de bitllets del metro."
  },
  "pl": {
   "Club": "Klub",
@@ -52522,7 +52570,15 @@
   "Goles a favor": "Gole strzelone",
   "Goles en contra": "Gole stracone",
   "Puntos": "Punkty",
-  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Kolejka: ligowa. Pensje: ile płacisz kadrze tygodniowo. Średnia: wyjściowej jedenastki. Cel i zaufanie: czego oczekuje zarząd i jak bardzo ci ufa (przy 12 lub mniej możesz zostać zwolniony)."
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Kolejka: ligowa. Pensje: ile płacisz kadrze tygodniowo. Średnia: wyjściowej jedenastki. Cel i zaufanie: czego oczekuje zarząd i jak bardzo ci ufa (przy 12 lub mniej możesz zostać zwolniony).",
+  "E: pedir el verde para cruzar": "E: poproś o zielone, by przejść",
+  "Ya puedes cruzar.": "Możesz już przejść.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Zgłoszone: za kilka sekund zapali się zielone.",
+  "Máquina de billetes": "Automat biletowy",
+  "Tarjeta Red": "Karta Red",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Doładowanie %d € (%s). Saldo karty Red: %d €.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Przejazd: -%d € · saldo karty Red: %d €",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Brak środków (%d €): przejazd kosztuje %d €. Doładuj kartę w automacie metra."
  },
  "tr": {
   "Club": "Kulüp",
@@ -59444,6 +59500,14 @@
   "Goles a favor": "Atılan gol",
   "Goles en contra": "Yenilen gol",
   "Puntos": "Puan",
-  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Hafta: ligdeki hafta. Maaşlar: kadroya haftalık ödediğin. Ortalama: ilk on birin ortalaması. Hedef ve güven: yönetimin beklentisi ve sana ne kadar güvendiği (12 ve altında kovulabilirsin)."
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Hafta: ligdeki hafta. Maaşlar: kadroya haftalık ödediğin. Ortalama: ilk on birin ortalaması. Hedef ve güven: yönetimin beklentisi ve sana ne kadar güvendiği (12 ve altında kovulabilirsin).",
+  "E: pedir el verde para cruzar": "E: geçmek için yeşil iste",
+  "Ya puedes cruzar.": "Artık geçebilirsin.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "İstendi: yaya ışığı birkaç saniye içinde yeşile dönecek.",
+  "Máquina de billetes": "Bilet makinesi",
+  "Tarjeta Red": "Red kartı",
+  "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "%d € yükleme (%s). Red kart bakiyesi: %d €.",
+  "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Bilet: -%d € · Red kart bakiyesi: %d €",
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Bakiye yok (%d €): bilet %d €. Kartı metro bilet makinesinde yükleyin."
  }
 }
