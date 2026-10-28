@@ -422,10 +422,15 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 
 static func _en_cache(esq: Skeleton3D, prefijo: String, acciones_experimentales: bool) -> AnimationLibrary:
 	var clave := "%s|%s|%d" % [prefijo, acciones_experimentales, _firma(esq)]
-	if _bibliotecas.has(clave):
-		return _bibliotecas[clave]
+	_candado.lock()   ## `PrecalentarAnim` la llena desde un hilo
+	var ya: Variant = _bibliotecas.get(clave)
+	_candado.unlock()
+	if ya != null:
+		return ya
 	var lib := _construir(esq, prefijo, acciones_experimentales)
+	_candado.lock()
 	_bibliotecas[clave] = lib
+	_candado.unlock()
 	return lib
 
 static func construir(esq: Skeleton3D, ruta_esqueleto: String = "", acciones_experimentales: bool = false) -> AnimationLibrary:
