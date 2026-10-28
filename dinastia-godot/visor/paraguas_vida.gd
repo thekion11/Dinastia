@@ -68,6 +68,9 @@ func _actualizar_clima_y_sonido(clima: String) -> void:
 func _actualizar_lluvia(clima: String, cb: Object) -> void:
 	if llueve(clima) and (_lluvia == null or not is_instance_valid(_lluvia)):
 		_lluvia = PrecipitacionCiudad.montar(self, clima)
+		var charcos: CharcosLluvia = _lluvia.get_node_or_null("CharcosLluvia")
+		if charcos != null and cb != null and cb.has_method("altura_en"):
+			charcos.altura = Callable(cb, "altura_en")
 		CityBuilder.mojar(true)
 	elif not llueve(clima) and _lluvia != null:
 		if is_instance_valid(_lluvia):

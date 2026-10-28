@@ -40,6 +40,7 @@ static func montar(padre: Node, clima: String, nivel: int = Calidad.elegida) -> 
 	sigue.add_child(cerca)
 	sigue.add_child(alrededor)
 	cont.add_child(sigue)
+	CharcosLluvia.montar(cont)
 	if clima == "tormenta":
 		cont.add_child(Precipitacion.Relampagos.new())
 	return cont

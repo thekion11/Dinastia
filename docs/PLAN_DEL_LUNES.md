@@ -663,7 +663,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-187 | P2 | PARCIAL | Casas sin habitantes ni rutinas | vivienda con «la familia que vive allí» (`InteriorInstalacion` l.1057); sin horarios |
 | M-188 | P2 | PENDIENTE | Sin tiendas con compra real (ropa, balones) | sin compra en tiendas |
 | M-189 | P2 | PENDIENTE | Sin bares/restaurantes con minijuego | sin bar con minijuego |
-| M-190 | P2 | PARCIAL | Sin clima dinámico en la ciudad (lluvia con charcos, reflejos) | charcos de luz de farola (`CiudadExpansion`); sin charcos de lluvia en la ciudad |
+| M-190 | P2 | HECHO-REVISAR | Lluvia con charcos | `CharcosLluvia` (MultiMesh de 196 discos con ondas, rejilla del mundo, siguen a la cámara, nacen con `PrecipitacionCiudad`, altura `CityBuilder.altura_en`+0,22); capturas `capturas_ciudad_c2/charcos_*.jpg`. Pendiente: reflejo de farolas en charcos de noche |
 | M-191 | P2 | PARCIAL | Sin ciclo día/noche más allá del slider | ciclo día/noche automático (`_ciclo_activo`); sin reloj real |
 | M-192 | P2 | SIN VERIFICAR | Aceras/pavimentos: 3 texturas | no se midió la variedad de aceras por barrio |
 | M-193 | P2 | PARCIAL | Sin vegetación variada (setos, flores) más allá de árboles | setos de jardines y casas (`CiudadExpansion._setos_t`); sin flores |
