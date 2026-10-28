@@ -263,6 +263,7 @@ func _patio_de_manzana(r: Rect2, c: Vector3) -> void:
 	_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(lado.x, 0.06, lado.y))
 	_lote("solar", Vector3(c.x, 0.3, c.z), Vector3(lado.x, 0.06, 2.6))
 	_lote("solar", Vector3(c.x, 0.3, c.z), Vector3(2.6, 0.06, lado.y))
+	PastoCiudad.rect(b, Rect2(c.x - lado.x * 0.5, c.z - lado.y * 0.5, lado.x, lado.y), 0.27, 0.004, func(p: Vector3) -> bool: return absf(p.x - c.x) < 3.2 or absf(p.z - c.z) < 3.2)   ## matas en el patio, fuera de los caminos
 	var pts: Array = []
 	for sx: float in [-1.0, 1.0]:
 		for sz: float in [-1.0, 1.0]:
