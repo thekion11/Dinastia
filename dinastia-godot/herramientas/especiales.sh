@@ -28,6 +28,7 @@ pasa "auditoría de datos" "godot --headless --path . res://pruebas/auditoria_da
 pasa "auditoría de clubes" "godot --headless --path . res://pruebas/auditoria_clubes.tscn" "FIN. 0 fallos"
 # 2c. Las partidas guardadas de versiones viejas siguen abriendo (1094, 27-10)
 pasa "partidas viejas abren" "godot --headless --path . res://pruebas/ideas/sav_fosiles.tscn" "FIN. 0 fallos"
+pasa "simular temporada con barra" "godot --headless --path . res://pruebas/ideas/sim_temporada_barra.tscn" "FIN. 0 fallos"
 # 3. Colisiones del club (paredes, muebles, gente, barreras invisibles)
 pasa "colisiones del club" "godot --headless --path . res://pruebas/prueba_colisiones_club.tscn" "FIN. 0 fallos"
 # 4. Partido con el motor real (acta = césped) y control del equipo

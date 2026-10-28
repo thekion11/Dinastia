@@ -164,19 +164,80 @@ func _dirigir() -> void:
 		vivo.queue_free()
 		_cerrar_partido_dirigido(p))
 
+## LA TEMPORADA ENTERA, CON SU BARRA (idea 1032, 28-10-2026). Antes `mundo.jugar_temporada()` corría de un tirón y la
+## pantalla se quedaba congelada sin decir nada. Ahora se juega semana a semana con un panel que dice por qué jornada va
+## y deja «Detener» (la temporada sigue donde quedó, como si se hubiera avanzado a mano).
+var _simulando := false
+var _detener := false
+
 func _jugar_temporada() -> void:
-	if not pr.mundo.temporada_en_curso():
-		pr._escribir("[color=#e05555]La temporada ya está terminada.[/color]")
+	if _simulando:
 		return
+	if not pr.mundo.temporada_en_curso():
+		pr._escribir("[color=#e05555]%s[/color]" % Idiomas.t("La temporada ya está terminada."))
+		return
+	_simulando = true
+	_detener = false
+	var liga: Liga = pr._liga_de(pr.mundo.mi_club())
+	var desde := liga.jornada_actual
+	var total := maxi(1, liga.calendario.size() - desde)
+	var panel := _panel_progreso()
+	var barra: ProgressBar = panel.get_meta("barra")
+	var rotulo: Label = panel.get_meta("rotulo")
 	var t0 := Time.get_ticks_msec()
-	pr.mundo.jugar_temporada()
-	var t := pr._liga_de(pr.mundo.mi_club()).tabla()
+	while pr.mundo.temporada_en_curso() and not _detener:
+		pr.mundo.avanzar_semana()
+		barra.value = 100.0 * float(liga.jornada_actual - desde) / float(total)
+		rotulo.text = Idiomas.t("Jornada %d de %d") % [liga.jornada_actual, liga.calendario.size()]
+		await pr.get_tree().process_frame
+	panel.queue_free()
+	_simulando = false
+	if pr.mundo.temporada_en_curso():
+		pr._escribir("[color=#d9a43a]%s[/color]" % (Idiomas.t("Simulación detenida en la jornada %d.") % liga.jornada_actual))
+		pr._partida.autoguardar_si_toca()
+		pr._refrescar()
+		return
+	pr.mundo.cerrar_temporada_simulada()
+	var t := liga.tabla()
 	var puesto := 1
 	for fila: Dictionary in t:
 		if fila["club"] == pr.mundo.mi_club():
 			break
 		puesto += 1
-	pr._escribir("[color=#3fa06a]Temporada %d completa en %d ms.[/color] Campeón: [b]%s[/b]. Acabas [b]%d.º[/b]." % [
-		pr.mundo.anio, Time.get_ticks_msec() - t0, t[0]["club"].nombre, puesto])
+	pr._escribir("[color=#3fa06a]%s[/color] %s" % [Idiomas.t("Temporada %d completa en %d ms.") % [pr.mundo.anio, Time.get_ticks_msec() - t0],
+		Idiomas.t("Campeón: %s. Acabas %d.º.") % [t[0]["club"].nombre, puesto]])
 	pr._partida.autoguardar_si_toca()
 	pr._refrescar()
+
+## El panel centrado con la barra, la jornada y «Detener»; tapa la pantalla para que no se toque nada a medias.
+func _panel_progreso() -> Control:
+	var velo := ColorRect.new()
+	velo.color = Color(0, 0, 0, 0.55)
+	velo.set_anchors_preset(Control.PRESET_FULL_RECT)
+	velo.mouse_filter = Control.MOUSE_FILTER_STOP
+	pr.add_child(velo)
+	var caja := PanelContainer.new()
+	caja.set_anchors_preset(Control.PRESET_CENTER)
+	caja.custom_minimum_size = Vector2(420, 0)
+	caja.position = -caja.custom_minimum_size * 0.5
+	velo.add_child(caja)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 10)
+	caja.add_child(v)
+	var titulo := Label.new()
+	titulo.text = Idiomas.t("⏭⏭ Simulando la temporada…")
+	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(titulo)
+	var barra := ProgressBar.new()
+	barra.custom_minimum_size = Vector2(380, 22)
+	v.add_child(barra)
+	var rotulo := Label.new()
+	rotulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(rotulo)
+	var parar := Button.new()
+	parar.text = Idiomas.t("Detener")
+	parar.pressed.connect(func() -> void: _detener = true)
+	v.add_child(parar)
+	velo.set_meta("barra", barra)
+	velo.set_meta("rotulo", rotulo)
+	return velo

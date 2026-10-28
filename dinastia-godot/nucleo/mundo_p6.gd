@@ -10,6 +10,11 @@ func temporada_en_curso() -> bool:
 func jugar_temporada() -> void:
 	while temporada_en_curso():
 		avanzar_semana()
+	cerrar_temporada_simulada()
+
+## Lo que hace `jugar_temporada` tras la última semana (el campeón y la señal). La pantalla, que simula semana a semana
+## con su barra de progreso (idea 1032), lo llama al acabar.
+func cerrar_temporada_simulada() -> void:
 	var campeon: Club = null
 	if not ligas.is_empty():
 		var t := ligas[0].tabla()
