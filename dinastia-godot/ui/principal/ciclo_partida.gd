@@ -100,6 +100,7 @@ func arrancar_con(m: Mundo) -> void:
 		PedidoPartida.modo_elegido = ""
 	_adoptar(m)
 	p._escribir("[color=#8ea595]Mundo nuevo.[/color] Semilla [color=#3fa06a]%d[/color]" % m.semilla)
+	_avisar_si_respaldo()
 	p._refrescar()
 
 ## Una partida ya leída del disco (la ranura principal, o la que deja la
@@ -180,6 +181,12 @@ func _avisar_si_respaldo() -> void:
 	if Partida.cargada_de_respaldo:
 		p._escribir("[color=#c9a227]El último guardado estaba dañado: se recuperó la copia anterior.[/color]")
 		Partida.cargada_de_respaldo = false
+	## M-430: si la sesión anterior dejó errores, se dice una vez y se indica cómo mandar el informe.
+	var reg := p.get_node_or_null("/root/Registro")
+	if reg != null and int(reg.errores_previos) > 0:
+		var donde := Idiomas.t("mándalo a %s") % String(reg.CONTACTO) if String(reg.CONTACTO) != "" else Idiomas.t("guárdalo para avisar")
+		p._escribir("[color=#c9a227]%s[/color]" % (Idiomas.t("La última vez el juego anotó %d errores. Si algo falló, copia el informe en Ajustes → Partida → «Copiar informe de fallos» y %s.") % [int(reg.errores_previos), donde]))
+		reg.errores_previos = 0
 
 ## Si la última vez se cerró el juego con un partido dirigido a medias, se
 ## completa desde el marcador que había (sin repetirlo desde el 0-0).
