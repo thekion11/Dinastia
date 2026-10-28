@@ -626,7 +626,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-284 | P2 | PENDIENTE | Sin modo lectura de pantalla (TTS) | sin TTS |
 | M-285 | P2 | PARCIAL | Navegación por mando en menús (panel de controles sí) | navegación con mando en el panel de controles; no en todos los menús |
 | M-287 | P2 | PENDIENTE | Rendimiento de menús: refresco ya 14× más rápido; sin pruebas de… | sin medida de apertura de pantallas |
-| M-289 | P2 | PENDIENTE | Menú lateral con 9 menús; Ciudad/Editar completados; Ajustes sólo… | Ajustes sigue con 3 tarjetas (`MenuLateral`) |
 | M-292 | P2 | PARCIAL | Seguir clubes (los jugadores ya: «👁️ Seguir» en la ficha y lista «EN SEGUIMIENTO» con ojeadores) | falta seguir un club rival (sus noticias en la bandeja) |
 | M-293 | P2 | PARCIAL | Tablas con filtros limitados (plantel) | filtros en plantel/libres |
 | M-294 | P2 | PARCIAL | Comparador de jugadores existe; sin comparativa de club/estadio | comparador de jugadores; sin club/estadio |

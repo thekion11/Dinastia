@@ -77,7 +77,10 @@ const MENUS := [
 		"colores": ["#0c0e12", "#171b22", "#a8b4c8"], "subs": [
 		{"tab": "Ajustes", "secc": "pantalla", "label": "Dispositivo", "icono": "🖥️", "desc": "Pantalla, calidad gráfica, mando y fotogramas."},
 		{"tab": "Ajustes", "secc": "audio", "label": "Sonido", "icono": "🔊", "desc": "Música, efectos y el ruido del estadio."},
-		{"tab": "Ajustes", "secc": "aspecto", "label": "Interfaz", "icono": "🖌️", "desc": "Paletas, fondos, idioma y estilo del menú."}]},
+		{"tab": "Ajustes", "secc": "aspecto", "label": "Interfaz", "icono": "🖌️", "desc": "Paletas, fondos y estilo del menú."},
+		{"tab": "Ajustes", "secc": "juego", "label": "Juego", "icono": "🎮", "desc": "Idioma, moneda, velocidad del partido, comodidades y vida del DT."},
+		{"tab": "Ajustes", "secc": "acceso", "label": "Accesibilidad", "icono": "♿", "desc": "Texto, colores, contraste, avisos de sonido y teclas."},
+		{"tab": "Ajustes", "secc": "partida", "label": "Partida y guardado", "icono": "💾", "desc": "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos."}]},
 	{"id": "ciudad", "icono": "🏙️", "nombre": "Ciudad 3D", "estilo": 7, "ficha": false,
 		"lema": "La ciudad que rodea tu estadio.",
 		"colores": ["#070a16", "#141a33", "#ffd27a"], "subs": [

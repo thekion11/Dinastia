@@ -6625,7 +6625,14 @@
   "Látigo": "Thunderbolt",
   "Zurdazo o derechazo de media distancia": "Long-range strike with either foot",
   "Ve el pase que nadie ve": "Sees the pass nobody else sees",
-  "Arranque": "Burst of pace"
+  "Arranque": "Burst of pace",
+  "Juego": "Game",
+  "Accesibilidad": "Accessibility",
+  "Partida y guardado": "Game and saving",
+  "Paletas, fondos y estilo del menú.": "Palettes, backgrounds and menu style.",
+  "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Language, currency, match speed, conveniences and the manager's life.",
+  "Texto, colores, contraste, avisos de sonido y teclas.": "Text, colours, contrast, sound cues and keys.",
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Slots, export, autosave, error report, privacy and credits."
  },
  "pt": {
   "Historia": "História",
@@ -13253,7 +13260,14 @@
   "Látigo": "Chute de chapa",
   "Zurdazo o derechazo de media distancia": "Chute de média distância com a canhota ou a destra",
   "Ve el pase que nadie ve": "Vê o passe que ninguém vê",
-  "Arranque": "Arrancada"
+  "Arranque": "Arrancada",
+  "Juego": "Jogo",
+  "Accesibilidad": "Acessibilidade",
+  "Partida y guardado": "Partida e salvamento",
+  "Paletas, fondos y estilo del menú.": "Paletas, fundos e estilo do menu.",
+  "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Idioma, moeda, velocidade da partida, comodidades e vida do técnico.",
+  "Texto, colores, contraste, avisos de sonido y teclas.": "Texto, cores, contraste, avisos de som e teclas.",
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Espaços, exportar, salvamento automático, relatório de erros, privacidade e créditos."
  },
  "patrones": [
   [
@@ -25614,7 +25628,14 @@
   "Látigo": "Frappe de mule",
   "Zurdazo o derechazo de media distancia": "Frappe de loin du gauche ou du droit",
   "Ve el pase que nadie ve": "Voit la passe que personne ne voit",
-  "Arranque": "Accélération"
+  "Arranque": "Accélération",
+  "Juego": "Jeu",
+  "Accesibilidad": "Accessibilité",
+  "Partida y guardado": "Partie et sauvegarde",
+  "Paletas, fondos y estilo del menú.": "Palettes, fonds et style du menu.",
+  "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Langue, monnaie, vitesse du match, confort et vie de l'entraîneur.",
+  "Texto, colores, contraste, avisos de sonido y teclas.": "Texte, couleurs, contraste, indications sonores et touches.",
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Emplacements, export, sauvegarde auto, rapport d'erreurs, confidentialité et crédits."
  },
  "it": {
   "Historia": "Storia",
@@ -32242,7 +32263,14 @@
   "Látigo": "Botta",
   "Zurdazo o derechazo de media distancia": "Tiro dalla distanza di sinistro o di destro",
   "Ve el pase que nadie ve": "Vede il passaggio che nessuno vede",
-  "Arranque": "Scatto"
+  "Arranque": "Scatto",
+  "Juego": "Gioco",
+  "Accesibilidad": "Accessibilità",
+  "Partida y guardado": "Partita e salvataggio",
+  "Paletas, fondos y estilo del menú.": "Palette, sfondi e stile del menu.",
+  "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Lingua, valuta, velocità della partita, comodità e vita dell'allenatore.",
+  "Texto, colores, contraste, avisos de sonido y teclas.": "Testo, colori, contrasto, avvisi sonori e tasti.",
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Slot, esporta, salvataggio automatico, rapporto errori, privacy e crediti."
  },
  "de": {
   "Historia": "Geschichte",
@@ -38870,7 +38898,14 @@
   "Látigo": "Hammer",
   "Zurdazo o derechazo de media distancia": "Distanzschuss mit links oder rechts",
   "Ve el pase que nadie ve": "Sieht den Pass, den keiner sieht",
-  "Arranque": "Antritt"
+  "Arranque": "Antritt",
+  "Juego": "Spiel",
+  "Accesibilidad": "Barrierefreiheit",
+  "Partida y guardado": "Spielstand und Speichern",
+  "Paletas, fondos y estilo del menú.": "Paletten, Hintergründe und Menüstil.",
+  "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Sprache, Währung, Spieltempo, Komfort und das Leben des Trainers.",
+  "Texto, colores, contraste, avisos de sonido y teclas.": "Text, Farben, Kontrast, Tonhinweise und Tasten.",
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Speicherplätze, Export, Autospeichern, Fehlerbericht, Datenschutz und Mitwirkende."
  },
  "ca": {
   "Historia": "Història",
@@ -45498,7 +45533,14 @@
   "Látigo": "Fuet",
   "Zurdazo o derechazo de media distancia": "Xut de mitja distància amb l'esquerra o la dreta",
   "Ve el pase que nadie ve": "Veu la passada que ningú no veu",
-  "Arranque": "Arrencada"
+  "Arranque": "Arrencada",
+  "Juego": "Joc",
+  "Accesibilidad": "Accessibilitat",
+  "Partida y guardado": "Partida i desament",
+  "Paletas, fondos y estilo del menú.": "Paletes, fons i estil del menú.",
+  "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Idioma, moneda, velocitat del partit, comoditats i vida del DT.",
+  "Texto, colores, contraste, avisos de sonido y teclas.": "Text, colors, contrast, avisos de so i tecles.",
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Ranures, exportar, desament automàtic, informe d'errors, privadesa i crèdits."
  },
  "pl": {
   "Club": "Klub",
@@ -52403,7 +52445,14 @@
   "Látigo": "Bomba",
   "Zurdazo o derechazo de media distancia": "Strzał z dystansu lewą lub prawą nogą",
   "Ve el pase que nadie ve": "Widzi podanie, którego nikt nie widzi",
-  "Arranque": "Przyspieszenie"
+  "Arranque": "Przyspieszenie",
+  "Juego": "Gra",
+  "Accesibilidad": "Dostępność",
+  "Partida y guardado": "Gra i zapis",
+  "Paletas, fondos y estilo del menú.": "Palety, tła i styl menu.",
+  "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Język, waluta, tempo meczu, udogodnienia i życie trenera.",
+  "Texto, colores, contraste, avisos de sonido y teclas.": "Tekst, kolory, kontrast, sygnały dźwięków i klawisze.",
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Sloty, eksport, autozapis, raport błędów, prywatność i twórcy."
  },
  "tr": {
   "Club": "Kulüp",
@@ -59308,6 +59357,13 @@
   "Látigo": "Füze",
   "Zurdazo o derechazo de media distancia": "Orta mesafeden sol ya da sağ ayakla vuruş",
   "Ve el pase que nadie ve": "Kimsenin görmediği pası görür",
-  "Arranque": "Patlayıcı çıkış"
+  "Arranque": "Patlayıcı çıkış",
+  "Juego": "Oyun",
+  "Accesibilidad": "Erişilebilirlik",
+  "Partida y guardado": "Oyun ve kayıt",
+  "Paletas, fondos y estilo del menú.": "Paletler, arka planlar ve menü stili.",
+  "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Dil, para birimi, maç hızı, kolaylıklar ve teknik direktörün hayatı.",
+  "Texto, colores, contraste, avisos de sonido y teclas.": "Metin, renkler, kontrast, ses uyarıları ve tuşlar.",
+  "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Kayıt yuvaları, dışa aktarma, otomatik kayıt, hata raporu, gizlilik ve emeği geçenler."
  }
 }

@@ -220,6 +220,9 @@ const GRUPOS := [
 		{"tab": "Ajustes", "secc": "pantalla", "label": "Dispositivo"},
 		{"tab": "Ajustes", "secc": "audio", "label": "Sonido"},
 		{"tab": "Ajustes", "secc": "aspecto", "label": "Interfaz"},
+		{"tab": "Ajustes", "secc": "juego", "label": "Juego"},
+		{"tab": "Ajustes", "secc": "acceso", "label": "Accesibilidad"},
+		{"tab": "Ajustes", "secc": "partida", "label": "Partida y guardado"},
 		{"tab": "Editor", "label": "Editor"},
 	]},
 ]
