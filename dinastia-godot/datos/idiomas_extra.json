@@ -6633,7 +6633,16 @@
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Language, currency, match speed, conveniences and the manager's life.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Text, colours, contrast, sound cues and keys.",
   "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Slots, export, autosave, error report, privacy and credits.",
-  "Mándalo a: %s": "Send it to: %s"
+  "Mándalo a: %s": "Send it to: %s",
+  "%s  ·  confianza %d": "%s  ·  confidence %d",
+  "Partidos jugados": "Matches played",
+  "Ganados": "Won",
+  "Empatados": "Drawn",
+  "Perdidos": "Lost",
+  "Goles a favor": "Goals for",
+  "Goles en contra": "Goals against",
+  "Puntos": "Points",
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Matchday: the league's. Wages: what you pay the squad each week. Average: your starting XI's. Objective and confidence: what the board expects and how much it trusts you (at 12 or below, you can be sacked)."
  },
  "pt": {
   "Historia": "História",
@@ -13269,7 +13278,16 @@
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Idioma, moeda, velocidade da partida, comodidades e vida do técnico.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Texto, cores, contraste, avisos de som e teclas.",
   "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Espaços, exportar, salvamento automático, relatório de erros, privacidade e créditos.",
-  "Mándalo a: %s": "Envie para: %s"
+  "Mándalo a: %s": "Envie para: %s",
+  "%s  ·  confianza %d": "%s  ·  confiança %d",
+  "Partidos jugados": "Jogos disputados",
+  "Ganados": "Vitórias",
+  "Empatados": "Empates",
+  "Perdidos": "Derrotas",
+  "Goles a favor": "Gols pró",
+  "Goles en contra": "Gols contra",
+  "Puntos": "Pontos",
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Rodada: a da liga. Salários: o que você paga por semana ao elenco. Média: a do time titular. Objetivo e confiança: o que a diretoria espera e quanto confia em você (com 12 ou menos, você pode ser demitido)."
  },
  "patrones": [
   [
@@ -25638,7 +25656,16 @@
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Langue, monnaie, vitesse du match, confort et vie de l'entraîneur.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Texte, couleurs, contraste, indications sonores et touches.",
   "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Emplacements, export, sauvegarde auto, rapport d'erreurs, confidentialité et crédits.",
-  "Mándalo a: %s": "Envoyez-le à : %s"
+  "Mándalo a: %s": "Envoyez-le à : %s",
+  "%s  ·  confianza %d": "%s  ·  confiance %d",
+  "Partidos jugados": "Matchs joués",
+  "Ganados": "Gagnés",
+  "Empatados": "Nuls",
+  "Perdidos": "Perdus",
+  "Goles a favor": "Buts marqués",
+  "Goles en contra": "Buts encaissés",
+  "Puntos": "Points",
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Journée : celle du championnat. Salaires : ce que tu paies chaque semaine à l'effectif. Moyenne : celle du onze. Objectif et confiance : ce que la direction attend et sa confiance en toi (à 12 ou moins, tu peux être renvoyé)."
  },
  "it": {
   "Historia": "Storia",
@@ -32274,7 +32301,16 @@
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Lingua, valuta, velocità della partita, comodità e vita dell'allenatore.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Testo, colori, contrasto, avvisi sonori e tasti.",
   "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Slot, esporta, salvataggio automatico, rapporto errori, privacy e crediti.",
-  "Mándalo a: %s": "Mandalo a: %s"
+  "Mándalo a: %s": "Mandalo a: %s",
+  "%s  ·  confianza %d": "%s  ·  fiducia %d",
+  "Partidos jugados": "Partite giocate",
+  "Ganados": "Vinte",
+  "Empatados": "Pareggiate",
+  "Perdidos": "Perse",
+  "Goles a favor": "Gol fatti",
+  "Goles en contra": "Gol subiti",
+  "Puntos": "Punti",
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Giornata: quella del campionato. Stipendi: quanto paghi ogni settimana alla rosa. Media: quella dell'undici. Obiettivo e fiducia: cosa si aspetta la società e quanto si fida di te (a 12 o meno, puoi essere esonerato)."
  },
  "de": {
   "Historia": "Geschichte",
@@ -38910,7 +38946,16 @@
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Sprache, Währung, Spieltempo, Komfort und das Leben des Trainers.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Text, Farben, Kontrast, Tonhinweise und Tasten.",
   "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Speicherplätze, Export, Autospeichern, Fehlerbericht, Datenschutz und Mitwirkende.",
-  "Mándalo a: %s": "Schick ihn an: %s"
+  "Mándalo a: %s": "Schick ihn an: %s",
+  "%s  ·  confianza %d": "%s  ·  Vertrauen %d",
+  "Partidos jugados": "Spiele",
+  "Ganados": "Siege",
+  "Empatados": "Unentschieden",
+  "Perdidos": "Niederlagen",
+  "Goles a favor": "Erzielte Tore",
+  "Goles en contra": "Gegentore",
+  "Puntos": "Punkte",
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Spieltag: der der Liga. Gehälter: was du dem Kader pro Woche zahlst. Schnitt: der der Startelf. Ziel und Vertrauen: was der Vorstand erwartet und wie sehr er dir vertraut (bei 12 oder weniger droht die Entlassung)."
  },
  "ca": {
   "Historia": "Història",
@@ -45546,7 +45591,16 @@
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Idioma, moneda, velocitat del partit, comoditats i vida del DT.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Text, colors, contrast, avisos de so i tecles.",
   "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Ranures, exportar, desament automàtic, informe d'errors, privadesa i crèdits.",
-  "Mándalo a: %s": "Envia'l a: %s"
+  "Mándalo a: %s": "Envia'l a: %s",
+  "%s  ·  confianza %d": "%s  ·  confiança %d",
+  "Partidos jugados": "Partits jugats",
+  "Ganados": "Guanyats",
+  "Empatados": "Empatats",
+  "Perdidos": "Perduts",
+  "Goles a favor": "Gols a favor",
+  "Goles en contra": "Gols en contra",
+  "Puntos": "Punts",
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Jornada: la de la lliga. Sous: el que pagues cada setmana a la plantilla. Mitjana: la de l'onze. Objectiu i confiança: el que espera la directiva i quant confia en tu (amb 12 o menys, et poden acomiadar)."
  },
  "pl": {
   "Club": "Klub",
@@ -52459,7 +52513,16 @@
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Język, waluta, tempo meczu, udogodnienia i życie trenera.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Tekst, kolory, kontrast, sygnały dźwięków i klawisze.",
   "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Sloty, eksport, autozapis, raport błędów, prywatność i twórcy.",
-  "Mándalo a: %s": "Wyślij na: %s"
+  "Mándalo a: %s": "Wyślij na: %s",
+  "%s  ·  confianza %d": "%s  ·  zaufanie %d",
+  "Partidos jugados": "Rozegrane mecze",
+  "Ganados": "Wygrane",
+  "Empatados": "Remisy",
+  "Perdidos": "Przegrane",
+  "Goles a favor": "Gole strzelone",
+  "Goles en contra": "Gole stracone",
+  "Puntos": "Punkty",
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Kolejka: ligowa. Pensje: ile płacisz kadrze tygodniowo. Średnia: wyjściowej jedenastki. Cel i zaufanie: czego oczekuje zarząd i jak bardzo ci ufa (przy 12 lub mniej możesz zostać zwolniony)."
  },
  "tr": {
   "Club": "Kulüp",
@@ -59372,6 +59435,15 @@
   "Idioma, moneda, velocidad del partido, comodidades y vida del DT.": "Dil, para birimi, maç hızı, kolaylıklar ve teknik direktörün hayatı.",
   "Texto, colores, contraste, avisos de sonido y teclas.": "Metin, renkler, kontrast, ses uyarıları ve tuşlar.",
   "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos.": "Kayıt yuvaları, dışa aktarma, otomatik kayıt, hata raporu, gizlilik ve emeği geçenler.",
-  "Mándalo a: %s": "Gönder: %s"
+  "Mándalo a: %s": "Gönder: %s",
+  "%s  ·  confianza %d": "%s  ·  güven %d",
+  "Partidos jugados": "Oynanan maç",
+  "Ganados": "Galibiyet",
+  "Empatados": "Beraberlik",
+  "Perdidos": "Mağlubiyet",
+  "Goles a favor": "Atılan gol",
+  "Goles en contra": "Yenilen gol",
+  "Puntos": "Puan",
+  "Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).": "Hafta: ligdeki hafta. Maaşlar: kadroya haftalık ödediğin. Ortalama: ilk on birin ortalaması. Hedef ve güven: yönetimin beklentisi ve sana ne kadar güvendiği (12 ve altında kovulabilirsin)."
  }
 }

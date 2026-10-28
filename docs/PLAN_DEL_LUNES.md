@@ -631,7 +631,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-294 | P2 | PARCIAL | Comparador de jugadores existe; sin comparativa de club/estadio | comparador de jugadores; sin club/estadio |
 | M-295 | P2 | SIN VERIFICAR | Sin gráficos históricos (valor, forma) en ficha | «crecimiento por temporada» en la ficha; sin gráficos verificados |
 | M-304 | P2 | PARCIAL | Animaciones de transición entre pantallas desiguales | `Animar` en 16 archivos; sin sistema común de transición |
-| M-305 | P2 | PARCIAL | Tooltips escasos | 103 tooltips |
+| M-305 | P2 | PARCIAL | Tooltips escasos | 28-10: la línea de cabecera (jornada, sueldos, media, objetivo, confianza) y las siglas de la tabla de liga ya explican; faltan las fichas y los paneles de club |
 | M-312 | P2 | PARCIAL | Sin modo «streamer» (ocultar datos sensibles/real) | ajuste «Caras reales: FOTO / RECREACIÓN» (`Cara.usar_fotos`); sin modo streamer |
 | M-435 | P2 | PENDIENTE | Sin gatillos analógicos para potencia de pase | sin gatillos analógicos |
 | M-436 | P2 | PENDIENTE | Sin giroscopio para cámara en primera persona (móvil) | sin giroscopio |
