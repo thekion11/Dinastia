@@ -15,12 +15,12 @@ func _ready() -> void:
 	Mini3D.caja(self, Vector3(0, -0.1, 0), Vector3(40, 0.2, 40), Mini3D.mat(Color(0.35, 0.35, 0.37)))
 	Mini3D.caja(self, Vector3(-6.0, 0.1, 0), Vector3(5.0, 0.2, 40), Mini3D.mat(Color(0.72, 0.72, 0.7)))
 	var para := Node3D.new()
-	para.position = Vector3(-6.6, 0.2, -5.5)
+	para.position = Vector3(-6.6, 0.2, 2.6)   ## la puerta delantera del bus (a +4,6 m de su centro) queda frente al paradero
 	para.rotation.y = PI * 0.5
 	add_child(para)
 	ParaderoRed.montar(para, 3.8, 11, "Av. Prueba", 100)
-	b.esperas_bus.append(Vector3(-4.8, 0.2, 4.0))
-	_bus = CityBuilder.autobus(Color(0.2, 0.45, 0.8), "122", "122")
+	b.esperas_bus.append(para.position)
+	_bus = CityBuilder.autobus(Color(0.0, 0.47, 0.75), "122 · ESTADIO", "122")
 	_bus.position = Vector3(0, 0, -2.0)
 	add_child(_bus)
 	var ex := ExploradorCiudad.new()
@@ -49,8 +49,8 @@ func _ready() -> void:
 	cam.fov = 50.0
 	add_child(cam)
 	cam.make_current()
-	cam.position = Vector3(-8.5, 3.4, 9.5)
-	cam.look_at(Vector3(-2.2, 1.0, 3.0), Vector3.UP)
+	cam.position = Vector3(-9.6, 1.7, 9.5)   ## a la altura de una persona
+	cam.look_at(Vector3(-3.0, 1.3, 2.6), Vector3.UP)
 
 func _process(d: float) -> void:
 	_n += 1

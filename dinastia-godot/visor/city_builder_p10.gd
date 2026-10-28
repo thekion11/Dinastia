@@ -49,119 +49,13 @@ func _redondear(puntos: PackedVector3Array, radio: float) -> PackedVector3Array:
 		salida.append(pb)
 	return salida
 
+
 ## EL AUTOBÚS URBANO (7-10-2026): el kit no trae ninguno y la furgoneta
 ## agrandada medía 6 m de alto. Este se arma con piezas: 12 m de largo, 3,1 de
 ## alto y 2,55 de ancho, con franja de ventanas, parabrisas, dos puertas,
 ## rótulo de destino encendido, ruedas y el color de la línea. Mira a +Z.
 static func autobus(col: Color, destino: String = "", numero: String = "") -> Node3D:
-	var raiz := Node3D.new()
-	var pintura := StandardMaterial3D.new()
-	pintura.albedo_color = col
-	pintura.roughness = 0.35
-	pintura.metallic = 0.2
-	var blanco := StandardMaterial3D.new()
-	blanco.albedo_color = Color(0.94, 0.94, 0.92)
-	blanco.roughness = 0.4
-	var vidrio := InteriorBus.vidrio()
-	var goma := StandardMaterial3D.new()
-	goma.albedo_color = Color(0.06, 0.06, 0.06)
-	goma.roughness = 0.9
-	var piezas := [
-		[Vector3(0, 1.0, 0), Vector3(2.55, 1.2, 12.0), pintura],           ## faldón
-		[Vector3(0, 2.3, 0), Vector3(2.5, 1.4, 11.9), vidrio],            ## ventanas
-		[Vector3(0, 3.05, 0), Vector3(2.55, 0.2, 12.0), blanco],          ## techo
-		[Vector3(0, 3.25, -1.5), Vector3(1.8, 0.25, 3.0), blanco],        ## climatizador
-		[Vector3(0, 2.3, 5.97), Vector3(2.3, 1.5, 0.08), vidrio],         ## parabrisas
-		[Vector3(0, 1.0, 6.02), Vector3(2.4, 0.5, 0.05), blanco],         ## parachoques
-		[Vector3(0, 2.85, 6.0), Vector3(1.8, 0.28, 0.06), null],          ## rótulo
-	]
-	for pz: Array in piezas:
-		var mi := MeshInstance3D.new()
-		var bm := BoxMesh.new()
-		bm.size = pz[1]
-		mi.mesh = bm
-		mi.position = pz[0]
-		if pz[2] != null:
-			mi.material_override = pz[2]
-		else:
-			var led := StandardMaterial3D.new()
-			led.albedo_color = Color(1.0, 0.7, 0.1)
-			led.emission_enabled = true
-			led.emission = Color(1.0, 0.6, 0.1)
-			led.emission_energy_multiplier = 1.5
-			mi.material_override = led
-		raiz.add_child(mi)
-	## Pilares entre ventanas y las dos puertas: en el lado de la ACERA (el derecho del autobús, que mira a +Z: −X; antes en +X, el lado de la calzada).
-	for k in 7:
-		var pil := MeshInstance3D.new()
-		var bm2 := BoxMesh.new()
-		bm2.size = Vector3(2.58, 1.4, 0.18)
-		pil.mesh = bm2
-		pil.material_override = pintura
-		pil.position = Vector3(0, 2.3, -5.4 + float(k) * 1.8)
-		raiz.add_child(pil)
-	for zp: float in [4.6, -0.8]:
-		var pu := MeshInstance3D.new()
-		var bm3 := BoxMesh.new()
-		bm3.size = Vector3(0.06, 2.3, 1.2)
-		pu.mesh = bm3
-		pu.material_override = vidrio
-		pu.position = Vector3(PasajerosBus.lado_puerta() * 1.29, 1.55, zp)
-		raiz.add_child(pu)
-	## Ruedas.
-	for zr: float in [3.8, -3.6]:
-		for xr: float in [-1.15, 1.15]:
-			var r := MeshInstance3D.new()
-			var cm := CylinderMesh.new()
-			cm.top_radius = 0.5
-			cm.bottom_radius = 0.5
-			cm.height = 0.32
-			r.mesh = cm
-			r.material_override = goma
-			r.rotation.z = PI * 0.5
-			r.position = Vector3(xr, 0.5, zr)
-			raiz.add_child(r)
-	InteriorBus.montar(raiz)
-	if destino != "":
-		var l := Label3D.new()
-		l.text = destino
-		l.font_size = 32
-		l.pixel_size = 0.006
-		l.modulate = Color(0.1, 0.05, 0.0)
-		l.outline_size = 0
-		l.position = Vector3(0, 2.85, 6.04)
-		raiz.add_child(l)
-	## EL NÚMERO DE LA LÍNEA (27-10-2026): grande en los dos costados y detrás, más las dos placas.
-	if numero != "":
-		for lado: float in [-1.0, 1.0]:
-			var ln := Label3D.new()
-			ln.text = numero
-			ln.font_size = 120
-			ln.pixel_size = 0.011
-			ln.modulate = Color.WHITE
-			ln.outline_size = 14
-			ln.outline_modulate = Color(0.05, 0.05, 0.08)
-			ln.position = Vector3(lado * 1.29, 1.15, -2.25)   ## entre la puerta trasera y la rueda trasera (no sobre la rueda)
-			ln.rotation.y = lado * PI * 0.5
-			raiz.add_child(ln)
-		var lt := Label3D.new()
-		lt.text = numero
-		lt.font_size = 110
-		lt.pixel_size = 0.012
-		lt.outline_size = 12
-		lt.position = Vector3(0, 2.3, -6.04)
-		lt.rotation.y = PI
-		raiz.add_child(lt)
-	var quad := QuadMesh.new()
-	quad.size = Vector2(0.52, 0.13)
-	for lado2 in 2:
-		var pl := MeshInstance3D.new()
-		pl.mesh = quad
-		pl.material_override = CocheDetalle.placa(hash(destino) + lado2 * 5)
-		pl.position = Vector3(0, 0.62, 6.04 if lado2 == 0 else -6.04)
-		pl.rotation.y = 0.0 if lado2 == 0 else PI
-		raiz.add_child(pl)
-	return raiz
+	return AutobusModelo.crear(col, destino, numero)
 
 ## Un peatón de verdad (`PeatonQ`: hombre o mujer del paquete Quaternius, con
 ## ropa de calle, pelo y a veces barba) caminando por la acera a paso humano.
