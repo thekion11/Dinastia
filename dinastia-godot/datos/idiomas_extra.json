@@ -6473,7 +6473,8 @@
   "Palmarés": "Honours",
   "Ese paradero no existe": "That bus stop does not exist",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Check the code on the pole: «PA» and four digits.",
-  "Tiempos según la posición real de cada bus.": "Times based on each bus's real position."
+  "Tiempos según la posición real de cada bus.": "Times based on each bus's real position.",
+  "¡CAMPEONES!": "CHAMPIONS!"
  },
  "pt": {
   "Historia": "História",
@@ -12949,7 +12950,8 @@
   "Palmarés": "Palmarés",
   "Ese paradero no existe": "Essa paragem não existe",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Confirma o código do poste: «PA» e quatro algarismos.",
-  "Tiempos según la posición real de cada bus.": "Tempos segundo a posição real de cada autocarro."
+  "Tiempos según la posición real de cada bus.": "Tempos segundo a posição real de cada autocarro.",
+  "¡CAMPEONES!": "CAMPEÕES!"
  },
  "patrones": [
   [
@@ -25136,7 +25138,8 @@
   "Palmarés": "Palmarès",
   "Ese paradero no existe": "Cet arrêt n'existe pas",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Vérifie le code sur le poteau : «PA» et quatre chiffres.",
-  "Tiempos según la posición real de cada bus.": "Temps selon la position réelle de chaque bus."
+  "Tiempos según la posición real de cada bus.": "Temps selon la position réelle de chaque bus.",
+  "¡CAMPEONES!": "CHAMPIONS !"
  },
  "it": {
   "Historia": "Storia",
@@ -31612,7 +31615,8 @@
   "Palmarés": "Albo d'oro",
   "Ese paradero no existe": "Questa fermata non esiste",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Controlla il codice sul palo: «PA» e quattro cifre.",
-  "Tiempos según la posición real de cada bus.": "Tempi secondo la posizione reale di ogni autobus."
+  "Tiempos según la posición real de cada bus.": "Tempi secondo la posizione reale di ogni autobus.",
+  "¡CAMPEONES!": "CAMPIONI!"
  },
  "de": {
   "Historia": "Geschichte",
@@ -38088,7 +38092,8 @@
   "Palmarés": "Titel",
   "Ese paradero no existe": "Diese Haltestelle gibt es nicht",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Prüfe den Code am Mast: «PA» und vier Ziffern.",
-  "Tiempos según la posición real de cada bus.": "Zeiten nach der echten Position jedes Busses."
+  "Tiempos según la posición real de cada bus.": "Zeiten nach der echten Position jedes Busses.",
+  "¡CAMPEONES!": "MEISTER!"
  },
  "ca": {
   "Historia": "Història",
@@ -44564,7 +44569,8 @@
   "Palmarés": "Palmarès",
   "Ese paradero no existe": "Aquesta parada no existeix",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Revisa el codi del pal: «PA» i quatre xifres.",
-  "Tiempos según la posición real de cada bus.": "Temps segons la posició real de cada bus."
+  "Tiempos según la posición real de cada bus.": "Temps segons la posició real de cada bus.",
+  "¡CAMPEONES!": "CAMPIONS!"
  },
  "pl": {
   "Club": "Klub",
@@ -51319,7 +51325,8 @@
   "Palmarés": "Trofea",
   "Ese paradero no existe": "Taki przystanek nie istnieje",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Sprawdź kod na słupku: «PA» i cztery cyfry.",
-  "Tiempos según la posición real de cada bus.": "Czasy według rzeczywistej pozycji każdego autobusu."
+  "Tiempos según la posición real de cada bus.": "Czasy według rzeczywistej pozycji każdego autobusu.",
+  "¡CAMPEONES!": "MISTRZOWIE!"
  },
  "tr": {
   "Club": "Kulüp",
@@ -58074,6 +58081,7 @@
   "Palmarés": "Kupalar",
   "Ese paradero no existe": "Böyle bir durak yok",
   "Revisa el código del poste: «PA» y cuatro cifras.": "Direkteki kodu kontrol et: «PA» ve dört rakam.",
-  "Tiempos según la posición real de cada bus.": "Süreler her otobüsün gerçek konumuna göre."
+  "Tiempos según la posición real de cada bus.": "Süreler her otobüsün gerçek konumuna göre.",
+  "¡CAMPEONES!": "ŞAMPİYONLAR!"
  }
 }

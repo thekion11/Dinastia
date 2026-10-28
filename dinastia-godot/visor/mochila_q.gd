@@ -13,7 +13,7 @@ static var _correas: ArrayMesh = null
 
 ## Camino de una correa (x positivo = lado derecho del peatón; se refleja para el otro): por la espalda, sobre el hombro, por el pecho,
 ## se mete en el costado del torso (a la vista solo queda el tramo del hombro al pecho) y vuelve por la espalda al fondo de la mochila.
-const CAMINO := [Vector3(0.10, 0.10, -0.178), Vector3(0.11, 0.18, -0.141), Vector3(0.115, 0.245, -0.03), Vector3(0.115, 0.215, 0.062),
+const CAMINO := [Vector3(0.10, 0.10, -0.178), Vector3(0.10, 0.16, -0.141), Vector3(0.105, 0.222, -0.03), Vector3(0.112, 0.20, 0.062),
 	Vector3(0.12, 0.20, 0.091), Vector3(0.12, 0.12, 0.117), Vector3(0.12, 0.05, 0.134), Vector3(0.12, 0.0, 0.116), Vector3(0.12, -0.02, 0.0),
 	Vector3(0.15, -0.04, -0.09), Vector3(0.13, -0.10, -0.16)]
 
