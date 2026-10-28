@@ -143,12 +143,34 @@ static func capa_de(c: Club, fondo: String) -> String:
 	if color_letras != "":
 		tinta = color_letras
 		borde = "#ffffff" if Color(color_letras).get_luminance() < 0.5 else "#14171c"
+	## PLACA CENTRAL (28-10-2026, revisión del líder): sobre un fondo con dibujo (rayas, mitades, cuadros…) el motivo va sobre una placa sólida con aro, para que
+	## el fondo del club se conserve entero y el motivo se lea. Sobre un fondo liso no hace falta.
+	var placa := ""
+	var cy := 33.0
+	var rx := 18.0
+	var ry := 18.0
+	if fig != "" and letras != "":
+		cy = 36.0
+		ry = 24.0
+	elif fig == "":
+		rx = minf(10.0 + float(letras.length()) * 3.5, 19.0)
+		ry = 13.0
+	if Escudo.patron_de(c) != "liso":
+		var aro := "#f4f1e6" if Color(fondo).get_luminance() < 0.55 else "#1a1d22"
+		var seg := AspectoClub.esc(c, 1, "")
+		if seg != "" and absf(Color(seg).get_luminance() - Color(fondo).get_luminance()) > 0.25:
+			aro = seg
+		placa = '<ellipse cx="32" cy="%.1f" rx="%.1f" ry="%.1f" fill="%s" stroke="%s" stroke-width="2.2"/>' % [cy, rx, ry, fondo, aro]
+	var ancho_letras := minf(38.0, 2.0 * rx - 6.0) if placa != "" else 38.0
+	if letras.length() >= 3:
+		ancho_letras = minf(ancho_letras, 30.0)   ## tres o cuatro letras no se aprietan contra el borde
 	if fig != "" and letras != "":
 		out += figura_svg(fig, 32.0, 25.0, 25.0, acento, fondo)
-		out += letras_svg(letras, 32.0, 49.0, 30.0, 11.0, tinta, borde)
+		out += letras_svg(letras, 32.0, 49.0, minf(30.0, ancho_letras), 11.0, tinta, borde)
 	elif fig != "":
-		out += figura_svg(fig, 32.0, 33.0, 32.0, acento, fondo)
+		out += figura_svg(fig, 32.0, 33.0, 32.0 if placa == "" else 26.0, acento, fondo)
 	else:
 		var col := color_letras if color_letras != "" else acento
-		out += letras_svg(letras, 32.0, 33.0, 38.0, 24.0, col, "#14171c" if Color(col).get_luminance() > 0.5 else "#ffffff")
+		out += letras_svg(letras, 32.0, 33.0, ancho_letras, 24.0, col, "#14171c" if Color(col).get_luminance() > 0.5 else "#ffffff")
+	out = placa + out
 	return out
