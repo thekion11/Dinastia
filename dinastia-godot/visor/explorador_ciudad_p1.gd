@@ -142,11 +142,11 @@ const EDIFICIOS := [
 ## (antes el rótulo y la sala se sorteaban por separado: una «Farmacia» podía
 ## abrir un taller).
 const SALA_DE_ROTULO := {
-	"Farmacia": "edificio_tienda", "Cafetería": "edificio_bar", "Panadería": "edificio_panaderia",
-	"Banco": "edificio_oficina", "Correos": "edificio_oficina", "Peluquería": "edificio_peluqueria",
+	"Farmacia": "edificio_farmacia", "Cafetería": "edificio_bar", "Panadería": "edificio_panaderia",
+	"Banco": "edificio_banco", "Correos": "edificio_oficina", "Peluquería": "edificio_peluqueria",
 	"Librería": "edificio_libreria", "Supermercado": "edificio_mercado", "Pizzería": "edificio_bar",
-	"Hotel": "edificio_oficina", "Deportes": "edificio_tienda", "Bar": "edificio_bar",
-	"Floristería": "edificio_tienda", "Ferretería": "edificio_tienda", "Peña del club": "edificio_bar",
+	"Hotel": "edificio_hotel", "Deportes": "edificio_tienda", "Bar": "edificio_bar",
+	"Floristería": "edificio_floristeria", "Ferretería": "edificio_ferreteria", "Peña del club": "edificio_bar",
 	"Heladería": "edificio_panaderia",
 }
 

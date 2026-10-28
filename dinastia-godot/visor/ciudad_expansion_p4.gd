@@ -147,7 +147,7 @@ func _parque(r: Rect2, lago: bool) -> void:
 	CiudadCancha.montar(self, cancha)
 	CiudadParque.rellenar(self, r, c)   ## bancos, mesas de pícnic y papeleras a lo largo de los paseos
 	PastoCiudad.parque(b, r, c, func(p: Vector3) -> bool:   ## matas de pasto: ni en la cancha ni en el lago
-		return CiudadCancha.ocupa(cancha, p) or (lago and pow((p.x - lago_c.x) / ((lago_r + 4.0) * 1.3), 2.0) + pow((p.z - lago_c.z) / (lago_r + 4.0), 2.0) < 1.0))
+		return CiudadCancha.ocupa(cancha, p) or (lago and pow((p.x - lago_c.x) / ((lago_r + 4.0) * 1.3), 2.0) + pow((p.z - lago_c.z) / (lago_r + 4.0), 2.0) < 1.0), pts)
 	b._rotulo(c + Vector3(0, 14, 0), "🌳 " + nombre, Color(0.7, 1.0, 0.7), 20)
 	b.puntos_clic.append({"k": "ciudad_parque_lago" if lago else "ciudad_parque", "n": "Parque · penales con los chicos", "pos": c, "estado": "ciudad"})
 

@@ -170,6 +170,7 @@ func _casas(r: Rect2) -> void:
 	var cols := 4
 	var filas := 2
 	var paso_x := r.size.x / float(cols)
+	PastoCiudad.solar_casas(b, r, cols)
 	for fi in filas:
 		var lado := -1.0 if fi == 0 else 1.0
 		for ci in cols:
