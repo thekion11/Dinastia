@@ -60,6 +60,17 @@ Medido con el mundo congelado (`Engine.time_scale = 0`, así cada cuadro es el m
 
 −3,3 % de triángulos con la cámara de TV (que ve casi toda la grada de un lado); +8 llamadas por los trozos. Con cámaras más cercanas a una tribuna (visita, repeticiones a pie de campo) el descarte es mayor. **M-344 (sobredibujo)**: `presupuesto_partido` imprime ahora el brillo medio del modo `overdraw` con y sin grada, pero en Compatibility/llvmpipe se satura (0,85 con todo, 0,83 sin grada): no discrimina. Un oclusor propio de la grada no se aplica sin una medida que lo justifique; queda pendiente medir en GPU real.
 
+## Tanda de rendimiento 2: memoria de vídeo del partido (M-347, 28-10)
+Medida con `RenderingServer.get_rendering_info(RENDERING_INFO_VIDEO_MEM_USED)` en `presupuesto_partido` (`TEXTURAS=1` lista además las texturas más pesadas del árbol). Estaba en **603 MB** (texturas 532 MB, búferes 69 MB; la cifra vieja de 539 MB ya había crecido), y el 60 % eran **~60 `NoiseTexture2D` de 1024² (5,3 MB cada una con mipmaps)** de `Texturas._tex_ruido`: una por cada rugosidad, grano y mapa de normales, pedidas de nuevo por cada estadio y edificio.
+
+| Paso | Vídeo total | Texturas |
+|---|---|---|
+| Antes | 603 MB | 532 MB |
+| Granos y rugosidades a 512² (la frecuencia del ruido se duplica para que el grano mida lo mismo) | 467 MB | 398 MB |
+| + mismos parámetros = misma textura compartida (caché `_cache_ruido`) | **311 MB** | 242 MB |
+
+−48 %. Los mapas de normales conservan 1024² en calidad ALTO. Techo nuevo en la prueba: `TECHO_VRAM_MB = 380`. Capturas `c54_texturas_{antes,despues}_{tv,repe}.jpg`: el césped y las gradas se ven igual (el grano cambia de píxel pero no de escala). Lo que queda: 128 texturas en el árbol (119 MB leídas de la CPU) y 69 MB de búferes (mallas); medir en GPU real con texturas comprimidas queda para el equipo del dueño.
+
 ## Rebajas aún propuestas (NO aplicadas)
 | # | Rebaja | Ahorro estimado |
 |---|---|---|

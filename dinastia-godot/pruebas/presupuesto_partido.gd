@@ -12,6 +12,8 @@ const PRESUPUESTO := {
 	"total": [1948324, 1408], "jugadores": [82076, 76], "publico": [884967, 53], "butacas": [724487, 14], "estadio": [1778760, 372],
 	"entorno": [159157, 943], "extras": [8000, 83], "cesped": [50, 10], "balon": [50, 4],
 }
+## Techo de memoria de vídeo del partido (M-347), en MB: medido 309 en 28-10 (eran 603 antes de compartir y reducir los ruidos).
+const TECHO_VRAM_MB := 380.0
 const CATEGORIAS := ["jugadores", "publico", "butacas", "estadio", "entorno", "extras", "cesped", "balon"]
 var _n := 0
 var _ui: CarreraJugadorUI
@@ -125,6 +127,18 @@ func _medir_todo() -> void:
 	print("")
 	await _sobredibujo()
 	print("FPS de referencia en esta máquina (%s): %.2f" % [RenderingServer.get_video_adapter_name(), fps])
+	var mb := 1048576.0
+	var vram := RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_VIDEO_MEM_USED) / mb
+	if vram > TECHO_VRAM_MB and OS.get_environment("MEDIR") == "":
+		print("FALLO: la memoria de vídeo del partido (%.0f MB) se pasa del techo (%.0f MB)" % [vram, TECHO_VRAM_MB])
+		_fallos += 1
+	print("MEMORIA DE VÍDEO del partido (M-347): total %.0f MB  texturas %.0f MB  búferes %.0f MB" % [
+		vram,
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TEXTURE_MEM_USED) / mb,
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_BUFFER_MEM_USED) / mb])
+	if OS.get_environment("TEXTURAS") != "":
+		_texturas_pesadas(_pj)
+		_texturas_pesadas(_ui)
 	print("PRESUPUESTO DEL PARTIDO (cuadro visible desde la cámara del partido)")
 	print("  %-10s %12s %10s   %12s %10s" % ["categoría", "triángulos", "llamadas", "techo tri.", "techo ll."])
 	var medir := OS.get_environment("MEDIR") != ""
@@ -168,3 +182,50 @@ func _sobredibujo() -> void:
 	_apagar(_grupos["publico"], true)
 	_pj._vp.debug_draw = Viewport.DEBUG_DRAW_DISABLED
 	print("SOBREDIBUJO (brillo medio del modo overdraw): todo %.4f  sin butacas ni público %.4f  -> la grada aporta %.1f %%" % [todo, sin_grada, 100.0 * (todo - sin_grada) / maxf(0.0001, todo)])
+
+## Las texturas más pesadas que cuelgan del árbol (materiales 3D, mallas y controles), para ver de dónde sale la memoria de vídeo (M-347).
+func _texturas_pesadas(raiz: Node) -> void:
+	var vistas := {}
+	var pila: Array = [raiz]
+	while not pila.is_empty():
+		var n: Node = pila.pop_back()
+		pila.append_array(n.get_children())
+		var mats: Array = []
+		if n is GeometryInstance3D:
+			mats.append((n as GeometryInstance3D).material_override)
+			if n is MeshInstance3D and (n as MeshInstance3D).mesh != null:
+				for s in (n as MeshInstance3D).mesh.get_surface_count():
+					mats.append((n as MeshInstance3D).mesh.surface_get_material(s))
+			if n is MultiMeshInstance3D and (n as MultiMeshInstance3D).multimesh != null and (n as MultiMeshInstance3D).multimesh.mesh != null:
+				var me := (n as MultiMeshInstance3D).multimesh.mesh
+				for s in me.get_surface_count():
+					mats.append(me.surface_get_material(s))
+		for m in mats:
+			if m is StandardMaterial3D:
+				for pr in ["albedo_texture", "normal_texture", "roughness_texture", "emission_texture", "metallic_texture", "ao_texture"]:
+					var t: Variant = (m as StandardMaterial3D).get(pr)
+					if t is Texture2D:
+						vistas[t] = true
+			elif m is ShaderMaterial:
+				for pr in (m as ShaderMaterial).shader.get_shader_uniform_list() if (m as ShaderMaterial).shader != null else []:
+					var t: Variant = (m as ShaderMaterial).get_shader_parameter(pr["name"])
+					if t is Texture2D:
+						vistas[t] = true
+		if n is TextureRect and (n as TextureRect).texture != null:
+			vistas[(n as TextureRect).texture] = true
+	var filas: Array = []
+	for t: Texture2D in vistas:
+		var img := t.get_image() if t is Texture2D else null
+		var bytes := 0
+		var desc := "%dx%d" % [t.get_width(), t.get_height()]
+		if img != null:
+			bytes = img.get_data().size()
+			desc += " fmt=%d mip=%s" % [img.get_format(), str(img.has_mipmaps())]
+		filas.append([bytes, "%s %s" % [t.resource_path if t.resource_path != "" else t.get_class(), desc]])
+	filas.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0])
+	var total := 0
+	for f: Array in filas:
+		total += int(f[0])
+	print("TEXTURAS en el árbol: %d, %.0f MB en total (leídas de la CPU); las %d más pesadas:" % [filas.size(), total / 1048576.0, mini(14, filas.size())])
+	for i in mini(14, filas.size()):
+		print("  %6.1f MB  %s" % [int(filas[i][0]) / 1048576.0, filas[i][1]])
