@@ -237,7 +237,7 @@ func _rotulo_comercio(frente: Vector3, giro: float, ancho: float) -> void:
 	var placa := b._caja_en(centro, Vector3(minf(ancho * 0.8, 7.0), 0.9, 0.18), b._mat_simple(col, 0.5, 0.25))
 	placa.rotation.y = giro
 	var l := Label3D.new()
-	l.text = String(com[0])
+	l.text = Idiomas.t(String(com[0]))   ## M-333 (en `rotulos` queda el castellano: con él se elige la sala)
 	l.font_size = 48
 	l.pixel_size = 0.012
 	l.outline_size = 8

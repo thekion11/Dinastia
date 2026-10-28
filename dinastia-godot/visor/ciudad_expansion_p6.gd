@@ -404,7 +404,7 @@ func _estatua_idolo(p: Vector3) -> void:
 		_bronce(n, bronce)
 	if nombre != "":
 		var l := Label3D.new()
-		l.text = "A %s\nídolo de %s" % [nombre, String(b.datos.get("club", {}).get("nombre", ""))]
+		l.text = Idiomas.t("A %s\nídolo de %s") % [nombre, String(b.datos.get("club", {}).get("nombre", ""))]
 		l.font_size = 48
 		l.pixel_size = 0.02
 		l.modulate = Color(0.95, 0.85, 0.55)

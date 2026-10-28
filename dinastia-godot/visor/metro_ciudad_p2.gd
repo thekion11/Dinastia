@@ -142,7 +142,7 @@ func _decorar_estacion(p: Vector3, dir: Vector3, col: Color, nombre: String, ele
 			## Los paneles de los lados repiten el NOMBRE (como en un metro de
 			## verdad, se lee desde la ventana del tren); el icono-emoji no se
 			## dibujaba (la fuente no lo tiene) y el panel quedaba vacío.
-			ico.text = ("Ⓜ %s" % nombre) if k != 1 else "%s\n%s" % [nombre, String(tema[2])]
+			ico.text = ("Ⓜ %s" % nombre) if k != 1 else "%s\n%s" % [nombre, Idiomas.t(String(tema[2]))]
 			## Más contenido: con 0,011 el lema llenaba la ventana del tren.
 			ico.font_size = 64 if k != 1 else 54
 			ico.pixel_size = 0.0085 if k != 1 else 0.0075
@@ -160,7 +160,7 @@ func _decorar_estacion(p: Vector3, dir: Vector3, col: Color, nombre: String, ele
 		## Marco y trasera oscuros: por detrás era una placa blanca lisa.
 		_caja(self, pl - hacia * 0.06, (Vector3(0.06, 1.95, 2.75) if vertical else Vector3(2.75, 1.95, 0.06)), _mat(Color(0.18, 0.2, 0.24), 0.5))
 		var plano := Label3D.new()
-		plano.text = "PLANO DE LA RED\n🔴 L1: %s\n🔵 L2: %s\n\nUsted está en: %s" % [" · ".join(NOMBRES["Línea 1"]), " · ".join(NOMBRES["Línea 2"]), nombre]
+		plano.text = Idiomas.t("PLANO DE LA RED") + "\n🔴 L1: %s\n🔵 L2: %s\n\n" % [" · ".join(NOMBRES["Línea 1"]), " · ".join(NOMBRES["Línea 2"])] + Idiomas.t("Usted está en: %s") % [nombre]
 		plano.font_size = 22
 		plano.pixel_size = 0.0045
 		plano.modulate = Color(0.1, 0.1, 0.15)

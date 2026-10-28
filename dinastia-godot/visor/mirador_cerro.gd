@@ -35,7 +35,7 @@ func configurar(t: Teleferico, b: CityBuilder, _giro: float) -> void:
 	var tubo := b._cil_en(centro + Vector3(18.0, 1.55, 14.0), 0.18, 1.1, acero)
 	tubo.rotation.z = PI * 0.3
 	var l := Label3D.new()
-	l.text = "MIRADOR DEL CERRO\n420 m sobre la ciudad"
+	l.text = Idiomas.t("MIRADOR DEL CERRO") + "\n" + Idiomas.t("420 m sobre la ciudad")
 	l.font_size = 48
 	l.pixel_size = 0.012
 	l.outline_size = 8

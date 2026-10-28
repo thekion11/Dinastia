@@ -194,7 +194,7 @@ func _cuadrillas_montar(candidatas: Array) -> void:
 
 func _rotulo(p: Vector3, texto: String) -> void:
 	var l := Label3D.new()
-	l.text = texto
+	l.text = Idiomas.t(texto)   ## M-333
 	l.font_size = 64
 	l.pixel_size = 0.05
 	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
