@@ -143,11 +143,11 @@ const EDIFICIOS := [
 ## abrir un taller).
 const SALA_DE_ROTULO := {
 	"Farmacia": "edificio_farmacia", "Cafetería": "edificio_bar", "Panadería": "edificio_panaderia",
-	"Banco": "edificio_banco", "Correos": "edificio_oficina", "Peluquería": "edificio_peluqueria",
-	"Librería": "edificio_libreria", "Supermercado": "edificio_mercado", "Pizzería": "edificio_bar",
-	"Hotel": "edificio_hotel", "Deportes": "edificio_tienda", "Bar": "edificio_bar",
+	"Banco": "edificio_banco", "Correos": "edificio_correos", "Peluquería": "edificio_peluqueria",
+	"Librería": "edificio_libreria", "Supermercado": "edificio_mercado", "Pizzería": "edificio_pizzeria",
+	"Hotel": "edificio_hotel", "Deportes": "edificio_deportes", "Bar": "edificio_bar",
 	"Floristería": "edificio_floristeria", "Ferretería": "edificio_ferreteria", "Peña del club": "edificio_bar",
-	"Heladería": "edificio_panaderia",
+	"Heladería": "edificio_heladeria",
 }
 
 var _es_dt := false

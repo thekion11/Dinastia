@@ -36,15 +36,14 @@ func _process(_d: float) -> void:
 	var sec: int = _lista[_k][0]
 	var n: Node3D = _lista[_k][1]
 	var cam: Camera3D = _vista.get("_camara")
-	var lado := 1.0 if _fase < 4 else -1.0
-	if _fase == 0 or _fase == 4:
-		cam.global_position = n.global_position + n.global_transform.basis.z.normalized() * 7.0 * lado + Vector3(0, 1.7, 0)
+	var lado := 1.0   ## siempre de frente (+Z local) a 5 m y 1,70 m
+	if _fase == 0:
+		cam.global_position = n.global_position + n.global_transform.basis.z.normalized() * 5.0 * lado + Vector3(0, 1.7, 0)
 		cam.look_at(n.global_position + Vector3(0, 1.8, 0), Vector3.UP)
 		cam.fov = 55.0
 		print("sector ", sec, " paradero ", n.get_meta("codigo_red", "?"), " en ", n.global_position, " giro ", rad_to_deg(n.global_rotation.y))
 	_fase += 1
-	if _fase == 4 or _fase == 8:
-		get_viewport().get_texture().get_image().save_png("/tmp/parad_%d_%s.png" % [sec, "mas" if lado > 0 else "menos"])
-	if _fase == 8:
+	if _fase == 5:
+		get_viewport().get_texture().get_image().save_png("/tmp/parad_%d_%s.png" % [sec, "mas"])
 		_fase = 0
 		_k += 1

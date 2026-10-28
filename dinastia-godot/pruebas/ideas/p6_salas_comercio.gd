@@ -3,7 +3,7 @@ extends BaseIdea
 
 func _probar() -> void:
 	_titulo("P6: SALAS PROPIAS DE LOS COMERCIOS")
-	var pares := {"Farmacia": "edificio_farmacia", "Banco": "edificio_banco", "Hotel": "edificio_hotel", "Ferretería": "edificio_ferreteria", "Floristería": "edificio_floristeria"}
+	var pares := {"Farmacia": "edificio_farmacia", "Banco": "edificio_banco", "Hotel": "edificio_hotel", "Ferretería": "edificio_ferreteria", "Floristería": "edificio_floristeria", "Correos": "edificio_correos", "Deportes": "edificio_deportes", "Pizzería": "edificio_pizzeria", "Heladería": "edificio_heladeria"}
 	for rotulo: String in pares:
 		_comprobar(String(ExploradorCiudad.SALA_DE_ROTULO.get(rotulo, "")) == pares[rotulo], "«%s» abre %s" % [rotulo, pares[rotulo]])
 		_comprobar(InteriorInstalacion.tiene(String(pares[rotulo])), "%s tiene sala" % pares[rotulo])
