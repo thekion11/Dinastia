@@ -364,7 +364,7 @@ func faros(n: float) -> void:
 			i += 1
 			if bool(v.get("peaton", false)) and is_instance_valid(v["nodo"]):
 				var sale := float((i * 7919) % 100) / 100.0 < cuota
-				(v["nodo"] as Node3D).visible = sale
+				(v["nodo"] as Node3D).visible = sale and not bool(v.get("oculto_rut", false))
 				v["oculto"] = not sale
 
 ## Pone una animación al peatón `v` (si su cuerpo la tiene).
