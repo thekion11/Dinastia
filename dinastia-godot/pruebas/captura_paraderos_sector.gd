@@ -21,6 +21,9 @@ func _process(_d: float) -> void:
 	_n += 1
 	if _n == 10:
 		_vista.set_process(false)
+		if OS.get_environment("HORA") != "":
+			_vista.set("_hora", float(OS.get_environment("HORA")))
+			_vista.call("_aplicar_hora")
 		var visto := {}
 		for n: Node3D in get_tree().get_nodes_in_group("paradero_red"):
 			var sec := RecorridosRed.sector_de(n.global_position)
@@ -44,6 +47,6 @@ func _process(_d: float) -> void:
 		print("sector ", sec, " paradero ", n.get_meta("codigo_red", "?"), " en ", n.global_position, " giro ", rad_to_deg(n.global_rotation.y))
 	_fase += 1
 	if _fase == 5:
-		get_viewport().get_texture().get_image().save_png("/tmp/parad_%d_%s.png" % [sec, "mas"])
+		get_viewport().get_texture().get_image().save_png("/tmp/parad%s_%d_%s.png" % [OS.get_environment("HORA"), sec, "mas"])
 		_fase = 0
 		_k += 1

@@ -318,6 +318,7 @@ func _puerto(r: Rect2) -> void:
 func _casa_grande(r: Rect2) -> void:
 	var c := Vector3(r.get_center().x, 0, r.get_center().y)
 	_lote("cesped", Vector3(c.x, 0.05, c.z), Vector3(r.size.x, 0.1, r.size.y))
+	PastoCiudad.rect(b, r, 0.1, 0.002, func(p: Vector3) -> bool: return absf(p.x - c.x) < (r.size.x - 70.0) * 0.5 + 4.0 and absf(p.z - c.z) < (r.size.y - 70.0) * 0.5 + 4.0 or absf(p.x - c.x) < 6.0)   ## matas en la finca, fuera de la casa y del camino
 	b._finca_enredadera(c, r.size)
 	b._casa_gigante(c, Vector2(r.size.x - 70.0, r.size.y - 70.0))
 	## Camino del portón (norte) a la casa, y una fuente en medio.

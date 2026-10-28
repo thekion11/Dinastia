@@ -39,5 +39,6 @@ func _process(_d: float) -> void:
 			cam.look_at(vistas[i][1], Vector3.UP)
 		if (_n - 12) % 6 == 4 and i < vistas.size():
 			get_viewport().get_texture().get_image().save_png("/tmp/pasto_%s_%d.png" % [tag, i])
+			print("COSTE %s vista %d: %d triángulos, %d llamadas, %d matas sembradas" % [tag, i, RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME), RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME), PastoCiudad.total_sembradas])
 		if i >= vistas.size():
 			get_tree().quit()

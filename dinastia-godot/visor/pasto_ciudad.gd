@@ -186,3 +186,20 @@ static func solar_casas(raiz: Node3D, r: Rect2, cols: int) -> int:
 			var g := absi(hash([semilla, i, j, 3]))
 			pts.append(Vector3(x + (float(g % 100) / 50.0 - 1.0) * (1.0 if j > 0 else 0.0), 0.1, z + (float((g / 100) % 100) / 50.0 - 1.0) * (1.0 if j > 0 else 0.0)))
 	return sembrar(raiz, pts, semilla)
+
+## Manchones de matas repartidos por un rectángulo de césped (patios de manzana, la feria, fincas, villas...). `dens`: manchones por m².
+## `evita`: Callable(Vector3) -> bool, true = no sembrar ahí (paseos, edificios).
+static func rect(raiz: Node3D, r: Rect2, y: float, dens: float, evita: Callable) -> int:
+	if apagado():
+		return 0
+	var pts: Array = []
+	var semilla := int(r.position.x * 3.0 + r.position.y * 7.0)
+	for i in int(r.size.x * r.size.y * dens):
+		var h := absi(hash([semilla, i, 77]))
+		var p := Vector3(r.position.x + 1.0 + float(h % 1000) / 1000.0 * (r.size.x - 2.0), y, r.position.y + 1.0 + float((h / 1000) % 1000) / 1000.0 * (r.size.y - 2.0))
+		if evita.call(p):
+			continue
+		for j in 3:
+			var g := absi(hash([semilla, i, j, 3]))
+			pts.append(p + (Vector3(float(g % 100) / 50.0 - 1.0, 0.0, float((g / 100) % 100) / 50.0 - 1.0) if j > 0 else Vector3.ZERO))
+	return sembrar(raiz, pts, semilla)
