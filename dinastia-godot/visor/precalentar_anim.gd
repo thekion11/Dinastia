@@ -6,6 +6,7 @@ extends RefCounted
 
 static var _lanzado := false
 static var _tarea := -1
+static var _fin := false
 
 ## Lanza (una sola vez) el armado de las animaciones de los cuerpos dados, uno tras otro en el mismo hilo, con y sin acciones experimentales. No bloquea:
 ## devuelve el id de la tarea (para esperarla en las pruebas) o -1.
@@ -32,4 +33,7 @@ static func lanzar(cuerpos: Array = ["male", "female"]) -> int:
 ## Si el hilo ya acabó (o no se lanzó). Las pruebas lo sondean pintando fotogramas: el hilo principal NO debe bloquearse esperándolo, porque el hilo
 ## carga recursos (`load` de las animaciones de fútbol) y eso puede necesitar al principal (se colgaba con `wait_for_task_completion`).
 static func terminado() -> bool:
-	return _tarea < 0 or WorkerThreadPool.is_task_completed(_tarea)
+	if _fin or _tarea < 0:
+		return true
+	_fin = WorkerThreadPool.is_task_completed(_tarea)   ## (tras `wait_for_task_completion` el id ya no vale: por eso se recuerda)
+	return _fin

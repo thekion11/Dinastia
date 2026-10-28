@@ -40,6 +40,8 @@ const CACHES := [
 	["res://ui/jersey.gd", "_cache_real", {}],
 	["res://ui/marca.gd", "_cache", {}],
 	["res://ui/portada.gd", "_cache", {}],
+	["res://visor/precalentar_caras.gd", "_activa", null],
+	["res://visor/precalentar_caras.gd", "_hechos", {}],
 	["res://ui/fuentes.gd", "_repuesto", []],
 	["res://ui/principal.gd", "_brillo_panel", null],
 	["res://ui/principal.gd", "_muestras", {}],
