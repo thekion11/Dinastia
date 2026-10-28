@@ -323,3 +323,31 @@ func _ver_estadio_con_carga() -> void:
 	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).
 	if is_instance_valid(carga):
 		carga.cerrar()
+
+## LA VUELTA OLÍMPICA (idea 327): el estadio propio, lleno y sin partido, con la celebración del título dentro (`CelebracionTrofeo`).
+## Termina sola o con cualquier tecla; después se devuelve la pantalla tal cual estaba. Se apaga en Ajustes con `vuelta_olimpica`.
+func _ver_vuelta_olimpica(titulo: String) -> void:
+	var c := p.mundo.mi_club() if p.mundo != null else null
+	if c == null or not bool(AjustesCiudad.valor("vuelta_olimpica", true)) or DisplayServer.get_name() == "headless":
+		return
+	for h in p.get_children():
+		if h is VistaEstadio or h is VistaCiudad:
+			return   ## ya hay un 3D abierto (un partido, la ciudad): no se le pisa
+	var ocultados: Array = []
+	for h in p.get_children():
+		if h is CanvasItem and (h as CanvasItem).visible:
+			(h as CanvasItem).visible = false
+			ocultados.append(h)
+	var vista := VistaEstadio.new()
+	vista.datos_pantalla = p._datos_pantalla_estadio(c)
+	p.add_child(vista)
+	vista.abrir(c, 1.0, null, null, p.mundo.perfil_estadio_de(c), Comercial.color_balon(p.mundo.comercial.balon, c))
+	var cel := CelebracionTrofeo.iniciar(vista._raiz3d, c, titulo, vista)
+	var volver := func() -> void:
+		if is_instance_valid(vista):
+			vista.queue_free()
+		for h in ocultados:
+			if is_instance_valid(h):
+				(h as CanvasItem).visible = true
+	vista.cerrado.connect(volver)
+	cel.terminado.connect(volver)
