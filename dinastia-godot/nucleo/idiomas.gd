@@ -241,7 +241,14 @@ func t(frase: String) -> String:
 	var r := _ordinales(_t(frase, 0))
 	cache[frase] = r
 	_cache[idioma] = cache
+	## M-463 (28-10-2026): lo que se queda igual se anota, en vez de callar. Muchas son nombres propios o cifras
+	## (que no se traducen); el recorrido de pantallas en otro idioma filtra las que parecen castellano.
+	if r == frase and sin_traduccion.size() < 4000 and _tiene_letras(frase):
+		sin_traduccion[frase] = int(sin_traduccion.get(frase, 0)) + 1
 	return r
+
+## Las frases que `t` devolvió sin cambios desde que arrancó el juego (frase → veces). Ver M-463.
+var sin_traduccion: Dictionary = {}
 
 ## Traduce un árbol de interfaz entero (etiquetas, botones y ayudas). Para las
 ## pantallas que no cuelgan de la principal -la Carrera de Jugador, el

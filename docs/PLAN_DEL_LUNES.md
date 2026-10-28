@@ -614,7 +614,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-406 | P2 | PENDIENTE | `Retrato3D` no se ejercita en headless | sin prueba con xvfb |
 | M-408 | P2 | PARCIAL | Sin pruebas de minijuegos 3D | `prueba_minijuegos_nuevos` (2D); minijuegos 3D sin prueba |
 | M-410 | P2 | PARCIAL | Pruebas de rendimiento con umbrales | la simulación tiene umbral (`eq_diez_temporadas`, EQ_MODO=rendimiento: la semana del año 20 < 2× la del año 1 + 20 ms) y el banco mide ms por paso del motor; faltan umbrales de FPS en hardware real (dueño) |
-| M-416 | P2 | PENDIENTE | Sin CI en GitHub Actions | sin GitHub Actions |
 | M-417 | P2 | PENDIENTE | `herramientas/banco.sh` sólo bash | sin unificar |
 | M-418 | P2 | PENDIENTE | Sin informes de cobertura | sin cobertura |
 
@@ -751,7 +750,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-370 | P2 | PENDIENTE | Historia de clubes (`historia_clubes.py`) por club; verificación… | sin prueba de coherencia |
 | M-371 | P2 | PENDIENTE | Himnos y cánticos sin letra | himnos sin letra |
 | M-372 | P2 | PENDIENTE | Retratos de DT/presidente generados; sin variedad étnica medida | sin estadística por país |
-| M-373 | P2 | PENDIENTE | Bandera de cada país como pieza; verificar que son las correctas y… | sin prueba visual de banderas |
 | M-376 | P2 | PENDIENTE | Premios individuales sin votación explicada | sin votación explicada |
 | M-377 | P2 | PARCIAL | Sin clima por país/estación realista | `Clima.del_partido` por país/estación; sin tabla completa verificada |
 | M-378 | P2 | PENDIENTE | Sin datos de ciudades (población, altura) para estadios | sin datos de ciudades |
@@ -854,11 +852,9 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-455 | P2 | PENDIENTE | Pruebas que escriben en `user://ajustes.cfg` real (E-10) | sin ruta inyectable |
 | M-456 | P2 | PENDIENTE | `auditoria_tecnica` solo carga las escenas de `escenas/` y `ui/` (4) | sin cambio |
 | M-457 | P2 | PENDIENTE | Los nodos huérfanos se miden solo en la pantalla principal | sin cambio |
-| M-458 | P2 | PENDIENTE | Sin comprobación de que cada `Label` traducible esté dentro de un… | sin cambio |
 | M-459 | P2 | PENDIENTE | Cinco idiomas de los nueve nacieron con frases que luego se… | sin flujo único |
 | M-460 | P2 | PENDIENTE | Las traducciones nuevas (552) están hechas a mano sin revisión nativa | sin marcar |
 | M-461 | P2 | PENDIENTE | Las cadenas con `%s`/`%d` dependen del orden de argumentos; en… | sin placeholders con nombre |
-| M-463 | P2 | PENDIENTE | `Idiomas.t` devuelve la clave si falta (silencioso) | sin registro de clave faltante |
 | M-464 | P2 | PENDIENTE | No existe un informe de «frases por pantalla»: no se sabe qué… | sin informe por pantalla |
 | M-466 | P2 | PENDIENTE | `datos/idiomas_extra.json` se reescribe entero con cada ampliación… | un solo archivo |
 | M-468 | P2 | PENDIENTE | Plurales y géneros en las 69 frases nuevas (p. ej. «%d botones»)… | sin plurales |

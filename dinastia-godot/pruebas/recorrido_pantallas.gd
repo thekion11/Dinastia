@@ -87,6 +87,8 @@ func _process(_d: float) -> void:
 			h.queue_free()
 	if _cola.is_empty():
 		print("RECORRIDO: %d pantallas, %d botones" % [_pantallas, _botones])
+		if _idioma_antes != "":
+			_castellano()
 		## Ajustes guarda las preferencias al pintarse: sin esto, el idioma de la prueba quedaba como el del juego.
 		if _idioma_antes != "":
 			Idiomas.idioma = _idioma_antes
@@ -218,3 +220,22 @@ func _pulsar_botones() -> void:
 			_botones += 1
 			if tabs.current_tab != actual:
 				tabs.current_tab = actual
+
+## M-458 / M-463 (28-10-2026): las frases que `Idiomas.t` dejó igual y que PARECEN castellano (dos o más palabras
+## típicas), en otro idioma. Con RECORRIDO_FALTAN=<ruta> las guarda; con RECORRIDO_CASTELLANO_MAX=n es una prueba.
+const PALABRAS_ES := ["que", "se", "tu", "tus", "con", "para", "por", "del", "las", "los", "una", "está", "hay", "más",
+	"pero", "muy", "sin", "años", "semanas", "jugadores", "partido", "partidos", "equipo", "tienes", "puedes", "cuando"]
+
+func _castellano() -> void:
+	var re := RegEx.create_from_string("(?i)(?<![\\p{L}])(" + "|".join(PALABRAS_ES) + ")(?![\\p{L}])")
+	var malas: Array = []
+	for f: String in Idiomas.sin_traduccion:
+		if re.search_all(f).size() >= 2:
+			malas.append(f)
+	malas.sort()
+	print("CASTELLANO: %d frases sin traducir que parecen castellano" % malas.size())
+	if OS.get_environment("RECORRIDO_FALTAN") != "":
+		FileAccess.open(OS.get_environment("RECORRIDO_FALTAN"), FileAccess.WRITE).store_string("\n".join(malas))
+	if OS.get_environment("RECORRIDO_CASTELLANO_MAX") != "":
+		print("FIN CASTELLANO. %d fallos" % (1 if malas.size() > int(OS.get_environment("RECORRIDO_CASTELLANO_MAX")) else 0))
+
