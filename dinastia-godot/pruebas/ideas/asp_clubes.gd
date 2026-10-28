@@ -76,7 +76,10 @@ func _probar_aspecto() -> void:
 				var capa := EscudoEmblemas.capa_de(cc, cc.color_escudo1())
 				if capa == "" or not capa.contains("<"):
 					con_motivo -= 1000
-				distintos[Escudo.svg_de(cc)] = true
+				var sv := Escudo.svg_de(cc)
+				if distintos.has(sv):
+					print("  (escudo repetido: %s = %s)" % [n, distintos[sv]])
+				distintos[sv] = n
 		_comprobar(con_motivo >= 60, "al menos 60 escudos con figura o letras propias (%d)" % con_motivo)
 		_comprobar(distintos.size() == con_motivo, "cada escudo con motivo sale distinto (%d de %d)" % [distintos.size(), con_motivo])
 		## El uniforme propio del jugador manda sobre el del club real.
