@@ -142,10 +142,7 @@ func _camara() -> void:
 func _confeti() -> void:
 	var c1 := Color(_club.color1)
 	var c2 := Color(_club.color2)
-	var colores := Gradient.new()
-	colores.colors = PackedColorArray([c1, c2, c1.lightened(0.25), Color.WHITE, c2.lightened(0.3), Color(0.98, 0.82, 0.25)])
-	colores.offsets = PackedFloat32Array([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-	colores.interpolation_mode = Gradient.GRADIENT_INTERPOLATE_CONSTANT
+	var cols: Array[Color] = [c1, c2, Color.WHITE, Color(0.98, 0.82, 0.25), c1.lightened(0.3), c2.lightened(0.3)]
 	var papel := QuadMesh.new()
 	papel.size = Vector2(0.38, 0.2)
 	var mat := StandardMaterial3D.new()
@@ -172,7 +169,7 @@ func _confeti() -> void:
 		p.angular_velocity_min = -360.0
 		p.angular_velocity_max = 360.0
 		p.angle_max = 360.0
-		p.color_initial_ramp = colores
+		p.color = cols[i % cols.size()]
 		p.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
 		p.emission_sphere_radius = 1.2
 		p.position = _posicion_canon(i)
@@ -326,11 +323,13 @@ func _vuelta(t: float) -> void:
 	## La cámara va dentro del campo, delante y hacia el centro, mirando al capitán con la copa; nunca fuera de las vallas.
 	var tang_c := (_en_elipse(ang0 - (u + 0.01) * TAU) - cap_pos).normalized()
 	var hacia_centro := Vector3(-cap_pos.x, 0, -cap_pos.z).normalized()
-	var cam := cap_pos + tang_c * 7.0 + hacia_centro * 9.0
+	var real := (_capi["nodo"] as Node3D).position   ## donde está de verdad (mientras sale a la pista aún no ha llegado a su punto)
+	hacia_centro = Vector3(-real.x, 0, -real.z).normalized()
+	var cam := real + tang_c * 7.0 + hacia_centro * 9.0
 	cam.x = clampf(cam.x, -_rx + 2.0, _rx - 2.0)
 	cam.z = clampf(cam.z, -_rz + 2.0, _rz - 2.0)
 	_cam.global_position = cam + Vector3(0, 1.8, 0)
-	_cam.look_at(cap_pos - tang_c * 2.0 + Vector3(0, 2.0, 0), Vector3.UP)
+	_cam.look_at(real - tang_c * 2.0 + Vector3(0, 2.0, 0), Vector3.UP)
 	_cam.fov = 48.0
 
 ## Fase 3: el equipo vuelve al círculo, vuelve a levantar la copa y la cámara se abre despacio con la grada de fondo.
