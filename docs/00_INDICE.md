@@ -9,6 +9,7 @@ Regla: **un tema = un documento. Lo pendiente vive en UN solo sitio: [`PLAN_DEL_
 | `02_vision/ideas_del_dueno/` | Instrucciones y notas originales del dueño (las listas de 300 y 750 ideas pasaron al plan) |
 | `04_auditorias/MEGA_AUDITORIA_3.md` | Auditoría del 24-10 con cifras (datos repetibles: `herramientas/auditoria_repo.py`) |
 | `04_auditorias/sesion_6.md`, `investigacion_s4/` | Informe de la sesión 6 (recursos libres, «¿por qué?», logros largos, Novedades) e investigación de la s4 |
+| `04_auditorias/CIERRE_2026-10-28.md` | Cierre del 27-28-10: qué hizo cada sesión, estado de la rama y avisos para retomar el lunes |
 | `05_referencia/` | Licencias, política de privacidad (para las tiendas), autoloads, índice de capas (generado), lista LFS, textos sin traducir, respaldo en Drive |
 
 Fuera de `docs/`: `CLAUDE.md` (reglas y órdenes vigentes), `material/` (originales de packs), `herramientas/` (scripts), `dinastia-godot/` (el juego).
