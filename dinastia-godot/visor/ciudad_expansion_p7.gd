@@ -374,26 +374,10 @@ func _bocas_metro() -> void:
 			n += 1
 	cuenta["bocas_metro"] = n
 
-## Las marquesinas de las paradas de autobús.
+## Los paraderos «Red» (`ParaderoRed`, como los de Santiago): salen de los recorridos sobre el mapa (`RecorridosMapa`), cada uno en la acera de su
+## sentido y mirando a la calle, con su código, su calle y esquina y los recorridos que de verdad paran ahí (`BusesRed.montar_paraderos`).
 func _marquesinas_bus() -> void:
-	var n := 0
-	for l: Dictionary in lineas_bus:
-		for p: Vector3 in l["paradas"]:
-			var q := p
-			## A la acera más cercana: se aparta del eje de la avenida.
-			var dir := Vector3(signf(p.x - snappedf(p.x, CELDA)), 0, signf(p.z - snappedf(p.z, CELDA)))
-			if absf(p.x - snappedf(p.x, CELDA)) < absf(p.z - snappedf(p.z, CELDA)):
-				q = Vector3(snappedf(p.x, CELDA) + signf(dir.x if dir.x != 0.0 else 1.0) * (ANCHO_AV * 0.5 + ACERA * 0.6), 0, p.z)
-			else:
-				q = Vector3(p.x, 0, snappedf(p.z, CELDA) + signf(dir.z if dir.z != 0.0 else 1.0) * (ANCHO_AV * 0.5 + ACERA * 0.6))
-			b.esperas_bus.append(q + Vector3(0, 0.24, 0.3))
-			## Paradero como los de Santiago (`ParaderoRed`): marquesina gris, pósters de recorridos, banca de láminas y poste con código «PA…».
-			var raiz_p := Node3D.new()
-			raiz_p.position = q
-			b.add_child(raiz_p)
-			ParaderoRed.montar(raiz_p, 3.8, int(q.x * 5.0 + q.z), "", RecorridosRed.sector_de(Vector3(q.x, 0.0, q.z)))   ## nombre y sector, de la tabla común
-			n += 1
-	cuenta["paradas_bus"] = n
+	cuenta["paradas_bus"] = BusesRed.montar_paraderos(self)
 
 func _guirnaldas() -> void:
 	var colores := [Color(1, 0.3, 0.3), Color(1, 0.85, 0.3), Color(0.3, 0.8, 1), Color(0.4, 1, 0.5), Color(1, 0.45, 0.9)]
