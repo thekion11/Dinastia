@@ -9,7 +9,7 @@ const MARGEN := 1.15   ## lo que se mide más un 15 % es el techo que se escribe
 ## quien suba un techo tiene que decir por qué en el doc. «estadio» INCLUYE a «publico» y «butacas» (son MultiMesh de las tribunas), así que las categorías no suman el total.
 ## «extras», «cesped» y «balon» miden 0 o casi con la cámara del saque (fuera de cuadro o demasiado pequeños): sus techos son holguras, no medidas.
 const PRESUPUESTO := {
-	"total": [2015119, 1399], "jugadores": [82076, 76], "publico": [884967, 53], "butacas": [791334, 8], "estadio": [1845607, 363],
+	"total": [1948324, 1408], "jugadores": [82076, 76], "publico": [884967, 53], "butacas": [724487, 14], "estadio": [1778760, 372],
 	"entorno": [159157, 943], "extras": [8000, 83], "cesped": [50, 10], "balon": [50, 4],
 }
 const CATEGORIAS := ["jugadores", "publico", "butacas", "estadio", "entorno", "extras", "cesped", "balon"]
@@ -123,6 +123,7 @@ func _medir_todo() -> void:
 		_apagar(_grupos[cat], true)
 		_medidas[cat] = {"tri": maxi(0, int(antes["tri"]) - int(m["tri"])), "llamadas": maxi(0, int(antes["llamadas"]) - int(m["llamadas"]))}
 	print("")
+	await _sobredibujo()
 	print("FPS de referencia en esta máquina (%s): %.2f" % [RenderingServer.get_video_adapter_name(), fps])
 	print("PRESUPUESTO DEL PARTIDO (cuadro visible desde la cámara del partido)")
 	print("  %-10s %12s %10s   %12s %10s" % ["categoría", "triángulos", "llamadas", "techo tri.", "techo ll."])
@@ -142,3 +143,28 @@ func _medir_todo() -> void:
 	Engine.time_scale = 1.0
 	print("===== FIN. %d fallos =====" % _fallos)
 	get_tree().quit(0 if _fallos == 0 else 1)
+
+## Sobredibujo medio del cuadro (M-344): modo de depuración «overdraw» (cada capa suma luz) y brillo medio de la imagen, con todo y sin la grada
+## (butacas y público). Es relativo: sirve para comparar antes y después, no tiene un valor absoluto.
+func _brillo() -> float:
+	var img := _pj._vp.get_texture().get_image()
+	var suma := 0.0
+	var n := 0
+	for y in range(0, img.get_height(), 4):
+		for x in range(0, img.get_width(), 4):
+			suma += img.get_pixel(x, y).r
+			n += 1
+	return suma / maxf(1.0, float(n))
+
+func _sobredibujo() -> void:
+	_pj._vp.debug_draw = Viewport.DEBUG_DRAW_OVERDRAW
+	await _medir()
+	var todo := _brillo()
+	_apagar(_grupos["butacas"], false)
+	_apagar(_grupos["publico"], false)
+	await _medir()
+	var sin_grada := _brillo()
+	_apagar(_grupos["butacas"], true)
+	_apagar(_grupos["publico"], true)
+	_pj._vp.debug_draw = Viewport.DEBUG_DRAW_DISABLED
+	print("SOBREDIBUJO (brillo medio del modo overdraw): todo %.4f  sin butacas ni público %.4f  -> la grada aporta %.1f %%" % [todo, sin_grada, 100.0 * (todo - sin_grada) / maxf(0.0001, todo)])
