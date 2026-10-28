@@ -3,7 +3,10 @@ extends "res://visor/city_builder_p8.gd"
 
 func tenir(n: Node, semilla: int) -> void:
 	var t: int = absi(semilla) % TINTES.size()
-	for mi in n.find_children("*", "MeshInstance3D", true, false):
+	var lista := n.find_children("*", "MeshInstance3D", true, false)
+	if n is MeshInstance3D:   ## (28-10) también la malla directa del kit (`_kit` ya no instancia la escena)
+		lista.append(n)
+	for mi in lista:
 		var m3 := mi as MeshInstance3D
 		if m3.mesh == null:
 			continue

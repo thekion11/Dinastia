@@ -108,6 +108,9 @@ var _rotulos: Node3D
 ## cada fotograma -son decenas de farolas y todas las ventanas del complejo.
 var _farolas_luz: Array[OmniLight3D] = []
 var _ventanas_mat: Array[StandardMaterial3D] = []
+## (28-10) Ventanas del complejo: 12 materiales compartidos con el azar cuantizado, en vez de uno por tira (M3).
+var _ventanas_comp: Array[StandardMaterial3D] = []
+var _marco_ventana: StandardMaterial3D = null
 
 ## CRONÓMETRO DE LA CONSTRUCCIÓN (etapa 3): con TIEMPOS=1 imprime lo que tarda
 ## cada parte. Sirve para saber qué conviene aligerar o repartir.

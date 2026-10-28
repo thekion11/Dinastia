@@ -130,6 +130,7 @@ func _volcar_lotes() -> void:
 		lista.assign(_lotes[clave])
 		_multimesh(BoxMesh.new(), _mat[clave], lista, Vector3.ONE)
 	_lotes.clear()
+	_volcar_lotes_det()
 
 # ============================================================================
 #  EL DIBUJO
@@ -148,11 +149,14 @@ func construir() -> void:
 	b.add_child(semaforos)
 	semaforos.montar(cruces_semaforo, self)
 	cuenta["edificios"] = 0
+	b._marca("exp_calles")   ## (28-10) marcas de tiempo por tramo, solo con TIEMPOS=1
 	for bl: Dictionary in bloques:
 		_dibujar_bloque(bl)
+	b._marca("exp_bloques")
 	_edificios_lejanos()
 	_casas_multimesh()
 	_modular_multimesh()
+	b._marca("exp_multimesh")
 	metro = MetroCiudad.new()
 	metro.name = "Metro"
 	b.add_child(metro)
@@ -166,20 +170,23 @@ func construir() -> void:
 	_orillas_nucleo()
 	_obras_en_calle()
 	_kenney_calles()
+	b._marca("exp_mobiliario")
 	cuenta["autopista"] = Autopista.montar(b)
 	_parque_eolico()
 	_deposito_agua()
 	redes = RedesCiudadVista.crear(self, 20261027)
 	tele_nodo = Teleferico.montar(b)
 	teleferico = tele_nodo.datos()
+	b._marca("exp_transporte")
 	_volcar_lotes()
+	b._marca("exp_lotes")
 
 ## Un bloque alto hecho con el mismo modelo apilado planta sobre planta (en
 ## vez de estirarlo): crece en pisos y las ventanas conservan su forma.
 func _kit_apilado(esc: PackedScene, pos: Vector3, s: float, pisos: int, giro: float) -> void:
-	var tmp: Node3D = esc.instantiate()
-	var alto := b._caja_de(tmp).size.y * s
-	tmp.free()
+	## (28-10) La altura sale de la malla cacheada (`_malla_kit`), sin instanciar y soltar un nodo por bloque.
+	var k0 := _malla_kit(esc.resource_path)
+	var alto: float = ((k0["caja"] as AABB).size.y if not k0.is_empty() else 0.0) * s
 	for k in pisos:
 		_kit(esc, pos + Vector3(0, float(k) * alto * 0.98, 0), Vector3.ONE * s, giro)
 
