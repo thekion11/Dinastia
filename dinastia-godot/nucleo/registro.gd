@@ -22,6 +22,12 @@ const TAMANO_MAX := 256 * 1024
 const ARCHIVOS := 3
 const TOPE_SESION := 4000
 const LINEAS_INFORME := 200
+## M-430 (28-10-2026): ADÓNDE SE MANDA EL INFORME. Lo pone el dueño (el mismo correo que la política de privacidad);
+## mientras esté vacío, el juego dice que el contacto llegará con la versión publicada.
+const CONTACTO := ""
+
+## Errores (ERROR, SCRIPT, SHADER) que dejó la sesión ANTERIOR: al arrancar, la pantalla principal ofrece copiar el informe.
+var errores_previos := 0
 
 var _registrador: _Registrador
 var _cerrojo := Mutex.new()
@@ -33,6 +39,7 @@ var _limpiezas: Array = []
 
 func _init() -> void:
 	_preparar_limpiezas()
+	errores_previos = _contar_errores_ultima_sesion()
 	_escribir_linea(_cabecera_sesion())
 	_registrador = _Registrador.new()
 	_registrador.dueno = self
@@ -93,7 +100,10 @@ func ultimas(n: int = LINEAS_INFORME) -> PackedStringArray:
 
 ## Lo que se copia al portapapeles: datos del sistema + últimas líneas.
 func informe(n: int = LINEAS_INFORME) -> String:
-	var partes := PackedStringArray(["INFORME DE FALLOS — DINASTÍA", datos_sistema(), "---"])
+	var partes := PackedStringArray(["INFORME DE FALLOS — DINASTÍA", datos_sistema()])
+	if CONTACTO != "":
+		partes.append("Mandar a: " + CONTACTO)
+	partes.append("---")
 	partes.append_array(ultimas(n))
 	return "\n".join(partes)
 
@@ -146,6 +156,18 @@ func _preparar_limpiezas() -> void:
 		## Un nombre de 1-2 letras («pi») tacharía media palabra de cualquier mensaje.
 		if u.length() > 2:
 			_limpiezas.append([u, "<usuario>"])
+
+## Cuenta los errores entre la última cabecera «===== sesión» del registro y el final (la sesión que acaba de cerrarse).
+func _contar_errores_ultima_sesion(ruta := RUTA) -> int:
+	if not FileAccess.file_exists(ruta):
+		return 0
+	var n := 0
+	for l: String in FileAccess.get_file_as_string(ruta).split("\n", false):
+		if l.begins_with("===== sesión"):
+			n = 0
+		elif l.contains(" ERROR: ") or l.contains(" SCRIPT: ") or l.contains(" SHADER: "):
+			n += 1
+	return n
 
 func _soltar_repetida() -> void:
 	if _repetida > 0:

@@ -6544,7 +6544,10 @@
   "Campeón: %s. Acabas %d.º.": "Champion: %s. You finish %d.",
   "¿Fichar por %s? Toca otra vez": "Sign for %s? Tap again",
   "¿Vender todo? Toca otra vez": "Sell everything? Tap again",
-  "¿Vender el 25 %? Toca otra vez": "Sell the 25%? Tap again"
+  "¿Vender el 25 %? Toca otra vez": "Sell the 25%? Tap again",
+  "mándalo a %s": "send it to %s",
+  "guárdalo para avisar": "keep it to report the problem",
+  "La última vez el juego anotó %d errores. Si algo falló, copia el informe en Ajustes → Partida → «Copiar informe de fallos» y %s.": "Last time the game logged %d errors. If something went wrong, copy the report in Settings → Game → «Copy error report» and %s."
  },
  "pt": {
   "Historia": "História",
@@ -13091,7 +13094,10 @@
   "Campeón: %s. Acabas %d.º.": "Campeão: %s. Você termina em %dº.",
   "¿Fichar por %s? Toca otra vez": "Assinar com o %s? Toque de novo",
   "¿Vender todo? Toca otra vez": "Vender tudo? Toque de novo",
-  "¿Vender el 25 %? Toca otra vez": "Vender os 25%? Toque de novo"
+  "¿Vender el 25 %? Toca otra vez": "Vender os 25%? Toque de novo",
+  "mándalo a %s": "envie para %s",
+  "guárdalo para avisar": "guarde-o para avisar",
+  "La última vez el juego anotó %d errores. Si algo falló, copia el informe en Ajustes → Partida → «Copiar informe de fallos» y %s.": "Da última vez o jogo registrou %d erros. Se algo falhou, copie o relatório em Ajustes → Partida → «Copiar relatório de erros» e %s."
  },
  "patrones": [
   [
@@ -25371,7 +25377,10 @@
   "Campeón: %s. Acabas %d.º.": "Champion : %s. Vous finissez %de.",
   "¿Fichar por %s? Toca otra vez": "Signer à %s ? Touchez encore",
   "¿Vender todo? Toca otra vez": "Tout vendre ? Touchez encore",
-  "¿Vender el 25 %? Toca otra vez": "Vendre les 25 % ? Touchez encore"
+  "¿Vender el 25 %? Toca otra vez": "Vendre les 25 % ? Touchez encore",
+  "mándalo a %s": "envoyez-le à %s",
+  "guárdalo para avisar": "gardez-le pour signaler le problème",
+  "La última vez el juego anotó %d errores. Si algo falló, copia el informe en Ajustes → Partida → «Copiar informe de fallos» y %s.": "La dernière fois, le jeu a noté %d erreurs. Si quelque chose a planté, copiez le rapport dans Réglages → Partie → « Copier le rapport d'erreurs » et %s."
  },
  "it": {
   "Historia": "Storia",
@@ -31918,7 +31927,10 @@
   "Campeón: %s. Acabas %d.º.": "Campione: %s. Finisci %dº.",
   "¿Fichar por %s? Toca otra vez": "Firmare per %s? Tocca di nuovo",
   "¿Vender todo? Toca otra vez": "Vendere tutto? Tocca di nuovo",
-  "¿Vender el 25 %? Toca otra vez": "Vendere il 25%? Tocca di nuovo"
+  "¿Vender el 25 %? Toca otra vez": "Vendere il 25%? Tocca di nuovo",
+  "mándalo a %s": "mandalo a %s",
+  "guárdalo para avisar": "conservalo per segnalarlo",
+  "La última vez el juego anotó %d errores. Si algo falló, copia el informe en Ajustes → Partida → «Copiar informe de fallos» y %s.": "L'ultima volta il gioco ha registrato %d errori. Se qualcosa non ha funzionato, copia il rapporto in Impostazioni → Partita → «Copia rapporto errori» e %s."
  },
  "de": {
   "Historia": "Geschichte",
@@ -38465,7 +38477,10 @@
   "Campeón: %s. Acabas %d.º.": "Meister: %s. Du wirst %d.",
   "¿Fichar por %s? Toca otra vez": "Zu %s wechseln? Nochmal tippen",
   "¿Vender todo? Toca otra vez": "Alles verkaufen? Nochmal tippen",
-  "¿Vender el 25 %? Toca otra vez": "Die 25 % verkaufen? Nochmal tippen"
+  "¿Vender el 25 %? Toca otra vez": "Die 25 % verkaufen? Nochmal tippen",
+  "mándalo a %s": "schick ihn an %s",
+  "guárdalo para avisar": "heb ihn auf, um den Fehler zu melden",
+  "La última vez el juego anotó %d errores. Si algo falló, copia el informe en Ajustes → Partida → «Copiar informe de fallos» y %s.": "Beim letzten Mal hat das Spiel %d Fehler notiert. Wenn etwas schiefging, kopiere den Bericht unter Einstellungen → Spiel → „Fehlerbericht kopieren“ und %s."
  },
  "ca": {
   "Historia": "Història",
@@ -45012,7 +45027,10 @@
   "Campeón: %s. Acabas %d.º.": "Campió: %s. Acabes %dè.",
   "¿Fichar por %s? Toca otra vez": "Fitxar pel %s? Toca un altre cop",
   "¿Vender todo? Toca otra vez": "Vendre-ho tot? Toca un altre cop",
-  "¿Vender el 25 %? Toca otra vez": "Vendre el 25 %? Toca un altre cop"
+  "¿Vender el 25 %? Toca otra vez": "Vendre el 25 %? Toca un altre cop",
+  "mándalo a %s": "envia'l a %s",
+  "guárdalo para avisar": "desa'l per avisar",
+  "La última vez el juego anotó %d errores. Si algo falló, copia el informe en Ajustes → Partida → «Copiar informe de fallos» y %s.": "L'última vegada el joc va anotar %d errors. Si alguna cosa va fallar, copia l'informe a Ajustos → Partida → «Copiar l'informe d'errors» i %s."
  },
  "pl": {
   "Club": "Klub",
@@ -51838,7 +51856,10 @@
   "Campeón: %s. Acabas %d.º.": "Mistrz: %s. Kończysz na %d. miejscu.",
   "¿Fichar por %s? Toca otra vez": "Podpisać z %s? Dotknij ponownie",
   "¿Vender todo? Toca otra vez": "Sprzedać wszystko? Dotknij ponownie",
-  "¿Vender el 25 %? Toca otra vez": "Sprzedać 25%? Dotknij ponownie"
+  "¿Vender el 25 %? Toca otra vez": "Sprzedać 25%? Dotknij ponownie",
+  "mándalo a %s": "wyślij go na %s",
+  "guárdalo para avisar": "zachowaj go, aby zgłosić problem",
+  "La última vez el juego anotó %d errores. Si algo falló, copia el informe en Ajustes → Partida → «Copiar informe de fallos» y %s.": "Ostatnio gra zapisała %d błędów. Jeśli coś poszło nie tak, skopiuj raport w Ustawienia → Gra → „Kopiuj raport błędów” i %s."
  },
  "tr": {
   "Club": "Kulüp",
@@ -58664,6 +58685,9 @@
   "Campeón: %s. Acabas %d.º.": "Şampiyon: %s. %d. sırada bitiriyorsun.",
   "¿Fichar por %s? Toca otra vez": "%s ile imzala? Tekrar dokun",
   "¿Vender todo? Toca otra vez": "Hepsini sat? Tekrar dokun",
-  "¿Vender el 25 %? Toca otra vez": "%25'i sat? Tekrar dokun"
+  "¿Vender el 25 %? Toca otra vez": "%25'i sat? Tekrar dokun",
+  "mándalo a %s": "%s adresine gönder",
+  "guárdalo para avisar": "sorunu bildirmek için sakla",
+  "La última vez el juego anotó %d errores. Si algo falló, copia el informe en Ajustes → Partida → «Copiar informe de fallos» y %s.": "Oyun geçen sefer %d hata kaydetti. Bir şey ters gittiyse raporu Ayarlar → Oyun → «Hata raporunu kopyala» bölümünden kopyala ve %s."
  }
 }
