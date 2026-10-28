@@ -12,6 +12,12 @@ const SIN_PIN := 100             ## € hasta los que la tarjeta paga sin PIN (s
 const MAX_MOV := 30
 const MAX_FALLOS := 3
 
+## LA TARJETA DE TRANSPORTE «RED» (M-182, 28-10-2026): saldo aparte que se recarga en las máquinas de billetes del metro y paga el metro, el bus y el
+## teleférico a las tarifas de `TARIFAS` (€). Sin saldo no se sube; se recarga con la cartera (efectivo o tarjeta de débito, con sus límites).
+const TARIFAS := {"metro": 1, "bus": 1, "teleferico": 3}
+const RECARGA := 5
+var saldo_transporte: int = 0
+
 var efectivo: int = 0
 var cargo_pend: int = 0          ## € ya gastados del punto interno en curso (0..11)
 var pin: String = "0000"
@@ -119,6 +125,21 @@ func cobrar(roles: Roles, importe: int, concepto: String, dia: int) -> Dictionar
 	_cargo_tarjeta(roles, importe, concepto, dia)
 	return {"error": "", "via": "tarjeta"}
 
+## Recarga la tarjeta de transporte con `importe` € que salen de la cartera. {error, via} como `cobrar`.
+func recargar_transporte(roles: Roles, importe: int, dia: int) -> Dictionary:
+	var r := cobrar(roles, importe, "Recarga de la tarjeta Red", dia)
+	if String(r["error"]) == "":
+		saldo_transporte += importe
+	return r
+
+## Paga un pasaje (`tipo`: metro, bus o teleferico) con el saldo de la tarjeta. "" si salió bien o "saldo".
+func pagar_pasaje(tipo: String) -> String:
+	var t := int(TARIFAS.get(tipo, 1))
+	if saldo_transporte < t:
+		return "saldo"
+	saldo_transporte -= t
+	return ""
+
 ## Cajero: pasa dinero de la cuenta al bolsillo (con comisión si el cajero es de otro banco).
 func retirar(roles: Roles, importe: int, pin_dado: String, dia: int, comision := 0) -> String:
 	if importe <= 0:
@@ -198,7 +219,7 @@ func desbloquear() -> void:
 
 func a_dict() -> Dictionary:
 	return {"efectivo": efectivo, "cargo": cargo_pend, "pin": pin, "pin_inicial": pin_inicial, "bloqueada": bloqueada, "fallos": fallos_pin,
-		"dia": dia_gasto, "gastado": gastado_dia, "retirado": retirado_dia, "mov": movimientos.duplicate(true)}
+		"dia": dia_gasto, "gastado": gastado_dia, "retirado": retirado_dia, "mov": movimientos.duplicate(true), "transporte": saldo_transporte}
 
 ## Partida vieja (diccionario vacío): efectivo 0 y PIN de fábrica.
 func desde_dict(d: Dictionary) -> void:
@@ -212,6 +233,7 @@ func desde_dict(d: Dictionary) -> void:
 	gastado_dia = int(d.get("gastado", 0))
 	retirado_dia = int(d.get("retirado", 0))
 	movimientos = (d.get("mov", []) as Array).duplicate(true)
+	saldo_transporte = int(d.get("transporte", 0))
 
 ## Clave de día para los límites diarios.
 static func clave_dia(anio: int, semana: int, dia: int) -> int:

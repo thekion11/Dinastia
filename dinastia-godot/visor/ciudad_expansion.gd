@@ -142,6 +142,7 @@ func construir() -> void:
 	_cargar_modelos()
 	_materiales()
 	_dibujar_calles()
+	CiudadRotonda.montar(self)   ## M-168
 	semaforos = Semaforos.new()
 	semaforos.name = "Semaforos"
 	b.add_child(semaforos)
