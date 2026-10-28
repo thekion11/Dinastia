@@ -1,6 +1,6 @@
 class_name InteriorInstalacion
-extends "res://ui/componentes/interior_instalacion_p6.gd"
-## [Capa 7/7 de `interior_instalacion.gd`] _peluqueria, _libreria, _taller, _recreativos, _construir_sala, _cerrar … (+6)
+extends "res://ui/componentes/interior_instalacion_p7.gd"
+## [Capa 8/8 de `interior_instalacion.gd`] _peluqueria, _libreria, _taller, _recreativos, _construir_sala, _cerrar … (+6)
 
 ## Peluquería (11 × 8 m): tres sillones frente a los espejos, el sofá de espera
 ## y la recepción.
@@ -215,6 +215,11 @@ func _construir_sala() -> void:
 		"libreria": _libreria()
 		"taller": _taller()
 		"recreativos": _recreativos()
+		"farmacia": _farmacia()
+		"banco": _banco()
+		"hotel": _hotel()
+		"ferreteria": _ferreteria()
+		"floristeria": _floristeria()
 	_vaciar_lotes()
 	## De vuelta al valor de siempre: los minijuegos y la ciudad lo usan.
 	Mini3D.sala_deportiva = true
