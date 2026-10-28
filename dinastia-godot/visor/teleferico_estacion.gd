@@ -56,11 +56,15 @@ static func detalles(base_n: Node3D) -> int:
 			n += 1
 	## Andén: línea amarilla en el borde, barandilla detrás y bancos.
 	_caja(base_n, Vector3(0, 0.53, 13.6), Vector3(22.0, 0.04, 0.3), amarillo)
-	_caja(base_n, Vector3(0, 1.45, 13.9), Vector3(22.0, 0.08, 0.08), acero)
-	_caja(base_n, Vector3(0, 1.0, 13.9), Vector3(22.0, 0.05, 0.05), acero)
+	## La barandilla deja una ENTRADA de 5 m en el centro (x ±2,5) donde empieza la rampa que baja a la plaza (28-10).
+	for cx: float in [-6.75, 6.75]:
+		_caja(base_n, Vector3(cx, 1.45, 13.9), Vector3(8.5, 0.08, 0.08), acero)
+		_caja(base_n, Vector3(cx, 1.0, 13.9), Vector3(8.5, 0.05, 0.05), acero)
 	for k2 in 12:
-		_caja(base_n, Vector3(-10.5 + float(k2) * 1.9, 0.95, 13.9), Vector3(0.07, 1.0, 0.07), acero)
-	n += 14
+		var px := -10.5 + float(k2) * 1.9
+		if absf(px) > 2.6:
+			_caja(base_n, Vector3(px, 0.95, 13.9), Vector3(0.07, 1.0, 0.07), acero)
+	n += 14 + rampa(base_n, acero, amarillo)
 	for bx: float in [-6.0, 0.0, 6.0]:
 		_caja(base_n, Vector3(bx, 0.95, 10.4), Vector3(2.2, 0.12, 0.6), madera)
 		_caja(base_n, Vector3(bx, 1.25, 10.7), Vector3(2.2, 0.5, 0.08), madera)
@@ -71,8 +75,31 @@ static func detalles(base_n: Node3D) -> int:
 	for lx: float in [-8.0, -2.7, 2.7, 8.0]:
 		_caja(base_n, Vector3(lx, 5.15, 9.8), Vector3(0.5, 0.12, 0.5), luz)
 		n += 1
-	for k3 in 4:
-		_caja(base_n, Vector3(-3.0 + float(k3) * 2.0, 1.0, 7.4), Vector3(0.08, 1.0, 0.08), acero)
-	_caja(base_n, Vector3(0, 1.35, 7.4), Vector3(6.0, 0.05, 0.05), marco)
+	for bx2: float in [-3.8, -2.4, 2.4, 3.8]:   ## la barrera deja libre el paso de la puerta (x ±2,4)
+		_caja(base_n, Vector3(bx2, 1.0, 7.4), Vector3(0.08, 1.0, 0.08), acero)
+	for cx2: float in [-3.1, 3.1]:
+		_caja(base_n, Vector3(cx2, 1.35, 7.4), Vector3(1.4, 0.05, 0.05), marco)
 	n += 5
 	return n
+
+## RAMPA Y CAMINO (28-10): del borde del andén (z = 13,8, y = 0,5) baja a la hierba (y = −0,2) en 4,3 m, con pasamanos a los lados y,
+## después, un camino de losas de 4 m de ancho hasta la plaza. Es por donde entra y sale la gente (`PasajerosTeleferico.RUTA_RAMPA`).
+static func rampa(base_n: Node3D, acero: Material, amarillo: Material) -> int:
+	var losas := StandardMaterial3D.new()
+	losas.albedo_color = Color(0.72, 0.71, 0.68)
+	losas.roughness = 0.9
+	var r := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(4.6, 0.14, 4.3)
+	r.mesh = bm
+	r.material_override = losas
+	r.position = Vector3(0, 0.1, 15.9)
+	r.rotation_degrees.x = 9.3
+	base_n.add_child(r)
+	for sx: float in [-2.2, 2.2]:
+		_caja(base_n, Vector3(sx, 0.95, 15.9), Vector3(0.05, 0.05, 4.3), acero)
+		for zz: float in [14.2, 15.9, 17.6]:
+			_caja(base_n, Vector3(sx, 0.7 - (zz - 13.8) * 0.16, zz), Vector3(0.06, 0.9, 0.06), acero)
+	_caja(base_n, Vector3(0, -0.17, 24.0), Vector3(4.6, 0.06, 12.0), losas)
+	_caja(base_n, Vector3(0, -0.13, 18.0), Vector3(4.6, 0.06, 0.25), amarillo)
+	return 8

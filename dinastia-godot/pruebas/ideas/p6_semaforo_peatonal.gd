@@ -21,3 +21,18 @@ func _probar() -> void:
 	s.t += 2.5
 	_comprobar(s.pedir() == "ya", "con el verde puesto, el botón dice que ya se puede cruzar")
 	_comprobar(s.boton_cerca(s.botones[0]) == 0.0 and s.boton_cerca(Vector3(60, 0, 60)) == INF, "se detecta el botón a menos de %.1f m y no a 60" % Semaforos.RADIO_BOTON)
+	## Barrido de todo el ciclo: el peatón que cruza una calle (el que mira a lo largo del eje e, cruza la del otro eje) solo tiene verde
+	## cuando esa calle está en ROJO, y nunca hay verde peatonal con el ámbar o el verde de la calle que cruza.
+	var fallos := 0
+	var verdes := 0
+	var tt := 0.0
+	while tt < Semaforos.CICLO:
+		s.t = tt
+		for e in 2:
+			if s.peatonal(e) != "r":
+				verdes += 1
+				if s.estado(1 - e) != "r":
+					fallos += 1
+		tt += 0.25
+	_comprobar(verdes > 0 and fallos == 0, "peatón en verde solo con la calle que cruza en rojo (%d instantes con verde, %d choques)" % [verdes, fallos])
+	_comprobar(Semaforos.pictograma(true).get_width() == 64 and Semaforos.pictograma(false).get_image().get_pixel(32, 11).a > 0.5, "el hombrecito (quieto y andando) está dibujado")
