@@ -6,6 +6,17 @@ const TOPE_OCUPACION := 0.86
 ## Cuántas filas de la bandeja de abajo llevan la butaca con respaldo curvo (1.944 triángulos); 99 o más = como antes de la rebaja #1 (las capturas «antes»).
 static var butaca_detalle_filas := 2
 
+## Lo que sale de poblar una grada: la hinchada por nivel de detalle, y los peldaños y pasillos.
+class _Gente:
+	var hinchas_xf: Array[Transform3D] = []
+	var hinchas_col: Array[Color] = []
+	var det_xf: Array[Transform3D] = []
+	var det_col: Array[Color] = []
+	var med_xf: Array[Transform3D] = []
+	var med_col: Array[Color] = []
+	var escalones: Array[Transform3D] = []
+	var pasillos: Array[float] = []
+
 ## Los dos colores de las franjas de un anillo: abajo el color 1 con toques del 2, en medio el 2 con toques del 1 y arriba una variante
 ## (la mezcla de los dos, algo más oscura) con toques del 1. `nivel` 0 = el de abajo.
 static func colores_de_nivel(c1: Color, c2: Color, nivel: int) -> Array[Color]:
@@ -119,8 +130,14 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	mm_lejos.mesh = _malla_butaca_lejos()
 	mm_lejos.instance_count = cuantas_fila * (filas_todas - filas)
 
-	var rng := RandomNumberGenerator.new()
-	rng.seed = int(largo * 100.0) + filas_semilla
+	var g := {"largo": largo, "fondo": fondo, "cuantas_fila": cuantas_fila, "filas": filas, "filas_todas": filas_todas, "filas_semilla": filas_semilla,
+		"sentido": sentido, "giro": giro, "rake": rake, "bandeja": bandeja, "ocupacion": ocupacion, "lateral": lateral}
+	g.merge(_paleta_grada(est, bandeja, largo, lateral))
+	var gt := _poblar_grada(mm, mm_lejos, g)
+	_montar_grada(deck, mm, mm_lejos, gt, g)
+
+## Colores de las butacas y de la ropa de la hinchada, y las medidas de la gente según la calidad (lo que no depende del azar).
+static func _paleta_grada(est: Dictionary, bandeja: int, largo: float, lateral: bool) -> Dictionary:
 	var c1 := Color(str(est.get("asiento1", "#1f5f3d")))
 	var c2 := Color(str(est.get("asiento2", "#e8e8e8")))
 	## COLOR POR NIVEL (27-10-2026, decisión del dueño): con `asientoNivel = "por_nivel"` (por defecto) el anillo de abajo lleva el color 1 del
@@ -147,12 +164,6 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var v1 := Color(str(est.get("visita1", "#ffffff")))
 	var v2 := Color(str(est.get("visita2", "#222222")))
 	var corte_visita := largo * 0.22
-	var hinchas_xf: Array[Transform3D] = []
-	var hinchas_col: Array[Color] = []
-	var det_xf: Array[Transform3D] = []
-	var det_col: Array[Color] = []
-	var med_xf: Array[Transform3D] = []
-	var med_col: Array[Color] = []
 	## 21-10-2026 («la gente no se ve tan real»; el dueño da el rendimiento por
 	## bueno): más filas con la persona de detalle (4 → 7 en ALTO) y con la de
 	## nivel medio (8 → 12). Desde la quinta fila se veían bloques sin cabeza.
@@ -162,10 +173,29 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var por_grupo: int = 3 if Calidad.elegida >= Calidad.ALTO else 2
 	var eje_largo := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
 	var eje_rake := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
+	return {"base_i1": base_i1, "base_i2": base_i2, "colores_hincha": colores_hincha, "visita": visita, "v1": v1, "v2": v2, "corte_visita": corte_visita,
+		"filas_medio": filas_medio, "filas_detalle": filas_detalle, "por_grupo": por_grupo, "eje_largo": eje_largo, "eje_rake": eje_rake}
+
+## Coloca las butacas (a `mm` las cercanas, a `mm_lejos` el resto) y reparte la hinchada: devuelve las listas de personas y los peldaños. El orden en que
+## se consume el azar es el de siempre: la grada de cada club sale idéntica.
+static func _poblar_grada(mm: MultiMesh, mm_lejos: MultiMesh, g: Dictionary) -> _Gente:
+	var largo: float = g["largo"]
+	var fondo: float = g["fondo"]
+	var cuantas_fila: int = g["cuantas_fila"]
+	var filas: int = g["filas"]
+	var filas_todas: int = g["filas_todas"]
+	var sentido: float = g["sentido"]
+	var giro: float = g["giro"]
+	var rake: float = g["rake"]
+	var lateral: bool = g["lateral"]
+	var base_i1: Color = g["base_i1"]
+	var base_i2: Color = g["base_i2"]
+	var eje_rake: Vector3 = g["eje_rake"]
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(largo * 100.0) + int(g["filas_semilla"])
+	var gt := _Gente.new()
 	var i := 0
 	var j := 0
-	var escalones: Array[Transform3D] = []
-	var pasillos_l: Array[float] = []
 	for f in range(filas_todas):
 		## Se empieza por el borde de abajo del deck (el que da al cesped).
 		var d: float = sentido * (-fondo * 0.5 + 0.6 + f * PASO_FILA)
@@ -196,9 +226,9 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 				else:
 					mm_lejos.set_instance_transform(j, cero)
 					j += 1
-				escalones.append(Transform3D(Basis().rotated(Vector3.UP, giro).rotated(eje_rake, -rake) if rake != 0.0 else Basis().rotated(Vector3.UP, giro), p + Vector3(0, -0.13, 0)))
+				gt.escalones.append(Transform3D(Basis().rotated(Vector3.UP, giro).rotated(eje_rake, -rake) if rake != 0.0 else Basis().rotated(Vector3.UP, giro), p + Vector3(0, -0.13, 0)))
 				if f == 0:
-					pasillos_l.append(l)
+					gt.pasillos.append(l)
 				continue
 			if f < filas:
 				mm.set_instance_transform(i, Transform3D(base, p))
@@ -210,133 +240,148 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 				j += 1
 			## Un hincha por asiento ocupado. Las filas pegadas al césped de la
 			## bandeja de abajo llevan el hincha de detalle; el resto, el barato.
-			var cerca := bandeja == 0 and f < filas_detalle
-			var vecino := false   ## el asiento de al lado de este grupo ya lleva a alguien
-			for k in (3 if cerca else por_grupo):
-				if rng.randf() >= minf(ocupacion, TOPE_OCUPACION):
-					vecino = false
-					continue
-				## HUECO ENTRE PERSONAS (27-10-2026, «se ven mal tan juntos»): a quien tiene vecino a su lado le toca dejar libre el
-				## asiento una de cada tres veces, y la ocupación no pasa del 86 %: siempre hay alguna butaca vacía.
-				if vecino and rng.randf() < 0.34:
-					vecino = false
-					continue
-				vecino = true
-				var desp := (float(k) - 0.5 * float((3 if cerca else por_grupo) - 1)) * 0.48
-				var jit := Vector3(rng.randf_range(-0.04, 0.04), 0, rng.randf_range(-0.04, 0.04))
-				## NO TODOS MIDEN LO MISMO: ±10% de talla, gratis en la matriz.
-				var talla := rng.randf_range(0.9, 1.08)
-				## NI TODOS IGUAL DE ANCHOS (25-10-2026): delgados y corpulentos, de un
-				## hash del sitio (no del `rng`: el resto de la grada sale igual).
-				var ancho := 0.78 + 0.2 * fposmod(sin(p.x * 12.9898 + p.z * 78.233 + float(k) * 3.1) * 43758.5453, 1.0)
-				var base_h := Basis().rotated(Vector3.UP, giro + rng.randf_range(-0.15, 0.15)).scaled(Vector3(talla * ancho, talla, talla * ancho))
-				if rake != 0.0:
-					base_h = base_h.rotated(eje_rake, -rake)
-				var xf := Transform3D(base_h, p + eje_largo * desp + jit + Vector3(0, 0.15, 0))
-				var col_h: Color = colores_hincha[rng.randi_range(0, colores_hincha.size() - 1)]
-				col_h = col_h.darkened(rng.randf() * 0.15)
-				## El sector visitante: el último cuarto de la fila, con una franja
-				## de butacas vacías que lo separa. El azar se consume igual, así el
-				## resto de la grada sale idéntico con o sin rival.
-				if visita and l > corte_visita - 1.6:
-					if l < corte_visita + 1.6:
-						continue
-					col_h = (v1 if (int(l * 7.0 + float(f) * 3.0) % 5) < 3 else v2).darkened(rng.randf() * 0.12)
-					## Marcado en el alfa: `hinchada.gdshader` no los hace saltar con
-					## los goles de casa (y `FestejoGrada` no les pone bengalas).
-					col_h.a = 0.5
-				if cerca:
-					det_xf.append(xf)
-					det_col.append(col_h)
-				## Las filas siguientes con la persona de nivel medio (estaba
-				## previsto y nunca se llenaba: desde la 5.ª fila eran todos la
-				## malla «lejos», bloques sin cabeza). En ALTO: las 12 filas
-				## siguientes de la bandeja baja y las 6 primeras de la segunda.
-				elif Calidad.elegida >= Calidad.ALTO and ((bandeja == 0 and f < filas_detalle + filas_medio) or (bandeja == 1 and f < 6)):
-					med_xf.append(xf)
-					med_col.append(col_h)
-				else:
-					hinchas_xf.append(xf)
-					hinchas_col.append(col_h)
+			_hinchas_del_asiento(g, gt, rng, p, l, f)
+	return gt
 
-	_montar_pasillos(deck, escalones, pasillos_l, lateral, fondo, largo, sentido, rake)
+## La hinchada de un grupo de butacas (hasta tres personas en la de arriba): consume el azar en el mismo orden de siempre.
+static func _hinchas_del_asiento(g: Dictionary, gt: _Gente, rng: RandomNumberGenerator, p: Vector3, l: float, f: int) -> void:
+	var bandeja: int = g["bandeja"]
+	var ocupacion: float = g["ocupacion"]
+	var giro: float = g["giro"]
+	var rake: float = g["rake"]
+	var eje_rake: Vector3 = g["eje_rake"]
+	var eje_largo: Vector3 = g["eje_largo"]
+	var filas_detalle: int = g["filas_detalle"]
+	var filas_medio: int = g["filas_medio"]
+	var por_grupo: int = g["por_grupo"]
+	var colores_hincha: Array = g["colores_hincha"]
+	var visita: bool = g["visita"]
+	var v1: Color = g["v1"]
+	var v2: Color = g["v2"]
+	var corte_visita: float = g["corte_visita"]
+	var cerca := bandeja == 0 and f < filas_detalle
+	var vecino := false   ## el asiento de al lado de este grupo ya lleva a alguien
+	for k in (3 if cerca else por_grupo):
+		if rng.randf() >= minf(ocupacion, TOPE_OCUPACION):
+			vecino = false
+			continue
+		## HUECO ENTRE PERSONAS (27-10-2026, «se ven mal tan juntos»): a quien tiene vecino a su lado le toca dejar libre el
+		## asiento una de cada tres veces, y la ocupación no pasa del 86 %: siempre hay alguna butaca vacía.
+		if vecino and rng.randf() < 0.34:
+			vecino = false
+			continue
+		vecino = true
+		var desp := (float(k) - 0.5 * float((3 if cerca else por_grupo) - 1)) * 0.48
+		var jit := Vector3(rng.randf_range(-0.04, 0.04), 0, rng.randf_range(-0.04, 0.04))
+		## NO TODOS MIDEN LO MISMO: ±10% de talla, gratis en la matriz.
+		var talla := rng.randf_range(0.9, 1.08)
+		## NI TODOS IGUAL DE ANCHOS (25-10-2026): delgados y corpulentos, de un
+		## hash del sitio (no del `rng`: el resto de la grada sale igual).
+		var ancho := 0.78 + 0.2 * fposmod(sin(p.x * 12.9898 + p.z * 78.233 + float(k) * 3.1) * 43758.5453, 1.0)
+		var base_h := Basis().rotated(Vector3.UP, giro + rng.randf_range(-0.15, 0.15)).scaled(Vector3(talla * ancho, talla, talla * ancho))
+		if rake != 0.0:
+			base_h = base_h.rotated(eje_rake, -rake)
+		var xf := Transform3D(base_h, p + eje_largo * desp + jit + Vector3(0, 0.15, 0))
+		var col_h: Color = colores_hincha[rng.randi_range(0, colores_hincha.size() - 1)]
+		col_h = col_h.darkened(rng.randf() * 0.15)
+		## El sector visitante: el último cuarto de la fila, con una franja
+		## de butacas vacías que lo separa. El azar se consume igual, así el
+		## resto de la grada sale idéntico con o sin rival.
+		if visita and l > corte_visita - 1.6:
+			if l < corte_visita + 1.6:
+				continue
+			col_h = (v1 if (int(l * 7.0 + float(f) * 3.0) % 5) < 3 else v2).darkened(rng.randf() * 0.12)
+			## Marcado en el alfa: `hinchada.gdshader` no los hace saltar con
+			## los goles de casa (y `FestejoGrada` no les pone bengalas).
+			col_h.a = 0.5
+		if cerca:
+			gt.det_xf.append(xf)
+			gt.det_col.append(col_h)
+		## Las filas siguientes con la persona de nivel medio (estaba
+		## previsto y nunca se llenaba: desde la 5.ª fila eran todos la
+		## malla «lejos», bloques sin cabeza). En ALTO: las 12 filas
+		## siguientes de la bandeja baja y las 6 primeras de la segunda.
+		elif Calidad.elegida >= Calidad.ALTO and ((bandeja == 0 and f < filas_detalle + filas_medio) or (bandeja == 1 and f < 6)):
+			gt.med_xf.append(xf)
+			gt.med_col.append(col_h)
+		else:
+			gt.hinchas_xf.append(xf)
+			gt.hinchas_col.append(col_h)
+
+## Un MultiMesh de butacas colgado del deck, con su plástico barnizado. SIN SOMBRA PROPIA (25-9-2026, `pruebas/medir_partido.gd`): miles de butacas
+## proyectando sombra se dibujaban otra vez en CADA cascada del sol; bajo el techo no se ve y la de la grada entera (el `deck`) sigue estando.
+static func _nodo_butacas(deck: MeshInstance3D, mm: MultiMesh, nombre: String, rugosidad: float, metal: float, barniz: float, barniz_rug: float) -> void:
+	var mat := StandardMaterial3D.new()
+	mat.vertex_color_use_as_albedo = true
+	mat.albedo_color = Color(0.9, 0.9, 0.9)
+	mat.roughness = rugosidad
+	if metal > 0.0:
+		mat.metallic = metal
+	mat.clearcoat_enabled = true
+	mat.clearcoat = barniz
+	mat.clearcoat_roughness = barniz_rug
+	var mi := MultiMeshInstance3D.new()
+	mi.multimesh = mm
+	mi.material_override = mat
+	mi.name = nombre
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	deck.add_child(mi)
+
+## Los nodos de la grada: pasillos y escaleras, las butacas lejanas y cercanas y las personas (con su nivel de detalle).
+static func _montar_grada(deck: MeshInstance3D, mm: MultiMesh, mm_lejos: MultiMesh, gt: _Gente, g: Dictionary) -> void:
+	var lateral: bool = g["lateral"]
+	var fondo: float = g["fondo"]
+	var largo: float = g["largo"]
+	var sentido: float = g["sentido"]
+	var rake: float = g["rake"]
+	var bandeja: int = g["bandeja"]
+	_montar_pasillos(deck, gt.escalones, gt.pasillos, lateral, fondo, largo, sentido, rake)
 	if bandeja == 0:
-		_escaleras_de_acceso(deck, escalones, pasillos_l, lateral)
+		_escaleras_de_acceso(deck, gt.escalones, gt.pasillos, lateral)
 
 	## Debajo de las butacas, cemento: la textura con gente pintada ya no hace
 	## falta y entre fila y fila se veía como manchas estiradas.
 	deck.material_override = _mat_escalones()
 	if mm_lejos.instance_count > 0:
-		var mil := MultiMeshInstance3D.new()
-		mil.multimesh = mm_lejos
-		var mat_l := StandardMaterial3D.new()
-		mat_l.vertex_color_use_as_albedo = true
-		mat_l.albedo_color = Color(0.9, 0.9, 0.9)
-		mat_l.roughness = 0.5
-		mat_l.clearcoat_enabled = true
-		mat_l.clearcoat = 0.25
-		mat_l.clearcoat_roughness = 0.4
-		mil.material_override = mat_l
-		mil.name = "ButacasLejos"
-		mil.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		deck.add_child(mil)
-
-	var mat := StandardMaterial3D.new()
-	mat.vertex_color_use_as_albedo = true
-	mat.albedo_color = Color(0.9, 0.9, 0.9)
+		_nodo_butacas(deck, mm_lejos, "ButacasLejos", 0.5, 0.0, 0.25, 0.4)
 	## Plástico de butaca con brillo suave de barniz (calidad de material, 27-10-2026): el respaldo y el asiento recogen la luz del sol bajo.
-	mat.roughness = 0.45
-	mat.metallic = 0.05
-	mat.clearcoat_enabled = true
-	mat.clearcoat = 0.3
-	mat.clearcoat_roughness = 0.35
-	var mi := MultiMeshInstance3D.new()
-	mi.multimesh = mm
-	mi.material_override = mat
-	mi.name = "ButacasCerca"
-	## SIN SOMBRA PROPIA (25-9-2026, `pruebas/medir_partido.gd`). Miles de
-	## butacas y de hinchas proyectando sombra se dibujaban otra vez en CADA
-	## cascada del sol -cuatro en calidad ALTO-: eran el grueso de los ~2
-	## millones de triángulos por fotograma. Bajo el techo de la grada esa
-	## sombra no se ve; la de la grada entera (el `deck`) sigue estando.
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	deck.add_child(mi)
+	_nodo_butacas(deck, mm, "ButacasCerca", 0.45, 0.05, 0.3, 0.35)
 
 	## Personas reales (mallas horneadas) en la bandeja baja; el maniquí queda para
 	## el resto y como respaldo si faltan los recursos.
 	var reales_cerca := _hinchas_horneados("cerca")
 	var reales_medio := _hinchas_horneados("medio")
-	if not reales_cerca.is_empty() and not det_xf.is_empty():
-		_montar_publico_lod(deck, "PersonasCerca", reales_cerca, det_xf, det_col)
-		det_xf.clear()
-		det_col.clear()
-	if not reales_medio.is_empty() and not med_xf.is_empty():
-		_montar_publico_lod(deck, "PersonasMedio", reales_medio, med_xf, med_col)
+	if not reales_cerca.is_empty() and not gt.det_xf.is_empty():
+		_montar_publico_lod(deck, "PersonasCerca", reales_cerca, gt.det_xf, gt.det_col)
+		gt.det_xf.clear()
+		gt.det_col.clear()
+	if not reales_medio.is_empty() and not gt.med_xf.is_empty():
+		_montar_publico_lod(deck, "PersonasMedio", reales_medio, gt.med_xf, gt.med_col)
 	else:
-		hinchas_xf.append_array(med_xf)
-		hinchas_col.append_array(med_col)
+		gt.hinchas_xf.append_array(gt.med_xf)
+		gt.hinchas_col.append_array(gt.med_col)
 	## EL RESTO DE LAS FILAS (14-10-2026, «¿y qué hacemos con el resto de las
 	## filas?»): también personas reales, con la malla «lejos» (~60 vértices, las
 	## mismas poses). El maniquí de 26 triángulos queda solo para calidad MEDIO.
 	var reales_lejos := _hinchas_horneados("lejos")
-	if not reales_lejos.is_empty() and not hinchas_xf.is_empty() and Calidad.elegida >= Calidad.ALTO:
+	if not reales_lejos.is_empty() and not gt.hinchas_xf.is_empty() and Calidad.elegida >= Calidad.ALTO:
 		## HINCHAS DEFORMADOS DE CERCA (27-10-2026, revisión del líder): la malla «lejos» (~70 vértices) es la decimación más basta y de
 		## cerca son triángulos con púas. Las filas altas la usan para todo, así que quien pasea por una bandeja alta (la visita al estadio)
 		## las veía así. Ahora, a menos de `LIMITE_ALTAS` m del trozo (8 trozos por bandeja) se cambia a la malla «medio».
 		if not reales_medio.is_empty():
-			_montar_publico_lod(deck, "PersonasLejos", reales_medio, hinchas_xf, hinchas_col, LIMITE_ALTAS, TRAMOS_ALTAS)
+			_montar_publico_lod(deck, "PersonasLejos", reales_medio, gt.hinchas_xf, gt.hinchas_col, LIMITE_ALTAS, TRAMOS_ALTAS)
 		else:
-			_montar_horneados(deck, "PersonasLejos", reales_lejos, hinchas_xf, hinchas_col)
+			_montar_horneados(deck, "PersonasLejos", reales_lejos, gt.hinchas_xf, gt.hinchas_col)
 		return
-	if not det_xf.is_empty():
+	if not gt.det_xf.is_empty():
 		var mmd := MultiMesh.new()
 		mmd.transform_format = MultiMesh.TRANSFORM_3D
 		mmd.use_colors = true
 		mmd.mesh = _malla_hincha_detalle()
-		mmd.instance_count = det_xf.size()
-		for k in det_xf.size():
-			mmd.set_instance_transform(k, det_xf[k])
-			mmd.set_instance_color(k, det_col[k])
+		mmd.instance_count = gt.det_xf.size()
+		for k in gt.det_xf.size():
+			mmd.set_instance_transform(k, gt.det_xf[k])
+			mmd.set_instance_color(k, gt.det_col[k])
 		var mat_d := ShaderMaterial.new()
 		mat_d.shader = load("res://visor/hinchada.gdshader")
 		## La malla de detalle tiene el cuello más arriba y pelo.
@@ -349,16 +394,16 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 		mid.name = "HinchadaCerca"
 		mid.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		deck.add_child(mid)
-	if hinchas_xf.is_empty():
+	if gt.hinchas_xf.is_empty():
 		return
 	var mmh := MultiMesh.new()
 	mmh.transform_format = MultiMesh.TRANSFORM_3D
 	mmh.use_colors = true
 	mmh.mesh = _malla_hincha_cache()
-	mmh.instance_count = hinchas_xf.size()
-	for k in hinchas_xf.size():
-		mmh.set_instance_transform(k, hinchas_xf[k])
-		mmh.set_instance_color(k, hinchas_col[k])
+	mmh.instance_count = gt.hinchas_xf.size()
+	for k in gt.hinchas_xf.size():
+		mmh.set_instance_transform(k, gt.hinchas_xf[k])
+		mmh.set_instance_color(k, gt.hinchas_col[k])
 	## LA HINCHADA SE MUEVE Y TIENE CARA (23-9-2026). Ver `visor/hinchada.
 	## gdshader` para el porqué de cada cosa: balanceo con fase propia, saltos
 	## sueltos y la cabeza en tono de piel en vez de ser del color de la
@@ -372,6 +417,7 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	mih.name = "Hinchada"
 	mih.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	deck.add_child(mih)
+
 
 ## LAS BOCAS DE ACCESO (23-9-2026). En `ea_fc25_referencia.mp4` la grada del
 ## fondo está picada de huecos oscuros: son los vomitorios por donde sale la

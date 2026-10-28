@@ -1,8 +1,7 @@
 extends "res://visor/explorador_ciudad_p3.gd"
 ## [Capa 4/6 de `explorador_ciudad.gd`] _mover_en_estadio, _bajar_a_la_galeria, _usar, _tactil, _aplicar_ajustes, _montar_hud … (+7)
 
-## Dentro del estadio se camina por las zonas de `TunelVestuario` (vestuario,
-## túnel, banda, campo y la puerta). Salir por la puerta devuelve a la calle.
+## Dentro del estadio se camina por las zonas de `TunelVestuario` (vestuario, túnel, banda, campo y la puerta). Salir por la puerta devuelve a la calle.
 func _mover_en_estadio(delta: float) -> void:
 	var e := _entrada()
 	if _sentado:
@@ -187,7 +186,9 @@ func _usar() -> void:
 				and MinijuegosCiudad.juego_de(String(_cerca["k"])) == "")):
 		_entrar_en_edificio(String(_cerca["k"]))
 		return
-	if _cerca["tipo"] == "metro":
+	if _cerca["tipo"] == "boton_peatonal":   ## M-170: pide el verde peatonal
+		return cb.expansion.semaforos.pedir_con_aviso(self)
+	if _cerca["tipo"] == "metro" and (vida == null or vida.cobrar_pasaje("metro")):   ## M-182: el pasaje sale de la tarjeta Red
 		_entrar_al_anden(_cerca["acc"])
 		return
 	if _cerca["tipo"] == "puerta_estadio":
