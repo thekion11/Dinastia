@@ -633,7 +633,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-294 | P2 | PARCIAL | Comparador de jugadores existe; sin comparativa de club/estadio | comparador de jugadores; sin club/estadio |
 | M-295 | P2 | SIN VERIFICAR | Sin gráficos históricos (valor, forma) en ficha | «crecimiento por temporada» en la ficha; sin gráficos verificados |
 | M-296 | P2 | PARCIAL | Notificaciones (`Aviso`) sin centro de notificaciones | bandeja de correo; sin filtros |
-| M-303 | P2 | PARCIAL | Cursor/hover sin feedback sonoro consistente en todos los… | `BotonFx` en todos los botones; pestañas/listas sin sonido |
 | M-304 | P2 | PARCIAL | Animaciones de transición entre pantallas desiguales | `Animar` en 16 archivos; sin sistema común de transición |
 | M-305 | P2 | PARCIAL | Tooltips escasos | 103 tooltips |
 | M-308 | P2 | PARCIAL | DPI alto: texto del `Label3D` en 3D | medido el 28-10 (720p y 1440p): el TAMAÑO escala igual (6,9 % del ancho con `fixed_size`, 9,7 % sin él); lo que falta es la NITIDEZ en 4K: `gui/theme/default_font_multichannel_signed_distance_field=true` la arreglaría pero cambia el dibujo de todo el texto 2D (referencias visuales): decisión del dueño |

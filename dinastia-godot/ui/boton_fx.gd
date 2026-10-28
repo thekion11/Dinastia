@@ -39,6 +39,18 @@ static func _nuevo(n: Node) -> void:
 			b.focus_entered.connect(_sonar.bind("clic_suave"))
 			b.mouse_entered.connect(_sonar.bind("clic_suave"))
 			b.pressed.connect(_sonar.bind("clic"))
+	## M-303 (28-10-2026): las pestañas y las listas suenan igual que los botones (tic al pasar, clic al elegir).
+	elif not n.has_meta("sin_sonido") and not n.has_meta("_fx"):
+		if n is TabBar:
+			n.set_meta("_fx", true)
+			(n as TabBar).tab_hovered.connect(func(_i: int) -> void: _sonar("clic_suave"))
+			(n as TabBar).tab_clicked.connect(func(_i: int) -> void: _sonar("clic"))
+		elif n is ItemList:
+			n.set_meta("_fx", true)
+			(n as ItemList).item_selected.connect(func(_i: int) -> void: _sonar("clic"))
+		elif n is Tree:
+			n.set_meta("_fx", true)
+			(n as Tree).item_selected.connect(_sonar.bind("clic"))
 
 static var _ultimo_ms := {}
 
