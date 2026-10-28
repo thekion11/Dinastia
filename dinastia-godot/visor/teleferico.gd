@@ -271,6 +271,8 @@ static func usar(e, k: String) -> bool:
 		if e.modo != "pie" or e.estado != "calle":
 			e._aviso.text = Idiomas.t("Deja el coche y sube a pie.")
 			return true
+		if e.vida != null and not e.vida.cobrar_pasaje("teleferico"):
+			return true
 		t.mirador.entrar(e)
 		return true
 	if k == "tele_cima":

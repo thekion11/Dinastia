@@ -113,6 +113,22 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_rig._add("Desde la grada (sancionado)", ojo + Vector3(0.6, 0.3, 0), Vector3(0, 0, ojo.z * 0.3), 62)
 		_rig.switch_to(_rig.cameras.size() - 1)
 
+	_montar_hud_de_transmision()
+	_montar_cajon_de_ajustes()
+
+	_pie = Label.new()
+	_pie.add_theme_font_size_override("font_size", 13)
+	_pie.add_theme_color_override("font_color", Color("e9eeea"))
+	_pie.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	_pie.offset_left = 18
+	_pie.offset_bottom = -14
+	_pie.offset_top = -34
+	_pie.visible = _pref("pie", false)
+	add_child(_pie)
+	_actualizar_pie(perfil, aforo, ocupacion)
+
+## Viñeta, radar y pantalla del estadio en la esquina (lo 2D que va encima del 3D).
+func _montar_hud_de_transmision() -> void:
 	## Viñeta de transmisión (22-9-2026, comparando contra el look de cámara de
 	## Open-Soccer): un oscurecido 2D encima del 3D, no un efecto de Environment
 	## -Godot 4 no trae viñeta nativa ahí-. Va ANTES del radar/barra/pie en el
@@ -152,6 +168,9 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_mini_pantalla.texture = _pantalla.get_texture()
 		_mini_pantalla.visible = _pref("pantalla_esquina", true)
 
+
+## El cajón de ajustes de la transmisión (cámara, partido, en pantalla, sonido).
+func _montar_cajon_de_ajustes() -> void:
 	## AJUSTES EN UN CAJÓN (25-9-2026, plan maestro B1). Antes siete botones
 	## vivían encima de la transmisión (cámara, zoom ±, modo, velocidad, nombres,
 	## volver); el usuario pidió que no estuvieran todos a la vista. Ahora en
@@ -244,17 +263,6 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_cajon.deslizador("Música", Musica.volumen, func(v: float) -> void:
 		Musica.volumen = v
 		Musica.aplicar_volumen())
-
-	_pie = Label.new()
-	_pie.add_theme_font_size_override("font_size", 13)
-	_pie.add_theme_color_override("font_color", Color("e9eeea"))
-	_pie.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	_pie.offset_left = 18
-	_pie.offset_bottom = -14
-	_pie.offset_top = -34
-	_pie.visible = _pref("pie", false)
-	add_child(_pie)
-	_actualizar_pie(perfil, aforo, ocupacion)
 
 func _a_la_revision_var(minuto: int, motivo: String, anular := false, al_anular := Callable(), lineas := {}) -> void:
 	if _sala_var != null or _raiz3d == null:

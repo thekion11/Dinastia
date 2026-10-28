@@ -51,3 +51,14 @@ func _probar() -> void:
 	var tn: Color = noche.get_shader_parameter("top_color")
 	_comprobar(tn.is_equal_approx(Color(0.04, 0.06, 0.16)), "de noche el cielo no se aclara a gris")
 
+	## Charcos (M-190).
+	var ll := PrecipitacionCiudad.montar(self, "lluvia", Calidad.ALTO)
+	var ch: CharcosLluvia = ll.get_node_or_null("CharcosLluvia")
+	_comprobar(ch != null, "la lluvia trae charcos")
+	if ch != null:
+		var n1 := ch.reponer(Vector3(500, 0, 500))
+		var tot := CharcosLluvia.CELDAS * CharcosLluvia.CELDAS
+		_comprobar(n1 > tot / 2 and n1 < tot, "charcos en una parte de las celdas: %d de %d" % [n1, tot])
+		_comprobar(ch.reponer(Vector3(500, 0, 500)) == n1 and CharcosLluvia.hash_celda(Vector2i(3, 4)) == CharcosLluvia.hash_celda(Vector2i(3, 4)), "estables: misma celda, mismos charcos")
+	var nada := PrecipitacionCiudad.montar(self, "despejado")
+	_comprobar(nada == null, "sin lluvia no hay charcos")
