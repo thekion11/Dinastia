@@ -235,7 +235,9 @@ func _indicador_guardado() -> void:
 func apuntar_deshacer(motivo: String) -> void:
 	if p.mundo == null:
 		return
-	pila_deshacer.append({"motivo": motivo, "estado": Partida.instantanea(p.mundo)})
+	## Copia profunda (28-10): la instantánea lleva tablas, atributos y onces por referencia; en la pila sobrevivían
+	## semanas y «deshacer» restauraba la tabla de HOY con la jornada de entonces.
+	pila_deshacer.append({"motivo": motivo, "estado": Partida.instantanea(p.mundo).duplicate(true)})
 	while pila_deshacer.size() > DESHACER_MAX:
 		pila_deshacer.pop_front()
 

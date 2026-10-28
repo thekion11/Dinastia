@@ -96,7 +96,7 @@ func _gritar_desde_la_banda() -> void:
 		_escribir("[color=#e05555][b]🟥 ¡Te expulsan a ti![/b][/color] %s" % (Idiomas.t("Protestar de forma airada al cuarto árbitro. Te vas a la tribuna, y el tribunal te sanciona con %d partido(s) más desde la grada.") % fechas))
 		_refrescar()
 		return
-	_escribir("[color=#8ea595]%s[/color]" % Azar.uno(_FRASES_BANDA))
+	_escribir("[color=#8ea595]%s[/color]" % _frase(_FRASES_BANDA, "banda", partido.minuto))   ## sin gastar Azar (28-10)
 	for j in _mi_once():
 		var m := vestuario.mente(j)
 		m["ansiedad"] = clampi(int(m["ansiedad"]) - Azar.ent(1, 4), 0, 100)

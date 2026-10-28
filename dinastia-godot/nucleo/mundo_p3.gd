@@ -185,6 +185,7 @@ func _capitan_si_falta(c: Club) -> void:
 ## 10.000 jugadores: util para una partida de verdad, un desperdicio para una
 ## prueba que solo mira si la tabla suma. Por eso se puede pedir un mundo chico.
 func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:
+	Partido.ex_de_mi_club.clear()   ## 28-10: un mundo nuevo no hereda los rencores del anterior (los ids j%d se repiten)
 	semilla = Azar.sembrar(semilla_partida)
 	mercado = Mercado.new(self)
 	roles = Roles.new(self)

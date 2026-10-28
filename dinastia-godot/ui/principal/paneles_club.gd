@@ -269,13 +269,16 @@ func _objetivos(mio: Club) -> Array[Jugador]:
 	var vistos := {}
 	var salida: Array[Jugador] = []
 	var clubes: Array = p.mundo.clubes.values()
+	## Generador propio (28-10): pintar una lista no puede gastar el azar de la partida (mirar el panel cambiaba el futuro).
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash([Azar.semilla, p.mundo.anio, p.mundo.semana, mio.id])
 	for intento in 400:
 		if salida.size() >= 30:
 			break
-		var otro: Club = clubes[Azar.ent(0, clubes.size() - 1)]
+		var otro: Club = clubes[rng.randi_range(0, clubes.size() - 1)]
 		if otro.id == mio.id or otro.plantilla.is_empty():
 			continue
-		var j: Jugador = otro.plantilla[Azar.ent(0, otro.plantilla.size() - 1)]
+		var j: Jugador = otro.plantilla[rng.randi_range(0, otro.plantilla.size() - 1)]
 		if vistos.has(j.id) or float(j.ovr) < media:
 			continue
 		vistos[j.id] = true

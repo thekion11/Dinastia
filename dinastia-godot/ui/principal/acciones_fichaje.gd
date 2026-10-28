@@ -10,10 +10,11 @@ func _init(principal: Principal) -> void:
 
 func _reconvertir(j: Jugador, pe: String) -> void:
 	var posd: Dictionary = (Datos.tabla("POSD") as Dictionary).get(pe, {})
+	p._partida.apuntar_deshacer("reconvertir a %s de %s" % [j.nombre, pe])   ## ANTES de mutar al jugador (28-10)
 	var r := j.reconvertir(pe)
 	if r.is_empty():
+		p._partida.pila_deshacer.pop_back()
 		return
-	p._partida.apuntar_deshacer("reconvertir a %s de %s" % [j.nombre, pe])
 	var d := int(r["despues"]) - int(r["antes"])
 	p._escribir("[color=#c9a227]🔁 Reconversión:[/color] %s pasa a jugar de %s. Su media queda en %d (%s%d). Necesita %d semana(s) para asentarse en el puesto." % [
 		j.nombre, String(posd.get("n", pe)).to_lower(), r["despues"], "+" if d >= 0 else "", d, int(r["semanas"])])

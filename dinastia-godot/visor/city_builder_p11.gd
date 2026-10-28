@@ -216,11 +216,7 @@ func build(d: Dictionary) -> void:
 		Optimizar.trocear(self)
 		Optimizar.butacas_livianas(self, true)
 		Optimizar.distancias(self)
-		_marca("despejar")
-		Optimizar.primitivas(self)
-		Optimizar.butacas_livianas(self, true)
-		Optimizar.distancias(self)
-		_marca("opt_distancias")
+		_marca("opt_distancias")   ## (28-10) antes se repetían primitivas/butacas/distancias: tres recorridos de la ciudad sin efecto
 		circulos = Optimizar.obstaculos(self, ExploradorCiudad.construir_obstaculos(self))
 		## Los bancos (asiento a 0,75 m y respaldo bajo) quedaban por debajo del umbral de 0,9 m y se
 		## atravesaban andando (27-10-2026, plan §4 colisiones): un círculo por asiento registrado.
