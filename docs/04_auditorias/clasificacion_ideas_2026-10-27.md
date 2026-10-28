@@ -51,7 +51,6 @@ Los encabezados del plan dan cifras viejas (F0 «33» tiene 23 filas, F1 «36» 
 
 **Interfaz**
 - M-438: Botones con tamaño mínimo en móvil.
-- M-433: Controles táctiles completos en el partido (hoy solo en la ciudad).
 - M-462: Iconos con emoji (💾 ↺ ● ✔ ▸) que pueden salir como cuadros: probar glifos o cambiarlos.
 
 **Gestión**
@@ -67,7 +66,6 @@ Los encabezados del plan dan cifras viejas (F0 «33» tiene 23 filas, F1 «36» 
 
 **Rendimiento**
 - M-341: Coste real de las sombras en GPU (dueño).
-- M-338: Presupuesto escrito de triángulos y llamadas por categoría en el partido.
 - M-339: Césped en capas (230 k tris) sin LOD extra; unir con el pasto nuevo.
 
 **Traducciones**

@@ -90,17 +90,9 @@ var _mat := {}
 
 ## Arma el grafo: rejilla, bulevar del núcleo y conectores a los anillos.
 ## LOS NOMBRES DE LAS CALLES (7-10-2026, «las calles deben tener nombre, los
-## parques también»). Ficticios, como toda la ciudad. Las filas (de oeste a
-## este, z fija) y las columnas (de norte a sur, x fija) tienen cada una el
-## suyo; una de cada tres es avenida.
-const NOMBRES_EO := ["de los Almendros", "del Rocío", "de la Alameda", "del Mirador", "de las Acacias", "de la Ribera",
-	"del Olivar", "de los Tilos", "de la Fragua", "del Pósito", "de las Moreras", "de la Estación", "Mayor",
-	"del Sol", "de los Naranjos", "del Molino", "de la Vega", "de las Huertas", "del Carmen", "de los Arcos",
-	"del Lucero", "de la Cantera", "de los Jazmines", "del Prado", "de la Muralla"]
-const NOMBRES_NS := ["de los Tejedores", "del Puerto", "de la Cordelería", "de los Plateros", "del Faro", "de la Imprenta",
-	"de los Herreros", "del Telégrafo", "de la Seda", "del Navegante", "de los Alfareros", "de la Libertad", "del Estadio",
-	"de la Constitución", "de los Canteranos", "del Reloj", "de la Ilustración", "de los Remeros", "del Campeonato",
-	"de las Artes", "de la Hinchada", "del Gol", "de los Fundadores", "del Ensanche", "de la Afición"]
+## parques también»; chilenos desde el 28-10-2026, orden 17 del dueño). Las
+## filas y las columnas tienen cada una el suyo y los da `CallesCiudad` (la
+## misma fuente que los paraderos «Red» y el mapa del transporte).
 const NOMBRES_PARQUE := ["Parque de la Alameda", "Jardines del Mirador", "Parque de los Tilos", "Parque de la Ribera",
 	"Parque de los Fundadores", "Jardín Botánico", "Parque del Reloj", "Parque de la Afición", "Pinar del Ensanche"]
 
@@ -326,10 +318,10 @@ static func en_borde_nucleo(a: Vector3, c: Vector3) -> bool:
 	return (absf(a.z - NUC_Z0) < 0.1 or absf(a.z - NUC_Z1) < 0.1) and en_x
 
 func nombre_fila(j: int) -> String:
-	return ("Avenida " if j % 3 == 0 else "Calle ") + String(NOMBRES_EO[clampi(j + K, 0, NOMBRES_EO.size() - 1)])
+	return CallesCiudad.nombre_fila(j)
 
 func nombre_columna(i: int) -> String:
-	return ("Avenida " if i % 3 == 0 else "Calle ") + String(NOMBRES_NS[clampi(i + K, 0, NOMBRES_NS.size() - 1)])
+	return CallesCiudad.nombre_columna(i)
 
 ## La calle en la que está un punto («Calle X», o «Calle X con Avenida Y» en
 ## un cruce). Vacío si no está sobre ninguna (dentro de una manzana).
