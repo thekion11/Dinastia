@@ -624,7 +624,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 |---|---|---|---|---|
 | M-279 | P1 | PENDIENTE | 27 módulos de `visor/` y 8 de `nucleo/` sin referencia directa en… | los módulos siguen sin prueba directa |
 | M-280 | P1 | PENDIENTE | 105 módulos de UI/visor sin referencia en banco/pruebas | sin prueba visual automática |
-| M-433 | P1 | PARCIAL | Controles táctiles sólo en la ciudad (cruceta/E) | 21-10: en PC ya no salen la cruceta ni «Salir» al pasear (estadio y ciudad) y la E solo aparece si hay algo con lo que interactuar (`ExploradorCiudad.es_tactil`); el partido sigue sin controles táctil |
 | M-283 | P2 | PENDIENTE | Sin subtítulos/indicadores visuales de sonido | sin avisos visuales de sonido |
 | M-284 | P2 | PENDIENTE | Sin modo lectura de pantalla (TTS) | sin TTS |
 | M-285 | P2 | PARCIAL | Navegación por mando en menús (panel de controles sí) | navegación con mando en el panel de controles; no en todos los menús |
@@ -910,7 +909,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-338 | P1 | PARCIAL | Partido ALTO ≈ 2,3 M tris/700 llamadas | partido ALTO 0,76 M tris / 630 llamadas (17-10); sin presupuesto por categoría escrito |
 | M-339 | P1 | PENDIENTE | Césped en capas ≈ 230 k tris/57 llamadas | capas del césped hasta 46 m sin LOD extra |
 | M-343 | P2 | PARCIAL | Draw calls 700 | sombras en 8 mallas por sector (741→691) y 630 llamadas; sin atlas |
 | M-344 | P2 | PARCIAL | Overdraw en grada por butacas y personas | 21-10: oclusión en la CIUDAD (`OclusoresCiudad`, 1.120 paredes): −16 % de llamadas a pie de calle (12.128 → 10.192 en 4 calles, `medir_oclusion`); en la grada del estadio sigue sin `OccluderInstance3D |

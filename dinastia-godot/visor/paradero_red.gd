@@ -6,15 +6,15 @@ extends RefCounted
 ## de un lado, el panel publicitario enmarcado con el póster rojo y blanco de Red y, delante, la banca de láminas gris claro con su barra de apoyo;
 ## un papelero gris claro al lado. APARTE, el POSTE con el CARTEL NEGRO: iconos de bus arriba a la izquierda, esquina roja con «Red» arriba a la derecha,
 ## nombre de la parada, cuadrícula de 2 columnas con los recorridos en blanco (cajitas con línea divisoria), QR abajo a la izquierda y franja roja abajo.
-## Los recorridos, el nombre de la parada y el código «PA####» salen de `RecorridosRed` (la misma tabla que lee la app «Red» del móvil); todo queda en `registro`.
-##   ParaderoRed.montar(raiz, ancho, semilla, nombre, sector)   (raiz = nodo en el suelo, ya girado; la banca queda a z = −0,9 y el frente abierto a +z)
+## Los recorridos, el nombre de la parada y el código «PA####» salen de `RecorridosRed` (los recorridos sobre el mapa, la misma fuente que lee la app «Red»
+## del móvil); todo queda en `registro`.
+##   ParaderoRed.montar(raiz, ancho, semilla, nombre, sector, codigo)   (raiz = nodo en el suelo, ya girado; la banca queda a z = −0,9 y el frente abierto
+##   a +z). Con `codigo` (un paradero del mapa) se usa ese; sin él, `semilla` elige uno real del sector (pruebas y capturas sueltas).
 const ROJO := Color(0.78, 0.09, 0.20)
 const NEGRO := Color(0.08, 0.08, 0.10)
 const POSTE := Color(0.21, 0.22, 0.25)
 const BLANCO := Color(0.95, 0.95, 0.96)
 const GRIS_CLARO := Color(0.78, 0.80, 0.82)
-
-## Los recorridos que paran en cada sector de la ciudad (números de la Red: la centena es el sector). Es la tabla que usará la app del móvil.
 
 ## Todos los paraderos montados: [{codigo, nombre, sector, parada, recorridos: [String], x, z}].
 static var registro: Array[Dictionary] = []
@@ -55,6 +55,7 @@ static func _caja(p: Node3D, pos: Vector3, tam: Vector3, m: Material, giro := Ve
 	mi.position = pos
 	mi.rotation_degrees = giro
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if tam.y < 0.2 and tam.x < 0.6 else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	mi.visibility_range_end = 450.0
 	p.add_child(mi)
 	return mi
 
@@ -68,6 +69,7 @@ static func _texto(p: Node3D, txt: String, pos: Vector3, tam_px: int, col: Color
 	l.shaded = false
 	l.double_sided = false
 	l.horizontal_alignment = ancla
+	l.visibility_range_end = 90.0   ## letra de 1-6 cm: de más lejos no se lee y cuesta dibujarla (hay ~120 paraderos)
 	l.position = pos
 	p.add_child(l)
 	return l
@@ -125,8 +127,8 @@ static func anuncio() -> ImageTexture:
 	_anuncio = ImageTexture.create_from_image(img)
 	return _anuncio
 
-## El código del paradero («PA» + 4 cifras, la primera es el sector) y sus recorridos: los da la tabla `RecorridosRed`, la
-## misma que lee la app «Red» del móvil, así que el cartel y la app dicen siempre lo mismo. `sector` 0 = el del origen.
+## El código del paradero («PA» + 4 cifras, la primera es el sector) y sus recorridos: los da `RecorridosRed` (un paradero real del
+## mapa), la misma fuente que lee la app «Red» del móvil, así que el cartel y la app dicen siempre lo mismo. `sector` 0 = el del origen.
 static func codigo(semilla: int, sector: int = 0) -> String:
 	return RecorridosRed.codigo(semilla, sector if sector > 0 else RecorridosRed.sector_de(Vector3.ZERO))
 
@@ -137,12 +139,15 @@ static func recorridos(semilla: int, sector: int = 0) -> Array[String]:
 static func asientos_x() -> Array[float]:
 	return [0.5, 1.2]
 
-static func montar(raiz: Node3D, ancho: float, semilla: int, nombre := "", sector := 0) -> void:
+static func montar(raiz: Node3D, ancho: float, semilla: int, nombre := "", sector := 0, cod := "") -> void:
 	var w := 3.8   ## el paradero real mide ~3,6 m: se ignora un ancho mayor (los de 7,5 m eran de la versión inventada)
 	var parada := 1 + absi(hash([semilla, 17])) % 9
 	var donde := raiz.global_position if raiz.is_inside_tree() else raiz.position
 	var sec := sector if sector > 0 else RecorridosRed.sector_de(donde)
-	var cod := codigo(semilla, sec)
+	if cod == "":
+		cod = codigo(semilla, sec)
+	else:
+		sec = RecorridosRed.sector_del_codigo(cod)
 	var rs := RecorridosRed.recorridos(cod)
 	if nombre == "":
 		nombre = RecorridosRed.nombre_parada(cod)

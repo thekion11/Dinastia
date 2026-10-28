@@ -184,7 +184,7 @@ func _montar(duracion_mitad: float) -> void:
 	Ambience.apply(_raiz, perfil, null, Calidad.elegida)
 	StadiumBuilder.build_pitch(_raiz, perfil, local)
 	StadiumBuilder.build(_raiz, perfil, int(perfil.get("aforo", 20000)), 0.8, local._hash_id(), local)
-	EntornoEstadio.montar(_raiz, perfil, StadiumBuilder.niveles_de(perfil, int(perfil.get("aforo", 20000))))
+	EntornoEstadio.montar(_raiz, perfil, StadiumBuilder.niveles_de(perfil, int(perfil.get("aforo", 20000))), true)
 	OlaGrada.piel_de_pais(_raiz, local.pais)
 	OlaGrada.colores_club(_raiz, Color(local.color1), Color(local.color2))
 	## Lo que el modo entrenador ya tenía y aquí faltaba: la lluvia o la nieve,
@@ -232,7 +232,7 @@ func _montar(duracion_mitad: float) -> void:
 	if _camarografos != null:
 		_camarografos.balon = balon
 	motor = MotorJugable.new()
-	add_child(motor)
+	add_child(motor); ControlesTactiles.poner(self)   ## M-433: stick y botones en el teléfono
 	motor.duracion_mitad = duracion_mitad; GestoTecnico.fijar_clima(motor, String(perfil.get("clima", "")))   ## el clima pesa en el juego
 	motor.preparar(lista, balon, yo.id if yo != null else "", hash(local.id + visita.id))
 	## La cabeza de cada jugador sigue al balón (M-098, como en el modo DT).

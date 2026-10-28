@@ -277,19 +277,8 @@ func _trafico() -> void:
 			var n_ex: Node3D = instanciar_coche(coches[rng.randi() % coches.size()], rng)
 			t.agregar_vehiculo(n_ex, id_ex, rng.randf() * 2200.0,
 				rng.randf_range(15.0, 24.0), 0.0, 0.0)
-		## Y dos autobuses por sentido, en la misma ruta -es el eje que pasa
-		## junto a las cuatro paradas y la terminal-, más grandes y más lentos
-		## que el tráfico normal.
-		for i in range(2):
-			if true:
-				var bus: Node3D = autobus(Color(0.95, 0.75, 0.15), "5 · ESTADIO", "5")
-				t.agregar_vehiculo(bus, id_ex, rng.randf_range(200.0, 2000.0),
-					9.0, 0.0, 0.0)
-				## Paran 10 s en cada una de las cuatro marquesinas del anillo (`_paradas_bus`).
-				var paradas_s: Array = []
-				for pp: Vector3 in paradas_bus_pos:
-					paradas_s.append(t.s_mas_cercano(id_ex, pp))
-				t.agregar_paradas_al_ultimo(paradas_s, 10.0)
+		## Los autobuses del anillo (la vieja línea 5 amarilla) ya no van aquí (28-10-2026): las cuatro marquesinas del anillo son
+		## paraderos de los recorridos «Red» 101c, 190, 122, C02, 150, 502c y 506c, que pasan por el anillo con sus buses (`BusesRed`).
 
 	## 2) LA AVENIDA DE ACCESO y 3) LA CALLE DEL BARRIO: circuitos estrechos
 	## -se baja por un carril y se sube por el otro-, que es lo que hace que un

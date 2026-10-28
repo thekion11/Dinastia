@@ -50,6 +50,21 @@ func _probar_palmares() -> void:
 			orden_ok = orden_ok and int(h["cantidad"]) == (h["anios"] as Array).size() and int(h["anio"]) == int((h["anios"] as Array)[(h["anios"] as Array).size() - 1])
 		_comprobar(orden_ok, "un hito por competición con su cantidad y el año del último título")
 		_comprobar(TrofeosReales.id_de(String(hitos[0]["titulo"]), "ESP") != "generico", "cada hito encuentra su copa de receta")
+		## Chile, Argentina, Uruguay y México también (orden del líder: el juego empieza en Chile).
+		var colo := HistoriaClub.de(_club("Colo-Colo" if real else _ficticio_de("Colo-Colo")), [])
+		var por_clave := {}
+		for x: Dictionary in HistoriaClub.lista_palmares(colo):
+			por_clave[String(x["clave"])] = x["anios"]
+		_comprobar(por_clave.has("liga:CHI") and (por_clave["liga:CHI"] as Array).size() >= 10, "el grande de Chile trae sus ligas (%d)" % (por_clave["liga:CHI"] as Array).size() if por_clave.has("liga:CHI") else "el grande de Chile trae sus ligas (0)")
+		_comprobar(por_clave.has("conf:lib") and (por_clave["conf:lib"] as Array).size() == 1 and int((por_clave["conf:lib"] as Array)[0]) == 1991, "…y la Libertadores de 1991")
+		var paises := {}
+		for k2: String in tabla:
+			var pal2: Variant = (tabla[k2] as Dictionary).get("palmares", null)
+			if pal2 is Dictionary:
+				for clave: String in (pal2 as Dictionary):
+					paises[clave] = true
+		for clave2: String in ["liga:CHI", "liga:ARG", "liga:URU", "liga:MEX", "copa:ARG"]:
+			_comprobar(paises.has(clave2), "hay palmarés de %s" % clave2)
 		var sin := _club("Club Inventado")
 		_comprobar(HistoriaClub.hitos_palmares(sin).is_empty() and HistoriaClub.texto_palmares(HistoriaClub.de(sin, [])) == "", "un club sin palmarés no inventa nada")
 		## El visor enseña las veces y los años.

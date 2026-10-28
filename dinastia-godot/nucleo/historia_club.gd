@@ -230,6 +230,8 @@ static func nombre_competicion(clave: String) -> String:
 	var pais := clave.get_slice(":", 1)
 	match clave.get_slice(":", 0):
 		"liga":
+			if pais == "CHI":   ## la liga de Chile no está en `PAISES_LIGAS` (la arma `Mundo`)
+				return "Primera División"
 			return String((Datos.tabla("PAISES_LIGAS") as Dictionary).get(pais, {}).get("liga", ""))
 		"copa":
 			return String((Datos.tabla("COPA_NOM") as Dictionary).get(pais, ""))

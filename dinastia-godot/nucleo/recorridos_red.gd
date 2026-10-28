@@ -1,21 +1,17 @@
 class_name RecorridosRed
 extends RefCounted
-## LOS RECORRIDOS DE «RED» (27-10-2026, orden del dueño 16). Los paraderos de la ciudad son de «Red» (como Red Movilidad de
-## Santiago): cada uno tiene su código «PA####» en el poste (`ParaderoRed`) y el DT lo consulta en la app «Red» del móvil para
-## ver qué micros pasan, en cuántos minutos llegan y su patente. Esta es LA TABLA: el cartel y la app la leen, así dicen lo mismo.
-## Reglas reales que dio el dueño:
-##   · Los recorridos se numeran por SECTOR de la ciudad: sector 100 → 122, 150, 190…; sector 200 → 203, 217, 278…; y así.
-##   · Sufijo «c»: el mismo recorrido en sentido contrario (122c vuelve por donde fue el 122).
-##   · Sufijo «e»: una alternativa (variante expresa o de desvío). Muy rara.
-##   · Además hay recorridos LOCALES tipo «C02», «C09c» (con su «c» también).
-##   · Un paradero muestra de 3 a 5 recorridos (el cartel tiene sitio para seis cajitas).
-## El código lleva el sector en su primera cifra (PA1xxx = sector 100, PA2xxx = sector 200…): así `recorridos(codigo)` no
-## necesita saber dónde está el paradero, y un código escrito a mano en la app da lo mismo que el cartel.
-## TODO ES DETERMINISTA: sale de `hash()` del código o del recorrido; no toca `Azar` ni la hora del sistema.
-## EL HORARIO (no hay buses «Red» circulando de verdad: los autobuses de `TraficoCiudad` son las líneas 3, 7, 10 y 22 de la
-## ciudad, con otra numeración): cada recorrido sale de cabecera cada 6-15 min según la hora del reloj del juego (más seguido
-## en punta, más espaciado a última hora y el domingo), con servicio de 05:30 a 23:30 (los locales, de 06:30 a 22:00). La
-## pasada por cada paradero va desfasada según el código. La patente es la del bus de la flota del recorrido que hace esa vuelta.
+## LOS RECORRIDOS DE «RED» (27-10-2026, orden del dueño 16; ATADOS AL MAPA el 28-10, orden 17). Los paraderos de la ciudad son de
+## «Red» (como Red Movilidad de Santiago): cada uno tiene su código «PA####» en el poste (`ParaderoRed`) y el DT lo consulta en la
+## app «Red» del móvil para ver qué micros pasan, en cuántos minutos llegan y su patente. ESTA ES LA FACHADA ÚNICA: el cartel 3D,
+## la app, el mapa del transporte y los buses de la calle (`BusesRed`) leen de aquí, así dicen lo mismo.
+## LOS DATOS salen del mapa (`RecorridosMapa`): cada recorrido sigue calles reales, su número es el del sector donde nace (1xx el
+## club, 2xx el centro…), su vuelta lleva «c», el 301e es la alternativa y C02/C09 los locales; los paraderos son sus paradas, con
+## el nombre de la calle y la esquina (`CallesCiudad`) y el código «PA» + sector + 3 cifras, numerado en orden por sector.
+## EL HORARIO (cuando la ciudad no está montada o el DT no está en la calle): cada recorrido sale de su cabecera cada 6-15 min según
+## la hora del reloj del juego (más seguido en punta, más espaciado a última hora y el domingo), con servicio de 05:30 a 23:30 (los
+## locales, de 06:30 a 22:00), y llega a cada paradero tras la DISTANCIA REAL del recorrido hasta él a `VEL_COMERCIAL`. En la
+## calle, la app usa la posición y la velocidad reales de los buses (`BusesRed.llegadas`).
+## TODO ES DETERMINISTA: no toca `Azar` ni la hora del sistema.
 
 ## Las medidas de la ciudad grande que definen las zonas (copiadas de `CiudadExpansion` y `CityBuilder.RIO_X`; la prueba
 ## `pruebas/ideas/red_app.gd` comprueba que siguen iguales). El núcleo es el club con sus anillos.
@@ -38,28 +34,6 @@ const SECTORES := {
 }
 const COLOR_LOCAL := Color(0.25, 0.55, 0.15)
 
-## LA TABLA: los recorridos troncales de cada sector y los locales. Los del dueño (122, 150, 190, 203, 217, 278) están.
-const TABLA := {
-	100: ["101", "104", "109", "112", "122", "150", "168", "190"],
-	200: ["203", "205", "210", "217", "226", "232", "278"],
-	300: ["301", "303", "307", "314", "325", "341", "385"],
-	400: ["401", "405", "412", "421", "426", "438", "480"],
-	500: ["502", "506", "511", "516", "519", "540", "592"],
-	600: ["604", "610", "614", "630", "648", "672"],
-}
-const LOCALES := {100: ["C01", "C02"], 200: ["C04", "C05"], 300: ["C07", "C09"], 400: ["C11", "C12"], 500: ["C14"], 600: ["C16", "C18"]}
-## Por dónde se cruzan los sectores: un paradero puede tener un recorrido que viene del sector vecino.
-const VECINOS := {100: [200, 300, 400, 500], 200: [100, 300, 500], 300: [100, 200, 400], 400: [100, 300, 600], 500: [100, 200, 600], 600: [400, 500]}
-
-## Calles y plazas inventadas con sabor chileno (árboles, aves, cerros, oficios; ningún nombre de persona).
-const CALLES := ["Av. Los Quillayes", "Los Aromos", "Av. El Peumo", "Las Araucarias", "Los Copihues", "Av. La Cordillera",
-	"Los Litres", "El Boldo", "Las Camelias", "Av. El Salitre", "Los Maitenes", "Las Vizcachas", "Av. Las Golondrinas",
-	"El Roble", "Los Canelos", "Los Alerces", "Av. La Chimba", "Las Tinajas", "El Molle", "Los Espinos", "Av. Los Andes",
-	"Las Diucas", "Los Zorzales", "El Algarrobo", "Av. La Herradura", "Los Tejares", "Las Lilas", "El Coigüe", "Los Talleres",
-	"Av. La Ribera", "Los Pescadores", "Las Bodegas", "El Arrayán", "Los Pimientos", "Av. Cerro Blanco", "Las Achiras"]
-const DESTINOS := ["Plaza Los Aromos", "Villa El Peumo", "Estación Ribera", "Terminal La Chimba", "Población El Salitre",
-	"Villa Los Copihues", "Plaza Cerro Blanco", "Puerto Viejo", "Mirador Los Andes", "Barrio Las Lilas", "Terminal El Molle",
-	"Estadio", "Plaza La Herradura", "Villa Las Diucas", "Hospital del Sur", "Mercado Central"]
 ## Letras de patente chilena (sin vocales ni las que se confunden).
 const LETRAS := "BCDFGHJKLPRSTVWXYZ"
 const INICIO_SERVICIO := 330      ## 05:30
@@ -67,6 +41,7 @@ const FIN_SERVICIO := 1410        ## 23:30
 const INICIO_LOCAL := 390         ## 06:30
 const FIN_LOCAL := 1320           ## 22:00
 const OCUPACION := ["Con asientos", "De pie", "Lleno"]
+const VEL_COMERCIAL := 330.0     ## m por minuto de reloj (~20 km/h con paradas y semáforos)
 
 ## La zona de la ciudad de un punto, como `CiudadExpansion._zona`: oeste del río, centro de torres al norte del club,
 ## comercio al este, casas al sur y el núcleo del club; más allá de 1.100 m, la periferia.
@@ -86,10 +61,24 @@ static func sector_de(pos: Vector3) -> int:
 static func nombre_sector(sector: int) -> String:
 	return String(SECTORES.get(sector, ["?"])[0])
 
-## «PA» + la cifra del sector + tres cifras por `semilla` (la posición del paradero).
+## Un paradero REAL del mapa para `semilla` dentro del `sector` (los montajes sueltos de pruebas y capturas): siempre el mismo.
 static func codigo(semilla: int, sector: int) -> String:
-	var s := clampi(sector / 100, 1, 6)
-	return "PA%d%03d" % [s, absi(hash([semilla, 11])) % 1000]
+	var s := clampi(sector / 100, 1, 6) * 100
+	var lista: Array[String] = []
+	for cod: String in RecorridosMapa.datos()["orden"]:
+		if int(RecorridosMapa.paradero(cod)["sector"]) == s:
+			lista.append(cod)
+	if lista.is_empty():
+		return String(RecorridosMapa.datos()["orden"][0])
+	return lista[posmod(semilla, lista.size())]
+
+## ¿Existe ese paradero en el mapa?
+static func existe(cod: String) -> bool:
+	return not RecorridosMapa.paradero(cod).is_empty()
+
+## El paradero del mapa en (o muy cerca de) una posición: "" si no hay ninguno a menos de `radio` metros.
+static func paradero_en(pos: Vector3, radio := 3.0) -> String:
+	return RecorridosMapa.cercano(pos, radio)
 
 ## Lo que escribe el jugador («pa1234», «1234», «PA 1234») a la forma del cartel; "" si no es un código.
 static func normalizar(texto: String) -> String:
@@ -101,50 +90,21 @@ static func normalizar(texto: String) -> String:
 		return ""
 	return t
 
-## El sector del código: la primera cifra si son cuatro y vale 1-6; si no (códigos viejos «PA433»), uno fijo por hash.
+## El sector del código: su primera cifra (PA2xxx = centro). Los del mapa siempre tienen cuatro.
 static func sector_del_codigo(cod: String) -> int:
 	var cifras := cod.substr(2)
 	if cifras.length() == 4 and int(cifras[0]) >= 1 and int(cifras[0]) <= 6:
 		return int(cifras[0]) * 100
-	return 100 * (1 + absi(hash([cod, "sector"])) % 6)
+	return 0
 
-## Los recorridos que paran en el paradero, ordenados (troncales por número y los locales al final).
+## Los recorridos que paran en el paradero (los que de verdad pasan por él, en su sentido), troncales por número y los locales
+## al final. Vacío si el código no existe.
 static func recorridos(cod: String) -> Array[String]:
-	var sector := sector_del_codigo(cod)
-	var propios: Array = TABLA[sector]
-	var h := absi(hash([cod, "rec"]))
-	var n := 3 + h % 3
-	var bases: Array[String] = []
-	if absi(hash([cod, "local"])) % 3 == 0:
-		var locs: Array = LOCALES[sector]
-		bases.append(String(locs[absi(hash([cod, "l"])) % locs.size()]))
-	if absi(hash([cod, "vecino"])) % 2 == 0:
-		var vs: Array = VECINOS[sector]
-		var otro: Array = TABLA[int(vs[absi(hash([cod, "v"])) % vs.size()])]
-		bases.append(String(otro[absi(hash([cod, "vr"])) % otro.size()]))
-	var k := absi(hash([cod, "paso"]))
-	var i := 0
-	while bases.size() < n and i < propios.size() * 2:
-		var r := String(propios[(k + i * 5) % propios.size()])
-		if not bases.has(r):
-			bases.append(r)
-		i += 1
+	var p := RecorridosMapa.paradero(cod)
 	var out: Array[String] = []
-	for b: String in bases:
-		out.append(b + sufijo(cod, b))
-	out.sort_custom(func(a: String, c: String) -> bool:
-		var la := a.begins_with("C")
-		var lc := c.begins_with("C")
-		return a < c if la == lc else lc)
+	if not p.is_empty():
+		out.assign(p["recorridos"])
 	return out
-
-## «c» (vuelta) según el lado de la calle en que está el paradero; «e» (alternativa), uno de cada veinticinco.
-static func sufijo(cod: String, base: String) -> String:
-	if absi(hash([cod, base, "c"])) % 2 == 0:
-		return "c"
-	if not base.begins_with("C") and absi(hash([cod, base, "e"])) % 25 == 0:
-		return "e"
-	return ""
 
 static func base_de(recorrido: String) -> String:
 	return recorrido.trim_suffix("c").trim_suffix("e")
@@ -155,20 +115,19 @@ static func color(recorrido: String) -> Color:
 	var s := int(recorrido.substr(0, 1)) * 100
 	return SECTORES[s][1] if SECTORES.has(s) else Color(0.4, 0.4, 0.45)
 
-## Hacia dónde va: el 122 de A a B; el 122c, de B a A.
+## Hacia dónde va (el barrio o hito de su cabecera final): el 122 al Puerto; el 122c, al Estadio.
 static func destino(recorrido: String) -> String:
-	var b := base_de(recorrido)
-	var h := absi(hash([b, "destino"]))
-	var a := h % DESTINOS.size()
-	var z := (a + 1 + (h / 7) % (DESTINOS.size() - 1)) % DESTINOS.size()
-	return String(DESTINOS[a] if recorrido.ends_with("c") else DESTINOS[z])
+	return String(RecorridosMapa.servicio(recorrido).get("destino", ""))
 
-## El nombre de la parada: la calle y la esquina («Av. Los Quillayes / Los Aromos»).
+## El nombre de la parada: la calle y la próxima esquina («Av. Los Pimientos / El Peumo»).
 static func nombre_parada(cod: String) -> String:
-	var h := absi(hash([cod, "calle"]))
-	var a := h % CALLES.size()
-	var b := (a + 1 + (h / 11) % (CALLES.size() - 1)) % CALLES.size()
-	return "%s / %s" % [CALLES[a], CALLES[b]]
+	return String(RecorridosMapa.paradero(cod).get("nombre", ""))
+
+## Metros desde la cabecera del recorrido hasta el paradero, por sus calles (−1 si no para ahí).
+static func distancia(cod: String, recorrido: String) -> float:
+	var s := RecorridosMapa.servicio(recorrido)
+	var i := (s.get("paraderos", []) as Array).find(cod)
+	return float(s["dist"][i]) if i >= 0 else -1.0
 
 ## Cada cuánto sale de cabecera (6-15 min): base por recorrido, más seguido en punta de lunes a viernes, más espaciado
 ## a última hora y el domingo. `dia` 0 = lunes.
@@ -185,14 +144,16 @@ static func frecuencia(recorrido: String, minuto_dia: int, dia: int) -> int:
 		f += 3
 	return clampi(f, 6, 15)
 
-## Las pasadas del día por el paradero (minuto del día). El índice de cada una es la vuelta del bus, para su patente.
+## Las pasadas del día por el paradero (minuto del día): las salidas de cabecera (desfasadas por recorrido) más el tiempo de
+## viaje por la distancia real hasta el paradero. El índice de cada una es la vuelta del bus, para su patente.
 static func pasadas(cod: String, recorrido: String, dia: int) -> PackedInt32Array:
 	var local := recorrido.begins_with("C")
-	var t := (INICIO_LOCAL if local else INICIO_SERVICIO) + absi(hash([cod, recorrido, "desfase"])) % 12
+	var t := (INICIO_LOCAL if local else INICIO_SERVICIO) + absi(hash([recorrido, "desfase"])) % 12
 	var fin := FIN_LOCAL if local else FIN_SERVICIO
+	var viaje := roundi(maxf(distancia(cod, recorrido), 0.0) / VEL_COMERCIAL)
 	var out := PackedInt32Array()
 	while t <= fin:
-		out.append(t)
+		out.append(t + viaje)
 		t += frecuencia(recorrido, t, dia)
 	return out
 

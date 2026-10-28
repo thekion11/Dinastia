@@ -26,6 +26,8 @@ static func id_de(titulo: String, pais: String) -> String:
 	var limpio := Nombres.limpiar(titulo)
 	if limpio == "Mundial de Clubes":
 		return "mundial"
+	if limpio == "Primera División":   ## la liga de Chile no está en `PAISES_LIGAS` (la arma `Mundo`)
+		return "liga:CHI"
 	if limpio == "Liga" and pais != "":
 		return "liga:" + pais
 	var ligas: Dictionary = Datos.tabla("PAISES_LIGAS")

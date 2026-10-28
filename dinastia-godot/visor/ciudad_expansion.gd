@@ -345,25 +345,8 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 			var na: Node3D = CityBuilder.instanciar_coche(coches[rng.randi() % coches.size()], rng)
 			t.agregar_vehiculo(na, ida, largo_a * float(i) / 12.0 + rng.randf() * 40.0, rng.randf_range(22.0, 30.0), 0.0, 0.0)
 			t.marcar_cola_al_ultimo()
-	## Los autobuses.
-	var n_bus := 0
-	for l: Dictionary in lineas_bus:
-		var pts2: PackedVector3Array = _subir_puentes(l["puntos"])
-		var id2 := t.agregar_ruta(b._redondear(pts2, 12.0))
-		_controles_de(t, id2)
-		var paradas: Array = []
-		for p: Vector3 in l["paradas"]:
-			paradas.append(t.s_mas_cercano(id2, p))
-		var largo2 := t.largo_de(id2)
-		var col_bus := MapaTransporte.color_linea(String(l["nombre"]).get_slice(" ", 1)).darkened(0.1)
-		for k in 2:
-			var num := String(l["nombre"]).get_slice(" ", 1)
-			var nb: Node3D = CityBuilder.autobus(col_bus, "%s · %s" % [num, String(l.get("destino", "CIRCULAR"))], num)
-			t.agregar_vehiculo(nb, id2, largo2 * float(k) * 0.5, 9.0, 0.0, 0.0)
-			t.agregar_paradas_al_ultimo(paradas, 7.0)
-			t.marcar_cola_al_ultimo()
-			n_bus += 1
-	cuenta["autobuses"] = n_bus
+	## Los autobuses: los recorridos «Red» sobre el mapa, ida y vuelta, con su número, destino y patente (`BusesRed`).
+	cuenta["autobuses"] = BusesRed.montar(self, t)
 	## Peatones: la vuelta a varias manzanas por su acera.
 	var n_p := 0
 	var elegidos := 0

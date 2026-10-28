@@ -3,8 +3,9 @@ extends RefCounted
 ## LA APP «RED» DEL MÓVIL (27-10-2026, orden del dueño 16): como la app de Red Movilidad de Santiago. Arriba, el paradero
 ## más cercano al DT (si está a menos de 40 m) o un campo para escribir el código «PA####» del poste; luego el nombre de la
 ## parada, sus recorridos en cajitas del color del cartel y las PRÓXIMAS LLEGADAS: recorrido y destino, minutos («Llegando»
-## si falta menos de uno), patente del bus y lo lleno que va. La tabla y el horario son de `RecorridosRed` (el cartel 3D lee
-## la misma, así dicen lo mismo); la hora, del reloj único (`Mundo.reloj`). Aquí solo se dibuja.
+## si falta menos de uno), patente del bus y lo lleno que va. Los recorridos son los del mapa (`RecorridosRed`, el cartel 3D lee
+## lo mismo); en la calle, los minutos salen de los buses reales (`BusesRed.llegadas`) y si no, del horario con la hora del reloj
+## único (`Mundo.reloj`). Aquí solo se dibuja.
 
 const ROJO := Color("d7182a")
 const RADIO_CERCA := 40.0
@@ -68,14 +69,23 @@ static func pintar(tel: Telefono) -> void:
 			"Acércate a menos de 40 m de un paradero o escribe el código PA del poste."))
 		return
 	var cod := String(par["codigo"])
+	if not RecorridosRed.existe(cod):
+		cuerpo.add_child(tel._vacio("🚏", "Ese paradero no existe", "Revisa el código del poste: «PA» y cuatro cifras."))
+		return
 	_tarjeta_paradero(tel, cuerpo, cod, float(par["distancia"]))
 	cuerpo.add_child(Tema.etiqueta(Tema.TAM_ROTULO - 2, Tema.ORO, Idiomas.t("PRÓXIMAS LLEGADAS")))
-	var ls := RecorridosRed.llegadas(cod, minuto_semana(tel.m))
+	## En la calle, con los buses de verdad (`BusesRed`: su posición y su velocidad sobre el recorrido); si no, el horario.
+	var ls: Array[Dictionary] = []
+	if tel.en_la_calle and tel.is_inside_tree():
+		ls = BusesRed.llegadas(tel.get_tree(), cod)
+	var vivo := not ls.is_empty()
+	if not vivo:
+		ls = RecorridosRed.llegadas(cod, minuto_semana(tel.m))
 	if ls.is_empty():
 		cuerpo.add_child(tel._nota(Idiomas.t("Sin servicio a esta hora. Los recorridos vuelven a pasar desde las 05:30.")))
 	for l: Dictionary in ls:
 		cuerpo.add_child(fila_llegada(l))
-	cuerpo.add_child(tel._nota(Idiomas.t("Tiempos estimados según el horario de cada recorrido.")))
+	cuerpo.add_child(tel._nota(Idiomas.t("Tiempos según la posición real de cada bus.") if vivo else Idiomas.t("Tiempos estimados según el horario de cada recorrido.")))
 
 ## Campo del código y «Buscar»; «Cerca» vuelve al paradero más cercano.
 static func _buscador(tel: Telefono, cuerpo: VBoxContainer) -> void:

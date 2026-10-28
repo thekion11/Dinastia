@@ -70,12 +70,17 @@ func _paradas_bus() -> void:
 	for s in sitios:
 		paradas_bus_pos.append(s["p"])
 		esperas_bus.append(s["p"])
+		## Son paraderos de los recorridos «Red» sobre el mapa (`RecorridosMapa.DEL_CLUB`): de allí salen su código, su nombre
+		## («Av. Los Hinchas / Estadio»), sus recorridos y hacia dónde miran (a la calle del anillo).
+		var cod := RecorridosRed.paradero_en(s["p"])
+		if cod != "":
+			s["a"] = float(RecorridosMapa.paradero(cod)["giro"])
 		var raiz := Node3D.new()
 		raiz.position = s["p"]
 		raiz.rotation.y = float(s["a"])
 		add_child(raiz)
 		## PARADERO DE LA RED (27-10-2026), como en las fotos del dueño: techo blanco con costillas rojas, cabecera negra «Paradero de Red Movilidad | Parada N», panel con póster, banca de láminas y poste con el cartel negro.
-		ParaderoRed.montar(raiz, 3.8, int(s["p"].x * 7.0 + s["p"].z), String(s["n"]), int(s.get("sector", 0)))
+		ParaderoRed.montar(raiz, 3.8, int(s["p"].x * 7.0 + s["p"].z), RecorridosRed.nombre_parada(cod) if cod != "" else String(s["n"]), int(s.get("sector", 0)), cod)
 		for xs: float in ParaderoRed.asientos_x():
 			asientos.append({"p": (s["p"] as Vector3) + Basis(Vector3.UP, float(s["a"])) * Vector3(xs, GenteSentada.ASIENTO_CIUDAD + 0.04, -0.9), "giro": float(s["a"])})
 		_cartel(s["p"] + Vector3(0, 0, -6.0), "🚌 " + String(s["n"]), true)
