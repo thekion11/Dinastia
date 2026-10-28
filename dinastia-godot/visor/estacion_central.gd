@@ -186,7 +186,7 @@ func _construir(b: CityBuilder, w: float, f: float, mats: Dictionary, ex: Ciudad
 
 func _rotulo(pos: Vector3, texto: String, tam: float) -> void:
 	var l := Label3D.new()
-	l.text = texto
+	l.text = Idiomas.t(texto)   ## M-333
 	l.font_size = 64
 	l.pixel_size = tam
 	l.outline_size = 10

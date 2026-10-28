@@ -69,7 +69,7 @@ func _cartel(pos: Vector3, texto: String, mio: bool) -> void:
 	add_child(poste)
 
 	var l := Label3D.new()
-	l.text = texto
+	l.text = Idiomas.t(texto)   ## M-333
 	## Letras de ~5 m: a la altura de cámara del mapa (165 m) se leen sin
 	## esfuerzo, y al bajar a mirar una parcela de cerca no tapan el edificio.
 	## A 9 m -el primer intento- los carteles eran más anchos que su parcela.

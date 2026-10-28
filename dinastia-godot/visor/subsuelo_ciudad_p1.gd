@@ -276,7 +276,7 @@ func _tubo(p: Vector3, q: Vector3, r: float, mat: Material) -> void:
 
 func _rotulo(pos: Vector3, texto: String, tam: float = 0.012, billboard: bool = true, giro: float = 0.0) -> Label3D:
 	var l := Label3D.new()
-	l.text = texto
+	l.text = Idiomas.t(texto)   ## M-333
 	l.font_size = 48
 	l.pixel_size = tam
 	l.outline_size = 8

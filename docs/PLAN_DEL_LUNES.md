@@ -930,7 +930,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-329 | P2 | PARCIAL | Sin género gramatical (entrenadora/jugadora) en todos los idiomas | `Genero` solo en español |
 | M-330 | P2 | PENDIENTE | Formatos de fecha/número por idioma | sin `Idiomas.fecha/numero` |
 | M-332 | P2 | PENDIENTE | Narración traducida (`narracion.json`) sin revisión nativa | sin revisión nativa |
-| M-333 | P2 | PARCIAL | Texto en imágenes (carteles del 3D) sin traducir | textos de `visor/` envueltos en `Idiomas.t` (15-10); carteles dibujados sin comprobar |
 | M-334 | P2 | PENDIENTE | Sin RTL (árabe, hebreo) aunque hay KSA/EGY/MAR | sin RTL |
 
 ### dueño (27)

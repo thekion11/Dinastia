@@ -182,7 +182,7 @@ func _campos() -> void:
 ## Un rótulo flotante: siempre del mismo tamaño en pantalla y mirando a cámara.
 func _rotulo(pos: Vector3, texto: String, color: Color, tam: int = 28) -> void:
 	var l := Label3D.new()
-	l.text = texto
+	l.text = Idiomas.t(texto)   ## M-333: los rótulos del mapa, en el idioma del juego (los nombres propios se quedan)
 	l.font_size = tam
 	l.outline_size = 10
 	l.modulate = color
