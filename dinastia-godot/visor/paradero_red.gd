@@ -141,7 +141,6 @@ static func asientos_x() -> Array[float]:
 
 static func montar(raiz: Node3D, ancho: float, semilla: int, nombre := "", sector := 0, cod := "") -> void:
 	var w := 3.8   ## el paradero real mide ~3,6 m: se ignora un ancho mayor (los de 7,5 m eran de la versión inventada)
-	var parada := 1 + absi(hash([semilla, 17])) % 9
 	var donde := raiz.global_position if raiz.is_inside_tree() else raiz.position
 	var sec := sector if sector > 0 else RecorridosRed.sector_de(donde)
 	if cod == "":
@@ -149,6 +148,9 @@ static func montar(raiz: Node3D, ancho: float, semilla: int, nombre := "", secto
 	else:
 		sec = RecorridosRed.sector_del_codigo(cod)
 	var rs := RecorridosRed.recorridos(cod)
+	## «Parada N»: el número del paradero dentro de su sector (las tres últimas cifras del código), como en la cabecera real;
+	## antes salía de un hash y casi todos decían «Parada 1».
+	var parada := maxi(1, int(cod.right(3))) if cod.length() >= 6 else 1 + absi(hash([semilla, 17])) % 9
 	if nombre == "":
 		nombre = RecorridosRed.nombre_parada(cod)
 	## La app encuentra el paradero por el grupo y la meta.
