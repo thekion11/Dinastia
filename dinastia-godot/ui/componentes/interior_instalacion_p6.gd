@@ -12,26 +12,36 @@ extends "res://ui/componentes/interior_instalacion_p5.gd"
 ## socorrista, el material (churros, tablas, pull-buoys) y la nevera. En las
 ## paredes, azulejo con la franja del club, el reloj, la pantalla de la sesión
 ## y el salvavidas. Casi todo en lotes (`_prim`, `_poner`).
+const PISC_ACERO := Color(0.7, 0.72, 0.75)
+const PISC_CROMO := Color(0.86, 0.87, 0.89)
+const PISC_BLANCO := Color(0.95, 0.95, 0.96)
+const PISC_GRESITE := Color(0.28, 0.6, 0.8)
+const PISC_MADERA := Color(0.74, 0.52, 0.32)
+const PISC_BATA := [Color(0.95, 0.95, 0.97), Color(0.14, 0.18, 0.32), true]
+## La piscina, por zonas: el vaso, las paredes, la gente del agua, el jacuzzi, el hielo, la sauna, las duchas y las tumbonas (cada una en su `_pisc_*`).
 func _piscina() -> void:
 	_sala(Vector3(22, 5.5, 14), Color(0.86, 0.89, 0.9), Color(0.82, 0.9, 0.93), "losa", Color(0.32, 0.58, 0.72))
-	var dep := [_c1, _c2]
-	var bata := [Color(0.95, 0.95, 0.97), Color(0.14, 0.18, 0.32), true]
-	var acero := Color(0.7, 0.72, 0.75)
-	var cromo := Color(0.86, 0.87, 0.89)
-	var blanco := Color(0.95, 0.95, 0.96)
-	var gresite := Color(0.28, 0.6, 0.8)
-	var madera := Color(0.74, 0.52, 0.32)
-	## --- El vaso: fondo de gresite con su cuadrícula y las calles pintadas.
+	var v := _pisc_vaso()
+	_pisc_paredes()
+	_pisc_gente(v["c"], v["hx"], v["hz"], v["calles"], v["agua"])
+	_pisc_jacuzzi()
+	_pisc_hielo()
+	_pisc_sauna()
+	_pisc_duchas()
+	_pisc_tumbonas()
+
+## El vaso: fondo de gresite con su cuadrícula y las calles pintadas. Devuelve lo que necesita la gente del agua.
+func _pisc_vaso() -> Dictionary:
 	var c := Vector3(-1.5, 0, -1.8)
 	var largo := 14.0
 	var ancho := 7.0
 	var hx := largo * 0.5
 	var hz := ancho * 0.5
-	_prim("caja", c + Vector3(0, 0.003, 0), Vector3(largo, 0.006, ancho), gresite)
+	_prim("caja", c + Vector3(0, 0.003, 0), Vector3(largo, 0.006, ancho), PISC_GRESITE)
 	for i in 15:
-		_prim("caja", c + Vector3(-hx + float(i), 0.007, 0), Vector3(0.025, 0.002, ancho), gresite.lightened(0.22))
+		_prim("caja", c + Vector3(-hx + float(i), 0.007, 0), Vector3(0.025, 0.002, ancho), PISC_GRESITE.lightened(0.22))
 	for j in 8:
-		_prim("caja", c + Vector3(0, 0.007, -hz + float(j)), Vector3(largo, 0.002, 0.025), gresite.lightened(0.22))
+		_prim("caja", c + Vector3(0, 0.007, -hz + float(j)), Vector3(largo, 0.002, 0.025), PISC_GRESITE.lightened(0.22))
 	var calles: Array[float] = []
 	for i in 4:
 		var zl := c.z - hz + 0.875 + float(i) * 1.75
@@ -41,13 +51,13 @@ func _piscina() -> void:
 			_prim("caja", Vector3(c.x + s * (hx - 1.0), 0.01, zl), Vector3(0.25, 0.003, 1.0), Color(0.08, 0.16, 0.35))
 	var agua := Mini3D.caja(_raiz, c + Vector3(0, 0.03, 0), Vector3(largo, 0.04, ancho), Mini3D.mat(Color(0.3, 0.68, 0.86, 0.5), 0.03, 0.12))
 	agua.name = "Agua"
-	## Rebosadero (rejilla oscura con sus lamas) y el borde blanco alrededor.
+	## Rebosadero (rejilla oscura con sus lamas) y el borde PISC_BLANCO alrededor.
 	var rejilla := Color(0.32, 0.38, 0.42)
 	for s: float in [-1.0, 1.0]:
 		_prim("caja", c + Vector3(0, 0.05, s * (hz + 0.09)), Vector3(largo + 0.36, 0.1, 0.18), rejilla)
 		_prim("caja", c + Vector3(s * (hx + 0.09), 0.05, 0), Vector3(0.18, 0.1, ancho), rejilla)
-		_prim("caja", c + Vector3(0, 0.06, s * (hz + 0.43)), Vector3(largo + 1.36, 0.12, 0.5), blanco)
-		_prim("caja", c + Vector3(s * (hx + 0.43), 0.06, 0), Vector3(0.5, 0.12, ancho + 0.36), blanco)
+		_prim("caja", c + Vector3(0, 0.06, s * (hz + 0.43)), Vector3(largo + 1.36, 0.12, 0.5), PISC_BLANCO)
+		_prim("caja", c + Vector3(s * (hx + 0.43), 0.06, 0), Vector3(0.5, 0.12, ancho + 0.36), PISC_BLANCO)
 		for i in int((largo + 0.36) / 0.12):
 			_prim("caja", c + Vector3(-hx - 0.12 + float(i) * 0.12, 0.102, s * (hz + 0.09)), Vector3(0.03, 0.004, 0.15), Color(0.85, 0.88, 0.9))
 		for j in int(ancho / 0.12):
@@ -65,32 +75,34 @@ func _piscina() -> void:
 		for k in n:
 			var x := c.x - hx + 0.1 + float(k) * 0.14
 			var cerca := absf(x - c.x) > hx - 5.0
-			var col := Color(0.85, 0.15, 0.12) if cerca else (Color(0.15, 0.35, 0.8) if k % 2 == 0 else blanco)
+			var col := Color(0.85, 0.15, 0.12) if cerca else (Color(0.15, 0.35, 0.8) if k % 2 == 0 else PISC_BLANCO)
 			_prim("cil", Vector3(x, 0.055, zb), Vector3(0.1, 0.12, 0.1), col, "goma", Vector3(0, 0, PI * 0.5))
 	## Banderines de espalda a 5 m de cada pared.
 	for s: float in [-1.0, 1.0]:
 		var x := c.x + s * (hx - 5.0)
 		for t: float in [-1.0, 1.0]:
-			_prim("cil", Vector3(x, 0.95, c.z + t * (hz + 0.55)), Vector3(0.05, 1.9, 0.05), acero, "metal")
+			_prim("cil", Vector3(x, 0.95, c.z + t * (hz + 0.55)), Vector3(0.05, 1.9, 0.05), PISC_ACERO, "metal")
 		_prim("caja", Vector3(x, 1.82, c.z), Vector3(0.015, 0.015, ancho + 1.1), Color(0.2, 0.2, 0.22))
 		for k in int(ancho / 0.35):
-			_prim("caja", Vector3(x, 1.73, c.z - hz + 0.2 + float(k) * 0.35), Vector3(0.004, 0.16, 0.13), [Color(0.85, 0.15, 0.12), blanco, Color(0.15, 0.35, 0.8)][k % 3])
+			_prim("caja", Vector3(x, 1.73, c.z - hz + 0.2 + float(k) * 0.35), Vector3(0.004, 0.16, 0.13), [Color(0.85, 0.15, 0.12), PISC_BLANCO, Color(0.15, 0.35, 0.8)][k % 3])
 	## Poyetes de salida (lado izquierdo), con su número.
 	for i in 4:
 		var p := Vector3(c.x - hx - 0.45, 0, calles[i])
 		_prim("caja", p + Vector3(0, 0.3, 0), Vector3(0.45, 0.6, 0.5), Color(0.2, 0.22, 0.26))
-		_prim("caja", p + Vector3(0.04, 0.64, 0), Vector3(0.6, 0.05, 0.55), blanco, "goma", Vector3(0, 0, -0.12))
-		_prim("caja", p + Vector3(-0.2, 0.75, 0), Vector3(0.04, 0.04, 0.45), cromo, "metal")
-		_texto(str(i + 1), p + Vector3(-0.232, 0.32, 0), 40, blanco, -PI * 0.5, false)
+		_prim("caja", p + Vector3(0.04, 0.64, 0), Vector3(0.6, 0.05, 0.55), PISC_BLANCO, "goma", Vector3(0, 0, -0.12))
+		_prim("caja", p + Vector3(-0.2, 0.75, 0), Vector3(0.04, 0.04, 0.45), PISC_CROMO, "metal")
+		_texto(str(i + 1), p + Vector3(-0.232, 0.32, 0), 40, PISC_BLANCO, -PI * 0.5, false)
 	## Escalerillas en el extremo derecho, a los dos lados.
 	for s: float in [-1.0, 1.0]:
 		var z := c.z + s * (hz + 0.12)
 		for dx: float in [-0.25, 0.25]:
 			var x := c.x + hx - 1.3 + dx
-			_prim("cil", Vector3(x, 0.5, z + s * 0.1), Vector3(0.045, 1.0, 0.045), cromo, "metal")
-			_prim("cil", Vector3(x, 1.0, z - s * 0.12), Vector3(0.045, 0.45, 0.045), cromo, "metal", Vector3(PI * 0.5, 0, 0))
-			_prim("cil", Vector3(x, 0.5, z - s * 0.34), Vector3(0.045, 1.0, 0.045), cromo, "metal")
-	## --- Paredes: franja del club, rótulos, reloj, pantalla y salvavidas.
+			_prim("cil", Vector3(x, 0.5, z + s * 0.1), Vector3(0.045, 1.0, 0.045), PISC_CROMO, "metal")
+			_prim("cil", Vector3(x, 1.0, z - s * 0.12), Vector3(0.045, 0.45, 0.045), PISC_CROMO, "metal", Vector3(PI * 0.5, 0, 0))
+			_prim("cil", Vector3(x, 0.5, z - s * 0.34), Vector3(0.045, 1.0, 0.045), PISC_CROMO, "metal")
+	return {"c": c, "hx": hx, "hz": hz, "calles": calles, "agua": agua}
+
+func _pisc_paredes() -> void:
 	_prim("caja", Vector3(0, 3.0, -6.99), Vector3(22, 0.22, 0.02), _c1)
 	for s: float in [-1.0, 1.0]:
 		_prim("caja", Vector3(s * 10.99, 3.0, 0), Vector3(0.02, 0.22, 14), _c1)
@@ -113,13 +125,15 @@ func _piscina() -> void:
 	_raiz.add_child(aro)
 	for k in 4:
 		var a := float(k) * PI * 0.5 + PI * 0.25
-		_prim("caja", Vector3(-9.6 + cos(a) * 0.31, 1.75 + sin(a) * 0.31, -6.84), Vector3(0.16, 0.08, 0.05), blanco, "mate", Vector3(0, 0, a + PI * 0.5))
-	_prim("caja", Vector3(-8.5, 1.55, -6.95), Vector3(0.45, 0.4, 0.1), blanco)
+		_prim("caja", Vector3(-9.6 + cos(a) * 0.31, 1.75 + sin(a) * 0.31, -6.84), Vector3(0.16, 0.08, 0.05), PISC_BLANCO, "mate", Vector3(0, 0, a + PI * 0.5))
+	_prim("caja", Vector3(-8.5, 1.55, -6.95), Vector3(0.45, 0.4, 0.1), PISC_BLANCO)
 	_prim("caja", Vector3(-8.5, 1.55, -6.895), Vector3(0.18, 0.05, 0.01), Color(0.8, 0.12, 0.12))
 	_prim("caja", Vector3(-8.5, 1.55, -6.895), Vector3(0.05, 0.18, 0.01), Color(0.8, 0.12, 0.12))
 	_ventana(-1.0, -4.4, 3.0, false)
 	_ventana(1.0, -4.4, 3.0, false)
-	## --- La gente en el agua (el suelo tapa lo que queda bajo la superficie).
+
+func _pisc_gente(c: Vector3, hx: float, hz: float, calles: Array[float], agua: Variant) -> void:
+	var dep := [_c1, _c2]
 	for i: int in [0, 2]:
 		var a := Vector3(c.x - hx + 1.3, -0.95, calles[i])
 		var b := Vector3(c.x + hx - 1.3, -0.95, calles[i])
@@ -134,7 +148,7 @@ func _piscina() -> void:
 	_prim("cil", Vector3(c.x + 2.05, 0.05, calles[1]), Vector3(0.1, 1.5, 0.1), Color(1.0, 0.55, 0.1), "goma", Vector3(PI * 0.5, 0, 0))
 	_trabajador(Vector3(c.x - 1.2, -0.95, calles[3] - 0.2), 0.0, false, ["brazos_al_frente", "charla", "brazos_al_frente", "pedir_calma"], dep)
 	_trabajador(Vector3(c.x - 4.6, -0.95, c.z + hz - 0.35), 0.0, false, ["parado", "charla", "cansado"], dep)
-	_trabajador(Vector3(c.x - 4.6, 0.12, c.z + hz + 0.55), PI, false, ["agachado"], bata)
+	_trabajador(Vector3(c.x - 4.6, 0.12, c.z + hz + 0.55), PI, false, ["agachado"], PISC_BATA)
 	if not _fijos.is_empty():
 		_fijos[-1]["base"] = "agachado"
 		Mini3D.anim(_fijos[-1]["d"], "agachado", "")
@@ -144,19 +158,21 @@ func _piscina() -> void:
 	var silla := Vector3(c.x + 5.6, 0, c.z + hz + 1.15)
 	for dx: float in [-0.28, 0.28]:
 		for dz: float in [-0.22, 0.22]:
-			_prim("cil", silla + Vector3(dx, 0.75, dz), Vector3(0.05, 1.5, 0.05), blanco, "metal")
+			_prim("cil", silla + Vector3(dx, 0.75, dz), Vector3(0.05, 1.5, 0.05), PISC_BLANCO, "metal")
 		for y: float in [0.35, 0.75, 1.1]:
-			_prim("caja", silla + Vector3(dx, y, 0.22), Vector3(0.04, 0.04, 0.04), blanco)
+			_prim("caja", silla + Vector3(dx, y, 0.22), Vector3(0.04, 0.04, 0.04), PISC_BLANCO)
 	for y: float in [0.35, 0.75, 1.1]:
-		_prim("caja", silla + Vector3(0, y, 0.24), Vector3(0.6, 0.035, 0.08), blanco)
+		_prim("caja", silla + Vector3(0, y, 0.24), Vector3(0.6, 0.035, 0.08), PISC_BLANCO)
 	_prim("caja", silla + Vector3(0, 1.5, 0), Vector3(0.66, 0.06, 0.56), Color(0.85, 0.15, 0.12))
 	_prim("caja", silla + Vector3(0, 1.85, 0.27), Vector3(0.66, 0.5, 0.05), Color(0.85, 0.15, 0.12))
-	_prim("caja", silla + Vector3(0, 0.95, -0.3), Vector3(0.5, 0.04, 0.2), blanco)
+	_prim("caja", silla + Vector3(0, 0.95, -0.3), Vector3(0.5, 0.04, 0.2), PISC_BLANCO)
 	_trabajador(silla + Vector3(0, 0, 0.04), PI, true, [], [Color(0.85, 0.12, 0.12), Color(0.95, 0.85, 0.2)], 1.53)
-	## --- Jacuzzi: vaso redondo elevado, agua con burbujas y dos dentro.
+
+func _pisc_jacuzzi() -> void:
+	var dep := [_c1, _c2]
 	var jc := Vector3(8.7, 0, -4.4)
 	_prim("cil", jc + Vector3(0, 0.275, 0), Vector3(3.0, 0.55, 3.0), Color(0.9, 0.93, 0.95))
-	_prim("cil", jc + Vector3(0, 0.552, 0), Vector3(2.66, 0.004, 2.66), gresite)
+	_prim("cil", jc + Vector3(0, 0.552, 0), Vector3(2.66, 0.004, 2.66), PISC_GRESITE)
 	_prim("cil", jc + Vector3(0, 0.3, 1.6), Vector3(0.9, 0.04, 0.5), Color(0.8, 0.84, 0.86))
 	for k in 3:
 		_prim("caja", jc + Vector3(-0.9 + float(k) * 0.9, 0.555, 1.38), Vector3(0.05, 0.02, 0.05), Color(0.6, 0.9, 1.0), "luz")
@@ -170,70 +186,78 @@ func _piscina() -> void:
 		var dir := Vector3(sin(a), 0, cos(a))
 		_trabajador(jc + dir * 0.95, atan2(-dir.x, -dir.z), true, [], dep, 0.2)
 	_cartel("HIDROMASAJE 37 °C", Vector3(8.7, 2.3, -6.95), 26, Color(0.9, 0.97, 1.0))
-	## --- Bañeras de hielo (crioterapia), una ocupada, y el fisio con el crono.
+
+func _pisc_hielo() -> void:
+	var dep := [_c1, _c2]
 	for k in 2:
 		var p := Vector3(7.9 + float(k) * 1.5, 0, -1.0)
-		_prim("caja", p + Vector3(0, 0.35, 0), Vector3(0.95, 0.7, 1.8), acero, "metal")
+		_prim("caja", p + Vector3(0, 0.35, 0), Vector3(0.95, 0.7, 1.8), PISC_ACERO, "metal")
 		_prim("caja", p + Vector3(0, 0.705, 0), Vector3(0.83, 0.01, 1.68), Color(0.72, 0.9, 0.97), "luz")
 		for q in 9:
 			_prim("caja", p + Vector3(_rng.randf_range(-0.33, 0.33), 0.72, _rng.randf_range(-0.7, 0.7)), Vector3.ONE * 0.07, Color(0.88, 0.96, 1.0), "luz", Vector3(0, _rng.randf() * TAU, 0))
-		_prim("caja", p + Vector3(0, 0.74, -0.86), Vector3(0.95, 0.08, 0.08), acero.darkened(0.2), "metal")
+		_prim("caja", p + Vector3(0, 0.74, -0.86), Vector3(0.95, 0.08, 0.08), PISC_ACERO.darkened(0.2), "metal")
 	_trabajador(Vector3(7.9, 0, -1.45), 0.0, true, [], dep, 0.25)
-	_trabajador(Vector3(8.65, 0, 0.55), PI * 0.85, false, ["charla", "senalar_adelante", "brazos_jarra"], bata)
+	_trabajador(Vector3(8.65, 0, 0.55), PI * 0.85, false, ["charla", "senalar_adelante", "brazos_jarra"], PISC_BATA)
 	_texto("CRIOTERAPIA 10 °C", Vector3(10.96, 2.2, -1.0), 24, Color(0.75, 0.92, 1.0), -PI * 0.5)
-	## --- Sauna acristalada, contra la pared derecha.
+
+func _pisc_sauna() -> void:
+	var dep := [_c1, _c2]
 	var x0 := 8.8
 	for z: float in [2.0, 5.0]:
-		_prim("caja", Vector3(9.9, 1.15, z), Vector3(2.2, 2.3, 0.08), madera)
+		_prim("caja", Vector3(9.9, 1.15, z), Vector3(2.2, 2.3, 0.08), PISC_MADERA)
 		for k in 15:
-			_prim("caja", Vector3(9.9, 0.1 + float(k) * 0.15, z + (0.045 if z > 3.0 else -0.045)), Vector3(2.2, 0.01, 0.01), madera.darkened(0.25))
-	_prim("caja", Vector3(9.9, 2.33, 2.0), Vector3(2.2, 0.08, 0.12), madera.darkened(0.15))
-	_prim("caja", Vector3(9.9, 2.33, 5.0), Vector3(2.2, 0.08, 0.12), madera.darkened(0.15))
-	_prim("caja", Vector3(x0, 2.33, 3.5), Vector3(0.12, 0.08, 3.0), madera.darkened(0.15))
+			_prim("caja", Vector3(9.9, 0.1 + float(k) * 0.15, z + (0.045 if z > 3.0 else -0.045)), Vector3(2.2, 0.01, 0.01), PISC_MADERA.darkened(0.25))
+	_prim("caja", Vector3(9.9, 2.33, 2.0), Vector3(2.2, 0.08, 0.12), PISC_MADERA.darkened(0.15))
+	_prim("caja", Vector3(9.9, 2.33, 5.0), Vector3(2.2, 0.08, 0.12), PISC_MADERA.darkened(0.15))
+	_prim("caja", Vector3(x0, 2.33, 3.5), Vector3(0.12, 0.08, 3.0), PISC_MADERA.darkened(0.15))
 	for z: float in [2.0, 2.85, 5.0]:
-		_prim("caja", Vector3(x0, 1.15, z), Vector3(0.1, 2.3, 0.1), madera.darkened(0.2))
+		_prim("caja", Vector3(x0, 1.15, z), Vector3(0.1, 2.3, 0.1), PISC_MADERA.darkened(0.2))
 	Mini3D.caja(_raiz, Vector3(x0, 1.15, 3.92), Vector3(0.02, 2.2, 2.1), Mini3D.mat(Color(0.75, 0.6, 0.4, 0.3), 0.05))
 	Mini3D.caja(_raiz, Vector3(x0, 1.05, 2.43), Vector3(0.03, 2.0, 0.8), Mini3D.mat(Color(0.75, 0.6, 0.4, 0.35), 0.05))
-	_prim("caja", Vector3(x0 - 0.04, 1.05, 2.75), Vector3(0.04, 0.3, 0.03), cromo, "metal")
+	_prim("caja", Vector3(x0 - 0.04, 1.05, 2.75), Vector3(0.04, 0.3, 0.03), PISC_CROMO, "metal")
 	for g: Array in [[10.6, 0.9, 0.5], [10.05, 0.45, 0.55]]:
-		_prim("caja", Vector3(float(g[0]), float(g[1]) * 0.5, 3.5), Vector3(float(g[2]), float(g[1]), 2.9), madera)
+		_prim("caja", Vector3(float(g[0]), float(g[1]) * 0.5, 3.5), Vector3(float(g[2]), float(g[1]), 2.9), PISC_MADERA)
 		for k in 4:
-			_prim("caja", Vector3(float(g[0]), float(g[1]) + 0.005, 2.2 + float(k) * 0.85), Vector3(float(g[2]), 0.01, 0.02), madera.darkened(0.3))
+			_prim("caja", Vector3(float(g[0]), float(g[1]) + 0.005, 2.2 + float(k) * 0.85), Vector3(float(g[2]), 0.01, 0.02), PISC_MADERA.darkened(0.3))
 	_prim("caja", Vector3(9.3, 0.35, 4.55), Vector3(0.5, 0.7, 0.5), Color(0.2, 0.2, 0.22), "metal")
 	for k in 9:
 		_prim("esf", Vector3(9.3 + _rng.randf_range(-0.16, 0.16), 0.75, 4.55 + _rng.randf_range(-0.16, 0.16)), Vector3.ONE * 0.11, Color(0.4, 0.38, 0.36))
-	_prim("cil", Vector3(9.75, 0.13, 4.6), Vector3(0.25, 0.26, 0.25), madera.darkened(0.35))
+	_prim("cil", Vector3(9.75, 0.13, 4.6), Vector3(0.25, 0.26, 0.25), PISC_MADERA.darkened(0.35))
 	_prim("caja", Vector3(10.94, 1.9, 3.5), Vector3(0.04, 0.12, 0.4), Color(1.0, 0.75, 0.4), "luz")
 	_trabajador(Vector3(10.55, 0, 3.9), -PI * 0.5, true, [], dep, 0.9)
 	_trabajador(Vector3(10.0, 0, 2.7), -PI * 0.5, true, [], dep, 0.45)
 	_texto("SAUNA  80 °C", Vector3(x0 - 0.06, 2.45, 3.5), 26, Color(1.0, 0.85, 0.6), -PI * 0.5)
-	## --- Duchas en la pared izquierda (mamparas, platos y una abierta).
+
+func _pisc_duchas() -> void:
+	var dep := [_c1, _c2]
 	for k in 3:
 		var z := -0.6 + float(k) * 1.2
 		_prim("caja", Vector3(-10.5, 0.004, z), Vector3(0.95, 0.008, 1.1), Color(0.55, 0.6, 0.64))
 		_prim("cil", Vector3(-10.5, 0.01, z), Vector3(0.1, 0.005, 0.1), Color(0.2, 0.2, 0.22), "metal")
-		_prim("cil", Vector3(-10.93, 1.15, z), Vector3(0.05, 2.3, 0.05), cromo, "metal")
-		_prim("caja", Vector3(-10.75, 2.25, z), Vector3(0.36, 0.035, 0.035), cromo, "metal")
-		_prim("cono", Vector3(-10.56, 2.18, z), Vector3(0.18, 0.1, 0.18), cromo, "metal")
-		_prim("cil", Vector3(-10.92, 1.05, z + 0.12), Vector3(0.07, 0.06, 0.07), cromo, "metal", Vector3(0, 0, PI * 0.5))
+		_prim("cil", Vector3(-10.93, 1.15, z), Vector3(0.05, 2.3, 0.05), PISC_CROMO, "metal")
+		_prim("caja", Vector3(-10.75, 2.25, z), Vector3(0.36, 0.035, 0.035), PISC_CROMO, "metal")
+		_prim("cono", Vector3(-10.56, 2.18, z), Vector3(0.18, 0.1, 0.18), PISC_CROMO, "metal")
+		_prim("cil", Vector3(-10.92, 1.05, z + 0.12), Vector3(0.07, 0.06, 0.07), PISC_CROMO, "metal", Vector3(0, 0, PI * 0.5))
 	for k in 4:
 		Mini3D.caja(_raiz, Vector3(-10.5, 1.0, -1.2 + float(k) * 1.2), Vector3(0.95, 2.0, 0.02), Mini3D.mat(Color(0.85, 0.93, 1.0, 0.25), 0.05))
 	var chorro := Mini3D.cilindro(_raiz, Vector3(-10.56, 1.15, 0.6), 0.09, 2.0, Mini3D.mat(Color(0.8, 0.92, 1.0, 0.3), 0.05, 0.3), 0.04)
 	chorro.name = "Chorro"
 	_trabajador(Vector3(-10.45, 0, 0.6), -PI * 0.5, false, ["parado", "cansado", "parado"], dep)
 	_toallero(Vector3(-10.62, 0, 4.6))
-	_fuente_agua(Vector3(-10.72, 0, 6.0), acero, cromo)
-	## --- Delante: tumbonas con sus toallas, mesitas y bebidas.
+	_fuente_agua(Vector3(-10.72, 0, 6.0), PISC_ACERO, PISC_CROMO)
+
+func _pisc_tumbonas() -> void:
+	var dep := [_c1, _c2]
 	for k in 4:
 		var x := -8.6 + float(k) * 1.6
 		_asiento("loungeChairRelax", Vector3(x, 0, 5.1), PI, [0.0] if k % 2 == 1 else [], dep, null, {"carpet": Color(0.95, 0.95, 0.95), "wood": Color(0.7, 0.72, 0.75)})
 		if k % 2 == 0:
-			_prim("caja", Vector3(x, 0.42, 5.4), Vector3(0.5, 0.03, 0.9), _c1 if k == 0 else blanco)
+			_prim("caja", Vector3(x, 0.42, 5.4), Vector3(0.5, 0.03, 0.9), _c1 if k == 0 else PISC_BLANCO)
 		if k < 3:
-			_prim("cil", Vector3(x + 0.8, 0.22, 5.6), Vector3(0.36, 0.44, 0.36), blanco)
+			_prim("cil", Vector3(x + 0.8, 0.22, 5.6), Vector3(0.36, 0.44, 0.36), PISC_BLANCO)
 			_poner("comida/glass", Vector3(x + 0.8, 0.44, 5.6), 0.0)
 	## Material: churros, tablas, pull-buoys, la nevera y una planta.
-	_prim("caja", Vector3(4.6, 0.04, 6.4), Vector3(1.3, 0.08, 0.4), acero, "metal")
+	_prim("caja", Vector3(4.6, 0.04, 6.4), Vector3(1.3, 0.08, 0.4), PISC_ACERO, "metal")
 	for k in 9:
 		_prim("cil", Vector3(4.05 + float(k) * 0.135, 0.8, 6.4), Vector3(0.09, 1.5, 0.09), [Color(1.0, 0.55, 0.1), Color(0.2, 0.6, 0.95), Color(0.95, 0.2, 0.5), Color(0.3, 0.85, 0.4)][k % 4], "goma")
 	for k in 10:
@@ -254,6 +278,7 @@ func _piscina() -> void:
 
 ## Vivienda (12 × 9 m, techo de 3 m): salón con sofá, tele y alfombra; cocina
 ## al fondo; mesa de comer; y la familia que vive allí.
+
 func _vivienda() -> void:
 	_tonos_sala = _MADERA_CLARA
 	_sala(Vector3(12, 3.0, 9), Color(0.7, 0.5, 0.34), Color(0.93, 0.89, 0.82), "parquet")
