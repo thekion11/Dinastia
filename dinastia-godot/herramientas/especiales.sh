@@ -42,6 +42,7 @@ pasa "calidad adaptativa (escalones)" "godot --headless --path . res://pruebas/p
 pasa "contador de FPS" "godot --headless --path . res://pruebas/prueba_contador_fps.tscn" "FIN CONTADOR FPS. 0 fallos"
 pasa "dominadas" "godot --headless --path . res://pruebas/prueba_dominadas.tscn" "DOMINADAS: 0 fallos"
 pasa "minijuegos nuevos" "godot --headless --path . res://pruebas/prueba_minijuegos_nuevos.tscn" "FIN MINIJUEGOS NUEVOS. 0 fallos"
+pasa "igualdad del motor con usuario" "godot --headless --path . res://pruebas/igualdad_motor.tscn" "FIN. 0 fallos"
 pasa "motor jugable (unidad)" "godot --headless --path . res://pruebas/prueba_motor_jugable.tscn" "FIN MOTOR. 0 fallos"
 # 5c. Movimiento suave y vida de la ciudad (27-10, orden del líder: que el tirón de los vehículos no vuelva a romperse sin que se note; ~1 min)
 pasa "tráfico, metro y bus suaves" "godot --headless --path . res://pruebas/ideas/pmov_suavidad_trafico.tscn" "FIN. 0 fallos"
@@ -59,6 +60,7 @@ pasa "controles táctiles del partido" "godot --headless --path . res://pruebas/
 if [ "$1" = "todo" ]; then
 # 6a. Presupuesto de triángulos y llamadas de dibujo del partido (M-338): con pantalla virtual; ~5 min
 if command -v xvfb-run >/dev/null; then
+pasa "troceo de la grada sin butacas perdidas" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_troceo_grada.tscn" "FIN. 0 fallos"
 pasa "presupuesto del partido" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/presupuesto_partido.tscn" "FIN. 0 fallos"
 fi
   # Balance del mundo a largo plazo (10 temporadas x 3 semillas, ~3,5 min) y rendimiento en 20 (~1,5 min)
