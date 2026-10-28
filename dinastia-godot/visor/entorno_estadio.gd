@@ -21,7 +21,11 @@ const PLAZA := 22.0        ## metros de plaza alrededor de la huella del estadio
 const BANDA := 34.0        ## de la plaza a la avenida (aparcamientos)
 const CALLE := 12.0
 
-static func montar(raiz: Node3D, est: Dictionary, niveles: int) -> Node3D:
+## Rebajas #2 y #3 del presupuesto del partido (27-10-2026): al acabar, `Optimizar.agrupar` (piezas quietas con la misma malla y materiales en un
+## MultiMesh por celda) y `Optimizar.distancias` (corte por distancia según el tamaño). Apagable para las capturas «antes».
+static var optimizar_partido := true
+
+static func montar(raiz: Node3D, est: Dictionary, niveles: int, optimizar := false) -> Node3D:
 	if raiz == null or raiz.get_node_or_null("EntornoEstadio") != null:
 		return null
 	var e := Node3D.new()
@@ -45,6 +49,9 @@ static func montar(raiz: Node3D, est: Dictionary, niveles: int) -> Node3D:
 	_aparcamiento(e, Vector3(0, 0, -(pz + BANDA * 0.5)), false, px * 1.4, rng)
 	_horizonte(e, cx, cz, rng)
 	_banderas(e, px, pz, est)
+	if optimizar and optimizar_partido:
+		e.set_meta("agrupado", Optimizar.agrupar(e))
+		e.set_meta("cortes", Optimizar.distancias(e))
 	return e
 
 ## Mástiles con las banderas del club en la plaza, delante de la tribuna

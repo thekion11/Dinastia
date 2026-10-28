@@ -3,6 +3,8 @@ extends "res://visor/stadium_builder_p5.gd"
 
 ## Ocupación máxima de una grada (un estadio «lleno» tiene siempre alguna butaca libre).
 const TOPE_OCUPACION := 0.86
+## Cuántas filas de la bandeja de abajo llevan la butaca con respaldo curvo (1.944 triángulos); 99 o más = como antes de la rebaja #1 (las capturas «antes»).
+static var butaca_detalle_filas := 2
 
 ## Los dos colores de las franjas de un anillo: abajo el color 1 con toques del 2, en medio el 2 con toques del 1 y arriba una variante
 ## (la mezcla de los dos, algo más oscura) con toques del 1. `nivel` 0 = el de abajo.
@@ -85,6 +87,12 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	## rampa serían más de 15 millones de vértices-. La textura con gente
 	## pintada desaparece: debajo queda cemento.
 	var filas: int = mini(presupuesto, filas_todas)
+	## REBAJA #1 DEL PRESUPUESTO (27-10-2026, `docs/04_auditorias/presupuesto_partido.md`): la butaca de 1.944 triángulos (respaldo curvo) solo en las
+	## `butaca_detalle_filas` primeras filas de la bandeja de abajo; el resto lleva la ligera (84), con los mismos colores por nivel. La semilla del azar
+	## sigue siendo la de antes, así que nada cambia de sitio ni de color.
+	var filas_semilla := filas
+	if butaca_detalle_filas < 99:
+		filas = mini(filas, butaca_detalle_filas) if bandeja == 0 else 0
 	## ¿QUÉ BORDE DEL DECK ES EL DE ABAJO? (29-9-2026). Se daba por hecho que
 	## el lado local negativo, y en las tribunas giradas al revés -la mitad-
 	## las filas de butacas 3D y el público denso acababan ARRIBA DEL TODO,
@@ -112,7 +120,7 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	mm_lejos.instance_count = cuantas_fila * (filas_todas - filas)
 
 	var rng := RandomNumberGenerator.new()
-	rng.seed = int(largo * 100.0) + filas
+	rng.seed = int(largo * 100.0) + filas_semilla
 	var c1 := Color(str(est.get("asiento1", "#1f5f3d")))
 	var c2 := Color(str(est.get("asiento2", "#e8e8e8")))
 	## COLOR POR NIVEL (27-10-2026, decisión del dueño): con `asientoNivel = "por_nivel"` (por defecto) el anillo de abajo lleva el color 1 del
