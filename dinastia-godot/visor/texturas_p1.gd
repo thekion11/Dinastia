@@ -20,9 +20,14 @@ extends RefCounted
 ## repetida cada 2 m da ~512 px/m. Subir de ahi no se nota en pantalla y si se
 ## nota en memoria de una integrada.
 const TEX := 1024
+## M-347 (28-10-2026): el partido tenía ~60 ruidos de 1024² (5,3 MB cada uno con mipmaps, ~320 MB de los 600 de vídeo). Los que MULTIPLICAN color o
+## rugosidad (granos sin relieve) bajan a 512²: a 2 m por repetición son 256 px/m, más que suficiente para un grano. Los mapas de normales
+## conservan 1024² solo en calidad ALTO.
+const TEX_GRANO := 512
 const METRO_POR_TILE := 2.0
 
 static var _cache := {}
+static var _cache_ruido := {}
 
 # ------------------------------------------------------------------- ruidos
 
@@ -37,14 +42,22 @@ static func _ruido(tipo: int, frec: float, semilla: int, octavas: int = 4) -> Fa
 ## Textura de ruido lista para usar como mapa. `normal` la convierte en mapa de
 ## normales, que es lo que da relieve sin anadir un solo poligono.
 static func _tex_ruido(frec: float, semilla: int, normal: bool = false,
-		octavas: int = 4, tipo: int = FastNoiseLite.TYPE_SIMPLEX_SMOOTH) -> NoiseTexture2D:
+		octavas: int = 4, tipo: int = FastNoiseLite.TYPE_SIMPLEX_SMOOTH, unica: bool = false) -> NoiseTexture2D:
+	var lado := TEX if (normal and Calidad.elegida >= Calidad.ALTO) else TEX_GRANO
+	## Mismos parámetros = misma textura compartida (M-347): cada estadio y cada edificio la pedían de nuevo. `unica` para quien la modifique después.
+	var clave := "ruido|%s|%d|%s|%d|%d|%d" % [frec, semilla, normal, octavas, tipo, lado]
+	if not unica and _cache_ruido.has(clave):
+		return _cache_ruido[clave]
 	var t := NoiseTexture2D.new()
-	t.width = TEX
-	t.height = TEX
+	t.width = lado
+	t.height = lado
 	t.seamless = true
 	t.as_normal_map = normal
 	t.bump_strength = 5.0
-	t.noise = _ruido(tipo, frec, semilla, octavas)
+	## La frecuencia del ruido es por píxel: a la mitad de lado, el doble de frecuencia para que el grano mida lo mismo sobre la superficie.
+	t.noise = _ruido(tipo, frec * float(TEX) / float(lado), semilla, octavas)
+	if not unica:
+		_cache_ruido[clave] = t
 	return t
 
 ## Ruido para MULTIPLICAR el color (albedo y detalle): de `piso` a blanco.
@@ -53,7 +66,11 @@ static func _tex_ruido(frec: float, semilla: int, normal: bool = false,
 ## las gradas y las fachadas salían NEGRAS a mediodía. Así el grano se nota
 ## pero el tinte manda.
 static func _ruido_claro(frec: float, semilla: int, octavas: int, piso: float) -> NoiseTexture2D:
-	var t := _tex_ruido(frec, semilla, false, octavas)
+	var clave := "claro|%s|%d|%d|%s" % [frec, semilla, octavas, piso]
+	if _cache_ruido.has(clave):
+		return _cache_ruido[clave]
+	var t := _tex_ruido(frec, semilla, false, octavas, FastNoiseLite.TYPE_SIMPLEX_SMOOTH, true)
+	_cache_ruido[clave] = t
 	var g := Gradient.new()
 	g.set_color(0, Color(piso, piso, piso))
 	g.set_color(1, Color.WHITE)
