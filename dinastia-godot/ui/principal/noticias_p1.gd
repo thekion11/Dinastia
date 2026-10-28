@@ -143,7 +143,8 @@ func _conectar_1() -> void:
 			p._anotar("🏆 ¡CAMPEÓN!", "%s." % nombre)
 			## El aviso ya toca "trofeo" por su tipo: llamarlo aquí además lo
 			## haría sonar dos veces.
-			Aviso.mostrar(p, "titulo", "🏆", nombre, "Lo levantaste tú. Queda en la vitrina para siempre."))
+			Aviso.mostrar(p, "titulo", "🏆", nombre, "Lo levantaste tú. Queda en la vitrina para siempre.")
+			p._vistas.call_deferred("_ver_vuelta_olimpica", nombre))   ## la vuelta olímpica en 3D, al acabar el cálculo de la semana
 		## La gala se calculaba entera y se guardaba sin que nadie la anunciara:
 		## el jugador podía ganar el premio a mejor entrenador del año y no
 		## enterarse jamás. Ahora avisa, y el detalle está en la pestaña Premios.
