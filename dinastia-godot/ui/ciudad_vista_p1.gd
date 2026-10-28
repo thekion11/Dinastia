@@ -239,6 +239,7 @@ func _aplicar_hora() -> void:
 	## Y las luces de la ciudad: farolas y ventanas encendidas cuando cae el sol.
 	if _ciudad != null:
 		_ciudad.encender_luces(maxf(noche, anochecer * 0.6))
+		RutinaPeatones.tick_si_toca(_ciudad.get_node_or_null("Trafico"), _hora)   ## M-183: la gente de la calle según la hora y el barrio
 
 	if _reloj != null:
 		_reloj.text = "%02d:%02d" % [int(_hora), int(fposmod(_hora, 1.0) * 60.0)]

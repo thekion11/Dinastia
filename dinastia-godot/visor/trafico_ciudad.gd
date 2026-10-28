@@ -44,7 +44,7 @@ func _process(delta_real: float) -> void:
 		## NPCs CON VIDA (etapa 1): de vez en cuando un peatón se detiene a mirar
 		## el móvil o a descansar y luego sigue su camino.
 		var es_peaton := bool(v.get("peaton", false))
-		if es_peaton and randf() < 0.0004 * delta * 60.0:
+		if es_peaton and randf() < 0.0004 * delta * 60.0 * float(v.get("rut_pausa", 1.0)):   ## (M-183: más paradas a la hora de comer y de tarde)
 			v["espera"] = randf_range(3.0, 9.0)
 			v["pausa"] = true
 			PeatonVida.esperar(self, v, randf())

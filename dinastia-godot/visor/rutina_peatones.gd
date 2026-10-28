@@ -1,0 +1,96 @@
+class_name RutinaPeatones
+extends RefCounted
+## RUTINAS DE LOS PEATONES POR HORA Y BARRIO (M-183, 27-10-2026). Antes la gente solo bajaba a un tercio de madrugada (`TraficoCiudad.faros`).
+## Ahora cada barrio (el SECTOR de `RecorridosRed.sector_de`) tiene su curva de gente a lo largo del día:
+##   100 Estadio y club · de día, con más movimiento a media mañana y al caer la tarde (entrenos, tienda, museo).
+##   200 Centro         · oficinas: hora punta de entrada (8), de salida (18) y la comida (13).
+##   300 Este           · compras: de las 10 a las 21, con el pico de la tarde.
+##   400 Sur            · residencial: salen al trabajo por la mañana (7-8) y vuelven por la tarde (19).
+##   500 Oeste y puerto · turnos: cambio a las 6-7, a las 14-15 y a las 22-23.
+##   600 Periferia      · poca gente siempre.
+## Y la manera de andar: con prisa en las horas punta de los barrios de trabajo (+25 %), paseando a la hora de comer o por la noche (-15 %),
+## y los que se paran (móvil, llamada, charla) son más a la hora de comer y por la tarde-noche, y casi nadie en hora punta.
+## Cada peatón tiene su azar estable (`hash` de su posición en la lista): el mismo sale a la calle a la misma hora. Estático y sin escena.
+
+const TOQUE_MS := 2500   ## cada cuánto se repasa a la gente (ms de reloj real)
+static var _ultimo_ms := -100000
+
+static func pico(h: float, c: float, w: float) -> float:
+	var d := (h - c) / w
+	return exp(-d * d)
+
+## Entre 0 y 1: «de día» (sube a las 6-8 h, baja a las 20-23 h).
+static func dia(h: float) -> float:
+	return smoothstep(5.5, 8.0, h) * (1.0 - smoothstep(20.0, 23.5, h))
+
+## Qué parte de la gente de ese barrio está en la calle a esa hora (0,08..1).
+static func densidad(h: float, sector: int) -> float:
+	var d := dia(h)
+	match sector:
+		100:
+			return 0.10 + 0.90 * d * (0.55 + 0.45 * maxf(pico(h, 11.0, 2.0), pico(h, 17.0, 2.0)))
+		200:
+			return 0.10 + 0.90 * clampf(d * 0.4 + maxf(pico(h, 8.0, 1.5), maxf(pico(h, 13.0, 1.2), pico(h, 18.0, 1.6))), 0.0, 1.0)
+		300:
+			return 0.10 + 0.90 * clampf(smoothstep(9.0, 11.0, h) * (1.0 - smoothstep(20.0, 22.5, h)) * 0.6 + 0.4 * pico(h, 18.0, 2.5), 0.0, 1.0)
+		400:
+			return 0.10 + 0.90 * clampf(pico(h, 7.5, 1.6) + pico(h, 19.0, 2.2) + 0.3 * d, 0.0, 1.0)
+		500:
+			return 0.12 + 0.88 * clampf(maxf(pico(h, 6.5, 1.0), maxf(pico(h, 14.5, 1.0), pico(h, 22.5, 1.0))) + 0.4 * d, 0.0, 1.0)
+		_:
+			return 0.08 + 0.30 * d
+
+## Ritmo de paso: 1 normal, hasta 1,25 en hora punta y hasta 0,85 paseando.
+static func prisa(h: float, sector: int) -> float:
+	if sector == 600:
+		return 1.0
+	var punta := maxf(pico(h, 8.0, 1.1), pico(h, 18.0, 1.1))
+	var paseo := maxf(pico(h, 13.2, 1.0), pico(h, 21.0, 1.8))
+	return clampf(1.0 + 0.25 * punta - 0.15 * paseo, 0.85, 1.25)
+
+## Multiplicador de la probabilidad de pararse a mirar el móvil, llamar o charlar.
+static func pausa(h: float, sector: int) -> float:
+	var ocio := maxf(pico(h, 13.2, 1.2), pico(h, 20.0, 2.0)) * (1.6 if sector == 300 or sector == 100 else 1.0)
+	var punta := maxf(pico(h, 8.0, 1.0), pico(h, 18.0, 1.0))
+	return clampf(1.0 + 2.5 * ocio - 0.5 * punta, 0.5, 4.0)
+
+## Repasa la lista de peatones de `trafico` (`TraficoCiudad`) a la hora `hora` (0..24).
+## Devuelve {visibles, total, prisa} para las pruebas y el diagnóstico.
+static func tick(vehiculos: Array, hora: float) -> Dictionary:
+	var visibles := 0
+	var total := 0
+	var prisa_suma := 0.0
+	var i := -1
+	for v: Dictionary in vehiculos:
+		i += 1
+		if not bool(v.get("peaton", false)):
+			continue
+		var nodo := v.get("nodo") as Node3D
+		if nodo == null or not is_instance_valid(nodo):
+			continue
+		total += 1
+		var sector := RecorridosRed.sector_de(nodo.position)
+		var r := float(posmod(hash([i, 83]), 1000)) / 1000.0
+		var sale := r < densidad(hora, sector)
+		v["oculto_rut"] = not sale
+		nodo.visible = sale and not bool(v.get("oculto", false))
+		var f_nuevo := prisa(hora, sector)
+		var f_viejo := float(v.get("rut_f", 1.0))
+		if absf(f_nuevo - f_viejo) > 0.03:
+			v["vel"] = float(v["vel"]) / f_viejo * f_nuevo
+			v["rut_f"] = f_nuevo
+		v["rut_pausa"] = pausa(hora, sector)
+		if sale:
+			visibles += 1
+			prisa_suma += float(v.get("rut_f", 1.0))
+	return {"visibles": visibles, "total": total, "prisa": prisa_suma / maxf(float(visibles), 1.0)}
+
+## Lo llama la vista de la ciudad en cada fotograma; solo repasa cada TOQUE_MS.
+static func tick_si_toca(trafico: Object, hora: float) -> void:
+	if trafico == null or OS.get_environment("RUTINA_PEATONES") == "0":   ## para las capturas «antes»
+		return
+	var ahora := Time.get_ticks_msec()
+	if ahora - _ultimo_ms < TOQUE_MS:
+		return
+	_ultimo_ms = ahora
+	tick(trafico.get("_vehiculos"), hora)
