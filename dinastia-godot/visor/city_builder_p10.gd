@@ -239,16 +239,17 @@ func _banderas_anillo(c1: Color, c2: Color) -> void:
 	if _anillo_con_banderas:
 		return
 	_anillo_con_banderas = true
+	## Una malla y un material para los 56 mástiles (28-10): antes cada uno traía los suyos.
+	var bm := BoxMesh.new()
+	bm.size = Vector3(0.2, 9.0, 0.2)
+	var gris := StandardMaterial3D.new()
+	gris.albedo_color = Color(0.7, 0.7, 0.72)
 	for i in 28:
 		var t := float(i) / 28.0
 		var x := lerpf(-RING_X, RING_X, t)
 		for z in [RING_Z_NORTE + ANCHO_CALLE, RING_Z_SUR - ANCHO_CALLE]:
 			var mastil := MeshInstance3D.new()
-			var bm := BoxMesh.new()
-			bm.size = Vector3(0.2, 9.0, 0.2)
 			mastil.mesh = bm
-			var gris := StandardMaterial3D.new()
-			gris.albedo_color = Color(0.7, 0.7, 0.72)
 			mastil.material_override = gris
 			mastil.position = Vector3(x, 4.5, z)
 			add_child(mastil)
