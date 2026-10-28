@@ -8,10 +8,13 @@ extends RefCounted
 ##   400 Sur            · residencial: salen al trabajo por la mañana (7-8) y vuelven por la tarde (19).
 ##   500 Oeste y puerto · turnos: cambio a las 6-7, a las 14-15 y a las 22-23.
 ##   600 Periferia      · poca gente siempre.
+## Y el SENTIDO: por la mañana salen a la calle sobre todo los que caminan hacia el Centro (el trabajo) y por la tarde los que vuelven de él.
 ## Y la manera de andar: con prisa en las horas punta de los barrios de trabajo (+25 %), paseando a la hora de comer o por la noche (-15 %),
 ## y los que se paran (móvil, llamada, charla) son más a la hora de comer y por la tarde-noche, y casi nadie en hora punta.
 ## Cada peatón tiene su azar estable (`hash` de su posición en la lista): el mismo sale a la calle a la misma hora. Estático y sin escena.
 
+## El punto al que se va a trabajar por la mañana (el Centro, sector 200) y del que se vuelve por la tarde.
+const TRABAJO := Vector3(-50.0, 0.0, -520.0)
 const TOQUE_MS := 2500   ## cada cuánto se repasa a la gente (ms de reloj real)
 static var _ultimo_ms := -100000
 
@@ -39,6 +42,14 @@ static func densidad(h: float, sector: int) -> float:
 			return 0.12 + 0.88 * clampf(maxf(pico(h, 6.5, 1.0), maxf(pico(h, 14.5, 1.0), pico(h, 22.5, 1.0))) + 0.4 * d, 0.0, 1.0)
 		_:
 			return 0.08 + 0.30 * d
+
+## Sentido del flujo: +1 por la mañana (la gente va hacia el trabajo), -1 por la tarde (vuelve), 0 el resto del día.
+static func sentido(h: float) -> float:
+	return pico(h, 8.0, 1.6) - pico(h, 18.0, 1.8)
+
+## Cuánto pesa que el peatón vaya hacia el trabajo (`coseno` = su rumbo frente a la dirección del trabajo, -1..1) a esa hora: 0,3..1,4.
+static func factor_flujo(h: float, coseno: float) -> float:
+	return clampf(1.0 - 0.85 * maxf(0.0, -sentido(h) * coseno), 0.15, 1.0)   ## sale menos quien va a contramano de la hora
 
 ## Ritmo de paso: 1 normal, hasta 1,25 en hora punta y hasta 0,85 paseando.
 static func prisa(h: float, sector: int) -> float:
@@ -71,7 +82,9 @@ static func tick(vehiculos: Array, hora: float) -> Dictionary:
 		total += 1
 		var sector := RecorridosRed.sector_de(nodo.position)
 		var r := float(posmod(hash([i, 83]), 1000)) / 1000.0
-		var sale := r < densidad(hora, sector)
+		var rumbo := Vector3(sin(nodo.rotation.y), 0.0, cos(nodo.rotation.y))
+		var al_trabajo := Vector3(TRABAJO.x - nodo.position.x, 0.0, TRABAJO.z - nodo.position.z).normalized()
+		var sale := r < densidad(hora, sector) * factor_flujo(hora, rumbo.dot(al_trabajo))   ## más gente hacia el trabajo por la mañana y de vuelta por la tarde
 		v["oculto_rut"] = not sale
 		nodo.visible = sale and not bool(v.get("oculto", false))
 		var f_nuevo := prisa(hora, sector)
