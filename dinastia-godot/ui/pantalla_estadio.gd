@@ -76,6 +76,7 @@ func mostrar(p: int) -> void:
 		if c != null:
 			c.visible = (k == p)
 	pagina_visible = p
+	refrescar()   ## (28-10) el texto al día justo antes de cada repintado
 	render_target_update_mode = SubViewport.UPDATE_ONCE
 
 func _casa_es_local() -> bool:
@@ -189,16 +190,16 @@ func _process(delta: float) -> void:
 	_t_redibujo += delta
 	if _t_redibujo >= SEG_REDIBUJO:
 		_t_redibujo = 0.0
+		## BUG REAL, ENCONTRADO CON LA PRUEBA DE CAPTURA (23-9-2026): este
+		## `refrescar()` estaba DESPUÉS del `return` del corte de gol, así que
+		## durante los 6,5 s del "¡GOOOL!" el marcador de debajo no se enteraba del
+		## gol -y al volver a la rotación seguía diciendo el resultado anterior-.
+		## Va antes de cualquier `return`; (28-10) solo cuando se va a repintar el
+		## viewport (y en `mostrar`/`al_gol`): entre repintados el texto no se ve.
+		refrescar()
 		render_target_update_mode = SubViewport.UPDATE_ONCE
-	## BUG REAL, ENCONTRADO CON LA PRUEBA DE CAPTURA (23-9-2026): este
-	## `refrescar()` estaba DESPUÉS del `return` del corte de gol, así que
-	## durante los 6,5 s del "¡GOOOL!" el marcador de debajo no se enteraba del
-	## gol -y al volver a la rotación seguía diciendo el resultado anterior
-	## hasta el siguiente frame-. La prueba lo cazó pidiendo "1 - 0" y leyendo
-	## "0 - 0". Va lo primero y sin condiciones: es barato (solo reescribe
-	## texto) y así no hay ningún camino que se lo salte.
-	refrescar()
 	if _gol_restante > 0.0:
+
 		_gol_restante -= delta
 		if _gol_restante <= 0.0:
 			_rehacer_orden()

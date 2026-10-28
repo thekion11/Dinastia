@@ -73,6 +73,10 @@ fi
   pasa "sin castellano en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_CASTELLANO_MAX=0 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN CASTELLANO. 0 fallos"
   # M-333: los rótulos 3D de la ciudad entera, en inglés, pasan por Idiomas.t
   pasa "carteles 3D traducidos" "godot --headless --path . res://pruebas/ideas/idi_carteles3d.tscn" "FIN. 0 fallos"
+  # El guion, fases 1-5 (auditoría del 28-10: estas pruebas existían y no las corría nadie; ~3 min)
+  for F in f1o_flujo f2p_prologo f3v_vida f3c_casa f4p_citas f4p_personas f4r_rutinas f5c_club; do
+    pasa "guion: $F" "godot --headless --path . res://pruebas/ideas/$F.tscn" "FIN. 0 fallos"
+  done
   # M-283, M-300, M-296, M-311, M-290: avisos de sonido, deshacer en la pizarra, bandeja por temas, resumen de carrera, datos de tarjetas
   pasa "avisos visuales de sonido" "godot --headless --path . res://pruebas/ideas/acc_avisos_sonido.tscn" "FIN. 0 fallos"
   pasa "deshacer en la pizarra" "godot --headless --path . res://pruebas/ideas/tac_deshacer.tscn" "FIN. 0 fallos"

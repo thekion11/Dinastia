@@ -216,11 +216,17 @@ func posicion_tren(i: int, t: float) -> Dictionary:
 	return {"z": z0, "visible": false, "parado": false, "v": 0.0, "a": 0.0}
 
 ## El instante del ciclo (en «segundos de juego»: 1 min de juego = 6 s) y si hay servicio (de 01:00 a 05:00, no).
-func _tiempo() -> Dictionary:
+## (28-10) Lo deja en `_tp_t` / `_tp_servicio` en vez de devolver un Dictionary nuevo por cuadro.
+var _tp_t := 0.0
+var _tp_servicio := true
+func _tiempo() -> void:
 	if reloj == null:
-		return {"t": _t, "servicio": true}
+		_tp_t = _t
+		_tp_servicio = true
+		return
 	var h := reloj.hora()
-	return {"t": float(reloj.dia * 1440 + reloj.minuto) * 6.0 + minf(_seg_min, 5.99), "servicio": h >= 5 or h < 1}
+	_tp_t = float(reloj.dia * 1440 + reloj.minuto) * 6.0 + minf(_seg_min, 5.99)
+	_tp_servicio = h >= 5 or h < 1
 
 func _process(delta: float) -> void:
 	_t += delta
@@ -229,17 +235,18 @@ func _process(delta: float) -> void:
 		_min_vista = reloj.minuto
 		_seg_min = 0.0
 		_reloj_rotulo.text = "%02d:%02d" % [reloj.hora(), reloj.minuto % 60]
-	var tp := _tiempo()
+	_tiempo()
 	for i in _trenes.size():
-		var p := posicion_tren(i, float(tp["t"]))
+		var p := posicion_tren(i, _tp_t)
 		var n: Node3D = _trenes[i]["nodo"]
-		n.visible = bool(p["visible"]) and bool(tp["servicio"]) and ViaEstacion.visible_en(float(p["z"]), largo_del_tren, z_tunel_anden)
+		n.visible = bool(p["visible"]) and _tp_servicio and ViaEstacion.visible_en(float(p["z"]), largo_del_tren, z_tunel_anden)
 		n.position.z = float(p["z"])
 		n.position.y = Y_TREN + ViaEstacion.altura(perfil_via, float(p["z"]))   ## sigue el terraplén de la vía exterior
 		## La caja se inclina con la frenada y la arrancada (cabeceo) y se mece un poco al rodar (balanceo).
 		var vel := absf(float(p["v"]))
 		n.rotation.x = clampf(-float(p["a"]) * 0.01, -0.02, 0.02)
 		n.rotation.z = sin(_t * 6.0 + float(i) * 2.0) * 0.0025 * clampf(vel / 6.0, 0.0, 1.0)
-	if _gente.is_empty() and bool(tp["servicio"]) and not _trenes.is_empty():
+	if _gente.is_empty() and _tp_servicio and not _trenes.is_empty():
 		_gente = PasajerosEstacion.crear(self)
-	PasajerosEstacion.actualizar(self, _gente, _trenes, float(tp["t"]), bool(tp["servicio"]))
+	PasajerosEstacion.actualizar(self, _gente, _trenes, _tp_t, _tp_servicio)
+

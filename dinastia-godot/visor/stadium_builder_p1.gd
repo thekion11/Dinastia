@@ -261,7 +261,9 @@ static func ocultar_techo_ante(cam: Camera3D) -> void:
 			continue
 		var fuera: Vector3 = mi.get_meta("fuera", Vector3.ZERO)
 		var d := (cam.global_position - mi.global_position)
+		var detras := Vector3(d.x, 0.0, d.z).dot(fuera) > -3.0
 		var capa: int = CAPA_TECHO_OCULTO if detras else 1
+
 		if mi.layers != capa:
 			mi.layers = capa
 

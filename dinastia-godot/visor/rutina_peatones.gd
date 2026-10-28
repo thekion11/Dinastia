@@ -120,9 +120,11 @@ static func tick(vehiculos: Array, hora: float) -> Dictionary:
 	return {"visibles": visibles, "total": total, "prisa": prisa_suma / maxf(float(visibles), 1.0)}
 
 ## Lo llama la vista de la ciudad en cada fotograma; solo repasa cada TOQUE_MS.
+static var _apagado := OS.get_environment("RUTINA_PEATONES") == "0"   ## para las capturas «antes»; (28-10) leída una vez, no por cuadro
 static func tick_si_toca(trafico: Object, hora: float) -> void:
-	if trafico == null or OS.get_environment("RUTINA_PEATONES") == "0":   ## para las capturas «antes»
+	if trafico == null or _apagado:
 		return
+
 	var ahora := Time.get_ticks_msec()
 	if ahora - _ultimo_ms < TOQUE_MS:
 		return
