@@ -6534,7 +6534,14 @@
   "Heladería": "Ice cream parlour",
   "Autopista": "Motorway",
   "salida": "exit",
-  "MIRADOR DEL CERRO": "HILLTOP LOOKOUT"
+  "MIRADOR DEL CERRO": "HILLTOP LOOKOUT",
+  "La temporada ya está terminada.": "The season is already over.",
+  "Jornada %d de %d": "Matchday %d of %d",
+  "Simulación detenida en la jornada %d.": "Simulation stopped at matchday %d.",
+  "Simulando la temporada…": "Simulating the season…",
+  "Detener": "Stop",
+  "Temporada %d completa en %d ms.": "Season %d completed in %d ms.",
+  "Campeón: %s. Acabas %d.º.": "Champion: %s. You finish %d."
  },
  "pt": {
   "Historia": "História",
@@ -13071,7 +13078,14 @@
   "Heladería": "Sorveteria",
   "Autopista": "Autoestrada",
   "salida": "saída",
-  "MIRADOR DEL CERRO": "MIRANTE DO MORRO"
+  "MIRADOR DEL CERRO": "MIRANTE DO MORRO",
+  "La temporada ya está terminada.": "A temporada já terminou.",
+  "Jornada %d de %d": "Rodada %d de %d",
+  "Simulación detenida en la jornada %d.": "Simulação parada na rodada %d.",
+  "Simulando la temporada…": "Simulando a temporada…",
+  "Detener": "Parar",
+  "Temporada %d completa en %d ms.": "Temporada %d concluída em %d ms.",
+  "Campeón: %s. Acabas %d.º.": "Campeão: %s. Você termina em %dº."
  },
  "patrones": [
   [
@@ -25341,7 +25355,14 @@
   "Heladería": "Glacier",
   "Autopista": "Autoroute",
   "salida": "sortie",
-  "MIRADOR DEL CERRO": "BELVÉDÈRE DE LA COLLINE"
+  "MIRADOR DEL CERRO": "BELVÉDÈRE DE LA COLLINE",
+  "La temporada ya está terminada.": "La saison est déjà terminée.",
+  "Jornada %d de %d": "Journée %d sur %d",
+  "Simulación detenida en la jornada %d.": "Simulation arrêtée à la journée %d.",
+  "Simulando la temporada…": "Simulation de la saison…",
+  "Detener": "Arrêter",
+  "Temporada %d completa en %d ms.": "Saison %d terminée en %d ms.",
+  "Campeón: %s. Acabas %d.º.": "Champion : %s. Vous finissez %de."
  },
  "it": {
   "Historia": "Storia",
@@ -31878,7 +31899,14 @@
   "Heladería": "Gelateria",
   "Autopista": "Autostrada",
   "salida": "uscita",
-  "MIRADOR DEL CERRO": "BELVEDERE DELLA COLLINA"
+  "MIRADOR DEL CERRO": "BELVEDERE DELLA COLLINA",
+  "La temporada ya está terminada.": "La stagione è già finita.",
+  "Jornada %d de %d": "Giornata %d di %d",
+  "Simulación detenida en la jornada %d.": "Simulazione fermata alla giornata %d.",
+  "Simulando la temporada…": "Simulazione della stagione…",
+  "Detener": "Ferma",
+  "Temporada %d completa en %d ms.": "Stagione %d completata in %d ms.",
+  "Campeón: %s. Acabas %d.º.": "Campione: %s. Finisci %dº."
  },
  "de": {
   "Historia": "Geschichte",
@@ -38415,7 +38443,14 @@
   "Heladería": "Eisdiele",
   "Autopista": "Autobahn",
   "salida": "Ausfahrt",
-  "MIRADOR DEL CERRO": "AUSSICHTSPUNKT AM HÜGEL"
+  "MIRADOR DEL CERRO": "AUSSICHTSPUNKT AM HÜGEL",
+  "La temporada ya está terminada.": "Die Saison ist schon vorbei.",
+  "Jornada %d de %d": "Spieltag %d von %d",
+  "Simulación detenida en la jornada %d.": "Simulation an Spieltag %d angehalten.",
+  "Simulando la temporada…": "Saison wird simuliert…",
+  "Detener": "Anhalten",
+  "Temporada %d completa en %d ms.": "Saison %d in %d ms abgeschlossen.",
+  "Campeón: %s. Acabas %d.º.": "Meister: %s. Du wirst %d."
  },
  "ca": {
   "Historia": "Història",
@@ -44952,7 +44987,14 @@
   "Heladería": "Gelateria",
   "Autopista": "Autopista",
   "salida": "sortida",
-  "MIRADOR DEL CERRO": "MIRADOR DEL TURÓ"
+  "MIRADOR DEL CERRO": "MIRADOR DEL TURÓ",
+  "La temporada ya está terminada.": "La temporada ja s'ha acabat.",
+  "Jornada %d de %d": "Jornada %d de %d",
+  "Simulación detenida en la jornada %d.": "Simulació aturada a la jornada %d.",
+  "Simulando la temporada…": "Simulant la temporada…",
+  "Detener": "Atura",
+  "Temporada %d completa en %d ms.": "Temporada %d completa en %d ms.",
+  "Campeón: %s. Acabas %d.º.": "Campió: %s. Acabes %dè."
  },
  "pl": {
   "Club": "Klub",
@@ -51768,7 +51810,14 @@
   "Heladería": "Lodziarnia",
   "Autopista": "Autostrada",
   "salida": "zjazd",
-  "MIRADOR DEL CERRO": "PUNKT WIDOKOWY NA WZGÓRZU"
+  "MIRADOR DEL CERRO": "PUNKT WIDOKOWY NA WZGÓRZU",
+  "La temporada ya está terminada.": "Sezon już się skończył.",
+  "Jornada %d de %d": "Kolejka %d z %d",
+  "Simulación detenida en la jornada %d.": "Symulacja zatrzymana w kolejce %d.",
+  "Simulando la temporada…": "Symulacja sezonu…",
+  "Detener": "Zatrzymaj",
+  "Temporada %d completa en %d ms.": "Sezon %d ukończony w %d ms.",
+  "Campeón: %s. Acabas %d.º.": "Mistrz: %s. Kończysz na %d. miejscu."
  },
  "tr": {
   "Club": "Kulüp",
@@ -58584,6 +58633,13 @@
   "Heladería": "Dondurmacı",
   "Autopista": "Otoyol",
   "salida": "çıkış",
-  "MIRADOR DEL CERRO": "TEPE SEYİR NOKTASI"
+  "MIRADOR DEL CERRO": "TEPE SEYİR NOKTASI",
+  "La temporada ya está terminada.": "Sezon zaten bitti.",
+  "Jornada %d de %d": "%d. hafta / %d",
+  "Simulación detenida en la jornada %d.": "Simülasyon %d. haftada durduruldu.",
+  "Simulando la temporada…": "Sezon simüle ediliyor…",
+  "Detener": "Durdur",
+  "Temporada %d completa en %d ms.": "%d sezonu %d ms'de tamamlandı.",
+  "Campeón: %s. Acabas %d.º.": "Şampiyon: %s. %d. sırada bitiriyorsun."
  }
 }

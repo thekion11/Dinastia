@@ -1869,7 +1869,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 1027. Confirmación previa a decisiones irreversibles — _No es sistemático para todas las decisiones irreversibles_
 - 1028. Deshacer la última acción no crítica — _Solo estas dos decisiones, no un deshacer general_
 - 1031. Carga inmediata de la última partida al abrir la app — _No se confirmó que cargue automáticamente la última al abrir_
-- 1032. Indicador de progreso claro en simulaciones largas — _No hay indicador de progreso al simular una temporada completa_
 - 1034. Resumen del día al avanzar el calendario — _No hay un 'resumen del día' formal al avanzar un día_
 - 1037. Sugerencias contextuales desactivables — _No todas las sugerencias son desactivables individualmente_
 - 1039. Ayuda contextual desplegable en cada pantalla — _No hay ayuda contextual desplegable uniforme por pantalla_
