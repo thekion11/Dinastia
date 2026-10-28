@@ -50,7 +50,7 @@ func _refrescar() -> void:
 	p._escudo_cabecera.add_child(e)
 	var dir_txt := ""
 	if p.mundo.directiva != null:
-		dir_txt = "  ·  %s  ·  confianza %d" % [p.mundo.directiva.objetivo, p.mundo.directiva.confianza]
+		dir_txt = "  ·  " + Idiomas.t("%s  ·  confianza %d") % [Idiomas.t(p.mundo.directiva.objetivo), p.mundo.directiva.confianza]
 	## La plata y la fecha ya no van en el texto corrido: viven arriba a la
 	## derecha, en grande. Aquí queda lo que de verdad es contexto.
 	## La caja CUENTA hasta su nuevo valor (plan maestro B11): un cobro o un
@@ -65,6 +65,9 @@ func _refrescar() -> void:
 	p._sub.text = Idiomas.t("%s  ·  Jornada %d de %d  ·  Sueldos %s/sem  ·  Media %.1f%s") % [
 		liga.nombre, liga.jornada_actual, liga.jornadas(),
 		p._dinero(c.masa_salarial()), c.media(), dir_txt]
+	## M-305: qué es cada cifra de esta línea, al pasar el ratón.
+	p._sub.tooltip_text = Idiomas.t("Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).")
+	p._sub.mouse_filter = Control.MOUSE_FILTER_PASS
 	## El desafío invicto no bloquea nada por dentro -se puede seguir jugando,
 	## como en el HTML-, solo avisa UNA vez de que la racha se acabó.
 	if not p.mundo.fin_partida.is_empty() and not p._fin_partida_avisado:

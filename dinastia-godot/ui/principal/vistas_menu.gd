@@ -127,7 +127,10 @@ func _pintar_clubes() -> void:
 		g.add_theme_constant_override("h_separation", 10)
 		p._lista_clubes.add_child(g)
 		for enc in ["#", "CLUB", "PJ", "G", "E", "P", "PTS"]:
-			p._celda(g, enc, p.COL_SUAVE, enc != "CLUB" and enc != "#", 11)
+			var ce := p._celda(g, enc, p.COL_SUAVE, enc != "CLUB" and enc != "#", 11)
+			if CompeticionFilas._sigla_larga(enc) != enc:   ## M-305: la sigla, explicada al pasar el ratón
+				ce.tooltip_text = Idiomas.t(CompeticionFilas._sigla_larga(enc))
+				ce.mouse_filter = Control.MOUSE_FILTER_PASS
 		var puesto := 1
 		for fila: Dictionary in l.tabla():
 			var club: Club = fila["club"]
