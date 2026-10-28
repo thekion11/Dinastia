@@ -326,9 +326,9 @@ func _abrev(nombre: String) -> String:
 	var n := Nombres.visible(nombre)
 	return n.substr(0, 3).to_upper() if n.length() > 3 else n.to_upper()
 
-## La guía con las teclas que el jugador haya configurado (Mando).
+## La guía con las teclas configuradas (Mando) del dispositivo de ahora (M-437): mando enchufado → sus botones; si no, teclado.
 func _guia_controles(con_balon: bool) -> String:
-	var c := func(a: String) -> String: return Mando.corto_de(a)
+	var c := func(a: String) -> String: return ControlFC.texto_ficha(a, ControlFC.dispositivo_detectado())
 	## EL PORTERO (Carrera): sus controles, no los de campo (26-10-2026).
 	if motor.estado == "tanda" and motor.tanda_me_toca_parar():
 		return Idiomas.t("PENAL: stick ◀ ▶ elige el lado de la estirada · %s te quedas en el centro") % c.call("jugar_tiro")

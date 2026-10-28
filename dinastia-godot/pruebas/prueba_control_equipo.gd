@@ -367,6 +367,10 @@ func _probar_panel_controles() -> void:
 			en_mapa = true
 	_ok(en_mapa, "controles: el InputMap ya usa la G")
 	_ok(Mando.corto_de("jugar_pase").begins_with("G"), "controles: la guía en pantalla dice G (%s)" % Mando.corto_de("jugar_pase"))
+	## M-437: la guía del partido sale del dispositivo de ahora: sin mando, la tecla; con mando PS, ✖; con Xbox, A.
+	_ok(ControlFC.texto_ficha("jugar_pase", "teclado") == "G" and ControlFC.texto_ficha("jugar_pase", "ps") == "✖"
+		and ControlFC.texto_ficha("jugar_pase", "xbox") == "A", "controles: guía por dispositivo (%s / %s / %s)" % [
+		ControlFC.texto_ficha("jugar_pase", "teclado"), ControlFC.texto_ficha("jugar_pase", "ps"), ControlFC.texto_ficha("jugar_pase", "xbox")])
 	Mando.fijar_ayuda("pase", "manual")
 	_ok(Mando.ayuda("pase") == "manual", "controles: pase manual")
 	Mando.fijar_esquema("clasico")
