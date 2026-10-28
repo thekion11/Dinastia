@@ -83,3 +83,11 @@ func _probar() -> void:
 				lejos18 += 1
 	_comprobar(hacia8 > lejos8 + 10, "a las 8 van más hacia el trabajo (%d) que de vuelta (%d)" % [hacia8, lejos8])
 	_comprobar(lejos18 > hacia18 + 10, "a las 18 vuelven más (%d) que van (%d)" % [lejos18, hacia18])
+	## Maletines: solo en hora punta y rumbo al trabajo (mañana) o de vuelta (tarde).
+	_comprobar(RutinaPeatones.lleva_maletin(8.0, 0.9, 0) and not RutinaPeatones.lleva_maletin(8.0, -0.9, 0), "a las 8 lleva maletín quien va al trabajo, no quien vuelve")
+	_comprobar(RutinaPeatones.lleva_maletin(18.0, -0.9, 0) and not RutinaPeatones.lleva_maletin(13.0, 0.9, 0), "a las 18 lo lleva quien vuelve, y a las 13 nadie")
+	var con := 0
+	for k in 300:
+		if RutinaPeatones.lleva_maletin(8.0, 0.9, k):
+			con += 1
+	_comprobar(con > 70 and con < 130, "más o menos uno de cada tres lo lleva (%d de 300)" % con)

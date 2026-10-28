@@ -51,6 +51,12 @@ static func sentido(h: float) -> float:
 static func factor_flujo(h: float, coseno: float) -> float:
 	return clampf(1.0 - 0.85 * maxf(0.0, -sentido(h) * coseno), 0.15, 1.0)   ## sale menos quien va a contramano de la hora
 
+## ¿Lleva maletín? Quien va al trabajo por la mañana o vuelve de él por la tarde, en hora punta (uno de cada tres, estable por peatón).
+static func lleva_maletin(h: float, coseno: float, i: int) -> bool:
+	var punta := maxf(pico(h, 8.0, 1.2), pico(h, 18.0, 1.4))
+	var rumbo_ok := (h < 12.0 and coseno > 0.3) or (h >= 12.0 and coseno < -0.3)
+	return punta > 0.35 and rumbo_ok and posmod(hash([i, 97]), 3) == 0
+
 ## Ritmo de paso: 1 normal, hasta 1,25 en hora punta y hasta 0,85 paseando.
 static func prisa(h: float, sector: int) -> float:
 	if sector == 600:
@@ -93,6 +99,10 @@ static func tick(vehiculos: Array, hora: float) -> Dictionary:
 			v["vel"] = float(v["vel"]) / f_viejo * f_nuevo
 			v["rut_f"] = f_nuevo
 		v["rut_pausa"] = pausa(hora, sector)
+		var con_maletin := lleva_maletin(hora, rumbo.dot(al_trabajo), i)
+		if con_maletin != bool(v.get("maletin", false)):
+			v["maletin"] = con_maletin
+			PeatonVida.maletin(v, con_maletin)
 		if sale:
 			visibles += 1
 			prisa_suma += float(v.get("rut_f", 1.0))
