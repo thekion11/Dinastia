@@ -33,6 +33,8 @@ var _lista: VBoxContainer
 var _btn_saltar: Button
 var _btn_seguir: Button
 var _t := 0.0
+var _ult_min_reloj := -1   ## (28-10) último minuto escrito en el reloj
+
 var _animado := true
 var _penales: Array = []
 
@@ -142,8 +144,10 @@ func _process(delta: float) -> void:
 		_mostrados += 1
 	if _t >= DURACION_RESUMEN:
 		_mostrar_todo()
-	else:
+	elif minuto_visto != _ult_min_reloj:   ## (28-10) solo al cambiar el minuto
+		_ult_min_reloj = minuto_visto
 		_reloj.text = "%d'" % minuto_visto
+
 
 func _revelar(mo: Dictionary) -> void:
 	var fila := HBoxContainer.new()

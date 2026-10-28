@@ -288,6 +288,8 @@ func pintar_pregunta(e: Dictionary) -> void:
 	var pregunta := String(e.get("pregunta", ""))
 	_pregunta.text = _con_titulo(pregunta)
 	desde = Time.get_ticks_msec() + int(_lectura(pregunta) * 1000.0)
+	_ult_reloj = -99   ## (28-10) pregunta nueva: el reloj en palabras se vuelve a escribir
+
 	## Mientras se lee, la cámara está en el periodista que pregunta (mano en alto).
 	if is_instance_valid(_escena):
 		_escena.enfocar_periodista(String(e.get("periodista", "")), _lectura(pregunta))

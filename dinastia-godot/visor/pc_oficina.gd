@@ -74,18 +74,22 @@ func _process(delta: float) -> void:
 	if is_instance_valid(_aro):
 		var k := 1.0 + 0.08 * sin(_t * 3.0)
 		_aro.scale = Vector3(k, 0.06, k)
-		_aro.visible = not abierto
+		if _aro.visible == abierto:
+			_aro.visible = not abierto
 	## El aviso de la E lo escribe el explorador cada cuadro con lo que tiene
 	## delante; cuando no hay nada (texto vacío) y estás sobre el aro, se pone el nuestro.
+	## (28-10) `cerca()` una sola vez por cuadro y la traducción solo cuando hace falta.
 	if explorador != null and is_instance_valid(explorador):
 		var aviso: Label = explorador.get("_aviso")
 		if aviso != null:
-			if cerca() and aviso.text == "":
+			var c := cerca()
+			if c and aviso.text == "":
 				aviso.text = Idiomas.t("E: encender el PC")
 				_aviso_puesto = true
-			elif _aviso_puesto and not cerca() and aviso.text == Idiomas.t("E: encender el PC"):
+			elif _aviso_puesto and not c and aviso.text == Idiomas.t("E: encender el PC"):
 				aviso.text = ""
 				_aviso_puesto = false
+
 
 func _unhandled_input(ev: InputEvent) -> void:
 	if abierto:

@@ -112,17 +112,22 @@ func notificar(texto: String, segundos := 3.5) -> void:
 	_t_nota = segundos
 
 ## `modo`: "pie", "correr", "coche", "tren". `maxima`: para la barra.
+## (28-10) Las etiquetas son una constante y cada `text` se escribe solo si cambió (se llama en cada tick físico).
+const ETIQUETAS := {"correr": "🏃 Carrera", "coche": "🚗 Conduciendo", "tren": "🚇 Metro"}
 func poner(modo: String, km_h: float, maxima: float, calle: String, metros: float) -> void:
 	_mostrar = modo in ["correr", "coche", "tren"]
-	_vel.text = str(int(round(km_h)))
+	_poner_texto(_vel, str(int(round(km_h))))
 	_barra.max_value = maxima
 	_barra.value = km_h
-	_icono.text = ((reloj_texto + "  ") if reloj_texto != "" else "") + Idiomas.t({"correr": "🏃 Carrera", "coche": "🚗 Conduciendo", "tren": "🚇 Metro"}.get(modo, "🚶 A pie"))
-	_calle.text = ("📍 " + calle) if calle != "" else ""
-	if _t_nota > 0.0:
-		_calle.text = _nota
+	_poner_texto(_icono, ((reloj_texto + "  ") if reloj_texto != "" else "") + Idiomas.t(ETIQUETAS.get(modo, "🚶 A pie")))
+	_poner_texto(_calle, _nota if _t_nota > 0.0 else (("📍 " + calle) if calle != "" else ""))
 	_recorrido += metros
-	_dist.text = "%.2f km" % (_recorrido / 1000.0) if _recorrido >= 100.0 else "%d m" % int(_recorrido)
+	_poner_texto(_dist, "%.2f km" % (_recorrido / 1000.0) if _recorrido >= 100.0 else "%d m" % int(_recorrido))
+
+static func _poner_texto(l: Label, s: String) -> void:
+	if l.text != s:
+		l.text = s
+
 
 func _process(delta: float) -> void:
 	_t += delta

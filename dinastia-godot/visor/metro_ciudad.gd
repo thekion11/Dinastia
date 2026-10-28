@@ -293,12 +293,15 @@ func _embarques(delta: float) -> void:
 
 ## Abre o cierra las puertas (paneles que se deslizan a lo largo del coche).
 func _puertas(n: Node3D, abiertas: bool) -> void:
-	for d: Array in n.get_meta("puertas", []):
+	if not n.has_meta("puertas"):   ## (28-10) sin crear un Array vacío por tren y cuadro
+		return
+	for d: Array in n.get_meta("puertas"):
 		var nodo: Node3D = d[0]
 		var base: Vector3 = d[1]
 		var hacia: float = d[2]
 		var obj := base + Vector3(0, 0, hacia * (0.75 if abiertas else 0.0))
-		nodo.position = nodo.position.lerp(obj, 0.18)
+		if not nodo.position.is_equal_approx(obj):   ## ya en su sitio: no se toca
+			nodo.position = nodo.position.lerp(obj, 0.18)
 
 func _process(delta: float) -> void:
 	_gente_cerca(delta)
@@ -327,10 +330,10 @@ func _process(delta: float) -> void:
 				mejor = minf(mejor, t.eta(float(pa["s"])))
 			var lab: Label3D = pa["label"]
 			var cuando := "llegando" if mejor < 20.0 else "%d min" % int(ceil(mejor / 60.0))
-			if pa.has("pantalla"):
-				lab.text = "%s · %s\nPróximo tren: %s" % [String((pa["linea"] as Dictionary)["nombre"]), String(pa["est"]), cuando]
-			else:
-				lab.text = "%s · próximo tren: %s" % [String((pa["linea"] as Dictionary)["nombre"]), cuando]
+			var txt_p := ("%s · %s\nPróximo tren: %s" % [String((pa["linea"] as Dictionary)["nombre"]), String(pa["est"]), cuando]) if pa.has("pantalla") \
+					else ("%s · próximo tren: %s" % [String((pa["linea"] as Dictionary)["nombre"]), cuando])
+			if lab.text != txt_p:   ## (28-10) cada asignación rehace la malla del texto: solo si cambió
+				lab.text = txt_p
 		for l: Dictionary in lineas:
 			for k in (l["trenes"] as Array).size():
 				## Parado en una estación dice dónde está (antes decía «Próxima:
@@ -338,7 +341,9 @@ func _process(delta: float) -> void:
 				var aqui := estacion_del_tren(String(l["nombre"]), k)
 				var txt := "%s\n%s" % [String(l["nombre"]), ("Estación: %s" % String(NOMBRES[l["nombre"]][aqui])) if aqui >= 0 else ("Próxima: %s" % proxima_de(String(l["nombre"]), k))]
 				for led: Label3D in (l["nodos"][k] as Node3D).get_meta("leds", []):
-					led.text = txt
+					if led.text != txt:
+						led.text = txt
+
 
 ## EL PERSONAJE NO ATRAVIESA A LA GENTE DEL ANDÉN (16-10-2026): lo usa el
 ## explorador en el andén. Devuelve `p` empujado fuera de cada persona

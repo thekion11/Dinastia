@@ -29,6 +29,7 @@ var _objetivos_ocultos := false
 var _escena: RuedaPrensaEscena3D
 const _PrincipalRuedaResumen := preload("res://ui/principal/rueda_prensa_resumen.gd")
 ## Quién hizo la última pregunta (la entrevista ya se vacía al cerrar).
+var _ult_reloj := -99   ## (28-10) último estado escrito en `_reloj_txt` (-1 leyendo, 0 dudando, n segundos)
 var _ultimo_periodista := ""
 var _ultimo_medio := ""
 ## Lo que movió la rueda entera (con repreguntas), para el resumen final.
@@ -103,12 +104,17 @@ func _process(_d: float) -> void:
 	var ahora := Time.get_ticks_msec()
 	if ahora < desde:
 		_reloj.value = 0.0
-		_reloj_txt.text = Idiomas.t("📖 Leyendo la pregunta…")
-		_reloj_txt.add_theme_color_override("font_color", Tema.SUAVE)
+		if _ult_reloj != -1:
+			_ult_reloj = -1
+			_reloj_txt.text = Idiomas.t("📖 Leyendo la pregunta…")
+			_reloj_txt.add_theme_color_override("font_color", Tema.SUAVE)
 		return
 	var seg := segundos()
 	_reloj.value = minf(seg, Prensa.TITUBEO_SEG)
-	var quedan := int(ceil(Prensa.TITUBEO_SEG - seg))
+	var quedan := maxi(int(ceil(Prensa.TITUBEO_SEG - seg)), 0)
+	if quedan == _ult_reloj:   ## (28-10) texto y color solo cuando cambia el segundo (el override relanza el relayout)
+		return
+	_ult_reloj = quedan
 	if quedan > 0:
 		_reloj_txt.text = Idiomas.t("⏱ %d s para contestar con aplomo") % quedan
 		_reloj_txt.add_theme_color_override("font_color", Tema.ORO if quedan <= 3 else Tema.TEXTO)
@@ -117,6 +123,7 @@ func _process(_d: float) -> void:
 		_reloj_txt.text = Idiomas.t("⏱ La sala ya nota que dudas")
 		_reloj_txt.add_theme_color_override("font_color", Tema.MAL)
 		_reloj.modulate = Tema.MAL
+
 
 
 ## El reloj, DISCRETO (26-10, pedido del dueño): una línea pequeña con los

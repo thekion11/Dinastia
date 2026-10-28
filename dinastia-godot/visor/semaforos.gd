@@ -23,6 +23,7 @@ var t := 0.0
 var cruces: Array = []
 var _luces := {}   ## "eje|color" -> StandardMaterial3D
 var botones: Array[Vector3] = []   ## dónde está cada botón peatonal (en el poste, a 1,1 m)
+var _ult_aplicado := ""   ## (28-10) estado ya escrito en los materiales: solo se reescriben cuando cambia
 
 func montar(lista: Array, exp: CiudadExpansion) -> void:
 	cruces = lista
@@ -102,6 +103,7 @@ func _mm(malla: Mesh, mat: Material, ts: Array[Transform3D]) -> void:
 	mi.multimesh = mm
 	mi.material_override = mat
 	add_child(mi)
+	_ult_aplicado = ""
 
 func _process(delta: float) -> void:
 	t = fmod(t + delta, CICLO)
@@ -159,9 +161,14 @@ func boton_cerca(p: Vector3) -> float:
 	return mejor if mejor <= RADIO_BOTON else INF
 
 func _aplicar() -> void:
+	var clave := "%s%s%s%s%d" % [estado(0), estado(1), peatonal(0), peatonal(1), int(t * 2.0) % 2]
+	if clave == _ult_aplicado:
+		return
+	_ult_aplicado = clave
 	for eje in 2:
 		var pe := peatonal(eje)
 		var verde_p := pe == "v" or (pe == "i" and int(t * 2.0) % 2 == 0)
+
 		var mv: StandardMaterial3D = _luces.get("%d|pv" % eje)
 		var mr: StandardMaterial3D = _luces.get("%d|pr" % eje)
 		if mv != null:

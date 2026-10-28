@@ -18,6 +18,8 @@ const DURACION := 6.5
 var _vp: SubViewport
 var _cam: Camera3D
 var _t := 0.0
+var _ult_seg := -1   ## (28-10) último segundo escrito en el reloj
+
 var _rotulo: Label
 var _reloj: Label
 var _decision: PanelContainer
@@ -406,7 +408,10 @@ func _process(delta: float) -> void:
 	## durar segundos, y la revisión se "terminaba" antes de verse.
 	delta = minf(delta, 0.1)
 	_t += delta
-	_reloj.text = "⏱ %02d" % int(_t)
+	if int(_t) != _ult_seg:   ## (28-10) el texto del reloj solo al cambiar el segundo
+		_ult_seg = int(_t)
+		_reloj.text = "⏱ %02d" % _ult_seg
+
 	## La cámara se acerca despacio a la pared de monitores.
 	if _cam != null:
 		_cam.position = _cam.position.lerp(Vector3(0.6, 1.9, 1.4), 0.25 * delta)

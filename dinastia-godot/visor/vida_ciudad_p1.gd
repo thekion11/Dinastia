@@ -44,6 +44,7 @@ var escaparates: EscaparateVida = null
 var grupos: GrupoVida = null
 var escaleras: EscaleraVida = null
 var paraguas: ParaguasVida = null
+var _t_extras := 0.0   ## (28-10) `poner_extras` cada 2 s, no por cuadro (recorría los bloques del parque sin balón)
 var pasajeros: PasajerosBus = null
 var en_casa := false
 var _punto_casa := {}
@@ -132,7 +133,11 @@ static func arranque_3d(m: Mundo) -> String:
 func _process(delta: float) -> void:
 	if expl == null or not is_instance_valid(expl) or expl.cuerpo == null:
 		return
-	call("poner_extras")   ## el balón del parque y la máquina del estadio (una sola vez cada uno; ver `VidaCiudad.poner_extras`)
+	_t_extras -= delta
+	if _t_extras <= 0.0:
+		_t_extras = 2.0
+		call("poner_extras")   ## el balón del parque y la máquina del estadio (una sola vez cada uno; ver `VidaCiudad.poner_extras`)
+
 	if _t_cuadro > 0.0:
 		_t_cuadro -= delta
 		if _t_cuadro <= 0.0 and _cuadro != null:

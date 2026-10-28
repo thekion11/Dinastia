@@ -186,8 +186,11 @@ func _process(delta: float) -> void:
 			if lbl.visible_characters >= total:
 				_completar_escritura()
 	if _fase == "prologo":
-		_btn_prologo.text = "▸▸" if _escribiendo else Idiomas.t("Entrar ▸")
+		var txt_b := "▸▸" if _escribiendo else Idiomas.t("Entrar ▸")
+		if _btn_prologo.text != txt_b:   ## (28-10) solo al cambiar
+			_btn_prologo.text = txt_b
 		return
+
 	var paso := paso_actual()
 	## La misión se cumple cuando el jugador HACE la cosa: el paso pasa de
 	## no-hecho a hecho. Si ya estaba hecho al llegar, primero tiene que dejar
