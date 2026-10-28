@@ -102,6 +102,7 @@ func _exit_tree() -> void:
 ## Reproduce un efecto. Si no existe, no hace nada y no se queja: un sonido que
 ## falta no puede tumbar un partido.
 func toca(nombre: String, bus: Bus = Bus.EFECTOS) -> void:
+	_aviso_visual(nombre)
 	if not encendido:
 		return
 	var variantes: Array = banco(nombre)
@@ -118,6 +119,16 @@ func toca(nombre: String, bus: Bus = Bus.EFECTOS) -> void:
 	p.stream = variantes[_siguiente % variantes.size()]
 	p.volume_db = linear_to_db(maxf(0.001, float(volumen[bus]))) + float(AJUSTE_DB.get(nombre, 0.0))
 	p.play()
+
+## M-283: el aviso escrito del sonido (aunque el sonido esté apagado). La capa se crea la primera vez que hace falta.
+var _avisos: AvisosSonido
+func _aviso_visual(nombre: String) -> void:
+	if not AvisosSonido.TEXTOS.has(nombre) or not AvisosSonido.activo():
+		return
+	if _avisos == null:
+		_avisos = AvisosSonido.new()
+		add_child(_avisos)
+	_avisos.avisar(nombre)
 
 ## Los nombres de los efectos que hay cargados, y una ficha de cada uno.
 ##
