@@ -6541,7 +6541,10 @@
   "Simulando la temporada…": "Simulating the season…",
   "Detener": "Stop",
   "Temporada %d completa en %d ms.": "Season %d completed in %d ms.",
-  "Campeón: %s. Acabas %d.º.": "Champion: %s. You finish %d."
+  "Campeón: %s. Acabas %d.º.": "Champion: %s. You finish %d.",
+  "¿Fichar por %s? Toca otra vez": "Sign for %s? Tap again",
+  "¿Vender todo? Toca otra vez": "Sell everything? Tap again",
+  "¿Vender el 25 %? Toca otra vez": "Sell the 25%? Tap again"
  },
  "pt": {
   "Historia": "História",
@@ -13085,7 +13088,10 @@
   "Simulando la temporada…": "Simulando a temporada…",
   "Detener": "Parar",
   "Temporada %d completa en %d ms.": "Temporada %d concluída em %d ms.",
-  "Campeón: %s. Acabas %d.º.": "Campeão: %s. Você termina em %dº."
+  "Campeón: %s. Acabas %d.º.": "Campeão: %s. Você termina em %dº.",
+  "¿Fichar por %s? Toca otra vez": "Assinar com o %s? Toque de novo",
+  "¿Vender todo? Toca otra vez": "Vender tudo? Toque de novo",
+  "¿Vender el 25 %? Toca otra vez": "Vender os 25%? Toque de novo"
  },
  "patrones": [
   [
@@ -25362,7 +25368,10 @@
   "Simulando la temporada…": "Simulation de la saison…",
   "Detener": "Arrêter",
   "Temporada %d completa en %d ms.": "Saison %d terminée en %d ms.",
-  "Campeón: %s. Acabas %d.º.": "Champion : %s. Vous finissez %de."
+  "Campeón: %s. Acabas %d.º.": "Champion : %s. Vous finissez %de.",
+  "¿Fichar por %s? Toca otra vez": "Signer à %s ? Touchez encore",
+  "¿Vender todo? Toca otra vez": "Tout vendre ? Touchez encore",
+  "¿Vender el 25 %? Toca otra vez": "Vendre les 25 % ? Touchez encore"
  },
  "it": {
   "Historia": "Storia",
@@ -31906,7 +31915,10 @@
   "Simulando la temporada…": "Simulazione della stagione…",
   "Detener": "Ferma",
   "Temporada %d completa en %d ms.": "Stagione %d completata in %d ms.",
-  "Campeón: %s. Acabas %d.º.": "Campione: %s. Finisci %dº."
+  "Campeón: %s. Acabas %d.º.": "Campione: %s. Finisci %dº.",
+  "¿Fichar por %s? Toca otra vez": "Firmare per %s? Tocca di nuovo",
+  "¿Vender todo? Toca otra vez": "Vendere tutto? Tocca di nuovo",
+  "¿Vender el 25 %? Toca otra vez": "Vendere il 25%? Tocca di nuovo"
  },
  "de": {
   "Historia": "Geschichte",
@@ -38450,7 +38462,10 @@
   "Simulando la temporada…": "Saison wird simuliert…",
   "Detener": "Anhalten",
   "Temporada %d completa en %d ms.": "Saison %d in %d ms abgeschlossen.",
-  "Campeón: %s. Acabas %d.º.": "Meister: %s. Du wirst %d."
+  "Campeón: %s. Acabas %d.º.": "Meister: %s. Du wirst %d.",
+  "¿Fichar por %s? Toca otra vez": "Zu %s wechseln? Nochmal tippen",
+  "¿Vender todo? Toca otra vez": "Alles verkaufen? Nochmal tippen",
+  "¿Vender el 25 %? Toca otra vez": "Die 25 % verkaufen? Nochmal tippen"
  },
  "ca": {
   "Historia": "Història",
@@ -44994,7 +45009,10 @@
   "Simulando la temporada…": "Simulant la temporada…",
   "Detener": "Atura",
   "Temporada %d completa en %d ms.": "Temporada %d completa en %d ms.",
-  "Campeón: %s. Acabas %d.º.": "Campió: %s. Acabes %dè."
+  "Campeón: %s. Acabas %d.º.": "Campió: %s. Acabes %dè.",
+  "¿Fichar por %s? Toca otra vez": "Fitxar pel %s? Toca un altre cop",
+  "¿Vender todo? Toca otra vez": "Vendre-ho tot? Toca un altre cop",
+  "¿Vender el 25 %? Toca otra vez": "Vendre el 25 %? Toca un altre cop"
  },
  "pl": {
   "Club": "Klub",
@@ -51817,7 +51835,10 @@
   "Simulando la temporada…": "Symulacja sezonu…",
   "Detener": "Zatrzymaj",
   "Temporada %d completa en %d ms.": "Sezon %d ukończony w %d ms.",
-  "Campeón: %s. Acabas %d.º.": "Mistrz: %s. Kończysz na %d. miejscu."
+  "Campeón: %s. Acabas %d.º.": "Mistrz: %s. Kończysz na %d. miejscu.",
+  "¿Fichar por %s? Toca otra vez": "Podpisać z %s? Dotknij ponownie",
+  "¿Vender todo? Toca otra vez": "Sprzedać wszystko? Dotknij ponownie",
+  "¿Vender el 25 %? Toca otra vez": "Sprzedać 25%? Dotknij ponownie"
  },
  "tr": {
   "Club": "Kulüp",
@@ -58640,6 +58661,9 @@
   "Simulando la temporada…": "Sezon simüle ediliyor…",
   "Detener": "Durdur",
   "Temporada %d completa en %d ms.": "%d sezonu %d ms'de tamamlandı.",
-  "Campeón: %s. Acabas %d.º.": "Şampiyon: %s. %d. sırada bitiriyorsun."
+  "Campeón: %s. Acabas %d.º.": "Şampiyon: %s. %d. sırada bitiriyorsun.",
+  "¿Fichar por %s? Toca otra vez": "%s ile imzala? Tekrar dokun",
+  "¿Vender todo? Toca otra vez": "Hepsini sat? Tekrar dokun",
+  "¿Vender el 25 %? Toca otra vez": "%25'i sat? Tekrar dokun"
  }
 }

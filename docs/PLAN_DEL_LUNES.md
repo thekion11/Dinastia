@@ -1866,7 +1866,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 1020. Tablas ordenables por cualquier columna — _Sólo seis columnas definidas, no cualquier columna_
 - 1022. Vista compacta y vista detallada intercambiables — _Compacta/detallada solo en alguna vista_
 - 1023. Modo oscuro y modo claro — _No hay un interruptor claro/oscuro explícito: el juego es oscuro con paletas alternativas_
-- 1027. Confirmación previa a decisiones irreversibles — _No es sistemático para todas las decisiones irreversibles_
 - 1028. Deshacer la última acción no crítica — _Solo estas dos decisiones, no un deshacer general_
 - 1031. Carga inmediata de la última partida al abrir la app — _No se confirmó que cargue automáticamente la última al abrir_
 - 1034. Resumen del día al avanzar el calendario — _No hay un 'resumen del día' formal al avanzar un día_

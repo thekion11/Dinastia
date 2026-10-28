@@ -277,7 +277,7 @@ func _pintar_fondos(c: Club) -> void:
 			b.clip_text = true
 			b.tooltip_text = Idiomas.t("%s  ·  vende el 25%% del próximo traspaso de %s") % [String(f[3]), j2.nombre]
 			b.custom_minimum_size = Vector2(120, 0)
-			b.pressed.connect(func() -> void:
+			DobleToque.conectar(b, Idiomas.t("¿Vender el 25 %? Toca otra vez"), func() -> void:   ## idea 1027: no se recompra
 				var p_local := ce.vender_participacion(j2, clave, 25, p.mundo.mi_club())
 				if p_local != "":
 					p._escribir("[color=#e05555]No se pudo: %s.[/color]" % p_local)

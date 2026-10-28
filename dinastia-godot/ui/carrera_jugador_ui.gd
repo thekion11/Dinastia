@@ -164,10 +164,13 @@ func _derecha(_j: Jugador) -> Control:
 			if cl == null:
 				continue
 			var k := i
-			v.add_child(_boton("✈  %s te quiere · %s/sem · %d sem para decidir" % [Nombres.visible(cl.nombre), Eco.dinero(int(o["sueldo"])), int(o["semanas"])], Color("ffd24a"), func() -> void:
+			## Cambiar de club no tiene vuelta: doble toque (idea 1027), como rescindir o vender.
+			var bo := _boton("✈  %s te quiere · %s/sem · %d sem para decidir" % [Nombres.visible(cl.nombre), Eco.dinero(int(o["sueldo"])), int(o["semanas"])], Color("ffd24a"), func() -> void: pass, 44)
+			DobleToque.conectar(bo, Idiomas.t("¿Fichar por %s? Toca otra vez") % Nombres.visible(cl.nombre), func() -> void:
 				if carrera.aceptar_oferta(mundo, k):
 					_msg = "¡Fichaste por %s!" % carrera.club(mundo).nombre
-				_pintar_semana(), 44))
+				_pintar_semana())
+			v.add_child(bo)
 	if not carrera.historial.is_empty():
 		v.add_child(_lbl(13, SUAVE, "TUS DECISIONES"))
 		for h: Dictionary in carrera.historial.slice(maxi(0, carrera.historial.size() - 6)):
