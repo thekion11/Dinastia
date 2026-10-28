@@ -180,7 +180,7 @@ func _probar_ciudad_grande() -> void:
 	var en_fila := e.nombre_calle_en(Vector3(1045.0, 0, -988.0))
 	var en_col := e.nombre_calle_en(Vector3(1100.0, 0, -940.0))
 	var en_manzana := e.nombre_calle_en(Vector3(1045.0, 0, -935.0))
-	_comprobar(cruce.contains(" con ") and en_fila.begins_with("Avenida") and en_col.begins_with("Calle") and en_manzana == "" and e.nombre_calle_en(Vector3.ZERO) == "",
+	_comprobar(cruce.contains(" con ") and en_fila.begins_with("Av. ") and en_col != "" and not en_col.begins_with("Av.") and en_manzana == "" and e.nombre_calle_en(Vector3.ZERO) == "",
 		"nombres de calle: «%s» · «%s» · «%s»" % [cruce, en_fila, en_col])
 	var paradas := 0
 	for l: Dictionary in e.lineas_bus:

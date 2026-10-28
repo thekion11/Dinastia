@@ -6470,7 +6470,10 @@
   "Veces campeón": "Times champion",
   "Años": "Years",
   "último": "last",
-  "Palmarés": "Honours"
+  "Palmarés": "Honours",
+  "Ese paradero no existe": "That bus stop does not exist",
+  "Revisa el código del poste: «PA» y cuatro cifras.": "Check the code on the pole: «PA» and four digits.",
+  "Tiempos según la posición real de cada bus.": "Times based on each bus's real position."
  },
  "pt": {
   "Historia": "História",
@@ -12943,7 +12946,10 @@
   "Veces campeón": "Vezes campeão",
   "Años": "Anos",
   "último": "último",
-  "Palmarés": "Palmarés"
+  "Palmarés": "Palmarés",
+  "Ese paradero no existe": "Essa paragem não existe",
+  "Revisa el código del poste: «PA» y cuatro cifras.": "Confirma o código do poste: «PA» e quatro algarismos.",
+  "Tiempos según la posición real de cada bus.": "Tempos segundo a posição real de cada autocarro."
  },
  "patrones": [
   [
@@ -25127,7 +25133,10 @@
   "Veces campeón": "Titres",
   "Años": "Années",
   "último": "dernier",
-  "Palmarés": "Palmarès"
+  "Palmarés": "Palmarès",
+  "Ese paradero no existe": "Cet arrêt n'existe pas",
+  "Revisa el código del poste: «PA» y cuatro cifras.": "Vérifie le code sur le poteau : «PA» et quatre chiffres.",
+  "Tiempos según la posición real de cada bus.": "Temps selon la position réelle de chaque bus."
  },
  "it": {
   "Historia": "Storia",
@@ -31600,7 +31609,10 @@
   "Veces campeón": "Volte campione",
   "Años": "Anni",
   "último": "ultimo",
-  "Palmarés": "Albo d'oro"
+  "Palmarés": "Albo d'oro",
+  "Ese paradero no existe": "Questa fermata non esiste",
+  "Revisa el código del poste: «PA» y cuatro cifras.": "Controlla il codice sul palo: «PA» e quattro cifre.",
+  "Tiempos según la posición real de cada bus.": "Tempi secondo la posizione reale di ogni autobus."
  },
  "de": {
   "Historia": "Geschichte",
@@ -38073,7 +38085,10 @@
   "Veces campeón": "Titel",
   "Años": "Jahre",
   "último": "zuletzt",
-  "Palmarés": "Titel"
+  "Palmarés": "Titel",
+  "Ese paradero no existe": "Diese Haltestelle gibt es nicht",
+  "Revisa el código del poste: «PA» y cuatro cifras.": "Prüfe den Code am Mast: «PA» und vier Ziffern.",
+  "Tiempos según la posición real de cada bus.": "Zeiten nach der echten Position jedes Busses."
  },
  "ca": {
   "Historia": "Història",
@@ -44546,7 +44561,10 @@
   "Veces campeón": "Vegades campió",
   "Años": "Anys",
   "último": "últim",
-  "Palmarés": "Palmarès"
+  "Palmarés": "Palmarès",
+  "Ese paradero no existe": "Aquesta parada no existeix",
+  "Revisa el código del poste: «PA» y cuatro cifras.": "Revisa el codi del pal: «PA» i quatre xifres.",
+  "Tiempos según la posición real de cada bus.": "Temps segons la posició real de cada bus."
  },
  "pl": {
   "Club": "Klub",
@@ -51298,7 +51316,10 @@
   "Veces campeón": "Tytuły",
   "Años": "Lata",
   "último": "ostatni",
-  "Palmarés": "Trofea"
+  "Palmarés": "Trofea",
+  "Ese paradero no existe": "Taki przystanek nie istnieje",
+  "Revisa el código del poste: «PA» y cuatro cifras.": "Sprawdź kod na słupku: «PA» i cztery cyfry.",
+  "Tiempos según la posición real de cada bus.": "Czasy według rzeczywistej pozycji każdego autobusu."
  },
  "tr": {
   "Club": "Kulüp",
@@ -58050,6 +58071,9 @@
   "Veces campeón": "Şampiyonluk",
   "Años": "Yıllar",
   "último": "son",
-  "Palmarés": "Kupalar"
+  "Palmarés": "Kupalar",
+  "Ese paradero no existe": "Böyle bir durak yok",
+  "Revisa el código del poste: «PA» y cuatro cifras.": "Direkteki kodu kontrol et: «PA» ve dört rakam.",
+  "Tiempos según la posición real de cada bus.": "Süreler her otobüsün gerçek konumuna göre."
  }
 }

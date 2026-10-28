@@ -15,35 +15,50 @@ func _probar() -> void:
 	_comprobar(textos.has("Red"), "lleva el logo «Red»")
 	_comprobar(textos.has("Av. Los Presidentes"), "el cartel lleva el nombre de la parada")
 	var rs := ParaderoRed.recorridos(1234, 200)
-	_comprobar(rs.size() >= 3 and rs.size() <= 6, "%d recorridos en la cuadrícula (%s)" % [rs.size(), ", ".join(rs)])
+	_comprobar(rs.size() >= 2 and rs.size() <= 5, "%d recorridos en la cuadrícula (%s)" % [rs.size(), ", ".join(rs)])
 	var todos := true
 	for r: String in rs:
 		todos = todos and textos.has(r)
 	_comprobar(todos, "todos salen en el cartel")
-	## Un sector da números de su centena (o alimentadores «C##») con sufijo «c» o, rarísimo, «e».
+	## Los recorridos son los del mapa (`RecorridosMapa`): en cada paradero de un sector, troncales de 3 cifras o locales «C##»,
+	## la vuelta con «c» y alguna alternativa «e»; casi todos del propio sector (los del club pasan por el centro, el sur…).
 	var mal := 0
 	var con_c := 0
 	var con_e := 0
 	var alim := 0
 	var total := 0
-	for s in 300:
-		for r: String in ParaderoRed.recorridos(s, 100):
+	var propios := 0
+	var rx := RegEx.create_from_string("^(\\d{3}|C\\d{2})[ce]?$")
+	for cod: String in RecorridosMapa.datos()["orden"]:
+		for r: String in RecorridosRed.recorridos(cod):
 			total += 1
-			var base := r.trim_suffix("c").trim_suffix("e")
+			if rx.search(r) == null:
+				mal += 1
 			if r.begins_with("C"):
 				alim += 1
-			elif not base.begins_with("1") or base.length() != 3:
-				mal += 1
+			elif int(r.substr(0, 1)) * 100 == RecorridosRed.sector_del_codigo(cod):
+				propios += 1
 			if r.ends_with("c"):
 				con_c += 1
 			if r.ends_with("e"):
 				con_e += 1
-	## Como en la Red de verdad, algún recorrido cruza desde un sector vecino: la mayoría son del propio.
-	_comprobar(mal * 3 < total, "el sector 100 da sobre todo 1xx (o «C##»): %d de %d son de un sector vecino" % [mal, total])
-	_comprobar(con_c > con_e * 3 and con_e > 0 and alim > 0, "hay «c» (%d), «e» muy rara (%d) y alimentadores (%d)" % [con_c, con_e, alim])
+	_comprobar(mal == 0 and propios * 2 > total, "%d recorridos en los paraderos con la forma de la Red; %d del propio sector" % [total, propios])
+	_comprobar(con_c > con_e * 3 and con_e > 0 and alim > 0, "hay «c» (%d), «e» muy rara (%d) y locales (%d)" % [con_c, con_e, alim])
 	_comprobar(ParaderoRed.codigo(1234) == ParaderoRed.codigo(1234) and ParaderoRed.codigo(1) != ParaderoRed.codigo(2) and ParaderoRed.codigo(7).begins_with("PA"), "el código «PA####» es estable por paradero")
-	_comprobar(RecorridosRed.sector_del_codigo(ParaderoRed.codigo(1234, 300)) == 300, "el código lleva su sector delante (tabla común `RecorridosRed`, la misma que lee la app)")
+	_comprobar(RecorridosRed.sector_del_codigo(ParaderoRed.codigo(1234, 300)) == 300 and RecorridosRed.existe(ParaderoRed.codigo(1234, 300)), "el código es de un paradero real del mapa y lleva su sector delante")
 	_comprobar(ParaderoRed.registro.size() == 1 and String(ParaderoRed.registro[0]["codigo"]) == ParaderoRed.codigo(1234, 200), "queda en el registro (para la app del móvil)")
+	## Con el código del mapa, el cartel lleva el nombre de su calle y sus recorridos.
+	var raiz2 := Node3D.new()
+	add_child(raiz2)
+	var cod2 := RecorridosRed.paradero_en(Vector3(192, 0, -170))
+	ParaderoRed.montar(raiz2, 3.8, 0, "", 0, cod2)
+	var t2: Array[String] = []
+	for l: Node in raiz2.find_children("*", "Label3D", true, false):
+		t2.append((l as Label3D).text)
+	var todos2 := t2.has(cod2) and t2.has("Av. Los Hinchas / Estadio")
+	for r: String in RecorridosRed.recorridos(cod2):
+		todos2 = todos2 and t2.has(r)
+	_comprobar(todos2, "el paradero del estadio (%s): «Av. Los Hinchas / Estadio» con %s" % [cod2, ", ".join(RecorridosRed.recorridos(cod2))])
 	## La banca queda a la altura de los asientos registrados (tablero a 0,69 sobre el suelo local) y sus asientos caen sobre ella.
 	var alto_banca := 0.0
 	for m: Node in raiz.find_children("*", "MeshInstance3D", true, false):

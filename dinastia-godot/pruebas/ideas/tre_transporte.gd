@@ -65,8 +65,8 @@ func _probar() -> void:
 	var nums: Array = []
 	for r: Dictionary in rutas:
 		nums.append(String(r["numero"]))
-	_comprobar(nums == ["5", "10", "22", "7", "3"], "cinco líneas de autobús numeradas (%s)" % ", ".join(nums))
-	_comprobar(MapaTransporte.color_linea("10") != MapaTransporte.color_linea("22") and ex.lineas_metro.size() == 2, "cada línea tiene su color y hay dos de metro")
+	_comprobar(nums.size() == 22 and nums.has("101") and nums.has("C02") and nums.has("301e"), "los %d recorridos «Red» del mapa numerados (%s…)" % [nums.size(), ", ".join(nums.slice(0, 6))])
+	_comprobar(MapaTransporte.color_linea("101") != MapaTransporte.color_linea("217") and ex.lineas_metro.size() == 2, "cada sector tiene su color y hay dos líneas de metro")
 	for m in 3:
 		mapa.modo = m
 		mapa.size = Vector2(1600, 900)

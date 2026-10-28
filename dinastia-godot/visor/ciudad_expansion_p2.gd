@@ -152,33 +152,7 @@ func armar_bloques() -> void:
 			bloques.append({"rect": r, "celda": celda, "zona": zona, "uso": uso})
 	cuenta["manzanas"] = bloques.size()
 
-func _linea_bus(nombre: String, esquinas: Array, separacion: float = 330.0) -> Dictionary:
-	var pts := PackedVector3Array()
-	var carril := ANCHO_AV * 0.25
-	for e: Vector2 in esquinas:
-		pts.append(Vector3(e.x, 0.3, e.y))
-	## Desplazado al carril derecho (sentido horario visto desde arriba).
-	var n := pts.size()
-	var sal := PackedVector3Array()
-	for k in n:
-		var prev := pts[(k - 1 + n) % n]
-		var act := pts[k]
-		var sig := pts[(k + 1) % n]
-		var d1 := (act - prev).normalized()
-		var d2 := (sig - act).normalized()
-		var off := (Vector3(-d1.z, 0, d1.x) + Vector3(-d2.z, 0, d2.x)).normalized() * carril
-		sal.append(act + off)
-	var paradas: Array = []
-	for k in n:
-		var a := sal[k]
-		var c := sal[(k + 1) % n]
-		var largo := a.distance_to(c)
-		var cuantas := int(largo / separacion)
-		for q in range(1, cuantas + 1):
-			paradas.append(a.lerp(c, float(q) / float(cuantas + 1)))
-	return {"nombre": nombre, "destino": {"Bus 10": "CIRCULAR CENTRO", "Bus 22": "CIRCULAR EXTERIOR", "Bus 7": "BARRIO ESTE", "Bus 3": "PUERTO Y OESTE"}.get(nombre, "CIRCULAR"), "puntos": sal, "paradas": paradas}
-
-## Dos líneas de metro (en datos: estaciones en cruces) y dos de autobús.
+## Dos líneas de metro (en datos: estaciones en cruces) y los recorridos «Red» de autobús.
 func armar_transporte() -> void:
 	## Mismas líneas que dibuja y mueve `MetroCiudad`: la 1 elevada por la
 	## avenida x = 660 y la 2 subterránea bajo z = -660 (transbordo en el cruce).
@@ -191,14 +165,18 @@ func armar_transporte() -> void:
 		{"nombre": "Línea 1", "color": Color(0.85, 0.15, 0.15), "estaciones": l1, "elevada": true},
 		{"nombre": "Línea 2", "color": Color(0.15, 0.4, 0.9), "estaciones": l2, "elevada": false},
 	]
-	## Autobuses: recorridos cerrados por avenidas, por el carril derecho.
-	lineas_bus = [
-		_linea_bus("Bus 10", [Vector2(NUC_X0, NUC_Z0), Vector2(NUC_X1, NUC_Z0), Vector2(NUC_X1, NUC_Z1), Vector2(NUC_X0, NUC_Z1)]),
-		_linea_bus("Bus 22", [Vector2(-660, -990), Vector2(990, -990), Vector2(990, 990), Vector2(-660, 990)]),
-		## Dos líneas de barrio (27-10-2026): la 7 por el Este (por las avenidas x = 660/990, z = 0/660) y la 3 por el Oeste y el puerto.
-		_linea_bus("Bus 7", [Vector2(660, 0), Vector2(990, 0), Vector2(990, 660), Vector2(660, 660)], 300.0),
-		_linea_bus("Bus 3", [Vector2(-990, -330), Vector2(-660, -330), Vector2(-660, 330), Vector2(-990, 330)], 300.0),
-	]
+	## Autobuses (28-10-2026): los recorridos «Red» sobre el mapa (`RecorridosMapa`), uno por servicio (ida y su «c»), con el eje que
+	## siguen y las aceras de sus paraderos. Los buses los mueve `BusesRed` y el plano los dibuja `MapaTransporte`.
+	lineas_bus = []
+	for num: String in RecorridosMapa.servicios():
+		var sv := RecorridosMapa.servicio(num)
+		var eje := PackedVector3Array()
+		for e: Vector2 in sv["ejes"]:
+			eje.append(Vector3(e.x, 0.3, e.y))
+		var paradas: Array = []
+		for cod: String in sv["paraderos"]:
+			paradas.append(RecorridosMapa.paradero(cod)["pos"])
+		lineas_bus.append({"nombre": num, "numero": num, "destino": sv["destino"], "puntos": eje, "paradas": paradas, "codigos": sv["paraderos"]})
 
 func _cargar_modelos() -> void:
 	for ruta in CityBuilder.RUTAS_COMERCIAL:
