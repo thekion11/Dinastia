@@ -106,7 +106,7 @@ static func autobus(col: Color, destino: String = "", numero: String = "") -> No
 		bm3.size = Vector3(0.06, 2.3, 1.2)
 		pu.mesh = bm3
 		pu.material_override = vidrio
-		pu.position = Vector3(-1.29, 1.55, zp)
+		pu.position = Vector3(PasajerosBus.lado_puerta() * 1.29, 1.55, zp)
 		raiz.add_child(pu)
 	## Ruedas.
 	for zr: float in [3.8, -3.6]:
