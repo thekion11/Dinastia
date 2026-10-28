@@ -22,7 +22,7 @@ func _ready() -> void:
 	for l in mundo.ligas:
 		for c in l.clubes:
 			por_nombre[c.nombre] = c
-	var pack: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string("res://datos/pack_real.json")) as Dictionary).get("tablas", {}).get("ASPECTO_CLUB", {})
+	var pack: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(OS.get_environment("PACK_SEL") if OS.get_environment("PACK_SEL") != "" else "res://datos/pack_real.json")) as Dictionary).get("tablas", {}).get("ASPECTO_CLUB", {})
 	var ant0: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string("/tmp/ant/pack_antes.json")) as Dictionary).get("tablas", {}).get("ASPECTO_CLUB", {}) if FileAccess.file_exists("/tmp/ant/pack_antes.json") else {}
 	for k: String in pack:
 		var a: Dictionary = ant0.get(k, {})
@@ -64,6 +64,6 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_f += 1
 	if _f == 12:
-		get_viewport().get_texture().get_image().save_png("/tmp/escudos_v3_%s.png" % ("antes" if OS.get_environment("ANTES") != "" else "despues"))
+		get_viewport().get_texture().get_image().save_png("/tmp/escudos_v3_%s.png" % ("antes" if OS.get_environment("ANTES") != "" else (OS.get_environment("ETIQ") if OS.get_environment("ETIQ") != "" else "despues")))
 		print("FIN. 0 fallos")
 		get_tree().quit()
