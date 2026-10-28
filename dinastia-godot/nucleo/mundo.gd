@@ -39,6 +39,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	retos_semana.generar(self)
 	mentor_mes.empezar()
 	DesafiosDificultad.aplicar(self)
+	PrecalentarCaras.del_mundo(self)   ## sus jugadores y los del próximo partido, en el menú (M-348)
 	return d
 
 func nueva_temporada() -> Dictionary:
