@@ -1,0 +1,28 @@
+# Tanda de rendimiento (28-10-2026) · M-348, M-350, M-354
+(M-344/M-345 y M-347 están en `presupuesto_partido.md`.)
+
+## M-348 · La primera construcción del estadio
+Medida con `pruebas/medir_carga_estadio.tscn` (`TIEMPOS=1` muestra el desglose de `StadiumBuilder.build`; `PRECALENTAR=1` imita lo que ya habría hecho `Precarga` en el menú). Renderizado por software (llvmpipe), con el estadio de un club de CHI:
+
+| | Primera apertura | Segunda |
+|---|---|---|
+| Antes | **8 600-9 400 ms** | 1 100-1 300 ms |
+| Con `PrecalentarAnim` | **≈ 3 900-4 300 ms** | 1 100 ms |
+
+- Lo que costaba: `estadio.extras` **3 466 ms** en frío (13 ms después). Era la mascota → `FutbolistaQ.terminar` → `AnimQuaternius.construir`: armar las ~350 animaciones del personaje la primera vez (**2 640 ms**; la segunda sale de la caché, 0 ms). La misma factura la pagaba cualquier primera aparición de un personaje (ciudad, ceremonia, partido).
+- Arreglo: `PrecalentarAnim.lanzar()` (lo llama `Precarga` al terminar de leer los archivos, en el menú) crea un esqueleto aparte y arma las animaciones de `male` y `female`, con y sin acciones experimentales, en un hilo de `WorkerThreadPool`; llena la misma caché (`_en_cache`, ahora con candado). El hilo principal sigue pintando (≈ 420 fotogramas mientras tanto). Cuesta 2,9 s de un hilo en segundo plano, no del hilo principal; `terminar` baja de 2 639 ms a 1 ms. Prueba `pruebas/ideas/pre_anim.gd` (la biblioteca del hilo = la del hilo principal: mismas animaciones y pistas) y `pruebas/medir_frio_personaje.tscn`. (La nota vieja de `Precarga` decía que armar las animaciones en un hilo «se bloquea»: lo que no es seguro es instanciar el modelo fuera del hilo principal; aquí el modelo se instancia en el principal y solo se arma la biblioteca en el hilo. Eso sí: el hilo hace `load` de las animaciones de fútbol y **el hilo principal no puede quedarse bloqueado esperándolo** (`wait_for_task_completion` desde el principal se cuelga); por eso las pruebas lo sondean con `PrecalentarAnim.terminado()` pintando fotogramas y el cierre no lo espera. Si se cierra el juego en los primeros segundos con el hilo a medias, solo puede salir un aviso de script en la consola.)
+- Lo que queda de frío (≈ 2,8 s en esta máquina), medido en `_sacar_los_22`: equipo local 681 ms (52 en caliente), visitante 419 (46), banca 945 (179), personal 290 (21); son las cachés de caras, pelo y equipación. Siguiente candidato: precalentarlas también desde `Precarga` (no se ha hecho: tocan nodos y materiales, no solo datos).
+- **Caché de mallas en disco**: descartada por ahora; con el frío de animaciones fuera, lo que queda no son mallas del estadio (`StadiumBuilder.build` completo en frío: ≈ 0,5 s).
+
+## M-350 · Cuánto tarda `avanzar_semana`
+`pruebas/medir_semanas.tscn` (sin gráfica; `TODAS=1` = base real con 18 ligas, `SEMANAS=n`):
+
+| Mundo | Media | Peor |
+|---|---|---|
+| 6 ligas (ficticio) | 220 ms | 410 ms |
+| 18 ligas (real, el más grande) | **755-780 ms** | 875-1 040 ms |
+
+Desglose con el cronómetro por fase (18 ligas, por semana): `_semana_jugar_ligas` **635 ms (81 %)**, continental 53, módulos del club 23, entrenamiento 22, caja y plantillas 14, copa 14, federación 10; el resto, < 4 ms. O sea: casi todo es simular los partidos de las demás ligas (~3,5 ms por partido). No pasa de ~1 s de media en ningún mundo; el peor caso (1,04 s, una semana de 18 ligas con todas las jornadas y copas) queda en el límite. **No se toca el motor del partido** (afectaría a los resultados y al equilibrio); si hiciera falta bajarlo: simular en un hilo las ligas lejanas mientras el jugador ve el resultado de la suya, o un modelo más barato para ligas sin jugador.
+
+## M-354 · `RendimientoAdaptativo` en el banco
+Nueva sección `_probar_rendimiento_adaptativo` (grupo `estadio`): los umbrales con FPS inventados mediante `RendimientoAdaptativo.avanzar(delta, fps)` (nuevo, público; `_process` solo lo llama con los FPS reales). Umbrales: objetivo **40 FPS**, calentamiento **3 s**, media de las últimas **4** muestras (una por segundo), **estrictamente menor** que 40 para bajar; baja UN escalón de 5 y vuelve a medir desde cero; nunca sube; apagado no hace nada; al quitarlo el 3D vuelve al 100 %. Lo que toca cada escalón (SSAO, sombras, butacas ligeras, 80 %, 67 %) sigue en `probar_rendimiento_adaptativo.tscn`, que ahora también está en `especiales.sh`.

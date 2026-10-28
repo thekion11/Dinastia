@@ -240,6 +240,7 @@ const CLIP_RECORTES := {
 ## reposo del modelo, así que se arma una vez por combinación y se comparte
 ## (nadie la modifica después; si alguien lo hiciera, cambiaría a todos).
 static var _bibliotecas := {}
+static var _candado := Mutex.new()
 
 ## SENTADO (22-9-2026, pedido directo del usuario tras ver el banquillo de
 ## pie: "que los que no caben estén sentados"). Pose estatica -con la misma
