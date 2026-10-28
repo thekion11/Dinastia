@@ -28,6 +28,13 @@ const FIGURAS := {
 	"cuernos": '<path d="M4 8 C4 22 10 30 20 30 C30 30 36 22 36 8 C32 18 28 22 20 22 C12 22 8 18 4 8 Z" fill="{F}"/><circle cx="20" cy="31" r="5" fill="{F}"/>',
 	"lobo": '<path d="M6 6 L14 14 L26 14 L34 6 L35 22 L28 33 L22 37 L18 37 L12 33 L5 22 Z" fill="{F}"/><path d="M14 22 L18 25 M26 22 L22 25" stroke="{D}" stroke-width="2.4"/><path d="M18 31 L20 34 L22 31 Z" fill="{D}"/>',
 	"leon": '<circle cx="20" cy="20" r="17" fill="{F}"/><circle cx="20" cy="21" r="10.5" fill="{D}"/><path d="M14 18 H17 M23 18 H26 M20 21 V26 M16.5 27.5 Q20 30 23.5 27.5" stroke="{F}" stroke-width="2" fill="none" stroke-linecap="round"/>',
+	"pez": '<path d="M4 20 C10 8 24 8 30 20 C24 32 10 32 4 20 Z" fill="{F}"/><path d="M28 20 L38 11 L38 29 Z" fill="{F}"/><circle cx="11" cy="18" r="1.6" fill="{D}"/>',
+	"abeja": '<ellipse cx="20" cy="24" rx="10" ry="8" fill="{F}"/><path d="M14 17 V31 M20 16 V32 M26 17 V31" stroke="{D}" stroke-width="2.6"/><ellipse cx="14" cy="12" rx="6" ry="4" fill="{F}" opacity=".7"/><ellipse cx="26" cy="12" rx="6" ry="4" fill="{F}" opacity=".7"/><circle cx="31" cy="23" r="3.2" fill="{F}"/>',
+	"cereza": '<circle cx="12" cy="28" r="7" fill="{F}"/><circle cx="28" cy="28" r="7" fill="{F}"/><path d="M12 22 C14 12 20 6 30 4 M28 22 C26 14 24 8 30 4" stroke="{F}" stroke-width="2" fill="none"/>',
+	"banana": '<path d="M5 9 C7 28 24 37 37 28 C26 31 14 24 12 7 Z" fill="{F}"/>',
+	"caballo": '<path d="M12 37 L14 21 L9 13 L16 9 L18 2 L23 8 L31 10 L35 19 L28 21 L26 27 L29 37 Z" fill="{F}"/><circle cx="24" cy="13" r="1.4" fill="{D}"/>',
+	"flecha": '<path d="M4 20 H31 M22 9 L34 20 L22 31" stroke="{F}" stroke-width="4.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+	"hacha": '<path d="M20 3 V38" stroke="{F}" stroke-width="3.6"/><path d="M20 6 C33 4 37 15 30 23 L20 20 Z" fill="{F}"/>',
 	"banda_h": '<rect x="1" y="14" width="38" height="12" fill="{F}"/>',
 	"mano": '<path d="M12 36 V18 L8 20 V12 H11 V6 H15 V12 H17 V3 H21 V12 H23 V5 H27 V14 H29 V9 H33 V26 Q33 36 24 36 Z" fill="{F}"/>',
 }
