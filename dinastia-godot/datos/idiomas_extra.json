@@ -6481,7 +6481,10 @@
   "pizarron": "tactician",
   "La ciudad está de fiesta: más gente en la calle y en el estadio": "The city is celebrating: more people on the streets and at the stadium",
   "La ciudad está de fiesta: más gente en la calle y en el estadio.": "The city is celebrating: more people on the streets and at the stadium.",
-  "Los primeros cinco metros no se los gana nadie": "Nobody beats us over the first five metres"
+  "Los primeros cinco metros no se los gana nadie": "Nobody beats us over the first five metres",
+  "E: pedir el verde para cruzar": "E: press for the green to cross",
+  "Ya puedes cruzar.": "You can cross now.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Requested: the walk signal turns green in a few seconds."
  },
  "pt": {
   "Historia": "História",
@@ -12965,7 +12968,10 @@
   "pizarron": "estrategista",
   "La ciudad está de fiesta: más gente en la calle y en el estadio": "A cidade está em festa: mais gente nas ruas e no estádio",
   "La ciudad está de fiesta: más gente en la calle y en el estadio.": "A cidade está em festa: mais gente nas ruas e no estádio.",
-  "Los primeros cinco metros no se los gana nadie": "Os primeiros cinco metros ninguém nos ganha"
+  "Los primeros cinco metros no se los gana nadie": "Os primeiros cinco metros ninguém nos ganha",
+  "E: pedir el verde para cruzar": "E: pedir o verde para atravessar",
+  "Ya puedes cruzar.": "Já pode atravessar.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Pedido feito: o boneco fica verde em poucos segundos."
  },
  "patrones": [
   [
@@ -25182,7 +25188,10 @@
   "pizarron": "tacticien",
   "La ciudad está de fiesta: más gente en la calle y en el estadio": "La ville est en fête : plus de monde dans les rues et au stade",
   "La ciudad está de fiesta: más gente en la calle y en el estadio.": "La ville est en fête : plus de monde dans les rues et au stade.",
-  "Los primeros cinco metros no se los gana nadie": "Sur les cinq premiers mètres, personne ne nous bat"
+  "Los primeros cinco metros no se los gana nadie": "Sur les cinq premiers mètres, personne ne nous bat",
+  "E: pedir el verde para cruzar": "E : demander le vert pour traverser",
+  "Ya puedes cruzar.": "Vous pouvez traverser.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Demande faite : le piéton passe au vert dans quelques secondes."
  },
  "it": {
   "Historia": "Storia",
@@ -31666,7 +31675,10 @@
   "pizarron": "tattico",
   "La ciudad está de fiesta: más gente en la calle y en el estadio": "La città è in festa: più gente per strada e allo stadio",
   "La ciudad está de fiesta: más gente en la calle y en el estadio.": "La città è in festa: più gente per strada e allo stadio.",
-  "Los primeros cinco metros no se los gana nadie": "Nei primi cinque metri non ci batte nessuno"
+  "Los primeros cinco metros no se los gana nadie": "Nei primi cinque metri non ci batte nessuno",
+  "E: pedir el verde para cruzar": "E: chiedi il verde per attraversare",
+  "Ya puedes cruzar.": "Puoi attraversare.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Richiesto: l'omino diventa verde tra pochi secondi."
  },
  "de": {
   "Historia": "Geschichte",
@@ -38150,7 +38162,10 @@
   "pizarron": "Taktiker",
   "La ciudad está de fiesta: más gente en la calle y en el estadio": "Die Stadt feiert: mehr Leute auf den Straßen und im Stadion",
   "La ciudad está de fiesta: más gente en la calle y en el estadio.": "Die Stadt feiert: mehr Leute auf den Straßen und im Stadion.",
-  "Los primeros cinco metros no se los gana nadie": "Die ersten fünf Meter gewinnt keiner gegen uns"
+  "Los primeros cinco metros no se los gana nadie": "Die ersten fünf Meter gewinnt keiner gegen uns",
+  "E: pedir el verde para cruzar": "E: Grün zum Überqueren anfordern",
+  "Ya puedes cruzar.": "Du kannst jetzt gehen.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Angefordert: Das Ampelmännchen wird in wenigen Sekunden grün."
  },
  "ca": {
   "Historia": "Història",
@@ -44634,7 +44649,10 @@
   "pizarron": "estrateg",
   "La ciudad está de fiesta: más gente en la calle y en el estadio": "La ciutat és de festa: més gent al carrer i a l'estadi",
   "La ciudad está de fiesta: más gente en la calle y en el estadio.": "La ciutat és de festa: més gent al carrer i a l'estadi.",
-  "Los primeros cinco metros no se los gana nadie": "Els primers cinc metres no ens els guanya ningú"
+  "Los primeros cinco metros no se los gana nadie": "Els primers cinc metres no ens els guanya ningú",
+  "E: pedir el verde para cruzar": "E: demanar el verd per creuar",
+  "Ya puedes cruzar.": "Ja pots creuar.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Demanat: el ninot es posa verd en uns segons."
  },
  "pl": {
   "Club": "Klub",
@@ -51397,7 +51415,10 @@
   "pizarron": "taktyk",
   "La ciudad está de fiesta: más gente en la calle y en el estadio": "Miasto świętuje: więcej ludzi na ulicach i na stadionie",
   "La ciudad está de fiesta: más gente en la calle y en el estadio.": "Miasto świętuje: więcej ludzi na ulicach i na stadionie.",
-  "Los primeros cinco metros no se los gana nadie": "Pierwszych pięciu metrów nikt nam nie odbierze"
+  "Los primeros cinco metros no se los gana nadie": "Pierwszych pięciu metrów nikt nam nie odbierze",
+  "E: pedir el verde para cruzar": "E: poproś o zielone, by przejść",
+  "Ya puedes cruzar.": "Możesz już przejść.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "Zgłoszone: za kilka sekund zapali się zielone."
  },
  "tr": {
   "Club": "Kulüp",
@@ -58160,6 +58181,9 @@
   "pizarron": "taktisyen",
   "La ciudad está de fiesta: más gente en la calle y en el estadio": "Şehir bayramda: sokaklarda ve stadyumda daha çok insan var",
   "La ciudad está de fiesta: más gente en la calle y en el estadio.": "Şehir bayramda: sokaklarda ve stadyumda daha çok insan var.",
-  "Los primeros cinco metros no se los gana nadie": "İlk beş metrede kimse bizi geçemez"
+  "Los primeros cinco metros no se los gana nadie": "İlk beş metrede kimse bizi geçemez",
+  "E: pedir el verde para cruzar": "E: geçmek için yeşil iste",
+  "Ya puedes cruzar.": "Artık geçebilirsin.",
+  "Pedido: el hombrecito se pone verde en unos segundos.": "İstendi: yaya ışığı birkaç saniye içinde yeşile dönecek."
  }
 }
