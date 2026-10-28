@@ -44,6 +44,9 @@ const SALAS_EDIFICIO := {
 	"edificio_tienda": ["tienda", "Tienda"], "edificio_mercado": ["mercado", "Supermercado"],
 	## La sala de recreativos del parque de atracciones (16-10-2026).
 	"edificio_recreativos": ["recreativos", "Recreativos"],
+	## Comercios con sala propia (27-10-2026, M-186).
+	"edificio_farmacia": ["farmacia", "Farmacia"], "edificio_banco": ["banco", "Banco"], "edificio_hotel": ["hotel", "Hotel"],
+	"edificio_ferreteria": ["ferreteria", "Ferretería"], "edificio_floristeria": ["floristeria", "Floristería"],
 }
 
 var clave := ""
