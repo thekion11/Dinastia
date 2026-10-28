@@ -49,6 +49,7 @@ var _hacer_refs := OS.get_environment("VISUAL") == "referencias"
 ## otro idioma o resolución), sin comparar. VISUAL_IDIOMA=de|tr|… cambia el idioma.
 var _solo_capturas := OS.get_environment("VISUAL") == "capturas"
 var _idioma_antes := ""
+var _ayudas_antes := true
 var _cambiadas: Array[String] = []
 var _nuevas: Array[String] = []
 
@@ -81,6 +82,9 @@ func _process(_d: float) -> void:
 		## El idioma lo decide la prueba, no las preferencias de la máquina (se
 		## restaura al terminar, para no dejárselo cambiado al jugador).
 		_idioma_antes = Idiomas.idioma
+		## Las ayudas de primera visita (CapasTutorial) tapaban media pantalla según el estado de la máquina: se apagan.
+		_ayudas_antes = CapasTutorial.activas()
+		CapasTutorial.poner_activas(false)
 		Idiomas.idioma = OS.get_environment("VISUAL_IDIOMA") if OS.get_environment("VISUAL_IDIOMA") != "" else "es"
 		_p._refrescar()
 		## Una partida nueva abre el tutorial de bienvenida encima de todo: se salta.
@@ -223,6 +227,7 @@ static func mapa(a: Image, b: Image) -> Image:
 	return out
 
 func _terminar() -> void:
+	CapasTutorial.poner_activas(_ayudas_antes)
 	if _idioma_antes != "" and _idioma_antes != Idiomas.idioma:
 		Idiomas.idioma = _idioma_antes
 	if FileAccess.file_exists(RESPALDO_PREFS):

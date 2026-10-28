@@ -228,9 +228,12 @@ const PALABRAS_ES := ["que", "se", "tu", "tus", "con", "para", "por", "del", "la
 
 func _castellano() -> void:
 	var re := RegEx.create_from_string("(?i)(?<![\\p{L}])(" + "|".join(PALABRAS_ES) + ")(?![\\p{L}])")
+	## Las siglas de posición (POR, DEF, MED, DEL) se quedan en castellano en todos los idiomas (orden 15) y «POR»/«DEL»
+	## parecían «por»/«del»: se quitan antes de contar, igual que el formato del editor («Club;Nombre;POS;Edad…»).
+	var siglas := RegEx.create_from_string("\\b(POR|DEF|MED|DEL|DFC|LAT|BAN|POS)\\b|Club;Nombre;[^ ]*")
 	var malas: Array = []
 	for f: String in Idiomas.sin_traduccion:
-		if re.search_all(f).size() >= 2:
+		if re.search_all(siglas.sub(f, "", true)).size() >= 2:
 			malas.append(f)
 	malas.sort()
 	print("CASTELLANO: %d frases sin traducir que parecen castellano" % malas.size())
