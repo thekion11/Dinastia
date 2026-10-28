@@ -349,6 +349,7 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 
 func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dictionary,
 		es_local: bool, kit: Dictionary, kit_portero: Dictionary = {}) -> Array:
+	PrecalentarCaras.detener()   ## entra una pantalla pesada: ya no se precalienta
 	var slots: Array = formacion.get("s", [])
 	var c1 := Color(kit.get("c1", "#2b6b45"))
 	var c2 := Color(kit.get("c2", "#ffffff"))
