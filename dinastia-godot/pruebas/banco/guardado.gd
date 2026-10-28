@@ -105,6 +105,13 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 	## prueba nada, porque todo está a cero y a cero se parece cualquier cosa.
 	for s in 10:
 		m.avanzar_semana()
+	## 28-10 (auditoría): campos que no se guardaban y el estado del azar.
+	var jp: Jugador = m.mi_club().plantilla[0]
+	jp.pos_sec.assign(["MC"])
+	jp.adapt = 3
+	jp.fidelidad_hasta = m.anio + 2
+	jp.notas.assign([6.5, 7.0])
+	Partido.ex_de_mi_club["j_prueba_ex"] = true
 	var antes_caja := m.mi_club().saldo
 	var antes_jug := m.cuantos_jugadores()
 	var antes_tabla := m.ligas[0].tabla()
@@ -113,6 +120,7 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 	var t0 := Time.get_ticks_msec()
 	_comprobar(Partida.guardar(m, "prueba_banco"), "la partida se guarda")
 	var ms_guardar := Time.get_ticks_msec() - t0
+	var estado_azar: int = Azar._rng.state
 	var f := FileAccess.open(Partida.ruta_de("prueba_banco"), FileAccess.READ)
 	var bytes := f.get_length() if f != null else 0
 	if f != null:
@@ -122,6 +130,7 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 
 	t0 = Time.get_ticks_msec()
 	var m2 := Partida.cargar("prueba_banco")
+	var azar_cargado: int = Azar._rng.state   ## nada más cargar: las comprobaciones de abajo pueden gastar azar
 	_linea("  cargado en %d ms" % (Time.get_ticks_msec() - t0))
 	_comprobar(m2 != null, "la partida se carga")
 	if m2 == null:
@@ -182,6 +191,23 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 			"un jugador vuelve identico (%s, %d, dorsal %d)" % [j2.nombre, j2.ovr, j2.dorsal])
 	else:
 		_comprobar(false, "el jugador de prueba no aparece tras cargar")
+
+	_comprobar(azar_cargado == estado_azar, "vuelve el ESTADO del azar: cargar y seguir es lo mismo que seguir")
+	var jx: Jugador = null
+	for j in m2.mi_club().plantilla:
+		if j.id == jp.id:
+			jx = j
+	_comprobar(jx != null and jx.pos_sec.size() == 1 and jx.pos_sec[0] == "MC" and jx.adapt == 3 \
+		and jx.fidelidad_hasta == m.anio + 2 and jx.notas.size() == 2, "vuelven posiciones secundarias, adaptación, fidelidad y notas")
+	_comprobar(Partido.ex_de_mi_club.has("j_prueba_ex"), "vuelven los «ex de mi club»")
+	Partido.ex_de_mi_club.erase("j_prueba_ex")
+	var nuevo := m2.crear_jugador(m2.mi_club(), "MED", "MC")
+	var repetido := 0
+	for c: Club in m2.clubes.values():
+		for j in c.plantilla:
+			if j != nuevo and j.id == nuevo.id:
+				repetido += 1
+	_comprobar(repetido == 0, "un jugador creado tras cargar estrena id (%s), no pisa a otro" % nuevo.id)
 
 	## Y lo mas facil de romper: que se pueda SEGUIR jugando desde donde estaba.
 	for s in 5:

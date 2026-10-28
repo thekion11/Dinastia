@@ -193,6 +193,8 @@ static func _jugador_a_dic_base(j: Jugador) -> Dictionary:
 		## no pesa nada: diez mil jugadores con quince rasgos cada uno serian dos
 		## megas de guardado para nada.
 		"lk": j.look, "oe": j.ovr_al_empezar, "hs": j.historial, "pr": j.premios,
+		## 28-10 (auditoría): se perdían al cargar las posiciones secundarias, la adaptación, la fidelidad pagada y las notas.
+		"psec": j.pos_sec, "ad": j.adapt, "fh": j.fidelidad_hasta, "no": j.notas.slice(-10),
 	}
 
 ## Las claves son cortas a propósito. Con 8.448 jugadores, escribir "atributos"
@@ -270,6 +272,9 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"version": VERSION,
 		"guardado": int(Time.get_unix_time_from_system()),
 		"semilla": m.semilla,
+		## 28-10: el ESTADO del azar, no solo la semilla: cargar y seguir da la misma línea que seguir sin cargar.
+		"azar": str(Azar._rng.state),   ## como texto: es de 64 bits y el JSON lo redondearía
+		"ex_mio": Partido.ex_de_mi_club,
 		"anio": m.anio,
 		"semana": m.semana,
 		"horario": m.horario,
@@ -412,4 +417,8 @@ static func _dic_a_jugador(d: Dictionary) -> Jugador:
 	var hs: Variant = d.get("hs", [])
 	j.historial = (hs as Array).duplicate() if hs is Array else []
 	j.premios = (d.get("pr", []) as Array).duplicate(true)
+	j.pos_sec.assign(d.get("psec", []))
+	j.adapt = int(d.get("ad", 0))
+	j.fidelidad_hasta = int(d.get("fh", 0))
+	j.notas.assign(d.get("no", []))
 	return j

@@ -416,7 +416,7 @@ func segunda_opinion(j: Jugador, c: Club) -> Dictionary:
 	if c.saldo < coste:
 		return {"error": "caja insuficiente: cuesta %d" % coste}
 	c.mover_saldo(-coste)
-	gasto.emit("Segunda opinión médica: %s" % Nombres.visible(j.nombre), -coste)
+	gasto.emit("Segunda opinión médica: %s" % Nombres.visible(j.nombre), coste)
 	_opiniones[j.id] = true
 	var nivel := _nivel_medico(j)
 	var r := Azar.f()

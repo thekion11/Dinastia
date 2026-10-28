@@ -172,7 +172,7 @@ func _pendientes_de_grupo(gid: String) -> int:
 	match gid:
 		"central":
 			for m: Dictionary in p._bandeja:
-				if not bool(m.get("leido", false)):
+				if not bool(m.get("leida", false)):
 					n += 1
 		"gente":
 			if p.mundo.cantera != null and p.mundo.cantera.hay_exigencia():
