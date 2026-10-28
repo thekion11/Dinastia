@@ -195,6 +195,7 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 		l.pixel_size = 0.006
 		l.modulate = Color(0.1, 0.05, 0.0)
 		l.outline_size = 0
+		l.double_sided = false
 		l.position = Vector3(0, 2.85, 6.04)
 		raiz.add_child(l)
 	## EL NÚMERO DE LA LÍNEA (27-10-2026): grande en los dos costados y detrás, más las dos placas.

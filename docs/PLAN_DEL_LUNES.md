@@ -658,14 +658,10 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-167 | P1 | PENDIENTE | Calzadas = cajas de asfalto con marcas propias; Kenney sólo… | calzadas propias; losetas Kenney no usadas |
 | M-171 | P1 | PARCIAL | Tráfico sin comportamiento complejo (adelantar, ceder en cruce) | 27-10: cola, frenado en rojo, prioridad de la derecha en los cruces y adelantar al autobús parado (`TraficoCiudad`); falta adelantar a coches lentos y rotondas |
 | M-263 | P1 | PENDIENTE | Eventos únicos (13) y control real; pocos días de «vida» entre… | sin agenda semanal |
-| M-168 | P2 | PENDIENTE | Sin rotondas | sin rotondas |
-| M-170 | P2 | PENDIENTE | Sin semáforos peatonales con botón | sin botón peatonal |
 | M-173 | P2 | PARCIAL | Sin sonido de motor/marchas/derrape | 21-10: el motor del coche suena, sintetizado en vivo con revoluciones y 5 marchas (`visor/motor_coche_sonido.gd`); sin radio |
 | M-174 | P2 | PARCIAL | Interior de coche sin modelo (salpicadero 2D) | salpicadero y volante 2D (`VolanteUI`) |
 | M-176 | P2 | PENDIENTE | Sin tipos de vehículo (moto, bus conducible, camión) | solo coche conducible |
-| M-177 | P2 | PENDIENTE | Sin gasolinera/aparcamiento/lavado | sin gasolinera/lavado |
 | M-180 | P2 | PARCIAL | Metro: sin vendedores/música/anuncios | anuncios en el vagón (`MetroCiudad.ANUNCIOS`); sin vendedores ni música |
-| M-182 | P2 | PENDIENTE | Sin tarjeta de transporte ni coste | máquinas de billetes decorativas; sin coste |
 | M-183 | P2 | PARCIAL | Peatones: 34 máx; sin rutinas por hora | 21-10: de madrugada queda en la calle un tercio de la gente (los ocultos tampoco se mueven: `TraficoCiudad.faros`); faltan rutinas por persona |
 | M-184 | P2 | PENDIENTE | Sin NPC con nombre y memoria (te reconocen) | sin vecinos con memoria |
 | M-185 | P2 | PENDIENTE | Diálogos por oficio (hecho) pero sin ramas ni consecuencias | diálogos sin consecuencias |
@@ -673,10 +669,8 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-187 | P2 | PARCIAL | Casas sin habitantes ni rutinas | vivienda con «la familia que vive allí» (`InteriorInstalacion` l.1057); sin horarios |
 | M-188 | P2 | PENDIENTE | Sin tiendas con compra real (ropa, balones) | sin compra en tiendas |
 | M-189 | P2 | PENDIENTE | Sin bares/restaurantes con minijuego | sin bar con minijuego |
-| M-190 | P2 | HECHO-REVISAR | Lluvia con charcos | `CharcosLluvia` (MultiMesh de 196 discos con ondas, rejilla del mundo, siguen a la cámara, nacen con `PrecipitacionCiudad`, altura `CityBuilder.altura_en`+0,22); capturas `capturas_ciudad_c2/charcos_*.jpg`. Pendiente: reflejo de farolas en charcos de noche |
 | M-191 | P2 | PARCIAL | Sin ciclo día/noche más allá del slider | ciclo día/noche automático (`_ciclo_activo`); sin reloj real |
 | M-192 | P2 | SIN VERIFICAR | Aceras/pavimentos: 3 texturas | no se midió la variedad de aceras por barrio |
-| M-193 | P2 | PARCIAL | Sin vegetación variada (setos, flores) más allá de árboles | setos de jardines y casas (`CiudadExpansion._setos_t`); sin flores |
 | M-196 | P2 | PENDIENTE | Botes sin sonido/estela | sin estela de botes |
 | M-197 | P2 | PENDIENTE | Autopista sin peajes ni estaciones | sin peajes |
 | M-198 | P2 | PENDIENTE | Aeropuerto/estación de tren inexistentes (no hay viajes) | sin viajes/aeropuerto |
@@ -2199,3 +2193,4 @@ Exportar e importar la partida (fila 30 de la propuesta, §10 «Guardado en la n
 - (28-10) M-168 rotonda (`visor/ciudad_rotonda.gd`, captura `capturas_ciudad_c2/rotonda_antes_despues.jpg`, arriba antes con semáforos, abajo después): en el cruce avenida × avenida (-660, 330), uno de los 38 que NO tiene ninguna ruta de coches a menos de 16 m (así no rompe la red): se le quita el semáforo y se levanta isla de 6,5 m con bordillo, monumento, arbustos y árboles, anillo asfaltado con rayas, señales de ceda el paso y flechas de giro antihorario; la isla es obstáculo sólido (`CityBuilder.circulos`). `SIN_ROTONDA=1` la apaga. Pendiente: una rotonda con TRÁFICO (desviar las rutas por el círculo; hay que reconstruir las paradas y los controles de las rutas que pasan por el cruce) y quitar de la lista de semáforos peatonales los botones de ese cruce.
 - (28-10) M-193 flores (`PastoCiudad.flores`, captura `capturas_ciudad_c2/flores_antes_despues.jpg`, izquierda antes y derecha después): una de cada dos matas del parque, los patios y la feria es el centro de un ramillete de 9 flores de cinco colores (tallo + cabeza con color por instancia), MultiMesh por celdas con corte a 38 m; coste medido +1,1 % de triángulos (4,28 M → 4,33 M) y +4 llamadas. `SIN_FLORES=1` las apaga. Pendiente: setos con flor y enredaderas en fachadas.
 - (28-10) M-182 tarjeta de transporte Red (`CarteraDT.saldo_transporte/TARIFAS/recargar_transporte/pagar_pasaje`, test `p6_tarjeta_transporte`; `VidaCiudad.usar_billetes/cobrar_pasaje`): las máquinas de billetes de los andenes (E) recargan 5 € de la cartera; entrar al metro cuesta 1 € y subir al teleférico 3 €, de la tarjeta; sin saldo no se sube y avisa. Se guarda en la partida (`transporte`). Sin captura (es texto de diálogo). Pendiente: cobrar también el bus cuando el DT suba a uno (hoy solo suben figurantes), mostrar el saldo en la app «Red» del móvil y abono mensual.
+- (28-10 cierre) Quedan de la sesión 3: peatones NPC que respeten la fase peatonal; rotonda con tráfico real; metro y tren con librea (no «Red»); luz de acera en paraderos; reflejo de farolas en los charcos de noche; el pasaje solo lo cobra el bus del DT; saldo de la tarjeta en la app «Red». Ver `docs/04_auditorias/sesion_3_cierre_28-10.md`.
