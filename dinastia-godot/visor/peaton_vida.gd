@@ -98,3 +98,40 @@ static func movil(v: Dictionary, poner: bool) -> void:
 	pantalla.material_override = Mini3D.mat(Color(0.75, 0.85, 0.95), 0.2, 0.6)
 	pantalla.position = Vector3(-0.01, 0.075, 0.035)
 	anc.add_child(pantalla)
+
+const NOMBRE_MALETIN := "Maletin"
+
+## Un maletín en la mano izquierda (caja de cuero con asa), o quitado. Lo lleva quien va o vuelve del trabajo en hora punta (`RutinaPeatones`).
+static func maletin(v: Dictionary, poner: bool) -> void:
+	var nodo: Node3D = v.get("nodo")
+	if nodo == null or not is_instance_valid(nodo):
+		return
+	var esq: Skeleton3D = FutbolistaQ.esqueleto_de(nodo)
+	if esq == null:
+		return
+	var viejo := esq.find_child(NOMBRE_MALETIN, false, false)
+	if not poner:
+		if viejo != null:
+			viejo.queue_free()
+		return
+	if viejo != null or esq.find_bone("hand_l") < 0:
+		return
+	var anc := BoneAttachment3D.new()
+	anc.name = NOMBRE_MALETIN
+	anc.bone_name = "hand_l"
+	esq.add_child(anc)
+	var cuero := Mini3D.mat(Color(0.22, 0.13, 0.08) if posmod(hash(v.get("id", 0)), 2) == 0 else Color(0.08, 0.08, 0.1), 0.55)
+	var caja := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(0.1, 0.3, 0.4)
+	caja.mesh = bm
+	caja.material_override = cuero
+	caja.position = Vector3(0.0, 0.34, 0.02)   ## colgando de la mano, el lado largo hacia delante
+	anc.add_child(caja)
+	var asa := MeshInstance3D.new()
+	var am := BoxMesh.new()
+	am.size = Vector3(0.025, 0.2, 0.2)
+	asa.mesh = am
+	asa.material_override = cuero
+	asa.position = Vector3(0.0, 0.14, 0.02)
+	anc.add_child(asa)
