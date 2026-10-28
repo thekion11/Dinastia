@@ -632,7 +632,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-295 | P2 | SIN VERIFICAR | Sin gráficos históricos (valor, forma) en ficha | «crecimiento por temporada» en la ficha; sin gráficos verificados |
 | M-304 | P2 | PARCIAL | Animaciones de transición entre pantallas desiguales | `Animar` en 16 archivos; sin sistema común de transición |
 | M-305 | P2 | PARCIAL | Tooltips escasos | 103 tooltips |
-| M-308 | P2 | PARCIAL | DPI alto: texto del `Label3D` en 3D | medido el 28-10 (720p y 1440p): el TAMAÑO escala igual (6,9 % del ancho con `fixed_size`, 9,7 % sin él); lo que falta es la NITIDEZ en 4K: `gui/theme/default_font_multichannel_signed_distance_field=true` la arreglaría pero cambia el dibujo de todo el texto 2D (referencias visuales): decisión del dueño |
 | M-312 | P2 | PARCIAL | Sin modo «streamer» (ocultar datos sensibles/real) | ajuste «Caras reales: FOTO / RECREACIÓN» (`Cara.usar_fotos`); sin modo streamer |
 | M-435 | P2 | PENDIENTE | Sin gatillos analógicos para potencia de pase | sin gatillos analógicos |
 | M-436 | P2 | PENDIENTE | Sin giroscopio para cámara en primera persona (móvil) | sin giroscopio |

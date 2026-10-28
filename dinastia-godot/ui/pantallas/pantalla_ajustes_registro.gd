@@ -13,6 +13,10 @@ static func pintar(p: Principal) -> void:
 	ex.text = Idiomas.t("El juego apunta sus errores en un registro local. Si algo falla, copia el informe y pégalo al avisar: lleva la versión, el sistema y los últimos errores, sin datos personales.")
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ajustes.add_child(ex)
+	if Registro.CONTACTO != "":
+		var co := p._texto(11, Principal.COL_TEXTO)
+		co.text = Idiomas.t("Mándalo a: %s") % Registro.CONTACTO
+		p._lista_ajustes.add_child(co)
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 6)
 	p._lista_ajustes.add_child(fila)
