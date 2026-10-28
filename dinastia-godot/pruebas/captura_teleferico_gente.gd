@@ -4,7 +4,9 @@ var _n := 0
 var _vista: VistaCiudad
 var _tele: Teleferico
 var _k := 0
-const MOMENTOS := [1.5, 3.0, 5.5, 7.5]
+const MOMENTOS := [-4.0, 1.5, 5.0, 8.5]
+## [posición local de la cámara, punto al que mira] por toma: cabina llegando (de lado), los que bajan, la rampa y la gente que sube.
+const CAMARAS := [[Vector3(24, 6, -16), Vector3(0, 6, -5)], [Vector3(10, 1.8, 30), Vector3(0, 3.0, 9)], [Vector3(9, 2.6, 34), Vector3(0, 3.2, 15)], [Vector3(-6, 2.0, 34), Vector3(0, 1.5, 18)]]
 
 func _ready() -> void:
 	var m := Mundo.new()
@@ -22,12 +24,13 @@ func _process(_d: float) -> void:
 		_vista.set_process(false)
 		_tele = cb.get_node_or_null("Teleferico") as Teleferico
 		print("teleférico: ", _tele != null)
-		_tele._t = PasajerosTeleferico.llegada() - 0.3
+		_tele._t = PasajerosTeleferico.llegada() - 4.4
 	if _n > 10 and _tele != null and _k < MOMENTOS.size():
 		var est := _tele.estacion_base
 		var cam: Camera3D = _vista.get("_camara")
-		cam.global_position = est.global_transform * Vector3(9.0, 1.7, 26.0)
-		cam.look_at(est.global_transform * Vector3(0, 1.5, 9.0), Vector3.UP)
+		cam.global_position = est.global_transform * (CAMARAS[_k][0] as Vector3)
+		cam.look_at(est.global_transform * (CAMARAS[_k][1] as Vector3), Vector3.UP)
+		cam.fov = 60.0
 		var u := _tele._t - PasajerosTeleferico.llegada()
 		if u >= float(MOMENTOS[_k]):
 			get_viewport().get_texture().get_image().save_png("/tmp/telegente_%d.png" % _k)

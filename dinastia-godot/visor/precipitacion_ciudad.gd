@@ -29,6 +29,8 @@ static func montar(padre: Node, clima: String, nivel: int = Calidad.elegida) -> 
 	## El reparto: un tercio junto a la cámara (lo que pasa por delante del objetivo) y el resto alrededor.
 	cerca.amount = clampi(cerca.amount, 200, presupuesto / 3)
 	alrededor.amount = clampi(alrededor.amount, 300, presupuesto - cerca.amount)
+	_anillo(cerca, 14.0, 3.0)   ## ninguna gota nace pegada a la cámara
+	_anillo(alrededor, 40.0, 4.0)
 	_resaltar(cerca, true)
 	_resaltar(alrededor, false)
 	cerca.position = Vector3(0, 2.0, 0)
@@ -55,6 +57,15 @@ static func particulas(cont: Node) -> int:
 ## Gotas más largas y claras que en el partido (sin subir el tope): en una calle ancha la lluvia fina no se leía.
 static func _resaltar(p: GPUParticles3D, cerca: bool) -> void:
 	var malla := p.draw_pass_1 as QuadMesh
-	malla.size = Vector2(0.02, 1.0) if cerca else Vector2(0.06, 2.2)
+	malla.size = Vector2(0.008, 0.5) if cerca else Vector2(0.016, 1.1)
 	var mat := malla.material as StandardMaterial3D
-	mat.albedo_color = Color(0.90, 0.94, 1.0, 0.5 if cerca else 0.75)
+	mat.albedo_color = Color(0.90, 0.94, 1.0, 0.16 if cerca else 0.32)
+
+## Las gotas nacen en un anillo alrededor de la cámara (con hueco en el centro) y no en una caja que la contiene.
+static func _anillo(p: GPUParticles3D, radio: float, hueco: float) -> void:
+	var pm := p.process_material as ParticleProcessMaterial
+	pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_RING
+	pm.emission_ring_axis = Vector3.UP
+	pm.emission_ring_height = 6.0
+	pm.emission_ring_radius = radio
+	pm.emission_ring_inner_radius = hueco

@@ -7,14 +7,19 @@ func _ready() -> void:
 	Mini3D.caja(self, Vector3(0, -0.1, 0), Vector3(60, 0.2, 60), Mini3D.mat(Color(0.35, 0.35, 0.37)))
 	var bus := CityBuilder.autobus(Color(0.0, 0.47, 0.75), "122 · ESTADIO", "122")
 	add_child(bus)
+	var noche := OS.get_environment("NOCHE") == "1"
+	if noche:
+		AutobusModelo.encender(bus, 1.0)
 	var sol := DirectionalLight3D.new()
 	sol.rotation_degrees = Vector3(-45, 35, 0)
+	sol.light_energy = 0.12 if noche else 1.0
+	sol.light_color = Color(0.6, 0.7, 1.0) if noche else Color.WHITE
 	add_child(sol)
 	var env := Environment.new()
 	env.background_mode = Environment.BG_COLOR
-	env.background_color = Color(0.62, 0.74, 0.88)
+	env.background_color = Color(0.02, 0.03, 0.06) if noche else Color(0.62, 0.74, 0.88)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.7, 0.7, 0.75)
+	env.ambient_light_color = Color(0.18, 0.2, 0.3) if noche else Color(0.7, 0.7, 0.75)
 	var we := WorldEnvironment.new()
 	we.environment = env
 	add_child(we)
@@ -34,4 +39,4 @@ func _process(_d: float) -> void:
 		cam.global_position = VISTAS[i][0]
 		cam.look_at(VISTAS[i][1], Vector3.UP)
 	if _n % 6 == 5:
-		get_viewport().get_texture().get_image().save_png("/tmp/busm_%d.png" % i)
+		get_viewport().get_texture().get_image().save_png("/tmp/busm_%s%d.png" % ["n" if OS.get_environment("NOCHE") == "1" else "", i])

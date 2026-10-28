@@ -9,6 +9,43 @@ const LARGO := 18.0
 const ANCHO := 6.4
 
 var _giran: Array = []   ## [{nodo, vel (rad/s), eje}]
+var _coche: Node3D       ## el auto que atraviesa el túnel (entra, sale, y vuelve a entrar)
+var _z_ini := 0.0
+var _z_fin := 0.0
+var _t_coche := 0.0
+const VEL_COCHE := 1.1
+
+## Caja de los modelos de `a` (transformación de `n` respecto al auto, sin traslación) para poder centrar y alinear un coche en su plaza.
+static func _aabb(n: Node3D, a: Transform3D) -> AABB:
+	var r := AABB()
+	var hay := false
+	if n is MeshInstance3D:
+		r = a * (n as MeshInstance3D).get_aabb()
+		hay = true
+	for h in n.get_children():
+		if h is Node3D:
+			var s := _aabb(h as Node3D, a * (h as Node3D).transform)
+			if s.size == Vector3.ZERO:
+				continue
+			r = s if not hay else r.merge(s)
+			hay = true
+	return r
+
+## Gira `auto` con el eje largo a lo largo de `x` o de `z` (y el morro hacia `signo`), lo encoge si no cabe en `max_largo` y lo centra en `centro` apoyado en el suelo.
+static func asentar(auto: Node3D, centro: Vector3, largo_en_x: bool, signo: float, max_largo: float) -> void:
+	auto.rotation = Vector3.ZERO
+	var bb := _aabb(auto, Transform3D(auto.basis, Vector3.ZERO))
+	var largo_natural_x := bb.size.x >= bb.size.z
+	var yaw := 0.0 if largo_natural_x == largo_en_x else PI * 0.5
+	if signo < 0.0:
+		yaw += PI
+	auto.rotation.y = yaw
+	bb = _aabb(auto, Transform3D(auto.basis, Vector3.ZERO))
+	var largo := bb.size.x if largo_en_x else bb.size.z
+	if largo > max_largo and largo > 0.01:
+		auto.scale *= max_largo / largo
+		bb = _aabb(auto, Transform3D(auto.basis, Vector3.ZERO))
+	auto.position = Vector3(centro.x - (bb.position.x + bb.size.x * 0.5), centro.y - bb.position.y, centro.z - (bb.position.z + bb.size.z * 0.5))
 
 static func montar(ex: CiudadExpansion, c: Vector3, w: float, f: float) -> void:
 	var b := ex.b
@@ -63,6 +100,18 @@ static func montar(ex: CiudadExpansion, c: Vector3, w: float, f: float) -> void:
 	horiz.add_to_group("lavado_giratorio")
 	b.add_child(horiz)
 	l._giran.append({"nodo": horiz, "vel": 9.0, "eje": Vector3.RIGHT})
+	## Un auto dentro del túnel: lo recorre despacio de un extremo al otro y vuelve a empezar.
+	var flota := CityBuilder.flota_coches()
+	if not flota.is_empty():
+		var rng2 := RandomNumberGenerator.new()
+		rng2.seed = int(c.x * 3.0 + c.z)
+		var dentro: Node3D = CityBuilder.instanciar_coche(flota[rng2.randi() % flota.size()], rng2)
+		asentar(dentro, Vector3(x0, y0 + 0.06, z0 - LARGO * 0.5 + 3.0), false, 1.0, 4.6)
+		b.add_child(dentro)
+		l._coche = dentro
+		l._z_ini = z0 - LARGO * 0.5 + 3.0
+		l._z_fin = z0 + LARGO * 0.5 - 3.0
+		l._t_coche = 0.0
 	## Espuma en el suelo del túnel.
 	var espuma := b._mat_simple(Color(1, 1, 1), 0.95)
 	for i in 14:
@@ -89,8 +138,7 @@ static func montar(ex: CiudadExpansion, c: Vector3, w: float, f: float) -> void:
 		b._rotulo(Vector3(px - 4.9, y0 + 0.12, zz), str(i + 1), Color(1, 1, 1), 18)
 		if i in [1, 4, 6] and not coches.is_empty():
 			var auto: Node3D = CityBuilder.instanciar_coche(coches[rng.randi() % coches.size()], rng)
-			auto.position = Vector3(px - 2.6 if i % 2 == 0 else px + 2.6, y0 + 0.05, zz)
-			auto.rotation.y = PI * 0.5 if i % 2 == 0 else -PI * 0.5
+			asentar(auto, Vector3(px - 2.6 if i % 2 == 0 else px + 2.6, y0 + 0.05, zz), true, 1.0 if i % 2 == 0 else -1.0, 4.6)
 			b.add_child(auto)
 	b._rotulo(Vector3(px, y0 + 3.2, pz - 3.6), "P", Color(0.2, 0.5, 1.0), 60)
 	b._cil_en(Vector3(px, y0 + 1.6, pz - 3.6), 0.07, 3.2, b._mat_simple(Color(0.4, 0.4, 0.45), 0.6))
@@ -105,3 +153,9 @@ func _process(delta: float) -> void:
 		var n := g["nodo"] as Node3D
 		if n.global_position.distance_to(cam.global_position) < ALCANCE:
 			n.rotate(g["eje"], float(g["vel"]) * delta)
+	if _coche != null and is_instance_valid(_coche) and _coche.global_position.distance_to(cam.global_position) < ALCANCE:
+		_t_coche += delta
+		var recorrido := _z_fin - _z_ini
+		var ciclo := recorrido / VEL_COCHE + 4.0   ## 4 s de pausa fuera antes de volver a entrar
+		var u := fmod(_t_coche, ciclo)
+		_coche.position.z = _z_ini + minf(u * VEL_COCHE, recorrido)

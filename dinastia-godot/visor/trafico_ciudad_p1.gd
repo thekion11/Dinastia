@@ -355,6 +355,11 @@ func faros(n: float) -> void:
 				_poner_faros(v)
 	if _mat_faros != null:
 		_mat_faros.set_shader_parameter("noche", noche)
+	if (noche > 0.45) != ParaderoRed.noche and is_inside_tree():
+		ParaderoRed.encender(get_tree(), noche > 0.45)
+	for v in _vehiculos:
+		if is_instance_valid(v["nodo"]) and (v["nodo"] as Node3D).has_meta("luz_d"):
+			AutobusModelo.encender(v["nodo"], noche)
 	## M-183 (21-10): de madrugada queda en la calle un tercio de la gente.
 	var cuota := lerpf(1.0, 0.35, smoothstep(0.55, 0.95, noche))
 	if absf(cuota - _cuota_gente) > 0.04:

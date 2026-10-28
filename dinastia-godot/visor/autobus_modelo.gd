@@ -66,6 +66,8 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 	luz_t.emission_enabled = true
 	luz_t.emission = Color(0.9, 0.05, 0.05)
 	luz_t.emission_energy_multiplier = 0.5
+	raiz.set_meta("luz_d", luz_d)
+	raiz.set_meta("luz_t", luz_t)
 	for xl: float in [-0.95, 0.95]:
 		for par: Array in [[6.045, luz_d, Vector3(0.34, 0.16, 0.03)], [-6.045, luz_t, Vector3(0.12, 0.5, 0.03)]]:
 			var lz := MeshInstance3D.new()
@@ -126,14 +128,17 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 		pil.material_override = blanco
 		pil.position = Vector3(0, 2.3, -5.4 + float(k) * 1.8)
 		raiz.add_child(pil)
+	## Puertas OPACAS (28-10): marco negro, dos hojas con su vidrio oscuro y un zócalo blanco, al ras del costado de la acera.
+	var vid_pu := StandardMaterial3D.new()
+	vid_pu.albedo_color = Color(0.09, 0.14, 0.17)
+	vid_pu.metallic = 0.5
+	vid_pu.roughness = 0.12
+	var xp: float = PasajerosBus.lado_puerta()
 	for zp: float in [4.6, -0.8]:
-		var pu := MeshInstance3D.new()
-		var bm3 := BoxMesh.new()
-		bm3.size = Vector3(0.06, 2.3, 1.2)
-		pu.mesh = bm3
-		pu.material_override = vidrio
-		pu.position = Vector3(PasajerosBus.lado_puerta() * 1.29, 1.55, zp)
-		raiz.add_child(pu)
+		_caja(raiz, Vector3(0.06, 2.3, 1.24), Vector3(xp * 1.295, 1.55, zp), negro)
+		for hoja: float in [-0.29, 0.29]:
+			_caja(raiz, Vector3(0.05, 1.35, 0.54), Vector3(xp * 1.325, 1.95, zp + hoja), vid_pu)
+			_caja(raiz, Vector3(0.05, 0.7, 0.54), Vector3(xp * 1.325, 0.95, zp + hoja), blanco)
 	## Ruedas a escala (neumático de 0,46 m de radio con su llanta) y los pasos de rueda: un arco negro alrededor de cada una, en el costado.
 	for zr: float in [3.8, -3.6]:
 		for xr: float in [-1.18, 1.18]:
@@ -171,6 +176,18 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 			arco.position = Vector3(signf(xr) * 1.29, 0.62, zr)
 			raiz.add_child(arco)
 	InteriorBus.montar(raiz)
+	## Un solo foco por autobús (apagado de día): ilumina la calzada delante de los faros.
+	var foco := SpotLight3D.new()
+	foco.name = "FocoFaros"
+	foco.position = Vector3(0, 0.9, 6.1)
+	foco.rotation_degrees.x = -4.0
+	foco.rotation_degrees.y = 180.0
+	foco.spot_range = 22.0
+	foco.spot_angle = 38.0
+	foco.light_energy = 12.0
+	foco.shadow_enabled = false
+	foco.visible = false
+	raiz.add_child(foco)
 	if destino != "":
 		var l := Label3D.new()
 		l.text = destino
@@ -178,6 +195,7 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 		l.pixel_size = 0.006
 		l.modulate = Color(0.1, 0.05, 0.0)
 		l.outline_size = 0
+		l.double_sided = false
 		l.position = Vector3(0, 2.85, 6.04)
 		raiz.add_child(l)
 	## EL NÚMERO DE LA LÍNEA (27-10-2026): grande en los dos costados y detrás, más las dos placas.
@@ -192,15 +210,26 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 			ln.outline_modulate = Color(0.05, 0.05, 0.08)
 			ln.position = Vector3(lado * 1.29, 1.45, 1.5)   ## entre las dos puertas (ni sobre una puerta ni sobre una rueda)
 			ln.rotation.y = lado * PI * 0.5
+			ln.double_sided = false
 			raiz.add_child(ln)
 		var lt := Label3D.new()
 		lt.text = numero
 		lt.font_size = 110
-		lt.pixel_size = 0.012
-		lt.outline_size = 12
-		lt.position = Vector3(0, 2.3, -6.04)
+		lt.pixel_size = 0.0065
+		lt.outline_size = 8
+		lt.position = Vector3(0, 2.3, -6.07)
 		lt.rotation.y = PI
+		lt.double_sided = false
+		lt.modulate = Color(1.0, 0.7, 0.1)
+		lt.outline_modulate = Color(0.1, 0.05, 0.0)
 		raiz.add_child(lt)
+		## El de atrás va dentro de un letrero luminoso (caja negra con brillo ámbar), como el de adelante.
+		var cartel := StandardMaterial3D.new()
+		cartel.albedo_color = Color(0.04, 0.03, 0.02)
+		cartel.emission_enabled = true
+		cartel.emission = Color(0.9, 0.5, 0.05)
+		cartel.emission_energy_multiplier = 0.35
+		_caja(raiz, Vector3(1.5, 0.8, 0.05), Vector3(0, 2.3, -6.03), cartel)
 	var quad := QuadMesh.new()
 	quad.size = Vector2(0.52, 0.13)
 	for lado2 in 2:
@@ -211,3 +240,24 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 		pl.rotation.y = 0.0 if lado2 == 0 else PI
 		raiz.add_child(pl)
 	return raiz
+
+static func _caja(raiz: Node3D, tam: Vector3, pos: Vector3, mat: Material) -> void:
+	var mi := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = tam
+	mi.mesh = bm
+	mi.material_override = mat
+	mi.position = pos
+	raiz.add_child(mi)
+
+## De noche (n de 0 a 1): los faros y las luces traseras brillan de verdad y el foco ilumina la calle.
+static func encender(bus: Node3D, n: float) -> void:
+	var d: StandardMaterial3D = bus.get_meta("luz_d", null)
+	var t: StandardMaterial3D = bus.get_meta("luz_t", null)
+	if d == null or t == null:
+		return
+	d.emission_energy_multiplier = lerpf(0.6, 9.0, n)
+	t.emission_energy_multiplier = lerpf(0.5, 5.0, n)
+	var f: SpotLight3D = bus.get_node_or_null("FocoFaros")
+	if f != null:
+		f.visible = n > 0.5

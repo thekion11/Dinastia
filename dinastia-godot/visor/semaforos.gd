@@ -34,6 +34,7 @@ func montar(lista: Array, exp: CiudadExpansion) -> void:
 		for col in ["r", "a", "v", "pr", "pv"]:
 			luces["%d|%s" % [eje, col]] = [] as Array[Transform3D]
 	var cab_p: Array[Transform3D] = []
+	var brazos: Array[Transform3D] = []
 	var botones_t: Array[Transform3D] = []
 	var off := CiudadExpansion.ANCHO_AV * 0.5 + 1.2
 	for p: Vector3 in cruces:
@@ -50,11 +51,17 @@ func montar(lista: Array, exp: CiudadExpansion) -> void:
 					var col := ["r", "a", "v"][k] as String
 					var pl := c + Vector3(0, 0.68 - float(k) * 0.68, 0) + mira * 0.33
 					(luces["%d|%s" % [eje, col]] as Array).append(Transform3D(Basis.from_scale(Vector3.ONE * 0.48), pl))
-				## Peatonal de ese eje: caja baja a un lado y dos luces (rojo arriba, verde abajo).
-				var cp := base + Vector3(0, 3.1, 0) + mira * 0.3 + Vector3(mira.z, 0, -mira.x) * 0.55
-				cab_p.append(Transform3D(Basis.from_scale(Vector3(0.45, 0.95, 0.3)), cp))
-				(luces["%d|pr" % eje] as Array).append(Transform3D(Basis.from_scale(Vector3(0.3, 0.3, 0.1)), cp + Vector3(0, 0.24, 0) + mira * 0.16))
-				(luces["%d|pv" % eje] as Array).append(Transform3D(Basis.from_scale(Vector3(0.3, 0.3, 0.1)), cp + Vector3(0, -0.24, 0) + mira * 0.16))
+				## Peatonal de ese eje (28-10): cabeza de 30 × 60 cm a 2,5 m, en su propio brazo, mirando al paso de cebra de la acera de enfrente
+				## (la ve quien espera al otro lado y cruza la calle PERPENDICULAR a este eje: verde solo cuando esa calle tiene rojo).
+				var lat := Vector3(mira.z, 0, -mira.x)
+				var ang := atan2(mira.x, mira.z)
+				var cp := base + Vector3(0, 2.5, 0) + mira * 0.12 + lat * 0.62
+				cab_p.append(Transform3D(Basis(Vector3.UP, ang).scaled_local(Vector3(0.3, 0.6, 0.16)), cp))
+				var brazo := Basis(Vector3.UP, ang).scaled_local(Vector3(0.62, 0.06, 0.06))
+				brazos.append(Transform3D(brazo, base + Vector3(0, 2.5, 0) + mira * 0.12 + lat * 0.31))
+				var lente := Basis(Vector3.UP, ang).scaled_local(Vector3(0.24, 0.24, 1.0))
+				(luces["%d|pr" % eje] as Array).append(Transform3D(lente, cp + Vector3(0, 0.15, 0) + mira * 0.085))
+				(luces["%d|pv" % eje] as Array).append(Transform3D(lente, cp + Vector3(0, -0.15, 0) + mira * 0.085))
 			## El botón peatonal en el poste, hacia la esquina de la acera.
 			var pb: Vector3 = base + Vector3(-esquina.x * 0.16, 1.1, -esquina.y * 0.16)
 			botones.append(pb)
@@ -67,6 +74,7 @@ func montar(lista: Array, exp: CiudadExpansion) -> void:
 	negro.albedo_color = Color(0.08, 0.08, 0.09)
 	_mm(BoxMesh.new(), negro, cabezas)
 	_mm(BoxMesh.new(), negro, cab_p)
+	_mm(BoxMesh.new(), gris, brazos)
 	var amarillo := StandardMaterial3D.new()
 	amarillo.albedo_color = Color(1.0, 0.82, 0.1)
 	amarillo.emission_enabled = true
@@ -80,15 +88,44 @@ func montar(lista: Array, exp: CiudadExpansion) -> void:
 		var col := clave.split("|")[1]
 		var m := StandardMaterial3D.new()
 		var base_c := {"r": Color(1, 0.12, 0.08), "a": Color(1, 0.7, 0.05), "v": Color(0.15, 1, 0.35), "pr": Color(1, 0.12, 0.08), "pv": Color(0.15, 1, 0.35)}[col] as Color
-		m.albedo_color = base_c * 0.25
+		m.albedo_color = Color(base_c.r * 0.25, base_c.g * 0.25, base_c.b * 0.25, 1.0)
 		m.emission_enabled = true
 		m.emission = base_c
 		m.emission_energy_multiplier = 0.0
+		var peatonal_l := col.length() == 2
+		if peatonal_l:
+			## El hombrecito: quieto (rojo) o andando (verde), dibujado a mano sobre un fondo transparente.
+			var tex := pictograma(col == "pv")
+			m.albedo_texture = tex
+			m.emission_texture = tex
+			m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+			m.cull_mode = BaseMaterial3D.CULL_DISABLED
 		_luces[clave] = m
 		var lista2: Array[Transform3D] = []
 		lista2.assign(luces[clave])
-		_mm(esf if col.length() == 1 else BoxMesh.new(), m, lista2)
+		_mm(QuadMesh.new() if peatonal_l else esf, m, lista2)
 	_aplicar()
+
+## El pictograma peatonal de 64 × 64: la figura sobre transparente (el color lo pone el material). `anda` = piernas abiertas y brazos en balanceo.
+static func pictograma(anda: bool) -> ImageTexture:
+	var img := Image.create(64, 64, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0, 0, 0, 0))
+	for y in 64:
+		for x in 64:
+			var dx := float(x) - 32.0
+			var dy := float(y)
+			var dentro := dx * dx + (dy - 11.0) * (dy - 11.0) <= 36.0   ## cabeza
+			if not dentro and dy >= 20.0 and dy <= 40.0:
+				dentro = absf(dx) <= 6.0   ## torso
+			if not dentro and dy > 20.0 and dy < 42.0:
+				var br := 12.0 - (dy - 20.0) * 0.5 if anda else 12.0
+				dentro = absf(absf(dx) - br) <= 3.0   ## brazos
+			if not dentro and dy > 38.0 and dy < 62.0:
+				var abre := (dy - 38.0) * 0.55 if anda else 0.0
+				dentro = absf(absf(dx) - (abre if anda else 4.5)) <= 3.5   ## piernas
+			if dentro:
+				img.set_pixel(x, y, Color.WHITE)
+	return ImageTexture.create_from_image(img)
 
 func _mm(malla: Mesh, mat: Material, ts: Array[Transform3D]) -> void:
 	if ts.is_empty():
@@ -172,9 +209,9 @@ func _aplicar() -> void:
 		var mv: StandardMaterial3D = _luces.get("%d|pv" % eje)
 		var mr: StandardMaterial3D = _luces.get("%d|pr" % eje)
 		if mv != null:
-			mv.emission_energy_multiplier = 3.0 if verde_p else 0.0
+			mv.emission_energy_multiplier = 1.3 if verde_p else 0.0
 		if mr != null:
-			mr.emission_energy_multiplier = 3.0 if pe == "r" else 0.0
+			mr.emission_energy_multiplier = 1.3 if pe == "r" else 0.0
 	for eje in 2:
 		var e := estado(eje)
 		for col in ["r", "a", "v"]:
