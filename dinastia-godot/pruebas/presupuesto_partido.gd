@@ -105,18 +105,21 @@ func _process(_d: float) -> void:
 
 func _medir_todo() -> void:
 	_recoger()
-	_base = await _medir()
-	_medidas["total"] = _base
 	## Referencia de FPS en ESTA máquina (renderizado por software si no hay GPU): no entra en el presupuesto, solo se imprime.
 	var t0 := Time.get_ticks_usec()
 	for k in 40:
 		await RenderingServer.frame_post_draw
 	var fps := 40.0 / (float(Time.get_ticks_usec() - t0) / 1000000.0)
+	_base = await _medir()
+	_medidas["total"] = _base
+	## Cada categoría se mide EN PAREJA: el cuadro justo antes (con todo) y el cuadro justo después de apagarla, para que lo que se mueva entre uno y
+	## otro (jugadores, cámara) no cuente como suyo.
 	for cat: String in CATEGORIAS:
+		var antes := await _medir()
 		_apagar(_grupos[cat], false)
 		var m := await _medir()
 		_apagar(_grupos[cat], true)
-		_medidas[cat] = {"tri": maxi(0, int(_base["tri"]) - int(m["tri"])), "llamadas": maxi(0, int(_base["llamadas"]) - int(m["llamadas"]))}
+		_medidas[cat] = {"tri": maxi(0, int(antes["tri"]) - int(m["tri"])), "llamadas": maxi(0, int(antes["llamadas"]) - int(m["llamadas"]))}
 	print("")
 	print("FPS de referencia en esta máquina (%s): %.2f" % [RenderingServer.get_video_adapter_name(), fps])
 	print("PRESUPUESTO DEL PARTIDO (cuadro visible desde la cámara del partido)")
