@@ -6650,7 +6650,13 @@
   "Tarjeta Red": "Red card",
   "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Top-up of €%d (%s). Red card balance: €%d.",
   "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Fare: -€%d · Red card balance: €%d",
-  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "No balance (€%d): the fare is €%d. Top up the card at a metro ticket machine."
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "No balance (€%d): the fare is €%d. Top up the card at a metro ticket machine.",
+  "hecho": "done",
+  "capital %s": "capital %s",
+  "1 liga, %d clubes": "1 league, %d clubs",
+  "%d ligas, %d clubes": "%d leagues, %d clubs",
+  "n.º %d del ranking de ligas": "no. %d in the league ranking",
+  "el grande: %s": "the giant: %s"
  },
  "pt": {
   "Historia": "História",
@@ -13303,7 +13309,13 @@
   "Tarjeta Red": "Cartão Red",
   "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Recarga de %d € (%s). Saldo do cartão Red: %d €.",
   "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Passagem: -%d € · saldo do cartão Red: %d €",
-  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Sem saldo (%d €): a passagem custa %d €. Recarregue o cartão numa máquina de bilhetes do metro."
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Sem saldo (%d €): a passagem custa %d €. Recarregue o cartão numa máquina de bilhetes do metro.",
+  "hecho": "feito",
+  "capital %s": "capital %s",
+  "1 liga, %d clubes": "1 liga, %d clubes",
+  "%d ligas, %d clubes": "%d ligas, %d clubes",
+  "n.º %d del ranking de ligas": "n.º %d no ranking de ligas",
+  "el grande: %s": "o grande: %s"
  },
  "patrones": [
   [
@@ -25689,7 +25701,13 @@
   "Tarjeta Red": "Carte Red",
   "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Recharge de %d € (%s). Solde de la carte Red : %d €.",
   "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Trajet : -%d € · solde de la carte Red : %d €",
-  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Solde insuffisant (%d €) : le trajet coûte %d €. Rechargez la carte à un distributeur du métro."
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Solde insuffisant (%d €) : le trajet coûte %d €. Rechargez la carte à un distributeur du métro.",
+  "hecho": "fait",
+  "capital %s": "capitale %s",
+  "1 liga, %d clubes": "1 championnat, %d clubs",
+  "%d ligas, %d clubes": "%d championnats, %d clubs",
+  "n.º %d del ranking de ligas": "n° %d du classement des championnats",
+  "el grande: %s": "le grand : %s"
  },
  "it": {
   "Historia": "Storia",
@@ -32342,7 +32360,13 @@
   "Tarjeta Red": "Carta Red",
   "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Ricarica di %d € (%s). Saldo della carta Red: %d €.",
   "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Corsa: -%d € · saldo della carta Red: %d €",
-  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Saldo insufficiente (%d €): la corsa costa %d €. Ricarica la carta a una biglietteria del metro."
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Saldo insufficiente (%d €): la corsa costa %d €. Ricarica la carta a una biglietteria del metro.",
+  "hecho": "fatto",
+  "capital %s": "capitale %s",
+  "1 liga, %d clubes": "1 campionato, %d club",
+  "%d ligas, %d clubes": "%d campionati, %d club",
+  "n.º %d del ranking de ligas": "n. %d nel ranking dei campionati",
+  "el grande: %s": "la grande: %s"
  },
  "de": {
   "Historia": "Geschichte",
@@ -38995,7 +39019,13 @@
   "Tarjeta Red": "Red-Karte",
   "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Aufladung von %d € (%s). Guthaben der Red-Karte: %d €.",
   "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Fahrt: -%d € · Guthaben der Red-Karte: %d €",
-  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Kein Guthaben (%d €): die Fahrt kostet %d €. Lade die Karte an einem U-Bahn-Automaten auf."
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Kein Guthaben (%d €): die Fahrt kostet %d €. Lade die Karte an einem U-Bahn-Automaten auf.",
+  "hecho": "erreicht",
+  "capital %s": "Hauptstadt %s",
+  "1 liga, %d clubes": "1 Liga, %d Vereine",
+  "%d ligas, %d clubes": "%d Ligen, %d Vereine",
+  "n.º %d del ranking de ligas": "Nr. %d der Ligen-Rangliste",
+  "el grande: %s": "der Große: %s"
  },
  "ca": {
   "Historia": "Història",
@@ -45648,7 +45678,13 @@
   "Tarjeta Red": "Targeta Red",
   "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Recàrrega de %d € (%s). Saldo de la targeta Red: %d €.",
   "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Passatge: -%d € · saldo de la targeta Red: %d €",
-  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Sense saldo (%d €): el passatge costa %d €. Recarrega la targeta en una màquina de bitllets del metro."
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Sense saldo (%d €): el passatge costa %d €. Recarrega la targeta en una màquina de bitllets del metro.",
+  "hecho": "fet",
+  "capital %s": "capital %s",
+  "1 liga, %d clubes": "1 lliga, %d clubs",
+  "%d ligas, %d clubes": "%d lligues, %d clubs",
+  "n.º %d del ranking de ligas": "núm. %d del rànquing de lligues",
+  "el grande: %s": "el gran: %s"
  },
  "pl": {
   "Club": "Klub",
@@ -52578,7 +52614,13 @@
   "Tarjeta Red": "Karta Red",
   "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "Doładowanie %d € (%s). Saldo karty Red: %d €.",
   "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Przejazd: -%d € · saldo karty Red: %d €",
-  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Brak środków (%d €): przejazd kosztuje %d €. Doładuj kartę w automacie metra."
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Brak środków (%d €): przejazd kosztuje %d €. Doładuj kartę w automacie metra.",
+  "hecho": "zdobyte",
+  "capital %s": "stolica %s",
+  "1 liga, %d clubes": "1 liga, %d klubów",
+  "%d ligas, %d clubes": "%d ligi, %d klubów",
+  "n.º %d del ranking de ligas": "nr %d w rankingu lig",
+  "el grande: %s": "potentat: %s"
  },
  "tr": {
   "Club": "Kulüp",
@@ -59508,6 +59550,12 @@
   "Tarjeta Red": "Red kartı",
   "Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.": "%d € yükleme (%s). Red kart bakiyesi: %d €.",
   "Pasaje: -%d € · saldo de la tarjeta Red: %d €": "Bilet: -%d € · Red kart bakiyesi: %d €",
-  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Bakiye yok (%d €): bilet %d €. Kartı metro bilet makinesinde yükleyin."
+  "Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.": "Bakiye yok (%d €): bilet %d €. Kartı metro bilet makinesinde yükleyin.",
+  "hecho": "tamamlandı",
+  "capital %s": "başkent %s",
+  "1 liga, %d clubes": "1 lig, %d kulüp",
+  "%d ligas, %d clubes": "%d lig, %d kulüp",
+  "n.º %d del ranking de ligas": "lig sıralamasında %d.",
+  "el grande: %s": "devi: %s"
  }
 }

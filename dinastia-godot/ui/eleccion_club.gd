@@ -361,12 +361,12 @@ func ficha_pais(p: String, ligas_del_pais: Array[Liga], total_clubes: int) -> St
 				mejor = c
 	var clima := Clima.del_partido(p, _mundo.semana, _mundo.anio, "globo")
 	var prox := Calendario.proximas(p, _mundo.anio, _mundo.semana, 1)
-	var partes: Array[String] = ["📍 %s · capital %s" % [p, String(Globo3D.CAPITAL.get(p, "?"))],
-		"%d liga%s, %d clubes" % [ligas_del_pais.size(), "" if ligas_del_pais.size() == 1 else "s", total_clubes]]
+	var partes: Array[String] = ["📍 %s · " % p + Idiomas.t("capital %s") % String(Globo3D.CAPITAL.get(p, "?")),
+		(Idiomas.t("1 liga, %d clubes") % total_clubes) if ligas_del_pais.size() == 1 else (Idiomas.t("%d ligas, %d clubes") % [ligas_del_pais.size(), total_clubes])]
 	if ranking > 0:
-		partes.append("n.º %d del ranking de ligas" % ranking)
+		partes.append(Idiomas.t("n.º %d del ranking de ligas") % ranking)
 	if mejor != null:
-		partes.append("el grande: %s" % mejor.nombre)
+		partes.append(Idiomas.t("el grande: %s") % mejor.nombre)
 	partes.append("%s %s" % [Clima.icono(clima), String(clima.get("texto", ""))])
 	if not prox.is_empty():
 		partes.append("%s %s (%d/%d)" % [Calendario.icono(String(prox[0]["tipo"])), Idiomas.t(String(prox[0]["nombre"])), int(prox[0]["dia"]), int(prox[0]["mes"])])
