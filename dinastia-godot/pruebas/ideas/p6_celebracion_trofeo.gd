@@ -18,12 +18,9 @@ func _probar() -> void:
 	cel.terminado.connect(func() -> void: _fin = true)
 	_comprobar(cel._jug.size() >= 10, "salen al campo %d jugadores" % cel._jug.size())
 	_comprobar(not cel._capi.is_empty() and not String((cel._capi["nodo"] as Node).name).is_empty(), "hay capitán")
-	var esq := FutbolistaQ.esqueleto_de(cel._capi["nodo"])
-	var en_mano := false
-	for h in esq.get_children():
-		if h is BoneAttachment3D and (h as BoneAttachment3D).bone_name == "hand_r" and h.get_child_count() > 0 and h.get_child(0).get_child_count() > 0:
-			en_mano = true
-	_comprobar(en_mano, "el capitán lleva la copa en la mano derecha")
+	var copa := (cel._capi["nodo"] as Node3D).get_node_or_null("CopaDelTitulo") as Node3D
+	_comprobar(copa != null and copa.position.y > 1.8, "el capitán lleva la copa en alto sobre la cabeza")
+	_comprobar(String(cel._capi.get("id", "")) != "" and not (cel._capi["nodo"] as Node).name.is_empty(), "el capitán no es el portero")
 	_comprobar(cel._canones.size() == CelebracionTrofeo.CONFETI_CANONES, "hay %d cañones de confeti" % cel._canones.size())
 	var t_total := CelebracionTrofeo.T_CORRO + CelebracionTrofeo.T_VUELTA + CelebracionTrofeo.T_FINAL
 	var lejos := 0.0
@@ -34,6 +31,7 @@ func _probar() -> void:
 			if p.emitting:
 				disparados += 1
 		lejos = maxf(lejos, ((cel._capi["nodo"] as Node3D).position).length())
+	_comprobar(cel._disparos.is_empty(), "se han disparado todos los cañones de la lista aunque los fotogramas salten")
 	_comprobar(disparados > 0, "los cañones disparan durante la fiesta")
 	_comprobar(lejos > 30.0, "el capitán da la vuelta por la pista (llega a %.0f m del centro)" % lejos)
 	_comprobar(not _fin and is_instance_valid(cel), "todavía no ha terminado antes de tiempo")
