@@ -12,7 +12,7 @@ signal terminado
 const T_CORRO := 7.0      ## s: del círculo central a la copa en alto
 const T_VUELTA := 26.0    ## s: la vuelta olímpica (8 s para salir a la pista y el resto corriendo por ella)
 const T_SALIDA := 8.0
-const T_FINAL := 5.0      ## s: panorámica de despedida
+const T_FINAL := 7.0      ## s: el equipo vuelve al círculo con la copa y la cámara se abre
 const VEL_VUELTA := 5.5   ## m/s del capitán
 const VEL_CICLO_TROTE := 3.05
 const CONFETI_CANONES := 6
@@ -33,6 +33,8 @@ var _rotulo: Label
 var _grada_t := 0.0
 var _cerrado := false
 var _canones: Array[CPUParticles3D] = []
+var _disparos: Array = []   ## [[t, [cañones]], ...] por orden; se disparan al cruzar su hora (aunque el fotograma salte)
+var _oculto_hud: Array[CanvasItem] = []
 
 static func iniciar(raiz3d: Node3D, club: Club, titulo: String, pantalla: Control = null) -> CelebracionTrofeo:
 	var c := CelebracionTrofeo.new()
@@ -47,8 +49,8 @@ static func iniciar(raiz3d: Node3D, club: Club, titulo: String, pantalla: Contro
 
 func _montar() -> void:
 	var g := StadiumBuilder.geom_de_forma(String(_club.perfil_estadio().get("forma", "oval")))
-	_rx = float(g["dx"]) - 6.0
-	_rz = float(g["dz"]) - 8.0
+	_rx = minf(float(g["dx"]) - 6.0, 31.0)   ## la vuelta va por dentro de las vallas, sobre el césped, para que la cámara no las atraviese
+	_rz = minf(float(g["dz"]) - 8.0, 49.0)
 	var l := Puente3D.once(_club.once())
 	var spawner := PlayerSpawner.new()
 	var filas := spawner.spawn_team(_raiz, l["xi"], l["jugadores"], Puente3D.formacion(_club.tactica.formacion), true,
@@ -80,6 +82,8 @@ func _montar() -> void:
 	_camara()
 	_confeti()
 	_rotulo_titulo()
+	_esconder_hud()
+	_disparos = [[0.2, [0, 3]], [3.0, [1, 2, 4, 5]], [6.5, [0, 2, 4]], [11.0, [1, 3, 5]], [15.0, [0, 3]], [19.0, [2, 5]], [23.0, [1, 4]], [27.0, [0, 3]], [31.0, [1, 2, 4, 5]], [34.0, [0, 1, 2, 3, 4, 5]]]
 	set_process(true)
 	set_process_input(true)
 
@@ -89,21 +93,17 @@ func _preparar_clips(d: Dictionary) -> void:
 	for clip: String in ["celebrar_carrera", "puno_al_aire", "aplaudir", "baile"]:
 		AnimExtra.asegurar(ap, esq, clip)
 
+## La copa del capitán: en alto sobre su cabeza (entre las manos levantadas), colgada de su nodo para que lo siga en la vuelta.
 func _poner_copa() -> void:
 	var receta := TrofeosReales.para_titulo(_titulo, _club.pais)
-	var esq := FutbolistaQ.esqueleto_de(_capi["nodo"])
-	if esq == null:
-		return
-	var escala_modelo := 1.0 / maxf(esq.global_transform.basis.get_scale().y, 0.01)
-	var mano := PeatonQ._en_hueso(esq, "hand_r", escala_modelo)
-	if mano == null:
-		return
 	if not receta.is_empty() and TrofeoModelo.disponible():
-		_copa = TrofeoModelo.nodo(receta, 0.55)
+		_copa = TrofeoModelo.nodo(receta, 0.85)
 	else:
 		_copa = _copa_simple()
-	_copa.position = Vector3(0, 0.12, 0)
-	mano.add_child(_copa)
+		_copa.scale = Vector3.ONE * 1.6
+	_copa.name = "CopaDelTitulo"
+	_copa.position = Vector3(0, 1.95, 0.05)
+	(_capi["nodo"] as Node3D).add_child(_copa)
 
 func _copa_simple() -> Node3D:
 	var r := Node3D.new()
@@ -143,11 +143,11 @@ func _confeti() -> void:
 	var c1 := Color(_club.color1)
 	var c2 := Color(_club.color2)
 	var colores := Gradient.new()
-	colores.colors = PackedColorArray([c1, c2, Color.WHITE, Color(0.98, 0.82, 0.25)])
-	colores.offsets = PackedFloat32Array([0.0, 0.33, 0.66, 1.0])
+	colores.colors = PackedColorArray([c1, c2, c1.lightened(0.25), Color.WHITE, c2.lightened(0.3), Color(0.98, 0.82, 0.25)])
+	colores.offsets = PackedFloat32Array([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
 	colores.interpolation_mode = Gradient.GRADIENT_INTERPOLATE_CONSTANT
 	var papel := QuadMesh.new()
-	papel.size = Vector2(0.14, 0.07)
+	papel.size = Vector2(0.38, 0.2)
 	var mat := StandardMaterial3D.new()
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mat.vertex_color_use_as_albedo = true
@@ -160,13 +160,13 @@ func _confeti() -> void:
 		p.emitting = false
 		p.one_shot = true
 		p.explosiveness = 0.9
-		p.amount = 260
-		p.lifetime = 5.5
+		p.amount = 520
+		p.lifetime = 6.5
 		p.direction = Vector3.UP
 		p.spread = 38.0
-		p.initial_velocity_min = 11.0
-		p.initial_velocity_max = 19.0
-		p.gravity = Vector3(0, -3.2, 0)
+		p.initial_velocity_min = 13.0
+		p.initial_velocity_max = 24.0
+		p.gravity = Vector3(0, -2.2, 0)
 		p.damping_min = 1.2
 		p.damping_max = 2.4
 		p.angular_velocity_min = -360.0
@@ -182,7 +182,7 @@ func _confeti() -> void:
 
 func _posicion_canon(i: int) -> Vector3:
 	var ang := TAU * float(i) / float(CONFETI_CANONES) + 0.4
-	return Vector3(cos(ang) * 20.0, 0.3, sin(ang) * 30.0)
+	return Vector3(cos(ang) * 22.0, 0.3, sin(ang) * 36.0)
 
 func _disparar(cuales: Array[int]) -> void:
 	for i in cuales:
@@ -208,6 +208,16 @@ func _rotulo_titulo() -> void:
 	_rotulo.modulate.a = 0.0
 	_pantalla.add_child(_rotulo)
 
+## El cartel de la pantalla de la esquina y el radar tapan el encuadre: se esconden mientras dura la fiesta.
+func _esconder_hud() -> void:
+	if _pantalla == null:
+		return
+	for nombre: String in ["_mini_pantalla", "_radar"]:
+		var c := _pantalla.get(nombre) as CanvasItem
+		if c != null and c.visible:
+			c.visible = false
+			_oculto_hud.append(c)
+
 func _input(ev: InputEvent) -> void:
 	if (ev is InputEventKey and ev.pressed) or (ev is InputEventMouseButton and ev.pressed):
 		cortar()
@@ -229,6 +239,9 @@ func cortar() -> void:
 		_cam_previa.make_current()
 	if is_instance_valid(_rotulo):
 		_rotulo.queue_free()
+	for c in _oculto_hud:
+		if is_instance_valid(c):
+			c.visible = true
 	terminado.emit()
 	queue_free()
 
@@ -239,43 +252,56 @@ func _process(delta: float) -> void:
 	if _t > T_CORRO + T_VUELTA + T_FINAL:
 		cortar()
 		return
+	while not _disparos.is_empty() and _t >= float((_disparos[0] as Array)[0]):
+		var cuales: Array[int] = []
+		cuales.assign((_disparos[0] as Array)[1])
+		_disparar(cuales)
+		_disparos.pop_front()
+	_copa_bota()
 	if _t < T_CORRO:
 		_corro(_t)
-	else:
+	elif _t < T_CORRO + T_VUELTA:
 		_vuelta(_t - T_CORRO)
+	else:
+		_final(_t - T_CORRO - T_VUELTA)
 	_grada(delta)
 	if is_instance_valid(_rotulo):
 		_rotulo.modulate.a = clampf(minf(_t / 1.0, (T_CORRO + T_VUELTA + T_FINAL - _t) / 1.0), 0.0, 1.0)
 
-## Fase 1: todos corren al círculo central; el capitán, al punto de la copa, que sube con el puño.
+## La copa se mece un poco, como la lleva quien corre con ella.
+func _copa_bota() -> void:
+	if is_instance_valid(_copa):
+		_copa.position.y = 1.95 + sin(_t * 5.0) * 0.04
+		_copa.rotation.y = _t * 0.9
+
+func _destino_corro(d: Dictionary) -> Vector3:
+	if d["capi"]:
+		return Vector3.ZERO
+	var n := _jug.size()
+	var i := int(d["i"])
+	var ang := PI * 0.5 + (float(i) / float(maxi(n - 1, 1)) - 0.5) * TAU * 0.78
+	return Vector3(cos(ang) * 3.1, 0.0, -sin(ang) * 3.1) * (0.8 + 0.4 * float(i % 3) / 2.0) + Vector3(0, 0, -0.8)
+
+## Fase 1: todos corren al círculo central y el capitán levanta la copa; la cámara, delante, encuadra al capitán con la copa arriba.
 func _corro(t: float) -> void:
 	var llegan := clampf(t / 3.0, 0.0, 1.0)
-	var n := _jug.size()
 	for d: Dictionary in _jug:
 		var i := int(d["i"])
-		var destino := Vector3.ZERO
-		if not d["capi"]:
-			var ang := PI * 0.5 + (float(i) / float(maxi(n - 1, 1)) - 0.5) * TAU * 0.78
-			destino = Vector3(cos(ang) * 3.1, 0.0, -sin(ang) * 3.1) * (0.8 + 0.4 * float(i % 3) / 2.0) + Vector3(0, 0, -0.8)
 		var base: Vector3 = d["base"]
+		var destino := _destino_corro(d)
 		var pos := base.lerp(destino, ease(llegan, -2.0)) if llegan < 1.0 else destino
 		_mover(d, pos, Vector3.ZERO, 4.0 if llegan < 1.0 else 0.0)
 		if llegan < 1.0:
 			_clip(d, "correr")
 		else:
-			_clip(d, "puno_al_aire" if d["capi"] else ("celebrar" if i % 2 == 0 else "aplaudir"))
-	## Cañones: el primero al salir, el resto al levantar la copa.
-	if t > 0.3 and t < 0.5:
-		_disparar([0, 3])
-	if t > 3.2 and t < 3.4:
-		_disparar([1, 2, 4, 5])
+			_clip(d, "celebrar" if (d["capi"] or i % 2 == 0) else "aplaudir")
 	var cp := _capi["nodo"] as Node3D
-	var orbita := 0.55 + t * 0.12
-	_cam.global_position = cp.global_position + Vector3(sin(orbita) * 5.4, 2.7 - 0.5 * t / T_CORRO, cos(orbita) * 5.4)
+	var orbita := lerpf(0.35, -0.35, t / T_CORRO)   ## de frente, abriéndose de un lado al otro
+	_cam.global_position = cp.global_position + Vector3(sin(orbita) * 6.0, 1.5, cos(orbita) * 6.0)
 	_cam.look_at(cp.global_position + Vector3(0, 2.0, 0), Vector3.UP)
-	_cam.fov = lerpf(52.0, 40.0, t / T_CORRO)
+	_cam.fov = lerpf(50.0, 42.0, t / T_CORRO)
 
-## Fase 2 y 3: salen a la pista (T_SALIDA s) y dan la vuelta olímpica por la elipse; la cámara va por delante y al final se abre a una panorámica.
+## Fase 2: salen a la pista (T_SALIDA s) y dan la vuelta por el borde del campo; la cámara, dentro del césped, mira al equipo con la grada al fondo.
 func _vuelta(t: float) -> void:
 	var ang0 := PI * 0.5   ## el lado sur
 	var u := maxf(minf(t, T_VUELTA) - T_SALIDA, 0.0) * VEL_VUELTA / _perimetro()
@@ -297,21 +323,35 @@ func _vuelta(t: float) -> void:
 		var ap := d["anim"] as AnimationPlayer
 		var fiesta: bool = (d["capi"] or i % 3 == 0) and ap.has_animation("celebrar_carrera")
 		_clip(d, "celebrar_carrera" if fiesta else ("correr" if salida < 1.0 else "trotar"))
-	## Un cañón de confeti cada cuatro segundos, a la altura del capitán.
-	if int(t) % 4 == 0 and fmod(t, 4.0) < 0.1:
-		_disparar([int(t / 4.0) % CONFETI_CANONES, (int(t / 4.0) + 3) % CONFETI_CANONES])
-	if t <= T_VUELTA:
-		var tang := (_en_elipse(ang0 - (u + 0.01) * TAU) - cap_pos).normalized()
-		var dentro := Vector3(cap_pos.x, 0, cap_pos.z).normalized() * -4.5
-		_cam.global_position = cap_pos + tang * 6.0 + dentro + Vector3(0, 1.7, 0)
-		_cam.look_at(cap_pos + tang * -2.0 + Vector3(0, 1.7, 0), Vector3.UP)
-		_cam.fov = 40.0
-	else:
-		var s := (t - T_VUELTA) / T_FINAL
-		var a := lerpf(0.2, 1.3, s)
-		_cam.global_position = Vector3(sin(a) * 30.0, lerpf(12.0, 26.0, s), cos(a) * 36.0)
-		_cam.look_at(Vector3(0, 1.0, 0), Vector3.UP)
-		_cam.fov = 60.0
+	## La cámara va dentro del campo, delante y hacia el centro, mirando al capitán con la copa; nunca fuera de las vallas.
+	var tang_c := (_en_elipse(ang0 - (u + 0.01) * TAU) - cap_pos).normalized()
+	var hacia_centro := Vector3(-cap_pos.x, 0, -cap_pos.z).normalized()
+	var cam := cap_pos + tang_c * 7.0 + hacia_centro * 9.0
+	cam.x = clampf(cam.x, -_rx + 2.0, _rx - 2.0)
+	cam.z = clampf(cam.z, -_rz + 2.0, _rz - 2.0)
+	_cam.global_position = cam + Vector3(0, 1.8, 0)
+	_cam.look_at(cap_pos - tang_c * 2.0 + Vector3(0, 2.0, 0), Vector3.UP)
+	_cam.fov = 48.0
+
+## Fase 3: el equipo vuelve al círculo, vuelve a levantar la copa y la cámara se abre despacio con la grada de fondo.
+func _final(t: float) -> void:
+	var llegan := clampf(t / 3.5, 0.0, 1.0)
+	for d: Dictionary in _jug:
+		if not d.has("fin_vuelta"):
+			d["fin_vuelta"] = _pos_de(d)
+		var base: Vector3 = d["fin_vuelta"]
+		var destino := _destino_corro(d)
+		var pos := base.lerp(destino, ease(llegan, -2.0)) if llegan < 1.0 else destino
+		_mover(d, pos, (destino - base) if llegan < 1.0 else Vector3.ZERO, 5.0 if llegan < 1.0 else 0.0)
+		if llegan < 1.0:
+			_clip(d, "correr")
+		else:
+			_clip(d, "celebrar" if (d["capi"] or int(d["i"]) % 2 == 0) else "aplaudir")
+	var s := t / T_FINAL
+	var a := lerpf(-0.5, 0.5, s)
+	_cam.global_position = Vector3(sin(a) * 15.0, lerpf(2.2, 8.0, s), cos(a) * 15.0 + 2.0)
+	_cam.look_at(Vector3(0, 1.9, 0), Vector3.UP)
+	_cam.fov = lerpf(46.0, 56.0, s)
 
 func _perimetro() -> float:
 	return PI * (3.0 * (_rx + _rz) - sqrt((3.0 * _rx + _rz) * (_rx + 3.0 * _rz)))
@@ -351,4 +391,6 @@ func _grada(delta: float) -> void:
 		return
 	_grada_t = 3.0
 	OlaGrada.lanzar(_raiz, "protesta", Vector3.ZERO, 0)
-	OlaGrada.lanzar(_raiz, "onda", Vector3(0, 0, 0), 0)
+	OlaGrada.lanzar(_raiz, "onda", (_capi["nodo"] as Node3D).global_position, 0)
+	if _t > T_CORRO + T_VUELTA:
+		OlaGrada.lanzar(_raiz, "ola")

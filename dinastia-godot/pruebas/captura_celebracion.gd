@@ -1,7 +1,7 @@
 extends Node
 ## La celebración de un título (idea 327): corro con la copa, vuelta olímpica y panorámica. → /tmp/celebracion_<n>.png
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_celebracion.tscn
-const MOMENTOS := [5.6, 12.0, 18.0, 24.0, 34.0]
+const MOMENTOS := [2.0, 5.8, 12.0, 20.0, 30.0, 37.0]
 var _n := 0
 var _vista: VistaEstadio
 var _mundo: Mundo
