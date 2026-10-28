@@ -4,12 +4,14 @@ extends Node
 var _n := 0
 var _vista: VistaCiudad
 var _mundo: Mundo
-var _horas := [3.0, 8.0, 13.0, 19.0]
+var _horas: Array = [3.0, 8.0, 13.0, 19.0]
 var _i := 0
 var _fase := 0
 var _centro := Vector3.ZERO
 
 func _ready() -> void:
+	if OS.get_environment("HORAS") != "":
+		_horas = Array(OS.get_environment("HORAS").split_floats(","))
 	_mundo = Mundo.new()
 	_mundo.generar(["CHI"], 4713)
 	_mundo.tomar_el_mando(_mundo.ligas[0].clubes[0].id)
@@ -19,7 +21,13 @@ func _ready() -> void:
 	_vista.set("_girando", false)
 	_centro = {"100": Vector3(120, 0, 40), "200": Vector3(60, 0, -520), "400": Vector3(60, 0, 740)}.get(OS.get_environment("SECTOR") if OS.get_environment("SECTOR") != "" else "100", Vector3(120, 0, 40))
 
+func _vuelta_centro() -> void:
+	if OS.get_environment("CENTRO") != "":
+		var v := OS.get_environment("CENTRO").split_floats(",")
+		_centro = Vector3(v[0], 0, v[1])
+
 func _process(_d: float) -> void:
+	_vuelta_centro()
 	_n += 1
 	if _n < 12 or _i >= _horas.size():
 		if _i >= _horas.size():
@@ -41,6 +49,8 @@ func _process(_d: float) -> void:
 	if _fase == 6:
 		var cerca := 0
 		var total := 0
+		var hacia := 0
+		var lejos := 0
 		for v: Dictionary in traf._vehiculos:
 			if bool(v.get("peaton", false)) and is_instance_valid(v["nodo"]):
 				var nd := v["nodo"] as Node3D
@@ -48,7 +58,13 @@ func _process(_d: float) -> void:
 					total += 1
 					if nd.visible:
 						cerca += 1
-		print("gente %02d h: %d visibles de %d a 70 m" % [int(_horas[_i]), cerca, total])
+						var rumbo := Vector3(sin(nd.rotation.y), 0, cos(nd.rotation.y))
+						var cs := rumbo.dot((RutinaPeatones.TRABAJO - nd.position).normalized())
+						if cs > 0.5:   ## solo los que van claramente hacia el trabajo o de vuelta (no los de las calles de través)
+							hacia += 1
+						elif cs < -0.5:
+							lejos += 1
+		print("gente %02d h: %d visibles de %d a 70 m (hacia el trabajo %d, de vuelta %d)" % [int(_horas[_i]), cerca, total, hacia, lejos])
 		get_viewport().get_texture().get_image().save_png("/tmp/rutina_%s_%02d.png" % ["antes" if OS.get_environment("RUTINA_PEATONES") == "0" else "despues", int(_horas[_i])])
 		_i += 1
 		_fase = 0

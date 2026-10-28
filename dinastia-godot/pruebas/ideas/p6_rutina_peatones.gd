@@ -23,6 +23,7 @@ func _probar() -> void:
 			var n := Node3D.new()
 			add_child(n)
 			n.position = POS[s] + Vector3(float(k), 0, 0)
+			n.rotation.y = 0.0 if k % 2 == 0 else PI   ## mitad hacia +Z, mitad hacia −Z
 			lista.append({"peaton": true, "nodo": n, "vel": 1.4, "sector": s})
 	var r3 := RutinaPeatones.tick(lista, 3.0)
 	var r8 := RutinaPeatones.tick(lista, 8.0)
@@ -54,3 +55,31 @@ func _probar() -> void:
 	(lista[5] as Dictionary)["oculto"] = true
 	RutinaPeatones.tick(lista, 8.0)
 	_comprobar(not ((lista[5] as Dictionary)["nodo"] as Node3D).visible, "el que oculta la noche sigue oculto")
+	## Sentido del flujo: por la mañana, más peatones hacia el trabajo; por la tarde, más de vuelta.
+	var gente: Array = []
+	for k in 200:
+		var n := Node3D.new()
+		add_child(n)
+		n.position = Vector3(0, 0, 100) + Vector3(float(k), 0, 0)   ## sector 100, al sur del trabajo
+		n.rotation.y = PI if k % 2 == 0 else 0.0   ## PI: mira a −Z (hacia el trabajo); 0: mira a +Z (se aleja)
+		gente.append({"peaton": true, "nodo": n, "vel": 1.4})
+	RutinaPeatones.tick(gente, 8.0)
+	var hacia8 := 0
+	var lejos8 := 0
+	for k in gente.size():
+		if ((gente[k] as Dictionary)["nodo"] as Node3D).visible:
+			if k % 2 == 0:
+				hacia8 += 1
+			else:
+				lejos8 += 1
+	RutinaPeatones.tick(gente, 18.0)
+	var hacia18 := 0
+	var lejos18 := 0
+	for k in gente.size():
+		if ((gente[k] as Dictionary)["nodo"] as Node3D).visible:
+			if k % 2 == 0:
+				hacia18 += 1
+			else:
+				lejos18 += 1
+	_comprobar(hacia8 > lejos8 + 10, "a las 8 van más hacia el trabajo (%d) que de vuelta (%d)" % [hacia8, lejos8])
+	_comprobar(lejos18 > hacia18 + 10, "a las 18 vuelven más (%d) que van (%d)" % [lejos18, hacia18])
