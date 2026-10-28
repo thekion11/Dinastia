@@ -43,3 +43,4 @@ static func montar(ex: CiudadExpansion, c: Vector3, w: float, f: float) -> void:
 	b._caja_en(pos + Vector3(0, 8.6, 0), Vector3(3.2, 2.6, 0.4), blanco)
 	b._caja_en(pos + Vector3(0, 9.55, 0), Vector3(3.2, 0.7, 0.45), rojo)
 	b._rotulo(pos + Vector3(0, 8.4, 0.25), Idiomas.t("Gasolina"), Color(0.8, 0.1, 0.1), 40)
+	CiudadLavado.montar(ex, c, w, f)   ## el lavado de autos al este y el aparcamiento al oeste (M-177)
