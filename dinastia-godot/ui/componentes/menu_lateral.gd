@@ -96,30 +96,7 @@ const MENUS := [
 
 ## Un dato vivo para la tarjeta de cada submenú en la portada del menú.
 static func dato(p: Principal, sub: Dictionary) -> String:
-	var m := p.mundo
-	if m == null or m.mi_club() == null:
-		return ""
-	var c := m.mi_club()
-	match String(sub.get("label", "")):
-		"Correo":
-			var n := 0
-			for x: Dictionary in p.get("_bandeja"):
-				if not bool(x.get("leido", false)):
-					n += 1
-			return "%d sin leer" % n if n > 0 else "Al día"
-		"Vitrina", "Historia del club":
-			return "%d títulos" % (m.roles.trofeos.size() if m.roles != null else 0)
-		"Hinchada y socios":
-			return "%s socios" % p._miles(c.socios if c.socios > 0 else c.estadio_aforo)
-		"Diseño del estadio":
-			return "%s butacas" % p._miles(c.estadio_aforo)
-		"Camarín", "Personal del club":
-			return "%d jugadores" % c.plantilla.size()
-		"Feed de redes":
-			return "%s seguidores" % p._miles(m.prensa.seguidores) if m.prensa != null else ""
-		"Mi carrera":
-			return m.roles.nombre if m.roles != null else ""
-	return ""
+	return DatoTarjeta.de(p, String(sub.get("label", "")))   ## M-290
 
 ## Los grupos de la barra de arriba que ahora viven aquí (la barra se queda
 ## con CENTRAL y CLUB).
