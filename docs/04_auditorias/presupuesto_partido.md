@@ -49,6 +49,17 @@ Medido con el mundo congelado (`Engine.time_scale = 0`, así cada cuadro es el m
 - **FPS de referencia en esta máquina** (llvmpipe por software, sin GPU, 1280×720, Compatibility): **0,70 → 0,75** fotogramas/s. Vale solo como referencia: por software manda el relleno de píxeles y las sombras, no los triángulos. En una GPU de verdad la mejora de triángulos y llamadas pesa mucho más; hay que repetir en el equipo del dueño.
 - **Aspecto**: capturas `c52_rebajas_tv_*` (cámara de TV del partido) y `c52_rebajas_pie_de_campo_*` (cámara a pie de campo mirando a la grada, para los planos de repetición laterales, que cambian de plano de una vez a otra): desde la TV no se aprecia diferencia; a pie de campo, el 4,9 % de los píxeles cambia (más de 40/255) por el ruido del césped y de la grada, y se mantienen el respaldo curvo de las dos primeras filas y los colores de butaca por nivel.
 
+## Tanda de rendimiento 1: culling por trozos de la grada (M-345, 28-10)
+`OptimizarGrada.trocear` (se llama desde `EntornoEstadio.montar(..., true)`, o sea solo en el partido jugable) parte el MultiMesh de butacas y el de hinchas de cada tribuna en 8 trozos de igual número de instancias a lo largo de su eje largo: cada trozo tiene su caja envolvente y el culling descarta los que quedan fuera de cámara (antes, con un solo rincón a la vista se dibujaba toda la tribuna). Mismo material y sombra; el nombre se conserva con sufijo (`ButacasCerca_3`).
+
+| Categoría (tri / llamadas) | Antes | Después | Techo nuevo |
+|---|---|---|---|
+| total | 1 752 277 / 1 216 | 1 694 194 / 1 224 | 1 948 324 / 1 408 |
+| butacas | 688 116 / 4 | 629 988 / 12 | 724 487 / 14 |
+| estadio | 1 604 875 / 315 | 1 546 747 / 323 | 1 778 760 / 372 |
+
+−3,3 % de triángulos con la cámara de TV (que ve casi toda la grada de un lado); +8 llamadas por los trozos. Con cámaras más cercanas a una tribuna (visita, repeticiones a pie de campo) el descarte es mayor. **M-344 (sobredibujo)**: `presupuesto_partido` imprime ahora el brillo medio del modo `overdraw` con y sin grada, pero en Compatibility/llvmpipe se satura (0,85 con todo, 0,83 sin grada): no discrimina. Un oclusor propio de la grada no se aplica sin una medida que lo justifique; queda pendiente medir en GPU real.
+
 ## Rebajas aún propuestas (NO aplicadas)
 | # | Rebaja | Ahorro estimado |
 |---|---|---|
