@@ -40,7 +40,7 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	## campo: "burbujas translúcidas quietas cerca del círculo central, solo de
 	## noche". Reproducido con `pruebas/captura_columna_noche.gd`. El césped
 	## nunca es un espejo: la rampa deja la rugosidad entre 0,78 y 1.
-	var rugosidad := Texturas._tex_ruido(0.03, 97, false, 4)
+	var rugosidad := Texturas._tex_ruido(0.03, 97, false, 4, FastNoiseLite.TYPE_SIMPLEX_SMOOTH, true)
 	var rampa := Gradient.new()
 	rampa.set_color(0, Color(0.78, 0.78, 0.78))
 	rampa.set_color(1, Color(1, 1, 1))
