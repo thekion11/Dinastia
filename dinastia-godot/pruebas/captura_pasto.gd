@@ -26,7 +26,7 @@ func _process(_d: float) -> void:
 				_parques.append(p["pos"])
 		print("parques: ", _parques.size(), " matas: ", PastoCiudad.total_sembradas)
 	if _n >= 12 and not _parques.is_empty():
-		var tag := "antes" if OS.get_environment("PASTO_DRIVE") == "0" else "despues"
+		var tag := "antes" if (OS.get_environment("PASTO_DRIVE") == "0" or OS.get_environment("SIN_FLORES") != "") else "despues"
 		var c := _parques[0]
 		var vistas := [
 			[c + Vector3(-20, 1.7, 22), c + Vector3(-4, 0.4, 8)],
