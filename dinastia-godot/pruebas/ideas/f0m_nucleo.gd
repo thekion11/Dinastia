@@ -302,6 +302,7 @@ func _probar_precarga() -> void:
 	var antes := Precarga._hecha
 	Precarga.empezar(get_tree())
 	_comprobar(Precarga._hecha == antes and get_tree().root.get_node_or_null("Precarga") == null, "en headless no arranca sola")
+	PrecalentarAnim._lanzado = true   ## el hilo de las animaciones se prueba aparte (`pre_anim`): aquí el hilo principal no puede esperar sin pintar
 	var p := Precarga.new()
 	p._ready()
 	var en_cola := p._cola.size()
