@@ -97,12 +97,12 @@ func _preparar_clips(d: Dictionary) -> void:
 func _poner_copa() -> void:
 	var receta := TrofeosReales.para_titulo(_titulo, _club.pais)
 	if not receta.is_empty() and TrofeoModelo.disponible():
-		_copa = TrofeoModelo.nodo(receta, 0.85)
+		_copa = TrofeoModelo.nodo(receta, 0.6)
 	else:
 		_copa = _copa_simple()
-		_copa.scale = Vector3.ONE * 1.6
+		_copa.scale = Vector3.ONE * 1.1
 	_copa.name = "CopaDelTitulo"
-	_copa.position = Vector3(0, 1.95, 0.05)
+	_copa.position = Vector3(0, 1.72, 0.05)   ## la base entre las manos levantadas (justo sobre la cabeza)
 	(_capi["nodo"] as Node3D).add_child(_copa)
 
 func _copa_simple() -> Node3D:
@@ -268,7 +268,7 @@ func _process(delta: float) -> void:
 ## La copa se mece un poco, como la lleva quien corre con ella.
 func _copa_bota() -> void:
 	if is_instance_valid(_copa):
-		_copa.position.y = 1.95 + sin(_t * 5.0) * 0.04
+		_copa.position.y = 1.72 + sin(_t * 5.0) * 0.03
 		_copa.rotation.y = _t * 0.9
 
 func _destino_corro(d: Dictionary) -> Vector3:
