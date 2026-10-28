@@ -111,6 +111,25 @@ func _pintar_correo() -> void:
 				it2["leida"] = true
 			_pintar_correo())
 		filtros.add_child(b_todas)
+	## M-296: una fila de temas con lo que hay de cada uno (solo los temas que tienen avisos).
+	var cuenta := {}
+	for it4: Dictionary in p._bandeja:
+		var tm := CategoriaAviso.de_fila(it4)
+		cuenta[tm] = int(cuenta.get(tm, 0)) + 1
+	if cuenta.size() > 1:
+		var temas := HFlowContainer.new()
+		temas.add_theme_constant_override("h_separation", 4)
+		p._lista_correo.add_child(temas)
+		for clave: String in ["", "mercado", "plantel", "cantera", "competicion", "club", "prensa", "vida", "otros"]:
+			if clave != "" and not cuenta.has(clave):
+				continue
+			var bt := Button.new()
+			bt.text = Idiomas.t("Todos los temas") if clave == "" else "%s (%d)" % [Idiomas.t(CategoriaAviso.nombre(clave)), int(cuenta[clave])]
+			bt.toggle_mode = true
+			bt.button_pressed = _correo_tema == clave
+			bt.add_theme_font_size_override("font_size", 11)
+			bt.pressed.connect(func() -> void: _correo_tema = clave; _pintar_correo())
+			temas.add_child(bt)
 	p._lista_correo.add_child(HSeparator.new())
 
 	if p._bandeja.is_empty():
@@ -126,6 +145,8 @@ func _pintar_correo() -> void:
 	var alguna := false
 	for it3: Dictionary in p._bandeja:
 		if _correo_filtro == "nuevas" and bool(it3["leida"]):
+			continue
+		if _correo_tema != "" and CategoriaAviso.de_fila(it3) != _correo_tema:
 			continue
 		alguna = true
 		var leida := bool(it3["leida"])

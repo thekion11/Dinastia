@@ -10,6 +10,7 @@ extends RefCounted
 var p: Principal
 ## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
 var _correo_filtro := "todo"
+var _correo_tema := ""   ## M-296: tema de la bandeja ("" = todos; claves de `CategoriaAviso`)
 
 func _init(principal: Principal) -> void:
 	p = principal

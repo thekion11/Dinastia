@@ -6580,7 +6580,11 @@
   "Avisos visuales de sonido": "Visual sound cues",
   "El silbato, los goles, la grada, las tarjetas o la sirena salen escritos abajo de la pantalla, también con el sonido apagado.": "The whistle, goals, crowd, cards or siren appear as text at the bottom of the screen, even with sound off.",
   "Deshacer": "Undo",
-  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Reverts the last change to the tactics or the line-up (up to 20)."
+  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Reverts the last change to the tactics or the line-up (up to 20).",
+  "Todos los temas": "All topics",
+  "Plantel": "Squad",
+  "Vida": "Life",
+  "Otros": "Other"
  },
  "pt": {
   "Historia": "História",
@@ -13163,7 +13167,11 @@
   "Avisos visuales de sonido": "Avisos visuais de som",
   "El silbato, los goles, la grada, las tarjetas o la sirena salen escritos abajo de la pantalla, también con el sonido apagado.": "O apito, os gols, a torcida, os cartões ou a sirene aparecem escritos na parte de baixo da tela, mesmo com o som desligado.",
   "Deshacer": "Desfazer",
-  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Desfaz a última mudança na tática ou na escalação (até 20)."
+  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Desfaz a última mudança na tática ou na escalação (até 20).",
+  "Todos los temas": "Todos os temas",
+  "Plantel": "Elenco",
+  "Vida": "Vida",
+  "Otros": "Outros"
  },
  "patrones": [
   [
@@ -25479,7 +25487,11 @@
   "Avisos visuales de sonido": "Indications visuelles des sons",
   "El silbato, los goles, la grada, las tarjetas o la sirena salen escritos abajo de la pantalla, también con el sonido apagado.": "Le sifflet, les buts, le public, les cartons ou la sirène s'affichent en bas de l'écran, même sans le son.",
   "Deshacer": "Annuler",
-  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Annule la dernière modification de la tactique ou du onze (jusqu'à 20)."
+  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Annule la dernière modification de la tactique ou du onze (jusqu'à 20).",
+  "Todos los temas": "Tous les sujets",
+  "Plantel": "Effectif",
+  "Vida": "Vie",
+  "Otros": "Autres"
  },
  "it": {
   "Historia": "Storia",
@@ -32062,7 +32074,11 @@
   "Avisos visuales de sonido": "Avvisi visivi dei suoni",
   "El silbato, los goles, la grada, las tarjetas o la sirena salen escritos abajo de la pantalla, también con el sonido apagado.": "Il fischio, i gol, il pubblico, i cartellini o la sirena compaiono scritti in basso, anche con l'audio spento.",
   "Deshacer": "Annulla",
-  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Annulla l'ultima modifica alla tattica o alla formazione (fino a 20)."
+  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Annulla l'ultima modifica alla tattica o alla formazione (fino a 20).",
+  "Todos los temas": "Tutti i temi",
+  "Plantel": "Rosa",
+  "Vida": "Vita",
+  "Otros": "Altro"
  },
  "de": {
   "Historia": "Geschichte",
@@ -38645,7 +38661,11 @@
   "Avisos visuales de sonido": "Visuelle Tonhinweise",
   "El silbato, los goles, la grada, las tarjetas o la sirena salen escritos abajo de la pantalla, también con el sonido apagado.": "Pfiff, Tore, Publikum, Karten oder Sirene erscheinen unten als Text, auch bei ausgeschaltetem Ton.",
   "Deshacer": "Rückgängig",
-  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Macht die letzte Änderung an Taktik oder Aufstellung rückgängig (bis zu 20)."
+  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Macht die letzte Änderung an Taktik oder Aufstellung rückgängig (bis zu 20).",
+  "Todos los temas": "Alle Themen",
+  "Plantel": "Kader",
+  "Vida": "Leben",
+  "Otros": "Sonstiges"
  },
  "ca": {
   "Historia": "Història",
@@ -45228,7 +45248,11 @@
   "Avisos visuales de sonido": "Avisos visuals de so",
   "El silbato, los goles, la grada, las tarjetas o la sirena salen escritos abajo de la pantalla, también con el sonido apagado.": "El xiulet, els gols, la grada, les targetes o la sirena surten escrits a baix de la pantalla, també amb el so apagat.",
   "Deshacer": "Desfés",
-  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Desfà l'últim canvi de la tàctica o de l'onze (fins a 20)."
+  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Desfà l'últim canvi de la tàctica o de l'onze (fins a 20).",
+  "Todos los temas": "Tots els temes",
+  "Plantel": "Plantilla",
+  "Vida": "Vida",
+  "Otros": "Altres"
  },
  "pl": {
   "Club": "Klub",
@@ -52090,7 +52114,10 @@
   "Avisos visuales de sonido": "Wizualne sygnały dźwięków",
   "El silbato, los goles, la grada, las tarjetas o la sirena salen escritos abajo de la pantalla, también con el sonido apagado.": "Gwizdek, gole, trybuny, kartki czy syrena pojawiają się jako tekst na dole ekranu, także przy wyłączonym dźwięku.",
   "Deshacer": "Cofnij",
-  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Cofa ostatnią zmianę taktyki lub składu (do 20)."
+  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Cofa ostatnią zmianę taktyki lub składu (do 20).",
+  "Todos los temas": "Wszystkie tematy",
+  "Vida": "Życie",
+  "Otros": "Inne"
  },
  "tr": {
   "Club": "Kulüp",
@@ -58952,6 +58979,9 @@
   "Avisos visuales de sonido": "Görsel ses uyarıları",
   "El silbato, los goles, la grada, las tarjetas o la sirena salen escritos abajo de la pantalla, también con el sonido apagado.": "Düdük, goller, tribün, kartlar veya siren ses kapalıyken bile ekranın altında yazıyla görünür.",
   "Deshacer": "Geri al",
-  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Taktikte veya ilk on birde yapılan son değişikliği geri alır (20'ye kadar)."
+  "Vuelve atrás el último cambio de la táctica o del once (hasta 20).": "Taktikte veya ilk on birde yapılan son değişikliği geri alır (20'ye kadar).",
+  "Todos los temas": "Tüm konular",
+  "Vida": "Yaşam",
+  "Otros": "Diğer"
  }
 }
