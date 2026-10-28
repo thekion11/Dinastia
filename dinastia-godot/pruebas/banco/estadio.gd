@@ -124,3 +124,68 @@ func _probar_reforma_con_obra() -> void:
 	_comprobar(termino and not m.estadio.en_obras() and String(m.perfil_estadio_de(mio)["forma"]) == nueva,
 		"al terminar, el estadio nuevo es el de todas partes")
 	_comprobar(not ("reforma" in (m.perfil_estadio_de(mio).get("en_obra", []) as Array)), "y se van los andamios")
+
+## CALIDAD ADAPTATIVA (M-354, 28-10-2026): los umbrales de `RendimientoAdaptativo` con FPS inventados (`avanzar`), sin depender de la máquina. La prueba de
+## lo que toca cada escalón está en `pruebas/probar_rendimiento_adaptativo.gd` (necesita abrir el estadio).
+func _probar_rendimiento_adaptativo() -> void:
+	_titulo("CALIDAD ADAPTATIVA: UMBRALES")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var m := RendimientoAdaptativo.MUESTRAS
+	## A: el calentamiento y el mínimo de muestras.
+	var ra := _ra_nuevo(raiz)
+	for i in int(RendimientoAdaptativo.SEG_CALENTAR) - 1:
+		ra.avanzar(1.0, 5.0)
+	_comprobar(ra.escalon == 0, "durante el calentamiento (%d s) no baja nada, ni a 5 FPS" % int(RendimientoAdaptativo.SEG_CALENTAR))
+	for i in m - 1:   ## la primera muestra cae al cumplirse el calentamiento
+		ra.avanzar(1.0, 5.0)
+	_comprobar(ra.escalon == 0, "con menos de %d muestras no decide, aunque sean malas" % m)
+	ra.free()
+	## B: lo que no debe bajar.
+	ra = _ra_nuevo(raiz, true)
+	for i in m:
+		ra.avanzar(1.0, RendimientoAdaptativo.OBJETIVO_FPS)
+	_comprobar(ra.escalon == 0, "la media justo en %d FPS no baja: el umbral es estricto" % int(RendimientoAdaptativo.OBJETIVO_FPS))
+	for i in 3 * m:
+		ra.avanzar(1.0, 60.0)
+	_comprobar(ra.escalon == 0, "a 60 FPS nunca baja")
+	ra.free()
+	## C: bajar de uno en uno, sin volver a subir.
+	ra = _ra_nuevo(raiz, true)
+	var llamadas := 0
+	while ra.escalon == 0 and llamadas < 20:
+		ra.avanzar(1.0, 30.0)
+		llamadas += 1
+	_comprobar(ra.escalon == 1 and llamadas == m, "a 30 FPS sostenidos baja UN escalón (a los %d segundos)" % llamadas)
+	for i in m - 1:
+		ra.avanzar(1.0, 20.0)
+	_comprobar(ra.escalon == 1, "tras bajar vuelve a medir desde cero: otros %d segundos antes del siguiente" % m)
+	ra.avanzar(1.0, 20.0)
+	_comprobar(ra.escalon == 2, "al cumplirse las %d muestras malas nuevas baja el segundo" % m)
+	for i in 4 * m:
+		ra.avanzar(1.0, 120.0)
+	_comprobar(ra.escalon == 2, "nunca vuelve a subir aunque los FPS mejoren")
+	ra.activo = false
+	for i in 4 * m:
+		ra.avanzar(1.0, 5.0)
+	_comprobar(ra.escalon == 2, "apagado no hace nada")
+	ra.activo = true
+	var avisos: Array[int] = []
+	ra.escalon_aplicado.connect(func(e: int, _q: String) -> void: avisos.append(e))
+	for i in 10 * m:
+		ra.avanzar(1.0, 5.0)
+	_comprobar(ra.escalon == RendimientoAdaptativo.ESCALONES.size() and avisos == [3, 4, 5],
+		"con FPS malos sostenidos llega al último escalón (%d) y avisa de cada uno, sin pasarse" % ra.escalon)
+	ra.free()
+	raiz.free()
+	_comprobar(is_equal_approx(get_viewport().scaling_3d_scale, 1.0), "al quitarlo, el 3D del juego vuelve al 100 %")
+
+func _ra_nuevo(raiz: Node3D, calentado := false) -> RendimientoAdaptativo:
+	var ra := RendimientoAdaptativo.new()
+	ra.raiz3d = raiz
+	add_child(ra)
+	if calentado:
+		ra.avanzar(RendimientoAdaptativo.SEG_CALENTAR, 100.0)   ## pasa el calentamiento con una muestra buena de relleno... que se descarta abajo
+		ra._muestras.clear()
+		ra._t_muestra = 0.0
+	return ra
