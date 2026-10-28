@@ -3,6 +3,11 @@ extends BaseIdea
 ## y «Detener»). Se detiene a medias (la temporada sigue en curso, como avanzada a mano) y luego se acaba entera.
 ##   herramientas/ideas.sh sim_temporada_barra
 
+## Un método y no un lambda: un lambda conectado a la señal del mundo tumbaba el motor al salir (malloc_consolidate).
+var _hubo := false
+func _al_terminar(_a: int, _c: Variant) -> void:
+	_hubo = true
+
 func _ready() -> void:
 	await get_tree().process_frame
 	_titulo("1032: SIMULAR LA TEMPORADA CON BARRA DE PROGRESO")
@@ -32,14 +37,15 @@ func _ready() -> void:
 		await get_tree().process_frame
 	_comprobar(pr.mundo.temporada_en_curso() and (not is_instance_valid(velo) or velo.is_queued_for_deletion()), "«Detener» para a medias: la temporada sigue en curso y el panel se va")
 	var anio := pr.mundo.anio
-	var hubo := [false]
-	pr.mundo.temporada_terminada.connect(func(_a: int, _c: Variant) -> void: hubo[0] = true)
+	pr.mundo.temporada_terminada.connect(_al_terminar)
 	j._jugar_temporada()
 	var t0 := Time.get_ticks_msec()
 	while j._simulando and Time.get_ticks_msec() - t0 < 240000:
 		await get_tree().process_frame
-	_comprobar(not pr.mundo.temporada_en_curso() and hubo[0], "otra vez hasta el final: temporada %d acabada y señal de cierre emitida" % anio)
+	_comprobar(not pr.mundo.temporada_en_curso() and _hubo, "otra vez hasta el final: temporada %d acabada y señal de cierre emitida" % anio)
+	pr.mundo.temporada_terminada.disconnect(_al_terminar)
 	pr.queue_free()
+	await get_tree().process_frame
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())
 	get_tree().quit(0 if _fallos.is_empty() else 1)
