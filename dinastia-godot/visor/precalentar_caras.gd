@@ -14,6 +14,8 @@ static var presupuesto_ms := MS_POR_FOTOGRAMA   ## 0 = sin espera (las medicione
 static var por_fotograma := 1                    ## jugadores por fotograma cuando no hay espera
 
 var _cola: Array = []
+var _mundo: WeakRef = null   ## el mundo para el que se precalienta: si se cierra la partida o cambia de club, se suelta lo pendiente
+var _club_id := ""
 var _espera := 0
 var _spawner := PlayerSpawner.new()
 
@@ -29,12 +31,17 @@ static func partido(local: Club, visita: Club) -> void:
 static func del_mundo(m: Mundo) -> void:
 	if m == null:
 		return
+	if is_instance_valid(_activa) and (_activa._mundo == null or _activa._mundo.get_ref() != m or _activa._club_id != m.mi_club_id):
+		_activa._cola.clear()   ## otra partida u otro club: lo pendiente era de antes
 	if OS.has_feature("mobile"):
 		club(m.mi_club())
-		return
-	var par := m.proximo_partido()
-	if par.size() >= 2:
-		partido(par[0], par[1])
+	else:
+		var par := m.proximo_partido()
+		if par.size() >= 2:
+			partido(par[0], par[1])
+	if is_instance_valid(_activa):
+		_activa._mundo = weakref(m)
+		_activa._club_id = m.mi_club_id
 
 static func _items(clubes: Array) -> Array:
 	var items: Array = []
@@ -78,6 +85,8 @@ static func detener() -> void:
 	_activa = null
 
 func _process(_d: float) -> void:
+	if _mundo != null and (_mundo.get_ref() == null or (_mundo.get_ref() as Mundo).mi_club_id != _club_id):
+		_cola.clear()   ## se cerró la partida o cambió de club
 	if _cola.is_empty():
 		queue_free()
 		_activa = null

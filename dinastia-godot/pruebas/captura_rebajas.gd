@@ -12,6 +12,9 @@ func _ready() -> void:
 		print("===== FIN. 0 fallos =====")
 		get_tree().quit()
 		return
+	if OS.get_environment("GRADA") == "0":   ## sin trocear la grada: para comprobar que el culling por trozos no deja butacas sin dibujar
+		OptimizarGrada.activo = false
+		_nombre = "sin_trozos"
 	if OS.get_environment("REBAJAS") == "0":
 		StadiumBuilder.butaca_detalle_filas = 99
 		EntornoEstadio.optimizar_partido = false
