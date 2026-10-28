@@ -603,8 +603,8 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-379 | P2 | PARCIAL | 70 funciones > 120 líneas (medido 28-10): las 5 peores eran `_butacas` 354, `_control_usuario` 274, `Estadio._construir` 254, `_piscina` 239, `_estacion` 233 | 28-10: partidas `_butacas` (stadium_builder_p6: paleta, poblar, hinchas, montar; hash idéntico de todos los MultiMesh en 2 calidades × 3 clubes), `Estadio._construir` (HUD y cajón aparte) y `_piscina` (8 zonas; mismo árbol de nodos). Quedan 67; `_control_usuario` (sensación de juego) sin tocar |
 | M-382 | P2 | PENDIENTE | Sin análisis estático | sin gdlint |
 | M-383 | P2 | PENDIENTE | Tipado: muchos `Dictionary` sin forma (jugadores del motor) | sin `JugadorMotor` tipado |
-| M-384 | P2 | PENDIENTE | `Mundo` 2.921 líneas, `Roles` 2.065, `Prensa` 2.541: acoplamiento alto | sin extraer servicios |
-| M-386 | P2 | PARCIAL | Señales sin desconexión en liberación (posibles fugas) | `auditoria_tecnica.gd` mide huérfanos en la pantalla principal; 21-10: el panel de objetivos pasa a señal (`vista_cambiada`) y respaldo cada 3 s, sin fallar con las pestañas prestadas a un menú |
+| M-384 | P2 | PARCIAL | `Mundo` 2.921 líneas, `Roles` 2.065, `Prensa` 2.541: acoplamiento alto | sin extraer servicios (28-10: ya en capas de <450 líneas; queda repartir por responsabilidad) |
+| M-386 | P2 | PARCIAL | ~300 objetos retenidos por partido jugable | 28-10: las conexiones de señales NO crecen (`sen_conexiones`); quedan ~300 objetos sin nodo ni recurso por partido, retenidos hasta cerrar el juego (no crece sin tope); búsqueda documentada en `rendimiento.md` sin causa |
 | M-387 | P2 | PENDIENTE | Mensajes de error silenciosos (`return` sin aviso) | sin registro de errores |
 | M-388 | P2 | PENDIENTE | Constantes mágicas (balance) dispersas | sin archivo de balance |
 | M-391 | P2 | PENDIENTE | Duplicación entre `MatchPlayback` y `MotorJugable` | duplicación sin retirar |
@@ -651,17 +651,16 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
 | M-167 | P1 | PENDIENTE | Calzadas = cajas de asfalto con marcas propias; Kenney sólo… | calzadas propias; losetas Kenney no usadas |
-| M-171 | P1 | PARCIAL | Tráfico sin comportamiento complejo (adelantar, ceder en cruce) | 27-10: cola, frenado en rojo, prioridad de la derecha en los cruces y adelantar al autobús parado (`TraficoCiudad`); falta adelantar a coches lentos y rotondas |
-| M-263 | P1 | PENDIENTE | Eventos únicos (13) y control real; pocos días de «vida» entre… | sin agenda semanal |
-| M-168 | P2 | PENDIENTE | Sin rotondas | sin rotondas |
-| M-170 | P2 | PENDIENTE | Sin semáforos peatonales con botón | sin botón peatonal |
+| M-171 | P1 | PARCIAL | Tráfico: comportamiento complejo | 27-10: cola, frenado en rojo, prioridad de la derecha, adelantamiento; falta rotonda con tráfico |
+| M-263 | P1 | PARCIAL | Eventos únicos y agenda | la agenda del móvil existe (`telefono_p3.gd`, `nucleo/citas.gd`); faltan los 13 eventos únicos con control real |
+| M-168 | P2 | PARCIAL | Rotondas | 28-10: una rotonda decorativa en un cruce sin rutas (`visor/ciudad_rotonda.gd`); falta rotonda con tráfico que la recorra |
+| M-170 | P2 | PARCIAL | Semáforos peatonales con botón | 28-10: botón y hombrecito (`visor/semaforos.gd pedir`); FALLO: el ciclo es global a toda la ciudad y los peatones de `TraficoCiudad` no respetan la fase; cabeza peatonal pequeña |
 | M-173 | P2 | PARCIAL | Sin sonido de motor/marchas/derrape | 21-10: el motor del coche suena, sintetizado en vivo con revoluciones y 5 marchas (`visor/motor_coche_sonido.gd`); sin radio |
-| M-174 | P2 | PARCIAL | Interior de coche sin modelo (salpicadero 2D) | salpicadero y volante 2D (`VolanteUI`) |
 | M-176 | P2 | PENDIENTE | Sin tipos de vehículo (moto, bus conducible, camión) | solo coche conducible |
-| M-177 | P2 | PENDIENTE | Sin gasolinera/aparcamiento/lavado | sin gasolinera/lavado |
+| M-177 | P2 | PARCIAL | Gasolinera, lavado, aparcamiento | 28-10: surtidor que cobra, túnel de lavado animado y 8 plazas (`visor/ciudad_lavado.gd`); falta lavar de verdad el coche del DT y aparcar en las plazas |
 | M-180 | P2 | PARCIAL | Metro: sin vendedores/música/anuncios | anuncios en el vagón (`MetroCiudad.ANUNCIOS`); sin vendedores ni música |
-| M-182 | P2 | PENDIENTE | Sin tarjeta de transporte ni coste | máquinas de billetes decorativas; sin coste |
-| M-183 | P2 | PARCIAL | Peatones: 34 máx; sin rutinas por hora | 21-10: de madrugada queda en la calle un tercio de la gente (los ocultos tampoco se mueven: `TraficoCiudad.faros`); faltan rutinas por persona |
+| M-182 | P2 | PARCIAL | Tarjeta de transporte y coste | 28-10: `CarteraDT.saldo_transporte`, metro 1 €, teleférico 3 €; falta cobrar el bus, saldo en la app Red y abono |
+| M-183 | P2 | PARCIAL | Peatones: rutinas | 28-10: densidad por sector y hora, flujo direccional, maletines y mochilas (`visor/rutina_peatones.gd`); falta rutina por PERSONA (casa→trabajo→casa) |
 | M-184 | P2 | PENDIENTE | Sin NPC con nombre y memoria (te reconocen) | sin vecinos con memoria |
 | M-185 | P2 | PENDIENTE | Diálogos por oficio (hecho) pero sin ramas ni consecuencias | diálogos sin consecuencias |
 | M-186 | P2 | PARCIAL | Interiores: 15 salas; edificios entrables «la mayoría» sin… | gimnasio, piscina, estación central, recreativos con muebles Kenney (15/16-10); 21-10: edificio del club con muebles de verdad del catálogo común `Modulos` (oficina del DT, despacho, sala de vídeo, pr |
@@ -669,16 +668,15 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-188 | P2 | PENDIENTE | Sin tiendas con compra real (ropa, balones) | sin compra en tiendas |
 | M-189 | P2 | PENDIENTE | Sin bares/restaurantes con minijuego | sin bar con minijuego |
 | M-190 | P2 | HECHO-REVISAR | Lluvia con charcos | `CharcosLluvia` (MultiMesh de 196 discos con ondas, rejilla del mundo, siguen a la cámara, nacen con `PrecipitacionCiudad`, altura `CityBuilder.altura_en`+0,22); capturas `capturas_ciudad_c2/charcos_*.jpg`. Pendiente: reflejo de farolas en charcos de noche |
-| M-191 | P2 | PARCIAL | Sin ciclo día/noche más allá del slider | ciclo día/noche automático (`_ciclo_activo`); sin reloj real |
 | M-192 | P2 | SIN VERIFICAR | Aceras/pavimentos: 3 texturas | no se midió la variedad de aceras por barrio |
-| M-193 | P2 | PARCIAL | Sin vegetación variada (setos, flores) más allá de árboles | setos de jardines y casas (`CiudadExpansion._setos_t`); sin flores |
+| M-193 | P2 | PARCIAL | Vegetación variada | 28-10: setos y flores (`PastoCiudad.flores`); faltan setos con flor y enredaderas |
 | M-196 | P2 | PENDIENTE | Botes sin sonido/estela | sin estela de botes |
 | M-197 | P2 | PENDIENTE | Autopista sin peajes ni estaciones | sin peajes |
-| M-198 | P2 | PENDIENTE | Aeropuerto/estación de tren inexistentes (no hay viajes) | sin viajes/aeropuerto |
+| M-198 | P2 | PARCIAL | Viajes: estación de tren y aeropuerto | 28-10: Estación Central con andén y trenes (`visor/estacion_central.gd`); sin viajes ni aeropuerto |
 | M-199 | P2 | PARCIAL | Sin señales de tráfico reales (límites, ceda) | 27-10: multa de 90 € por semáforo en rojo con policía a la vista; sin límites de velocidad |
 | M-203 | P2 | PENDIENTE | Sin colisión/oclusión de sonido en interiores | sin filtro de sonido en interiores |
 | M-204 | P2 | PENDIENTE | LOD de edificios lejanos con ventanas (cristal) pero sin siluetas… | sin impostores de edificios |
-| M-205 | P2 | PENDIENTE | `ciudad_expansion.gd` 2.321 líneas y `city_builder.gd` 4.687 | `ciudad_expansion.gd` creció a 3.569 líneas |
+| M-205 | P2 | PARCIAL | `ciudad_expansion.gd` 2.321 líneas y `city_builder.gd` 4.687 | `ciudad_expansion.gd` creció a 3.569 líneas (28-10: ya en capas de <450 líneas; queda repartir por responsabilidad) |
 | M-206 | P2 | PENDIENTE | Sin editor de ciudad más allá de terrenos/negocios | sin editor de ciudad |
 | M-265 | P2 | PENDIENTE | Avatar propio sin personalización de cuerpo | sin personalización del cuerpo |
 | M-266 | P2 | PARCIAL | Sin entrenador como NPC con diálogos sobre el jugador | `relacion_dt` decide minutos; sin entrenador con diálogos |
@@ -696,11 +694,9 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
 | M-207 | P1 | PENDIENTE | Plantillas de 25 en todos los clubes (C-05) | plantillas de 25 |
-| M-208 | P1 | HECHO (27-10) | Caja del club propio crece de forma casi monótona (prueba larga:… | 20-10: el mantenimiento de instalaciones (M-227) es un coste que crece con el club; 27-10: crisis de caja (`CrisisCaja`: multa, recorte de patrocinio, obra que se encarece; crecen con la caja y no caen seguidas) |
 | M-210 | P1 | PARCIAL | Mercado: precios por reputación sin burbujas ni crisis | eras con precios (`Eras`, `_probar_eras_y_precios`); sin burbujas |
 | M-219 | P1 | PARCIAL | `Banco` e `Insolvencia` existen pero con pocos eventos de gravedad | administrador, tope salarial, venta de lo que sobra, refundación (`Insolvencia`); sin descenso administrativo |
 | M-235 | P1 | PARCIAL | Lesiones: duración y recaídas ok; sin prevención visible (carga… | carga y riesgo en `Medico` (l.244-254); indicador por jugador sin confirmar |
-| M-241 | P1 | PENDIENTE | Prensa 2.541 líneas (la mayor del núcleo): `resolver` 476 líneas | `Prensa.resolver` sigue en una función |
 | M-359 | P1 | PENDIENTE | Estadio real en 46 % de clubes (C-01) | 46 % |
 | M-209 | P2 | PARCIAL | La prueba larga sólo comprueba que no hay errores, no el equilibrio | `prueba_larga` comprueba medias en rango; sin métricas de equilibrio |
 | M-211 | P2 | PARCIAL | Cláusulas de rescisión: sin «cláusulazo» automático de IA | el mercado reconoce pagos de cláusula (`Mercado` l.345); sin «clausulazo» de IA deliberado |
@@ -733,7 +729,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-254 | P2 | PARCIAL | Vida del DT (bienestar, casa, familia): sin impacto en rendimiento… | estrés en `VidaDT`; efecto en rendimiento sin comprobar |
 | M-257 | P2 | PENDIENTE | Historia del club generada; sin línea de tiempo interactiva | sin línea de tiempo |
 | M-258 | P2 | PENDIENTE | Documental de temporada: guion fijo | documental con guion fijo |
-| M-259 | P2 | PARCIAL | Clima en partidos con efecto menor | el clima reduce las llegadas (`Partido.clima`); sin efecto en balón ni desgaste |
+| M-259 | P2 | PARCIAL | Clima sin efecto en el desgaste | el clima ya cambia error, agarre y roce (`gesto_tecnico.gd`); falta su efecto en cansancio (calor, altura) |
 | M-261 | P2 | PENDIENTE | Sin modo historia/campaña guiada | sin modo historia |
 | M-361 | P2 | SIN VERIFICAR | `tablas.json` en una línea (D-04) | no se revisó `tablas.json` |
 | M-362 | P2 | PENDIENTE | `ESTADIO_CLUB` por nombre (frágil con leetspeak) | `ESTADIO_CLUB` por nombre |
@@ -768,7 +764,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-018 | P2 | PENDIENTE | Banquillos de un solo diseño por preset | `EST_BANQUILLOS` sin ampliar |
 | M-019 | P2 | PARCIAL | Sin zona de prensa/cabinas de TV visibles en el graderío | cabina de prensa en `estadio_extras.gd`; sin vidrio ni NPC de prensa dentro |
 | M-020 | P2 | PARCIAL | Sin palcos reales (`palcos` existe como instalación) | palcos como pieza de `estadio_extras.gd` y `ClubDentro.PALCO`; sin interior con personas |
-| M-022 | P2 | PENDIENTE | Sin sonido espacial por sector (cantos locales vs visitantes) | no existe ningún `AudioStreamPlayer3D` en el juego |
+| M-022 | P2 | PENDIENTE | Sin sonido espacial por sector (cantos locales vs visitantes) | solo `servicios_vida.gd` usa `AudioStreamPlayer3D` en el juego |
 | M-024 | P2 | PARCIAL | Sombras de la grada sobre el campo no cambian con la hora real del… | `Ambience` usa la hora elegida para el estadio, no la hora/estación real del partido |
 | M-025 | P2 | PARCIAL | Poca variedad de torres de luz (4 esquinas) | focos «corona/mixto/halo» además de torres; no 6/8 torres por forma |
 | M-027 | P2 | PENDIENTE | Sin variación de terreno exterior (cerro, mar, río) según `rasgo` | el texto `rasgo` no elige fondo ni niebla |
@@ -791,7 +787,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-079 | P1 | PENDIENTE | Retrato real 13 % (base real) | 13 % con retrato real; descarga bloqueada por la red |
 | M-091 | P1 | PARCIAL | Botines: variedad añadida, pero sin modelos distintos por forma | `VestidorQ._botin_de` varía modelo/color por dorsal; no hay mallas de bota alta/calcetín |
 | M-094 | P1 | PARCIAL | Animación de caminata del DT: 6 estilos (✅) | «Mi caminata» con 6 estilos para el DT; peatones y jugadores no |
-| M-095 | P1 | PENDIENTE | 335 clips; muchos sin uso en partido | sin auditoría automática de clips usados |
+| M-095 | P1 | PARCIAL | Auditoría automática de clips usados | hecha para ciudad/UAL (`p3_clips_ual`); falta para los 335 clips del partido |
 | M-447 | P1 | PARCIAL | Las cadenas en español escritas directo en `ui/` (I-02): antes 573… | ✅ 15-10 salvo 15 textos |
 | M-037 | P2 | PENDIENTE | Sin sector «barra brava»/torcida con comportamiento diferente (de… | sin sector ultra con bengalas/humo |
 | M-038 | P2 | PENDIENTE | Hinchas sentados con piernas invisibles (se cortan en la cadera) | público horneado cortado en la cadera |
@@ -872,7 +868,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-125 | P2 | PENDIENTE | Sin tácticas de medio campo (doble pivote, falso 9) | sin roles con comportamiento propio |
 | M-126 | P2 | PARCIAL | Cambios de IA por cansancio (60/70/80') fijos | DT rival cambia en 60/70/80' y ajusta la pizarra según marcador (`_dt_rival`); minutos fijos |
 | M-128 | P2 | PARCIAL | Portero con salidas sólo en mano a mano | colocación y achique del portero (14-10); sin salidas aéreas |
-| M-129 | P2 | PARCIAL | Sin lanzamientos de larga distancia ni centros desde banda con… | los atributos pesan en el motor (`_atributos`); sin parámetro de precisión por tipo de envío |
 | M-131 | P2 | PARCIAL | Ayudas de asistencia (pase/tiro) con 3 niveles | ayudas por pieza (asistido/manual, auto/semi/manual) en `Mando`; sin perfiles Arcade/Semi/Manual |
 | M-134 | P2 | PARCIAL | Sin cámaras de repetición cinematográficas (grúa, dron) | cámaras «Dron orbital» y otras en el rig; la repetición no alterna planos |
 | M-135 | P2 | PENDIENTE | Sin cámara de gol del cuarto árbitro/línea | sin cámara de línea de gol |
@@ -903,16 +898,14 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-339 | P1 | PENDIENTE | Césped en capas ≈ 230 k tris/57 llamadas | capas del césped hasta 46 m sin LOD extra |
 | M-343 | P2 | PARCIAL | Draw calls 700 | sombras en 8 mallas por sector (741→691) y 630 llamadas; sin atlas |
 | M-344 | P2 | PARCIAL | Overdraw en grada por butacas y personas | 21-10: oclusión en la CIUDAD (`OclusoresCiudad`, 1.120 paredes): −16 % de llamadas a pie de calle (12.128 → 10.192 en 4 calles, `medir_oclusion`); en la grada del estadio sigue sin `OccluderInstance3D |
-| M-345 | P2 | PENDIENTE | Culling por trozos para MultiMesh grandes | sin culling por trozos de MultiMesh |
+| M-345 | P2 | PARCIAL | Culling por trozos de MultiMesh | 28-10: hecho en la grada (8 trozos por bandeja, −3,3 % tris); falta en la ciudad |
 | M-346 | P2 | PARCIAL | Texturas con compresión (s3tc en PC); sin variantes móviles… | 21-10: revisado: las texturas grandes de 3D ya están en VRAM (s3tc) y limitadas (ropa 4K → 1024); las 3.103 sin comprimir son caras reales, iconos 2D y paletas de Kenney, que se dejan sin pérdida a pr |
-| M-347 | P2 | PARCIAL | VRAM 539 MB en partido | texturas del globo comprimidas (72→13 MB); VRAM del partido sin remedir |
-| M-348 | P2 | PENDIENTE | Carga: `Precarga` existe; primera construcción de estadio larga | sin caché en disco de mallas generadas |
+| M-347 | P2 | PARCIAL | VRAM del partido | 28-10: 603 → 311 MB (ruidos a 512 y compartidos); volver a medir en hardware real |
+| M-348 | P2 | PARCIAL | Primera construcción del estadio | 28-10: 7,5-9,4 s → 2,6-2,8 s (animaciones en hilo + jugadores precalentados en el menú); segunda apertura 1,4 s; sin caché en disco |
 | M-349 | P2 | PENDIENTE | Generación de `Mundo` (384 clubes) y `Reales.aplicar`: medir… | sin `WorkerThreadPool` |
-| M-350 | P2 | PENDIENTE | `avanzar_semana` 532 líneas: tiempo por semana desconocido | sin perfil por semana |
 | M-351 | P2 | PENDIENTE | Hilos: ¿se usan para IA/ciudad? | sin hilos para tráfico/peatones (solo LOD del tráfico) |
 | M-352 | P2 | PENDIENTE | GC/alloc en `_process` (Dictionary por jugador) | sin Packed arrays en el motor |
 | M-353 | P2 | PENDIENTE | Valorar C#/GDExtension sólo si el motor domina CPU | sin medición previa |
-| M-354 | P2 | PARCIAL | `RendimientoAdaptativo` existe; documentar umbrales y probarlos | `pruebas/probar_rendimiento_adaptativo.gd`; no está en el banco |
 | M-355 | P2 | PARCIAL | Sin modo batería/60→30 FPS en móvil | límite de FPS 30/60/120 (`Principal.FPS_OPCIONES`); sin modo batería |
 | M-356 | P2 | PENDIENTE | Memoria de la ciudad ×4 (2.640 m) | sin streaming por celdas |
 | M-357 | P2 | PARCIAL | Capturas pesadas en repo (`pruebas/capturas`) | `.gitignore` de promo/lotes y JPG por defecto; resto en repo |
