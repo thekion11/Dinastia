@@ -369,14 +369,15 @@ static func _en_cache(esq: Skeleton3D, prefijo: String, acciones_experimentales:
 		return _bibliotecas[clave]
 	## En disco (`CacheDisco`, 30-10-2026): construirla son 2-3 s; cargarla, ~0,1 s. Con ella van
 	## las fases de los pies (`AnimPasos.fases`), que la construcción deja apuntadas.
-	var en_disco := "anim|%s|%s" % [clave, CacheDisco.huella("anim", _fuentes())]
-	var lib := CacheDisco.cargar(en_disco, "AnimationLibrary") as AnimationLibrary
+	var huella := CacheDisco.huella("anim", _fuentes())
+	var en_disco := "anim|%s|%s" % [clave, huella]
+	var lib := CacheDisco.cargar(en_disco, huella, "AnimationLibrary") as AnimationLibrary
 	if lib != null and lib.has_meta("fases_pasos"):
 		AnimPasos.fases.merge(lib.get_meta("fases_pasos"), true)
 	else:
 		lib = _construir(esq, prefijo, acciones_experimentales)
 		lib.set_meta("fases_pasos", AnimPasos.fases.duplicate())
-		CacheDisco.guardar(en_disco, lib)
+		CacheDisco.guardar(en_disco, huella, lib)
 	_bibliotecas[clave] = lib
 	return lib
 
