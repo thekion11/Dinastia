@@ -90,10 +90,106 @@ jobs:
           mkdir -v -p build/windows
           cd dinastia-godot
           timeout 900 godot --headless --path . --import > /dev/null 2>&1 || true
-          godot --headless --export-release "Windows" ../build/windows/Dinastia.exe
+          codigo=0
+          godot --headless --export-release "Windows" ../build/windows/Dinastia.exe > /tmp/export.txt 2>&1 || codigo=$?
+          tail -n 30 /tmp/export.txt
+          [ "$codigo" -eq 0 ] || exit "$codigo"
+          ## Comprobaciones (30-10-2026): la extensión C++ junto al .exe y las animaciones horneadas
+          ## dentro (si faltan, el juego funciona igual pero más lento: se avisa).
+          ls -la ../build/windows
+          ls ../build/windows/*.dll >/dev/null 2>&1 || echo "::warning::Falta la DLL de la extensión C++ (bin_nativo)"
+          grep -q "Caché horneada: 5 archivos" /tmp/export.txt || echo "::warning::Sin caché horneada de animaciones"
 
       - name: Subir el build
         uses: actions/upload-artifact@v4
         with:
           name: Dinastia-Windows
           path: build/windows
+
+  ## LINUX (30-10-2026): preset público «Linux» (sin caras ni datos reales).
+  export-linux:
+    needs: banco
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - name: Descargar el repositorio (sin LFS)
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Recursos LFS del juego
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          command -v git-lfs >/dev/null || (apt-get update && apt-get install -y git-lfs)
+          git lfs install --local
+          git lfs pull --include="dinastia-godot/**"
+
+      - name: Plantillas de exportación
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates
+          if [ "$HOME" != "/root" ]; then mv /root/.local/share/godot/export_templates/* ~/.local/share/godot/export_templates; fi
+
+      - name: Build de Linux
+        run: |
+          mkdir -v -p build/linux
+          cd dinastia-godot
+          timeout 900 godot --headless --path . --import > /dev/null 2>&1 || true
+          codigo=0
+          godot --headless --export-release "Linux" ../build/linux/Dinastia.x86_64 > /tmp/export.txt 2>&1 || codigo=$?
+          tail -n 30 /tmp/export.txt
+          [ "$codigo" -eq 0 ] || exit "$codigo"
+          ls -la ../build/linux
+          ls ../build/linux/*.so >/dev/null 2>&1 || echo "::warning::Falta la .so de la extensión C++ (bin_nativo)"
+          grep -q "Caché horneada: 5 archivos" /tmp/export.txt || echo "::warning::Sin caché horneada de animaciones"
+
+      - name: Subir el build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dinastia-Linux
+          path: build/linux
+
+  ## ANDROID (30-10-2026): APK de DEPURACIÓN firmada con la clave de depuración de la imagen del CI.
+  ## La de publicar (release) se firma con la keystore del dueño, que no está aquí. Sin binario C++
+  ## para Android: el juego usa las versiones GDScript (mismo resultado).
+  export-android:
+    needs: banco
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - name: Descargar el repositorio (sin LFS)
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Recursos LFS del juego
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          command -v git-lfs >/dev/null || (apt-get update && apt-get install -y git-lfs)
+          git lfs install --local
+          git lfs pull --include="dinastia-godot/**"
+
+      - name: Plantillas y ajustes de Android de la imagen
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates ~/.config
+          if [ "$HOME" != "/root" ]; then
+            mv /root/.local/share/godot/export_templates/* ~/.local/share/godot/export_templates
+            mv /root/.config/godot ~/.config/godot
+          fi
+
+      - name: Build de Android (depuración)
+        run: |
+          mkdir -v -p build/android
+          cd dinastia-godot
+          timeout 900 godot --headless --path . --import > /dev/null 2>&1 || true
+          godot --headless --export-debug "Android" ../build/android/Dinastia-debug.apk
+          ls -la ../build/android
+
+      - name: Subir el build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dinastia-Android-debug
+          path: build/android
