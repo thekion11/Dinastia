@@ -61,6 +61,7 @@ const CACHES := [
 	["res://visor/balon_3d.gd", "_cache_tex", {}],
 	["res://visor/cara_malla.gd", "_texturas", {}],
 	["res://visor/cara_malla.gd", "_cache_mallas", {}],
+	["res://visor/cara_malla.gd", "_rejillas", {}],
 	["res://visor/city_builder.gd", "_mat_blanco", null],
 	["res://visor/city_builder.gd", "_mat_bordillo", null],
 	["res://visor/city_builder.gd", "_mat_tapa", null],

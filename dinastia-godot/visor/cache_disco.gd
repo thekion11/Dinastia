@@ -26,7 +26,11 @@ static func huella(grupo: String, archivos: PackedStringArray) -> String:
 	for a in archivos:
 		partes.append(a)
 		if FileAccess.file_exists(a):
-			partes.append(FileAccess.get_md5(a))
+			## Los grandes (modelos, clips: ~0,4 s de MD5 al abrir el primer estadio) por tamaño y
+			## fecha; los scripts y los .import, por contenido.
+			var f := FileAccess.open(a, FileAccess.READ)
+			var largo := f.get_length() if f != null else 0
+			partes.append(FileAccess.get_md5(a) if largo < 200000 else "t%d" % largo)
 			partes.append(str(FileAccess.get_modified_time(a)))
 		if FileAccess.file_exists(a + ".import"):
 			partes.append(FileAccess.get_md5(a + ".import"))

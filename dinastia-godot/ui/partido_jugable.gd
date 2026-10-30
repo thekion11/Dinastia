@@ -177,7 +177,7 @@ func _montar(duracion_mitad: float) -> void:
 	Calidad.aplicar_viewport(_vp, Calidad.elegida)
 	_raiz = Node3D.new()
 	_vp.add_child(_raiz)
-	## El estadio del local, el que se juega.
+	RuidosFondo.precargar()   ## (el estadio del local, el que se juega; texturas de ruido en hilos)
 	var perfil := mundo.perfil_estadio_de(local).duplicate() if mundo != null and equipo_usuario == null else local.perfil_estadio()
 	_perfil = perfil
 	Ambience.apply(_raiz, perfil, null, Calidad.elegida)

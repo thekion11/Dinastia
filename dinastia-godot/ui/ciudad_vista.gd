@@ -116,6 +116,7 @@ func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary
 ## es EL TUYO, con la forma, las bandejas, el techo y las butacas que hayas
 ## pagado -no una maqueta genérica-.
 func abrir(c: Club, obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary = {}) -> void:
+	RuidosFondo.precargar()   ## las texturas de ruido, leídas en hilos mientras se construye
 	club = c
 	_obras = obras
 	_ciudad_datos = ciudad
