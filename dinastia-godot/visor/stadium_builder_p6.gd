@@ -84,16 +84,11 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	## Antes las tribunas de detrás de los arcos quedaban al revés.
 	var giro: float = (-sentido * PI * 0.5) if lateral else (PI if sentido > 0.0 else 0.0)
 
-	var mm := MultiMesh.new()
-	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.use_colors = true
-	mm.mesh = malla
-	mm.instance_count = cuantas_fila * filas
-	var mm_lejos := MultiMesh.new()
-	mm_lejos.transform_format = MultiMesh.TRANSFORM_3D
-	mm_lejos.use_colors = true
-	mm_lejos.mesh = _malla_butaca_lejos()
-	mm_lejos.instance_count = cuantas_fila * (filas_todas - filas)
+	## Las butacas se juntan aquí y se montan al final EN TRAMOS (`_butacas_en_tramos`).
+	var cerca_xf: Array[Transform3D] = []
+	var cerca_col: Array[Color] = []
+	var lejos_xf: Array[Transform3D] = []
+	var lejos_col: Array[Color] = []
 
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(largo * 100.0) + filas
@@ -127,8 +122,6 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var por_grupo: int = 3 if Calidad.elegida >= Calidad.ALTO else 2
 	var eje_largo := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
 	var eje_rake := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
-	var i := 0
-	var j := 0
 	var escalones: Array[Transform3D] = []
 	var pasillos_l: Array[float] = []
 	for f in range(filas_todas):
@@ -153,26 +146,18 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 			## horizontales y barandilla, como en cualquier estadio. Parte la
 			## grada en bloques (de lejos era un muro de ruido) y deja el camino
 			## por el que se sube a las filas.
+			## (Antes la columna del pasillo era una butaca de escala cero: se dibujaba igual.)
 			if es_pasillo(c, cuantas_fila):
-				var cero := Transform3D(Basis().scaled(Vector3.ZERO), p)
-				if f < filas:
-					mm.set_instance_transform(i, cero)
-					i += 1
-				else:
-					mm_lejos.set_instance_transform(j, cero)
-					j += 1
 				escalones.append(Transform3D(Basis().rotated(Vector3.UP, giro).rotated(eje_rake, -rake) if rake != 0.0 else Basis().rotated(Vector3.UP, giro), p + Vector3(0, -0.13, 0)))
 				if f == 0:
 					pasillos_l.append(l)
 				continue
 			if f < filas:
-				mm.set_instance_transform(i, Transform3D(base, p))
-				mm.set_instance_color(i, col)
-				i += 1
+				cerca_xf.append(Transform3D(base, p))
+				cerca_col.append(col)
 			else:
-				mm_lejos.set_instance_transform(j, Transform3D(base, p))
-				mm_lejos.set_instance_color(j, col)
-				j += 1
+				lejos_xf.append(Transform3D(base, p))
+				lejos_col.append(col)
 			## Un hincha por asiento ocupado. Las filas pegadas al césped de la
 			## bandeja de abajo llevan el hincha de detalle; el resto, el barato.
 			var cerca := bandeja == 0 and f < filas_detalle
@@ -223,34 +208,24 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	## Debajo de las butacas, cemento: la textura con gente pintada ya no hace
 	## falta y entre fila y fila se veía como manchas estiradas.
 	deck.material_override = _mat_escalones()
-	if mm_lejos.instance_count > 0:
-		var mil := MultiMeshInstance3D.new()
-		mil.multimesh = mm_lejos
+	if not lejos_xf.is_empty():
 		var mat_l := StandardMaterial3D.new()
 		mat_l.vertex_color_use_as_albedo = true
 		mat_l.albedo_color = Color(0.9, 0.9, 0.9)
 		mat_l.roughness = 0.55
-		mil.material_override = mat_l
-		mil.name = "ButacasLejos"
-		mil.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		deck.add_child(mil)
+		_butacas_en_tramos(deck, "ButacasLejos", _malla_butaca_lejos(), lejos_xf, lejos_col, mat_l)
 
 	var mat := StandardMaterial3D.new()
 	mat.vertex_color_use_as_albedo = true
 	mat.albedo_color = Color(0.9, 0.9, 0.9)
 	mat.roughness = 0.55
 	mat.metallic = 0.05
-	var mi := MultiMeshInstance3D.new()
-	mi.multimesh = mm
-	mi.material_override = mat
-	mi.name = "ButacasCerca"
 	## SIN SOMBRA PROPIA (25-9-2026, `pruebas/medir_partido.gd`). Miles de
 	## butacas y de hinchas proyectando sombra se dibujaban otra vez en CADA
 	## cascada del sol -cuatro en calidad ALTO-: eran el grueso de los ~2
 	## millones de triángulos por fotograma. Bajo el techo de la grada esa
 	## sombra no se ve; la de la grada entera (el `deck`) sigue estando.
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	deck.add_child(mi)
+	_butacas_en_tramos(deck, "ButacasCerca", malla, cerca_xf, cerca_col, mat)
 
 	## Personas reales (mallas horneadas) en la bandeja baja; el maniquí queda para
 	## el resto y como respaldo si faltan los recursos.
@@ -316,6 +291,50 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	mih.name = "Hinchada"
 	mih.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	deck.add_child(mih)
+
+## LAS BUTACAS EN TRAMOS (30-10-2026, rendimiento). Eran un MultiMesh por bandeja: la gráfica
+## recorta y elige el detalle (LOD) por nodo, así que con una punta de la tribuna en cámara se
+## dibujaba ENTERA -también la que queda detrás de la cámara de TV- y siempre a detalle máximo
+## (914.000 triángulos la tribuna de 470 grupos). En tramos de ~`TRAMO_BUTACAS` m a lo largo,
+## lo que se ve es lo mismo; lo que no, ya no se manda. Nombres «ButacasCerca_0», «_1»…
+const TRAMO_BUTACAS := 16.0
+
+static func _butacas_en_tramos(deck: Node3D, nombre: String, malla: Mesh, xfs: Array[Transform3D],
+		cols: Array[Color], mat: Material) -> void:
+	if xfs.is_empty() or malla == null:
+		return
+	var lo := xfs[0].origin
+	var hi := xfs[0].origin
+	for t in xfs:
+		lo = lo.min(t.origin)
+		hi = hi.max(t.origin)
+	var eje := 0 if (hi.x - lo.x) >= (hi.z - lo.z) else 2
+	var largo := maxf(hi[eje] - lo[eje], 0.001)
+	var tramos := clampi(int(round(largo / TRAMO_BUTACAS)), 1, 12)
+	var grupos: Array = []
+	for k in tramos:
+		grupos.append([])
+	for i in xfs.size():
+		var k := clampi(int((xfs[i].origin[eje] - lo[eje]) / largo * tramos), 0, tramos - 1)
+		(grupos[k] as Array).append(i)
+	for k in tramos:
+		var ids: Array = grupos[k]
+		if ids.is_empty():
+			continue
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.use_colors = true
+		mm.mesh = malla
+		mm.instance_count = ids.size()
+		for n in ids.size():
+			mm.set_instance_transform(n, xfs[ids[n]])
+			mm.set_instance_color(n, cols[ids[n]])
+		var mi := MultiMeshInstance3D.new()
+		mi.multimesh = mm
+		mi.material_override = mat
+		mi.name = "%s_%d" % [nombre, k]
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		deck.add_child(mi)
 
 ## LAS BOCAS DE ACCESO (23-9-2026). En `ea_fc25_referencia.mp4` la grada del
 ## fondo está picada de huecos oscuros: son los vomitorios por donde sale la
