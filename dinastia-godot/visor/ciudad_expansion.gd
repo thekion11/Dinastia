@@ -123,6 +123,7 @@ func construir() -> void:
 	_cargar_modelos()
 	_materiales()
 	_dibujar_calles()
+	await b._marca("exp.calles")   ## (30-10-2026) puntos donde, con la carga encima, se cede un fotograma
 	semaforos = Semaforos.new()
 	semaforos.name = "Semaforos"
 	b.add_child(semaforos)
@@ -130,14 +131,17 @@ func construir() -> void:
 	cuenta["edificios"] = 0
 	for bl: Dictionary in bloques:
 		_dibujar_bloque(bl)
+		await b._marca("exp.bloque")
 	_edificios_lejanos()
 	_casas_multimesh()
 	_modular_multimesh()
+	await b._marca("exp.casas")
 	metro = MetroCiudad.new()
 	metro.name = "Metro"
 	b.add_child(metro)
 	metro.montar(self)
 	_bocas_metro()
+	await b._marca("exp.metro")
 	_marquesinas_bus()
 	_guirnaldas()
 	_farolas()
@@ -146,9 +150,11 @@ func construir() -> void:
 	_orillas_nucleo()
 	_obras_en_calle()
 	_kenney_calles()
+	await b._marca("exp.mobiliario")
 	cuenta["autopista"] = Autopista.montar(b)
 	_parque_eolico()
 	_deposito_agua()
+	await b._marca("exp.afueras")
 	_volcar_lotes()
 
 ## Un bloque alto hecho con el mismo modelo apilado planta sobre planta (en

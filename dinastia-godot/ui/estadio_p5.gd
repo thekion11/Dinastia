@@ -404,7 +404,10 @@ func abrir(c: Club, ocupacion: float = 0.8, rival: Club = null, p: Partido = nul
 	visitante = rival
 	partido = p
 	set_anchors_preset(Control.PRESET_FULL_RECT)
-	_construir(ocupacion, perfil_forzado, colores_balon)
+	if por_partes:   ## en pausa mientras se arma entre fotogramas (`_respiro`)
+		process_mode = Node.PROCESS_MODE_DISABLED
+	await _construir(ocupacion, perfil_forzado, colores_balon)
+	process_mode = Node.PROCESS_MODE_INHERIT
 	if partido != null:
 		_arrancar_partido()
 

@@ -149,7 +149,15 @@ var _rect_entrada := Rect2()
 ## Un hincha de pie en tres piezas (pantalón, camiseta, piel), cada una con su
 ## color por instancia. Low-poly: se ven de lejos y son cientos.
 static var _piezas_hincha: Array = []
+## Entre paso y paso (30-10-2026): con `por_partes` (lo pone `VistaCiudad` con la pantalla de
+## carga) cede un fotograma cada ~40 ms de trabajo, y la carga sigue animada.
+var por_partes := false
+var _t_respiro := 0
+
 func _marca(que: String) -> void:
+	if por_partes and Time.get_ticks_usec() - _t_respiro > 40000:
+		await get_tree().process_frame
+		_t_respiro = Time.get_ticks_usec()
 	if _medir_tiempos:
 		var ahora := Time.get_ticks_usec()
 		Registro.depurar("TIEMPO", "%-24s %6.0f ms" % [que, (ahora - _t_marca) / 1000.0])

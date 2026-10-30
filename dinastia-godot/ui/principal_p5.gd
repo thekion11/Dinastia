@@ -1,7 +1,7 @@
 extends "res://ui/principal_p4.gd"
 ## [Capa 5/17 de `principal.gd`] _ver_estadio_propio, _ver_estadio_con_carga, _dato, _aire_cifra, _miles, _pintar_estadio
 
-func _ver_estadio_propio() -> void:
+func _ver_estadio_propio(por_partes := false) -> void:
 	_fundido_entrada()
 	var c := mundo.mi_club()
 	if c == null:
@@ -21,16 +21,17 @@ func _ver_estadio_propio() -> void:
 	## cuáles estaban visibles, no asumiendo que todos lo estaban-.
 	var ocultados: Array = []
 	for h in get_children():
-		if h is CanvasItem and (h as CanvasItem).visible:
+		if h is CanvasItem and (h as CanvasItem).visible and not h is PantallaCarga:   ## la carga sigue encima
 			(h as CanvasItem).visible = false
 			ocultados.append(h)
 	var vista := VistaEstadio.new()
+	vista.por_partes = por_partes   ## con carga: se arma entre fotogramas y la carga sigue viva
 	## Sin partido la pantalla gigante enseña bienvenida + tabla + goleadores,
 	## que es lo que hace un estadio de verdad un día entre semana. Va antes de
 	## `abrir()`, que es donde se monta.
 	vista.datos_pantalla = _datos_pantalla_estadio(c)
 	add_child(vista)
-	vista.abrir(c, clampf(gente, 0.05, 1.0), null, null, mundo.perfil_estadio_de(c),
+	await vista.abrir(c, clampf(gente, 0.05, 1.0), null, null, mundo.perfil_estadio_de(c),
 		Comercial.color_balon(mundo.comercial.balon, c))
 	vista.cerrado.connect(func() -> void:
 		vista.queue_free()
@@ -44,7 +45,7 @@ func _ver_estadio_con_carga() -> void:
 	var carga := PantallaCarga.mostrar(self, Idiomas.t("Levantando el estadio…"))
 	await get_tree().process_frame
 	await get_tree().process_frame
-	_ver_estadio_propio()
+	await _ver_estadio_propio(true)
 	## Si algo la cerró mientras se esperaba (otra pantalla encima, o el
 	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).
 	if is_instance_valid(carga):
