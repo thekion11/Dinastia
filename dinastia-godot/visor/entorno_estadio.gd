@@ -21,6 +21,16 @@ const PLAZA := 22.0        ## metros de plaza alrededor de la huella del estadio
 const BANDA := 34.0        ## de la plaza a la avenida (aparcamientos)
 const CALLE := 12.0
 
+## LAS PIEZAS REPETIDAS, JUNTAS (30-10-2026, rendimiento). Coches aparcados, árboles y edificios
+## del entorno eran ~860 mallas sueltas: ~420 llamadas de dibujo de las ~1.150 del plano de TV.
+## Las iguales (misma malla, material y celda) pasan a un MultiMesh, como en la ciudad
+## (`Optimizar.agrupar`), pero sin la caja lejana: se ve exactamente igual. Se llama al terminar
+## de montar el estadio (después de teñir la grada).
+static func agrupar(raiz: Node3D) -> void:
+	var e := raiz.get_node_or_null("EntornoEstadio") as Node3D if raiz != null else null
+	if e != null:
+		Optimizar.agrupar(e, false)
+
 static func montar(raiz: Node3D, est: Dictionary, niveles: int) -> Node3D:
 	if raiz == null or raiz.get_node_or_null("EntornoEstadio") != null:
 		return null
