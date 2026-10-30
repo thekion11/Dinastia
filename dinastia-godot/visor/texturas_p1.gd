@@ -216,7 +216,8 @@ static func asfalto(tinte: Color = Color(0.17, 0.175, 0.185), semilla: int = 23)
 		return _cache[clave]
 	var m := StandardMaterial3D.new()
 	m.albedo_color = Color(1, 1, 1)
-	m.albedo_texture = _imagen_asfalto(tinte, semilla)
+	m.albedo_texture = ImagenEnDisco.textura("asfalto|%s|%d" % [var_to_bytes(tinte).hex_encode(), semilla],
+		"res://visor/texturas_p1.gd", _imagen_asfalto.bind(tinte, semilla))   ## en disco (30-10)
 	m.normal_enabled = true
 	m.normal_texture = _tex_ruido(0.35, semilla + 5, true, 2)
 	m.normal_scale = 0.45
