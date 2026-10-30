@@ -795,7 +795,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-154 | P3 | PENDIENTE | Sin online | fuera de alcance, sin documentar |
 | M-166 | P3 | PENDIENTE | Sin partidos de fútbol sala/playa/mujeres (género existe) | fuera de alcance, sin documentar |
 
-### F6 pulido (rendimiento) (18)
+### F6 pulido (rendimiento) (19)
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
@@ -807,6 +807,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-346 | P2 | PARCIAL | Texturas con compresión (s3tc en PC); sin variantes móviles… | 21-10: revisado: las texturas grandes de 3D ya están en VRAM (s3tc) y limitadas (ropa 4K → 1024); las 3.103 sin comprimir son caras reales, iconos 2D y paletas de Kenney, que se dejan sin pérdida a pr |
 | M-347 | P2 | PARCIAL | VRAM 539 MB en partido | texturas del globo comprimidas (72→13 MB); VRAM del partido sin remedir |
 | M-348 | P2 | PARCIAL | Carga: `Precarga` existe; primera construcción de estadio larga | 30-10: `CacheDisco` (user://cache, con huella de scripts y fuentes) guarda la biblioteca de animaciones (2,2-2,9 s → 0,1 s); 1.ª apertura 10,4 → 4,9 s en headless; falta medirla con la precarga real y en disco lento |
+| M-359 | P2 | PARCIAL | Congelones de la 1.ª sesión (ruidos, balón, caras) | 30-10: ruidos de `Texturas` generados en hilos al arrancar y leídos en paralelo (`RuidosFondo`, byte a byte = `NoiseTexture2D`): congelón tras el estadio 21 → 0,2-0,65 s, tras la ciudad 33 → 2 s; balón 140 → 0,6 ms; `_pegar_borde` 144 → 9 ms; la caché borra las bibliotecas viejas (266 → 187 MB). Falta: construir las 4 bibliotecas de animación la 1.ª vez (~6 s; en un hilo NO: el horneado del mocap necesita el árbol y `load()` en hilo se bloquea con el principal); 1.er fotograma con render (30 s en lavapipe: compilar pipelines; medir en GPU real 🔒) |
 | M-349 | P2 | PENDIENTE | Generación de `Mundo` (384 clubes) y `Reales.aplicar`: medir… | sin `WorkerThreadPool` |
 | M-350 | P2 | PARCIAL | `avanzar_semana` 532 líneas: tiempo por semana desconocido | 30-10: medida (6 ligas) 274 → 145 ms; el 65 % es jugar la jornada (armar el once ~0,5 ms y los 90 minutos ~0,7 ms por partido); huella idéntica |
 | M-351 | P2 | PENDIENTE | Hilos: ¿se usan para IA/ciudad? | sin hilos para tráfico/peatones (solo LOD del tráfico) |
