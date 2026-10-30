@@ -33,8 +33,8 @@ func _ready() -> void:
 	## Mientras se mira el menú, los modelos pesados se cargan en un hilo.
 	Precarga.empezar(get_tree())
 	RuidosFondo.empezar()   ## las texturas de ruido, en hilos mientras se usan los menús
-	if Medicion.pedida():   ## `-- --medir`: el recorrido de medición (nucleo/medicion.gd)
-		Medicion.empezar(get_tree())
+	if "--medir" in OS.get_cmdline_user_args():   ## el recorrido de medición (nucleo/medicion.gd)
+		_con_pesado(func() -> void: _P().medir(get_tree()))   ## cuando llegue lo pesado
 	_clave = _leer_ajuste()
 	_construir()
 	_pintar_banner()
@@ -63,6 +63,7 @@ func _ready() -> void:
 	_banner.resized.connect(func() -> void:
 		if is_instance_valid(_bokeh_banner):
 			_bokeh_banner.ajustar_area(_banner.size))
+	Engine.set_meta("menu_ms", Time.get_ticks_msec())   ## menú montado: para `Medicion`
 
 ## El botón grande de «Nuevo juego», justo debajo de la partida en curso.
 func _construir_nuevo_juego() -> void:
@@ -93,9 +94,10 @@ func _construir_nuevo_juego() -> void:
 func _nuevo_juego() -> void:
 	## Lo que ya se tocó en este menú (nombre y dificultad) no se pierde.
 	var nombre := _campo_nombre.text.strip_edges() if _campo_nombre != null else ""
-	OrquestadorEntrada.estado_inicial = {"dificultad": _dificultad}
+	var estado := {"dificultad": _dificultad}
 	if nombre != "" and nombre != Idiomas.t("Míster"):
-		OrquestadorEntrada.estado_inicial["nombre"] = nombre
+		estado["nombre"] = nombre
+	_P().estado_entrada(estado)
 	## Si la carga en hilo ya acabó (o acaba ahora), se cambia sin volver a leer el disco.
 	var hecha: Variant = null
 	if ResourceLoader.load_threaded_get_status(ESCENA_ENTRADA) != ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:

@@ -144,8 +144,13 @@ func _construir() -> void:
 	_panel_continuar.add_theme_constant_override("separation", 8)
 	raiz.add_child(_panel_continuar)
 
-	_construir_perfil(raiz)
-	_construir_meta(raiz)
+	## En su sitio, al llegar lo pesado (ver `_con_pesado`).
+	var hueco_perfil := VBoxContainer.new()
+	raiz.add_child(hueco_perfil)
+	var hueco_meta := VBoxContainer.new()
+	raiz.add_child(hueco_meta)
+	_con_pesado(_construir_perfil.bind(hueco_perfil))
+	_con_pesado(_construir_meta.bind(hueco_meta))
 	_construir_datos_dt(raiz)
 
 	_construir_selector_portada(raiz)
@@ -168,50 +173,44 @@ func _construir() -> void:
 # --- arrancar partida ---------------------------------------------------------
 
 func _hay_partida() -> bool:
-	return not Partida.listar().is_empty()
+	return _P().hay_partida()
 
 func _dinero(n: int) -> String:
 	return Eco.dinero(n)
 
 func _continuar() -> void:
-	var m := _mundo_guardado if _mundo_guardado != null else Partida.cargar("partida")
+	var m = _mundo_guardado if _mundo_guardado != null else _P().cargar("partida")
 	if m == null:
 		return
 	_entrar_en(m)
 
 ## Entra a una partida cargada (fase 3, bloque 7): con el prólogo visto y la vida encendida,
 ## en 3D (la oficina, o tu casa el lunes a las 08:00); si no, el menú central de siempre.
-func _entrar_en(m: Mundo) -> void:
-	Principal.mundo_a_cargar = m
-	var d := VidaCiudad.arranque_3d(m)
-	if d != "":
-		PrologoDT.directo = d
-		get_tree().change_scene_to_file(OrquestadorMundo.PROLOGO)
-		return
-	get_tree().change_scene_to_file("res://escenas/principal.tscn")
+func _entrar_en(m) -> void:
+	_P().entrar_en(get_tree(), m)
 
 func _borrar_partida() -> void:
-	Partida.borrar("partida")
+	_P().borrar("partida")
 	_mundo_guardado = null
 	_actualizar_continuar()
 
 ## Exportar / importar / abrir otra partida (plan §10): siempre visible, porque
 ## importar tiene sentido justo cuando todavía no hay ninguna.
-var _archivo_ui: PartidaArchivoUI
+var _archivo_ui: Node   ## un `PartidaArchivoUI` (sin nombrar la clase)
 
 func _poner_botones_archivo() -> void:
 	if _archivo_ui == null:
-		_archivo_ui = PartidaArchivoUI.new()
+		_archivo_ui = _P().archivo_ui()
 		add_child(_archivo_ui)
-		_archivo_ui.lista_cambiada.connect(_actualizar_continuar)
-		_archivo_ui.abrir_pedido.connect(_abrir_partida)
-	var fila := _archivo_ui.construir_botones()
+		_archivo_ui.connect("lista_cambiada", _actualizar_continuar)
+		_archivo_ui.connect("abrir_pedido", _abrir_partida)
+	var fila: Control = _archivo_ui.call("construir_botones")
 	_panel_continuar.add_child(fila)
 	## Debajo de la tarjeta de «Continuar», que se añade después.
 	fila.move_to_front.call_deferred()
 
 func _abrir_partida(nombre: String) -> void:
-	var m := Partida.cargar(nombre)
+	var m = _P().cargar(nombre)
 	if m == null:
 		return
 	_entrar_en(m)
@@ -223,16 +222,19 @@ func _abrir_partida(nombre: String) -> void:
 ## partida UNA vez -barata, ~50 ms medidos en el banco de pruebas- y se
 ## conserva para no leer el fichero dos veces si el jugador pulsa Continuar.
 func _actualizar_continuar() -> void:
+	_con_pesado(_actualizar_continuar_ya)
+
+func _actualizar_continuar_ya() -> void:
 	for h in _panel_continuar.get_children():
 		_panel_continuar.remove_child(h)
 		h.free()
 	_poner_botones_archivo()
 	if not _hay_partida():
 		return
-	_mundo_guardado = Partida.cargar("partida")
+	_mundo_guardado = _P().cargar("partida")
 	if _mundo_guardado == null:
 		return
-	var c := _mundo_guardado.mi_club()
+	var c = _mundo_guardado.mi_club()
 	if c == null:
 		return
 	var caja := _panel()
@@ -244,7 +246,7 @@ func _actualizar_continuar() -> void:
 	caja.add_child(fila)
 
 	var escudo := TextureRect.new()
-	escudo.texture = Escudo.textura(c, 40)
+	escudo.texture = _P().escudo(c, 40)
 	escudo.custom_minimum_size = Vector2(40, 44)
 	## Sin esto el escudo sale a su tamaño real de rasterizado -4x, para que
 	## las curvas no salgan dentadas al escalar- en vez de los 40 px pedidos.
@@ -262,18 +264,18 @@ func _actualizar_continuar() -> void:
 	var nom := _texto(15, COL_TEXTO)
 	nom.text = c.nombre
 	v.add_child(nom)
-	var l := _mundo_guardado.liga_de(c)
+	var l = _mundo_guardado.liga_de(c)
 	var puesto := 0
 	var pts := 0
 	if l != null:
-		var tabla := l.tabla()
+		var tabla: Array = l.tabla()
 		for i in tabla.size():
 			if tabla[i]["club"] == c:
 				puesto = i + 1
 				pts = int(tabla[i]["pts"])
 				break
 	var resumen := _texto(11, COL_SUAVE)
-	var trofeos := _mundo_guardado.directiva.trofeos.size() if _mundo_guardado.directiva != null else 0
+	var trofeos: int = _mundo_guardado.directiva.trofeos.size() if _mundo_guardado.directiva != null else 0
 	resumen.text = Idiomas.t("Año %d · %dº con %d pts · Caja %s · %d título(s)") % [
 		_mundo_guardado.anio, puesto, pts, _dinero(c.saldo), trofeos]
 	resumen.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
