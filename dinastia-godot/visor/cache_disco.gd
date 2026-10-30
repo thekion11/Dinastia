@@ -82,6 +82,34 @@ static func guardar(clave: String, huella_: String, r: Resource) -> void:
 		if f.ends_with(".res") and not f.begins_with(huella_.left(8) + "_"):
 			DirAccess.remove_absolute(CARPETA + f)
 
+## LA CACHÉ HORNEADA DEL BUILD (30-10-2026): la que mete en el paquete `addons/cache_horneada` al
+## exportar, hecha con el código de esa exportación. Solo en el juego exportado (en desarrollo el
+## código cambia y manda la caché con huella) y si el manifiesto es de esta versión y este motor.
+## `DINASTIA_HORNEADA_DIR` la fuerza en otra carpeta (para las pruebas).
+const HORNEADA := "res://cache_horneada/"
+
+static func nombre_horneada(clave: String) -> String:
+	return clave.md5_text() + ".res"
+
+static func manifiesto_actual() -> Dictionary:
+	return {"version": str(ProjectSettings.get_setting("application/config/version", "")),
+		"motor": str(Engine.get_version_info()["string"])}
+
+static func cargar_horneada(clave: String, tipo: String) -> Resource:
+	var carpeta := OS.get_environment("DINASTIA_HORNEADA_DIR")
+	if carpeta == "":
+		if not OS.has_feature("template"):
+			return null
+		carpeta = HORNEADA
+	var m: Variant = JSON.parse_string(FileAccess.get_file_as_string(carpeta.path_join("manifiesto.json")))
+	if not (m is Dictionary) or m != manifiesto_actual():
+		return null
+	var ruta := carpeta.path_join(nombre_horneada(clave))
+	if not ResourceLoader.exists(ruta) and not FileAccess.file_exists(ruta):
+		return null
+	var r := ResourceLoader.load(ruta, tipo, ResourceLoader.CACHE_MODE_IGNORE)
+	return r if r != null and r.is_class(tipo) else null
+
 ## IMÁGENES (30-10-2026): PNG sin pérdida. Guardar se hace en otro hilo (no frena el juego).
 static func _ruta_png(clave: String) -> String:
 	return CARPETA + clave.md5_text() + ".png"

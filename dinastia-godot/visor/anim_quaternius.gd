@@ -372,6 +372,8 @@ static func _en_cache(esq: Skeleton3D, prefijo: String, acciones_experimentales:
 	var huella := CacheDisco.huella("anim", _fuentes())
 	var en_disco := "anim|%s|%s" % [clave, huella]
 	var lib := CacheDisco.cargar(en_disco, huella, "AnimationLibrary") as AnimationLibrary
+	if lib == null:   ## la del build (`addons/cache_horneada`), la primera vez que se juega
+		lib = CacheDisco.cargar_horneada("anim|" + clave, "AnimationLibrary") as AnimationLibrary
 	if lib != null and lib.has_meta("fases_pasos"):
 		AnimPasos.fases.merge(lib.get_meta("fases_pasos"), true)
 	else:
