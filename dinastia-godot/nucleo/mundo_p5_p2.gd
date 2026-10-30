@@ -71,7 +71,8 @@ func _semana_lesion_insolita() -> void:
 var imprevistos: Imprevistos = Imprevistos.new()
 
 func _semana_imprevisto() -> void:
-	var nuevo := imprevistos.semana(self, mi_club(), anio, semana, bool(normas.get("queda", false)))
+	var nuevo := imprevistos.semana(self, mi_club(), anio, semana, bool(normas.get("queda", false)),
+		necesidades.factor_riesgo() if necesidades != null else 1.0)
 	if nuevo.is_empty() or prensa == null:
 		return
 	var txt := String(nuevo["texto"]) + "."

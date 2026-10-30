@@ -19,6 +19,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		ya_jugado.cerrar_notas_mirado()
 	_semana_contexto_de_partidos()
 	_semana_once_antes_de_jugar()
+	if necesidades.preparacion_cambio():   ## §2.5: cansado o con hambre, el partido de esta semana lo nota
+		aplicar_bonificadores()
 	var jugaron_en_casa := _semana_jugar_ligas(ya_jugado)
 	_semana_caja_y_plantillas(jugaron_en_casa)
 	CrisisCaja.semana(self)   ## multas, recortes de patrocinio y obras que se encarecen (M-208)
