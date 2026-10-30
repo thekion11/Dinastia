@@ -353,7 +353,7 @@ func _pintar_ciudad(c: Club) -> void:
 	## (12-9-2026): `CityBuilder` llevaba desde el 2-09-2026 viviendo solo en
 	## el proyecto viejo, nunca portado. Mismo patrón que el botón de estadio.
 	var ver3d := Button.new()
-	ver3d.text = Idiomas.t("🏙️ Ver la ciudad en 3D")
+	ver3d.text = Idiomas.t("🚪 Levantarse del PC") if p._vistas.pc_oficina() != null else Idiomas.t("🏙️ Ver la ciudad en 3D")
 	ver3d.add_theme_font_size_override("font_size", 11)
 	ver3d.pressed.connect(p._ver_ciudad_con_carga)
 	p._lista_ciudad.add_child(ver3d)

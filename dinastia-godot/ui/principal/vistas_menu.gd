@@ -28,7 +28,28 @@ func _idolo_del_club(c: Club) -> String:
 		if mejor == null or j.ovr > mejor.ovr:
 			mejor = j
 	return mejor.nombre if mejor != null else ""
+## (§2.5-1 del plan, 30-10) Si el menú central vive dentro del PC de la oficina, la ciudad ya es
+## el mundo en el que estás: «Ver la ciudad», «Pasear» y «Conducir» te levantan del PC en vez de
+## construir una segunda ciudad dentro del menú (eso rompía el prólogo y la vida en 3D).
+func pc_oficina() -> PcOficina:
+	var n: Node = p.get_parent()
+	while n != null:
+		if n is PcOficina:
+			return n as PcOficina
+		n = n.get_parent()
+	return null
+
+## true si había PC y se apagó (quien llama no debe abrir la ciudad).
+func _levantarse_si_pc() -> bool:
+	var pc := pc_oficina()
+	if pc == null:
+		return false
+	pc.apagar()
+	return true
+
 func _ver_ciudad_propia() -> void:
+	if _levantarse_si_pc():
+		return
 	p._fundido_entrada()
 	var c := p.mundo.mi_club()
 	if c == null or p.mundo.obras == null:
@@ -64,6 +85,8 @@ func _ver_ciudad_propia() -> void:
 		p._ir_a_pestana("Estadio")
 		p._pintar_estadio(c))
 func _ver_ciudad_con_carga() -> void:
+	if _levantarse_si_pc():
+		return
 	PantallaCarga.club = p.mundo.mi_club() if p.mundo != null else null
 	var carga := PantallaCarga.mostrar(p, Idiomas.t("Construyendo la ciudad…"))
 	await p.get_tree().process_frame
@@ -268,6 +291,8 @@ func _marca(nombre: String, color_hex: String, alto: int = 28) -> Control:
 	return caja
 ## Abre la ciudad y arranca directamente el paseo ("pie") o la conducción ("coche").
 func _ver_ciudad_explorando(modo: String) -> void:
+	if _levantarse_si_pc():
+		return
 	## Fase 3: sin coche propio (o en el taller) se sale a pie, y la vida se engancha al paseo.
 	var transp := VidaCiudad.transporte(p.mundo)
 	if modo == "coche" and not bool(transp["coche"]):
