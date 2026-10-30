@@ -23,6 +23,8 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 - Contenedor nuevo: `git lfs pull --include="dinastia-godot/**"` ANTES de abrir Godot. Godot 4.7.2 se baja de GitHub releases.
   Clonar con `--single-branch --branch main` (las ramas viejas pesan). Tras clases nuevas: `godot --headless --import`.
 - Datos de caras reales fuera de los builds públicos. Legal: la licencia libre cubre la foto, no el derecho de imagen.
+  (30-10, opción B) TODOS los presets son públicos; lo real va en `caras_reales.pck` (`herramientas/empaquetar_caras.gd`),
+  que `PaqueteReal` monta si está junto al ejecutable o en user://. El .pck NO se publica ni va al repo.
 - `datos/idiomas_extra.json` (9 idiomas) round-trips con `json.dumps(ensure_ascii=False, indent=1)`; textos nuevos de UI con `Idiomas.t`.
 - Diálogos de ciudad y narración se GENERAN (`herramientas/dialogos_ciudad.py`, `montar_narracion.py`): no editar a mano los resultados.
 - En el motor del partido, no usar dicts de jugador como clave: usar `p["id"]`.
