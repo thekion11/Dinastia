@@ -73,6 +73,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	OlaGrada.piel_de_pais(_raiz3d, club.pais if club != null else "")
 	if club != null:
 		OlaGrada.colores_club(_raiz3d, Color(club.color1), Color(club.color2))
+	EntornoEstadio.agrupar(_raiz3d)   ## piezas repetidas del entorno en MultiMesh (rendimiento)
 	## LA PANTALLA GIGANTE (22-9-2026, rehecha el 23-9). Ahora se monta SIEMPRE,
 	## haya partido o no: sin partido enseña bienvenida + tabla + goleadores,
 	## que es lo que hace la pantalla de un estadio de verdad un día entre

@@ -96,8 +96,7 @@ func _montar_hud() -> void:
 	_mira.visible = false
 	add_child(_mira)
 
-## Marcador, números, aguante y ayuda fuera durante la ceremonia; los nombres
-## sobre los jugadores, fuera también en la realización del gol.
+## Marcador, números, aguante y ayuda fuera durante la ceremonia; los nombres, también en la del gol.
 func _ver_hud(si: bool) -> void:
 	for c: Control in _hud:
 		if is_instance_valid(c):
@@ -187,6 +186,7 @@ func _montar(duracion_mitad: float) -> void:
 	EntornoEstadio.montar(_raiz, perfil, StadiumBuilder.niveles_de(perfil, int(perfil.get("aforo", 20000))))
 	OlaGrada.piel_de_pais(_raiz, local.pais)
 	OlaGrada.colores_club(_raiz, Color(local.color1), Color(local.color2))
+	EntornoEstadio.agrupar(_raiz)   ## piezas repetidas del entorno en MultiMesh (rendimiento)
 	## Lo que el modo entrenador ya tenía y aquí faltaba: la lluvia o la nieve,
 	## la pantalla gigante y camarógrafos/guardias de verdad en vez de maniquíes.
 	var gp := StadiumBuilder.geom_de_forma(String(perfil.get("forma", "oval")))

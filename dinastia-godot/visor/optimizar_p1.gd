@@ -359,7 +359,8 @@ static func _montar_proxies(raiz: Node3D, proxies: Array) -> void:
 		mmi.visibility_range_begin_margin = 20.0
 		raiz.add_child(mmi)
 
-static func agrupar(raiz: Node3D) -> Dictionary:
+## `con_proxies` = false: solo junta piezas iguales, sin la caja lejana (el entorno del estadio).
+static func agrupar(raiz: Node3D, con_proxies: bool = true) -> Dictionary:
 	_motivos.clear()
 	var grupos := {}
 	var mallas_con_mat := {}
@@ -376,7 +377,7 @@ static func agrupar(raiz: Node3D) -> Dictionary:
 		var t := mi.global_transform
 		## LOD JERÁRQUICO: un edificio pesado se dibuja entero hasta RANGO_EDIFICIO
 		## y, más allá, como una caja de su color medio (12 triángulos).
-		if mi.mesh is ArrayMesh and _tris(mi.mesh) > UMBRAL_PESADO and mi.visibility_range_end <= 0.0 and not _sin_lod(mi):
+		if con_proxies and mi.mesh is ArrayMesh and _tris(mi.mesh) > UMBRAL_PESADO and mi.visibility_range_end <= 0.0 and not _sin_lod(mi):
 			var caja_e := mi.get_aabb()
 			proxies.append([t * Transform3D(Basis.from_scale(caja_e.size), caja_e.get_center()), _color_medio(mi, colores), Vector2i(floori(t.origin.x / CELDA), floori(t.origin.z / CELDA))])
 			mi.visibility_range_end = RANGO_EDIFICIO
