@@ -52,30 +52,35 @@ static func scripts(carpeta: String, prefijos: PackedStringArray) -> PackedStrin
 	r.sort()
 	return r
 
-static func _ruta(clave: String) -> String:
-	return CARPETA + clave.md5_text() + ".res"
+## Los recursos llevan delante el principio de su huella: al guardar uno nuevo se borran los de
+## otras huellas (código o motor viejos, ~11 MB cada biblioteca), así la carpeta no crece sin fin.
+static func _ruta(clave: String, huella_: String) -> String:
+	return CARPETA + huella_.left(8) + "_" + clave.md5_text() + ".res"
 
 ## El recurso guardado con esa clave, o null si no hay (o no es del tipo esperado).
-static func cargar(clave: String, tipo: String) -> Resource:
+static func cargar(clave: String, huella_: String, tipo: String) -> Resource:
 	if not activa():
 		return null
-	var ruta := _ruta(clave)
+	var ruta := _ruta(clave, huella_)
 	if not FileAccess.file_exists(ruta):
 		return null
 	var r := ResourceLoader.load(ruta, tipo, ResourceLoader.CACHE_MODE_IGNORE)
 	return r if r != null and r.is_class(tipo) else null
 
 ## Guarda el recurso (a un temporal y luego renombra: un cierre a medias no deja un archivo roto).
-static func guardar(clave: String, r: Resource) -> void:
+static func guardar(clave: String, huella_: String, r: Resource) -> void:
 	if not activa() or r == null:
 		return
 	DirAccess.make_dir_recursive_absolute(CARPETA)
-	var ruta := _ruta(clave)
+	var ruta := _ruta(clave, huella_)
 	var tmp := ruta.get_basename() + ".tmp.res"
 	if ResourceSaver.save(r, tmp, ResourceSaver.FLAG_COMPRESS) == OK:
 		DirAccess.rename_absolute(tmp, ruta)
 	else:
 		DirAccess.remove_absolute(tmp)
+	for f in DirAccess.get_files_at(CARPETA):
+		if f.ends_with(".res") and not f.begins_with(huella_.left(8) + "_"):
+			DirAccess.remove_absolute(CARPETA + f)
 
 ## IMÁGENES (30-10-2026): PNG sin pérdida. Guardar se hace en otro hilo (no frena el juego).
 static func _ruta_png(clave: String) -> String:
