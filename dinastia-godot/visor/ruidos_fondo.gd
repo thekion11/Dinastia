@@ -17,9 +17,17 @@ static var _empezado := false
 static var _leidas := {}
 static var _cerrojo := Mutex.new()
 
-## Lanza la generación de las que falten en disco. Una vez por sesión.
+## Lanza la generación de las que falten en disco. Una vez por sesión. EN COLA (30-10-2026): como
+## mucho `EN_PARALELO` a la vez y se para al salir (`_parar`, lo pone `Cierre`): antes eran ~69
+## tareas a la vez y al cerrar el juego Godot esperaba a que acabasen TODAS (en el banco del CI, con
+## la caché vacía, el cierre pasaba de 4 minutos). Sin pantalla (pruebas, CI) no se generan: allí
+## nadie las aprovecha y cada prueba las genera al pedirlas, como siempre.
+const EN_PARALELO := 2
+static var _cola: Array = []
+static var _parar := false
+
 static func empezar() -> void:
-	if _empezado or not CacheDisco.activa():
+	if _empezado or not CacheDisco.activa() or DisplayServer.get_name() == "headless":
 		return
 	_empezado = true
 	Nativo.obj()   ## se mira aquí, en el hilo principal, antes de los hilos
@@ -30,8 +38,19 @@ static func empezar() -> void:
 		var p := normalizar(c)
 		if p.is_empty() or FileAccess.file_exists(CacheDisco._ruta_png(clave_disco(str(p)))):
 			continue
-		var lut := _lut(float(p[4])) if p[0] is String else PackedByteArray()
-		WorkerThreadPool.add_task(_generar.bind(p, lut), true, "Ruido de Texturas")
+		_cola.append([p, _lut(float(p[4])) if p[0] is String else PackedByteArray()])
+	for i in mini(EN_PARALELO, _cola.size()):
+		WorkerThreadPool.add_task(_trabajar, true, "Ruidos de Texturas")
+
+## Cada hilo toma la siguiente de la cola hasta vaciarla (o hasta que el juego se cierre).
+static func _trabajar() -> void:
+	while not _parar:
+		_cerrojo.lock()
+		var t: Variant = _cola.pop_front() if not _cola.is_empty() else null
+		_cerrojo.unlock()
+		if t == null:
+			return
+		_generar(t[0], t[1])
 
 ## La clave con sus tipos (el JSON lo devuelve todo como float).
 static func normalizar(c: Array) -> Array:

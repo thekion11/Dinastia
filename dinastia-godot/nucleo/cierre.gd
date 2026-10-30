@@ -106,6 +106,11 @@ func _exit_tree() -> void:
 	## La traducción de «entrenadora» es un script registrado en el servidor de
 	## traducciones: fuera, antes que nada (era la causa del fallo al salir).
 	Genero.desinstalar()
+	## Que los hilos de las texturas de ruido no sigan con la cola: Godot espera a que acaben.
+	if ResourceLoader.has_cached("res://visor/ruidos_fondo.gd"):
+		load("res://visor/ruidos_fondo.gd").set("_parar", true)
+	if ResourceLoader.has_cached("res://visor/cache_disco.gd"):
+		load("res://visor/cache_disco.gd").esperar_guardados()
 	for fila: Array in CACHES:
 		var s: Script = load(String(fila[0]))
 		if s != null:

@@ -126,7 +126,27 @@ static func guardar_imagen(clave: String, img: Image) -> void:
 	if not activa() or img == null or img.is_empty():
 		return
 	var copia := img.duplicate() as Image
-	WorkerThreadPool.add_task(guardar_imagen_ya.bind(clave, copia))
+	## Prioridad normal y apuntada (30-10-2026): en baja prioridad, al cerrar Godot esperaba a que su
+	## cola se vaciara y a veces nunca lo hacía (el banco del CI se colgaba al salir). Godot pide
+	## esperar cada tarea: las ya hechas se esperan aquí y las que queden, al cerrar (`Cierre`).
+	_cerrojo_tareas.lock()
+	for i in range(_tareas.size() - 1, -1, -1):
+		if WorkerThreadPool.is_task_completed(_tareas[i]):
+			WorkerThreadPool.wait_for_task_completion(_tareas[i])
+			_tareas.remove_at(i)
+	_tareas.append(WorkerThreadPool.add_task(guardar_imagen_ya.bind(clave, copia), true, "Guardar caché"))
+	_cerrojo_tareas.unlock()
+
+static var _tareas: Array[int] = []
+static var _cerrojo_tareas := Mutex.new()
+
+## Al cerrar el juego: que terminen los guardados pendientes (son cortos).
+static func esperar_guardados() -> void:
+	_cerrojo_tareas.lock()
+	for t in _tareas:
+		WorkerThreadPool.wait_for_task_completion(t)
+	_tareas.clear()
+	_cerrojo_tareas.unlock()
 
 ## Igual, en el hilo que llama (los hilos de `RuidosFondo`). El nombre temporal lleva el hilo:
 ## dos hilos con la misma imagen no se pisan el archivo a medio escribir.
