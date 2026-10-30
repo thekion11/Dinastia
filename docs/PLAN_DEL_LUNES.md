@@ -795,26 +795,27 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-154 | P3 | PENDIENTE | Sin online | fuera de alcance, sin documentar |
 | M-166 | P3 | PENDIENTE | Sin partidos de fútbol sala/playa/mujeres (género existe) | fuera de alcance, sin documentar |
 
-### F6 pulido (rendimiento) (17)
+### F6 pulido (rendimiento) (18)
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-338 | P1 | PARCIAL | Partido ALTO ≈ 2,3 M tris/700 llamadas | partido ALTO 0,76 M tris / 630 llamadas (17-10); sin presupuesto por categoría escrito |
+| M-338 | P1 | PARCIAL | Partido ALTO ≈ 2,3 M tris/700 llamadas | 30-10 (lavapipe, cámara de TV): 1,54 M primitivas / 981 llamadas (antes 1,75 M / 1.158); el público son ~690 k (cerca 145 k, medio 258 k, lejos 284 k) y la mascota sola 72 k; sin presupuesto por categoría escrito |
 | M-339 | P1 | PENDIENTE | Césped en capas ≈ 230 k tris/57 llamadas | capas del césped hasta 46 m sin LOD extra |
-| M-343 | P2 | PARCIAL | Draw calls 700 | sombras en 8 mallas por sector (741→691) y 630 llamadas; sin atlas |
+| M-343 | P2 | PARCIAL | Draw calls 700 | 30-10: `EntornoEstadio.agrupar` (coches, árboles y edificios repetidos en MultiMesh): TV 1.158→981, ras de campo 1.645→1.323; el entorno aún suma ~440 llamadas con sus sombras; sin atlas |
 | M-344 | P2 | PARCIAL | Overdraw en grada por butacas y personas | 21-10: oclusión en la CIUDAD (`OclusoresCiudad`, 1.120 paredes): −16 % de llamadas a pie de calle (12.128 → 10.192 en 4 calles, `medir_oclusion`); en la grada del estadio sigue sin `OccluderInstance3D |
-| M-345 | P2 | PENDIENTE | Culling por trozos para MultiMesh grandes | sin culling por trozos de MultiMesh |
+| M-345 | P2 | PARCIAL | Culling por trozos para MultiMesh grandes | 30-10: butacas en tramos de 16 m (`_butacas_en_tramos`); el público horneado (8 poses × tribuna) sigue en un MultiMesh por pose y bandeja |
 | M-346 | P2 | PARCIAL | Texturas con compresión (s3tc en PC); sin variantes móviles… | 21-10: revisado: las texturas grandes de 3D ya están en VRAM (s3tc) y limitadas (ropa 4K → 1024); las 3.103 sin comprimir son caras reales, iconos 2D y paletas de Kenney, que se dejan sin pérdida a pr |
 | M-347 | P2 | PARCIAL | VRAM 539 MB en partido | texturas del globo comprimidas (72→13 MB); VRAM del partido sin remedir |
-| M-348 | P2 | PENDIENTE | Carga: `Precarga` existe; primera construcción de estadio larga | sin caché en disco de mallas generadas |
+| M-348 | P2 | PARCIAL | Carga: `Precarga` existe; primera construcción de estadio larga | 30-10: `CacheDisco` (user://cache, con huella de scripts y fuentes) guarda la biblioteca de animaciones (2,2-2,9 s → 0,1 s); 1.ª apertura 10,4 → 4,9 s en headless; falta medirla con la precarga real y en disco lento |
 | M-349 | P2 | PENDIENTE | Generación de `Mundo` (384 clubes) y `Reales.aplicar`: medir… | sin `WorkerThreadPool` |
-| M-350 | P2 | PENDIENTE | `avanzar_semana` 532 líneas: tiempo por semana desconocido | sin perfil por semana |
+| M-350 | P2 | PARCIAL | `avanzar_semana` 532 líneas: tiempo por semana desconocido | 30-10: medida (6 ligas) 274 → 145 ms; el 65 % es jugar la jornada (armar el once ~0,5 ms y los 90 minutos ~0,7 ms por partido); huella idéntica |
 | M-351 | P2 | PENDIENTE | Hilos: ¿se usan para IA/ciudad? | sin hilos para tráfico/peatones (solo LOD del tráfico) |
 | M-352 | P2 | PENDIENTE | GC/alloc en `_process` (Dictionary por jugador) | sin Packed arrays en el motor |
 | M-353 | P2 | PENDIENTE | Valorar C#/GDExtension sólo si el motor domina CPU | sin medición previa |
 | M-354 | P2 | PARCIAL | `RendimientoAdaptativo` existe; documentar umbrales y probarlos | `pruebas/probar_rendimiento_adaptativo.gd`; no está en el banco |
 | M-355 | P2 | PARCIAL | Sin modo batería/60→30 FPS en móvil | límite de FPS 30/60/120 (`Principal.FPS_OPCIONES`); sin modo batería |
 | M-356 | P2 | PENDIENTE | Memoria de la ciudad ×4 (2.640 m) | sin streaming por celdas |
+| M-358 | P2 | PENDIENTE | Arranque del juego ~10 s hasta el menú (headless) | 30-10: 8,7 s antes del primer `_ready`: el motor analiza y compila ~560 scripts porque todo depende de todo (el menú alcanza 557 de 619); separar el menú del resto o medir el .exe de release (tokens binarios, sin avisos) |
 | M-357 | P2 | PARCIAL | Capturas pesadas en repo (`pruebas/capturas`) | `.gitignore` de promo/lotes y JPG por defecto; resto en repo |
 
 ### F6 pulido (traducciones) (6)
