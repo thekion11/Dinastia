@@ -35,7 +35,8 @@ func _ready() -> void:
 		RenderingServer.get_video_adapter_vendor(), OS.get_processor_name(), OS.get_processor_count(), OS.get_name()])
 	_linea("Renderizador: %s · Calidad: %s · Ventana: %s" % [RenderingServer.get_current_rendering_method(),
 		str(Calidad.elegida), str(get_viewport().get_visible_rect().size)])
-	_linea("Arranque hasta el menú: %d ms" % Time.get_ticks_msec())
+	_linea("Arranque hasta ver el menú: %d ms" % int(Engine.get_meta("menu_ms", Time.get_ticks_msec())))
+	_linea("Menú completo (partida en curso, perfil, álbum): %d ms" % Time.get_ticks_msec())
 	_empezar_parte("menú")
 
 func _linea(t: String) -> void:
@@ -66,6 +67,8 @@ func _process(delta: float) -> void:
 	if _t_parte < SEGUNDOS_POR_PARTE:
 		return
 	_cerrar_parte()
+	if _paso == 0:
+		_linea("Scripts compilados en segundo plano a los: %d ms" % int(Engine.get_meta("compilado_ms", -1)))
 	_paso += 1
 	match _paso:
 		1:

@@ -97,6 +97,7 @@ func informe(n: int = LINEAS_INFORME) -> String:
 	partes.append_array(ultimas(n))
 	return "\n".join(partes)
 
+## (`Partida` por ruta, 30-10-2026: nombrar la clase compilaba ~550 scripts al arrancar.)
 func datos_sistema() -> String:
 	var idioma := "?"
 	var idiomas := get_node_or_null("/root/Idiomas")
@@ -104,7 +105,7 @@ func datos_sistema() -> String:
 		idioma = String(idiomas.get("idioma"))
 	var ver := String(ProjectSettings.get_setting("application/config/version", ""))
 	return "Juego %s (guardado v%d) · Godot %s · %s %s · %s · %s · idioma %s · %dx%d" % [
-		ver if ver != "" else "dev", Partida.VERSION, Engine.get_version_info().get("string", "?"),
+		ver if ver != "" else "dev", load("res://nucleo/partida.gd").VERSION, Engine.get_version_info().get("string", "?"),
 		OS.get_name(), OS.get_version(), _renderizador(), RenderingServer.get_video_adapter_name(),
 		idioma, DisplayServer.window_get_size().x, DisplayServer.window_get_size().y]
 
