@@ -56,6 +56,7 @@ var base_real: bool = false
 signal base_cambiada(real: bool)
 
 func _ready() -> void:
+	PaqueteReal.montar()   ## el paquete privado de caras y datos reales, si está (30-10-2026)
 	cargar()
 	_cargar_pack()
 	usar_base_real(preferencia_base_real())
