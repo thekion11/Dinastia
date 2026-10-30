@@ -13,15 +13,19 @@ static var _retenidos: Array[Resource] = []   ## que no se suelten de la caché
 
 var _cola: PackedStringArray = PackedStringArray()
 var _en_curso: PackedStringArray = PackedStringArray()
-## DE UNO EN UNO, medido: con 4 a la vez los scripts que se compilaban junto a sus dependencias
-## quedaban sin tipos resueltos y el código iba ~1,5× más lento (la ciudad, 4,1 → 5,6 s).
+## DE UNO EN UNO Y NADA MÁS A LA VEZ, medido: con varias compilaciones simultáneas (4 aquí, o la
+## escena de «Nuevo juego» en otro hilo) los scripts compilados junto a sus dependencias quedaban
+## sin tipos resueltos y el código iba ~1,5× más lento (la ciudad, 4,1 → 5,6-6,4 s). Por eso la
+## escena de entrada también pasa por esta cola, después de `inicio_pesado.gd`.
 const EN_PARALELO := 1
 
-static func empezar(arbol: SceneTree) -> void:
+## `primeros`: lo que va antes que los scripts (p. ej. la escena de «Nuevo juego»).
+static func empezar(arbol: SceneTree, primeros: PackedStringArray = PackedStringArray()) -> void:
 	if _hecho:
 		return
 	_hecho = true
 	var n := CompilarFondo.new()
+	n._cola = primeros.duplicate()
 	n.name = "CompilarFondo"
 	arbol.root.add_child.call_deferred(n)
 

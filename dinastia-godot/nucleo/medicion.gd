@@ -35,6 +35,7 @@ func _ready() -> void:
 		RenderingServer.get_video_adapter_vendor(), OS.get_processor_name(), OS.get_processor_count(), OS.get_name()])
 	_linea("Renderizador: %s · Calidad: %s · Ventana: %s" % [RenderingServer.get_current_rendering_method(),
 		str(Calidad.elegida), str(get_viewport().get_visible_rect().size)])
+	_linea("Extensión C++: %s" % ("activa" if Nativo.obj() != null else "NO (se usa GDScript)"))
 	_linea("Arranque hasta ver el menú: %d ms" % int(Engine.get_meta("menu_ms", Time.get_ticks_msec())))
 	_linea("Menú completo (partida en curso, perfil, álbum): %d ms" % Time.get_ticks_msec())
 	_empezar_parte("menú")
