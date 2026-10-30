@@ -35,6 +35,7 @@ pasa "menú ciudad a pie" "godot --headless --path . res://pruebas/prueba_menu_c
 pasa "ruidos en segundo plano" "godot --headless --path . res://pruebas/probar_ruidos_fondo.tscn" "FIN. 0 fallos"
 pasa "textura del balón" "godot --headless --path . --script res://pruebas/probar_balon_textura.gd" "FIN. 0 fallos"
 pasa "textura del césped" "godot --headless --path . res://pruebas/probar_cesped_textura.tscn" "FIN. 0 fallos"
+pasa "extensión C++ = GDScript" "godot --headless --path . res://pruebas/probar_nativo.tscn" "FIN. 0 fallos"
 pasa "caché horneada del build" "godot --headless --path . --script res://pruebas/probar_cache_horneada.gd" "FIN. 0 fallos"
 pasa "estadio y ciudad por partes" "godot --headless --path . res://pruebas/probar_por_partes.tscn" "FIN. 0 fallos"
 # 6. Todas las pantallas y botones de la interfaz (lento)

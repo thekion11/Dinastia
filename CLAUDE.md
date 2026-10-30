@@ -26,6 +26,7 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 - `datos/idiomas_extra.json` (9 idiomas) round-trips con `json.dumps(ensure_ascii=False, indent=1)`; textos nuevos de UI con `Idiomas.t`.
 - Diálogos de ciudad y narración se GENERAN (`herramientas/dialogos_ciudad.py`, `montar_narracion.py`): no editar a mano los resultados.
 - En el motor del partido, no usar dicts de jugador como clave: usar `p["id"]`.
+- Extensión C++ (`nativo/src` → `bin_nativo/`, 30-10): cada función es copia exacta de su versión GDScript (que se queda como respaldo para Android/Web). Si se toca una de las dos, recompilar (`herramientas/compilar_nativo.sh`) y `pruebas/probar_nativo.tscn` debe dar «FIN. 0 fallos».
 
 ## Órdenes vigentes del dueño (24-10)
 1. Fases 0-6 del guion y decisiones validadas (punto 4 = separar `Principal` en clases + cifras fase 4): en `docs/PLAN_DEL_LUNES.md` §2.

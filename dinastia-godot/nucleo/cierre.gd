@@ -89,6 +89,7 @@ const CACHES := [
 	["res://visor/ropa_separada.gd", "_cache", {}],
 	["res://visor/ropa_separada.gd", "_mats", {}],
 	["res://visor/stadium_builder.gd", "_cesped", {}],
+	["res://visor/city_builder.gd", "_hierba", null],
 	["res://visor/stadium_builder.gd", "_malla_hincha", null],
 	["res://visor/stadium_builder.gd", "_malla_hincha_det", null],
 	["res://visor/stadium_builder.gd", "_butaca_lejos", null],
