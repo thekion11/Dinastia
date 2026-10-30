@@ -111,6 +111,8 @@ func _dirigir() -> void:
 		pr._escribir("[color=#c9a227]%s — %s.[/color]" % [pr.mundo.copa.nombre, pr.mundo.copa.nombre_de_ronda()])
 	elif conti != null:
 		pr._escribir("[color=#c9a227]%s — %s.[/color]" % [Continental.nombre_conti(conti.clave), conti.nombre_de_ronda()])
+	if pr.mundo.necesidades.preparacion_cambio():   ## §2.5: tu cansancio y tu hambre, en ESTE partido
+		pr.mundo.aplicar_bonificadores()
 	var p := Partido.new(par[0], par[1])
 	## EL TIEMPO DE LA CIUDAD (plan maestro C1): el mismo que se juega y el
 	## mismo cielo que se ve. Sale del país del local y la época del año.

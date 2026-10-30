@@ -273,9 +273,9 @@ func aplicar_bonificadores() -> void:
 	staff.aplicar(c)
 	if entrenamiento != null:
 		var dt := entrenamiento.bonus_dt()
-		## MI VIDA: trabajar más prepara mejor el partido (y de baja, peor).
+		## MI VIDA: trabajar más prepara mejor el partido (y de baja, peor); cansado o con hambre, peor (§2.5).
 		if vida != null:
-			dt *= vida.factor_trabajo(anio, semana)
+			dt *= vida.factor_trabajo(anio, semana) * necesidades.usar_preparacion()
 		c.bonus_ataque *= dt
 		c.bonus_defensa *= dt
 	## LAS MAESTRÍAS (15 categorías de 30 niveles): ataque, defensa, porteros,

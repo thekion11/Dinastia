@@ -48,6 +48,7 @@ const SECCIONES := [
 	"_probar_notas",
 	"_probar_directiva",
 	"_probar_banco",
+	"_probar_necesidades_con_efecto",
 	"_probar_staff",
 	"_probar_obras",
 	"_probar_roles_y_federacion",
