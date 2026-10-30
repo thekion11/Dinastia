@@ -102,7 +102,8 @@ func _pintar() -> void:
 
 func _responder(tono: String, d: int) -> void:
 	_tonos.append(tono)
-	## El DT gesticula ahora mismo en el plató (el reloj del gesto salta a cero).
+	## El DT gesticula ahora mismo en el plató con el gesto de su tono (el reloj del gesto salta a cero).
+	_escena.tono_dt = tono
 	_escena._t_gesto_dt = 0.0
 	## Lo que opina la prensa: el mismo mecanismo que la rueda semanal.
 	if mundo != null and mundo.prensa != null:

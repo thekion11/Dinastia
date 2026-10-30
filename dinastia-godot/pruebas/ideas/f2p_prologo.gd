@@ -110,8 +110,14 @@ func _probar_async() -> void:
 	var ok_prensa := await _llegar_y_escuchar("prensa", false)
 	_comprobar(ok_prensa and is_instance_valid(_p.prensa), "en la sala de prensa se abre la presentación")
 	var rel0 := _m.prensa.relacion_media()
+	var gestos_ok := true
+	for t: Dictionary in PrologoPasos.TONOS:
+		gestos_ok = gestos_ok and AnimExtra.GESTO_TONO.has(String(t["clave"])) and AnimExtra.new().has_method(String(AnimExtra.GESTO_TONO[t["clave"]]))
 	for i in 3:
 		_p.prensa._responder("seguro", 2)
+		if i == 0:
+			gestos_ok = gestos_ok and _p.prensa._escena.tono_dt == "seguro"
+	_comprobar(gestos_ok, "cada tono tiene su gesto en el plató y responder se lo pasa al DT (seguro = manos abiertas)")
 	_comprobar(_m.prensa.relacion_media() == clampi(rel0 + 6, 0, 100), "tres respuestas seguras suben la relación con la prensa")
 	for b: Button in _p.prensa._botones.get_children():
 		b.pressed.emit()

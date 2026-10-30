@@ -435,6 +435,9 @@ func _gesticular_dt(delta: float) -> void:
 	_t_gesto_dt = _rng_dt.randf_range(3.5, 6.5)
 	var ap: AnimationPlayer = _dt_3d.get("anim")
 	var gesto: String = GESTOS_PRENSA[_rng_dt.randi() % GESTOS_PRENSA.size()]
+	var cara: String = ["concentrado", "alegre", "neutral", "enfado"][_rng_dt.randi() % 4]
+	if AnimExtra.asegurar_gesto_tono(ap, _dt_3d.get("esqueleto"), tono_dt) != "":   ## §2.5: el gesto de su tono
+		gesto = AnimExtra.GESTO_TONO[tono_dt]; cara = AnimExtra.CARA_TONO[tono_dt]; tono_dt = ""
 	if ap != null:
 		var lib := ap.get_animation_library("")
 		if lib != null:
@@ -443,4 +446,4 @@ func _gesticular_dt(delta: float) -> void:
 			ap.play(gesto, 0.3)
 			ap.queue("parado")
 	var raiz: Node = (_dt_3d["nodo"] as Node).get_parent()
-	Expresion.de(raiz).poner(["concentrado", "alegre", "neutral", "enfado"][_rng_dt.randi() % 4], 3.0)
+	Expresion.de(raiz).poner(cara, 3.0)

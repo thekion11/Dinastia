@@ -115,3 +115,48 @@ static func asegurar(ap: AnimationPlayer, esq: Skeleton3D, clave: String) -> boo
 	lib.add_animation(clave, a)
 	return true
 
+
+## ------------------------------------------------- GESTOS DE LA RUEDA (§2.5)
+## (30-10) El DT contesta a la prensa con el gesto de su TONO (`PrologoPasos.TONOS`):
+## seguro = manos abiertas, evasivo = mano al cuello, humilde = manos juntas.
+const GESTO_TONO := {"seguro": "manos_abiertas", "evasivo": "mano_cuello", "humilde": "manos_juntas"}
+const CARA_TONO := {"seguro": "alegre", "evasivo": "neutral", "humilde": "concentrado"}
+
+## Manos abiertas al frente, palmas a la vista y la barbilla arriba.
+static func manos_abiertas(esq: Skeleton3D, pre: String) -> Animation:
+	var a := AnimQuaternius._nueva(2.0, false)
+	for lado: String in ["i", "d"]:
+		_brazos(a, esq, pre, lado, [[0.0, 0, 6, 0], [0.4, 48, 22, 45], [1.5, 46, 26, 42], [2.0, 0, 6, 0]])
+	_p(a, esq, "cuello", [[0.0, Vector3.ZERO], [0.4, Vector3(-8, 0, 0)], [1.5, Vector3(-8, 0, 0)], [2.0, Vector3.ZERO]], pre)
+	return a
+
+## Una mano a la nuca, la otra abajo, la mirada que se escapa de lado.
+static func mano_cuello(esq: Skeleton3D, pre: String) -> Animation:
+	var a := AnimQuaternius._nueva(2.2, false)
+	_brazos(a, esq, pre, "d", [[0.0, 0, 6, 0], [0.45, 22, 118, 132], [1.7, 22, 116, 134], [2.2, 0, 6, 0]])
+	_brazos(a, esq, pre, "i", [[0.0, 4, 6, 8], [2.2, 4, 6, 8]])
+	_p(a, esq, "cuello", [[0.0, Vector3.ZERO], [0.5, Vector3(14, -16, 0)], [1.7, Vector3(12, -14, 0)], [2.2, Vector3.ZERO]], pre)
+	return a
+
+## Las manos juntas delante del pecho y la cabeza un poco baja.
+static func manos_juntas(esq: Skeleton3D, pre: String) -> Animation:
+	var a := AnimQuaternius._nueva(2.0, false)
+	for lado: String in ["i", "d"]:
+		_brazos(a, esq, pre, lado, [[0.0, 0, 6, 0], [0.4, 30, -20, 62], [1.5, 30, -20, 64], [2.0, 0, 6, 0]])
+	_p(a, esq, "cuello", [[0.0, Vector3.ZERO], [0.4, Vector3(10, 0, 0)], [1.5, Vector3(10, 0, 0)], [2.0, Vector3.ZERO]], pre)
+	return a
+
+## Pone en el reproductor el gesto del tono (una vez) y devuelve su nombre ("" si no hay tono).
+static func asegurar_gesto_tono(ap: AnimationPlayer, esq: Skeleton3D, tono: String) -> String:
+	var g := String(GESTO_TONO.get(tono, ""))
+	if g == "" or ap == null or esq == null:
+		return ""
+	if not ap.has_animation(g):
+		var lib := ap.get_animation_library("")
+		if lib == null:
+			return ""
+		var pre := str(ap.get_path_to(esq))
+		var a: Animation = AnimExtra.new().call(g, esq, pre)
+		_completar(a, esq, pre)
+		lib.add_animation(g, a)
+	return g
