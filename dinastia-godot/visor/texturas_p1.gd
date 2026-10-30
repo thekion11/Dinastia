@@ -36,8 +36,29 @@ static func _ruido(tipo: int, frec: float, semilla: int, octavas: int = 4) -> Fa
 
 ## Textura de ruido lista para usar como mapa. `normal` la convierte en mapa de
 ## normales, que es lo que da relieve sin anadir un solo poligono.
+## COMPARTIDAS (30-10-2026): solo dependen de estos parámetros, no del tinte; antes cada color
+## regeneraba sus ruidos de 1024² al cerrar el fotograma (la congelación de 20-40 s tras montar la
+## ciudad o el estadio). Y EN DISCO (PNG sin pérdida + mismos mipmaps): idénticas, sin generarlas.
+static var _ruidos := {}
+
 static func _tex_ruido(frec: float, semilla: int, normal: bool = false,
-		octavas: int = 4, tipo: int = FastNoiseLite.TYPE_SIMPLEX_SMOOTH) -> NoiseTexture2D:
+		octavas: int = 4, tipo: int = FastNoiseLite.TYPE_SIMPLEX_SMOOTH) -> Texture2D:
+	var clave := str([frec, semilla, normal, octavas, tipo, TEX])
+	if not _ruidos.has(clave):
+		_ruidos[clave] = _con_disco(clave, func() -> NoiseTexture2D: return _nuevo_ruido(frec, semilla, normal, octavas, tipo))
+	return _ruidos[clave]
+
+static func _con_disco(clave: String, crear: Callable) -> Texture2D:
+	var en_disco := "ruido|%s|%s" % [clave, Engine.get_version_info()["string"]]
+	var img := CacheDisco.cargar_imagen(en_disco)
+	if img != null and img.get_width() == TEX:
+		img.generate_mipmaps()
+		return ImageTexture.create_from_image(img)
+	var t: NoiseTexture2D = crear.call()
+	t.changed.connect(func() -> void: CacheDisco.guardar_imagen(en_disco, t.get_image()), CONNECT_ONE_SHOT)
+	return t
+
+static func _nuevo_ruido(frec: float, semilla: int, normal: bool, octavas: int, tipo: int) -> NoiseTexture2D:
 	var t := NoiseTexture2D.new()
 	t.width = TEX
 	t.height = TEX
@@ -52,8 +73,14 @@ static func _tex_ruido(frec: float, semilla: int, normal: bool = false,
 ## detalle multiplicados el hormigón quedaba a ~¼ de su tinte: la espalda de
 ## las gradas y las fachadas salían NEGRAS a mediodía. Así el grano se nota
 ## pero el tinte manda.
-static func _ruido_claro(frec: float, semilla: int, octavas: int, piso: float) -> NoiseTexture2D:
-	var t := _tex_ruido(frec, semilla, false, octavas)
+static func _ruido_claro(frec: float, semilla: int, octavas: int, piso: float) -> Texture2D:
+	var clave := str(["claro", frec, semilla, octavas, piso, TEX])
+	if not _ruidos.has(clave):
+		_ruidos[clave] = _con_disco(clave, func() -> NoiseTexture2D: return _nuevo_claro(frec, semilla, octavas, piso))
+	return _ruidos[clave]
+
+static func _nuevo_claro(frec: float, semilla: int, octavas: int, piso: float) -> NoiseTexture2D:
+	var t := _nuevo_ruido(frec, semilla, false, octavas, FastNoiseLite.TYPE_SIMPLEX_SMOOTH)
 	var g := Gradient.new()
 	g.set_color(0, Color(piso, piso, piso))
 	g.set_color(1, Color.WHITE)
