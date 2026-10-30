@@ -367,9 +367,27 @@ static func _en_cache(esq: Skeleton3D, prefijo: String, acciones_experimentales:
 	var clave := "%s|%s|%d" % [prefijo, acciones_experimentales, _firma(esq)]
 	if _bibliotecas.has(clave):
 		return _bibliotecas[clave]
-	var lib := _construir(esq, prefijo, acciones_experimentales)
+	## En disco (`CacheDisco`, 30-10-2026): construirla son 2-3 s; cargarla, ~0,1 s. Con ella van
+	## las fases de los pies (`AnimPasos.fases`), que la construcción deja apuntadas.
+	var en_disco := "anim|%s|%s" % [clave, CacheDisco.huella("anim", _fuentes())]
+	var lib := CacheDisco.cargar(en_disco, "AnimationLibrary") as AnimationLibrary
+	if lib != null and lib.has_meta("fases_pasos"):
+		AnimPasos.fases.merge(lib.get_meta("fases_pasos"), true)
+	else:
+		lib = _construir(esq, prefijo, acciones_experimentales)
+		lib.set_meta("fases_pasos", AnimPasos.fases.duplicate())
+		CacheDisco.guardar(en_disco, lib)
 	_bibliotecas[clave] = lib
 	return lib
+
+## Lo que decide cómo sale la biblioteca: los scripts de animación y los clips de origen.
+static func _fuentes() -> PackedStringArray:
+	var r := CacheDisco.scripts("res://visor", PackedStringArray(["anim_", "retarget_futbol_q", "futbolista_q"]))
+	r.append(RUTA_UAL)
+	for f in DirAccess.get_files_at(CARPETA_FUTBOL):
+		if f.ends_with(".fbx") or f.ends_with(".fbx.import"):
+			r.append(CARPETA_FUTBOL + f.trim_suffix(".import"))
+	return r
 
 static func construir(esq: Skeleton3D, ruta_esqueleto: String = "", acciones_experimentales: bool = false) -> AnimationLibrary:
 	var prefijo := ruta_esqueleto if ruta_esqueleto != "" else str(esq.name)
