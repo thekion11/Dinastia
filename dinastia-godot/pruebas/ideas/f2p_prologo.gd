@@ -125,6 +125,19 @@ func _probar_async() -> void:
 	_comprobar(pr != null and pr is Principal and (pr as Principal).mundo == _m, "E enciende el menú central con TU partida")
 	_comprobar(not _p.vista.visible and _p.explorador.process_mode == Node.PROCESS_MODE_DISABLED, "mientras el PC está encendido el mundo 3D se esconde y se congela")
 	_comprobar(_m.prologo_visto, "la primera vez que enciendes el PC el prólogo queda hecho")
+	## §2.5-1: desde el PC, «Pasear» y «Ver la ciudad» te levantan (no abren otra ciudad dentro del menú).
+	await (pr as Principal)._ver_ciudad_explorando("pie")
+	await _frames(2)
+	_comprobar(not _p.pc.abierto and pr.find_children("*", "VistaCiudad", true, false).is_empty() and _p.vista.visible,
+		"desde el PC, «Pasear» te levanta en vez de abrir otra ciudad dentro del menú")
+	_p.pc.encender()
+	await _frames(2)
+	await (pr as Principal)._ver_ciudad_con_carga()
+	await _frames(2)
+	_comprobar(not _p.pc.abierto and pr.find_children("*", "VistaCiudad", true, false).is_empty(),
+		"desde el PC, «Ver la ciudad en 3D» también te levanta")
+	_p.pc.encender()
+	await _frames(2)
 	_p.pc.apagar()
 	await _frames(3)
 	_comprobar(_p.pc.principal() == null and _p.vista.visible and _p.explorador.process_mode == Node.PROCESS_MODE_INHERIT, "levantarte apaga el PC y devuelve el mundo")

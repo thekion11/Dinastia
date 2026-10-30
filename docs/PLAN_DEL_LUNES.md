@@ -494,20 +494,19 @@ Cumplimiento medido en el código: entrada ~95 %, fase 0 (separar `Principal`) ~
 club ampliado ~85 %, redes ~85 %, dinero ~70 %, calidad visual ~70 % (el dueño dijo «MEJORAR» dos veces), cifras 2.3 100 %.
 Las pruebas f1-f5 del guion ya corren en `especiales.sh` (28-10). Lo que falta, por importancia para el jugador (horas de sesión):
 
-1. Cerrar el acceso a la ciudad desde el menú central cuando se está en la capa del PC (`pantalla_ciudad.gd:355-358`, `menu_lateral.gd:89-90,142`): hoy «Ver 3D / Pasear / Conducir» rompen el prólogo (2 h).
-2. Enganchar `factor_riesgo`/`probabilidad_de_fallo` (`necesidades.gd:109-122`) a la semana y al partido: hoy comer y dormir no cambian nada (3 h).
-3. Completar el recorrido del prólogo: túnel, utilería, sala de vídeo y comedor con personal que saluda (3 h).
-4. Gesto del DT según el tono elegido en la rueda de presentación (3 h).
-5. Entrevista de 3 preguntas, con el grupo del vestuario y el staff (hoy 1 pregunta) (3 h).
-6. Efecto real del apoyo político: `apoyo_club` no se lee (declaración en la rueda, relación con el gobierno) (2 h).
-7. Favor del agente en `MesaAgente` (1 h); logro «Primer día» y alta de los logros sueltos (2 h).
-8. Fase 0: `abrir(contexto)` en las 19 pantallas (hoy 1), autoguardar al salir del orquestador (4 h).
-9. Club ampliado: la rama de otro deporte no ofrece «visibilidad» ni celebra sus títulos (2 h).
-10. Dinero: tarjeta en mano, más cajeros y «fuera de servicio», más de un combustible, auditoría de coches (4 h).
-11. Redes: camión cisterna, casas del kit que sigan al sector en el apagón, captura Forward+ en el PC del dueño (3 h).
-12. Calidad visual (2.2e): aplicar postura, mochilas y pelo del Drive a los futbolistas del partido; pelo femenino (pasada nueva, con veredicto del dueño).
+1. Enganchar `factor_riesgo`/`probabilidad_de_fallo` (`necesidades.gd:109-122`) a la semana y al partido: hoy comer y dormir no cambian nada (3 h).
+2. Completar el recorrido del prólogo: túnel, utilería, sala de vídeo y comedor con personal que saluda (3 h).
+3. Gesto del DT según el tono elegido en la rueda de presentación (3 h).
+4. Entrevista de 3 preguntas, con el grupo del vestuario y el staff (hoy 1 pregunta) (3 h).
+5. Efecto real del apoyo político: `apoyo_club` no se lee (declaración en la rueda, relación con el gobierno) (2 h).
+6. Favor del agente en `MesaAgente` (1 h); logro «Primer día» y alta de los logros sueltos (2 h).
+7. Fase 0: `abrir(contexto)` en las 19 pantallas (hoy 1), autoguardar al salir del orquestador (4 h).
+8. Club ampliado: la rama de otro deporte no ofrece «visibilidad» ni celebra sus títulos (2 h).
+9. Dinero: tarjeta en mano, más cajeros y «fuera de servicio», más de un combustible, auditoría de coches (4 h).
+10. Redes: camión cisterna, casas del kit que sigan al sector en el apagón, captura Forward+ en el PC del dueño (3 h).
+11. Calidad visual (2.2e): aplicar postura, mochilas y pelo del Drive a los futbolistas del partido; pelo femenino (pasada nueva, con veredicto del dueño).
 
-Los 10 primeros (~27 h) cierran lo que el guion exige de verdad; el total de la lista larga del informe es ~65 h.
+Los 9 primeros (~25 h) cierran lo que el guion exige de verdad; el total de la lista larga del informe es ~65 h.
 
 ### 2.4 Pendientes del traspaso anterior
 
