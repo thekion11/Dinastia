@@ -41,9 +41,8 @@ func _ready() -> void:
 	_actualizar_picker()
 	_actualizar_continuar()
 	_construir_nuevo_juego()
-	## La entrada se carga en un hilo mientras se mira el menú: al pulsar «Nuevo juego»
-	## ya está en memoria y el paso a la intro no se queda en negro esperando el disco.
-	ResourceLoader.load_threaded_request(ESCENA_ENTRADA)
+	## La escena de «Nuevo juego» se carga en un hilo mientras se mira el menú, en la cola de
+	## `CompilarFondo` (después de lo pesado): al pulsar ya está en memoria.
 	_reloj_portada = Timer.new()
 	_reloj_portada.wait_time = SEG_PORTADA
 	_reloj_portada.timeout.connect(_rotar_portada)

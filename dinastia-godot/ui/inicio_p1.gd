@@ -85,7 +85,8 @@ func _mirar_pesado() -> void:
 	get_tree().process_frame.disconnect(_mirar_pesado)
 	if _pesado == null:
 		_pesado = ResourceLoader.load_threaded_get(PESADO) if st == ResourceLoader.THREAD_LOAD_LOADED else load(PESADO)
-	CompilarFondo.empezar(get_tree())   ## y el resto del juego, de uno en uno en un hilo
+	## Y el resto, de uno en uno y en orden: primero la escena de «Nuevo juego», luego los scripts.
+	CompilarFondo.empezar(get_tree(), PackedStringArray(["res://escenas/entrada.tscn"]))
 	var lista := _pendientes
 	_pendientes = []
 	for f in lista:
