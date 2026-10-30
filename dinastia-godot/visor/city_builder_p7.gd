@@ -265,6 +265,17 @@ func _mallas_de(n: Node) -> Array[MeshInstance3D]:
 ## La caja real de un modelo importado, midiendo su AABB -nunca a ojo, cada
 ## exportador trae sus propias unidades. Mismo método que ya usó
 ## `RuedaPrensaEscena3D._montar_podio_generado()` para el podio generado.
+## La caja de una ESCENA (30-10-2026, rendimiento): instanciarla entera solo para medirla, cada vez
+## que se coloca un edificio, costaba más de un segundo al montar la ciudad. Es siempre la misma.
+static var _cajas_escena := {}
+
+func _caja_de_escena(esc: PackedScene) -> AABB:
+	if not _cajas_escena.has(esc):
+		var tmp: Node = esc.instantiate()
+		_cajas_escena[esc] = _caja_de(tmp)
+		tmp.free()
+	return _cajas_escena[esc]
+
 func _caja_de(n: Node) -> AABB:
 	var caja := AABB()
 	var primero := true

@@ -154,9 +154,7 @@ func construir() -> void:
 ## Un bloque alto hecho con el mismo modelo apilado planta sobre planta (en
 ## vez de estirarlo): crece en pisos y las ventanas conservan su forma.
 func _kit_apilado(esc: PackedScene, pos: Vector3, s: float, pisos: int, giro: float) -> void:
-	var tmp: Node3D = esc.instantiate()
-	var alto := b._caja_de(tmp).size.y * s
-	tmp.free()
+	var alto := b._caja_de_escena(esc).size.y * s
 	for k in pisos:
 		_kit(esc, pos + Vector3(0, float(k) * alto * 0.98, 0), Vector3.ONE * s, giro)
 

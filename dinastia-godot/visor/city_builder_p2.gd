@@ -250,19 +250,28 @@ func _terreno() -> Array[MeshInstance3D]:
 
 	var salida: Array[MeshInstance3D] = []
 	var por_baldosa: int = TERRENO_CELDAS / TERRENO_BALDOSAS
-	var idx := func(ii: int, jj: int) -> int: return jj * (TERRENO_CELDAS + 1) + ii
+	var fila := TERRENO_CELDAS + 1
+	## RENDIMIENTO (30-10-2026): la normal de cada punto de la rejilla se calcula UNA vez (antes,
+	## seis por celda) y las baldosas se arman con arreglos en vez de vértice a vértice con
+	## `SurfaceTool`. Mismos vértices, normales y UV, en el mismo orden.
+	var normales := PackedVector3Array()
+	normales.resize(fila * fila)
+	for j in fila:
+		for i in fila:
+			normales[j * fila + i] = _normal_rejilla(alturas, i, j, paso)
 	for bj in range(TERRENO_BALDOSAS):
 		for bi in range(TERRENO_BALDOSAS):
-			var st := SurfaceTool.new()
-			st.begin(Mesh.PRIMITIVE_TRIANGLES)
+			var vs := PackedVector3Array()
+			var ns := PackedVector3Array()
+			var uvs := PackedVector2Array()
 			for j in range(bj * por_baldosa, (bj + 1) * por_baldosa):
 				for i in range(bi * por_baldosa, (bi + 1) * por_baldosa):
 					var x0 := -mitad + i * paso
 					var z0 := -mitad + j * paso
-					var p00 := Vector3(x0, alturas[idx.call(i, j)], z0)
-					var p10 := Vector3(x0 + paso, alturas[idx.call(i + 1, j)], z0)
-					var p01 := Vector3(x0, alturas[idx.call(i, j + 1)], z0 + paso)
-					var p11 := Vector3(x0 + paso, alturas[idx.call(i + 1, j + 1)], z0 + paso)
+					var p00 := Vector3(x0, alturas[j * fila + i], z0)
+					var p10 := Vector3(x0 + paso, alturas[j * fila + i + 1], z0)
+					var p01 := Vector3(x0, alturas[(j + 1) * fila + i], z0 + paso)
+					var p11 := Vector3(x0 + paso, alturas[(j + 1) * fila + i + 1], z0 + paso)
 					## Dos triángulos por celda, en el orden que deja la cara
 					## hacia arriba (si se invierte, desde la cámara no hay
 					## nada: un agujero verde donde estaba el suelo).
@@ -273,16 +282,20 @@ func _terreno() -> Array[MeshInstance3D]:
 					## Y el ORDEN: con el de antes la cara quedaba hacia abajo y el
 					## motor la descartaba; lo que se veía era el "suelo" pálido
 					## del cielo, no el terreno.
-					var ns := [_normal_rejilla(alturas, i, j, paso), _normal_rejilla(alturas, i + 1, j, paso), _normal_rejilla(alturas, i, j + 1, paso), _normal_rejilla(alturas, i + 1, j, paso), _normal_rejilla(alturas, i + 1, j + 1, paso), _normal_rejilla(alturas, i, j + 1, paso)]
-					var k := 0
-					for tri in [[p00, p10, p01], [p10, p11, p01]]:
-						for p: Vector3 in tri:
-							st.set_normal(ns[k])
-							st.set_uv(Vector2(p.x, p.z) / 20.0)
-							st.add_vertex(p)
-							k += 1
+					vs.append_array([p00, p10, p01, p10, p11, p01])
+					ns.append_array([normales[j * fila + i], normales[j * fila + i + 1], normales[(j + 1) * fila + i],
+						normales[j * fila + i + 1], normales[(j + 1) * fila + i + 1], normales[(j + 1) * fila + i]])
+					uvs.append_array([Vector2(p00.x, p00.z) / 20.0, Vector2(p10.x, p10.z) / 20.0, Vector2(p01.x, p01.z) / 20.0,
+						Vector2(p10.x, p10.z) / 20.0, Vector2(p11.x, p11.z) / 20.0, Vector2(p01.x, p01.z) / 20.0])
+			var arr := []
+			arr.resize(Mesh.ARRAY_MAX)
+			arr[Mesh.ARRAY_VERTEX] = vs
+			arr[Mesh.ARRAY_NORMAL] = ns
+			arr[Mesh.ARRAY_TEX_UV] = uvs
+			var malla := ArrayMesh.new()
+			malla.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
 			var mi := MeshInstance3D.new()
-			mi.mesh = st.commit()
+			mi.mesh = malla
 			mi.material_override = mat
 			salida.append(mi)
 	return salida
