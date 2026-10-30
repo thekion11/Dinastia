@@ -22,6 +22,7 @@ static func empezar() -> void:
 	if _empezado or not CacheDisco.activa():
 		return
 	_empezado = true
+	Nativo.obj()   ## se mira aquí, en el hilo principal, antes de los hilos
 	var d: Variant = JSON.parse_string(FileAccess.get_file_as_string(LISTA)) if FileAccess.file_exists(LISTA) else null
 	if not (d is Dictionary):
 		return
@@ -81,6 +82,12 @@ static func _lut(piso: float) -> PackedByteArray:
 	return sale.get_data()
 
 static func _con_rampa(img: Image, lut: PackedByteArray) -> Image:
+	if Nativo.obj() != null:   ## en C++ (mismos bytes, ~100× más rápido)
+		return Image.create_from_data(img.get_width(), img.get_height(), false, Image.FORMAT_RGBA8,
+			Nativo.obj().rampa(img.get_data(), lut))
+	return _con_rampa_gd(img, lut)
+
+static func _con_rampa_gd(img: Image, lut: PackedByteArray) -> Image:
 	var src := img.get_data()
 	var dst := PackedByteArray()
 	dst.resize(src.size() * 4)

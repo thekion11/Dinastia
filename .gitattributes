@@ -52,3 +52,6 @@ dinastia-godot/audio/ui/*.ogg -filter -diff -merge binary
 dinastia-godot/assets/ciudad/kaykit/*.gltf -filter -diff -merge
 # Los .bat de Windows con fin de línea CRLF (cmd.exe).
 *.bat text eol=crlf
+# Binarios de la extensión nativa (pequeños, fuera de LFS).
+dinastia-godot/bin_nativo/*.so binary
+dinastia-godot/bin_nativo/*.dll binary
