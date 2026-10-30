@@ -11,6 +11,7 @@ extends BaseIdea
 var _p: PrologoDT
 var _e: ExploradorCiudad
 var _m: Mundo
+var _saludos: Array[String] = []   ## el personal que saludó al llegar a su sala
 
 func _ready() -> void:
 	await get_tree().process_frame
@@ -35,12 +36,12 @@ func _probar_async() -> void:
 	_comprobar(not OrquestadorMundo.con_prologo("dt"), "las pruebas pueden apagarlo")
 	OrquestadorMundo.sin_prologo = false
 	## --- el guion ------------------------------------------------------------------
-	_comprobar(PrologoPasos.PASOS.size() == 8 and PrologoPasos.indice("oficina") == 7, "el guion tiene 8 pasos y termina en tu oficina")
+	_comprobar(PrologoPasos.PASOS.size() == 12 and PrologoPasos.indice("oficina") == 11, "el guion tiene 12 pasos y termina en tu oficina")
 	var sin_traducir: Array[String] = []
 	var idioma_antes: String = Idiomas.idioma
 	Idiomas.idioma = "en"
 	for paso: Dictionary in PrologoPasos.PASOS:
-		for f: String in paso["frases"]:
+		for f: String in (paso["frases"] as Array) + ([paso["saludo"]] if paso.has("saludo") else []):
 			if Idiomas.t(f) == f:
 				sin_traducir.append(f.left(30))
 	Idiomas.idioma = idioma_antes
@@ -89,9 +90,10 @@ func _probar_async() -> void:
 	await _frames(2)
 	_comprobar(_p.paso_i == 2 and String(_e.estado) == "estadio", "al cruzar la puerta empieza el recorrido (vestuario)")
 	## Las salas, una tras otra.
-	for clave: String in ["vestuario", "campo", "enfermeria"]:
+	for clave: String in ["vestuario", "tunel", "campo", "utileria", "enfermeria"]:
 		var ok := await _llegar_y_escuchar(clave)
 		_comprobar(ok, "sala «%s»: el mentor espera allí y habla al llegar" % clave)
+	_comprobar(_saludos.has("utilero") and _saludos.has("medico"), "en la utilería y la enfermería el personal saluda antes que el mentor %s" % [_saludos])
 	## Directiva.
 	var ok_pres := await _llegar_y_escuchar("presidente", false)
 	_comprobar(ok_pres and is_instance_valid(_p.hud._directiva), "en el despacho se abre la pregunta de la directiva")
@@ -102,6 +104,8 @@ func _probar_async() -> void:
 	_comprobar(_p.dialogo.visible and _p._directivos.size() == 2, "el presidente contesta y hay dos directivos de cuerpo presente")
 	_p._hablar()
 	await _frames(2)
+	var ok_video := await _llegar_y_escuchar("video")
+	_comprobar(ok_video and _saludos.has("ojeador"), "sala de vídeo: el ojeador saluda y el mentor la explica")
 	## Prensa.
 	var ok_prensa := await _llegar_y_escuchar("prensa", false)
 	_comprobar(ok_prensa and is_instance_valid(_p.prensa), "en la sala de prensa se abre la presentación")
@@ -112,7 +116,9 @@ func _probar_async() -> void:
 	for b: Button in _p.prensa._botones.get_children():
 		b.pressed.emit()
 	await _frames(2)
-	_comprobar(_p.paso_i == 7 and _p.prensa == null, "al salir de la sala de prensa toca la oficina")
+	_comprobar(_p.paso_i == PrologoPasos.indice("comedor") and _p.prensa == null, "al salir de la sala de prensa toca el comedor")
+	var ok_com := await _llegar_y_escuchar("comedor")
+	_comprobar(ok_com and _saludos.has("cocinera"), "comedor del plantel: la cocinera saluda")
 	## La oficina y el PC.
 	var ok_of := await _llegar_y_escuchar("oficina", false)
 	_comprobar(ok_of and _p.pc != null, "en la oficina aparece el PC")
@@ -176,6 +182,8 @@ func _llegar_y_escuchar(clave: String, cerrar: bool = true) -> bool:
 	await _frames(3)
 	var mentor_alli := _p.mentor.visible and _p.mentor.position.distance_to(_p.destino) < 0.6
 	var habla := _p.dialogo.visible
+	if _p.frase_i == 0 and not _p.hablantes.is_empty() and _p.hablantes[0] != "":
+		_saludos.append(_p.hablantes[0])
 	if cerrar:
 		_terminar_charla()
 		await _frames(2)

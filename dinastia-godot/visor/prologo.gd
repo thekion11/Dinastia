@@ -38,6 +38,8 @@ var est: Dictionary = {}        ## `TunelVestuario.datos` del estadio del club
 var puerta := Vector3.ZERO      ## la puerta del club, en el mundo
 var paso_i := -1
 var frases: Array[String] = []
+## Quién dice cada frase: "" = el mentor; si no, la clave del personal del club (`PersonalEstadio`).
+var hablantes: Array[String] = []
 var frase_i := -1
 var destino := Vector3.INF
 var destino_planta := 0
@@ -62,6 +64,9 @@ func _ready() -> void:
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(fondo)
 	PantallaCarga.club = club
+	## (30-10) El club del jugador: sin esto, en una partida nueva (el menú central aún no lo puso)
+	## el edificio salía sin su personal y nadie saludaba en el recorrido.
+	PersonajeDT.club_usuario = club.id
 	var carga := PantallaCarga.mostrar(self, Idiomas.t("Construyendo la ciudad…"))
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -154,6 +159,9 @@ func _ir_al_paso(i: int) -> void:
 	paso_i = i
 	var p: Dictionary = PrologoPasos.PASOS[i]
 	frases = PrologoPasos.frases_de(p, mentor.nombre)
+	hablantes.clear()
+	for f in frases:
+		hablantes.append("")
 	frase_i = -1
 	hud.tarjeta(PrologoPasos.tarjeta_controles(p))
 	esperando_entrada = false
@@ -194,8 +202,45 @@ func _centro_zona(zona: String, planta: int) -> Vector3:
 	var c := mejor.get_center()
 	return CityBuilder.ESTADIO_EN + Vector3(c.x, RecorridoClub.y_de(planta), c.y)
 
+## (§2.5, 30-10) Al llegar a la sala, su personal saluda primero, si está en su puesto.
+func _meter_saludo() -> void:
+	var sal := PrologoPasos.saludo_de(PrologoPasos.PASOS[paso_i])
+	if sal.is_empty() or (not hablantes.is_empty() and hablantes[0] != "") or _personal(String(sal[0])).is_empty():
+		return
+	frases.insert(0, String(sal[1]))
+	hablantes.insert(0, String(sal[0]))
+
+## El personal del club con esa clave, si está a la vista (o vacío).
+func _personal(clave: String) -> Dictionary:
+	var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio if is_inside_tree() else null
+	if pe == null:
+		return {}
+	var g := pe.buscar(clave)
+	if g.is_empty() or not is_instance_valid(g["nodo"]) or not (g["nodo"] as Node3D).visible:
+		return {}
+	return g
+
+## Quien saluda te mira y hace el gesto; al terminar (`si` = false) vuelve a lo suyo.
+func _atender_personal(clave: String, si: bool) -> Dictionary:
+	var g := _personal(clave)
+	if g.is_empty():
+		return g
+	var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+	pe.atender(g, explorador.cuerpo.position - CityBuilder.ESTADIO_EN, si)
+	if si:
+		pe.gesto(g, ["saludo_mano", "saludar_publico"])
+	return g
+
 func _hablar() -> void:
+	if frase_i >= 0 and frase_i < hablantes.size() and hablantes[frase_i] != "":
+		_atender_personal(hablantes[frase_i], false)
 	frase_i += 1
+	if frase_i < hablantes.size() and hablantes[frase_i] != "":
+		explorador.pausar(true)
+		var g := _atender_personal(hablantes[frase_i], true)
+		var quien := "%s · %s" % [String(g.get("nombre", "")), String(g.get("puesto", ""))] if not g.is_empty() else ""
+		dialogo.decir(quien, frases[frase_i], Color(0.85, 0.85, 0.8), frase_i, frases.size())
+		return
 	if frase_i >= frases.size():
 		dialogo.cerrar()
 		mentor.hablar(false)
@@ -210,7 +255,7 @@ func _hablar() -> void:
 	explorador._t_burbuja = 120.0
 	explorador._colocar_camara(1.0)
 	mentor.mirar_a(explorador.cuerpo.position)
-	if frase_i == 0:
+	if frase_i == 0 or hablantes[frase_i - 1] != "":
 		mentor.hablar(true)
 	dialogo.decir(mentor.nombre, frases[frase_i], Color(club.color1).lerp(Color.WHITE, 0.35), frase_i, frases.size())
 
@@ -259,6 +304,7 @@ func _process(_delta: float) -> void:
 		if String(PrologoPasos.PASOS[paso_i]["clave"]) == "llegada":
 			_ir_al_paso(paso_i + 1)
 		else:
+			_meter_saludo()
 			_hablar()
 
 func _input(ev: InputEvent) -> void:
