@@ -64,6 +64,7 @@ const CACHES := [
 	["res://visor/city_builder.gd", "_mat_blanco", null],
 	["res://visor/city_builder.gd", "_mat_bordillo", null],
 	["res://visor/city_builder.gd", "_mat_tapa", null],
+	["res://visor/city_builder.gd", "_cajas_escena", {}],
 	["res://visor/futbolista_q.gd", "_packed_male", null],
 	["res://visor/futbolista_q.gd", "_packed_female", null],
 	["res://visor/kit_texture_factory.gd", "_jersey_cache", {}],

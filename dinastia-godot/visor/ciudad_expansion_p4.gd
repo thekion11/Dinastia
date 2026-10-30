@@ -271,9 +271,7 @@ func _fachadas(r: Rect2, con_nave: bool) -> void:
 		while u < largo * 0.5 - 6.0:
 			var esc: PackedScene = _comercial[_rng.randi() % _comercial.size()]
 			var s := 5.6 * _rng.randf_range(0.9, 1.1)
-			var tmp: Node3D = esc.instantiate()
-			var caja := b._caja_de(tmp)
-			tmp.free()
+			var caja := b._caja_de_escena(esc)
 			var ancho := maxf(caja.size.x * s, 6.0)
 			var fondo := maxf(caja.size.z * s, 6.0)
 			if u + ancho > largo * 0.5:

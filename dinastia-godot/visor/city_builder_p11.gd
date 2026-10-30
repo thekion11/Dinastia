@@ -216,10 +216,8 @@ func build(d: Dictionary) -> void:
 		Optimizar.butacas_livianas(self, true)
 		Optimizar.distancias(self)
 		_marca("despejar")
-		Optimizar.primitivas(self)
-		Optimizar.butacas_livianas(self, true)
-		Optimizar.distancias(self)
-		_marca("opt_distancias")
+		## (30-10-2026: aquí se repetían primitivas, butacas livianas y distancias -una copia de
+		## una fusión vieja-; la segunda pasada no cambiaba nada de la escena y costaba ~150 ms.)
 		circulos = Optimizar.obstaculos(self, ExploradorCiudad.construir_obstaculos(self))
 		_marca("obstaculos")
 		OclusoresCiudad.montar(self)
