@@ -76,6 +76,7 @@ const CACHES := [
 	["res://visor/peaton_q.gd", "_mat_zapatilla", null],
 	["res://visor/pelo_capas.gd", "_mat_cache", {}],
 	["res://visor/pelo_capas.gd", "_cache_cuero", {}],
+	["res://visor/pelo_capas.gd", "_cand_cuero", {}],
 	["res://visor/pelo_capas.gd", "_cache_pestanas", {}],
 	["res://visor/persona_realista.gd", "_escena", null],
 	["res://visor/persona_realista.gd", "_mats", {}],
