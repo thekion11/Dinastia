@@ -1,6 +1,15 @@
 extends "res://ui/estadio_p2.gd"
 ## [Capa 3/6 de `estadio.gd`] _construir, _a_la_revision_var, _al_jugada_ambiente, _nodo_de, _banca_gesto, _banca_celebra … (+6)
 
+## POR PARTES (30-10-2026, rendimiento): con `por_partes` (lo pone quien enseña la pantalla de
+## carga) se cede un fotograma entre los pasos grandes: la carga sigue animada en vez de quedarse
+## congelada. Sin él (pruebas, resto del juego) todo ocurre en la misma llamada, como siempre.
+var por_partes := false
+
+func _respiro() -> void:
+	if por_partes:
+		await get_tree().process_frame
+
 func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon: Array = []) -> void:
 	RuidosFondo.precargar()   ## las texturas de ruido, leídas en hilos mientras se construye
 	_ajustar_a_pantalla()
@@ -60,6 +69,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 				_pie_base += "  ·  calidad ajustada: %s" % que
 				_pie.text = _pie_base)
 	StadiumBuilder.build_pitch(_raiz3d, perfil, club)
+	await _respiro()
 	## La semilla sale del id del club: el mismo recinto siempre.
 	## M-021: los colores del rival para su sector de la grada (solo en partido).
 	var perfil_b := perfil
@@ -68,6 +78,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		perfil_b["visita1"] = visitante.color1
 		perfil_b["visita2"] = visitante.color2
 	StadiumBuilder.build(_raiz3d, perfil_b, aforo, ocupacion, club._hash_id(), club)
+	await _respiro()
 	## Lo que rodea al estadio: plaza, avenida, aparcamientos y la ciudad al fondo.
 	EntornoEstadio.montar(_raiz3d, perfil, StadiumBuilder.niveles_de(perfil, aforo))
 	## La piel de la grada, la del país del club de casa (M-034).
@@ -75,6 +86,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	if club != null:
 		OlaGrada.colores_club(_raiz3d, Color(club.color1), Color(club.color2))
 	EntornoEstadio.agrupar(_raiz3d)   ## piezas repetidas del entorno en MultiMesh (rendimiento)
+	await _respiro()
 	## LA PANTALLA GIGANTE (22-9-2026, rehecha el 23-9). Ahora se monta SIEMPRE,
 	## haya partido o no: sin partido enseña bienvenida + tabla + goleadores,
 	## que es lo que hace la pantalla de un estadio de verdad un día entre
@@ -97,6 +109,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		partido.preparar()
 	if visitante != null:
 		_sacar_los_22()
+	await _respiro()
 
 	## Las cámaras se calculan CONTRA el estadio recién construido, no se ponen
 	## en posiciones fijas: un recinto de 8.000 butacas y uno de 90.000 necesitan

@@ -55,7 +55,9 @@ func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary
 
 	_ciudad = CityBuilder.new()
 	_raiz3d.add_child(_ciudad)
-	_ciudad.build(_datos_de(club, obras, ciudad, perfil_estadio))
+	_ciudad.por_partes = por_partes
+	await _ciudad.build(_datos_de(club, obras, ciudad, perfil_estadio))
+	_ciudad.por_partes = false
 	## Etapa 3: la misma calidad adaptativa que el partido -si la máquina no
 	## llega a 40 FPS se bajan efectos por escalones-. No en render por software.
 	var adaptador := RenderingServer.get_video_adapter_name().to_lower()
@@ -115,6 +117,9 @@ func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary
 ## (`mundo.perfil_estadio_de(club)`). Con él, el estadio que se ve en el mapa
 ## es EL TUYO, con la forma, las bandejas, el techo y las butacas que hayas
 ## pagado -no una maqueta genérica-.
+## (30-10-2026) Con la pantalla de carga encima: la ciudad se arma entre fotogramas.
+var por_partes := false
+
 func abrir(c: Club, obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary = {}) -> void:
 	RuidosFondo.precargar()   ## las texturas de ruido, leídas en hilos mientras se construye
 	club = c
@@ -122,7 +127,10 @@ func abrir(c: Club, obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictio
 	_ciudad_datos = ciudad
 	_perfil = perfil_estadio
 	set_anchors_preset(Control.PRESET_FULL_RECT)
-	_construir(obras, ciudad, perfil_estadio)
+	if por_partes:   ## en pausa mientras se arma entre fotogramas (ver `CityBuilder._marca`)
+		process_mode = Node.PROCESS_MODE_DISABLED
+	await _construir(obras, ciudad, perfil_estadio)
+	process_mode = Node.PROCESS_MODE_INHERIT
 
 ## Mueve el punto mirado: `d.x` a la derecha de la cámara, `d.y` hacia atrás.
 func _desplazar(d: Vector2) -> void:
