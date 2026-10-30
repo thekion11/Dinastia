@@ -32,6 +32,7 @@ func _ready() -> void:
 		return
 	## Mientras se mira el menú, los modelos pesados se cargan en un hilo.
 	Precarga.empezar(get_tree())
+	RuidosFondo.empezar()   ## las texturas de ruido, en hilos mientras se usan los menús
 	_clave = _leer_ajuste()
 	_construir()
 	_pintar_banner()
