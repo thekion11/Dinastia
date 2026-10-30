@@ -72,3 +72,26 @@ static func guardar(clave: String, r: Resource) -> void:
 		DirAccess.rename_absolute(tmp, ruta)
 	else:
 		DirAccess.remove_absolute(tmp)
+
+## IMÁGENES (30-10-2026): PNG sin pérdida. Guardar se hace en otro hilo (no frena el juego).
+static func _ruta_png(clave: String) -> String:
+	return CARPETA + clave.md5_text() + ".png"
+
+static func cargar_imagen(clave: String) -> Image:
+	if not activa():
+		return null
+	var ruta := _ruta_png(clave)
+	if not FileAccess.file_exists(ruta):
+		return null
+	return Image.load_from_file(ruta)
+
+static func guardar_imagen(clave: String, img: Image) -> void:
+	if not activa() or img == null or img.is_empty():
+		return
+	DirAccess.make_dir_recursive_absolute(CARPETA)
+	var ruta := _ruta_png(clave)
+	var copia := img.duplicate() as Image
+	WorkerThreadPool.add_task(func() -> void:
+		if copia.save_png(ruta + ".tmp") == OK:
+			DirAccess.rename_absolute(ruta + ".tmp", ruta))
+

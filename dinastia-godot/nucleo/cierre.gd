@@ -92,6 +92,7 @@ const CACHES := [
 	["res://visor/stadium_builder.gd", "_butaca_lejos", null],
 	["res://visor/stadium_builder.gd", "_escalones", null],
 	["res://visor/texturas.gd", "_cache", {}],
+	["res://visor/texturas.gd", "_ruidos", {}],
 	["res://visor/vestidor_q.gd", "_cache_equipacion", {}],
 	["res://visor/vestidor_q.gd", "_packed_male", []],
 	["res://visor/vestidor_q.gd", "_cache_textura", {}],
