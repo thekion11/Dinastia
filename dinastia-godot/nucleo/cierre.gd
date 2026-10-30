@@ -13,6 +13,7 @@ const CACHES := [
 	["res://nucleo/historia_club.gd", "_clasicos", {}],
 	["res://nucleo/historia_club.gd", "_clasicos_de_tabla", null],
 	["res://nucleo/nombres.gd", "_vetados", {}],
+	["res://nucleo/nombres.gd", "_limpios", {}],
 	["res://nucleo/precarga.gd", "_guardados", []],
 	["res://nucleo/partido.gd", "ctx_moda", {}],
 	["res://nucleo/partido.gd", "ex_de_mi_club", {}],

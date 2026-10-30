@@ -200,18 +200,18 @@ func disponible() -> bool:
 ## el jugador siga valiendo `ovr` en su puesto por mucho que se le muevan las
 ## piezas. Sin esa resta, repartir al azar inflaba la media real.
 func generar_atributos() -> void:
-	var posd: Dictionary = Datos.tabla("POSD")
-	var clave := pos_e if (posd != null and posd.has(pos_e)) else "MC"
-	var pesos: Dictionary = posd[clave]["p"]
-	var desv := {}
+	var e := PesosPuesto.de(pos_e)   ## los pesos de POSD, en su orden (30-10, rendimiento)
+	if e.is_empty():
+		e = PesosPuesto.de("MC")
+	var ks: PackedStringArray = e[0]; var ws: PackedFloat64Array = e[1]
+	var desv := PackedInt32Array(); desv.resize(ks.size())
 	var acumulado := 0.0
-	for k: String in pesos:
-		var v := Azar.ent(-15, 15)
-		desv[k] = v
-		acumulado += float(v) * float(pesos[k])
+	for i in ks.size():
+		desv[i] = Azar.ent(-15, 15)
+		acumulado += float(desv[i]) * ws[i]
 	atributos = {}
-	for k: String in pesos:
-		atributos[k] = clampi(int(round(float(ovr) + float(desv[k]) - acumulado)), 22, 99)
+	for i in ks.size():
+		atributos[ks[i]] = clampi(int(round(float(ovr) + float(desv[i]) - acumulado)), 22, 99)
 	_sesgo_por_rasgo()
 
 func _sesgo_por_rasgo() -> void:
