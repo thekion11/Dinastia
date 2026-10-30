@@ -50,9 +50,10 @@ static func _tex_ruido(frec: float, semilla: int, normal: bool = false,
 
 static func _con_disco(clave: String, crear: Callable) -> Texture2D:
 	var en_disco := RuidosFondo.clave_disco(clave)
-	var img := CacheDisco.cargar_imagen(en_disco)
+	var img := RuidosFondo.tomar(en_disco)   ## ya leída (con mipmaps) en un hilo, si se precargó
+	if img == null:
+		img = RuidosFondo.leer(en_disco)
 	if img != null and img.get_width() == TEX:
-		img.generate_mipmaps()
 		return ImageTexture.create_from_image(img)
 	var t: NoiseTexture2D = crear.call()
 	t.changed.connect(func() -> void: CacheDisco.guardar_imagen(en_disco, t.get_image()), CONNECT_ONE_SHOT)

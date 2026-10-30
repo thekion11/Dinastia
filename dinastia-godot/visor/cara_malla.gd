@@ -217,22 +217,28 @@ static func color_iris(nombre: String) -> Color:
 static func _pegar_borde(pos: PackedVector3Array, cuerpo: Dictionary) -> PackedVector3Array:
 	if cuerpo.is_empty():
 		return pos
-	var cv: PackedVector3Array = cuerpo["v"]
-	var cabeza := PackedVector3Array()
-	for p in cv:
-		if p.y > 1.55 and p.z > 0.0 and absf(p.x) < 0.11:
-			cabeza.append(p)
-	if cabeza.is_empty():
+	## Los puntos de la cabeza en una rejilla de 14 mm (30-10-2026, rendimiento): solo se miran
+	## las 9 celdas de alrededor, que contienen todos los que cumplen la condición (r ≤ 14 mm).
+	var rejilla := _rejilla_cabeza(cuerpo)
+	if rejilla.is_empty():
 		return pos
 	var salida := pos.duplicate()
 	for i in mini(salida.size(), _alfa.size()):
 		if _alfa[i] >= 1.0:
 			continue
 		var q := salida[i]
+		var cerca := PackedVector3Array()
+		var cx := floori(q.x / 0.014)
+		var cy := floori(q.y / 0.014)
+		for gx in range(cx - 1, cx + 2):
+			for gy in range(cy - 1, cy + 2):
+				var celda: Variant = rejilla.get(Vector2i(gx, gy))
+				if celda != null:
+					cerca.append_array(celda)
 		## La piel delante en ese (x, y): el vértice más adelantado cerca.
 		var z := -1.0
 		for r: float in [0.004, 0.008, 0.014]:
-			for p in cabeza:
+			for p in cerca:
 				if absf(p.x - q.x) < r and absf(p.y - q.y) < r and p.z > z:
 					z = p.z
 			if z > -1.0:
@@ -242,6 +248,25 @@ static func _pegar_borde(pos: PackedVector3Array, cuerpo: Dictionary) -> PackedV
 		var peso := 1.0 if _alfa[i] <= 0.0 else (0.6 if _alfa[i] < 0.9 else 0.3)
 		salida[i].z = lerpf(q.z, z + 0.0015, peso)
 	return salida
+
+static var _rejillas := {}
+
+static func _rejilla_cabeza(cuerpo: Dictionary) -> Dictionary:
+	var cv: PackedVector3Array = cuerpo["v"]
+	var clave := "%s|%d" % [String(cuerpo.get("id", "")), cv.size()]
+	if _rejillas.has(clave):
+		return _rejillas[clave]
+	var r := {}
+	for p in cv:
+		if p.y > 1.55 and p.z > 0.0 and absf(p.x) < 0.11:
+			var k := Vector2i(floori(p.x / 0.014), floori(p.y / 0.014))
+			if not r.has(k):
+				r[k] = PackedVector3Array()
+			var a: PackedVector3Array = r[k]
+			a.append(p)
+			r[k] = a
+	_rejillas[clave] = r
+	return r
 
 ## Cuelga la cara del hueso de la cabeza del jugador. null si no hay malla.
 static func poner(d: Dictionary, nombre: String, tex: Texture2D, piel: Color) -> MeshInstance3D:

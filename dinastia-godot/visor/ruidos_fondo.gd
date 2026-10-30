@@ -13,6 +13,9 @@ extends RefCounted
 const LISTA := "res://datos/ruidos_previstos.json"
 
 static var _empezado := false
+## Leídas del disco en hilos (`precargar`): clave de disco -> [tarea, Image o null].
+static var _leidas := {}
+static var _cerrojo := Mutex.new()
 
 ## Lanza la generación de las que falten en disco. Una vez por sesión.
 static func empezar() -> void:
@@ -88,3 +91,55 @@ static func _con_rampa(img: Image, lut: PackedByteArray) -> Image:
 		dst[i * 4 + 2] = lut[o + 2]
 		dst[i * 4 + 3] = lut[o + 3]
 	return Image.create_from_data(img.get_width(), img.get_height(), false, Image.FORMAT_RGBA8, dst)
+
+## AL EMPEZAR A MONTAR UN ESTADIO O LA CIUDAD: los hilos leen del disco (PNG + mipmaps) las
+## texturas previstas mientras el hilo principal construye; `tomar` recoge cada una ya lista.
+static func precargar() -> void:
+	if not CacheDisco.activa() or not FileAccess.file_exists(LISTA):
+		return
+	var d: Variant = JSON.parse_string(FileAccess.get_file_as_string(LISTA))
+	if not (d is Dictionary):
+		return
+	for c: Array in (d as Dictionary).get("claves", []):
+		var p := normalizar(c)
+		if p.is_empty() or Texturas._ruidos.has(str(p)):   ## ya en memoria: no hace falta leerla
+			continue
+		var clave := clave_disco(str(p))
+		_cerrojo.lock()
+		var ya := _leidas.has(clave)
+		_cerrojo.unlock()
+		if ya or not FileAccess.file_exists(CacheDisco._ruta_png(clave)):
+			continue
+		var t := WorkerThreadPool.add_task(_leer.bind(clave), true, "Leer ruido")
+		_cerrojo.lock()
+		_leidas[clave] = [t, null]
+		_cerrojo.unlock()
+
+## Del disco, con sus mipmaps (los mismos que haría `NoiseTexture2D`), o null.
+static func leer(clave: String) -> Image:
+	var img := CacheDisco.cargar_imagen(clave)
+	if img != null:
+		img.generate_mipmaps()
+	return img
+
+static func _leer(clave: String) -> void:
+	var img := leer(clave)
+	_cerrojo.lock()
+	if _leidas.has(clave):
+		_leidas[clave][1] = img
+	_cerrojo.unlock()
+
+## La imagen leída en un hilo (esperándolo si aún no terminó), o null si no se precargó.
+static func tomar(clave: String) -> Image:
+	_cerrojo.lock()
+	var e: Variant = _leidas.get(clave)
+	_cerrojo.unlock()
+	if e == null:
+		return null
+	WorkerThreadPool.wait_for_task_completion(int(e[0]))
+	_cerrojo.lock()
+	var img: Image = _leidas[clave][1]
+	_leidas.erase(clave)
+	_cerrojo.unlock()
+	return img
+
