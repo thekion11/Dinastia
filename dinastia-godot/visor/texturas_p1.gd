@@ -49,7 +49,7 @@ static func _tex_ruido(frec: float, semilla: int, normal: bool = false,
 	return _ruidos[clave]
 
 static func _con_disco(clave: String, crear: Callable) -> Texture2D:
-	var en_disco := "ruido|%s|%s" % [clave, Engine.get_version_info()["string"]]
+	var en_disco := RuidosFondo.clave_disco(clave)
 	var img := CacheDisco.cargar_imagen(en_disco)
 	if img != null and img.get_width() == TEX:
 		img.generate_mipmaps()

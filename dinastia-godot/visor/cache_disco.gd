@@ -88,10 +88,17 @@ static func cargar_imagen(clave: String) -> Image:
 static func guardar_imagen(clave: String, img: Image) -> void:
 	if not activa() or img == null or img.is_empty():
 		return
+	var copia := img.duplicate() as Image
+	WorkerThreadPool.add_task(guardar_imagen_ya.bind(clave, copia))
+
+## Igual, en el hilo que llama (los hilos de `RuidosFondo`). El nombre temporal lleva el hilo:
+## dos hilos con la misma imagen no se pisan el archivo a medio escribir.
+static func guardar_imagen_ya(clave: String, img: Image) -> void:
+	if not activa() or img == null or img.is_empty():
+		return
 	DirAccess.make_dir_recursive_absolute(CARPETA)
 	var ruta := _ruta_png(clave)
-	var copia := img.duplicate() as Image
-	WorkerThreadPool.add_task(func() -> void:
-		if copia.save_png(ruta + ".tmp") == OK:
-			DirAccess.rename_absolute(ruta + ".tmp", ruta))
+	var tmp := "%s.%d.tmp" % [ruta, OS.get_thread_caller_id()]
+	if img.save_png(tmp) == OK:
+		DirAccess.rename_absolute(tmp, ruta)
 
