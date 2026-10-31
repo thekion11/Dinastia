@@ -73,7 +73,7 @@ var bienvenida: bool = false
 ## EL DEPÓSITO DEL COCHE (27-10-2026): se gasta al conducir por la ciudad en 3D (`VidaCiudad.gasolina_tick`), vacío no arranca
 ## y se llena en los surtidores. `aviso_comb` = la semana (año*100+semana) del último aviso de «menos del 15 %».
 const DEPOSITO_L := 45.0
-const L_POR_KM := 2.5
+const L_POR_KM := 0.5   ## (31-10, decisión del dueño) antes 2,5: 18 km por depósito; ahora ~90 km
 var combustible: float = DEPOSITO_L
 var premium := false   ## (§2.5) el último repostaje fue premium: rinde un 15 % más
 var aviso_comb: int = -1
