@@ -233,13 +233,17 @@ func _fijar_ritmo(r: String) -> void:
 		_motor.t = frac * _motor.duracion_mitad
 	_mostrar_banner_gol({"rapido": "⏩ Partido corto", "normal": "⏯ Ritmo normal", "largo": "🐢 Partido largo"}.get(r, r), true)
 
-## DIFICULTAD DE LA CPU (20-10-2026): se guarda en los ajustes y vale para el
-## próximo partido; en el actual, al momento.
+## DIFICULTAD DE LA CPU (20-10-2026): se guarda en los ajustes y vale para el próximo partido; en el actual,
+## al momento. Con las 8 categorías (27-10) va en otra clave: la vieja «profesional» era la normal y hoy es más
+## difícil, así que la elección de antes se traduce una vez (`VIEJA`) y la normal pasa a «debutante».
+const DIFICULTAD_VIEJA := {"principiante": "practicante", "amateur": "cadete", "semipro": "debutante",
+	"profesional": "debutante", "clase_mundial": "experto", "leyenda": "maestro"}
 static func dificultad_cpu_guardada() -> String:
 	var cfg := ConfigFile.new()
 	cfg.load(CajonAjustes.RUTA)
-	var d := String(cfg.get_value(CajonAjustes.SECCION, "dificultad_cpu", "profesional"))
-	return d if MotorJugable.DIFICULTADES.has(d) else "profesional"
+	var vieja := String(DIFICULTAD_VIEJA.get(String(cfg.get_value(CajonAjustes.SECCION, "dificultad_cpu", "")), "debutante"))
+	var d := String(cfg.get_value(CajonAjustes.SECCION, "dificultad_cpu8", vieja))
+	return d if MotorJugable.DIFICULTADES.has(d) else "debutante"
 
 func _texto_dificultad() -> String:
 	return Idiomas.t("🤖 Dificultad de la CPU: ") + Idiomas.t(String(MotorJugable.DIFICULTADES[dificultad_cpu_guardada()]["nombre"]))
@@ -247,7 +251,7 @@ func _texto_dificultad() -> String:
 func _fijar_dificultad_cpu(nivel: String) -> void:
 	var cfg := ConfigFile.new()
 	cfg.load(CajonAjustes.RUTA)
-	cfg.set_value(CajonAjustes.SECCION, "dificultad_cpu", nivel)
+	cfg.set_value(CajonAjustes.SECCION, "dificultad_cpu8", nivel)
 	cfg.save(CajonAjustes.RUTA)
 	if _motor != null:
 		_motor.fijar_dificultad(nivel)
@@ -255,7 +259,43 @@ func _fijar_dificultad_cpu(nivel: String) -> void:
 		_btn_dificultad.text = _texto_dificultad()
 	_mostrar_banner_gol(Idiomas.t("CPU: ") + Idiomas.t(String(MotorJugable.DIFICULTADES[nivel]["nombre"])), true)
 
-## Pasa al siguiente nivel (vuelve al primero tras «Leyenda»).
+## EL PRESET DE JUEGO (semana 3, 27-10-2026): Realista o Arcade, guardado como la dificultad.
+static func preset_guardado() -> String:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	var d := String(cfg.get_value(CajonAjustes.SECCION, "preset_juego", "realista"))
+	return d if MotorJugable.PRESETS.has(d) else "realista"
+
+func _texto_preset() -> String:
+	return Idiomas.t("🎮 Estilo de juego: ") + Idiomas.t(String(MotorJugable.PRESETS[preset_guardado()]["nombre"]))
+
+func _ciclar_preset(boton: Button) -> void:
+	var orden: Array = MotorJugable.ORDEN_PRESETS
+	var nuevo := String(orden[(orden.find(preset_guardado()) + 1) % orden.size()])
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	cfg.set_value(CajonAjustes.SECCION, "preset_juego", nuevo)
+	cfg.save(CajonAjustes.RUTA)
+	if _motor != null:
+		_motor.fijar_preset(nuevo)
+	boton.text = _texto_preset()
+
+## La distancia de la cámara «Pro» (semana 4): cerca, normal o lejos; se guarda como el preset.
+static func pro_camara_guardada() -> String:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	var d := String(cfg.get_value(CajonAjustes.SECCION, "pro_camara", "normal"))
+	return d if CameraRig.PRO_DISTANCIAS.has(d) else "normal"
+
+func _fijar_pro_camara(clave: String) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	cfg.set_value(CajonAjustes.SECCION, "pro_camara", clave)
+	cfg.save(CajonAjustes.RUTA)
+	if _rig != null:
+		_rig.pro_distancia = float(CameraRig.PRO_DISTANCIAS[clave])
+
+## Pasa al siguiente nivel (vuelve al primero tras «Ultimate»).
 func _ciclar_dificultad_cpu() -> void:
 	var orden: Array = MotorJugable.ORDEN_DIFICULTAD
 	var i := orden.find(dificultad_cpu_guardada())

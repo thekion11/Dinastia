@@ -55,6 +55,16 @@ func _probar() -> void:
 	_comprobar(BanquilloVivo.preparar(ap), "el banquillo tiene sus clips de medio cuerpo")
 	for nombre in BanquilloVivo.CLIPS:
 		_comprobar(ap.has_animation(nombre), "clip de banquillo «%s»" % nombre)
+	## Ante una lesión de los suyos (M-102): todos los clips de `LESIONES` existen y el que lleva las manos a la cabeza es de medio cuerpo.
+	var faltan: Array[String] = []
+	for c: String in BanquilloVivo.LESIONES:
+		if not ap.has_animation(c):
+			faltan.append(c)
+	_comprobar(faltan.is_empty() and ap.has_animation("sentado_manos_cabeza"), "los clips de lesión del banquillo existen (faltan: %s)" % ", ".join(faltan))
+	var prueba := Node3D.new()
+	add_child(prueba)
+	_comprobar(BanquilloVivo.reaccionar(prueba, "lesion", true) == 0, "sin banquillo no reacciona nadie (y no falla)")
+	prueba.queue_free()
 	if ap.has_animation("sentado_festeja"):
 		var sentado := ap.get_animation("sentado")
 		var fest := ap.get_animation("sentado_festeja")

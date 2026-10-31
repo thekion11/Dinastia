@@ -1,8 +1,7 @@
 extends "res://visor/explorador_ciudad_p3.gd"
 ## [Capa 4/6 de `explorador_ciudad.gd`] _mover_en_estadio, _bajar_a_la_galeria, _usar, _tactil, _aplicar_ajustes, _montar_hud … (+7)
 
-## Dentro del estadio se camina por las zonas de `TunelVestuario` (vestuario,
-## túnel, banda, campo y la puerta). Salir por la puerta devuelve a la calle.
+## Dentro del estadio se camina por las zonas de `TunelVestuario` (vestuario, túnel, banda, campo y la puerta). Salir por la puerta devuelve a la calle.
 func _mover_en_estadio(delta: float) -> void:
 	var e := _entrada()
 	if _sentado:
@@ -30,10 +29,6 @@ func _mover_en_estadio(delta: float) -> void:
 	if _planta == GaleriaClub.PLANTA and GaleriaClub.arriba(_est, local):
 		## Arriba de la escalera mecánica: la calle.
 		_subir_de_la_galeria()
-		return
-	if _planta == 0 and local.z > float((_est["puerta"] as Vector3).z) + 1.0:
-		## Cruzada la puerta, ya en la calle.
-		_salir_del_estadio()
 		return
 	## Colisión del cuerpo entero (paredes, muebles, gente): `ColisionClub`.
 	## La puerta a la calle es la excepción: cruzarla saca del estadio.
@@ -63,6 +58,9 @@ func _mover_en_estadio(delta: float) -> void:
 		_aviso.text = Idiomas.t("E: hablar con %s (%s)") % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]
 		_zona_est = nombre
 		_aviso_hablar = true
+	elif not MuseoVitrinas.cercana(cuerpo.position - CityBuilder.ESTADIO_EN).is_empty():
+		_aviso.text = Idiomas.t("E: ver el trofeo")
+		_zona_est = "·vitrina"
 	elif RecorridoClub.junto_a_la_grada(cuerpo.position - CityBuilder.ESTADIO_EN, _planta):
 		_aviso.text = Idiomas.t("E: sentarse en la grada")
 		_zona_est = "·grada"
@@ -151,6 +149,8 @@ func _usar() -> void:
 			_hinchas_quitados = RecorridoClub.despejar_hinchas(cb, cuerpo.global_position + Vector3(0, 0.5, 0))
 			_aviso.text = Idiomas.t("En la grada. A/D: mirar alrededor · E: levantarse")
 			return
+		if MuseoVitrinas.usar(self, loc):
+			return
 		var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
 		var g: Dictionary = pe.cercano(cuerpo.position - CityBuilder.ESTADIO_EN, _planta) if pe != null else {}
 		if not g.is_empty():
@@ -176,6 +176,8 @@ func _usar() -> void:
 		return
 	if _cerca.is_empty():
 		return
+	if _cerca["tipo"] == "lugar" and (SubsueloCiudad.servicio(self, String(_cerca["k"])) or ComercioCiudad.servicio(self, String(_cerca["k"]))):
+		return
 	if _cerca["tipo"] == "lugar" and vida != null and vida.es_mi_casa(String(_cerca["k"])):
 		vida.entrar_casa()
 		return
@@ -184,7 +186,9 @@ func _usar() -> void:
 				and MinijuegosCiudad.juego_de(String(_cerca["k"])) == "")):
 		_entrar_en_edificio(String(_cerca["k"]))
 		return
-	if _cerca["tipo"] == "metro":
+	if _cerca["tipo"] == "boton_peatonal":   ## M-170: pide el verde peatonal
+		return cb.expansion.semaforos.pedir_con_aviso(self)
+	if _cerca["tipo"] == "metro" and (vida == null or vida.cobrar_pasaje("metro")):   ## M-182: el pasaje sale de la tarjeta Red
 		_entrar_al_anden(_cerca["acc"])
 		return
 	if _cerca["tipo"] == "puerta_estadio":

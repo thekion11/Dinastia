@@ -104,6 +104,8 @@ func _abrir_mesa(e: Dictionary) -> void:
 	var c := p.mundo.cantera
 	var bono := p.mundo.entrenamiento.bono_agentes() if p.mundo.entrenamiento != null else 0.0
 	var mesa := MesaAgente.new(e, c.confianza_de(String(e.get("agente", ""))), bono, Azar.ent(1, 1 << 30))
+	if p.mundo.citas != null and p.mundo.citas.favor_agente == p.mundo.anio * 60 + p.mundo.semana:
+		mesa.aplicar_favor()   ## §2.5: le debías un café al agente
 	p.add_child(MesaAgenteUI.new(mesa, func(m: MesaAgente) -> void:
 		var r: Dictionary
 		match m.estado:
@@ -168,7 +170,7 @@ func _pintar_solicitud_plantel() -> void:
 	t.text = Idiomas.t("TE BUSCA UN JUGADOR")
 	marco.add_child(t)
 	var txt := p._texto(13, Principal.COL_TEXTO)
-	txt.text = Idiomas.t("%s (%d años, media %d) %s") % [j.nombre, j.edad, j.ovr, String(d[1]).to_lower()]
+	txt.text = Idiomas.t("%s (%d años, media %d) %s") % [j.nombre, j.edad, j.ovr, Idiomas.t(String(d[1]).to_lower())]
 	txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	marco.add_child(txt)
 	var fila := HBoxContainer.new()

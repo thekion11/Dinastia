@@ -183,7 +183,7 @@ static func _jugador_a_dic_base(j: Jugador) -> Dictionary:
 		"g": j.pos, "pe": j.pos_e, "e": j.edad, "o": j.ovr, "t": j.pot,
 		"at": j.atributos, "r": j.rasgo,
 		"f": j.forma, "m": j.moral, "fi": j.fisico,
-		"l": j.lesion, "s": j.suspension, "a": j.amarillas,
+		"l": j.lesion, "s": j.suspension, "ss": j.susp_semana, "a": j.amarillas,
 		"go": j.goles, "as": j.asistencias, "pj": j.partidos,
 		"v": j.valor, "su": j.sueldo, "an": j.anios_contrato, "pc": j.primer_contrato, "rd": j.rebaja_descenso, "dc": j.descenso_club,
 		"d": j.dorsal, "cap": j.capitan, "ps": j.pide_salir, "tr": j.transferible,
@@ -193,6 +193,8 @@ static func _jugador_a_dic_base(j: Jugador) -> Dictionary:
 		## no pesa nada: diez mil jugadores con quince rasgos cada uno serian dos
 		## megas de guardado para nada.
 		"lk": j.look, "oe": j.ovr_al_empezar, "hs": j.historial, "pr": j.premios,
+		## 28-10 (auditoría): se perdían al cargar las posiciones secundarias, la adaptación, la fidelidad pagada y las notas.
+		"psec": j.pos_sec, "ad": j.adapt, "fh": j.fidelidad_hasta, "no": j.notas.slice(-10),
 	}
 
 ## Las claves son cortas a propósito. Con 8.448 jugadores, escribir "atributos"
@@ -270,6 +272,9 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"version": VERSION,
 		"guardado": int(Time.get_unix_time_from_system()),
 		"semilla": m.semilla,
+		## 28-10: el ESTADO del azar, no solo la semilla: cargar y seguir da la misma línea que seguir sin cargar.
+		"azar": str(Azar._rng.state),   ## como texto: es de 64 bits y el JSON lo redondearía
+		"ex_mio": Partido.ex_de_mi_club,
 		"anio": m.anio,
 		"semana": m.semana,
 		"horario": m.horario,
@@ -317,6 +322,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"vida": m.vida.a_dic() if m.vida != null else {},
 		"reloj": m.reloj.a_dic(), "necesidades": m.necesidades.a_dic(),   ## fase 0
 		"citas": m.citas.a_dic(),   ## fase 4
+		"redes_ciudad": m.redes_ciudad.a_dic() if m.redes_ciudad != null else {},   ## redes de la ciudad (partida vieja: sin clave)
 		"afinidad": m.afinidad.a_dic(),   ## fase 4, bloque 7
 		"imprevistos": m.imprevistos.a_dic(),
 		"maestria": m.maestria.a_dic() if m.maestria != null else {},
@@ -338,6 +344,8 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"prensa": _prensa_a_dic(m.prensa),
 		"medico": m.medico.a_dic() if m.medico != null else {},
 		"logros": m.logros.a_dic() if m.logros != null else {},
+		"retos_semana": m.retos_semana.a_dic(),
+		"mentor_mes": m.mentor_mes.a_dic(),
 		"mercado_dt": MercadoDT.de(m).a_dic(),
 		"ojeados": m.ojeados,
 		"libro_financiero": m.libro_financiero,
@@ -355,7 +363,22 @@ static func instantanea(m: Mundo) -> Dictionary:
 
 	return datos
 
+## EL DESAFÍO «SIN RED» (27-10-2026, fila 971): con él no se puede volver a un guardado anterior. Hay UNA sola ranura (la principal, `partida`):
+## guardar en cualquier otra la reutiliza, así que no quedan guardados viejos a los que volver; y mientras se juega no se carga ninguno (el ciclo de
+## partida lo comprueba con `motivo_sin_cargar`). Se guarda siempre solo cada semana (`autoguardar_si_toca`).
+const RANURA_UNICA := "partida"
+
+static func ranura_para(m: Mundo, nombre: String) -> String:
+	return RANURA_UNICA if m != null and m.tiene_desafio("sinRecarga") else nombre
+
+## "" si se puede cargar; si no, el motivo (ya traducido).
+static func motivo_sin_cargar(m: Mundo) -> String:
+	if m != null and m.tiene_desafio("sinRecarga"):
+		return Idiomas.t("Desafío «Sin red»: no puedes cargar guardados anteriores. La partida se guarda sola cada semana.")
+	return ""
+
 static func guardar(m: Mundo, nombre: String) -> bool:
+	nombre = ranura_para(m, nombre)
 	var t0 := Time.get_ticks_msec()
 	var datos := instantanea(m)
 	var crudo := JSON.stringify(datos).to_utf8_buffer()
@@ -378,7 +401,7 @@ static func _dic_a_jugador(d: Dictionary) -> Jugador:
 	j.atributos = d["at"]; j.rasgo = String(d["r"])
 	j.forma = int(d["f"]); j.moral = int(d["m"]); j.fisico = int(d["fi"])
 	j.historial_moral = (d.get("hm", []) as Array).duplicate(true)
-	j.lesion = int(d["l"]); j.suspension = int(d["s"]); j.amarillas = int(d["a"])
+	j.lesion = int(d["l"]); j.suspension = int(d["s"]); j.susp_semana = int(d.get("ss", -1)); j.amarillas = int(d["a"])
 	j.goles = int(d["go"]); j.asistencias = int(d["as"]); j.partidos = int(d["pj"])
 	j.valor = int(d["v"]); j.sueldo = int(d["su"]); j.anios_contrato = int(d["an"])
 	j.primer_contrato = bool(d.get("pc", false))   ## guardados viejos: sin primer contrato
@@ -394,4 +417,8 @@ static func _dic_a_jugador(d: Dictionary) -> Jugador:
 	var hs: Variant = d.get("hs", [])
 	j.historial = (hs as Array).duplicate() if hs is Array else []
 	j.premios = (d.get("pr", []) as Array).duplicate(true)
+	j.pos_sec.assign(d.get("psec", []))
+	j.adapt = int(d.get("ad", 0))
+	j.fidelidad_hasta = int(d.get("fh", 0))
+	j.notas.assign(d.get("no", []))
 	return j

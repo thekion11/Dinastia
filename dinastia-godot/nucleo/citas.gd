@@ -28,9 +28,23 @@ const TIPOS := {
 	"politica": {"icono": "🏢", "dia": 4, "hora": 12, "donde": "ciudad", "lugar": "ciudad_ayuntamiento", "planta": 0, "nombre_lugar": "el ayuntamiento"},
 	## Bloque 4: la entrevista de contratación, al día siguiente del fichaje, en tu oficina.
 	"entrevista": {"icono": "🤝", "dia": -1, "hora": 10, "donde": "estadio", "lugar": "Oficina del DT", "planta": 1, "nombre_lugar": "tu oficina"},
+	## Bloque 6: la asamblea de socios (cada 4 temporadas, o con la confianza por los suelos), el sábado en el salón de actos.
+	"asamblea": {"icono": "🗳️", "dia": 5, "hora": 11, "donde": "estadio", "lugar": "Sala de prensa", "planta": 2, "nombre_lugar": "el salón de actos"},
+	## Fase 5: las ramas de otros deportes piden presupuesto (semana 5) y el presidente presenta cada trofeo nuevo en el museo.
+	"rama": {"icono": "🏅", "dia": 2, "hora": 17, "donde": "estadio", "lugar": "Museo del club", "planta": 2, "nombre_lugar": "el museo del club"},
+	"celebracion": {"icono": "🏆", "dia": 0, "hora": 10, "donde": "estadio", "lugar": "Museo del club", "planta": 2, "nombre_lugar": "el museo del club"},
 }
+const RAMA_SEMANA := 5
+const RAMA_EXTRA := 0.10   ## del coste anual de la rama
+const ASAMBLEA_SEMANA := 3
+const CONFIANZA_ASAMBLEA := 25
 ## Lo que mueve la moral del recién llegado cada tono de la entrevista (seguro, evasivo, humilde).
 const MORAL_ENTREVISTA := [2, -1, 1]
+## (§2.5, 30-10) La entrevista son TRES preguntas: el tono (arriba), con qué grupo del vestuario se
+## cambia y con quién del cuerpo técnico trabaja su primera semana. Staff: [forma, adaptación, moral].
+const ENTREVISTA_PREGUNTAS := ["%s quiere conocer a su nuevo entrenador.", "¿Con quién se cambia %s en el vestuario?",
+	"¿Con quién del cuerpo técnico trabaja %s esta semana?"]
+const STAFF_ENTREVISTA := [[3, 0, 0], [0, 15, 0], [0, 0, 1]]
 const _NOMBRES := ["Valeria", "Ignacio", "Camila", "Rodrigo", "Antonia", "Matías", "Josefa", "Sebastián", "Constanza", "Nicolás"]
 const _APELLIDOS := ["Soto", "Reyes", "Vargas", "Fuentes", "Araya", "Espinoza", "Tapia", "Carrasco", "Sepúlveda", "Figueroa"]
 
@@ -40,6 +54,13 @@ var lista: Array[Dictionary] = []
 var objetivo := ""
 ## La semana (abs) en que el agente te dejó algo a deber (bloque 3: −5 % en su próxima mesa).
 var favor_agente := -1
+## La semana (abs) en que convocaste una rueda de prensa extra desde el móvil (máximo una).
+var rueda_semana := -1
+## El año en que ya hubo asamblea (una por temporada como mucho).
+var asamblea_anio := -1
+## Cuántos trofeos del DT se habían celebrado ya (−1 = aún sin mirar).
+var _trofeos_vistos := -1
+var _ramas_vistas := -1   ## títulos de las ramas ya celebrados (`CitasRamas`)
 var _n := 0
 
 static func _h(t: String) -> int:
@@ -94,11 +115,43 @@ func semana(m: Mundo, prox: int = -1) -> void:
 		_nueva(m, prox, "agente", m.mercado_av.superagente, Idiomas.t("Agente de jugadores"),
 			Idiomas.t("quiere hablar de sus representados (%d en tu plantilla)") % m.mercado_av.clientes.size(), "")
 		nuevas += 1
+	## La asamblea de socios: cada 4 temporadas, o cualquier temporada con la confianza por los suelos.
+	if nuevas < MAX_SEMANA and asamblea_anio != m.anio and prox == ASAMBLEA_SEMANA and not _hay("asamblea", prox) \
+			and (m.anio % 4 == 0 or (m.directiva != null and m.directiva.confianza < CONFIANZA_ASAMBLEA)):
+		if m.junta != null:
+			m.junta.formar(c)
+		var pres := String(m.junta.presidente.get("nombre", "Presidente")) if m.junta != null else "Presidente"
+		_nueva(m, prox, "asamblea", pres, Idiomas.t("Asamblea de socios"), Idiomas.t("convoca la asamblea: los socios votan la presidencia y tú hablas"), "")
+		nuevas += 1
+	## Las ramas de otros deportes (fase 5): su coordinadora pide presupuesto extra en la semana 5.
+	if m.hinchada != null and prox == RAMA_SEMANA:
+		for f: Array in Hinchada.RAMAS:
+			var clave := String(f[0])
+			if nuevas >= MAX_SEMANA or not m.hinchada.tiene_rama(clave) or _hay_clave("rama", prox, clave):
+				continue
+			_nueva(m, prox, "rama", nombre_ficticio("rama|" + clave + c.id), Idiomas.t("Coordinadora de %s") % Idiomas.t(String(f[2])),
+				Idiomas.t("pide un presupuesto extra para la rama (%s)") % Eco.dinero(int(float(f[3]) * RAMA_EXTRA)), clave)
+			nuevas += 1
+	## Un trofeo nuevo del primer equipo: el presidente lo presenta en el museo el lunes.
+	if m.roles != null:
+		var tro := m.roles.trofeos.size()
+		if _trofeos_vistos >= 0 and tro > _trofeos_vistos and nuevas < MAX_SEMANA and not _hay("celebracion", prox):
+			var pres := String(m.junta.presidente.get("nombre", "Presidente")) if m.junta != null else "Presidente"
+			_nueva(m, prox, "celebracion", pres, Idiomas.t("Presidente de %s") % c.nombre, Idiomas.t("te espera para presentar el trofeo nuevo en el museo"), "")
+			nuevas += 1
+		_trofeos_vistos = tro
+	nuevas = CitasRamas.celebraciones(self, m, c, prox, nuevas)   ## §2.5: los títulos de las ramas también se celebran
 	## La semana antes de la votación, el gabinete del alcalde pide apoyo.
 	if nuevas < MAX_SEMANA and m.politica != null and prox == Politica.semana_votacion(c.pais) - 1 and not _hay("politica", prox):
 		_nueva(m, prox, "politica", Politica.nombre_ficticio(c.pais, "gabinete%d" % m.anio), Idiomas.t("Jefe de gabinete del alcalde"),
 			Idiomas.t("pide el apoyo público del club antes de la votación"), c.pais)
 		nuevas += 1
+
+func _hay_clave(tipo: String, sem: int, clave: String) -> bool:
+	for ct: Dictionary in lista:
+		if String(ct["tipo"]) == tipo and int(ct["semana"]) == sem and String(ct["clave"]) == clave and String(ct["estado"]) == "pendiente":
+			return true
+	return false
 
 func _hay(tipo: String, sem: int) -> bool:
 	for ct: Dictionary in lista:
@@ -172,6 +225,14 @@ func opciones(m: Mundo, ct: Dictionary) -> Array[String]:
 			return [Idiomas.t("Firmar aquí mismo (+5 % de renta)"), Idiomas.t("Lo pienso; sigue en el PC")]
 		"agente":
 			return [Idiomas.t("Escuchar lo que ofrece"), Idiomas.t("No hago tratos en la calle")]
+		"rama":
+			return [Idiomas.t("Aprobar el presupuesto extra"), Idiomas.t("Este año no"), Idiomas.t("Darles visibilidad: un partido en el estadio")]
+		"celebracion":
+			return [Idiomas.t("Levantar la copa y foto para Tribuna"), Idiomas.t("Celebrarlo en privado")]
+		"asamblea":
+			return [Idiomas.t("Seguro · Este proyecto va a ganar: pido vuestro voto para seguir igual."),
+				Idiomas.t("Evasivo · No es momento de cambios; ya veremos cómo acaba la temporada."),
+				Idiomas.t("Humilde · Los socios mandan; yo seguiré trabajando con quien elijan.")]
 		"entrevista":
 			return [Idiomas.t("Seguro · Vienes a ser importante: demuéstralo desde mañana."),
 				Idiomas.t("Evasivo · Ya veremos dónde encajas; el tiempo dirá."),
@@ -182,7 +243,31 @@ func opciones(m: Mundo, ct: Dictionary) -> Array[String]:
 
 ## Cumple la cita con la opción elegida (0 o 1). Devuelve {titulo, texto} ya traducido.
 ## Lo que pasa es lo de siempre (PC) más el bono de estar en persona.
-func resolver(m: Mundo, id: String, opcion: int) -> Dictionary:
+## Las opciones de la pregunta `paso` (0-2) de la entrevista; la 0 son los tonos de `opciones()`.
+func opciones_entrevista(m: Mundo, ct: Dictionary, paso: int) -> Array[String]:
+	match paso:
+		1:
+			var o: Array[String] = []
+			for cl: Dictionary in grupos_entrevista(m):
+				o.append(Idiomas.t("Con «%s»") % Idiomas.t(String(cl["nombre"])))
+			o.append(Idiomas.t("Con todos, sin bandos"))
+			return o
+		2:
+			return [Idiomas.t("El preparador físico: un plan a su medida (+3 de forma)"),
+				Idiomas.t("El analista: vídeos de tu sistema (+15 de adaptación)"),
+				Idiomas.t("Nadie en especial: que se integre a su ritmo (+1 de moral)")]
+	return opciones(m, ct)
+
+## Hasta dos grupos del vestuario a los que presentarlo (los de más miembros).
+func grupos_entrevista(m: Mundo) -> Array:
+	if m.vestuario == null:
+		return []
+	var g := m.vestuario.camarillas.duplicate()
+	g.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return (a["miembros"] as Array).size() > (b["miembros"] as Array).size())
+	return g.slice(0, 2)
+
+## `extra` = [grupo, staff] de las preguntas 2 y 3 de la entrevista (vacío = solo el tono, como antes).
+func resolver(m: Mundo, id: String, opcion: int, extra: Array = []) -> Dictionary:
 	var ct := por_id(id)
 	if ct.is_empty() or String(ct["estado"]) != "pendiente":
 		return {}
@@ -221,10 +306,35 @@ func resolver(m: Mundo, id: String, opcion: int) -> Dictionary:
 					j = x
 			if j == null:
 				return {"titulo": String(ct["quien"]), "texto": Idiomas.t("Ya no está en el club.")}
-			var d: int = MORAL_ENTREVISTA[clampi(opcion, 0, 2)]
+			var d: int = MORAL_ENTREVISTA[clampi(opcion, 0, 2)] + _entrevista_extra(m, j, extra)
 			j.cambiar_moral(d, "Entrevista con el DT")
 			return {"titulo": Idiomas.t("Primera charla con %s") % j.nombre, "texto": Idiomas.t("Sale de tu oficina %s (moral %+d).") % [
 				[Idiomas.t("con ganas de demostrar"), Idiomas.t("sin saber qué esperar"), Idiomas.t("sintiéndose uno más")][clampi(opcion, 0, 2)], d]}
+		"asamblea":
+			return _asamblea(m, c, opcion)
+		"rama":
+			if opcion == 2:
+				return CitasRamas.visibilidad(m, c, ct)
+			if opcion != 0 or m.hinchada == null:
+				return {"titulo": String(ct["quien"]), "texto": Idiomas.t("«Lo entiendo. Seguiremos con lo que hay.»")}
+			var coste := 0
+			for f: Array in Hinchada.RAMAS:
+				if String(f[0]) == String(ct["clave"]):
+					coste = int(float(f[3]) * RAMA_EXTRA)
+			if c.saldo < coste:
+				return {"titulo": String(ct["quien"]), "texto": Idiomas.t("No hay caja para el extra (%s).") % Eco.dinero(coste)}
+			c.mover_saldo(-coste)
+			m.hinchada.bono_rama[String(ct["clave"])] = m.anio
+			return {"titulo": Idiomas.t("Presupuesto aprobado"), "texto": Idiomas.t("%s para la rama esta temporada: jugará más fuerte.") % Eco.dinero(coste)}
+		"celebracion":
+			if String(ct["clave"]).begins_with("rama|"):
+				return CitasRamas.celebrar(m, c, ct, opcion)
+			if m.prensa != null:
+				m.prensa.animo = clampi(m.prensa.animo + 3, 0, 100)
+			if opcion == 0 and m.redes != null:
+				m.redes.publicar(m, "victoria", [Redes.hashtag_club(c), "#Campeones"])
+				return {"titulo": Idiomas.t("¡Campeones!"), "texto": Idiomas.t("La copa ya está en la vitrina y la foto en Tribuna. La grada está en una nube (+3 de ánimo).")}
+			return {"titulo": Idiomas.t("¡Campeones!"), "texto": Idiomas.t("La copa ya está en la vitrina. La grada está en una nube (+3 de ánimo).")}
 	## política
 	if opcion != 0 or m.politica == null:
 		return {"titulo": String(ct["quien"]), "texto": Idiomas.t("«Lo entiendo. El fútbol es de todos.»")}
@@ -234,12 +344,57 @@ func resolver(m: Mundo, id: String, opcion: int) -> Dictionary:
 		for f: Array in Prensa.PERIODISTAS:
 			if String(f[3]) == "crítico":
 				m.prensa._mover_relacion(String(f[0]), -2)
+		m.prensa.noticia.emit("🏛️ El club, con el gobierno", "El club apoya públicamente al gobierno antes de la votación. Si repite, será un aliado (sus ayudas, +25 %); si pierde, el nuevo gobierno lo recordará.")
 	return {"titulo": String(ct["quien"]), "texto": Idiomas.t("«El alcalde lo recordará.» El club apoya al gobierno en la próxima rueda; la prensa crítica toma nota (−2 de relación).")}
+
+## La votación de la asamblea (determinista: ánimo de la grada, confianza y tu discurso).
+## Perder no te echa: cambia el presidente de la `Junta` y la confianza vuelve a 50.
+func _asamblea(m: Mundo, c: Club, opcion: int) -> Dictionary:
+	asamblea_anio = m.anio
+	var animo := m.prensa.animo if m.prensa != null else 50
+	var conf := m.directiva.confianza if m.directiva != null else 50
+	var votos := 40.0 + (animo - 50) * 0.5 + (conf - 50) * 0.3
+	match clampi(opcion, 0, 2):
+		0: votos += 6.0 if animo >= 50 else -4.0
+		1: votos -= 2.0
+		2: votos += 4.0 if animo < 50 else 1.0
+	var pct := clampi(int(round(votos)), 5, 95)
+	if pct >= 50:
+		if m.directiva != null:
+			m.directiva.confianza = clampi(m.directiva.confianza + 2, 0, 100)
+		return {"titulo": Idiomas.t("La asamblea respalda al presidente"), "texto": Idiomas.t("%d %% de los votos. El proyecto sigue; la directiva te lo agradece (+2 de confianza).") % pct}
+	if m.junta != null:
+		var h := absi(("pres|%d|%s" % [m.anio, c.id]).hash())
+		var estilos: Array = Junta.ESTILOS.keys()
+		var anterior := String(m.junta.presidente.get("estilo", ""))
+		var estilo := String(estilos[h % estilos.size()])
+		if estilo == anterior:
+			estilo = String(estilos[(h + 1) % estilos.size()])
+		m.junta.presidente = {"nombre": m.junta._nombre(h), "estilo": estilo}
+	if m.directiva != null:
+		m.directiva.confianza = 50
+	if m.prensa != null and m.prensa.titular_pendiente.is_empty():
+		m.prensa.titular_pendiente = {"t": Idiomas.t("Cambio en la presidencia tras la asamblea"), "c": Idiomas.t("Los socios votaron el cambio; el entrenador sigue."), "tipo": "neutro", "medio": "La Tribuna"}
+	return {"titulo": Idiomas.t("Nuevo presidente"), "texto": Idiomas.t("%d %% de los votos: los socios eligen otra presidencia. Tú sigues; %s empieza de cero contigo (confianza 50).") % [
+		pct, String(m.junta.presidente.get("nombre", "")) if m.junta != null else ""]}
+
+## Convocar una rueda de prensa desde el móvil (§2.2d bloque 6): una extra por semana, con
+## el guion neutro de siempre; se responde en el PC como cualquier rueda. "" = convocada.
+func convocar_rueda(m: Mundo) -> String:
+	if m == null or m.prensa == null:
+		return "No hay prensa en esta partida."
+	if m.prensa.hay_rueda():
+		return "Ya hay una rueda abierta: respóndela en el PC."
+	if rueda_semana == m.anio * 60 + m.semana:
+		return "Ya convocaste una rueda esta semana."
+	rueda_semana = m.anio * 60 + m.semana
+	m.prensa.abrir_rueda(false, true)
+	return ""
 
 # ======================================================================== GUARDADO
 
 func a_dic() -> Dictionary:
-	return {"lista": lista.duplicate(true), "objetivo": objetivo, "favor_agente": favor_agente, "n": _n}
+	return {"lista": lista.duplicate(true), "objetivo": objetivo, "favor_agente": favor_agente, "rueda": rueda_semana, "asamblea": asamblea_anio, "trofeos": _trofeos_vistos, "ramas": _ramas_vistas, "n": _n}
 
 func desde_dic(d: Dictionary) -> void:
 	lista.clear()
@@ -248,4 +403,28 @@ func desde_dic(d: Dictionary) -> void:
 			lista.append(ct as Dictionary)
 	objetivo = String(d.get("objetivo", ""))
 	favor_agente = int(d.get("favor_agente", -1))
+	rueda_semana = int(d.get("rueda", -1))
+	asamblea_anio = int(d.get("asamblea", -1))
+	_trofeos_vistos = int(d.get("trofeos", -1))
+	_ramas_vistas = int(d.get("ramas", -1))
 	_n = int(d.get("n", 0))
+
+## Las preguntas 2 y 3 de la entrevista: entra en el grupo elegido (hasta que el vestuario se
+## redibuje) y trabaja con el staff. Devuelve la moral extra (grupo de buen humor +1, enfadado −1).
+func _entrevista_extra(m: Mundo, j: Jugador, extra: Array) -> int:
+	var d := 0
+	if extra.size() >= 1:
+		var grupos := grupos_entrevista(m)
+		var gi := int(extra[0])
+		if gi >= 0 and gi < grupos.size():
+			var cl: Dictionary = grupos[gi]
+			if not (cl["miembros"] as Array).has(j.id):
+				(cl["miembros"] as Array).append(j.id)
+			m.vestuario._clan_de[j.id] = cl["id"]
+			d += 1 if int(cl.get("humor", 0)) >= 0 else -1
+	if extra.size() >= 2:
+		var st: Array = STAFF_ENTREVISTA[clampi(int(extra[1]), 0, 2)]
+		j.forma = clampi(j.forma + int(st[0]), 0, 100)
+		j.adapt = mini(100, j.adapt + int(st[1]))
+		d += int(st[2])
+	return d

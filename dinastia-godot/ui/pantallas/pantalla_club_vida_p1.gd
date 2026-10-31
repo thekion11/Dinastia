@@ -295,7 +295,12 @@ func _pintar_logros() -> void:
 	p._lista_logros.add_child(lema)
 	p._lista_logros.add_child(HSeparator.new())
 
-	var cat := lg.catalogo()
+	## Los logros cuyo sistema no existe (`Logros.SIN_SISTEMA`) no se enseñan: un logro que nunca puede caer solo
+	## confunde (28-10, cierre). Cuando se porte su sistema, se quita la clave de esa lista y vuelven solos.
+	var cat: Array = []
+	for f0: Dictionary in lg.catalogo():
+		if not bool(f0["pendiente"]):
+			cat.append(f0)
 	var hechos := 0
 	for f: Dictionary in cat:
 		if f["conseguido"]:
@@ -304,13 +309,11 @@ func _pintar_logros() -> void:
 	t.text = Idiomas.t("%d de %d logros") % [hechos, cat.size()]
 	p._lista_logros.add_child(t)
 	for f: Dictionary in cat:
-		var col := Principal.COL_VERDE if f["conseguido"] else (Principal.COL_BORDE if f["pendiente"] else Principal.COL_SUAVE)
-		var l := p._texto(12, col)
-		var marca := "hecho" if f["conseguido"] else ("—" if f["pendiente"] else "por hacer")
-		l.text = "%s %s  ·  %s" % [String(f["icono"]), String(f["titulo"]), marca]
+		var l := p._texto(12, Principal.COL_VERDE if f["conseguido"] else Principal.COL_SUAVE)
+		l.text = "%s %s  ·  %s" % [String(f["icono"]), Idiomas.t(String(f["titulo"])), Idiomas.t("hecho") if f["conseguido"] else Idiomas.t("por hacer")]
 		p._lista_logros.add_child(l)
-		var d := p._texto(11, Principal.COL_BORDE if f["pendiente"] else Principal.COL_SUAVE)
-		d.text = "     " + String(f["descripcion"]) + (Idiomas.t("   (su sistema aún no está portado)") if f["pendiente"] else "")
+		var d := p._texto(11, Principal.COL_SUAVE)
+		d.text = "     " + Idiomas.t(String(f["descripcion"]))
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_logros.add_child(d)
 	## Los treinta a largo plazo, con su progreso (26-10-2026).

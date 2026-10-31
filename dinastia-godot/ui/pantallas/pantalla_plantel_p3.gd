@@ -313,15 +313,15 @@ func _pintar_proximas_fechas(c: Club) -> void:
 		var cuando := "%d de %s" % [int(f["dia"]), Principal.MESES_LARGOS[int(f["mes"]) - 1]]
 		## "11 de septiembre" ya es la fecha: no repetirla.
 		var nom := String(f["nombre"])
-		l.text = "%s %s%s  (%s)" % [Calendario.icono(String(f["tipo"])), cuando,
-			"" if nom == cuando else " · " + nom, Idiomas.t("esta semana") if faltan < 7 else Idiomas.t("en %d días") % faltan]
-		l.tooltip_text = String(f["texto"])
+		l.text = "%s %s%s  (%s)" % [Calendario.icono(String(f["tipo"])), Idiomas.t(cuando),
+			"" if nom == cuando else " · " + Idiomas.t(nom), Idiomas.t("esta semana") if faltan < 7 else Idiomas.t("en %d días") % faltan]
+		l.tooltip_text = Idiomas.t(String(f["texto"]))
 		l.mouse_filter = Control.MOUSE_FILTER_PASS
 		p._lista_calendario.add_child(l)
 	for tor: Dictionary in Calendario.torneos(p.mundo.anio):
 		var sedes: Array = tor["sedes"]
 		var l2 := p._texto(12, Principal.COL_ORO)
-		l2.text = Idiomas.t("🌍 %s %d: del %d/%d al %d/%d%s") % [String(tor["nombre"]), p.mundo.anio,
+		l2.text = Idiomas.t("🌍 %s %d: del %d/%d al %d/%d%s") % [Idiomas.t(String(tor["nombre"])), p.mundo.anio,
 			int(tor["desde"][1]), int(tor["desde"][0]), int(tor["hasta"][1]), int(tor["hasta"][0]),
 			(Idiomas.t(" · sede: ") + ", ".join(sedes)) if not sedes.is_empty() else ""]
 		p._lista_calendario.add_child(l2)

@@ -33,7 +33,8 @@ const FORMAS := ["clasico", "circulo", "penta", "rombo", "hex", "escudo", "cruza
 const PATRONES := ["liso", "banda", "franjas", "mitad", "cuartos", "aro", "estrella", "ondas", "chevron", "sol",
 	"cruz", "rombos", "escamas", "estrella6",
 	"tablero", "corona2", "rayo", "anillos", "abanico", "interior", "puntas", "barras", "borde",
-	"escalera", "pila", "estrella8", "manchas", "florlis", "trebol", "medialuna"]
+	"escalera", "pila", "estrella8", "manchas", "florlis", "trebol", "medialuna",
+	"tercios_v", "tercios_h", "banda_h"]
 
 ## Las siluetas, en el sistema de coordenadas 64x70 del HTML.
 const SILUETAS := {
@@ -168,7 +169,7 @@ static func silueta(forma: String) -> String:
 ## [forma, patrón] del escudo del club real al que representa (tabla ESTADIO_CLUB,
 ## campo «escudo», `herramientas/estadios_reales.py`), o [].
 static func _rasgo_real(c: Club) -> Array:
-	var r: Variant = c.fila_estadio_real().get("escudo", [])
+	var r: Variant = AspectoClub.fila(c).get("escudo", [])
 	return r if r is Array else []
 
 ## djb2 sobre el id, el mismo hash que usa el resto del proyecto para que un
@@ -221,6 +222,8 @@ static func simbolo_de(c: Club) -> String:
 ## Las dos letras que van encima del escudo. Solo mayúsculas y dígitos, como en
 ## el HTML: "U. de Chile" da "UC", "Colo-Colo" da "CC".
 static func iniciales(c: Club) -> String:
+	if AspectoClub.siglas(c) != "":
+		return AspectoClub.siglas(c)
 	var s := ""
 	for i in c.nombre.length():
 		var ch := c.nombre[i]
@@ -234,8 +237,15 @@ static func iniciales(c: Club) -> String:
 
 ## El patrón que va recortado dentro de la silueta. Son los diez del HTML, con
 ## sus mismas coordenadas y opacidades.
-static func _patron_svg(p: String, c2: String) -> String:
+static func _patron_svg(p: String, c2: String, c3: String = "") -> String:
 	match p:
+		## Tricolores (orden 15): tres paños iguales con los dos colores y un tercero (`esc3` de la fila del club; si falta, el blanco).
+		"tercios_v":
+			return '<rect x="-4" y="-4" width="25.3" height="80" fill="%s" opacity=".95"/><rect x="42.7" y="-4" width="25.3" height="80" fill="%s" opacity=".95"/>' % [c2, c3 if c3 != "" else "#ffffff"]
+		"tercios_h":
+			return '<rect x="-4" y="-4" width="72" height="25" fill="%s" opacity=".95"/><rect x="-4" y="48" width="72" height="26" fill="%s" opacity=".95"/>' % [c2, c3 if c3 != "" else "#ffffff"]
+		"banda_h":
+			return '<rect x="-4" y="26" width="72" height="16" fill="%s" opacity=".95"/>' % c2
 		"banda":
 			return '<path d="M-6 44 L44 -6 L62 8 L12 58Z" fill="%s" opacity=".92"/>' % c2
 		"franjas":
@@ -421,7 +431,8 @@ static func svg_de(c: Club) -> String:
 </defs>
 <path d="%s" fill="%s"/>
 <g clip-path="url(#cl)">%s<path d="%s" fill="none" stroke="%s" stroke-width="5.5"/><path d="%s" fill="none" stroke="#000" stroke-opacity=".28" stroke-width="7.5"/></g>
+%s
 <path d="%s" fill="url(#br)"/>
 <path d="%s" fill="none" stroke="#00000055" stroke-width="1.4"/>
 <path d="%s" transform="translate(32 35) scale(.86) translate(-32 -35)" fill="none" stroke="#ffffff" stroke-opacity=".55" stroke-width="1.1"/>
-</svg>""" % [d, d, c.color_escudo1(), _patron_svg(p, c.color_escudo2()), d, _borde_de(c), d, d, d, d]
+</svg>""" % [d, d, c.color_escudo1(), _patron_svg(p, c.color_escudo2(), AspectoClub.esc(c, 2, "")), d, _borde_de(c), d, EscudoEmblemas.capa_de(c, c.color_escudo1()), d, d, d]

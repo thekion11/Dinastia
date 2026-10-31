@@ -264,10 +264,11 @@ static func _pintar_publico(img: Image, w: int, h: int, a1: Color, a2: Color,
 ## misma columna- y se sube la resolución para que cada "persona" no sea un
 ## bloque de 2 píxeles tan burdo.
 static func _make_stand_texture(patron: String, a1: Color, a2: Color, a3: Color, seed_val: int, lleno: float) -> ImageTexture:
-	## 96, no 64 (23-9-2026). Hasta que se arreglo el atlas de UV del `BoxMesh`
-	## (ver la nota en `build()`), de estos texeles solo se veia UN TERCIO: la
-	## rampa entera se pintaba con ~21 texeles de ancho. Ahora que se ven los
-	## 96, subir la resolucion de este eje si se nota -y es el eje que rayaba.
+	return _tex_cacheada("grada|%s|%s|%s|%s|%d|%.2f" % [patron, a1.to_html(), a2.to_html(), a3.to_html(), seed_val, lleno],
+		_make_stand_texture_calc.bind(patron, a1, a2, a3, seed_val, lleno))
+
+static func _make_stand_texture_calc(patron: String, a1: Color, a2: Color, a3: Color, seed_val: int, lleno: float) -> ImageTexture:
+	## 96, no 64 (23-9-2026): hasta arreglar el atlas de UV del `BoxMesh` solo se veía un tercio de estos texeles.
 	var w := 96    # resolucion subiendo la rampa
 	var h := 320   # resolucion a lo largo (se repite cada ~20 m, mismo tramo que antes)
 	var img := Image.create(w, h, true, Image.FORMAT_RGB8)
@@ -308,12 +309,7 @@ static func _make_stand_texture(patron: String, a1: Color, a2: Color, a3: Color,
 			col = Color(clampf(col.r + grano, 0, 1), clampf(col.g + grano, 0, 1), clampf(col.b + grano, 0, 1))
 			img.set_pixel(x, y, col)
 	_pintar_publico(img, w, h, a1, a2, lleno, rng)
-	## BUG REAL ENCONTRADO Y CORREGIDO (21-9-2026): esta textura llevaba
-	## `use_mipmaps=false` -sin generar mipmaps, el "ruido de gente" pixel a
-	## pixel de esta imagen, repetido varias veces a lo largo de la tribuna y
-	## visto de lejos, hace aliasing severo: sale como estatica de TV con
-	## rayas verticales de color, no como publico. `generate_mipmaps()` rellena
-	## la cadena de mip que `Image.create(..., true, ...)` solo reserva.
+	## Sin mipmaps (21-9-2026) el ruido de gente visto de lejos hacía aliasing como estática de TV.
 	img.generate_mipmaps()
 	return ImageTexture.create_from_image(img)
 

@@ -60,68 +60,29 @@ func _terminal_buses() -> void:
 ## el estadio, el centro comercial, la zona industrial y el barrio.
 func _paradas_bus() -> void:
 	var sitios := [
-		{"p": Vector3(RING_X - 13.0, 0, -170.0), "a": -PI * 0.5, "n": "Estadio"},
-		{"p": Vector3(-RING_X + 13.0, 0, 110.0), "a": PI * 0.5, "n": "Centro comercial"},
-		{"p": Vector3(RING_X - 13.0, 0, 140.0), "a": -PI * 0.5, "n": "Zona industrial"},
-		{"p": Vector3(BARRIO_EN.x + 13.0, 0, RING_Z_SUR + 60.0), "a": -PI * 0.5, "n": "Barrio"},
+		{"p": Vector3(RING_X - 13.0, 0, -170.0), "a": -PI * 0.5, "n": "Estadio", "sector": 300},
+		{"p": Vector3(-RING_X + 13.0, 0, 110.0), "a": PI * 0.5, "n": "Centro comercial", "sector": 100},
+		{"p": Vector3(RING_X - 13.0, 0, 140.0), "a": -PI * 0.5, "n": "Zona industrial", "sector": 400},
+		{"p": Vector3(BARRIO_EN.x + 13.0, 0, RING_Z_SUR + 60.0), "a": -PI * 0.5, "n": "Barrio", "sector": 200},
 	]
-	var vidrio := StandardMaterial3D.new()
-	vidrio.albedo_color = Color(0.72, 0.86, 0.92, 0.4)
-	vidrio.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	vidrio.metallic = 0.4
-	vidrio.roughness = 0.1
-	var metal: StandardMaterial3D = Texturas.metal(Color(0.08, 0.09, 0.1), 0.4).duplicate()
-	metal.metallic = 0.6
-	var acento := StandardMaterial3D.new()
-	acento.albedo_color = _color_club("c1", Color(0.2, 0.5, 0.3))
-	acento.roughness = 0.5
-
+	paradas_bus_pos.clear()
+	ParaderoRed.registro.clear()
 	for s in sitios:
+		paradas_bus_pos.append(s["p"])
+		esperas_bus.append(s["p"])
+		## Son paraderos de los recorridos «Red» sobre el mapa (`RecorridosMapa.DEL_CLUB`): de allí salen su código, su nombre
+		## («Av. Los Hinchas / Estadio»), sus recorridos y hacia dónde miran (a la calle del anillo).
+		var cod := RecorridosRed.paradero_en(s["p"])
+		if cod != "":
+			s["a"] = float(RecorridosMapa.paradero(cod)["giro"])
 		var raiz := Node3D.new()
 		raiz.position = s["p"]
 		raiz.rotation.y = float(s["a"])
 		add_child(raiz)
-		## Techo de la marquesina, con la franja del club por delante.
-		var techo := MeshInstance3D.new()
-		var tm := BoxMesh.new()
-		tm.size = Vector3(7.5, 0.22, 3.0)
-		techo.mesh = tm
-		techo.material_override = metal
-		techo.position = Vector3(0, 3.1, 0)
-		raiz.add_child(techo)
-		var franja := MeshInstance3D.new()
-		var fm := BoxMesh.new()
-		fm.size = Vector3(7.6, 0.5, 0.16)
-		franja.mesh = fm
-		franja.material_override = acento
-		franja.position = Vector3(0, 2.85, 1.5)
-		raiz.add_child(franja)
-		## Trasera de cristal y dos pilares.
-		var pared := MeshInstance3D.new()
-		var pm := BoxMesh.new()
-		pm.size = Vector3(7.5, 2.5, 0.1)
-		pared.mesh = pm
-		pared.material_override = vidrio
-		pared.position = Vector3(0, 1.6, -1.4)
-		raiz.add_child(pared)
-		for lado in [-1.0, 1.0]:
-			var pil := MeshInstance3D.new()
-			var cm := CylinderMesh.new()
-			cm.top_radius = 0.11
-			cm.bottom_radius = 0.11
-			cm.height = 3.0
-			pil.mesh = cm
-			pil.material_override = metal
-			pil.position = Vector3(lado * 3.5, 1.5, 1.3)
-			raiz.add_child(pil)
-		## El banco.
-		var banco := MeshInstance3D.new()
-		var bm := BoxMesh.new()
-		bm.size = Vector3(5.4, 0.16, 0.7)
-		banco.mesh = bm
-		banco.material_override = acento
-		banco.position = Vector3(0, 0.75, -0.9)
-		raiz.add_child(banco)
+		## PARADERO DE LA RED (27-10-2026), como en las fotos del dueño: techo blanco con costillas rojas, cabecera negra «Paradero de Red Movilidad | Parada N», panel con póster, banca de láminas y poste con el cartel negro.
+		ParaderoRed.montar(raiz, 3.8, int(s["p"].x * 7.0 + s["p"].z), RecorridosRed.nombre_parada(cod) if cod != "" else String(s["n"]), int(s.get("sector", 0)), cod)
+		for xs: float in ParaderoRed.asientos_x():
+			asientos.append({"p": (s["p"] as Vector3) + Basis(Vector3.UP, float(s["a"])) * Vector3(xs, GenteSentada.ASIENTO_CIUDAD + 0.04, -0.9), "giro": float(s["a"])})
 		_cartel(s["p"] + Vector3(0, 0, -6.0), "🚌 " + String(s["n"]), true)
 
 	_terminal_buses()
@@ -304,13 +265,23 @@ func _casa_ribera(centro: Vector3) -> void:
 	var raiz := Node3D.new()
 	add_child(raiz)
 	raiz.add_child(n)
+	## El glb trae una semiesfera de cielo de 103 m (la misma de la villa) y, bajo el suelo de la casa, losas de terreno y
+	## rocas (planas, con su borde por debajo de cero): medida con ellas la casa salía diminuta bajo una cúpula y, ya sin
+	## cúpula, las rocas flotaban delante. Se quitan antes de medir.
+	for m: MeshInstance3D in _mallas_de(n):
+		if m.mesh == null:
+			continue
+		var a := m.transform * m.mesh.get_aabb()
+		var plana := a.position.y < -0.5 and a.size.y < maxf(a.size.x, a.size.z) * 0.5
+		if a.size.length() > 60.0 or plana:
+			m.get_parent().remove_child(m)
+			m.free()
 	var caja := _caja_de(n)
 	var alto: float = caja.size.y
 	var escala := (22.0 / alto) if alto > 0.001 else 1.0
 	raiz.scale = Vector3.ONE * escala
-	## El origen del modelo no está en su base (el AABB empieza por debajo de
-	## cero): sin corregirlo queda medio enterrado.
-	raiz.position = centro + Vector3(0, -caja.position.y * escala, 0)
+	## El suelo de la casa está en y=0 del modelo (el AABB baja de cero por una luna de cristal): se apoya ahí.
+	raiz.position = centro
 	raiz.rotation.y = PI * 0.5
 
 func vestir_torre(n: Node, semilla: int) -> void:

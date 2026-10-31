@@ -240,6 +240,7 @@ const CLIP_RECORTES := {
 ## reposo del modelo, así que se arma una vez por combinación y se comparte
 ## (nadie la modifica después; si alguien lo hiciera, cambiaría a todos).
 static var _bibliotecas := {}
+static var _candado := Mutex.new()
 
 ## SENTADO (22-9-2026, pedido directo del usuario tras ver el banquillo de
 ## pie: "que los que no caben estén sentados"). Pose estatica -con la misma
@@ -344,3 +345,12 @@ static func _cargar_clip_futbol(archivo: String) -> Dictionary:
 		nodo.free()
 	_cache_futbol[archivo] = salida
 	return salida
+
+## Lo que decide cómo sale la biblioteca: los scripts de animación y los clips de origen.
+static func _fuentes() -> PackedStringArray:
+	var r := CacheDisco.scripts("res://visor", PackedStringArray(["anim_", "retarget_futbol_q", "futbolista_q"]))
+	r.append(RUTA_UAL)
+	for f in DirAccess.get_files_at(CARPETA_FUTBOL):
+		if f.ends_with(".fbx") or f.ends_with(".fbx.import"):
+			r.append(CARPETA_FUTBOL + f.trim_suffix(".import"))
+	return r

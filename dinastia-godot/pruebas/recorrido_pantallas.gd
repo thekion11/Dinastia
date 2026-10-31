@@ -18,10 +18,20 @@ var _botones := 0
 ## Con RECORRIDO_TEXTOS=<ruta>, además guarda todos los textos que se vieron
 ## (lo usa la traducción: mapa de metas 17).
 var _textos := {}
+## M-467 (27-10-2026): con RECORRIDO_IDIOMA=de cambia el idioma al abrir, y con RECORRIDO_LARGOS=<ruta>
+## guarda los botones y etiquetas que se salen de la pantalla o salen cortados («pantalla|texto» → motivo).
+var _largos := {}
+var _donde := ""
+var _espera := -1
+var _idioma_antes := ""
 
 func _ready() -> void:
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
+	## Después de abrir: la principal carga el idioma de las preferencias guardadas.
+	if OS.get_environment("RECORRIDO_IDIOMA") != "":
+		_idioma_antes = Idiomas.idioma
+		Idiomas.idioma = OS.get_environment("RECORRIDO_IDIOMA")
 
 func _process(_d: float) -> void:
 	_n += 1
@@ -64,16 +74,36 @@ func _process(_d: float) -> void:
 		return
 	if _n < 10:
 		return
+	## Se mide dos cuadros después de abrir cada pantalla: lo que se encoge o se coloca tarde ya está en su sitio.
+	if _espera > 0:
+		_espera -= 1
+		return
+	if _espera == 0:
+		_espera = -1
+		_medir()
 	## Cierra lo que haya quedado abierto encima (sorteos, pantallas completas).
 	for h in _p.get_children():
 		if h is Control and (h as Control).mouse_filter == Control.MOUSE_FILTER_STOP and h.get_index() > 3 and h.name != "PanelObjetivos" and h.name != "MenuLateral" and not (h is PantallaMenu):
 			h.queue_free()
 	if _cola.is_empty():
 		print("RECORRIDO: %d pantallas, %d botones" % [_pantallas, _botones])
+		if _idioma_antes != "":
+			_castellano()
+		## Ajustes guarda las preferencias al pintarse: sin esto, el idioma de la prueba quedaba como el del juego.
+		if _idioma_antes != "":
+			Idiomas.idioma = _idioma_antes
+			_p.call("_guardar_preferencias")
 		var ruta := OS.get_environment("RECORRIDO_TEXTOS")
 		if ruta != "":
 			var f := FileAccess.open(ruta, FileAccess.WRITE)
 			f.store_string(JSON.stringify(_textos))
+		if OS.get_environment("RECORRIDO_LARGOS") != "":
+			FileAccess.open(OS.get_environment("RECORRIDO_LARGOS"), FileAccess.WRITE).store_string(JSON.stringify(_largos, " "))
+			var cortados := _largos.values().filter(func(v: String) -> bool: return v.begins_with("cortado")).size()
+			print("LARGOS: %d textos que no caben (%d cortados)" % [_largos.size(), cortados])
+			## Con RECORRIDO_CORTADOS_MAX=n (especiales.sh todo) es una prueba: falla si hay más de n cortados.
+			if OS.get_environment("RECORRIDO_CORTADOS_MAX") != "":
+				print("FIN LARGOS. %d fallos" % (1 if cortados > int(OS.get_environment("RECORRIDO_CORTADOS_MAX")) else 0))
 		get_tree().quit()
 		return
 	var paso: Array = _cola.pop_front()
@@ -111,8 +141,37 @@ func _process(_d: float) -> void:
 			print("PANTALLA ficha %s" % paso[1])
 			_pulsar_botones()
 	_pantallas += 1
+	_donde = " ".join(paso.map(func(x: Variant) -> String: return str(x.get("tab", "")) + "/" + str(x.get("secc", "")) if x is Dictionary else str(x)))
 	if OS.get_environment("RECORRIDO_TEXTOS") != "":
 		_recoger(_p)
+	if OS.get_environment("RECORRIDO_LARGOS") != "":
+		_espera = 2
+
+## Lo que no cabe: un control visible que se sale por la derecha de la ventana, o un texto que el control recorta
+## (clip o «…») porque es más ancho que el propio control.
+func _medir() -> void:
+	var ancho := get_viewport().get_visible_rect().size.x
+	for n in _p.find_children("*", "Control", true, false):
+		var c := n as Control
+		if not (c is Button or c is Label) or not c.is_visible_in_tree() or c.get_window() != get_tree().root:
+			continue
+		var t: String = c.get("text")
+		if t.strip_edges() == "" or c.size.x < 4.0:
+			continue
+		var motivo := ""
+		if c.get_global_rect().end.x > ancho + 2.0 and c.get_global_rect().position.x < ancho:
+			motivo = "se sale %d px" % int(c.get_global_rect().end.x - ancho)
+		else:
+			var corta: bool = c.get("clip_text") or int(c.get("text_overrun_behavior")) != TextServer.OVERRUN_NO_TRIMMING
+			var envuelve: bool = int(c.get("autowrap_mode")) != TextServer.AUTOWRAP_OFF
+			if corta and not envuelve and not t.contains("\n"):
+				var f := c.get_theme_font("font")
+				var w := f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, c.get_theme_font_size("font_size")).x
+				var hueco := c.size.x - (c.get_theme_stylebox("normal").get_minimum_size().x if c is Button else 0.0)
+				if w > hueco + 2.0:
+					motivo = "cortado %d/%d px (%s)" % [int(w), int(hueco), c.get_class()]
+		if motivo != "":
+			_largos["%s | %s" % [_donde, t.left(80)]] = motivo
 
 func _recoger(n: Node) -> void:
 	var ts: Array = []
@@ -161,3 +220,25 @@ func _pulsar_botones() -> void:
 			_botones += 1
 			if tabs.current_tab != actual:
 				tabs.current_tab = actual
+
+## M-458 / M-463 (28-10-2026): las frases que `Idiomas.t` dejó igual y que PARECEN castellano (dos o más palabras
+## típicas), en otro idioma. Con RECORRIDO_FALTAN=<ruta> las guarda; con RECORRIDO_CASTELLANO_MAX=n es una prueba.
+const PALABRAS_ES := ["que", "se", "tu", "tus", "con", "para", "por", "del", "las", "los", "una", "está", "hay", "más",
+	"pero", "muy", "sin", "años", "semanas", "jugadores", "partido", "partidos", "equipo", "tienes", "puedes", "cuando"]
+
+func _castellano() -> void:
+	var re := RegEx.create_from_string("(?i)(?<![\\p{L}])(" + "|".join(PALABRAS_ES) + ")(?![\\p{L}])")
+	## Las siglas de posición (POR, DEF, MED, DEL) se quedan en castellano en todos los idiomas (orden 15) y «POR»/«DEL»
+	## parecían «por»/«del»: se quitan antes de contar, igual que el formato del editor («Club;Nombre;POS;Edad…»).
+	var siglas := RegEx.create_from_string("\\b(POR|DEF|MED|DEL|DFC|LAT|BAN|POS)\\b|Club;Nombre;[^ ]*")
+	var malas: Array = []
+	for f: String in Idiomas.sin_traduccion:
+		if re.search_all(siglas.sub(f, "", true)).size() >= 2:
+			malas.append(f)
+	malas.sort()
+	print("CASTELLANO: %d frases sin traducir que parecen castellano" % malas.size())
+	if OS.get_environment("RECORRIDO_FALTAN") != "":
+		FileAccess.open(OS.get_environment("RECORRIDO_FALTAN"), FileAccess.WRITE).store_string("\n".join(malas))
+	if OS.get_environment("RECORRIDO_CASTELLANO_MAX") != "":
+		print("FIN CASTELLANO. %d fallos" % (1 if malas.size() > int(OS.get_environment("RECORRIDO_CASTELLANO_MAX")) else 0))
+

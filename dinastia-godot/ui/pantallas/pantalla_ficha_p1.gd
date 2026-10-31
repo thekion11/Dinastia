@@ -131,7 +131,9 @@ func _pintar_embajador(d: Directiva) -> void:
 		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		fila.add_child(nom)
-		p._boton("Cesar  %s" % p._dinero(Directiva.FINIQUITO_EMBAJADOR), _cesar_embajador, fila)
+		## Cesarlo cuesta el finiquito y la leyenda se va: segundo toque para confirmar (M-299).
+		var bc: Button = p._boton("Cesar  %s" % p._dinero(Directiva.FINIQUITO_EMBAJADOR), func() -> void: pass, fila)
+		DobleToque.conectar(bc, Idiomas.t("¿Cesarlo? Toca otra vez"), _cesar_embajador)
 	else:
 		var cantera := p.mundo.cantera
 		var candidatas: Array[Dictionary] = Directiva.candidatas_embajador(cantera.leyendas, p.mundo.anio) if cantera != null else []
@@ -149,7 +151,7 @@ func _pintar_embajador(d: Directiva) -> void:
 			nom2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			fila2.add_child(nom2)
 			var costo := 400000 + int(l.get("nivel", 80)) * 8000
-			p._boton("Firmar  %s" % p._dinero(costo), func() -> void: _contratar_embajador(l), fila2)
+			p._boton(Idiomas.t("Firmar  %s") % p._dinero(costo), func() -> void: _contratar_embajador(l), fila2)
 	p._lista_club.add_child(HSeparator.new())
 
 ## EL DIRECTORIO: quién te puso ahí, qué te pide y cuánto te aguanta.

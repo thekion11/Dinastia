@@ -84,6 +84,8 @@ func _colocar_camara(delta: float) -> void:
 		deseo.x = clampf(deseo.x, _INT_ORIGEN.x - t.x * 0.5 + 0.3, _INT_ORIGEN.x + t.x * 0.5 - 0.3)
 		deseo.z = clampf(deseo.z, _INT_ORIGEN.z - t.z * 0.5 + 0.3, _INT_ORIGEN.z + t.z * 0.5 - 0.3)
 		deseo.y = minf(deseo.y, _INT_ORIGEN.y + t.y - 0.3)
+	elif estado == "subsuelo" and sub != null:
+		deseo = sub.encajar_camara(deseo, cuerpo.position)
 	elif estado == "calle":
 		## La cámara no se mete dentro de los edificios: si el punto de detrás
 		## cae en una huella, se acerca al personaje hasta el último sitio libre
@@ -184,6 +186,8 @@ func _subir_al_tren(k: int) -> void:
 	_luz_cam.visible = true
 
 func _usar_en_anden() -> void:
+	if vida != null and ((metro.expendedora_cerca(cuerpo.position) and vida.usar_expendedora()) or (metro.billetes_cerca(cuerpo.position) and vida.usar_billetes())):   ## la expendedora cobra la cartera; la de billetes recarga la tarjeta Red
+		return
 	var k := metro.tren_parado_en(_linea, _idx)
 	if k >= 0:
 		_subir_al_tren(k)
@@ -376,6 +380,8 @@ func _cruzar_puerta() -> void:
 	_aviso.text = ""
 
 func _entrada() -> Vector2:
+	if bool(get_meta("juego_abierto", false)):
+		return Vector2.ZERO   ## una máquina de peluches abierta usa las mismas teclas
 	var x := float(Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT)) - float(Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT))
 	var y := float(Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP)) - float(Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN))
 	var jx := Input.get_joy_axis(0, JOY_AXIS_LEFT_X)
@@ -430,6 +436,10 @@ func _animar_dt(v: float) -> void:
 	if quiere == "parado" and absf(v) > 0.05 and _anim.has_animation("caminar"):
 		var est: Array = ESTILOS_CAMINATA.get(estilo_caminata(), ESTILOS_CAMINATA["formal"])
 		quiere = String(est[0]) if _anim.has_animation(String(est[0])) else "caminar"
+	## GIRAR CON EL CUERPO (P1 «MEJORAR», 27-10): quieto pero girando sobre ti, los pies dan pasitos (el clip a ritmo lento).
+	if quiere == "parado" and modo == "pie" and absf(angle_difference(cuerpo.rotation.y, rumbo)) > 0.45 and _anim.has_animation("caminar"):
+		quiere = "caminar"
+		v = 0.8
 	## SIN PATINAR (26-10-2026, §2.2e P2): el clip corre a la velocidad real dividida por la
 	## suya natural (lo que avanza el pie apoyado, medido con `pruebas/sonda_movimiento`).
 	if quiere != "parado":

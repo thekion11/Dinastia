@@ -70,6 +70,14 @@ func _init(exigencia: Dictionary, confianza: int = 0, bono: float = 0.0, semilla
 	paciencia = paciencia_max
 	ultima = _saludo()
 
+## (§2.5, 30-10) El favor del agente de la semana (cita en persona, `Citas.favor_agente`): como en
+## `Negociacion`, pide un 5 % menos y cede antes (su mínimo baja 5 puntos).
+var con_favor := false
+func aplicar_favor() -> void:
+	con_favor = true
+	pide = 95
+	minimo = maxi(20, minimo - 5)
+
 func emoji() -> String:
 	return String(PERFIL[perfil]["emoji"])
 

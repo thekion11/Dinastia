@@ -52,11 +52,11 @@ func _pintar_sucesion(r: Roles) -> void:
 		p._lista_legado.add_child(d2)
 
 func _retirarse() -> void:
-	if not p._confirmar_retiro:
-		p._confirmar_retiro = true
+	if not _confirmar_retiro:
+		_confirmar_retiro = true
 		p._refrescar()
 		return
-	p._confirmar_retiro = false
+	_confirmar_retiro = false
 	var problema := p.mundo.roles.retirarse()
 	if problema != "":
 		p._escribir("[color=#e05555]%s.[/color]" % problema)
@@ -77,7 +77,7 @@ func _pintar_fin_de_carrera(r: Roles) -> void:
 		av.text = Idiomas.t("Cuando quieras cerrar la historia, puedes anunciar tu retirada y ver el balance completo de tu carrera. No se puede deshacer.")
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(av)
-		p._boton(Idiomas.t("¿SEGURO? Anunciar mi retirada") if p._confirmar_retiro else Idiomas.t("🏁 Anunciar mi retirada"),
+		p._boton(Idiomas.t("¿SEGURO? Anunciar mi retirada") if _confirmar_retiro else Idiomas.t("🏁 Anunciar mi retirada"),
 			_retirarse, p._lista_legado)
 
 ## `epilogoHTML()`: el resumen con veredicto. Antes de la tercera temporada no

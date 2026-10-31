@@ -29,7 +29,8 @@ public:
 	Array alisado(const PackedVector3Array &pos, const PackedVector3Array &nor, const PackedInt32Array &idx) const;
 	// `TerrenoArreglos.calcular_gd`: las baldosas [vértices, normales, UV] del relieve de la ciudad.
 	Array terreno(const Ref<FastNoiseLite> &ruido, const Ref<FastNoiseLite> &detalle, double lado, int celdas,
-			int baldosas, double llano_radio, double llano_trans, double alto) const;
+			int baldosas, double llano_radio, double llano_trans, double alto, const Vector2 &monte, double monte_alto,
+			double monte_radio) const;
 	// `CityBuilder._imagen_hierba_gd`: la textura de hierba (azar del motor, misma secuencia).
 	Ref<Image> hierba(const Ref<Image> &manchas, int64_t semilla) const;
 };

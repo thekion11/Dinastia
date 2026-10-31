@@ -13,6 +13,7 @@ func _montar_motor() -> void:
 	_motor.autopiloto = true
 	_motor.lanza_usuario = {"corner": true, "falta": true, "penal": true, "banda": true}
 	_motor.eliminatoria = eliminatoria
+	GestoTecnico.fijar_clima(_motor, String(_perfil.get("clima", "")))   ## lluvia, nieve...: pesan en el juego (27-10)
 	_motor.preparar(_en_campo, _balon, "", hash(partido.local.id + partido.visita.id) + partido.minuto)
 	## La cabeza de cada jugador sigue al balón (M-098).
 	MiradaBalon.poner(_motor.jugadores, _balon)
@@ -144,6 +145,10 @@ func _montar_motor() -> void:
 		_mostrar_nombres(false)
 	## La dificultad de la CPU (20-10-2026): la última elegida.
 	_motor.dificultad_cpu = dificultad_cpu_guardada()
+	_motor.fijar_preset(preset_guardado())
+	_motor.indicador_pase = _pref("indicador_pase", true)
+	if _rig != null:
+		_rig.pro_distancia = float(CameraRig.PRO_DISTANCIAS[pro_camara_guardada()])
 	## Si jugaste tú el último partido, vuelves a jugar (se recuerda).
 	if _pref("control_equipo", false) and _mi_lado >= 0 and not practica:
 		_alternar_control_motor.call_deferred()
@@ -155,8 +160,7 @@ func _montar_motor() -> void:
 ## pantalla (offset vertical positivo, `clip_contents` del padre no hace
 ## falta porque el Control raíz ya mide toda la pantalla): `_mostrar_banner_gol()`
 ## lo trae, lo sostiene y lo despide, todo con el mismo Tween para que un
-## segundo gol a los dos segundos del primero no dispare una animación a medias
-## sobre otra.
+## segundo gol a los dos segundos del primero no dispare una animación a medias sobre otra.
 func _crear_banner_gol() -> void:
 	_banner_caja = PanelContainer.new()
 	var e := StyleBoxFlat.new()
@@ -387,8 +391,7 @@ func _arrancar_partido() -> void:
 ## En el tercero manda el reloj de `MatchPlayback`: cada vez que cruza un minuto,
 ## le pide otro minuto al `Partido`. UN solo reloj y UNA sola verdad. Si el reloj
 ## corriera aquí y en la pantalla 2D a la vez, el marcador que se ve y el que va a
-## la tabla se separarían, que es el fallo que ya costó una depuración con el
-## partido dirigido.
+## la tabla se separarían, que es el fallo que ya costó una depuración con el partido dirigido.
 ## `perfil_forzado`: el perfil YA calculado -normalmente `mundo.perfil_estadio_de(c)`-,
 ## para cuando `c` es tu propio club y por tanto su recinto es el que hayas
 ## diseñado en `EstadioPropio`, no el que sale del hash de su id. Sin este

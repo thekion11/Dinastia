@@ -122,6 +122,7 @@ func vestir_todas_las_torres() -> int:
 	return cuenta
 
 func build(d: Dictionary) -> void:
+	PrecalentarCaras.detener()   ## la ciudad es pantalla pesada: ya no se precalienta
 	datos = d
 	## La ciudad vieja se quita YA, no al final del cuadro: con `queue_free` las
 	## dos ciudades convivían un cuadro y el motor avisaba «material is null»
@@ -220,6 +221,11 @@ func build(d: Dictionary) -> void:
 		## (30-10-2026: aquí se repetían primitivas, butacas livianas y distancias -una copia de
 		## una fusión vieja-; la segunda pasada no cambiaba nada de la escena y costaba ~150 ms.)
 		circulos = Optimizar.obstaculos(self, ExploradorCiudad.construir_obstaculos(self))
+		## Los bancos (asiento a 0,75 m y respaldo bajo) quedaban por debajo del umbral de 0,9 m y se
+		## atravesaban andando (27-10-2026, plan §4 colisiones): un círculo por asiento registrado.
+		for a: Dictionary in asientos:
+			var pa: Vector3 = a["p"]
+			circulos.append(Vector3(pa.x, pa.z, 0.42))
 		await _marca("obstaculos")
 		OclusoresCiudad.montar(self)
 		await _marca("oclusores")
@@ -241,6 +247,9 @@ func encender_luces(noche: float) -> void:
 	var f: float = clampf(noche, 0.0, 1.0)
 	for mt in _mats_torre:
 		mt.set_shader_parameter("noche", f)
+		if expansion != null and expansion.textura_luz != null:   ## apagón por sector (§2.2g)
+			mt.set_shader_parameter("luz_sectores", expansion.textura_luz)
+			mt.set_shader_parameter("usa_sectores", true)
 	StadiumBuilder.encender_conos(f)
 	for l in _farolas_luz:
 		if is_instance_valid(l):

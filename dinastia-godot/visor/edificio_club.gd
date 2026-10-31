@@ -183,7 +183,7 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 	var vidrio: StandardMaterial3D = Texturas.cristal(true, true)
 	## El ascensor de la planta 0 (dentro del vestuario, junto a la pizarra).
 	_ascensor(nodo, x0, z_fin, 0.0)
-	for f: Array in PLANTAS:
+	for f: Array in todas():
 		var p := int(f[0])
 		var y0 := float(p) * ALTO_PLANTA
 		var bajo_tierra := p < 0

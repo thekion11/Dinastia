@@ -10,6 +10,11 @@ func temporada_en_curso() -> bool:
 func jugar_temporada() -> void:
 	while temporada_en_curso():
 		avanzar_semana()
+	cerrar_temporada_simulada()
+
+## Lo que hace `jugar_temporada` tras la última semana (el campeón y la señal). La pantalla, que simula semana a semana
+## con su barra de progreso (idea 1032), lo llama al acabar.
+func cerrar_temporada_simulada() -> void:
 	var campeon: Club = null
 	if not ligas.is_empty():
 		var t := ligas[0].tabla()
@@ -255,6 +260,9 @@ func _cerrar_campeonato() -> Dictionary:
 		entrenamiento.repartir_puntos(mi_club())
 	if copa != null and copa.campeon == mi_club() and logros != null:
 		logros.celebrar_titulo(copa.nombre)
+	## La COPA es un título: va a la vitrina de la carrera (y al museo) con la final que se jugó (decisión del dueño, 27-10-2026).
+	if copa != null and copa.campeon == mi_club() and roles != null:
+		roles.sumar_trofeo(copa.nombre, {"final": _final_de_copa(copa)})
 	if directiva != null and not directiva.despedido_ya and mi_puesto > 0:
 		resumen["directiva"] = directiva.tras_temporada(mi_puesto, mi_puesto == 1,
 			copa != null and copa.campeon == mi_club())
@@ -291,6 +299,20 @@ func _cerrar_campeonato() -> Dictionary:
 				prensa.noticia.emit(String(rr["titulo"]), String(rr["texto"]))
 	return resumen
 
+## La final de la copa, en una línea: «A 2-1 B» (con penales si los hubo).
+func _final_de_copa(c: Copa) -> String:
+	if c.historial.is_empty():
+		return ""
+	var rs: Array = (c.historial.back() as Dictionary).get("resultados", [])
+	if rs.is_empty():
+		return ""
+	var r: Dictionary = rs[0]
+	var txt := "%s %d-%d %s" % [(r["local"] as Club).nombre, int(r["gl"]), int(r["gv"]), (r["visita"] as Club).nombre]
+	var pen: Array = r.get("penales", [])
+	if pen.size() >= 2:
+		txt += " (%d-%d pen.)" % [int(pen[0]), int(pen[1])]
+	return txt
+
 ## Cierra la temporada: cumpleanos, retiros y un campeonato nuevo.
 ## EL QUE SIGUE, RETASADO (26-10-2026, `pruebas/ideas/eq_diez_temporadas.gd`). El cumpleaños y el año de
 ## contrato que se resta cambian lo que vale, pero `tasar()` solo corría si cambiaba la media: el de 21 que
@@ -319,6 +341,8 @@ func _vence_contrato(j: Jugador, c: Club) -> bool:
 	j.anios_contrato -= 1
 	if j.anios_contrato > 0:
 		return false
+	if c.id != mi_club_id and Precontratos.llega(self, j):
+		return true   ## precontrato con tu club: ni renueva ni va a libres; entra en `Mundo.nueva_temporada`
 	var h := absi(hash("%s|%d" % [j.id, anio]))
 	if c.id != mi_club_id:
 		var sigue := 0.5 if j.edad >= 33 else 0.88
@@ -415,7 +439,7 @@ func jugar_supercopa() -> Dictionary:
 		if logros != null:
 			logros.celebrar_titulo(nombre)
 		if roles != null:
-			roles.sumar_trofeo(nombre)
+			roles.sumar_trofeo(nombre, {"final": "%s %d-%d %s" % [a.nombre, gl, gv, b.nombre]})
 	if prensa != null:
 		prensa.noticia.emit(nombre,
 			"%s %d-%d %s. %s levanta el primer título del año." % [a.nombre, gl, gv, b.nombre, gana.nombre])

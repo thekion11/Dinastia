@@ -23,6 +23,7 @@ func _cargar_extra() -> void:
 
 func _ready() -> void:
 	_cargar_extra()
+	TextoQueCabe.vigilar(get_tree())
 func _ordinales(texto: String) -> String:
 	if idioma == "fr":
 		if _re_ord_fr == null:
@@ -130,6 +131,12 @@ func _t(frase: String, prof: int) -> String:
 			dr = _patron(resto, prof)
 		if dr != "":
 			return frase.substr(0, ini0) + dr
+	## Una cita entera entre comillas (27-10-2026): «Hay materia prima…» es la misma frase que sin ellas.
+	if frase.length() > 2 and frase.begins_with("«") and frase.ends_with("»"):
+		var dentro := frase.substr(1, frase.length() - 2)
+		var td := _t(dentro, prof + 1)
+		if td != dentro:
+			return "«" + td + "»"
 	## Por oraciones: la narración a veces pega varias frases en un mismo
 	## texto («Pregunta. Tardaste en contestar: en la sala se notó.»).
 	if prof < 2 and frase.length() > 30 and (frase.contains(". ") or frase.contains("! ") or frase.contains("? ")):
@@ -234,7 +241,14 @@ func t(frase: String) -> String:
 	var r := _ordinales(_t(frase, 0))
 	cache[frase] = r
 	_cache[idioma] = cache
+	## M-463 (28-10-2026): lo que se queda igual se anota, en vez de callar. Muchas son nombres propios o cifras
+	## (que no se traducen); el recorrido de pantallas en otro idioma filtra las que parecen castellano.
+	if r == frase and sin_traduccion.size() < 4000 and _tiene_letras(frase):
+		sin_traduccion[frase] = int(sin_traduccion.get(frase, 0)) + 1
 	return r
+
+## Las frases que `t` devolvió sin cambios desde que arrancó el juego (frase → veces). Ver M-463.
+var sin_traduccion: Dictionary = {}
 
 ## Traduce un árbol de interfaz entero (etiquetas, botones y ayudas). Para las
 ## pantallas que no cuelgan de la principal -la Carrera de Jugador, el

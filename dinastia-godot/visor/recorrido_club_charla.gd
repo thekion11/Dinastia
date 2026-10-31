@@ -51,7 +51,7 @@ static func pasillo(m: Mundo, g: Dictionary) -> String:
 	var anio: int = m.reloj.anio if m.reloj.anio >= 0 else m.anio
 	var sem: int = m.reloj.semana if m.reloj.semana >= 0 else m.semana
 	var frases := _pasillo(m.afinidad.tramo(nombre))
-	var dt := Principal.dt_nombre_elegido.strip_edges().get_slice(" ", 0)
+	var dt := PedidoPartida.dt_nombre_elegido.strip_edges().get_slice(" ", 0)
 	if dt == "" or dt.to_lower() == "míster":
 		dt = "míster"
 	var i := absi(("%s|%d|%d|%d" % [nombre, anio, sem, m.reloj.dia]).hash()) % frases.size()

@@ -106,6 +106,7 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.directiva.temporadas = int(dd.get("temporadas", 0))
 		m.directiva.despedido_ya = bool(dd.get("despedido", false))
 		m.directiva.desde_dic(dd.get("consejeros", {}))
+		DesafiosDificultad.aplicar(m)
 		m.directiva.trofeos.clear()
 		for t: String in dd.get("trofeos", []):
 			m.directiva.trofeos.append(t)
@@ -221,6 +222,8 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.medico.desde_dic(datos.get("medico", {}))
 	if m.logros != null:
 		m.logros.desde_dic(datos.get("logros", {}))
+	m.retos_semana.desde_dic(datos.get("retos_semana", {}))
+	m.mentor_mes.desde_dic(datos.get("mentor_mes", {}))
 	MercadoDT.de(m).desde_dic(m, datos.get("mercado_dt", {}))
 	m.ojeados = datos.get("ojeados", {})
 	m.libro_financiero.clear()
@@ -291,6 +294,9 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	m.reloj.desde_dic(datos.get("reloj", {}))
 	m.necesidades.desde_dic(datos.get("necesidades", {}))
 	m.citas.desde_dic(datos.get("citas", {}))
+	if not (datos.get("redes_ciudad", {}) as Dictionary).is_empty():
+		m.redes_ciudad = RedesCiudad.new(int(datos["redes_ciudad"].get("semilla", 1)))
+		m.redes_ciudad.desde_dic(datos["redes_ciudad"])
 	m.afinidad.desde_dic(datos.get("afinidad", {}))
 	m.imprevistos.desde_dic(datos.get("imprevistos", {}))
 	m.horario = String(datos.get("horario", "tarde"))
@@ -328,9 +334,33 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	var cj: Dictionary = datos.get("carrera_jugador", {})
 	if not cj.is_empty():
 		m.carrera_jugador = CarreraJugador.desde_dic(cj)
+	## 28-10 (auditoría): los contadores de ids no se guardan; sin esto, el primer canterano o libre nacía como «j1» y
+	## chocaba con un jugador existente (y «c1» con un club). Se recalculan de lo cargado.
+	var seq_j := 0
+	for c: Club in m.clubes.values():
+		seq_j = maxi(seq_j, _seq_de(c.id, "c", 0))
+		for j: Jugador in c.plantilla:
+			seq_j = maxi(seq_j, _seq_de(j.id, "j", 0))
+	for j: Jugador in m.libres:
+		seq_j = maxi(seq_j, _seq_de(j.id, "j", 0))
+	m._seq_jugador = maxi(m._seq_jugador, seq_j)
+	var seq_c := 0
+	for cid: String in m.clubes:
+		seq_c = maxi(seq_c, _seq_de(cid, "c", 0))
+	m._seq_club = maxi(m._seq_club, seq_c)
+	## Los «ex de mi club» son del mundo cargado, no de la partida anterior de la misma sesión.
+	Partido.ex_de_mi_club = (datos.get("ex_mio", {}) as Dictionary).duplicate()
+	## El estado del azar guardado manda sobre todo lo que la carga haya consumido (`tomar_el_mando`, etc.).
+	if datos.has("azar"):
+		Azar._rng.state = int(String(datos["azar"]))
 	LeyesPais.clubes_mundo = m.clubes
 	LeyesPais.anio_actual = m.anio
 	return m
+
+## El número de un id «j123» / «c45»; `defecto` si no tiene esa forma.
+static func _seq_de(id: String, prefijo: String, defecto: int) -> int:
+	var n := id.trim_prefix(prefijo)
+	return int(n) if id.begins_with(prefijo) and n.is_valid_int() else defecto
 
 static func cargar(nombre: String) -> Mundo:
 	var t0 := Time.get_ticks_msec()

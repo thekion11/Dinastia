@@ -7,6 +7,8 @@ func _pintar_tactica(c: Club) -> void:
 	## interruptores se tocan una vez cada varias semanas; el once se mira cada
 	## domingo.
 	_pintar_pizarron(c)
+	PresetsTacticaUI.pintar(p, c)   ## presets de pizarra con nombre (fila 382)
+	_boton_deshacer(c)
 	var t := p._texto(11, Principal.COL_SUAVE)
 	t.text = Idiomas.t("FORMACIÓN")
 	p._lista_tactica.add_child(t)
@@ -24,6 +26,7 @@ func _pintar_tactica(c: Club) -> void:
 		bf.button_pressed = c.tactica.formacion == nombre_f
 		bf.add_theme_font_size_override("font_size", 11)
 		bf.pressed.connect(func() -> void:
+			DeshacerTactica.apuntar(c)
 			c.tactica.formacion = nombre_f
 			## Cambiar de dibujo invalida el once elegido: las ranuras son otras.
 			c.limpiar_once()
@@ -61,6 +64,7 @@ func _pintar_tactica(c: Club) -> void:
 			b.add_theme_font_size_override("font_size", 11)
 			var valor := n
 			b.pressed.connect(func() -> void:
+				DeshacerTactica.apuntar(c)
 				c.tactica.set(prop, valor)
 				p._refrescar())
 			fila.add_child(b)
@@ -83,6 +87,7 @@ func _pintar_tactica(c: Club) -> void:
 		b2.text = "SÍ" if bool(c.tactica.get(prop2)) else "NO"
 		b2.add_theme_font_size_override("font_size", 11)
 		b2.pressed.connect(func() -> void:
+			DeshacerTactica.apuntar(c)
 			c.tactica.set(prop2, not bool(c.tactica.get(prop2)))
 			p._refrescar())
 		fila2.add_child(b2)
@@ -148,9 +153,11 @@ func _pintar_tactica(c: Club) -> void:
 	fila_b.add_theme_constant_override("separation", 6)
 	p._lista_tactica.add_child(fila_b)
 	p._boton("Que lo arme el ayudante", func() -> void:
+		DeshacerTactica.apuntar(c)
 		c.limpiar_once()
 		p._refrescar(), fila_b)
 	p._boton("Vaciar", func() -> void:
+		DeshacerTactica.apuntar(c)
 		c.once_elegido.clear()
 		p._refrescar(), fila_b)
 
@@ -170,6 +177,7 @@ func _pintar_tactica(c: Club) -> void:
 		b.add_theme_font_size_override("font_size", 11)
 		b.disabled = not j.disponible() and not dentro
 		b.pressed.connect(func() -> void:
+			DeshacerTactica.apuntar(c)
 			if dentro:
 				c.once_elegido.erase(j.id)
 			elif c.once_elegido.size() < 11:
@@ -223,7 +231,7 @@ func _pintar_desafios() -> void:
 	var tt := p._texto(11, Principal.COL_SUAVE)
 	tt.text = Idiomas.t("LOS OCHO DESAFÍOS")
 	p._lista_desafios.add_child(tt)
-	var tabla: Variant = Datos.tabla("DESAFIOS")
+	var tabla: Variant = DesafiosDificultad.todos()
 	if not (tabla is Array):
 		return
 	for fila: Array in (tabla as Array):
@@ -319,7 +327,7 @@ func _pintar_ficha_club(club: Club) -> void:
 	t.text = Idiomas.t("%s  ·  reputación %d  ·  aforo %s") % [club.nombre, club.rep, p._miles(club.estadio_aforo)]
 	p._lista_clubes.add_child(t)
 	var hi_c := _historia_de(club)
-	for linea: String in ["📜 " + HistoriaClub.resumen(hi_c), HistoriaClub.texto_historia(hi_c), HistoriaClub.texto_clasicos(hi_c)]:
+	for linea: String in ["📜 " + HistoriaClub.resumen(hi_c), HistoriaClub.texto_historia(hi_c), HistoriaClub.texto_clasicos(hi_c), HistoriaClub.texto_palmares(hi_c)]:
 		if linea.strip_edges() == "":
 			continue
 		var hist := p._texto(11, Principal.COL_TEXTO)
@@ -414,3 +422,12 @@ func _pintar_goleadores(pais: String) -> void:
 		g.add_child(b)
 		p._celda(g, suyo.nombre if suyo else "—", Principal.COL_SUAVE, false, 11)
 		p._celda(g, str(j.goles), Principal.COL_VERDE, true, 12)
+
+## M-300: «↶ Deshacer» el último cambio de la pizarra (dibujo, perillas, interruptores u once). Apagado si no hay nada.
+func _boton_deshacer(c: Club) -> void:
+	var n := DeshacerTactica.pasos(c)
+	var b := p._boton(Idiomas.t("↶ Deshacer") + ("  (%d)" % n if n > 0 else ""), func() -> void:
+		if DeshacerTactica.deshacer(c):
+			p._refrescar(), p._lista_tactica)
+	b.disabled = n == 0
+	b.tooltip_text = Idiomas.t("Vuelve atrás el último cambio de la táctica o del once (hasta 20).")

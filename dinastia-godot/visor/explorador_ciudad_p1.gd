@@ -142,12 +142,12 @@ const EDIFICIOS := [
 ## (antes el rótulo y la sala se sorteaban por separado: una «Farmacia» podía
 ## abrir un taller).
 const SALA_DE_ROTULO := {
-	"Farmacia": "edificio_tienda", "Cafetería": "edificio_bar", "Panadería": "edificio_panaderia",
-	"Banco": "edificio_oficina", "Correos": "edificio_oficina", "Peluquería": "edificio_peluqueria",
-	"Librería": "edificio_libreria", "Supermercado": "edificio_mercado", "Pizzería": "edificio_bar",
-	"Hotel": "edificio_oficina", "Deportes": "edificio_tienda", "Bar": "edificio_bar",
-	"Floristería": "edificio_tienda", "Ferretería": "edificio_tienda", "Peña del club": "edificio_bar",
-	"Heladería": "edificio_panaderia",
+	"Farmacia": "edificio_farmacia", "Cafetería": "edificio_bar", "Panadería": "edificio_panaderia",
+	"Banco": "edificio_banco", "Correos": "edificio_correos", "Peluquería": "edificio_peluqueria",
+	"Librería": "edificio_libreria", "Supermercado": "edificio_mercado", "Pizzería": "edificio_pizzeria",
+	"Hotel": "edificio_hotel", "Deportes": "edificio_deportes", "Bar": "edificio_bar",
+	"Floristería": "edificio_floristeria", "Ferretería": "edificio_ferreteria", "Peña del club": "edificio_pena",
+	"Heladería": "edificio_heladeria",
 }
 
 var _es_dt := false
@@ -191,6 +191,7 @@ var _tactil_vec := Vector2.ZERO
 ## coche girar más cerrado, como al derrapar), el volante se mueve suave y la
 ## carrocería se inclina en curvas y al acelerar o frenar.
 var _volante := 0.0
+var _pedal := 0.0              ## acelerador (+) o freno (−) ya suavizado
 var _ui_volante: Control
 var _cabeceo := 0.0
 var _balanceo := 0.0
@@ -238,6 +239,7 @@ const _INT_ORIGEN := Vector3(0.0, -400.0, 0.0)
 var _int: InteriorInstalacion = null
 var _int_raiz: Node3D = null
 var _int_circulos := PackedVector3Array()
+var sub: SubsueloCiudad = null   ## el subsuelo (easter egg), se levanta al bajar la primera vez
 ## LA VIDA EN 3D (fase 3, 26-10-2026): reloj, casa, comidas, móvil y calabozo; null sin partida.
 var vida: VidaCiudad = null
 var _calle_pos := Vector3.ZERO
@@ -345,6 +347,7 @@ func _crear_cuerpo() -> Node3D:
 		if esc != null:
 			var c: Node3D = esc.instantiate()
 			c.scale = Vector3.ONE * 1.65
+			CocheDetalle.vestir(c, c.scale, 7)   ## pintura de coche, placas, faros y retrovisores
 			raiz.add_child(c)
 		return raiz
 	## TU PERSONAJE (estadio 2.0): el DT con el aspecto que elegiste, si hay.

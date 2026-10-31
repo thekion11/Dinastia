@@ -52,12 +52,13 @@ static func _trabajar() -> void:
 			return
 		_generar(t[0], t[1])
 
-## La clave con sus tipos (el JSON lo devuelve todo como float).
+## La clave con sus tipos (el JSON lo devuelve todo como float). El lado lo pone la calidad
+## elegida, como en `Texturas._lado` (M-347): la lista no depende de ella.
 static func normalizar(c: Array) -> Array:
 	if c.size() == 6 and c[0] is String and c[0] == "claro":
-		return ["claro", float(c[1]), int(c[2]), int(c[3]), float(c[4]), int(c[5])]
+		return ["claro", float(c[1]), int(c[2]), int(c[3]), float(c[4]), Texturas._lado(false)]
 	if c.size() == 6:
-		return [float(c[0]), int(c[1]), bool(c[2]), int(c[3]), int(c[4]), int(c[5])]
+		return [float(c[0]), int(c[1]), bool(c[2]), int(c[3]), int(c[4]), Texturas._lado(bool(c[2]))]
 	return []
 
 ## La imagen, como la haría `NoiseTexture2D` con esos parámetros (ver `Texturas._nuevo_ruido`).
@@ -65,10 +66,11 @@ static func imagen(p: Array, lut: PackedByteArray = PackedByteArray()) -> Image:
 	var claro := p[0] is String
 	var n := FastNoiseLite.new()
 	n.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH if claro else int(p[4])
-	n.frequency = float(p[1]) if claro else float(p[0])
+	var tam := int(p[5])
+	## La misma escala que `Texturas._nuevo_ruido`: a menos lado, más frecuencia (M-347).
+	n.frequency = (float(p[1]) if claro else float(p[0])) * float(Texturas.TEX) / float(tam)
 	n.seed = int(p[2]) if claro else int(p[1])
 	n.fractal_octaves = int(p[3])
-	var tam := int(p[5])
 	var img := n.get_seamless_image(tam, tam, false, false, 0.1, true)
 	if claro:
 		img = _con_rampa(img, lut)

@@ -13,12 +13,14 @@ static func altura(x: float, z: float, ruido: FastNoiseLite, detalle: FastNoiseL
 	t = t * t * (3.0 - 2.0 * t)
 	var h: float = ruido.get_noise_2d(x, z) * CityBuilder.TERRENO_ALTURA
 	h += detalle.get_noise_2d(x, z) * 6.0
-	return h * t
+	var dm := Vector2(x, z).distance_to(CityBuilder.MONTE_CENTRO)
+	return h * t + CityBuilder.MONTE_ALTURA * exp(-dm * dm / (2.0 * CityBuilder.MONTE_RADIO * CityBuilder.MONTE_RADIO)) * t
 
 static func calcular(ruido: FastNoiseLite, detalle: FastNoiseLite) -> Array:
 	if Nativo.obj() != null:
 		return Nativo.obj().terreno(ruido, detalle, CityBuilder.TERRENO_LADO, CityBuilder.TERRENO_CELDAS,
-			CityBuilder.TERRENO_BALDOSAS, CityBuilder.LLANO_RADIO, CityBuilder.LLANO_TRANSICION, CityBuilder.TERRENO_ALTURA)
+			CityBuilder.TERRENO_BALDOSAS, CityBuilder.LLANO_RADIO, CityBuilder.LLANO_TRANSICION, CityBuilder.TERRENO_ALTURA,
+			CityBuilder.MONTE_CENTRO, CityBuilder.MONTE_ALTURA, CityBuilder.MONTE_RADIO)
 	return calcular_gd(ruido, detalle)
 
 ## Normal de la rejilla de alturas en el vértice (i, j), siempre hacia arriba.

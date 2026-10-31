@@ -17,7 +17,7 @@ static func borrar(nombre: String) -> void:
 
 ## Entra a una partida cargada: con el prólogo visto y la vida encendida, en 3D; si no, el menú.
 static func entrar_en(arbol: SceneTree, m: Mundo) -> void:
-	Principal.mundo_a_cargar = m
+	PedidoPartida.mundo_a_cargar = m
 	var d := VidaCiudad.arranque_3d(m)
 	if d != "":
 		PrologoDT.directo = d

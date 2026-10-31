@@ -12,10 +12,14 @@ extends RefCounted
 ## El estrés y la familia NO se duplican aquí: viven semana a semana en `VidaDT`
 ## desde septiembre, y la fase 3 («casa y familia») es la que las unirá al reloj.
 ##
-## Efectos (leídos por quien decida algo con azar; hoy nadie los aplica todavía a
-## la simulación semanal, a propósito: la fase 0 deja el juego igual):
-##   - `factor_riesgo()` ≥ 1: multiplica la probabilidad de que algo salga mal.
-##   - `factor_rendimiento()` ≤ 1: lo bien que sale lo que hagas trabajando.
+## Efectos (30-10, §2.5 del plan: «si fallan, aumentan las posibilidades de que las
+## cosas salgan mal»). Se leen al cerrar la semana, ANTES de que el reloj dé la
+## semana por vivida con rutina; con la rutina valen 1 y el juego queda igual:
+##   - `factor_riesgo()` ≥ 1: multiplica la probabilidad del imprevisto de la semana
+##     (`Imprevistos.semana`, 12 % → hasta 21,6 %).
+##   - `factor_rendimiento()` ≤ 1: lo bien que sale lo que hagas trabajando; la
+##     preparación del partido (`factor_preparacion`, en `Mundo.aplicar_bonificadores`)
+##     pierde hasta un 4 %, algo más que la semana de baja médica (−2 %).
 ## Topes: las dos van de 0 a 100 y no se salen. Con la energía a 0 estando
 ## despierto se emite `agotamiento` (una vez por episodio).
 ##
@@ -117,6 +121,23 @@ func factor_rendimiento() -> float:
 		return 1.0
 	return 1.0 - RENDIMIENTO_ENERGIA * falta_energia() - RENDIMIENTO_HAMBRE * exceso_hambre()
 
+## La preparación del partido: de 1,0 (bien) a 0,96 (en el fondo).
+const PREPARACION_MAX := 0.16
+func factor_preparacion() -> float:
+	return 1.0 - (1.0 - factor_rendimiento()) * PREPARACION_MAX
+
+## La que ya está aplicada a los bonificadores del club (no se guarda: al cargar se recalculan).
+var preparacion_usada := 1.0
+## La lee `Mundo.aplicar_bonificadores` y queda anotada.
+func usar_preparacion() -> float:
+	preparacion_usada = factor_preparacion()
+	return preparacion_usada
+
+## ¿Cambió el estado del DT desde que se calcularon los bonificadores? Antes de un
+## partido, si es así, se recalculan (con la rutina nunca: el juego queda igual).
+func preparacion_cambio() -> bool:
+	return not is_equal_approx(factor_preparacion(), preparacion_usada)
+
 ## Una probabilidad base ajustada por el estado del DT (con tope en 1).
 func probabilidad_de_fallo(base: float) -> float:
 	return clampf(base * factor_riesgo(), 0.0, 1.0)
@@ -144,6 +165,11 @@ func pasar(minutos: int, actividad: String = "libre") -> void:
 ## Comer algo al paso (una barrita, un café con algo): quita hambre sin gastar tiempo.
 func picar(puntos: int) -> void:
 	hambre_m = clampi(hambre_m - maxi(puntos, 0) * ESCALA, 0, MAXIMO)
+	_revisar_umbrales()
+
+## Un golpe de energía al paso (una bebida energética, un café): sube la energía sin gastar tiempo.
+func animar(puntos: int) -> void:
+	energia_m = clampi(energia_m + maxi(puntos, 0) * ESCALA, 0, MAXIMO)
 	_revisar_umbrales()
 
 ## Cambia el modo de vida. Al apagarla, el DT vuelve a la rutina (descansado y

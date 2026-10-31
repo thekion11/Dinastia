@@ -1,0 +1,16 @@
+Boca Juniors|clasico|banda|BJ|franja_pecho|#003f8a|#ffd100|#003f8a|#003f8a
+River Plate|escudo|banda|RP|sash|#ffffff|#d50032|#000000|#ffffff|#ffffff|#d50032
+Racing Club|circulo|franjas|RC|franjas|#75aadb|#ffffff|#ffffff|#ffffff
+San Lorenzo|circulo|franjas|SL|franjas|#00246b|#d50032|#00246b|#00246b
+Independiente|ovalo|liso|CI|liso|#d50032|#ffffff|#0b2f66|#d50032
+Estudiantes|escudo|franjas|EP|franjas|#d50032|#ffffff|#000000|#d50032
+Vélez|circulo|chevron|VS|v_ancha|#ffffff|#00246b|#ffffff|#ffffff
+Huracan|hex|estrella|HU|liso|#ffffff|#d50032|#ffffff|#ffffff
+Rosario Central|clasico|franjas|CE|franjas|#003f8a|#ffd100|#003f8a|#003f8a
+Newell's|circulo|mitad|NO|mitad|#d50032|#000000|#000000|#000000
+Lanús|banderin|liso|LA|liso|#7a1f2b|#ffffff|#7a1f2b|#7a1f2b
+Talleres|circulo|franjas|TA|franjas|#00246b|#ffffff|#00246b|#00246b
+Banfield|escudo|franjas|BA|franjas|#00843d|#ffffff|#ffffff|#00843d
+Godoy Cruz|clasico|franjas|GC|franjas|#00246b|#ffffff|#00246b|#00246b
+Colón|rombo|franjas|CO|franjas|#d50032|#000000|#000000|#d50032
+Unión SF|clasico|franjas|US|franjas|#d50032|#ffffff|#000000|#d50032

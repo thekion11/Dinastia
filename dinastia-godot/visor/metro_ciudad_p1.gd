@@ -21,13 +21,16 @@ extends Node3D
 const ALTO_VIADUCTO := 11.0
 const PROF_TUNEL := -12.0
 const VEL := 16.0          ## m/s de crucero (~58 km/h)
-const ACEL := 1.2          ## m/s²
+const ACEL := 1.2          ## m/s² (máxima)
+const PLAN := 1.0          ## m/s² con la que se planea cada frenada (margen sobre ACEL)
+const TIRON := 1.0         ## m/s³: lo que puede cambiar la aceleración por segundo
 const PARADA := 7.0        ## s con las puertas abiertas
 
 ## Un tren sobre una línea recta de estaciones (posiciones `s` a lo largo).
 class Tren:
 	var s := 0.0
 	var v := 0.0
+	var a := 0.0           ## aceleración actual (con rampa)
 	var sentido := 1.0
 	var espera := 0.0
 	var largo := 0.0
@@ -70,15 +73,21 @@ class Tren:
 			sentido = -sentido
 			return
 		var dist := absf(objetivo - s)
-		var frenada := v * v / (2.0 * ACEL)
-		if dist <= frenada + 0.3:
-			v = maxf(0.0, v - ACEL * delta)
-		else:
-			v = minf(VEL, v + ACEL * delta)
+		## Perfil de parada (F-2): velocidad máxima desde la que aún se frena a PLAN hasta la estación; la aceleración sube y baja con rampa (TIRON m/s³).
+		var tope := sqrt(2.0 * PLAN * maxf(dist - 0.3, 0.0))
+		var obj := minf(VEL, tope)
+		var ganancia := 1.0 / delta if tope < VEL else 3.0
+		var a_pedida := clampf((obj - v) * ganancia, -ACEL, ACEL)   ## con rampa, no de golpe
+		## Crucero sin chocar con el tope (tirón de 13 m/s³): quitar `a` con rampa suma `a²/(2·TIRON)` de velocidad; si ya llega a `obj`, se quita YA.
+		if a > 0.0 and v + a * a / (2.0 * TIRON) >= obj:
+			a_pedida = minf(a_pedida, 0.0)
+		a = move_toward(a, a_pedida, TIRON * delta)
+		v = clampf(v + a * delta, 0.0, VEL)
 		var paso := v * delta
-		if paso >= dist or dist < 0.6:
+		if paso >= dist or dist < 0.35:
 			s = objetivo
 			v = 0.0
+			a = 0.0
 			espera = PARADA
 			paradas_hechas += 1
 			ultima_parada = objetivo
@@ -102,8 +111,9 @@ class Tren:
 
 ## LOS NOMBRES DE LAS ESTACIONES (de norte a sur / de oeste a este).
 const NOMBRES := {
-	"Línea 1": ["Alto Norte", "Mercado Este", "Cine", "Transbordo", "Hospital", "Ensanche", "Puerta Sur"],
-	"Línea 2": ["Ribera Oeste", "Puerto", "Talleres", "Plaza Mayor", "Estación Central", "Ópera", "Transbordo"],
+	## (27-10-2026: «Transbordo» en el cruce de verdad: la 1 en x = 660 y la 2 en z = -660 se cortan en la 2.ª estación de la 1 y la 6.ª de la 2.)
+	"Línea 1": ["Alto Norte", "Transbordo", "Cine", "Mercado Este", "Hospital", "Ensanche", "Puerta Sur"],
+	"Línea 2": ["Ribera Oeste", "Puerto", "Talleres", "Plaza Mayor", "Estación Central", "Transbordo", "Ópera"],
 }
 const ANDEN_LAT := 4.0      ## centro de cada andén lateral (a cada lado de la vía)
 const ANDEN_ANCHO := 4.0
@@ -161,6 +171,7 @@ const BANCO_FONDO := 0.15
 const RADIO_GENTE := 75.0   ## a esta distancia de la cámara se llena el andén
 
 static var _escenas := {}
+var expendedoras: Array[Vector3] = []   ## dónde hay máquinas expendedoras en los andenes (la E las compra: `ExploradorCiudad._usar_en_anden`)
 var _sitios: Array = []     ## [{centro, clave, sitios: [{p, giro, sentado, pareja}]}]
 var _gente_clave := ""
 var _gente: Node3D
@@ -236,7 +247,10 @@ func _caja(padre: Node3D, pos: Vector3, tam: Vector3, m: Material) -> MeshInstan
 	return mi
 
 func _viaducto(a: Vector3, b: Vector3, col: Color) -> void:
-	var hormigon := _mat(Color(0.72, 0.71, 0.68), 0.8)
+	var hormigon := _mat(Color(0.8, 0.79, 0.76), 0.85)   ## hormigón con manchas (el ruido del subsuelo), triplanar
+	hormigon.albedo_texture = SubsueloDetalle._ruido(41, 0.04, FastNoiseLite.TYPE_SIMPLEX_SMOOTH)
+	hormigon.uv1_triplanar = true
+	hormigon.uv1_scale = Vector3(0.1, 0.1, 0.1)
 	var largo := a.distance_to(b)
 	var m := (a + b) * 0.5
 	var vertical := absf(a.x - b.x) < 0.1

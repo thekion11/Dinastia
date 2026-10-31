@@ -157,7 +157,7 @@ static func textura(club: Club, cual: int = 0, ancho_px: int = 128, custom_kit: 
 	## arrastra el color del escudo ni el del menu-.
 	var estilo := custom_kit if custom_kit != "" else club.kit_estilo
 	## Con la equipación del diseñador, sus cinco colores y su ribete.
-	if cual == 0 and custom_kit == "" and not club.kit_x.is_empty():
+	if cual == 0 and custom_kit == "" and (not club.kit_x.is_empty() or AspectoClub.fila(club).has("camiseta")):   ## orden 15: el diseño del club real también en las fichas
 		var kx := DisenosKit.kit_de_club(club)
 		return DisenosKit.textura_camiseta(String(kx["dis"]), DisenosKit.colores(kx), int(kx.get("trim", 1)), ancho_px)
 	return textura_procedural(club.color_kit1(), club.color_kit2(),

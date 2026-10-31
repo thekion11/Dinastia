@@ -1,9 +1,8 @@
 extends "res://ui/estadio_p2.gd"
 ## [Capa 3/6 de `estadio.gd`] _construir, _a_la_revision_var, _al_jugada_ambiente, _nodo_de, _banca_gesto, _banca_celebra … (+6)
 
-## POR PARTES (30-10-2026, rendimiento): con `por_partes` (lo pone quien enseña la pantalla de
-## carga) se cede un fotograma entre los pasos grandes: la carga sigue animada en vez de quedarse
-## congelada. Sin él (pruebas, resto del juego) todo ocurre en la misma llamada, como siempre.
+## POR PARTES (30-10-2026, rendimiento): con `por_partes` (lo pone quien enseña la pantalla de carga) se cede un fotograma
+## entre los pasos grandes y la carga sigue animada. Sin él (pruebas, resto del juego) todo ocurre en la misma llamada.
 var por_partes := false
 
 func _respiro() -> void:
@@ -29,8 +28,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	## Así que se hace como en el visor que ya funcionaba: los nodos 3D cuelgan
 	## del árbol y los pinta el viewport raíz, que dibuja el 3D primero y los
 	## Control encima. Por eso aquí NO hay un ColorRect de fondo: taparía el
-	## estadio entero. El 4K por SubViewport se puede recuperar más adelante, pero
-	## es un lujo y esto es lo que tiene que verse.
+	## estadio entero. El 4K por SubViewport se puede recuperar más adelante, pero es un lujo y esto es lo que tiene que verse.
 	_raiz3d = Node3D.new()
 	add_child(_raiz3d)
 	## Fuera de la ciudad no se sabe la hora: la gente del club está siempre.
@@ -46,8 +44,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	## falta. La primera vez faltaban `aplicar_viewport` y `build_pitch`, y el
 	## resultado fue un estadio con gradas, techo, focos y marcador… sobre un
 	## agujero negro donde tenía que estar el campo. No hubo ni un error: `build`
-	## levanta el recinto, pero el césped, las líneas y las porterías los pone
-	## `build_pitch`, que es una función aparte.
+	## levanta el recinto, pero el césped, las líneas y las porterías los pone `build_pitch`, que es una función aparte.
 	Calidad.aplicar_viewport(get_viewport(), Calidad.elegida)
 	Ambience.apply(_raiz3d, perfil, null, Calidad.elegida)
 	## El clima también se VE, no solo se oye (plan maestro B11).
@@ -57,8 +54,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		Precipitacion.montar(_raiz3d, String(perfil.get("clima", "noche")), float(gp["dx"]), float(gp["dz"]), Calidad.elegida)
 	## Si la máquina no llega a 40 FPS, se bajan efectos por escalones durante
 	## el partido (ver `RendimientoAdaptativo`). En un renderizador por software
-	## -los servidores de pruebas- no tiene sentido: ahí nunca se llegaría y las
-	## capturas saldrían con la calidad rebajada.
+	## -los servidores de pruebas- no tiene sentido: ahí nunca se llegaría y las capturas saldrían con la calidad rebajada.
 	var adaptador := RenderingServer.get_video_adapter_name().to_lower()
 	if Calidad.adaptativa and not adaptador.contains("llvmpipe") and not adaptador.contains("swiftshader"):
 		var ra := RendimientoAdaptativo.new()
@@ -86,6 +82,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	if club != null:
 		OlaGrada.colores_club(_raiz3d, Color(club.color1), Color(club.color2))
 	EntornoEstadio.agrupar(_raiz3d)   ## piezas repetidas del entorno en MultiMesh (rendimiento)
+	OptimizarGrada.trocear(_raiz3d)   ## M-345: butacas e hinchas en trozos con su propia caja
 	await _respiro()
 	## LA PANTALLA GIGANTE (22-9-2026, rehecha el 23-9). Ahora se monta SIEMPRE,
 	## haya partido o no: sin partido enseña bienvenida + tabla + goleadores,
@@ -100,8 +97,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	## Si viene un partido sin empezar hay que prepararlo ANTES de sacar a nadie:
 	## `preparar()` es quien arma los dos onces y quien mide su fuerza. Sin eso,
 	## `once_local` está vacío y la fuerza cacheada es un diccionario vacío, así
-	## que `simular_minuto()` revienta con "Invalid access to property 'ata'" en
-	## cada uno de los noventa minutos.
+	## que `simular_minuto()` revienta con "Invalid access to property 'ata'" en cada uno de los noventa minutos.
 	##
 	## Y solo si NO ha empezado: llamarlo con el partido en marcha lo devolvería
 	## al minuto cero y borraría el marcador.
@@ -128,6 +124,22 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_rig._add("Desde la grada (sancionado)", ojo + Vector3(0.6, 0.3, 0), Vector3(0, 0, ojo.z * 0.3), 62)
 		_rig.switch_to(_rig.cameras.size() - 1)
 
+	_montar_hud_de_transmision()
+	_montar_cajon_de_ajustes()
+
+	_pie = Label.new()
+	_pie.add_theme_font_size_override("font_size", 13)
+	_pie.add_theme_color_override("font_color", Color("e9eeea"))
+	_pie.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	_pie.offset_left = 18
+	_pie.offset_bottom = -14
+	_pie.offset_top = -34
+	_pie.visible = _pref("pie", false)
+	add_child(_pie)
+	_actualizar_pie(perfil, aforo, ocupacion)
+
+## Viñeta, radar y pantalla del estadio en la esquina (lo 2D que va encima del 3D).
+func _montar_hud_de_transmision() -> void:
 	## Viñeta de transmisión (22-9-2026, comparando contra el look de cámara de
 	## Open-Soccer): un oscurecido 2D encima del 3D, no un efecto de Environment
 	## -Godot 4 no trae viñeta nativa ahí-. Va ANTES del radar/barra/pie en el
@@ -167,6 +179,8 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		_mini_pantalla.texture = _pantalla.get_texture()
 		_mini_pantalla.visible = _pref("pantalla_esquina", true)
 
+## El cajón de ajustes de la transmisión (cámara, partido, en pantalla, sonido).
+func _montar_cajon_de_ajustes() -> void:
 	## AJUSTES EN UN CAJÓN (25-9-2026, plan maestro B1). Antes siete botones
 	## vivían encima de la transmisión (cámara, zoom ±, modo, velocidad, nombres,
 	## volver); el usuario pidió que no estuvieran todos a la vista. Ahora en
@@ -205,6 +219,13 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 			["⏯ Normal", func() -> void: _fijar_ritmo("normal")],
 			["🐢 Largo (FC)", func() -> void: _fijar_ritmo("largo")]])
 		_btn_dificultad = _cajon.boton(_texto_dificultad(), _ciclar_dificultad_cpu)
+		var b_preset: Button = _cajon.boton(_texto_preset(), func() -> void: pass)
+		b_preset.pressed.connect(func() -> void: _ciclar_preset(b_preset))
+		_cajon.interruptor("🎯 Indicador de pase (a quién va el balón)", _pref("indicador_pase", true), func(si: bool) -> void:
+			_guardar_pref("indicador_pase", si)
+			if _motor != null:
+				_motor.indicador_pase = si)
+		_cajon.fila([["🎥 Pro: cerca", func() -> void: _fijar_pro_camara("cerca")], ["Normal", func() -> void: _fijar_pro_camara("normal")], ["Lejos", func() -> void: _fijar_pro_camara("lejos")]])
 		_btn_velocidad = _cajon.boton("⏱", _ciclar_velocidad)
 		## SIMULAR EL RESTO (28-9-2026, informe externo: "falta el botón de
 		## simular el partido entero"). Existía en la pantalla de texto, que
@@ -253,17 +274,6 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		Musica.volumen = v
 		Musica.aplicar_volumen())
 
-	_pie = Label.new()
-	_pie.add_theme_font_size_override("font_size", 13)
-	_pie.add_theme_color_override("font_color", Color("e9eeea"))
-	_pie.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	_pie.offset_left = 18
-	_pie.offset_bottom = -14
-	_pie.offset_top = -34
-	_pie.visible = _pref("pie", false)
-	add_child(_pie)
-	_actualizar_pie(perfil, aforo, ocupacion)
-
 func _a_la_revision_var(minuto: int, motivo: String, anular := false, al_anular := Callable(), lineas := {}) -> void:
 	if _sala_var != null or _raiz3d == null:
 		return
@@ -301,7 +311,7 @@ func _nodo_de(id: String) -> Node3D:
 func _banca_gesto(es_local: bool, clip: String, dura: float, otro := "") -> void:
 	## Los sentados festejan o protestan SIN levantarse (26-10, `BanquilloVivo`:
 	## medio cuerpo de Mesh2Motion sobre la cadera de «sentado»). Ambos banquillos.
-	BanquilloVivo.reaccionar(_raiz3d, "gol" if clip == "celebrar" else "protesta", es_local, dura)
+	BanquilloVivo.reaccionar(_raiz3d, "gol" if clip == "celebrar" else ("lesion" if clip == "lamento" else "protesta"), es_local, dura)
 	for f: Dictionary in _en_banca:
 		if bool(f.get("es_local", false)) != es_local:
 			continue

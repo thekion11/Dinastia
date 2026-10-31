@@ -103,6 +103,8 @@ func _mover_en_anden(delta: float) -> void:
 		_aviso.text = Idiomas.t("🚇 Tren en el andén, puertas abiertas · E para subir")
 	else:
 		_aviso.text = Idiomas.t("Próximo tren: %s · E: salir a la calle") % ("llegando" if eta < 20.0 else "%d s" % int(eta))
+	if metro.expendedora_cerca(cuerpo.position):
+		_aviso.text = Idiomas.t("🥤 E: comprar en la máquina expendedora")
 
 func _viajar(delta: float) -> void:
 	var l := metro.linea(_linea)
@@ -175,24 +177,27 @@ func _conducir(e: Vector2, delta: float) -> void:
 		add_child(_motor_sonido)
 	_motor_sonido.poner(vel, maxf(e.y, 0.0))
 	var freno_mano := Input.is_physical_key_pressed(KEY_SPACE) or Input.is_joy_button_pressed(0, JOY_BUTTON_B)
-	_volante = lerpf(_volante, e.x, clampf(delta * 6.0, 0.0, 1.0))
-	if e.y > 0.0:
-		var potencia := 15.0 * (1.0 - clampf(maxf(vel, 0.0) / VEL_COCHE, 0.0, 1.0) * 0.82) + 2.0
-		vel = clampf(vel + e.y * potencia * delta, -8.0, VEL_COCHE)
-	elif e.y < 0.0:
+	_volante = lerpf(_volante, e.x, clampf(delta * 4.5, 0.0, 1.0))
+	## El pedal no salta: sube en un tercio de segundo y se suelta más deprisa (27-10, pieza F: suavizar la conducción).
+	_pedal = move_toward(_pedal, e.y, (3.5 if absf(e.y) > absf(_pedal) else 7.0) * delta)
+	if _pedal > 0.0:
+		var potencia := 6.5 * (1.0 - clampf(maxf(vel, 0.0) / VEL_COCHE, 0.0, 1.0) * 0.75) + 1.2
+		vel = clampf(vel + _pedal * potencia * delta, -8.0, VEL_COCHE)
+	elif _pedal < 0.0:
 		if vel > 0.5:
-			vel = maxf(vel - 24.0 * absf(e.y) * delta, 0.0)
+			## Frenada de ~0,95 g a fondo, que se afloja al final para que el coche se pose en vez de clavarse.
+			vel = maxf(vel - lerpf(3.0, 9.3, clampf(vel / 3.0, 0.0, 1.0)) * absf(_pedal) * delta, 0.0)
 		else:
-			vel = clampf(vel + e.y * 7.0 * delta, -8.0, VEL_COCHE)
+			vel = clampf(vel + _pedal * 3.5 * delta, -8.0, VEL_COCHE)
 	else:
-		vel = move_toward(vel, 0.0, (4.0 + absf(vel) * 0.12) * delta)
+		vel = move_toward(vel, 0.0, (1.2 + absf(vel) * 0.1) * delta)
 	if freno_mano:
-		vel = move_toward(vel, 0.0, 20.0 * delta)
+		vel = move_toward(vel, 0.0, 9.0 * delta)
 	var giro := 1.9 * (1.6 if freno_mano and absf(vel) > 4.0 else 1.0)
 	## A más velocidad el volante gira menos (no se vuelca a 90 km/h).
 	var cierre := clampf(absf(vel) / 8.0, 0.0, 1.0) * (1.0 - clampf(absf(vel) / VEL_COCHE, 0.0, 1.0) * 0.45)
 	rumbo -= _volante * delta * giro * cierre * signf(vel if vel != 0.0 else 1.0)
-	var acel_real := e.y if absf(vel) < VEL_COCHE else 0.0
+	var acel_real := _pedal if absf(vel) < VEL_COCHE else 0.0
 	_cabeceo = lerpf(_cabeceo, clampf(-acel_real * 0.035 - (0.03 if freno_mano else 0.0), -0.06, 0.06), clampf(delta * 4.0, 0.0, 1.0))
 	_balanceo = lerpf(_balanceo, clampf(_volante * absf(vel) * 0.0035, -0.07, 0.07), clampf(delta * 5.0, 0.0, 1.0))
 
@@ -227,6 +232,11 @@ func _buscar_cerca() -> void:
 				_cerca = {"tipo": "metro", "acc": a, "n": "Ⓜ %s · %s" % [a["linea"], a["nombre"]]}
 				_aviso.text = Idiomas.t("E: entrar al metro (%s, estación %s)") % [a["linea"], a["nombre"]]
 				return
+	## El botón de un semáforo peatonal (M-170).
+	if modo == "pie" and cb.expansion != null and cb.expansion.semaforos != null and cb.expansion.semaforos.boton_cerca(p) < INF:
+		_cerca = {"tipo": "boton_peatonal", "n": "Botón de cruce"}
+		_aviso.text = Idiomas.t("E: pedir el verde para cruzar")
+		return
 	if modo == "pie" and trafico != null:
 		for v: Dictionary in trafico._vehiculos:
 			var n: Node3D = v["nodo"]
@@ -262,7 +272,7 @@ func _buscar_cerca() -> void:
 func _physics_process(delta: float) -> void:
 	if cuerpo == null:
 		return
-	if estado in ["anden", "estadio", "interior", "puerta"]:
+	if estado in ["anden", "estadio", "interior", "puerta", "subsuelo", "cima"]:
 		_actualizar_mano("pie", 0.0, 1.0, 0.0)
 	if estado == "anden":
 		_mover_en_anden(delta)
@@ -276,6 +286,12 @@ func _physics_process(delta: float) -> void:
 	if estado == "interior":
 		_mover_en_interior(delta)
 		return
+	if estado == "subsuelo":
+		sub.paso(self, delta)
+		return
+	if estado == "cima":
+		cb.expansion.tele_nodo.mirador.paso(self, delta)
+		return
 	if estado == "puerta":
 		_andar_solo(delta)
 		return
@@ -285,6 +301,8 @@ func _physics_process(delta: float) -> void:
 		var rumbo_antes := rumbo
 		_conducir(e, delta)
 		_girar_si_cabe(rumbo_antes)
+		if vida != null and vida.servicios != null:
+			vida.servicios.vigilar(cuerpo.position, absf(vel))   ## multa por semáforo en rojo si la policía lo ve (pieza E)
 	else:
 		var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
 		## Aceleración y frenada suaves: arrancar y parar no es instantáneo.
@@ -368,9 +386,14 @@ func _unhandled_input(ev: InputEvent) -> void:
 			_usar()
 		return
 	var k := (ev as InputEventKey).keycode
-	if k == KEY_ESCAPE:
+	if k == KEY_ESCAPE and MapaTransporte.cerrar(self):   ## Esc cierra el mapa del transporte si está abierto
+		get_viewport().set_input_as_handled()
+	elif k == KEY_ESCAPE:
 		get_viewport().set_input_as_handled()
 		salir.emit()
+	elif k == KEY_N:   ## el mapa del transporte público (completo / autobuses / metro)
+		get_viewport().set_input_as_handled()
+		MapaTransporte.alternar(self)
 	elif k == KEY_E:
 		get_viewport().set_input_as_handled()
 		_usar()

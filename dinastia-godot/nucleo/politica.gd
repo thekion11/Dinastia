@@ -194,8 +194,12 @@ func semana(c: Club, anio: int, sem: int, prensa: Prensa) -> void:
 				cands = [{"partido": String(g["partido"]), "lider": String(g["lider"]), "postura": String(g["postura"])}]
 			var gana: Dictionary = cands[_h("gana|%s|%d" % [pais, anio]) % cands.size()]
 			var sigue := String(gana["partido"]) == String(g["partido"])
+			var apoyo := int(g.get("apoyo_club", -1)) >= int(g.get("desde", 0))
 			gobiernos[pais] = {"partido": String(gana["partido"]), "lider": String(gana["lider"]),
 				"postura": String(gana["postura"]), "desde": anio, "proxima": anio + mandato(pais)}
+			## §2.5: el apoyo del club pesa. Si repite el gobierno apoyado, sigue de aliado; si gana otro, recela.
+			if apoyo:
+				gobiernos[pais]["apoyo_club" if sigue else "recelo_club"] = anio
 			campana.erase(pais)
 			var pos: Array = POSTURAS[String(gana["postura"])]
 			noticia.emit("🗳️ Elecciones en %s" % pais, "%s. Gobierna %s (%s). Su prioridad: %s — %s" % [
@@ -203,13 +207,25 @@ func semana(c: Club, anio: int, sem: int, prensa: Prensa) -> void:
 				String(gana["partido"]), String(pos[0]).to_lower(), String(pos[1])])
 	## El efecto de la postura, cada cuatro semanas.
 	if sem % 4 == 0:
-		_efecto(c, String(gobiernos[pais]["postura"]), prensa)
+		_efecto(c, String(gobiernos[pais]["postura"]), prensa, relacion(gobiernos[pais]))
 
-func _efecto(c: Club, postura: String, prensa: Prensa) -> void:
+## (§2.5, 30-10) La relación del club con el gobierno: +1 aliado (lo apoyaste en este mandato),
+## −1 recelo (apoyaste al que perdió), 0 neutral. Mueve un 25 % lo que el gobierno da o cobra.
+const PESO_RELACION := 0.25
+static func relacion(g: Dictionary) -> int:
+	if int(g.get("apoyo_club", -1)) >= int(g.get("desde", 0)):
+		return 1
+	if int(g.get("recelo_club", -1)) >= int(g.get("desde", 0)):
+		return -1
+	return 0
+
+func _efecto(c: Club, postura: String, prensa: Prensa, rel := 0) -> void:
 	var p: Array = POSTURAS.get(postura, [])
 	if p.is_empty():
 		return
 	var monto := Eco.escalar(float(int(p[3])), float(c.rep))
+	## Las ayudas suben con un aliado y bajan con recelo; la tasa, al revés.
+	monto = int(round(float(monto) * (1.0 + PESO_RELACION * float(rel) * (-1.0 if String(p[2]) == "tasa_seguridad" else 1.0))))
 	match String(p[2]):
 		"subvencion_obras":
 			c.mover_saldo(monto)

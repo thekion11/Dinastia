@@ -61,7 +61,7 @@ func _probar() -> void:
 	## La frase de pasillo: por tu nombre, según el tramo, y la charla se anota.
 	var g := {"nombre": "Ema Soto", "clave": "secretaria", "puesto": "Secretaria"}
 	m.afinidad.valores["Ema Soto"] = 20
-	Principal.dt_nombre_elegido = "Carlos Prueba"
+	PedidoPartida.dt_nombre_elegido = "Carlos Prueba"
 	var dt := "Carlos"
 	var fria := RecorridoCharla.pasillo(m, g)
 	_comprobar(fria != "" and fria.contains(dt), "la persona te saluda por tu nombre (%s)" % fria)

@@ -125,7 +125,10 @@ func _saturacion_animo() -> float:
 ## amanecer, día, atardecer- se interpolan entre sí, así que no hay saltos:
 ## el cambio de color va siempre con la altura del sol, que es lo que pasa de
 ## verdad.
+var clima_actual := ""   ## `Mundo.clima()`; lo pone `ParaguasVida` al cambiar
+
 func _aplicar_hora() -> void:
+	var sol_nominal := 1.0   ## energía nominal / real del sol: el halo del cielo no debe crecer con el refuerzo del sol bajo
 	## La gente del club del estadio trabaja de 8 a 21 h.
 	PersonalEstadio.hora = _hora
 	## Altura del sol: -1 a medianoche, +1 a mediodía. El seno hace justo esta
@@ -136,6 +139,16 @@ func _aplicar_hora() -> void:
 	var noche: float = clampf(-altura * 3.0, 0.0, 1.0)       ## 1 = noche cerrada
 	## El rojizo del horizonte solo existe cuando el sol está justo en él.
 	var rasante: float = clampf(1.0 - absf(altura) * 3.4, 0.0, 1.0)
+	## HORA DORADA (S5, 27-10-2026): el sol bajo (unos 7° de altura, ~17:30 y ~6:30) dura más que el instante en que toca el
+	## horizonte; ahí la luz es ámbar, las sombras largas y el aire se vuelve calima cálida.
+	## Sol bajo (poco después del amanecer y antes del ocaso): el suelo recibe solo `altura` del haz y quedaba casi negro. Se
+	## compensa con más energía de sol y más rebote del cielo (fill), sin luces extra: el contraste entre caras al sol y a la sombra se conserva.
+	var bajo: float = (1.0 - smoothstep(0.1, 0.6, altura)) * clampf(altura * 8.0, 0.0, 1.0)
+	var dorada: float = clampf(1.0 - absf(altura - 0.14) * 3.2, 0.0, 1.0)
+	## NIEBLA DE LA MAÑANA (S5): a primera hora el aire de la ciudad lleva bruma que se levanta hacia las 9.
+	var bruma: float = clampf(1.0 - absf(_hora - 6.8) / 2.4, 0.0, 1.0)
+	## Las farolas y las ventanas se encienden al caer el sol (antes de la noche cerrada), no cuando ya es de noche.
+	var anochecer: float = clampf((0.06 - altura) * 7.0, 0.0, 1.0) if _hora > 12.0 else 0.0
 
 	if _sol != null:
 		## El sol recorre el cielo de este a oeste inclinándose con la hora.
@@ -147,23 +160,26 @@ func _aplicar_hora() -> void:
 		## bonito de foto y horrible para mirar un mapa-. La luz nunca baja de
 		## 8°: de noche sigue viniendo de arriba, pero muy floja y azulada, que
 		## es exactamente lo que hace la luna.
-		var altura_luz: float = maxf(altura, 0.14)
+		## Con el sol ya bien dirigido (27-10), la luna sube a unos 40° para que la noche conserve luz sobre el suelo.
+		var altura_luz: float = altura if altura >= 0.14 else lerpf(0.14, 0.9, clampf((0.14 - altura) / 0.5, 0.0, 1.0))
 		var base := Basis.IDENTITY
 		base = base.rotated(Vector3.UP, deg_to_rad(-42.0))
 		base = base.rotated(Vector3(cos(deg_to_rad(-42.0)), 0, -sin(deg_to_rad(-42.0))),
-			-asin(clampf(altura_luz, -1.0, 1.0)) - PI * 0.5)
+			-asin(clampf(altura_luz, -1.0, 1.0)))   ## 27-10: sin el «− PI/2» de antes (el sol estaba INVERTIDO: vertical al amanecer, horizontal a mediodía)
 		_sol.transform.basis = base
 		var sol_dia := Color(1.0, 0.97, 0.90)
 		var sol_rasante := Color(1.0, 0.62, 0.34)
 		## Luna fría pero no azul eléctrico (13-10-2026: teñía aceras y calles).
 		var luna := Color(0.66, 0.72, 0.9)
-		var col: Color = sol_dia.lerp(sol_rasante, rasante)
+		var col: Color = sol_dia.lerp(sol_rasante, rasante).lerp(Color(1.0, 0.72, 0.42), dorada * 0.55)
 		_sol.light_color = luna.lerp(col, clampf(dia + rasante * 0.8, 0.0, 1.0))
 		## 1,15 y no 1,45: a pleno día con 1,45 el césped y los campos salían
 		## lavados, casi blancos. El sol de mediodía quema, pero la cámara de
 		## este juego no es una cámara real sin diafragma. Y 0,30 de noche, no
 		## 0,06: con 0,06 no se veía el suelo.
-		_sol.light_energy = lerpf(0.24, 1.15, dia)
+		var energia_nominal: float = lerpf(0.34, 1.15, dia) + dorada * 0.3
+		_sol.light_energy = energia_nominal + bajo * 1.1
+		sol_nominal = energia_nominal / maxf(_sol.light_energy, 0.01)
 		_sol.shadow_enabled = dia > 0.05
 
 	if _cielo != null:
@@ -174,8 +190,8 @@ func _aplicar_hora() -> void:
 		var hor_dia := Color(0.78, 0.86, 0.94)
 		var hor_rasante := Color(0.98, 0.62, 0.34)
 		var hor_noche := Color(0.11, 0.14, 0.26)
-		_cielo.set_shader_parameter("top_color", top_noche.lerp(top_dia, dia))
-		var horizonte := hor_dia.lerp(hor_rasante, rasante)
+		_cielo.set_shader_parameter("top_color", top_noche.lerp(top_dia, dia).lerp(Color(0.50, 0.40, 0.66), dorada * 0.4))   ## malva en lo alto con el sol bajo
+		var horizonte := hor_dia.lerp(hor_rasante, clampf(rasante + dorada * 0.75, 0.0, 1.0))
 		_cielo.set_shader_parameter("horizon_color", hor_noche.lerp(horizonte, clampf(dia + rasante, 0.0, 1.0)))
 		## El suelo del cielo sigue al césped -ver la nota de arriba- pero se
 		## apaga de noche, o el horizonte quedaría verde fosforito a las 3 AM.
@@ -185,19 +201,20 @@ func _aplicar_hora() -> void:
 		## Las estrellas son del cielo nocturno cerrado, no de todo lo que no
 		## sea "pleno día": con `1.0-dia` asomaban ya a media tarde.
 		_cielo.set_shader_parameter("noche_cantidad", noche)
+		_cielo.set_shader_parameter("halo_escala", sol_nominal)
 
 	if _env != null:
 		## De noche hay que abrir el diafragma o no se ve nada; de día cerrarlo
 		## o se quema. Es exactamente lo que hace una cámara de verdad.
 		_env.tonemap_exposure = lerpf(1.40, 1.02, dia)
-		_env.ambient_light_energy = lerpf(0.62, 1.0, dia)
+		_env.ambient_light_energy = lerpf(0.9, 1.0, dia) + dorada * 0.3 + bajo * 0.55
 		## En el renderizador de compatibilidad (móvil, web) el cielo con shader
 		## propio no da luz ambiente: lo que queda a la sombra -la espalda de la
 		## grada, la copa de los árboles- salía NEGRO a mediodía. Ahí la luz
 		## ambiente va como color, el del cielo de esa hora.
 		## De noche, el reflejo cálido de las farolas sobre la ciudad (como el
 		## sodio de una ciudad real), no un azul puro que lo tiñe todo.
-		_env.ambient_light_color = Color(0.24, 0.21, 0.22).lerp(Color(0.62, 0.68, 0.74), dia)
+		_env.ambient_light_color = Color(0.25, 0.25, 0.3).lerp(Color(0.62, 0.68, 0.74), dia).lerp(Color(0.74, 0.62, 0.52), dorada * 0.35)
 		if Calidad.es_compatibilidad():
 			_env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 		else:
@@ -207,11 +224,22 @@ func _aplicar_hora() -> void:
 			_env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
 			_env.ambient_light_sky_contribution = 0.3
 		if _env.fog_enabled:
-			_env.fog_light_color = Color(0.16, 0.13, 0.14).lerp(Color(0.78, 0.80, 0.84), dia)
+			_env.fog_light_color = Color(0.16, 0.13, 0.14).lerp(Color(0.78, 0.80, 0.84), dia).lerp(Color(0.95, 0.70, 0.50), dorada * 0.6)
+			_env.fog_density = lerpf(0.00016, 0.00026, dorada) * (1.0 + bruma * 1.6)   ## calima de la hora dorada y bruma de la mañana
+
+	## Con niebla volumétrica (calidad ULTRA) el aire toma el color de la hora: oscuro de noche (no «brilla»), ámbar al ocaso,
+	## y espesa de mañana. La densidad base es la de `ciudad_vista.gd` (0,0006).
+	if _env != null and _env.volumetric_fog_enabled:
+		var aire_dia := Color(0.90, 0.91, 0.94)
+		_env.volumetric_fog_albedo = Color(0.10, 0.11, 0.18).lerp(aire_dia, dia).lerp(Color(1.0, 0.72, 0.5), dorada * 0.55)
+		_env.volumetric_fog_density = 0.0006 * (1.0 + bruma * 1.4 + dorada * 0.5) * lerpf(0.6, 1.0, dia)
+
+	ClimaCiudad.aplicar(clima_actual, _sol, _env, _cielo, dia)   ## el tiempo de la semana, sobre lo que dejó la hora
 
 	## Y las luces de la ciudad: farolas y ventanas encendidas cuando cae el sol.
 	if _ciudad != null:
-		_ciudad.encender_luces(noche)
+		_ciudad.encender_luces(maxf(noche, anochecer * 0.6))
+		RutinaPeatones.tick_si_toca(_ciudad.get_node_or_null("Trafico"), _hora)   ## M-183: la gente de la calle según la hora y el barrio
 
 	if _reloj != null:
 		_reloj.text = "%02d:%02d" % [int(_hora), int(fposmod(_hora, 1.0) * 60.0)]
@@ -265,12 +293,6 @@ func _boton(padre: Node, texto: String, accion: Callable) -> void:
 	b.custom_minimum_size = Vector2(0, 32)
 	b.pressed.connect(accion)
 	padre.add_child(b)
-
-func _alternar_giro() -> void:
-	_girando = not _girando
-
-func alternar_ciclo() -> void:
-	_ciclo_activo = not _ciclo_activo
 
 func _dejar_de_explorar() -> void:
 	if _explorador == null:

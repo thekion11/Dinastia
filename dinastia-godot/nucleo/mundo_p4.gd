@@ -9,6 +9,9 @@ extends "res://nucleo/mundo_p3.gd"
 ## El marcador de liga de tu club esta semana ([gf, gc]; vacío si no jugó). Lo
 ## lee `_semana_memoria_del_partido()` para las rachas de lo que no dirigiste.
 var _marcador_liga_semana: Array = []
+## Los retos de la semana de tu club (`RetosSemana`, semana 6 del plan, 27-10-2026).
+var retos_semana := RetosSemana.new()
+var mentor_mes := MentorPrimerMes.new()   ## el tutorial de gestión del primer mes (M-297)
 
 func _avisar_a_la_directiva(resultados: Array) -> void:
 	var mio := mi_club()

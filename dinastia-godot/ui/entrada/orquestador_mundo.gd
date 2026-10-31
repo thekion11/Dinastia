@@ -4,7 +4,7 @@ extends RefCounted
 ## `OrquestadorEntrada`: leer el estado acumulado (sea cual sea la forma exacta en que lo
 ## devuelva cada pantalla: texto suelto o diccionario) y crear la partida por el MISMO
 ## camino que ya usaban `ui/inicio.gd` y `ui/eleccion_club.gd`: el mundo entero generado,
-## `tomar_el_mando()` sobre el club, y `Principal.mundo_pregenerado` + modo, nombre,
+## `tomar_el_mando()` sobre el club, y `PedidoPartida.mundo_pregenerado` + modo, nombre,
 ## dificultad y desafíos en las variables estáticas de Principal, que hace el resto en
 ## `_arrancar_con()`. Aquí no hay reglas de juego nuevas salvo las de la entrada al
 ## campeonato (§9.1 del plan, cifras validadas por el dueño el 24-10).
@@ -194,7 +194,7 @@ static func preparar(estado: Dictionary) -> Dictionary:
 	if modo == "continuar":
 		var guardado := Partida.cargar("partida")
 		if guardado != null:
-			Principal.mundo_a_cargar = guardado
+			PedidoPartida.mundo_a_cargar = guardado
 			return {"escena": PRINCIPAL, "mundo": guardado}
 		modo = "dt"
 	if modo == "carrera-m":
@@ -202,9 +202,9 @@ static func preparar(estado: Dictionary) -> Dictionary:
 		CarreraJugadorUI.nombre_pedido = nombre_dt(estado)
 		return {"escena": CARRERA_JUGADOR, "mundo": null}
 	var m: Mundo = estado.get("mundo") if estado.get("mundo") is Mundo else generar_mundo()
-	Principal.tutorial_pedido = modo == "tutorial"
-	Principal.fundar_pedido = false
-	Principal.reto_pedido = ""
+	PedidoPartida.tutorial_pedido = modo == "tutorial"
+	PedidoPartida.fundar_pedido = false
+	PedidoPartida.reto_pedido = ""
 	var montado := false
 	if modo == "retos":
 		var reto := _texto(estado, "modo", ["reto"])
@@ -224,18 +224,18 @@ static func preparar(estado: Dictionary) -> Dictionary:
 	_llamar(CONFIG_DATOS, "aplicar_al_club", [config(estado), m.mi_club(), m])
 	aplicar_vida(m, estado)
 	aplicar_personaje(m, estado)
-	Principal.mundo_pregenerado = m
+	PedidoPartida.mundo_pregenerado = m
 	## «Crear tu Club», el tutorial y los retos son carreras de entrenador (como antes).
-	Principal.modo_elegido = "dt" if modo in ["creador", "tutorial", "retos"] else modo
-	Principal.dt_nombre_elegido = nombre_dt(estado)
-	Principal.dificultad_elegida = dificultad(estado)
+	PedidoPartida.modo_elegido = "dt" if modo in ["creador", "tutorial", "retos"] else modo
+	PedidoPartida.dt_nombre_elegido = nombre_dt(estado)
+	PedidoPartida.dificultad_elegida = dificultad(estado)
 	var desafios: Array[String] = []
 	if modo != "retos":
 		var lista: Variant = estado.get("desafios", config(estado).get("desafios", []))
 		if lista is Array:
 			for d: Variant in lista:
 				desafios.append(String(d))
-	Principal.desafios_elegidos = desafios
+	PedidoPartida.desafios_elegidos = desafios
 	return {"escena": PROLOGO if con_prologo(modo) else PRINCIPAL, "mundo": m}
 
 ## ¿Este modo empieza con el prólogo 3D? Los que dirigen un club, salvo el tutorial

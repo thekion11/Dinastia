@@ -24,6 +24,15 @@ uniform vec4 tierra_color : source_color = vec4(0.36, 0.30, 0.22, 1.0);
 // la ladera más discreta saca ya su franja de tierra.
 uniform float umbral_roca : hint_range(0.0, 1.0) = 0.965;
 uniform float umbral_cesped : hint_range(0.0, 1.0) = 0.994;
+// EL CERRO (27-10-2026, el dueño: «la ladera es una superficie marrón plana»): el monte sube 420 m en una campana de 520 m, con
+// pendientes de hasta ~37° (NORMAL.y ≈ 0,80; medido: 0,92 en el medio y 0,80 en lo más empinado): con los umbrales de arriba, pensados para lomas de 12°, TODA su ladera caía en
+// «tierra» y se veía de un marrón liso. Dentro del radio del monte los umbrales bajan (pradera desde ~0,865, roca solo bajo ~0,80, lo
+// más empinado), se rompen con ruido para que no haya una raya limpia entre pradera y roca, y con la altura la pradera se
+// seca (verde-amarillento) y aparece más roca, como en una montaña de verdad.
+uniform vec2 monte_centro = vec2(2300.0, 1300.0);
+uniform float monte_radio = 1100.0;
+uniform float umbral_roca_monte : hint_range(0.0, 1.0) = 0.66;
+uniform float umbral_cesped_monte : hint_range(0.0, 1.0) = 0.745;
 uniform float roughness_cesped : hint_range(0.0, 1.0) = 0.94;
 uniform float roughness_roca : hint_range(0.0, 1.0) = 0.86;
 
@@ -67,14 +76,31 @@ void fragment() {
 	vec3 roca = mix(roca_oscura.rgb, roca_clara.rgb, moteado);
 
 	float ladera = clamp(n_mundo.y, 0.0, 1.0);
-	// Dos tramos: roca->tierra hasta `umbral_roca`, tierra->césped hasta
-	// `umbral_cesped`. Con un solo smoothstep la tierra desaparecía -pasaba
+	// El monte: 1 dentro de su campana, 0 en el llano.
+	float k = 1.0 - smoothstep(monte_radio * 0.6, monte_radio, distance(p_mundo.xz, monte_centro));
+	float alt = clamp(p_mundo.y / 420.0, 0.0, 1.0);
+	float rotura = (fbm3(vec3(p_mundo.xz * 0.03, 5.0)) - 0.5) * 0.09 * k + (fbm3(vec3(p_mundo.xz * 0.15, 8.0)) - 0.5) * 0.03 * k;
+	float u_roca = mix(umbral_roca, umbral_roca_monte + alt * 0.02, k);
+	float u_cesped = mix(umbral_cesped, umbral_cesped_monte + alt * 0.03, k);
+	ladera = clamp(ladera + rotura, 0.0, 1.0);
+	// Pradera de montaña: se seca y aclara con la altura y tiene manchas de matorral más oscuro.
+	vec3 pradera = cesped;
+	pradera = mix(pradera, pradera * vec3(1.18, 1.1, 0.72), alt * 0.8 * k);
+	float mancha = smoothstep(0.52, 0.72, fbm3(vec3(p_mundo.xz * 0.02, 11.0)));
+	pradera = mix(pradera, pradera * vec3(0.62, 0.78, 0.55), mancha * 0.7 * k);
+	// Roca estratificada: bandas horizontales del moteado según la altura.
+	float estrato = fbm3(vec3(p_mundo.x * 0.04, p_mundo.y * 0.35, p_mundo.z * 0.04));
+	vec3 roca_m = mix(roca_oscura.rgb * 0.95, roca_clara.rgb * 1.05, clamp(moteado * 0.5 + estrato * 0.5, 0.0, 1.0));
+	roca = mix(roca, roca_m, k);
+	// Dos tramos: roca->tierra hasta `u_roca`, tierra->césped hasta `u_cesped`. Con un solo smoothstep la tierra desaparecía -pasaba
 	// de roca a césped sin el tramo suelto de en medio, que es justo lo que
 	// delata una ladera real desde lejos-.
-	float t1 = smoothstep(0.0, umbral_roca, ladera);
-	float t2 = smoothstep(umbral_roca, umbral_cesped, ladera);
-	vec3 base = mix(roca, tierra_color.rgb, t1);
-	base = mix(base, cesped, t2);
+	float t1 = smoothstep(0.0, u_roca, ladera);
+	float t2 = smoothstep(u_roca, u_cesped, ladera);
+	// En el monte la «tierra» lleva hierba mezclada (olivas), no un marrón liso.
+	vec3 tierra = mix(tierra_color.rgb, pradera * vec3(0.78, 0.7, 0.55), 0.55 * k);
+	vec3 base = mix(roca, tierra, t1);
+	base = mix(base, pradera, t2);
 
 	vec2 deriva = vec2(1.0, 0.35) * TIME * nubes_sombra_velocidad * 40.0;
 	float n_sombra = fbm3(vec3((p_mundo.xz + deriva) * nubes_sombra_escala, 0.0));

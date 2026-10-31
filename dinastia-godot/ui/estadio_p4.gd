@@ -177,6 +177,7 @@ func _a_la_lesion(j: Jugador, semanas: int, minuto: int) -> void:
 		return
 	if j.club_id == club.id:
 		Sonido.toca("lesion_grave" if semanas >= 6 else "lesion")
+	_banca_lesion(j.club_id == club.id)
 	_suceso({
 		"min": minuto,
 		"t": "lesion",
@@ -300,6 +301,10 @@ func _anular_gol_motor(de_local: bool, autor: String) -> void:
 func _banca_protesta(es_local: bool) -> void:
 	_banca_gesto(es_local, "discutir_arbitro", 2.6, "protestar")
 
+## M-102 (27-10): el banquillo del lesionado se lleva las manos a la cabeza (los sentados sin levantarse; los de pie, el gesto de lamento).
+func _banca_lesion(es_local: bool) -> void:
+	_banca_gesto(es_local, "lamento", 3.5, "manos_cabeza")
+
 ## Los avisos del motor que merecen rótulo (los goles ya tienen el suyo).
 func _al_aviso_motor(texto: String) -> void:
 	## En la tanda: «Penal 3: Nombre» lleva el nombre (no se traduce entero).
@@ -331,6 +336,18 @@ func _al_empezar_tanda() -> void:
 	_mostrar_banner_gol("🥅 " + Idiomas.t("TANDA DE PENALES"), false)
 	if _rig != null:
 		_rig.plano_tanda = true
+	## La presentación: los cinco lanzadores de cada equipo, en orden (semana 4, 27-10-2026).
+	var orden: Array = _motor.tanda.get("orden", [[], []])
+	PresentacionTanda.crear(self, partido.local, partido.visita, (orden[0] as Array).map(_nombre_motor), (orden[1] as Array).map(_nombre_motor))
+
+## El nombre visible de un jugador del motor (su `Jugador` o, si no, su puesto).
+func _nombre_motor(p: Dictionary) -> String:
+	var jg: Variant = p.get("jugador")
+	if jg is Jugador:
+		return Nombres.visible((jg as Jugador).nombre)
+	if jg is Dictionary:
+		return Nombres.visible(String((jg as Dictionary).get("nombre", p.get("slot_code", ""))))
+	return String(p.get("slot_code", ""))
 
 # --- los insertos de la realización (25-10-2026) -------------------------------------
 

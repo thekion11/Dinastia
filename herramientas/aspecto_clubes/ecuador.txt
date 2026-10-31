@@ -1,0 +1,16 @@
+LDU Quito|circulo|liso|LDU|liso|#ffffff|#00246b|#ffffff|#ffffff
+Barcelona SC|escudo|liso|BS|liso|#ffd100|#000000|#000000|#ffd100
+Emelec|clasico|liso|EM|liso|#0038a8|#ffffff|#ffffff|#0038a8
+I. del Valle|hex|mitad|IV|mitad|#000000|#75aadb|#000000|#000000
+Aucas|rombo|franjas|AU|franjas|#ffd100|#000000|#000000|#ffd100
+El Nacional|banderin|liso|EN|liso|#d50032|#75aadb|#75aadb|#d50032
+Delfin|ovalo|liso|DE|liso|#ffd100|#0038a8|#0038a8|#ffd100
+U. Católica (E)|clasico|liso|UC|liso|#75aadb|#ffffff|#ffffff|#75aadb
+Orense|escudo|liso|OR|liso|#00843d|#ffd100|#ffd100|#00843d
+Técnico U.|penta|liso|TU|liso|#d50032|#ffffff|#ffffff|#d50032
+Mushuc Runa|circulo|liso|MR|liso|#d50032|#ffd100|#ffd100|#d50032
+Macara|hex|franjas|MA|franjas|#75aadb|#00246b|#00246b|#75aadb
+Guayaquil C.|clasico|liso|GC|liso|#ff7a00|#0038a8|#0038a8|#ff7a00
+Cumbaya|rombo|liso|CU|liso|#ffd100|#000000|#000000|#ffd100
+Imbabura|escudo|liso|IM|liso|#0038a8|#ffffff|#ffffff|#0038a8
+9 de Octubre|ovalo|liso|NO|liso|#75aadb|#ffffff|#ffffff|#75aadb

@@ -19,7 +19,7 @@ using namespace godot;
 
 // `TerrenoArreglos.altura` (las cuentas en float de 64 bits, como GDScript).
 static double altura_terreno(double x, double z, FastNoiseLite *ruido, FastNoiseLite *detalle,
-		double llano_radio, double llano_trans, double alto) {
+		double llano_radio, double llano_trans, double alto, const Vector2 &monte, double monte_alto, double monte_radio) {
 	const double d = double(Vector2(real_t(x), real_t(z)).length());
 	if (d <= llano_radio) {
 		return 0.0;
@@ -28,11 +28,13 @@ static double altura_terreno(double x, double z, FastNoiseLite *ruido, FastNoise
 	t = t * t * (3.0 - 2.0 * t);
 	double h = double(ruido->get_noise_2d(real_t(x), real_t(z))) * alto;
 	h += double(detalle->get_noise_2d(real_t(x), real_t(z))) * 6.0;
-	return h * t;
+	const double dm = double(Vector2(real_t(x), real_t(z)).distance_to(monte));
+	return h * t + monte_alto * std::exp(-dm * dm / (2.0 * monte_radio * monte_radio)) * t;
 }
 
 Array DinastiaNativo::terreno(const Ref<FastNoiseLite> &ruido, const Ref<FastNoiseLite> &detalle, double lado,
-		int celdas, int baldosas, double llano_radio, double llano_trans, double alto) const {
+		int celdas, int baldosas, double llano_radio, double llano_trans, double alto, const Vector2 &monte,
+		double monte_alto, double monte_radio) const {
 	Array salida;
 	if (ruido.is_null() || detalle.is_null() || celdas <= 0 || baldosas <= 0) {
 		return salida;
@@ -45,7 +47,7 @@ Array DinastiaNativo::terreno(const Ref<FastNoiseLite> &ruido, const Ref<FastNoi
 		for (int i = 0; i < fila; i++) {
 			const double x = -mitad + i * paso;
 			const double z = -mitad + j * paso;
-			alturas[size_t(j) * fila + i] = altura_terreno(x, z, ruido.ptr(), detalle.ptr(), llano_radio, llano_trans, alto);
+			alturas[size_t(j) * fila + i] = altura_terreno(x, z, ruido.ptr(), detalle.ptr(), llano_radio, llano_trans, alto, monte, monte_alto, monte_radio);
 		}
 	}
 	auto h = [&](int ii, int jj) {

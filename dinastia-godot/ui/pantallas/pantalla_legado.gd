@@ -7,6 +7,7 @@ func _pintar_records() -> void:
 	var lg := p.mundo.logros
 	if lg == null:
 		return
+	_resumen_carrera(lg)
 
 	var tr := p._texto(11, Principal.COL_SUAVE)
 	tr.text = Idiomas.t("RACHAS")
@@ -137,7 +138,7 @@ func _pintar_records() -> void:
 		for i in range(pls.size() - 1, maxi(-1, pls.size() - 9), -1):
 			var p_local: Dictionary = pls[i]
 			var anio_p := int(p_local.get("anio", 0))
-			var abierto := p._plantel_abierto == anio_p
+			var abierto := _plantel_abierto == anio_p
 			var bp := Button.new()
 			bp.text = Idiomas.t("%s%d  ·  %dº  ·  MVP: %s") % ["▾ " if abierto else "▸ ", anio_p,
 				int(p_local.get("puesto", 0)), String(p_local.get("mvp", "—"))]
@@ -146,7 +147,7 @@ func _pintar_records() -> void:
 			bp.add_theme_font_size_override("font_size", 12)
 			bp.add_theme_color_override("font_color", p._color_de_paleta(Principal.COL_ORO if abierto else Principal.COL_TEXTO))
 			bp.pressed.connect(func() -> void:
-				p._plantel_abierto = 0 if p._plantel_abierto == anio_p else anio_p
+				_plantel_abierto = 0 if _plantel_abierto == anio_p else anio_p
 				p._refrescar())
 			p._lista_records.add_child(bp)
 			if not abierto:
@@ -177,3 +178,36 @@ func _pintar_records() -> void:
 					p._celda(rej, "—", Principal.COL_SUAVE, true)
 					p._celda(rej, "—", Principal.COL_SUAVE, true)
 					p._celda(rej, "—", Principal.COL_SUAVE, true)
+
+## M-311 (28-10-2026): TU CARRERA EN UNA FILA, arriba del todo: temporadas, partidos, victorias-empates-derrotas con el
+## porcentaje, goles y títulos. Sale de `Logros.carrera` (dirigidos y simulados) y del muro de títulos; en una partida
+## vieja, que solo contaba partidos y victorias, lo que falte se completa con el cara a cara (los dirigidos).
+func _resumen_carrera(lg: Logros) -> void:
+	var tot := {"pj": 0, "pg": 0, "pe": 0, "pp": 0, "gf": 0, "gc": 0}
+	for c: String in tot:
+		tot[c] = int(lg.carrera.get(c, 0))
+	if not lg.carrera.has("pe"):
+		for k: String in lg.h2h:
+			for c: String in ["pe", "pp", "gf", "gc"]:
+				tot[c] = int(tot[c]) + int((lg.h2h[k] as Dictionary).get(c, 0))
+	var t := p._texto(11, Principal.COL_SUAVE)
+	t.text = Idiomas.t("TU CARRERA")
+	p._lista_records.add_child(t)
+	var g := GridContainer.new()
+	g.columns = 6
+	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	g.add_theme_constant_override("h_separation", 14)
+	p._lista_records.add_child(g)
+	var pct := 100.0 * float(tot["pg"]) / float(maxi(1, int(tot["pj"])))
+	for par: Array in [["Temporadas", str(maxi(1, p.mundo.anio - lg.anio_inicio + 1))], ["Partidos", str(tot["pj"])],
+			["G-E-P", "%d-%d-%d" % [tot["pg"], tot["pe"], tot["pp"]]], ["% victorias", "%.0f %%" % pct],
+			["Goles", "%d:%d" % [tot["gf"], tot["gc"]]], ["Títulos", str(lg.muro.size())]]:
+		var col := VBoxContainer.new()
+		g.add_child(col)
+		var et := p._texto(10, Principal.COL_SUAVE)
+		et.text = Idiomas.t(String(par[0]))
+		col.add_child(et)
+		var va := p._texto(16, Principal.COL_TEXTO)
+		va.text = String(par[1])
+		col.add_child(va)
+	p._lista_records.add_child(HSeparator.new())

@@ -1,211 +1,227 @@
 class_name VidaCiudad
-extends Node
-## LA VIDA EN 3D (fase 3 del plan del lunes, 26-10-2026). Plan §2.2c: el reloj de la
-## partida (`Reloj`) manda sobre la luz de la ciudad y corre mientras paseas; la
-## jornada en el club cuenta como trabajo; comer y dormir mueven `Necesidades`; la
-## Casa Grande se abre por dentro (`CasaDT`) con tu familia; el móvil adelanta el
-## reloj con la rutina; el coche depende de `VidaDT.transporte`, y conducir a lo
-## loco acaba en el calabozo. No inventa reglas de simulación: la SEMANA la sigue
-## avanzando `Mundo.avanzar_semana()` (la misma llamada que el PC), solo que aquí
-## también la dispara dormir el domingo.
-##
-## Se cuelga del explorador (`enganchar`): el explorador le pregunta en los puntos
-## justos (E en un interior, E en una sala del estadio, la T del móvil, el HUD) y
-## todo lo demás pasa en `_process`. Sin `Mundo` no se engancha y el paseo es el
-## de siempre (las pruebas viejas y la ciudad sin partida no cambian).
+extends "res://visor/vida_ciudad_p1.gd"
+## (Parte 2 de 2 de `vida_ciudad.gd`.)
 
-## 1 minuto real = 10 minutos de juego (un minuto de juego cada 6 s).
-const SEG_POR_MINUTO := 6.0
-const MULTAS_CALABOZO := 3
-const CONFIANZA_CALABOZO := 3
-const ESTRES_CALABOZO := 4
-const ESTRES_DESMAYO := 6
-const HORA_PARTIDO := 15
-const ZONA_COMEDOR := "Comedor del plantel"
-const DIAS := ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
-## Dónde se come algo en la ciudad (interiores de manzana): clave → lo que pasa.
-const COMIDAS := {
-	"edificio_bar": "Un café con algo en la barra. Media hora y a seguir.",
-	"edificio_panaderia": "Pan recién hecho y un café de pie. Media hora.",
-	"edificio_mercado": "Fruta y un bocadillo del mercado. Media hora.",
-}
+var _mq_estadio := false
+var _balon: BalonSuelto
+var _panel_cajero: Control   ## el panel abierto (cajero, ventanilla o caja de la tienda), si lo hay
 
-var mundo: Mundo
-var expl: ExploradorCiudad
-var vista: VistaCiudad
-var casa: CasaDT = null
-## Las citas en persona en 3D (fase 4): flecha, cuerpos y charla.
-var citas_3d: CitasCiudad = null
-var en_casa := false
-var _punto_casa := {}
-var _acum := 0.0
-var _cuadro: CuadroDialogo
-var _t_cuadro := 0.0
-var _capa_tel: CanvasLayer
-var _calabozo_semana := ""
-var _desmayo_en_curso := false
-
-# ========================================================================== ENGANCHE
-
-static func enganchar(e: ExploradorCiudad, v: VistaCiudad, m: Mundo) -> VidaCiudad:
-	if e == null or m == null or m.reloj == null:
+## Las redes de la ciudad (luz, agua, drenaje, gas), si la ciudad ya está levantada.
+func _redes() -> RedesCiudadVista:
+	if expl == null or expl.cb == null or expl.cb.expansion == null:
 		return null
-	var s := VidaCiudad.new()
-	s.name = "Vida"
-	s.mundo = m
-	s.expl = e
-	s.vista = v
-	e.add_child(s)
-	e.vida = s
-	m.reloj.tiempo_pasado.connect(s._al_pasar_tiempo)
-	m.reloj.hora_cambiada.connect(s._al_cambiar_hora)
-	m.reloj.semana_agotada.connect(s._al_agotar_semana)
-	if m.necesidades != null:
-		m.necesidades.estado_cambiado.connect(s._al_cambiar_nivel)
-		m.necesidades.agotamiento.connect(s._desmayo)
-	s._sincronizar_luz()
-	if m.citas != null:
-		s.citas_3d = CitasCiudad.crear(s)
-	return s
+	return expl.cb.expansion.redes
 
-## ¿Se puede salir en coche esta semana? {coche, motivo}. Con «micro» no hay coche
-## propio; y una semana de cada ocho (por hash, estable) el coche está en el taller.
-static func transporte(m: Mundo) -> Dictionary:
-	if m == null or m.vida == null or m.mi_club() == null:
-		return {"coche": true, "motivo": ""}
-	if m.vida.transporte == "micro":
-		return {"coche": false, "motivo": "Sin coche propio: esta semana te mueves en bus y metro (Mi Vida → Transporte)."}
-	if absi(("averia|%d|%d|%s" % [m.anio, m.semana, m.mi_club().id]).hash()) % 8 == 0:
-		return {"coche": false, "motivo": "🔧 Tu coche está en el taller esta semana: bus y metro."}
-	return {"coche": true, "motivo": ""}
-
-## Dónde empieza una partida cargada en 3D (bloque 7): "" = en el menú de siempre
-## (prólogo sin ver, pruebas, vida apagada → PC); "oficina" o "casa" (lunes 08:00).
-static func arranque_3d(m: Mundo) -> String:
-	if m == null or not m.prologo_visto or m.ciudad == null or m.obras == null or m.reloj == null:
-		return ""
-	if OrquestadorMundo.sin_prologo or OS.get_environment("PROLOGO") == "0":
-		return ""
-	if m.necesidades != null and m.necesidades.modo == "apagada":
-		return "oficina"
-	if m.reloj.dia == 0 and m.reloj.minuto <= Reloj.HORA_INICIO * Reloj.MINUTOS_HORA:
-		return "casa"
-	return "oficina"
-
-# ====================================================================== RELOJ VIVO
-
-func _process(delta: float) -> void:
-	if expl == null or not is_instance_valid(expl) or expl.cuerpo == null:
+## El depósito del coche (solo en coche y en la calle): gasta con la distancia, avisa al bajar del 15 % (una vez por semana)
+## y vacío el coche no arranca hasta repostar en un surtidor (E).
+func gasolina_tick(delta: float) -> void:
+	if mundo.vida == null or String(expl.modo) != "coche" or String(expl.estado) != "calle":
 		return
-	if _t_cuadro > 0.0:
-		_t_cuadro -= delta
-		if _t_cuadro <= 0.0 and _cuadro != null:
-			_cuadro.cerrar()
-	## Pausado (diálogo, PC, móvil) o andando solo por la puerta: el tiempo no corre.
-	if not expl.is_physics_processing() or String(expl.estado) == "puerta":
-		return
-	_acum += delta
-	while _acum >= SEG_POR_MINUTO:
-		_acum -= SEG_POR_MINUTO
-		if not mundo.reloj.agotada():
-			mundo.reloj.avanzar_minutos(1, actividad_actual())
-	if expl.multas >= MULTAS_CALABOZO:
-		_calabozo()
+	var vd := mundo.vida
+	vd.gastar_combustible(absf(expl.vel) * delta)
+	_t_vacio -= delta
+	if vd.combustible <= 0.01:
+		expl.vel = 0.0
+		if _t_vacio <= 0.0:
+			_t_vacio = 20.0
+			_notificar(Idiomas.t("⛽ Sin gasolina: el coche no arranca hasta que repostes en un surtidor (E)."))
+	elif vd.fraccion_comb() < 0.15 and vd.aviso_comb != mundo.anio * 100 + mundo.semana:
+		vd.aviso_comb = mundo.anio * 100 + mundo.semana
+		_notificar(Idiomas.t("⛽ Te queda menos del 15 % de gasolina: busca un surtidor (E)."))
 
-## Lo que cuenta el tiempo ahora mismo para `Necesidades`: en el club de lunes a
-## viernes es jornada (09-18) u horas extra (18-23); el resto, libre.
-func actividad_actual() -> String:
-	var r := mundo.reloj
-	if String(expl.estado) == "estadio" and not r.es_fin_de_semana():
-		if r.es_jornada_laboral():
-			return "trabajo"
-		if r.hora() >= Reloj.JORNADA_FIN and r.hora() < 23:
-			return "horas_extra"
-	return "libre"
-
-func _al_pasar_tiempo(_minutos: int, _actividad: String) -> void:
-	_sincronizar_luz()
-
-## Cada hora de horas extra: +1 de preparación (balance) y +1 de estrés (`VidaDT`).
-func _al_cambiar_hora(hora: int, _dia: int) -> void:
-	if mundo.vida == null or actividad_actual() != "horas_extra":
-		return
-	mundo.vida.balance = clampi(mundo.vida.balance + 1, 0, 100)
-	mundo.vida.estres = clampi(mundo.vida.estres + 1, 0, 100)
-	if hora == Reloj.JORNADA_FIN + 1:
-		_notificar(Idiomas.t("🕖 Horas extra: preparas mejor la semana, pero el estrés sube."))
-
-func _al_agotar_semana() -> void:
-	_decir(Idiomas.t("Domingo por la noche"), Idiomas.t("La semana se acaba: duerme en tu cama o pulsa «Avanzar semana» en el PC."))
-
-## La luz de la ciudad ES la hora del reloj (la vuelta de 2 min queda apagada).
-func _sincronizar_luz() -> void:
-	if vista == null or not is_instance_valid(vista):
-		return
-	vista._ciclo_activo = false
-	vista._hora = mundo.reloj.hora_decimal()
-	vista._aplicar_hora()
-	if expl._movil != null:
-		expl._movil.reloj_texto = etiqueta_hora()
-
-## «Martes 10:40», para el HUD y el móvil en la mano.
-func etiqueta_hora() -> String:
-	var r := mundo.reloj
-	return "%s %s" % [Idiomas.t(DIAS[clampi(r.dia, 0, 6)]), r.texto_hora()]
-
-# ===================================================================== NECESIDADES
-
-func _al_cambiar_nivel(necesidad: String, nivel: int) -> void:
-	if nivel <= 0:
-		return
-	if necesidad == "energia":
-		if nivel == 1:
-			_notificar(Idiomas.t("🩺 Estás cansado: come algo y duerme pronto."))
-		else:
-			_decir(Idiomas.t("El médico del club"), Idiomas.t("Estás al límite. Si no duermes, caerás redondo donde estés."))
-	elif necesidad == "hambre":
-		_notificar(Idiomas.t("🍽 Tienes hambre: el comedor del plantel, tu casa o un bar de la ciudad.") if nivel == 1
-			else Idiomas.t("🍽 Famélico. Come ya: el rendimiento se resiente."))
-
-## Energía a cero fuera de la cama: despiertas en casa con estrés y un titular.
-func _desmayo() -> void:
-	if _desmayo_en_curso or mundo.necesidades == null:
-		return
-	_desmayo_en_curso = true
-	if String(expl.estado) in ["anden", "tren", "puerta"]:
-		_desmayo_en_curso = false
-		return
-	expl._fundido()
-	if String(expl.estado) == "interior":
-		expl._salir_del_edificio()
-	elif String(expl.estado) == "estadio":
-		expl._salir_del_estadio()
-	var cg := _punto_ciudad("casa_grande")
-	if cg != Vector3.INF:
-		expl.cuerpo.position = expl.buscar_libre(cg)
-	mundo.reloj.esperar_hasta(CasaDT.HORA_LEVANTARSE, "dormir")
-	if mundo.vida != null:
-		mundo.vida.estres = clampi(mundo.vida.estres + ESTRES_DESMAYO, 0, 100)
-		mundo.vida._anotar("Te desmayaste de agotamiento; te llevaron a casa.", mundo.anio, mundo.semana)
-	_titular("El DT se desploma en plena calle: «agotamiento», dice el club", "Lo recogieron unos vecinos.")
-	_decir(Idiomas.t("Despiertas en casa"), Idiomas.t("Caíste redondo de agotamiento. Te trajeron a casa; mañana lo lee toda la ciudad."))
-	_tras_dormir()
-	_desmayo_en_curso = false
-
-func _punto_ciudad(k: String) -> Vector3:
-	if expl.cb == null:
-		return Vector3.INF
-	for pc: Dictionary in expl.cb.puntos_clic:
-		if String(pc["k"]) == k:
-			return pc["pos"]
-	return Vector3.INF
-
-## E en una sala del estadio: el comedor del plantel da de comer. true si lo usó.
-func usar_en_estadio(zona: String) -> bool:
-	if zona != ZONA_COMEDOR:
+## E ante un surtidor: elige combustible (normal o premium, precio según las existencias, §2.5) y llena
+## el depósito (10 minutos). Sin corriente en el sector, no hay bomba. Con `tipo` ya dado, reposta directo.
+func usar_surtidor(k: String, tipo := "") -> bool:
+	var redes := _redes()
+	if not k.begins_with("surtidor_") or redes == null:
 		return false
-	_comer(Idiomas.t("Comes con el plantel en el comedor del club. Media hora de charla y plato caliente."))
+	var s := redes.surtidor(int(k.get_slice("_", 1)))
+	if s.is_empty():
+		return false
+	if tipo != "" or expl == null or expl._capa == null:
+		_decir(Idiomas.t("Gasolinera"), repostar(k, tipo if tipo != "" else "normal"))
+		return true
+	if is_instance_valid(_panel_cajero):
+		return true
+	var falta := VidaDT.DEPOSITO_L - mundo.vida.combustible if mundo.vida != null else 45.0
+	var surtido: Array = []
+	for t: String in RedesCiudad.COMBUSTIBLES:
+		var litros := minf(falta, float(redes.modelo.gas.get(int(s["id"]), 0.0)))
+		surtido.append({"tipo": t, "nombre": String(RedesCiudad.COMBUSTIBLES[t][0]), "precio": roundi(litros * redes.modelo.precio_litro(int(s["id"]), t))})
+	var saldo := func() -> String:
+		return Idiomas.t("En el bolsillo") + ": " + Eco.dinero_euros(float(mundo.roles.cartera.efectivo)) if mundo.roles != null else ""
+	_panel_cajero = PanelTienda.abrir(expl._capa, Idiomas.t("Gasolinera"), surtido, func(it: Dictionary) -> String: return repostar(k, String(it["tipo"])),
+		saldo, expl.cuerpo.position, expl.cuerpo)
 	return true
+
+## Llena el depósito con `tipo` en el surtidor `k`. Devuelve el mensaje (traducido).
+func repostar(k: String, tipo: String) -> String:
+	var redes := _redes()
+	var s := redes.surtidor(int(k.get_slice("_", 1))) if redes != null else {}
+	if s.is_empty():
+		return ""
+	var falta := VidaDT.DEPOSITO_L - mundo.vida.combustible if mundo.vida != null else 45.0
+	if falta < 1.0:
+		return Idiomas.t("Tienes el depósito lleno.")
+	## El DT paga de SU bolsillo (efectivo y, si no alcanza, la tarjeta sin contacto), no el club. Se mira ANTES de echar gasolina.
+	var cartera: CarteraDT = mundo.roles.cartera if mundo.roles != null else null
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	if cartera != null:
+		var tope := roundi(minf(falta, float(redes.modelo.gas.get(int(s["id"]), 0.0))) * redes.modelo.precio_litro(int(s["id"]), tipo))
+		var motivo := cartera.puede_cobrar(mundo.roles, tope, dia)
+		if motivo != "" and tope > 0:
+			return CarteraDT.texto_error(motivo, tope)
+	var r := redes.modelo.repostar(int(s["id"]), s["sector"], falta, tipo)
+	if int(r["coste"]) <= 0:
+		return Idiomas.t("Sin corriente (o sin existencias): las bombas no funcionan.")
+	mundo.reloj.avanzar_minutos(10, "libre")
+	if mundo.vida != null:
+		mundo.vida.combustible = minf(VidaDT.DEPOSITO_L, mundo.vida.combustible + float(r["litros"]))
+		mundo.vida.premium = tipo == "premium"
+	var via := ""
+	if cartera != null:
+		via = String(cartera.cobrar(mundo.roles, int(r["coste"]), "Gasolina", dia)["via"])
+	elif mundo.mi_club() != null:
+		mundo.mi_club().mover_saldo(-maxi(1, roundi(float(r["coste"]) / Eco.ECO)))   ## sin cartera (partida sin roles) paga el club (puntos internos): nunca gratis
+	Sonido.toca("clic", Sonido.Bus.EFECTOS)
+	return Idiomas.t("Depósito lleno: %d l por %d € (%s).") % [roundi(float(r["litros"])), int(r["coste"]), Idiomas.t(via if via != "" else "efectivo")]
+
+## El balón suelto del parque más cercano al DT (una sola vez, la primera que se le ve): se patea a pie. Ver `BalonSuelto`.
+func poner_extras() -> void:
+	poner_balon()
+	## Una máquina expendedora en el exterior, junto a la puerta del club del estadio (una sola vez).
+	if not _mq_estadio and expl != null and expl.cb != null and not expl._est.is_empty():
+		_mq_estadio = true
+		var pu: Vector3 = CityBuilder.ESTADIO_EN + (expl._est["puerta"] as Vector3)
+		ExpendedoraCiudad.montar(expl.cb, Vector3(pu.x - 6.0, 0.2, pu.z + 1.0), 0.0)
+
+func poner_balon() -> void:
+	if is_instance_valid(_balon) or expl == null or expl.cb == null or expl.cb.expansion == null or expl.cuerpo == null:
+		return
+	var mejor: Rect2
+	var d_mejor := INF
+	for bl: Dictionary in expl.cb.expansion.bloques:
+		if String(bl["uso"]) == "parque":
+			var r: Rect2 = bl["rect"]
+			var d := r.get_center().distance_to(Vector2(expl.cuerpo.position.x, expl.cuerpo.position.z))
+			if d < d_mejor:
+				d_mejor = d
+				mejor = r
+	if d_mejor == INF:
+		return
+	_balon = BalonSuelto.new()
+	_balon.jugador = expl.cuerpo
+	_balon.activo = func() -> bool: return String(expl.modo) == "pie"
+	_balon.limites = mejor.grow(-3.0)
+	_balon.position = Vector3(mejor.get_center().x + 3.0, 1.0, mejor.get_center().y + 3.0)
+	expl.cb.add_child(_balon)
+
+## E ante un cajero: abre el panel de PIN y operaciones (retirar, ingresar, cambiar el PIN) con la cartera del DT.
+func usar_cajero(k: String) -> bool:
+	if mundo.roles == null:
+		return false
+	if is_instance_valid(_panel_cajero):
+		return true
+	var banco := CajeroCiudad.banco_de(k)
+	var pos := Vector3.ZERO
+	for pc: Dictionary in expl.cb.puntos_clic:
+		if String(pc.get("k", "")) == k:
+			pos = pc["pos"]
+	## (§2.5, 30-10) Sin corriente en su sector, el cajero está fuera de servicio (como las bombas del surtidor).
+	var redes := _redes()
+	if redes != null and not redes.modelo.hay_luz(RedesCiudad.sector_en(pos.x, pos.z)):
+		_decir(Idiomas.t(String(banco["nombre"])), Idiomas.t("Fuera de servicio: el sector está sin corriente."))
+		return true
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	_panel_cajero = PanelCajero.abrir(expl._capa, mundo.roles.cartera, mundo.roles, dia, Idiomas.t(String(banco["nombre"])), int(banco["comision"]), pos, expl.cuerpo)
+	return true
+
+## E ante la ventanilla del banco: el panel de la sucursal (desbloquear, restablecer el PIN, movimientos).
+func usar_banco(k: String) -> bool:
+	if mundo.roles == null:
+		return false
+	if is_instance_valid(_panel_cajero):
+		return true
+	var pos := Vector3.ZERO
+	for pc: Dictionary in expl.cb.puntos_clic:
+		if String(pc.get("k", "")) == k:
+			pos = pc["pos"]
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	_panel_cajero = PanelCajero.abrir(expl._capa, mundo.roles.cartera, mundo.roles, dia, Idiomas.t("Banco Andino"), 0, pos, expl.cuerpo, true)
+	return true
+
+## E ante una máquina expendedora: compra lo que pide el cansancio o el hambre y lo cobra la cartera del DT (sin gastar tiempo).
+func usar_expendedora() -> bool:
+	if mundo.roles == null or mundo.necesidades == null:
+		return false
+	var it := Expendedora.elegir(mundo.necesidades.energia(), mundo.necesidades.hambre())
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	var r := mundo.roles.cartera.cobrar(mundo.roles, int(it["precio"]), String(it["nombre"]), dia)
+	if String(r["error"]) != "":
+		_decir(Idiomas.t("Máquina expendedora"), CarteraDT.texto_error(String(r["error"]), int(it["precio"])))
+		return true
+	mundo.necesidades.animar(int(it["energia"]))
+	mundo.necesidades.picar(int(it["hambre"]))
+	_decir(Idiomas.t("Máquina expendedora"), Idiomas.t("%s por %d € (%s).") % [Idiomas.t(String(it["nombre"])), int(it["precio"]), Idiomas.t(String(r["via"]))])
+	Sonido.toca("clic", Sonido.Bus.EFECTOS)
+	return true
+
+## E ante una máquina de billetes del metro: recarga la tarjeta Red con `CarteraDT.RECARGA` € de la cartera (M-182).
+func usar_billetes() -> bool:
+	if mundo.roles == null:
+		return false
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	var c := mundo.roles.cartera
+	var r := c.recargar_transporte(mundo.roles, CarteraDT.RECARGA, dia)
+	if String(r["error"]) != "":
+		_decir(Idiomas.t("Máquina de billetes"), CarteraDT.texto_error(String(r["error"]), CarteraDT.RECARGA))
+		return true
+	_decir(Idiomas.t("Máquina de billetes"), Idiomas.t("Recarga de %d € (%s). Saldo de la tarjeta Red: %d €.") % [CarteraDT.RECARGA, Idiomas.t(String(r["via"])), c.saldo_transporte])
+	Sonido.toca("clic", Sonido.Bus.EFECTOS)
+	return true
+
+## Cobra un pasaje (`metro`, `bus`, `teleferico`) de la tarjeta Red. false (con aviso) si no hay saldo: no se sube (M-182).
+func cobrar_pasaje(tipo: String) -> bool:
+	if mundo.roles == null:
+		return true
+	var c := mundo.roles.cartera
+	var tarifa := int(CarteraDT.TARIFAS.get(tipo, 1))
+	if c.pagar_pasaje(tipo) == "":
+		expl._aviso.text = Idiomas.t("Pasaje: -%d € · saldo de la tarjeta Red: %d €") % [tarifa, c.saldo_transporte]
+		return true
+	_decir(Idiomas.t("Tarjeta Red"), Idiomas.t("Sin saldo (%d €): el pasaje cuesta %d €. Recarga la tarjeta en una máquina de billetes del metro.") % [c.saldo_transporte, tarifa])
+	return false
+
+## E ante el mostrador de la tienda de la gasolinera: abre la caja con el surtido (`PanelTienda`); cada compra pasa por `comprar_surtido`.
+func usar_tienda() -> bool:
+	if mundo.roles == null:
+		return false
+	if is_instance_valid(_panel_cajero):
+		return true
+	var pos := expl.cuerpo.position
+	var mejor := INF
+	for pc: Dictionary in expl.cb.puntos_clic:
+		if String(pc.get("k", "")).begins_with("tienda_") and (pc["pos"] as Vector3).distance_to(expl.cuerpo.position) < mejor:
+			mejor = (pc["pos"] as Vector3).distance_to(expl.cuerpo.position)
+			pos = pc["pos"]
+	var saldo := func() -> String:
+		return Idiomas.t("En el bolsillo") + ": " + Eco.dinero_euros(float(mundo.roles.cartera.efectivo)) + "  ·  " + Idiomas.t("Cuenta") + ": " + Eco.dinero_euros(float(mundo.roles.cartera.cuenta_eur(mundo.roles)))
+	_panel_cajero = PanelTienda.abrir(expl._capa, Idiomas.t("Tienda de la gasolinera"), TiendaGasolinera.SURTIDO, comprar_surtido, saldo, pos, expl.cuerpo)
+	return true
+
+## Compra un artículo del surtido: lo cobra la cartera del DT, baja el hambre o sube la energía. Devuelve el mensaje (traducido) para la caja.
+func comprar_surtido(it: Dictionary) -> String:
+	if mundo.roles == null:
+		return ""
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	var r := mundo.roles.cartera.cobrar(mundo.roles, int(it["precio"]), String(it["nombre"]), dia)
+	if String(r["error"]) != "":
+		return CarteraDT.texto_error(String(r["error"]), int(it["precio"]))
+	if mundo.necesidades != null:
+		mundo.necesidades.picar(int(it.get("hambre", 0)))
+		mundo.necesidades.animar(int(it.get("energia", 0)))
+	Sonido.toca("clic", Sonido.Bus.EFECTOS)
+	return Idiomas.t("%s por %d € (%s).") % [Idiomas.t(String(it["nombre"])), int(it["precio"]), Idiomas.t(String(r["via"]))]
 
 func _comer(texto: String) -> void:
 	mundo.reloj.avanzar_minutos(30, "comer")
@@ -284,6 +300,8 @@ func usar_interior() -> bool:
 			return false
 		if String(_punto_casa["clave"]) == "cama":
 			expl._fundido()
+		elif String(_punto_casa["clave"]) == "sofa":
+			expl._gesto_propio("sentarse", "sentado")   ## se sienta y se QUEDA sentado hasta moverse (§2.2e P3)
 		_decir(String(r["titulo"]), String(r["texto"]))
 		if String(_punto_casa["clave"]) == "cama":
 			_tras_dormir()
@@ -326,6 +344,11 @@ func abrir_telefono() -> void:
 	raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_capa_tel.add_child(raiz)
 	var pop := Telefono.abrir(raiz, mundo)
+	## La app «Red» busca el paradero más cercano al DT.
+	for n in pop.find_children("*", "PanelContainer", true, false):
+		if n is Telefono and is_instance_valid(expl.cuerpo):
+			(n as Telefono).en_la_calle = true
+			(n as Telefono).posicion_dt = expl.cuerpo.global_position
 	expl.pausar(true)
 	pop.tree_exited.connect(func() -> void:
 		if is_instance_valid(expl):
@@ -357,9 +380,9 @@ func _calabozo() -> void:
 
 # ========================================================================= AVISOS
 
-func _titular(t: String, c: String) -> void:
+func _titular(t: String, c: String, tipo: String = "mal") -> void:
 	if mundo.prensa != null and mundo.prensa.titular_pendiente.is_empty():
-		mundo.prensa.titular_pendiente = {"t": Idiomas.t(t), "c": Idiomas.t(c), "tipo": "mal", "medio": "La Tribuna"}
+		mundo.prensa.titular_pendiente = {"t": Idiomas.t(t), "c": Idiomas.t(c), "tipo": tipo, "medio": "La Tribuna"}
 
 func _notificar(texto: String) -> void:
 	if expl._movil != null:

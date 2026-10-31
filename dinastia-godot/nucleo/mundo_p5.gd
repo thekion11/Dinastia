@@ -19,8 +19,12 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		ya_jugado.cerrar_notas_mirado()
 	_semana_contexto_de_partidos()
 	_semana_once_antes_de_jugar()
+	if necesidades.preparacion_cambio():   ## §2.5: cansado o con hambre, el partido de esta semana lo nota
+		aplicar_bonificadores()
 	var jugaron_en_casa := _semana_jugar_ligas(ya_jugado)
 	_semana_caja_y_plantillas(jugaron_en_casa)
+	CrisisCaja.semana(self)   ## multas, recortes de patrocinio y obras que se encarecen (M-208)
+	_retos_tras_partido(ya_jugado)
 	_semana_memoria_del_partido(ya_jugado)
 	_semana_mercado()
 	_semana_lesion_insolita()
@@ -40,6 +44,7 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 	_semana_copa(ya_jugado)
 	semana += 1
 	Jugador.semana_global = anio * 100 + semana
+	PrecalentarCaras.del_mundo(self)   ## M-348: los onces del próximo partido, de uno en uno en el menú
 	semana_avanzada.emit(semana, anio)
 
 ## FASE 14 · LOS MÓDULOS SEMANALES DEL CLUB: redes, mercado avanzado, fondo, cantera,
@@ -234,3 +239,24 @@ func _semana_copa(ya_jugado: Partido) -> void:
 	if copa != null and copa.en_curso() and semana % 4 == 0:
 		var res_copa: Array = copa.jugar_ronda(ya_jugado if _copa_es_de(ya_jugado) else null)
 		_rueda_de_eliminatoria(res_copa, "copa", copa.participantes)
+
+## Los retos de la semana: con el marcador de tu partido (dirigido o simulado) se juzgan los de esta semana y
+## salen los de la próxima. Va antes de la memoria del partido, que vacía `_marcador_liga_semana`.
+func _retos_tras_partido(ya: Partido) -> void:
+	var c := mi_club()
+	if retos_semana == null or c == null:
+		return
+	var gf := -1
+	var gc := -1
+	if ya != null and (ya.local == c or ya.visita == c):
+		gf = ya.goles_local if ya.local == c else ya.goles_visita
+		gc = ya.goles_visita if ya.local == c else ya.goles_local
+	elif _marcador_liga_semana.size() == 2:
+		gf = int(_marcador_liga_semana[0])
+		gc = int(_marcador_liga_semana[1])
+	if gf >= 0:
+		retos_semana.evaluar(self, gf, gc)
+	retos_semana.generar(self)
+	if mentor_mes != null:
+		mentor_mes.tras_semana(self, gf, gc)
+

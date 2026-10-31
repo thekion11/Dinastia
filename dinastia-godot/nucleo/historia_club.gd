@@ -118,6 +118,10 @@ static func de(c: Club, rivales: Array) -> Dictionary:
 			if g.has(k):
 				r[k] = g[k]
 		r["con_guino"] = true
+	## El PALMARÉS real (orden 15 f): títulos por competición y año, si el club lo trae.
+	var pal: Variant = g.get("palmares", {})
+	if pal is Dictionary and not (pal as Dictionary).is_empty():
+		r["palmares"] = pal
 	## El rival histórico es el del clásico con nombre, si lo hay.
 	if not (r["clasicos"] as Array).is_empty():
 		r["rival"] = String((r["clasicos"] as Array)[0]["rival"])
@@ -215,3 +219,60 @@ static func texto_clasicos(hi: Dictionary) -> String:
 static func texto_historia(hi: Dictionary) -> String:
 	var g := String(hi.get("guino", ""))
 	return g if g != "" else String(hi.get("origen", ""))
+
+## El PALMARÉS (orden 15 f, 27-10-2026): `HISTORIA_CLUBES[club]["palmares"] = {clave: [años]}`, con las claves «liga:ESP», «copa:ENG», «conf:lib», «mundial».
+const ORDEN_PALMARES := ["mundial", "conf:ucl", "conf:lib", "conf:uel", "conf:sud", "conf:asia", "conf:afr", "conf:oce", "conf:conc"]
+
+## El nombre de la competición `clave` en la base que esté activa («Premier League» o su nombre ficticio), o "".
+static func nombre_competicion(clave: String) -> String:
+	if clave == "mundial":
+		return "Mundial de Clubes"
+	var pais := clave.get_slice(":", 1)
+	match clave.get_slice(":", 0):
+		"liga":
+			if pais == "CHI":   ## la liga de Chile no está en `PAISES_LIGAS` (la arma `Mundo`)
+				return "Primera División"
+			return String((Datos.tabla("PAISES_LIGAS") as Dictionary).get(pais, {}).get("liga", ""))
+		"copa":
+			return String((Datos.tabla("COPA_NOM") as Dictionary).get(pais, ""))
+		"conf":
+			return String((Datos.tabla("CONFED") as Dictionary).get(pais, {}).get("n", ""))
+	return ""
+
+## [{clave, titulo, anios}] de lo que trae `hi["palmares"]`, de lo más grande a lo más doméstico (mundial, continentales, liga, copa).
+static func lista_palmares(hi: Dictionary) -> Array:
+	var pal: Dictionary = hi.get("palmares", {})
+	var claves: Array = pal.keys()
+	claves.sort_custom(func(a: String, b: String) -> bool:
+		var ia := ORDEN_PALMARES.find(a) if ORDEN_PALMARES.has(a) else (50 if a.begins_with("liga") else 60)
+		var ib := ORDEN_PALMARES.find(b) if ORDEN_PALMARES.has(b) else (50 if b.begins_with("liga") else 60)
+		return ia < ib or (ia == ib and a < b))
+	var sal: Array = []
+	for k: String in claves:
+		var nombre := nombre_competicion(k)
+		var anios: Array = (pal[k] as Array).duplicate()
+		anios.sort()
+		if nombre != "" and not anios.is_empty():
+			sal.append({"clave": k, "titulo": nombre, "anios": anios})
+	return sal
+
+## «🏆 Palmarés: Liga ×36 (último 2024) · Copa Libertadores ×3 (último 2018)…», o "" si el club no trae palmarés.
+static func texto_palmares(hi: Dictionary) -> String:
+	var lista := lista_palmares(hi)
+	if lista.is_empty():
+		return ""
+	var partes: Array[String] = []
+	for x: Dictionary in lista:
+		var anios: Array = x["anios"]
+		partes.append("%s ×%d (%s %d)" % [Idiomas.t(String(x["titulo"])), anios.size(), Idiomas.t("último"), int(anios[anios.size() - 1])])
+	return "🏆 " + Idiomas.t("Palmarés") + ": " + " · ".join(partes)
+
+## Los hitos del museo que salen del palmarés: uno por competición, con el año del último título y todos sus años.
+static func hitos_palmares(c: Club) -> Array:
+	var sal: Array = []
+	if c == null:
+		return sal
+	for x: Dictionary in lista_palmares(dato(c.nombre)):
+		var anios: Array = x["anios"]
+		sal.append({"anio": int(anios[anios.size() - 1]), "titulo": String(x["titulo"]), "cantidad": anios.size(), "anios": anios.duplicate(), "final": "", "goleadores": []})
+	return sal

@@ -109,18 +109,25 @@ func _parque(r: Rect2, lago: bool) -> void:
 	## Caminos en cruz.
 	_lote("acera", Vector3(c.x, 0.1, c.z), Vector3(r.size.x, 0.1, 4.0))
 	_lote("acera", Vector3(c.x, 0.1, c.z), Vector3(4.0, 0.1, r.size.y))
+	## El lago (27-10): más pequeño, en el cuadrante sur-este y a ras de suelo, con orilla de arena, para que ni los
+	## puestos, ni los parterres, ni los árboles caigan dentro (antes era un disco azul elevado encima de todo).
+	var lago_c := c + Vector3(r.size.x * 0.27, 0, r.size.y * 0.30)
+	var lago_r := minf(r.size.x, r.size.y) * 0.13
 	if lago:
-		var l := MeshInstance3D.new()
-		var cm := CylinderMesh.new()
-		cm.top_radius = minf(r.size.x, r.size.y) * 0.3
-		cm.bottom_radius = cm.top_radius
-		cm.height = 0.2
-		cm.radial_segments = 32
-		l.mesh = cm
-		l.material_override = _mat["agua"]
-		l.position = c + Vector3(r.size.x * 0.18, 0.18, r.size.y * 0.18)
-		l.scale = Vector3(1.4, 1, 1)
-		b.add_child(l)
+		for capa: Array in [[lago_r + 1.4, 0.115, b._mat_simple(Color(0.80, 0.74, 0.55), 0.95)], [lago_r, 0.13, _mat["agua"]]]:
+			var l := MeshInstance3D.new()
+			var cm := CylinderMesh.new()
+			cm.top_radius = float(capa[0])
+			cm.bottom_radius = cm.top_radius
+			cm.height = 0.2
+			cm.radial_segments = 32
+			l.mesh = cm
+			l.material_override = capa[2]
+			l.position = Vector3(lago_c.x, float(capa[1]) - 0.1, lago_c.z)
+			l.scale = Vector3(1.3, 1, 1)
+			b.add_child(l)
+		CiudadCancha.patos(self, lago_c, lago_r)
+	var cancha := CiudadCancha.centro(r, c, lago)
 	var pts: Array = []
 	for k in 40:
 		var p := c + Vector3(_rng.randf_range(-0.46, 0.46) * r.size.x, 0, _rng.randf_range(-0.46, 0.46) * r.size.y)
@@ -129,10 +136,18 @@ func _parque(r: Rect2, lago: bool) -> void:
 			continue
 		if p.x < c.x - r.size.x * 0.1 and p.z < c.z - r.size.y * 0.1 and not lago:
 			continue
+		if CiudadCancha.ocupa(cancha, p):
+			continue
+		if lago and pow((p.x - lago_c.x) / ((lago_r + 4.0) * 1.3), 2.0) + pow((p.z - lago_c.z) / (lago_r + 4.0), 2.0) < 1.0:
+			continue   ## fuera del agua y de su orilla
 		pts.append(p)
 	_arboles_en(pts, 1.0)
 	var nombre := "Parque del Lago" if lago else String(NOMBRES_PARQUE[absi(int(c.x * 7.0 + c.z * 13.0)) % NOMBRES_PARQUE.size()])
 	_detalles_parque(r, c, nombre, lago)
+	CiudadCancha.montar(self, cancha)
+	CiudadParque.rellenar(self, r, c)   ## bancos, mesas de pícnic y papeleras a lo largo de los paseos
+	PastoCiudad.parque(b, r, c, func(p: Vector3) -> bool:   ## matas de pasto: ni en la cancha ni en el lago
+		return CiudadCancha.ocupa(cancha, p) or (lago and pow((p.x - lago_c.x) / ((lago_r + 4.0) * 1.3), 2.0) + pow((p.z - lago_c.z) / (lago_r + 4.0), 2.0) < 1.0), pts)
 	b._rotulo(c + Vector3(0, 14, 0), "🌳 " + nombre, Color(0.7, 1.0, 0.7), 20)
 	b.puntos_clic.append({"k": "ciudad_parque_lago" if lago else "ciudad_parque", "n": "Parque · penales con los chicos", "pos": c, "estado": "ciudad"})
 
@@ -222,7 +237,7 @@ func _rotulo_comercio(frente: Vector3, giro: float, ancho: float) -> void:
 	var placa := b._caja_en(centro, Vector3(minf(ancho * 0.8, 7.0), 0.9, 0.18), b._mat_simple(col, 0.5, 0.25))
 	placa.rotation.y = giro
 	var l := Label3D.new()
-	l.text = String(com[0])
+	l.text = Idiomas.t(String(com[0]))   ## M-333 (en `rotulos` queda el castellano: con él se elige la sala)
 	l.font_size = 48
 	l.pixel_size = 0.012
 	l.outline_size = 8
@@ -248,6 +263,7 @@ func _patio_de_manzana(r: Rect2, c: Vector3) -> void:
 	_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(lado.x, 0.06, lado.y))
 	_lote("solar", Vector3(c.x, 0.3, c.z), Vector3(lado.x, 0.06, 2.6))
 	_lote("solar", Vector3(c.x, 0.3, c.z), Vector3(2.6, 0.06, lado.y))
+	PastoCiudad.rect(b, Rect2(c.x - lado.x * 0.5, c.z - lado.y * 0.5, lado.x, lado.y), 0.27, 0.004, func(p: Vector3) -> bool: return absf(p.x - c.x) < 3.2 or absf(p.z - c.z) < 3.2)   ## matas en el patio, fuera de los caminos
 	var pts: Array = []
 	for sx: float in [-1.0, 1.0]:
 		for sz: float in [-1.0, 1.0]:
@@ -343,7 +359,8 @@ func _bloque_modular(frente: Vector3, giro: float, semilla: int, ancho_max: floa
 	var w := 4 if ancho_max >= 4.0 * s and hr.randf() < 0.6 else 3
 	var d := 3 if fondo_max >= 3.0 * s and hr.randf() < 0.55 else 2
 	var pisos := hr.randi_range(3, 7)
-	var col: Array = COLORES_PISOS[hr.randi() % COLORES_PISOS.size()]
+	var fam: Array = FAMILIAS_BARRIO[posmod(int(floorf(frente.x / (CELDA * 6.0))) * 2 + int(floorf(frente.z / (CELDA * 6.0))) * 3, FAMILIAS_BARRIO.size())]
+	var col: Array = COLORES_PISOS[int(fam[hr.randi() % fam.size()])]
 	var toldo := hr.randi() % 5
 	var estilo: Array = ESTILOS_MOD[hr.randi() % ESTILOS_MOD.size()]
 	var tienda := hr.randf() < 0.55
@@ -394,6 +411,7 @@ func _bloque_modular(frente: Vector3, giro: float, semilla: int, ancho_max: floa
 				var t := Transform3D(rot * Basis(Vector3.UP, g) * Basis.from_scale(Vector3.ONE * s),
 					frente + rot * Vector3(lx, float(p) * PISO_MOD, lz))
 				_mod(pieza, t, pared, extra)
+	cuenta["detalles_fachada"] = int(cuenta.get("detalles_fachada", 0)) + DetalleFachada.montar(self, frente, rot, s, w, pisos, PISO_MOD, puerta_i, semilla)
 	## Azotea: cornisa con parapeto, el suelo de grava, equipos de aire y la
 	## caseta de la escalera.
 	var ancho := float(w) * s
@@ -407,6 +425,8 @@ func _bloque_modular(frente: Vector3, giro: float, semilla: int, ancho_max: floa
 	for sx: float in [-1.0, 1.0]:
 		_mod_caja(centro + rot * Vector3(sx * (ancho * 0.5 + 0.1), 0, 0) + Vector3(0, alto + 0.6, 0), Vector3(0.3, 0.75, fondo), rot, remate_srgb)
 	_mod_caja(centro + Vector3(0, alto + 0.26, 0), Vector3(ancho - 0.2, 0.06, fondo - 0.2), rot, Color(0.46, 0.45, 0.43))
+	var tipo_tejado := TejadoTipo.montar(self, centro, rot, ancho, fondo, alto, pisos, semilla)
+	cuenta["tejado_%d" % tipo_tejado] = int(cuenta.get("tejado_%d" % tipo_tejado, 0)) + 1
 	var caseta := rot * Vector3((hr.randf() - 0.5) * ancho * 0.4, 0, (hr.randf() - 0.5) * fondo * 0.3)
 	_mod_caja(centro + caseta + Vector3(0, alto + 1.4, 0), Vector3(2.6, 2.4, 2.6), rot, (col[0] as Color).darkened(0.08))
 	_mod_caja(centro + caseta + Vector3(0, alto + 2.68, 0), Vector3(3.0, 0.16, 3.0), rot, remate_srgb)
@@ -419,4 +439,5 @@ func _bloque_modular(frente: Vector3, giro: float, semilla: int, ancho_max: floa
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
 	cuenta["bloques_modulares"] = int(cuenta.get("bloques_modulares", 0)) + 1
 	_puertas_mod.append(puerta)
+	PuertaVida.registrar(b, puerta + rot * Vector3(0, 0, 0.2), rot * Vector3(0, 0, 1))
 	return puerta

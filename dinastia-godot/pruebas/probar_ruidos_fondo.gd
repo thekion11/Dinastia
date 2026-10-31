@@ -9,8 +9,8 @@ func _ready() -> void:
 	var d: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(RuidosFondo.LISTA))
 	for c: Array in d["claves"]:
 		var p := RuidosFondo.normalizar(c)
-		var t: NoiseTexture2D = Texturas._nuevo_claro(p[1], p[2], p[3], p[4]) if p[0] is String \
-			else Texturas._nuevo_ruido(p[0], p[1], p[2], p[3], p[4])
+		var t: NoiseTexture2D = Texturas._nuevo_claro(p[1], p[2], p[3], p[4], p[5]) if p[0] is String \
+			else Texturas._nuevo_ruido(p[0], p[1], p[2], p[3], p[4], p[5])
 		_a.append([p, t])
 func _process(_d: float) -> void:
 	_n += 1

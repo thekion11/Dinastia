@@ -30,15 +30,27 @@ const PASOS := [
 			"El vestuario. Cada taquilla lleva el nombre de un jugador; aquí se ganan y se pierden los partidos antes de jugarlos.",
 			"Sígueme por el túnel: quiero que veas el campo desde abajo.",
 		]},
+	{"clave": "tunel", "planta": 0, "zona": "Túnel",
+		"frases": [
+			"El túnel. Por aquí sale el equipo cada partido; desde aquí ya se oye la grada.",
+			"Unos pasos más y estamos en la banda.",
+		]},
 	{"clave": "campo", "planta": 0, "zona": "Banda",
 		"frases": [
 			"Tu banquillo. Desde aquí dirigirás; y cuando te sancionen, desde la grada, como todo el mundo.",
-			"Ahora al sótano: la enfermería. El ascensor está al fondo del edificio.",
+			"Ahora al sótano: la utilería y la enfermería. El ascensor está al fondo del edificio.",
 		],
 		"controles": ["usar"]},
-	{"clave": "enfermeria", "planta": -1, "zona": "Enfermería",
+	{"clave": "utileria", "planta": -1, "zona": "Utilería", "saluda": "utilero",
+		"saludo": "¡Bienvenido, míster! Botas, balones y camisetas: todo numerado y listo para el domingo.",
 		"frases": [
-			"La enfermería y la utilería. El médico te dirá quién llega al domingo; el utilero, quién está más fino.",
+			"La utilería. Nada sale al campo sin pasar por estas manos; el utilero sabe antes que nadie quién está más fino.",
+			"Al lado, la enfermería.",
+		]},
+	{"clave": "enfermeria", "planta": -1, "zona": "Enfermería", "saluda": "medico",
+		"saludo": "Encantado. Cada lunes tendrá el parte: quién llega al domingo y quién no.",
+		"frases": [
+			"La enfermería. Hazle caso al médico: un jugador forzado hoy es una baja de un mes.",
 			"Subamos a la primera planta: el presidente quiere conocerte.",
 		]},
 	{"clave": "presidente", "planta": 1, "zona": "Despacho del presidente",
@@ -46,11 +58,23 @@ const PASOS := [
 			"El despacho del presidente. Aquí se firma y aquí se despide. Te presento a la junta.",
 		],
 		"directiva": true},
+	{"clave": "video", "planta": 1, "zona": "Sala de vídeo", "saluda": "ojeador",
+		"saludo": "Míster, un gusto. Del próximo rival ya tengo los primeros vídeos.",
+		"frases": [
+			"La sala de vídeo: aquí se estudia al rival. El ojeador te dejará sus informes cada semana.",
+			"Ahora arriba, a la segunda planta: la prensa te espera.",
+		]},
 	{"clave": "prensa", "planta": 2, "zona": "Sala de prensa",
 		"frases": [
 			"La sala de prensa. Te presentan hoy mismo: tres preguntas, y cada palabra se guarda.",
 		],
 		"prensa": true},
+	{"clave": "comedor", "planta": 2, "zona": "Comedor del plantel", "saluda": "cocinera",
+		"saludo": "¡Por fin! Aquí se come a su hora, míster; el que no come, no corre.",
+		"frases": [
+			"El comedor del plantel. Come aquí los días de trabajo: cansado y con hambre se decide peor.",
+			"Bajemos a la primera planta: falta lo más importante.",
+		]},
 	{"clave": "oficina", "planta": 1, "zona": "Oficina del DT",
 		"frases": [
 			"Y esta es tu oficina. Desde el ordenador llevas el club entero: plantilla, mercado, táctica, finanzas.",
@@ -116,6 +140,12 @@ static func indice(clave: String) -> int:
 		if String(PASOS[i]["clave"]) == clave:
 			return i
 	return -1
+
+## El saludo del personal de la sala (o vacío): [clave del puesto, frase traducida].
+static func saludo_de(p: Dictionary) -> Array:
+	if String(p.get("saluda", "")) == "":
+		return []
+	return [String(p["saluda"]), Idiomas.t(String(p.get("saludo", "")))]
 
 ## Las frases de un paso ya traducidas y con el nombre del mentor puesto.
 static func frases_de(p: Dictionary, nombre_mentor: String) -> Array[String]:

@@ -181,7 +181,7 @@ func registrar_ruta_gente(id: int) -> void:
 	if not (_gente_celdas[k] as Array).has(id):
 		(_gente_celdas[k] as Array).append(id)
 
-func _colocar(v: Dictionary) -> void:
+func _colocar(v: Dictionary, delta := 0.0) -> void:
 	var nodo: Node3D = v["nodo"]
 	if not is_instance_valid(nodo):
 		return
@@ -201,7 +201,12 @@ func _colocar(v: Dictionary) -> void:
 	## de marcha, que es donde tienen el morro los coches (`CityBuilder.
 	## instanciar_coche`): su `giro` es 0. El -90° de antes suponía el morro en
 	## X y dejaba la flota entera circulando de lado.
-	nodo.rotation.y = atan2(dir.x, dir.z) + float(v["giro"])
+	var yaw := atan2(dir.x, dir.z) + float(v["giro"])
+	## El peatón gira con suavidad hacia donde va a ir (`MovimientoNatural`); los vehículos, como siempre.
+	if delta > 0.0 and bool(v.get("peaton", false)):
+		var prox: Vector3 = r.en(float(v["s"]) + MovimientoNatural.ANTICIPO)[1]
+		yaw = MovimientoNatural.girar(nodo.rotation.y, atan2(prox.x, prox.z) + float(v["giro"]), delta)
+	nodo.rotation.y = yaw
 
 ## Cuelga un vehículo de una ruta. `giro_base` corrige modelos que no miran
 ## hacia -Z (los coches de Kenney miran a +X, por ejemplo): sin eso, la flota
@@ -350,6 +355,11 @@ func faros(n: float) -> void:
 				_poner_faros(v)
 	if _mat_faros != null:
 		_mat_faros.set_shader_parameter("noche", noche)
+	if (noche > 0.45) != ParaderoRed.noche and is_inside_tree():
+		ParaderoRed.encender(get_tree(), noche > 0.45)
+	for v in _vehiculos:
+		if is_instance_valid(v["nodo"]) and (v["nodo"] as Node3D).has_meta("luz_d"):
+			AutobusModelo.encender(v["nodo"], noche)
 	## M-183 (21-10): de madrugada queda en la calle un tercio de la gente.
 	var cuota := lerpf(1.0, 0.35, smoothstep(0.55, 0.95, noche))
 	if absf(cuota - _cuota_gente) > 0.04:
@@ -359,7 +369,7 @@ func faros(n: float) -> void:
 			i += 1
 			if bool(v.get("peaton", false)) and is_instance_valid(v["nodo"]):
 				var sale := float((i * 7919) % 100) / 100.0 < cuota
-				(v["nodo"] as Node3D).visible = sale
+				(v["nodo"] as Node3D).visible = sale and not bool(v.get("oculto_rut", false))
 				v["oculto"] = not sale
 
 ## Pone una animación al peatón `v` (si su cuerpo la tiene).
@@ -378,11 +388,7 @@ func _gesto(v: Dictionary, gesto: String) -> void:
 		var lib := ap.get_animation_library("")
 		if lib == null:
 			continue
-		if not lib.has_animation(gesto) and AnimExtra.UAL.has(gesto):
-			var esq := FutbolistaQ.esqueleto_de(nodo)
-			var clip: Animation = AnimQuaternius.cargar_real(String(AnimExtra.UAL[gesto]), str(ap.get_path_to(esq)) if esq != null else "")
-			if clip != null:
-				lib.add_animation(gesto, clip)
+		AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(nodo), gesto)
 		if lib.has_animation(gesto):
 			ap.play(gesto, 0.3)
 

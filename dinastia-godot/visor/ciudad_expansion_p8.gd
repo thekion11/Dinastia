@@ -34,9 +34,9 @@ func _mat_poste_farola(malla: Mesh) -> StandardMaterial3D:
 
 func _farolas() -> void:
 	var postes: Array[Transform3D] = []
-	var cabezas: Array[Transform3D] = []
-	var charcos: Array[Transform3D] = []
-	var conos: Array[Transform3D] = []
+	var cabezas := {}      ## sector -> Array[Transform3D]: las luces van por sectores para que un apagón apague SU sector
+	var charcos := {}
+	var conos := {}
 	## FAROLA CURVA DE KENNEY (15-10-2026): antes, un cilindro con una losa amarilla
 	## encima. El brazo (+Z del modelo) da a la calzada; la luz, el charco y el cono
 	## van en la punta del brazo, medida con la caja del modelo.
@@ -87,15 +87,15 @@ func _farolas() -> void:
 				var bas := Basis(Vector3.UP, atan2(dir.x, dir.z)).scaled(Vector3.ONE * ef2)
 				farolas_k.append(Transform3D(bas, base + Vector3(0, 0.2, 0) - bas * Vector3(0, cf2.position.y, 0)))
 			var luz := base + dir * punta.z + Vector3(0, punta.y, 0)
-			cabezas.append(Transform3D(Basis.from_scale(Vector3(0.55, 0.12, 0.55)), luz))
-			charcos.append(Transform3D(Basis.from_scale(Vector3(13.0, 1.0, 13.0)), Vector3(luz.x, 0.3, luz.z) + dir * 0.6))
+			var sec := RedesCiudad.sector_en(luz.x, luz.z)
+			_a_sector(cabezas, sec, Transform3D(Basis.from_scale(Vector3(0.55, 0.12, 0.55)), luz))
+			_a_sector(charcos, sec, Transform3D(Basis.from_scale(Vector3(13.0, 1.0, 13.0)), Vector3(luz.x, 0.3, luz.z) + dir * 0.6))
 			## Cono de luz: del farol al suelo, ancho abajo (10 m de diámetro).
-			conos.append(Transform3D(Basis.from_scale(Vector3(10.0, luz.y - 0.3, 10.0)), Vector3(luz.x, luz.y * 0.5 + 0.1, luz.z)))
+			_a_sector(conos, sec, Transform3D(Basis.from_scale(Vector3(10.0, luz.y - 0.3, 10.0)), Vector3(luz.x, luz.y * 0.5 + 0.1, luz.z)))
 	var gris := b._mat_simple(Color(0.25, 0.26, 0.27), 0.5)
 	_multimesh(CylinderMesh.new(), gris, postes, Vector3.ONE)
 	if not farolas_k.is_empty():
 		_multimesh(kf["malla"], _mat_poste_farola(kf["malla"]), farolas_k, Vector3.ONE)
-	_multimesh(BoxMesh.new(), _mat_luz_farola(), cabezas, Vector3.ONE)
 	_farola_charco = StandardMaterial3D.new()
 	_farola_charco.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	_farola_charco.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -104,7 +104,6 @@ func _farolas() -> void:
 	_farola_charco.albedo_color = Color(1.0, 0.8, 0.55, 0.0)
 	var pl := PlaneMesh.new()
 	pl.size = Vector2(1, 1)
-	_multimesh(pl, _farola_charco, charcos, Vector3.ONE)
 	## Los conos de luz: visibles solo al caer la noche (`encender`).
 	var cono := CylinderMesh.new()
 	cono.top_radius = 0.04
@@ -115,8 +114,23 @@ func _farolas() -> void:
 	## Haz con degradado y sin contorno (`cono_farola.gdshader`).
 	_farola_cono = ShaderMaterial.new()
 	_farola_cono.shader = load("res://visor/cono_farola.gdshader")
-	_multimesh(cono, _farola_cono, conos, Vector3.ONE)
+	## Una luz, un charco y un haz POR SECTOR, con material propio (copia del global): `encender` apaga los del sector sin corriente.
+	var caja := BoxMesh.new()
+	for sec: Vector2i in cabezas:
+		var m_luz: StandardMaterial3D = _mat_luz_farola().duplicate()
+		var m_cha: StandardMaterial3D = _farola_charco.duplicate()
+		var m_con: ShaderMaterial = _farola_cono.duplicate()
+		_farolas_sec[sec] = {"luz": m_luz, "charco": m_cha, "cono": m_con}
+		for par: Array in [[caja, m_luz, cabezas], [pl, m_cha, charcos], [cono, m_con, conos]]:
+			var lista: Array[Transform3D] = []
+			lista.assign((par[2] as Dictionary).get(sec, []))
+			_multimesh(par[0], par[1], lista, Vector3.ONE)
 	cuenta["farolas"] = postes.size()
+
+func _a_sector(d: Dictionary, sec: Vector2i, t: Transform3D) -> void:
+	if not d.has(sec):
+		d[sec] = []
+	(d[sec] as Array).append(t)
 
 ## EL MOBILIARIO URBANO (7-10-2026, «agrega cosas que tiene una ciudad real…
 ## me gustan los detalles, el alcantarillado»): tapas de alcantarilla en los
@@ -202,10 +216,13 @@ func _mobiliario_urbano() -> void:
 			if q % 2 == 1:
 				var pb := a + dir * (largo * (f + 0.12)) + lat * lado * (ancho * 0.5 + 3.2)
 				var rb := Basis(Vector3.UP, giro + (PI * 0.5 if lado > 0.0 else -PI * 0.5))
-				bancos_a.append(Transform3D(rb * Basis.from_scale(Vector3(1.9, 0.08, 0.5)), pb + Vector3(0, 0.75, 0)))
-				bancos_a.append(Transform3D(rb * Basis.from_scale(Vector3(1.9, 0.45, 0.07)), pb + Vector3(0, 1.0, 0) + lat * lado * 0.25))
-				bancos_p.append(Transform3D(rb * Basis.from_scale(Vector3(0.08, 0.45, 0.45)), pb + Vector3(0, 0.5, 0) + dir * 0.8))
-				bancos_p.append(Transform3D(rb * Basis.from_scale(Vector3(0.08, 0.45, 0.45)), pb + Vector3(0, 0.5, 0) - dir * 0.8))
+				## ALTURA REAL DE UN BANCO (27-10-2026, orden del líder): el tablero a 0,45 m de la acera (que está a 0,2), no a 0,59.
+				bancos_a.append(Transform3D(rb * Basis.from_scale(Vector3(1.9, 0.08, 0.5)), pb + Vector3(0, 0.61, 0)))
+				bancos_a.append(Transform3D(rb * Basis.from_scale(Vector3(1.9, 0.45, 0.07)), pb + Vector3(0, 0.86, 0) + lat * lado * 0.25))
+				bancos_p.append(Transform3D(rb * Basis.from_scale(Vector3(0.08, 0.41, 0.45)), pb + Vector3(0, 0.41, 0) + dir * 0.8))
+				bancos_p.append(Transform3D(rb * Basis.from_scale(Vector3(0.08, 0.41, 0.45)), pb + Vector3(0, 0.41, 0) - dir * 0.8))
+				for sx: float in [-0.5, 0.5]:
+					b.asientos.append({"p": pb + dir * sx + Vector3(0, GenteSentada.ASIENTO_CIUDAD, 0), "giro": atan2(-lat.x * lado, -lat.z * lado)})
 			if q % 3 == 0:
 				var ph := a + dir * (largo * (f + 0.06)) + lat * -lado * (ancho * 0.5 + 0.7)
 				hidrantes.append(Transform3D(Basis.from_scale(Vector3(0.3, 0.75, 0.3)), ph + Vector3(0, 0.62, 0)))

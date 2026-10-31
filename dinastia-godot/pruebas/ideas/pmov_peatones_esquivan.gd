@@ -10,6 +10,7 @@ func _probar() -> void:
 	_adelanta_al_lento()
 	_adelanta_al_parado()
 	_lado_con_pared()
+	_rodea_mobiliario()
 	_rodea_al_jugador()
 	_botes_no_son_gente()
 
@@ -33,6 +34,23 @@ func _simular(t: TraficoCiudad, a: int, b: int, seg: float) -> float:
 		t._process(DT)
 		m = minf(m, Vector2(na.position.x - nb.position.x, na.position.z - nb.position.z).length())
 	return m
+
+## Una papelera (círculo de 0,4 m) en mitad del carril: el peatón la ve 1,2 m antes, se
+## abre a un lado y la deja atrás sin atravesarla (27-10-2026, plan §4).
+func _rodea_mobiliario() -> void:
+	var t := _trafico()
+	var r := _acera(t)
+	var papelera := Vector2(-70.0, 0.0)   ## s = 30 (la acera empieza en x = -100)
+	t.libre_fn = func(q: Vector3) -> bool: return Vector2(q.x, q.z).distance_to(papelera) > 0.4 + 0.3
+	t.agregar_vehiculo(Node3D.new(), r, 24.0, 1.2, 0.18)
+	var n: Node3D = t._vehiculos[0]["nodo"]
+	var m := INF
+	for i in int(12.0 / DT):
+		t._process(DT)
+		m = minf(m, Vector2(n.position.x, n.position.z).distance_to(papelera))
+	_comprobar(float(t._vehiculos[0]["s"]) > 34.0, "pasa la papelera (s=%.1f, papelera en 30)" % float(t._vehiculos[0]["s"]))
+	_comprobar(m > 0.4, "sin atravesarla (mínimo %.2f m del centro; antes 0)" % m)
+	t.queue_free()
 
 func _adelanta_al_lento() -> void:
 	var t := _trafico()

@@ -58,6 +58,34 @@ func _probar() -> void:
 		if x["tipo"] == "agente":
 			m.citas.resolver(m, String(x["id"]), 0)
 	_comprobar(m.citas.favor_agente == m.anio * 60 + m.semana, "escuchar al agente deja un favor pendiente")
+	## §2.5: apoyar al gobierno lo hace aliado (sus ayudas +25 %, su tasa −25 %); si pierde, el nuevo recela.
+	for x: Dictionary in m.citas.pendientes():
+		if x["tipo"] == "politica":
+			m.citas.resolver(m, String(x["id"]), 0)
+	var gob := m.politica.gobierno(c.pais, m.anio)
+	var s0 := c.saldo
+	m.politica._efecto(c, "deporte", null, Politica.relacion(gob))
+	var con_apoyo := c.saldo - s0
+	s0 = c.saldo
+	m.politica._efecto(c, "deporte", null, 0)
+	var sin_apoyo := c.saldo - s0
+	s0 = c.saldo
+	m.politica._efecto(c, "seguridad", null, 1)
+	var tasa_aliado := s0 - c.saldo
+	s0 = c.saldo
+	m.politica._efecto(c, "seguridad", null, -1)
+	var tasa_recelo := s0 - c.saldo
+	_comprobar(Politica.relacion(gob) == 1 and con_apoyo == int(round(sin_apoyo * 1.25)) and tasa_aliado < tasa_recelo,
+		"apoyar al gobierno lo hace aliado: ayuda %d → %d; la tasa con aliado %d y con recelo %d" % [sin_apoyo, con_apoyo, tasa_aliado, tasa_recelo])
+	_comprobar(Politica.relacion({"desde": m.anio, "recelo_club": m.anio}) == -1 and Politica.relacion({"desde": m.anio}) == 0,
+		"si gana otro partido el nuevo gobierno recela; sin apoyo, neutral")
+	var g_antes := m.politica.gobierno(c.pais, m.anio)
+	g_antes["proxima"] = m.anio
+	var partido_antes := String(g_antes["partido"])
+	m.politica.semana(c, m.anio, Politica.semana_votacion(c.pais), null)
+	var g_nuevo := m.politica.gobierno(c.pais, m.anio)
+	var esperado := 1 if String(g_nuevo["partido"]) == partido_antes else -1
+	_comprobar(Politica.relacion(g_nuevo) == esperado, "tras la votación el apoyo pesa: %s (%d)" % ["repite, sigue aliado" if esperado == 1 else "gana otro, recela", esperado])
 	## El favor abarata la próxima mesa (bloque 3): −5 % en lo pedido y +10 puntos de aceptación.
 	var otro: Club = null
 	for cl: Club in m.ligas[0].clubes:
@@ -83,10 +111,69 @@ func _probar() -> void:
 	var moral0 := j.moral
 	var re := m.citas.resolver(m, String(ce["id"]), 0)
 	_comprobar(not re.is_empty() and j.moral == mini(moral0 + 2, 100), "el tono seguro sube la moral del recién llegado (+2)")
+	## §2.5: la entrevista completa son tres preguntas (tono, grupo del vestuario, staff).
+	var j2: Jugador = c.plantilla[1]
+	m.citas.entrevista(m, j2)
+	var ce2 := {}
+	for x: Dictionary in m.citas.pendientes():
+		if x["tipo"] == "entrevista":
+			ce2 = x
+	var grupos := m.citas.grupos_entrevista(m)
+	_comprobar(m.citas.opciones_entrevista(m, ce2, 1).size() == grupos.size() + 1 and m.citas.opciones_entrevista(m, ce2, 2).size() == 3,
+		"la entrevista pregunta también por el grupo del vestuario (%d + «con todos») y por el staff (3)" % grupos.size())
+	var forma0 := j2.forma
+	var ad0 := j2.adapt
+	var mo2 := j2.moral
+	m.citas.resolver(m, String(ce2["id"]), 2, [grupos.size(), 0])
+	_comprobar(j2.forma == mini(forma0 + 3, 100) and j2.adapt == ad0 and j2.moral == mini(mo2 + 1, 100),
+		"humilde + «con todos» + preparador físico: +1 de moral y +3 de forma")
+	if not grupos.is_empty():
+		var j3: Jugador = c.plantilla[2]
+		m.citas.entrevista(m, j3)
+		var ce3 := {}
+		for x: Dictionary in m.citas.pendientes():
+			if x["tipo"] == "entrevista":
+				ce3 = x
+		var cl: Dictionary = m.citas.grupos_entrevista(m)[0]
+		m.citas.resolver(m, String(ce3["id"]), 0, [0, 1])
+		_comprobar((cl["miembros"] as Array).has(j3.id) and String(m.vestuario._clan_de.get(j3.id, "")) == String(cl["id"]) and j3.adapt >= 15,
+			"presentado a «%s»: entra en ese grupo; con el analista, +15 de adaptación" % String(cl["nombre"]))
 	## Fotos a Tribuna (bloque 6): una publicación «paseo» suma seguidores.
 	var seg0 := int(m.redes.cuentas["dt"]["seguidores"])
 	var pub := m.redes.publicar(m, "paseo", ["#MiCiudad"])
 	_comprobar(not pub.has("error") and String(pub.get("tipo", "")) == "paseo" and int(m.redes.cuentas["dt"]["seguidores"]) >= seg0, "una foto del paseo se publica en Tribuna y suma seguidores")
+	## Convocar una rueda de prensa desde el móvil: una por semana, y no si ya hay una abierta.
+	m.prensa.entrevista = {}
+	_comprobar(m.citas.convocar_rueda(m) == "" and m.prensa.hay_rueda(), "convocar abre una rueda de prensa")
+	_comprobar(m.citas.convocar_rueda(m) != "", "con una abierta no se convoca otra")
+	m.prensa.entrevista = {}
+	_comprobar(m.citas.convocar_rueda(m) != "", "y solo una extra por semana")
+	## La asamblea de socios (bloque 6): cada 4 temporadas; perderla cambia al presidente, no al DT.
+	var anio0 := m.anio
+	m.anio = 2028
+	m.citas.asamblea_anio = -1
+	m.citas.semana(m, Citas.ASAMBLEA_SEMANA)
+	var ca := {}
+	for x: Dictionary in m.citas.pendientes():
+		if x["tipo"] == "asamblea":
+			ca = x
+	_comprobar(not ca.is_empty() and m.citas.opciones(m, ca).size() == 3, "en año de asamblea el presidente convoca a los socios (tres discursos)")
+	var pres0 := String(m.junta.presidente["nombre"])
+	m.prensa.animo = 20
+	m.directiva.confianza = 30
+	var ra := m.citas.resolver(m, String(ca["id"]), 0)
+	_comprobar(not ra.is_empty() and String(m.junta.presidente["nombre"]) != pres0 and m.directiva.confianza == 50, "con la grada en contra, el discurso seguro pierde: presidente nuevo y confianza 50")
+	m.citas.asamblea_anio = -1
+	m.citas.semana(m, Citas.ASAMBLEA_SEMANA)
+	for x: Dictionary in m.citas.pendientes():
+		if x["tipo"] == "asamblea":
+			ca = x
+	var pres1 := String(m.junta.presidente["nombre"])
+	m.prensa.animo = 80
+	m.directiva.confianza = 70
+	m.citas.resolver(m, String(ca["id"]), 0)
+	_comprobar(String(m.junta.presidente["nombre"]) == pres1 and m.directiva.confianza == 72, "con la grada a favor, el presidente sigue (+2 de confianza)")
+	m.anio = anio0
 	## Caducan el domingo sin castigo.
 	m.semana = sem_voto + 1
 	var saldo := c.saldo

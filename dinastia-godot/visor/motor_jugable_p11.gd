@@ -264,7 +264,8 @@ func _paso_tanda(delta: float) -> void:
 	_actualizar_balon_visual(delta)
 	match fase:
 		"entrar":
-			if _t_estado > 2.5:
+			## 4 s y no 2,5: lo que tarda la tele en presentar a los lanzadores (`PresentacionTanda`).
+			if _t_estado > 4.0:
 				_siguiente_penal()
 		"preparar":
 			## El portero en la línea, mirando al lanzador.
@@ -379,3 +380,42 @@ func _cuerpos() -> void:
 			if acerca > 0.0:
 				pa["vel"] = va - nrm * acerca * mb / (ma + mb)
 				pb["vel"] = vb + nrm * acerca * ma / (ma + mb)
+
+## LOS PRESETS DE JUEGO (semana 3, 27-10-2026). «Realista» es el motor calibrado con las sondas (la
+## puntería, las faltas y las ocasiones del fútbol de verdad); «Arcade» perdona: pases y tiros con un
+## 30 % menos de error y la mitad de faltas, para jugar a gusto con mando sin pelearse con el motor.
+const PRESETS := {
+	"realista": {"nombre": "Realista", "error": 1.0, "faltas": 1.0},
+	"arcade": {"nombre": "Arcade", "error": 0.7, "faltas": 0.5},
+}
+const ORDEN_PRESETS := ["realista", "arcade"]
+
+func fijar_preset(clave: String) -> void:
+	var pr: Dictionary = PRESETS.get(clave, PRESETS["realista"])
+	preset_error = float(pr["error"])
+	preset_faltas = float(pr["faltas"])
+
+## EL INDICADOR DE PASE (semana 4, 27-10-2026, ayudas del modo jugable): con el balón en tus pies, la flecha
+## amarilla de los saques marca a quién iría el pase ahora mismo (el mismo compañero que elige Pase con el
+## stick), para jugar sin adivinar. Se apaga en el cajón ⚙ del estadio (`indicador_pase`).
+var indicador_pase := true
+var _t_indicador := 0.0
+var _receptor_auto := false
+
+func _indicar_pase(delta: float) -> void:
+	if not indicador_pase or usuario.is_empty() or poseedor != usuario or estado != "juego":
+		if _receptor_auto:
+			_receptor_marcado = {}
+			_receptor_auto = false
+			_dibujar_receptor()
+		return
+	_t_indicador -= delta
+	if _t_indicador <= 0.0:
+		_t_indicador = 0.12
+		var n: Node3D = usuario["node"]
+		var mundo := _a_mundo(Mando.movimiento(), dir_ataque(bool(usuario["es_local"])))
+		var dir := mundo.normalized() if mundo.length() > 0.1 else Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
+		_receptor_marcado = _companero_en_direccion(usuario, dir)
+		_receptor_auto = true
+	_dibujar_receptor()
+

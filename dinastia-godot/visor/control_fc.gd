@@ -67,6 +67,7 @@ const MANUAL := [
 		["Tiro básico / cabeceo / volea (mantener = potencia)", ["jugar_tiro"], ""],
 		["Tiro de calidad (finesse, con rosca al segundo palo)", ["jugar_mod", "jugar_tiro"], ""],
 		["Vaselina (chip shot)", ["jugar_cambiar", "jugar_tiro"], ""],
+		["Tiro raso (pegado al césped)", ["mant:jugar_regate", "jugar_tiro"], ""],
 		["Tiro potente (power shot, cámara lenta, apuntado manual)", ["jugar_cambiar", "jugar_mod", "jugar_tiro"], ""],
 		["Pase raso corto", ["jugar_pase"], ""],
 		["Pase al hueco (filtrado)", ["jugar_filtrado"], ""],
