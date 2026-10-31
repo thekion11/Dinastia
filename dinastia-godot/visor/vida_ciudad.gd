@@ -94,6 +94,8 @@ func poner_extras() -> void:
 		_mq_estadio = true
 		var pu: Vector3 = CityBuilder.ESTADIO_EN + (expl._est["puerta"] as Vector3)
 		ExpendedoraCiudad.montar(expl.cb, Vector3(pu.x - 6.0, 0.2, pu.z + 1.0), 0.0)
+		if expl.cb.expansion != null:
+			CajeroCiudad.montar(expl.cb.expansion, Vector3(pu.x - 8.0, 0.2, pu.z + 1.0), 0.0)   ## y un cajero (§2.5)
 
 func poner_balon() -> void:
 	if is_instance_valid(_balon) or expl == null or expl.cb == null or expl.cb.expansion == null or expl.cuerpo == null:
