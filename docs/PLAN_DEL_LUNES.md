@@ -795,7 +795,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-154 | P3 | PENDIENTE | Sin online | fuera de alcance, sin documentar |
 | M-166 | P3 | PENDIENTE | Sin partidos de fútbol sala/playa/mujeres (género existe) | fuera de alcance, sin documentar |
 
-### F6 pulido (rendimiento) (19)
+### F6 pulido (rendimiento) (20)
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
@@ -817,6 +817,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-356 | P2 | PENDIENTE | Memoria de la ciudad ×4 (2.640 m) | sin streaming por celdas |
 | M-358 | P2 | PARCIAL | Arranque del juego hasta el menú | 30-10, juego EXPORTADO: ver el menú 4,5 → 0,75 s. Las autocargas ya no nombran `Partida`/`Reales` (compilaban 562 scripts) y el menú no nombra lo pesado (`ui/inicio_pesado.gd`, cargado en un hilo; partida en curso, perfil y álbum se pintan al llegar, ~5 s). `CompilarFondo` compila el resto en segundo plano DE UNO EN UNO (con 4 a la vez la ciudad iba ~1,5× más lenta: tipos sin resolver). Estadio y ciudad, igual que antes (2,2 y 4,4 s). Falta: separar `Principal` y que `Mundo` no nombre interfaz (charlas → ficha → Principal) para compilar menos en total. (En desarrollo, CERRAR tarda ~9 s: no afecta al juego exportado.) |
 | M-472 | P2 | PENDIENTE | Builds: firma y reparto | 30-10: el CI exporta Windows, Linux y Android (APK de depuración) públicos; lo real va en `caras_reales.pck` (`herramientas/empaquetar_caras.gd`, no se publica). Falta (🔒 dueño): APK de publicación firmado con su keystore; subir el .pck a su Drive privado; decidir si el CI también exporta la Web |
+| M-473 | P2 | PENDIENTE | Pruebas visuales: 5 pantallas no se parecen a su referencia | 30-10: `especiales.sh todo` → «pruebas visuales (20 pantallas)» falla en plantel, táctica, cantera, mercado y clubes, IGUAL en `main` (mismos números: no viene del rendimiento). La diferencia está en los retratos 3D de los jugadores; probablemente las referencias son anteriores a la pasada 1 de personajes (PR #13). Decidir (dueño / sesión visual) si el aspecto nuevo es el querido y entonces `herramientas/visual.sh referencias` |
 | M-357 | P2 | PARCIAL | Capturas pesadas en repo (`pruebas/capturas`) | `.gitignore` de promo/lotes y JPG por defecto; resto en repo |
 
 ### F6 pulido (traducciones) (6)
