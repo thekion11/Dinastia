@@ -50,6 +50,9 @@ func _process(delta_real: float) -> void:
 			PeatonVida.esperar(self, v, randf())
 			continue
 		var avance := float(v["vel"]) * delta
+		if float(v.get("susto", 0.0)) > 0.0:   ## mejora G: asustado, aprieta el paso
+			v["susto"] = float(v["susto"]) - delta
+			avance *= SUSTO_PASO
 		var ruta := int(v["ruta"])
 		var s0 := float(v["s"])
 		var largo := (_rutas[ruta] as Ruta).largo

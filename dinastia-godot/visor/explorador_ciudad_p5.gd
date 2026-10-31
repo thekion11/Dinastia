@@ -174,6 +174,7 @@ func _cerrar_puerta_si_lejos() -> void:
 ## (31-10, auditoría del coche) Sin gasolina el pedal no empuja: antes `VidaCiudad` paraba el coche en `_process`
 ## y `_conducir` lo volvía a acelerar en cada paso de física (avanzaba a trompicones con el depósito vacío).
 var sin_gasolina := false
+var _t_susto := 0.0
 
 func _conducir(e: Vector2, delta: float) -> void:
 	if _motor_sonido == null:
@@ -348,6 +349,11 @@ func _physics_process(delta: float) -> void:
 		_buscar_cerca()
 	## Gente alrededor: los peatones lejanos reaparecen cerca (a la espalda).
 	_t_gente -= delta
+	## Mejora G: a más de 40 km/h, los peatones a menos de 6 m se asustan (cada 0,3 s).
+	_t_susto -= delta
+	if _t_susto <= 0.0 and modo == "coche" and absf(vel) * 3.6 > 40.0 and trafico != null and estado == "calle":
+		_t_susto = 0.3
+		trafico.asustar(cuerpo.position, 6.0)
 	if _t_gente <= 0.0 and trafico != null and estado == "calle":
 		var mira := -camara.global_transform.basis.z
 		## La primera vez (al empezar a pasear) se llena el entorno de golpe.
@@ -406,6 +412,11 @@ func _unhandled_input(ev: InputEvent) -> void:
 	elif k == KEY_T and vida != null:
 		get_viewport().set_input_as_handled()
 		vida.abrir_telefono()
+	elif k == KEY_H and modo == "coche" and estado == "calle":   ## mejora E: el claxon (y la gente se aparta, mejora G)
+		get_viewport().set_input_as_handled()
+		Sonido.toca("claxon", Sonido.Bus.AMBIENTE)
+		if trafico != null:
+			trafico.asustar(cuerpo.position + Vector3(sin(rumbo), 0, cos(rumbo)) * 8.0, 12.0)
 	elif k == KEY_V and modo == "coche" and estado == "calle":
 		cam_coche = (cam_coche + 1) % 3
 		_aviso.text = [Idiomas.t("Cámara: tercera persona"), Idiomas.t("Cámara: capó"), Idiomas.t("Cámara: primera persona")][cam_coche]

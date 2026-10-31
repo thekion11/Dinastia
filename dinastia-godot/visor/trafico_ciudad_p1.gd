@@ -408,3 +408,21 @@ func _charlar(a: Dictionary, b: Dictionary) -> void:
 		var d := otro.global_position - yo.global_position
 		yo.rotation.y = atan2(d.x, d.z)
 		_gesto(v, "charla")
+
+## (31-10, mejora G del coche) EL SUSTO: el claxon o un coche que pasa rápido pegado a la acera hace que
+## los peatones de alrededor dejen lo que hacían (móvil, charla) y aprieten el paso un par de segundos.
+## Devuelve cuántos se asustaron.
+const SUSTO_SEG := 2.5
+const SUSTO_PASO := 2.2
+func asustar(centro: Vector3, radio: float) -> int:
+	var n := 0
+	for v: Dictionary in _vehiculos:
+		if not bool(v.get("peaton", false)) or not is_instance_valid(v["nodo"]):
+			continue
+		var p: Vector3 = (v["nodo"] as Node3D).position
+		if Vector2(p.x - centro.x, p.z - centro.z).length_squared() > radio * radio:
+			continue
+		v["susto"] = SUSTO_SEG
+		v["espera"] = 0.0
+		n += 1
+	return n

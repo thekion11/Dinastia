@@ -234,6 +234,19 @@ func _probar_async() -> void:
 			_comprobar(t_ok.contains("50 %") and not t_ok.contains(Idiomas.t("RESERVA")) and _v.reserva() and _v.texto_gasolina().contains(Idiomas.t("RESERVA")),
 				"el indicador de gasolina dice «%s» y en reserva «%s»" % [t_ok, _v.texto_gasolina()])
 			_m.vida.combustible = c0
+			## Mejoras E y G (31-10): el claxon y la velocidad asustan a los peatones cercanos (aprietan el paso).
+			if _e.trafico != null:
+				var pe: Dictionary = {}
+				for v: Dictionary in _e.trafico._vehiculos:
+					if bool(v.get("peaton", false)) and is_instance_valid(v["nodo"]):
+						pe = v
+						break
+				if not pe.is_empty():
+					var pp: Vector3 = (pe["nodo"] as Node3D).position
+					var n_sust := _e.trafico.asustar(pp, 3.0)
+					_comprobar(n_sust >= 1 and float(pe.get("susto", 0.0)) > 0.0 and _e.trafico.asustar(pp + Vector3(500, 0, 500), 3.0) == 0,
+						"el claxon asusta a los peatones de alrededor (%d) y a los lejanos no" % n_sust)
+					pe["susto"] = 0.0
 			_comprobar((_m.mi_club().saldo if _m.mi_club() != null else 0) == club_saldo, "y el club no paga la gasolina")
 			_m.vida.combustible = 5.0
 			_m.roles.patrimonio = 0
