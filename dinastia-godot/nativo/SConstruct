@@ -2,12 +2,16 @@
 # EXTENSIÓN NATIVA DE DINASTÍA (30-10-2026): los bucles más pesados de GDScript, en C++.
 # Se compila contra godot-cpp (oficial, MIT), que NO va en el repositorio: ver
 # herramientas/compilar_nativo.sh (lo descarga en el commit probado y compila cada plataforma).
-#   scons GODOT_CPP=<ruta a godot-cpp> platform=linux|windows target=template_debug|template_release
+#   scons GODOT_CPP=<ruta a godot-cpp> platform=linux|windows|android [arch=arm64] target=template_debug|template_release
 import os
 
 godot_cpp = ARGUMENTS.get("GODOT_CPP", os.environ.get("GODOT_CPP", "godot-cpp"))
 env = SConscript(os.path.join(godot_cpp, "SConstruct"))
 env.Append(CPPPATH=["src/"])
+# ARM (Android y Linux arm64, 31-10-2026): sin fusionar multiplicación y suma (FMA). En ARM los compiladores
+# las fusionan por defecto y los últimos bits cambiarían respecto a GDScript, que hace cada operación aparte.
+if env["arch"] in ("arm64", "arm32"):
+    env.Append(CCFLAGS=["-ffp-contract=off"])
 fuentes = Glob("src/*.cpp")
 destino = "../bin_nativo/libdinastia{}{}".format(env["suffix"], env["SHLIBSUFFIX"])
 Default(env.SharedLibrary(destino, source=fuentes))

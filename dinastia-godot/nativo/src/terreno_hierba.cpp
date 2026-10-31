@@ -80,10 +80,10 @@ Array DinastiaNativo::terreno(const Ref<FastNoiseLite> &ruido, const Ref<FastNoi
 				for (int i = bi * por_baldosa; i < (bi + 1) * por_baldosa; i++) {
 					const double x0 = -mitad + i * paso;
 					const double z0 = -mitad + j * paso;
-					const Vector3 p00(real_t(x0), real_t(alturas[size_t(j) * fila + i]), real_t(z0));
-					const Vector3 p10(real_t(x0 + paso), real_t(alturas[size_t(j) * fila + i + 1]), real_t(z0));
-					const Vector3 p01(real_t(x0), real_t(alturas[size_t(j + 1) * fila + i]), real_t(z0 + paso));
-					const Vector3 p11(real_t(x0 + paso), real_t(alturas[size_t(j + 1) * fila + i + 1]), real_t(z0 + paso));
+					const Vector3 p00 = Vector3(real_t(x0), real_t(alturas[size_t(j) * fila + i]), real_t(z0));
+					const Vector3 p10 = Vector3(real_t(x0 + paso), real_t(alturas[size_t(j) * fila + i + 1]), real_t(z0));
+					const Vector3 p01 = Vector3(real_t(x0), real_t(alturas[size_t(j + 1) * fila + i]), real_t(z0 + paso));
+					const Vector3 p11 = Vector3(real_t(x0 + paso), real_t(alturas[size_t(j + 1) * fila + i + 1]), real_t(z0 + paso));
 					const Vector3 v[6] = { p00, p10, p01, p10, p11, p01 };
 					const Vector3 n6[6] = { normales[size_t(j) * fila + i], normales[size_t(j) * fila + i + 1],
 						normales[size_t(j + 1) * fila + i], normales[size_t(j) * fila + i + 1],
