@@ -162,6 +162,8 @@ func _mover_jugadores(delta: float) -> void:
 		var hacia_b := balon.position - n.position
 		hacia_b.y = 0.0
 		var atras := false
+		var giro_antes := n.rotation.y
+		var corre_recto := false
 		if float(p.get("mirar_hasta", 0.0)) > t:
 			## Un giro mandado (golpeo, filigrana): manda sobre todo lo demás.
 			n.rotation.y = rotate_toward(n.rotation.y, float(p["mirar"]), GIRO_RAPIDO * delta)
@@ -175,9 +177,13 @@ func _mover_jugadores(delta: float) -> void:
 			n.rotation.y = rotate_toward(n.rotation.y, atan2(hacia_b.x, hacia_b.z), 8.0 * delta)
 		elif sp > 0.4:
 			n.rotation.y = rotate_toward(n.rotation.y, atan2(vel.x, vel.z), 9.0 * delta)
+			corre_recto = true
 		elif poseedor != p:
 			var hacia := balon.position - n.position
 			n.rotation.y = rotate_toward(n.rotation.y, atan2(hacia.x, hacia.z), 4.0 * delta)
+		## Al girar corriendo de frente, el cuerpo se inclina hacia dentro de la curva (31-10, §2.2e P2); de lado o atrás, no.
+		if delta > 0.0:
+			n.rotation.z = MovimientoNatural.inclinacion(n.rotation.z, angle_difference(giro_antes, n.rotation.y) / delta if corre_recto else 0.0, sp, delta)
 		## Aguante: el sprint cansa, andar recupera.
 		if bool(p.get("correr", false)) and sp > 5.0:
 			## Presionar arriba cansa: el equipo de presión alta se funde antes
