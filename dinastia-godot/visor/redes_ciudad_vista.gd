@@ -326,7 +326,7 @@ func _gasolineras() -> void:
 				b._caja_en(q + Vector3(0, 1.0, 0), Vector3(0.7, 1.6, 0.5), b._mat_simple(Color(0.85, 0.85, 0.87), 0.5))
 				b._caja_en(q + Vector3(0, 1.45, 0.27), Vector3(0.45, 0.3, 0.05), pantalla)
 		var sec := RedesCiudad.sector_en(c.x, c.z)
-		surtidores.append({"id": id, "pos": c, "sector": sec, "pantalla": pantalla})
+		surtidores.append({"id": id, "pos": c, "sector": sec, "pantalla": pantalla, "cisterna": _camion_cisterna(c + Vector3(r.size.x * 0.32, 0.3, r.size.y * 0.22))})
 		b.puntos_clic.append({"k": "surtidor_%d" % id, "n": "Repostar · Gasolinera", "pos": c, "estado": "ciudad", "radio": 26.0, "alcance": 8.0})
 		id += 1
 	cuenta["surtidores"] = surtidores.size() * 4
@@ -381,6 +381,8 @@ func refrescar() -> void:
 	for s: Dictionary in surtidores:
 		var pm: StandardMaterial3D = s["pantalla"]
 		pm.emission_energy_multiplier = 1.4 if modelo.hay_luz(s["sector"]) else 0.0
+		if is_instance_valid(s.get("cisterna")):
+			(s["cisterna"] as Node3D).visible = modelo.cisterna.has(int(s["id"]))
 
 func fraccion_luz() -> float:
 	return modelo.fraccion_luz()
@@ -391,3 +393,38 @@ func surtidor(id: int) -> Dictionary:
 		if int(s["id"]) == id:
 			return s
 	return {}
+
+## EL CAMIÓN CISTERNA (§2.5, 30-10): el camión de reparto del kit con un depósito blanco encima; solo se ve
+## mientras descarga en su gasolinera (`RedesCiudad.cisterna`, unas horas tras quedarse bajo el 20 %).
+func _camion_cisterna(p: Vector3) -> Node3D:
+	var g := Node3D.new()
+	g.name = "Cisterna"
+	g.position = p
+	g.visible = false
+	var camion := load("res://assets/ciudad/kenney_cars/delivery-flat.glb") as PackedScene
+	if camion != null:
+		var t: Node3D = camion.instantiate()
+		t.scale = Vector3.ONE * 2.6
+		g.add_child(t)
+	var tanque := MeshInstance3D.new()
+	var cm := CylinderMesh.new()
+	cm.top_radius = 1.0
+	cm.bottom_radius = 1.0
+	cm.height = 4.2
+	tanque.mesh = cm
+	tanque.rotation.x = PI * 0.5
+	tanque.position = Vector3(0, 2.4, -0.9)
+	tanque.material_override = b._mat_simple(Color(0.92, 0.92, 0.9), 0.35)
+	g.add_child(tanque)
+	var franja := MeshInstance3D.new()
+	var fm := CylinderMesh.new()
+	fm.top_radius = 1.02
+	fm.bottom_radius = 1.02
+	fm.height = 0.5
+	franja.mesh = fm
+	franja.rotation.x = PI * 0.5
+	franja.position = tanque.position
+	franja.material_override = b._mat_simple(Color(0.85, 0.15, 0.1), 0.4)
+	g.add_child(franja)
+	b.add_child(g)
+	return g
