@@ -240,6 +240,19 @@ func _probar_async() -> void:
 			_m.vida.combustible = lleno
 			_m.vida.gastar_combustible(10000.0)
 			var gasto_n := lleno - _m.vida.combustible
+			## Auditoría del coche (31-10): con el depósito vacío, el pedal no mueve el coche.
+			var comb_ok := _m.vida.combustible
+			_m.vida.combustible = 0.0
+			_v.gasolina_tick(0.016)
+			var vel0 := _e.vel
+			_e._pedal = 1.0
+			_e.vel = 0.0
+			_e._conducir(Vector2(0, 1), 0.1)
+			_comprobar(_e.sin_gasolina and _e.vel == 0.0, "sin gasolina el acelerador no mueve el coche")
+			_m.vida.combustible = comb_ok
+			_v.gasolina_tick(0.016)
+			_e.vel = vel0
+			_e._pedal = 0.0
 			_comprobar(panel_ok and gasto_p < gasto_n, "el surtidor ofrece normal y premium, y la premium gasta menos (%.2f l contra %.2f l en 10 km)" % [gasto_p, gasto_n])
 			var id0 := int(surt["id"])
 			var gas_g: float = sr.modelo.gas[id0]

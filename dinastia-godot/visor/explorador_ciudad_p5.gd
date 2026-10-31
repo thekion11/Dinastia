@@ -171,6 +171,10 @@ func _cerrar_puerta_si_lejos() -> void:
 	if lejos and EntradaClub.abierta(get_tree()):
 		EntradaClub.abrir(get_tree(), false)
 
+## (31-10, auditoría del coche) Sin gasolina el pedal no empuja: antes `VidaCiudad` paraba el coche en `_process`
+## y `_conducir` lo volvía a acelerar en cada paso de física (avanzaba a trompicones con el depósito vacío).
+var sin_gasolina := false
+
 func _conducir(e: Vector2, delta: float) -> void:
 	if _motor_sonido == null:
 		_motor_sonido = MotorCocheSonido.new()
@@ -180,7 +184,7 @@ func _conducir(e: Vector2, delta: float) -> void:
 	_volante = lerpf(_volante, e.x, clampf(delta * 4.5, 0.0, 1.0))
 	## El pedal no salta: sube en un tercio de segundo y se suelta más deprisa (27-10, pieza F: suavizar la conducción).
 	_pedal = move_toward(_pedal, e.y, (3.5 if absf(e.y) > absf(_pedal) else 7.0) * delta)
-	if _pedal > 0.0:
+	if _pedal > 0.0 and not sin_gasolina:
 		var potencia := 6.5 * (1.0 - clampf(maxf(vel, 0.0) / VEL_COCHE, 0.0, 1.0) * 0.75) + 1.2
 		vel = clampf(vel + _pedal * potencia * delta, -8.0, VEL_COCHE)
 	elif _pedal < 0.0:

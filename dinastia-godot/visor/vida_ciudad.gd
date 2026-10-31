@@ -15,6 +15,7 @@ func _redes() -> RedesCiudadVista:
 ## El depósito del coche (solo en coche y en la calle): gasta con la distancia, avisa al bajar del 15 % (una vez por semana)
 ## y vacío el coche no arranca hasta repostar en un surtidor (E).
 func gasolina_tick(delta: float) -> void:
+	expl.sin_gasolina = mundo.vida != null and mundo.vida.combustible <= 0.01
 	if mundo.vida == null or String(expl.modo) != "coche" or String(expl.estado) != "calle":
 		return
 	var vd := mundo.vida
