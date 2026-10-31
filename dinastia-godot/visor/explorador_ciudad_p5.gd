@@ -428,6 +428,9 @@ func _unhandled_input(ev: InputEvent) -> void:
 	elif k == KEY_T and vida != null:
 		get_viewport().set_input_as_handled()
 		vida.abrir_telefono()
+	elif k == KEY_F and estado == "calle":   ## mejora D: bajarse del coche / volver a subir
+		get_viewport().set_input_as_handled()
+		_aviso.text = AparcarCoche.alternar(self)
 	elif k == KEY_H and modo == "coche" and estado == "calle":   ## mejora E: el claxon (y la gente se aparta, mejora G)
 		get_viewport().set_input_as_handled()
 		Sonido.toca("claxon", Sonido.Bus.AMBIENTE)

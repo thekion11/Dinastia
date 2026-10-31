@@ -6777,7 +6777,10 @@
   "El DT golpea a un peatón con su coche": "Coach hits a pedestrian with his car",
   "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "The local resident is unhurt but shaken. Police fine him 150 euros.",
   "🔧 El coche está muy golpeado: la próxima vez que salgas irá al taller esta semana.": "🔧 The car is badly damaged: next time you head out it'll be in the garage this week.",
-  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Your car is in the garage after all the knocks: bus and metro this week."
+  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Your car is in the garage after all the knocks: bus and metro this week.",
+  "Para el coche para bajarte (F).": "Stop the car to get out (F).",
+  "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Car parked. F next to it to get back in.",
+  "Tu coche está aparcado a %d m.": "Your car is parked %d m away."
  },
  "pt": {
   "Historia": "História",
@@ -13557,7 +13560,10 @@
   "El DT golpea a un peatón con su coche": "O treinador atropela um peão com o seu carro",
   "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "O vizinho, ileso mas assustado. A polícia aplica-lhe uma multa de 150 euros.",
   "🔧 El coche está muy golpeado: la próxima vez que salgas irá al taller esta semana.": "🔧 O carro está muito amolgado: da próxima vez que saíres vai para a oficina esta semana.",
-  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 O teu carro está na oficina por causa das pancadas: esta semana, autocarro e metro."
+  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 O teu carro está na oficina por causa das pancadas: esta semana, autocarro e metro.",
+  "Para el coche para bajarte (F).": "Para o carro para saíres (F).",
+  "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Carro estacionado. F junto a ele para voltar a entrar.",
+  "Tu coche está aparcado a %d m.": "O teu carro está estacionado a %d m."
  },
  "patrones": [
   [
@@ -26070,7 +26076,10 @@
   "El DT golpea a un peatón con su coche": "L'entraîneur heurte un piéton avec sa voiture",
   "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "Le riverain, indemne mais choqué. La police lui inflige une amende de 150 euros.",
   "🔧 El coche está muy golpeado: la próxima vez que salgas irá al taller esta semana.": "🔧 La voiture est très abîmée : la prochaine fois que tu sortiras, elle sera au garage cette semaine.",
-  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Ta voiture est au garage à cause des chocs : cette semaine, bus et métro."
+  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Ta voiture est au garage à cause des chocs : cette semaine, bus et métro.",
+  "Para el coche para bajarte (F).": "Arrête la voiture pour descendre (F).",
+  "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Voiture garée. F à côté pour remonter.",
+  "Tu coche está aparcado a %d m.": "Ta voiture est garée à %d m."
  },
  "it": {
   "Historia": "Storia",
@@ -32850,7 +32859,10 @@
   "El DT golpea a un peatón con su coche": "L'allenatore investe un pedone con la sua auto",
   "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "Il passante, illeso ma spaventato. La polizia gli infligge una multa di 150 euro.",
   "🔧 El coche está muy golpeado: la próxima vez que salgas irá al taller esta semana.": "🔧 L'auto è molto ammaccata: la prossima volta che esci sarà in officina questa settimana.",
-  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 La tua auto è in officina per i colpi: questa settimana, autobus e metro."
+  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 La tua auto è in officina per i colpi: questa settimana, autobus e metro.",
+  "Para el coche para bajarte (F).": "Ferma l'auto per scendere (F).",
+  "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Auto parcheggiata. F vicino per risalire.",
+  "Tu coche está aparcado a %d m.": "La tua auto è parcheggiata a %d m."
  },
  "de": {
   "Historia": "Geschichte",
@@ -39630,7 +39642,10 @@
   "El DT golpea a un peatón con su coche": "Trainer fährt mit seinem Auto einen Fußgänger an",
   "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "Der Anwohner ist unverletzt, aber erschrocken. Die Polizei verhängt 150 Euro Bußgeld.",
   "🔧 El coche está muy golpeado: la próxima vez que salgas irá al taller esta semana.": "🔧 Das Auto ist stark beschädigt: Beim nächsten Mal steht es diese Woche in der Werkstatt.",
-  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Dein Auto ist wegen der Unfallschäden in der Werkstatt: diese Woche Bus und U-Bahn."
+  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Dein Auto ist wegen der Unfallschäden in der Werkstatt: diese Woche Bus und U-Bahn.",
+  "Para el coche para bajarte (F).": "Halte an, um auszusteigen (F).",
+  "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Auto geparkt. F daneben, um wieder einzusteigen.",
+  "Tu coche está aparcado a %d m.": "Dein Auto parkt %d m entfernt."
  },
  "ca": {
   "Historia": "Història",
@@ -46410,7 +46425,10 @@
   "El DT golpea a un peatón con su coche": "L'entrenador topa amb un vianant amb el seu cotxe",
   "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "El veí, il·lès però espantat. La policia li imposa una multa de 150 euros.",
   "🔧 El coche está muy golpeado: la próxima vez que salgas irá al taller esta semana.": "🔧 El cotxe està molt picat: la propera vegada que surtis anirà al taller aquesta setmana.",
-  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 El teu cotxe és al taller pels cops: aquesta setmana, bus i metro."
+  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 El teu cotxe és al taller pels cops: aquesta setmana, bus i metro.",
+  "Para el coche para bajarte (F).": "Atura el cotxe per baixar (F).",
+  "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Cotxe aparcat. F al costat per tornar a pujar.",
+  "Tu coche está aparcado a %d m.": "El teu cotxe està aparcat a %d m."
  },
  "pl": {
   "Club": "Klub",
@@ -53467,7 +53485,10 @@
   "El DT golpea a un peatón con su coche": "Trener potrącił pieszego swoim samochodem",
   "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "Mieszkaniec bez obrażeń, ale przestraszony. Policja nałożyła 150 euro mandatu.",
   "🔧 El coche está muy golpeado: la próxima vez que salgas irá al taller esta semana.": "🔧 Samochód jest mocno rozbity: następnym razem w tym tygodniu będzie w warsztacie.",
-  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Twój samochód jest w warsztacie po stłuczkach: w tym tygodniu autobus i metro."
+  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Twój samochód jest w warsztacie po stłuczkach: w tym tygodniu autobus i metro.",
+  "Para el coche para bajarte (F).": "Zatrzymaj samochód, żeby wysiąść (F).",
+  "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Samochód zaparkowany. F obok niego, żeby wsiąść.",
+  "Tu coche está aparcado a %d m.": "Twój samochód stoi %d m stąd."
  },
  "tr": {
   "Club": "Kulüp",
@@ -60524,6 +60545,9 @@
   "El DT golpea a un peatón con su coche": "Teknik direktör arabasıyla bir yayaya çarptı",
   "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "Yaya yarasız ama korkmuş. Polis 150 euro ceza kesti.",
   "🔧 El coche está muy golpeado: la próxima vez que salgas irá al taller esta semana.": "🔧 Araba çok hasarlı: bir dahaki çıkışında bu hafta serviste olacak.",
-  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Araban çarpmalar yüzünden serviste: bu hafta otobüs ve metro."
+  "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Araban çarpmalar yüzünden serviste: bu hafta otobüs ve metro.",
+  "Para el coche para bajarte (F).": "İnmek için arabayı durdur (F).",
+  "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Araba park edildi. Tekrar binmek için yanında F.",
+  "Tu coche está aparcado a %d m.": "Araban %d m ötede park halinde."
  }
 }
