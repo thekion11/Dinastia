@@ -4,6 +4,8 @@
 # Linux y Windows (debug para el editor y las pruebas, release para el juego exportado).
 #   herramientas/compilar_nativo.sh            todo
 #   herramientas/compilar_nativo.sh linux      solo Linux
+#   herramientas/compilar_nativo.sh android    Android arm64 (necesita ANDROID_NDK_ROOT; lo hace el CI, 31-10)
+#   ARCH=arm64 herramientas/compilar_nativo.sh linux   Linux arm64 (el CI lo compila en una máquina ARM para la prueba)
 # Windows se compila desde Linux con mingw-w64 (apt-get install mingw-w64).
 # Tras compilar: pruebas/probar_nativo.tscn debe terminar en «FIN. 0 fallos».
 set -e
@@ -17,7 +19,12 @@ git -C godot-cpp checkout -q "$COMMIT_GODOT_CPP"
 PLATAFORMAS="${1:-linux windows}"
 for p in $PLATAFORMAS; do
   for t in template_debug template_release; do
-    scons -j"$(nproc)" GODOT_CPP=godot-cpp platform="$p" target="$t" api_version=4.7
+    if [ "$p" = "android" ]; then
+      ## Con ANDROID_HOME vacío godot-cpp usa ANDROID_NDK_ROOT (el NDK que haya, sin fijar versión).
+      scons -j"$(nproc)" GODOT_CPP=godot-cpp platform=android arch=arm64 target="$t" api_version=4.7 ANDROID_HOME=
+    else
+      scons -j"$(nproc)" GODOT_CPP=godot-cpp platform="$p" target="$t" api_version=4.7 ${ARCH:+arch=$ARCH}
+    fi
   done
 done
 ls -la ../bin_nativo/
