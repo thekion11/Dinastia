@@ -26,7 +26,9 @@ func _probar() -> void:
 	var ang := func(m: PosturaQ, i: int) -> float: return rad_to_deg(m._giros[i].get_angle())
 	_comprobar(absf(ang.call(atleta, 3)) <= absf(ang.call(peaton, 3)) * 0.34 + 0.01, "hombro del atleta %.1f° contra %.1f° del peatón" % [ang.call(atleta, 3), ang.call(peaton, 3)])
 	_comprobar(absf(ang.call(atleta, 1)) <= absf(ang.call(peaton, 1)) * 0.36 + 0.01, "cuello del atleta %.1f° contra %.1f°" % [ang.call(atleta, 1), ang.call(peaton, 1)])
-	_comprobar(absf(ang.call(atleta, 4) - ang.call(peaton, 4) * 0.7) < 0.05, "y los dedos algo menos doblados que el peatón (%.1f° contra %.1f°)" % [ang.call(atleta, 4), ang.call(peaton, 4)])
+	_comprobar(atleta._fijos.size() == 1 and peaton._fijos.is_empty(), "el atleta lleva la mano fija (no sigue al clip «OK»); el peatón no (%d)" % atleta._fijos.size())
+	var dedo := rad_to_deg((esq.get_bone_rest(5).basis.get_rotation_quaternion().inverse() * atleta._fijos_q[0]).get_angle())
+	_comprobar(dedo > 18.0 and dedo < 40.0, "índice relajado sobre el reposo, ni recto ni en puño (%.1f°)" % dedo)
 	var todos_nivelan := true
 	for s in 60:
 		var m := PosturaQ.new()

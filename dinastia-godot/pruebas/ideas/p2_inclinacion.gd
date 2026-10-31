@@ -11,7 +11,7 @@ func _tras(giro: float, vel: float, n := 60, desde := 0.0) -> float:
 	return z
 
 func _probar() -> void:
-	_titulo("P2: INCLINACIÓN AL GIRAR CORRIENDO")
+	_titulo("P2: INCLINACIÓN AL GIRAR CORRIENDO Y AL ACELERAR")
 	var andando := _tras(2.6, 1.7)
 	_comprobar(absf(andando) < 0.005, "andando (1,7 m/s) girando a tope no se inclina (%.1f°)" % rad_to_deg(andando))
 	var corriendo := _tras(2.6, 5.0)
@@ -32,3 +32,20 @@ func _probar() -> void:
 	var salto := absf(MovimientoNatural.inclinacion(corriendo, 0.0, 5.0, DT) - corriendo)
 	_comprobar(absf(recto) < deg_to_rad(0.5), "al dejar de girar se endereza en 1 s (%.2f°)" % rad_to_deg(recto))
 	_comprobar(salto < deg_to_rad(2.0), "sin saltos de un fotograma a otro (%.2f°)" % rad_to_deg(salto))
+	## Echarse adelante al acelerar (31-10) y algo atrás al frenar; parejo, recto.
+	var x := 0.0
+	for i in 30:
+		x = MovimientoNatural.cabeceo(x, 5.0, DT)
+	var m := Node3D.new()
+	m.rotation = Vector3(x, 0.0, 0.0)
+	var cima := m.transform.basis * Vector3.UP
+	m.free()
+	_comprobar(x > deg_to_rad(5.0) and cima.z > 0.05, "al arrancar (5 m/s²) se echa adelante, hacia donde mira (%.1f°, z = %.2f)" % [rad_to_deg(x), cima.z])
+	var y := 0.0
+	for i in 30:
+		y = MovimientoNatural.cabeceo(y, -12.0, DT)
+	_comprobar(y < 0.0 and y >= -MovimientoNatural.ATRAS_MAX - 0.001, "al frenar en seco, algo atrás y con tope (%.1f°)" % rad_to_deg(y))
+	var z := x
+	for i in 30:
+		z = MovimientoNatural.cabeceo(z, 0.0, DT)
+	_comprobar(absf(z) < deg_to_rad(0.5), "y a velocidad pareja vuelve a ir recto (%.2f°)" % rad_to_deg(z))
