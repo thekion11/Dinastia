@@ -243,6 +243,11 @@ static func _material_liso(color: Color, rugosidad: float) -> StandardMaterial3D
 ## El shader lo usa solo donde hay tela. Devuelve [CUSTOM0, CUSTOM1]:
 ## CUSTOM0 = normal alisada (xyz) + relleno (w); CUSTOM1 = normal de reposo.
 static func _alisado(pos: PackedVector3Array, nor: Variant, idx: Variant) -> Array:
+	if nor is PackedVector3Array and idx is PackedInt32Array and not pos.is_empty() and Nativo.obj() != null:
+		return Nativo.obj().alisado(pos, nor, idx)   ## en C++, mismos bytes (30-10-2026)
+	return _alisado_gd(pos, nor, idx)
+
+static func _alisado_gd(pos: PackedVector3Array, nor: Variant, idx: Variant) -> Array:
 	var n := pos.size()
 	var c0 := PackedFloat32Array()
 	var c1 := PackedFloat32Array()

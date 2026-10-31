@@ -56,6 +56,7 @@ var base_real: bool = false
 signal base_cambiada(real: bool)
 
 func _ready() -> void:
+	PaqueteReal.montar()   ## el paquete privado de caras y datos reales, si está (30-10-2026)
 	cargar()
 	_cargar_pack()
 	usar_base_real(preferencia_base_real())
@@ -131,7 +132,10 @@ func usar_base_real(activar: bool) -> bool:
 	_sumar_paises_extra()
 	var cambio := real != base_real
 	base_real = real
-	Reales.invalidar()
+	## Sin nombrar la clase (30-10-2026, arranque): nombrarla hacía compilar ~550 scripts antes del
+	## menú. Si `Reales` aún no se cargó, su índice está vacío y no hay nada que invalidar.
+	if ResourceLoader.has_cached("res://nucleo/reales.gd"):
+		load("res://nucleo/reales.gd").invalidar()
 	if cambio:
 		base_cambiada.emit(real)
 	return real

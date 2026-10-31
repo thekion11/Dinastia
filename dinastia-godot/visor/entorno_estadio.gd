@@ -21,6 +21,16 @@ const PLAZA := 22.0        ## metros de plaza alrededor de la huella del estadio
 const BANDA := 34.0        ## de la plaza a la avenida (aparcamientos)
 const CALLE := 12.0
 
+## LAS PIEZAS REPETIDAS, JUNTAS (30-10-2026, rendimiento). Coches aparcados, árboles y edificios
+## del entorno eran ~860 mallas sueltas: ~420 llamadas de dibujo de las ~1.150 del plano de TV.
+## Las iguales (misma malla, material y celda) pasan a un MultiMesh, como en la ciudad
+## (`Optimizar.agrupar`), pero sin la caja lejana: se ve exactamente igual. Lo usa la vista del estadio
+## del menú; en el partido lo hace `montar(..., true)` (junto con los cortes por distancia).
+static func agrupar(raiz: Node3D) -> void:
+	var e := raiz.get_node_or_null("EntornoEstadio") as Node3D if raiz != null else null
+	if e != null:
+		Optimizar.agrupar(e, false)
+
 ## Rebajas #2 y #3 del presupuesto del partido (27-10-2026): al acabar, `Optimizar.agrupar` (piezas quietas con la misma malla y materiales en un
 ## MultiMesh por celda) y `Optimizar.distancias` (corte por distancia según el tamaño). Apagable para las capturas «antes».
 static var optimizar_partido := true
@@ -37,6 +47,7 @@ static func montar(raiz: Node3D, est: Dictionary, niveles: int, optimizar := fal
 	var hz: float = float(g["dz"]) + fondo + 10.0
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(String(est.get("nombre", "estadio")) + String(est.get("forma", "")))
+	CocheDetalle._n_coches = 0   ## (31-10) las matrículas también desde cero: el mismo estadio sale igual cada vez
 	_suelos(e, hx, hz)
 	var px := hx + PLAZA
 	var pz := hz + PLAZA
@@ -261,4 +272,8 @@ static func _horizonte(e: Node3D, cx: float, cz: float, rng: RandomNumberGenerat
 		b.position = p
 		b.rotation.y = atan2(-dir.x, -dir.z) + float(rng.randi() % 4) * PI * 0.5
 		b.scale = Vector3.ONE * rng.randf_range(9.0, 13.0) * (1.0 + (lejos - 90.0) / 300.0)
+		## Fuera del agrupado en MultiMesh (`agrupar`, 30-10-2026): juntas, las piezas de estos
+		## edificios perdían las líneas de los pisos y los remates de azotea (comparación visual con
+		## la versión original, cámara «Detrás del arco»). `Optimizar` no agrupa lo que cuelga de un grupo.
+		b.add_to_group("sin_agrupar")
 		e.add_child(b)

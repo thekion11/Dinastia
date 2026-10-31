@@ -3,22 +3,18 @@ extends RefCounted
 
 ## Fabrica de materiales con imperfecciones para la ciudad y las instalaciones.
 ##
-## POR QUE
-## Una caja de un solo color plano se lee como plastico por mucha luz que le
+## POR QUE Una caja de un solo color plano se lee como plastico por mucha luz que le
 ## eches: no tiene grano, no tiene desgaste y refleja igual en toda su
 ## superficie. Lo que hace que un muro parezca hormigon de verdad es que la
-## rugosidad CAMBIE de un punto a otro, que haya manchas donde escurre el agua y
-## que las esquinas esten sucias.
+## rugosidad CAMBIE de un punto a otro, que haya manchas donde escurre el agua y que las esquinas esten sucias.
 ##
 ## Se generan con FastNoiseLite y NoiseTexture2D, que son codigo nativo del
 ## motor: un ruido de 1024x1024 se calcula en milisegundos, mientras que ese
 ## mismo bucle escrito en GDScript tardaba segundos por textura.
 ##
-## DENSIDAD DE TEXEL
-## El objetivo es 512-1024 pixeles por metro de fachada. Con `uv1_scale` se
+## DENSIDAD DE TEXEL El objetivo es 512-1024 pixeles por metro de fachada. Con `uv1_scale` se
 ## repite la textura cada `METRO_POR_TILE` metros, asi que una textura de 1024
-## repetida cada 2 m da ~512 px/m. Subir de ahi no se nota en pantalla y si se
-## nota en memoria de una integrada.
+## repetida cada 2 m da ~512 px/m. Subir de ahi no se nota en pantalla y si se nota en memoria de una integrada.
 const TEX := 1024
 ## M-347 (28-10-2026): el partido tenía ~60 ruidos de 1024² (5,3 MB cada uno con mipmaps, ~320 MB de los 600 de vídeo). Los que MULTIPLICAN color o
 ## rugosidad (granos sin relieve) bajan a 512²: a 2 m por repetición son 256 px/m, más que suficiente para un grano. Los mapas de normales
@@ -27,7 +23,6 @@ const TEX_GRANO := 512
 const METRO_POR_TILE := 2.0
 
 static var _cache := {}
-static var _cache_ruido := {}
 
 # ------------------------------------------------------------------- ruidos
 
@@ -41,13 +36,35 @@ static func _ruido(tipo: int, frec: float, semilla: int, octavas: int = 4) -> Fa
 
 ## Textura de ruido lista para usar como mapa. `normal` la convierte en mapa de
 ## normales, que es lo que da relieve sin anadir un solo poligono.
+## COMPARTIDAS (30-10-2026): solo dependen de estos parámetros, no del tinte; antes cada color
+## regeneraba sus ruidos de 1024² al cerrar el fotograma (la congelación de 20-40 s tras montar la
+## ciudad o el estadio). Y EN DISCO (PNG sin pérdida + mismos mipmaps): idénticas, sin generarlas.
+static var _ruidos := {}
+
 static func _tex_ruido(frec: float, semilla: int, normal: bool = false,
-		octavas: int = 4, tipo: int = FastNoiseLite.TYPE_SIMPLEX_SMOOTH, unica: bool = false) -> NoiseTexture2D:
-	var lado := TEX if (normal and Calidad.elegida >= Calidad.ALTO) else TEX_GRANO
-	## Mismos parámetros = misma textura compartida (M-347): cada estadio y cada edificio la pedían de nuevo. `unica` para quien la modifique después.
-	var clave := "ruido|%s|%d|%s|%d|%d|%d" % [frec, semilla, normal, octavas, tipo, lado]
-	if not unica and _cache_ruido.has(clave):
-		return _cache_ruido[clave]
+		octavas: int = 4, tipo: int = FastNoiseLite.TYPE_SIMPLEX_SMOOTH) -> Texture2D:
+	var lado := _lado(normal)
+	var clave := str([frec, semilla, normal, octavas, tipo, lado])
+	if not _ruidos.has(clave):
+		_ruidos[clave] = _con_disco(clave, lado, func() -> NoiseTexture2D: return _nuevo_ruido(frec, semilla, normal, octavas, tipo, lado))
+	return _ruidos[clave]
+
+## M-347: los granos van a 512² y los mapas de normales a 1024² solo en calidad ALTO.
+static func _lado(normal: bool) -> int:
+	return TEX if (normal and Calidad.elegida >= Calidad.ALTO) else TEX_GRANO
+
+static func _con_disco(clave: String, lado: int, crear: Callable) -> Texture2D:
+	var en_disco := RuidosFondo.clave_disco(clave)
+	var img := RuidosFondo.tomar(en_disco)   ## ya leída (con mipmaps) en un hilo, si se precargó
+	if img == null:
+		img = RuidosFondo.leer(en_disco)
+	if img != null and img.get_width() == lado:
+		return ImageTexture.create_from_image(img)
+	var t: NoiseTexture2D = crear.call()
+	t.changed.connect(func() -> void: CacheDisco.guardar_imagen(en_disco, t.get_image()), CONNECT_ONE_SHOT)
+	return t
+
+static func _nuevo_ruido(frec: float, semilla: int, normal: bool, octavas: int, tipo: int, lado: int = TEX) -> NoiseTexture2D:
 	var t := NoiseTexture2D.new()
 	t.width = lado
 	t.height = lado
@@ -56,21 +73,21 @@ static func _tex_ruido(frec: float, semilla: int, normal: bool = false,
 	t.bump_strength = 5.0
 	## La frecuencia del ruido es por píxel: a la mitad de lado, el doble de frecuencia para que el grano mida lo mismo sobre la superficie.
 	t.noise = _ruido(tipo, frec * float(TEX) / float(lado), semilla, octavas)
-	if not unica:
-		_cache_ruido[clave] = t
 	return t
 
 ## Ruido para MULTIPLICAR el color (albedo y detalle): de `piso` a blanco.
 ## 8-10-2026: el ruido crudo va de negro a blanco (media 0,5), y con albedo y
 ## detalle multiplicados el hormigón quedaba a ~¼ de su tinte: la espalda de
-## las gradas y las fachadas salían NEGRAS a mediodía. Así el grano se nota
-## pero el tinte manda.
-static func _ruido_claro(frec: float, semilla: int, octavas: int, piso: float) -> NoiseTexture2D:
-	var clave := "claro|%s|%d|%d|%s" % [frec, semilla, octavas, piso]
-	if _cache_ruido.has(clave):
-		return _cache_ruido[clave]
-	var t := _tex_ruido(frec, semilla, false, octavas, FastNoiseLite.TYPE_SIMPLEX_SMOOTH, true)
-	_cache_ruido[clave] = t
+## las gradas y las fachadas salían NEGRAS a mediodía. Así el grano se nota pero el tinte manda.
+static func _ruido_claro(frec: float, semilla: int, octavas: int, piso: float) -> Texture2D:
+	var lado := _lado(false)
+	var clave := str(["claro", frec, semilla, octavas, piso, lado])
+	if not _ruidos.has(clave):
+		_ruidos[clave] = _con_disco(clave, lado, func() -> NoiseTexture2D: return _nuevo_claro(frec, semilla, octavas, piso, lado))
+	return _ruidos[clave]
+
+static func _nuevo_claro(frec: float, semilla: int, octavas: int, piso: float, lado: int = TEX) -> NoiseTexture2D:
+	var t := _nuevo_ruido(frec, semilla, false, octavas, FastNoiseLite.TYPE_SIMPLEX_SMOOTH, lado)
 	var g := Gradient.new()
 	g.set_color(0, Color(piso, piso, piso))
 	g.set_color(1, Color.WHITE)
@@ -79,8 +96,7 @@ static func _ruido_claro(frec: float, semilla: int, octavas: int, piso: float) -
 
 # --------------------------------------------------------------- hormigon
 
-## Hormigon visto: grano fino, rugosidad desigual y un relieve muy suave. Es la
-## base de casi todo el complejo.
+## Hormigon visto: grano fino, rugosidad desigual y un relieve muy suave. Es la base de casi todo el complejo.
 static func hormigon(tinte: Color, semilla: int = 11) -> StandardMaterial3D:
 	var clave := "horm|%s|%d" % [tinte.to_html(false), semilla]
 	if _cache.has(clave):
@@ -88,8 +104,7 @@ static func hormigon(tinte: Color, semilla: int = 11) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = tinte
 	m.albedo_texture = _ruido_claro(0.012, semilla, 5, 0.72)
-	## El ruido en albedo entra como gris: se mezcla con el tinte en vez de
-	## sustituirlo, para que el color del edificio siga mandando.
+	## El ruido en albedo entra como gris: se mezcla con el tinte en vez de sustituirlo, para que el color del edificio siga mandando.
 	m.detail_enabled = true
 	m.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
 	m.detail_albedo = _ruido_claro(0.05, semilla + 7, 3, 0.8)
@@ -150,8 +165,7 @@ static func ladrillo(tinte: Color, semilla: int = 17) -> StandardMaterial3D:
 	_cache[clave] = m
 	return m
 
-## La imagen del asfalto (512 px = 4 m): se genera una vez y se repite sin
-## costuras (el ruido es "seamless").
+## La imagen del asfalto (512 px = 4 m): se genera una vez y se repite sin costuras (el ruido es "seamless").
 static func _imagen_asfalto(tinte: Color, semilla: int) -> ImageTexture:
 	var n := 512
 	var grande := _ruido(FastNoiseLite.TYPE_SIMPLEX_SMOOTH, 0.004, semilla, 3)
@@ -178,8 +192,7 @@ static func _imagen_asfalto(tinte: Color, semilla: int) -> ImageTexture:
 			else:
 				v += (rng.randf() - 0.5) * 0.1
 			## Grietas finas (los bordes de las celdas), SOLO en las zonas
-			## gastadas (15-10-2026): en toda la superficie formaban una red
-			## continua de polígonos y la calzada parecía adoquinada.
+			## gastadas (15-10-2026): en toda la superficie formaban una red continua de polígonos y la calzada parecía adoquinada.
 			if img_c.get_pixel(x, y).r < 0.03 and g > 0.6:
 				v -= 0.2 * clampf((g - 0.6) / 0.08, 0.0, 1.0)
 			var c := Color(tinte.r * v, tinte.g * v, tinte.b * v)
@@ -196,19 +209,18 @@ static func _imagen_asfalto(tinte: Color, semilla: int) -> ImageTexture:
 static func asfalto(tinte: Color = Color(0.17, 0.175, 0.185), semilla: int = 23) -> StandardMaterial3D:
 	## REHECHO (26-9-2026, el usuario: "las calles se ven mal, no hagas eso de
 	## rayar zonas para ahorrar tiempo"). Antes era ruido suave pegado a la UV
-	## de la caja: en una calle de 800 m la textura entera se ESTIRABA a lo
-	## largo y se veían rayas. Ahora:
+	## de la caja: en una calle de 800 m la textura entera se ESTIRABA a lo largo y se veían rayas. Ahora:
 	##   - una imagen de asfalto de verdad: árido claro y oscuro grano a grano,
 	##     manchas grandes de rodadura y aceite, y alguna grieta fina;
 	##   - se repite en coordenadas del MUNDO (triplanar), un mosaico cada 4 m,
-	##     da igual lo larga que sea la calle;
-	##   - filtrado anisótropo: en ángulo rasante no se emborrona.
+	##     da igual lo larga que sea la calle;   - filtrado anisótropo: en ángulo rasante no se emborrona.
 	var clave := "asf|%s|%d" % [tinte.to_html(false), semilla]
 	if _cache.has(clave):
 		return _cache[clave]
 	var m := StandardMaterial3D.new()
 	m.albedo_color = Color(1, 1, 1)
-	m.albedo_texture = _imagen_asfalto(tinte, semilla)
+	m.albedo_texture = ImagenEnDisco.textura("asfalto|%s|%d" % [var_to_bytes(tinte).hex_encode(), semilla],
+		"res://visor/texturas_p1.gd", _imagen_asfalto.bind(tinte, semilla))   ## en disco (30-10)
 	m.normal_enabled = true
 	m.normal_texture = _tex_ruido(0.35, semilla + 5, true, 2)
 	m.normal_scale = 0.45
@@ -358,8 +370,7 @@ static func cristal(encendida: bool, calido: bool = true) -> StandardMaterial3D:
 ## Tela: banderines, el pórtico inflable del túnel, cualquier lona. Sin esto
 ## eran cajas de color plano -ni un banderín de verdad ni una lona se ven
 ## como plástico rígido, tienen trama (el tejido en sí) y arrugas (que un
-## normal map barato ya sugiere sin animar nada). Rugoso alto por defecto:
-## la tela no brilla como el metal ni el cristal de al lado.
+## normal map barato ya sugiere sin animar nada). Rugoso alto por defecto: la tela no brilla como el metal ni el cristal de al lado.
 static func tela(tinte: Color, rugoso: float = 0.88) -> StandardMaterial3D:
 	var clave := "tel|%s|%.2f" % [tinte.to_html(false), rugoso]
 	if _cache.has(clave):
@@ -367,8 +378,7 @@ static func tela(tinte: Color, rugoso: float = 0.88) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = tinte
 	## La trama: ruido fino en el detalle, multiplicado sobre el color -mismo
-	## truco que ya usa `cesped()` para la brizna- para que no se vea un
-	## plano de color puro incluso de cerca.
+	## truco que ya usa `cesped()` para la brizna- para que no se vea un plano de color puro incluso de cerca.
 	m.detail_enabled = true
 	m.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
 	m.detail_albedo = _ruido_claro(0.6, 71, 2, 0.75)
@@ -385,8 +395,7 @@ static func tela(tinte: Color, rugoso: float = 0.88) -> StandardMaterial3D:
 ## Madera: bancos, tarimas. El grano tiene que ir en UNA dirección marcada
 ## -por eso `roughness_texture` usa una frecuencia baja en un eje y el normal
 ## una más alta en el otro, a diferencia de `hormigon()` o `cesped()` donde el
-## ruido es igual de random en las dos direcciones-, si no se lee como piedra
-## clara, no como tablones.
+## ruido es igual de random en las dos direcciones-, si no se lee como piedra clara, no como tablones.
 static func madera(tinte: Color, rugoso: float = 0.65) -> StandardMaterial3D:
 	var clave := "mad|%s|%.2f" % [tinte.to_html(false), rugoso]
 	if _cache.has(clave):

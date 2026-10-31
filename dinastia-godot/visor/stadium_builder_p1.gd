@@ -323,7 +323,7 @@ static func _perimetro_cesped(root: Node3D, dx: float, dz: float, tono: Color) -
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	root.add_child(mi)
 
-## Caché de las texturas generadas píxel a píxel (28-10): el césped y la grada de un estadio con los mismos colores y patrón
+## Caché de las texturas generadas píxel a píxel (28-10): la grada de un estadio con los mismos colores y patrón
 ## tardaban 80-200 ms en rehacerse en cada apertura. Tope de 32 entradas (se vacía entera al llenarse).
 static var _cache_tex := {}
 static func _tex_cacheada(clave: String, hacer: Callable) -> ImageTexture:
@@ -333,60 +333,22 @@ static func _tex_cacheada(clave: String, hacer: Callable) -> ImageTexture:
 		_cache_tex[clave] = hacer.call()
 	return _cache_tex[clave]
 
-static func _make_grass_texture(patron: String, claro: Color, oscuro: Color) -> ImageTexture:
-	return _tex_cacheada("cesped|%s|%s|%s" % [patron, claro.to_html(), oscuro.to_html()], _make_grass_texture_calc.bind(patron, claro, oscuro))
 
-static func _make_grass_texture_calc(patron: String, claro: Color, oscuro: Color) -> ImageTexture:
-	var n := 256
-	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
-	for y in range(n):
-		for x in range(n):
-			var u := float(x) / n
-			var v := float(y) / n
-			var band := 0
-			match patron:
-				## ~6 m por franja (20 a lo largo), como el corte real.
-				"rayas":
-					band = int(v * 20.0)
-				"rayasH":
-					band = int(u * 20.0)
-				"damero":
-					band = int(u * 10.0) + int(v * 10.0)
-				"damGrande":
-					band = int(u * 5.0) + int(v * 5.0)
-				## (`Club` sortea "circulos": antes no casaba y salía liso.)
-				"circular", "circulos":
-					band = int(Vector2(u - 0.5, v - 0.5).length() * 16.0)
-				"diagonal":
-					band = int((u + v) * 10.0)
-				"espiga":
-					band = int((u + fmod(v * 6.0, 1.0)) * 8.0)
-				"cruz":
-					band = 1 if (absf(u - 0.5) < 0.12 or absf(v - 0.5) < 0.12) else 0
-				"abanico":
-					band = int(atan2(v - 0.5, u - 0.5) * 6.0)
-				"rombos":
-					band = int((absf(u - 0.5) + absf(v - 0.5)) * 14.0)
-				## (25-10-2026, «rayas, sin bloques»): «mitades» eran DOS bloques lisos
-				## de 58 m, y desde la tele el campo se leía partido en dos losas. La
-				## cortadora deja igual sus franjas dentro de cada mitad: van suaves
-				## (a un 30 %, el nivel intermedio que entiende `cesped_mascara`).
-				"mitades":
-					var lado := claro if v < 0.5 else oscuro
-					var otro := oscuro if v < 0.5 else claro
-					img.set_pixel(x, y, lado.lerp(otro, 0.3) if int(v * 20.0) % 2 == 1 else lado)
-					continue
-				## "liso" (y lo desconocido): en un campo de verdad el corte
-				## siempre se nota un poco -franjas muy suaves, un tercio-. (Hasta el
-				## 25-10 la máscara del shader era de dos niveles y «liso» salía con
-				## las mismas franjas fuertes que «rayas».)
-				_:
-					band = int(v * 20.0)
-					img.set_pixel(x, y, oscuro.lerp(claro, 0.3) if band % 2 == 0 else oscuro)
-					continue
-			img.set_pixel(x, y, claro if band % 2 == 0 else oscuro)
-	var tex := ImageTexture.create_from_image(img)
-	return tex
+## Con caché (30-10-2026, rendimiento): la textura (`CespedTextura`, 65.536 píxeles en GDScript) se
+## hacía en cada estadio y ciudad. En memoria y en disco (PNG sin pérdida, colores exactos en la clave).
+static var _cesped := {}
+
+static func _make_grass_texture(patron: String, claro: Color, oscuro: Color) -> ImageTexture:
+	var clave := "%s|%s" % [patron, var_to_bytes([claro, oscuro]).hex_encode()]
+	if _cesped.has(clave):
+		return _cesped[clave]
+	var en_disco := "cesped|%s|%s" % [clave, CacheDisco.huella("cesped", PackedStringArray(["res://visor/cesped_textura.gd"]))]
+	var img := CacheDisco.cargar_imagen(en_disco)
+	if img == null or img.get_format() != Image.FORMAT_RGB8 or img.get_width() != 256:
+		img = CespedTextura.nueva(patron, claro, oscuro)
+		CacheDisco.guardar_imagen(en_disco, img)
+	_cesped[clave] = ImageTexture.create_from_image(img)
+	return _cesped[clave]
 
 ## `tipo` (16-9-2026, "el estadio por MODULOS", Fase 2 "Componentes"): el
 ## patron del tejido, catalogo `EST_REDTIPO`. El default ("cuadrada") es

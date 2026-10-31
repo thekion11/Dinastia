@@ -2,7 +2,8 @@ class_name PrecalentarAnim
 extends RefCounted
 ## LA PRIMERA VEZ QUE SE CREA UN PERSONAJE (M-348, 28-10-2026): armar las ~350 animaciones de `AnimQuaternius` cuesta ~2,6-3 s (la segunda vez, 0: está en caché) y
 ## caía en medio de abrir el estadio, la ciudad o la mascota. Aquí se arman ANTES, en un hilo, mientras el jugador está en el menú: se crea un esqueleto aparte
-## (sin colgarlo del árbol: solo se lee) y el hilo llena la misma caché (`_en_cache`, con candado). Probado: el hilo principal sigue pintando fotogramas. NUNCA esperar a este hilo bloqueando el principal (se cuelga: el hilo hace `load`).
+## (sin colgarlo del árbol: solo se lee) y el hilo llena la misma caché (`_en_cache`, con candado). (30-10) El hilo solo LEE la biblioteca ya armada
+## (caché en disco o la horneada en el build): fuera del árbol el mocap no se mueve y armarla allí daba 86 animaciones distintas; si no hay, se arma luego en el principal. Probado: el hilo principal sigue pintando fotogramas. NUNCA esperar a este hilo bloqueando el principal (se cuelga: el hilo hace `load`).
 
 static var _lanzado := false
 static var _tarea := -1

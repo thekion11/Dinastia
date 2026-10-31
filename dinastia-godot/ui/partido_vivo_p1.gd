@@ -292,11 +292,8 @@ func _ver_estadio() -> void:
 	##
 	## Y NO BASTA CON ESCONDER LOS PROPIOS: `PartidoVivo` vive colgado de
 	## `principal.gd` (`_dirigir()` hace `add_child(vivo)` sobre sí mismo), y
-	## esa pantalla de abajo -tabla, cabecera, pestañas- es OTRO Control
-	## opaco en el mismo viewport. Escondiendo solo los hijos de aquí, la
-	## primera prueba con captura real seguía mostrando el panel del club por
-	## debajo: dos capas del mismo problema, no una. Hay que esconder también
-	## los hijos visibles del padre mientras el 3D está abierto.
+	## esa pantalla de abajo es OTRO Control opaco en el mismo viewport (la captura
+	## lo mostraba debajo): se esconden también los hijos visibles del padre.
 	var ocultados: Array = []
 	for h in get_children():
 		if h is Control and (h as Control).visible:
@@ -308,7 +305,10 @@ func _ver_estadio() -> void:
 			if h != self and h is Control and (h as Control).visible:
 				(h as Control).visible = false
 				ocultados.append(h)
+	var carga := PantallaCarga.mostrar(self, Idiomas.t("Levantando el estadio…"))
+	await get_tree().process_frame
 	var vista := VistaEstadio.new()
+	vista.por_partes = true   ## (30-10-2026) armado entre fotogramas: la carga sigue viva
 	## ANTES de `abrir()`: `VistaEstadio._construir()` monta la pantalla gigante
 	## dentro de esa llamada, así que asignarlo después llegaría tarde y la
 	## pantalla se quedaría sin tabla ni goleadores.
@@ -326,7 +326,9 @@ func _ver_estadio() -> void:
 	vista.parar_en_descanso = not _entretiempo_hecho
 	## Eliminatoria: con el motor real, prórroga y penales se juegan en el 3D.
 	vista.eliminatoria = es_eliminatoria
-	vista.abrir(partido.local, clampf(gente, 0.05, 1.0), partido.visita, partido, perfil_estadio, colores_balon)
+	await vista.abrir(partido.local, clampf(gente, 0.05, 1.0), partido.visita, partido, perfil_estadio, colores_balon)
+	if is_instance_valid(carga):
+		carga.cerrar()
 	vista.cerrado.connect(func() -> void:
 		vista.queue_free()
 		for h in ocultados:

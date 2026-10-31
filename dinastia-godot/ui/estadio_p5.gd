@@ -160,8 +160,7 @@ func _montar_motor() -> void:
 ## pantalla (offset vertical positivo, `clip_contents` del padre no hace
 ## falta porque el Control raíz ya mide toda la pantalla): `_mostrar_banner_gol()`
 ## lo trae, lo sostiene y lo despide, todo con el mismo Tween para que un
-## segundo gol a los dos segundos del primero no dispare una animación a medias
-## sobre otra.
+## segundo gol a los dos segundos del primero no dispare una animación a medias sobre otra.
 func _crear_banner_gol() -> void:
 	_banner_caja = PanelContainer.new()
 	var e := StyleBoxFlat.new()
@@ -392,8 +391,7 @@ func _arrancar_partido() -> void:
 ## En el tercero manda el reloj de `MatchPlayback`: cada vez que cruza un minuto,
 ## le pide otro minuto al `Partido`. UN solo reloj y UNA sola verdad. Si el reloj
 ## corriera aquí y en la pantalla 2D a la vez, el marcador que se ve y el que va a
-## la tabla se separarían, que es el fallo que ya costó una depuración con el
-## partido dirigido.
+## la tabla se separarían, que es el fallo que ya costó una depuración con el partido dirigido.
 ## `perfil_forzado`: el perfil YA calculado -normalmente `mundo.perfil_estadio_de(c)`-,
 ## para cuando `c` es tu propio club y por tanto su recinto es el que hayas
 ## diseñado en `EstadioPropio`, no el que sale del hash de su id. Sin este
@@ -409,7 +407,10 @@ func abrir(c: Club, ocupacion: float = 0.8, rival: Club = null, p: Partido = nul
 	visitante = rival
 	partido = p
 	set_anchors_preset(Control.PRESET_FULL_RECT)
-	_construir(ocupacion, perfil_forzado, colores_balon)
+	if por_partes:   ## en pausa mientras se arma entre fotogramas (`_respiro`)
+		process_mode = Node.PROCESS_MODE_DISABLED
+	await _construir(ocupacion, perfil_forzado, colores_balon)
+	process_mode = Node.PROCESS_MODE_INHERIT
 	if partido != null:
 		_arrancar_partido()
 

@@ -321,7 +321,7 @@ static func _butaca_real(raiz: Node, cerca_de_local: Vector3, signo_x: float) ->
 	var cerca_de := r3.to_global(cerca_de_local)
 	var mejor := Vector3.INF
 	var dist := 25.0
-	for n in raiz.find_children("ButacasCerca", "MultiMeshInstance3D", true, false):
+	for n in raiz.find_children("ButacasCerca*", "MultiMeshInstance3D", true, false):
 		var mmi := n as MultiMeshInstance3D
 		if mmi.multimesh == null or not mmi.is_inside_tree() or signf(r3.to_local(mmi.global_position).x) != signf(signo_x):
 			continue

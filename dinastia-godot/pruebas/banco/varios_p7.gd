@@ -218,13 +218,14 @@ func _probar_presets_exportacion() -> void:
 	var c := ConfigFile.new()
 	_comprobar(c.load("res://export_presets.cfg") == OK, "export_presets.cfg se puede leer")
 	var privados := ["datos/pack_real.json", "recursos/caras_reales/", "recursos/caras_reales_256/", "datos/creditos_fotos.txt"]
-	for i in 4:
+	## (30-10-2026, opción B del dueño) TODAS las versiones son públicas, Windows y Linux incluidas:
+	## lo real va aparte en caras_reales.pck (herramientas/empaquetar_caras.gd).
+	var i := 0
+	while c.has_section("preset.%d" % i):
 		var sec := "preset.%d" % i
+		i += 1
 		var nombre := String(c.get_value(sec, "name", ""))
 		var excl := String(c.get_value(sec, "exclude_filter", ""))
-		if nombre == "Windows":
-			_comprobar(excl.contains("recursos/caras_reales/"), "la versión completa no lleva las fotos originales (solo los retratos)")
-			continue
 		var faltan: Array[String] = []
 		for p: String in privados:
 			if not excl.contains(p):

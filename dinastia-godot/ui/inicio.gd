@@ -32,15 +32,17 @@ func _ready() -> void:
 		return
 	## Mientras se mira el menú, los modelos pesados se cargan en un hilo.
 	Precarga.empezar(get_tree())
+	RuidosFondo.empezar()   ## las texturas de ruido, en hilos mientras se usan los menús
+	if "--medir" in OS.get_cmdline_user_args():   ## el recorrido de medición (nucleo/medicion.gd)
+		_con_pesado(func() -> void: _P().medir(get_tree()))   ## cuando llegue lo pesado
 	_clave = _leer_ajuste()
 	_construir()
 	_pintar_banner()
 	_actualizar_picker()
 	_actualizar_continuar()
 	_construir_nuevo_juego()
-	## La entrada se carga en un hilo mientras se mira el menú: al pulsar «Nuevo juego»
-	## ya está en memoria y el paso a la intro no se queda en negro esperando el disco.
-	ResourceLoader.load_threaded_request(ESCENA_ENTRADA)
+	## La escena de «Nuevo juego» se carga en un hilo mientras se mira el menú, en la cola de
+	## `CompilarFondo` (después de lo pesado): al pulsar ya está en memoria.
 	_reloj_portada = Timer.new()
 	_reloj_portada.wait_time = SEG_PORTADA
 	_reloj_portada.timeout.connect(_rotar_portada)
@@ -60,6 +62,7 @@ func _ready() -> void:
 	_banner.resized.connect(func() -> void:
 		if is_instance_valid(_bokeh_banner):
 			_bokeh_banner.ajustar_area(_banner.size))
+	Engine.set_meta("menu_ms", Time.get_ticks_msec())   ## menú montado: para `Medicion`
 
 ## El botón grande de «Nuevo juego», justo debajo de la partida en curso.
 func _construir_nuevo_juego() -> void:
@@ -90,9 +93,10 @@ func _construir_nuevo_juego() -> void:
 func _nuevo_juego() -> void:
 	## Lo que ya se tocó en este menú (nombre y dificultad) no se pierde.
 	var nombre := _campo_nombre.text.strip_edges() if _campo_nombre != null else ""
-	OrquestadorEntrada.estado_inicial = {"dificultad": _dificultad}
+	var estado := {"dificultad": _dificultad}
 	if nombre != "" and nombre != Idiomas.t("Míster"):
-		OrquestadorEntrada.estado_inicial["nombre"] = nombre
+		estado["nombre"] = nombre
+	_P().estado_entrada(estado)
 	## Si la carga en hilo ya acabó (o acaba ahora), se cambia sin volver a leer el disco.
 	var hecha: Variant = null
 	if ResourceLoader.load_threaded_get_status(ESCENA_ENTRADA) != ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:

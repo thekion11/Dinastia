@@ -2,7 +2,7 @@
 #  EMPAQUETAR DINASTIA PARA ENTREGAR
 # ============================================================================
 #    .\empaquetar.ps1                    -> pregunta el formato
-#    .\empaquetar.ps1 -Formato completo  -> .exe con TODO (fotos y camisetas)
+#    .\empaquetar.ps1 -Formato completo  -> .exe publico + caras_reales.pck + camisetas (TODO)
 #    .\empaquetar.ps1 -Formato ligero    -> .exe pequeno, para mandar por chat
 #    .\empaquetar.ps1 -Formato web       -> pagina jugable en el navegador
 #    .\empaquetar.ps1 -Formato apk       -> APK firmado para Android
@@ -149,6 +149,17 @@ $hechos = @()
 if ($Formato -eq "completo" -or $Formato -eq "todos") {
   $dir = Join-Path $entregas "windows"
   Exportar "Windows" (Join-Path $dir "DINASTIA.exe")
+  # LAS CARAS Y LOS DATOS REALES VAN APARTE (30-10-2026, opcion B): el .exe es PUBLICO (sin nada
+  # real) y `caras_reales.pck` junto a el los anade al arrancar (`PaqueteReal`). NO publicar el .pck.
+  $pck = Join-Path $dir "caras_reales.pck"
+  Write-Host "  empaquetando caras y datos reales (caras_reales.pck)..." -ForegroundColor Yellow
+  Start-Process -FilePath $godot -Wait -NoNewWindow -ArgumentList @("--headless", "--path", "`"$proyecto`"",
+    "--script", "res://herramientas/empaquetar_caras.gd", "--", "`"$pck`"") | Out-Null
+  if (Test-Path $pck) {
+    Write-Host ("  caras: {0} MB" -f [math]::Round((Get-Item $pck).Length / 1MB, 1)) -ForegroundColor Green
+  } else {
+    Write-Host "  AVISO: no se genero caras_reales.pck; el completo saldra sin caras ni base real" -ForegroundColor Yellow
+  }
   # LAS CAMISETAS REALES VAN AL LADO DEL .EXE, no dentro: `KitTextureFactory`
   # las busca por ruta relativa al ejecutable. Sin esta copia el juego arranca
   # igual pero dibuja las camisetas en vez de usar las fotos.

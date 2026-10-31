@@ -13,6 +13,7 @@ const CACHES := [
 	["res://nucleo/historia_club.gd", "_clasicos", {}],
 	["res://nucleo/historia_club.gd", "_clasicos_de_tabla", null],
 	["res://nucleo/nombres.gd", "_vetados", {}],
+	["res://nucleo/nombres.gd", "_limpios", {}],
 	["res://nucleo/precarga.gd", "_guardados", []],
 	["res://nucleo/partido.gd", "ctx_moda", {}],
 	["res://nucleo/partido.gd", "ex_de_mi_club", {}],
@@ -64,9 +65,11 @@ const CACHES := [
 	["res://visor/balon_3d.gd", "_cache_tex", {}],
 	["res://visor/cara_malla.gd", "_texturas", {}],
 	["res://visor/cara_malla.gd", "_cache_mallas", {}],
+	["res://visor/cara_malla.gd", "_rejillas", {}],
 	["res://visor/city_builder.gd", "_mat_blanco", null],
 	["res://visor/city_builder.gd", "_mat_bordillo", null],
 	["res://visor/city_builder.gd", "_mat_tapa", null],
+	["res://visor/city_builder.gd", "_cajas_escena", {}],
 	["res://visor/futbolista_q.gd", "_packed_male", null],
 	["res://visor/futbolista_q.gd", "_packed_female", null],
 	["res://visor/kit_texture_factory.gd", "_jersey_cache", {}],
@@ -80,6 +83,7 @@ const CACHES := [
 	["res://visor/peaton_q.gd", "_mat_zapatilla", null],
 	["res://visor/pelo_capas.gd", "_mat_cache", {}],
 	["res://visor/pelo_capas.gd", "_cache_cuero", {}],
+	["res://visor/pelo_capas.gd", "_cand_cuero", {}],
 	["res://visor/pelo_capas.gd", "_cache_pestanas", {}],
 	["res://visor/persona_realista.gd", "_escena", null],
 	["res://visor/persona_realista.gd", "_mats", {}],
@@ -88,11 +92,15 @@ const CACHES := [
 	["res://visor/retrato3d.gd", "_cola", []],
 	["res://visor/ropa_separada.gd", "_cache", {}],
 	["res://visor/ropa_separada.gd", "_mats", {}],
+	["res://visor/stadium_builder.gd", "_cesped", {}],
+	["res://visor/stadium_builder.gd", "_cache_tex", {}],
+	["res://visor/city_builder.gd", "_hierba", null],
 	["res://visor/stadium_builder.gd", "_malla_hincha", null],
 	["res://visor/stadium_builder.gd", "_malla_hincha_det", null],
 	["res://visor/stadium_builder.gd", "_butaca_lejos", null],
 	["res://visor/stadium_builder.gd", "_escalones", null],
 	["res://visor/texturas.gd", "_cache", {}],
+	["res://visor/texturas.gd", "_ruidos", {}],
 	["res://visor/city_builder.gd", "_rugosidad_mate", null],
 	["res://ui/escudo_muestras.gd", "_cache", {}],
 	["res://ui/disenos_kit_p1.gd", "_cache", {}],
@@ -107,7 +115,6 @@ const CACHES := [
 	["res://visor/stadium_builder.gd", "_tex_techo", null],
 	["res://visor/player_spawner.gd", "_texturas_barra", {}],
 	["res://visor/fachada_estadio.gd", "_tex_cortina", {}],
-	["res://visor/texturas.gd", "_cache_ruido", {}],
 	["res://visor/vestidor_q.gd", "_cache_equipacion", {}],
 	["res://visor/vestidor_q.gd", "_packed_male", []],
 	["res://visor/vestidor_q.gd", "_cache_textura", {}],
@@ -118,6 +125,11 @@ func _exit_tree() -> void:
 	## La traducción de «entrenadora» es un script registrado en el servidor de
 	## traducciones: fuera, antes que nada (era la causa del fallo al salir).
 	Genero.desinstalar()
+	## Que los hilos de las texturas de ruido no sigan con la cola: Godot espera a que acaben.
+	if ResourceLoader.has_cached("res://visor/ruidos_fondo.gd"):
+		load("res://visor/ruidos_fondo.gd").set("_parar", true)
+	if ResourceLoader.has_cached("res://visor/cache_disco.gd"):
+		load("res://visor/cache_disco.gd").esperar_guardados()
 	for fila: Array in CACHES:
 		var s: Script = load(String(fila[0]))
 		if s != null:

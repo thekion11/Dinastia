@@ -35,3 +35,6 @@ dinastia-godot/pruebas/capturas/*
 # Godot importa AUDITORIA_CLUBES.csv como traducciones al correr el banco: derivados, no fuente.
 dinastia-godot/AUDITORIA_CLUBES.*.translation
 dinastia-godot/AUDITORIA_CLUBES.csv.import
+
+# Paquete PRIVADO de caras y datos reales (herramientas/empaquetar_caras.gd): nunca al repositorio.
+caras_reales.pck
