@@ -260,6 +260,18 @@ func _probar_async() -> void:
 			_comprobar(is_instance_valid(_v._panel_cajero) and _v._panel_cajero.is_inside_tree(), "la E ante un cajero abre el panel")
 			if is_instance_valid(_v._panel_cajero):
 				_v._panel_cajero.free()
+			## §2.5: sin corriente en su sector, «fuera de servicio».
+			if _v._redes() != null:
+				var posc := Vector3.ZERO
+				for pc: Dictionary in _e.cb.puntos_clic:
+					if String(pc.get("k", "")) == kc:
+						posc = pc["pos"]
+				var sec := RedesCiudad.sector_en(posc.x, posc.z)
+				var luz0: Variant = _v._redes().modelo.luz.get(sec, true)
+				_v._redes().modelo.luz[sec] = false
+				_v.usar_cajero(kc)
+				_comprobar(not is_instance_valid(_v._panel_cajero), "sin corriente en su sector el cajero está fuera de servicio")
+				_v._redes().modelo.luz[sec] = luz0
 	## Las expendedoras puestas: ciudad (centro comercial, gasolineras, estación, estadio) y andenes del metro.
 	if _v != null and _e != null and _e.cb != null:
 		_v.poner_extras()
