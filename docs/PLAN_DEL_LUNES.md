@@ -500,6 +500,7 @@ Los 2 primeros (~8 h) cierran lo que el guion exige de verdad; el total de la li
 
 ### 2.4 Pendientes del traspaso anterior
 
+- (31-10, rescatado de `ccr-76d707c5`) Viajes y día de partido por distancia y costo de vida (`nucleo/viajes.gd`, `datos/geografia.json`): falta usarlo en los viajes de copas continentales si se añaden y revisar `ESCALA_JUEGO` si cambia la taquilla.
 De `PENDIENTES.md` (traspaso al 21-10):
 - **Fusionar a `main`**: nada de la rama actual (ni de la sesión 2, §9) está en `main` aún.
 - **Partido**: roles por jugador (PlayStyles), más desmarques de ruptura, cartel del 4.º

@@ -273,3 +273,44 @@ func _probar_palabras_prohibidas() -> void:
 		and re_rel.search("catolicismo") == null, "el detector caza lo prohibido (y no palabras parecidas)")
 	_comprobar(archivos.size() > 100, "se revisan los textos de todo el juego (%d archivos)" % archivos.size())
 	_comprobar(malos.is_empty(), "ningún político, partido ni religión real (%s)" % str(malos))
+
+## EL LOGO DEFINITIVO (26-10-2026): los PNG con fondo transparente existen, la portada lo muestra
+## y la intro lo carga y se salta con cualquier tecla.
+func _probar_logo() -> void:
+	_titulo("EL LOGO DEFINITIVO: PNG CON ALFA, PORTADA E INTRO")
+	for lado: int in [1024, 512, 256, 64]:
+		var ruta := "res://assets/logo/logo_%d.png" % lado
+		var img := Image.load_from_file(ProjectSettings.globalize_path(ruta))
+		_comprobar(img != null and img.get_width() == lado and img.get_height() == lado, "%s existe y mide %dx%d" % [ruta, lado, lado])
+		if img == null:
+			continue
+		var c: int = lado / 2
+		_comprobar(img.detect_alpha() != Image.ALPHA_NONE and img.get_pixel(0, 0).a < 0.01 and img.get_pixel(lado - 1, lado - 1).a < 0.01,
+			"%d: tiene alfa y las esquinas son transparentes" % lado)
+		_comprobar(img.get_pixel(c, c).a > 0.99, "%d: el interior (el balón) sigue opaco" % lado)
+	for n in ["alas_izq", "alas_der"]:
+		var ia := Image.load_from_file(ProjectSettings.globalize_path("res://assets/logo/%s.png" % n))
+		_comprobar(ia != null and ia.detect_alpha() != Image.ALPHA_NONE and ia.get_pixel(0, 0).a < 0.01, "%s.png existe con fondo transparente" % n)
+	_comprobar(FileAccess.file_exists("res://assets/logo/alas_fuente.jpg"), "la fuente de las alas está guardada")
+	_comprobar(FileAccess.file_exists("res://assets/logo/logo_dinastia_fuente.jpg"), "la fuente 2048x2048 está guardada")
+	var ini := Inicio.new()
+	var raiz := VBoxContainer.new()
+	ini._construir_banner(raiz)
+	var logo := raiz.find_child("LogoPortada", true, false) as TextureRect
+	_comprobar(logo != null and logo.texture != null and logo.texture.get_width() >= 256, "la portada lleva el logo")
+	raiz.free()
+	ini.free()
+	_comprobar(str(ProjectSettings.get_setting("application/config/icon")).begins_with("res://assets/logo/"), "el icono de la aplicación es el logo")
+	var intro := IntroMarca.new()
+	intro.configurar({})
+	add_child(intro)
+	_comprobar(intro._logo != null and intro._alas_izq != null and intro._alas_der != null and intro.se_puede_saltar(), "la intro carga el logo, las alas y se puede saltar")
+	var tecla := InputEventKey.new()
+	tecla.keycode = KEY_SPACE
+	tecla.pressed = true
+	intro.avanzar(0.3)
+	intro._input(tecla)
+	for i in 40:
+		intro.avanzar(1.0 / 60.0)
+	_comprobar(intro.acabada(), "cualquier tecla la salta, también la primera vez")
+	intro.queue_free()
