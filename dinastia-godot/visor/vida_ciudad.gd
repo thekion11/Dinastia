@@ -15,8 +15,13 @@ func _redes() -> RedesCiudadVista:
 ## El depósito del coche (solo en coche y en la calle): gasta con la distancia, avisa al bajar del 15 % (una vez por semana)
 ## y vacío el coche no arranca hasta repostar en un surtidor (E).
 func gasolina_tick(delta: float) -> void:
+	expl.sin_gasolina = mundo.vida != null and mundo.vida.combustible <= 0.01
+	if expl._movil != null and mundo.vida != null:   ## mejora A: la gasolina en el móvil de la mano (ámbar en reserva)
+		expl._movil.gasolina_texto = "⛽ %d %%" % roundi(mundo.vida.fraccion_comb() * 100.0)
+		expl._movil.reserva = reserva()
 	if mundo.vida == null or String(expl.modo) != "coche" or String(expl.estado) != "calle":
 		return
+	DanioCoche.tick(self)   ## mejora C: los golpes suman daño y se ven
 	var vd := mundo.vida
 	vd.gastar_combustible(absf(expl.vel) * delta)
 	_t_vacio -= delta
@@ -94,6 +99,8 @@ func poner_extras() -> void:
 		_mq_estadio = true
 		var pu: Vector3 = CityBuilder.ESTADIO_EN + (expl._est["puerta"] as Vector3)
 		ExpendedoraCiudad.montar(expl.cb, Vector3(pu.x - 6.0, 0.2, pu.z + 1.0), 0.0)
+		if expl.cb.expansion != null:
+			CajeroCiudad.montar(expl.cb.expansion, Vector3(pu.x - 8.0, 0.2, pu.z + 1.0), 0.0)   ## y un cajero (§2.5)
 
 func poner_balon() -> void:
 	if is_instance_valid(_balon) or expl == null or expl.cb == null or expl.cb.expansion == null or expl.cuerpo == null:
@@ -397,3 +404,45 @@ func _decir(titulo: String, texto: String) -> void:
 		add_child(_cuadro)
 	_cuadro.decir(titulo, texto, Color(1.0, 0.86, 0.5), 0, 1)
 	_t_cuadro = 5.0
+
+## (§2.5, 31-10) Pagar con tarjeta enseña la tarjeta en la mano (`TarjetaMano`) con el importe.
+var _tarjeta: TarjetaMano
+func _al_pagar_con_tarjeta(importe: int, _concepto: String) -> void:
+	if expl == null or not is_instance_valid(expl) or expl._capa == null:
+		return
+	if not is_instance_valid(_tarjeta):
+		var titular := mundo.roles.nombre if mundo.roles != null else Idiomas.t("Entrenador")
+		_tarjeta = TarjetaMano.crear("Banco Andino", String(titular), TarjetaMano.digitos_de(String(titular)))
+		expl._capa.add_child(_tarjeta)
+	_tarjeta.mostrar(importe)
+
+## (31-10, decisión del dueño) La multa por conducción temeraria cuesta dinero: 60 € de la cartera del
+## DT (efectivo y, si no alcanza, la tarjeta); si no puede pagarla, queda anotada. Sigue contando para el calabozo.
+const MULTA_TEMERARIA := 60
+var _titular_atropello := -1
+func multa_temeraria() -> void:
+	expl.multas += 1
+	## Mejora F: si el golpe fue contra una persona, atropello con reacción (multa de 150 € y titular).
+	var pe := AtropelloCiudad.peaton_delante(expl)
+	if not pe.is_empty():
+		AtropelloCiudad.reaccionar(expl, pe)
+		_notificar(AtropelloCiudad.multar(self))
+		return
+	var via := ""
+	if mundo.roles != null and mundo.roles.cartera != null:
+		via = String(mundo.roles.cartera.cobrar(mundo.roles, MULTA_TEMERARIA, "Multa por conducción temeraria", CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia))["via"])
+	if via != "":
+		_notificar(Idiomas.t("🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).") % [MULTA_TEMERARIA, expl.multas, Idiomas.t(via)])
+	else:
+		_notificar(Idiomas.t("🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.") % [MULTA_TEMERARIA, expl.multas])
+
+## (31-10, mejora A del coche) El indicador de gasolina del HUD y del salpicadero: «⛽ 62 %» y, por
+## debajo del 15 %, «⛽ 9 % · RESERVA» (la luz de reserva).
+func reserva() -> bool:
+	return mundo.vida != null and mundo.vida.fraccion_comb() < 0.15
+
+func texto_gasolina() -> String:
+	if mundo.vida == null:
+		return ""
+	var t := "⛽ %d %%" % roundi(mundo.vida.fraccion_comb() * 100.0)
+	return t + " · " + Idiomas.t("RESERVA") if reserva() else t

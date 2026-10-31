@@ -1,4 +1,4 @@
-extends RefCounted
+extends PantallaBase
 ## [Capa 1/2 de `pantalla_identidad.gd`] _init, _fila_color_identidad, _rejilla_identidad, _rejilla_especiales, _boton_heredar, _pintar_proveedor … (+5)
 
 ## IDENTIDAD Y COMERCIAL: colores, escudo, equipaciones, proveedor, zonas, naming y detalles.
@@ -7,10 +7,6 @@ extends RefCounted
 ## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
-var p: Principal
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 ## Una fila de color. `prop` puede ser un color del club (siempre tiene valor) o
 ## uno de los heredables (vacío = "el del club"), y el selector arranca con el

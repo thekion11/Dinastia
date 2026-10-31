@@ -376,10 +376,10 @@ func _golpe_coche(v: float, contra_fijo: bool) -> void:
 	_sacudida_golpe = clampf(v / 18.0, 0.15, 1.0)
 	Mando.vibrar(clampf(v / 20.0, 0.25, 1.0), 0.35)
 	if not contra_fijo and v * 3.6 > 25.0:
-		multas += 1
 		Sonido.toca("claxon", Sonido.Bus.AMBIENTE)
-		if _movil != null:
-			_movil.notificar(Idiomas.t("🚓 Multa por conducción temeraria (%d)") % multas)
+		if vida != null:
+			vida.multa_temeraria()   ## (31-10) 60 € de la cartera y aviso en el móvil; sin partida, solo cuenta
+		else: multas += 1
 
 ## Un trozo de movimiento con sus choques. Devuelve false si chocó de frente.
 func _mover_un_trozo(paso: Vector3, r: float) -> bool:

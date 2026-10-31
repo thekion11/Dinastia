@@ -2,6 +2,10 @@ extends "res://nucleo/mundo_p5_p2.gd"
 ## [Capa 7/10 de `mundo.gd`] avanzar_semana, _semana_modulos_del_club, _semana_banco, _semana_ingresos_comerciales, _semana_enfermeria, _semana_entrenamiento … (+3)
 ## enfermería, entrenamiento, federación y plantel, continental y copa) y el guion `avanzar_semana`.
 
+## (Fase 0 §7.2, 31-10) La partida se guardó al salir de la entrada con el prólogo 3D aún por hacer:
+## «Continuar» vuelve al prólogo (`VidaCiudad.arranque_3d` → "prologo").
+var prologo_pendiente := false
+
 ## Avanza una semana: jornada, dinero, mercado y recuperación, en ese orden.
 ##
 ## Es un guion: cada línea es una fase con nombre (fases 1-4 en `mundo_p5_p1.gd`, 5-13 en

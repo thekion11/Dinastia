@@ -1,4 +1,4 @@
-extends RefCounted
+extends PantallaBase
 ## [Capa 1/2 de `pantalla_opciones.gd`] _init, _pintar_glosario, _pintar_idioma, _pintar_moneda, _situacion_musical, _pintar_musica … (+7)
 
 ## GLOSARIO, IDIOMA, MONEDA, MÚSICA, PEÑAS, ATAJOS Y DISPOSITIVO.
@@ -7,10 +7,6 @@ extends RefCounted
 ## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
-var p: Principal
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 func _pintar_glosario() -> void:
 	p._limpiar(p._lista_glosario)

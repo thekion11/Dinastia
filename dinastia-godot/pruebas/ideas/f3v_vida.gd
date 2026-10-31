@@ -216,6 +216,58 @@ func _probar_async() -> void:
 			var gas0: float = sr.modelo.gas[int(surt["id"])]
 			_v.usar_surtidor("surtidor_0", "normal")
 			_comprobar(_m.vida.combustible > 40.0 and _m.roles.patrimonio < 500, "repostar cobra de la cuenta del DT con la tarjeta sin contacto")
+			_comprobar(is_instance_valid(_v._tarjeta) and _v._tarjeta.visible, "y la tarjeta sube a la mano con el importe (§2.5)")
+			## Decisiones del dueño (31-10): la multa temeraria cuesta 60 € y el consumo es 0,5 l/km.
+			var multas0 := _e.multas
+			_m.roles.cartera.efectivo = 100
+			_v.multa_temeraria()
+			_comprobar(_e.multas == multas0 + 1 and _m.roles.cartera.efectivo == 40, "la multa por conducción temeraria cobra 60 € y cuenta para el calabozo")
+			_e.multas = multas0
+			var c0 := _m.vida.combustible
+			_m.vida.premium = false
+			_m.vida.gastar_combustible(10000.0)
+			_comprobar(is_equal_approx(c0 - _m.vida.combustible, 5.0), "10 km gastan 5 l (0,5 l/km: un depósito da ~90 km)")
+			## Mejora A (31-10): indicador de gasolina con luz de reserva.
+			_m.vida.combustible = VidaDT.DEPOSITO_L * 0.5
+			var t_ok := _v.texto_gasolina()
+			_m.vida.combustible = VidaDT.DEPOSITO_L * 0.1
+			_comprobar(t_ok.contains("50 %") and not t_ok.contains(Idiomas.t("RESERVA")) and _v.reserva() and _v.texto_gasolina().contains(Idiomas.t("RESERVA")),
+				"el indicador de gasolina dice «%s» y en reserva «%s»" % [t_ok, _v.texto_gasolina()])
+			_m.vida.combustible = c0
+			## Mejora C (31-10): los golpes suman daño; con 70 o más el coche va al taller y vuelve reparado.
+			_m.vida.danio = 0
+			DanioCoche.tick(_v)
+			_e._t_golpe += 1.0
+			_e._sacudida_golpe = 12.0 / 18.0
+			DanioCoche.tick(_v)
+			var d1 := _m.vida.danio
+			_m.vida.danio = 75
+			var taller := not bool(VidaCiudad.transporte(_m)["coche"])
+			_m.vida.semana(_m.mi_club(), _m.roles, _m.anio, _m.semana, 0)
+			_comprobar(d1 == 24 and taller and _m.vida.danio == 0, "un golpe a 43 km/h suma %d de daño; con 75 el coche va al taller y la semana lo repara" % d1)
+			## Mejoras E y G (31-10): el claxon y la velocidad asustan a los peatones cercanos (aprietan el paso).
+			if _e.trafico != null:
+				var pe: Dictionary = {}
+				for v: Dictionary in _e.trafico._vehiculos:
+					if bool(v.get("peaton", false)) and is_instance_valid(v["nodo"]):
+						pe = v
+						break
+				if not pe.is_empty():
+					var pp: Vector3 = (pe["nodo"] as Node3D).position
+					var n_sust := _e.trafico.asustar(pp, 3.0)
+					_comprobar(n_sust >= 1 and float(pe.get("susto", 0.0)) > 0.0 and _e.trafico.asustar(pp + Vector3(500, 0, 500), 3.0) == 0,
+						"el claxon asusta a los peatones de alrededor (%d) y a los lejanos no" % n_sust)
+					pe["susto"] = 0.0
+					## Mejora F: el golpe que multa contra una persona es un atropello con reacción (150 €).
+					var morro := _e.cuerpo.position + Vector3(sin(_e.rumbo), 0, cos(_e.rumbo)) * 2.0
+					(pe["nodo"] as Node3D).position = morro
+					_m.roles.cartera.efectivo = 200
+					var mult0 := _e.multas
+					_v.multa_temeraria()
+					var lejos := ((pe["nodo"] as Node3D).position - morro).length()
+					_comprobar(_m.roles.cartera.efectivo == 50 and lejos >= 1.3 and float(pe.get("espera", 0.0)) > 0.0 and _e.multas == mult0 + 1,
+						"atropello: el peatón se aparta de un salto (%.1f m) y se queda aturdido; multa de 150 € (efectivo %d, espera %.1f, multas %d→%d)" % [lejos, _m.roles.cartera.efectivo, float(pe.get("espera", 0.0)), mult0, _e.multas])
+					_e.multas = mult0
 			_comprobar((_m.mi_club().saldo if _m.mi_club() != null else 0) == club_saldo, "y el club no paga la gasolina")
 			_m.vida.combustible = 5.0
 			_m.roles.patrimonio = 0
@@ -240,6 +292,19 @@ func _probar_async() -> void:
 			_m.vida.combustible = lleno
 			_m.vida.gastar_combustible(10000.0)
 			var gasto_n := lleno - _m.vida.combustible
+			## Auditoría del coche (31-10): con el depósito vacío, el pedal no mueve el coche.
+			var comb_ok := _m.vida.combustible
+			_m.vida.combustible = 0.0
+			_v.gasolina_tick(0.016)
+			var vel0 := _e.vel
+			_e._pedal = 1.0
+			_e.vel = 0.0
+			_e._conducir(Vector2(0, 1), 0.1)
+			_comprobar(_e.sin_gasolina and _e.vel == 0.0, "sin gasolina el acelerador no mueve el coche")
+			_m.vida.combustible = comb_ok
+			_v.gasolina_tick(0.016)
+			_e.vel = vel0
+			_e._pedal = 0.0
 			_comprobar(panel_ok and gasto_p < gasto_n, "el surtidor ofrece normal y premium, y la premium gasta menos (%.2f l contra %.2f l en 10 km)" % [gasto_p, gasto_n])
 			var id0 := int(surt["id"])
 			var gas_g: float = sr.modelo.gas[id0]
@@ -304,6 +369,12 @@ func _probar_async() -> void:
 			if String(pc.get("k", "")).begins_with("expendedora_"):
 				n_mq += 1
 		_comprobar(n_mq >= 5, "hay expendedoras en la ciudad: centro comercial, gasolineras, estación y estadio (%d)" % n_mq)
+		## §2.5: cajeros también en hospital, universidad, estación y estadio.
+		var cajeros: Array = []
+		for pc: Dictionary in _e.cb.puntos_clic:
+			if String(pc.get("k", "")).begins_with("cajero_"):
+				cajeros.append(pc["pos"])
+		_comprobar(cajeros.size() >= 8, "hay %d cajeros (también en hospital, universidad, estación y estadio)" % cajeros.size())
 		_comprobar(_e.metro != null and not _e.metro.expendedoras.is_empty() and _e.metro.expendedora_cerca(_e.metro.expendedoras[0]) and not _e.metro.expendedora_cerca(_e.metro.expendedoras[0] + Vector3(10, 0, 0)), "los andenes del metro tienen su máquina y se detecta a menos de 2,2 m")
 	## LA EXPENDEDORA cobra de la cartera y sube la energía; el balón suelto del parque aparece.
 	if _v != null and _m.roles != null and _m.necesidades != null:
@@ -342,5 +413,22 @@ func _probar_async() -> void:
 		_v.comprar_surtido(TiendaGasolinera.SURTIDO[0])
 		_comprobar(_m.necesidades.hambre() == h_antes, "sin dinero no se lleva nada")
 	tel.queue_free()
+	## Mejora D (31-10): F para bajarse del coche (queda aparcado y sólido) y volver a subir.
+	if _e != null and _e.cb != null and String(_e.estado) == "calle":
+		AparcarCoche._cambiar_cuerpo(_e, "coche", _e.cuerpo.position, _e.rumbo)
+		_e.vel = 10.0
+		var no_baja := AparcarCoche.alternar(_e)
+		_e.vel = 0.0
+		var pos_coche := _e.cuerpo.position
+		AparcarCoche.alternar(_e)
+		var aparcado := AparcarCoche.aparcado(_e)
+		_comprobar(no_baja != "" and _e.modo == "pie" and aparcado != null and aparcado.position.distance_to(pos_coche) < 0.01
+			and _e._choca_circulos(pos_coche, 0.3) and _e.cuerpo != aparcado,
+			"en marcha no se baja; parado, F te baja: el coche queda aparcado y es sólido")
+		_e.cuerpo.position = pos_coche + Vector3(2.0, 0, 0)
+		AparcarCoche.alternar(_e)
+		_comprobar(_e.modo == "coche" and _e.cuerpo == aparcado and AparcarCoche.aparcado(_e) == null and not _e._choca_circulos(pos_coche, 0.3),
+			"F junto al coche te sube de nuevo y deja de ser un obstáculo")
+		AparcarCoche._cambiar_cuerpo(_e, "pie", _e.cuerpo.position, _e.rumbo)
 	PedidoPartida.mundo_pregenerado = null
 	PedidoPartida.mundo_a_cargar = null

@@ -1,4 +1,4 @@
-extends RefCounted
+extends PantallaBase
 ## [Capa 1/2 de `pantalla_club_estadio.gd`] _init, estilos, propuestas, filas del diseño y reformas
 
 ## CLUB → ESTADIO: los estilos, el diseño por secciones y las reformas.
@@ -7,7 +7,6 @@ extends RefCounted
 ## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
-var p: Principal
 ## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
 ## Qué tribuna se está editando cuando "Personalizar cada tribuna" está activo.
 ## Solo estado de interfaz -no se guarda, como `_secc_ajustes`-: al volver a
@@ -24,9 +23,6 @@ var _bandeja_actual: String = "sur"
 ## `Azar` al PULSAR -es una decisión del jugador-: pedir la propuesta en cada
 ## repintado consumiría números y movería la simulación entera.
 var _propuesta_estadio: Dictionary = {}
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 func _pintar_estilos_estadio(c: Club) -> void:
 	var e := p.mundo.estadio

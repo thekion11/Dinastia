@@ -119,3 +119,7 @@ func _exportar_csv(ed: Editor, solo_mi_liga: bool) -> void:
 		return
 	DisplayServer.clipboard_set(texto)
 	p._escribir("[color=#4caf6d]Base exportada.[/color] Copiada al portapapeles (%d líneas)." % (texto.count("\n") + 1))
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"editor": _pintar_editor}

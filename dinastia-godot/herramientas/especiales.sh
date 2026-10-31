@@ -23,8 +23,10 @@ python3 ../herramientas/revisar_lineas.py --todos > "$LOG" 2>&1
 if grep -q "pasan de 450 líneas: 0" "$LOG"; then echo "OK     norma de 450 líneas"; else FALLOS=$((FALLOS + 1)); echo "FALLO  norma de 450 líneas"; head -5 "$LOG"; fi
 # 2. Todos los scripts compilan (el banco solo ve los que toca)
 pasa "todos los scripts compilan" "godot --headless --path . --script res://pruebas/comprobar_scripts.gd" "FIN. 0 fallos"
-# 2b. Las auditorías de datos y de clubes (base ficticia y real; ~9 s cada una; catálogo M-413, 27-10-2026)
+# 2b. Las auditorías de datos y de clubes (base ficticia y real; ~9 s cada una; catálogo M-413, 27-10-2026) y la técnica
+#     (shaders, escenas de juego y nodos huérfanos al abrir y cerrar la principal; M-470, 31-10)
 pasa "auditoría de datos" "godot --headless --path . res://pruebas/auditoria_datos.tscn" "0 hallazgos"
+pasa "auditoría técnica" "godot --headless --path . res://pruebas/auditoria_tecnica.tscn" "FIN AUDITORÍA TÉCNICA. 0 fallos"
 pasa "auditoría de clubes" "godot --headless --path . res://pruebas/auditoria_clubes.tscn" "FIN. 0 fallos"
 # 2c. Las partidas guardadas de versiones viejas siguen abriendo (1094, 27-10)
 pasa "partidas viejas abren" "godot --headless --path . res://pruebas/ideas/sav_fosiles.tscn" "FIN. 0 fallos"
@@ -84,7 +86,7 @@ fi
   # M-333: los rótulos 3D de la ciudad entera, en inglés, pasan por Idiomas.t
   pasa "carteles 3D traducidos" "godot --headless --path . res://pruebas/ideas/idi_carteles3d.tscn" "FIN. 0 fallos"
   # El guion, fases 1-5 (auditoría del 28-10: estas pruebas existían y no las corría nadie; ~3 min)
-  for F in f1o_flujo f2p_prologo f3v_vida f3c_casa f4p_citas f4p_personas f4r_rutinas f5c_club; do
+  for F in f0_contratos f1o_flujo f2p_prologo f3v_vida f3c_casa f4p_citas f4p_personas f4r_rutinas f5c_club; do
     pasa "guion: $F" "godot --headless --path . res://pruebas/ideas/$F.tscn" "FIN. 0 fallos"
   done
   # M-283, M-300, M-296, M-311, M-290: avisos de sonido, deshacer en la pizarra, bandeja por temas, resumen de carrera, datos de tarjetas

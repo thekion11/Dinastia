@@ -12,6 +12,7 @@ var _vueltas := 0
 var _actual: IntroMarca
 
 func _probar() -> void:
+	OrquestadorMundo.ranura_al_salir = ""   ## no pisar la partida de la máquina (autoguardado de la entrada)
 	_titulo("FASE 1 · etapa 0: intro de marca (IntroMarca)")
 	var azar_antes: int = Azar._rng.state
 	_primera_vez()
