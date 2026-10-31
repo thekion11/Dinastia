@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+# EXTENSIÓN NATIVA DE DINASTÍA (30-10-2026): los bucles más pesados de GDScript, en C++.
+# Se compila contra godot-cpp (oficial, MIT), que NO va en el repositorio: ver
+# herramientas/compilar_nativo.sh (lo descarga en el commit probado y compila cada plataforma).
+#   scons GODOT_CPP=<ruta a godot-cpp> platform=linux|windows target=template_debug|template_release
+import os
+
+godot_cpp = ARGUMENTS.get("GODOT_CPP", os.environ.get("GODOT_CPP", "godot-cpp"))
+env = SConscript(os.path.join(godot_cpp, "SConstruct"))
+env.Append(CPPPATH=["src/"])
+fuentes = Glob("src/*.cpp")
+destino = "../bin_nativo/libdinastia{}{}".format(env["suffix"], env["SHLIBSUFFIX"])
+Default(env.SharedLibrary(destino, source=fuentes))
