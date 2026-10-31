@@ -21,6 +21,7 @@ func gasolina_tick(delta: float) -> void:
 		expl._movil.reserva = reserva()
 	if mundo.vida == null or String(expl.modo) != "coche" or String(expl.estado) != "calle":
 		return
+	DanioCoche.tick(self)   ## mejora C: los golpes suman daño y se ven
 	var vd := mundo.vida
 	vd.gastar_combustible(absf(expl.vel) * delta)
 	_t_vacio -= delta

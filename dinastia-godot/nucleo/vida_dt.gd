@@ -75,7 +75,11 @@ var bienvenida: bool = false
 const DEPOSITO_L := 45.0
 const L_POR_KM := 0.5   ## (31-10, decisión del dueño) antes 2,5: 18 km por depósito; ahora ~90 km
 var combustible: float = DEPOSITO_L
-var premium := false   ## (§2.5) el último repostaje fue premium: rinde un 15 % más
+var premium := false
+## (31-10, mejora C del coche) Los golpes del coche: 0 = nuevo, 100 = destrozado. Con `DANIO_TALLER` o más
+## el coche va al taller esa semana (`VidaCiudad.transporte`) y vuelve reparado la siguiente.
+var danio := 0
+const DANIO_TALLER := 70   ## (§2.5) el último repostaje fue premium: rinde un 15 % más
 var aviso_comb: int = -1
 ## LOS PRECIOS SIGUEN AL SUELDO (recorrido D4): con precios fijos, casa y auto
 ## costaban el 4% de lo que cobra un DT de club grande y no había decisión.
@@ -175,6 +179,8 @@ func _anotar(texto: String, anio: int = 0, sem: int = 0) -> void:
 
 ## Una vez por semana. `resultado`: 1 ganó, 0 empató, -1 perdió, 2 sin partido.
 func semana(c: Club, roles: Roles, anio: int, sem: int, resultado: int) -> void:
+	if danio >= DANIO_TALLER:
+		danio = 0   ## mejora C: la semana en el taller lo deja como nuevo
 	if c == null or roles == null:
 		return
 	crear_perfil(c.id)
@@ -327,7 +333,7 @@ func fraccion_comb() -> float:
 func a_dic() -> Dictionary:
 	return {"viv": vivienda, "tr": transporte, "bal": balance, "es": estres, "fam": familia,
 		"sea": semanas_estres_alto, "oc": ocio_semana, "baja": baja_hasta, "pend": pendiente,
-		"perfil": perfil, "hist": historial, "bienv": bienvenida, "comb": snappedf(combustible, 0.01), "avc": aviso_comb, "prem": premium}
+		"perfil": perfil, "hist": historial, "bienv": bienvenida, "comb": snappedf(combustible, 0.01), "avc": aviso_comb, "prem": premium, "dan": danio}
 
 func desde_dic(d: Dictionary) -> void:
 	vivienda = String(d.get("viv", "depto"))
@@ -345,3 +351,4 @@ func desde_dic(d: Dictionary) -> void:
 	combustible = clampf(float(d.get("comb", DEPOSITO_L)), 0.0, DEPOSITO_L)
 	aviso_comb = int(d.get("avc", -1))
 	premium = bool(d.get("prem", false))
+	danio = clampi(int(d.get("dan", 0)), 0, 100)
