@@ -493,7 +493,7 @@ Las pruebas f1-f5 del guion ya corren en `especiales.sh` (28-10). Lo que falta, 
 
 1. Fase 0: `abrir(contexto)` en las 19 pantallas (hoy 1), autoguardar al salir del orquestador (4 h). Ojo (30-10): guardar en `OrquestadorEntrada._finalizar` no basta: nombre del DT, dificultad, modo y desafíos los aplica `Principal` al adoptar `PedidoPartida.mundo_pregenerado`; un guardado previo los perdería al cargarlo. Hay que mover esa adopción al orquestador (o guardarla con la partida) y que «Continuar» con el prólogo a medias vuelva al prólogo (`VidaCiudad.arranque_3d`).
 2. Dinero: tarjeta en mano, auditoría de coches (2 h). Pendiente de mirar en Forward+: los cajeros nuevos (hospital, universidad, estación, estadio; revisados en Compatibility el 31-10: en este contenedor la ciudad de la rama pasa de ~13 GB en Forward+ con lavapipe y el sistema mata la captura).
-3. Redes: camión cisterna, casas del kit que sigan al sector en el apagón, captura Forward+ en el PC del dueño (3 h).
+3. Redes: casas del kit que sigan al sector en el apagón, captura Forward+ en el PC del dueño (2 h).
 4. Calidad visual (2.2e): aplicar postura, mochilas y pelo del Drive a los futbolistas del partido; pelo femenino (pasada nueva, con veredicto del dueño).
 
 Los 2 primeros (~8 h) cierran lo que el guion exige de verdad; el total de la lista larga del informe es ~65 h.

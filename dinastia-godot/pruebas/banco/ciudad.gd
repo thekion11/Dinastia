@@ -146,6 +146,9 @@ func _probar_redes_ciudad() -> void:
 	g.gas[1] = 100.0
 	g.pasar(1, 9, 0.5, 0.0)
 	_comprobar(float(g.gas[1]) > 5000.0, "una gasolinera casi vacía recibe la cisterna")
+	_comprobar(int(g.cisterna.get(1, 0)) == RedesCiudad.CISTERNA_HORAS and RedesCiudad.new(7).cisterna.is_empty(), "y el camión cisterna se queda descargando unas horas (§2.5)")
+	g.pasar(RedesCiudad.CISTERNA_HORAS + 1, 10, 0.5, 0.0)
+	_comprobar(not g.cisterna.has(1) and g.a_dic().has("cis"), "luego se va, y su estado se guarda")
 	## EDIFICIOS REALES: consumen de su sector, el hospital tiene generador y aislar uno baja la demanda.
 	var ed := RedesCiudad.new(7)
 	ed.averias_azar = false

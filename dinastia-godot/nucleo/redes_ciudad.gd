@@ -53,6 +53,8 @@ var agua_nivel := AGUA_DEPOSITO * 0.8
 var colector := {}                           ## sector -> mm acumulados
 var inundado := {}                           ## sector -> bool
 var gas := {}                                ## id gasolinera -> litros
+var cisterna := {}                           ## id gasolinera -> horas que le quedan al camión cisterna descargando (§2.5)
+const CISTERNA_HORAS := 3
 var edificios: Array = []                    ## [{id, nombre, uso, sector, pos, kw, m3h, generador, aislado}]
 var historial: Array = []                    ## [{gen, dem, agua, lluvia, sin_luz}] una por hora, las últimas 24
 var registro: Array = []                     ## líneas «20:00 …» del centro de mando
@@ -289,7 +291,12 @@ func _gasolineras(h: int) -> void:
 	for id in gas.keys():
 		var v: float = float(gas[id]) - 340.0 * curva(h)
 		if v < GAS_DEPOSITO * 0.2:
-			v += GAS_DEPOSITO * 0.5          ## llega la cisterna
+			v += GAS_DEPOSITO * 0.5          ## llega la cisterna (y se queda unas horas descargando: se ve en la gasolinera)
+			cisterna[id] = CISTERNA_HORAS
+		elif cisterna.has(id):
+			cisterna[id] = int(cisterna[id]) - 1
+			if int(cisterna[id]) <= 0:
+				cisterna.erase(id)
 		gas[id] = clampf(v, 0.0, GAS_DEPOSITO)
 
 # ============================================================================ PARTIDA
@@ -307,7 +314,7 @@ func a_dic() -> Dictionary:
 			aislados.append(int(ed["id"]))
 	return {"v": 1, "semilla": semilla, "horas": horas, "hora_dia": hora_dia, "agua": agua_nivel, "cortes": c, "colector": col,
 		"gas": [gas[0], gas[1], gas[2]], "historial": historial.duplicate(true), "registro": registro.duplicate(), "aislados": aislados,
-		"evento": evento.a_dic(), "clima": clima, "viento": viento, "lluvia": lluvia}
+		"evento": evento.a_dic(), "clima": clima, "viento": viento, "lluvia": lluvia, "cis": cisterna.duplicate()}
 
 ## Carga una instantánea (partida vieja sin redes = `{}`: se queda como nueva). Los edificios no se guardan (salen de la
 ## ciudad): `recibir_edificios` los vuelve a conectar y aplica los aislados.
@@ -339,6 +346,9 @@ func desde_dic(d: Dictionary) -> void:
 	clima = String(d.get("clima", ""))
 	viento = float(d.get("viento", viento))
 	lluvia = float(d.get("lluvia", 0.0))
+	cisterna.clear()
+	for k: Variant in (d.get("cis", {}) as Dictionary):
+		cisterna[int(k)] = int(d["cis"][k])
 	recibir_edificios(edificios)
 
 func recibir_edificios(lista: Array) -> void:
