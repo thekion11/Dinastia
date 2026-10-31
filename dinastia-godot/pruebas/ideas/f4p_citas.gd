@@ -83,6 +83,33 @@ func _probar() -> void:
 	var moral0 := j.moral
 	var re := m.citas.resolver(m, String(ce["id"]), 0)
 	_comprobar(not re.is_empty() and j.moral == mini(moral0 + 2, 100), "el tono seguro sube la moral del recién llegado (+2)")
+	## §2.5: la entrevista completa son tres preguntas (tono, grupo del vestuario, staff).
+	var j2: Jugador = c.plantilla[1]
+	m.citas.entrevista(m, j2)
+	var ce2 := {}
+	for x: Dictionary in m.citas.pendientes():
+		if x["tipo"] == "entrevista":
+			ce2 = x
+	var grupos := m.citas.grupos_entrevista(m)
+	_comprobar(m.citas.opciones_entrevista(m, ce2, 1).size() == grupos.size() + 1 and m.citas.opciones_entrevista(m, ce2, 2).size() == 3,
+		"la entrevista pregunta también por el grupo del vestuario (%d + «con todos») y por el staff (3)" % grupos.size())
+	var forma0 := j2.forma
+	var ad0 := j2.adapt
+	var mo2 := j2.moral
+	m.citas.resolver(m, String(ce2["id"]), 2, [grupos.size(), 0])
+	_comprobar(j2.forma == mini(forma0 + 3, 100) and j2.adapt == ad0 and j2.moral == mini(mo2 + 1, 100),
+		"humilde + «con todos» + preparador físico: +1 de moral y +3 de forma")
+	if not grupos.is_empty():
+		var j3: Jugador = c.plantilla[2]
+		m.citas.entrevista(m, j3)
+		var ce3 := {}
+		for x: Dictionary in m.citas.pendientes():
+			if x["tipo"] == "entrevista":
+				ce3 = x
+		var cl: Dictionary = m.citas.grupos_entrevista(m)[0]
+		m.citas.resolver(m, String(ce3["id"]), 0, [0, 1])
+		_comprobar((cl["miembros"] as Array).has(j3.id) and String(m.vestuario._clan_de.get(j3.id, "")) == String(cl["id"]) and j3.adapt >= 15,
+			"presentado a «%s»: entra en ese grupo; con el analista, +15 de adaptación" % String(cl["nombre"]))
 	## Fotos a Tribuna (bloque 6): una publicación «paseo» suma seguidores.
 	var seg0 := int(m.redes.cuentas["dt"]["seguidores"])
 	var pub := m.redes.publicar(m, "paseo", ["#MiCiudad"])
