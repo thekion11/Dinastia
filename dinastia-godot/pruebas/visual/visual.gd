@@ -61,6 +61,11 @@ func _ready() -> void:
 	if FileAccess.file_exists(Principal.PREFS):
 		DirAccess.rename_absolute(Principal.PREFS, RESPALDO_PREFS)
 	AjustesCiudad.guardar("tutorial_visto", true)
+	## (30-10) Sin el aviso «la última vez el juego anotó N errores» (M-430): depende de cómo
+	## acabó la sesión anterior de Godot en esa máquina, no de la pantalla.
+	var reg := get_node_or_null("/root/Registro")
+	if reg != null:
+		reg.errores_previos = 0
 	## Sin fundidos a medias en la foto: animaciones reducidas (solo en memoria, no se
 	## guarda en los ajustes del jugador) y el reloj a ×10 para los fundidos que no
 	## pasan por `Animar` (filas que entran escalonadas).
