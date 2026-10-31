@@ -308,6 +308,9 @@ func _jugador_de_la_semana(c: Club) -> Jugador:
 	return c.plantilla[(p.mundo.semana + p.mundo.anio) % c.plantilla.size()]
 
 func _anotar(titulo: String, cuerpo: String) -> void:
+	## Con el nombre de competición que se ve (correo, Tribuna y móvil lo heredan).
+	titulo = CompeticionInfo.visibles_en(titulo)
+	cuerpo = CompeticionInfo.visibles_en(cuerpo)
 	p._bandeja.push_front({"titulo": titulo, "cuerpo": cuerpo, "semana": p.mundo.semana, "anio": p.mundo.anio, "leida": false})
 	## Lo que pasa también se comenta en Tribuna (las redes del móvil).
 	if p.mundo.redes != null:

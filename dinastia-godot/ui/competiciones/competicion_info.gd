@@ -68,6 +68,37 @@ static func colores(nombre: String) -> Array[Color]:
 	var c2 := Color(0.93, 0.8, 0.42) if t in ["continental", "mundial_clubes", "mundial_sel", "supercopa"] else Color(0.95, 0.95, 0.97)
 	return [c1, c2]
 
+## Frases enteras del núcleo que, cambiando solo el nombre, quedarían torcidas.
+const FRASES := {
+	"La Eurocopa de selecciones europeas.": "El torneo de selecciones del Viejo Continente.",
+	"El Mundial: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.",
+}
+static var _re_internos: RegEx = null
+
+## UN TEXTO LIBRE CON LOS NOMBRES QUE SE VEN (s3, 26-10). Las noticias, los
+## avisos, el mentor y la portada llegan del núcleo ya armados («🌍 Mundial de
+## Clubes 2027», «Se jugó la Copa del Mundo...»): con la base ficticia, cada
+## nombre interno se cambia por el visible ANTES de traducir, para que la
+## traducción salga ya con el nombre ficticio. «Copa África de Clubes» (la
+## continental) no es «Copa África» (la de selecciones): no se toca.
+static func visibles_en(texto: String) -> String:
+	if Datos.base_real or texto == "":
+		return texto
+	var r := texto
+	for f: String in FRASES:
+		r = r.replace(f, String(FRASES[f]))
+	if _re_internos == null:
+		var alternativas: Array = []
+		for k: String in FICTICIOS:
+			alternativas.append(k)
+		_re_internos = RegEx.create_from_string("(%s)(?! de Clubes)" % "|".join(alternativas))
+	var salida := ""
+	var desde := 0
+	for m: RegExMatch in _re_internos.search_all(r):
+		salida += r.substr(desde, m.get_start() - desde) + String(FICTICIOS[m.get_string(1)])
+		desde = m.get_end()
+	return salida + r.substr(desde)
+
 ## Las siglas que van dentro del logo (el SVG no dibuja texto).
 static func siglas(nombre: String) -> String:
 	var s := ""

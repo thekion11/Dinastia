@@ -67,3 +67,5 @@ dinastia-godot/assets/trofeos/*.glb -filter -diff -merge binary
 dinastia-godot/assets/pasto/*.glb -filter -diff -merge binary
 # Regalos del dueño del Drive optimizados (27-10-2026): torre de focos del estadio (11 k caras, texturas 512 px, 2,4 MB) y sillón de oficina (reducido de 118 k a 4,7 k caras, 314 KB): archivos normales.
 dinastia-godot/assets/regalos/*.glb -filter -diff -merge binary
+# Logo definitivo (26-10): archivos pequeños, fuera de LFS
+dinastia-godot/assets/logo/* -filter -diff -merge binary
