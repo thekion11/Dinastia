@@ -357,6 +357,9 @@ func _cabina_3d(ver: bool) -> void:
 		x = x.normalized()
 		_cabina_brazos[i].transform = Transform3D(Basis(x, y * largo, x.cross(y)), (hombro + mano) * 0.5)
 	_cabina_kmh.text = "%d km/h" % int(round(absf(vel) * 3.6))
+	if vida != null:   ## mejora A (31-10): la gasolina debajo, en ámbar con la luz de reserva
+		_cabina_kmh.text += "\n" + vida.texto_gasolina()
+		_cabina_kmh.modulate = Color(1.0, 0.62, 0.15) if vida.reserva() else Color(0.55, 0.95, 0.8)
 
 func _fov_hacia(f: float, delta: float) -> void:
 	camara.fov = lerpf(camara.fov, f, clampf(delta * 3.0, 0.0, 1.0)) if delta < 1.0 else f

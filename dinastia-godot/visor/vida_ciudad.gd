@@ -16,6 +16,9 @@ func _redes() -> RedesCiudadVista:
 ## y vacío el coche no arranca hasta repostar en un surtidor (E).
 func gasolina_tick(delta: float) -> void:
 	expl.sin_gasolina = mundo.vida != null and mundo.vida.combustible <= 0.01
+	if expl._movil != null and mundo.vida != null:   ## mejora A: la gasolina en el móvil de la mano (ámbar en reserva)
+		expl._movil.gasolina_texto = "⛽ %d %%" % roundi(mundo.vida.fraccion_comb() * 100.0)
+		expl._movil.reserva = reserva()
 	if mundo.vida == null or String(expl.modo) != "coche" or String(expl.estado) != "calle":
 		return
 	var vd := mundo.vida
@@ -424,3 +427,14 @@ func multa_temeraria() -> void:
 		_notificar(Idiomas.t("🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).") % [MULTA_TEMERARIA, expl.multas, Idiomas.t(via)])
 	else:
 		_notificar(Idiomas.t("🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.") % [MULTA_TEMERARIA, expl.multas])
+
+## (31-10, mejora A del coche) El indicador de gasolina del HUD y del salpicadero: «⛽ 62 %» y, por
+## debajo del 15 %, «⛽ 9 % · RESERVA» (la luz de reserva).
+func reserva() -> bool:
+	return mundo.vida != null and mundo.vida.fraccion_comb() < 0.15
+
+func texto_gasolina() -> String:
+	if mundo.vida == null:
+		return ""
+	var t := "⛽ %d %%" % roundi(mundo.vida.fraccion_comb() * 100.0)
+	return t + " · " + Idiomas.t("RESERVA") if reserva() else t
