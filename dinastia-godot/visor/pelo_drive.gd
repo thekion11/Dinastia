@@ -26,6 +26,17 @@ static func elegir(semilla: int, mujer: bool) -> int:
 		return -1
 	return int(lista[absi(hash([semilla, 43])) % lista.size()])
 
+## FUTBOLISTAS (31-10, §2.5 punto 5): el peinado del Drive solo donde coincide con el corte de su retrato 2D (el rizado con los dos rizados,
+## el flequillo y el ondulado con el flequillo despeinado), así la ficha y el campo no se contradicen. Sin foto real: a quien la tiene no se
+## le cambia el pelo. Determinista por el id del jugador.
+const DE_CORTE_FUTBOLISTA := {"rizado": [80, 59], "afro": [80], "flequillo": [68], "ondulado": [68]}
+
+static func para_futbolista(jid: String, corte: String, con_foto: bool) -> int:
+	if con_foto or not DE_CORTE_FUTBOLISTA.has(corte) or OS.get_environment("SIN_PELO_DRIVE") != "":
+		return -1
+	var lista: Array = DE_CORTE_FUTBOLISTA[corte]
+	return int(lista[absi(hash([jid, 47])) % lista.size()])
+
 static var _mallas: Dictionary = {}
 static var _mats: Dictionary = {}
 
