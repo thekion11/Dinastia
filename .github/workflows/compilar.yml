@@ -153,8 +153,67 @@ jobs:
   ## ANDROID (30-10-2026): APK de DEPURACIÓN firmada con la clave de depuración de la imagen del CI.
   ## La de publicar (release) se firma con la keystore del dueño, que no está aquí. Sin binario C++
   ## para Android: el juego usa las versiones GDScript (mismo resultado).
+  ## LA EXTENSIÓN C++ PARA ANDROID (M-353, 31-10-2026): el contenedor de trabajo no llega al NDK; las máquinas
+  ## de GitHub lo traen instalado ($ANDROID_NDK_LATEST_HOME). Se compila arm64 y la usa `export-android`.
+  nativo-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Descargar el repositorio (sin LFS)
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Compilar la extensión (arm64)
+        working-directory: dinastia-godot
+        run: |
+          sudo apt-get update -q && sudo apt-get install -y -q scons
+          export ANDROID_NDK_ROOT="$ANDROID_NDK_LATEST_HOME"
+          bash herramientas/compilar_nativo.sh android
+          ls -la bin_nativo/libdinastia.android.*
+
+      - name: Subir la extensión de Android
+        uses: actions/upload-artifact@v4
+        with:
+          name: nativo-android
+          path: dinastia-godot/bin_nativo/libdinastia.android.*
+
+  ## LA MISMA EXTENSIÓN EN ARM, PROBADA (M-353): Android no puede correr el banco aquí, así que se compila
+  ## para Linux arm64 con las mismas opciones (sin FMA) y `probar_nativo` comprueba en una máquina ARM que
+  ## el C++ da los mismos bytes que GDScript.
+  nativo-arm:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 60
+    steps:
+      - name: Descargar el repositorio (sin LFS)
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Recursos LFS del juego
+        run: git lfs pull --include="dinastia-godot/**"
+
+      - name: Compilar la extensión (Linux arm64)
+        working-directory: dinastia-godot
+        run: |
+          sudo apt-get update -q && sudo apt-get install -y -q scons
+          ARCH=arm64 bash herramientas/compilar_nativo.sh linux
+
+      - name: Godot 4.7.2 para arm64
+        run: |
+          curl -sSLo /tmp/godot.zip https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.arm64.zip
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          sudo mv /tmp/godot/Godot_v4.7.2-stable_linux.arm64 /usr/local/bin/godot
+
+      - name: Prueba C++ = GDScript en ARM
+        working-directory: dinastia-godot
+        run: |
+          timeout 1500 godot --headless --path . --import > /tmp/importar.txt 2>&1 || true
+          timeout 900 godot --headless --path . res://pruebas/probar_nativo.tscn | tee /tmp/nativo.txt
+          grep -q "FIN. 0 fallos" /tmp/nativo.txt
+
   export-android:
-    needs: banco
+    needs: [banco, nativo-android]
     runs-on: ubuntu-latest
     timeout-minutes: 60
     container:
@@ -171,6 +230,12 @@ jobs:
           command -v git-lfs >/dev/null || (apt-get update && apt-get install -y git-lfs)
           git lfs install --local
           git lfs pull --include="dinastia-godot/**"
+
+      - name: La extensión C++ de Android (M-353)
+        uses: actions/download-artifact@v4
+        with:
+          name: nativo-android
+          path: dinastia-godot/bin_nativo
 
       - name: Plantillas y ajustes de Android de la imagen
         run: |
