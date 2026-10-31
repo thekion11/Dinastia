@@ -81,6 +81,9 @@ static func fachada(ex: CiudadExpansion, uso: String, c: Vector3, w: float, f: f
 		return
 	var d: Array = FACHADAS[uso]
 	FachadaModular.montar(ex, c.x, c.z + float(d[0]) + f * float(d[1]), 0.3, w * float(d[2]), int(d[3]), true, true)
+	## (§2.5, 30-10) Un cajero junto a la fachada del hospital y de la universidad.
+	if uso in ["hospital", "universidad"]:
+		CajeroCiudad.montar(ex, Vector3(c.x + w * float(d[2]) * 0.5 - 1.2, 0.3, c.z + float(d[0]) + f * float(d[1]) + FachadaModular.FONDO + 0.9), 0.0)
 
 ## Pórtico cívico (ayuntamiento y universidad): zócalo con escalinata de 6 peldaños, seis columnas de dos pisos (~8,6 m), entablamento
 ## con el rótulo y frontón triangular. Columnas de `kit_edificios` (CC0); el resto, piedra lisa. Sin azar: no toca `_rng`.

@@ -304,6 +304,12 @@ func _probar_async() -> void:
 			if String(pc.get("k", "")).begins_with("expendedora_"):
 				n_mq += 1
 		_comprobar(n_mq >= 5, "hay expendedoras en la ciudad: centro comercial, gasolineras, estación y estadio (%d)" % n_mq)
+		## §2.5: cajeros también en hospital, universidad, estación y estadio.
+		var cajeros: Array = []
+		for pc: Dictionary in _e.cb.puntos_clic:
+			if String(pc.get("k", "")).begins_with("cajero_"):
+				cajeros.append(pc["pos"])
+		_comprobar(cajeros.size() >= 8, "hay %d cajeros (también en hospital, universidad, estación y estadio)" % cajeros.size())
 		_comprobar(_e.metro != null and not _e.metro.expendedoras.is_empty() and _e.metro.expendedora_cerca(_e.metro.expendedoras[0]) and not _e.metro.expendedora_cerca(_e.metro.expendedoras[0] + Vector3(10, 0, 0)), "los andenes del metro tienen su máquina y se detecta a menos de 2,2 m")
 	## LA EXPENDEDORA cobra de la cartera y sube la energía; el balón suelto del parque aparece.
 	if _v != null and _m.roles != null and _m.necesidades != null:

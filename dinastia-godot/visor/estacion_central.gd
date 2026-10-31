@@ -132,7 +132,9 @@ func _construir(b: CityBuilder, w: float, f: float, mats: Dictionary, ex: Ciudad
 	else:
 		_caja(b, Vector3(0, 5.0, z_front + 0.1), Vector3(w * 0.6, 7.0, 0.2), mats["vidrio"])
 	_rotulo(Vector3(0, 15.0, z_front + 0.8), "ESTACIÓN CENTRAL", 0.035)
-	ExpendedoraCiudad.montar(b, position + Vector3(12.5, 0.3, z_front + 2.0), 0.0)   ## una máquina expendedora junto a las puertas (cobra de la cartera)
+	ExpendedoraCiudad.montar(b, position + Vector3(12.5, 0.3, z_front + 4.0), 0.0)   ## una máquina expendedora junto a las puertas (cobra de la cartera; en +2 quedaba dentro de la fachada)
+	if ex != null:
+		CajeroCiudad.montar(ex, position + Vector3(15.0, 0.3, z_front + 4.0), 0.0)   ## y un cajero al lado (§2.5; a la izquierda lo tapaba la parada de taxis)
 	var disco := b._cil_en(position + Vector3(0, 12.0, z_front + 1.6), 1.6, 0.4, b._mat_simple(Color(0.95, 0.95, 0.9), 0.4))
 	disco.rotation.x = PI * 0.5
 	_reloj_rotulo = Label3D.new()
