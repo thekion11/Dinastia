@@ -306,7 +306,7 @@ aproximadas a lo largo de las paredes, no taquilla por taquilla.
 anual → `Hinchada.bono_rama` = +0,06 de fuerza esa temporada); el museo cuenta las copas de las ramas (`Principal._ctx_club`);
 cita «celebración» el lunes siguiente a un trofeo nuevo del primer equipo (presidente en el museo; levantar la copa publica
 «victoria» en Tribuna y sube 3 el ánimo). Límites: no hay todavía vuelta olímpica en el campo ni celebración 3D de las ramas
-(bloque 4, parte); el presupuesto de la rama no tiene efecto visible fuera del puesto final.
+(bloque 4, parte); el presupuesto de la rama no tiene efecto visible fuera del puesto final. (30-10) La rama pide también visibilidad (un partido en el estadio) y sus títulos tienen su cita de celebración en el museo (`CitasRamas`).
 
 **Pruebas (modelo V).** Idea `f5c_club`: en horario de vestuario hay cuerpos con nombres de la plantilla y fuera de horario
 no; la cita de la rama cuesta caja y sube la fuerza; un título de rama suma una copa al museo; el título del primer equipo
@@ -491,13 +491,12 @@ Cumplimiento medido en el código: entrada ~95 %, fase 0 (separar `Principal`) ~
 club ampliado ~85 %, redes ~85 %, dinero ~70 %, calidad visual ~70 % (el dueño dijo «MEJORAR» dos veces), cifras 2.3 100 %.
 Las pruebas f1-f5 del guion ya corren en `especiales.sh` (28-10). Lo que falta, por importancia para el jugador (horas de sesión):
 
-1. Fase 0: `abrir(contexto)` en las 19 pantallas (hoy 1), autoguardar al salir del orquestador (4 h).
-2. Club ampliado: la rama de otro deporte no ofrece «visibilidad» ni celebra sus títulos (2 h).
-3. Dinero: tarjeta en mano, más cajeros y «fuera de servicio», más de un combustible, auditoría de coches (4 h).
-4. Redes: camión cisterna, casas del kit que sigan al sector en el apagón, captura Forward+ en el PC del dueño (3 h).
-5. Calidad visual (2.2e): aplicar postura, mochilas y pelo del Drive a los futbolistas del partido; pelo femenino (pasada nueva, con veredicto del dueño).
+1. Fase 0: `abrir(contexto)` en las 19 pantallas (hoy 1), autoguardar al salir del orquestador (4 h). Ojo (30-10): guardar en `OrquestadorEntrada._finalizar` no basta: nombre del DT, dificultad, modo y desafíos los aplica `Principal` al adoptar `PedidoPartida.mundo_pregenerado`; un guardado previo los perdería al cargarlo. Hay que mover esa adopción al orquestador (o guardarla con la partida) y que «Continuar» con el prólogo a medias vuelva al prólogo (`VidaCiudad.arranque_3d`).
+2. Dinero: tarjeta en mano, más cajeros y «fuera de servicio», más de un combustible, auditoría de coches (4 h).
+3. Redes: camión cisterna, casas del kit que sigan al sector en el apagón, captura Forward+ en el PC del dueño (3 h).
+4. Calidad visual (2.2e): aplicar postura, mochilas y pelo del Drive a los futbolistas del partido; pelo femenino (pasada nueva, con veredicto del dueño).
 
-Los 3 primeros (~10 h) cierran lo que el guion exige de verdad; el total de la lista larga del informe es ~65 h.
+Los 2 primeros (~8 h) cierran lo que el guion exige de verdad; el total de la lista larga del informe es ~65 h.
 
 ### 2.4 Pendientes del traspaso anterior
 

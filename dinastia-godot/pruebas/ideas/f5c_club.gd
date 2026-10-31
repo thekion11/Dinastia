@@ -59,6 +59,29 @@ func _probar() -> void:
 	var c2 := Citas.new()
 	c2.desde_dic(d)
 	_comprobar(c2._trofeos_vistos == m.citas._trofeos_vistos, "lo celebrado sobrevive a guardar y cargar")
+	## §2.5: la rama también pide VISIBILIDAD (un partido en el estadio) y celebra sus títulos.
+	_comprobar(m.citas.opciones(m, cr).size() == 3, "la coordinadora ofrece tres respuestas: presupuesto, no o visibilidad")
+	var socios0 := c.socios
+	var cesped0 := m.ciudad.cesped
+	var cv := cr.duplicate()
+	cv["estado"] = "pendiente"
+	cv["id"] = "prueba_vis"
+	m.citas.lista.append(cv)
+	var rv := m.citas.resolver(m, "prueba_vis", 2)
+	_comprobar(not rv.is_empty() and c.socios == socios0 + CitasRamas.VISIBILIDAD_SOCIOS and m.ciudad.cesped == maxi(0, cesped0 - CitasRamas.VISIBILIDAD_CESPED)
+		and int(m.hinchada.visib_rama.get("futsal", -1)) == m.anio, "visibilidad: la rama juega en el estadio (+socios, algo de fuerza, el césped se resiente)")
+	var celebradas := m.citas._ramas_vistas
+	m.hinchada.palmares_ramas.push_front({"anio": m.anio, "rama": "Futsal", "clave": "futsal", "puesto": 1})
+	m.citas.semana(m, 10)
+	var crr := {}
+	for x: Dictionary in m.citas.pendientes():
+		if x["tipo"] == "celebracion" and String(x["clave"]) == "rama|futsal":
+			crr = x
+	_comprobar(not crr.is_empty() and m.citas._ramas_vistas == celebradas + 1, "un título nuevo de la rama trae su celebración en el museo")
+	var s1 := c.socios
+	var rr2 := m.citas.resolver(m, String(crr["id"]), 0) if not crr.is_empty() else {}
+	_comprobar(not rr2.is_empty() and c.socios == s1 + CitasRamas.CELEBRACION_SOCIOS, "levantar la copa de la rama suma socios y la foto")
+	_comprobar(Citas.new().a_dic().has("ramas") and m.hinchada.a_dic().has("visib_rama"), "la visibilidad y los títulos celebrados se guardan")
 	## EL MUSEO QUE CRECE (27-10): capacidad real en la planta 2 y planta 3 «Museo ampliado» por el ascensor.
 	var ctx0 := EdificioClub.ctx
 	var hitos: Array = []

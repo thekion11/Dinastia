@@ -6682,7 +6682,14 @@
   "🏛️ El club, con el gobierno": "🏛️ The club backs the government",
   "El club apoya públicamente al gobierno antes de la votación. Si repite, será un aliado (sus ayudas, +25 %); si pierde, el nuevo gobierno lo recordará.": "The club publicly backs the government before the vote. If it stays in power, it will be an ally (its grants, +25 %); if it loses, the new government will remember.",
   "Primer día": "First day",
-  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Finish the prologue: the tour of the club and the keys to your office."
+  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Finish the prologue: the tour of the club and the keys to your office.",
+  "te espera en el museo con la copa de la rama": "is waiting for you in the museum with the section's trophy",
+  "Darles visibilidad: un partido en el estadio": "Give them visibility: a match in the stadium",
+  "La rama, en el estadio": "The section, in the stadium",
+  "Juegan un partido en tu césped: +%d socios y un poco más de fuerza esta temporada (el césped, −%d).": "They play a match on your pitch: +%d members and a bit more strength this season (the pitch, −%d).",
+  "¡La rama, campeona!": "The section are champions!",
+  "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "The section's trophy is now in the museum and the photo on Tribuna (+%d members, +2 mood).",
+  "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "The section's trophy is now in the museum (+%d members, +2 mood)."
  },
  "pt": {
   "Historia": "História",
@@ -13367,7 +13374,14 @@
   "🏛️ El club, con el gobierno": "🏛️ O clube, com o governo",
   "El club apoya públicamente al gobierno antes de la votación. Si repite, será un aliado (sus ayudas, +25 %); si pierde, el nuevo gobierno lo recordará.": "O clube apoia publicamente o governo antes da votação. Se repetir, será um aliado (os seus apoios, +25 %); se perder, o novo governo vai lembrar-se.",
   "Primer día": "Primeiro dia",
-  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Termina o prólogo: a visita ao clube e as chaves do teu gabinete."
+  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Termina o prólogo: a visita ao clube e as chaves do teu gabinete.",
+  "te espera en el museo con la copa de la rama": "espera-te no museu com a taça da secção",
+  "Darles visibilidad: un partido en el estadio": "Dar-lhes visibilidade: um jogo no estádio",
+  "La rama, en el estadio": "A secção, no estádio",
+  "Juegan un partido en tu césped: +%d socios y un poco más de fuerza esta temporada (el césped, −%d).": "Jogam um jogo no teu relvado: +%d sócios e um pouco mais de força esta época (o relvado, −%d).",
+  "¡La rama, campeona!": "A secção é campeã!",
+  "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "A taça da secção já está no museu e a foto na Tribuna (+%d sócios, +2 de ânimo).",
+  "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "A taça da secção já está no museu (+%d sócios, +2 de ânimo)."
  },
  "patrones": [
   [
@@ -25785,7 +25799,14 @@
   "🏛️ El club, con el gobierno": "🏛️ Le club, avec le gouvernement",
   "El club apoya públicamente al gobierno antes de la votación. Si repite, será un aliado (sus ayudas, +25 %); si pierde, el nuevo gobierno lo recordará.": "Le club soutient publiquement le gouvernement avant le vote. S'il est reconduit, ce sera un allié (ses aides, +25 %) ; s'il perd, le nouveau gouvernement s'en souviendra.",
   "Primer día": "Premier jour",
-  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Termine le prologue : la visite du club et les clés de ton bureau."
+  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Termine le prologue : la visite du club et les clés de ton bureau.",
+  "te espera en el museo con la copa de la rama": "t'attend au musée avec la coupe de la section",
+  "Darles visibilidad: un partido en el estadio": "Leur donner de la visibilité : un match au stade",
+  "La rama, en el estadio": "La section, au stade",
+  "Juegan un partido en tu césped: +%d socios y un poco más de fuerza esta temporada (el césped, −%d).": "Ils jouent un match sur ta pelouse : +%d socios et un peu plus de force cette saison (la pelouse, −%d).",
+  "¡La rama, campeona!": "La section, championne !",
+  "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "La coupe de la section est au musée et la photo sur Tribuna (+%d socios, +2 d'humeur).",
+  "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "La coupe de la section est au musée (+%d socios, +2 d'humeur)."
  },
  "it": {
   "Historia": "Storia",
@@ -32470,7 +32491,14 @@
   "🏛️ El club, con el gobierno": "🏛️ Il club con il governo",
   "El club apoya públicamente al gobierno antes de la votación. Si repite, será un aliado (sus ayudas, +25 %); si pierde, el nuevo gobierno lo recordará.": "Il club appoggia pubblicamente il governo prima del voto. Se resta, sarà un alleato (i suoi aiuti, +25 %); se perde, il nuovo governo se ne ricorderà.",
   "Primer día": "Primo giorno",
-  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Completa il prologo: il giro del club e le chiavi del tuo ufficio."
+  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Completa il prologo: il giro del club e le chiavi del tuo ufficio.",
+  "te espera en el museo con la copa de la rama": "ti aspetta al museo con la coppa della sezione",
+  "Darles visibilidad: un partido en el estadio": "Dare loro visibilità: una partita allo stadio",
+  "La rama, en el estadio": "La sezione, allo stadio",
+  "Juegan un partido en tu césped: +%d socios y un poco más de fuerza esta temporada (el césped, −%d).": "Giocano una partita sul tuo prato: +%d soci e un po' più di forza in questa stagione (il prato, −%d).",
+  "¡La rama, campeona!": "La sezione è campione!",
+  "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "La coppa della sezione è già al museo e la foto su Tribuna (+%d soci, +2 di umore).",
+  "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "La coppa della sezione è già al museo (+%d soci, +2 di umore)."
  },
  "de": {
   "Historia": "Geschichte",
@@ -39155,7 +39183,14 @@
   "🏛️ El club, con el gobierno": "🏛️ Der Verein steht zur Regierung",
   "El club apoya públicamente al gobierno antes de la votación. Si repite, será un aliado (sus ayudas, +25 %); si pierde, el nuevo gobierno lo recordará.": "Der Verein unterstützt die Regierung vor der Wahl öffentlich. Bleibt sie im Amt, ist sie ein Verbündeter (ihre Zuschüsse +25 %); verliert sie, wird sich die neue Regierung daran erinnern.",
   "Primer día": "Erster Tag",
-  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Beende den Prolog: den Rundgang durch den Verein und die Schlüssel zu deinem Büro."
+  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Beende den Prolog: den Rundgang durch den Verein und die Schlüssel zu deinem Büro.",
+  "te espera en el museo con la copa de la rama": "erwartet dich im Museum mit dem Pokal der Abteilung",
+  "Darles visibilidad: un partido en el estadio": "Ihnen Sichtbarkeit geben: ein Spiel im Stadion",
+  "La rama, en el estadio": "Die Abteilung im Stadion",
+  "Juegan un partido en tu césped: +%d socios y un poco más de fuerza esta temporada (el césped, −%d).": "Sie spielen auf deinem Rasen: +%d Mitglieder und etwas mehr Stärke in dieser Saison (der Rasen, −%d).",
+  "¡La rama, campeona!": "Die Abteilung ist Meister!",
+  "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "Der Pokal der Abteilung steht im Museum und das Foto auf Tribuna (+%d Mitglieder, +2 Stimmung).",
+  "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "Der Pokal der Abteilung steht im Museum (+%d Mitglieder, +2 Stimmung)."
  },
  "ca": {
   "Historia": "Història",
@@ -45840,7 +45875,14 @@
   "🏛️ El club, con el gobierno": "🏛️ El club, amb el govern",
   "El club apoya públicamente al gobierno antes de la votación. Si repite, será un aliado (sus ayudas, +25 %); si pierde, el nuevo gobierno lo recordará.": "El club dona suport públicament al govern abans de la votació. Si repeteix, serà un aliat (les seves ajudes, +25 %); si perd, el nou govern ho recordarà.",
   "Primer día": "Primer dia",
-  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Acaba el pròleg: el recorregut pel club i les claus del teu despatx."
+  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Acaba el pròleg: el recorregut pel club i les claus del teu despatx.",
+  "te espera en el museo con la copa de la rama": "t'espera al museu amb la copa de la secció",
+  "Darles visibilidad: un partido en el estadio": "Donar-los visibilitat: un partit a l'estadi",
+  "La rama, en el estadio": "La secció, a l'estadi",
+  "Juegan un partido en tu césped: +%d socios y un poco más de fuerza esta temporada (el césped, −%d).": "Juguen un partit a la teva gespa: +%d socis i una mica més de força aquesta temporada (la gespa, −%d).",
+  "¡La rama, campeona!": "La secció, campiona!",
+  "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "La copa de la secció ja és al museu i la foto a Tribuna (+%d socis, +2 d'ànim).",
+  "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "La copa de la secció ja és al museu (+%d socis, +2 d'ànim)."
  },
  "pl": {
   "Club": "Klub",
@@ -52802,7 +52844,14 @@
   "🏛️ El club, con el gobierno": "🏛️ Klub popiera rząd",
   "El club apoya públicamente al gobierno antes de la votación. Si repite, será un aliado (sus ayudas, +25 %); si pierde, el nuevo gobierno lo recordará.": "Klub publicznie popiera rząd przed głosowaniem. Jeśli utrzyma władzę, będzie sojusznikiem (jego dotacje +25 %); jeśli przegra, nowy rząd to zapamięta.",
   "Primer día": "Pierwszy dzień",
-  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Ukończ prolog: obchód klubu i klucze do twojego gabinetu."
+  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Ukończ prolog: obchód klubu i klucze do twojego gabinetu.",
+  "te espera en el museo con la copa de la rama": "czeka na ciebie w muzeum z pucharem sekcji",
+  "Darles visibilidad: un partido en el estadio": "Dać im widoczność: mecz na stadionie",
+  "La rama, en el estadio": "Sekcja na stadionie",
+  "Juegan un partido en tu césped: +%d socios y un poco más de fuerza esta temporada (el césped, −%d).": "Grają mecz na twojej murawie: +%d członków i trochę więcej siły w tym sezonie (murawa, −%d).",
+  "¡La rama, campeona!": "Sekcja mistrzem!",
+  "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "Puchar sekcji jest już w muzeum, a zdjęcie na Tribunie (+%d członków, +2 nastroju).",
+  "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "Puchar sekcji jest już w muzeum (+%d członków, +2 nastroju)."
  },
  "tr": {
   "Club": "Kulüp",
@@ -59764,6 +59813,13 @@
   "🏛️ El club, con el gobierno": "🏛️ Kulüp hükümetin yanında",
   "El club apoya públicamente al gobierno antes de la votación. Si repite, será un aliado (sus ayudas, +25 %); si pierde, el nuevo gobierno lo recordará.": "Kulüp oylamadan önce hükümeti açıkça destekliyor. Hükümet kalırsa müttefik olur (yardımları +%25); kaybederse yeni hükümet bunu unutmaz.",
   "Primer día": "İlk gün",
-  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Girişi bitir: kulüp turu ve ofisinin anahtarları."
+  "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.": "Girişi bitir: kulüp turu ve ofisinin anahtarları.",
+  "te espera en el museo con la copa de la rama": "şubenin kupasıyla seni müzede bekliyor",
+  "Darles visibilidad: un partido en el estadio": "Görünürlük ver: stadyumda bir maç",
+  "La rama, en el estadio": "Şube stadyumda",
+  "Juegan un partido en tu césped: +%d socios y un poco más de fuerza esta temporada (el césped, −%d).": "Senin çiminde bir maç oynuyorlar: +%d üye ve bu sezon biraz daha güç (çim, −%d).",
+  "¡La rama, campeona!": "Şube şampiyon!",
+  "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "Şubenin kupası artık müzede, fotoğraf Tribuna'da (+%d üye, +2 moral).",
+  "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "Şubenin kupası artık müzede (+%d üye, +2 moral)."
  }
 }

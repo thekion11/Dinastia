@@ -60,6 +60,7 @@ var rueda_semana := -1
 var asamblea_anio := -1
 ## Cuántos trofeos del DT se habían celebrado ya (−1 = aún sin mirar).
 var _trofeos_vistos := -1
+var _ramas_vistas := -1   ## títulos de las ramas ya celebrados (`CitasRamas`)
 var _n := 0
 
 static func _h(t: String) -> int:
@@ -139,6 +140,7 @@ func semana(m: Mundo, prox: int = -1) -> void:
 			_nueva(m, prox, "celebracion", pres, Idiomas.t("Presidente de %s") % c.nombre, Idiomas.t("te espera para presentar el trofeo nuevo en el museo"), "")
 			nuevas += 1
 		_trofeos_vistos = tro
+	nuevas = CitasRamas.celebraciones(self, m, c, prox, nuevas)   ## §2.5: los títulos de las ramas también se celebran
 	## La semana antes de la votación, el gabinete del alcalde pide apoyo.
 	if nuevas < MAX_SEMANA and m.politica != null and prox == Politica.semana_votacion(c.pais) - 1 and not _hay("politica", prox):
 		_nueva(m, prox, "politica", Politica.nombre_ficticio(c.pais, "gabinete%d" % m.anio), Idiomas.t("Jefe de gabinete del alcalde"),
@@ -224,7 +226,7 @@ func opciones(m: Mundo, ct: Dictionary) -> Array[String]:
 		"agente":
 			return [Idiomas.t("Escuchar lo que ofrece"), Idiomas.t("No hago tratos en la calle")]
 		"rama":
-			return [Idiomas.t("Aprobar el presupuesto extra"), Idiomas.t("Este año no")]
+			return [Idiomas.t("Aprobar el presupuesto extra"), Idiomas.t("Este año no"), Idiomas.t("Darles visibilidad: un partido en el estadio")]
 		"celebracion":
 			return [Idiomas.t("Levantar la copa y foto para Tribuna"), Idiomas.t("Celebrarlo en privado")]
 		"asamblea":
@@ -311,6 +313,8 @@ func resolver(m: Mundo, id: String, opcion: int, extra: Array = []) -> Dictionar
 		"asamblea":
 			return _asamblea(m, c, opcion)
 		"rama":
+			if opcion == 2:
+				return CitasRamas.visibilidad(m, c, ct)
 			if opcion != 0 or m.hinchada == null:
 				return {"titulo": String(ct["quien"]), "texto": Idiomas.t("«Lo entiendo. Seguiremos con lo que hay.»")}
 			var coste := 0
@@ -323,6 +327,8 @@ func resolver(m: Mundo, id: String, opcion: int, extra: Array = []) -> Dictionar
 			m.hinchada.bono_rama[String(ct["clave"])] = m.anio
 			return {"titulo": Idiomas.t("Presupuesto aprobado"), "texto": Idiomas.t("%s para la rama esta temporada: jugará más fuerte.") % Eco.dinero(coste)}
 		"celebracion":
+			if String(ct["clave"]).begins_with("rama|"):
+				return CitasRamas.celebrar(m, c, ct, opcion)
 			if m.prensa != null:
 				m.prensa.animo = clampi(m.prensa.animo + 3, 0, 100)
 			if opcion == 0 and m.redes != null:
@@ -388,7 +394,7 @@ func convocar_rueda(m: Mundo) -> String:
 # ======================================================================== GUARDADO
 
 func a_dic() -> Dictionary:
-	return {"lista": lista.duplicate(true), "objetivo": objetivo, "favor_agente": favor_agente, "rueda": rueda_semana, "asamblea": asamblea_anio, "trofeos": _trofeos_vistos, "n": _n}
+	return {"lista": lista.duplicate(true), "objetivo": objetivo, "favor_agente": favor_agente, "rueda": rueda_semana, "asamblea": asamblea_anio, "trofeos": _trofeos_vistos, "ramas": _ramas_vistas, "n": _n}
 
 func desde_dic(d: Dictionary) -> void:
 	lista.clear()
@@ -400,6 +406,7 @@ func desde_dic(d: Dictionary) -> void:
 	rueda_semana = int(d.get("rueda", -1))
 	asamblea_anio = int(d.get("asamblea", -1))
 	_trofeos_vistos = int(d.get("trofeos", -1))
+	_ramas_vistas = int(d.get("ramas", -1))
 	_n = int(d.get("n", 0))
 
 ## Las preguntas 2 y 3 de la entrevista: entra en el grupo elegido (hasta que el vestuario se
