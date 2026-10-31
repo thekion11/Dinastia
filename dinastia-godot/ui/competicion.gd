@@ -116,16 +116,16 @@ func _llenar_selector() -> void:
 	_selector.clear()
 	_entradas.clear()
 	for l: Liga in mundo.ligas:
-		_selector.add_item("%s  ·  %s" % [Idiomas.t(l.nombre), l.pais], _entradas.size())
+		_selector.add_item("%s  ·  %s" % [CompeticionInfo.nombre_visible(l.nombre), l.pais], _entradas.size())
 		_entradas.append(l)
 	if mundo.copa != null and not mundo.copa.participantes.is_empty():
-		_selector.add_item("🏆  " + Idiomas.t(mundo.copa.nombre), _entradas.size())
+		_selector.add_item("🏆  " + CompeticionInfo.nombre_visible(mundo.copa.nombre), _entradas.size())
 		_entradas.append(mundo.copa)
 	for k: String in Continental.claves():
 		var t: Continental = mundo.continentales.get(k)
 		if t == null or t.participantes.is_empty():
 			continue
-		_selector.add_item("🌎  " + Idiomas.t(Continental.nombre_conti(k)), _entradas.size())
+		_selector.add_item("🌎  " + CompeticionInfo.nombre_visible(Continental.nombre_conti(k)), _entradas.size())
 		_entradas.append(t)
 	var i := _entradas.find(_copa if _copa != null else _liga)
 	if i >= 0:
@@ -178,7 +178,7 @@ func _pintar() -> void:
 	if _copa != null:
 		CompeticionCopas.pintar(_lista, _copa, mio)
 		return
-	CompeticionFilas.titulo(_lista, Idiomas.t("%s  ·  jornada %d de %d") % [Idiomas.t(_liga.nombre),
+	CompeticionFilas.titulo(_lista, Idiomas.t("%s  ·  jornada %d de %d") % [CompeticionInfo.nombre_visible(_liga.nombre),
 		mini(_liga.jornada_actual, _liga.jornadas()), _liga.jornadas()], COL_ORO, 16)
 	_pintar_tabla_completa(mio)
 	_pintar_ultimos(mio)
