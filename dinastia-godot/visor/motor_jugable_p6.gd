@@ -3,6 +3,10 @@ extends "res://visor/motor_jugable_p5.gd"
 
 ## Patea el balón hacia `destino` con una velocidad horizontal `vh` y la
 ## parábola que haga falta para llegar ahí (más `loft` de altura extra).
+## El saque de mano: el balón sigue en la mano del portero hasta `SUELTA_MANO` s después (el clip carga el brazo antes de lanzar).
+const SUELTA_MANO := 0.45
+var _en_mano: Dictionary = {}
+
 func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 0.0, anim := "pase") -> void:
 	_ultima_anim = anim
 	_n_patada += 1
@@ -37,6 +41,10 @@ func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 
 		h = d / dist * vh
 	vel_balon = Vector3(h.x, vy, h.z)
 	giro_balon = Vector3(0, efecto, 0)
+	if anim == "saque_mano":
+		## Lo retiene en la mano mientras carga el brazo y lo suelta al lanzar (`_retener_en_mano`, 31-10).
+		_en_mano = {"p": p, "hasta": t + SUELTA_MANO, "vel": vel_balon}
+		vel_balon = Vector3.ZERO
 	if depurar:
 		Registro.depurar("PATADA", "%s(%s) desde %s a %s vh %.1f loft %.1f vel %s" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", str(b), str(destino), vh, loft, str(vel_balon)])
 	if OS.get_environment("DEPURAR_AIRE") != "" and vy > 2.0:

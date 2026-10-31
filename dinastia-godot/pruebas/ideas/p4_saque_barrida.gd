@@ -13,6 +13,7 @@ func _probar() -> void:
 			gk = p
 			break
 	## 1) Saque de mano aislado: el portero acaba de atrapar y pasa a un compañero a 20 m.
+	motor.estado = "juego"
 	motor.poseedor = gk
 	gk["en_manos"] = true
 	var b := motor.balon.position
@@ -20,6 +21,15 @@ func _probar() -> void:
 	_comprobar(String(gk.get("anim_actual", "")) == "saque_mano", "con el balón en las manos pasa con la mano (gesto «%s»)" % String(gk.get("anim_actual", "")))
 	_comprobar(motor.balon.position.y >= 1.6, "el balón sale desde arriba del hombro (%.2f m)" % motor.balon.position.y)
 	_comprobar(not bool(gk.get("en_manos", false)), "y ya no lo tiene en las manos")
+	## Lo retiene en la mano mientras carga el brazo y lo suelta a los 0,45 s, ya con velocidad.
+	_comprobar(not motor._en_mano.is_empty() and motor.vel_balon.length() < 0.01, "al principio sigue en la mano (sin velocidad)")
+	var t_suelta := -1.0
+	for i in 30:
+		motor.paso(1.0 / 30.0)
+		if t_suelta < 0.0 and motor._en_mano.is_empty():
+			t_suelta = float(i + 1) / 30.0
+	_comprobar(t_suelta > 0.35 and t_suelta < 0.6, "lo suelta al lanzar, no al empezar a cargar el brazo (a los %.2f s)" % t_suelta)
+	_comprobar(motor.vel_balon.length() > 5.0 or motor.poseedor != gk, "y el balón sale con su velocidad (%.1f m/s)" % motor.vel_balon.length())
 	## 2) Envío largo: sigue siendo de volea (no un lanzamiento de 60 m).
 	motor.poseedor = gk
 	gk["en_manos"] = true
