@@ -400,3 +400,14 @@ func _decir(titulo: String, texto: String) -> void:
 		add_child(_cuadro)
 	_cuadro.decir(titulo, texto, Color(1.0, 0.86, 0.5), 0, 1)
 	_t_cuadro = 5.0
+
+## (§2.5, 31-10) Pagar con tarjeta enseña la tarjeta en la mano (`TarjetaMano`) con el importe.
+var _tarjeta: TarjetaMano
+func _al_pagar_con_tarjeta(importe: int, _concepto: String) -> void:
+	if expl == null or not is_instance_valid(expl) or expl._capa == null:
+		return
+	if not is_instance_valid(_tarjeta):
+		var titular := mundo.roles.nombre if mundo.roles != null else Idiomas.t("Entrenador")
+		_tarjeta = TarjetaMano.crear("Banco Andino", String(titular), TarjetaMano.digitos_de(String(titular)))
+		expl._capa.add_child(_tarjeta)
+	_tarjeta.mostrar(importe)

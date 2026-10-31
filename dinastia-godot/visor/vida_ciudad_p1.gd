@@ -87,6 +87,8 @@ static func enganchar(e: ExploradorCiudad, v: VistaCiudad, m: Mundo) -> VidaCiud
 		else:
 			red.adoptar(m.redes_ciudad)
 	s._sincronizar_luz()
+	if m.roles != null and m.roles.cartera != null:
+		m.roles.cartera.pago_con_tarjeta.connect(s._al_pagar_con_tarjeta)   ## §2.5: la tarjeta en la mano
 	if m.citas != null:
 		s.citas_3d = CitasCiudad.crear(s)
 	s.sentados = GenteSentada.crear(s)

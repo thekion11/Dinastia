@@ -216,6 +216,7 @@ func _probar_async() -> void:
 			var gas0: float = sr.modelo.gas[int(surt["id"])]
 			_v.usar_surtidor("surtidor_0", "normal")
 			_comprobar(_m.vida.combustible > 40.0 and _m.roles.patrimonio < 500, "repostar cobra de la cuenta del DT con la tarjeta sin contacto")
+			_comprobar(is_instance_valid(_v._tarjeta) and _v._tarjeta.visible, "y la tarjeta sube a la mano con el importe (§2.5)")
 			_comprobar((_m.mi_club().saldo if _m.mi_club() != null else 0) == club_saldo, "y el club no paga la gasolina")
 			_m.vida.combustible = 5.0
 			_m.roles.patrimonio = 0
