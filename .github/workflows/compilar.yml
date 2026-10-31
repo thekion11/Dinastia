@@ -252,6 +252,8 @@ jobs:
           timeout 900 godot --headless --path . --import > /dev/null 2>&1 || true
           godot --headless --export-debug "Android" ../build/android/Dinastia-debug.apk
           ls -la ../build/android
+          ## M-353: la extensión C++ tiene que ir dentro del APK (si no, el juego usa la versión GDScript, más lenta).
+          unzip -l ../build/android/Dinastia-debug.apk | grep "libdinastia" || { echo "Falta libdinastia en el APK"; exit 1; }
 
       - name: Subir el build
         uses: actions/upload-artifact@v4
