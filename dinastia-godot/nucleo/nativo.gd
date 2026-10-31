@@ -2,7 +2,7 @@ class_name Nativo
 extends RefCounted
 ## LA EXTENSIÓN EN C++ (30-10-2026, rendimiento): `bin_nativo/` (código en `nativo/src`). Los
 ## bucles más pesados de GDScript, traducidos uno a uno para dar los MISMOS bytes (lo comprueba
-## `pruebas/probar_nativo.tscn`). Si no hay binario para esta plataforma (hoy: Android y Web), o con
+## `pruebas/probar_nativo.tscn`). Si no hay binario para esta plataforma (hoy: Web; el de Android lo compila el CI, M-353), o con
 ## `DINASTIA_SIN_NATIVO=1`, `obj()` devuelve null y cada llamador usa su versión GDScript.
 
 static var _obj: Object = null
