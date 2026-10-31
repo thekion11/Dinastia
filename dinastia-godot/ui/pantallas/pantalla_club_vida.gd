@@ -128,3 +128,7 @@ func _pintar_hinchada(c: Club) -> void:
 			rival_pd.nombre, rival_pd.rep, hoy_pd, base_pd]
 		epd.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_estadio.add_child(epd)
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"conti": _pintar_conti, "medico": _pintar_medico, "logros": _pintar_logros, "entrenamiento": _pintar_entrenamiento}
