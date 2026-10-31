@@ -356,6 +356,7 @@ static func _cargar_clip_futbol(archivo: String) -> Dictionary:
 static func _fuentes() -> PackedStringArray:
 	var r := CacheDisco.scripts("res://visor", PackedStringArray(["anim_", "retarget_futbol_q", "futbolista_q"]))
 	r.append(RUTA_UAL)
+	r.append(RUTA_UAL2)
 	for f in DirAccess.get_files_at(CARPETA_FUTBOL):
 		if f.ends_with(".fbx") or f.ends_with(".fbx.import"):
 			r.append(CARPETA_FUTBOL + f.trim_suffix(".import"))

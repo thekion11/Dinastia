@@ -56,6 +56,7 @@ const CACHES := [
 	["res://visor/anim_futbol.gd", "_cache", {}],
 	["res://visor/anim_quaternius.gd", "_packed_ual", null],
 	["res://visor/anim_quaternius.gd", "_lib_ual", null],
+	["res://visor/anim_quaternius.gd", "_lib_ual2", null],
 	["res://visor/anim_quaternius.gd", "_bibliotecas", {}],
 	["res://visor/anim_quaternius.gd", "_cache_futbol", {}],
 	["res://visor/anim_quaternius.gd", "_cache_futbol_global", {}],
