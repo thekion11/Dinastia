@@ -795,7 +795,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-154 | P3 | PENDIENTE | Sin online | fuera de alcance, sin documentar |
 | M-166 | P3 | PENDIENTE | Sin partidos de fútbol sala/playa/mujeres (género existe) | fuera de alcance, sin documentar |
 
-### F6 pulido (rendimiento) (17)
+### F6 pulido (rendimiento) (18)
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
@@ -815,6 +815,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-354 | P2 | PARCIAL | `RendimientoAdaptativo` existe; documentar umbrales y probarlos | `pruebas/probar_rendimiento_adaptativo.gd`; no está en el banco |
 | M-355 | P2 | PARCIAL | Sin modo batería/60→30 FPS en móvil | límite de FPS 30/60/120 (`Principal.FPS_OPCIONES`); sin modo batería |
 | M-356 | P2 | PENDIENTE | Memoria de la ciudad ×4 (2.640 m) | sin streaming por celdas |
+| M-475 | P1 | PENDIENTE | Comparación visual main ↔ `claude/happy-carson-qao1ph` (30-10, Forward+ lavapipe, 960×540, mundo CHI 777, 2 tomas por versión) | Igual (dentro del ruido entre dos tomas de la misma versión): menú, carga, cara, pelo, ciudad general y a pie, estadio en «Principal (TV)», «Tribuna alta» y «A ras de campo». **Cambia**: «Detrás del arco», edificios del horizonte: en la rama optimizada faltan los remates de azotea (depósitos, máquinas). Causa probable: `EntornoEstadio.agrupar` → `Optimizar.agrupar(e, false)` (`ui/estadio_p3.gd`) junta esas piezas en MultiMesh por celda y su rango de visibilidad pasa a medirse desde el MultiMesh, no desde cada pieza (o se pliegan mal). Arreglarlo en esa rama y repetir la toma |
 | M-357 | P2 | PARCIAL | Capturas pesadas en repo (`pruebas/capturas`) | `.gitignore` de promo/lotes y JPG por defecto; resto en repo |
 
 ### F6 pulido (traducciones) (6)
