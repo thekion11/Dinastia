@@ -19,7 +19,7 @@ func _capa_modal_encima() -> bool: return _atajos._capa_modal_encima()
 
 
 ## Puente (fase 6, paso 6): la sección Identidad la pinta `PantallaIdentidad`.
-func _pintar_identidad(c: Club) -> void: _ui_identidad._pintar_identidad(c)
+func _pintar_identidad(c: Club) -> void: _ui_identidad.abrir("identidad", {"club": c})
 
 func _al_paso_nuevo() -> void:
 	if mundo == null or mundo.prensa == null or mundo.prensa.al_paso.is_empty():

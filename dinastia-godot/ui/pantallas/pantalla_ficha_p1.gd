@@ -1,4 +1,4 @@
-extends RefCounted
+extends PantallaBase
 ## [Capa 1/2 de `pantalla_ficha.gd`] _init, _paleta_ficha, _pedir_informe_ojeo, _pagar_clausula, _paleta_club_dentro, _alternar_consejero … (+12)
 
 ## LA FICHA Y EL CLUB POR DENTRO: la ficha del jugador y sus acciones, el directorio, el staff, los consejeros, el embajador, los ojeadores, la analítica y las academias.
@@ -7,10 +7,6 @@ extends RefCounted
 ## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
-var p: Principal
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 ## La ficha. Es la pantalla donde el jugador decide, así que enseña las TRES
 ## puertas del fichaje juntas -lo que pide su club, lo que pide él de ficha y las

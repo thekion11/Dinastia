@@ -1,4 +1,4 @@
-extends RefCounted
+extends PantallaBase
 ## [Capa 1/3 de `pantalla_legado.gd`] _init, _pintar_inicio, _texto_proximo_compromiso, _pintar_desgaste, _pintar_rival_dt, _pintar_leyenda_viva … (+6)
 
 ## INICIO, CARRERA Y LEGADO: la portada, el legado, el rival DT, las filiales, la sucesión, el árbol de habilidades, el fin de carrera y los récords.
@@ -7,7 +7,6 @@ extends RefCounted
 ## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
-var p: Principal
 ## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
 ## Que año del archivo de planteles está desplegado. Cero, ninguno: si se
 ## abrieran todos a la vez, veinte temporadas serían seiscientas filas.
@@ -15,9 +14,6 @@ var _plantel_abierto: int = 0
 ## La retirada no se puede deshacer, así que el boton pide confirmacion como el
 ## de vender el club: primero avisa, y solo el segundo clic la ejecuta.
 var _confirmar_retiro: bool = false
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 func _pintar_inicio(c: Club) -> void:
 	p._limpiar(p._lista_inicio)

@@ -387,3 +387,7 @@ func _creditos_fotos() -> void:
 	lista.add_theme_color_override("default_color", Principal.COL_TEXTO)
 	lista.text = "\n".join(lineas).replace(": foto de ", Idiomas.t(": foto de "))
 	caja.add_child(lista)
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"ajustes": _pintar_ajustes}

@@ -173,3 +173,7 @@ func _pintar_informe() -> void:
 		b.pressed.connect(func() -> void: p._ir_a_pestana(tab))
 		fila.add_child(b)
 	p._lista_inicio.add_child(HSeparator.new())
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"seleccion": _pintar_seleccion, "cantera": _pintar_cantera, "contratos": _pintar_contratos, "comparar": _pintar_comparar}

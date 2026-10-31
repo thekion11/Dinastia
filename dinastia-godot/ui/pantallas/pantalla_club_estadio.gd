@@ -201,3 +201,7 @@ func _pintar_estadio(c: Club) -> void:
 		"Aleja la grada del campo: -3,5 de ambiente.")
 	_fila_interruptor_estadio(e.ajustes, "vallas", "Vallas perimetrales",
 		"Separan a la hinchada del césped. Estética de otra época.")
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"estadio": _pintar_estadio}

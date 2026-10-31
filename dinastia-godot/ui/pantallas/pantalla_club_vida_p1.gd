@@ -1,4 +1,4 @@
-extends RefCounted
+extends PantallaBase
 ## [Capa 1/4 de `pantalla_club_vida.gd`] _init, _pintar_balance_medico, _terapia, _segunda_opinion, _pintar_medico, _pintar_logros_ocultos … (+5)
 
 ## LA VIDA DEL CLUB: el médico, los logros, el museo, las obras, la pretemporada, las mentorías, el entrenamiento, la federación y la hinchada.
@@ -7,10 +7,6 @@ extends RefCounted
 ## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
-var p: Principal
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 ## La enfermería: quién está fuera, con qué y cuánto le queda, y qué se puede
 ## hacer al respecto. Es la pantalla que hace que contratar al jefe médico y

@@ -1,12 +1,11 @@
 class_name PantallaCiudad
-extends RefCounted
+extends PantallaBase
 ## LA CIUDAD: terrenos, negocios, conciertos, la municipalidad, la sostenibilidad y la seguridad.
 ##
 ## Sale de `ui/principal.gd` (mapa de metas 15: el archivo pasaba de
 ## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
-var p: Principal
 ## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
 ## `GLOSARIO` del HTML (`juego.js`, 20 términos): tabla estática, ya exportada
 ## en `datos/tablas.json` como cualquier otra -no se transcribe a mano-. Sin
@@ -23,9 +22,6 @@ var p: Principal
 ## número. Quien quiera SU liga —los nombres bien escritos, las plantillas que
 ## él conoce— tiene que poder escribirla, y a mano son cuatrocientos clubes.
 var _editor: Editor
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 func _editor_de() -> Editor:
 	if _editor == null or _editor._mundo() != p.mundo:
@@ -388,3 +384,7 @@ func _pintar_ciudad(c: Club) -> void:
 	_pintar_municipalidad(ci, c)
 	_pintar_sostenibilidad(ci, c)
 	_pintar_seguridad(ci, c)
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"ciudad": _pintar_ciudad}

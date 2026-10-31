@@ -98,7 +98,7 @@ func _refrescar() -> void:
 			"oro":    p._color_accesible(p.COL_ORO),
 			"escala": p._escala_texto,
 		}))
-	p._perezoso(p._lista_plantel, p._ui_plantel._pintar_plantel.bind(c))
+	p._perezoso(p._lista_plantel, p._ui_plantel.abrir.bind("plantel", {"club": c}))
 	## El panel de mercado se actualiza con la paleta del club activo para que
 	## el color de acento refleje siempre al equipo que se dirige.
 	##
@@ -121,52 +121,48 @@ func _refrescar() -> void:
 				"rojo":   p._color_accesible(p.COL_ROJO),
 				"oro":    p._color_accesible(p.COL_ORO),
 			}, p._negociacion_ultimo))
-	p._perezoso(p._lista_copa, p._ui_plantel._pintar_copa.bind(c))
-	p._perezoso(p._lista_club, p._ui_ficha._pintar_club.bind(c))
-	p._perezoso(p._lista_conti, p._ui_club_vida._pintar_conti.bind(c))
-	p._perezoso(p._lista_medico, p._ui_club_vida._pintar_medico.bind(c))
-	p._perezoso(p._lista_logros, p._ui_club_vida._pintar_logros)
-	p._perezoso(p._lista_entren, p._ui_club_vida._pintar_entrenamiento.bind(c))
+	p._perezoso(p._lista_copa, p._ui_plantel.abrir.bind("copa", {"club": c}))
+	p._perezoso(p._lista_club, p._ui_ficha.abrir.bind("club", {"club": c}))
+	p._perezoso(p._lista_conti, p._ui_club_vida.abrir.bind("conti", {"club": c}))
+	p._perezoso(p._lista_medico, p._ui_club_vida.abrir.bind("medico", {"club": c}))
+	p._perezoso(p._lista_logros, p._ui_club_vida.abrir.bind("logros"))
+	p._perezoso(p._lista_entren, p._ui_club_vida.abrir.bind("entrenamiento", {"club": c}))
 	p._perezoso(p._lista_fed, p._pintar_federacion.bind(c))
-	p._perezoso(p._lista_estadio, p._ui_club_estadio._pintar_estadio.bind(c))
-	p._perezoso(p._lista_seleccion, p._ui_cantera._pintar_seleccion.bind(c))
-	p._perezoso(p._lista_cantera, p._ui_cantera._pintar_cantera.bind(c))
-	p._perezoso(p._lista_contratos, p._ui_cantera._pintar_contratos.bind(c))
-	p._perezoso(p._lista_comparar, p._ui_cantera._pintar_comparar)
-	p._perezoso(p._lista_records, func() -> void:
-		p._ui_legado._pintar_records()
-		p._ui_legado._filtrar_records())
-	p._perezoso(p._lista_legado, p._ui_legado._pintar_legado)
-	p._perezoso(p._lista_inicio, p._ui_legado._pintar_inicio.bind(c))
+	p._perezoso(p._lista_estadio, p._ui_club_estadio.abrir.bind("estadio", {"club": c}))
+	p._perezoso(p._lista_seleccion, p._ui_cantera.abrir.bind("seleccion", {"club": c}))
+	p._perezoso(p._lista_cantera, p._ui_cantera.abrir.bind("cantera", {"club": c}))
+	p._perezoso(p._lista_contratos, p._ui_cantera.abrir.bind("contratos", {"club": c}))
+	p._perezoso(p._lista_comparar, p._ui_cantera.abrir.bind("comparar"))
+	p._perezoso(p._lista_records, p._ui_legado.abrir.bind("records"))
+	p._perezoso(p._lista_legado, p._ui_legado.abrir.bind("legado"))
+	p._perezoso(p._lista_inicio, p._ui_legado.abrir.bind("inicio", {"club": c}))
 	## Las otras tres viven DENTRO de `_pintar_gente()` ahora -un chip por
 	## sección, solo se pinta la que está activa- en vez de apilarse las
 	## cuatro siempre, aunque solo una se vea.
-	p._perezoso(p._lista_gente, p._ui_gente._pintar_gente)
-	p._perezoso(p._lista_finanzas, p._ui_finanzas._pintar_finanzas.bind(c))
-	p._perezoso(p._lista_camarin, p._ui_finanzas._pintar_camarin.bind(c))
-	p._perezoso(p._lista_ciudad, p._ui_ciudad._pintar_ciudad.bind(c))
-	p._perezoso(p._lista_editor, p._ui_editor._pintar_editor)
-	p._perezoso(p._lista_glosario, p._ui_opciones._pintar_glosario)
-	p._perezoso(p._lista_ajustes, p._ui_ajustes._pintar_ajustes)
-	p._perezoso(p._lista_correo, p._ui_gente._pintar_correo)
-	p._perezoso(p._lista_redes, func() -> void:
-		p._ui_gente._pintar_redes()
-		p._ui_gente._filtrar_redes())
+	p._perezoso(p._lista_gente, p._ui_gente.abrir.bind("gente"))
+	p._perezoso(p._lista_finanzas, p._ui_finanzas.abrir.bind("finanzas", {"club": c}))
+	p._perezoso(p._lista_camarin, p._ui_finanzas.abrir.bind("camarin", {"club": c}))
+	p._perezoso(p._lista_ciudad, p._ui_ciudad.abrir.bind("ciudad", {"club": c}))
+	p._perezoso(p._lista_editor, p._ui_editor.abrir.bind("editor"))
+	p._perezoso(p._lista_glosario, p._ui_opciones.abrir.bind("glosario"))
+	p._perezoso(p._lista_ajustes, p._ui_ajustes.abrir.bind("ajustes"))
+	p._perezoso(p._lista_correo, p._ui_gente.abrir.bind("correo"))
+	p._perezoso(p._lista_redes, p._ui_gente.abrir.bind("redes"))
 	## Diferidas como las demás (etapa 1, 2.ª pasada): llamadas a pelo, con
 	## la pestaña oculta no pintaban NI quedaban pendientes, y al entrar en
 	## «Vida» o «Habilidades» la hoja salía vacía.
-	p._perezoso(p._lista_vida, p._ui_legado._pintar_vida)
-	p._perezoso(p._lista_habilidades, p._ui_legado._pintar_habilidades)
-	p._perezoso(p._lista_libres, p._ui_plantel._pintar_libres.bind(c))
-	p._perezoso(p._lista_premios, p._ui_plantel._pintar_premios)
+	p._perezoso(p._lista_vida, p._ui_legado.abrir.bind("vida"))
+	p._perezoso(p._lista_habilidades, p._ui_legado.abrir.bind("habilidades"))
+	p._perezoso(p._lista_libres, p._ui_plantel.abrir.bind("libres", {"club": c}))
+	p._perezoso(p._lista_premios, p._ui_plantel.abrir.bind("premios"))
 	p._perezoso(p._lista_clubes, p._pintar_clubes)
-	p._perezoso(p._lista_desafios, p._ui_plantel._pintar_desafios)
-	p._perezoso(p._lista_tactica, p._ui_plantel._pintar_tactica.bind(c))
-	p._perezoso(p._lista_partido, p._ui_plantel._pintar_partido.bind(c))
-	p._perezoso(p._lista_calendario, p._ui_plantel._pintar_calendario.bind(c))
+	p._perezoso(p._lista_desafios, p._ui_plantel.abrir.bind("desafios"))
+	p._perezoso(p._lista_tactica, p._ui_plantel.abrir.bind("tactica", {"club": c}))
+	p._perezoso(p._lista_partido, p._ui_plantel.abrir.bind("partido", {"club": c}))
+	p._perezoso(p._lista_calendario, p._ui_plantel.abrir.bind("calendario", {"club": c}))
 	_pintar_dias()
 	p._actualizar_badges()
-	p._ui_despacho._pintar_despacho()
+	p._ui_despacho.abrir("despacho")
 	## La ficha, igual: si la columna no se ve (menús sin ficha), se pinta al verse.
 	p._seleccionado = p._seleccionado if p._seleccionado != null else p._jugador_de_la_semana(c)
 	p._perezoso(p._ficha, p._ver_ficha.bind(p._seleccionado))

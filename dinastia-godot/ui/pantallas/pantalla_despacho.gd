@@ -1,5 +1,5 @@
 class_name PantallaDespacho
-extends RefCounted
+extends PantallaBase
 ## Lo que hay que resolver ahora (asuntos, decisiones, la junta, el agente).
 
 ## EL DESPACHO: lo que hay que resolver ahora (asuntos, decisiones, la junta, el agente). La rueda de
@@ -9,10 +9,6 @@ extends RefCounted
 ## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
-var p: Principal
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 func _marco_aviso(color: Color) -> VBoxContainer:
 	var caja := PanelContainer.new()
@@ -435,3 +431,7 @@ func _pintar_despacho() -> void:
 		"mercado_av": _pintar_asunto_mercado_av()
 		"insolvencia": _pintar_asunto_insolvencia()
 		"vida": _pintar_asunto_vida()
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"despacho": _pintar_despacho}

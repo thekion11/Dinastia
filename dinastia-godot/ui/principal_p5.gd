@@ -29,4 +29,4 @@ func _miles(n: int) -> String:
 	return salida
 
 ## Puente (fase 6, paso 6): la pestaña Estadio la pinta `PantallaClubEstadio`.
-func _pintar_estadio(c: Club) -> void: _ui_club_estadio._pintar_estadio(c)
+func _pintar_estadio(c: Club) -> void: _ui_club_estadio.abrir("estadio", {"club": c})

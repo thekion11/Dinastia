@@ -424,3 +424,7 @@ func _ver_ficha_3(j: Jugador) -> void:
 	## La ficha se rehace entera en cada clic: sin esto, lo que no pasó por
 	## `Idiomas.t` se quedaba en castellano hasta el siguiente repintado general.
 	(p as Principal)._traducir_pantalla(p._ficha)
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"club": _pintar_club}

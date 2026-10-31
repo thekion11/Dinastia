@@ -211,3 +211,10 @@ func _resumen_carrera(lg: Logros) -> void:
 		va.text = String(par[1])
 		col.add_child(va)
 	p._lista_records.add_child(HSeparator.new())
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"records": func() -> void:
+			_pintar_records()
+			_filtrar_records(),
+		"legado": _pintar_legado, "inicio": _pintar_inicio, "vida": _pintar_vida, "habilidades": _pintar_habilidades}
