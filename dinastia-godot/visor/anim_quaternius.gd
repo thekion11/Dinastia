@@ -410,6 +410,7 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 		## EL PORTAFOLIO GRANDE (26-9-2026): clips de la UAL, espejos de cada
 		## movimiento de fútbol y expresiones a mano.
 		AnimExtra.extender(lib, esq, prefijo)
+	SueloAnim.corregir(lib, esq, prefijo)   ## ningún pie bajo el césped (31-10, auditoría biomecánica; SIN_SUELO_ANIM=1 lo apaga)
 	return lib
 
 static func _en_cache(esq: Skeleton3D, prefijo: String, acciones_experimentales: bool) -> AnimationLibrary:

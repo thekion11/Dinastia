@@ -354,7 +354,7 @@ static func _cargar_clip_futbol(archivo: String) -> Dictionary:
 
 ## Lo que decide cómo sale la biblioteca: los scripts de animación y los clips de origen.
 static func _fuentes() -> PackedStringArray:
-	var r := CacheDisco.scripts("res://visor", PackedStringArray(["anim_", "retarget_futbol_q", "futbolista_q"]))
+	var r := CacheDisco.scripts("res://visor", PackedStringArray(["anim_", "retarget_futbol_q", "futbolista_q", "suelo_anim"]))
 	r.append(RUTA_UAL)
 	r.append(RUTA_UAL2)
 	for f in DirAccess.get_files_at(CARPETA_FUTBOL):
