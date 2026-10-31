@@ -50,6 +50,8 @@ const CATALOGO := [
 	["dt_3", "🎙️", "Entrenador del año ×3", "Tres premios al mejor entrenador en la gala de fin de temporada.", 3],
 	["fairplay_1", "🕊️", "Juego limpio", "El premio Fair Play de la gala de fin de temporada.", 1],
 	["ideal_5", "🧩", "Medio equipo ideal", "Cinco de los tuyos en el equipo ideal de una misma gala.", 5],
+	## (§2.5 del guion, 30-10) El primer día: el prólogo hecho (el recorrido y tu oficina).
+	["primer_dia", "🔑", "Primer día", "Termina el prólogo: el recorrido por el club y las llaves de tu oficina.", 1],
 ]
 
 ## La fila de una clave (vacía si no existe).
@@ -109,6 +111,8 @@ static func valor(clave: String, lg: Logros) -> int:
 			for a: Dictionary in lg.premios:
 				mejor = maxi(mejor, int(a.get("ideal_mios", 0)))
 			return mejor
+		"primer":
+			return 1 if m.prologo_visto else 0
 	return 0
 
 ## El mayor valor de un registro: los goles van {nombre: n} y los partidos

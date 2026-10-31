@@ -37,7 +37,7 @@ func _catalogo() -> void:
 	for f: Array in LogrosLargo.CATALOGO:
 		ok = ok and f.size() == 5 and int(f[4]) > 0 and not claves.has(f[0])
 		claves[f[0]] = true
-	_comprobar(LogrosLargo.CATALOGO.size() == 30 and ok, "30 logros, claves únicas y meta positiva")
+	_comprobar(LogrosLargo.CATALOGO.size() == 31 and ok, "31 logros (30 de largo plazo y el «Primer día» del guion), claves únicas y meta positiva")
 	Idiomas.idioma = "en"
 	var sin := []
 	for f: Array in LogrosLargo.CATALOGO:
@@ -98,6 +98,7 @@ func _poner(clave: String, n: int) -> void:
 			for i in n:
 				_lg.premios.append({"dt_es_mio": true, "fairplay_es_mio": true})
 		"ideal": _lg.premios = [{"ideal_mios": n}]
+		"primer": _m.prologo_visto = n > 0
 
 func _carrera_y_guardado() -> void:
 	_lg.carrera = {"pj": 0, "pg": 0}
