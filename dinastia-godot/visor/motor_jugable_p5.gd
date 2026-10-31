@@ -94,7 +94,7 @@ func _mover_jugadores(delta: float) -> void:
 		var n: Node3D = p["node"]
 		if not is_instance_valid(n) or not p.has("objetivo"):
 			continue
-		var obj: Vector3 = p["objetivo"]
+		var obj: Vector3 = p["objetivo"] if float(p.get("levanta_hasta", 0.0)) <= t else n.position   ## en el suelo tras la barrida (31-10)
 		obj.y = 0.0
 		var dif := obj - Vector3(n.position.x, 0, n.position.z)
 		var dist := dif.length()
@@ -408,6 +408,8 @@ func _golpeo_anim(p: Dictionary, ap: AnimationPlayer, anim: String, destino: Vec
 			ops = ["patear", "pase_largo"]
 		"banda":
 			ops = ["saque_banda"]
+		"mano":
+			ops = ["saque_mano"]
 		_:
 			if anim == "cabezazo":
 				ops = ["cabezazo_potente", "cabezazo_picado"] if vh > 15.0 else ["pase_cabeza", "cabezazo"]
