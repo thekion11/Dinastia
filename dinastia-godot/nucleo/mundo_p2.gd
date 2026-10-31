@@ -93,8 +93,10 @@ func _sortear_nombre(pais: String, region: String = "") -> String:
 	if region != "EUS":
 		var extra := _bolsa_extra(pais)
 		if not extra.is_empty():
-			n = n + (extra[0] as Array)
-			a = a + (extra[1] as Array)
+			## Unidas una vez por país (30-10, rendimiento: se copiaban en cada nombre sorteado).
+			if not _bolsas_unidas.has(pais):
+				_bolsas_unidas[pais] = [n + (extra[0] as Array), a + (extra[1] as Array)]
+			n = _bolsas_unidas[pais][0]; a = _bolsas_unidas[pais][1]
 	return "%s %s" % [Azar.uno(n), Azar.uno(a)]
 func _nombre_al_azar(pais: String = "", region: String = "") -> String:
 	if _nombres_usados.is_empty():

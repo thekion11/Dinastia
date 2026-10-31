@@ -149,7 +149,15 @@ var _rect_entrada := Rect2()
 ## Un hincha de pie en tres piezas (pantalón, camiseta, piel), cada una con su
 ## color por instancia. Low-poly: se ven de lejos y son cientos.
 static var _piezas_hincha: Array = []
+## Entre paso y paso (30-10-2026): con `por_partes` (lo pone `VistaCiudad` con la pantalla de
+## carga) cede un fotograma cada ~40 ms de trabajo, y la carga sigue animada.
+var por_partes := false
+var _t_respiro := 0
+
 func _marca(que: String) -> void:
+	if por_partes and Time.get_ticks_usec() - _t_respiro > 40000:
+		await get_tree().process_frame
+		_t_respiro = Time.get_ticks_usec()
 	if _medir_tiempos:
 		var ahora := Time.get_ticks_usec()
 		Registro.depurar("TIEMPO", "%-24s %6.0f ms" % [que, (ahora - _t_marca) / 1000.0])
@@ -166,21 +174,39 @@ func _color_luces() -> Color:
 ## suma con MENOS peso cerca del llano, o el borde del campo de juego quedaría
 ## rizado justo donde empieza el césped liso.
 func _altura_terreno(x: float, z: float, ruido: FastNoiseLite, detalle: FastNoiseLite) -> float:
-	var d := Vector2(x, z).length()
-	if d <= LLANO_RADIO:
-		return 0.0
-	var t: float = clampf((d - LLANO_RADIO) / LLANO_TRANSICION, 0.0, 1.0)
-	t = t * t * (3.0 - 2.0 * t)
-	var h: float = ruido.get_noise_2d(x, z) * TERRENO_ALTURA
-	h += detalle.get_noise_2d(x, z) * 6.0
-	var dm := Vector2(x, z).distance_to(MONTE_CENTRO)
-	return h * t + MONTE_ALTURA * exp(-dm * dm / (2.0 * MONTE_RADIO * MONTE_RADIO)) * t
+	return TerrenoArreglos.altura(x, z, ruido, detalle)
 
 ## Cesped generado por codigo: dos verdes mezclados con ruido menudo. Sin una
 ## textura, una explanada de 520 m de un solo color se lee como un papel pintado.
 static func _textura_cesped() -> ImageTexture:
 	## 26-9-2026: 512 px (antes 96) sobre 20 m, sin costuras: briznas finas en
 	## dos verdes, matas más oscuras y algo de hierba seca, con mipmaps.
+	## Siempre la misma: en memoria y en disco (30-10-2026; el ruido de 512² eran ~90 ms por ciudad).
+	if _hierba != null:
+		return _hierba
+	var en_disco := "hierba|%s" % CacheDisco.huella("hierba", PackedStringArray(["res://visor/city_builder_p2.gd"]))
+	var img := CacheDisco.cargar_imagen(en_disco)
+	if img == null or img.get_width() != 512 or img.get_format() != Image.FORMAT_RGB8:
+		img = _imagen_hierba()
+		CacheDisco.guardar_imagen(en_disco, img)
+	img.generate_mipmaps()
+	_hierba = ImageTexture.create_from_image(img)
+	return _hierba
+
+static var _hierba: ImageTexture = null
+
+## Los píxeles (en C++ con `Nativo`, mismos bytes; `_imagen_hierba_gd` es el original).
+static func _imagen_hierba() -> Image:
+	if Nativo.obj() != null:
+		var ruido := FastNoiseLite.new()
+		ruido.seed = 911
+		ruido.frequency = 0.02
+		var img: Image = Nativo.obj().hierba(ruido.get_seamless_image(512, 512), 20260902)
+		if img != null:
+			return img
+	return _imagen_hierba_gd()
+
+static func _imagen_hierba_gd() -> Image:
 	var n := 512
 	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
 	var rng := RandomNumberGenerator.new()
@@ -202,16 +228,7 @@ static func _textura_cesped() -> ImageTexture:
 			elif m > 0.72 and rng.randf() < 0.25:
 				c = c.lerp(seca, 0.5)
 			img.set_pixel(x, y, c)
-	img.generate_mipmaps()
-	return ImageTexture.create_from_image(img)
-
-## Normal de la rejilla de alturas en el vértice (i, j), siempre hacia arriba.
-func _normal_rejilla(alturas: Array, i: int, j: int, paso: float) -> Vector3:
-	var n := TERRENO_CELDAS
-	var h := func(ii: int, jj: int) -> float: return float(alturas[clampi(jj, 0, n) * (n + 1) + clampi(ii, 0, n)])
-	var dx: float = (h.call(i + 1, j) - h.call(i - 1, j)) / (2.0 * paso)
-	var dz: float = (h.call(i, j + 1) - h.call(i, j - 1)) / (2.0 * paso)
-	return Vector3(-dx, 1.0, -dz).normalized()
+	return img
 
 ## El ruido que define el relieve (compartido por la malla del terreno y por `altura_en`). Aparte de `_terreno` para poder leer alturas SIN construir la
 ## malla (27-10-2026: la vía del tren y el teleférico las piden al montar la ciudad, y `altura_en` daba 0 si el terreno aún no se había construido).
@@ -231,25 +248,8 @@ func _preparar_ruido() -> void:
 
 func _terreno() -> Array[MeshInstance3D]:
 	_preparar_ruido()
-	var ruido := _ruido_terreno
-	var detalle := _ruido_detalle
+	var baldosas := TerrenoArreglos.calcular(_ruido_terreno, _ruido_detalle)   ## alturas, normales y UV (C++ si está)
 
-	var paso := TERRENO_LADO / float(TERRENO_CELDAS)
-	var mitad := TERRENO_LADO * 0.5
-	var alturas: Array = []
-	alturas.resize((TERRENO_CELDAS + 1) * (TERRENO_CELDAS + 1))
-	for j in range(TERRENO_CELDAS + 1):
-		for i in range(TERRENO_CELDAS + 1):
-			var x := -mitad + i * paso
-			var z := -mitad + j * paso
-			alturas[j * (TERRENO_CELDAS + 1) + i] = _altura_terreno(x, z, ruido, detalle)
-
-	## SHADER DE LADERA (12-9-2026): antes una sola textura de césped se
-	## estiraba sobre TODO el relieve, así que una loma de 78 m se veía con
-	## césped hasta en la parte casi vertical. `terreno.gdshader` mezcla la
-	## misma textura con roca/tierra procedural según `NORMAL.y` -plano sigue
-	## siendo césped, la pendiente se vuelve roca-, un solo material para las
-	## 64 baldosas igual que antes.
 	var shader_terreno := load("res://visor/terreno.gdshader") as Shader
 	var mat := ShaderMaterial.new()
 	mat.shader = shader_terreno
@@ -257,42 +257,21 @@ func _terreno() -> Array[MeshInstance3D]:
 	mat.set_shader_parameter("escala_cesped", Vector2(20.0, 20.0))
 
 	var salida: Array[MeshInstance3D] = []
-	var por_baldosa: int = TERRENO_CELDAS / TERRENO_BALDOSAS
-	var idx := func(ii: int, jj: int) -> int: return jj * (TERRENO_CELDAS + 1) + ii
-	for bj in range(TERRENO_BALDOSAS):
-		for bi in range(TERRENO_BALDOSAS):
-			var st := SurfaceTool.new()
-			st.begin(Mesh.PRIMITIVE_TRIANGLES)
-			for j in range(bj * por_baldosa, (bj + 1) * por_baldosa):
-				for i in range(bi * por_baldosa, (bi + 1) * por_baldosa):
-					var x0 := -mitad + i * paso
-					var z0 := -mitad + j * paso
-					var p00 := Vector3(x0, alturas[idx.call(i, j)], z0)
-					var p10 := Vector3(x0 + paso, alturas[idx.call(i + 1, j)], z0)
-					var p01 := Vector3(x0, alturas[idx.call(i, j + 1)], z0 + paso)
-					var p11 := Vector3(x0 + paso, alturas[idx.call(i + 1, j + 1)], z0 + paso)
-					## Dos triángulos por celda, en el orden que deja la cara
-					## hacia arriba (si se invierte, desde la cámara no hay
-					## nada: un agujero verde donde estaba el suelo).
-					## NORMALES (26-9-2026): `generate_normals()` las daba hacia
-					## ABAJO con este orden de vértices, y el shader pintaba todo
-					## el llano como roca gris y sin luz. Ahora salen del propio
-					## relieve (diferencias centrales), suaves y hacia arriba.
-					## Y el ORDEN: con el de antes la cara quedaba hacia abajo y el
-					## motor la descartaba; lo que se veía era el "suelo" pálido
-					## del cielo, no el terreno.
-					var ns := [_normal_rejilla(alturas, i, j, paso), _normal_rejilla(alturas, i + 1, j, paso), _normal_rejilla(alturas, i, j + 1, paso), _normal_rejilla(alturas, i + 1, j, paso), _normal_rejilla(alturas, i + 1, j + 1, paso), _normal_rejilla(alturas, i, j + 1, paso)]
-					var k := 0
-					for tri in [[p00, p10, p01], [p10, p11, p01]]:
-						for p: Vector3 in tri:
-							st.set_normal(ns[k])
-							st.set_uv(Vector2(p.x, p.z) / 20.0)
-							st.add_vertex(p)
-							k += 1
-			var mi := MeshInstance3D.new()
-			mi.mesh = st.commit()
-			mi.material_override = mat
-			salida.append(mi)
+	for b: Array in baldosas:
+		var vs: PackedVector3Array = b[0]
+		var ns: PackedVector3Array = b[1]
+		var uvs: PackedVector2Array = b[2]
+		var arr := []
+		arr.resize(Mesh.ARRAY_MAX)
+		arr[Mesh.ARRAY_VERTEX] = vs
+		arr[Mesh.ARRAY_NORMAL] = ns
+		arr[Mesh.ARRAY_TEX_UV] = uvs
+		var malla := ArrayMesh.new()
+		malla.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
+		var mi := MeshInstance3D.new()
+		mi.mesh = malla
+		mi.material_override = mat
+		salida.append(mi)
 	return salida
 
 func _via(centro: Vector3, tam: Vector2, mat_asfalto: Material, _mat_linea: Material, horizontal: bool) -> void:

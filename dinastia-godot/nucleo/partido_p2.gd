@@ -31,8 +31,7 @@ func _init(_local: Club, _visita: Club, _neutral: bool = false) -> void:
 	rastro.enganchar(self)
 
 ## LAS VALORACIONES DEL PARTIDO (M-141): la nota de cada uno de los que
-## jugaron, como en los diarios, de mejor a peor:
-##   [{jugador, nota, local, titular}]
+## jugaron, como en los diarios, de mejor a peor:   [{jugador, nota, local, titular}]
 ## La base es la nota del partido (6 + goles), más lo apuntado en `_aportes`,
 ## el resultado del equipo (+0,4 / −0,3), la portería a cero o los goles encajados
 ## (porteros y defensas) y un poco de la calidad del jugador. Los que entraron
@@ -231,6 +230,7 @@ func _elegir_goleador(once: Array[Jugador]) -> Jugador:
 		return null
 	var pesos: Array[float] = []
 	var total := 0.0
+	var tac := _tactica_de(once); var con_roles := tac != null and not tac.roles.is_empty()  ## sin roles, peso 1
 	for j in once:
 		var base := 0.02
 		match Datos.grupo(j.pos_e):
@@ -239,7 +239,7 @@ func _elegir_goleador(once: Array[Jugador]) -> Jugador:
 			"DEF": base = 0.11
 			"POR": base = 0.004
 		base *= 0.5 + float(j.atributos.get("tir", 50)) / 100.0
-		base *= RolTactico.peso(_tactica_de(once), j, "gol")
+		base *= RolTactico.peso(tac, j, "gol") if con_roles else 1.0
 		pesos.append(base)
 		total += base
 	var r := Azar.f() * total
@@ -276,6 +276,7 @@ func _elegir_asistente(once: Array[Jugador], autor: Jugador, minuto: int) -> Jug
 		return null
 	var pesos: Array[float] = []
 	var total := 0.0
+	var tac := _tactica_de(once); var con_roles := tac != null and not tac.roles.is_empty()
 	for j in candidatos:
 		var base := 0.05
 		match Datos.grupo(j.pos_e):
@@ -284,7 +285,7 @@ func _elegir_asistente(once: Array[Jugador], autor: Jugador, minuto: int) -> Jug
 			"DEF": base = 0.22
 			"POR": base = 0.02
 		base *= 0.5 + float(j.atributos.get("pas", 50)) / 100.0
-		base *= RolTactico.peso(_tactica_de(once), j, "asist")
+		base *= RolTactico.peso(tac, j, "asist") if con_roles else 1.0
 		pesos.append(base)
 		total += base
 	var rng := RandomNumberGenerator.new()

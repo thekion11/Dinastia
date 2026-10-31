@@ -94,8 +94,7 @@ func _montar_hud() -> void:
 	_mira.visible = false
 	add_child(_mira)
 
-## Marcador, números, aguante y ayuda fuera durante la ceremonia; los nombres
-## sobre los jugadores, fuera también en la realización del gol.
+## Marcador, números, aguante y ayuda fuera durante la ceremonia; los nombres, también en la del gol.
 func _ver_hud(si: bool) -> void:
 	for c: Control in _hud:
 		if is_instance_valid(c):
@@ -174,7 +173,7 @@ func _montar(duracion_mitad: float) -> void:
 	Calidad.aplicar_viewport(_vp, Calidad.elegida)
 	_raiz = Node3D.new()
 	_vp.add_child(_raiz)
-	## El estadio del local, el que se juega.
+	RuidosFondo.precargar()   ## (el estadio del local, el que se juega; texturas de ruido en hilos)
 	var perfil := mundo.perfil_estadio_de(local).duplicate() if mundo != null and equipo_usuario == null else local.perfil_estadio()
 	_perfil = perfil
 	Ambience.apply(_raiz, perfil, null, Calidad.elegida)
