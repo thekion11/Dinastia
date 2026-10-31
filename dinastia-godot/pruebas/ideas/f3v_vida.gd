@@ -227,6 +227,13 @@ func _probar_async() -> void:
 			_m.vida.premium = false
 			_m.vida.gastar_combustible(10000.0)
 			_comprobar(is_equal_approx(c0 - _m.vida.combustible, 5.0), "10 km gastan 5 l (0,5 l/km: un depósito da ~90 km)")
+			## Mejora A (31-10): indicador de gasolina con luz de reserva.
+			_m.vida.combustible = VidaDT.DEPOSITO_L * 0.5
+			var t_ok := _v.texto_gasolina()
+			_m.vida.combustible = VidaDT.DEPOSITO_L * 0.1
+			_comprobar(t_ok.contains("50 %") and not t_ok.contains(Idiomas.t("RESERVA")) and _v.reserva() and _v.texto_gasolina().contains(Idiomas.t("RESERVA")),
+				"el indicador de gasolina dice «%s» y en reserva «%s»" % [t_ok, _v.texto_gasolina()])
+			_m.vida.combustible = c0
 			_comprobar((_m.mi_club().saldo if _m.mi_club() != null else 0) == club_saldo, "y el club no paga la gasolina")
 			_m.vida.combustible = 5.0
 			_m.roles.patrimonio = 0

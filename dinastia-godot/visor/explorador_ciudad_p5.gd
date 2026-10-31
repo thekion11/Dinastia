@@ -368,6 +368,8 @@ func _physics_process(delta: float) -> void:
 		int(absf(vel) * 3.6), "" if modo == "coche" else Idiomas.t("Mayús: correr · V: vista · ")]
 	if vida != null:
 		_hud.text = "🕒 %s · %s" % [vida.etiqueta_hora(), _hud.text]
+		if modo == "coche":
+			_hud.text += "  ·  " + vida.texto_gasolina()   ## mejora A: gasolina y reserva
 	## Dónde estás: el nombre de la calle (o el cruce).
 	if cb != null and cb.expansion != null:
 		var calle := cb.expansion.nombre_calle_en(cuerpo.position)
