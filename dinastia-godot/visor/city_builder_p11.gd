@@ -123,6 +123,7 @@ func vestir_todas_las_torres() -> int:
 
 func build(d: Dictionary) -> void:
 	PrecalentarCaras.detener()   ## la ciudad es pantalla pesada: ya no se precalienta
+	CocheDetalle._n_coches = 0   ## (31-10) matrículas desde cero: la misma ciudad sale igual cada vez
 	datos = d
 	## La ciudad vieja se quita YA, no al final del cuadro: con `queue_free` las
 	## dos ciudades convivían un cuadro y el motor avisaba «material is null»

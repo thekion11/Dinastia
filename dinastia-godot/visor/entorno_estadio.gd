@@ -47,6 +47,7 @@ static func montar(raiz: Node3D, est: Dictionary, niveles: int, optimizar := fal
 	var hz: float = float(g["dz"]) + fondo + 10.0
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(String(est.get("nombre", "estadio")) + String(est.get("forma", "")))
+	CocheDetalle._n_coches = 0   ## (31-10) las matrículas también desde cero: el mismo estadio sale igual cada vez
 	_suelos(e, hx, hz)
 	var px := hx + PLAZA
 	var pz := hz + PLAZA
