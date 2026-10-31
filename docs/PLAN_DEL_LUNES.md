@@ -492,16 +492,15 @@ Cumplimiento medido en el código: entrada ~95 %, fase 0 (separar `Principal`) ~
 club ampliado ~85 %, redes ~85 %, dinero ~70 %, calidad visual ~70 % (el dueño dijo «MEJORAR» dos veces), cifras 2.3 100 %.
 Las pruebas f1-f5 del guion ya corren en `especiales.sh` (28-10). Lo que falta, por importancia para el jugador (horas de sesión):
 
-1. Entrevista de 3 preguntas, con el grupo del vestuario y el staff (hoy 1 pregunta) (3 h).
-2. Efecto real del apoyo político: `apoyo_club` no se lee (declaración en la rueda, relación con el gobierno) (2 h).
-3. Favor del agente en `MesaAgente` (1 h); logro «Primer día» y alta de los logros sueltos (2 h).
-4. Fase 0: `abrir(contexto)` en las 19 pantallas (hoy 1), autoguardar al salir del orquestador (4 h).
-5. Club ampliado: la rama de otro deporte no ofrece «visibilidad» ni celebra sus títulos (2 h).
-6. Dinero: tarjeta en mano, más cajeros y «fuera de servicio», más de un combustible, auditoría de coches (4 h).
-7. Redes: camión cisterna, casas del kit que sigan al sector en el apagón, captura Forward+ en el PC del dueño (3 h).
-8. Calidad visual (2.2e): aplicar postura, mochilas y pelo del Drive a los futbolistas del partido; pelo femenino (pasada nueva, con veredicto del dueño).
+1. Efecto real del apoyo político: `apoyo_club` no se lee (declaración en la rueda, relación con el gobierno) (2 h).
+2. Favor del agente en `MesaAgente` (1 h); logro «Primer día» y alta de los logros sueltos (2 h).
+3. Fase 0: `abrir(contexto)` en las 19 pantallas (hoy 1), autoguardar al salir del orquestador (4 h).
+4. Club ampliado: la rama de otro deporte no ofrece «visibilidad» ni celebra sus títulos (2 h).
+5. Dinero: tarjeta en mano, más cajeros y «fuera de servicio», más de un combustible, auditoría de coches (4 h).
+6. Redes: camión cisterna, casas del kit que sigan al sector en el apagón, captura Forward+ en el PC del dueño (3 h).
+7. Calidad visual (2.2e): aplicar postura, mochilas y pelo del Drive a los futbolistas del partido; pelo femenino (pasada nueva, con veredicto del dueño).
 
-Los 6 primeros (~16 h) cierran lo que el guion exige de verdad; el total de la lista larga del informe es ~65 h.
+Los 5 primeros (~13 h) cierran lo que el guion exige de verdad; el total de la lista larga del informe es ~65 h.
 
 ### 2.4 Pendientes del traspaso anterior
 

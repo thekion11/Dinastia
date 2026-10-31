@@ -6670,7 +6670,15 @@
   "Ahora arriba, a la segunda planta: la prensa te espera.": "Now upstairs, to the second floor: the press is waiting for you.",
   "¡Por fin! Aquí se come a su hora, míster; el que no come, no corre.": "At last! Here we eat on time, boss; whoever doesn't eat, doesn't run.",
   "El comedor del plantel. Come aquí los días de trabajo: cansado y con hambre se decide peor.": "The squad canteen. Eat here on working days: tired and hungry, you make worse decisions.",
-  "Bajemos a la primera planta: falta lo más importante.": "Let's go down to the first floor: the most important thing is still to come."
+  "Bajemos a la primera planta: falta lo más importante.": "Let's go down to the first floor: the most important thing is still to come.",
+  "%s quiere conocer a su nuevo entrenador.": "%s wants to meet his new coach.",
+  "¿Con quién se cambia %s en el vestuario?": "Who will %s change next to in the dressing room?",
+  "¿Con quién del cuerpo técnico trabaja %s esta semana?": "Which member of the staff will %s work with this week?",
+  "Con «%s»": "With «%s»",
+  "Con todos, sin bandos": "With everyone, no cliques",
+  "El preparador físico: un plan a su medida (+3 de forma)": "The fitness coach: a tailored plan (+3 form)",
+  "El analista: vídeos de tu sistema (+15 de adaptación)": "The analyst: videos of your system (+15 adaptation)",
+  "Nadie en especial: que se integre a su ritmo (+1 de moral)": "No one in particular: let him settle in at his own pace (+1 morale)"
  },
  "pt": {
   "Historia": "História",
@@ -13343,7 +13351,15 @@
   "Ahora arriba, a la segunda planta: la prensa te espera.": "Agora lá acima, ao segundo piso: a imprensa está à tua espera.",
   "¡Por fin! Aquí se come a su hora, míster; el que no come, no corre.": "Finalmente! Aqui come-se a horas, mister; quem não come, não corre.",
   "El comedor del plantel. Come aquí los días de trabajo: cansado y con hambre se decide peor.": "O refeitório do plantel. Come aqui nos dias de trabalho: cansado e com fome decide-se pior.",
-  "Bajemos a la primera planta: falta lo más importante.": "Desçamos ao primeiro piso: falta o mais importante."
+  "Bajemos a la primera planta: falta lo más importante.": "Desçamos ao primeiro piso: falta o mais importante.",
+  "%s quiere conocer a su nuevo entrenador.": "%s quer conhecer o seu novo treinador.",
+  "¿Con quién se cambia %s en el vestuario?": "Com quem se equipa %s no balneário?",
+  "¿Con quién del cuerpo técnico trabaja %s esta semana?": "Com quem da equipa técnica trabalha %s esta semana?",
+  "Con «%s»": "Com «%s»",
+  "Con todos, sin bandos": "Com todos, sem grupos",
+  "El preparador físico: un plan a su medida (+3 de forma)": "O preparador físico: um plano à medida (+3 de forma)",
+  "El analista: vídeos de tu sistema (+15 de adaptación)": "O analista: vídeos do teu sistema (+15 de adaptação)",
+  "Nadie en especial: que se integre a su ritmo (+1 de moral)": "Ninguém em especial: que se integre ao seu ritmo (+1 de moral)"
  },
  "patrones": [
   [
@@ -25749,7 +25765,15 @@
   "Ahora arriba, a la segunda planta: la prensa te espera.": "Maintenant en haut, au deuxième étage : la presse t'attend.",
   "¡Por fin! Aquí se come a su hora, míster; el que no come, no corre.": "Enfin ! Ici on mange à l'heure, coach ; qui ne mange pas ne court pas.",
   "El comedor del plantel. Come aquí los días de trabajo: cansado y con hambre se decide peor.": "La cantine de l'effectif. Mange ici les jours de travail : fatigué et affamé, on décide moins bien.",
-  "Bajemos a la primera planta: falta lo más importante.": "Descendons au premier étage : il reste le plus important."
+  "Bajemos a la primera planta: falta lo más importante.": "Descendons au premier étage : il reste le plus important.",
+  "%s quiere conocer a su nuevo entrenador.": "%s veut rencontrer son nouvel entraîneur.",
+  "¿Con quién se cambia %s en el vestuario?": "Avec qui %s se change-t-il au vestiaire ?",
+  "¿Con quién del cuerpo técnico trabaja %s esta semana?": "Avec qui du staff %s travaille-t-il cette semaine ?",
+  "Con «%s»": "Avec « %s »",
+  "Con todos, sin bandos": "Avec tout le monde, sans clans",
+  "El preparador físico: un plan a su medida (+3 de forma)": "Le préparateur physique : un plan sur mesure (+3 de forme)",
+  "El analista: vídeos de tu sistema (+15 de adaptación)": "L'analyste : des vidéos de ton système (+15 d'adaptation)",
+  "Nadie en especial: que se integre a su ritmo (+1 de moral)": "Personne en particulier : qu'il s'intègre à son rythme (+1 de moral)"
  },
  "it": {
   "Historia": "Storia",
@@ -32422,7 +32446,15 @@
   "Ahora arriba, a la segunda planta: la prensa te espera.": "Ora di sopra, al secondo piano: la stampa ti aspetta.",
   "¡Por fin! Aquí se come a su hora, míster; el que no come, no corre.": "Finalmente! Qui si mangia all'ora giusta, mister; chi non mangia non corre.",
   "El comedor del plantel. Come aquí los días de trabajo: cansado y con hambre se decide peor.": "La mensa della squadra. Mangia qui nei giorni di lavoro: stanco e affamato si decide peggio.",
-  "Bajemos a la primera planta: falta lo más importante.": "Scendiamo al primo piano: manca la cosa più importante."
+  "Bajemos a la primera planta: falta lo más importante.": "Scendiamo al primo piano: manca la cosa più importante.",
+  "%s quiere conocer a su nuevo entrenador.": "%s vuole conoscere il suo nuovo allenatore.",
+  "¿Con quién se cambia %s en el vestuario?": "Con chi si cambia %s nello spogliatoio?",
+  "¿Con quién del cuerpo técnico trabaja %s esta semana?": "Con chi dello staff lavora %s questa settimana?",
+  "Con «%s»": "Con «%s»",
+  "Con todos, sin bandos": "Con tutti, senza gruppetti",
+  "El preparador físico: un plan a su medida (+3 de forma)": "Il preparatore atletico: un piano su misura (+3 di forma)",
+  "El analista: vídeos de tu sistema (+15 de adaptación)": "L'analista: video del tuo sistema (+15 di adattamento)",
+  "Nadie en especial: que se integre a su ritmo (+1 de moral)": "Nessuno in particolare: che si integri con i suoi tempi (+1 di morale)"
  },
  "de": {
   "Historia": "Geschichte",
@@ -39095,7 +39127,15 @@
   "Ahora arriba, a la segunda planta: la prensa te espera.": "Jetzt nach oben, in den zweiten Stock: die Presse wartet auf dich.",
   "¡Por fin! Aquí se come a su hora, míster; el que no come, no corre.": "Endlich! Hier wird pünktlich gegessen, Trainer; wer nicht isst, läuft nicht.",
   "El comedor del plantel. Come aquí los días de trabajo: cansado y con hambre se decide peor.": "Die Kantine der Mannschaft. Iss hier an Arbeitstagen: müde und hungrig entscheidet man schlechter.",
-  "Bajemos a la primera planta: falta lo más importante.": "Gehen wir runter in den ersten Stock: das Wichtigste fehlt noch."
+  "Bajemos a la primera planta: falta lo más importante.": "Gehen wir runter in den ersten Stock: das Wichtigste fehlt noch.",
+  "%s quiere conocer a su nuevo entrenador.": "%s möchte seinen neuen Trainer kennenlernen.",
+  "¿Con quién se cambia %s en el vestuario?": "Neben wem zieht sich %s in der Kabine um?",
+  "¿Con quién del cuerpo técnico trabaja %s esta semana?": "Mit wem aus dem Trainerstab arbeitet %s diese Woche?",
+  "Con «%s»": "Mit «%s»",
+  "Con todos, sin bandos": "Mit allen, ohne Grüppchen",
+  "El preparador físico: un plan a su medida (+3 de forma)": "Der Athletiktrainer: ein Plan nach Maß (+3 Form)",
+  "El analista: vídeos de tu sistema (+15 de adaptación)": "Der Analyst: Videos deines Systems (+15 Anpassung)",
+  "Nadie en especial: que se integre a su ritmo (+1 de moral)": "Niemand Bestimmtes: Er soll sich in seinem Tempo einleben (+1 Moral)"
  },
  "ca": {
   "Historia": "Història",
@@ -45768,7 +45808,15 @@
   "Ahora arriba, a la segunda planta: la prensa te espera.": "Ara amunt, a la segona planta: la premsa t'espera.",
   "¡Por fin! Aquí se come a su hora, míster; el que no come, no corre.": "Per fi! Aquí es menja a l'hora, míster; qui no menja, no corre.",
   "El comedor del plantel. Come aquí los días de trabajo: cansado y con hambre se decide peor.": "El menjador de la plantilla. Menja aquí els dies de feina: cansat i amb gana es decideix pitjor.",
-  "Bajemos a la primera planta: falta lo más importante.": "Baixem a la primera planta: falta el més important."
+  "Bajemos a la primera planta: falta lo más importante.": "Baixem a la primera planta: falta el més important.",
+  "%s quiere conocer a su nuevo entrenador.": "%s vol conèixer el seu nou entrenador.",
+  "¿Con quién se cambia %s en el vestuario?": "Amb qui es canvia %s al vestidor?",
+  "¿Con quién del cuerpo técnico trabaja %s esta semana?": "Amb qui del cos tècnic treballa %s aquesta setmana?",
+  "Con «%s»": "Amb «%s»",
+  "Con todos, sin bandos": "Amb tothom, sense bàndols",
+  "El preparador físico: un plan a su medida (+3 de forma)": "El preparador físic: un pla a mida (+3 de forma)",
+  "El analista: vídeos de tu sistema (+15 de adaptación)": "L'analista: vídeos del teu sistema (+15 d'adaptació)",
+  "Nadie en especial: que se integre a su ritmo (+1 de moral)": "Ningú en especial: que s'integri al seu ritme (+1 de moral)"
  },
  "pl": {
   "Club": "Klub",
@@ -52718,7 +52766,15 @@
   "Ahora arriba, a la segunda planta: la prensa te espera.": "Teraz na górę, na drugie piętro: prasa na ciebie czeka.",
   "¡Por fin! Aquí se come a su hora, míster; el que no come, no corre.": "Nareszcie! Tu je się o czasie, trenerze; kto nie je, ten nie biega.",
   "El comedor del plantel. Come aquí los días de trabajo: cansado y con hambre se decide peor.": "Stołówka drużyny. Jedz tu w dni pracy: zmęczony i głodny podejmujesz gorsze decyzje.",
-  "Bajemos a la primera planta: falta lo más importante.": "Zejdźmy na pierwsze piętro: zostało to, co najważniejsze."
+  "Bajemos a la primera planta: falta lo más importante.": "Zejdźmy na pierwsze piętro: zostało to, co najważniejsze.",
+  "%s quiere conocer a su nuevo entrenador.": "%s chce poznać swojego nowego trenera.",
+  "¿Con quién se cambia %s en el vestuario?": "Z kim %s będzie się przebierał w szatni?",
+  "¿Con quién del cuerpo técnico trabaja %s esta semana?": "Z kim ze sztabu %s pracuje w tym tygodniu?",
+  "Con «%s»": "Z «%s»",
+  "Con todos, sin bandos": "Ze wszystkimi, bez grupek",
+  "El preparador físico: un plan a su medida (+3 de forma)": "Trener przygotowania fizycznego: plan na miarę (+3 formy)",
+  "El analista: vídeos de tu sistema (+15 de adaptación)": "Analityk: nagrania twojego systemu (+15 adaptacji)",
+  "Nadie en especial: que se integre a su ritmo (+1 de moral)": "Nikt w szczególności: niech wdraża się we własnym tempie (+1 morale)"
  },
  "tr": {
   "Club": "Kulüp",
@@ -59668,6 +59724,14 @@
   "Ahora arriba, a la segunda planta: la prensa te espera.": "Şimdi yukarı, ikinci kata: basın seni bekliyor.",
   "¡Por fin! Aquí se come a su hora, míster; el que no come, no corre.": "Nihayet! Burada yemek vaktinde yenir hocam; yemeyen koşamaz.",
   "El comedor del plantel. Come aquí los días de trabajo: cansado y con hambre se decide peor.": "Takım yemekhanesi. İş günlerinde burada ye: yorgun ve aç olunca daha kötü karar verilir.",
-  "Bajemos a la primera planta: falta lo más importante.": "Birinci kata inelim: en önemlisi hâlâ eksik."
+  "Bajemos a la primera planta: falta lo más importante.": "Birinci kata inelim: en önemlisi hâlâ eksik.",
+  "%s quiere conocer a su nuevo entrenador.": "%s yeni hocasıyla tanışmak istiyor.",
+  "¿Con quién se cambia %s en el vestuario?": "%s soyunma odasında kimlerin yanında giyinecek?",
+  "¿Con quién del cuerpo técnico trabaja %s esta semana?": "%s bu hafta teknik ekipten kiminle çalışacak?",
+  "Con «%s»": "«%s» ile",
+  "Con todos, sin bandos": "Herkesle, grupsuz",
+  "El preparador físico: un plan a su medida (+3 de forma)": "Kondisyoner: ona özel bir plan (+3 form)",
+  "El analista: vídeos de tu sistema (+15 de adaptación)": "Analist: sisteminin videoları (+15 uyum)",
+  "Nadie en especial: que se integre a su ritmo (+1 de moral)": "Özellikle kimse: kendi temposunda uyum sağlasın (+1 moral)"
  }
 }

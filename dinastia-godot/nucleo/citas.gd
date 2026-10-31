@@ -40,6 +40,11 @@ const ASAMBLEA_SEMANA := 3
 const CONFIANZA_ASAMBLEA := 25
 ## Lo que mueve la moral del recién llegado cada tono de la entrevista (seguro, evasivo, humilde).
 const MORAL_ENTREVISTA := [2, -1, 1]
+## (§2.5, 30-10) La entrevista son TRES preguntas: el tono (arriba), con qué grupo del vestuario se
+## cambia y con quién del cuerpo técnico trabaja su primera semana. Staff: [forma, adaptación, moral].
+const ENTREVISTA_PREGUNTAS := ["%s quiere conocer a su nuevo entrenador.", "¿Con quién se cambia %s en el vestuario?",
+	"¿Con quién del cuerpo técnico trabaja %s esta semana?"]
+const STAFF_ENTREVISTA := [[3, 0, 0], [0, 15, 0], [0, 0, 1]]
 const _NOMBRES := ["Valeria", "Ignacio", "Camila", "Rodrigo", "Antonia", "Matías", "Josefa", "Sebastián", "Constanza", "Nicolás"]
 const _APELLIDOS := ["Soto", "Reyes", "Vargas", "Fuentes", "Araya", "Espinoza", "Tapia", "Carrasco", "Sepúlveda", "Figueroa"]
 
@@ -236,7 +241,31 @@ func opciones(m: Mundo, ct: Dictionary) -> Array[String]:
 
 ## Cumple la cita con la opción elegida (0 o 1). Devuelve {titulo, texto} ya traducido.
 ## Lo que pasa es lo de siempre (PC) más el bono de estar en persona.
-func resolver(m: Mundo, id: String, opcion: int) -> Dictionary:
+## Las opciones de la pregunta `paso` (0-2) de la entrevista; la 0 son los tonos de `opciones()`.
+func opciones_entrevista(m: Mundo, ct: Dictionary, paso: int) -> Array[String]:
+	match paso:
+		1:
+			var o: Array[String] = []
+			for cl: Dictionary in grupos_entrevista(m):
+				o.append(Idiomas.t("Con «%s»") % Idiomas.t(String(cl["nombre"])))
+			o.append(Idiomas.t("Con todos, sin bandos"))
+			return o
+		2:
+			return [Idiomas.t("El preparador físico: un plan a su medida (+3 de forma)"),
+				Idiomas.t("El analista: vídeos de tu sistema (+15 de adaptación)"),
+				Idiomas.t("Nadie en especial: que se integre a su ritmo (+1 de moral)")]
+	return opciones(m, ct)
+
+## Hasta dos grupos del vestuario a los que presentarlo (los de más miembros).
+func grupos_entrevista(m: Mundo) -> Array:
+	if m.vestuario == null:
+		return []
+	var g := m.vestuario.camarillas.duplicate()
+	g.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return (a["miembros"] as Array).size() > (b["miembros"] as Array).size())
+	return g.slice(0, 2)
+
+## `extra` = [grupo, staff] de las preguntas 2 y 3 de la entrevista (vacío = solo el tono, como antes).
+func resolver(m: Mundo, id: String, opcion: int, extra: Array = []) -> Dictionary:
 	var ct := por_id(id)
 	if ct.is_empty() or String(ct["estado"]) != "pendiente":
 		return {}
@@ -275,7 +304,7 @@ func resolver(m: Mundo, id: String, opcion: int) -> Dictionary:
 					j = x
 			if j == null:
 				return {"titulo": String(ct["quien"]), "texto": Idiomas.t("Ya no está en el club.")}
-			var d: int = MORAL_ENTREVISTA[clampi(opcion, 0, 2)]
+			var d: int = MORAL_ENTREVISTA[clampi(opcion, 0, 2)] + _entrevista_extra(m, j, extra)
 			j.cambiar_moral(d, "Entrevista con el DT")
 			return {"titulo": Idiomas.t("Primera charla con %s") % j.nombre, "texto": Idiomas.t("Sale de tu oficina %s (moral %+d).") % [
 				[Idiomas.t("con ganas de demostrar"), Idiomas.t("sin saber qué esperar"), Idiomas.t("sintiéndose uno más")][clampi(opcion, 0, 2)], d]}
@@ -371,3 +400,23 @@ func desde_dic(d: Dictionary) -> void:
 	asamblea_anio = int(d.get("asamblea", -1))
 	_trofeos_vistos = int(d.get("trofeos", -1))
 	_n = int(d.get("n", 0))
+
+## Las preguntas 2 y 3 de la entrevista: entra en el grupo elegido (hasta que el vestuario se
+## redibuje) y trabaja con el staff. Devuelve la moral extra (grupo de buen humor +1, enfadado −1).
+func _entrevista_extra(m: Mundo, j: Jugador, extra: Array) -> int:
+	var d := 0
+	if extra.size() >= 1:
+		var grupos := grupos_entrevista(m)
+		var gi := int(extra[0])
+		if gi >= 0 and gi < grupos.size():
+			var cl: Dictionary = grupos[gi]
+			if not (cl["miembros"] as Array).has(j.id):
+				(cl["miembros"] as Array).append(j.id)
+			m.vestuario._clan_de[j.id] = cl["id"]
+			d += 1 if int(cl.get("humor", 0)) >= 0 else -1
+	if extra.size() >= 2:
+		var st: Array = STAFF_ENTREVISTA[clampi(int(extra[1]), 0, 2)]
+		j.forma = clampi(j.forma + int(st[0]), 0, 100)
+		j.adapt = mini(100, j.adapt + int(st[1]))
+		d += int(st[2])
+	return d

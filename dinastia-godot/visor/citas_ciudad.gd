@@ -178,16 +178,37 @@ func usar() -> bool:
 	expl.pausar(true)
 	var club := mundo.mi_club()
 	var color := Color(club.color1).lerp(Color.WHITE, 0.35) if club != null else Color(1.0, 0.86, 0.5)
-	hud.pregunta_directiva("%s · %s" % [String(ct["quien"]), String(ct["cargo"])], color,
-		"%s %s" % [String(ct["quien"]).get_slice(" ", 0), String(ct["asunto"])], mundo.citas.opciones(mundo, ct))
+	_paso = 0
+	_elecciones.clear()
+	_preguntar(ct, color)
 	return true
+
+## (§2.5) La entrevista hace tres preguntas seguidas; el resto de citas, una.
+var _paso := 0
+var _elecciones: Array = []
+func _preguntar(ct: Dictionary, color: Color) -> void:
+	var quien := "%s · %s" % [String(ct["quien"]), String(ct["cargo"])]
+	if String(ct["tipo"]) == "entrevista":
+		hud.pregunta_directiva(quien, color, Idiomas.t(Citas.ENTREVISTA_PREGUNTAS[_paso]) % String(ct["quien"]).get_slice(" ", 0),
+			mundo.citas.opciones_entrevista(mundo, ct, _paso))
+		return
+	hud.pregunta_directiva(quien, color, "%s %s" % [String(ct["quien"]).get_slice(" ", 0), String(ct["asunto"])], mundo.citas.opciones(mundo, ct))
 
 func _responder(i: int) -> void:
 	if _abierta == "":
 		return
 	var id := _abierta
+	var ct := mundo.citas.por_id(id)
+	if String(ct.get("tipo", "")) == "entrevista" and _paso < Citas.ENTREVISTA_PREGUNTAS.size() - 1:
+		_elecciones.append(i)
+		_paso += 1
+		var club := mundo.mi_club()
+		_preguntar(ct, Color(club.color1).lerp(Color.WHITE, 0.35) if club != null else Color(1.0, 0.86, 0.5))
+		return
 	_abierta = ""
-	var r := mundo.citas.resolver(mundo, id, i)
+	_elecciones.append(i)
+	var r := mundo.citas.resolver(mundo, id, int(_elecciones[0]), _elecciones.slice(1)) if String(ct.get("tipo", "")) == "entrevista" \
+		else mundo.citas.resolver(mundo, id, i)
 	expl.pausar(false)
 	expl._t_burbuja = 0.0
 	expl._hablando_con = null
