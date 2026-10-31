@@ -71,6 +71,7 @@ static func colores(nombre: String) -> Array[Color]:
 ## Frases enteras del núcleo que, cambiando solo el nombre, quedarían torcidas.
 const FRASES := {
 	"La Eurocopa de selecciones europeas.": "El torneo de selecciones del Viejo Continente.",
+	"El Mundial: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.",
 }
 static var _re_internos: RegEx = null
 
