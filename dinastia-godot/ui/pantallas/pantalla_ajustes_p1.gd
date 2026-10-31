@@ -1,4 +1,4 @@
-extends RefCounted
+extends PantallaBase
 ## [Capa 1/2 de `pantalla_ajustes.gd`] _init, _pintar_fotogramas, _color_pal, _pal_borde, _pintar_clima, _pintar_aspecto … (+5)
 
 ## AJUSTES DE INTERFAZ: fotogramas, clima, aspecto, accesibilidad, traspaso de partida y fondos.
@@ -7,10 +7,6 @@ extends RefCounted
 ## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
-var p: Principal
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 func _pintar_fotogramas() -> void:
 	var t := p._texto(11, Principal.COL_SUAVE)

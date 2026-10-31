@@ -253,3 +253,7 @@ func _pintar_identidad(c: Club) -> void:
 ## perdían al cambiar de pantalla. Juntas se leen como la hemeroteca del ciclo:
 ## de un vistazo se ve si el año fue de titulares buenos o de titulares malos.
 ## LA ENTREVISTA AL PASO (C6): si esta semana te paró un medio nuevo.
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"identidad": _pintar_identidad}

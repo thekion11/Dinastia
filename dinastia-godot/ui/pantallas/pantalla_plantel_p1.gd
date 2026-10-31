@@ -1,4 +1,4 @@
-extends RefCounted
+extends PantallaBase
 ## [Capa 1/4 de `pantalla_plantel.gd`] _init, _pintar_plantel, _fichar_libre, _pintar_libres, _pintar_pizarron, _pintar_balon_parado … (+2)
 
 ## PLANTEL, TÁCTICA Y PARTIDO: la plantilla, los libres, la pizarra, el balón parado, la táctica, los rivales, el calendario, la copa y la negociación.
@@ -7,7 +7,6 @@ extends RefCounted
 ## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
-var p: Principal
 ## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
 ## Por qué columna se ordena el plantel y en qué sentido. `vJugadores()` del
 ## HTML deja ordenar por seis columnas; aquí se guarda entre repintados para que
@@ -15,9 +14,6 @@ var p: Principal
 var _orden_plantel: String = "ovr"
 var _orden_plantel_desc: bool = true
 var _libres_filtro := "todos"
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 func _pintar_plantel(c: Club) -> void:
 	PanelPlantel.pintar(p._lista_plantel, c, p.mundo, _orden_plantel, _orden_plantel_desc, p.COL_ACENTO,
