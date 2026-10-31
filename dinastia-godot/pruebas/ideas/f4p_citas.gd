@@ -58,6 +58,34 @@ func _probar() -> void:
 		if x["tipo"] == "agente":
 			m.citas.resolver(m, String(x["id"]), 0)
 	_comprobar(m.citas.favor_agente == m.anio * 60 + m.semana, "escuchar al agente deja un favor pendiente")
+	## §2.5: apoyar al gobierno lo hace aliado (sus ayudas +25 %, su tasa −25 %); si pierde, el nuevo recela.
+	for x: Dictionary in m.citas.pendientes():
+		if x["tipo"] == "politica":
+			m.citas.resolver(m, String(x["id"]), 0)
+	var gob := m.politica.gobierno(c.pais, m.anio)
+	var s0 := c.saldo
+	m.politica._efecto(c, "deporte", null, Politica.relacion(gob))
+	var con_apoyo := c.saldo - s0
+	s0 = c.saldo
+	m.politica._efecto(c, "deporte", null, 0)
+	var sin_apoyo := c.saldo - s0
+	s0 = c.saldo
+	m.politica._efecto(c, "seguridad", null, 1)
+	var tasa_aliado := s0 - c.saldo
+	s0 = c.saldo
+	m.politica._efecto(c, "seguridad", null, -1)
+	var tasa_recelo := s0 - c.saldo
+	_comprobar(Politica.relacion(gob) == 1 and con_apoyo == int(round(sin_apoyo * 1.25)) and tasa_aliado < tasa_recelo,
+		"apoyar al gobierno lo hace aliado: ayuda %d → %d; la tasa con aliado %d y con recelo %d" % [sin_apoyo, con_apoyo, tasa_aliado, tasa_recelo])
+	_comprobar(Politica.relacion({"desde": m.anio, "recelo_club": m.anio}) == -1 and Politica.relacion({"desde": m.anio}) == 0,
+		"si gana otro partido el nuevo gobierno recela; sin apoyo, neutral")
+	var g_antes := m.politica.gobierno(c.pais, m.anio)
+	g_antes["proxima"] = m.anio
+	var partido_antes := String(g_antes["partido"])
+	m.politica.semana(c, m.anio, Politica.semana_votacion(c.pais), null)
+	var g_nuevo := m.politica.gobierno(c.pais, m.anio)
+	var esperado := 1 if String(g_nuevo["partido"]) == partido_antes else -1
+	_comprobar(Politica.relacion(g_nuevo) == esperado, "tras la votación el apoyo pesa: %s (%d)" % ["repite, sigue aliado" if esperado == 1 else "gana otro, recela", esperado])
 	## El favor abarata la próxima mesa (bloque 3): −5 % en lo pedido y +10 puntos de aceptación.
 	var otro: Club = null
 	for cl: Club in m.ligas[0].clubes:

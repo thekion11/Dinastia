@@ -338,6 +338,7 @@ func resolver(m: Mundo, id: String, opcion: int, extra: Array = []) -> Dictionar
 		for f: Array in Prensa.PERIODISTAS:
 			if String(f[3]) == "crítico":
 				m.prensa._mover_relacion(String(f[0]), -2)
+		m.prensa.noticia.emit("🏛️ El club, con el gobierno", "El club apoya públicamente al gobierno antes de la votación. Si repite, será un aliado (sus ayudas, +25 %); si pierde, el nuevo gobierno lo recordará.")
 	return {"titulo": String(ct["quien"]), "texto": Idiomas.t("«El alcalde lo recordará.» El club apoya al gobierno en la próxima rueda; la prensa crítica toma nota (−2 de relación).")}
 
 ## La votación de la asamblea (determinista: ánimo de la grada, confianza y tu discurso).
