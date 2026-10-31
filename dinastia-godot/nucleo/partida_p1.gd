@@ -284,7 +284,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		## club (equipaciones reales, plantillas) siga cuadrando.
 		"base_real": Datos.base_real,
 		"desafios": m.desafios, "dificultad": m.dificultad, "vref": m.valor_ia_ref,
-		"prologo_visto": m.prologo_visto,
+		"prologo_visto": m.prologo_visto, "prologo_pendiente": m.prologo_pendiente,
 		"reto": m.reto,
 		"fondo": m.fondo.a_dic() if m.fondo != null else {},
 		"clubes": [],

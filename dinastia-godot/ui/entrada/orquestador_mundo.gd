@@ -236,7 +236,18 @@ static func preparar(estado: Dictionary) -> Dictionary:
 			for d: Variant in lista:
 				desafios.append(String(d))
 	PedidoPartida.desafios_elegidos = desafios
+	## (Fase 0 §7.2, 31-10) Autoguardado antes de la transición larga: lo pedido se aplica ya (lo que
+	## antes hacía `Principal` al adoptar el mundo) y la partida queda guardada con el prólogo pendiente,
+	## así un cierre durante el prólogo no pierde lo elegido en la entrada.
+	PedidoPartida.aplicar(m)
+	if con_prologo(modo):
+		m.prologo_pendiente = true
+		if ranura_al_salir != "":
+			Partida.guardar(m, ranura_al_salir)
 	return {"escena": PROLOGO if con_prologo(modo) else PRINCIPAL, "mundo": m}
+
+## Dónde se guarda («partida», la de «Continuar»). Las pruebas usan otra para no pisar la de la máquina.
+static var ranura_al_salir := "partida"
 
 ## ¿Este modo empieza con el prólogo 3D? Los que dirigen un club, salvo el tutorial
 ## (tiene su propia guía) y los retos (empiezan en una situación concreta).

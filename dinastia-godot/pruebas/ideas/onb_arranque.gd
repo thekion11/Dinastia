@@ -9,6 +9,7 @@ const AJUSTES := "user://ajustes.cfg"
 var _resultado: Dictionary = {}
 
 func _probar() -> void:
+	OrquestadorMundo.ranura_al_salir = ""   ## no pisar la partida de la máquina (autoguardado de la entrada)
 	_titulo("ONBOARDING · ARRANQUE COMPLETO HASTA EL PRIMER PARTIDO")
 	## La entrada se prueba hasta Principal; el prólogo 3D de la fase 2 tiene su propia prueba (f2p_prologo).
 	OrquestadorMundo.sin_prologo = true

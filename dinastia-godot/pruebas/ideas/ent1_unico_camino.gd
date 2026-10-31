@@ -4,6 +4,7 @@ extends BaseIdea
 ## retos (los cinco, con selector), el tutorial y la Carrera de Jugador.
 
 func _probar() -> void:
+	OrquestadorMundo.ranura_al_salir = ""   ## no pisar la partida de la máquina (autoguardado de la entrada)
 	_titulo("ENTRADA NUEVA: ÚNICO CAMINO PARA EMPEZAR PARTIDA")
 	# --- el menú de inicio --------------------------------------------------------
 	var inicio: Control = (load("res://escenas/inicio.tscn") as PackedScene).instantiate()

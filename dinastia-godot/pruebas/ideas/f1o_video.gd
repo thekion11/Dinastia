@@ -40,6 +40,7 @@ func _ojear(tiempo: float) -> void:
 	await _esperar(tiempo * 0.1)
 
 func _ready() -> void:
+	OrquestadorMundo.ranura_al_salir = ""   ## no pisar la partida de la máquina (autoguardado de la entrada)
 	OrquestadorEntrada.ruta_prefs = "user://f1o_video_entrada.cfg"
 	OrquestadorMundo.ruta_preferencias = "user://f1o_video_prefs.cfg"
 	## 1) El menú de inicio con «Nuevo juego».

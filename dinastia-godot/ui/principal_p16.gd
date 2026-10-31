@@ -21,8 +21,8 @@ func _ready() -> void:
 	elif PedidoPartida.mundo_pregenerado != null:
 		var m := PedidoPartida.mundo_pregenerado
 		PedidoPartida.mundo_pregenerado = null
-		var modo := PedidoPartida.modo_elegido if PedidoPartida.modo_elegido != "" else "dt"
 		_partida.arrancar_con(m)
+		var modo := m.roles.modo_actual() if m.roles != null else "dt"   ## (31-10) el modo ya aplicado (`PedidoPartida.aplicar`)
 		if not m.prologo_visto:   ## tras el prólogo 3D la guía del taxi sobra (26-10)
 			_guia.quizas(modo)
 	else:

@@ -165,6 +165,25 @@ func _probar_async() -> void:
 	## Guardar y cargar conservan la marca.
 	var datos := Partida.instantanea(_m)
 	_comprobar(bool(datos.get("prologo_visto", false)), "la instantánea guarda prologo_visto")
+	## Fase 0 §7.2 (31-10): lo pedido en la entrada se aplica UNA vez (el orquestador antes de autoguardar,
+	## y Principal lo encuentra hecho), y una partida guardada con el prólogo pendiente vuelve al prólogo.
+	var mf := _mundo(4243)
+	var dif0 := PedidoPartida.dificultad_elegida
+	PedidoPartida.dificultad_elegida = "facil"
+	var s0 := mf.mi_club().saldo
+	PedidoPartida.aplicar(mf)
+	var s1 := mf.mi_club().saldo
+	PedidoPartida.aplicar(mf)
+	PedidoPartida.dificultad_elegida = dif0
+	_comprobar(s1 == int(round(float(s0) * 1.6)) and mf.mi_club().saldo == s1 and mf.dificultad == "facil",
+		"la dificultad elegida se aplica una sola vez aunque la pidan el orquestador y Principal")
+	mf.prologo_visto = false
+	mf.prologo_pendiente = true
+	Partida.guardar(mf, "zz_prueba_orquestador")
+	var mc := Partida.cargar("zz_prueba_orquestador")
+	_comprobar(mc != null and mc.prologo_pendiente and VidaCiudad.arranque_3d(mc) == "prologo" and mc.mi_club().saldo == s1,
+		"guardada al salir de la entrada, «Continuar» vuelve al prólogo con la caja ya ajustada")
+	Partida.borrar("zz_prueba_orquestador")
 	PedidoPartida.mundo_pregenerado = null
 	PedidoPartida.mundo_a_cargar = null
 	PedidoPartida.modo_elegido = ""

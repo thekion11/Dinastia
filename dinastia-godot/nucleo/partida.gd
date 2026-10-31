@@ -312,6 +312,7 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 		m.desafios.append(String(k))
 	m.dificultad = String(datos.get("dificultad", "normal"))   ## guardados viejos: normal
 	m.prologo_visto = bool(datos.get("prologo_visto", true))   ## guardados viejos: ya jugaban, sin prólogo
+	m.prologo_pendiente = bool(datos.get("prologo_pendiente", false))
 	m.valor_ia_ref = float(datos.get("vref", 0.0))
 
 	for d: Dictionary in datos["clubes"]:
