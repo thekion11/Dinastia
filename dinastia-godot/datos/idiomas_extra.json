@@ -6690,7 +6690,9 @@
   "¡La rama, campeona!": "The section are champions!",
   "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "The section's trophy is now in the museum and the photo on Tribuna (+%d members, +2 mood).",
   "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "The section's trophy is now in the museum (+%d members, +2 mood).",
-  "Fuera de servicio: el sector está sin corriente.": "Out of service: the area has no power."
+  "Fuera de servicio: el sector está sin corriente.": "Out of service: the area has no power.",
+  "Gasolina normal": "Regular petrol",
+  "Gasolina premium (+15 % de rendimiento)": "Premium petrol (+15 % mileage)"
  },
  "pt": {
   "Historia": "História",
@@ -13383,7 +13385,9 @@
   "¡La rama, campeona!": "A secção é campeã!",
   "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "A taça da secção já está no museu e a foto na Tribuna (+%d sócios, +2 de ânimo).",
   "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "A taça da secção já está no museu (+%d sócios, +2 de ânimo).",
-  "Fuera de servicio: el sector está sin corriente.": "Fora de serviço: o setor está sem corrente."
+  "Fuera de servicio: el sector está sin corriente.": "Fora de serviço: o setor está sem corrente.",
+  "Gasolina normal": "Gasolina normal",
+  "Gasolina premium (+15 % de rendimiento)": "Gasolina premium (+15 % de rendimento)"
  },
  "patrones": [
   [
@@ -25809,7 +25813,9 @@
   "¡La rama, campeona!": "La section, championne !",
   "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "La coupe de la section est au musée et la photo sur Tribuna (+%d socios, +2 d'humeur).",
   "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "La coupe de la section est au musée (+%d socios, +2 d'humeur).",
-  "Fuera de servicio: el sector está sin corriente.": "Hors service : le secteur est sans courant."
+  "Fuera de servicio: el sector está sin corriente.": "Hors service : le secteur est sans courant.",
+  "Gasolina normal": "Essence ordinaire",
+  "Gasolina premium (+15 % de rendimiento)": "Essence premium (+15 % de rendement)"
  },
  "it": {
   "Historia": "Storia",
@@ -32502,7 +32508,9 @@
   "¡La rama, campeona!": "La sezione è campione!",
   "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "La coppa della sezione è già al museo e la foto su Tribuna (+%d soci, +2 di umore).",
   "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "La coppa della sezione è già al museo (+%d soci, +2 di umore).",
-  "Fuera de servicio: el sector está sin corriente.": "Fuori servizio: il settore è senza corrente."
+  "Fuera de servicio: el sector está sin corriente.": "Fuori servizio: il settore è senza corrente.",
+  "Gasolina normal": "Benzina normale",
+  "Gasolina premium (+15 % de rendimiento)": "Benzina premium (+15 % di resa)"
  },
  "de": {
   "Historia": "Geschichte",
@@ -39195,7 +39203,9 @@
   "¡La rama, campeona!": "Die Abteilung ist Meister!",
   "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "Der Pokal der Abteilung steht im Museum und das Foto auf Tribuna (+%d Mitglieder, +2 Stimmung).",
   "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "Der Pokal der Abteilung steht im Museum (+%d Mitglieder, +2 Stimmung).",
-  "Fuera de servicio: el sector está sin corriente.": "Außer Betrieb: Der Bereich hat keinen Strom."
+  "Fuera de servicio: el sector está sin corriente.": "Außer Betrieb: Der Bereich hat keinen Strom.",
+  "Gasolina normal": "Normalbenzin",
+  "Gasolina premium (+15 % de rendimiento)": "Premiumbenzin (+15 % Reichweite)"
  },
  "ca": {
   "Historia": "Història",
@@ -45888,7 +45898,9 @@
   "¡La rama, campeona!": "La secció, campiona!",
   "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "La copa de la secció ja és al museu i la foto a Tribuna (+%d socis, +2 d'ànim).",
   "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "La copa de la secció ja és al museu (+%d socis, +2 d'ànim).",
-  "Fuera de servicio: el sector está sin corriente.": "Fora de servei: el sector està sense corrent."
+  "Fuera de servicio: el sector está sin corriente.": "Fora de servei: el sector està sense corrent.",
+  "Gasolina normal": "Gasolina normal",
+  "Gasolina premium (+15 % de rendimiento)": "Gasolina prèmium (+15 % de rendiment)"
  },
  "pl": {
   "Club": "Klub",
@@ -52858,7 +52870,9 @@
   "¡La rama, campeona!": "Sekcja mistrzem!",
   "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "Puchar sekcji jest już w muzeum, a zdjęcie na Tribunie (+%d członków, +2 nastroju).",
   "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "Puchar sekcji jest już w muzeum (+%d członków, +2 nastroju).",
-  "Fuera de servicio: el sector está sin corriente.": "Nieczynny: w sektorze nie ma prądu."
+  "Fuera de servicio: el sector está sin corriente.": "Nieczynny: w sektorze nie ma prądu.",
+  "Gasolina normal": "Benzyna zwykła",
+  "Gasolina premium (+15 % de rendimiento)": "Benzyna premium (+15 % wydajności)"
  },
  "tr": {
   "Club": "Kulüp",
@@ -59828,6 +59842,8 @@
   "¡La rama, campeona!": "Şube şampiyon!",
   "La copa de la rama ya está en el museo y la foto en Tribuna (+%d socios, +2 de ánimo).": "Şubenin kupası artık müzede, fotoğraf Tribuna'da (+%d üye, +2 moral).",
   "La copa de la rama ya está en el museo (+%d socios, +2 de ánimo).": "Şubenin kupası artık müzede (+%d üye, +2 moral).",
-  "Fuera de servicio: el sector está sin corriente.": "Hizmet dışı: bölgede elektrik yok."
+  "Fuera de servicio: el sector está sin corriente.": "Hizmet dışı: bölgede elektrik yok.",
+  "Gasolina normal": "Normal benzin",
+  "Gasolina premium (+15 % de rendimiento)": "Premium benzin (+%15 verim)"
  }
 }

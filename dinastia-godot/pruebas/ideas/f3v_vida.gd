@@ -214,24 +214,48 @@ func _probar_async() -> void:
 			_m.roles.patrimonio = 500
 			_m.roles.cartera.efectivo = 0
 			var gas0: float = sr.modelo.gas[int(surt["id"])]
-			_v.usar_surtidor("surtidor_0")
+			_v.usar_surtidor("surtidor_0", "normal")
 			_comprobar(_m.vida.combustible > 40.0 and _m.roles.patrimonio < 500, "repostar cobra de la cuenta del DT con la tarjeta sin contacto")
 			_comprobar((_m.mi_club().saldo if _m.mi_club() != null else 0) == club_saldo, "y el club no paga la gasolina")
 			_m.vida.combustible = 5.0
 			_m.roles.patrimonio = 0
 			var gas1: float = sr.modelo.gas[int(surt["id"])]
-			_v.usar_surtidor("surtidor_0")
+			_v.usar_surtidor("surtidor_0", "normal")
 			_comprobar(_m.vida.combustible == 5.0 and is_equal_approx(float(sr.modelo.gas[int(surt["id"])]), gas1), "sin dinero no echa gasolina ni gasta existencias")
 			_m.roles.cartera.efectivo = 80
-			_v.usar_surtidor("surtidor_0")
+			_v.usar_surtidor("surtidor_0", "normal")
 			_comprobar(_m.vida.combustible > 40.0 and _m.roles.cartera.efectivo < 80 and gas0 > 0.0, "con efectivo paga en efectivo")
+			## §2.5: dos combustibles; la E sin tipo abre el surtidor con los dos precios; la premium rinde más.
+			_m.vida.combustible = 5.0
+			_m.roles.patrimonio = 5000
+			_v.usar_surtidor("surtidor_0")
+			var panel_ok := is_instance_valid(_v._panel_cajero) and (_v._panel_cajero as PanelTienda).surtido.size() == 2
+			if is_instance_valid(_v._panel_cajero):
+				_v._panel_cajero.free()
+			_v.usar_surtidor("surtidor_0", "premium")
+			var lleno := _m.vida.combustible
+			_m.vida.gastar_combustible(10000.0)
+			var gasto_p := lleno - _m.vida.combustible
+			_m.vida.premium = false
+			_m.vida.combustible = lleno
+			_m.vida.gastar_combustible(10000.0)
+			var gasto_n := lleno - _m.vida.combustible
+			_comprobar(panel_ok and gasto_p < gasto_n, "el surtidor ofrece normal y premium, y la premium gasta menos (%.2f l contra %.2f l en 10 km)" % [gasto_p, gasto_n])
+			var id0 := int(surt["id"])
+			var gas_g: float = sr.modelo.gas[id0]
+			sr.modelo.gas[id0] = RedesCiudad.GAS_DEPOSITO * 0.1
+			var caro := sr.modelo.precio_litro(id0)
+			sr.modelo.gas[id0] = RedesCiudad.GAS_DEPOSITO * 0.9
+			var normal := sr.modelo.precio_litro(id0)
+			sr.modelo.gas[id0] = gas_g
+			_comprobar(caro > normal and is_equal_approx(normal, 1.4) and sr.modelo.precio_litro(id0, "premium") > normal, "el precio sube con pocas existencias (%.2f contra %.2f €/l) y la premium cuesta más" % [caro, normal])
 	## Sin cartera (mundo sin roles) la gasolina no sale gratis: la paga el club como antes.
 	if _v != null and _v._redes() != null and _m.mi_club() != null and not _v._redes().surtidor(0).is_empty():
 		var roles_guardados: Roles = _m.roles
 		_m.roles = null
 		_m.vida.combustible = 5.0
 		var saldo_sin := _m.mi_club().saldo
-		_v.usar_surtidor("surtidor_0")
+		_v.usar_surtidor("surtidor_0", "normal")
 		_comprobar(_m.vida.combustible > 40.0 and _m.mi_club().saldo < saldo_sin, "sin cartera repostar lo paga el club (nunca sale gratis)")
 		_m.roles = roles_guardados
 	## LA VENTANILLA DEL BANCO está en la plaza y la E abre el panel de la sucursal.

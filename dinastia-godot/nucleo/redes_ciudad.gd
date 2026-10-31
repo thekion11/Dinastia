@@ -38,6 +38,9 @@ const COLECTOR := 40.0                       ## mm de agua que aguanta un colect
 const SUMIDERO_MM_H := 14.0                  ## lo que evacúa un colector sano por hora
 const GAS_DEPOSITO := 30000.0                ## litros por gasolinera
 const PRECIO_LITRO := 1.4
+## (§2.5, 30-10) Dos combustibles: [nombre, precio base]. El precio sube si la gasolinera tiene el
+## depósito por debajo de la mitad (hasta +25 % vacía). La premium rinde un 15 % más (`VidaDT.premium`).
+const COMBUSTIBLES := {"normal": ["Gasolina normal", 1.4], "premium": ["Gasolina premium (+15 % de rendimiento)", 1.75]}
 
 var semilla := 1
 var horas := 0                               ## horas de juego simuladas
@@ -374,12 +377,19 @@ func sectores_inundados() -> int:
 	return n
 
 ## Echa gasolina: {litros, coste}. Sin luz en el sector del surtidor, no hay bomba.
-func repostar(id: int, sec: Vector2i, litros: float) -> Dictionary:
+func repostar(id: int, sec: Vector2i, litros: float, tipo := "normal") -> Dictionary:
 	if not gas.has(id) or not hay_luz(sec):
 		return {"litros": 0.0, "coste": 0}
 	var l := minf(litros, float(gas[id]))
+	var precio := precio_litro(id, tipo)
 	gas[id] = float(gas[id]) - l
-	return {"litros": l, "coste": roundi(l * PRECIO_LITRO)}
+	return {"litros": l, "coste": roundi(l * precio)}
+
+## El precio del litro en esa gasolinera hoy (con sus existencias).
+func precio_litro(id: int, tipo := "normal") -> float:
+	var base := float((COMBUSTIBLES.get(tipo, COMBUSTIBLES["normal"]) as Array)[1])
+	var frac := float(gas.get(id, 0.0)) / GAS_DEPOSITO
+	return snappedf(base * (1.0 + 0.5 * maxf(0.0, 0.5 - frac)), 0.01)
 
 ## Resumen para el móvil / el informe: una línea por red.
 func resumen() -> Array[String]:

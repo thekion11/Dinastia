@@ -492,7 +492,7 @@ club ampliado ~85 %, redes ~85 %, dinero ~70 %, calidad visual ~70 % (el dueño 
 Las pruebas f1-f5 del guion ya corren en `especiales.sh` (28-10). Lo que falta, por importancia para el jugador (horas de sesión):
 
 1. Fase 0: `abrir(contexto)` en las 19 pantallas (hoy 1), autoguardar al salir del orquestador (4 h). Ojo (30-10): guardar en `OrquestadorEntrada._finalizar` no basta: nombre del DT, dificultad, modo y desafíos los aplica `Principal` al adoptar `PedidoPartida.mundo_pregenerado`; un guardado previo los perdería al cargarlo. Hay que mover esa adopción al orquestador (o guardarla con la partida) y que «Continuar» con el prólogo a medias vuelva al prólogo (`VidaCiudad.arranque_3d`).
-2. Dinero: tarjeta en mano, más cajeros (hospital, universidad, estación, estadio), más de un combustible, auditoría de coches (3,5 h).
+2. Dinero: tarjeta en mano, más cajeros (hospital, universidad, estación, estadio), auditoría de coches (2,5 h).
 3. Redes: camión cisterna, casas del kit que sigan al sector en el apagón, captura Forward+ en el PC del dueño (3 h).
 4. Calidad visual (2.2e): aplicar postura, mochilas y pelo del Drive a los futbolistas del partido; pelo femenino (pasada nueva, con veredicto del dueño).
 

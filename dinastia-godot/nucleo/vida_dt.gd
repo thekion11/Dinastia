@@ -75,6 +75,7 @@ var bienvenida: bool = false
 const DEPOSITO_L := 45.0
 const L_POR_KM := 2.5
 var combustible: float = DEPOSITO_L
+var premium := false   ## (§2.5) el último repostaje fue premium: rinde un 15 % más
 var aviso_comb: int = -1
 ## LOS PRECIOS SIGUEN AL SUELDO (recorrido D4): con precios fijos, casa y auto
 ## costaban el 4% de lo que cobra un DT de club grande y no había decisión.
@@ -318,7 +319,7 @@ func resolver(op: String, roles: Roles, c: Club, prensa: Prensa, anio: int, sem:
 	return r
 
 func gastar_combustible(metros: float) -> void:
-	combustible = maxf(0.0, combustible - metros / 1000.0 * L_POR_KM)
+	combustible = maxf(0.0, combustible - metros / 1000.0 * L_POR_KM / (1.15 if premium else 1.0))
 
 func fraccion_comb() -> float:
 	return combustible / DEPOSITO_L
@@ -326,7 +327,7 @@ func fraccion_comb() -> float:
 func a_dic() -> Dictionary:
 	return {"viv": vivienda, "tr": transporte, "bal": balance, "es": estres, "fam": familia,
 		"sea": semanas_estres_alto, "oc": ocio_semana, "baja": baja_hasta, "pend": pendiente,
-		"perfil": perfil, "hist": historial, "bienv": bienvenida, "comb": snappedf(combustible, 0.01), "avc": aviso_comb}
+		"perfil": perfil, "hist": historial, "bienv": bienvenida, "comb": snappedf(combustible, 0.01), "avc": aviso_comb, "prem": premium}
 
 func desde_dic(d: Dictionary) -> void:
 	vivienda = String(d.get("viv", "depto"))
@@ -343,3 +344,4 @@ func desde_dic(d: Dictionary) -> void:
 	bienvenida = bool(d.get("bienv", false))
 	combustible = clampf(float(d.get("comb", DEPOSITO_L)), 0.0, DEPOSITO_L)
 	aviso_comb = int(d.get("avc", -1))
+	premium = bool(d.get("prem", false))
