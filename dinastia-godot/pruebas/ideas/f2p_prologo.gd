@@ -137,6 +137,7 @@ func _probar_async() -> void:
 	_comprobar(pr != null and pr is Principal and (pr as Principal).mundo == _m, "E enciende el menú central con TU partida")
 	_comprobar(not _p.vista.visible and _p.explorador.process_mode == Node.PROCESS_MODE_DISABLED, "mientras el PC está encendido el mundo 3D se esconde y se congela")
 	_comprobar(_m.prologo_visto, "la primera vez que enciendes el PC el prólogo queda hecho")
+	_comprobar(_m.logros != null and _m.logros.largos.has("primer_dia"), "y cae el logro «Primer día»")
 	## §2.5-1: desde el PC, «Pasear» y «Ver la ciudad» te levantan (no abren otra ciudad dentro del menú).
 	await (pr as Principal)._ver_ciudad_explorando("pie")
 	await _frames(2)

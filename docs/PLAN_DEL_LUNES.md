@@ -175,7 +175,6 @@ de presentación. Mentor y directivos son ficticios (nombres de `Tutorial.mentor
 - El PC enciende `Principal` como capa (el mundo 3D se esconde y se congela, no se destruye); la segunda vez lo
   retoma como partida cargada para no volver a escalar la caja por la dificultad. Pendiente: que al salir del
   juego desde el PC se guarde (hoy guarda al avanzar la semana y al encenderlo la primera vez).
-- Logro «Primer día»: no se añadió (la API de `Logros` no tiene alta de logros sueltos; queda para la fase 5).
 - Rendimiento: la ciudad entera queda cargada bajo el menú central; en gama baja habrá que medirlo (fase 6).
 - (26-10, tarde) El mentor del modo DT es el presidente REAL de la junta (antes salían dos presidentes distintos en el
   despacho); la cabecera de la rueda de presentación se aclara con el color del club; al encender el PC ya no sale la guía
@@ -276,7 +275,7 @@ dialogo`), la flecha del HUD del prólogo y el reloj (`Reloj`, `VidaCiudad`).
   < 25), en el salón de actos; tres discursos; votos = 40 + (ánimo de la grada − 50) × 0,5 + (confianza − 50) × 0,3 + tono
   (seguro ±, humilde + si la grada está en contra); perder cambia al presidente de la `Junta` y la confianza vuelve a 50 (tú
   sigues); ganar da +2. Determinista, sin `Azar`.
-- Pendiente de la fase 4: el favor del agente en `MesaAgente` (los representantes de la cantera); los sitios de la ciudad son
+- Pendiente de la fase 4: los sitios de la ciudad son
   fijos (no hay «sede» propia por marca); las personas de las citas usan el cuerpo genérico (cara por nombre).
 
 **Pruebas (modelo V).** Idea `f4p_personas`: un asunto de la junta genera una cita con mensaje y aparece en la Agenda; a la hora,
@@ -492,14 +491,13 @@ Cumplimiento medido en el código: entrada ~95 %, fase 0 (separar `Principal`) ~
 club ampliado ~85 %, redes ~85 %, dinero ~70 %, calidad visual ~70 % (el dueño dijo «MEJORAR» dos veces), cifras 2.3 100 %.
 Las pruebas f1-f5 del guion ya corren en `especiales.sh` (28-10). Lo que falta, por importancia para el jugador (horas de sesión):
 
-1. Favor del agente en `MesaAgente` (1 h); logro «Primer día» y alta de los logros sueltos (2 h).
-2. Fase 0: `abrir(contexto)` en las 19 pantallas (hoy 1), autoguardar al salir del orquestador (4 h).
-3. Club ampliado: la rama de otro deporte no ofrece «visibilidad» ni celebra sus títulos (2 h).
-4. Dinero: tarjeta en mano, más cajeros y «fuera de servicio», más de un combustible, auditoría de coches (4 h).
-5. Redes: camión cisterna, casas del kit que sigan al sector en el apagón, captura Forward+ en el PC del dueño (3 h).
-6. Calidad visual (2.2e): aplicar postura, mochilas y pelo del Drive a los futbolistas del partido; pelo femenino (pasada nueva, con veredicto del dueño).
+1. Fase 0: `abrir(contexto)` en las 19 pantallas (hoy 1), autoguardar al salir del orquestador (4 h).
+2. Club ampliado: la rama de otro deporte no ofrece «visibilidad» ni celebra sus títulos (2 h).
+3. Dinero: tarjeta en mano, más cajeros y «fuera de servicio», más de un combustible, auditoría de coches (4 h).
+4. Redes: camión cisterna, casas del kit que sigan al sector en el apagón, captura Forward+ en el PC del dueño (3 h).
+5. Calidad visual (2.2e): aplicar postura, mochilas y pelo del Drive a los futbolistas del partido; pelo femenino (pasada nueva, con veredicto del dueño).
 
-Los 4 primeros (~11 h) cierran lo que el guion exige de verdad; el total de la lista larga del informe es ~65 h.
+Los 3 primeros (~10 h) cierran lo que el guion exige de verdad; el total de la lista larga del informe es ~65 h.
 
 ### 2.4 Pendientes del traspaso anterior
 
