@@ -107,6 +107,11 @@ func usar_cajero(k: String) -> bool:
 	for pc: Dictionary in expl.cb.puntos_clic:
 		if String(pc.get("k", "")) == k:
 			pos = pc["pos"]
+	## (§2.5, 30-10) Sin corriente en su sector, el cajero está fuera de servicio (como las bombas del surtidor).
+	var redes := _redes()
+	if redes != null and not redes.modelo.hay_luz(RedesCiudad.sector_en(pos.x, pos.z)):
+		_decir(Idiomas.t(String(banco["nombre"])), Idiomas.t("Fuera de servicio: el sector está sin corriente."))
+		return true
 	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
 	_panel_cajero = PanelCajero.abrir(expl._capa, mundo.roles.cartera, mundo.roles, dia, Idiomas.t(String(banco["nombre"])), int(banco["comision"]), pos, expl.cuerpo)
 	return true
