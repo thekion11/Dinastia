@@ -234,6 +234,17 @@ func _probar_async() -> void:
 			_comprobar(t_ok.contains("50 %") and not t_ok.contains(Idiomas.t("RESERVA")) and _v.reserva() and _v.texto_gasolina().contains(Idiomas.t("RESERVA")),
 				"el indicador de gasolina dice «%s» y en reserva «%s»" % [t_ok, _v.texto_gasolina()])
 			_m.vida.combustible = c0
+			## Mejora C (31-10): los golpes suman daño; con 70 o más el coche va al taller y vuelve reparado.
+			_m.vida.danio = 0
+			DanioCoche.tick(_v)
+			_e._t_golpe += 1.0
+			_e._sacudida_golpe = 12.0 / 18.0
+			DanioCoche.tick(_v)
+			var d1 := _m.vida.danio
+			_m.vida.danio = 75
+			var taller := not bool(VidaCiudad.transporte(_m)["coche"])
+			_m.vida.semana(_m.mi_club(), _m.roles, _m.anio, _m.semana, 0)
+			_comprobar(d1 == 24 and taller and _m.vida.danio == 0, "un golpe a 43 km/h suma %d de daño; con 75 el coche va al taller y la semana lo repara" % d1)
 			## Mejoras E y G (31-10): el claxon y la velocidad asustan a los peatones cercanos (aprietan el paso).
 			if _e.trafico != null:
 				var pe: Dictionary = {}

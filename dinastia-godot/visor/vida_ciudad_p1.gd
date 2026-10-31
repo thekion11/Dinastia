@@ -113,6 +113,8 @@ static func transporte(m: Mundo) -> Dictionary:
 		return {"coche": true, "motivo": ""}
 	if m.vida.transporte == "micro":
 		return {"coche": false, "motivo": "Sin coche propio: esta semana te mueves en bus y metro (Mi Vida → Transporte)."}
+	if m.vida.danio >= VidaDT.DANIO_TALLER:   ## mejora C (31-10): los golpes lo llevan al taller
+		return {"coche": false, "motivo": "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro."}
 	if absi(("averia|%d|%d|%s" % [m.anio, m.semana, m.mi_club().id]).hash()) % 8 == 0:
 		return {"coche": false, "motivo": "🔧 Tu coche está en el taller esta semana: bus y metro."}
 	return {"coche": true, "motivo": ""}
