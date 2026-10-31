@@ -26,25 +26,30 @@ var _giros: Array[Quaternion] = []
 var _cabeza := -1
 var _nivelar := true
 
-## Pone el modificador a la persona `nodo` (una vez). `semilla` fija sus medidas.
-static func poner(nodo: Node, semilla: int) -> PosturaQ:
+## Pone el modificador a la persona `nodo` (una vez). `semilla` fija sus medidas. `atleta` (futbolistas, 31-10): manos
+## un 30 % menos dobladas (su clip ya trae los dedos algo doblados), hombros apenas caídos (1-4°), cuello casi recto (0-2°) y siempre mirando al frente: un deportista no va encorvado.
+static func poner(nodo: Node, semilla: int, atleta := false) -> PosturaQ:
 	var esq := FutbolistaQ.esqueleto_de(nodo)
 	if esq == null or esq.get_node_or_null("PosturaQ") != null:
 		return null
 	var m := PosturaQ.new()
 	m.name = "PosturaQ"
 	esq.add_child(m)
-	m.configurar(esq, semilla)
+	m.configurar(esq, semilla, atleta)
 	return m
 
-func configurar(esq: Skeleton3D, semilla: int) -> void:
+func configurar(esq: Skeleton3D, semilla: int, atleta := false) -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = semilla ^ 0x51ed
 	var relaja := rng.randf_range(0.6, 1.4)
-	_nivelar = rng.randf() >= PROB_BAJA
+	_nivelar = rng.randf() >= PROB_BAJA or atleta
 	var cuello := rng.randf_range(1.0, 6.0) if _nivelar else rng.randf_range(6.0, 14.0)
 	_cabeza = esq.find_bone("Head")
 	var hombro := rng.randf_range(4.0, 12.0)
+	if atleta:
+		cuello *= 0.35
+		hombro *= 0.33
+		relaja *= 0.7   ## el clip del futbolista ya trae los dedos algo doblados: con la curva entera la mano quedaba en puño apretado
 	_anadir(esq, "spine_03", eje_cuello, cuello * 0.3)
 	_anadir(esq, "neck_01", eje_cuello, cuello * 0.4)
 	_anadir(esq, "Head", eje_cuello, cuello * 0.3)
