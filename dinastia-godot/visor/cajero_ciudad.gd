@@ -5,7 +5,7 @@ extends RefCounted
 ## `PanelCajero` con la cartera del DT. Dos bancos inventados: el propio (sin comisión) y uno ajeno (2 € por retirada). Sin azar: nada toca `_rng`.
 const BANCOS := [{"nombre": "Banco Andino", "comision": 0}, {"nombre": "Caja Costera", "comision": 2}]
 
-## (31-10, M-476) Más allá de esto el cajero no se dibuja (mide 2 m: a 300 m es menos de un píxel de alto).
+## (31-10, M-476) Más allá de esto el cajero no se dibuja (mide 2 m: a 300 m son unos 6 píxeles de alto, imposible de usar).
 const VISIBLE_HASTA := 300.0
 
 static func banco_de(k: String) -> Dictionary:
