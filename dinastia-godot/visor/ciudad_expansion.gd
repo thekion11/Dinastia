@@ -202,6 +202,8 @@ func encender(noche: float) -> void:
 		(fs["cono"] as ShaderMaterial).set_shader_parameter("fuerza", lerpf(0.0, 0.22, noche) * f)
 	if _ventanas_lejanas != null:
 		_ventanas_lejanas.set_shader_parameter("noche", noche)
+	if _casas_mat != null:
+		_casas_mat.set_shader_parameter("noche", noche)
 	_actualizar_luz_sectores()
 
 ## El mapa 5x5 de corriente por sector que leen las fachadas (`fachada_torre.gdshader`): las ventanas de
@@ -220,6 +222,9 @@ func _actualizar_luz_sectores() -> void:
 	if _ventanas_lejanas != null:
 		_ventanas_lejanas.set_shader_parameter("luz_sectores", textura_luz)
 		_ventanas_lejanas.set_shader_parameter("usa_sectores", true)
+	if _casas_mat != null:
+		_casas_mat.set_shader_parameter("luz_sectores", textura_luz)
+		_casas_mat.set_shader_parameter("usa_sectores", true)
 
 ## `luz`: la máscara de las ventanas encendidas (blanco = ventana, unas sí y
 ## otras no) para la emisión nocturna.

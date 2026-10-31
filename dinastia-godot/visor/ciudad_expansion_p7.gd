@@ -262,6 +262,7 @@ func _casas_kenney() -> bool:
 		mallas.append(malla)
 	var mat := ShaderMaterial.new()
 	mat.shader = load("res://visor/casa_kenney.gdshader")
+	_casas_mat = mat
 	mat.set_shader_parameter("paleta", load("res://assets/kenney/suburbano/Textures/colormap.png"))
 	var grupos: Array = []
 	for i in mallas.size():
