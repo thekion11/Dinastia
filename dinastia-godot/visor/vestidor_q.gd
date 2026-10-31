@@ -39,6 +39,9 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 		if biblio is Dictionary and String((biblio as Dictionary).get("cara", "")) == nombre_foto \
 				and String((biblio as Dictionary).get("pelo", "")) == "":
 			tocar_pelo = false
+		## Con un peinado del Drive ya puesto (`PeloDrive.para_futbolista`, 31-10) se queda ese: el dueño lo prefiere al pelo por capas.
+		if (d.get("nodo", modelo) as Node).find_child("PeloDrive*", true, false) != null:
+			tocar_pelo = false
 		if biblio is Dictionary and String((biblio as Dictionary).get("cara", "")) == nombre_foto:
 			medida = medida.duplicate()
 			var hb := BibliotecaCaras.pelo(String(biblio.get("pelo", "")), Color(String(biblio.get("color_pelo", "#2a211b"))))
