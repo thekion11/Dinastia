@@ -130,7 +130,7 @@ func ficha() -> MenuModosFicha:
 	return _ficha
 
 static func jugable(m: Dictionary) -> bool:
-	return not CATS_SIN_JUGAR.has(String(m.get("cat", "")))
+	return not CATS_SIN_JUGAR.has(String(m.get("cat", ""))) and DesbloqueoModos.abierto(String(m.get("id", "")))
 
 # --- selección ------------------------------------------------------------------
 
@@ -158,7 +158,8 @@ func elegir(i: int) -> void:
 	seleccionar(i)
 	var m := _modos[i]
 	if not jugable(m):
-		_ficha.avisar(Idiomas.t("Todavía no se puede jugar. Está en la lista para cuando esté listo."))
+		var falta := DesbloqueoModos.requisito(String(m.get("id", "")))
+		_ficha.avisar(falta if falta != "" else Idiomas.t("Todavía no se puede jugar. Está en la lista para cuando esté listo."))
 		_sonar("error")
 		return
 	_sonar("abrir")

@@ -226,7 +226,7 @@ func _una_farola(pos: Vector3, hacia: float) -> void:
 	var luz := OmniLight3D.new()
 	luz.omni_range = 46.0
 	luz.light_energy = 0.0
-	luz.light_color = _luz_color
+	luz.light_color = _luz_color.lerp(Color(1.0, 0.69, 0.40), 0.6)   ## el charco en el suelo es siempre de sodio cálido (S5)
 	luz.position = punta + Vector3(0.55, -0.6, 0)
 	raiz.add_child(luz)
 	_farolas_luz.append(luz)

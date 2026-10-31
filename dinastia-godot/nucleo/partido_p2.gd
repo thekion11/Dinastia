@@ -31,8 +31,7 @@ func _init(_local: Club, _visita: Club, _neutral: bool = false) -> void:
 	rastro.enganchar(self)
 
 ## LAS VALORACIONES DEL PARTIDO (M-141): la nota de cada uno de los que
-## jugaron, como en los diarios, de mejor a peor:
-##   [{jugador, nota, local, titular}]
+## jugaron, como en los diarios, de mejor a peor:   [{jugador, nota, local, titular}]
 ## La base es la nota del partido (6 + goles), más lo apuntado en `_aportes`,
 ## el resultado del equipo (+0,4 / −0,3), la portería a cero o los goles encajados
 ## (porteros y defensas) y un poco de la calidad del jugador. Los que entraron
@@ -211,9 +210,11 @@ func _tarjeta_arbitral(arr: Array[Jugador], plantilla: String, arbitro_nombre: S
 	j.amarillas += 1
 	var roja := j.amarillas % 2 == 0 and Azar.suerte(0.18)
 	if roja:
-		j.suspension = maxi(j.suspension, 1)
+		Disciplina.sanciona(j)
 	decision_arbitral.emit(Idiomas.t(plantilla) % [arbitro_nombre, j.nombre], minuto)
 	tarjeta.emit(j, roja, minuto)
+	if not roja and Disciplina.acumula(j):
+		decision_arbitral.emit(Disciplina.frase(j), minuto)
 
 ## El goleador no se sortea plano: se pondera por lo cerca del area que juega y
 ## por su pegada. Si se sortea plano, los centrales marcan tanto como los nueves
@@ -427,7 +428,7 @@ func _incidencias() -> void:
 			tarjeta.emit(l, roja, minuto)
 	## Una sola tirada siempre: la superficie cambia la probabilidad, no cuántas
 	## veces se consulta `Azar`.
-	var f_sup := ctx_lesion_local if local != null and local.id == ctx_club_id else 1.0
+	var f_sup := (ctx_lesion_local if local != null and local.id == ctx_club_id else 1.0) * (ctx_lesion_mio if (local != null and local.id == ctx_club_id) or (visita != null and visita.id == ctx_club_id) else 1.0)
 	if Azar.suerte(0.0024 * f_sup):
 		var h := _alguien(_todos)
 		if h != null:

@@ -30,25 +30,11 @@ const TUNEL_HUECO := 3.2
 ## ============================================================================
 ## EL GRADERIO POR BANDEJAS DE VERDAD (23-9-2026)
 ## ============================================================================
-## Pedido del usuario: *"el estadio debe ser modular para lo de reformar el
-## estadio y habrá que hacerle más bandejas y variantes para cuando uno agrande
-## el estadio (máximo 150.000)"*.
-##
-## Hasta hoy una tribuna era UNA rampa continua de 11 m de fondo, y su altura
-## salia de multiplicar 6,5 m por el numero de bandejas. Eso tenia un problema
-## de raiz que la auditoria de esta misma sesion dejo anotado: con 3 bandejas la
-## rampa sube 18 m en 11 m de fondo, o sea **58,6 grados**. Ninguna grada real
-## pasa de ~35, y a 5 bandejas habria sido un acantilado de 70 grados.
-##
-## Ahora cada bandeja es su propia rampa, con su propio fondo, su pendiente
-## acotada y un FRENTE vertical entre una y la siguiente -que es exactamente el
-## perfil de un estadio de varias bandejas, y de paso es donde cuelgan los
-## telones-. La tribuna crece hacia AFUERA al sumar bandejas, no solo hacia
-## arriba, que es lo que hace que 5 bandejas sigan pareciendo un estadio.
-##
-## La cara interior (la que da al cesped) NO se mueve: sigue a `FRENTE_TRIBUNA`
-## del eje nominal `dx`/`dz`. Asi la relacion con la cancha, las camaras, las
-## vallas y el tunel es la misma con 1 bandeja que con 5.
+## Pedido del usuario: estadio modular, con más bandejas al agrandarlo (máximo 150.000). Antes una tribuna era UNA rampa
+## continua de 11 m de fondo: con 3 bandejas subía 58,6° (ninguna grada real pasa de ~35°). Ahora cada bandeja es su propia
+## rampa con pendiente acotada y un FRENTE vertical entre una y la siguiente (donde cuelgan los telones): la tribuna crece
+## hacia AFUERA al sumar bandejas. La cara interior (la del césped) no se mueve: sigue a `FRENTE_TRIBUNA`, así la relación
+## con la cancha, las cámaras, las vallas y el túnel es la misma con 1 bandeja que con 5.
 
 ## Lo que sube una grada de verdad. 33 grados es el limite de lo comodo; por
 ## encima, una tribuna se lee como una pared.
@@ -181,6 +167,9 @@ const POSES_PUBLICO := ["quieto", "charla", "aplaude", "aplaude_arriba", "puno",
 ## al centro de cada MultiMesh, por eso los tramos.
 const LOD_PUBLICO := 55.0
 const TRAMOS_PUBLICO := 3
+## Las filas altas (malla «lejos» siempre): a menos de esto del trozo se ven con la malla «medio» (8 trozos por bandeja).
+const LIMITE_ALTAS := 26.0
+const TRAMOS_ALTAS := 8
 
 ## EL HINCHA DE LAS PRIMERAS FILAS (29-9-2026). Pedido del usuario al ver el
 ## partido jugable de la Carrera de Jugador ("ese público se ve horrible"):
@@ -259,11 +248,12 @@ static func marcar_techo(mi: GeometryInstance3D, fuera: Vector3) -> void:
 	mi.add_to_group("techo_estadio")
 	mi.set_meta("fuera", Vector3(fuera.x, 0.0, fuera.z).normalized())
 
-## Llamar cada fotograma con la cámara activa.
+## Llamar cada fotograma con la cámara activa. (28-10) `layers`/`cull_mask` solo se escriben si cambian.
 static func ocultar_techo_ante(cam: Camera3D) -> void:
 	if cam == null or not cam.is_inside_tree():
 		return
-	cam.cull_mask &= ~CAPA_TECHO_OCULTO
+	if cam.cull_mask & CAPA_TECHO_OCULTO:
+		cam.cull_mask &= ~CAPA_TECHO_OCULTO
 	for n in cam.get_tree().get_nodes_in_group("techo_estadio"):
 		## GeometryInstance3D: también las vigas del techo (un MultiMesh, 26-10-2026).
 		var mi := n as GeometryInstance3D
@@ -272,7 +262,11 @@ static func ocultar_techo_ante(cam: Camera3D) -> void:
 		var fuera: Vector3 = mi.get_meta("fuera", Vector3.ZERO)
 		var d := (cam.global_position - mi.global_position)
 		var detras := Vector3(d.x, 0.0, d.z).dot(fuera) > -3.0
-		mi.layers = CAPA_TECHO_OCULTO if detras else 1
+		var capa: int = CAPA_TECHO_OCULTO if detras else 1
+
+		if mi.layers != capa:
+			mi.layers = capa
+
 
 static func _box(root: Node3D, center: Vector3, size: Vector3, mat: Material) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
@@ -328,6 +322,17 @@ static func _perimetro_cesped(root: Node3D, dx: float, dz: float, tono: Color) -
 	mi.material_override = Texturas.cesped(Color.from_hsv(tono.h, minf(tono.s * 1.1, 0.6), tono.v * 0.72), 37)
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	root.add_child(mi)
+
+## Caché de las texturas generadas píxel a píxel (28-10): la grada de un estadio con los mismos colores y patrón
+## tardaban 80-200 ms en rehacerse en cada apertura. Tope de 32 entradas (se vacía entera al llenarse).
+static var _cache_tex := {}
+static func _tex_cacheada(clave: String, hacer: Callable) -> ImageTexture:
+	if not _cache_tex.has(clave):
+		if _cache_tex.size() >= 32:
+			_cache_tex.clear()
+		_cache_tex[clave] = hacer.call()
+	return _cache_tex[clave]
+
 
 ## Con caché (30-10-2026, rendimiento): la textura (`CespedTextura`, 65.536 píxeles en GDScript) se
 ## hacía en cada estadio y ciudad. En memoria y en disco (PNG sin pérdida, colores exactos en la clave).

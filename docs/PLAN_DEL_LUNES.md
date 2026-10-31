@@ -4,34 +4,36 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## ESTADO AL CIERRE DEL 28-10 (para retomar el lunes)
+
+- **Rama**: todo unido en `claude/dazzling-rubin-v7rfyi` (líder). Banco «FIN. 0 fallos», especiales «todo en orden», prueba visual en 0 fallos (referencias al día), ningún script de más de 450 líneas. Registro detallado del 27-28-10: `docs/04_auditorias/CIERRE_2026-10-28.md`.
+- **Sesiones**: la ejecutora cierra con un PR final y su resumen en `docs/04_auditorias/rendimiento.md` («ESTADO AL CIERRE 28-10»); la sesión 3 con `docs/04_auditorias/sesion_3_cierre_28-10.md`. El líder une ambos antes de parar.
+- **Para el lunes, primero**: unir lo último de las dos sesiones si quedó algo; repasar las correcciones de ciudad que pidió el líder (bus, paraderos de noche, semáforo peatonal, teleférico, lavado, lluvia); seguir con §2.2e (pasadas visuales) y las filas P1 de esta lista.
+- **Del dueño**: §0 y §1 (FPS en hardware real, builds, keystore, publicar la política de privacidad, red a Wikimedia).
+- **Auditoría de código del 28-10**: lo arreglado y lo pendiente (materiales sin compartir, vías sin conectar, probables del guardado, `MotorLibre`) está en `CIERRE_2026-10-28.md` §«Auditoría»; las órdenes sin completar y los fallos abiertos, en sus dos secciones siguientes.
+
 ## 0. Lo que espera una decisión tuya (lista corta)
 
 Sin esto, las filas que dependen de ello no avanzan. El detalle está en la sección que se cita.
-- **Decididas por el dueño (26-10):** logros de racha: **cuentan jugando y simulando**; «Siempre, todo el partido» apaga ese lado del plan: **se queda así**; versión **0.9.0**; reparto de la TV 50/50: **sí**; taquilla ×3,5: **sí**; **por ahora sin pago** (nada de monedas ni gacha); banderas **detalladas** (flag-icons, MIT); narración hablada: **después del lanzamiento**; filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`: **todas al plan**; fuentes OFL, silbato VCSL y CI: **sí**; modelo B (MakeHuman): **pulirlo más** (fase 4 traje, fase 5 cuerpo) antes de integrar; rueda de prensa: **compararla con la competencia y completarla**.
+- **Decididas por el dueño (27-10 tarde)** (CLAUDE.md orden 14): pantalla de entrada APROBADA; «el bloqueo» de modos ACEPTADO; las 53 escenas de prueba: reutilizar lo que sirva; peatones SÍ en bus y transportes; dificultad de la CPU en 8 categorías (Practicante, Cadete, Debutante = normal, Semiprofesional, Profesional, Experto, Maestro, Ultimate) más dificultades fuera del partido; policía y bomberos SÍ; peluches SÍ y coleccionables con logros; museo con trofeos interactivos; pelo con lo del Drive; clasificar las ~1.200 ideas.
+- **Clasificación de las 1.201 ideas** (27-10): `docs/04_auditorias/clasificacion_ideas_2026-10-27.md`. 68 para el lanzamiento y 43 que hay que verificar jugando (unas 26-32 sesiones-día, 9-11 días con 3 sesiones); 731 después, 296 a verificar después, 63 descartadas y 20 de decisión del dueño. Revisarla y aprobarla.
 - **Decididas por el dueño (26-10):** logros de racha: **cuentan jugando y simulando**; «Siempre, todo el partido» apaga ese lado del plan: **se queda así**; versión **0.9.0**; reparto de la TV 50/50: **sí**; taquilla ×3,5: **sí**; **por ahora sin pago** (nada de monedas ni gacha); banderas **detalladas** (flag-icons, MIT); narración hablada: **después del lanzamiento**; filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`: **todas al plan** (hechas en la sesión 5: la 14 entera, la parte del partido de la 4 y el núcleo de la 18, ver `docs/04_auditorias/sesion_5.md`; de la 4 queda «en finanzas, cada ingreso y gasto con su origen»; de la 18, la interfaz de la pizarra con las dos fases y los roles, y que la IA use roles); fuentes OFL, silbato VCSL y CI: **sí**; modelo B (MakeHuman): **pulirlo más** (fase 4 traje, fase 5 cuerpo) antes de integrar; rueda de prensa: **compararla con la competencia y completarla**.
-- **Aprobar la pantalla de entrada** como escena principal (`Inicio.flujo_nuevo`, hoy `true` en código): verla en juego real y decir sí o no (§8).
-- **Empujar `main` reescrito** y **borrar las 8 ramas y `latest`** (§1); cuándo fusionar a `main` la rama actual y la de la sesión 2 (§9).
+- **`main` reescrito y etiqueta `latest`**: las 8 ramas viejas ya no están (27-10); siguen la etiqueta `latest` y la historia vieja de `main` (502 objetos de capturas e informes): empujarlo necesita un *force push* que solo puede hacer el dueño (§1). Cuándo fusionar a `main` la rama actual (§9).
 - **Foundry/Azure** sí o no; **abrir la red a Wikimedia** (caras y escudos que faltan) (§1).
-- **«El bloqueo»** de modos: opción en Ajustes con «Todo abierto» por defecto, sí o no (§1).
 - **Texturas de caras**: permiso para probar BC7 en una muestra y medir ΔE de piel (§4).
-- **53 escenas de prueba sin mención**: cuáles se borran (§4).
-- **Carrera de Jugador**: cuánto subir la dificultad de la CPU en ese modo (§2.4).
-- **Peatones**: subir al autobús y tomar coches del tráfico (dijiste «no por ahora»; el transporte público del guion lo vuelve a pedir) (§2.4).
 - **20 decisiones de producto** (monetización y estética) (§7, final) y las prioridades de «Huecos y mejoras propuestas» (§10).
 - Solo tuyo, sin decisión de diseño: FPS en hardware real, builds, keystore (cambiar contraseña), licencias, derechos de imagen, música y voces, binarios al Drive (§1).
 
 ## 1. Lunes 26-10 — del dueño
 
-- [ ] **Borrar 8 ramas y la etiqueta `latest`** (el clon pesa 1,33 GiB hasta entonces). Con `git clone --single-branch --branch main` ya sale ligero.
-  `git push origin --delete ccr-54306f57-jlcywg claude/godot-project-review-o1dvr1 claude/inspiring-allen-8vu29s claude/sweet-turing-tysv99 borrar-ccr-54306f57-jlcywg borrar-claude-godot-project-review-o1dvr1 borrar-claude-inspiring-allen-8vu29s borrar-claude-sweet-turing-tysv99` y `git push origin --delete latest`. La rama `respaldo-historia-2026-10-24` (= `main` antes de reescribir): dejarla 1-2 semanas y borrarla. GitHub conserva `refs/pull/*` con objetos viejos.
+- [ ] **Borrar la etiqueta `latest`** (las 8 ramas viejas ya no están, 27-10): `git push origin --delete latest`.
 - [ ] **Quitar documentos y capturas viejos del historial de `main`**: ya reescrito en la rama de trabajo (530 rutas fuera, 802 → 682 MiB, árbol idéntico); falta empujarlo a `main` (el clasificador de permisos bloqueó el empuje forzado): añadir una regla de Bash o ejecutar tú, desde un clon espejo reescrito, `git push --force-with-lease=main:2f97059740f0b995ddc1b391ea3282eb26e345bd origin main:main`. Las ramas viejas y `respaldo-historia-2026-10-24` conservan todo lo borrado.
 - [ ] Probar Foundry/Azure (200 USD, 30 días) y decidir si se usa.
 - [ ] Abrir la red a Wikimedia/banderas (necesario para las caras que faltan: ~906 de 2.125 y escudos).
-- [ ] CI `compilar.yml`: ruta y preset ya corregidos; falta imagen de Godot **4.7** (la 4.3 no abre el proyecto) y la configuración de exportación.
 - [ ] **Perfil de FPS en hardware real** (M-337, P0): PC modesto (Intel UHD) y móvil; aquí solo hay render por software.
+- [ ] Política de privacidad (`docs/05_referencia/POLITICA_DE_PRIVACIDAD.md`, es y en, con tu correo desde el 28-10): publicarla en una dirección web fija para las tiendas.
 - [ ] Builds, keystore, licencias, derechos de imagen, música y voces (🔒). Cambiar la contraseña del keystore (la vieja sigue en el historial). Confirmar la fuente de los modelos 🟡 (Sketchfab, Meshy, mocap de Gumroad, Canva).
 - [ ] Subir los binarios pesados (`recursos/`, `marca/`, `material/`) al Drive con `herramientas/drive_subir.ps1` y verificar. Respaldo de texto: `docs/05_referencia/RESPALDO_DRIVE.md`.
-- [ ] Decidir: «el bloqueo» (modos que se desbloquean jugando) como opción en Ajustes, «Todo abierto» por defecto.
 
 ## 2. El guion: fases 0–6 (reestructuración)
 
@@ -42,8 +44,8 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 | **1 — Entrada** | APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»): capturas en `docs/04_auditorias/capturas_fase1/` | las fases 0-5 como pantallas completas |
 | **2 — Prólogo 3D** | CONSTRUIDO el 26-10 (`escenas/prologo.tscn`, `visor/prologo*.gd`, `visor/pc_oficina.gd`; prueba `pruebas/ideas/f2p_prologo`, capturas `docs/04_auditorias/capturas_fase2/`). APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»); límites en §2.2b | de «Nuevo juego» hasta tu primer día |
 | **3 — Vida** | CONSTRUIDO el 26-10 (`visor/vida_ciudad.gd` + `visor/casa_dt.gd`, agenda del móvil, arranque en casa/oficina; pruebas `pruebas/ideas/f3v_vida` y `f3c_casa`, capturas `docs/04_auditorias/capturas_fase3/`). APROBADA el 26-10 (sin jugarla aún; «a futuro pulir»); límites en §2.2c | un día completo jugable en 3D |
-| **4 — Personas** | EN CONSTRUCCIÓN desde el 26-10: bloques 1-4 y parte del 6 hechos (`nucleo/citas.gd`, `visor/citas_ciudad.gd`, Agenda con «Ir», favor del agente en `Negociacion`, entrevista de contratación, fotos a Tribuna; pruebas `f4p_citas` y `f4p_personas`; capturas `docs/04_auditorias/capturas_fase4/`); el bloque 7 lo hace la sesión ejecutora; faltan asamblea/elecciones y «convocar rueda» (§2.2d) | negociaciones en persona |
-| **5 — Club ampliado** | vestuario con nombres, otros deportes, trofeos y celebraciones | |
+| **4 — Personas** | CONSTRUIDA el 27-10 (`nucleo/citas.gd`, `visor/citas_ciudad.gd`, `nucleo/afinidad_club.gd`; Agenda con «Ir» y «Convocar rueda»; pruebas `f4p_citas`, `f4p_personas`, `f4r_rutinas`; capturas `docs/04_auditorias/capturas_fase4/`). Sin aprobar aún (27-10: «mejorar»); límites en §2.2d | negociaciones en persona |
+| **5 — Club ampliado** | CONSTRUIDA el 27-10 (`nucleo/citas.gd`: ramas, copas y celebración; `visor/vestuario_vivo.gd`: futbolistas con nombre junto a su taquilla de 10 a 12; pruebas `f5c_club` y `f4p_personas`; capturas `docs/04_auditorias/capturas_fase5/`). Sin aprobar aún (27-10: «mejorar»); límites en §2.2f | |
 | **6 — Pulido y auditoría** | pasos 4-7 de 7.1, limpieza del repo, vídeo | cierre y MEGAPLAN siguiente |
 
 Cada fase tiene un documento de estado y se pasa a `main` con un PR cuando lo pidas.
@@ -115,18 +117,11 @@ Fase 0 CERRADA el 26-10 (pasos 1-3 hechos: noticias, sorteos, preferencias, cicl
 #### 7. Código menos delicado (cómo se hace y cómo se comprueba)
 
 #### 7.1 Partir `principal.gd` sin romperlo
-Método «estrangulador»: cada paso mueve un grupo de funciones a su propia clase, **sin
-cambiar su comportamiento**, y el banco entero debe seguir en 0 fallos.
-
-| Paso | Se extrae | Va a | Riesgo |
-|---|---|---|---|
-| 4 | Elegir club (mapa, países, escudos) | pasa a ser la **fase 2** del nuevo menú inicial | se rehace de todos modos |
-| 5 | Hubs contextuales y carril de chips | `ui/menu/hubs.gd` | medio |
-| 6 | Estadio, finanzas, identidad, camarín (`_pintar_*`) | `ui/pantallas/*` (ya hay una por tema) | medio |
-| 7 | Lo que queda: **`MenuCentral`**, la cáscara que abre el PC de la oficina | `ui/menu_central.gd` | alto: depende de 1-6 |
-
-Meta: `Principal` pasa de 6.867 a < 1.500 líneas y las 157 variables de miembro se reparten
-por clases. Cada paso es un commit pequeño con su banco.
+Pasos 1-7 HECHOS el 27-10: `Principal` pasó de 6.867 a 1.438 líneas (meta < 1.500) con puentes de una línea; lo extraído vive en
+`ui/pantallas/*`, `ui/menu/hubs.gd` y `ui/principal/*` (`ConstruirMenu`, `AvanceSemana`, `JornadaPartido`, `TemaMenu`, `PiezasUI`, `TablasMenu`,
+`PedidoPartida`…), y 26 variables se mudaron a la clase que las usa. Queda: las ~105 variables de miembro compartidas (widgets que monta
+`ConstruirMenu` y preferencias) siguen en `Principal`; repartirlas exige que cada pantalla reciba sus widgets en `abrir(contexto)` (§7.2).
+Renombrar la cáscara a `MenuCentral` cuando el PC de la oficina sea la única entrada.
 
 #### 7.2 Contratos y aislamiento
 - **Un contrato por pantalla:** `abrir(contexto)`, `cerrar()` y una señal; nada de que una
@@ -175,14 +170,11 @@ de presentación. Mentor y directivos son ficticios (nombres de `Tutorial.mentor
 - El mentor no busca camino por el edificio: habla, «se adelanta» (da tres pasos y se esfuma) y te espera ya en la
   sala siguiente; la flecha del HUD y el aro en el suelo te llevan (con el ascensor si cambia la planta).
 - Mientras el mentor habla el personaje se queda quieto (frases cortas); todo lo demás es libre.
-- En la rueda de presentación el DT gesticula al responder con los gestos del plató de siempre (no hay aún una pose
-  distinta por tono: seguro/evasivo/humilde solo cambian el texto y la relación con la prensa, ±2 por respuesta).
 - La directiva son el presidente del personal del club más dos accionistas de la `Junta` con cuerpo; una pregunta,
   dos respuestas (+3 / +1 de confianza).
 - El PC enciende `Principal` como capa (el mundo 3D se esconde y se congela, no se destruye); la segunda vez lo
   retoma como partida cargada para no volver a escalar la caja por la dificultad. Pendiente: que al salir del
   juego desde el PC se guarde (hoy guarda al avanzar la semana y al encenderlo la primera vez).
-- Logro «Primer día»: no se añadió (la API de `Logros` no tiene alta de logros sueltos; queda para la fase 5).
 - Rendimiento: la ciudad entera queda cargada bajo el menú central; en gama baja habrá que medirlo (fase 6).
 - (26-10, tarde) El mentor del modo DT es el presidente REAL de la junta (antes salían dos presidentes distintos en el
   despacho); la cabecera de la rueda de presentación se aclara con el color del club; al encender el PC ya no sale la guía
@@ -277,15 +269,139 @@ dialogo`), la flecha del HUD del prólogo y el reloj (`Reloj`, `VidaCiudad`).
   tonos: seguro +2 de moral, evasivo −1, humilde +1. Si no vas, caduca sin efecto. El cuerpo es genérico (cara por nombre),
   no el modelo del jugador (fase 5).
 - Bloque 6 (parte): las fotos del modo foto se publican desde la app Fotos como «paseo» en `Redes` (tipo nuevo, +seguidores).
-- Pendiente: asamblea/elecciones del club, «convocar rueda de prensa» desde el móvil, el favor en `MesaAgente`; los sitios de
-  la ciudad son fijos (no hay «sede» propia por marca). El bloque 7 (rutinas y afinidad del personal) lo construye la sesión
-  ejecutora (tarea 6).
+- «Convocar rueda de prensa» desde la Agenda del móvil (`Citas.convocar_rueda`: una extra por semana, guion neutro, se
+  responde en el PC). Bloque 7 hecho por la ejecutora (`nucleo/afinidad_club.gd`, saludos por tramo en el pasillo).
+- Asamblea de socios (bloque 6, 27-10): el sábado de la semana 3 cada 4 temporadas (o cualquier temporada con la confianza
+  < 25), en el salón de actos; tres discursos; votos = 40 + (ánimo de la grada − 50) × 0,5 + (confianza − 50) × 0,3 + tono
+  (seguro ±, humilde + si la grada está en contra); perder cambia al presidente de la `Junta` y la confianza vuelve a 50 (tú
+  sigues); ganar da +2. Determinista, sin `Azar`.
+- Pendiente de la fase 4: los sitios de la ciudad son
+  fijos (no hay «sede» propia por marca); las personas de las citas usan el cuerpo genérico (cara por nombre).
 
 **Pruebas (modelo V).** Idea `f4p_personas`: un asunto de la junta genera una cita con mensaje y aparece en la Agenda; a la hora,
 la persona está en su sitio (fuera de hora, no); negociar en persona aplica −5 %/+10 y por PC no; firmar una zona en persona
 da el +5 %; la entrevista mueve ±2 de moral; publicar una foto suma seguidores; la asamblea cambia el presidente al perder
 y nada más; las citas caducan el domingo sin castigo. Captura `f4p_captura_personas` (mensaje con «Ir», patrocinador en su
 sede, agente en el bar, asamblea, foto publicada).
+
+### 2.2f Fase 5 — Club ampliado: DISEÑO (27-10, compuerta 2; construir en este orden)
+
+**Lo que ya existe y se enlaza:** taquillas con dorsal y nombre de la plantilla (`TunelVestuario`), museo con una copa por
+título (`SalasClub.museo`, `ctx["titulos"]` en `Principal`), ramas de otros deportes que juegan su temporada y dejan palmarés
+(`Hinchada.RAMAS`, `temporada_ramas`, `palmares_ramas`), trofeos de la directiva (`Directiva.trofeos`), citas en persona
+(`Citas`), cuerpos genéricos (`PrologoMentor`) y los clips de la UAL (`AnimExtra.asegurar`).
+
+| # | Bloque | Qué hace | Regla |
+|---|---|---|---|
+| 1 | Vestuario con vida | Laborables de 10 a 12 (reloj), 3-5 futbolistas con cuerpo junto a su taquilla (nombre y dorsal de la plantilla real; cara por nombre, no el modelo del jugador hasta tener retratos 3D en el paseo); E = frase según su moral y rol; «charla» de la UAL | solo textos: nada cambia en el partido |
+| 2 | Las ramas como personas | Una cita por temporada (semana 5) con la coordinadora de cada rama abierta: pide presupuesto (10 % del coste anual) o visibilidad (un partido en el estadio); aceptar sube la fuerza de la rama esa temporada (+0,06 en `temporada_ramas`) y cuesta caja; negar no castiga | ficticio; sin religión ni política |
+| 3 | Trofeos de verdad | El museo cuenta también los títulos de las ramas (puesto 1 en `palmares_ramas`); cada título nuevo añade su copa y una placa con el año | el museo lee `ctx["titulos"]` + ramas |
+| 4 | Celebraciones | Título de liga o copa del primer equipo: cita «celebración» el lunes siguiente en el museo con el presidente (copa nueva, foto para Tribuna) y, en el estadio, vuelta olímpica de la plantilla con confeti al entrar al campo esa semana; título de una rama: la rama celebra en el museo y sale en portada | una vez por título; reversible |
+
+**Hecho el 27-10:** bloque 1 `VestuarioVivo` (colgado de `CitasCiudad`): laborables de 10 a 12, 4 futbolistas (dorsal más bajo)
+en chándal del club junto a las taquillas, nombre y «dorsal · puesto» en el rótulo, E = frase por moral (3 tramos × 3) con el
+clip de charla; fuera de horario el vestuario queda vacío. Límite: cara por nombre (no el retrato 3D del jugador) y posiciones
+aproximadas a lo largo de las paredes, no taquilla por taquilla.
+**Bloques 2-4:** cita «rama» en la semana 5 por cada rama abierta (coordinadora ficticia, +10 % del coste
+anual → `Hinchada.bono_rama` = +0,06 de fuerza esa temporada); el museo cuenta las copas de las ramas (`Principal._ctx_club`);
+cita «celebración» el lunes siguiente a un trofeo nuevo del primer equipo (presidente en el museo; levantar la copa publica
+«victoria» en Tribuna y sube 3 el ánimo). Límites: no hay todavía vuelta olímpica en el campo ni celebración 3D de las ramas
+(bloque 4, parte); el presupuesto de la rama no tiene efecto visible fuera del puesto final. (30-10) La rama pide también visibilidad (un partido en el estadio) y sus títulos tienen su cita de celebración en el museo (`CitasRamas`).
+
+**Pruebas (modelo V).** Idea `f5c_club`: en horario de vestuario hay cuerpos con nombres de la plantilla y fuera de horario
+no; la cita de la rama cuesta caja y sube la fuerza; un título de rama suma una copa al museo; el título del primer equipo
+crea la cita «celebración» y la vuelta olímpica se activa una sola vez. Captura `f5c_captura_club` (vestuario con gente,
+museo con copas, celebración).
+
+#### 2.2f-bis El museo que crece (orden del dueño 27-10) — HECHO, falta el veredicto del dueño
+Construido en tres pasos (`MuseoAmpliado`, `MuseoAmpliadoAnim`, `SalasClub.vitrina`; prueba `f5c_club` ampliada; capturas `f5d_captura_museo` en `docs/04_auditorias/capturas_museo/`):
+la sala de la planta 2 tiene una vitrina por título hasta seis; con el museo a nivel 5 (obra «Museo del club» de siempre, no una obra nueva) el ascensor
+suma la planta 3 «Museo ampliado» (copas del séptimo título en adelante, panel de hitos, camisetas por década, balón de la primera copa); mientras la obra del
+nivel 5 está en marcha la planta 3 sale con andamios y lona; la primera vez que se entra tras terminarla, el rótulo «Museo ampliado · N títulos» y las copas
+se iluminan una a una (lo visto se guarda en los ajustes, no en la partida). A mejorar si el dueño lo pide: fundido de pantalla real, pared de camisetas con
+equipaciones de verdad por década y más de 10 copas en la planta 3.
+
+### 2.2g Redes de la ciudad y subsuelo (sesión 3): luz, agua, drenaje y gasolineras (pedido del dueño, 27-10) — CONSTRUIDO, falta mirarlo
+`nucleo/redes_ciudad.gd` (modelo por horas, 25 sectores de 6x6 celdas; prueba `_probar_redes_ciudad` del banco) y
+`visor/redes_ciudad_vista.gd` (dibujo; prueba `ideas/red_redes_3d`). Cuelga de `CiudadExpansion.redes`; `VidaCiudad` lo avanza
+cada hora del `Reloj` con el clima de la semana (viento mueve el parque eólico, lluvia llena los colectores).
+- Luz: parque eólico + central de respaldo; en hora punta sin viento se cortan sectores por turno (el hospital no); torres de
+  alta tensión, subestación, transformadores con lámpara verde/roja y farolas que bajan con la fracción sin corriente.
+- Agua: potabilizadora → depósito; sin luz o con rotura el sector pierde presión. Drenaje: sumideros y tapas; tormenta o
+  sumideros atascados inundan el sector (lámina de agua). Gas: 3 gasolineras con depósito y cisterna; E en el surtidor = 45 l, 63 €, 10 min.
+- SUBSUELO (easter egg, pedido del dueño 27-10): cinco tapas de alcantarilla con aro de óxido (E de pie sobre ellas) bajan a
+  `visor/subsuelo_ciudad*.gd`: colector con canal de agua y ratas, galerías de luz (armarios con el estado de 4 sectores), agua y gas,
+  sala de control (pantalla con `resumen()`, botón de reparar averías y palanca roja que corta la luz del sector de arriba) y un
+  cuarto olvidado. Estado `subsuelo` del explorador; capturas en `docs/04_auditorias/capturas_subsuelo/` (escena `pruebas/captura_subsuelo`,
+  corre con `xvfb-run … --rendering-driver opengl3`, SIN_LUZ=1 para el modo emergencia). Hecho en Compatibility: falta mirarlo en Forward+.
+- CENTRO DE MANDO Y EVENTO (27-10, 2.ª pasada): tres pantallas reales (`visor/panel_mando.gd`: mapa sinóptico, curvas de 24 h, alertas
+  y tabla de edificios) en la sala de control; sala de acometidas con un armario por edificio REAL (19: club, hospital, ayuntamiento…;
+  consumo, luz, agua, rumbo y distancia desde la tapa; E aísla/restablece) y esos edificios consumen de verdad en `RedesCiudad`
+  (hospital, comisaría y bomberos con generador). EVENTO «Apagón de tormenta» (`nucleo/evento_apagon.gd`): semana de tormenta, 20:00,
+  60 %: dos sectores sin luz; móvil avisa, abajo hay que REARMAR el cuadro general (galería eléctrica) y RECONECTAR (botón verde) →
+  titular «bien»; si nadie baja, la cuadrilla arregla a las 08:00 (titular «mal»). Detalle: hormigón texturado, franjas de peligro,
+  abrazaderas, charcos, extintores, salidas, marcos por red, ventiladores y goteras. Capturas con `EVENTO=1` en la escena de captura.
+  PENDIENTE: los edificios de la superficie no cambian de aspecto con el corte (solo farolas); sonido ambiente; Forward+.
+- Hecho 27-10 (3.ª pasada): las redes se GUARDAN en la partida (`Mundo.redes_ciudad`, clave `redes_ciudad`; partida vieja = nuevas; ida y vuelta
+  probada) y el móvil avisa de cortes e inundaciones nuevos.
+- Hecho 27-10: coche con depósito real (`VidaDT.combustible`, 45 l, 2,5 l/km; se guarda): vacío no arranca hasta repostar con E en un surtidor; aviso en el móvil al bajar del 15 % (una vez por semana, `aviso_comb` guardado). Las averías se guardan (`cortes`); la cuadrilla se deriva de ellas.
+- Hecho 27-10 (transporte, pedido del dueño): MAPA del transporte (`visor/mapa_transporte.gd`, tecla N en la calle: completo / autobuses / metro; capturas `capturas_transporte/mapa_*.jpg`); autobuses con NÚMERO (5 anillo, 10, 22, y dos líneas de barrio nuevas: 7 y 3) y placas; coches menos infantiles (`CocheDetalle` + `coche_real.gdshader`: paleta apagada, cristales oscuros, faros, retrovisores, placas «AB 123 CD»); transbordo del metro en el cruce real; CERRO de 420 m al sureste (`CityBuilder.MONTE_*`) con el TELEFÉRICO (`visor/teleferico.gd`: 2 estaciones, 5 torres, 2 cabinas por cable; E en la base sube al MIRADOR, `visor/mirador_cerro.gd`, 12 min de juego; estado «cima»). Cabina del coche rehecha (`visor/cabina_coche.gd`: salpicadero con esferas y pantalla, consola, puertas, techo, volante de cuero; antes/después en `capturas_transporte/cabina_*.jpg`), el coche del DT con pintura y placa, y el tren del metro con acero inoxidable, bogies, equipos de techo, marcos de puerta y rótulo (`visor/tren_detalle.gd`). PENDIENTE: ventanillas y retrovisores laterales de la cabina (hoy sin vista trasera), vista del conductor del metro, nieve/árboles en el cerro, revisar todo en Forward+.
+- Hecho 27-10 (transporte): en los andenes del metro la gente de pie espera con el móvil, hablando por teléfono o quieta (`PeatonVida.en_anden`); los pilares y el tablero del viaducto son de hormigón con manchas; los autobuses del anillo paran 10 s en las 4 marquesinas (`CityBuilder.paradas_bus_pos`) y a los 3 s de parar sube y baja gente en los bancos de al lado (`GenteSentada.vigilar_buses`: cambia quién está sentado, y caminan de verdad hasta/desde la puerta (`GenteSentada.embarque`: 1 sube, 2 bajan, se borran al llegar). Prueba `ideas/tre_transporte`. Cerro: 950 pinos, camino ancho, rocas (`teleferico_paisaje.gd`). PENDIENTE: capturas finales del embarque.
+- Hecho 27-10: ESTACIÓN CENTRAL real (`visor/estacion_central.gd`, kit `kenney/tren`): vestíbulo con bóveda, andén isla con marquesina, dos vías con topes y túnel cubierto al norte; dos trenes de 3 coches que entran, esperan, retroceden al túnel y dejan la vía vacía (ciclo de 70 s reales ≈ 10 min de juego, desfasados). Capturas en `docs/04_auditorias/capturas_estacion/` (Compatibility). Retoques 2.ª pasada: boca de túnel oscura con marco de hormigón texturado, fachada con puertas de cristal (`FachadaModular`), reloj de fachada con la hora del juego, parada de taxis y marquesina; trenes por el RELOJ (sin servicio 01-05 h) y pasajeros sentados en los bancos del andén (`GenteSentada`). PENDIENTE: vía de salida real fuera de la ciudad y pasajeros de pie que suban/bajen.
+- Hecho 27-10: averías visibles: una cuadrilla (camión, conos y baliza) junto a la tapa central de cada sector con avería abierta; desaparece al repararse (`RedesCiudadVista._cuadrillas`).
+- Hecho: sonido ambiente del subsuelo con efectos ya existentes (zumbido «noche_estadio» y gotas «clic_suave»; sonidos propios, pendientes).
+- PENDIENTE: camión cisterna;
+  apagón por sector en las VENTANAS (las farolas ya van por sector desde el 27-10: `ciudad_expansion._farolas_sec`, capturas `apagon_sector_*`); cables con caída;
+  
+
+- FORWARD+ DEL APAGÓN VISTO (27-10, líder): `pruebas/ideas/p_captura_apagon.tscn`, de noche y con la ciudad entera; con 4 sectores cortados
+  sus farolas Y LAS VENTANAS de esos sectores se apagan y el resto sigue (`capturas_subsuelo/forward_apagon_ciudad_{antes,despues}.jpg`):
+  `fachada_torre.gdshader` lee un mapa 5x5 de corriente (`CiudadExpansion.textura_luz`, una textura compartida: sin draw calls nuevos)
+  en las torres del núcleo y en los edificios lejanos. Las casas y piezas del kit con ventanas propias no siguen aún al sector.
+### 2.2h Dinero en la ciudad: cartera, bancos, cajeros, gasolinera «por arriba», peluches, servicios públicos y coches (pedido del dueño, 27-10) — SOLO DISEÑO, sin código hasta el OK del líder
+Pedido del dueño (27-10): máquinas de peluches solo en UNA zona y que FUNCIONEN (él trae más decoración de ese estilo); la gasolinera «por arriba»
+(lo que vende) funcional y unida al coche, con la sesión de redes haciendo el sistema de gas «por debajo»; sistema de pago con tarjeta física,
+bancos y cajeros; policía, bomberos y servicios públicos; mejorar el sistema de coches. Esto es lo que hay hoy y cómo se parte en piezas.
+
+**Lo que ya existe (medido el 27-10)**
+- Repostar: `VidaCiudad.usar_surtidor` (E ante un surtidor) pide `redes.modelo.repostar(id, sector, litros) -> {litros, coste}` (sesión de redes, 1,4 €/l, sin
+  corriente no hay bomba), avanza 10 min y COBRA AL CLUB (`mundo.mi_club().mover_saldo`), no al bolsillo del DT. Depósito `VidaDT.combustible` (45 l, 2,5 l/km).
+- Dinero personal: `Roles.patrimonio` (casa, transporte y mudanzas lo gastan en `VidaDT`). Dinero del club: `Club.saldo`. Hoy NO hay efectivo, tarjeta ni cuenta.
+- Gasolinera visual (`CiudadGasolinera`): marquesina, islas, tienda con fachada y mástil de precio; la tienda es decorado (no se entra ni se compra).
+- Peluches: `CiudadArcade` pone 3 máquinas (`maquina_peluches.glb`, 893 KB) ante el centro comercial; son decorado. Los 14 peluches del zip NO están en el repo.
+- Servicios: `CiudadServicios` pone bomberos (2 camiones + ambulancia), comisaría y hospital como edificios; ningún vehículo sale, no hay incidentes.
+
+**Decisiones del dueño (propuesta mía entre paréntesis; 1 y 2 aprobadas por el líder el 27-10; 3-5 esperan al dueño)**
+1. ¿De quién es el dinero de la gasolina y las compras? (DEL BOLSILLO DEL DT: `Roles.patrimonio`; el club paga solo lo del club). Hoy cobra al club: es un fallo de diseño.
+2. ¿Moneda única en euros y una sola cartera? (sí; efectivo + una cuenta + una tarjeta de débito; crédito más adelante).
+3. ¿Los peluches se pagan con fichas o con dinero? (monedas de 1 €; sale del efectivo, no de la tarjeta, para empujar a usar el cajero).
+4. ¿Qué zona de recreativas se queda? (la del centro comercial; las otras dos máquinas se quitan, pasan a una sola sala con 3 máquinas funcionales).
+5. ¿Los peluches nuevos (14 del zip) se suben al repo reducidos a 256 px (~100 KB cada uno, como la máquina)? (sí: es una subida de binarios nueva; hace falta su OK por la regla de LFS; van fuera de LFS con excepción).
+
+**Piezas, en orden de construcción** (cada una = una entrega pequeña con prueba en el banco, captura Forward+ y traducciones con `sumar_traducciones.py`)
+- **A. Cartera — HECHA el 27-10 (modelo + guardado + `_probar_cartera_dt`; falta la pantalla «Cartera» del móvil y el objeto en la mano)** (`nucleo/cartera_dt.gd`, sin visor): efectivo, saldo de cuenta, tarjeta (número, PIN de 4 cifras, bloqueada sí/no, límite diario), movimientos (últimos 30).
+  Guardado en la partida (clave nueva, partida vieja = efectivo = 0 y cuenta = `patrimonio` actual). Prueba: ida y vuelta, no se puede gastar más de lo que hay, `patrimonio` = efectivo + cuenta.
+  La tarjeta física: objeto en la mano del DT (modelo simple, textura con el escudo del club) que se ve en el móvil (pantalla «Cartera»).
+- **B. Bancos y cajeros — CAJEROS HECHOS el 27-10** (`visor/cajero_ciudad.gd`, `ui/componentes/panel_cajero.gd`: teclado de PIN, retirar 20/50/100/200, ingresar, cambiar el PIN, comisión de 2 € en banco ajeno, bloqueo; tres puestos: gasolinera, centro comercial y plaza; capturas `capturas_ciudad_c2/cajero_*`). **SUCURSAL HECHA (27-10): ventanilla «Banco Andino» bajo los soportales de la plaza mayor (`visor/ciudad_banco.gd`, `BancoCiudad`, `PanelCajero` en modo ventanilla: sin PIN, desbloquea la tarjeta, restablece el PIN, ingresa el efectivo y enseña los 5 últimos movimientos; `CarteraDT.restablecer_pin`). FALTAN más cajeros (hospital, universidad, estación, estadio) y un edificio de banco propio (hoy es una ventanilla en un soportal)** (`visor/ciudad_banco.gd`): una sucursal con fachada modular y cajeros en la fachada y en la gasolinera, el centro comercial y la estación. E en el cajero:
+  retirar / ingresar / ver saldo / cambiar PIN; límite diario; comisión si el cajero es de otro banco (3 bancos ficticios, nombres inventados); sin corriente en el sector (`redes`) el
+  cajero muestra «fuera de servicio». Interior de la sucursal (mostrador y ventanilla) solo si sobra tiempo.
+- **C. Gasolinera por arriba — HECHO el surtidor (27-10: cobra efectivo y, si no, tarjeta sin contacto ≤100 €, ya no al club; `VidaCiudad.usar_surtidor`); CAJA DE LA TIENDA HECHA (27-10: `PanelTienda` con seis artículos, `VidaCiudad.comprar_surtido`; el PIN se pide en cajeros, no en el comercio: hasta 100 € paga sin contacto)** (`visor/gasolinera_tienda.gd`): E en la tienda abre una caja: comprar lo del surtido (`kenney/comida`: bebidas, bollería, bocadillos; sube la «energía» del DT un poco),
+  pagar con tarjeta (PIN) o efectivo. El surtidor deja de cobrar al club y cobra con la misma caja; elegir combustible (dos precios, que salen de las existencias de `redes`).
+  CONTRATO con la sesión de redes: ella conserva `repostar(id, sector, litros) -> {litros, coste}` y los precios; yo solo hago la pantalla, el cobro y la tienda. Si cambia esa firma, me avisa.
+- **Semana 6 (27-10, pedido del líder): MÁQUINAS EXPENDEDORAS y BALÓN SUELTO — HECHO en el centro comercial y la gasolinera** (`visor/expendedora_ciudad.gd`, `nucleo/expendedora.gd`, `Necesidades.animar`: cobran de `CarteraDT` y suben la energía; gancho único `ComercioCiudad.servicio`). Balón suelto en el parque más cercano (`visor/balon_suelto.gd`: gravedad, bote, rozamiento, rebote en los bordes; se patea andando, no en coche). **Hechas también (27-10, tras el OK del líder): andenes del metro (`MetroCiudad.expendedoras` + `_usar_en_anden`), estación central (junto a las puertas), estadio (exterior a la izquierda de la puerta del club y en el pasillo de la sala de prensa, `EdificioClub.expendedoras` + `VidaCiudad.usar_en_estadio`).** Capturas: `capturas_ciudad_c2/expendedora_estadio_exterior.jpg` y `expendedora_sala_prensa.jpg`. Pendiente: ver la de la estación a pie y el aviso «E: comprar» en la calle y en el estadio (en el metro ya sale).
+- **D. Peluches — HECHA la parte jugable (27-10)**: `nucleo/peluches.gd` (tabla `PELUCHES` de 14 con series, máquina, peso, forma, color y `modelo`/`escala` donde enchufar los .glb del dueño; álbum y 5 logros: uno por serie y uno por la colección; guardado en `Roles`), `ui/componentes/panel_peluches.gd` (vista cenital de la garra: moneda de 1 € del EFECTIVO, A/D/W/S o flechas, espacio; probabilidad por peso y distancia, con ayuda tras cada fallo), `visor/peluches_ciudad.gd` (puntos `peluches_0..2` en las 3 máquinas de `ciudad_arcade.gd`, gancho de la E, estantería del álbum en la vivienda) y `visor/peluche_modelo.gd` (relleno con esferas hasta tener los modelos); resumen y logros en la app Banco del móvil. Falta: los 14 modelos reales (cuando el dueño pueda bajarlos del Drive y se apruebe subirlos reducidos) y ver la sala en la ciudad entera. Diseño original:
+  (`visor/peluches_juego.gd` + `ciudad_arcade.gd`): UNA sala, tres máquinas. E ante la máquina: meter moneda (1 €), mover la garra con A/D/W/S, bajar con espacio;
+  la garra agarra con probabilidad que baja con el peso/tamaño del peluche y sube un poco en cada intento fallido (para no ser imposible); el premio cae al buzón y va a un
+  baúl en casa del DT. Los 14 peluches del zip (reducidos) se reparten en las tres máquinas; las decoraciones nuevas del dueño se suman con una tabla (`PELUCHES`).
+- **E. Policía y bomberos** — HECHO (27-10, ver `ciudad_26_10.md`). Falta: verlo
+  en la ciudad ENTERA con la cámara del juego (solo hay capturas de calles de prueba) y que el accidente y el robo tengan más detalle (peatones mirando, un sospechoso).
+- **F. Coches mejor**: primero una AUDITORÍA del coche actual (`motor_jugable*`, `trafico_ciudad*`: cuántos sub-pasos, colisiones, aparcar, marchas) y de los peatones; luego tres mejoras
+  pequeñas elegidas por el dueño (frenada/derrape, daños visibles, aparcar entre dos coches, gasolina con luz de reserva, radio). No se diseña más hasta tener la auditoría.
+
+**Reparto entre sesiones**: redes (sesión 3) = modelo del gas/luz/agua; yo = todo lo de arriba (cartera, banco, tienda, peluches, servicios); estación y `kit tren` = sesión 3.
+**Riesgos**: (1) nada de esto debe consumir `_rng` de la ciudad (hash de la posición, como los rellenos); (2) todo script < 450 líneas; (3) el guardado: cada pieza lleva clave propia
+y partida vieja = valores por defecto; (4) la economía del club no se toca (`Club.saldo`): solo se separa el bolsillo del DT; (5) PIN y tarjeta son ficticios, sin datos reales.
+**Pregunta de arranque**: ¿empiezo por A+B (cartera y cajeros, base de todo) o por D (peluches, lo más visible)? Recomiendo A → C → B → D → E → F.
 
 ### 2.2e Calidad visual de ciudad y personajes (pedido del dueño, 26-10 noche) — PENDIENTE DE DISEÑO
 
@@ -313,15 +429,41 @@ Compuerta: el dueño ve cada pasada y dice «estamos» o «mejorar». Nada se qu
 | hombro→muñeca | 0,34 | 0,27 | 0,29 (−15 %) |
 | antebrazo / brazo | 0,80 | 0,97 · 1,04 | 0,78 · 0,83 |
 | pantorrilla / muslo | 0,95 | 1,07 · 1,14 | 0,98 · 1,04 |
-| anchura de hombros | 0,245 | 0,23 · 0,17 | 0,19 · 0,14 (PENDIENTE) |
+| anchura de hombros | 0,245 | 0,23 · 0,17 | 0,21 · 0,19 (pasada 2: el brazo se desplaza hacia fuera por la clavícula, `HOMBROS_FUERA`; captura `peatones_pasada2_hombros.jpg`) |
 
-Cambios: `PersonajeDT.ANATOMIA` (húmero ×1,15, muslo ×1,05, pantorrilla ×0,96) para DT, futbolistas y peatones. Los hombros
-quedan pendientes: la clavícula va en diagonal y el sistema de escalas por ejes del mundo también estira el brazo; hay que
-escalarla en ejes locales compensando al hijo (siguiente pasada). Movimiento: el pie apoyado de «caminar» recorre 1,0 m/s y el
+Cambios: `PersonajeDT.ANATOMIA` (húmero ×1,15, muslo ×1,05, pantorrilla ×0,96) para DT, futbolistas y peatones. Los hombros se
+resolvieron en la pasada 2 desplazando el hueso del brazo (escalar la clavícula estiraba el brazo). Movimiento: el pie apoyado de «caminar» recorre 1,0 m/s y el
 paseo iba a 1,7 m/s (patinaba ×1,7; agachado ×2,4; correr ×1,3-1,5): ahora `speed_scale = velocidad real / natural del clip`
 (`ExploradorCiudad.VEL_NATURAL_CLIP`) y los peatones del tráfico igual (`TraficoCiudad.agregar_vehiculo`). Hecho también: el cuerpo gira con inercia
-(persigue el rumbo, `lerp_angle` a 9/s) y la mezcla al pararse dura 0,4 s. Falta: más clips (P3), piel/pelo/ropa (P4) y el
-veredicto del dueño sobre esta pasada.
+(persigue el rumbo, `lerp_angle` a 9/s) y la mezcla al pararse dura 0,4 s. P3 (27-10, pasada 1): inventario del pack UAL = 43 clips; los
+de conversación y asiento estaban mapeados en `AnimExtra.UAL` pero solo los futbolistas los cargaban. `AnimExtra.asegurar`
+carga un clip en cualquier cuerpo al momento; ahora HABLAN con el clip de charla el mentor del prólogo, las personas de las
+citas (mientras dura el cuadro) y la familia en casa (4 s). P1 pasada 3 (27-10, POSTURA): el «Idle» del pack era una postura de superhéroe; medido con la sonda: pies a 0,66 m
+(0,35 de la altura; humano 0,20-0,30), rodilla 156° (humano > 170°). `AnimQuaternius._piernas_naturales` gira los muslos 12°
+hacia dentro, estira la rodilla 14° y sube la raíz 4 cm (el pie vuelve a su altura): ahora tobillos a 0,17 m entre sí, rodilla
+169°, pie a 0,087 m (antes 0,09). Capturas `p1_postura_{antes,despues}.jpg`. Y ANDANDO (misma pasada): el ancho de paso del pack
+era 0,24 m (humano 0,08-0,12): 5° de muslo hacia dentro en caminar/trote/correr → 0,09-0,12 m (`PIERNAS_CADERA_ANDAR`). P3 pasada 2 (27-10): los bancos de acera y de parada registran asientos
+(`CityBuilder.asientos`) y `GenteSentada` (`visor/gente_sentada.gd`, cuelga de `VidaCiudad`) sienta hasta 6 peatones con el clip
+«sentado» en los asientos a < 55 m (ocupación estable por hash de asiento y hora); el DT en el sofá encadena «sentarse» → «sentado»
+y se queda así hasta dar un paso (`_gesto_propio(gesto, luego)`); los vecinos ya charlaban con clip (6 s). Prueba `p3_sentados`;
+capturas antes/después `docs/04_auditorias/capturas_personajes/p3_sentados_{antes,despues}.jpg`. P3 pasada 3 (27-10, ESPERAR): cuando un peatón se para por su cuenta ya no se queda siempre quieto: la mitad mira el móvil
+(clip «Idle_Torch» del pack con un móvil en la palma, `PeatonVida`), un cuarto habla por teléfono y el resto espera; captura
+`p3_espera_movil.jpg`. P4 pasada 1 (27-10, ROPA y PIEL): el shader del cuerpo aplanaba el relieve de la ropa de calle a 0,06
+para tapar el músculo y borraba las arrugas y el tejido; ahora quita el músculo (como en la equipación) y deja la profundidad
+en 0,4 (`p4_ropa_despues.jpg`; antes = `p1_postura_despues.jpg`). La piel desnuda iba con rugosidad y especular de tela
+(brillo plástico en nariz y labios): ahora rugosidad 0,76, especular 0,14 y subsuperficie 0,22 (`p4_cara_{antes,despues}.jpg`; en la captura el cambio es SUTIL: el
+brillo que queda en nariz y labios viene de la luz de borde `RIM` y de la cara de frente al sol; pendiente revisarlo con la cámara real).
+P3 HECHO 27-10 (`ideas/p3_puertas`, `p3_escaleras`, `p3_banquillo_tour`): vecinos que abren las puertas de las entradas (`PuertaVida`: llegan, tienden la mano, la hoja gira, entran/salen), gente que sube y baja escaleras peldaño a peldaño con el ciclo de paso ajustado (`EscaleraVida`: bocas del metro, escalinata del ayuntamiento, estación del teleférico) y los 5 mejores suplentes sentados en el banquillo local de la visita al estadio (`BanquilloTour`). La grada de la visita ya lleva hinchada (35 % de ocupación, VAT). S8 MUSEO INTERACTIVO (27-10, `MuseoVitrinas` + `VisorTrofeo`, `ideas/s8_museo_vitrinas`, captura `capturas_ciudad_c2/visor_trofeo.jpg`): E ante una vitrina de la planta 2 (`SalasClub.vitrinas`) abre un panel con la copa real girando en su propio `SubViewport` (ratón o A/D para girarla) y la ficha del título k (`Roles.trofeos[k]`: competición, año, final, goleadores; lo no guardado dice «Sin datos»). Ahora se guardan la final y los tres máximos goleadores al ganar la LIGA (`Roles._ficha_liga`) y la final de la Supercopa. La planta 3 del museo ampliado (copas 7+, `MuseoAmpliado.vitrinas`) también es interactiva: ambas plantas siguen el mismo orden de hitos por año (`MuseoVitrinas.hitos`). La COPA ya suma a `Roles.trofeos` con su final (`Mundo._final_de_copa`). PENDIENTE: el museo no ha crecido más en detalle. S7 PASAJEROS DEL AUTOBÚS (27-10, `PasajerosBus`, `ideas/s7_pasajeros`): en cada marquesina (`CityBuilder.esperas_bus`) esperan 2 personas mientras el jugador está a < 70 m; al parar el autobús caminan a la puerta y suben (su semilla queda en `meta "pasajeros"` del autobús, máx. 10); en la parada siguiente BAJAN las mismas personas y se van andando. Los cristales del autobús son semitransparentes y tintados (`InteriorBus`, captura `capturas_ciudad_c2/bus_interior.jpg`) y dentro hay 10 plazas con una silueta sentada por pasajero (se encienden/apagan con `meta "pasajeros"`, `ideas/s7_pasajeros`); son siluetas simples (cápsula y esfera), no peatones con esqueleto. El metro ya lo hacía (espera, subir, viajar dentro y bajar: `metro_ciudad_p1`); el tren y el teleférico son de la ejecutora. S6 PARAGUAS (27-10, `ParaguasVida`, `ideas/s6_paraguas`, `capturas_personajes/s6_paraguas.jpg`): con clima de lluvia o tormenta (`Mundo.clima()`) los peatones abren un paraguas sobre la cabeza (6 colores apagados), caminan un 25 % más rápido y hasta 5 se resguardan unos 6-10 s bajo la marquesina de una entrada (a < 4,5 m) con el paraguas cerrado; al escampar se recoge todo. El paraguas va en la MANO derecha (BoneAttachment3D a hand_r) con el brazo levantado (clip «caminar_paraguas», el caminar con brazo y antebrazo fijados; eje corregido 35°). LLUVIA EN LA CIUDAD (`PrecipitacionCiudad`: dos emisores que siguen a la cámara, topes de partículas 1800/4200/5200 según calidad frente a ~15 000 en el partido; suelo mojado `CityBuilder.mojar`; capturas `s6_lluvia_ciudad_{seco,lluvia}.jpg`; memoria del proceso 5230 → 5233 MB con 4200 partículas en software). CLIMA EN LA CIUDAD (`ClimaCiudad`, usa `Ambience.CLIMA_PARTIDO`): con lluvia/tormenta/nublado/niebla el cielo se aplana a gris sin disco solar, el sol baja de energía y se difumina, más niebla; gotas largas y claras; ruido de lluvia cada 3 s por el bus de ambiente (`lluvia_ambiente`/`lluvia_fuerte`); capturas `s6_lluvia_ciudad_{lluvia,cerca}.jpg` (la de cerca: dos peatones con el paraguas en la mano). PENDIENTE: revisar en Forward+. P1-P3 «MEJORAR» (27-10) 1/3 MOVIMIENTO NATURAL (`MovimientoNatural`, `ideas/p1_movimiento_natural`): el peatón de la ciudad arranca con rampa de 0,45 s (la velocidad del clip la sigue), si lo frenan (jugador, semáforo, el de delante) pasa a «parado» en vez de mover las piernas sin avanzar (con 0,4 s de histéresis), gira con suavidad hacia donde va a ir (mira 0,5 m por delante en la ruta, máx. 0,33 rad por fotograma en una esquina de 90°) y 2 de cada 3 peatones a < 8 m giran la cabeza hacia el jugador (`LookAtModifier3D` de `MiradaBalon`, influencia con rampa de 0,5 s). El jugador quieto que gira sobre sí da pasitos (clip «caminar» a 0,8). PENDIENTE de la pasada: inclinación del torso al girar corriendo, sin captura antes/después (un fotograma fijo no enseña el giro; la prueba mide el giro por fotograma). 2/3 POSTURA y ANATOMÍA (27-10, `PosturaQ`, `ideas/p2_postura`, `capturas_personajes/p2_postura_antes_despues.jpg`, arriba antes, abajo después): un `SkeletonModifier3D` por peatón, tras la animación, suma según su semilla manos relajadas (dedos doblados 14-22° por falange, pulgar menos), hombros caídos 4-12° y cabeza/cuello adelantados 3-14°; 35 huesos, rotaciones fijas. Ejes medidos por prueba (dedos X, hombro −Z, cuello X). REVISIÓN DEL LÍDER (27-10): el adelanto de cuello es leve (1-6°) y la cabeza se NIVELA (corrige el 85 % del cabeceo medido; solo 1 de cada 12 conserva la cabeza gacha) para mirar al horizonte de perfil. MOCHILAS DE PERFIL (revisión del líder en Forward+): la mochila se hundió 3,5 cm en el torso (espalda medida a z −0,14…−0,16 entre y −0,15 y 0,22) y las correas se acortaron (el pecho llega solo hasta la axila y pegadas a la fachada del torso); captura andando `p4_mochila_perfil_antes_despues.jpg`. El «objeto oscuro del mentón» NO era una malla del peatón: era la visera de la gorra del peatón que quedaba detrás en la escena de captura (se solapaban en fila). MOCHILAS (`MochilaQ`, `capturas_personajes/p4_mochila_antes_despues.jpg`, arriba cajas, abajo ahora): cuerpo y bolsillo de bordes redondeados, asa y dos correas que pasan por el hombro, bajan por el pecho y vuelven bajo el brazo pegadas al torso (medido en `spine_03`). PENDIENTE: lo mismo en los futbolistas del partido (no se ha tocado) y 3/3 MÁS ANIMACIONES (27-10): MIRAR ESCAPARATES (`EscaparateVida`, `ideas/p3_escaparates`): junto a las entradas (`puertas_vida`) un vecino llega por la fachada, se para a 2,6 m de la puerta, gira el cuerpo al cristal, pasea la mirada 6-9 s (`LookAtModifier3D` sobre un punto que barre el escaparate) y se va; máx. 2. HABLAR EN GRUPO (`GrupoVida`, `ideas/p3_grupo`, `capturas_personajes/p3_grupo.jpg`): tres vecinos llegan por distintos lados, forman un corro a 0,95 m del centro ante una entrada, charlan 14-22 s con el clip «charla» a distinto desfase (la cabeza de cada uno sigue al que habla, que cambia cada 3 s) y se van cada uno por su lado; 1 grupo a la vez. ARREGLO DE FONDO: la «charla» (y cualquier clip `…_Loop`) NO se cargaba para los peatones porque el pack lo guarda sin el sufijo (`PeatonVida.gesto` y `TraficoCiudad._gesto` no tenían el respaldo de `AnimExtra.asegurar`, que ahora además deja esos clips en bucle): las charlas de dos peatones que se alcanzaban tampoco gesticulaban. MIRAR EL MÓVIL ya existía (`PeatonVida.esperar`: «Idle_Torch» con el móvil en la mano). SENTARSE EN UN BANCO (`GenteSentada._llegadas`, `ideas/p3_sentados`): quien ocupa un asiento MIENTRAS lo miras (a > 6 m) llega andando desde 3,2 m, se vuelve y el clip «sentarse» encadena «sentado»; los que ya estaban al acercarte siguen apareciendo sentados. El móvil y la llamada ya existían. SIN CAPTURA de las dos escenas (movimiento) y la forma de la raíz al sentarse no se ha revisado a ojo: PENDIENTE de revisar en el juego; RESPALDO CURVO de la butaca cercana (`RespaldoCurvo`, `capturas_estadio/respaldo_curvo.jpg`, vista cenital: abajo plano, arriba curvo): se deforma una vez la malla del modelo, los vértices del respaldo se adelantan hasta 5 cm en los bordes de cada respaldo (cóncavo); sutil a distancia de juego. La butaca LEJANA (3 losas) sigue plana a propósito (presupuesto de vértices). LEVANTARSE DEL BANCO (`GenteSentada._levantar/_salidas`, `capturas_personajes/p3_levantarse.jpg`): quien deja el asiento a < 38 m se levanta con el clip «levantarse» («Sitting_Exit», 1 s) y se va andando 8 m por la acera; lejos desaparece sin más. SIN HUNDIRSE (revisión del líder): medido con la pelvis, «Sitting_Idle» la deja a 1,05 m de la raíz y «Sitting_Enter/Exit» a 0,60; la raíz sube `COMPENSA` = 0,45 m durante esos clips (`GenteSentada.raiz_levantarse/raiz_sentarse`) y los peatones andan a la altura del suelo (`ExploradorCiudad.altura_suelo`). BANCOS A ALTURA REAL (orden del líder, `capturas_personajes/p3_banco_altura_antes_despues.jpg`): el tablero baja a 0,45 m sobre la acera (`GenteSentada.ASIENTO_CIUDAD` = 0,65 en el mundo; banco de acera `CiudadExpansion`, banco de parada `CityBuilder`, banco del andén `EstacionCentral` a 1,35 sobre el andén) y los sentados bajan la raíz 4 cm (`PIES_AL_SUELO`) para que las suelas apoyen (antes los pies colgaban ~28 cm). Los círculos de colisión de los bancos no dependen de la altura. AUDITORÍA DE CLIPS (`ideas/p3_clips_ual`): los 25 clips de `AnimExtra.UAL` y los de `AnimQuaternius.CLIP_REAL/CAMINATA` se cargan; otros 3 sitios que cargaban a mano sin el respaldo «_Loop» (explorador_ciudad_p2, rueda de prensa p2/p3) ahora usan `AnimExtra.asegurar`. PERSONAJE REALISTA DEL DRIVE («Realistic Male 3D Character Model», zip de 182 MB; `capturas_personajes/drive_personaje_realista.jpg`, renderizado en un proyecto aparte): es una persona vestida (sudadera, pantalón cargo, botas, pelo y barba) de calidad muy alta, pero NO SIRVE para peatones ni futbolistas: UNA sola malla de 485.122 triángulos con ropa y pelo fundidos (no se recolorea ni se cambia), esqueleto Reallusion de 101 huesos («CC_Base_*», no es el de Quaternius: no recibe nuestras animaciones sin retarget), texturas 4K de 9 + 7 MB, una sola identidad (repetida 30 veces se nota) y sin licencia escrita; un FBX/glb iría a LFS (no se puede subir). Opción si el dueño quiere: usarlo como UN personaje de primer plano (p. ej. un DT rival o el prólogo) decimado a ~30.000 triángulos y 1K de textura (<5 MB como `.res` fuera de LFS) o sacarle la cabeza para una ficha; no lo hago sin su OK. PELO DEL DRIVE (27-10, `PeloDrive`, `herramientas/pelo_drive_extraer.py` + `pelo_drive_a_res.gd`, `ideas/p4_pelo_drive`, capturas antes/después `capturas_personajes/p4_pelo_drive_*.jpg`): el OBJ «nv toufa» (122 MB, 105 peinados «samor_1125_NN» en cm y en rejilla, sin licencia escrita: PENDIENTE confirmar con el dueño) se bajó con curl y se procesó con `fast-simplification` (decimar a 800 triángulos DEJABA HUECOS: la malla son láminas de mechones; a 2.500 se ve sólida). Se probaron ~30 y quedaron 11 que asientan bien (hombres 73, 74, 77, 79, 80, 68; mujeres 28, 60, 117, 33, 36; los de coleta, trenzas y flequillo largo tapaban los ojos o no tenían masa de pelo). Salen como `assets/characters/pelo_drive/pelo_NNN.res` (603 KB en total, fuera de LFS: `.res` no está en .gitattributes). El modelo del pack mira a −z (se gira 180°); ajuste por ancho de cabeza y coronilla (`AJUSTE_M/F`). El 45 % de los peatones lleva uno (`PeloDrive.elegir`, por semilla; `SIN_PELO_DRIVE=1` lo apaga), el resto sigue con los cortes de Quaternius; bajo gorra no se ven. NO aplicado aún a los futbolistas del partido ni a la ciudad vieja de `PeatonQ` fuera de los peatones. Las correas de la mochila se acortaron otra vez (a la vista solo el tramo hombro-pecho). P4 PELO (27-10): el pack Quaternius del repo trae 6 mallas; la sin usar `Hair_BuzzedFemale` se estrena en el corte rapado de las MUJERES (`PeloQ.poner`, `ideas/p4_pelo_mujer`, `capturas_personajes/p4_pelo_mujer_antes_despues.jpg`, arriba antes y abajo después: asienta mejor). No hay más cortes en el repo; esperan los del Drive. P4 pasada 2 (27-10, CONTACTO): los peatones llevan una mancha de sombra redonda y suave bajo los pies (`PeatonQ.sombra_contacto`, una malla y un material compartidos, hasta 70 m) para que no «floten» más allá del alcance de la sombra del sol (`ideas/p4_contacto`, `capturas_personajes/p4_contacto_antes_despues.jpg`, arriba antes, abajo después). LOD SIN SALTOS: las mallas del peatón se disuelven con tramado (`VISIBILITY_RANGE_FADE_SELF`) en los 20 m de margen en vez de desaparecer de golpe (solo Forward+/Mobile; en Compatibility sigue el salto). Queda en P4: pelo con mechones (pide mallas mejores). Falta P3: capturas de escaleras en Forward+, clips propios de abrir puerta/subir escalón (el pack gratuito solo trae «Interact»), peatones que entran en tiendas pequeñas (no tienen puerta registrada); y P4: pelo (mechones poligonales). PROBADO Y DESCARTADO (27-10): suavizar las normales de las 4 mallas de pelo del pack
+(promedio por vértice) empeora: las tarjetas de mechón comparten vértices y salen manchas claras/oscuras; el pelo pide mallas
+mejores (o más cortes del pack de Quaternius), no un cambio de sombreado. VEREDICTO DEL DUEÑO (27-10): «MEJORAR» (P1-P3 no bastan: seguir subiendo anatomía, movimiento, animaciones y acabado; la C2 de ciudad sigue hasta agotar P0 y P1).
+
+#### 2.2h Butacas y aficionados (decisión del dueño 27-10) — HECHO, falta Forward+
+`StadiumBuilder._butacas` (hueco entre hinchas: tope de ocupación 86 %, quien tiene vecino deja el asiento libre 1 de cada 3, cuerpos algo más
+delgados; barniz en el plástico de la butaca), `colores_de_nivel` (abajo color 1, en medio color 2, arriba una mezcla; `est["asientoNivel"]`
+= `por_nivel` por defecto o `uniforme`), `_vomitorios` (boca de hormigón con dintel y jambas, hueco negro, rótulo de SALIDA y descansillo, en
+3 MultiMesh por grada) y la opción elegible en el diseñador (Club → Estadio → La grada, `EST_NIVELES`) y en el menú inicial (paso Estadio,
+`ConfigClubDatos.asiento_nivel`). Prueba `ideas/e1_butacas`; capturas `docs/04_auditorias/capturas_estadio/butacas_{antes,despues}_{1,2}.jpg`
+(cámara alta de TV y tribuna; en Compatibility; la de partido cercana y Forward+ las repite el líder). REVISIÓN DEL LÍDER (27-10): los vomitorios flotaban → ahora son bloques de hormigón asentados en la rampa, al final de un pasillo (`VomitoriosGrada`); el «bloque negro con una P» de la toma alta era la fila de PALCOS VIP del lado −X sobre la que estaba MI cámara de captura (no un fallo del juego; la toma alta se hace ahora desde +X). Butaca lejana con reposabrazos (+48 vértices por grupo). Capturas con un club rosa y celeste (`butacas_vivo_*.jpg`: el color por nivel se ve, abajo rosa y arriba mezcla; y la cámara real del partido a pie de campo). ZANCAS EN LOS PASILLOS DE TODAS LAS BANDEJAS (27-10, `DetalleGrada.zancas_pasillo`, `ideas/e2_zancas_pasillos`, `capturas_estadio/zancas_pasillos_antes_despues.jpg` y `zancas_pasillos_tv.jpg`): un murete de 0,14 × 0,5 m a cada lado de cada pasillo, de la primera a la última fila, siguiendo la pendiente (la barandilla ya existía). Desde la cámara de TV el cambio es SUTIL (los muretes son finos); se ve de cerca. HINCHAS «DEFORMADOS» EN LAS BANDEJAS ALTAS (revisión del líder, `capturas_estadio/hinchas_altas_antes_despues.jpg`, arriba antes, abajo después): eran la malla VAT «lejos» (~70 vértices, la decimación más basta de `hornear_publico_vat`: triángulos con púas) vista a 3-5 m; las filas altas la usaban SIEMPRE. Ahora esas filas llevan la malla «medio» (160 vértices) a menos de `LIMITE_ALTAS` = 26 m de cada uno de 8 trozos por bandeja y «lejos» más allá (`_montar_publico_lod` con límite y trozos propios): desde la TV no cambia nada. COSTE: un MultiMesh extra por trozo (solo se dibuja el cercano). La malla «lejos» en sí no se ha tocado (rehornearla da solo los LOD de `generate_lods`: ~70 o ~160). Las 13 poses se ven bien en «cerca» y «medio» (`pruebas/captura_vat_clips.gd`). M-038 (piernas cortadas en la cadera) sigue pendiente. TORRE DE FOCOS DEL DRIVE (27-10, `TorreFocos`, `ideas/e3_torre_focos`, `capturas_estadio/torre_focos_{tv,cerca}_antes_despues.jpg`, izquierda día y derecha noche, arriba antes y abajo después): el regalo `assets/regalos/torre_focos.glb` (23,2 m, ~21.800 triángulos, 30 proyectores con escalerilla) sustituye al poste de cilindro y la cabeza de cajas en las torres de las 4 esquinas (`StadiumBuilder._focos`, tipos «torres» y «mixto»), escalado a la altura de siempre, girado para que los focos miren al campo y con la emisión del color de luz del club (x1,8); sin el recurso o con `SIN_TORRE_DRIVE=1` se usa lo de antes. Desde la TV son del mismo tamaño en pantalla (puntitos) y de noche brillan igual; de cerca se ve el bastidor real. COSTE: ~87.000 triángulos por estadio con 4 torres (sin sombra). La corona de focos de los estadios «corona»/«halo» no se ha tocado. TÚNEL DE VESTUARIO EN OTRO LADO (M-017): DECIDIDO NO HACERLO (líder, 27-10): el túnel está fijo en la tribuna +Z (`StadiumBuilder._tunel`, `tunel_x` solo varía la X: central o esquina) y la salida de equipos, la ceremonia, los banquillos y la cámara asumen ese lado; moverlo toca 8-10 archivos y arriesga romper la salida de equipos. Si algún día se quiere: parámetro `est["tunel_lado"]` (±1) reflejando z en la boca, el hueco de grada, la ruta de salida y la cámara. PARADEROS COMO LOS DE SANTIAGO (27-10, `ParaderoRed`, `ideas/p5_paradero_red`, `capturas_ciudad_c2/paradero_red_antes_despues.jpg`, arriba antes, abajo después, desde la cámara a pie): marquesina de acero gris con techo plano de poco vuelo y franja burdeos con el rótulo «Red», trasera de cristal con pósters de mapa de recorridos, lateral de cristal, banca corrida de láminas metálicas (tablero a 0,45 m) y, aparte, el POSTE con el cartel del paradero (franja verde «PARADERO», código «PA» + cifras estable por paradero, un QR y 3-5 recorridos en cajitas de color). De noche (cámara de paseo con la luz apagada, `captura_paradero.gd` con NOCHE=1) los pósters y la placa del cartel se leen (sin luz propia el resto queda a oscuras, como la acera). Lo usan las 4 paradas del anillo (`CityBuilder._paradas_bus`, 7,5 m) y las marquesinas de las líneas de bus (`CiudadExpansion._marquesinas_bus`, 3,6 m). LIMITACIÓN: las webs de Red/DTPM (red.cl, infraestructurapublica.cl) no se pueden abrir desde el contenedor (host fuera de la red permitida): el diseño sale de memoria; hace falta una foto real para afinar colores y proporciones (¿el burdeos es el de la marca?). Los carteles de recorridos son inventados (no son líneas reales). BARANDA EN LAS BANDEJAS ALTAS (orden del líder, `DetalleGrada.barandas_pasillo`, `capturas_estadio/pasillo_alto_antes_despues.jpg`, arriba antes y abajo después, de frente y de lado): pasamanos fino a 0,45 m sobre cada zanca con un poste cada ~2 m; solo en bandejas altas (la baja tiene sus escaleras con zancas y pasamanos). PENDIENTE: si el dueño lo pide, escaleras exteriores del anillo hasta la bandeja alta.
 
 ### 2.3 Fase 4: cifras validadas (entrar al campeonato)
 
@@ -343,11 +485,23 @@ Efecto buscado: reemplazar es barato pero tiene coste moral y de plantilla; paga
 la liga pero empiezas peor. Los dos son recuperables, ninguno es un castigo definitivo.
 
 
+### 2.5 Lo que falta del guion (auditoría del 28-10; detalle en `docs/04_auditorias/GUION_FRENTE_AL_CODIGO_2026-10-28.md`)
+
+Cumplimiento medido en el código: entrada ~95 %, fase 0 (separar `Principal`) ~65 %, prólogo ~75 %, vida ~80 %, personas ~80 %,
+club ampliado ~85 %, redes ~85 %, dinero ~70 %, calidad visual ~70 % (el dueño dijo «MEJORAR» dos veces), cifras 2.3 100 %.
+Las pruebas f1-f5 del guion ya corren en `especiales.sh` (28-10). Lo que falta, por importancia para el jugador (horas de sesión):
+
+1. Fase 0: `abrir(contexto)` en las 19 pantallas (hoy 1), autoguardar al salir del orquestador (4 h). Ojo (30-10): guardar en `OrquestadorEntrada._finalizar` no basta: nombre del DT, dificultad, modo y desafíos los aplica `Principal` al adoptar `PedidoPartida.mundo_pregenerado`; un guardado previo los perdería al cargarlo. Hay que mover esa adopción al orquestador (o guardarla con la partida) y que «Continuar» con el prólogo a medias vuelva al prólogo (`VidaCiudad.arranque_3d`).
+2. Dinero: tarjeta en mano, más cajeros (hospital, universidad, estación, estadio), auditoría de coches (2,5 h).
+3. Redes: camión cisterna, casas del kit que sigan al sector en el apagón, captura Forward+ en el PC del dueño (3 h).
+4. Calidad visual (2.2e): aplicar postura, mochilas y pelo del Drive a los futbolistas del partido; pelo femenino (pasada nueva, con veredicto del dueño).
+
+Los 2 primeros (~8 h) cierran lo que el guion exige de verdad; el total de la lista larga del informe es ~65 h.
+
 ### 2.4 Pendientes del traspaso anterior
 
 De `PENDIENTES.md` (traspaso al 21-10):
 - **Fusionar a `main`**: nada de la rama actual (ni de la sesión 2, §9) está en `main` aún.
-- **Carrera de Jugador**: dificultad de la CPU en ese modo (¡con cuidado!), más eventos.
 - **Partido**: roles por jugador (PlayStyles), más desmarques de ruptura, cartel del 4.º
   árbitro con corte de cámara, red del arco.
 - **Gente del club y ciudad en primeras filas** (M-040) y mejor variedad (M-033).
@@ -372,38 +526,21 @@ Marca «verificar» lo que la memoria del proyecto dice haber hecho en parte (t�
 - [ ] La IA cambia de verdad: altura del bloque, distancia entre líneas, quién sube.
 - [ ] Prueba en el banco: con presión alta se recupera más arriba (medido).
 
-### Semana 3 (27-10 → 2-11) — Partido II: porteros, pases y presets
-- [ ] Portero que se coloca según el ángulo del tiro y sale a los centros.
-- [ ] Tiro bajo, pase al hueco con elección del receptor, menos rebotes al defender.
-- [ ] Preset Arcade / Realista.
-- [ ] Recorrido de la etapa 5 (física): balón, choques, objetos que no se atraviesan.
-
-### Semana 4 (3-11 → 9-11) — Partido III: espectáculo
-- [ ] Salida del túnel, himno, foto de equipo, saque inicial con cámara de TV.
-- [ ] Prórroga completa y tanda con presentación.
-- [ ] Ayudas del modo jugable (indicador de pase, cámara «Be a Pro» ajustable).
-
 ### Semana 5 (10-11 → 16-11) — Ciudad hacia «look GTA» posible
-- [ ] Paleta por barrio y desgaste en fachadas y asfalto.
-- [ ] Farolas cálidas, hora dorada, niebla y cielo revisados.
-- [ ] Objetos pequeños por manzana: cables, aires, toldos, grafitis, carteles.
-- [ ] Tejados distintos por tipo, patios y jardines (etapa 6).
+- HECHO 27-10 (capturas `docs/04_auditorias/capturas_s5/`, prueba `ideas/s5_detalles`, escena `captura_luz_ciudad`): sol corregido (estaba INVERTIDO: vertical al amanecer y horizontal a mediodía; ahora la altura manda de verdad y la luna sube a ~64°), hora dorada (sol ámbar, calima cálida, ambiente cálido), farolas con charco de sodio y encendido al anochecer, paleta por barrio (3 familias por sector, `FAMILIAS_BARRIO`), desgaste de las paredes modulares (suciedad en la base, churretes, moteado en `bloque_modular.gdshader`) y objetos por bloque (`DetalleFachada`: aires, cable, carteles, grafiti). SOL BAJO (27-10, a petición del líder tras sus capturas Forward+): el asfalto a las 7:00 y 17:24 pasa de luminancia media 29 a ~60 (`bajo` en `_aplicar_hora`: más energía de sol y rebote del cielo cuando la altura es pequeña; las caras al sol y a la sombra siguen distinguiéndose, `sol_bajo_*.jpg`). TEJADOS POR TIPO (`TejadoTipo`, hastiales ya limpios: plano, dos aguas, depósito con antena, jardín; `tejados.jpg`). El asfalto ya trae grano, grietas y manchas de aceite/rodadura (`Texturas.asfalto`); más desgaste con parches se repetiría cada 4 m: sin hacer. CABLES ENTRE POSTES (`ciudad_expansion._cable_entre`: 3 hilos combados en un MultiMesh, 278 vanos en las calles de barrio; `cables_postes.jpg`). NIEBLA POR HORA (27-10, sin captura Forward+ aún: bruma de mañana que se levanta hacia las 9, calima ámbar al ocaso y aire oscuro de noche también con niebla volumétrica ULTRA; `_aplicar_hora`). Los toldos ya los traen los bloques modulares (5 colores por bloque). ARRIATES a pie de fachada (`DetalleFachada`: tierra, matas y flores en una franja de 0,55 m a los lados de la puerta; `arriates_fachada.jpg`): cierra «patios y jardines a nivel de calle» (los patios interiores no se ven desde la calle: sin hacer). PENDIENTE: revisar la niebla volumétrica en Forward+ ULTRA (el dueño en su PC), patios y jardines a nivel de calle (etapa 6). Revisar en Forward+ la fachada a contraluz en la hora dorada.
 
 ### Semana 6 (17-11 → 23-11) — Interacción y vida
 - [ ] Interacción con objetos: sentarse en bancos, máquinas expendedoras, puertas que se abren, balón suelto en el parque.
 - [ ] NPC: más oficios y charlas por barrio y hora, paraguas con lluvia.
-- [ ] Retos semanales tipo «Manager Live».
 
 ### Semana 7 (24-11 → 30-11) — Tutorial y primera hora de juego
-- [ ] Tutorial por capas: 3 minutos obligatorios, el resto como misiones opcionales.
-- [ ] Indicaciones sobre la pantalla (flechas, resaltado) en vez de texto largo.
-- [ ] Desbloqueo opcional de modos (ver «el bloqueo»).
+- [ ] Indicaciones sobre la pantalla: hay resaltado y flecha sobre el control de cada misión (27-10); falta acortar los textos más largos del mentor (medir en la primera hora con jugadores nuevos).
+
 - [ ] Pruebas de la primera hora: qué ve un jugador nuevo, sin perderse.
 
 ### Semana 8 (1-12 → 7-12) — Ultra pulido de todo
 - [ ] Recorrido pantalla por pantalla: textos cortados, colores, tamaños, traducciones.
 - [ ] Recorrido de cada etapa 1–6 con capturas.
-- [ ] Accesibilidad: tamaño de letra global y modo daltónico están en la rama de la sesión 2 (falta fusionar y la petición 3 de §9 para que lleguen a `Tema`); subtítulos solo si hay voces.
 
 ### Semana 9 (8-12 → 15-12) — Auditoría y lanzamiento
 - [ ] Auditoría completa y prueba larga de 10 temporadas.
@@ -424,7 +561,7 @@ Fuera de alcance: multijugador online (requiere servidor).
 | Partido jugable | básico completo | táctica en vivo, porteros, presets, cinemáticas, ayudas |
 | Interfaz | mucha información | coherencia de estilo, diálogos (hecho el 13-10), accesibilidad (texto grande, daltónicos) |
 | Audio | 🔒 música del dueño | efectos de interfaz y ambiente revisados |
-| Guardado | copias rotativas, huella y versiones (`pruebas/ideas/sav_guardado.gd`) | aviso visible al jugador si se corrompe (hoy solo `push_warning`) |
+| Guardado | copias rotativas, huella y versiones (`pruebas/ideas/sav_guardado.gd`); aviso visible si se recupera la copia (menú y arranque 3D) o si no se puede abrir (27-10); topes de historiales VERIFICADOS el 27-10 con `pruebas/sonda_memoria.tscn` (6 temporadas: 0,54 → 1,10 MB; todas las listas con tope: pubs 80, libres 80, portadas 60, mensajes 60, libro 60, posts 50, historial y moral del jugador 12; lo que crece, ~56 KB/temporada, es `clubes`) | medir 30 temporadas y desglosar `clubes` si el guardado pasa de 3 MB |
 | Legal | política ficticia | licencias de recursos y caras reales (🔒 del dueño) |
 | Tienda | — | iconos, capturas, descripción, clasificación por edad (🔒 del dueño) |
 
@@ -434,6 +571,21 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 
 ### Detectados en pruebas y aún sin cerrar
 
+- **Prueba visual «tactica» inestable** (30-10, segunda sesión): con el mismo commit (`53788309`) pasó una vez y falló dos; cambian las posiciones de los jugadores en la pizarra (no el resto de la pantalla). Algo de la pizarra depende del estado de la máquina (`user://`, lo que dejaron otras pruebas como `tac_deshacer`) o del orden de carga: buscar qué y fijarlo en `pruebas/visual/visual.gd`. Arreglado ya: el aviso «la última vez el juego anotó N errores» rompía «inicio» y «plantel» (la prueba pone a cero `Registro.errores_previos`).
+- **`PeatonQ.terminar` no viste a nadie si el nodo aún no está en el árbol** (27-10, ejecutora; salían en ropa interior en las cabinas del teleférico): `terminar` hace `if not nodo.is_inside_tree(): return` y `Mini3D.persona` no avisa. Solución aplicada en `TelefericoCabina.poblar`: crear las personas con el padre YA en el árbol. Pendiente: que `terminar` pida la ropa en `_ready` o avise (`push_warning`) para que no vuelva a pasar en otra escena.
+- **TIRO_PULIDO** (dueño 27-10: encender y pulir más). ENCENDIDO el 27-10 (`PMOT_TIRO=0` lo apaga). Medido con el mismo once a los dos lados, 6 partidos: encendido tal cual daba 0,8 goles por partido porque el portero paraba el 89 % de lo que iba dentro; con la parada que cuesta más lejos del cuerpo y con tiros fuertes (`PARADA_LEJOS` 0,5) quedan 2,3 goles, 20 % de conversión y 59 % de paradas (real: ~2,7, ~11 % y ~70 %). Queda para la pasada final del motor: más tiros por partido (hoy ~12; real ~25), el portero algo más seguro y el pie malo.
+- **Pasto del Drive** (27-10): `grass.blend` son dos matas de hierba SILVESTRE (60-90 cm, ~6.000 vértices cada una), no césped de cancha. Subidas como `assets/pasto/mata_1.glb` y `mata_2.glb` (texturas a 512 px); captura `docs/04_auditorias/capturas_ciudad/pasto_drive.jpg`. Uso: parques, bordes de caminos y solares vacíos de la ciudad, repartidas con `MultiMesh` y con distancia de corte; el césped de la cancha sigue en la pasada final del motor.
+- **Más regalos del Drive** (27-10), en `assets/regalos/`: `torre_focos.glb` (torre de iluminación de 23 m, para los focos de los estadios) y `sillon_oficina.glb` (para el despacho del DT y la oficina de la directiva). Captura `docs/04_auditorias/capturas_estadio/regalos_torre_sillon.jpg`. Faltan por colocar. La sala de TV (`.3DS`) y las texturas de libros y tazas quedan en el Drive: se evaluarán al amueblar interiores.
+- **Restos de español en otros idiomas** (27-10): el recorrido en alemán con `RECORRIDO_TEXTOS` y un filtro de palabras españolas ya sale limpio (calendario, federación, quejas del vestuario, árbitros, estilos de DT, prenómina, créditos: hechos). Quedan los textos que el recorrido no abre (otras noticias armadas con `%` en `nucleo/`, ficha del país en `ui/eleccion_club.gd` «%d liga%s, %d clubes») y 22 fiestas que el código escribe en el idioma de su país («Thanksgiving», «Fête nationale»), a propósito. Los logros sin sistema muestran «(su sistema aún no está portado)» al jugador: antes de lanzar, ocultarlos o reescribir. Las posiciones (POR, DC, MC…) se quedan en español en todos los idiomas (dueño, 27-10).
+- **Aviso de «Unexpected NUL character» al cargar `PantallaModos`** (27-10): tres avisos de Godot al cargar el menú de modos (también sin los cambios del día). No viene de los `preload` de texto de `menu_modos*`: buscar qué recurso o JSON lleva un byte nulo.
+- **Pelo de los peatones** (27-10, P4): los mechones se ven duros; suavizar normales empeora. Arreglarlo pide cambiar las mallas de pelo (Quaternius trae más cortes): decisión de aspecto del dueño.
+- **Cada gesto con su habilidad, su pie y su clima** (dueño 27-10, HECHO la base: `GestoTecnico`, sonda `s3g_gesto_tecnico`): rosca, vaselina, raso, potente, cabezazo y los pases corto, tenso, al hueco y largo pesan sus atributos; la pierna débil (1-5 estrellas) suma hasta un 48 % de error; el clima del partido (lluvia, tormenta, nieve, niebla) cambia el error, el agarre del portero y lo que rueda el balón. Medido (6 partidos): 2,3 goles en seco, 2,5 con lluvia, 2,7 con nieve. Para la pasada final: rasgos del jugador (los «PlayStyles»), viento en lo que va por el aire, calor y altura en el cansancio, y un ajuste fino con N grande.
+- **PASADA FINAL DEL MOTOR (decisión del dueño, 27-10)**: al final del plan, junta la contrapartida táctica (abajo), lo visual, la IA de la CPU, el comportamiento, el físico, el pasto nuevo (`grass.blend` del Drive, 13,9 MB; el contenedor no lo puede bajar porque es privado: el dueño lo comparte «cualquiera con el enlace» o lo exporta a .glb; Blender ya está listo como `bpy` 5.0.1 para convertirlo), las físicas y más sonidos.
+- **Táctica sin contrapartida** (27-10, `sonda_motor_dt` ESCENARIO=tactica N=6, umbrales M-414): el local ofensivo (presión y línea altas) tira 12,8 y concede 6,2; el defensivo tira 3,0 y concede 9,8 (y encaja 2,0 goles frente a 1,7). Presionar arriba no deja la espalda libre y el bloque bajo no protege: ofensivo siempre gana. Falta el coste de la línea alta (balones a la espalda, contras) y que el bloque bajo quite tiros. Probado y revertido el 27-10: doblar el peso de la línea sin balón y filtrar más contra línea alta EMPEORA (el bloque bajo pierde 6 de 6 y concede 11 tiros); la causa parece la pasividad de mentalidad 0 + presión 0 (regala el balón). Pide una pasada propia con N grande.
+- **Capturas de la ciudad en Forward+ ya no caben** (27-10 tarde): con todo lo sumado hoy (pasajeros, cables, detalles, lluvia, parques) la captura de mediodía también pasa del límite de memoria del contenedor y la mata el sistema. Revisar en Compatibility aquí (posiciones y composición) y la luz en el PC del dueño; o bajar la calidad a MEDIO en `captura_luz_ciudad`.
+- **Capturas de noche en Forward+** (27-10): en este contenedor (Vulkan por software) la ciudad con las farolas encendidas (103 luces, 49 farolas de 46 m) pasa de 14,5 GB y el sistema mata la captura, desde las 18:20; también con el código de antes de S5. Mediodía y mañana caben (~7 GB). La noche se revisa en Compatibility o en hardware real; medir FPS de noche en el PC del dueño (§1).
+- **Vehículos más suaves y realistas** (dueño 27-10, ejecutora, pieza F): frenada (hoy 72 km/h → 0 en 0,82 s, ~2,4 g; `pmov_conduccion`), aceleración y giro de autos, metro y bus; crear el tren; mejorar el teleférico.
+- **Butacas y aficionados** (dueño 27-10, sesión 3): separar un poco a los hinchas (se ven muy juntos), subir la calidad de las butacas, mejorar los accesos y colorear las butacas por nivel según el color del club, elegible en la personalización del menú inicial.
 - **Roles por jugador** (como los PlayStyles de FC 26) con efecto en el motor.
 - **Red del arco**: onda más ancha y lenta (17-10), techo sin asomar por el larguero. **Cartel del cuarto árbitro**: 20-10 a tamaño real (0,92 × 0,62 m), dígitos con halo, mango y por encima de la cabeza. Desde la toma abierta de TV sigue siendo pequeño (como en la tele de verdad, que corta a un primer plano): pendiente un corte de cámara al cartel.
 - Desmarques de ruptura (los peatones: §2.4).
@@ -441,20 +593,13 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 
 ## 4. Mejoras de código
 
-- [ ] 143 funciones de más de 100 líneas (21 de más de 200). Las mayores: `Principal._construir` 403, `Sonido._sintetizar_g1/g2` ~384, `Banco._probar_tanda_c_1` 382, `Principal._conectar_noticias_1` 376, `StadiumBuilder.build_1` 365. Partir por responsabilidad, no por tamaño.
+- [ ] Funciones de más de 100 líneas (medido el 27-10): 171, de ellas 10 de más de 200. Las mayores: `Banco._probar_tanda_c_1` 383, `_probar_guardado_1` 376, `StadiumBuilder._butacas` 322, `MotorJugable._control_usuario` 273, `Estadio._construir` 248, `InteriorInstalacion._piscina` 242 y `_estacion` 234. Partir por responsabilidad, no por tamaño: un corte automático solo separa colas pequeñas (probado el 27-10 y descartado). Hechas el 27-10: `ConstruirMenu._construir` (4 partes), `Noticias._conectar_1` (3) y `PantallaFicha._ver_ficha` (3).
 - [ ] Capas `_pN` (233 archivos): repartir por responsabilidad real hasta que la herencia en cadena ya no haga falta (`docs/05_referencia/indice_de_capas.md`).
-- [ ] `ui/principal.gd`: de objeto gigante en 19 capas a clases con interfaz mínima (ver 2.2).
 - [ ] Texturas (medido el 24-10): de las 3.103 sin pérdida, 2.535 son caras reales (prohibido tocarlas sin tu OK), 494 iconos de botones y 40 escudos especiales; el resto ya está comprimido. Hecho: 4 texturas normal/roughness de personajes a 1024 px (−48 MB estimados). DECISIÓN DEL DUEÑO: probar BC7 de alta calidad en una muestra de caras y medir ΔE de piel antes de generalizar; identificar ~24 texturas dinámicas de 1024² sin nombre (~100 MB); reapuntar 38 duplicados (ahorra disco, no VRAM).
-- [ ] `_process`: `dibujo_mando`/`MandoGiratorio` con setters y `queue_redraw()` están en la rama de la sesión 2 (falta fusionar); oclusión en más zonas de la ciudad.
-- [ ] 53 escenas de prueba sin ninguna mención: decidir cuáles se borran (§0). La fase 0 dio prueba a 30 módulos: repasar si queda alguno de `visor/`/`nucleo/` sin prueba directa.
-- [ ] `MotorLibre` es prototipo (el juego usa `MotorJugable`): decidir si se borra.
-- [ ] Colisiones de la ciudad fuera del club (peatones, mobiliario, edificios): revisar como en `ColisionClub`.
-- [ ] 506 frases visibles sin traducir en 8 idiomas (`docs/05_referencia/textos_sin_traducir.txt`); la prueba de paridad debe exigir 0.
+- [ ] Oclusión en más zonas de la ciudad (`OclusoresCiudad`); el `_process` de `dibujo_mando`/`MandoGiratorio` ya solo pinta cuando cambia (comprobado el 27-10).
+- [ ] Escenas de prueba que nadie lanza (27-10, orden 14: reutilizar antes de borrar). Contadas de nuevo: 354 en `pruebas/` sin mención, casi todas capturas y diagnósticos que se lanzan a mano (se quedan). De las 14 `prueba_*`: 6 siguen pasando y ya corren en `especiales.sh` (contador de FPS, dominadas, minijuegos nuevos, motor jugable; ceremonia de carrera y práctica en `todo`). Rotas, a arreglar o retirar: `prueba_repeticion` (solo graba 4,2 s: ¿fallo real de la repetición?), `prueba_descanso_3d` (falla en la fase 2, minuto 48), `prueba_intro` (el partido no arranca tras el vuelo corto; la ceremonia lo sustituyó el 13-10 y la prueba se cuelga con pantalla), `prueba_casa_kenney` (captura sin pantalla). Sin veredicto propio: `prueba_alineacion_indebida`, `prueba_carrera_flujo`, `prueba_ciudad_modelos` (inventario). Fase 0: repasar si queda algún módulo de `visor/`/`nucleo/` sin prueba directa.
 - [ ] C++/GDExtension solo si el perfil en hardware real lo pide.
-- [ ] Guardado: aviso al jugador si el archivo está dañado y ofrecer la copia; topes de memoria en historiales (M-400).
-- [ ] 16 `print` sueltos en código del juego (auditoría 3, §2): quitarlos o pasarlos a un registro con nivel.
 - [ ] 23 imágenes ≥ 2048 px que no lo necesitan: bajarlas a 2048 (auditoría 3, §4; no las caras sin tu OK).
-- [ ] Código y comentarios que citan documentos borrados (ROADMAP, LEEME, MEGAPLAN…): apuntarlos a `PLAN_DEL_LUNES.md`.
 
 ## 5. Mejoras abiertas del catálogo (356)
 
@@ -465,34 +610,26 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-403 | P1 | PARCIAL | 8 módulos de `nucleo/` sin referencia en pruebas:… | Logros y Negociación cubiertos de forma indirecta (`_probar_logros`, `_probar_negociacion`); los otros 6 no |
-| M-404 | P1 | PENDIENTE | 27 módulos de `visor/` sin referencia: `Ambience`, `Autopista`,… | solo `CameraRig` aparece en el banco |
-| M-379 | P2 | PENDIENTE | 64 funciones > 120 líneas (Q-01): `Sonido._sintetizar` 1.000,… | funciones largas sin partir |
+| M-404 | P1 | PARCIAL | Módulos de `visor/` sin prueba directa | medido el 27-10: 22 de 131, casi todos rellenos de ciudad (`CiudadMercado`, `CiudadSolar`, `FachadaModular`…) que solo se ejercitan al construir la ciudad en las sondas `p3_*`/`tre_*`; falta una sonda que compruebe que cada relleno deja piezas |
+| M-379 | P2 | PARCIAL | 70 funciones > 120 líneas (medido 28-10): las 5 peores eran `_butacas` 354, `_control_usuario` 274, `Estadio._construir` 254, `_piscina` 239, `_estacion` 233 | 28-10: partidas `_butacas` (stadium_builder_p6: paleta, poblar, hinchas, montar; hash idéntico de todos los MultiMesh en 2 calidades × 3 clubes), `Estadio._construir` (HUD y cajón aparte) y `_piscina` (8 zonas; mismo árbol de nodos). `_control_usuario` partido con la huella de `igualdad_motor` idéntica. Quedan 66 (siguientes: `_estacion` 233, `_ver_ficha` 212, `_pintar_dispositivo` 211) |
 | M-382 | P2 | PENDIENTE | Sin análisis estático | sin gdlint |
 | M-383 | P2 | PENDIENTE | Tipado: muchos `Dictionary` sin forma (jugadores del motor) | sin `JugadorMotor` tipado |
-| M-384 | P2 | PENDIENTE | `Mundo` 2.921 líneas, `Roles` 2.065, `Prensa` 2.541: acoplamiento alto | sin extraer servicios |
-| M-385 | P2 | PENDIENTE | Autoloads con globals (`Datos`, `Sonido`…) | sin documentar autoloads |
-| M-386 | P2 | PARCIAL | Señales sin desconexión en liberación (posibles fugas) | `auditoria_tecnica.gd` mide huérfanos en la pantalla principal; 21-10: el panel de objetivos pasa a señal (`vista_cambiada`) y respaldo cada 3 s, sin fallar con las pestañas prestadas a un menú |
+| M-384 | P2 | PARCIAL | `Mundo` 2.921 líneas, `Roles` 2.065, `Prensa` 2.541: acoplamiento alto | sin extraer servicios (28-10: ya en capas de <450 líneas; queda repartir por responsabilidad) |
+| M-386 | P2 | PARCIAL | ~300 objetos retenidos por partido jugable | 28-10: las conexiones de señales NO crecen (`sen_conexiones`); quedan ~300 objetos sin nodo ni recurso por partido, retenidos hasta cerrar el juego (no crece sin tope); búsqueda documentada en `rendimiento.md` sin causa |
 | M-387 | P2 | PENDIENTE | Mensajes de error silenciosos (`return` sin aviso) | sin registro de errores |
 | M-388 | P2 | PENDIENTE | Constantes mágicas (balance) dispersas | sin archivo de balance |
 | M-391 | P2 | PENDIENTE | Duplicación entre `MatchPlayback` y `MotorJugable` | duplicación sin retirar |
-| M-392 | P2 | PENDIENTE | `MotorLibre` prototipo (546 líneas) sin uso claro | `MotorLibre` sigue (545 líneas); 20-10: con la base ficticia da 12,5 goles de media entre iguales (su prueba fija ahora la base real para no depender del orden) |
+| M-392 | P3 | PARCIAL | `MotorLibre` (567 líneas): NO es código muerto | 28-10: lo usa `OcasionesDT.lectura` (las ocasiones jugables del partido del DT: lee la jugada y propone pase, conducción o tiro). Lo que sobra es su prueba `_probar_motor_libre`, la más lenta del banco (38 s de 129): acortarla (menos partidos simulados con los mismos umbrales) |
 | M-393 | P2 | PENDIENTE | Código de pruebas mezclado con herramientas (`herramientas/*.ps1`) | sin separar |
 | M-394 | P2 | PENDIENTE | Herramientas `.exe`/`.cs` binarias en repo | `herramientas/*.exe` siguen en el repo |
 | M-396 | P2 | PENDIENTE | Convenciones: mezcla de español/inglés en nombres | sin guía de estilo |
 | M-397 | P2 | PENDIENTE | Comentarios muy extensos (valioso pero ruidoso) | sin ADRs |
 | M-398 | P2 | PENDIENTE | Sin documentación de arquitectura actualizada (`LEEME.md`) | LEEME sin diagrama |
-| M-400 | P2 | SIN VERIFICAR | Sin límites de memoria en historiales (noticias, prensa) | no se revisaron topes de historiales |
 | M-401 | P2 | PENDIENTE | Dependencia de nombres de nodo (`find_child`) frágil | sin cambio |
 | M-402 | P2 | PENDIENTE | Duplicación de carga de JSON (`Datos` 212 tablas) | sin carga perezosa |
 | M-406 | P2 | PENDIENTE | `Retrato3D` no se ejercita en headless | sin prueba con xvfb |
-| M-407 | P2 | PENDIENTE | Sin pruebas de conducción/ciudad (V-06) | sin prueba de conducción |
 | M-408 | P2 | PARCIAL | Sin pruebas de minijuegos 3D | `prueba_minijuegos_nuevos` (2D); minijuegos 3D sin prueba |
-| M-409 | P2 | PARCIAL | Sin pruebas de menús/UI de integración (abrir cada pantalla sin error) | `_probar_carga_de_ui` en el banco; sin recorrido por pestañas |
-| M-410 | P2 | PENDIENTE | Sin pruebas de rendimiento con umbrales | sin umbrales de rendimiento |
-| M-413 | P2 | PENDIENTE | `auditoria_clubes`/`auditoria_datos` no están en el banco | auditorías fuera del banco |
-| M-414 | P2 | PENDIENTE | Resultados de sondas (calidad/táctica/simetría) sin umbrales | sondas sin umbrales |
-| M-416 | P2 | PENDIENTE | Sin CI en GitHub Actions | sin GitHub Actions |
+| M-410 | P2 | PARCIAL | Pruebas de rendimiento con umbrales | la simulación tiene umbral (`eq_diez_temporadas`, EQ_MODO=rendimiento: la semana del año 20 < 2× la del año 1 + 20 ms) y el banco mide ms por paso del motor; faltan umbrales de FPS en hardware real (dueño) |
 | M-417 | P2 | PENDIENTE | `herramientas/banco.sh` sólo bash | sin unificar |
 | M-418 | P2 | PENDIENTE | Sin informes de cobertura | sin cobertura |
 
@@ -500,37 +637,21 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-277 | P1 | PARCIAL | 274 textos en español directamente en `ui/` (I-02), concentrados… | ✅ 15-10: 1.132 textos envueltos; quedan ~15 (M-447) |
-| M-278 | P1 | PENDIENTE | `ui/principal.gd` 6.655 líneas (y 3 funciones >330) | `principal.gd` con 6.777 líneas |
 | M-279 | P1 | PENDIENTE | 27 módulos de `visor/` y 8 de `nucleo/` sin referencia directa en… | los módulos siguen sin prueba directa |
 | M-280 | P1 | PENDIENTE | 105 módulos de UI/visor sin referencia en banco/pruebas | sin prueba visual automática |
-| M-433 | P1 | PARCIAL | Controles táctiles sólo en la ciudad (cruceta/E) | 21-10: en PC ya no salen la cruceta ni «Salir» al pasear (estadio y ciudad) y la E solo aparece si hay algo con lo que interactuar (`ExploradorCiudad.es_tactil`); el partido sigue sin controles táctil |
-| M-283 | P2 | PENDIENTE | Sin subtítulos/indicadores visuales de sonido | sin avisos visuales de sonido |
 | M-284 | P2 | PENDIENTE | Sin modo lectura de pantalla (TTS) | sin TTS |
 | M-285 | P2 | PARCIAL | Navegación por mando en menús (panel de controles sí) | navegación con mando en el panel de controles; no en todos los menús |
 | M-287 | P2 | PENDIENTE | Rendimiento de menús: refresco ya 14× más rápido; sin pruebas de… | sin medida de apertura de pantallas |
-| M-289 | P2 | PENDIENTE | Menú lateral con 9 menús; Ciudad/Editar completados; Ajustes sólo… | Ajustes sigue con 3 tarjetas (`MenuLateral`) |
-| M-290 | P2 | PARCIAL | Tarjetas con dato vivo sólo en algunas (`Menu.dato`) | `MenuLateral.dato` existe; no todas las tarjetas |
-| M-292 | P2 | PARCIAL | Sin favoritos/marcadores de jugadores o clubes | favoritos de pestañas; sin seguimiento de jugadores/clubes |
+| M-292 | P2 | PARCIAL | Seguir clubes (los jugadores ya: «👁️ Seguir» en la ficha y lista «EN SEGUIMIENTO» con ojeadores) | falta seguir un club rival (sus noticias en la bandeja) |
 | M-293 | P2 | PARCIAL | Tablas con filtros limitados (plantel) | filtros en plantel/libres |
 | M-294 | P2 | PARCIAL | Comparador de jugadores existe; sin comparativa de club/estadio | comparador de jugadores; sin club/estadio |
 | M-295 | P2 | SIN VERIFICAR | Sin gráficos históricos (valor, forma) en ficha | «crecimiento por temporada» en la ficha; sin gráficos verificados |
-| M-296 | P2 | PARCIAL | Notificaciones (`Aviso`) sin centro de notificaciones | bandeja de correo; sin filtros |
-| M-297 | P2 | PENDIENTE | Tutorial: ciudad y controles; falta tutorial de gestión (primer mes) | sin tutorial de gestión |
-| M-299 | P2 | PARCIAL | Sin confirmaciones consistentes para acciones destructivas… | `CuadroDialogo` en despacho/principal; no uniforme en vender/despedir |
-| M-300 | P2 | PENDIENTE | Sin deshacer en acciones de pizarra | sin deshacer en pizarra |
-| M-302 | P2 | PENDIENTE | Sin tema claro/alto contraste | sin tema claro/alto contraste |
-| M-303 | P2 | PARCIAL | Cursor/hover sin feedback sonoro consistente en todos los… | `BotonFx` en todos los botones; pestañas/listas sin sonido |
 | M-304 | P2 | PARCIAL | Animaciones de transición entre pantallas desiguales | `Animar` en 16 archivos; sin sistema común de transición |
-| M-305 | P2 | PARCIAL | Tooltips escasos | 103 tooltips |
-| M-307 | P2 | PENDIENTE | Resoluciones: pensado 1280×720–1600×900; sin pruebas en 4:3, 21:9… | sin capturas por aspecto |
-| M-308 | P2 | PENDIENTE | DPI alto: texto del `Label3D` en 3D no escala | `pixel_size` fijo |
-| M-311 | P2 | PARCIAL | Sin perfil de jugador (estadísticas globales) | `PanelMeta` (álbum/museo global); sin perfil de estadísticas |
+| M-305 | P2 | PARCIAL | Tooltips escasos | 28-10: la línea de cabecera (jornada, sueldos, media, objetivo, confianza) y las siglas de la tabla de liga ya explican; faltan las fichas y los paneles de club |
 | M-312 | P2 | PARCIAL | Sin modo «streamer» (ocultar datos sensibles/real) | ajuste «Caras reales: FOTO / RECREACIÓN» (`Cara.usar_fotos`); sin modo streamer |
 | M-435 | P2 | PENDIENTE | Sin gatillos analógicos para potencia de pase | sin gatillos analógicos |
 | M-436 | P2 | PENDIENTE | Sin giroscopio para cámara en primera persona (móvil) | sin giroscopio |
-| M-437 | P2 | PARCIAL | Sin detección de dispositivo para cambiar iconos en tiempo real… | `dispositivo_detectado` en panel de controles y `ControlFC`; guía del partido sin comprobar |
-| M-438 | P2 | PENDIENTE | UI de móvil: botones pequeños | sin tamaño mínimo |
+| M-438 | P2 | PENDIENTE | UI de móvil: botones pequeños. Medido el 27-10: un botón de 32 px en un teléfono apaisado (~68 mm de alto, 720 px lógicos) mide ~3 mm; al zoom máximo (140 %) ~4,2 mm; Android pide ~7,6 mm (48 dp). No se arregla con escala: a ×1,8 las pantallas de 1280 × 720 no caben. Propuesta: modo móvil con una columna (lista lateral → pestañas), botones de 64 px y el zoom por defecto a 120 % al primer arranque en móvil. Necesita probarse en un teléfono (dueño). | sin tamaño mínimo |
 | M-439 | P2 | PENDIENTE | Orientación vertical no soportada | sin vertical |
 | M-440 | P2 | PENDIENTE | Sin modo una mano | sin modo una mano |
 | M-441 | P2 | PENDIENTE | Sin soporte de teclado en pantalla para nombres | sin teclado en pantalla |
@@ -541,36 +662,29 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
 | M-167 | P1 | PENDIENTE | Calzadas = cajas de asfalto con marcas propias; Kenney sólo… | calzadas propias; losetas Kenney no usadas |
-| M-171 | P1 | PARCIAL | Tráfico sin comportamiento complejo (adelantar, ceder en cruce) | cola y frenado en rojo (`TraficoCiudad`); sin adelantar |
-| M-263 | P1 | PENDIENTE | Eventos únicos (13) y control real; pocos días de «vida» entre… | sin agenda semanal |
-| M-168 | P2 | PENDIENTE | Sin rotondas | sin rotondas |
-| M-170 | P2 | PENDIENTE | Sin semáforos peatonales con botón | sin botón peatonal |
+| M-171 | P1 | PARCIAL | Tráfico: comportamiento complejo | 27-10: cola, frenado en rojo, prioridad de la derecha, adelantamiento; falta rotonda con tráfico |
+| M-263 | P1 | PARCIAL | Eventos únicos y agenda | la agenda del móvil existe (`telefono_p3.gd`, `nucleo/citas.gd`); faltan los 13 eventos únicos con control real |
+| M-168 | P2 | PARCIAL | Rotondas | 28-10: una rotonda decorativa en un cruce sin rutas (`visor/ciudad_rotonda.gd`); falta rotonda con tráfico que la recorra |
+| M-170 | P2 | PARCIAL | Semáforos peatonales con botón | 28-10: botón y hombrecito (`visor/semaforos.gd pedir`); FALLO: el ciclo es global a toda la ciudad y los peatones de `TraficoCiudad` no respetan la fase; cabeza peatonal pequeña |
 | M-173 | P2 | PARCIAL | Sin sonido de motor/marchas/derrape | 21-10: el motor del coche suena, sintetizado en vivo con revoluciones y 5 marchas (`visor/motor_coche_sonido.gd`); sin radio |
-| M-174 | P2 | PARCIAL | Interior de coche sin modelo (salpicadero 2D) | salpicadero y volante 2D (`VolanteUI`) |
 | M-176 | P2 | PENDIENTE | Sin tipos de vehículo (moto, bus conducible, camión) | solo coche conducible |
-| M-177 | P2 | PENDIENTE | Sin gasolinera/aparcamiento/lavado | sin gasolinera/lavado |
 | M-180 | P2 | PARCIAL | Metro: sin vendedores/música/anuncios | anuncios en el vagón (`MetroCiudad.ANUNCIOS`); sin vendedores ni música |
-| M-182 | P2 | PENDIENTE | Sin tarjeta de transporte ni coste | máquinas de billetes decorativas; sin coste |
-| M-183 | P2 | PARCIAL | Peatones: 34 máx; sin rutinas por hora | 21-10: de madrugada queda en la calle un tercio de la gente (los ocultos tampoco se mueven: `TraficoCiudad.faros`); faltan rutinas por persona |
+| M-182 | P2 | PARCIAL | Tarjeta de transporte y coste | 28-10: `CarteraDT.saldo_transporte`, metro 1 €, teleférico 3 €; falta cobrar el bus, saldo en la app Red y abono |
+| M-183 | P2 | PARCIAL | Peatones: rutinas | 28-10: densidad por sector y hora, flujo direccional, maletines y mochilas (`visor/rutina_peatones.gd`); falta rutina por PERSONA (casa→trabajo→casa) |
 | M-184 | P2 | PENDIENTE | Sin NPC con nombre y memoria (te reconocen) | sin vecinos con memoria |
 | M-185 | P2 | PENDIENTE | Diálogos por oficio (hecho) pero sin ramas ni consecuencias | diálogos sin consecuencias |
 | M-186 | P2 | PARCIAL | Interiores: 15 salas; edificios entrables «la mayoría» sin… | gimnasio, piscina, estación central, recreativos con muebles Kenney (15/16-10); 21-10: edificio del club con muebles de verdad del catálogo común `Modulos` (oficina del DT, despacho, sala de vídeo, pr |
 | M-187 | P2 | PARCIAL | Casas sin habitantes ni rutinas | vivienda con «la familia que vive allí» (`InteriorInstalacion` l.1057); sin horarios |
 | M-188 | P2 | PENDIENTE | Sin tiendas con compra real (ropa, balones) | sin compra en tiendas |
 | M-189 | P2 | PENDIENTE | Sin bares/restaurantes con minijuego | sin bar con minijuego |
-| M-190 | P2 | PARCIAL | Sin clima dinámico en la ciudad (lluvia con charcos, reflejos) | charcos de luz de farola (`CiudadExpansion`); sin charcos de lluvia en la ciudad |
-| M-191 | P2 | PARCIAL | Sin ciclo día/noche más allá del slider | ciclo día/noche automático (`_ciclo_activo`); sin reloj real |
 | M-192 | P2 | SIN VERIFICAR | Aceras/pavimentos: 3 texturas | no se midió la variedad de aceras por barrio |
-| M-193 | P2 | PARCIAL | Sin vegetación variada (setos, flores) más allá de árboles | setos de jardines y casas (`CiudadExpansion._setos_t`); sin flores |
 | M-196 | P2 | PENDIENTE | Botes sin sonido/estela | sin estela de botes |
 | M-197 | P2 | PENDIENTE | Autopista sin peajes ni estaciones | sin peajes |
-| M-198 | P2 | PENDIENTE | Aeropuerto/estación de tren inexistentes (no hay viajes) | sin viajes/aeropuerto |
-| M-199 | P2 | PENDIENTE | Sin señales de tráfico reales (límites, ceda) | sin límites de velocidad con multa |
-| M-200 | P2 | PENDIENTE | Sin policía/multas | sin policía |
-| M-201 | P2 | PENDIENTE | Sin accidentes/eventos aleatorios | sin eventos de calle |
+| M-198 | P2 | PARCIAL | Viajes: estación de tren y aeropuerto | 28-10: Estación Central con andén y trenes (`visor/estacion_central.gd`); sin viajes ni aeropuerto |
+| M-199 | P2 | PARCIAL | Sin señales de tráfico reales (límites, ceda) | 27-10: multa de 90 € por semáforo en rojo con policía a la vista; sin límites de velocidad |
 | M-203 | P2 | PENDIENTE | Sin colisión/oclusión de sonido en interiores | sin filtro de sonido en interiores |
 | M-204 | P2 | PENDIENTE | LOD de edificios lejanos con ventanas (cristal) pero sin siluetas… | sin impostores de edificios |
-| M-205 | P2 | PENDIENTE | `ciudad_expansion.gd` 2.321 líneas y `city_builder.gd` 4.687 | `ciudad_expansion.gd` creció a 3.569 líneas |
+| M-205 | P2 | PARCIAL | `ciudad_expansion.gd` 2.321 líneas y `city_builder.gd` 4.687 | `ciudad_expansion.gd` creció a 3.569 líneas (28-10: ya en capas de <450 líneas; queda repartir por responsabilidad) |
 | M-206 | P2 | PENDIENTE | Sin editor de ciudad más allá de terrenos/negocios | sin editor de ciudad |
 | M-265 | P2 | PENDIENTE | Avatar propio sin personalización de cuerpo | sin personalización del cuerpo |
 | M-266 | P2 | PARCIAL | Sin entrenador como NPC con diálogos sobre el jugador | `relacion_dt` decide minutos; sin entrenador con diálogos |
@@ -588,18 +702,15 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
 | M-207 | P1 | PENDIENTE | Plantillas de 25 en todos los clubes (C-05) | plantillas de 25 |
-| M-208 | P1 | PARCIAL | Caja del club propio crece de forma casi monótona (prueba larga:… | 20-10: el mantenimiento de instalaciones (M-227) es un coste que crece con el club; faltan crisis |
 | M-210 | P1 | PARCIAL | Mercado: precios por reputación sin burbujas ni crisis | eras con precios (`Eras`, `_probar_eras_y_precios`); sin burbujas |
 | M-219 | P1 | PARCIAL | `Banco` e `Insolvencia` existen pero con pocos eventos de gravedad | administrador, tope salarial, venta de lo que sobra, refundación (`Insolvencia`); sin descenso administrativo |
 | M-235 | P1 | PARCIAL | Lesiones: duración y recaídas ok; sin prevención visible (carga… | carga y riesgo en `Medico` (l.244-254); indicador por jugador sin confirmar |
-| M-241 | P1 | PENDIENTE | Prensa 2.541 líneas (la mayor del núcleo): `resolver` 476 líneas | `Prensa.resolver` sigue en una función |
 | M-359 | P1 | PENDIENTE | Estadio real en 46 % de clubes (C-01) | 46 % |
 | M-209 | P2 | PARCIAL | La prueba larga sólo comprueba que no hay errores, no el equilibrio | `prueba_larga` comprueba medias en rango; sin métricas de equilibrio |
 | M-211 | P2 | PARCIAL | Cláusulas de rescisión: sin «cláusulazo» automático de IA | el mercado reconoce pagos de cláusula (`Mercado` l.345); sin «clausulazo» de IA deliberado |
 | M-213 | P2 | PARCIAL | Sin agentes con personalidad reflejada en comisiones (hay 4 perfiles) | perfiles de agente (`MesaAgente.PERFIL`); sin historial |
 | M-214 | P2 | PENDIENTE | Cesiones con opción de compra obligatoria sin seguimiento de… | cesiones sin bonus por partidos |
 | M-216 | P2 | SIN VERIFICAR | Fichajes de IA entre clubes poco visibles | no se comprobó la noticia semanal de traspasos de IA |
-| M-217 | P2 | PENDIENTE | Sin fichajes libres por fin de contrato anticipados (precontrato) | sin precontratos |
 | M-218 | P2 | PARCIAL | Sin límite de fair play financiero explícito (hay aviso) | tope salarial con administrador (`Insolvencia`); sin ratio salarial general |
 | M-220 | P2 | PARCIAL | Sin intereses variables según reputación y mercado | préstamos con tasas por tipo (`Banco`); no dinámicas |
 | M-221 | P2 | SIN VERIFICAR | Impuestos y derechos de TV simplificados | derechos de TV con multiplicador; no se comprobó el reparto por país |
@@ -626,8 +737,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-254 | P2 | PARCIAL | Vida del DT (bienestar, casa, familia): sin impacto en rendimiento… | estrés en `VidaDT`; efecto en rendimiento sin comprobar |
 | M-257 | P2 | PENDIENTE | Historia del club generada; sin línea de tiempo interactiva | sin línea de tiempo |
 | M-258 | P2 | PENDIENTE | Documental de temporada: guion fijo | documental con guion fijo |
-| M-259 | P2 | PARCIAL | Clima en partidos con efecto menor | el clima reduce las llegadas (`Partido.clima`); sin efecto en balón ni desgaste |
-| M-260 | P2 | PENDIENTE | Dificultad: 3 niveles simples | sin dificultad adaptativa |
+| M-259 | P2 | PARCIAL | Clima sin efecto en el desgaste | el clima ya cambia error, agarre y roce (`gesto_tecnico.gd`); falta su efecto en cansancio (calor, altura) |
 | M-261 | P2 | PENDIENTE | Sin modo historia/campaña guiada | sin modo historia |
 | M-361 | P2 | SIN VERIFICAR | `tablas.json` en una línea (D-04) | no se revisó `tablas.json` |
 | M-362 | P2 | PENDIENTE | `ESTADIO_CLUB` por nombre (frágil con leetspeak) | `ESTADIO_CLUB` por nombre |
@@ -639,7 +749,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-370 | P2 | PENDIENTE | Historia de clubes (`historia_clubes.py`) por club; verificación… | sin prueba de coherencia |
 | M-371 | P2 | PENDIENTE | Himnos y cánticos sin letra | himnos sin letra |
 | M-372 | P2 | PENDIENTE | Retratos de DT/presidente generados; sin variedad étnica medida | sin estadística por país |
-| M-373 | P2 | PENDIENTE | Bandera de cada país como pieza; verificar que son las correctas y… | sin prueba visual de banderas |
 | M-376 | P2 | PENDIENTE | Premios individuales sin votación explicada | sin votación explicada |
 | M-377 | P2 | PARCIAL | Sin clima por país/estación realista | `Clima.del_partido` por país/estación; sin tabla completa verificada |
 | M-378 | P2 | PENDIENTE | Sin datos de ciudades (población, altura) para estadios | sin datos de ciudades |
@@ -663,7 +772,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-018 | P2 | PENDIENTE | Banquillos de un solo diseño por preset | `EST_BANQUILLOS` sin ampliar |
 | M-019 | P2 | PARCIAL | Sin zona de prensa/cabinas de TV visibles en el graderío | cabina de prensa en `estadio_extras.gd`; sin vidrio ni NPC de prensa dentro |
 | M-020 | P2 | PARCIAL | Sin palcos reales (`palcos` existe como instalación) | palcos como pieza de `estadio_extras.gd` y `ClubDentro.PALCO`; sin interior con personas |
-| M-022 | P2 | PENDIENTE | Sin sonido espacial por sector (cantos locales vs visitantes) | no existe ningún `AudioStreamPlayer3D` en el juego |
+| M-022 | P2 | PENDIENTE | Sin sonido espacial por sector (cantos locales vs visitantes) | solo `servicios_vida.gd` usa `AudioStreamPlayer3D` en el juego |
 | M-024 | P2 | PARCIAL | Sombras de la grada sobre el campo no cambian con la hora real del… | `Ambience` usa la hora elegida para el estadio, no la hora/estación real del partido |
 | M-025 | P2 | PARCIAL | Poca variedad de torres de luz (4 esquinas) | focos «corona/mixto/halo» además de torres; no 6/8 torres por forma |
 | M-027 | P2 | PENDIENTE | Sin variación de terreno exterior (cerro, mar, río) según `rasgo` | el texto `rasgo` no elige fondo ni niebla |
@@ -686,7 +795,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-079 | P1 | PENDIENTE | Retrato real 13 % (base real) | 13 % con retrato real; descarga bloqueada por la red |
 | M-091 | P1 | PARCIAL | Botines: variedad añadida, pero sin modelos distintos por forma | `VestidorQ._botin_de` varía modelo/color por dorsal; no hay mallas de bota alta/calcetín |
 | M-094 | P1 | PARCIAL | Animación de caminata del DT: 6 estilos (✅) | «Mi caminata» con 6 estilos para el DT; peatones y jugadores no |
-| M-095 | P1 | PENDIENTE | 335 clips; muchos sin uso en partido | sin auditoría automática de clips usados |
+| M-095 | P1 | PARCIAL | Auditoría automática de clips usados | hecha para ciudad/UAL (`p3_clips_ual`); falta para los 335 clips del partido |
 | M-447 | P1 | PARCIAL | Las cadenas en español escritas directo en `ui/` (I-02): antes 573… | ✅ 15-10 salvo 15 textos |
 | M-037 | P2 | PENDIENTE | Sin sector «barra brava»/torcida con comportamiento diferente (de… | sin sector ultra con bengalas/humo |
 | M-038 | P2 | PENDIENTE | Hinchas sentados con piernas invisibles (se cortan en la cadera) | público horneado cortado en la cadera |
@@ -724,13 +833,13 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-097 | P2 | PARCIAL | Retarget con pies que patinan | IK de piernas solo en la ciudad (`AnimQuaternius._ik_pierna`); sin foot locking en partido |
 | M-099 | P2 | PARCIAL | Cuerpos sin colisión entre brazos/piernas (solapes sólo en XZ) | cuerpos que se empujan y duelos en el motor (`MotorJugable._cuerpos`, 17-10), en 2D; sin cápsulas 3D |
 | M-101 | P2 | PARCIAL | Celebraciones por rasgo (ya) pero sólo 2/3 propias | carrera al córner y abrazo (`_ia_celebracion`); sin 10 por rasgo ni coreografías |
-| M-102 | P2 | PARCIAL | Sin reacciones de banquillo coordinadas | celebra el gol (`_banca_celebra`); 21-10: protesta la roja de uno de los suyos (`_banca_protesta`); falta la lesión |
+| M-102 | P2 | PARCIAL | Sin reacciones de banquillo coordinadas | celebra el gol (`_banca_celebra`); 21-10: protesta la roja de uno de los suyos (`_banca_protesta`); 27-10: se llevan las manos a la cabeza (o brazos cruzados / inquietos) ante la lesión de uno de los suyos (`_banca_lesion`, `BanquilloVivo.LESIONES`; sentados sin levantarse y de pie con «lamento»; `ideas/vat_hinchada` comprueba los clips; SIN captura en partido, solo prueba) |
 | M-103 | P2 | PARCIAL | Lesiones sin animación específica | clip de dolor (`AnimQuaternius`); sin camilla ni médicos en campo |
 | M-108 | P2 | SIN VERIFICAR | Mascotas con animación limitada | `MascotaQ` tiene animaciones propias; no se comprobó si son 6 ni si hay rutas |
 | M-109 | P2 | PARCIAL | Niños de ceremonia con una misma malla | niños con cuerpos de peatones variados (`CeremoniaPartido`); sin comprobar variedad de malla |
 | M-110 | P2 | PENDIENTE | Sin voces/murmullos de jugadores | sin voces de jugadores |
 | M-112 | P2 | PENDIENTE | Sin avatar del usuario en el estadio como jugador (carrera) con su… | la Carrera de Jugador no usa el cuerpo del creador |
-| M-444 | P2 | PENDIENTE | Fuga de texturas GL al cerrar `prueba_carrera_flujo` | fuga de texturas sin arreglar (INFORME_INTERNO H-12) |
+| M-444 | P2 | PARCIAL | Fuga de texturas GL al cerrar `prueba_carrera_flujo` | 28-10: acotada a «al cerrar el partido jugable» (2 texturas de 256², solo al apagar); añadidas cachés a `Cierre.CACHES`; sin resolver |
 | M-445 | P2 | PENDIENTE | Pruebas que no caben en 5 min con render por software (`intro`,… | sin modo rápido del arnés (H-13) |
 | M-448 | P2 | PENDIENTE | `auditoria_clubes` tarda ~8 min y `auditoria_datos` ~1 min | sin muestra |
 | M-449 | P2 | PENDIENTE | Los informes (`AUDITORIA_CLUBES.csv`) se regeneran a mano | sin CI nocturno |
@@ -742,15 +851,11 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-455 | P2 | PENDIENTE | Pruebas que escriben en `user://ajustes.cfg` real (E-10) | sin ruta inyectable |
 | M-456 | P2 | PENDIENTE | `auditoria_tecnica` solo carga las escenas de `escenas/` y `ui/` (4) | sin cambio |
 | M-457 | P2 | PENDIENTE | Los nodos huérfanos se miden solo en la pantalla principal | sin cambio |
-| M-458 | P2 | PENDIENTE | Sin comprobación de que cada `Label` traducible esté dentro de un… | sin cambio |
 | M-459 | P2 | PENDIENTE | Cinco idiomas de los nueve nacieron con frases que luego se… | sin flujo único |
 | M-460 | P2 | PENDIENTE | Las traducciones nuevas (552) están hechas a mano sin revisión nativa | sin marcar |
 | M-461 | P2 | PENDIENTE | Las cadenas con `%s`/`%d` dependen del orden de argumentos; en… | sin placeholders con nombre |
-| M-462 | P2 | PENDIENTE | Etiquetas de botón con emoji/caracteres (💾 ↺ ● ✔ ▸ ◯) pueden no… | sin prueba de glifos |
-| M-463 | P2 | PENDIENTE | `Idiomas.t` devuelve la clave si falta (silencioso) | sin registro de clave faltante |
 | M-464 | P2 | PENDIENTE | No existe un informe de «frases por pantalla»: no se sabe qué… | sin informe por pantalla |
 | M-466 | P2 | PENDIENTE | `datos/idiomas_extra.json` se reescribe entero con cada ampliación… | un solo archivo |
-| M-467 | P2 | PENDIENTE | Falta un chequeo de longitud de texto (alemán/finés largo) en botones | sin chequeo de longitud |
 | M-468 | P2 | PENDIENTE | Plurales y géneros en las 69 frases nuevas (p. ej. «%d botones»)… | sin plurales |
 | M-470 | P2 | PENDIENTE | El banco no ejecuta `auditoria_tecnica`, `auditoria_datos` ni las… | banco sin auditorías |
 | M-046 | P3 | PENDIENTE | Sin multitudes en accesos, tienda y museo del estadio | sin flujo de NPC antes/después del partido |
@@ -771,7 +876,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-125 | P2 | PENDIENTE | Sin tácticas de medio campo (doble pivote, falso 9) | sin roles con comportamiento propio |
 | M-126 | P2 | PARCIAL | Cambios de IA por cansancio (60/70/80') fijos | DT rival cambia en 60/70/80' y ajusta la pizarra según marcador (`_dt_rival`); minutos fijos |
 | M-128 | P2 | PARCIAL | Portero con salidas sólo en mano a mano | colocación y achique del portero (14-10); sin salidas aéreas |
-| M-129 | P2 | PARCIAL | Sin lanzamientos de larga distancia ni centros desde banda con… | los atributos pesan en el motor (`_atributos`); sin parámetro de precisión por tipo de envío |
 | M-131 | P2 | PARCIAL | Ayudas de asistencia (pase/tiro) con 3 niveles | ayudas por pieza (asistido/manual, auto/semi/manual) en `Mando`; sin perfiles Arcade/Semi/Manual |
 | M-134 | P2 | PARCIAL | Sin cámaras de repetición cinematográficas (grúa, dron) | cámaras «Dron orbital» y otras en el rig; la repetición no alterna planos |
 | M-135 | P2 | PENDIENTE | Sin cámara de gol del cuarto árbitro/línea | sin cámara de línea de gol |
@@ -799,20 +903,15 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-338 | P1 | PARCIAL | Partido ALTO ≈ 2,3 M tris/700 llamadas | 30-10 (lavapipe, cámara de TV): 1,54 M primitivas / 981 llamadas (antes 1,75 M / 1.158); el público son ~690 k (cerca 145 k, medio 258 k, lejos 284 k) y la mascota sola 72 k; sin presupuesto por categoría escrito |
 | M-339 | P1 | PENDIENTE | Césped en capas ≈ 230 k tris/57 llamadas | capas del césped hasta 46 m sin LOD extra |
 | M-343 | P2 | PARCIAL | Draw calls 700 | 30-10: `EntornoEstadio.agrupar` (coches, árboles y edificios repetidos en MultiMesh): TV 1.158→981, ras de campo 1.645→1.323; el entorno aún suma ~440 llamadas con sus sombras; sin atlas |
 | M-344 | P2 | PARCIAL | Overdraw en grada por butacas y personas | 21-10: oclusión en la CIUDAD (`OclusoresCiudad`, 1.120 paredes): −16 % de llamadas a pie de calle (12.128 → 10.192 en 4 calles, `medir_oclusion`); en la grada del estadio sigue sin `OccluderInstance3D |
-| M-345 | P2 | PARCIAL | Culling por trozos para MultiMesh grandes | 30-10: butacas en tramos de 16 m (`_butacas_en_tramos`); el público horneado (8 poses × tribuna) sigue en un MultiMesh por pose y bandeja |
 | M-346 | P2 | PARCIAL | Texturas con compresión (s3tc en PC); sin variantes móviles… | 21-10: revisado: las texturas grandes de 3D ya están en VRAM (s3tc) y limitadas (ropa 4K → 1024); las 3.103 sin comprimir son caras reales, iconos 2D y paletas de Kenney, que se dejan sin pérdida a pr |
-| M-347 | P2 | PARCIAL | VRAM 539 MB en partido | texturas del globo comprimidas (72→13 MB); VRAM del partido sin remedir |
 | M-471 | P1 | PENDIENTE | Rendimiento en el PC real del dueño | Medir con `herramientas/medir_mi_pc.bat` (juego exportado, `-- --medir`: tiempos de carga, FPS medio/1 %/peor, GPU, si la extensión C++ y el paquete de caras están activos) en la laptop del dueño, una vez con la carpeta `cache` borrada (1.ª sesión) y otra normal. En este contenedor (sin GPU) no se puede medir ni el 1.er fotograma (compilar shaders: 30 s en lavapipe) ni los FPS reales 🔒 |
 | M-349 | P2 | PENDIENTE | Generación de `Mundo` (384 clubes) y `Reales.aplicar`: medir… | sin `WorkerThreadPool` |
-| M-350 | P2 | PARCIAL | `avanzar_semana` 532 líneas: tiempo por semana desconocido | 30-10: medida (6 ligas) 274 → 145 ms; el 65 % es jugar la jornada (armar el once ~0,5 ms y los 90 minutos ~0,7 ms por partido); huella idéntica |
 | M-351 | P2 | PENDIENTE | Hilos: ¿se usan para IA/ciudad? | sin hilos para tráfico/peatones (solo LOD del tráfico) |
 | M-352 | P2 | PENDIENTE | GC/alloc en `_process` (Dictionary por jugador) | sin Packed arrays en el motor |
 | M-353 | P2 | PARCIAL | Extensión C++ (GDExtension, `nativo/` → `bin_nativo/`) | 30-10: alisado de ropa, terreno, hierba y rampa de ruidos en C++ (mismos bytes, `probar_nativo`). Falta: binarios de Android y Web (allí se usa la versión GDScript), y más funciones si el perfil lo pide (pelo `_cuero`, `CaraMalla._cargar`) |
-| M-354 | P2 | PARCIAL | `RendimientoAdaptativo` existe; documentar umbrales y probarlos | `pruebas/probar_rendimiento_adaptativo.gd`; no está en el banco |
 | M-355 | P2 | PARCIAL | Sin modo batería/60→30 FPS en móvil | límite de FPS 30/60/120 (`Principal.FPS_OPCIONES`); sin modo batería |
 | M-356 | P2 | PENDIENTE | Memoria de la ciudad ×4 (2.640 m) | sin streaming por celdas |
 | M-358 | P2 | PARCIAL | Arranque del juego hasta el menú | 30-10, juego EXPORTADO: ver el menú 4,5 → 0,75 s. Las autocargas ya no nombran `Partida`/`Reales` (compilaban 562 scripts) y el menú no nombra lo pesado (`ui/inicio_pesado.gd`, cargado en un hilo; partida en curso, perfil y álbum se pintan al llegar, ~5 s). `CompilarFondo` compila el resto en segundo plano DE UNO EN UNO (con 4 a la vez la ciudad iba ~1,5× más lenta: tipos sin resolver). Estadio y ciudad, igual que antes (2,2 y 4,4 s). Falta: separar `Principal` y que `Mundo` no nombre interfaz (charlas → ficha → Principal) para compilar menos en total. (En desarrollo, CERRAR tarda ~9 s: no afecta al juego exportado.) |
@@ -828,7 +927,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-329 | P2 | PARCIAL | Sin género gramatical (entrenadora/jugadora) en todos los idiomas | `Genero` solo en español |
 | M-330 | P2 | PENDIENTE | Formatos de fecha/número por idioma | sin `Idiomas.fecha/numero` |
 | M-332 | P2 | PENDIENTE | Narración traducida (`narracion.json`) sin revisión nativa | sin revisión nativa |
-| M-333 | P2 | PARCIAL | Texto en imágenes (carteles del 3D) sin traducir | textos de `visor/` envueltos en `Idiomas.t` (15-10); carteles dibujados sin comprobar |
 | M-334 | P2 | PENDIENTE | Sin RTL (árabe, hebreo) aunque hay KSA/EGY/MAR | sin RTL |
 
 ### dueño (27)
@@ -838,8 +936,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-337 | P0 | 🔒 DUEÑO | No hay perfil en hardware real (R-01) | perfil en hardware real |
 | M-341 | P1 | 🔒 DUEÑO | Sombras: 4 cortes en ALTO; sin ahorro medible al bajar (probado),… | coste de sombras en GPU real |
 | M-419 | P1 | 🔒 DUEÑO | `.git` 5,5 GB con punteros LFS antiguos (D-03) | historial/LFS: decisión del dueño |
-| M-420 | P1 | PENDIENTE | Builds públicos sin datos reales (caras, fotos): comprobar con… | sin prueba del .pck |
-| M-421 | P1 | 🔒 DUEÑO | Derechos de imagen de jugadores reales (decisión del dueño) | derechos de imagen |
 | M-313 | P2 | PENDIENTE | `Sonido._sintetizar` 1.000 líneas: efectos sintetizados sin editor | `_sintetizar` sigue monolítica |
 | M-314 | P2 | PENDIENTE | Sin mezcla dinámica (ducking de música en diálogo/gol) | sin ducking |
 | M-315 | P2 | PARCIAL | Música (`Musica` 384 líneas, procedural): sin variaciones por mood… | `Musica` con capas por estado |
@@ -853,12 +949,9 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-324 | P2 | PENDIENTE | Sin prueba que detecte clipping/silencios | sin prueba de clipping |
 | M-422 | P2 | PENDIENTE | 8 presets de exportación; sin pruebas de compilación | sin CI de exportación |
 | M-423 | P2 | 🔒 DUEÑO | Android: keystore del dueño (regla) | keystore |
-| M-424 | P2 | PARCIAL | Licencias de terceros (Kenney CC0, Quaternius, Anderson Rohr):… | `LICENCIAS.md` con los kits Kenney (15-10); sin auditoría automática |
-| M-425 | P2 | PENDIENTE | Créditos de fotos (`creditos_fotos.txt`) sólo para el pack real | créditos de fotos sin pantalla |
 | M-426 | P2 | PENDIENTE | Archivos grandes sueltos (`.glb` >5 MB) | sin compresión de GLB grandes |
 | M-427 | P2 | PARCIAL | `pruebas/capturas` crece sin control | carpetas promo/lotes ignoradas; capturas siguen en el repo |
 | M-428 | P2 | 🔒 DUEÑO | `.zip` de terceros dentro de `recursos/` (punteros LFS) | archivos de terceros con LFS: decisión del dueño |
-| M-430 | P2 | PENDIENTE | Sin canal de reporte de errores | sin reporte de errores |
 | M-432 | P2 | PENDIENTE | Sin política de contenido (religión/política ficticia) | sin lista en CI |
 | M-323 | P3 | 🔒 DUEÑO | Sin música licenciada (decisión del dueño) | música licenciada: decisión del dueño |
 
@@ -1029,7 +1122,6 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 - 229. Modo sandbox sin presión de despido
 
 **20. Extras y Sistemas Meta**
-- 233. Dificultad ajustable (finanzas, presión mediática, etc.)
 - 237. Estadísticas exportables de tu carrera
 - 244. Notificaciones push de eventos importantes
 - 246. Sistema de logros ocultos/easter eggs
@@ -1739,14 +1831,11 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 
 **49. Modos de Juego y Desafíos**
 - 947. Modo empezar desde abajo con un club amateur — _No existe un club amateur ni división inferior a Segunda para empezar desde abajo_
-- 951. Modo sin dinero: presupuesto cero toda la partida — _El texto promete 'sin créditos bancarios' pero Banco.pedir no lo comprueba; el presupuesto es bajo solo al inicio, no 'cero toda la partida'_
 - 954. Modo clásico eterno: ganar todos los derbis de la temporada — _El desafío castiga perder, no exige ganar todos los derbis de la temporada_
-- 956. Modo leyenda: treinta temporadas en el mismo club — _ui/eleccion_club.gd:207 admite que 'leyenda30' y 'sinRecarga' son solo un aviso: no se hacen cumplir_
 - 957. Modo dinastía familiar centrado en hijos y nietos — _No es un modo de juego centrado en la familia con objetivos de generaciones_
 - 958. Modo presidente: solo decisiones institucionales — _No hay un modo 'presidente' solo institucional (la junta/accionistas existen como sistema)_
 - 964. Escenario: evitar el descenso con el peor plantel de la liga — _No es 'evitar el descenso con el peor plantel' (la meta del reto es terminar entre los ocho primeros)_
 - 968. Modo rápido de una sola temporada — _No hay un modo 'una sola temporada' con final y puntaje propio_
-- 971. Modo realista con carrera irreversible — _La restricción de recarga es solo un aviso (no se hace cumplir)_
 - 972. Dificultad ajustable por sistema (finanzas, mercado, IA rival) — _Global (3 niveles), no ajustable por sistema (finanzas/mercado/IA rival) y solo se aplica a la caja inicial_
 - 980. Modo espectador de una liga completamente simulada — _No hay modo espectador de una liga sin gestor_
 - 981. Modo solo simulación: ver evolucionar el mundo sin intervenir — _Siempre hay un club propio; no hay modo sin club que observe el mundo_
@@ -1773,14 +1862,11 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 1020. Tablas ordenables por cualquier columna — _Sólo seis columnas definidas, no cualquier columna_
 - 1022. Vista compacta y vista detallada intercambiables — _Compacta/detallada solo en alguna vista_
 - 1023. Modo oscuro y modo claro — _No hay un interruptor claro/oscuro explícito: el juego es oscuro con paletas alternativas_
-- 1027. Confirmación previa a decisiones irreversibles — _No es sistemático para todas las decisiones irreversibles_
 - 1028. Deshacer la última acción no crítica — _Solo estas dos decisiones, no un deshacer general_
 - 1031. Carga inmediata de la última partida al abrir la app — _No se confirmó que cargue automáticamente la última al abrir_
-- 1032. Indicador de progreso claro en simulaciones largas — _No hay indicador de progreso al simular una temporada completa_
 - 1034. Resumen del día al avanzar el calendario — _No hay un 'resumen del día' formal al avanzar un día_
 - 1037. Sugerencias contextuales desactivables — _No todas las sugerencias son desactivables individualmente_
 - 1039. Ayuda contextual desplegable en cada pantalla — _No hay ayuda contextual desplegable uniforme por pantalla_
-- 1040. Tutorial por capas que se activa al usar cada sistema — _Es un tutorial inicial lineal, no se activa por primer uso de cada sistema_
 - 1042. Pantalla de inicio personalizable con widgets — _El tablero es fijo; no consume WIDGETS ni se personaliza_
 - 1046. Widget de lesionados y suspendidos — _No hay tarjeta de lesionados en el tablero de inicio_
 - 1050. Consumo de batería optimizado por diseño — _No hay un modo de batería explícito_
@@ -1799,7 +1885,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 
 **53. Monetización y Modelo Indie**
 - 1081. Sin cajas de recompensa ni azar pagado — _Existe una mecánica tipo 'sobre'; la promesa 'sin cajas de recompensa' es válida mientras no se pague_
-- 1094. Compromiso de que las partidas guardadas sobrevivan a las actualizaciones — _No hay migraciones entre versiones del esquema; compromiso solo en la intención_
 - 1095. Compatibilidad hacia atrás de las bases de datos — _Sin versionado de bases de datos_
 
 ### No existen (173)
@@ -2021,17 +2106,16 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 **53. Monetización y Modelo Indie**
 - 1092. Canal de reporte de errores dentro del juego — _Todo_
 - 1093. Encuestas a jugadores para priorizar funciones — _Todo_
-- 1098. Política de privacidad simple y legible — _Todo_
 
 ### Decisiones de producto, no tareas (20): monetización y estética; decide el dueño
 
 943, 1051, 1055, 1072, 1075, 1076, 1077, 1078, 1079, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090, 1099, 1100
 
 ## 8. Hallazgos de la tanda de pulido (25-10), sin arreglar
-- Balance (medido por `pruebas/ideas/eq_diez_temporadas.gd`, especial `todo`; 10 temporadas × 3 semillas): **el grande sin gestionar se hace rico** (rep 88→96, sueldos 17-27 % de los ingresos, caja 6,6→65-95 M en 10 años; pasa M-208 porque su referencia sube con la rep). El chico sin gestionar pierde ~1-2 M/año también en Primera (resultado previsto −1,1 a −1,7 M): es estructural, no del descenso. s303 GRANDE da «último año 11 %» en t1 (rango 12-38 %).
+- Balance (medido por `pruebas/ideas/eq_diez_temporadas.gd`, especial `todo`; 10 temporadas × 3 semillas): el grande sin gestionar se hacía rico (rep 88→96, sueldos 17-27 % de los ingresos, caja 6,6→65-95 M en 10 años); 27-10: con `CrisisCaja` termina en 13-35 M y baja en 1-4 de las 10 temporadas. El chico sin gestionar pierde ~1-2 M/año también en Primera (resultado previsto −1,1 a −1,7 M): es estructural, no del descenso. s303 GRANDE da «último año 11 %» en t1 (rango 12-38 %).
 - `Mundo.generar(["CHI"], semilla)` da el MISMO mundo en t0 con 101, 202 y 303 (la semilla solo cambia la simulación): ¿buscado?
 - Pantalla de entrada: pendiente de tu aprobación como escena principal (`Inicio.flujo_nuevo`, §0).
-- Carrera: falta la animación de parada del portero en modo jugador.
+- Carrera/partido jugable: el portero que no llega a un tiro ya se estira hacia el balón y queda batido (27-10, `MotorJugable._reaccion_portero`); falta verlo con la cámara real en un gol y decidir si la estirada fallida necesita un clip «batido» propio.
 - Licencias 🟡 que quedan (sesión 6, `docs/04_auditorias/sesion_6.md`): `persona_realista.glb` → relevo de MakeHuman (CC0) ya enganchado en `visor/persona_mh.gd`: falta que el dueño suba por LFS `assets/personas/persona_mh_cuerpo.glb` y `persona_mh_ropa.glb` (generar con `herramientas/makehuman/mh_generar.py <datos> <Quaternius.gltf> persona_mh m` y renombrar) cuando el traje esté pulido (bajo de la chaqueta dentado, cejas manchadas), y luego excluir `persona_realista*` de las exportaciones públicas; `anims_futbol/` → la vía barata es guardar la captura de la página de Gumroad (dueño); CMU sirve de licencia pero exige retargetear BVH en Blender y no trae regates; `vagabond.obj` (velero), `arco_entrada`, `asientos_lod`, `podio_prensa` y las insignias de Canva siguen sin confirmar.
 
 - Primera hora (informe onb, 26-10): cerrado el 26-10 (todo `grab_focus` diferido de `ui/entrada/*` pasa por `FocoSeguro.dar`, que comprueba que el control siga en el árbol; el resto es síncrono o va con `is_inside_tree()`). Lo demás (cabecera con ayudas, objetivos que ceden la ficha, reabrir el tutorial, carril de chips de los hubs) lo cerró la sesión 3.
@@ -2047,11 +2131,9 @@ Peticiones a zonas que no eran suyas (la 14, partir `banco_p25.gd`, ya está hec
 Defectos a la vista que dejó anotados: ninguno pendiente (el de «Forma del escudo» ya estaba aplicado el 26-10).
 
 Auditoría de fuentes y de presentación del texto (26-10, sesión fnt). Lo de traducción es para S1:
-- **93 claves con solo en y pt** (faltan fr, it, de, ca, pl, tr): son los titulares de imprevistos y avisos («Apelación ACOGIDA», «Cedido a préstamo», «¡Clausulazo!», «Polémica en redes»…). En 6 idiomas caen al castellano. Lista: claves de `en` que no están en `fr`.
 - **150 claves que no aparecen literalmente en el código ni en los datos**: casi todas se componen en tiempo de ejecución (icono + texto, «✔  …», «·····  Jefe médico», «sí   Construir»), así que NO son claves muertas seguras. Hay restos claros, como «Estrecha (cabe mas)» sin tilde, que es el nombre viejo de la tipografía. Antes de borrar nada: un barrido que registre en partida qué claves se piden de verdad.
 - **Caídas por formato**: no hay ninguna clave cuyos `%s`/`%d` no casen con su traducción. Los 42 avisos que salen al comparar son «%» de porcentaje literal («12% más»), no marcadores. La única llamada que formatea DENTRO de `Idiomas.t` es `ui/principal/rueda_prensa.gd:414` (`Idiomas.t("%s %s" % …)`, icono + texto); funciona porque `t` separa el icono, pero lo limpio es `Idiomas.t(datos[1])` (zona de la rueda de prensa).
 - **Nombres propios con la misma forma en todos los idiomas**: las leyes laborales (Arbeitszeitgesetz, Fair Labor Standards Act…), DINASTÍA, VAR, Valparaíso. Están bien; no hay que traducirlos.
-- **Texto que no cabe**: en `ui/componentes/ficha_jugador_info.gd:_dato` el valor «pertenece a «Los históricos»» se corta con «…» ya en castellano (165/149 px; en alemán, 195/161). Se puede leer en la ayuda emergente; dar más ancho al valor cuando la etiqueta es corta.
 - **El registro «Qué pasa»** («Mundo nuevo. Semilla …») queda en el idioma en que se escribió: son entradas guardadas, no rótulos. Está bien así, pero conviene saberlo.
 
 ## 10. Huecos y mejoras propuestas
@@ -2092,3 +2174,22 @@ Filas 1-14 de `docs/04_auditorias/investigacion_s4/03_propuesta.md`, aprobadas p
 | 14 | **Ocasiones jugables en el partido del DT**: en las 3-6 llegadas claras, pausa y eliges pase, conducción o tiro con la cámara a pie de campo | alta | L | `nucleo/partido*.gd`, `nucleo/motor_libre.gd` (`tomar_control`), `ui/partido_vivo*.gd`, `visor/control_partido.gd` | pendiente |
 
 Exportar e importar la partida (fila 30 de la propuesta, §10 «Guardado en la nube») ya está hecho: Ajustes → Partida (`ui/pantallas/pantalla_ajustes_p1.gd`, `_exportar_partida` y `_importar_partida`). Queda la nube.
+
+- (27-10) Paradero Red rehecho según las fotos del dueño (`visor/paradero_red.gd`, tabla `datos/paraderos_red.json`); la sesión líder conecta `RecorridosRed` al cartel al unir. Correas de mochila planas pegadas al torso (falta captura de frente). Sillón de oficina en despacho DT/presidente (`visor/sillon_oficina.gd`; faltan capturas sin avatar). Pelo Drive a ~4500 tris: falta revisar los 11 peinados uno a uno (hoja antes/después) antes de usarlos en futbolistas. Pasto: pendiente.
+- (27-10) Revisión del pelo Drive, 11 peinados a 1,5 m (`docs/04_auditorias/capturas_personajes/pelo_drive_revision_11.jpg`, filas: 73,74,77,79,80,68,28,60,117,33,36; izquierda = Quaternius, derecha = Drive): solo quedan el 80 (rizado) y el 68 (flequillo); los otros 9 se descartaron (casco, ojos tapados, huecos). No hay pelo Drive femenino ni en futbolistas. Para más variedad: elegir otros del OBJ con la misma vara (de cerca, MEJOR que Quaternius).
+- (27-10) Pasto del Drive (`visor/pasto_ciudad.gd`): matas `mata_1/2.glb` con MultiMesh por celdas de 24 m, ocultas a 42 m, sin sombra; en parques (borde y manchones, fuera de cancha, lago y paseos) y orillas del río. Captura `capturas_ciudad_c2/pasto_antes_despues.jpg` (arriba antes, abajo después). PASTO_DRIVE=0 lo apaga. Densidad subida (bordes de paseos, pie de árboles, orillas cada 1,6 m, huecos entre casas) y tono llevado al verde del parque. Ya también en patios de manzana, feria y finca grande. COSTE medido (cámara de parque, software): +90 mil triángulos (3,89 M → 3,98 M, +2 %) y +22 llamadas de dibujo con 15.776 matas sembradas gracias al corte a 42 m. Falta: mirar FPS en hardware real
+- (27-10) 327 Celebración de trofeo en 3D (`visor/celebracion_trofeo.gd`, test `p6_celebracion_trofeo`, captura `capturas_personajes/celebracion_trofeo.jpg`): el once se junta en el círculo, el capitán (nunca el portero) levanta la copa del título (`TrofeoModelo`), confeti, vuelta olímpica por la pista con el equipo detrás, grada de pie y saltando, panorámica final. Se lanza sola al ganar un título (`vistas_menu._ver_vuelta_olimpica`; se apaga con la clave `vuelta_olimpica`; nunca en headless ni con otro 3D abierto). Pulir: el plano del segundo 12 pasa por el túnel; la copa podría ir más arriba en la vuelta.
+- (27-10) M-186 edificios entrables: 5 salas propias nuevas para los comercios que abrían una tienda/oficina genérica (`interior_instalacion_p7.gd`: farmacia, banco, hotel, ferretería, floristería; `SALA_DE_ROTULO` las enlaza; captura `capturas_ciudad_c2/salas_comercio_nuevas.jpg`, test `p6_salas_comercio`). Correos, Deportes, Pizzería y Heladería también (`salas_comercio_nuevas2.jpg`) y la Peña del club (`sala_pena_club.jpg`). Hotel algo vacío: añadir habitaciones arriba.
+- (28-10) M-183 rutinas de peatones por hora y barrio (`visor/rutina_peatones.gd`, test `p6_rutina_peatones`, captura `capturas_ciudad_c2/rutinas_peatones_sur.jpg`: arriba antes, abajo después; barrio sur a las 8 y a las 13 h): curvas de densidad por sector de `RecorridosRed`, +25 % de prisa en hora punta, -15 % paseando y más paradas a la hora de comer; se apaga con `RUTINA_PEATONES=0`. FLUJO DIRECCIONAL hecho (`RutinaPeatones.sentido/factor_flujo`: a contramano de la hora sale menos gente; medido en el barrio sur, solo peatones de rumbo claro: a las 8 h antes 23 hacia el trabajo y 17 de vuelta, ahora 22 y 11; a las 18 h antes 31 y 23, ahora 18 y 21). Maletines en hora punta hechos (`PeatonVida.maletin`, `capturas_personajes/peatones_maletin.jpg`). Mochilas por hora hechas (`PeatonVida.mochila`, `RutinaPeatones.lleva_mochila`; medido en el barrio sur: 35 de 92 a las 8 h, 20 de 61 a las 11 h, 0 a las 2 h). Pendiente: que `ParaguasVida` y las rutinas compartan la velocidad base (hoy se multiplican).
+- (28-10) Autobús: las puertas del modelo pasan al lado de la ACERA (−X; el bus mira a +Z) y los pasajeros suben/bajan por ahí (`city_builder_p10.autobus`, `PasajerosBus.parada`); comprobado con la cámara (`pruebas/captura_bus_puerta.gd`: la puerta nueva queda 2,6 m más cerca de la espera). Paraderos: los 124 miran a la calzada (`pruebas/captura_paraderos_orient.gd`, 0 mal orientados); hoja `capturas_ciudad_c2/paraderos_por_sector.jpg` (izq. = frente, der. = espalda). Dato para la tabla de recorridos: un paradero en x=454 (sector 300 según `sector_de`) lleva el código PA1002 (sector 100).
+- (28-10) Peatones que SUBEN de verdad al bus (orden 14): ahora caminan a la puerta del lado de la acera, suben el escalón y se adentran por el pasillo (los que bajan salen del pasillo por la puerta a la acera). Captura `capturas_ciudad_c2/peatones_suben_bus_antes_despues.jpg` (filas 1-2 antes: puerta del lado de la calzada, rodean el bus y desaparecen tras él; filas 3-4 después), escena `pruebas/captura_subir_bus.gd` (`BUS_PUERTA_ANTIGUA=1` pone el modelo de antes). Pendiente: que los trenes y el teleférico hagan lo mismo (otra sesión).
+- (28-10) Autobús (orden 13): modelo sacado a `visor/autobus_modelo.gd` con librea «Red» (blanco con faldón rojo y filete del color del recorrido), ruedas a escala con llanta, pasos de rueda, parabrisas inclinado y espejos; el bus para con la PUERTA DELANTERA frente al paradero (`BusesRed.PUERTA_ADELANTE`: la parada se adelanta 4,6 m); los pasajeros esperan BAJO EL TECHO del paradero (`PasajerosBus.sitio_espera`). Captura `peatones_suben_bus_antes_despues.jpg` (arriba antes, abajo después, cámara a 1,7 m). Hecho también: montantes negros entre ventanas, faros y luces traseras (`bus_red_modelo.jpg`). Pendiente: cristal con reflejo, y mismo tratamiento para el metro y el tren.
+- (28-10) Paraderos de noche revisados (`capturas_ciudad_c2/paraderos_de_noche.jpg`, 22:00, un paradero por sector): cabecera, cartel y panel se leen (emisivos); tubo fluorescente bajo el techo añadido. Falta que el paradero ilumine la acera (una luz real sería cara en 124 paraderos: valorar proyector falso en el suelo).
+- (28-10) Pelo Drive, 2.ª ronda (`capturas_personajes/pelo_drive_revision_ronda2.jpg`, filas: 78,81,83,63,92,55,57,61,59,69): solo entra el 59 (rizado corto); los demás tapan los ojos, dejan la nuca pelada o con huecos. Hoy hay 3 peinados masculinos (80, 68, 59) y ninguno femenino; los 105 del OBJ ya se han mirado a vista de pájaro, el resto son largos/coletas/trenzas.
+- (28-10) Teleférico con gente que sube y baja (`visor/pasajeros_teleferico.gd`, test `p6_pasajeros_teleferico`, captura `capturas_ciudad_c2/teleferico_gente.jpg`): al llegar la cabina a la estación de abajo bajan dos personas por la puerta y cruzan el andén; unos segundos después suben otras dos desde la plaza y entran. Metro (`MetroCiudad._planear_embarque`) y Estación Central (`PasajerosEstacion`) ya tenían embarque; el tren del metro ya lleva carrocería de acero, bogies, interior y rótulos (`TrenDetalle`), así que no se le aplica la librea Red (es «Metro», no Red). Pendiente: gente que suba a la cabina de ARRIBA y que se vea el cambio de viajeros dentro de la cabina.
+- (28-10) M-174 interior del coche: ya existía `CabinaCoche` (salpicadero, volante con manos, retrovisor, pilares; captura `capturas_ciudad_c2/cabina_coche_3d.jpg`, tecla V: capó / primera persona); queda el `VolanteUI` 2D solo para el mando táctil. M-177 gasolinera con LAVADO DE AUTOS y APARCAMIENTO (`visor/ciudad_lavado.gd`, captura `gasolinera_lavado_aparcamiento.jpg`): túnel de 18 m con rodillos y cepillo que giran (grupo `lavado_giratorio`, para que `Optimizar.agrupar` no los funda), espuma, rótulo y semáforo; 8 plazas numeradas con 3 coches de la flota. Pendiente: lavar de verdad el coche del DT (suciedad + E en el túnel) y plazas «usables» para aparcar el coche propio.
+- (28-10) M-170 semáforos peatonales con botón (`visor/semaforos.gd`, test `p6_semaforo_peatonal`, captura `capturas_ciudad_c2/semaforo_peatonal.jpg`: arriba rojo, abajo verde): en cada poste una cabeza peatonal por eje (rojo / verde / verde intermitente los últimos 4 s) y un botón amarillo a 1,1 m; a pie, E junto al poste pide el verde (llega en ~2 s) o avisa de que ya se puede cruzar (`pedir`/`pedir_con_aviso`; el ciclo es COMPARTIDO por todos los cruces, así que adelanta el de toda la ciudad). Pendiente: que los peatones de `TraficoCiudad` respeten la fase peatonal (hoy ceden paso por distancia a los coches, no por la luz) y botón por cruce en vez del ciclo global.
+- (28-10) M-168 rotonda (`visor/ciudad_rotonda.gd`, captura `capturas_ciudad_c2/rotonda_antes_despues.jpg`, arriba antes con semáforos, abajo después): en el cruce avenida × avenida (-660, 330), uno de los 38 que NO tiene ninguna ruta de coches a menos de 16 m (así no rompe la red): se le quita el semáforo y se levanta isla de 6,5 m con bordillo, monumento, arbustos y árboles, anillo asfaltado con rayas, señales de ceda el paso y flechas de giro antihorario; la isla es obstáculo sólido (`CityBuilder.circulos`). `SIN_ROTONDA=1` la apaga. Pendiente: una rotonda con TRÁFICO (desviar las rutas por el círculo; hay que reconstruir las paradas y los controles de las rutas que pasan por el cruce) y quitar de la lista de semáforos peatonales los botones de ese cruce.
+- (28-10) M-193 flores (`PastoCiudad.flores`, captura `capturas_ciudad_c2/flores_antes_despues.jpg`, izquierda antes y derecha después): una de cada dos matas del parque, los patios y la feria es el centro de un ramillete de 9 flores de cinco colores (tallo + cabeza con color por instancia), MultiMesh por celdas con corte a 38 m; coste medido +1,1 % de triángulos (4,28 M → 4,33 M) y +4 llamadas. `SIN_FLORES=1` las apaga. Pendiente: setos con flor y enredaderas en fachadas.
+- (28-10) M-182 tarjeta de transporte Red (`CarteraDT.saldo_transporte/TARIFAS/recargar_transporte/pagar_pasaje`, test `p6_tarjeta_transporte`; `VidaCiudad.usar_billetes/cobrar_pasaje`): las máquinas de billetes de los andenes (E) recargan 5 € de la cartera; entrar al metro cuesta 1 € y subir al teleférico 3 €, de la tarjeta; sin saldo no se sube y avisa. Se guarda en la partida (`transporte`). Sin captura (es texto de diálogo). Pendiente: cobrar también el bus cuando el DT suba a uno (hoy solo suben figurantes), mostrar el saldo en la app «Red» del móvil y abono mensual.
+- (28-10 cierre) Quedan de la sesión 3: peatones NPC que respeten la fase peatonal; rotonda con tráfico real; metro y tren con librea (no «Red»); luz de acera en paraderos; reflejo de farolas en los charcos de noche; el pasaje solo lo cobra el bus del DT; saldo de la tarjeta en la app «Red». Ver `docs/04_auditorias/sesion_3_cierre_28-10.md`.

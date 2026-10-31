@@ -25,7 +25,7 @@ func _semana_memoria_del_partido(ya_jugado: Partido) -> void:
 		## El partido de liga que se simuló sin dirigirlo: solo rachas.
 		var gf_s := int(_marcador_liga_semana[0])
 		var gc_s := int(_marcador_liga_semana[1])
-		logros.tras_partido_simulado(gf_s > gc_s, gf_s == gc_s)
+		logros.tras_partido_simulado(gf_s > gc_s, gf_s == gc_s, gf_s, gc_s)
 	_marcador_liga_semana = []
 	## El interinato se cuenta en fechas, no en semanas: `fechas_interinato_
 	## restantes()` las saca del propio calendario de la liga, así que llamar de
@@ -71,7 +71,8 @@ func _semana_lesion_insolita() -> void:
 var imprevistos: Imprevistos = Imprevistos.new()
 
 func _semana_imprevisto() -> void:
-	var nuevo := imprevistos.semana(self, mi_club(), anio, semana, bool(normas.get("queda", false)))
+	var nuevo := imprevistos.semana(self, mi_club(), anio, semana, bool(normas.get("queda", false)),
+		necesidades.factor_riesgo() if necesidades != null else 1.0)
 	if nuevo.is_empty() or prensa == null:
 		return
 	var txt := String(nuevo["texto"]) + "."

@@ -1,0 +1,16 @@
+Juventus|ovalo|franjas|JUV|franjas|#000000|#ffffff|#ffffff|#000000
+Milan|escudo|cruz|MIL|franjas|#d50032|#000000|#ffffff|#000000
+Inter|circulo|aro|INT|franjas|#0067b1|#000000|#000000|#0067b1
+Napoli|circulo|liso|NAP|liso|#199fda|#ffffff|#ffffff|#199fda
+Roma|escudo|liso|ROM|liso|#8e1f2f|#f0bc42|#ffffff|#8e1f2f
+Lazio|circulo|liso|LAZ|liso|#75aadb|#ffffff|#ffffff|#75aadb
+Atalanta|escudo|liso|ATA|franjas|#1e71b8|#000000|#000000|#1e71b8
+Fiorentina|escudo|florlis|FIO|liso|#5c2d91|#ffffff|#5c2d91|#5c2d91
+Torino|escudo|liso|TOR|liso|#7a1f2b|#ffffff|#ffffff|#7a1f2b
+Bologna|circulo|franjas|BOL|franjas|#d50032|#0a2240|#ffffff|#0a2240
+Udinese|ovalo|franjas|UDI|franjas|#ffffff|#000000|#000000|#ffffff
+Sampdoria|ovalo|liso|SAM|franja_pecho|#0067b1|#ffffff|#0067b1|#0067b1
+Genoa|escudo|mitad|GEN|mitad|#d50032|#0a2240|#0a2240|#d50032
+Sassuolo|circulo|franjas|SAS|franjas|#00954c|#000000|#000000|#00954c
+Monza|clasico|liso|MON|liso|#d50032|#ffffff|#ffffff|#d50032
+Lecce|escudo|franjas|LEC|franjas|#ffd100|#d50032|#d50032|#ffd100

@@ -329,6 +329,7 @@ func _feria(r: Rect2) -> void:
 	## Suelo: césped, paseo central norte-sur, paseo este-oeste y la explanada
 	## de la entrada.
 	_lote("cesped", Vector3(c.x, 0.05, c.z), Vector3(r.size.x, 0.1, r.size.y))
+	PastoCiudad.rect(b, r, 0.1, 0.003, func(p: Vector3) -> bool: return absf(p.x - c.x) < 5.0 or absf(p.z - (c.z - 8.0)) < 5.0 or p.z < r.position.y + 16.0)   ## matas en la feria, fuera de los paseos y la entrada
 	_lote("acera", Vector3(c.x, 0.11, c.z - 4.0), Vector3(7.0, 0.1, r.size.y - 8.0))
 	_lote("acera", Vector3(c.x, 0.11, c.z - 8.0), Vector3(r.size.x - 8.0, 0.1, 6.0))
 	_lote("acera", Vector3(c.x, 0.11, r.position.y + 7.0), Vector3(24.0, 0.1, 14.0))
@@ -404,7 +405,7 @@ func _estatua_idolo(p: Vector3) -> void:
 		_bronce(n, bronce)
 	if nombre != "":
 		var l := Label3D.new()
-		l.text = "A %s\nídolo de %s" % [nombre, String(b.datos.get("club", {}).get("nombre", ""))]
+		l.text = Idiomas.t("A %s\nídolo de %s") % [nombre, String(b.datos.get("club", {}).get("nombre", ""))]
 		l.font_size = 48
 		l.pixel_size = 0.02
 		l.modulate = Color(0.95, 0.85, 0.55)

@@ -256,7 +256,9 @@ func _pintar_fondos(c: Club) -> void:
 		var n := p._texto(12, Principal.COL_ORO if vendido > 0 else Principal.COL_TEXTO)
 		n.text = Idiomas.t("%s  ·  %d años  ·  %s") % [j2.nombre, j2.edad, p._dinero(j2.valor)]
 		n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		n.clip_text = true
+		## Parte en dos líneas en vez de cortarse (M-467): junto a los botones de la fila no cabe ni en español.
+		n.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		n.custom_minimum_size.x = 60
 		fila.add_child(n)
 		if vendido > 0:
 			var v := p._texto(11, Principal.COL_ROJO)
@@ -275,7 +277,7 @@ func _pintar_fondos(c: Club) -> void:
 			b.clip_text = true
 			b.tooltip_text = Idiomas.t("%s  ·  vende el 25%% del próximo traspaso de %s") % [String(f[3]), j2.nombre]
 			b.custom_minimum_size = Vector2(120, 0)
-			b.pressed.connect(func() -> void:
+			DobleToque.conectar(b, Idiomas.t("¿Vender el 25 %? Toca otra vez"), func() -> void:   ## idea 1027: no se recompra
 				var p_local := ce.vender_participacion(j2, clave, 25, p.mundo.mi_club())
 				if p_local != "":
 					p._escribir("[color=#e05555]No se pudo: %s.[/color]" % p_local)

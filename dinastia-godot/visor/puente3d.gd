@@ -50,6 +50,7 @@ static func jugador(j: Jugador) -> Dictionary:
 		"forma": j.forma,
 		## Para celebrar el gol según su carácter (29-9-2026).
 		"rasgo": j.rasgo,
+		"pie": j.pie(), "pierna_debil": j.pierna_debil(),   ## para el pie malo en el motor (GestoTecnico, 27-10)
 		## PARA EL MOTOR REAL (13-10-2026): sin esto `MotorJugable` jugaba con
 		## los 22 a 60 de media -no le llegaba ni la media ni un atributo- y la
 		## calidad de la plantilla no influía en lo que pasaba en el césped.

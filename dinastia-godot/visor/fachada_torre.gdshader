@@ -8,6 +8,10 @@ uniform vec4 vidrio : source_color = vec4(0.14, 0.17, 0.2, 1.0);
 uniform vec2 celda = vec2(3.0, 3.6);
 uniform bool pared_de_instancia = false;   // el color de pared lo trae cada instancia del MultiMesh
 uniform float noche : hint_range(0.0, 1.0) = 0.0;
+// Apagón por sector (27-10-2026, §2.2g): 5x5 texels, rojo = el sector tiene corriente. Sector de un punto:
+// celda = round(x/110) (-12..12), sector = (celda+12)/6, como `RedesCiudad.sector_en`.
+uniform sampler2D luz_sectores : filter_nearest, repeat_disable;
+uniform bool usa_sectores = false;
 
 varying vec3 wpos;
 varying vec3 wnorm;
@@ -54,6 +58,10 @@ void fragment() {
 		ROUGHNESS = mix(0.85, 0.32, v);
 		METALLIC = v * 0.25;
 		float enc = step(0.6, h) * v * noche;
+		if (usa_sectores) {
+			ivec2 c = ivec2(round(wpos.xz / 110.0)) + ivec2(12);
+			enc *= texelFetch(luz_sectores, clamp(c / 6, ivec2(0), ivec2(4)), 0).r;
+		}
 		EMISSION = vec3(1.0, 0.82, 0.5) * enc * 1.0;
 	}
 }

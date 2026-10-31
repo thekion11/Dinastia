@@ -204,6 +204,143 @@ func _probar_async() -> void:
 	tel._adelantar("partido")
 	_comprobar(_m.reloj.dia == 5 and _m.reloj.hora() == VidaCiudad.HORA_PARTIDO, "y pasado el partido, no salta a la semana siguiente")
 	_comprobar(absf(_vista._hora - _m.reloj.hora_decimal()) < 0.01, "la luz de la ciudad siguió al móvil")
+	## EL SURTIDOR COBRA AL BOLSILLO DEL DT (pieza C de §2.2h), no al club.
+	if _v != null and _v._redes() != null and _m.roles != null:
+		var sr := _v._redes()
+		var surt: Dictionary = sr.surtidor(0)
+		if not surt.is_empty():
+			var club_saldo := _m.mi_club().saldo if _m.mi_club() != null else 0
+			_m.vida.combustible = 5.0
+			_m.roles.patrimonio = 500
+			_m.roles.cartera.efectivo = 0
+			var gas0: float = sr.modelo.gas[int(surt["id"])]
+			_v.usar_surtidor("surtidor_0", "normal")
+			_comprobar(_m.vida.combustible > 40.0 and _m.roles.patrimonio < 500, "repostar cobra de la cuenta del DT con la tarjeta sin contacto")
+			_comprobar((_m.mi_club().saldo if _m.mi_club() != null else 0) == club_saldo, "y el club no paga la gasolina")
+			_m.vida.combustible = 5.0
+			_m.roles.patrimonio = 0
+			var gas1: float = sr.modelo.gas[int(surt["id"])]
+			_v.usar_surtidor("surtidor_0", "normal")
+			_comprobar(_m.vida.combustible == 5.0 and is_equal_approx(float(sr.modelo.gas[int(surt["id"])]), gas1), "sin dinero no echa gasolina ni gasta existencias")
+			_m.roles.cartera.efectivo = 80
+			_v.usar_surtidor("surtidor_0", "normal")
+			_comprobar(_m.vida.combustible > 40.0 and _m.roles.cartera.efectivo < 80 and gas0 > 0.0, "con efectivo paga en efectivo")
+			## §2.5: dos combustibles; la E sin tipo abre el surtidor con los dos precios; la premium rinde más.
+			_m.vida.combustible = 5.0
+			_m.roles.patrimonio = 5000
+			_v.usar_surtidor("surtidor_0")
+			var panel_ok := is_instance_valid(_v._panel_cajero) and (_v._panel_cajero as PanelTienda).surtido.size() == 2
+			if is_instance_valid(_v._panel_cajero):
+				_v._panel_cajero.free()
+			_v.usar_surtidor("surtidor_0", "premium")
+			var lleno := _m.vida.combustible
+			_m.vida.gastar_combustible(10000.0)
+			var gasto_p := lleno - _m.vida.combustible
+			_m.vida.premium = false
+			_m.vida.combustible = lleno
+			_m.vida.gastar_combustible(10000.0)
+			var gasto_n := lleno - _m.vida.combustible
+			_comprobar(panel_ok and gasto_p < gasto_n, "el surtidor ofrece normal y premium, y la premium gasta menos (%.2f l contra %.2f l en 10 km)" % [gasto_p, gasto_n])
+			var id0 := int(surt["id"])
+			var gas_g: float = sr.modelo.gas[id0]
+			sr.modelo.gas[id0] = RedesCiudad.GAS_DEPOSITO * 0.1
+			var caro := sr.modelo.precio_litro(id0)
+			sr.modelo.gas[id0] = RedesCiudad.GAS_DEPOSITO * 0.9
+			var normal := sr.modelo.precio_litro(id0)
+			sr.modelo.gas[id0] = gas_g
+			_comprobar(caro > normal and is_equal_approx(normal, 1.4) and sr.modelo.precio_litro(id0, "premium") > normal, "el precio sube con pocas existencias (%.2f contra %.2f €/l) y la premium cuesta más" % [caro, normal])
+	## Sin cartera (mundo sin roles) la gasolina no sale gratis: la paga el club como antes.
+	if _v != null and _v._redes() != null and _m.mi_club() != null and not _v._redes().surtidor(0).is_empty():
+		var roles_guardados: Roles = _m.roles
+		_m.roles = null
+		_m.vida.combustible = 5.0
+		var saldo_sin := _m.mi_club().saldo
+		_v.usar_surtidor("surtidor_0", "normal")
+		_comprobar(_m.vida.combustible > 40.0 and _m.mi_club().saldo < saldo_sin, "sin cartera repostar lo paga el club (nunca sale gratis)")
+		_m.roles = roles_guardados
+	## LA VENTANILLA DEL BANCO está en la plaza y la E abre el panel de la sucursal.
+	if _v != null and _e != null and _e.cb != null and _m.roles != null:
+		var kb := ""
+		for pc: Dictionary in _e.cb.puntos_clic:
+			if String(pc.get("k", "")).begins_with("banco_"):
+				kb = String(pc["k"])
+				break
+		_comprobar(kb != "", "hay una sucursal bancaria (ventanilla) en la plaza mayor")
+		if kb != "":
+			_v.usar_banco(kb)
+			_comprobar(is_instance_valid(_v._panel_cajero) and (_v._panel_cajero as PanelCajero).ventanilla, "la E ante la ventanilla abre el panel en modo sucursal")
+			if is_instance_valid(_v._panel_cajero):
+				_v._panel_cajero.free()
+	## LOS CAJEROS están puestos en la ciudad y la E abre el panel.
+	if _v != null and _e != null and _e.cb != null and _m.roles != null:
+		var kc := ""
+		for pc: Dictionary in _e.cb.puntos_clic:
+			if String(pc.get("k", "")).begins_with("cajero_"):
+				kc = String(pc["k"])
+				break
+		_comprobar(kc != "", "hay cajeros automáticos puestos en la ciudad")
+		if kc != "":
+			_v.usar_cajero(kc)
+			_comprobar(is_instance_valid(_v._panel_cajero) and _v._panel_cajero.is_inside_tree(), "la E ante un cajero abre el panel")
+			if is_instance_valid(_v._panel_cajero):
+				_v._panel_cajero.free()
+			## §2.5: sin corriente en su sector, «fuera de servicio».
+			if _v._redes() != null:
+				var posc := Vector3.ZERO
+				for pc: Dictionary in _e.cb.puntos_clic:
+					if String(pc.get("k", "")) == kc:
+						posc = pc["pos"]
+				var sec := RedesCiudad.sector_en(posc.x, posc.z)
+				var luz0: Variant = _v._redes().modelo.luz.get(sec, true)
+				_v._redes().modelo.luz[sec] = false
+				_v.usar_cajero(kc)
+				_comprobar(not is_instance_valid(_v._panel_cajero), "sin corriente en su sector el cajero está fuera de servicio")
+				_v._redes().modelo.luz[sec] = luz0
+	## Las expendedoras puestas: ciudad (centro comercial, gasolineras, estación, estadio) y andenes del metro.
+	if _v != null and _e != null and _e.cb != null:
+		_v.poner_extras()
+		var n_mq := 0
+		for pc: Dictionary in _e.cb.puntos_clic:
+			if String(pc.get("k", "")).begins_with("expendedora_"):
+				n_mq += 1
+		_comprobar(n_mq >= 5, "hay expendedoras en la ciudad: centro comercial, gasolineras, estación y estadio (%d)" % n_mq)
+		_comprobar(_e.metro != null and not _e.metro.expendedoras.is_empty() and _e.metro.expendedora_cerca(_e.metro.expendedoras[0]) and not _e.metro.expendedora_cerca(_e.metro.expendedoras[0] + Vector3(10, 0, 0)), "los andenes del metro tienen su máquina y se detecta a menos de 2,2 m")
+	## LA EXPENDEDORA cobra de la cartera y sube la energía; el balón suelto del parque aparece.
+	if _v != null and _m.roles != null and _m.necesidades != null:
+		_m.roles.patrimonio = 100
+		_m.roles.cartera.cargo_pend = 0
+		_m.roles.cartera.efectivo = 0
+		_m.necesidades.energia_m = 30 * Necesidades.ESCALA
+		_v.usar_expendedora()
+		_comprobar(_m.necesidades.energia() == 45 and _m.roles.cartera.cuenta_eur(_m.roles) == 1197, "la expendedora cobra 3 € de la cartera y sube la energía de 30 a 45")
+		_m.roles.patrimonio = 0
+		_m.necesidades.energia_m = 30 * Necesidades.ESCALA
+		_v.usar_expendedora()
+		_comprobar(_m.necesidades.energia() == 30, "sin dinero la expendedora no da nada")
+	if _v != null:
+		_v.poner_balon()
+		_comprobar(is_instance_valid(_v._balon) and _v._balon.is_inside_tree(), "hay un balón suelto en el parque más cercano")
+	## LA TIENDA DE LA GASOLINERA: la E abre la caja; comprar cobra al DT (no al club) y baja el hambre.
+	if _v != null and _m.roles != null and _m.necesidades != null:
+		_m.roles.patrimonio = 100
+		_m.roles.cartera.cargo_pend = 0
+		_m.roles.cartera.efectivo = 0
+		_m.necesidades.hambre_m = 80 * Necesidades.ESCALA
+		var club_t := _m.mi_club().saldo if _m.mi_club() != null else 0
+		_v.usar_tienda()
+		_comprobar(is_instance_valid(_v._panel_cajero) and _v._panel_cajero is PanelTienda, "la E ante el mostrador abre la caja de la tienda")
+		_v._panel_cajero.free()
+		_v.comprar_surtido(TiendaGasolinera.SURTIDO[0])
+		_comprobar(_m.necesidades.hambre() < 80 and _m.roles.cartera.cuenta_eur(_m.roles) == 1196, "comprar un bocadillo (4 €, con tarjeta) baja el hambre")
+		_comprobar((_m.mi_club().saldo if _m.mi_club() != null else 0) == club_t, "y el club no paga la compra")
+		_m.necesidades.energia_m = 30 * Necesidades.ESCALA
+		_v.comprar_surtido(TiendaGasolinera.SURTIDO[4])
+		_comprobar(_m.necesidades.energia() == 45, "la bebida energética de la tienda sube la energía de 30 a 45")
+		_m.roles.patrimonio = 0
+		_m.roles.cartera.cargo_pend = 0
+		var h_antes := _m.necesidades.hambre()
+		_v.comprar_surtido(TiendaGasolinera.SURTIDO[0])
+		_comprobar(_m.necesidades.hambre() == h_antes, "sin dinero no se lleva nada")
 	tel.queue_free()
-	Principal.mundo_pregenerado = null
-	Principal.mundo_a_cargar = null
+	PedidoPartida.mundo_pregenerado = null
+	PedidoPartida.mundo_a_cargar = null

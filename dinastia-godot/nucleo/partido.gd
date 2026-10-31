@@ -185,11 +185,13 @@ func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 		return
 	j.amarillas += 1
 	if roja:
-		j.suspension = maxi(j.suspension, 1)
+		Disciplina.sanciona(j)
 		once_local.erase(j)
 		once_visita.erase(j)
 		invalidar_fuerza()
 	tarjeta.emit(j, roja, minuto)
+	if not roja and Disciplina.acumula(j):
+		decision_arbitral.emit(Disciplina.frase(j), minuto)
 
 ## Posesión, córners y faltas medidos en el césped.
 func fijar_estadisticas(pos_local: float, corners: Array, faltas_: Array, fueras_: Array = []) -> void:

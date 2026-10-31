@@ -38,6 +38,8 @@ import hashlib
 import historia_clubes
 import jugadores_guino
 import estadios_reales
+import aspecto_clubes
+import palmares_clubes
 import json
 import os
 import sys
@@ -58,6 +60,8 @@ TABLAS_DEL_PACK = [
     # La arquitectura del estadio de cada club real (`estadios_reales.py`):
     # en la base con el nombre ficticio, en el pack con el real.
     "ESTADIO_CLUB",
+    # El aspecto (escudo, uniforme, butacas) de cada club (`aspecto_clubes.py`): en la base con el nombre ficticio y sin siglas, en el pack con el real.
+    "ASPECTO_CLUB",
 ]
 
 # ---------------------------------------------------------------------------
@@ -610,7 +614,7 @@ def main():
     if os.path.exists(PACK):
         real = leer(PACK)["tablas"]
     else:
-        real = {k: base[k] for k in TABLAS_DEL_PACK}
+        real = {k: base[k] for k in TABLAS_DEL_PACK if k in base}
 
     errores = []
 
@@ -661,6 +665,12 @@ def main():
     hist_base, hist_pack = historia_clubes.tablas(CLUBES, limpiar)
     fic.update(hist_base)
     real.update(hist_pack)
+    # El palmarés real de cada club (`palmares_clubes.py`) cuelga de su fila de historia.
+    pal_fic, pal_real = palmares_clubes.tablas(CLUBES)
+    for nom, pal in pal_fic.items():
+        fic["HISTORIA_CLUBES"][nom]["palmares"] = pal
+    for nom, pal in pal_real.items():
+        real["HISTORIA_CLUBES"][nom]["palmares"] = pal
     base.pop("HISTORIA_REAL", None)
     fic["DATA_P1"] = renombrar(real["DATA_P1"])
     fic["DATA_P2"] = renombrar(real["DATA_P2"])
@@ -698,6 +708,7 @@ def main():
     todos = [f[0] for f in real["DATA_P1"] + real["DATA_P2"]] + \
         [f[0] for d in real["PAISES_LIGAS"].values() for f in d["clubes"]]
     real["ESTADIO_CLUB"] = {n: estadios_reales.ESTADIOS[limpiar(n)] for n in todos if limpiar(n) in estadios_reales.ESTADIOS}
+    fic["ASPECTO_CLUB"], real["ASPECTO_CLUB"] = aspecto_clubes.tablas(CLUBES, limpiar, todos)
 
     # Bolsas de nombres (viven solo en la base: no son datos reales).
     pools = base["POOLS_EU"]

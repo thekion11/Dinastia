@@ -24,14 +24,18 @@ const CALLE := 12.0
 ## LAS PIEZAS REPETIDAS, JUNTAS (30-10-2026, rendimiento). Coches aparcados, árboles y edificios
 ## del entorno eran ~860 mallas sueltas: ~420 llamadas de dibujo de las ~1.150 del plano de TV.
 ## Las iguales (misma malla, material y celda) pasan a un MultiMesh, como en la ciudad
-## (`Optimizar.agrupar`), pero sin la caja lejana: se ve exactamente igual. Se llama al terminar
-## de montar el estadio (después de teñir la grada).
+## (`Optimizar.agrupar`), pero sin la caja lejana: se ve exactamente igual. Lo usa la vista del estadio
+## del menú; en el partido lo hace `montar(..., true)` (junto con los cortes por distancia).
 static func agrupar(raiz: Node3D) -> void:
 	var e := raiz.get_node_or_null("EntornoEstadio") as Node3D if raiz != null else null
 	if e != null:
 		Optimizar.agrupar(e, false)
 
-static func montar(raiz: Node3D, est: Dictionary, niveles: int) -> Node3D:
+## Rebajas #2 y #3 del presupuesto del partido (27-10-2026): al acabar, `Optimizar.agrupar` (piezas quietas con la misma malla y materiales en un
+## MultiMesh por celda) y `Optimizar.distancias` (corte por distancia según el tamaño). Apagable para las capturas «antes».
+static var optimizar_partido := true
+
+static func montar(raiz: Node3D, est: Dictionary, niveles: int, optimizar := false) -> Node3D:
 	if raiz == null or raiz.get_node_or_null("EntornoEstadio") != null:
 		return null
 	var e := Node3D.new()
@@ -55,6 +59,10 @@ static func montar(raiz: Node3D, est: Dictionary, niveles: int) -> Node3D:
 	_aparcamiento(e, Vector3(0, 0, -(pz + BANDA * 0.5)), false, px * 1.4, rng)
 	_horizonte(e, cx, cz, rng)
 	_banderas(e, px, pz, est)
+	if optimizar and optimizar_partido:
+		e.set_meta("agrupado", Optimizar.agrupar(e))
+		e.set_meta("cortes", Optimizar.distancias(e))
+		OptimizarGrada.trocear(raiz)   ## M-345: las tribunas ya construidas, en trozos con su propia caja
 	return e
 
 ## Mástiles con las banderas del club en la plaza, delante de la tribuna

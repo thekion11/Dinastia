@@ -1,0 +1,16 @@
+Flamengo|ovalo|aro|FL|aros|#d50032|#000000|#ffffff|#d50032
+Palmeiras|circulo|liso|PA|liso|#006437|#ffffff|#ffffff|#006437
+Sao Paulo|escudo|franjas|SP|doble_faja|#ffffff|#d50032|#ffffff|#ffffff|#ffffff|#d50032
+Gremio|escudo|franjas|GR|franjas_tricolor|#0d80bf|#000000|#000000|#000000
+Corinthians|clasico|aro|CO|liso|#ffffff|#000000|#000000|#ffffff|#000000|#ffffff
+Santos|circulo|aro|SA|liso|#ffffff|#000000|#ffffff|#ffffff|#ffffff|#000000
+Fluminense|escudo|franjas|FU|franjas_tricolor|#7a1f2b|#00843d|#ffffff|#ffffff
+Botafogo|circulo|estrella|BO|franjas|#000000|#ffffff|#000000|#000000
+Cruzeiro|ovalo|estrella|CR|liso|#0038a8|#ffffff|#ffffff|#0038a8
+Atl. Mineiro|escudo|franjas|AM|franjas|#000000|#ffffff|#000000|#000000
+Internacional|ovalo|liso|IN|liso|#d50032|#ffffff|#ffffff|#d50032
+Vasco|clasico|banda|VA|sash|#000000|#ffffff|#000000|#000000
+Bahia|banderin|franjas|BAH|franjas_tricolor|#0038a8|#d50032|#ffffff|#0038a8
+Fortaleza|hex|franjas|FO|franjas_tricolor|#0038a8|#d50032|#0038a8|#0038a8
+Athletico PR|penta|franjas|AP|franjas|#d50032|#000000|#000000|#d50032
+Goiás|rombo|liso|GO|liso|#00843d|#ffffff|#ffffff|#00843d

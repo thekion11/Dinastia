@@ -168,6 +168,8 @@ func perfil(mi: Club, obras: Instalaciones = null) -> Dictionary:
 	for k: String in ["vallaCol", "focosCol"]:
 		if String(hecho().get(k, "")) != "":
 			p[k] = String(hecho()[k])
+	if String(hecho().get("asientoNivel", "por_nivel")) != "por_nivel":
+		p["asientoNivel"] = String(hecho()["asientoNivel"])
 	if String(hecho().get("ledPaleta", "marcas")) != "marcas":
 		p["ledPaleta"] = String(hecho()["ledPaleta"])
 	## Colores propios de las LED: mandan sobre la paleta elegida.

@@ -34,6 +34,9 @@ static func crear(principal: Node, modo: String) -> PanelObjetivos:
 	var p := PanelObjetivos.new()
 	p._principal = principal
 	p._modo = modo
+	## (28-10) La conexión a `vista_cambiada` se hace aquí una vez, no comprobándola en cada cuadro.
+	if principal != null and principal.has_signal("vista_cambiada") and not principal.is_connected("vista_cambiada", p._avisado):
+		principal.connect("vista_cambiada", p._avisado)
 	## Sin preferencia guardada: en pantallas estrechas (1280x720) arranca
 	## plegado; desplegado tapaba la ficha del jugador (MEGAPLAN fase 1).
 	var guardado: Variant = _leer("plegado_v2", null)
@@ -98,6 +101,10 @@ static func lista(mundo: Mundo, modo: String) -> Array[Dictionary]:
 		var local: bool = par[0] == c
 		var rival: Club = par[1] if local else par[0]
 		out.append({"icono": "⚽", "texto": "Próximo: %s %s" % ["vs" if local else "en casa de", Nombres.visible(rival.nombre)], "hecho": false})
+	## Los retos de la semana para ese partido (`RetosSemana`, semana 6 del plan).
+	if mundo.retos_semana != null:
+		for rt: Dictionary in mundo.retos_semana.activos:
+			out.append({"icono": "🎯", "texto": Idiomas.t(String(rt["texto"])), "hecho": false, "reto": true})
 	var hechas := misiones_hechas(modo)
 	var guion := Tutorial.guion(modo, Tutorial.contexto(mundo, c.nombre))
 	for p: Dictionary in guion["pasos"]:
@@ -240,9 +247,8 @@ func _avisado() -> void:
 
 func _process(delta: float) -> void:
 	_t += delta
-	if _principal != null and _principal.has_signal("vista_cambiada") and not _principal.is_connected("vista_cambiada", _avisado):
-		_principal.connect("vista_cambiada", _avisado)
 	if (not _mirar_ya and _t < 3.0) or _principal == null or not _principal.has_method("tutorial_hecho"):
+
 		return
 	_t = 0.0
 	_mirar_ya = false

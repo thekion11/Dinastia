@@ -188,7 +188,7 @@ func tras_partido(p: Partido, competicion: String = "Liga", publico: int = 0, po
 
 	_anotar_cara_a_cara(rival, mis_goles, sus_goles, gane, empate)
 	_anotar_rachas(gane, empate)
-	_anotar_carrera(gane)
+	_anotar_carrera(gane, empate, mis_goles, sus_goles)
 	_anotar_records(rival, mis_goles, sus_goles, competicion, publico)
 	_anotar_participaciones(p, soy_local)
 
@@ -206,17 +206,20 @@ func tras_partido(p: Partido, competicion: String = "Liga", publico: int = 0, po
 ## Un partido de tu club que NO dirigiste (simulado por la jornada): no trae
 ## el once ni los goleadores, pero el marcador basta para las rachas. Sin esto,
 ## quien simula toda la temporada veía «RACHAS» a 0 en Récords.
-func tras_partido_simulado(gane: bool, empate: bool) -> void:
+func tras_partido_simulado(gane: bool, empate: bool, gf: int = 0, gc: int = 0) -> void:
 	if mundo == null or mundo.mi_club() == null:
 		return
 	_anotar_rachas(gane, empate)
-	_anotar_carrera(gane)
+	_anotar_carrera(gane, empate, gf, gc)
 	revisar()
 
-func _anotar_carrera(gane: bool) -> void:
+## M-311: también empates, derrotas y goles (el resumen «TU CARRERA» de Legado). Las partidas viejas solo traen pj y pg.
+func _anotar_carrera(gane: bool, empate: bool = false, gf: int = 0, gc: int = 0) -> void:
 	carrera["pj"] = int(carrera.get("pj", 0)) + 1
-	if gane:
-		carrera["pg"] = int(carrera.get("pg", 0)) + 1
+	var clave := "pg" if gane else ("pe" if empate else "pp")
+	carrera[clave] = int(carrera.get(clave, 0)) + 1
+	carrera["gf"] = int(carrera.get("gf", 0)) + gf
+	carrera["gc"] = int(carrera.get("gc", 0)) + gc
 
 ## Levantar un título. Es lo más caro del perfil de gestor y lo único que llena
 ## la vitrina, y además se NOTA en el club: la hinchada se vuelca, llegan socios

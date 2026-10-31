@@ -145,7 +145,9 @@ func _colocar() -> void:
 
 func _process(delta: float) -> void:
 	_t += delta
-	queue_redraw()
+	if is_visible_in_tree():   ## (28-10) en una pestaña oculta no se redibuja
+		queue_redraw()
+
 
 func _estado(clave: String) -> String:
 	if _e.dt_tiene(clave):

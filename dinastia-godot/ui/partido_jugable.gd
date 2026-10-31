@@ -3,7 +3,6 @@ extends "res://ui/partido_jugable_p1.gd"
 ## [Capa 2/2 de `partido_jugable.gd`] _montar_hud, _ver_hud, ceremonia_activa, saltar_ceremonia, _silbato, _fin_ceremonia … (+10)
 
 func _montar_hud() -> void:
-	## Marcador arriba a la izquierda.
 	var caja := PanelContainer.new()
 	caja.add_theme_stylebox_override("panel", _panel(LIMA))
 	caja.position = Vector2(24, 18)
@@ -16,7 +15,6 @@ func _montar_hud() -> void:
 	h.add_child(_marcador)
 	_reloj = _etiqueta(22, LIMA)
 	h.add_child(_reloj)
-	## Tus números, arriba a la derecha.
 	var caja2 := PanelContainer.new()
 	caja2.add_theme_stylebox_override("panel", _panel(FUCSIA))
 	caja2.set_anchors_preset(Control.PRESET_TOP_RIGHT)
@@ -171,9 +169,7 @@ func _montar(duracion_mitad: float) -> void:
 	_vp = SubViewport.new()
 	_vp.own_world_3d = true
 	cont.add_child(_vp)
-	## Mismos acabados que el partido del modo entrenador (antialias, sombras,
-	## debanding): antes aquí solo había un MSAA suelto y la grada se veía
-	## rayada a la rasante.
+	## Mismos acabados que el partido del modo entrenador (antialias, sombras, debanding).
 	Calidad.aplicar_viewport(_vp, Calidad.elegida)
 	_raiz = Node3D.new()
 	_vp.add_child(_raiz)
@@ -183,12 +179,10 @@ func _montar(duracion_mitad: float) -> void:
 	Ambience.apply(_raiz, perfil, null, Calidad.elegida)
 	StadiumBuilder.build_pitch(_raiz, perfil, local)
 	StadiumBuilder.build(_raiz, perfil, int(perfil.get("aforo", 20000)), 0.8, local._hash_id(), local)
-	EntornoEstadio.montar(_raiz, perfil, StadiumBuilder.niveles_de(perfil, int(perfil.get("aforo", 20000))))
+	EntornoEstadio.montar(_raiz, perfil, StadiumBuilder.niveles_de(perfil, int(perfil.get("aforo", 20000))), true)
 	OlaGrada.piel_de_pais(_raiz, local.pais)
 	OlaGrada.colores_club(_raiz, Color(local.color1), Color(local.color2))
-	EntornoEstadio.agrupar(_raiz)   ## piezas repetidas del entorno en MultiMesh (rendimiento)
-	## Lo que el modo entrenador ya tenía y aquí faltaba: la lluvia o la nieve,
-	## la pantalla gigante y camarógrafos/guardias de verdad en vez de maniquíes.
+	## Como el modo entrenador: lluvia o nieve, pantalla gigante y camarógrafos/guardias de verdad.
 	var gp := StadiumBuilder.geom_de_forma(String(perfil.get("forma", "oval")))
 	if String(perfil.get("techo", "")) != "retractil":
 		Precipitacion.montar(_raiz, String(perfil.get("clima", "noche")), float(gp["dx"]), float(gp["dz"]), Calidad.elegida)
@@ -232,8 +226,8 @@ func _montar(duracion_mitad: float) -> void:
 	if _camarografos != null:
 		_camarografos.balon = balon
 	motor = MotorJugable.new()
-	add_child(motor)
-	motor.duracion_mitad = duracion_mitad
+	add_child(motor); ControlesTactiles.poner(self)   ## M-433: stick y botones en el teléfono
+	motor.duracion_mitad = duracion_mitad; GestoTecnico.fijar_clima(motor, String(perfil.get("clima", "")))   ## el clima pesa en el juego
 	motor.preparar(lista, balon, yo.id if yo != null else "", hash(local.id + visita.id))
 	## La cabeza de cada jugador sigue al balón (M-098, como en el modo DT).
 	MiradaBalon.poner(motor.jugadores, balon)
@@ -253,8 +247,7 @@ func _montar(duracion_mitad: float) -> void:
 	motor.remate.connect(func(_l: bool, autor: String, _t: String) -> void:
 		if autor != "":
 			_tiros_de[autor] = int(_tiros_de.get(autor, 0)) + 1)
-	## La repetición graba siempre los últimos segundos (dentro del mundo 3D:
-	## sus cámaras son del SubViewport).
+	## La repetición graba siempre los últimos segundos (sus cámaras son del SubViewport).
 	_repe = Repeticion.new()
 	_raiz.add_child(_repe)
 	_repe.setup(motor.jugadores, balon)
@@ -278,8 +271,7 @@ func _montar(duracion_mitad: float) -> void:
 	else:
 		_silbato()
 
-## La cámara va detrás de tu jugador, mirando hacia el arco rival; en los
-## lanzamientos, detrás del balón.
+## La cámara va detrás de tu jugador, mirando al arco rival; en los lanzamientos, detrás del balón.
 func _actualizar_camara(delta: float) -> void:
 	var foco: Vector3
 	var d := 1.0 if not motor.tanda.is_empty() else MotorJugable.dir_ataque(_es_local_usuario)
@@ -299,9 +291,8 @@ func _actualizar_camara(delta: float) -> void:
 		var dir := motor.direccion_apunte()
 		detras = -dir * 10.0 + Vector3(0, 8.5, 0)
 		mira = foco + dir * 18.0
-	## EL PORTERO (Carrera, 25-10-2026): detrás de su arco y por encima de la red,
-	## mirando al campo entre él y el balón (detrás de él a ras del campo quedaba
-	## fuera de cuadro, debajo de la cámara). Ahí el límite es el de detrás del arco.
+	## EL PORTERO (Carrera, 25-10-2026): detrás de su arco y por encima de la red, mirando al campo entre él y el
+	## balón (a ras del campo quedaba fuera de cuadro). Ahí el límite es el de detrás del arco.
 	var lim := Vector3(33.0, 0, 51.0)
 	var gk := not motor.usuario.is_empty() and bool(motor.usuario["por"]) and not motor.apuntando and motor.estado != "saque"
 	if gk:
@@ -311,10 +302,8 @@ func _actualizar_camara(delta: float) -> void:
 		mira = yo + Vector3((motor.balon.position.x - yo.x) * 0.4, 0.5, d * clampf((motor.balon.position.z - yo.z) * d * 0.3, 8.0, 12.0))
 		lim.z = 60.5
 	var deseada := foco + detras
-	## LA CÁMARA NO SALE DEL CAMPO (29-9-2026). Pegada a la grada se veía el
-	## público de cerca -muñecos y textura estirada- y la tapaban las vallas.
-	## Si choca con el borde, en vez de atravesarlo sube: queda un plano
-	## picado, como la cámara de una transmisión en el fondo.
+	## LA CÁMARA NO SALE DEL CAMPO (29-9-2026): pegada a la grada se veían los muñecos y las vallas la tapaban.
+	## Si choca con el borde, sube: queda un plano picado, como la cámara de una transmisión en el fondo.
 	var fuera := maxf(absf(deseada.x) - lim.x, 0.0) + maxf(absf(deseada.z) - lim.z, 0.0)
 	deseada.x = clampf(deseada.x, -lim.x, lim.x)
 	deseada.z = clampf(deseada.z, -lim.z, lim.z)
@@ -326,9 +315,19 @@ func _abrev(nombre: String) -> String:
 	var n := Nombres.visible(nombre)
 	return n.substr(0, 3).to_upper() if n.length() > 3 else n.to_upper()
 
-## La guía con las teclas que el jugador haya configurado (Mando).
+## La guía con las teclas configuradas (Mando) del dispositivo de ahora (M-437): mando enchufado → sus botones; si no, teclado.
+## Se calcula una vez por estado (28-10): antes eran 8 consultas al mando y 8 traducciones por cuadro. `_guia_cache` se
+## vacía al cerrar Controles, por si se reasignó una tecla.
+var _guia_cache := {}
 func _guia_controles(con_balon: bool) -> String:
-	var c := func(a: String) -> String: return Mando.corto_de(a)
+	var disp := ControlFC.dispositivo_detectado()
+	var clave := "%s|%s|%s|%s" % [motor.estado == "tanda" and motor.tanda_me_toca_parar(), not motor.usuario.is_empty() and bool(motor.usuario["por"]), con_balon, disp]
+	if not _guia_cache.has(clave):
+		_guia_cache[clave] = _guia_controles_calc(con_balon, disp)
+	return _guia_cache[clave]
+
+func _guia_controles_calc(con_balon: bool, disp: String) -> String:
+	var c := func(a: String) -> String: return ControlFC.texto_ficha(a, disp)
 	## EL PORTERO (Carrera): sus controles, no los de campo (26-10-2026).
 	if motor.estado == "tanda" and motor.tanda_me_toca_parar():
 		return Idiomas.t("PENAL: stick ◀ ▶ elige el lado de la estirada · %s te quedas en el centro") % c.call("jugar_tiro")
@@ -370,8 +369,7 @@ func _actualizar_apunte() -> void:
 	_flecha.position = lugar + dir * (largo * 0.5 + 0.6) + Vector3(0, 0.05 + float(motor.apunte["loft"]) * 0.5, 0)
 	_flecha.rotation.y = atan2(dir.x, dir.z)
 
-## Lo que falta se juega solo (tu jugador en piloto automático), a toda
-## velocidad y sin pantalla.
+## Lo que falta se juega solo (tu jugador en piloto automático), a toda velocidad y sin pantalla.
 func _simular_resto() -> void:
 	if _pausa != null:
 		_pausa.queue_free()
@@ -401,7 +399,7 @@ func _alternar_pausa() -> void:
 		["🎮  Controles", func() -> void:
 			if _controles == null:
 				_controles = PanelControles.abrir(self)
-				_controles.cerrado.connect(func() -> void: _controles = null)],
+				_controles.cerrado.connect(func() -> void: _controles = null; _guia_cache.clear())],
 		["⏩  Simular lo que queda", _simular_resto],
 	])
 

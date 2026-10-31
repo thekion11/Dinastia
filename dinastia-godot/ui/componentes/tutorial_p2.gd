@@ -37,6 +37,16 @@ func _completar_escritura() -> void:
 		lbl.visible_characters = -1
 	_escribiendo = false
 
+const CAPA_BASICA := 3
+var _btn_saltar: Button
+
+## ¿Ya pasaron las CAPA_BASICA primeras misiones (las del paso actual cuentan si ya se vieron)?
+func _capa_basica_hecha() -> bool:
+	var vistas := 0
+	for k in mini(_i, _pasos.size()):
+		vistas += 1 if _pasos[k].has("mision") else 0
+	return vistas >= CAPA_BASICA
+
 func _terminar(completo: bool) -> void:
 	terminado.emit(completo)
 	queue_free()
@@ -139,6 +149,8 @@ func _colocar() -> void:
 	var obj := _objetivo()
 	if obj == null:
 		_marco.visible = false
+		if _flecha != null:
+			_flecha.visible = false
 		_poner_sombras(Rect2(pantalla * 0.5, Vector2.ZERO), pantalla, true)
 		_tarjeta.position = Vector2((pantalla.x - _tarjeta.size.x) * 0.5, maxf(8.0, pantalla.y - _tarjeta.size.y - 28.0))
 		return
@@ -149,6 +161,7 @@ func _colocar() -> void:
 	## El latido: el borde respira para que el ojo lo encuentre.
 	_marco.modulate.a = 0.65 + 0.35 * sin(_t * 5.0)
 	_poner_sombras(r, pantalla, false)
+	_flecha_mision(r)
 	## La tarjeta debajo del objetivo si cabe; si no, encima; si tampoco, al
 	## lado. Siempre dentro de la pantalla.
 	var ts := _tarjeta.size
@@ -162,6 +175,25 @@ func _colocar() -> void:
 	pos.x = clampf(pos.x, 8.0, maxf(8.0, pantalla.x - ts.x - 8.0))
 	pos.y = clampf(pos.y, 8.0, maxf(8.0, pantalla.y - ts.y - 8.0))
 	_tarjeta.position = pos
+
+## LA FLECHA DE LA MISIÓN (semana 7 del plan, 27-10-2026): un triángulo dorado que bota sobre el control que
+## hay que tocar (debajo si el control está pegado arriba), mientras la misión no esté cumplida.
+var _flecha: Polygon2D
+
+func _flecha_mision(r: Rect2) -> void:
+	if _flecha == null:
+		_flecha = Polygon2D.new()
+		_flecha.polygon = PackedVector2Array([Vector2(-13, -16), Vector2(13, -16), Vector2(0, 0)])
+		_flecha.color = COL_ORO
+		add_child(_flecha)
+	var mision := paso_actual().has("mision") and not _cumplidas.has(_i)
+	_flecha.visible = mision
+	if not mision:
+		return
+	var arriba := r.position.y > 40.0
+	var bote := absf(sin(_t * 5.0)) * 7.0
+	_flecha.scale = Vector2(1.0, 1.0 if arriba else -1.0)
+	_flecha.position = Vector2(r.get_center().x, r.position.y - 4.0 - bote) if arriba else Vector2(r.get_center().x, r.end.y + 4.0 + bote)
 
 func _mostrar(i: int) -> void:
 	if i >= _pasos.size():
@@ -178,6 +210,11 @@ func _mostrar(i: int) -> void:
 	_escribir(_lbl_texto, texto)
 	_lbl_progreso.text = "" if final else "%d / %d" % [_i + 1, _pasos.size() - 1]
 	_btn_atras.visible = _i > 0 and not final
+	## EL TUTORIAL POR CAPAS (semana 7 del plan, 27-10-2026): pasadas las CAPA_BASICA primeras misiones, «Saltar» pasa
+	## a «Lo demás, por mi cuenta»: el tutorial cuenta como hecho y lo que falta queda en el panel de objetivos (🧭),
+	## donde se marca solo al hacerlo.
+	if is_instance_valid(_btn_saltar):
+		_btn_saltar.text = Idiomas.t("Lo demás, por mi cuenta ▸") if _capa_basica_hecha() else Idiomas.t("Saltar")
 	_btn_sig.text = Idiomas.t("¡A jugar!") if final else Idiomas.t("Siguiente ▸")
 	_btn_extra.visible = final and _puede_dirigir()
 	_hecho_al_entrar = _hecho(paso)
@@ -304,12 +341,12 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	var botones := HBoxContainer.new()
 	botones.add_theme_constant_override("separation", 8)
 	v.add_child(botones)
-	var saltar := Button.new()
-	saltar.text = Idiomas.t("Saltar")
-	saltar.flat = true
-	saltar.add_theme_color_override("font_color", COL_SUAVE)
-	saltar.pressed.connect(func() -> void: _terminar(false))
-	botones.add_child(saltar)
+	_btn_saltar = Button.new()
+	_btn_saltar.text = Idiomas.t("Saltar")
+	_btn_saltar.flat = true
+	_btn_saltar.add_theme_color_override("font_color", COL_SUAVE)
+	_btn_saltar.pressed.connect(func() -> void: _terminar(_capa_basica_hecha()))
+	botones.add_child(_btn_saltar)
 	var empuje := Control.new()
 	empuje.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	botones.add_child(empuje)

@@ -135,7 +135,7 @@ static func sin_lejos(mi: GeometryInstance3D, distancia := DIST_CEJAS) -> void:
 
 ## Pone pelo, barba (si `barba`) y cejas a un jugador de `FutbolistaQ.crear()`.
 ## `corte`: uno de `Cara.CORTES`. Devuelve el nodo del que cuelga todo.
-static func poner(d: Dictionary, corte: String, color: Color, barba: bool) -> Node3D:
+static func poner(d: Dictionary, corte: String, color: Color, barba: bool, drive_id := -1) -> Node3D:
 	var esq: Skeleton3D = d.get("esqueleto")
 	if esq == null:
 		return null
@@ -149,7 +149,10 @@ static func poner(d: Dictionary, corte: String, color: Color, barba: bool) -> No
 	var desde_cabeza := esq.get_bone_global_rest(hueso).affine_inverse()
 	var piezas: Array = []
 	var fila: Array = DE_CORTE.get(corte, ["Hair_SimpleParted", 1.0])
-	if String(fila[0]) != "":
+	## El corte rapado de una MUJER usa su propia malla del pack (`Hair_BuzzedFemale`, que estaba sin usar): la de hombre no asienta en su cabeza.
+	if String(d.get("cuerpo", "male")) == "female" and String(fila[0]) == "Hair_Buzzed":
+		fila = ["Hair_BuzzedFemale", float(fila[1])]
+	if String(fila[0]) != "" and drive_id < 0:
 		piezas.append([String(fila[0]), float(fila[1])])
 	if barba:
 		piezas.append(["Hair_Beard", 1.0])
@@ -185,4 +188,7 @@ static func poner(d: Dictionary, corte: String, color: Color, barba: bool) -> No
 		t = t * Transform3D(_nodos.get(String(p[0]), Transform3D.IDENTITY))
 		mi.transform = t
 		anc.add_child(mi)
+	## Peinado del Drive del dueño (`PeloDrive`) en lugar del corte del pack.
+	if drive_id >= 0:
+		PeloDrive.poner(esq, anc, drive_id, color, String(d.get("cuerpo", "male")) == "female")
 	return anc

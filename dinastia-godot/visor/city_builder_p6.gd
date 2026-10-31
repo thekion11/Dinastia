@@ -69,7 +69,7 @@ func _cartel(pos: Vector3, texto: String, mio: bool) -> void:
 	add_child(poste)
 
 	var l := Label3D.new()
-	l.text = texto
+	l.text = Idiomas.t(texto)   ## M-333
 	## Letras de ~5 m: a la altura de cámara del mapa (165 m) se leen sin
 	## esfuerzo, y al bajar a mirar una parcela de cerca no tapan el edificio.
 	## A 9 m -el primer intento- los carteles eran más anchos que su parcela.
@@ -336,26 +336,34 @@ static func escala_real(esc: PackedScene) -> Vector3:
 	_escalas_reales[ruta] = res
 	return res
 
+static var _mats_coche := {}   ## (textura, tinte) → material compartido de los coches fbx
 ## Un coche de la flota, ya con el morro hacia +Z y a su escala.
 static func instanciar_coche(par: Dictionary, rng: RandomNumberGenerator = null) -> Node3D:
 	var modelo: Node3D = (par["esc"] as PackedScene).instantiate()
 	if not bool(par.get("fbx", false)):
 		modelo.scale = escala_real(par["esc"])
+		CocheDetalle.vestir(modelo, modelo.scale)   ## pintura de coche, placas, faros y retrovisores (27-10-2026)
 		return modelo
 	var raiz := Node3D.new()
 	raiz.add_child(modelo)
 	## Z arriba -> Y arriba (90° en X) y morro de -X a +Z (90° en Y).
 	modelo.basis = Basis(Vector3.UP, PI * 0.5) * Basis(Vector3.RIGHT, PI * 0.5)
 	raiz.scale = Vector3.ONE * float(par["escala"])
-	var mat := StandardMaterial3D.new()
-	if par.get("tex") != null:
-		mat.albedo_texture = par["tex"]
-	## Cada coche de un color: la textura lleva el detalle y el tinte la pintura.
+	## Cada coche de un color: la textura lleva el detalle y el tinte la pintura. Un material por (textura, tinte), compartido
+	## entre todos los coches iguales (28-10): antes cada coche traía el suyo y rompía los lotes de dibujo.
 	var tintes := [Color.WHITE, Color(0.85, 0.2, 0.18), Color(0.2, 0.35, 0.75), Color(0.2, 0.2, 0.22), Color(0.75, 0.75, 0.78), Color(0.9, 0.75, 0.2), Color(0.25, 0.5, 0.3)]
-	if rng != null:
-		mat.albedo_color = tintes[rng.randi() % tintes.size()]
-	mat.roughness = 0.35
-	mat.metallic = 0.3
+	var k := (rng.randi() % tintes.size()) if rng != null else 0
+	var clave := "%s|%d" % [str(par.get("tex")), k]
+	if not _mats_coche.has(clave):
+		var mat := StandardMaterial3D.new()
+		if par.get("tex") != null:
+			mat.albedo_texture = par["tex"]
+		if rng != null:
+			mat.albedo_color = tintes[k]
+		mat.roughness = 0.35
+		mat.metallic = 0.3
+		_mats_coche[clave] = mat
+	var mat: StandardMaterial3D = _mats_coche[clave]
 	for mi in modelo.find_children("*", "MeshInstance3D", true, false):
 		(mi as MeshInstance3D).material_override = mat
 	return raiz

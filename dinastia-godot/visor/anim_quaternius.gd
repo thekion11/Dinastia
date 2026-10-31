@@ -2,8 +2,7 @@ class_name AnimQuaternius
 extends "res://visor/anim_quaternius_p2.gd"
 ## [Capa 3/3 de `anim_quaternius.gd`] rabia, senalar_falta, falta_barrida, dolor, _firma, parado … (+11)
 
-## La rabia: cabeza atrás mirando al cielo, brazos que caen de golpe y una
-## patada al aire.
+## La rabia: cabeza atrás mirando al cielo, brazos que caen de golpe y una patada al aire.
 static func rabia(esq: Skeleton3D, prefijo: String) -> Animation:
 	var a := _nueva(1.8, false)
 	_pista(a, esq, "espalda2", [[0.0, Vector3.ZERO], [0.35, Vector3(-16, 0, 0)], [0.9, Vector3(10, 0, 0)], [1.8, Vector3.ZERO]], prefijo)
@@ -18,8 +17,7 @@ static func rabia(esq: Skeleton3D, prefijo: String) -> Animation:
 	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.8, Vector3(0, -0.03, 0)], [1.05, Vector3(0, -0.04, 0.02)], [1.4, Vector3.ZERO], [1.8, Vector3.ZERO]], prefijo, true)
 	return a
 
-## El árbitro señala la falta: brazo derecho extendido hacia el costado, a la
-## altura del hombro, y lo sostiene.
+## El árbitro señala la falta: brazo derecho extendido hacia el costado, a la altura del hombro, y lo sostiene.
 static func senalar_falta(esq: Skeleton3D, prefijo: String) -> Animation:
 	var a := _nueva(1.8, false)
 	_pista(a, esq, "brazo_d", [[0.0, Vector3(0, 0, -6)], [0.3, Vector3(-6, 0, -80)], [1.5, Vector3(-6, 0, -82)], [1.8, Vector3(0, 0, -6)]], prefijo)
@@ -28,8 +26,7 @@ static func senalar_falta(esq: Skeleton3D, prefijo: String) -> Animation:
 	return a
 
 ## La barrida: la cadera baja casi al suelo, la pierna de delante estirada
-## hacia el balón y la de atrás recogida debajo; el tronco se echa atrás y un
-## brazo busca el suelo.
+## hacia el balón y la de atrás recogida debajo; el tronco se echa atrás y un brazo busca el suelo.
 static func falta_barrida(esq: Skeleton3D, prefijo: String) -> Animation:
 	var a := _nueva(1.2, false)
 	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.3, Vector3(0, -0.56, 0.15)], [0.85, Vector3(0, -0.58, 0.25)], [1.2, Vector3(0, -0.2, 0.2)]], prefijo, true)
@@ -99,8 +96,7 @@ static func _pierna(a: Animation, esq: Skeleton3D, mus: String, rod: String, pie
 	_pista(a, esq, pie, kp, prefijo)
 
 ## Ciclo de zancada, mismo diseno de 4 tiempos que `AnimMixamo.correr()`
-## (contacto -> apoyo -> impulso -> recogida), recalibrado a los ejes de
-## este esqueleto.
+## (contacto -> apoyo -> impulso -> recogida), recalibrado a los ejes de este esqueleto.
 static func correr(esq: Skeleton3D, prefijo: String, dur: float, f: float) -> Animation:
 	var a := _nueva(dur, true)
 	var t1 := dur * 0.25
@@ -155,8 +151,7 @@ static func _relajar_dedos(anim: Animation, esq: Skeleton3D, cuanto: float) -> A
 			a.track_set_key_value(t, k, q.slerp(reposo, cuanto))
 	return a
 
-## El reposo del clip abre los brazos como un superhéroe: se acercan al
-## cuerpo `ang` radianes (giro local sobre Z del brazo).
+## El reposo del clip abre los brazos como un superhéroe: se acercan al cuerpo `ang` radianes (giro local sobre Z del brazo).
 static func _brazos_al_cuerpo(anim: Animation, ang: float) -> Animation:
 	for t in anim.get_track_count():
 		if anim.track_get_type(t) != Animation.TYPE_ROTATION_3D:
@@ -169,6 +164,54 @@ static func _brazos_al_cuerpo(anim: Animation, ang: float) -> Animation:
 		for k in anim.track_get_key_count(t):
 			var q: Quaternion = anim.track_get_key_value(t, k)
 			anim.track_set_key_value(t, k, q * giro)
+	return anim
+
+## PIERNAS NATURALES DE PIE (27-10-2026, plan §2.2e P1 pasada 3, medido con `pruebas/sonda_movimiento.tscn`):
+## el «Idle» del pack es una postura de superhéroe: pies a 0,66 m (0,35 de la altura; humano 0,20-0,30) y
+## rodilla a 156° (humano > 170°). Se giran los muslos hacia dentro (`cadera` grados, eje del mundo Z, la
+## mirada) y se estiran las rodillas (`rodilla` grados, eje del mundo X), con cada giro pasado al marco del
+## hueso por su reposo global; y la pelvis sube `alza` m para que el pie, más largo en vertical, no se hunda.
+static func _piernas_naturales(anim: Animation, esq: Skeleton3D, cadera: float, rodilla: float, alza: float) -> Animation:
+	var giros := {
+		"thigh_l": Vector3(0, 0, -deg_to_rad(cadera)), "thigh_r": Vector3(0, 0, deg_to_rad(cadera)),
+		"calf_l": Vector3(deg_to_rad(rodilla), 0, 0), "calf_r": Vector3(deg_to_rad(rodilla), 0, 0),
+	}
+	var subida := false
+	for t in anim.get_track_count():
+		var ruta := str(anim.track_get_path(t))
+		var hueso := ruta.get_slice(":", ruta.get_slice_count(":") - 1)
+		## La pista de posición de la RAÍZ del esqueleto (sea «root» o «pelvis»): sube todo el cuerpo.
+		if anim.track_get_type(t) == Animation.TYPE_POSITION_3D and alza != 0.0 and esq.find_bone(hueso) >= 0 \
+				and esq.get_bone_parent(esq.find_bone(hueso)) < 0:
+			for k in anim.track_get_key_count(t):
+				var pos: Vector3 = anim.track_get_key_value(t, k)
+				anim.track_set_key_value(t, k, pos + Vector3(0, alza, 0))
+			subida = true
+			continue
+		if anim.track_get_type(t) != Animation.TYPE_ROTATION_3D or not giros.has(hueso):
+			continue
+		var i := esq.find_bone(hueso)
+		if i < 0:
+			continue
+		var eje_mundo: Vector3 = giros[hueso]
+		var w := Basis.from_euler(eje_mundo)
+		var rg := esq.get_bone_global_rest(i).basis
+		var delta := Quaternion(rg.inverse() * w * rg).normalized()
+		for k in anim.track_get_key_count(t):
+			var q: Quaternion = anim.track_get_key_value(t, k)
+			anim.track_set_key_value(t, k, q * delta)
+	## Sin pista de posición de la raíz en el clip: se crea con el reposo más el alza.
+	if alza != 0.0 and not subida and esq.get_bone_count() > 0:
+		var raiz := 0
+		for i in esq.get_bone_count():
+			if esq.get_bone_parent(i) < 0:
+				raiz = i
+				break
+		var ruta_raiz := str(anim.track_get_path(0))
+		var prefijo := ruta_raiz.substr(0, ruta_raiz.rfind(":"))
+		var t2 := anim.add_track(Animation.TYPE_POSITION_3D)
+		anim.track_set_path(t2, NodePath("%s:%s" % [prefijo, esq.get_bone_name(raiz)]))
+		anim.position_track_insert_key(t2, 0.0, esq.get_bone_rest(raiz).origin + Vector3(0, alza, 0))
 	return anim
 
 static func sentado(esq: Skeleton3D, prefijo: String) -> Animation:
@@ -199,8 +242,7 @@ static func sentado(esq: Skeleton3D, prefijo: String) -> Animation:
 ## soltar, acompanar-, recalibrado a los ejes propios de este esqueleto. Solo
 ## eje X en todo (pierna de golpeo, pierna de apoyo, los dos brazos de
 ## contrapeso): es el eje que se confirmo IGUAL de un lado y del otro con la
-## sonda, asi que aqui no hace falta pelear con el espejo de Z como en el
-## brazo caido de `parado()`/`correr()` -el baseline de Z ya lo pone
+## sonda, asi que aqui no hace falta pelear con el espejo de Z como en el brazo caido de `parado()`/`correr()` -el baseline de Z ya lo pone
 ## `_ajustar()` solo, esta animacion no le suma nada mas en Z-.
 static func patear(esq: Skeleton3D, prefijo: String) -> Animation:
 	var a := _nueva(0.85, false)
@@ -226,8 +268,7 @@ static func patear(esq: Skeleton3D, prefijo: String) -> Animation:
 
 ## El festejo de gol: correr con los brazos abiertos y saltar, en bucle -la
 ## clasica-. Calco de `AnimMixamo.celebrar()`, mismo criterio que `cabezazo()`
-## para "espalda" (-> `espalda2`) y para el Z de los brazos (ya venia
-## pre-espejado en el original: 96/-96, 128/-128, se copia tal cual). El
+## para "espalda" (-> `espalda2`) y para el Z de los brazos (ya venia pre-espejado en el original: 96/-96, 128/-128, se copia tal cual). El
 ## antebrazo del original solo gira 16 grados en Z -un detalle cosmetico
 ## minusculo, sin verificar con sonda en este esqueleto-, asi que se omite en
 ## vez de arriesgar un eje sin medir por un movimiento que apenas se nota.
@@ -258,8 +299,7 @@ static func celebrar(esq: Skeleton3D, prefijo: String) -> Animation:
 ## PISO (la constante `BRAZO_ABAJO_Z`), no espeja los deltas que le manda cada
 ## animacion, así que cada animacion tiene que mirar sus propios deltas de Z
 ## igual que ya hacia el fichero Mixamo (confirmado con la sonda: Z sube/baja
-## el brazo con el mismo signo en el input pero en direcciones reales
-## opuestas entre lados).
+## el brazo con el mismo signo en el input pero en direcciones reales opuestas entre lados).
 static func cabezazo(esq: Skeleton3D, prefijo: String) -> Animation:
 	var a := _nueva(1.0, false)
 	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.35, Vector3(0, 0.22, 0)],
@@ -275,6 +315,12 @@ static func cabezazo(esq: Skeleton3D, prefijo: String) -> Animation:
 	_pierna_anat(a, esq, "i", [[0.0, 10, 25, 0], [0.45, 55, 80, 20], [0.8, 15, 30, 5], [1.0, 0, RODILLA_REPOSO, 0]], prefijo)
 	_pierna_anat(a, esq, "d", [[0.0, 10, 25, 0], [0.45, 5, 18, 25], [0.8, 12, 30, 5], [1.0, 0, RODILLA_REPOSO, 0]], prefijo)
 	return a
+
+## Grados y metros de `_piernas_naturales` para «parado» (ajustados con la sonda).
+const PIERNAS_CADERA := 12.0
+const PIERNAS_RODILLA := -14.0
+const PIERNAS_ALZA := 0.04
+const PIERNAS_CADERA_ANDAR := 5.0
 
 static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales: bool) -> AnimationLibrary:
 	var lib := AnimationLibrary.new()
@@ -292,9 +338,12 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 			real = _relajar_dedos(real, esq, 0.5)
 			if clave == "parado":
 				real = _brazos_al_cuerpo(real, -0.2)
+				real = _piernas_naturales(real, esq, PIERNAS_CADERA, PIERNAS_RODILLA, PIERNAS_ALZA)
 			## Los pies que no patinan (25-10-2026): el trote y el sprint con
 			## el pie de apoyo a la velocidad del cuerpo (`AnimPasos`).
 			else:
+				## Y andando: el paso del pack es ancho (tobillos a 0,24 m; humano 0,08-0,12).
+				real = _piernas_naturales(real, esq, PIERNAS_CADERA_ANDAR, 0.0, 0.0)
 				real = AnimPasos.preparar(clave, real, esq)
 		lib.add_animation(clave, real if real != null else a_mano[clave])
 	## EL TROTE HACIA ATRÁS DE VERDAD (25-10-2026). Era el trote hacia delante
@@ -312,7 +361,7 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 	for clave: String in CLIP_CAMINATA:
 		var extra: Animation = cargar_real(String(CLIP_CAMINATA[clave]), prefijo)
 		if extra != null:
-			lib.add_animation(clave, _relajar_dedos(extra, esq, 0.5))
+			lib.add_animation(clave, _piernas_naturales(_relajar_dedos(extra, esq, 0.5), esq, PIERNAS_CADERA_ANDAR, 0.0, 0.0))
 	## "sentado" no tiene equivalente en la Universal Animation Library
 	## (ninguno de los 43 clips gratis es una pose sentada) -se queda a mano,
 	## sin intentar `cargar_real()` primero.
@@ -365,8 +414,11 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 
 static func _en_cache(esq: Skeleton3D, prefijo: String, acciones_experimentales: bool) -> AnimationLibrary:
 	var clave := "%s|%s|%d" % [prefijo, acciones_experimentales, _firma(esq)]
-	if _bibliotecas.has(clave):
-		return _bibliotecas[clave]
+	_candado.lock()   ## `PrecalentarAnim` la carga desde un hilo
+	var ya: Variant = _bibliotecas.get(clave)
+	_candado.unlock()
+	if ya != null:
+		return ya
 	## En disco (`CacheDisco`, 30-10-2026): construirla son 2-3 s; cargarla, ~0,1 s. Con ella van
 	## las fases de los pies (`AnimPasos.fases`), que la construcción deja apuntadas.
 	var huella := CacheDisco.huella("anim", _fuentes())
@@ -375,22 +427,22 @@ static func _en_cache(esq: Skeleton3D, prefijo: String, acciones_experimentales:
 	if lib == null:   ## la del build (`addons/cache_horneada`), la primera vez que se juega
 		lib = CacheDisco.cargar_horneada("anim|" + clave, "AnimationLibrary") as AnimationLibrary
 	if lib != null and lib.has_meta("fases_pasos"):
+		_candado.lock()
 		AnimPasos.fases.merge(lib.get_meta("fases_pasos"), true)
+		_candado.unlock()
+	elif OS.get_thread_caller_id() != OS.get_main_thread_id():
+		## Desde un hilo (`PrecalentarAnim`) NUNCA se construye: fuera del árbol el horneado del mocap
+		## (`_bakear_futbol_global`, `seek`) no se mueve y salían 86 animaciones distintas (medido el
+		## 30-10). Sin caché, la construye el hilo principal al crear el primer personaje, como siempre.
+		return null
 	else:
 		lib = _construir(esq, prefijo, acciones_experimentales)
 		lib.set_meta("fases_pasos", AnimPasos.fases.duplicate())
 		CacheDisco.guardar(en_disco, huella, lib)
+	_candado.lock()
 	_bibliotecas[clave] = lib
+	_candado.unlock()
 	return lib
-
-## Lo que decide cómo sale la biblioteca: los scripts de animación y los clips de origen.
-static func _fuentes() -> PackedStringArray:
-	var r := CacheDisco.scripts("res://visor", PackedStringArray(["anim_", "retarget_futbol_q", "futbolista_q"]))
-	r.append(RUTA_UAL)
-	for f in DirAccess.get_files_at(CARPETA_FUTBOL):
-		if f.ends_with(".fbx") or f.ends_with(".fbx.import"):
-			r.append(CARPETA_FUTBOL + f.trim_suffix(".import"))
-	return r
 
 static func construir(esq: Skeleton3D, ruta_esqueleto: String = "", acciones_experimentales: bool = false) -> AnimationLibrary:
 	var prefijo := ruta_esqueleto if ruta_esqueleto != "" else str(esq.name)

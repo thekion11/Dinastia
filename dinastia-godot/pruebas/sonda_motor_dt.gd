@@ -61,6 +61,8 @@ func _ready() -> void:
 	for k: String in duelos_tot:
 		du_txt += "%s %.1f  " % [k, float(duelos_tot[k]) / np]
 	print("DUELOS por partido: " + du_txt)
+	if esc == "calidad" or esc == "tactica" or esc == "":
+		print("UMBRALES: %d fallos" % fallos_umbral)
 	print("===== FIN SONDA MOTOR DT =====")
 	get_tree().quit()
 
@@ -109,6 +111,7 @@ func _jugar(a: Club, b: Club, semilla: int, tac: Array = [{}, {}], cansancio := 
 	motor.cansancio_real = cansancio
 	motor.tarjetas_reales = true
 	motor.preparar(lista, ball, "", semilla)
+	GestoTecnico.fijar_clima(motor, OS.get_environment("CLIMA"))   ## CLIMA=lluvia|nieve|tormenta|niebla (27-10)
 	## SIN_DUELOS=1 / SIN_CUERPOS=1: para medir qué cambia cada parte.
 	motor.duelos_activos = OS.get_environment("SIN_DUELOS") == ""
 	motor.cuerpos_activos = OS.get_environment("SIN_CUERPOS") == ""
@@ -275,7 +278,17 @@ func _diag() -> void:
 	print("DIAG bloque largo %.0f/%.0f m, ancho %.0f/%.0f m; rival más cercano al poseedor %.1f m" % [largo_b[0] / total, largo_b[1] / total, ancho_b[0] / total, ancho_b[1] / total, presion_t / maxf(t_pos, 0.01)])
 	print("DIAG balón en el último tercio: local ataca %.0f %%, visita ataca %.0f %%" % [100.0 * tercio[0] / total, 100.0 * tercio[1] / total])
 
-func _resumen(nombre: String, res: Array) -> void:
+## M-414 (27-10-2026): los escenarios de calidad y táctica ya no solo imprimen; comprueban lo que el
+## entrenador debe notar y la sonda termina con «UMBRALES: N fallos» (`herramientas/especiales.sh todo`).
+var fallos_umbral := 0
+
+func _umbral(ok: bool, que: String) -> void:
+	print("UMBRAL %s %s" % ["ok   " if ok else "FALLO", que])
+	if not ok:
+		fallos_umbral += 1
+
+## Medias por partido: [goles local, goles visita, tiros local, tiros visita].
+func _resumen(nombre: String, res: Array) -> Array:
 	var g := [0, 0]
 	var t := [0, 0]
 	var gana := [0, 0, 0]
@@ -284,6 +297,7 @@ func _resumen(nombre: String, res: Array) -> void:
 		gana[0 if r[0] > r[1] else (2 if r[0] < r[1] else 1)] += 1
 	var n := float(maxi(res.size(), 1))
 	print("  %-46s goles %.2f-%.2f  tiros %.1f-%.1f  G/E/P local %d/%d/%d" % [nombre, g[0] / n, g[1] / n, t[0] / n, t[1] / n, gana[0], gana[1], gana[2]])
+	return [g[0] / n, g[1] / n, t[0] / n, t[1] / n]
 
 func _calidad(n: int) -> void:
 	var cl := _clubes_por_media()
@@ -295,8 +309,11 @@ func _calidad(n: int) -> void:
 	for i in n:
 		r1.append(_jugar(mejor, peor, _s0(100) + i))
 		r2.append(_jugar(peor, mejor, _s0(100) + i))
-	_resumen("el mejor de local", r1)
-	_resumen("el peor de local", r2)
+	var a := _resumen("el mejor de local", r1)
+	var b := _resumen("el peor de local", r2)
+	## El mejor gana de media en los dos campos y por más de medio gol, y tira más.
+	_umbral(a[0] - a[1] > 0.5 and b[1] - b[0] > 0.5, "calidad: el mejor marca más de medio gol por partido más que el peor, de local (%+.2f) y de visita (%+.2f)" % [a[0] - a[1], b[1] - b[0]])
+	_umbral(a[2] > a[3] and b[3] > b[2], "calidad: y tira más en los dos campos")
 
 func _tactica(n: int) -> void:
 	var cl := _clubes_por_media()
@@ -312,9 +329,16 @@ func _tactica(n: int) -> void:
 		r0.append(_jugar(a, b, _s0(200) + i))
 		r1.append(_jugar(a, b, _s0(200) + i, [ofe, {}]))
 		r2.append(_jugar(a, b, _s0(200) + i, [defe, {}]))
-	_resumen("los dos con la pizarra media", r0)
-	_resumen("local ofensivo, presión y línea altas", r1)
-	_resumen("local defensivo, presión y línea bajas", r2)
+	var m0 := _resumen("los dos con la pizarra media", r0)
+	var m1 := _resumen("local ofensivo, presión y línea altas", r1)
+	var m2 := _resumen("local defensivo, presión y línea bajas", r2)
+	## La pizarra se nota: el ofensivo tira más que el defensivo, y el defensivo recibe menos tiros que el ofensivo.
+	_umbral(m1[2] > m2[2], "táctica: el local ofensivo tira más (%.1f) que el defensivo (%.1f)" % [m1[2], m2[2]])
+	## La CONTRAPARTIDA (presionar arriba deja la espalda libre) no es un umbral sino un aviso: el 27-10 el
+	## ofensivo concedía MENOS tiros (6,2) que el defensivo (9,8): sin coste, la pizarra no es una decisión.
+	if m1[3] <= m2[3]:
+		print("HALLAZGO táctica sin contrapartida: el ofensivo concede %.1f tiros y el defensivo %.1f (plan §3, Detectados)" % [m1[3], m2[3]])
+	_umbral(absf(m1[2] - m0[2]) + absf(m2[2] - m0[2]) > 1.0, "táctica: los dos extremos se apartan de la pizarra media (%.1f / %.1f / %.1f tiros)" % [m2[2], m0[2], m1[2]])
 
 func _cambios(n: int) -> void:
 	var cl := _clubes_por_media()

@@ -12,6 +12,7 @@ var balon: Node3D = null
 var jugador_activo: Node3D = null
 var color_local := Color("3fa06a")
 var color_visita := Color("e05555")
+var _ult_puntos: Array = []   ## (28-10) posiciones (al cm) y tamaño del último dibujo: si nada se movió, no se redibuja
 
 func setup(all_players: Array, ball_node: Node3D, c_local: Color = Color("3fa06a"), c_visita: Color = Color("e05555")) -> void:
 	jugadores = all_players
@@ -57,8 +58,21 @@ func _rehacer_lineas() -> void:
 	TrazoSuave.rect(self, Rect2(Vector2((w - w_area) * 0.5, h - h_area), Vector2(w_area, h_area)), Color(1, 1, 1, 0.2), 1.0, true)
 
 func _process(_delta: float) -> void:
-	if visible:
+	if not visible:
+		return
+	var puntos: Array = [size, jugador_activo]
+	for p in jugadores:
+		var node: Node3D = p.get("node")
+		if is_instance_valid(node):
+			var g := node.global_position
+			puntos.append(Vector2i(int(g.x * 100.0), int(g.z * 100.0)))
+	if is_instance_valid(balon):
+		puntos.append(Vector2i(int(balon.global_position.x * 100.0), int(balon.global_position.z * 100.0)))
+
+	if puntos != _ult_puntos:
+		_ult_puntos = puntos
 		queue_redraw()
+
 
 func _draw() -> void:
 	var w := size.x

@@ -35,11 +35,12 @@ func crear(look: Dictionary, c1: Color, c2: Color) -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(String(look.get("semilla", nombre)))
 	var asp := PersonajeDT.aleatorio(rng)
-	## Traje oscuro con corbata: es alguien del club, no un paseante.
-	asp["ropa"] = "traje"
-	asp["c_ropa"] = "#1c2233"
-	asp["c_ropa2"] = "#f2f2f2"
-	asp["corbata"] = true
+	## Traje oscuro con corbata: es alguien del club, no un paseante (o el chándal del club
+	## si `look["ropa"]` lo pide: los futbolistas del vestuario, fase 5).
+	asp["ropa"] = String(look.get("ropa", "traje"))
+	asp["c_ropa"] = String(look.get("c_ropa", "#1c2233"))
+	asp["c_ropa2"] = String(look.get("c_ropa2", "#f2f2f2"))
+	asp["corbata"] = asp["ropa"] == "traje"
 	asp["gorra"] = false
 	if bool(look.get("canas", false)):
 		asp["color_pelo"] = "#b9b9b9"
@@ -129,6 +130,17 @@ func _mirar_hacia(p: Vector3) -> void:
 	var v := p - position
 	if Vector2(v.x, v.z).length() > 0.01:
 		rotation.y = atan2(v.x, v.z)
+
+## Hablar: el clip de charla de la UAL (brazos y cabeza vivos) mientras dura el cuadro
+## de diálogo; al terminar vuelve a «parado». (§2.2e P3, 27-10-2026)
+func hablar(si: bool) -> void:
+	if anim == null:
+		return
+	if si:
+		if AnimExtra.asegurar(anim, FutbolistaQ.esqueleto_de(self), "charla"):
+			anim.play("charla", 0.3)
+	else:
+		_animar("parado")
 
 func _animar(nombre_anim: String) -> void:
 	if anim != null and anim.has_animation(nombre_anim) and anim.current_animation != nombre_anim:

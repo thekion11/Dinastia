@@ -69,7 +69,7 @@ func _cabezazo(p: Dictionary) -> void:
 		## los palos y entraba más de la mitad (en el fútbol, ~1 de cada 8). Ahora
 		## se busca un palo, abajo, y se desvía según el remate y la distancia.
 		if TIRO_PULIDO:
-			var err := (0.5 + (1.0 - float(p["attr"]["tir"])) * 1.4) * (0.4 + absf(pos(p).z - arco.z) / 11.0)
+			var err := (0.5 + (1.0 - GestoTecnico.tiro(p, "cabeza")) * 1.4) * (0.4 + absf(pos(p).z - arco.z) / 11.0) * GestoTecnico.factor(self, p, true)
 			destino = Vector3((1.0 if _rng.randf() < 0.5 else -1.0) * _rng.randf_range(0.8, PALO - 0.3) + _rng.randf_range(-err, err),
 				clampf(_rng.randf_range(0.3, 1.4) + _rng.randf_range(-err, err) * 0.6, 0.15, 3.5), arco.z)
 		_patear(p, destino, 14.0 + float(p["attr"]["tir"]) * 6.0, 0.0, 0.0, "cabezazo")
@@ -123,11 +123,16 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 		poseedor = {}
 		ultimo_toque = p
 		_offside = {}
-		vel_balon = (pos(p) - pos(victima)).normalized() * 3.0 + Vector3(_rng.randf_range(-2, 2), 0, 0)
 		victima["enfriar"] = 0.6
+		## ROBO LIMPIO (semana 3, 27-10-2026: «menos rebotes al defender»): de pie, el buen defensor se
+		## queda el balón; antes siempre quedaba suelto rebotando, y el rechace lo recogía cualquiera.
+		if not barrida and _rng.randf() < 0.25 + def_ * 0.45:
+			_tomar(p)
+		else:
+			vel_balon = (pos(p) - pos(victima)).normalized() * 3.0 + Vector3(_rng.randf_range(-2, 2), 0, 0)
 	## FALTAS (17-10-2026): había ~4 por partido; una entrada que no llega al
 	## balón acaba en falta más a menudo (sobre todo si el defensor es agresivo).
-	elif r < exito + (0.28 if barrida else 0.13) + float(p.get("agresividad", 0.5)) * 0.06:
+	elif r < exito + ((0.28 if barrida else 0.13) + float(p.get("agresividad", 0.5)) * 0.06) * preset_faltas:
 		_falta(p, victima, 0.25, "", "deslizante" if barrida else "de_pie")
 
 # ---------------------------------------------------------------- disputas
@@ -316,7 +321,8 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 			var dl := cerca.distance_to(pos(r))
 			if dl < 2.2:
 				riesgo += (2.2 - dl) * 2.4
-		var nota := progreso * (CHISPA_AVANCE * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) \
+		var nota := progreso * (CHISPA_AVANCE * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1) \
+				+ 0.03 * float(_tac(bool(p["es_local"]), "verticalidad") - 1)) \
 			+ minf(libre, 10.0) * 0.18 - riesgo - dist * 0.02
 		## Un buen pasador ve el fuera de juego: con más visión (pase) casi
 		## nunca se la da a un compañero adelantado.
@@ -390,7 +396,9 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 	destino += guia
 	## Nadie pasa perfecto: el error crece con la distancia, con la presión y
 	## cuanto peor es el pase del que la toca.
-	var error := ((1.0 - float(p["attr"]["pas"])) * dist * 0.22 + (1.2 if _presion(p) < 2.0 else 0.0) * (1.4 - float(p["attr"]["pas"]))) * _error_extra
+	var hab := GestoTecnico.pase(p, largo, al_hueco, tenso)   ## cada pase pesa sus atributos; pie malo y clima (27-10)
+	var error := ((1.0 - hab) * dist * 0.22 + (1.2 if _presion(p) < 2.0 else 0.0) * (1.4 - hab)) * _error_extra * preset_error
+	error *= GestoTecnico.factor_pie(p, pos(p), destino) * GestoTecnico.factor(self, p, largo or dist > 30.0)
 	destino += Vector3(_rng.randf_range(-error, error), 0, _rng.randf_range(-error, error))
 	## POR ABAJO SIEMPRE QUE SE PUEDA (13-10-2026): con «cualquier rival cerca
 	## de la línea = por arriba» la sonda medía el balón en el aire el 64 % del

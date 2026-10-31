@@ -15,7 +15,7 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 	p["vel"] = Vector3(hacia_x * (3.4 if estirada else 2.0), 0, 0)
 	p["objetivo"] = Vector3(pos(p).x + hacia_x, 0, pos(p).z)
 	var fuerza := vel_balon.length()
-	if not estirada and fuerza < 22.0 and _rng.randf() < float(p["attr"]["par"]) * 0.9:
+	if not estirada and fuerza < 22.0 and _rng.randf() < float(p["attr"]["par"]) * 0.9 * GestoTecnico.agarre(self):
 		_tomar(p)
 		## El balón va a las manos desde donde estaba (antes saltaba a ellas
 		## en un fotograma: «teletransporte» de hasta 2 m en la sonda, M-114).
@@ -60,12 +60,9 @@ func _penal_en_juego(gk: Dictionary, cruce: Vector3) -> void:
 		gk["vel"] = Vector3(float(lado) * 6.0, 0, 0)
 		gk["objetivo"] = Vector3(pos(gk).x + float(lado) * 2.2, 0, pos(gk).z)
 
-## TIRO QUE VIENE: ¿llega a tapar? (sacado de `_ia_portero` el 25-10-2026 para
-## que el portero de la Carrera lo use desde `_control_usuario`). Devuelve true
-## si el portero ya actuó (parada o penal). `manual`: lo maneja el usuario, que
-## elige el lado con el stick (`guia`, X del mundo: 0 = no eligió). Mientras no
-## elige se espera a medio segundo del arco y la reacción automática es más floja; si
-## elige el lado equivocado no llega.
+## TIRO QUE VIENE: ¿llega a tapar? (de `_ia_portero`, 25-10, para el portero de la Carrera en `_control_usuario`).
+## Devuelve true si ya actuó (parada o penal). `manual`: lo maneja el usuario, que elige lado con el stick (`guia`,
+## X del mundo, 0 = no eligió); sin elegir espera a medio segundo y reacciona más flojo; si elige mal no llega.
 func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 	var b := balon.position
 	var arco := _arco_propio(p)
@@ -75,9 +72,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 		if tz > 0.0 and tz < 1.6:
 			var cruce := b + vel_balon * tz
 			cruce.y = b.y + vel_balon.y * tz - 0.5 * G * tz * tz
-			## UNA decisión por disparo (13-10-2026): antes se tiraba el dado en
-			## cada fotograma del vuelo -20 o 30 oportunidades- y el portero lo
-			## paraba casi todo (8 de cada 10 en la sonda).
+			## UNA decisión por disparo (13-10): con un dado por fotograma lo paraba casi todo (8 de 10).
 			if absf(cruce.x) < PALO + 0.8 and cruce.y < LARGUERO + 0.4 and int(p.get("_patada_vista", -1)) != _n_patada:
 				## El usuario aún no eligió: se espera (sin gastar la decisión).
 				if manual and absf(guia) < 0.3 and tz > 0.55:
@@ -86,14 +81,11 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 				if PULIDO and String(_tiro_vivo.get("clase", "")) == "penal":
 					_penal_en_juego(p, cruce)
 					return true
-				## Alcance de la estirada: hasta ~3 m con un gran portero, y menos
-				## cuanto menos tiempo tiene para reaccionar (antes llegaba a 4 m
-				## en cualquier tiro). Arriba, a la escuadra, cuesta más.
+				## Alcance: hasta ~3 m con un gran portero, menos con menos tiempo; a la escuadra cuesta más.
 				var alcance: float = (1.1 + float(p["attr"]["div"]) * 2.0 + float(p["attr"]["ref"]) * 0.8) * clampf((tz - 0.1) * 2.4, 0.3, 1.0)
 				if cruce.y > 1.8:
 					alcance *= 0.85
-				## El alcance se mide donde está ÉL (adelantado tapa más ángulo),
-				## no en la línea de gol.
+				## El alcance se mide donde está ÉL (adelantado tapa más ángulo), no en la línea de gol.
 				var tg := clampf((pos(p).z - b.z) / vel_balon.z, 0.0, tz)
 				var cruce_gk := b + vel_balon * tg
 				cruce_gk.y = b.y + vel_balon.y * tg - 0.5 * G * tg * tg
@@ -110,8 +102,13 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 						return true
 					else:
 						alcance *= 1.1  ## Eligió bien: se anticipa un poco.
+				if TIRO_PULIDO: prob *= (1.0 - PARADA_LEJOS * pow(clampf(lat / maxf(alcance, 0.1), 0.0, 1.0), 2.0)) * clampf(1.15 - vel_balon.length() / 90.0, 0.7, 1.0)   ## lejos del cuerpo o muy fuerte cuesta más (27-10)
 				if lat < alcance and _rng.randf() < prob:
 					_parada(p, cruce_gk, lat > 1.2)
+					return true
+				## NO LLEGA (27-10, §8): se estira hacia el balón y queda batido (antes miraba quieto el gol).
+				if lat > 0.6:
+					_anim(p, "estirada_media_%s" % ("izq" if (cruce_gk.x - pos(p).x) * dir_ataque(bool(p["es_local"])) > 0.0 else "der"), true)
 					return true
 	return false
 
@@ -136,6 +133,10 @@ func _ia_portero(p: Dictionary) -> Vector3:
 	## Tiro que viene: ¿llega a tapar?
 	if _reaccion_portero(p):
 		return pos(p)
+	var sc := SalidaPortero.punto(self, p)   ## un centro que cae en su zona: sale a por él (semana 3)
+	if sc != Vector3.INF:
+		p["correr"] = true
+		return pos(p) if SalidaPortero.atrapar(self, p) else sc
 	## Balón suelto en su área y él llega antes: sale a por él.
 	if poseedor.is_empty() and _en_su_area(p, b) and b.y < 2.0:
 		var suyo := true
@@ -198,17 +199,12 @@ func _finta_ia(p: Dictionary, rival: Dictionary, fwd: Vector3, lado: float, sp: 
 	## Tras la finta decide con calma (no la suelta en mitad del gesto).
 	_decision_en = maxf(_decision_en, t + 0.45)
 
-## EL REGATE DE LA IA (15-10-2026, H-11 / M-443). Antes la finta solo se
-## probaba con un rival a menos de 1,8 m y DESPUÉS de tirar, centrar o pasar,
-## y con la entrada saltando a 1,25 m casi nunca llegaba: 0 en un partido. Ahora
-## se decide al VER venir al defensor: en carrera, con un rival delante a 1,5-3,6
-## m, una sola tirada por duelo (no cada fotograma). Las ganas crecen con el
-## regate (nada por debajo de 35, ~2 de cada 5 duelos con 65 y 3 de cada 5
-## con 85 o más) y bajan en el propio tercio. La salida es hacia el lado
-## contrario del defensor, con un empujón lateral de verdad (velocidad, no
-## teletransporte); el defensor se la come según regate contra defensa y, si
-## pica, queda clavado un momento (no puede entrar). Si no pica, la entrada
-## normal decide (con la bonificación de `regate_hasta`).
+## EL REGATE DE LA IA (15-10-2026, H-11 / M-443). Antes la finta solo se probaba con un rival a menos de 1,8 m
+## y DESPUÉS de tirar, centrar o pasar: 0 en un partido. Ahora se decide al VER venir al defensor (en carrera,
+## rival delante a 1,5-3,6 m, una tirada por duelo). Las ganas crecen con el regate (nada bajo 35, ~2 de 5 duelos
+## con 65, 3 de 5 con 85+) y bajan en el propio tercio. Sale al lado contrario del defensor con un empujón de
+## verdad; el defensor se la come según regate contra defensa y, si pica, queda clavado (no puede entrar). Si
+## no pica, decide la entrada normal (con la bonificación de `regate_hasta`).
 func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> bool:
 	if rival.is_empty() or bool(p["por"]) or t < float(p["regate_hasta"]) + 0.6:
 		return false
@@ -258,11 +254,11 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 ## palo; `fuerza` ∈ [0, 1] es la carga. Mucha fuerza sin técnica se va alta.
 func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	var arco := _arco_rival(p)
-	var tec := float(p["attr"]["tir"])
+	var tec := GestoTecnico.tiro(p, _mod_tiro)   ## cada tiro pesa sus atributos (27-10)
 	## El error crece con la distancia: desde 25 m se falla mucho más que
 	## dentro del área (la sonda medía 8 de cada 10 tiros entre los palos).
 	var lejos := Vector2(pos(p).x - arco.x, pos(p).z - arco.z).length()
-	var error := ((1.0 - tec) * 2.6 + maxf(0.0, fuerza - 0.8) * 2.5) * (0.55 + lejos / 26.0) * (1.25 if _manual_tiro else 1.0) * _error_extra
+	var error := ((1.0 - tec) * 2.6 + maxf(0.0, fuerza - 0.8) * 2.5) * (0.55 + lejos / 26.0) * (1.25 if _manual_tiro else 1.0) * _error_extra * preset_error * GestoTecnico.factor_pie(p, pos(p), arco) * GestoTecnico.factor(self, p, _mod_tiro == "vaselina")
 	var clase := String(saque.get("tipo", "pie")) if estado == "saque" else "pie"
 	## LA PUNTERÍA DE VERDAD (25-10-2026). La sonda medía 3 de cada 4 tiros entre
 	## los palos (en el fútbol, 1 de cada 3; en FC, la mitad) y el portero los
@@ -288,6 +284,10 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 			destino.y = clampf(1.4 + _rng.randf_range(-error, error) * 0.4, 0.8, 2.6)
 			vh = clampf(9.0 + lejos * 0.32, 10.0, 17.0)
 			loft = clampf(lejos * 0.28, 3.5, 7.5)
+		"raso":
+			## LT + B: el tiro raso, pegado al césped y al palo (semana 3, 27-10-2026).
+			destino.y = clampf(0.18 + _rng.randf_range(0.0, error) * 0.25, 0.12, 0.5)
+			vh *= 0.92
 		"potente":
 			## LB + RB + B: el cañonazo; apuntado a mano, castiga el mal apunte.
 			vh += 9.0
@@ -437,7 +437,7 @@ func _ia_portador(p: Dictionary) -> void:
 	## pase (y más verticalidad, fila 18), más a menudo.
 	if dist_arco < 48.0:
 		var hueco := _companero_al_hueco(p)
-		if not hueco.is_empty() and _rng.randf() < 0.45 + 0.15 * float(_tac(bool(p["es_local"]), "verticalidad")) + float(p["attr"]["pas"]) * 0.3:
+		if not hueco.is_empty() and _rng.randf() < 0.6 + 0.2 * float(_tac(bool(p["es_local"]), "verticalidad") - 1) + float(p["attr"]["pas"]) * 0.3:
 			_pasar_a(p, hueco, false, true)
 			return
 	## Pasar si hay presión o un compañero mejor situado.

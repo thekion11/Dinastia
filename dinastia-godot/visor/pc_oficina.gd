@@ -10,7 +10,7 @@ extends Node
 ## estadio sigue siendo EL MISMO al levantarte), y la capa lleva un botón
 ## «Levantarse» y Esc (si Principal no tiene nada modal abierto) para apagarlo.
 ##
-## Principal no sabe que es una capa: arranca con `Principal.mundo_pregenerado`
+## Principal no sabe que es una capa: arranca con `PedidoPartida.mundo_pregenerado`
 ## como cuando era la escena entera. Por eso el prólogo NO borra esa estática.
 
 signal encendido
@@ -74,18 +74,22 @@ func _process(delta: float) -> void:
 	if is_instance_valid(_aro):
 		var k := 1.0 + 0.08 * sin(_t * 3.0)
 		_aro.scale = Vector3(k, 0.06, k)
-		_aro.visible = not abierto
+		if _aro.visible == abierto:
+			_aro.visible = not abierto
 	## El aviso de la E lo escribe el explorador cada cuadro con lo que tiene
 	## delante; cuando no hay nada (texto vacío) y estás sobre el aro, se pone el nuestro.
+	## (28-10) `cerca()` una sola vez por cuadro y la traducción solo cuando hace falta.
 	if explorador != null and is_instance_valid(explorador):
 		var aviso: Label = explorador.get("_aviso")
 		if aviso != null:
-			if cerca() and aviso.text == "":
+			var c := cerca()
+			if c and aviso.text == "":
 				aviso.text = Idiomas.t("E: encender el PC")
 				_aviso_puesto = true
-			elif _aviso_puesto and not cerca() and aviso.text == Idiomas.t("E: encender el PC"):
+			elif _aviso_puesto and not c and aviso.text == Idiomas.t("E: encender el PC"):
 				aviso.text = ""
 				_aviso_puesto = false
+
 
 func _unhandled_input(ev: InputEvent) -> void:
 	if abierto:
@@ -135,6 +139,8 @@ func encender() -> void:
 	## El prólogo ya contó el primer día: Principal no abre la guía antigua del taxi (p16).
 	if mundo != null:
 		mundo.prologo_visto = true
+		if mundo.logros != null:
+			mundo.logros.revisar_largos()   ## el logro «Primer día» (§2.5)
 	_principal = (load("res://escenas/principal.tscn") as PackedScene).instantiate() as Control
 	_capa.add_child(_principal)
 	_principal.set_anchors_preset(Control.PRESET_FULL_RECT)

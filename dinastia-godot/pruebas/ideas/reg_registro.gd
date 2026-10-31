@@ -31,7 +31,7 @@ func _probar() -> void:
 	var inf := Registro.informe(30)
 	_comprobar(inf.begins_with("INFORME DE FALLOS"), "el informe empieza con su cabecera")
 	_comprobar(inf.contains("Godot 4.") and inf.contains(OS.get_name()) and inf.contains("idioma"), "el informe lleva versión, SO e idioma")
-	_comprobar(inf.split("\n").size() <= 30 + 3, "el informe se limita a las últimas N líneas")
+	_comprobar(inf.split("\n").size() <= 30 + 4, "el informe se limita a las últimas N líneas (cabecera: título, sistema, contacto, separador)")
 	## Rotación: más de 256 KB pasan a registro.1.txt.
 	var grande := "x".repeat(1000)
 	for i in 300:
@@ -45,3 +45,10 @@ func _probar() -> void:
 		var ruta := Registro._ruta(i)
 		if FileAccess.file_exists(ruta):
 			DirAccess.remove_absolute(ProjectSettings.globalize_path(ruta))
+	## M-430: los errores de la sesión anterior se cuentan al arrancar (solo los de la última cabecera).
+	var prueba := "user://registro_prueba_m430.txt"
+	var f := FileAccess.open(prueba, FileAccess.WRITE)
+	f.store_string("===== sesión vieja\n10:00:00 ERROR: a\n===== sesión 2\n10:00:01 ERROR: b  [x.gd:1 f]\n10:00:02 AVISO: c\n10:00:03 SCRIPT: d\n")
+	f.close()
+	_comprobar(Registro._contar_errores_ultima_sesion(prueba) == 2, "cuenta los errores (no los avisos) de la última sesión")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(prueba))

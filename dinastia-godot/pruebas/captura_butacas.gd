@@ -1,0 +1,66 @@
+extends Node
+## BUTACAS Y AFICIONADOS (27-10-2026): tres vistas del estadio del partido (calidad ALTO, 85 % de grada):
+##   0 = desde el borde del césped a las butacas bajas (la cámara de TV pasa por aquí),
+##   1 = plano alto lateral de TV, 2 = la parte alta de una tribuna (vomitorios y pasillos).
+## Salen en $PREFIJO_N.png (por defecto /tmp/butacas).
+##   PREFIJO=/tmp/butacas_antes xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_butacas.tscn
+var _n := 0
+var _vista: VistaEstadio
+var _cam: Camera3D
+## 0 = desde el césped a las butacas bajas, 1 = toma alta de TV (desde el lado +X, lejos de los palcos del −X), 2 = la parte alta de una tribuna,
+## 3 = de cerca, las butacas del primer anillo, 4 = la cámara REAL del partido a pie de campo (no se toca la cámara del juego).
+const VISTAS := [[Vector3(-26, 2.4, -6), Vector3(46, 4.5, 0)], [Vector3(46, 17, 6), Vector3(-30, 2, -4)], [Vector3(14, 9, -54), Vector3(8, 10, -70)],
+	[Vector3(33.5, 1.9, 14), Vector3(44, 2.7, 20)], null]
+const POR_VISTA := 16
+
+func _ready() -> void:
+	Calidad.elegida = Calidad.ALTO
+	AjustesCiudad.guardar("tutorial_visto", true)
+	var cfg := ConfigFile.new()
+	cfg.load(CajonAjustes.RUTA)
+	cfg.set_value(CajonAjustes.SECCION, "ceremonia", false)
+	cfg.set_value(CajonAjustes.SECCION, "intro", false)
+	cfg.save(CajonAjustes.RUTA)
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	m.mi_club_id = m.ligas[0].clubes[0].id
+	Partido.ctx_club_id = m.mi_club_id
+	var par := m.proximo_partido()
+	if OS.get_environment("VIVO") == "1":
+		## Un club de colores vivos (rosa y celeste) que juega en casa: el color por nivel se tiene que ver. Se elige uno sin estadio real.
+		par = [m.ligas[0].clubes[4], m.ligas[0].clubes[5]]
+		par[0].color1 = "#d6246e"
+		par[0].color2 = "#12a4d6"
+		par[0].kit_color1 = ""
+		par[0].kit_color2 = ""
+		print("PERFIL ", par[0].perfil_estadio().get("asiento1"), " ", par[0].perfil_estadio().get("asiento2"))
+	var partido := Partido.new(par[0], par[1])
+	_vista = VistaEstadio.new()
+	add_child(_vista)
+	_vista.abrir(par[0], 0.85, par[1], partido)
+	_cam = Camera3D.new()
+	_cam.far = 600.0
+	add_child(_cam)
+
+func _process(_d: float) -> void:
+	_n += 1
+	if _n < 20:
+		return
+	for cl in get_tree().root.find_children("*", "CanvasLayer", true, false):
+		(cl as CanvasLayer).visible = false
+	var k := (_n - 20) / POR_VISTA
+	var f := (_n - 20) % POR_VISTA
+	if OS.get_environment("SOLO") != "":   ## SOLO=3: una sola vista (las capturas del estadio completo son lentas)
+		k = int(OS.get_environment("SOLO")) if k == 0 else VISTAS.size()
+	if k >= VISTAS.size():
+		print("FIN. 0 fallos")
+		get_tree().quit()
+		return
+	if VISTAS[k] != null:
+		_cam.make_current()
+		_cam.position = VISTAS[k][0]
+		_cam.look_at(VISTAS[k][1], Vector3.UP)
+	if f == POR_VISTA - 2:
+		var pref := OS.get_environment("PREFIJO") if OS.get_environment("PREFIJO") != "" else "/tmp/butacas"
+		get_viewport().get_texture().get_image().save_png("%s_%d.png" % [pref, k])
+		print("FOTO ", pref, "_", k)

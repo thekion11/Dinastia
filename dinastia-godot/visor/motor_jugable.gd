@@ -40,6 +40,7 @@ func paso(delta: float) -> void:
 			if practica:
 				_paso_practica()
 			_control_usuario(delta)
+			_indicar_pase(delta)
 			if cansancio_real:
 				_t_attr -= delta
 				if _t_attr <= 0.0:

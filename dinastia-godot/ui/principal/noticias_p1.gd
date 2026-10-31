@@ -143,7 +143,8 @@ func _conectar_1() -> void:
 			p._anotar("🏆 ¡CAMPEÓN!", "%s." % nombre)
 			## El aviso ya toca "trofeo" por su tipo: llamarlo aquí además lo
 			## haría sonar dos veces.
-			Aviso.mostrar(p, "titulo", "🏆", nombre, "Lo levantaste tú. Queda en la vitrina para siempre."))
+			Aviso.mostrar(p, "titulo", "🏆", nombre, "Lo levantaste tú. Queda en la vitrina para siempre.")
+			p._vistas.call_deferred("_ver_vuelta_olimpica", nombre))   ## la vuelta olímpica en 3D, al acabar el cálculo de la semana
 		## La gala se calculaba entera y se guardaba sin que nadie la anunciara:
 		## el jugador podía ganar el premio a mejor entrenador del año y no
 		## enterarse jamás. Ahora avisa, y el detalle está en la pestaña Premios.
@@ -218,8 +219,13 @@ func _conectar_1() -> void:
 				var gano: Club = r.get("pasa")
 				if gano == p.mundo.mi_club():
 					Aviso.mostrar(p, "dinero", "🎟️", "Pasas de ronda",
-						"%s superada. Cada eliminatoria que se gana es taquilla y premio." % nombre_ronda, "ronda_superada")
+						Idiomas.t("%s superada.") % Idiomas.t(nombre_ronda) + " " + Idiomas.t("Cada eliminatoria que se gana es taquilla y premio."), "ronda_superada")
 					return)
+	_conectar_1_2()
+	_conectar_1_3()
+
+## (Trozo 2 de `_conectar_1`, partida por responsabilidad: fase 6, §4 del plan.)
+func _conectar_1_2() -> void:
 	## Lo mismo para Champions/Libertadores -mismo bug, sin arreglar hasta hoy
 	## (14-9-2026): ver `_conectar_mi_continental()`, llamada desde
 	## `_conectar_sorteos()` mas abajo porque comparten el mismo ciclo de vida
@@ -272,8 +278,8 @@ func _conectar_1() -> void:
 				## rutina; perder a alguien un mes y medio cambia la temporada,
 				## y es justo lo que se pasa por alto leyendo el registro.
 				if semanas >= 6:
-					Aviso.mostrar(p, "alerta", "🚑", "Lesión grave: %s" % j.nombre,
-						"%s. Se pierde %d semanas." % [tipo, semanas], "medico_parte")
+					Aviso.mostrar(p, "alerta", "🚑", Idiomas.t("Lesión grave: %s") % j.nombre,
+						Idiomas.t("%s. Se pierde %d semanas.") % [tipo, semanas], "medico_parte")
 				## LA VENTANA DE EMERGENCIA. `Roles.gd` lo deja escrito en su propio
 				## comentario -"quien lleve las lesiones la abre llamando a
 				## abrir_emergencia()"- y nadie la llamaba: perder a un titular 12+
@@ -346,6 +352,9 @@ func _conectar_1() -> void:
 		p.mundo.federacion.escandalo.connect(func(funa: int, motivo: String) -> void:
 			if p.mundo.prensa != null:
 				p.mundo.prensa._mover_funa(funa))
+
+## (Trozo 3 de `_conectar_1`, partida por responsabilidad: fase 6, §4 del plan.)
+func _conectar_1_3() -> void:
 	## `cesiones` vive desde `generar()`, igual que `federacion` -ver el
 	## comentario de `federacion.movimiento` más abajo-, así que sus tres
 	## señales necesitan el mismo candado o se duplican al cambiar de club.

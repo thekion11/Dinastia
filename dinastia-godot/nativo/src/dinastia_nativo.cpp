@@ -14,7 +14,7 @@ using namespace godot;
 void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("rampa", "src", "lut"), &DinastiaNativo::rampa);
 	ClassDB::bind_method(D_METHOD("alisado", "pos", "nor", "idx"), &DinastiaNativo::alisado);
-	ClassDB::bind_method(D_METHOD("terreno", "ruido", "detalle", "lado", "celdas", "baldosas", "llano_radio", "llano_trans", "alto"), &DinastiaNativo::terreno);
+	ClassDB::bind_method(D_METHOD("terreno", "ruido", "detalle", "lado", "celdas", "baldosas", "llano_radio", "llano_trans", "alto", "monte", "monte_alto", "monte_radio"), &DinastiaNativo::terreno);
 	ClassDB::bind_method(D_METHOD("hierba", "manchas", "semilla"), &DinastiaNativo::hierba);
 }
 

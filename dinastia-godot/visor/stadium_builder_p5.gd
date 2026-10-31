@@ -128,6 +128,12 @@ static func _malla_butaca_lejos() -> Mesh:
 	for k in 3:
 		var x := -0.55 + float(k) * 0.5
 		st.append_from(respaldo, 0, Transform3D(Basis(Vector3(1, 0, 0), -0.14), Vector3(x, 0.58, -0.20)))
+	## Los reposabrazos entre asiento y asiento (27-10-2026): dos listones a 50 cm del suelo; con ellos la fila se lee como butacas separadas
+	## y no como un banco corrido (+48 vértices por grupo de tres).
+	var brazo := BoxMesh.new()
+	brazo.size = Vector3(0.05, 0.05, 0.32)
+	for xb in [-0.30, 0.20]:
+		st.append_from(brazo, 0, Transform3D(Basis(), Vector3(xb, 0.50, -0.02)))
 	var viga := BoxMesh.new()
 	viga.size = Vector3(1.40, 0.30, 0.06)
 	st.append_from(viga, 0, Transform3D(Basis(), Vector3(-0.05, 0.20, -0.08)))
@@ -298,7 +304,8 @@ static func _montar_horneados(deck: Node3D, nombre: String, mallas: Array, xfs: 
 		mmi.visibility_range_end = hasta
 		deck.add_child(mmi)
 
-static func _montar_publico_lod(deck: Node3D, nombre: String, mallas: Array, xfs: Array[Transform3D], cols: Array[Color]) -> void:
+static func _montar_publico_lod(deck: Node3D, nombre: String, mallas: Array, xfs: Array[Transform3D], cols: Array[Color],
+		limite := LOD_PUBLICO, tramos := TRAMOS_PUBLICO) -> void:
 	var lejos := _hinchas_horneados("lejos")
 	## SIN_LOD_PUBLICO=1: el montaje de antes (para medir antes/después).
 	if lejos.is_empty() or xfs.is_empty() or OS.get_environment("SIN_LOD_PUBLICO") != "":
@@ -313,18 +320,18 @@ static func _montar_publico_lod(deck: Node3D, nombre: String, mallas: Array, xfs
 		hi = hi.max(t.origin)
 	var eje := 0 if (hi.x - lo.x) >= (hi.z - lo.z) else 2
 	var largo := maxf(hi[eje] - lo[eje], 0.001)
-	for k in TRAMOS_PUBLICO:
+	for k in tramos:
 		var tx: Array[Transform3D] = []
 		var tc: Array[Color] = []
 		for i in xfs.size():
-			var f := clampi(int((xfs[i].origin[eje] - lo[eje]) / largo * TRAMOS_PUBLICO), 0, TRAMOS_PUBLICO - 1)
+			var f := clampi(int((xfs[i].origin[eje] - lo[eje]) / largo * float(tramos)), 0, tramos - 1)
 			if f == k:
 				tx.append(xfs[i])
 				tc.append(cols[i])
 		if tx.is_empty():
 			continue
-		_montar_horneados(deck, "%s%d" % [nombre, k], mallas, tx, tc, 0.0, LOD_PUBLICO)
-		_montar_horneados(deck, "%s%d_lejos" % [nombre, k], suplentes, tx, tc, LOD_PUBLICO, 0.0)
+		_montar_horneados(deck, "%s%d" % [nombre, k], mallas, tx, tc, 0.0, limite)
+		_montar_horneados(deck, "%s%d_lejos" % [nombre, k], suplentes, tx, tc, limite, 0.0)
 
 static func _malla_hincha_detalle() -> Mesh:
 	if _malla_hincha_det != null:

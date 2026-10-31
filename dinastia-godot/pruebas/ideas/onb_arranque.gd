@@ -10,6 +10,8 @@ var _resultado: Dictionary = {}
 
 func _probar() -> void:
 	_titulo("ONBOARDING · ARRANQUE COMPLETO HASTA EL PRIMER PARTIDO")
+	## La entrada se prueba hasta Principal; el prólogo 3D de la fase 2 tiene su propia prueba (f2p_prologo).
+	OrquestadorMundo.sin_prologo = true
 	OrquestadorEntrada.ruta_prefs = "user://onb_entrada_prueba.cfg"
 	OrquestadorMundo.ruta_preferencias = "user://onb_preferencias_prueba.cfg"
 	_borrar(OrquestadorEntrada.ruta_prefs)
@@ -56,7 +58,7 @@ func _probar() -> void:
 		_linea("    etapa %-10s %5d ms" % [k, Time.get_ticks_msec() - tp])
 	_comprobar(pasos == ["intro", "idioma", "modo", "pais", "config", "entrada", "personaje"],
 		"recorre las 7 etapas de la entrada (%s)" % ", ".join(pasos))
-	_comprobar(String(_resultado.get("escena", "")) == OrquestadorMundo.PRINCIPAL and Principal.mundo_pregenerado != null,
+	_comprobar(String(_resultado.get("escena", "")) == OrquestadorMundo.PRINCIPAL and PedidoPartida.mundo_pregenerado != null,
 		"la entrada termina en Principal con la partida lista")
 	o.queue_free()
 	t = _tramo("entrada (7 etapas, con el mundo)", t)
@@ -98,8 +100,8 @@ func _probar() -> void:
 	# --- limpieza ---------------------------------------------------------------------------
 	Idiomas.idioma = idioma_antes
 	Genero.fijar(mujer_antes)
-	Principal.mundo_pregenerado = null
-	Principal.modo_elegido = ""
+	PedidoPartida.mundo_pregenerado = null
+	PedidoPartida.modo_elegido = ""
 	_borrar(OrquestadorEntrada.ruta_prefs)
 	_borrar(OrquestadorMundo.ruta_preferencias)
 	_borrar(AJUSTES)

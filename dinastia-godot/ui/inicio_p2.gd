@@ -181,8 +181,15 @@ func _dinero(n: int) -> String:
 func _continuar() -> void:
 	var m = _mundo_guardado if _mundo_guardado != null else _P().cargar("partida")
 	if m == null:
+		_no_se_pudo_abrir()
 		return
 	_entrar_en(m)
+
+## Si el guardado y TODAS sus copias están dañados (27-10-2026, plan §4): antes el botón no hacía
+## nada y el jugador no sabía por qué; ahora se le dice y se le ofrece importar una exportada.
+func _no_se_pudo_abrir() -> void:
+	if _archivo_ui != null:
+		_archivo_ui._avisar(Idiomas.t("No se pudo abrir la partida: el guardado y sus copias están dañados. Si exportaste una, puedes importarla."))
 
 ## Entra a una partida cargada (fase 3, bloque 7): con el prólogo visto y la vida encendida,
 ## en 3D (la oficina, o tu casa el lunes a las 08:00); si no, el menú central de siempre.
@@ -212,6 +219,7 @@ func _poner_botones_archivo() -> void:
 func _abrir_partida(nombre: String) -> void:
 	var m = _P().cargar(nombre)
 	if m == null:
+		_no_se_pudo_abrir()
 		return
 	_entrar_en(m)
 
@@ -292,7 +300,9 @@ func _actualizar_continuar_ya() -> void:
 	var bx := Button.new()
 	bx.text = "✕"
 	bx.custom_minimum_size = Vector2(32, 32)
-	bx.pressed.connect(_borrar_partida)
+	bx.tooltip_text = Idiomas.t("Borrar la partida guardada")
+	## Borra la partida ENTERA y no hay vuelta: segundo toque para confirmar (M-299, 27-10-2026).
+	DobleToque.conectar(bx, Idiomas.t("¿Borrar la partida? Toca otra vez"), _borrar_partida)
 	botones.add_child(bx)
 
 ## Cada 30 s: la siguiente variante, fundida encima de la actual (1,4 s).

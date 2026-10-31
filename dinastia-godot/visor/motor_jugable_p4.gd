@@ -3,6 +3,9 @@ extends "res://visor/motor_jugable_p3.gd"
 
 # ---------------------------------------------------------------- balón
 
+var clima := ""            ## la clave de `Clima` del partido (GestoTecnico.fijar_clima)
+var _roce_clima := 1.0     ## lluvia: el balón resbala más; nieve: frena antes
+
 func _mover_balon(delta: float) -> void:
 	if not poseedor.is_empty():
 		var n: Node3D = poseedor["node"]
@@ -53,7 +56,7 @@ func _mover_balon(delta: float) -> void:
 			var h := Vector3(vel_balon.x, 0, vel_balon.z)
 			var v := h.length()
 			if v > 0.0:
-				h = h / v * maxf(0.0, v - (v * ROCE_SUELO + ROCE_FIJO) * delta)
+				h = h / v * maxf(0.0, v - (v * ROCE_SUELO + ROCE_FIJO) * _roce_clima * delta)
 			vel_balon = Vector3(h.x, 0.0, h.z)
 			balon.position += vel_balon * delta
 			balon.position.y = R
@@ -66,7 +69,9 @@ func _mover_balon(delta: float) -> void:
 			_palos_y_lineas(previa)
 		return
 	var p := balon.position
-	var en_aire := p.y > R + 0.02 or vel_balon.y > 0.2
+	## Bajando también está en el aire (27-10-2026, s3f): a menos de 2 cm del suelo y cayendo a 3 m/s se
+	## daba por rodando, perdía la velocidad vertical y el bote «moría» (uno de cada tres a 60 fps).
+	var en_aire := p.y > R + 0.02 or absf(vel_balon.y) > 0.2
 	if en_aire:
 		var magnus := giro_balon.cross(vel_balon) * 0.012
 		vel_balon += (Vector3(0, -G, 0) + magnus - vel_balon * ARRASTRE) * delta
@@ -74,7 +79,7 @@ func _mover_balon(delta: float) -> void:
 		var h := Vector3(vel_balon.x, 0, vel_balon.z)
 		var v := h.length()
 		if v > 0.0:
-			var nv := maxf(0.0, v - (v * ROCE_SUELO + ROCE_FIJO) * delta)
+			var nv := maxf(0.0, v - (v * ROCE_SUELO + ROCE_FIJO) * _roce_clima * delta)
 			h = h / v * nv
 		vel_balon = Vector3(h.x, 0.0, h.z)
 		giro_balon *= 0.97
@@ -128,13 +133,17 @@ func _empujar(p: Dictionary, dir: Vector3, fuerza: float, freno: float, dur: flo
 ## minuto = 180 s la mitad) había 3/4 de los duelos de la sonda (240 s) y la IA
 ## amagaba ~13 veces por partido en vez de ~20. Las ganas de cada duelo se
 ## multiplican por lo que falta de césped para que salgan las mismas por 90'.
+## EL PRESET DE JUEGO (semana 3, 27-10-2026; `fijar_preset`): «arcade» afina pases y tiros y pita menos.
+var preset_error := 1.0
+var preset_faltas := 1.0
+
 func _escala_ritmo() -> float:
 	return clampf(MITAD_CALIBRADA / maxf(duracion_mitad, 1.0), 0.6, 2.0)
 
 ## Las faltas de duelo se reparten por segundo de césped: con partidos más
 ## cortos hay menos choques y cada uno pesa más (como las fintas).
 func _escala_falta() -> float:
-	return _escala_ritmo()
+	return _escala_ritmo() * preset_faltas
 
 ## ¿`victima` iba sola hacia el arco? Cerca del arco rival (35 m), de cara a él
 ## y sin ningún defensor de campo (aparte de `menos`) entre ella y la portería.

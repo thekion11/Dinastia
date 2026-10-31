@@ -76,6 +76,7 @@ func _estadio() -> void:
 		nodo.set_meta("sin_corte", true)
 		StadiumBuilder.build(nodo, perfil, aforo, 0.85 if bool(datos.get("dia_partido", false)) else 0.35, semilla, club_obj)
 		GaleriaClub.en_ciudad = false
+		BanquilloTour.montar(nodo, club_obj)   ## los suplentes sentados en el banquillo local (P3)
 		huellas.append(Rect2(ESTADIO_EN.x - 62.0, ESTADIO_EN.z - 80.0, 124.0, 160.0))
 		## El vestuario del túnel sobresale por detrás de la tribuna (estadio 2.0).
 		var tv := TunelVestuario.datos(perfil, StadiumBuilder.niveles_de(perfil, aforo))
@@ -181,7 +182,7 @@ func _campos() -> void:
 ## Un rótulo flotante: siempre del mismo tamaño en pantalla y mirando a cámara.
 func _rotulo(pos: Vector3, texto: String, color: Color, tam: int = 28) -> void:
 	var l := Label3D.new()
-	l.text = texto
+	l.text = Idiomas.t(texto)   ## M-333: los rótulos del mapa, en el idioma del juego (los nombres propios se quedan)
 	l.font_size = tam
 	l.outline_size = 10
 	l.modulate = color

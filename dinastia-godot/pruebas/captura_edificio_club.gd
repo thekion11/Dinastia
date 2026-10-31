@@ -9,11 +9,17 @@ var _imgs: Array[Image] = []
 var _n := 0
 var _paso := 0
 ## [planta, sala] en el orden de las fotos.
-const SALAS := [[0, "Vestuario"], [-2, "Estacionamiento"], [-1, "Utilería"], [-1, "Enfermería"],
+const TODAS := [[0, "Vestuario"], [-2, "Estacionamiento"], [-1, "Utilería"], [-1, "Enfermería"],
 	[-1, "Vestuario visitante"], [1, "Oficina del DT"], [1, "Despacho del presidente"], [1, "Sala de vídeo"],
 	[2, "Sala de prensa"], [2, "Museo del club"], [1, "Pasillo"], [0, "Ascensor"]]
+## SOLO=5,6 deja solo esas salas (índices de TODAS) y SIN_AVATAR=1 esconde al jugador (para ver el mobiliario).
+var SALAS: Array = TODAS
 
 func _ready() -> void:
+	if OS.get_environment("SOLO") != "":
+		SALAS = []
+		for i in OS.get_environment("SOLO").split(","):
+			SALAS.append(TODAS[int(i)])
 	var m := Mundo.new()
 	m.generar(["CHI"], 77)
 	var club: Club = m.ligas[0].clubes[0]
@@ -44,6 +50,8 @@ func _colocar(planta: int, sala: String) -> void:
 			_ex.rumbo = PI
 			_ex.paso(Vector2.ZERO, false, 0.0)
 			_ex._colocar_camara(1.0)
+			if OS.get_environment("SIN_AVATAR") == "1":
+				_ex.cuerpo.visible = false
 			print("SALA ", planta, " ", sala, " zona=", _ex.zona_en(_ex.cuerpo.position).get("nombre", "?"))
 			return
 	print("NO HAY SALA ", planta, " ", sala)
@@ -59,9 +67,10 @@ func _process(_d: float) -> void:
 			_foto()
 		if _paso >= SALAS.size():
 			var hoja := Image.create(480 * 4, 270 * 3, false, Image.FORMAT_RGBA8)
+			var nombre := "res://pruebas/capturas/edificio_club.png" 
 			for k in _imgs.size():
 				hoja.blit_rect(_imgs[k], Rect2i(0, 0, 480, 270), Vector2i((k % 4) * 480, (k / 4) * 270))
-			hoja.save_png("res://pruebas/capturas/edificio_club.png")
+			hoja.save_png(nombre)
 			print("HOJA OK")
 			get_tree().quit()
 			return

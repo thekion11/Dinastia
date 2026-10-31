@@ -368,6 +368,7 @@ func _process(delta: float) -> void:
 	if ms <= 0.0:
 		return
 	_acumulado += delta * 1000.0
+	var simulado := false   ## `_refrescar()` rehace ~50 controles: solo cuando el reloj avanzó, no cada cuadro (28-10)
 	while _acumulado >= ms and not partido.terminado_ya:
 		## EL ENTRETIEMPO. El reloj se para solo al llegar al 45 y no sigue
 		## hasta que salgas del camarín: si no parara, la charla sería un botón
@@ -384,10 +385,12 @@ func _process(delta: float) -> void:
 			return
 		_acumulado -= ms
 		partido.simular_minuto()
+		simulado = true
 		if _invasion_pendiente:
 			_invasion_pendiente = false
 			return
-	_refrescar()
+	if simulado:
+		_refrescar()
 
 ## EL RITMO DE LA CRÓNICA (auditoría 26-10: en 48 de 50 partidos había tramos de 20 minutos o más sin
 ## una sola línea; el máximo, 38'). Si la crónica lleva `SILENCIO_MAX` minutos callada, cuenta algo que

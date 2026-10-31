@@ -77,7 +77,10 @@ const MENUS := [
 		"colores": ["#0c0e12", "#171b22", "#a8b4c8"], "subs": [
 		{"tab": "Ajustes", "secc": "pantalla", "label": "Dispositivo", "icono": "🖥️", "desc": "Pantalla, calidad gráfica, mando y fotogramas."},
 		{"tab": "Ajustes", "secc": "audio", "label": "Sonido", "icono": "🔊", "desc": "Música, efectos y el ruido del estadio."},
-		{"tab": "Ajustes", "secc": "aspecto", "label": "Interfaz", "icono": "🖌️", "desc": "Paletas, fondos, idioma y estilo del menú."}]},
+		{"tab": "Ajustes", "secc": "aspecto", "label": "Interfaz", "icono": "🖌️", "desc": "Paletas, fondos y estilo del menú."},
+		{"tab": "Ajustes", "secc": "juego", "label": "Juego", "icono": "🎮", "desc": "Idioma, moneda, velocidad del partido, comodidades y vida del DT."},
+		{"tab": "Ajustes", "secc": "acceso", "label": "Accesibilidad", "icono": "♿", "desc": "Texto, colores, contraste, avisos de sonido y teclas."},
+		{"tab": "Ajustes", "secc": "partida", "label": "Partida y guardado", "icono": "💾", "desc": "Ranuras, exportar, autoguardado, informe de fallos, privacidad y créditos."}]},
 	{"id": "ciudad", "icono": "🏙️", "nombre": "Ciudad 3D", "estilo": 7, "ficha": false,
 		"lema": "La ciudad que rodea tu estadio.",
 		"colores": ["#070a16", "#141a33", "#ffd27a"], "subs": [
@@ -96,30 +99,7 @@ const MENUS := [
 
 ## Un dato vivo para la tarjeta de cada submenú en la portada del menú.
 static func dato(p: Principal, sub: Dictionary) -> String:
-	var m := p.mundo
-	if m == null or m.mi_club() == null:
-		return ""
-	var c := m.mi_club()
-	match String(sub.get("label", "")):
-		"Correo":
-			var n := 0
-			for x: Dictionary in p.get("_bandeja"):
-				if not bool(x.get("leido", false)):
-					n += 1
-			return "%d sin leer" % n if n > 0 else "Al día"
-		"Vitrina", "Historia del club":
-			return "%d títulos" % (m.roles.trofeos.size() if m.roles != null else 0)
-		"Hinchada y socios":
-			return "%s socios" % p._miles(c.socios if c.socios > 0 else c.estadio_aforo)
-		"Diseño del estadio":
-			return "%s butacas" % p._miles(c.estadio_aforo)
-		"Camarín", "Personal del club":
-			return "%d jugadores" % c.plantilla.size()
-		"Feed de redes":
-			return "%s seguidores" % p._miles(m.prensa.seguidores) if m.prensa != null else ""
-		"Mi carrera":
-			return m.roles.nombre if m.roles != null else ""
-	return ""
+	return DatoTarjeta.de(p, String(sub.get("label", "")))   ## M-290
 
 ## Los grupos de la barra de arriba que ahora viven aquí (la barra se queda
 ## con CENTRAL y CLUB).

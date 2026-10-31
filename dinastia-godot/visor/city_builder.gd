@@ -141,7 +141,30 @@ static func asfalto_mate(m: StandardMaterial3D, rugosidad := 0.85) -> StandardMa
 		_rugosidad_mate = t
 	m.roughness_texture = _rugosidad_mate
 	m.roughness = rugosidad
+	_mojables.append(m)
+	m.set_meta("seco", [rugosidad, m.albedo_color, 0.6])
 	return m
+
+## Otro material de suelo que se moja con la lluvia (aceras, losas): se oscurece menos que el asfalto.
+static func mojable(m: StandardMaterial3D, factor := 0.74) -> StandardMaterial3D:
+	if m.has_meta("seco"):
+		return m
+	_mojables.append(m)
+	m.set_meta("seco", [m.roughness, m.albedo_color, factor])
+	return m
+
+## SUELO MOJADO (S6): con lluvia el asfalto pierde rugosidad (refleja el cielo) y se oscurece; al escampar vuelve a como estaba.
+static var _mojables: Array[StandardMaterial3D] = []
+
+static func mojar(mojado: bool) -> void:
+	for m: StandardMaterial3D in _mojables:
+		if m == null or not m.has_meta("seco"):
+			continue
+		var seco: Array = m.get_meta("seco")
+		m.roughness = 0.25 if mojado else float(seco[0])
+		var k: float = float(seco[2]) if seco.size() > 2 else 0.72
+		m.albedo_color = (seco[1] as Color) * k if mojado else seco[1] as Color
+		m.metallic_specular = 0.6 if mojado else 0.2
 
 func mostrar_rotulos(si: bool) -> void:
 	if _rotulos != null:

@@ -19,6 +19,8 @@ var hud: PrologoHud
 ## id de cita → PrologoMentor en su sitio.
 var cuerpos: Dictionary = {}
 var cerca_id := ""
+## Los futbolistas del vestuario en horario (fase 5, bloque 1).
+var vestuario: VestuarioVivo = null
 var _abierta := ""
 var _t := 0.0
 
@@ -38,6 +40,7 @@ func _ready() -> void:
 	if hud._saltar != null:
 		hud._saltar.visible = false
 	hud.flecha(false)
+	vestuario = VestuarioVivo.crear(self)
 
 func _process(delta: float) -> void:
 	if mundo == null or mundo.citas == null or expl == null or not is_instance_valid(expl) or expl.cuerpo == null:
@@ -158,6 +161,8 @@ func _buscar_cerca() -> void:
 
 ## La E del explorador: true si la cita se quedó con ella.
 func usar() -> bool:
+	if cerca_id == "" and _abierta == "" and vestuario != null and vestuario.usar():
+		return true
 	if cerca_id == "" or _abierta != "":
 		return false
 	var ct := mundo.citas.por_id(cerca_id)
@@ -166,27 +171,49 @@ func usar() -> bool:
 	_abierta = cerca_id
 	var per: PrologoMentor = cuerpos.get(cerca_id)
 	if per != null and is_instance_valid(per):
-		per.gesto()
+		per.hablar(true)
 		expl._hablando_con = per
 		expl._t_burbuja = 120.0
 		expl._colocar_camara(1.0)
 	expl.pausar(true)
 	var club := mundo.mi_club()
 	var color := Color(club.color1).lerp(Color.WHITE, 0.35) if club != null else Color(1.0, 0.86, 0.5)
-	hud.pregunta_directiva("%s · %s" % [String(ct["quien"]), String(ct["cargo"])], color,
-		"%s %s" % [String(ct["quien"]).get_slice(" ", 0), String(ct["asunto"])], mundo.citas.opciones(mundo, ct))
+	_paso = 0
+	_elecciones.clear()
+	_preguntar(ct, color)
 	return true
+
+## (§2.5) La entrevista hace tres preguntas seguidas; el resto de citas, una.
+var _paso := 0
+var _elecciones: Array = []
+func _preguntar(ct: Dictionary, color: Color) -> void:
+	var quien := "%s · %s" % [String(ct["quien"]), String(ct["cargo"])]
+	if String(ct["tipo"]) == "entrevista":
+		hud.pregunta_directiva(quien, color, Idiomas.t(Citas.ENTREVISTA_PREGUNTAS[_paso]) % String(ct["quien"]).get_slice(" ", 0),
+			mundo.citas.opciones_entrevista(mundo, ct, _paso))
+		return
+	hud.pregunta_directiva(quien, color, "%s %s" % [String(ct["quien"]).get_slice(" ", 0), String(ct["asunto"])], mundo.citas.opciones(mundo, ct))
 
 func _responder(i: int) -> void:
 	if _abierta == "":
 		return
 	var id := _abierta
+	var ct := mundo.citas.por_id(id)
+	if String(ct.get("tipo", "")) == "entrevista" and _paso < Citas.ENTREVISTA_PREGUNTAS.size() - 1:
+		_elecciones.append(i)
+		_paso += 1
+		var club := mundo.mi_club()
+		_preguntar(ct, Color(club.color1).lerp(Color.WHITE, 0.35) if club != null else Color(1.0, 0.86, 0.5))
+		return
 	_abierta = ""
-	var r := mundo.citas.resolver(mundo, id, i)
+	_elecciones.append(i)
+	var r := mundo.citas.resolver(mundo, id, int(_elecciones[0]), _elecciones.slice(1)) if String(ct.get("tipo", "")) == "entrevista" \
+		else mundo.citas.resolver(mundo, id, i)
 	expl.pausar(false)
 	expl._t_burbuja = 0.0
 	expl._hablando_con = null
 	if cuerpos.has(id) and is_instance_valid(cuerpos[id]):
+		(cuerpos[id] as PrologoMentor).hablar(false)
 		(cuerpos[id] as PrologoMentor).adelantarse(expl.cuerpo.position + Vector3(4.0, 0, 4.0))
 		var per: Node = cuerpos[id]
 		get_tree().create_timer(2.5).timeout.connect(func() -> void:

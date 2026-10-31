@@ -61,6 +61,10 @@ func _probar() -> void:
 	for s in semillas:
 		for grande: bool in [true, false]:
 			_una(int(s), temporadas, grande)
+		## EL GRANDE BIEN GESTIONADO (M-208, revisión del líder): con los dos consejeros que más golpes esquivan en el directorio (legal: multas; marketing:
+		## recortes de patrocinio y +10 % de auspicios) llega más lejos que el que no hace nada: las crisis se pueden esquivar, no son un castigo ciego.
+		_una(int(s), temporadas, true, true)
+		_comprobar(float(_final[int(s)][true]) > float(_final[int(s)][false]), "s%d: el grande con consejeros termina con más caja que sin ellos (%.1f M frente a %.1f M)" % [s, float(_final[int(s)][true]) / 1e6, float(_final[int(s)][false]) / 1e6])
 
 func _mundo_con(semilla: int, grande: bool) -> Mundo:
 	var m := Mundo.new()
@@ -70,10 +74,15 @@ func _mundo_con(semilla: int, grande: bool) -> Mundo:
 	m.tomar_el_mando((primera[0] if grande else primera[primera.size() - 1]).id)
 	return m
 
-func _una(semilla: int, temporadas: int, grande: bool) -> void:
+var _final := {}   ## semilla → {gestionado: caja final del grande}
+
+func _una(semilla: int, temporadas: int, grande: bool, gestionado := false) -> void:
 	var m := _mundo_con(semilla, grande)
+	if gestionado:
+		for k in ["leg", "mkt"]:
+			m.directiva.consejeros[k] = {"nombre": k, "edad": 50, "perfil": ""}
 	var yo: Club = m.clubes[m.mi_club_id]
-	var et := "s%d %s" % [semilla, "GRANDE" if grande else "CHICO"]
+	var et := "s%d %s%s" % [semilla, "GRANDE" if grande else "CHICO", " con consejeros" if gestionado else ""]
 	_linea("")
 	_linea("--- %s (%s, rep %d) ---" % [et, yo.nombre, yo.rep])
 	var f0 := _foto(m, 0.0)
@@ -83,6 +92,7 @@ func _una(semilla: int, temporadas: int, grande: bool) -> void:
 	var f := f0
 	var perdida_primera := 0.0
 	var en_primera := 0
+	var bajadas := 0   ## temporadas en que la caja bajó (con las crisis de `CrisisCaja` no sube en línea recta)
 	for t in temporadas:
 		var caja_antes := yo.saldo
 		var div_antes := yo.division
@@ -92,6 +102,8 @@ func _una(semilla: int, temporadas: int, grande: bool) -> void:
 		## La foto de plantillas y contratos, tras el cierre (renovaciones, retiros, cantera).
 		var g: float = f["gpp"]
 		f = _foto(m, g)
+		if yo.saldo < caja_antes:
+			bajadas += 1
 		_linea("  t%-2d " % (t + 1) + _texto(f))
 		_revisar(f, f0, t + 1, fallos)
 		if div_antes == 1:
@@ -100,7 +112,11 @@ func _una(semilla: int, temporadas: int, grande: bool) -> void:
 	## Caja: tendencia en todo el tramo (la de un año suelto es ruido de premios y ascensos).
 	var ref := Eco.ref_caja(yo.rep)
 	if grande:
+		if not _final.has(semilla):
+			_final[semilla] = {}
+		_final[semilla][gestionado] = yo.saldo
 		var crece := float(yo.saldo - caja0) / float(temporadas)
+		_comprobar(bajadas >= 1 or temporadas < 5, "%s: la caja del grande no sube en línea recta (bajó en %d de %d temporadas)" % [et, bajadas, temporadas])
 		_comprobar(crece < ref * 0.75, "%s: la caja del grande no se dispara sola (%.2f M/temporada; ref %.2f M)" % [et, crece / 1e6, ref / 1e6])
 	else:
 		var media := perdida_primera / maxf(1.0, float(en_primera))

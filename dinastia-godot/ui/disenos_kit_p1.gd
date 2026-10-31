@@ -254,7 +254,7 @@ static func indice_de(tabla: Array, clave: String) -> int:
 ## que representa (tabla ESTADIO_CLUB, campo «camiseta»); si no, el del hash.
 static func _diseno_de(c: Club) -> String:
 	if c.kit_estilo == "":
-		var real := String(c.fila_estadio_real().get("camiseta", ""))
+		var real := String(AspectoClub.fila(c).get("camiseta", ""))
 		if real != "":
 			return real
 	return Jersey.kit_de(c, c.kit_estilo)
@@ -281,6 +281,12 @@ static func kit_de_club(c: Club) -> Dictionary:
 		"acc": {},
 		"cuello": absi(hash(c.id)) % CUELLOS.size(),
 	}
+	## El pantalón y las medias del club real (orden 15), salvo que el jugador se haya diseñado el uniforme.
+	if c.kit_color1 == "" and c.kit_x.is_empty():
+		for k: Array in [["pant", "c1"], ["med", "c1"]]:
+			var hx := AspectoClub.kit(c, String(k[0]))
+			if hx != "":
+				base[k[0]][k[1]] = hx
 	for k: String in c.kit_x:
 		base[k] = c.kit_x[k]
 	## Los patrocinadores no se guardan en el kit: salen de los contratos (o del

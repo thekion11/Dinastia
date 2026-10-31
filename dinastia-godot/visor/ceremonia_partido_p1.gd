@@ -25,8 +25,10 @@ signal terminada
 const T_VUELO := 4.5
 const T_SALIDA := 10.0
 const T_FILA := 5.0
+const T_FOTO := 3.4      ## la foto de equipo del once local (`CeremoniaFoto`, 27-10-2026)
 const T_SORTEO := 4.2
-const T_FIN := T_VUELO + T_SALIDA + T_FILA * 2.0 + T_SORTEO
+const INICIO_SORTEO := T_VUELO + T_SALIDA + T_FILA * 2.0 + T_FOTO
+const T_FIN := INICIO_SORTEO + T_SORTEO
 
 var activa := false
 var _ui: Control
@@ -57,6 +59,8 @@ var _estilo := {}
 var _arbitro: Dictionary = {}
 var _capitanes: Array = []
 var _moneda: MeshInstance3D
+var _foto_guardado: Array = []
+var _flash: OmniLight3D
 var _saludo_hecho := false
 var _gana_local := true
 
@@ -265,6 +269,8 @@ func terminar() -> void:
 	if not activa:
 		return
 	activa = false
+	if is_instance_valid(_flash):
+		_flash.queue_free()
 	for g: Array in _guardado:
 		var nd: Node3D = g[0]
 		if is_instance_valid(nd):

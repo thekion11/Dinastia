@@ -259,7 +259,10 @@ func _coherencia() -> void:
 			n += int(c[2])
 		var e := est / maxf(n, 1)
 		var real := float(ok) / maxf(n, 1)
-		_comprobar(n >= 8 and absf(real - e) <= (0.2 if forzada == "pase" else 0.12),
+		## Margen: el fijo de siempre o dos desviaciones típicas de la binomial, lo mayor (27-10-2026:
+		## con 13 tiros la desviación ya es ~10 %, y cualquier cambio del azar del motor lo tumbaba).
+		var margen := maxf(0.2 if forzada == "pase" else 0.12, 2.0 * sqrt(e * (1.0 - e) / maxf(n, 1)))
+		_comprobar(n >= 8 and absf(real - e) <= margen,
 			"%s: el botón decía %.0f %% de media y en el césped salió %d de %d (%.0f %%)" % [forzada, e * 100.0, ok, n, real * 100.0])
 
 func _jugar_forzando(semilla: int, forzada: String) -> Array:

@@ -33,7 +33,7 @@ func fundar_club(nombre_club: String, pais: String, col1: String = "", col2: Str
 ## desafíos activos entre sí, tal cual el HTML.
 func multiplicador_desafios() -> float:
 	var m := 1.0
-	var tabla: Variant = Datos.tabla("DESAFIOS")
+	var tabla: Variant = DesafiosDificultad.todos()
 	if not (tabla is Array):
 		return m
 	for k: String in desafios:
@@ -185,6 +185,7 @@ func _capitan_si_falta(c: Club) -> void:
 ## 10.000 jugadores: util para una partida de verdad, un desperdicio para una
 ## prueba que solo mira si la tabla suma. Por eso se puede pedir un mundo chico.
 func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:
+	Partido.ex_de_mi_club.clear()   ## 28-10: un mundo nuevo no hereda los rencores del anterior (los ids j%d se repiten)
 	semilla = Azar.sembrar(semilla_partida)
 	mercado = Mercado.new(self)
 	roles = Roles.new(self)

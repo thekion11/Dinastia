@@ -78,7 +78,7 @@ func conectar_mi_continental() -> void:
 		for r: Dictionary in resultados:
 			if r.get("pasa") == p.mundo.mi_club():
 				Aviso.mostrar(p, "dinero", "🎟️", "Pasas de ronda en %s" % c.nombre,
-					"%s superada. Cada eliminatoria continental que se gana es premio." % nombre_ronda, "ronda_superada")
+					Idiomas.t("%s superada.") % Idiomas.t(nombre_ronda) + " " + Idiomas.t("Cada eliminatoria continental que se gana es premio."), "ronda_superada")
 				return)
 	c.grupos_terminados.connect(func(clasificados: Array) -> void:
 		if clasificados.has(p.mundo.mi_club()):

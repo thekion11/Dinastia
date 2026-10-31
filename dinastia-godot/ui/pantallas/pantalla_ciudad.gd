@@ -7,14 +7,30 @@ extends RefCounted
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
 var p: Principal
+## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
+## `GLOSARIO` del HTML (`juego.js`, 20 términos): tabla estática, ya exportada
+## en `datos/tablas.json` como cualquier otra -no se transcribe a mano-. Sin
+## búsqueda por ahora: con 20 entradas una lista fija se lee entera de un
+## vistazo, y el proyecto no tenía hasta hoy ningún campo de texto interactivo
+## que replicar con fidelidad.
+## `vEditor()`: LA ÚNICA PANTALLA QUE NO JUEGA.
+##
+## Cambia los DATOS: nombres de club, colores, reputación, aforo, y de cada
+## jugador su nombre, media, techo, edad, dorsal, puesto, rasgo, atributos y
+## cara. Y un importador de CSV para meter una liga entera de golpe.
+##
+## POR QUÉ ESTÁ. El mundo se genera solo y los nombres van censurados letra a
+## número. Quien quiera SU liga —los nombres bien escritos, las plantillas que
+## él conoce— tiene que poder escribirla, y a mano son cuatrocientos clubes.
+var _editor: Editor
 
 func _init(principal: Principal) -> void:
 	p = principal
 
 func _editor_de() -> Editor:
-	if p._editor == null or p._editor._mundo() != p.mundo:
-		p._editor = Editor.new(p.mundo)
-	return p._editor
+	if _editor == null or _editor._mundo() != p.mundo:
+		_editor = Editor.new(p.mundo)
+	return _editor
 
 ## EL ALUMBRADO PÚBLICO: de qué color se ve tu ciudad de noche. Es la única
 ## decisión de la pantalla que no cuesta dinero ni da ingresos, y aun así es de
@@ -318,3 +334,57 @@ func _pintar_seguridad(ci: Ciudad, c: Club) -> void:
 		ex.text = Idiomas.t("Un incidente grave cuesta puertas cerradas o aforo reducido, y eso es taquilla que no vuelve. Sube con el mal ambiente y la funa.")
 		ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_ciudad.add_child(ex)
+
+## `vCiudad()`: EL CLUB Y SU BARRIO.
+##
+## Es la parte del juego que ocurre fuera del campo y de la caja. Todo lo demás
+## escala con ganar partidos; esto no: los negocios anexos ingresan TODAS las
+## semanas del año, jueguen o no, y tienen un freno que no es dinero —el permiso
+## municipal y la relación con los vecinos—, así que no basta con tener caja.
+func _pintar_ciudad(c: Club) -> void:
+	var ci := p.mundo.ciudad
+	if ci == null:
+		return
+	p._limpiar(p._lista_ciudad)
+	var t := p._texto(11, p.COL_SUAVE)
+	t.text = Idiomas.t("🏙️ EL CLUB Y SU CIUDAD")
+	p._lista_ciudad.add_child(t)
+	## EL VISOR 3D DE LA CIUDAD DEPORTIVA, por fin alcanzable desde el juego
+	## (12-9-2026): `CityBuilder` llevaba desde el 2-09-2026 viviendo solo en
+	## el proyecto viejo, nunca portado. Mismo patrón que el botón de estadio.
+	var ver3d := Button.new()
+	ver3d.text = Idiomas.t("🚪 Levantarse del PC") if p._vistas.pc_oficina() != null else Idiomas.t("🏙️ Ver la ciudad en 3D")
+	ver3d.add_theme_font_size_override("font_size", 11)
+	ver3d.pressed.connect(p._ver_ciudad_con_carga)
+	p._lista_ciudad.add_child(ver3d)
+	_pintar_luces_ciudad(ci)
+
+	var n_neg := 0
+	for k: String in ci.negocios:
+		if bool(ci.negocios[k]):
+			n_neg += 1
+	p._dato("Negocios abiertos", "%d de %d" % [n_neg, Ciudad.lista_negocios().size()],
+		p.COL_TEXTO, p._lista_ciudad)
+	p._dato("Ingreso semanal", p._dinero(ci.renta_negocios(c, p.mundo.prensa.animo if p.mundo.prensa else 60)),
+		p.COL_VERDE, p._lista_ciudad)
+	p._dato("Relación con los vecinos", "%d de 100" % ci.vecinos,
+		p.COL_ROJO if ci.vecinos < 35 else (p.COL_VERDE if ci.vecinos > 70 else p.COL_ORO), p._lista_ciudad)
+	p._dato("Estado del césped", "%d de 100" % ci.cesped,
+		p.COL_ROJO if ci.cesped < Ciudad.CESPED_MINIMO_CONCIERTO else p.COL_VERDE, p._lista_ciudad)
+	if not ci.sancion.is_empty():
+		var av := p._texto(12, p.COL_ROJO)
+		av.text = Idiomas.t("🚫 Próximo partido a puertas cerradas.") if String(ci.sancion["tipo"]) == "cerradas" \
+			else "🚧 Aforo reducido al 40%% durante %d semana(s)." % int(ci.sancion["semanas"])
+		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		p._lista_ciudad.add_child(av)
+	if not ci.permiso.is_empty():
+		p._dato("Permiso en trámite", "resolución en %d semana(s)  ·  %d%% estimado" % [
+			int(ci.permiso["semanas"]), int(round(float(ci.permiso["prob"]) * 100.0))],
+			p.COL_ORO, p._lista_ciudad)
+
+	_pintar_terrenos(ci, c)
+	_pintar_negocios(ci, c)
+	_pintar_conciertos(ci, c)
+	_pintar_municipalidad(ci, c)
+	_pintar_sostenibilidad(ci, c)
+	_pintar_seguridad(ci, c)

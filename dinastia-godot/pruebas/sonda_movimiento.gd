@@ -91,6 +91,19 @@ func _anatomia(cuerpo: String, d: Dictionary) -> void:
 		"antebrazo_sobre_brazo": codo.distance_to(mano) / maxf(hombro_i.distance_to(codo), 0.001),
 		"pantorrilla_sobre_muslo": rodilla.distance_to(pie) / maxf(cadera.distance_to(rodilla), 0.001),
 	}
+	## POSTURA de pie («parado», a mitad del clip): separación de los pies y ángulo de la rodilla (humano relajado: pies a
+	## 0,20-0,30 m para 1,78 m de altura; rodilla casi recta, > 170°).
+	if ap != null and ap.has_animation("parado"):
+		ap.play("parado")
+		ap.seek(0.5, true)
+		esq.force_update_all_bone_transforms()
+		var fi := _pos(esq, "foot_l")
+		var fd := _pos(esq, "foot_r")
+		var ca := _pos(esq, "thigh_l")
+		var ro := _pos(esq, "calf_l")
+		var rodilla_ang := rad_to_deg((ca - ro).angle_to(fi - ro))
+		print("  POSTURA parado: pies a %.2f m (%.2f de la altura) · rodilla %.0f° · tobillos a %.2f m del eje · pie a %.3f m del suelo" % [fi.distance_to(fd), fi.distance_to(fd) / h, rodilla_ang, absf(fi.x - fd.x) * 0.5, fi.y])
+		ap.pause()
 	print("\n=== ANATOMÍA %s · altura %.2f m · %.1f cabezas ===" % [cuerpo, h, 1.0 / maxf(medidas["cabeza"], 0.001)])
 	for k: String in medidas:
 		var v: float = medidas[k]
@@ -114,6 +127,7 @@ func _clips(cuerpo: String, d: Dictionary) -> void:
 		var largo := ap.current_animation_length
 		var dt := 1.0 / 60.0
 		var vels: Array[float] = []
+		var anchos: Array[float] = []   ## separación lateral de los tobillos (ancho de paso)
 		var antes_i := Vector3.INF
 		var antes_d := Vector3.INF
 		var t := 0.0
@@ -122,6 +136,7 @@ func _clips(cuerpo: String, d: Dictionary) -> void:
 			esq.force_update_all_bone_transforms()
 			var pi := _pos(esq, "foot_l")
 			var pd := _pos(esq, "foot_r")
+			anchos.append(absf(pi.x - pd.x))
 			if antes_i != Vector3.INF:
 				var apoyado_i := pi.y <= pd.y
 				var p0: Vector3 = antes_i if apoyado_i else antes_d
@@ -133,5 +148,7 @@ func _clips(cuerpo: String, d: Dictionary) -> void:
 		vels.sort()
 		var natural: float = vels[vels.size() / 2] if not vels.is_empty() else 0.0
 		var juego: float = VELOCIDADES[clip]
-		print("  %-16s natural %.2f m/s · juego %.2f m/s · patina ×%.2f · largo %.2f s" % [clip, natural, juego, juego / maxf(natural, 0.01), largo])
+		anchos.sort()
+		var ancho: float = anchos[anchos.size() / 2] if not anchos.is_empty() else 0.0
+		print("  %-16s natural %.2f m/s · juego %.2f m/s · patina ×%.2f · largo %.2f s · ancho de paso %.2f m (humano 0,08-0,12)" % [clip, natural, juego, juego / maxf(natural, 0.01), largo, ancho])
 	ap.stop()

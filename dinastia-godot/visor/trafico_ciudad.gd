@@ -38,15 +38,16 @@ func _process(delta_real: float) -> void:
 			v["espera"] = float(v["espera"]) - delta
 			if float(v["espera"]) <= 0.0 and v.has("pausa"):
 				v.erase("pausa")
+				PeatonVida.movil(v, false)
 				_animar(v, "caminar")
 			continue
 		## NPCs CON VIDA (etapa 1): de vez en cuando un peatón se detiene a mirar
 		## el móvil o a descansar y luego sigue su camino.
 		var es_peaton := bool(v.get("peaton", false))
-		if es_peaton and randf() < 0.0004 * delta * 60.0:
+		if es_peaton and randf() < 0.0004 * delta * 60.0 * float(v.get("rut_pausa", 1.0)):   ## (M-183: más paradas a la hora de comer y de tarde)
 			v["espera"] = randf_range(3.0, 9.0)
 			v["pausa"] = true
-			_animar(v, "parado")
+			PeatonVida.esperar(self, v, randf())
 			continue
 		var avance := float(v["vel"]) * delta
 		var ruta := int(v["ruta"])
@@ -54,13 +55,26 @@ func _process(delta_real: float) -> void:
 		var largo := (_rutas[ruta] as Ruta).largo
 		## En rojo (o ámbar), se detiene en la línea.
 		var frena := false
+		## SUAVE (27-10-2026, pieza F-2): un coche o un bus no se clava en la línea ni en la parada: tiene velocidad
+		## propia (`vact`) que acelera a ARRANQUE y frena a FRENADA, y mira lo bastante lejos para parar con ella.
+		var suave := not es_peaton
+		var vact := float(v.get("vact", v["vel"]))
+		var tope := INF
+		var aterriza := -1.0
+		var mira := maxf(12.0, vact * vact / (2.0 * PLAN) + 2.0) if suave else 12.0
 		if semaforos != null and _controles.has(ruta):
 			for c: Dictionary in _controles[ruta]:
 				var d := fposmod(float(c["s"]) - s0, largo)
-				if d < avance + 0.5 and d < 12.0 and not semaforos.verde(int(c["eje"])):
-					avance = maxf(0.0, d - 0.3)
+				var visto := d < mira if suave else (d < avance + 0.5 and d < 12.0)
+				if visto and not semaforos.verde(int(c["eje"])):
+					avance = minf(avance, maxf(0.0, d - 0.3)) if suave else maxf(0.0, d - 0.3)
+					tope = minf(tope, sqrt(2.0 * PLAN * maxf(d - 0.3, 0.0)))
 					frena = true
 					break
+		## SIRENAS (27-10-2026, pieza E): ante un vehículo de emergencia con la sirena puesta, coches y buses frenan (con su rampa de siempre).
+		if suave and not sirenas.is_empty() and sirena_cerca((v["nodo"] as Node3D).position):
+			tope = 0.0
+			frena = true
 		if v.has("faros") and bool(v["frena"]) != frena:
 			v["frena"] = frena
 			var fm: MeshInstance3D = v["faros"]
@@ -70,7 +84,10 @@ func _process(delta_real: float) -> void:
 		if v.has("paradas"):
 			for ps: float in v["paradas"]:
 				var d2 := fposmod(ps - s0, largo)
-				if d2 < avance:
+				if suave and d2 < mira:
+					tope = minf(tope, sqrt(2.0 * PLAN * maxf(d2 - 0.3, 0.0)))
+				if d2 < (0.35 if suave else avance):
+					aterriza = d2 + 0.05   ## llega con la velocidad ya casi a cero y se posa justo en la parada
 					avance = d2 + 0.05
 					v["espera"] = float(v.get("espera_parada", 8.0))
 					break
@@ -81,12 +98,17 @@ func _process(delta_real: float) -> void:
 				var d3 := fposmod(float(o["s"]) - s0, largo)
 				if d3 < 9.0:
 					avance = minf(avance, maxf(0.0, d3 - 8.0))
+				if suave and d3 < mira + 9.0:
+					tope = minf(tope, float(o.get("vact", o["vel"])) + sqrt(2.0 * PLAN * maxf(d3 - 9.0, 0.0)))
 		## Un peatón no atraviesa al que va delante en su ruta: si le alcanza a menos
 		## de 0,9 m, se queda detrás. ADELANTAR (pmov, 26-10-2026): si el de delante
 		## va más despacio o está parado, se abre a un lado libre (`_esquivar`) y le
 		## pasa; con los dos ya a distinto lado, no se frenan.
 		if es_peaton:
 			_lateral(v, delta)
+			_mirar_delante(v, s0, delta)
+		elif v.has("lat_obj") or float(v.get("lat", 0.0)) != 0.0:
+			_lateral(v, delta, VEL_ADELANTA)   ## el coche que adelanta se abre al centro de la calzada y vuelve a su carril
 		if _peatones_ruta.has(ruta) and es_peaton:
 			for o: Dictionary in _peatones_ruta[ruta]:
 				if o == v:
@@ -142,20 +164,54 @@ func _process(delta_real: float) -> void:
 				var fm2: MeshInstance3D = v["faros"]
 				if is_instance_valid(fm2):
 					fm2.set_instance_shader_parameter("freno", 1.0)
+		if suave and delta > 0.0:
+			var objetivo := minf(float(v["vel"]), tope)
+			## La aceleración misma sube y baja con rampa (tirón máximo TIRON m/s³): sin latigazos al empezar a frenar.
+			var ganancia := 1.0 / delta if tope < float(v["vel"]) else 6.0   ## siguiendo un perfil de parada, a tope; en crucero, con cola suave
+			var a_pedida := clampf((objetivo - vact) * ganancia, -FRENADA, ARRANQUE)
+			var a_act := move_toward(float(v.get("aact", 0.0)), a_pedida, TIRON * delta)
+			vact = maxf(vact + a_act * delta, 0.0)
+			v["aact"] = a_act
+			if avance < vact * delta:
+				vact = avance / delta   ## un obstáculo duro (el jugador, un cruce): la velocidad se ajusta a lo que queda
+			else:
+				avance = vact * delta
+			if aterriza >= 0.0:
+				avance = aterriza
+			if float(v.get("espera", 0.0)) > 0.0:
+				vact = 0.0   ## llegó a la parada: está quieto mientras sube y baja la gente
+			v["vact"] = vact
+		if es_peaton and hay_jugador and nivel == 0:
+			var nv2: Node3D = v["nodo"]
+			if is_instance_valid(nv2):
+				MovimientoNatural.mirada(v, jugador, nv2.position.distance_squared_to(pj), delta)
+		if es_peaton:
+			avance = MovimientoNatural.marcha(v, avance, float(v["vel"]) * delta, delta)
 		v["s"] = s0 + avance
-		_colocar(v)
+		_colocar(v, delta)
 
 ## ESQUIVAR (pmov, 26-10-2026): los peatones ya no solo esperan. `lat` es lo que
 ## se apartan de su línea (positivo, hacia fuera de la manzana); se mueve
 ## hacia `lat_obj` a paso lateral y vuelve a 0 cuando ya no hay a quién rodear.
+## Aceleración y frenada cómodas de coches y buses (m/s²).
+const ARRANQUE := 2.4
+const FRENADA := 3.5
+## Con la que se PLANEA la parada (algo menos que la máxima: margen para alcanzar el perfil sin tirones).
+const PLAN := 2.6
+const TIRON := 8.0
 const LADO_ESQUIVA := 0.75
 const SEPARA_LADO := 0.6
 const VEL_LATERAL := 0.9
+## ADELANTAR (27-10-2026, M-171): el coche que se encuentra un autobús parado en su carril se abre `LAT_ADELANTA` m hacia el eje de la
+## avenida (el carril contrario queda a 12 m del suyo: sobra sitio), lo rodea y vuelve. `lat` positivo es hacia el eje.
+const LAT_ADELANTA := 3.4
+const VEL_ADELANTA := 1.6
+const VISTA_ADELANTA := 30.0
 ## ¿Se puede pisar este punto? (lo pone el explorador: paredes, farolas,
 ## bancos). Sin él (pruebas, mapa de lejos) se da por libre.
 var libre_fn: Callable
 
-func _lateral(v: Dictionary, delta: float) -> void:
+func _lateral(v: Dictionary, delta: float, vel := VEL_LATERAL) -> void:
 	var t_lat := float(v.get("t_lat", 0.0))
 	if t_lat > 0.0:
 		v["t_lat"] = t_lat - delta
@@ -164,7 +220,39 @@ func _lateral(v: Dictionary, delta: float) -> void:
 	var lat := float(v.get("lat", 0.0))
 	var obj := float(v.get("lat_obj", 0.0))
 	if lat != obj:
-		v["lat"] = move_toward(lat, obj, VEL_LATERAL * delta)
+		v["lat"] = move_toward(lat, obj, vel * delta)
+
+## MOBILIARIO DELANTE (27-10-2026, plan §4): cuatro veces por segundo el peatón mira 1,2 m por
+## delante en su carril; si hay un banco, una papelera o una farola (`libre_fn`), se abre a un lado
+## libre como al adelantar. Sin `libre_fn` (pruebas, mapa de lejos) no mira nada.
+## Los vehículos de emergencia con la sirena encendida (los registra `ServiciosVida`) y a qué distancia hacen parar al tráfico: a 55 m
+## frenando a FRENADA da tiempo de parar a 14 m/s, y vale también para el que cruza por una bocacalle.
+static var sirenas: Array[Node3D] = []
+const RADIO_SIRENA := 55.0
+
+static func sirena_cerca(p: Vector3) -> bool:
+	for s: Node3D in sirenas:
+		if is_instance_valid(s) and Vector2(s.position.x - p.x, s.position.z - p.z).length() < RADIO_SIRENA:
+			return true
+	return false
+
+const MIRA_CADA := 0.25
+const MIRA_DELANTE := 1.2
+
+func _mirar_delante(v: Dictionary, s: float, delta: float) -> void:
+	if not libre_fn.is_valid():
+		return
+	var t := float(v.get("t_mira", randf() * MIRA_CADA)) - delta
+	if t > 0.0:
+		v["t_mira"] = t
+		return
+	v["t_mira"] = MIRA_CADA
+	var par: Array = (_rutas[int(v["ruta"])] as Ruta).en(s)
+	var dir: Vector3 = par[1]
+	var lat := float(v.get("lat", 0.0))
+	var q: Vector3 = par[0] + Vector3(dir.z, 0, -dir.x) * lat + dir * MIRA_DELANTE
+	if not bool(libre_fn.call(q)):
+		_esquivar(v, lat, 1.0)
 
 ## Se abre a un lado (primero `preferido`: +1 fuera, -1 dentro) a `LADO_ESQUIVA`
 ## de `de_lat` (el lado del que estorba), si ese carril está libre un par de
@@ -290,6 +378,15 @@ func _cede_paso(v: Dictionary, idx: int, delta: float) -> bool:
 					continue
 				var pb: Vector2 = e[1]
 				var otro_coche: bool = e[3]
+				## ADELANTAR: un autobús parado en la parada, en mi mismo sentido y mi carril, a menos de VISTA_ADELANTA por delante (o recién pasado):
+				## me abro hacia el eje (el hueco de 7 m ya no lo ve a 2,6 m de lado; mientras tanto frena con él) y mantengo la apertura a su altura.
+				if coche and otro_coche and float(o.get("espera", 0.0)) > 0.0 and o.has("paradas") and da.dot(e[2]) > 0.9:
+					var rel_b := pb - pa
+					var lado_b := absf(rel_b.dot(Vector2(-da.y, da.x)))
+					var frente_b := rel_b.dot(da)
+					if frente_b > -9.0 and frente_b < VISTA_ADELANTA and lado_b < 5.0:
+						v["lat_obj"] = LAT_ADELANTA
+						v["t_lat"] = 1.5
 				## DE FRENTE EN LA MISMA ACERA (dos peatones en sentidos contrarios):
 				## cada uno se abre a SU derecha con tiempo (a 4 m), así se cruzan sin
 				## pararse. Antes uno cedía y el otro le atravesaba (pmov, 26-10-2026).
@@ -311,8 +408,12 @@ func _cede_paso(v: Dictionary, idx: int, delta: float) -> bool:
 				if not coche and otro_coche and _en_hueco(pb, e[2], true, pa, 0.3):
 					continue
 				## Los dos se tienen delante y son iguales: pasa el de índice menor.
-				if coche == otro_coche and not de_frente and j > idx and _en_hueco(pb, e[2], otro_coche, pa, extra if coche else 0.3):
-					continue
+				## PRIORIDAD DE LA DERECHA (M-171): cede el que tiene al otro a su derecha; sin derecha clara (casi de frente o en línea), el de índice mayor.
+				if coche == otro_coche and not de_frente and _en_hueco(pb, e[2], otro_coche, pa, extra if coche else 0.3):
+					var der := (pb - pa).dot(Vector2(-da.y, da.x))
+					var yo_cedo := der > 1.0 if absf(der) > 1.0 else j < idx
+					if not yo_cedo:
+						continue
 				v["cediendo"] = float(v.get("cediendo", 0.0)) + delta
 				return true
 	v["cediendo"] = 0.0

@@ -1,18 +1,9 @@
 extends "res://ui/principal_p9.gd"
 ## [Capa 10/17 de `principal.gd`] _anotar, _noticia_contratos, _guardar, _autoguardar_si_toca, _deshacer, _cargar_preferencias … (+5)
 
-func _anotar(titulo: String, cuerpo: String) -> void:
-	_bandeja.push_front({"titulo": titulo, "cuerpo": cuerpo, "semana": mundo.semana, "anio": mundo.anio, "leida": false})
-	## Lo que pasa también se comenta en Tribuna (las redes del móvil).
-	if mundo.redes != null:
-		mundo.redes.desde_noticia(mundo, titulo, cuerpo)
-	## Y si es cosa de alguien (la directiva, la familia...), te escribe.
-	if mundo.movil != null:
-		var de := Movil.remitente_de(titulo, cuerpo)
-		if not de.is_empty():
-			mundo.movil.recibir(String(de[0]), String(de[1]), "%s %s", mundo.anio, mundo.semana, [titulo, cuerpo], true)
-	if _bandeja.size() > BANDEJA_MAX:
-		_bandeja.resize(BANDEJA_MAX)
+## Puentes (fase 6, paso 7): viven en `ui/principal/avance_semana.gd`.
+func _anotar(titulo: String, cuerpo: String) -> void: _avance._anotar(titulo, cuerpo)
+
 
 ## Complementa a `_escribir()`, no lo reemplaza: `_escribir()` sigue pintando
 ## el registro exactamente igual que antes -no se le tocó una línea, cero

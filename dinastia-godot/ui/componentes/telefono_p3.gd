@@ -26,6 +26,10 @@ static func restaurar_marcas(raiz: Node) -> void:
 ## Qué hacer cuando, ya en la pantalla de inicio, se pide «atrás». Lo pone quien abre el móvil.
 var al_cerrar: Callable
 var _tw_app: Tween
+## La app «Red» (`AppRed`): dónde está el DT si el móvil se abrió en la calle (lo pone `VidaCiudad`) y el código escrito.
+var en_la_calle := false
+var posicion_dt := Vector3.ZERO
+var codigo_red := ""
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel") and is_visible_in_tree() and atras():
@@ -164,6 +168,15 @@ func _agenda() -> void:
 		b.pressed.connect(_adelantar.bind(String(par[0])))
 		_cuerpo.add_child(b)
 	_cuerpo.add_child(_nota(Idiomas.t("El tiempo adelantado sigue tu rutina: duermes y comes como siempre.")))
+	## Convocar una rueda de prensa extra (fase 4, bloque 6): una por semana.
+	if m.citas != null:
+		var rp := Button.new()
+		rp.text = Idiomas.t("📣 Convocar rueda de prensa")
+		rp.custom_minimum_size = Vector2(0, 40)
+		rp.pressed.connect(func() -> void:
+			var motivo := m.citas.convocar_rueda(m)
+			_decir(Idiomas.t("Rueda convocada: la respondes en el PC.") if motivo == "" else Idiomas.t(motivo)))
+		_cuerpo.add_child(rp)
 
 ## Entrenamiento (laborables a las 10:00), partido (sábado) y rueda de prensa (viernes).
 func _proximos(r: Reloj) -> Array[String]:
@@ -193,3 +206,7 @@ func _adelantar(que: String) -> void:
 	r.avanzar_con_rutina(mins)
 	Sonido.toca("clic", Sonido.Bus.EFECTOS)
 	(self as Telefono).abrir_app("agenda")
+
+## La app «Red»: paradero cercano o código escrito, y las próximas llegadas (`AppRed`, `RecorridosRed`).
+func _red() -> void:
+	AppRed.pintar(self as Telefono)

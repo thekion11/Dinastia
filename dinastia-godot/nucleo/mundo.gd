@@ -8,6 +8,8 @@ extends "res://nucleo/mundo_p7.gd"
 ## menos y en leyenda más. Por encima del tope, el valor de TODA la IA (no tu club, no los sueldos firmados)
 ## se escala hasta él al cerrar la temporada. Claves = las de la tabla `DIF`.
 const TOPE_VALOR_IA := {"facil": 1.35, "normal": 1.50, "leyenda": 1.65}
+## El estado de las redes de la ciudad (luz, agua, drenaje, gas; se guarda). Null: aún no se ha pisado la ciudad en 3D o partida vieja.
+var redes_ciudad: RedesCiudad = null
 ## La dificultad de la partida (la pone `CicloPartida.arrancar_con`; se guarda) y el valor medio de la IA de
 ## referencia (al tomar el mando; 0 = todavía no).
 ## (`dificultad` vive en mundo_p6, que la usa para los premios.)
@@ -17,17 +19,36 @@ func tope_valor_ia() -> float:
 	return float(TOPE_VALOR_IA.get(dificultad, TOPE_VALOR_IA["normal"]))
 
 ## La referencia se toma al empezar la partida (guardados viejos: en su primer cierre).
+## MODO LEYENDA (27-10-2026, fila 956): «treinta temporadas en el mismo club, sin cambiarte». Mientras el desafío siga en pie no se puede coger otro
+## club; solo si te echan (`despedido_ya`) puedes irte, y entonces la leyenda se rompe (`tomar_el_mando` la quita: ya no multiplica el puntaje).
+## "" si se puede; si no, el motivo (ya traducido).
+func motivo_sin_cambiar_de_club(club_id: String) -> String:
+	if tiene_desafio("leyenda30") and mi_club_id != "" and club_id != mi_club_id and not (directiva != null and directiva.despedido_ya):
+		return Idiomas.t("Modo leyenda: no puedes cambiar de club. Solo si te despiden.")
+	return ""
+
 func tomar_el_mando(club_id: String) -> Directiva:
+	if tiene_desafio("leyenda30") and mi_club_id != "" and club_id != mi_club_id:
+		desafios.erase("leyenda30")   ## te fuiste (te echaron): ya no es una leyenda de un solo club
 	var d := super(club_id)
 	Finanzas.fijar_medias_tv(ligas)
 	if valor_ia_ref <= 0.0:
 		valor_ia_ref = valor_medio_ia()
+	## Un club nuevo, retos nuevos (los del anterior no valen aquí).
+	retos_semana.activos = []
+	retos_semana.generar(self)
+	mentor_mes.empezar()
+	DesafiosDificultad.aplicar(self)
+	PrecalentarCaras.del_mundo(self)   ## sus jugadores y los del próximo partido, en el menú (M-348)
 	return d
 
 func nueva_temporada() -> Dictionary:
 	if valor_ia_ref <= 0.0:
 		valor_ia_ref = valor_medio_ia()
 	var r := super()
+	var llegados := Precontratos.llegan(self)   ## los precontratos del DT entran ya con la plantilla repuesta
+	if not llegados.is_empty():
+		r["precontratos"] = llegados.size()
 	Finanzas.fijar_medias_tv(ligas)
 	## La cláusula de descenso alcanza a los que llegan mientras el club siga abajo.
 	for c: Club in clubes.values():

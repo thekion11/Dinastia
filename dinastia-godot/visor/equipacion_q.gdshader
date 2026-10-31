@@ -1043,8 +1043,14 @@ void fragment() {
 		// Zapatos de calle (13-10-2026): cuero o lona, no charol de botín.
 		rugo = mix(rugo, 0.62, m.a);
 	}
+	// PIEL (27-10-2026, plan §2.2e P4): la piel desnuda (cara, cuello, brazos) iba con la rugosidad y el
+	// especular de la tela base (0,62 / 0,3-0,45) y brillaba como plástico en nariz, labios y pómulos. La piel
+	// real es mate (rugosidad ~0,75, especular bajo) y deja pasar algo de luz: un poco de subsuperficie.
+	float desnudo = 1.0 - max(tela, m.a);
+	rugo = mix(rugo, 0.76, desnudo);
 	ROUGHNESS = rugo + punto * 0.05 * tela;
-	SPECULAR = civil ? mix(0.3, 0.5, m.a) : mix(0.45, 0.42, clamp(es_camiseta + m.g, 0.0, 1.0)) + 0.1 * m.a;
+	SPECULAR = mix(civil ? mix(0.3, 0.5, m.a) : mix(0.45, 0.42, clamp(es_camiseta + m.g, 0.0, 1.0)) + 0.1 * m.a, 0.14, desnudo);
+	SSS_STRENGTH = 0.22 * desnudo;
 	if (!civil) {
 		// Brillo de tela deportiva: un satinado leve a contraluz, solo en la tela.
 		float roce = 1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0);
@@ -1062,6 +1068,12 @@ void fragment() {
 	if (juego) {
 		nm.xy -= nm_cuerpo * 1.0 * tela;
 		nm.x += cos(ang_m * 6.2832) * fade_m * 0.07 * m.b;
+	}
+	// Ropa de calle (27-10-2026, plan §2.2e P4): el músculo se quita igual que en la de juego y la
+	// profundidad del relieve vuelve a ser visible (abajo, 0,4 en vez de 0,06): antes, para tapar los
+	// abdominales, se aplanaba TODO y las arrugas y el tejido de la tela desaparecían con ellos.
+	if (civil && usa_reposo && usa_normal) {
+		nm.xy -= nm_cuerpo * tela;
 	}
 	NORMAL_MAP = nm;
 	// RELIEVE DEL ESCUDO (17-10-2026, M-051): un bordado de ~0,7 mm sin textura
@@ -1085,7 +1097,7 @@ void fragment() {
 	// Ropa de calle: casi nada del relieve muscular de la piel atraviesa la tela.
 	// El zapato de calle tampoco deja ver el relieve de los dedos (26-10-2026).
 	float tapa_n = civil ? max(tela, m.a) : tela;
-	NORMAL_MAP_DEPTH = usa_normal ? mix(1.0, usa_reposo ? (civil ? 0.06 : 0.6) : 0.45, tapa_n) : 0.6 * tela;
+	NORMAL_MAP_DEPTH = usa_normal ? mix(1.0, usa_reposo ? (civil ? 0.4 : 0.6) : 0.45, tapa_n) : 0.6 * tela;
 	RIM = borde;
 	RIM_TINT = 0.35;
 }

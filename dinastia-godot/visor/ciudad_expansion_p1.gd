@@ -63,6 +63,8 @@ const ESPECIALES := {
 	Vector2i(4, 8): "villa_moderna", Vector2i(-8, 1): "desguace", Vector2i(-2, 9): "granja",
 	## El parque de atracciones (16-10-2026), junto a la universidad, en las afueras.
 	Vector2i(5, 9): "feria",
+	## El parque solar de la periferia este (27-10-2026).
+	Vector2i(9, 3): "parque_solar", Vector2i(9, -2): "obra",
 }
 
 var b: CityBuilder
@@ -88,17 +90,9 @@ var _mat := {}
 
 ## Arma el grafo: rejilla, bulevar del núcleo y conectores a los anillos.
 ## LOS NOMBRES DE LAS CALLES (7-10-2026, «las calles deben tener nombre, los
-## parques también»). Ficticios, como toda la ciudad. Las filas (de oeste a
-## este, z fija) y las columnas (de norte a sur, x fija) tienen cada una el
-## suyo; una de cada tres es avenida.
-const NOMBRES_EO := ["de los Almendros", "del Rocío", "de la Alameda", "del Mirador", "de las Acacias", "de la Ribera",
-	"del Olivar", "de los Tilos", "de la Fragua", "del Pósito", "de las Moreras", "de la Estación", "Mayor",
-	"del Sol", "de los Naranjos", "del Molino", "de la Vega", "de las Huertas", "del Carmen", "de los Arcos",
-	"del Lucero", "de la Cantera", "de los Jazmines", "del Prado", "de la Muralla"]
-const NOMBRES_NS := ["de los Tejedores", "del Puerto", "de la Cordelería", "de los Plateros", "del Faro", "de la Imprenta",
-	"de los Herreros", "del Telégrafo", "de la Seda", "del Navegante", "de los Alfareros", "de la Libertad", "del Estadio",
-	"de la Constitución", "de los Canteranos", "del Reloj", "de la Ilustración", "de los Remeros", "del Campeonato",
-	"de las Artes", "de la Hinchada", "del Gol", "de los Fundadores", "del Ensanche", "de la Afición"]
+## parques también»; chilenos desde el 28-10-2026, orden 17 del dueño). Las
+## filas y las columnas tienen cada una el suyo y los da `CallesCiudad` (la
+## misma fuente que los paraderos «Red» y el mapa del transporte).
 const NOMBRES_PARQUE := ["Parque de la Alameda", "Jardines del Mirador", "Parque de los Tilos", "Parque de la Ribera",
 	"Parque de los Fundadores", "Jardín Botánico", "Parque del Reloj", "Parque de la Afición", "Pinar del Ensanche"]
 
@@ -208,6 +202,9 @@ const COLORES_PISOS := [
 	[Color(0.9, 0.76, 0.6), Color(0.45, 0.36, 0.3)], [Color(0.62, 0.68, 0.8), Color(0.94, 0.94, 0.93)],
 	[Color(0.93, 0.77, 0.7), Color(0.6, 0.34, 0.3)], [Color(0.98, 0.9, 0.62), Color(0.42, 0.4, 0.38)],
 ]
+## PALETA POR BARRIO (S5, 27-10-2026): cada sector de la ciudad (6 × 6 manzanas) pertenece a una de tres familias de color, de
+## modo que un barrio se lee de un vistazo: ocres y crema, terracota y ladrillo, o grises y azules fríos. Índices de COLORES_PISOS.
+const FAMILIAS_BARRIO := [[0, 1, 6, 9], [3, 4, 8], [2, 5, 7]]
 ## Estilos de fachada: la pieza de los módulos pares y la de los impares.
 const ESTILOS_MOD := [
 	["building-windows-sills", "building-windows-sills"],
@@ -285,6 +282,9 @@ var _farola_luz: StandardMaterial3D
 var _farola_charco: StandardMaterial3D
 
 var _farola_cono: ShaderMaterial = null
+var tele_nodo: Teleferico          ## el teleférico del cerro (27-10-2026)
+var teleferico := {}               ## sus datos para el mapa: {nombre, base, cima, color}
+var _farolas_sec := {}      ## sector -> {luz, charco, cono}: materiales propios de las farolas de cada sector
 
 ## Los edificios lejanos: cajas con ventanas en un solo MultiMesh.
 var _lejanos: Array[Rect2] = []
@@ -318,10 +318,10 @@ static func en_borde_nucleo(a: Vector3, c: Vector3) -> bool:
 	return (absf(a.z - NUC_Z0) < 0.1 or absf(a.z - NUC_Z1) < 0.1) and en_x
 
 func nombre_fila(j: int) -> String:
-	return ("Avenida " if j % 3 == 0 else "Calle ") + String(NOMBRES_EO[clampi(j + K, 0, NOMBRES_EO.size() - 1)])
+	return CallesCiudad.nombre_fila(j)
 
 func nombre_columna(i: int) -> String:
-	return ("Avenida " if i % 3 == 0 else "Calle ") + String(NOMBRES_NS[clampi(i + K, 0, NOMBRES_NS.size() - 1)])
+	return CallesCiudad.nombre_columna(i)
 
 ## La calle en la que está un punto («Calle X», o «Calle X con Avenida Y» en
 ## un cruce). Vacío si no está sobre ninguna (dentro de una manzana).

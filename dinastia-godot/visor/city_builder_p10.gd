@@ -49,91 +49,13 @@ func _redondear(puntos: PackedVector3Array, radio: float) -> PackedVector3Array:
 		salida.append(pb)
 	return salida
 
+
 ## EL AUTOBÚS URBANO (7-10-2026): el kit no trae ninguno y la furgoneta
 ## agrandada medía 6 m de alto. Este se arma con piezas: 12 m de largo, 3,1 de
 ## alto y 2,55 de ancho, con franja de ventanas, parabrisas, dos puertas,
 ## rótulo de destino encendido, ruedas y el color de la línea. Mira a +Z.
-static func autobus(col: Color, destino: String = "") -> Node3D:
-	var raiz := Node3D.new()
-	var pintura := StandardMaterial3D.new()
-	pintura.albedo_color = col
-	pintura.roughness = 0.35
-	pintura.metallic = 0.2
-	var blanco := StandardMaterial3D.new()
-	blanco.albedo_color = Color(0.94, 0.94, 0.92)
-	blanco.roughness = 0.4
-	var vidrio := StandardMaterial3D.new()
-	vidrio.albedo_color = Color(0.12, 0.16, 0.2)
-	vidrio.roughness = 0.08
-	vidrio.metallic = 0.6
-	var goma := StandardMaterial3D.new()
-	goma.albedo_color = Color(0.06, 0.06, 0.06)
-	goma.roughness = 0.9
-	var piezas := [
-		[Vector3(0, 1.0, 0), Vector3(2.55, 1.2, 12.0), pintura],           ## faldón
-		[Vector3(0, 2.3, 0), Vector3(2.5, 1.4, 11.9), vidrio],            ## ventanas
-		[Vector3(0, 3.05, 0), Vector3(2.55, 0.2, 12.0), blanco],          ## techo
-		[Vector3(0, 3.25, -1.5), Vector3(1.8, 0.25, 3.0), blanco],        ## climatizador
-		[Vector3(0, 2.3, 5.97), Vector3(2.3, 1.5, 0.08), vidrio],         ## parabrisas
-		[Vector3(0, 1.0, 6.02), Vector3(2.4, 0.5, 0.05), blanco],         ## parachoques
-		[Vector3(0, 2.85, 6.0), Vector3(1.8, 0.28, 0.06), null],          ## rótulo
-	]
-	for pz: Array in piezas:
-		var mi := MeshInstance3D.new()
-		var bm := BoxMesh.new()
-		bm.size = pz[1]
-		mi.mesh = bm
-		mi.position = pz[0]
-		if pz[2] != null:
-			mi.material_override = pz[2]
-		else:
-			var led := StandardMaterial3D.new()
-			led.albedo_color = Color(1.0, 0.7, 0.1)
-			led.emission_enabled = true
-			led.emission = Color(1.0, 0.6, 0.1)
-			led.emission_energy_multiplier = 1.5
-			mi.material_override = led
-		raiz.add_child(mi)
-	## Pilares entre ventanas y las dos puertas (lado derecho, +X).
-	for k in 7:
-		var pil := MeshInstance3D.new()
-		var bm2 := BoxMesh.new()
-		bm2.size = Vector3(2.58, 1.4, 0.18)
-		pil.mesh = bm2
-		pil.material_override = pintura
-		pil.position = Vector3(0, 2.3, -5.4 + float(k) * 1.8)
-		raiz.add_child(pil)
-	for zp: float in [4.6, -0.8]:
-		var pu := MeshInstance3D.new()
-		var bm3 := BoxMesh.new()
-		bm3.size = Vector3(0.06, 2.3, 1.2)
-		pu.mesh = bm3
-		pu.material_override = vidrio
-		pu.position = Vector3(1.29, 1.55, zp)
-		raiz.add_child(pu)
-	## Ruedas.
-	for zr: float in [3.8, -3.6]:
-		for xr: float in [-1.15, 1.15]:
-			var r := MeshInstance3D.new()
-			var cm := CylinderMesh.new()
-			cm.top_radius = 0.5
-			cm.bottom_radius = 0.5
-			cm.height = 0.32
-			r.mesh = cm
-			r.material_override = goma
-			r.rotation.z = PI * 0.5
-			r.position = Vector3(xr, 0.5, zr)
-			raiz.add_child(r)
-	if destino != "":
-		var l := Label3D.new()
-		l.text = destino
-		l.font_size = 32
-		l.pixel_size = 0.006
-		l.modulate = Color(0.1, 0.05, 0.0)
-		l.outline_size = 0
-		l.position = Vector3(0, 2.85, 6.04)
-		raiz.add_child(l)
-	return raiz
+static func autobus(col: Color, destino: String = "", numero: String = "") -> Node3D:
+	return AutobusModelo.crear(col, destino, numero)
 
 ## Un peatón de verdad (`PeatonQ`: hombre o mujer del paquete Quaternius, con
 ## ropa de calle, pelo y a veces barba) caminando por la acera a paso humano.
@@ -249,14 +171,8 @@ func _trafico() -> void:
 			var n_ex: Node3D = instanciar_coche(coches[rng.randi() % coches.size()], rng)
 			t.agregar_vehiculo(n_ex, id_ex, rng.randf() * 2200.0,
 				rng.randf_range(15.0, 24.0), 0.0, 0.0)
-		## Y dos autobuses por sentido, en la misma ruta -es el eje que pasa
-		## junto a las cuatro paradas y la terminal-, más grandes y más lentos
-		## que el tráfico normal.
-		for i in range(2):
-			if true:
-				var bus: Node3D = autobus(Color(0.95, 0.75, 0.15), "ESTADIO")
-				t.agregar_vehiculo(bus, id_ex, rng.randf_range(200.0, 2000.0),
-					9.0, 0.0, 0.0)
+		## Los autobuses del anillo (la vieja línea 5 amarilla) ya no van aquí (28-10-2026): las cuatro marquesinas del anillo son
+		## paraderos de los recorridos «Red» 101c, 190, 122, C02, 150, 502c y 506c, que pasan por el anillo con sus buses (`BusesRed`).
 
 	## 2) LA AVENIDA DE ACCESO y 3) LA CALLE DEL BARRIO: circuitos estrechos
 	## -se baja por un carril y se sube por el otro-, que es lo que hace que un
@@ -323,16 +239,17 @@ func _banderas_anillo(c1: Color, c2: Color) -> void:
 	if _anillo_con_banderas:
 		return
 	_anillo_con_banderas = true
+	## Una malla y un material para los 56 mástiles (28-10): antes cada uno traía los suyos.
+	var bm := BoxMesh.new()
+	bm.size = Vector3(0.2, 9.0, 0.2)
+	var gris := StandardMaterial3D.new()
+	gris.albedo_color = Color(0.7, 0.7, 0.72)
 	for i in 28:
 		var t := float(i) / 28.0
 		var x := lerpf(-RING_X, RING_X, t)
 		for z in [RING_Z_NORTE + ANCHO_CALLE, RING_Z_SUR - ANCHO_CALLE]:
 			var mastil := MeshInstance3D.new()
-			var bm := BoxMesh.new()
-			bm.size = Vector3(0.2, 9.0, 0.2)
 			mastil.mesh = bm
-			var gris := StandardMaterial3D.new()
-			gris.albedo_color = Color(0.7, 0.7, 0.72)
 			mastil.material_override = gris
 			mastil.position = Vector3(x, 4.5, z)
 			add_child(mastil)

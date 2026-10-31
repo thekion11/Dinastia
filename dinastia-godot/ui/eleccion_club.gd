@@ -38,12 +38,12 @@ func _ready() -> void:
 	_mundo = Mundo.new()
 	_mundo.generar([], 0)
 	## UN RETO (26-9-2026): el club lo elige el propio reto, y a jugar.
-	if Principal.reto_pedido != "":
-		var id := Principal.reto_pedido
-		Principal.reto_pedido = ""
+	if PedidoPartida.reto_pedido != "":
+		var id := PedidoPartida.reto_pedido
+		PedidoPartida.reto_pedido = ""
 		if Retos.montar(_mundo, id) != null:
-			Principal.mundo_pregenerado = _mundo
-			Principal.desafios_elegidos = []
+			PedidoPartida.mundo_pregenerado = _mundo
+			PedidoPartida.desafios_elegidos = []
 			get_tree().change_scene_to_file.call_deferred("res://escenas/principal.tscn")
 			return
 	_construir()
@@ -172,7 +172,7 @@ func _construir_fundar(raiz: VBoxContainer) -> void:
 	_campo_estadio.placeholder_text = Idiomas.t("Nombre del estadio")
 	_campo_estadio.custom_minimum_size = Vector2(170, 32)
 	fila.add_child(_campo_estadio)
-	if Principal.fundar_pedido:
+	if PedidoPartida.fundar_pedido:
 		e.border_color = COL_ACENTO
 		e.set_border_width_all(2)
 		t.text = Idiomas.t("🛠️ FUNDA TU CLUB")
@@ -193,12 +193,12 @@ func _fundar() -> void:
 	var nombre := _campo_nombre_club.text.strip_edges()
 	if nombre == "":
 		return
-	Principal.fundar_pedido = false
+	PedidoPartida.fundar_pedido = false
 	var club := _mundo.fundar_club(nombre, _pais_actual, "#" + _col1.color.to_html(false), "#" + _col2.color.to_html(false), _campo_estadio.text.strip_edges())
 	if club == null:
 		return
-	Principal.mundo_pregenerado = _mundo
-	Principal.desafios_elegidos = _desafios.duplicate()
+	PedidoPartida.mundo_pregenerado = _mundo
+	PedidoPartida.desafios_elegidos = _desafios.duplicate()
 	get_tree().change_scene_to_file("res://escenas/principal.tscn")
 
 ## Los desafíos: reglas extra, opcionales, que multiplican el puntaje final
@@ -228,13 +228,13 @@ func _construir_desafios(raiz: VBoxContainer) -> void:
 	_fila_desafios.add_theme_constant_override("h_separation", 6)
 	_fila_desafios.add_theme_constant_override("v_separation", 6)
 	v.add_child(_fila_desafios)
-	var tabla: Variant = Datos.tabla("DESAFIOS")
+	var tabla: Variant = DesafiosDificultad.todos()
 	if tabla is Array:
 		for fila: Array in (tabla as Array):
 			var k := String(fila[0])
 			var b := Button.new()
-			b.text = "%s %s  ×%s" % [String(fila[1]), String(fila[2]), str(fila[4])]
-			b.tooltip_text = String(fila[3])
+			b.text = "%s %s  ×%s" % [String(fila[1]), Idiomas.t(String(fila[2])), str(fila[4])]
+			b.tooltip_text = Idiomas.t(String(fila[3]))
 			b.toggle_mode = true
 			b.add_theme_font_size_override("font_size", 11)
 			b.pressed.connect(func() -> void: _alternar_desafio(k))
@@ -249,7 +249,7 @@ func _alternar_desafio(k: String) -> void:
 	else:
 		_desafios.append(k)
 	var mult := 1.0
-	var tabla: Variant = Datos.tabla("DESAFIOS")
+	var tabla: Variant = DesafiosDificultad.todos()
 	if tabla is Array:
 		for fila: Array in (tabla as Array):
 			if _desafios.has(String(fila[0])):
@@ -340,8 +340,8 @@ func _limpiar(n: Node) -> void:
 
 func _elegir_club(c: Club) -> void:
 	_mundo.tomar_el_mando(c.id)
-	Principal.mundo_pregenerado = _mundo
-	Principal.desafios_elegidos = _desafios.duplicate()
+	PedidoPartida.mundo_pregenerado = _mundo
+	PedidoPartida.desafios_elegidos = _desafios.duplicate()
 	get_tree().change_scene_to_file("res://escenas/principal.tscn")
 
 ## C14: la ficha del país en una línea -capital, ligas, nivel del fútbol en el
@@ -361,13 +361,13 @@ func ficha_pais(p: String, ligas_del_pais: Array[Liga], total_clubes: int) -> St
 				mejor = c
 	var clima := Clima.del_partido(p, _mundo.semana, _mundo.anio, "globo")
 	var prox := Calendario.proximas(p, _mundo.anio, _mundo.semana, 1)
-	var partes: Array[String] = ["📍 %s · capital %s" % [p, String(Globo3D.CAPITAL.get(p, "?"))],
-		"%d liga%s, %d clubes" % [ligas_del_pais.size(), "" if ligas_del_pais.size() == 1 else "s", total_clubes]]
+	var partes: Array[String] = ["📍 %s · " % p + Idiomas.t("capital %s") % String(Globo3D.CAPITAL.get(p, "?")),
+		(Idiomas.t("1 liga, %d clubes") % total_clubes) if ligas_del_pais.size() == 1 else (Idiomas.t("%d ligas, %d clubes") % [ligas_del_pais.size(), total_clubes])]
 	if ranking > 0:
-		partes.append("n.º %d del ranking de ligas" % ranking)
+		partes.append(Idiomas.t("n.º %d del ranking de ligas") % ranking)
 	if mejor != null:
-		partes.append("el grande: %s" % mejor.nombre)
+		partes.append(Idiomas.t("el grande: %s") % mejor.nombre)
 	partes.append("%s %s" % [Clima.icono(clima), String(clima.get("texto", ""))])
 	if not prox.is_empty():
-		partes.append("%s %s (%d/%d)" % [Calendario.icono(String(prox[0]["tipo"])), String(prox[0]["nombre"]), int(prox[0]["dia"]), int(prox[0]["mes"])])
+		partes.append("%s %s (%d/%d)" % [Calendario.icono(String(prox[0]["tipo"])), Idiomas.t(String(prox[0]["nombre"])), int(prox[0]["dia"]), int(prox[0]["mes"])])
 	return "  ·  ".join(partes)

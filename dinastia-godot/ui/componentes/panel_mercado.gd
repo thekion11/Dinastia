@@ -114,6 +114,7 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		add_child(av)
 
+	_pintar_precontrato(n.jugador)
 	_pintar_resultado_ronda(n)
 	_dato(Idiomas.t("Piden"), _dinero(n.pedido), COL_SUAVE)
 	_dato(Idiomas.t("Perciben con tu oferta actual"), _dinero(n.valor_percibido()), COL_TEXTO)

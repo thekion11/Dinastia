@@ -20,6 +20,22 @@ func _kenney(clave: String, pos: Vector3, mira: Vector3, padre: Node3D = null, r
 	(padre if padre != null else self).add_child(n)
 	return n
 
+var billeteras: Array[Vector3] = []   ## dónde hay máquinas de billetes en los andenes
+
+## ¿Hay una máquina de billetes a `radio` m (en planta) de `p`?
+func billetes_cerca(p: Vector3, radio := 2.6) -> bool:
+	for q: Vector3 in billeteras:
+		if Vector2(q.x - p.x, q.z - p.z).length() < radio and absf(q.y - p.y) < 3.0:
+			return true
+	return false
+
+## ¿Hay una máquina expendedora a `radio` m (en planta) de `p`?
+func expendedora_cerca(p: Vector3, radio := 2.2) -> bool:
+	for q: Vector3 in expendedoras:
+		if Vector2(q.x - p.x, q.z - p.z).length() < radio and absf(q.y - p.y) < 3.0:
+			return true
+	return false
+
 ## Una caja de tamaño `t` (x = ancho, z = grosor) puesta de cara a lo largo de `lon`.
 static func _tam_lon(lon: Vector3, t: Vector3) -> Vector3:
 	return t if absf(lon.z) > 0.5 else Vector3(t.z, t.y, t.x)
@@ -36,9 +52,11 @@ func _amueblar_anden(p: Vector3, fondo: Vector3, hacia: Vector3, lon: Vector3, y
 	var ancho := (ANDEN_ANCHO - 0.15) if elevada else (2.0 + 8.0 - 0.45 - 2.0)
 	var sitios: Array = []
 	## Máquinas de billetes y expendedora, al lado del plano de la red.
+	expendedoras.append(en.call(0.65, -25.6))
 	_kenney("expendedora", en.call(0.65, -25.6), hacia)
 	_kenney("billetes", en.call(0.5, -23.6), hacia)
 	_kenney("billetes", en.call(0.5, -22.6), hacia)
+	billeteras.append(en.call(0.5, -23.1))   ## M-182: la E aquí recarga la tarjeta Red
 	## Bancos de espaldas a la pared, papeleras entre ellos y plantas grandes.
 	for f: float in [-12.0, -4.0, 4.0, 12.0]:
 		## El banco del kit mira a su -Z (el respaldo queda en +Z): de espaldas a
@@ -134,7 +152,7 @@ func _decorar_estacion(p: Vector3, dir: Vector3, col: Color, nombre: String, ele
 			## Los paneles de los lados repiten el NOMBRE (como en un metro de
 			## verdad, se lee desde la ventana del tren); el icono-emoji no se
 			## dibujaba (la fuente no lo tiene) y el panel quedaba vacío.
-			ico.text = ("Ⓜ %s" % nombre) if k != 1 else "%s\n%s" % [nombre, String(tema[2])]
+			ico.text = ("Ⓜ %s" % nombre) if k != 1 else "%s\n%s" % [nombre, Idiomas.t(String(tema[2]))]
 			## Más contenido: con 0,011 el lema llenaba la ventana del tren.
 			ico.font_size = 64 if k != 1 else 54
 			ico.pixel_size = 0.0085 if k != 1 else 0.0075
@@ -152,7 +170,7 @@ func _decorar_estacion(p: Vector3, dir: Vector3, col: Color, nombre: String, ele
 		## Marco y trasera oscuros: por detrás era una placa blanca lisa.
 		_caja(self, pl - hacia * 0.06, (Vector3(0.06, 1.95, 2.75) if vertical else Vector3(2.75, 1.95, 0.06)), _mat(Color(0.18, 0.2, 0.24), 0.5))
 		var plano := Label3D.new()
-		plano.text = "PLANO DE LA RED\n🔴 L1: %s\n🔵 L2: %s\n\nUsted está en: %s" % [" · ".join(NOMBRES["Línea 1"]), " · ".join(NOMBRES["Línea 2"]), nombre]
+		plano.text = Idiomas.t("PLANO DE LA RED") + "\n🔴 L1: %s\n🔵 L2: %s\n\n" % [" · ".join(NOMBRES["Línea 1"]), " · ".join(NOMBRES["Línea 2"])] + Idiomas.t("Usted está en: %s") % [nombre]
 		plano.font_size = 22
 		plano.pixel_size = 0.0045
 		plano.modulate = Color(0.1, 0.1, 0.15)

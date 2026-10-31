@@ -29,6 +29,8 @@ func _pisos(r: Rect2) -> void:
 					"pos": Vector3(puerta.x, 0, zf + fila * 2.6), "estado": "ciudad", "radio": 6.0})
 			else:
 				_kit(esc, pos_p, tam, 0.0 if fila > 0.0 else PI, true)
+	if not modular:
+		CiudadOeste.rellenar(self, r)
 	## El patio entre las dos hileras: césped, un camino y árboles.
 	_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(r.size.x * 0.82, 0.06, r.size.y * 0.2))
 	_lote("solar", Vector3(c.x, 0.3, c.z), Vector3(r.size.x * 0.82, 0.06, 2.4))
@@ -91,6 +93,7 @@ func _industrial(r: Rect2) -> void:
 		## ×4: a ×9 parecía una torre de refrigeración de 25 m de ancho.
 		if _pieza_kit(RUTA_IND + "chimney-large.glb", pc, 4.0, 0.0) == null:
 			b._cil_en(c + Vector3(-r.size.x * 0.38, 14.0, r.size.y * 0.3), 1.4, 28.0, b._mat_simple(Color(0.55, 0.3, 0.25), 0.8))
+	CiudadIndustrial.rellenar(self, r)
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
 
 func _cd(pos: Vector3, tam: Vector3, col: Color) -> void:
@@ -167,6 +170,7 @@ func _casas(r: Rect2) -> void:
 	var cols := 4
 	var filas := 2
 	var paso_x := r.size.x / float(cols)
+	PastoCiudad.solar_casas(b, r, cols)
 	for fi in filas:
 		var lado := -1.0 if fi == 0 else 1.0
 		for ci in cols:

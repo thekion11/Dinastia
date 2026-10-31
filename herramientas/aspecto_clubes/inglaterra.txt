@@ -1,0 +1,16 @@
+Manchester Utd|circulo|aro|MU|liso|#d50032|#000000|#ffffff|#000000
+City de Manch.|circulo|aro|MC|liso|#6caddf|#ffffff|#ffffff|#6caddf
+Liverpool|escudo|liso|LIV|liso|#c8102e|#ffffff|#c8102e|#c8102e
+Arsenal|escudo|liso|ARS|mangas_contraste|#ef0107|#ffffff|#ffffff|#ef0107
+Chelsea|circulo|aro|CHE|liso|#034694|#ffffff|#034694|#ffffff
+Tottenham|escudo|liso|TOT|liso|#ffffff|#132257|#132257|#ffffff
+Newcastle|circulo|franjas|NEW|franjas|#000000|#ffffff|#000000|#000000
+Aston Villa|escudo|liso|AV|mangas_contraste|#7a1f2b|#95bfe5|#ffffff|#95bfe5
+West Ham|escudo|cruz|WH|mangas_contraste|#7a263a|#1bb1e7|#ffffff|#1bb1e7
+Everton FC|ovalo|liso|EVE|liso|#003399|#ffffff|#ffffff|#003399
+Brighton|circulo|franjas|BH|franjas|#0057b8|#ffffff|#ffffff|#0057b8
+Wolves|hex|liso|WOL|liso|#fdb913|#000000|#000000|#fdb913
+Cristal Palace|circulo|franjas|CP|franjas|#1b458f|#d50032|#1b458f|#1b458f
+Fulham|circulo|liso|FUL|liso|#ffffff|#000000|#000000|#ffffff
+Brentford|circulo|franjas|BRE|franjas|#d50032|#ffffff|#000000|#d50032
+Nottingham F.|ovalo|liso|NF|liso|#d50032|#ffffff|#ffffff|#d50032

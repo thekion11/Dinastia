@@ -1,0 +1,16 @@
+Al-Hilal|circulo|liso|HIL|liso|#0038a8|#ffffff|#0038a8|#0038a8
+Al-Nassr|escudo|liso|NAS|liso|#ffd100|#0038a8|#0038a8|#ffd100
+Al-ittihad|circulo|franjas|ITT|franjas|#ffd100|#000000|#000000|#ffd100
+Al-ahli SA|hex|liso|AHL|liso|#00843d|#ffffff|#ffffff|#00843d
+Al-Shabab|clasico|liso|SHA|liso|#ffffff|#000000|#ffffff|#ffffff
+Al-Ettifaq|escudo|liso|ETT|liso
+Al-Taawoun|rombo|liso|TAA|liso
+Al-Faiha|ovalo|liso|FAY|liso
+Al-Raed|clasico|liso|RAE|liso
+Al-Fateh|hex|liso|FAT|liso
+Dammac|escudo|liso|DAM|liso
+Al-Khaleej|circulo|liso|KHA|liso
+Al-Wehda|rombo|liso|WEH|liso
+Al-Okgdood|clasico|liso|OKH|liso
+Al-Riyadh|escudo|liso|RIY|liso
+Al-Hazem|hex|liso|HAZ|liso

@@ -49,11 +49,23 @@ var _hacer_refs := OS.get_environment("VISUAL") == "referencias"
 ## otro idioma o resolución), sin comparar. VISUAL_IDIOMA=de|tr|… cambia el idioma.
 var _solo_capturas := OS.get_environment("VISUAL") == "capturas"
 var _idioma_antes := ""
+var _ayudas_antes := true
 var _cambiadas: Array[String] = []
 var _nuevas: Array[String] = []
 
+## Las preferencias de la máquina (paleta, tarjetas, fondo, diseño rotativo) las dejan cambiadas
+## las pruebas de Ajustes: la foto se hace con las de serie y las del jugador se devuelven al acabar.
+const RESPALDO_PREFS := Principal.PREFS + ".visual_respaldo"
+
 func _ready() -> void:
+	if FileAccess.file_exists(Principal.PREFS):
+		DirAccess.rename_absolute(Principal.PREFS, RESPALDO_PREFS)
 	AjustesCiudad.guardar("tutorial_visto", true)
+	## (30-10) Sin el aviso «la última vez el juego anotó N errores» (M-430): depende de cómo
+	## acabó la sesión anterior de Godot en esa máquina, no de la pantalla.
+	var reg := get_node_or_null("/root/Registro")
+	if reg != null:
+		reg.errores_previos = 0
 	## Sin fundidos a medias en la foto: animaciones reducidas (solo en memoria, no se
 	## guarda en los ajustes del jugador) y el reloj a ×10 para los fundidos que no
 	## pasan por `Animar` (filas que entran escalonadas).
@@ -62,7 +74,7 @@ func _ready() -> void:
 	var m := Mundo.new()
 	m.generar([], SEMILLA)
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
-	Principal.mundo_pregenerado = m
+	PedidoPartida.mundo_pregenerado = m
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 	DirAccess.make_dir_recursive_absolute(SALIDA)
@@ -75,6 +87,9 @@ func _process(_d: float) -> void:
 		## El idioma lo decide la prueba, no las preferencias de la máquina (se
 		## restaura al terminar, para no dejárselo cambiado al jugador).
 		_idioma_antes = Idiomas.idioma
+		## Las ayudas de primera visita (CapasTutorial) tapaban media pantalla según el estado de la máquina: se apagan.
+		_ayudas_antes = CapasTutorial.activas()
+		CapasTutorial.poner_activas(false)
 		Idiomas.idioma = OS.get_environment("VISUAL_IDIOMA") if OS.get_environment("VISUAL_IDIOMA") != "" else "es"
 		_p._refrescar()
 		## Una partida nueva abre el tutorial de bienvenida encima de todo: se salta.
@@ -217,9 +232,12 @@ static func mapa(a: Image, b: Image) -> Image:
 	return out
 
 func _terminar() -> void:
+	CapasTutorial.poner_activas(_ayudas_antes)
 	if _idioma_antes != "" and _idioma_antes != Idiomas.idioma:
 		Idiomas.idioma = _idioma_antes
-		_p._guardar_preferencias()
+	if FileAccess.file_exists(RESPALDO_PREFS):
+		DirAccess.remove_absolute(Principal.PREFS)
+		DirAccess.rename_absolute(RESPALDO_PREFS, Principal.PREFS)
 	if get_viewport().get_visible_rect().size != Vector2(1280, 720):
 		print("AVISO: las referencias se hicieron a 1280×720; esta ventana es %s" % str(get_viewport().get_visible_rect().size))
 	print("")

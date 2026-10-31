@@ -26,6 +26,8 @@ func _instalacion(uso: String, r: Rect2) -> void:
 	var w := r.size.x
 	var f := r.size.y
 	var nombre := ""
+	if uso in ["comisaria", "bomberos", "hospital"]:
+		ServiciosVida.registrar(uso, c, w, f)   ## de aquí salen los vehículos de emergencia (pieza E)
 	match uso:
 		"plaza_mayor":
 			nombre = "Plaza Mayor"
@@ -40,48 +42,48 @@ func _instalacion(uso: String, r: Rect2) -> void:
 				for sz: float in [-1.0, 1.0]:
 					esquinas.append(c + Vector3(sx * w * 0.36, -0.2, sz * f * 0.36))
 			_arboles_en(esquinas, 1.0)
+			## Bancos, farolas, puestos, soportales con cafés y terrazas (`CiudadPlaza`).
+			CiudadPlaza.montar(self, c, w, f)
 		"ayuntamiento":
 			nombre = "Ayuntamiento"
 			b._caja_en(c + Vector3(0, 9.0, -6.0), Vector3(w * 0.8, 18.0, f * 0.55), _mat["piedra"])
 			b._caja_en(c + Vector3(0, 26.0, -6.0), Vector3(9.0, 16.0, 9.0), _mat["piedra"])
 			b._cil_en(c + Vector3(0, 36.0, -6.0), 4.0, 4.0, b._mat_simple(Color(0.35, 0.5, 0.45), 0.4), 0.2)
-			for k in 8:
-				b._cil_en(c + Vector3(-w * 0.34 + float(k) * w * 0.097, 7.0, f * 0.24), 0.8, 14.0, _mat["piedra"])
 			_bandera_mastil(c + Vector3(0, 0, f * 0.4))
 		"estacion_central":
 			nombre = "Estación Central"
-			b._caja_en(c + Vector3(0, 6.0, 0), Vector3(w * 0.85, 12.0, f * 0.7), _mat["claro"])
-			b._boveda(c + Vector3(0, 12.0, 0), w * 0.85, f * 0.7, b._mat_simple(Color(0.5, 0.62, 0.7), 0.3), 0.3)
-			b._caja_en(c + Vector3(0, 5.0, f * 0.35 + 0.1), Vector3(w * 0.6, 7.0, 0.2), _mat["vidrio"])
+			EstacionCentral.montar(b, c, w, f, _mat, self)   ## estación de cabecera con trenes (27-10-2026)
 			_cartel_m(c + Vector3(w * 0.4, 0, f * 0.45), Color(0.85, 0.15, 0.15))
 		"mercado":
-			nombre = "Mercado"
+			nombre = "Mercado municipal"   ## «Mercado» a secas se traduce como el de fichajes
 			b._caja_en(c + Vector3(0, 4.5, 0), Vector3(w * 0.8, 9.0, f * 0.7), b._mat_simple(Color(0.7, 0.4, 0.3), 0.8))
 			b._boveda(c + Vector3(0, 9.0, 0), w * 0.8, f * 0.7, b._mat_simple(Color(0.35, 0.45, 0.4), 0.5), 0.25)
+			CiudadMercado.montar(self, c, w, f)
 		"cine":
 			nombre = "Cine"
 			b._caja_en(c + Vector3(0, 9.0, 0), Vector3(w * 0.7, 18.0, f * 0.7), b._mat_simple(Color(0.25, 0.22, 0.3), 0.5))
 			var neon := b._mat_simple(Color(1.0, 0.3, 0.6), 0.3, 2.0)
-			b._caja_en(c + Vector3(0, 14.0, f * 0.35 + 0.3), Vector3(w * 0.5, 3.0, 0.3), neon)
+			b._caja_en(c + Vector3(0, 14.0, f * 0.35 + FachadaModular.FONDO + 0.3), Vector3(w * 0.5, 3.0, 0.3), neon)
 		"hospital":
 			nombre = "Hospital"
 			var blanco := b._mat_simple(Color(0.96, 0.96, 0.97), 0.5)
 			b._caja_en(c + Vector3(0, 12.0, -8.0), Vector3(w * 0.8, 24.0, f * 0.4), blanco)
 			b._caja_en(c + Vector3(-w * 0.25, 5.0, f * 0.15), Vector3(w * 0.35, 10.0, f * 0.4), blanco)
 			var rojo := b._mat_simple(Color(0.85, 0.1, 0.1), 0.5, 0.4)
-			b._caja_en(c + Vector3(0, 20.0, -8.0 + f * 0.2 + 0.3), Vector3(7.0, 2.0, 0.3), rojo)
-			b._caja_en(c + Vector3(0, 20.0, -8.0 + f * 0.2 + 0.3), Vector3(2.0, 7.0, 0.3), rojo)
+			b._caja_en(c + Vector3(0, 20.0, -8.0 + f * 0.2 + FachadaModular.FONDO + 0.3), Vector3(7.0, 2.0, 0.3), rojo)
+			b._caja_en(c + Vector3(0, 20.0, -8.0 + f * 0.2 + FachadaModular.FONDO + 0.3), Vector3(2.0, 7.0, 0.3), rojo)
 			b._cil_en(c + Vector3(w * 0.2, 24.2, -8.0), 5.0, 0.3, b._mat_simple(Color(0.3, 0.3, 0.32), 0.6))
 		"comisaria":
 			nombre = "Comisaría"
 			b._caja_en(c + Vector3(0, 6.0, 0), Vector3(w * 0.7, 12.0, f * 0.6), b._mat_simple(Color(0.75, 0.78, 0.84), 0.6))
-			b._caja_en(c + Vector3(0, 9.5, f * 0.3 + 0.2), Vector3(w * 0.5, 1.6, 0.3), b._mat_simple(Color(0.15, 0.3, 0.75), 0.5, 0.3))
+			b._caja_en(c + Vector3(0, 9.5, f * 0.3 + FachadaModular.FONDO + 0.2), Vector3(w * 0.5, 1.6, 0.3), b._mat_simple(Color(0.15, 0.3, 0.75), 0.5, 0.3))
 		"bomberos":
 			nombre = "Bomberos"
 			b._caja_en(c + Vector3(0, 6.0, 0), Vector3(w * 0.7, 12.0, f * 0.6), b._mat_simple(Color(0.75, 0.2, 0.15), 0.6))
 			for k in 3:
 				b._caja_en(c + Vector3(-w * 0.22 + float(k) * w * 0.22, 3.5, f * 0.3 + 0.1), Vector3(w * 0.17, 6.0, 0.2), b._mat_simple(Color(0.85, 0.85, 0.85), 0.4))
 			b._caja_en(c + Vector3(w * 0.3, 11.0, -f * 0.2), Vector3(5.0, 22.0, 5.0), b._mat_simple(Color(0.75, 0.2, 0.15), 0.6))
+			CiudadServicios.bomberos(self, c, w, f)
 		"escuela", "instituto":
 			nombre = "Escuela" if uso == "escuela" else "Instituto"
 			var lad := b._mat_simple(Color(0.7, 0.42, 0.32), 0.85)
@@ -97,31 +99,21 @@ func _instalacion(uso: String, r: Rect2) -> void:
 		"centro_comercial":
 			nombre = "Centro Comercial"
 			b._caja_en(c + Vector3(0, 8.0, -f * 0.1), Vector3(w * 0.9, 16.0, f * 0.55), _mat["claro"])
-			b._caja_en(c + Vector3(0, 7.0, -f * 0.1 + f * 0.275 + 0.2), Vector3(w * 0.7, 10.0, 0.2), _mat["vidrio"])
 			_lote("asfalto", c + Vector3(0, 0.25, f * 0.32), Vector3(w * 0.9, 0.1, f * 0.3))
+			## Fachada real (escaparates, entrada con marquesina, pisos y cornisa) y las recreativas junto a la puerta.
+			FachadaModular.montar(self, c.x, c.z + f * 0.175, c.y + 0.3, w * 0.9, 4)
+			CiudadArcade.montar(b, c, w, f)
+			CajeroCiudad.montar(self, Vector3(c.x + 8.0, c.y + 0.3, c.z + f * 0.175 + FachadaModular.FONDO + 0.6), 0.0)
+			ExpendedoraCiudad.montar(b, Vector3(c.x + 10.5, c.y + 0.3, c.z + f * 0.175 + FachadaModular.FONDO + 0.6), 0.0)
 		"gasolinera":
 			nombre = "Gasolinera"
-			b._caja_en(c + Vector3(0, 6.0, 0), Vector3(w * 0.5, 0.6, f * 0.4), b._mat_simple(Color(0.9, 0.9, 0.9), 0.5))
-			for sx: float in [-1.0, 1.0]:
-				for sz: float in [-1.0, 1.0]:
-					b._cil_en(c + Vector3(sx * w * 0.18, 3.0, sz * f * 0.12), 0.3, 6.0, _mat["claro"])
-			b._caja_en(c + Vector3(0, 1.0, 0), Vector3(1.2, 2.0, 2.0), b._mat_simple(Color(0.85, 0.2, 0.15), 0.5))
-			b._caja_en(c + Vector3(-w * 0.35, 2.5, -f * 0.3), Vector3(10.0, 5.0, 8.0), _mat["claro"])
+			CiudadGasolinera.montar(self, c, w, f)
 		"villa_moderna":
 			nombre = "Villa moderna"
 			_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(w, 0.06, f))
-			var esc := load(CityBuilder.RUTA_OFICINA_DT) as PackedScene
-			if esc != null:
-				var n0: Node3D = esc.instantiate()
-				var raiz := Node3D.new()
-				b.add_child(raiz)
-				raiz.add_child(n0)
-				var caja := b._caja_de(n0)
-				n0.position = -Vector3(caja.position.x + caja.size.x * 0.5, caja.position.y, caja.position.z + caja.size.z * 0.5)
-				var s := minf((w - 12.0) / maxf(caja.size.x, 0.01), (f - 12.0) / maxf(caja.size.z, 0.01))
-				raiz.scale = Vector3.ONE * s
-				raiz.position = c
-				cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
+			## Una casa a escala humana con piezas del kit suburbano (`CiudadVilla`): el `oficina_dt.glb` que había
+			## traía una semiesfera de cielo de 103 m y salía una cúpula.
+			cuenta["edificios"] = int(cuenta.get("edificios", 0)) + CiudadVilla.montar(self, c, w, f)
 		"desguace":
 			nombre = "Desguace"
 			_lote("solar", Vector3(c.x, 0.26, c.z), Vector3(w, 0.05, f))
@@ -133,6 +125,7 @@ func _instalacion(uso: String, r: Rect2) -> void:
 			if caja2 != null:
 				for k in 6:
 					_kit(caja2, c + Vector3(-w * 0.35 + float(k % 3) * 3.0, float(k / 3) * 2.2, -f * 0.3), Vector3.ONE * 2.2, 0.0)
+			CiudadServicios.desguace(self, c, w, f)
 		"granja":
 			nombre = "Granja urbana"
 			_lote("cesped", Vector3(c.x, 0.27, c.z), Vector3(w, 0.06, f))
@@ -153,8 +146,11 @@ func _instalacion(uso: String, r: Rect2) -> void:
 				n.position = c + Vector3(-w * 0.3 + float(k) * w * 0.2, 0.2, f * 0.3)
 				n.name = "Bus"
 				b.add_child(n)
+			CiudadServicios.cocheras(self, c, w, f)
 		_:
 			b._caja_en(c + Vector3(0, 6.0, 0), Vector3(w * 0.7, 12.0, f * 0.6), _mat["claro"])
+	CiudadServicios.fachada(self, uso, c, w, f)
+	CiudadServicios.portico(self, uso, c, w, f)
 	if nombre != "":
 		b._rotulo(c + Vector3(0, 30.0, 0), nombre, Color(1, 1, 1), 22)
 		b.puntos_clic.append({"k": "ciudad_" + uso, "n": nombre, "pos": c, "estado": "ciudad"})
@@ -193,6 +189,16 @@ func _dibujar_bloque(bl: Dictionary) -> void:
 			_casas(r)
 		"lejano":
 			_lejanos.append(r)
+		"obra":
+			## Como el parque solar: lejana apuntada para no mover el azar.
+			_lejanos.append(r)
+			_sin_lejano.append(r)
+			CiudadObra.montar(self, r)
+		"parque_solar":
+			## Como la feria: se apunta como lejana para consumir el mismo azar (`_edificios_lejanos`).
+			_lejanos.append(r)
+			_sin_lejano.append(r)
+			CiudadSolar.montar(self, r)
 		"feria":
 			## Antes era una manzana lejana: se sigue apuntando para que el azar de
 			## `_edificios_lejanos` se consuma igual (no se mueve nada más).
@@ -363,27 +369,15 @@ func _bocas_metro() -> void:
 				_lote("acera", p + Vector3(0, -0.2 - float(s) * 0.35, -2.5 + float(s) * 0.9), Vector3(2.6, 0.2, 0.9))
 			for lado: float in [-1.0, 1.0]:
 				b._caja_en(p + Vector3(lado * 1.7, 0.6, 0), Vector3(0.12, 1.0, 7.0), b._mat_simple(Color(0.55, 0.56, 0.58), 0.3))
+			EscaleraVida.registrar(b, p + Vector3(0, -1.85, 2.9), p + Vector3(0, -0.05, -2.5), 6)
 			_cartel_m(p + Vector3(2.4, 0, -3.0), col)
 			n += 1
 	cuenta["bocas_metro"] = n
 
-## Las marquesinas de las paradas de autobús.
+## Los paraderos «Red» (`ParaderoRed`, como los de Santiago): salen de los recorridos sobre el mapa (`RecorridosMapa`), cada uno en la acera de su
+## sentido y mirando a la calle, con su código, su calle y esquina y los recorridos que de verdad paran ahí (`BusesRed.montar_paraderos`).
 func _marquesinas_bus() -> void:
-	var n := 0
-	for l: Dictionary in lineas_bus:
-		for p: Vector3 in l["paradas"]:
-			var q := p
-			## A la acera más cercana: se aparta del eje de la avenida.
-			var dir := Vector3(signf(p.x - snappedf(p.x, CELDA)), 0, signf(p.z - snappedf(p.z, CELDA)))
-			if absf(p.x - snappedf(p.x, CELDA)) < absf(p.z - snappedf(p.z, CELDA)):
-				q = Vector3(snappedf(p.x, CELDA) + signf(dir.x if dir.x != 0.0 else 1.0) * (ANCHO_AV * 0.5 + ACERA * 0.6), 0, p.z)
-			else:
-				q = Vector3(p.x, 0, snappedf(p.z, CELDA) + signf(dir.z if dir.z != 0.0 else 1.0) * (ANCHO_AV * 0.5 + ACERA * 0.6))
-			b._caja_en(q + Vector3(0, 2.6, 0), Vector3(3.5, 0.15, 1.6), _mat["claro"])
-			b._caja_en(q + Vector3(0, 1.3, -0.7), Vector3(3.5, 2.4, 0.08), _mat["vidrio"])
-			b._caja_en(q + Vector3(0, 0.55, -0.3), Vector3(2.8, 0.15, 0.5), _mat["tronco"])
-			n += 1
-	cuenta["paradas_bus"] = n
+	cuenta["paradas_bus"] = BusesRed.montar_paraderos(self)
 
 func _guirnaldas() -> void:
 	var colores := [Color(1, 0.3, 0.3), Color(1, 0.85, 0.3), Color(0.3, 0.8, 1), Color(0.4, 1, 0.5), Color(1, 0.45, 0.9)]

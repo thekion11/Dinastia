@@ -247,7 +247,8 @@ func _probar_retrato3d() -> void:
 	_comprobar(chico.get_size() == Vector2(Retrato3D.TAM_CHICO, Retrato3D.TAM_CHICO) and grande.get_size() == Vector2(Retrato3D.TAM_GRANDE, Retrato3D.TAM_GRANDE), "dos resoluciones según el alto pedido")
 	_comprobar(Retrato3D.textura(j, "#c01020", "#ffffff", 64) == chico and Retrato3D._cola.size() == cola0 + 2, "en caché: un encargo por jugador, tamaño y camiseta")
 	var im := chico.get_image()
-	var esperado := Color(Color("#c01020").darkened(0.55), 1.0)
+	## El marcador es `Retrato3D.fondo_de` (color del club fundido con verde oscuro y aclarado hasta LUZ_FONDO), no el club oscurecido.
+	var esperado := Color(Retrato3D.fondo_de("#c01020"), 1.0)
 	var px := im.get_pixel(5, 5) if im != null else Color.WHITE
 	_comprobar(absf(px.r - esperado.r) < 0.01 and absf(px.g - esperado.g) < 0.01 and absf(px.b - esperado.b) < 0.01, "el marcador es el color del club, oscurecido, hasta que llega el retrato")
 	Retrato3D.limpiar_cache()

@@ -90,6 +90,12 @@ var expansion: CiudadExpansion
 ## modo a pie / al volante (`ExploradorCiudad`).
 var huellas: Array[Rect2] = []
 var etiquetas: Array = []          ## [{pos:Vector3, texto:String, nivel:int}]
+## Asientos públicos (bancos de acera y de parada): {p: Vector3 del asiento, giro: float}. `GenteSentada` sienta gente ahí (P3).
+var asientos: Array[Dictionary] = []
+var escaleras: Array[Dictionary] = []   ## {pie, cima, n} de las escaleras por donde `EscaleraVida` hace subir y bajar gente
+var puertas_vida: Array[Dictionary] = []   ## {p, n} de las entradas por donde `PuertaVida` hace entrar y salir vecinos
+var esperas_bus: Array[Vector3] = []   ## dónde esperan los pasajeros (bajo cada marquesina; `PasajerosBus`)
+var paradas_bus_pos: Array[Vector3] = []   ## dónde están las marquesinas del anillo (los autobuses paran junto a ellas)
 ## LO QUE SE PUEDE TOCAR EN EL MAPA (plan maestro B7): cada instalación, su
 ## solar si todavía no existe, y el estadio. `VistaCiudad` proyecta `pos` a la
 ## pantalla para saber qué se clicó (el mapa no tiene colisiones).
@@ -132,6 +138,10 @@ const TERRENO_CELDAS := 160          ## 121x121 vértices: suficiente para que l
 const LLANO_RADIO := 1480.0          ## dentro de esto, altura 0 garantizada
 const LLANO_TRANSICION := 520.0      ## y esto es lo que tarda en empezar a subir
 const TERRENO_ALTURA := 78.0
+## EL CERRO (27-10-2026): una montaña en las afueras (sureste) para el teleférico; se suma al relieve de ruido.
+const MONTE_CENTRO := Vector2(2300.0, 1300.0)
+const MONTE_ALTURA := 420.0
+const MONTE_RADIO := 520.0
 
 ## Se guardan para poder preguntar la altura en cualquier punto DESPUÉS de
 ## generar la malla: lo que se plante fuera del llano -los edificios del

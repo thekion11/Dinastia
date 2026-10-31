@@ -66,44 +66,45 @@ func nueva() -> void:
 
 ## El camino compartido entre "Nueva partida directa" (arriba) y "vengo del
 ## asistente con un mundo ya generado y un club ya elegido"
-## (`ui/eleccion_club.gd`, que deja `Principal.mundo_pregenerado`): aplicar
+## (`ui/eleccion_club.gd`, que deja `PedidoPartida.mundo_pregenerado`): aplicar
 ## dificultad y modo, conectar el registro, y pintar. Separado para no repetir
 ## estas seis líneas en dos sitios que tenían que estar siempre de acuerdo.
 func arrancar_con(m: Mundo) -> void:
 	p.mundo = m
 	p._fin_partida_avisado = false
-	m.dificultad = Principal.dificultad_elegida
+	m.dificultad = PedidoPartida.dificultad_elegida
 	## La dificultad: aquí escala la caja inicial («plata» del HTML: hasta 60% más en
 	## fácil o 45% menos en leyenda). Premios («prem») y pretensiones salariales («pide»)
 	## y el tope del valor de la IA los aplica el núcleo con Mundo.factor_dificultad().
 	var dif: Variant = Datos.tabla("DIF")
-	if dif is Dictionary and (dif as Dictionary).has(Principal.dificultad_elegida):
-		var plata := float((dif as Dictionary)[Principal.dificultad_elegida].get("plata", 1.0))
+	if dif is Dictionary and (dif as Dictionary).has(PedidoPartida.dificultad_elegida):
+		var plata := float((dif as Dictionary)[PedidoPartida.dificultad_elegida].get("plata", 1.0))
 		m.mi_club().saldo = int(round(float(m.mi_club().saldo) * plata))
 	## Los desafíos: "pobreza" pisaría la caja de la dificultad si fuera antes,
 	## así que van después -es la letra pequeña ganándole a la general, como en
 	## el HTML, donde `aplicarDesafios()` también corre después de fijar el
 	## saldo por dificultad.
-	if not Principal.desafios_elegidos.is_empty():
-		m.desafios = Principal.desafios_elegidos.duplicate()
+	if not PedidoPartida.desafios_elegidos.is_empty():
+		m.desafios = PedidoPartida.desafios_elegidos.duplicate()
 		m.aplicar_desafios()
-		Principal.desafios_elegidos = []
+		PedidoPartida.desafios_elegidos = []
 	## El modo de carrera elegido en la pantalla previa. Si viene vacío -se
 	## abrió esta escena directo, sin pasar por seleccion_modo.gd, como hacen
 	## los bancos de prueba y las capturas- se queda el DT clásico de siempre.
-	if Principal.modo_elegido != "":
-		m.roles.arrancar(Principal.modo_elegido, Principal.dt_nombre_elegido)
+	if PedidoPartida.modo_elegido != "":
+		m.roles.arrancar(PedidoPartida.modo_elegido, PedidoPartida.dt_nombre_elegido)
 		## FONDO DE INVERSIÓN (26-9-2026): el fondo arranca con su propia caja.
-		if Principal.modo_elegido == "fondo" and m.mi_club() != null:
+		if PedidoPartida.modo_elegido == "fondo" and m.mi_club() != null:
 			m.fondo = FondoInversion.new()
 			m.fondo.caja = int(round(Eco.ref_caja(70.0) * 2.5))
-		Principal.modo_elegido = ""
+		PedidoPartida.modo_elegido = ""
 	_adoptar(m)
 	p._escribir("[color=#8ea595]Mundo nuevo.[/color] Semilla [color=#3fa06a]%d[/color]" % m.semilla)
+	_avisar_si_respaldo()
 	p._refrescar()
 
 ## Una partida ya leída del disco (la ranura principal, o la que deja la
-## pantalla de inicio en `Principal.mundo_a_cargar`).
+## pantalla de inicio en `PedidoPartida.mundo_a_cargar`).
 func entrar_cargada(m: Mundo) -> void:
 	_adoptar(m)
 	p._escribir("[color=#3fa06a]Partida cargada:[/color] %s, %d, semana %d." % [
@@ -133,6 +134,10 @@ func guardar() -> void:
 		p._escribir("[color=#e05555]No se pudo guardar.[/color]")
 
 func cargar() -> void:
+	var veto := Partida.motivo_sin_cargar(p.mundo)
+	if veto != "":
+		p._escribir("[color=#c9a227]%s[/color]" % veto)
+		return
 	var m := Partida.cargar(RANURA)
 	if m == null:
 		p._escribir("[color=#c9a227]No hay ninguna partida guardada todavía.[/color]")
@@ -149,6 +154,10 @@ func guardar_en(nombre: String) -> void:
 	p._refrescar()
 
 func cargar_de(nombre: String) -> void:
+	var veto := Partida.motivo_sin_cargar(p.mundo)
+	if veto != "":
+		p._escribir("[color=#c9a227]%s[/color]" % veto)
+		return
 	var m := Partida.cargar(nombre)
 	if m == null:
 		p._escribir("[color=#c9a227]Esa ranura está vacía.[/color]")
@@ -163,7 +172,7 @@ func cargar_de(nombre: String) -> void:
 ## propósito -uno por semana durante toda una carrera sería puro ruido en el
 ## registro-, en la misma ranura que ya usa el botón "Guardar".
 func autoguardar_si_toca() -> void:
-	if p._autoguardado and Partida.guardar(p.mundo, RANURA):
+	if (p._autoguardado or p.mundo.tiene_desafio("sinRecarga")) and Partida.guardar(p.mundo, RANURA):
 		_indicador_guardado()
 
 ## Si el guardado principal estaba roto y se recuperó la copia (guardado
@@ -172,6 +181,12 @@ func _avisar_si_respaldo() -> void:
 	if Partida.cargada_de_respaldo:
 		p._escribir("[color=#c9a227]El último guardado estaba dañado: se recuperó la copia anterior.[/color]")
 		Partida.cargada_de_respaldo = false
+	## M-430: si la sesión anterior dejó errores, se dice una vez y se indica cómo mandar el informe.
+	var reg := p.get_node_or_null("/root/Registro")
+	if reg != null and int(reg.errores_previos) > 0:
+		var donde := Idiomas.t("mándalo a %s") % String(reg.CONTACTO) if String(reg.CONTACTO) != "" else Idiomas.t("guárdalo para avisar")
+		p._escribir("[color=#c9a227]%s[/color]" % (Idiomas.t("La última vez el juego anotó %d errores. Si algo falló, copia el informe en Ajustes → Partida → «Copiar informe de fallos» y %s.") % [int(reg.errores_previos), donde]))
+		reg.errores_previos = 0
 
 ## Si la última vez se cerró el juego con un partido dirigido a medias, se
 ## completa desde el marcador que había (sin repetirlo desde el 0-0).
@@ -220,11 +235,17 @@ func _indicador_guardado() -> void:
 func apuntar_deshacer(motivo: String) -> void:
 	if p.mundo == null:
 		return
-	pila_deshacer.append({"motivo": motivo, "estado": Partida.instantanea(p.mundo)})
+	## Copia profunda (28-10): la instantánea lleva tablas, atributos y onces por referencia; en la pila sobrevivían
+	## semanas y «deshacer» restauraba la tabla de HOY con la jornada de entonces.
+	pila_deshacer.append({"motivo": motivo, "estado": Partida.instantanea(p.mundo).duplicate(true)})
 	while pila_deshacer.size() > DESHACER_MAX:
 		pila_deshacer.pop_front()
 
 func deshacer() -> void:
+	var veto := Partida.motivo_sin_cargar(p.mundo)   ## deshacer también es volver atrás: «Sin red» lo prohíbe
+	if veto != "":
+		p._escribir("[color=#c9a227]%s[/color]" % veto)
+		return
 	if pila_deshacer.is_empty():
 		p._escribir("[color=#c9a227]No hay nada que deshacer.[/color]")
 		return

@@ -230,7 +230,9 @@ static func _imagen_hierba_gd() -> Image:
 			img.set_pixel(x, y, c)
 	return img
 
-func _terreno() -> Array[MeshInstance3D]:
+## El ruido que define el relieve (compartido por la malla del terreno y por `altura_en`). Aparte de `_terreno` para poder leer alturas SIN construir la
+## malla (27-10-2026: la vía del tren y el teleférico las piden al montar la ciudad, y `altura_en` daba 0 si el terreno aún no se había construido).
+func _preparar_ruido() -> void:
 	var ruido := FastNoiseLite.new()
 	ruido.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	ruido.seed = 20260912
@@ -244,7 +246,9 @@ func _terreno() -> Array[MeshInstance3D]:
 	_ruido_terreno = ruido
 	_ruido_detalle = detalle
 
-	var baldosas := TerrenoArreglos.calcular(ruido, detalle)   ## alturas, normales y UV (C++ si está)
+func _terreno() -> Array[MeshInstance3D]:
+	_preparar_ruido()
+	var baldosas := TerrenoArreglos.calcular(_ruido_terreno, _ruido_detalle)   ## alturas, normales y UV (C++ si está)
 
 	var shader_terreno := load("res://visor/terreno.gdshader") as Shader
 	var mat := ShaderMaterial.new()

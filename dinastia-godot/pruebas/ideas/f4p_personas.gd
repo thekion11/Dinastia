@@ -77,6 +77,28 @@ func _probar_async() -> void:
 	await _frames(1)
 	_comprobar(_m.citas.por_id(String(ct["id"]))["estado"] == "hecha" and _m.comercial.zonas_firmadas.has(zona), "la respuesta resuelve la cita (zona firmada en persona)")
 	_comprobar(_e.is_physics_processing() and not _c.cuerpos.has(String(ct["id"])) and _m.citas.objetivo == "", "y el paseo sigue, la persona se va y la flecha se apaga")
+	## §2.5: la entrevista en persona son tres preguntas seguidas en el mismo cuadro.
+	var jf: Jugador = _m.mi_club().plantilla[3]
+	_m.citas.entrevista(_m, jf)
+	var cef := {}
+	for x: Dictionary in _m.citas.pendientes():
+		if x["tipo"] == "entrevista":
+			cef = x
+	var ad0 := jf.adapt
+	_c._abierta = String(cef["id"])
+	_c._paso = 0
+	_c._elecciones.clear()
+	_c._preguntar(cef, Color.WHITE)
+	_c._responder(0)
+	await _frames(1)
+	var segunda := _c._abierta == String(cef["id"]) and _c._paso == 1 and is_instance_valid(_c.hud._directiva)
+	_c._responder(0)
+	await _frames(1)
+	var tercera := _c._paso == 2 and String(_m.citas.por_id(String(cef["id"]))["estado"]) == "pendiente"
+	_c._responder(1)
+	await _frames(1)
+	_comprobar(segunda and tercera and String(_m.citas.por_id(String(cef["id"]))["estado"]) == "hecha" and jf.adapt >= mini(ad0 + 15, 100),
+		"la entrevista en persona: tono, grupo y staff, y al final se resuelve (analista: +15 de adaptación)")
 	_c._process(0.6)
 	_comprobar(not _c.hud._flecha.visible, "sin cita marcada, sin flecha")
 	## Una cita en el estadio apunta dentro del club.
@@ -96,5 +118,26 @@ func _probar_async() -> void:
 		_m.reloj.minuto = int(cj["hora"]) * 60
 		_c._revisar_cuerpos()
 		_comprobar(not _c.cuerpos.has(String(cj["id"])), "desde la calle no se ve al presidente en su despacho")
-	Principal.mundo_pregenerado = null
-	Principal.mundo_a_cargar = null
+	## Fase 5, bloque 1: el vestuario con vida (laborables de 10 a 12, en la planta 0 del club).
+	var vest := _c.vestuario
+	_comprobar(vest != null, "las citas 3D montan el vestuario con vida")
+	if vest != null:
+		_e._entrar_al_estadio()
+		_m.reloj.dia = 1
+		_m.reloj.minuto = 10 * 60 + 30
+		vest.revisar()
+		await _frames(2)
+		_comprobar(vest.cuerpos.size() == VestuarioVivo.CUANTOS, "en horario hay %d futbolistas junto a las taquillas" % VestuarioVivo.CUANTOS)
+		if not vest.cuerpos.is_empty():
+			var c0: Dictionary = vest.cuerpos[0]
+			var jug: PrologoMentor = c0["nodo"]
+			_comprobar(jug.nombre == Nombres.visible((c0["jugador"] as Jugador).nombre), "con el nombre de la plantilla (%s)" % jug.nombre)
+			_e.cuerpo.position = jug.position + Vector3(0, 0, 1.0)
+			vest._buscar_cerca()
+			_comprobar(not vest.cerca.is_empty() and _c.usar(), "a su lado la E habla con él")
+		_m.reloj.minuto = 14 * 60
+		vest.revisar()
+		_comprobar(vest.cuerpos.is_empty(), "fuera de horario el vestuario queda vacío")
+		_e._salir_del_estadio()
+	PedidoPartida.mundo_pregenerado = null
+	PedidoPartida.mundo_a_cargar = null
