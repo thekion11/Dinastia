@@ -858,7 +858,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-464 | P2 | PENDIENTE | No existe un informe de «frases por pantalla»: no se sabe qué… | sin informe por pantalla |
 | M-466 | P2 | PENDIENTE | `datos/idiomas_extra.json` se reescribe entero con cada ampliación… | un solo archivo |
 | M-468 | P2 | PENDIENTE | Plurales y géneros en las 69 frases nuevas (p. ej. «%d botones»)… | sin plurales |
-| M-470 | P2 | PENDIENTE | El banco no ejecuta `auditoria_tecnica`, `auditoria_datos` ni las… | banco sin auditorías |
+| M-470 | P2 | PARCIAL | El banco no ejecuta `auditoria_tecnica`, `auditoria_datos` ni las… | 31-10: la técnica (shaders, escenas, huérfanos: 0 fallos) y la de datos ya van en `especiales.sh`; las visuales, en `especiales.sh todo`. Queda fuera `auditoria_biomecanica`: es un informe, no una prueba (246 animaciones con pies bajo el suelo o articulaciones fuera de rango); va a la pasada de personajes (§2.2e) |
 | M-046 | P3 | PENDIENTE | Sin multitudes en accesos, tienda y museo del estadio | sin flujo de NPC antes/después del partido |
 | M-076 | P3 | PENDIENTE | Sin parches de competición (campeón, copa) | sin parches de competición |
 | M-111 | P3 | PENDIENTE | Sin modo foto con poses y expresión (existe `ModoFoto`) | `ModoFoto` sin poses ni editor de expresión |
