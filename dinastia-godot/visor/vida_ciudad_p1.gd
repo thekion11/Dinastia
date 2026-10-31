@@ -120,10 +120,12 @@ static func transporte(m: Mundo) -> Dictionary:
 ## Dónde empieza una partida cargada en 3D (bloque 7): "" = en el menú de siempre
 ## (prólogo sin ver, pruebas, vida apagada → PC); "oficina" o "casa" (lunes 08:00).
 static func arranque_3d(m: Mundo) -> String:
-	if m == null or not m.prologo_visto or m.ciudad == null or m.obras == null or m.reloj == null:
+	if m == null or m.ciudad == null or m.obras == null or m.reloj == null:
 		return ""
 	if OrquestadorMundo.sin_prologo or OS.get_environment("PROLOGO") == "0":
 		return ""
+	if not m.prologo_visto:
+		return "prologo" if m.prologo_pendiente else ""   ## guardado al salir de la entrada: el prólogo entero
 	if m.necesidades != null and m.necesidades.modo == "apagada":
 		return "oficina"
 	if m.reloj.dia == 0 and m.reloj.minuto <= Reloj.HORA_INICIO * Reloj.MINUTOS_HORA:
