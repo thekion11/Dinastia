@@ -247,6 +247,16 @@ func _probar_async() -> void:
 					_comprobar(n_sust >= 1 and float(pe.get("susto", 0.0)) > 0.0 and _e.trafico.asustar(pp + Vector3(500, 0, 500), 3.0) == 0,
 						"el claxon asusta a los peatones de alrededor (%d) y a los lejanos no" % n_sust)
 					pe["susto"] = 0.0
+					## Mejora F: el golpe que multa contra una persona es un atropello con reacción (150 €).
+					var morro := _e.cuerpo.position + Vector3(sin(_e.rumbo), 0, cos(_e.rumbo)) * 2.0
+					(pe["nodo"] as Node3D).position = morro
+					_m.roles.cartera.efectivo = 200
+					var mult0 := _e.multas
+					_v.multa_temeraria()
+					var lejos := ((pe["nodo"] as Node3D).position - morro).length()
+					_comprobar(_m.roles.cartera.efectivo == 50 and lejos >= 1.3 and float(pe.get("espera", 0.0)) > 0.0 and _e.multas == mult0 + 1,
+						"atropello: el peatón se aparta de un salto (%.1f m) y se queda aturdido; multa de 150 € (efectivo %d, espera %.1f, multas %d→%d)" % [lejos, _m.roles.cartera.efectivo, float(pe.get("espera", 0.0)), mult0, _e.multas])
+					_e.multas = mult0
 			_comprobar((_m.mi_club().saldo if _m.mi_club() != null else 0) == club_saldo, "y el club no paga la gasolina")
 			_m.vida.combustible = 5.0
 			_m.roles.patrimonio = 0

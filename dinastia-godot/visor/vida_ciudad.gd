@@ -418,8 +418,15 @@ func _al_pagar_con_tarjeta(importe: int, _concepto: String) -> void:
 ## (31-10, decisión del dueño) La multa por conducción temeraria cuesta dinero: 60 € de la cartera del
 ## DT (efectivo y, si no alcanza, la tarjeta); si no puede pagarla, queda anotada. Sigue contando para el calabozo.
 const MULTA_TEMERARIA := 60
+var _titular_atropello := -1
 func multa_temeraria() -> void:
 	expl.multas += 1
+	## Mejora F: si el golpe fue contra una persona, atropello con reacción (multa de 150 € y titular).
+	var pe := AtropelloCiudad.peaton_delante(expl)
+	if not pe.is_empty():
+		AtropelloCiudad.reaccionar(expl, pe)
+		_notificar(AtropelloCiudad.multar(self))
+		return
 	var via := ""
 	if mundo.roles != null and mundo.roles.cartera != null:
 		via = String(mundo.roles.cartera.cobrar(mundo.roles, MULTA_TEMERARIA, "Multa por conducción temeraria", CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia))["via"])
