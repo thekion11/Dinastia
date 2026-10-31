@@ -217,6 +217,16 @@ func _probar_async() -> void:
 			_v.usar_surtidor("surtidor_0", "normal")
 			_comprobar(_m.vida.combustible > 40.0 and _m.roles.patrimonio < 500, "repostar cobra de la cuenta del DT con la tarjeta sin contacto")
 			_comprobar(is_instance_valid(_v._tarjeta) and _v._tarjeta.visible, "y la tarjeta sube a la mano con el importe (§2.5)")
+			## Decisiones del dueño (31-10): la multa temeraria cuesta 60 € y el consumo es 0,5 l/km.
+			var multas0 := _e.multas
+			_m.roles.cartera.efectivo = 100
+			_v.multa_temeraria()
+			_comprobar(_e.multas == multas0 + 1 and _m.roles.cartera.efectivo == 40, "la multa por conducción temeraria cobra 60 € y cuenta para el calabozo")
+			_e.multas = multas0
+			var c0 := _m.vida.combustible
+			_m.vida.premium = false
+			_m.vida.gastar_combustible(10000.0)
+			_comprobar(is_equal_approx(c0 - _m.vida.combustible, 5.0), "10 km gastan 5 l (0,5 l/km: un depósito da ~90 km)")
 			_comprobar((_m.mi_club().saldo if _m.mi_club() != null else 0) == club_saldo, "y el club no paga la gasolina")
 			_m.vida.combustible = 5.0
 			_m.roles.patrimonio = 0

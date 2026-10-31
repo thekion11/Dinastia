@@ -6768,7 +6768,9 @@
   "El proyecto se liquida.": "The project is wound up.",
   "Intereses de sobregiro": "Overdraft interest",
   "Viajes a domicilio (distancia real)": "Away trips (real distance)",
-  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "The World Nations Cup: every four years. Called-up players leave to join their national teams."
+  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "The World Nations Cup: every four years. Called-up players leave to join their national teams.",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 €%d fine for reckless driving (%d of 3; paid by %s).",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 €%d fine for reckless driving (%d of 3): you couldn't pay it, so it's on record."
  },
  "pt": {
   "Historia": "História",
@@ -13539,7 +13541,9 @@
   "El proyecto se liquida.": "O projeto é liquidado.",
   "Intereses de sobregiro": "Juros de cheque especial",
   "Viajes a domicilio (distancia real)": "Viagens fora de casa (distância real)",
-  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "A Copa Mundial de Nações: a cada quatro anos. Os jogadores convocados vão para as suas seleções."
+  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "A Copa Mundial de Nações: a cada quatro anos. Os jogadores convocados vão para as suas seleções.",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 Multa de %d € por condução perigosa (%d de 3; paga em %s).",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 Multa de %d € por condução perigosa (%d de 3): não a pudeste pagar e fica registada."
  },
  "patrones": [
   [
@@ -26043,7 +26047,9 @@
   "El proyecto se liquida.": "Le projet est liquidé.",
   "Intereses de sobregiro": "Intérêts de découvert",
   "Viajes a domicilio (distancia real)": "Déplacements à l'extérieur (distance réelle)",
-  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "La Coupe mondiale des nations : tous les quatre ans. Les joueurs convoqués rejoignent leur sélection."
+  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "La Coupe mondiale des nations : tous les quatre ans. Les joueurs convoqués rejoignent leur sélection.",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 Amende de %d € pour conduite dangereuse (%d sur 3 ; payée en %s).",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 Amende de %d € pour conduite dangereuse (%d sur 3) : tu n'as pas pu la payer, elle reste inscrite."
  },
  "it": {
   "Historia": "Storia",
@@ -32814,7 +32820,9 @@
   "El proyecto se liquida.": "Il progetto viene liquidato.",
   "Intereses de sobregiro": "Interessi di scoperto",
   "Viajes a domicilio (distancia real)": "Trasferte (distanza reale)",
-  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "La Coppa mondiale delle nazioni: ogni quattro anni. I giocatori convocati partono con le loro nazionali."
+  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "La Coppa mondiale delle nazioni: ogni quattro anni. I giocatori convocati partono con le loro nazionali.",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 Multa di %d € per guida pericolosa (%d su 3; pagata in %s).",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 Multa di %d € per guida pericolosa (%d su 3): non hai potuto pagarla e resta registrata."
  },
  "de": {
   "Historia": "Geschichte",
@@ -39585,7 +39593,9 @@
   "El proyecto se liquida.": "Das Projekt wird aufgelöst.",
   "Intereses de sobregiro": "Überziehungszinsen",
   "Viajes a domicilio (distancia real)": "Auswärtsreisen (reale Entfernung)",
-  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "Der Weltpokal der Nationen: alle vier Jahre. Die nominierten Spieler reisen zu ihren Nationalmannschaften."
+  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "Der Weltpokal der Nationen: alle vier Jahre. Die nominierten Spieler reisen zu ihren Nationalmannschaften.",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 %d € Bußgeld wegen rücksichtslosen Fahrens (%d von 3; bezahlt mit %s).",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 %d € Bußgeld wegen rücksichtslosen Fahrens (%d von 3): du konntest es nicht bezahlen, es bleibt vermerkt."
  },
  "ca": {
   "Historia": "Història",
@@ -46356,7 +46366,9 @@
   "El proyecto se liquida.": "El projecte es liquida.",
   "Intereses de sobregiro": "Interessos de descobert",
   "Viajes a domicilio (distancia real)": "Desplaçaments a domicili (distància real)",
-  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "La Copa Mundial de Nacions: cada quatre anys. Els jugadors convocats se'n van amb les seves seleccions."
+  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "La Copa Mundial de Nacions: cada quatre anys. Els jugadors convocats se'n van amb les seves seleccions.",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 Multa de %d € per conducció temerària (%d de 3; pagada en %s).",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 Multa de %d € per conducció temerària (%d de 3): no l'has pogut pagar i queda anotada."
  },
  "pl": {
   "Club": "Klub",
@@ -53404,7 +53416,9 @@
   "El proyecto se liquida.": "Projekt zostaje zlikwidowany.",
   "Intereses de sobregiro": "Odsetki od debetu",
   "Viajes a domicilio (distancia real)": "Wyjazdy (rzeczywisty dystans)",
-  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "Światowy Puchar Narodów: co cztery lata. Powołani zawodnicy wyjeżdżają do swoich reprezentacji."
+  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "Światowy Puchar Narodów: co cztery lata. Powołani zawodnicy wyjeżdżają do swoich reprezentacji.",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 Mandat %d € za niebezpieczną jazdę (%d z 3; zapłacony: %s).",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 Mandat %d € za niebezpieczną jazdę (%d z 3): nie mogłeś zapłacić, zostaje zapisany."
  },
  "tr": {
   "Club": "Kulüp",
@@ -60452,6 +60466,8 @@
   "El proyecto se liquida.": "Proje tasfiye ediliyor.",
   "Intereses de sobregiro": "Ek hesap faizi",
   "Viajes a domicilio (distancia real)": "Deplasmanlar (gerçek mesafe)",
-  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "Dünya Uluslar Kupası: dört yılda bir. Davet edilen oyuncular milli takımlarına katılır."
+  "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "Dünya Uluslar Kupası: dört yılda bir. Davet edilen oyuncular milli takımlarına katılır.",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 Tehlikeli sürüş cezası %d € (%d/3; %s ile ödendi).",
+  "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 Tehlikeli sürüş cezası %d € (%d/3): ödeyemedin, kayda geçti."
  }
 }
