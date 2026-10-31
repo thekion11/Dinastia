@@ -413,5 +413,22 @@ func _probar_async() -> void:
 		_v.comprar_surtido(TiendaGasolinera.SURTIDO[0])
 		_comprobar(_m.necesidades.hambre() == h_antes, "sin dinero no se lleva nada")
 	tel.queue_free()
+	## Mejora D (31-10): F para bajarse del coche (queda aparcado y sólido) y volver a subir.
+	if _e != null and _e.cb != null and String(_e.estado) == "calle":
+		AparcarCoche._cambiar_cuerpo(_e, "coche", _e.cuerpo.position, _e.rumbo)
+		_e.vel = 10.0
+		var no_baja := AparcarCoche.alternar(_e)
+		_e.vel = 0.0
+		var pos_coche := _e.cuerpo.position
+		AparcarCoche.alternar(_e)
+		var aparcado := AparcarCoche.aparcado(_e)
+		_comprobar(no_baja != "" and _e.modo == "pie" and aparcado != null and aparcado.position.distance_to(pos_coche) < 0.01
+			and _e._choca_circulos(pos_coche, 0.3) and _e.cuerpo != aparcado,
+			"en marcha no se baja; parado, F te baja: el coche queda aparcado y es sólido")
+		_e.cuerpo.position = pos_coche + Vector3(2.0, 0, 0)
+		AparcarCoche.alternar(_e)
+		_comprobar(_e.modo == "coche" and _e.cuerpo == aparcado and AparcarCoche.aparcado(_e) == null and not _e._choca_circulos(pos_coche, 0.3),
+			"F junto al coche te sube de nuevo y deja de ser un obstáculo")
+		AparcarCoche._cambiar_cuerpo(_e, "pie", _e.cuerpo.position, _e.rumbo)
 	PedidoPartida.mundo_pregenerado = null
 	PedidoPartida.mundo_a_cargar = null
