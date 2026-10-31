@@ -85,7 +85,7 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	var alto_cm := clampf(float(hd.get("alto", 7.0)) - CRANEO_CM, 0.25, 6.0)
 	if bool(hd.get("cortado", false)):
 		alto_cm = maxf(alto_cm, 2.0)
-	var clave_cuero := "%s|%d|%d|%d" % [String(cuerpo.get("id", "")), hash(hd), hash(pos), int(CAPAS_CUERO * reduce)]
+	var clave_cuero := _clave_cuero(cuerpo, hd, pos, int(CAPAS_CUERO * reduce))
 	var cuero: ArrayMesh = _cache_cuero.get(clave_cuero)
 	if cuero == null:
 		cuero = _cuero(cuerpo, pos, datos, hd, int(CAPAS_CUERO * reduce))
@@ -127,7 +127,7 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	## entre capas, que de lejos no llega a un píxel.
 	var capas_cerca := int(CAPAS_CUERO * reduce)
 	if capas_cerca > CAPAS_LEJOS:
-		var clave_l := "%s|%d|%d|%d" % [String(cuerpo.get("id", "")), hash(hd), hash(pos), CAPAS_LEJOS]
+		var clave_l := _clave_cuero(cuerpo, hd, pos, CAPAS_LEJOS)
 		var lejos: ArrayMesh = _cache_cuero.get(clave_l)
 		if lejos == null:
 			lejos = _cuero(cuerpo, pos, datos, hd, CAPAS_LEJOS)
@@ -142,6 +142,14 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	## Melena (llega a la mandíbula o más): quien llama pone además el peinado
 	## largo del pack encima (el pelo por capas no cuelga).
 	return float(hd.get("largo", 0.0)) < LARGO_MELENA or corte == "melena_rizada"
+
+## La clave del cuero en la caché (30-10-2026): solo lo que da forma a la malla (`_cuero` y
+## `corte_de`), NO el color del pelo, que va en el material. Antes la clave llevaba el peinado
+## entero con su color y dos jugadores con la misma cara y el mismo corte rehacían la malla.
+static func _clave_cuero(cuerpo: Dictionary, hd: Dictionary, pos: PackedVector3Array, capas: int) -> String:
+	var forma := [hd.get("linea", []), hd.get("lados", 0.5), hd.get("calvo", false), hd.get("alto", 7.0),
+		hd.get("rizo", 0.0), hd.get("largo", 0.0)]
+	return "%s|%d|%d|%d" % [String(cuerpo.get("id", "")), hash(forma), hash(pos), capas]
 
 ## Reparte un poco de cada valor a sus vecinos (la forma de la ceja entre los
 ## puntos que marca MediaPipe).

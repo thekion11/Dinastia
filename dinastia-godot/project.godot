@@ -89,6 +89,10 @@ window/stretch/aspect="expand"
 ; negras, que es justo lo que hace falta cuando la relacion de aspecto cambia.
 window/handheld/orientation=0
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/cache_horneada/plugin.cfg")
+
 [gui]
 
 theme/default_font_multichannel_signed_distance_field=true

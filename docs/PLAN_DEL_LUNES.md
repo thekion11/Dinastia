@@ -899,21 +899,24 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-154 | P3 | PENDIENTE | Sin online | fuera de alcance, sin documentar |
 | M-166 | P3 | PENDIENTE | Sin partidos de fútbol sala/playa/mujeres (género existe) | fuera de alcance, sin documentar |
 
-### F6 pulido (rendimiento) (17)
+### F6 pulido (rendimiento) (20)
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
 | M-339 | P1 | PENDIENTE | Césped en capas ≈ 230 k tris/57 llamadas | capas del césped hasta 46 m sin LOD extra |
-| M-343 | P2 | PARCIAL | Draw calls 700 | sombras en 8 mallas por sector (741→691) y 630 llamadas; sin atlas |
+| M-343 | P2 | PARCIAL | Draw calls 700 | 30-10: `EntornoEstadio.agrupar` (coches, árboles y edificios repetidos en MultiMesh): TV 1.158→981, ras de campo 1.645→1.323; el entorno aún suma ~440 llamadas con sus sombras; sin atlas |
 | M-344 | P2 | PARCIAL | Overdraw en grada por butacas y personas | 21-10: oclusión en la CIUDAD (`OclusoresCiudad`, 1.120 paredes): −16 % de llamadas a pie de calle (12.128 → 10.192 en 4 calles, `medir_oclusion`); en la grada del estadio sigue sin `OccluderInstance3D |
 | M-346 | P2 | PARCIAL | Texturas con compresión (s3tc en PC); sin variantes móviles… | 21-10: revisado: las texturas grandes de 3D ya están en VRAM (s3tc) y limitadas (ropa 4K → 1024); las 3.103 sin comprimir son caras reales, iconos 2D y paletas de Kenney, que se dejan sin pérdida a pr |
-| M-348 | P2 | PARCIAL | Primera construcción del estadio | 28-10: 7,5-9,4 s → 2,6-2,8 s (animaciones en hilo + jugadores precalentados en el menú); segunda apertura 1,4 s; sin caché en disco |
+| M-471 | P1 | PENDIENTE | Rendimiento en el PC real del dueño | Medir con `herramientas/medir_mi_pc.bat` (juego exportado, `-- --medir`: tiempos de carga, FPS medio/1 %/peor, GPU, si la extensión C++ y el paquete de caras están activos) en la laptop del dueño, una vez con la carpeta `cache` borrada (1.ª sesión) y otra normal. En este contenedor (sin GPU) no se puede medir ni el 1.er fotograma (compilar shaders: 30 s en lavapipe) ni los FPS reales 🔒 |
 | M-349 | P2 | PENDIENTE | Generación de `Mundo` (384 clubes) y `Reales.aplicar`: medir… | sin `WorkerThreadPool` |
 | M-351 | P2 | PENDIENTE | Hilos: ¿se usan para IA/ciudad? | sin hilos para tráfico/peatones (solo LOD del tráfico) |
 | M-352 | P2 | PENDIENTE | GC/alloc en `_process` (Dictionary por jugador) | sin Packed arrays en el motor |
-| M-353 | P2 | PENDIENTE | Valorar C#/GDExtension sólo si el motor domina CPU | sin medición previa |
+| M-353 | P2 | PARCIAL | Extensión C++ (GDExtension, `nativo/` → `bin_nativo/`) | 30-10: alisado de ropa, terreno, hierba y rampa de ruidos en C++ (mismos bytes, `probar_nativo`). Falta: binarios de Android y Web (allí se usa la versión GDScript), y más funciones si el perfil lo pide (pelo `_cuero`, `CaraMalla._cargar`) |
 | M-355 | P2 | PARCIAL | Sin modo batería/60→30 FPS en móvil | límite de FPS 30/60/120 (`Principal.FPS_OPCIONES`); sin modo batería |
 | M-356 | P2 | PENDIENTE | Memoria de la ciudad ×4 (2.640 m) | sin streaming por celdas |
+| M-358 | P2 | PARCIAL | Arranque del juego hasta el menú | 30-10, juego EXPORTADO: ver el menú 4,5 → 0,75 s. Las autocargas ya no nombran `Partida`/`Reales` (compilaban 562 scripts) y el menú no nombra lo pesado (`ui/inicio_pesado.gd`, cargado en un hilo; partida en curso, perfil y álbum se pintan al llegar, ~5 s). `CompilarFondo` compila el resto en segundo plano DE UNO EN UNO (con 4 a la vez la ciudad iba ~1,5× más lenta: tipos sin resolver). Estadio y ciudad, igual que antes (2,2 y 4,4 s). Falta: separar `Principal` y que `Mundo` no nombre interfaz (charlas → ficha → Principal) para compilar menos en total. (En desarrollo, CERRAR tarda ~9 s: no afecta al juego exportado.) |
+| M-472 | P2 | PENDIENTE | Builds: firma y reparto | 30-10: el CI exporta Windows, Linux y Android (APK de depuración) públicos; lo real va en `caras_reales.pck` (`herramientas/empaquetar_caras.gd`, no se publica). Falta (🔒 dueño): APK de publicación firmado con su keystore; subir el .pck a su Drive privado; decidir si el CI también exporta la Web |
+| M-473 | P2 | PENDIENTE | Pruebas visuales: 5 pantallas no se parecen a su referencia | 30-10: `especiales.sh todo` → «pruebas visuales (20 pantallas)» falla en plantel, táctica, cantera, mercado y clubes, IGUAL en `main` (mismos números: no viene del rendimiento). La diferencia está en los retratos 3D de los jugadores; probablemente las referencias son anteriores a la pasada 1 de personajes (PR #13). Decidir (dueño / sesión visual) si el aspecto nuevo es el querido y entonces `herramientas/visual.sh referencias` |
 | M-357 | P2 | PARCIAL | Capturas pesadas en repo (`pruebas/capturas`) | `.gitignore` de promo/lotes y JPG por defecto; resto en repo |
 
 ### F6 pulido (traducciones) (6)

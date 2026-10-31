@@ -2,8 +2,7 @@ class_name AnimQuaternius
 extends "res://visor/anim_quaternius_p2.gd"
 ## [Capa 3/3 de `anim_quaternius.gd`] rabia, senalar_falta, falta_barrida, dolor, _firma, parado … (+11)
 
-## La rabia: cabeza atrás mirando al cielo, brazos que caen de golpe y una
-## patada al aire.
+## La rabia: cabeza atrás mirando al cielo, brazos que caen de golpe y una patada al aire.
 static func rabia(esq: Skeleton3D, prefijo: String) -> Animation:
 	var a := _nueva(1.8, false)
 	_pista(a, esq, "espalda2", [[0.0, Vector3.ZERO], [0.35, Vector3(-16, 0, 0)], [0.9, Vector3(10, 0, 0)], [1.8, Vector3.ZERO]], prefijo)
@@ -18,8 +17,7 @@ static func rabia(esq: Skeleton3D, prefijo: String) -> Animation:
 	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.8, Vector3(0, -0.03, 0)], [1.05, Vector3(0, -0.04, 0.02)], [1.4, Vector3.ZERO], [1.8, Vector3.ZERO]], prefijo, true)
 	return a
 
-## El árbitro señala la falta: brazo derecho extendido hacia el costado, a la
-## altura del hombro, y lo sostiene.
+## El árbitro señala la falta: brazo derecho extendido hacia el costado, a la altura del hombro, y lo sostiene.
 static func senalar_falta(esq: Skeleton3D, prefijo: String) -> Animation:
 	var a := _nueva(1.8, false)
 	_pista(a, esq, "brazo_d", [[0.0, Vector3(0, 0, -6)], [0.3, Vector3(-6, 0, -80)], [1.5, Vector3(-6, 0, -82)], [1.8, Vector3(0, 0, -6)]], prefijo)
@@ -28,8 +26,7 @@ static func senalar_falta(esq: Skeleton3D, prefijo: String) -> Animation:
 	return a
 
 ## La barrida: la cadera baja casi al suelo, la pierna de delante estirada
-## hacia el balón y la de atrás recogida debajo; el tronco se echa atrás y un
-## brazo busca el suelo.
+## hacia el balón y la de atrás recogida debajo; el tronco se echa atrás y un brazo busca el suelo.
 static func falta_barrida(esq: Skeleton3D, prefijo: String) -> Animation:
 	var a := _nueva(1.2, false)
 	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.3, Vector3(0, -0.56, 0.15)], [0.85, Vector3(0, -0.58, 0.25)], [1.2, Vector3(0, -0.2, 0.2)]], prefijo, true)
@@ -99,8 +96,7 @@ static func _pierna(a: Animation, esq: Skeleton3D, mus: String, rod: String, pie
 	_pista(a, esq, pie, kp, prefijo)
 
 ## Ciclo de zancada, mismo diseno de 4 tiempos que `AnimMixamo.correr()`
-## (contacto -> apoyo -> impulso -> recogida), recalibrado a los ejes de
-## este esqueleto.
+## (contacto -> apoyo -> impulso -> recogida), recalibrado a los ejes de este esqueleto.
 static func correr(esq: Skeleton3D, prefijo: String, dur: float, f: float) -> Animation:
 	var a := _nueva(dur, true)
 	var t1 := dur * 0.25
@@ -155,8 +151,7 @@ static func _relajar_dedos(anim: Animation, esq: Skeleton3D, cuanto: float) -> A
 			a.track_set_key_value(t, k, q.slerp(reposo, cuanto))
 	return a
 
-## El reposo del clip abre los brazos como un superhéroe: se acercan al
-## cuerpo `ang` radianes (giro local sobre Z del brazo).
+## El reposo del clip abre los brazos como un superhéroe: se acercan al cuerpo `ang` radianes (giro local sobre Z del brazo).
 static func _brazos_al_cuerpo(anim: Animation, ang: float) -> Animation:
 	for t in anim.get_track_count():
 		if anim.track_get_type(t) != Animation.TYPE_ROTATION_3D:
@@ -247,8 +242,7 @@ static func sentado(esq: Skeleton3D, prefijo: String) -> Animation:
 ## soltar, acompanar-, recalibrado a los ejes propios de este esqueleto. Solo
 ## eje X en todo (pierna de golpeo, pierna de apoyo, los dos brazos de
 ## contrapeso): es el eje que se confirmo IGUAL de un lado y del otro con la
-## sonda, asi que aqui no hace falta pelear con el espejo de Z como en el
-## brazo caido de `parado()`/`correr()` -el baseline de Z ya lo pone
+## sonda, asi que aqui no hace falta pelear con el espejo de Z como en el brazo caido de `parado()`/`correr()` -el baseline de Z ya lo pone
 ## `_ajustar()` solo, esta animacion no le suma nada mas en Z-.
 static func patear(esq: Skeleton3D, prefijo: String) -> Animation:
 	var a := _nueva(0.85, false)
@@ -274,8 +268,7 @@ static func patear(esq: Skeleton3D, prefijo: String) -> Animation:
 
 ## El festejo de gol: correr con los brazos abiertos y saltar, en bucle -la
 ## clasica-. Calco de `AnimMixamo.celebrar()`, mismo criterio que `cabezazo()`
-## para "espalda" (-> `espalda2`) y para el Z de los brazos (ya venia
-## pre-espejado en el original: 96/-96, 128/-128, se copia tal cual). El
+## para "espalda" (-> `espalda2`) y para el Z de los brazos (ya venia pre-espejado en el original: 96/-96, 128/-128, se copia tal cual). El
 ## antebrazo del original solo gira 16 grados en Z -un detalle cosmetico
 ## minusculo, sin verificar con sonda en este esqueleto-, asi que se omite en
 ## vez de arriesgar un eje sin medir por un movimiento que apenas se nota.
@@ -306,8 +299,7 @@ static func celebrar(esq: Skeleton3D, prefijo: String) -> Animation:
 ## PISO (la constante `BRAZO_ABAJO_Z`), no espeja los deltas que le manda cada
 ## animacion, así que cada animacion tiene que mirar sus propios deltas de Z
 ## igual que ya hacia el fichero Mixamo (confirmado con la sonda: Z sube/baja
-## el brazo con el mismo signo en el input pero en direcciones reales
-## opuestas entre lados).
+## el brazo con el mismo signo en el input pero en direcciones reales opuestas entre lados).
 static func cabezazo(esq: Skeleton3D, prefijo: String) -> Animation:
 	var a := _nueva(1.0, false)
 	_pista_pos(a, esq, "cadera", [[0.0, Vector3.ZERO], [0.35, Vector3(0, 0.22, 0)],
@@ -422,12 +414,31 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 
 static func _en_cache(esq: Skeleton3D, prefijo: String, acciones_experimentales: bool) -> AnimationLibrary:
 	var clave := "%s|%s|%d" % [prefijo, acciones_experimentales, _firma(esq)]
-	_candado.lock()   ## `PrecalentarAnim` la llena desde un hilo
+	_candado.lock()   ## `PrecalentarAnim` la carga desde un hilo
 	var ya: Variant = _bibliotecas.get(clave)
 	_candado.unlock()
 	if ya != null:
 		return ya
-	var lib := _construir(esq, prefijo, acciones_experimentales)
+	## En disco (`CacheDisco`, 30-10-2026): construirla son 2-3 s; cargarla, ~0,1 s. Con ella van
+	## las fases de los pies (`AnimPasos.fases`), que la construcción deja apuntadas.
+	var huella := CacheDisco.huella("anim", _fuentes())
+	var en_disco := "anim|%s|%s" % [clave, huella]
+	var lib := CacheDisco.cargar(en_disco, huella, "AnimationLibrary") as AnimationLibrary
+	if lib == null:   ## la del build (`addons/cache_horneada`), la primera vez que se juega
+		lib = CacheDisco.cargar_horneada("anim|" + clave, "AnimationLibrary") as AnimationLibrary
+	if lib != null and lib.has_meta("fases_pasos"):
+		_candado.lock()
+		AnimPasos.fases.merge(lib.get_meta("fases_pasos"), true)
+		_candado.unlock()
+	elif OS.get_thread_caller_id() != OS.get_main_thread_id():
+		## Desde un hilo (`PrecalentarAnim`) NUNCA se construye: fuera del árbol el horneado del mocap
+		## (`_bakear_futbol_global`, `seek`) no se mueve y salían 86 animaciones distintas (medido el
+		## 30-10). Sin caché, la construye el hilo principal al crear el primer personaje, como siempre.
+		return null
+	else:
+		lib = _construir(esq, prefijo, acciones_experimentales)
+		lib.set_meta("fases_pasos", AnimPasos.fases.duplicate())
+		CacheDisco.guardar(en_disco, huella, lib)
 	_candado.lock()
 	_bibliotecas[clave] = lib
 	_candado.unlock()

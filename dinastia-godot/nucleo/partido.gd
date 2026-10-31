@@ -64,23 +64,25 @@ func simular_minuto() -> void:
 	## Córners, faltas y fueras de juego con las probabilidades por minuto del
 	## HTML, tal cual. El local saca algún córner más y comete alguna falta
 	## menos: no es simetría rota, es la ventaja de campo contada en detalle.
-	if Azar.suerte(0.10):
+	## (El generador de `Azar` directo: es justo lo que hace `Azar.suerte`, sin la llamada.)
+	var rng: RandomNumberGenerator = Azar._rng
+	if rng.randf() < 0.10:
 		corners_local += 1
-	if Azar.suerte(0.09):
+	if rng.randf() < 0.09:
 		corners_visita += 1
-	if Azar.suerte(0.16):
+	if rng.randf() < 0.16:
 		faltas_local += 1
-	if Azar.suerte(0.17):
+	if rng.randf() < 0.17:
 		faltas_visita += 1
-	if Azar.suerte(0.05):
+	if rng.randf() < 0.05:
 		fueras_local += 1
-	if Azar.suerte(0.05):
+	if rng.randf() < 0.05:
 		fueras_visita += 1
 
 	if not motor_externo:
-		if Azar.suerte(p_l):
+		if rng.randf() < p_l:
 			_atacar(local, once_local, true)
-		if Azar.suerte(p_v):
+		if rng.randf() < p_v:
 			_atacar(visita, once_visita, false)
 
 	_incidencias()

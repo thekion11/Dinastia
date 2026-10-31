@@ -17,7 +17,18 @@ const UNLEET := {
 	"0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "8": "b", "9": "g",
 }
 
+## Recordado (30-10-2026, rendimiento): es una función pura y se pide una vez por jugador creado.
+static var _limpios: Dictionary = {}
+
 static func limpiar(nombre: String) -> String:
+	if _limpios.has(nombre):
+		return _limpios[nombre]
+	if _limpios.size() > 50000:
+		_limpios.clear()
+	_limpios[nombre] = _limpiar(nombre)
+	return _limpios[nombre]
+
+static func _limpiar(nombre: String) -> String:
 	var salida := ""
 	var n := nombre.length()
 	for i in n:

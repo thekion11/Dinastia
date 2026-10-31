@@ -243,7 +243,7 @@ var _n_fijo := 0
 ## el nombre ya existe; con bolsas muy chicas, alguno se puede repetir igual.
 var _nombres_usados: Dictionary = {}
 
-static var _bolsas_extra: Dictionary = {}
+static var _bolsas_extra: Dictionary = {}; static var _bolsas_unidas: Dictionary = {}
 
 const MOTIVOS_LIBRE := [
 	"Rescindió por sueldos impagos", "Su club descendió y lo dejó libre",

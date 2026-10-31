@@ -2,7 +2,7 @@ extends "res://ui/principal_p4.gd"
 ## [Capa 5/17 de `principal.gd`] _ver_estadio_propio, _ver_estadio_con_carga, _dato, _aire_cifra, _miles, _pintar_estadio
 
 ## Puentes (fase 6, paso 7): viven en `ui/principal/vistas_menu.gd`.
-func _ver_estadio_propio() -> void: _vistas._ver_estadio_propio()
+func _ver_estadio_propio(por_partes := false) -> void: await _vistas._ver_estadio_propio(por_partes)
 func _ver_estadio_con_carga() -> void: await _vistas._ver_estadio_con_carga()
 
 

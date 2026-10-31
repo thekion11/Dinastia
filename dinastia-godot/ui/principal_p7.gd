@@ -3,7 +3,7 @@ extends "res://ui/principal_p6.gd"
 
 ## Puentes (fase 6, paso 7): viven en `VistasMenu`.
 func _idolo_del_club(c: Club) -> String: return _vistas._idolo_del_club(c)
-func _ver_ciudad_propia() -> void: _vistas._ver_ciudad_propia()
+func _ver_ciudad_propia(por_partes := false) -> void: await _vistas._ver_ciudad_propia(por_partes)
 func _ver_ciudad_con_carga() -> void: await _vistas._ver_ciudad_con_carga()
 func _pintar_clubes() -> void: _vistas._pintar_clubes()
 func _pendientes_de_grupo(gid: String) -> int: return _vistas._pendientes_de_grupo(gid)
