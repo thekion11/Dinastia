@@ -65,7 +65,22 @@ func _probar() -> void:
 		"tras la barrida de la UAL2 se queda en el suelo hasta levantarse (hasta t = %.2f)" % float(usu.get("levanta_hasta", 0.0)))
 	_comprobar(usu["objetivo"] == motor.pos(usu) or float(usu["levanta_hasta"]) <= motor.t, "y mientras se levanta no persigue nada (objetivo = donde está)")
 	_comprobar(reales >= 4 and reales <= 18, "de 30 barridas del jugador, %d son la de la UAL2" % reales)
-	## 5) Un partido simulado no se rompe con todo esto.
+	## 5) Tras una falta cae, se queda en el suelo y se levanta con el clip de la UAL2, sin moverse mientras.
+	var r3 := _motor()
+	var m3: MotorJugable = r3[0]
+	var vic: Dictionary = m3.jugadores[8]
+	m3._caer(vic)
+	var donde := m3.pos(vic)
+	var anims := []
+	for i in 30 * 4:
+		m3.paso(1.0 / 30.0)
+		var a := String(vic.get("anim_actual", ""))
+		if anims.is_empty() or anims[-1] != a:
+			anims.append(a)
+		if i == 30 * 3:
+			_comprobar(m3.pos(vic).distance_to(donde) < 0.6, "en el suelo y levantándose no se desplaza (%.2f m en 3 s)" % m3.pos(vic).distance_to(donde))
+	_comprobar(anims.size() >= 2 and anims[0] == "caida_lesion" and anims[1] == "levantarse_suelo", "cae y luego se levanta, sin ponerse de pie entre medias (%s)" % str(anims.slice(0, 3)))
+	## 6) Un partido simulado no se rompe con todo esto.
 	var r2 := _motor()
 	var m2: MotorJugable = r2[0]
 	for i in 30 * 60 * 3:

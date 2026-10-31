@@ -1,5 +1,6 @@
 extends Node3D
-## Tira de fotogramas (de lado) de la barrida de la UAL2 (`AnimExtra.BARRIDA_REAL`) y del saque de mano del portero (31-10).
+## Tira de fotogramas (de lado) de la barrida de la UAL2 (`AnimExtra.BARRIDA_REAL`), del saque de mano del portero y de la
+## caída por falta seguida del levantarse de la UAL2 (31-10).
 ##   herramientas/captura.sh res://pruebas/captura_barrida_saque.tscn
 var _n := 0
 var _cuerpos: Array = []
@@ -20,10 +21,10 @@ func _ready() -> void:
 	sol.shadow_enabled = true
 	add_child(sol)
 	var cam := Camera3D.new()
-	cam.position = Vector3(0, 1.6, 9.0)
+	cam.position = Vector3(0, 1.4, 10.5)
 	cam.fov = 40
 	add_child(cam)
-	cam.look_at(Vector3(0, 0.8, 0))
+	cam.look_at(Vector3(0, 1.0, 0))
 	var c: Club = m.clubes.values()[0]
 	var sp := PlayerSpawner.new()
 	var kit := Puente3D.kit(c)
@@ -31,17 +32,19 @@ func _ready() -> void:
 	var j: Jugador = c.plantel()[3]
 	var datos := Puente3D.jugador(j)
 	var look: Array = PlayerSpawner._look_de(datos)
-	var tiempos := [[0.15, 0.5, 0.85, 1.15, 1.5, 1.75], [0.1, 0.35, 0.6, 0.85, 1.05, 1.3]]
-	for fila in 2:
+	var tiempos := [[0.15, 0.5, 0.85, 1.15, 1.5, 1.75], [0.1, 0.35, 0.6, 0.85, 1.05, 1.3], [0.6, 9.0, 0.05, 0.5, 0.95, 1.4]]
+	for fila in 3:
 		for k in 6:
 			var nodo := sp._crear_jugador(self, j.id, "DEL", "", Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]), 10, look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
 			var n3 := nodo["nodo"] as Node3D
-			n3.position = Vector3(-5.0 + k * 2.0, 2.2 - fila * 2.6, 0)
+			n3.position = Vector3(-5.0 + k * 2.0, 2.6 - fila * 2.3, 0)
 			n3.rotation_degrees.y = 90.0
 			var ap: AnimationPlayer = nodo["anim"]
 			var esq := FutbolistaQ.esqueleto_de(n3)
-			var clip := "barrida_real" if fila == 0 else "saque_mano"
-			if fila == 0:
+			var clip := "barrida_real" if fila == 0 else ("saque_mano" if fila == 1 else ("caida_lesion" if k < 2 else "levantarse_suelo"))
+			if fila == 2:
+				AnimExtra.asegurar(ap, esq, "levantarse_suelo")
+			elif fila == 0:
 				AnimExtra.unir(ap, esq, clip, AnimExtra.BARRIDA_REAL)
 			else:
 				AnimExtra.asegurar(ap, esq, clip)

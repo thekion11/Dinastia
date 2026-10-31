@@ -47,7 +47,7 @@ func _duelo_agarron(a: Dictionary, c: Dictionary, d: float) -> bool:
 	## Cuanto más lo retiene, más fácil que pite.
 	if _rng.randf() < (0.06 + agr * 0.16 + (1.0 - frena) * 0.35) * _escala_falta():
 		if _rng.randf() < 0.35:
-			_anim(obj, "caida_fea", true, 1.2)
+			_caer(obj)
 		_falta(ag, obj, 0.08 + agr * 0.2, "agarron", "agarron")
 		return true
 	## Sin falta, si lo frena del todo le roba la cartera.
@@ -196,6 +196,11 @@ func _mover_jugadores(delta: float) -> void:
 			p["aguante"] = minf(1.0, float(p["aguante"]) + delta * 0.006)
 
 		## La animación según la velocidad (salvo que haya un gesto en curso).
+		if float(p.get("levantar_en", 0.0)) > 0.0:
+			if t < float(p["levantar_en"]):
+				continue   ## en el suelo: se queda en la última pose de la caída
+			p["levantar_en"] = 0.0
+			_anim(p, "levantarse_suelo", true, 1.4)
 		if float(p.get("gesto_hasta", 0.0)) > t:
 			continue
 		var anim := "parado" if sp < 0.5 else ("trotar" if sp < 5.2 else "correr")
