@@ -6771,7 +6771,11 @@
   "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "The World Nations Cup: every four years. Called-up players leave to join their national teams.",
   "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 €%d fine for reckless driving (%d of 3; paid by %s).",
   "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 €%d fine for reckless driving (%d of 3): you couldn't pay it, so it's on record.",
-  "RESERVA": "RESERVE"
+  "RESERVA": "RESERVE",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d € (pagada en %s).": "🚓 You hit a pedestrian (unhurt): €%d fine (paid by %s).",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d €, que queda anotada.": "🚓 You hit a pedestrian (unhurt): €%d fine, now on record.",
+  "El DT golpea a un peatón con su coche": "Coach hits a pedestrian with his car",
+  "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "The local resident is unhurt but shaken. Police fine him 150 euros."
  },
  "pt": {
   "Historia": "História",
@@ -13545,7 +13549,11 @@
   "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "A Copa Mundial de Nações: a cada quatro anos. Os jogadores convocados vão para as suas seleções.",
   "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 Multa de %d € por condução perigosa (%d de 3; paga em %s).",
   "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 Multa de %d € por condução perigosa (%d de 3): não a pudeste pagar e fica registada.",
-  "RESERVA": "RESERVA"
+  "RESERVA": "RESERVA",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d € (pagada en %s).": "🚓 Atropelaste um peão (ileso): multa de %d € (paga em %s).",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d €, que queda anotada.": "🚓 Atropelaste um peão (ileso): multa de %d €, que fica registada.",
+  "El DT golpea a un peatón con su coche": "O treinador atropela um peão com o seu carro",
+  "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "O vizinho, ileso mas assustado. A polícia aplica-lhe uma multa de 150 euros."
  },
  "patrones": [
   [
@@ -26052,7 +26060,11 @@
   "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "La Coupe mondiale des nations : tous les quatre ans. Les joueurs convoqués rejoignent leur sélection.",
   "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 Amende de %d € pour conduite dangereuse (%d sur 3 ; payée en %s).",
   "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 Amende de %d € pour conduite dangereuse (%d sur 3) : tu n'as pas pu la payer, elle reste inscrite.",
-  "RESERVA": "RÉSERVE"
+  "RESERVA": "RÉSERVE",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d € (pagada en %s).": "🚓 Tu as heurté un piéton (indemne) : amende de %d € (payée en %s).",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d €, que queda anotada.": "🚓 Tu as heurté un piéton (indemne) : amende de %d €, qui reste inscrite.",
+  "El DT golpea a un peatón con su coche": "L'entraîneur heurte un piéton avec sa voiture",
+  "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "Le riverain, indemne mais choqué. La police lui inflige une amende de 150 euros."
  },
  "it": {
   "Historia": "Storia",
@@ -32826,7 +32838,11 @@
   "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "La Coppa mondiale delle nazioni: ogni quattro anni. I giocatori convocati partono con le loro nazionali.",
   "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 Multa di %d € per guida pericolosa (%d su 3; pagata in %s).",
   "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 Multa di %d € per guida pericolosa (%d su 3): non hai potuto pagarla e resta registrata.",
-  "RESERVA": "RISERVA"
+  "RESERVA": "RISERVA",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d € (pagada en %s).": "🚓 Hai investito un pedone (illeso): multa di %d € (pagata in %s).",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d €, que queda anotada.": "🚓 Hai investito un pedone (illeso): multa di %d €, che resta registrata.",
+  "El DT golpea a un peatón con su coche": "L'allenatore investe un pedone con la sua auto",
+  "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "Il passante, illeso ma spaventato. La polizia gli infligge una multa di 150 euro."
  },
  "de": {
   "Historia": "Geschichte",
@@ -39600,7 +39616,11 @@
   "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "Der Weltpokal der Nationen: alle vier Jahre. Die nominierten Spieler reisen zu ihren Nationalmannschaften.",
   "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 %d € Bußgeld wegen rücksichtslosen Fahrens (%d von 3; bezahlt mit %s).",
   "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 %d € Bußgeld wegen rücksichtslosen Fahrens (%d von 3): du konntest es nicht bezahlen, es bleibt vermerkt.",
-  "RESERVA": "RESERVE"
+  "RESERVA": "RESERVE",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d € (pagada en %s).": "🚓 Du hast einen Fußgänger angefahren (unverletzt): %d € Bußgeld (bezahlt mit %s).",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d €, que queda anotada.": "🚓 Du hast einen Fußgänger angefahren (unverletzt): %d € Bußgeld, das vermerkt bleibt.",
+  "El DT golpea a un peatón con su coche": "Trainer fährt mit seinem Auto einen Fußgänger an",
+  "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "Der Anwohner ist unverletzt, aber erschrocken. Die Polizei verhängt 150 Euro Bußgeld."
  },
  "ca": {
   "Historia": "Història",
@@ -46374,7 +46394,11 @@
   "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "La Copa Mundial de Nacions: cada quatre anys. Els jugadors convocats se'n van amb les seves seleccions.",
   "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 Multa de %d € per conducció temerària (%d de 3; pagada en %s).",
   "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 Multa de %d € per conducció temerària (%d de 3): no l'has pogut pagar i queda anotada.",
-  "RESERVA": "RESERVA"
+  "RESERVA": "RESERVA",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d € (pagada en %s).": "🚓 Has topat amb un vianant (il·lès): multa de %d € (pagada en %s).",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d €, que queda anotada.": "🚓 Has topat amb un vianant (il·lès): multa de %d €, que queda anotada.",
+  "El DT golpea a un peatón con su coche": "L'entrenador topa amb un vianant amb el seu cotxe",
+  "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "El veí, il·lès però espantat. La policia li imposa una multa de 150 euros."
  },
  "pl": {
   "Club": "Klub",
@@ -53425,7 +53449,11 @@
   "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "Światowy Puchar Narodów: co cztery lata. Powołani zawodnicy wyjeżdżają do swoich reprezentacji.",
   "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 Mandat %d € za niebezpieczną jazdę (%d z 3; zapłacony: %s).",
   "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 Mandat %d € za niebezpieczną jazdę (%d z 3): nie mogłeś zapłacić, zostaje zapisany.",
-  "RESERVA": "REZERWA"
+  "RESERVA": "REZERWA",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d € (pagada en %s).": "🚓 Potrąciłeś pieszego (bez obrażeń): mandat %d € (zapłacony: %s).",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d €, que queda anotada.": "🚓 Potrąciłeś pieszego (bez obrażeń): mandat %d €, który zostaje zapisany.",
+  "El DT golpea a un peatón con su coche": "Trener potrącił pieszego swoim samochodem",
+  "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "Mieszkaniec bez obrażeń, ale przestraszony. Policja nałożyła 150 euro mandatu."
  },
  "tr": {
   "Club": "Kulüp",
@@ -60476,6 +60504,10 @@
   "La Copa Mundial de Naciones: cada cuatro años. Los jugadores convocados se van con sus selecciones.": "Dünya Uluslar Kupası: dört yılda bir. Davet edilen oyuncular milli takımlarına katılır.",
   "🚓 Multa de %d € por conducción temeraria (%d de 3; pagada en %s).": "🚓 Tehlikeli sürüş cezası %d € (%d/3; %s ile ödendi).",
   "🚓 Multa de %d € por conducción temeraria (%d de 3): no pudiste pagarla y queda anotada.": "🚓 Tehlikeli sürüş cezası %d € (%d/3): ödeyemedin, kayda geçti.",
-  "RESERVA": "YEDEK"
+  "RESERVA": "YEDEK",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d € (pagada en %s).": "🚓 Bir yayaya çarptın (yarasız): %d € ceza (%s ile ödendi).",
+  "🚓 Has golpeado a un peatón (ileso): multa de %d €, que queda anotada.": "🚓 Bir yayaya çarptın (yarasız): %d € ceza, kayda geçti.",
+  "El DT golpea a un peatón con su coche": "Teknik direktör arabasıyla bir yayaya çarptı",
+  "El vecino, ileso pero asustado. La policía le impone una multa de 150 euros.": "Yaya yarasız ama korkmuş. Polis 150 euro ceza kesti."
  }
 }
