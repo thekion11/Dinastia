@@ -70,14 +70,25 @@ static func _clip(v: Dictionary, nombre: String, k: float) -> void:
 
 ## INCLINACIÓN AL GIRAR (P2, 31-10): quien gira corriendo se inclina hacia dentro de la curva, como un corredor (ángulo físico
 ## atan(v·ω/g), rebajado a `INCLINA_K` y con tope `INCLINA_MAX`: el giro del juego es más cerrado que el de una persona). Andando
-## no se inclina (se gira a pasos): entra entre 2 y 4,5 m/s; corriendo a 5 m/s y girando a tope, ~9°. `giro` es la velocidad de giro del cuerpo (rad/s, + = a la
+## no se inclina (se gira a pasos): entra entre 2 y 4,5 m/s; corriendo a 5 m/s y girando a tope, ~11° (tope 11,5°). `giro` es la velocidad de giro del cuerpo (rad/s, + = a la
 ## izquierda). Devuelve el balanceo (rotation.z del cuerpo, que mira a +Z: + inclina a la derecha), suavizado.
-const INCLINA_K := 0.25
-const INCLINA_MAX := 0.16
-const INCLINA_SUAVE := 6.0
+const INCLINA_K := 0.3
+const INCLINA_MAX := 0.2
+const INCLINA_SUAVE := 5.0
 
 static func inclinacion(actual: float, giro: float, vel: float, delta: float) -> float:
 	var obj := clampf(-atan(vel * giro / 9.8) * INCLINA_K, -INCLINA_MAX, INCLINA_MAX) * smoothstep(2.0, 4.5, absf(vel))
+	return lerpf(actual, obj, 1.0 - exp(-INCLINA_SUAVE * delta))
+
+## ECHARSE ADELANTE AL ACELERAR (31-10, veredicto del dueño «mejorar»): quien arranca o acelera se echa hacia delante (como un
+## velocista al salir) y quien frena en seco, un poco atrás. `acel` en m/s² (+ = gana velocidad). Devuelve rotation.x del cuerpo
+## (mira a +Z: + echa la cabeza adelante), suavizado. Topes: 8° adelante, 4° atrás.
+const ADELANTE_K := 0.025
+const ADELANTE_MAX := 0.14
+const ATRAS_MAX := 0.07
+
+static func cabeceo(actual: float, acel: float, delta: float) -> float:
+	var obj := clampf(acel * ADELANTE_K, -ATRAS_MAX, ADELANTE_MAX)
 	return lerpf(actual, obj, 1.0 - exp(-INCLINA_SUAVE * delta))
 
 ## LA CABEZA SIGUE AL JUGADOR: dos de cada tres peatones que pasan a menos de `MIRA_A` m giran la cabeza hacia ti (mismo

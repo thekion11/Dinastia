@@ -14,6 +14,10 @@ const DEDOS := ["index", "middle", "ring", "pinky"]
 ## Doblez (grados) de la 1.ª, 2.ª y 3.ª falange de un dedo y del pulgar, a media relajación.
 const CURVA := [14.0, 22.0, 16.0]
 const CURVA_PULGAR := [6.0, 8.0, 6.0]
+## LA MANO DEL ATLETA (31-10, veredicto del dueño «mejorar»): el clip del futbolista cierra índice y pulgar en círculo (el gesto «OK») y
+## sumarle doblez daba un puño apretado. En el atleta los dedos NO siguen al clip: se ponen sobre el reposo en una mano relajada de
+## verdad (cada dedo más doblado que el anterior, hacia el meñique; la falange del medio, la que más; el pulgar casi en reposo: doblado se cierra en círculo con el índice y estirado se abre de lado).
+const MANO_ATLETA := {"index": [26.0, 36.0, 17.0], "middle": [38.0, 50.0, 24.0], "ring": [45.0, 56.0, 27.0], "pinky": [52.0, 60.0, 30.0], "thumb": [2.0, 6.0, 6.0]}
 const PROB_BAJA := 0.08
 const NIVELA := 0.85
 
@@ -23,11 +27,13 @@ static var eje_cuello := Vector3.RIGHT
 
 var _huesos: PackedInt32Array = PackedInt32Array()
 var _giros: Array[Quaternion] = []
+var _fijos: PackedInt32Array = PackedInt32Array()   ## huesos que no siguen al clip: su giro es reposo × `_fijos_q`
+var _fijos_q: Array[Quaternion] = []
 var _cabeza := -1
 var _nivelar := true
 
-## Pone el modificador a la persona `nodo` (una vez). `semilla` fija sus medidas. `atleta` (futbolistas, 31-10): manos
-## un 30 % menos dobladas (su clip ya trae los dedos algo doblados), hombros apenas caídos (1-4°), cuello casi recto (0-2°) y siempre mirando al frente: un deportista no va encorvado.
+## Pone el modificador a la persona `nodo` (una vez). `semilla` fija sus medidas. `atleta` (futbolistas, 31-10): mano
+## relajada fija (`MANO_ATLETA`, no sigue al clip), hombros apenas caídos (1-4°), cuello casi recto (0-2°) y siempre mirando al frente: un deportista no va encorvado.
 static func poner(nodo: Node, semilla: int, atleta := false) -> PosturaQ:
 	var esq := FutbolistaQ.esqueleto_de(nodo)
 	if esq == null or esq.get_node_or_null("PosturaQ") != null:
@@ -49,13 +55,18 @@ func configurar(esq: Skeleton3D, semilla: int, atleta := false) -> void:
 	if atleta:
 		cuello *= 0.35
 		hombro *= 0.33
-		relaja *= 0.7   ## el clip del futbolista ya trae los dedos algo doblados: con la curva entera la mano quedaba en puño apretado
 	_anadir(esq, "spine_03", eje_cuello, cuello * 0.3)
 	_anadir(esq, "neck_01", eje_cuello, cuello * 0.4)
 	_anadir(esq, "Head", eje_cuello, cuello * 0.3)
 	for lado in ["l", "r"]:
 		var signo := 1.0 if lado == "l" else -1.0
 		_anadir(esq, "clavicle_" + lado, eje_hombro, hombro * signo)
+		if atleta:
+			var suelta := rng.randf_range(0.85, 1.15)
+			for dedo: String in MANO_ATLETA:
+				for f in 3:
+					_fijar(esq, "%s_0%d_%s" % [dedo, f + 1, lado], eje_dedos, float(MANO_ATLETA[dedo][f]) * suelta)
+			continue
 		for dedo in DEDOS:
 			for f in 3:
 				_anadir(esq, "%s_0%d_%s" % [dedo, f + 1, lado], eje_dedos, CURVA[f] * relaja)
@@ -69,10 +80,19 @@ func _anadir(esq: Skeleton3D, hueso: String, eje: Vector3, grados: float) -> voi
 	_huesos.append(i)
 	_giros.append(Quaternion(eje, deg_to_rad(grados)))
 
+func _fijar(esq: Skeleton3D, hueso: String, eje: Vector3, grados: float) -> void:
+	var i := esq.find_bone(hueso)
+	if i < 0:
+		return
+	_fijos.append(i)
+	_fijos_q.append(esq.get_bone_rest(i).basis.get_rotation_quaternion() * Quaternion(eje, deg_to_rad(grados)))
+
 func _process_modification() -> void:
 	var esq := get_skeleton()
 	if esq == null:
 		return
+	for k in _fijos.size():
+		esq.set_bone_pose_rotation(_fijos[k], _fijos_q[k])
 	for k in _huesos.size():
 		esq.set_bone_pose_rotation(_huesos[k], esq.get_bone_pose_rotation(_huesos[k]) * _giros[k])
 	if _nivelar and _cabeza >= 0:

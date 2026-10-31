@@ -3,6 +3,7 @@ extends "res://visor/explorador_ciudad_p4.gd"
 
 ## Factor de densidad de peatones del club (−1 = sin leer todavía).
 var _densidad_gente: float = -1.0
+var _vel_antes := 0.0   ## velocidad a pie del fotograma anterior (echarse adelante al acelerar, 31-10)
 
 ## ¿Hay una fachada de manzana al alcance de este punto (3 m)? Devuelve la
 ## clave de la sala con el nombre propio, o vacío.
@@ -275,6 +276,7 @@ func _physics_process(delta: float) -> void:
 	if estado in ["anden", "estadio", "interior", "puerta", "subsuelo", "cima"]:
 		_actualizar_mano("pie", 0.0, 1.0, 0.0)
 		cuerpo.rotation.z = 0.0   ## sin la inclinación de la carrera por la calle
+		cuerpo.rotation.x = 0.0
 	if estado == "anden":
 		_mover_en_anden(delta)
 		return
@@ -339,6 +341,8 @@ func _physics_process(delta: float) -> void:
 	elif delta > 0.0:
 		## A pie, corriendo, se inclina hacia dentro de la curva (31-10, §2.2e P2).
 		cuerpo.rotation.z = MovimientoNatural.inclinacion(cuerpo.rotation.z, angle_difference(giro_antes, cuerpo.rotation.y) / delta, vel, delta)
+		cuerpo.rotation.x = MovimientoNatural.cabeceo(cuerpo.rotation.x, (vel - _vel_antes) / delta if vel >= 0.0 else 0.0, delta)
+		_vel_antes = vel
 	_colocar_camara(delta)
 	## Qué hay cerca (puertas, metro, vecinos, fachadas): ~370 µs por búsqueda;
 	## basta unas 8 veces por segundo o al dar medio metro (15-10-2026).

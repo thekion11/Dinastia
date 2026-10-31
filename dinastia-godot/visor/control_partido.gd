@@ -182,7 +182,7 @@ func _process(delta: float) -> void:
 
 		# Arrastrar balón con toques de conducción si tiene posesión
 		if tiene_posesion and is_instance_valid(balon):
-			var fwd := node.global_transform.basis.z.normalized()
+			var fwd := Vector3(sin(node.global_rotation.y), 0.0, cos(node.global_rotation.y))   ## horizontal: el cuerpo puede ir inclinado (31-10)
 			var pos_b := node.global_position + fwd * 0.72 + Vector3(0, 0.11, 0)
 			balon.global_position = balon.global_position.lerp(pos_b, 12.0 * delta)
 	else:
@@ -245,7 +245,7 @@ func _ejecutar_pase_corto() -> void:
 	if not is_instance_valid(balon):
 		return
 	var node: Node3D = jugador_activo["node"]
-	var fwd := node.global_transform.basis.z.normalized()
+	var fwd := Vector3(sin(node.global_rotation.y), 0.0, cos(node.global_rotation.y))   ## horizontal: el cuerpo puede ir inclinado (31-10)
 
 	# Buscar compañero en la dirección a la que mira el jugador
 	var mejor_dest: Dictionary = {}
@@ -281,7 +281,7 @@ func _ejecutar_pase_largo() -> void:
 	if not is_instance_valid(balon):
 		return
 	var node: Node3D = jugador_activo["node"]
-	var fwd := node.global_transform.basis.z.normalized()
+	var fwd := Vector3(sin(node.global_rotation.y), 0.0, cos(node.global_rotation.y))   ## horizontal: el cuerpo puede ir inclinado (31-10)
 	var target_pos := node.global_position + fwd * 24.0
 	target_pos.x = clampf(target_pos.x, -32.0, 32.0)
 	target_pos.z = clampf(target_pos.z, -50.0, 50.0)
@@ -349,5 +349,5 @@ func _ejecutar_barrida() -> void:
 	var ap: AnimationPlayer = jugador_activo.get("anim")
 	if is_instance_valid(ap) and ap.has_animation("falta_barrida"):
 		ap.play("falta_barrida")
-	var fwd := node.global_transform.basis.z.normalized()
+	var fwd := Vector3(sin(node.global_rotation.y), 0.0, cos(node.global_rotation.y))   ## horizontal: el cuerpo puede ir inclinado (31-10)
 	node.position += fwd * 2.4
