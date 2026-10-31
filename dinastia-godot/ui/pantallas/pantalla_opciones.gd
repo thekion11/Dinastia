@@ -381,3 +381,7 @@ func _pintar_qol() -> void:
 			bt.pressed.connect(func() -> void: p._alternar_favorito(tab))
 			rej.add_child(bt)
 	p._lista_ajustes.add_child(HSeparator.new())
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"glosario": _pintar_glosario}

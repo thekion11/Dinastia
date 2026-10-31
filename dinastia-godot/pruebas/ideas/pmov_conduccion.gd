@@ -12,6 +12,7 @@ func _probar() -> void:
 	_frenar_y_marcha_atras()
 	_rodar_suelto()
 	_giro_segun_velocidad()
+	_derrape()
 	_multas()
 
 func _explorador() -> ExploradorCiudad:
@@ -123,3 +124,31 @@ func _multas() -> void:
 	e._golpe_coche(5.0, false)
 	_comprobar(e.multas == 1, "un roce a 18 km/h no es multa")
 	_soltar(e)
+
+## Mejora B (31-10): con el freno de mano a buena velocidad y el volante girado, el coche derrapa (la
+## trayectoria se queda atrás del morro) y pierde velocidad; sin freno de mano, apenas cruza.
+func _derrape() -> void:
+	_linea("· Derrape")
+	var e := _explorador()
+	e.vel = 18.0
+	e._volante = 1.0
+	e.freno_mano_prueba = true
+	var max_d := 0.0
+	for i in int(0.6 / DT):
+		e._conducir(Vector2(1, 0), DT)
+		max_d = maxf(max_d, e.deriva)
+	var v_derrape := e.vel
+	e.freno_mano_prueba = false
+	for i in int(1.0 / DT):
+		e._conducir(Vector2(0, 0), DT)
+	_comprobar(max_d > 0.3 and e.deriva < 0.05, "con freno de mano el coche cruza (%.2f rad) y al soltarlo recupera la trayectoria (%.2f)" % [max_d, e.deriva])
+	var e2 := _explorador()
+	e2.vel = 18.0
+	e2._volante = 1.0
+	var max_n := 0.0
+	for i in int(0.6 / DT):
+		e2._conducir(Vector2(1, 0), DT)
+		max_n = maxf(max_n, e2.deriva)
+	_comprobar(max_n < 0.15 and v_derrape < 18.0, "sin freno de mano apenas cruza (%.2f rad); el derrape cuesta velocidad (%.1f m/s)" % [max_n, v_derrape])
+	_soltar(e)
+	_soltar(e2)

@@ -107,6 +107,9 @@ var _nota := ""
 var _t_nota := 0.0
 ## «Martes 10:40» del reloj de la partida (lo pone `VidaCiudad`); vacío = sin reloj.
 var reloj_texto := ""
+## (31-10, mejora A del coche) «⛽ 62 %» al conducir (lo pone `VidaCiudad`); en reserva, en ámbar.
+var gasolina_texto := ""
+var reserva := false
 func notificar(texto: String, segundos := 3.5) -> void:
 	_nota = texto
 	_t_nota = segundos
@@ -117,6 +120,8 @@ const ETIQUETAS := {"correr": "🏃 Carrera", "coche": "🚗 Conduciendo", "tren
 func poner(modo: String, km_h: float, maxima: float, calle: String, metros: float) -> void:
 	_mostrar = modo in ["correr", "coche", "tren"]
 	_poner_texto(_vel, str(int(round(km_h))))
+	_poner_texto(_unidad, "km/h   " + gasolina_texto if modo == "coche" and gasolina_texto != "" else "km/h")
+	_unidad.add_theme_color_override("font_color", Color(1.0, 0.62, 0.15) if modo == "coche" and reserva else Color(1, 1, 1, 0.6))
 	_barra.max_value = maxima
 	_barra.value = km_h
 	_poner_texto(_icono, ((reloj_texto + "  ") if reloj_texto != "" else "") + Idiomas.t(ETIQUETAS.get(modo, "🚶 A pie")))

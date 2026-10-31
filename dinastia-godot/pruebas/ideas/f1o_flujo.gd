@@ -8,6 +8,7 @@ var _resultado: Dictionary = {}
 var _cancelado := false
 
 func _probar() -> void:
+	OrquestadorMundo.ranura_al_salir = ""   ## no pisar la partida de la máquina (autoguardado de la entrada)
 	_titulo("FASE 1 · ENTRADA: orquestador de etapas 0-6")
 	## La entrada se prueba hasta Principal; el prólogo 3D de la fase 2 tiene su propia prueba (f2p_prologo).
 	OrquestadorMundo.sin_prologo = true
@@ -130,7 +131,7 @@ func _flujo_reemplazar() -> void:
 	_comprobar(c != null and c == victima and clubes_antes > 0 and m.clubes.size() == clubes_antes,
 		"reemplazar: ocupa la plaza del más flojo de la liga más baja y el mundo sigue con los mismos clubes (%d antes, %d después)" % [clubes_antes, m.clubes.size()])
 	_comprobar(c != null and not prev.is_empty() and c.rep == int(prev["rep"]) and c.rep == int(prev["rep_reemplazado"]) - 10
-		and c.saldo == int(prev["presupuesto"]), "reputación del reemplazado −10 y presupuesto B (rep %d, caja %s)" % [c.rep if c else 0, _dinero(c.saldo if c else 0)])
+		and c.saldo == int(round(float(prev["presupuesto"]) * 1.6)), "reputación del reemplazado −10 y presupuesto B, ya con la dificultad fácil (×1,6) aplicada al salir (rep %d, caja %s)" % [c.rep if c else 0, _dinero(c.saldo if c else 0)])
 	_comprobar(c != null and c.color1.to_lower() == "#112233" and c.color2.to_lower() == "#ddeeff" and c.estadio_nombre == "Estadio F1O",
 		"colores y estadio del club elegidos")
 	_comprobar(m.directiva != null and m.directiva.confianza == 60, "confianza de la directiva 60")
@@ -141,8 +142,8 @@ func _flujo_reemplazar() -> void:
 		"la casa y la mascota de la configuración")
 	_comprobar(String((m.roles.look.get("p3d", {}) as Dictionary).get("cuerpo", "")) == "female" and int(m.roles.look.get("barba", 1)) == 0,
 		"el aspecto del personaje (3D y retrato: una entrenadora no lleva barba)")
-	_comprobar(PedidoPartida.dt_nombre_elegido == "Ana Prueba" and PedidoPartida.modo_elegido == "dt" and PedidoPartida.dificultad_elegida == "facil",
-		"nombre, modo y dificultad (la del menú viejo) llegan a Principal")
+	_comprobar(m.roles.nombre == "Ana Prueba" and m.roles.modo_actual() == "dt" and m.dificultad == "facil",
+		"nombre, modo y dificultad (la del menú viejo) ya aplicados a la partida al salir de la entrada (fase 0, 31-10)")
 	_comprobar(String((OrquestadorMundo.ultima_eleccion.get("config", {}) as Dictionary).get("densidad", "")) == "alta"
 		and not OrquestadorMundo.ultima_eleccion.has("mundo"), "lo demás de la configuración queda a mano para las fases siguientes")
 	## Lo que haría `Principal._arrancar_con()`: el rol no pisa el aspecto ni el nombre.
@@ -235,7 +236,7 @@ func _flujo_club_existente() -> void:
 	_comprobar(not pasos.has("entrada"), "sin crear club no hay etapa de entrada al campeonato (%s)" % ", ".join(pasos))
 	var m: Mundo = _resultado.get("mundo")
 	_comprobar(m != null and m.mi_club_id == elegido.id and m.clubes.size() == mini.clubes.size(), "diriges el club elegido en el globo")
-	_comprobar(PedidoPartida.modo_elegido == "dir" and PedidoPartida.dificultad_elegida == "normal", "modo Director Deportivo, dificultad normal")
+	_comprobar(m.roles.modo_actual() == "dir" and m.dificultad == "normal", "modo Director Deportivo, dificultad normal")
 	o.queue_free()
 
 func _flujo_jugador() -> void:
