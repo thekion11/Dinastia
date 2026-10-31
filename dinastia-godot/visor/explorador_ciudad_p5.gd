@@ -175,13 +175,17 @@ func _cerrar_puerta_si_lejos() -> void:
 ## y `_conducir` lo volvía a acelerar en cada paso de física (avanzaba a trompicones con el depósito vacío).
 var sin_gasolina := false
 var _t_susto := 0.0
+## Mejora B (31-10): hacia dónde va de verdad el coche; con el freno de mano se queda atrás del morro (derrape).
+var _rumbo_mov := 0.0
+var deriva := 0.0
+var freno_mano_prueba := false   ## las pruebas tiran del freno de mano sin teclado
 
 func _conducir(e: Vector2, delta: float) -> void:
 	if _motor_sonido == null:
 		_motor_sonido = MotorCocheSonido.new()
 		add_child(_motor_sonido)
 	_motor_sonido.poner(vel, maxf(e.y, 0.0))
-	var freno_mano := Input.is_physical_key_pressed(KEY_SPACE) or Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+	var freno_mano := Input.is_physical_key_pressed(KEY_SPACE) or Input.is_joy_button_pressed(0, JOY_BUTTON_B) or freno_mano_prueba
 	_volante = lerpf(_volante, e.x, clampf(delta * 4.5, 0.0, 1.0))
 	## El pedal no salta: sube en un tercio de segundo y se suelta más deprisa (27-10, pieza F: suavizar la conducción).
 	_pedal = move_toward(_pedal, e.y, (3.5 if absf(e.y) > absf(_pedal) else 7.0) * delta)
@@ -202,6 +206,15 @@ func _conducir(e: Vector2, delta: float) -> void:
 	## A más velocidad el volante gira menos (no se vuelca a 90 km/h).
 	var cierre := clampf(absf(vel) / 8.0, 0.0, 1.0) * (1.0 - clampf(absf(vel) / VEL_COCHE, 0.0, 1.0) * 0.45)
 	rumbo -= _volante * delta * giro * cierre * signf(vel if vel != 0.0 else 1.0)
+	## Mejora B: con el freno de mano a más de 6 m/s las ruedas pierden agarre: la trayectoria tarda en seguir
+	## al morro (el coche cruza), se pierde velocidad según lo cruzado y al soltar se recupera.
+	var agarre := 1.6 if (freno_mano or freno_mano_prueba) and absf(vel) > 6.0 else 20.0
+	if agarre > 2.0 and absf(angle_difference(_rumbo_mov, rumbo)) > 0.8:
+		_rumbo_mov = rumbo   ## un rumbo puesto de golpe (al subir al coche, un guion): sin derrape fantasma
+	_rumbo_mov = lerp_angle(_rumbo_mov, rumbo, 1.0 - exp(-agarre * delta))
+	deriva = absf(angle_difference(_rumbo_mov, rumbo))
+	if agarre < 2.0 and deriva > 0.15:
+		vel = move_toward(vel, 0.0, deriva * 4.0 * delta)
 	var acel_real := _pedal if absf(vel) < VEL_COCHE else 0.0
 	_cabeceo = lerpf(_cabeceo, clampf(-acel_real * 0.035 - (0.03 if freno_mano else 0.0), -0.06, 0.06), clampf(delta * 4.0, 0.0, 1.0))
 	_balanceo = lerpf(_balanceo, clampf(_volante * absf(vel) * 0.0035, -0.07, 0.07), clampf(delta * 5.0, 0.0, 1.0))
@@ -325,7 +338,10 @@ func _physics_process(delta: float) -> void:
 				_t_gesto_propio = 0.0
 				_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
 			_sonar_pasos(vel)
-	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
+	if modo != "coche":
+		_rumbo_mov = rumbo
+	var rm := _rumbo_mov if modo == "coche" else rumbo   ## mejora B: en coche, la trayectoria (derrape)
+	var adelante := Vector3(sin(rm), 0, cos(rm))
 	var r := RADIO_COCHE if modo == "coche" else RADIO_PIE
 	## En pasos de 30 cm como mucho (17-10, caza de bugs): con un tirón de
 	## fotogramas el coche avanzaba metros de golpe y se saltaba vallas finas.
