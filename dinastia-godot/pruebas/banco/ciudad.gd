@@ -217,7 +217,7 @@ func _probar_redes_ciudad() -> void:
 	var vd := VidaDT.new()
 	_comprobar(is_equal_approx(vd.combustible, 45.0) and is_equal_approx(vd.fraccion_comb(), 1.0), "el coche sale con el depósito lleno (45 l)")
 	vd.gastar_combustible(10000.0)
-	_comprobar(is_equal_approx(vd.combustible, 20.0), "10 km gastan 25 l (2,5 l/km)")
+	_comprobar(is_equal_approx(vd.combustible, 40.0), "10 km gastan 5 l (0,5 l/km, decisión del dueño del 31-10)")
 	vd.gastar_combustible(100000.0)
 	_comprobar(vd.combustible == 0.0, "el depósito no baja de cero")
 	vd.combustible = 6.0
