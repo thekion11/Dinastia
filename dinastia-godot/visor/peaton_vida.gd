@@ -3,19 +3,23 @@ extends RefCounted
 ## LA ESPERA CON VIDA DE LOS PEATONES (calidad visual P3, pasada 3, 27-10-2026). Plan §2.2e: *«esperar
 ## (3 variantes)»*. Cuando un peatón se detiene por su cuenta (`TraficoCiudad`), ya no se queda siempre
 ## en «parado»: la mitad mira el móvil (clip «Idle_Torch» del pack, el brazo levantado delante, con un
-## móvil en la mano derecha), un cuarto habla por teléfono (clip de charla, móvil en la mano) y el resto
-## espera quieto. Al reanudar la marcha el móvil se guarda. Todo estático: no guarda estado.
+## móvil en la mano derecha), un cuarto habla por teléfono (31-10: clip «telefono» de la UAL2, el móvil a la
+## oreja; antes era el de charla) y el resto espera: la mitad quieto y la otra mitad con los brazos cruzados
+## (UAL2). Al reanudar la marcha el móvil se guarda. Todo estático: no guarda estado.
 
 const PROB_MOVIL := 0.5
 const PROB_LLAMADA := 0.25
+const PROB_CRUZADOS := 0.125
 const NOMBRE_MOVIL := "Movil"
 
-## Elige y pone la variante de espera: 0 = mira el móvil, 1 = llamada, 2 = quieto.
+## Elige y pone la variante de espera: 0 = mira el móvil, 1 = llamada, 2 = quieto, 3 = brazos cruzados.
 static func variante(r: float) -> int:
 	if r < PROB_MOVIL:
 		return 0
 	if r < PROB_MOVIL + PROB_LLAMADA:
 		return 1
+	if r < PROB_MOVIL + PROB_LLAMADA + PROB_CRUZADOS:
+		return 3
 	return 2
 
 static func esperar(trafico: Object, v: Dictionary, r: float) -> int:
@@ -25,8 +29,10 @@ static func esperar(trafico: Object, v: Dictionary, r: float) -> int:
 			trafico._gesto(v, "mirar_movil")
 			movil(v, true)
 		1:
-			trafico._gesto(v, "charla")
+			trafico._gesto(v, "telefono")
 			movil(v, true)
+		3:
+			trafico._gesto(v, "brazos_cruzados")
 		_:
 			trafico._animar(v, "parado")
 	return k
@@ -37,7 +43,10 @@ static func en_anden(d: Dictionary, r: float) -> int:
 	if k == 2:
 		Mini3D.anim(d, "parado", "")
 		return k
-	gesto(d["nodo"], "mirar_movil" if k == 0 else "charla")
+	if k == 3:
+		gesto(d["nodo"], "brazos_cruzados")
+		return k
+	gesto(d["nodo"], "mirar_movil" if k == 0 else "telefono")
 	movil(d, true)
 	return k
 

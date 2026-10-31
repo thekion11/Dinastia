@@ -64,6 +64,10 @@ const BRAZO_ABAJO_Z := -82.0
 const RUTA_UAL := "res://assets/characters/quaternius/anims/UAL1_Standard.glb"
 static var _packed_ual: PackedScene
 static var _lib_ual: AnimationLibrary
+## UAL2 (31-10-2026, CC0, mismo esqueleto): 17 clips elegidos en un .res (`herramientas/ual2_a_res.gd`). `cargar_real` busca aquí
+## lo que no está en la UAL1: brazos cruzados, hablar por teléfono, barrida, saque de mano, levantarse del suelo…
+const RUTA_UAL2 := "res://assets/characters/quaternius/anims_ual2/ual2_elegidos.res"
+static var _lib_ual2: AnimationLibrary
 
 ## MOCAP DE FUTBOL DE VERDAD (19-9-2026). El usuario consiguio -gratis, uso
 ## comercial libre, sin atribucion- el pack "Free mocap pack 05: Soccer" de
@@ -294,9 +298,11 @@ static func _lib_real() -> AnimationLibrary:
 ## llama pueda quedarse con la version a mano como respaldo en vez de romper.
 static func cargar_real(nombre_real: String, prefijo: String) -> Animation:
 	var lib := _lib_real()
-	if lib == null:
-		return null
-	if not lib.has_animation(nombre_real):
+	if lib == null or not lib.has_animation(nombre_real):
+		if _lib_ual2 == null and ResourceLoader.exists(RUTA_UAL2):
+			_lib_ual2 = load(RUTA_UAL2) as AnimationLibrary
+		lib = _lib_ual2
+	if lib == null or not lib.has_animation(nombre_real):
 		return null
 	var original: Animation = lib.get_animation(nombre_real)
 	var copia: Animation = original.duplicate(true)

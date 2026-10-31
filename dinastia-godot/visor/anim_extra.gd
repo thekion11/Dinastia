@@ -92,11 +92,20 @@ static func celebracion(ap: AnimationPlayer, rasgo: String, id_jugador: String, 
 		return "celebrar"
 	return elegida
 
+## Clips de la UAL2 (31-10, CC0, `AnimQuaternius.RUTA_UAL2`): solo bajo demanda con `asegurar` (no van en `extender`, que los
+## cargaría en los 22 futbolistas aunque nadie los use).
+const UAL2 := {
+	"brazos_cruzados": "Idle_FoldArms_Loop", "telefono": "Idle_TalkingPhone_Loop", "negar": "Idle_No_Loop", "asentir": "Yes",
+	"cargar_caja": "Walk_Carry_Loop", "beber": "Consume", "apoyado_baranda": "Idle_Rail_Loop", "baranda_llama": "Idle_Rail_Call",
+	"barrida_inicio": "Slide_Start", "barrida_desliza": "Slide_Loop", "barrida_fin": "Slide_Exit", "saque_mano": "OverhandThrow",
+	"choque": "Hit_Knockback", "levantarse_suelo": "LayToIdle", "trepar": "ClimbUp_1m", "abrir_caja": "Chest_Open", "regar": "Farm_Watering",
+}
+
 ## Carga UN clip de la UAL en el AnimationPlayer de un cuerpo si aún no lo tiene (las
 ## personas del prólogo, las citas, la familia y los vecinos no pasan por `extender`).
 ## Devuelve true si el clip existe tras la llamada. (§2.2e P3, 27-10-2026)
 static func asegurar(ap: AnimationPlayer, esq: Skeleton3D, clave: String) -> bool:
-	if ap == null or not UAL.has(clave):
+	if ap == null or not (UAL.has(clave) or UAL2.has(clave)):
 		return false
 	if ap.has_animation(clave):
 		return true
@@ -104,7 +113,7 @@ static func asegurar(ap: AnimationPlayer, esq: Skeleton3D, clave: String) -> boo
 	if lib == null:
 		return false
 	var prefijo := str(ap.get_path_to(esq)) if esq != null else ""
-	var nombre_ual := String(UAL[clave])
+	var nombre_ual := String(UAL[clave] if UAL.has(clave) else UAL2[clave])
 	var a: Animation = AnimQuaternius.cargar_real(nombre_ual, prefijo)
 	if a == null and nombre_ual.ends_with("_Loop"):
 		a = AnimQuaternius.cargar_real(nombre_ual.trim_suffix("_Loop"), prefijo)
