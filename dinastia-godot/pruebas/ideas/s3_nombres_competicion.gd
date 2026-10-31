@@ -17,7 +17,7 @@ func _ready() -> void:
 	var m := Mundo.new()
 	m.generar([], 20261026)
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
-	Principal.mundo_pregenerado = m
+	PedidoPartida.mundo_pregenerado = m
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 	for i in 4:
