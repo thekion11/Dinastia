@@ -274,6 +274,7 @@ func _physics_process(delta: float) -> void:
 		return
 	if estado in ["anden", "estadio", "interior", "puerta", "subsuelo", "cima"]:
 		_actualizar_mano("pie", 0.0, 1.0, 0.0)
+		cuerpo.rotation.z = 0.0   ## sin la inclinación de la carrera por la calle
 	if estado == "anden":
 		_mover_en_anden(delta)
 		return
@@ -330,10 +331,14 @@ func _physics_process(delta: float) -> void:
 		if not _mover_un_trozo(paso_total / float(trozos), r):
 			break
 	## Giro con inercia (26-10, §2.2e P2): el cuerpo persigue el rumbo en vez de saltar a él.
+	var giro_antes := cuerpo.rotation.y
 	cuerpo.rotation.y = lerp_angle(cuerpo.rotation.y, rumbo, 1.0 - exp(-9.0 * delta))
 	if modo == "coche":
 		cuerpo.rotation.x = _cabeceo
 		cuerpo.rotation.z = _balanceo
+	elif delta > 0.0:
+		## A pie, corriendo, se inclina hacia dentro de la curva (31-10, §2.2e P2).
+		cuerpo.rotation.z = MovimientoNatural.inclinacion(cuerpo.rotation.z, angle_difference(giro_antes, cuerpo.rotation.y) / delta, vel, delta)
 	_colocar_camara(delta)
 	## Qué hay cerca (puertas, metro, vecinos, fachadas): ~370 µs por búsqueda;
 	## basta unas 8 veces por segundo o al dar medio metro (15-10-2026).

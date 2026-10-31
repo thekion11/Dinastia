@@ -68,6 +68,18 @@ static func _clip(v: Dictionary, nombre: String, k: float) -> void:
 	else:
 		ap.speed_scale = 1.0
 
+## INCLINACIÓN AL GIRAR (P2, 31-10): quien gira corriendo se inclina hacia dentro de la curva, como un corredor (ángulo físico
+## atan(v·ω/g), rebajado a `INCLINA_K` y con tope `INCLINA_MAX`: el giro del juego es más cerrado que el de una persona). Andando
+## no se inclina (se gira a pasos): entra entre 2 y 4,5 m/s; corriendo a 5 m/s y girando a tope, ~9°. `giro` es la velocidad de giro del cuerpo (rad/s, + = a la
+## izquierda). Devuelve el balanceo (rotation.z del cuerpo, que mira a +Z: + inclina a la derecha), suavizado.
+const INCLINA_K := 0.25
+const INCLINA_MAX := 0.16
+const INCLINA_SUAVE := 6.0
+
+static func inclinacion(actual: float, giro: float, vel: float, delta: float) -> float:
+	var obj := clampf(-atan(vel * giro / 9.8) * INCLINA_K, -INCLINA_MAX, INCLINA_MAX) * smoothstep(2.0, 4.5, absf(vel))
+	return lerpf(actual, obj, 1.0 - exp(-INCLINA_SUAVE * delta))
+
 ## LA CABEZA SIGUE AL JUGADOR: dos de cada tres peatones que pasan a menos de `MIRA_A` m giran la cabeza hacia ti (mismo
 ## `LookAtModifier3D` que la mirada al balón, con tope de giro menor) y la sueltan al alejarte, con la influencia subiendo y bajando
 ## en medio segundo para que el cuello no salte. Sin cuerpo propio no hace nada.
