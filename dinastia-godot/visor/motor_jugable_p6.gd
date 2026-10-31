@@ -6,6 +6,15 @@ extends "res://visor/motor_jugable_p5.gd"
 func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 0.0, anim := "pase") -> void:
 	_ultima_anim = anim
 	_n_patada += 1
+	## SAQUE DE MANO (31-10): el portero con el balón en las manos que pasa raso y corto lo lanza con la mano (clip de la UAL2):
+	## el balón sale desde arriba del hombro y rueda; los envíos largos siguen siendo de volea.
+	if bool(p.get("en_manos", false)) and loft <= 0.0 and Vector2(destino.x - balon.position.x, destino.z - balon.position.z).length() < 32.0 \
+			and AnimExtra.asegurar(p.get("anim"), FutbolistaQ.esqueleto_de(p["node"]), "saque_mano"):
+		anim = "saque_mano"
+		_ctx_golpeo = "mano"
+		balon.position.y = maxf(balon.position.y, 1.7)
+		vh = minf(vh, 17.0)
+	p["en_manos"] = false
 	var b := balon.position
 	var d := Vector3(destino.x - b.x, 0, destino.z - b.z)
 	var dist := maxf(d.length(), 0.1)
@@ -110,12 +119,15 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 	var de_lado := absf((pos(victima) - pos(p)).normalized().dot(Vector3(sin((p["node"] as Node3D).rotation.y), 0, cos((p["node"] as Node3D).rotation.y)))) < 0.5
 	var gesto_e := "entrada_de_pie"
 	if barrida:
-		gesto_e = ["barrida_lateral", "barrida_corta", "barrida_rapida", "barrida_larga", "falta_barrida"][_rng.randi() % 5]
+		gesto_e = ["barrida_lateral", "barrida_corta", "barrida_rapida", "barrida_larga", "falta_barrida", "barrida_real", "barrida_real"][_rng.randi() % 7]
+		## La barrida de la UAL2 (31-10: entra, se desliza y se levanta) se arma la primera vez que hace falta.
+		if gesto_e == "barrida_real" and not AnimExtra.unir(p.get("anim"), FutbolistaQ.esqueleto_de(p["node"]), gesto_e, AnimExtra.BARRIDA_REAL):
+			gesto_e = "barrida_larga"
 	elif de_lado:
 		gesto_e = "carga_hombro" if _rng.randf() < 0.5 else "entrada_lateral_pie"
 	## La barrida del usuario ya va por el suelo (`_lanzar_barrida`): no se repite el gesto.
 	if not (barrida and String(p.get("anim_actual", "")).begins_with("barrida") and float(p.get("gesto_hasta", 0.0)) > t):
-		_anim(p, gesto_e, true)
+		_anim(p, gesto_e, true, 1.9 if gesto_e == "barrida_real" else 1.4)
 	var r := _rng.randf()
 	if r < exito:
 		if p == usuario:

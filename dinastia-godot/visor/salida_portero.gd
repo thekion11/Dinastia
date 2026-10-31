@@ -79,6 +79,7 @@ static func atrapar(m: Object, gk: Dictionary) -> bool:
 	if rng.randf() < 0.45 + float(a.get("par", 0.5)) * 0.3 + float(a.get("pos", 0.5)) * 0.15:
 		m.call("_anim", gk, "blocaje_alto", true)
 		m.call("_tomar", gk)
+		gk["en_manos"] = true   ## (saque de mano, 31-10)
 		m.emit_signal("aviso", "¡Atajada!")
 		return true
 	var arco: Vector3 = m.call("_arco_propio", gk)
