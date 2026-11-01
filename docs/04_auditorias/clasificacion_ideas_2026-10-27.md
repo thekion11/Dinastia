@@ -138,7 +138,6 @@ Escribir la prueba del campo «cómo probar» del plan y mirarlo en el partido o
 - 363: Indicador de fatiga por jugador en tiempo real
 - 371: Modo "solo resultado" para quienes simulan temporadas rápido
 - 383: Roles por posición (lateral ofensivo, pivote, falso 9, mediapunta)
-- 1036: Alerta si intentas avanzar con alineación inválida
 - 1062: Sonido ambiente de estadio durante el partido
 - 1063: Silbato, murmullo y explosión de gol como capas separadas
 - 1067: Sonido distintivo para el gol propio y para el gol rival

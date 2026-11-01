@@ -6787,7 +6787,12 @@
   "Arcade: pase, tiro y cambio asistidos": "Arcade: assisted passing, shooting and switching",
   "Semi: pase asistido, tiro manual, cambio semiautomático": "Semi: assisted passing, manual shooting, semi-automatic switching",
   "Manual: tú decides pase, tiro y cambio": "Manual: you control passing, shooting and switching",
-  "Perfil de ayudas: %s": "Assist profile: %s"
+  "Perfil de ayudas: %s": "Assist profile: %s",
+  "un jugador que ya no está en el club": "a player who is no longer at the club",
+  "%s (lesionado)": "%s (injured)",
+  "%s (sancionado)": "%s (suspended)",
+  "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "In your chosen XI, these can't play: %s. The automatic XI will start unless you change it.",
+  "Tu once elegido no vale": "Your chosen XI isn't valid"
  },
  "pt": {
   "Historia": "História",
@@ -13577,7 +13582,12 @@
   "Arcade: pase, tiro y cambio asistidos": "Arcade: passe, chute e troca assistidos",
   "Semi: pase asistido, tiro manual, cambio semiautomático": "Semi: passe assistido, chute manual, troca semiautomática",
   "Manual: tú decides pase, tiro y cambio": "Manual: você decide passe, chute e troca",
-  "Perfil de ayudas: %s": "Perfil de ajudas: %s"
+  "Perfil de ayudas: %s": "Perfil de ajudas: %s",
+  "un jugador que ya no está en el club": "um jogador que já não está no clube",
+  "%s (lesionado)": "%s (lesionado)",
+  "%s (sancionado)": "%s (suspenso)",
+  "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "No teu onze escolhido não pode jogar: %s. Sairá o onze automático se não o mudares.",
+  "Tu once elegido no vale": "O teu onze escolhido não vale"
  },
  "patrones": [
   [
@@ -26100,7 +26110,12 @@
   "Arcade: pase, tiro y cambio asistidos": "Arcade : passe, tir et changement assistés",
   "Semi: pase asistido, tiro manual, cambio semiautomático": "Semi : passe assistée, tir manuel, changement semi-automatique",
   "Manual: tú decides pase, tiro y cambio": "Manuel : tu décides passe, tir et changement",
-  "Perfil de ayudas: %s": "Profil d'aides : %s"
+  "Perfil de ayudas: %s": "Profil d'aides : %s",
+  "un jugador que ya no está en el club": "un joueur qui n'est plus au club",
+  "%s (lesionado)": "%s (blessé)",
+  "%s (sancionado)": "%s (suspendu)",
+  "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "Dans ton onze choisi, ne peut pas jouer : %s. Le onze automatique jouera si tu ne le changes pas.",
+  "Tu once elegido no vale": "Ton onze choisi n'est pas valable"
  },
  "it": {
   "Historia": "Storia",
@@ -32890,7 +32905,12 @@
   "Arcade: pase, tiro y cambio asistidos": "Arcade: passaggio, tiro e cambio assistiti",
   "Semi: pase asistido, tiro manual, cambio semiautomático": "Semi: passaggio assistito, tiro manuale, cambio semiautomatico",
   "Manual: tú decides pase, tiro y cambio": "Manuale: decidi tu passaggio, tiro e cambio",
-  "Perfil de ayudas: %s": "Profilo di aiuti: %s"
+  "Perfil de ayudas: %s": "Profilo di aiuti: %s",
+  "un jugador que ya no está en el club": "un giocatore che non è più nel club",
+  "%s (lesionado)": "%s (infortunato)",
+  "%s (sancionado)": "%s (squalificato)",
+  "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "Nel tuo undici scelto non può giocare: %s. Uscirà l'undici automatico se non lo cambi.",
+  "Tu once elegido no vale": "Il tuo undici scelto non è valido"
  },
  "de": {
   "Historia": "Geschichte",
@@ -39680,7 +39700,12 @@
   "Arcade: pase, tiro y cambio asistidos": "Arcade: Pass, Schuss und Wechsel unterstützt",
   "Semi: pase asistido, tiro manual, cambio semiautomático": "Semi: Pass unterstützt, Schuss manuell, Wechsel halbautomatisch",
   "Manual: tú decides pase, tiro y cambio": "Manuell: Du entscheidest Pass, Schuss und Wechsel",
-  "Perfil de ayudas: %s": "Hilfen-Profil: %s"
+  "Perfil de ayudas: %s": "Hilfen-Profil: %s",
+  "un jugador que ya no está en el club": "ein Spieler, der nicht mehr im Verein ist",
+  "%s (lesionado)": "%s (verletzt)",
+  "%s (sancionado)": "%s (gesperrt)",
+  "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "In deiner gewählten Elf kann nicht spielen: %s. Die automatische Elf spielt, wenn du sie nicht änderst.",
+  "Tu once elegido no vale": "Deine gewählte Elf ist ungültig"
  },
  "ca": {
   "Historia": "Història",
@@ -46470,7 +46495,12 @@
   "Arcade: pase, tiro y cambio asistidos": "Arcade: passada, xut i canvi assistits",
   "Semi: pase asistido, tiro manual, cambio semiautomático": "Semi: passada assistida, xut manual, canvi semiautomàtic",
   "Manual: tú decides pase, tiro y cambio": "Manual: tu decideixes passada, xut i canvi",
-  "Perfil de ayudas: %s": "Perfil d'ajudes: %s"
+  "Perfil de ayudas: %s": "Perfil d'ajudes: %s",
+  "un jugador que ya no está en el club": "un jugador que ja no és al club",
+  "%s (lesionado)": "%s (lesionat)",
+  "%s (sancionado)": "%s (sancionat)",
+  "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "Al teu onze triat no pot jugar: %s. Sortirà l'onze automàtic si no el canvies.",
+  "Tu once elegido no vale": "El teu onze triat no val"
  },
  "pl": {
   "Club": "Klub",
@@ -53537,7 +53567,12 @@
   "Arcade: pase, tiro y cambio asistidos": "Arcade: wspomagane podanie, strzał i zmiana",
   "Semi: pase asistido, tiro manual, cambio semiautomático": "Semi: wspomagane podanie, ręczny strzał, półautomatyczna zmiana",
   "Manual: tú decides pase, tiro y cambio": "Ręczny: sam decydujesz o podaniu, strzale i zmianie",
-  "Perfil de ayudas: %s": "Profil pomocy: %s"
+  "Perfil de ayudas: %s": "Profil pomocy: %s",
+  "un jugador que ya no está en el club": "zawodnik, którego nie ma już w klubie",
+  "%s (lesionado)": "%s (kontuzjowany)",
+  "%s (sancionado)": "%s (zawieszony)",
+  "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "W wybranej jedenastce nie może zagrać: %s. Wyjdzie automatyczna jedenastka, jeśli jej nie zmienisz.",
+  "Tu once elegido no vale": "Twoja wybrana jedenastka jest nieważna"
  },
  "tr": {
   "Club": "Kulüp",
@@ -60604,6 +60639,11 @@
   "Arcade: pase, tiro y cambio asistidos": "Arcade: yardımlı pas, şut ve oyuncu değişimi",
   "Semi: pase asistido, tiro manual, cambio semiautomático": "Yarı: yardımlı pas, manuel şut, yarı otomatik değişim",
   "Manual: tú decides pase, tiro y cambio": "Manuel: pas, şut ve değişimi sen belirlersin",
-  "Perfil de ayudas: %s": "Yardım profili: %s"
+  "Perfil de ayudas: %s": "Yardım profili: %s",
+  "un jugador que ya no está en el club": "artık kulüpte olmayan bir oyuncu",
+  "%s (lesionado)": "%s (sakat)",
+  "%s (sancionado)": "%s (cezalı)",
+  "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "Seçtiğin ilk 11'de oynayamayacak: %s. Değiştirmezsen otomatik ilk 11 çıkacak.",
+  "Tu once elegido no vale": "Seçtiğin ilk 11 geçersiz"
  }
 }

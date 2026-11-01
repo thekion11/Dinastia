@@ -1580,7 +1580,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 1025. Paletas alternativas para daltonismo — _Principal._daltonico=true cambia los colores de _color_accesible_
 - 1029. Autoguardado configurable — _Principal._autoguardado=true; Partida.guardar(mundo,RANURA)_
 - 1030. Guardado manual con varias ranuras — _Partida.guardar(mundo,'ranura1'); Partida.listar() las incluye_
-- 1036. Alerta si intentas avanzar con alineación inválida — _LeyesPais.infracciones_once(club, once manual) no vacío_
 - 1038. Glosario integrado de términos del juego — _Datos.tabla('GLOSARIO') no vacío_
 - 1041. Modo experto que oculta toda la ayuda — _Principal._modo_experto=true y _pintar_* omiten notas_
 - 1043. Widget de próximo partido — _TableroInicio.pintar(...) (UI)_
