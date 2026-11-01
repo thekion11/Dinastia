@@ -41,7 +41,14 @@ const GOLPEOS := {"tiro_carrera": ["ls_shot__sprint__030", 0.17, true], "pase_ca
 	"celebrar_ls": ["ls_celebration__happy_extreme__000_decel_decel", 0.04, false], "lamento_ls": ["ls_celebration__sad_normal__000", 0.04, false],
 	## Tanda 4: los envíos largos hechos a mano levantaban el talón hasta el glúteo antes de golpear (`league_comparacion_centro_largo.jpg`).
 	"centro": ["ls_highpass__walk__000_long", 0.41, true], "pase_largo": ["ls_highpass__idle__000_long", 0.57, true],
-	"pase_bombeado": ["ls_highpass__idle__020", 0.25, true]}
+	"pase_bombeado": ["ls_highpass__idle__020", 0.25, true],
+	## Tanda 5: el defensor que BLOQUEA un tiro con el cuerpo (antes no hacía ningún gesto), según la altura del balón. Descartados
+	## (`league_bloqueos.jpg`): el rasante (se tira y se queda tumbado boca arriba) y el alto (levanta el brazo: sería mano).
+	"bloqueo_rodilla": ["ls_deflect__idle__000_kneeheight_holdball", 0.09, false], "bloqueo_tronco": ["ls_deflect__idle__000_trunk_holdball", 0.10, false]}
+
+## El gesto de bloqueo según la altura del balón (m).
+static func bloqueo(altura: float) -> String:
+	return "bloqueo_rodilla" if altura < 0.95 else "bloqueo_tronco"
 const ANTES_CONTACTO := 0.04
 
 static func golpeos(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) -> void:
