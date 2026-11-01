@@ -239,6 +239,8 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 		pl.position = Vector3(0, 0.62, 6.04 if lado2 == 0 else -6.04)
 		pl.rotation.y = 0.0 if lado2 == 0 else PI
 		raiz.add_child(pl)
+	## Una malla por material (M-476): de ~97 piezas sueltas a ~14 superficies; juntas miden 12 m, el corte va aquí.
+	FundirPiezas.fundir(raiz, 600.0, "Carroceria")
 	return raiz
 
 static func _caja(raiz: Node3D, tam: Vector3, pos: Vector3, mat: Material) -> void:

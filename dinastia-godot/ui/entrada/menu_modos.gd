@@ -321,7 +321,7 @@ func _construir() -> void:
 	add_child(_retos)
 
 func _construir_lista() -> void:
-	var sec_previa := "\u0000"
+	var sec_previa := ""
 	for i in _modos.size():
 		var m := _modos[i]
 		var sec := String(m.get("_sec", ""))
