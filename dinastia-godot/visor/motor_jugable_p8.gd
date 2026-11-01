@@ -167,12 +167,9 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	p["correr"] = false
 	var b := balon.position
 	var arco := _arco_propio(p)
-	var cercanos: Array = []
-	for q: Dictionary in jugadores:
-		if bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and not (q == usuario and not autopiloto):
-			cercanos.append([pos(q).distance_to(b), q])
-	cercanos.sort_custom(func(a: Array, c: Array) -> bool: return float(a[0]) < float(c[0]))
-	## El más cercano presiona; el segundo cubre entre el balón y el arco.
+	## El que presiona y el segundo, estables (R3, 01-11: `MotorPresion`); el segundo cubre entre el balón y el arco.
+	var pp := MotorPresion.papeles(self as Object as MotorJugable, bool(p["es_local"]))
+	var yo := String(p.get("id", ""))
 	## Presión baja: lejos de su área se temporiza; presión alta: van dos.
 	var pres := _tac(bool(p["es_local"]), "presion")
 	## GATILLOS DE PRESIÓN (21-10-2026, M-124): hay momentos en que hasta un
@@ -180,7 +177,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	var gatillo := false
 	if not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]):
 		gatillo = _gatillo_presion(poseedor)
-	if not cercanos.is_empty() and cercanos[0][1] == p:
+	if yo != "" and pp[0] == yo:
 		if pres == 0 and not gatillo and b.distance_to(arco) > 42.0 and pos(p).distance_to(b) > 9.0:
 			return b + (arco - b).normalized() * 5.0
 		p["correr"] = true
@@ -189,7 +186,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 			var ba := b + _plano(poseedor["vel"] as Vector3) * clampf(pos(p).distance_to(b) / 8.0, 0.0, 0.5)
 			return ba + (arco - ba).normalized() * 0.8
 		return b + (arco - b).normalized() * 0.8
-	if cercanos.size() > 1 and cercanos[1][1] == p:
+	if yo != "" and pp[1] == yo:
 		if pres == 2 or (pres == 1 and gatillo):
 			p["correr"] = true
 			return b + (arco - b).normalized() * 2.5
