@@ -295,6 +295,7 @@ func _tomar(p: Dictionary) -> void:
 		var tirador: Dictionary = _tiro_vivo["p"]
 		_cerrar_tiro("fallo")
 		if bool(tirador["es_local"]) != bool(p["es_local"]) and not bool(p["por"]) and vel_balon.length() > 14.0:
+			_anim(p, LeagueAnim.bloqueo(balon.position.y), true, 0.9)   ## el cuerpo que bloquea (01-11, League-Soccer)
 			vel_balon = Vector3(-vel_balon.x * 0.3 + _rng.randf_range(-6, 6), _rng.randf_range(0.5, 3.0), vel_balon.z * _rng.randf_range(0.2, 0.5))
 			penultimo_toque = ultimo_toque
 			ultimo_toque = p
