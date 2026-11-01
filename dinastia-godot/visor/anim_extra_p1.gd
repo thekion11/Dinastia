@@ -294,6 +294,7 @@ static func extender(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) ->
 			var an: Animation = nuevas[k]
 			_completar(an, esq, prefijo)
 			lib.add_animation(k, an)
+	LeagueAnim.golpeos(lib, esq, prefijo)   ## tiro y pase en carrera de League-Soccer (01-11)
 	var a_espejar: Array = ESPEJABLES.duplicate()
 	a_espejar.append_array(AnimFutbol.espejables())
 	for k: String in a_espejar:

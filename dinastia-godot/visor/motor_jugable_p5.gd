@@ -422,7 +422,9 @@ func _golpeo_anim(p: Dictionary, ap: AnimationPlayer, anim: String, destino: Vec
 				ops = ["pase_pecho"] if desde.y > 1.0 else ["media_volea"]
 			elif anim == "pase":
 				var atras := (destino.z - desde.z) * d < -3.0
-				if loft > 0.0:
+				if sp > 4.5 and loft <= 0.0 and not de_primera and not atras and ap.has_animation("pase_carrera"):
+					ops = ["pase_carrera"]   ## pasando a la carrera, el de League-Soccer (01-11)
+				elif loft > 0.0:
 					ops = ["pase_largo", "pase_bombeado"] if dist > 28.0 else ["pase_bombeado"]
 				elif de_primera:
 					ops = ["pase_primera"]
