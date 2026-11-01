@@ -32,6 +32,7 @@ func paso(delta: float) -> void:
 			_retener_en_mano()
 			_mover_balon(delta)
 			_duelos()
+			MotorVentaja.revisar(self)
 			if estado != "juego":
 				_mover_jugadores(delta)
 				_actualizar_balon_visual(delta)

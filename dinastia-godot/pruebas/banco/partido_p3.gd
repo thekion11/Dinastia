@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p2.gd"
-## [Capa 3/6 de `partido.gd`] _probar_fisica_motor
+## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja
 
 func _probar_fisica_motor() -> void:
 	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")
@@ -57,3 +57,43 @@ func _probar_fisica_motor() -> void:
 	_comprobar(float(c["tiron"]) / float(c["muestras"]) < 0.005, "tirones > 25 m/s² por debajo del 0,5 %% (%d de %d)" % [c["tiron"], c["muestras"]])
 	_comprobar(int(c["tele"]) <= 3, "el balón no salta en pleno juego (%d)" % c["tele"])
 	raiz.queue_free()
+
+## LA VENTAJA DE VERDAD (01-11-2026, IA R1, `MotorVentaja`): si el equipo de la víctima pierde el balón, se vuelve a la falta.
+func _probar_ventaja() -> void:
+	_titulo("VENTAJA: SE VUELVE A LA FALTA SI SE PIERDE EL BALÓN")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var loc: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	var lugar := Vector3(6.0, 0.0, 20.0 * motor.dir_ataque(true))
+	## 1) Pierde el balón al segundo: falta para el local donde fue.
+	motor.estado = "juego"
+	motor._t_estado = 5.0
+	motor.poseedor = loc[0]
+	MotorVentaja.dar(motor, lugar, true, "Un defensor")
+	motor.t += 1.0
+	motor._t_estado += 1.0
+	motor.poseedor = vis[0]
+	MotorVentaja.revisar(motor)
+	_comprobar(motor.estado == "saque" and String(motor.saque.get("tipo", "")) == "falta" and bool(motor.saque.get("local", false)),
+		"perdió el balón: falta para el que la sufrió (%s, %s)" % [motor.estado, str(motor.saque.get("tipo", ""))])
+	_comprobar((motor.saque.get("lugar", Vector3.ZERO) as Vector3).distance_to(Vector3(lugar.x, motor.R, lugar.z)) < 0.01, "y se saca donde fue la falta")
+	_comprobar(MotorVentaja.pendiente(motor).is_empty() and int(motor.duelos.get("ventaja_vuelta", 0)) == 1, "la ventaja ya no queda pendiente")
+	## 2) Sigue con el balón 3,5 s: la ventaja se da por jugada (aunque luego lo pierda).
+	motor.estado = "juego"
+	motor._t_estado = 5.0
+	motor.poseedor = loc[0]
+	MotorVentaja.dar(motor, lugar, true, "Un defensor")
+	motor.t += 4.0
+	motor._t_estado += 4.0
+	MotorVentaja.revisar(motor)
+	motor.poseedor = vis[0]
+	MotorVentaja.revisar(motor)
+	_comprobar(motor.estado == "juego" and MotorVentaja.pendiente(motor).is_empty(), "pasados 3,5 s la ventaja se da por jugada")
+	## 3) El juego se paró entre medias (fuera, otra falta): tampoco se vuelve.
+	MotorVentaja.dar(motor, lugar, true, "Un defensor")
+	motor._t_estado = 0.2
+	motor.poseedor = vis[0]
+	MotorVentaja.revisar(motor)
+	_comprobar(motor.estado == "juego" and MotorVentaja.pendiente(motor).is_empty(), "si el juego se paró, la ventaja se olvida")
+	(r[1] as Node3D).queue_free()
