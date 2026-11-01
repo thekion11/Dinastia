@@ -69,3 +69,7 @@ dinastia-godot/assets/pasto/*.glb -filter -diff -merge binary
 dinastia-godot/assets/regalos/*.glb -filter -diff -merge binary
 # Logo definitivo (26-10): archivos pequeños, fuera de LFS
 dinastia-godot/assets/logo/* -filter -diff -merge binary
+# Respaldo de terceros (01-11-2026, orden del dueño: «todo absolutamente todo» de League-Soccer y soccer5v5): archivos normales
+# (desde las sesiones en la nube no se puede subir a LFS). Ver dinastia-godot/terceros/*/LEEME.md.
+dinastia-godot/terceros/**/*.mp3 -filter -diff -merge binary
+dinastia-godot/terceros/**/*.wav -filter -diff -merge binary

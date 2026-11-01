@@ -1,0 +1,245 @@
+#pragma once
+
+#include <string>
+#include <vector>
+
+#include "../../data/careerdata.hpp"
+#include "career_hub_model.hpp"
+#include "utils/gui2/page.hpp"
+#include "utils/gui2/widgets/button.hpp"
+#include "utils/gui2/widgets/caption.hpp"
+#include "utils/gui2/widgets/editline.hpp"
+#include "utils/gui2/widgets/frame.hpp"
+#include "utils/gui2/widgets/grid.hpp"
+#include "utils/gui2/widgets/pulldown.hpp"
+#include "utils/gui2/widgets/table.hpp"
+#include "utils/gui2/widgets/text.hpp"
+#include "utils/gui2/windowmanager.hpp"
+
+using namespace blunted;
+
+// Mode selection: Owner/GM / Coach / Player
+class CareerMenuPage : public Gui2Page {
+public:
+  CareerMenuPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerMenuPage();
+  virtual void Process();
+
+protected:
+  void GoMyCoach();
+  void GoPlayerCareer();
+  void GoOwnerCareer();
+  void GoContinueCareer();
+
+private:
+  void GoCareerMode(const std::string& mode);
+  unsigned long pageCreatedTime_ms;
+  bool autoAdvanceTriggered;
+};
+
+// New career setup: pick team and identity
+class CareerNewGamePage : public Gui2Page {
+public:
+  CareerNewGamePage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerNewGamePage();
+
+protected:
+  void StartCareer();
+  void RefreshTeamSelect();
+
+private:
+  std::string m_mode;
+  Gui2Pulldown* teamSelectPulldown;
+  Gui2EditLine* managerNameInput;
+  std::string m_selectedTeamID;
+};
+
+// Career hub: season info, budget, objectives
+class CareerHubPage : public Gui2Page {
+public:
+  CareerHubPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerHubPage();
+
+private:
+  CareerHubSection m_section = CareerHubSection::OVERVIEW;
+  Gui2Caption* m_feedback = nullptr;
+  Gui2Grid* m_messages = nullptr;
+  Gui2Text* m_unreadSummary = nullptr;
+  void OpenSection(CareerHubSection section);
+  void OpenTool(CareerHubAction action);
+  void OpenInboxItem(size_t index);
+  void GoMatchday();
+};
+
+// Transfer market browser
+class CareerTransferMarketPage : public Gui2Page {
+public:
+  CareerTransferMarketPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerTransferMarketPage();
+};
+
+class CareerTransferBidsPage : public Gui2Page {
+public:
+  CareerTransferBidsPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerTransferBidsPage();
+
+protected:
+  void NegotiateBid(const std::string& playerName);
+};
+
+class CareerTransferBidDetailPage : public Gui2Page {
+public:
+  CareerTransferBidDetailPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerTransferBidDetailPage();
+
+protected:
+  void PlaceBidForPlayer(long long amount);
+  std::string m_playerName;
+  long long m_askingPrice;
+  long long m_playerWage;
+};
+
+// 6.13 – Press conference / media interactions
+class CareerPressConferencePage : public Gui2Page {
+public:
+  CareerPressConferencePage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerPressConferencePage();
+
+protected:
+  // Called when the user selects an answer (index 0-2)
+  void SelectAnswer(int answerIndex);
+
+  // Reputation delta for each answer of the current question
+  int m_reputationDeltas[3] = {5, 0, -5};
+};
+
+// 6.16 – League expansion / relegation configuration
+class CareerLeagueExpansionPage : public Gui2Page {
+public:
+  CareerLeagueExpansionPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerLeagueExpansionPage();
+
+protected:
+  void EnableRelegation();
+  void DisableRelegation();
+  void AddDivision();
+};
+
+// 6.17 – Custom league creation
+class CareerCustomLeaguePage : public Gui2Page {
+public:
+  CareerCustomLeaguePage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerCustomLeaguePage();
+
+protected:
+  void CreateCustomLeague();
+};
+
+// Recruiting / Free Agency
+class CareerFreeAgencyPage : public Gui2Page {
+public:
+  CareerFreeAgencyPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerFreeAgencyPage();
+
+protected:
+  void RecruitPlayer(const std::string& playerName);
+  std::vector<Gui2Button*> playerButtons;
+};
+
+// Squad Training
+class CareerTrainingPage : public Gui2Page {
+public:
+  CareerTrainingPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerTrainingPage();
+
+protected:
+  void TrainSquad();
+  void TrainFocus(const std::string& focusArea);
+};
+
+// Youth Academy
+class CareerYouthAcademyPage : public Gui2Page {
+public:
+  CareerYouthAcademyPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerYouthAcademyPage();
+
+protected:
+  void ScoutPlayer();
+  void PromotePlayer(const std::string& playerName);
+};
+
+// Strategy / Tactics
+class CareerStrategyPage : public Gui2Page {
+public:
+  CareerStrategyPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerStrategyPage();
+
+protected:
+  void SetStrategy(const std::string& strategyName);
+};
+
+// Full Squad Roster view
+class CareerSquadRosterPage : public Gui2Page {
+public:
+  CareerSquadRosterPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerSquadRosterPage();
+
+protected:
+  void InspectPlayer(const PlayerCareerState& player);
+  void ExtendContract(const std::string& playerName);
+  void ToggleTransferList(const std::string& playerName);
+  void ReleasePlayer(const std::string& playerName);
+  void MotivatePlayer(const std::string& playerName);
+  void DrillPlayer(const std::string& playerName);
+  Gui2Table* m_rosterTable = nullptr;
+};
+
+// Season End / Advance
+class CareerSeasonPage : public Gui2Page {
+public:
+  CareerSeasonPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerSeasonPage();
+
+private:
+  int m_season = 0;
+
+protected:
+  void AdvanceSeason();
+  void GoToHub();
+};
+
+// Matchday Simulation
+class CareerMatchdayPage : public Gui2Page {
+public:
+  CareerMatchdayPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CareerMatchdayPage();
+  virtual void Process();
+
+protected:
+  void BuildFixtures();
+  void PopulateGrid();
+  void UpdateSummary();
+  void SimulateMatch(int fixtureIndex);
+  void SimulateAll();
+  void PlayMatch();
+  void PlayMatchFixture(int fixtureIndex);
+  void GoBack();
+
+  Gui2Frame* frame;
+  Gui2Grid* fixtureGrid;
+  Gui2Caption* summaryCaption;
+  Gui2Frame* m_card = nullptr;  // the fixture preview / result
+  Gui2Button* m_back = nullptr;
+  std::vector<Gui2Caption*> fixtureScoreCaps;
+  std::vector<std::string> m_opponents;
+  std::vector<int> m_opponentDBIDs;
+  std::vector<bool> m_isHome;
+  std::vector<SimulatedMatch> m_results;
+  int m_week;
+  int m_season = 0;
+  unsigned long smokeMatchAt_ms = 0;  // career_match smoke route: when to kick off
+};
+
+// ---------------------------------------------------------------------------
+// Owner Mode Pages have been moved to ownerpages.hpp
+// ---------------------------------------------------------------------------
