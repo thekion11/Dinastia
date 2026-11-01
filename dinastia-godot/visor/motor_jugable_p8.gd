@@ -10,7 +10,7 @@ func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	## bloque, la mentalidad lo empuja y la amplitud abre a los de banda.
 	var loc := bool(p["es_local"])
 	var lin := float(_tac(loc, "linea") - 1)
-	var men := float(_tac(loc, "mentalidad") - 1)
+	var men := float(_tac(loc, "mentalidad") - 1) + MotorTacticaViva.urgencia(self as Object as MotorJugable, loc)   ## + marcador y reloj (U2, 01-11)
 	var amp := float(_tac(loc, "amplitud") - 1)
 	var z := base.z * 0.55 + b.z * 0.45 + (d * (9.0 + men * 3.0) if en_posesion else -d * 3.0)
 	z += d * (lin * 3.5 + men * 2.0)
