@@ -41,7 +41,7 @@ const ESPEJABLES := ["patear", "pase", "penal", "penal_2", "regate_finta", "rega
 
 ## Acción -> variantes posibles (las que existan en la librería del jugador).
 const CATEGORIAS := {
-	"regate": ["regate_finta", "regate_finta_espejo", "regate_pausa", "regate_pausa_espejo", "voltereta"],
+	"regate": ["regate_finta", "regate_finta_espejo", "regate_pausa", "regate_pausa_espejo"],   ## (31-10: sin «voltereta»: nadie regatea rodando y el clip sale de rango en la auditoría biomecánica; sigue cargada)
 	"conducir": ["conducir", "conducir_espejo"],
 	"patear": ["patear", "patear_espejo"],
 	"pase": ["pase", "pase_espejo"],
