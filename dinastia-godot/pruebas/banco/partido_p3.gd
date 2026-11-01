@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p2.gd"
-## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja
+## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable
 
 func _probar_fisica_motor() -> void:
 	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")
@@ -96,4 +96,39 @@ func _probar_ventaja() -> void:
 	motor.poseedor = vis[0]
 	MotorVentaja.revisar(motor)
 	_comprobar(motor.estado == "juego" and MotorVentaja.pendiente(motor).is_empty(), "si el juego se paró, la ventaja se olvida")
+	(r[1] as Node3D).queue_free()
+
+## PRESIONADORES ESTABLES (01-11-2026, IA R3, `MotorPresion`): el papel no salta entre dos casi a la misma distancia.
+func _probar_presion_estable() -> void:
+	_titulo("PRESIONADORES ESTABLES")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	var centrales := vis.filter(func(p: Dictionary) -> bool: return motor._rol(p) == "DFC")
+	var otros := vis.filter(func(p: Dictionary) -> bool: return motor._rol(p) != "DFC")
+	for i in vis.size():
+		(vis[i]["node"] as Node3D).position = Vector3(-30.0 + i * 2.0, 0, 45.0)
+	motor.balon.position = Vector3(0, 0.11, 0)
+	var a: Dictionary = otros[0]
+	var b: Dictionary = otros[1]
+	var ida := String(a["id"])
+	var idb := String(b["id"])
+	var colocar := func(da: float, db: float) -> void:
+		(a["node"] as Node3D).position = Vector3(da, 0, 0)
+		(b["node"] as Node3D).position = Vector3(-db, 0, 0)
+		motor.t += 0.1
+	colocar.call(10.0, 10.4)
+	_comprobar(MotorPresion.papeles(motor, false)[0] == ida, "presiona el más cercano")
+	colocar.call(10.6, 10.0)
+	_comprobar(MotorPresion.papeles(motor, false)[0] == ida, "si otro solo está 0,6 m mejor, no le quita el papel")
+	colocar.call(10.6, 8.0)
+	_comprobar(MotorPresion.papeles(motor, false)[0] == idb, "si está 2,6 m mejor, sí")
+	## El segundo: un medio a 11 m antes que un central a 9 m.
+	if not centrales.is_empty() and otros.size() > 2:
+		(centrales[0]["node"] as Node3D).position = Vector3(0, 0, 9.0)
+		(otros[2]["node"] as Node3D).position = Vector3(0, 0, -11.0)
+		colocar.call(30.0, 5.0)
+		motor.remove_meta("presion_antes")
+		var pp := MotorPresion.papeles(motor, false)
+		_comprobar(pp[0] == idb and pp[1] == String(otros[2]["id"]), "de segundo sale un medio y el central guarda su sitio (%s)" % motor._rol(motor.jugadores.filter(func(p: Dictionary) -> bool: return String(p["id"]) == String(pp[1]))[0]))
 	(r[1] as Node3D).queue_free()
