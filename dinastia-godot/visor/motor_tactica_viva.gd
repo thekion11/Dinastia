@@ -18,3 +18,23 @@ static func urgencia(m: MotorJugable, local: bool) -> float:
 		return 0.0
 	var frac := m.tiempo_jugado() / maxf(2.0 * m.duracion_mitad, 0.001)
 	return clampf(float(dif) * POR_GOL, -TOPE, TOPE) * smoothstep(0.3, 1.0, frac)
+
+## EL ESTILO PROPIO DE CADA CLUB (01-11-2026, IA U8, idea de League-Soccer `TeamAIController`: parámetros tácticos continuos por
+## equipo). La pizarra son enteros 0-2 y dos clubes con la misma pizarra jugaban idéntico. Ahora cada club suma a su `linea` y
+## su `amplitud` un matiz continuo de ±`MATIZ`, fijo para ese club (sale de su país y sus colores, iguales en la base real y en
+## la ficticia) y un poco de su reputación (el grande juega algo más arriba). Va en la táctica que arma el estadio
+## (`f_linea`, `f_amplitud`) y lo lee `_forma`. `SIN_ESTILO_CLUB=1` = antes.
+const MATIZ := 0.35
+static var _sin_estilo := OS.has_environment("SIN_ESTILO_CLUB")
+
+static func estilo_club(c: Club) -> Dictionary:
+	if _sin_estilo or c == null:
+		return {}
+	var h := absi(hash("%s|%s|%s" % [c.pais, c.color1, c.color2]))
+	var a := float(h % 1000) / 999.0 * 2.0 - 1.0
+	var b := float((h / 1000) % 1000) / 999.0 * 2.0 - 1.0
+	return {"f_linea": clampf(a * MATIZ + (float(c.rep) - 75.0) / 100.0, -0.5, 0.5), "f_amplitud": b * MATIZ}
+
+## El matiz continuo `k` («linea», «amplitud») del equipo en la táctica del motor (0 si no lo trae).
+static func f(m: MotorJugable, local: bool, k: String) -> float:
+	return float((m.tacticas[0 if local else 1] as Dictionary).get("f_" + k, 0.0))

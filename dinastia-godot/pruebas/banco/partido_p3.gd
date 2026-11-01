@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p2.gd"
-## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable, _probar_presion_zona, _probar_linea_prevista, _probar_primer_toque, _probar_tactica_viva, _probar_pase_mejora
+## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable, _probar_presion_zona, _probar_linea_prevista, _probar_primer_toque, _probar_tactica_viva, _probar_pase_mejora, _probar_estilo_club
 
 func _probar_fisica_motor() -> void:
 	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")
@@ -266,4 +266,27 @@ func _probar_pase_mejora() -> void:
 	var atras: float = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, -16.0))[1]
 	_comprobar(atras > adelante + 1.0, "encendida: pasar a la espalda cuesta (%.2f frente a %.2f)" % [atras, adelante])
 	MotorPaseMejora.ACTIVO = antes
+	(r[1] as Node3D).queue_free()
+
+## EL ESTILO PROPIO DE CADA CLUB (01-11-2026, IA U8, `MotorTacticaViva.estilo_club`).
+func _probar_estilo_club() -> void:
+	_titulo("ESTILO PROPIO DE CADA CLUB")
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	var clubes: Array = m.ligas[0].clubes
+	var vistos := {}
+	for c: Club in clubes:
+		vistos[str(MotorTacticaViva.estilo_club(c))] = true
+	_comprobar(vistos.size() >= clubes.size() - 2, "casi cada club tiene su estilo (%d distintos de %d)" % [vistos.size(), clubes.size()])
+	var e := MotorTacticaViva.estilo_club(clubes[0])
+	_comprobar(e == MotorTacticaViva.estilo_club(clubes[0]) and absf(float(e["f_linea"])) <= 0.5 and absf(float(e["f_amplitud"])) <= MotorTacticaViva.MATIZ,
+		"fijo y dentro de sus topes (%s)" % str(e))
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var p: Dictionary = motor.jugadores.filter(func(q: Dictionary) -> bool: return bool(q["es_local"]) and not bool(q["por"]))[0]
+	motor.tacticas[0] = {}
+	var sin := motor._forma(p, true)
+	motor.tacticas[0] = {"f_linea": 0.5, "f_amplitud": 0.0}
+	var con := motor._forma(p, true)
+	_comprobar((con.z - sin.z) * motor.dir_ataque(true) > 1.0, "en `_forma`, el matiz de línea adelanta el bloque (%.2f m)" % ((con.z - sin.z) * motor.dir_ataque(true)))
 	(r[1] as Node3D).queue_free()
