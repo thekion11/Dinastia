@@ -123,7 +123,7 @@ func _ia_portero(p: Dictionary) -> Vector3:
 		if t > _decision_en + 0.8:
 			var mejor := _mejor_pase(p)
 			## Salida jugada casi siempre; el pelotazo, menos alto.
-			if not mejor.is_empty() and _rng.randf() < 0.8:
+			if not mejor.is_empty() and _rng.randf() < MotorTacticaViva.prob_salida_jugada(self as Object as MotorJugable, bool(p["es_local"])):
 				_pasar_a(p, mejor)
 			else:
 				var lejos := Vector3(_rng.randf_range(-15, 15), 0, dir_ataque(bool(p["es_local"])) * 2.0)
@@ -396,11 +396,11 @@ func _ia_portador(p: Dictionary) -> void:
 	var angulo := absf(yo.x) / maxf(absf(arco.z - yo.z), 1.0)
 	## Se tira también desde la frontal (hasta ~27 m), como en un partido de
 	## verdad; con más pegada, desde más lejos.
-	var ganas_tiro := (1.0 - dist_arco / 34.0) * (0.7 + float(p["attr"]["tir"]) * 0.6) - angulo * 0.25
-	## MÁS CHISPA (20-10-2026): el sorteo era muy conservador y el partido se
-	## quedaba en ~0,8 tiros por minuto y equipo (FC ronda 1,5). Ahora se
-	## anima más desde la frontal; la calidad del tiro no cambia.
-	if dist_arco < 30.0 and ganas_tiro > 0.05 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * CHISPA_TIRO / pow(prisa(), 1.3):
+	var lejano := MotorTacticaViva.bandera(self as Object as MotorJugable, bool(p["es_local"]), "tiro_lejano")   ## pizarra: tiro lejano (01-11)
+	var ganas_tiro := (1.0 - dist_arco / (40.0 if lejano else 34.0)) * (0.7 + float(p["attr"]["tir"]) * 0.6) - angulo * 0.25
+	## MÁS CHISPA (20-10-2026): el sorteo era muy conservador y el partido se quedaba en ~0,8 tiros por minuto
+	## y equipo (FC ronda 1,5). Ahora se anima más desde la frontal; la calidad del tiro no cambia.
+	if dist_arco < (34.0 if lejano else 30.0) and ganas_tiro > 0.05 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * CHISPA_TIRO / pow(prisa(), 1.3):
 		## A un palo, abajo o arriba (antes se apuntaba al azar por el centro
 		## y el portero lo paraba casi todo: 27 de 29 en la sonda).
 		## (Pulido: más pegado al palo, lejos del portero, a riesgo de irse fuera.)

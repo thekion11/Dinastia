@@ -38,3 +38,14 @@ static func estilo_club(c: Club) -> Dictionary:
 ## El matiz continuo `k` («linea», «amplitud») del equipo en la táctica del motor (0 si no lo trae).
 static func f(m: MotorJugable, local: bool, k: String) -> float:
 	return float((m.tacticas[0 if local else 1] as Dictionary).get("f_" + k, 0.0))
+
+## TRES PERILLAS QUE EL 3D NO OÍA (01-11-2026, verificación de jugabilidad 389-391): «salida corta», «marca al hombre» y «tiro
+## lejano» solo cambiaban el motor simulado (`Tactica.multiplicador_*`); `tactica_desde` no se las pasaba al partido 3D. Ahora
+## llegan como 0/1 (sin la clave = no, como antes) y las leen el portero (`_ia_portero`), la defensa (`_ia_defensa`) y el portador
+## (`_ia_portador`).
+static func bandera(m: MotorJugable, local: bool, k: String) -> bool:
+	return int((m.tacticas[0 if local else 1] as Dictionary).get(k, 0)) == 1
+
+## Con salida corta el portero juega en corto 19 de cada 20 veces (sin ella, 4 de 5: la de siempre).
+static func prob_salida_jugada(m: MotorJugable, local: bool) -> float:
+	return 0.95 if bandera(m, local, "salida_corta") else 0.8

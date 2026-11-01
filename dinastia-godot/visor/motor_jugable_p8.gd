@@ -196,7 +196,8 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	## Los demás: zona, marcando al rival más cercano.
 	var obj := _forma(p, false)
 	var rival: Dictionary = {}
-	var md := 11.0
+	var al_hombre := MotorTacticaViva.bandera(self as Object as MotorJugable, bool(p["es_local"]), "marca")   ## pizarra: marca al hombre (01-11)
+	var md := 16.0 if al_hombre else 11.0
 	for q: Dictionary in jugadores:
 		if bool(q["es_local"]) != bool(p["es_local"]) and not bool(q["por"]):
 			var d := pos(q).distance_to(obj)
@@ -205,7 +206,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 				rival = q
 	if not rival.is_empty():
 		## Marca a distancia de zona: entre el rival y el arco, a 2,4 m.
-		obj = pos(rival) + (arco - pos(rival)).normalized() * 2.4
+		obj = pos(rival) + (arco - pos(rival)).normalized() * (1.2 if al_hombre else 2.4)
 	## La defensa no persigue a cada delantero hacia su arco: se queda en la
 	## línea común (M-123) y solo cierra por dentro hacia el que marca.
 	if _rol(p) in ["DFC", "LD", "LI"] and not _SIN_LINEA:

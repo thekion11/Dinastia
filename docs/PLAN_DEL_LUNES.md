@@ -1285,14 +1285,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 
 **31. Táctica y Sistema de Juego**
 - 383. Roles por posición (lateral ofensivo, pivote, falso 9, mediapunta) — _Vestuario.fijar_rol_tactico(j,'pivote'); rol_tactico(j)=='pivote'; bonus_roles(once) cambia att/def_
-- 385. Altura de la línea defensiva — _Tactica.linea=ALTO sube multiplicador_ataque y baja multiplicador_defensa_
-- 386. Intensidad de presión (bloque alto, medio, bajo) — _Tactica.presion=ALTO multiplica ataque 1.05_
-- 387. Ritmo de circulación de balón — _multiplicador_ataque con ritmo=ALTO == 1.07*..._
-- 388. Amplitud del ataque — _multiplicador con amplitud=ALTO_
-- 389. Tipo de salida (juego corto desde el arquero vs. pelotazo largo) — _Tactica.salida_corta=true => multiplicador_ataque*1.03_
-- 390. Criterio de remate (buscar tiro lejano o el pase extra) — _multiplicador_ataque con tiro_lejano_
-- 391. Marcaje al hombre o por zona — _multiplicador_defensa con marca_al_hombre_
-- 392. Trampa del fuera de juego activable — _multiplicador_defensa con fuera_de_juego_
 - 393. Editor simple de jugadas ensayadas de córner — _Tactica.efectividad(once, def_corner(c)[3], entrenamiento) en rango 0.82-1.35_
 - 394. Editor de jugadas ensayadas de tiro libre — _Tactica.def_libre('ensayada') y efectividad_
 - 400. Análisis previo del rival con puntos débiles sugeridos — _Mundo.analizar_rival() devuelve '' y fija bono_analisis>1; InformeRival.mostrar solo UI_
