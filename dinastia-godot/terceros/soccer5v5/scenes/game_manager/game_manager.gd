@@ -4,9 +4,9 @@ const DURATION_GAME := 1000 #2 * 60 * 1000
 
 enum State {IN_PLAY, SCORED, RESET, KICKOFF, OVERTIME, GAMEOVER}
 
-var clubs : Array[String] = ["EDATHODIKA FC", "REAL MADRID"]
+var clubs : Array[String] = ["DINASTIA FC", "REAL MADRIZ"]
 var current_state : GameState = null
-var player_setup : Array[String] = ["EDATHODIKA FC", ""]
+var player_setup : Array[String] = ["DINASTIA FC", ""]
 var state_factory := GameStateFactory.new()
 var score := [0, 0]
 var time_left: float

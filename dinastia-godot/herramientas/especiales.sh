@@ -51,6 +51,8 @@ pasa "estadio y ciudad por partes" "godot --headless --path . res://pruebas/prob
 pasa "calidad adaptativa (escalones)" "godot --headless --path . res://pruebas/probar_rendimiento_adaptativo.tscn" "probar_rendimiento_adaptativo: 0 fallos"
 pasa "contador de FPS" "godot --headless --path . res://pruebas/prueba_contador_fps.tscn" "FIN CONTADOR FPS. 0 fallos"
 pasa "dominadas" "godot --headless --path . res://pruebas/prueba_dominadas.tscn" "DOMINADAS: 0 fallos"
+pasa "minijuego retro 5v5" "godot --headless --path . res://pruebas/ideas/m5_retro5v5.tscn" "FIN. 0 fallos"
+pasa "barrida, saque de mano, caídas y bloqueos" "godot --headless --path . res://pruebas/ideas/p4_saque_barrida.tscn" "FIN. 0 fallos"
 pasa "minijuegos nuevos" "godot --headless --path . res://pruebas/prueba_minijuegos_nuevos.tscn" "FIN MINIJUEGOS NUEVOS. 0 fallos"
 pasa "igualdad del motor con usuario" "godot --headless --path . res://pruebas/igualdad_motor.tscn" "FIN. 0 fallos"
 pasa "motor jugable (unidad)" "godot --headless --path . res://pruebas/prueba_motor_jugable.tscn" "FIN MOTOR. 0 fallos"
