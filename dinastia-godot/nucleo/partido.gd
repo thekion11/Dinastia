@@ -192,6 +192,28 @@ func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 	tarjeta.emit(j, roja, minuto)
 	if not roja and Disciplina.acumula(j):
 		decision_arbitral.emit(Disciplina.frase(j), minuto)
+	if roja:
+		_revisar_siete()
+
+## MENOS DE SIETE (01-11, fallo que League-Soccer ya resolvió): el reglamento no deja jugar a un equipo con menos de 7; el
+## partido se suspende y se le da por perdido 3-0, o con el marcador si su rival ya ganaba por 3 o más. Solo pasa en el 3D (en el
+## simulado una roja no saca a nadie del once: solo lo sanciona).
+func _revisar_siete() -> void:
+	if terminado_ya:
+		return
+	for lado_local: bool in [true, false]:
+		if (once_local if lado_local else once_visita).size() >= 7:
+			continue
+		var diff := (goles_visita - goles_local) if lado_local else (goles_local - goles_visita)
+		if diff < 3:
+			goles_local = 0 if lado_local else 3
+			goles_visita = 3 if lado_local else 0
+		decision_arbitral.emit(Idiomas.t("Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.") % [
+			(local if lado_local else visita).nombre, goles_local, goles_visita], minuto)
+		terminado_ya = true
+		_devolver_tactica()
+		terminado.emit(goles_local, goles_visita)
+		return
 
 ## Posesión, córners y faltas medidos en el césped.
 func fijar_estadisticas(pos_local: float, corners: Array, faltas_: Array, fueras_: Array = []) -> void:

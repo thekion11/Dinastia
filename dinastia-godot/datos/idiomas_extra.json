@@ -6781,7 +6781,8 @@
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Car parked. F next to it to get back in.",
   "Tu coche está aparcado a %d m.": "Your car is parked %d m away.",
   "Recreativa: fútbol retro 5 contra 5": "Arcade: retro 5-a-side football",
-  "FÚTBOL RETRO": "RETRO FOOTBALL"
+  "FÚTBOL RETRO": "RETRO FOOTBALL",
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Match abandoned: %s is down to fewer than seven players and loses %d-%d."
  },
  "pt": {
   "Historia": "História",
@@ -13565,7 +13566,8 @@
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Carro estacionado. F junto a ele para voltar a entrar.",
   "Tu coche está aparcado a %d m.": "O teu carro está estacionado a %d m.",
   "Recreativa: fútbol retro 5 contra 5": "Fliperama: futebol retrô 5 contra 5",
-  "FÚTBOL RETRO": "FUTEBOL RETRÔ"
+  "FÚTBOL RETRO": "FUTEBOL RETRÔ",
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Partida suspensa: %s fica com menos de sete jogadores e perde por %d-%d."
  },
  "patrones": [
   [
@@ -26082,7 +26084,8 @@
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Voiture garée. F à côté pour remonter.",
   "Tu coche está aparcado a %d m.": "Ta voiture est garée à %d m.",
   "Recreativa: fútbol retro 5 contra 5": "Borne d'arcade : football rétro à 5 contre 5",
-  "FÚTBOL RETRO": "FOOTBALL RÉTRO"
+  "FÚTBOL RETRO": "FOOTBALL RÉTRO",
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Match arrêté : %s a moins de sept joueurs et perd %d-%d."
  },
  "it": {
   "Historia": "Storia",
@@ -32866,7 +32869,8 @@
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Auto parcheggiata. F vicino per risalire.",
   "Tu coche está aparcado a %d m.": "La tua auto è parcheggiata a %d m.",
   "Recreativa: fútbol retro 5 contra 5": "Cabinato: calcio retrò 5 contro 5",
-  "FÚTBOL RETRO": "CALCIO RETRÒ"
+  "FÚTBOL RETRO": "CALCIO RETRÒ",
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Partita sospesa: %s resta con meno di sette giocatori e perde %d-%d."
  },
  "de": {
   "Historia": "Geschichte",
@@ -39650,7 +39654,8 @@
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Auto geparkt. F daneben, um wieder einzusteigen.",
   "Tu coche está aparcado a %d m.": "Dein Auto parkt %d m entfernt.",
   "Recreativa: fútbol retro 5 contra 5": "Spielautomat: Retro-Fußball 5 gegen 5",
-  "FÚTBOL RETRO": "RETRO-FUSSBALL"
+  "FÚTBOL RETRO": "RETRO-FUSSBALL",
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Spiel abgebrochen: %s hat weniger als sieben Spieler und verliert %d:%d."
  },
  "ca": {
   "Historia": "Història",
@@ -46434,7 +46439,8 @@
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Cotxe aparcat. F al costat per tornar a pujar.",
   "Tu coche está aparcado a %d m.": "El teu cotxe està aparcat a %d m.",
   "Recreativa: fútbol retro 5 contra 5": "Màquina recreativa: futbol retro 5 contra 5",
-  "FÚTBOL RETRO": "FUTBOL RETRO"
+  "FÚTBOL RETRO": "FUTBOL RETRO",
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Partit suspès: %s es queda amb menys de set jugadors i el perd %d-%d."
  },
  "pl": {
   "Club": "Klub",
@@ -53495,7 +53501,8 @@
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Samochód zaparkowany. F obok niego, żeby wsiąść.",
   "Tu coche está aparcado a %d m.": "Twój samochód stoi %d m stąd.",
   "Recreativa: fútbol retro 5 contra 5": "Automat: retro piłka nożna 5 na 5",
-  "FÚTBOL RETRO": "RETRO PIŁKA"
+  "FÚTBOL RETRO": "RETRO PIŁKA",
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Mecz przerwany: %s ma mniej niż siedmiu zawodników i przegrywa %d:%d."
  },
  "tr": {
   "Club": "Kulüp",
@@ -60556,6 +60563,7 @@
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Araba park edildi. Tekrar binmek için yanında F.",
   "Tu coche está aparcado a %d m.": "Araban %d m ötede park halinde.",
   "Recreativa: fútbol retro 5 contra 5": "Atari makinesi: retro 5'e 5 futbol",
-  "FÚTBOL RETRO": "RETRO FUTBOL"
+  "FÚTBOL RETRO": "RETRO FUTBOL",
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Maç tatil edildi: %s yedi oyuncunun altına düştü ve maçı %d-%d kaybetti."
  }
 }
