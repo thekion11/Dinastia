@@ -1,5 +1,5 @@
 extends BaseIdea
-## EL PARTIDO REACCIONA (01-11-2026, fase 4 «jugabilidad», «verificar jugando» 251, 361, 362 y 378). Al probarlo salieron dos
+## EL PARTIDO REACCIONA (01-11-2026, fase 4 «jugabilidad», «verificar jugando» 251, 361, 362, 378 y 1036). Al probarlo salieron dos
 ## huecos, ya arreglados: el clima no tocaba la asistencia (`Clima.factor_publico`) y los clubes de la IA nunca cambiaban de
 ## plan en el minuto 60 (solo había plan si lo ponía el usuario).
 
@@ -45,3 +45,13 @@ func _probar() -> void:
 	_comprobar(a.tactica.mentalidad > ment and String(q.plan_activado.get(a.id, "")) == "perdiendo:ofensivo", "la IA perdiendo se vuelca (%s)" % String(q.plan_activado.get(a.id, "")))
 	q._devolver_tactica()
 	_comprobar(a.tactica.mentalidad == ment, "y al final vuelve a su táctica")
+	## 1036: el once elegido con un lesionado avisa.
+	var c: Club = m.ligas[0].clubes[4]
+	var xi := c.once()
+	c.once_elegido.clear()
+	for jx: Jugador in xi:
+		c.once_elegido.append(jx.id)
+	_comprobar(AvisoOnce.motivo(c) == "", "un once elegido sano no avisa")
+	xi[3].lesion = 2
+	var aviso := AvisoOnce.motivo(c)
+	_comprobar(aviso.contains(xi[3].nombre) and aviso.contains("lesionado"), "con un lesionado en el once, avisa: «%s»" % aviso)
