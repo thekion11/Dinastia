@@ -85,3 +85,7 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 18. (28-10) CIERRE hasta el lunes: tras la limpieza de código y lo pendiente de las sesiones, guardar todo y dejar registros
     al limpio. Registro: `docs/04_auditorias/CIERRE_2026-10-28.md`; estado para retomar arriba de `PLAN_DEL_LUNES.md`.
     Correo de contacto del dueño (informe de fallos y privacidad): en `Registro.CONTACTO`.
+19. (01-11) TERCEROS: «agarrar todo» de League-Soccer (Apache 2.0) y soccer5v5 (MIT) y quedarse siempre con lo MEJOR; lo que no
+    se use queda de respaldo en `dinastia-godot/terceros/` (Godot no lo importa). Sus datos REALES (jugadores, escudos, uniformes,
+    competiciones) NO se copian: solo su DIRECCIÓN en `terceros/league_soccer/DIRECCION_DATOS_REALES.md`, para recrearlos
+    después de forma legal. Animaciones de League-Soccer: `herramientas/league_anim_a_res.gd` → `anims_league/league.res`.
