@@ -250,8 +250,7 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 	## en el choque o el agarrón la víctima cae o pierde el balón.)
 	if motivo == "" and not con_tarjeta and not en_area and not _falta_tactica and poseedor == victima \
 			and lugar.z * dir_ataque(atacante_local) > 4.0 and _rng.randf() < 0.35:
-		aviso.emit("Ventaja")
-		_gesto_arbitro("arbitro_ventaja", 0.0, 1.6, {"mira": lugar})
+		MotorVentaja.dar(self as Object as MotorJugable, lugar, atacante_local, nombre)   ## y si pierde el balón, vuelve a la falta (R1, 01-11)
 		return true
 	_gesto_arbitro("arbitro_silbato", 0.0, 0.9, {"mira": lugar})
 	var tras := 0.8
