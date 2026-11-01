@@ -428,6 +428,8 @@ func _contar(k: String) -> void:
 
 ## El remate en curso termina: atajada, palo o fuera.
 func _cerrar_tiro(tipo: String) -> void:
+	if tipo == "poste":
+		Sonido.toca("poste")   ## el palo grabado de League-Soccer (01-11); suena aunque el remate ya estuviera cerrado
 	if _tiro_vivo.is_empty():
 		return
 	var p: Dictionary = _tiro_vivo["p"]
