@@ -25,7 +25,8 @@ static func corregir(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) ->
 		if a.has_meta("suelo_ok"):
 			continue
 		a.set_meta("suelo_ok", true)
-		if corregir_clip(a, esq, prefijo, ref):
+		var c := CodoAnim.corregir_clip(a, esq, prefijo)   ## y codos que no pasan de 145° (31-10)
+		if corregir_clip(a, esq, prefijo, ref) or c:
 			n += 1
 	return n
 
