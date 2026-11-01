@@ -92,3 +92,7 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 20. (01-11) ORDEN DE TRABAJO del dueño: 1) FALLOS (los 8 que League-Soccer ya resolvió, `docs/04_auditorias/terceros_gestion_recursos_2026-11-01.md` U7),
     2) CLUBES (recrear de forma legal con `terceros/league_soccer/DIRECCION_DATOS_REALES.md`), 3) IA (R1-R3, U1-U8 de `terceros_ia_motor_2026-11-01.md`),
     4) jugabilidad, 5) optimización, 6) detectar fallos, 7) sonidos de sistema, 8) minijuegos, 9) entrenamiento.
+21. (01-11 noche) Seguir las fases de la orden 20 SIN parar hasta terminarlas TODAS (3 IA: R2 y U8; 4-9) y avisar al dueño
+    (Calendar) SOLO al final, con el resumen; no avisar fase por fase. Al final: dos VÍDEOS (un partido con la cámara real y un
+    recorrido del juego entero: menú, ciudad, estadio, museo, gestión, partido, minijuego), grabados con `--write-movie` + xvfb +
+    ffmpeg, fuera del repo (scratchpad → app y Drive). El dueño pone nota 1-100 con argumentos, que pasan a la lista de mejoras.
