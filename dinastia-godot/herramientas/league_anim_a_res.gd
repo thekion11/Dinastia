@@ -168,6 +168,11 @@ func _convertir(datos: Dictionary) -> Animation:
 				a.rotation_track_insert_key(pistas[nombre], t, (bp.inverse() * bg).get_rotation_quaternion())
 		var jp: Variant = _muestra(datos.get("player", []), cuadro)
 		var alto := (jp as Vector3).y if jp != null else 0.0
-		var reposo_p := esq.get_bone_rest(esq.find_bone("pelvis")).origin
-		a.position_track_insert_key(pp, t, reposo_p + Vector3(0, alto * (reposo_p.y / ALTURA_ORIGEN), 0))
+		## La pelvis vive en el espacio de `root`, que viene GIRADO (allí la altura es Z): el «arriba» del esqueleto se pasa a ese
+		## espacio (antes se sumaba a su Y y el cuerpo que caía se desplazaba en horizontal en vez de bajar: tropiezo flotando).
+		var ip := esq.find_bone("pelvis")
+		var reposo_p := esq.get_bone_rest(ip).origin
+		var g_raiz: Basis = (reposo_g[esq.get_bone_name(esq.get_bone_parent(ip))] as Transform3D).basis
+		var altura_pelvis := (reposo_g["pelvis"] as Transform3D).origin.y
+		a.position_track_insert_key(pp, t, reposo_p + g_raiz.inverse() * Vector3(0, alto * (altura_pelvis / ALTURA_ORIGEN), 0))
 	return a

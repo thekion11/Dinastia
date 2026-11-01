@@ -200,7 +200,7 @@ func _mover_jugadores(delta: float) -> void:
 			if t < float(p["levantar_en"]):
 				continue   ## en el suelo: se queda en la última pose de la caída
 			p["levantar_en"] = 0.0
-			_anim(p, "levantarse_suelo", true, 1.4)
+			_anim(p, String(p.get("levantar_con", "levantarse_suelo")), true, 1.8)
 		if float(p.get("gesto_hasta", 0.0)) > t:
 			continue
 		var anim := "parado" if sp < 0.5 else ("trotar" if sp < 5.2 else "correr")
@@ -332,9 +332,9 @@ func _tomar(p: Dictionary) -> void:
 	if bool(p["por"]):
 		_anim(p, "blocaje_alto" if alto > 1.4 else ("blocaje_rasante" if fuerte > 6.0 else "recoger_balon"), true, 0.8)
 	elif alto > 0.9:
-		_anim(p, "golpe_pecho", true, 0.6)
+		_anim(p, "control_pecho" if (p["anim"] as AnimationPlayer).has_animation("control_pecho") else "golpe_pecho", true, 0.6)   ## (01-11: League-Soccer)
 	elif fuerte > 7.0 and (p["vel"] as Vector3).length() < 2.0:
-		_anim(p, "parada_pie", true, 0.6)
+		_anim(p, "control_pie" if (p["anim"] as AnimationPlayer).has_animation("control_pie") else "parada_pie", true, 0.6)
 	poseedor = p
 	pase_a = {}
 	vel_balon = Vector3.ZERO
