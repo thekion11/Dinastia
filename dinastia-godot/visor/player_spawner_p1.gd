@@ -306,7 +306,10 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 				corte = look_j["pelo"]
 			## Barba 3D solo para las barbas completas del retrato (1, 4 y 6):
 			## bigote, perilla o barba de días no son esa malla.
-			PeloQ.poner(dq, corte, pelo, barba in [1, 4, 6])
+			## El peinado del Drive donde coincide con el corte del retrato (sin foto real) y la postura relajada de manos (31-10, §2.5 punto 5).
+			var con_foto := typeof(look_j) == TYPE_DICTIONARY and String(jug.get("foto", "")) != ""
+			PeloQ.poner(dq, corte, pelo, barba in [1, 4, 6], -1 if puesto == "ARB" else PeloDrive.para_futbolista(jid, corte, con_foto))
+			PosturaQ.poner(dq["nodo"], absi(hash(jid)), true)
 			## Y su cara: los rasgos del retrato (o la foto real) moldeados
 			## sobre la cabeza. Después del pelo: con foto esconde las cejas y
 			## la barba 3D.
