@@ -40,6 +40,7 @@ import jugadores_guino
 import estadios_reales
 import aspecto_clubes
 import palmares_clubes
+import liga_paises_bajos
 import json
 import os
 import sys
@@ -572,6 +573,13 @@ POOLS_CAMBIOS = {
     ("ESP", 1): {"Aduriz": "Olabarria", "Zubizarreta": "Elorza", "Muguruza": "Ibarguren"},
 }
 
+# Países Bajos (01-11-2026): sus datos viven en `liga_paises_bajos.py`.
+CLUBES.update(liga_paises_bajos.CLUBES)
+LIGAS[liga_paises_bajos.PAIS] = liga_paises_bajos.LIGA_FICTICIA
+COPAS[liga_paises_bajos.PAIS] = liga_paises_bajos.COPA_FICTICIA
+historia_clubes.H.update(liga_paises_bajos.HISTORIA)
+historia_clubes.CLASICOS.extend(liga_paises_bajos.CLASICOS)
+
 # ---------------------------------------------------------------------------
 
 UNLEET = {"0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "8": "b", "9": "g"}
@@ -615,6 +623,7 @@ def main():
         real = leer(PACK)["tablas"]
     else:
         real = {k: base[k] for k in TABLAS_DEL_PACK if k in base}
+    liga_paises_bajos.asegurar(real)
 
     errores = []
 
