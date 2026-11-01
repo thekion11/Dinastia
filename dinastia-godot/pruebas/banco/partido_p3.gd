@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p2.gd"
-## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable
+## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable, _probar_presion_zona
 
 func _probar_fisica_motor() -> void:
 	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")
@@ -131,4 +131,35 @@ func _probar_presion_estable() -> void:
 		motor.remove_meta("presion_antes")
 		var pp := MotorPresion.papeles(motor, false)
 		_comprobar(pp[0] == idb and pp[1] == String(otros[2]["id"]), "de segundo sale un medio y el central guarda su sitio (%s)" % motor._rol(motor.jugadores.filter(func(p: Dictionary) -> bool: return String(p["id"]) == String(pp[1]))[0]))
+	(r[1] as Node3D).queue_free()
+
+## PRESIÓN POR ZONA (01-11-2026, IA U1, `MotorPresion.zona`): con el balón adentrado y alguien cerca, sale a morder un rato.
+func _probar_presion_zona() -> void:
+	_titulo("PRESIÓN POR ZONA")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var loc: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	var dueno: Dictionary = loc[0]
+	var d := motor.dir_ataque(true)
+	(motor.tacticas[1] as Dictionary)["presion"] = 0
+	for i in vis.size():
+		(vis[i]["node"] as Node3D).position = Vector3(-30.0 + i * 2.0, 0, d * 50.0)
+	## Local con el balón en su campo, a 35 m de su arco: territorio del visitante 0,83.
+	(dueno["node"] as Node3D).position = Vector3(0, 0, -d * 17.5)
+	(vis[0]["node"] as Node3D).position = Vector3(0, 0, -d * 25.0)
+	_comprobar(not MotorPresion.zona(motor, dueno), "presión baja y nadie a menos de 5 m: espera")
+	(vis[0]["node"] as Node3D).position = Vector3(0, 0, -d * 21.0)
+	_comprobar(MotorPresion.zona(motor, dueno), "presión baja, balón en su campo y un rival a 3,5 m: sale a morder")
+	(vis[0]["node"] as Node3D).position = Vector3(0, 0, -d * 30.0)
+	motor.t += 1.0
+	_comprobar(MotorPresion.zona(motor, dueno), "y aguanta la presión un rato aunque se aleje")
+	motor.t += 2.0
+	_comprobar(not MotorPresion.zona(motor, dueno), "a los 2 s la suelta")
+	## Balón en el campo del que defiende (territorio 0,3): con presión baja, no.
+	(dueno["node"] as Node3D).position = Vector3(0, 0, d * 21.0)
+	(vis[0]["node"] as Node3D).position = Vector3(0, 0, d * 24.0)
+	_comprobar(not MotorPresion.zona(motor, dueno), "en su propio campo, con presión baja, no sale")
+	(motor.tacticas[1] as Dictionary)["presion"] = 2
+	_comprobar(MotorPresion.zona(motor, dueno), "con presión alta, sí")
 	(r[1] as Node3D).queue_free()

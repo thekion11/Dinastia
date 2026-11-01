@@ -118,6 +118,8 @@ func _gatillo_presion(dueno: Dictionary) -> bool:
 	var mira := Vector3(sin(float(dueno.get("mirar", 0.0))), 0, cos(float(dueno.get("mirar", 0.0))))
 	if mira.dot((propio - q).normalized()) > 0.6:
 		return true
+	if MotorPresion.zona(self as Object as MotorJugable, dueno):   ## presión por zona (U1, 01-11)
+		return true
 	return q.distance_to(propio) < 24.0 and _rol(dueno) in ["DFC", "LD", "LI", "POR"]
 
 func _linea_defensiva(local: bool) -> float:
