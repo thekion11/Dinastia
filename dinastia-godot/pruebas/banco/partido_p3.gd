@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p2.gd"
-## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable, _probar_presion_zona, _probar_linea_prevista, _probar_primer_toque
+## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable, _probar_presion_zona, _probar_linea_prevista, _probar_primer_toque, _probar_tactica_viva
 
 func _probar_fisica_motor() -> void:
 	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")
@@ -211,4 +211,24 @@ func _probar_primer_toque() -> void:
 	_comprobar(detras > frente and frente > con_rival, "rápido cuesta más, y por la espalda más aún (%.3f > %.3f)" % [detras, frente])
 	_comprobar(detras <= MotorControl.TOPE, "nunca pasa del tope (%.3f)" % detras)
 	_comprobar(gk.is_empty() or MotorControl.riesgo(motor, gk[0]) == 0.0, "el portero no se ve afectado")
+	(r[1] as Node3D).queue_free()
+
+## LA TÁCTICA SEGÚN EL MARCADOR Y EL RELOJ (01-11-2026, IA U2, `MotorTacticaViva`).
+func _probar_tactica_viva() -> void:
+	_titulo("TÁCTICA SEGÚN MARCADOR Y RELOJ")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	motor.goles = [0, 1]
+	motor.mitad = 1
+	motor.t = 0.0
+	_comprobar(MotorTacticaViva.urgencia(motor, true) == 0.0, "al empezar, perder 0-1 no cambia nada")
+	motor.mitad = 2
+	motor.t = motor.duracion_mitad * 0.9
+	var pierde := MotorTacticaViva.urgencia(motor, true)
+	var gana := MotorTacticaViva.urgencia(motor, false)
+	_comprobar(pierde > 0.2 and gana < -0.2, "al final, el que pierde se adelanta y el que gana se repliega (%.2f / %.2f)" % [pierde, gana])
+	motor.goles = [0, 4]
+	_comprobar(MotorTacticaViva.urgencia(motor, true) <= MotorTacticaViva.TOPE, "con tope (%.2f)" % MotorTacticaViva.urgencia(motor, true))
+	motor.control_equipo = 0
+	_comprobar(MotorTacticaViva.urgencia(motor, true) == 0.0, "el equipo del usuario no se toca")
 	(r[1] as Node3D).queue_free()
