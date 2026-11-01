@@ -12,6 +12,10 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - **Del dueño**: §0 y §1 (FPS en hardware real, builds, keystore, publicar la política de privacidad, red a Wikimedia).
 - **Auditoría de código del 28-10**: lo arreglado y lo pendiente (materiales sin compartir, vías sin conectar, probables del guardado, `MotorLibre`) está en `CIERRE_2026-10-28.md` §«Auditoría»; las órdenes sin completar y los fallos abiertos, en sus dos secciones siguientes.
 
+## ORDEN DE TRABAJO DEL DUEÑO (01-11)
+1) fallos (los 8 de League-Soccer) → 2) clubes (recreación legal) → 3) IA → 4) jugabilidad → 5) optimización → 6) detectar fallos →
+7) sonidos de sistema → 8) minijuegos → 9) entrenamiento.
+
 ## 0. Lo que espera una decisión tuya (lista corta)
 
 Sin esto, las filas que dependen de ello no avanzan. El detalle está en la sección que se cita.
