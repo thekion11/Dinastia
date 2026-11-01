@@ -17,3 +17,6 @@ Lo que NO va a los builds públicos: su base de datos trae jugadores y escudos R
 
 Uso en el juego (01-11-2026): `assets/characters/quaternius/anims_league/league.res` (las 293 + espejos, nombres `ls_…`);
 la carrera rápida («correr») es ya el paso de sprint de League-Soccer (`visor/league_anim.gd`).
+
+Los datos reales que quedaron fuera (jugadores, escudos, uniformes y competiciones) tienen su DIRECCIÓN y qué contienen en
+`DIRECCION_DATOS_REALES.md`, para recrearlos después de forma legal (orden del dueño, 01-11).
