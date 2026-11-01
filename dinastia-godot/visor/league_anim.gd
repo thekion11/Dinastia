@@ -27,3 +27,29 @@ static func ciclo(clave: String, prefijo: String) -> Animation:
 	sal.length = a.length + b.length
 	sal.loop_mode = Animation.LOOP_LINEAR
 	return sal
+
+## GOLPEOS (01-11, segunda tanda, comparados de lado con `pruebas/captura_comparar`): clave → [clip, contacto (s), sustituye].
+## Recortados para empezar justo antes del contacto (el motor saca el balón al empezar el gesto, como en los recortes del mocap).
+## «tiro_carrera» SUSTITUYE al hecho a mano (que queda como «tiro_carrera_mano»: se encorvaba y giraba de espaldas al rematar);
+## «pase_carrera» es nuevo: el pase al correr (el «pase» del mocap es un toque parado, que sigue para los pases sin carrera).
+## La barrida de League-Soccer NO entra: acaba tumbado boca arriba del todo; la de la UAL2 se ve mejor.
+const GOLPEOS := {"tiro_carrera": ["ls_shot__sprint__030", 0.17, true], "pase_carrera": ["ls_pass__sprint__000", 0.27, false]}
+const ANTES_CONTACTO := 0.04
+
+static func golpeos(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) -> void:
+	if OS.get_environment("SIN_LEAGUE") != "":
+		return
+	var rp := esq.get_bone_rest(esq.find_bone("pelvis")).origin
+	for clave: String in GOLPEOS:
+		var g: Array = GOLPEOS[clave]
+		for lado in ["", "_espejo"]:
+			var base: Animation = AnimQuaternius.cargar_real(String(g[0]) + lado, prefijo)
+			if base == null:
+				continue
+			var a := AnimQuaternius.recortar(base, maxf(float(g[1]) - ANTES_CONTACTO, 0.0) / base.length, 1.0, false, true, rp)
+			var nombre: String = clave + lado
+			if lib.has_animation(nombre):
+				if bool(g[2]) and not lib.has_animation(clave + "_mano" + lado):
+					lib.add_animation(clave + "_mano" + lado, lib.get_animation(nombre))
+				lib.remove_animation(nombre)
+			lib.add_animation(nombre, a)
