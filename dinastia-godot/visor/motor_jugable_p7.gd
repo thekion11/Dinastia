@@ -9,8 +9,7 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 	var altura := "baja" if cruce.y < 0.7 else ("media" if cruce.y < 1.6 else "alta")
 	var anim := ("estirada_%s_%s" % [altura, lado]) if estirada else ("atajar_bajo" if cruce.y < 0.6 else ("blocaje_alto" if cruce.y > 1.6 else "atajar"))
 	_anim(p, anim, true)
-	## Se tira de verdad: un impulso lateral que la inercia gasta (antes se
-	## teletransportaba 1,6 m de un fotograma a otro).
+	## Se tira de verdad: un impulso lateral que la inercia gasta (antes se teletransportaba 1,6 m de un fotograma a otro).
 	var hacia_x := clampf(cruce.x - pos(p).x, -2.2, 2.2)
 	p["vel"] = Vector3(hacia_x * (3.4 if estirada else 2.0), 0, 0)
 	p["objetivo"] = Vector3(pos(p).x + hacia_x, 0, pos(p).z)
@@ -296,6 +295,7 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	_ctx_golpeo = "tiro"
 	_patear(p, destino, vh, loft, efecto, "patear")
 	tiros[0 if bool(p["es_local"]) else 1] += 1
+	_cerrar_tiro("fallo")   ## (01-11) el remate anterior aún abierto se cierra: si no, el mapa de tiros lo contaba y el acta no
 	_tiro_vivo = {"p": p, "t": t, "clase": clase}
 	_contar("tiro_%s" % clase)
 	_contar("tiro_%s_%s" % [clase, "dentro" if lejos < 16.5 else ("frontal" if lejos < 25.0 else "lejos")])

@@ -92,6 +92,7 @@ func _cabezazo(p: Dictionary) -> void:
 				clampf(_rng.randf_range(0.3, 1.4) + _rng.randf_range(-err, err) * 0.6, 0.15, 3.5), arco.z)
 		_patear(p, destino, 14.0 + float(p["attr"]["tir"]) * 6.0, 0.0, 0.0, "cabezazo")
 		tiros[0 if bool(p["es_local"]) else 1] += 1
+		_cerrar_tiro("fallo")   ## (01-11) el remate anterior aún abierto se cierra (ver `_tirar`)
 		_tiro_vivo = {"p": p, "t": t, "clase": "cabeza"}
 		_contar("tiro_cabeza")
 	else:
