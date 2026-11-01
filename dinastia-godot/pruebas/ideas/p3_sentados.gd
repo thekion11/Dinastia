@@ -99,7 +99,7 @@ func _probar_async() -> void:
 	_e.cuerpo.position = p + Vector3(200.0, 0, 0)
 	gs.revisar()
 	## Esperar con vida (P3, pasada 3): tres variantes y el móvil en la mano.
-	_comprobar(PeatonVida.variante(0.1) == 0 and PeatonVida.variante(0.6) == 1 and PeatonVida.variante(0.9) == 2, "la espera tiene tres variantes (móvil, llamada, quieto)")
+	_comprobar(PeatonVida.variante(0.1) == 0 and PeatonVida.variante(0.6) == 1 and PeatonVida.variante(0.8) == 3 and PeatonVida.variante(0.95) == 2, "la espera tiene cuatro variantes (móvil, llamada, brazos cruzados, quieto)")
 	var rng_p := RandomNumberGenerator.new()
 	rng_p.seed = 5
 	var dp := PeatonQ.crear(rng_p)

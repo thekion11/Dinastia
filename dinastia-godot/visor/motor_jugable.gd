@@ -13,6 +13,8 @@ func paso(delta: float) -> void:
 		delta *= 0.35
 	_t_estado += delta
 	_mover_arbitros(delta)
+	if estado != "juego" and not _en_mano.is_empty():
+		_en_mano = {}   ## el juego se paró con el balón en la mano: ese saque ya no vale
 	match estado:
 		"juego":
 			t += delta
@@ -27,6 +29,7 @@ func paso(delta: float) -> void:
 				return
 			if not poseedor.is_empty():
 				posesion[0 if bool(poseedor["es_local"]) else 1] += delta
+			_retener_en_mano()
 			_mover_balon(delta)
 			_duelos()
 			if estado != "juego":
@@ -95,3 +98,21 @@ func anular_gol(de_local: bool) -> void:
 func posesion_local() -> int:
 	var tot: float = float(posesion[0]) + float(posesion[1])
 	return int(round(posesion[0] / tot * 100.0)) if tot > 0.0 else 50
+
+## SAQUE DE MANO (31-10): hasta soltarlo, el balón va pegado a la mano derecha del portero; al soltarlo sale con la velocidad
+## que se calculó al decidir el pase (si el portero ya no está o el juego se paró, se suelta tal cual).
+func _retener_en_mano() -> void:
+	if _en_mano.is_empty():
+		return
+	var gk: Dictionary = _en_mano["p"]
+	if t >= float(_en_mano["hasta"]) or not is_instance_valid(gk.get("node")):
+		vel_balon = _en_mano["vel"]
+		_en_mano = {}
+		return
+	vel_balon = Vector3.ZERO
+	gk["enfriar"] = maxf(float(gk.get("enfriar", 0.0)), 0.3)   ## que no lo «recoja» de su propia mano
+	var esq := FutbolistaQ.esqueleto_de(gk["node"])
+	var i := esq.find_bone("hand_r") if esq != null else -1
+	if i >= 0:
+		balon.global_position = esq.global_transform * esq.get_bone_global_pose(i).origin
+

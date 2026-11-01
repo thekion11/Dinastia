@@ -92,11 +92,20 @@ static func celebracion(ap: AnimationPlayer, rasgo: String, id_jugador: String, 
 		return "celebrar"
 	return elegida
 
+## Clips de la UAL2 (31-10, CC0, `AnimQuaternius.RUTA_UAL2`): solo bajo demanda con `asegurar` (no van en `extender`, que los
+## cargaría en los 22 futbolistas aunque nadie los use).
+const UAL2 := {
+	"brazos_cruzados": "Idle_FoldArms_Loop", "telefono": "Idle_TalkingPhone_Loop", "negar": "Idle_No_Loop", "asentir": "Yes",
+	"cargar_caja": "Walk_Carry_Loop", "beber": "Consume", "apoyado_baranda": "Idle_Rail_Loop", "baranda_llama": "Idle_Rail_Call",
+	"barrida_inicio": "Slide_Start", "barrida_desliza": "Slide_Loop", "barrida_fin": "Slide_Exit", "saque_mano": "OverhandThrow",
+	"choque": "Hit_Knockback", "levantarse_suelo": "LayToIdle", "trepar": "ClimbUp_1m", "abrir_caja": "Chest_Open", "regar": "Farm_Watering",
+}
+
 ## Carga UN clip de la UAL en el AnimationPlayer de un cuerpo si aún no lo tiene (las
 ## personas del prólogo, las citas, la familia y los vecinos no pasan por `extender`).
 ## Devuelve true si el clip existe tras la llamada. (§2.2e P3, 27-10-2026)
 static func asegurar(ap: AnimationPlayer, esq: Skeleton3D, clave: String) -> bool:
-	if ap == null or not UAL.has(clave):
+	if ap == null or not (UAL.has(clave) or UAL2.has(clave)):
 		return false
 	if ap.has_animation(clave):
 		return true
@@ -104,7 +113,7 @@ static func asegurar(ap: AnimationPlayer, esq: Skeleton3D, clave: String) -> boo
 	if lib == null:
 		return false
 	var prefijo := str(ap.get_path_to(esq)) if esq != null else ""
-	var nombre_ual := String(UAL[clave])
+	var nombre_ual := String(UAL[clave] if UAL.has(clave) else UAL2[clave])
 	var a: Animation = AnimQuaternius.cargar_real(nombre_ual, prefijo)
 	if a == null and nombre_ual.ends_with("_Loop"):
 		a = AnimQuaternius.cargar_real(nombre_ual.trim_suffix("_Loop"), prefijo)
@@ -160,3 +169,41 @@ static func asegurar_gesto_tono(ap: AnimationPlayer, esq: Skeleton3D, tono: Stri
 		_completar(a, esq, pre)
 		lib.add_animation(g, a)
 	return g
+
+## Une trozos de clips de la UAL/UAL2 en uno solo `clave` (31-10, la barrida de verdad: entrar + deslizar + levantarse).
+## `partes` = [[clave_ual, desde_s, hasta_s], …] (hasta < 0 = hasta el final). Las pistas se casan por ruta; entre trozos
+## no hay mezcla (los clips de la UAL2 empiezan donde acaba el anterior). Devuelve true si quedó en la librería.
+static func unir(ap: AnimationPlayer, esq: Skeleton3D, clave: String, partes: Array) -> bool:
+	if ap == null or ap.has_animation(clave):
+		return ap != null
+	var lib := ap.get_animation_library("")
+	if lib == null:
+		return false
+	var sal := Animation.new()
+	var t0 := 0.0
+	for pt: Array in partes:
+		if not asegurar(ap, esq, String(pt[0])):
+			return false
+		var a := ap.get_animation(String(pt[0]))
+		var desde := float(pt[1])
+		var hasta := a.length if float(pt[2]) < 0.0 else minf(float(pt[2]), a.length)
+		for i in a.get_track_count():
+			var ruta := a.track_get_path(i)
+			var tipo := a.track_get_type(i)
+			var j := sal.find_track(ruta, tipo)
+			if j < 0:
+				j = sal.add_track(tipo)
+				sal.track_set_path(j, ruta)
+				sal.track_set_interpolation_type(j, a.track_get_interpolation_type(i))
+			for k in a.track_get_key_count(i):
+				var tk := a.track_get_key_time(i, k)
+				if tk >= desde - 0.0001 and tk <= hasta + 0.0001:
+					sal.track_insert_key(j, t0 + tk - desde, a.track_get_key_value(i, k))
+		t0 += hasta - desde
+	sal.length = t0
+	sal.loop_mode = Animation.LOOP_NONE
+	lib.add_animation(clave, sal)
+	return true
+
+## La barrida con los clips de la UAL2: arranca, se desliza medio segundo y se levanta (~1,8 s).
+const BARRIDA_REAL := [["barrida_inicio", 0.0, -1.0], ["barrida_desliza", 0.0, 0.5], ["barrida_fin", 0.0, -1.0]]
