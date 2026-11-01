@@ -1,0 +1,63 @@
+#ifndef _HPP_SYSTEMS_PHYSICS_TASK
+#define _HPP_SYSTEMS_PHYSICS_TASK
+
+#include "defines.hpp"
+#include "systems/isystemtask.hpp"
+#include "wrappers/interface_physics.hpp"
+
+namespace blunted {
+
+class PhysicsSystem;
+
+class PhysicsTask : public ISystemTask {
+public:
+  PhysicsTask(PhysicsSystem* system);
+  virtual ~PhysicsTask();
+
+  virtual void operator()();
+
+protected:
+  void GetPhase();
+  void ProcessPhase();
+  void PutPhase();
+
+  bool quit;
+  PhysicsSystem* physicsSystem;
+
+  // remaining time to pass to next RenderFrame
+  int remainder_ms;
+
+  // resolution
+  int timeStep_ms;
+
+  unsigned long previousTime_ms;
+};
+
+class PhysicsTaskCommand_StepTime : public Command {
+public:
+  PhysicsTaskCommand_StepTime(IPhysicsWrapper* physics, int timediff_ms, int resolution_ms)
+      : Command("StepTime"),
+        physics(physics),
+        timediff_ms(timediff_ms),
+        resolution_ms(resolution_ms){};
+
+  int remainder_ms;
+
+protected:
+  virtual bool Execute(void* caller = nullptr);
+
+  IPhysicsWrapper* physics;
+  int timediff_ms, resolution_ms;
+};
+
+class PhysicsTaskCommand_UpdateGeometry : public Command {
+public:
+  PhysicsTaskCommand_UpdateGeometry() : Command("UpdateGeometry") {}
+
+protected:
+  virtual bool Execute(void* caller = nullptr);
+};
+
+}  // namespace blunted
+
+#endif
