@@ -154,14 +154,14 @@ func _aplicar_plan() -> void:
 		var mia: int = goles_local if c == local else goles_visita
 		var suya: int = goles_visita if c == local else goles_local
 		var cambio: Dictionary = c.tactica.plan_para(mia - suya)
+		if cambio.is_empty() and c.id != ctx_club_id:   ## la IA también reacciona (01-11, idea 378): perdiendo se vuelca; ganando, el débil se cierra
+			cambio = Tactica.cambio_de("ofensivo" if mia < suya else ("cerrojo" if mia > suya and c.rep < (visita if c == local else local).rep else ""))
 		if cambio.is_empty():
 			continue
-		## Se apunta la táctica de antes para devolverla al final
-		## (`_devolver_tactica`): el plan es de ESTE partido, no una orden
-		## permanente. Antes se quedaba escrita en `club.tactica` para siempre.
+		## Se apunta la táctica de antes para devolverla al final (`_devolver_tactica`): el plan es de ESTE partido.
 		if not tactica_previa.has(c.id):
 			tactica_previa[c.id] = {"mentalidad": c.tactica.mentalidad, "linea": c.tactica.linea}
-		plan_activado[c.id] = c.tactica.clave_plan(mia - suya)
+		plan_activado[c.id] = c.tactica.clave_plan(mia - suya) if c.tactica.clave_plan(mia - suya) != "" else ("perdiendo:ofensivo" if mia < suya else "ganando:cerrojo")
 		c.tactica.mentalidad = int(cambio["mentalidad"])
 		c.tactica.linea = int(cambio["linea"])
 		## Cambiar la táctica invalida la fuerza cacheada: sin esto el cambio se

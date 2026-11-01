@@ -132,15 +132,11 @@ Escribir la prueba del campo «cómo probar» del plan y mirarlo en el partido o
 
 **Partido**
 - 143: Mosaicos y coreografías en el estadio
-- 251: Clima que afecta partidos y asistencia
 - 352: Velocidad de simulación configurable (x1, x2, x4, saltar a evento)
 - 353: Botón "saltar al próximo gol" para partidas rápidas
 - 360: Cambios en vivo con vista rápida del banco de suplentes
-- 361: Instrucciones en vivo (presionar, retrasar líneas, perder tiempo)
-- 362: Charla de entretiempo con varios tonos y efecto real en la moral
 - 363: Indicador de fatiga por jugador en tiempo real
 - 371: Modo "solo resultado" para quienes simulan temporadas rápido
-- 378: IA rival que reacciona a tu táctica a mitad de partido
 - 383: Roles por posición (lateral ofensivo, pivote, falso 9, mediapunta)
 - 1036: Alerta si intentas avanzar con alineación inválida
 - 1062: Sonido ambiente de estadio durante el partido

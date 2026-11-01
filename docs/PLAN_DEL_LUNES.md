@@ -1233,7 +1233,6 @@ De las 350, **124 se dieron por hechas y comprobadas** (hay implementación y un
 - 245. Resumen semanal tipo "informe de gestión"
 
 **21. Detalles de Ambientación**
-- 251. Clima que afecta partidos y asistencia
 - 255. Eventos comunitarios fuera del fútbol (caridad)
 
 **22. Sistemas de Jugadores (detalle extra)**
@@ -1273,11 +1272,8 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 352. Velocidad de simulación configurable (x1, x2, x4, saltar a evento) — _Afirmar MatchPlayback.VELOCIDADES.size()>=3 y que mas_rapido() sube vel_idx_
 - 353. Botón "saltar al próximo gol" para partidas rápidas — _Con Partido.simular_minuto en bucle hasta que cambie el marcador (lógica en la UI, no extraída a nucleo)_
 - 360. Cambios en vivo con vista rápida del banco de suplentes — _Partido.cambiar(club, sale, entra) y afirmar once actualizado y límite MAX_CAMBIOS_
-- 361. Instrucciones en vivo (presionar, retrasar líneas, perder tiempo) — _Fijar instr_riesgo=true y comparar fuerza/ goles esperados vs false en muchos partidos_
-- 362. Charla de entretiempo con varios tonos y efecto real en la moral — _Vestuario.charla(tono, ...) y afirmar cambio de moral/ansiedad de los jugadores_
 - 363. Indicador de fatiga por jugador en tiempo real — _MotorJugable.forma_fisica(p) decrece con el tiempo de partido (requiere motor)_
 - 371. Modo "solo resultado" para quienes simulan temporadas rápido — _Mundo.avanzar_semana() x N y afirmar tabla coherente (ya es el flujo base del banco)_
-- 378. IA rival que reacciona a tu táctica a mitad de partido — _Partido con plan_perdiendo!='nada' y marcador adverso cambia tactica.mentalidad_
 
 **31. Táctica y Sistema de Juego**
 - 383. Roles por posición (lateral ofensivo, pivote, falso 9, mediapunta) — _Vestuario.fijar_rol_tactico(j,'pivote'); rol_tactico(j)=='pivote'; bonus_roles(once) cambia att/def_
