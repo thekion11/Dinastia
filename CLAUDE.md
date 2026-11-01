@@ -89,3 +89,6 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     se use queda de respaldo en `dinastia-godot/terceros/` (Godot no lo importa). Sus datos REALES (jugadores, escudos, uniformes,
     competiciones) NO se copian: solo su DIRECCIÓN en `terceros/league_soccer/DIRECCION_DATOS_REALES.md`, para recrearlos
     después de forma legal. Animaciones de League-Soccer: `herramientas/league_anim_a_res.gd` → `anims_league/league.res`.
+20. (01-11) ORDEN DE TRABAJO del dueño: 1) FALLOS (los 8 que League-Soccer ya resolvió, `docs/04_auditorias/terceros_gestion_recursos_2026-11-01.md` U7),
+    2) CLUBES (recrear de forma legal con `terceros/league_soccer/DIRECCION_DATOS_REALES.md`), 3) IA (R1-R3, U1-U8 de `terceros_ia_motor_2026-11-01.md`),
+    4) jugabilidad, 5) optimización, 6) detectar fallos, 7) sonidos de sistema, 8) minijuegos, 9) entrenamiento.
