@@ -8,3 +8,12 @@ Origen: https://github.com/Habeeb-Rahman-CA/soccer5v5-game-godot (MIT, ver `LICE
 - NO USAR sin comprar licencia: la fuente «Daydream» (`assets/fonts/Daydream 1.0 Personal License.txt`: SOLO USO PERSONAL).
   «Pixeled» no trae licencia: no usar hasta confirmarla.
 - Ideas de uso: minijuego retro, interfaz, estados del motor.
+
+DATOS REALES (01-11-2026, misma norma que League-Soccer): `assets/json/squads.json` traía 9 clubes REALES (Real Madrid, Barcelona,
+PSG, Bayern, Man City, Man United, Liverpool, AC Milan, Inter) con 6 jugadores reales cada uno, y un 10.º club con el autor y sus
+amigos. NO se guarda aquí: su DIRECCIÓN es https://github.com/Habeeb-Rahman-CA/soccer5v5-game-godot, `assets/json/squads.json`
+(commit en `ORIGEN_COMMIT.txt`). El constante `CLUB` de `scenes/characters/player.gd` y `scenes/game_manager/game_manager.gd`
+nombraban esos clubes (son los colores de cada uno en la paleta): aquí ya van con el nombre modificado, como en el minijuego.
+
+INTEGRADO como minijuego en `res://minijuegos/retro5v5/` (rutas reescritas, sin la fuente Daydream, clubes con nombre modificado y
+jugadores inventados). AVISO: el rótulo `assets/art/ui/.../worldcup-label.png` dice «World Cup» (marca de la FIFA): cambiarlo antes de publicar.

@@ -35,4 +35,6 @@ static func montar(b: Node3D, c: Vector3, w: float, f: float) -> int:
 		rot.rotation.y = PI
 		b.add_child(rot)
 		puestas += 1
+	## Y la recreativa del fútbol retro (01-11, `RecreativaRetro`), al lado de la máquina suelta.
+	RecreativaRetro.montar(b, Vector3(c.x + 16.6, c.y + 0.3, z))
 	return puestas
