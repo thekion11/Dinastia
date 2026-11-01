@@ -3,9 +3,9 @@ extends "res://visor/explorador_ciudad_p4.gd"
 
 ## Factor de densidad de peatones del club (−1 = sin leer todavía).
 var _densidad_gente: float = -1.0
+var _vel_antes := 0.0   ## velocidad a pie del fotograma anterior (echarse adelante al acelerar, 31-10)
 
-## ¿Hay una fachada de manzana al alcance de este punto (3 m)? Devuelve la
-## clave de la sala con el nombre propio, o vacío.
+## ¿Hay una fachada de manzana al alcance de este punto (3 m)? Devuelve la clave de la sala con el nombre propio, o vacío.
 func edificio_en(p: Vector3) -> Dictionary:
 	if cb == null:
 		return {}
@@ -65,8 +65,7 @@ func _actualizar_mano(modo_mano: String, km_h: float, maxima: float, metros: flo
 			if _minimapa.red == null and cb != null:
 				_minimapa.red = cb.expansion
 			_minimapa.poner(cuerpo.position, rumbo if modo == "coche" else cuerpo.rotation.y, get_physics_process_delta_time())
-	## Las paredes de oclusión, solo en la calle: dentro de un edificio taparían
-	## lo que se ve por la puerta (`OclusoresCiudad`).
+	## Las paredes de oclusión, solo en la calle: dentro de un edificio taparían lo que se ve por la puerta (`OclusoresCiudad`).
 	if cb != null:
 		OclusoresCiudad.activar(cb, estado == "calle")
 	if _boton_e != null:
@@ -151,12 +150,10 @@ func _andar_solo(delta: float) -> void:
 	cuerpo.rotation.y = lerp_angle(cuerpo.rotation.y, rumbo, 1.0 - exp(-9.0 * delta))
 	cuerpo.position += hacia / d * minf(d, VEL_PIE * delta)
 	_animar_dt(VEL_PIE)
-	## La cámara se queda donde estaba (detrás, en la calle) y le sigue con
-	## la mirada: así se ve al DT cruzar la puerta.
+	## La cámara se queda donde estaba (detrás, en la calle) y le sigue con la mirada: así se ve al DT cruzar la puerta.
 	camara.look_at(cuerpo.position + Vector3(0, 1.3, 0), Vector3.UP)
 
-## En la calle, con la puerta abierta y ya lejos: se cierra sola. Y si te
-## vas a mitad de la charla con el portero, la charla se acaba.
+## En la calle, con la puerta abierta y ya lejos: se cierra sola. Y si te vas a mitad de la charla con el portero, la charla se acaba.
 func _cerrar_puerta_si_lejos() -> void:
 	if _est.is_empty():
 		return
@@ -274,8 +271,7 @@ func _buscar_cerca() -> void:
 			if de < mejor and d < float(pc.get("radio", 99.0)):
 				mejor = de
 				_cerca = {"tipo": "lugar", "k": String(pc["k"]), "n": String(pc["n"])}
-	## Cualquier fachada de manzana: se puede entrar (etapa 6). El tipo y el
-	## nombre salen del tramo de calle, así que son siempre los mismos.
+	## Cualquier fachada de manzana: se puede entrar (etapa 6). El tipo y el nombre salen del tramo de calle, así que son siempre los mismos.
 	if _cerca.is_empty() and modo == "pie":
 		var ed := edificio_en(p)
 		if not ed.is_empty():
@@ -292,6 +288,8 @@ func _physics_process(delta: float) -> void:
 		return
 	if estado in ["anden", "estadio", "interior", "puerta", "subsuelo", "cima"]:
 		_actualizar_mano("pie", 0.0, 1.0, 0.0)
+		cuerpo.rotation.z = 0.0   ## sin la inclinación de la carrera por la calle
+		cuerpo.rotation.x = 0.0
 	if estado == "anden":
 		_mover_en_anden(delta)
 		return
@@ -351,10 +349,16 @@ func _physics_process(delta: float) -> void:
 		if not _mover_un_trozo(paso_total / float(trozos), r):
 			break
 	## Giro con inercia (26-10, §2.2e P2): el cuerpo persigue el rumbo en vez de saltar a él.
+	var giro_antes := cuerpo.rotation.y
 	cuerpo.rotation.y = lerp_angle(cuerpo.rotation.y, rumbo, 1.0 - exp(-9.0 * delta))
 	if modo == "coche":
 		cuerpo.rotation.x = _cabeceo
 		cuerpo.rotation.z = _balanceo
+	elif delta > 0.0:
+		## A pie, corriendo, se inclina hacia dentro de la curva (31-10, §2.2e P2).
+		cuerpo.rotation.z = MovimientoNatural.inclinacion(cuerpo.rotation.z, angle_difference(giro_antes, cuerpo.rotation.y) / delta, vel, delta)
+		cuerpo.rotation.x = MovimientoNatural.cabeceo(cuerpo.rotation.x, (vel - _vel_antes) / delta if vel >= 0.0 else 0.0, delta)
+		_vel_antes = vel
 	_colocar_camara(delta)
 	## Qué hay cerca (puertas, metro, vecinos, fachadas): ~370 µs por búsqueda;
 	## basta unas 8 veces por segundo o al dar medio metro (15-10-2026).
@@ -376,8 +380,7 @@ func _physics_process(delta: float) -> void:
 		## Cuánta gente alrededor: menos en calidad media o con el motor ligero.
 		var max_gente := 18 if (Calidad.motor_ligero or Calidad.elegida == Calidad.MEDIO) else 34
 		## Y la densidad elegida al crear el club (0.6 tranquila … 1.4 bulliciosa). Se lee
-		## una vez por paseo (el archivo no cambia mientras se pasea) y se acota por si
-		## el ajuste viniera corrupto.
+		## una vez por paseo (el archivo no cambia mientras se pasea) y se acota por si el ajuste viniera corrupto.
 		if _densidad_gente < 0.0:
 			_densidad_gente = clampf(float(AjustesCiudad.valor("densidad_factor", 1.0)), 0.3, 1.6)
 		max_gente = maxi(4, roundi(max_gente * _densidad_gente))
