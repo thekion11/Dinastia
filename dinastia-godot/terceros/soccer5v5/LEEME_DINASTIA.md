@@ -16,4 +16,4 @@ amigos. NO se guarda aquí: su DIRECCIÓN es https://github.com/Habeeb-Rahman-CA
 nombraban esos clubes (son los colores de cada uno en la paleta): aquí ya van con el nombre modificado, como en el minijuego.
 
 INTEGRADO como minijuego en `res://minijuegos/retro5v5/` (rutas reescritas, sin la fuente Daydream, clubes con nombre modificado y
-jugadores inventados). AVISO: el rótulo `assets/art/ui/.../worldcup-label.png` dice «World Cup» (marca de la FIFA): cambiarlo antes de publicar.
+jugadores inventados). El rótulo `worldcup-label.png` («World Cup», marca registrada de la FIFA) NO se copió al minijuego (01-11); sigue solo aquí.
