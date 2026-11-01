@@ -77,6 +77,9 @@ func _distintas(a: PackedStringArray, b: PackedStringArray) -> int:
 	var n := 0
 	for k in cuenta:
 		n += absi(int(cuenta[k]))
+		## `PARTES_DETALLE=1`: qué filas sobran (para cazar lo que no sale igual entre dos armados).
+		if int(cuenta[k]) != 0 and OS.get_environment("PARTES_DETALLE") == "1":
+			print("  %+d %s" % [int(cuenta[k]), k])
 	return n
 
 func _recorrer(n: Node, filas: PackedStringArray) -> void:
