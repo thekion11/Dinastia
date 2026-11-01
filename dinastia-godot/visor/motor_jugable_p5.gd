@@ -336,6 +336,8 @@ func _tomar(p: Dictionary) -> void:
 		_anim(p, "control_pecho" if (p["anim"] as AnimationPlayer).has_animation("control_pecho") else "golpe_pecho", true, 0.6)   ## (01-11: League-Soccer)
 	elif fuerte > 7.0 and (p["vel"] as Vector3).length() < 2.0:
 		_anim(p, "control_pie" if (p["anim"] as AnimationPlayer).has_animation("control_pie") else "parada_pie", true, 0.6)
+	if MotorControl.se_le_va(self as Object as MotorJugable, p):   ## el primer toque se escapa (U5, 01-11)
+		return
 	poseedor = p
 	pase_a = {}
 	vel_balon = Vector3.ZERO

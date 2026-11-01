@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p2.gd"
-## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable, _probar_presion_zona, _probar_linea_prevista
+## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable, _probar_presion_zona, _probar_linea_prevista, _probar_primer_toque
 
 func _probar_fisica_motor() -> void:
 	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")
@@ -183,4 +183,32 @@ func _probar_linea_prevista() -> void:
 	var con_vel := motor.linea_fuera_de_juego(lado)
 	vis[0]["vel"] = Vector3.ZERO
 	_comprobar(is_equal_approx(con_vel, motor.linea_fuera_de_juego(lado)), "el fuera de juego del árbitro no usa la previsión (%.2f)" % con_vel)
+	(r[1] as Node3D).queue_free()
+
+## EL PRIMER TOQUE QUE SE ESCAPA (01-11-2026, IA U5, `MotorControl`).
+func _probar_primer_toque() -> void:
+	_titulo("PRIMER TOQUE BAJO PRESIÓN")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var loc: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	var gk: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["por"]))
+	for i in vis.size():
+		(vis[i]["node"] as Node3D).position = Vector3(-30.0 + i * 3.0, 0, 40.0)
+	var p: Dictionary = loc[0]
+	(p["node"] as Node3D).position = Vector3.ZERO
+	(p["node"] as Node3D).rotation.y = 0.0
+	motor.balon.position = Vector3(0, 0.11, 0.5)
+	motor.vel_balon = Vector3(0, 0, -6.0)
+	_comprobar(MotorControl.riesgo(motor, p) == 0.0, "balón suave y nadie cerca: control seguro")
+	(vis[0]["node"] as Node3D).position = Vector3(0.6, 0, 0)
+	var con_rival := MotorControl.riesgo(motor, p)
+	_comprobar(con_rival > 0.0, "con un rival a 0,6 m el control puede irse (%.3f)" % con_rival)
+	motor.vel_balon = Vector3(0, 0, 22.0)   ## rápido y por la espalda (mira a +z y el balón va a +z)
+	var detras := MotorControl.riesgo(motor, p)
+	motor.vel_balon = Vector3(0, 0, -22.0)
+	var frente := MotorControl.riesgo(motor, p)
+	_comprobar(detras > frente and frente > con_rival, "rápido cuesta más, y por la espalda más aún (%.3f > %.3f)" % [detras, frente])
+	_comprobar(detras <= MotorControl.TOPE, "nunca pasa del tope (%.3f)" % detras)
+	_comprobar(gk.is_empty() or MotorControl.riesgo(motor, gk[0]) == 0.0, "el portero no se ve afectado")
 	(r[1] as Node3D).queue_free()
