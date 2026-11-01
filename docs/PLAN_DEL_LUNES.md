@@ -1272,15 +1272,11 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 **30. Simulación de Partido (motor y experiencia)**
 - 352. Velocidad de simulación configurable (x1, x2, x4, saltar a evento) — _Afirmar MatchPlayback.VELOCIDADES.size()>=3 y que mas_rapido() sube vel_idx_
 - 353. Botón "saltar al próximo gol" para partidas rápidas — _Con Partido.simular_minuto en bucle hasta que cambie el marcador (lógica en la UI, no extraída a nucleo)_
-- 355. Barra de momentum que muestra qué equipo domina el partido — _Simular un Partido y afirmar que momentum_local() esta en rango y cambia tras un gol (_momentum_push)_
-- 357. Probabilidad de gol en vivo (xG) como estadística opcional — _Partido simulado: afirmar xg_local+xg_visita>0 y ~ remates*0.2_
-- 358. Eventos aleatorios de partido (palo, gol anulado, revisión de VAR) — _Llamar anular_gol_externo y afirmar que baja el marcador; contar tipo=='poste' en eventos de muchos partidos_
 - 360. Cambios en vivo con vista rápida del banco de suplentes — _Partido.cambiar(club, sale, entra) y afirmar once actualizado y límite MAX_CAMBIOS_
 - 361. Instrucciones en vivo (presionar, retrasar líneas, perder tiempo) — _Fijar instr_riesgo=true y comparar fuerza/ goles esperados vs false en muchos partidos_
 - 362. Charla de entretiempo con varios tonos y efecto real en la moral — _Vestuario.charla(tono, ...) y afirmar cambio de moral/ansiedad de los jugadores_
 - 363. Indicador de fatiga por jugador en tiempo real — _MotorJugable.forma_fisica(p) decrece con el tiempo de partido (requiere motor)_
 - 371. Modo "solo resultado" para quienes simulan temporadas rápido — _Mundo.avanzar_semana() x N y afirmar tabla coherente (ya es el flujo base del banco)_
-- 376. Ocasiones claras falladas para generar tensión sin gol — _Contar eventos de fallo/atajada en Partido simulado_
 - 378. IA rival que reacciona a tu táctica a mitad de partido — _Partido con plan_perdiendo!='nada' y marcador adverso cambia tactica.mentalidad_
 
 **31. Táctica y Sistema de Juego**
@@ -1487,7 +1483,6 @@ Hallazgos de código a arreglar: `datos/tablas.json` trae tablas que nada usa (E
 - 800. Narrador de temporada que resume la campaña como relato — _Prensa.narrador_temporada() devuelve texto no vacío_
 
 **44. Árbitros, Reglamento y Disciplina**
-- 801. Árbitros con perfiles distintos (permisivo, tarjetero, casero) — _Partido con arbitro {perfil:'casero'} y muchas simulaciones: más amarillas al visitante_
 - 802. Designación arbitral conocida antes del partido — _Previa.arbitro_de('x',5) igual en llamadas repetidas_
 - 803. Historial de resultados con cada árbitro — _Federacion.anotar_arbitro('A','casero',2,0); texto_arbitro('A')_
 - 804. Reclamo formal por una designación arbitral — _Prensa.arbitro_dudoso('X'); sortear_evento incluye 'reclamo'_
