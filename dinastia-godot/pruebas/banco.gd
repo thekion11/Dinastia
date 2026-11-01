@@ -79,6 +79,7 @@ const SECCIONES := [
 	"_probar_presion_estable",
 	"_probar_presion_zona",
 	"_probar_linea_prevista",
+	"_probar_primer_toque",
 	"_probar_vallas_led",
 	"_probar_ola_grada",
 	"_probar_dificultad_cpu",
@@ -218,7 +219,7 @@ var _tiempos: Array = []
 ## BANCO_GRUPO=<grupo>). Antes de SUBIR sigue mandando el banco entero.
 const GRUPOS := {
 	"partido": ["_probar_partidos", "_probar_previa", "_probar_arbitros", "_probar_tactica_en_movimiento",
-		"_probar_puente3d", "_probar_fisica_motor", "_probar_faltas_puntos", "_probar_ventaja", "_probar_presion_estable", "_probar_presion_zona", "_probar_linea_prevista", "_probar_transmision_y_estadisticas",
+		"_probar_puente3d", "_probar_fisica_motor", "_probar_faltas_puntos", "_probar_ventaja", "_probar_presion_estable", "_probar_presion_zona", "_probar_linea_prevista", "_probar_primer_toque", "_probar_transmision_y_estadisticas",
 		"_probar_arreglos_partido_motor", "_probar_prorroga_y_penales", "_probar_partido_abandonado", "_probar_tanda_c",
 		"_probar_notas", "_probar_dificultad_cpu"],
 	"guardado": ["_probar_guardado", "_probar_guardado_seguro", "_probar_partido_abandonado", "_probar_repetibilidad"],
