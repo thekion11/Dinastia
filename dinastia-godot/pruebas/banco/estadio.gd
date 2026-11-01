@@ -189,3 +189,28 @@ func _ra_nuevo(raiz: Node3D, calentado := false) -> RendimientoAdaptativo:
 		ra._muestras.clear()
 		ra._t_muestra = 0.0
 	return ra
+
+## (01-11) `PeatonQ.terminar` con el nodo aún fuera del árbol no vestía a nadie (salían en ropa
+## interior en el teleférico): ahora se viste al entrar, igual que si ya estuviera, y una sola vez.
+func _probar_peaton_fuera_del_arbol() -> void:
+	_titulo("PEATÓN VESTIDO AUNQUE SE TERMINE FUERA DEL ÁRBOL")
+	var r1 := RandomNumberGenerator.new()
+	r1.seed = 7
+	var d := PeatonQ.crear(r1)
+	var r2 := RandomNumberGenerator.new()
+	r2.seed = 7
+	var ref := PeatonQ.crear(r2)
+	if d.is_empty() or ref.is_empty():
+		_comprobar(false, "PeatonQ.crear da un peatón")
+		return
+	var nodo: Node3D = d["nodo"]
+	PeatonQ.terminar(d)
+	PeatonQ.terminar(d)
+	add_child(nodo)
+	add_child(ref["nodo"])
+	PeatonQ.terminar(ref)
+	var n := nodo.find_children("*", "MeshInstance3D", true, false).size()
+	var n_ref := (ref["nodo"] as Node).find_children("*", "MeshInstance3D", true, false).size()
+	_comprobar(n == n_ref and n > 3, "terminado fuera y metido después lleva las mismas piezas que dentro (%d / %d), sin doblar la ropa" % [n, n_ref])
+	nodo.queue_free()
+	(ref["nodo"] as Node).queue_free()

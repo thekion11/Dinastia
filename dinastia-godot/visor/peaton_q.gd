@@ -50,7 +50,10 @@ static func terminar(d: Dictionary) -> void:
 	if d.is_empty():
 		return
 	var nodo: Node3D = d["nodo"]
+	## Fuera del árbol aún no hay esqueleto listo: se viste al entrar (antes se quedaba en ropa interior).
 	if not nodo.is_inside_tree():
+		if not nodo.tree_entered.is_connected(terminar.bind(d)):
+			nodo.tree_entered.connect(terminar.bind(d), CONNECT_ONE_SHOT)
 		return
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(d["semilla"])

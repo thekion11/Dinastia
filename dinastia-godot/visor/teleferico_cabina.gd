@@ -91,7 +91,7 @@ static func montar(color: Color) -> Node3D:
 
 ## Los viajeros: personas de verdad (`Mini3D.persona`, las mismas de la ciudad), de pie en el suelo de la cabina y a la escala humana
 ## real (la cabina va ×1,8 en el mundo, así que aquí ×1/1,8), mirando a sitios distintos. HAY QUE LLAMARLA con la cabina YA EN EL
-## ÁRBOL: `PeatonQ.terminar` no viste a nadie si el nodo aún no está en él (salían en ropa interior).
+## ÁRBOL: antes `PeatonQ.terminar` no vestía a nadie fuera del árbol (salían en ropa interior); ahora espera a que entre.
 static func poblar(raiz: Node3D, semilla: int) -> int:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = semilla

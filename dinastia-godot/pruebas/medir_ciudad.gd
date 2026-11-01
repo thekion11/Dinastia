@@ -95,6 +95,8 @@ func _process(_d: float) -> void:
 		_m.append(_muestra())
 	if _n == 131:
 		_res["a_pie"] = _media(_m)
+		if OS.get_environment("DETALLE") != "":
+			_detalle_a_pie()
 		var ex: ExploradorCiudad = _v.get("_explorador")
 		_res["circulos"] = ex.cb.circulos.size()
 		var tipos := {}
@@ -248,3 +250,43 @@ func _medir_prim() -> int:
 	for i in 4:
 		await get_tree().process_frame
 	return int(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
+
+## Con DETALLE=1, a pie (31-10, M-476): qué se DIBUJA de verdad desde la cámara de la calle (en el campo de visión y dentro
+## de su distancia de corte), sumado por los dos nodos de arriba; y por qué `Optimizar.agrupar` dejó piezas sueltas.
+func _detalle_a_pie() -> void:
+	var cam := get_viewport().get_camera_3d()
+	if cam == null:
+		return
+	var grupos := {}
+	for n in _v.find_children("*", "GeometryInstance3D", true, false):
+		var g := n as GeometryInstance3D
+		if not g.is_visible_in_tree():
+			continue
+		var c := g.global_transform * g.get_aabb().get_center()
+		var d := cam.global_position.distance_to(c)
+		if (g.visibility_range_end > 0.0 and d > g.visibility_range_end) or not cam.is_position_in_frustum(c):
+			continue
+		var a := g.get_parent()
+		var clave := g.get_class()
+		for k in 2:
+			if a == null or a == _v:
+				break
+			var nom := String(a.name)
+			clave = (a.get_class() if nom.begins_with("@") else nom.rstrip("0123456789_")) + "/" + clave
+			a = a.get_parent()
+		grupos[clave] = int(grupos.get(clave, 0)) + 1
+		## El primer grupo de Godot hacia arriba: lo que impide a `agrupar` juntarla.
+		var q: Node = g
+		while q != null and q != _v:
+			if not q.get_groups().is_empty():
+				var gk := "GRUPO " + str(q.get_groups()[0])
+				grupos[gk] = int(grupos.get(gk, 0)) + 1
+				break
+			q = q.get_parent()
+	var orden := grupos.keys()
+	orden.sort_custom(func(x, y): return grupos[x] > grupos[y])
+	for k in orden.slice(0, 30):
+		print("A_PIE ", grupos[k], "  ", k)
+	for m in Optimizar._motivos:
+		print("MOTIVO ", Optimizar._motivos[m], "  ", m)
+

@@ -57,7 +57,17 @@ func _probar() -> void:
 	## La gente se ve DENTRO: tantas siluetas como pasajeros, y los cristales dejan ver.
 	var real := CityBuilder.autobus(Color(0.2, 0.4, 0.7))
 	add_child(real)
-	var vid := (real.get_child(3) as MeshInstance3D).material_override as StandardMaterial3D   ## (el 4.º: faldón, banda roja, filete, ventanas)
+	## (31-10, M-476: la carrocería va fundida en una malla por material) El cristal: el material semitransparente de sus superficies.
+	var vid: StandardMaterial3D = null
+	for mi: Node in real.find_children("*", "MeshInstance3D", false, false):
+		var mm := (mi as MeshInstance3D).mesh
+		for k in mm.get_surface_count():
+			var sm := mm.surface_get_material(k) as StandardMaterial3D
+			if sm != null and sm.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA:
+				vid = sm
+	_comprobar(vid != null, "el autobús tiene cristales")
+	if vid == null:
+		return
 	_comprobar(vid.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA and vid.albedo_color.a < 0.5, "los cristales del autobús son semitransparentes")
 	real.set_meta("pasajeros", [3, 9, 12])
 	InteriorBus.actualizar(real)
