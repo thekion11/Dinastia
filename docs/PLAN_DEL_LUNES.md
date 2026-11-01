@@ -879,7 +879,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-125 | P2 | PENDIENTE | Sin tácticas de medio campo (doble pivote, falso 9) | sin roles con comportamiento propio |
 | M-126 | P2 | PARCIAL | Cambios de IA por cansancio (60/70/80') fijos | DT rival cambia en 60/70/80' y ajusta la pizarra según marcador (`_dt_rival`); minutos fijos |
 | M-128 | P2 | PARCIAL | Portero con salidas sólo en mano a mano | colocación y achique del portero (14-10); sin salidas aéreas |
-| M-131 | P2 | PARCIAL | Ayudas de asistencia (pase/tiro) con 3 niveles | ayudas por pieza (asistido/manual, auto/semi/manual) en `Mando`; sin perfiles Arcade/Semi/Manual |
 | M-134 | P2 | PARCIAL | Sin cámaras de repetición cinematográficas (grúa, dron) | cámaras «Dron orbital» y otras en el rig; la repetición no alterna planos |
 | M-135 | P2 | PENDIENTE | Sin cámara de gol del cuarto árbitro/línea | sin cámara de línea de gol |
 | M-140 | P2 | PENDIENTE | Descanso: charla de medio tiempo con opciones; sin vestuario 3D… | el descanso vuelve al camarín 2D (`prueba_descanso_3d`); sin cinemática de vestuario |

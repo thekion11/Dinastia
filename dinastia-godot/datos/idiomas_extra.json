@@ -6782,7 +6782,12 @@
   "Tu coche está aparcado a %d m.": "Your car is parked %d m away.",
   "Recreativa: fútbol retro 5 contra 5": "Arcade: retro 5-a-side football",
   "FÚTBOL RETRO": "RETRO FOOTBALL",
-  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Match abandoned: %s is down to fewer than seven players and loses %d-%d."
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Match abandoned: %s is down to fewer than seven players and loses %d-%d.",
+  "PERFIL DE AYUDAS": "ASSIST PROFILE",
+  "Arcade: pase, tiro y cambio asistidos": "Arcade: assisted passing, shooting and switching",
+  "Semi: pase asistido, tiro manual, cambio semiautomático": "Semi: assisted passing, manual shooting, semi-automatic switching",
+  "Manual: tú decides pase, tiro y cambio": "Manual: you control passing, shooting and switching",
+  "Perfil de ayudas: %s": "Assist profile: %s"
  },
  "pt": {
   "Historia": "História",
@@ -13567,7 +13572,12 @@
   "Tu coche está aparcado a %d m.": "O teu carro está estacionado a %d m.",
   "Recreativa: fútbol retro 5 contra 5": "Fliperama: futebol retrô 5 contra 5",
   "FÚTBOL RETRO": "FUTEBOL RETRÔ",
-  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Partida suspensa: %s fica com menos de sete jogadores e perde por %d-%d."
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Partida suspensa: %s fica com menos de sete jogadores e perde por %d-%d.",
+  "PERFIL DE AYUDAS": "PERFIL DE AJUDAS",
+  "Arcade: pase, tiro y cambio asistidos": "Arcade: passe, chute e troca assistidos",
+  "Semi: pase asistido, tiro manual, cambio semiautomático": "Semi: passe assistido, chute manual, troca semiautomática",
+  "Manual: tú decides pase, tiro y cambio": "Manual: você decide passe, chute e troca",
+  "Perfil de ayudas: %s": "Perfil de ajudas: %s"
  },
  "patrones": [
   [
@@ -26085,7 +26095,12 @@
   "Tu coche está aparcado a %d m.": "Ta voiture est garée à %d m.",
   "Recreativa: fútbol retro 5 contra 5": "Borne d'arcade : football rétro à 5 contre 5",
   "FÚTBOL RETRO": "FOOTBALL RÉTRO",
-  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Match arrêté : %s a moins de sept joueurs et perd %d-%d."
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Match arrêté : %s a moins de sept joueurs et perd %d-%d.",
+  "PERFIL DE AYUDAS": "PROFIL D'AIDES",
+  "Arcade: pase, tiro y cambio asistidos": "Arcade : passe, tir et changement assistés",
+  "Semi: pase asistido, tiro manual, cambio semiautomático": "Semi : passe assistée, tir manuel, changement semi-automatique",
+  "Manual: tú decides pase, tiro y cambio": "Manuel : tu décides passe, tir et changement",
+  "Perfil de ayudas: %s": "Profil d'aides : %s"
  },
  "it": {
   "Historia": "Storia",
@@ -32870,7 +32885,12 @@
   "Tu coche está aparcado a %d m.": "La tua auto è parcheggiata a %d m.",
   "Recreativa: fútbol retro 5 contra 5": "Cabinato: calcio retrò 5 contro 5",
   "FÚTBOL RETRO": "CALCIO RETRÒ",
-  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Partita sospesa: %s resta con meno di sette giocatori e perde %d-%d."
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Partita sospesa: %s resta con meno di sette giocatori e perde %d-%d.",
+  "PERFIL DE AYUDAS": "PROFILO DI AIUTI",
+  "Arcade: pase, tiro y cambio asistidos": "Arcade: passaggio, tiro e cambio assistiti",
+  "Semi: pase asistido, tiro manual, cambio semiautomático": "Semi: passaggio assistito, tiro manuale, cambio semiautomatico",
+  "Manual: tú decides pase, tiro y cambio": "Manuale: decidi tu passaggio, tiro e cambio",
+  "Perfil de ayudas: %s": "Profilo di aiuti: %s"
  },
  "de": {
   "Historia": "Geschichte",
@@ -39655,7 +39675,12 @@
   "Tu coche está aparcado a %d m.": "Dein Auto parkt %d m entfernt.",
   "Recreativa: fútbol retro 5 contra 5": "Spielautomat: Retro-Fußball 5 gegen 5",
   "FÚTBOL RETRO": "RETRO-FUSSBALL",
-  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Spiel abgebrochen: %s hat weniger als sieben Spieler und verliert %d:%d."
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Spiel abgebrochen: %s hat weniger als sieben Spieler und verliert %d:%d.",
+  "PERFIL DE AYUDAS": "HILFEN-PROFIL",
+  "Arcade: pase, tiro y cambio asistidos": "Arcade: Pass, Schuss und Wechsel unterstützt",
+  "Semi: pase asistido, tiro manual, cambio semiautomático": "Semi: Pass unterstützt, Schuss manuell, Wechsel halbautomatisch",
+  "Manual: tú decides pase, tiro y cambio": "Manuell: Du entscheidest Pass, Schuss und Wechsel",
+  "Perfil de ayudas: %s": "Hilfen-Profil: %s"
  },
  "ca": {
   "Historia": "Història",
@@ -46440,7 +46465,12 @@
   "Tu coche está aparcado a %d m.": "El teu cotxe està aparcat a %d m.",
   "Recreativa: fútbol retro 5 contra 5": "Màquina recreativa: futbol retro 5 contra 5",
   "FÚTBOL RETRO": "FUTBOL RETRO",
-  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Partit suspès: %s es queda amb menys de set jugadors i el perd %d-%d."
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Partit suspès: %s es queda amb menys de set jugadors i el perd %d-%d.",
+  "PERFIL DE AYUDAS": "PERFIL D'AJUDES",
+  "Arcade: pase, tiro y cambio asistidos": "Arcade: passada, xut i canvi assistits",
+  "Semi: pase asistido, tiro manual, cambio semiautomático": "Semi: passada assistida, xut manual, canvi semiautomàtic",
+  "Manual: tú decides pase, tiro y cambio": "Manual: tu decideixes passada, xut i canvi",
+  "Perfil de ayudas: %s": "Perfil d'ajudes: %s"
  },
  "pl": {
   "Club": "Klub",
@@ -53502,7 +53532,12 @@
   "Tu coche está aparcado a %d m.": "Twój samochód stoi %d m stąd.",
   "Recreativa: fútbol retro 5 contra 5": "Automat: retro piłka nożna 5 na 5",
   "FÚTBOL RETRO": "RETRO PIŁKA",
-  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Mecz przerwany: %s ma mniej niż siedmiu zawodników i przegrywa %d:%d."
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Mecz przerwany: %s ma mniej niż siedmiu zawodników i przegrywa %d:%d.",
+  "PERFIL DE AYUDAS": "PROFIL POMOCY",
+  "Arcade: pase, tiro y cambio asistidos": "Arcade: wspomagane podanie, strzał i zmiana",
+  "Semi: pase asistido, tiro manual, cambio semiautomático": "Semi: wspomagane podanie, ręczny strzał, półautomatyczna zmiana",
+  "Manual: tú decides pase, tiro y cambio": "Ręczny: sam decydujesz o podaniu, strzale i zmianie",
+  "Perfil de ayudas: %s": "Profil pomocy: %s"
  },
  "tr": {
   "Club": "Kulüp",
@@ -60564,6 +60599,11 @@
   "Tu coche está aparcado a %d m.": "Araban %d m ötede park halinde.",
   "Recreativa: fútbol retro 5 contra 5": "Atari makinesi: retro 5'e 5 futbol",
   "FÚTBOL RETRO": "RETRO FUTBOL",
-  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Maç tatil edildi: %s yedi oyuncunun altına düştü ve maçı %d-%d kaybetti."
+  "Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.": "Maç tatil edildi: %s yedi oyuncunun altına düştü ve maçı %d-%d kaybetti.",
+  "PERFIL DE AYUDAS": "YARDIM PROFİLİ",
+  "Arcade: pase, tiro y cambio asistidos": "Arcade: yardımlı pas, şut ve oyuncu değişimi",
+  "Semi: pase asistido, tiro manual, cambio semiautomático": "Yarı: yardımlı pas, manuel şut, yarı otomatik değişim",
+  "Manual: tú decides pase, tiro y cambio": "Manuel: pas, şut ve değişimi sen belirlersin",
+  "Perfil de ayudas: %s": "Yardım profili: %s"
  }
 }
