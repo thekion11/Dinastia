@@ -31,6 +31,7 @@ func _ready() -> void:
 		tot["tiros"] += int(motor.tiros[0]) + int(motor.tiros[1])
 		tot["faltas"] += int(motor.faltas[0]) + int(motor.faltas[1])
 		tot["pases_ok"] += int(motor.pases_ok[0]) + int(motor.pases_ok[1])
+		tot["fueras_juego"] = int(tot.get("fueras_juego", 0)) + int(motor.fueras_de_juego[0]) + int(motor.fueras_de_juego[1])
 		var d := 0
 		for k: String in motor.duelos:
 			d += int(motor.duelos[k])
