@@ -33,7 +33,12 @@ static func ciclo(clave: String, prefijo: String) -> Animation:
 ## «tiro_carrera» SUSTITUYE al hecho a mano (que queda como «tiro_carrera_mano»: se encorvaba y giraba de espaldas al rematar);
 ## «pase_carrera» es nuevo: el pase al correr (el «pase» del mocap es un toque parado, que sigue para los pases sin carrera).
 ## La barrida de League-Soccer NO entra: acaba tumbado boca arriba del todo; la de la UAL2 se ve mejor.
-const GOLPEOS := {"tiro_carrera": ["ls_shot__sprint__030", 0.17, true], "pase_carrera": ["ls_pass__sprint__000", 0.27, false]}
+## Tanda 3 (01-11): controles al recibir alto (los nuestros eran una reacción a un golpe y un aspaviento con la pierna), el
+## tropiezo a la carrera con su levantarse desde boca abajo, y variantes de celebración y lamento (se suman, no sustituyen).
+const GOLPEOS := {"tiro_carrera": ["ls_shot__sprint__030", 0.17, true], "pase_carrera": ["ls_pass__sprint__000", 0.27, false],
+	"control_pecho": ["ls_trap__idle__highballs__000_chest", 0.39, false], "control_pie": ["ls_trap__idle__000_IB000", 0.20, false],
+	"tropiezo": ["ls_trip__trip_t3__sprint__000", 0.04, false], "levantarse_boca_abajo": ["ls_movement_special__idle__special__000_stand_up_from_front", 0.04, false],
+	"celebrar_ls": ["ls_celebration__happy_extreme__000_decel_decel", 0.04, false], "lamento_ls": ["ls_celebration__sad_normal__000", 0.04, false]}
 const ANTES_CONTACTO := 0.04
 
 static func golpeos(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) -> void:
