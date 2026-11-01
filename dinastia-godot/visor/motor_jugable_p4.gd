@@ -292,6 +292,18 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 		_empezar_saque("falta", atacante_local, Vector3(lugar.x, R, lugar.z))
 	return true
 
+## Cae por una falta (31-10): la caída entera, un momento en el suelo y se LEVANTA con el clip de la UAL2 (antes la caída se
+## cortaba a 1,2 s y se ponía a correr de golpe). Mientras, no se mueve (`levanta_hasta`). Cae de ESPALDAS («caida_lesion»):
+## «caida_fea» acaba boca abajo y el clip de levantarse empieza boca arriba (se daba la vuelta de golpe; tira de fotogramas).
+func _caer(p: Dictionary) -> void:
+	var ap: AnimationPlayer = p.get("anim")
+	if not (is_instance_valid(ap) and ap.has_animation("caida_lesion") and AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(p["node"]), "levantarse_suelo")):
+		_anim(p, "caida_fea", true, 1.2)
+		return
+	_anim(p, "caida_lesion", true, 1.9)
+	p["levantar_en"] = t + 1.9
+	p["levanta_hasta"] = t + 3.3
+
 ## BALÓN DIVIDIDO: el más cercano de cada equipo, los dos a menos de 1,7 m de
 ## un balón suelto y raso, llegando con menos de 0,35 s de diferencia.
 func _duelo_dividido() -> void:
@@ -359,7 +371,7 @@ func _duelo_dividido() -> void:
 	var tarde := float(eta[1 - gana]) - float(eta[gana])
 	if tarde > 0.1 and _rng.randf() < float(l["agresividad"]) * 0.2 * _escala_falta():
 		_anim(l, "zancadilla" if _rng.randf() < 0.5 else "entrada_lateral_pie", true)
-		_anim(w, "caida_fea", true, 1.2)
+		_caer(w)
 		_falta(l, w, 0.15 + float(l["agresividad"]) * 0.2, "dividido", "de_pie")
 		return
 	_anim(l, "duelo_empujado_der" if _derecha(l).dot(entre) > 0.0 else "duelo_empujado_izq", true, 0.7)
@@ -428,5 +440,5 @@ func _duelo_hombro(a: Dictionary, c: Dictionary, rel: Vector3, d: float) -> bool
 	if era_suyo and _rng.randf() < (0.08 + float(w["agresividad"]) * 0.08 + m * 0.08) * _escala_falta():
 		## Solo cae si el árbitro la ve (la carga limpia no se pita: sin piscinazos).
 		if _falta(w, l, 0.06 + float(w["agresividad"]) * 0.1, "hombro", "empujon" if float(w["agresividad"]) > 0.7 else "hombro"):
-			_anim(l, "caida_fea", true, 1.2)
+			_caer(l)
 	return true

@@ -17,8 +17,8 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 	var fuerza := vel_balon.length()
 	if not estirada and fuerza < 22.0 and _rng.randf() < float(p["attr"]["par"]) * 0.9 * GestoTecnico.agarre(self):
 		_tomar(p)
-		## El balón va a las manos desde donde estaba (antes saltaba a ellas
-		## en un fotograma: «teletransporte» de hasta 2 m en la sonda, M-114).
+		p["en_manos"] = true   ## (saque de mano, 31-10)
+		## El balón va a las manos desde donde estaba (antes saltaba a ellas en un fotograma: «teletransporte» de hasta 2 m, M-114).
 		aviso.emit("¡Atajada!")
 	else:
 		## Rechace: hacia un lado y, la mitad de las veces, por detrás de la

@@ -337,12 +337,24 @@ func _lanzar_barrida(p: Dictionary) -> void:
 	_mirar(p, atan2(dir.x, dir.z), 0.45)
 	p["barrida_hasta"] = t + 0.45
 	p["barrida_dir"] = dir
-	_anim(p, ["barrida_lateral", "barrida_corta", "barrida_rapida", "barrida_larga"][_rng.randi() % 4], true)
+	## (31-10) Una de cada tres, la barrida de la UAL2: entra, se desliza y se levanta (1,8 s; las hechas a mano duran menos).
+	if _rng.randf() < 0.34 and AnimExtra.unir(p.get("anim"), FutbolistaQ.esqueleto_de(p["node"]), "barrida_real", AnimExtra.BARRIDA_REAL):
+		_anim(p, "barrida_real", true, 1.9)
+	else:
+		_anim(p, ["barrida_lateral", "barrida_corta", "barrida_rapida", "barrida_larga"][_rng.randi() % 4], true)
 
 ## Mientras dura, el que barre no maneja nada (está en el suelo): true.
 func _seguir_barrida(p: Dictionary) -> bool:
+	## LEVANTÁNDOSE (31-10): tras la barrida de la UAL2 sigue en el suelo, frenando, hasta que el clip lo pone de pie (si no, se le
+	## veía deslizarse tumbado a velocidad de carrera).
+	if float(p.get("levanta_hasta", 0.0)) > t:
+		p["objetivo"] = pos(p)
+		p["correr"] = false
+		return true
 	if float(p.get("barrida_hasta", 0.0)) <= 0.0:
 		return false
+	if String(p.get("anim_actual", "")) == "barrida_real":
+		p["levanta_hasta"] = float(p.get("gesto_hasta", 0.0)) - 0.15
 	if not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]) and pos(poseedor).distance_to(pos(p)) < 1.4:
 		p["barrida_hasta"] = 0.0
 		_entrada(p, true)
