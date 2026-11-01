@@ -50,7 +50,7 @@ func _penal_en_juego(gk: Dictionary, cruce: Vector3) -> void:
 		var alcance := 1.4 + (float(gk["attr"]["div"]) + ref) * 0.6
 		para = absf(cruce.x) < alcance and cruce.y < (1.6 if absf(cruce.x) > 2.3 else 2.1) and _rng.randf() < 0.62 + ref * 0.3
 	if para:
-		_parada(gk, cruce, lado != 0)
+		MotorParada.programar(self as Object as MotorJugable, gk, cruce, lado != 0)
 		return
 	## Se tira al lado que eligió (y el balón entra o se va por el otro).
 	if lado != 0:
@@ -63,6 +63,7 @@ func _penal_en_juego(gk: Dictionary, cruce: Vector3) -> void:
 ## Devuelve true si ya actuó (parada o penal). `manual`: lo maneja el usuario, que elige lado con el stick (`guia`,
 ## X del mundo, 0 = no eligió); sin elegir espera a medio segundo y reacciona más flojo; si elige mal no llega.
 func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
+	if MotorParada.revisar(self as Object as MotorJugable, p): return true   ## la parada decidida, cuando llega el balón (01-11)
 	var b := balon.position
 	var arco := _arco_propio(p)
 	var hacia := signf(arco.z)
@@ -71,8 +72,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 		if tz > 0.0 and tz < 1.6:
 			var cruce := b + vel_balon * tz
 			cruce.y = b.y + vel_balon.y * tz - 0.5 * G * tz * tz
-			## UNA decisión por disparo (13-10): con un dado por fotograma lo paraba casi todo (8 de 10).
-			if absf(cruce.x) < PALO + 0.8 and cruce.y < LARGUERO + 0.4 and int(p.get("_patada_vista", -1)) != _n_patada:
+			if absf(cruce.x) < PALO + 0.8 and cruce.y < LARGUERO + 0.4 and int(p.get("_patada_vista", -1)) != _n_patada:   ## UNA decisión por disparo (13-10)
 				## El usuario aún no eligió: se espera (sin gastar la decisión).
 				if manual and absf(guia) < 0.3 and tz > 0.55:
 					return false
@@ -103,7 +103,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 						alcance *= 1.1  ## Eligió bien: se anticipa un poco.
 				if TIRO_PULIDO: prob *= (1.0 - PARADA_LEJOS * pow(clampf(lat / maxf(alcance, 0.1), 0.0, 1.0), 2.0)) * clampf(1.15 - vel_balon.length() / 90.0, 0.7, 1.0)   ## lejos del cuerpo o muy fuerte cuesta más (27-10)
 				if lat < alcance and _rng.randf() < prob:
-					_parada(p, cruce_gk, lat > 1.2)
+					MotorParada.programar(self as Object as MotorJugable, p, cruce_gk, lat > 1.2)
 					return true
 				## NO LLEGA (27-10, §8): se estira hacia el balón y queda batido (antes miraba quieto el gol).
 				if lat > 0.6:
@@ -317,7 +317,7 @@ func _ultima_linea(local: bool) -> float:
 	for q: Dictionary in jugadores:
 		if bool(q["es_local"]) != local or bool(q["por"]):
 			continue
-		var z := pos(q).z
+		var z := pos(q).z + (q["vel"] as Vector3).z * MotorPresion.PREVE_LINEA   ## donde ESTARÁ (U3, 01-11)
 		if not hay or (z - linea) * d < 0.0:
 			linea = z
 			hay = true

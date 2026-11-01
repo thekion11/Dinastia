@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p2.gd"
-## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable, _probar_presion_zona
+## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable, _probar_presion_zona, _probar_linea_prevista
 
 func _probar_fisica_motor() -> void:
 	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")
@@ -162,4 +162,25 @@ func _probar_presion_zona() -> void:
 	_comprobar(not MotorPresion.zona(motor, dueno), "en su propio campo, con presión baja, no sale")
 	(motor.tacticas[1] as Dictionary)["presion"] = 2
 	_comprobar(MotorPresion.zona(motor, dueno), "con presión alta, sí")
+	(r[1] as Node3D).queue_free()
+
+## LÍNEA DE FUERA DE JUEGO PREVISTA (01-11-2026, IA U3): para los desmarques, la defensa se mira donde estará en 0,24 s.
+func _probar_linea_prevista() -> void:
+	_titulo("LÍNEA DE FUERA DE JUEGO PREVISTA")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	var d := motor.dir_ataque(false)
+	for i in vis.size():
+		(vis[i]["node"] as Node3D).position = Vector3(-20.0 + i * 3.0, 0, 0)
+		vis[i]["vel"] = Vector3.ZERO
+	## El último defensor, a 25 m de su arco, sube a 5 m/s: dentro de 0,24 s estará 1,2 m más arriba.
+	(vis[0]["node"] as Node3D).position = Vector3(0, 0, -d * 27.5)
+	vis[0]["vel"] = Vector3(0, 0, d * 5.0)
+	var linea := motor._ultima_linea(false)
+	_comprobar(absf(linea - (-d * 27.5 + d * 1.2)) < 0.01, "la línea se mira donde estará el último (%.2f)" % linea)
+	var lado := signf(motor._arco_propio(vis[0]).z)
+	var con_vel := motor.linea_fuera_de_juego(lado)
+	vis[0]["vel"] = Vector3.ZERO
+	_comprobar(is_equal_approx(con_vel, motor.linea_fuera_de_juego(lado)), "el fuera de juego del árbitro no usa la previsión (%.2f)" % con_vel)
 	(r[1] as Node3D).queue_free()

@@ -75,3 +75,9 @@ static func zona(m: MotorJugable, dueno: Dictionary) -> bool:
 	hasta[defiende_local] = m.t + ZONA_DURA + 2.0 * pr
 	m.set_meta("zona_hasta", hasta)
 	return true
+
+## LÍNEA DE FUERA DE JUEGO PREVISTA (01-11-2026, IA U3, idea de League-Soccer `AI_GetOffsideLine(futureSim_ms=240)`): para los
+## DESMARQUES (`_ultima_linea`: `_companero_al_hueco` y el ataque sin balón) la última línea rival se mira donde estará dentro
+## de 0,24 s, no donde está: el delantero se adelanta a la defensa que sube y no se queda en fuera de juego. El fuera de juego
+## que pita el árbitro (`_foto_offside`) no cambia. `SIN_LINEA_PREVISTA=1` = antes.
+static var PREVE_LINEA := 0.0 if OS.has_environment("SIN_LINEA_PREVISTA") else 0.24
