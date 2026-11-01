@@ -68,6 +68,7 @@ pasa "aspecto de los clubes" "godot --headless --path . res://pruebas/ideas/asp_
 pasa "trofeos por competición" "godot --headless --path . res://pruebas/ideas/tro_recetas.tscn" "FIN. 0 fallos"
 pasa "app Red del móvil" "godot --headless --path . res://pruebas/ideas/red_app.tscn" "FIN. 0 fallos"
 pasa "palmarés en la historia del club" "godot --headless --path . res://pruebas/ideas/pal_clubes.tscn" "FIN. 0 fallos"
+pasa "Países Bajos real y ficticio" "godot --headless --path . res://pruebas/ideas/c1_paises_bajos.tscn" "FIN. 0 fallos"
 pasa "controles táctiles del partido" "godot --headless --path . res://pruebas/ideas/tac_controles.tscn" "FIN. 0 fallos"
 # 6. Todas las pantallas y botones de la interfaz (lento)
 if [ "$1" = "todo" ]; then
