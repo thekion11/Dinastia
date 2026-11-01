@@ -41,7 +41,8 @@ func _listar(d: String) -> void:
 			_cola.append(d.path_join(n))
 	for sub in DirAccess.get_directories_at(d):
 		var ruta := d.path_join(sub)
-		if not sub.begins_with(".") and not CARPETAS_FUERA.has(ruta):
+		## (31-10) Ni lo que Godot ignora (`.gdignore`: `nativo/`, donde el compilador del C++ baja godot-cpp con sus pruebas).
+		if not sub.begins_with(".") and not CARPETAS_FUERA.has(ruta) and not FileAccess.file_exists(ruta.path_join(".gdignore")):
 			_listar(ruta)
 
 func _process(_d: float) -> void:
