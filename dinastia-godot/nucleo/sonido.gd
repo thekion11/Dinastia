@@ -21,7 +21,10 @@ const AJUSTE_DB := {"menu_mover": -8.0, "clic_suave": -21.0, "menu_aceptar": -16
 	## El bombo de la barra con redoblante (VCSL, CC0), 26-10-2026. Ajustes tan
 	## grandes porque la receta era ruido de 50-90 Hz con un pico muy bajo: se
 	## iguala el pico, no se sube la percusión de golpe.
-	"tambor": -19.5, "tambor_visitante": -35.0}
+	"tambor": -19.5, "tambor_visitante": -35.0,
+	## Golpeo de balón y poste grabados de League-Soccer (Apache 2.0, `audio/ui/LICENCIA_LeagueSoccer_Apache-2.0.txt`), 01-11-2026:
+	## el partido jugable no sonaba al golpear ni al dar en el palo. Igualados al pico de la síntesis que sustituyen (+1 dB, `sui_grabados`).
+	"pase_corto": -26.0, "tiro_potente": -25.5, "poste": -12.6, "travesano": -12.6}
 
 func ruta_grabado(nombre: String) -> String:
 	return CARPETA_GRABADOS + nombre + ".ogg"
