@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p2.gd"
-## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable, _probar_presion_zona, _probar_linea_prevista, _probar_primer_toque, _probar_tactica_viva
+## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable, _probar_presion_zona, _probar_linea_prevista, _probar_primer_toque, _probar_tactica_viva, _probar_pase_mejora
 
 func _probar_fisica_motor() -> void:
 	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")
@@ -231,4 +231,39 @@ func _probar_tactica_viva() -> void:
 	_comprobar(MotorTacticaViva.urgencia(motor, true) <= MotorTacticaViva.TOPE, "con tope (%.2f)" % MotorTacticaViva.urgencia(motor, true))
 	motor.control_equipo = 0
 	_comprobar(MotorTacticaViva.urgencia(motor, true) == 0.0, "el equipo del usuario no se toca")
+	(r[1] as Node3D).queue_free()
+
+## EL PASE POR CUÁNTO MEJORA (01-11-2026, IA R2, `MotorPaseMejora`, bandera PMOT_PASE): apagada, la cuenta de siempre; encendida,
+## el rival que llega corriendo a la línea del pase cuenta, y pasar a la espalda cuesta.
+func _probar_pase_mejora() -> void:
+	_titulo("PASE POR MEJORA (BANDERA)")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var loc: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]))
+	for i in vis.size():
+		(vis[i]["node"] as Node3D).position = Vector3(-30.0 + i * 3.0, 0, 45.0)
+		vis[i]["vel"] = Vector3.ZERO
+	var p: Dictionary = loc[0]
+	var q: Dictionary = loc[1]
+	(p["node"] as Node3D).position = Vector3.ZERO
+	(p["node"] as Node3D).rotation.y = 0.0
+	(q["node"] as Node3D).position = Vector3(0, 0, 16.0)
+	q["vel"] = Vector3.ZERO
+	## Un rival a 3 m de la línea del pase, corriendo hacia ella a 7 m/s.
+	(vis[0]["node"] as Node3D).position = Vector3(3.0, 0, 8.0)
+	vis[0]["vel"] = Vector3(-7.0, 0, 0)
+	var antes := MotorPaseMejora.ACTIVO
+	MotorPaseMejora.ACTIVO = false
+	var apagada: Array = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, 16.0))
+	MotorPaseMejora.ACTIVO = true
+	var encendida: Array = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, 16.0))
+	_comprobar(float(apagada[1]) == 0.0, "apagada: el rival a 3 m de la línea no cuenta (%.2f)" % float(apagada[1]))
+	_comprobar(float(encendida[1]) > 1.0, "encendida: el que llega corriendo, sí (%.2f)" % float(encendida[1]))
+	(vis[0]["node"] as Node3D).position = Vector3(-30.0, 0, 45.0)
+	var adelante: float = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, 16.0))[1]
+	(q["node"] as Node3D).position = Vector3(0, 0, -16.0)
+	var atras: float = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, -16.0))[1]
+	_comprobar(atras > adelante + 1.0, "encendida: pasar a la espalda cuesta (%.2f frente a %.2f)" % [atras, adelante])
+	MotorPaseMejora.ACTIVO = antes
 	(r[1] as Node3D).queue_free()

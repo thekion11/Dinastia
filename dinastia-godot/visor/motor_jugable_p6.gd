@@ -333,16 +333,9 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 		if dist < 4.0 or dist > 42.0:
 			continue
 		var progreso := (qp.z - yo.z) * d
-		var libre := 99.0
-		var riesgo := 0.0
-		for r: Dictionary in jugadores:
-			if bool(r["es_local"]) == bool(p["es_local"]):
-				continue
-			libre = minf(libre, pos(r).distance_to(qp))
-			var cerca := Geometry3D.get_closest_point_to_segment(pos(r), yo, qp)
-			var dl := cerca.distance_to(pos(r))
-			if dl < 2.2:
-				riesgo += (2.2 - dl) * 2.4
+		var lr := MotorPaseMejora.libre_y_riesgo(self as Object as MotorJugable, p, q, yo, qp)   ## (R2, 01-11: con PMOT_PASE=1, previsto)
+		var libre: float = lr[0]
+		var riesgo: float = lr[1]
 		var nota := progreso * (CHISPA_AVANCE * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1) \
 				+ 0.03 * float(_tac(bool(p["es_local"]), "verticalidad") - 1)) \
 			+ minf(libre, 10.0) * 0.18 - riesgo - dist * 0.02
