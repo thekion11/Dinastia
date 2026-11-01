@@ -77,6 +77,12 @@ const AYUDAS := {
 	"direccion": ["camara", "campo"],
 	"vibracion": ["normal", "suave", "no"],
 }
+## PERFILES DE AYUDA (01-11-2026, M-131): las tres ayudas del juego de una vez. Lo que no cuadra con ninguno es «personalizado».
+const PERFILES := {
+	"arcade": {"pase": "asistido", "tiro": "asistido", "cambio": "auto"},
+	"semi": {"pase": "asistido", "tiro": "manual", "cambio": "semi"},
+	"manual": {"pase": "manual", "tiro": "manual", "cambio": "manual"},
+}
 static var ayudas := {"pase": "asistido", "tiro": "asistido", "cambio": "auto", "direccion": "camara", "vibracion": "normal"}
 static var esquema := "wasd"
 ## Lo que el jugador cambió a mano: acción -> {"teclas": [..], "botones": [..]}.
@@ -184,6 +190,20 @@ static func restaurar() -> void:
 	ayudas = {"pase": "asistido", "tiro": "asistido", "cambio": "auto", "direccion": "camara"}
 	guardar()
 	aplicar()
+
+## El perfil que cuadra con las ayudas de ahora («arcade», «semi», «manual») o «personalizado».
+static func perfil() -> String:
+	for n: String in PERFILES:
+		var ok := true
+		for k: String in PERFILES[n]:
+			ok = ok and ayuda(k) == String(PERFILES[n][k])
+		if ok:
+			return n
+	return "personalizado"
+
+static func aplicar_perfil(n: String) -> void:
+	for k: String in PERFILES.get(n, {}):
+		fijar_ayuda(k, String(PERFILES[n][k]))
 
 static func fijar_ayuda(k: String, v: String) -> void:
 	if not _cargado:

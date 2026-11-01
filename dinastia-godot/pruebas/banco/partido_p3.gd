@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p2.gd"
-## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable, _probar_presion_zona, _probar_linea_prevista, _probar_primer_toque, _probar_tactica_viva, _probar_pase_mejora, _probar_estilo_club
+## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable, _probar_presion_zona, _probar_linea_prevista, _probar_primer_toque, _probar_tactica_viva, _probar_pase_mejora, _probar_estilo_club, _probar_perfiles_ayuda
 
 func _probar_fisica_motor() -> void:
 	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")
@@ -290,3 +290,20 @@ func _probar_estilo_club() -> void:
 	var con := motor._forma(p, true)
 	_comprobar((con.z - sin.z) * motor.dir_ataque(true) > 1.0, "en `_forma`, el matiz de línea adelanta el bloque (%.2f m)" % ((con.z - sin.z) * motor.dir_ataque(true)))
 	(r[1] as Node3D).queue_free()
+
+## PERFILES DE AYUDA (01-11-2026, M-131): Arcade / Semi / Manual aplican las tres ayudas de una vez.
+func _probar_perfiles_ayuda() -> void:
+	_titulo("PERFILES DE AYUDA")
+	var antes := {}
+	for k: String in ["pase", "tiro", "cambio"]:
+		antes[k] = Mando.ayuda(k)
+	Mando.aplicar_perfil("manual")
+	_comprobar(Mando.ayuda("pase") == "manual" and Mando.ayuda("tiro") == "manual" and Mando.ayuda("cambio") == "manual" and Mando.perfil() == "manual", "Manual: todo a mano")
+	Mando.aplicar_perfil("semi")
+	_comprobar(Mando.ayuda("pase") == "asistido" and Mando.ayuda("tiro") == "manual" and Mando.perfil() == "semi", "Semi: pase asistido y tiro manual")
+	Mando.fijar_ayuda("cambio", "manual")
+	_comprobar(Mando.perfil() == "personalizado", "si tocas una ayuda suelta, el perfil pasa a personalizado")
+	Mando.aplicar_perfil("arcade")
+	_comprobar(Mando.perfil() == "arcade", "Arcade: todo asistido")
+	for k: String in antes:
+		Mando.fijar_ayuda(k, String(antes[k]))
