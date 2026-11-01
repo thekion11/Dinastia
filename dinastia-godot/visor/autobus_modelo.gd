@@ -239,7 +239,44 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 		pl.position = Vector3(0, 0.62, 6.04 if lado2 == 0 else -6.04)
 		pl.rotation.y = 0.0 if lado2 == 0 else PI
 		raiz.add_child(pl)
+	_fundir(raiz)
 	return raiz
+
+## UNA MALLA POR MATERIAL (31-10-2026, M-476): el bus eran ~80 cajas, cilindros y placas sueltas, una llamada de dibujo cada una
+## (dos buses en una parada sumaban ~180 de las ~1.000 de la calle). Como no se mueven entre sí, se funden en una sola
+## `ArrayMesh` con una superficie por material (los mismos materiales: `encender` sigue cambiando los de las luces). Rótulos y
+## el foco no se tocan.
+static func _fundir(raiz: Node3D) -> void:
+	var por_mat := {}
+	var orden: Array = []
+	for h in raiz.get_children():
+		var mi := h as MeshInstance3D
+		if mi == null or mi.mesh == null or mi.material_override == null:
+			continue
+		var m: Material = mi.material_override
+		if not por_mat.has(m):
+			var st := SurfaceTool.new()
+			st.begin(Mesh.PRIMITIVE_TRIANGLES)
+			por_mat[m] = st
+			orden.append(m)
+		for k in mi.mesh.get_surface_count():
+			(por_mat[m] as SurfaceTool).append_from(mi.mesh, k, mi.transform)
+		raiz.remove_child(mi)
+		mi.free()
+	if orden.is_empty():
+		return
+	var malla := ArrayMesh.new()
+	for m: Material in orden:
+		var st: SurfaceTool = por_mat[m]
+		st.commit(malla)
+		malla.surface_set_material(malla.get_surface_count() - 1, m)
+	var todo := MeshInstance3D.new()
+	todo.name = "Carroceria"
+	todo.mesh = malla
+	## Sueltas, `Optimizar.distancias` cortaba cada pieza a 180-600 m; juntas miden 12 m (fuera de su tabla): el corte, aquí.
+	todo.visibility_range_end = 600.0
+	todo.visibility_range_end_margin = 60.0
+	raiz.add_child(todo)
 
 static func _caja(raiz: Node3D, tam: Vector3, pos: Vector3, mat: Material) -> void:
 	var mi := MeshInstance3D.new()

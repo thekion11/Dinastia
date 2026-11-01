@@ -275,9 +275,17 @@ func _detalle_a_pie() -> void:
 			clave = (a.get_class() if nom.begins_with("@") else nom.rstrip("0123456789_")) + "/" + clave
 			a = a.get_parent()
 		grupos[clave] = int(grupos.get(clave, 0)) + 1
+		## El primer grupo de Godot hacia arriba: lo que impide a `agrupar` juntarla.
+		var q: Node = g
+		while q != null and q != _v:
+			if not q.get_groups().is_empty():
+				var gk := "GRUPO " + str(q.get_groups()[0])
+				grupos[gk] = int(grupos.get(gk, 0)) + 1
+				break
+			q = q.get_parent()
 	var orden := grupos.keys()
 	orden.sort_custom(func(x, y): return grupos[x] > grupos[y])
-	for k in orden.slice(0, 25):
+	for k in orden.slice(0, 30):
 		print("A_PIE ", grupos[k], "  ", k)
 	for m in Optimizar._motivos:
 		print("MOTIVO ", Optimizar._motivos[m], "  ", m)
