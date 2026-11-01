@@ -38,7 +38,10 @@ static func ciclo(clave: String, prefijo: String) -> Animation:
 const GOLPEOS := {"tiro_carrera": ["ls_shot__sprint__030", 0.17, true], "pase_carrera": ["ls_pass__sprint__000", 0.27, false],
 	"control_pecho": ["ls_trap__idle__highballs__000_chest", 0.39, false], "control_pie": ["ls_trap__idle__000_IB000", 0.20, false],
 	"tropiezo": ["ls_trip__trip_t3__sprint__000", 0.04, false], "levantarse_boca_abajo": ["ls_movement_special__idle__special__000_stand_up_from_front", 0.04, false],
-	"celebrar_ls": ["ls_celebration__happy_extreme__000_decel_decel", 0.04, false], "lamento_ls": ["ls_celebration__sad_normal__000", 0.04, false]}
+	"celebrar_ls": ["ls_celebration__happy_extreme__000_decel_decel", 0.04, false], "lamento_ls": ["ls_celebration__sad_normal__000", 0.04, false],
+	## Tanda 4: los envíos largos hechos a mano levantaban el talón hasta el glúteo antes de golpear (`league_comparacion_centro_largo.jpg`).
+	"centro": ["ls_highpass__walk__000_long", 0.41, true], "pase_largo": ["ls_highpass__idle__000_long", 0.57, true],
+	"pase_bombeado": ["ls_highpass__idle__020", 0.25, true]}
 const ANTES_CONTACTO := 0.04
 
 static func golpeos(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) -> void:
