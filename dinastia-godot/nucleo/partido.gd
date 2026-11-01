@@ -108,8 +108,13 @@ func _por_id(id: String) -> Jugador:
 			return j
 	return null
 
-## Un gol que pasó en el césped. `autor_id` vacío = en propia puerta.
-func gol_externo(es_local: bool, autor_id: String, asist_id: String) -> void:
+## El minuto de un suceso de la crónica como se dice en la tele: «90+3'» si fue en el descuento del 3D.
+static func texto_minuto(e: Dictionary) -> String:
+	var mas := int(e.get("mas", 0))
+	return ("%d+%d'" % [int(e.get("min", 0)), mas]) if mas > 0 else ("%d'" % int(e.get("min", 0)))
+
+## Un gol que pasó en el césped. `autor_id` vacío = en propia puerta. `mas`: el minuto del descuento en que entró (0 = en juego).
+func gol_externo(es_local: bool, autor_id: String, asist_id: String, mas := 0) -> void:
 	if terminado_ya:
 		return
 	var c := local if es_local else visita
@@ -131,6 +136,8 @@ func gol_externo(es_local: bool, autor_id: String, asist_id: String) -> void:
 		autor.anotar()
 		_notas[autor.id] = minf(float(_notas.get(autor.id, 6.0)) + 1.1, 10.0)
 	cronica.append({"min": minuto, "tipo": "gol", "club": c.id, "autor": autor.nombre if autor else "en propia puerta"})
+	if mas > 0:
+		cronica[-1]["mas"] = mas
 	_momentum_push(2, es_local)
 	gol.emit(c, autor, minuto, asistente)
 
