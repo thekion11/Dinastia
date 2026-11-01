@@ -52,3 +52,26 @@ static func _elegir(dist: Dictionary, previo: String, fuera: String, roles: Dict
 
 static func _nota(dist: Dictionary, roles: Dictionary, id: String) -> float:
 	return float(dist[id]) + (CASTIGO_CENTRAL if not _sin and String(roles.get(id, "")) == "DFC" else 0.0)
+
+## PRESIÓN POR ZONA (01-11-2026, IA U1, idea de League-Soccer `ShouldStartZonePressure`): un gatillo más de `_gatillo_presion`.
+## El equipo que defiende sale a morder si el balón ya está adentrado en el campo rival (territorio > 0,55 − 0,9·presión, con la
+## presión 0/1/2 pasada a 0/0,5/1) y tiene a alguien a menos de 5 + 8·presión m del portador; una vez empieza, aguanta
+## `ZONA_DURA` + 2·presión s aunque el portador salga de la zona. Medido con `SIN_ZONA=1` (= antes).
+const ZONA_DURA := 2.0
+static var _sin_zona := OS.has_environment("SIN_ZONA")
+
+static func zona(m: MotorJugable, dueno: Dictionary) -> bool:
+	if _sin_zona:
+		return false
+	var defiende_local := not bool(dueno["es_local"])
+	var pr := float(m._tac(defiende_local, "presion")) * 0.5
+	var hasta: Dictionary = m.get_meta("zona_hasta", {})
+	if m.t < float(hasta.get(defiende_local, -1.0)):
+		return true
+	## Territorio desde el arco propio del que defiende: 0 en su arco, 1 en el del portador.
+	var terr := 0.5 + m.pos(dueno).z * m.dir_ataque(defiende_local) / (2.0 * m.LARGO)
+	if terr <= 0.55 - 0.9 * pr or m._presion(dueno) > 5.0 + 8.0 * pr:
+		return false
+	hasta[defiende_local] = m.t + ZONA_DURA + 2.0 * pr
+	m.set_meta("zona_hasta", hasta)
+	return true
