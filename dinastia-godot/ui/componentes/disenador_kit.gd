@@ -258,7 +258,7 @@ func _montar() -> void:
 	_pestanas.add_child(_tab_accesorios())
 	_pestanas.add_child(_tab_numeros())
 	_pestanas.add_child(_tab_sponsors())
-	_actualizar()
+	_actualizar(true)
 	Animar.aparecer(marco)
 
 func _vestir_3d() -> void:
@@ -284,6 +284,10 @@ func _process(delta: float) -> void:
 		var b: TextureButton = p[0]
 		if is_instance_valid(b):
 			b.texture_normal = DisenosKit.textura_camiseta(String(p[1]), DisenosKit.colores(_kit), int(_kit.get("trim", 1)), 64)
+	if _refresco_2d > 0.0:
+		_refresco_2d -= delta
+		if _refresco_2d <= 0.0:
+			_pintar_2d()
 	if _refresco_3d > 0.0:
 		_refresco_3d -= delta
 		if _refresco_3d <= 0.0:
