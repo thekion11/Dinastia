@@ -12,6 +12,10 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - **Del dueño**: §0 y §1 (FPS en hardware real, builds, keystore, publicar la política de privacidad, red a Wikimedia).
 - **Auditoría de código del 28-10**: lo arreglado y lo pendiente (materiales sin compartir, vías sin conectar, probables del guardado, `MotorLibre`) está en `CIERRE_2026-10-28.md` §«Auditoría»; las órdenes sin completar y los fallos abiertos, en sus dos secciones siguientes.
 
+## ESTADO AL 02-11 (fases 1-9 hechas)
+- Las 9 fases de la orden 20 están hechas: registro en `docs/04_auditorias/CIERRE_FASES_2026-11-02.md`. Para el dueño:
+  encender o no `PMOT_PASE` (R2), calibrar los goles (≈2,3 por partido) y su nota 1-100 sobre los vídeos (orden 21).
+
 ## ORDEN DE TRABAJO DEL DUEÑO (01-11)
 1) fallos (los 8 de League-Soccer) → 2) clubes (recreación legal) → 3) IA → 4) jugabilidad → 5) optimización → 6) detectar fallos →
 7) sonidos de sistema → 8) minijuegos → 9) entrenamiento.
