@@ -22,6 +22,25 @@ var _orden: Array = []
 var _k := 0
 var _cambia_en := 4.5
 var _tono := Color(0.2, 0.45, 0.3)
+var _etapa: Label
+var _destino := 0.0   ## hasta dónde ha llegado la construcción (0-1), según las etapas que avisa `CityBuilder._marca`
+var _frac := 0.0      ## lo que se dibuja (persigue a `_destino` suavemente)
+static var _actual: PantallaCarga = null
+
+## (2-11, «se demora demasiado»): la barra ya no va y viene sin saber nada; avanza con las etapas de la construcción y dice cuál es. Cada etapa: [fracción hecha, texto].
+const ETAPAS := {
+	"_suelo": [0.12, "Terreno"], "_calles": [0.17, "Calles"], "_estadio": [0.33, "Estadio"], "_parcelas": [0.38, "Instalaciones"],
+	"_barrio_residencial": [0.43, "Barrio del club"], "expansion.construir": [0.72, "Ciudad"], "_arbolado": [0.77, "Árboles y parques"],
+	"_trafico": [0.9, "Tráfico y gente"], "despejar": [0.97, "Últimos detalles"],
+}
+
+## Lo llama la construcción de la ciudad al acabar cada etapa (no hace nada si no hay pantalla de carga).
+static func paso(que: String) -> void:
+	if _actual == null or not is_instance_valid(_actual) or not ETAPAS.has(que):
+		return
+	var e: Array = ETAPAS[que]
+	_actual._destino = maxf(_actual._destino, float(e[0]))
+	_actual._etapa.text = Idiomas.t(String(e[1])) + "…"
 
 ## REHECHA (2-11-2026, queja del dueño: «una pantalla gris, debería notarse que es de carga»): fondo con
 ## el color del club y franjas en diagonal, escudo grande, un anillo con un balón que gira, una barra
@@ -103,6 +122,11 @@ static func mostrar(padre: Node, mensaje: String) -> PantallaCarga:
 	n._barra.color = Color(1.0, 0.82, 0.35)
 	n._barra.size = Vector2(110, 6)
 	pista.add_child(n._barra)
+	n._etapa = Label.new()
+	n._etapa.add_theme_font_size_override("font_size", 15)
+	n._etapa.add_theme_color_override("font_color", Color(0.85, 0.9, 0.85, 0.85))
+	n._etapa.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	caja.add_child(n._etapa)
 	## El consejo en una tarjeta, con el mismo estilo que los diálogos.
 	var tarjeta := PanelContainer.new()
 	tarjeta.add_theme_stylebox_override("panel", CuadroDialogo.estilo_panel())
@@ -126,6 +150,7 @@ static func mostrar(padre: Node, mensaje: String) -> PantallaCarga:
 	n._orden.shuffle()
 	n._poner_consejo()
 	padre.add_child(n)
+	_actual = n
 	n._ajustar()
 	n.get_viewport().size_changed.connect(n._ajustar)
 	return n
@@ -160,8 +185,14 @@ func _process(delta: float) -> void:
 		_anillo.queue_redraw()
 	if _barra != null:
 		var ancho := (_barra.get_parent() as Control).size.x
-		var u := (sin(_t * 2.2) + 1.0) * 0.5
-		_barra.position.x = -_barra.size.x + u * (ancho + _barra.size.x)
+		if _destino > 0.0:
+			## Con etapas conocidas: barra que se llena (con un pequeño avance propio para que no parezca parada entre etapa y etapa).
+			_frac = minf(minf(_frac + delta * 0.02 + maxf(_destino - _frac, 0.0) * delta * 3.0, 0.995), _destino + 0.06)
+			_barra.size.x = ancho * _frac
+			_barra.position.x = 0.0
+		else:
+			var u := (sin(_t * 2.2) + 1.0) * 0.5
+			_barra.position.x = -_barra.size.x + u * (ancho + _barra.size.x)
 	_cambia_en -= delta
 	if _cambia_en <= 0.0 and _tarjeta != null:
 		_cambia_en = 4.5
@@ -233,6 +264,8 @@ static func consejo() -> String:
 
 ## Quita la pantalla con un fundido corto.
 func cerrar() -> void:
+	if _actual == self:
+		_actual = null
 	var tw := create_tween()
 	tw.tween_property(self, "modulate:a", 0.0, 0.25)
 	tw.tween_callback(queue_free)
