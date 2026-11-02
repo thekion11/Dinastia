@@ -114,7 +114,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	key.light_angular_distance = 0.5
 	key.shadow_blur = 1.0
 	key.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS if nivel >= Calidad.ALTO \
-		else DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
+		else DirectionalLight3D.SHADOW_ORTHOGONAL
 	key.directional_shadow_max_distance = 260.0 if nivel >= Calidad.ALTO else 160.0
 	key.directional_shadow_split_1 = 0.05
 	key.directional_shadow_split_2 = 0.15
