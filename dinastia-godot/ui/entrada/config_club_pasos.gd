@@ -115,7 +115,7 @@ func _campo(texto: String, pista: String, maximo: int, tam: int) -> LineEdit:
 	le.text = texto
 	le.placeholder_text = pista
 	le.max_length = maximo
-	le.custom_minimum_size = Vector2(0, 40)
+	le.custom_minimum_size = Vector2(0, EscalaMovil.campo_alto(40))
 	le.add_theme_font_size_override("font_size", tam)
 	le.add_theme_stylebox_override("normal", _caja(Color(0, 0, 0, 0.35), Tema.RADIO, Color(1, 1, 1, 0.14)))
 	le.add_theme_stylebox_override("focus", _caja(Color(0, 0, 0, 0.45), Tema.RADIO, Tema.ORO))
