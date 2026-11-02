@@ -542,8 +542,15 @@ jobs:
           mkdir -p paquetes
           for d in bajados/*/; do n=$(basename "$d"); (cd "$d" && zip -qr "../../paquetes/${n}-${ETIQUETA}.zip" .); done
           ls -la paquetes
+          {
+            echo "Borrador creado por el CI desde la rama ${GITHUB_REF_NAME} (commit ${GITHUB_SHA::8}). Sin caras ni datos reales. Revisar y publicar a mano."
+            echo; echo "| Versión | Archivo |"; echo "|---|---|"
+            for z in paquetes/*.zip; do n=$(basename "$z" .zip); v=$(echo "$n" | sed -E "s/^Dinastia-//; s/-${ETIQUETA}$//" | tr 'A-Z' 'a-z'); i=$v; case "$v" in android-debug|android-aab) i=android ;; esac
+              echo "| <img src=\"RAWURL/${i}.png\" width=\"48\"> | $n.zip |"; done
+          } > notas.md
+          sed -i "s#RAWURL#https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_SHA}/.github/iconos#g" notas.md
           gh release create "$ETIQUETA" paquetes/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --draft \
-            --title "Dinastía $ETIQUETA" --notes "Borrador creado por el CI desde la rama ${GITHUB_REF_NAME} (commit ${GITHUB_SHA::8}). Sin caras ni datos reales. Revisar y publicar a mano."
+            --title "Dinastía $ETIQUETA" --notes-file notas.md
           echo "### 📦 Borrador de Release «$ETIQUETA» creado. Publícalo desde la pestaña Releases." >> "$GITHUB_STEP_SUMMARY"
 
   nativo-arm:

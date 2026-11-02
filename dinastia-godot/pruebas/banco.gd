@@ -190,6 +190,7 @@ const SECCIONES := [
 	"_probar_partido_abandonado",
 	"_probar_no_atravesar_paredes",
 	"_probar_paridad_idiomas",
+	"_probar_insignia_version",
 ]
 
 ## Dónde vive cada grupo, en el orden en que se buscan las secciones.
@@ -229,7 +230,7 @@ const GRUPOS := {
 		"_probar_leyes_pais", "_probar_incumplir_ley", "_probar_vender", "_probar_ojeadores"],
 	"competicion": ["_probar_calendario", "_probar_copa", "_probar_continental", "_probar_selecciones",
 		"_probar_ascensos", "_probar_temporadas"],
-	"textos": ["_probar_paridad_idiomas", "_probar_narracion_traducida", "_probar_tema_y_ortografia", "_probar_carga_de_ui", "_probar_palabras_prohibidas", "_probar_glifos_idiomas", "_probar_logo"],
+	"textos": ["_probar_paridad_idiomas", "_probar_narracion_traducida", "_probar_tema_y_ortografia", "_probar_carga_de_ui", "_probar_palabras_prohibidas", "_probar_glifos_idiomas", "_probar_logo", "_probar_insignia_version"],
 }
 
 const COSTES := {
