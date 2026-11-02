@@ -45,7 +45,7 @@ func _probar_async() -> void:
 	await _pintar("pantalla")
 	var sl: HSlider = null
 	for s: HSlider in _todos(_p._lista_ajustes, "HSlider"):
-		if is_equal_approx(s.min_value, 0.8) and is_equal_approx(s.max_value, 1.4):
+		if is_equal_approx(s.min_value, 0.8) and is_equal_approx(s.max_value, 1.8):
 			sl = s
 	_comprobar(sl != null, "Pantalla tiene el deslizador del tamaño de la interfaz")
 	if sl == null:
