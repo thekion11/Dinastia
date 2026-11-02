@@ -50,6 +50,8 @@ func _correr() -> void:
 		"personaje": await _personaje()
 		"mascota": await _mascota()
 		"equipacion": await _equipacion()
+		"carga": await _carga()
+		"escudo": await _escudos()
 	get_tree().quit()
 
 func _personaje() -> void:
@@ -124,7 +126,33 @@ func _equipacion() -> void:
 			dz = n
 	print("diseñador incrustado: ", dz)
 	if dz != null:
-		dz._aleatorio()
-		await _esperar_s(1.0)
+		for r in 3:
+			dz._aleatorio()
+			await _esperar_s(1.5)
+			await _foto("aleatorio%d" % r)
 		print("kit_x del club tras Aleatorio: ", p.datos.club.kit_x.keys())
 		await _foto("paso_equipacion_aleatorio")
+
+func _carga() -> void:
+	PantallaCarga.club = _m.mi_club()
+	PantallaCarga.mostrar(self, Idiomas.t("Construyendo la ciudad…"))
+	await _esperar_s(1.2)
+	await _foto("a")
+	await _esperar_s(5.0)
+	await _foto("b")
+
+func _escudos() -> void:
+	var x := 20.0
+	for sim in ["", "🦅", "⚽", "⭐", "🔱"]:
+		var c := _m.mi_club()
+		c.esc_simbolo = sim
+		c.esc_forma = "clasico"
+		Escudo.limpiar_cache()
+		var t := TextureRect.new()
+		t.texture = EscudoTexto.textura(c, 160)
+		t.position = Vector2(x, 20)
+		t.custom_minimum_size = Vector2(160, 160)
+		add_child(t)
+		x += 190.0
+	await _esperar_s(0.5)
+	await _foto("simbolos")
