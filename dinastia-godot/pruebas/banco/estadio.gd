@@ -340,3 +340,41 @@ func _probar_visor_pequenos() -> void:
 	cb.queue_free()
 	## Tienda de la gasolinera: solo responde a «tienda_<n>» y necesita vida.
 	_comprobar(not GasolineraTienda.servicio({"vida": null}, "otra_cosa") and not GasolineraTienda.servicio({"vida": null}, "tienda_1"), "sin vida o con otra clave, la tienda no responde")
+
+## M-404: efectos de la ciudad y el teleférico sin prueba directa (fuego, accidente, cinta, banderas del gol, andén).
+func _probar_visor_efectos() -> void:
+	_titulo("EFECTOS DEL VISOR (incendio, accidente, cinta, banderas, andén del teleférico)")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var fuego := IncendioVisual.fuego(raiz, Vector3(5, 0, 5))
+	_comprobar(fuego.get_node_or_null("Llama2") != null and fuego.get_node_or_null("Humo3") != null and fuego.get_node_or_null("LuzFuego") != null, "el fuego tiene 3 llamas, 4 bolas de humo y su luz")
+	IncendioVisual.animar(fuego, 1.0, 1.0)
+	var llama := fuego.get_node("Llama0") as MeshInstance3D
+	var luz_viva := (fuego.get_node("LuzFuego") as OmniLight3D).light_energy
+	IncendioVisual.animar(fuego, 1.0, 0.0)
+	_comprobar(llama.scale.x < 0.1 and (fuego.get_node("LuzFuego") as OmniLight3D).light_energy < luz_viva * 0.1, "al apagarse las llamas encogen y la luz se va")
+	IncendioVisual.animar(null, 0.0, 1.0)   ## no revienta con nulo
+	var humo_y := (fuego.get_node("Humo0") as MeshInstance3D).position.y
+	_comprobar(humo_y >= 7.0, "el humo sube sobre las llamas (y = %.1f)" % humo_y)
+	var acc := IncendioVisual.accidente(raiz, Vector3(-20, 0, 0))
+	_comprobar(acc.get_node_or_null("Intermitente3") != null, "el accidente lleva sus cuatro intermitentes")
+	IncendioVisual.parpadeo(acc, 0.1)
+	var visible_a := (acc.get_node("Intermitente0") as MeshInstance3D).visible
+	IncendioVisual.parpadeo(acc, 0.5)
+	_comprobar(visible_a and not (acc.get_node("Intermitente0") as MeshInstance3D).visible, "los intermitentes parpadean")
+	var cinta := IncendioVisual.cinta(raiz, Vector3(0, 0, 20))
+	_comprobar(cinta.get_child_count() == 8, "la cinta: 4 postes y 4 cordones (%d)" % cinta.get_child_count())
+	## Banderas del gol: tres planos con shader (o nada con el motor ligero).
+	var sitios := [Vector3(30, 5, 0), Vector3(-30, 5, 0), Vector3(0, 5, 40), Vector3(0, 5, -40)]
+	var ban := BanderasGrada.lanzar(raiz, Color.RED, Color.WHITE, sitios)
+	if Calidad.motor_ligero:
+		_comprobar(ban == null, "con el motor ligero no hay banderas")
+	else:
+		_comprobar(ban != null and ban.get_child_count() == 3, "tres banderas con los colores del club")
+		_comprobar(BanderasGrada.lanzar(raiz, Color.RED, Color.WHITE, []) == null, "sin sitios en la grada no lanza nada")
+	## Andén del teleférico: deja piezas y no revienta.
+	var anden := Node3D.new()
+	raiz.add_child(anden)
+	var n_det := TelefericoEstacion.detalles(anden)
+	_comprobar(n_det > 0 and anden.get_child_count() > 0, "el andén del teleférico recibe sus detalles (%d)" % n_det)
+	raiz.queue_free()
