@@ -143,3 +143,28 @@ func _probar_perfiles_mando() -> void:
 	Mando.aplicar()
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(MandoPerfiles.ruta))
 	MandoPerfiles.ruta = ruta_antes
+
+## M-441 (2-11-2026): el teclado en pantalla para el mando (sin esperas: el banco no aguarda a las secciones).
+func _probar_teclado_pantalla() -> void:
+	_titulo("TECLADO EN PANTALLA (M-441)")
+	_comprobar(not TecladoPantalla.hace_falta() or not Input.get_connected_joypads().is_empty(), "sin mando no hace falta (en el banco no hay mando)")
+	TecladoPantalla.forzar = true
+	_comprobar(TecladoPantalla.hace_falta(), "con mando (forzado) sí")
+	var campo := LineEdit.new()
+	add_child(campo)
+	var enviado: Array = []
+	campo.text_submitted.connect(func(tx: String) -> void: enviado.append(tx))
+	var t := TecladoPantalla.new()
+	t.objetivo = campo
+	add_child(t)
+	_comprobar(t._teclas.size() == 40, "cuarenta teclas en cuatro filas")
+	t._escribir("a")
+	t._escribir("n")
+	t._escribir("a")
+	t._borrar()
+	t._escribir("i")
+	_comprobar(campo.text == "Ani", "escribe con mayúscula solo la primera y borra (%s)" % campo.text)
+	t.aceptar()
+	_comprobar(enviado == ["Ani"] and TecladoPantalla._saltar_foco == false and campo.has_focus(), "Aceptar envía el texto y devuelve el foco al campo sin reabrir el teclado")
+	TecladoPantalla.forzar = false
+	campo.queue_free()
