@@ -168,15 +168,10 @@ func construir() -> void:
 		metro.montar(self)
 		_bocas_metro()
 	await b._marca("exp.metro")
-	_marquesinas_bus()
-	_guirnaldas()
-	_farolas()
-	_mobiliario_urbano()
-	_placas_de_calle()
-	_orillas_nucleo()
-	_obras_en_calle()
-	_kenney_calles()
-	await b._marca("exp.mobiliario")
+	if CityBuilder.diferir:
+		tardio_pendiente = true   ## el mobiliario urbano se hace después (`ExpansionTardia`)
+	else:
+		await ExpansionTardia.mobiliario(self)
 	if not CityBuilder.modo_prologo:   ## lo lejano, fuera del prólogo
 		cuenta["autopista"] = Autopista.montar(b)
 		_parque_eolico()

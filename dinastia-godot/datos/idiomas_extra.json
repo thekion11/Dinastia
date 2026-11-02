@@ -7022,7 +7022,8 @@
   "Barrio del club": "Club neighbourhood",
   "Árboles y parques": "Trees and parks",
   "Tráfico y gente": "Traffic and people",
-  "Últimos detalles": "Final touches"
+  "Últimos detalles": "Final touches",
+  "Terminando la ciudad…": "Finishing the city…"
  },
  "pt": {
   "Historia": "História",
@@ -14047,7 +14048,8 @@
   "Barrio del club": "Bairro do clube",
   "Árboles y parques": "Árvores e parques",
   "Tráfico y gente": "Trânsito e gente",
-  "Últimos detalles": "Últimos detalhes"
+  "Últimos detalles": "Últimos detalhes",
+  "Terminando la ciudad…": "Terminando a cidade…"
  },
  "patrones": [
   [
@@ -26849,7 +26851,8 @@
   "Barrio del club": "Quartier du club",
   "Árboles y parques": "Arbres et parcs",
   "Tráfico y gente": "Circulation et gens",
-  "Últimos detalles": "Derniers détails"
+  "Últimos detalles": "Derniers détails",
+  "Terminando la ciudad…": "Finalisation de la ville…"
  },
  "it": {
   "Historia": "Storia",
@@ -33874,7 +33877,8 @@
   "Barrio del club": "Quartiere del club",
   "Árboles y parques": "Alberi e parchi",
   "Tráfico y gente": "Traffico e gente",
-  "Últimos detalles": "Ultimi dettagli"
+  "Últimos detalles": "Ultimi dettagli",
+  "Terminando la ciudad…": "Completamento della città…"
  },
  "de": {
   "Historia": "Geschichte",
@@ -40899,7 +40903,8 @@
   "Barrio del club": "Vereinsviertel",
   "Árboles y parques": "Bäume und Parks",
   "Tráfico y gente": "Verkehr und Menschen",
-  "Últimos detalles": "Letzte Details"
+  "Últimos detalles": "Letzte Details",
+  "Terminando la ciudad…": "Stadt wird fertiggestellt…"
  },
  "ca": {
   "Historia": "Història",
@@ -47924,7 +47929,8 @@
   "Barrio del club": "Barri del club",
   "Árboles y parques": "Arbres i parcs",
   "Tráfico y gente": "Trànsit i gent",
-  "Últimos detalles": "Últims detalls"
+  "Últimos detalles": "Últims detalls",
+  "Terminando la ciudad…": "Acabant la ciutat…"
  },
  "pl": {
   "Club": "Klub",
@@ -55224,7 +55230,8 @@
   "Barrio del club": "Dzielnica klubu",
   "Árboles y parques": "Drzewa i parki",
   "Tráfico y gente": "Ruch i ludzie",
-  "Últimos detalles": "Ostatnie szczegóły"
+  "Últimos detalles": "Ostatnie szczegóły",
+  "Terminando la ciudad…": "Kończenie budowy miasta…"
  },
  "tr": {
   "Club": "Kulüp",
@@ -62524,6 +62531,7 @@
   "Barrio del club": "Kulüp mahallesi",
   "Árboles y parques": "Ağaçlar ve parklar",
   "Tráfico y gente": "Trafik ve insanlar",
-  "Últimos detalles": "Son rötuşlar"
+  "Últimos detalles": "Son rötuşlar",
+  "Terminando la ciudad…": "Şehir tamamlanıyor…"
  }
 }
