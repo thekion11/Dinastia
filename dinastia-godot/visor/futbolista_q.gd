@@ -48,18 +48,38 @@ const MODELOS_AJENOS := {
 	"kk_esq_picaro": ["Esqueleto pícaro", "res://assets/characters/kaykit/Skeleton_Rogue.glb"],
 	"kk_esq_secuaz": ["Esqueleto secuaz", "res://assets/characters/kaykit/Skeleton_Minion.glb"],
 }
+## Los «Modular Men/Women» de Quaternius (CC0): civiles sin animaciones; `IdleProcedural` les da vida.
+## Clave → [nombre, ruta, cuerpo].
+const MODULARES_H := {"Adventurer": "Aventurero", "Beach": "Playa", "Casual": "Casual", "Casual2": "Casual 2", "Farmer": "Granjero",
+	"King": "Rey", "Punk": "Punk", "Spacesuit": "Astronauta", "Suit": "Traje", "Swat": "SWAT", "Worker": "Obrero"}
+const MODULARES_M := {"Adventurer": "Aventurera", "Casual": "Casual", "Formal": "Formal", "Medieval": "Medieval", "Punk": "Punk",
+	"SciFi": "Ciencia ficción", "Soldier": "Soldado", "Suit": "Traje", "Witch": "Bruja", "Worker": "Obrera"}
+static var _modulares: Dictionary = {}
+## Todos los modelos ajenos: los KayKit y los modulares.
+static func todos_ajenos() -> Dictionary:
+	if _modulares.is_empty():
+		for k: String in MODULARES_H:
+			_modulares["mh_" + k.to_lower()] = [MODULARES_H[k], "res://assets/characters/modular/men/%s.glb" % k, "male"]
+		for k: String in MODULARES_M:
+			_modulares["mm_" + k.to_lower()] = [MODULARES_M[k], "res://assets/characters/modular/women/%s.glb" % k, "female"]
+		for k: String in MODELOS_AJENOS:
+			var f: Array = MODELOS_AJENOS[k]
+			_modulares[k] = [f[0], f[1], ""]
+	return _modulares
+
 const ARMAS := ["shield", "sword", "axe", "staff", "knife", "spellbook", "wand", "crossbow", "bow", "arrow", "blade", "mug", "hammer", "dagger", "quiver", "cross"]
 
 ## ¿Está el modelo ajeno en el juego?
 static func ajeno_disponible(clave: String) -> bool:
-	return MODELOS_AJENOS.has(clave) and ResourceLoader.exists(String((MODELOS_AJENOS[clave] as Array)[1]))
+	var t := todos_ajenos()
+	return t.has(clave) and ResourceLoader.exists(String((t[clave] as Array)[1]))
 
 ## Arma un modelo ajeno a `altura` m (medida por sus mallas) con su «Idle» en bucle y sin armas.
 ## Devuelve {"nodo","modelo","anim","altura","cuerpo","ajeno"} (sin esqueleto Quaternius). `padre` en el árbol.
 static func ajeno(padre: Node3D, clave: String, altura: float) -> Dictionary:
 	if not ajeno_disponible(clave):
 		return {}
-	var packed: PackedScene = load(String((MODELOS_AJENOS[clave] as Array)[1]))
+	var packed: PackedScene = load(String((todos_ajenos()[clave] as Array)[1]))
 	if packed == null:
 		return {}
 	var modelo: Node3D = packed.instantiate()
@@ -87,7 +107,14 @@ static func ajeno(padre: Node3D, clave: String, altura: float) -> Dictionary:
 		modelo.position.y = -ymin * altura / h
 	var ap: AnimationPlayer = null
 	var aps := modelo.find_children("*", "AnimationPlayer", true, false)
-	if not aps.is_empty():
+	if aps.is_empty():
+		## Sin clips (los modulares): reposo procedural.
+		var sks := modelo.find_children("*", "Skeleton3D", true, false)
+		if not sks.is_empty():
+			var ip := IdleProcedural.new()
+			raiz.add_child(ip)
+			ip.configurar(sks[0] as Skeleton3D)
+	else:
 		ap = aps[0] as AnimationPlayer
 		for n: String in ["Idle", "Unarmed_Idle"]:
 			if ap.has_animation(n):
