@@ -20,3 +20,16 @@ func _probar() -> void:
 	var n2 := PantallaCarga.mostrar(c, "Construyendo la ciudad…")
 	await get_tree().process_frame
 	_comprobar(n2.size.x >= vp.x - 1.0 and n2.size.y >= vp.y - 1.0, "con un Control de tamaño 0 de padre también cubre la ventana (%s)" % str(n2.size))
+	## La barra avanza con las etapas de la construcción.
+	PantallaCarga.paso("_suelo")
+	PantallaCarga.paso("_estadio")
+	_comprobar(is_equal_approx(n2._destino, 0.33) and n2._etapa.text != "", "al acabar el estadio la barra va por el 33 %% y dice «%s»" % n2._etapa.text)
+	PantallaCarga.paso("_calles")   ## una etapa anterior no retrocede la barra
+	_comprobar(is_equal_approx(n2._destino, 0.33), "y no retrocede si llega un aviso de una etapa anterior")
+	for i in 120:
+		n2._process(0.05)
+	_comprobar(n2._frac >= 0.33 and n2._frac < 0.5 and n2._barra.size.x > 0.0, "la barra se dibuja hasta ahí (%.2f)" % n2._frac)
+	var todas := true
+	for k: String in PantallaCarga.ETAPAS:
+		todas = todas and Idiomas.t(String((PantallaCarga.ETAPAS[k] as Array)[1])) != ""
+	_comprobar(todas, "todas las etapas tienen texto")
