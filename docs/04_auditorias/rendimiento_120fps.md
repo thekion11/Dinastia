@@ -74,3 +74,10 @@ Siguiente por ms: `personal_estadio` (0,97, solo debería correr con el estadio 
 
 ### Tanda 4b (2-11) — tres recortes pequeños, SIN ganancia demostrada
 Personal del estadio con la cámara a >260 m (1 de cada 10 fotogramas, tiempo acumulado), `AnimTransiciones` solo con reproductor activo y semáforos reescritos solo cada medio segundo. Base medida después: **7,48 ms** (antes 7,23): dentro del ruido de la medición (~0,5 ms; clases que antes valían 0 salen con −0,5). Se dejan porque son lógicamente correctos, de bajo riesgo (banco ciudad y estadio 0 fallos) y costaban 0,5-1 ms por separado en la primera medición, pero **no se puede afirmar que bajen el tiempo total**. Para medir cambios de menos de 0,5 ms hace falta repetir ≥5 veces y promediar, o un perfilador de scripts en hardware real.
+
+## CORRECCIÓN sobre las tandas 4 y 4b (2-11) — el tiempo de fotograma sin pantalla tiene un SUELO de 6,9 ms
+Una escena vacía con `godot --headless` da **6,90 ms por fotograma** (con o sin `--max-fps`, `--disable-vsync`): el bucle sin render espera hasta ese mínimo. Por eso:
+- Las cifras de CPU de la ciudad («8,91 → 7,23 → 7,48 ms») NO son coste de scripts puro: mezclan el suelo; el −19 % de la pausa de AnimationPlayer no se puede afirmar con ese método, y el «ruido de ~0,5 ms» tampoco era ruido de scripts. La medición del partido (todo −0,00 ms, base 6,90) estaba totalmente tapada por el suelo.
+- Los cambios de la tanda 4/4b (pausa de AnimationPlayer a >260 m, personal lejano, AnimTransiciones, semáforos) siguen siendo correctos (banco 0 fallos) pero **sin ganancia demostrada**.
+- Método válido: **CPU del proceso** (`/proc/self/stat`, utime+stime, todos los hilos) por fotograma, como hace `pruebas/medir_cpu_partido.gd`, en máquina SIN otras cargas y con ≥150 fotogramas por muestra (el reloj de /proc va a 10 ms). El primer intento de esa medición salió inservible (otras cargas en paralelo); falta repetirla en limpio.
+- Lo que sí es fiable y comparable: triángulos, llamadas, objetos y memoria (tandas 1-3), y el presupuesto del recorrido.
