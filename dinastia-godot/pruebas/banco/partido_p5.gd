@@ -211,6 +211,13 @@ func _probar_arreglos_partido_motor() -> void:
 	Calidad.motor_ligero = true
 	_comprobar(not FestejoGrada.activo(), "festejo: apagado con el motor ligero")
 	Calidad.motor_ligero = ligero
+	## BANDERAS GRANDES (2-11-2026): el gol las lanza (antes no las llamaba nadie) y se cuelgan de la grada.
+	_comprobar(FileAccess.get_file_as_string("res://visor/festejo_grada.gd").contains("BanderasGrada.lanzar("), "festejo: el gol lanza las banderas grandes")
+	var raiz_b := Node3D.new()
+	add_child(raiz_b)
+	var ban := BanderasGrada.lanzar(raiz_b, Color.RED, Color.WHITE, [Vector3(30, 2, 0), Vector3(-30, 2, 8), Vector3(0, 2, 40), Vector3(0, 2, -40)], 8.0, 3)
+	_comprobar(ban != null and ban.get_child_count() == 3, "banderas: tres, con los colores del club (%d)" % (ban.get_child_count() if ban != null else -1))
+	raiz_b.queue_free()
 
 
 func _probar_transmision_y_estadisticas() -> void:
