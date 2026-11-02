@@ -41,6 +41,7 @@ func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 
 		h = d / dist * vh
 	vel_balon = Vector3(h.x, vy, h.z)
 	giro_balon = Vector3(0, efecto, 0)
+	Sonido.toca("tiro_potente" if vh > 22.0 else "pase_corto", Sonido.Bus.EFECTOS, clampf(remap(vh, 6.0, 30.0, -9.0, 2.0), -9.0, 2.0))   ## golpeo de League-Soccer; más fuerte cuanto más potente (M-320)
 	if anim == "saque_mano":
 		## Lo retiene en la mano mientras carga el brazo y lo suelta al lanzar (`_retener_en_mano`, 31-10).
 		_en_mano = {"p": p, "hasta": t + SUELTA_MANO, "vel": vel_balon}
@@ -91,6 +92,7 @@ func _cabezazo(p: Dictionary) -> void:
 				clampf(_rng.randf_range(0.3, 1.4) + _rng.randf_range(-err, err) * 0.6, 0.15, 3.5), arco.z)
 		_patear(p, destino, 14.0 + float(p["attr"]["tir"]) * 6.0, 0.0, 0.0, "cabezazo")
 		tiros[0 if bool(p["es_local"]) else 1] += 1
+		_cerrar_tiro("fallo")   ## (01-11) el remate anterior aún abierto se cierra (ver `_tirar`)
 		_tiro_vivo = {"p": p, "t": t, "clase": "cabeza"}
 		_contar("tiro_cabeza")
 	else:
@@ -331,16 +333,9 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 		if dist < 4.0 or dist > 42.0:
 			continue
 		var progreso := (qp.z - yo.z) * d
-		var libre := 99.0
-		var riesgo := 0.0
-		for r: Dictionary in jugadores:
-			if bool(r["es_local"]) == bool(p["es_local"]):
-				continue
-			libre = minf(libre, pos(r).distance_to(qp))
-			var cerca := Geometry3D.get_closest_point_to_segment(pos(r), yo, qp)
-			var dl := cerca.distance_to(pos(r))
-			if dl < 2.2:
-				riesgo += (2.2 - dl) * 2.4
+		var lr := MotorPaseMejora.libre_y_riesgo(self as Object as MotorJugable, p, q, yo, qp)   ## (R2, 01-11: con PMOT_PASE=1, previsto)
+		var libre: float = lr[0]
+		var riesgo: float = lr[1]
 		var nota := progreso * (CHISPA_AVANCE * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1) \
 				+ 0.03 * float(_tac(bool(p["es_local"]), "verticalidad") - 1)) \
 			+ minf(libre, 10.0) * 0.18 - riesgo - dist * 0.02

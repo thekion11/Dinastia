@@ -2,7 +2,8 @@ extends BaseIdea
 ## Los clics de interfaz grabados (Kenney, CC0) se cargan del .ogg y lo demás sigue sintetizado.
 
 const GRABADOS := ["menu_mover", "clic_suave", "menu_aceptar", "clic", "menu_atras", "menu_seccion", "silbato",
-	"pitido_final", "medio_tiempo", "tambor", "tambor_visitante"]
+	"pitido_final", "medio_tiempo", "tambor", "tambor_visitante",
+	"pase_corto", "tiro_potente", "poste", "travesano"]   ## (01-11: League-Soccer)
 
 func _probar() -> void:
 	_titulo("SONIDO: grabaciones de interfaz en audio/ui (sui)")

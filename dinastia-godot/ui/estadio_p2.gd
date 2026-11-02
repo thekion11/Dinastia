@@ -195,6 +195,7 @@ func _actualizar_tacticas() -> void:
 		var mio := c.id == Partido.ctx_club_id
 		var t := MotorJugable.tactica_desde(c.tactica, mio and partido.instr_riesgo, mio and partido.instr_tiempo)
 		t.merge(_ajuste_rival[i], true)
+		t.merge(MotorTacticaViva.estilo_club(c), false)   ## el estilo propio del club (IA U8, 01-11)
 		_motor.tacticas[i] = t
 
 func _abrir_panel_dt() -> void:

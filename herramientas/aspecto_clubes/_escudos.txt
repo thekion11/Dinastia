@@ -385,3 +385,7 @@ FC Cincinnati||||CIN|||
 Nashville SC|circulo||lobo||||
 St. Louis City|cruzado|||STL|||
 Charlotte FC|||corona||||
+Ajax|circulo|aro||AFC/#d2122e|#ffffff|#d2122e|
+PSV|escudo|franjas||PSV/#14171c|#ed1c24|#ffffff|
+Go Ahead Eagles|clasico|liso|aguila||#e30613|#ffd100|
+Feyenoord|escudo|tercios_v|||#e30613|#ffffff|#14171c

@@ -76,7 +76,6 @@ Los encabezados del plan dan cifras viejas (F0 «33» tiene 23 filas, F1 «36» 
 
 **Partido**
 - M-128: Portero con salidas aéreas y algo más seguro (pasada final del motor).
-- M-131: Perfiles de ayuda Arcade / Semi / Manual (las ayudas sueltas ya existen).
 - M-096: Mezcla entre clips del partido variable, no fija 0,25 s (movimiento natural).
 - M-097: Pies que patinan en el partido: bloqueo de pies como en la ciudad.
 - M-038: Hinchas de la grada cortados en la cadera: fallo visible desde la TV.
@@ -124,21 +123,12 @@ Escribir la prueba del campo «cómo probar» del plan y mirarlo en el partido o
 
 **Partido**
 - 143: Mosaicos y coreografías en el estadio
-- 251: Clima que afecta partidos y asistencia
 - 352: Velocidad de simulación configurable (x1, x2, x4, saltar a evento)
 - 353: Botón "saltar al próximo gol" para partidas rápidas
-- 355: Barra de momentum que muestra qué equipo domina el partido
-- 357: Probabilidad de gol en vivo (xG) como estadística opcional
-- 358: Eventos aleatorios de partido (palo, gol anulado, revisión de VAR)
 - 360: Cambios en vivo con vista rápida del banco de suplentes
-- 361: Instrucciones en vivo (presionar, retrasar líneas, perder tiempo)
-- 362: Charla de entretiempo con varios tonos y efecto real en la moral
 - 363: Indicador de fatiga por jugador en tiempo real
 - 371: Modo "solo resultado" para quienes simulan temporadas rápido
-- 376: Ocasiones claras falladas para generar tensión sin gol
-- 378: IA rival que reacciona a tu táctica a mitad de partido
 - 383: Roles por posición (lateral ofensivo, pivote, falso 9, mediapunta)
-- 1036: Alerta si intentas avanzar con alineación inválida
 - 1062: Sonido ambiente de estadio durante el partido
 - 1063: Silbato, murmullo y explosión de gol como capas separadas
 - 1067: Sonido distintivo para el gol propio y para el gol rival

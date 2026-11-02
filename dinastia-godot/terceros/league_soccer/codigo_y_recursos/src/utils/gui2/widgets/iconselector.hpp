@@ -1,0 +1,69 @@
+#ifndef _HPP_GUI2_VIEW_ICONSELECTOR
+#define _HPP_GUI2_VIEW_ICONSELECTOR
+
+#include "../view.hpp"
+#include "SDL2/SDL_ttf.h"
+#include "caption.hpp"
+#include "image.hpp"
+#include "scene/objects/image2d.hpp"
+
+namespace blunted {
+
+struct Gui2IconSelectorEntry {
+  std::string caption;
+  std::string id;
+  Gui2Image* icon;
+};
+
+class Gui2IconSelector : public Gui2View {
+public:
+  Gui2IconSelector(Gui2WindowManager* windowManager, const std::string& name, float x_percent,
+                   float y_percent, float width_percent, float height_percent,
+                   const std::string& caption);
+  virtual ~Gui2IconSelector();
+
+  virtual void GetImages(std::vector<boost::intrusive_ptr<Image2D>>& target);
+
+  virtual void Process();
+  virtual void Redraw();
+
+  std::string GetSelectedEntryID() {
+    if (entries.size() > 0)
+      return entries.at(selectedEntry).id;
+    else
+      return "";
+  }
+  void ClearEntries();
+  void AddEntry(const std::string& id, const std::string& caption, const std::string& imageFile);
+  bool SetSelectedEntryIndex(int entryIndex);
+
+  virtual void ProcessWindowingEvent(WindowingEvent* event);
+
+  virtual void OnGainFocus();
+  virtual void OnLoseFocus();
+
+  boost::signals2::signal<void()> sig_OnClick;
+  boost::signals2::signal<void()> sig_OnChange;
+
+protected:
+  boost::intrusive_ptr<Image2D> image;
+
+  float iconWidthPercent;
+  float iconHeightPercent;
+
+  std::string caption;
+
+  std::vector<Gui2IconSelectorEntry> entries;
+  Gui2Caption* titleCaption;
+  Gui2Caption* selectedCaption;
+
+  int selectedEntry;
+  float visibleSelectedEntry;
+
+  int fadeOut_ms;
+  int fadeOutTime_ms;
+};
+
+}  // namespace blunted
+
+#endif

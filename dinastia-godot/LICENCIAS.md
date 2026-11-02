@@ -135,3 +135,18 @@ Quaternius, CC0-1.0 (vía `trebeljahr/quaternius-showcase/LICENSES.md`). 21 civi
 
 ## Avatares VRM de Numinia — `assets/characters/vrm/`
 PabloFMM, CC0 (`numinia-digital-goods-data/data/avatars/numinia-avatars.json`): Starter Avatar 01 y Avatar Arla (~3,9 MB c/u), renombrados .vrm → .glb. Se pierde el sombreado MToon. Los demás avatares de ese repo no se usan (autores distintos o sin licencia clara).
+## Terceros sumados el 31-10 y el 01-11-2026 (orden del dueño: «agarrar todo» de League-Soccer y soccer5v5)
+
+| Qué | Dónde | Fuente | Estado |
+|---|---|---|---|
+| 17 animaciones de la Universal Animation Library 2 (Quaternius) | `assets/characters/quaternius/anims_ual2/` | quaternius.itch.io (copia en github.com/NafisRayan/Animate-Rigged-Humanoid-No-Blender) | 🟢 CC0 (`LICENCIA_CC0.txt`) |
+| 293 animaciones de fútbol convertidas (+ espejos) | `assets/characters/quaternius/anims_league/league.res` | github.com/awest813/League-Soccer (heredero de GameplayFootball / Google Research Football) | 🟢 Apache 2.0 (`terceros/league_soccer/LICENCIA_Apache-2.0.txt`); citar en los créditos |
+| Golpeo de balón y palo (`pase_corto`, `tiro_potente`, `poste`, `travesano`) | `audio/ui/*.ogg` | League-Soccer, `data/media/sounds/ballsound.wav` y `goalpost.wav` | 🟡 el repositorio es Apache 2.0, pero el WAV no indica su origen (viene de GameplayFootball): confirmar o sustituir antes de vender |
+| Minijuego retro 5 contra 5: código, dibujos y efectos | `minijuegos/retro5v5/` | github.com/Habeeb-Rahman-CA/soccer5v5-game-godot | 🟢 MIT, © 2026 Habeeb Rahman (`minijuegos/retro5v5/LICENCIA_MIT.txt`); citar en los créditos. Clubes con nombre modificado y jugadores inventados (el original traía reales) |
+| Música del minijuego (4 temas) | `minijuegos/retro5v5/assets/music/` | soccer5v5 | 🟡 el repositorio es MIT, pero su autor no dice de dónde salen los temas: confirmar o sustituir antes de vender |
+| Fuente «Daydream» de soccer5v5 | solo en `terceros/soccer5v5/` | soccer5v5 | 🔴 SOLO USO PERSONAL: no se usa ni se publica |
+| Fuente «Pixeled» de soccer5v5 | solo en `terceros/soccer5v5/` | soccer5v5 | 🔴 sin licencia: no se usa |
+| Rótulo «World Cup» de soccer5v5 | solo en `terceros/soccer5v5/` | soccer5v5 | 🔴 marca registrada de la FIFA: no se usa |
+| Máquina recreativa | `assets/kenney/mini_arcade/arcade-machine.glb` | Kenney Mini Arcade | 🟢 CC0 (ya listado arriba; ahora en uso) |
+| Respaldo completo de los dos repositorios | `terceros/` | — | No viaja en ningún build (Godot no lo importa: `.gdignore`). Sus datos REALES no se copiaron: solo su dirección (`terceros/league_soccer/DIRECCION_DATOS_REALES.md`). No usar sus marcas («LEAGUE SOCCER», «LS SPORTS»), sus carteles de publicidad con marcas reales ni sus fondos sin origen indicado |
+

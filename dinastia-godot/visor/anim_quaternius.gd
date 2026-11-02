@@ -331,7 +331,7 @@ static func _construir(esq: Skeleton3D, prefijo: String, acciones_experimentales
 		"correr": correr(esq, prefijo, 0.52, 1.0),
 	}
 	for clave in a_mano:
-		var real: Animation = cargar_real(String(CLIP_REAL[clave]), prefijo)
+		var real: Animation = LeagueAnim.ciclo(clave, prefijo) if LeagueAnim.CICLOS.has(clave) and OS.get_environment("SIN_LEAGUE") == "" else cargar_real(String(CLIP_REAL[clave]), prefijo)
 		## Manos relajadas (13-10-2026): los clips llevan el puño cerrado de
 		## superhéroe; parado y andando, los dedos van a medio cerrar.
 		if real != null:

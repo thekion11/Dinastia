@@ -78,8 +78,9 @@ func _probar_partidos() -> void:
 	var goles_de_remate: int = int(tipos["gol"]) - int(tipos["gol_arbitral"])
 	_linea("  %d remates: %d goles, %d atajadas, %d postes, %d fallos (%d goles de penal arbitral, aparte)" % [
 		remates_totales, goles_de_remate, tipos["atajada"], tipos["poste"], tipos["fallo"], tipos["gol_arbitral"]])
-	_comprobar(remates_totales == goles_de_remate + no_gol,
-		"cada remate termina en gol o en una senal de remate, sin contar los penales del arbitro (%d = %d)" % [remates_totales, goles_de_remate + no_gol])
+	## El penal del árbitro también es un remate desde `_contar_penal` (26-10): cuenta en los dos lados (01-11).
+	_comprobar(remates_totales == goles_de_remate + no_gol + int(tipos["gol_arbitral"]),
+		"cada remate termina en gol o en una senal de remate, con los penales del arbitro (%d = %d)" % [remates_totales, goles_de_remate + no_gol + int(tipos["gol_arbitral"])])
 	## Sobre los NO-goles: atajada deberia rondar 25/70 (~36%), poste 7/70
 	## (~10%), fallo 38/70 (~54%). Con margen ancho porque son proporciones
 	## sobre una muestra de unos pocos cientos, no miles.

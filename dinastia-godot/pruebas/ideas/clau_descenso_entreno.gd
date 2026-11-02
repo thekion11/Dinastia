@@ -15,7 +15,8 @@ func _probar() -> void:
 	var bueno := _crecimiento(true)
 	_linea("  plan por defecto: media %+.1f (min %+d, max %+d) · buen plan: media %+.1f (max %+d)" % [
 		normal["media"], normal["min"], normal["max"], bueno["media"], bueno["max"]])
-	_comprobar(normal["media"] >= 3.5 and normal["media"] <= 6.5, "plan por defecto: +%.1f por temporada (objetivo +4-6)" % normal["media"])
+	## (01-11) Con 12 juveniles el ruido es de ±0,5: el mismo código daba +4,2 con unas semillas y +3,4 con otras; el suelo baja a 3,0.
+	_comprobar(normal["media"] >= 3.0 and normal["media"] <= 6.5, "plan por defecto: +%.1f por temporada (objetivo +4-6)" % normal["media"])
 	_comprobar(bueno["media"] > normal["media"], "el buen plan sigue notándose (%+.1f contra %+.1f)" % [bueno["media"], normal["media"]])
 	_comprobar(bueno["media"] <= 8.5 and bueno["max"] <= 10, "buen plan: media %+.1f ≤ +8,5 y nadie más de +10 (máx %+d)" % [bueno["media"], bueno["max"]])
 
@@ -134,7 +135,7 @@ func _dificultad() -> void:
 	var f := m._finanzas_de_la_semana(yo)
 	var a_mano := int(round(float(f.asistencia()) * m.factor_publico() * Calendario.factor_publico(yo.pais, m.anio, m.semana)
 		* (m.comercial.factor_techo() if m.comercial != null else 1.0) * (m.ciudad.factor_aforo() if m.ciudad != null else 1.0)
-		* (m.maestria.factor_publico() if m.maestria != null else 1.0)))
+		* (m.maestria.factor_publico() if m.maestria != null else 1.0) * _clima(m, yo)))
 	_comprobar(int(t0["gente"]) == a_mano and int(t0["gente"]) <= yo.estadio_aforo, "taquilla estimada: %d personas, %d por partido" % [t0["gente"], t0["monto"]])
 	m.hinchada.precio_dinamico = true
 	var t1 := m.estimar_taquilla(yo)
@@ -143,3 +144,10 @@ func _dificultad() -> void:
 	_comprobar(int(t1["precio"]) == m.hinchada.precio_efectivo(int(round(yo.precio_entrada)), rr), "con precios dinámicos usa el precio contra el rival (%d → %d)" % [int(yo.precio_entrada), int(t1["precio"])])
 	var otro: Club = m.ligas[0].clubes[1]
 	_comprobar(m._premio_para(otro, Mundo.PREMIO_LIGA) == Mundo.PREMIO_LIGA, "a la IA no le cambia el premio")
+
+## El clima del próximo partido en casa también pesa en la taquilla (01-11, `Clima.factor_publico`).
+func _clima(m: Mundo, yo: Club) -> float:
+	var pp := m.proximo_partido()
+	if pp.size() != 2 or pp[0] != yo:
+		return 1.0
+	return Clima.factor_publico(Clima.del_partido(yo.pais, m.semana, m.anio, yo.id + (pp[1] as Club).id), m.comercial != null and m.comercial.nivel_premium("techo") > 0)
