@@ -6,6 +6,8 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 ## ESTADO AL CIERRE DEL 28-10 (para retomar el lunes)
 
+- **2-11 (lunes), reanudado**: versión **0.9.1** con Novedades; auditoría de código aplicada (guardado, deshacer, determinismo, 13 sitios por fotograma, texturas del estadio, materiales de coches, ciudad con menos nodos); cierres de las dos sesiones unidos; ejecutora y sesión 3 con su cola del lunes (mensajes del líder del 2-11). Lo que falta del guion: §2.5.
+
 - **Rama**: todo unido en `claude/dazzling-rubin-v7rfyi` (líder). Banco «FIN. 0 fallos», especiales «todo en orden», prueba visual en 0 fallos (referencias al día), ningún script de más de 450 líneas. Registro detallado del 27-28-10: `docs/04_auditorias/CIERRE_2026-10-28.md`.
 - **Sesiones**: la ejecutora cierra con un PR final y su resumen en `docs/04_auditorias/rendimiento.md` («ESTADO AL CIERRE 28-10»); la sesión 3 con `docs/04_auditorias/sesion_3_cierre_28-10.md`. El líder une ambos antes de parar.
 - **Para el lunes, primero**: unir lo último de las dos sesiones si quedó algo; repasar las correcciones de ciudad que pidió el líder (bus, paraderos de noche, semáforo peatonal, teleférico, lavado, lluvia); seguir con §2.2e (pasadas visuales) y las filas P1 de esta lista.
