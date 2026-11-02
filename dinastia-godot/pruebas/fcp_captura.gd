@@ -74,6 +74,11 @@ func _personaje() -> void:
 	_nodo = p
 	await _esperar_s(1.0)
 	var hojas: HojasPersonaje = p.get("_hojas")
+	if OS.get_environment("MODELO") != "":
+		hojas.cambiar("modelo", OS.get_environment("MODELO"), true)
+		await _esperar_s(1.5)
+		await _foto("modelo_" + OS.get_environment("MODELO"))
+		return
 	var sig := _boton(p, Idiomas.t("Siguiente: datos →"))
 	await _clic(sig)
 	await _esperar_s(0.3)

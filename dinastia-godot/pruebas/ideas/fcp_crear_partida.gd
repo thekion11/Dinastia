@@ -12,6 +12,8 @@ func _ready() -> void:
 	_escudo_en_camiseta()
 	_titulo("CREAR PARTIDA: vestir dos veces cambia el uniforme del 3D")
 	await _vestir_dos_veces()
+	_titulo("CREAR PARTIDA: modelos base extra")
+	await _modelos_base()
 	_titulo("CREAR PARTIDA: símbolo del escudo horneado")
 	_simbolo_horneado()
 	print("")
@@ -117,3 +119,16 @@ func _simbolo_horneado() -> void:
 	c.esc_simbolo = "⭐"
 	var con := EscudoTexto.textura(c, 64)
 	_comprobar(sin != null and con != null and con.get_image().get_data() != sin.get_image().get_data(), "con símbolo el escudo cambia (queda pintado en la imagen)")
+
+## Los modelos base extra (Campesino, Explorador; hombre y mujer) cargan, comparten el esqueleto y animan.
+func _modelos_base() -> void:
+	var raiz := Node3D.new()
+	add_child(raiz)
+	for mb: String in FutbolistaQ.MODELOS_BASE:
+		for cuerpo: String in ["male", "female"]:
+			_comprobar(FutbolistaQ.base_extra(mb, cuerpo) != null, "%s (%s): carga" % [mb, cuerpo])
+			var d := PersonajeDT.crear(raiz, {"modelo": mb, "cuerpo": cuerpo})
+			_comprobar(not d.is_empty() and d.has("anim") and (d["anim"] as AnimationPlayer).current_animation != "", "%s (%s): se crea y reproduce una animación" % [mb, cuerpo])
+			if not d.is_empty():
+				(d["nodo"] as Node).queue_free()
+	raiz.queue_free()

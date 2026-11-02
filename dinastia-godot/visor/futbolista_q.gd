@@ -27,6 +27,25 @@ const MODELOS := {
 	"female": MODELO_FEMALE,
 }
 
+## MODELOS BASE EXTRA (2-11-2026, pedido del dueño: «tenemos otros modelos y no están como opciones
+## básicas»): los trajes completos de «Modular Character Outfits - Fantasy» (Quaternius, CC0), que
+## comparten el esqueleto de 65 huesos y por eso llevan todas las animaciones. Vienen vestidos: el
+## vestidor de equipación y el pelo no se les aplican. Clave → [nombre, hombre, mujer].
+const MODELOS_BASE := {
+	"campesino": ["Campesino", "res://assets/characters/outfits/Male_Peasant.gltf", "res://assets/characters/outfits/Female_Peasant.gltf"],
+	"explorador": ["Explorador", "res://assets/characters/outfits/Male_Ranger.gltf", "res://assets/characters/outfits/Female_Ranger.gltf"],
+}
+static var _extra: Dictionary = {}
+
+## ¿Existe (y carga) ese modelo base extra para ese cuerpo?
+static func base_extra(modelo: String, cuerpo: String) -> PackedScene:
+	if not MODELOS_BASE.has(modelo):
+		return null
+	var ruta := String((MODELOS_BASE[modelo] as Array)[2 if cuerpo == "female" else 1])
+	if not _extra.has(ruta):
+		_extra[ruta] = load(ruta) if ResourceLoader.exists(ruta) else null
+	return _extra[ruta]
+
 static var _packed_male: PackedScene
 static var _packed_female: PackedScene
 
@@ -74,8 +93,10 @@ static func _altura_natural(esq: Skeleton3D) -> float:
 ## altura pedida (en metros). `cuerpo` es "male" o "female" -cualquier otro
 ## valor cae en "male"-. Devuelve {"nodo":Node3D, "esqueleto":Skeleton3D}
 ## -sin "anim" todavia, ver cabecera-.
-static func crear(altura: float = ALTURA_BASE, cuerpo: String = "male") -> Dictionary:
-	var packed := _cargar(cuerpo)
+static func crear(altura: float = ALTURA_BASE, cuerpo: String = "male", modelo_base: String = "") -> Dictionary:
+	var packed := base_extra(modelo_base, cuerpo) if modelo_base != "" else null
+	if packed == null:
+		packed = _cargar(cuerpo)
 	if packed == null:
 		push_error("FutbolistaQ: no se pudo cargar el modelo '%s'" % cuerpo)
 		return {}

@@ -40,3 +40,6 @@ Siguiente paso: que el dueño elija cuáles (la pregunta de los cuatro modelos b
 
 ## Optimización del diseñador (2-11-2026)
 Las dos camisetas 2D (píxel a píxel en GDScript) se repintaban en cada cambio de color al arrastrar; ahora se agrupan y se repintan 0,12 s tras el último cambio (`_refresco_2d` en `disenador_kit_p1.gd`); el 3D ya iba con 0,25 s. Sin cifras de FPS (render por software aquí).
+
+## Modelos base (fallo 1) — HECHO en parte (2-11-2026)
+Selector «Modelo base» en la pestaña Cuerpo (`HojasPersonaje`) con Atleta (clásico), Campesino y Explorador (hombre y mujer), de «Modular Character Outfits» (CC0, `assets/characters/outfits/`, fuera de LFS con el OK del dueño, 14 MB). Comparten el esqueleto de 65 huesos: llevan las animaciones y los gestos; vienen vestidos (sin vestidor, pelo ni accesorios). Clave `modelo` en el aspecto (`PersonajeDT.BASE`), `FutbolistaQ.MODELOS_BASE`. Faltan: Kenney `characterMedium` (otro esqueleto), MakeHuman (faltan .glb) y los del Drive (sin acceso).
