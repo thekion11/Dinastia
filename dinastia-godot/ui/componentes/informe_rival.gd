@@ -291,8 +291,7 @@ func _construir() -> void:
 	b.pressed.connect(func() -> void: cerrado.emit())
 	pie.add_child(b)
 	b.call_deferred("grab_focus")
-	modulate.a = 0.0
-	create_tween().tween_property(self, "modulate:a", 1.0, 0.25)
+	Animar.entrar(self, 0.25)   ## M-304: la entrada común
 
 func _escudo(c: Club, px: int) -> TextureRect:
 	var esc := TextureRect.new()

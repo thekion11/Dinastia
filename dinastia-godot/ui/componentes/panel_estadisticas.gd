@@ -164,12 +164,7 @@ func _montar() -> void:
 	seguir.pressed.connect(cerrar)
 	pie.add_child(seguir)
 	## Entrada: sube y aparece.
-	caja.modulate.a = 0.0
-	caja.pivot_offset = caja.custom_minimum_size * 0.5
-	caja.scale = Vector2(0.96, 0.96)
-	var tw2 := create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tw2.tween_property(caja, "modulate:a", 1.0, 0.22)
-	tw2.tween_property(caja, "scale", Vector2.ONE, 0.25)
+	Animar.entrar(caja, 0.24)   ## M-304: la entrada común
 	Sonido.toca("menu_seccion")
 
 func _chip(c: Color) -> ColorRect:
