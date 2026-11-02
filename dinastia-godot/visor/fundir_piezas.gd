@@ -7,14 +7,14 @@ extends RefCounted
 ## Solo los hijos directos con `material_override`; rótulos, luces y lo que tenga hijos o nombre propio se quedan.
 
 ## Funde los hijos directos de `raiz`. `corte` > 0 pone ese `visibility_range_end` a la malla fundida. Devuelve cuántas
-## piezas fundió.
-static func fundir(raiz: Node3D, corte := 0.0, nombre := "Fundido") -> int:
+## piezas fundió. `excluir`: nodos que se quedan sueltos (puertas que se deslizan, etc.).
+static func fundir(raiz: Node3D, corte := 0.0, nombre := "Fundido", excluir: Array = []) -> int:
 	var por_clave := {}
 	var orden: Array = []
 	var n := 0
 	for h in raiz.get_children():
 		var mi := h as MeshInstance3D
-		if mi == null or mi.mesh == null or mi.material_override == null or mi.get_child_count() > 0 or not mi.visible:
+		if mi == null or mi.mesh == null or mi.material_override == null or mi.get_child_count() > 0 or not mi.visible or excluir.has(mi):
 			continue
 		var clave := [mi.material_override, mi.cast_shadow]
 		if not por_clave.has(clave):

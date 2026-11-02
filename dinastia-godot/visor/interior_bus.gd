@@ -34,6 +34,9 @@ static func montar(bus: Node3D) -> void:
 	cabeza.height = 0.24
 	var banco := BoxMesh.new()
 	banco.size = Vector3(0.5, 0.12, 0.5)
+	## M-476: los 10 asientos (cajas iguales) van fundidos en UNA malla; antes eran 10 nodos por autobús.
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for k in PLAZAS:
 		var x := -0.8 if k % 2 == 0 else 0.8
 		var z := -4.6 + 1.8 * float(k / 2)
@@ -41,11 +44,7 @@ static func montar(bus: Node3D) -> void:
 		plaza.name = "Plaza%d" % k
 		plaza.position = Vector3(x, 1.6, z)
 		interior.add_child(plaza)
-		var s := MeshInstance3D.new()
-		s.mesh = banco
-		s.material_override = asiento
-		s.position = Vector3(0, 0.45, 0)
-		plaza.add_child(s)
+		st.append_from(banco, 0, Transform3D(Basis.IDENTITY, plaza.position + Vector3(0, 0.45, 0)))
 		var persona := Node3D.new()
 		persona.name = "Persona"
 		persona.visible = false
@@ -59,6 +58,11 @@ static func montar(bus: Node3D) -> void:
 		h.material_override = piel
 		h.position = Vector3(0, 1.25, 0)
 		persona.add_child(h)
+	var asientos := MeshInstance3D.new()
+	asientos.name = "Asientos"
+	asientos.mesh = st.commit()
+	asientos.material_override = asiento
+	interior.add_child(asientos)
 
 ## Enciende una silueta por pasajero (ropa de un color apagado sacado de su semilla) y apaga el resto.
 static func actualizar(bus: Node3D) -> void:
