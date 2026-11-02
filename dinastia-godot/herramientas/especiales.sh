@@ -6,8 +6,15 @@
 cd "$(dirname "$0")/.." || exit 1
 FALLOS=0
 LOG=$(mktemp)
+# REPARTO (2-11-2026, CI): ESPECIALES_PARTE="i/N" corre solo cada N-ésima prueba (las demás se saltan),
+# para repartir las especiales entre N máquinas a la vez. Sin la variable, corren todas.
+PARTE_I=""; PARTE_N=1
+if [ -n "$ESPECIALES_PARTE" ]; then PARTE_I=${ESPECIALES_PARTE%/*}; PARTE_N=${ESPECIALES_PARTE#*/}; fi
+CONT=0
 
 pasa() {  # nombre, comando, patrón de éxito
+  CONT=$((CONT + 1))
+  if [ -n "$PARTE_I" ] && [ $((CONT % PARTE_N)) -ne "$PARTE_I" ]; then return; fi
   local t0=$(date +%s)
   timeout 600 bash -c "$2" > "$LOG" 2>&1
   local seg=$(( $(date +%s) - t0 ))
@@ -19,8 +26,11 @@ pasa() {  # nombre, comando, patrón de éxito
 }
 
 # 1. Tamaño del código (norma de 450 líneas)
+if [ -n "$PARTE_I" ] && [ "$PARTE_I" != "0" ]; then :  # (solo la parte 0 hace la norma de líneas)
+else
 python3 ../herramientas/revisar_lineas.py --todos > "$LOG" 2>&1
 if grep -q "pasan de 450 líneas: 0" "$LOG"; then echo "OK     norma de 450 líneas"; else FALLOS=$((FALLOS + 1)); echo "FALLO  norma de 450 líneas"; head -5 "$LOG"; fi
+fi
 # 2. Todos los scripts compilan (el banco solo ve los que toca)
 pasa "todos los scripts compilan" "godot --headless --path . --script res://pruebas/comprobar_scripts.gd" "FIN. 0 fallos"
 # 2b. Las auditorías de datos y de clubes (base ficticia y real; ~9 s cada una; catálogo M-413, 27-10-2026) y la técnica
