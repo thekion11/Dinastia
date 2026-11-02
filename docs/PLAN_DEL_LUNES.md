@@ -14,7 +14,8 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 ## ESTADO AL 02-11 (fases 1-9 hechas)
 - Las 9 fases de la orden 20 están hechas: registro en `docs/04_auditorias/CIERRE_FASES_2026-11-02.md`. Para el dueño:
-  encender o no `PMOT_PASE` (R2), calibrar los goles (≈2,3 por partido) y su nota 1-100 sobre los vídeos (orden 21).
+  encender o no `PMOT_PASE` (R2), calibrar los goles (≈2,3 por partido) y su nota 1-100 sobre el vídeo del partido completo
+  (orden 21; enviado el 02-11, 9 min 23 s, grabado con `pruebas/video_partido.tscn`, CEREMONIA=1 RITMO=rapido, 20 fps).
 
 ## ORDEN DE TRABAJO DEL DUEÑO (01-11)
 1) fallos (los 8 de League-Soccer) → 2) clubes (recreación legal) → 3) IA → 4) jugabilidad → 5) optimización → 6) detectar fallos →
