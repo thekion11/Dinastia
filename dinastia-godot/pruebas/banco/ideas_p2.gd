@@ -201,3 +201,31 @@ func _probar_lector_avisos() -> void:
 	Aviso.mostrar(self, "logro", "🏆", "Primer día", "Terminaste el prólogo.")
 	_comprobar(LectorPantalla.ultimo_anuncio.begins_with("Primer día"), "encendido, lee el aviso de logro (%s)" % LectorPantalla.ultimo_anuncio)
 	LectorPantalla.fijar(antes)
+
+## M-285 (2-11-2026): el foco con mando entra en el contenido.
+func _probar_foco_mando() -> void:
+	_titulo("FOCO CON MANDO EN LAS PANTALLAS (M-285)")
+	var raiz := VBoxContainer.new()
+	add_child(raiz)
+	var oculto := Button.new()
+	oculto.visible = false
+	raiz.add_child(oculto)
+	var etiqueta := Label.new()
+	raiz.add_child(etiqueta)
+	var caja := HBoxContainer.new()
+	raiz.add_child(caja)
+	var apagado := Button.new()
+	apagado.disabled = true
+	caja.add_child(apagado)
+	var bueno := Button.new()
+	caja.add_child(bueno)
+	_comprobar(FocoMando.primero(raiz) == bueno, "salta lo oculto, lo que no se enfoca y lo desactivado")
+	FocoMando.forzar = false
+	if Input.get_connected_joypads().is_empty():
+		FocoMando.enfocar(raiz)
+		_comprobar(not bueno.has_focus(), "sin mando no toca el foco")
+	FocoMando.forzar = true
+	FocoMando.enfocar(raiz)
+	_comprobar(bueno.has_focus(), "con mando el foco cae en el primer control usable")
+	FocoMando.forzar = false
+	raiz.queue_free()
