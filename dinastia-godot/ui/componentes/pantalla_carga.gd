@@ -56,13 +56,16 @@ static func mostrar(padre: Node, mensaje: String) -> PantallaCarga:
 	fr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	n.add_child(fr)
+	## 2-11 (queja del dueño, móvil): con `PRESET_CENTER` la caja se centraba sobre un padre de tamaño 0 y la pantalla salía en la esquina
+	## (cortada, con el gris de fondo). Un CenterContainer de pantalla completa la centra sea cual sea el tamaño que acabe teniendo.
+	var centro := CenterContainer.new()
+	centro.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	centro.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	n.add_child(centro)
 	var caja := VBoxContainer.new()
-	caja.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	caja.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	caja.grow_vertical = Control.GROW_DIRECTION_BOTH
 	caja.alignment = BoxContainer.ALIGNMENT_CENTER
 	caja.add_theme_constant_override("separation", 16)
-	n.add_child(caja)
+	centro.add_child(caja)
 	## El anillo con el balón, y dentro el escudo.
 	var cont := CenterContainer.new()
 	caja.add_child(cont)
@@ -123,7 +126,17 @@ static func mostrar(padre: Node, mensaje: String) -> PantallaCarga:
 	n._orden.shuffle()
 	n._poner_consejo()
 	padre.add_child(n)
+	n._ajustar()
+	n.get_viewport().size_changed.connect(n._ajustar)
 	return n
+
+## Cubre SIEMPRE la ventana entera: si el padre no es un Control (el prólogo cuelga de un Node3D) o aún no tiene tamaño, se le da el de la ventana.
+func _ajustar() -> void:
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var vp := get_viewport_rect().size
+	if not (get_parent() is Control) or size.x < 2.0 or size.y < 2.0:
+		position = Vector2.ZERO
+		size = vp
 
 ## Deja que el sistema PINTE la pantalla antes de bloquear con la construcción. Dos fotogramas de
 ## `process_frame` no bastan: en Windows la ventana se quedaba en gris porque el primer dibujo aún no había

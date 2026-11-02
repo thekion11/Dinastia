@@ -277,13 +277,20 @@ func _process(delta: float) -> void:
 		_pivote.rotation.y += delta * 0.8
 	## Miniaturas de la galería, unas pocas por frame: todas de golpe congelaban
 	## la pantalla un segundo.
-	for i in 4:
-		if _pendientes.is_empty():
-			break
+	## Con un PRESUPUESTO de 6 ms por fotograma (al menos una): en un móvil lento no se congela la pantalla, y en el PC salen igual de rápido.
+	var t0 := Time.get_ticks_usec()
+	while not _pendientes.is_empty():
 		var p: Array = _pendientes.pop_front()
 		var b: TextureButton = p[0]
 		if is_instance_valid(b):
 			b.texture_normal = DisenosKit.textura_camiseta(String(p[1]), DisenosKit.colores(_kit), int(_kit.get("trim", 1)), 64)
+		if Time.get_ticks_usec() - t0 > 6000:
+			break
+	if _mejora_2d > 0.0:
+		_mejora_2d -= delta
+		if _mejora_2d <= 0.0 and _refresco_2d <= 0.0:
+			_ss_2d = 2
+			_pintar_2d()
 	if _refresco_2d > 0.0:
 		_refresco_2d -= delta
 		if _refresco_2d <= 0.0:
