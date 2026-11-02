@@ -6894,7 +6894,19 @@
   "Manga": "Sleeve",
   "Espalda": "Back",
   "Short": "Shorts",
-  "Ropa de entrenamiento": "Training kit"
+  "Ropa de entrenamiento": "Training kit",
+  "🫧 Burbuja: los traspasos valen un %d %% más hasta %d. Buen momento para vender.": "🫧 Bubble: transfers are worth %d %% more until %d. A good time to sell.",
+  "📉 Crisis: los traspasos valen un %d %% menos hasta %d. Buen momento para comprar.": "📉 Crisis: transfers are worth %d %% less until %d. A good time to buy.",
+  "💥 Estalla la burbuja del mercado": "💥 The market bubble bursts",
+  "Los traspasos inflados de los últimos años pasan factura: los clubes no tienen caja y los precios se hunden. Es momento de comprar barato; vender será difícil.": "Years of inflated transfers take their toll: clubs have no cash and prices collapse. Time to buy cheap; selling will be hard.",
+  "📈 El mercado se recupera": "📈 The market recovers",
+  "Vuelve el dinero a los traspasos: los precios regresan a lo normal.": "Money returns to transfers: prices go back to normal.",
+  "🫧 La burbuja se desinfla sin ruido": "🫧 The bubble quietly deflates",
+  "Los precios de traspaso vuelven a lo normal sin que nadie quiebre.": "Transfer prices return to normal without anyone going bust.",
+  "📉 Crisis en el mercado de traspasos": "📉 Crisis in the transfer market",
+  "Los derechos de televisión se renegocian a la baja y los clubes cierran el grifo: los traspasos valen bastante menos.": "TV rights are renegotiated downwards and clubs turn off the tap: transfers are worth much less.",
+  "🫧 Burbuja en el mercado de traspasos": "🫧 Bubble in the transfer market",
+  "Entra dinero nuevo en el fútbol y los clubes pagan cifras nunca vistas: vender ahora es negocio, comprar sale caro.": "New money pours into football and clubs pay unheard-of sums: selling now is good business, buying is expensive."
  },
  "pt": {
   "Historia": "História",
@@ -13791,7 +13803,19 @@
   "Manga": "Manga",
   "Espalda": "Costas",
   "Short": "Calção",
-  "Ropa de entrenamiento": "Roupa de treino"
+  "Ropa de entrenamiento": "Roupa de treino",
+  "🫧 Burbuja: los traspasos valen un %d %% más hasta %d. Buen momento para vender.": "🫧 Bolha: as transferências valem %d %% mais até %d. Bom momento para vender.",
+  "📉 Crisis: los traspasos valen un %d %% menos hasta %d. Buen momento para comprar.": "📉 Crise: as transferências valem %d %% menos até %d. Bom momento para comprar.",
+  "💥 Estalla la burbuja del mercado": "💥 Estoura a bolha do mercado",
+  "Los traspasos inflados de los últimos años pasan factura: los clubes no tienen caja y los precios se hunden. Es momento de comprar barato; vender será difícil.": "As transferências infladas dos últimos anos cobram seu preço: os clubes não têm caixa e os preços despencam. Hora de comprar barato; vender será difícil.",
+  "📈 El mercado se recupera": "📈 O mercado se recupera",
+  "Vuelve el dinero a los traspasos: los precios regresan a lo normal.": "O dinheiro volta às transferências: os preços voltam ao normal.",
+  "🫧 La burbuja se desinfla sin ruido": "🫧 A bolha murcha sem barulho",
+  "Los precios de traspaso vuelven a lo normal sin que nadie quiebre.": "Os preços de transferência voltam ao normal sem que ninguém quebre.",
+  "📉 Crisis en el mercado de traspasos": "📉 Crise no mercado de transferências",
+  "Los derechos de televisión se renegocian a la baja y los clubes cierran el grifo: los traspasos valen bastante menos.": "Os direitos de TV são renegociados para baixo e os clubes fecham a torneira: as transferências valem bem menos.",
+  "🫧 Burbuja en el mercado de traspasos": "🫧 Bolha no mercado de transferências",
+  "Entra dinero nuevo en el fútbol y los clubes pagan cifras nunca vistas: vender ahora es negocio, comprar sale caro.": "Entra dinheiro novo no futebol e os clubes pagam valores nunca vistos: vender agora é negócio, comprar sai caro."
  },
  "patrones": [
   [
@@ -26465,7 +26489,19 @@
   "Manga": "Manche",
   "Espalda": "Dos",
   "Short": "Short",
-  "Ropa de entrenamiento": "Tenue d'entraînement"
+  "Ropa de entrenamiento": "Tenue d'entraînement",
+  "🫧 Burbuja: los traspasos valen un %d %% más hasta %d. Buen momento para vender.": "🫧 Bulle : les transferts valent %d %% de plus jusqu'en %d. Bon moment pour vendre.",
+  "📉 Crisis: los traspasos valen un %d %% menos hasta %d. Buen momento para comprar.": "📉 Crise : les transferts valent %d %% de moins jusqu'en %d. Bon moment pour acheter.",
+  "💥 Estalla la burbuja del mercado": "💥 La bulle du marché éclate",
+  "Los traspasos inflados de los últimos años pasan factura: los clubes no tienen caja y los precios se hunden. Es momento de comprar barato; vender será difícil.": "Les transferts gonflés des dernières années se paient : les clubs n'ont plus de trésorerie et les prix s'effondrent. C'est le moment d'acheter bon marché ; vendre sera difficile.",
+  "📈 El mercado se recupera": "📈 Le marché se redresse",
+  "Vuelve el dinero a los traspasos: los precios regresan a lo normal.": "L'argent revient dans les transferts : les prix redeviennent normaux.",
+  "🫧 La burbuja se desinfla sin ruido": "🫧 La bulle se dégonfle sans bruit",
+  "Los precios de traspaso vuelven a lo normal sin que nadie quiebre.": "Les prix des transferts redeviennent normaux sans que personne ne fasse faillite.",
+  "📉 Crisis en el mercado de traspasos": "📉 Crise sur le marché des transferts",
+  "Los derechos de televisión se renegocian a la baja y los clubes cierran el grifo: los traspasos valen bastante menos.": "Les droits TV sont renégociés à la baisse et les clubs ferment le robinet : les transferts valent bien moins.",
+  "🫧 Burbuja en el mercado de traspasos": "🫧 Bulle sur le marché des transferts",
+  "Entra dinero nuevo en el fútbol y los clubes pagan cifras nunca vistas: vender ahora es negocio, comprar sale caro.": "De l'argent frais arrive dans le football et les clubs paient des sommes jamais vues : vendre maintenant est une affaire, acheter coûte cher."
  },
  "it": {
   "Historia": "Storia",
@@ -33362,7 +33398,19 @@
   "Manga": "Manica",
   "Espalda": "Schiena",
   "Short": "Pantaloncini",
-  "Ropa de entrenamiento": "Divisa d'allenamento"
+  "Ropa de entrenamiento": "Divisa d'allenamento",
+  "🫧 Burbuja: los traspasos valen un %d %% más hasta %d. Buen momento para vender.": "🫧 Bolla: i trasferimenti valgono il %d %% in più fino al %d. Buon momento per vendere.",
+  "📉 Crisis: los traspasos valen un %d %% menos hasta %d. Buen momento para comprar.": "📉 Crisi: i trasferimenti valgono il %d %% in meno fino al %d. Buon momento per comprare.",
+  "💥 Estalla la burbuja del mercado": "💥 Scoppia la bolla del mercato",
+  "Los traspasos inflados de los últimos años pasan factura: los clubes no tienen caja y los precios se hunden. Es momento de comprar barato; vender será difícil.": "I trasferimenti gonfiati degli ultimi anni presentano il conto: i club non hanno liquidità e i prezzi crollano. È il momento di comprare a poco; vendere sarà difficile.",
+  "📈 El mercado se recupera": "📈 Il mercato si riprende",
+  "Vuelve el dinero a los traspasos: los precios regresan a lo normal.": "Il denaro torna nei trasferimenti: i prezzi tornano normali.",
+  "🫧 La burbuja se desinfla sin ruido": "🫧 La bolla si sgonfia senza rumore",
+  "Los precios de traspaso vuelven a lo normal sin que nadie quiebre.": "I prezzi dei trasferimenti tornano normali senza che nessuno fallisca.",
+  "📉 Crisis en el mercado de traspasos": "📉 Crisi nel mercato dei trasferimenti",
+  "Los derechos de televisión se renegocian a la baja y los clubes cierran el grifo: los traspasos valen bastante menos.": "I diritti TV vengono rinegoziati al ribasso e i club chiudono i rubinetti: i trasferimenti valgono molto meno.",
+  "🫧 Burbuja en el mercado de traspasos": "🫧 Bolla nel mercato dei trasferimenti",
+  "Entra dinero nuevo en el fútbol y los clubes pagan cifras nunca vistas: vender ahora es negocio, comprar sale caro.": "Entrano soldi nuovi nel calcio e i club pagano cifre mai viste: vendere ora conviene, comprare costa caro."
  },
  "de": {
   "Historia": "Geschichte",
@@ -40259,7 +40307,19 @@
   "Manga": "Ärmel",
   "Espalda": "Rücken",
   "Short": "Hose",
-  "Ropa de entrenamiento": "Trainingskleidung"
+  "Ropa de entrenamiento": "Trainingskleidung",
+  "🫧 Burbuja: los traspasos valen un %d %% más hasta %d. Buen momento para vender.": "🫧 Blase: Transfers sind %d %% mehr wert (bis %d). Guter Zeitpunkt zum Verkaufen.",
+  "📉 Crisis: los traspasos valen un %d %% menos hasta %d. Buen momento para comprar.": "📉 Krise: Transfers sind %d %% weniger wert (bis %d). Guter Zeitpunkt zum Kaufen.",
+  "💥 Estalla la burbuja del mercado": "💥 Die Marktblase platzt",
+  "Los traspasos inflados de los últimos años pasan factura: los clubes no tienen caja y los precios se hunden. Es momento de comprar barato; vender será difícil.": "Die überhöhten Transfers der letzten Jahre rächen sich: Die Vereine haben kein Geld und die Preise brechen ein. Zeit, günstig zu kaufen; Verkaufen wird schwer.",
+  "📈 El mercado se recupera": "📈 Der Markt erholt sich",
+  "Vuelve el dinero a los traspasos: los precios regresan a lo normal.": "Das Geld kehrt in den Transfermarkt zurück: Die Preise normalisieren sich.",
+  "🫧 La burbuja se desinfla sin ruido": "🫧 Die Blase verpufft leise",
+  "Los precios de traspaso vuelven a lo normal sin que nadie quiebre.": "Die Transferpreise normalisieren sich, ohne dass jemand pleitegeht.",
+  "📉 Crisis en el mercado de traspasos": "📉 Krise auf dem Transfermarkt",
+  "Los derechos de televisión se renegocian a la baja y los clubes cierran el grifo: los traspasos valen bastante menos.": "Die TV-Rechte werden nach unten verhandelt und die Vereine drehen den Hahn zu: Transfers sind deutlich weniger wert.",
+  "🫧 Burbuja en el mercado de traspasos": "🫧 Blase auf dem Transfermarkt",
+  "Entra dinero nuevo en el fútbol y los clubes pagan cifras nunca vistas: vender ahora es negocio, comprar sale caro.": "Neues Geld fließt in den Fußball und die Vereine zahlen nie gesehene Summen: Verkaufen lohnt sich jetzt, Kaufen wird teuer."
  },
  "ca": {
   "Historia": "Història",
@@ -47156,7 +47216,19 @@
   "Manga": "Màniga",
   "Espalda": "Esquena",
   "Short": "Pantaló",
-  "Ropa de entrenamiento": "Roba d'entrenament"
+  "Ropa de entrenamiento": "Roba d'entrenament",
+  "🫧 Burbuja: los traspasos valen un %d %% más hasta %d. Buen momento para vender.": "🫧 Bombolla: els traspassos valen un %d %% més fins al %d. Bon moment per vendre.",
+  "📉 Crisis: los traspasos valen un %d %% menos hasta %d. Buen momento para comprar.": "📉 Crisi: els traspassos valen un %d %% menys fins al %d. Bon moment per comprar.",
+  "💥 Estalla la burbuja del mercado": "💥 Esclata la bombolla del mercat",
+  "Los traspasos inflados de los últimos años pasan factura: los clubes no tienen caja y los precios se hunden. Es momento de comprar barato; vender será difícil.": "Els traspassos inflats dels darrers anys passen factura: els clubs no tenen caixa i els preus s'enfonsen. És moment de comprar barat; vendre serà difícil.",
+  "📈 El mercado se recupera": "📈 El mercat es recupera",
+  "Vuelve el dinero a los traspasos: los precios regresan a lo normal.": "Torna els diners als traspassos: els preus tornen a la normalitat.",
+  "🫧 La burbuja se desinfla sin ruido": "🫧 La bombolla es desinfla sense soroll",
+  "Los precios de traspaso vuelven a lo normal sin que nadie quiebre.": "Els preus dels traspassos tornen a la normalitat sense que ningú faci fallida.",
+  "📉 Crisis en el mercado de traspasos": "📉 Crisi al mercat de traspassos",
+  "Los derechos de televisión se renegocian a la baja y los clubes cierran el grifo: los traspasos valen bastante menos.": "Els drets de televisió es renegocien a la baixa i els clubs tanquen l'aixeta: els traspassos valen força menys.",
+  "🫧 Burbuja en el mercado de traspasos": "🫧 Bombolla al mercat de traspassos",
+  "Entra dinero nuevo en el fútbol y los clubes pagan cifras nunca vistas: vender ahora es negocio, comprar sale caro.": "Entren diners nous al futbol i els clubs paguen xifres mai vistes: vendre ara és negoci, comprar surt car."
  },
  "pl": {
   "Club": "Klub",
@@ -54329,7 +54401,19 @@
   "Manga": "Rękaw",
   "Espalda": "Plecy",
   "Short": "Spodenki",
-  "Ropa de entrenamiento": "Strój treningowy"
+  "Ropa de entrenamiento": "Strój treningowy",
+  "🫧 Burbuja: los traspasos valen un %d %% más hasta %d. Buen momento para vender.": "🫧 Bańka: transfery są warte o %d %% więcej do %d. Dobry moment na sprzedaż.",
+  "📉 Crisis: los traspasos valen un %d %% menos hasta %d. Buen momento para comprar.": "📉 Kryzys: transfery są warte o %d %% mniej do %d. Dobry moment na zakupy.",
+  "💥 Estalla la burbuja del mercado": "💥 Pęka bańka na rynku",
+  "Los traspasos inflados de los últimos años pasan factura: los clubes no tienen caja y los precios se hunden. Es momento de comprar barato; vender será difícil.": "Zawyżone transfery ostatnich lat zbierają żniwo: kluby nie mają gotówki, a ceny spadają. Czas kupować tanio; sprzedaż będzie trudna.",
+  "📈 El mercado se recupera": "📈 Rynek się odbija",
+  "Vuelve el dinero a los traspasos: los precios regresan a lo normal.": "Pieniądze wracają na rynek transferowy: ceny wracają do normy.",
+  "🫧 La burbuja se desinfla sin ruido": "🫧 Bańka cicho uchodzi",
+  "Los precios de traspaso vuelven a lo normal sin que nadie quiebre.": "Ceny transferowe wracają do normy i nikt nie bankrutuje.",
+  "📉 Crisis en el mercado de traspasos": "📉 Kryzys na rynku transferowym",
+  "Los derechos de televisión se renegocian a la baja y los clubes cierran el grifo: los traspasos valen bastante menos.": "Prawa telewizyjne renegocjuje się w dół, a kluby zakręcają kurek: transfery są warte znacznie mniej.",
+  "🫧 Burbuja en el mercado de traspasos": "🫧 Bańka na rynku transferowym",
+  "Entra dinero nuevo en el fútbol y los clubes pagan cifras nunca vistas: vender ahora es negocio, comprar sale caro.": "Do futbolu wpływają nowe pieniądze, a kluby płacą niespotykane kwoty: sprzedaż to teraz interes, kupowanie jest drogie."
  },
  "tr": {
   "Club": "Kulüp",
@@ -61502,6 +61586,18 @@
   "Manga": "Kol",
   "Espalda": "Sırt",
   "Short": "Şort",
-  "Ropa de entrenamiento": "Antrenman kıyafeti"
+  "Ropa de entrenamiento": "Antrenman kıyafeti",
+  "🫧 Burbuja: los traspasos valen un %d %% más hasta %d. Buen momento para vender.": "🫧 Balon: transferler %%%d daha değerli (%d yılına kadar). Satmak için iyi zaman.",
+  "📉 Crisis: los traspasos valen un %d %% menos hasta %d. Buen momento para comprar.": "📉 Kriz: transferler %%%d daha az değerli (%d yılına kadar). Almak için iyi zaman.",
+  "💥 Estalla la burbuja del mercado": "💥 Piyasa balonu patladı",
+  "Los traspasos inflados de los últimos años pasan factura: los clubes no tienen caja y los precios se hunden. Es momento de comprar barato; vender será difícil.": "Son yılların şişirilmiş transferleri bedelini ödetiyor: kulüplerin kasası boş ve fiyatlar çöküyor. Ucuza alma zamanı; satmak zor olacak.",
+  "📈 El mercado se recupera": "📈 Piyasa toparlanıyor",
+  "Vuelve el dinero a los traspasos: los precios regresan a lo normal.": "Para transferlere geri dönüyor: fiyatlar normale dönüyor.",
+  "🫧 La burbuja se desinfla sin ruido": "🫧 Balon sessizce sönüyor",
+  "Los precios de traspaso vuelven a lo normal sin que nadie quiebre.": "Transfer fiyatları kimse batmadan normale dönüyor.",
+  "📉 Crisis en el mercado de traspasos": "📉 Transfer piyasasında kriz",
+  "Los derechos de televisión se renegocian a la baja y los clubes cierran el grifo: los traspasos valen bastante menos.": "Yayın hakları düşük fiyattan yeniden pazarlık ediliyor ve kulüpler musluğu kapatıyor: transferler çok daha az değerli.",
+  "🫧 Burbuja en el mercado de traspasos": "🫧 Transfer piyasasında balon",
+  "Entra dinero nuevo en el fútbol y los clubes pagan cifras nunca vistas: vender ahora es negocio, comprar sale caro.": "Futbola yeni para giriyor ve kulüpler görülmemiş rakamlar ödüyor: şimdi satmak kârlı, almak pahalı."
  }
 }
