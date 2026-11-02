@@ -296,11 +296,11 @@ func _terminar() -> void:
 
 func _fin_de_mitad() -> void:
 	var empate := int(goles[0]) == int(goles[1])
-	## El silbato largo, con los brazos arriba (M-106).
-	## (El sonido sale ya: tras el final el motor deja de correr.)
+	## El silbato largo, con los brazos arriba (M-106); el sonido sale ya (tras el final el motor deja de correr).
 	gesto_arbitro.emit("fin")
 	_gesto_arbitro("arbitro_silbato", 0.0, 1.2, {"silbato": ""})
 	_gesto_arbitro("arbitro_tiempo_anadido", 1.2, 1.8)
+	vel_balon = Vector3(vel_balon.x * 0.3, minf(vel_balon.y, 0.0), vel_balon.z * 0.3)   ## el silbato corta el juego (H-03: un balón en vuelo salía del estadio)
 	if mitad == 1 or mitad == 3:
 		estado = "descanso"
 		_t_estado = 0.0
