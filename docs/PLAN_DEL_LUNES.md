@@ -4,6 +4,9 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+
+- (2-11) SIGUIENTE PASO DE CARGA (meta del dueño: ≤5 s en móvil): hecha la carga diferida (hasta ver la ciudad 7,2→3,5 s; ciudad entera 5,7→1,5 s en servidor). Falta: STREAMING POR CERCANÍA en móvil (idea del dueño: no construir los bloques lejanos hasta acercarse; PRIMEROS menor y límite de vista), diferir túnel/sombra del estadio (~1,3 s) y que el .so de Android llegue a `bin_nativo/` (dueño/CI, M-353).
+
 ## CIERRE DEL 2-11 (revisiones que faltan y ramas viejas)
 
 **Hiper auditoría del 2-11**: `docs/04_auditorias/HIPER_AUDITORIA_2026-11-02.md` (errores H-01 a H-11, optimización, efectos, jugabilidad y físicas, con prioridad P0-P2). Primero: H-01 interpolación de física (el partido corre a 60 Hz sin interpolar, a 120 FPS da tirones) y H-02 la prueba inestable «estadio y ciudad por partes».
