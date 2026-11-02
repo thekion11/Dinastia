@@ -37,3 +37,6 @@ Licencia indicada por GitHub; confirmar la del propio pack antes de importar (y 
 | 10 | `godotengine/godot-demo-projects` | MIT | personajes de demostración (robot, maniquí) con rig para Godot |
 | 11 | `GeorgeQLe/assets-kaykit-3d-characters` | sin identificar | copia de KayKit; mejor ir a la fuente (1-2) |
 Siguiente paso: que el dueño elija cuáles (la pregunta de los cuatro modelos base sigue abierta) y bajar solo esos a una carpeta propia, con retargeting al esqueleto de 65 huesos de Quaternius.
+
+## Optimización del diseñador (2-11-2026)
+Las dos camisetas 2D (píxel a píxel en GDScript) se repintaban en cada cambio de color al arrastrar; ahora se agrupan y se repintan 0,12 s tras el último cambio (`_refresco_2d` en `disenador_kit_p1.gd`); el 3D ya iba con 0,25 s. Sin cifras de FPS (render por software aquí).

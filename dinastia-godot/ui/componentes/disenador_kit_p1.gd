@@ -35,6 +35,7 @@ var _pendientes: Array = []      ## miniaturas por generar (pocas por frame)
 var _pestanas: TabContainer
 var _colores: Array = []         ## los 5 ColorPickerButton de la camiseta
 var _refresco_3d := 0.0
+var _refresco_2d := 0.0
 
 ## PANTALLA PROPIA (26-9-2026, pedido: "debe tener su propio menú, que tenga
 ## la totalidad de la pantalla, no encima del menú central"). No se cuelga del
@@ -106,15 +107,25 @@ func _selector_color(hexa: String, al_cambiar: Callable) -> ColorPickerButton:
 
 ## Repinta la vista previa (el 3D, un instante después: si se arrastra un
 ## color no se rehace el material en cada paso).
-func _actualizar() -> void:
+func _actualizar(ya := false) -> void:
+	## OPTIMIZADO (2-11-2026): las dos camisetas 2D se dibujan píxel a píxel en GDScript (~340×620 px
+	## cada una); arrastrar un color mandaba decenas de repintados por segundo. Ahora se agrupan: se
+	## repintan 0,12 s después del último cambio (o al momento con `ya`).
+	if ya:
+		_pintar_2d()
+	else:
+		_refresco_2d = 0.12
+	if _incrustado:
+		_volcar_al_club()
+	_refresco_3d = 0.25
+
+func _pintar_2d() -> void:
+	_refresco_2d = 0.0
 	_frente.texture = DisenosKit.textura_completa(_kit, false, 170)
 	_espalda.texture = DisenosKit.textura_completa(_kit, true, 170)
 	_dorsal_2d.text = "10"
 	_dorsal_2d.add_theme_color_override("font_color", DisenosKit._col(_kit.get("num", "ffffff")))
 	_dorsal_2d.add_theme_color_override("font_outline_color", DisenosKit.colores(_kit)[0].darkened(0.4))
-	_refresco_3d = 0.25
-	if _incrustado:
-		_volcar_al_club()
 
 ## Lo diseñado, al club (sin patrocinadores, que salen de los contratos, ni lo que se recalcula).
 func _volcar_al_club() -> void:
