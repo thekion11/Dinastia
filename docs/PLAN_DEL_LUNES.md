@@ -501,7 +501,6 @@ Las pruebas f1-f5 del guion ya corren en `especiales.sh` (28-10). Lo que falta, 
 3. Completar el recorrido del prólogo: túnel, utilería, sala de vídeo y comedor con personal que saluda (3 h).
 4. Gesto del DT según el tono elegido en la rueda de presentación (3 h).
 5. Entrevista de 3 preguntas, con el grupo del vestuario y el staff (hoy 1 pregunta) (3 h).
-6. Efecto real del apoyo político: `apoyo_club` no se lee (declaración en la rueda, relación con el gobierno) (2 h).
 7. Favor del agente en `MesaAgente` (1 h); logro «Primer día» y alta de los logros sueltos (2 h).
 8. Fase 0: `abrir(contexto)` en las 19 pantallas (hoy 1), autoguardar al salir del orquestador (4 h).
 9. Club ampliado: la rama de otro deporte no ofrece «visibilidad» ni celebra sus títulos (2 h).
@@ -509,7 +508,7 @@ Las pruebas f1-f5 del guion ya corren en `especiales.sh` (28-10). Lo que falta, 
 11. Redes: camión cisterna, casas del kit que sigan al sector en el apagón, captura Forward+ en el PC del dueño (3 h).
 12. Calidad visual (2.2e): aplicar postura, mochilas y pelo del Drive a los futbolistas del partido; pelo femenino (pasada nueva, con veredicto del dueño).
 
-Los 10 primeros (~27 h) cierran lo que el guion exige de verdad; el total de la lista larga del informe es ~65 h.
+Los 9 primeros (~25 h) cierran lo que el guion exige de verdad; el total de la lista larga del informe es ~65 h.
 
 ### 2.4 Pendientes del traspaso anterior
 
@@ -609,7 +608,7 @@ También abiertos del ROADMAP: juegos mentales en el túnel antes de salir a la 
 - [ ] Capas `_pN` (233 archivos): repartir por responsabilidad real hasta que la herencia en cadena ya no haga falta (`docs/05_referencia/indice_de_capas.md`).
 - [ ] Texturas (medido el 24-10): de las 3.103 sin pérdida, 2.535 son caras reales (prohibido tocarlas sin tu OK), 494 iconos de botones y 40 escudos especiales; el resto ya está comprimido. Hecho: 4 texturas normal/roughness de personajes a 1024 px (−48 MB estimados). DECISIÓN DEL DUEÑO: probar BC7 de alta calidad en una muestra de caras y medir ΔE de piel antes de generalizar; identificar ~24 texturas dinámicas de 1024² sin nombre (~100 MB); reapuntar 38 duplicados (ahorra disco, no VRAM).
 - [ ] Oclusión en más zonas de la ciudad (`OclusoresCiudad`); el `_process` de `dibujo_mando`/`MandoGiratorio` ya solo pinta cuando cambia (comprobado el 27-10).
-- [ ] Escenas de prueba que nadie lanza (27-10, orden 14: reutilizar antes de borrar). Contadas de nuevo: 354 en `pruebas/` sin mención, casi todas capturas y diagnósticos que se lanzan a mano (se quedan). De las 14 `prueba_*`: 6 siguen pasando y ya corren en `especiales.sh` (contador de FPS, dominadas, minijuegos nuevos, motor jugable; ceremonia de carrera y práctica en `todo`). Rotas, a arreglar o retirar: `prueba_repeticion` (solo graba 4,2 s: ¿fallo real de la repetición?), `prueba_descanso_3d` (falla en la fase 2, minuto 48), `prueba_intro` (el partido no arranca tras el vuelo corto; la ceremonia lo sustituyó el 13-10 y la prueba se cuelga con pantalla), `prueba_casa_kenney` (captura sin pantalla). Sin veredicto propio: `prueba_alineacion_indebida`, `prueba_carrera_flujo`, `prueba_ciudad_modelos` (inventario). Fase 0: repasar si queda algún módulo de `visor/`/`nucleo/` sin prueba directa.
+- [ ] Escenas de prueba que nadie lanza (27-10, orden 14: reutilizar antes de borrar). Contadas de nuevo: 354 en `pruebas/` sin mención, casi todas capturas y diagnósticos que se lanzan a mano (se quedan). De las 14 `prueba_*`: 6 siguen pasando y ya corren en `especiales.sh` (contador de FPS, dominadas, minijuegos nuevos, motor jugable; ceremonia de carrera y práctica en `todo`). Revisadas el 2-11: `prueba_repeticion` ARREGLADA (disparaba a un cuadro fijo; ahora espera 8 s grabados) y en `especiales.sh`; `prueba_descanso_3d` sin pantalla solo llega al minuto 43 en 7 min (el reloj del partido va a tiempo real: darle un reloj acelerado o correrla solo con GPU); `prueba_intro` y `prueba_casa_kenney` necesitan pantalla (`captura.sh`) y no afirman nada: son capturas, pasarlas a `pruebas/captura_*` o retirarlas. Sin veredicto propio: `prueba_alineacion_indebida`, `prueba_carrera_flujo`, `prueba_ciudad_modelos` (inventario). Fase 0: repasar si queda algún módulo de `visor/`/`nucleo/` sin prueba directa.
 - [ ] C++/GDExtension solo si el perfil en hardware real lo pide.
 - [ ] 23 imágenes ≥ 2048 px que no lo necesitan: bajarlas a 2048 (auditoría 3, §4; no las caras sin tu OK).
 
@@ -652,7 +651,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-279 | P1 | PENDIENTE | 27 módulos de `visor/` y 8 de `nucleo/` sin referencia directa en… | los módulos siguen sin prueba directa |
 | M-280 | P1 | PENDIENTE | 105 módulos de UI/visor sin referencia en banco/pruebas | sin prueba visual automática |
 | M-284 | P2 | PENDIENTE | Sin modo lectura de pantalla (TTS) | sin TTS |
-| M-285 | P2 | PARCIAL | Navegación por mando en menús (panel de controles sí) | navegación con mando en el panel de controles; no en todos los menús |
+| M-285 | P2 | PARCIAL | Navegación por mando en menús | 2-11: con mando, la primera tarjeta de cada menú toma el foco y la cruceta recorre las tarjetas (`PantallaMenu.portada`); el panel de controles ya lo hacía; faltan las listas de las pantallas de gestión (foco inicial y orden de tabulación) |
 | M-287 | P2 | PENDIENTE | Rendimiento de menús: refresco ya 14× más rápido; sin pruebas de… | sin medida de apertura de pantallas |
 | M-292 | P2 | PARCIAL | Seguir clubes (los jugadores ya: «👁️ Seguir» en la ficha y lista «EN SEGUIMIENTO» con ojeadores) | falta seguir un club rival (sus noticias en la bandeja) |
 | M-293 | P2 | PARCIAL | Tablas con filtros limitados (plantel) | filtros en plantel/libres |

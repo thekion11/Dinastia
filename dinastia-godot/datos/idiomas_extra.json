@@ -6683,7 +6683,12 @@
   "La guía de controles del partido muestra los botones del mando que tienes conectado.": "The match control guide shows the buttons of the controller you have connected.",
   "Avisos visuales de sonido: silbato, goles, grada, tarjetas y sirena salen escritos, también con el sonido apagado.": "Visual sound cues: whistle, goals, crowd, cards and siren appear as text, even with the sound off.",
   "Los carteles 3D de la ciudad y los textos que quedaban en castellano ya salen en tu idioma.": "The city's 3D signs and the texts that were still in Spanish now appear in your language.",
-  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "If there were errors last time, the game says so at startup and explains how to send the report."
+  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "If there were errors last time, the game says so at startup and explains how to send the report.",
+  "📰 El club respalda al gobierno": "📰 The club backs the government",
+  "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Extraordinary grant (the government returns the favour)",
+  "🤝 El alcalde cumple": "🤝 The mayor delivers",
+  "🧊 El nuevo gobierno no olvida": "🧊 The new government does not forget",
+  "Tasa de seguridad: exenta por el apoyo del club": "Security levy: waived for the club's support"
  },
  "pt": {
   "Historia": "História",
@@ -13369,7 +13374,12 @@
   "La guía de controles del partido muestra los botones del mando que tienes conectado.": "O guia de controles da partida mostra os botões do controle conectado.",
   "Avisos visuales de sonido: silbato, goles, grada, tarjetas y sirena salen escritos, también con el sonido apagado.": "Avisos visuais de som: apito, gols, torcida, cartões e sirene aparecem escritos, mesmo com o som desligado.",
   "Los carteles 3D de la ciudad y los textos que quedaban en castellano ya salen en tu idioma.": "Os letreiros 3D da cidade e os textos que ainda estavam em espanhol agora aparecem no seu idioma.",
-  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "Se da última vez houve erros, o jogo avisa ao iniciar e explica como enviar o relatório."
+  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "Se da última vez houve erros, o jogo avisa ao iniciar e explica como enviar o relatório.",
+  "📰 El club respalda al gobierno": "📰 O clube apoia o governo",
+  "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Subvenção extraordinária (o governo retribui o apoio)",
+  "🤝 El alcalde cumple": "🤝 O prefeito cumpre",
+  "🧊 El nuevo gobierno no olvida": "🧊 O novo governo não esquece",
+  "Tasa de seguridad: exenta por el apoyo del club": "Taxa de segurança: isenta pelo apoio do clube"
  },
  "patrones": [
   [
@@ -19102,6 +19112,39 @@
    "Deu setmanes més de feina a la banqueta. Tens $1 punt(s) per gastar al teu arbre de carrera.",
    "Kolejne dziesięć tygodni pracy na ławce. Masz $1 pkt do wydania w drzewku kariery.",
    "Kulübede on hafta daha. Kariyer ağacında harcayacak $1 puanın var."
+  ],
+  [
+   "^(.+) declara en rueda de prensa su apoyo a (.+) \\((.+)\\)\\. La afición más crítica no lo celebra\\.$",
+   "$1 declares at a press conference its support for $2 ($3). The most critical fans are not pleased.",
+   "$1 declara em coletiva seu apoio a $2 ($3). A torcida mais crítica não gosta.",
+   "$1 déclare en conférence de presse son soutien à $2 ($3). Les supporters les plus critiques n'apprécient pas.",
+   "$1 dichiara in conferenza stampa il suo appoggio a $2 ($3). I tifosi più critici non gradiscono.",
+   "$1 erklärt auf einer Pressekonferenz seine Unterstützung für $2 ($3). Die kritischsten Fans sind nicht begeistert.",
+   "$1 declara en roda de premsa el seu suport a $2 ($3). L'afició més crítica no ho celebra.",
+   "$1 deklaruje na konferencji poparcie dla $2 ($3). Najbardziej krytyczni kibice nie są zadowoleni.",
+   "$1 basın toplantısında $2 ($3) için desteğini açıklıyor. En eleştirel taraftarlar bundan hoşlanmıyor."
+  ],
+  [
+   "^El gobierno reelegido devuelve el apoyo del club: subvención extraordinaria de (.+)\\.$",
+   "The re-elected government returns the club's support: an extraordinary grant of $1.",
+   "O governo reeleito retribui o apoio do clube: subvenção extraordinária de $1.",
+   "Le gouvernement réélu rend l'appui du club : subvention extraordinaire de $1.",
+   "Il governo rieletto ricambia l'appoggio del club: sovvenzione straordinaria di $1.",
+   "Die wiedergewählte Regierung revanchiert sich: Sonderzuschuss von $1.",
+   "El govern reelegit torna el suport del club: subvenció extraordinària de $1.",
+   "Ponownie wybrany rząd odwdzięcza się klubowi: dotacja nadzwyczajna $1.",
+   "Yeniden seçilen hükümet kulübün desteğine karşılık veriyor: $1 olağanüstü teşvik."
+  ],
+  [
+   "^(.+) apoyó al gobierno anterior\\. El nuevo no lo olvida: un año sin ayudas públicas para el club\\.$",
+   "$1 backed the previous government. The new one does not forget: a year without public aid for the club.",
+   "$1 apoiou o governo anterior. O novo não esquece: um ano sem ajudas públicas para o clube.",
+   "$1 a soutenu l'ancien gouvernement. Le nouveau n'oublie pas : un an sans aides publiques pour le club.",
+   "$1 ha appoggiato il governo precedente. Il nuovo non dimentica: un anno senza aiuti pubblici per il club.",
+   "$1 hat die alte Regierung unterstützt. Die neue vergisst das nicht: ein Jahr ohne öffentliche Hilfen für den Verein.",
+   "$1 va donar suport al govern anterior. El nou no ho oblida: un any sense ajudes públiques per al club.",
+   "$1 poparł poprzedni rząd. Nowy tego nie zapomina: rok bez pomocy publicznej dla klubu.",
+   "$1 önceki hükümeti destekledi. Yenisi unutmuyor: kulüp için bir yıl kamu yardımı yok."
   ]
  ],
  "fr": {
@@ -25788,7 +25831,12 @@
   "La guía de controles del partido muestra los botones del mando que tienes conectado.": "Le guide des commandes du match affiche les boutons de la manette branchée.",
   "Avisos visuales de sonido: silbato, goles, grada, tarjetas y sirena salen escritos, también con el sonido apagado.": "Indications visuelles des sons : sifflet, buts, public, cartons et sirène s'affichent en texte, même sans le son.",
   "Los carteles 3D de la ciudad y los textos que quedaban en castellano ya salen en tu idioma.": "Les panneaux 3D de la ville et les textes restés en espagnol s'affichent désormais dans ta langue.",
-  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "S'il y a eu des erreurs la dernière fois, le jeu le dit au démarrage et explique comment envoyer le rapport."
+  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "S'il y a eu des erreurs la dernière fois, le jeu le dit au démarrage et explique comment envoyer le rapport.",
+  "📰 El club respalda al gobierno": "📰 Le club soutient le gouvernement",
+  "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Subvention extraordinaire (le gouvernement rend l'appui)",
+  "🤝 El alcalde cumple": "🤝 Le maire tient parole",
+  "🧊 El nuevo gobierno no olvida": "🧊 Le nouveau gouvernement n'oublie pas",
+  "Tasa de seguridad: exenta por el apoyo del club": "Taxe de sécurité : exonérée grâce au soutien du club"
  },
  "it": {
   "Historia": "Storia",
@@ -32474,7 +32522,12 @@
   "La guía de controles del partido muestra los botones del mando que tienes conectado.": "La guida dei comandi della partita mostra i tasti del controller collegato.",
   "Avisos visuales de sonido: silbato, goles, grada, tarjetas y sirena salen escritos, también con el sonido apagado.": "Avvisi visivi dei suoni: fischio, gol, pubblico, cartellini e sirena compaiono scritti, anche con l'audio spento.",
   "Los carteles 3D de la ciudad y los textos que quedaban en castellano ya salen en tu idioma.": "I cartelli 3D della città e i testi rimasti in spagnolo ora compaiono nella tua lingua.",
-  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "Se l'ultima volta ci sono stati errori, il gioco lo dice all'avvio e spiega come inviare il rapporto."
+  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "Se l'ultima volta ci sono stati errori, il gioco lo dice all'avvio e spiega come inviare il rapporto.",
+  "📰 El club respalda al gobierno": "📰 Il club appoggia il governo",
+  "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Sovvenzione straordinaria (il governo ricambia l'appoggio)",
+  "🤝 El alcalde cumple": "🤝 Il sindaco mantiene",
+  "🧊 El nuevo gobierno no olvida": "🧊 Il nuovo governo non dimentica",
+  "Tasa de seguridad: exenta por el apoyo del club": "Tassa di sicurezza: esente per l'appoggio del club"
  },
  "de": {
   "Historia": "Geschichte",
@@ -39160,7 +39213,12 @@
   "La guía de controles del partido muestra los botones del mando que tienes conectado.": "Die Steuerungshilfe im Spiel zeigt die Tasten des angeschlossenen Controllers.",
   "Avisos visuales de sonido: silbato, goles, grada, tarjetas y sirena salen escritos, también con el sonido apagado.": "Visuelle Tonhinweise: Pfiff, Tore, Publikum, Karten und Sirene erscheinen als Text, auch bei ausgeschaltetem Ton.",
   "Los carteles 3D de la ciudad y los textos que quedaban en castellano ya salen en tu idioma.": "Die 3D-Schilder der Stadt und die noch spanischen Texte erscheinen jetzt in deiner Sprache.",
-  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "Gab es beim letzten Mal Fehler, sagt das Spiel es beim Start und erklärt, wie man den Bericht schickt."
+  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "Gab es beim letzten Mal Fehler, sagt das Spiel es beim Start und erklärt, wie man den Bericht schickt.",
+  "📰 El club respalda al gobierno": "📰 Der Verein stellt sich hinter die Regierung",
+  "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Sonderzuschuss (die Regierung revanchiert sich)",
+  "🤝 El alcalde cumple": "🤝 Der Bürgermeister hält Wort",
+  "🧊 El nuevo gobierno no olvida": "🧊 Die neue Regierung vergisst nicht",
+  "Tasa de seguridad: exenta por el apoyo del club": "Sicherheitsabgabe: erlassen wegen der Unterstützung des Vereins"
  },
  "ca": {
   "Historia": "Història",
@@ -45846,7 +45904,12 @@
   "La guía de controles del partido muestra los botones del mando que tienes conectado.": "La guia de controls del partit mostra els botons del comandament que tens connectat.",
   "Avisos visuales de sonido: silbato, goles, grada, tarjetas y sirena salen escritos, también con el sonido apagado.": "Avisos visuals de so: xiulet, gols, grada, targetes i sirena surten escrits, també amb el so apagat.",
   "Los carteles 3D de la ciudad y los textos que quedaban en castellano ya salen en tu idioma.": "Els cartells 3D de la ciutat i els textos que quedaven en castellà ja surten en el teu idioma.",
-  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "Si l'última vegada hi va haver errors, el joc ho diu en arrencar i explica com enviar l'informe."
+  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "Si l'última vegada hi va haver errors, el joc ho diu en arrencar i explica com enviar l'informe.",
+  "📰 El club respalda al gobierno": "📰 El club dona suport al govern",
+  "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Subvenció extraordinària (el govern torna el suport)",
+  "🤝 El alcalde cumple": "🤝 L'alcalde compleix",
+  "🧊 El nuevo gobierno no olvida": "🧊 El nou govern no oblida",
+  "Tasa de seguridad: exenta por el apoyo del club": "Taxa de seguretat: exempta pel suport del club"
  },
  "pl": {
   "Club": "Klub",
@@ -52808,7 +52871,12 @@
   "La guía de controles del partido muestra los botones del mando que tienes conectado.": "Przewodnik sterowania w meczu pokazuje przyciski podłączonego pada.",
   "Avisos visuales de sonido: silbato, goles, grada, tarjetas y sirena salen escritos, también con el sonido apagado.": "Wizualne sygnały dźwięków: gwizdek, gole, trybuny, kartki i syrena pojawiają się jako tekst, także przy wyłączonym dźwięku.",
   "Los carteles 3D de la ciudad y los textos que quedaban en castellano ya salen en tu idioma.": "Napisy 3D w mieście i teksty, które były jeszcze po hiszpańsku, są już w twoim języku.",
-  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "Jeśli ostatnio były błędy, gra mówi o tym przy starcie i wyjaśnia, jak wysłać raport."
+  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "Jeśli ostatnio były błędy, gra mówi o tym przy starcie i wyjaśnia, jak wysłać raport.",
+  "📰 El club respalda al gobierno": "📰 Klub popiera rząd",
+  "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Dotacja nadzwyczajna (rząd odwdzięcza się za poparcie)",
+  "🤝 El alcalde cumple": "🤝 Burmistrz dotrzymuje słowa",
+  "🧊 El nuevo gobierno no olvida": "🧊 Nowy rząd nie zapomina",
+  "Tasa de seguridad: exenta por el apoyo del club": "Opłata za bezpieczeństwo: umorzona za poparcie klubu"
  },
  "tr": {
   "Club": "Kulüp",
@@ -59770,6 +59838,11 @@
   "La guía de controles del partido muestra los botones del mando que tienes conectado.": "Maç kontrol kılavuzu, bağlı olan kumandanın tuşlarını gösteriyor.",
   "Avisos visuales de sonido: silbato, goles, grada, tarjetas y sirena salen escritos, también con el sonido apagado.": "Görsel ses uyarıları: düdük, goller, tribün, kartlar ve siren ses kapalıyken bile yazıyla görünüyor.",
   "Los carteles 3D de la ciudad y los textos que quedaban en castellano ya salen en tu idioma.": "Şehrin 3B tabelaları ve İspanyolca kalan metinler artık senin dilinde.",
-  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "Son seferinde hata olduysa oyun açılışta bunu söylüyor ve raporu nasıl göndereceğini anlatıyor."
+  "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe.": "Son seferinde hata olduysa oyun açılışta bunu söylüyor ve raporu nasıl göndereceğini anlatıyor.",
+  "📰 El club respalda al gobierno": "📰 Kulüp hükümeti destekliyor",
+  "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Olağanüstü teşvik (hükümet desteğe karşılık veriyor)",
+  "🤝 El alcalde cumple": "🤝 Belediye başkanı sözünü tutuyor",
+  "🧊 El nuevo gobierno no olvida": "🧊 Yeni hükümet unutmuyor",
+  "Tasa de seguridad: exenta por el apoyo del club": "Güvenlik vergisi: kulübün desteği nedeniyle muaf"
  }
 }
