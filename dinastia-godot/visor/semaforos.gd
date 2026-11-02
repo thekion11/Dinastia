@@ -142,8 +142,15 @@ func _mm(malla: Mesh, mat: Material, ts: Array[Transform3D]) -> void:
 	add_child(mi)
 	_ult_aplicado = ""
 
+var _medio := -1   ## medio segundo del ciclo ya procesado
+
 func _process(delta: float) -> void:
 	t = fmod(t + delta, CICLO)
+	## 2-11-2026 (120 FPS): los estados y el parpadeo solo cambian cada medio segundo; antes se construía la clave 120 veces por segundo (0,56 ms).
+	var m := int(t * 2.0)
+	if m == _medio:
+		return
+	_medio = m
 	_aplicar()
 
 ## "v", "a" o "r" para el eje en este instante.
