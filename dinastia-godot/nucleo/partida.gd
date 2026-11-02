@@ -97,6 +97,7 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 	## manana se anade un sistema nuevo, cargar una partida vieja lo estrena en
 	## limpio en vez de dejarlo en null.
 	m.tomar_el_mando(m.mi_club_id)
+	m.anios_en_club = int(datos.get("anios_en_club", 0))   ## (`tomar_el_mando` lo pone a 0: se restaura DESPUÉS)
 
 	var dd: Dictionary = datos.get("directiva", {})
 	if not dd.is_empty() and m.directiva != null:
@@ -304,6 +305,9 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	m.mi_club_id = String(datos["mi_club"])
 	m.desafios.clear()
 	m.reto = (datos.get("reto", {}) as Dictionary).duplicate()
+	m.rotacion_activa = bool(datos.get("rotacion_activa", false))
+	m.bono_analisis = float(datos.get("bono_analisis", 1.0))
+	m.fin_partida = (datos.get("fin_partida", {}) as Dictionary).duplicate()
 	var df: Dictionary = datos.get("fondo", {})
 	if not df.is_empty():
 		m.fondo = FondoInversion.new()

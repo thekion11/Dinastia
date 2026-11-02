@@ -82,7 +82,7 @@ func _kenney_calles() -> void:
 ## EL PARQUE EÓLICO en las lomas del noroeste, fuera de la autopista: diez
 ## molinos de 45 m con las aspas girando (cada uno a su ritmo).
 func _parque_eolico() -> void:
-	var blanco := b._mat_simple(Color(0.93, 0.94, 0.95), 0.4)
+	var blanco := b._mat_unico(Color(0.93, 0.94, 0.95), 0.4)
 	for k in 10:
 		var ang := -2.3 + float(k) * 0.12
 		var r := 1750.0 + float(k % 3) * 120.0

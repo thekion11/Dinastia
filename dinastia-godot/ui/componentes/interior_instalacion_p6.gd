@@ -342,7 +342,7 @@ func _bar() -> void:
 	_poner("kitchenBarEnd", Vector3(float(xs[5]) + ancho * 0.5 + _medida("kitchenBarEnd", esc_barra).x * 0.5, 0, zb), PI, esc_barra)
 	var tope := _alto("kitchenBar", esc_barra)
 	## Grifos de cerveza, vasos y servilleteros sobre la barra.
-	var metal := Mini3D.mat(Color(0.85, 0.85, 0.88), 0.2)
+	var metal := Mini3D.mat_unico(Color(0.85, 0.85, 0.88), 0.2)
 	metal.metallic = 0.9
 	for k in 3:
 		Mini3D.cilindro(_raiz, Vector3(-3.0 + float(k) * 0.25, tope + 0.2, zb - 0.1), 0.025, 0.4, metal)
@@ -420,7 +420,7 @@ func _panaderia() -> void:
 			xp += 0.42
 	for s: float in [-1.0, 1.0]:
 		Mini3D.caja(_raiz, Vector3(-2.2 + s * 2.72, 1.0, -3.78), Vector3(0.05, 2.0, 0.42), madera)
-	var horno := Mini3D.mat(Color(0.25, 0.25, 0.27), 0.35)
+	var horno := Mini3D.mat_unico(Color(0.25, 0.25, 0.27), 0.35)
 	horno.metallic = 0.6
 	Mini3D.caja(_raiz, Vector3(3.2, 0.95, -3.45), Vector3(1.8, 1.9, 1.0), horno)
 	for y: float in [0.65, 1.35]:
