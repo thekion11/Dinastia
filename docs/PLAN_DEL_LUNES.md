@@ -685,7 +685,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-439 | P2 | PENDIENTE | Orientación vertical no soportada | sin vertical |
 | M-440 | P2 | PENDIENTE | Sin modo una mano | sin modo una mano |
 | M-441 | P2 | PARCIAL | Teclado en pantalla para nombres | en Android e iOS sale el teclado del sistema (`LineEdit.virtual_keyboard_enabled`, por defecto); falta un teclado propio para jugar solo con mando en PC/TV |
-| M-442 | P2 | PENDIENTE | Mando: botones reasignables guardados pero sin perfiles múltiples | sin perfiles de mando |
 
 ### F3 vida en 3D (42)
 

@@ -427,3 +427,29 @@ func _probar_modo_streamer() -> void:
 	_comprobar(Cara.foto_real(j) == null and Cara.ruta_foto(j) == "", "ni foto ni ruta de un jugador real")
 	Cara.usar_fotos = antes_f
 	Cara.modo_streamer = antes_s
+
+## M-442 (2-11-2026): perfiles de mando en tres huecos.
+func _probar_perfiles_mando() -> void:
+	_titulo("PERFILES DE MANDO (M-442)")
+	var ruta_antes := MandoPerfiles.ruta
+	MandoPerfiles.ruta = "user://prueba_perfiles_mando.cfg"
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(MandoPerfiles.ruta))
+	Mando.cargar()
+	var antes := {"esquema": Mando.esquema, "propio": Mando.propio.duplicate(true), "ayudas": Mando.ayudas.duplicate()}
+	_comprobar(not MandoPerfiles.tiene(1) and not MandoPerfiles.cargar_de(1), "los huecos empiezan vacíos")
+	Mando.esquema = "clasico"
+	Mando.ayudas["tiro"] = "manual"
+	MandoPerfiles.guardar_en(2)
+	Mando.esquema = "wasd"
+	Mando.ayudas["tiro"] = "asistido"
+	_comprobar(MandoPerfiles.tiene(2) and MandoPerfiles.cargar_de(2) and Mando.esquema == "clasico" and Mando.ayuda("tiro") == "manual",
+		"guardar en el 2 y cargarlo devuelve esquema y ayudas")
+	MandoPerfiles.guardar_en(9)
+	_comprobar(not MandoPerfiles.tiene(9), "solo hay tres huecos")
+	Mando.esquema = String(antes["esquema"])
+	Mando.propio = antes["propio"]
+	Mando.ayudas = antes["ayudas"]
+	Mando.guardar()
+	Mando.aplicar()
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(MandoPerfiles.ruta))
+	MandoPerfiles.ruta = ruta_antes

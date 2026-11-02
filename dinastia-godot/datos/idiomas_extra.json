@@ -7006,7 +7006,13 @@
   "Media de la plantilla": "Squad rating",
   "Sueldos por semana": "Wages per week",
   "Modo streamer": "Streamer mode",
-  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "For streaming or recording: real-database faces always show as recreations, never the photo, without changing your face setting."
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "For streaming or recording: real-database faces always show as recreations, never the photo, without changing your face setting.",
+  "Perfiles de mando": "Control profiles",
+  "Guarda tus teclas, botones y ayudas en un hueco y cárgalos cuando juegue otra persona o cambies de mando.": "Save your keys, buttons and assists in a slot and load them when someone else plays or you switch controller.",
+  "Cargar %d": "Load %d",
+  "Guardar en %d": "Save to %d",
+  "Perfil %d cargado.": "Profile %d loaded.",
+  "Controles guardados en el perfil %d.": "Controls saved to profile %d."
  },
  "pt": {
   "Historia": "História",
@@ -14015,7 +14021,13 @@
   "Media de la plantilla": "Média do elenco",
   "Sueldos por semana": "Salários por semana",
   "Modo streamer": "Modo streamer",
-  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Para transmitir ou gravar: os rostos da base real aparecem sempre recriados, nunca a foto, sem mudar seu ajuste de rostos."
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Para transmitir ou gravar: os rostos da base real aparecem sempre recriados, nunca a foto, sem mudar seu ajuste de rostos.",
+  "Perfiles de mando": "Perfis de controle",
+  "Guarda tus teclas, botones y ayudas en un hueco y cárgalos cuando juegue otra persona o cambies de mando.": "Salve suas teclas, botões e ajudas num espaço e carregue quando outra pessoa jogar ou você trocar de controle.",
+  "Cargar %d": "Carregar %d",
+  "Guardar en %d": "Salvar em %d",
+  "Perfil %d cargado.": "Perfil %d carregado.",
+  "Controles guardados en el perfil %d.": "Controles salvos no perfil %d."
  },
  "patrones": [
   [
@@ -26801,7 +26813,13 @@
   "Media de la plantilla": "Note de l'effectif",
   "Sueldos por semana": "Salaires par semaine",
   "Modo streamer": "Mode streamer",
-  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Pour diffuser ou enregistrer : les visages de la base réelle sont toujours recréés, jamais la photo, sans changer votre réglage des visages."
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Pour diffuser ou enregistrer : les visages de la base réelle sont toujours recréés, jamais la photo, sans changer votre réglage des visages.",
+  "Perfiles de mando": "Profils de manette",
+  "Guarda tus teclas, botones y ayudas en un hueco y cárgalos cuando juegue otra persona o cambies de mando.": "Enregistrez vos touches, boutons et aides dans un emplacement et chargez-les quand quelqu'un d'autre joue ou que vous changez de manette.",
+  "Cargar %d": "Charger %d",
+  "Guardar en %d": "Enregistrer dans %d",
+  "Perfil %d cargado.": "Profil %d chargé.",
+  "Controles guardados en el perfil %d.": "Commandes enregistrées dans le profil %d."
  },
  "it": {
   "Historia": "Storia",
@@ -33810,7 +33828,13 @@
   "Media de la plantilla": "Media della rosa",
   "Sueldos por semana": "Stipendi a settimana",
   "Modo streamer": "Modalità streamer",
-  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Per trasmettere o registrare: i volti della base reale si vedono sempre ricreati, mai la foto, senza cambiare la tua impostazione."
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Per trasmettere o registrare: i volti della base reale si vedono sempre ricreati, mai la foto, senza cambiare la tua impostazione.",
+  "Perfiles de mando": "Profili del controller",
+  "Guarda tus teclas, botones y ayudas en un hueco y cárgalos cuando juegue otra persona o cambies de mando.": "Salva tasti, pulsanti e aiuti in uno slot e caricali quando gioca un'altra persona o cambi controller.",
+  "Cargar %d": "Carica %d",
+  "Guardar en %d": "Salva in %d",
+  "Perfil %d cargado.": "Profilo %d caricato.",
+  "Controles guardados en el perfil %d.": "Comandi salvati nel profilo %d."
  },
  "de": {
   "Historia": "Geschichte",
@@ -40819,7 +40843,13 @@
   "Media de la plantilla": "Kaderwertung",
   "Sueldos por semana": "Gehälter pro Woche",
   "Modo streamer": "Streamer-Modus",
-  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Zum Streamen oder Aufnehmen: Gesichter der echten Datenbank erscheinen immer nachgebildet, nie als Foto, ohne deine Gesichtseinstellung zu ändern."
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Zum Streamen oder Aufnehmen: Gesichter der echten Datenbank erscheinen immer nachgebildet, nie als Foto, ohne deine Gesichtseinstellung zu ändern.",
+  "Perfiles de mando": "Steuerungsprofile",
+  "Guarda tus teclas, botones y ayudas en un hueco y cárgalos cuando juegue otra persona o cambies de mando.": "Speichere Tasten, Knöpfe und Hilfen in einem Platz und lade sie, wenn jemand anderes spielt oder du den Controller wechselst.",
+  "Cargar %d": "%d laden",
+  "Guardar en %d": "In %d speichern",
+  "Perfil %d cargado.": "Profil %d geladen.",
+  "Controles guardados en el perfil %d.": "Steuerung in Profil %d gespeichert."
  },
  "ca": {
   "Historia": "Història",
@@ -47828,7 +47858,13 @@
   "Media de la plantilla": "Mitjana de la plantilla",
   "Sueldos por semana": "Sous per setmana",
   "Modo streamer": "Mode streamer",
-  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Per emetre o gravar: les cares de la base real es veuen sempre recreades, mai la foto, sense canviar el teu ajust de cares."
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Per emetre o gravar: les cares de la base real es veuen sempre recreades, mai la foto, sense canviar el teu ajust de cares.",
+  "Perfiles de mando": "Perfils de comandament",
+  "Guarda tus teclas, botones y ayudas en un hueco y cárgalos cuando juegue otra persona o cambies de mando.": "Desa les tecles, botons i ajudes en un espai i carrega'ls quan jugui una altra persona o canviïs de comandament.",
+  "Cargar %d": "Carregar %d",
+  "Guardar en %d": "Desar a %d",
+  "Perfil %d cargado.": "Perfil %d carregat.",
+  "Controles guardados en el perfil %d.": "Controls desats al perfil %d."
  },
  "pl": {
   "Club": "Klub",
@@ -55113,7 +55149,13 @@
   "Media de la plantilla": "Ocena kadry",
   "Sueldos por semana": "Pensje tygodniowo",
   "Modo streamer": "Tryb streamera",
-  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Do streamowania i nagrywania: twarze z prawdziwej bazy zawsze jako rekonstrukcja, nigdy zdjęcie, bez zmiany twojego ustawienia twarzy."
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Do streamowania i nagrywania: twarze z prawdziwej bazy zawsze jako rekonstrukcja, nigdy zdjęcie, bez zmiany twojego ustawienia twarzy.",
+  "Perfiles de mando": "Profile sterowania",
+  "Guarda tus teclas, botones y ayudas en un hueco y cárgalos cuando juegue otra persona o cambies de mando.": "Zapisz klawisze, przyciski i wspomagania w slocie i wczytaj je, gdy gra ktoś inny albo zmieniasz kontroler.",
+  "Cargar %d": "Wczytaj %d",
+  "Guardar en %d": "Zapisz w %d",
+  "Perfil %d cargado.": "Wczytano profil %d.",
+  "Controles guardados en el perfil %d.": "Zapisano sterowanie w profilu %d."
  },
  "tr": {
   "Club": "Kulüp",
@@ -62398,6 +62440,12 @@
   "Media de la plantilla": "Kadro reytingi",
   "Sueldos por semana": "Haftalık maaşlar",
   "Modo streamer": "Yayıncı modu",
-  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Yayın veya kayıt için: gerçek veritabanının yüzleri her zaman yeniden çizilmiş görünür, asla fotoğraf değil; yüz ayarın değişmez."
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Yayın veya kayıt için: gerçek veritabanının yüzleri her zaman yeniden çizilmiş görünür, asla fotoğraf değil; yüz ayarın değişmez.",
+  "Perfiles de mando": "Kontrol profilleri",
+  "Guarda tus teclas, botones y ayudas en un hueco y cárgalos cuando juegue otra persona o cambies de mando.": "Tuşlarını, düğmelerini ve yardımlarını bir yuvaya kaydet; başkası oynadığında veya kontrolcü değiştirdiğinde yükle.",
+  "Cargar %d": "%d yükle",
+  "Guardar en %d": "%d yuvasına kaydet",
+  "Perfil %d cargado.": "%d. profil yüklendi.",
+  "Controles guardados en el perfil %d.": "Kontroller %d. profile kaydedildi."
  }
 }
