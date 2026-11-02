@@ -14,7 +14,7 @@ G=/sys/fs/cgroup/memory/dinastia_hw
 if mkdir -p $G 2>/dev/null && echo $((RAM*1024*1024)) > $G/memory.limit_in_bytes 2>/dev/null; then
   echo $$ > $G/cgroup.procs; echo "[hw] cgroup memoria ${RAM} MB"
 else echo "[hw] sin cgroup de memoria (solo se informa el pico)"; fi
-xvfb-run -a -s "-screen 0 1920x1080x24" taskset -c "$NUC" godot --path . --rendering-driver "$DRV" --resolution "$RES" "$ESC" "$@" 2>&1 &
+xvfb-run -a -s "-screen 0 1920x1080x24" stdbuf -oL -eL taskset -c "$NUC" godot --path . --rendering-driver "$DRV" --resolution "$RES" "$ESC" "$@" 2>&1 &
 PID=$!; PICO=0; sleep 3
 while kill -0 $PID 2>/dev/null; do
   for q in $(pgrep -f "godot --path"); do
