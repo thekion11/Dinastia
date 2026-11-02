@@ -35,6 +35,22 @@ const COLUMNAS := [["NOMBRE", "nombre", "Ordenar por nombre"], ["POS", "pos", "P
 ## El filtro de línea es preferencia de la pantalla, como el orden; se guarda en
 ## la propia lista (que no se destruye entre repintados) y no en el guardado.
 const META_LINEA := "uipl_linea"
+## (2-11, M-293) El segundo filtro: por estado. [clave, rótulo, ayuda].
+const META_ESTADO := "uipl_estado"
+const ESTADOS := [["todos", "Todos", "Sin filtro de estado"], ["disponibles", "✅ Disponibles", "Pueden jugar el próximo partido"],
+	["bajas", "🩹 Bajas", "Lesionados o sancionados"], ["riesgo", "⚠ En riesgo", "Riesgo de lesión alto o medio: dales descanso"],
+	["transferibles", "🔻 Transferibles", "Los que pusiste en venta"], ["jovenes", "↗ Jóvenes", "21 años o menos"],
+	["contrato", "📝 Fin de contrato", "Les queda un año o menos: renueva o véndelos"]]
+
+static func _estado_ok(mundo: Mundo, j: Jugador, estado: String) -> bool:
+	match estado:
+		"disponibles": return j.disponible()
+		"bajas": return j.lesion > 0 or j.suspension > 0
+		"riesgo": return _riesgo(mundo, j) != ""
+		"transferibles": return j.transferible
+		"jovenes": return j.edad <= 21
+		"contrato": return j.anios_contrato <= 1
+	return true
 
 static func pintar(lista: VBoxContainer, c: Club, mundo: Mundo, orden: String, orden_desc: bool,
 		col_acento: Color, color_de_paleta: Callable, fila_jugador: Callable,
@@ -53,6 +69,8 @@ static func pintar(lista: VBoxContainer, c: Club, mundo: Mundo, orden: String, o
 	var repintar := func() -> void:
 		pintar(lista, c, mundo, orden, orden_desc, col_acento, color_de_paleta, fila_jugador, al_pulsar_columna)
 	_filtros(lista, c, linea, repintar)
+	var estado := String(lista.get_meta(META_ESTADO, "todos"))
+	_filtros_estado(lista, c, mundo, estado, repintar)
 
 	var g := GridContainer.new()
 	g.columns = 6
@@ -77,7 +95,7 @@ static func pintar(lista: VBoxContainer, c: Club, mundo: Mundo, orden: String, o
 		g.add_child(b)
 
 	var lista_ordenada := c.plantilla.filter(func(j: Jugador) -> bool:
-		return linea == "todos" or _linea_de(j) == linea)
+		return (linea == "todos" or _linea_de(j) == linea) and _estado_ok(mundo, j, estado))
 	lista_ordenada.sort_custom(func(a: Jugador, b: Jugador) -> bool:
 		return _comparar(a, b, orden, orden_desc))
 	for j: Jugador in lista_ordenada:
@@ -119,7 +137,7 @@ static func pintar(lista: VBoxContainer, c: Club, mundo: Mundo, orden: String, o
 			celda.mouse_filter = Control.MOUSE_FILTER_PASS
 	if lista_ordenada.is_empty():
 		var nadie := _texto(12, color_de_paleta.call(COL_SUAVE))
-		nadie.text = Idiomas.t("Nadie en esa línea ahora mismo.")
+		nadie.text = Idiomas.t("Nadie en esa línea ahora mismo.") if estado == "todos" else Idiomas.t("Nadie cumple ese filtro ahora mismo.")
 		lista.add_child(nadie)
 	_leyenda(lista, color_de_paleta)
 
@@ -192,6 +210,30 @@ static func _filtros(lista: VBoxContainer, c: Club, linea: String, repintar: Cal
 		b.add_theme_font_size_override("font_size", 11)
 		b.pressed.connect(func() -> void:
 			lista.set_meta(META_LINEA, clave)
+			repintar.call())
+		fila.add_child(b)
+
+## La fila de filtros por estado (M-293), con cuántos cumple cada uno dentro de la línea elegida.
+static func _filtros_estado(lista: VBoxContainer, c: Club, mundo: Mundo, estado: String, repintar: Callable) -> void:
+	var linea := String(lista.get_meta(META_LINEA, "todos"))
+	var fila := HFlowContainer.new()
+	fila.add_theme_constant_override("h_separation", 6)
+	fila.add_theme_constant_override("v_separation", 6)
+	lista.add_child(fila)
+	for par: Array in ESTADOS:
+		var clave := String(par[0])
+		var n := 0
+		for j: Jugador in c.plantilla:
+			if (linea == "todos" or _linea_de(j) == linea) and _estado_ok(mundo, j, clave):
+				n += 1
+		var b := Button.new()
+		b.text = "%s  %d" % [Idiomas.t(String(par[1])), n]
+		b.tooltip_text = Idiomas.t(String(par[2]))
+		b.toggle_mode = true
+		b.button_pressed = estado == clave
+		b.add_theme_font_size_override("font_size", 11)
+		b.pressed.connect(func() -> void:
+			lista.set_meta(META_ESTADO, clave)
 			repintar.call())
 		fila.add_child(b)
 
