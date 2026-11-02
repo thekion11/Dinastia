@@ -47,7 +47,7 @@ func _medir() -> void:
 	var rep := maxi(1, int(OS.get_environment("REPETIR")) if OS.get_environment("REPETIR") != "" else 3)
 	var base := 0.0
 	for i in rep:
-		base += await _cuadros(40)
+		base += await _cuadros(150)
 	base /= rep
 	print("CPUP base %.2f ms  (%d clases con proceso, %d nodos)" % [base, por_clase.size(), int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT))])
 	for k: String in por_clase:
@@ -55,7 +55,7 @@ func _medir() -> void:
 			n.process_mode = Node.PROCESS_MODE_DISABLED
 		var t := 0.0
 		for i in rep:
-			t += await _cuadros(40)
+			t += await _cuadros(150)
 		t /= rep
 		for n: Node in por_clase[k]:
 			n.process_mode = Node.PROCESS_MODE_INHERIT
@@ -66,7 +66,7 @@ func _medir() -> void:
 			n.process_mode = Node.PROCESS_MODE_DISABLED
 		var t2 := 0.0
 		for i in rep:
-			t2 += await _cuadros(40)
+			t2 += await _cuadros(150)
 		t2 /= rep
 		for n in ns:
 			n.process_mode = Node.PROCESS_MODE_INHERIT
@@ -74,10 +74,17 @@ func _medir() -> void:
 	print("===== FIN. 0 fallos =====")
 	get_tree().quit()
 
+## CPU del proceso (usuario + sistema, todos los hilos) por fotograma, en ms. El tiempo de pared NO sirve sin pantalla: el bucle sin
+## render espera hasta un suelo fijo de 6,9 ms por fotograma (medido con una escena vacía) y tapa todo lo que cuesta menos.
+static func _cpu_ms() -> float:
+	var t := FileAccess.get_file_as_string("/proc/self/stat")
+	var campos := t.substr(t.rfind(")") + 2).split(" ")
+	return (float(campos[11]) + float(campos[12])) * 10.0   ## ticks de 10 ms (campos 14 y 15 del archivo)
+
 func _cuadros(c: int) -> float:
 	for i in 5:
 		await get_tree().process_frame
-	var t0 := Time.get_ticks_usec()
+	var t0 := _cpu_ms()
 	for i in c:
 		await get_tree().process_frame
-	return float(Time.get_ticks_usec() - t0) / 1000.0 / float(c)
+	return (_cpu_ms() - t0) / float(c)
