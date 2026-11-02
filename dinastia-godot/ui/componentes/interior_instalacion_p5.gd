@@ -275,7 +275,7 @@ func _prensa() -> void:
 ## bancos y visitantes.
 func _museo() -> void:
 	_sala(Vector3(22, 5.0, 14), Color(0.42, 0.32, 0.26), Color(0.2, 0.2, 0.23), "parquet")
-	var oro := Mini3D.mat(Color(0.95, 0.75, 0.25), 0.25)
+	var oro := Mini3D.mat_unico(Color(0.95, 0.75, 0.25), 0.25)
 	oro.metallic = 0.9
 	var vidrio := Mini3D.mat(Color(0.8, 0.9, 1.0, 0.25), 0.05)
 	for k in 5:

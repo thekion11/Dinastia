@@ -169,3 +169,17 @@ static func mojar(mojado: bool) -> void:
 func mostrar_rotulos(si: bool) -> void:
 	if _rotulos != null:
 		_rotulos.visible = si
+
+## Los materiales compartidos que ya no son lo que pidieron (alguien los modificó): claves de la caché.
+func materiales_alterados() -> Array:
+	var malos: Array = []
+	for k: String in _cache_mat:
+		var d: Dictionary = _cache_mat[k]
+		var m: StandardMaterial3D = d["m"]
+		var ref := _mat_unico(d["c"], d["rug"], d["emi"])
+		if m.albedo_color != ref.albedo_color or not is_equal_approx(m.roughness, ref.roughness) \
+				or not is_equal_approx(m.metallic, ref.metallic) or m.transparency != ref.transparency \
+				or m.emission_enabled != ref.emission_enabled or not is_equal_approx(m.emission_energy_multiplier, ref.emission_energy_multiplier) \
+				or m.cull_mode != ref.cull_mode or m.shading_mode != ref.shading_mode or m.albedo_texture != ref.albedo_texture:
+			malos.append(k)
+	return malos

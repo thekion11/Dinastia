@@ -75,7 +75,7 @@ func _hacer_bote(k: int) -> Node3D:
 	var n := Node3D.new()
 	n.name = "Bote"
 	var casco := [Color(0.9, 0.9, 0.88), Color(0.15, 0.3, 0.55), Color(0.7, 0.15, 0.12)][k % 3] as Color
-	var mc := _mat_simple(casco, 0.4)
+	var mc := _mat_unico(casco, 0.4)
 	var c := MeshInstance3D.new()
 	var bm := BoxMesh.new()
 	bm.size = Vector3(3.4, 1.2, 9.0)

@@ -358,12 +358,11 @@ func buscar_oferta_por_mi_jugador() -> void:
 	var es_clausula := false
 	var cesiones := _mundo().cesiones
 	if cesiones != null:
-		var clausula := int(cesiones.clausulas.get(j.id, 0))
-		## "La cláusula es ley": si la oferta ya la cubre casi entera, se paga
-		## la cláusula exacta y la respuesta no puede ser un no -ver
-		## responder_oferta()-.
-		if clausula > 0 and float(monto) >= float(clausula) * 0.85:
-			monto = clausula
+		## "La cláusula es ley": si la oferta ya la cubre casi entera, se paga la cláusula exacta y la respuesta no
+		## puede ser un no -ver responder_oferta()-. (2-11: la regla vive en `oferta_por_clausula`, que nadie llamaba.)
+		var por_clausula := cesiones.oferta_por_clausula(j, monto, 1.0, true)
+		if bool(por_clausula["obligatoria"]):
+			monto = int(por_clausula["monto"])
 			es_clausula = true
 	ofertas_recibidas.append({"jugador": j, "club": comprador, "monto": monto,
 		"semana": _mundo().semana, "abs": _mundo().anio * 60 + _mundo().semana, "clausula": es_clausula})
