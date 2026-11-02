@@ -442,6 +442,6 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 		_pase_usuario_vivo = true
 		_pase_usuario_de = p
 
-## Cuánto más rápido hay que lanzar para llegar con el tiempo previsto: el aire quita ≈ K·v²·t en el vuelo (el 0,85 es porque no va siempre a toda velocidad); tope +15 % (a más, el balón pasaría de 36 m/s y la sonda de física lo contaría como salto).
+## Cuánto más rápido hay que lanzar para llegar con el tiempo previsto: el aire quita ≈ K·v²·t en el vuelo; tope +25 % (a más, el balón pasaría de 36 m/s y la sonda de física lo contaría como salto).
 static func compensa_arrastre(vh: float, tv: float) -> float:
-	return 1.0 / (1.0 - minf(ARRASTRE_CUAD * vh * tv * 0.85, 0.13))
+	return 1.0 / (1.0 - minf(ARRASTRE_CUAD * vh * tv, 0.2))

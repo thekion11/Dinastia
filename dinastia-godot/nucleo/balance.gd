@@ -14,9 +14,11 @@ const ROCE_SUELO := 0.18      ## frenado proporcional al rodar (1/s)
 
 const ROCE_FIJO := 0.7        ## frenado constante al rodar (m/s²)
 
-## H-03 (2-11-2026): resistencia del aire CUADRÁTICA (a = K·|v|·v), como la real (≈ 0,5·ρ·Cd·A/m ≈ 0,013 con ρ=1,2, Cd=0,25, A=0,038 m², m=0,43 kg). Antes era lineal
-## (v·0,06): a 30 m/s frenaba 1,8 m/s² y el real ≈ 12, y los tiros lejanos no «caían». Lo que frena de más al lanzar se compensa en `_lanzar` (`compensa_arrastre`).
-const ARRASTRE_CUAD := 0.0133
+## H-03 (2-11-2026): resistencia del aire CUADRÁTICA (a = K·|v|·v), como la real (K = 0,5·ρ·Cd·A/m; con ρ=1,2, A=0,038 m², m=0,43 kg y un Cd de 0,15 de balón liso sale
+## ≈ 0,008; con el 0,25 de un balón con costuras sería 0,013). Antes era lineal (v·0,06: a 30 m/s frenaba 1,8 m/s² y ahora 7,2). 0,013 hundía la ventaja del equipo mejor
+## (la sonda «el mejor gana al peor» pasaba de +2,0 a +0,2 goles); con 0,008 todo queda en rango (medido con 30 semillas en `rendimiento.md`). Lo que frena de más se compensa al lanzar
+## (`compensa_arrastre`).
+const ARRASTRE_CUAD := 0.008
 ## H-04: lo que se gasta el efecto (giro) del balón, por tiempo y no por fotograma: en el aire ~15 %/s; en el suelo, como el 3 % por fotograma a 60 Hz de antes (0,97^60).
 const GIRO_AIRE := 0.15
 const GIRO_SUELO := 0.97
