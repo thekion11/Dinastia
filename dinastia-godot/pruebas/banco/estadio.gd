@@ -265,6 +265,9 @@ func _probar_rellenos_ciudad() -> void:
 		"CiudadPlaza": func(ex): CiudadPlaza.montar(ex, Vector3.ZERO, 40.0, 0.0),
 		"CiudadOeste": func(ex): CiudadOeste.rellenar(ex, Rect2(-30, -30, 60, 60)),
 		"FachadaModular": func(ex): FachadaModular.montar(ex, 0.0, 0.0, 0.0, 12.0, 3),
+		"CiudadServicios.bomberos": func(ex): CiudadServicios.bomberos(ex, Vector3.ZERO, 40.0, 40.0),
+		"CiudadServicios.cocheras": func(ex): CiudadServicios.cocheras(ex, Vector3.ZERO, 40.0, 40.0),
+		"CiudadServicios.desguace": func(ex): CiudadServicios.desguace(ex, Vector3.ZERO, 40.0, 40.0),
 	}
 	for nombre: String in casos:
 		var cb := CityBuilder.new()
