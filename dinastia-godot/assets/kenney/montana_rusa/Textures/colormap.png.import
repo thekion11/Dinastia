@@ -3,19 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c854xsiosnxe8"
-path="res://.godot/imported/colormap.png-df2a094f24e9803dc655c7f7754e2abb.ctex"
+path.s3tc="res://.godot/imported/colormap.png-df2a094f24e9803dc655c7f7754e2abb.s3tc.ctex"
+path.etc2="res://.godot/imported/colormap.png-df2a094f24e9803dc655c7f7754e2abb.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/kenney/montana_rusa/Textures/colormap.png"
-dest_files=["res://.godot/imported/colormap.png-df2a094f24e9803dc655c7f7754e2abb.ctex"]
+dest_files=["res://.godot/imported/colormap.png-df2a094f24e9803dc655c7f7754e2abb.s3tc.ctex", "res://.godot/imported/colormap.png-df2a094f24e9803dc655c7f7754e2abb.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
