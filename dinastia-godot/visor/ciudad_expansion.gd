@@ -155,12 +155,10 @@ func construir() -> void:
 	cuenta["edificios"] = 0
 	await b._marca("exp_calles")   ## (28-10) marcas de tiempo por tramo, solo con TIEMPOS=1
 	for bl: Dictionary in ExpansionTardia.primeros_bloques(self):
-		_dibujar_bloque(bl)
+		ExpansionTardia.bloque(self, bl)
 		await b._marca("exp.bloque")
 	if not CityBuilder.diferir:   ## con carga diferida, esto va tras las manzanas que faltan (`ExpansionTardia.bloques_restantes`)
-		_edificios_lejanos()
-		_casas_multimesh()
-		_modular_multimesh()
+		ExpansionTardia.casas(self)
 	await b._marca("exp.casas")
 	metro = MetroCiudad.new()
 	metro.name = "Metro"

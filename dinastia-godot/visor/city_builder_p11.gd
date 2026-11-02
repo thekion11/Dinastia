@@ -241,6 +241,7 @@ func _resto() -> void:
 	await ExpansionTardia.bloques_restantes(expansion)
 	await ExpansionTardia.mobiliario(expansion)
 	expansion._volcar_lotes()
+	vestir_todas_las_torres()   ## las torres de las manzanas tardías (las de antes ya llevan su material: no se repiten)
 	await _marca("exp_lotes_tardio")
 	await _optimizar()
 	completa = true
