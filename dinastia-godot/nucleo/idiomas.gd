@@ -25,6 +25,7 @@ func _ready() -> void:
 	_cargar_extra()
 	TextoQueCabe.vigilar(get_tree())
 	LectorPantalla.vigilar(get_tree())   ## M-284: lectura de pantalla, si está encendida
+	TecladoPantalla.vigilar(get_tree())   ## M-441: teclado en pantalla con mando en PC/TV
 func _ordinales(texto: String) -> String:
 	if idioma == "fr":
 		if _re_ord_fr == null:

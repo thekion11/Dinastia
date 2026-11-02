@@ -7012,7 +7012,10 @@
   "Cargar %d": "Load %d",
   "Guardar en %d": "Save to %d",
   "Perfil %d cargado.": "Profile %d loaded.",
-  "Controles guardados en el perfil %d.": "Controls saved to profile %d."
+  "Controles guardados en el perfil %d.": "Controls saved to profile %d.",
+  "⇧ Mayús": "⇧ Shift",
+  "✔ Aceptar": "✔ OK",
+  "✖ Cerrar": "✖ Close"
  },
  "pt": {
   "Historia": "História",
@@ -14027,7 +14030,10 @@
   "Cargar %d": "Carregar %d",
   "Guardar en %d": "Salvar em %d",
   "Perfil %d cargado.": "Perfil %d carregado.",
-  "Controles guardados en el perfil %d.": "Controles salvos no perfil %d."
+  "Controles guardados en el perfil %d.": "Controles salvos no perfil %d.",
+  "⇧ Mayús": "⇧ Maiús",
+  "✔ Aceptar": "✔ Aceitar",
+  "✖ Cerrar": "✖ Fechar"
  },
  "patrones": [
   [
@@ -26819,7 +26825,10 @@
   "Cargar %d": "Charger %d",
   "Guardar en %d": "Enregistrer dans %d",
   "Perfil %d cargado.": "Profil %d chargé.",
-  "Controles guardados en el perfil %d.": "Commandes enregistrées dans le profil %d."
+  "Controles guardados en el perfil %d.": "Commandes enregistrées dans le profil %d.",
+  "⇧ Mayús": "⇧ Maj",
+  "✔ Aceptar": "✔ Valider",
+  "✖ Cerrar": "✖ Fermer"
  },
  "it": {
   "Historia": "Storia",
@@ -33834,7 +33843,10 @@
   "Cargar %d": "Carica %d",
   "Guardar en %d": "Salva in %d",
   "Perfil %d cargado.": "Profilo %d caricato.",
-  "Controles guardados en el perfil %d.": "Comandi salvati nel profilo %d."
+  "Controles guardados en el perfil %d.": "Comandi salvati nel profilo %d.",
+  "⇧ Mayús": "⇧ Maiusc",
+  "✔ Aceptar": "✔ Conferma",
+  "✖ Cerrar": "✖ Chiudi"
  },
  "de": {
   "Historia": "Geschichte",
@@ -40849,7 +40861,10 @@
   "Cargar %d": "%d laden",
   "Guardar en %d": "In %d speichern",
   "Perfil %d cargado.": "Profil %d geladen.",
-  "Controles guardados en el perfil %d.": "Steuerung in Profil %d gespeichert."
+  "Controles guardados en el perfil %d.": "Steuerung in Profil %d gespeichert.",
+  "⇧ Mayús": "⇧ Umschalt",
+  "✔ Aceptar": "✔ OK",
+  "✖ Cerrar": "✖ Schließen"
  },
  "ca": {
   "Historia": "Història",
@@ -47864,7 +47879,10 @@
   "Cargar %d": "Carregar %d",
   "Guardar en %d": "Desar a %d",
   "Perfil %d cargado.": "Perfil %d carregat.",
-  "Controles guardados en el perfil %d.": "Controls desats al perfil %d."
+  "Controles guardados en el perfil %d.": "Controls desats al perfil %d.",
+  "⇧ Mayús": "⇧ Maj",
+  "✔ Aceptar": "✔ Acceptar",
+  "✖ Cerrar": "✖ Tancar"
  },
  "pl": {
   "Club": "Klub",
@@ -55155,7 +55173,10 @@
   "Cargar %d": "Wczytaj %d",
   "Guardar en %d": "Zapisz w %d",
   "Perfil %d cargado.": "Wczytano profil %d.",
-  "Controles guardados en el perfil %d.": "Zapisano sterowanie w profilu %d."
+  "Controles guardados en el perfil %d.": "Zapisano sterowanie w profilu %d.",
+  "⇧ Mayús": "⇧ Shift",
+  "✔ Aceptar": "✔ Zatwierdź",
+  "✖ Cerrar": "✖ Zamknij"
  },
  "tr": {
   "Club": "Kulüp",
@@ -62446,6 +62467,9 @@
   "Cargar %d": "%d yükle",
   "Guardar en %d": "%d yuvasına kaydet",
   "Perfil %d cargado.": "%d. profil yüklendi.",
-  "Controles guardados en el perfil %d.": "Kontroller %d. profile kaydedildi."
+  "Controles guardados en el perfil %d.": "Kontroller %d. profile kaydedildi.",
+  "⇧ Mayús": "⇧ Büyük",
+  "✔ Aceptar": "✔ Tamam",
+  "✖ Cerrar": "✖ Kapat"
  }
 }
