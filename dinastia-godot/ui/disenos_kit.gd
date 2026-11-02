@@ -5,7 +5,7 @@ extends "res://ui/disenos_kit_p4.gd"
 static func _imagen_camiseta(clave: String, cols: Array[Color], trim: int, ancho_px: int, espalda: bool = false, sp: Dictionary = {}, cuello: int = 0) -> Image:
 	## (2-11, «se demora demasiado el diseñador»): lo que NO depende de los colores ni del diseño (silueta, luz del tejido, cuello, puños, escudo) se calcula una vez
 	## por tamaño (`DisenosKitEstructura`) y se guarda; cada camiseta solo calcula el color de la tela y lo multiplica por esa luz.
-	var ss := 2 if ancho_px > 80 and ancho_px <= 200 else 1
+	var ss := 2 if ancho_px <= 200 else 1
 	var escala := float(ancho_px * ss) / 64.0
 	var est := DisenosKitEstructura.de(escala, espalda, cuello, ancho_px >= 96)
 	var w: int = est["w"]
