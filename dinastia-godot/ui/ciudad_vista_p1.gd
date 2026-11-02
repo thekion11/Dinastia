@@ -364,31 +364,31 @@ func abrir_ficha(k: String) -> void:
 	aviso.custom_minimum_size = Vector2(300, 0)
 	if coste > 0 and not _obras.en_obra(k):
 		var b := Button.new()
-		b.text = "%s  ·  %s  ·  %d sem" % ["Construir" if nivel == 0 else "Mejorar al nivel %d" % (nivel + 1),
+		b.text = Idiomas.t("%s  ·  %s  ·  %d sem") % [Idiomas.t("Construir") if nivel == 0 else Idiomas.t("Mejorar al nivel %d") % (nivel + 1),
 			Cesiones.dinero(coste), _obras.semanas_de(k)]
 		b.custom_minimum_size = Vector2(0, 36)
 		b.disabled = coste > club.saldo
 		if coste > club.saldo:
 			aviso.text = Idiomas.t("No alcanza la caja: tienes %s.") % Cesiones.dinero(club.saldo)
 		b.pressed.connect(func() -> void:
-			var problema: String = String(construir.call(k)) if construir.is_valid() else "no disponible"
+			var problema: String = String(construir.call(k)) if construir.is_valid() else Idiomas.t("no disponible")
 			if problema != "":
-				aviso.text = "No se puede: %s." % problema
+				aviso.text = Idiomas.t("No se puede: %s.") % Idiomas.t(problema)
 				return
 			_reconstruir()
 			abrir_ficha(k))
 		v.add_child(b)
 	elif coste < 0:
-		v.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.BIEN, "Al máximo."))
+		v.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.BIEN, Idiomas.t("Al máximo.")))
 	v.add_child(aviso)
 	if nivel > 0 and InteriorInstalacion.tiene(k):
 		var dentro := Button.new()
-		dentro.text = "🚪 Ver por dentro"
+		dentro.text = Idiomas.t("🚪 Ver por dentro")
 		dentro.custom_minimum_size = Vector2(0, 34)
 		dentro.pressed.connect(func() -> void: InteriorInstalacion.abrir(self, k, club))
 		v.add_child(dentro)
 	var cerrar := Button.new()
-	cerrar.text = "Cerrar"
+	cerrar.text = Idiomas.t("Cerrar")
 	cerrar.flat = true
 	cerrar.pressed.connect(func() -> void:
 		_ficha.queue_free()
