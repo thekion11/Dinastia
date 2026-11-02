@@ -6791,7 +6791,12 @@
   "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "Tip: change your tactics during the match if the opponent surprises you.",
   "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "Tip: your phone has an agenda with the day's appointments and meetings.",
   "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "Tip: a good press conference keeps the fans happy.",
-  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Tip: the city has a metro, buses and a cable car so you can get around at ease."
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Tip: the city has a metro, buses and a cable car so you can get around at ease.",
+  "Modelo base": "Base model",
+  "Atleta (clásico)": "Athlete (classic)",
+  "Campesino": "Peasant",
+  "Explorador": "Ranger",
+  "los modelos de fantasía traen su ropa": "fantasy models come with their own clothes"
  },
  "pt": {
   "Historia": "História",
@@ -13585,7 +13590,12 @@
   "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "Dica: muda a tática durante o jogo se o adversário te surpreender.",
   "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "Dica: o teu telemóvel tem uma agenda com os compromissos e reuniões do dia.",
   "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "Dica: uma boa conferência de imprensa mantém os adeptos contentes.",
-  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Dica: a cidade tem metro, autocarros e teleférico para te deslocares sem pressa."
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Dica: a cidade tem metro, autocarros e teleférico para te deslocares sem pressa.",
+  "Modelo base": "Modelo base",
+  "Atleta (clásico)": "Atleta (clássico)",
+  "Campesino": "Camponês",
+  "Explorador": "Explorador",
+  "los modelos de fantasía traen su ropa": "os modelos de fantasia trazem a sua roupa"
  },
  "patrones": [
   [
@@ -26112,7 +26122,12 @@
   "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "Astuce : changez de tactique pendant le match si l'adversaire vous surprend.",
   "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "Astuce : votre téléphone contient un agenda avec les rendez-vous et réunions du jour.",
   "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "Astuce : une bonne conférence de presse garde les supporters contents.",
-  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Astuce : la ville a un métro, des bus et un téléphérique pour vous déplacer sans hâte."
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Astuce : la ville a un métro, des bus et un téléphérique pour vous déplacer sans hâte.",
+  "Modelo base": "Modèle de base",
+  "Atleta (clásico)": "Athlète (classique)",
+  "Campesino": "Paysan",
+  "Explorador": "Rôdeur",
+  "los modelos de fantasía traen su ropa": "les modèles fantasy ont leurs propres vêtements"
  },
  "it": {
   "Historia": "Storia",
@@ -32906,7 +32921,12 @@
   "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "Consiglio: cambia tattica durante la partita se l'avversario ti sorprende.",
   "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "Consiglio: il tuo telefono ha un'agenda con gli appuntamenti e le riunioni del giorno.",
   "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "Consiglio: una buona conferenza stampa tiene contenti i tifosi.",
-  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Consiglio: la città ha metro, autobus e funivia per spostarti senza fretta."
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Consiglio: la città ha metro, autobus e funivia per spostarti senza fretta.",
+  "Modelo base": "Modello base",
+  "Atleta (clásico)": "Atleta (classico)",
+  "Campesino": "Contadino",
+  "Explorador": "Esploratore",
+  "los modelos de fantasía traen su ropa": "i modelli fantasy hanno i loro vestiti"
  },
  "de": {
   "Historia": "Geschichte",
@@ -39700,7 +39720,12 @@
   "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "Tipp: Ändere die Taktik während des Spiels, wenn dich der Gegner überrascht.",
   "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "Tipp: Dein Handy hat einen Terminkalender mit den Verabredungen und Besprechungen des Tages.",
   "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "Tipp: Eine gute Pressekonferenz hält die Fans bei Laune.",
-  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Tipp: Die Stadt hat U-Bahn, Busse und eine Seilbahn, damit du dich in Ruhe fortbewegen kannst."
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Tipp: Die Stadt hat U-Bahn, Busse und eine Seilbahn, damit du dich in Ruhe fortbewegen kannst.",
+  "Modelo base": "Basismodell",
+  "Atleta (clásico)": "Athlet (klassisch)",
+  "Campesino": "Bauer",
+  "Explorador": "Waldläufer",
+  "los modelos de fantasía traen su ropa": "Fantasy-Modelle bringen ihre eigene Kleidung mit"
  },
  "ca": {
   "Historia": "Història",
@@ -46494,7 +46519,12 @@
   "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "Consell: canvia la tàctica durant el partit si el rival et sorprèn.",
   "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "Consell: el teu mòbil té una agenda amb les cites i reunions del dia.",
   "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "Consell: una bona roda de premsa manté contenta l'afició.",
-  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Consell: la ciutat té metro, autobusos i telefèric per moure't sense pressa."
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Consell: la ciutat té metro, autobusos i telefèric per moure't sense pressa.",
+  "Modelo base": "Model base",
+  "Atleta (clásico)": "Atleta (clàssic)",
+  "Campesino": "Pagès",
+  "Explorador": "Explorador",
+  "los modelos de fantasía traen su ropa": "els models de fantasia porten la seva roba"
  },
  "pl": {
   "Club": "Klub",
@@ -53565,7 +53595,12 @@
   "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "Wskazówka: zmień taktykę w trakcie meczu, jeśli rywal cię zaskoczy.",
   "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "Wskazówka: twój telefon ma kalendarz ze spotkaniami i zebraniami na dziś.",
   "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "Wskazówka: dobra konferencja prasowa utrzymuje dobry nastrój kibiców.",
-  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Wskazówka: w mieście jest metro, autobusy i kolejka linowa, byś mógł podróżować bez pośpiechu."
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Wskazówka: w mieście jest metro, autobusy i kolejka linowa, byś mógł podróżować bez pośpiechu.",
+  "Modelo base": "Model bazowy",
+  "Atleta (clásico)": "Sportowiec (klasyczny)",
+  "Campesino": "Chłop",
+  "Explorador": "Zwiadowca",
+  "los modelos de fantasía traen su ropa": "modele fantasy mają własne ubrania"
  },
  "tr": {
   "Club": "Kulüp",
@@ -60636,6 +60671,11 @@
   "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "İpucu: Rakip seni şaşırtırsa maç sırasında taktiğini değiştir.",
   "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "İpucu: Telefonunda günün randevuları ve toplantılarını gösteren bir ajanda var.",
   "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "İpucu: İyi bir basın toplantısı taraftarı memnun tutar.",
-  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "İpucu: Şehirde metro, otobüs ve teleferik var; acele etmeden dolaşabilirsin."
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "İpucu: Şehirde metro, otobüs ve teleferik var; acele etmeden dolaşabilirsin.",
+  "Modelo base": "Temel model",
+  "Atleta (clásico)": "Atlet (klasik)",
+  "Campesino": "Köylü",
+  "Explorador": "Kaşif",
+  "los modelos de fantasía traen su ropa": "fantezi modelleri kendi kıyafetleriyle gelir"
  }
 }
