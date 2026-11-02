@@ -527,7 +527,7 @@ Cumplimiento medido en el código: entrada ~95 %, fase 0 (separar `Principal`) ~
 club ampliado ~85 %, redes ~85 %, dinero ~70 %, calidad visual ~70 % (el dueño dijo «MEJORAR» dos veces), cifras 2.3 100 %.
 Las pruebas f1-f5 del guion ya corren en `especiales.sh` (28-10). Lo que falta, por importancia para el jugador (horas de sesión):
 
-3-5 y 9 (recorrido completo del prólogo con personal que saluda, gesto del DT según el tono, entrevista de 3 preguntas, «visibilidad» y celebración de la rama de otro deporte): HECHOS el 2-11 en la rama de la sesión de ciudad (`ccr-630aba3a-nnd93p`); falta unirla (26 bloques de conflicto con `main` que resuelve esa sesión) y la entrevista para el staff.
+5. Entrevista de 3 preguntas: HECHA con el vestuario (2-11); falta la versión para el staff (sesión de ciudad).
 8. Fase 0: HECHO el contrato (31-10): `PantallaBase` con `abrir(sección, contexto)`, `cerrar()` y la señal `cerrada` en las 15 pantallas del menú central; `Principal._refrescar` las abre por `abrir` (34 secciones; prueba `f0_contratos` en especiales). Falta (deuda interna, invisible al jugador): que cada pantalla tenga su propio nodo y estado en vez de pintar en `p._lista_*` y leer `p.*`, y los 9 trozos que otros paneles componen a mano (`federacion_menu`, `paneles_club`, `vistas_menu`). El autoguardado al salir de la entrada está HECHO.
 9. Club ampliado: la rama de otro deporte no ofrece «visibilidad» ni celebra sus títulos (2 h).
 10. Dinero: coches: auditoría HECHA (`docs/04_auditorias/coches_31_10.md`), el dueño pidió TODAS (A-G, 31-10): A gasolina en el móvil/HUD/salpicadero; B derrape; C daños visibles y taller; D bajarse y aparcar; E claxon (la RADIO espera música con licencia del dueño); F atropello con reacción, 150 € y titular; G claxon y velocidad asustan a los peatones; consumo 0,5 l/km y multa temeraria 60 €. Solo falta la radio. Pendiente de mirar en Forward+ en el PC del dueño: los cajeros nuevos (hospital, universidad, estación, estadio).
@@ -699,7 +699,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
 | M-167 | P1 | PENDIENTE | Calzadas = cajas de asfalto con marcas propias; Kenney sólo… | calzadas propias; losetas Kenney no usadas |
-| M-171 | P1 | PARCIAL | Tráfico: comportamiento complejo | 27-10: cola, frenado en rojo, prioridad de la derecha, adelantamiento; falta rotonda con tráfico |
 | M-168 | P2 | PARCIAL | Rotondas | 28-10: una rotonda decorativa en un cruce sin rutas (`visor/ciudad_rotonda.gd`); falta rotonda con tráfico que la recorra |
 | M-170 | P2 | PARCIAL | Semáforos peatonales con botón | 28-10: botón y hombrecito (`visor/semaforos.gd pedir`); FALLO: el ciclo es global a toda la ciudad y los peatones de `TraficoCiudad` no respetan la fase; cabeza peatonal pequeña |
 | M-173 | P2 | PARCIAL | Sin sonido de motor/marchas/derrape | 21-10: el motor del coche suena, sintetizado en vivo con revoluciones y 5 marchas (`visor/motor_coche_sonido.gd`); sin radio |
