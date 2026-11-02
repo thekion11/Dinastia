@@ -238,6 +238,7 @@ func _resto() -> void:
 	await _marca("_karting")
 	_trafico()
 	await _marca("_trafico")
+	await ExpansionTardia.bloques_restantes(expansion)
 	await ExpansionTardia.mobiliario(expansion)
 	expansion._volcar_lotes()
 	await _marca("exp_lotes_tardio")

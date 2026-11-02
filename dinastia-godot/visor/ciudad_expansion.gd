@@ -154,12 +154,13 @@ func construir() -> void:
 	cuenta["senales_velocidad"] = SenalesVelocidad.montar(self)   ## M-199: límites de velocidad en los cruces
 	cuenta["edificios"] = 0
 	await b._marca("exp_calles")   ## (28-10) marcas de tiempo por tramo, solo con TIEMPOS=1
-	for bl: Dictionary in bloques:
+	for bl: Dictionary in ExpansionTardia.primeros_bloques(self):
 		_dibujar_bloque(bl)
 		await b._marca("exp.bloque")
-	_edificios_lejanos()
-	_casas_multimesh()
-	_modular_multimesh()
+	if not CityBuilder.diferir:   ## con carga diferida, esto va tras las manzanas que faltan (`ExpansionTardia.bloques_restantes`)
+		_edificios_lejanos()
+		_casas_multimesh()
+		_modular_multimesh()
 	await b._marca("exp.casas")
 	metro = MetroCiudad.new()
 	metro.name = "Metro"
