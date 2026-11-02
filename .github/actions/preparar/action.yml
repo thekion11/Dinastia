@@ -1,0 +1,44 @@
+# Preparación común de todos los trabajos con Godot (LFS del juego + caché de importación).
+# Va DESPUÉS de actions/checkout. La caché de `.godot` se identifica por el contenido de los
+# .import, project.godot y los .gd: si algo cambia, se reimporta (nunca se usa una caché vieja).
+name: Preparar el proyecto
+description: LFS de dinastia-godot, caché de .godot e importación
+runs:
+  using: composite
+  steps:
+    - name: Huella de los archivos LFS
+      id: huella
+      shell: bash
+      run: |
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        echo "lfs=$(git lfs ls-files -l --include='dinastia-godot/**' 2>/dev/null | sha256sum | cut -c1-32)" >> "$GITHUB_OUTPUT"
+
+    - name: Caché de los objetos LFS
+      uses: actions/cache@v4
+      with:
+        path: .git/lfs/objects
+        key: lfs-${{ steps.huella.outputs.lfs }}
+
+    - name: Recursos LFS del juego
+      shell: bash
+      run: |
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        command -v git-lfs >/dev/null || (apt-get update && apt-get install -y git-lfs)
+        git lfs install --local
+        git lfs pull --include="dinastia-godot/**"
+
+    - name: Caché de la importación
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: dinastia-godot/.godot
+        key: godot-4.7.2-${{ hashFiles('dinastia-godot/project.godot', 'dinastia-godot/**/*.import', 'dinastia-godot/**/*.gd') }}
+
+    - name: Importar el proyecto
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      working-directory: dinastia-godot
+      run: |
+        godot --version
+        timeout 900 godot --headless --path . --import > /tmp/importar.txt 2>&1 || true
+        tail -n 20 /tmp/importar.txt
