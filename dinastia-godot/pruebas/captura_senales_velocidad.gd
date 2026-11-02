@@ -35,13 +35,23 @@ func _process(_d: float) -> void:
 		var en := c + Vector3(ancho + 4.5 + 5.0, 0, ancho)   ## a 5 m de la señal, mirándola de frente
 		_e.cuerpo.position = Vector3(en.x, _e.altura_suelo(en.x, en.z), en.z)
 		_e.set("rumbo", PI * 0.5)
+	if f >= 20 and f <= 30:
+		_apuntar(c + Vector3(ancho + 4.5, 2.25, ancho), Vector3(1, 0, 0))
 	if f == 30:
 		get_viewport().get_texture().get_image().save_png("/tmp/senal_0.png")
 	if f == 31:
 		var en2 := c + Vector3(-ancho, 0, ancho + 4.5 + 5.0)
 		_e.cuerpo.position = Vector3(en2.x, _e.altura_suelo(en2.x, en2.z), en2.z)
 		_e.set("rumbo", 0.0)
+	if f >= 50 and f <= 60:
+		_apuntar(c + Vector3(-ancho, 2.25, ancho + 4.5), Vector3(0, 0, 1))
 	if f == 60:
 		get_viewport().get_texture().get_image().save_png("/tmp/senal_1.png")
 		print("FIN. 0 fallos")
 		get_tree().quit()
+
+## La cámara a 4 m delante de la señal (mirando de frente a su cara, que da a `cara`) y a su altura.
+func _apuntar(sitio: Vector3, cara: Vector3) -> void:
+	var cam := get_viewport().get_camera_3d()
+	cam.global_position = sitio + cara * 4.0 + Vector3(0, -0.5, 0)
+	cam.look_at(sitio, Vector3.UP)
