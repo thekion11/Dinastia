@@ -96,4 +96,6 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     (Calendar) SOLO al final, con el resumen; no avisar fase por fase. Al final: dos VÍDEOS (un partido con la cámara real y un
     recorrido del juego entero: menú, ciudad, estadio, museo, gestión, partido, minijuego), grabados con `--write-movie` + xvfb +
     ffmpeg, fuera del repo (scratchpad → app y Drive). El dueño pone nota 1-100 con argumentos, que pasan a la lista de mejoras.
-    (02-11) El dueño pidió SOLO el vídeo del partido (enviado: 2 partes, Lautaro 2-1 Marga Marga); su nota queda pendiente.
+    (02-11) El dueño pidió SOLO el vídeo del partido (enviado: 2 partes comprimidas a 960x540, Lautaro 2-1 Marga Marga); su nota queda
+    pendiente. Lo pidió más nítido: la regrabación en 1080p se cortó a medias (tarda ~7 h por software); queda el script
+    `herramientas/grabar_partido_hd.sh` para hacerlo en un PC con GPU o rehacerlo aquí.
