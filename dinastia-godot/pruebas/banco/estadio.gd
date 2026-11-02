@@ -281,3 +281,62 @@ func _probar_rellenos_ciudad() -> void:
 		var nuevos := cb.get_child_count() + cb.puntos_clic.size() - antes   ## piezas o puntos de clic
 		_comprobar(nuevos >= 1, "%s deja piezas (%d)" % [nombre, nuevos])
 		cb.queue_free()
+
+## M-404: módulos de `visor/` sin prueba directa (foto de equipo, sillón, banco, obra, tienda de la gasolinera).
+func _probar_visor_pequenos() -> void:
+	_titulo("MÓDULOS PEQUEÑOS DEL VISOR (foto de equipo, sillón, banco, obra, tienda)")
+	## CeremoniaFoto: once locales en dos filas y vuelta exacta al sitio.
+	var jugadores: Array = []
+	var nodos: Array = []
+	for i in 12:
+		var nd := Node3D.new()
+		nd.position = Vector3(float(i), 0, 3.0)
+		nd.rotation.y = 0.3
+		add_child(nd)
+		nodos.append(nd)
+		jugadores.append({"es_local": i < 11, "node": nd, "anim": null})
+	var anims: Array = []
+	var guardado := CeremoniaFoto.colocar(jugadores, func(_a, nombre): anims.append(nombre))
+	_comprobar(guardado.size() == 11, "la foto coloca solo a los 11 locales (%d)" % guardado.size())
+	_comprobar(anims.count("parado") == 6 and anims.count("agachado") == 5, "seis de pie detrás y cinco agachados delante")
+	_comprobar(is_equal_approx((nodos[0] as Node3D).position.x, CeremoniaFoto.X_ATRAS) and is_equal_approx((nodos[10] as Node3D).position.x, CeremoniaFoto.X_DELANTE), "dos filas en X_ATRAS y X_DELANTE")
+	_comprobar((nodos[11] as Node3D).position == Vector3(11, 0, 3.0), "el visitante no se mueve")
+	CeremoniaFoto.devolver(guardado, jugadores, func(_a, _n): pass)
+	_comprobar((nodos[4] as Node3D).position == Vector3(4, 0, 3.0) and is_equal_approx((nodos[4] as Node3D).rotation.y, 0.3), "al terminar cada uno vuelve a su sitio y giro")
+	var raiz_luz := Node3D.new()
+	add_child(raiz_luz)
+	var l := CeremoniaFoto.luz(raiz_luz)
+	CeremoniaFoto.destellar(l, 0.75)   ## (0,75 + 0,2) mod 0,45 = 0,05 s: en pleno destello
+	var encendido := l.light_energy
+	CeremoniaFoto.destellar(l, 0.88)   ## fase 0,18 s: apagado
+	_comprobar(encendido > 0.0 and l.light_energy == 0.0, "el flash destella a ratos y se apaga entre medias")
+	for nd2: Node3D in nodos:
+		nd2.queue_free()
+	raiz_luz.queue_free()
+	## SillonOficina: con el recurso del Drive lo pone con su cuerpo; sin él devuelve null (quien llama usa lo de antes).
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var sillon := SillonOficina.poner(raiz, Vector3(1, 0, 2), 0.5)
+	if ResourceLoader.exists(SillonOficina.RUTA):
+		_comprobar(sillon != null and sillon.find_children("*", "CollisionShape3D", true, false).size() == 1, "el sillón del Drive se coloca con su cuerpo")
+		var sin_cuerpo := SillonOficina.poner(raiz, Vector3.ZERO, 0.0, false)
+		_comprobar(sin_cuerpo != null and sin_cuerpo.find_children("*", "CollisionShape3D", true, false).is_empty(), "sin cuerpo no lleva colisión")
+	else:
+		_comprobar(sillon == null, "sin el recurso devuelve null")
+	raiz.queue_free()
+	## Banco y obra de la ciudad.
+	var cb := CityBuilder.new()
+	add_child(cb)
+	cb._rotulos = Node3D.new()
+	cb.add_child(cb._rotulos)
+	var ex := CiudadExpansion.new(cb)
+	var clics := cb.puntos_clic.size()
+	CiudadBanco.montar(ex, 0.0, 0.0, 0.0)
+	_comprobar(cb.puntos_clic.size() == clics + 1 and String(cb.puntos_clic[-1]["k"]).begins_with("banco_"), "la ventanilla del banco deja su punto de clic")
+	var hijos := cb.get_child_count()
+	ex._materiales()   ## la obra usa el hormigón de la ciudad
+	CiudadObra.montar(ex, Rect2(-30, -30, 60, 60))
+	_comprobar(cb.get_child_count() > hijos, "la obra deja piezas (%d)" % (cb.get_child_count() - hijos))
+	cb.queue_free()
+	## Tienda de la gasolinera: solo responde a «tienda_<n>» y necesita vida.
+	_comprobar(not GasolineraTienda.servicio({"vida": null}, "otra_cosa") and not GasolineraTienda.servicio({"vida": null}, "tienda_1"), "sin vida o con otra clave, la tienda no responde")
