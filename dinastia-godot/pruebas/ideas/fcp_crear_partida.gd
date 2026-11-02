@@ -131,4 +131,11 @@ func _modelos_base() -> void:
 			_comprobar(not d.is_empty() and d.has("anim") and (d["anim"] as AnimationPlayer).current_animation != "", "%s (%s): se crea y reproduce una animación" % [mb, cuerpo])
 			if not d.is_empty():
 				(d["nodo"] as Node).queue_free()
+	for k: String in FutbolistaQ.MODELOS_AJENOS:
+		_comprobar(FutbolistaQ.ajeno_disponible(k), "%s: está en el juego" % k)
+		var da := PersonajeDT.crear(raiz, {"modelo": k, "altura": 1.8})
+		var ap: AnimationPlayer = da.get("anim")
+		_comprobar(not da.is_empty() and ap != null and ap.current_animation != "", "%s: se arma con su Idle" % k)
+		if not da.is_empty():
+			(da["nodo"] as Node).queue_free()
 	raiz.queue_free()

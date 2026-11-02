@@ -126,3 +126,6 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 
 ## Modular Character Outfits - Fantasy (Standard) — `assets/characters/outfits/`
 Quaternius, CC0 1.0 (ver `License_Standard.txt` en esa carpeta). Campesino y Explorador, hombre y mujer, en glTF con el esqueleto de 65 huesos. Texturas reducidas a 1024 px (originales 4096). Fuera de LFS por orden del dueño (2-11-2026); ~14 MB.
+
+## KayKit Adventurers y Skeletons — `assets/characters/kaykit/`
+Kay Lousberg (kaylousberg.com), CC0 (ver `LICENSE_*.txt`). 5 aventureros y 4 esqueletos, esqueleto propio de 41 huesos con 76 animaciones dentro de cada .glb. Fuera de LFS (OK del dueño, 2-11-2026), ~37 MB.

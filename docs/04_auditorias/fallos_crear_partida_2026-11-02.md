@@ -43,3 +43,13 @@ Las dos camisetas 2D (píxel a píxel en GDScript) se repintaban en cada cambio 
 
 ## Modelos base (fallo 1) — HECHO en parte (2-11-2026)
 Selector «Modelo base» en la pestaña Cuerpo (`HojasPersonaje`) con Atleta (clásico), Campesino y Explorador (hombre y mujer), de «Modular Character Outfits» (CC0, `assets/characters/outfits/`, fuera de LFS con el OK del dueño, 14 MB). Comparten el esqueleto de 65 huesos: llevan las animaciones y los gestos; vienen vestidos (sin vestidor, pelo ni accesorios). Clave `modelo` en el aspecto (`PersonajeDT.BASE`), `FutbolistaQ.MODELOS_BASE`. Faltan: Kenney `characterMedium` (otro esqueleto), MakeHuman (faltan .glb) y los del Drive (sin acceso).
+
+## «Agarra todos» los 11 candidatos (2-11-2026) — estado
+Clonados (superficiales) en /tmp; no se añadieron al repo los que no sirven:
+- **KayKit Adventurers y Skeletons** (CC0): INTEGRADOS como «Modelo base» (9 personajes cartoon, Idle propio, sin armas; `FutbolistaQ.MODELOS_AJENOS`, `assets/characters/kaykit/`, 37 MB fuera de LFS).
+- **Quaternius «Modular Men/Women»** (en `trebeljahr/quaternius-showcase`, CC0, 21 personajes civiles: Casual, Suit, Worker, Formal…): sin animaciones y con otro esqueleto (49/51 huesos); falta retargetear (BoneMap) antes de poder ofrecerlos. Los más útiles para un DT: Suit/Formal/Casual.
+- **Numinia VRM (15) y 3d-anvil (VRM/GLB)** (CC0): VRM necesita un importador de Godot (addon `godot-vrm`); pendiente.
+- **MH2_Asset_Repository_CCO** (5 MB, CC0): ropa/pelo de MakeHuman 2; solo sirve con el flujo MakeHuman (`persona_mh.gd`, faltan los .glb).
+- **Vitruvian-Project** (2,2 GB, CC0): proyecto Blender de humano digital; demasiado pesado y sin .glb listos.
+- **humanizer** (AGPL, herramienta) y **godot-demo-projects** (MIT): no se copian.
+- **assets-kaykit-3d-characters** (copia no oficial): se usó la fuente oficial.

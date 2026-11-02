@@ -35,6 +35,67 @@ const MODELOS_BASE := {
 	"campesino": ["Campesino", "res://assets/characters/outfits/Male_Peasant.gltf", "res://assets/characters/outfits/Female_Peasant.gltf"],
 	"explorador": ["Explorador", "res://assets/characters/outfits/Male_Ranger.gltf", "res://assets/characters/outfits/Female_Ranger.gltf"],
 }
+## MODELOS AJENOS (otro esqueleto, con sus propias animaciones dentro del .glb): KayKit (CC0). No pasan
+## por el vestidor ni las animaciones de Quaternius; `ajeno()` los arma con su «Idle».
+const MODELOS_AJENOS := {
+	"kk_barbaro": ["Bárbaro", "res://assets/characters/kaykit/Barbarian.glb"],
+	"kk_caballero": ["Caballero", "res://assets/characters/kaykit/Knight.glb"],
+	"kk_mago": ["Mago", "res://assets/characters/kaykit/Mage.glb"],
+	"kk_picaro": ["Pícaro", "res://assets/characters/kaykit/Rogue.glb"],
+	"kk_picaro_capucha": ["Pícaro con capucha", "res://assets/characters/kaykit/Rogue_Hooded.glb"],
+	"kk_esq_guerrero": ["Esqueleto guerrero", "res://assets/characters/kaykit/Skeleton_Warrior.glb"],
+	"kk_esq_mago": ["Esqueleto mago", "res://assets/characters/kaykit/Skeleton_Mage.glb"],
+	"kk_esq_picaro": ["Esqueleto pícaro", "res://assets/characters/kaykit/Skeleton_Rogue.glb"],
+	"kk_esq_secuaz": ["Esqueleto secuaz", "res://assets/characters/kaykit/Skeleton_Minion.glb"],
+}
+const ARMAS := ["shield", "sword", "axe", "staff", "knife", "spellbook", "wand", "crossbow", "bow", "arrow", "blade", "mug", "hammer", "dagger", "quiver", "cross"]
+
+## ¿Está el modelo ajeno en el juego?
+static func ajeno_disponible(clave: String) -> bool:
+	return MODELOS_AJENOS.has(clave) and ResourceLoader.exists(String((MODELOS_AJENOS[clave] as Array)[1]))
+
+## Arma un modelo ajeno a `altura` m (medida por sus mallas) con su «Idle» en bucle y sin armas.
+## Devuelve {"nodo","modelo","anim","altura","cuerpo","ajeno"} (sin esqueleto Quaternius). `padre` en el árbol.
+static func ajeno(padre: Node3D, clave: String, altura: float) -> Dictionary:
+	if not ajeno_disponible(clave):
+		return {}
+	var packed: PackedScene = load(String((MODELOS_AJENOS[clave] as Array)[1]))
+	if packed == null:
+		return {}
+	var modelo: Node3D = packed.instantiate()
+	var raiz := Node3D.new()
+	raiz.add_child(modelo)
+	padre.add_child(raiz)
+	for mi in modelo.find_children("*", "MeshInstance3D", true, false):
+		var nom := String(mi.name).to_lower()
+		for a: String in ARMAS:
+			if nom.contains(a):
+				(mi as MeshInstance3D).visible = false
+				break
+	## Altura: de los pies a la coronilla de las mallas visibles.
+	var ymin := 1e9
+	var ymax := -1e9
+	for mi in modelo.find_children("*", "MeshInstance3D", true, false):
+		var m := mi as MeshInstance3D
+		if m.visible and m.mesh != null:
+			var bb := m.global_transform * m.get_aabb()
+			ymin = minf(ymin, bb.position.y)
+			ymax = maxf(ymax, bb.end.y)
+	var h := ymax - ymin
+	if h > 0.1:
+		modelo.scale = Vector3.ONE * (altura / h)
+		modelo.position.y = -ymin * altura / h
+	var ap: AnimationPlayer = null
+	var aps := modelo.find_children("*", "AnimationPlayer", true, false)
+	if not aps.is_empty():
+		ap = aps[0] as AnimationPlayer
+		for n: String in ["Idle", "Unarmed_Idle"]:
+			if ap.has_animation(n):
+				ap.get_animation(n).loop_mode = Animation.LOOP_LINEAR
+				ap.play(n)
+				break
+	return {"nodo": raiz, "modelo": modelo, "anim": ap, "altura": altura, "cuerpo": "male", "ajeno": true}
+
 static var _extra: Dictionary = {}
 
 ## ¿Existe (y carga) ese modelo base extra para ese cuerpo?
