@@ -381,6 +381,29 @@ func _probar_eras_y_precios() -> void:
 	_linea("  proyeccion media de la camada: con epoca dorada %.1f, sin ella %.1f" % [techo_con, techo_sin])
 	_comprobar(techo_con > techo_sin, "la epoca dorada se nota de verdad en la camada")
 
+	## EL CICLO DEL MERCADO (M-210): burbuja y crisis mueven lo que se pide en un traspaso, no el valor.
+	var jx: Jugador = m.ligas[0].clubes[3].plantilla[0]
+	var pedido0 := m.mercado.valor_pedido(jx)
+	var valor0 := jx.valor
+	e.mercado = {"tipo": "burbuja", "hasta": m.anio}
+	var pedido_b := m.mercado.valor_pedido(jx)
+	e.mercado = {"tipo": "crisis", "hasta": m.anio}
+	var pedido_c := m.mercado.valor_pedido(jx)
+	_linea("  pedido por %s: normal %d, burbuja %d, crisis %d" % [jx.nombre, pedido0, pedido_b, pedido_c])
+	_comprobar(pedido_b > pedido0 and pedido_c < pedido0 and jx.valor == valor0, "la burbuja encarece y la crisis abarata el traspaso, sin tocar el valor")
+	_comprobar(is_equal_approx(e.factor_mercado(m.anio + 1), 1.0), "el ciclo caduca solo")
+	var e2 := Eras.new()
+	e2.desde_dic(e.a_dic())
+	_comprobar(e2.ciclo_mercado(m.anio) == "crisis", "el ciclo se guarda y se carga")
+	var tipos := {}
+	var ex := Eras.new()
+	for a in range(2026, 2126):
+		ex._rodar_mercado(a, 777)
+		tipos[ex.ciclo_mercado(a)] = int(tipos.get(ex.ciclo_mercado(a), 0)) + 1
+	_linea("  100 temporadas: %s" % str(tipos))
+	_comprobar(tipos.has("burbuja") and tipos.has("crisis") and int(tipos.get("normal", 0)) > 50, "en un siglo hay burbujas y crisis, pero lo normal es lo normal")
+	e.mercado = {"tipo": "normal", "hasta": 0}
+
 	## LOS PRECIOS DINAMICOS: el mismo asiento no vale lo mismo contra el lider
 	## que contra el colista.
 	var h := m.hinchada

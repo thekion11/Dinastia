@@ -700,7 +700,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 |---|---|---|---|---|
 | M-167 | P1 | PENDIENTE | Calzadas = cajas de asfalto con marcas propias; Kenney sólo… | calzadas propias; losetas Kenney no usadas |
 | M-171 | P1 | PARCIAL | Tráfico: comportamiento complejo | 27-10: cola, frenado en rojo, prioridad de la derecha, adelantamiento; falta rotonda con tráfico |
-| M-263 | P1 | PARCIAL | Eventos únicos y agenda | la agenda del móvil existe (`telefono_p3.gd`, `nucleo/citas.gd`); faltan los 13 eventos únicos con control real |
 | M-168 | P2 | PARCIAL | Rotondas | 28-10: una rotonda decorativa en un cruce sin rutas (`visor/ciudad_rotonda.gd`); falta rotonda con tráfico que la recorra |
 | M-170 | P2 | PARCIAL | Semáforos peatonales con botón | 28-10: botón y hombrecito (`visor/semaforos.gd pedir`); FALLO: el ciclo es global a toda la ciudad y los peatones de `TraficoCiudad` no respetan la fase; cabeza peatonal pequeña |
 | M-173 | P2 | PARCIAL | Sin sonido de motor/marchas/derrape | 21-10: el motor del coche suena, sintetizado en vivo con revoluciones y 5 marchas (`visor/motor_coche_sonido.gd`); sin radio |
@@ -738,7 +737,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-210 | P1 | PARCIAL | Mercado: precios por reputación sin burbujas ni crisis | eras con precios (`Eras`, `_probar_eras_y_precios`); sin burbujas |
 | M-219 | P1 | PARCIAL | `Banco` e `Insolvencia` existen pero con pocos eventos de gravedad | administrador, tope salarial, venta de lo que sobra, refundación (`Insolvencia`); descenso administrativo ya hecho (`Insolvencia.descenso_administrativo`, cableado en `mundo_p6`, prueba del 2-11) |
 | M-359 | P1 | PENDIENTE | Estadio real en 46 % de clubes (C-01) | 46 % |
 | M-209 | P2 | PARCIAL | La prueba larga sólo comprueba que no hay errores, no el equilibrio | `prueba_larga` comprueba medias en rango; sin métricas de equilibrio |
