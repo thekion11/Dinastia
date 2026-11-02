@@ -6783,7 +6783,8 @@
   "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "drag to rotate · right click or WASD to move · wheel to zoom · click a building or lot to see its sheet",
   "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d people  ·  drag to rotate, wheel to zoom, Esc to exit",
   "🎮 Jugar aquí": "🎮 Play here",
-  "No alcanza la caja: tienes %s.": "Not enough funds: you have %s."
+  "No alcanza la caja: tienes %s.": "Not enough funds: you have %s.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  risk %s  ·  fitness %d  ·  out this week %s"
  },
  "pt": {
   "Historia": "História",
@@ -13569,7 +13570,8 @@
   "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "arraste para girar · clique direito ou WASD para mover · roda para aproximar · clique num edifício ou terreno para ver a ficha",
   "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d pessoas  ·  arraste para girar, roda para aproximar, Esc para sair",
   "🎮 Jugar aquí": "🎮 Jogar aqui",
-  "No alcanza la caja: tienes %s.": "O caixa não chega: tens %s."
+  "No alcanza la caja: tienes %s.": "O caixa não chega: tens %s.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  risco %s  ·  físico %d  ·  baixa esta semana %s"
  },
  "patrones": [
   [
@@ -26088,7 +26090,8 @@
   "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "glisser pour tourner · clic droit ou WASD pour se déplacer · molette pour zoomer · cliquer sur un bâtiment ou un terrain pour voir sa fiche",
   "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d personnes  ·  glisser pour tourner, molette pour zoomer, Échap pour sortir",
   "🎮 Jugar aquí": "🎮 Jouer ici",
-  "No alcanza la caja: tienes %s.": "La caisse ne suffit pas : vous avez %s."
+  "No alcanza la caja: tienes %s.": "La caisse ne suffit pas : vous avez %s.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  risque %s  ·  physique %d  ·  blessure cette semaine %s"
  },
  "it": {
   "Historia": "Storia",
@@ -32874,7 +32877,8 @@
   "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "trascina per ruotare · clic destro o WASD per muoverti · rotella per ingrandire · clic su un edificio o lotto per vedere la scheda",
   "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d persone  ·  trascina per ruotare, rotella per ingrandire, Esc per uscire",
   "🎮 Jugar aquí": "🎮 Gioca qui",
-  "No alcanza la caja: tienes %s.": "La cassa non basta: hai %s."
+  "No alcanza la caja: tienes %s.": "La cassa non basta: hai %s.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  rischio %s  ·  fisico %d  ·  stop questa settimana %s"
  },
  "de": {
   "Historia": "Geschichte",
@@ -39660,7 +39664,8 @@
   "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "ziehen zum Drehen · Rechtsklick oder WASD zum Bewegen · Mausrad zum Zoomen · Gebäude oder Grundstück anklicken für das Datenblatt",
   "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d Personen  ·  ziehen zum Drehen, Mausrad zum Zoomen, Esc zum Verlassen",
   "🎮 Jugar aquí": "🎮 Hier spielen",
-  "No alcanza la caja: tienes %s.": "Die Kasse reicht nicht: Sie haben %s."
+  "No alcanza la caja: tienes %s.": "Die Kasse reicht nicht: Sie haben %s.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  Risiko %s  ·  Fitness %d  ·  Ausfall diese Woche %s"
  },
  "ca": {
   "Historia": "Història",
@@ -46446,7 +46451,8 @@
   "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "arrossega per girar · clic dret o WASD per moure't · roda per acostar · clic en un edifici o solar per veure'n la fitxa",
   "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d persones  ·  arrossega per girar, roda per acostar, Esc per sortir",
   "🎮 Jugar aquí": "🎮 Juga aquí",
-  "No alcanza la caja: tienes %s.": "No arriba la caixa: tens %s."
+  "No alcanza la caja: tienes %s.": "No arriba la caixa: tens %s.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  risc %s  ·  físic %d  ·  baixa aquesta setmana %s"
  },
  "pl": {
   "Club": "Klub",
@@ -53509,7 +53515,8 @@
   "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "przeciągnij, aby obracać · prawy przycisk lub WASD, aby się poruszać · kółko, aby przybliżyć · kliknij budynek lub działkę, aby zobaczyć kartę",
   "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d osób  ·  przeciągnij, aby obracać, kółko, aby przybliżyć, Esc, aby wyjść",
   "🎮 Jugar aquí": "🎮 Graj tutaj",
-  "No alcanza la caja: tienes %s.": "Brakuje środków: masz %s."
+  "No alcanza la caja: tienes %s.": "Brakuje środków: masz %s.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  ryzyko %s  ·  kondycja %d  ·  kontuzja w tym tygodniu %s"
  },
  "tr": {
   "Club": "Kulüp",
@@ -60572,6 +60579,7 @@
   "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "döndürmek için sürükle · hareket için sağ tık veya WASD · yakınlaştırmak için tekerlek · kartı görmek için bir binaya veya araziye tıkla",
   "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d kişi  ·  döndürmek için sürükle, yakınlaştırmak için tekerlek, çıkmak için Esc",
   "🎮 Jugar aquí": "🎮 Burada oyna",
-  "No alcanza la caja: tienes %s.": "Kasa yetmiyor: elinizde %s var."
+  "No alcanza la caja: tienes %s.": "Kasa yetmiyor: elinizde %s var.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  risk %s  ·  kondisyon %d  ·  bu hafta sakatlık %s"
  }
 }
