@@ -51,6 +51,7 @@ func _ready() -> void:
 	## Que una pausa del árbol no la deje congelada a medias.
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_montar()
+	InsigniaVersion.poner(self)   # 2-11: qué versión descargó el jugador (solo en builds del CI)
 	## Bajo un Control (el orquestador) las anclas bastan; colgada de un Node suelto (una
 	## escena de prueba) no hay rectángulo padre y se quedaría en 0×0: sigue a la ventana.
 	if not (get_parent() is Control):

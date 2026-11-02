@@ -32,6 +32,14 @@ runs:
       run: |
         python3 -c "import PIL" 2>/dev/null || (apt-get update -qq && apt-get install -y -qq python3 python3-pil)
         python3 herramientas/marca_iconos.py "${{ inputs.variante }}" assets/logo/variante
+        ## La marca de la versión DENTRO del juego (ui/componentes/insignia_version.gd lee este archivo).
+        case "${{ inputs.variante }}" in
+          windows) NOMBRE="Windows" ;; windows-ligero) NOMBRE="Windows ligero" ;; linux) NOMBRE="Linux" ;;
+          android) NOMBRE="Android" ;; android-armv7) NOMBRE="Android armv7" ;; web) NOMBRE="Web" ;; *) NOMBRE="${{ inputs.variante }}" ;;
+        esac
+        printf '{"variante":"%s","nombre":"%s","modo":"%s","sufijo":"%s","commit":"%s","fecha":"%s"}' \
+          "${{ inputs.variante }}" "$NOMBRE" "${{ inputs.modo }}" "${{ inputs.sufijo }}" "$GITHUB_SHA" "$(date -u +%Y-%m-%d)" > datos/build_info.json
+        echo "::notice title=${NOMBRE}::Versión ${{ inputs.variante }} · modo ${{ inputs.modo }} · commit ${GITHUB_SHA::7}"
         ## Solo en esta copia del runner: el icono del juego (ventana, web) y el del preset.
         sed -i 's#^config/icon=.*#config/icon="res://assets/logo/variante/icono_256.png"#' project.godot
         ARM=""; [ "${{ inputs.variante }}" = "android-armv7" ] && ARM="--armv7"
@@ -92,6 +100,16 @@ runs:
           android*|web) ;;
           *) grep -q "Caché horneada: 5 archivos" /tmp/export.txt || echo "::warning::Sin caché horneada de animaciones" ;;
         esac
+
+    - name: Marca de la versión junto al build (icono y LEEME)
+      shell: bash
+      run: |
+        d="build/${{ inputs.carpeta || inputs.variante }}"
+        cp dinastia-godot/assets/logo/variante/icono_256.png "$d/ICONO-${{ inputs.variante }}.png"
+        printf 'DINASTIA\nVersión: %s%s\nVariante: %s\nModo: %s\nCommit: %s\nFecha: %s\n' \
+          "$(sed -n 's/^config\/version="\(.*\)"/\1/p' dinastia-godot/project.godot)" "${{ inputs.sufijo }}" \
+          "${{ inputs.variante }}" "${{ inputs.modo }}" "$GITHUB_SHA" "$(date -u +%Y-%m-%d)" > "$d/VERSION.txt"
+        cat "$d/VERSION.txt"
 
     - name: Subir el build
       uses: actions/upload-artifact@v4

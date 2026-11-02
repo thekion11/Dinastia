@@ -63,6 +63,7 @@ func _ready() -> void:
 		get_viewport().size_changed.connect(_a_la_ventana)
 	_modos = leer_modos()
 	_construir()
+	InsigniaVersion.poner(self)   # 2-11: qué versión descargó el jugador (solo en builds del CI)
 	_preseleccionar()
 	_reloj_logo = Timer.new()
 	_reloj_logo.one_shot = true

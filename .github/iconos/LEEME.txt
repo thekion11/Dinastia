@@ -1,0 +1,4 @@
+Copias de los iconos de herramientas/marca_iconos.py para verlos en el resumen de cada ejecucion del CI.
+Regenerar tras cambiar colores (desde dinastia-godot/):
+  python3 herramientas/marca_iconos.py --hoja ../.github/iconos/hoja.png
+  y por variante: icono(variante, caras, 192).save("../.github/iconos/<variante>[-dorado].png")
