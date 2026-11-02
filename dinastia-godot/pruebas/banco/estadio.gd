@@ -214,3 +214,41 @@ func _probar_peaton_fuera_del_arbol() -> void:
 	_comprobar(n == n_ref and n > 3, "terminado fuera y metido después lleva las mismas piezas que dentro (%d / %d), sin doblar la ropa" % [n, n_ref])
 	nodo.queue_free()
 	(ref["nodo"] as Node).queue_free()
+
+## M-476 / M-404: `FundirPiezas` junta los hijos directos con material en una malla por (material, sombra), respeta
+## `excluir` y deja los mismos materiales y la misma geometría.
+func _probar_fundir_piezas() -> void:
+	_titulo("FUNDIR PIEZAS (una malla por material)")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var rojo := StandardMaterial3D.new()
+	var azul := StandardMaterial3D.new()
+	var piezas: Array = []
+	for i in 6:
+		var mi := MeshInstance3D.new()
+		mi.mesh = BoxMesh.new()
+		mi.material_override = rojo if i < 4 else azul
+		mi.position = Vector3(i * 2.0, 0, 0)
+		raiz.add_child(mi)
+		piezas.append(mi)
+	var puerta := MeshInstance3D.new()
+	puerta.mesh = BoxMesh.new()
+	puerta.material_override = rojo
+	raiz.add_child(puerta)
+	var rotulo := Label3D.new()
+	raiz.add_child(rotulo)
+	var n := FundirPiezas.fundir(raiz, 300.0, "Fundido", [puerta])
+	_comprobar(n == 6, "funde las 6 piezas y deja la excluida (%d)" % n)
+	var mallas: Array = raiz.get_children().filter(func(h): return h.name == "Fundido")
+	_comprobar(mallas.size() == 1 and (mallas[0] as MeshInstance3D).mesh.get_surface_count() == 2, "una malla con una superficie por material")
+	var m: MeshInstance3D = mallas[0]
+	_comprobar(m.mesh.surface_get_material(0) == rojo and m.mesh.surface_get_material(1) == azul, "las superficies llevan los MISMOS materiales")
+	_comprobar(m.visibility_range_end == 300.0, "lleva la distancia de corte pedida")
+	_comprobar(is_instance_valid(puerta) and puerta.get_parent() == raiz and is_instance_valid(rotulo), "la excluida y el rótulo se quedan")
+	var vert := 0
+	for k in m.mesh.get_surface_count():
+		vert += (m.mesh.surface_get_arrays(k)[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
+	_comprobar(vert == 6 * 24, "la geometría no cambia (%d vértices: 6 cajas de 24)" % vert)
+	var aabb := m.get_aabb()
+	_comprobar(absf(aabb.size.x - 11.0) < 0.01, "las posiciones se conservan (ancho %.2f)" % aabb.size.x)
+	raiz.queue_free()
