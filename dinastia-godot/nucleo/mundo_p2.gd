@@ -356,6 +356,10 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	obras.aplicar(c)
 	medico = Medico.new(staff, mi_club_id)
 	entrenamiento = Entrenamiento.new(staff, obras, medico)
+	## Los gastos de médico, entrenamiento y vestuario ya restaban caja pero no llegaban a ningún libro (auditoría 28-10).
+	## Los tres objetos son nuevos en cada `tomar_el_mando`, así que no se duplica la conexión.
+	for fuente_g: Variant in [medico, entrenamiento]:
+		fuente_g.gasto.connect(func(concepto: String, monto: int) -> void: _anotar_movimiento(concepto, -monto))
 	## LA SIEMBRA ÚNICA. El mundo entero se generó en `generar()`, ANTES de que
 	## existiera ningún `Entrenamiento` -no hay club elegido todavía, así que
 	## `crear_jugador()` no tiene a quién pedirle el sorteo-, y por eso ninguno
@@ -376,6 +380,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	prensa = Prensa.new(self)
 	logros = Logros.new(self)
 	vestuario = Vestuario.new(self)
+	vestuario.gasto.connect(func(concepto: String, monto: int) -> void: _anotar_movimiento(concepto, -monto))
 	hinchada = Hinchada.new(self)
 	gente = Gente.new(self)
 	club_dentro = ClubDentro.new()
@@ -425,14 +430,9 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	## clubes al azar sin necesitar saber cuál es el tuyo -pero conviene que la
 	## primera camada de hijos de leyenda ya tenga candidatos esperando.
 	cantera.sembrar_leyendas()
-	## El libro de movimientos: siete fuentes. `tomar_el_mando()` se puede llamar
-	## más de una vez sobre el mismo Mundo -fundar club, trotamundos, cargar una
-	## partida-, y no todas estas clases se recrean cada vez -`federacion` y
-	## `estadio` viven desde que se crea el Mundo, `cesiones` desde `generar()`-,
-	## así que conectar sin comprobar antes iría duplicando la conexión y cada
-	## movimiento acabaría anotado dos, tres, cuatro veces. `Finanzas` es aparte:
-	## se crea una instancia nueva cada semana para cada club en
-	## `avanzar_semana()`, así que esa conexión va ahí, no aquí.
+	## El libro de movimientos: siete fuentes. `tomar_el_mando()` puede llamarse varias veces sobre el mismo Mundo
+	## (fundar club, trotamundos, cargar), y `federacion`, `estadio` y `cesiones` viven desde antes: conectar sin
+	## comprobar duplicaría cada apunte. `Finanzas` es aparte (instancia nueva cada semana en `avanzar_semana()`).
 	for fuente: Variant in [federacion, estadio, cesiones, cantera, prensa, selecciones]:
 		var sig: Signal = fuente.movimiento
 		if not sig.is_connected(_anotar_movimiento):

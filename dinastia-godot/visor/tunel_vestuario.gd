@@ -85,7 +85,7 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 	var zocalo := _mat(c1.lerp(Color(0.1, 0.1, 0.12), 0.25), 0.6)
 	var suelo := _mat(Color(0.16, 0.17, 0.19).lerp(c1, 0.18), 0.95)
 	var techo := _mat(Color(0.82, 0.83, 0.84), 0.9)
-	var luz := _mat(Color(1, 0.98, 0.92), 0.4)
+	var luz := _mat_unico(Color(1, 0.98, 0.92), 0.4)
 	luz.emission_enabled = true
 	luz.emission = Color(1, 0.96, 0.88)
 	luz.emission_energy_multiplier = 2.2
@@ -344,11 +344,35 @@ static func _caja(padre: Node3D, pos: Vector3, tam: Vector3, mat: Material, soli
 		padre.add_child(cuerpo)
 	return mi
 
+## MATERIALES COMPARTIDOS (2-11-2026, auditoría 28-10 §1): `_mat` devuelve el MISMO material para el mismo color y
+## rugosidad. Quien lo vaya a MODIFICAR (o cambiarlo desde el nodo) pide `_mat_unico`. `materiales_alterados()` lo vigila.
+static var _cache_mat := {}
+
 static func _mat(c: Color, rugosidad: float) -> StandardMaterial3D:
+	var k := "%s|%.3f" % [c.to_html(true), rugosidad]
+	if _cache_mat.has(k):
+		return (_cache_mat[k] as Dictionary)["m"]
+	var m := _mat_unico(c, rugosidad)
+	_cache_mat[k] = {"m": m, "c": c, "rug": rugosidad}
+	return m
+
+static func _mat_unico(c: Color, rugosidad: float) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = c
 	m.roughness = rugosidad
 	return m
+
+static func materiales_alterados() -> Array:
+	var malos: Array = []
+	for k: String in _cache_mat:
+		var d: Dictionary = _cache_mat[k]
+		var m: StandardMaterial3D = d["m"]
+		var ref := _mat_unico(d["c"], d["rug"])
+		if m.albedo_color != ref.albedo_color or not is_equal_approx(m.roughness, ref.roughness) \
+				or not is_equal_approx(m.metallic, ref.metallic) or m.transparency != ref.transparency \
+				or m.emission_enabled != ref.emission_enabled or m.cull_mode != ref.cull_mode or m.albedo_texture != ref.albedo_texture:
+			malos.append(k)
+	return malos
 
 ## Texto en 3D. `giro`: rotación en Y (0 = mira a +Z).
 static func _rotulo(padre: Node3D, texto: String, pos: Vector3, giro: float, tam: int, col: Color) -> void:
