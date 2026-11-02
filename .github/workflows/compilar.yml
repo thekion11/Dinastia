@@ -1,43 +1,66 @@
-# CI de Dinastía (26-10-2026): Godot 4.7.2, el banco de pruebas entero y, si pasa, el build de Windows.
+# CI de Dinastía (26-10-2026; selector y colores 2-11-2026): Godot 4.7.2, banco + pruebas especiales y, si
+# pasan, SOLO la versión elegida.
 #
-# - Imagen: barichello/godot-ci:4.7.2 (etiqueta de Docker Hub, sin «-stable»; trae godot,
-#   las plantillas de exportación y git-lfs). La 4.3 de antes no abría el proyecto.
-# - LFS: solo `dinastia-godot/**` (las ramas y carpetas viejas pesan; ver CLAUDE.md).
-# - El banco (`dinastia-godot/herramientas/banco.sh`) tiene que terminar en «FIN. 0 fallos»: se comprueba
-#   el código de salida Y el texto del registro, que se sube como artefacto aunque falle.
-# - El build de Windows solo corre si el banco pasa. Firmas, keystore y builds públicos los lleva el dueño.
+# - Imagen: barichello/godot-ci:4.7.2 (godot, plantillas de exportación y git-lfs).
+# - LFS: solo `dinastia-godot/**`. La caché guarda los objetos LFS y la importación de Godot (acción `preparar`).
+# - Ninguna compilación ni exportación empieza si `banco` y `especiales` no pasan (banco: «FIN. 0 fallos»).
+# - Cada versión es su propia cadena (exportar-X → verificar-X) para que en el gráfico salga en su propia caja
+#   y se pueda pinchar por separado. Colores en los nombres: 🟣 banco · ⚪ especiales · ⚫ C++ Android · 🟠 C++ ARM
+#   · 🟦 Windows (🔹 ligero) · 🟥 Linux · 🟩 Android (🌿 armv7) · 🌐 Web. Iconos: `herramientas/marca_iconos.py`.
+# - Borde dorado = versión con caras reales: ESAS NO SE CONSTRUYEN AQUÍ (el repositorio es público y el
+#   caras_reales.pck no se publica nunca); el artefacto «iconos-marca» trae los iconos dorados para armarlas en local.
+# - Android firmado (release): secretos ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_USER, ANDROID_KEYSTORE_PASSWORD.
+#   Si faltan, sale de depuración. La contraseña NUNCA va en el repositorio.
 name: Compilar y probar Dinastia
+
+run-name: ${{ github.event_name == 'workflow_dispatch' && format('▶ {0} · {1}{2}', inputs.objetivo, github.ref_name, inputs.sufijo) || format('⬆ push · {0}', github.ref_name) }}
 
 on:
   push:
     branches: [ "**" ]
   workflow_dispatch:
+    inputs:
+      objetivo:
+        description: "Qué versión construir (el banco corre siempre primero)"
+        type: choice
+        default: todo
+        options: [ todo, windows, windows-ligero, linux, android, android-aab, android-armv7, web, arm, solo-banco ]
+      android_release:
+        description: "Android firmado (release, necesita los secretos de la keystore); si no, depuración"
+        type: boolean
+        default: false
+      sufijo:
+        description: "Texto añadido a la versión (p. ej. -beta2). Opcional"
+        type: string
+        default: ""
+      release_borrador:
+        description: "Al terminar, crear un BORRADOR de Release en GitHub con lo construido (no es público hasta que lo publiques tú)"
+        type: boolean
+        default: false
+      version_release:
+        description: "Etiqueta del Release (p. ej. v0.9-beta). Obligatoria si marcas release_borrador"
+        type: string
+        default: ""
+
+## Un push nuevo a la misma rama cancela la ejecución anterior.
+concurrency:
+  group: compilar-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   banco:
+    name: 🟣 banco
     runs-on: ubuntu-latest
     timeout-minutes: 60
     container:
       image: barichello/godot-ci:4.7.2
     steps:
-      - name: Descargar el repositorio (sin LFS)
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           lfs: false
 
-      - name: Recursos LFS del juego
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          command -v git-lfs >/dev/null || (apt-get update && apt-get install -y git-lfs)
-          git lfs install --local
-          git lfs pull --include="dinastia-godot/**"
-
-      - name: Importar el proyecto
-        working-directory: dinastia-godot
-        run: |
-          godot --version
-          timeout 900 godot --headless --path . --import > /tmp/importar.txt 2>&1 || true
-          tail -n 20 /tmp/importar.txt
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
 
       - name: Banco de pruebas entero
         working-directory: dinastia-godot
@@ -47,6 +70,7 @@ jobs:
           codigo=$?
           set -e
           tail -n 40 /tmp/banco.txt
+          { echo "### 🟣 Banco"; echo '```'; head -n 12 pruebas/ultimo_resultado.txt 2>/dev/null; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           if [ "$codigo" -ne 0 ]; then
             echo "El banco terminó con código $codigo (1 fallos, 2 sintaxis, 3 colgado)."
             exit 1
@@ -61,110 +85,96 @@ jobs:
           path: /tmp/banco.txt
           if-no-files-found: ignore
 
-  export-windows:
-    needs: banco
+  ## Lo que el banco no ve (norma de líneas, auditorías, C++ = GDScript, tráfico, partido con motor real…),
+  ## EN PARALELO con el banco: el tiempo total es el del más lento, no la suma.
+  especiales:
+    name: ⚪ especiales ${{ matrix.parte }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        parte: [ "0/3", "1/3", "2/3" ]   # reparto entre 3 máquinas (antes: 10 min en una sola)
     container:
       image: barichello/godot-ci:4.7.2
     steps:
-      - name: Descargar el repositorio (sin LFS)
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           lfs: false
 
-      - name: Recursos LFS del juego
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          command -v git-lfs >/dev/null || (apt-get update && apt-get install -y git-lfs)
-          git lfs install --local
-          git lfs pull --include="dinastia-godot/**"
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
 
-      - name: Plantillas de exportación
-        run: |
-          mkdir -v -p ~/.local/share/godot/export_templates
-          if [ "$HOME" != "/root" ]; then mv /root/.local/share/godot/export_templates/* ~/.local/share/godot/export_templates; fi
+      - name: Python (la norma de 450 líneas lo necesita; la imagen no lo trae)
+        run: command -v python3 >/dev/null || (apt-get update -qq && apt-get install -y -qq python3)
 
-      - name: Build de Windows
+      - name: Pruebas especiales rápidas (parte ${{ matrix.parte }})
+        working-directory: dinastia-godot
+        env:
+          ESPECIALES_PARTE: ${{ matrix.parte }}
         run: |
-          mkdir -v -p build/windows
-          cd dinastia-godot
-          timeout 900 godot --headless --path . --import > /dev/null 2>&1 || true
-          codigo=0
-          godot --headless --export-release "Windows" ../build/windows/Dinastia.exe > /tmp/export.txt 2>&1 || codigo=$?
-          tail -n 30 /tmp/export.txt
-          [ "$codigo" -eq 0 ] || exit "$codigo"
-          ## Comprobaciones (30-10-2026): la extensión C++ junto al .exe y las animaciones horneadas
-          ## dentro (si faltan, el juego funciona igual pero más lento: se avisa).
-          ls -la ../build/windows
-          ls ../build/windows/*.dll >/dev/null 2>&1 || echo "::warning::Falta la DLL de la extensión C++ (bin_nativo)"
-          grep -q "Caché horneada: 5 archivos" /tmp/export.txt || echo "::warning::Sin caché horneada de animaciones"
+          set +e
+          bash herramientas/especiales.sh | tee /tmp/especiales.txt
+          { echo "### ⚪ Pruebas especiales, parte ${ESPECIALES_PARTE}"; echo '```'; cat /tmp/especiales.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          grep -q "^FALLO" /tmp/especiales.txt && { echo "Hay pruebas especiales que fallan."; exit 1; }
+          exit 0
 
-      - name: Subir el build
+      - name: Subir el registro
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Dinastia-Windows
-          path: build/windows
+          name: especiales-registro-${{ strategy.job-index }}
+          path: /tmp/especiales.txt
+          if-no-files-found: ignore
 
-  ## LINUX (30-10-2026): preset público «Linux» (sin caras ni datos reales).
-  export-linux:
-    needs: banco
+  ## Iconos de todas las versiones (normales y con borde dorado) para revisarlos y para armar las builds con caras en local.
+  iconos-marca:
+    name: 🎨 iconos
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    container:
-      image: barichello/godot-ci:4.7.2
+    timeout-minutes: 10
     steps:
-      - name: Descargar el repositorio (sin LFS)
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           lfs: false
-
-      - name: Recursos LFS del juego
+          sparse-checkout: |
+            dinastia-godot/herramientas
+            dinastia-godot/assets/logo
+      - name: Generar
         run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          command -v git-lfs >/dev/null || (apt-get update && apt-get install -y git-lfs)
-          git lfs install --local
-          git lfs pull --include="dinastia-godot/**"
-
-      - name: Plantillas de exportación
-        run: |
-          mkdir -v -p ~/.local/share/godot/export_templates
-          if [ "$HOME" != "/root" ]; then mv /root/.local/share/godot/export_templates/* ~/.local/share/godot/export_templates; fi
-
-      - name: Build de Linux
-        run: |
-          mkdir -v -p build/linux
+          pip install -q pillow
+          git lfs pull --include="dinastia-godot/assets/logo/logo_1024.png" || true
           cd dinastia-godot
-          timeout 900 godot --headless --path . --import > /dev/null 2>&1 || true
-          codigo=0
-          godot --headless --export-release "Linux" ../build/linux/Dinastia.x86_64 > /tmp/export.txt 2>&1 || codigo=$?
-          tail -n 30 /tmp/export.txt
-          [ "$codigo" -eq 0 ] || exit "$codigo"
-          ls -la ../build/linux
-          ls ../build/linux/*.so >/dev/null 2>&1 || echo "::warning::Falta la .so de la extensión C++ (bin_nativo)"
-          grep -q "Caché horneada: 5 archivos" /tmp/export.txt || echo "::warning::Sin caché horneada de animaciones"
-
-      - name: Subir el build
-        uses: actions/upload-artifact@v4
+          for v in windows windows-ligero linux android android-armv7 web; do
+            python3 herramientas/marca_iconos.py $v ../iconos/$v
+            python3 herramientas/marca_iconos.py $v ../iconos/$v-dorado --caras
+          done
+          python3 herramientas/marca_iconos.py --hoja ../iconos/hoja.png
+      - uses: actions/upload-artifact@v4
         with:
-          name: Dinastia-Linux
-          path: build/linux
+          name: iconos-marca
+          path: iconos
 
-  ## ANDROID (30-10-2026): APK de DEPURACIÓN firmada con la clave de depuración de la imagen del CI.
-  ## La de publicar (release) se firma con la keystore del dueño, que no está aquí. Sin binario C++
-  ## para Android: el juego usa las versiones GDScript (mismo resultado).
-  ## LA EXTENSIÓN C++ PARA ANDROID (M-353, 31-10-2026): el contenedor de trabajo no llega al NDK; las máquinas
-  ## de GitHub lo traen instalado ($ANDROID_NDK_LATEST_HOME). Se compila arm64 y la usa `export-android`.
   nativo-android:
+    name: ⚫ C++ Android
+    needs: [banco, especiales]
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'android' || inputs.objetivo == 'android-aab' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Descargar el repositorio (sin LFS)
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           lfs: false
 
+      ## Si no cambió el C++ (ni el script que lo compila) se reutiliza la extensión ya compilada.
+      - name: Caché de la extensión
+        id: cpp
+        uses: actions/cache@v4
+        with:
+          path: dinastia-godot/bin_nativo/libdinastia.android.*
+          key: cpp-android-${{ hashFiles('dinastia-godot/nativo/**', 'dinastia-godot/herramientas/compilar_nativo.sh') }}
+
       - name: Compilar la extensión (arm64)
+        if: steps.cpp.outputs.cache-hit != 'true'
         working-directory: dinastia-godot
         run: |
           sudo apt-get update -q && sudo apt-get install -y -q scons
@@ -178,10 +188,364 @@ jobs:
           name: nativo-android
           path: dinastia-godot/bin_nativo/libdinastia.android.*
 
-  ## LA MISMA EXTENSIÓN EN ARM, PROBADA (M-353): Android no puede correr el banco aquí, así que se compila
-  ## para Linux arm64 con las mismas opciones (sin FMA) y `probar_nativo` comprueba en una máquina ARM que
-  ## el C++ da los mismos bytes que GDScript.
+  exportar-windows:
+    name: 🟦 Windows
+    needs: [banco, especiales]
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'windows' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - name: Exportar Windows
+        uses: ./.github/actions/exportar
+        with:
+          variante: windows
+          preset: Windows
+          salida: windows/Dinastia.exe
+          artefacto: Dinastia-Windows
+          sufijo: ${{ github.event_name == 'workflow_dispatch' && inputs.sufijo || '' }}
+
+  ## Comprobación final de Windows: existe, no está vacío y deja su tamaño en el resumen. Es también lo que da a
+  ## cada versión su propia caja en el gráfico.
+  verificar-windows:
+    name: ✅ Windows
+    needs: exportar-windows
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Dinastia-Windows
+          path: salida
+      - name: Revisar y resumir
+        run: |
+          ls -la salida
+          test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
+          { echo "### 🟦 Windows"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+
+  exportar-windows-ligero:
+    name: 🔹 Windows ligero
+    needs: [banco, especiales]
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'windows-ligero' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - name: Exportar Windows ligero
+        uses: ./.github/actions/exportar
+        with:
+          variante: windows-ligero
+          preset: WindowsLigero
+          salida: windows-ligero/Dinastia.exe
+          artefacto: Dinastia-Windows-ligero
+          sufijo: ${{ github.event_name == 'workflow_dispatch' && inputs.sufijo || '' }}
+
+  ## Comprobación final de Windows ligero: existe, no está vacío y deja su tamaño en el resumen. Es también lo que da a
+  ## cada versión su propia caja en el gráfico.
+  verificar-windows-ligero:
+    name: ✅ Windows ligero
+    needs: exportar-windows-ligero
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Dinastia-Windows-ligero
+          path: salida
+      - name: Revisar y resumir
+        run: |
+          ls -la salida
+          test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
+          { echo "### 🔹 Windows ligero"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+
+  exportar-linux:
+    name: 🟥 Linux
+    needs: [banco, especiales]
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'linux' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - name: Exportar Linux
+        uses: ./.github/actions/exportar
+        with:
+          variante: linux
+          preset: Linux
+          salida: linux/Dinastia.x86_64
+          artefacto: Dinastia-Linux
+          sufijo: ${{ github.event_name == 'workflow_dispatch' && inputs.sufijo || '' }}
+
+  ## Comprobación final de Linux: existe, no está vacío y deja su tamaño en el resumen. Es también lo que da a
+  ## cada versión su propia caja en el gráfico.
+  verificar-linux:
+    name: ✅ Linux
+    needs: exportar-linux
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Dinastia-Linux
+          path: salida
+      - name: Revisar y resumir
+        run: |
+          ls -la salida
+          test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
+          { echo "### 🟥 Linux"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+
+  exportar-android:
+    name: 🟩 Android
+    needs: [banco, especiales, nativo-android]
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'android' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - name: La extensión C++ de Android (M-353)
+        uses: actions/download-artifact@v4
+        with:
+          name: nativo-android
+          path: dinastia-godot/bin_nativo
+
+      - name: Exportar Android
+        uses: ./.github/actions/exportar
+        with:
+          variante: android
+          preset: Android
+          salida: android/Dinastia.apk
+          artefacto: Dinastia-Android
+          sufijo: ${{ github.event_name == 'workflow_dispatch' && inputs.sufijo || '' }}
+          modo: ${{ github.event_name == 'workflow_dispatch' && inputs.android_release && 'release' || 'debug' }}
+          keystore_base64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          keystore_usuario: ${{ secrets.ANDROID_KEYSTORE_USER }}
+          keystore_clave: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+
+  ## Comprobación final de Android: existe, no está vacío y deja su tamaño en el resumen. Es también lo que da a
+  ## cada versión su propia caja en el gráfico.
+  verificar-android:
+    name: ✅ Android
+    needs: exportar-android
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Dinastia-Android
+          path: salida
+      - name: Revisar y resumir
+        run: |
+          ls -la salida
+          test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
+          { echo "### 🟩 Android"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+
+  exportar-android-aab:
+    name: 🟩 Android AAB (Play)
+    needs: [banco, especiales, nativo-android]
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.objetivo == 'android-aab' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - name: La extensión C++ de Android (M-353)
+        uses: actions/download-artifact@v4
+        with:
+          name: nativo-android
+          path: dinastia-godot/bin_nativo
+
+      - name: Exportar Android AAB
+        uses: ./.github/actions/exportar
+        with:
+          variante: android
+          preset: Android
+          salida: android-aab/Dinastia.aab
+          carpeta: android-aab
+          formato: aab
+          artefacto: Dinastia-Android-aab
+          sufijo: ${{ github.event_name == 'workflow_dispatch' && inputs.sufijo || '' }}
+          modo: ${{ github.event_name == 'workflow_dispatch' && inputs.android_release && 'release' || 'debug' }}
+          keystore_base64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          keystore_usuario: ${{ secrets.ANDROID_KEYSTORE_USER }}
+          keystore_clave: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+
+  ## Comprobación final de Android AAB: existe, no está vacío y deja su tamaño en el resumen. Es también lo que da a
+  ## cada versión su propia caja en el gráfico.
+  verificar-android-aab:
+    name: ✅ Android AAB
+    needs: exportar-android-aab
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Dinastia-Android-aab
+          path: salida
+      - name: Revisar y resumir
+        run: |
+          ls -la salida
+          test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
+          { echo "### 🟩 Android"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+
+  exportar-android-armv7:
+    name: 🌿 Android armv7
+    needs: [banco, especiales]
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'android-armv7' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - name: Exportar Android armv7
+        uses: ./.github/actions/exportar
+        with:
+          variante: android-armv7
+          preset: Android
+          salida: android-armv7/Dinastia.apk
+          artefacto: Dinastia-Android-armv7
+          sufijo: ${{ github.event_name == 'workflow_dispatch' && inputs.sufijo || '' }}
+          modo: ${{ github.event_name == 'workflow_dispatch' && inputs.android_release && 'release' || 'debug' }}
+          keystore_base64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          keystore_usuario: ${{ secrets.ANDROID_KEYSTORE_USER }}
+          keystore_clave: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+
+  ## Comprobación final de Android armv7: existe, no está vacío y deja su tamaño en el resumen. Es también lo que da a
+  ## cada versión su propia caja en el gráfico.
+  verificar-android-armv7:
+    name: ✅ Android armv7
+    needs: exportar-android-armv7
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Dinastia-Android-armv7
+          path: salida
+      - name: Revisar y resumir
+        run: |
+          ls -la salida
+          test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
+          { echo "### 🌿 Android armv7"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+
+  exportar-web:
+    name: 🌐 Web
+    needs: [banco, especiales]
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'web' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - name: Exportar Web
+        uses: ./.github/actions/exportar
+        with:
+          variante: web
+          preset: Web
+          salida: web/index.html
+          artefacto: Dinastia-Web
+          sufijo: ${{ github.event_name == 'workflow_dispatch' && inputs.sufijo || '' }}
+
+  ## Comprobación final de Web: existe, no está vacío y deja su tamaño en el resumen. Es también lo que da a
+  ## cada versión su propia caja en el gráfico.
+  verificar-web:
+    name: ✅ Web
+    needs: exportar-web
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Dinastia-Web
+          path: salida
+      - name: Revisar y resumir
+        run: |
+          ls -la salida
+          test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
+          { echo "### 🌐 Web"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+
+  ## RELEASE EN BORRADOR (2-11-2026, orden del dueño): junta lo construido en un Release PRIVADO hasta que el dueño
+  ## lo publique. Sin caras reales (esas no se construyen aquí).
+  release:
+    name: 📦 release (borrador)
+    needs: [verificar-windows, verificar-windows-ligero, verificar-linux, verificar-android, verificar-android-aab, verificar-android-armv7, verificar-web]
+    if: ${{ always() && !failure() && !cancelled() && github.event_name == 'workflow_dispatch' && inputs.release_borrador && inputs.version_release != '' && inputs.objetivo != 'solo-banco' && inputs.objetivo != 'arm' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: Dinastia-*
+          path: bajados
+      - name: Crear el borrador
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ETIQUETA: ${{ inputs.version_release }}
+        run: |
+          mkdir -p paquetes
+          for d in bajados/*/; do n=$(basename "$d"); (cd "$d" && zip -qr "../../paquetes/${n}-${ETIQUETA}.zip" .); done
+          ls -la paquetes
+          gh release create "$ETIQUETA" paquetes/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --draft \
+            --title "Dinastía $ETIQUETA" --notes "Borrador creado por el CI desde la rama ${GITHUB_REF_NAME} (commit ${GITHUB_SHA::8}). Sin caras ni datos reales. Revisar y publicar a mano."
+          echo "### 📦 Borrador de Release «$ETIQUETA» creado. Publícalo desde la pestaña Releases." >> "$GITHUB_STEP_SUMMARY"
+
   nativo-arm:
+    name: 🟠 C++ en ARM (prueba)
+    needs: [banco, especiales]
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'arm' }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 60
     steps:
@@ -211,52 +575,3 @@ jobs:
           timeout 1500 godot --headless --path . --import > /tmp/importar.txt 2>&1 || true
           timeout 900 godot --headless --path . res://pruebas/probar_nativo.tscn | tee /tmp/nativo.txt
           grep -q "FIN. 0 fallos" /tmp/nativo.txt
-
-  export-android:
-    needs: [banco, nativo-android]
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    container:
-      image: barichello/godot-ci:4.7.2
-    steps:
-      - name: Descargar el repositorio (sin LFS)
-        uses: actions/checkout@v4
-        with:
-          lfs: false
-
-      - name: Recursos LFS del juego
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          command -v git-lfs >/dev/null || (apt-get update && apt-get install -y git-lfs)
-          git lfs install --local
-          git lfs pull --include="dinastia-godot/**"
-
-      - name: La extensión C++ de Android (M-353)
-        uses: actions/download-artifact@v4
-        with:
-          name: nativo-android
-          path: dinastia-godot/bin_nativo
-
-      - name: Plantillas y ajustes de Android de la imagen
-        run: |
-          mkdir -v -p ~/.local/share/godot/export_templates ~/.config
-          if [ "$HOME" != "/root" ]; then
-            mv /root/.local/share/godot/export_templates/* ~/.local/share/godot/export_templates
-            mv /root/.config/godot ~/.config/godot
-          fi
-
-      - name: Build de Android (depuración)
-        run: |
-          mkdir -v -p build/android
-          cd dinastia-godot
-          timeout 900 godot --headless --path . --import > /dev/null 2>&1 || true
-          godot --headless --export-debug "Android" ../build/android/Dinastia-debug.apk
-          ls -la ../build/android
-          ## M-353: la extensión C++ tiene que ir dentro del APK (si no, el juego usa la versión GDScript, más lenta).
-          unzip -l ../build/android/Dinastia-debug.apk | grep "libdinastia" || { echo "Falta libdinastia en el APK"; exit 1; }
-
-      - name: Subir el build
-        uses: actions/upload-artifact@v4
-        with:
-          name: Dinastia-Android-debug
-          path: build/android
