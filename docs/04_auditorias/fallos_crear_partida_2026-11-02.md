@@ -59,3 +59,8 @@ Clonados (superficiales) en /tmp; no se añadieron al repo los que no sirven:
 - **Arbusto del prólogo:** sin GPU se hizo por geometría. `PrologoDT.obstaculos_blandos` localiza las cajas de setos/jardineras/arbustos (7 cerca de la puerta) y `PrologoMentor.colocar` empuja a quien aparece fuera de ellas (+0,45 m de margen); prueba `_mentor_sin_solape` en `fcp_crear_partida`. Pendiente de confirmar a ojo con GPU.
 - **Optimización:** se quitó `Escudo.limpiar_cache()` de cada repintado de la vista previa de configuración (re-rasterizaba todos los escudos); repintado 2D del diseñador agrupado.
 - **Aviso:** `PantallaCarga.dejar_pintar` no espera `frame_post_draw` en headless (la señal nunca llega y colgaba el prólogo en las pruebas).
+
+## Tanda 4 (2-11-2026)
+- **VRM:** sin addon: un .vrm es un glTF binario, se renombra a .glb y Godot lo carga (sin MToon). Integrados 2 avatares CC0 de PabloFMM (Starter 01, Arla); el resto del repo Numinia no (autores distintos/licencia no clara). `IdleProcedural` ahora entiende nombres VRM y Mixamo, y un antebrazo mal nombrado («rightLoweArm»). Un AnimationPlayer sin clips cuenta como «sin animaciones».
+- **MakeHuman y Vitruvian:** siguen fuera. MakeHuman: `humanizer` (AGPL) necesita Blender/MakeHuman para generar; los .glb de `persona_mh` los tiene que generar o subir el dueño (`herramientas/makehuman/README.md`). Vitruvian: 2,2 GB de proyecto Blender.
+- **Triángulos/texturas/LOD:** los modelos nuevos son de bajo polígono (KayKit, Modular) o ~4 MB (VRM); las texturas de Campesino/Explorador ya se bajaron a 1024. No se midió ni se hizo LOD (sin GPU aquí).
