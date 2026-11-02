@@ -112,6 +112,11 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 	jp.fidelidad_hasta = m.anio + 2
 	jp.notas.assign([6.5, 7.0])
 	Partido.ex_de_mi_club["j_prueba_ex"] = true
+	## 2-11: cuatro campos del Mundo que no se guardaban (auditoría del 28-10).
+	m.anios_en_club = 1
+	m.rotacion_activa = true
+	m.bono_analisis = 1.04
+	m.fin_partida = {"motivo": "invicto", "anio": m.anio, "semana": m.semana}
 	var antes_caja := m.mi_club().saldo
 	var antes_jug := m.cuantos_jugadores()
 	var antes_tabla := m.ligas[0].tabla()
@@ -200,6 +205,9 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 	_comprobar(jx != null and jx.pos_sec.size() == 1 and jx.pos_sec[0] == "MC" and jx.adapt == 3 \
 		and jx.fidelidad_hasta == m.anio + 2 and jx.notas.size() == 2, "vuelven posiciones secundarias, adaptación, fidelidad y notas")
 	_comprobar(Partido.ex_de_mi_club.has("j_prueba_ex"), "vuelven los «ex de mi club»")
+	_comprobar(m2.anios_en_club == 1 and m2.rotacion_activa and is_equal_approx(m2.bono_analisis, 1.04)
+		and String(m2.fin_partida.get("motivo", "")) == "invicto" and int(m2.fin_partida.get("anio", 0)) == m.anio,
+		"vuelven años en el club, rotación, bono de análisis y fin de partida (%d %s %.2f %s)" % [m2.anios_en_club, str(m2.rotacion_activa), m2.bono_analisis, str(m2.fin_partida)])
 	Partido.ex_de_mi_club.erase("j_prueba_ex")
 	var nuevo := m2.crear_jugador(m2.mi_club(), "MED", "MC")
 	var repetido := 0
