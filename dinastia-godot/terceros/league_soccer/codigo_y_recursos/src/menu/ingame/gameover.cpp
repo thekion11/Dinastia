@@ -1,0 +1,413 @@
+#include "gameover.hpp"
+
+#include <algorithm>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <map>
+
+#include "../../data/matchhistory.hpp"
+#include "../../data/teamdata.hpp"
+#include "../../league/leaguecode.hpp"
+#include "../../onthepitch/match.hpp"
+#include "../career/career_database.hpp"
+#include "../pagefactory.hpp"
+#include "main.hpp"
+#include "utils/gui2/events.hpp"
+#include "utils/localization.hpp"
+
+using namespace blunted;
+
+namespace {
+
+constexpr unsigned long kMenuSmokeQuitDelay_ms = 1000;
+
+bool MenuSmokeFullMatchEnabled() {
+  return GetConfiguration()->GetBool("menu_smoke_test_full_match", false);
+}
+
+}  // namespace
+
+GameOverPage::GameOverPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData)
+    : Gui2Page(windowManager, pageData),
+      match(nullptr),
+      pageCreatedTime_ms(EnvironmentManager::GetInstance().GetTime_ms()),
+      autoQuitTriggered(false) {
+  match = GetGameTask()->GetMatch();
+  if (!match) {
+    return;
+  }
+  match->Pause(true);
+
+  // Layout (frame-relative %): title 3, score 8, stats 18-42, player of the
+  // match 46, buttons 54. The frame is sized to its content.
+  Gui2Frame* frame = new Gui2Frame(windowManager, "gameover_frame", 10, 8, 80, 64, true);
+  this->AddView(frame);
+  frame->Show();
+
+  std::string scoreStr = match->GetTeam(0)->GetTeamData()->GetName() + " " +
+                         int_to_str(match->GetMatchData()->GetGoalCount(0)) + " - " +
+                         int_to_str(match->GetMatchData()->GetGoalCount(1)) + " " +
+                         match->GetTeam(1)->GetTeamData()->GetName();
+  Gui2Caption* title = new Gui2Caption(windowManager, "caption_gameover_title", 2, 3, 76, 3,
+                                       Localization::GetInstance().Translate("ingame_fulltime"));
+  title->SetPosition(40 - title->GetTextWidthPercent() * 0.5f, 3);
+  frame->AddView(title);
+  title->Show();
+
+  Gui2Caption* header =
+      new Gui2Caption(windowManager, "caption_gameover_header", 2, 8, 76, 4, scoreStr);
+  header->SetPosition(40 - header->GetTextWidthPercent() * 0.5f, 8);
+  frame->AddView(header);
+  header->Show();
+
+  // Goal scorers under each side of the score: "Kagawa 23', 67'".
+  // (team, database ID) -> goals, for the ratings below. Keyed by team too:
+  // both sides can field the same database IDs (a club against itself).
+  std::map<std::pair<int, int>, int> goalsByPlayer;
+  for (int t = 0; t < 2; t++) {
+    const auto& scorerIDs = match->GetMatchData()->GetGoalScorers(t);
+    const auto& minutes = match->GetMatchData()->GetGoalMinutes(t);
+    std::vector<std::pair<int, std::string>> scorers;  // database ID, minutes
+    for (size_t g = 0; g < scorerIDs.size(); g++) {
+      goalsByPlayer[{t, scorerIDs[g]}]++;
+      const std::string minute = g < minutes.size() ? minutes[g] : "";
+      auto existing = std::find_if(scorers.begin(), scorers.end(),
+                                   [&](const auto& entry) { return entry.first == scorerIDs[g]; });
+      if (existing == scorers.end())
+        scorers.emplace_back(scorerIDs[g], minute);
+      else
+        existing->second += ", " + minute;
+    }
+    std::string line;
+    for (const auto& scorer : scorers) {
+      std::string name;
+      for (const auto& player : match->GetTeam(t)->GetTeamData()->GetPlayerData()) {
+        if (player->GetDatabaseID() == scorer.first)
+          name = player->GetLastName();
+      }
+      line += (line.empty() ? "" : "  ") + name + " " + scorer.second;
+    }
+    if (line.empty())
+      continue;
+    Gui2Caption* scorerCaption =
+        new Gui2Caption(windowManager, "caption_gameover_scorers_t" + int_to_str(t),
+                        t == 0 ? 4 : 42, 12.5f, 34, 2.5f, line);
+    if (t == 0)
+      scorerCaption->SetPosition(38 - scorerCaption->GetTextWidthPercent(), 12.5f);
+    frame->AddView(scorerCaption);
+    scorerCaption->Show();
+  }
+
+  buttonOkay = new Gui2Button(windowManager, "button_gameover_ok", 42, 54, 24, 4,
+                              Localization::GetInstance().Translate("gameover_continue"));
+  frame->AddView(buttonOkay);
+  buttonOkay->Show();
+  buttonOkay->sig_OnClick.connect([this](...) { GoMainMenu(); });
+
+  float possession1 = match->GetMatchData()->GetPossessionTime_ms(0);
+  float possession2 = match->GetMatchData()->GetPossessionTime_ms(1);
+  int shots1 = match->GetMatchData()->GetShots(0);
+  int shots2 = match->GetMatchData()->GetShots(1);
+  int shotsOnTarget1 = match->GetMatchData()->GetShotsOnTarget(0);
+  int shotsOnTarget2 = match->GetMatchData()->GetShotsOnTarget(1);
+  int passes1 = match->GetMatchData()->GetPassAttempts(0);
+  int passes2 = match->GetMatchData()->GetPassAttempts(1);
+  int passComp1 = match->GetMatchData()->GetPassesCompleted(0);
+  int passComp2 = match->GetMatchData()->GetPassesCompleted(1);
+  int fouls1 = match->GetMatchData()->GetFouls(0);
+  int fouls2 = match->GetMatchData()->GetFouls(1);
+
+  Gui2Grid* grid = new Gui2Grid(windowManager, "grid_gameover_stats", 5, 18, 70, 24);
+
+  float totalPossession = possession1 + possession2;
+  int possession1Pct = (totalPossession > 0) ? round(possession1 / totalPossession * 100) : 50;
+  int possession2Pct = 100 - possession1Pct;
+
+  grid->AddView(new Gui2Caption(windowManager, "caption_possession_t1", 0, 0, 25, 3,
+                                int_to_str(possession1Pct) + "%"),
+                0, 0);
+  grid->AddView(new Gui2Caption(windowManager, "caption_possession_header", 0, 0, 35, 3,
+                                Localization::GetInstance().Translate("gameover_possession")),
+                0, 1);
+  grid->AddView(new Gui2Caption(windowManager, "caption_possession_t2", 0, 0, 10, 3,
+                                int_to_str(possession2Pct) + "%"),
+                0, 2);
+
+  grid->AddView(new Gui2Caption(windowManager, "caption_shots_t1", 0, 0, 25, 3, int_to_str(shots1)),
+                1, 0);
+  grid->AddView(new Gui2Caption(windowManager, "caption_shots_header", 0, 0, 35, 3,
+                                Localization::GetInstance().Translate("gameover_shots")),
+                1, 1);
+  grid->AddView(new Gui2Caption(windowManager, "caption_shots_t2", 0, 0, 10, 3, int_to_str(shots2)),
+                1, 2);
+
+  auto shotOnTargetStr = [](int onTarget, int total) -> std::string {
+    if (total == 0)
+      return "0";
+    return int_to_str(onTarget) + "/" + int_to_str(total);
+  };
+  grid->AddView(new Gui2Caption(windowManager, "caption_sot_t1", 0, 0, 25, 3,
+                                shotOnTargetStr(shotsOnTarget1, shots1)),
+                2, 0);
+  grid->AddView(new Gui2Caption(windowManager, "caption_sot_header", 0, 0, 35, 3,
+                                Localization::GetInstance().Translate("gameover_shots_on_target")),
+                2, 1);
+  grid->AddView(new Gui2Caption(windowManager, "caption_sot_t2", 0, 0, 10, 3,
+                                shotOnTargetStr(shotsOnTarget2, shots2)),
+                2, 2);
+
+  auto passAccStr = [](int completed, int attempted) -> std::string {
+    if (attempted == 0)
+      return "0%";
+    return int_to_str(int(round(completed * 100.0f / attempted))) + "% (" + int_to_str(completed) +
+           "/" + int_to_str(attempted) + ")";
+  };
+  grid->AddView(new Gui2Caption(windowManager, "caption_passacc_t1", 0, 0, 25, 3,
+                                passAccStr(passComp1, passes1)),
+                3, 0);
+  grid->AddView(new Gui2Caption(windowManager, "caption_passacc_header", 0, 0, 35, 3,
+                                Localization::GetInstance().Translate("gameover_pass_accuracy")),
+                3, 1);
+  grid->AddView(new Gui2Caption(windowManager, "caption_passacc_t2", 0, 0, 10, 3,
+                                passAccStr(passComp2, passes2)),
+                3, 2);
+
+  grid->AddView(new Gui2Caption(windowManager, "caption_fouls_t1", 0, 0, 25, 3, int_to_str(fouls1)),
+                4, 0);
+  grid->AddView(new Gui2Caption(windowManager, "caption_fouls_header", 0, 0, 35, 3,
+                                Localization::GetInstance().Translate("gameover_fouls")),
+                4, 1);
+  grid->AddView(new Gui2Caption(windowManager, "caption_fouls_t2", 0, 0, 10, 3, int_to_str(fouls2)),
+                4, 2);
+
+  grid->UpdateLayout(0.5);
+
+  frame->AddView(grid);
+  grid->Show();
+
+  // Man of the Match (MOM) & Ratings
+  float bestRating = 0.0f;
+  std::string momName = "";
+
+  for (int t = 0; t < 2; t++) {
+    std::vector<Player*> players;
+    match->GetAllTeamPlayers(t, players);
+
+    // Team performance modifier
+    float teamMod = 0.0f;
+    if (match->GetMatchData()->GetGoalCount(t) > match->GetMatchData()->GetGoalCount(1 - t)) {
+      teamMod = 1.0f;  // Winners get boost
+    } else if (match->GetMatchData()->GetGoalCount(t) <
+               match->GetMatchData()->GetGoalCount(1 - t)) {
+      teamMod = -0.5f;  // Losers get penalty
+    }
+
+    for (Player* p : players) {
+      PlayerData* pd = p->GetPlayerData();
+      if (!pd)
+        continue;
+
+      // Base rating 5.5 to 6.5
+      float rating = 5.5f + (std::rand() % 10) * 0.1f;
+      rating += teamMod;
+
+      // Condition modifier
+      int cond = pd->GetCondition();
+      rating += (cond - 3) * 0.2f;
+
+      // Goals decide matches; before this the award ignored them.
+      auto scored = goalsByPlayer.find({t, pd->GetDatabaseID()});
+      if (scored != goalsByPlayer.end())
+        rating += 1.2f * scored->second;
+
+      // Ensure rating is between 4.0 and 9.0 (unless MOM, which we can push to 9.5)
+      rating = std::clamp(rating, 4.0f, 9.0f);
+
+      if (rating > bestRating) {
+        bestRating = rating;
+        momName = pd->GetLastName();
+      }
+    }
+  }
+
+  // Give MOM an extra boost
+  bestRating = std::clamp(bestRating + 0.5f, 6.5f, 9.5f);
+
+  // Display MOM
+  char ratingBuf[16];
+  snprintf(ratingBuf, sizeof(ratingBuf), "%.1f", bestRating);
+  std::string momStr = Localization::GetInstance().Translate("gameover_mom") + ": " + momName +
+                       " (" + std::string(ratingBuf) + ")";
+
+  Gui2Caption* momCaption = new Gui2Caption(windowManager, "caption_mom", 2, 46, 76, 4, momStr);
+  momCaption->SetColor(windowManager->GetStyle()->GetColor(e_DecorationType_Bright2));  // Gold
+  momCaption->SetOutlineColor(Vector3(0, 0, 0));
+  momCaption->SetPosition(40 - momCaption->GetTextWidthPercent() * 0.5f, 46);
+  frame->AddView(momCaption);
+  momCaption->Show();
+
+  buttonOkay->SetFocus();
+
+  // Auto-save match result to history. Guarded so re-entering this page (e.g.
+  // returning from Match History) does not append a duplicate record.
+  if (!match->GetMatchData()->IsHistorySaved()) {
+    match->GetMatchData()->SetHistorySaved(true);
+
+    float poss1 = match->GetMatchData()->GetPossessionTime_ms(0);
+    float poss2 = match->GetMatchData()->GetPossessionTime_ms(1);
+    float totalPoss = poss1 + poss2;
+
+    MatchHistoryEntry entry;
+    entry.id = 0;
+
+    time_t now = time(nullptr);
+    char tsbuf[32];
+    std::tm localTime = {};
+    if (blunted::GetLocalTime(now, localTime) &&
+        strftime(tsbuf, sizeof(tsbuf), "%Y-%m-%d %H:%M:%S", &localTime) > 0) {
+      entry.timestamp = tsbuf;
+    } else {
+      entry.timestamp = "1970-01-01 00:00:00";
+    }
+
+    entry.team1_name = match->GetTeam(0)->GetTeamData()->GetName();
+    entry.team2_name = match->GetTeam(1)->GetTeamData()->GetName();
+    entry.score1 = match->GetMatchData()->GetGoalCount(0);
+    entry.score2 = match->GetMatchData()->GetGoalCount(1);
+    entry.match_time_ms = (int)match->GetMatchTime_ms();
+    entry.possession1_pct = (totalPoss > 0) ? poss1 / totalPoss * 100.0f : 50.0f;
+    entry.possession2_pct = (totalPoss > 0) ? poss2 / totalPoss * 100.0f : 50.0f;
+    entry.shots1 = match->GetMatchData()->GetShots(0);
+    entry.shots2 = match->GetMatchData()->GetShots(1);
+    entry.shots_on_target1 = match->GetMatchData()->GetShotsOnTarget(0);
+    entry.shots_on_target2 = match->GetMatchData()->GetShotsOnTarget(1);
+    entry.passes1 = match->GetMatchData()->GetPassAttempts(0);
+    entry.passes2 = match->GetMatchData()->GetPassAttempts(1);
+    entry.passes_completed1 = match->GetMatchData()->GetPassesCompleted(0);
+    entry.passes_completed2 = match->GetMatchData()->GetPassesCompleted(1);
+    entry.fouls1 = match->GetMatchData()->GetFouls(0);
+    entry.fouls2 = match->GetMatchData()->GetFouls(1);
+
+    MatchHistory::EnsureTable();
+    MatchHistory::SaveMatch(entry);
+  }
+
+  Gui2Button* buttonHistory =
+      new Gui2Button(windowManager, "button_gameover_history", 14, 54, 24, 4,
+                     Localization::GetInstance().Translate("gameover_match_history"));
+  frame->AddView(buttonHistory);
+  buttonHistory->Show();
+  buttonHistory->sig_OnClick.connect([this](...) {
+    Properties props;
+    CreatePage((int)e_PageID_MatchHistory, props);
+  });
+
+  this->Show();
+}
+
+GameOverPage::~GameOverPage() {}
+
+void GameOverPage::Process() {
+  Gui2Page::Process();
+
+  // menu_smoke_quit_delay_ms keeps the page up longer for frame captures.
+  const unsigned long quitDelay_ms = static_cast<unsigned long>(
+      GetConfiguration()->GetInt("menu_smoke_quit_delay_ms", kMenuSmokeQuitDelay_ms));
+  if (!autoQuitTriggered && MenuSmokeFullMatchEnabled() &&
+      EnvironmentManager::GetInstance().GetTime_ms() >= pageCreatedTime_ms + quitDelay_ms) {
+    autoQuitTriggered = true;
+    // A career fixture: record it as Continue would, then report what the
+    // career kept from the 3D match.
+    if (CareerDatabase::GetInstance().HasPendingFixture()) {
+      auto* matchData = match->GetMatchData();
+      const bool recorded = CareerDatabase::GetInstance().ConsumePlayedFixture(
+          matchData->GetGoalCount(0), matchData->GetGoalCount(1), matchData->GetGoalScorers(0),
+          matchData->GetGoalScorers(1));
+      const CareerSave* save = CareerDatabase::GetInstance().GetActiveSave();
+      int appearances = 0;
+      int goals = 0;
+      for (const auto& player : save ? save->roster : std::vector<PlayerCareerState>{}) {
+        appearances += player.matchesPlayed;
+        goals += player.careerGoals;
+      }
+      printf("[menu-smoke] Career match %s: week now %d, %d appearances, %d goals credited\n",
+             recorded ? "recorded" : "NOT recorded", save ? save->season.currentWeek : 0,
+             appearances, goals);
+    }
+    printf("[menu-smoke] Full match complete: %s %i - %i %s\n",
+           match->GetTeam(0)->GetTeamData()->GetName().c_str(),
+           match->GetMatchData()->GetGoalCount(0), match->GetMatchData()->GetGoalCount(1),
+           match->GetTeam(1)->GetTeamData()->GetName().c_str());
+    printf("[menu-smoke] Full-match verification succeeded, quitting test run\n");
+    EnvironmentManager::GetInstance().SignalQuit();
+  }
+}
+
+void GameOverPage::ProcessWindowingEvent(WindowingEvent* event) {
+  if (event->IsEscape()) {
+    // The match is over; ESC should return to the main menu like "Continue"
+    // rather than walking back into the (now finished) match/game flow.
+    GoMainMenu();
+    return;
+  } else {
+    event->Ignore();
+  }
+}
+
+void GameOverPage::GoRematch() {
+  windowManager->GetPagePath()->Clear();
+
+  GetGameTask()->Action(e_GameTaskMessage_StopMatch);
+  GetGameTask()->Action(e_GameTaskMessage_StartMatch);
+
+  this->Exit();
+  Properties properties;
+  windowManager->GetPageFactory()->CreatePage((int)e_PageID_Game, properties, 0);
+  delete this;
+}
+
+void GameOverPage::GoMainMenu() {
+  // A league fixture was played: write its score back into the season before
+  // leaving the game flow, and resume into the matchday summary.
+  bool leagueMatchPlayed = false;
+  if (match && LeagueHasPendingFixture()) {
+    auto* matchData = match->GetMatchData();
+    if (matchData) {
+      // MatchData team 0/1 mirror the fixture's home/away sides.
+      leagueMatchPlayed =
+          LeagueConsumePlayedFixture(matchData->GetGoalCount(0), matchData->GetGoalCount(1));
+    } else {
+      LeagueClearPendingFixture();
+    }
+  }
+
+  // Preserve the finished 3D match in career bookkeeping before leaving the game flow.
+  bool resumeCareer = false;
+  if (!leagueMatchPlayed && CareerDatabase::GetInstance().HasPendingFixture()) {
+    auto* matchData = match ? match->GetMatchData() : nullptr;
+    if (matchData) {
+      resumeCareer = CareerDatabase::GetInstance().ConsumePlayedFixture(
+          matchData->GetGoalCount(0), matchData->GetGoalCount(1), matchData->GetGoalScorers(0),
+          matchData->GetGoalScorers(1));
+      if (!resumeCareer) {
+        buttonOkay->SetCaption(TR("career_save_retry"));
+        buttonOkay->SetFocus();
+        return;  // Keep MatchData alive so retry submits the same finished score.
+      }
+    } else {
+      CareerDatabase::GetInstance().ClearPendingFixture();
+    }
+  }
+  // A career squad applies to its fixture only.
+  ClearSquadOverride();
+  if (resumeCareer) {
+    GetConfiguration()->SetBool("career_resume_hub", true);
+  }
+  if (leagueMatchPlayed) {
+    GetConfiguration()->SetBool("league_resume_hub", true);
+  }
+  this->Exit();
+  GetMenuTask()->SetMenuAction(e_MenuAction_Menu);
+  delete this;
+}

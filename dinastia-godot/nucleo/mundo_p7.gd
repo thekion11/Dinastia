@@ -23,16 +23,14 @@ func nueva_temporada() -> Dictionary:
 		resumen["selecciones"] = selecciones.cierre_de_temporada(anio)
 	anio += 1
 	semana = 1
+	var libres_del_anio := libres.duplicate()   ## (01-11) los que ya eran libres: los que se van ahora ya cumplen años abajo
 	for c: Club in clubes.values():
 		var siguen: Array[Jugador] = []
 		for j in c.plantilla:
-			## La foto de la media con la que arranca el ano, para poder decir
-			## despues cuanto crecio cada uno. Se toma ANTES de la curva de
-			## progreso de abajo: si se tomara despues, el crecimiento del ano
-			## saldria siempre a cero.
+			## La foto de la media con la que arranca el ano, para poder decir despues cuanto crecio cada uno. Se toma ANTES de la
+			## curva de progreso de abajo: si se tomara despues, el crecimiento del ano saldria siempre a cero.
 			j.ovr_al_empezar = j.ovr
-			## `anio` ya se incrementó arriba (línea de "anio += 1"): `anio - 1`
-			## es la temporada que de verdad se está cerrando.
+			## `anio` ya se incrementó arriba (línea de "anio += 1"): `anio - 1` es la temporada que de verdad se está cerrando.
 			j.registrar_temporada(anio - 1, c.nombre)
 			j.edad += 1
 			j.partidos = 0
@@ -42,10 +40,8 @@ func nueva_temporada() -> Dictionary:
 			## veteranos bajan. Es lo que hace que una plantilla envejezca.
 			## Vive en `ProgresoJugador` (cantera_progreso.gd), con la semanal.
 			ProgresoJugador.anual(j)
-			## EL RETIRO POR LESIONES. `Medico.retiro_forzado()` estaba escrita y no
-			## la llamaba nadie: tres lesiones graves seguidas no acababan con la
-			## carrera de nadie, que es justo el peor final que puede tener un
-			## futbolista y el que hace que cuidar el fisico importe.
+			## EL RETIRO POR LESIONES. `Medico.retiro_forzado()` estaba escrita y no la llamaba nadie: tres lesiones graves seguidas no
+			## acababan con la carrera de nadie, que es justo el peor final que puede tener un futbolista y el que hace que cuidar el fisico importe.
 			if c.id == mi_club_id and medico != null and medico.retiro_forzado(j):
 				if cantera != null:
 					cantera.registrar_retiro(j, c)
@@ -63,6 +59,9 @@ func nueva_temporada() -> Dictionary:
 		c.plantilla = siguen
 		_subir_de_cantera(c)
 		_repartir_dorsales(c)
+	for j: Jugador in libres_del_anio:   ## los libres también cumplen años y progresan (antes solo los de un club; bot 01-11)
+		j.edad += 1
+		ProgresoJugador.anual(j)
 	for l in ligas:
 		l.preparar()
 	## La camada nueva: DESPUES de los retiros (para que registren su leyenda

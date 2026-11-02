@@ -1,0 +1,394 @@
+#include <chrono>
+#include <cstdlib>
+#include <filesystem>
+#include <fstream>
+#include <string>
+
+#include <gtest/gtest.h>
+
+#include "base/properties.hpp"
+#include "league/leaguecode.hpp"
+#include "league/leaguesetup.hpp"
+#include "sqlite3.h"
+#include "utils/database.hpp"
+
+using blunted::Database;
+using blunted::Properties;
+
+namespace {
+
+Database g_testDatabase;
+Properties g_testConfiguration;
+std::string g_activeSaveDirectory;
+std::uint64_t g_workspaceCounter = 0;
+
+std::filesystem::path MakeUniqueWorkspaceRoot() {
+  const auto now = std::chrono::steady_clock::now().time_since_epoch().count();
+  return std::filesystem::temp_directory_path() /
+         ("gf-test-" + std::to_string(now) + "-" + std::to_string(++g_workspaceCounter));
+}
+
+}  // namespace
+
+Database* GetDB() {
+  return &g_testDatabase;
+}
+
+Properties* GetConfiguration() {
+  return &g_testConfiguration;
+}
+
+std::string GetActiveSaveDirectory() {
+  return g_activeSaveDirectory;
+}
+
+void SetActiveSaveDirectory(const std::string& dir) {
+  g_activeSaveDirectory = dir;
+}
+
+namespace {
+
+class ScopedCurrentPath {
+public:
+  explicit ScopedCurrentPath(const std::filesystem::path& target)
+      : original_(std::filesystem::current_path()) {
+    std::filesystem::current_path(target);
+  }
+
+  ~ScopedCurrentPath() { std::filesystem::current_path(original_); }
+
+private:
+  std::filesystem::path original_;
+};
+
+class ScopedWorkspace {
+public:
+  ScopedWorkspace() {
+    root_ = MakeUniqueWorkspaceRoot();
+    std::filesystem::create_directories(root_);
+  }
+
+  ~ScopedWorkspace() {
+    std::error_code error;
+    std::filesystem::remove_all(root_, error);
+  }
+
+  const std::filesystem::path& root() const { return root_; }
+
+private:
+  std::filesystem::path root_;
+};
+
+void ExecSql(sqlite3* db, const std::string& sql) {
+  char* errorMessage = nullptr;
+  const int rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &errorMessage);
+  ASSERT_EQ(rc, SQLITE_OK) << (errorMessage ? errorMessage : "unknown sqlite error");
+  if (errorMessage) {
+    sqlite3_free(errorMessage);
+  }
+}
+
+void WriteTextFile(const std::filesystem::path& path, const std::string& contents) {
+  std::filesystem::create_directories(path.parent_path());
+  std::ofstream output(path, std::ios::binary);
+  ASSERT_TRUE(output.is_open()) << path.string();
+  output << contents;
+}
+
+void CreateFoundationDatabase(const std::filesystem::path& root, const std::string& databaseName,
+                              const std::string& playerStatsColumnName = "profile_xml") {
+  const auto databaseDir = root / "databases" / databaseName;
+  std::filesystem::create_directories(databaseDir);
+
+  sqlite3* db = nullptr;
+  ASSERT_EQ(sqlite3_open((databaseDir / "database.sqlite").string().c_str(), &db), SQLITE_OK);
+
+  ExecSql(db,
+          "CREATE TABLE leagues(id INTEGER PRIMARY KEY, name TEXT);"
+          "CREATE TABLE teams(id INTEGER PRIMARY KEY, league_id INTEGER, name TEXT, logo_url TEXT, "
+          "kit_url TEXT);"
+          "CREATE TABLE players(id INTEGER PRIMARY KEY, team_id INTEGER, " +
+              playerStatsColumnName + " TEXT, base_stat INTEGER);");
+
+  ExecSql(db,
+          "INSERT INTO leagues(id, name) VALUES (1, 'Premier Test League');"
+          "INSERT INTO teams(id, league_id, name, logo_url, kit_url) VALUES "
+          "(1, 1, 'Alpha FC', 'images_teams/test/alpha_logo.png', 'images_teams/test/alpha'),"
+          "(2, 1, 'Bravo FC', 'images_teams/test/bravo_logo.png', 'images_teams/test/bravo'),"
+          "(3, 1, 'Charlie FC', 'images_teams/test/charlie_logo.png', 'images_teams/test/charlie'),"
+          "(4, 1, 'Delta FC', 'images_teams/test/delta_logo.png', 'images_teams/test/delta');");
+
+  for (int playerId = 1; playerId <= 4; ++playerId) {
+    const int teamId = playerId;
+    ExecSql(db, "INSERT INTO players(id, team_id, " + playerStatsColumnName +
+                    ", base_stat) VALUES (" + std::to_string(playerId) + ", " +
+                    std::to_string(teamId) + ", '<profile><pace>0.5</pace></profile>', 55);");
+  }
+
+  ASSERT_EQ(sqlite3_close(db), SQLITE_OK);
+
+  WriteTextFile(databaseDir / "images_teams" / "test" / "alpha_logo.png", "alpha");
+  WriteTextFile(databaseDir / "images_teams" / "test" / "alpha" / "kit_home.png", "kit");
+  WriteTextFile(databaseDir / "images_teams" / "test" / "bravo_logo.png", "bravo");
+}
+
+int QuerySingleInt(Database* db, const std::string& sql) {
+  auto result = db->Query(sql);
+  EXPECT_FALSE(result->data.empty()) << sql;
+  EXPECT_FALSE(result->data.at(0).empty()) << sql;
+  return result->data.empty() || result->data.at(0).empty() ? 0
+                                                            : std::stoi(result->data.at(0).at(0));
+}
+
+std::string QuerySingleString(Database* db, const std::string& sql) {
+  auto result = db->Query(sql);
+  EXPECT_FALSE(result->data.empty()) << sql;
+  EXPECT_FALSE(result->data.at(0).empty()) << sql;
+  return result->data.empty() || result->data.at(0).empty() ? "" : result->data.at(0).at(0);
+}
+
+TEST(LeagueBootstrapIntegrationTest, CreateNewLeagueSaveCopiesDatabaseAndKnownAssets) {
+  ScopedWorkspace workspace;
+  ScopedCurrentPath cwd(workspace.root());
+  CreateFoundationDatabase(workspace.root(), "default");
+
+  EXPECT_EQ(CreateNewLeagueSave("default", "season_one"), 0);
+
+  const auto saveDir = workspace.root() / "saves" / "season_one";
+  EXPECT_TRUE(std::filesystem::exists(saveDir / "database.sqlite"));
+  EXPECT_TRUE(std::filesystem::exists(saveDir / "autosave.sqlite"));
+  EXPECT_TRUE(std::filesystem::exists(saveDir / "images_teams" / "test" / "alpha_logo.png"));
+  EXPECT_TRUE(
+      std::filesystem::exists(saveDir / "images_teams" / "test" / "alpha" / "kit_home.png"));
+  EXPECT_FALSE(std::filesystem::exists(saveDir / "images_teams" / "test" / "bravo"));
+}
+
+TEST(LeagueBootstrapIntegrationTest, GeneratedTeamsIncludeClassicTacticalDefaults) {
+  ScopedWorkspace workspace;
+  const auto databasePath = workspace.root() / "generated.sqlite";
+  sqlite3* emptyDatabase = nullptr;
+  ASSERT_EQ(sqlite3_open(databasePath.string().c_str(), &emptyDatabase), SQLITE_OK);
+  ASSERT_EQ(sqlite3_close(emptyDatabase), SQLITE_OK);
+  ASSERT_TRUE(GetDB()->Load(databasePath.string()));
+
+  SetupFourLeagues(GetDB());
+
+  const std::string tactics =
+      QuerySingleString(GetDB(), "SELECT tactics_xml FROM teams ORDER BY id LIMIT 1");
+  EXPECT_NE(tactics.find("<counter_attack>0.5</counter_attack>"), std::string::npos);
+  EXPECT_NE(tactics.find("<support_distance>0.5</support_distance>"), std::string::npos);
+  EXPECT_NE(tactics.find("<team_pressure>0.5</team_pressure>"), std::string::npos);
+}
+
+TEST(LeagueBootstrapIntegrationTest, PrepareDatabaseForLeagueSupportsProfileXmlSchema) {
+  ScopedWorkspace workspace;
+  ScopedCurrentPath cwd(workspace.root());
+  CreateFoundationDatabase(workspace.root(), "default", "profile_xml");
+
+  ASSERT_TRUE(
+      GetDB()->Load((workspace.root() / "databases" / "default" / "database.sqlite").string()));
+  ASSERT_TRUE(PrepareDatabaseForLeague());
+
+  EXPECT_EQ(
+      QuerySingleInt(GetDB(),
+                     "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='settings'"),
+      1);
+  EXPECT_EQ(
+      QuerySingleInt(GetDB(),
+                     "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='calendar'"),
+      1);
+  EXPECT_EQ(
+      QuerySingleInt(
+          GetDB(), "SELECT COUNT(*) FROM pragma_table_info('players') WHERE name='stats_temporal'"),
+      1);
+
+  const auto temporalStats =
+      QuerySingleString(GetDB(), "SELECT stats_temporal FROM players WHERE id = 1 LIMIT 1");
+  EXPECT_NE(temporalStats.find("<current>"), std::string::npos);
+  EXPECT_NE(temporalStats.find("<pace>"), std::string::npos);
+}
+
+TEST(LeagueBootstrapIntegrationTest, GenerateSeasonCalendarsCreatesRoundRobinFixtures) {
+  ScopedWorkspace workspace;
+  ScopedCurrentPath cwd(workspace.root());
+  CreateFoundationDatabase(workspace.root(), "default");
+
+  ASSERT_TRUE(
+      GetDB()->Load((workspace.root() / "databases" / "default" / "database.sqlite").string()));
+  ASSERT_TRUE(PrepareDatabaseForLeague());
+
+  GetDB()->Query(
+      "INSERT INTO settings(managername, team_id, currency, difficulty, seasonyear, timestamp) "
+      "VALUES ('Coach Test', 1, 'euro', 0.5, 2013, '2013-10-23')");
+  GenerateSeasonCalendars();
+
+  // The season starts at the settings date; generation no longer skips ahead.
+  EXPECT_EQ(QuerySingleInt(GetDB(), "SELECT COUNT(*) FROM calendar"), 12);
+  EXPECT_EQ(QuerySingleInt(GetDB(), "SELECT COUNT(DISTINCT timestamp) FROM calendar"), 6);
+  EXPECT_EQ(QuerySingleString(GetDB(), "SELECT timestamp FROM settings LIMIT 1"), "2013-10-23");
+}
+
+TEST(LeagueBootstrapIntegrationTest, SeasonCompletesAdvancesAndSupportsSaveSlots) {
+  ScopedWorkspace workspace;
+  ScopedCurrentPath cwd(workspace.root());
+  CreateFoundationDatabase(workspace.root(), "default");
+
+  ASSERT_TRUE(
+      GetDB()->Load((workspace.root() / "databases" / "default" / "database.sqlite").string()));
+  ASSERT_TRUE(PrepareDatabaseForLeague());
+
+  GetDB()->Query(
+      "INSERT INTO settings(managername, team_id, currency, difficulty, seasonyear, timestamp) "
+      "VALUES ('Coach Test', 1, 'euro', 0.5, 2013, '2013-06-01')");
+  GenerateSeasonCalendars();
+
+  EXPECT_FALSE(LeagueSeasonComplete());
+
+  // Play out the entire season matchday by matchday.
+  std::string matchdayDate;
+  int resolvedMatchdays = 0;
+  while (LeagueGetNextMatchdayDate(matchdayDate)) {
+    EXPECT_GT(LeagueResolveMatchday(matchdayDate), 0);
+    resolvedMatchdays++;
+  }
+  EXPECT_EQ(resolvedMatchdays, 6);
+  EXPECT_TRUE(LeagueSeasonComplete());
+  EXPECT_EQ(QuerySingleInt(GetDB(), "SELECT COUNT(*) FROM match_results WHERE played = 1"), 12);
+
+  // Rolling into the next season resets results and regenerates the calendar.
+  ASSERT_TRUE(LeagueAdvanceSeason());
+  EXPECT_EQ(QuerySingleInt(GetDB(), "SELECT seasonyear FROM settings LIMIT 1"), 2014);
+  EXPECT_EQ(QuerySingleString(GetDB(), "SELECT timestamp FROM settings LIMIT 1"), "2014-06-01");
+  EXPECT_EQ(QuerySingleInt(GetDB(), "SELECT COUNT(*) FROM match_results"), 0);
+  EXPECT_EQ(QuerySingleInt(GetDB(), "SELECT COUNT(*) FROM calendar"), 12);
+  EXPECT_FALSE(LeagueSeasonComplete());
+
+  // Save slots: save, count, load, bounds.
+  SetActiveSaveDirectory("slotworkspace");
+  std::filesystem::create_directories(std::filesystem::path("saves") / "slotworkspace");
+  {
+    std::ofstream autosave(std::filesystem::path("saves") / "slotworkspace" / "autosave.sqlite",
+                           std::ios::binary);
+    autosave << "autosave-bytes";
+  }
+  EXPECT_EQ(LeagueGetSlotCount(), 0);
+  EXPECT_TRUE(LeagueSaveToSlot(1));
+  EXPECT_TRUE(LeagueSaveToSlot(3));
+  EXPECT_EQ(LeagueGetSlotCount(), 3);
+  EXPECT_TRUE(LeagueSaveToSlot(3));  // overwrite is allowed
+  EXPECT_FALSE(LeagueSaveToSlot(0));
+  EXPECT_FALSE(LeagueSaveToSlot(kLeagueMaxSaveSlots + 1));
+
+  EXPECT_TRUE(
+      std::filesystem::exists(std::filesystem::path("saves") / "slotworkspace" / "slot_3.sqlite"));
+  // Loading rewrites the live autosave from the slot.
+  {
+    std::ofstream slot3(std::filesystem::path("saves") / "slotworkspace" / "slot_3.sqlite",
+                        std::ios::binary);
+    slot3 << "slot-bytes";
+  }
+  EXPECT_TRUE(LeagueLoadSlot(3));
+  std::ifstream autosaveBack(std::filesystem::path("saves") / "slotworkspace" / "autosave.sqlite",
+                             std::ios::binary);
+  std::string contents((std::istreambuf_iterator<char>(autosaveBack)),
+                       std::istreambuf_iterator<char>());
+  EXPECT_EQ(contents, "slot-bytes");
+  EXPECT_FALSE(LeagueLoadSlot(2));  // empty slot
+}
+
+TEST(LeagueBootstrapIntegrationTest, StepLeagueTimeAdvancesMatchDaysAndRollsSeason) {
+  ScopedWorkspace workspace;
+  ScopedCurrentPath cwd(workspace.root());
+  CreateFoundationDatabase(workspace.root(), "default");
+
+  ASSERT_TRUE(
+      GetDB()->Load((workspace.root() / "databases" / "default" / "database.sqlite").string()));
+  ASSERT_TRUE(PrepareDatabaseForLeague());
+
+  GetDB()->Query(
+      "INSERT INTO settings(managername, team_id, currency, difficulty, seasonyear, timestamp) "
+      "VALUES ('Coach Test', 1, 'euro', 0.5, 2013, '2013-10-23')");
+
+  ASSERT_TRUE(StepLeagueTime());
+  EXPECT_EQ(QuerySingleString(GetDB(), "SELECT timestamp FROM settings LIMIT 1"), "2013-10-26");
+
+  GetDB()->Query("UPDATE settings SET timestamp = '2014-01-01', seasonyear = 2013");
+  ASSERT_TRUE(StepLeagueTime());
+  EXPECT_EQ(QuerySingleInt(GetDB(), "SELECT seasonyear FROM settings LIMIT 1"), 2014);
+  EXPECT_GT(QuerySingleInt(GetDB(), "SELECT COUNT(*) FROM calendar"), 0);
+}
+
+TEST(LeagueBootstrapIntegrationTest, MatchdayLoopRecordsSimulatedAndPlayedResults) {
+  ScopedWorkspace workspace;
+  ScopedCurrentPath cwd(workspace.root());
+  CreateFoundationDatabase(workspace.root(), "default");
+
+  ASSERT_TRUE(
+      GetDB()->Load((workspace.root() / "databases" / "default" / "database.sqlite").string()));
+  ASSERT_TRUE(PrepareDatabaseForLeague());
+
+  GetDB()->Query(
+      "INSERT INTO settings(managername, team_id, currency, difficulty, seasonyear, timestamp) "
+      "VALUES ('Coach Test', 1, 'euro', 0.5, 2013, '2013-10-23')");
+  GenerateSeasonCalendars();
+
+  // Round 1 pairs (1 vs 4) and (2 vs 3); the user controls team 1.
+  LeagueFixtureInfo fixture;
+  ASSERT_TRUE(LeagueGetUserNextFixture(fixture));
+  EXPECT_EQ(fixture.homeTeamID, 1);
+  EXPECT_EQ(fixture.awayTeamID, 4);
+  EXPECT_EQ(fixture.date, "2013-10-23");
+
+  int homeGoals = 0;
+  int awayGoals = 0;
+  LeagueSimulateFixture(fixture, homeGoals, awayGoals);
+  EXPECT_GE(homeGoals, 0);
+  EXPECT_GE(awayGoals, 0);
+  LeagueRecordResult(fixture, homeGoals, awayGoals);
+
+  // Resolving the matchday plays out the remaining round-1 fixture.
+  EXPECT_EQ(LeagueResolveMatchday(fixture.date), 1);
+  EXPECT_EQ(QuerySingleInt(GetDB(), "SELECT COUNT(*) FROM match_results WHERE played = 1"), 2);
+  EXPECT_EQ(QuerySingleInt(
+                GetDB(), "SELECT COUNT(*) FROM inbox_messages WHERE subject LIKE 'Match Result:%'"),
+            2);
+  EXPECT_EQ(LeagueGetLastMatchdayDate(), "2013-10-23");
+  EXPECT_EQ(QuerySingleString(GetDB(), "SELECT timestamp FROM settings LIMIT 1"), "2013-10-23");
+
+  // The next user fixture is on the following matchday (team 1 hosts team 3).
+  LeagueFixtureInfo next;
+  ASSERT_TRUE(LeagueGetUserNextFixture(next));
+  EXPECT_EQ(next.homeTeamID, 1);
+  EXPECT_EQ(next.awayTeamID, 3);
+  EXPECT_EQ(next.date, "2013-10-30");
+
+  // Kick off in the 3D engine and write the final score back.
+  LeagueSetPendingFixture(next);
+  EXPECT_TRUE(LeagueHasPendingFixture());
+  ASSERT_TRUE(LeagueConsumePlayedFixture(3, 1));
+  EXPECT_FALSE(LeagueHasPendingFixture());
+
+  auto playedRow = GetDB()->Query(
+      "SELECT team1_goals, team2_goals FROM match_results "
+      "WHERE calendar_id = " +
+      std::to_string(next.calendarID));
+  ASSERT_FALSE(playedRow->data.empty());
+  EXPECT_EQ(std::stoi(playedRow->data.at(0).at(0)), 3);
+  EXPECT_EQ(std::stoi(playedRow->data.at(0).at(1)), 1);
+  EXPECT_EQ(QuerySingleString(GetDB(), "SELECT timestamp FROM settings LIMIT 1"), "2013-10-30");
+
+  // Reporting the same fixture twice is rejected.
+  LeagueSetPendingFixture(next);
+  EXPECT_FALSE(LeagueConsumePlayedFixture(9, 9));
+  EXPECT_EQ(std::stoi(playedRow->data.at(0).at(0)), 3);
+  LeagueClearPendingFixture();
+
+  // Advancing without playing sims the entire next matchday.
+  std::string matchdayDate;
+  ASSERT_TRUE(LeagueGetNextMatchdayDate(matchdayDate));
+  EXPECT_EQ(matchdayDate, "2013-11-06");
+  EXPECT_EQ(LeagueResolveMatchday(matchdayDate), 2);
+  EXPECT_EQ(QuerySingleInt(GetDB(), "SELECT COUNT(*) FROM match_results WHERE played = 1"), 6);
+}
+
+}  // namespace

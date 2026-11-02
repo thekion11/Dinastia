@@ -1,0 +1,142 @@
+#include "pulldown.hpp"
+
+#include <algorithm>
+
+namespace blunted {
+
+Gui2Pulldown::Gui2Pulldown(Gui2WindowManager* windowManager, const std::string& name,
+                           float x_percent, float y_percent, float width_percent,
+                           float height_percent)
+    : Gui2View(windowManager, name, x_percent, y_percent, width_percent, height_percent) {
+  isSelectable = true;
+  isOverlay = false;  // reminder: dynamic, based on 'is pulled down'
+
+  bg = new Gui2Image(windowManager, name + "_bg", 0, 0, width_percent, height_percent);
+  bg->LoadImage("media/menu/backgrounds/black.png");
+  bg->Show();
+
+  grid = new Gui2Grid(windowManager, name + "_grid", 0, 0, width_percent, height_percent);
+  grid->Show();
+
+  selectedEntry = 0;
+
+  pulldownButton =
+      new Gui2Button(windowManager, name + "_pulldownbutton", 0, 0, width_percent, 3, "tmp");
+  pulldownButton->sig_OnClick.connect([this](auto*) { PullDownOrUp(); });
+  this->AddView(pulldownButton);
+  pulldownButton->Show();
+
+  pulledDown = false;
+}
+
+Gui2Pulldown::~Gui2Pulldown() {
+  if (!pulledDown) {  // grid is not a child then, so remove it manually
+    grid->Exit();
+    delete grid;
+    bg->Exit();
+    delete bg;
+  }
+}
+
+void Gui2Pulldown::AddEntry(const std::string& caption, const std::string& name) {
+  Gui2Button* button = new Gui2Button(windowManager, name + "_entry" + int_to_str(entries.size()),
+                                      0, 0, width_percent - 1, 3, caption);
+  button->sig_OnClick.connect([this, idx = entries.size()](auto*) { Select(idx); });
+
+  PulldownEntry entry;
+  entry.name = name;
+  entry.button = button;
+
+  grid->AddView(button, entries.size(), 0);
+
+  entries.push_back(entry);
+
+  if (entries.size() == 1)
+    pulldownButton->SetCaption(caption);  // default selected
+}
+
+void Gui2Pulldown::ClearEntries() {
+  for (auto& entry : entries) {
+    grid->RemoveView(entry.button);
+    entry.button->Exit();
+    delete entry.button;
+  }
+  entries.clear();
+  selectedEntry = 0;
+  pulldownButton->SetCaption("");
+}
+
+void Gui2Pulldown::PullDownOrUp() {
+  if (pulledDown == false) {
+    if (entries.empty())
+      return;
+    this->AddView(bg);
+    this->AddView(grid);
+    grid->SetMaxVisibleRows(5);
+    grid->UpdateLayout(0.0, 0.0, 0.0, 0.0);
+    entries.at(selectedEntry).button->SetFocus();
+    float width, height, screenX, screenY;
+    grid->GetSize(width, height);
+    GetDerivedPosition(screenX, screenY);
+    const float popupX = std::clamp(screenX, 0.0f, std::max(0.0f, 100.0f - width)) - screenX;
+    const float popupY = std::clamp(screenY, 0.0f, std::max(0.0f, 100.0f - height)) - screenY;
+    grid->SetPosition(popupX, popupY);
+    bg->SetPosition(popupX, popupY);
+    bg->SetSize(width, height);
+    pulldownButton->Hide();
+    bg->Show();
+    grid->Show();
+    pulledDown = true;
+    isOverlay = true;
+  } else {  // we want to pull it up
+    grid->Hide();
+    bg->Hide();
+    pulldownButton->Show();
+    this->RemoveView(grid);
+    this->RemoveView(bg);
+    pulldownButton->SetFocus();
+    pulledDown = false;
+    isOverlay = false;
+  }
+}
+
+void Gui2Pulldown::SetSelected(int selectedEntry) {
+  this->selectedEntry = selectedEntry;
+  pulldownButton->SetCaption(entries.at(selectedEntry).button->GetCaption());
+}
+
+std::string Gui2Pulldown::GetSelected() const {
+  return entries.at(selectedEntry).name;
+}
+
+void Gui2Pulldown::SetSelectedByName(const std::string& name) {
+  for (unsigned int i = 0; i < entries.size(); i++) {
+    if (entries.at(i).name == name) {
+      SetSelected(i);
+      return;
+    }
+  }
+}
+
+void Gui2Pulldown::ProcessWindowingEvent(WindowingEvent* event) {
+  if (event->IsEscape()) {
+    if (pulledDown)
+      PullDownOrUp();
+    else
+      event->Ignore();
+  } else if (pulledDown) {
+    event->Accept();  // An open popup owns navigation until selection or Escape.
+  } else {
+    event->Ignore();
+  }
+}
+
+void Gui2Pulldown::Select(int selectedEntry) {
+  this->selectedEntry = selectedEntry;
+  pulldownButton->SetCaption(entries.at(selectedEntry).button->GetCaption());
+  if (pulledDown)
+    sig_OnChange(this);
+  PullDownOrUp();
+}
+
+}  // namespace blunted

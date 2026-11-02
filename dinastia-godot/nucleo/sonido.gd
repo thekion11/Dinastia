@@ -21,7 +21,10 @@ const AJUSTE_DB := {"menu_mover": -8.0, "clic_suave": -21.0, "menu_aceptar": -16
 	## El bombo de la barra con redoblante (VCSL, CC0), 26-10-2026. Ajustes tan
 	## grandes porque la receta era ruido de 50-90 Hz con un pico muy bajo: se
 	## iguala el pico, no se sube la percusión de golpe.
-	"tambor": -19.5, "tambor_visitante": -35.0}
+	"tambor": -19.5, "tambor_visitante": -35.0,
+	## Golpeo de balón y poste grabados de League-Soccer (Apache 2.0, `audio/ui/LICENCIA_LeagueSoccer_Apache-2.0.txt`), 01-11-2026:
+	## el partido jugable no sonaba al golpear ni al dar en el palo. Igualados al pico de la síntesis que sustituyen (+1 dB, `sui_grabados`).
+	"pase_corto": -26.0, "tiro_potente": -25.5, "poste": -12.6, "travesano": -12.6}
 
 func ruta_grabado(nombre: String) -> String:
 	return CARPETA_GRABADOS + nombre + ".ogg"
@@ -101,7 +104,8 @@ func _exit_tree() -> void:
 
 ## Reproduce un efecto. Si no existe, no hace nada y no se queja: un sonido que
 ## falta no puede tumbar un partido.
-func toca(nombre: String, bus: Bus = Bus.EFECTOS) -> void:
+## `extra_db` (01-11, M-320): un ajuste de volumen de esta vez (la patada suena según su potencia).
+func toca(nombre: String, bus: Bus = Bus.EFECTOS, extra_db := 0.0) -> void:
 	_aviso_visual(nombre)
 	if not encendido:
 		return
@@ -117,7 +121,7 @@ func toca(nombre: String, bus: Bus = Bus.EFECTOS) -> void:
 	## una vez en este proyecto con un feed cosmetico, y solo la caza el banco.
 	## Aqui basta con ir rotando: el oido no distingue una rueda de un sorteo.
 	p.stream = variantes[_siguiente % variantes.size()]
-	p.volume_db = linear_to_db(maxf(0.001, float(volumen[bus]))) + float(AJUSTE_DB.get(nombre, 0.0))
+	p.volume_db = linear_to_db(maxf(0.001, float(volumen[bus]))) + float(AJUSTE_DB.get(nombre, 0.0)) + extra_db
 	p.play()
 
 ## M-283: el aviso escrito del sonido (aunque el sonido esté apagado). La capa se crea la primera vez que hace falta.

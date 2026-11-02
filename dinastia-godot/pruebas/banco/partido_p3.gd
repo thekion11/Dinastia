@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p2.gd"
-## [Capa 3/6 de `partido.gd`] _probar_fisica_motor
+## [Capa 3/6 de `partido.gd`] _probar_fisica_motor, _probar_ventaja, _probar_presion_estable, _probar_presion_zona, _probar_linea_prevista, _probar_primer_toque, _probar_tactica_viva, _probar_pase_mejora, _probar_estilo_club, _probar_perfiles_ayuda
 
 func _probar_fisica_motor() -> void:
 	_titulo("FÍSICA DEL MOTOR (SIN PANTALLA)")
@@ -57,3 +57,253 @@ func _probar_fisica_motor() -> void:
 	_comprobar(float(c["tiron"]) / float(c["muestras"]) < 0.005, "tirones > 25 m/s² por debajo del 0,5 %% (%d de %d)" % [c["tiron"], c["muestras"]])
 	_comprobar(int(c["tele"]) <= 3, "el balón no salta en pleno juego (%d)" % c["tele"])
 	raiz.queue_free()
+
+## LA VENTAJA DE VERDAD (01-11-2026, IA R1, `MotorVentaja`): si el equipo de la víctima pierde el balón, se vuelve a la falta.
+func _probar_ventaja() -> void:
+	_titulo("VENTAJA: SE VUELVE A LA FALTA SI SE PIERDE EL BALÓN")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var loc: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	var lugar := Vector3(6.0, 0.0, 20.0 * motor.dir_ataque(true))
+	## 1) Pierde el balón al segundo: falta para el local donde fue.
+	motor.estado = "juego"
+	motor._t_estado = 5.0
+	motor.poseedor = loc[0]
+	MotorVentaja.dar(motor, lugar, true, "Un defensor")
+	motor.t += 1.0
+	motor._t_estado += 1.0
+	motor.poseedor = vis[0]
+	MotorVentaja.revisar(motor)
+	_comprobar(motor.estado == "saque" and String(motor.saque.get("tipo", "")) == "falta" and bool(motor.saque.get("local", false)),
+		"perdió el balón: falta para el que la sufrió (%s, %s)" % [motor.estado, str(motor.saque.get("tipo", ""))])
+	_comprobar((motor.saque.get("lugar", Vector3.ZERO) as Vector3).distance_to(Vector3(lugar.x, motor.R, lugar.z)) < 0.01, "y se saca donde fue la falta")
+	_comprobar(MotorVentaja.pendiente(motor).is_empty() and int(motor.duelos.get("ventaja_vuelta", 0)) == 1, "la ventaja ya no queda pendiente")
+	## 2) Sigue con el balón 3,5 s: la ventaja se da por jugada (aunque luego lo pierda).
+	motor.estado = "juego"
+	motor._t_estado = 5.0
+	motor.poseedor = loc[0]
+	MotorVentaja.dar(motor, lugar, true, "Un defensor")
+	motor.t += 4.0
+	motor._t_estado += 4.0
+	MotorVentaja.revisar(motor)
+	motor.poseedor = vis[0]
+	MotorVentaja.revisar(motor)
+	_comprobar(motor.estado == "juego" and MotorVentaja.pendiente(motor).is_empty(), "pasados 3,5 s la ventaja se da por jugada")
+	## 3) El juego se paró entre medias (fuera, otra falta): tampoco se vuelve.
+	MotorVentaja.dar(motor, lugar, true, "Un defensor")
+	motor._t_estado = 0.2
+	motor.poseedor = vis[0]
+	MotorVentaja.revisar(motor)
+	_comprobar(motor.estado == "juego" and MotorVentaja.pendiente(motor).is_empty(), "si el juego se paró, la ventaja se olvida")
+	(r[1] as Node3D).queue_free()
+
+## PRESIONADORES ESTABLES (01-11-2026, IA R3, `MotorPresion`): el papel no salta entre dos casi a la misma distancia.
+func _probar_presion_estable() -> void:
+	_titulo("PRESIONADORES ESTABLES")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	var centrales := vis.filter(func(p: Dictionary) -> bool: return motor._rol(p) == "DFC")
+	var otros := vis.filter(func(p: Dictionary) -> bool: return motor._rol(p) != "DFC")
+	for i in vis.size():
+		(vis[i]["node"] as Node3D).position = Vector3(-30.0 + i * 2.0, 0, 45.0)
+	motor.balon.position = Vector3(0, 0.11, 0)
+	var a: Dictionary = otros[0]
+	var b: Dictionary = otros[1]
+	var ida := String(a["id"])
+	var idb := String(b["id"])
+	var colocar := func(da: float, db: float) -> void:
+		(a["node"] as Node3D).position = Vector3(da, 0, 0)
+		(b["node"] as Node3D).position = Vector3(-db, 0, 0)
+		motor.t += 0.1
+	colocar.call(10.0, 10.4)
+	_comprobar(MotorPresion.papeles(motor, false)[0] == ida, "presiona el más cercano")
+	colocar.call(10.6, 10.0)
+	_comprobar(MotorPresion.papeles(motor, false)[0] == ida, "si otro solo está 0,6 m mejor, no le quita el papel")
+	colocar.call(10.6, 8.0)
+	_comprobar(MotorPresion.papeles(motor, false)[0] == idb, "si está 2,6 m mejor, sí")
+	## El segundo: un medio a 11 m antes que un central a 9 m.
+	if not centrales.is_empty() and otros.size() > 2:
+		(centrales[0]["node"] as Node3D).position = Vector3(0, 0, 9.0)
+		(otros[2]["node"] as Node3D).position = Vector3(0, 0, -11.0)
+		colocar.call(30.0, 5.0)
+		motor.remove_meta("presion_antes")
+		var pp := MotorPresion.papeles(motor, false)
+		_comprobar(pp[0] == idb and pp[1] == String(otros[2]["id"]), "de segundo sale un medio y el central guarda su sitio (%s)" % motor._rol(motor.jugadores.filter(func(p: Dictionary) -> bool: return String(p["id"]) == String(pp[1]))[0]))
+	(r[1] as Node3D).queue_free()
+
+## PRESIÓN POR ZONA (01-11-2026, IA U1, `MotorPresion.zona`): con el balón adentrado y alguien cerca, sale a morder un rato.
+func _probar_presion_zona() -> void:
+	_titulo("PRESIÓN POR ZONA")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var loc: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	var dueno: Dictionary = loc[0]
+	var d := motor.dir_ataque(true)
+	(motor.tacticas[1] as Dictionary)["presion"] = 0
+	for i in vis.size():
+		(vis[i]["node"] as Node3D).position = Vector3(-30.0 + i * 2.0, 0, d * 50.0)
+	## Local con el balón en su campo, a 35 m de su arco: territorio del visitante 0,83.
+	(dueno["node"] as Node3D).position = Vector3(0, 0, -d * 17.5)
+	(vis[0]["node"] as Node3D).position = Vector3(0, 0, -d * 25.0)
+	_comprobar(not MotorPresion.zona(motor, dueno), "presión baja y nadie a menos de 5 m: espera")
+	(vis[0]["node"] as Node3D).position = Vector3(0, 0, -d * 21.0)
+	_comprobar(MotorPresion.zona(motor, dueno), "presión baja, balón en su campo y un rival a 3,5 m: sale a morder")
+	(vis[0]["node"] as Node3D).position = Vector3(0, 0, -d * 30.0)
+	motor.t += 1.0
+	_comprobar(MotorPresion.zona(motor, dueno), "y aguanta la presión un rato aunque se aleje")
+	motor.t += 2.0
+	_comprobar(not MotorPresion.zona(motor, dueno), "a los 2 s la suelta")
+	## Balón en el campo del que defiende (territorio 0,3): con presión baja, no.
+	(dueno["node"] as Node3D).position = Vector3(0, 0, d * 21.0)
+	(vis[0]["node"] as Node3D).position = Vector3(0, 0, d * 24.0)
+	_comprobar(not MotorPresion.zona(motor, dueno), "en su propio campo, con presión baja, no sale")
+	(motor.tacticas[1] as Dictionary)["presion"] = 2
+	_comprobar(MotorPresion.zona(motor, dueno), "con presión alta, sí")
+	(r[1] as Node3D).queue_free()
+
+## LÍNEA DE FUERA DE JUEGO PREVISTA (01-11-2026, IA U3): para los desmarques, la defensa se mira donde estará en 0,24 s.
+func _probar_linea_prevista() -> void:
+	_titulo("LÍNEA DE FUERA DE JUEGO PREVISTA")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	var d := motor.dir_ataque(false)
+	for i in vis.size():
+		(vis[i]["node"] as Node3D).position = Vector3(-20.0 + i * 3.0, 0, 0)
+		vis[i]["vel"] = Vector3.ZERO
+	## El último defensor, a 25 m de su arco, sube a 5 m/s: dentro de 0,24 s estará 1,2 m más arriba.
+	(vis[0]["node"] as Node3D).position = Vector3(0, 0, -d * 27.5)
+	vis[0]["vel"] = Vector3(0, 0, d * 5.0)
+	var linea := motor._ultima_linea(false)
+	_comprobar(absf(linea - (-d * 27.5 + d * 1.2)) < 0.01, "la línea se mira donde estará el último (%.2f)" % linea)
+	var lado := signf(motor._arco_propio(vis[0]).z)
+	var con_vel := motor.linea_fuera_de_juego(lado)
+	vis[0]["vel"] = Vector3.ZERO
+	_comprobar(is_equal_approx(con_vel, motor.linea_fuera_de_juego(lado)), "el fuera de juego del árbitro no usa la previsión (%.2f)" % con_vel)
+	(r[1] as Node3D).queue_free()
+
+## EL PRIMER TOQUE QUE SE ESCAPA (01-11-2026, IA U5, `MotorControl`).
+func _probar_primer_toque() -> void:
+	_titulo("PRIMER TOQUE BAJO PRESIÓN")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var loc: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	var gk: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["por"]))
+	for i in vis.size():
+		(vis[i]["node"] as Node3D).position = Vector3(-30.0 + i * 3.0, 0, 40.0)
+	var p: Dictionary = loc[0]
+	(p["node"] as Node3D).position = Vector3.ZERO
+	(p["node"] as Node3D).rotation.y = 0.0
+	motor.balon.position = Vector3(0, 0.11, 0.5)
+	motor.vel_balon = Vector3(0, 0, -6.0)
+	_comprobar(MotorControl.riesgo(motor, p) == 0.0, "balón suave y nadie cerca: control seguro")
+	(vis[0]["node"] as Node3D).position = Vector3(0.6, 0, 0)
+	var con_rival := MotorControl.riesgo(motor, p)
+	_comprobar(con_rival > 0.0, "con un rival a 0,6 m el control puede irse (%.3f)" % con_rival)
+	motor.vel_balon = Vector3(0, 0, 22.0)   ## rápido y por la espalda (mira a +z y el balón va a +z)
+	var detras := MotorControl.riesgo(motor, p)
+	motor.vel_balon = Vector3(0, 0, -22.0)
+	var frente := MotorControl.riesgo(motor, p)
+	_comprobar(detras > frente and frente > con_rival, "rápido cuesta más, y por la espalda más aún (%.3f > %.3f)" % [detras, frente])
+	_comprobar(detras <= MotorControl.TOPE, "nunca pasa del tope (%.3f)" % detras)
+	_comprobar(gk.is_empty() or MotorControl.riesgo(motor, gk[0]) == 0.0, "el portero no se ve afectado")
+	(r[1] as Node3D).queue_free()
+
+## LA TÁCTICA SEGÚN EL MARCADOR Y EL RELOJ (01-11-2026, IA U2, `MotorTacticaViva`).
+func _probar_tactica_viva() -> void:
+	_titulo("TÁCTICA SEGÚN MARCADOR Y RELOJ")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	motor.goles = [0, 1]
+	motor.mitad = 1
+	motor.t = 0.0
+	_comprobar(MotorTacticaViva.urgencia(motor, true) == 0.0, "al empezar, perder 0-1 no cambia nada")
+	motor.mitad = 2
+	motor.t = motor.duracion_mitad * 0.9
+	var pierde := MotorTacticaViva.urgencia(motor, true)
+	var gana := MotorTacticaViva.urgencia(motor, false)
+	_comprobar(pierde > 0.2 and gana < -0.2, "al final, el que pierde se adelanta y el que gana se repliega (%.2f / %.2f)" % [pierde, gana])
+	motor.goles = [0, 4]
+	_comprobar(MotorTacticaViva.urgencia(motor, true) <= MotorTacticaViva.TOPE, "con tope (%.2f)" % MotorTacticaViva.urgencia(motor, true))
+	motor.control_equipo = 0
+	_comprobar(MotorTacticaViva.urgencia(motor, true) == 0.0, "el equipo del usuario no se toca")
+	(r[1] as Node3D).queue_free()
+
+## EL PASE POR CUÁNTO MEJORA (01-11-2026, IA R2, `MotorPaseMejora`, bandera PMOT_PASE): apagada, la cuenta de siempre; encendida,
+## el rival que llega corriendo a la línea del pase cuenta, y pasar a la espalda cuesta.
+func _probar_pase_mejora() -> void:
+	_titulo("PASE POR MEJORA (BANDERA)")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var loc: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]))
+	for i in vis.size():
+		(vis[i]["node"] as Node3D).position = Vector3(-30.0 + i * 3.0, 0, 45.0)
+		vis[i]["vel"] = Vector3.ZERO
+	var p: Dictionary = loc[0]
+	var q: Dictionary = loc[1]
+	(p["node"] as Node3D).position = Vector3.ZERO
+	(p["node"] as Node3D).rotation.y = 0.0
+	(q["node"] as Node3D).position = Vector3(0, 0, 16.0)
+	q["vel"] = Vector3.ZERO
+	## Un rival a 3 m de la línea del pase, corriendo hacia ella a 7 m/s.
+	(vis[0]["node"] as Node3D).position = Vector3(3.0, 0, 8.0)
+	vis[0]["vel"] = Vector3(-7.0, 0, 0)
+	var antes := MotorPaseMejora.ACTIVO
+	MotorPaseMejora.ACTIVO = false
+	var apagada: Array = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, 16.0))
+	MotorPaseMejora.ACTIVO = true
+	var encendida: Array = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, 16.0))
+	_comprobar(float(apagada[1]) == 0.0, "apagada: el rival a 3 m de la línea no cuenta (%.2f)" % float(apagada[1]))
+	_comprobar(float(encendida[1]) > 1.0, "encendida: el que llega corriendo, sí (%.2f)" % float(encendida[1]))
+	(vis[0]["node"] as Node3D).position = Vector3(-30.0, 0, 45.0)
+	var adelante: float = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, 16.0))[1]
+	(q["node"] as Node3D).position = Vector3(0, 0, -16.0)
+	var atras: float = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, -16.0))[1]
+	_comprobar(atras > adelante + 1.0, "encendida: pasar a la espalda cuesta (%.2f frente a %.2f)" % [atras, adelante])
+	MotorPaseMejora.ACTIVO = antes
+	(r[1] as Node3D).queue_free()
+
+## EL ESTILO PROPIO DE CADA CLUB (01-11-2026, IA U8, `MotorTacticaViva.estilo_club`).
+func _probar_estilo_club() -> void:
+	_titulo("ESTILO PROPIO DE CADA CLUB")
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	var clubes: Array = m.ligas[0].clubes
+	var vistos := {}
+	for c: Club in clubes:
+		vistos[str(MotorTacticaViva.estilo_club(c))] = true
+	_comprobar(vistos.size() >= clubes.size() - 2, "casi cada club tiene su estilo (%d distintos de %d)" % [vistos.size(), clubes.size()])
+	var e := MotorTacticaViva.estilo_club(clubes[0])
+	_comprobar(e == MotorTacticaViva.estilo_club(clubes[0]) and absf(float(e["f_linea"])) <= 0.5 and absf(float(e["f_amplitud"])) <= MotorTacticaViva.MATIZ,
+		"fijo y dentro de sus topes (%s)" % str(e))
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var p: Dictionary = motor.jugadores.filter(func(q: Dictionary) -> bool: return bool(q["es_local"]) and not bool(q["por"]))[0]
+	motor.tacticas[0] = {}
+	var sin := motor._forma(p, true)
+	motor.tacticas[0] = {"f_linea": 0.5, "f_amplitud": 0.0}
+	var con := motor._forma(p, true)
+	_comprobar((con.z - sin.z) * motor.dir_ataque(true) > 1.0, "en `_forma`, el matiz de línea adelanta el bloque (%.2f m)" % ((con.z - sin.z) * motor.dir_ataque(true)))
+	(r[1] as Node3D).queue_free()
+
+## PERFILES DE AYUDA (01-11-2026, M-131): Arcade / Semi / Manual aplican las tres ayudas de una vez.
+func _probar_perfiles_ayuda() -> void:
+	_titulo("PERFILES DE AYUDA")
+	var antes := {}
+	for k: String in ["pase", "tiro", "cambio"]:
+		antes[k] = Mando.ayuda(k)
+	Mando.aplicar_perfil("manual")
+	_comprobar(Mando.ayuda("pase") == "manual" and Mando.ayuda("tiro") == "manual" and Mando.ayuda("cambio") == "manual" and Mando.perfil() == "manual", "Manual: todo a mano")
+	Mando.aplicar_perfil("semi")
+	_comprobar(Mando.ayuda("pase") == "asistido" and Mando.ayuda("tiro") == "manual" and Mando.perfil() == "semi", "Semi: pase asistido y tiro manual")
+	Mando.fijar_ayuda("cambio", "manual")
+	_comprobar(Mando.perfil() == "personalizado", "si tocas una ayuda suelta, el perfil pasa a personalizado")
+	Mando.aplicar_perfil("arcade")
+	_comprobar(Mando.perfil() == "arcade", "Arcade: todo asistido")
+	for k: String in antes:
+		Mando.fijar_ayuda(k, String(antes[k]))

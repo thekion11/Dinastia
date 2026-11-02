@@ -83,6 +83,9 @@ func _dirigir() -> void:
 	if not pr.mundo.temporada_en_curso():
 		pr._escribir("[color=#e05555]La temporada está terminada.[/color]")
 		return
+	var falla_once := AvisoOnce.motivo(pr.mundo.mi_club())   ## alineación inválida (01-11, idea 1036)
+	if falla_once != "":
+		Aviso.mostrar(pr, "alerta", "⚠️", Idiomas.t("Tu once elegido no vale"), falla_once)
 	## Si esta semana hay copa, manda la copa: es la que se juega a un solo
 	## partido y la que se puede perder para siempre.
 	var par := pr.mundo.partido_de_copa()

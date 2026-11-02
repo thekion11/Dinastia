@@ -80,7 +80,7 @@ func _probar() -> void:
 	var reales: Dictionary = Datos.tabla("REALES")
 	for club: String in reales:
 		for j: String in reales[club]:
-			var pais := j.get_slice("|", j.get_slice_count("|") - 1)
+			var pais := j.get_slice("|", 4)   ## el 5.º campo es el país; el 6.º, si está, la región («EUS»), que no lleva bandera
 			if not Banderas.ISO.has(pais) and not nac_sin.has(pais):
 				nac_sin.append(pais)
 	_comprobar(nac_sin.is_empty(), "toda nacionalidad de jugador tiene su bandera (sin ella: %s)" % str(nac_sin))

@@ -90,6 +90,38 @@ func _probar() -> void:
 		if i == 30 * 3:
 			_comprobar(m3.pos(vic).distance_to(donde) < 0.6, "en el suelo y levantándose no se desplaza (%.2f m en 3 s)" % m3.pos(vic).distance_to(donde))
 	_comprobar(anims.size() >= 2 and anims[0] == "caida_lesion" and anims[1] == "levantarse_suelo", "cae y luego se levanta, sin ponerse de pie entre medias (%s)" % str(anims.slice(0, 3)))
+	## 5b) Cayendo a la carrera (01-11): el tropiezo de League-Soccer y su levantarse desde boca abajo, sin desplazarse.
+	var r4 := _motor()
+	var m4: MotorJugable = r4[0]
+	var cor: Dictionary = m4.jugadores[9]
+	cor["vel"] = Vector3(0, 0, 6.0)
+	m4._caer(cor)
+	var donde4 := m4.pos(cor)
+	var anims4 := []
+	for i in 30 * 4:
+		m4.paso(1.0 / 30.0)
+		var a4 := String(cor.get("anim_actual", ""))
+		if anims4.is_empty() or anims4[-1] != a4:
+			anims4.append(a4)
+	_comprobar(anims4.size() >= 2 and anims4[0] == "tropiezo" and anims4[1] == "levantarse_boca_abajo",
+		"a la carrera tropieza y se levanta desde boca abajo (%s)" % str(anims4.slice(0, 3)))
+	_comprobar(m4.pos(cor).distance_to(donde4) < 0.6, "sin desplazarse mientras está en el suelo (%.2f m)" % m4.pos(cor).distance_to(donde4))
+	## 5c) El defensor que bloquea un tiro con el cuerpo hace el gesto de League-Soccer según la altura (01-11).
+	var r5 := _motor()
+	var m5: MotorJugable = r5[0]
+	var tirador: Dictionary = m5.jugadores[9]
+	var defensa: Dictionary = {}
+	for q: Dictionary in m5.jugadores:
+		if bool(q["es_local"]) != bool(tirador["es_local"]) and not bool(q["por"]):
+			defensa = q
+			break
+	for alto in [0.5, 1.3]:
+		m5._tiro_vivo = {"p": tirador, "t": m5.t, "clase": "pie"}
+		m5.vel_balon = Vector3(0, 0, 20.0)
+		m5.balon.position.y = alto
+		defensa["gesto_hasta"] = 0.0
+		m5._tomar(defensa)
+		_comprobar(String(defensa.get("anim_actual", "")) == LeagueAnim.bloqueo(alto), "bloquea un tiro a %.1f m con «%s» (%s)" % [alto, LeagueAnim.bloqueo(alto), String(defensa.get("anim_actual", ""))])
 	## 6) Un partido simulado no se rompe con todo esto.
 	var r2 := _motor()
 	var m2: MotorJugable = r2[0]

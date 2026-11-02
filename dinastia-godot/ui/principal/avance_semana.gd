@@ -188,6 +188,10 @@ func _avanzar_semana() -> void:
 		Aviso.mostrar(p, "mercado", "⏳", "El mercado cierra",
 			"Queda%s %d semana%s para el cierre. Lo que no fiches ahora, no lo fichas hasta la próxima ventana." % [
 				"" if q == 1 else "n", q, "" if q == 1 else "s"], "mercado_cierra")
+	## ALINEACIÓN INVÁLIDA (01-11, idea 1036): si tu once elegido tiene un lesionado o un sancionado, se avisa.
+	var falla_once := AvisoOnce.motivo(mio)
+	if falla_once != "":
+		Aviso.mostrar(p, "alerta", "⚠️", Idiomas.t("Tu once elegido no vale"), falla_once)
 	## Se escucha esta jornada para contar lo que le pasó a TU club, que es lo
 	## único que interesa de las 190 jornadas que se juegan en el mundo.
 	var visto := {"txt": ""}

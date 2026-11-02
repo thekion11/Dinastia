@@ -1,0 +1,225 @@
+#include "career_training.hpp"
+
+#include <algorithm>
+#include <random>
+#include <string>
+#include <vector>
+
+#include "career_common.hpp"
+#include "utils/localization.hpp"
+
+namespace blunted {
+namespace CareerTraining {
+
+void DevelopAfterMatch(CareerSave& save, CareerCommon::CareerEvents& events) {
+  int support = save.mode == CareerMode::COACH ? 1 : 0;
+  int coachBonus = 0;
+  for (const auto& coach : save.staff) {
+    if (coach.contractYearsRemaining > 0 &&
+        (coach.role == "Assistant Coach" || coach.role == "Youth Coach"))
+      coachBonus = std::max(coachBonus, coach.skill >= 80 ? 2 : 1);
+  }
+  support += coachBonus;
+  bool trainingFacility = false;
+  bool youthFacility = false;
+  for (const auto& upgrade : save.stadium.upgrades) {
+    if (!upgrade.isComplete())
+      continue;
+    trainingFacility |= upgrade.name == "Training Complex";
+    youthFacility |= upgrade.name == "Youth Academy";
+  }
+  auto develop = [&](PlayerCareerState& player, bool academy) {
+    const bool recovery = !academy && save.trainingPlan == CareerTrainingPlan::RECOVERY;
+    const bool intensive = !academy && save.trainingPlan == CareerTrainingPlan::DEVELOPMENT;
+    const bool resting = player.fitness < 60 || player.injury != InjuryStatus::HEALTHY;
+    player.fitness = CareerCommon::ClampInt(player.fitness + (recovery || resting ? 10
+                                                              : intensive         ? -4
+                                                                                  : 2),
+                                            0, 100);
+    const int ceiling = std::min(99, player.pot);
+    if (player.ovr >= ceiling) {
+      player.developmentPoints = 0;
+      return;
+    }
+    if (recovery || resting)
+      return;
+    int points = (intensive ? 7 : 3) + (player.age <= 21 ? 2 : 0) + support;
+    if (player.age >= 30)
+      points = std::max(1, points / 2);
+    points += academy ? (youthFacility ? 2 : 0) : (trainingFacility ? 1 : 0);
+    player.developmentPoints += points;
+    if (player.developmentPoints >= 100) {
+      player.developmentPoints -= 100;
+      ++player.ovr;
+      if (player.ovr >= ceiling)
+        player.developmentPoints = 0;
+      events.AddEvent("development",
+                      TRF("career_event_developed", {player.name, std::to_string(player.ovr)}), 0,
+                      false);
+    }
+  };
+  for (auto& player : save.roster)
+    develop(player, false);
+  // Academy prospects follow their own balanced schedule.
+  for (auto& player : save.youthAcademy)
+    develop(player, true);
+}
+
+bool TrainSquad(CareerSave& save, CareerCommon::CareerEvents& events) {
+  if (save.trainingPoints <= 0)
+    return false;
+  save.trainingPoints--;
+  const bool isCoach = (save.mode == CareerMode::COACH);
+  const int formDelta = isCoach ? 6 : 3;
+  const int moraleDelta = isCoach ? 3 : 1;
+  for (auto& player : save.roster) {
+    player.matchForm = std::min(100, player.matchForm + formDelta);
+    player.morale = std::min(100, player.morale + moraleDelta);
+  }
+  events.AddEvent("training", TR(isCoach ? "career_event_training_coach" : "career_event_training"),
+                  1, false);
+  return true;
+}
+
+bool TrainFocus(CareerSave& save, CareerCommon::CareerEvents& events,
+                const std::string& focusArea) {
+  if (save.trainingPoints <= 0)
+    return false;
+  save.trainingPoints--;
+  const bool isCoach = (save.mode == CareerMode::COACH);
+  int playersImproved = 0;
+
+  for (auto& player : save.roster) {
+    bool eligible = false;
+    const std::string& pos = player.preferredPosition;
+
+    if (focusArea == "Individual") {
+      if (player.databaseID == save.controlledEntityID) {
+        player.ovr = std::min(99, player.ovr + 1);
+        player.matchForm = std::min(100, player.matchForm + 10);
+        player.morale = std::min(100, player.morale + 10);
+        events.AddEvent("training", TR("career_event_individual_training"), 1, false);
+      }
+      continue;
+    }
+
+    if (focusArea == "Attacking" || focusArea == "Shooting") {
+      eligible =
+          (pos == "CF" || pos == "ST" || pos == "AM" || pos == "LW" || pos == "RW" || pos == "FW");
+    } else if (focusArea == "Defending") {
+      eligible = (pos == "CB" || pos == "LB" || pos == "RB" || pos == "DM" || pos == "GK");
+    } else if (focusArea == "Tactical") {
+      eligible =
+          (pos == "CM" || pos == "DM" || pos == "AM" || pos == "LM" || pos == "RM" || pos == "WM");
+    } else if (focusArea == "Physical") {
+      eligible = (player.age <= 28);
+    }
+
+    if (eligible) {
+      if (player.ovr < player.pot || isCoach) {
+        player.ovr = std::min(99, player.ovr + 1);
+        playersImproved++;
+      }
+    }
+    player.matchForm = std::min(100, player.matchForm + (isCoach ? 5 : 3));
+    if (isCoach) {
+      player.morale = std::min(100, player.morale + 2);
+    }
+  }
+
+  if (focusArea != "Individual") {
+    events.AddEvent(
+        "training",
+        TRF(isCoach ? "career_event_focus_training_coach" : "career_event_focus_training",
+            {focusArea, std::to_string(playersImproved)}),
+        1, false);
+  }
+  return true;
+}
+
+void SetStrategy(CareerSave& save, CareerCommon::CareerEvents& events,
+                 const std::string& strategy) {
+  save.activeStrategy = strategy;
+  events.AddEvent("strategy", TRF("career_event_strategy", {strategy}), 0, false);
+}
+
+bool MotivatePlayer(CareerSave& save, CareerCommon::CareerEvents& events,
+                    const std::string& playerName) {
+  for (auto& p : save.roster) {
+    if (p.name == playerName) {
+      p.morale = std::min(100, p.morale + 15);
+      p.matchForm = std::min(100, p.matchForm + 6);
+      events.AddEvent("talk", TRF("career_event_talk", {playerName}), 1, false);
+      return true;
+    }
+  }
+  return false;
+}
+
+bool DrillPlayer(CareerSave& save, CareerCommon::CareerEvents& events,
+                 const std::string& playerName) {
+  if (save.trainingPoints <= 0)
+    return false;
+  for (auto& p : save.roster) {
+    if (p.name == playerName) {
+      save.trainingPoints--;
+      p.ovr = std::min(99, p.ovr + 1);
+      p.matchForm = std::min(100, p.matchForm + 10);
+      events.AddEvent("training", TRF("career_event_drill", {playerName}), 1, false);
+      return true;
+    }
+  }
+  return false;
+}
+
+void ScoutYouthPlayer(CareerSave& save, CareerCommon::CareerEvents& events) {
+  int scoutCost = 50000 * save.scoutingNetworkLevel;
+  if (save.transferBudget < scoutCost)
+    return;
+  save.transferBudget -= scoutCost;
+  save.finance.transferBudget = save.transferBudget;
+
+  static const std::vector<std::string> firstNames = {"Leo", "Kai", "Ravi", "Mateo", "Yuki"};
+  static const std::vector<std::string> lastNames = {"Martinez", "Tanaka", "Okafor", "Silva",
+                                                     "Kim"};
+  static const std::vector<std::string> positions = {"CF", "CM", "CB", "AM", "GK"};
+  // The shared career RNG, so seeded runs (tests, audits) are repeatable.
+  std::mt19937& rng = CareerCommon::Rng();
+  std::uniform_int_distribution<int> fd(0, static_cast<int>(firstNames.size()) - 1);
+  std::uniform_int_distribution<int> ld(0, static_cast<int>(lastNames.size()) - 1);
+  std::uniform_int_distribution<int> pd(0, static_cast<int>(positions.size()) - 1);
+  std::uniform_int_distribution<int> ad(15, 18);
+
+  PlayerCareerState youth;
+  youth.name = firstNames[fd(rng)] + " " + lastNames[ld(rng)];
+  youth.position = positions[pd(rng)];
+  youth.preferredPosition = youth.position;
+  youth.age = ad(rng);
+  youth.ovr = 50 + (rng() % 10);
+  youth.pot = 70 + (rng() % 15);
+  youth.wage = 500;
+  youth.value = 100000;
+  youth.isYouth = true;
+  save.youthAcademy.push_back(youth);
+  events.AddEvent("scouting", TRF("career_event_scouted", {youth.name, youth.position}), 0, false);
+}
+
+void PromoteYouthPlayer(CareerSave& save, CareerCommon::CareerEvents& events,
+                        const std::string& playerName) {
+  auto it =
+      std::find_if(save.youthAcademy.begin(), save.youthAcademy.end(),
+                   [&playerName](const PlayerCareerState& p) { return p.name == playerName; });
+  if (it == save.youthAcademy.end())
+    return;
+  PlayerCareerState promoted = *it;
+  promoted.contract.yearsRemaining = 4;
+  promoted.isYouth = false;
+  promoted.morale = 85;
+  promoted.matchForm = 55;
+  save.roster.push_back(promoted);
+  save.youthAcademy.erase(it);
+  events.AddEvent("academy", TRF("career_event_promoted", {playerName}), 1, false);
+}
+
+}  // namespace CareerTraining
+}  // namespace blunted

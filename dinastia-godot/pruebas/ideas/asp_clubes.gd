@@ -31,9 +31,9 @@ func _probar_aspecto() -> void:
 		_titulo("ASPECTO DE CLUB · BASE %s" % ("REAL" if real else "FICTICIA"))
 		var tabla: Dictionary = Datos.tabla("ASPECTO_CLUB")
 		var nombres := _clubes()
-		_comprobar(tabla.size() == 384, "384 filas de aspecto (%d)" % tabla.size())
+		_comprobar(tabla.size() == 402, "402 filas de aspecto (%d)" % tabla.size())
 		var propios := nombres.filter(func(n: String) -> bool: return tabla.has(n) or tabla.has(Nombres.limpiar(n)))
-		_comprobar(propios.size() == 384, "los 384 clubes de las 22 ligas originales tienen su fila (%d)" % propios.size())
+		_comprobar(propios.size() == 402, "los 402 clubes de las 23 ligas (22 + Países Bajos, 01-11) tienen su fila (%d)" % propios.size())
 		nombres = propios
 		var mal := 0
 		var sin_siglas := 0
@@ -61,7 +61,7 @@ func _probar_aspecto() -> void:
 			repetidos[c.color1 + c.color2 + str(f["escudo"]) + str(f.get("esc", [])) + String(f["camiseta"]) + str(f.get("kit", {}))] = true
 		_comprobar(mal == 0, "todos tienen escudo, camiseta y butacas y se dibujan (%d con fallo)" % mal)
 		_comprobar(sin_siglas == 0, "siglas: las del club real en el pack y ninguna en la base ficticia (%d mal)" % sin_siglas)
-		_comprobar(repetidos.size() >= 300, "el aspecto no se repite de un club a otro (%d distintos de 384)" % repetidos.size())
+		_comprobar(repetidos.size() >= 300, "el aspecto no se repite de un club a otro (%d distintos de 402)" % repetidos.size())
 		## Las figuras y letras de los escudos más conocidos (escudos v2).
 		var con_motivo := 0
 		var distintos := {}
