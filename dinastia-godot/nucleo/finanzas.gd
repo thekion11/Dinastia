@@ -13,11 +13,9 @@ extends RefCounted
 ## estadio. Es lo que impide que exista un precio "óptimo" que se pone una vez y
 ## ya está.
 
-## Puntos por espectador y unidad de precio.
-const PPE := 0.25
+const PPE := Balance.PPE   ## (valor en `nucleo/balance.gd`)
 
-## Cada cuantas semanas se cierra el mes. El HTML usa `G.sem%4===0`.
-const SEMANAS_DEL_MES := 4
+const SEMANAS_DEL_MES := Balance.SEMANAS_DEL_MES   ## (valor en `nucleo/balance.gd`)
 
 signal movimiento(concepto: String, monto: int)
 
@@ -61,15 +59,10 @@ func _init(club: Club, aporte_obras: float = 0.0, honorarios: int = 0, bono_mkt:
 	honorarios_consejeros = honorarios
 	bono_patrocinio = bono_mkt
 
-## LA TAQUILLA REAL (26-10, decidido por el dueño: ×3,5). Con PPE 0,25 la taquilla era el 4 % de los ingresos
-## del chico (0,10 M) y el 4,6 % del grande (1,09 M); en el fútbol real el día de partido pesa un 10-15 % en un
-## club chico chileno y un 20-25 % en Colo-Colo. Con ×3,5 queda en ~13 % y ~15 %.
-const FACTOR_TAQUILLA := 3.5
+const FACTOR_TAQUILLA := Balance.FACTOR_TAQUILLA   ## (valor en `nucleo/balance.gd`)
 ## El que se usa: las especiales lo cambian con TAQUILLA_X=<x> para medir otro.
 static var factor_taquilla: float = FACTOR_TAQUILLA
-## Abrir el estadio cuesta: seguridad, servicios y personal del día de partido, ~30 % de lo recaudado (en
-## clubes reales, 25-40 %). Solo tu club, como la operación.
-const COSTE_DIA_DE_PARTIDO := 0.30
+const COSTE_DIA_DE_PARTIDO := Balance.COSTE_DIA_DE_PARTIDO   ## (valor en `nucleo/balance.gd`)
 
 ## Lo que deja cada espectador con el precio de entrada puesto.
 static func ingreso_por_espectador(precio: float) -> float:
@@ -133,24 +126,7 @@ func patrocinio() -> int:
 	movimiento.emit("Publicidad y patrocinios", monto)
 	return monto
 
-## Derechos de televisión. Es la entrada más grande de un club moderno, y el
-## salto de Primera a Segunda es brutal a propósito (300.000 contra 58.000): es
-## lo que hace que descender sea una catástrofe económica y no un disgusto
-## deportivo.
-##
-## Sin esto, portado el juego solo con taquilla y sueldos, TODOS los clubes
-## perdían más de cinco millones por semana y el mundo entero quebraba en tres
-## meses. La taquilla nunca pagó una plantilla.
-## Lo que la television paga ANTES de multiplicadores. Sale aparte porque el
-## plus del horario se cobra sobre esta cifra limpia, no sobre la ya ajustada.
-## EL REPARTO SOLIDARIO (26-10, decidido por el dueño: 0,5). Con el reparto solo por
-## reputación el grande de Chile cobra 9,4 veces lo que el chico (20,5 M contra 2,2 M al año), y el chico
-## pierde 1,1-1,7 M por año también en Primera. En el fútbol real es mucho más plano: Premier 1,6-1,8 veces
-## del primero al último, LaLiga con tope de 3,5, el CDF chileno casi a partes iguales. Con 0,5 la mitad de la
-## tele se reparte a partes iguales (la MEDIA de su liga, que fija `Mundo` con `fijar_medias_tv`) y la otra
-## mitad por reputación. Ojo: la cuota del «club medio» (rep 70) no sirve de parte igual: la media de la
-## Primera chilena es 0,64 M/mes, el doble de la del rep 70, porque la arrastran los tres grandes.
-const REPARTO_TV_IGUAL := 0.5   ## activado el 26-10 (decisión del dueño)
+const REPARTO_TV_IGUAL := Balance.REPARTO_TV_IGUAL   ## (valor en `nucleo/balance.gd`)
 ## El que se usa: las especiales lo cambian con TV_IGUAL=<x> para medir otro reparto.
 static var reparto_tv_igual: float = REPARTO_TV_IGUAL
 ## "pais|division" -> media mensual de la tele por reputación en esa liga.

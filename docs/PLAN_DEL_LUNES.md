@@ -629,7 +629,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-384 | P2 | PARCIAL | `Mundo` 2.921 líneas, `Roles` 2.065, `Prensa` 2.541: acoplamiento alto | sin extraer servicios (28-10: ya en capas de <450 líneas; queda repartir por responsabilidad) |
 | M-386 | P2 | PARCIAL | ~300 objetos retenidos por partido jugable | 28-10: las conexiones de señales NO crecen (`sen_conexiones`); quedan ~300 objetos sin nodo ni recurso por partido, retenidos hasta cerrar el juego (no crece sin tope); búsqueda documentada en `rendimiento.md` sin causa |
 | M-387 | P2 | PENDIENTE | Mensajes de error silenciosos (`return` sin aviso) | sin registro de errores |
-| M-388 | P2 | PENDIENTE | Constantes mágicas (balance) dispersas | sin archivo de balance |
 | M-391 | P2 | PENDIENTE | Duplicación entre `MatchPlayback` y `MotorJugable` | duplicación sin retirar |
 | M-392 | P3 | PARCIAL | `MotorLibre` (567 líneas): NO es código muerto | 28-10: lo usa `OcasionesDT.lectura` (las ocasiones jugables del partido del DT: lee la jugada y propone pase, conducción o tiro). Lo que sobra es su prueba `_probar_motor_libre`, la más lenta del banco (38 s de 129): acortarla (menos partidos simulados con los mismos umbrales) |
 | M-393 | P2 | PENDIENTE | Código de pruebas mezclado con herramientas (`herramientas/*.ps1`) | sin separar |
