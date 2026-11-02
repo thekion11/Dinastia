@@ -75,7 +75,7 @@ func cargar() -> void:
 	Musica.automatica = bool(cf.get_value("musica", "automatica", Musica.automatica))
 	p._escala_texto = clampf(float(cf.get_value("texto", "escala", p._escala_texto)), 0.7, 1.6)
 	p._daltonico = bool(cf.get_value("texto", "daltonico", p._daltonico))
-	p._zoom_interfaz = clampf(float(cf.get_value("pantalla", "zoom", p._zoom_interfaz)), 0.7, 1.6)
+	p._zoom_interfaz = clampf(float(cf.get_value("pantalla", "zoom", EscalaMovil.zoom(null))), 0.7, 1.8)
 	p._modo_tv = bool(cf.get_value("pantalla", "modo_tv", p._modo_tv))
 	VestidorQ.ropa_aparte = bool(cf.get_value("pantalla", "ropa_aparte", VestidorQ.ropa_aparte))
 	Cara.usar_fotos = bool(cf.get_value("pantalla", "caras_foto", Cara.usar_fotos))

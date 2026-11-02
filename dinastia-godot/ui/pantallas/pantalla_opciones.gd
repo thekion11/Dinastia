@@ -38,7 +38,7 @@ func _pintar_dispositivo() -> void:
 	fila2.add_child(et2)
 	var sl := HSlider.new()
 	sl.min_value = 0.8
-	sl.max_value = 1.4
+	sl.max_value = 1.8
 	sl.step = 0.05
 	sl.value = p._zoom_interfaz
 	sl.size_flags_horizontal = Control.SIZE_EXPAND_FILL

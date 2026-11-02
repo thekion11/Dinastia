@@ -7015,7 +7015,14 @@
   "Controles guardados en el perfil %d.": "Controls saved to profile %d.",
   "⇧ Mayús": "⇧ Shift",
   "✔ Aceptar": "✔ OK",
-  "✖ Cerrar": "✖ Close"
+  "✖ Cerrar": "✖ Close",
+  "Terreno": "Terrain",
+  "Calles": "Streets",
+  "Estadio": "Stadium",
+  "Barrio del club": "Club neighbourhood",
+  "Árboles y parques": "Trees and parks",
+  "Tráfico y gente": "Traffic and people",
+  "Últimos detalles": "Final touches"
  },
  "pt": {
   "Historia": "História",
@@ -14033,7 +14040,14 @@
   "Controles guardados en el perfil %d.": "Controles salvos no perfil %d.",
   "⇧ Mayús": "⇧ Maiús",
   "✔ Aceptar": "✔ Aceitar",
-  "✖ Cerrar": "✖ Fechar"
+  "✖ Cerrar": "✖ Fechar",
+  "Terreno": "Terreno",
+  "Calles": "Ruas",
+  "Estadio": "Estádio",
+  "Barrio del club": "Bairro do clube",
+  "Árboles y parques": "Árvores e parques",
+  "Tráfico y gente": "Trânsito e gente",
+  "Últimos detalles": "Últimos detalhes"
  },
  "patrones": [
   [
@@ -26828,7 +26842,14 @@
   "Controles guardados en el perfil %d.": "Commandes enregistrées dans le profil %d.",
   "⇧ Mayús": "⇧ Maj",
   "✔ Aceptar": "✔ Valider",
-  "✖ Cerrar": "✖ Fermer"
+  "✖ Cerrar": "✖ Fermer",
+  "Terreno": "Terrain",
+  "Calles": "Rues",
+  "Estadio": "Stade",
+  "Barrio del club": "Quartier du club",
+  "Árboles y parques": "Arbres et parcs",
+  "Tráfico y gente": "Circulation et gens",
+  "Últimos detalles": "Derniers détails"
  },
  "it": {
   "Historia": "Storia",
@@ -33846,7 +33867,14 @@
   "Controles guardados en el perfil %d.": "Comandi salvati nel profilo %d.",
   "⇧ Mayús": "⇧ Maiusc",
   "✔ Aceptar": "✔ Conferma",
-  "✖ Cerrar": "✖ Chiudi"
+  "✖ Cerrar": "✖ Chiudi",
+  "Terreno": "Terreno",
+  "Calles": "Strade",
+  "Estadio": "Stadio",
+  "Barrio del club": "Quartiere del club",
+  "Árboles y parques": "Alberi e parchi",
+  "Tráfico y gente": "Traffico e gente",
+  "Últimos detalles": "Ultimi dettagli"
  },
  "de": {
   "Historia": "Geschichte",
@@ -40864,7 +40892,14 @@
   "Controles guardados en el perfil %d.": "Steuerung in Profil %d gespeichert.",
   "⇧ Mayús": "⇧ Umschalt",
   "✔ Aceptar": "✔ OK",
-  "✖ Cerrar": "✖ Schließen"
+  "✖ Cerrar": "✖ Schließen",
+  "Terreno": "Gelände",
+  "Calles": "Straßen",
+  "Estadio": "Stadion",
+  "Barrio del club": "Vereinsviertel",
+  "Árboles y parques": "Bäume und Parks",
+  "Tráfico y gente": "Verkehr und Menschen",
+  "Últimos detalles": "Letzte Details"
  },
  "ca": {
   "Historia": "Història",
@@ -47882,7 +47917,14 @@
   "Controles guardados en el perfil %d.": "Controls desats al perfil %d.",
   "⇧ Mayús": "⇧ Maj",
   "✔ Aceptar": "✔ Acceptar",
-  "✖ Cerrar": "✖ Tancar"
+  "✖ Cerrar": "✖ Tancar",
+  "Terreno": "Terreny",
+  "Calles": "Carrers",
+  "Estadio": "Estadi",
+  "Barrio del club": "Barri del club",
+  "Árboles y parques": "Arbres i parcs",
+  "Tráfico y gente": "Trànsit i gent",
+  "Últimos detalles": "Últims detalls"
  },
  "pl": {
   "Club": "Klub",
@@ -55176,7 +55218,13 @@
   "Controles guardados en el perfil %d.": "Zapisano sterowanie w profilu %d.",
   "⇧ Mayús": "⇧ Shift",
   "✔ Aceptar": "✔ Zatwierdź",
-  "✖ Cerrar": "✖ Zamknij"
+  "✖ Cerrar": "✖ Zamknij",
+  "Terreno": "Teren",
+  "Calles": "Ulice",
+  "Barrio del club": "Dzielnica klubu",
+  "Árboles y parques": "Drzewa i parki",
+  "Tráfico y gente": "Ruch i ludzie",
+  "Últimos detalles": "Ostatnie szczegóły"
  },
  "tr": {
   "Club": "Kulüp",
@@ -62470,6 +62518,12 @@
   "Controles guardados en el perfil %d.": "Kontroller %d. profile kaydedildi.",
   "⇧ Mayús": "⇧ Büyük",
   "✔ Aceptar": "✔ Tamam",
-  "✖ Cerrar": "✖ Kapat"
+  "✖ Cerrar": "✖ Kapat",
+  "Terreno": "Arazi",
+  "Calles": "Sokaklar",
+  "Barrio del club": "Kulüp mahallesi",
+  "Árboles y parques": "Ağaçlar ve parklar",
+  "Tráfico y gente": "Trafik ve insanlar",
+  "Últimos detalles": "Son rötuşlar"
  }
 }

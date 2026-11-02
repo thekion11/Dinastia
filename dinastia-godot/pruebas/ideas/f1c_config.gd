@@ -112,6 +112,9 @@ func _probar_pantalla() -> void:
 	_comprobar(p._contenido.get_child_count() > 0, "el primer paso se pinta")
 	p.siguiente()
 	_comprobar(p._paso == 0, "sin nombre no se avanza")
+	## Los chips de arriba no dejan saltarse un paso con error (2-11): tocar el 5.º con el nombre vacío te devuelve al paso con el error.
+	p._chips[4].pressed.emit()
+	_comprobar(p._paso == 0, "tocar un paso de más adelante con un error pendiente no salta: vuelve al paso con el error")
 	_comprobar(p._aviso.text.contains("3"), "y el pie dice por qué: «%s»" % p._aviso.text)
 	var campo: LineEdit = p._contenido.find_child("CampoNombre", true, false)
 	_comprobar(campo != null and campo.editable, "el nombre se escribe en el primer paso")

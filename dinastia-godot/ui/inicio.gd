@@ -27,6 +27,7 @@ func _ready() -> void:
 	## Lo gráfico va primero: si el jugador eligió el motor ligero, el juego
 	## se relanza con él antes de montar nada.
 	Calidad.cargar()
+	EscalaMovil.aplicar(get_tree(), Principal.PREFS)   ## móvil: interfaz más grande la primera vez (y se respeta lo elegido en Ajustes)
 	BotonFx.activar(get_tree())
 	if Calidad.relanzar_si_hace_falta(get_tree()):
 		return
