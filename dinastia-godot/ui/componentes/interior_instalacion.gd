@@ -247,7 +247,7 @@ func _interfaz(nombre: String) -> void:
 	_titulo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_titulo)
 	var salir := Button.new()
-	salir.text = "Salir"
+	salir.text = Idiomas.t("Salir")
 	salir.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	salir.offset_left = -110
 	salir.offset_right = -20

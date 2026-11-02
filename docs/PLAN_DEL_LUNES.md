@@ -527,19 +527,14 @@ Cumplimiento medido en el código: entrada ~95 %, fase 0 (separar `Principal`) ~
 club ampliado ~85 %, redes ~85 %, dinero ~70 %, calidad visual ~70 % (el dueño dijo «MEJORAR» dos veces), cifras 2.3 100 %.
 Las pruebas f1-f5 del guion ya corren en `especiales.sh` (28-10). Lo que falta, por importancia para el jugador (horas de sesión):
 
-1. Cerrar el acceso a la ciudad desde el menú central cuando se está en la capa del PC (`pantalla_ciudad.gd:355-358`, `menu_lateral.gd:89-90,142`): hoy «Ver 3D / Pasear / Conducir» rompen el prólogo (2 h).
-2. Enganchar `factor_riesgo`/`probabilidad_de_fallo` (`necesidades.gd:109-122`) a la semana y al partido: hoy comer y dormir no cambian nada (3 h).
-3. Completar el recorrido del prólogo: túnel, utilería, sala de vídeo y comedor con personal que saluda (3 h).
-4. Gesto del DT según el tono elegido en la rueda de presentación (3 h).
-5. Entrevista de 3 preguntas, con el grupo del vestuario y el staff (hoy 1 pregunta) (3 h).
-7. Favor del agente en `MesaAgente` (1 h); logro «Primer día» y alta de los logros sueltos (2 h).
+5. Entrevista de 3 preguntas: HECHA con el vestuario (2-11); falta la versión para el staff (sesión de ciudad).
 8. Fase 0: HECHO el contrato (31-10): `PantallaBase` con `abrir(sección, contexto)`, `cerrar()` y la señal `cerrada` en las 15 pantallas del menú central; `Principal._refrescar` las abre por `abrir` (34 secciones; prueba `f0_contratos` en especiales). Falta (deuda interna, invisible al jugador): que cada pantalla tenga su propio nodo y estado en vez de pintar en `p._lista_*` y leer `p.*`, y los 9 trozos que otros paneles componen a mano (`federacion_menu`, `paneles_club`, `vistas_menu`). El autoguardado al salir de la entrada está HECHO.
 9. Club ampliado: la rama de otro deporte no ofrece «visibilidad» ni celebra sus títulos (2 h).
 10. Dinero: coches: auditoría HECHA (`docs/04_auditorias/coches_31_10.md`), el dueño pidió TODAS (A-G, 31-10): A gasolina en el móvil/HUD/salpicadero; B derrape; C daños visibles y taller; D bajarse y aparcar; E claxon (la RADIO espera música con licencia del dueño); F atropello con reacción, 150 € y titular; G claxon y velocidad asustan a los peatones; consumo 0,5 l/km y multa temeraria 60 €. Solo falta la radio. Pendiente de mirar en Forward+ en el PC del dueño: los cajeros nuevos (hospital, universidad, estación, estadio).
 11. Redes: captura Forward+ en el PC del dueño (aquí la ciudad se queda sin memoria en Forward+; revisado en Compatibility: camión cisterna y ventanas de las casas del kit que se encienden de noche y se apagan con su sector).
 12. Calidad visual (2.2e): POSTURA («atleta», `PosturaQ.MANO_ATLETA`) y PELO DEL DRIVE en los futbolistas del partido HECHOS (31-10 en main; 2-11 también en la rama de la sesión de ciudad, con `SIN_PELO_DRIVE=1` / `SIN_POSTURA=1` para el antes): unificar las dos al fusionar y dejar una sola hoja antes/después con la cámara real. Falta: pelo femenino (ningún peinado femenino del Drive aceptado).
 
-Los 7 primeros abiertos (~17 h) cierran lo que el guion exige de verdad; el total de la lista larga del informe es ~65 h.
+Lo que el guion exige de verdad ya está hecho o a falta de unir; lo abierto es deuda interna (8), lo que espera al PC del dueño (10-11) y el pelo femenino (12); el total de la lista larga del informe es ~65 h.
 
 ### 2.4 Pendientes del traspaso anterior
 
@@ -655,7 +650,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-404 | P1 | PARCIAL | Módulos de `visor/` sin prueba directa | medido el 27-10: 22 de 131 (2-11: `FundirPiezas` y 8 rellenos de ciudad y 5 módulos pequeños (foto de equipo, sillón, banco, obra, tienda) ya tienen prueba en el banco: `_probar_fundir_piezas`, `_probar_rellenos_ciudad`, `_probar_visor_pequenos`; recalculado el 2-11 por `class_name` en `visor/`: 9 de 194 sin referencia en `pruebas/` (antes 29; `_probar_rellenos_ciudad` ya incluye CiudadServicios; `_probar_visor_efectos` cubre IncendioVisual, BanderasGrada y TelefericoEstacion; `_probar_vomitorios`, VomitoriosGrada y EstadioObra): AtropelloCiudad, MiradorCerro, PanelMando, PcOficina, PrologoHud, PrologoPrensa, SubsueloDetalle, SubsueloMando, TelefericoPaisaje), casi todos rellenos de ciudad (`CiudadMercado`, `CiudadSolar`, `FachadaModular`…) que solo se ejercitan al construir la ciudad en las sondas `p3_*`/`tre_*`; falta una sonda que compruebe que cada relleno deja piezas |
 | M-379 | P2 | PARCIAL | 70 funciones > 120 líneas (medido 28-10): las 5 peores eran `_butacas` 354, `_control_usuario` 274, `Estadio._construir` 254, `_piscina` 239, `_estacion` 233 | 28-10: partidas `_butacas` (stadium_builder_p6: paleta, poblar, hinchas, montar; hash idéntico de todos los MultiMesh en 2 calidades × 3 clubes), `Estadio._construir` (HUD y cajón aparte) y `_piscina` (8 zonas; mismo árbol de nodos). `_control_usuario` partido con la huella de `igualdad_motor` idéntica. Quedan 66 (siguientes: `_estacion` 233, `_ver_ficha` 212, `_pintar_dispositivo` 211) |
 | M-382 | P2 | PENDIENTE | Sin análisis estático | sin gdlint |
 | M-383 | P2 | PENDIENTE | Tipado: muchos `Dictionary` sin forma (jugadores del motor) | sin `JugadorMotor` tipado |
@@ -680,8 +674,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-279 | P1 | PENDIENTE | 27 módulos de `visor/` y 8 de `nucleo/` sin referencia directa en… | los módulos siguen sin prueba directa |
-| M-280 | P1 | PENDIENTE | 105 módulos de UI/visor sin referencia en banco/pruebas | sin prueba visual automática |
+| M-280 | P1 | PARCIAL | Clases de UI que ninguna prueba nombra | 2-11: visor y núcleo ya al 100 % (`vis_sueltos`, `_probar_nucleo_sueltos`); en `ui/` 62 clases no se nombran, pero las pantallas las recorre `recorrido_pantallas` (34 secciones, 9 idiomas); falta prueba directa de las piezas que el recorrido no abre (tanda, garra, vitrina, móvil en la mano) |
 | M-284 | P2 | PARCIAL | Lectura de pantalla (TTS) | 2-11: `LectorPantalla` lee con la voz del sistema el control que toma el foco (texto, pista, estado, ayuda), interruptor en Accesibilidad; falta leer las listas largas (tablas) y los avisos emergentes, y probarlo con voces reales en el PC del dueño |
 | M-285 | P2 | PARCIAL | Navegación por mando en menús | 2-11: con mando, la primera tarjeta de cada menú toma el foco y la cruceta recorre las tarjetas (`PantallaMenu.portada`); el panel de controles ya lo hacía; faltan las listas de las pantallas de gestión (foco inicial y orden de tabulación) |
 | M-287 | P2 | PENDIENTE | Rendimiento de menús: refresco ya 14× más rápido; sin pruebas de… | sin medida de apertura de pantallas |
@@ -704,19 +697,16 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
 | M-167 | P1 | PENDIENTE | Calzadas = cajas de asfalto con marcas propias; Kenney sólo… | calzadas propias; losetas Kenney no usadas |
-| M-171 | P1 | PARCIAL | Tráfico: comportamiento complejo | 27-10: cola, frenado en rojo, prioridad de la derecha, adelantamiento; falta rotonda con tráfico |
-| M-263 | P1 | PARCIAL | Eventos únicos y agenda | la agenda del móvil existe (`telefono_p3.gd`, `nucleo/citas.gd`); faltan los 13 eventos únicos con control real |
 | M-168 | P2 | PARCIAL | Rotondas | 28-10: una rotonda decorativa en un cruce sin rutas (`visor/ciudad_rotonda.gd`); falta rotonda con tráfico que la recorra |
 | M-170 | P2 | PARCIAL | Semáforos peatonales con botón | 28-10: botón y hombrecito (`visor/semaforos.gd pedir`); FALLO: el ciclo es global a toda la ciudad y los peatones de `TraficoCiudad` no respetan la fase; cabeza peatonal pequeña |
 | M-173 | P2 | PARCIAL | Sin sonido de motor/marchas/derrape | 21-10: el motor del coche suena, sintetizado en vivo con revoluciones y 5 marchas (`visor/motor_coche_sonido.gd`); sin radio |
 | M-176 | P2 | PENDIENTE | Sin tipos de vehículo (moto, bus conducible, camión) | solo coche conducible |
-| M-180 | P2 | PARCIAL | Metro: sin vendedores/música/anuncios | anuncios en el vagón (`MetroCiudad.ANUNCIOS`); sin vendedores ni música |
+| M-180 | P2 | PARCIAL | Metro: sin vendedores/música/anuncios | anuncios en el vagón y vendedor con puesto en cada andén (28-10, `MetroCiudad.vendedores`, E compra una empanada: 3 €); sin música (el audio lo maneja el dueño) |
 | M-182 | P2 | PARCIAL | Tarjeta de transporte y coste | 28-10: `CarteraDT.saldo_transporte`, metro 1 €, teleférico 3 €; falta cobrar el bus, saldo en la app Red y abono |
 | M-183 | P2 | PARCIAL | Peatones: rutinas | 28-10: densidad por sector y hora, flujo direccional, maletines y mochilas (`visor/rutina_peatones.gd`); falta rutina por PERSONA (casa→trabajo→casa) |
 | M-184 | P2 | PENDIENTE | Sin NPC con nombre y memoria (te reconocen) | sin vecinos con memoria |
 | M-185 | P2 | PENDIENTE | Diálogos por oficio (hecho) pero sin ramas ni consecuencias | diálogos sin consecuencias |
 | M-186 | P2 | PARCIAL | Interiores: 15 salas; edificios entrables «la mayoría» sin… | gimnasio, piscina, estación central, recreativos con muebles Kenney (15/16-10); 21-10: edificio del club con muebles de verdad del catálogo común `Modulos` (oficina del DT, despacho, sala de vídeo, pr |
-| M-187 | P2 | PARCIAL | Casas sin habitantes ni rutinas | vivienda con «la familia que vive allí» (`InteriorInstalacion` l.1057); sin horarios |
 | M-188 | P2 | PENDIENTE | Sin tiendas con compra real (ropa, balones) | sin compra en tiendas |
 | M-189 | P2 | PENDIENTE | Sin bares/restaurantes con minijuego | sin bar con minijuego |
 | M-192 | P2 | SIN VERIFICAR | Aceras/pavimentos: 3 texturas | no se midió la variedad de aceras por barrio |
@@ -743,8 +733,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-210 | P1 | PARCIAL | Mercado: precios por reputación sin burbujas ni crisis | eras con precios (`Eras`, `_probar_eras_y_precios`); sin burbujas |
-| M-219 | P1 | PARCIAL | `Banco` e `Insolvencia` existen pero con pocos eventos de gravedad | administrador, tope salarial, venta de lo que sobra, refundación (`Insolvencia`); descenso administrativo ya hecho (`Insolvencia.descenso_administrativo`, cableado en `mundo_p6`, prueba del 2-11) |
 | M-359 | P1 | PENDIENTE | Estadio real en 46 % de clubes (C-01) | 46 % |
 | M-209 | P2 | PARCIAL | La prueba larga sólo comprueba que no hay errores, no el equilibrio | `prueba_larga` comprueba medias en rango; sin métricas de equilibrio |
 | M-211 | P2 | PARCIAL | Cláusulas de rescisión: sin «cláusulazo» automático de IA | el mercado reconoce pagos de cláusula (`Mercado` l.345); sin «clausulazo» de IA deliberado |
@@ -836,7 +824,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-091 | P1 | PARCIAL | Botines: variedad añadida, pero sin modelos distintos por forma | `VestidorQ._botin_de` varía modelo/color por dorsal; no hay mallas de bota alta/calcetín |
 | M-094 | P1 | PARCIAL | Animación de caminata del DT: 6 estilos (✅) | «Mi caminata» con 6 estilos para el DT; peatones y jugadores no |
 | M-095 | P1 | PARCIAL | Auditoría automática de clips usados | hecha para ciudad/UAL (`p3_clips_ual`) y para el partido (`p3_clips_partido`, 2-11: los 38 nombres que el partido pide y las 22 categorías de variantes existen en un futbolista, que trae 350 animaciones); falta que cada clip de las 350 se use o se descarte a propósito |
-| M-447 | P1 | PARCIAL | Las cadenas en español escritas directo en `ui/` (I-02): antes 573… | ✅ 15-10 salvo ~11 textos (2-11: traducidos 4: ayuda de la ciudad, título del interior, «Jugar aquí», aviso de caja) |
 | M-037 | P2 | PENDIENTE | Sin sector «barra brava»/torcida con comportamiento diferente (de… | sin sector ultra con bengalas/humo |
 | M-038 | P2 | PENDIENTE | Hinchas sentados con piernas invisibles (se cortan en la cadera) | público horneado cortado en la cadera |
 | M-039 | P2 | PARCIAL | Tres niveles de detalle; el salto «cerca→medio→lejos» puede verse | detalle por distancia por tramos de grada (16-10, 2,24→1,72 M tris); sin mezcla por dithering |
@@ -908,7 +895,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-119 | P1 | PARCIAL | Penales: el portero «decide una vez» pero sin lectura del lanzador | 20-10: en la TANDA el portero de la IA se tira más al lado natural del pie del lanzador (46/36/18) y, según sus reflejos (4-16 %), lee la carrera (`_lado_portero_tanda`); falta en los penales del part |
 | M-147 | P1 | PARCIAL | Hitbox del balón vs cuerpo: 0 casos atravesando (sonda); pero… | balón con altura y cabezazo en el motor; colisión por distancia, sin cápsulas |
 | M-120 | P2 | PARCIAL | Córners con 3 variantes | receptor/2.º/3.er lanzador en córners (14-10); sin jugadas ensayadas de `CatalogoJugadas` |
 | M-121 | P2 | PARCIAL | Tiros libres: barrera simple | barrera de 4 a 9,15 m fija |
@@ -2215,3 +2201,5 @@ Exportar e importar la partida (fila 30 de la propuesta, §10 «Guardado en la n
 - (28-10) M-193 flores (`PastoCiudad.flores`, captura `capturas_ciudad_c2/flores_antes_despues.jpg`, izquierda antes y derecha después): una de cada dos matas del parque, los patios y la feria es el centro de un ramillete de 9 flores de cinco colores (tallo + cabeza con color por instancia), MultiMesh por celdas con corte a 38 m; coste medido +1,1 % de triángulos (4,28 M → 4,33 M) y +4 llamadas. `SIN_FLORES=1` las apaga. Pendiente: setos con flor y enredaderas en fachadas.
 - (28-10) M-182 tarjeta de transporte Red (`CarteraDT.saldo_transporte/TARIFAS/recargar_transporte/pagar_pasaje`, test `p6_tarjeta_transporte`; `VidaCiudad.usar_billetes/cobrar_pasaje`): las máquinas de billetes de los andenes (E) recargan 5 € de la cartera; entrar al metro cuesta 1 € y subir al teleférico 3 €, de la tarjeta; sin saldo no se sube y avisa. Se guarda en la partida (`transporte`). Sin captura (es texto de diálogo). Pendiente: cobrar también el bus cuando el DT suba a uno (hoy solo suben figurantes), mostrar el saldo en la app «Red» del móvil y abono mensual.
 - (28-10 cierre) Quedan de la sesión 3: peatones NPC que respeten la fase peatonal; rotonda con tráfico real; metro y tren con librea (no «Red»); luz de acera en paraderos; reflejo de farolas en los charcos de noche; el pasaje solo lo cobra el bus del DT; saldo de la tarjeta en la app «Red». Ver `docs/04_auditorias/sesion_3_cierre_28-10.md`.
+
+- (2-11) Sesión 3, cola del lunes. HECHO: peatones NPC que cruzan avenidas con su fase peatonal (`PeatonesCruce`, 24 cruces, test `p6_peatones_cruce`; `TraficoCiudad` usa `Semaforos.peatonal` para peatones), rotonda con 3 coches en su carril circular (`CiudadRotonda.trafico`), el DT sube al bus Red junto al paradero (E, paga 1 € de la tarjeta, baja 3 paradas después: `BusDT`, test `p6_bus_dt`) y la app Red muestra el saldo, velocidad de peatones = base × prisa de la hora × prisa de la lluvia (`RutinaPeatones.poner_factor`), PA1002 en su sector (el sector del código sale de DONDE queda el paradero), `BanderasGrada` conectada a `FestejoGrada` en el gol (captura `banderas_grada.jpg`), teleférico: estación de arriba con su rampa y su gente, llegadas de las dos cabinas y viajeros que cambian dentro (`PasajerosTeleferico.cambiar_viajeros`), prólogo con túnel, utilería, sala de vídeo y comedor (el personal saluda: `PrologoDT._saludan`), gesto del DT según el tono en la presentación (`PrologoPasos.GESTO_TONO`), entrevista de contratación de 3 preguntas (`Citas.RONDAS`; falta la versión para el staff), rama con «visibilidad» (ceder el estadio) y celebración de sus títulos (`Citas`, `Hinchada.visibilidad_rama`), M-187 casas con horario (`HabitantesCasa`), M-180 vendedor del andén. Pasada visual en el partido: peinados del Drive y postura en los futbolistas (`player_spawner_p1`, apagable con `SIN_PELO_DRIVE=1` / `SIN_POSTURA=1`); mochilas no (no tienen sentido en el campo). PENDIENTE: pelo femenino (los 5 candidatos se descartaron; hace falta elegir otros del OBJ), hoja `capturas_personajes/pelo_postura_partido_antes_despues.jpg` (arriba antes, abajo después; en la cámara de TV no se distingue y el plano cercano es poco concluyente porque los jugadores se mueven entre una y otra pasada: falta una toma con el balón parado y el veredicto del dueño), música del metro.

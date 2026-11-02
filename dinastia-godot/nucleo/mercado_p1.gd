@@ -79,6 +79,8 @@ func valor_pedido(j: Jugador) -> int:
 	var m := _mundo()
 	if m != null and m.roles != null and j.club_id != m.mi_club_id:
 		p *= m.roles.reputacion.mult_compras()
+	if m != null and m.eras != null:
+		p *= m.eras.factor_mercado(m.anio)          ## burbuja o crisis del mercado (M-210)
 	return int(max(1000.0, round(p / 1000.0) * 1000.0))
 
 ## Las ganas que tiene de ir a `destino`, de 0 a 1, con los motivos para poder
@@ -352,6 +354,8 @@ func buscar_oferta_por_mi_jugador() -> void:
 		return
 	var comprador: Club = candidatos[Azar.ent(0, candidatos.size() - 1)]
 	var monto := int(round(float(j.valor) * (0.85 + Azar.f() * 0.5)))
+	if _mundo().eras != null:
+		monto = int(round(float(monto) * _mundo().eras.factor_mercado(_mundo().anio)))
 	## Fama de negociador: te ofrecen más por tus jugadores.
 	if _mundo().roles != null:
 		monto = int(round(float(monto) * _mundo().roles.reputacion.mult_ventas()))

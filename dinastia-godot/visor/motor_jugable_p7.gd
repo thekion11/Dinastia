@@ -36,28 +36,12 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 		p["enfriar"] = 0.6
 		aviso.emit("¡Qué parada!")
 
-## EL PENAL EN EL PARTIDO (25-10-2026): a 11 m no da tiempo a reaccionar, así que
-## el portero adivina el lado, como en la tanda (antes reaccionaba al tiro y paraba
-## 4 de cada 9: la sonda medía un 43 % de penales marcados; en el fútbol, ~76 %).
+## PENAL EN PLENO PARTIDO: en `PenalPortero` (2-11, para la norma de 450 líneas).
 func _penal_en_juego(gk: Dictionary, cruce: Vector3) -> void:
-	var r := _rng.randf()
-	var lado := 1 if r < 0.42 else (-1 if r < 0.84 else 0)
-	var ref := float(gk["attr"]["ref"])
-	var para := false
-	if lado == 0:
-		para = absf(cruce.x) < 1.1 and cruce.y < 2.0
-	elif signf(cruce.x) == float(lado):
-		var alcance := 1.4 + (float(gk["attr"]["div"]) + ref) * 0.6
-		para = absf(cruce.x) < alcance and cruce.y < (1.6 if absf(cruce.x) > 2.3 else 2.1) and _rng.randf() < 0.62 + ref * 0.3
-	if para:
-		MotorParada.programar(self as Object as MotorJugable, gk, cruce, lado != 0)
-		return
-	## Se tira al lado que eligió (y el balón entra o se va por el otro).
-	if lado != 0:
-		var lado_anim := "izq" if float(lado) * dir_ataque(bool(gk["es_local"])) > 0.0 else "der"
-		_anim(gk, "estirada_media_%s" % lado_anim, true)
-		gk["vel"] = Vector3(float(lado) * 6.0, 0, 0)
-		gk["objetivo"] = Vector3(pos(gk).x + float(lado) * 2.2, 0, pos(gk).z)
+	PenalPortero.en_juego(self as Object as MotorJugable, gk, cruce)
+
+func _lado_portero_tanda(lz: Dictionary, gk: Dictionary, mira := 1) -> int:
+	return PenalPortero.lado(self as Object as MotorJugable, lz, gk, mira)
 
 ## TIRO QUE VIENE: ¿llega a tapar? (de `_ia_portero`, 25-10, para el portero de la Carrera en `_control_usuario`).
 ## Devuelve true si ya actuó (parada o penal). `manual`: lo maneja el usuario, que elige lado con el stick (`guia`,

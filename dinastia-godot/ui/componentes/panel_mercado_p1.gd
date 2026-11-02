@@ -125,6 +125,16 @@ func _pintar_estado_ventana() -> void:
 			b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			add_child(b)
 
+	## El ciclo del mercado (M-210): burbuja o crisis, con lo que significa para comprar y vender.
+	var ciclo := _mundo.eras.ciclo_mercado(_mundo.anio) if _mundo.eras != null else "normal"
+	if ciclo != "normal":
+		var cm := _lbl(11, COL_ORO if ciclo == "burbuja" else COL_ROJO)
+		cm.text = (Idiomas.t("🫧 Burbuja: los traspasos valen un %d %% más hasta %d. Buen momento para vender.") if ciclo == "burbuja" \
+			else Idiomas.t("📉 Crisis: los traspasos valen un %d %% menos hasta %d. Buen momento para comprar.")) \
+			% [int(round(absf(_mundo.eras.factor_mercado(_mundo.anio) - 1.0) * 100.0)), int(_mundo.eras.mercado["hasta"])]
+		cm.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		add_child(cm)
+
 	var nota := _lbl(10, COL_SUAVE)
 	nota.text = Idiomas.t("Ventanas de pases: semanas 1–6 y 18–24. Libres y precontratos funcionan todo el año.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
