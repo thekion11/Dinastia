@@ -66,3 +66,10 @@ func _probar() -> void:
 			alto_banca = m.position.y + 0.02
 	_comprobar(absf(alto_banca - 0.69) < 0.001, "la banca tiene el tablero a 0,69 (%.2f) como los asientos de `GenteSentada`" % alto_banca)
 	_comprobar(ParaderoRed.asientos_x().size() == 2, "dos asientos en la banca")
+	## El código lleva el sector de DONDE queda el paradero (PA1002 caía en el sector 300).
+	var fuera := 0
+	for cod: String in RecorridosMapa.datos()["paraderos"]:
+		var pa: Dictionary = RecorridosMapa.paradero(cod)
+		if RecorridosRed.sector_de(pa["pos"]) != RecorridosRed.sector_del_codigo(cod):
+			fuera += 1
+	_comprobar(fuera == 0, "los %d paraderos del mapa llevan el sector de su posición (%d fuera de sitio)" % [RecorridosMapa.datos()["paraderos"].size(), fuera])

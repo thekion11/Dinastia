@@ -103,6 +103,9 @@ func _mover_en_anden(delta: float) -> void:
 		_aviso.text = Idiomas.t("🚇 Tren en el andén, puertas abiertas · E para subir")
 	else:
 		_aviso.text = Idiomas.t("Próximo tren: %s · E: salir a la calle") % ("llegando" if eta < 20.0 else "%d s" % int(eta))
+	if metro.vendedor_cerca(cuerpo.position):
+		_aviso.text = Idiomas.t("🥟 E: comprar una empanada al vendedor (3 €)")
+		return
 	if metro.expendedora_cerca(cuerpo.position):
 		_aviso.text = Idiomas.t("🥤 E: comprar en la máquina expendedora")
 
@@ -232,6 +235,12 @@ func _buscar_cerca() -> void:
 				_cerca = {"tipo": "metro", "acc": a, "n": "Ⓜ %s · %s" % [a["linea"], a["nombre"]]}
 				_aviso.text = Idiomas.t("E: entrar al metro (%s, estación %s)") % [a["linea"], a["nombre"]]
 				return
+	## Un autobús «Red» parado en el paradero de al lado: E sube (paga el pasaje y baja 3 paradas más allá).
+	var sube := BusDT.detectar(get_tree(), p) if modo == "pie" else {}
+	if not sube.is_empty():
+		_cerca = sube
+		_aviso.text = Idiomas.t("E: subir al bus %s (%d €)") % [sube["num"], int(CarteraDT.TARIFAS["bus"])]
+		return
 	## El botón de un semáforo peatonal (M-170).
 	if modo == "pie" and cb.expansion != null and cb.expansion.semaforos != null and cb.expansion.semaforos.boton_cerca(p) < INF:
 		_cerca = {"tipo": "boton_peatonal", "n": "Botón de cruce"}

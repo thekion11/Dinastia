@@ -30,15 +30,25 @@ const PASOS := [
 			"El vestuario. Cada taquilla lleva el nombre de un jugador; aquí se ganan y se pierden los partidos antes de jugarlos.",
 			"Sígueme por el túnel: quiero que veas el campo desde abajo.",
 		]},
+	{"clave": "tunel", "planta": 0, "zona": "Túnel",
+		"frases": [
+			"El túnel. Treinta metros de silencio antes del ruido: los jugadores salen por aquí y tú, detrás.",
+			"Al fondo, el campo. Sigamos.",
+		]},
 	{"clave": "campo", "planta": 0, "zona": "Banda",
 		"frases": [
 			"Tu banquillo. Desde aquí dirigirás; y cuando te sancionen, desde la grada, como todo el mundo.",
-			"Ahora al sótano: la enfermería. El ascensor está al fondo del edificio.",
+			"Ahora al sótano: la utilería y la enfermería. El ascensor está al fondo del edificio.",
 		],
 		"controles": ["usar"]},
-	{"clave": "enfermeria", "planta": -1, "zona": "Enfermería",
+	{"clave": "utileria", "planta": -1, "zona": "Utilería", "saluda": ["utilero"],
 		"frases": [
-			"La enfermería y la utilería. El médico te dirá quién llega al domingo; el utilero, quién está más fino.",
+			"La utilería. Cada bota, cada balón y cada camiseta tienen su sitio; el utilero sabe quién está más fino y te lo dirá si se lo preguntas.",
+			"Pegada, la enfermería.",
+		]},
+	{"clave": "enfermeria", "planta": -1, "zona": "Enfermería", "saluda": ["medico"],
+		"frases": [
+			"La enfermería. El médico te dirá quién llega al domingo y quién no debería ni calentar.",
 			"Subamos a la primera planta: el presidente quiere conocerte.",
 		]},
 	{"clave": "presidente", "planta": 1, "zona": "Despacho del presidente",
@@ -46,11 +56,21 @@ const PASOS := [
 			"El despacho del presidente. Aquí se firma y aquí se despide. Te presento a la junta.",
 		],
 		"directiva": true},
+	{"clave": "video", "planta": 1, "zona": "Sala de vídeo", "saluda": ["ojeador"],
+		"frases": [
+			"La sala de vídeo. Aquí se ve al rival antes de que el rival te vea a ti; el ojeador te trae los informes.",
+			"Ahora arriba: la prensa te espera.",
+		]},
 	{"clave": "prensa", "planta": 2, "zona": "Sala de prensa",
 		"frases": [
 			"La sala de prensa. Te presentan hoy mismo: tres preguntas, y cada palabra se guarda.",
 		],
 		"prensa": true},
+	{"clave": "comedor", "planta": 2, "zona": "Comedor del plantel", "saluda": ["cocinera"],
+		"frases": [
+			"El comedor del plantel. Un equipo que come junto, gana junto; la cocinera te guardará siempre un plato.",
+			"Por último, tu oficina. Baja conmigo.",
+		]},
 	{"clave": "oficina", "planta": 1, "zona": "Oficina del DT",
 		"frases": [
 			"Y esta es tu oficina. Desde el ordenador llevas el club entero: plantilla, mercado, táctica, finanzas.",
@@ -82,6 +102,13 @@ const TONOS := [
 	{"clave": "evasivo", "nombre": "Evasivo", "gesto": "cuello", "relacion": -2},
 	{"clave": "humilde", "nombre": "Humilde", "gesto": "juntas", "relacion": 1},
 ]
+## El gesto y la cara del DT en el plató según el TONO de la respuesta (clips de la librería «banda» de `PersonajeDT`): seguro abre los brazos
+## hacia la sala, evasivo se lleva las manos a la cabeza, humilde pide calma con las palmas.
+const GESTO_TONO := {
+	"seguro": ["banda/llamar_hinchada", "alegre"],
+	"evasivo": ["banda/manos_cabeza", "concentrado"],
+	"humilde": ["banda/pedir_calma", "neutral"],
+}
 const PREGUNTAS_PRENSA := [
 	{"medio": "La Jornada Deportiva", "pregunta": "¿Por qué este club y por qué ahora?",
 		"respuestas": {

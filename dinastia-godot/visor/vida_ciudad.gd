@@ -141,6 +141,21 @@ func usar_expendedora() -> bool:
 	Sonido.toca("clic", Sonido.Bus.EFECTOS)
 	return true
 
+## E ante el vendedor del andén (M-180): una empanada y una bebida por 3 € que quitan el hambre y dan algo de energía; la cartera cobra como en la expendedora.
+func usar_vendedor() -> bool:
+	if mundo.roles == null or mundo.necesidades == null:
+		return false
+	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
+	var r := mundo.roles.cartera.cobrar(mundo.roles, 3, "Empanada del andén", dia)
+	if String(r["error"]) != "":
+		_decir(Idiomas.t("Vendedor del andén"), CarteraDT.texto_error(String(r["error"]), 3))
+		return true
+	mundo.necesidades.animar(6)
+	mundo.necesidades.picar(25)
+	_decir(Idiomas.t("Vendedor del andén"), Idiomas.t("Una empanada caliente por %d € (%s). «¡Buen provecho, míster!»") % [3, Idiomas.t(String(r["via"]))])
+	Sonido.toca("clic", Sonido.Bus.EFECTOS)
+	return true
+
 ## E ante una máquina de billetes del metro: recarga la tarjeta Red con `CarteraDT.RECARGA` € de la cartera (M-182).
 func usar_billetes() -> bool:
 	if mundo.roles == null:

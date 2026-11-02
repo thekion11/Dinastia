@@ -66,7 +66,9 @@ func _process(delta_real: float) -> void:
 			for c: Dictionary in _controles[ruta]:
 				var d := fposmod(float(c["s"]) - s0, largo)
 				var visto := d < mira if suave else (d < avance + 0.5 and d < 12.0)
-				if visto and not semaforos.verde(int(c["eje"])):
+				## Un peatón cruza con SU fase (verde fijo; ya no empieza en el intermitente), un coche con la del tráfico.
+				var libre := semaforos.peatonal(int(c["eje"])) == "v" if es_peaton else semaforos.verde(int(c["eje"]))
+				if visto and not libre:
 					avance = minf(avance, maxf(0.0, d - 0.3)) if suave else maxf(0.0, d - 0.3)
 					tope = minf(tope, sqrt(2.0 * PLAN * maxf(d - 0.3, 0.0)))
 					frena = true

@@ -292,7 +292,8 @@ func _vivienda() -> void:
 	_poner("tableCoffee", Vector3(-3.2, 0, -2.4))
 	_poner("books", Vector3(-3.0, _alto("tableCoffee"), -2.4), 0.3)
 	_poner("plantSmall2", Vector3(-3.5, _alto("tableCoffee"), -2.35))
-	_asiento("loungeSofa", Vector3(-3.2, 0, -0.85), PI, [-0.45], _calle(), null, {"carpet": tela})
+	var h := HabitantesCasa.plan(HabitantesCasa.hora_actual())   ## quién está en casa a esta hora (M-187)
+	_asiento("loungeSofa", Vector3(-3.2, 0, -0.85), PI, [-0.45] if bool(h["sofa"]) else [], _calle(), null, {"carpet": tela})
 	_poner("pillowBlue", Vector3(-2.5, 0.46, -0.75), PI)
 	_asiento("loungeChair", Vector3(-5.1, 0, -2.4), PI * 0.5, [], [], null, {"carpet": tela.darkened(0.2)})
 	_poner("lampRoundFloor", Vector3(-5.5, 0, -3.9))
@@ -313,17 +314,17 @@ func _vivienda() -> void:
 	_poner("toaster", Vector3(2.9, encimera, zc - 0.1))
 	_poner("comida/pot", Vector3(3.5, _alto("kitchenStove"), zc))
 	_poner("comida/cutting-board", Vector3(4.4, encimera, zc + 0.05), PI * 0.5)
-	_trabajador(Vector3(3.3, 0, -3.05), PI, false, ["charla", "brazos_jarra"], [Color(0.9, 0.85, 0.7), Color(0.3, 0.3, 0.35), true])
+	if bool(h["cocina"]): _trabajador(Vector3(3.3, 0, -3.05), PI, false, ["charla", "brazos_jarra"], [Color(0.9, 0.85, 0.7), Color(0.3, 0.3, 0.35), true])
 	## Comedor.
-	_mesa_con_sillas(Vector3(3.3, 0, -0.6), 0.0, "table", 2.2, 2, "chairCushion", 0.4, _calle(), "comida/plate", ["comida/glass"])
+	_mesa_con_sillas(Vector3(3.3, 0, -0.6), 0.0, "table", 2.2, 2, "chairCushion", float(h["mesa"]), _calle(), "comida/plate", ["comida/glass"])
 	_poner("comida/cake", Vector3(3.3, _alto("table", 2.2), -0.6))
 	_ventana(1.0, 0.6)
 	## Entrada.
 	_poner("coatRackStanding", Vector3(2.5, 0, 4.15))
 	_planta(Vector3(5.5, 0, 4.0))
 	_poner("trashcan", Vector3(5.6, 0, -2.9), 0.0, 1.4)
-	_caminante([Vector3(-4.4, 0, 1.6), Vector3(4.4, 0, 1.6), Vector3(4.4, 0, 2.9), Vector3(-4.4, 0, 2.9)])
-	_cartel("🏠 " + _sala_nombre().to_upper(), Vector3(-0.4, 2.62, -4.45), 26)
+	if bool(h["pasea"]): _caminante([Vector3(-4.4, 0, 1.6), Vector3(4.4, 0, 1.6), Vector3(4.4, 0, 2.9), Vector3(-4.4, 0, 2.9)])
+	_cartel("🏠 %s · %s" % [_sala_nombre().to_upper(), Idiomas.t(String(h["estado"]))], Vector3(-0.4, 2.62, -4.45), 26)
 
 ## Bar (14 × 10 m): barra con taburetes, botellero, mesas, tragaperras y tele
 ## con el fútbol; el camarero y los clientes.

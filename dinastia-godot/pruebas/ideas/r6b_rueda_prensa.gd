@@ -89,3 +89,9 @@ func _primera_rueda() -> void:
 	m.prensa.responder(0)
 	m.prensa.abrir_rueda(true, false)
 	_comprobar(String(m.prensa.entrevista.get("pregunta", "")) != hecha, "la segunda rueda ya es la de siempre")
+	## Gesto del DT según el tono de la respuesta (la presentación del prólogo).
+	var tonos_ok := true
+	for tono: String in ["seguro", "evasivo", "humilde"]:
+		var g: Array = PrologoPasos.GESTO_TONO.get(tono, [])
+		tonos_ok = tonos_ok and g.size() == 2 and String(g[0]).begins_with("banda/")
+	_comprobar(tonos_ok and PrologoPasos.GESTO_TONO["seguro"][0] != PrologoPasos.GESTO_TONO["evasivo"][0] and PrologoPasos.GESTO_TONO["evasivo"][0] != PrologoPasos.GESTO_TONO["humilde"][0], "cada tono tiene su propio gesto del DT")

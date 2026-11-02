@@ -179,7 +179,7 @@ func usar() -> bool:
 	var club := mundo.mi_club()
 	var color := Color(club.color1).lerp(Color.WHITE, 0.35) if club != null else Color(1.0, 0.86, 0.5)
 	hud.pregunta_directiva("%s · %s" % [String(ct["quien"]), String(ct["cargo"])], color,
-		"%s %s" % [String(ct["quien"]).get_slice(" ", 0), String(ct["asunto"])], mundo.citas.opciones(mundo, ct))
+		"%s %s" % [String(ct["quien"]).get_slice(" ", 0), mundo.citas.pregunta(ct)], mundo.citas.opciones(mundo, ct))
 	return true
 
 func _responder(i: int) -> void:
@@ -188,6 +188,14 @@ func _responder(i: int) -> void:
 	var id := _abierta
 	_abierta = ""
 	var r := mundo.citas.resolver(mundo, id, i)
+	if bool(r.get("sigue", false)):   ## la entrevista tiene más preguntas: se reabre con la siguiente
+		_abierta = id
+		var ct := mundo.citas.por_id(id)
+		var club := mundo.mi_club()
+		hud.pregunta_directiva("%s · %s" % [String(ct["quien"]), String(ct["cargo"])], Color(club.color1).lerp(Color.WHITE, 0.35) if club != null else Color(1.0, 0.86, 0.5),
+			"%s %s" % [String(ct["quien"]).get_slice(" ", 0), mundo.citas.pregunta(ct)], mundo.citas.opciones(mundo, ct))
+		Sonido.toca("clic", Sonido.Bus.EFECTOS)
+		return
 	expl.pausar(false)
 	expl._t_burbuja = 0.0
 	expl._hablando_con = null

@@ -14,7 +14,7 @@ static func _caja(base_n: Node3D, pos: Vector3, tam: Vector3, mat: Material) -> 
 	mi.position = pos
 	base_n.add_child(mi)
 
-static func detalles(base_n: Node3D) -> int:
+static func detalles(base_n: Node3D, cima := false) -> int:
 	var cristal := StandardMaterial3D.new()
 	cristal.albedo_color = Color(0.25, 0.4, 0.55)
 	cristal.roughness = 0.1
@@ -64,7 +64,7 @@ static func detalles(base_n: Node3D) -> int:
 		var px := -10.5 + float(k2) * 1.9
 		if absf(px) > 2.6:
 			_caja(base_n, Vector3(px, 0.95, 13.9), Vector3(0.07, 1.0, 0.07), acero)
-	n += 14 + rampa(base_n, acero, amarillo)
+	n += 14 + rampa(base_n, acero, amarillo, cima)
 	for bx: float in [-6.0, 0.0, 6.0]:
 		_caja(base_n, Vector3(bx, 0.95, 10.4), Vector3(2.2, 0.12, 0.6), madera)
 		_caja(base_n, Vector3(bx, 1.25, 10.7), Vector3(2.2, 0.5, 0.08), madera)
@@ -83,23 +83,30 @@ static func detalles(base_n: Node3D) -> int:
 	return n
 
 ## RAMPA Y CAMINO (28-10): del borde del andén (z = 13,8, y = 0,5) baja a la hierba (y = −0,2) en 4,3 m, con pasamanos a los lados y,
-## después, un camino de losas de 4 m de ancho hasta la plaza. Es por donde entra y sale la gente (`PasajerosTeleferico.RUTA_RAMPA`).
-static func rampa(base_n: Node3D, acero: Material, amarillo: Material) -> int:
+## después, un camino de losas de 4 m de ancho hasta la plaza. Es por donde entra y sale la gente (`PasajerosTeleferico.RAMPA_ALTA/BAJA`).
+## En la estación de ARRIBA (`cima`) el suelo es la losa de la ladera (y = −0,1) y se acaba a 17 m: rampa corta de 2,4 m y sin camino.
+static func rampa(base_n: Node3D, acero: Material, amarillo: Material, cima := false) -> int:
 	var losas := StandardMaterial3D.new()
 	losas.albedo_color = Color(0.72, 0.71, 0.68)
 	losas.roughness = 0.9
+	var largo := 2.4 if cima else 4.3
+	var y_bajo := -0.1 if cima else -0.2
+	var ang := atan((0.5 - y_bajo) / largo)
 	var r := MeshInstance3D.new()
 	var bm := BoxMesh.new()
-	bm.size = Vector3(4.6, 0.14, 4.3)
+	bm.size = Vector3(4.6, 0.14, largo / cos(ang))
 	r.mesh = bm
 	r.material_override = losas
-	r.position = Vector3(0, 0.1, 15.9)
-	r.rotation_degrees.x = 9.3
+	r.position = Vector3(0, 0.5 - (0.5 - y_bajo) * 0.5 - 0.07, 13.8 + largo * 0.5)
+	r.rotation.x = ang
 	base_n.add_child(r)
 	for sx: float in [-2.2, 2.2]:
-		_caja(base_n, Vector3(sx, 0.95, 15.9), Vector3(0.05, 0.05, 4.3), acero)
-		for zz: float in [14.2, 15.9, 17.6]:
-			_caja(base_n, Vector3(sx, 0.7 - (zz - 13.8) * 0.16, zz), Vector3(0.06, 0.9, 0.06), acero)
+		_caja(base_n, Vector3(sx, 0.95 - (0.5 - y_bajo) * 0.5, 13.8 + largo * 0.5), Vector3(0.05, 0.05, largo), acero)
+		for k in 3:
+			var zz := 13.9 + largo * float(k) / 2.0
+			_caja(base_n, Vector3(sx, 0.7 - (zz - 13.8) / largo * (0.5 - y_bajo) * 0.5 - 0.1, zz), Vector3(0.06, 0.9, 0.06), acero)
+	if cima:
+		return 4
 	_caja(base_n, Vector3(0, -0.17, 24.0), Vector3(4.6, 0.06, 12.0), losas)
 	_caja(base_n, Vector3(0, -0.13, 18.0), Vector3(4.6, 0.06, 0.25), amarillo)
 	return 8

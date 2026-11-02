@@ -434,7 +434,7 @@ func _gesticular_dt(delta: float) -> void:
 		return
 	_t_gesto_dt = _rng_dt.randf_range(3.5, 6.5)
 	var ap: AnimationPlayer = _dt_3d.get("anim")
-	var gesto: String = GESTOS_PRENSA[_rng_dt.randi() % GESTOS_PRENSA.size()]
+	var gesto: String = GESTOS_PRENSA[_rng_dt.randi() % GESTOS_PRENSA.size()] if _gesto_pedido == "" else _gesto_pedido
 	if ap != null:
 		var lib := ap.get_animation_library("")
 		if lib != null:
@@ -443,4 +443,6 @@ func _gesticular_dt(delta: float) -> void:
 			ap.play(gesto, 0.3)
 			ap.queue("parado")
 	var raiz: Node = (_dt_3d["nodo"] as Node).get_parent()
-	Expresion.de(raiz).poner(["concentrado", "alegre", "neutral", "enfado"][_rng_dt.randi() % 4], 3.0)
+	Expresion.de(raiz).poner(["concentrado", "alegre", "neutral", "enfado"][_rng_dt.randi() % 4] if _cara_pedida == "" else _cara_pedida, 3.0)
+	_gesto_pedido = ""
+	_cara_pedida = ""
