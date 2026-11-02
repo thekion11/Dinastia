@@ -80,6 +80,12 @@ func mostrar(c: Club, animal: String) -> void:
 	for h in _pivote.get_children():
 		h.queue_free()
 	_masc = MascotaQ.crear(_pivote, c, animal, Vector3.ZERO, 0.0)
+	## Quieta en su sitio y de frente: antes paseaba y se salía del cuadro (2-11-2026).
+	if _masc != null and _masc.get_node_or_null("Animador") != null:
+		var an_ctl := _masc.get_node("Animador") as MascotaQ
+		an_ctl.en_sitio = true
+		an_ctl._gesto()
+	_pivote.rotation.y = 0.0
 
 func _al_entrar() -> void:
 	if _pendiente.size() == 2:
@@ -95,3 +101,14 @@ func _process(delta: float) -> void:
 	## En la banda la mascota pasea; aquí no hay banda: camina en el sitio.
 	if is_instance_valid(_masc):
 		_masc.position = Vector3.ZERO
+		## Las animaciones del traje desplazan la pelvis hasta ~1 m del origen: se recentra el cuerpo bajo
+		## el eje del giro para que no se salga de cuadro (2-11-2026).
+		var esq := _masc.find_children("*", "Skeleton3D", true, false)
+		if not esq.is_empty():
+			var sk := esq[0] as Skeleton3D
+			var i := sk.find_bone("pelvis")
+			if i >= 0:
+				var pel := (sk.global_transform * sk.get_bone_global_pose(i)).origin
+				var d := _pivote.global_position - pel
+				d.y = 0.0
+				_masc.global_position += d

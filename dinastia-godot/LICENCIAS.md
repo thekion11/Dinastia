@@ -123,3 +123,6 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 3. La base «ficticia» (`datos/tablas.json` → `REALES`, 256 clubes) son las plantillas reales con el nombre
    retocado letra a letra («Fernando de Paul» → «Fernando de Peol») y la misma edad, media, posición y
    nacionalidad. Viaja en los builds públicos. ¿Basta para el derecho de imagen? Lo decide el dueño (M-421).
+
+## Modular Character Outfits - Fantasy (Standard) — `assets/characters/outfits/`
+Quaternius, CC0 1.0 (ver `License_Standard.txt` en esa carpeta). Campesino y Explorador, hombre y mujer, en glTF con el esqueleto de 65 huesos. Texturas reducidas a 1024 px (originales 4096). Fuera de LFS por orden del dueño (2-11-2026); ~14 MB.

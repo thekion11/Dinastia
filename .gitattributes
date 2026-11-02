@@ -69,3 +69,7 @@ dinastia-godot/assets/pasto/*.glb -filter -diff -merge binary
 dinastia-godot/assets/regalos/*.glb -filter -diff -merge binary
 # Logo definitivo (26-10): archivos pequeños, fuera de LFS
 dinastia-godot/assets/logo/* -filter -diff -merge binary
+dinastia-godot/assets/characters/outfits/*.gltf -filter -diff -merge binary
+dinastia-godot/assets/characters/outfits/*.bin -filter -diff -merge binary
+dinastia-godot/assets/characters/outfits/*.png -filter -diff -merge binary
+dinastia-godot/assets/characters/outfits/*.txt -filter -diff -merge binary

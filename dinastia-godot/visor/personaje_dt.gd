@@ -157,12 +157,21 @@ static func _accesorios(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> v
 ## `c1`/`c2`: colores del club, para el chándal y la bufanda.
 static func crear(padre: Node3D, asp_guardado: Dictionary, c1: Color = Color("1f5fa8"), c2: Color = Color.WHITE) -> Dictionary:
 	var a := aspecto(asp_guardado)
-	var d := FutbolistaQ.crear(float(a["altura"]), String(a["cuerpo"]))
+	var mb := String(a.get("modelo", ""))
+	var d := FutbolistaQ.crear(float(a["altura"]), String(a["cuerpo"]), mb)
 	if d.is_empty():
 		return d
 	padre.add_child(d["nodo"])
 	FutbolistaQ.terminar(d, false)
 	_cuerpo(d, a)
+	if mb != "" and FutbolistaQ.base_extra(mb, String(a["cuerpo"])) != null:
+		## Modelo base con su ropa de fábrica: solo animación (sin vestidor, pelo ni accesorios).
+		var ap0: AnimationPlayer = d["anim"]
+		var q0 := parado_persona(d)
+		if q0 != "":
+			ap0.play(q0)
+		PersonajeVida.animar(d)
+		return d
 	_vestir(d, a, c1, c2)
 	var corte := String(a["pelo"])
 	## Con gorra, el pelo queda debajo: solo asoma lo corto. Antes se
