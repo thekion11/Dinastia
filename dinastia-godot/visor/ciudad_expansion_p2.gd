@@ -201,13 +201,13 @@ func _materiales() -> void:
 	## Etapa 4: acera de baldosa con juntas y solar de hormigón, no colores lisos.
 	_mat["acera"] = CityBuilder.mojable(Texturas.baldosa(Color(0.62, 0.61, 0.58), 53))
 	_mat["solar"] = Texturas.hormigon(Color(0.42, 0.42, 0.41), 29)
-	_mat["linea"] = b._mat_simple(Color(0.92, 0.9, 0.82), 0.7)
+	_mat["linea"] = b._mat_unico(Color(0.92, 0.9, 0.82), 0.7)
 	_mat["cesped"] = Texturas.cesped(Color(0.27, 0.48, 0.24), 37)
-	_mat["hoja"] = b._mat_simple(Color(0.18, 0.4, 0.2), 0.9)
-	_mat["tronco"] = b._mat_simple(Color(0.35, 0.26, 0.18), 0.9)
-	_mat["claro"] = b._mat_simple(Color(0.9, 0.89, 0.86), 0.7)
+	_mat["hoja"] = b._mat_unico(Color(0.18, 0.4, 0.2), 0.9)
+	_mat["tronco"] = b._mat_unico(Color(0.35, 0.26, 0.18), 0.9)
+	_mat["claro"] = b._mat_unico(Color(0.9, 0.89, 0.86), 0.7)
 	_mat["vidrio"] = b._vidrio_oscuro()
-	_mat["piedra"] = b._mat_simple(Color(0.84, 0.8, 0.7), 0.8)
+	_mat["piedra"] = b._mat_unico(Color(0.84, 0.8, 0.7), 0.8)
 	var agua := StandardMaterial3D.new()
 	agua.albedo_color = Color(0.12, 0.4, 0.55)
 	agua.roughness = 0.08
@@ -221,7 +221,7 @@ func _lote(mat: String, pos: Vector3, tam: Vector3) -> void:
 
 func _mat_det(clave: String, c: Color, rug: float) -> StandardMaterial3D:
 	if not _mats_det.has(clave):
-		_mats_det[clave] = b._mat_simple(c, rug)
+		_mats_det[clave] = b._mat_unico(c, rug)
 	return _mats_det[clave]
 
 ## LOS APOYOS DEL PUENTE (16-10-2026, «los tableros flotan o tienen apoyos
