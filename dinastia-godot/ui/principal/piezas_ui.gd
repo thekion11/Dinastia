@@ -109,7 +109,8 @@ func _dato(etiqueta: String, valor: String, color: Color, padre: Node = null) ->
 	a.text = etiqueta
 	a.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	a.clip_text = true
-	a.tooltip_text = etiqueta
+	a.tooltip_text = AyudaDatos.de(etiqueta)   ## (M-305) qué es el dato, si hay explicación
+	a.mouse_filter = Control.MOUSE_FILTER_PASS
 	h.add_child(a)
 	var b := p._texto(12, color)
 	b.text = valor
