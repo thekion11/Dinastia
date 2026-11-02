@@ -230,15 +230,16 @@ func _lote_det(clave: String, centro: Vector3, tam: Vector3, giro: float) -> voi
 		_lotes_det[clave] = [] as Array[Transform3D]
 	(_lotes_det[clave] as Array).append(Transform3D(Basis(Vector3.UP, giro) * Basis.from_scale(tam), centro))
 
-## (28-10) Los detalles de edificio, un MultiMesh por clave y celda de 100 m (como hace `Optimizar.trocear`,
-## que a estos no los toca: el nombre «Edificios…» lo evita). Los chicos de azotea (equipos y depósito)
-## llevan el mismo corte de distancia (320 m) que `Optimizar.distancias` daba a cada caja suelta.
+## (28-10) Los detalles de edificio, un MultiMesh por clave y celda de `Optimizar.CELDA` (160 m: las mismas
+## celdas en que `Optimizar.agrupar` los juntaba cuando eran nodos sueltos, así se dibujan con las mismas
+## llamadas; `Optimizar.trocear` no los toca: el nombre «Edificios…» lo evita). Los chicos de azotea (equipos
+## y depósito) llevan el mismo corte de distancia (320 m) que `Optimizar.distancias` daba a cada caja suelta.
 const CORTE_DET := {"equipo": 320.0, "deposito": 320.0}
 func _volcar_lotes_det() -> void:
 	for clave: String in _lotes_det:
 		var por_celda := {}
 		for t: Transform3D in _lotes_det[clave]:
-			var k := Vector2i(floori(t.origin.x / 100.0), floori(t.origin.z / 100.0))
+			var k := Vector2i(floori(t.origin.x / Optimizar.CELDA), floori(t.origin.z / Optimizar.CELDA))
 			if not por_celda.has(k):
 				por_celda[k] = [] as Array[Transform3D]
 			(por_celda[k] as Array).append(t)
