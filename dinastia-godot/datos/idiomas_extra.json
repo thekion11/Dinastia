@@ -6698,7 +6698,14 @@
   "Lectura de pantalla activada": "Screen reader on",
   "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Reads aloud, with the system voice, the button or field that has focus (controller, Tab or click). Needs voices installed on the device.",
   "activado": "on",
-  "desactivado": "off"
+  "desactivado": "off",
+  "%d lesión(es) grave(s)": "%d serious injury(ies)",
+  "rasgo frágil": "fragile trait",
+  "físico %d": "fitness %d",
+  "alto": "high",
+  "medio": "medium",
+  "Riesgo de lesión %s: %s. Dale descanso o bájale la carga en Entrenar.": "Injury risk %s: %s. Rest him or lower his load in Training.",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  ⚠/△ riesgo de lesión alto/medio  ·  rojo: no disponible": "Ⓒ captain  ·  🔻 transfer-listed  ·  🩹 injured  ·  🚫 suspended  ·  ✦ special skill  ·  ↗ (green): young with room to grow  ·  ⚠/△ high/medium injury risk  ·  red: unavailable"
  },
  "pt": {
   "Historia": "História",
@@ -13399,7 +13406,14 @@
   "Lectura de pantalla activada": "Leitura de tela ativada",
   "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Lê em voz alta, com a voz do sistema, o botão ou campo que tem o foco (controle, Tab ou clique). Precisa de vozes instaladas no aparelho.",
   "activado": "ativado",
-  "desactivado": "desativado"
+  "desactivado": "desativado",
+  "%d lesión(es) grave(s)": "%d lesão(ões) grave(s)",
+  "rasgo frágil": "traço frágil",
+  "físico %d": "físico %d",
+  "alto": "alto",
+  "medio": "médio",
+  "Riesgo de lesión %s: %s. Dale descanso o bájale la carga en Entrenar.": "Risco de lesão %s: %s. Dê descanso ou reduza a carga em Treinar.",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  ⚠/△ riesgo de lesión alto/medio  ·  rojo: no disponible": "Ⓒ capitão  ·  🔻 transferível  ·  🩹 lesionado  ·  🚫 suspenso  ·  ✦ habilidade especial  ·  ↗ (verde): jovem com margem  ·  ⚠/△ risco de lesão alto/médio  ·  vermelho: indisponível"
  },
  "patrones": [
   [
@@ -25866,7 +25880,14 @@
   "Lectura de pantalla activada": "Lecture d'écran activée",
   "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Lit à voix haute, avec la voix du système, le bouton ou le champ qui a le focus (manette, Tab ou clic). Nécessite des voix installées sur l'appareil.",
   "activado": "activé",
-  "desactivado": "désactivé"
+  "desactivado": "désactivé",
+  "%d lesión(es) grave(s)": "%d blessure(s) grave(s)",
+  "rasgo frágil": "trait fragile",
+  "físico %d": "physique %d",
+  "alto": "élevé",
+  "medio": "moyen",
+  "Riesgo de lesión %s: %s. Dale descanso o bájale la carga en Entrenar.": "Risque de blessure %s : %s. Repos ou charge réduite dans Entraînement.",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  ⚠/△ riesgo de lesión alto/medio  ·  rojo: no disponible": "Ⓒ capitaine  ·  🔻 transférable  ·  🩹 blessé  ·  🚫 suspendu  ·  ✦ aptitude spéciale  ·  ↗ (vert) : jeune avec de la marge  ·  ⚠/△ risque de blessure élevé/moyen  ·  rouge : indisponible"
  },
  "it": {
   "Historia": "Storia",
@@ -32567,7 +32588,14 @@
   "Lectura de pantalla activada": "Lettura dello schermo attiva",
   "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Legge ad alta voce, con la voce di sistema, il pulsante o il campo che ha il focus (controller, Tab o clic). Servono voci installate nel dispositivo.",
   "activado": "attivo",
-  "desactivado": "disattivo"
+  "desactivado": "disattivo",
+  "%d lesión(es) grave(s)": "%d infortunio(i) grave(i)",
+  "rasgo frágil": "tratto fragile",
+  "físico %d": "fisico %d",
+  "alto": "alto",
+  "medio": "medio",
+  "Riesgo de lesión %s: %s. Dale descanso o bájale la carga en Entrenar.": "Rischio infortunio %s: %s. Fallo riposare o abbassa il carico in Allenamento.",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  ⚠/△ riesgo de lesión alto/medio  ·  rojo: no disponible": "Ⓒ capitano  ·  🔻 trasferibile  ·  🩹 infortunato  ·  🚫 squalificato  ·  ✦ abilità speciale  ·  ↗ (verde): giovane con margine  ·  ⚠/△ rischio infortunio alto/medio  ·  rosso: non disponibile"
  },
  "de": {
   "Historia": "Geschichte",
@@ -39268,7 +39296,14 @@
   "Lectura de pantalla activada": "Bildschirmvorlesen eingeschaltet",
   "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Liest mit der Systemstimme den Button oder das Feld vor, das den Fokus hat (Controller, Tab oder Klick). Braucht installierte Stimmen auf dem Gerät.",
   "activado": "ein",
-  "desactivado": "aus"
+  "desactivado": "aus",
+  "%d lesión(es) grave(s)": "%d schwere Verletzung(en)",
+  "rasgo frágil": "Merkmal „anfällig“",
+  "físico %d": "Fitness %d",
+  "alto": "hoch",
+  "medio": "mittel",
+  "Riesgo de lesión %s: %s. Dale descanso o bájale la carga en Entrenar.": "Verletzungsrisiko %s: %s. Pause geben oder die Belastung im Training senken.",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  ⚠/△ riesgo de lesión alto/medio  ·  rojo: no disponible": "Ⓒ Kapitän  ·  🔻 auf der Transferliste  ·  🩹 verletzt  ·  🚫 gesperrt  ·  ✦ Spezialfähigkeit  ·  ↗ (grün): jung mit Luft nach oben  ·  ⚠/△ Verletzungsrisiko hoch/mittel  ·  rot: nicht verfügbar"
  },
  "ca": {
   "Historia": "Història",
@@ -45969,7 +46004,14 @@
   "Lectura de pantalla activada": "Lectura de pantalla activada",
   "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Llegeix en veu alta, amb la veu del sistema, el botó o el camp que té el focus (comandament, Tab o clic). Necessita veus instal·lades a l'equip.",
   "activado": "activat",
-  "desactivado": "desactivat"
+  "desactivado": "desactivat",
+  "%d lesión(es) grave(s)": "%d lesió(ns) greu(s)",
+  "rasgo frágil": "tret fràgil",
+  "físico %d": "físic %d",
+  "alto": "alt",
+  "medio": "mitjà",
+  "Riesgo de lesión %s: %s. Dale descanso o bájale la carga en Entrenar.": "Risc de lesió %s: %s. Dona-li descans o abaixa-li la càrrega a Entrenar.",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  ⚠/△ riesgo de lesión alto/medio  ·  rojo: no disponible": "Ⓒ capità  ·  🔻 transferible  ·  🩹 lesionat  ·  🚫 sancionat  ·  ✦ habilitat especial  ·  ↗ (verd): jove amb marge  ·  ⚠/△ risc de lesió alt/mitjà  ·  vermell: no disponible"
  },
  "pl": {
   "Club": "Klub",
@@ -52946,7 +52988,14 @@
   "Lectura de pantalla activada": "Czytnik ekranu włączony",
   "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Czyta na głos, głosem systemu, przycisk lub pole mające fokus (pad, Tab lub kliknięcie). Wymaga głosów zainstalowanych na urządzeniu.",
   "activado": "włączone",
-  "desactivado": "wyłączone"
+  "desactivado": "wyłączone",
+  "%d lesión(es) grave(s)": "%d poważna(e) kontuzja(e)",
+  "rasgo frágil": "cecha: kruchy",
+  "físico %d": "kondycja %d",
+  "alto": "wysokie",
+  "medio": "średnie",
+  "Riesgo de lesión %s: %s. Dale descanso o bájale la carga en Entrenar.": "Ryzyko kontuzji %s: %s. Daj mu odpocząć albo obniż obciążenie w Treningu.",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  ⚠/△ riesgo de lesión alto/medio  ·  rojo: no disponible": "Ⓒ kapitan  ·  🔻 na liście transferowej  ·  🩹 kontuzjowany  ·  🚫 zawieszony  ·  ✦ umiejętność specjalna  ·  ↗ (zielony): młody z potencjałem  ·  ⚠/△ ryzyko kontuzji wysokie/średnie  ·  czerwony: niedostępny"
  },
  "tr": {
   "Club": "Kulüp",
@@ -59923,6 +59972,13 @@
   "Lectura de pantalla activada": "Ekran okuyucu açık",
   "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Odaktaki düğmeyi veya alanı sistem sesiyle yüksek sesle okur (kumanda, Tab veya tıklama). Cihazda yüklü sesler gerekir.",
   "activado": "açık",
-  "desactivado": "kapalı"
+  "desactivado": "kapalı",
+  "%d lesión(es) grave(s)": "%d ciddi sakatlık",
+  "rasgo frágil": "kırılgan özelliği",
+  "físico %d": "fiziksel %d",
+  "alto": "yüksek",
+  "medio": "orta",
+  "Riesgo de lesión %s: %s. Dale descanso o bájale la carga en Entrenar.": "Sakatlık riski %s: %s. Dinlendir veya Antrenman'da yükünü azalt.",
+  "Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  ⚠/△ riesgo de lesión alto/medio  ·  rojo: no disponible": "Ⓒ kaptan  ·  🔻 transfer listesinde  ·  🩹 sakat  ·  🚫 cezalı  ·  ✦ özel yetenek  ·  ↗ (yeşil): gelişim payı olan genç  ·  ⚠/△ sakatlık riski yüksek/orta  ·  kırmızı: oynayamaz"
  }
 }
