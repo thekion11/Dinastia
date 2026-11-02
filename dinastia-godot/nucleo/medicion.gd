@@ -63,7 +63,8 @@ func _ready() -> void:
 	_json["ram_mb"] = int(OS.get_memory_info().get("physical", 0)) / 1048576
 	_json["renderizador"] = RenderingServer.get_current_rendering_method()
 	_json["modo"] = "largo" if largo else "corto"
-	_json["pantalla_hz"] = DisplayServer.screen_get_refresh_rate()
+	var hz := DisplayServer.screen_get_refresh_rate()
+	_json["pantalla_hz"] = 0.0 if (is_nan(hz) or hz < 0.0) else hz   ## Xvfb/sin pantalla devuelve NaN
 	_linea("Modo: %s · vsync apagado · pantalla %.0f Hz" % [_json["modo"], _json["pantalla_hz"]])
 	_linea("DINASTÍA %s · Godot %s · %s" % [ProjectSettings.get_setting("application/config/version", ""),
 		Engine.get_version_info()["string"], Time.get_datetime_string_from_system()])
