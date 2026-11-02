@@ -89,6 +89,9 @@ static func _sitios_de_grada(raiz: Node3D) -> Array:
 	var clave := raiz.get_instance_id()
 	if _cache_sitios.has(clave):
 		return _cache_sitios[clave]
+	for k: int in _cache_sitios.keys():   ## estadios ya liberados (M-386); un id reutilizado daría los sitios de otro estadio
+		if not is_instance_id_valid(k):
+			_cache_sitios.erase(k)
 	var mejores: Array = []
 	var dist: Array = []
 	for i in 8:
