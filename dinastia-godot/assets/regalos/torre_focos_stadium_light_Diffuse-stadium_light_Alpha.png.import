@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c1lbqabakh6x4"
-path="res://.godot/imported/torre_focos_stadium_light_Diffuse-stadium_light_Alpha.png-6a637ee17ac61d56fc42829aed5269a4.ctex"
+path.s3tc="res://.godot/imported/torre_focos_stadium_light_Diffuse-stadium_light_Alpha.png-6a637ee17ac61d56fc42829aed5269a4.s3tc.ctex"
+path.etc2="res://.godot/imported/torre_focos_stadium_light_Diffuse-stadium_light_Alpha.png-6a637ee17ac61d56fc42829aed5269a4.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "e80dc0cddfbb099c352606e519431898"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/regalos/torre_focos_stadium_light_Diffuse-stadium_light_Alpha.png"
-dest_files=["res://.godot/imported/torre_focos_stadium_light_Diffuse-stadium_light_Alpha.png-6a637ee17ac61d56fc42829aed5269a4.ctex"]
+dest_files=["res://.godot/imported/torre_focos_stadium_light_Diffuse-stadium_light_Alpha.png-6a637ee17ac61d56fc42829aed5269a4.s3tc.ctex", "res://.godot/imported/torre_focos_stadium_light_Diffuse-stadium_light_Alpha.png-6a637ee17ac61d56fc42829aed5269a4.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
