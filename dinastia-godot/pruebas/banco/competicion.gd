@@ -135,6 +135,17 @@ func _probar_copa() -> void:
 		if c25.plantilla.size() < 25:
 			chicos += 1
 	_comprobar(chicos == 0, "los %d clubes de 5 países arrancan con al menos 25 jugadores (%d con menos)" % [m25.clubes.size(), chicos])
+	## M-219 (2-11-2026): el club intervenido de Primera baja aunque la tabla lo salvara, y sube en su lugar el mejor sano de Segunda.
+	var t1: Array = m25.ligas[0].tabla()
+	var t2: Array = m25.ligas[1].tabla()
+	var intervenido: Club = (t1[0] as Dictionary)["club"]   ## el líder: ni cerca de bajar
+	var ins := Insolvencia.new()
+	ins.rojo_ia[intervenido.id] = Banco.SEM_VEEDOR
+	var bajan: Array[Club] = []
+	var suben: Array[Club] = []
+	var castigados := ins.descenso_administrativo(m25, t1, t2, bajan, suben)
+	_comprobar(castigados.has(intervenido) and bajan.has(intervenido) and suben.size() == 1 and not ins.intervenido(m25, suben[0]),
+		"descenso administrativo: el intervenido baja y sube en su lugar un club sano (%d bajan, %d suben)" % [bajan.size(), suben.size()])
 	var copa := Copa.new("Copa de prueba")
 	copa.preparar(aspirantes)
 	_linea("  %d clubes inscritos -> %d en el cuadro (%s)" % [
