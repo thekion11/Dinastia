@@ -227,7 +227,7 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 	## juega, no hasta el fondo de una tribuna que la camara raras veces
 	## encuadra entera-. Medido con `pruebas/medir_rendimiento.gd`, ver LEEME.md del historial de git.
 	luz.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS if nivel >= ALTO \
-		else DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
+		else DirectionalLight3D.SHADOW_ORTHOGONAL
 	luz.directional_shadow_max_distance = 420.0 if nivel >= ALTO else 320.0
 	luz.directional_shadow_split_1 = 0.06
 	luz.directional_shadow_split_2 = 0.16
