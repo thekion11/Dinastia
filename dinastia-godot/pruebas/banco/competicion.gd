@@ -162,6 +162,14 @@ func _probar_copa() -> void:
 	## El premio es fijo y se cobra. Es lo que hace que una copa cambie el ano
 	## de un club chico.
 	var antes := copa.campeon.saldo
+	## 2-11 (auditoría 28-10): con un número impar de vivos el último club pasa con un «bye», no se descarta.
+	var copa_i := Copa.new("Impar")
+	var impares: Array[Club] = []
+	for i in 3:
+		impares.append(aspirantes[i])
+	copa_i.vivos = impares.duplicate()
+	copa_i.jugar_ronda()
+	_comprobar(copa_i.vivos.size() == 2 and copa_i.vivos.has(impares[2]), "copa con 3 vivos: el último pasa con bye (%d vivos)" % copa_i.vivos.size())
 	var copa2 := Copa.new("Otra")
 	copa2.preparar(aspirantes)
 	var c2 := copa2.jugar_hasta_el_final()
