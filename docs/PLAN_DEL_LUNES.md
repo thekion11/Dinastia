@@ -19,6 +19,8 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 **Ramas viejas** (detalle y listas en `docs/04_auditorias/ramas_viejas_2026-11-02.md`): de 100 ramas remotas, 24 ya están en `main` (nada que unir, borrables) y 76 NO comparten historia con `main` porque `main` se reescribió el 24-10 y el 27-10: por eso no se unen (un merge traería de vuelta la historia vieja, ~4.000 archivos de diferencia); su trabajo útil ya se integró a mano y lo que falte se rescata por cherry-pick de un commit. Pendiente del dueño: borrar la lista A, decidir la lista B, cerrar los PR #83-#85 (`rend2` y `rend4` ya están en `main`) y borrar la etiqueta `latest`. Nada se borró.
 
+**Pendiente para limpiar el repositorio (decisión del dueño, 2-11: «por ahora déjalo»)**: volver a revisar las ramas viejas y, cuando se decida, borrar por grupos. Ya hecha la comparación archivo por archivo contra `main` (sección final de `ramas_viejas_2026-11-02.md`): conservar `ccr-a64d04fd-r5uoai`, `respaldo-historia-2026-10-24` y `ccr-76d707c5-dwse9h` (tienen archivos que `main` no tiene); rescatar si se quiere los 9 `pelo_*.res`; el resto es borrable con orden explícita. Hasta entonces no se toca ninguna rama.
+
 ## ESTADO AL CIERRE DEL 28-10 (para retomar el lunes)
 
 - **Rama**: todo unido en `claude/dazzling-rubin-v7rfyi` (líder). Banco «FIN. 0 fallos», especiales «todo en orden», prueba visual en 0 fallos (referencias al día), ningún script de más de 450 líneas. Registro detallado del 27-28-10: `docs/04_auditorias/CIERRE_2026-10-28.md`.
