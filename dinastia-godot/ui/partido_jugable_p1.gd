@@ -60,6 +60,7 @@ var _en_campo: Array = []
 var _ceremonia: CeremoniaPartido
 var _btn_saltar: Button
 var _cine: CineGol
+var _interp: InterpolacionPartido
 var _repe: Repeticion
 var _rotulo_repe: PanelContainer
 var _hud: Array[Control] = []

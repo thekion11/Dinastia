@@ -235,6 +235,7 @@ func _montar(duracion_mitad: float) -> void:
 	if carrera != null:
 		motor.lanza_usuario = {"corner": bool(carrera.lanzador.get("corners", true)),
 			"falta": bool(carrera.lanzador.get("faltas", false)), "penal": bool(carrera.lanzador.get("penales", false)), "banda": false}
+	_interp = InterpolacionPartido.montar(self, _raiz)
 	motor.aviso.connect(_mostrar_banner)
 	motor.sustitucion.connect(func(_s: String, _e: String, _l: bool) -> void: _escena_cambio())
 	## El silbato con el gesto del árbitro (M-106).
@@ -416,7 +417,8 @@ func _process(delta: float) -> void:
 		PlayerSpawner.despejar_rotulos(motor.jugadores, _cam, motor.balon.position, _vp.size.y if _vp != null else 900.0)
 	if motor == null:
 		return
-	_actualizar_camara(delta)
+	if _interp == null or not _interp.activa:   ## con la interpolación, la cámara se mueve en el paso de física (`InterpolacionPartido`)
+		_actualizar_camara(delta)
 	var yo := motor.usuario
 	_marcador.text = "%s  %d - %d  %s" % [_abrev(local.nombre), motor.goles[0], motor.goles[1], _abrev(visita.nombre)]
 	_reloj.text = "%d'" % motor.minuto()
