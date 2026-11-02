@@ -240,11 +240,16 @@ func _resto() -> void:
 	await _marca("_trafico")
 	await ExpansionTardia.bloques_restantes(expansion)
 	await ExpansionTardia.mobiliario(expansion)
+	if not modo_prologo:
+		ExpansionTardia.afueras(expansion)
+		await _marca("exp.afueras_tardio")
 	expansion._volcar_lotes()
 	vestir_todas_las_torres()   ## las torres de las manzanas tardías (las de antes ya llevan su material: no se repiten)
 	await _marca("exp_lotes_tardio")
 	await _optimizar()
 	completa = true
+	if not modo_prologo:
+		diferir = false
 	resto_listo.emit()
 
 ## Las pasadas de optimización y las colisiones.
@@ -255,7 +260,9 @@ func _optimizar() -> void:
 		Optimizar.butacas_livianas(self, true)
 		Optimizar.distancias(self)
 		if modo_prologo:   ## (sigue puesto hasta que `completa`: el prólogo lo apaga al acabar `_resto`)
-			OptimizarGrada.limitar_vista(self, 380.0)   ## prólogo (2-11): nada pequeño se dibuja a más de 380 m
+			OptimizarGrada.limitar_vista(self, 380.0)
+		elif EscalaMovil.es_movil() or Calidad.motor_ligero or OS.get_environment("MOVIL_SIM") != "":   ## móvil / motor ligero: no se dibuja lo pequeño a más de 450 m
+			OptimizarGrada.limitar_vista(self, 450.0)   ## prólogo (2-11): nada pequeño se dibuja a más de 380 m
 		await _marca("despejar")
 		## (30-10-2026: aquí se repetían primitivas, butacas livianas y distancias -una copia de
 		## una fusión vieja-; la segunda pasada no cambiaba nada de la escena y costaba ~150 ms.)
