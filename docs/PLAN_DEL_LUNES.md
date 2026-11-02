@@ -679,7 +679,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-285 | P2 | PARCIAL | Navegación por mando en menús | 2-11: con mando, la primera tarjeta de cada menú toma el foco y la cruceta recorre las tarjetas (`PantallaMenu.portada`); el panel de controles ya lo hacía; faltan las listas de las pantallas de gestión (foco inicial y orden de tabulación) |
 | M-287 | P2 | PENDIENTE | Rendimiento de menús: refresco ya 14× más rápido; sin pruebas de… | sin medida de apertura de pantallas |
 | M-294 | P2 | PARCIAL | Comparador de jugadores existe; sin comparativa de club/estadio | comparador de jugadores; sin club/estadio |
-| M-295 | P2 | SIN VERIFICAR | Sin gráficos históricos (valor, forma) en ficha | «crecimiento por temporada» en la ficha; sin gráficos verificados |
 | M-304 | P2 | PARCIAL | Animaciones de transición entre pantallas desiguales | `Animar` en 16 archivos; sin sistema común de transición |
 | M-312 | P2 | PARCIAL | Sin modo «streamer» (ocultar datos sensibles/real) | ajuste «Caras reales: FOTO / RECREACIÓN» (`Cara.usar_fotos`); sin modo streamer |
 | M-435 | P2 | PENDIENTE | Sin gatillos analógicos para potencia de pase | sin gatillos analógicos |

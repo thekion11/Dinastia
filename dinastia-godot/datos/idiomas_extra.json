@@ -6994,7 +6994,11 @@
   "21 años o menos": "21 or younger",
   "📝 Fin de contrato": "📝 Contract ending",
   "Les queda un año o menos: renueva o véndelos": "One year or less left: renew or sell them",
-  "Nadie cumple ese filtro ahora mismo.": "Nobody matches that filter right now."
+  "Nadie cumple ese filtro ahora mismo.": "Nobody matches that filter right now.",
+  "— media": "— rating",
+  "— valor": "— value",
+  "%s · media %d": "%s · rating %d",
+  " · valor %s": " · value %s"
  },
  "pt": {
   "Historia": "História",
@@ -13991,7 +13995,11 @@
   "21 años o menos": "21 anos ou menos",
   "📝 Fin de contrato": "📝 Fim de contrato",
   "Les queda un año o menos: renueva o véndelos": "Falta um ano ou menos: renove ou venda",
-  "Nadie cumple ese filtro ahora mismo.": "Ninguém atende a esse filtro agora."
+  "Nadie cumple ese filtro ahora mismo.": "Ninguém atende a esse filtro agora.",
+  "— media": "— média",
+  "— valor": "— valor",
+  "%s · media %d": "%s · média %d",
+  " · valor %s": " · valor %s"
  },
  "patrones": [
   [
@@ -26765,7 +26773,11 @@
   "21 años o menos": "21 ans ou moins",
   "📝 Fin de contrato": "📝 Fin de contrat",
   "Les queda un año o menos: renueva o véndelos": "Un an ou moins restant : prolongez ou vendez-les",
-  "Nadie cumple ese filtro ahora mismo.": "Personne ne correspond à ce filtre pour l'instant."
+  "Nadie cumple ese filtro ahora mismo.": "Personne ne correspond à ce filtre pour l'instant.",
+  "— media": "— note",
+  "— valor": "— valeur",
+  "%s · media %d": "%s · note %d",
+  " · valor %s": " · valeur %s"
  },
  "it": {
   "Historia": "Storia",
@@ -33762,7 +33774,11 @@
   "21 años o menos": "21 anni o meno",
   "📝 Fin de contrato": "📝 Contratto in scadenza",
   "Les queda un año o menos: renueva o véndelos": "Resta un anno o meno: rinnova o vendili",
-  "Nadie cumple ese filtro ahora mismo.": "Nessuno corrisponde a quel filtro ora."
+  "Nadie cumple ese filtro ahora mismo.": "Nessuno corrisponde a quel filtro ora.",
+  "— media": "— media",
+  "— valor": "— valore",
+  "%s · media %d": "%s · media %d",
+  " · valor %s": " · valore %s"
  },
  "de": {
   "Historia": "Geschichte",
@@ -40759,7 +40775,11 @@
   "21 años o menos": "21 Jahre oder jünger",
   "📝 Fin de contrato": "📝 Vertragsende",
   "Les queda un año o menos: renueva o véndelos": "Ein Jahr oder weniger: verlängern oder verkaufen",
-  "Nadie cumple ese filtro ahora mismo.": "Gerade passt niemand zu diesem Filter."
+  "Nadie cumple ese filtro ahora mismo.": "Gerade passt niemand zu diesem Filter.",
+  "— media": "— Wertung",
+  "— valor": "— Marktwert",
+  "%s · media %d": "%s · Wertung %d",
+  " · valor %s": " · Marktwert %s"
  },
  "ca": {
   "Historia": "Història",
@@ -47756,7 +47776,11 @@
   "21 años o menos": "21 anys o menys",
   "📝 Fin de contrato": "📝 Fi de contracte",
   "Les queda un año o menos: renueva o véndelos": "Els queda un any o menys: renova o ven-los",
-  "Nadie cumple ese filtro ahora mismo.": "Ningú compleix aquest filtre ara mateix."
+  "Nadie cumple ese filtro ahora mismo.": "Ningú compleix aquest filtre ara mateix.",
+  "— media": "— mitjana",
+  "— valor": "— valor",
+  "%s · media %d": "%s · mitjana %d",
+  " · valor %s": " · valor %s"
  },
  "pl": {
   "Club": "Klub",
@@ -55029,7 +55053,11 @@
   "21 años o menos": "21 lat lub mniej",
   "📝 Fin de contrato": "📝 Koniec kontraktu",
   "Les queda un año o menos: renueva o véndelos": "Został rok lub mniej: przedłuż albo sprzedaj",
-  "Nadie cumple ese filtro ahora mismo.": "Nikt nie spełnia teraz tego filtra."
+  "Nadie cumple ese filtro ahora mismo.": "Nikt nie spełnia teraz tego filtra.",
+  "— media": "— ocena",
+  "— valor": "— wartość",
+  "%s · media %d": "%s · ocena %d",
+  " · valor %s": " · wartość %s"
  },
  "tr": {
   "Club": "Kulüp",
@@ -62302,6 +62330,10 @@
   "21 años o menos": "21 yaş veya altı",
   "📝 Fin de contrato": "📝 Sözleşme bitiyor",
   "Les queda un año o menos: renueva o véndelos": "Bir yıl veya daha az kaldı: yenile ya da sat",
-  "Nadie cumple ese filtro ahora mismo.": "Şu anda bu filtreye uyan kimse yok."
+  "Nadie cumple ese filtro ahora mismo.": "Şu anda bu filtreye uyan kimse yok.",
+  "— media": "— reyting",
+  "— valor": "— değer",
+  "%s · media %d": "%s · reyting %d",
+  " · valor %s": " · değer %s"
  }
 }
