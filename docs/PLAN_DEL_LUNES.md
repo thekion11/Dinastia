@@ -14,6 +14,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - **Auditoría de código del 28-10**: lo arreglado y lo pendiente (materiales sin compartir, vías sin conectar, probables del guardado, `MotorLibre`) está en `CIERRE_2026-10-28.md` §«Auditoría»; las órdenes sin completar y los fallos abiertos, en sus dos secciones siguientes.
 
 ## ESTADO AL 02-11 (fases 1-9 hechas)
+- ABIERTO en `main` (no es de estas fases; falla también en `origin/main` solo): `probar_rendimiento_adaptativo` («no hay sexto escalón, y avisó de los cinco»). `prueba_menu_ciudad_pie` falló una vez con la máquina cargada y pasa sola.
 - Las 9 fases de la orden 20 están hechas: registro en `docs/04_auditorias/CIERRE_FASES_2026-11-02.md`. Para el dueño:
   encender o no `PMOT_PASE` (R2), calibrar los goles (≈2,3 por partido) y su nota 1-100 sobre el vídeo del partido completo
   (orden 21; enviado el 02-11, 9 min 23 s, grabado con `pruebas/video_partido.tscn`, CEREMONIA=1 RITMO=rapido, 20 fps).
