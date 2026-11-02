@@ -1,8 +1,8 @@
 extends BaseIdea
 ## Carga diferida del prólogo: al terminar, la ciudad tiene las mismas piezas que construida de seguida (misma suma de instancias de MultiMesh y mismas mallas por clase).
 
-func _huella(diferir: bool) -> Dictionary:
-	CityBuilder.modo_prologo = true
+func _huella(diferir: bool, prologo := true) -> Dictionary:
+	CityBuilder.modo_prologo = prologo
 	CityBuilder.diferir = diferir
 	var m := Mundo.new()
 	m.generar(["CHI"], 4713)
@@ -11,7 +11,9 @@ func _huella(diferir: bool) -> Dictionary:
 	var vista := VistaCiudad.new()
 	vista.por_partes = true
 	add_child(vista)
+	var t0 := Time.get_ticks_msec()
 	await vista.abrir(club, m.obras, m.ciudad, m.perfil_estadio_de(club))
+	var ms_visible := Time.get_ticks_msec() - t0
 	var cb := vista.get("_ciudad") as CityBuilder
 	var espera := 0
 	while not cb.completa and espera < 4000:
@@ -19,7 +21,7 @@ func _huella(diferir: bool) -> Dictionary:
 		espera += 1
 	for i in 40:   ## los trabajos «para el siguiente fotograma» (zapatillas de los peatones…) terminan igual en los dos modos
 		await get_tree().process_frame
-	var d := {"completa": cb.completa, "circulos": cb.circulos.size(), "frames": espera}
+	var d := {"ms_visible": ms_visible, "completa": cb.completa, "circulos": cb.circulos.size(), "frames": espera}
 	var instancias := 0
 	var mallas := 0
 	var multis := 0
@@ -75,3 +77,12 @@ func _probar() -> void:
 	_comprobar(a["vehiculos"] == b["vehiculos"] and bool(b["trafico"]), "mismo tráfico (%d vehículos)" % int(b["vehiculos"]))
 	_comprobar(_casi(a["circulos"], b["circulos"]), "mismos obstáculos de colisión (%d / %d)" % [int(a["circulos"]), int(b["circulos"])])
 	_comprobar(a["edificios"] == b["edificios"], "mismos edificios contados (%d / %d)" % [int(a["edificios"]), int(b["edificios"])])
+
+	## La ciudad ENTERA (la de «Ver ciudad»): lo mismo, y se mide cuánto tarda en verse.
+	var c: Dictionary = await _huella(false, false)
+	var e: Dictionary = await _huella(true, false)
+	print("CIUDAD ENTERA: de seguida %d ms hasta verla; diferida %d ms" % [int(c["ms_visible"]), int(e["ms_visible"])])
+	_comprobar(bool(c["completa"]) and bool(e["completa"]), "la ciudad entera termina en los dos modos")
+	_comprobar(int(e["ms_visible"]) < int(c["ms_visible"]) * 0.7, "y se ve en %d ms en vez de %d ms" % [int(e["ms_visible"]), int(c["ms_visible"])])
+	_comprobar(_casi(c["instancias"], e["instancias"]) and _casi(c["mallas"], e["mallas"]) and _casi(c["multimesh"], e["multimesh"]), "con las mismas piezas (instancias %d / %d, mallas %d / %d)" % [int(c["instancias"]), int(e["instancias"]), int(c["mallas"]), int(e["mallas"])])
+	_comprobar(c["vehiculos"] == e["vehiculos"] and c["edificios"] == e["edificios"], "mismo tráfico (%d) y mismos edificios (%d)" % [int(e["vehiculos"]), int(e["edificios"])])

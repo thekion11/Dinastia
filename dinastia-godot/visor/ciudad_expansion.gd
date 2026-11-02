@@ -171,14 +171,9 @@ func construir() -> void:
 		tardio_pendiente = true   ## el mobiliario urbano se hace después (`ExpansionTardia`)
 	else:
 		await ExpansionTardia.mobiliario(self)
-	if not CityBuilder.modo_prologo:   ## lo lejano, fuera del prólogo
-		cuenta["autopista"] = Autopista.montar(b)
-		_parque_eolico()
-		_deposito_agua()
 	redes = RedesCiudadVista.crear(self, 20261027)
-	if not CityBuilder.modo_prologo:
-		tele_nodo = Teleferico.montar(b)
-		teleferico = tele_nodo.datos()
+	if not CityBuilder.modo_prologo and not CityBuilder.diferir:   ## lo lejano (autopista, eólico, depósito, teleférico), fuera del prólogo y, con carga diferida, después
+		ExpansionTardia.afueras(self)
 	await b._marca("exp.afueras")
 	_volcar_lotes()
 	await b._marca("exp_lotes")

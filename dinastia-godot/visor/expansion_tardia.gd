@@ -61,3 +61,14 @@ static func mobiliario(ex: CiudadExpansion) -> void:
 	ex._kenney_calles()
 	ex.tardio_pendiente = false
 	await ex.b._marca("exp.mobiliario")
+
+## Lo más lejano de la ciudad (no está en el prólogo): la autopista, el parque eólico, el depósito de agua y el teleférico.
+static func afueras(ex: CiudadExpansion) -> void:
+	sembrar(ex, "autopista")
+	ex.cuenta["autopista"] = Autopista.montar(ex.b)
+	sembrar(ex, "eolico")
+	ex._parque_eolico()
+	sembrar(ex, "deposito")
+	ex._deposito_agua()
+	ex.tele_nodo = Teleferico.montar(ex.b)
+	ex.teleferico = ex.tele_nodo.datos()
