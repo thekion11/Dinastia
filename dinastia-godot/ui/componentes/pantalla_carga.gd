@@ -131,7 +131,9 @@ static func mostrar(padre: Node, mensaje: String) -> PantallaCarga:
 static func dejar_pintar(arbol: SceneTree) -> void:
 	for _i in 2:
 		await arbol.process_frame
-		await RenderingServer.frame_post_draw
+		## En headless no hay dibujo (la señal no llega nunca): solo fotogramas.
+		if DisplayServer.get_name() != "headless":
+			await RenderingServer.frame_post_draw
 
 func _poner_consejo() -> void:
 	var l := lista_consejos()

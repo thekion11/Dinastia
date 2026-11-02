@@ -43,3 +43,24 @@ Las dos camisetas 2D (píxel a píxel en GDScript) se repintaban en cada cambio 
 
 ## Modelos base (fallo 1) — HECHO en parte (2-11-2026)
 Selector «Modelo base» en la pestaña Cuerpo (`HojasPersonaje`) con Atleta (clásico), Campesino y Explorador (hombre y mujer), de «Modular Character Outfits» (CC0, `assets/characters/outfits/`, fuera de LFS con el OK del dueño, 14 MB). Comparten el esqueleto de 65 huesos: llevan las animaciones y los gestos; vienen vestidos (sin vestidor, pelo ni accesorios). Clave `modelo` en el aspecto (`PersonajeDT.BASE`), `FutbolistaQ.MODELOS_BASE`. Faltan: Kenney `characterMedium` (otro esqueleto), MakeHuman (faltan .glb) y los del Drive (sin acceso).
+
+## «Agarra todos» los 11 candidatos (2-11-2026) — estado
+Clonados (superficiales) en /tmp; no se añadieron al repo los que no sirven:
+- **KayKit Adventurers y Skeletons** (CC0): INTEGRADOS como «Modelo base» (9 personajes cartoon, Idle propio, sin armas; `FutbolistaQ.MODELOS_AJENOS`, `assets/characters/kaykit/`, 37 MB fuera de LFS).
+- **Quaternius «Modular Men/Women»** (en `trebeljahr/quaternius-showcase`, CC0, 21 personajes civiles: Casual, Suit, Worker, Formal…): sin animaciones y con otro esqueleto (49/51 huesos); falta retargetear (BoneMap) antes de poder ofrecerlos. Los más útiles para un DT: Suit/Formal/Casual.
+- **Numinia VRM (15) y 3d-anvil (VRM/GLB)** (CC0): VRM necesita un importador de Godot (addon `godot-vrm`); pendiente.
+- **MH2_Asset_Repository_CCO** (5 MB, CC0): ropa/pelo de MakeHuman 2; solo sirve con el flujo MakeHuman (`persona_mh.gd`, faltan los .glb).
+- **Vitruvian-Project** (2,2 GB, CC0): proyecto Blender de humano digital; demasiado pesado y sin .glb listos.
+- **humanizer** (AGPL, herramienta) y **godot-demo-projects** (MIT): no se copian.
+- **assets-kaykit-3d-characters** (copia no oficial): se usó la fuente oficial.
+
+## Tanda 3 (orden directa del dueño, 2-11-2026)
+- **Modular Men/Women** (21 civiles, CC0) integrados como «Modelo base» (filtrados por Hombre/Mujer): sin clips, así que `IdleProcedural` les pone los brazos caídos (medidos desde el hueso real) y respiración/cabeza/cadera por código. Sin retargeting. Kenney: DESCARTADO por el dueño. Siguen sin integrar: VRM (necesita addon), MakeHuman (faltan .glb), Vitruvian (Blender 2,2 GB), herramientas/demos.
+- **Arbusto del prólogo:** sin GPU se hizo por geometría. `PrologoDT.obstaculos_blandos` localiza las cajas de setos/jardineras/arbustos (7 cerca de la puerta) y `PrologoMentor.colocar` empuja a quien aparece fuera de ellas (+0,45 m de margen); prueba `_mentor_sin_solape` en `fcp_crear_partida`. Pendiente de confirmar a ojo con GPU.
+- **Optimización:** se quitó `Escudo.limpiar_cache()` de cada repintado de la vista previa de configuración (re-rasterizaba todos los escudos); repintado 2D del diseñador agrupado.
+- **Aviso:** `PantallaCarga.dejar_pintar` no espera `frame_post_draw` en headless (la señal nunca llega y colgaba el prólogo en las pruebas).
+
+## Tanda 4 (2-11-2026)
+- **VRM:** sin addon: un .vrm es un glTF binario, se renombra a .glb y Godot lo carga (sin MToon). Integrados 2 avatares CC0 de PabloFMM (Starter 01, Arla); el resto del repo Numinia no (autores distintos/licencia no clara). `IdleProcedural` ahora entiende nombres VRM y Mixamo, y un antebrazo mal nombrado («rightLoweArm»). Un AnimationPlayer sin clips cuenta como «sin animaciones».
+- **MakeHuman y Vitruvian:** siguen fuera. MakeHuman: `humanizer` (AGPL) necesita Blender/MakeHuman para generar; los .glb de `persona_mh` los tiene que generar o subir el dueño (`herramientas/makehuman/README.md`). Vitruvian: 2,2 GB de proyecto Blender.
+- **Triángulos/texturas/LOD:** los modelos nuevos son de bajo polígono (KayKit, Modular) o ~4 MB (VRM); las texturas de Campesino/Explorador ya se bajaron a 1024. No se midió ni se hizo LOD (sin GPU aquí).
