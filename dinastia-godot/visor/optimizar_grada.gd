@@ -16,15 +16,7 @@ static func trocear(raiz: Node, tramos := 8) -> int:
 	var hechos := _trocear(raiz, tramos)
 	if Calidad.elegida == Calidad.MEDIO:
 		Optimizar.butacas_livianas(raiz, true)
-		sin_sombra_propia(raiz)
 	return hechos
-
-## En MEDIO la grada (butacas e hinchas) no proyecta sombra: es lo que más triángulos mete en la pasada de sombras y casi no se nota
-## (sigue RECIBIENDO sombra del techo y las tribunas). Se dice en `docs/04_auditorias/rendimiento_120fps.md`.
-static func sin_sombra_propia(raiz: Node) -> void:
-	for nombre: String in NOMBRES:
-		for n in raiz.find_children(nombre + "*", "MultiMeshInstance3D", true, false):
-			(n as GeometryInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 static func _trocear(raiz: Node, tramos: int) -> int:
 	if not activo or DisplayServer.get_name() == "headless":
