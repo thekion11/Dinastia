@@ -51,14 +51,10 @@ const AREA_Z := 16.5
 const PUNTO_PENAL := 11.0
 const R := 0.11
 const G := 9.81
-## EL CÉSPED (13-10-2026): con 0,55/s + 1,1 m/s² el balón rodaba como en el
-## barro -un pase de 20 m tardaba ~3 s y llegaba muerto- y la sonda medía el
-## balón SIN dueño el 88 % del tiempo. Ahora frena como un césped cortado: un
-## pase raso de 20 m tarda ~1,5 s y llega a ~11 m/s.
-const ROCE_SUELO := 0.18      ## frenado proporcional al rodar (1/s)
-const ROCE_FIJO := 0.7        ## frenado constante al rodar (m/s²)
-const ARRASTRE := 0.06
-const BOTE := 0.55
+const ROCE_SUELO := Balance.ROCE_SUELO   ## (valor en `nucleo/balance.gd`)
+const ROCE_FIJO := Balance.ROCE_FIJO   ## (valor en `nucleo/balance.gd`)
+const ARRASTRE := Balance.ARRASTRE   ## (valor en `nucleo/balance.gd`)
+const BOTE := Balance.BOTE   ## (valor en `nucleo/balance.gd`)
 
 var jugadores: Array = []
 ## El trío arbitral (los de `PlayerSpawner.spawn_arbitros`): no juegan, pero se
@@ -210,22 +206,8 @@ var regates_ia_ok := 0
 var _celebra_anim := "celebrar"
 
 # ---------------------------------------------------------------- dificultad
-## DIFICULTAD DE LA CPU (20-10-2026, pedido del dueño). Como en FC: solo toca al
-## equipo que maneja la CPU frente al tuyo. Cada nivel cambia la calidad de sus jugadores (`attr`),
-## la presión y el error de sus tiros y pases (`error`, en `GestoTecnico.factor`).
-## (La «pausa» NO es dificultad: pensar más con el balón hace que conduzca y tire MÁS; contra el nivel
-## más bajo la CPU tiraba 7 veces. Queda en 1,0 para todos.)
-const DIFICULTADES := {   ## 8 categorías del dueño (27-10); «debutante» = el motor calibrado de siempre (antes «profesional»)
-	"practicante": {"nombre": "Practicante", "attr": 0.72, "pausa": 1.0, "presion": -1, "error": 1.35},
-	"cadete": {"nombre": "Cadete", "attr": 0.84, "pausa": 1.0, "presion": -1, "error": 1.18},
-	"debutante": {"nombre": "Debutante", "attr": 1.0, "pausa": 1.0, "presion": 0, "error": 1.0},
-	"semiprofesional": {"nombre": "Semiprofesional", "attr": 1.03, "pausa": 1.0, "presion": 0, "error": 0.95},
-	"profesional": {"nombre": "Profesional", "attr": 1.06, "pausa": 1.0, "presion": 1, "error": 0.9},
-	"experto": {"nombre": "Experto", "attr": 1.09, "pausa": 1.0, "presion": 1, "error": 0.86},
-	"maestro": {"nombre": "Maestro", "attr": 1.13, "pausa": 1.0, "presion": 1, "error": 0.81},
-	"ultimate": {"nombre": "Ultimate", "attr": 1.18, "pausa": 1.0, "presion": 1, "error": 0.75},
-}
-const ORDEN_DIFICULTAD := ["practicante", "cadete", "debutante", "semiprofesional", "profesional", "experto", "maestro", "ultimate"]
+const DIFICULTADES := Balance.DIFICULTADES   ## (valor en `nucleo/balance.gd`)
+const ORDEN_DIFICULTAD := Balance.ORDEN_DIFICULTAD   ## (valor en `nucleo/balance.gd`)
 var dificultad_cpu := "debutante"
 ## Qué equipo es la CPU (0 local, 1 visita). -1 = el contrario al que manejas
 ## (si no manejas a nadie, ninguno: CPU contra CPU juegan igual).
@@ -250,19 +232,10 @@ const TANDA_PUNTO := Vector3(0, R, LARGO - PUNTO_PENAL)
 ## Tu portero sin lado elegido: adivina como el de la IA.
 const SIN_ELEGIR := 99
 
-## FALTAS POR PUNTOS (20-10-2026, del vídeo que regaló el dueño): la sanción
-## sale de CÓMO fue la entrada, no de una tirada. Cada factor suma su peso y el
-## total decide: falta ≥ 1,0 · amarilla ≥ 4,0 · roja directa ≥ 7,0 (por detrás
-## + a gran velocidad + último hombre = 7,3 → roja).
-const PESO_FALTA := {"agarron": 1.4, "por_detras": 3.0, "empujon": 1.7, "gran_velocidad": 2.0,
-	"deslizante": 2.6, "profesional": 2.3, "de_pie": 1.2, "hombro": 0.9, "agresiva": 2.4}
-## Por debajo de 1,0 no hay falta (25-10-2026, lo que faltaba del vídeo): la
-## carga de hombro limpia (0,9) es legal y el juego sigue; con algo más (por
-## detrás, lanzado, un empujón) ya pasa del umbral. El criterio del árbitro
-## (±0,4) solo decide la tarjeta, no si hubo falta.
-const UMBRAL_FALTA := 1.0
-const UMBRAL_AMARILLA := 4.0
-const UMBRAL_ROJA := 7.0
+const PESO_FALTA := Balance.PESO_FALTA   ## (valor en `nucleo/balance.gd`)
+const UMBRAL_FALTA := Balance.UMBRAL_FALTA   ## (valor en `nucleo/balance.gd`)
+const UMBRAL_AMARILLA := Balance.UMBRAL_AMARILLA   ## (valor en `nucleo/balance.gd`)
+const UMBRAL_ROJA := Balance.UMBRAL_ROJA   ## (valor en `nucleo/balance.gd`)
 ## PULIDO DEL 25-10-2026 (sondas): PMOT=0 vuelve al motor de antes para medir
 ## antes/después con las mismas semillas.
 static var PULIDO := OS.get_environment("PMOT") != "0"
@@ -315,10 +288,7 @@ const NOMBRE_FACTOR := {"agarron": "agarrón", "por_detras": "por detrás", "emp
 ## Vector3.INF = sigue con su forma (o no toca llegar).
 static var LLEGADA := OS.get_environment("SIN_LLEGADA") == ""
 
-## GIRO RÁPIDO (M-115, 19-10-2026): ≈690°/s, lo más rápido que gira el cuerpo
-## de un futbolista al encararse a un pase (por debajo de los 720°/s que la
-## sonda de física marca como imposibles). `_mirar` lo deja pedido `dur` s.
-const GIRO_RAPIDO := 12.0
+const GIRO_RAPIDO := Balance.GIRO_RAPIDO   ## (valor en `nucleo/balance.gd`)
 ## El margen aleatorio del sorteo de tiro (menos = se tira más). Ver `_ia_portador`.
 static var CHISPA_TIRO := float(OS.get_environment("CHISPA_TIRO")) if OS.get_environment("CHISPA_TIRO") != "" else 0.16
 ## Cuánto vale cada metro que avanza un pase al elegirlo (más = más vertical).

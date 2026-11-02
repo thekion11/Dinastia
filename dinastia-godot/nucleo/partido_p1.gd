@@ -49,22 +49,13 @@ const MINUTOS := 90
 ## cambio más (como el reglamento). Sin motor el empate va directo a penales.
 var minutos_fin := MINUTOS
 var cambios_extra := 0
-const BASE_ATAQUE := 0.048
-const EXPONENTE := 1.6
-const REPARTO := 1.9
-## Cuánto pesa la diferencia de calidad (ver `_probabilidad`).
-const SENSIBILIDAD := 3.2
-## De cada ataque que se genera, este porcentaje termina dentro. Es el `r<0.30`
-## del HTML, y es facil de pasar por alto al portar: la formula de arriba NO da
-## goles, da LLEGADAS. Portandola como si diera goles salian ocho por partido en
-## vez de dos y medio. Lo caza la prueba de "goles por partido" del banco, que
-## esta puesta justo para esto.
-const CONVERSION := 0.30
-## Los mismos cortes de `ataque()` en juego.js (linea ~2139 y ~2144), sobre el
-## mismo `r` que decide el gol: entre CONVERSION y R_ATAJADA para la atajada,
-## entre R_ATAJADA y R_POSTE para el palo, el resto para el fallo.
-const R_ATAJADA := 0.55
-const R_POSTE := 0.62
+const BASE_ATAQUE := Balance.BASE_ATAQUE   ## (valor en `nucleo/balance.gd`)
+const EXPONENTE := Balance.EXPONENTE   ## (valor en `nucleo/balance.gd`)
+const REPARTO := Balance.REPARTO   ## (valor en `nucleo/balance.gd`)
+const SENSIBILIDAD := Balance.SENSIBILIDAD   ## (valor en `nucleo/balance.gd`)
+const CONVERSION := Balance.CONVERSION   ## (valor en `nucleo/balance.gd`)
+const R_ATAJADA := Balance.R_ATAJADA   ## (valor en `nucleo/balance.gd`)
+const R_POSTE := Balance.R_POSTE   ## (valor en `nucleo/balance.gd`)
 
 var local: Club
 var visita: Club
@@ -122,10 +113,8 @@ var instr_tiempo := false
 ## eventos. Positivo = a favor del LOCAL.
 var momentum_eventos: Array[int] = []
 
-## LAS ARENGAS. `impulsos` guarda hasta qué minuto le dura el subidón a cada
-## jugador al que le hayas gritado desde la banda.
-const ARENGA_BOOST := 1.12
-const ARENGA_MINUTOS := 18
+const ARENGA_BOOST := Balance.ARENGA_BOOST   ## (valor en `nucleo/balance.gd`)
+const ARENGA_MINUTOS := Balance.ARENGA_MINUTOS   ## (valor en `nucleo/balance.gd`)
 var impulsos: Dictionary = {}
 ## Cuanto pega la arenga. Viene de fuera porque `Partido` no conoce el arbol del
 ## entrenador: lo pone `Mundo` con `Entrenamiento.factor_instrucciones()`.
@@ -258,10 +247,7 @@ var _notas_cerradas := false
 # Dos cosas que pasan DENTRO del partido y que no son números: un futbolista al
 # que echaste jugando contra ti, y una grada que se harta.
 
-## Cuánto se agranda un ex contra su antiguo club. Un 12% es mucho para un solo
-## jugador y es exactamente el punto: la ley del ex no es una superstición del
-## fútbol, es que ese día juega distinto.
-const LEY_DEL_EX := 1.12
+const LEY_DEL_EX := Balance.LEY_DEL_EX   ## (valor en `nucleo/balance.gd`)
 
 ## Los que fueron tuyos y hoy están enfrente. Se guarda al vender o rescindir,
 ## no se deduce: `club_formacion` dice dónde se formó, no de dónde lo echaste,
