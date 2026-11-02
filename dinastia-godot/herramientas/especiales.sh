@@ -34,6 +34,7 @@ pasa "colisiones del club" "godot --headless --path . res://pruebas/prueba_colis
 # 4. Partido con el motor real (acta = césped) y control del equipo
 pasa "partido con motor real" "godot --headless --path . res://pruebas/prueba_partido_motor.tscn" "0 fallos"
 pasa "control del equipo" "godot --headless --path . res://pruebas/prueba_control_equipo.tscn" "0 fallos"
+pasa "repetición del gol" "godot --headless --path . res://pruebas/prueba_repeticion.tscn" "REPETICIÓN: 0 fallos"
 # 5. Modos de juego y menú de la ciudad a pie
 pasa "modos de juego" "godot --headless --path . res://pruebas/prueba_modos.tscn" "0 fallos"
 pasa "menú ciudad a pie" "godot --headless --path . res://pruebas/prueba_menu_ciudad_pie.tscn" "0 fallos"
