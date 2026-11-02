@@ -297,7 +297,7 @@ func _process(delta: float) -> void:
 func _rehacer_previa() -> void:
 	var c := datos.club
 	Escudo.limpiar_cache()
-	_p_escudo.texture = Escudo.textura(c, 118)
+	_p_escudo.texture = EscudoTexto.textura(c, 118)
 	_p_kit.texture = DisenosKit.textura_completa(kit_previa(), _espalda, 150)
 	_p_nombre.text = c.nombre.strip_edges() if c.nombre.strip_edges() != "" else Idiomas.t("(sin nombre)")
 	_p_nombre.add_theme_color_override("font_color", Tema.TEXTO if c.nombre.strip_edges() != "" else Tema.SUAVE)

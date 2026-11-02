@@ -85,7 +85,7 @@ func _paso_resumen() -> void:
 		[0, Idiomas.t("Club"), "%s\n🏟️ %s%s" % [c.nombre.strip_edges(), c.estadio_nombre.strip_edges() if c.estadio_nombre.strip_edges() != "" \
 			else Idiomas.t("Estadio %s") % c.nombre.strip_edges(), ("\n«%s»" % datos.lema.strip_edges()) if datos.lema.strip_edges() != "" else ""]],
 		[1, Idiomas.t("Escudo"), (Idiomas.t("Escudo especial (coleccionable)") if c.esc_especial != "" else
-			Idiomas.t("Símbolo: %s") % (c.esc_simbolo if c.esc_simbolo != "" else Escudo.iniciales(c))), Escudo.textura(c, 56)],
+			Idiomas.t("Símbolo: %s") % (c.esc_simbolo if c.esc_simbolo != "" else Escudo.iniciales(c))), EscudoTexto.textura(c, 56)],
 		[2, Idiomas.t("Equipación"), kit + ("\n" + Idiomas.t("Diseño completo propio") if not c.kit_x.is_empty() else ""),
 			DisenosKit.textura_camiseta(c.kit_estilo, DisenosKit.colores(kit_previa()), 1, 56)],
 		[3, Idiomas.t("Mascota"), "%s %s" % [String(an[1]), Idiomas.t(String(an[0]))]],
