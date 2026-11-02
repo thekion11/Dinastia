@@ -78,3 +78,25 @@ static func _partir(mmi: MultiMeshInstance3D, tramos: int) -> void:
 		padre.add_child(m2)
 	padre.remove_child(mmi)
 	mmi.free()
+
+## EL PRÓLOGO NO NECESITA VER LEJOS (2-11-2026): tope de distancia de dibujo para todo lo pequeño o mediano que no tenga uno más
+## corto (lo grande -terreno, horizonte, edificios de más de `GRANDE` m- se queda). Fuera del estadio (`sin_corte`) y sin rótulos.
+## Devuelve cuántos objetos recibieron el tope.
+static func limitar_vista(raiz: Node, hasta: float, grande := 90.0) -> int:
+	var fuera := {}
+	for r in raiz.find_children("*", "Node3D", true, false):
+		if r.has_meta("sin_corte"):
+			for x in r.find_children("*", "GeometryInstance3D", true, false):
+				fuera[x] = true
+	var n := 0
+	for g_n in raiz.find_children("*", "GeometryInstance3D", true, false):
+		var g := g_n as GeometryInstance3D
+		if fuera.has(g) or g is Label3D or (g.visibility_range_end > 0.0 and g.visibility_range_end <= hasta):
+			continue
+		if g.get_aabb().size.length() > grande:
+			continue
+		g.visibility_range_end = hasta
+		g.visibility_range_end_margin = hasta * 0.1
+		n += 1
+	return n
+
