@@ -650,7 +650,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 |---|---|---|---|---|
 | M-279 | P1 | PENDIENTE | 27 módulos de `visor/` y 8 de `nucleo/` sin referencia directa en… | los módulos siguen sin prueba directa |
 | M-280 | P1 | PENDIENTE | 105 módulos de UI/visor sin referencia en banco/pruebas | sin prueba visual automática |
-| M-284 | P2 | PENDIENTE | Sin modo lectura de pantalla (TTS) | sin TTS |
+| M-284 | P2 | PARCIAL | Lectura de pantalla (TTS) | 2-11: `LectorPantalla` lee con la voz del sistema el control que toma el foco (texto, pista, estado, ayuda), interruptor en Accesibilidad; falta leer las listas largas (tablas) y los avisos emergentes, y probarlo con voces reales en el PC del dueño |
 | M-285 | P2 | PARCIAL | Navegación por mando en menús | 2-11: con mando, la primera tarjeta de cada menú toma el foco y la cruceta recorre las tarjetas (`PantallaMenu.portada`); el panel de controles ya lo hacía; faltan las listas de las pantallas de gestión (foco inicial y orden de tabulación) |
 | M-287 | P2 | PENDIENTE | Rendimiento de menús: refresco ya 14× más rápido; sin pruebas de… | sin medida de apertura de pantallas |
 | M-293 | P2 | PARCIAL | Tablas con filtros limitados (plantel) | filtros en plantel/libres |
@@ -664,7 +664,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-438 | P2 | PENDIENTE | UI de móvil: botones pequeños. Medido el 27-10: un botón de 32 px en un teléfono apaisado (~68 mm de alto, 720 px lógicos) mide ~3 mm; al zoom máximo (140 %) ~4,2 mm; Android pide ~7,6 mm (48 dp). No se arregla con escala: a ×1,8 las pantallas de 1280 × 720 no caben. Propuesta: modo móvil con una columna (lista lateral → pestañas), botones de 64 px y el zoom por defecto a 120 % al primer arranque en móvil. Necesita probarse en un teléfono (dueño). | sin tamaño mínimo |
 | M-439 | P2 | PENDIENTE | Orientación vertical no soportada | sin vertical |
 | M-440 | P2 | PENDIENTE | Sin modo una mano | sin modo una mano |
-| M-441 | P2 | PENDIENTE | Sin soporte de teclado en pantalla para nombres | sin teclado en pantalla |
+| M-441 | P2 | PARCIAL | Teclado en pantalla para nombres | en Android e iOS sale el teclado del sistema (`LineEdit.virtual_keyboard_enabled`, por defecto); falta un teclado propio para jugar solo con mando en PC/TV |
 | M-442 | P2 | PENDIENTE | Mando: botones reasignables guardados pero sin perfiles múltiples | sin perfiles de mando |
 
 ### F3 vida en 3D (42)

@@ -24,6 +24,7 @@ func _cargar_extra() -> void:
 func _ready() -> void:
 	_cargar_extra()
 	TextoQueCabe.vigilar(get_tree())
+	LectorPantalla.vigilar(get_tree())   ## M-284: lectura de pantalla, si está encendida
 func _ordinales(texto: String) -> String:
 	if idioma == "fr":
 		if _re_ord_fr == null:

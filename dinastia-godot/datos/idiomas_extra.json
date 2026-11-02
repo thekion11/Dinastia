@@ -6693,7 +6693,12 @@
   "👁️ Dejar de seguir al club": "👁️ Unfollow club",
   "Cada semana, su resultado te llega al correo.": "Every week, its result lands in your inbox.",
   "📌 Club seguido: %s": "📌 Followed club: %s",
-  "Jornada %d: %s %d-%d %s.": "Matchday %d: %s %d-%d %s."
+  "Jornada %d: %s %d-%d %s.": "Matchday %d: %s %d-%d %s.",
+  "Lectura de pantalla": "Screen reader",
+  "Lectura de pantalla activada": "Screen reader on",
+  "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Reads aloud, with the system voice, the button or field that has focus (controller, Tab or click). Needs voices installed on the device.",
+  "activado": "on",
+  "desactivado": "off"
  },
  "pt": {
   "Historia": "História",
@@ -13389,7 +13394,12 @@
   "👁️ Dejar de seguir al club": "👁️ Deixar de seguir o clube",
   "Cada semana, su resultado te llega al correo.": "Toda semana, o resultado chega ao seu correio.",
   "📌 Club seguido: %s": "📌 Clube seguido: %s",
-  "Jornada %d: %s %d-%d %s.": "Rodada %d: %s %d-%d %s."
+  "Jornada %d: %s %d-%d %s.": "Rodada %d: %s %d-%d %s.",
+  "Lectura de pantalla": "Leitura de tela",
+  "Lectura de pantalla activada": "Leitura de tela ativada",
+  "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Lê em voz alta, com a voz do sistema, o botão ou campo que tem o foco (controle, Tab ou clique). Precisa de vozes instaladas no aparelho.",
+  "activado": "ativado",
+  "desactivado": "desativado"
  },
  "patrones": [
   [
@@ -25851,7 +25861,12 @@
   "👁️ Dejar de seguir al club": "👁️ Ne plus suivre le club",
   "Cada semana, su resultado te llega al correo.": "Chaque semaine, son résultat arrive dans ton courrier.",
   "📌 Club seguido: %s": "📌 Club suivi : %s",
-  "Jornada %d: %s %d-%d %s.": "Journée %d : %s %d-%d %s."
+  "Jornada %d: %s %d-%d %s.": "Journée %d : %s %d-%d %s.",
+  "Lectura de pantalla": "Lecture d'écran",
+  "Lectura de pantalla activada": "Lecture d'écran activée",
+  "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Lit à voix haute, avec la voix du système, le bouton ou le champ qui a le focus (manette, Tab ou clic). Nécessite des voix installées sur l'appareil.",
+  "activado": "activé",
+  "desactivado": "désactivé"
  },
  "it": {
   "Historia": "Storia",
@@ -32547,7 +32562,12 @@
   "👁️ Dejar de seguir al club": "👁️ Smetti di seguire il club",
   "Cada semana, su resultado te llega al correo.": "Ogni settimana il suo risultato arriva nella posta.",
   "📌 Club seguido: %s": "📌 Club seguito: %s",
-  "Jornada %d: %s %d-%d %s.": "Giornata %d: %s %d-%d %s."
+  "Jornada %d: %s %d-%d %s.": "Giornata %d: %s %d-%d %s.",
+  "Lectura de pantalla": "Lettura dello schermo",
+  "Lectura de pantalla activada": "Lettura dello schermo attiva",
+  "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Legge ad alta voce, con la voce di sistema, il pulsante o il campo che ha il focus (controller, Tab o clic). Servono voci installate nel dispositivo.",
+  "activado": "attivo",
+  "desactivado": "disattivo"
  },
  "de": {
   "Historia": "Geschichte",
@@ -39243,7 +39263,12 @@
   "👁️ Dejar de seguir al club": "👁️ Verein nicht mehr folgen",
   "Cada semana, su resultado te llega al correo.": "Jede Woche landet sein Ergebnis in deinem Posteingang.",
   "📌 Club seguido: %s": "📌 Verfolgter Verein: %s",
-  "Jornada %d: %s %d-%d %s.": "Spieltag %d: %s %d-%d %s."
+  "Jornada %d: %s %d-%d %s.": "Spieltag %d: %s %d-%d %s.",
+  "Lectura de pantalla": "Bildschirmvorlesen",
+  "Lectura de pantalla activada": "Bildschirmvorlesen eingeschaltet",
+  "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Liest mit der Systemstimme den Button oder das Feld vor, das den Fokus hat (Controller, Tab oder Klick). Braucht installierte Stimmen auf dem Gerät.",
+  "activado": "ein",
+  "desactivado": "aus"
  },
  "ca": {
   "Historia": "Història",
@@ -45939,7 +45964,12 @@
   "👁️ Dejar de seguir al club": "👁️ Deixar de seguir el club",
   "Cada semana, su resultado te llega al correo.": "Cada setmana, el seu resultat t'arriba al correu.",
   "📌 Club seguido: %s": "📌 Club seguit: %s",
-  "Jornada %d: %s %d-%d %s.": "Jornada %d: %s %d-%d %s."
+  "Jornada %d: %s %d-%d %s.": "Jornada %d: %s %d-%d %s.",
+  "Lectura de pantalla": "Lectura de pantalla",
+  "Lectura de pantalla activada": "Lectura de pantalla activada",
+  "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Llegeix en veu alta, amb la veu del sistema, el botó o el camp que té el focus (comandament, Tab o clic). Necessita veus instal·lades a l'equip.",
+  "activado": "activat",
+  "desactivado": "desactivat"
  },
  "pl": {
   "Club": "Klub",
@@ -52911,7 +52941,12 @@
   "👁️ Dejar de seguir al club": "👁️ Przestań obserwować klub",
   "Cada semana, su resultado te llega al correo.": "Co tydzień jego wynik trafia do twojej skrzynki.",
   "📌 Club seguido: %s": "📌 Obserwowany klub: %s",
-  "Jornada %d: %s %d-%d %s.": "Kolejka %d: %s %d-%d %s."
+  "Jornada %d: %s %d-%d %s.": "Kolejka %d: %s %d-%d %s.",
+  "Lectura de pantalla": "Czytnik ekranu",
+  "Lectura de pantalla activada": "Czytnik ekranu włączony",
+  "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Czyta na głos, głosem systemu, przycisk lub pole mające fokus (pad, Tab lub kliknięcie). Wymaga głosów zainstalowanych na urządzeniu.",
+  "activado": "włączone",
+  "desactivado": "wyłączone"
  },
  "tr": {
   "Club": "Kulüp",
@@ -59883,6 +59918,11 @@
   "👁️ Dejar de seguir al club": "👁️ Kulübü takibi bırak",
   "Cada semana, su resultado te llega al correo.": "Her hafta sonucu gelen kutuna düşer.",
   "📌 Club seguido: %s": "📌 Takip edilen kulüp: %s",
-  "Jornada %d: %s %d-%d %s.": "%d. hafta: %s %d-%d %s."
+  "Jornada %d: %s %d-%d %s.": "%d. hafta: %s %d-%d %s.",
+  "Lectura de pantalla": "Ekran okuyucu",
+  "Lectura de pantalla activada": "Ekran okuyucu açık",
+  "Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.": "Odaktaki düğmeyi veya alanı sistem sesiyle yüksek sesle okur (kumanda, Tab veya tıklama). Cihazda yüklü sesler gerekir.",
+  "activado": "açık",
+  "desactivado": "kapalı"
  }
 }
