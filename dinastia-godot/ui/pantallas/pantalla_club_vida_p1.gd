@@ -153,7 +153,8 @@ func _pintar_medico(c: Club) -> void:
 		var r := p.mundo.medico.riesgo_declarado(j2)
 		var col2 := Principal.COL_ROJO if r == "alto" else (Principal.COL_ORO if r.begins_with("medio") else Principal.COL_SUAVE)
 		var l := p._texto(12, col2)
-		l.text = Idiomas.t("%s  ·  riesgo %s  ·  físico %d") % [j2.nombre, r, j2.fisico]
+		var prob := p.mundo.medico.riesgo_por_fatiga(j2)   ## M-235: la probabilidad de baja esta semana, no solo el historial
+		l.text = Idiomas.t("%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s") % [j2.nombre, r, j2.fisico, "%.1f %%" % (prob * 100.0)]
 		p._lista_medico.add_child(l)
 
 ## LOS LOGROS OCULTOS. No se anuncian y no se listan: hasta que caen se ven como

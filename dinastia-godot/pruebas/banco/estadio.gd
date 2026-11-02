@@ -214,3 +214,189 @@ func _probar_peaton_fuera_del_arbol() -> void:
 	_comprobar(n == n_ref and n > 3, "terminado fuera y metido después lleva las mismas piezas que dentro (%d / %d), sin doblar la ropa" % [n, n_ref])
 	nodo.queue_free()
 	(ref["nodo"] as Node).queue_free()
+
+## M-476 / M-404: `FundirPiezas` junta los hijos directos con material en una malla por (material, sombra), respeta
+## `excluir` y deja los mismos materiales y la misma geometría.
+func _probar_fundir_piezas() -> void:
+	_titulo("FUNDIR PIEZAS (una malla por material)")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var rojo := StandardMaterial3D.new()
+	var azul := StandardMaterial3D.new()
+	var piezas: Array = []
+	for i in 6:
+		var mi := MeshInstance3D.new()
+		mi.mesh = BoxMesh.new()
+		mi.material_override = rojo if i < 4 else azul
+		mi.position = Vector3(i * 2.0, 0, 0)
+		raiz.add_child(mi)
+		piezas.append(mi)
+	var puerta := MeshInstance3D.new()
+	puerta.mesh = BoxMesh.new()
+	puerta.material_override = rojo
+	raiz.add_child(puerta)
+	var rotulo := Label3D.new()
+	raiz.add_child(rotulo)
+	var n := FundirPiezas.fundir(raiz, 300.0, "Fundido", [puerta])
+	_comprobar(n == 6, "funde las 6 piezas y deja la excluida (%d)" % n)
+	var mallas: Array = raiz.get_children().filter(func(h): return h.name == "Fundido")
+	_comprobar(mallas.size() == 1 and (mallas[0] as MeshInstance3D).mesh.get_surface_count() == 2, "una malla con una superficie por material")
+	var m: MeshInstance3D = mallas[0]
+	_comprobar(m.mesh.surface_get_material(0) == rojo and m.mesh.surface_get_material(1) == azul, "las superficies llevan los MISMOS materiales")
+	_comprobar(m.visibility_range_end == 300.0, "lleva la distancia de corte pedida")
+	_comprobar(is_instance_valid(puerta) and puerta.get_parent() == raiz and is_instance_valid(rotulo), "la excluida y el rótulo se quedan")
+	var vert := 0
+	for k in m.mesh.get_surface_count():
+		vert += (m.mesh.surface_get_arrays(k)[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
+	_comprobar(vert == 6 * 24, "la geometría no cambia (%d vértices: 6 cajas de 24)" % vert)
+	var aabb := m.get_aabb()
+	_comprobar(absf(aabb.size.x - 11.0) < 0.01, "las posiciones se conservan (ancho %.2f)" % aabb.size.x)
+	raiz.queue_free()
+
+## M-404: cada relleno de la ciudad deja piezas (se ejercitaban solo al construir la ciudad entera).
+func _probar_rellenos_ciudad() -> void:
+	_titulo("RELLENOS DE LA CIUDAD (cada uno deja piezas)")
+	var casos := {
+		"CiudadMercado": func(ex): CiudadMercado.montar(ex, Vector3.ZERO, 40.0, 0.0),
+		"CiudadSolar": func(ex): CiudadSolar.montar(ex, Rect2(-20, -20, 40, 40)),
+		"CiudadVilla": func(ex): CiudadVilla.montar(ex, Vector3.ZERO, 40.0, 0.0),
+		"CiudadIndustrial": func(ex): CiudadIndustrial.rellenar(ex, Rect2(-30, -30, 60, 60)),
+		"CiudadGasolinera": func(ex): CiudadGasolinera.montar(ex, Vector3.ZERO, 40.0, 0.0),
+		"CiudadPlaza": func(ex): CiudadPlaza.montar(ex, Vector3.ZERO, 40.0, 0.0),
+		"CiudadOeste": func(ex): CiudadOeste.rellenar(ex, Rect2(-30, -30, 60, 60)),
+		"FachadaModular": func(ex): FachadaModular.montar(ex, 0.0, 0.0, 0.0, 12.0, 3),
+		"CiudadServicios.bomberos": func(ex): CiudadServicios.bomberos(ex, Vector3.ZERO, 40.0, 40.0),
+		"CiudadServicios.cocheras": func(ex): CiudadServicios.cocheras(ex, Vector3.ZERO, 40.0, 40.0),
+		"CiudadServicios.desguace": func(ex): CiudadServicios.desguace(ex, Vector3.ZERO, 40.0, 40.0),
+	}
+	for nombre: String in casos:
+		var cb := CityBuilder.new()
+		add_child(cb)
+		var ex := CiudadExpansion.new(cb)
+		cb._rotulos = Node3D.new()   ## los rótulos del mapa cuelgan de aquí al construir la ciudad
+		cb.add_child(cb._rotulos)
+		if nombre == "CiudadOeste" and ex._mallas_mod().is_empty():
+			_linea("  CiudadOeste: sin mallas modulares cargadas, no aplica")
+			cb.queue_free()
+			continue
+		var antes := cb.get_child_count() + cb.puntos_clic.size()
+		(casos[nombre] as Callable).call(ex)
+		var nuevos := cb.get_child_count() + cb.puntos_clic.size() - antes   ## piezas o puntos de clic
+		_comprobar(nuevos >= 1, "%s deja piezas (%d)" % [nombre, nuevos])
+		cb.queue_free()
+
+## M-404: módulos de `visor/` sin prueba directa (foto de equipo, sillón, banco, obra, tienda de la gasolinera).
+func _probar_visor_pequenos() -> void:
+	_titulo("MÓDULOS PEQUEÑOS DEL VISOR (foto de equipo, sillón, banco, obra, tienda)")
+	## CeremoniaFoto: once locales en dos filas y vuelta exacta al sitio.
+	var jugadores: Array = []
+	var nodos: Array = []
+	for i in 12:
+		var nd := Node3D.new()
+		nd.position = Vector3(float(i), 0, 3.0)
+		nd.rotation.y = 0.3
+		add_child(nd)
+		nodos.append(nd)
+		jugadores.append({"es_local": i < 11, "node": nd, "anim": null})
+	var anims: Array = []
+	var guardado := CeremoniaFoto.colocar(jugadores, func(_a, nombre): anims.append(nombre))
+	_comprobar(guardado.size() == 11, "la foto coloca solo a los 11 locales (%d)" % guardado.size())
+	_comprobar(anims.count("parado") == 6 and anims.count("agachado") == 5, "seis de pie detrás y cinco agachados delante")
+	_comprobar(is_equal_approx((nodos[0] as Node3D).position.x, CeremoniaFoto.X_ATRAS) and is_equal_approx((nodos[10] as Node3D).position.x, CeremoniaFoto.X_DELANTE), "dos filas en X_ATRAS y X_DELANTE")
+	_comprobar((nodos[11] as Node3D).position == Vector3(11, 0, 3.0), "el visitante no se mueve")
+	CeremoniaFoto.devolver(guardado, jugadores, func(_a, _n): pass)
+	_comprobar((nodos[4] as Node3D).position == Vector3(4, 0, 3.0) and is_equal_approx((nodos[4] as Node3D).rotation.y, 0.3), "al terminar cada uno vuelve a su sitio y giro")
+	var raiz_luz := Node3D.new()
+	add_child(raiz_luz)
+	var l := CeremoniaFoto.luz(raiz_luz)
+	CeremoniaFoto.destellar(l, 0.75)   ## (0,75 + 0,2) mod 0,45 = 0,05 s: en pleno destello
+	var encendido := l.light_energy
+	CeremoniaFoto.destellar(l, 0.88)   ## fase 0,18 s: apagado
+	_comprobar(encendido > 0.0 and l.light_energy == 0.0, "el flash destella a ratos y se apaga entre medias")
+	for nd2: Node3D in nodos:
+		nd2.queue_free()
+	raiz_luz.queue_free()
+	## SillonOficina: con el recurso del Drive lo pone con su cuerpo; sin él devuelve null (quien llama usa lo de antes).
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var sillon := SillonOficina.poner(raiz, Vector3(1, 0, 2), 0.5)
+	if ResourceLoader.exists(SillonOficina.RUTA):
+		_comprobar(sillon != null and sillon.find_children("*", "CollisionShape3D", true, false).size() == 1, "el sillón del Drive se coloca con su cuerpo")
+		var sin_cuerpo := SillonOficina.poner(raiz, Vector3.ZERO, 0.0, false)
+		_comprobar(sin_cuerpo != null and sin_cuerpo.find_children("*", "CollisionShape3D", true, false).is_empty(), "sin cuerpo no lleva colisión")
+	else:
+		_comprobar(sillon == null, "sin el recurso devuelve null")
+	raiz.queue_free()
+	## Banco y obra de la ciudad.
+	var cb := CityBuilder.new()
+	add_child(cb)
+	cb._rotulos = Node3D.new()
+	cb.add_child(cb._rotulos)
+	var ex := CiudadExpansion.new(cb)
+	var clics := cb.puntos_clic.size()
+	CiudadBanco.montar(ex, 0.0, 0.0, 0.0)
+	_comprobar(cb.puntos_clic.size() == clics + 1 and String(cb.puntos_clic[-1]["k"]).begins_with("banco_"), "la ventanilla del banco deja su punto de clic")
+	var hijos := cb.get_child_count()
+	ex._materiales()   ## la obra usa el hormigón de la ciudad
+	CiudadObra.montar(ex, Rect2(-30, -30, 60, 60))
+	_comprobar(cb.get_child_count() > hijos, "la obra deja piezas (%d)" % (cb.get_child_count() - hijos))
+	cb.queue_free()
+	## Tienda de la gasolinera: solo responde a «tienda_<n>» y necesita vida.
+	_comprobar(not GasolineraTienda.servicio({"vida": null}, "otra_cosa") and not GasolineraTienda.servicio({"vida": null}, "tienda_1"), "sin vida o con otra clave, la tienda no responde")
+
+## M-404: efectos de la ciudad y el teleférico sin prueba directa (fuego, accidente, cinta, banderas del gol, andén).
+func _probar_visor_efectos() -> void:
+	_titulo("EFECTOS DEL VISOR (incendio, accidente, cinta, banderas, andén del teleférico)")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var fuego := IncendioVisual.fuego(raiz, Vector3(5, 0, 5))
+	_comprobar(fuego.get_node_or_null("Llama2") != null and fuego.get_node_or_null("Humo3") != null and fuego.get_node_or_null("LuzFuego") != null, "el fuego tiene 3 llamas, 4 bolas de humo y su luz")
+	IncendioVisual.animar(fuego, 1.0, 1.0)
+	var llama := fuego.get_node("Llama0") as MeshInstance3D
+	var luz_viva := (fuego.get_node("LuzFuego") as OmniLight3D).light_energy
+	IncendioVisual.animar(fuego, 1.0, 0.0)
+	_comprobar(llama.scale.x < 0.1 and (fuego.get_node("LuzFuego") as OmniLight3D).light_energy < luz_viva * 0.1, "al apagarse las llamas encogen y la luz se va")
+	IncendioVisual.animar(null, 0.0, 1.0)   ## no revienta con nulo
+	var humo_y := (fuego.get_node("Humo0") as MeshInstance3D).position.y
+	_comprobar(humo_y >= 7.0, "el humo sube sobre las llamas (y = %.1f)" % humo_y)
+	var acc := IncendioVisual.accidente(raiz, Vector3(-20, 0, 0))
+	_comprobar(acc.get_node_or_null("Intermitente3") != null, "el accidente lleva sus cuatro intermitentes")
+	IncendioVisual.parpadeo(acc, 0.1)
+	var visible_a := (acc.get_node("Intermitente0") as MeshInstance3D).visible
+	IncendioVisual.parpadeo(acc, 0.5)
+	_comprobar(visible_a and not (acc.get_node("Intermitente0") as MeshInstance3D).visible, "los intermitentes parpadean")
+	var cinta := IncendioVisual.cinta(raiz, Vector3(0, 0, 20))
+	_comprobar(cinta.get_child_count() == 8, "la cinta: 4 postes y 4 cordones (%d)" % cinta.get_child_count())
+	## Banderas del gol: tres planos con shader (o nada con el motor ligero).
+	var sitios := [Vector3(30, 5, 0), Vector3(-30, 5, 0), Vector3(0, 5, 40), Vector3(0, 5, -40)]
+	var ban := BanderasGrada.lanzar(raiz, Color.RED, Color.WHITE, sitios)
+	if Calidad.motor_ligero:
+		_comprobar(ban == null, "con el motor ligero no hay banderas")
+	else:
+		_comprobar(ban != null and ban.get_child_count() == 3, "tres banderas con los colores del club")
+		_comprobar(BanderasGrada.lanzar(raiz, Color.RED, Color.WHITE, []) == null, "sin sitios en la grada no lanza nada")
+	## Andén del teleférico: deja piezas y no revienta.
+	var anden := Node3D.new()
+	raiz.add_child(anden)
+	var n_det := TelefericoEstacion.detalles(anden)
+	_comprobar(n_det > 0 and anden.get_child_count() > 0, "el andén del teleférico recibe sus detalles (%d)" % n_det)
+	raiz.queue_free()
+
+## M-404: vomitorios de la grada (tres MultiMesh por tribuna) y la obra del estadio (solo datos).
+func _probar_vomitorios() -> void:
+	_titulo("VOMITORIOS DE LA GRADA")
+	var contados: Array[int] = []
+	for largo: float in [30.0, 80.0, 140.0]:
+		var deck := MeshInstance3D.new()
+		deck.mesh = BoxMesh.new()
+		add_child(deck)
+		VomitoriosGrada.montar(deck, largo, 12.0, false)
+		var multis: Array = deck.get_children().filter(func(h): return h is MultiMeshInstance3D)
+		_comprobar(multis.size() == 3, "largo %.0f: hormigón, hueco y rótulo (3 multimallas, %d)" % [largo, multis.size()])
+		if multis.size() == 3:
+			var n: int = (multis[0] as MultiMeshInstance3D).multimesh.instance_count
+			_comprobar(n >= 2 and n <= 6 and (multis[1] as MultiMeshInstance3D).multimesh.instance_count == n, "largo %.0f: entre 2 y 6 accesos, uno por hueco (%d)" % [largo, n])
+			contados.append(n)
+		deck.queue_free()
+	_comprobar(contados.size() == 3 and contados[2] >= contados[0], "una grada más larga no tiene menos accesos %s" % str(contados))
+	_comprobar(EstadioObra.new() != null, "EstadioObra se crea (solo datos)")
