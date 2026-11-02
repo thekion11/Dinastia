@@ -5,7 +5,8 @@
   Con caras reales (--caras) = BORDE DORADO.
 Uso:  marca_iconos.py <variante> <carpeta_salida> [--caras]      (genera icono_1024/512/256.png y adaptivo_primero/fondo.png para Android)
       marca_iconos.py --hoja <salida.png>                       (hoja con todas, para revisar)
-Se ejecuta en el CI justo antes de exportar; no se sube nada nuevo al repositorio."""
+Se ejecuta en el CI justo antes de exportar. Las copias de `.github/iconos/` (192 px y la hoja) son las que
+muestra el resumen de cada ejecución: si cambias colores aquí, regéneralas (ver .github/iconos/LEEME.txt)."""
 import sys
 from PIL import Image, ImageDraw
 

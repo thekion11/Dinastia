@@ -149,6 +149,10 @@ jobs:
             python3 herramientas/marca_iconos.py $v ../iconos/$v-dorado --caras
           done
           python3 herramientas/marca_iconos.py --hoja ../iconos/hoja.png
+      - name: Mostrar la hoja en el resumen
+        run: |
+          echo '### 🎨 Iconos por versión (arriba normales, abajo con borde dorado = con caras, solo en local)' >> "$GITHUB_STEP_SUMMARY"
+          echo '![hoja de iconos](https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/.github/iconos/hoja.png)' >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         with:
           name: iconos-marca
@@ -229,7 +233,7 @@ jobs:
         run: |
           ls -la salida
           test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
-          { echo "### 🟦 Windows"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+          { echo "### 🟦 Windows"; echo '<img src="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/.github/iconos/windows.png" width="96" align="right" alt="icono windows">'; echo; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
 
   exportar-windows-ligero:
     name: 🔹 Windows ligero
@@ -272,7 +276,7 @@ jobs:
         run: |
           ls -la salida
           test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
-          { echo "### 🔹 Windows ligero"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+          { echo "### 🔹 Windows ligero"; echo '<img src="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/.github/iconos/windows-ligero.png" width="96" align="right" alt="icono windows-ligero">'; echo; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
 
   exportar-linux:
     name: 🟥 Linux
@@ -315,7 +319,7 @@ jobs:
         run: |
           ls -la salida
           test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
-          { echo "### 🟥 Linux"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+          { echo "### 🟥 Linux"; echo '<img src="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/.github/iconos/linux.png" width="96" align="right" alt="icono linux">'; echo; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
 
   exportar-android:
     name: 🟩 Android
@@ -368,7 +372,7 @@ jobs:
         run: |
           ls -la salida
           test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
-          { echo "### 🟩 Android"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+          { echo "### 🟩 Android"; echo '<img src="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/.github/iconos/android.png" width="96" align="right" alt="icono android">'; echo; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
 
   exportar-android-aab:
     name: 🟩 Android AAB (Play)
@@ -423,7 +427,7 @@ jobs:
         run: |
           ls -la salida
           test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
-          { echo "### 🟩 Android"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+          { echo "### 🟩 Android"; echo '<img src="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/.github/iconos/android.png" width="96" align="right" alt="icono android">'; echo; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
 
   exportar-android-armv7:
     name: 🌿 Android armv7
@@ -470,7 +474,7 @@ jobs:
         run: |
           ls -la salida
           test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
-          { echo "### 🌿 Android armv7"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+          { echo "### 🌿 Android armv7"; echo '<img src="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/.github/iconos/android-armv7.png" width="96" align="right" alt="icono android-armv7">'; echo; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
 
   exportar-web:
     name: 🌐 Web
@@ -513,7 +517,7 @@ jobs:
         run: |
           ls -la salida
           test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
-          { echo "### 🌐 Web"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+          { echo "### 🌐 Web"; echo '<img src="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/.github/iconos/web.png" width="96" align="right" alt="icono web">'; echo; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
 
   ## RELEASE EN BORRADOR (2-11-2026, orden del dueño): junta lo construido en un Release PRIVADO hasta que el dueño
   ## lo publique. Sin caras reales (esas no se construyen aquí).
@@ -538,8 +542,15 @@ jobs:
           mkdir -p paquetes
           for d in bajados/*/; do n=$(basename "$d"); (cd "$d" && zip -qr "../../paquetes/${n}-${ETIQUETA}.zip" .); done
           ls -la paquetes
+          {
+            echo "Borrador creado por el CI desde la rama ${GITHUB_REF_NAME} (commit ${GITHUB_SHA::8}). Sin caras ni datos reales. Revisar y publicar a mano."
+            echo; echo "| Versión | Archivo |"; echo "|---|---|"
+            for z in paquetes/*.zip; do n=$(basename "$z" .zip); v=$(echo "$n" | sed -E "s/^Dinastia-//; s/-${ETIQUETA}$//" | tr 'A-Z' 'a-z'); i=$v; case "$v" in android-debug|android-aab) i=android ;; esac
+              echo "| <img src=\"RAWURL/${i}.png\" width=\"48\"> | $n.zip |"; done
+          } > notas.md
+          sed -i "s#RAWURL#https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_SHA}/.github/iconos#g" notas.md
           gh release create "$ETIQUETA" paquetes/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --draft \
-            --title "Dinastía $ETIQUETA" --notes "Borrador creado por el CI desde la rama ${GITHUB_REF_NAME} (commit ${GITHUB_SHA::8}). Sin caras ni datos reales. Revisar y publicar a mano."
+            --title "Dinastía $ETIQUETA" --notes-file notas.md
           echo "### 📦 Borrador de Release «$ETIQUETA» creado. Publícalo desde la pestaña Releases." >> "$GITHUB_STEP_SUMMARY"
 
   nativo-arm:
