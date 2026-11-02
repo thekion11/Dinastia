@@ -314,6 +314,11 @@ func _probar_dificultad_cpu() -> void:
 		cuenta[motor._lado_portero_tanda(loc_p, vis_p)] += 1
 	var nat := -1 if AnimExtra.es_zurdo(String(loc_p.get("id", ""))) else 1
 	_comprobar(int(cuenta[nat]) > int(cuenta[-nat]) and int(cuenta[0]) > 0, "M-119: el portero lee el pie del lanzador (%s, natural %d)" % [str(cuenta), nat])
+	## Y en pleno partido (2-11): el portero que mira a +Z tiene la izquierda en −X, así que el lado natural se invierte en el mundo.
+	var cuenta2 := {-1: 0, 0: 0, 1: 0}
+	for _i in 600:
+		cuenta2[PenalPortero.lado(motor, loc_p, vis_p, -1)] += 1
+	_comprobar(int(cuenta2[-nat]) > int(cuenta2[nat]), "M-119: en el partido, el portero que mira al otro lado también lee el pie (%s)" % str(cuenta2))
 	raiz.queue_free()
 
 ## FALTAS POR PUNTOS (20-10-2026, vídeo del dueño): jugadas preparadas.
