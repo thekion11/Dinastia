@@ -57,3 +57,21 @@ func _probar() -> void:
 	for i in 90:
 		t2._process(DT)
 	_comprobar(float(t2._vehiculos[0]["s"]) != s0, "y avanzan por el carril")
+	## M-170: el peatón que espera pulsa el botón (una vez por espera) y el verde se adelanta; el siguiente tiene que esperar el enfriamiento.
+	var t3 := TraficoCiudad.new()
+	add_child(t3)
+	t3.set_process(false)
+	var sem3 := Semaforos.new()
+	t3.semaforos = sem3
+	var id3 := t3.agregar_ruta(PeatonesCruce.esquinas(p))
+	for c3: Dictionary in PeatonesCruce.controles(p):
+		t3.agregar_control(id3, float(c3["s"]), int(c3["eje"]))
+	t3.agregar_vehiculo(Node3D.new(), id3, 0.0, 1.3)
+	var v3: Dictionary = t3._vehiculos[0]
+	v3["peaton"] = true
+	sem3.t = 1.0   ## peatonal(1) en rojo: tiene que esperar
+	var antes_t := sem3.t
+	for i in 200:
+		t3._process(DT)
+	_comprobar(bool(v3.get("pidio", false)) and sem3.t > antes_t + 5.0, "el peatón pulsa el botón al llegar al bordillo y el ciclo se adelanta (t %.1f → %.1f)" % [antes_t, sem3.t])
+	_comprobar(not sem3.pulsa_npc(1), "otro peatón no puede pulsar hasta pasados %.0f s (no acortan el ciclo de los coches)" % Semaforos.ENFRIA_NPC)
