@@ -6688,7 +6688,12 @@
   "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Extraordinary grant (the government returns the favour)",
   "🤝 El alcalde cumple": "🤝 The mayor delivers",
   "🧊 El nuevo gobierno no olvida": "🧊 The new government does not forget",
-  "Tasa de seguridad: exenta por el apoyo del club": "Security levy: waived for the club's support"
+  "Tasa de seguridad: exenta por el apoyo del club": "Security levy: waived for the club's support",
+  "👁️ Seguir al club": "👁️ Follow club",
+  "👁️ Dejar de seguir al club": "👁️ Unfollow club",
+  "Cada semana, su resultado te llega al correo.": "Every week, its result lands in your inbox.",
+  "📌 Club seguido: %s": "📌 Followed club: %s",
+  "Jornada %d: %s %d-%d %s.": "Matchday %d: %s %d-%d %s."
  },
  "pt": {
   "Historia": "História",
@@ -13379,7 +13384,12 @@
   "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Subvenção extraordinária (o governo retribui o apoio)",
   "🤝 El alcalde cumple": "🤝 O prefeito cumpre",
   "🧊 El nuevo gobierno no olvida": "🧊 O novo governo não esquece",
-  "Tasa de seguridad: exenta por el apoyo del club": "Taxa de segurança: isenta pelo apoio do clube"
+  "Tasa de seguridad: exenta por el apoyo del club": "Taxa de segurança: isenta pelo apoio do clube",
+  "👁️ Seguir al club": "👁️ Seguir o clube",
+  "👁️ Dejar de seguir al club": "👁️ Deixar de seguir o clube",
+  "Cada semana, su resultado te llega al correo.": "Toda semana, o resultado chega ao seu correio.",
+  "📌 Club seguido: %s": "📌 Clube seguido: %s",
+  "Jornada %d: %s %d-%d %s.": "Rodada %d: %s %d-%d %s."
  },
  "patrones": [
   [
@@ -25836,7 +25846,12 @@
   "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Subvention extraordinaire (le gouvernement rend l'appui)",
   "🤝 El alcalde cumple": "🤝 Le maire tient parole",
   "🧊 El nuevo gobierno no olvida": "🧊 Le nouveau gouvernement n'oublie pas",
-  "Tasa de seguridad: exenta por el apoyo del club": "Taxe de sécurité : exonérée grâce au soutien du club"
+  "Tasa de seguridad: exenta por el apoyo del club": "Taxe de sécurité : exonérée grâce au soutien du club",
+  "👁️ Seguir al club": "👁️ Suivre le club",
+  "👁️ Dejar de seguir al club": "👁️ Ne plus suivre le club",
+  "Cada semana, su resultado te llega al correo.": "Chaque semaine, son résultat arrive dans ton courrier.",
+  "📌 Club seguido: %s": "📌 Club suivi : %s",
+  "Jornada %d: %s %d-%d %s.": "Journée %d : %s %d-%d %s."
  },
  "it": {
   "Historia": "Storia",
@@ -32527,7 +32542,12 @@
   "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Sovvenzione straordinaria (il governo ricambia l'appoggio)",
   "🤝 El alcalde cumple": "🤝 Il sindaco mantiene",
   "🧊 El nuevo gobierno no olvida": "🧊 Il nuovo governo non dimentica",
-  "Tasa de seguridad: exenta por el apoyo del club": "Tassa di sicurezza: esente per l'appoggio del club"
+  "Tasa de seguridad: exenta por el apoyo del club": "Tassa di sicurezza: esente per l'appoggio del club",
+  "👁️ Seguir al club": "👁️ Segui il club",
+  "👁️ Dejar de seguir al club": "👁️ Smetti di seguire il club",
+  "Cada semana, su resultado te llega al correo.": "Ogni settimana il suo risultato arriva nella posta.",
+  "📌 Club seguido: %s": "📌 Club seguito: %s",
+  "Jornada %d: %s %d-%d %s.": "Giornata %d: %s %d-%d %s."
  },
  "de": {
   "Historia": "Geschichte",
@@ -39218,7 +39238,12 @@
   "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Sonderzuschuss (die Regierung revanchiert sich)",
   "🤝 El alcalde cumple": "🤝 Der Bürgermeister hält Wort",
   "🧊 El nuevo gobierno no olvida": "🧊 Die neue Regierung vergisst nicht",
-  "Tasa de seguridad: exenta por el apoyo del club": "Sicherheitsabgabe: erlassen wegen der Unterstützung des Vereins"
+  "Tasa de seguridad: exenta por el apoyo del club": "Sicherheitsabgabe: erlassen wegen der Unterstützung des Vereins",
+  "👁️ Seguir al club": "👁️ Verein folgen",
+  "👁️ Dejar de seguir al club": "👁️ Verein nicht mehr folgen",
+  "Cada semana, su resultado te llega al correo.": "Jede Woche landet sein Ergebnis in deinem Posteingang.",
+  "📌 Club seguido: %s": "📌 Verfolgter Verein: %s",
+  "Jornada %d: %s %d-%d %s.": "Spieltag %d: %s %d-%d %s."
  },
  "ca": {
   "Historia": "Història",
@@ -45909,7 +45934,12 @@
   "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Subvenció extraordinària (el govern torna el suport)",
   "🤝 El alcalde cumple": "🤝 L'alcalde compleix",
   "🧊 El nuevo gobierno no olvida": "🧊 El nou govern no oblida",
-  "Tasa de seguridad: exenta por el apoyo del club": "Taxa de seguretat: exempta pel suport del club"
+  "Tasa de seguridad: exenta por el apoyo del club": "Taxa de seguretat: exempta pel suport del club",
+  "👁️ Seguir al club": "👁️ Seguir el club",
+  "👁️ Dejar de seguir al club": "👁️ Deixar de seguir el club",
+  "Cada semana, su resultado te llega al correo.": "Cada setmana, el seu resultat t'arriba al correu.",
+  "📌 Club seguido: %s": "📌 Club seguit: %s",
+  "Jornada %d: %s %d-%d %s.": "Jornada %d: %s %d-%d %s."
  },
  "pl": {
   "Club": "Klub",
@@ -52876,7 +52906,12 @@
   "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Dotacja nadzwyczajna (rząd odwdzięcza się za poparcie)",
   "🤝 El alcalde cumple": "🤝 Burmistrz dotrzymuje słowa",
   "🧊 El nuevo gobierno no olvida": "🧊 Nowy rząd nie zapomina",
-  "Tasa de seguridad: exenta por el apoyo del club": "Opłata za bezpieczeństwo: umorzona za poparcie klubu"
+  "Tasa de seguridad: exenta por el apoyo del club": "Opłata za bezpieczeństwo: umorzona za poparcie klubu",
+  "👁️ Seguir al club": "👁️ Obserwuj klub",
+  "👁️ Dejar de seguir al club": "👁️ Przestań obserwować klub",
+  "Cada semana, su resultado te llega al correo.": "Co tydzień jego wynik trafia do twojej skrzynki.",
+  "📌 Club seguido: %s": "📌 Obserwowany klub: %s",
+  "Jornada %d: %s %d-%d %s.": "Kolejka %d: %s %d-%d %s."
  },
  "tr": {
   "Club": "Kulüp",
@@ -59843,6 +59878,11 @@
   "Subvención extraordinaria (el gobierno devuelve el apoyo)": "Olağanüstü teşvik (hükümet desteğe karşılık veriyor)",
   "🤝 El alcalde cumple": "🤝 Belediye başkanı sözünü tutuyor",
   "🧊 El nuevo gobierno no olvida": "🧊 Yeni hükümet unutmuyor",
-  "Tasa de seguridad: exenta por el apoyo del club": "Güvenlik vergisi: kulübün desteği nedeniyle muaf"
+  "Tasa de seguridad: exenta por el apoyo del club": "Güvenlik vergisi: kulübün desteği nedeniyle muaf",
+  "👁️ Seguir al club": "👁️ Kulübü takip et",
+  "👁️ Dejar de seguir al club": "👁️ Kulübü takibi bırak",
+  "Cada semana, su resultado te llega al correo.": "Her hafta sonucu gelen kutuna düşer.",
+  "📌 Club seguido: %s": "📌 Takip edilen kulüp: %s",
+  "Jornada %d: %s %d-%d %s.": "%d. hafta: %s %d-%d %s."
  }
 }

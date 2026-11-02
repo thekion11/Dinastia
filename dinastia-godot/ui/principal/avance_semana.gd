@@ -211,6 +211,7 @@ func _avanzar_semana() -> void:
 	liga.jornada_terminada.disconnect(oyente)
 	if visto["txt"] != "":
 		p._escribir(visto["txt"])
+	_clubes_seguidos()
 	if p.mundo.semana % Finanzas.SEMANAS_DEL_MES == 1 and p.mundo.semana > 1:
 		var delta := mio.saldo - caja_antes
 		p._escribir("[color=#c9a227]Cierre de mes:[/color] la caja %s %s" % [
@@ -319,3 +320,21 @@ func _anotar(titulo: String, cuerpo: String) -> void:
 			p.mundo.movil.recibir(String(de[0]), String(de[1]), "%s %s", p.mundo.anio, p.mundo.semana, [titulo, cuerpo], true)
 	if p._bandeja.size() > Principal.BANDEJA_MAX:
 		p._bandeja.resize(Principal.BANDEJA_MAX)
+
+## M-292 (2-11): el último resultado de cada club que sigues, una vez por jornada jugada, a la bandeja.
+var _seguido_jornada := {}
+func _clubes_seguidos() -> void:
+	if p.mundo.ojeadores == null:
+		return
+	for cid: String in p.mundo.ojeadores.clubes_seguidos:
+		var c: Club = p.mundo.clubes.get(cid)
+		if c == null:
+			continue
+		var l := p._liga_de(c)
+		if l.historial.is_empty() or int(_seguido_jornada.get(cid, -1)) == l.jornada_actual:
+			continue
+		_seguido_jornada[cid] = l.jornada_actual
+		for r: Dictionary in l.historial[-1]:
+			if r["local"] == c or r["visita"] == c:
+				_anotar(Idiomas.t("📌 Club seguido: %s") % c.nombre, Idiomas.t("Jornada %d: %s %d-%d %s.") % [
+					l.jornada_actual, (r["local"] as Club).nombre, int(r["gl"]), int(r["gv"]), (r["visita"] as Club).nombre])
