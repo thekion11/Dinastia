@@ -26,13 +26,16 @@ func _process(_d: float) -> void:
 	var etiqueta := "A" if OS.get_environment("SIN_PELO_DRIVE") != "" else "B"
 	if _n == 150:
 		get_viewport().get_texture().get_image().save_png("/tmp/pelopart_%s_0.png" % etiqueta)
+	if _n == 155:
+		## Balón parado: se congela el partido para que el plano cercano sea el mismo jugador en el antes y el después.
+		_vista.process_mode = Node.PROCESS_MODE_DISABLED
 	if _n == 160 or _n == 200:
 		var motor: MotorJugable = _vista.get("_motor")
 		var elegidos: Array = []
 		for p: Dictionary in motor.jugadores:
 			if not bool(p["por"]) and bool(p["es_local"]):
 				elegidos.append(p)
-		var p: Dictionary = elegidos[2 if _n == 160 else 5]
+		var p: Dictionary = elegidos[3 if _n == 160 else 7]
 		var nodo: Node3D = p["node"]
 		var cam := Camera3D.new()
 		add_child(cam)
