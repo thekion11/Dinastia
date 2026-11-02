@@ -252,3 +252,32 @@ func _probar_fundir_piezas() -> void:
 	var aabb := m.get_aabb()
 	_comprobar(absf(aabb.size.x - 11.0) < 0.01, "las posiciones se conservan (ancho %.2f)" % aabb.size.x)
 	raiz.queue_free()
+
+## M-404: cada relleno de la ciudad deja piezas (se ejercitaban solo al construir la ciudad entera).
+func _probar_rellenos_ciudad() -> void:
+	_titulo("RELLENOS DE LA CIUDAD (cada uno deja piezas)")
+	var casos := {
+		"CiudadMercado": func(ex): CiudadMercado.montar(ex, Vector3.ZERO, 40.0, 0.0),
+		"CiudadSolar": func(ex): CiudadSolar.montar(ex, Rect2(-20, -20, 40, 40)),
+		"CiudadVilla": func(ex): CiudadVilla.montar(ex, Vector3.ZERO, 40.0, 0.0),
+		"CiudadIndustrial": func(ex): CiudadIndustrial.rellenar(ex, Rect2(-30, -30, 60, 60)),
+		"CiudadGasolinera": func(ex): CiudadGasolinera.montar(ex, Vector3.ZERO, 40.0, 0.0),
+		"CiudadPlaza": func(ex): CiudadPlaza.montar(ex, Vector3.ZERO, 40.0, 0.0),
+		"CiudadOeste": func(ex): CiudadOeste.rellenar(ex, Rect2(-30, -30, 60, 60)),
+		"FachadaModular": func(ex): FachadaModular.montar(ex, 0.0, 0.0, 0.0, 12.0, 3),
+	}
+	for nombre: String in casos:
+		var cb := CityBuilder.new()
+		add_child(cb)
+		var ex := CiudadExpansion.new(cb)
+		cb._rotulos = Node3D.new()   ## los rótulos del mapa cuelgan de aquí al construir la ciudad
+		cb.add_child(cb._rotulos)
+		if nombre == "CiudadOeste" and ex._mallas_mod().is_empty():
+			_linea("  CiudadOeste: sin mallas modulares cargadas, no aplica")
+			cb.queue_free()
+			continue
+		var antes := cb.get_child_count() + cb.puntos_clic.size()
+		(casos[nombre] as Callable).call(ex)
+		var nuevos := cb.get_child_count() + cb.puntos_clic.size() - antes   ## piezas o puntos de clic
+		_comprobar(nuevos >= 1, "%s deja piezas (%d)" % [nombre, nuevos])
+		cb.queue_free()
