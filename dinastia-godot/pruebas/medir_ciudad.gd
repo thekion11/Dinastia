@@ -310,6 +310,20 @@ func _detalle_a_pie() -> void:
 				por_grupo[gk2] = int(por_grupo.get(gk2, 0)) + 1
 				break
 			q2 = q2.get_parent()
+	## Dentro de `Trafico`: mallas por vehículo (nombre del hijo directo sin números) (M-476).
+	var traf := _v.find_child("Trafico", true, false)
+	if traf != null:
+		var por_veh := {}
+		for n in traf.find_children("*", "MeshInstance3D", true, false):
+			var top: Node = n
+			while top.get_parent() != null and top.get_parent() != traf:
+				top = top.get_parent()
+			var nom := String(top.name).rstrip("0123456789_") if not String(top.name).begins_with("@") else top.get_class()
+			por_veh[nom] = Vector2i(int(por_veh.get(nom, Vector2i.ZERO).x) + 1, 0)
+		var ov := por_veh.keys()
+		ov.sort_custom(func(x, y): return por_veh[x].x > por_veh[y].x)
+		for k in ov.slice(0, 12):
+			print("TRAFICO_MALLAS ", por_veh[k].x, "  ", k)
 	var og := por_grupo.keys()
 	og.sort_custom(func(x, y): return por_grupo[x] > por_grupo[y])
 	for k in og.slice(0, 12):
