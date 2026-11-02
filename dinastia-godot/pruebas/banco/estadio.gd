@@ -378,3 +378,22 @@ func _probar_visor_efectos() -> void:
 	var n_det := TelefericoEstacion.detalles(anden)
 	_comprobar(n_det > 0 and anden.get_child_count() > 0, "el andén del teleférico recibe sus detalles (%d)" % n_det)
 	raiz.queue_free()
+
+## M-404: vomitorios de la grada (tres MultiMesh por tribuna) y la obra del estadio (solo datos).
+func _probar_vomitorios() -> void:
+	_titulo("VOMITORIOS DE LA GRADA")
+	var contados: Array[int] = []
+	for largo: float in [30.0, 80.0, 140.0]:
+		var deck := MeshInstance3D.new()
+		deck.mesh = BoxMesh.new()
+		add_child(deck)
+		VomitoriosGrada.montar(deck, largo, 12.0, false)
+		var multis: Array = deck.get_children().filter(func(h): return h is MultiMeshInstance3D)
+		_comprobar(multis.size() == 3, "largo %.0f: hormigón, hueco y rótulo (3 multimallas, %d)" % [largo, multis.size()])
+		if multis.size() == 3:
+			var n: int = (multis[0] as MultiMeshInstance3D).multimesh.instance_count
+			_comprobar(n >= 2 and n <= 6 and (multis[1] as MultiMeshInstance3D).multimesh.instance_count == n, "largo %.0f: entre 2 y 6 accesos, uno por hueco (%d)" % [largo, n])
+			contados.append(n)
+		deck.queue_free()
+	_comprobar(contados.size() == 3 and contados[2] >= contados[0], "una grada más larga no tiene menos accesos %s" % str(contados))
+	_comprobar(EstadioObra.new() != null, "EstadioObra se crea (solo datos)")
