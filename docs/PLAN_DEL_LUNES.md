@@ -13,6 +13,11 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - **Del dueño**: §0 y §1 (FPS en hardware real, builds, keystore, publicar la política de privacidad, red a Wikimedia).
 - **Auditoría de código del 28-10**: lo arreglado y lo pendiente (materiales sin compartir, vías sin conectar, probables del guardado, `MotorLibre`) está en `CIERRE_2026-10-28.md` §«Auditoría»; las órdenes sin completar y los fallos abiertos, en sus dos secciones siguientes.
 
+## ESTADO 120 FPS (2-11-2026) — detalle en `04_auditorias/rendimiento_120fps.md`
+- **Hecho y en `main`**: butacas cercanas livianas desde el inicio en MEDIO (partido −34 % de triángulos, 1,34 M → 0,88 M; RAM 3,1 → 2,4 GB); escalón 6 de calidad adaptativa «sin sombra del sol»; perfil ligero automático por hardware (`CalidadAuto`: Intel HD/UHD, ≤4,5 GB, ≤2 hilos, móvil); benchmark (`--medir`, `--benchmark`, botón en Ajustes); `hw_modesto.sh`, `presupuesto.sh` (en `especiales.sh todo`), `medir_entorno_nodos`, `medir_cpu_partido`.
+- **Pendiente**: FPS reales y benchmark en Android/hardware real (dueño); ciudad ~4,4-5 GB de RAM y 9,7 s de carga (sesión del prólogo, rama `ccr-1749cbc2-dmhp94-prologo`); CPU del partido por clase con tiempo de CPU del proceso en máquina sin otras cargas; EntornoEstadio (333 llamadas) con fusión de mallas; rótulos de vallas en un atlas; tick 10-20 Hz con interpolación de peatones/coches; público lejano en MultiMesh; BC7 de caras (decisión del dueño, §4).
+- **Aviso**: el tiempo de fotograma `--headless` tiene un suelo de 6,9 ms: no sirve para medir CPU; usar triángulos/llamadas/memoria o CPU del proceso.
+
 ## 0. Lo que espera una decisión tuya (lista corta)
 
 Sin esto, las filas que dependen de ello no avanzan. El detalle está en la sección que se cita.
