@@ -1,17 +1,31 @@
-# CI de Dinastía (26-10-2026): Godot 4.7.2, el banco de pruebas entero y, si pasa, el build de Windows.
+# CI de Dinastía (26-10-2026; selector de versión 2-11-2026): Godot 4.7.2, el banco + pruebas especiales y, si pasan, la versión elegida.
 #
 # - Imagen: barichello/godot-ci:4.7.2 (etiqueta de Docker Hub, sin «-stable»; trae godot,
 #   las plantillas de exportación y git-lfs). La 4.3 de antes no abría el proyecto.
 # - LFS: solo `dinastia-godot/**` (las ramas y carpetas viejas pesan; ver CLAUDE.md).
 # - El banco (`dinastia-godot/herramientas/banco.sh`) tiene que terminar en «FIN. 0 fallos»: se comprueba
 #   el código de salida Y el texto del registro, que se sube como artefacto aunque falle.
-# - El build de Windows solo corre si el banco pasa. Firmas, keystore y builds públicos los lleva el dueño.
+# - Ningún build ni compilación corre si el banco no pasa. Firmas, keystore y builds públicos los lleva el dueño.
 name: Compilar y probar Dinastia
 
+## OBJETIVO (2-11-2026): en «Run workflow» se elige UNA versión y solo corre esa (más el banco, que SIEMPRE
+## corre primero: ninguna exportación ni compilación empieza sin que pase). Con un push se hace «todo».
+##   todo · windows · linux · android (compila el C++ de Android y exporta el APK) · arm (C++ en Linux arm64) · solo-banco
 on:
   push:
     branches: [ "**" ]
   workflow_dispatch:
+    inputs:
+      objetivo:
+        description: "Qué versión construir (el banco corre siempre)"
+        type: choice
+        default: todo
+        options: [ todo, windows, linux, android, arm, solo-banco ]
+
+## Un push nuevo a la misma rama cancela la ejecución anterior (ahorra minutos y colas).
+concurrency:
+  group: compilar-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   banco:
@@ -20,24 +34,12 @@ jobs:
     container:
       image: barichello/godot-ci:4.7.2
     steps:
-      - name: Descargar el repositorio (sin LFS)
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           lfs: false
 
-      - name: Recursos LFS del juego
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          command -v git-lfs >/dev/null || (apt-get update && apt-get install -y git-lfs)
-          git lfs install --local
-          git lfs pull --include="dinastia-godot/**"
-
-      - name: Importar el proyecto
-        working-directory: dinastia-godot
-        run: |
-          godot --version
-          timeout 900 godot --headless --path . --import > /tmp/importar.txt 2>&1 || true
-          tail -n 20 /tmp/importar.txt
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
 
       - name: Banco de pruebas entero
         working-directory: dinastia-godot
@@ -53,32 +55,39 @@ jobs:
           fi
           grep -q "FIN. 0 fallos" /tmp/banco.txt || { echo "El banco no terminó en «FIN. 0 fallos»."; exit 1; }
 
+      ## Lo que el banco no ve (norma de líneas, auditorías, C++ = GDScript, tráfico, partido con motor real…).
+      - name: Pruebas especiales rápidas
+        working-directory: dinastia-godot
+        run: |
+          set +e
+          bash herramientas/especiales.sh | tee /tmp/especiales.txt
+          grep -q "^FALLO" /tmp/especiales.txt && { echo "Hay pruebas especiales que fallan."; exit 1; }
+          exit 0
+
       - name: Subir el registro del banco
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: banco-registro
-          path: /tmp/banco.txt
+          path: |
+            /tmp/banco.txt
+            /tmp/especiales.txt
           if-no-files-found: ignore
 
   export-windows:
     needs: banco
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'windows' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     container:
       image: barichello/godot-ci:4.7.2
     steps:
-      - name: Descargar el repositorio (sin LFS)
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           lfs: false
 
-      - name: Recursos LFS del juego
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          command -v git-lfs >/dev/null || (apt-get update && apt-get install -y git-lfs)
-          git lfs install --local
-          git lfs pull --include="dinastia-godot/**"
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
 
       - name: Plantillas de exportación
         run: |
@@ -89,7 +98,6 @@ jobs:
         run: |
           mkdir -v -p build/windows
           cd dinastia-godot
-          timeout 900 godot --headless --path . --import > /dev/null 2>&1 || true
           codigo=0
           godot --headless --export-release "Windows" ../build/windows/Dinastia.exe > /tmp/export.txt 2>&1 || codigo=$?
           tail -n 30 /tmp/export.txt
@@ -109,22 +117,18 @@ jobs:
   ## LINUX (30-10-2026): preset público «Linux» (sin caras ni datos reales).
   export-linux:
     needs: banco
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'linux' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     container:
       image: barichello/godot-ci:4.7.2
     steps:
-      - name: Descargar el repositorio (sin LFS)
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           lfs: false
 
-      - name: Recursos LFS del juego
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          command -v git-lfs >/dev/null || (apt-get update && apt-get install -y git-lfs)
-          git lfs install --local
-          git lfs pull --include="dinastia-godot/**"
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
 
       - name: Plantillas de exportación
         run: |
@@ -135,7 +139,6 @@ jobs:
         run: |
           mkdir -v -p build/linux
           cd dinastia-godot
-          timeout 900 godot --headless --path . --import > /dev/null 2>&1 || true
           codigo=0
           godot --headless --export-release "Linux" ../build/linux/Dinastia.x86_64 > /tmp/export.txt 2>&1 || codigo=$?
           tail -n 30 /tmp/export.txt
@@ -156,6 +159,8 @@ jobs:
   ## LA EXTENSIÓN C++ PARA ANDROID (M-353, 31-10-2026): el contenedor de trabajo no llega al NDK; las máquinas
   ## de GitHub lo traen instalado ($ANDROID_NDK_LATEST_HOME). Se compila arm64 y la usa `export-android`.
   nativo-android:
+    needs: banco
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'android' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -182,6 +187,8 @@ jobs:
   ## para Linux arm64 con las mismas opciones (sin FMA) y `probar_nativo` comprueba en una máquina ARM que
   ## el C++ da los mismos bytes que GDScript.
   nativo-arm:
+    needs: banco
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'arm' }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 60
     steps:
@@ -214,22 +221,18 @@ jobs:
 
   export-android:
     needs: [banco, nativo-android]
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'android' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     container:
       image: barichello/godot-ci:4.7.2
     steps:
-      - name: Descargar el repositorio (sin LFS)
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           lfs: false
 
-      - name: Recursos LFS del juego
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          command -v git-lfs >/dev/null || (apt-get update && apt-get install -y git-lfs)
-          git lfs install --local
-          git lfs pull --include="dinastia-godot/**"
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
 
       - name: La extensión C++ de Android (M-353)
         uses: actions/download-artifact@v4
@@ -249,7 +252,6 @@ jobs:
         run: |
           mkdir -v -p build/android
           cd dinastia-godot
-          timeout 900 godot --headless --path . --import > /dev/null 2>&1 || true
           godot --headless --export-debug "Android" ../build/android/Dinastia-debug.apk
           ls -la ../build/android
           ## M-353: la extensión C++ tiene que ir dentro del APK (si no, el juego usa la versión GDScript, más lenta).
