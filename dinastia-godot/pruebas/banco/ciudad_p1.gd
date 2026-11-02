@@ -137,6 +137,7 @@ func _probar_ciudad_grande() -> void:
 	e.armar_red()
 	e.armar_bloques()
 	e.armar_transporte()
+	_comprobar(cb.materiales_alterados().is_empty(), "la red vial y el transporte no modifican materiales compartidos %s" % str(cb.materiales_alterados()))
 	var lado := float(CiudadExpansion.K) * CiudadExpansion.CELDA * 2.0
 	_comprobar(lado * lado >= 4.0 * 1200.0 * 1200.0, "la ciudad mide %d m de lado: más de 4 veces la superficie de antes" % int(lado))
 	_comprobar(e.tramos.size() >= 900, "%d tramos de calle en la red" % e.tramos.size())
@@ -285,6 +286,9 @@ func _probar_ciudad_b7() -> void:
 	var cb := CityBuilder.new()
 	add_child(cb)
 	cb.build(datos)
+	## MATERIALES COMPARTIDOS (2-11-2026): la ciudad reutiliza materiales iguales y ninguno salió modificado.
+	_comprobar(cb._cache_mat.size() > 20, "la ciudad comparte materiales (%d distintos)" % cb._cache_mat.size())
+	_comprobar(cb.materiales_alterados().is_empty(), "ningún material compartido de la ciudad fue modificado %s" % str(cb.materiales_alterados()))
 	var por_k := {}
 	for p: Dictionary in cb.puntos_clic:
 		por_k[String(p["k"])] = String(p["estado"])

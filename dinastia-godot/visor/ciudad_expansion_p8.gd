@@ -285,7 +285,7 @@ func _mobiliario_urbano() -> void:
 			techos_k.append(Transform3D(rot * Basis.from_scale(Vector3(2.6, 0.25, 2.8)), pk + Vector3(0, 3.05, 0)))
 			for i in 5:
 				bicis.append(Transform3D(rot * Basis.from_scale(Vector3(0.06, 0.8, 0.9)), a + dir * (largo * 0.7 + float(i) * 0.7) - lat * (ancho * 0.5 + 0.7) + Vector3(0, 0.7, 0)))
-	var hierro := b._mat_simple(Color(0.14, 0.14, 0.15), 0.45)
+	var hierro := b._mat_unico(Color(0.14, 0.14, 0.15), 0.45)
 	hierro.metallic = 0.6
 	_multimesh(cil, hierro, tapas, Vector3.ONE)
 	_multimesh(caja, b._mat_simple(Color(0.1, 0.1, 0.11), 0.5), sumideros, Vector3.ONE)
