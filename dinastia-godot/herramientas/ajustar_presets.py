@@ -26,18 +26,19 @@ if sufijo:
     CAMBIOS["application/product_version"] = '"1.0%s"' % sufijo
 
 lineas = open("export_presets.cfg", encoding="utf-8").read().split("\n")
-dentro, vistos = False, 0
+dentro, vistos, existe = False, 0, False
 for i, l in enumerate(lineas):
     if l.startswith("[preset.") and not l.endswith(".options]"):
         dentro = False
     m = re.match(r'name="(.*)"', l)
     if m and not l.startswith("["):
         dentro = (m.group(1) == preset)
+        existe = existe or dentro
     if dentro and "=" in l:
         k = l.split("=", 1)[0]
         if k in CAMBIOS:
             lineas[i] = "%s=%s" % (k, CAMBIOS[k]); vistos += 1
-if not vistos:
+if not existe:
     sys.exit("No encontré el preset «%s» en export_presets.cfg" % preset)
 open("export_presets.cfg", "w", encoding="utf-8").write("\n".join(lineas))
 print("preset %s: %d ajustes (%s)" % (preset, vistos, "armv7" if armv7 else "iconos"))
