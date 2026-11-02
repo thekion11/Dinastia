@@ -140,6 +140,11 @@ func _hoja_cuerpo() -> Control:
 	for k: String in FutbolistaQ.MODELOS_BASE:
 		if FutbolistaQ.base_extra(k, String(asp.get("cuerpo", "male"))) != null:
 			modelos.append([k, String((FutbolistaQ.MODELOS_BASE[k] as Array)[0])])
+	var ajenos := FutbolistaQ.todos_ajenos()
+	for k: String in ajenos:
+		var fila: Array = ajenos[k]
+		if (String(fila[2]) == "" or String(fila[2]) == String(asp.get("cuerpo", "male"))) and FutbolistaQ.ajeno_disponible(k):
+			modelos.append([k, String(fila[0])])
 	if modelos.size() > 1:
 		ControlesPersonaje.opciones(vb, asp, "Modelo base", "modelo", modelos, cb, false,
 			"los modelos de fantasía traen su ropa" if String(asp.get("modelo", "")) != "" else "")

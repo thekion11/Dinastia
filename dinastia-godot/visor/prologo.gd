@@ -97,6 +97,29 @@ func _ready() -> void:
 	else:
 		_ir_al_paso(0)
 
+## Las cajas de setos, jardineras y arbustos cerca de `centro` (a menos de 40 m): donde un personaje que
+## aparece de golpe quedaría metido en la vegetación.
+static func obstaculos_blandos(raiz: Node, centro: Vector3) -> Array[AABB]:
+	var r: Array[AABB] = []
+	for n in raiz.find_children("*", "MultiMeshInstance3D", true, false):
+		var mm := n as MultiMeshInstance3D
+		var nom := String(mm.name).to_lower()
+		if mm.multimesh == null or not (nom.contains("seto") or nom.contains("jardiner") or nom.contains("arbust")):
+			continue
+		var caja := mm.multimesh.mesh.get_aabb() if mm.multimesh.mesh != null else AABB(Vector3(-0.5, -0.5, -0.5), Vector3.ONE)
+		for i in mm.multimesh.instance_count:
+			var t := mm.global_transform * mm.multimesh.get_instance_transform(i)
+			if t.origin.distance_to(centro) < 40.0:
+				r.append(t * caja)
+	for n in raiz.find_children("*", "MeshInstance3D", true, false):
+		var mi := n as MeshInstance3D
+		if mi.mesh == null or not mi.is_inside_tree() or mi.global_position.distance_to(centro) > 40.0:
+			continue
+		var nom := String(mi.name).to_lower()
+		if mi.mesh is SphereMesh or nom.contains("seto") or nom.contains("arbust") or nom.contains("macet"):
+			r.append(mi.global_transform * mi.get_aabb())
+	return r
+
 ## La ciudad del club (misma semilla y estadio que la ciudad de siempre).
 func _construir_mundo() -> void:
 	vista = VistaCiudad.new()
@@ -120,6 +143,7 @@ func _construir_mundo() -> void:
 	vista._ciclo_activo = false
 	vista._hora = 10.0
 	vista._aplicar_hora()
+	PrologoMentor.obstaculos = obstaculos_blandos(vista._raiz3d, puerta)
 
 func _empezar_a_pie() -> void:
 	vista.explorar("pie", puerta + Vector3(0, 0, 7.0))

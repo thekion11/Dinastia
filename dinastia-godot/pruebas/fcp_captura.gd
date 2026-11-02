@@ -77,6 +77,13 @@ func _personaje() -> void:
 	if OS.get_environment("MODELO") != "":
 		hojas.cambiar("modelo", OS.get_environment("MODELO"), true)
 		await _esperar_s(1.5)
+		var est: EstudioPersonaje = p.get("_estudio")
+		var nodo: Node = est.modelo().get("nodo")
+		for sk in nodo.find_children("*", "Skeleton3D", true, false):
+			var skk := sk as Skeleton3D
+			var ih := skk.find_bone("rightHand")
+			if ih >= 0:
+				print("mano y=", skk.get_bone_global_pose(ih).origin.y, " hombro y=", skk.get_bone_global_pose(skk.find_bone("rightUpperArm")).origin.y, " ip=", nodo.find_children("*", "Node", true, false).filter(func(n): return n is IdleProcedural).size())
 		await _foto("modelo_" + OS.get_environment("MODELO"))
 		return
 	var sig := _boton(p, Idiomas.t("Siguiente: datos →"))
