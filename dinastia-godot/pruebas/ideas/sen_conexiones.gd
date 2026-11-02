@@ -36,12 +36,12 @@ func _ready() -> void:
 	_comprobar(int(medidas[3]["mundo"]) == int(medidas[1]["mundo"]), "el mundo no gana conexiones entre la 2.ª y la 4.ª vuelta (%d -> %d)" % [medidas[1]["mundo"], medidas[3]["mundo"]])
 	_comprobar(int(medidas[3]["ui"]) == int(medidas[1]["ui"]), "la interfaz de la carrera tampoco (%d -> %d)" % [medidas[1]["ui"], medidas[3]["ui"]])
 	_comprobar(int(medidas[3]["huerfanos"]) <= int(medidas[1]["huerfanos"]), "sin nodos huérfanos nuevos (%d -> %d)" % [medidas[1]["huerfanos"], medidas[3]["huerfanos"]])
-	## CONOCIDO (28-10-2026): cada partido abierto y cerrado deja ~400 objetos sin nodo ni recurso (los nodos y los recursos se quedan estables: 137 y 1100).
-	## Posible ciclo de referencias en el partido; sin resolver. Esta barrera solo impide que empeore (2-11: una vuelta con gol o repetición deja ~700 y otra ~300: hallazgo de M-386, no se tapa subiendo el tope).
+	## M-386 (2-11, resuelto): cada partido dejaba ~300 objetos (700 con gol o repetición) porque `OlaGrada._cache` guardaba, por estadio, los materiales
+	## de la grada para siempre (nunca borraba los estadios liberados). Ahora se purgan: +8 por vuelta. Tope 40: si vuelve a subir, hay otro retén.
 	var crece := (int(medidas[3]["objetos"]) - int(medidas[1]["objetos"])) / 2
 	_comprobar(int(medidas[3]["nodos"]) == int(medidas[1]["nodos"]) and int(medidas[3]["recursos"]) == int(medidas[1]["recursos"]),
 		"los nodos y los recursos vivos no crecen (%d y %d)" % [medidas[3]["nodos"], medidas[3]["recursos"]])
-	_comprobar(crece <= 450, "los objetos sueltos crecen como mucho lo conocido por partido (+%d por vuelta, tope 450)" % crece)
+	_comprobar(crece <= 40, "los objetos sueltos crecen como mucho lo conocido por partido (+%d por vuelta, tope 40)" % crece)
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())
 	get_tree().quit(0 if _fallos.is_empty() else 1)
