@@ -338,6 +338,13 @@ static func escala_real(esc: PackedScene) -> Vector3:
 
 static var _mats_coche := {}   ## (textura, tinte) → material compartido de los coches fbx
 ## Un coche de la flota, ya con el morro hacia +Z y a su escala.
+## Un coche para el tráfico: igual que `instanciar_coche`, con sus piezas fundidas (M-476: carrocería, ruedas, placas y faros
+## en pocas mallas; en la calle nadie las toca por separado).
+static func instanciar_trafico(par: Dictionary, rng: RandomNumberGenerator = null) -> Node3D:
+	var c := instanciar_coche(par, rng)
+	FundirPiezas.fundir(c, 400.0, "Carroceria")
+	return c
+
 static func instanciar_coche(par: Dictionary, rng: RandomNumberGenerator = null) -> Node3D:
 	var modelo: Node3D = (par["esc"] as PackedScene).instantiate()
 	if not bool(par.get("fbx", false)):

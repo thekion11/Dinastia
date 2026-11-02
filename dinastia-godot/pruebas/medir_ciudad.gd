@@ -125,6 +125,7 @@ func _process(_d: float) -> void:
 ## el nombre del nodo padre. Sirve para elegir dónde atacar.
 func _detalle() -> void:
 	var grupos := {}
+	var ejemplos := {}
 	for n in _v.find_children("*", "GeometryInstance3D", true, false):
 		var g := n as GeometryInstance3D
 		if not g.is_visible_in_tree() or g.visibility_range_end > 0.0:
@@ -258,6 +259,7 @@ func _detalle_a_pie() -> void:
 	if cam == null:
 		return
 	var grupos := {}
+	var ejemplos := {}
 	for n in _v.find_children("*", "GeometryInstance3D", true, false):
 		var g := n as GeometryInstance3D
 		if not g.is_visible_in_tree():
@@ -275,6 +277,15 @@ func _detalle_a_pie() -> void:
 			clave = (a.get_class() if nom.begins_with("@") else nom.rstrip("0123456789_")) + "/" + clave
 			a = a.get_parent()
 		grupos[clave] = int(grupos.get(clave, 0)) + 1
+		if not ejemplos.has(clave):
+			var sc := ""
+			var q2: Node = g.get_parent()
+			while q2 != null and q2 != _v:
+				if q2.get_script() != null:
+					sc = String((q2.get_script() as Script).resource_path).get_file()
+					break
+				q2 = q2.get_parent()
+			ejemplos[clave] = "%s malla=%s script=%s pos=%s" % [g.name, g.get("mesh").get_class() if g.get("mesh") != null else "-", sc, g.global_position.round()]
 		## El primer grupo de Godot hacia arriba: lo que impide a `agrupar` juntarla.
 		var q: Node = g
 		while q != null and q != _v:
@@ -286,7 +297,35 @@ func _detalle_a_pie() -> void:
 	var orden := grupos.keys()
 	orden.sort_custom(func(x, y): return grupos[x] > grupos[y])
 	for k in orden.slice(0, 30):
-		print("A_PIE ", grupos[k], "  ", k)
+		print("A_PIE ", grupos[k], "  ", k, "  ej: ", ejemplos.get(k, ""))
 	for m in Optimizar._motivos:
 		print("MOTIVO ", Optimizar._motivos[m], "  ", m)
+	## Todas las mallas (vean o no) que un grupo impide juntar, por nombre de grupo (M-476).
+	var por_grupo := {}
+	for n in _v.find_children("*", "MeshInstance3D", true, false):
+		var q2: Node = n
+		while q2 != null and q2 != _v:
+			if not q2.get_groups().is_empty():
+				var gk2 := String(q2.get_groups()[0])
+				por_grupo[gk2] = int(por_grupo.get(gk2, 0)) + 1
+				break
+			q2 = q2.get_parent()
+	## Dentro de `Trafico`: mallas por vehículo (nombre del hijo directo sin números) (M-476).
+	var traf := _v.find_child("Trafico", true, false)
+	if traf != null:
+		var por_veh := {}
+		for n in traf.find_children("*", "MeshInstance3D", true, false):
+			var top: Node = n
+			while top.get_parent() != null and top.get_parent() != traf:
+				top = top.get_parent()
+			var nom := String(top.name).rstrip("0123456789_") if not String(top.name).begins_with("@") else top.get_class()
+			por_veh[nom] = Vector2i(int(por_veh.get(nom, Vector2i.ZERO).x) + 1, 0)
+		var ov := por_veh.keys()
+		ov.sort_custom(func(x, y): return por_veh[x].x > por_veh[y].x)
+		for k in ov.slice(0, 12):
+			print("TRAFICO_MALLAS ", por_veh[k].x, "  ", k)
+	var og := por_grupo.keys()
+	og.sort_custom(func(x, y): return por_grupo[x] > por_grupo[y])
+	for k in og.slice(0, 12):
+		print("GRUPO_TODAS ", por_grupo[k], "  ", k)
 
