@@ -297,7 +297,7 @@ static func kit_de_club(c: Club) -> Dictionary:
 	base["sp"] = sp
 	## EL ESCUDO DEL CLUB EN LA CAMISETA (14-10-2026): el mismo escudo que se ve en
 	## las fichas, no un escudete genérico.
-	base["escudo_tex"] = Escudo.textura(c, 64)
+	base["escudo_tex"] = EscudoTexto.textura(c, 64)
 	base["marca"] = marca_de(c)
 	return base
 

@@ -306,7 +306,7 @@ func _ver_estadio() -> void:
 				(h as Control).visible = false
 				ocultados.append(h)
 	var carga := PantallaCarga.mostrar(self, Idiomas.t("Levantando el estadio…"))
-	await get_tree().process_frame
+	await PantallaCarga.dejar_pintar(get_tree())
 	var vista := VistaEstadio.new()
 	vista.por_partes = true   ## (30-10-2026) armado entre fotogramas: la carga sigue viva
 	## ANTES de `abrir()`: `VistaEstadio._construir()` monta la pantalla gigante
