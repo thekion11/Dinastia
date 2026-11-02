@@ -160,7 +160,7 @@ func _marca(que: String) -> void:
 		_t_respiro = Time.get_ticks_usec()
 	if _medir_tiempos:
 		var ahora := Time.get_ticks_usec()
-		Registro.depurar("TIEMPO", "%-24s %6.0f ms" % [que, (ahora - _t_marca) / 1000.0])
+		Registro.depurar("TIEMPO", "%-24s %6.0f ms  mem %6.0f MB" % [que, (ahora - _t_marca) / 1000.0, Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0])
 		_t_marca = ahora
 
 func _color_luces() -> Color:
