@@ -17,7 +17,7 @@ func _comisaria() -> void:
 	for k in 5:
 		_poner("bookcaseClosedDoors", Vector3(-8.5 + float(k) * 0.82, 0, -5.75), 0.0, null, {"wood": Color(0.55, 0.58, 0.62)})
 	## El calabozo: rejas, pared y un banco con un detenido.
-	var reja := Mini3D.mat(Color(0.3, 0.3, 0.32), 0.3)
+	var reja := Mini3D.mat_unico(Color(0.3, 0.3, 0.32), 0.3)
 	reja.metallic = 0.7
 	var x := 3.0
 	while x <= 9.0:

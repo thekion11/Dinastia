@@ -136,6 +136,11 @@ func jugar_ronda(ya_jugado: Partido = null) -> Array:
 			"local": a, "visita": b, "gl": gl, "gv": gv,
 			"penales": penales, "pasa": gana, "ronda": titulo,
 		})
+	## Un número impar de vivos (un cuadro cargado o armado a mano) ya no descarta al último club en silencio
+	## (auditoría del 28-10): pasa de ronda con un «bye» (sin fila en los resultados: nadie lo juega).
+	if vivos.size() % 2 == 1:
+		var libre: Club = vivos[vivos.size() - 1]
+		pasan.append(libre)
 	historial.append({"ronda": titulo, "resultados": resultados})
 	vivos = pasan
 	ronda += 1
