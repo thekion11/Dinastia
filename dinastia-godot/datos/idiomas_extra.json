@@ -6779,7 +6779,19 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Your car is in the garage after all the knocks: bus and metro this week.",
   "Para el coche para bajarte (F).": "Stop the car to get out (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Car parked. F next to it to get back in.",
-  "Tu coche está aparcado a %d m.": "Your car is parked %d m away."
+  "Tu coche está aparcado a %d m.": "Your car is parked %d m away.",
+  "Consejo: arrastra al personaje para girarlo y usa la rueda del ratón para acercarte.": "Tip: drag your character to rotate it and use the mouse wheel to zoom in.",
+  "Consejo: la mascota de tu club gesticula en la banda durante los partidos.": "Tip: your club's mascot gestures on the touchline during matches.",
+  "Consejo: los patrocinadores de tu camiseta salen de los contratos de Finanzas.": "Tip: the sponsors on your shirt come from the contracts in Finance.",
+  "Consejo: el escudo y los colores que elijas se ven en la camiseta, el estadio y la ciudad.": "Tip: the crest and colours you choose show up on the shirt, the stadium and the city.",
+  "Consejo: el museo del club guarda los trofeos que vas ganando.": "Tip: the club museum keeps the trophies you win.",
+  "Consejo: puedes cambiar el aspecto de tu personaje cuando quieras desde el menú.": "Tip: you can change your character's look whenever you want from the menu.",
+  "Consejo: descansar a los jugadores cansados baja el riesgo de lesión.": "Tip: resting tired players lowers the risk of injury.",
+  "Consejo: cuida la caja del club: una plantilla demasiado cara puede ahogarte.": "Tip: watch the club's cash: a payroll that is too expensive can sink you.",
+  "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "Tip: change your tactics during the match if the opponent surprises you.",
+  "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "Tip: your phone has an agenda with the day's appointments and meetings.",
+  "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "Tip: a good press conference keeps the fans happy.",
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Tip: the city has a metro, buses and a cable car so you can get around at ease."
  },
  "pt": {
   "Historia": "História",
@@ -13561,7 +13573,19 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 O teu carro está na oficina por causa das pancadas: esta semana, autocarro e metro.",
   "Para el coche para bajarte (F).": "Para o carro para saíres (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Carro estacionado. F junto a ele para voltar a entrar.",
-  "Tu coche está aparcado a %d m.": "O teu carro está estacionado a %d m."
+  "Tu coche está aparcado a %d m.": "O teu carro está estacionado a %d m.",
+  "Consejo: arrastra al personaje para girarlo y usa la rueda del ratón para acercarte.": "Dica: arraste a personagem para a rodar e use a roda do rato para aproximar.",
+  "Consejo: la mascota de tu club gesticula en la banda durante los partidos.": "Dica: a mascote do teu clube faz gestos junto à linha lateral durante os jogos.",
+  "Consejo: los patrocinadores de tu camiseta salen de los contratos de Finanzas.": "Dica: os patrocinadores da tua camisola vêm dos contratos de Finanças.",
+  "Consejo: el escudo y los colores que elijas se ven en la camiseta, el estadio y la ciudad.": "Dica: o emblema e as cores que escolheres aparecem na camisola, no estádio e na cidade.",
+  "Consejo: el museo del club guarda los trofeos que vas ganando.": "Dica: o museu do clube guarda os troféus que vais conquistando.",
+  "Consejo: puedes cambiar el aspecto de tu personaje cuando quieras desde el menú.": "Dica: podes mudar o aspeto da tua personagem quando quiseres a partir do menu.",
+  "Consejo: descansar a los jugadores cansados baja el riesgo de lesión.": "Dica: descansar os jogadores cansados reduz o risco de lesão.",
+  "Consejo: cuida la caja del club: una plantilla demasiado cara puede ahogarte.": "Dica: cuida da tesouraria do clube: um plantel demasiado caro pode afogar-te.",
+  "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "Dica: muda a tática durante o jogo se o adversário te surpreender.",
+  "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "Dica: o teu telemóvel tem uma agenda com os compromissos e reuniões do dia.",
+  "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "Dica: uma boa conferência de imprensa mantém os adeptos contentes.",
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Dica: a cidade tem metro, autocarros e teleférico para te deslocares sem pressa."
  },
  "patrones": [
   [
@@ -26076,7 +26100,19 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Ta voiture est au garage à cause des chocs : cette semaine, bus et métro.",
   "Para el coche para bajarte (F).": "Arrête la voiture pour descendre (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Voiture garée. F à côté pour remonter.",
-  "Tu coche está aparcado a %d m.": "Ta voiture est garée à %d m."
+  "Tu coche está aparcado a %d m.": "Ta voiture est garée à %d m.",
+  "Consejo: arrastra al personaje para girarlo y usa la rueda del ratón para acercarte.": "Astuce : faites glisser le personnage pour le tourner et utilisez la molette pour zoomer.",
+  "Consejo: la mascota de tu club gesticula en la banda durante los partidos.": "Astuce : la mascotte de votre club s'agite en bord de touche pendant les matchs.",
+  "Consejo: los patrocinadores de tu camiseta salen de los contratos de Finanzas.": "Astuce : les sponsors de votre maillot proviennent des contrats de la section Finances.",
+  "Consejo: el escudo y los colores que elijas se ven en la camiseta, el estadio y la ciudad.": "Astuce : l'écusson et les couleurs que vous choisissez se voient sur le maillot, au stade et en ville.",
+  "Consejo: el museo del club guarda los trofeos que vas ganando.": "Astuce : le musée du club conserve les trophées que vous remportez.",
+  "Consejo: puedes cambiar el aspecto de tu personaje cuando quieras desde el menú.": "Astuce : vous pouvez changer l'apparence de votre personnage quand vous voulez depuis le menu.",
+  "Consejo: descansar a los jugadores cansados baja el riesgo de lesión.": "Astuce : faire souffler les joueurs fatigués réduit le risque de blessure.",
+  "Consejo: cuida la caja del club: una plantilla demasiado cara puede ahogarte.": "Astuce : surveillez la trésorerie du club : une masse salariale trop élevée peut vous étrangler.",
+  "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "Astuce : changez de tactique pendant le match si l'adversaire vous surprend.",
+  "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "Astuce : votre téléphone contient un agenda avec les rendez-vous et réunions du jour.",
+  "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "Astuce : une bonne conférence de presse garde les supporters contents.",
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Astuce : la ville a un métro, des bus et un téléphérique pour vous déplacer sans hâte."
  },
  "it": {
   "Historia": "Storia",
@@ -32858,7 +32894,19 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 La tua auto è in officina per i colpi: questa settimana, autobus e metro.",
   "Para el coche para bajarte (F).": "Ferma l'auto per scendere (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Auto parcheggiata. F vicino per risalire.",
-  "Tu coche está aparcado a %d m.": "La tua auto è parcheggiata a %d m."
+  "Tu coche está aparcado a %d m.": "La tua auto è parcheggiata a %d m.",
+  "Consejo: arrastra al personaje para girarlo y usa la rueda del ratón para acercarte.": "Consiglio: trascina il personaggio per ruotarlo e usa la rotellina per avvicinarti.",
+  "Consejo: la mascota de tu club gesticula en la banda durante los partidos.": "Consiglio: la mascotte del tuo club fa gesti a bordo campo durante le partite.",
+  "Consejo: los patrocinadores de tu camiseta salen de los contratos de Finanzas.": "Consiglio: gli sponsor sulla tua maglia vengono dai contratti di Finanze.",
+  "Consejo: el escudo y los colores que elijas se ven en la camiseta, el estadio y la ciudad.": "Consiglio: lo stemma e i colori che scegli si vedono sulla maglia, nello stadio e in città.",
+  "Consejo: el museo del club guarda los trofeos que vas ganando.": "Consiglio: il museo del club conserva i trofei che vinci.",
+  "Consejo: puedes cambiar el aspecto de tu personaje cuando quieras desde el menú.": "Consiglio: puoi cambiare l'aspetto del tuo personaggio quando vuoi dal menu.",
+  "Consejo: descansar a los jugadores cansados baja el riesgo de lesión.": "Consiglio: far riposare i giocatori stanchi riduce il rischio di infortuni.",
+  "Consejo: cuida la caja del club: una plantilla demasiado cara puede ahogarte.": "Consiglio: tieni d'occhio la cassa del club: una rosa troppo costosa può affondarti.",
+  "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "Consiglio: cambia tattica durante la partita se l'avversario ti sorprende.",
+  "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "Consiglio: il tuo telefono ha un'agenda con gli appuntamenti e le riunioni del giorno.",
+  "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "Consiglio: una buona conferenza stampa tiene contenti i tifosi.",
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Consiglio: la città ha metro, autobus e funivia per spostarti senza fretta."
  },
  "de": {
   "Historia": "Geschichte",
@@ -39640,7 +39688,19 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Dein Auto ist wegen der Unfallschäden in der Werkstatt: diese Woche Bus und U-Bahn.",
   "Para el coche para bajarte (F).": "Halte an, um auszusteigen (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Auto geparkt. F daneben, um wieder einzusteigen.",
-  "Tu coche está aparcado a %d m.": "Dein Auto parkt %d m entfernt."
+  "Tu coche está aparcado a %d m.": "Dein Auto parkt %d m entfernt.",
+  "Consejo: arrastra al personaje para girarlo y usa la rueda del ratón para acercarte.": "Tipp: Zieh die Figur, um sie zu drehen, und zoome mit dem Mausrad heran.",
+  "Consejo: la mascota de tu club gesticula en la banda durante los partidos.": "Tipp: Das Maskottchen deines Vereins gestikuliert während der Spiele an der Seitenlinie.",
+  "Consejo: los patrocinadores de tu camiseta salen de los contratos de Finanzas.": "Tipp: Die Sponsoren auf deinem Trikot stammen aus den Verträgen unter Finanzen.",
+  "Consejo: el escudo y los colores que elijas se ven en la camiseta, el estadio y la ciudad.": "Tipp: Das Wappen und die Farben, die du wählst, sieht man auf dem Trikot, im Stadion und in der Stadt.",
+  "Consejo: el museo del club guarda los trofeos que vas ganando.": "Tipp: Das Vereinsmuseum bewahrt die Pokale auf, die du gewinnst.",
+  "Consejo: puedes cambiar el aspecto de tu personaje cuando quieras desde el menú.": "Tipp: Das Aussehen deiner Figur kannst du jederzeit im Menü ändern.",
+  "Consejo: descansar a los jugadores cansados baja el riesgo de lesión.": "Tipp: Müde Spieler zu schonen senkt das Verletzungsrisiko.",
+  "Consejo: cuida la caja del club: una plantilla demasiado cara puede ahogarte.": "Tipp: Behalte die Vereinskasse im Blick: ein zu teurer Kader kann dich ruinieren.",
+  "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "Tipp: Ändere die Taktik während des Spiels, wenn dich der Gegner überrascht.",
+  "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "Tipp: Dein Handy hat einen Terminkalender mit den Verabredungen und Besprechungen des Tages.",
+  "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "Tipp: Eine gute Pressekonferenz hält die Fans bei Laune.",
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Tipp: Die Stadt hat U-Bahn, Busse und eine Seilbahn, damit du dich in Ruhe fortbewegen kannst."
  },
  "ca": {
   "Historia": "Història",
@@ -46422,7 +46482,19 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 El teu cotxe és al taller pels cops: aquesta setmana, bus i metro.",
   "Para el coche para bajarte (F).": "Atura el cotxe per baixar (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Cotxe aparcat. F al costat per tornar a pujar.",
-  "Tu coche está aparcado a %d m.": "El teu cotxe està aparcat a %d m."
+  "Tu coche está aparcado a %d m.": "El teu cotxe està aparcat a %d m.",
+  "Consejo: arrastra al personaje para girarlo y usa la rueda del ratón para acercarte.": "Consell: arrossega el personatge per girar-lo i fes servir la roda del ratolí per apropar-te.",
+  "Consejo: la mascota de tu club gesticula en la banda durante los partidos.": "Consell: la mascota del teu club gesticula a la banda durant els partits.",
+  "Consejo: los patrocinadores de tu camiseta salen de los contratos de Finanzas.": "Consell: els patrocinadors de la teva samarreta surten dels contractes de Finances.",
+  "Consejo: el escudo y los colores que elijas se ven en la camiseta, el estadio y la ciudad.": "Consell: l'escut i els colors que triïs es veuen a la samarreta, a l'estadi i a la ciutat.",
+  "Consejo: el museo del club guarda los trofeos que vas ganando.": "Consell: el museu del club guarda els trofeus que vas guanyant.",
+  "Consejo: puedes cambiar el aspecto de tu personaje cuando quieras desde el menú.": "Consell: pots canviar l'aspecte del teu personatge quan vulguis des del menú.",
+  "Consejo: descansar a los jugadores cansados baja el riesgo de lesión.": "Consell: fer descansar els jugadors cansats redueix el risc de lesió.",
+  "Consejo: cuida la caja del club: una plantilla demasiado cara puede ahogarte.": "Consell: vigila la caixa del club: una plantilla massa cara et pot ofegar.",
+  "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "Consell: canvia la tàctica durant el partit si el rival et sorprèn.",
+  "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "Consell: el teu mòbil té una agenda amb les cites i reunions del dia.",
+  "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "Consell: una bona roda de premsa manté contenta l'afició.",
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Consell: la ciutat té metro, autobusos i telefèric per moure't sense pressa."
  },
  "pl": {
   "Club": "Klub",
@@ -53481,7 +53553,19 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Twój samochód jest w warsztacie po stłuczkach: w tym tygodniu autobus i metro.",
   "Para el coche para bajarte (F).": "Zatrzymaj samochód, żeby wysiąść (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Samochód zaparkowany. F obok niego, żeby wsiąść.",
-  "Tu coche está aparcado a %d m.": "Twój samochód stoi %d m stąd."
+  "Tu coche está aparcado a %d m.": "Twój samochód stoi %d m stąd.",
+  "Consejo: arrastra al personaje para girarlo y usa la rueda del ratón para acercarte.": "Wskazówka: przeciągnij postać, by ją obrócić, i użyj kółka myszy, by przybliżyć.",
+  "Consejo: la mascota de tu club gesticula en la banda durante los partidos.": "Wskazówka: maskotka twojego klubu gestykuluje przy linii boiska podczas meczów.",
+  "Consejo: los patrocinadores de tu camiseta salen de los contratos de Finanzas.": "Wskazówka: sponsorzy na twojej koszulce pochodzą z kontraktów w Finansach.",
+  "Consejo: el escudo y los colores que elijas se ven en la camiseta, el estadio y la ciudad.": "Wskazówka: herb i kolory, które wybierzesz, widać na koszulce, na stadionie i w mieście.",
+  "Consejo: el museo del club guarda los trofeos que vas ganando.": "Wskazówka: muzeum klubu przechowuje zdobywane przez ciebie trofea.",
+  "Consejo: puedes cambiar el aspecto de tu personaje cuando quieras desde el menú.": "Wskazówka: wygląd swojej postaci możesz zmienić w dowolnej chwili z poziomu menu.",
+  "Consejo: descansar a los jugadores cansados baja el riesgo de lesión.": "Wskazówka: odpoczynek dla zmęczonych zawodników zmniejsza ryzyko kontuzji.",
+  "Consejo: cuida la caja del club: una plantilla demasiado cara puede ahogarte.": "Wskazówka: pilnuj kasy klubu: zbyt drogi skład może cię pogrążyć.",
+  "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "Wskazówka: zmień taktykę w trakcie meczu, jeśli rywal cię zaskoczy.",
+  "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "Wskazówka: twój telefon ma kalendarz ze spotkaniami i zebraniami na dziś.",
+  "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "Wskazówka: dobra konferencja prasowa utrzymuje dobry nastrój kibiców.",
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "Wskazówka: w mieście jest metro, autobusy i kolejka linowa, byś mógł podróżować bez pośpiechu."
  },
  "tr": {
   "Club": "Kulüp",
@@ -60540,6 +60624,18 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Araban çarpmalar yüzünden serviste: bu hafta otobüs ve metro.",
   "Para el coche para bajarte (F).": "İnmek için arabayı durdur (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Araba park edildi. Tekrar binmek için yanında F.",
-  "Tu coche está aparcado a %d m.": "Araban %d m ötede park halinde."
+  "Tu coche está aparcado a %d m.": "Araban %d m ötede park halinde.",
+  "Consejo: arrastra al personaje para girarlo y usa la rueda del ratón para acercarte.": "İpucu: Karakteri döndürmek için sürükle, yaklaşmak için fare tekerleğini kullan.",
+  "Consejo: la mascota de tu club gesticula en la banda durante los partidos.": "İpucu: Kulübünün maskotu maçlar sırasında kenar çizgisinde hareketlenir.",
+  "Consejo: los patrocinadores de tu camiseta salen de los contratos de Finanzas.": "İpucu: Formandaki sponsorlar Finans bölümündeki sözleşmelerden gelir.",
+  "Consejo: el escudo y los colores que elijas se ven en la camiseta, el estadio y la ciudad.": "İpucu: Seçtiğin arma ve renkler formada, stadyumda ve şehirde görünür.",
+  "Consejo: el museo del club guarda los trofeos que vas ganando.": "İpucu: Kulüp müzesi kazandığın kupaları saklar.",
+  "Consejo: puedes cambiar el aspecto de tu personaje cuando quieras desde el menú.": "İpucu: Karakterinin görünümünü istediğin zaman menüden değiştirebilirsin.",
+  "Consejo: descansar a los jugadores cansados baja el riesgo de lesión.": "İpucu: Yorgun oyuncuları dinlendirmek sakatlanma riskini azaltır.",
+  "Consejo: cuida la caja del club: una plantilla demasiado cara puede ahogarte.": "İpucu: Kulübün kasasına dikkat et: çok pahalı bir kadro seni batırabilir.",
+  "Consejo: cambia la táctica durante el partido si el rival te sorprende.": "İpucu: Rakip seni şaşırtırsa maç sırasında taktiğini değiştir.",
+  "Consejo: tu móvil tiene una agenda con las citas y reuniones del día.": "İpucu: Telefonunda günün randevuları ve toplantılarını gösteren bir ajanda var.",
+  "Consejo: una buena rueda de prensa mantiene contenta a la hinchada.": "İpucu: İyi bir basın toplantısı taraftarı memnun tutar.",
+  "Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa.": "İpucu: Şehirde metro, otobüs ve teleferik var; acele etmeden dolaşabilirsin."
  }
 }

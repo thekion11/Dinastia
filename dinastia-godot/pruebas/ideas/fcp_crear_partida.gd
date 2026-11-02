@@ -10,6 +10,10 @@ func _ready() -> void:
 	await _cola_mascota()
 	_titulo("CREAR PARTIDA: el escudo propio sale en la camiseta 2D")
 	_escudo_en_camiseta()
+	_titulo("CREAR PARTIDA: vestir dos veces cambia el uniforme del 3D")
+	await _vestir_dos_veces()
+	_titulo("CREAR PARTIDA: símbolo del escudo horneado")
+	_simbolo_horneado()
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())
 	get_tree().quit(0 if _fallos.is_empty() else 1)
@@ -90,3 +94,26 @@ func _escudo_en_camiseta() -> void:
 	var esp_con := DisenosKit.textura_completa(kit_e, true, 200).get_image()
 	var esp_sin := DisenosKit.textura_completa(sin_kit, true, 200).get_image()
 	_comprobar(esp_con.get_data() == esp_sin.get_data(), "y de espaldas no lleva escudo")
+
+## Antes, tras el primer vestido el cuerpo ya no se reconocía (su material activo era el del shader) y el
+## diseñador no repintaba el uniforme ni los botines del jugador 3D.
+func _vestir_dos_veces() -> void:
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var d := FutbolistaQ.crear(1.8, "male")
+	raiz.add_child(d["nodo"])
+	FutbolistaQ.terminar(d, true)
+	var kit1 := DisenosKit.kit_de_club(_mundo(780).mi_club()).duplicate(true)
+	var kit2 := kit1.duplicate(true)
+	kit2["cols"] = ["ff00ff", "00ffff", "123456", "ffffff", "111111"]
+	_comprobar(VestidorQ.vestir_equipacion(d, Color("ff0000"), Color("0000ff"), "liso", Color("c68d68"), Color(0.1, 0.1, 0.1), Color(0, 0, 0, 0), Color(0, 0, 0, 0), false, kit1, 10), "primer vestido")
+	_comprobar(VestidorQ.vestir_equipacion(d, Color("ff00ff"), Color("00ffff"), "liso", Color("c68d68"), Color(0.1, 0.1, 0.1), Color(0, 0, 0, 0), Color(0, 0, 0, 0), false, kit2, 10), "segundo vestido (otro uniforme)")
+	raiz.queue_free()
+
+func _simbolo_horneado() -> void:
+	var c := _mundo(781).mi_club()
+	c.esc_simbolo = ""
+	var sin := EscudoTexto.textura(c, 64)
+	c.esc_simbolo = "⭐"
+	var con := EscudoTexto.textura(c, 64)
+	_comprobar(sin != null and con != null and con.get_image().get_data() != sin.get_image().get_data(), "con símbolo el escudo cambia (queda pintado en la imagen)")

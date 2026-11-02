@@ -68,8 +68,7 @@ func _ready() -> void:
 	## el edificio salía sin su personal y nadie saludaba en el recorrido.
 	PersonajeDT.club_usuario = club.id
 	var carga := PantallaCarga.mostrar(self, Idiomas.t("Construyendo la ciudad…"))
-	await get_tree().process_frame
-	await get_tree().process_frame
+	await PantallaCarga.dejar_pintar(get_tree())
 	_construir_mundo()
 	if is_instance_valid(carga):
 		carga.cerrar()
