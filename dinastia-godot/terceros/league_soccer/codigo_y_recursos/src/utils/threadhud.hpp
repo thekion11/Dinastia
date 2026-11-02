@@ -1,0 +1,54 @@
+#ifndef _HPP_UTILS_THREADHUD
+#define _HPP_UTILS_THREADHUD
+
+#include <SDL2/SDL_ttf.h>
+
+#include "managers/resourcemanager.hpp"
+#include "scene/objects/image2d.hpp"
+#include "scene/resources/surface.hpp"
+#include "scene/scene2d/scene2d.hpp"
+#include "types/thread.hpp"
+
+namespace blunted {
+
+struct WorkerThreadItem {
+  unsigned long beginTime_ms;
+  unsigned long endTime_ms;
+  e_ThreadState state;
+  std::string commandName;
+};
+
+class ThreadHud {
+public:
+  ThreadHud(std::shared_ptr<Scene2D> scene2D);
+  virtual ~ThreadHud();
+
+  void Execute();
+
+  void Redraw(bool forceRedraw = false);
+
+protected:
+  std::shared_ptr<Scene2D> scene2D;
+
+  std::vector<std::vector<WorkerThreadItem>>
+      workerThreadHistory;  // vector content is guaranteed to be chronologic
+  boost::intrusive_ptr<Image2D> graph;
+
+  int skipRedrawCounter;
+
+  int _width;
+  int _headerheight;
+  int _lineheight;
+  int _height;
+
+  bool gui_autoPlay;
+  unsigned long gui_focusTime_ms;
+  float gui_zoomLevel;
+  float gui_zoomMomentum;
+
+  TTF_Font* font;
+};
+
+}  // namespace blunted
+
+#endif

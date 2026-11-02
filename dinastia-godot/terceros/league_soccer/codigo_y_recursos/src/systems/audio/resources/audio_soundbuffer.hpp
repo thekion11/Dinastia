@@ -1,0 +1,32 @@
+#ifndef _HPP_SYSTEM_AUDIO_RESOURCE_SOUNDBUFFER
+#define _HPP_SYSTEM_AUDIO_RESOURCE_SOUNDBUFFER
+
+#include "../rendering/interface_audiorenderer.hpp"
+#include "defines.hpp"
+#include "scene/resources/soundbuffer.hpp"
+
+namespace blunted {
+
+class Renderer3D;
+
+class AudioSoundBuffer {
+public:
+  AudioSoundBuffer();
+  virtual ~AudioSoundBuffer();
+
+  void SetAudioRenderer(AudioRenderer* renderer);
+
+  int CreateAudioSoundBuffer(const WavData* wavData);
+  void DeleteAudioSoundBuffer();
+
+  void SetID(int value);
+  int GetID();
+
+protected:
+  int audioSoundBufferID;
+  AudioRenderer* renderer;
+};
+
+}  // namespace blunted
+
+#endif

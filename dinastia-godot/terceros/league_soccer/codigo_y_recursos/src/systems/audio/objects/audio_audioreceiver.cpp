@@ -1,0 +1,62 @@
+#include "audio_audioreceiver.hpp"
+
+#include "../audio_scene.hpp"
+#include "../audio_system.hpp"
+#include "../rendering/audio_messages.hpp"
+#include "managers/resourcemanagerpool.hpp"
+
+namespace blunted {
+
+AudioAudioReceiver::AudioAudioReceiver(AudioScene* audioScene) : AudioObject(audioScene) {}
+
+AudioAudioReceiver::~AudioAudioReceiver() {}
+
+boost::intrusive_ptr<Interpreter> AudioAudioReceiver::GetInterpreter(e_ObjectType objectType) {
+  if (objectType == e_ObjectType_AudioReceiver) {
+    boost::intrusive_ptr<AudioAudioReceiver_AudioReceiverInterpreter> audioReceiverInterpreter(
+        new AudioAudioReceiver_AudioReceiverInterpreter(this));
+    return audioReceiverInterpreter;
+  }
+  Log(e_FatalError, "AudioAudioReceiver", "GetInterpreter",
+      "No appropriate interpreter found for this ObjectType");
+  return boost::intrusive_ptr<AudioAudioReceiver_AudioReceiverInterpreter>();
+}
+
+void AudioAudioReceiver::SetPosition(const Vector3& newPosition) {
+  position = newPosition;
+}
+
+Vector3 AudioAudioReceiver::GetPosition() const {
+  return position;
+}
+
+void AudioAudioReceiver::SetRotation(const Quaternion& newRotation) {
+  rotation = newRotation;
+}
+
+Quaternion AudioAudioReceiver::GetRotation() const {
+  return rotation;
+}
+
+AudioAudioReceiver_AudioReceiverInterpreter::AudioAudioReceiver_AudioReceiverInterpreter(
+    AudioAudioReceiver* caller)
+    : caller(caller) {}
+
+void AudioAudioReceiver_AudioReceiverInterpreter::OnLoad() {}
+
+void AudioAudioReceiver_AudioReceiverInterpreter::OnUnload() {}
+
+void AudioAudioReceiver_AudioReceiverInterpreter::OnSpatialChange(const Vector3& position,
+                                                                  const Quaternion& rotation) {
+  caller->SetPosition(position);
+  caller->SetRotation(rotation);
+
+  AudioRenderer* renderer = caller->GetAudioScene()->GetAudioSystem()->GetAudioRenderer();
+  if (renderer) {
+    boost::intrusive_ptr<AudioRendererMessage_SetListenerParameters> listenerMsg(
+        new AudioRendererMessage_SetListenerParameters(position, Vector3(0, 0, 0), rotation));
+    renderer->messageQueue.PushMessage(listenerMsg);
+  }
+}
+
+}  // namespace blunted

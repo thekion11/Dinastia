@@ -406,9 +406,9 @@ func _escribir_goles() -> void:
 			_escribir("[color=#8ea595]GOLES[/color]")
 			hubo = true
 		var de_los_mios := String(e.get("club", "")) == mi_club.id
-		_escribir("[color=%s]  %d'  %s[/color]" % [
+		_escribir("[color=%s]  %s  %s[/color]" % [
 			"#4caf6d" if de_los_mios else "#e05555",
-			int(e.get("min", 0)), Idiomas.t(String(e.get("autor", "?")))])
+			Partido.texto_minuto(e), Idiomas.t(String(e.get("autor", "?")))])
 
 ## El cuadro de "ESTADÍSTICAS DEL PARTIDO" de `vPost()`, en texto: siete filas
 ## con el tuyo primero, ganes o pierdas, seas local o visitante -leer tu propia

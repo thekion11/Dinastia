@@ -68,6 +68,10 @@ static var _lib_ual: AnimationLibrary
 ## lo que no está en la UAL1: brazos cruzados, hablar por teléfono, barrida, saque de mano, levantarse del suelo…
 const RUTA_UAL2 := "res://assets/characters/quaternius/anims_ual2/ual2_elegidos.res"
 static var _lib_ual2: AnimationLibrary
+## LEAGUE-SOCCER (01-11-2026, Apache 2.0): sus 293 animaciones de fútbol (y sus espejos) convertidas a este esqueleto
+## (`herramientas/league_anim_a_res.gd`), con nombres «ls_<carpeta>__<archivo>». También las busca `cargar_real`.
+const RUTA_LEAGUE := "res://assets/characters/quaternius/anims_league/league.res"
+static var _lib_league: AnimationLibrary
 
 ## MOCAP DE FUTBOL DE VERDAD (19-9-2026). El usuario consiguio -gratis, uso
 ## comercial libre, sin atribucion- el pack "Free mocap pack 05: Soccer" de
@@ -302,6 +306,10 @@ static func cargar_real(nombre_real: String, prefijo: String) -> Animation:
 		if _lib_ual2 == null and ResourceLoader.exists(RUTA_UAL2):
 			_lib_ual2 = load(RUTA_UAL2) as AnimationLibrary
 		lib = _lib_ual2
+	if (lib == null or not lib.has_animation(nombre_real)) and nombre_real.begins_with("ls_"):
+		if _lib_league == null and ResourceLoader.exists(RUTA_LEAGUE):
+			_lib_league = load(RUTA_LEAGUE) as AnimationLibrary
+		lib = _lib_league
 	if lib == null or not lib.has_animation(nombre_real):
 		return null
 	var original: Animation = lib.get_animation(nombre_real)
@@ -354,9 +362,10 @@ static func _cargar_clip_futbol(archivo: String) -> Dictionary:
 
 ## Lo que decide cómo sale la biblioteca: los scripts de animación y los clips de origen.
 static func _fuentes() -> PackedStringArray:
-	var r := CacheDisco.scripts("res://visor", PackedStringArray(["anim_", "retarget_futbol_q", "futbolista_q", "suelo_anim"]))
+	var r := CacheDisco.scripts("res://visor", PackedStringArray(["anim_", "retarget_futbol_q", "futbolista_q", "suelo_anim", "codo_anim", "league_anim"]))
 	r.append(RUTA_UAL)
 	r.append(RUTA_UAL2)
+	r.append(RUTA_LEAGUE)
 	for f in DirAccess.get_files_at(CARPETA_FUTBOL):
 		if f.ends_with(".fbx") or f.ends_with(".fbx.import"):
 			r.append(CARPETA_FUTBOL + f.trim_suffix(".import"))
