@@ -10,7 +10,7 @@ const RUTA := "res://assets/characters/pelo_drive/pelo_%03d.res"
 ## Hombres y mujeres: los 11 que quedaron bien sobre la cabeza tras probar 30 de los 105 (el modelo del pack mira a -z: se gira 180°).
 const HOMBRES := [80, 68, 59]   ## (rizado, flequillo despeinado y rizado corto: de cerca se ven mejor que el corte de Quaternius al que sustituyen)
 ## Revisión 27-10 (hoja antes/después, 1,5 m, frente/3/4/perfil): los otros 9 se descartaron (parecen casco, tapan los ojos o dejan huecos).
-const MUJERES := []
+const MUJERES := []   ## 2-11: otros 12 candidatos (18, 25, 38, 44, 53, 65, 76, 85, 90, 108, 111, 115) también descartados: láminas con huecos, tapan los ojos o parecen casco (hoja `pelo_mujer_drive_candidatas_2.jpg`)
 ## [ancho que ocupa el peinado, altura de su parte alta sobre el hueso Head, desplazamiento en z] según el cuerpo (en m).
 const AJUSTE_M := [0.215, 0.255, 0.008]
 const AJUSTE_F := [0.200, 0.235, 0.004]

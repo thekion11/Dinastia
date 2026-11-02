@@ -151,6 +151,7 @@ func construir() -> void:
 	semaforos.name = "Semaforos"
 	b.add_child(semaforos)
 	semaforos.montar(cruces_semaforo, self)
+	cuenta["senales_velocidad"] = SenalesVelocidad.montar(self)   ## M-199: límites de velocidad en los cruces
 	cuenta["edificios"] = 0
 	await b._marca("exp_calles")   ## (28-10) marcas de tiempo por tramo, solo con TIEMPOS=1
 	for bl: Dictionary in bloques:
