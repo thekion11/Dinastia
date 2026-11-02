@@ -320,7 +320,12 @@ func vigilar(pos: Vector3, vel_ms: float) -> void:
 			_cruces[Vector2i(roundi(p.x / IncidentesCiudad.CELDA), roundi(p.z / IncidentesCiudad.CELDA))] = p
 	vigilar_en(pos, vel_ms, exp.semaforos)
 
+var _t_exceso := -100000   ## ms del último aviso por exceso de velocidad (M-199)
+
 func vigilar_en(pos: Vector3, vel_ms: float, sem: Semaforos) -> void:
+	if vel_ms * 3.6 > float(SenalesVelocidad.limite(pos)) + SenalesVelocidad.MARGEN and Time.get_ticks_msec() - _t_exceso > int(SenalesVelocidad.ENFRIA * 1000.0) and policia_cerca(pos):
+		_t_exceso = Time.get_ticks_msec()
+		multar(IncidentesCiudad.MULTA_VELOCIDAD, true)
 	var dir := Vector3.ZERO if _pos_ant == Vector3.INF else pos - _pos_ant
 	_pos_ant = pos
 	var clave := Vector2i(roundi(pos.x / IncidentesCiudad.CELDA), roundi(pos.z / IncidentesCiudad.CELDA))
@@ -340,7 +345,7 @@ func vigilar_en(pos: Vector3, vel_ms: float, sem: Semaforos) -> void:
 	multar(IncidentesCiudad.MULTA_SEMAFORO)
 
 ## Cobra la multa de la cartera del DT (efectivo y, si no alcanza, la tarjeta); si no puede pagarla, queda anotada.
-func multar(importe: int) -> String:
+func multar(importe: int, velocidad := false) -> String:
 	multas_puestas += 1
 	var m: Mundo = vida.mundo
 	var via := ""
@@ -351,7 +356,9 @@ func multar(importe: int) -> String:
 		via = String(r["via"])
 	vida.expl.multas += 1
 	Sonido.toca("sirena", Sonido.Bus.AMBIENTE)
-	if via != "":
+	if velocidad:
+		vida._notificar(Idiomas.t("🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.") % [importe, SenalesVelocidad.limite(vida.expl.cuerpo.position), Idiomas.t(via) if via != "" else Idiomas.t("no pudiste pagarla y queda anotada")])
+	elif via != "":
 		vida._notificar(Idiomas.t("🚓 Multa de %d € por saltarte un semáforo en rojo (pagada en %s).") % [importe, Idiomas.t(via)])
 	else:
 		vida._notificar(Idiomas.t("🚓 Multa de %d € por saltarte un semáforo en rojo: no pudiste pagarla y queda anotada.") % importe)

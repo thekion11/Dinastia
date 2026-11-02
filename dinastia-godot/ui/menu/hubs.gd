@@ -60,6 +60,8 @@ func abrir(clave: String) -> void:
 	caja.add_child(cerrar)
 	## La entrada con un desliz corto hacia arriba: es lo que hace que el hub
 	## se sienta una capa que sube y no un cambio de pantalla seco.
+	if Animar.reducidas():   ## M-304: con animaciones reducidas, sin desliz
+		return
 	caja.modulate.a = 0.0
 	caja.position.y += 18.0
 	var tw := p.create_tween().set_parallel(true)

@@ -79,6 +79,7 @@ func cargar() -> void:
 	p._modo_tv = bool(cf.get_value("pantalla", "modo_tv", p._modo_tv))
 	VestidorQ.ropa_aparte = bool(cf.get_value("pantalla", "ropa_aparte", VestidorQ.ropa_aparte))
 	Cara.usar_fotos = bool(cf.get_value("pantalla", "caras_foto", Cara.usar_fotos))
+	Cara.modo_streamer = bool(cf.get_value("pantalla", "streamer", false))
 	## 0 = «sin límite» (antes el clampi lo volvía 30 al recargar).
 	var fps_g := int(cf.get_value("pantalla", "fps", p._fps_elegido))
 	p._fps_elegido = 0 if fps_g == 0 else clampi(fps_g, 30, 240)
@@ -116,6 +117,7 @@ func guardar() -> void:
 	cf.set_value("pantalla", "modo_tv", p._modo_tv)
 	cf.set_value("pantalla", "ropa_aparte", VestidorQ.ropa_aparte)
 	cf.set_value("pantalla", "caras_foto", Cara.usar_fotos)
+	cf.set_value("pantalla", "streamer", Cara.modo_streamer)
 	cf.set_value("pantalla", "fps", p._fps_elegido)
 	cf.set_value("pantalla", "contador_fps", ContadorFps.visible_pref)
 	cf.set_value("juego", "modo_experto", p._modo_experto)

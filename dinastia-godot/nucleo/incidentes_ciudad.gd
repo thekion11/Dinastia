@@ -7,6 +7,7 @@ extends RefCounted
 ## SIN `Azar`: todo sale de un hash de (semilla, día, hora). Los incidentes no tocan la liga ni la partida; con la misma semilla, el mismo día
 ## y la misma hora ocurre lo mismo (y se puede probar).
 const CELDA := 110.0
+const MULTA_VELOCIDAD := 60               ## € por pasar de `SenalesVelocidad.MARGEN` km/h sobre el límite con la policía delante (M-199)
 const MULTA_SEMAFORO := 90                ## € de la cartera por cruzar en rojo con la policía delante
 const HORA_DESDE := 7                     ## no hay incidentes de madrugada
 const UNO_DE_CADA := 8                    ## una hora de cada 8 (≈ 2 incidentes por día de juego)

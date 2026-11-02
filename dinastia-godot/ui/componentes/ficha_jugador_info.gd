@@ -259,6 +259,8 @@ static func pintar_historial(lista: VBoxContainer, j: Jugador, paleta: Dictionar
 	var t := _texto(11, paleta["suave"], paleta)
 	t.text = Idiomas.t("CRECIMIENTO POR TEMPORADA")
 	lista.add_child(t)
+	if j.historial.size() >= 2:   ## (M-295) la media y el valor de un vistazo
+		lista.add_child(GraficoEvolucion.de(j.historial, paleta))
 	for i in range(j.historial.size() - 1, -1, -1):
 		var h: Dictionary = j.historial[i]
 		var fila := HBoxContainer.new()
