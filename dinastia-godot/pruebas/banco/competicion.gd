@@ -127,6 +127,14 @@ func _probar_copa() -> void:
 	var aspirantes: Array[Club] = []
 	for c: Club in m.clubes.values():
 		aspirantes.append(c)
+	## M-207 / C-05 (2-11-2026): TODOS los clubes arrancan con 25 jugadores (el plan de demarcaciones suma 25).
+	var m25 := Mundo.new()
+	m25.generar(["CHI", "ARG", "ESP", "ENG", "BRA"], 25)
+	var chicos := 0
+	for c25: Club in m25.clubes.values():
+		if c25.plantilla.size() < 25:
+			chicos += 1
+	_comprobar(chicos == 0, "los %d clubes de 5 países arrancan con al menos 25 jugadores (%d con menos)" % [m25.clubes.size(), chicos])
 	var copa := Copa.new("Copa de prueba")
 	copa.preparar(aspirantes)
 	_linea("  %d clubes inscritos -> %d en el cuadro (%s)" % [
