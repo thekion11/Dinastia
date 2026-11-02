@@ -15,25 +15,49 @@ static func primeros_bloques(ex: CiudadExpansion) -> Array:
 	ex.bloques_diferidos = orden.slice(PRIMEROS)
 	return orden.slice(0, PRIMEROS)
 
+## El azar de cada pieza sale de SU clave y no de lo que se haya dibujado antes (`_rng` compartido): así la ciudad es la misma se construya de seguida o por partes, y en cualquier orden.
+static func sembrar(ex: CiudadExpansion, clave: Variant) -> void:
+	ex._rng.seed = 13072026 + hash(clave)
+
+## Una manzana, con su propio azar.
+static func bloque(ex: CiudadExpansion, bl: Dictionary) -> void:
+	sembrar(ex, ["bloque", bl["celda"]])
+	ex._dibujar_bloque(bl)
+
+## Lo que se agrupa tras dibujar todas las manzanas: edificios lejanos, casas y modulares.
+static func casas(ex: CiudadExpansion) -> void:
+	sembrar(ex, "edificios_lejanos")
+	ex._edificios_lejanos()
+	sembrar(ex, "casas")
+	ex._casas_multimesh()
+	sembrar(ex, "modular")
+	ex._modular_multimesh()
+
 ## Las manzanas que faltan, una a una (cada una cede el fotograma si toca).
 static func bloques_restantes(ex: CiudadExpansion) -> void:
 	for bl: Dictionary in ex.bloques_diferidos:
-		ex._dibujar_bloque(bl)
+		bloque(ex, bl)
 		await ex.b._marca("exp.bloque")
 	ex.bloques_diferidos = []
-	ex._edificios_lejanos()
-	ex._casas_multimesh()
-	ex._modular_multimesh()
+	casas(ex)
 	await ex.b._marca("exp.casas")
 
 static func mobiliario(ex: CiudadExpansion) -> void:
+	sembrar(ex, "marquesinas")
 	ex._marquesinas_bus()
+	sembrar(ex, "guirnaldas")
 	ex._guirnaldas()
+	sembrar(ex, "farolas")
 	ex._farolas()
+	sembrar(ex, "mobiliario")
 	ex._mobiliario_urbano()
+	sembrar(ex, "placas")
 	ex._placas_de_calle()
+	sembrar(ex, "orillas")
 	ex._orillas_nucleo()
+	sembrar(ex, "obras")
 	ex._obras_en_calle()
+	sembrar(ex, "kenney")
 	ex._kenney_calles()
 	ex.tardio_pendiente = false
 	await ex.b._marca("exp.mobiliario")
