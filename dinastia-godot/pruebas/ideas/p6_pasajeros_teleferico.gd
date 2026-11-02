@@ -38,3 +38,28 @@ func _probar() -> void:
 	tele._t += Teleferico.CICLO
 	pt._process(0.05)
 	_comprobar(pt._andando.size() == n0, "con la cámara lejos no se monta gente")
+	## Segunda llegada del ciclo (la otra cabina, a los V s) y estación de arriba con su propia ruta.
+	pt._andando.clear()
+	cam.global_position = Vector3.ZERO
+	tele._t = Teleferico.VIAJE + 1.0 + 2.0 * Teleferico.CICLO
+	pt._process(0.05)
+	_comprobar(pt._andando.size() == 2, "la otra cabina también llega a esta estación (a los %.0f s) y baja gente" % Teleferico.VIAJE)
+	var cima_n := Node3D.new()
+	raiz.add_child(cima_n)
+	var pc := PasajerosTeleferico.crear(tele, cima_n, true)
+	tele._t = PasajerosTeleferico.llegada() + 1.0 + 3.0 * Teleferico.CICLO
+	pc._process(0.05)
+	_comprobar(pc._andando.size() == 2 and (pc._andando[0]["ruta"] as Array).size() == 5, "la estación de arriba también baja gente (por su rampa corta)")
+	tele._t = Teleferico.VIAJE + 20.0 + 3.0 * Teleferico.CICLO
+	var n_antes := pc._andando.size()
+	pc._process(0.05)
+	_comprobar(pc._andando.size() == n_antes, "fuera de la ventana de 9 s de una llegada no sale nadie de golpe")
+	## Viajeros que cambian dentro de la cabina.
+	var cab := Node3D.new()
+	for i in 4:
+		var v := Node3D.new()
+		v.set_meta("viajero", true)
+		cab.add_child(v)
+	_comprobar(PasajerosTeleferico.cambiar_viajeros(cab, true) == 2 and not cab.get_child(0).visible and cab.get_child(2).visible, "al llegar bajan dos viajeros de la cabina")
+	_comprobar(PasajerosTeleferico.cambiar_viajeros(cab, false) == 2 and cab.get_child(0).visible, "y suben otros dos al salir")
+	cab.free()

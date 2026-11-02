@@ -168,7 +168,7 @@ static func _servicio(num: String, ejes: PackedVector2Array, destino: String, tm
 				var ancho := _acera(a, c)
 				var pos := e + lado * ancho
 				tmp[k] = {"eje": e, "dir": dir, "lado": lado, "pos": Vector3(pos.x, 0.0, pos.y),
-					"giro": atan2(-lado.x, -lado.y), "sector": RecorridosRed.sector_de(Vector3(e.x, 0.0, e.y)),
+					"giro": atan2(-lado.x, -lado.y), "sector": RecorridosRed.sector_de(Vector3(pos.x, 0.0, pos.y)),   ## el de DONDE queda el paradero (en un borde el eje caía en otro sector)
 					"calle": CallesCiudad.calle_del_eje(a, c), "cruce": String(q[1]) if String(q[1]) != "" else CallesCiudad.cruce(e, dir),
 					"club": String(q[1]) != "", "servicios": []}
 			if not (tmp[k]["servicios"] as Array).has(num):

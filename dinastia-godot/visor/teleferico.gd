@@ -24,6 +24,7 @@ var _t := 0.0
 var _balanceo := [{"th": 0.0, "om": 0.0, "d": 0.0}, {"th": 0.0, "om": 0.0, "d": 0.0}]
 var cuenta := {}
 var estacion_base: Node3D = null             ## la estación de abajo (para `PasajerosTeleferico`)
+var estacion_cima: Node3D = null             ## la de arriba (la gente que sube y baja allí también)
 
 static func montar(b: CityBuilder) -> Teleferico:
 	var t := Teleferico.new()
@@ -77,6 +78,8 @@ func _estacion(b: CityBuilder, suelo: Vector3, giro: float, nombre: String, mats
 	add_child(base_n)
 	if estacion_base == null:
 		estacion_base = base_n   ## la primera que se monta es la de abajo
+	else:
+		estacion_cima = base_n
 	for par in [[Vector3(0, 0.6, 0), Vector3(22, 1.2, 12), mats["losa"]], [Vector3(0, 3.4, 0), Vector3(16, 5.6, 9), mats["muro"]],
 			[Vector3(0, 6.6, 0), Vector3(18, 0.7, 11), mats["tejado"]], [Vector3(0, 8.6, 0), Vector3(1.2, 4.0, 1.2), mats["acero"]]]:
 		var mi := MeshInstance3D.new()
@@ -133,7 +136,7 @@ func _estacion(b: CityBuilder, suelo: Vector3, giro: float, nombre: String, mats
 		peld.position = Vector3(13.4 - 0.4 * float(s), -0.2 + alto_s * 0.5, 0.0)
 		base_n.add_child(peld)
 	EscaleraVida.registrar(b, suelo + base_n.basis * Vector3(13.6, -0.2, 0), suelo + base_n.basis * Vector3(11.4, 1.2, 0), 6)
-	cuenta["detalles_estacion"] = int(cuenta.get("detalles_estacion", 0)) + TelefericoEstacion.detalles(base_n)
+	cuenta["detalles_estacion"] = int(cuenta.get("detalles_estacion", 0)) + TelefericoEstacion.detalles(base_n, estacion_cima == base_n)
 
 func _construir(b: CityBuilder) -> void:
 	base = _suelo(b, BASE_XZ)
@@ -176,6 +179,7 @@ func _construir(b: CityBuilder) -> void:
 		cabinas.append(cab)
 	TelefericoPaisaje.montar(self, b, base, cima)
 	PasajerosTeleferico.crear(self, estacion_base)   ## la gente que sube y baja en la estación de abajo
+	PasajerosTeleferico.crear(self, estacion_cima, true)   ## y en la de arriba
 	mirador = MiradorCerro.new()
 	mirador.configurar(self, b, giro)
 	b.puntos_clic.append({"k": "tele_base", "n": "Teleférico: subir al Cerro", "pos": base + dir * -9.0, "estado": "ciudad", "radio": 22.0, "alcance": 8.0})

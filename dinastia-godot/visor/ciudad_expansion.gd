@@ -347,6 +347,7 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 				t.agregar_vehiculo(nodo, id, largo * (float(i) + rng.randf() * 0.5) / float(por_sentido), rng.randf_range(10.0, 15.0), 0.0, 0.0)
 				t.marcar_cola_al_ultimo()
 				n_coches += 1
+	n_coches += CiudadRotonda.trafico(self, t, coches, rng)   ## y los tres de la rotonda
 	cuenta["coches"] = n_coches
 	## La autopista: tráfico más rápido, sin semáforos.
 	for pts_a: PackedVector3Array in ([] if CityBuilder.modo_prologo else Autopista.rutas()):
@@ -401,6 +402,7 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 			break
 		b._un_peaton(t, rng, int(rutas_g[rng.randi() % rutas_g.size()]), rng.randf() * 300.0)
 		n_p += 1
+	n_p += PeatonesCruce.montar(self, t, rng)   ## y los que CRUZAN las avenidas con su semáforo
 	cuenta["peatones"] = n_p
 
 ## Cable combado entre dos postes (S5): tres hilos (uno por brazo del travesaño) en tramos rectos de ~5 m que bajan hasta la flecha
