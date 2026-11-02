@@ -197,6 +197,7 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 		l.outline_size = 0
 		l.double_sided = false
 		l.position = Vector3(0, 2.85, 6.04)
+		l.visibility_range_end = 120.0   ## M-476: más lejos no se lee
 		raiz.add_child(l)
 	## EL NÚMERO DE LA LÍNEA (27-10-2026): grande en los dos costados y detrás, más las dos placas.
 	if numero != "":
@@ -211,6 +212,7 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 			ln.position = Vector3(lado * 1.29, 1.45, 1.5)   ## entre las dos puertas (ni sobre una puerta ni sobre una rueda)
 			ln.rotation.y = lado * PI * 0.5
 			ln.double_sided = false
+			ln.visibility_range_end = 160.0
 			raiz.add_child(ln)
 		var lt := Label3D.new()
 		lt.text = numero
@@ -222,6 +224,7 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 		lt.double_sided = false
 		lt.modulate = Color(1.0, 0.7, 0.1)
 		lt.outline_modulate = Color(0.1, 0.05, 0.0)
+		lt.visibility_range_end = 160.0
 		raiz.add_child(lt)
 		## El de atrás va dentro de un letrero luminoso (caja negra con brillo ámbar), como el de adelante.
 		var cartel := StandardMaterial3D.new()
