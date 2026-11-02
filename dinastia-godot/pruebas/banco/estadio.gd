@@ -174,7 +174,7 @@ func _probar_rendimiento_adaptativo() -> void:
 	ra.escalon_aplicado.connect(func(e: int, _q: String) -> void: avisos.append(e))
 	for i in 10 * m:
 		ra.avanzar(1.0, 5.0)
-	_comprobar(ra.escalon == RendimientoAdaptativo.ESCALONES.size() and avisos == [3, 4, 5],
+	_comprobar(ra.escalon == RendimientoAdaptativo.ESCALONES.size() and avisos == [3, 4, 5, 6],
 		"con FPS malos sostenidos llega al último escalón (%d) y avisa de cada uno, sin pasarse" % ra.escalon)
 	ra.free()
 	raiz.free()
