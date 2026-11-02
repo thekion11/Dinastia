@@ -72,7 +72,7 @@ static func montar(ex: CiudadExpansion) -> int:
 		return 0
 	var raiz := Node3D.new()
 	raiz.name = "SenalesVelocidad"
-	b.add_child(raiz)
+	b.add_child(raiz)   ## CiudadExpansion es RefCounted: las señales cuelgan del CityBuilder
 	_mm(raiz, CylinderMesh.new(), b._mat_simple(Color(0.6, 0.62, 0.64), 0.4), postes)
 	var quad := QuadMesh.new()
 	for v: int in por_valor:

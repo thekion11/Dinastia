@@ -77,6 +77,7 @@ pasa "portero de la Carrera" "godot --headless --path . res://pruebas/ideas/cpor
 pasa "pasos y guardia del portero" "godot --headless --path . res://pruebas/ideas/pani_pasos.tscn" "FIN. 0 fallos"
 pasa "minijuegos nuevos" "godot --headless --path . res://pruebas/prueba_minijuegos_nuevos.tscn" "FIN MINIJUEGOS NUEVOS. 0 fallos"
 pasa "igualdad del mundo simulado (balance)" "godot --headless --path . res://pruebas/igualdad_mundo.tscn" "FIN. 0 fallos"
+pasa "interpolación de la física del partido" "godot --headless --path . res://pruebas/ideas/int_partido.tscn" "FIN. 0 fallos"
 pasa "igualdad del motor con usuario" "godot --headless --path . res://pruebas/igualdad_motor.tscn" "FIN. 0 fallos"
 pasa "motor jugable (unidad)" "godot --headless --path . res://pruebas/prueba_motor_jugable.tscn" "FIN MOTOR. 0 fallos"
 # 5c. Movimiento suave y vida de la ciudad (27-10, orden del líder: que el tirón de los vehículos no vuelva a romperse sin que se note; ~1 min)
