@@ -59,7 +59,7 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     butacas por nivel según el color del club (y elegible en la personalización del menú inicial).
 14. (27-10 tarde, decisiones del dueño) SÍ a clasificar las ~1.200 ideas (lanzamiento / después / descartar). `main` limpio y las
     ramas viejas: el dueño dice que ya lo hizo (verificar). PANTALLA DE ENTRADA nueva: APROBADA. «EL BLOQUEO» de modos: ACEPTADO
-    (opción en Ajustes). Las 53 escenas de prueba sin mención: ver qué se puede REUTILIZAR antes de borrar. PEATONES: SÍ suben al
+    (opción en Ajustes). Escenas de prueba sin mención: reutilizadas las 62 que pasan (bloque «reutilizadas» de `especiales.sh`, 2-11); capturas, diagnósticos y vídeos se quedan; no borrar nada sin decirlo. PEATONES: SÍ suben al
     bus y a los demás transportes. DIFICULTAD DE LA CPU en 8 categorías: Practicante, Cadete, DEBUTANTE (la normal), Semiprofesional,
     Profesional, Experto, Maestro, Ultimate; y además dificultades fuera del partido (eventos, probabilidades, retos, poca ayuda,
     asistentes deficientes, malos consejos y otras). POLICÍA Y BOMBEROS: sí. MUSEO: mejorarlo más y poder INTERACTUAR con los
@@ -85,3 +85,4 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 18. (28-10) CIERRE hasta el lunes: tras la limpieza de código y lo pendiente de las sesiones, guardar todo y dejar registros
     al limpio. Registro: `docs/04_auditorias/CIERRE_2026-10-28.md`; estado para retomar arriba de `PLAN_DEL_LUNES.md`.
     Correo de contacto del dueño (informe de fallos y privacidad): en `Registro.CONTACTO`.
+19. (2-11) 120 FPS mínimo en equipos modestos (4 GB DDR3, Intel UHD/HD, Pentium): optimizar sin quitar nada sin decirlo y medir con `herramientas/hw_modesto.sh` (llvmpipe: comparar triángulos, llamadas, memoria; NUNCA el tiempo de fotograma `--headless`, tiene un suelo de 6,9 ms). El dueño ordenó (2-11) pasar todo a `main`. Estado y pendientes: `docs/04_auditorias/rendimiento_120fps.md` y arriba de `PLAN_DEL_LUNES.md`.

@@ -215,7 +215,17 @@ func _ruta(clave: String, planta: int, zona: String) -> Array:
 	return [Vector3(cx + 0.6, y, mejor.position.y + mejor.size.y * 0.35), Vector3(cx, y, z_tab - 0.5),
 		Vector3(cx, y, z_tab + 0.7), Vector3(cx + 1.4, y, z_fin - 1.2)]
 
-func _process(delta: float) -> void:
+var _acum := 0.0   ## tiempo acumulado mientras se salta fotogramas (cámara lejos)
+
+func _process(delta_real: float) -> void:
+	## 2-11-2026 (120 FPS): con la cámara a más de 260 m del personal (fuera de la vista) solo se actualiza 1 de cada 10 fotogramas, con el tiempo acumulado
+	## (0,97 ms por fotograma en la ciudad a pie).
+	var cam := get_viewport().get_camera_3d() if is_inside_tree() and self is Node3D else null
+	var delta := delta_real + _acum
+	_acum = 0.0
+	if cam != null and (self as Node3D).global_position.distance_squared_to(cam.global_position) > 67600.0 and Engine.get_process_frames() % 10 != 0:
+		_acum = delta
+		return
 	var de_turno := hora < 0.0 or (hora >= 8.0 and hora < 21.0)
 	for g: Dictionary in gente:
 		var n: Node3D = g["nodo"]
