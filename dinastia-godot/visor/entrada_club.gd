@@ -35,7 +35,7 @@ static func montar(nodo: Node3D, x0: float, z_fin: float, c1: Color, c2: Color,
 	var e := Node3D.new()
 	e.name = "EntradaClub"
 	nodo.add_child(e)
-	var acero := TunelVestuario._mat(Color(0.3, 0.32, 0.35), 0.35)
+	var acero := TunelVestuario._mat_unico(Color(0.3, 0.32, 0.35), 0.35)
 	acero.metallic = 0.7
 	var granito := TunelVestuario._mat(Color(0.36, 0.37, 0.4), 0.45)
 	var club := TunelVestuario._mat(c1, 0.5)
@@ -118,7 +118,7 @@ static func montar(nodo: Node3D, x0: float, z_fin: float, c1: Color, c2: Color,
 	TunelVestuario._caja(e, Vector3(px, 0.15, zf + 0.75), Vector3(HOJA * 2.0 - 0.2, 0.02, 1.1), TunelVestuario._mat(c1.darkened(0.25), 0.95), false)
 	## Placa y maceteros.
 	TunelVestuario._rotulo(e, Idiomas.t("ENTRADA DEL CLUB · SOLO PERSONAL"), Vector3(px - HOJA - 0.35, 2.2, zf + 0.32), 0.0, 22, Color(1, 1, 1))
-	var hoja_v := TunelVestuario._mat(Color(0.2, 0.42, 0.2), 0.9)
+	var hoja_v := TunelVestuario._mat_unico(Color(0.2, 0.42, 0.2), 0.9)
 	var maceta := TunelVestuario._mat(Color(0.18, 0.18, 0.2), 0.6)
 	for lado4 in [-1.0, 1.0]:
 		var mx: float = px + lado4 * (HOJA + 1.15)

@@ -349,7 +349,7 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 	cuerpo.position = buscar_libre(desde)
 	camara = Camera3D.new()
 	camara.fov = 65.0
-	camara.far = 5000.0
+	camara.far = 650.0 if PrologoDT.activo else 5000.0   ## el prólogo solo enseña el barrio (2-11)
 	add_child(camara)
 	camara.make_current()
 	_luz_cam = OmniLight3D.new()

@@ -197,6 +197,8 @@ const SECCIONES := [
 	"_probar_no_atravesar_paredes",
 	"_probar_paridad_idiomas",
 	"_probar_insignia_version",
+	"_probar_lanzamiento_tactica",
+	"_probar_lanzamiento_accesibilidad",
 ]
 
 ## Dónde vive cada grupo, en el orden en que se buscan las secciones.
@@ -210,6 +212,7 @@ const ARCHIVOS := {
 	"textos": "res://pruebas/banco/textos.gd",
 	"ideas": "res://pruebas/banco/ideas.gd",
 	"varios": "res://pruebas/banco/varios.gd",
+	"lanzamiento": "res://pruebas/banco/lanzamiento.gd",
 }
 
 var _tiempos: Array = []
@@ -237,6 +240,7 @@ const GRUPOS := {
 	"competicion": ["_probar_calendario", "_probar_copa", "_probar_continental", "_probar_selecciones",
 		"_probar_ascensos", "_probar_temporadas"],
 	"textos": ["_probar_paridad_idiomas", "_probar_narracion_traducida", "_probar_tema_y_ortografia", "_probar_carga_de_ui", "_probar_palabras_prohibidas", "_probar_glifos_idiomas", "_probar_logo", "_probar_insignia_version"],
+	"lanzamiento": ["_probar_lanzamiento_tactica", "_probar_lanzamiento_accesibilidad"],
 }
 
 const COSTES := {
@@ -298,6 +302,10 @@ func _parte_de(i: int, total: int) -> int:
 func _cerrar() -> void:
 	## Las secciones más lentas, para saber dónde mirar si el banco se alarga.
 	_tiempos.sort_custom(func(a: Array, b: Array) -> bool: return int(a[0]) > int(b[0]))
+	## MATERIALES COMPARTIDOS (2-11-2026): lo que construyó este proceso no dejó ningún material compartido modificado.
+	_titulo("MATERIALES COMPARTIDOS: NINGUNO MODIFICADO")
+	_comprobar(Mini3D.materiales_alterados().is_empty(), "Mini3D.mat (%d distintos) %s" % [Mini3D._cache_mat.size(), str(Mini3D.materiales_alterados())])
+	_comprobar(TunelVestuario.materiales_alterados().is_empty(), "TunelVestuario._mat (%d distintos) %s" % [TunelVestuario._cache_mat.size(), str(TunelVestuario.materiales_alterados())])
 	var suma := 0
 	for tt: Array in _tiempos:
 		suma += int(tt[0])

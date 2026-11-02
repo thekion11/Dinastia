@@ -59,12 +59,12 @@ func _montar_motor() -> void:
 		## adelantado (lo que el juez de línea dejó pasar, hasta 30 cm). La falta
 		## previa sigue siendo rara y al azar.
 		var m := _motor.margen_gol
-		## Medido con la sonda (17-10): la mayoría de goles tras pase llegan con
-		## el goleador 1-2 m en línea; se revisan los de menos de 1 m y, a veces,
-		## los de hasta 1,8 m. Solo se anula si estaba de verdad adelantado.
-		var ajustado := m <= 0.3 and (m > -1.0 or (m > -1.8 and Azar.suerte(0.35)))
-		if Partido.ctx_factor_tarjetas < 1.0 and (ajustado or Azar.suerte(0.08)):
-			var anula := m > 0.0 if ajustado else Azar.suerte(0.25)
+		## Medido con la sonda (17-10): la mayoría de goles tras pase llegan con el goleador 1-2 m en línea; se revisan
+		## los de menos de 1 m y, a veces, los de hasta 1,8 m. Solo se anula si estaba de verdad adelantado.
+		var dec := RevisionVAR.decidir(m, Partido.ctx_factor_tarjetas, hash("%s|%d|%s" % [autor, partido.minuto, str(de_local)]))   ## 2-11: en el núcleo
+		var ajustado := bool(dec["ajustado"])
+		if bool(dec["revisa"]):
+			var anula := bool(dec["anula"])
 			var motivo := "Revisión del gol: posible fuera de juego" if ajustado else "Revisión del gol: posible falta previa"
 			get_tree().create_timer(2.2).timeout.connect(func() -> void:
 				if is_instance_valid(self) and _motor != null:
