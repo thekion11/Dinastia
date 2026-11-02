@@ -71,6 +71,9 @@ Medida con `RenderingServer.get_rendering_info(RENDERING_INFO_VIDEO_MEM_USED)` e
 
 −48 %. Los mapas de normales conservan 1024² en calidad ALTO. Techo nuevo en la prueba: `TECHO_VRAM_MB = 380`. Capturas `c54_texturas_{antes,despues}_{tv,repe}.jpg`: el césped y las gradas se ven igual (el grano cambia de píxel pero no de escala). Lo que queda: 128 texturas en el árbol (119 MB leídas de la CPU) y 69 MB de búferes (mallas); medir en GPU real con texturas comprimidas queda para el equipo del dueño.
 
+## Tanda de rendimiento 5: VRAM del partido 312 → 253 MB (H-06/H-07, 2-11)
+Desglose (`TEXTURAS=45`): 11 mapas de normales de ruido de 1024² (5,3 MB cada uno) + 13 ruidos de 512², los 9 + 4 mapas de `assets/regalos` (sillón de oficina y torre de focos, sin comprimir: 1 MB cada uno) y los colormaps de Kenney. Cambios: (1) los mapas de normales de ruido bajan a 512² también en ALTO (1024² solo en ULTRA); (2) 65 texturas 3D de `assets/{regalos,peluches,kenney,ciudad,personas,objetos,trofeos,pasto}` pasan de `compress/mode=0` (sin comprimir) a `2` (VRAM comprimida), salvo `Preview.png` (interfaz), las de normales y las máscaras de equipación (son datos). **312 → 253 MB (−19 %)**; techo en la prueba 380 → 300 MB. Capturas `c56_vram_{antes,despues}_{tv,repe}.jpg`: iguales a ojo. Sin tocar: las ~3.400 texturas 2D de interfaz (caras, iconos, banderas: no se cargan juntas en un partido; comprimirlas estropea el borde nítido) y las creadas en ejecución (`ImageTexture` de escudos y uniformes: comprimir en ejecución cuesta tiempo en la primera apertura, ver M-348).
+
 ## Rebajas aún propuestas (NO aplicadas)
 | # | Rebaja | Ahorro estimado |
 |---|---|---|

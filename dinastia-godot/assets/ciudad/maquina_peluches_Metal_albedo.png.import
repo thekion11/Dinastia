@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dmcwu7velcvwf"
-path="res://.godot/imported/maquina_peluches_Metal_albedo.png-02d763df5a087d962a6c82b8ee08dfc2.ctex"
+path.s3tc="res://.godot/imported/maquina_peluches_Metal_albedo.png-02d763df5a087d962a6c82b8ee08dfc2.s3tc.ctex"
+path.etc2="res://.godot/imported/maquina_peluches_Metal_albedo.png-02d763df5a087d962a6c82b8ee08dfc2.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "7e3aaf29f5f138a800aee45100fab53b"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/ciudad/maquina_peluches_Metal_albedo.png"
-dest_files=["res://.godot/imported/maquina_peluches_Metal_albedo.png-02d763df5a087d962a6c82b8ee08dfc2.ctex"]
+dest_files=["res://.godot/imported/maquina_peluches_Metal_albedo.png-02d763df5a087d962a6c82b8ee08dfc2.s3tc.ctex", "res://.godot/imported/maquina_peluches_Metal_albedo.png-02d763df5a087d962a6c82b8ee08dfc2.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
