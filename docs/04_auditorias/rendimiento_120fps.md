@@ -35,3 +35,20 @@ Desglose por grupo (base): butacas 655 k triángulos, sombras 430 k y 319 llamad
 - **Aplicado**: butacas livianas en MEDIO (ALTO/ULTRA no cambian). Cambio visual: las butacas cercanas pierden el respaldo curvo (84 triángulos).
 - **Descartado** (sin efecto medido, revertido): acortar la sombra y quitar la sombra de la grada.
 - **Pendiente de decidir**: apagar la sombra solar quitaría −251 llamadas (−32 %) pero es quitar un efecto; iría como escalón del modo ligero, dicho al jugador.
+
+## Benchmark dentro del juego (PC y Android) — `nucleo/medicion.gd`
+- **Cómo lanzarlo**: PC: `DINASTIA.exe -- --medir` (corto, ~1 min) o `-- --benchmark` (largo: el partido dura 3 min). Cualquier plataforma, **sin argumentos**:
+  Ajustes → Rendimiento → «Prueba de rendimiento (unos 6 min)» (modo largo).
+- **Qué hace**: apaga el vsync y el tope de FPS durante la prueba (los devuelve al acabar), recorre menú → estadio con la cámara de TV → ciudad y mide, por parte:
+  FPS medio, p1 y mínimo, peor fotograma, ms de CPU por fotograma, llamadas de dibujo, triángulos, objetos, memoria estática y de vídeo. En modo largo añade FPS del primer
+  tercio frente al último de cada parte (`caida_pct`): sirve para ver si el móvil baja por calor. También guarda GPU, CPU, hilos, RAM, modelo, SO, renderizador, versión y Hz de pantalla.
+- **Dónde queda el informe**: `user://mediciones/medicion_<fecha>.txt` y `.json`. Además se copia al portapapeles, se muestra en pantalla con su ruta y un botón «Cerrar» (vuelve al menú) y
+  se vuelca a la salida estándar (`MEDICION ...` y `MEDICION_JSON {...}`; en Android sale por `adb logcat -s godot`, pero no hace falta adb: basta pegar el portapapeles).
+  En Android la carpeta es la privada de la app (`/data/data/<paquete>/files/...`): por eso el informe está en pantalla y en el portapapeles.
+- **Pendiente (necesita dispositivo)**: el tiempo de cada parte se mide con el reloj del juego; en un Vivo Y36 5G (60/90 Hz) queda por ver si el sistema impone un tope de fotogramas aunque el vsync esté apagado.
+- **Perfil móvil**: en móvil `CalidadAuto` parte siempre de MEDIO (el renderizador ya es Compatibilidad por `renderer/rendering_method.mobile`), con la calidad adaptativa encendida.
+- **Presupuesto**: `herramientas/presupuesto.sh` (en `especiales.sh todo`) corre el benchmark corto con límites de equipo modesto y falla si llamadas, triángulos, memoria o vídeo pasan de `herramientas/presupuesto_benchmark.json`.
+
+### Generar la APK (el dueño maneja los builds)
+Actions → «compilar» → Run workflow → `objetivo` = `android` (arm64, depuración o release firmado con `android_release`), `android-armv7` (móviles de 32 bits) o `android-aab` (tienda).
+La rama: `ccr-120fps-optimizar` (o la que se una a `main`). El release firmado necesita los secretos `ANDROID_KEYSTORE_BASE64/USER/PASSWORD`. El artefacto se descarga de la propia ejecución.

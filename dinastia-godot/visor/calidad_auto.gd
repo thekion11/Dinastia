@@ -25,6 +25,8 @@ static func detectar(gpu: String = "", ram_mb: int = -1, hilos: int = -1) -> Dic
 		if g.contains(k):
 			motivos.append("gráfica «%s»" % gpu)
 			break
+	if OS.has_feature("mobile"):
+		motivos.append("móvil (presupuesto ligero por defecto: MEDIO, Compatibilidad)")
 	if ram_mb > 0 and ram_mb <= RAM_DEBIL_MB:
 		motivos.append("%d MB de RAM" % ram_mb)
 	if hilos <= HILOS_DEBIL:
