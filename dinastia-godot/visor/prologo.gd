@@ -23,6 +23,8 @@ static var rapido := false
 ## Partida cargada (fase 3, bloque 7): "" = el guion entero; "oficina" o "casa" = sin
 ## guion, aparecer ahí con el PC listo (lo pone `Inicio` según `VidaCiudad.arranque_3d`).
 static var directo := ""
+## Mientras la escena del prólogo está viva (2-11): el explorador acorta el plano lejano de la cámara (la ciudad está recortada).
+static var activo := false
 
 var mundo: Mundo
 var club: Club
@@ -51,7 +53,11 @@ var _directiva_hecha := false
 var _guardado_al_encender := false
 var _listo := false
 
+func _exit_tree() -> void:
+	activo = false
+
 func _ready() -> void:
+	activo = true
 	mundo = PedidoPartida.mundo_pregenerado if PedidoPartida.mundo_pregenerado != null else PedidoPartida.mundo_a_cargar
 	club = mundo.mi_club() if mundo != null else null
 	if club == null or mundo.obras == null or mundo.ciudad == null:
@@ -70,7 +76,9 @@ func _ready() -> void:
 	var carga := PantallaCarga.mostrar(self, Idiomas.t("Construyendo la ciudad…"))
 	await get_tree().process_frame
 	await get_tree().process_frame
-	_construir_mundo()
+	CityBuilder.modo_prologo = OS.get_environment("PROLOGO_COMPLETO") == ""   ## solo el barrio del club (2-11); PROLOGO_COMPLETO=1 = la ciudad entera, para comparar
+	await _construir_mundo()
+	CityBuilder.modo_prologo = false
 	if is_instance_valid(carga):
 		carga.cerrar()
 	hud = PrologoHud.new()
@@ -93,11 +101,12 @@ func _ready() -> void:
 ## La ciudad del club (misma semilla y estadio que la ciudad de siempre).
 func _construir_mundo() -> void:
 	vista = VistaCiudad.new()
+	vista.por_partes = true   ## armado entre fotogramas: la pantalla de carga sigue viva (antes se quedaba GRIS, congelada)
 	add_child(vista)
 	vista.animo = CiudadAnimo.de(mundo, club)
 	EdificioClub.fijar_ctx(mundo, club)
 	var perfil := mundo.perfil_estadio_de(club)
-	vista.abrir(club, mundo.obras, mundo.ciudad, perfil)
+	await vista.abrir(club, mundo.obras, mundo.ciudad, perfil)
 	est = TunelVestuario.datos(perfil, StadiumBuilder.niveles_de(perfil, int(perfil.get("aforo", 20000))))
 	puerta = CityBuilder.ESTADIO_EN + (est["puerta"] as Vector3)
 	## La cámara aérea mira al estadio mientras dura la presentación.
