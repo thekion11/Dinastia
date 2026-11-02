@@ -369,7 +369,7 @@ func abrir_ficha(k: String) -> void:
 		b.custom_minimum_size = Vector2(0, 36)
 		b.disabled = coste > club.saldo
 		if coste > club.saldo:
-			aviso.text = "No alcanza la caja: tienes %s." % Cesiones.dinero(club.saldo)
+			aviso.text = Idiomas.t("No alcanza la caja: tienes %s.") % Cesiones.dinero(club.saldo)
 		b.pressed.connect(func() -> void:
 			var problema: String = String(construir.call(k)) if construir.is_valid() else "no disponible"
 			if problema != "":
