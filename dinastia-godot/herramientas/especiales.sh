@@ -182,6 +182,7 @@ fi
   pasa "textos largos en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_LARGOS=/tmp/largos_de.json RECORRIDO_CORTADOS_MAX=4 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN LARGOS. 0 fallos"
   # M-463: en alemán no queda castellano sin traducir (las siglas POR/DEF/MED/DEL y el formato del editor ya no cuentan)
   pasa "sin castellano en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_CASTELLANO_MAX=0 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN CASTELLANO. 0 fallos"
+  pasa "apertura de pantallas (M-287, tope 2 s sin GPU)" "RECORRIDO_MS_MAX=2000 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN TIEMPOS. 0 fallos"
   # M-333: los rótulos 3D de la ciudad entera, en inglés, pasan por Idiomas.t
   pasa "carteles 3D traducidos" "godot --headless --path . res://pruebas/ideas/idi_carteles3d.tscn" "FIN. 0 fallos"
   pasa "módulos del visor sin prueba (M-404)" "godot --headless --path . res://pruebas/ideas/vis_sueltos.tscn" "FIN. 0 fallos"

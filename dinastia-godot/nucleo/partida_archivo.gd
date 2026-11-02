@@ -66,6 +66,7 @@ static func _md5(b: PackedByteArray) -> PackedByteArray:
 ## Escribe con temporal, comprobación y rotación de copias. Si algo falla, el
 ## principal y sus copias quedan como estaban.
 static func escribir(ruta: String, crudo: PackedByteArray) -> bool:
+	Partida._cabeceras.erase(ruta)   ## la cabecera en caché de `Partida.listar` ya no vale
 	var t0 := Time.get_ticks_msec()
 	var paquete := empaquetar(crudo)
 	var tmp := ruta + TEMPORAL

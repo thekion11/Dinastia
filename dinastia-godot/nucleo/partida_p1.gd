@@ -100,6 +100,22 @@ static func _leer_con_respaldo(ruta: String) -> Dictionary:
 
 ## Lista los guardados con su resumen, para poder pintar un menú de carga sin
 ## abrir cada fichero entero.
+## (2-11-2026, M-287) La cabecera de cada partida, en caché por ruta y fecha de modificación: listar las ranuras
+## leía y descifraba cada guardado entero (~600 KB) en cada apertura de Ajustes → Partida (1,3 s por software).
+## Si el archivo principal no existe (se lee el respaldo), no se guarda en caché.
+static var _cabeceras: Dictionary = {}
+static func _cabecera_cacheada(ruta: String) -> Dictionary:
+	if not FileAccess.file_exists(ruta):
+		return _cabecera_de(_leer_con_respaldo(ruta))
+	var mt := FileAccess.get_modified_time(ruta)
+	var e: Dictionary = _cabeceras.get(ruta, {})
+	if not e.is_empty() and int(e["mt"]) == mt:
+		return (e["cab"] as Dictionary).duplicate()
+	var cab := _cabecera_de(_leer_con_respaldo(ruta))
+	if not cargada_de_respaldo:
+		_cabeceras[ruta] = {"mt": mt, "cab": cab.duplicate()}
+	return cab
+
 static func listar() -> Array[Dictionary]:
 	var salida: Array[Dictionary] = []
 	var d := DirAccess.open(carpeta())
@@ -113,7 +129,7 @@ static func listar() -> Array[Dictionary]:
 			if f.ends_with(EXTENSION + suf):
 				nombres[f.trim_suffix(EXTENSION + suf)] = true
 	for n: String in nombres:
-		var cab := _cabecera_de(_leer_con_respaldo(carpeta() + "/" + n + EXTENSION))
+		var cab := _cabecera_cacheada(carpeta() + "/" + n + EXTENSION)
 		if not cab.is_empty():
 			cab["fichero"] = n
 			salida.append(cab)

@@ -374,6 +374,7 @@ static func cargar(nombre: String) -> Mundo:
 	return m
 
 static func borrar(nombre: String) -> void:
+	_cabeceras.erase(ruta_de(nombre))
 	for suf: String in PartidaArchivo.sufijos():
 		if FileAccess.file_exists(ruta_de(nombre) + suf):
 			DirAccess.remove_absolute(ruta_de(nombre) + suf)
