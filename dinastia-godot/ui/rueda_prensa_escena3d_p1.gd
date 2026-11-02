@@ -42,11 +42,11 @@ var _dt_brazos: Array[Node3D] = []
 var _dt_3d_pendiente := false
 var _dt_3d: Dictionary = {}
 var _t_gesto_dt := 3.0
-var _gesto_pedido := ""   ## el gesto y la cara que pide la respuesta elegida en la presentación (`PrologoPrensa`); se gastan al hacerlos
-var _cara_pedida := ""
 var _rng_dt := RandomNumberGenerator.new()
 ## Solo gestos suaves (26-10): los «Spell_*» estiraban el brazo hacia la cámara.
 const GESTOS_PRENSA := ["charla"]
+## (§2.5) El tono de la última respuesta ("seguro", "evasivo", "humilde"): el próximo gesto es el suyo.
+var tono_dt := ""
 var _t := 0.0
 var _cam_pos := Vector3.ZERO
 var _cam_mira := Vector3.ZERO

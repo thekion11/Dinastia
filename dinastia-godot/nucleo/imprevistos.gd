@@ -136,13 +136,15 @@ var recientes: Array = []
 
 ## Una semana: primero corren los efectos que duran y luego, quizá, uno nuevo.
 ## Devuelve el imprevisto nuevo ({fila, jugador, texto, semanas}) o vacío.
-func semana(m: Object, c: Club, anio: int, semana_n: int, toque_de_queda: bool) -> Dictionary:
+## `riesgo` (≥ 1): `Necesidades.factor_riesgo()` del DT al cerrar la semana: cansado o con hambre,
+## más imprevistos (con la rutina es 1 y todo queda igual que siempre).
+func semana(m: Object, c: Club, anio: int, semana_n: int, toque_de_queda: bool, riesgo: float = 1.0) -> Dictionary:
 	if c == null:
 		return {}
 	correr_activos(c)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = absi(("%s|%d|%d|imprevisto" % [c.id, anio, semana_n]).hash())
-	if rng.randf() >= PROB_SEMANA:
+	if rng.randf() >= clampf(PROB_SEMANA * riesgo, 0.0, 1.0):
 		return {}
 	return sortear(m, c, rng, toque_de_queda)
 

@@ -145,3 +145,16 @@ static func consejo(info: Dictionary, soy_local: bool) -> String:
 		"niebla":
 			return "Con niebla ni los de la grada verán el partido. Juego corto y seguro."
 	return ""
+
+## EL CLIMA TAMBIÉN VACÍA LA GRADA (01-11-2026, idea 251 «clima que afecta partidos y asistencia»: hasta hoy solo trababa el
+## juego). Con lluvia, tormenta, nieve o niebla va menos gente, y con calor intenso a mediodía también; el TECHO RETRÁCTIL
+## (`Comercial`) quita lo de la lluvia, la tormenta y la nieve (la niebla y el calor siguen). Lo usa `Mundo` al cobrar la
+## taquilla y al estimarla, con el mismo clima que tendrá el partido (`del_partido`, misma semilla).
+static func factor_publico(info: Dictionary, con_techo := false) -> float:
+	var clave := String(info.get("clave", ""))
+	var f: float = {"lluvia": 0.92, "tormenta": 0.82, "nieve": 0.85, "niebla": 0.97}.get(clave, 1.0)
+	if con_techo and clave in ["lluvia", "tormenta", "nieve"]:
+		f = 1.0
+	if bool(info.get("calor", false)):
+		f *= 0.95
+	return f

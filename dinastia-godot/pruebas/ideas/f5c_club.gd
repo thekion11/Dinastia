@@ -59,6 +59,29 @@ func _probar() -> void:
 	var c2 := Citas.new()
 	c2.desde_dic(d)
 	_comprobar(c2._trofeos_vistos == m.citas._trofeos_vistos, "lo celebrado sobrevive a guardar y cargar")
+	## §2.5: la rama también pide VISIBILIDAD (un partido en el estadio) y celebra sus títulos.
+	_comprobar(m.citas.opciones(m, cr).size() == 3, "la coordinadora ofrece tres respuestas: presupuesto, no o visibilidad")
+	var socios0 := c.socios
+	var cesped0 := m.ciudad.cesped
+	var cv := cr.duplicate()
+	cv["estado"] = "pendiente"
+	cv["id"] = "prueba_vis"
+	m.citas.lista.append(cv)
+	var rv := m.citas.resolver(m, "prueba_vis", 2)
+	_comprobar(not rv.is_empty() and c.socios == socios0 + CitasRamas.VISIBILIDAD_SOCIOS and m.ciudad.cesped == maxi(0, cesped0 - CitasRamas.VISIBILIDAD_CESPED)
+		and int(m.hinchada.visib_rama.get("futsal", -1)) == m.anio, "visibilidad: la rama juega en el estadio (+socios, algo de fuerza, el césped se resiente)")
+	var celebradas := m.citas._ramas_vistas
+	m.hinchada.palmares_ramas.push_front({"anio": m.anio, "rama": "Futsal", "clave": "futsal", "puesto": 1})
+	m.citas.semana(m, 10)
+	var crr := {}
+	for x: Dictionary in m.citas.pendientes():
+		if x["tipo"] == "celebracion" and String(x["clave"]) == "rama|futsal":
+			crr = x
+	_comprobar(not crr.is_empty() and m.citas._ramas_vistas == celebradas + 1, "un título nuevo de la rama trae su celebración en el museo")
+	var s1 := c.socios
+	var rr2 := m.citas.resolver(m, String(crr["id"]), 0) if not crr.is_empty() else {}
+	_comprobar(not rr2.is_empty() and c.socios == s1 + CitasRamas.CELEBRACION_SOCIOS, "levantar la copa de la rama suma socios y la foto")
+	_comprobar(Citas.new().a_dic().has("ramas") and m.hinchada.a_dic().has("visib_rama"), "la visibilidad y los títulos celebrados se guardan")
 	## EL MUSEO QUE CRECE (27-10): capacidad real en la planta 2 y planta 3 «Museo ampliado» por el ascensor.
 	var ctx0 := EdificioClub.ctx
 	var hitos: Array = []
@@ -91,27 +114,3 @@ func _probar() -> void:
 	_comprobar(anim != null and anim.copas.size() == 3, "la planta 3 lleva una copa por título del séptimo en adelante (3 de 9): %d" % (anim.copas.size() if anim != null else -1))
 	raiz2.free()
 	EdificioClub.ctx = ctx0
-	## 28-10: la coordinadora ofrece una tercera salida («visibilidad»: ceder el estadio) y los títulos de rama también se celebran.
-	var m2 := _mundo(56)
-	m2.reloj.sincronizar(m2.anio, m2.semana)
-	m2.hinchada.ramas["futsal"] = true
-	m2.citas.semana(m2, Citas.RAMA_SEMANA)
-	var cr2 := {}
-	for x: Dictionary in m2.citas.pendientes():
-		if x["tipo"] == "rama":
-			cr2 = x
-	_comprobar(m2.citas.opciones(m2, cr2).size() == 3, "la cita de la rama ofrece tres salidas (presupuesto, no, visibilidad)")
-	var saldo2 := m2.mi_club().saldo
-	var rv := m2.citas.resolver(m2, String(cr2["id"]), 2)
-	_comprobar(not rv.is_empty() and m2.mi_club().saldo == saldo2 and int(m2.hinchada.visibilidad_rama.get("futsal", -1)) == m2.anio, "ceder el estadio no cuesta caja y queda anotado (visibilidad)")
-	var m3 := _mundo(57)
-	m3.reloj.sincronizar(m3.anio, m3.semana)
-	m3.hinchada.ramas["futsal"] = true
-	m3.citas.semana(m3, 3)   ## fija el contador de títulos ya vistos (0)
-	m3.hinchada.palmares_ramas.push_front({"anio": m3.anio, "rama": "Futsal", "clave": "futsal", "puesto": 1})
-	m3.citas.semana(m3, 4)
-	var cel := {}
-	for x: Dictionary in m3.citas.pendientes():
-		if x["tipo"] == "celebracion":
-			cel = x
-	_comprobar(not cel.is_empty() and String(cel["clave"]) == "futsal", "un título de rama trae su celebración en el museo")

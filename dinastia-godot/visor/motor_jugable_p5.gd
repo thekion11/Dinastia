@@ -47,7 +47,7 @@ func _duelo_agarron(a: Dictionary, c: Dictionary, d: float) -> bool:
 	## Cuanto más lo retiene, más fácil que pite.
 	if _rng.randf() < (0.06 + agr * 0.16 + (1.0 - frena) * 0.35) * _escala_falta():
 		if _rng.randf() < 0.35:
-			_anim(obj, "caida_fea", true, 1.2)
+			_caer(obj)
 		_falta(ag, obj, 0.08 + agr * 0.2, "agarron", "agarron")
 		return true
 	## Sin falta, si lo frena del todo le roba la cartera.
@@ -94,7 +94,7 @@ func _mover_jugadores(delta: float) -> void:
 		var n: Node3D = p["node"]
 		if not is_instance_valid(n) or not p.has("objetivo"):
 			continue
-		var obj: Vector3 = p["objetivo"]
+		var obj: Vector3 = p["objetivo"] if float(p.get("levanta_hasta", 0.0)) <= t else n.position   ## en el suelo tras la barrida (31-10)
 		obj.y = 0.0
 		var dif := obj - Vector3(n.position.x, 0, n.position.z)
 		var dist := dif.length()
@@ -162,6 +162,8 @@ func _mover_jugadores(delta: float) -> void:
 		var hacia_b := balon.position - n.position
 		hacia_b.y = 0.0
 		var atras := false
+		var giro_antes := n.rotation.y
+		var corre_recto := false
 		if float(p.get("mirar_hasta", 0.0)) > t:
 			## Un giro mandado (golpeo, filigrana): manda sobre todo lo demás.
 			n.rotation.y = rotate_toward(n.rotation.y, float(p["mirar"]), GIRO_RAPIDO * delta)
@@ -175,9 +177,15 @@ func _mover_jugadores(delta: float) -> void:
 			n.rotation.y = rotate_toward(n.rotation.y, atan2(hacia_b.x, hacia_b.z), 8.0 * delta)
 		elif sp > 0.4:
 			n.rotation.y = rotate_toward(n.rotation.y, atan2(vel.x, vel.z), 9.0 * delta)
+			corre_recto = true
 		elif poseedor != p:
 			var hacia := balon.position - n.position
 			n.rotation.y = rotate_toward(n.rotation.y, atan2(hacia.x, hacia.z), 4.0 * delta)
+		## Al girar corriendo de frente, el cuerpo se inclina hacia dentro de la curva (31-10, §2.2e P2); de lado o atrás, no.
+		if delta > 0.0:
+			n.rotation.z = MovimientoNatural.inclinacion(n.rotation.z, angle_difference(giro_antes, n.rotation.y) / delta if corre_recto else 0.0, sp, delta)
+			n.rotation.x = MovimientoNatural.cabeceo(n.rotation.x, (sp - float(p.get("sp_antes", sp))) / delta if corre_recto else 0.0, delta)
+			p["sp_antes"] = sp
 		## Aguante: el sprint cansa, andar recupera.
 		if bool(p.get("correr", false)) and sp > 5.0:
 			## Presionar arriba cansa: el equipo de presión alta se funde antes
@@ -188,6 +196,11 @@ func _mover_jugadores(delta: float) -> void:
 			p["aguante"] = minf(1.0, float(p["aguante"]) + delta * 0.006)
 
 		## La animación según la velocidad (salvo que haya un gesto en curso).
+		if float(p.get("levantar_en", 0.0)) > 0.0:
+			if t < float(p["levantar_en"]):
+				continue   ## en el suelo: se queda en la última pose de la caída
+			p["levantar_en"] = 0.0
+			_anim(p, String(p.get("levantar_con", "levantarse_suelo")), true, 1.8)
 		if float(p.get("gesto_hasta", 0.0)) > t:
 			continue
 		var anim := "parado" if sp < 0.5 else ("trotar" if sp < 5.2 else "correr")
@@ -282,6 +295,7 @@ func _tomar(p: Dictionary) -> void:
 		var tirador: Dictionary = _tiro_vivo["p"]
 		_cerrar_tiro("fallo")
 		if bool(tirador["es_local"]) != bool(p["es_local"]) and not bool(p["por"]) and vel_balon.length() > 14.0:
+			_anim(p, LeagueAnim.bloqueo(balon.position.y), true, 0.9)   ## el cuerpo que bloquea (01-11, League-Soccer)
 			vel_balon = Vector3(-vel_balon.x * 0.3 + _rng.randf_range(-6, 6), _rng.randf_range(0.5, 3.0), vel_balon.z * _rng.randf_range(0.2, 0.5))
 			penultimo_toque = ultimo_toque
 			ultimo_toque = p
@@ -319,9 +333,11 @@ func _tomar(p: Dictionary) -> void:
 	if bool(p["por"]):
 		_anim(p, "blocaje_alto" if alto > 1.4 else ("blocaje_rasante" if fuerte > 6.0 else "recoger_balon"), true, 0.8)
 	elif alto > 0.9:
-		_anim(p, "golpe_pecho", true, 0.6)
+		_anim(p, "control_pecho" if (p["anim"] as AnimationPlayer).has_animation("control_pecho") else "golpe_pecho", true, 0.6)   ## (01-11: League-Soccer)
 	elif fuerte > 7.0 and (p["vel"] as Vector3).length() < 2.0:
-		_anim(p, "parada_pie", true, 0.6)
+		_anim(p, "control_pie" if (p["anim"] as AnimationPlayer).has_animation("control_pie") else "parada_pie", true, 0.6)
+	if MotorControl.se_le_va(self as Object as MotorJugable, p):   ## el primer toque se escapa (U5, 01-11)
+		return
 	poseedor = p
 	pase_a = {}
 	vel_balon = Vector3.ZERO
@@ -400,6 +416,8 @@ func _golpeo_anim(p: Dictionary, ap: AnimationPlayer, anim: String, destino: Vec
 			ops = ["patear", "pase_largo"]
 		"banda":
 			ops = ["saque_banda"]
+		"mano":
+			ops = ["saque_mano"]
 		_:
 			if anim == "cabezazo":
 				ops = ["cabezazo_potente", "cabezazo_picado"] if vh > 15.0 else ["pase_cabeza", "cabezazo"]
@@ -407,7 +425,9 @@ func _golpeo_anim(p: Dictionary, ap: AnimationPlayer, anim: String, destino: Vec
 				ops = ["pase_pecho"] if desde.y > 1.0 else ["media_volea"]
 			elif anim == "pase":
 				var atras := (destino.z - desde.z) * d < -3.0
-				if loft > 0.0:
+				if sp > 4.5 and loft <= 0.0 and not de_primera and not atras and ap.has_animation("pase_carrera"):
+					ops = ["pase_carrera"]   ## pasando a la carrera, el de League-Soccer (01-11)
+				elif loft > 0.0:
 					ops = ["pase_largo", "pase_bombeado"] if dist > 28.0 else ["pase_bombeado"]
 				elif de_primera:
 					ops = ["pase_primera"]

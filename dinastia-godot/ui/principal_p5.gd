@@ -2,7 +2,7 @@ extends "res://ui/principal_p4.gd"
 ## [Capa 5/17 de `principal.gd`] _ver_estadio_propio, _ver_estadio_con_carga, _dato, _aire_cifra, _miles, _pintar_estadio
 
 ## Puentes (fase 6, paso 7): viven en `ui/principal/vistas_menu.gd`.
-func _ver_estadio_propio() -> void: _vistas._ver_estadio_propio()
+func _ver_estadio_propio(por_partes := false) -> void: await _vistas._ver_estadio_propio(por_partes)
 func _ver_estadio_con_carga() -> void: await _vistas._ver_estadio_con_carga()
 
 
@@ -29,4 +29,4 @@ func _miles(n: int) -> String:
 	return salida
 
 ## Puente (fase 6, paso 6): la pestaña Estadio la pinta `PantallaClubEstadio`.
-func _pintar_estadio(c: Club) -> void: _ui_club_estadio._pintar_estadio(c)
+func _pintar_estadio(c: Club) -> void: _ui_club_estadio.abrir("estadio", {"club": c})

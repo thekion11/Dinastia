@@ -1,12 +1,11 @@
 class_name PantallaCiudad
-extends RefCounted
+extends PantallaBase
 ## LA CIUDAD: terrenos, negocios, conciertos, la municipalidad, la sostenibilidad y la seguridad.
 ##
 ## Sale de `ui/principal.gd` (mapa de metas 15: el archivo pasaba de
 ## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
-var p: Principal
 ## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
 ## `GLOSARIO` del HTML (`juego.js`, 20 términos): tabla estática, ya exportada
 ## en `datos/tablas.json` como cualquier otra -no se transcribe a mano-. Sin
@@ -23,9 +22,6 @@ var p: Principal
 ## número. Quien quiera SU liga —los nombres bien escritos, las plantillas que
 ## él conoce— tiene que poder escribirla, y a mano son cuatrocientos clubes.
 var _editor: Editor
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 func _editor_de() -> Editor:
 	if _editor == null or _editor._mundo() != p.mundo:
@@ -353,7 +349,7 @@ func _pintar_ciudad(c: Club) -> void:
 	## (12-9-2026): `CityBuilder` llevaba desde el 2-09-2026 viviendo solo en
 	## el proyecto viejo, nunca portado. Mismo patrón que el botón de estadio.
 	var ver3d := Button.new()
-	ver3d.text = Idiomas.t("🏙️ Ver la ciudad en 3D")
+	ver3d.text = Idiomas.t("🚪 Levantarse del PC") if p._vistas.pc_oficina() != null else Idiomas.t("🏙️ Ver la ciudad en 3D")
 	ver3d.add_theme_font_size_override("font_size", 11)
 	ver3d.pressed.connect(p._ver_ciudad_con_carga)
 	p._lista_ciudad.add_child(ver3d)
@@ -388,3 +384,7 @@ func _pintar_ciudad(c: Club) -> void:
 	_pintar_municipalidad(ci, c)
 	_pintar_sostenibilidad(ci, c)
 	_pintar_seguridad(ci, c)
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"ciudad": _pintar_ciudad}

@@ -12,7 +12,7 @@ extends RefCounted
 ## un contrato caro con un plantel flojo es hipotecar el año siguiente: si no
 ## cumples, las ofertas de la próxima pretemporada llegan un 30% más flacas.
 ##
-## LAS TREINTA Y OCHO MARCAS salen de la tabla `MARCAS`, que ya venía exportada
+## LAS SETENTA MARCAS salen de la tabla `MARCAS`, que ya venía exportada
 ## del HTML y no la leía nadie. Van desde la cervecera y el banco hasta la
 ## funeraria, la app de citas y el podcast «Fútbol y Terapia»: es la mitad del
 ## chiste de la pantalla y el motivo de que el escudo importe.

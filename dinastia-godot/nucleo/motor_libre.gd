@@ -121,9 +121,11 @@ func paso() -> void:
 
 func resultado() -> Dictionary:
 	var pos_tot: float = stats["posesion"][0] + stats["posesion"][1]
+	var pos_l: float = roundf(100.0 * stats["posesion"][0] / pos_tot) if pos_tot > 0.0 else 50.0
 	return {"goles": goles.duplicate(), "tiros": stats["tiros"].duplicate(),
 		"pases": stats["pases"].duplicate(), "pases_ok": stats["pases_ok"].duplicate(),
-		"posesion": [roundf(100.0 * stats["posesion"][0] / maxf(1.0, pos_tot)), roundf(100.0 * stats["posesion"][1] / maxf(1.0, pos_tot))],
+		## La visita = 100 − local (01-11): redondeadas por separado podían sumar 101 (50,5 + 49,5 → 51 + 50).
+		"posesion": [pos_l, 100.0 - pos_l],
 		"regates": stats["regates"].duplicate(), "regates_ok": stats["regates_ok"].duplicate(),
 		"entradas_ok": stats["entradas_ok"].duplicate(), "xg": stats["xg"].duplicate(), "decisiones": stats["decisiones"].duplicate()}
 

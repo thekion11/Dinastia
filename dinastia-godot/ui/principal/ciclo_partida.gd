@@ -72,32 +72,9 @@ func nueva() -> void:
 func arrancar_con(m: Mundo) -> void:
 	p.mundo = m
 	p._fin_partida_avisado = false
-	m.dificultad = PedidoPartida.dificultad_elegida
-	## La dificultad: aquí escala la caja inicial («plata» del HTML: hasta 60% más en
-	## fácil o 45% menos en leyenda). Premios («prem») y pretensiones salariales («pide»)
-	## y el tope del valor de la IA los aplica el núcleo con Mundo.factor_dificultad().
-	var dif: Variant = Datos.tabla("DIF")
-	if dif is Dictionary and (dif as Dictionary).has(PedidoPartida.dificultad_elegida):
-		var plata := float((dif as Dictionary)[PedidoPartida.dificultad_elegida].get("plata", 1.0))
-		m.mi_club().saldo = int(round(float(m.mi_club().saldo) * plata))
-	## Los desafíos: "pobreza" pisaría la caja de la dificultad si fuera antes,
-	## así que van después -es la letra pequeña ganándole a la general, como en
-	## el HTML, donde `aplicarDesafios()` también corre después de fijar el
-	## saldo por dificultad.
-	if not PedidoPartida.desafios_elegidos.is_empty():
-		m.desafios = PedidoPartida.desafios_elegidos.duplicate()
-		m.aplicar_desafios()
-		PedidoPartida.desafios_elegidos = []
-	## El modo de carrera elegido en la pantalla previa. Si viene vacío -se
-	## abrió esta escena directo, sin pasar por seleccion_modo.gd, como hacen
-	## los bancos de prueba y las capturas- se queda el DT clásico de siempre.
-	if PedidoPartida.modo_elegido != "":
-		m.roles.arrancar(PedidoPartida.modo_elegido, PedidoPartida.dt_nombre_elegido)
-		## FONDO DE INVERSIÓN (26-9-2026): el fondo arranca con su propia caja.
-		if PedidoPartida.modo_elegido == "fondo" and m.mi_club() != null:
-			m.fondo = FondoInversion.new()
-			m.fondo.caja = int(round(Eco.ref_caja(70.0) * 2.5))
-		PedidoPartida.modo_elegido = ""
+	## Dificultad, desafíos y modo (`PedidoPartida.aplicar`; si el orquestador ya lo hizo antes de
+	## autoguardar, no se repite).
+	PedidoPartida.aplicar(m)
 	_adoptar(m)
 	p._escribir("[color=#8ea595]Mundo nuevo.[/color] Semilla [color=#3fa06a]%d[/color]" % m.semilla)
 	_avisar_si_respaldo()

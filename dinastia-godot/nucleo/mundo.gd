@@ -139,6 +139,9 @@ func estimar_taquilla(c: Club) -> Dictionary:
 		f_publico *= Calendario.factor_publico(c.pais, anio, semana)
 		if maestria != null:
 			f_publico *= maestria.factor_publico()
+		var pp_c := proximo_partido()   ## el clima del partido (01-11, idea 251), si juega en casa
+		if pp_c.size() == 2 and pp_c[0] == c:
+			f_publico *= Clima.factor_publico(Clima.del_partido(c.pais, semana, anio, c.id + (pp_c[1] as Club).id), comercial != null and comercial.nivel_premium("techo") > 0)
 	var precio := c.precio_entrada
 	if c.id == mi_club_id and hinchada != null and hinchada.precio_dinamico:
 		var pp := proximo_partido()

@@ -60,10 +60,16 @@ func _probar() -> void:
 		todos2 = todos2 and t2.has(r)
 	_comprobar(todos2, "el paradero del estadio (%s): «Av. Los Hinchas / Estadio» con %s" % [cod2, ", ".join(RecorridosRed.recorridos(cod2))])
 	## La banca queda a la altura de los asientos registrados (tablero a 0,69 sobre el suelo local) y sus asientos caen sobre ella.
+	## (31-10, M-476: las piezas van fundidas en una malla por material) El tablero: el vértice más alto de las láminas,
+	## en la franja de la banca (z de −1,12 a −0,68, y de 0,6 a 0,75).
 	var alto_banca := 0.0
-	for m: Node in raiz.find_children("*", "MeshInstance3D", true, false):
-		if absf(m.position.z + 0.9) < 0.2 and absf(m.position.y - 0.67) < 0.01:
-			alto_banca = m.position.y + 0.02
+	for m: Node in raiz.find_children("*", "MeshInstance3D", false, false):
+		var mm := (m as MeshInstance3D).mesh
+		for k in mm.get_surface_count():
+			for v: Vector3 in mm.surface_get_arrays(k)[Mesh.ARRAY_VERTEX]:
+				var q := (m as Node3D).transform * v
+				if q.z > -1.12 and q.z < -0.68 and q.y > 0.6 and q.y < 0.75:
+					alto_banca = maxf(alto_banca, q.y)
 	_comprobar(absf(alto_banca - 0.69) < 0.001, "la banca tiene el tablero a 0,69 (%.2f) como los asientos de `GenteSentada`" % alto_banca)
 	_comprobar(ParaderoRed.asientos_x().size() == 2, "dos asientos en la banca")
 	## El código lleva el sector de DONDE queda el paradero (PA1002 caía en el sector 300).

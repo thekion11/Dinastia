@@ -284,8 +284,11 @@ static func instantanea(m: Mundo) -> Dictionary:
 		## club (equipaciones reales, plantillas) siga cuadrando.
 		"base_real": Datos.base_real,
 		"desafios": m.desafios, "dificultad": m.dificultad, "vref": m.valor_ia_ref,
-		"prologo_visto": m.prologo_visto,
+		"prologo_visto": m.prologo_visto, "prologo_pendiente": m.prologo_pendiente,
 		"reto": m.reto,
+		## 2-11 (probables de la auditoría del 28-10): estos cuatro campos del Mundo no se guardaban y cargar los reiniciaba.
+		"anios_en_club": m.anios_en_club, "rotacion_activa": m.rotacion_activa,
+		"bono_analisis": m.bono_analisis, "fin_partida": m.fin_partida,
 		"fondo": m.fondo.a_dic() if m.fondo != null else {},
 		"clubes": [],
 		"ligas": [],

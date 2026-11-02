@@ -3,9 +3,22 @@ extends "res://visor/motor_jugable_p5.gd"
 
 ## Patea el balón hacia `destino` con una velocidad horizontal `vh` y la
 ## parábola que haga falta para llegar ahí (más `loft` de altura extra).
+## El saque de mano: el balón sigue en la mano del portero hasta `SUELTA_MANO` s después (el clip carga el brazo antes de lanzar).
+const SUELTA_MANO := 0.45
+var _en_mano: Dictionary = {}
+
 func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 0.0, anim := "pase") -> void:
 	_ultima_anim = anim
 	_n_patada += 1
+	## SAQUE DE MANO (31-10): el portero con el balón en las manos que pasa raso y corto lo lanza con la mano (clip de la UAL2):
+	## el balón sale desde arriba del hombro y rueda; los envíos largos siguen siendo de volea.
+	if bool(p.get("en_manos", false)) and loft <= 0.0 and Vector2(destino.x - balon.position.x, destino.z - balon.position.z).length() < 32.0 \
+			and AnimExtra.asegurar(p.get("anim"), FutbolistaQ.esqueleto_de(p["node"]), "saque_mano"):
+		anim = "saque_mano"
+		_ctx_golpeo = "mano"
+		balon.position.y = maxf(balon.position.y, 1.7)
+		vh = minf(vh, 17.0)
+	p["en_manos"] = false
 	var b := balon.position
 	var d := Vector3(destino.x - b.x, 0, destino.z - b.z)
 	var dist := maxf(d.length(), 0.1)
@@ -28,6 +41,11 @@ func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 
 		h = d / dist * vh
 	vel_balon = Vector3(h.x, vy, h.z)
 	giro_balon = Vector3(0, efecto, 0)
+	Sonido.toca("tiro_potente" if vh > 22.0 else "pase_corto", Sonido.Bus.EFECTOS, clampf(remap(vh, 6.0, 30.0, -9.0, 2.0), -9.0, 2.0))   ## golpeo de League-Soccer; más fuerte cuanto más potente (M-320)
+	if anim == "saque_mano":
+		## Lo retiene en la mano mientras carga el brazo y lo suelta al lanzar (`_retener_en_mano`, 31-10).
+		_en_mano = {"p": p, "hasta": t + SUELTA_MANO, "vel": vel_balon}
+		vel_balon = Vector3.ZERO
 	if depurar:
 		Registro.depurar("PATADA", "%s(%s) desde %s a %s vh %.1f loft %.1f vel %s" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", str(b), str(destino), vh, loft, str(vel_balon)])
 	if OS.get_environment("DEPURAR_AIRE") != "" and vy > 2.0:
@@ -74,6 +92,7 @@ func _cabezazo(p: Dictionary) -> void:
 				clampf(_rng.randf_range(0.3, 1.4) + _rng.randf_range(-err, err) * 0.6, 0.15, 3.5), arco.z)
 		_patear(p, destino, 14.0 + float(p["attr"]["tir"]) * 6.0, 0.0, 0.0, "cabezazo")
 		tiros[0 if bool(p["es_local"]) else 1] += 1
+		_cerrar_tiro("fallo")   ## (01-11) el remate anterior aún abierto se cierra (ver `_tirar`)
 		_tiro_vivo = {"p": p, "t": t, "clase": "cabeza"}
 		_contar("tiro_cabeza")
 	else:
@@ -110,12 +129,15 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 	var de_lado := absf((pos(victima) - pos(p)).normalized().dot(Vector3(sin((p["node"] as Node3D).rotation.y), 0, cos((p["node"] as Node3D).rotation.y)))) < 0.5
 	var gesto_e := "entrada_de_pie"
 	if barrida:
-		gesto_e = ["barrida_lateral", "barrida_corta", "barrida_rapida", "barrida_larga", "falta_barrida"][_rng.randi() % 5]
+		gesto_e = ["barrida_lateral", "barrida_corta", "barrida_rapida", "barrida_larga", "falta_barrida", "barrida_real", "barrida_real"][_rng.randi() % 7]
+		## La barrida de la UAL2 (31-10: entra, se desliza y se levanta) se arma la primera vez que hace falta.
+		if gesto_e == "barrida_real" and not AnimExtra.unir(p.get("anim"), FutbolistaQ.esqueleto_de(p["node"]), gesto_e, AnimExtra.BARRIDA_REAL):
+			gesto_e = "barrida_larga"
 	elif de_lado:
 		gesto_e = "carga_hombro" if _rng.randf() < 0.5 else "entrada_lateral_pie"
 	## La barrida del usuario ya va por el suelo (`_lanzar_barrida`): no se repite el gesto.
 	if not (barrida and String(p.get("anim_actual", "")).begins_with("barrida") and float(p.get("gesto_hasta", 0.0)) > t):
-		_anim(p, gesto_e, true)
+		_anim(p, gesto_e, true, 1.9 if gesto_e == "barrida_real" else 1.4)
 	var r := _rng.randf()
 	if r < exito:
 		if p == usuario:
@@ -311,16 +333,9 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 		if dist < 4.0 or dist > 42.0:
 			continue
 		var progreso := (qp.z - yo.z) * d
-		var libre := 99.0
-		var riesgo := 0.0
-		for r: Dictionary in jugadores:
-			if bool(r["es_local"]) == bool(p["es_local"]):
-				continue
-			libre = minf(libre, pos(r).distance_to(qp))
-			var cerca := Geometry3D.get_closest_point_to_segment(pos(r), yo, qp)
-			var dl := cerca.distance_to(pos(r))
-			if dl < 2.2:
-				riesgo += (2.2 - dl) * 2.4
+		var lr := MotorPaseMejora.libre_y_riesgo(self as Object as MotorJugable, p, q, yo, qp)   ## (R2, 01-11: con PMOT_PASE=1, previsto)
+		var libre: float = lr[0]
+		var riesgo: float = lr[1]
 		var nota := progreso * (CHISPA_AVANCE * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1) \
 				+ 0.03 * float(_tac(bool(p["es_local"]), "verticalidad") - 1)) \
 			+ minf(libre, 10.0) * 0.18 - riesgo - dist * 0.02

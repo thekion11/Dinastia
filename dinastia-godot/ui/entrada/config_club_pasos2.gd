@@ -185,6 +185,13 @@ func _paso_juego() -> void:
 	_grupo(bf)
 	_interruptor(Idiomas.t("Mostrar contador de FPS"), datos.contador_fps, func(si: bool) -> void:
 		datos.contador_fps = si)
+	var bb := _boton_grande(Idiomas.t("Prueba de rendimiento (unos 6 min)"), Color(0.2, 0.25, 0.35))
+	bb.tooltip_text = Idiomas.t("Recorre menú, estadio y ciudad sin límite de FPS y guarda un informe (también en el portapapeles) para mandarlo.")
+	bb.pressed.connect(func() -> void:
+		Medicion.forzada = true
+		Medicion.largo = true
+		get_tree().change_scene_to_file("res://escenas/inicio.tscn"))
+	_contenido.add_child(bb)
 	_seccion(Idiomas.t("Gente por la calle"), Idiomas.t("Cuántos peatones hay en la ciudad 3D. Más gente da más vida y pide más equipo."))
 	var fd := _flujo()
 	var bd: Array = []

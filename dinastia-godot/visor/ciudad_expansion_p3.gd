@@ -4,7 +4,7 @@ extends "res://visor/ciudad_expansion_p2.gd"
 func _adornar_puente(rx: float, z: float, ancho: float, agua0: float, agua1: float, rampa: float) -> void:
 	var piedra := b._mat_simple(Color(0.78, 0.7, 0.58), 0.85)
 	var piedra_osc := b._mat_simple(Color(0.6, 0.53, 0.44), 0.9)
-	var forja := b._mat_simple(Color(0.1, 0.11, 0.12), 0.4)
+	var forja := b._mat_unico(Color(0.1, 0.11, 0.12), 0.4)
 	forja.metallic = 0.5
 	var nombre := String(NOMBRES_PUENTE[absi(int(z / CELDA)) % NOMBRES_PUENTE.size()])
 	var dovelas: Array[Transform3D] = []

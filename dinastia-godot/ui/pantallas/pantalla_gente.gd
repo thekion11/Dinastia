@@ -239,3 +239,9 @@ func _emitir_bono(c: Club) -> void:
 	if problema != "":
 		p._escribir("[color=#e05555]No se pudo emitir: %s.[/color]" % problema)
 	p._refrescar()
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"gente": _pintar_gente, "correo": _pintar_correo, "redes": func() -> void:
+			_pintar_redes()
+			_filtrar_redes()}

@@ -406,3 +406,7 @@ func _pintar_camarin(c: Club) -> void:
 		var jj: Jugador = jerarquia[i]
 		var etiqueta := "referente" if i < 3 else ("influyente" if i < 6 else "periférico")
 		p._dato("%d.  %s%s" % [i + 1, "ⓒ " if jj.capitan else "", jj.nombre], "%d  ·  %s" % [jj.ovr, etiqueta], p.COL_TEXTO, p._lista_camarin)
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"finanzas": _pintar_finanzas, "camarin": _pintar_camarin}

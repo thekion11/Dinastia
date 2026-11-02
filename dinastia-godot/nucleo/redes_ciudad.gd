@@ -38,6 +38,9 @@ const COLECTOR := 40.0                       ## mm de agua que aguanta un colect
 const SUMIDERO_MM_H := 14.0                  ## lo que evacúa un colector sano por hora
 const GAS_DEPOSITO := 30000.0                ## litros por gasolinera
 const PRECIO_LITRO := 1.4
+## (§2.5, 30-10) Dos combustibles: [nombre, precio base]. El precio sube si la gasolinera tiene el
+## depósito por debajo de la mitad (hasta +25 % vacía). La premium rinde un 15 % más (`VidaDT.premium`).
+const COMBUSTIBLES := {"normal": ["Gasolina normal", 1.4], "premium": ["Gasolina premium (+15 % de rendimiento)", 1.75]}
 
 var semilla := 1
 var horas := 0                               ## horas de juego simuladas
@@ -50,6 +53,8 @@ var agua_nivel := AGUA_DEPOSITO * 0.8
 var colector := {}                           ## sector -> mm acumulados
 var inundado := {}                           ## sector -> bool
 var gas := {}                                ## id gasolinera -> litros
+var cisterna := {}                           ## id gasolinera -> horas que le quedan al camión cisterna descargando (§2.5)
+const CISTERNA_HORAS := 3
 var edificios: Array = []                    ## [{id, nombre, uso, sector, pos, kw, m3h, generador, aislado}]
 var historial: Array = []                    ## [{gen, dem, agua, lluvia, sin_luz}] una por hora, las últimas 24
 var registro: Array = []                     ## líneas «20:00 …» del centro de mando
@@ -286,7 +291,12 @@ func _gasolineras(h: int) -> void:
 	for id in gas.keys():
 		var v: float = float(gas[id]) - 340.0 * curva(h)
 		if v < GAS_DEPOSITO * 0.2:
-			v += GAS_DEPOSITO * 0.5          ## llega la cisterna
+			v += GAS_DEPOSITO * 0.5          ## llega la cisterna (y se queda unas horas descargando: se ve en la gasolinera)
+			cisterna[id] = CISTERNA_HORAS
+		elif cisterna.has(id):
+			cisterna[id] = int(cisterna[id]) - 1
+			if int(cisterna[id]) <= 0:
+				cisterna.erase(id)
 		gas[id] = clampf(v, 0.0, GAS_DEPOSITO)
 
 # ============================================================================ PARTIDA
@@ -304,7 +314,7 @@ func a_dic() -> Dictionary:
 			aislados.append(int(ed["id"]))
 	return {"v": 1, "semilla": semilla, "horas": horas, "hora_dia": hora_dia, "agua": agua_nivel, "cortes": c, "colector": col,
 		"gas": [gas[0], gas[1], gas[2]], "historial": historial.duplicate(true), "registro": registro.duplicate(), "aislados": aislados,
-		"evento": evento.a_dic(), "clima": clima, "viento": viento, "lluvia": lluvia}
+		"evento": evento.a_dic(), "clima": clima, "viento": viento, "lluvia": lluvia, "cis": cisterna.duplicate()}
 
 ## Carga una instantánea (partida vieja sin redes = `{}`: se queda como nueva). Los edificios no se guardan (salen de la
 ## ciudad): `recibir_edificios` los vuelve a conectar y aplica los aislados.
@@ -336,6 +346,9 @@ func desde_dic(d: Dictionary) -> void:
 	clima = String(d.get("clima", ""))
 	viento = float(d.get("viento", viento))
 	lluvia = float(d.get("lluvia", 0.0))
+	cisterna.clear()
+	for k: Variant in (d.get("cis", {}) as Dictionary):
+		cisterna[int(k)] = int(d["cis"][k])
 	recibir_edificios(edificios)
 
 func recibir_edificios(lista: Array) -> void:
@@ -374,12 +387,19 @@ func sectores_inundados() -> int:
 	return n
 
 ## Echa gasolina: {litros, coste}. Sin luz en el sector del surtidor, no hay bomba.
-func repostar(id: int, sec: Vector2i, litros: float) -> Dictionary:
+func repostar(id: int, sec: Vector2i, litros: float, tipo := "normal") -> Dictionary:
 	if not gas.has(id) or not hay_luz(sec):
 		return {"litros": 0.0, "coste": 0}
 	var l := minf(litros, float(gas[id]))
+	var precio := precio_litro(id, tipo)
 	gas[id] = float(gas[id]) - l
-	return {"litros": l, "coste": roundi(l * PRECIO_LITRO)}
+	return {"litros": l, "coste": roundi(l * precio)}
+
+## El precio del litro en esa gasolinera hoy (con sus existencias).
+func precio_litro(id: int, tipo := "normal") -> float:
+	var base := float((COMBUSTIBLES.get(tipo, COMBUSTIBLES["normal"]) as Array)[1])
+	var frac := float(gas.get(id, 0.0)) / GAS_DEPOSITO
+	return snappedf(base * (1.0 + 0.5 * maxf(0.0, 0.5 - frac)), 0.01)
 
 ## Resumen para el móvil / el informe: una línea por red.
 func resumen() -> Array[String]:

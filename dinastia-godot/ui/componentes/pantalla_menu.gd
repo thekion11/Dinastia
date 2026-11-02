@@ -239,6 +239,9 @@ func portada() -> void:
 		var tarjeta := _tarjeta(subs[i], i)
 		rej.add_child(tarjeta)
 		Idiomas.traducir_arbol(tarjeta)
+		## M-285 (2-11): con mando, la primera tarjeta toma el foco; la cruceta pasa de una a otra y A entra.
+		if i == 0 and not Input.get_connected_joypads().is_empty():
+			tarjeta.call_deferred("grab_focus")
 		## Entran escalonadas.
 		tarjeta.modulate.a = 0.0
 		var tw := tarjeta.create_tween()

@@ -326,6 +326,12 @@ func _pintar_ficha_club(club: Club) -> void:
 	var t := p._texto(13, Principal.COL_ORO)
 	t.text = Idiomas.t("%s  ·  reputación %d  ·  aforo %s") % [club.nombre, club.rep, p._miles(club.estadio_aforo)]
 	p._lista_clubes.add_child(t)
+	## M-292 (2-11): seguir al club: su resultado de cada semana llega a la bandeja.
+	if p.mundo.ojeadores != null and club != p.mundo.mi_club():
+		var bs := p._boton(Idiomas.t("👁️ Dejar de seguir al club") if p.mundo.ojeadores.sigue_club(club) else Idiomas.t("👁️ Seguir al club"), func() -> void:
+			p.mundo.ojeadores.alternar_club(club)
+			_pintar_ficha_club_refresco(), p._lista_clubes)
+		bs.tooltip_text = Idiomas.t("Cada semana, su resultado te llega al correo.")
 	var hi_c := _historia_de(club)
 	for linea: String in ["📜 " + HistoriaClub.resumen(hi_c), HistoriaClub.texto_historia(hi_c), HistoriaClub.texto_clasicos(hi_c), HistoriaClub.texto_palmares(hi_c)]:
 		if linea.strip_edges() == "":
@@ -431,3 +437,6 @@ func _boton_deshacer(c: Club) -> void:
 			p._refrescar(), p._lista_tactica)
 	b.disabled = n == 0
 	b.tooltip_text = Idiomas.t("Vuelve atrás el último cambio de la táctica o del once (hasta 20).")
+
+func _pintar_ficha_club_refresco() -> void:
+	p._vistas._pintar_clubes()

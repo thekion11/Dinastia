@@ -1,6 +1,6 @@
 class_name CiudadExpansion
 extends "res://visor/ciudad_expansion_p8.gd"
-## [Capa 9/9 de `ciudad_expansion.gd`] _kenney_calles, _parque_eolico, _deposito_agua, _volcar_lotes, construir, _kit_apilado … (+6)
+## [Capa 9/9 de `ciudad_expansion.gd`] _kenney_calles, _parque_eolico, _deposito_agua, _volcar_lotes, construir, encender … (+5)
 
 var _mat_cartel: StandardMaterial3D
 ## Luz, agua, drenaje y gasolineras (27-10-2026): `RedesCiudadVista`.
@@ -82,7 +82,7 @@ func _kenney_calles() -> void:
 ## EL PARQUE EÓLICO en las lomas del noroeste, fuera de la autopista: diez
 ## molinos de 45 m con las aspas girando (cada uno a su ritmo).
 func _parque_eolico() -> void:
-	var blanco := b._mat_simple(Color(0.93, 0.94, 0.95), 0.4)
+	var blanco := b._mat_unico(Color(0.93, 0.94, 0.95), 0.4)
 	for k in 10:
 		var ang := -2.3 + float(k) * 0.12
 		var r := 1750.0 + float(k % 3) * 120.0
@@ -140,28 +140,33 @@ func construir() -> void:
 	armar_red()
 	armar_bloques()
 	armar_transporte()
+	if CityBuilder.modo_prologo:
+		_recortar_a_zona()
 	_cargar_modelos()
 	_materiales()
 	_dibujar_calles()
 	CiudadRotonda.montar(self)   ## M-168
+	await b._marca("exp.calles")   ## (30-10-2026) puntos donde, con la carga encima, se cede un fotograma
 	semaforos = Semaforos.new()
 	semaforos.name = "Semaforos"
 	b.add_child(semaforos)
 	semaforos.montar(cruces_semaforo, self)
 	cuenta["edificios"] = 0
-	b._marca("exp_calles")   ## (28-10) marcas de tiempo por tramo, solo con TIEMPOS=1
+	await b._marca("exp_calles")   ## (28-10) marcas de tiempo por tramo, solo con TIEMPOS=1
 	for bl: Dictionary in bloques:
 		_dibujar_bloque(bl)
-	b._marca("exp_bloques")
+		await b._marca("exp.bloque")
 	_edificios_lejanos()
 	_casas_multimesh()
 	_modular_multimesh()
-	b._marca("exp_multimesh")
+	await b._marca("exp.casas")
 	metro = MetroCiudad.new()
 	metro.name = "Metro"
 	b.add_child(metro)
-	metro.montar(self)
-	_bocas_metro()
+	if not CityBuilder.modo_prologo:   ## prólogo: metro vacío, sin líneas ni bocas
+		metro.montar(self)
+		_bocas_metro()
+	await b._marca("exp.metro")
 	_marquesinas_bus()
 	_guirnaldas()
 	_farolas()
@@ -170,25 +175,18 @@ func construir() -> void:
 	_orillas_nucleo()
 	_obras_en_calle()
 	_kenney_calles()
-	b._marca("exp_mobiliario")
-	cuenta["autopista"] = Autopista.montar(b)
-	_parque_eolico()
-	_deposito_agua()
+	await b._marca("exp.mobiliario")
+	if not CityBuilder.modo_prologo:   ## lo lejano, fuera del prólogo
+		cuenta["autopista"] = Autopista.montar(b)
+		_parque_eolico()
+		_deposito_agua()
 	redes = RedesCiudadVista.crear(self, 20261027)
-	tele_nodo = Teleferico.montar(b)
-	teleferico = tele_nodo.datos()
-	b._marca("exp_transporte")
+	if not CityBuilder.modo_prologo:
+		tele_nodo = Teleferico.montar(b)
+		teleferico = tele_nodo.datos()
+	await b._marca("exp.afueras")
 	_volcar_lotes()
-	b._marca("exp_lotes")
-
-## Un bloque alto hecho con el mismo modelo apilado planta sobre planta (en
-## vez de estirarlo): crece en pisos y las ventanas conservan su forma.
-func _kit_apilado(esc: PackedScene, pos: Vector3, s: float, pisos: int, giro: float) -> void:
-	## (28-10) La altura sale de la malla cacheada (`_malla_kit`), sin instanciar y soltar un nodo por bloque.
-	var k0 := _malla_kit(esc.resource_path)
-	var alto: float = ((k0["caja"] as AABB).size.y if not k0.is_empty() else 0.0) * s
-	for k in pisos:
-		_kit(esc, pos + Vector3(0, float(k) * alto * 0.98, 0), Vector3.ONE * s, giro)
+	await b._marca("exp_lotes")
 
 ## 0 de día, 1 de noche: guirnaldas, farolas y ventanas lejanas.
 func encender(noche: float) -> void:
@@ -209,6 +207,8 @@ func encender(noche: float) -> void:
 		(fs["cono"] as ShaderMaterial).set_shader_parameter("fuerza", lerpf(0.0, 0.22, noche) * f)
 	if _ventanas_lejanas != null:
 		_ventanas_lejanas.set_shader_parameter("noche", noche)
+	if _casas_mat != null:
+		_casas_mat.set_shader_parameter("noche", noche)
 	_actualizar_luz_sectores()
 
 ## El mapa 5x5 de corriente por sector que leen las fachadas (`fachada_torre.gdshader`): las ventanas de
@@ -227,6 +227,9 @@ func _actualizar_luz_sectores() -> void:
 	if _ventanas_lejanas != null:
 		_ventanas_lejanas.set_shader_parameter("luz_sectores", textura_luz)
 		_ventanas_lejanas.set_shader_parameter("usa_sectores", true)
+	if _casas_mat != null:
+		_casas_mat.set_shader_parameter("luz_sectores", textura_luz)
+		_casas_mat.set_shader_parameter("usa_sectores", true)
 
 ## `luz`: la máscara de las ventanas encendidas (blanco = ventana, unas sí y
 ## otras no) para la emisión nocturna.
@@ -328,6 +331,8 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 	]
 	var por_sentido := int(round(lerpf(4.0, 9.0, b._empuje_club())))
 	var n_coches := 0
+	if CityBuilder.modo_prologo:   ## prólogo (2-11): solo el circuito del núcleo; los otros cinco rodean la ciudad entera
+		circuitos = [circuitos[5]]
 	for esq: Array in circuitos:
 		for sentido in [1.0, -1.0]:
 			var pts := _carril(esq, sentido)
@@ -338,20 +343,20 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 				continue
 			var largo := t.largo_de(id)
 			for i in por_sentido:
-				var nodo: Node3D = CityBuilder.instanciar_coche(coches[rng.randi() % coches.size()], rng)
+				var nodo: Node3D = CityBuilder.instanciar_trafico(coches[rng.randi() % coches.size()], rng)
 				t.agregar_vehiculo(nodo, id, largo * (float(i) + rng.randf() * 0.5) / float(por_sentido), rng.randf_range(10.0, 15.0), 0.0, 0.0)
 				t.marcar_cola_al_ultimo()
 				n_coches += 1
 	n_coches += CiudadRotonda.trafico(self, t, coches, rng)   ## y los tres de la rotonda
 	cuenta["coches"] = n_coches
 	## La autopista: tráfico más rápido, sin semáforos.
-	for pts_a: PackedVector3Array in Autopista.rutas():
+	for pts_a: PackedVector3Array in ([] if CityBuilder.modo_prologo else Autopista.rutas()):
 		var ida := t.agregar_ruta(b._redondear(pts_a, 30.0))
 		if coches.is_empty():
 			continue
 		var largo_a := t.largo_de(ida)
 		for i in 12:
-			var na: Node3D = CityBuilder.instanciar_coche(coches[rng.randi() % coches.size()], rng)
+			var na: Node3D = CityBuilder.instanciar_trafico(coches[rng.randi() % coches.size()], rng)
 			t.agregar_vehiculo(na, ida, largo_a * float(i) / 12.0 + rng.randf() * 40.0, rng.randf_range(22.0, 30.0), 0.0, 0.0)
 			t.marcar_cola_al_ultimo()
 	## Los autobuses: los recorridos «Red» sobre el mapa, ida y vuelta, con su número, destino y patente (`BusesRed`).
@@ -419,3 +424,25 @@ func _cable_entre(a: Vector3, c: Vector3, ts: Array[Transform3D]) -> void:
 			var x_eje := Vector3.UP.cross(z_eje).normalized()
 			var y_eje := z_eje.cross(x_eje)
 			ts.append(Transform3D(Basis(x_eje * 0.06, y_eje * 0.06, z_eje * largo), (p0 + p1) * 0.5))
+
+## EL PRÓLOGO SOLO ENSEÑA EL BARRIO (2-11-2026): se quedan las manzanas, tramos y semáforos que caen en el núcleo del club más
+## `MARGEN_PROLOGO` metros alrededor; el resto de la rejilla no se dibuja. Se filtra aquí, antes de dibujar, para que todo lo
+## que recorre `bloques`/`tramos` (casas, mobiliario, farolas, marcas, semáforos…) trabaje solo con lo que se va a ver.
+const MARGEN_PROLOGO := 220.0
+func _recortar_a_zona() -> void:
+	var zona := Rect2(NUC_X0 - MARGEN_PROLOGO, NUC_Z0 - MARGEN_PROLOGO, NUC_X1 - NUC_X0 + 2.0 * MARGEN_PROLOGO, NUC_Z1 - NUC_Z0 + 2.0 * MARGEN_PROLOGO)
+	bloques = bloques.filter(func(bl: Dictionary) -> bool: return zona.intersects(bl["rect"] as Rect2))
+	tramos = tramos.filter(func(t: Dictionary) -> bool: return zona.has_point(Vector2((t["a"] as Vector3).x, (t["a"] as Vector3).z)) and zona.has_point(Vector2((t["b"] as Vector3).x, (t["b"] as Vector3).z)))
+	cruces_semaforo = cruces_semaforo.filter(func(p: Vector3) -> bool: return zona.has_point(Vector2(p.x, p.z)))
+	## El grafo de calles (para recorrerlo) también: nada de nodos fuera de la zona, o el tráfico y la gente saldrían al vacío.
+	var dentro := func(k: Vector2i) -> bool:
+		var n: Vector3 = nodos.get(k, Vector3(1e9, 0, 1e9))
+		return zona.has_point(Vector2(n.x, n.z))
+	for k: Vector2i in vecinos.keys():
+		if not dentro.call(k):
+			vecinos.erase(k)
+		else:
+			vecinos[k] = (vecinos[k] as Array).filter(func(v: Vector2i) -> bool: return dentro.call(v))
+	cuenta["manzanas"] = bloques.size()
+	if CityBuilder._medir_tiempos:
+		Registro.depurar("PROLOGO", "zona recortada: %d bloques, %d tramos, %d semáforos" % [bloques.size(), tramos.size(), cruces_semaforo.size()])

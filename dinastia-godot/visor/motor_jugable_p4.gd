@@ -250,8 +250,7 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 	## en el choque o el agarrón la víctima cae o pierde el balón.)
 	if motivo == "" and not con_tarjeta and not en_area and not _falta_tactica and poseedor == victima \
 			and lugar.z * dir_ataque(atacante_local) > 4.0 and _rng.randf() < 0.35:
-		aviso.emit("Ventaja")
-		_gesto_arbitro("arbitro_ventaja", 0.0, 1.6, {"mira": lugar})
+		MotorVentaja.dar(self as Object as MotorJugable, lugar, atacante_local, nombre)   ## y si pierde el balón, vuelve a la falta (R1, 01-11)
 		return true
 	_gesto_arbitro("arbitro_silbato", 0.0, 0.9, {"mira": lugar})
 	var tras := 0.8
@@ -291,6 +290,24 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 		aviso.emit("Falta de %s" % nombre)
 		_empezar_saque("falta", atacante_local, Vector3(lugar.x, R, lugar.z))
 	return true
+
+## Cae por una falta (31-10): cae, se queda en el suelo y se LEVANTA (`levantar_con`), sin moverse (`levanta_hasta`). De espaldas
+## («caida_lesion»: «caida_fea» acaba boca abajo y el levantarse empieza boca arriba); a la carrera (> 4 m/s, 01-11) el TROPIEZO de League-Soccer y su levantarse desde boca abajo.
+func _caer(p: Dictionary) -> void:
+	var ap: AnimationPlayer = p.get("anim")
+	if is_instance_valid(ap) and (p["vel"] as Vector3).length() > 4.0 and ap.has_animation("tropiezo") and ap.has_animation("levantarse_boca_abajo"):
+		_anim(p, "tropiezo", true, 1.9)
+		p["levantar_con"] = "levantarse_boca_abajo"
+		p["levantar_en"] = t + 1.6
+		p["levanta_hasta"] = t + 3.4
+		return
+	if not (is_instance_valid(ap) and ap.has_animation("caida_lesion") and AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(p["node"]), "levantarse_suelo")):
+		_anim(p, "caida_fea", true, 1.2)
+		return
+	_anim(p, "caida_lesion", true, 1.9)
+	p["levantar_con"] = "levantarse_suelo"
+	p["levantar_en"] = t + 1.9
+	p["levanta_hasta"] = t + 3.3
 
 ## BALÓN DIVIDIDO: el más cercano de cada equipo, los dos a menos de 1,7 m de
 ## un balón suelto y raso, llegando con menos de 0,35 s de diferencia.
@@ -359,7 +376,7 @@ func _duelo_dividido() -> void:
 	var tarde := float(eta[1 - gana]) - float(eta[gana])
 	if tarde > 0.1 and _rng.randf() < float(l["agresividad"]) * 0.2 * _escala_falta():
 		_anim(l, "zancadilla" if _rng.randf() < 0.5 else "entrada_lateral_pie", true)
-		_anim(w, "caida_fea", true, 1.2)
+		_caer(w)
 		_falta(l, w, 0.15 + float(l["agresividad"]) * 0.2, "dividido", "de_pie")
 		return
 	_anim(l, "duelo_empujado_der" if _derecha(l).dot(entre) > 0.0 else "duelo_empujado_izq", true, 0.7)
@@ -428,5 +445,5 @@ func _duelo_hombro(a: Dictionary, c: Dictionary, rel: Vector3, d: float) -> bool
 	if era_suyo and _rng.randf() < (0.08 + float(w["agresividad"]) * 0.08 + m * 0.08) * _escala_falta():
 		## Solo cae si el árbitro la ve (la carga limpia no se pita: sin piscinazos).
 		if _falta(w, l, 0.06 + float(w["agresividad"]) * 0.1, "hombro", "empujon" if float(w["agresividad"]) > 0.7 else "hombro"):
-			_anim(l, "caida_fea", true, 1.2)
+			_caer(l)
 	return true

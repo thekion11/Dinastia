@@ -1,0 +1,62 @@
+#ifndef _HPP_FOOTBALL_ONTHEPITCH_HUMANCONTROLLER
+#define _HPP_FOOTBALL_ONTHEPITCH_HUMANCONTROLLER
+
+#include "../../../hid/ihidevice.hpp"
+#include "../../playercontrolsettings.hpp"
+#include "../../sprinttap.hpp"
+#include "playercontroller.hpp"
+
+class Player;
+
+class HumanController : public PlayerController {
+public:
+  HumanController(Match* match, IHIDevice* hid);
+  virtual ~HumanController();
+
+  virtual void SetPlayer(PlayerBase* player);
+
+  virtual void RequestCommand(PlayerCommandQueue& commandQueue);
+  virtual void Process();
+  virtual Vector3 GetDirection();
+  virtual float GetFloatVelocity();
+
+  virtual int GetReactionTime_ms();
+
+  IHIDevice* GetHIDevice() { return hid; }
+
+  int GetActionMode() { return actionMode; }
+  int GetGauge_ms() const { return gauge_ms; }
+  float GetGaugeFactor() const;
+  e_ButtonFunction GetActionButton() const { return actionButton; }
+  bool IsSuperCancelling() const;
+
+  virtual void Reset();
+
+protected:
+  void _GetHidInput(Vector3& rawInputDirection, float& rawInputVelocityFloat);
+
+  IHIDevice* hid;
+
+  // set when a contextual button (example: pass/defend button) is pressed
+  // once this is set and the button stays pressed, it stays the same
+  // 0: undefined, 1: off-the-ball button active, 2: on-the-ball button active/action queued
+  int actionMode;
+
+  e_ButtonFunction actionButton;
+  int actionBufferTime_ms;
+  int gauge_ms;
+  // gauge_ms when the charged action was last handed to the humanoid; -1 if
+  // not yet dispatched. Power is fixed at that point.
+  int dispatchedGauge_ms = -1;
+
+  SprintTap sprintTap;
+  SwitchModifierTracker switchModifier;
+
+  // stuff to keep track of analog stick (or keys even) so that we can use a direction once it's
+  // been pointed in for a while, instead of directly
+  Vector3 previousDirection;
+  Vector3 steadyDirection;
+  int lastSteadyDirectionSnapshotTime_ms;
+};
+
+#endif

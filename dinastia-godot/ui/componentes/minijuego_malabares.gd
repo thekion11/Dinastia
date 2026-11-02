@@ -124,7 +124,7 @@ func _tocar() -> void:
 	_g = 1.1 + float(_toques) * 0.05
 	_vy = -sqrt(2.0 * _g * 0.55)
 	_vx += (_x - _pie) * 1.5
-	Sonido.toca("pase", Sonido.Bus.EFECTOS)
+	Sonido.toca("pase_corto", Sonido.Bus.EFECTOS)   ## «pase» no existía: no sonaba nada (01-11, prueba s7)
 
 ## ×1 hasta 4 toques buenos seguidos, ×2 desde 5, ×3 desde 10, ×4 desde 20.
 func multiplicador() -> int:
