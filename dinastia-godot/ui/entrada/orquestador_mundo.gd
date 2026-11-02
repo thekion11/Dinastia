@@ -168,11 +168,11 @@ static func aplicar_preferencias(estado: Dictionary) -> void:
 	if toca_calidad and real:
 		Calidad.guardar()
 	var vis: Variant = cfg.get("visual", cfg.get("calidad"))
-	var niveles := {"medio": Calidad.MEDIO, "alto": Calidad.ALTO, "ultra": Calidad.ULTRA}
+	var niveles := {"minimo": Calidad.MINIMO, "medio": Calidad.MEDIO, "alto": Calidad.ALTO, "ultra": Calidad.ULTRA}
 	if vis is String and niveles.has(String(vis).to_lower()):
 		vis = niveles[String(vis).to_lower()]
 	if vis is int or vis is float:
-		Calidad.elegida = clampi(int(vis), Calidad.MEDIO, Calidad.ULTRA)
+		Calidad.elegida = clampi(int(vis), Calidad.MINIMO, Calidad.ULTRA)
 		if real:
 			Calidad.guardar()
 

@@ -70,7 +70,7 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	## 2 filas pegadas al césped llevan el modelo real (1.944 triángulos por
 	## butaca); el resto, la butaca liviana. Medido en el partido: las butacas
 	## eran 4,4 M de triángulos, más que todo lo demás junto.
-	var reales: int = 2 if Calidad.elegida == Calidad.MEDIO else FILAS_REALES
+	var reales: int = 2 if Calidad.elegida <= Calidad.MEDIO else FILAS_REALES
 	var presupuesto: int = reales if bandeja == 0 \
 		else (maxi(1, reales / 2) if bandeja == 1 and reales == FILAS_REALES else 0)
 	## LA HINCHADA LLEGA ARRIBA DEL TODO; LAS BUTACAS 3D, NO (23-9-2026).

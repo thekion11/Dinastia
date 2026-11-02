@@ -178,14 +178,15 @@ func _pintar_dispositivo() -> void:
 			[Calidad.ULTRA, "Ultra", "Todos los efectos, sombras y reflejos"],
 			[Calidad.ALTO, "Alta", "El equilibrio: sombras sí, lo más caro no"],
 			[Calidad.MEDIO, "Media", "Sin efectos pesados: máxima fluidez"],
+			[Calidad.MINIMO, "Mínima", "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución"],
 		]:
 		var clave: int = nivel[0]
 		var b_c := Button.new()
-		b_c.text = String(nivel[1])
+		b_c.text = Idiomas.t(String(nivel[1]))
 		b_c.add_theme_font_size_override("font_size", 11)
 		b_c.toggle_mode = true
 		b_c.button_pressed = Calidad.elegida == clave
-		b_c.tooltip_text = String(nivel[2])
+		b_c.tooltip_text = Idiomas.t(String(nivel[2]))
 		b_c.custom_minimum_size = Vector2(70, 0)
 		b_c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b_c.pressed.connect(func() -> void:

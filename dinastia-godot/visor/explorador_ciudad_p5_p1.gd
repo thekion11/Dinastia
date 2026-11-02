@@ -389,7 +389,7 @@ func _physics_process(delta: float) -> void:
 		var mira := -camara.global_transform.basis.z
 		## La primera vez (al empezar a pasear) se llena el entorno de golpe.
 		## Cuánta gente alrededor: menos en calidad media o con el motor ligero.
-		var max_gente := 18 if (Calidad.motor_ligero or Calidad.elegida == Calidad.MEDIO) else 34
+		var max_gente := 18 if (Calidad.motor_ligero or Calidad.elegida <= Calidad.MEDIO) else 34
 		## Y la densidad elegida al crear el club (0.6 tranquila … 1.4 bulliciosa). Se lee
 		## una vez por paseo (el archivo no cambia mientras se pasea) y se acota por si el ajuste viniera corrupto.
 		if _densidad_gente < 0.0:

@@ -229,3 +229,39 @@ func _probar_foco_mando() -> void:
 	_comprobar(bueno.has_focus(), "con mando el foco cae en el primer control usable")
 	FocoMando.forzar = false
 	raiz.queue_free()
+
+## (2-11-2026) El nivel gráfico MÍNIMO, la versión ultra ligera dentro del juego.
+func _probar_calidad_minima() -> void:
+	_titulo("CALIDAD MÍNIMA (ultra ligera)")
+	_comprobar(Calidad.MINIMO < Calidad.MEDIO and Calidad.MEDIO == 0 and Calidad.ULTRA == 2, "MÍNIMO va por debajo sin mover los valores guardados (0, 1, 2)")
+	var sol := Calidad.sol(Calidad.MINIMO)
+	var sol_m := Calidad.sol(Calidad.MEDIO)
+	_comprobar(not sol.shadow_enabled and sol_m.shadow_enabled, "sin sombras en MÍNIMO; MEDIO las conserva")
+	sol.free()
+	sol_m.free()
+	var vp := SubViewport.new()
+	add_child(vp)
+	Calidad.aplicar_viewport(vp, Calidad.MINIMO)
+	_comprobar(vp.msaa_3d == Viewport.MSAA_DISABLED and is_equal_approx(vp.scaling_3d_scale, Calidad.ESCALA_MINIMO), "sin suavizado y el 3D al 70 %")
+	Calidad.aplicar_viewport(vp, Calidad.ALTO)
+	_comprobar(is_equal_approx(vp.scaling_3d_scale, 1.0), "al subir de nivel vuelve al 100 %")
+	vp.queue_free()
+	var we := Calidad.entorno(Calidad.MINIMO)
+	_comprobar(we.environment.reflected_light_source == Environment.REFLECTION_SOURCE_DISABLED and not we.environment.ssao_enabled, "sin reflejos del cielo ni oclusión ambiental")
+	we.free()
+	_comprobar(CespedCapas.capas_por_calidad() >= 0, "el césped por capas sabe responder")
+	_comprobar(CalidadAuto.muy_debil({"gpu": "Mali-400 MP", "ram_mb": 2048, "hilos": 4, "debil": true}), "un móvil viejo (Mali-400, 2 GB) es muy débil → MÍNIMO")
+	_comprobar(not CalidadAuto.muy_debil({"gpu": "Intel(R) UHD Graphics 620", "ram_mb": 8192, "hilos": 8, "debil": true}), "una Intel UHD con 8 GB se queda en MEDIO")
+	_comprobar(not CalidadAuto.muy_debil({"gpu": "llvmpipe (LLVM 15)", "ram_mb": 2048, "hilos": 2, "debil": true}), "el render por software de los servidores no cuenta")
+	var antes := Calidad.elegida
+	var existia := FileAccess.file_exists(Calidad.ARCHIVO)
+	Calidad.elegida = Calidad.MINIMO
+	Calidad.guardar()
+	Calidad.elegida = Calidad.ULTRA
+	Calidad.cargar()
+	_comprobar(Calidad.elegida == Calidad.MINIMO, "MÍNIMO se guarda y se lee (no se recorta a MEDIO)")
+	Calidad.elegida = antes
+	if existia:
+		Calidad.guardar()
+	else:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(Calidad.ARCHIVO))

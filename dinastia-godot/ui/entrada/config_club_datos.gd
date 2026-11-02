@@ -218,7 +218,7 @@ func desde_dic(d: Dictionary) -> void:
 	if int(m.get("fps", fps)) in FPS:
 		fps = int(m.get("fps", fps))
 	contador_fps = bool(m.get("contador_fps", contador_fps))
-	calidad = clampi(int(m.get("calidad", calidad)), Calidad.MEDIO, Calidad.ULTRA)
+	calidad = clampi(int(m.get("calidad", calidad)), Calidad.MINIMO, Calidad.ULTRA)
 	adaptativa = bool(m.get("adaptativa", adaptativa))
 	motor_ligero = bool(m.get("motor_ligero", motor_ligero))
 	if DENSIDADES.has(String(m.get("densidad", ""))):
@@ -305,6 +305,8 @@ static func _equipo_modesto() -> bool:
 
 ## La calidad que se recomienda para este equipo.
 static func calidad_recomendada() -> int:
+	if CalidadAuto.muy_debil():
+		return Calidad.MINIMO
 	return Calidad.MEDIO if _equipo_modesto() else Calidad.ALTO
 
 # --------------------------------------------------------------- APLICAR
@@ -383,7 +385,7 @@ static func aplicar_maquina(config: Dictionary, ruta_prefs: String = PREFS, arbo
 	if ruta_prefs != PREFS:
 		return
 	Engine.max_fps = f
-	Calidad.elegida = clampi(int(d.get("calidad", Calidad.ALTO)), Calidad.MEDIO, Calidad.ULTRA)
+	Calidad.elegida = clampi(int(d.get("calidad", Calidad.ALTO)), Calidad.MINIMO, Calidad.ULTRA)
 	Calidad.adaptativa = bool(d.get("adaptativa", true))
 	Calidad.motor_ligero = bool(d.get("motor_ligero", false))
 	Calidad.guardar()
