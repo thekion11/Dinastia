@@ -373,6 +373,17 @@ func faros(n: float) -> void:
 				v["oculto"] = not sale
 
 ## Pone una animación al peatón `v` (si su cuerpo la tiene).
+## Pausa/reanuda los AnimationPlayer de un peatón (los de más de 260 m no se ven: 204 de ellos costaban 1,5 ms por fotograma).
+func _pausar_anim(v: Dictionary, pausar: bool) -> void:
+	var nodo: Node3D = v["nodo"]
+	if not is_instance_valid(nodo):
+		return
+	if not v.has("aps"):
+		v["aps"] = nodo.find_children("*", "AnimationPlayer", true, false)
+	for ap: AnimationPlayer in v["aps"]:
+		if is_instance_valid(ap):
+			ap.process_mode = Node.PROCESS_MODE_DISABLED if pausar else Node.PROCESS_MODE_INHERIT
+
 func _animar(v: Dictionary, anim: String) -> void:
 	var nodo: Node3D = v["nodo"]
 	if not is_instance_valid(nodo):

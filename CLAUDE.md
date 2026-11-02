@@ -85,3 +85,4 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 18. (28-10) CIERRE hasta el lunes: tras la limpieza de código y lo pendiente de las sesiones, guardar todo y dejar registros
     al limpio. Registro: `docs/04_auditorias/CIERRE_2026-10-28.md`; estado para retomar arriba de `PLAN_DEL_LUNES.md`.
     Correo de contacto del dueño (informe de fallos y privacidad): en `Registro.CONTACTO`.
+19. (2-11) 120 FPS mínimo en equipos modestos (4 GB DDR3, Intel UHD/HD, Pentium): optimizar sin quitar nada sin decirlo y medir con `herramientas/hw_modesto.sh` (llvmpipe: comparar triángulos, llamadas, memoria; NUNCA el tiempo de fotograma `--headless`, tiene un suelo de 6,9 ms). El dueño ordenó (2-11) pasar todo a `main`. Estado y pendientes: `docs/04_auditorias/rendimiento_120fps.md` y arriba de `PLAN_DEL_LUNES.md`.
