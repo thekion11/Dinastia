@@ -4,7 +4,7 @@ extends Node3D
 ## compara una huella de las posiciones de los 22, del balón, el marcador y las estadísticas cada 300 pasos y al final con la guardada en `ESPERADO`.
 ##   godot --headless --path . res://pruebas/igualdad_motor.tscn          (ACTUALIZAR=1 imprime la huella nueva)
 ## Si cambia a propósito la sensación de juego, se actualiza `ESPERADO` en este archivo, diciéndolo.
-const ESPERADO := "3180886866"   ## 01-11: cambio querido (IA U5: el primer toque se escapa, `MotorControl`); antes 1995017035
+const ESPERADO := "2992411691"   ## 2-11 (H-03/H-04/H-05, a propósito): era 3180886866   ## 01-11: cambio querido (IA U5: el primer toque se escapa, `MotorControl`); antes 1995017035
 const PASOS := 30 * 420
 const ACCIONES := ["jugar_pase", "jugar_tiro", "jugar_centro", "jugar_filtrado", "jugar_pase_largo", "jugar_cambiar", "jugar_mod", "jugar_regate", "jugar_pedir", "jugar_sombrero",
 	"jugar_fili_arriba", "jugar_fili_abajo", "jugar_fili_izquierda", "jugar_fili_derecha", "jugar_tac_arriba", "jugar_tac_abajo", "jugar_tac_izquierda", "jugar_tac_derecha"]

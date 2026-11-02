@@ -160,7 +160,7 @@ func _tren_rusa(origen: Vector3, base: Basis, e: float, camino: Array) -> void:
 		while i_seg < acum.size() - 2 and acum[i_seg + 1] < s:
 			i_seg += 1
 		var y := pts[i_seg].y
-		var v := 3.0 if tipo[i_seg] > 0.5 else 4.0 + sqrt(maxf(2.0 * 9.8 * (y_max - y), 0.0)) * 0.8
+		var v := 3.0 if tipo[i_seg] > 0.5 else 4.0 + sqrt(maxf(2.0 * Balance.GRAVEDAD * (y_max - y), 0.0)) * 0.8
 		s += v * dt
 		t += dt
 		tiempos.append(t)
