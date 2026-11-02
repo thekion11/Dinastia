@@ -70,7 +70,9 @@ func _ready() -> void:
 	var carga := PantallaCarga.mostrar(self, Idiomas.t("Construyendo la ciudad…"))
 	await get_tree().process_frame
 	await get_tree().process_frame
-	_construir_mundo()
+	CityBuilder.modo_prologo = true   ## solo el barrio del club (2-11): ver `CiudadExpansion._recortar_a_zona`
+	await _construir_mundo()
+	CityBuilder.modo_prologo = false
 	if is_instance_valid(carga):
 		carga.cerrar()
 	hud = PrologoHud.new()
@@ -93,11 +95,12 @@ func _ready() -> void:
 ## La ciudad del club (misma semilla y estadio que la ciudad de siempre).
 func _construir_mundo() -> void:
 	vista = VistaCiudad.new()
+	vista.por_partes = true   ## armado entre fotogramas: la pantalla de carga sigue viva (antes se quedaba GRIS, congelada)
 	add_child(vista)
 	vista.animo = CiudadAnimo.de(mundo, club)
 	EdificioClub.fijar_ctx(mundo, club)
 	var perfil := mundo.perfil_estadio_de(club)
-	vista.abrir(club, mundo.obras, mundo.ciudad, perfil)
+	await vista.abrir(club, mundo.obras, mundo.ciudad, perfil)
 	est = TunelVestuario.datos(perfil, StadiumBuilder.niveles_de(perfil, int(perfil.get("aforo", 20000))))
 	puerta = CityBuilder.ESTADIO_EN + (est["puerta"] as Vector3)
 	## La cámara aérea mira al estadio mientras dura la presentación.
