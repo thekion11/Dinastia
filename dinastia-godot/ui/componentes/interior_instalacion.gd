@@ -100,7 +100,7 @@ func _taller() -> void:
 	_poner("cardboardBoxClosed", Vector3(5.7, 0, -5.4), -0.3)
 	_poner("cardboardBoxClosed", Vector3(5.45, _alto("cardboardBoxClosed"), -5.45), 0.5)
 	## Neumáticos apilados y bidones.
-	var goma := Mini3D.mat(Color(0.07, 0.07, 0.08), 0.85)
+	var goma := Mini3D.mat_unico(Color(0.07, 0.07, 0.08), 0.85)
 	for k in 5:
 		var rueda := MeshInstance3D.new()
 		var tm := TorusMesh.new()
