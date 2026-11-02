@@ -91,6 +91,7 @@ func _ver_ciudad_con_carga() -> void:
 	PantallaCarga.club = p.mundo.mi_club() if p.mundo != null else null
 	var carga := PantallaCarga.mostrar(p, Idiomas.t("Construyendo la ciudad…"))
 	await PantallaCarga.dejar_pintar(p.get_tree())
+	CityBuilder.diferir = true   ## (2-11) la ciudad se muestra en cuanto está lo cercano; lo demás se construye después (`CityBuilder._resto`)
 	await _ver_ciudad_propia(true)
 	## Si algo la cerró mientras se esperaba (otra pantalla encima, o el
 	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).

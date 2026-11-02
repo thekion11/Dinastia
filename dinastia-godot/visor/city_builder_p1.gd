@@ -122,6 +122,7 @@ static var _medir_tiempos := OS.get_environment("TIEMPOS") != ""
 ## ciudad se arma recortada a esa zona (`CiudadExpansion._recortar_a_zona`) y sin lo lejano (autopista, parque eólico,
 ## depósito de agua, teleférico): ~1/3 de lo que se construye, y la carga y la memoria bajan en proporción. Lo pone `PrologoDT`.
 static var modo_prologo := false
+static var diferir := false   ## construir lo no visible de entrada DESPUÉS de mostrar la ciudad (`_resto`); lo pone el prólogo
 
 ## ============================================================================
 ##  EL TERRENO (12-9-2026, tercera pasada)
