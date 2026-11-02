@@ -1,0 +1,134 @@
+extends BaseIdea
+## FALLOS DE «CREAR PERSONAJE / CREAR PARTIDA» (2-11-2026, informe del dueño en Windows).
+## Se pulsan los botones de verdad (señal `pressed` de cada chip), no se llama a `cambiar` a mano.
+
+func _ready() -> void:
+	await get_tree().process_frame
+	_titulo("CREAR PARTIDA: elegir modelo de personaje varias veces")
+	await _elegir_varias_veces()
+	_titulo("CREAR PARTIDA: la cola de la mascota sigue al cuerpo")
+	await _cola_mascota()
+	_titulo("CREAR PARTIDA: el escudo propio sale en la camiseta 2D")
+	_escudo_en_camiseta()
+	_titulo("CREAR PARTIDA: vestir dos veces cambia el uniforme del 3D")
+	await _vestir_dos_veces()
+	_titulo("CREAR PARTIDA: modelos base extra")
+	await _modelos_base()
+	_titulo("CREAR PARTIDA: símbolo del escudo horneado")
+	_simbolo_horneado()
+	print("")
+	print("===== FIN. %d fallos =====" % _fallos.size())
+	get_tree().quit(0 if _fallos.is_empty() else 1)
+
+func _esperar_s(s: float) -> void:
+	await get_tree().create_timer(s).timeout
+	await get_tree().process_frame
+
+## Los botones (chips) de una hoja cuyo texto sea `texto`.
+func _chip(raiz: Node, texto: String) -> Button:
+	for n in raiz.find_children("*", "Button", true, false):
+		var b := n as Button
+		if b.text == texto and b.is_visible_in_tree():
+			return b
+	return null
+
+func _elegir_varias_veces() -> void:
+	var m := _mundo(777)
+	var raiz := Control.new()
+	raiz.size = Vector2(1600, 900)
+	add_child(raiz)
+	var pp := PantallaPersonaje.new()
+	pp.configurar({"pais": "ARG", "club": m.mi_club(), "paso": 6})
+	raiz.add_child(pp)
+	await _esperar_s(0.5)
+	var hojas: HojasPersonaje = pp.get("_hojas")
+	var est: EstudioPersonaje = pp.get("_estudio")
+	for ronda in 3:
+		for par: Array in [["Mujer", "female"], ["Hombre", "male"]]:
+			var b := _chip(hojas, Idiomas.t(String(par[0])))
+			_comprobar(b != null, "ronda %d: existe el botón «%s»" % [ronda, par[0]])
+			if b == null:
+				continue
+			b.pressed.emit()
+			await _esperar_s(0.5)
+			_comprobar(String(hojas.asp["cuerpo"]) == String(par[1]), "ronda %d: elegir %s cambia el aspecto" % [ronda, par[0]])
+			_comprobar(String(est.modelo().get("cuerpo", "")) == String(par[1]), "ronda %d: el 3D muestra %s" % [ronda, par[0]])
+	raiz.queue_free()
+	await _esperar_s(0.2)
+
+## La cola cuelga de la pelvis: tras gesticular y pasear, sigue a menos de 35 cm de ella (antes se quedaba
+## flotando en el sitio donde nació).
+func _cola_mascota() -> void:
+	var m := _mundo(778)
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var club := m.mi_club()
+	for animal: String in MascotaQ.ANIMALES:
+		var masc := MascotaQ.crear(raiz, club, animal, Vector3.ZERO, 0.0)
+		_comprobar(masc != null, "%s: se arma" % animal)
+		if masc == null:
+			continue
+		var ctl := masc.get_node("Animador") as MascotaQ
+		var esq := ctl._esq
+		var peor := 0.0
+		for i in 400:
+			ctl._process(0.1)
+			await get_tree().process_frame
+			ctl._process(0.0)
+			var pelvis := (esq.global_transform * esq.get_bone_global_pose(ctl._i_pelvis)).origin
+			peor = maxf(peor, (masc.get_node("ColaSoporte") as Node3D).global_position.distance_to(pelvis))
+		_comprobar(peor < 0.35, "%s: la cola no se separa de la pelvis (máx. %.2f m)" % [animal, peor])
+		masc.queue_free()
+	raiz.queue_free()
+
+## La camiseta 2D lleva el escudo del club (antes solo un escudete genérico).
+func _escudo_en_camiseta() -> void:
+	var c := _mundo(779).mi_club()
+	var kit := DisenosKit.kit_de_club(c)
+	kit["sp"] = {}
+	var con := DisenosKit.textura_completa(kit, false, 200).get_image()
+	var sin_kit := kit.duplicate()
+	sin_kit.erase("escudo_tex")
+	var sin := DisenosKit.textura_completa(sin_kit, false, 200).get_image()
+	_comprobar(kit.get("escudo_tex") is Texture2D, "el kit del club trae su escudo")
+	_comprobar(con.get_data() != sin.get_data(), "la camiseta de frente cambia con el escudo puesto")
+	var kit_e := kit.duplicate()
+	var esp_con := DisenosKit.textura_completa(kit_e, true, 200).get_image()
+	var esp_sin := DisenosKit.textura_completa(sin_kit, true, 200).get_image()
+	_comprobar(esp_con.get_data() == esp_sin.get_data(), "y de espaldas no lleva escudo")
+
+## Antes, tras el primer vestido el cuerpo ya no se reconocía (su material activo era el del shader) y el
+## diseñador no repintaba el uniforme ni los botines del jugador 3D.
+func _vestir_dos_veces() -> void:
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var d := FutbolistaQ.crear(1.8, "male")
+	raiz.add_child(d["nodo"])
+	FutbolistaQ.terminar(d, true)
+	var kit1 := DisenosKit.kit_de_club(_mundo(780).mi_club()).duplicate(true)
+	var kit2 := kit1.duplicate(true)
+	kit2["cols"] = ["ff00ff", "00ffff", "123456", "ffffff", "111111"]
+	_comprobar(VestidorQ.vestir_equipacion(d, Color("ff0000"), Color("0000ff"), "liso", Color("c68d68"), Color(0.1, 0.1, 0.1), Color(0, 0, 0, 0), Color(0, 0, 0, 0), false, kit1, 10), "primer vestido")
+	_comprobar(VestidorQ.vestir_equipacion(d, Color("ff00ff"), Color("00ffff"), "liso", Color("c68d68"), Color(0.1, 0.1, 0.1), Color(0, 0, 0, 0), Color(0, 0, 0, 0), false, kit2, 10), "segundo vestido (otro uniforme)")
+	raiz.queue_free()
+
+func _simbolo_horneado() -> void:
+	var c := _mundo(781).mi_club()
+	c.esc_simbolo = ""
+	var sin := EscudoTexto.textura(c, 64)
+	c.esc_simbolo = "⭐"
+	var con := EscudoTexto.textura(c, 64)
+	_comprobar(sin != null and con != null and con.get_image().get_data() != sin.get_image().get_data(), "con símbolo el escudo cambia (queda pintado en la imagen)")
+
+## Los modelos base extra (Campesino, Explorador; hombre y mujer) cargan, comparten el esqueleto y animan.
+func _modelos_base() -> void:
+	var raiz := Node3D.new()
+	add_child(raiz)
+	for mb: String in FutbolistaQ.MODELOS_BASE:
+		for cuerpo: String in ["male", "female"]:
+			_comprobar(FutbolistaQ.base_extra(mb, cuerpo) != null, "%s (%s): carga" % [mb, cuerpo])
+			var d := PersonajeDT.crear(raiz, {"modelo": mb, "cuerpo": cuerpo})
+			_comprobar(not d.is_empty() and d.has("anim") and (d["anim"] as AnimationPlayer).current_animation != "", "%s (%s): se crea y reproduce una animación" % [mb, cuerpo])
+			if not d.is_empty():
+				(d["nodo"] as Node).queue_free()
+	raiz.queue_free()

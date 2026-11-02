@@ -74,8 +74,7 @@ func _ready() -> void:
 	## el edificio salía sin su personal y nadie saludaba en el recorrido.
 	PersonajeDT.club_usuario = club.id
 	var carga := PantallaCarga.mostrar(self, Idiomas.t("Construyendo la ciudad…"))
-	await get_tree().process_frame
-	await get_tree().process_frame
+	await PantallaCarga.dejar_pintar(get_tree())
 	CityBuilder.modo_prologo = OS.get_environment("PROLOGO_COMPLETO") == ""   ## solo el barrio del club (2-11); PROLOGO_COMPLETO=1 = la ciudad entera, para comparar
 	await _construir_mundo()
 	CityBuilder.modo_prologo = false

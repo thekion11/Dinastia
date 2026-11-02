@@ -12,6 +12,13 @@ extends Control
 ## Guardar deja la equipación en `Club.kit_x`; la ve todo el juego.
 
 signal cerrado
+## Cambió algo en el modo incrustado (la pantalla que lo aloja repinta su vista previa).
+signal cambiado
+
+## MODO INCRUSTADO (2-11-2026, «la pestaña uniforme debe ser el editor completo»): el mismo diseñador, sin
+## pantalla propia, dentro de un paso de la configuración del club. No hay Guardar/Cancelar: cada cambio
+## se vuelca al club al momento.
+var _incrustado := false
 
 var _mundo: Mundo
 var _club: Club
@@ -28,6 +35,7 @@ var _pendientes: Array = []      ## miniaturas por generar (pocas por frame)
 var _pestanas: TabContainer
 var _colores: Array = []         ## los 5 ColorPickerButton de la camiseta
 var _refresco_3d := 0.0
+var _refresco_2d := 0.0
 
 ## PANTALLA PROPIA (26-9-2026, pedido: "debe tener su propio menú, que tenga
 ## la totalidad de la pantalla, no encima del menú central"). No se cuelga del
@@ -45,6 +53,20 @@ const FILTROS := [
 ]
 var _filtro := 0
 var _busqueda := ""
+
+## El diseñador DENTRO de `padre` (un contenedor), para `club`, sin capa propia.
+static func incrustar(padre: Control, club: Club, mundo: Mundo) -> DisenadorKit:
+	var n := DisenadorKit.new()
+	n._incrustado = true
+	n._mundo = mundo
+	n._club = club
+	n._kit = DisenosKit.kit_de_club(club).duplicate(true)
+	n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	n.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	n.custom_minimum_size = Vector2(0, 840)
+	padre.add_child(n)
+	n._montar()
+	return n
 
 static func abrir(padre: Control, mundo: Mundo) -> DisenadorKit:
 	## Uno solo a la vez (25-10-2026): la capa cuelga de la raíz, fuera del menú, así que
@@ -85,13 +107,37 @@ func _selector_color(hexa: String, al_cambiar: Callable) -> ColorPickerButton:
 
 ## Repinta la vista previa (el 3D, un instante después: si se arrastra un
 ## color no se rehace el material en cada paso).
-func _actualizar() -> void:
+func _actualizar(ya := false) -> void:
+	## OPTIMIZADO (2-11-2026): las dos camisetas 2D se dibujan píxel a píxel en GDScript (~340×620 px
+	## cada una); arrastrar un color mandaba decenas de repintados por segundo. Ahora se agrupan: se
+	## repintan 0,12 s después del último cambio (o al momento con `ya`).
+	if ya:
+		_pintar_2d()
+	else:
+		_refresco_2d = 0.12
+	if _incrustado:
+		_volcar_al_club()
+	_refresco_3d = 0.25
+
+func _pintar_2d() -> void:
+	_refresco_2d = 0.0
 	_frente.texture = DisenosKit.textura_completa(_kit, false, 170)
 	_espalda.texture = DisenosKit.textura_completa(_kit, true, 170)
 	_dorsal_2d.text = "10"
 	_dorsal_2d.add_theme_color_override("font_color", DisenosKit._col(_kit.get("num", "ffffff")))
 	_dorsal_2d.add_theme_color_override("font_outline_color", DisenosKit.colores(_kit)[0].darkened(0.4))
-	_refresco_3d = 0.25
+
+## Lo diseñado, al club (sin patrocinadores, que salen de los contratos, ni lo que se recalcula).
+func _volcar_al_club() -> void:
+	var k := _kit.duplicate(true)
+	for clave: String in ["sp", "escudo_tex", "marca"]:
+		k.erase(clave)
+	_club.kit_x = k
+	var cols: Array = _kit["cols"]
+	_club.kit_color1 = "#" + String(cols[0]).trim_prefix("#")
+	_club.kit_color2 = "#" + String(cols[1]).trim_prefix("#")
+	_club.kit_estilo = String(_kit["dis"])
+	cambiado.emit()
 
 ## Con otro color hay que rehacer las 70 miniaturas: se encolan de nuevo.
 func _color_cambiado() -> void:
