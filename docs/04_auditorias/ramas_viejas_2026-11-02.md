@@ -122,3 +122,19 @@ Ojo: incluye ramas recientes de las sesiones del 2-11 (`ccr-2b01929a-qdnwp5`, `c
 - `claude/inspiring-hamilton-667tns-viajeros` (482)
 - `claude/segunda-sesion-comparacion` (197)
 - `respaldo-historia-2026-10-24` (672)
+
+## Comparación archivo por archivo (2-11, tarde)
+
+Método: para cada una de las 76 ramas sin base común se tomaron los archivos que cambió desde el punto de partida antiguo (`5b2b6ad9`) y se compararon con `main` (mismo contenido / contenido distinto / ausente). Resultado agregado: 1.421.456 archivos-cambio idénticos a `main`, 31.177 con contenido distinto (738 rutas: `main` los modificó después) y 2.044 ausentes de `main` (785 rutas distintas).
+
+De las 785 rutas ausentes, la mayoría es basura retirada a propósito (capturas `pruebas/capturas`, `docs/informes_extraidos`, `_extraido_*`, informes `.md` viejos, `banco_p1`…`banco_p24` ya fundidos en `pruebas/banco/`, logs `salida_*`). Quedan **283 rutas con posible valor**:
+
+- **«Escudos especiales/» (111 archivos, imágenes de escudos y `canva_originales/`)**: ausente de `main` y SOLO existe en `ccr-a64d04fd-r5uoai` y `respaldo-historia-2026-10-24`. **No borrar esas dos ramas.**
+- **`marca/fotogramas/`, `marca/tierra/`, `recursos/tierra/` y `docs/CIERRE_26-10_PENDIENTES.md`**: solo en `ccr-a64d04fd-r5uoai` y `respaldo-historia-2026-10-24`.
+- **Código y pruebas que `main` no tiene**, solo en `ccr-76d707c5-dwse9h`: `visor/edificio_club_fachada.gd`, `visor/stadium_builder_haz.gdshader`, `visor/ventanas_kit.gdshader`, `pruebas/ideas/` (`pers_caras_ojos`, `pint_personal`, `pmov_controles`, `pmov_transporte`, `ppru_*`, `trad_*`) y `datos/trad_parches/` (3 JSON). Revisar si alguna función se perdió; si sí, rescatar por cherry-pick.
+- **`assets/characters/pelo_drive/pelo_028, 033, 036, 060, 073, 074, 077, 079, 117.res`**: ausentes de `main` (que sí tiene otros 19 archivos `pelo_drive`); están en las 8 ramas `escudos2`, `escudos3`, `palmares`, `palmares2`, `palmares3`, `presupuesto`, `tactil2`, `trofeos`. Posible rescate (pelo del Drive).
+- Resto: `.uid` sueltos, `pantalla_despacho_p1.gd` y `principal_p11*.gd` (capas viejas ya partidas de otra forma), `docs/textos_sin_traducir.txt`, `instruciones profundas/` (en `ccr-a64d04fd-r5uoai` y `respaldo-…`).
+
+Ramas **sin ningún archivo de valor ausente** (borrables en cuanto el dueño lo ordene; todo lo que cambiaron está en `main` o fue retirado a propósito): `ccr-76d707c5-dwse9h-respaldo-wip`, `…hamilton-gasolinera`, `…-museo`, `…-regalos`, `…-relleno`, `…-relleno2`, `…-ribera2`, `…-tareas` y `claude/segunda-sesion-comparacion`.
+
+**Conclusión**: no borrar las 76 en bloque. Conservar `ccr-a64d04fd-r5uoai`, `respaldo-historia-2026-10-24` y `ccr-76d707c5-dwse9h`; rescatar (si el dueño quiere) los 9 `pelo_*.res` y el código de `ccr-76d707c5-dwse9h`; el resto de las ~70 ramas `inspiring-hamilton-…` solo aportan rutas que ya están en `main`, retiradas a propósito o los 9 `.res`.
