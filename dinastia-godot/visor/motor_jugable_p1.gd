@@ -50,10 +50,10 @@ const AREA_X := 20.16
 const AREA_Z := 16.5
 const PUNTO_PENAL := 11.0
 const R := 0.11
-const G := 9.81
+const G := Balance.GRAVEDAD   ## (valor en `nucleo/balance.gd`)
 const ROCE_SUELO := Balance.ROCE_SUELO   ## (valor en `nucleo/balance.gd`)
 const ROCE_FIJO := Balance.ROCE_FIJO   ## (valor en `nucleo/balance.gd`)
-const ARRASTRE := Balance.ARRASTRE   ## (valor en `nucleo/balance.gd`)
+const ARRASTRE_CUAD := Balance.ARRASTRE_CUAD   ## (valor en `nucleo/balance.gd`)
 const BOTE := Balance.BOTE   ## (valor en `nucleo/balance.gd`)
 
 var jugadores: Array = []
