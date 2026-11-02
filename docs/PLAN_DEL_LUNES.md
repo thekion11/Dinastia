@@ -790,7 +790,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-035 | P1 | PARCIAL | Sin bufandas/banderas/camisetas del club en la mano | banda de bufandas y tifo en grada (`StadiumBuilder` «bufandas»/«tifo»); sin mallas en la mano |
 | M-054 | P1 | PENDIENTE | Ropa con volumen sólo en retratos (K-02) | `VestidorQ.ropa_aparte` sigue apagado en partido por coste |
 | M-055 | P1 | PARCIAL | Sin arrugas dinámicas según animación | pliegues de tela estáticos (`pliegues()` en el shader); no dependen de la animación |
-| M-058 | P1 | PARCIAL | 30 marcas de patrocinio (K-03) | 38 marcas en `Auspicio` (antes 30); meta 70 |
+| M-058 | P1 | PARCIAL | 30 marcas de patrocinio (K-03) | 70 marcas en `Auspicio` (2-11: +34 ficticias en `tablas.json`; banco 0 fallos); meta cumplida, falta solo revisar su logo en captura |
 | M-079 | P1 | PENDIENTE | Retrato real 13 % (base real) | 13 % con retrato real; descarga bloqueada por la red |
 | M-091 | P1 | PARCIAL | Botines: variedad añadida, pero sin modelos distintos por forma | `VestidorQ._botin_de` varía modelo/color por dorsal; no hay mallas de bota alta/calcetín |
 | M-094 | P1 | PARCIAL | Animación de caminata del DT: 6 estilos (✅) | «Mi caminata» con 6 estilos para el DT; peatones y jugadores no |
