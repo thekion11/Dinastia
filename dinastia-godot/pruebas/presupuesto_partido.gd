@@ -226,6 +226,6 @@ func _texturas_pesadas(raiz: Node) -> void:
 	var total := 0
 	for f: Array in filas:
 		total += int(f[0])
-	print("TEXTURAS en el árbol: %d, %.0f MB en total (leídas de la CPU); las %d más pesadas:" % [filas.size(), total / 1048576.0, mini(14, filas.size())])
-	for i in mini(14, filas.size()):
+	print("TEXTURAS en el árbol: %d, %.0f MB en total (leídas de la CPU); las %d más pesadas:" % [filas.size(), total / 1048576.0, mini(int(OS.get_environment("TEXTURAS")) if OS.get_environment("TEXTURAS").is_valid_int() and int(OS.get_environment("TEXTURAS")) > 1 else 14, filas.size())])
+	for i in mini(int(OS.get_environment("TEXTURAS")) if OS.get_environment("TEXTURAS").is_valid_int() and int(OS.get_environment("TEXTURAS")) > 1 else 14, filas.size()):
 		print("  %6.1f MB  %s" % [int(filas[i][0]) / 1048576.0, filas[i][1]])
