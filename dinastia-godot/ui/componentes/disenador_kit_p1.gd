@@ -12,6 +12,13 @@ extends Control
 ## Guardar deja la equipación en `Club.kit_x`; la ve todo el juego.
 
 signal cerrado
+## Cambió algo en el modo incrustado (la pantalla que lo aloja repinta su vista previa).
+signal cambiado
+
+## MODO INCRUSTADO (2-11-2026, «la pestaña uniforme debe ser el editor completo»): el mismo diseñador, sin
+## pantalla propia, dentro de un paso de la configuración del club. No hay Guardar/Cancelar: cada cambio
+## se vuelca al club al momento.
+var _incrustado := false
 
 var _mundo: Mundo
 var _club: Club
@@ -45,6 +52,20 @@ const FILTROS := [
 ]
 var _filtro := 0
 var _busqueda := ""
+
+## El diseñador DENTRO de `padre` (un contenedor), para `club`, sin capa propia.
+static func incrustar(padre: Control, club: Club, mundo: Mundo) -> DisenadorKit:
+	var n := DisenadorKit.new()
+	n._incrustado = true
+	n._mundo = mundo
+	n._club = club
+	n._kit = DisenosKit.kit_de_club(club).duplicate(true)
+	n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	n.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	n.custom_minimum_size = Vector2(0, 840)
+	padre.add_child(n)
+	n._montar()
+	return n
 
 static func abrir(padre: Control, mundo: Mundo) -> DisenadorKit:
 	## Uno solo a la vez (25-10-2026): la capa cuelga de la raíz, fuera del menú, así que
@@ -92,6 +113,20 @@ func _actualizar() -> void:
 	_dorsal_2d.add_theme_color_override("font_color", DisenosKit._col(_kit.get("num", "ffffff")))
 	_dorsal_2d.add_theme_color_override("font_outline_color", DisenosKit.colores(_kit)[0].darkened(0.4))
 	_refresco_3d = 0.25
+	if _incrustado:
+		_volcar_al_club()
+
+## Lo diseñado, al club (sin patrocinadores, que salen de los contratos, ni lo que se recalcula).
+func _volcar_al_club() -> void:
+	var k := _kit.duplicate(true)
+	for clave: String in ["sp", "escudo_tex", "marca"]:
+		k.erase(clave)
+	_club.kit_x = k
+	var cols: Array = _kit["cols"]
+	_club.kit_color1 = "#" + String(cols[0]).trim_prefix("#")
+	_club.kit_color2 = "#" + String(cols[1]).trim_prefix("#")
+	_club.kit_estilo = String(_kit["dis"])
+	cambiado.emit()
 
 ## Con otro color hay que rehacer las 70 miniaturas: se encolan de nuevo.
 func _color_cambiado() -> void:

@@ -210,14 +210,15 @@ func _vista_previa() -> Control:
 	return vb
 
 func _montar() -> void:
-	var fondo := ColorRect.new()
-	fondo.color = Tema.FONDO
-	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(fondo)
+	if not _incrustado:
+		var fondo := ColorRect.new()
+		fondo.color = Tema.FONDO
+		fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
+		add_child(fondo)
 	var marco := MarginContainer.new()
 	marco.set_anchors_preset(Control.PRESET_FULL_RECT)
 	for lado in ["left", "right", "top", "bottom"]:
-		marco.add_theme_constant_override("margin_" + lado, 24)
+		marco.add_theme_constant_override("margin_" + lado, 0 if _incrustado else 24)
 	add_child(marco)
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", 10)
@@ -229,19 +230,26 @@ func _montar() -> void:
 	var t := Tema.etiqueta(Tema.TAM_TITULO + 4, Tema.ORO, "🎽 DISEÑADOR DE EQUIPACIÓN")
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cab.add_child(t)
-	for par: Array in [["🎲 Aleatorio", _aleatorio], ["↺ Colores del club", _restablecer], ["Cancelar", _cerrar], ["💾 Guardar", _guardar]]:
+	var botones_cab: Array = [["🎲 Aleatorio", _aleatorio], ["↺ Colores del club", _restablecer]]
+	if not _incrustado:
+		botones_cab += [["Cancelar", _cerrar], ["💾 Guardar", _guardar]]
+	for par: Array in botones_cab:
 		var b := Button.new()
 		b.text = String(par[0])
 		b.custom_minimum_size = Vector2(130, 40)
 		b.pressed.connect(par[1])
 		cab.add_child(b)
-	var cuerpo := HBoxContainer.new()
+	## Incrustado cabe poco a lo ancho: la vista previa arriba y las pestañas debajo.
+	var cuerpo: BoxContainer = VBoxContainer.new() if _incrustado else HBoxContainer.new()
 	cuerpo.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	cuerpo.add_theme_constant_override("separation", 16)
 	vb.add_child(cuerpo)
 	cuerpo.add_child(_vista_previa())
 	_pestanas = TabContainer.new()
 	_pestanas.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_pestanas.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	if _incrustado:
+		_pestanas.custom_minimum_size = Vector2(0, 470)
 	cuerpo.add_child(_pestanas)
 	_pestanas.add_child(_tab_camiseta())
 	_pestanas.add_child(_tab_prenda("Pantalón", "pant", DisenosKit.PANTALONES))
@@ -283,6 +291,8 @@ func _process(delta: float) -> void:
 
 ## Esc cierra sin guardar, como "Cancelar".
 func _unhandled_input(ev: InputEvent) -> void:
+	if _incrustado:
+		return
 	if ev is InputEventKey and (ev as InputEventKey).pressed and (ev as InputEventKey).keycode == KEY_ESCAPE:
 		get_viewport().set_input_as_handled()
 		_cerrar()
