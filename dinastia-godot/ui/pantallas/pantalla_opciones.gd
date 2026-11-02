@@ -28,7 +28,15 @@ func _pintar_dispositivo() -> void:
 				p._refrescar())
 		p._refrescar())
 	fila.add_child(b)
+	_disp_zoom()
+	_disp_tv()
+	_disp_ropa()
+	_disp_caras()
+	_disp_controles()
+	_disp_calidad()
+	p._lista_ajustes.add_child(HSeparator.new())
 
+func _disp_zoom() -> void:
 	var fila2 := HBoxContainer.new()
 	fila2.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila2)
@@ -69,6 +77,8 @@ func _pintar_dispositivo() -> void:
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ajustes.add_child(ex)
 
+
+func _disp_tv() -> void:
 	## MODO TELEVISIÓN. Para HDMI y pantallas grandes: se mira desde el sofá, a
 	## tres metros, y lo que a medio metro es cómodo a tres metros no se lee. Es
 	## un zoom fuerte de golpe, no un ajuste fino.
@@ -97,6 +107,8 @@ func _pintar_dispositivo() -> void:
 		p._refrescar())
 	fila_tv.add_child(b_tv)
 
+
+func _disp_ropa() -> void:
 	## ROPA APARTE (26-9-2026): camiseta, pantalón y medias como mallas propias
 	## con volumen en el partido 3D (en el diseñador siempre).
 	var fila_ra := HBoxContainer.new()
@@ -115,6 +127,8 @@ func _pintar_dispositivo() -> void:
 		p._refrescar())
 	fila_ra.add_child(b_ra)
 
+
+func _disp_caras() -> void:
 	## CARAS REALES (29-9-2026): con la base real, la foto libre del jugador o
 	## solo su recreación (piel, pelo y barba sacados de la foto).
 	if Datos.base_real:
@@ -150,6 +164,8 @@ func _pintar_dispositivo() -> void:
 			p._refrescar())
 		fila_st.add_child(b_st)
 
+
+func _disp_controles() -> void:
 	## CONTROLES DEL PARTIDO (14-10-2026): teclas, mando y ayudas, los mismos
 	## que se abren desde el ⚙ del estadio y la pausa de la Carrera de Jugador.
 	var fila_ct := HBoxContainer.new()
@@ -165,6 +181,8 @@ func _pintar_dispositivo() -> void:
 	b_ct.pressed.connect(func() -> void: PanelControles.abrir(p))
 	fila_ct.add_child(b_ct)
 
+
+func _disp_calidad() -> void:
 	## CALIDAD GRÁFICA. Manda en el visor 3D del estadio, que es lo único del
 	## juego que puede ir lento: la interfaz son etiquetas y no cuesta nada.
 	## `Calidad` ya tenía los tres niveles montados desde el porte del visor.
@@ -228,7 +246,6 @@ func _pintar_dispositivo() -> void:
 		ec.text = Idiomas.t("Si el estadio en 3D se siente lento, baja la calidad. La interfaz no cambia: son etiquetas y no cuestan nada.")
 		ec.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_ajustes.add_child(ec)
-	p._lista_ajustes.add_child(HSeparator.new())
 
 ## "Velocidad de partido por defecto" de `vAjustes()`: con qué velocidad
 ## arranca cada partido dirigido en vivo. Antes de esta tanda el juego lo
