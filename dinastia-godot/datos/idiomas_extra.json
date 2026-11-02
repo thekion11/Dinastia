@@ -6998,7 +6998,9 @@
   "— media": "— rating",
   "— valor": "— value",
   "%s · media %d": "%s · rating %d",
-  " · valor %s": " · value %s"
+  " · valor %s": " · value %s",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 €%d fine for speeding (limit %d km/h): %s.",
+  "no pudiste pagarla y queda anotada": "you couldn't pay it and it stays on record"
  },
  "pt": {
   "Historia": "História",
@@ -13999,7 +14001,9 @@
   "— media": "— média",
   "— valor": "— valor",
   "%s · media %d": "%s · média %d",
-  " · valor %s": " · valor %s"
+  " · valor %s": " · valor %s",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Multa de %d € por excesso de velocidade (limite %d km/h): %s.",
+  "no pudiste pagarla y queda anotada": "você não pôde pagar e ela fica registrada"
  },
  "patrones": [
   [
@@ -26777,7 +26781,9 @@
   "— media": "— note",
   "— valor": "— valeur",
   "%s · media %d": "%s · note %d",
-  " · valor %s": " · valeur %s"
+  " · valor %s": " · valeur %s",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Amende de %d € pour excès de vitesse (limite %d km/h) : %s.",
+  "no pudiste pagarla y queda anotada": "tu n'as pas pu la payer, elle reste notée"
  },
  "it": {
   "Historia": "Storia",
@@ -33778,7 +33784,9 @@
   "— media": "— media",
   "— valor": "— valore",
   "%s · media %d": "%s · media %d",
-  " · valor %s": " · valore %s"
+  " · valor %s": " · valore %s",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Multa di %d € per eccesso di velocità (limite %d km/h): %s.",
+  "no pudiste pagarla y queda anotada": "non hai potuto pagarla e resta annotata"
  },
  "de": {
   "Historia": "Geschichte",
@@ -40779,7 +40787,9 @@
   "— media": "— Wertung",
   "— valor": "— Marktwert",
   "%s · media %d": "%s · Wertung %d",
-  " · valor %s": " · Marktwert %s"
+  " · valor %s": " · Marktwert %s",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 %d € Strafe wegen Geschwindigkeitsüberschreitung (Limit %d km/h): %s.",
+  "no pudiste pagarla y queda anotada": "du konntest sie nicht bezahlen, sie bleibt vermerkt"
  },
  "ca": {
   "Historia": "Història",
@@ -47780,7 +47790,9 @@
   "— media": "— mitjana",
   "— valor": "— valor",
   "%s · media %d": "%s · mitjana %d",
-  " · valor %s": " · valor %s"
+  " · valor %s": " · valor %s",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Multa de %d € per excés de velocitat (límit %d km/h): %s.",
+  "no pudiste pagarla y queda anotada": "no vas poder pagar-la i queda anotada"
  },
  "pl": {
   "Club": "Klub",
@@ -55057,7 +55069,9 @@
   "— media": "— ocena",
   "— valor": "— wartość",
   "%s · media %d": "%s · ocena %d",
-  " · valor %s": " · wartość %s"
+  " · valor %s": " · wartość %s",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Mandat %d € za przekroczenie prędkości (limit %d km/h): %s.",
+  "no pudiste pagarla y queda anotada": "nie mogłeś zapłacić i została zapisana"
  },
  "tr": {
   "Club": "Kulüp",
@@ -62334,6 +62348,8 @@
   "— media": "— reyting",
   "— valor": "— değer",
   "%s · media %d": "%s · reyting %d",
-  " · valor %s": " · değer %s"
+  " · valor %s": " · değer %s",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Hız ihlali için %d € ceza (sınır %d km/h): %s.",
+  "no pudiste pagarla y queda anotada": "ödeyemedin ve kayıtta kaldı"
  }
 }
