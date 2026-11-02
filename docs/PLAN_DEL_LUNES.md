@@ -527,19 +527,14 @@ Cumplimiento medido en el código: entrada ~95 %, fase 0 (separar `Principal`) ~
 club ampliado ~85 %, redes ~85 %, dinero ~70 %, calidad visual ~70 % (el dueño dijo «MEJORAR» dos veces), cifras 2.3 100 %.
 Las pruebas f1-f5 del guion ya corren en `especiales.sh` (28-10). Lo que falta, por importancia para el jugador (horas de sesión):
 
-1. Cerrar el acceso a la ciudad desde el menú central cuando se está en la capa del PC (`pantalla_ciudad.gd:355-358`, `menu_lateral.gd:89-90,142`): hoy «Ver 3D / Pasear / Conducir» rompen el prólogo (2 h).
-2. Enganchar `factor_riesgo`/`probabilidad_de_fallo` (`necesidades.gd:109-122`) a la semana y al partido: hoy comer y dormir no cambian nada (3 h).
-3. Completar el recorrido del prólogo: túnel, utilería, sala de vídeo y comedor con personal que saluda (3 h).
-4. Gesto del DT según el tono elegido en la rueda de presentación (3 h).
-5. Entrevista de 3 preguntas, con el grupo del vestuario y el staff (hoy 1 pregunta) (3 h).
-7. Favor del agente en `MesaAgente` (1 h); logro «Primer día» y alta de los logros sueltos (2 h).
+3-5 y 9 (recorrido completo del prólogo con personal que saluda, gesto del DT según el tono, entrevista de 3 preguntas, «visibilidad» y celebración de la rama de otro deporte): HECHOS el 2-11 en la rama de la sesión de ciudad (`ccr-630aba3a-nnd93p`); falta unirla (26 bloques de conflicto con `main` que resuelve esa sesión) y la entrevista para el staff.
 8. Fase 0: HECHO el contrato (31-10): `PantallaBase` con `abrir(sección, contexto)`, `cerrar()` y la señal `cerrada` en las 15 pantallas del menú central; `Principal._refrescar` las abre por `abrir` (34 secciones; prueba `f0_contratos` en especiales). Falta (deuda interna, invisible al jugador): que cada pantalla tenga su propio nodo y estado en vez de pintar en `p._lista_*` y leer `p.*`, y los 9 trozos que otros paneles componen a mano (`federacion_menu`, `paneles_club`, `vistas_menu`). El autoguardado al salir de la entrada está HECHO.
 9. Club ampliado: la rama de otro deporte no ofrece «visibilidad» ni celebra sus títulos (2 h).
 10. Dinero: coches: auditoría HECHA (`docs/04_auditorias/coches_31_10.md`), el dueño pidió TODAS (A-G, 31-10): A gasolina en el móvil/HUD/salpicadero; B derrape; C daños visibles y taller; D bajarse y aparcar; E claxon (la RADIO espera música con licencia del dueño); F atropello con reacción, 150 € y titular; G claxon y velocidad asustan a los peatones; consumo 0,5 l/km y multa temeraria 60 €. Solo falta la radio. Pendiente de mirar en Forward+ en el PC del dueño: los cajeros nuevos (hospital, universidad, estación, estadio).
 11. Redes: captura Forward+ en el PC del dueño (aquí la ciudad se queda sin memoria en Forward+; revisado en Compatibility: camión cisterna y ventanas de las casas del kit que se encienden de noche y se apagan con su sector).
 12. Calidad visual (2.2e): POSTURA («atleta», `PosturaQ.MANO_ATLETA`) y PELO DEL DRIVE en los futbolistas del partido HECHOS (31-10 en main; 2-11 también en la rama de la sesión de ciudad, con `SIN_PELO_DRIVE=1` / `SIN_POSTURA=1` para el antes): unificar las dos al fusionar y dejar una sola hoja antes/después con la cámara real. Falta: pelo femenino (ningún peinado femenino del Drive aceptado).
 
-Los 7 primeros abiertos (~17 h) cierran lo que el guion exige de verdad; el total de la lista larga del informe es ~65 h.
+Lo que el guion exige de verdad ya está hecho o a falta de unir; lo abierto es deuda interna (8), lo que espera al PC del dueño (10-11) y el pelo femenino (12); el total de la lista larga del informe es ~65 h.
 
 ### 2.4 Pendientes del traspaso anterior
 
