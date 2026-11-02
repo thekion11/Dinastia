@@ -7000,7 +7000,11 @@
   "%s · media %d": "%s · rating %d",
   " · valor %s": " · value %s",
   "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 €%d fine for speeding (limit %d km/h): %s.",
-  "no pudiste pagarla y queda anotada": "you couldn't pay it and it stays on record"
+  "no pudiste pagarla y queda anotada": "you couldn't pay it and it stays on record",
+  "TU CLUB FRENTE A %s": "YOUR CLUB VS %s",
+  "Media del mejor once": "Best XI rating",
+  "Media de la plantilla": "Squad rating",
+  "Sueldos por semana": "Wages per week"
  },
  "pt": {
   "Historia": "História",
@@ -14003,7 +14007,11 @@
   "%s · media %d": "%s · média %d",
   " · valor %s": " · valor %s",
   "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Multa de %d € por excesso de velocidade (limite %d km/h): %s.",
-  "no pudiste pagarla y queda anotada": "você não pôde pagar e ela fica registrada"
+  "no pudiste pagarla y queda anotada": "você não pôde pagar e ela fica registrada",
+  "TU CLUB FRENTE A %s": "SEU CLUBE CONTRA %s",
+  "Media del mejor once": "Média do melhor time",
+  "Media de la plantilla": "Média do elenco",
+  "Sueldos por semana": "Salários por semana"
  },
  "patrones": [
   [
@@ -26783,7 +26791,11 @@
   "%s · media %d": "%s · note %d",
   " · valor %s": " · valeur %s",
   "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Amende de %d € pour excès de vitesse (limite %d km/h) : %s.",
-  "no pudiste pagarla y queda anotada": "tu n'as pas pu la payer, elle reste notée"
+  "no pudiste pagarla y queda anotada": "tu n'as pas pu la payer, elle reste notée",
+  "TU CLUB FRENTE A %s": "VOTRE CLUB FACE À %s",
+  "Media del mejor once": "Note du meilleur onze",
+  "Media de la plantilla": "Note de l'effectif",
+  "Sueldos por semana": "Salaires par semaine"
  },
  "it": {
   "Historia": "Storia",
@@ -33786,7 +33798,11 @@
   "%s · media %d": "%s · media %d",
   " · valor %s": " · valore %s",
   "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Multa di %d € per eccesso di velocità (limite %d km/h): %s.",
-  "no pudiste pagarla y queda anotada": "non hai potuto pagarla e resta annotata"
+  "no pudiste pagarla y queda anotada": "non hai potuto pagarla e resta annotata",
+  "TU CLUB FRENTE A %s": "IL TUO CLUB CONTRO %s",
+  "Media del mejor once": "Media del miglior undici",
+  "Media de la plantilla": "Media della rosa",
+  "Sueldos por semana": "Stipendi a settimana"
  },
  "de": {
   "Historia": "Geschichte",
@@ -40789,7 +40805,11 @@
   "%s · media %d": "%s · Wertung %d",
   " · valor %s": " · Marktwert %s",
   "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 %d € Strafe wegen Geschwindigkeitsüberschreitung (Limit %d km/h): %s.",
-  "no pudiste pagarla y queda anotada": "du konntest sie nicht bezahlen, sie bleibt vermerkt"
+  "no pudiste pagarla y queda anotada": "du konntest sie nicht bezahlen, sie bleibt vermerkt",
+  "TU CLUB FRENTE A %s": "DEIN VEREIN GEGEN %s",
+  "Media del mejor once": "Wertung der besten Elf",
+  "Media de la plantilla": "Kaderwertung",
+  "Sueldos por semana": "Gehälter pro Woche"
  },
  "ca": {
   "Historia": "Història",
@@ -47792,7 +47812,11 @@
   "%s · media %d": "%s · mitjana %d",
   " · valor %s": " · valor %s",
   "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Multa de %d € per excés de velocitat (límit %d km/h): %s.",
-  "no pudiste pagarla y queda anotada": "no vas poder pagar-la i queda anotada"
+  "no pudiste pagarla y queda anotada": "no vas poder pagar-la i queda anotada",
+  "TU CLUB FRENTE A %s": "EL TEU CLUB DAVANT %s",
+  "Media del mejor once": "Mitjana del millor onze",
+  "Media de la plantilla": "Mitjana de la plantilla",
+  "Sueldos por semana": "Sous per setmana"
  },
  "pl": {
   "Club": "Klub",
@@ -55071,7 +55095,11 @@
   "%s · media %d": "%s · ocena %d",
   " · valor %s": " · wartość %s",
   "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Mandat %d € za przekroczenie prędkości (limit %d km/h): %s.",
-  "no pudiste pagarla y queda anotada": "nie mogłeś zapłacić i została zapisana"
+  "no pudiste pagarla y queda anotada": "nie mogłeś zapłacić i została zapisana",
+  "TU CLUB FRENTE A %s": "TWÓJ KLUB KONTRA %s",
+  "Media del mejor once": "Ocena najlepszej jedenastki",
+  "Media de la plantilla": "Ocena kadry",
+  "Sueldos por semana": "Pensje tygodniowo"
  },
  "tr": {
   "Club": "Kulüp",
@@ -62350,6 +62378,10 @@
   "%s · media %d": "%s · reyting %d",
   " · valor %s": " · değer %s",
   "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Hız ihlali için %d € ceza (sınır %d km/h): %s.",
-  "no pudiste pagarla y queda anotada": "ödeyemedin ve kayıtta kaldı"
+  "no pudiste pagarla y queda anotada": "ödeyemedin ve kayıtta kaldı",
+  "TU CLUB FRENTE A %s": "KULÜBÜN VE %s",
+  "Media del mejor once": "En iyi 11'in reytingi",
+  "Media de la plantilla": "Kadro reytingi",
+  "Sueldos por semana": "Haftalık maaşlar"
  }
 }
