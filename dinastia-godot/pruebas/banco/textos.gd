@@ -314,3 +314,22 @@ func _probar_logo() -> void:
 		intro.avanzar(1.0 / 60.0)
 	_comprobar(intro.acabada(), "cualquier tecla la salta, también la primera vez")
 	intro.queue_free()
+
+## LA MARCA DE LA VERSIÓN (2-11-2026): sin `build_info.json` no hay etiqueta ni insignia (el editor y los builds
+## locales no se ensucian); con él sale «Nombre · versión · commit» y la insignia se cuelga del padre.
+func _probar_insignia_version() -> void:
+	_titulo("LA MARCA DE LA VERSIÓN (BUILDS DEL CI)")
+	var falta := "user://prueba_sin_build_info.json"
+	_comprobar(InfoBuild.etiqueta(falta) == "", "sin build_info.json no hay etiqueta")
+	var padre := Control.new()
+	_comprobar(InsigniaVersion.poner(padre, falta) == null and padre.get_child_count() == 0, "sin datos no se cuelga ninguna insignia")
+	var ruta := "user://prueba_build_info.json"
+	var f := FileAccess.open(ruta, FileAccess.WRITE)
+	f.store_string(JSON.stringify({"variante": "linux", "nombre": "Linux", "commit": "a1b2c3d4e5f6", "sufijo": "-beta2"}))
+	f.close()
+	var v := String(ProjectSettings.get_setting("application/config/version", ""))
+	_comprobar(InfoBuild.etiqueta(ruta) == "Linux · %s-beta2 · a1b2c3d" % v, "la etiqueta junta nombre, versión+sufijo y commit corto (%s)" % InfoBuild.etiqueta(ruta))
+	var ins := InsigniaVersion.poner(padre, ruta)
+	_comprobar(ins != null and padre.get_child_count() == 1 and ins.get_child_count() >= 1, "con datos la insignia cuelga del padre con su texto")
+	padre.free()
+	DirAccess.remove_absolute(ruta)
