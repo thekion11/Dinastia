@@ -228,8 +228,7 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 	## encuadra entera-. Medido con `pruebas/medir_rendimiento.gd`, ver LEEME.md del historial de git.
 	luz.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS if nivel >= ALTO \
 		else DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
-	## 2-11-2026 (120 FPS): en MEDIO la sombra llega a 160 m (antes 320): la cámara de TV encuadra el campo y las gradas cercanas.
-	luz.directional_shadow_max_distance = 420.0 if nivel >= ALTO else 160.0
+	luz.directional_shadow_max_distance = 420.0 if nivel >= ALTO else 320.0
 	luz.directional_shadow_split_1 = 0.06
 	luz.directional_shadow_split_2 = 0.16
 	luz.directional_shadow_split_3 = 0.42
