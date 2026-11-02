@@ -112,11 +112,15 @@ static func tick(vehiculos: Array, lluvia: bool, puertas: Array, cuenta: int) ->
 			parado = true
 			PeatonVida.gesto(nodo, "parado")   ## (antes `Mini3D.anim(v, …)`: el registro del tráfico no trae «anim» y daba un error de script cada repaso con lluvia)
 		var quiere := lluvia and not parado
-		if quiere and nodo.find_child(NOMBRE, true, false) == null:
+		## Un solo `find_child` por peatón y repaso (antes 3); solo se vuelve a mirar si se abrió o cerró uno.
+		var tiene := nodo.find_child(NOMBRE, true, false) != null
+		if quiere and not tiene:
 			abrir(nodo, posmod(hash([i, 3]), COLORES.size()))
-		elif not quiere and nodo.find_child(NOMBRE, true, false) != null:
+			tiene = nodo.find_child(NOMBRE, true, false) != null
+		elif not quiere and tiene:
 			cerrar(nodo)
-		if nodo.find_child(NOMBRE, true, false) != null:
+			tiene = nodo.find_child(NOMBRE, true, false) != null
+		if tiene:
 			abiertos += 1
 			_pose(nodo, true)   ## tras una parada el tráfico vuelve a «caminar»: se repone la pose del brazo
 	return abiertos

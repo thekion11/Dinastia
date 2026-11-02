@@ -113,7 +113,7 @@ static func montar(ex: CiudadExpansion, c: Vector3, w: float, f: float) -> void:
 		l._z_fin = z0 + LARGO * 0.5 - 3.0
 		l._t_coche = 0.0
 	## Espuma en el suelo del túnel.
-	var espuma := b._mat_simple(Color(1, 1, 1), 0.95)
+	var espuma := b._mat_unico(Color(1, 1, 1), 0.95)
 	for i in 14:
 		var s := MeshInstance3D.new()
 		var sm := SphereMesh.new()

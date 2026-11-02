@@ -91,7 +91,7 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 		return
 	var lote := PiezasVestuario.Lote.new()
 	var m := PiezasVestuario.materiales(c1, c2)
-	var base := TunelVestuario._mat(Color(0.1, 0.1, 0.12), 0.4)
+	var base := TunelVestuario._mat_unico(Color(0.1, 0.1, 0.12), 0.4)
 	var vidrio := SalasClub.vidrio_vitrina()
 	var cx := caja.get_center().x
 	var hs := hitos(ctx)
@@ -137,7 +137,7 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 	TunelVestuario._rotulo(nodo, texto, Vector3(px4, y0 + 1.75, caja.position.y - 0.1), 0.0, 17, Color(1.0, 0.86, 0.45))
 	if not hs.is_empty():
 		lote.malla(m["metal"], SalasClub._en(Vector3(px4, y0 + 0.4, caja.position.y + 0.7)), SalasClub._cilindro(0.1, 0.14, 0.8))
-		lote.malla(TunelVestuario._mat(Color(0.45, 0.28, 0.14), 0.6), SalasClub._en(Vector3(px4, y0 + 0.92, caja.position.y + 0.7)), SalasClub._esfera(0.13))
+		lote.malla(TunelVestuario._mat_unico(Color(0.45, 0.28, 0.14), 0.6), SalasClub._en(Vector3(px4, y0 + 0.92, caja.position.y + 0.7)), SalasClub._esfera(0.13))
 		TunelVestuario._rotulo(nodo, Idiomas.t("Primer título") + " · %d" % int((hs[0] as Dictionary).get("anio", 0)),
 			Vector3(px4, y0 + 0.5, caja.position.y + 0.86), 0.0, 14, Color(0.9, 0.9, 0.85))
 	lote.caja(m["cam1"], SalasClub._en(Vector3(cx, y0 + 2.7, caja.position.y - 0.14)), Vector3(caja.size.x, 0.3, 0.02))
@@ -155,7 +155,7 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 ## La planta en obra: andamios, lona y un cartel con las semanas que faltan.
 static func _obra(nodo: Node3D, caja: Rect2, y0: float, ctx: Dictionary) -> void:
 	var acero: StandardMaterial3D = Texturas.metal(Color(0.62, 0.64, 0.66), 0.5)
-	var tablon := TunelVestuario._mat(Color(0.62, 0.46, 0.28), 0.8)
+	var tablon := TunelVestuario._mat_unico(Color(0.62, 0.46, 0.28), 0.8)
 	var lona := StandardMaterial3D.new()
 	lona.albedo_color = Color(0.2, 0.42, 0.66, 0.55)
 	lona.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA

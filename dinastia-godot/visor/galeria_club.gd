@@ -244,7 +244,7 @@ static func _escalera(nodo: Node3D, pie: Vector3, c1: Color, horm: Material, par
 	var ang := atan2(sube, largo)
 	var hip := Vector2(largo, sube).length()
 	var centro := pie + Vector3(0, sube / 2.0, largo / 2.0)
-	var acero := TunelVestuario._mat(Color(0.55, 0.57, 0.6), 0.35)
+	var acero := TunelVestuario._mat_unico(Color(0.55, 0.57, 0.6), 0.35)
 	acero.metallic = 0.7
 	var peldano := TunelVestuario._mat(Color(0.22, 0.22, 0.24), 0.5)
 	var pasa := TunelVestuario._mat(c1.darkened(0.2), 0.4)

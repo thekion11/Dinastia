@@ -10,7 +10,15 @@ const MIN_INSTANCIAS := 600
 static var activo := true   ## las comprobaciones de «antes» (imágenes sin trocear) lo apagan
 
 ## Parte los MultiMesh grandes de la grada colgados de `raiz`. Devuelve cuántos partió.
+## 2-11-2026 (120 FPS): en calidad MEDIO (y en el perfil ligero automático) las butacas cercanas llevan desde el principio la malla
+## liviana (84 triángulos en vez de 1 944): medido en el partido, −36 % de triángulos (1,34 M → 0,85 M). ALTO y ULTRA no cambian.
 static func trocear(raiz: Node, tramos := 8) -> int:
+	var hechos := _trocear(raiz, tramos)
+	if Calidad.elegida == Calidad.MEDIO:
+		Optimizar.butacas_livianas(raiz, true)
+	return hechos
+
+static func _trocear(raiz: Node, tramos: int) -> int:
 	if not activo or DisplayServer.get_name() == "headless":
 		return 0   ## sin pantalla los MultiMesh no guardan sus datos
 	var hechos := 0

@@ -324,6 +324,11 @@ func _probar_marcas_y_escudos() -> void:
 			peor = k
 	_linea("  %d clubes, %d zonas patrocinadas, %d marcas; media %.1f, la que más: %s ×%d" % [m.clubes.size(), zonas, cuenta.size(), media, peor, int(cuenta.get(peor, 0))])
 	_comprobar(m.clubes.size() > 300, "un mundo grande (%d clubes)" % m.clubes.size())
+	var sin25: Array[String] = []
+	for c2: Club in m.clubes.values():
+		if c2.plantilla.size() != 25:
+			sin25.append("%s (%d)" % [c2.nombre, c2.plantilla.size()])
+	_comprobar(sin25.is_empty(), "M-207: todos los clubes del mundo tienen plantilla de 25 (fallan %d: %s)" % [sin25.size(), ", ".join(sin25.slice(0, 5))])
 	_comprobar(float(cuenta.get(peor, 0)) <= 2.0 * media, "M-059: ninguna marca pasa del doble de la media (%s ×%d, media %.1f)" % [peor, int(cuenta.get(peor, 0)), media])
 	## M-085: canas con la edad en los inventados.
 	var jv: Jugador = null

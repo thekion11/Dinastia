@@ -152,7 +152,7 @@ func _rasgo_instalacion(k: String, pos: Vector3, ancho: float, fondo: float, alt
 			for i in 6:
 				_cil_en(pos + Vector3(-ancho * 0.35 + i * ancho * 0.14, 3.5, fz + 2.0), 0.55, 7.0, piedra)
 			_caja_en(pos + Vector3(0, 7.3, fz + 2.0), Vector3(ancho * 0.85, 0.8, 3.0), piedra)
-			var oro := _mat_simple(Color(0.95, 0.75, 0.2), 0.25)
+			var oro := _mat_unico(Color(0.95, 0.75, 0.2), 0.25)
 			oro.metallic = 0.9
 			_caja_en(pos + Vector3(0, 0.8, fz + 11.0), Vector3(2.0, 1.6, 2.0), piedra)
 			_cil_en(pos + Vector3(0, 2.4, fz + 11.0), 0.25, 1.6, oro, 0.25)
@@ -197,7 +197,7 @@ func _rasgo_instalacion(k: String, pos: Vector3, ancho: float, fondo: float, alt
 			_caja_en(pos + Vector3(0, minf(alto, 6.0) * 0.55, fz + 0.2), Vector3(ancho * 0.5, 2.6, 0.15), _mat_simple(Color(0.2, 0.5, 1.0), 0.3, 1.6))
 		"ct":
 			## Placas solares en el techo y una pizarra táctica gigante.
-			var panel := _mat_simple(Color(0.08, 0.12, 0.25), 0.2)
+			var panel := _mat_unico(Color(0.08, 0.12, 0.25), 0.2)
 			panel.metallic = 0.6
 			for i in 4:
 				var pl := _caja_en(pos + Vector3(-ancho * 0.3 + i * ancho * 0.2, alto + 1.0, fondo * 0.15), Vector3(ancho * 0.16, 0.1, 4.0), panel)
@@ -285,7 +285,7 @@ func _edificio(e: Dictionary, niv: int, enObra: bool, pos: Vector3) -> void:
 		## 7-10-2026: una sola paleta para todo el complejo -hormigón claro con
 		## el color de la instalación muy suave y el acento del club-. Con la
 		## textura de hormigón y el color al 45 % salían cajas casi negras.
-		mat = _mat_simple((e["col"] as Color).lerp(Color(0.93, 0.92, 0.89), 0.72), 0.7)
+		mat = _mat_unico((e["col"] as Color).lerp(Color(0.93, 0.92, 0.89), 0.72), 0.7)
 	## CADA INSTALACIÓN CON SU ARQUITECTURA (7-10-2026, «a la ciudad le falta
 	## mejorar las instalaciones»): hasta hoy el cuerpo era SIEMPRE la misma
 	## caja y solo cambiaban los adornos, así que desde el mapa la piscina, el
