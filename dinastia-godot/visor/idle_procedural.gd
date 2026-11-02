@@ -13,13 +13,39 @@ var _hueso := {}          ## nombre → [índice, rotación base de pose]
 func configurar(e: Skeleton3D) -> void:
 	esq = e
 	_t = randf() * 6.0
+	## Tres convenciones de nombres: Quaternius modular («UpperArm.L»), VRM («leftUpperArm») y Mixamo («mixamorig:LeftArm»).
+	var conv := 0
+	if esq.find_bone("leftUpperArm") >= 0:
+		conv = 1
+	elif esq.find_bone("mixamorig:LeftArm") >= 0:
+		conv = 2
 	for lado: String in ["L", "R"]:
-		_brazo_abajo("UpperArm." + lado, "LowerArm." + lado, 1.0 if lado == "L" else -1.0)
-		_brazo_abajo("LowerArm." + lado, "Hand." + lado, 1.0 if lado == "L" else -1.0, 0.12)
-	for n: String in ["Hips", "Chest", "Neck", "Head", "Torso"]:
-		var i := esq.find_bone(n)
-		if i >= 0:
-			_hueso[n] = [i, esq.get_bone_pose_rotation(i)]
+		var s := 1.0 if lado == "L" else -1.0
+		var nombres := ["UpperArm." + lado, "LowerArm." + lado, "Hand." + lado]
+		if conv == 1:
+			var p := "left" if lado == "L" else "right"
+			nombres = [p + "UpperArm", p + "LowerArm", p + "Hand"]
+		elif conv == 2:
+			var q := "mixamorig:Left" if lado == "L" else "mixamorig:Right"
+			nombres = [q + "Arm", q + "ForeArm", q + "Hand"]
+		## En VRM/Mixamo el lado «izquierdo» del personaje queda en el +X del modelo mirando a +Z o a -Z según el
+		## exportador: se decide por la posición real de la mano.
+		var ih := esq.find_bone(nombres[2])
+		## Un antebrazo mal nombrado en el modelo («rightLoweArm» en los avatares Numinia): es el padre de la mano.
+		if esq.find_bone(nombres[1]) < 0 and ih >= 0 and esq.get_bone_parent(ih) >= 0:
+			nombres[1] = esq.get_bone_name(esq.get_bone_parent(ih))
+		if ih >= 0 and conv != 0:
+			s = signf((esq.global_transform * esq.get_bone_global_pose(ih).origin).x) if absf((esq.global_transform * esq.get_bone_global_pose(ih).origin).x) > 0.01 else s
+		_brazo_abajo(nombres[0], nombres[1], s)
+		_brazo_abajo(nombres[1], nombres[2], s, 0.12)
+	var mapa := {"Hips": ["Hips", "hips", "mixamorig:Hips"], "Chest": ["Chest", "chest", "mixamorig:Spine2"],
+		"Neck": ["Neck", "neck", "mixamorig:Neck"], "Head": ["Head", "head", "mixamorig:Head"]}
+	for n: String in mapa:
+		for cand: String in mapa[n]:
+			var i := esq.find_bone(cand)
+			if i >= 0:
+				_hueso[n] = [i, esq.get_bone_pose_rotation(i)]
+				break
 
 ## Gira el hueso `nom` para que apunte hacia abajo (algo pegado al cuerpo), midiendo su dirección real.
 func _brazo_abajo(nom: String, hijo: String, lado: float, apertura := 0.18) -> void:
@@ -38,6 +64,7 @@ func _brazo_abajo(nom: String, hijo: String, lado: float, apertura := 0.18) -> v
 	var padre := esq.get_bone_parent(i)
 	var pb := esq.get_bone_global_pose(padre).basis if padre >= 0 else Basis.IDENTITY
 	esq.set_bone_pose_rotation(i, (pb.inverse() * nueva).get_rotation_quaternion())
+	esq.force_update_all_bone_transforms()   ## el siguiente hueso (antebrazo) lee la pose ya girada
 
 func _process(delta: float) -> void:
 	if esq == null:

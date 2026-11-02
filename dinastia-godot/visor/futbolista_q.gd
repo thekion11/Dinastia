@@ -65,6 +65,9 @@ static func todos_ajenos() -> Dictionary:
 		for k: String in MODELOS_AJENOS:
 			var f: Array = MODELOS_AJENOS[k]
 			_modulares[k] = [f[0], f[1], ""]
+		## Avatares VRM CC0 de PabloFMM (importados como glTF).
+		_modulares["vrm_starter"] = ["Avatar Starter", "res://assets/characters/vrm/Starter01.glb", ""]
+		_modulares["vrm_arla"] = ["Avatar Arla", "res://assets/characters/vrm/Arla.glb", ""]
 	return _modulares
 
 const ARMAS := ["shield", "sword", "axe", "staff", "knife", "spellbook", "wand", "crossbow", "bow", "arrow", "blade", "mug", "hammer", "dagger", "quiver", "cross"]
@@ -107,6 +110,8 @@ static func ajeno(padre: Node3D, clave: String, altura: float) -> Dictionary:
 		modelo.position.y = -ymin * altura / h
 	var ap: AnimationPlayer = null
 	var aps := modelo.find_children("*", "AnimationPlayer", true, false)
+	## Un AnimationPlayer sin clips (los VRM lo traen vacío) cuenta como «sin animaciones».
+	aps = aps.filter(func(n: Node) -> bool: return not (n as AnimationPlayer).get_animation_list().is_empty())
 	if aps.is_empty():
 		## Sin clips (los modulares): reposo procedural.
 		var sks := modelo.find_children("*", "Skeleton3D", true, false)

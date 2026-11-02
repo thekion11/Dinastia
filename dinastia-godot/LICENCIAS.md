@@ -132,3 +132,6 @@ Kay Lousberg (kaylousberg.com), CC0 (ver `LICENSE_*.txt`). 5 aventureros y 4 esq
 
 ## Ultimate Modular Men / Women — `assets/characters/modular/`
 Quaternius, CC0-1.0 (vía `trebeljahr/quaternius-showcase/LICENSES.md`). 21 civiles sin animaciones (~18 MB, sin texturas), esqueleto de 49-51 huesos; `visor/idle_procedural.gd` les da el reposo. Fuera de LFS (OK del dueño, 2-11-2026).
+
+## Avatares VRM de Numinia — `assets/characters/vrm/`
+PabloFMM, CC0 (`numinia-digital-goods-data/data/avatars/numinia-avatars.json`): Starter Avatar 01 y Avatar Arla (~3,9 MB c/u), renombrados .vrm → .glb. Se pierde el sombreado MToon. Los demás avatares de ese repo no se usan (autores distintos o sin licencia clara).
