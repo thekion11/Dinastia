@@ -82,7 +82,11 @@ runs:
         case "${{ inputs.variante }}" in
           windows*) ls ../build/${{ inputs.variante }}/*.dll >/dev/null 2>&1 || echo "::warning::Falta la DLL de la extensión C++" ;;
           linux)    ls ../build/linux/*.so >/dev/null 2>&1 || echo "::warning::Falta la .so de la extensión C++" ;;
-          android*) [ "${{ inputs.variante }}" = "android-armv7" ] || unzip -l "$salida" | grep -q libdinastia || { echo "Falta libdinastia en el APK (M-353)"; exit 1; } ;;
+          ## (sin «unzip | grep -q»: con pipefail, grep -q corta la tubería y da un falso «falta»)
+          android*) if [ "${{ inputs.variante }}" != "android-armv7" ]; then
+                      unzip -l "$salida" > /tmp/contenido.txt
+                      grep -q libdinastia /tmp/contenido.txt || { echo "Falta libdinastia en el paquete (M-353)"; exit 1; }
+                    fi ;;
         esac
         case "${{ inputs.variante }}" in
           android*|web) ;;
