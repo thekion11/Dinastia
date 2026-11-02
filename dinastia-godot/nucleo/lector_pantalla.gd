@@ -74,6 +74,16 @@ static func decir(texto: String) -> void:
 	DisplayServer.tts_stop()
 	DisplayServer.tts_speak(texto, _voz, 50, 1.0, 1.1)
 
+## LOS AVISOS EMERGENTES (2-11-2026, M-284): logros, noticias y notificaciones del móvil se leen en cola, sin
+## cortar lo que se esté leyendo. `ultimo_anuncio` queda aunque no haya voz (para las pruebas).
+static var ultimo_anuncio := ""
+static func anunciar(texto: String) -> void:
+	if not activo() or texto.strip_edges() == "":
+		return
+	ultimo_anuncio = texto
+	if _hay_voz():
+		DisplayServer.tts_speak(texto, _voz, 50, 1.0, 1.1)
+
 static func parar() -> void:
 	_ultimo = ""
 	if _hay_voz():
