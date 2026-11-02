@@ -19,7 +19,7 @@ extends RefCounted
 
 ## MÍNIMO (2-11-2026, pedido del dueño: «una versión ultra ligera dentro del juego» para móviles y PC muy modestos):
 ## por debajo de MEDIO y con valor −1, para que lo guardado (0, 1, 2) siga valiendo y todo lo que decide con
-## «>= ALTO» lo trate como ligero. Sin sombras, sin suavizado, el 3D al 70 % de resolución, sin reflejos del cielo
+## «>= ALTO» lo trate como ligero. Sin sombras, suavizado mínimo (MSAA x2), el 3D al 70 % de resolución, sin reflejos del cielo
 ## en los materiales, y grada, gente y césped como en MEDIO o menos (ver `escala_3d` y quien mira `<= MEDIO`).
 enum { MINIMO = -1, MEDIO, ALTO, ULTRA }
 const ESCALA_MINIMO := 0.7
@@ -274,10 +274,10 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 		vp.msaa_3d = Viewport.MSAA_2X
 		if avanzado:
 			vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
-	elif nivel >= MEDIO:
-		vp.msaa_3d = Viewport.MSAA_2X
 	else:
-		vp.msaa_3d = Viewport.MSAA_DISABLED
+		## MÍNIMO también lleva MSAA x2: sin él, a 70 % de resolución, las líneas finas del campo lejanas salían
+		## entrecortadas (visto en la captura del 2-11). En las gráficas de móvil (por teselas) x2 cuesta poco.
+		vp.msaa_3d = Viewport.MSAA_2X
 	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
 	vp.scaling_3d_scale = escala_3d(nivel)
 	vp.use_debanding = nivel > MINIMO

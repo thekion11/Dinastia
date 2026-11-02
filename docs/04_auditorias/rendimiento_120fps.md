@@ -84,7 +84,7 @@ Una escena vacía con `godot --headless` da **6,90 ms por fotograma** (con o sin
 
 ## Nivel gráfico MÍNIMO, la versión ultra ligera dentro del juego (2-11-2026, pedido del dueño)
 Un cuarto nivel por debajo de MEDIO (`Calidad.MINIMO = -1`, lo guardado antes sigue valiendo): sin sombras del sol (ciudad y estadio),
-sin suavizado (MSAA), el 3D al 70 % de resolución (la calidad adaptativa parte de ahí), sin reflejos del cielo ni debanding, y grada,
+suavizado mínimo (MSAA x2: sin él, a 70 %, las líneas lejanas del campo salían entrecortadas), el 3D al 70 % de resolución (la calidad adaptativa parte de ahí), sin reflejos del cielo ni debanding, y grada,
 gente, festejos y césped como en MEDIO. Se elige en Ajustes («Mínima») y en la configuración inicial, y `CalidadAuto` lo pone solo la
 primera vez en equipos muy débiles (≤ 3 GB de RAM, gráficas de móvil antiguas Mali-400/T, Adreno 3xx/4xx, PowerVR, o gráfica débil con
 2 hilos). Mismo juego en todas las plataformas: la versión «ligera» de cada dispositivo es este nivel elegido por detección, no builds aparte.
@@ -94,3 +94,5 @@ Medido con `hw_modesto.sh` (partido, lavapipe 2 núcleos, sin tope de RAM; por s
 |---|---|---|---|---|---|
 | MEDIO | 830 | 1.002.242 | 356 MB | 809 ms | 7.470 MB |
 | MÍNIMO | 568 | 741.502 | 274 MB | 473 ms | 6.327 MB |
+
+Con el motor de compatibilidad (el de los equipos débiles): MEDIO 824 llamadas y 204 MB de vídeo → MÍNIMO 565 y 192 MB. Hoja antes/después con la cámara real del partido: `capturas_ciudad_c2/partido_medio_vs_minimo.jpg` (arriba MEDIO, abajo MÍNIMO).
