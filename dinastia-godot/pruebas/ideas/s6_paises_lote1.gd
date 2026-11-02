@@ -16,11 +16,11 @@ func _probar() -> void:
 	var datos_ok := true
 	var codigo_ok := true
 	for p: String in LOTE:
-		datos_ok = datos_ok and pl.has(p) and ps.has(p) and pools.has(p) and ucl.has(p) and (pl[p]["clubes"] as Array).size() == 16
+		datos_ok = datos_ok and pl.has(p) and ps.has(p) and pools.has(p) and ucl.has(p) and (pl[p]["clubes"] as Array).size() == (18 if p == "NED" else 16)
 		codigo_ok = codigo_ok and not LeyesPais.reglas(p).is_empty() and Copa.COPAS_POR_PAIS.has(p) and Politica.ESTRUCTURA.has(p) \
 			and Contratos.JORNADA.has(p) and Calendario.FIJAS.has(p) and MapaPais.SILUETAS.has(p) and PaisDatos.MONUMENTOS.has(p) \
 			and PaisDatos.OFICIAL.has(p) and Globo3D.CAPITAL.has(p) and Paises.conocido(p)
-	_comprobar(datos_ok, "las tablas (liga de 16, selección, nombres, Champions) traen a los 5")
+	_comprobar(datos_ok, "las tablas (liga de 16, selección, nombres, Champions) traen a los 5 (Países Bajos: 18 clubes, Eredivisie real desde el 1-11)")
 	_comprobar(codigo_ok, "y los datos de cada sistema: plantel, copa, política, jornada, fiestas, mapa, monumentos, globo")
 	var europa: Array = []
 	for fila: Array in PaisDatos.CONTINENTES:
@@ -36,7 +36,7 @@ func _probar() -> void:
 		var m := Mundo.new()
 		m.generar(["POR", "NED", "BEL", "CRO", "DEN"], semilla)
 		m.tomar_el_mando(m.ligas[0].clubes[0].id)
-		ligas_ok = ligas_ok and m.ligas.size() == 5 and m.clubes.size() == 80
+		ligas_ok = ligas_ok and m.ligas.size() == 5 and m.clubes.size() == 82
 		var vistos := {}
 		for c: Club in m.clubes.values():
 			if vistos.has(c.nombre):
@@ -62,8 +62,8 @@ func _probar() -> void:
 		for t in 3:
 			m.jugar_temporada()
 			m.nueva_temporada()
-		sin_errores = sin_errores and m.ligas.size() == 5 and m.anio == anio0 + 3 and m.clubes.size() == 80
-	_comprobar(ligas_ok, "cada mundo trae 5 ligas y 80 clubes")
+		sin_errores = sin_errores and m.ligas.size() == 5 and m.anio == anio0 + 3 and m.clubes.size() == 82
+	_comprobar(ligas_ok, "cada mundo trae 5 ligas y 82 clubes (NED trae 18)")
 	_comprobar(duplicados == 0, "ningún club repetido")
 	_comprobar(nombres_de_casa, "los portugueses llevan apellidos portugueses")
 	_comprobar(sin_errores, "3 semillas × 3 temporadas sin romperse")

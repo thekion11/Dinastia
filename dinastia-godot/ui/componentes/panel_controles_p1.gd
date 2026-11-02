@@ -52,6 +52,8 @@ var _fila_activa: Control
 var _tw_scroll: Tween
 var _tw_selector: Tween
 
+const PERFILES_NOMBRE := {"arcade": "Arcade: pase, tiro y cambio asistidos", "semi": "Semi: pase asistido, tiro manual, cambio semiautomático",
+	"manual": "Manual: tú decides pase, tiro y cambio"}
 const NOMBRES_AYUDA := {
 	"pase": ["Pases", {"asistido": "Asistido (busca al compañero)", "manual": "Manual (al punto que apuntas)"}],
 	"tiro": ["Tiros", {"asistido": "Asistido (al palo largo)", "manual": "Manual (apuntas tú)"}],
@@ -398,6 +400,16 @@ func _marcar_cambio(texto: String) -> void:
 func _pintar_ayudas() -> void:
 	_titulo.text = "⚙  " + Idiomas.t("Ayudas y esquema")
 	_subtitulo.text = Idiomas.t("Cuánto te ayuda el juego al pasar, tirar y cambiar de jugador, y qué teclas usa el teclado.")
+	_titulo_seccion("PERFIL DE AYUDAS")   ## (M-131, 01-11) Arcade / Semi / Manual de una vez
+	for n: String in ["arcade", "semi", "manual"]:
+		var es := Mando.perfil() == n
+		var nom := Idiomas.t(String(PERFILES_NOMBRE[n]))
+		_fila([[("◉  " if es else "○  ") + nom, 0, 14, Color("ffd23f") if es else Tema.TEXTO]], [],
+			func() -> void:
+				if Mando.perfil() != n:
+					Mando.aplicar_perfil(n)
+					_marcar_cambio(Idiomas.t("Perfil de ayudas: %s") % nom)
+					_repintar_conservando("perf_" + n)).set_meta("clave", "perf_" + n)
 	_titulo_seccion("ESQUEMA DE TECLADO")
 	for e: String in Mando.ESQUEMAS:
 		var elegido := e == Mando.esquema

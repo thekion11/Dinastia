@@ -1,0 +1,198 @@
+{
+ "codigo": {
+  "scripts": 1720,
+  "scripts_juego": 904,
+  "lineas": 264233,
+  "lineas_juego": 191034,
+  "capas_pN": 244,
+  "mayor_script": 481,
+  "funciones": 11212,
+  "funciones_mas_de_100_lineas": 190,
+  "funciones_mas_de_200_lineas": 14,
+  "top_funciones": [
+   {
+    "lineas": 403,
+    "archivo": "dinastia-godot/pruebas/ideas/f3v_vida.gd",
+    "firma": "func _probar_async() -> void:"
+   },
+   {
+    "lineas": 382,
+    "archivo": "dinastia-godot/pruebas/banco/partido_p4.gd",
+    "firma": "func _probar_tanda_c_1() -> Array:"
+   },
+   {
+    "lineas": 375,
+    "archivo": "dinastia-godot/pruebas/banco/guardado_p2.gd",
+    "firma": "func _probar_guardado_1() -> Array:"
+   },
+   {
+    "lineas": 243,
+    "archivo": "dinastia-godot/visor/autobus_modelo.gd",
+    "firma": "static func crear(col: Color, destino: String = \"\", numero: String = \""
+   },
+   {
+    "lineas": 239,
+    "archivo": "dinastia-godot/nucleo/catalogo_jugadas.gd",
+    "firma": "static func _f(dur: float, destinos: Dictionary, extra: Dictionary = {"
+   },
+   {
+    "lineas": 233,
+    "archivo": "dinastia-godot/ui/componentes/interior_instalacion_p3.gd",
+    "firma": "func _estacion() -> void:"
+   },
+   {
+    "lineas": 231,
+    "archivo": "dinastia-godot/pruebas/banco/guardado.gd",
+    "firma": "func _probar_guardado_2(m: Mundo, v_rp) -> Array:"
+   },
+   {
+    "lineas": 216,
+    "archivo": "dinastia-godot/ui/pantallas/pantalla_opciones.gd",
+    "firma": "func _pintar_dispositivo() -> void:"
+   },
+   {
+    "lineas": 215,
+    "archivo": "dinastia-godot/visor/trafico_ciudad.gd",
+    "firma": "func _process(delta_real: float) -> void:"
+   },
+   {
+    "lineas": 214,
+    "archivo": "dinastia-godot/ui/pantallas/pantalla_ficha.gd",
+    "firma": "func _ver_ficha(j: Jugador) -> void:"
+   },
+   {
+    "lineas": 213,
+    "archivo": "dinastia-godot/pruebas/banco/partido_p2.gd",
+    "firma": "func _probar_tactica_en_movimiento() -> void:"
+   },
+   {
+    "lineas": 211,
+    "archivo": "dinastia-godot/ui/principal_p2.gd",
+    "firma": "func _ayudante(n: Node) -> Node:"
+   }
+  ],
+  "marcas_TODO_FIXME": {
+   "XXX": 5,
+   "TODO": 44
+  },
+  "defs_process": 145,
+  "defs_physics_process": 4,
+  "print_en_juego": 25,
+  "push_error_warning": 31,
+  "is_instance_valid": 540,
+  "signals_declaradas": 316,
+  "class_name": 635
+ },
+ "pruebas": {
+  "escenas": 763,
+  "escenas_sin_ninguna_mencion": 123,
+  "capturas_en_git": 1,
+  "ejemplos_sin_mencion": [
+   "ik_jarra.tscn",
+   "jarra.tscn",
+   "captura_arbitro_vivo.tscn",
+   "captura_atajos.tscn",
+   "captura_banderas_selecciones.tscn",
+   "captura_bus_interior.tscn",
+   "captura_bus_modelo.tscn",
+   "captura_cabeza_perfil.tscn",
+   "captura_cabina.tscn",
+   "captura_carga.tscn",
+   "captura_ceremonia.tscn",
+   "captura_clubin.tscn",
+   "captura_complejo_horizonte.tscn",
+   "captura_continental_vivo.tscn",
+   "captura_continuar.tscn"
+  ]
+ },
+ "texturas": {
+  "importadas": 3471,
+  "modo_compresion": {
+   "0": 3406,
+   "2": 65
+  },
+  "nota": "0 = sin pérdida, 1 = con pérdida, 2 = VRAM comprimida, 3 = VRAM Basis Universal"
+ },
+ "assets": {
+  "candidatos": 2032,
+  "sin_ninguna_referencia_por_nombre": 0,
+  "peso_bytes_sin_referencia(punteros LFS cuentan poco)": 0,
+  "ejemplos": []
+ },
+ "proyecto": {
+  "addons": [
+   "dinastia-godot/addons/LICENCIAS_TERCEROS.txt",
+   "dinastia-godot/addons/antialiased_line2d/LICENSE.md",
+   "dinastia-godot/addons/antialiased_line2d/antialiased_line2d.gd",
+   "dinastia-godot/addons/antialiased_line2d/antialiased_line2d.gd.uid",
+   "dinastia-godot/addons/antialiased_line2d/antialiased_line2d.svg"
+  ],
+  "editor_plugins": true,
+  "autoloads": [
+   "Registro",
+   "Datos",
+   "Azar",
+   "Eco",
+   "Sonido",
+   "Musica",
+   "Idiomas",
+   "Cierre",
+   "AntialiasedLine2DTexture",
+   "KeyUtils",
+   "DataLoader",
+   "GameEvents",
+   "GameManager"
+  ],
+  "escenas": 15,
+  "shaders": 42
+ },
+ "repo": {
+  "archivos_rastreados": 22066,
+  "lfs": 270
+ },
+ "documentos": {
+  "md": 70,
+  "md_kb": 1138,
+  "mayores": [
+   [
+    282,
+    "docs/PLAN_DEL_LUNES.md"
+   ],
+   [
+    75,
+    "docs/04_auditorias/clasificacion_ideas_2026-10-27.md"
+   ],
+   [
+    55,
+    "docs/04_auditorias/ciudad_26_10.md"
+   ],
+   [
+    49,
+    "dinastia-godot/terceros/league_soccer/codigo_y_recursos/docs/gap-list.md"
+   ],
+   [
+    46,
+    "docs/05_referencia/indice_de_capas.md"
+   ],
+   [
+    42,
+    "docs/indice_de_capas.md"
+   ]
+  ]
+ },
+ "idiomas": {
+  "idiomas_extra": [
+   "en",
+   "pt",
+   "fr",
+   "it",
+   "de",
+   "ca",
+   "pl",
+   "tr"
+  ],
+  "frases_en": 6848,
+  "patrones": 522,
+  "frases_sin_traducir_medidas": 106
+ }
+}

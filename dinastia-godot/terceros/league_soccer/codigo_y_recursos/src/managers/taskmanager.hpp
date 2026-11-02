@@ -1,0 +1,47 @@
+#ifndef _HPP_MANAGERS_TASK
+#define _HPP_MANAGERS_TASK
+
+#include "base/properties.hpp"
+#include "defines.hpp"
+#include "systems/isystemtask.hpp"
+#include "types/singleton.hpp"
+
+namespace blunted {
+
+class WorkerThread;
+
+class TaskManager : public Singleton<TaskManager> {
+public:
+  TaskManager();
+  ~TaskManager();
+
+  /// start worker threads
+  void Initialize();
+
+  /// wait until the workQueue is processed
+  void EmptyQueue();
+
+  /// gracefully exit and then kill worker threads
+  void Exit();
+
+  int GetWorkerThreadCount();
+  e_ThreadState GetWorkerThreadState(int workerThreadIndex);
+  void GetFullWorkerThreadState(int workerThreadIndex, e_ThreadState& state,
+                                std::string& commandName);
+
+  /// insert a message in the workQueue
+  void EnqueueWork(boost::intrusive_ptr<Command> message, bool notify = true);  // ATOMIC
+
+  void NotifyWorkers(e_NotificationSubject notificationSubject = e_NotificationSubject_All);
+
+  /// wait on a new workQueue item
+  boost::intrusive_ptr<Command> WaitForWork();  // ATOMIC
+
+protected:
+  MessageQueue<boost::intrusive_ptr<Command>> workQueue;
+  std::vector<WorkerThread*> pool;
+};
+
+}  // namespace blunted
+
+#endif

@@ -1,0 +1,5 @@
+# Extensión nativa: godot-cpp se descarga al compilar (herramientas/compilar_nativo.sh).
+godot-cpp/
+src/*.os
+src/*.o
+.sconsign*.dblite

@@ -1,0 +1,69 @@
+#include "default_def.hpp"
+
+#include "../../../../aitactics.hpp"
+
+DefaultDefenseStrategy::DefaultDefenseStrategy(ElizaController* controller) : Strategy(controller) {
+  name = "default defense";
+}
+
+DefaultDefenseStrategy::~DefaultDefenseStrategy() {}
+
+void DefaultDefenseStrategy::RequestInput(const MentalImage* mentalImage, Vector3& direction,
+                                          float& velocity) {
+  bool offensiveComponents = true;
+  bool defensiveComponents = true;
+  bool laziness = true;
+
+  Vector3 desiredPosition_static =
+      team->GetController()->GetAdaptedFormationPosition(CastPlayer(), false);
+  Vector3 desiredPosition_dynamic =
+      team->GetController()->GetAdaptedFormationPosition(CastPlayer(), true);
+  // PES 5/6: tighter action distance [12,18] vs [15,20] — defenders hold shape
+  // more rigorously and don't drift toward the ball as early.
+  float actionDistance = NormalizedClamp(
+      player->GetPosition().GetDistance(match->GetDesignatedPossessionPlayer()->GetPosition()),
+      12.0f, 18.0f);
+  float staticPositionBias =
+      curve(1.1f * actionDistance,
+            1.0f);  // higher bias: swap positions less, maintain defensive shape more
+  Vector3 desiredPosition = desiredPosition_static * staticPositionBias +
+                            desiredPosition_dynamic * (1.0f - staticPositionBias);
+
+  if (offensiveComponents) {
+    // support position
+    float attackBias =
+        NormalizedClamp((controller->GetFadingTeamPossessionAmount() - 0.5f) * 1.0f, 0.2f, 0.9f);
+    attackBias *= AITactics::GetDefenderSupportScale(
+        AI_GetMindSet(CastPlayer()->GetDynamicFormationEntry().role));
+    // Explicit one-twos and selected overlap runs apply to defenders too.
+    const bool makeRun =
+        attackBias > 0.7f &&
+        team->GetController()->GetEndApplyAttackingRun_ms() > match->GetActualTime_ms() &&
+        team->GetController()->GetAttackingRunPlayer() == player;
+    Vector3 supportPosition =
+        controller->GetSupportPosition_ForceField(mentalImage, desiredPosition, makeRun);
+    desiredPosition = desiredPosition * (1.0f - attackBias) + supportPosition * attackBias;
+  }
+
+  if (defensiveComponents) {
+    float mindset = AI_GetMindSet(CastPlayer()->GetDynamicFormationEntry().role);
+    controller->AddDefensiveComponent(
+        desiredPosition,
+        pow(clamp(1.9f - mindset - controller->GetFadingTeamPossessionAmount(), 0.0f, 1.0f), 0.7f));
+
+    // offside trap (used to be applied before AddDefensiveComponent)
+    team->GetController()->ApplyOffsideTrap(desiredPosition);
+  }
+
+  direction = (desiredPosition - player->GetPosition()).GetNormalized(player->GetDirectionVec());
+  float desiredVelocity =
+      (desiredPosition - player->GetPosition()).GetLength() * distanceToVelocityMultiplier;
+
+  // laziness
+  if (laziness)
+    desiredVelocity = controller->GetLazyVelocity(desiredVelocity);
+
+  desiredVelocity = clamp(desiredVelocity, 0, sprintVelocity);
+
+  velocity = desiredVelocity;
+}

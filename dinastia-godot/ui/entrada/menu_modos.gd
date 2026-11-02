@@ -63,6 +63,7 @@ func _ready() -> void:
 		get_viewport().size_changed.connect(_a_la_ventana)
 	_modos = leer_modos()
 	_construir()
+	InsigniaVersion.poner(self)   # 2-11: qué versión descargó el jugador (solo en builds del CI)
 	_preseleccionar()
 	_reloj_logo = Timer.new()
 	_reloj_logo.one_shot = true
@@ -321,7 +322,7 @@ func _construir() -> void:
 	add_child(_retos)
 
 func _construir_lista() -> void:
-	var sec_previa := "\u0000"
+	var sec_previa := ""
 	for i in _modos.size():
 		var m := _modos[i]
 		var sec := String(m.get("_sec", ""))

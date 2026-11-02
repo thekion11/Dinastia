@@ -66,7 +66,7 @@ func _amueblar_anden(p: Vector3, fondo: Vector3, hacia: Vector3, lon: Vector3, y
 	_kenney("billetes", en.call(0.5, -23.6), hacia)
 	_kenney("billetes", en.call(0.5, -22.6), hacia)
 	billeteras.append(en.call(0.5, -23.1))   ## M-182: la E aquí recarga la tarjeta Red
-	## M-180: un puesto de empanadas y bebidas (mostrador con toldo); el vendedor lo crea `MetroCiudad._gente_cerca` con la estación. La E compra (`VidaCiudad.usar_vendedor`).
+	## M-180: un puesto de empanadas y bebidas (mostrador con toldo); el vendedor lo crea `MetroCiudad._gente_cerca` con la estación. La E compra (`VendedorAnden.usar`).
 	var mostrador: Vector3 = en.call(1.5, 14.5)
 	var giro_v := atan2(hacia.x, hacia.z)
 	vendedores.append({"p": mostrador, "yo": en.call(0.55, 14.5), "giro": giro_v})

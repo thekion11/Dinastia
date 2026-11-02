@@ -9,16 +9,15 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 	var altura := "baja" if cruce.y < 0.7 else ("media" if cruce.y < 1.6 else "alta")
 	var anim := ("estirada_%s_%s" % [altura, lado]) if estirada else ("atajar_bajo" if cruce.y < 0.6 else ("blocaje_alto" if cruce.y > 1.6 else "atajar"))
 	_anim(p, anim, true)
-	## Se tira de verdad: un impulso lateral que la inercia gasta (antes se
-	## teletransportaba 1,6 m de un fotograma a otro).
+	## Se tira de verdad: un impulso lateral que la inercia gasta (antes se teletransportaba 1,6 m de un fotograma a otro).
 	var hacia_x := clampf(cruce.x - pos(p).x, -2.2, 2.2)
 	p["vel"] = Vector3(hacia_x * (3.4 if estirada else 2.0), 0, 0)
 	p["objetivo"] = Vector3(pos(p).x + hacia_x, 0, pos(p).z)
 	var fuerza := vel_balon.length()
 	if not estirada and fuerza < 22.0 and _rng.randf() < float(p["attr"]["par"]) * 0.9 * GestoTecnico.agarre(self):
 		_tomar(p)
-		## El balón va a las manos desde donde estaba (antes saltaba a ellas
-		## en un fotograma: «teletransporte» de hasta 2 m en la sonda, M-114).
+		p["en_manos"] = true   ## (saque de mano, 31-10)
+		## El balón va a las manos desde donde estaba (antes saltaba a ellas en un fotograma: «teletransporte» de hasta 2 m, M-114).
 		aviso.emit("¡Atajada!")
 	else:
 		## Rechace: hacia un lado y, la mitad de las veces, por detrás de la
@@ -51,7 +50,7 @@ func _penal_en_juego(gk: Dictionary, cruce: Vector3) -> void:
 		var alcance := 1.4 + (float(gk["attr"]["div"]) + ref) * 0.6
 		para = absf(cruce.x) < alcance and cruce.y < (1.6 if absf(cruce.x) > 2.3 else 2.1) and _rng.randf() < 0.62 + ref * 0.3
 	if para:
-		_parada(gk, cruce, lado != 0)
+		MotorParada.programar(self as Object as MotorJugable, gk, cruce, lado != 0)
 		return
 	## Se tira al lado que eligió (y el balón entra o se va por el otro).
 	if lado != 0:
@@ -64,6 +63,7 @@ func _penal_en_juego(gk: Dictionary, cruce: Vector3) -> void:
 ## Devuelve true si ya actuó (parada o penal). `manual`: lo maneja el usuario, que elige lado con el stick (`guia`,
 ## X del mundo, 0 = no eligió); sin elegir espera a medio segundo y reacciona más flojo; si elige mal no llega.
 func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
+	if MotorParada.revisar(self as Object as MotorJugable, p): return true   ## la parada decidida, cuando llega el balón (01-11)
 	var b := balon.position
 	var arco := _arco_propio(p)
 	var hacia := signf(arco.z)
@@ -72,8 +72,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 		if tz > 0.0 and tz < 1.6:
 			var cruce := b + vel_balon * tz
 			cruce.y = b.y + vel_balon.y * tz - 0.5 * G * tz * tz
-			## UNA decisión por disparo (13-10): con un dado por fotograma lo paraba casi todo (8 de 10).
-			if absf(cruce.x) < PALO + 0.8 and cruce.y < LARGUERO + 0.4 and int(p.get("_patada_vista", -1)) != _n_patada:
+			if absf(cruce.x) < PALO + 0.8 and cruce.y < LARGUERO + 0.4 and int(p.get("_patada_vista", -1)) != _n_patada:   ## UNA decisión por disparo (13-10)
 				## El usuario aún no eligió: se espera (sin gastar la decisión).
 				if manual and absf(guia) < 0.3 and tz > 0.55:
 					return false
@@ -104,7 +103,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 						alcance *= 1.1  ## Eligió bien: se anticipa un poco.
 				if TIRO_PULIDO: prob *= (1.0 - PARADA_LEJOS * pow(clampf(lat / maxf(alcance, 0.1), 0.0, 1.0), 2.0)) * clampf(1.15 - vel_balon.length() / 90.0, 0.7, 1.0)   ## lejos del cuerpo o muy fuerte cuesta más (27-10)
 				if lat < alcance and _rng.randf() < prob:
-					_parada(p, cruce_gk, lat > 1.2)
+					MotorParada.programar(self as Object as MotorJugable, p, cruce_gk, lat > 1.2)
 					return true
 				## NO LLEGA (27-10, §8): se estira hacia el balón y queda batido (antes miraba quieto el gol).
 				if lat > 0.6:
@@ -124,7 +123,7 @@ func _ia_portero(p: Dictionary) -> Vector3:
 		if t > _decision_en + 0.8:
 			var mejor := _mejor_pase(p)
 			## Salida jugada casi siempre; el pelotazo, menos alto.
-			if not mejor.is_empty() and _rng.randf() < 0.8:
+			if not mejor.is_empty() and _rng.randf() < MotorTacticaViva.prob_salida_jugada(self as Object as MotorJugable, bool(p["es_local"])):
 				_pasar_a(p, mejor)
 			else:
 				var lejos := Vector3(_rng.randf_range(-15, 15), 0, dir_ataque(bool(p["es_local"])) * 2.0)
@@ -296,6 +295,7 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	_ctx_golpeo = "tiro"
 	_patear(p, destino, vh, loft, efecto, "patear")
 	tiros[0 if bool(p["es_local"]) else 1] += 1
+	_cerrar_tiro("fallo")   ## (01-11) el remate anterior aún abierto se cierra: si no, el mapa de tiros lo contaba y el acta no
 	_tiro_vivo = {"p": p, "t": t, "clase": clase}
 	_contar("tiro_%s" % clase)
 	_contar("tiro_%s_%s" % [clase, "dentro" if lejos < 16.5 else ("frontal" if lejos < 25.0 else "lejos")])
@@ -317,7 +317,7 @@ func _ultima_linea(local: bool) -> float:
 	for q: Dictionary in jugadores:
 		if bool(q["es_local"]) != local or bool(q["por"]):
 			continue
-		var z := pos(q).z
+		var z := pos(q).z + (q["vel"] as Vector3).z * MotorPresion.PREVE_LINEA   ## donde ESTARÁ (U3, 01-11)
 		if not hay or (z - linea) * d < 0.0:
 			linea = z
 			hay = true
@@ -396,11 +396,11 @@ func _ia_portador(p: Dictionary) -> void:
 	var angulo := absf(yo.x) / maxf(absf(arco.z - yo.z), 1.0)
 	## Se tira también desde la frontal (hasta ~27 m), como en un partido de
 	## verdad; con más pegada, desde más lejos.
-	var ganas_tiro := (1.0 - dist_arco / 34.0) * (0.7 + float(p["attr"]["tir"]) * 0.6) - angulo * 0.25
-	## MÁS CHISPA (20-10-2026): el sorteo era muy conservador y el partido se
-	## quedaba en ~0,8 tiros por minuto y equipo (FC ronda 1,5). Ahora se
-	## anima más desde la frontal; la calidad del tiro no cambia.
-	if dist_arco < 30.0 and ganas_tiro > 0.05 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * CHISPA_TIRO / pow(prisa(), 1.3):
+	var lejano := MotorTacticaViva.bandera(self as Object as MotorJugable, bool(p["es_local"]), "tiro_lejano")   ## pizarra: tiro lejano (01-11)
+	var ganas_tiro := (1.0 - dist_arco / (40.0 if lejano else 34.0)) * (0.7 + float(p["attr"]["tir"]) * 0.6) - angulo * 0.25
+	## MÁS CHISPA (20-10-2026): el sorteo era muy conservador y el partido se quedaba en ~0,8 tiros por minuto
+	## y equipo (FC ronda 1,5). Ahora se anima más desde la frontal; la calidad del tiro no cambia.
+	if dist_arco < (34.0 if lejano else 30.0) and ganas_tiro > 0.05 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * CHISPA_TIRO / pow(prisa(), 1.3):
 		## A un palo, abajo o arriba (antes se apuntaba al azar por el centro
 		## y el portero lo paraba casi todo: 27 de 29 en la sonda).
 		## (Pulido: más pegado al palo, lejos del portero, a riesgo de irse fuera.)

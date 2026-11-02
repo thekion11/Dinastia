@@ -175,15 +175,25 @@ func once(f: String = "") -> Array[Jugador]:
 		return _es_puesto_portero(ranuras[a]) and not _es_puesto_portero(ranuras[b]))
 
 	var asignado := {}
+	## Lo que no depende de la ranura, una vez por jugador (30-10, rendimiento): mismas cuentas.
+	var n_libres := libres.size()
+	var fa := PackedFloat64Array(); var fb := PackedFloat64Array(); var por := PackedByteArray()
+	var ge := PackedStringArray()
+	for j in libres:
+		fa.append(0.7 + 0.003 * j.forma); fb.append(0.9 + 0.002 * j.moral)
+		por.append(1 if j.pos_e == "POR" else 0); ge.append(PesosPuesto.grupo(j.pos_e))
+	var tomado := PackedByteArray(); tomado.resize(n_libres)
 	for i: int in orden:
 		var puesto: String = ranuras[i][0]
+		var puesto_por := 1 if PesosPuesto.es_portero(puesto) else 0
+		var grupo_puesto := PesosPuesto.grupo(puesto)
 		var mejor: Jugador = null
 		var mejor_v := -1.0
-		for j in libres:
-			if usados.has(j.id):
+		var mejor_k := -1
+		for k in n_libres:
+			if tomado[k] == 1 or por[k] != puesto_por:
 				continue
-			if _es_puesto_portero_str(puesto) != j.es_portero():
-				continue
+			var j: Jugador = libres[k]
 			## LA FAMILIARIDAD CON EL PUESTO. Antes solo se miraban los atributos, y
 			## por eso el once automático ponía a un extremo veloz de lateral por
 			## delante de un lateral de verdad: el extremo tiene el ritmo que pide la
@@ -198,17 +208,19 @@ func once(f: String = "") -> Array[Jugador]:
 				## Cambiar de LÍNEA (un delantero de lateral, un central de
 				## extremo) cuesta más que moverse dentro de ella (17-10: el
 				## informe del rival enseñaba DC jugando de LI).
-				if not j.pos_sec.has(puesto) and _grupo_de(puesto) != _grupo_de(j.pos_e):
+				if not j.pos_sec.has(puesto) and grupo_puesto != ge[k]:
 					encaja = 0.62
 			## Fuera de su puesto no rinde más que en el suyo (los atributos de un
 			## delantero rápido daban 76 de lateral con 74 de media).
 			var en_puesto := j.media_en(puesto) if j.pos_e == puesto else mini(j.media_en(puesto), j.ovr)
-			var v := float(en_puesto) * encaja * (0.7 + 0.003 * j.forma) * (0.9 + 0.002 * j.moral)
+			var v := float(en_puesto) * encaja * fa[k] * fb[k]
 			if v > mejor_v:
 				mejor_v = v
 				mejor = j
+				mejor_k = k
 		if mejor != null:
 			usados[mejor.id] = true
+			tomado[mejor_k] = 1
 			asignado[i] = mejor
 	## Segunda vuelta sin el filtro de porteria, para las ranuras que quedaron
 	## vacias porque no habia nadie de ese perfil.
@@ -227,18 +239,8 @@ func once(f: String = "") -> Array[Jugador]:
 	## Las reglas de la liga de este club (cupo en cancha, juveniles).
 	return LeyesPais.ajustar_once(self, elegidos)
 
-static func _grupo_de(puesto: String) -> String:
-	var posd: Dictionary = Datos.tabla("POSD")
-	return String((posd.get(puesto, {}) as Dictionary).get("g", ""))
-
 func _es_puesto_portero(ranura: Variant) -> bool:
-	return _es_puesto_portero_str(String(ranura[0]))
-
-func _es_puesto_portero_str(puesto: String) -> bool:
-	var posd: Dictionary = Datos.tabla("POSD")
-	if posd == null or not posd.has(puesto):
-		return false
-	return String(posd[puesto].get("g", "")) == "POR"
+	return PesosPuesto.es_portero(String(ranura[0]))
 
 ## --- EL ESTADIO ------------------------------------------------------------
 ## El recinto de cada club, para el visor 3D.
@@ -380,8 +382,7 @@ func _to_string() -> String:
 ## parecen todos porque salen del mismo sitio.
 ##
 ## Vacío = heredado. Es la diferencia entre "no lo he tocado" y "lo he puesto
-## igual a propósito", y hace que el botón de "volver a los colores del club"
-## signifique algo.
+## igual a propósito", y hace que el botón de "volver a los colores del club" signifique algo.
 var kit_color1: String = ""
 var kit_color2: String = ""
 var kit_estilo: String = ""

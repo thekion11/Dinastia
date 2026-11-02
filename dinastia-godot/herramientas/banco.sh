@@ -5,7 +5,7 @@
 #
 # Reparto: las secciones de `SECCIONES` (pruebas/banco.gd, el corredor; su código vive en
 # pruebas/banco/<grupo>.gd desde el 26-10) se dividen entre N procesos
-# (uno por núcleo, máx. 4) equilibrados por tiempo (`COSTES` en banco.gd). Cada
+# (uno por núcleo, máx. 6) equilibrados por tiempo (`COSTES` en banco.gd; máx. 6). Cada
 # proceso tiene su propia carpeta `user://` (XDG_DATA_HOME) para que los
 # guardados de una parte no pisen los de otra.
 #
@@ -38,7 +38,7 @@ comp_mal() {
 LOG="${1:-/tmp/banco.txt}"
 SIN_AVANCE="${SIN_AVANCE:-240}"
 NUCLEOS=$(nproc 2>/dev/null || echo 1)
-N="${BANCO_PARTES:-$(( NUCLEOS < 4 ? NUCLEOS : 4 ))}"
+N="${BANCO_PARTES:-$(( NUCLEOS < 6 ? NUCLEOS : 6 ))}"
 [ "$N" -lt 1 ] && N=1
 TMP=$(mktemp -d)
 INICIO=$(date +%s)

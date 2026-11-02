@@ -64,23 +64,25 @@ func simular_minuto() -> void:
 	## Córners, faltas y fueras de juego con las probabilidades por minuto del
 	## HTML, tal cual. El local saca algún córner más y comete alguna falta
 	## menos: no es simetría rota, es la ventaja de campo contada en detalle.
-	if Azar.suerte(0.10):
+	## (El generador de `Azar` directo: es justo lo que hace `Azar.suerte`, sin la llamada.)
+	var rng: RandomNumberGenerator = Azar._rng
+	if rng.randf() < 0.10:
 		corners_local += 1
-	if Azar.suerte(0.09):
+	if rng.randf() < 0.09:
 		corners_visita += 1
-	if Azar.suerte(0.16):
+	if rng.randf() < 0.16:
 		faltas_local += 1
-	if Azar.suerte(0.17):
+	if rng.randf() < 0.17:
 		faltas_visita += 1
-	if Azar.suerte(0.05):
+	if rng.randf() < 0.05:
 		fueras_local += 1
-	if Azar.suerte(0.05):
+	if rng.randf() < 0.05:
 		fueras_visita += 1
 
 	if not motor_externo:
-		if Azar.suerte(p_l):
+		if rng.randf() < p_l:
 			_atacar(local, once_local, true)
-		if Azar.suerte(p_v):
+		if rng.randf() < p_v:
 			_atacar(visita, once_visita, false)
 
 	_incidencias()
@@ -106,8 +108,13 @@ func _por_id(id: String) -> Jugador:
 			return j
 	return null
 
-## Un gol que pasó en el césped. `autor_id` vacío = en propia puerta.
-func gol_externo(es_local: bool, autor_id: String, asist_id: String) -> void:
+## El minuto de un suceso de la crónica como se dice en la tele: «90+3'» si fue en el descuento del 3D.
+static func texto_minuto(e: Dictionary) -> String:
+	var mas := int(e.get("mas", 0))
+	return ("%d+%d'" % [int(e.get("min", 0)), mas]) if mas > 0 else ("%d'" % int(e.get("min", 0)))
+
+## Un gol que pasó en el césped. `autor_id` vacío = en propia puerta. `mas`: el minuto del descuento en que entró (0 = en juego).
+func gol_externo(es_local: bool, autor_id: String, asist_id: String, mas := 0) -> void:
 	if terminado_ya:
 		return
 	var c := local if es_local else visita
@@ -129,6 +136,8 @@ func gol_externo(es_local: bool, autor_id: String, asist_id: String) -> void:
 		autor.anotar()
 		_notas[autor.id] = minf(float(_notas.get(autor.id, 6.0)) + 1.1, 10.0)
 	cronica.append({"min": minuto, "tipo": "gol", "club": c.id, "autor": autor.nombre if autor else "en propia puerta"})
+	if mas > 0:
+		cronica[-1]["mas"] = mas
 	_momentum_push(2, es_local)
 	gol.emit(c, autor, minuto, asistente)
 
@@ -190,6 +199,28 @@ func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 	tarjeta.emit(j, roja, minuto)
 	if not roja and Disciplina.acumula(j):
 		decision_arbitral.emit(Disciplina.frase(j), minuto)
+	if roja:
+		_revisar_siete()
+
+## MENOS DE SIETE (01-11, fallo que League-Soccer ya resolvió): el reglamento no deja jugar a un equipo con menos de 7; el
+## partido se suspende y se le da por perdido 3-0, o con el marcador si su rival ya ganaba por 3 o más. Solo pasa en el 3D (en el
+## simulado una roja no saca a nadie del once: solo lo sanciona).
+func _revisar_siete() -> void:
+	if terminado_ya:
+		return
+	for lado_local: bool in [true, false]:
+		if (once_local if lado_local else once_visita).size() >= 7:
+			continue
+		var diff := (goles_visita - goles_local) if lado_local else (goles_local - goles_visita)
+		if diff < 3:
+			goles_local = 0 if lado_local else 3
+			goles_visita = 3 if lado_local else 0
+		decision_arbitral.emit(Idiomas.t("Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.") % [
+			(local if lado_local else visita).nombre, goles_local, goles_visita], minuto)
+		terminado_ya = true
+		_devolver_tactica()
+		terminado.emit(goles_local, goles_visita)
+		return
 
 ## Posesión, córners y faltas medidos en el césped.
 func fijar_estadisticas(pos_local: float, corners: Array, faltas_: Array, fueras_: Array = []) -> void:

@@ -35,6 +35,8 @@ const BASE := {
 	"manga_corta": false, "tatuaje": 0,
 	## 26-10-2026 (opción A): forma de cara, cejas y la edad que se ve (0 = sin marcas).
 	"forma_cara": 0.0, "cejas": 0.0, "edad": 0,
+	## Modelo base 3D: "" = el atleta de siempre; si no, una clave de `FutbolistaQ.MODELOS_BASE`.
+	"modelo": "",
 }
 const PIELES := ["f6dccb", "f3d2b8", "f1c7a5", "e8bc96", "e0b08a", "d29f78", "c68d68", "b57a55",
 	"a86b45", "8a5536", "7a4a2e", "6b4028", "4a2c1c", "3a2216"]

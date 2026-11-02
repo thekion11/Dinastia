@@ -11,6 +11,7 @@ var _negro_desde := -1
 var _visto := false
 
 func _ready() -> void:
+	OrquestadorMundo.ranura_al_salir = ""   ## no pisar la partida de la máquina (autoguardado de la entrada)
 	OrquestadorEntrada.ruta_prefs = "user://medir_fundido_entrada.cfg"
 	if get_parent() != get_tree().root or get_tree().current_scene == self:
 		var yo := Node.new()

@@ -22,6 +22,7 @@ func _esperar(seg: float) -> void:
 	await get_tree().create_timer(seg).timeout
 
 func _ready() -> void:
+	OrquestadorMundo.ranura_al_salir = ""   ## no pisar la partida de la máquina (autoguardado de la entrada)
 	OrquestadorEntrada.ruta_prefs = "user://f1o_captura_entrada.cfg"
 	OrquestadorMundo.ruta_preferencias = "user://f1o_captura_prefs.cfg"
 	## 1) El menú de inicio, con «Nuevo juego» (el único camino para empezar partida).

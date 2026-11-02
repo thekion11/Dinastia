@@ -1,4 +1,4 @@
-extends RefCounted
+extends PantallaBase
 ## [Capa 1/4 de `pantalla_club_vida.gd`] _init, _pintar_balance_medico, _terapia, _segunda_opinion, _pintar_medico, _pintar_logros_ocultos … (+5)
 
 ## LA VIDA DEL CLUB: el médico, los logros, el museo, las obras, la pretemporada, las mentorías, el entrenamiento, la federación y la hinchada.
@@ -7,10 +7,6 @@ extends RefCounted
 ## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
-var p: Principal
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 ## La enfermería: quién está fuera, con qué y cuánto le queda, y qué se puede
 ## hacer al respecto. Es la pantalla que hace que contratar al jefe médico y
@@ -157,7 +153,8 @@ func _pintar_medico(c: Club) -> void:
 		var r := p.mundo.medico.riesgo_declarado(j2)
 		var col2 := Principal.COL_ROJO if r == "alto" else (Principal.COL_ORO if r.begins_with("medio") else Principal.COL_SUAVE)
 		var l := p._texto(12, col2)
-		l.text = Idiomas.t("%s  ·  riesgo %s  ·  físico %d") % [j2.nombre, r, j2.fisico]
+		var prob := p.mundo.medico.riesgo_por_fatiga(j2)   ## M-235: la probabilidad de baja esta semana, no solo el historial
+		l.text = Idiomas.t("%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s") % [j2.nombre, r, j2.fisico, "%.1f %%" % (prob * 100.0)]
 		p._lista_medico.add_child(l)
 
 ## LOS LOGROS OCULTOS. No se anuncian y no se listan: hasta que caen se ven como

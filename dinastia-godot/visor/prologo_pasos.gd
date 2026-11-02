@@ -32,8 +32,8 @@ const PASOS := [
 		]},
 	{"clave": "tunel", "planta": 0, "zona": "Túnel",
 		"frases": [
-			"El túnel. Treinta metros de silencio antes del ruido: los jugadores salen por aquí y tú, detrás.",
-			"Al fondo, el campo. Sigamos.",
+			"El túnel. Por aquí sale el equipo cada partido; desde aquí ya se oye la grada.",
+			"Unos pasos más y estamos en la banda.",
 		]},
 	{"clave": "campo", "planta": 0, "zona": "Banda",
 		"frases": [
@@ -41,14 +41,16 @@ const PASOS := [
 			"Ahora al sótano: la utilería y la enfermería. El ascensor está al fondo del edificio.",
 		],
 		"controles": ["usar"]},
-	{"clave": "utileria", "planta": -1, "zona": "Utilería", "saluda": ["utilero"],
+	{"clave": "utileria", "planta": -1, "zona": "Utilería", "saluda": "utilero",
+		"saludo": "¡Bienvenido, míster! Botas, balones y camisetas: todo numerado y listo para el domingo.",
 		"frases": [
-			"La utilería. Cada bota, cada balón y cada camiseta tienen su sitio; el utilero sabe quién está más fino y te lo dirá si se lo preguntas.",
-			"Pegada, la enfermería.",
+			"La utilería. Nada sale al campo sin pasar por estas manos; el utilero sabe antes que nadie quién está más fino.",
+			"Al lado, la enfermería.",
 		]},
-	{"clave": "enfermeria", "planta": -1, "zona": "Enfermería", "saluda": ["medico"],
+	{"clave": "enfermeria", "planta": -1, "zona": "Enfermería", "saluda": "medico",
+		"saludo": "Encantado. Cada lunes tendrá el parte: quién llega al domingo y quién no.",
 		"frases": [
-			"La enfermería. El médico te dirá quién llega al domingo y quién no debería ni calentar.",
+			"La enfermería. Hazle caso al médico: un jugador forzado hoy es una baja de un mes.",
 			"Subamos a la primera planta: el presidente quiere conocerte.",
 		]},
 	{"clave": "presidente", "planta": 1, "zona": "Despacho del presidente",
@@ -56,20 +58,22 @@ const PASOS := [
 			"El despacho del presidente. Aquí se firma y aquí se despide. Te presento a la junta.",
 		],
 		"directiva": true},
-	{"clave": "video", "planta": 1, "zona": "Sala de vídeo", "saluda": ["ojeador"],
+	{"clave": "video", "planta": 1, "zona": "Sala de vídeo", "saluda": "ojeador",
+		"saludo": "Míster, un gusto. Del próximo rival ya tengo los primeros vídeos.",
 		"frases": [
-			"La sala de vídeo. Aquí se ve al rival antes de que el rival te vea a ti; el ojeador te trae los informes.",
-			"Ahora arriba: la prensa te espera.",
+			"La sala de vídeo: aquí se estudia al rival. El ojeador te dejará sus informes cada semana.",
+			"Ahora arriba, a la segunda planta: la prensa te espera.",
 		]},
 	{"clave": "prensa", "planta": 2, "zona": "Sala de prensa",
 		"frases": [
 			"La sala de prensa. Te presentan hoy mismo: tres preguntas, y cada palabra se guarda.",
 		],
 		"prensa": true},
-	{"clave": "comedor", "planta": 2, "zona": "Comedor del plantel", "saluda": ["cocinera"],
+	{"clave": "comedor", "planta": 2, "zona": "Comedor del plantel", "saluda": "cocinera",
+		"saludo": "¡Por fin! Aquí se come a su hora, míster; el que no come, no corre.",
 		"frases": [
-			"El comedor del plantel. Un equipo que come junto, gana junto; la cocinera te guardará siempre un plato.",
-			"Por último, tu oficina. Baja conmigo.",
+			"El comedor del plantel. Come aquí los días de trabajo: cansado y con hambre se decide peor.",
+			"Bajemos a la primera planta: falta lo más importante.",
 		]},
 	{"clave": "oficina", "planta": 1, "zona": "Oficina del DT",
 		"frases": [
@@ -102,13 +106,6 @@ const TONOS := [
 	{"clave": "evasivo", "nombre": "Evasivo", "gesto": "cuello", "relacion": -2},
 	{"clave": "humilde", "nombre": "Humilde", "gesto": "juntas", "relacion": 1},
 ]
-## El gesto y la cara del DT en el plató según el TONO de la respuesta (clips de la librería «banda» de `PersonajeDT`): seguro abre los brazos
-## hacia la sala, evasivo se lleva las manos a la cabeza, humilde pide calma con las palmas.
-const GESTO_TONO := {
-	"seguro": ["banda/llamar_hinchada", "alegre"],
-	"evasivo": ["banda/manos_cabeza", "concentrado"],
-	"humilde": ["banda/pedir_calma", "neutral"],
-}
 const PREGUNTAS_PRENSA := [
 	{"medio": "La Jornada Deportiva", "pregunta": "¿Por qué este club y por qué ahora?",
 		"respuestas": {
@@ -143,6 +140,12 @@ static func indice(clave: String) -> int:
 		if String(PASOS[i]["clave"]) == clave:
 			return i
 	return -1
+
+## El saludo del personal de la sala (o vacío): [clave del puesto, frase traducida].
+static func saludo_de(p: Dictionary) -> Array:
+	if String(p.get("saluda", "")) == "":
+		return []
+	return [String(p["saluda"]), Idiomas.t(String(p.get("saludo", "")))]
 
 ## Las frases de un paso ya traducidas y con el nombre del mentor puesto.
 static func frases_de(p: Dictionary, nombre_mentor: String) -> Array[String]:

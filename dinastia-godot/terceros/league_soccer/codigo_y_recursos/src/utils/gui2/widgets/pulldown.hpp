@@ -1,0 +1,51 @@
+#ifndef _HPP_GUI2_VIEW_PULLDOWN
+#define _HPP_GUI2_VIEW_PULLDOWN
+
+#include "../view.hpp"
+#include "button.hpp"
+#include "grid.hpp"
+#include "image.hpp"
+
+namespace blunted {
+
+struct PulldownEntry {
+  std::string name;
+  Gui2Button* button;
+};
+
+class Gui2Pulldown : public Gui2View {
+public:
+  Gui2Pulldown(Gui2WindowManager* windowManager, const std::string& name, float x_percent,
+               float y_percent, float width_percent, float height_percent);
+  virtual ~Gui2Pulldown();
+
+  void AddEntry(const std::string& caption, const std::string& name);
+  void ClearEntries();
+  void PullDownOrUp();
+  void SetSelected(int selectedEntry);
+  // Selects the entry whose 'name' (the value passed to AddEntry) matches
+  // 'name'. No-op if no matching entry is found.
+  void SetSelectedByName(const std::string& name);
+  std::string GetSelected() const;
+
+  virtual void ProcessWindowingEvent(WindowingEvent* event);
+
+  boost::signals2::signal<void(Gui2Pulldown*)> sig_OnChange;
+
+protected:
+  void Select(int selectedEntry);
+
+  Gui2Button* pulldownButton;
+
+  std::vector<PulldownEntry> entries;
+  int selectedEntry;
+
+  Gui2Image* bg;
+  Gui2Grid* grid;
+
+  bool pulledDown;
+};
+
+}  // namespace blunted
+
+#endif

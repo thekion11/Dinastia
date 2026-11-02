@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p1.gd"
-## [Capa 2/10 de `varios.gd`] _probar_pie_habil, _probar_banquillo, _probar_banco
+## [Capa 2/10 de `varios.gd`] _probar_pie_habil, _probar_banquillo, _probar_banco, _probar_necesidades_con_efecto, _probar_viajes
 
 ## EL PIE HÁBIL: "D.d==='LAT'&&D.b&&j.pie&&D.b!==j.pie" del HTML. `Jugador.
 ## pie()` YA EXISTÍA -de un hash de su id, no guardado, misma proporción
@@ -345,3 +345,71 @@ func _probar_banco() -> void:
 	_comprobar(int((b11.prestamos[0] as Dictionary)["deuda"]) == int((b10.prestamos[0] as Dictionary)["deuda"]),
 		"la deuda de cada prestamo vuelve exacta")
 	_comprobar(b11.semanas_en_rojo == 3, "las semanas en rojo vuelven exactas")
+
+## §2.5 DEL GUION (30-10): «comer y dormir; si fallan, aumentan las posibilidades de que las
+## cosas salgan mal». Cansado y con hambre: más imprevistos y peor preparación del partido;
+## con la rutina, todo igual que siempre (mismos bonificadores, mismo sorteo).
+func _probar_necesidades_con_efecto() -> void:
+	_titulo("NECESIDADES DEL DT CON EFECTO (§2.5)")
+	var m := Mundo.new()
+	m.generar(["CHI"], 3051)
+	var c := m.mi_club() if m.mi_club() != null else m.ligas[0].clubes[0]
+	m.tomar_el_mando(c.id)
+	m.aplicar_bonificadores()
+	var ata0 := c.bonus_ataque
+	_comprobar(not m.necesidades.preparacion_cambio() and m.necesidades.factor_preparacion() == 1.0,
+		"con la rutina la preparación no cambia (×1)")
+	m.necesidades.pasar(20 * 60, "horas_extra")
+	var prep := m.necesidades.factor_preparacion()
+	_comprobar(prep < 1.0 and prep >= 0.96 and m.necesidades.preparacion_cambio(),
+		"tras 20 h de horas extra sin comer la preparación baja (×%.3f, tope ×0,96)" % prep)
+	m.aplicar_bonificadores()
+	_comprobar(c.bonus_ataque < ata0 and not m.necesidades.preparacion_cambio(),
+		"el partido lo nota: bonus de ataque %.3f → %.3f" % [ata0, c.bonus_ataque])
+	## El imprevisto de la semana: misma semilla, más probable con el riesgo alto.
+	var imp := Imprevistos.new()
+	var con_rutina := 0
+	var cansado := 0
+	for s in 120:
+		if not imp.semana(m, c, 2026, s, false, 1.0).is_empty():
+			con_rutina += 1
+		imp.recientes.clear()
+		imp.activos.clear()
+		if not imp.semana(m, c, 2026, s, false, m.necesidades.factor_riesgo()).is_empty():
+			cansado += 1
+		imp.recientes.clear()
+		imp.activos.clear()
+	_comprobar(cansado > con_rutina, "cansado y con hambre hay más imprevistos (%d contra %d en 120 semanas)" % [cansado, con_rutina])
+	## En «ligera» no castiga.
+	m.necesidades.poner_modo("ligera")
+	_comprobar(m.necesidades.factor_preparacion() == 1.0 and m.necesidades.factor_riesgo() == 1.0, "con la vida ligera, sin castigo")
+
+## LO QUE CUESTA JUGAR (26-10, pedido del dueño): el día de partido y el viaje salen de precios reales y de la
+## distancia, no de un porcentaje. Se comprueba la lógica, no cifras sueltas.
+func _probar_viajes() -> void:
+	_titulo("VIAJES Y DÍA DE PARTIDO POR DISTANCIA Y COSTE DE VIDA")
+	var scl := Viajes.distancia_km("CHI", "ESP")
+	_comprobar(scl > 10000.0 and scl < 11500.0, "Santiago–Madrid ≈ 10.700 km (sale %d)" % int(scl))
+	_comprobar(absf(Viajes.distancia_km("CHI", "ARG") - Viajes.distancia_km("ARG", "CHI")) < 0.01, "la distancia es simétrica")
+	_comprobar(Viajes.distancia_km("ENG", "ENG") == 220.0, "dentro del mismo país: los km medios de su liga")
+	_comprobar(Viajes.medio(300.0) == "bus" and Viajes.medio(2000.0) == "avion" and Viajes.medio(8000.0) == "charter",
+		"autocar, avión y chárter según los km")
+	var local := Viajes.viaje_interno("ENG", "ENG", 70)
+	var lejos := Viajes.viaje_interno("CHI", "ESP", 70)
+	_comprobar(lejos > local * 10, "cruzar el océano cuesta mucho más que un viaje local (%d vs %d)" % [lejos, local])
+	_comprobar(Viajes.viaje_interno("CHI", "ARG", 85) > Viajes.viaje_interno("CHI", "ARG", 55), "un club grande viaja con más gente y mejor hotel")
+	_comprobar(Viajes.viaje_interno("ESP", "ESP", 70) > Viajes.viaje_interno("BOL", "BOL", 70), "el mismo viaje es más caro en España que en Bolivia")
+	var chico := Viajes.dia_de_partido_interno("CHI", 5000, 8000)
+	var grande := Viajes.dia_de_partido_interno("CHI", 40000, 60000)
+	_comprobar(grande > chico * 4, "abrir un estadio grande cuesta mucho más que uno chico (%d vs %d)" % [grande, chico])
+	_comprobar(Viajes.dia_de_partido_interno("ENG", 20000, 25000) > Viajes.dia_de_partido_interno("BOL", 20000, 25000),
+		"el día de partido es más caro donde la vida es más cara")
+	var c := Club.new()
+	c.pais = "CHI"
+	c.rep = 70
+	c.estadio_aforo = 20000
+	var f := Finanzas.new(c, 0.0, 0, 0.0)
+	var g := f.asistencia()
+	var taq := int(round(float(g) * Finanzas.ingreso_por_espectador(c.precio_entrada)))
+	var ratio := float(Viajes.dia_de_partido_interno(c.pais, g, c.estadio_aforo)) / float(maxi(taq, 1))
+	_comprobar(ratio > 0.25 and ratio < 0.35, "el club medio chileno sigue pagando ~30 %% de su taquilla (%.0f %%)" % (ratio * 100.0))

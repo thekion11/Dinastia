@@ -138,6 +138,10 @@ static func ajustar_once(c: Club, once: Array[Jugador], clubes: Dictionary = {})
 	## Salida rápida: ligas sin tope en cancha ni juveniles obligatorios.
 	if r.is_empty() or once.is_empty() or (int(r.get("cancha", 0)) <= 0 and (r.get("juveniles", []) as Array).is_empty()):
 		return once
+	## Salida rápida 2 (01-11, fase 5 «optimización»: era un tercio del coste de `Club.once()`): si el once ya cumple el
+	## tope y tiene los juveniles que pide la liga, no hace falta armar el banquillo ni ordenar nada.
+	if _ya_cumple(c, once, r, clubes):
+		return once
 	var res: Array[Jugador] = once.duplicate()
 	var banca: Array[Jugador] = []
 	for j: Jugador in c.disponibles():
@@ -264,3 +268,22 @@ static func resumen(pais: String) -> Array:
 		l.append("Un sub-%d obligatorio en el once" % e)
 	l.append("📜 " + String(r.get("norma", "")) + ("" if bool(r.get("seguro", true)) else " (por verificar)"))
 	return l
+
+static func _ya_cumple(c: Club, once: Array[Jugador], r: Dictionary, clubes: Dictionary) -> bool:
+	var tope := int(r.get("cancha", 0))
+	if tope > 0:
+		var n := 0
+		for j: Jugador in once:
+			if ocupa_cupo(j, c.pais, clubes):
+				n += 1
+		if n > tope:
+			return false
+	for edad: int in r.get("juveniles", []):
+		var hay := false
+		for j: Jugador in once:
+			if j.edad <= edad:
+				hay = true
+				break
+		if not hay:
+			return false
+	return true

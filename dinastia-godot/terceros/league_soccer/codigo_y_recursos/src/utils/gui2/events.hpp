@@ -1,0 +1,131 @@
+// Copyright 2019 Google LLC & Bastiaan Konings
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//     http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#ifndef _HPP_GUI2_EVENTS
+#define _HPP_GUI2_EVENTS
+
+#include <set>
+
+#include <SDL2/SDL.h>
+
+#include "SDL2/SDL_keyboard.h"
+#include "base/math/vector3.hpp"
+#include "managers/usereventmanager.hpp"
+
+namespace blunted {
+
+enum e_Gui2EventType {
+  e_Gui2EventType_Windowing = 0,
+  e_Gui2EventType_Mouse = 1,
+  e_Gui2EventType_Keyboard = 2,
+  e_Gui2EventType_Joystick = 3,
+  e_Gui2EventType_User = 100
+};
+
+class Gui2Event {
+public:
+  Gui2Event(e_Gui2EventType eventType);
+  virtual ~Gui2Event();
+
+  e_Gui2EventType GetType() const;
+
+  void Accept() { accepted = true; }
+  void Ignore() { accepted = false; }
+
+  bool IsAccepted() const { return accepted; }
+
+protected:
+  e_Gui2EventType eventType;
+
+  bool accepted;
+};
+
+class WindowingEvent : public Gui2Event {
+public:
+  WindowingEvent();
+  virtual ~WindowingEvent();
+
+  bool IsActivate() { return activate; }
+  bool IsEscape() { return escape; }
+  Vector3 GetDirection() { return direction; }
+
+  void SetActivate() { activate = true; }
+  void SetEscape() { escape = true; }
+  void SetDirection(const Vector3& direction) { this->direction = direction; }
+
+protected:
+  bool activate;
+  bool escape;
+  Vector3 direction;
+};
+
+class KeyboardEvent : public Gui2Event {
+public:
+  KeyboardEvent();
+  virtual ~KeyboardEvent();
+
+  const std::set<SDL_Keycode>& GetKeyOnce() const { return keyOnce; }
+  bool GetKeyOnce(SDL_Keycode id) const { return keyOnce.count(id); }
+  void SetKeyOnce(SDL_Keycode id) { keyOnce.insert(id); }
+  bool GetKeyContinuous(SDL_Keycode id) const { return keyContinuous.count(id); }
+  void SetKeyContinuous(SDL_Keycode id) { keyContinuous.insert(id); }
+  bool GetKeyRepeated(SDL_Keycode id) const { return keyRepeated.count(id); }
+  void SetKeyRepeated(SDL_Keycode id) { keyRepeated.insert(id); }
+  std::set<SDL_Keycode>& GetKeysymOnce() { return keysymOnce; }
+  std::set<SDL_Keycode>& GetKeysymContinuous() { return keysymContinuous; }
+  std::set<SDL_Keycode>& GetKeysymRepeated() { return keysymRepeated; }
+
+protected:
+  std::set<SDL_Keycode> keysymOnce;
+  std::set<SDL_Keycode> keysymContinuous;
+  std::set<SDL_Keycode> keysymRepeated;
+
+  std::set<SDL_Keycode> keyOnce;
+  std::set<SDL_Keycode> keyContinuous;
+  std::set<SDL_Keycode> keyRepeated;
+};
+
+class JoystickEvent : public Gui2Event {
+public:
+  JoystickEvent();
+  virtual ~JoystickEvent();
+
+  // Out-of-range IDs (e.g. a function remapped to an axis, which is encoded
+  // as a negative ID) read as released rather than indexing out of bounds.
+  bool GetButton(int joyID, int id) const { return ValidButton(joyID, id) && button[joyID][id]; }
+  void SetButton(int joyID, int id) {
+    if (ValidButton(joyID, id))
+      button[joyID][id] = true;
+  }
+  float GetAxis(int joyID, int id) const { return ValidAxis(joyID, id) ? axes[joyID][id] : 0.0f; }
+  void SetAxis(int joyID, int id, float value) {
+    if (ValidAxis(joyID, id))
+      this->axes[joyID][id] = value;
+  }
+
+protected:
+  // todo: doesn't it make more sense to have one joystick event per joyid? that's what we're
+  // actually doing, but then why have this multidimensional array and not just a seperate joyid
+  // variable?
+  static bool ValidButton(int joyID, int id) {
+    return joyID >= 0 && joyID < _JOYSTICK_MAX && id >= 0 && id < _JOYSTICK_MAXBUTTONS;
+  }
+  static bool ValidAxis(int joyID, int id) {
+    return joyID >= 0 && joyID < _JOYSTICK_MAX && id >= 0 && id < _JOYSTICK_MAXAXES;
+  }
+
+  bool button[_JOYSTICK_MAX][_JOYSTICK_MAXBUTTONS];
+  float axes[_JOYSTICK_MAX][_JOYSTICK_MAXAXES];
+};
+
+}  // namespace blunted
+
+#endif

@@ -1,0 +1,41 @@
+#ifndef _UTILS_ORBITCAMERA
+#define _UTILS_ORBITCAMERA
+
+#include "scene/objects/camera.hpp"
+#include "scene/objects/light.hpp"
+#include "scene/scene3d/scene3d.hpp"
+#include "types/command.hpp"
+#include "types/iusertask.hpp"
+
+namespace blunted {
+
+class OrbitCamera : public IUserTask {
+public:
+  OrbitCamera(std::shared_ptr<Scene3D> scene3D, const Vector3& position);
+  virtual ~OrbitCamera();
+
+  boost::intrusive_ptr<Node> GetCameraNode();
+
+  virtual void GetPhase();
+  virtual void ProcessPhase();
+  virtual void PutPhase();
+
+protected:
+  boost::intrusive_ptr<Camera> orbitCamera;
+  boost::intrusive_ptr<Light> light;
+  boost::intrusive_ptr<Light> light2;
+  boost::intrusive_ptr<Node> orbitCameraNode;
+
+  radian mouseVert, mouseHoriz;
+
+  Vector3 orbitCameraPosition;
+  Quaternion newRotation;
+  Vector3 newPosition;
+
+  float time;
+  float prevTime;
+};
+
+}  // namespace blunted
+
+#endif

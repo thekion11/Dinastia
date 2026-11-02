@@ -262,6 +262,7 @@ func _casas_kenney() -> bool:
 		mallas.append(malla)
 	var mat := ShaderMaterial.new()
 	mat.shader = load("res://visor/casa_kenney.gdshader")
+	_casas_mat = mat
 	mat.set_shader_parameter("paleta", load("res://assets/kenney/suburbano/Textures/colormap.png"))
 	var grupos: Array = []
 	for i in mallas.size():
@@ -315,7 +316,7 @@ func _casas_multimesh() -> void:
 	_multimesh(prisma, null, _techos_t, Vector3.ONE, _techos_col)
 	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.36, 0.22, 0.14), 0.7), _puertas_t, Vector3.ONE)
 	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.96, 0.96, 0.94), 0.6), _marcos_t, Vector3.ONE)
-	var vid := b._mat_simple(Color(0.2, 0.28, 0.36), 0.12)
+	var vid := b._mat_unico(Color(0.2, 0.28, 0.36), 0.12)
 	vid.metallic = 0.6
 	_multimesh(BoxMesh.new(), vid, _vidrios_t, Vector3.ONE)
 	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.55, 0.3, 0.24), 0.8), _chimeneas_t, Vector3.ONE)

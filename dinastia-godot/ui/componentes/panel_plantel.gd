@@ -101,16 +101,50 @@ static func pintar(lista: VBoxContainer, c: Club, mundo: Mundo, orden: String, o
 		## ningún dato solo con color; lo rojo ya lleva 🩹 o 🚫).
 		if color == COL_VERDE:
 			marcas += " ↗"
+		## M-235 (2-11): la PREVENCIÓN a la vista. ⚠ riesgo alto de lesión (historial, rasgo frágil o físico bajo), △ medio;
+		## la ayuda del nombre dice por qué y qué hacer (descanso, menos carga).
+		var riesgo := _riesgo(mundo, j)
+		if riesgo == "alto":
+			marcas += " ⚠"
+		elif riesgo == "medio":
+			marcas += " △"
 		var antes := g.get_child_count()
 		fila_jugador.call(g, j,
 			[j.nombre + marcas, j.pos_e, str(j.edad), str(j.ovr), str(j.pot), _dinero(j.valor)],
 			[color, COL_SUAVE, color, color, COL_SUAVE, color])
 		_ajustar_nombre(g, antes, j)
+		if riesgo != "" and antes < g.get_child_count():
+			var celda := g.get_child(antes) as Control
+			celda.tooltip_text = _texto_riesgo(mundo, j, riesgo)
+			celda.mouse_filter = Control.MOUSE_FILTER_PASS
 	if lista_ordenada.is_empty():
 		var nadie := _texto(12, color_de_paleta.call(COL_SUAVE))
 		nadie.text = Idiomas.t("Nadie en esa línea ahora mismo.")
 		lista.add_child(nadie)
 	_leyenda(lista, color_de_paleta)
+
+## Riesgo de lesión de un jugador sano: "alto", "medio" o "" (bajo). Junta el informe del médico (historial y rasgo)
+## con el físico que le queda; lesionado no se marca (ya lleva 🩹).
+static func _riesgo(mundo: Mundo, j: Jugador) -> String:
+	if j.lesion > 0 or mundo == null or mundo.medico == null:
+		return ""
+	var decl := mundo.medico.riesgo_declarado(j)
+	if decl == "alto" or (decl == "medio-alto" and j.fisico < 70) or j.fisico < 50:
+		return "alto"
+	if decl in ["medio", "medio-alto"] or j.fisico < 62:
+		return "medio"
+	return ""
+
+static func _texto_riesgo(mundo: Mundo, j: Jugador, riesgo: String) -> String:
+	var graves := mundo.medico.lesiones_graves(j)
+	var por: Array[String] = []
+	if graves > 0:
+		por.append(Idiomas.t("%d lesión(es) grave(s)") % graves)
+	if j.rasgo == "fragil":
+		por.append(Idiomas.t("rasgo frágil"))
+	if j.fisico < 62:
+		por.append(Idiomas.t("físico %d") % j.fisico)
+	return Idiomas.t("Riesgo de lesión %s: %s. Dale descanso o bájale la carga en Entrenar.") % [Idiomas.t(riesgo), ", ".join(por)]
 
 ## La línea del campo de un jugador (POR, DEF, MED o DEL).
 static func _linea_de(j: Jugador) -> String:
@@ -188,7 +222,7 @@ static func _ajustar_nombre(g: GridContainer, desde: int, j: Jugador) -> void:
 ## y los iconos solo los entendía quien había leído el código.
 static func _leyenda(lista: VBoxContainer, color_de_paleta: Callable) -> void:
 	var l := _texto(10, color_de_paleta.call(COL_SUAVE))
-	l.text = Idiomas.t("Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  rojo: no disponible")
+	l.text = Idiomas.t("Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  ⚠/△ riesgo de lesión alto/medio  ·  rojo: no disponible")
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lista.add_child(l)
 

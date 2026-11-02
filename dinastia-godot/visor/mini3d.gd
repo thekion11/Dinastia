@@ -118,7 +118,20 @@ static func anim(d: Dictionary, nombre: String, luego: String = "parado", mezcla
 	if a != null and a.loop_mode == Animation.LOOP_NONE and luego != "" and ap.has_animation(luego):
 		ap.queue(luego)
 
+## MATERIALES COMPARTIDOS (2-11-2026, auditoría 28-10 §1): `mat` devuelve el MISMO material para el mismo
+## color/rugosidad/emisión (menos lotes de dibujo). Quien vaya a MODIFICARLO (metálico, transparencia, guardarlo para
+## animarlo, cambiarlo desde el nodo…) pide `mat_unico`, una copia suya. `materiales_alterados()` lo vigila (el banco).
+static var _cache_mat := {}
+
 static func mat(c: Color, rug: float = 0.7, emi: float = 0.0) -> StandardMaterial3D:
+	var k := "%s|%.3f|%.3f" % [c.to_html(true), rug, emi]
+	if _cache_mat.has(k):
+		return (_cache_mat[k] as Dictionary)["m"]
+	var m := mat_unico(c, rug, emi)
+	_cache_mat[k] = {"m": m, "c": c, "rug": rug, "emi": emi}
+	return m
+
+static func mat_unico(c: Color, rug: float = 0.7, emi: float = 0.0) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = c
 	m.roughness = rug
@@ -129,6 +142,20 @@ static func mat(c: Color, rug: float = 0.7, emi: float = 0.0) -> StandardMateria
 		m.emission = c
 		m.emission_energy_multiplier = emi
 	return m
+
+## Las claves de los materiales compartidos que ya no son lo que pidieron (alguien los modificó).
+static func materiales_alterados() -> Array:
+	var malos: Array = []
+	for k: String in _cache_mat:
+		var d: Dictionary = _cache_mat[k]
+		var m: StandardMaterial3D = d["m"]
+		var ref := mat_unico(d["c"], d["rug"], d["emi"])
+		if m.albedo_color != ref.albedo_color or not is_equal_approx(m.roughness, ref.roughness) \
+				or not is_equal_approx(m.metallic, ref.metallic) or m.transparency != ref.transparency \
+				or m.emission_enabled != ref.emission_enabled or not is_equal_approx(m.emission_energy_multiplier, ref.emission_energy_multiplier) \
+				or m.cull_mode != ref.cull_mode or m.shading_mode != ref.shading_mode or m.albedo_texture != ref.albedo_texture:
+			malos.append(k)
+	return malos
 
 static func caja(padre: Node3D, pos: Vector3, tam: Vector3, m: Material) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
@@ -209,7 +236,7 @@ static func campo_y_arco(raiz: Node3D) -> Node3D:
 	trav.rotation.z = PI * 0.5
 	var red := Node3D.new()
 	raiz.add_child(red)
-	var red_m := Mini3D.mat(Color(0.95, 0.95, 0.95, 0.28), 0.8)
+	var red_m := Mini3D.mat_unico(Color(0.95, 0.95, 0.95, 0.28), 0.8)
 	red_m.cull_mode = BaseMaterial3D.CULL_DISABLED
 	Mini3D.caja(red, Vector3(0, ALTO_ARCO * 0.5, -2.0), Vector3(ANCHO_ARCO, ALTO_ARCO, 0.02), red_m)
 	Mini3D.caja(red, Vector3(0, ALTO_ARCO, -1.0), Vector3(ANCHO_ARCO, 0.02, 2.0), red_m)

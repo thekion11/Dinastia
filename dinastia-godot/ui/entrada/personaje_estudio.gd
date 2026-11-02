@@ -228,7 +228,38 @@ func _rearmar() -> void:
 	_actual = PersonajeDT.crear(_pivote, _asp, c1, c2)
 	## En el estudio te mira (un poco): en la banda mira al partido.
 	PersonajeVida.mirar_camara(_actual, true)
+	_dar_vida(_actual)
 	_colocar_camara()
+
+## NO TIESO (2-11-2026, queja del dueño: «antinatural, tieso»): además del «parado» de persona, cada
+## pocos segundos hace un gesto de los de la banda (manos a la cintura, aplaudir, pedir calma) y
+## vuelve a la pose de reposo con mezcla suave, igual que el DT en el partido.
+class _Gestos extends Node:
+	const GESTOS := ["banda/brazos_jarra", "banda/aplaudir", "banda/pedir_calma"]
+	var ap: AnimationPlayer
+	var hasta := 2.5
+	func _process(delta: float) -> void:
+		hasta -= minf(delta, 0.1)
+		if hasta > 0.0 or not is_instance_valid(ap):
+			return
+		var hay: Array[String] = []
+		for g: String in GESTOS:
+			if ap.has_animation(g):
+				hay.append(g)
+		if not hay.is_empty() and ap.current_animation.begins_with("persona/"):
+			ap.play(hay[randi() % hay.size()], 0.35)
+			hasta = maxf(ap.current_animation_length, 1.5)
+		else:
+			ap.play("persona/parado" if ap.has_animation("persona/parado") else "parado", 0.35)
+			hasta = randf_range(3.0, 6.0)
+
+static func _dar_vida(d: Dictionary) -> void:
+	if d.is_empty() or not d.has("esqueleto"):
+		return
+	PersonajeDT.gestos_banda(d)
+	var g := _Gestos.new()
+	g.ap = d["anim"]
+	(d["nodo"] as Node).add_child(g)
 
 ## Para las pruebas: el modelo que se ve ahora ({} si aún no se armó).
 func modelo() -> Dictionary:

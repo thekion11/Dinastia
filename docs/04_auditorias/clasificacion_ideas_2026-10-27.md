@@ -1,5 +1,6 @@
 # Clasificación de las ideas pendientes del plan (27-10-2026)
 
+> **2-11-2026**: se borraron 21 filas ya hechas y probadas (desafíos 951/956/971, precontratos, glifos, migraciones de guardado, CI y presets, RendimientoAdaptativo, perillas tácticas 385-392, texto escalable y daltonismo, contraste, perfiles de árbitro; ver `pruebas/banco/lanzamiento.gd` y el bloque «reutilizadas» de `especiales.sh`). Las cifras de la tabla son las del 27-10.
 Fuente: `docs/PLAN_DEL_LUNES.md` §5, §6 y §7 tal como estaban el 27-10. Criterio: LANZAMIENTO = hace falta para lanzar el 15-12-2026; DESPUÉS = vale la pena, tras lanzar; DESCARTAR = repetida, superada por algo hecho, contraria a una decisión del dueño o sin aporte. Las «Existen: falta una prueba» y las «Declaradas hechas sin prueba» van en un bloque aparte «verificar»: LANZAMIENTO si tocan el partido o la primera hora, DESPUÉS el resto. En la duda entre DESPUÉS y DESCARTAR, DESPUÉS.
 
 ## 1. Resumen
@@ -51,18 +52,11 @@ Los encabezados del plan dan cifras viejas (F0 «33» tiene 23 filas, F1 «36» 
 
 **Interfaz**
 - M-438: Botones con tamaño mínimo en móvil.
-- M-462: Iconos con emoji (💾 ↺ ● ✔ ▸) que pueden salir como cuadros: probar glifos o cambiarlos.
 
 **Gestión**
 - 233: Dificultades fuera del partido (finanzas, prensa, mercado) junto a las 8 de la CPU.
-- M-217: Precontratos: el mercado los promete y no existen (hacerlos o quitar el texto).
-- 956: Desafío «leyenda30» solo avisa: hacerlo cumplir o quitarlo.
-- 971: «Sin recarga» solo avisa: bloquear de verdad la carga o quitarlo.
-- 951: «Sin dinero» promete sin créditos y `Banco.pedir` no lo comprueba.
 
 **Estabilidad**
-- 1094: Migraciones de guardado entre versiones (que las partidas sobrevivan a las actualizaciones).
-- M-422: Prueba de compilación de los presets de exportación (builds que no se rompen).
 
 **Rendimiento**
 - M-341: Coste real de las sombras en GPU (dueño).
@@ -82,7 +76,6 @@ Los encabezados del plan dan cifras viejas (F0 «33» tiene 23 filas, F1 «36» 
 
 **Partido**
 - M-128: Portero con salidas aéreas y algo más seguro (pasada final del motor).
-- M-131: Perfiles de ayuda Arcade / Semi / Manual (las ayudas sueltas ya existen).
 - M-096: Mezcla entre clips del partido variable, no fija 0,25 s (movimiento natural).
 - M-097: Pies que patinan en el partido: bloqueo de pies como en la ciudad.
 - M-038: Hinchas de la grada cortados en la cadera: fallo visible desde la TV.
@@ -97,7 +90,6 @@ Los encabezados del plan dan cifras viejas (F0 «33» tiene 23 filas, F1 «36» 
 - 327: Celebración de trofeo: vuelta olímpica y celebración 3D (fase 5, bloque 4 pendiente).
 
 **Interfaz**
-- M-302: Tema de alto contraste (accesibilidad pedida en «lanzable»).
 - M-307: Probar 4:3, 21:9 y móvil: textos cortados o fuera de pantalla.
 - M-437: Iconos del mando/teclado que cambian con el dispositivo también en la guía del partido.
 - M-373: Comprobar que cada país muestra su bandera correcta (banderas detalladas).
@@ -105,7 +97,6 @@ Los encabezados del plan dan cifras viejas (F0 «33» tiene 23 filas, F1 «36» 
 - 1032: Barra de progreso al simular una temporada entera.
 
 **Estabilidad**
-- M-416: CI en GitHub Actions con la imagen Godot 4.7 (aprobado por el dueño).
 - M-209: Prueba larga con métricas de equilibrio (semana 9: 10 temporadas en cada modo).
 - M-386: Señales sin desconectar al liberar nodos: posibles fugas en sesiones largas.
 - M-444: Fuga de texturas GL al cerrar `prueba_carrera_flujo`.
@@ -119,7 +110,6 @@ Los encabezados del plan dan cifras viejas (F0 «33» tiene 23 filas, F1 «36» 
 - M-347: Volver a medir la VRAM del partido (539 MB).
 - M-348: Primera construcción del estadio larga: caché de mallas o carga más corta.
 - M-350: Medir cuánto tarda `avanzar_semana` (lo que espera el jugador cada semana).
-- M-354: Probar en el banco `RendimientoAdaptativo` y sus umbrales.
 
 **Traducciones**
 - M-458: Comprobar que todo `Label` visible pasa por `Idiomas.t`.
@@ -133,30 +123,12 @@ Escribir la prueba del campo «cómo probar» del plan y mirarlo en el partido o
 
 **Partido**
 - 143: Mosaicos y coreografías en el estadio
-- 251: Clima que afecta partidos y asistencia
 - 352: Velocidad de simulación configurable (x1, x2, x4, saltar a evento)
 - 353: Botón "saltar al próximo gol" para partidas rápidas
-- 355: Barra de momentum que muestra qué equipo domina el partido
-- 357: Probabilidad de gol en vivo (xG) como estadística opcional
-- 358: Eventos aleatorios de partido (palo, gol anulado, revisión de VAR)
 - 360: Cambios en vivo con vista rápida del banco de suplentes
-- 361: Instrucciones en vivo (presionar, retrasar líneas, perder tiempo)
-- 362: Charla de entretiempo con varios tonos y efecto real en la moral
 - 363: Indicador de fatiga por jugador en tiempo real
 - 371: Modo "solo resultado" para quienes simulan temporadas rápido
-- 376: Ocasiones claras falladas para generar tensión sin gol
-- 378: IA rival que reacciona a tu táctica a mitad de partido
 - 383: Roles por posición (lateral ofensivo, pivote, falso 9, mediapunta)
-- 385: Altura de la línea defensiva
-- 386: Intensidad de presión (bloque alto, medio, bajo)
-- 387: Ritmo de circulación de balón
-- 388: Amplitud del ataque
-- 389: Tipo de salida (juego corto desde el arquero vs. pelotazo largo)
-- 390: Criterio de remate (buscar tiro lejano o el pase extra)
-- 391: Marcaje al hombre o por zona
-- 392: Trampa del fuera de juego activable
-- 801: Árbitros con perfiles distintos (permisivo, tarjetero, casero)
-- 1036: Alerta si intentas avanzar con alineación inválida
 - 1062: Sonido ambiente de estadio durante el partido
 - 1063: Silbato, murmullo y explosión de gol como capas separadas
 - 1067: Sonido distintivo para el gol propio y para el gol rival
@@ -172,8 +144,6 @@ Escribir la prueba del campo «cómo probar» del plan y mirarlo en el partido o
 - 946: Modo carrera clásico con club a elección
 - 948: Modo club creado desde cero en la última división
 - 985: Tutorial narrativo integrado a la primera temporada
-- 1024: Escalado de texto para accesibilidad
-- 1025: Paletas alternativas para daltonismo
 - 1029: Autoguardado configurable
 - 1030: Guardado manual con varias ranuras
 - 1097: Sin recolección innecesaria de datos personales

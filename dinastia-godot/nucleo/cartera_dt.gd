@@ -6,6 +6,9 @@ extends RefCounted
 ## UNIDADES: la cartera habla en EUROS de pantalla; `Roles.patrimonio` va en puntos internos (1 punto = `Eco.ECO` = 12 EUR). `cargo_pend` (0..11 €) guarda lo
 ## ya gastado del punto en curso, así cada euro cuenta sin tocar la economía del resto del juego.
 ## Los métodos devuelven "" si salió bien o un CÓDIGO de error ("bloqueada", "pin", "limite", "saldo", "importe"); la pantalla lo traduce con `Idiomas.t`.
+## (§2.5, 31-10) Se pagó algo con la tarjeta sin contacto (la ciudad enseña `TarjetaMano`).
+signal pago_con_tarjeta(importe: int, concepto: String)
+
 const LIMITE_TARJETA := 600      ## € al día con tarjeta
 const LIMITE_CAJERO := 500       ## € al día retirados en cajero
 const SIN_PIN := 100             ## € hasta los que la tarjeta paga sin PIN (sin contacto)
@@ -123,6 +126,7 @@ func cobrar(roles: Roles, importe: int, concepto: String, dia: int) -> Dictionar
 		pagar_efectivo(importe, concepto, dia)
 		return {"error": "", "via": "efectivo"}
 	_cargo_tarjeta(roles, importe, concepto, dia)
+	pago_con_tarjeta.emit(importe, concepto)
 	return {"error": "", "via": "tarjeta"}
 
 ## Recarga la tarjeta de transporte con `importe` € que salen de la cartera. {error, via} como `cobrar`.

@@ -175,6 +175,23 @@ static func nota_subtitulos(p: Principal) -> void:
 		Sonido.toca("silbato", Sonido.Bus.INTERFAZ)
 		p._refrescar())
 	fila.add_child(b)
+	## M-284 (2-11): lectura de pantalla con la voz del sistema.
+	var fila_l := HBoxContainer.new()
+	fila_l.add_theme_constant_override("separation", 8)
+	p._lista_ajustes.add_child(fila_l)
+	var et_l := p._texto(12, Principal.COL_TEXTO)
+	et_l.text = Idiomas.t("Lectura de pantalla")
+	et_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	et_l.tooltip_text = Idiomas.t("Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.")
+	fila_l.add_child(et_l)
+	var b_l := Button.new()
+	b_l.text = "SÍ" if LectorPantalla.activo() else "NO"
+	b_l.pressed.connect(func() -> void:
+		LectorPantalla.fijar(not LectorPantalla.activo())
+		if LectorPantalla.activo():
+			LectorPantalla.decir(Idiomas.t("Lectura de pantalla activada"))
+		p._refrescar())
+	fila_l.add_child(b_l)
 	var l := p._texto(10, Principal.COL_SUAVE)
 	l.text = Idiomas.t("Subtítulos: el juego no tiene voces. La narración del partido, la prensa y el vestuario ya salen siempre escritos.")
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

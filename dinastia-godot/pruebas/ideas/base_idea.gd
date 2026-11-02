@@ -15,7 +15,7 @@ var _fallos: Array[String] = []
 
 func _ready() -> void:
 	await get_tree().process_frame
-	_probar()
+	await _probar()   ## (01-11: las pruebas asíncronas, como la del minijuego, esperan a terminar)
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())
 	get_tree().quit(0 if _fallos.is_empty() else 1)

@@ -1,11 +1,10 @@
 class_name PantallaElegirClub
-extends RefCounted
+extends PantallaBase
 ## ELEGIR CLUB (fase 6, paso 4 del plan §7.1; sale de `Principal`, capa 12, el 27-10-2026): el selector
 ## de club de la barra, el diálogo con el mapa de países y escudos, y tomar el mando de un club.
 ## `p` es la pantalla principal: el selector, el diálogo abierto, el país elegido y el mundo siguen
 ## en ella; `Principal` conserva puentes de una línea con los nombres de siempre.
 
-var p: Principal
 ## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
 ## ELEGIR CLUB: MAPA DEL PAÍS Y ESCUDOS, no un desplegable de 383 líneas.
 ##
@@ -23,9 +22,6 @@ var p: Principal
 ## empezar. El desplegable de arriba sigue existiendo para cambiar rápido.
 var _dlg_club: Window = null
 var _pais_elegido: String = ""
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 func _al_elegir_club(indice: int) -> void:
 	var veto := p.mundo.motivo_sin_cambiar_de_club(String(p._selector.get_item_metadata(indice)))
@@ -236,3 +232,7 @@ func _abrir_elegir_club() -> void:
 	_pais_elegido = p.mundo.mi_club().pais if p.mundo.mi_club() != null else ""
 	_pintar_elegir_club(col)
 	_dlg_club.popup_centered()
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"elegir_club": _abrir_elegir_club}
