@@ -33,7 +33,7 @@ func _process(_d: float) -> void:
 			if not bool(p["por"]) and bool(p["es_local"]):
 				elegidos.append(p)
 		var p: Dictionary = elegidos[2 if _n == 160 else 5]
-		var nodo: Node3D = p["nodo"]
+		var nodo: Node3D = p["node"]
 		var cam := Camera3D.new()
 		add_child(cam)
 		cam.global_position = nodo.global_position + nodo.global_transform.basis.z * 2.2 + Vector3(0, 1.75, 0)
