@@ -358,10 +358,12 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 
 func _rival_mas_cercano(p: Dictionary) -> Dictionary:
 	var mejor: Dictionary = {}
-	var md := 999.0
+	var md := 999.0 * 999.0
+	var yo := pos(p)
+	var local := bool(p["es_local"])
 	for q: Dictionary in jugadores:
-		if bool(q["es_local"]) != bool(p["es_local"]):
-			var d := pos(q).distance_to(pos(p))
+		if bool(q["es_local"]) != local:
+			var d := (q["node"] as Node3D).position.distance_squared_to(yo)
 			if d < md:
 				md = d
 				mejor = q
