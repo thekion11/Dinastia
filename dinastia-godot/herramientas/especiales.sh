@@ -82,6 +82,7 @@ fi
   done
   # M-283, M-300, M-296, M-311, M-290: avisos de sonido, deshacer en la pizarra, bandeja por temas, resumen de carrera, datos de tarjetas
   pasa "avisos visuales de sonido" "godot --headless --path . res://pruebas/ideas/acc_avisos_sonido.tscn" "FIN. 0 fallos"
+  pasa "lectura de pantalla" "godot --headless --path . res://pruebas/ideas/acc_lector.tscn" "FIN. 0 fallos"
   pasa "deshacer en la pizarra" "godot --headless --path . res://pruebas/ideas/tac_deshacer.tscn" "FIN. 0 fallos"
   pasa "bandeja por temas" "godot --headless --path . res://pruebas/ideas/ban_temas.tscn" "FIN. 0 fallos"
   pasa "resumen de carrera" "godot --headless --path . res://pruebas/ideas/leg_resumen.tscn" "FIN. 0 fallos"
