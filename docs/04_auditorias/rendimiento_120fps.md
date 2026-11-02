@@ -61,3 +61,8 @@ La luz del partido se configura en `visor/ambience.gd` (no en `Calidad.sol`): ME
 | Cascada ortogonal única (`ambience.gd`) | 784 | 823 k | **Descartada**: −7 % de triángulos pero la iluminación del césped cambia (más clara, menos relieve) |
 | Cambiar `Calidad.sol` (distancia/modo) | 793 | 882 k | Sin efecto: esa luz no es la del partido |
 Pendiente (palancas reales que quedan): EntornoEstadio (333 llamadas), apagar la sombra solar en «ligero» (−205 llamadas, es quitar un efecto: solo con aviso), rótulos de las vallas en un solo atlas.
+
+## Tanda 3 (2-11) — qué hay en `EntornoEstadio` (333 llamadas en vista)
+Herramienta: `pruebas/medir_entorno_nodos.tscn` (sin pantalla; recuento por tipo y superficies). Resultado: 445 superficies visibles en 27 tipos; **241 son `MultiMeshInstance3D`** (el agrupado por malla+material+celda de 160 m de `Optimizar.agrupar`), 52 ruedas + 13 coches + 13 carrocerías sueltas, 38 quads, ~65 edificios de ~15 modelos distintos.
+Ya está al límite de lo que da agrupar piezas iguales; lo que queda necesita **fusionar mallas distintas** (coches: carrocería+4 ruedas en una malla por coche, ~−50 llamadas; edificios: atlas de materiales) o apagar la sombra solar (−205 llamadas, quita un efecto). Candidatos ordenados por llamadas ahorradas: sombra solar en «ligero» (205, con aviso) > coches fusionados (≈50) > quads/planos (47).
+`Optimizar.agrupar` y `distancias` no se tocan: están cubiertos por el banco y por el presupuesto.
