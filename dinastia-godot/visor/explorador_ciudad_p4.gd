@@ -186,8 +186,8 @@ func _usar() -> void:
 				and MinijuegosCiudad.juego_de(String(_cerca["k"])) == "")):
 		_entrar_en_edificio(String(_cerca["k"]))
 		return
-	if _cerca["tipo"] == "boton_peatonal":   ## M-170: pide el verde peatonal
-		return cb.expansion.semaforos.pedir_con_aviso(self)
+	if _cerca["tipo"] == "boton_peatonal" or _cerca["tipo"] == "bus_parada":   ## M-170 pide el verde; M-182 sube al bus (pasaje)
+		return BusDT.usar(self, _cerca)
 	if _cerca["tipo"] == "metro" and (vida == null or vida.cobrar_pasaje("metro")):   ## M-182: el pasaje sale de la tarjeta Red
 		_entrar_al_anden(_cerca["acc"])
 		return

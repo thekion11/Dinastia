@@ -179,6 +179,10 @@ func _gente_cerca(delta: float) -> void:
 				if bool(s["sentado"]) and _rng_gente.randf() < 0.45:
 					continue
 				_cola_gente.append({"tipo": "sitio", "s": s, "e": e})
+	## M-180: el vendedor ambulante de los puestos de esta estación.
+	for v: Dictionary in vendedores:
+		if (v["p"] as Vector3).distance_to(mejor["centro"]) < 70.0 and absf((v["p"] as Vector3).y - (mejor["centro"] as Vector3).y) < 6.0:
+			_cola_gente.append({"tipo": "vendedor", "p": v["yo"], "giro": v["giro"]})
 	## Qué línea y qué estación es (para saber cuándo para su tren).
 	for l: Dictionary in lineas:
 		if bool(l["elevada"]) != bool(mejor["elevada"]):

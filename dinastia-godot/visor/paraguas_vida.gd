@@ -94,12 +94,9 @@ static func tick(vehiculos: Array, lluvia: bool, puertas: Array, cuenta: int) ->
 		if nodo == null or not is_instance_valid(nodo):
 			continue
 		## Velocidad: con lluvia, más prisa; al escampar, la de siempre.
-		if lluvia and not v.has("vel0"):
-			v["vel0"] = float(v["vel"])
-			v["vel"] = float(v["vel"]) * FACTOR_PRISA
-		elif not lluvia and v.has("vel0"):
-			v["vel"] = float(v["vel0"])
-			v.erase("vel0")
+		var f_lluvia := FACTOR_PRISA if lluvia else 1.0
+		if absf(f_lluvia - float(v.get("lluvia_f", 1.0))) > 0.001:
+			RutinaPeatones.poner_factor(v, "lluvia_f", f_lluvia)
 		var parado := bool(v.get("pausa", false))
 		if not parado:
 			v.erase("resguardo")
