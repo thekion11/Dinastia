@@ -24,13 +24,21 @@ on:
         description: "Qué versión construir (el banco corre siempre primero)"
         type: choice
         default: todo
-        options: [ todo, windows, windows-ligero, linux, android, android-armv7, web, arm, solo-banco ]
+        options: [ todo, windows, windows-ligero, linux, android, android-aab, android-armv7, web, arm, solo-banco ]
       android_release:
         description: "Android firmado (release, necesita los secretos de la keystore); si no, depuración"
         type: boolean
         default: false
       sufijo:
         description: "Texto añadido a la versión (p. ej. -beta2). Opcional"
+        type: string
+        default: ""
+      release_borrador:
+        description: "Al terminar, crear un BORRADOR de Release en GitHub con lo construido (no es público hasta que lo publiques tú)"
+        type: boolean
+        default: false
+      version_release:
+        description: "Etiqueta del Release (p. ej. v0.9-beta). Obligatoria si marcas release_borrador"
         type: string
         default: ""
 
@@ -140,7 +148,7 @@ jobs:
   nativo-android:
     name: ⚫ C++ Android
     needs: [banco, especiales]
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'android' }}
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'android' || inputs.objetivo == 'android-aab' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -353,6 +361,61 @@ jobs:
           test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
           { echo "### 🟩 Android"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
 
+  exportar-android-aab:
+    name: 🟩 Android AAB (Play)
+    needs: [banco, especiales, nativo-android]
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'android-aab' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - name: La extensión C++ de Android (M-353)
+        uses: actions/download-artifact@v4
+        with:
+          name: nativo-android
+          path: dinastia-godot/bin_nativo
+
+      - name: Exportar Android AAB
+        uses: ./.github/actions/exportar
+        with:
+          variante: android
+          preset: Android
+          salida: android-aab/Dinastia.aab
+          carpeta: android-aab
+          formato: aab
+          artefacto: Dinastia-Android-aab
+          sufijo: ${{ github.event_name == 'workflow_dispatch' && inputs.sufijo || '' }}
+          modo: ${{ github.event_name == 'workflow_dispatch' && inputs.android_release && 'release' || 'debug' }}
+          keystore_base64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          keystore_usuario: ${{ secrets.ANDROID_KEYSTORE_USER }}
+          keystore_clave: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+
+  ## Comprobación final de Android AAB: existe, no está vacío y deja su tamaño en el resumen. Es también lo que da a
+  ## cada versión su propia caja en el gráfico.
+  verificar-android-aab:
+    name: ✅ Android AAB
+    needs: exportar-android-aab
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Dinastia-Android-aab
+          path: salida
+      - name: Revisar y resumir
+        run: |
+          ls -la salida
+          test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
+          { echo "### 🟩 Android"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+
   exportar-android-armv7:
     name: 🌿 Android armv7
     needs: [banco, especiales]
@@ -442,6 +505,33 @@ jobs:
           ls -la salida
           test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
           { echo "### 🌐 Web"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
+
+  ## RELEASE EN BORRADOR (2-11-2026, orden del dueño): junta lo construido en un Release PRIVADO hasta que el dueño
+  ## lo publique. Sin caras reales (esas no se construyen aquí).
+  release:
+    name: 📦 release (borrador)
+    needs: [verificar-windows, verificar-windows-ligero, verificar-linux, verificar-android, verificar-android-aab, verificar-android-armv7, verificar-web]
+    if: ${{ always() && !failure() && !cancelled() && github.event_name == 'workflow_dispatch' && inputs.release_borrador && inputs.version_release != '' && inputs.objetivo != 'solo-banco' && inputs.objetivo != 'arm' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: Dinastia-*
+          path: bajados
+      - name: Crear el borrador
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ETIQUETA: ${{ inputs.version_release }}
+        run: |
+          mkdir -p paquetes
+          for d in bajados/*/; do n=$(basename "$d"); (cd "$d" && zip -qr "../../paquetes/${n}-${ETIQUETA}.zip" .); done
+          ls -la paquetes
+          gh release create "$ETIQUETA" paquetes/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --draft \
+            --title "Dinastía $ETIQUETA" --notes "Borrador creado por el CI desde la rama ${GITHUB_REF_NAME} (commit ${GITHUB_SHA::8}). Sin caras ni datos reales. Revisar y publicar a mano."
+          echo "### 📦 Borrador de Release «$ETIQUETA» creado. Publícalo desde la pestaña Releases." >> "$GITHUB_STEP_SUMMARY"
 
   nativo-arm:
     name: 🟠 C++ en ARM (prueba)
