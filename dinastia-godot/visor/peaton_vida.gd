@@ -129,7 +129,7 @@ static func maletin(v: Dictionary, poner: bool) -> void:
 	anc.name = NOMBRE_MALETIN
 	anc.bone_name = "hand_l"
 	esq.add_child(anc)
-	var cuero := Mini3D.mat(Color(0.22, 0.13, 0.08) if posmod(hash(v.get("id", 0)), 2) == 0 else Color(0.08, 0.08, 0.1), 0.55)
+	var cuero := Mini3D.mat_unico(Color(0.22, 0.13, 0.08) if posmod(hash(v.get("id", 0)), 2) == 0 else Color(0.08, 0.08, 0.1), 0.55)
 	var caja := MeshInstance3D.new()
 	var bm := BoxMesh.new()
 	bm.size = Vector3(0.1, 0.3, 0.4)
