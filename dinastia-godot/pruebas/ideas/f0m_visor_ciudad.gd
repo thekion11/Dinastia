@@ -57,6 +57,9 @@ func _probar_autopista() -> void:
 		var tam := (mi.mesh as BoxMesh).size
 		if not is_equal_approx(tam.y, 0.5) or mi.position.y < 0.6:
 			continue
+		## Solo el primer trecho (la bajada del anillo, 60 m): más lejos la carretera SIGUE EL TERRENO (que sube y baja con las lomas) y ya no baja siempre.
+		if maxf(absf(mi.position.x), absf(mi.position.z)) > Autopista.R + Autopista.ANCHO * 0.5 + 100.0:
+			continue
 		var eje := Vector3(0, 0, tam.z * 0.5) if is_equal_approx(tam.x, Autopista.ANCHO * 0.8) else Vector3(tam.x * 0.5, 0, 0)
 		var p1 := mi.transform * eje
 		var p2 := mi.transform * -eje
@@ -247,6 +250,8 @@ func _probar_mini3d() -> void:
 	svp.add_child(cam)
 	cam.position = Vector3(0, 10, 10)
 	cam.look_at(Vector3.ZERO)
+	cam.make_current()
+	await get_tree().process_frame   ## (4.7) la cámara de un SubViewport solo proyecta tras un fotograma
 	var p: Variant = Mini3D.suelo_bajo(cam, Vector2(100, 100))
 	_comprobar(p is Vector3 and (p as Vector3).length() < 0.05, "suelo_bajo(): el centro de la pantalla cae en el origen")
 	cam.look_at(Vector3(0, 20, 0))
