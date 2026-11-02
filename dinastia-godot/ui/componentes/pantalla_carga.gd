@@ -157,11 +157,14 @@ static func mostrar(padre: Node, mensaje: String) -> PantallaCarga:
 
 ## Cubre SIEMPRE la ventana entera: si el padre no es un Control (el prólogo cuelga de un Node3D) o aún no tiene tamaño, se le da el de la ventana.
 func _ajustar() -> void:
-	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var vp := get_viewport_rect().size
-	if not (get_parent() is Control) or size.x < 2.0 or size.y < 2.0:
+	if not (get_parent() is Control) or get_parent_area_size().x < 2.0:
+		## Sin un Control que le dé tamaño (el prólogo cuelga de un Node3D): anclas iguales arriba a la izquierda y el tamaño de la ventana a mano.
+		set_anchors_preset(Control.PRESET_TOP_LEFT, false)
 		position = Vector2.ZERO
 		size = vp
+	else:
+		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 ## Deja que el sistema PINTE la pantalla antes de bloquear con la construcción. Dos fotogramas de
 ## `process_frame` no bastan: en Windows la ventana se quedaba en gris porque el primer dibujo aún no había

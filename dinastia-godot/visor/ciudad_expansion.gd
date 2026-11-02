@@ -154,12 +154,11 @@ func construir() -> void:
 	cuenta["senales_velocidad"] = SenalesVelocidad.montar(self)   ## M-199: límites de velocidad en los cruces
 	cuenta["edificios"] = 0
 	await b._marca("exp_calles")   ## (28-10) marcas de tiempo por tramo, solo con TIEMPOS=1
-	for bl: Dictionary in bloques:
-		_dibujar_bloque(bl)
+	for bl: Dictionary in ExpansionTardia.primeros_bloques(self):
+		ExpansionTardia.bloque(self, bl)
 		await b._marca("exp.bloque")
-	_edificios_lejanos()
-	_casas_multimesh()
-	_modular_multimesh()
+	if not CityBuilder.diferir:   ## con carga diferida, esto va tras las manzanas que faltan (`ExpansionTardia.bloques_restantes`)
+		ExpansionTardia.casas(self)
 	await b._marca("exp.casas")
 	metro = MetroCiudad.new()
 	metro.name = "Metro"
@@ -168,23 +167,13 @@ func construir() -> void:
 		metro.montar(self)
 		_bocas_metro()
 	await b._marca("exp.metro")
-	_marquesinas_bus()
-	_guirnaldas()
-	_farolas()
-	_mobiliario_urbano()
-	_placas_de_calle()
-	_orillas_nucleo()
-	_obras_en_calle()
-	_kenney_calles()
-	await b._marca("exp.mobiliario")
-	if not CityBuilder.modo_prologo:   ## lo lejano, fuera del prólogo
-		cuenta["autopista"] = Autopista.montar(b)
-		_parque_eolico()
-		_deposito_agua()
+	if CityBuilder.diferir:
+		tardio_pendiente = true   ## el mobiliario urbano se hace después (`ExpansionTardia`)
+	else:
+		await ExpansionTardia.mobiliario(self)
 	redes = RedesCiudadVista.crear(self, 20261027)
-	if not CityBuilder.modo_prologo:
-		tele_nodo = Teleferico.montar(b)
-		teleferico = tele_nodo.datos()
+	if not CityBuilder.modo_prologo and not CityBuilder.diferir:   ## lo lejano (autopista, eólico, depósito, teleférico), fuera del prólogo y, con carga diferida, después
+		ExpansionTardia.afueras(self)
 	await b._marca("exp.afueras")
 	_volcar_lotes()
 	await b._marca("exp_lotes")

@@ -413,3 +413,6 @@ func _armar_brazos() -> void:
 		_sumar_brazo(c, -d, float(t["ancho"]))
 	for p: Vector3 in cruces_semaforo:
 		_con_semaforo[clave_cruce(p)] = true
+
+var tardio_pendiente := false   ## el mobiliario urbano espera a `ExpansionTardia.mobiliario` (carga diferida)
+var bloques_diferidos: Array = []   ## manzanas que esperan a `ExpansionTardia.bloques_restantes` (carga diferida)
