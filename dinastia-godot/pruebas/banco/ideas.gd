@@ -386,3 +386,27 @@ func _probar_filtros_plantel() -> void:
 	_comprobar(int(jh.historial[0].get("val", -1)) == jh.valor and gr._get_tooltip(Vector2(0, 0)).contains("2026"),
 		"el historial guarda el valor y el gráfico de la ficha lo enseña al pasar el ratón")
 	gr.free()
+
+## M-294 (2-11-2026): tu club frente a otro en su ficha.
+func _probar_compara_clubes() -> void:
+	_titulo("TU CLUB FRENTE A OTRO (M-294)")
+	var m := Mundo.new()
+	m.generar(["CHI"], 2940)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var mio := m.mi_club()
+	var otro: Club = m.ligas[0].clubes[1]
+	mio.rep = 80
+	otro.rep = 60
+	var caja := VBoxContainer.new()
+	add_child(caja)
+	ComparaClubes.pintar(caja, mio, otro, Color.GRAY, Color.WHITE, Color.GREEN, Color.RED)
+	var g := caja.find_children("*", "GridContainer", true, false)
+	_comprobar(not g.is_empty() and (g[0] as GridContainer).get_child_count() == 3 * (ComparaClubes.filas().size() + 1), "una fila por dato y una de cabecera")
+	var rep_mia := (g[0] as GridContainer).get_child(4) as Label
+	_comprobar(rep_mia.text.begins_with("80") and rep_mia.text.contains("▲"), "gana la reputación más alta y se marca (%s)" % rep_mia.text)
+	_comprobar(ComparaClubes._miles(1234567) == "1.234.567" and ComparaClubes._miles(950) == "950", "los miles con punto")
+	var vacio := VBoxContainer.new()
+	ComparaClubes.pintar(vacio, mio, mio, Color.GRAY, Color.WHITE, Color.GREEN, Color.RED)
+	_comprobar(vacio.get_child_count() == 0, "contigo mismo no hay comparación")
+	vacio.free()
+	caja.queue_free()

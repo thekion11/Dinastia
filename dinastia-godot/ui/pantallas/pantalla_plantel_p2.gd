@@ -355,6 +355,7 @@ func _pintar_ficha_club(club: Club) -> void:
 	if not once.is_empty():
 		media_once /= float(once.size())
 	p._dato("Media del mejor once", "%.1f" % media_once, Principal.COL_TEXTO, p._lista_clubes)
+	ComparaClubes.pintar(p._lista_clubes, p.mundo.mi_club(), club, Principal.COL_SUAVE, Principal.COL_TEXTO, Principal.COL_VERDE, Principal.COL_ROJO)   ## M-294
 	if p.mundo.roles != null and club == p.mundo.mi_club() and not p.mundo.roles.dt_empleado.is_empty():
 		p._dato("Entrenador", p.mundo.roles.dt_nombre(), Principal.COL_TEXTO, p._lista_clubes)
 	## El aviso de clásico: cambia cómo se juega ese partido -aforo, ánimo,
