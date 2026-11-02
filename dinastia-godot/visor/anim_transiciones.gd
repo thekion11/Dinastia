@@ -40,6 +40,10 @@ static func fase_de(clip: String, pos: float, largo: float) -> float:
 	return fposmod(pos / maxf(largo, 0.001) - float(AnimPasos.fases.get(clip, 0.0)), 1.0)
 
 func _process(_d: float) -> void:
+	## 2-11-2026 (120 FPS): con el reproductor parado o su personaje fuera de la vista no hay paso que apuntar.
+	if _ap == null or not is_instance_valid(_ap) or not _ap.is_playing():
+		_clip = ""
+		return
 	apuntar()
 
 func apuntar() -> void:
