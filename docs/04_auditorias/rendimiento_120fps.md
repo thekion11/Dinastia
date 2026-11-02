@@ -52,3 +52,12 @@ Desglose por grupo (base): butacas 655 k triángulos, sombras 430 k y 319 llamad
 ### Generar la APK (el dueño maneja los builds)
 Actions → «compilar» → Run workflow → `objetivo` = `android` (arm64, depuración o release firmado con `android_release`), `android-armv7` (móviles de 32 bits) o `android-aab` (tienda).
 La rama: `ccr-120fps-optimizar` (o la que se una a `main`). El release firmado necesita los secretos `ANDROID_KEYSTORE_BASE64/USER/PASSWORD`. El artefacto se descarga de la propia ejecución.
+
+## Tanda 2 (2-11) — sombras y llamadas (partido, MEDIO, Compatibilidad)
+Desglose por nodo (`ARBOL=1`, base 741 llamadas): **EntornoEstadio 333** (527 hijos; ya agrupado con `Optimizar.agrupar`), **sombra solar 205 llamadas / 205 k triángulos**, VallasLed 56 (rótulos `Label3D`; los paneles ya son 2 MultiMesh), arcos y fachada ~19 cada uno.
+La luz del partido se configura en `visor/ambience.gd` (no en `Calidad.sol`): MEDIO ya usa 160 m y 2 cascadas.
+| Prueba | Llamadas | Triángulos | Veredicto |
+|---|---|---|---|
+| Cascada ortogonal única (`ambience.gd`) | 784 | 823 k | **Descartada**: −7 % de triángulos pero la iluminación del césped cambia (más clara, menos relieve) |
+| Cambiar `Calidad.sol` (distancia/modo) | 793 | 882 k | Sin efecto: esa luz no es la del partido |
+Pendiente (palancas reales que quedan): EntornoEstadio (333 llamadas), apagar la sombra solar en «ligero» (−205 llamadas, es quitar un efecto: solo con aviso), rótulos de las vallas en un solo atlas.
