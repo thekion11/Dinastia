@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Ajusta UN preset de export_presets.cfg para una versión (solo en el CI, sobre la copia del
 runner; nunca se sube). Uso:
-  ajustar_presets.py <preset> <carpeta_res_iconos> [--armv7] [--version=<sufijo>]
+  ajustar_presets.py <preset> <carpeta_res_iconos> [--armv7] [--aab] [--version=<sufijo>]
 Pone los iconos de la variante (marca_iconos.py) y, en Android, la arquitectura y el nombre."""
 import re, sys
 
 preset, carpeta = sys.argv[1], sys.argv[2]
 armv7 = "--armv7" in sys.argv
+aab = "--aab" in sys.argv
 sufijo = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--version=")), "")
 CAMBIOS = {
     "application/icon": '"%s/icono_1024.png"' % carpeta,
@@ -17,6 +18,9 @@ CAMBIOS = {
 if armv7:
     CAMBIOS["architectures/armeabi-v7a"] = "true"
     CAMBIOS["architectures/arm64-v8a"] = "false"
+if aab:   # paquete para Google Play: compilación con Gradle + formato AAB
+    CAMBIOS["gradle_build/use_gradle_build"] = "true"
+    CAMBIOS["gradle_build/export_format"] = "1"
 if sufijo:
     CAMBIOS["version/name"] = '"1.0%s"' % sufijo
     CAMBIOS["application/product_version"] = '"1.0%s"' % sufijo

@@ -7,6 +7,8 @@ inputs:
   preset:   { description: "Nombre del preset de export_presets.cfg", required: true }
   salida:   { description: "Archivo de salida (relativo a build/)", required: true }
   artefacto: { description: "Nombre del artefacto", required: true }
+  carpeta:  { description: "Carpeta de build/ que se sube (por defecto, la de la variante)", default: "" }
+  formato:  { description: "apk o aab (Android)", default: apk }
   modo:     { description: "release o debug", default: release }
   sufijo:   { description: "Texto de versión (p. ej. -beta2)", default: "" }
   keystore_base64:   { description: "Keystore de Android en base64 (secreto, opcional)", default: "" }
@@ -33,8 +35,20 @@ runs:
         ## Solo en esta copia del runner: el icono del juego (ventana, web) y el del preset.
         sed -i 's#^config/icon=.*#config/icon="res://assets/logo/variante/icono_256.png"#' project.godot
         ARM=""; [ "${{ inputs.variante }}" = "android-armv7" ] && ARM="--armv7"
-        python3 herramientas/ajustar_presets.py "${{ inputs.preset }}" res://assets/logo/variante $ARM --version="${{ inputs.sufijo }}"
+        AAB=""; [ "${{ inputs.formato }}" = "aab" ] && AAB="--aab"
+        python3 herramientas/ajustar_presets.py "${{ inputs.preset }}" res://assets/logo/variante $ARM $AAB --version="${{ inputs.sufijo }}"
         timeout 900 godot --headless --path . --import > /tmp/importar2.txt 2>&1 || true
+
+    - name: Plantilla de Gradle (solo para el AAB)
+      if: ${{ inputs.formato == 'aab' }}
+      shell: bash
+      working-directory: dinastia-godot
+      run: |
+        plantilla=$(ls -d ~/.local/share/godot/export_templates/*/ | head -1)
+        mkdir -p android/build
+        unzip -q -o "${plantilla}android_source.zip" -d android/build
+        godot --version | cut -d. -f1-4 | tr -d '\n' > android/.build_version
+        cat android/.build_version; echo
 
     - name: Firma de Android (solo si hay keystore en los secretos)
       id: firma
@@ -68,7 +82,7 @@ runs:
         case "${{ inputs.variante }}" in
           windows*) ls ../build/${{ inputs.variante }}/*.dll >/dev/null 2>&1 || echo "::warning::Falta la DLL de la extensión C++" ;;
           linux)    ls ../build/linux/*.so >/dev/null 2>&1 || echo "::warning::Falta la .so de la extensión C++" ;;
-          android)  unzip -l "$salida" | grep -q libdinastia || { echo "Falta libdinastia en el APK (M-353)"; exit 1; } ;;
+          android*) [ "${{ inputs.variante }}" = "android-armv7" ] || unzip -l "$salida" | grep -q libdinastia || { echo "Falta libdinastia en el APK (M-353)"; exit 1; } ;;
         esac
         case "${{ inputs.variante }}" in
           android*|web) ;;
@@ -79,4 +93,4 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.artefacto }}
-        path: build/${{ inputs.variante }}
+        path: build/${{ inputs.carpeta || inputs.variante }}
