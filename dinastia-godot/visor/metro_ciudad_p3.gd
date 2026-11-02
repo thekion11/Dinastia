@@ -140,6 +140,11 @@ func _tren_real(col: Color) -> Node3D:
 	n.set_meta("leds", leds)
 	n.set_meta("puertas", puertas)
 	TrenDetalle.vestir(n, col, f)
+	## M-476: ~150 cajas sueltas por tren → una malla por material (las puertas se quedan: se deslizan).
+	var sueltas: Array = [interior]   ## el interior lleva su propio corte a 120 m
+	for pu: Array in puertas:
+		sueltas.append(pu[0])
+	FundirPiezas.fundir(n, 600.0, "Carroceria", sueltas)
 	return n
 
 ## El tren «fantasma» de la línea subterránea: solo se ve en rayos X.
