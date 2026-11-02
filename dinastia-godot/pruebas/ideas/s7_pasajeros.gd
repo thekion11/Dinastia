@@ -73,6 +73,19 @@ func _probar() -> void:
 	InteriorBus.actualizar(real)
 	var vis := 0
 	for k in InteriorBus.PLAZAS:
-		if (real.get_node("Interior/Plaza%d/Persona" % k) as Node3D).visible:
+		var per := real.get_node_or_null("Interior/Plaza%d/Persona" % k) as Node3D   ## las siluetas se crean al sentarse alguien
+		if per != null and per.visible:
 			vis += 1
 	_comprobar(vis == 3, "tres pasajeros, tres siluetas sentadas (%d)" % vis)
+	## Se bajan dos: solo queda una silueta y las plazas ya creadas se apagan.
+	real.set_meta("pasajeros", [3])
+	InteriorBus.actualizar(real)
+	var quedan := 0
+	for k in InteriorBus.PLAZAS:
+		var per2 := real.get_node_or_null("Interior/Plaza%d/Persona" % k) as Node3D
+		if per2 != null and per2.visible:
+			quedan += 1
+	_comprobar(quedan == 1, "al bajarse dos pasajeros queda una silueta (%d)" % quedan)
+	real.set_meta("pasajeros", [])
+	InteriorBus.actualizar(real)
+	_comprobar(real.find_children("Persona", "Node3D", true, false).all(func(n): return not (n as Node3D).visible), "con el autobús vacío todas las siluetas están apagadas")
