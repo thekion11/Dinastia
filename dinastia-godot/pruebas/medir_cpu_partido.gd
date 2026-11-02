@@ -77,7 +77,10 @@ func _medir() -> void:
 ## CPU del proceso (usuario + sistema, todos los hilos) por fotograma, en ms. El tiempo de pared NO sirve sin pantalla: el bucle sin
 ## render espera hasta un suelo fijo de 6,9 ms por fotograma (medido con una escena vacía) y tapa todo lo que cuesta menos.
 static func _cpu_ms() -> float:
-	var t := FileAccess.get_file_as_string("/proc/self/stat")
+	var f := FileAccess.open("/proc/self/stat", FileAccess.READ)   ## los archivos de /proc dicen medir 0 bytes: se lee por líneas
+	if f == null:
+		return 0.0
+	var t := f.get_line()
 	var campos := t.substr(t.rfind(")") + 2).split(" ")
 	return (float(campos[11]) + float(campos[12])) * 10.0   ## ticks de 10 ms (campos 14 y 15 del archivo)
 
