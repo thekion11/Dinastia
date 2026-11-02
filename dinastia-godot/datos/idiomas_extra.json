@@ -6779,7 +6779,14 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Your car is in the garage after all the knocks: bus and metro this week.",
   "Para el coche para bajarte (F).": "Stop the car to get out (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Car parked. F next to it to get back in.",
-  "Tu coche está aparcado a %d m.": "Your car is parked %d m away."
+  "Tu coche está aparcado a %d m.": "Your car is parked %d m away.",
+  "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "drag to rotate · right click or WASD to move · wheel to zoom · click a building or lot to see its sheet",
+  "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d people  ·  drag to rotate, wheel to zoom, Esc to exit",
+  "🎮 Jugar aquí": "🎮 Play here",
+  "No alcanza la caja: tienes %s.": "Not enough funds: you have %s.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  risk %s  ·  fitness %d  ·  out this week %s",
+  "Prueba de rendimiento (unos 6 min)": "Performance test (about 6 min)",
+  "Recorre menú, estadio y ciudad sin límite de FPS y guarda un informe (también en el portapapeles) para mandarlo.": "Runs through the menu, stadium and city with no FPS cap and saves a report (also to the clipboard) so you can send it."
  },
  "pt": {
   "Historia": "História",
@@ -13561,7 +13568,14 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 O teu carro está na oficina por causa das pancadas: esta semana, autocarro e metro.",
   "Para el coche para bajarte (F).": "Para o carro para saíres (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Carro estacionado. F junto a ele para voltar a entrar.",
-  "Tu coche está aparcado a %d m.": "O teu carro está estacionado a %d m."
+  "Tu coche está aparcado a %d m.": "O teu carro está estacionado a %d m.",
+  "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "arraste para girar · clique direito ou WASD para mover · roda para aproximar · clique num edifício ou terreno para ver a ficha",
+  "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d pessoas  ·  arraste para girar, roda para aproximar, Esc para sair",
+  "🎮 Jugar aquí": "🎮 Jogar aqui",
+  "No alcanza la caja: tienes %s.": "O caixa não chega: tens %s.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  risco %s  ·  físico %d  ·  baixa esta semana %s",
+  "Prueba de rendimiento (unos 6 min)": "Teste de desempenho (cerca de 6 min)",
+  "Recorre menú, estadio y ciudad sin límite de FPS y guarda un informe (también en el portapapeles) para mandarlo.": "Percorre o menu, o estádio e a cidade sem limite de FPS e guarda um relatório (também na área de transferência) para o enviares."
  },
  "patrones": [
   [
@@ -26076,7 +26090,14 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Ta voiture est au garage à cause des chocs : cette semaine, bus et métro.",
   "Para el coche para bajarte (F).": "Arrête la voiture pour descendre (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Voiture garée. F à côté pour remonter.",
-  "Tu coche está aparcado a %d m.": "Ta voiture est garée à %d m."
+  "Tu coche está aparcado a %d m.": "Ta voiture est garée à %d m.",
+  "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "glisser pour tourner · clic droit ou WASD pour se déplacer · molette pour zoomer · cliquer sur un bâtiment ou un terrain pour voir sa fiche",
+  "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d personnes  ·  glisser pour tourner, molette pour zoomer, Échap pour sortir",
+  "🎮 Jugar aquí": "🎮 Jouer ici",
+  "No alcanza la caja: tienes %s.": "La caisse ne suffit pas : vous avez %s.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  risque %s  ·  physique %d  ·  blessure cette semaine %s",
+  "Prueba de rendimiento (unos 6 min)": "Test de performance (environ 6 min)",
+  "Recorre menú, estadio y ciudad sin límite de FPS y guarda un informe (también en el portapapeles) para mandarlo.": "Parcourt le menu, le stade et la ville sans limite de FPS et enregistre un rapport (aussi dans le presse-papiers) à envoyer."
  },
  "it": {
   "Historia": "Storia",
@@ -32858,7 +32879,14 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 La tua auto è in officina per i colpi: questa settimana, autobus e metro.",
   "Para el coche para bajarte (F).": "Ferma l'auto per scendere (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Auto parcheggiata. F vicino per risalire.",
-  "Tu coche está aparcado a %d m.": "La tua auto è parcheggiata a %d m."
+  "Tu coche está aparcado a %d m.": "La tua auto è parcheggiata a %d m.",
+  "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "trascina per ruotare · clic destro o WASD per muoverti · rotella per ingrandire · clic su un edificio o lotto per vedere la scheda",
+  "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d persone  ·  trascina per ruotare, rotella per ingrandire, Esc per uscire",
+  "🎮 Jugar aquí": "🎮 Gioca qui",
+  "No alcanza la caja: tienes %s.": "La cassa non basta: hai %s.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  rischio %s  ·  fisico %d  ·  stop questa settimana %s",
+  "Prueba de rendimiento (unos 6 min)": "Test delle prestazioni (circa 6 min)",
+  "Recorre menú, estadio y ciudad sin límite de FPS y guarda un informe (también en el portapapeles) para mandarlo.": "Percorre menu, stadio e città senza limite di FPS e salva un rapporto (anche negli appunti) da inviare."
  },
  "de": {
   "Historia": "Geschichte",
@@ -39640,7 +39668,14 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Dein Auto ist wegen der Unfallschäden in der Werkstatt: diese Woche Bus und U-Bahn.",
   "Para el coche para bajarte (F).": "Halte an, um auszusteigen (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Auto geparkt. F daneben, um wieder einzusteigen.",
-  "Tu coche está aparcado a %d m.": "Dein Auto parkt %d m entfernt."
+  "Tu coche está aparcado a %d m.": "Dein Auto parkt %d m entfernt.",
+  "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "ziehen zum Drehen · Rechtsklick oder WASD zum Bewegen · Mausrad zum Zoomen · Gebäude oder Grundstück anklicken für das Datenblatt",
+  "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d Personen  ·  ziehen zum Drehen, Mausrad zum Zoomen, Esc zum Verlassen",
+  "🎮 Jugar aquí": "🎮 Hier spielen",
+  "No alcanza la caja: tienes %s.": "Die Kasse reicht nicht: Sie haben %s.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  Risiko %s  ·  Fitness %d  ·  Ausfall diese Woche %s",
+  "Prueba de rendimiento (unos 6 min)": "Leistungstest (ca. 6 Min.)",
+  "Recorre menú, estadio y ciudad sin límite de FPS y guarda un informe (también en el portapapeles) para mandarlo.": "Läuft durch Menü, Stadion und Stadt ohne FPS-Limit und speichert einen Bericht (auch in der Zwischenablage) zum Versenden."
  },
  "ca": {
   "Historia": "Història",
@@ -46422,7 +46457,14 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 El teu cotxe és al taller pels cops: aquesta setmana, bus i metro.",
   "Para el coche para bajarte (F).": "Atura el cotxe per baixar (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Cotxe aparcat. F al costat per tornar a pujar.",
-  "Tu coche está aparcado a %d m.": "El teu cotxe està aparcat a %d m."
+  "Tu coche está aparcado a %d m.": "El teu cotxe està aparcat a %d m.",
+  "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "arrossega per girar · clic dret o WASD per moure't · roda per acostar · clic en un edifici o solar per veure'n la fitxa",
+  "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d persones  ·  arrossega per girar, roda per acostar, Esc per sortir",
+  "🎮 Jugar aquí": "🎮 Juga aquí",
+  "No alcanza la caja: tienes %s.": "No arriba la caixa: tens %s.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  risc %s  ·  físic %d  ·  baixa aquesta setmana %s",
+  "Prueba de rendimiento (unos 6 min)": "Prova de rendiment (uns 6 min)",
+  "Recorre menú, estadio y ciudad sin límite de FPS y guarda un informe (también en el portapapeles) para mandarlo.": "Recorre menú, estadi i ciutat sense límit de FPS i desa un informe (també al porta-retalls) per enviar-lo."
  },
  "pl": {
   "Club": "Klub",
@@ -53481,7 +53523,14 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Twój samochód jest w warsztacie po stłuczkach: w tym tygodniu autobus i metro.",
   "Para el coche para bajarte (F).": "Zatrzymaj samochód, żeby wysiąść (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Samochód zaparkowany. F obok niego, żeby wsiąść.",
-  "Tu coche está aparcado a %d m.": "Twój samochód stoi %d m stąd."
+  "Tu coche está aparcado a %d m.": "Twój samochód stoi %d m stąd.",
+  "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "przeciągnij, aby obracać · prawy przycisk lub WASD, aby się poruszać · kółko, aby przybliżyć · kliknij budynek lub działkę, aby zobaczyć kartę",
+  "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d osób  ·  przeciągnij, aby obracać, kółko, aby przybliżyć, Esc, aby wyjść",
+  "🎮 Jugar aquí": "🎮 Graj tutaj",
+  "No alcanza la caja: tienes %s.": "Brakuje środków: masz %s.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  ryzyko %s  ·  kondycja %d  ·  kontuzja w tym tygodniu %s",
+  "Prueba de rendimiento (unos 6 min)": "Test wydajności (ok. 6 min)",
+  "Recorre menú, estadio y ciudad sin límite de FPS y guarda un informe (también en el portapapeles) para mandarlo.": "Przechodzi przez menu, stadion i miasto bez limitu FPS i zapisuje raport (także w schowku), który można wysłać."
  },
  "tr": {
   "Club": "Kulüp",
@@ -60540,6 +60589,13 @@
   "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro.": "🔧 Araban çarpmalar yüzünden serviste: bu hafta otobüs ve metro.",
   "Para el coche para bajarte (F).": "İnmek için arabayı durdur (F).",
   "🅿️ Coche aparcado. F junto a él para volver a subir.": "🅿️ Araba park edildi. Tekrar binmek için yanında F.",
-  "Tu coche está aparcado a %d m.": "Araban %d m ötede park halinde."
+  "Tu coche está aparcado a %d m.": "Araban %d m ötede park halinde.",
+  "arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha": "döndürmek için sürükle · hareket için sağ tık veya WASD · yakınlaştırmak için tekerlek · kartı görmek için bir binaya veya araziye tıkla",
+  "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir": "🚪 %s  ·  %d kişi  ·  döndürmek için sürükle, yakınlaştırmak için tekerlek, çıkmak için Esc",
+  "🎮 Jugar aquí": "🎮 Burada oyna",
+  "No alcanza la caja: tienes %s.": "Kasa yetmiyor: elinizde %s var.",
+  "%s  ·  riesgo %s  ·  físico %d  ·  baja esta semana %s": "%s  ·  risk %s  ·  kondisyon %d  ·  bu hafta sakatlık %s",
+  "Prueba de rendimiento (unos 6 min)": "Performans testi (yaklaşık 6 dk)",
+  "Recorre menú, estadio y ciudad sin límite de FPS y guarda un informe (también en el portapapeles) para mandarlo.": "Menü, stadyum ve şehri FPS sınırı olmadan gezer ve göndermek için bir rapor kaydeder (panoya da)."
  }
 }

@@ -82,7 +82,7 @@ func _kenney_calles() -> void:
 ## EL PARQUE EÓLICO en las lomas del noroeste, fuera de la autopista: diez
 ## molinos de 45 m con las aspas girando (cada uno a su ritmo).
 func _parque_eolico() -> void:
-	var blanco := b._mat_simple(Color(0.93, 0.94, 0.95), 0.4)
+	var blanco := b._mat_unico(Color(0.93, 0.94, 0.95), 0.4)
 	for k in 10:
 		var ang := -2.3 + float(k) * 0.12
 		var r := 1750.0 + float(k % 3) * 120.0
@@ -347,7 +347,7 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 				continue
 			var largo := t.largo_de(id)
 			for i in por_sentido:
-				var nodo: Node3D = CityBuilder.instanciar_coche(coches[rng.randi() % coches.size()], rng)
+				var nodo: Node3D = CityBuilder.instanciar_trafico(coches[rng.randi() % coches.size()], rng)
 				t.agregar_vehiculo(nodo, id, largo * (float(i) + rng.randf() * 0.5) / float(por_sentido), rng.randf_range(10.0, 15.0), 0.0, 0.0)
 				t.marcar_cola_al_ultimo()
 				n_coches += 1
@@ -359,7 +359,7 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 			continue
 		var largo_a := t.largo_de(ida)
 		for i in 12:
-			var na: Node3D = CityBuilder.instanciar_coche(coches[rng.randi() % coches.size()], rng)
+			var na: Node3D = CityBuilder.instanciar_trafico(coches[rng.randi() % coches.size()], rng)
 			t.agregar_vehiculo(na, ida, largo_a * float(i) / 12.0 + rng.randf() * 40.0, rng.randf_range(22.0, 30.0), 0.0, 0.0)
 			t.marcar_cola_al_ultimo()
 	## Los autobuses: los recorridos «Red» sobre el mapa, ida y vuelta, con su número, destino y patente (`BusesRed`).

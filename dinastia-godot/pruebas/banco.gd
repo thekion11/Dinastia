@@ -54,6 +54,7 @@ const SECCIONES := [
 	"_probar_roles_y_federacion",
 	"_probar_estadio",
 	"_probar_rendimiento_adaptativo",
+	"_probar_calidad_auto",
 	"_probar_puente3d",
 	"_probar_tactica_en_movimiento",
 	"_probar_copa",
@@ -121,6 +122,11 @@ const SECCIONES := [
 	"_probar_entrevistas",
 	"_probar_estadio_b6",
 	"_probar_ciudad_b7",
+	"_probar_fundir_piezas",
+	"_probar_rellenos_ciudad",
+	"_probar_visor_pequenos",
+	"_probar_visor_efectos",
+	"_probar_vomitorios",
 	"_probar_coherencia_c1",
 	"_probar_portadas_c20",
 	"_probar_cantera_c3",
@@ -191,6 +197,8 @@ const SECCIONES := [
 	"_probar_no_atravesar_paredes",
 	"_probar_paridad_idiomas",
 	"_probar_insignia_version",
+	"_probar_lanzamiento_tactica",
+	"_probar_lanzamiento_accesibilidad",
 ]
 
 ## Dónde vive cada grupo, en el orden en que se buscan las secciones.
@@ -204,6 +212,7 @@ const ARCHIVOS := {
 	"textos": "res://pruebas/banco/textos.gd",
 	"ideas": "res://pruebas/banco/ideas.gd",
 	"varios": "res://pruebas/banco/varios.gd",
+	"lanzamiento": "res://pruebas/banco/lanzamiento.gd",
 }
 
 var _tiempos: Array = []
@@ -221,16 +230,17 @@ const GRUPOS := {
 	"guardado": ["_probar_guardado", "_probar_guardado_seguro", "_probar_partido_abandonado", "_probar_repetibilidad"],
 	"ciudad": ["_probar_modulos", "_probar_faros_coches", "_probar_ciudad", "_probar_ciudad_b7", "_probar_ciudad_animo", "_probar_ciudad_grande",
 		"_probar_redes_ciudad", "_probar_cartera_dt", "_probar_cajero", "_probar_expendedora_balon", "_probar_parque_lleno", "_probar_cancha_patos", "_probar_comercio_lleno", "_probar_no_atravesar_paredes", "_probar_minijuegos", "_probar_optimizacion"],
-	"estadio": ["_probar_estadio", "_probar_estadio_b6", "_probar_b6_formas_led", "_probar_tunel_navegable",
+	"estadio": ["_probar_fundir_piezas", "_probar_vomitorios", "_probar_visor_efectos", "_probar_visor_pequenos", "_probar_rellenos_ciudad", "_probar_estadio", "_probar_estadio_b6", "_probar_b6_formas_led", "_probar_tunel_navegable",
 		"_probar_edificio_club", "_probar_personal_estadio", "_probar_peaton_fuera_del_arbol", "_probar_interiores_club", "_probar_galeria_club",
 		"_probar_reforma_con_obra", "_probar_guinos_estadio", "_probar_vallas_led", "_probar_ola_grada",
-		"_probar_rendimiento_adaptativo"],
+		"_probar_rendimiento_adaptativo", "_probar_calidad_auto"],
 	"gestion": ["_probar_piel_por_pais", "_probar_capitan_votado", "_probar_finanzas", "_probar_mercado", "_probar_directiva", "_probar_staff", "_probar_obras",
 		"_probar_cantera", "_probar_cesiones", "_probar_negociacion", "_probar_contratos_c9", "_probar_economia",
 		"_probar_leyes_pais", "_probar_incumplir_ley", "_probar_vender", "_probar_ojeadores"],
 	"competicion": ["_probar_calendario", "_probar_copa", "_probar_continental", "_probar_selecciones",
 		"_probar_ascensos", "_probar_temporadas"],
 	"textos": ["_probar_paridad_idiomas", "_probar_narracion_traducida", "_probar_tema_y_ortografia", "_probar_carga_de_ui", "_probar_palabras_prohibidas", "_probar_glifos_idiomas", "_probar_logo", "_probar_insignia_version"],
+	"lanzamiento": ["_probar_lanzamiento_tactica", "_probar_lanzamiento_accesibilidad"],
 }
 
 const COSTES := {
@@ -292,6 +302,10 @@ func _parte_de(i: int, total: int) -> int:
 func _cerrar() -> void:
 	## Las secciones más lentas, para saber dónde mirar si el banco se alarga.
 	_tiempos.sort_custom(func(a: Array, b: Array) -> bool: return int(a[0]) > int(b[0]))
+	## MATERIALES COMPARTIDOS (2-11-2026): lo que construyó este proceso no dejó ningún material compartido modificado.
+	_titulo("MATERIALES COMPARTIDOS: NINGUNO MODIFICADO")
+	_comprobar(Mini3D.materiales_alterados().is_empty(), "Mini3D.mat (%d distintos) %s" % [Mini3D._cache_mat.size(), str(Mini3D.materiales_alterados())])
+	_comprobar(TunelVestuario.materiales_alterados().is_empty(), "TunelVestuario._mat (%d distintos) %s" % [TunelVestuario._cache_mat.size(), str(TunelVestuario.materiales_alterados())])
 	var suma := 0
 	for tt: Array in _tiempos:
 		suma += int(tt[0])

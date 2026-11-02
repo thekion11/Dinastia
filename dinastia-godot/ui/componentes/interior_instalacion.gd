@@ -100,7 +100,7 @@ func _taller() -> void:
 	_poner("cardboardBoxClosed", Vector3(5.7, 0, -5.4), -0.3)
 	_poner("cardboardBoxClosed", Vector3(5.45, _alto("cardboardBoxClosed"), -5.45), 0.5)
 	## Neumáticos apilados y bidones.
-	var goma := Mini3D.mat(Color(0.07, 0.07, 0.08), 0.85)
+	var goma := Mini3D.mat_unico(Color(0.07, 0.07, 0.08), 0.85)
 	for k in 5:
 		var rueda := MeshInstance3D.new()
 		var tm := TorusMesh.new()
@@ -241,7 +241,7 @@ func _interfaz(nombre: String) -> void:
 	banda.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(banda)
 	_titulo = Label.new()
-	_titulo.text = "🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir" % [nombre, _raiz.find_children("*", "Skeleton3D", true, false).size()]
+	_titulo.text = Idiomas.t("🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir") % [nombre, _raiz.find_children("*", "Skeleton3D", true, false).size()]
 	_titulo.add_theme_font_size_override("font_size", 20)
 	_titulo.position = Vector2(20, 14)
 	_titulo.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -257,7 +257,7 @@ func _interfaz(nombre: String) -> void:
 	add_child(salir)
 	if _minijuego.is_valid():
 		var jugar := Button.new()
-		jugar.text = "🎮 Jugar aquí"
+		jugar.text = Idiomas.t("🎮 Jugar aquí")
 		jugar.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 		jugar.offset_left = -260
 		jugar.offset_right = -120
