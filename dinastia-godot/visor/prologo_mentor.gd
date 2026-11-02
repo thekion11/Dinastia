@@ -61,8 +61,38 @@ func crear(look: Dictionary, c1: Color, c2: Color) -> void:
 	add_child(_rotulo)
 	_animar("parado")
 
+## Cajas de los obstáculos blandos (setos, jardineras, arbustos) que el prólogo localiza al construir la
+## ciudad. Quien aparece de golpe no debe quedar dentro de uno (queja del dueño, 2-11-2026: el
+## acompañante de la bienvenida atravesaba un arbusto).
+static var obstaculos: Array[AABB] = []
+const MARGEN := 0.45
+
+## `p` desplazado en horizontal hasta quedar fuera de todo obstáculo (con un margen).
+static func fuera_de_obstaculos(p: Vector3) -> Vector3:
+	for _vuelta in 4:
+		var movido := false
+		for a: AABB in obstaculos:
+			var b := a.grow(MARGEN)
+			if p.y + 1.8 < b.position.y or p.y > b.end.y:
+				continue
+			if p.x > b.position.x and p.x < b.end.x and p.z > b.position.z and p.z < b.end.z:
+				var salidas := [b.position.x - p.x, b.end.x - p.x, b.position.z - p.z, b.end.z - p.z]
+				var mejor := 0
+				for i in 4:
+					if absf(float(salidas[i])) < absf(float(salidas[mejor])):
+						mejor = i
+				if mejor < 2:
+					p.x += float(salidas[mejor]) + (-0.01 if mejor == 0 else 0.01)
+				else:
+					p.z += float(salidas[mejor]) + (-0.01 if mejor == 2 else 0.01)
+				movido = true
+		if not movido:
+			break
+	return p
+
 ## Aparece de golpe en `p` (se usa con la pantalla en negro o tras esfumarse).
 func colocar(p: Vector3, rumbo: float = PI) -> void:
+	p = fuera_de_obstaculos(p)
 	position = p
 	rotation.y = rumbo
 	scale = Vector3.ONE * _escala_base

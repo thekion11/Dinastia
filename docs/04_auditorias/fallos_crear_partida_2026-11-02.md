@@ -53,3 +53,9 @@ Clonados (superficiales) en /tmp; no se añadieron al repo los que no sirven:
 - **Vitruvian-Project** (2,2 GB, CC0): proyecto Blender de humano digital; demasiado pesado y sin .glb listos.
 - **humanizer** (AGPL, herramienta) y **godot-demo-projects** (MIT): no se copian.
 - **assets-kaykit-3d-characters** (copia no oficial): se usó la fuente oficial.
+
+## Tanda 3 (orden directa del dueño, 2-11-2026)
+- **Modular Men/Women** (21 civiles, CC0) integrados como «Modelo base» (filtrados por Hombre/Mujer): sin clips, así que `IdleProcedural` les pone los brazos caídos (medidos desde el hueso real) y respiración/cabeza/cadera por código. Sin retargeting. Kenney: DESCARTADO por el dueño. Siguen sin integrar: VRM (necesita addon), MakeHuman (faltan .glb), Vitruvian (Blender 2,2 GB), herramientas/demos.
+- **Arbusto del prólogo:** sin GPU se hizo por geometría. `PrologoDT.obstaculos_blandos` localiza las cajas de setos/jardineras/arbustos (7 cerca de la puerta) y `PrologoMentor.colocar` empuja a quien aparece fuera de ellas (+0,45 m de margen); prueba `_mentor_sin_solape` en `fcp_crear_partida`. Pendiente de confirmar a ojo con GPU.
+- **Optimización:** se quitó `Escudo.limpiar_cache()` de cada repintado de la vista previa de configuración (re-rasterizaba todos los escudos); repintado 2D del diseñador agrupado.
+- **Aviso:** `PantallaCarga.dejar_pintar` no espera `frame_post_draw` en headless (la señal nunca llega y colgaba el prólogo en las pruebas).

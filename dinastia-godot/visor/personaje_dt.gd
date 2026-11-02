@@ -158,7 +158,7 @@ static func _accesorios(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> v
 static func crear(padre: Node3D, asp_guardado: Dictionary, c1: Color = Color("1f5fa8"), c2: Color = Color.WHITE) -> Dictionary:
 	var a := aspecto(asp_guardado)
 	var mb := String(a.get("modelo", ""))
-	if FutbolistaQ.MODELOS_AJENOS.has(mb):
+	if FutbolistaQ.todos_ajenos().has(mb):
 		var da := FutbolistaQ.ajeno(padre, mb, float(a["altura"]))
 		if not da.is_empty():
 			return da

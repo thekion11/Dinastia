@@ -14,6 +14,8 @@ func _ready() -> void:
 	await _vestir_dos_veces()
 	_titulo("CREAR PARTIDA: modelos base extra")
 	await _modelos_base()
+	_titulo("PRÓLOGO: el mentor no aparece dentro de arbustos ni setos")
+	await _mentor_sin_solape()
 	_titulo("CREAR PARTIDA: símbolo del escudo horneado")
 	_simbolo_horneado()
 	print("")
@@ -131,11 +133,47 @@ func _modelos_base() -> void:
 			_comprobar(not d.is_empty() and d.has("anim") and (d["anim"] as AnimationPlayer).current_animation != "", "%s (%s): se crea y reproduce una animación" % [mb, cuerpo])
 			if not d.is_empty():
 				(d["nodo"] as Node).queue_free()
-	for k: String in FutbolistaQ.MODELOS_AJENOS:
+	for k: String in FutbolistaQ.todos_ajenos():
 		_comprobar(FutbolistaQ.ajeno_disponible(k), "%s: está en el juego" % k)
 		var da := PersonajeDT.crear(raiz, {"modelo": k, "altura": 1.8})
 		var ap: AnimationPlayer = da.get("anim")
-		_comprobar(not da.is_empty() and ap != null and ap.current_animation != "", "%s: se arma con su Idle" % k)
+		var vivo := ap != null and ap.current_animation != ""
+		if not vivo and not da.is_empty():
+			vivo = (da["nodo"] as Node).find_children("*", "Node", true, false).any(func(n: Node) -> bool: return n is IdleProcedural)
+		_comprobar(not da.is_empty() and vivo, "%s: se arma y está vivo (clip o reposo procedural)" % k)
 		if not da.is_empty():
 			(da["nodo"] as Node).queue_free()
 	raiz.queue_free()
+
+## Geometría pura (sin GPU): se construye el prólogo y se comprueba que el mentor, tras colocarse en la
+## puerta y en cada sala, no queda dentro de ninguna caja de seto, jardinera o arbusto.
+func _mentor_sin_solape() -> void:
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"], 4242)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	PedidoPartida.mundo_pregenerado = m
+	PedidoPartida.modo_elegido = "dt"
+	PrologoDT.rapido = true
+	var p: PrologoDT = (load("res://escenas/prologo.tscn") as PackedScene).instantiate()
+	add_child(p)
+	for i in 600:
+		await get_tree().process_frame
+		if p._listo:
+			break
+	_comprobar(p._listo, "el prólogo se construyó")
+	var cajas := PrologoMentor.obstaculos
+	print("  obstáculos blandos cerca de la puerta: ", cajas.size())
+	var puntos: Array[Vector3] = [p.puerta + Vector3(0.8, 0.02, 3.0), p.puerta + Vector3(0, 0, 7.0), p.puerta + Vector3(-0.8, 0.02, 3.0), p.puerta + Vector3(2.5, 0.02, 2.0)]
+	for pt: Vector3 in puntos:
+		var q := PrologoMentor.fuera_de_obstaculos(pt)
+		var dentro := false
+		for a: AABB in cajas:
+			var b := a.grow(0.2)
+			if q.x > b.position.x and q.x < b.end.x and q.z > b.position.z and q.z < b.end.z and q.y + 1.8 > b.position.y and q.y < b.end.y:
+				dentro = true
+		_comprobar(not dentro, "punto %s queda fuera de los obstáculos blandos" % str(pt))
+	var mp := p.mentor.position
+	_comprobar(PrologoMentor.fuera_de_obstaculos(mp).is_equal_approx(mp), "el mentor ya está colocado fuera de todo obstáculo")
+	p.queue_free()
+	PrologoDT.rapido = false
+	await get_tree().process_frame

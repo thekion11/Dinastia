@@ -129,3 +129,6 @@ Quaternius, CC0 1.0 (ver `License_Standard.txt` en esa carpeta). Campesino y Exp
 
 ## KayKit Adventurers y Skeletons — `assets/characters/kaykit/`
 Kay Lousberg (kaylousberg.com), CC0 (ver `LICENSE_*.txt`). 5 aventureros y 4 esqueletos, esqueleto propio de 41 huesos con 76 animaciones dentro de cada .glb. Fuera de LFS (OK del dueño, 2-11-2026), ~37 MB.
+
+## Ultimate Modular Men / Women — `assets/characters/modular/`
+Quaternius, CC0-1.0 (vía `trebeljahr/quaternius-showcase/LICENSES.md`). 21 civiles sin animaciones (~18 MB, sin texturas), esqueleto de 49-51 huesos; `visor/idle_procedural.gd` les da el reposo. Fuera de LFS (OK del dueño, 2-11-2026).
