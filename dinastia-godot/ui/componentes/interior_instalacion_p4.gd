@@ -148,7 +148,7 @@ func _camiseta(p: Vector3, giro: float, c1: Color, c2: Color, plegada: bool = fa
 ## Barra de ropa con camisetas colgadas, de `largo` m, mirando a `giro`.
 func _perchero(p: Vector3, giro: float, largo: float, c1: Color, c2: Color) -> void:
 	var lado := Vector3(cos(giro), 0, -sin(giro))
-	var metal := Mini3D.mat(Color(0.7, 0.72, 0.75), 0.25)
+	var metal := Mini3D.mat_unico(Color(0.7, 0.72, 0.75), 0.25)
 	metal.metallic = 0.8
 	for s: float in [-1.0, 1.0]:
 		Mini3D.cilindro(_raiz, p + lado * (s * largo * 0.5) + Vector3(0, 0.8, 0), 0.02, 1.6, metal)

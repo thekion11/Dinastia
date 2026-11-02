@@ -211,6 +211,30 @@ func _probar_arreglos_partido_motor() -> void:
 	Calidad.motor_ligero = true
 	_comprobar(not FestejoGrada.activo(), "festejo: apagado con el motor ligero")
 	Calidad.motor_ligero = ligero
+	## BANDERAS GRANDES (2-11-2026): el gol las lanza (antes no las llamaba nadie) y se cuelgan de la grada.
+	_comprobar(FileAccess.get_file_as_string("res://visor/festejo_grada.gd").contains("BanderasGrada.lanzar("), "festejo: el gol lanza las banderas grandes")
+	var raiz_b := Node3D.new()
+	add_child(raiz_b)
+	var ban := BanderasGrada.lanzar(raiz_b, Color.RED, Color.WHITE, [Vector3(30, 2, 0), Vector3(-30, 2, 8), Vector3(0, 2, 40), Vector3(0, 2, -40)], 8.0, 3)
+	_comprobar(ban != null and ban.get_child_count() == 3, "banderas: tres, con los colores del club (%d)" % (ban.get_child_count() if ban != null else -1))
+	raiz_b.queue_free()
+	## LA DECISIÓN DEL VAR (2-11-2026): vive en el núcleo, no gasta el azar de la partida y es repetible.
+	var azar_antes: int = Azar._rng.state
+	var adelantado := RevisionVAR.decidir(0.2, 0.9, 7)
+	var en_juego := RevisionVAR.decidir(-0.5, 0.9, 7)
+	_comprobar(bool(adelantado["revisa"]) and bool(adelantado["ajustado"]) and bool(adelantado["anula"]), "VAR: un gol ajustado con el goleador adelantado se revisa y se anula")
+	_comprobar(bool(en_juego["revisa"]) and bool(en_juego["ajustado"]) and not bool(en_juego["anula"]), "VAR: un gol ajustado en juego se revisa y se cuenta")
+	_comprobar(not bool(RevisionVAR.decidir(0.2, 1.0, 7)["revisa"]), "VAR: sin VAR en la liga no se revisa nada")
+	_comprobar(RevisionVAR.decidir(0.2, 0.9, 7) == adelantado and Azar._rng.state == azar_antes, "VAR: es repetible y no toca el azar de la partida")
+	var revisados := 0
+	var anulados := 0
+	for sem in 4000:
+		var d := RevisionVAR.decidir(-2.5, 0.9, sem)
+		if bool(d["revisa"]):
+			revisados += 1
+			anulados += 1 if bool(d["anula"]) else 0
+	_comprobar(revisados > 4000 * 0.06 and revisados < 4000 * 0.10 and float(anulados) / float(maxi(revisados, 1)) > 0.18 and float(anulados) / float(maxi(revisados, 1)) < 0.32,
+		"VAR: lejos de la línea solo se revisa ~8 %% (%d de 4000) y se anula ~1 de cada 4 (%d)" % [revisados, anulados])
 
 
 func _probar_transmision_y_estadisticas() -> void:

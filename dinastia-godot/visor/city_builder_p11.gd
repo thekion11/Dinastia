@@ -218,6 +218,8 @@ func build(d: Dictionary) -> void:
 		Optimizar.trocear(self)
 		Optimizar.butacas_livianas(self, true)
 		Optimizar.distancias(self)
+		if modo_prologo:
+			OptimizarGrada.limitar_vista(self, 380.0)   ## prólogo (2-11): nada pequeño se dibuja a más de 380 m
 		await _marca("despejar")
 		## (30-10-2026: aquí se repetían primitivas, butacas livianas y distancias -una copia de
 		## una fusión vieja-; la segunda pasada no cambiaba nada de la escena y costaba ~150 ms.)

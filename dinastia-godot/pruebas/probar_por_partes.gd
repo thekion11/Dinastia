@@ -7,11 +7,29 @@ extends Node
 ## Y por partes se cede de verdad: hay varios fotogramas por el medio (30-10-2026).
 
 var _fallos := 0
+var _cuadros := 0   ## cuadros vistos por la señal `process_frame` (Engine.get_process_frames() no avanza de forma fiable en headless: 2 esperas = 1)
+
+func _un_cuadro() -> void:
+	_cuadros += 1
+
+## Espera a que lo diferido (gente, tráfico) termine de crearse: el árbol no cambia durante 8 cuadros seguidos (tope 240).
+## Antes eran 10 cuadros fijos y, según la máquina, a veces no bastaban (el «dos armados dan lo mismo» oscilaba en el CI).
+func _esperar_estable(raiz: Node) -> void:
+	var antes := -1
+	var quietos := 0
+	for i in 240:
+		await get_tree().process_frame
+		var ahora := raiz.find_children("*", "", true, false).size()
+		quietos = quietos + 1 if ahora == antes else 0
+		antes = ahora
+		if quietos >= 8:
+			return
 
 func _ready() -> void:
 	_correr.call_deferred()
 
 func _correr() -> void:
+	get_tree().process_frame.connect(_un_cuadro)
 	var m := Mundo.new()
 	m.generar(["CHI"], 777)
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
@@ -22,13 +40,12 @@ func _correr() -> void:
 		var v := VistaEstadio.new()
 		v.por_partes = partes
 		add_child(v)
-		var f0 := Engine.get_process_frames()
+		var f0 := _cuadros
 		await v.abrir(c, 0.5, null, null, m.perfil_estadio_de(c))
-		var n := Engine.get_process_frames() - f0
+		var n := _cuadros - f0
 		_comprobar(not partes or n >= 3, "estadio por partes cede fotogramas (%d)" % n)
 		_comprobar(v.process_mode == Node.PROCESS_MODE_INHERIT, "estadio vuelve a procesar")
-		for i in 10:
-			await get_tree().process_frame
+		await _esperar_estable(v)
 		huellas["estadio%s" % partes] = huellas.get("estadio%s" % partes, []) + [_huella(v)]
 		v.free()
 	for partes: bool in [false, true, false]:
@@ -36,12 +53,11 @@ func _correr() -> void:
 		var vc := VistaCiudad.new()
 		vc.por_partes = partes
 		add_child(vc)
-		var f1 := Engine.get_process_frames()
+		var f1 := _cuadros
 		await vc.abrir(c, m.obras, m.ciudad, m.perfil_estadio_de(c))
-		var n2 := Engine.get_process_frames() - f1
+		var n2 := _cuadros - f1
 		_comprobar(not partes or n2 >= 3, "ciudad por partes cede fotogramas (%d)" % n2)
-		for i in 10:   ## lo que se crea diferido (gente, tráfico) en los dos modos
-			await get_tree().process_frame
+		await _esperar_estable(vc)   ## lo que se crea diferido (gente, tráfico) en los dos modos
 		huellas["ciudad%s" % partes] = huellas.get("ciudad%s" % partes, []) + [_huella(vc)]
 		vc.free()
 	for que in ["estadio", "ciudad"]:

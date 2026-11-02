@@ -59,7 +59,7 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     butacas por nivel según el color del club (y elegible en la personalización del menú inicial).
 14. (27-10 tarde, decisiones del dueño) SÍ a clasificar las ~1.200 ideas (lanzamiento / después / descartar). `main` limpio y las
     ramas viejas: el dueño dice que ya lo hizo (verificar). PANTALLA DE ENTRADA nueva: APROBADA. «EL BLOQUEO» de modos: ACEPTADO
-    (opción en Ajustes). Las 53 escenas de prueba sin mención: ver qué se puede REUTILIZAR antes de borrar. PEATONES: SÍ suben al
+    (opción en Ajustes). Escenas de prueba sin mención: reutilizadas las 62 que pasan (bloque «reutilizadas» de `especiales.sh`, 2-11); capturas, diagnósticos y vídeos se quedan; no borrar nada sin decirlo. PEATONES: SÍ suben al
     bus y a los demás transportes. DIFICULTAD DE LA CPU en 8 categorías: Practicante, Cadete, DEBUTANTE (la normal), Semiprofesional,
     Profesional, Experto, Maestro, Ultimate; y además dificultades fuera del partido (eventos, probabilidades, retos, poca ayuda,
     asistentes deficientes, malos consejos y otras). POLICÍA Y BOMBEROS: sí. MUSEO: mejorarlo más y poder INTERACTUAR con los
