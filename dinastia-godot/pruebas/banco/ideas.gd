@@ -376,3 +376,13 @@ func _probar_filtros_plantel() -> void:
 	var bajas := c.plantilla.filter(func(j: Jugador) -> bool: return j.lesion > 0 or j.suspension > 0).size()
 	_comprobar(filas == bajas, "con «Bajas» la lista enseña solo las %d bajas (%d filas)" % [bajas, filas])
 	lista.queue_free()
+	## M-295: el historial guarda el valor y la ficha lo dibuja.
+	var jh: Jugador = c.plantilla[2]
+	jh.historial.clear()
+	jh.registrar_temporada(2026, c.nombre)
+	jh.registrar_temporada(2027, c.nombre)
+	var gr := GraficoEvolucion.de(jh.historial, {"escala": 1.0})
+	gr.size = Vector2(300, 90)
+	_comprobar(int(jh.historial[0].get("val", -1)) == jh.valor and gr._get_tooltip(Vector2(0, 0)).contains("2026"),
+		"el historial guarda el valor y el gráfico de la ficha lo enseña al pasar el ratón")
+	gr.free()
