@@ -125,6 +125,7 @@ func _process(_d: float) -> void:
 ## el nombre del nodo padre. Sirve para elegir dónde atacar.
 func _detalle() -> void:
 	var grupos := {}
+	var ejemplos := {}
 	for n in _v.find_children("*", "GeometryInstance3D", true, false):
 		var g := n as GeometryInstance3D
 		if not g.is_visible_in_tree() or g.visibility_range_end > 0.0:
@@ -258,6 +259,7 @@ func _detalle_a_pie() -> void:
 	if cam == null:
 		return
 	var grupos := {}
+	var ejemplos := {}
 	for n in _v.find_children("*", "GeometryInstance3D", true, false):
 		var g := n as GeometryInstance3D
 		if not g.is_visible_in_tree():
@@ -275,6 +277,15 @@ func _detalle_a_pie() -> void:
 			clave = (a.get_class() if nom.begins_with("@") else nom.rstrip("0123456789_")) + "/" + clave
 			a = a.get_parent()
 		grupos[clave] = int(grupos.get(clave, 0)) + 1
+		if not ejemplos.has(clave):
+			var sc := ""
+			var q2: Node = g.get_parent()
+			while q2 != null and q2 != _v:
+				if q2.get_script() != null:
+					sc = String((q2.get_script() as Script).resource_path).get_file()
+					break
+				q2 = q2.get_parent()
+			ejemplos[clave] = "%s malla=%s script=%s pos=%s" % [g.name, g.get("mesh").get_class() if g.get("mesh") != null else "-", sc, g.global_position.round()]
 		## El primer grupo de Godot hacia arriba: lo que impide a `agrupar` juntarla.
 		var q: Node = g
 		while q != null and q != _v:
@@ -286,7 +297,7 @@ func _detalle_a_pie() -> void:
 	var orden := grupos.keys()
 	orden.sort_custom(func(x, y): return grupos[x] > grupos[y])
 	for k in orden.slice(0, 30):
-		print("A_PIE ", grupos[k], "  ", k)
+		print("A_PIE ", grupos[k], "  ", k, "  ej: ", ejemplos.get(k, ""))
 	for m in Optimizar._motivos:
 		print("MOTIVO ", Optimizar._motivos[m], "  ", m)
 

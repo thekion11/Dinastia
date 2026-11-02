@@ -147,7 +147,7 @@ func _trafico() -> void:
 		## puede tener las calles igual de vacías que una de tercera.
 		var por_sentido: int = int(round(lerpf(4.0, 10.0, _empuje_club())))
 		for i in range(por_sentido):
-			var nodo: Node3D = instanciar_coche(coches[rng.randi() % coches.size()], rng)
+			var nodo: Node3D = instanciar_trafico(coches[rng.randi() % coches.size()], rng)
 			## Giro 0: `instanciar_coche` ya deja el morro en +Z (ver arriba).
 			t.agregar_vehiculo(nodo, id, rng.randf() * 1800.0,
 				rng.randf_range(13.0, 22.0), 0.0, 0.0)
@@ -168,7 +168,7 @@ func _trafico() -> void:
 		if coches.is_empty():
 			continue
 		for i in range(int(round(lerpf(3.0, 7.0, _empuje_club())))):
-			var n_ex: Node3D = instanciar_coche(coches[rng.randi() % coches.size()], rng)
+			var n_ex: Node3D = instanciar_trafico(coches[rng.randi() % coches.size()], rng)
 			t.agregar_vehiculo(n_ex, id_ex, rng.randf() * 2200.0,
 				rng.randf_range(15.0, 24.0), 0.0, 0.0)
 		## Los autobuses del anillo (la vieja línea 5 amarilla) ya no van aquí (28-10-2026): las cuatro marquesinas del anillo son
@@ -193,7 +193,7 @@ func _trafico() -> void:
 		if coches.is_empty():
 			continue
 		for i in range(int(tramo["n"])):
-			var nodo2: Node3D = instanciar_coche(coches[rng.randi() % coches.size()], rng)
+			var nodo2: Node3D = instanciar_trafico(coches[rng.randi() % coches.size()], rng)
 			t.agregar_vehiculo(nodo2, id2, rng.randf() * 600.0,
 				rng.randf_range(9.0, 15.0), 0.0, 0.0)
 
