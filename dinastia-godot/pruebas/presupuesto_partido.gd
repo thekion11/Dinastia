@@ -12,8 +12,8 @@ const PRESUPUESTO := {
 	"total": [1948324, 1408], "jugadores": [82076, 76], "publico": [884967, 53], "butacas": [724487, 14], "estadio": [1778760, 372],
 	"entorno": [159157, 943], "extras": [8000, 83], "cesped": [50, 10], "balon": [50, 4],
 }
-## Techo de memoria de vídeo del partido (M-347), en MB: medido 309 en 28-10 (eran 603 antes de compartir y reducir los ruidos).
-const TECHO_VRAM_MB := 380.0
+## Techo de memoria de vídeo del partido (M-347), en MB: medido 253 en 2-11 (309 en 28-10; 603 antes de compartir y reducir los ruidos).
+const TECHO_VRAM_MB := 300.0
 const CATEGORIAS := ["jugadores", "publico", "butacas", "estadio", "entorno", "extras", "cesped", "balon"]
 var _n := 0
 var _ui: CarreraJugadorUI

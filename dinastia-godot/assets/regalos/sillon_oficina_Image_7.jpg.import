@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://s8urgvg1d1y4"
-path="res://.godot/imported/sillon_oficina_Image_7.jpg-c38377b1e0c20f257dd20dc18cae16d4.ctex"
+path.s3tc="res://.godot/imported/sillon_oficina_Image_7.jpg-c38377b1e0c20f257dd20dc18cae16d4.s3tc.ctex"
+path.etc2="res://.godot/imported/sillon_oficina_Image_7.jpg-c38377b1e0c20f257dd20dc18cae16d4.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "5cbfeaa88c1089a21fc50acc09dc9df0"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/regalos/sillon_oficina_Image_7.jpg"
-dest_files=["res://.godot/imported/sillon_oficina_Image_7.jpg-c38377b1e0c20f257dd20dc18cae16d4.ctex"]
+dest_files=["res://.godot/imported/sillon_oficina_Image_7.jpg-c38377b1e0c20f257dd20dc18cae16d4.s3tc.ctex", "res://.godot/imported/sillon_oficina_Image_7.jpg-c38377b1e0c20f257dd20dc18cae16d4.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
