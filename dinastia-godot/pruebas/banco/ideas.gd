@@ -410,3 +410,20 @@ func _probar_compara_clubes() -> void:
 	_comprobar(vacio.get_child_count() == 0, "contigo mismo no hay comparación")
 	vacio.free()
 	caja.queue_free()
+
+## M-312 (2-11-2026): el modo streamer quita las fotos reales sin tocar la preferencia de caras.
+func _probar_modo_streamer() -> void:
+	_titulo("MODO STREAMER (M-312)")
+	var antes_f := Cara.usar_fotos
+	var antes_s := Cara.modo_streamer
+	Cara.usar_fotos = true
+	Cara.modo_streamer = false
+	_comprobar(Cara.fotos_permitidas(), "sin modo streamer, la preferencia FOTO manda")
+	Cara.modo_streamer = true
+	_comprobar(not Cara.fotos_permitidas() and Cara.usar_fotos, "con modo streamer no hay fotos, y la preferencia sigue en FOTO")
+	var j := Jugador.new()
+	j.real = true
+	j.nombre = "Alguien Real"
+	_comprobar(Cara.foto_real(j) == null and Cara.ruta_foto(j) == "", "ni foto ni ruta de un jugador real")
+	Cara.usar_fotos = antes_f
+	Cara.modo_streamer = antes_s

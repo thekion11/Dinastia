@@ -7004,7 +7004,9 @@
   "TU CLUB FRENTE A %s": "YOUR CLUB VS %s",
   "Media del mejor once": "Best XI rating",
   "Media de la plantilla": "Squad rating",
-  "Sueldos por semana": "Wages per week"
+  "Sueldos por semana": "Wages per week",
+  "Modo streamer": "Streamer mode",
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "For streaming or recording: real-database faces always show as recreations, never the photo, without changing your face setting."
  },
  "pt": {
   "Historia": "História",
@@ -14011,7 +14013,9 @@
   "TU CLUB FRENTE A %s": "SEU CLUBE CONTRA %s",
   "Media del mejor once": "Média do melhor time",
   "Media de la plantilla": "Média do elenco",
-  "Sueldos por semana": "Salários por semana"
+  "Sueldos por semana": "Salários por semana",
+  "Modo streamer": "Modo streamer",
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Para transmitir ou gravar: os rostos da base real aparecem sempre recriados, nunca a foto, sem mudar seu ajuste de rostos."
  },
  "patrones": [
   [
@@ -26795,7 +26799,9 @@
   "TU CLUB FRENTE A %s": "VOTRE CLUB FACE À %s",
   "Media del mejor once": "Note du meilleur onze",
   "Media de la plantilla": "Note de l'effectif",
-  "Sueldos por semana": "Salaires par semaine"
+  "Sueldos por semana": "Salaires par semaine",
+  "Modo streamer": "Mode streamer",
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Pour diffuser ou enregistrer : les visages de la base réelle sont toujours recréés, jamais la photo, sans changer votre réglage des visages."
  },
  "it": {
   "Historia": "Storia",
@@ -33802,7 +33808,9 @@
   "TU CLUB FRENTE A %s": "IL TUO CLUB CONTRO %s",
   "Media del mejor once": "Media del miglior undici",
   "Media de la plantilla": "Media della rosa",
-  "Sueldos por semana": "Stipendi a settimana"
+  "Sueldos por semana": "Stipendi a settimana",
+  "Modo streamer": "Modalità streamer",
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Per trasmettere o registrare: i volti della base reale si vedono sempre ricreati, mai la foto, senza cambiare la tua impostazione."
  },
  "de": {
   "Historia": "Geschichte",
@@ -40809,7 +40817,9 @@
   "TU CLUB FRENTE A %s": "DEIN VEREIN GEGEN %s",
   "Media del mejor once": "Wertung der besten Elf",
   "Media de la plantilla": "Kaderwertung",
-  "Sueldos por semana": "Gehälter pro Woche"
+  "Sueldos por semana": "Gehälter pro Woche",
+  "Modo streamer": "Streamer-Modus",
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Zum Streamen oder Aufnehmen: Gesichter der echten Datenbank erscheinen immer nachgebildet, nie als Foto, ohne deine Gesichtseinstellung zu ändern."
  },
  "ca": {
   "Historia": "Història",
@@ -47816,7 +47826,9 @@
   "TU CLUB FRENTE A %s": "EL TEU CLUB DAVANT %s",
   "Media del mejor once": "Mitjana del millor onze",
   "Media de la plantilla": "Mitjana de la plantilla",
-  "Sueldos por semana": "Sous per setmana"
+  "Sueldos por semana": "Sous per setmana",
+  "Modo streamer": "Mode streamer",
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Per emetre o gravar: les cares de la base real es veuen sempre recreades, mai la foto, sense canviar el teu ajust de cares."
  },
  "pl": {
   "Club": "Klub",
@@ -55099,7 +55111,9 @@
   "TU CLUB FRENTE A %s": "TWÓJ KLUB KONTRA %s",
   "Media del mejor once": "Ocena najlepszej jedenastki",
   "Media de la plantilla": "Ocena kadry",
-  "Sueldos por semana": "Pensje tygodniowo"
+  "Sueldos por semana": "Pensje tygodniowo",
+  "Modo streamer": "Tryb streamera",
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Do streamowania i nagrywania: twarze z prawdziwej bazy zawsze jako rekonstrukcja, nigdy zdjęcie, bez zmiany twojego ustawienia twarzy."
  },
  "tr": {
   "Club": "Kulüp",
@@ -62382,6 +62396,8 @@
   "TU CLUB FRENTE A %s": "KULÜBÜN VE %s",
   "Media del mejor once": "En iyi 11'in reytingi",
   "Media de la plantilla": "Kadro reytingi",
-  "Sueldos por semana": "Haftalık maaşlar"
+  "Sueldos por semana": "Haftalık maaşlar",
+  "Modo streamer": "Yayıncı modu",
+  "Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.": "Yayın veya kayıt için: gerçek veritabanının yüzleri her zaman yeniden çizilmiş görünür, asla fotoğraf değil; yüz ayarın değişmez."
  }
 }

@@ -679,7 +679,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-285 | P2 | PARCIAL | Navegación por mando en menús | 2-11: con mando, la primera tarjeta de cada menú toma el foco y la cruceta recorre las tarjetas (`PantallaMenu.portada`); el panel de controles ya lo hacía; faltan las listas de las pantallas de gestión (foco inicial y orden de tabulación) |
 | M-287 | P2 | PENDIENTE | Rendimiento de menús: refresco ya 14× más rápido; sin pruebas de… | sin medida de apertura de pantallas |
 | M-304 | P2 | PARCIAL | Animaciones de transición entre pantallas desiguales | `Animar` en 16 archivos; sin sistema común de transición |
-| M-312 | P2 | PARCIAL | Sin modo «streamer» (ocultar datos sensibles/real) | ajuste «Caras reales: FOTO / RECREACIÓN» (`Cara.usar_fotos`); sin modo streamer |
 | M-435 | P2 | PENDIENTE | Sin gatillos analógicos para potencia de pase | sin gatillos analógicos |
 | M-436 | P2 | PENDIENTE | Sin giroscopio para cámara en primera persona (móvil) | sin giroscopio |
 | M-438 | P2 | PENDIENTE | UI de móvil: botones pequeños. Medido el 27-10: un botón de 32 px en un teléfono apaisado (~68 mm de alto, 720 px lógicos) mide ~3 mm; al zoom máximo (140 %) ~4,2 mm; Android pide ~7,6 mm (48 dp). No se arregla con escala: a ×1,8 las pantallas de 1280 × 720 no caben. Propuesta: modo móvil con una columna (lista lateral → pestañas), botones de 64 px y el zoom por defecto a 120 % al primer arranque en móvil. Necesita probarse en un teléfono (dueño). | sin tamaño mínimo |

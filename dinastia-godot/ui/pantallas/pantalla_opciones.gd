@@ -133,6 +133,22 @@ func _pintar_dispositivo() -> void:
 			p._guardar_preferencias()
 			p._refrescar())
 		fila_cf.add_child(b_cf)
+		## M-312: modo streamer, para emitir sin fotos de personas reales.
+		var fila_st := HBoxContainer.new()
+		fila_st.add_theme_constant_override("separation", 8)
+		p._lista_ajustes.add_child(fila_st)
+		var et_st := p._texto(12, Principal.COL_TEXTO)
+		et_st.text = Idiomas.t("Modo streamer")
+		et_st.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		et_st.tooltip_text = Idiomas.t("Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.")
+		fila_st.add_child(et_st)
+		var b_st := Button.new()
+		b_st.text = Idiomas.t("SÍ") if Cara.modo_streamer else Idiomas.t("NO")
+		b_st.pressed.connect(func() -> void:
+			Cara.modo_streamer = not Cara.modo_streamer
+			p._guardar_preferencias()
+			p._refrescar())
+		fila_st.add_child(b_st)
 
 	## CONTROLES DEL PARTIDO (14-10-2026): teclas, mando y ayudas, los mismos
 	## que se abren desde el ⚙ del estadio y la pausa de la Carrera de Jugador.
