@@ -1,0 +1,95 @@
+#include "bluntmath.hpp"
+
+#include <cmath>
+#include <random>
+
+namespace blunted {
+
+unsigned int fastrandseed;
+unsigned int max_uint;
+
+std::mutex randMutex;
+
+std::mt19937 rng_engine;
+std::uniform_real_distribution<float> rng_dist(0.0f, 1.0f);
+
+real clamp(const real value, const real min, const real max) {
+  assert(max >= min);
+  if (min > value)
+    return min;
+  if (max < value)
+    return max;
+  return value;
+}
+
+real NormalizedClamp(const real value, const real min, const real max) {
+  assert(max > min);
+  real banana = clamp(value, min, max);
+  banana = (banana - min) / (max - min);
+  return banana;
+}
+
+real invsqrt(real fvalue) {
+  return 1.0f / std::sqrt(fvalue);
+}
+
+float dot_product(real v1[3], real v2[3]) {
+  return (v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]);
+}
+
+void normalize(real v[3]) {
+  real f = 1.0f / sqrt(dot_product(v, v));
+
+  v[0] *= f;
+  v[1] *= f;
+  v[2] *= f;
+}
+
+bool sign(real n) {
+  return n >= 0;
+}
+
+signed int signSide(real n) {
+  return n >= 0 ? 1 : -1;
+}
+
+bool is_odd(int n) {
+  return n & 1;
+}
+
+void randomseed() {
+  rng_engine.seed(static_cast<unsigned int>(std::time(0)));
+}
+
+inline real boostrandom() {
+  return rng_dist(rng_engine);
+}
+
+real random(real min, real max) {
+  float stretch = max - min;
+
+  randMutex.lock();
+  real value = min + (boostrandom() * stretch);
+  randMutex.unlock();
+  return value;
+}
+
+int pot(int x) {
+  int val = 1;
+  while (val < x) {
+    val *= 2;
+  }
+  return val;
+}
+
+real ModulateIntoRange(real min, real max, real value) {
+  real step = max - min;
+  real newValue = value;
+  while (newValue < min)
+    newValue += step;
+  while (newValue > max)
+    newValue -= step;
+  return newValue;
+}
+
+}  // namespace blunted

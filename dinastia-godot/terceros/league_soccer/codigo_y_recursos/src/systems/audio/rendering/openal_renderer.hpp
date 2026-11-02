@@ -1,0 +1,54 @@
+#ifndef _HPP_AUDIO_OPENAL
+#define _HPP_AUDIO_OPENAL
+
+#include "interface_audiorenderer.hpp"
+
+#if defined(__has_include)
+#if __has_include(<OpenAL/al.h>)
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+#elif __has_include(<AL/al.h>)
+#include <AL/al.h>
+#include <AL/alc.h>
+#endif
+#elif defined(__APPLE__)
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+#else
+#include <AL/al.h>
+#include <AL/alc.h>
+#endif
+
+namespace blunted {
+
+class OpenALRenderer : public AudioRenderer {
+public:
+  OpenALRenderer();
+  virtual ~OpenALRenderer();
+
+  // init & exit
+  virtual bool CreateContext();
+  virtual void Exit();
+
+  virtual int CreateAudioSoundBuffer(const WavData* wavData);
+  virtual void DeleteAudioSoundBuffer(int audioSoundBufferID);
+  virtual void PlayAudioSoundBuffer(int audioSoundBufferID);
+
+  virtual void SetListenerParameters(const Vector3& position, const Vector3& velocity,
+                                     const Quaternion& orientation);
+
+  virtual void SetSourceParameter(int audioSoundBufferID, e_AudioRenderer_SourceParameter parameter,
+                                  float value);
+  virtual void SetSourcePosition(int audioSoundBufferID, const Vector3& position);
+
+  void operator()();
+
+protected:
+  ALCcontext* context;
+
+  std::map<ALuint, ALuint> bufferSourceMapping;
+};
+
+}  // namespace blunted
+
+#endif

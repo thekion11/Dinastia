@@ -1,0 +1,67 @@
+#ifndef _HPP_MENU_GAMEPLAN
+#define _HPP_MENU_GAMEPLAN
+
+#include <memory>
+
+#include "../data/teamdata.hpp"
+#include "../onthepitch/match.hpp"
+#include "utils/database.hpp"
+#include "utils/gui2/page.hpp"
+#include "utils/gui2/widgets/button.hpp"
+#include "utils/gui2/widgets/frame.hpp"
+#include "utils/gui2/widgets/grid.hpp"
+#include "utils/gui2/widgets/image.hpp"
+#include "utils/gui2/widgets/root.hpp"
+#include "utils/gui2/widgets/slider.hpp"
+#include "utils/gui2/windowmanager.hpp"
+#include "widgets/gameplansubmenu.hpp"
+#include "widgets/planmap.hpp"
+
+using namespace blunted;
+
+struct TacticsSlider {
+  int id;
+  Gui2Slider* widget;
+  std::string tacticName;
+};
+
+class GamePlanPage : public Gui2Page {
+public:
+  GamePlanPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~GamePlanPage();
+
+  void OnClose();
+
+  virtual void Deactivate();
+  virtual void Reactivate();
+
+  Vector3 GetButtonColor(int id);
+
+  void GoLineupMenu();
+  void LineupMenuOnClick(Gui2Button* button);
+  void SaveLineup();
+
+  void GoTacticsMenu();
+  void TacticsMenuOnChange(Gui2Slider* slider, int id);
+  void SaveTactics();
+
+protected:
+  int teamID;
+
+  Gui2PlanMap* map;
+  Gui2Grid* grid;
+  Gui2Grid* gridNav;
+  Gui2Button* buttonLineup;
+  Gui2Button* buttonTactics;
+
+  TeamData* teamData;
+
+  GamePlanSubMenu* lineupMenu;
+  GamePlanSubMenu* tacticsMenu;
+
+  std::vector<TacticsSlider> tacticsSliders;
+
+  std::unique_ptr<Database> namedb;
+};
+
+#endif

@@ -143,6 +143,12 @@ func _paradas(motor: MotorJugable, gk: Dictionary, guia: float) -> int:
 		_tiro(motor, gk, -38.5)
 		var antes := int(motor.stats["paradas"])
 		motor._reaccion_portero(gk, true, guia)
+		## La parada se hace cuando el balón LLEGA (`MotorParada`, 01-11): se lo deja viajar hasta el portero.
+		for _k in 60:
+			if int(motor.stats["paradas"]) > antes or not gk.has("parada_pend"):
+				break
+			motor.balon.position += motor.vel_balon / 30.0
+			MotorParada.revisar(motor, gk)
 		if int(motor.stats["paradas"]) > antes:
 			n += 1
 	return n

@@ -81,9 +81,11 @@ func _editor(m: Mundo, mio: Club) -> void:
 	## Como si la pestaña Editor estuviera a la vista (sin ventana, el repintado
 	## se aplazaría con `_perezoso` y no habría nada que comprobar).
 	_p.set("pintar_todo", true)
-	_p.set("_ed_club", mio.id)
-	_p.set("_ed_jugador", j.id)
-	_p.get("_ui_editor").call("_pintar_editor")
+	## (01-11) `_ed_club` y `_ed_jugador` se mudaron de `Principal` a `PantallaEditor` (fase 6): se fijan allí.
+	var ed: Object = _p.get("_ui_editor")
+	ed.set("_ed_club", mio.id)
+	ed.set("_ed_jugador", j.id)
+	ed.call("_pintar_editor")
 	var lista: Control = _p.get("_lista_editor")
 	## «Victoria:» y su desplegable en la misma caja.
 	var juntos := false

@@ -184,6 +184,9 @@ func _cobrar_la_jornada(c: Club, f: Finanzas, jugaron_en_casa: Dictionary) -> vo
 		f_publico *= Calendario.factor_publico(c.pais, anio, semana)
 		if maestria != null:
 			f_publico *= maestria.factor_publico()
+		if en_casa and jugaron_en_casa.has(c.id):   ## el clima del partido también vacía la grada (01-11, idea 251)
+			f_publico *= Clima.factor_publico(Clima.del_partido(c.pais, semana, anio, c.id + (jugaron_en_casa[c.id] as Club).id),
+				comercial != null and comercial.nivel_premium("techo") > 0)
 	f.semana(en_casa, false, f_publico)
 	## EL PLUS DE LA TELEVISION POR EL HORARIO. Un lunes por la noche no va
 	## nadie al estadio y paga mucho mas la television: sin este cobro, elegir

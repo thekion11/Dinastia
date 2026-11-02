@@ -1,0 +1,18 @@
+Ajax|circulo|aro|AFC|franja_central|#ffffff|#d2122e|#ffffff|#ffffff|#ffffff|#d2122e
+PSV|escudo|franjas|PSV|franjas|#ed1c24|#ffffff|#000000|#ed1c24
+Feyenoord|escudo|tercios_v|FEY|mitad|#e30613|#ffffff|#000000|#000000|#e30613|#ffffff
+AZ Alkmaar|circulo|liso|AZ|liso|#d50032|#ffffff|#ffffff|#d50032
+Twente|escudo|liso|FCT|liso|#e3001b|#ffffff|#ffffff|#e3001b
+Utrecht|escudo|liso|FCU|liso|#d50032|#ffffff|#ffffff|#d50032
+Heerenveen|escudo|franjas|SCH|franjas|#0057b8|#ffffff|#ffffff|#0057b8
+Groningen|circulo|liso|FCG|mangas_contraste|#00843d|#ffffff|#ffffff|#00843d
+NEC|escudo|tercios_v|NEC|franjas|#d50032|#00843d|#000000|#000000|#d50032|#00843d|||||#000000
+PEC Zwolle|escudo|franjas|PEC|franjas|#0057b8|#ffffff|#ffffff|#0057b8
+NAC Breda|circulo|liso|NAC|liso|#ffd100|#000000|#000000|#ffd100
+Fortuna Sittard|circulo|liso|FSI|liso|#ffd100|#00843d|#00843d|#ffd100
+Go Ahead Eagles|clasico|tercios_v|GAE|mitad|#e30613|#ffd100|#e30613|#e30613
+Sparta Rotterdam|escudo|franjas|SPA|franjas|#d50032|#ffffff|#000000|#000000
+Heracles|escudo|franjas|HAC|franjas|#000000|#ffffff|#000000|#000000
+Volendam|circulo|liso|FCV|liso|#f58220|#ffffff|#ffffff|#f58220
+Excelsior|escudo|franjas|EXC|franjas|#d50032|#000000|#000000|#000000
+Telstar|circulo|liso|TEL|liso|#ffffff|#0057b8|#ffffff|#ffffff

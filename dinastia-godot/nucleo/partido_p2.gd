@@ -154,14 +154,14 @@ func _aplicar_plan() -> void:
 		var mia: int = goles_local if c == local else goles_visita
 		var suya: int = goles_visita if c == local else goles_local
 		var cambio: Dictionary = c.tactica.plan_para(mia - suya)
+		if cambio.is_empty() and c.id != ctx_club_id:   ## la IA también reacciona (01-11, idea 378): perdiendo se vuelca; ganando, el débil se cierra
+			cambio = Tactica.cambio_de("ofensivo" if mia < suya else ("cerrojo" if mia > suya and c.rep < (visita if c == local else local).rep else ""))
 		if cambio.is_empty():
 			continue
-		## Se apunta la táctica de antes para devolverla al final
-		## (`_devolver_tactica`): el plan es de ESTE partido, no una orden
-		## permanente. Antes se quedaba escrita en `club.tactica` para siempre.
+		## Se apunta la táctica de antes para devolverla al final (`_devolver_tactica`): el plan es de ESTE partido.
 		if not tactica_previa.has(c.id):
 			tactica_previa[c.id] = {"mentalidad": c.tactica.mentalidad, "linea": c.tactica.linea}
-		plan_activado[c.id] = c.tactica.clave_plan(mia - suya)
+		plan_activado[c.id] = c.tactica.clave_plan(mia - suya) if c.tactica.clave_plan(mia - suya) != "" else ("perdiendo:ofensivo" if mia < suya else "ganando:cerrojo")
 		c.tactica.mentalidad = int(cambio["mentalidad"])
 		c.tactica.linea = int(cambio["linea"])
 		## Cambiar la táctica invalida la fuerza cacheada: sin esto el cambio se
@@ -414,12 +414,12 @@ func _atacar(c: Club, once: Array[Jugador], es_local: bool) -> void:
 ## Tarjetas y lesiones. Las probabilidades por minuto salen de las del HTML
 ## repartidas sobre los 90: ~2,8 amarillas y ~0,2 lesiones por partido.
 func _incidencias() -> void:
-	## EL VAR RECORTA LAS TARJETAS. `Federacion.factor_tarjetas()` devolvia un 0,5
-	## que no leia nadie: la asamblea podia votar el videoarbitraje y en el campo
-	## se sacaban exactamente las mismas amarillas. Con video se protesta menos y
-	## se inventan menos faltas, que es justo lo que el HTML llamaba `_fVAR`.
-	if Azar.suerte(0.031 * ctx_factor_tarjetas) and not motor_externo:
-		var l := _alguien(_todos)
+	## EL VAR RECORTA LAS TARJETAS (`Federacion.factor_tarjetas()`, el `_fVAR` del HTML: con vídeo se protesta e inventa menos).
+	## EL PERFIL DEL ÁRBITRO SE NOTA (01-11, verificación 801): su chequeo propio apenas sumaba 0,1 tarjetas por partido; ahora
+	## pesa en la tasa normal y el casero carga las tarjetas al que visita.
+	var casero := String(arbitro.get("perfil", "")) == "casero"
+	if Azar.suerte(0.031 * ctx_factor_tarjetas * float({"tarjetero": 1.4, "estricto": 1.15, "permisivo": 0.7}.get(String(arbitro.get("perfil", "")), 1.0))) and not motor_externo:
+		var l := _alguien(once_visita if casero and Azar.suerte(0.35) else _todos)
 		if l != null:
 			l.amarillas += 1
 			var roja := l.amarillas % 2 == 0 and Azar.suerte(0.18)

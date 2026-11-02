@@ -250,8 +250,7 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 	## en el choque o el agarrón la víctima cae o pierde el balón.)
 	if motivo == "" and not con_tarjeta and not en_area and not _falta_tactica and poseedor == victima \
 			and lugar.z * dir_ataque(atacante_local) > 4.0 and _rng.randf() < 0.35:
-		aviso.emit("Ventaja")
-		_gesto_arbitro("arbitro_ventaja", 0.0, 1.6, {"mira": lugar})
+		MotorVentaja.dar(self as Object as MotorJugable, lugar, atacante_local, nombre)   ## y si pierde el balón, vuelve a la falta (R1, 01-11)
 		return true
 	_gesto_arbitro("arbitro_silbato", 0.0, 0.9, {"mira": lugar})
 	var tras := 0.8
@@ -292,15 +291,21 @@ func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, mo
 		_empezar_saque("falta", atacante_local, Vector3(lugar.x, R, lugar.z))
 	return true
 
-## Cae por una falta (31-10): la caída entera, un momento en el suelo y se LEVANTA con el clip de la UAL2 (antes la caída se
-## cortaba a 1,2 s y se ponía a correr de golpe). Mientras, no se mueve (`levanta_hasta`). Cae de ESPALDAS («caida_lesion»):
-## «caida_fea» acaba boca abajo y el clip de levantarse empieza boca arriba (se daba la vuelta de golpe; tira de fotogramas).
+## Cae por una falta (31-10): cae, se queda en el suelo y se LEVANTA (`levantar_con`), sin moverse (`levanta_hasta`). De espaldas
+## («caida_lesion»: «caida_fea» acaba boca abajo y el levantarse empieza boca arriba); a la carrera (> 4 m/s, 01-11) el TROPIEZO de League-Soccer y su levantarse desde boca abajo.
 func _caer(p: Dictionary) -> void:
 	var ap: AnimationPlayer = p.get("anim")
+	if is_instance_valid(ap) and (p["vel"] as Vector3).length() > 4.0 and ap.has_animation("tropiezo") and ap.has_animation("levantarse_boca_abajo"):
+		_anim(p, "tropiezo", true, 1.9)
+		p["levantar_con"] = "levantarse_boca_abajo"
+		p["levantar_en"] = t + 1.6
+		p["levanta_hasta"] = t + 3.4
+		return
 	if not (is_instance_valid(ap) and ap.has_animation("caida_lesion") and AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(p["node"]), "levantarse_suelo")):
 		_anim(p, "caida_fea", true, 1.2)
 		return
 	_anim(p, "caida_lesion", true, 1.9)
+	p["levantar_con"] = "levantarse_suelo"
 	p["levantar_en"] = t + 1.9
 	p["levanta_hasta"] = t + 3.3
 
