@@ -4,12 +4,12 @@ extends RefCounted
 ## donde está la señal (`RecorridosRed.sector_de`): 40 km/h en el barrio del club (estadio, colegios), 50 en el centro, el este, el sur y el oeste y 60 en la periferia.
 ## En los cruces con semáforo, cada `CADA` uno lleva una señal por eje en la acera, mirando al tráfico que llega. Si el DT conduce por encima del límite + `MARGEN`
 ## km/h con la policía a la vista, le multan (`ServiciosVida.vigilar`); una vez cada `ENFRIA` s. Las cifras se dibujan con una tipografía de píxeles 3 × 5 en una textura
-## por valor (sin Label3D): un solo MultiMesh de discos y otro de postes, visibles a menos de `ALCANCE` m.
+## por valor (sin Label3D): un solo MultiMesh de discos y otro de postes,.
 const LIMITES := {100: 40, 200: 50, 300: 50, 400: 50, 500: 50, 600: 60}
 const MARGEN := 20.0    ## km/h por encima del límite que ya se multa
 const ENFRIA := 30.0    ## s entre dos multas por exceso
 const CADA := 4         ## un cruce de cada 4 lleva señales
-const ALCANCE := 110.0
+
 
 ## Cifras 3 × 5 (una cadena de 15 caracteres por cifra, fila a fila).
 const CIFRAS := {"0": "111101101101111", "1": "010110010010111", "2": "111001111100111", "3": "111001111001111", "4": "101101111001001",
@@ -96,6 +96,5 @@ static func _mm(padre: Node3D, malla: Mesh, mat: Material, ts: Array[Transform3D
 	var mi := MultiMeshInstance3D.new()
 	mi.multimesh = mm
 	mi.material_override = mat
-	mi.visibility_range_end = ALCANCE
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	padre.add_child(mi)
