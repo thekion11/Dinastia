@@ -92,6 +92,12 @@ var _ida := -1.0
 func _gesto() -> void:
 	if _ap == null:
 		return
+	if en_sitio and _ap.has_animation("parado"):
+		## En la configuración del club: de pie y quieta (los gestos con los brazos en alto la
+		## deformaban y se veía fea).
+		_ap.play("parado", 0.25)
+		_hasta = 6.0
+		return
 	var hay: Array[String] = []
 	for g: String in GESTOS:
 		if _ap.has_animation(g):
@@ -131,7 +137,7 @@ func _process(delta: float) -> void:
 			_caminando = false
 			_cuerpo.rotation.y = _giro0
 			_gesto()
-		elif _rng.randf() < 0.3 and _ap.has_animation("caminar"):
+		elif not en_sitio and _rng.randf() < 0.3 and _ap.has_animation("caminar"):
 			## Camina a lo largo de la banda (de lado respecto de la
 			## hinchada), una vez hacia cada lado: siempre vuelve a su sitio.
 			_caminando = true

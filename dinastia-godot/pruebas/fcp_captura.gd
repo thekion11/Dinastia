@@ -109,7 +109,22 @@ func _personaje() -> void:
 	await _foto("ropa")
 
 func _mascota() -> void:
-	pass
+	var p := PantallaConfigClub.new()
+	p.set_anchors_preset(Control.PRESET_FULL_RECT)
+	p.configurar({"mundo": _m, "modo": "creador"})
+	add_child(p)
+	await _esperar_s(0.6)
+	p.ir_a(3)
+	await _esperar_s(1.5)
+	for an in ["oso", "gato", "aguila", "dragon"]:
+		p.datos.mascota = an
+		p._vista_mascota.call("mostrar", p.datos.club, an)
+		await _esperar_s(1.5)
+		var mv = p._vista_mascota
+		var mm: Node3D = mv._masc
+		var esq := mm.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D
+		print(an, " masc=", mm.global_position, " escala=", mm.scale, " pivote_rot=", mv._pivote.rotation, " cabeza=", (esq.global_transform * esq.get_bone_global_pose(esq.find_bone("Head"))).origin, " size=", mv.size)
+		await _foto(an)
 
 func _equipacion() -> void:
 	var p := PantallaConfigClub.new()

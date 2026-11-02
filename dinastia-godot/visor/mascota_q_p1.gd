@@ -53,6 +53,8 @@ var _ap: AnimationPlayer
 var _cuerpo: Node3D
 var _cola: Node3D
 var _soporte: Node3D
+## En la configuración del club no hay banda: no pasea (si no se sale del cuadro).
+var en_sitio := false
 var _esq: Skeleton3D
 var _i_pelvis := -1
 var _desde_pelvis := Transform3D.IDENTITY

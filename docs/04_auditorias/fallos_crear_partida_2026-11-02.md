@@ -6,12 +6,12 @@ Rama `ccr-fallos-crear-partida`. Prueba: `pruebas/ideas/fcp_crear_partida` (banc
 |---|---|---|
 | 1 | «Tras elegir un modelo de personaje no deja elegir otro» → el dueño aclara: es el MODELO BASE 3D (hoy solo Hombre/Mujer Quaternius). Quiere como opciones básicas: «Modular Character Outfits», los del Drive, Kenney `characterMedium` y MakeHuman | PENDIENTE (ver abajo) |
 | 2 | Pantalla gris con «…a primera persona.» al confirmar | Es `PantallaCarga` del prólogo (`visor/prologo.gd` construye la ciudad bloqueando el hilo). Lo lleva la sesión del prólogo |
-| 3 | Mascotas: cola flotando | ARREGLADO: la cola sigue a la pelvis (`visor/mascota_q.gd`, `ColaSoporte`). «Feas»: pendiente |
+| 3 | Mascotas: cola flotando | ARREGLADO: la cola sigue a la pelvis (`visor/mascota_q.gd`, `ColaSoporte`). «Feas»: la vista previa de la mascota (paso Mascota) salía fuera de cuadro y con los brazos en alto (las animaciones desplazan la pelvis ~1 m y paseaba); ahora se recentra, queda de pie y quieta (`en_sitio`, `config_club_mascota.gd`). Capturas `fcp_mascota_*.jpg` |
 | 4 | Escudo propio no sale en el uniforme | ARREGLADO en la camiseta 2D (`DisenosKit.textura_completa` dibuja `escudo_tex` de frente). Los SÍMBOLOS del escudo tampoco salían donde no hay etiqueta encima (el rasterizador SVG no dibuja `<text>`): nuevo `ui/escudo_texto.gd` los hornea en la imagen (vista previa de configuración, camiseta, carga, resumen) |
 | 7 | El jugador 3D del diseñador no cambiaba de uniforme ni de botines tras el primer vestido | ARREGLADO en `VestidorQ.vestir_equipacion`: tras vestir, el material activo del cuerpo ya era el del shader y no se reconocía; ahora se busca por el material de la malla. Afectaba a cualquier re-vestido |
 | 8 | Pantalla de carga gris y pobre | REHECHA: fondo con el color del club y franjas, anillo con balón, barra, consejo que rota (18 consejos, 9 idiomas); `PantallaCarga.dejar_pintar` espera al dibujo real antes de bloquear |
 | 5 | «Uniforme» debe ser el editor completo | HECHO: `DisenadorKit.incrustar` dentro del paso «Equipación»; cada cambio va al club al momento. `_abrir_disenador` de `config_club_pasos.gd` ya no se usa (se deja) |
-| 6 | Acompañante del bienvenido atraviesa un arbusto | PENDIENTE |
+| 6 | Acompañante del bienvenido atraviesa un arbusto | PENDIENTE: no reproducido (la captura del prólogo no corre en este contenedor, render por software). Candidatos: macetero con arbusto de `visor/entrada_club.gd` y la posición del mentor `puerta + (0.8, 0, 3.0)` en `visor/prologo.gd` |
 | + | Personaje del estudio tieso | Gestos de banda en bucle (`personaje_estudio.gd`); falta mejor esqueleto/movimiento |
 
 ## Modelos base (fallo 1): estado de los candidatos
