@@ -4,6 +4,21 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## CIERRE DEL 2-11 (revisiones que faltan y ramas viejas)
+
+**Estado**: todo el trabajo de las sesiones del 2-11 está en `main` (PR #93-#100, #105, #106; CI verde: banco y los 6 tramos de especiales). Las ramas de las sesiones no tienen nada por delante. Registros: `docs/04_auditorias/rendimiento_120fps.md`, `fallos_crear_partida_2026-11-02.md`, `CLAUDE.md` (órdenes 19-21).
+
+**Revisiones que faltan (solo las puede cerrar el dueño o un equipo con GPU)**
+- Probar el PRÓLOGO en el PC de Windows: pantalla gris/congelamiento/cierre al moverse. Causa corregida (la ciudad entera se armaba en un solo fotograma: ahora por etapas y recortada al barrio, 15,9 a 6,4 s, 4.316 a 2.627 llamadas), pero el cierre en Windows NO se pudo reproducir sin GPU.
+- Confirmar a ojo el ARBUSTO del personaje de bienvenida (resuelto por geometría con prueba, sin captura).
+- Ejecutar el BENCHMARK (Ajustes o `--benchmark`) en el Vivo Y36 5G y en una laptop modesta: no hay ninguna cifra de FPS real. Los 120 FPS en equipos modestos NO están verificados.
+- Elegir/revisar los modelos base: 37 ya integrados; faltan MakeHuman (hay que generar los .glb) y Vitruvian (2,2 GB de Blender). Kenney descartado.
+- Capturas Forward+ con la cámara real (por software se cuelga con el partido) y nota del vídeo del partido (el 1080p se hace con `herramientas/grabar_partido_hd.sh` en un PC con GPU).
+
+**Revisiones técnicas pendientes**: estadio ligero en el prólogo y carga diferida de lo no visible; `probar_por_partes`: «cede fotogramas (0)» falla siempre en local (estadio/ciudad por partes no ceden cuadros aunque `por_partes` esté puesto); tick escalonado de peatones/coches y público lejano en MultiMesh (necesitan hardware real para medirse); el tiempo de fotograma `--headless` tiene un suelo de 6,9 ms (las cifras de CPU de ciudad −19 % no valen); calidad ALTO supera 4 GB de RAM; `CLAUDE.md` tiene dos órdenes numeradas «19.» (120 FPS y TERCEROS): renumerar con cuidado, otros documentos citan 19/20/21; el PR #99 se fusionó con el CI a medias (después salió verde).
+
+**Ramas viejas** (detalle y listas en `docs/04_auditorias/ramas_viejas_2026-11-02.md`): de 100 ramas remotas, 24 ya están en `main` (nada que unir, borrables) y 76 NO comparten historia con `main` porque `main` se reescribió el 24-10 y el 27-10: por eso no se unen (un merge traería de vuelta la historia vieja, ~4.000 archivos de diferencia); su trabajo útil ya se integró a mano y lo que falte se rescata por cherry-pick de un commit. Pendiente del dueño: borrar la lista A, decidir la lista B, cerrar los PR #83-#85 (`rend2` y `rend4` ya están en `main`) y borrar la etiqueta `latest`. Nada se borró.
+
 ## ESTADO AL CIERRE DEL 28-10 (para retomar el lunes)
 
 - **Rama**: todo unido en `claude/dazzling-rubin-v7rfyi` (líder). Banco «FIN. 0 fallos», especiales «todo en orden», prueba visual en 0 fallos (referencias al día), ningún script de más de 450 líneas. Registro detallado del 27-28-10: `docs/04_auditorias/CIERRE_2026-10-28.md`.
