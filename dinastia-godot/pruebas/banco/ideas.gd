@@ -344,3 +344,45 @@ func _probar_nucleo_sueltos() -> void:
 	_comprobar(PaqueteReal.montado == "", "sin caras_reales.pck no se monta nada (build público)")
 	_comprobar(not Medicion.pedida() and not Medicion.es_largo(), "sin --medir ni --benchmark no se mide")
 	_comprobar(CompilarFondo.CARPETAS_FUERA.has("res://pruebas"), "la compilación de fondo no gasta tiempo en las pruebas")
+
+## M-293 (2-11-2026): el filtro por estado del plantel.
+func _probar_filtros_plantel() -> void:
+	_titulo("FILTROS DEL PLANTEL POR ESTADO (M-293)")
+	var m := Mundo.new()
+	m.generar(["CHI"], 2930)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var c := m.mi_club()
+	var a: Jugador = c.plantilla[0]
+	var b: Jugador = c.plantilla[1]
+	a.lesion = 3
+	b.transferible = true
+	b.edad = 19
+	b.anios_contrato = 1
+	_comprobar(PanelPlantel._estado_ok(m, a, "bajas") and not PanelPlantel._estado_ok(m, a, "disponibles"), "el lesionado sale en bajas y no en disponibles")
+	_comprobar(PanelPlantel._estado_ok(m, b, "transferibles") and PanelPlantel._estado_ok(m, b, "jovenes") and PanelPlantel._estado_ok(m, b, "contrato"),
+		"transferible, joven y con contrato acabando a la vez")
+	var lista := VBoxContainer.new()
+	add_child(lista)
+	lista.set_meta(PanelPlantel.META_ESTADO, "bajas")
+	PanelPlantel.pintar(lista, c, m, "ovr", true, Color.WHITE, func(x): return x,
+		func(g: GridContainer, _j: Jugador, textos: Array, _cols: Array) -> void:
+			for t in textos:
+				var l := Label.new()
+				l.text = String(t)
+				g.add_child(l),
+		func(_k): pass)
+	var g := lista.find_children("*", "GridContainer", true, false)
+	var filas := ((g[0] as GridContainer).get_child_count() - 6) / 6 if not g.is_empty() else -1
+	var bajas := c.plantilla.filter(func(j: Jugador) -> bool: return j.lesion > 0 or j.suspension > 0).size()
+	_comprobar(filas == bajas, "con «Bajas» la lista enseña solo las %d bajas (%d filas)" % [bajas, filas])
+	lista.queue_free()
+	## M-295: el historial guarda el valor y la ficha lo dibuja.
+	var jh: Jugador = c.plantilla[2]
+	jh.historial.clear()
+	jh.registrar_temporada(2026, c.nombre)
+	jh.registrar_temporada(2027, c.nombre)
+	var gr := GraficoEvolucion.de(jh.historial, {"escala": 1.0})
+	gr.size = Vector2(300, 90)
+	_comprobar(int(jh.historial[0].get("val", -1)) == jh.valor and gr._get_tooltip(Vector2(0, 0)).contains("2026"),
+		"el historial guarda el valor y el gráfico de la ficha lo enseña al pasar el ratón")
+	gr.free()
