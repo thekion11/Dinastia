@@ -364,7 +364,7 @@ jobs:
   exportar-android-aab:
     name: 🟩 Android AAB (Play)
     needs: [banco, especiales, nativo-android]
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'android-aab' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.objetivo == 'android-aab' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     container:
