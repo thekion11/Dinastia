@@ -1,0 +1,231 @@
+// Copyright 2019 Google LLC & Bastiaan Konings
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//     http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include "guitask.hpp"
+
+#include "managers/environmentmanager.hpp"
+#include "managers/usereventmanager.hpp"
+
+namespace blunted {
+
+Gui2Task::Gui2Task(std::shared_ptr<Scene2D> scene2D, float aspectRatio, float margin)
+    : scene2D(scene2D) {
+  windowManager = new Gui2WindowManager(scene2D, aspectRatio, margin);
+  for (int j = 0; j < _JOYSTICK_MAX; j++) {
+    for (int i = 0; i < _JOYSTICK_MAXBUTTONS; i++) {
+      prevButtonState[j][i] = false;
+    }
+  }
+  for (int j = 0; j < _JOYSTICK_MAX; j++) {
+    for (int i = 0; i < _JOYSTICK_MAXAXES; i++) {
+      prevAxisState[j][i] = false;
+    }
+  }
+
+  // Raw SDL buttons 0/1 are A/B (Cross/Circle) on common pads. Until a gamepad
+  // supplies its own mapping, confirm and back must not share a button.
+  joyButtonActivate = 0;
+  joyButtonEscape = 1;
+  activeJoystick = 0;
+
+  keyboard = true;
+}
+
+Gui2Task::~Gui2Task() {
+  windowManager->Exit();
+  delete windowManager;
+}
+
+void Gui2Task::GetPhase() {}
+
+void Gui2Task::ProcessPhase() {
+  windowManager->GetRoot()->SetRecursiveZPriority(
+      0);  // todo: this can probably be optimized (like, doing it every frame seems redundant?)
+  // windowManager->GetRoot()->PrintTree(0);
+  ProcessEvents();
+  windowManager->Process();
+}
+
+void Gui2Task::PutPhase() {}
+
+void Gui2Task::ProcessEvents() {
+  // todo: stop making objects every process(); this is terribly inefficient. find out if they are
+  // needed in the first place.
+
+  if (!windowManager->GetFocus())
+    return;
+  Gui2View* currentFocus = windowManager->GetFocus();
+
+  // some buttons need to be sent through a windowing event (escape, enter, directional controls)
+  // if a view accepts a keyboard/joystick event, don't send windowing event => *disabled, now uses
+  // focus check
+  bool needsWindowingEvent = false;
+  WindowingEvent* wEvent = new WindowingEvent();
+
+  // keyboard events
+
+  KeyboardEvent* event = new KeyboardEvent();
+  bool needsKeyboardEvent = false;
+
+  auto currentKeyState = UserEventManager::GetInstance().GetKeyboardState();
+  const unsigned long now_ms = EnvironmentManager::GetInstance().GetTime_ms();
+
+  for (auto keyState : currentKeyState) {
+    auto pressedKey = keyState.first;
+
+    // continuous
+    event->SetKeyContinuous(pressedKey);
+    // printf("key %i pressed\n", pressedKey);
+
+    needsKeyboardEvent = true;
+
+    // only when pressed first time
+    if (prevKeyState.count(pressedKey) == 0) {
+      event->SetKeyOnce(pressedKey);
+
+      if (keyboard) {
+        if (pressedKey == SDLK_RETURN) {
+          wEvent->SetActivate();
+          needsWindowingEvent = true;
+        } else if (pressedKey == SDLK_ESCAPE) {
+          wEvent->SetEscape();
+          needsWindowingEvent = true;
+        }
+      }
+    }
+
+    // when pressed first time, then at a steady rate while held
+    if (keyRepeat[pressedKey].Update(true, now_ms)) {
+      event->SetKeyRepeated(pressedKey);
+
+      if (keyboard) {
+        if (pressedKey == SDLK_UP) {
+          wEvent->SetDirection(Vector3(0, -1, 0));
+          needsWindowingEvent = true;
+        } else if (pressedKey == SDLK_RIGHT) {
+          wEvent->SetDirection(Vector3(1, 0, 0));
+          needsWindowingEvent = true;
+        } else if (pressedKey == SDLK_DOWN) {
+          wEvent->SetDirection(Vector3(0, 1, 0));
+          needsWindowingEvent = true;
+        } else if (pressedKey == SDLK_LEFT) {
+          wEvent->SetDirection(Vector3(-1, 0, 0));
+          needsWindowingEvent = true;
+        }
+      }
+    }
+  }
+
+  prevKeyState = currentKeyState;
+  for (auto it = keyRepeat.begin(); it != keyRepeat.end();) {
+    if (currentKeyState.count(it->first) == 0)
+      it = keyRepeat.erase(it);
+    else
+      ++it;
+  }
+
+  if (needsKeyboardEvent) {
+    if (windowManager->GetFocus() == currentFocus)
+      windowManager->GetFocus()->ProcessEvent(event);
+  }
+  delete event;
+
+  // joystick events
+
+  for (int j = 0; j < UserEventManager::GetInstance().GetJoystickCount(); j++) {
+    float axes[_JOYSTICK_MAXAXES];
+    bool stick = false;
+    for (int i = 0; i < _JOYSTICK_MAXAXES; i++) {
+      axes[i] = UserEventManager::GetInstance().GetJoystickAxis(j, i);
+      if (fabs(axes[i]) > 0.2) {
+        stick = true;
+        prevAxisState[j][i] = true;
+      } else {
+        axes[i] = 0.0;
+        if (prevAxisState[j][i] == true)
+          stick = true;  // report axis back-to-middle
+        prevAxisState[j][i] = false;
+      }
+    }
+
+    bool buttonChanged = false;
+    for (int i = 0; i < _JOYSTICK_MAXBUTTONS; i++) {
+      if (UserEventManager::GetInstance().GetJoyButtonState(j, i) != prevButtonState[j][i]) {
+        buttonChanged = true;
+        break;
+      }
+    }
+
+    // Direction from the analog stick and the D-pad hat buttons (16: Up,
+    // 17: Right, 18: Down, 19: Left), repeated at the same rate as held keys.
+    // Evaluated every tick so a held D-pad repeats too (it raises no new events).
+    Vector3 stick1Direction = Vector3(axes[0], axes[1], 0);
+    if (UserEventManager::GetInstance().GetJoyButtonState(j, 16))
+      stick1Direction += Vector3(0, -1, 0);
+    if (UserEventManager::GetInstance().GetJoyButtonState(j, 18))
+      stick1Direction += Vector3(0, 1, 0);
+    if (UserEventManager::GetInstance().GetJoyButtonState(j, 19))
+      stick1Direction += Vector3(-1, 0, 0);
+    if (UserEventManager::GetInstance().GetJoyButtonState(j, 17))
+      stick1Direction += Vector3(1, 0, 0);
+    if (stickRepeat[j].Update(stick1Direction.GetLength() != 0, now_ms)) {
+      SetActiveJoystickID(j);
+      wEvent->SetDirection(stick1Direction);
+      needsWindowingEvent = true;
+    }
+
+    if (stick || buttonChanged) {
+      JoystickEvent* event = new JoystickEvent();
+
+      for (int i = 0; i < _JOYSTICK_MAXAXES; i++) {
+        event->SetAxis(j, i, axes[i]);
+      }
+
+      for (int i = 0; i < _JOYSTICK_MAXBUTTONS; i++) {
+        bool pressed = UserEventManager::GetInstance().GetJoyButtonState(j, i);
+        if (pressed && !prevButtonState[j][i]) {
+          event->SetButton(j, i);
+          SetActiveJoystickID(j);
+          if (i == joyButtonActivate) {
+            wEvent->SetActivate();
+            needsWindowingEvent = true;
+          }
+          if (i == joyButtonEscape) {
+            wEvent->SetEscape();
+            needsWindowingEvent = true;
+          }
+        }
+        prevButtonState[j][i] = pressed;
+      }
+
+      if (windowManager->GetFocus() == currentFocus)
+        windowManager->GetFocus()->ProcessEvent(event);
+      delete event;
+    }
+  }
+
+  if (needsWindowingEvent)
+    if (windowManager->GetFocus() == currentFocus)
+      windowManager->GetFocus()->ProcessEvent(wEvent);
+
+  delete wEvent;
+}
+
+void Gui2Task::SetEventJoyButtons(int activate, int escape) {
+  // Menus compare raw buttons, so axis mappings (negative) and a shared
+  // confirm/back button would make one of them unusable; keep the old pair.
+  if (activate < 0 || escape < 0 || activate == escape)
+    return;
+  this->joyButtonActivate = activate;
+  this->joyButtonEscape = escape;
+}
+
+}  // namespace blunted

@@ -65,3 +65,8 @@ func _pintar_copa(mio: Club) -> void:
 				marcador += "  (%d-%d pen.)" % [r["penales"][0], r["penales"][1]]
 			p._celda(g, marcador, col, true)
 			p._celda(g, String(r["visita"].nombre), col if r["pasa"] == r["visita"] else Principal.COL_SUAVE)
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"copa": _pintar_copa, "plantel": _pintar_plantel, "libres": _pintar_libres, "premios": _pintar_premios,
+		"desafios": _pintar_desafios, "tactica": _pintar_tactica, "partido": _pintar_partido, "calendario": _pintar_calendario}

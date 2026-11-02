@@ -291,6 +291,7 @@ static var motor_ligero := false
 static func cargar() -> void:
 	var cf := ConfigFile.new()
 	if cf.load(ARCHIVO) != OK:
+		CalidadAuto.aplicar_si_primera_vez()   ## primera vez: perfil según el hardware
 		return
 	if cf.has_section_key("grafica", "calidad"):
 		elegida = clampi(int(cf.get_value("grafica", "calidad")), MEDIO, ULTRA)

@@ -50,6 +50,11 @@ dinastia-godot/assets/quaternius_muebles/*.glb -filter -diff -merge binary
 dinastia-godot/audio/ui/*.ogg -filter -diff -merge binary
 # Edificios de KayKit City Builder Bits (CC0, ~430 KB, 26-10): archivos normales; sustituyen a complejo_residencial.glb.
 dinastia-godot/assets/ciudad/kaykit/*.gltf -filter -diff -merge
+# Los .bat de Windows con fin de línea CRLF (cmd.exe).
+*.bat text eol=crlf
+# Binarios de la extensión nativa (pequeños, fuera de LFS).
+dinastia-godot/bin_nativo/*.so binary
+dinastia-godot/bin_nativo/*.dll binary
 # Trofeo del museo del club (regalo del dueño, 27-10; una copa, 52 KB): archivo normal.
 dinastia-godot/assets/ciudad/trofeo.glb -filter -diff -merge binary
 # Máquina de peluches del centro comercial (regalo del dueño, 27-10; re-exportada con Godot, texturas 256 px, <1 MB): archivo normal.
@@ -62,3 +67,21 @@ dinastia-godot/assets/trofeos/*.glb -filter -diff -merge binary
 dinastia-godot/assets/pasto/*.glb -filter -diff -merge binary
 # Regalos del dueño del Drive optimizados (27-10-2026): torre de focos del estadio (11 k caras, texturas 512 px, 2,4 MB) y sillón de oficina (reducido de 118 k a 4,7 k caras, 314 KB): archivos normales.
 dinastia-godot/assets/regalos/*.glb -filter -diff -merge binary
+# Logo definitivo (26-10): archivos pequeños, fuera de LFS
+dinastia-godot/assets/logo/* -filter -diff -merge binary
+dinastia-godot/assets/characters/outfits/*.gltf -filter -diff -merge binary
+dinastia-godot/assets/characters/outfits/*.bin -filter -diff -merge binary
+dinastia-godot/assets/characters/outfits/*.png -filter -diff -merge binary
+dinastia-godot/assets/characters/outfits/*.txt -filter -diff -merge binary
+dinastia-godot/assets/characters/kaykit/*.glb -filter -diff -merge binary
+dinastia-godot/assets/characters/kaykit/*.txt -filter -diff -merge binary
+dinastia-godot/assets/characters/modular/*/*.glb -filter -diff -merge binary
+dinastia-godot/assets/characters/vrm/*.glb -filter -diff -merge binary
+dinastia-godot/assets/characters/vrm/*.txt -filter -diff -merge binary
+# Respaldo de terceros (01-11-2026, orden del dueño: «todo absolutamente todo» de League-Soccer y soccer5v5): archivos normales
+# (desde las sesiones en la nube no se puede subir a LFS). Ver dinastia-godot/terceros/*/LEEME.md.
+dinastia-godot/terceros/**/*.mp3 -filter -diff -merge binary
+dinastia-godot/terceros/**/*.wav -filter -diff -merge binary
+# El minijuego retro 5v5 (soccer5v5, MIT; 01-11-2026): sus sonidos y música como archivos normales.
+dinastia-godot/minijuegos/**/*.mp3 -filter -diff -merge binary
+dinastia-godot/minijuegos/**/*.wav -filter -diff -merge binary

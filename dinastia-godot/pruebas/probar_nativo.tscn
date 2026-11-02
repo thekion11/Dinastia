@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://pruebas/probar_nativo.gd" id="1"]
+
+[node name="ProbarNativo" type="Node"]
+script = ExtResource("1")

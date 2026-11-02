@@ -194,17 +194,21 @@ func semana(c: Club, anio: int, sem: int, prensa: Prensa) -> void:
 				cands = [{"partido": String(g["partido"]), "lider": String(g["lider"]), "postura": String(g["postura"])}]
 			var gana: Dictionary = cands[_h("gana|%s|%d" % [pais, anio]) % cands.size()]
 			var sigue := String(gana["partido"]) == String(g["partido"])
-			var apoyo := int(g.get("apoyo_club", -1)) == anio
+			var apoyo := int(g.get("apoyo_club", -1)) >= int(g.get("desde", 0))
 			gobiernos[pais] = {"partido": String(gana["partido"]), "lider": String(gana["lider"]),
 				"postura": String(gana["postura"]), "desde": anio, "proxima": anio + mandato(pais)}
-			if apoyo and sigue:
-				var bono := Eco.escalar(15000.0, float(c.rep))
-				c.mover_saldo(bono)
-				movimiento.emit("Subvención extraordinaria (el gobierno devuelve el apoyo)", bono)
-				noticia.emit("🤝 El alcalde cumple", "El gobierno reelegido devuelve el apoyo del club: subvención extraordinaria de %s." % Eco.dinero(bono))
-			elif apoyo:
-				gobiernos[pais]["frio_hasta"] = anio + 1
-				noticia.emit("🧊 El nuevo gobierno no olvida", "%s apoyó al gobierno anterior. El nuevo no lo olvida: un año sin ayudas públicas para el club." % c.nombre)
+			## §2.5: el apoyo del club pesa. Si repite el gobierno apoyado, sigue de aliado; si gana otro, recela.
+			if apoyo:
+				gobiernos[pais]["apoyo_club" if sigue else "recelo_club"] = anio
+				## (2-11, guion §2.5.6) El premio o el castigo también se ven: el reelegido devuelve el favor con una
+				## subvención; el que gana contra el club lo dice en prensa (y recela: `relacion` = −1).
+				if sigue:
+					var bono := Eco.escalar(15000.0, float(c.rep))
+					c.mover_saldo(bono)
+					movimiento.emit("Subvención extraordinaria (el gobierno devuelve el apoyo)", bono)
+					noticia.emit("🤝 El alcalde cumple", "El gobierno reelegido devuelve el apoyo del club: subvención extraordinaria de %s." % Eco.dinero(bono))
+				else:
+					noticia.emit("🧊 El nuevo gobierno no olvida", "%s apoyó al gobierno anterior. El nuevo no lo olvida: recela del club y recorta sus ayudas." % c.nombre)
 			campana.erase(pais)
 			var pos: Array = POSTURAS[String(gana["postura"])]
 			noticia.emit("🗳️ Elecciones en %s" % pais, "%s. Gobierna %s (%s). Su prioridad: %s — %s" % [
@@ -212,7 +216,7 @@ func semana(c: Club, anio: int, sem: int, prensa: Prensa) -> void:
 				String(gana["partido"]), String(pos[0]).to_lower(), String(pos[1])])
 	## EL APOYO DEL CLUB (2-11, guion §2.5.6): si el DT respaldó al gobierno en la cita del funcionario (`Citas`, pone
 	## `apoyo_club` = año), lo declara en la prensa una vez, y el gobierno se lo devuelve ese año (`_efecto`). Si en las
-	## urnas gana OTRO partido, el nuevo gobierno se acuerda: un año frío, sin ayudas (`frio_hasta`).
+	## urnas gana OTRO partido, el nuevo gobierno se acuerda: recela (`recelo_club`, `relacion` = −1) y recorta las ayudas.
 	var gob: Dictionary = gobiernos[pais]
 	if int(gob.get("apoyo_club", -1)) == anio and not gob.has("declarado"):
 		gob["declarado"] = anio
@@ -221,30 +225,32 @@ func semana(c: Club, anio: int, sem: int, prensa: Prensa) -> void:
 			prensa.mover_animo(-1)
 	## El efecto de la postura, cada cuatro semanas.
 	if sem % 4 == 0:
-		_efecto(c, String(gob["postura"]), prensa, gob, anio)
+		_efecto(c, String(gob["postura"]), prensa, relacion(gob))
 
-func _efecto(c: Club, postura: String, prensa: Prensa, gob: Dictionary = {}, anio: int = 0) -> void:
+## (§2.5, 30-10) La relación del club con el gobierno: +1 aliado (lo apoyaste en este mandato),
+## −1 recelo (apoyaste al que perdió), 0 neutral. Mueve un 25 % lo que el gobierno da o cobra.
+const PESO_RELACION := 0.25
+static func relacion(g: Dictionary) -> int:
+	if int(g.get("apoyo_club", -1)) >= int(g.get("desde", 0)):
+		return 1
+	if int(g.get("recelo_club", -1)) >= int(g.get("desde", 0)):
+		return -1
+	return 0
+
+func _efecto(c: Club, postura: String, prensa: Prensa, rel := 0) -> void:
 	var p: Array = POSTURAS.get(postura, [])
 	if p.is_empty():
 		return
 	var monto := Eco.escalar(float(int(p[3])), float(c.rep))
-	## Con el apoyo del club vigente, las ayudas suben la mitad y la tasa se perdona; con el gobierno frío, no hay ayudas.
-	var apoyo := int(gob.get("apoyo_club", -1)) == anio and anio > 0
-	var frio := int(gob.get("frio_hasta", -1)) >= anio and anio > 0
-	if apoyo:
-		monto = int(monto * 1.5)
-	if frio and String(p[2]) != "tasa_seguridad":
-		return
+	## Las ayudas suben con un aliado y bajan con recelo; la tasa, al revés.
+	monto = int(round(float(monto) * (1.0 + PESO_RELACION * float(rel) * (-1.0 if String(p[2]) == "tasa_seguridad" else 1.0))))
 	match String(p[2]):
 		"subvencion_obras":
 			c.mover_saldo(monto)
 			movimiento.emit("Plan de obras del gobierno (accesos al estadio)", monto)
 		"tasa_seguridad":
-			if apoyo:
-				movimiento.emit("Tasa de seguridad: exenta por el apoyo del club", 0)
-			else:
-				c.mover_saldo(-monto)
-				movimiento.emit("Tasa de seguridad en los estadios", -monto)
+			c.mover_saldo(-monto)
+			movimiento.emit("Tasa de seguridad en los estadios", -monto)
 			if prensa != null:
 				prensa.mover_animo(1)
 		"rebaja_impuestos":

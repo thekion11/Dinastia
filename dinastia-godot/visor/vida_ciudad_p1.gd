@@ -87,6 +87,8 @@ static func enganchar(e: ExploradorCiudad, v: VistaCiudad, m: Mundo) -> VidaCiud
 		else:
 			red.adoptar(m.redes_ciudad)
 	s._sincronizar_luz()
+	if m.roles != null and m.roles.cartera != null:
+		m.roles.cartera.pago_con_tarjeta.connect(s._al_pagar_con_tarjeta)   ## §2.5: la tarjeta en la mano
 	if m.citas != null:
 		s.citas_3d = CitasCiudad.crear(s)
 	s.sentados = GenteSentada.crear(s)
@@ -111,6 +113,8 @@ static func transporte(m: Mundo) -> Dictionary:
 		return {"coche": true, "motivo": ""}
 	if m.vida.transporte == "micro":
 		return {"coche": false, "motivo": "Sin coche propio: esta semana te mueves en bus y metro (Mi Vida → Transporte)."}
+	if m.vida.danio >= VidaDT.DANIO_TALLER:   ## mejora C (31-10): los golpes lo llevan al taller
+		return {"coche": false, "motivo": "🔧 Tu coche está en el taller por los golpes: esta semana, bus y metro."}
 	if absi(("averia|%d|%d|%s" % [m.anio, m.semana, m.mi_club().id]).hash()) % 8 == 0:
 		return {"coche": false, "motivo": "🔧 Tu coche está en el taller esta semana: bus y metro."}
 	return {"coche": true, "motivo": ""}
@@ -118,10 +122,12 @@ static func transporte(m: Mundo) -> Dictionary:
 ## Dónde empieza una partida cargada en 3D (bloque 7): "" = en el menú de siempre
 ## (prólogo sin ver, pruebas, vida apagada → PC); "oficina" o "casa" (lunes 08:00).
 static func arranque_3d(m: Mundo) -> String:
-	if m == null or not m.prologo_visto or m.ciudad == null or m.obras == null or m.reloj == null:
+	if m == null or m.ciudad == null or m.obras == null or m.reloj == null:
 		return ""
 	if OrquestadorMundo.sin_prologo or OS.get_environment("PROLOGO") == "0":
 		return ""
+	if not m.prologo_visto:
+		return "prologo" if m.prologo_pendiente else ""   ## guardado al salir de la entrada: el prólogo entero
 	if m.necesidades != null and m.necesidades.modo == "apagada":
 		return "oficina"
 	if m.reloj.dia == 0 and m.reloj.minuto <= Reloj.HORA_INICIO * Reloj.MINUTOS_HORA:

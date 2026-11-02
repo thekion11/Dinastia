@@ -23,7 +23,12 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		if mi.mesh == null:
 			continue
 		for s in mi.mesh.get_surface_count():
-			var m := mi.get_active_material(s)
+			## El material de la MALLA, no el activo: tras vestir una vez, el activo es el del shader
+			## de equipación (sin nombre) y la segunda vez no se encontraba el cuerpo → el diseñador
+			## no repintaba al 3D ni uniforme ni botines (2-11-2026, queja del dueño).
+			var m := mi.mesh.surface_get_material(s)
+			if m == null:
+				m = mi.get_active_material(s)
 			if m == null:
 				continue
 			match m.resource_name:
@@ -72,7 +77,7 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		clave += "|m"
 	var mat: ShaderMaterial = _cache_equipacion.get(clave)
 	if mat == null:
-		var original := cuerpo.get_active_material(superficie) as BaseMaterial3D
+		var original := cuerpo.mesh.surface_get_material(superficie) as BaseMaterial3D
 		mat = ShaderMaterial.new()
 		mat.shader = load(SHADER_EQUIPACION)
 		if original != null and original.albedo_texture != null:

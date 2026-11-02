@@ -1,5 +1,5 @@
 class_name PantallaDespacho
-extends RefCounted
+extends PantallaBase
 ## Lo que hay que resolver ahora (asuntos, decisiones, la junta, el agente).
 
 ## EL DESPACHO: lo que hay que resolver ahora (asuntos, decisiones, la junta, el agente). La rueda de
@@ -9,10 +9,6 @@ extends RefCounted
 ## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
-var p: Principal
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 func _marco_aviso(color: Color) -> VBoxContainer:
 	var caja := PanelContainer.new()
@@ -104,6 +100,8 @@ func _abrir_mesa(e: Dictionary) -> void:
 	var c := p.mundo.cantera
 	var bono := p.mundo.entrenamiento.bono_agentes() if p.mundo.entrenamiento != null else 0.0
 	var mesa := MesaAgente.new(e, c.confianza_de(String(e.get("agente", ""))), bono, Azar.ent(1, 1 << 30))
+	if p.mundo.citas != null and p.mundo.citas.favor_agente == p.mundo.anio * 60 + p.mundo.semana:
+		mesa.aplicar_favor()   ## §2.5: le debías un café al agente
 	p.add_child(MesaAgenteUI.new(mesa, func(m: MesaAgente) -> void:
 		var r: Dictionary
 		match m.estado:
@@ -433,3 +431,7 @@ func _pintar_despacho() -> void:
 		"mercado_av": _pintar_asunto_mercado_av()
 		"insolvencia": _pintar_asunto_insolvencia()
 		"vida": _pintar_asunto_vida()
+
+## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
+func secciones() -> Dictionary:
+	return {"despacho": _pintar_despacho}

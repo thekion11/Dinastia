@@ -170,7 +170,7 @@ static func _ascensor(nodo: Node3D, x0: float, z_fin: float, y0: float) -> void:
 	var cx := x0 + (ASC_X0 + ASC_X1) / 2.0
 	TunelVestuario._caja(nodo, Vector3(cx, y0 + 1.15, z_fin - 0.08), Vector3(ASC_X1 - ASC_X0 - 0.3, 2.3, 0.08), acero, false)
 	TunelVestuario._caja(nodo, Vector3(cx, y0 + 1.15, z_fin - 0.13), Vector3(0.02, 2.2, 0.02), TunelVestuario._mat(Color(0.2, 0.2, 0.22), 0.5), false)
-	var boton := TunelVestuario._mat(Color(1, 0.8, 0.3), 0.3)
+	var boton := TunelVestuario._mat_unico(Color(1, 0.8, 0.3), 0.3)
 	boton.emission_enabled = true
 	boton.emission = Color(1, 0.75, 0.25)
 	TunelVestuario._caja(nodo, Vector3(x0 + ASC_X1 + 0.1, y0 + 1.2, z_fin - 0.1), Vector3(0.12, 0.25, 0.04), boton, false)
@@ -195,7 +195,7 @@ static func _pared_galeria(nodo: Node3D, x0: float, z_fin: float, y0: float, anc
 	var texto := Idiomas.t("GALERÍA AL COMPLEJO")
 	if not GaleriaClub.en_ciudad:
 		## Persiana bajada: la galería se recorre desde la ciudad.
-		var persiana := TunelVestuario._mat(Color(0.62, 0.64, 0.66), 0.45)
+		var persiana := TunelVestuario._mat_unico(Color(0.62, 0.64, 0.66), 0.45)
 		persiana.metallic = 0.6
 		TunelVestuario._caja(nodo, Vector3(xp, y0 + ALTO_LIBRE / 2.0, z_fin + 0.1), Vector3(h1 - h0, ALTO_LIBRE, 0.06), persiana, true)
 		for k in 14:
@@ -358,7 +358,7 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 		"Sala de vídeo":
 			var filas := clampi(1 + nivel("video") / 3, 1, 4)
 			TunelVestuario._caja(nodo, Vector3(cx, y0 + 1.7, caja.position.y + 0.08), Vector3(caja.size.x - 1.0, 1.6, 0.06), oscuro, false)
-			var pant := TunelVestuario._mat(Color(0.2, 0.5, 0.3), 0.3)
+			var pant := TunelVestuario._mat_unico(Color(0.2, 0.5, 0.3), 0.3)
 			pant.emission_enabled = true
 			pant.emission = Color(0.15, 0.45, 0.25)
 			TunelVestuario._caja(nodo, Vector3(cx, y0 + 1.7, caja.position.y + 0.12), Vector3(caja.size.x - 1.2, 1.4, 0.02), pant, false)
@@ -430,4 +430,4 @@ static func datos_deco(clave: String) -> Array:
 	return sal
 
 static func _m(c: Color, r: float = 0.6) -> StandardMaterial3D:
-	return TunelVestuario._mat(c, r)
+	return TunelVestuario._mat_unico(c, r)

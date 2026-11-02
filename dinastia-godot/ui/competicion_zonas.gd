@@ -119,7 +119,7 @@ static func _marcar_continentales(mundo: Mundo, liga: Liga, salida: Dictionary) 
 	for k: String in Continental.claves():
 		if not reparto.has(k):
 			continue
-		var torneo := Idiomas.t(Continental.nombre_conti(k))
+		var torneo := CompeticionInfo.nombre_visible(Continental.nombre_conti(k))
 		for c: Club in (reparto[k] as Array):
 			if not de_esta.has(c.id):
 				continue

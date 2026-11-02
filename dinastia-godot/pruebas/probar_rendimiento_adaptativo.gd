@@ -1,5 +1,5 @@
 extends Node
-## LOS CINCO ESCALONES DE `RendimientoAdaptativo` (25-9-2026).
+## LOS SEIS ESCALONES DE `RendimientoAdaptativo` (25-9-2026).
 ##
 ##   godot --headless --path . res://pruebas/probar_rendimiento_adaptativo.tscn
 ##
@@ -52,7 +52,9 @@ func _ready() -> void:
 	ra.bajar()
 	_comprobar(is_equal_approx(get_viewport().scaling_3d_scale, 0.67), "escalón 5: 3D al 67%")
 	ra.bajar()
-	_comprobar(ra.escalon == 5 and avisos.size() == 5, "no hay sexto escalón, y avisó de los cinco")
+	_comprobar(not sol.shadow_enabled and avisos[-1] == "sin sombra del sol", "escalón 6: sin sombra del sol (último recurso)")
+	ra.bajar()
+	_comprobar(ra.escalon == 6 and avisos.size() == 6, "no hay séptimo escalón, y avisó de los seis")
 	vista.queue_free()
 	await get_tree().process_frame
 	await get_tree().process_frame

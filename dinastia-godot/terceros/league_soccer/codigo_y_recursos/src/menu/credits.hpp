@@ -1,0 +1,50 @@
+#ifndef _HPP_MENU_CREDITS
+#define _HPP_MENU_CREDITS
+
+#include "base/math/vector3.hpp"
+#include "utils/gui2/widgets/caption.hpp"
+#include "utils/gui2/widgets/image.hpp"
+#include "utils/gui2/widgets/menu.hpp"
+#include "utils/gui2/widgets/root.hpp"
+#include "utils/gui2/windowmanager.hpp"
+
+using namespace blunted;
+
+const int numtexts = 24;
+const int numballs = 12;
+
+struct CreditsContents {
+  std::string text;
+  Vector3 color;
+};
+
+class CreditsPage : public Gui2Page {
+public:
+  CreditsPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData);
+  virtual ~CreditsPage();
+
+  void InitCreditsContents();
+  void AddHeader(const std::string& blah);
+  void AddSubHeader(const std::string& blah);
+  void AddCredit(const std::string& blah);
+  void AddWhitespace();
+
+  virtual void Process();
+  virtual void ProcessJoystickEvent(JoystickEvent* event);
+
+protected:
+  Gui2Caption* text[numtexts];
+  Gui2Image* balls[numballs];
+  Vector3 ballPos[numballs];
+  Vector3 ballMov[numballs];
+  unsigned long pageCreatedTime_ms;
+  bool autoAdvanceTriggered;
+
+  float scrollOffset;
+  unsigned int creditOffset;
+  unsigned int previousStartIndex;
+
+  std::vector<CreditsContents> credits;
+};
+
+#endif

@@ -83,6 +83,9 @@ func _dirigir() -> void:
 	if not pr.mundo.temporada_en_curso():
 		pr._escribir("[color=#e05555]La temporada está terminada.[/color]")
 		return
+	var falla_once := AvisoOnce.motivo(pr.mundo.mi_club())   ## alineación inválida (01-11, idea 1036)
+	if falla_once != "":
+		Aviso.mostrar(pr, "alerta", "⚠️", Idiomas.t("Tu once elegido no vale"), falla_once)
 	## Si esta semana hay copa, manda la copa: es la que se juega a un solo
 	## partido y la que se puede perder para siempre.
 	var par := pr.mundo.partido_de_copa()
@@ -111,6 +114,8 @@ func _dirigir() -> void:
 		pr._escribir("[color=#c9a227]%s — %s.[/color]" % [pr.mundo.copa.nombre, pr.mundo.copa.nombre_de_ronda()])
 	elif conti != null:
 		pr._escribir("[color=#c9a227]%s — %s.[/color]" % [Continental.nombre_conti(conti.clave), conti.nombre_de_ronda()])
+	if pr.mundo.necesidades.preparacion_cambio():   ## §2.5: tu cansancio y tu hambre, en ESTE partido
+		pr.mundo.aplicar_bonificadores()
 	var p := Partido.new(par[0], par[1])
 	## EL TIEMPO DE LA CIUDAD (plan maestro C1): el mismo que se juega y el
 	## mismo cielo que se ve. Sale del país del local y la época del año.

@@ -147,7 +147,7 @@ func fair_play(funa: int, animo: int) -> int:
 func a_dic() -> Dictionary:
 	return {"segmentos": segmentos, "abono": abono, "abonados": abonados, "encuesta": encuesta,
 		"dias_hincha": dias_hincha, "penas": penas.duplicate(true), "ramas": ramas.duplicate(),
-		"precio_dinamico": precio_dinamico, "anios_rama": anios_rama, "palmares_ramas": palmares_ramas, "bono_rama": bono_rama}
+		"precio_dinamico": precio_dinamico, "anios_rama": anios_rama, "palmares_ramas": palmares_ramas, "bono_rama": bono_rama, "visib_rama": visib_rama}
 
 func desde_dic(d: Dictionary) -> void:
 	var s: Dictionary = d.get("segmentos", {})
@@ -164,6 +164,7 @@ func desde_dic(d: Dictionary) -> void:
 	anios_rama = (d.get("anios_rama", {}) as Dictionary).duplicate()
 	palmares_ramas = (d.get("palmares_ramas", []) as Array).duplicate(true)
 	bono_rama = (d.get("bono_rama", {}) as Dictionary).duplicate()
+	visib_rama = (d.get("visib_rama", {}) as Dictionary).duplicate()
 
 # ---------------------------------------------------------------------------
 #  EL DÍA DEL HINCHA
@@ -313,6 +314,8 @@ var anios_rama: Dictionary = {}   ## clave -> temporadas completas abierta
 var palmares_ramas: Array = []    ## [{anio, rama, puesto}], lo más nuevo primero
 ## Fase 5 (27-10): clave de rama → año en que el DT aprobó presupuesto extra en persona (+0,06 de fuerza).
 var bono_rama: Dictionary = {}
+## (§2.5, 30-10) clave de rama → año en que jugó un partido en el estadio (+0,03 de fuerza).
+var visib_rama: Dictionary = {}
 
 func temporada_ramas(c: Club, anio: int) -> Array:
 	var salida: Array = []
@@ -328,6 +331,8 @@ func temporada_ramas(c: Club, anio: int) -> Array:
 		var fuerza := float(c.rep) / 100.0 * 0.55 + minf(float(anios), 5.0) * 0.06 + r * 0.30
 		if int(bono_rama.get(clave, -1)) == anio:
 			fuerza += 0.06
+		if int(visib_rama.get(clave, -1)) == anio:
+			fuerza += 0.03
 		var puesto := clampi(1 + int((1.0 - fuerza) * 12.0), 1, 12)
 		var d := {"anio": anio, "rama": String(f[2]), "clave": clave, "puesto": puesto}
 		salida.append(d)

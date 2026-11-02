@@ -6,8 +6,17 @@
 cd "$(dirname "$0")/.." || exit 1
 FALLOS=0
 LOG=$(mktemp)
+# REPARTO (2-11-2026, CI): ESPECIALES_PARTE="i/N" corre solo cada N-ésima prueba (las demás se saltan),
+# para repartir las especiales entre N máquinas a la vez. Sin la variable, corren todas.
+PARTE_I=""; PARTE_N=1
+if [ -n "$ESPECIALES_PARTE" ]; then PARTE_I=${ESPECIALES_PARTE%/*}; PARTE_N=${ESPECIALES_PARTE#*/}; fi
+CONT=0
 
+BLOQUE=""
 pasa() {  # nombre, comando, patrón de éxito
+  if [ -n "$ESPECIALES_SOLO" ] && [ "$ESPECIALES_SOLO" != "$BLOQUE" ]; then return; fi
+  CONT=$((CONT + 1))
+  if [ -n "$PARTE_I" ] && [ $((CONT % PARTE_N)) -ne "$PARTE_I" ]; then return; fi
   local t0=$(date +%s)
   timeout 600 bash -c "$2" > "$LOG" 2>&1
   local seg=$(( $(date +%s) - t0 ))
@@ -19,12 +28,17 @@ pasa() {  # nombre, comando, patrón de éxito
 }
 
 # 1. Tamaño del código (norma de 450 líneas)
+if [ -n "$PARTE_I" ] && [ "$PARTE_I" != "0" ]; then :  # (solo la parte 0 hace la norma de líneas)
+else
 python3 ../herramientas/revisar_lineas.py --todos > "$LOG" 2>&1
 if grep -q "pasan de 450 líneas: 0" "$LOG"; then echo "OK     norma de 450 líneas"; else FALLOS=$((FALLOS + 1)); echo "FALLO  norma de 450 líneas"; head -5 "$LOG"; fi
+fi
 # 2. Todos los scripts compilan (el banco solo ve los que toca)
 pasa "todos los scripts compilan" "godot --headless --path . --script res://pruebas/comprobar_scripts.gd" "FIN. 0 fallos"
-# 2b. Las auditorías de datos y de clubes (base ficticia y real; ~9 s cada una; catálogo M-413, 27-10-2026)
+# 2b. Las auditorías de datos y de clubes (base ficticia y real; ~9 s cada una; catálogo M-413, 27-10-2026) y la técnica
+#     (shaders, escenas de juego y nodos huérfanos al abrir y cerrar la principal; M-470, 31-10)
 pasa "auditoría de datos" "godot --headless --path . res://pruebas/auditoria_datos.tscn" "0 hallazgos"
+pasa "auditoría técnica" "godot --headless --path . res://pruebas/auditoria_tecnica.tscn" "FIN AUDITORÍA TÉCNICA. 0 fallos"
 pasa "auditoría de clubes" "godot --headless --path . res://pruebas/auditoria_clubes.tscn" "FIN. 0 fallos"
 # 2c. Las partidas guardadas de versiones viejas siguen abriendo (1094, 27-10)
 pasa "partidas viejas abren" "godot --headless --path . res://pruebas/ideas/sav_fosiles.tscn" "FIN. 0 fallos"
@@ -38,10 +52,29 @@ pasa "repetición del gol" "godot --headless --path . res://pruebas/prueba_repet
 # 5. Modos de juego y menú de la ciudad a pie
 pasa "modos de juego" "godot --headless --path . res://pruebas/prueba_modos.tscn" "0 fallos"
 pasa "menú ciudad a pie" "godot --headless --path . res://pruebas/prueba_menu_ciudad_pie.tscn" "0 fallos"
+# 5b. Las texturas de ruido en segundo plano son las de NoiseTexture2D, byte a byte (30-10)
+pasa "ruidos en segundo plano" "godot --headless --path . res://pruebas/probar_ruidos_fondo.tscn" "FIN. 0 fallos"
+pasa "textura del balón" "godot --headless --path . --script res://pruebas/probar_balon_textura.gd" "FIN. 0 fallos"
+pasa "textura del césped" "godot --headless --path . res://pruebas/probar_cesped_textura.tscn" "FIN. 0 fallos"
+pasa "texturas en disco (asfalto)" "godot --headless --path . res://pruebas/probar_imagen_en_disco.tscn" "FIN. 0 fallos"
+pasa "extensión C++ = GDScript" "godot --headless --path . res://pruebas/probar_nativo.tscn" "FIN. 0 fallos"
+pasa "caché horneada del build" "godot --headless --path . --script res://pruebas/probar_cache_horneada.gd" "FIN. 0 fallos"
+pasa "estadio y ciudad por partes" "godot --headless --path . res://pruebas/probar_por_partes.tscn" "FIN. 0 fallos"
 # 5b. Pruebas viejas que nadie lanzaba y siguen pasando (reutilizadas el 27-10, orden 14 del dueño)
 pasa "calidad adaptativa (escalones)" "godot --headless --path . res://pruebas/probar_rendimiento_adaptativo.tscn" "probar_rendimiento_adaptativo: 0 fallos"
 pasa "contador de FPS" "godot --headless --path . res://pruebas/prueba_contador_fps.tscn" "FIN CONTADOR FPS. 0 fallos"
 pasa "dominadas" "godot --headless --path . res://pruebas/prueba_dominadas.tscn" "DOMINADAS: 0 fallos"
+pasa "minijuego retro 5v5" "godot --headless --path . res://pruebas/ideas/m5_retro5v5.tscn" "FIN. 0 fallos"
+pasa "barrida, saque de mano, caídas y bloqueos" "godot --headless --path . res://pruebas/ideas/p4_saque_barrida.tscn" "FIN. 0 fallos"
+pasa "fallos de League-Soccer (posesión, menos de siete, libres)" "godot --headless --path . res://pruebas/ideas/fallos_terceros.tscn" "FIN. 0 fallos"
+pasa "la pizarra se nota (simulado y 3D)" "godot --headless --path . res://pruebas/ideas/j4_pizarra.tscn" "FIN. 0 fallos"
+pasa "el partido simulado tiene vida" "godot --headless --path . res://pruebas/ideas/j4_partido_vivo.tscn" "FIN. 0 fallos"
+pasa "el partido reacciona (clima, arenga, riesgo, plan)" "godot --headless --path . res://pruebas/ideas/j4_partido_reacciones.tscn" "FIN. 0 fallos"
+pasa "sonidos de sistema (todos existen, buses, silencio)" "godot --headless --path . res://pruebas/ideas/s7_sonidos_sistema.tscn" "FIN. 0 fallos"
+pasa "minijuegos 3D (penales y tiro libre)" "godot --headless --path . res://pruebas/ideas/m4_minijuegos_3d.tscn" "FIN. 0 fallos"
+pasa "el entrenamiento se nota" "godot --headless --path . res://pruebas/ideas/j9_entrenamiento.tscn" "FIN. 0 fallos"
+pasa "portero de la Carrera" "godot --headless --path . res://pruebas/ideas/cpor_portero.tscn" "FIN. 0 fallos"
+pasa "pasos y guardia del portero" "godot --headless --path . res://pruebas/ideas/pani_pasos.tscn" "FIN. 0 fallos"
 pasa "minijuegos nuevos" "godot --headless --path . res://pruebas/prueba_minijuegos_nuevos.tscn" "FIN MINIJUEGOS NUEVOS. 0 fallos"
 pasa "igualdad del motor con usuario" "godot --headless --path . res://pruebas/igualdad_motor.tscn" "FIN. 0 fallos"
 pasa "motor jugable (unidad)" "godot --headless --path . res://pruebas/prueba_motor_jugable.tscn" "FIN MOTOR. 0 fallos"
@@ -56,13 +89,86 @@ pasa "aspecto de los clubes" "godot --headless --path . res://pruebas/ideas/asp_
 pasa "trofeos por competición" "godot --headless --path . res://pruebas/ideas/tro_recetas.tscn" "FIN. 0 fallos"
 pasa "app Red del móvil" "godot --headless --path . res://pruebas/ideas/red_app.tscn" "FIN. 0 fallos"
 pasa "palmarés en la historia del club" "godot --headless --path . res://pruebas/ideas/pal_clubes.tscn" "FIN. 0 fallos"
+pasa "Países Bajos real y ficticio" "godot --headless --path . res://pruebas/ideas/c1_paises_bajos.tscn" "FIN. 0 fallos"
 pasa "controles táctiles del partido" "godot --headless --path . res://pruebas/ideas/tac_controles.tscn" "FIN. 0 fallos"
 # 6. Todas las pantallas y botones de la interfaz (lento)
+# 5d. ESCENAS DE PRUEBA REUTILIZADAS (2-11-2026, orden 14 del dueño: «ver qué se puede reutilizar antes de borrar»). Eran escenas que nadie
+#     lanzaba (ni banco, ni especiales, ni CI ni documentos); se corrieron una por una y las que pasan quedan aquí. Cada una cuesta ~10 s
+#     (casi todo es el arranque de Godot): en el CI se reparten entre las partes de `ESPECIALES_PARTE`. `ESPECIALES_SOLO=reutilizadas` corre solo este bloque.
+BLOQUE=reutilizadas
+pasa "banco_inicio" "godot --headless --path . res://pruebas/banco_inicio.tscn" "(^|[^0-9])0 fallos"
+pasa "bug_semilla" "godot --headless --path . res://pruebas/ideas/bug_semilla.tscn" "(^|[^0-9])0 fallos"
+pasa "cierre_anio_deudas" "godot --headless --path . res://pruebas/ideas/cierre_anio_deudas.tscn" "(^|[^0-9])0 fallos"
+pasa "clau_descenso_entreno" "godot --headless --path . res://pruebas/ideas/clau_descenso_entreno.tscn" "(^|[^0-9])0 fallos"
+pasa "cpor_portero" "godot --headless --path . res://pruebas/ideas/cpor_portero.tscn" "(^|[^0-9])0 fallos"
+pasa "desa_leyenda" "godot --headless --path . res://pruebas/ideas/desa_leyenda.tscn" "(^|[^0-9])0 fallos"
+pasa "desa_sin_dinero" "godot --headless --path . res://pruebas/ideas/desa_sin_dinero.tscn" "(^|[^0-9])0 fallos"
+pasa "desa_sin_red" "godot --headless --path . res://pruebas/ideas/desa_sin_red.tscn" "(^|[^0-9])0 fallos"
+pasa "disc_amarillas" "godot --headless --path . res://pruebas/ideas/disc_amarillas.tscn" "(^|[^0-9])0 fallos"
+pasa "ent1_unico_camino" "godot --headless --path . res://pruebas/ideas/ent1_unico_camino.tscn" "(^|[^0-9])0 fallos"
+pasa "exim_exportar_importar" "godot --headless --path . res://pruebas/ideas/exim_exportar_importar.tscn" "(^|[^0-9])0 fallos"
+pasa "f0d_tablas" "godot --headless --path . res://pruebas/ideas/f0d_tablas.tscn" "(^|[^0-9])0 fallos"
+pasa "f0m_nucleo" "godot --headless --path . res://pruebas/ideas/f0m_nucleo.tscn" "(^|[^0-9])0 fallos"
+pasa "f0m_visor_datos" "godot --headless --path . res://pruebas/ideas/f0m_visor_datos.tscn" "(^|[^0-9])0 fallos"
+pasa "f0m_visor_estadio" "godot --headless --path . res://pruebas/ideas/f0m_visor_estadio.tscn" "(^|[^0-9])0 fallos"
+pasa "f0p_principal" "godot --headless --path . res://pruebas/ideas/f0p_principal.tscn" "(^|[^0-9])0 fallos"
+pasa "f0r_reloj" "godot --headless --path . res://pruebas/ideas/f0r_reloj.tscn" "(^|[^0-9])0 fallos"
+pasa "f1e_entrada_campeonato" "godot --headless --path . res://pruebas/ideas/f1e_entrada_campeonato.tscn" "(^|[^0-9])0 fallos"
+pasa "f1e_pantalla_entrada" "godot --headless --path . res://pruebas/ideas/f1e_pantalla_entrada.tscn" "(^|[^0-9])0 fallos"
+pasa "f1m_modos" "godot --headless --path . res://pruebas/ideas/f1m_modos.tscn" "(^|[^0-9])0 fallos"
+pasa "f1p_personaje" "godot --headless --path . res://pruebas/ideas/f1p_personaje.tscn" "(^|[^0-9])0 fallos"
+pasa "f9_galeria_kit" "godot --headless --path . res://pruebas/ideas/f9_galeria_kit.tscn" "(^|[^0-9])0 fallos"
+pasa "fnt_idioma_vivo" "godot --headless --path . res://pruebas/ideas/fnt_idioma_vivo.tscn" "(^|[^0-9])0 fallos"
+pasa "fz0_globo_crear" "godot --headless --path . res://pruebas/ideas/fz0_globo_crear.tscn" "(^|[^0-9])0 fallos"
+pasa "m414_simetria" "godot --headless --path . res://pruebas/ideas/m414_simetria.tscn" "(^|[^0-9])0 fallos"
+pasa "m462_glifos" "godot --headless --path . res://pruebas/ideas/m462_glifos.tscn" "(^|[^0-9])0 fallos"
+pasa "mc_contratos" "godot --headless --path . res://pruebas/ideas/mc_contratos.tscn" "(^|[^0-9])0 fallos"
+pasa "mer_precontratos" "godot --headless --path . res://pruebas/ideas/mer_precontratos.tscn" "(^|[^0-9])0 fallos"
+pasa "onb_arranque" "godot --headless --path . res://pruebas/ideas/onb_arranque.tscn" "(^|[^0-9])0 fallos"
+pasa "p3_grada_colores" "godot --headless --path . res://pruebas/ideas/p3_grada_colores.tscn" "(^|[^0-9])0 fallos"
+pasa "p6_pasto_drive" "godot --headless --path . res://pruebas/ideas/p6_pasto_drive.tscn" "(^|[^0-9])0 fallos"
+pasa "pc_primer_contrato" "godot --headless --path . res://pruebas/ideas/pc_primer_contrato.tscn" "(^|[^0-9])0 fallos"
+pasa "pcam_encuadre" "godot --headless --path . res://pruebas/ideas/pcam_encuadre.tscn" "(^|[^0-9])0 fallos"
+pasa "pcam_repeticion" "godot --headless --path . res://pruebas/ideas/pcam_repeticion.tscn" "(^|[^0-9])0 fallos"
+pasa "pcar_agenda" "godot --headless --path . res://pruebas/ideas/pcar_agenda.tscn" "(^|[^0-9])0 fallos"
+pasa "pcar_avisos_idioma" "godot --headless --path . res://pruebas/ideas/pcar_avisos_idioma.tscn" "(^|[^0-9])0 fallos"
+pasa "pcar_tiro" "godot --headless --path . res://pruebas/ideas/pcar_tiro.tscn" "(^|[^0-9])0 fallos"
+pasa "pciu_luces_calle" "godot --headless --path . res://pruebas/ideas/pciu_luces_calle.tscn" "(^|[^0-9])0 fallos"
+pasa "pint_charla" "godot --headless --path . res://pruebas/ideas/pint_charla.tscn" "(^|[^0-9])0 fallos"
+pasa "pint_vestuario" "godot --headless --path . res://pruebas/ideas/pint_vestuario.tscn" "(^|[^0-9])0 fallos"
+pasa "plan_costumbre" "godot --headless --path . res://pruebas/ideas/plan_costumbre.tscn" "(^|[^0-9])0 fallos"
+pasa "pmot_control" "godot --headless --path . res://pruebas/ideas/pmot_control.tscn" "(^|[^0-9])0 fallos"
+pasa "pmot_faltas" "godot --headless --path . res://pruebas/ideas/pmot_faltas.tscn" "(^|[^0-9])0 fallos"
+pasa "pmov_peatones_esquivan" "godot --headless --path . res://pruebas/ideas/pmov_peatones_esquivan.tscn" "(^|[^0-9])0 fallos"
+pasa "r6b_rueda_prensa" "godot --headless --path . res://pruebas/ideas/r6b_rueda_prensa.tscn" "(^|[^0-9])0 fallos"
+pasa "red_apagon" "godot --headless --path . res://pruebas/ideas/red_apagon.tscn" "(^|[^0-9])0 fallos"
+pasa "reg_registro" "godot --headless --path . res://pruebas/ideas/reg_registro.tscn" "(^|[^0-9])0 fallos"
+pasa "s2p_peticiones" "godot --headless --path . res://pruebas/ideas/s2p_peticiones.tscn" "(^|[^0-9])0 fallos"
+pasa "s3f_fisica" "godot --headless --path . res://pruebas/ideas/s3f_fisica.tscn" "(^|[^0-9])0 fallos"
+pasa "s3p_salida_centros" "godot --headless --path . res://pruebas/ideas/s3p_salida_centros.tscn" "(^|[^0-9])0 fallos"
+pasa "s6_paises_lote1" "godot --headless --path . res://pruebas/ideas/s6_paises_lote1.tscn" "(^|[^0-9])0 fallos"
+pasa "s6r_retos_semana" "godot --headless --path . res://pruebas/ideas/s6r_retos_semana.tscn" "(^|[^0-9])0 fallos"
+pasa "s7b_bloqueo_modos" "godot --headless --path . res://pruebas/ideas/s7b_bloqueo_modos.tscn" "(^|[^0-9])0 fallos"
+pasa "s7d_doble_toque" "godot --headless --path . res://pruebas/ideas/s7d_doble_toque.tscn" "(^|[^0-9])0 fallos"
+pasa "s7m_mentor_mes" "godot --headless --path . res://pruebas/ideas/s7m_mentor_mes.tscn" "(^|[^0-9])0 fallos"
+pasa "s7t_tutorial_capas" "godot --headless --path . res://pruebas/ideas/s7t_tutorial_capas.tscn" "(^|[^0-9])0 fallos"
+pasa "s7x_desafios_dificultad" "godot --headless --path . res://pruebas/ideas/s7x_desafios_dificultad.tscn" "(^|[^0-9])0 fallos"
+pasa "trad_prensa" "godot --headless --path . res://pruebas/ideas/trad_prensa.tscn" "(^|[^0-9])0 fallos"
+pasa "trad_tutorial" "godot --headless --path . res://pruebas/ideas/trad_tutorial.tscn" "(^|[^0-9])0 fallos"
+pasa "tre_coches" "godot --headless --path . res://pruebas/ideas/tre_coches.tscn" "(^|[^0-9])0 fallos"
+pasa "zz_alt" "godot --headless --path . res://pruebas/ideas/zz_alt.tscn" "(^|[^0-9])0 fallos"
+pasa "timing_disparo_jugadas" "godot --headless --path . res://pruebas/timing_disparo_jugadas.tscn" "(^|[^0-9])0 fallos"
+BLOQUE=""
 if [ "$1" = "todo" ]; then
+  # Reutilizadas lentas (> 45 s cada una)
+  pasa "estres_tirolibre" "godot --headless --path . res://pruebas/estres_tirolibre.tscn" "(^|[^0-9])0 fallos"
+  pasa "cop_prorroga_tanda" "godot --headless --path . res://pruebas/ideas/cop_prorroga_tanda.tscn" "(^|[^0-9])0 fallos"
+  pasa "p4_mobiliario_bajo" "godot --headless --path . res://pruebas/ideas/p4_mobiliario_bajo.tscn" "(^|[^0-9])0 fallos"
 # 6a. Presupuesto de triángulos y llamadas de dibujo del partido (M-338): con pantalla virtual; ~5 min
 if command -v xvfb-run >/dev/null; then
 pasa "troceo de la grada sin butacas perdidas" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_troceo_grada.tscn" "FIN. 0 fallos"
 pasa "presupuesto del partido" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/presupuesto_partido.tscn" "FIN. 0 fallos"
+pasa "presupuesto del recorrido (menú, estadio, ciudad)" "herramientas/presupuesto.sh" "FIN. 0 fallos"
 fi
   # Balance del mundo a largo plazo (10 temporadas x 3 semillas, ~3,5 min) y rendimiento en 20 (~1,5 min)
   pasa "balance en 10 temporadas" "godot --headless --path . res://pruebas/ideas/eq_diez_temporadas.tscn" "FIN. 0 fallos"
@@ -77,7 +183,7 @@ fi
   # M-333: los rótulos 3D de la ciudad entera, en inglés, pasan por Idiomas.t
   pasa "carteles 3D traducidos" "godot --headless --path . res://pruebas/ideas/idi_carteles3d.tscn" "FIN. 0 fallos"
   # El guion, fases 1-5 (auditoría del 28-10: estas pruebas existían y no las corría nadie; ~3 min)
-  for F in f1o_flujo f2p_prologo f3v_vida f3c_casa f4p_citas f4p_personas f4r_rutinas f5c_club; do
+  for F in f0_contratos f1o_flujo f2p_prologo f3v_vida f3c_casa f4p_citas f4p_personas f4r_rutinas f5c_club; do
     pasa "guion: $F" "godot --headless --path . res://pruebas/ideas/$F.tscn" "FIN. 0 fallos"
   done
   # M-283, M-300, M-296, M-311, M-290: avisos de sonido, deshacer en la pizarra, bandeja por temas, resumen de carrera, datos de tarjetas

@@ -75,7 +75,7 @@ func _hacer_bote(k: int) -> Node3D:
 	var n := Node3D.new()
 	n.name = "Bote"
 	var casco := [Color(0.9, 0.9, 0.88), Color(0.15, 0.3, 0.55), Color(0.7, 0.15, 0.12)][k % 3] as Color
-	var mc := _mat_simple(casco, 0.4)
+	var mc := _mat_unico(casco, 0.4)
 	var c := MeshInstance3D.new()
 	var bm := BoxMesh.new()
 	bm.size = Vector3(3.4, 1.2, 9.0)
@@ -106,6 +106,10 @@ func _hacer_bote(k: int) -> Node3D:
 	toldo.position = Vector3(0, 2.25, -0.8)
 	n.add_child(toldo)
 	return n
+
+## En el prólogo (2-11) el tráfico y los peatones del anillo son el 40 %: la calle se ve viva y se arma bastante antes.
+func _n_pro(n: int) -> int:
+	return maxi(1, int(round(float(n) * 0.4))) if CityBuilder.modo_prologo else n
 
 func _trafico() -> void:
 	var t := TraficoCiudad.new()
@@ -146,8 +150,8 @@ func _trafico() -> void:
 		## club de barrio a 10 en uno grande. Una ciudad de primera división no
 		## puede tener las calles igual de vacías que una de tercera.
 		var por_sentido: int = int(round(lerpf(4.0, 10.0, _empuje_club())))
-		for i in range(por_sentido):
-			var nodo: Node3D = instanciar_coche(coches[rng.randi() % coches.size()], rng)
+		for i in range(_n_pro(por_sentido)):
+			var nodo: Node3D = instanciar_trafico(coches[rng.randi() % coches.size()], rng)
 			## Giro 0: `instanciar_coche` ya deja el morro en +Z (ver arriba).
 			t.agregar_vehiculo(nodo, id, rng.randf() * 1800.0,
 				rng.randf_range(13.0, 22.0), 0.0, 0.0)
@@ -167,8 +171,8 @@ func _trafico() -> void:
 		var id_ex := t.agregar_ruta(_redondear(esq2, 30.0))
 		if coches.is_empty():
 			continue
-		for i in range(int(round(lerpf(3.0, 7.0, _empuje_club())))):
-			var n_ex: Node3D = instanciar_coche(coches[rng.randi() % coches.size()], rng)
+		for i in range(_n_pro(int(round(lerpf(3.0, 7.0, _empuje_club()))))):
+			var n_ex: Node3D = instanciar_trafico(coches[rng.randi() % coches.size()], rng)
 			t.agregar_vehiculo(n_ex, id_ex, rng.randf() * 2200.0,
 				rng.randf_range(15.0, 24.0), 0.0, 0.0)
 		## Los autobuses del anillo (la vieja línea 5 amarilla) ya no van aquí (28-10-2026): las cuatro marquesinas del anillo son
@@ -192,8 +196,8 @@ func _trafico() -> void:
 		var id2 := t.agregar_ruta(_redondear(circuito, 7.0))
 		if coches.is_empty():
 			continue
-		for i in range(int(tramo["n"])):
-			var nodo2: Node3D = instanciar_coche(coches[rng.randi() % coches.size()], rng)
+		for i in range(_n_pro(int(tramo["n"]))):
+			var nodo2: Node3D = instanciar_trafico(coches[rng.randi() % coches.size()], rng)
 			t.agregar_vehiculo(nodo2, id2, rng.randf() * 600.0,
 				rng.randf_range(9.0, 15.0), 0.0, 0.0)
 
@@ -212,14 +216,14 @@ func _trafico() -> void:
 		if sentido_p < 0.0:
 			esq_p.reverse()
 		var id_p := t.agregar_ruta(_redondear(esq_p, 20.0))
-		for i in range(int(round(lerpf(10.0, 22.0, _empuje_club())))):
+		for i in range(_n_pro(int(round(lerpf(10.0, 22.0, _empuje_club()))))):
 			_un_peaton(t, rng_p, id_p, rng_p.randf() * 2400.0)
 	var acera_av := PackedVector3Array([
 		Vector3(-(ANCHO_CALLE * 0.5 + BORDILLO + ACERA * 0.5), 0.3, -85.0), Vector3(-(ANCHO_CALLE * 0.5 + BORDILLO + ACERA * 0.5), 0.3, RING_Z_SUR - 10.0),
 		Vector3(ANCHO_CALLE * 0.5 + BORDILLO + ACERA * 0.5, 0.3, RING_Z_SUR - 10.0), Vector3(ANCHO_CALLE * 0.5 + BORDILLO + ACERA * 0.5, 0.3, -85.0),
 	])
 	var id_av := t.agregar_ruta(_redondear(acera_av, 5.0))
-	for i in range(int(round(lerpf(6.0, 14.0, _empuje_club())))):
+	for i in range(_n_pro(int(round(lerpf(6.0, 14.0, _empuje_club()))))):
 		_un_peaton(t, rng_p, id_av, rng_p.randf() * 900.0)
 
 	## 4) LOS BOTES DEL RÍO (7-10-2026). El velero tiene el mástil más alto

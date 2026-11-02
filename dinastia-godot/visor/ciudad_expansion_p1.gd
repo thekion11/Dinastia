@@ -292,6 +292,7 @@ var _lejanos: Array[Rect2] = []
 var _sin_lejano: Array[Rect2] = []
 
 var _ventanas_lejanas: ShaderMaterial
+var _casas_mat: ShaderMaterial   ## (§2.5) el material de las casas del kit: noche y apagón por sector
 
 ## LOTES: las cajas planas que más se repiten (calzadas, aceras, solares,
 ## césped) se juntan por material en un MultiMesh cada una. Eran miles de

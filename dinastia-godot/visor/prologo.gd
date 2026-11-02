@@ -23,6 +23,8 @@ static var rapido := false
 ## Partida cargada (fase 3, bloque 7): "" = el guion entero; "oficina" o "casa" = sin
 ## guion, aparecer ahí con el PC listo (lo pone `Inicio` según `VidaCiudad.arranque_3d`).
 static var directo := ""
+## Mientras la escena del prólogo está viva (2-11): el explorador acorta el plano lejano de la cámara (la ciudad está recortada).
+static var activo := false
 
 var mundo: Mundo
 var club: Club
@@ -38,6 +40,8 @@ var est: Dictionary = {}        ## `TunelVestuario.datos` del estadio del club
 var puerta := Vector3.ZERO      ## la puerta del club, en el mundo
 var paso_i := -1
 var frases: Array[String] = []
+## Quién dice cada frase: "" = el mentor; si no, la clave del personal del club (`PersonalEstadio`).
+var hablantes: Array[String] = []
 var frase_i := -1
 var destino := Vector3.INF
 var destino_planta := 0
@@ -49,7 +53,11 @@ var _directiva_hecha := false
 var _guardado_al_encender := false
 var _listo := false
 
+func _exit_tree() -> void:
+	activo = false
+
 func _ready() -> void:
+	activo = true
 	mundo = PedidoPartida.mundo_pregenerado if PedidoPartida.mundo_pregenerado != null else PedidoPartida.mundo_a_cargar
 	club = mundo.mi_club() if mundo != null else null
 	if club == null or mundo.obras == null or mundo.ciudad == null:
@@ -62,10 +70,14 @@ func _ready() -> void:
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(fondo)
 	PantallaCarga.club = club
+	## (30-10) El club del jugador: sin esto, en una partida nueva (el menú central aún no lo puso)
+	## el edificio salía sin su personal y nadie saludaba en el recorrido.
+	PersonajeDT.club_usuario = club.id
 	var carga := PantallaCarga.mostrar(self, Idiomas.t("Construyendo la ciudad…"))
-	await get_tree().process_frame
-	await get_tree().process_frame
-	_construir_mundo()
+	await PantallaCarga.dejar_pintar(get_tree())
+	CityBuilder.modo_prologo = OS.get_environment("PROLOGO_COMPLETO") == ""   ## solo el barrio del club (2-11); PROLOGO_COMPLETO=1 = la ciudad entera, para comparar
+	await _construir_mundo()
+	CityBuilder.modo_prologo = false
 	if is_instance_valid(carga):
 		carga.cerrar()
 	hud = PrologoHud.new()
@@ -85,14 +97,38 @@ func _ready() -> void:
 	else:
 		_ir_al_paso(0)
 
+## Las cajas de setos, jardineras y arbustos cerca de `centro` (a menos de 40 m): donde un personaje que
+## aparece de golpe quedaría metido en la vegetación.
+static func obstaculos_blandos(raiz: Node, centro: Vector3) -> Array[AABB]:
+	var r: Array[AABB] = []
+	for n in raiz.find_children("*", "MultiMeshInstance3D", true, false):
+		var mm := n as MultiMeshInstance3D
+		var nom := String(mm.name).to_lower()
+		if mm.multimesh == null or not (nom.contains("seto") or nom.contains("jardiner") or nom.contains("arbust")):
+			continue
+		var caja := mm.multimesh.mesh.get_aabb() if mm.multimesh.mesh != null else AABB(Vector3(-0.5, -0.5, -0.5), Vector3.ONE)
+		for i in mm.multimesh.instance_count:
+			var t := mm.global_transform * mm.multimesh.get_instance_transform(i)
+			if t.origin.distance_to(centro) < 40.0:
+				r.append(t * caja)
+	for n in raiz.find_children("*", "MeshInstance3D", true, false):
+		var mi := n as MeshInstance3D
+		if mi.mesh == null or not mi.is_inside_tree() or mi.global_position.distance_to(centro) > 40.0:
+			continue
+		var nom := String(mi.name).to_lower()
+		if mi.mesh is SphereMesh or nom.contains("seto") or nom.contains("arbust") or nom.contains("macet"):
+			r.append(mi.global_transform * mi.get_aabb())
+	return r
+
 ## La ciudad del club (misma semilla y estadio que la ciudad de siempre).
 func _construir_mundo() -> void:
 	vista = VistaCiudad.new()
+	vista.por_partes = true   ## armado entre fotogramas: la pantalla de carga sigue viva (antes se quedaba GRIS, congelada)
 	add_child(vista)
 	vista.animo = CiudadAnimo.de(mundo, club)
 	EdificioClub.fijar_ctx(mundo, club)
 	var perfil := mundo.perfil_estadio_de(club)
-	vista.abrir(club, mundo.obras, mundo.ciudad, perfil)
+	await vista.abrir(club, mundo.obras, mundo.ciudad, perfil)
 	est = TunelVestuario.datos(perfil, StadiumBuilder.niveles_de(perfil, int(perfil.get("aforo", 20000))))
 	puerta = CityBuilder.ESTADIO_EN + (est["puerta"] as Vector3)
 	## La cámara aérea mira al estadio mientras dura la presentación.
@@ -107,6 +143,7 @@ func _construir_mundo() -> void:
 	vista._ciclo_activo = false
 	vista._hora = 10.0
 	vista._aplicar_hora()
+	PrologoMentor.obstaculos = obstaculos_blandos(vista._raiz3d, puerta)
 
 func _empezar_a_pie() -> void:
 	vista.explorar("pie", puerta + Vector3(0, 0, 7.0))
@@ -154,6 +191,9 @@ func _ir_al_paso(i: int) -> void:
 	paso_i = i
 	var p: Dictionary = PrologoPasos.PASOS[i]
 	frases = PrologoPasos.frases_de(p, mentor.nombre)
+	hablantes.clear()
+	for f in frases:
+		hablantes.append("")
 	frase_i = -1
 	hud.tarjeta(PrologoPasos.tarjeta_controles(p))
 	esperando_entrada = false
@@ -194,8 +234,45 @@ func _centro_zona(zona: String, planta: int) -> Vector3:
 	var c := mejor.get_center()
 	return CityBuilder.ESTADIO_EN + Vector3(c.x, RecorridoClub.y_de(planta), c.y)
 
+## (§2.5, 30-10) Al llegar a la sala, su personal saluda primero, si está en su puesto.
+func _meter_saludo() -> void:
+	var sal := PrologoPasos.saludo_de(PrologoPasos.PASOS[paso_i])
+	if sal.is_empty() or (not hablantes.is_empty() and hablantes[0] != "") or _personal(String(sal[0])).is_empty():
+		return
+	frases.insert(0, String(sal[1]))
+	hablantes.insert(0, String(sal[0]))
+
+## El personal del club con esa clave, si está a la vista (o vacío).
+func _personal(clave: String) -> Dictionary:
+	var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio if is_inside_tree() else null
+	if pe == null:
+		return {}
+	var g := pe.buscar(clave)
+	if g.is_empty() or not is_instance_valid(g["nodo"]) or not (g["nodo"] as Node3D).visible:
+		return {}
+	return g
+
+## Quien saluda te mira y hace el gesto; al terminar (`si` = false) vuelve a lo suyo.
+func _atender_personal(clave: String, si: bool) -> Dictionary:
+	var g := _personal(clave)
+	if g.is_empty():
+		return g
+	var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+	pe.atender(g, explorador.cuerpo.position - CityBuilder.ESTADIO_EN, si)
+	if si:
+		pe.gesto(g, ["saludo_mano", "saludar_publico"])
+	return g
+
 func _hablar() -> void:
+	if frase_i >= 0 and frase_i < hablantes.size() and hablantes[frase_i] != "":
+		_atender_personal(hablantes[frase_i], false)
 	frase_i += 1
+	if frase_i < hablantes.size() and hablantes[frase_i] != "":
+		explorador.pausar(true)
+		var g := _atender_personal(hablantes[frase_i], true)
+		var quien := "%s · %s" % [String(g.get("nombre", "")), String(g.get("puesto", ""))] if not g.is_empty() else ""
+		dialogo.decir(quien, frases[frase_i], Color(0.85, 0.85, 0.8), frase_i, frases.size())
+		return
 	if frase_i >= frases.size():
 		dialogo.cerrar()
 		mentor.hablar(false)
@@ -210,7 +287,7 @@ func _hablar() -> void:
 	explorador._t_burbuja = 120.0
 	explorador._colocar_camara(1.0)
 	mentor.mirar_a(explorador.cuerpo.position)
-	if frase_i == 0:
+	if frase_i == 0 or hablantes[frase_i - 1] != "":
 		mentor.hablar(true)
 	dialogo.decir(mentor.nombre, frases[frase_i], Color(club.color1).lerp(Color.WHITE, 0.35), frase_i, frases.size())
 
@@ -259,6 +336,7 @@ func _process(_delta: float) -> void:
 		if String(PrologoPasos.PASOS[paso_i]["clave"]) == "llegada":
 			_ir_al_paso(paso_i + 1)
 		else:
+			_meter_saludo()
 			_hablar()
 
 func _input(ev: InputEvent) -> void:

@@ -40,12 +40,8 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	## campo: "burbujas translúcidas quietas cerca del círculo central, solo de
 	## noche". Reproducido con `pruebas/captura_columna_noche.gd`. El césped
 	## nunca es un espejo: la rampa deja la rugosidad entre 0,78 y 1.
-	var rugosidad := Texturas._tex_ruido(0.03, 97, false, 4, FastNoiseLite.TYPE_SIMPLEX_SMOOTH, true)
-	var rampa := Gradient.new()
-	rampa.set_color(0, Color(0.78, 0.78, 0.78))
-	rampa.set_color(1, Color(1, 1, 1))
-	rugosidad.color_ramp = rampa
-	gmat.roughness_texture = rugosidad
+	## (La rampa 0,78 → 1 es la de `_ruido_claro`: la misma textura, compartida y en disco.)
+	gmat.roughness_texture = Texturas._ruido_claro(0.03, 97, 4, 0.78)
 	gmat.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
 	gmat.metallic = 0.0
 	gmat.metallic_specular = 0.18

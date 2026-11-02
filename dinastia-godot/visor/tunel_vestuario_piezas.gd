@@ -91,9 +91,9 @@ static func materiales(c1: Color, c2: Color) -> Dictionary:
 	var madera := TunelVestuario._mat(Color(0.56, 0.4, 0.25).lerp(c1, 0.12), 0.55)
 	var fondo := TunelVestuario._mat(Color(0.2, 0.21, 0.23).lerp(c1, 0.25), 0.7)
 	var cojin := TunelVestuario._mat(c1.lerp(Color(0.08, 0.08, 0.1), 0.15), 0.9)
-	var placa := TunelVestuario._mat(Color(0.1, 0.1, 0.12), 0.35)
+	var placa := TunelVestuario._mat_unico(Color(0.1, 0.1, 0.12), 0.35)
 	placa.metallic = 0.4
-	var tira := TunelVestuario._mat(Color(1, 0.93, 0.78), 0.4)
+	var tira := TunelVestuario._mat_unico(Color(1, 0.93, 0.78), 0.4)
 	tira.emission_enabled = true
 	tira.emission = Color(1, 0.88, 0.62)
 	tira.emission_energy_multiplier = 1.8
