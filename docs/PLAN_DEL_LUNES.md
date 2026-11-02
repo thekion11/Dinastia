@@ -609,7 +609,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-404 | P1 | PARCIAL | Módulos de `visor/` sin prueba directa | medido el 27-10: 22 de 131 (2-11: `FundirPiezas` ya tiene prueba en el banco, `_probar_fundir_piezas`; 28 siguen), casi todos rellenos de ciudad (`CiudadMercado`, `CiudadSolar`, `FachadaModular`…) que solo se ejercitan al construir la ciudad en las sondas `p3_*`/`tre_*`; falta una sonda que compruebe que cada relleno deja piezas |
+| M-404 | P1 | PARCIAL | Módulos de `visor/` sin prueba directa | medido el 27-10: 22 de 131 (2-11: `FundirPiezas` y 8 rellenos de ciudad ya tienen prueba en el banco, `_probar_fundir_piezas` y `_probar_rellenos_ciudad`; ~20 siguen), casi todos rellenos de ciudad (`CiudadMercado`, `CiudadSolar`, `FachadaModular`…) que solo se ejercitan al construir la ciudad en las sondas `p3_*`/`tre_*`; falta una sonda que compruebe que cada relleno deja piezas |
 | M-379 | P2 | PARCIAL | 70 funciones > 120 líneas (medido 28-10): las 5 peores eran `_butacas` 354, `_control_usuario` 274, `Estadio._construir` 254, `_piscina` 239, `_estacion` 233 | 28-10: partidas `_butacas` (stadium_builder_p6: paleta, poblar, hinchas, montar; hash idéntico de todos los MultiMesh en 2 calidades × 3 clubes), `Estadio._construir` (HUD y cajón aparte) y `_piscina` (8 zonas; mismo árbol de nodos). `_control_usuario` partido con la huella de `igualdad_motor` idéntica. Quedan 66 (siguientes: `_estacion` 233, `_ver_ficha` 212, `_pintar_dispositivo` 211) |
 | M-382 | P2 | PENDIENTE | Sin análisis estático | sin gdlint |
 | M-383 | P2 | PENDIENTE | Tipado: muchos `Dictionary` sin forma (jugadores del motor) | sin `JugadorMotor` tipado |
