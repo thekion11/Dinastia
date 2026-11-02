@@ -812,7 +812,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-079 | P1 | PENDIENTE | Retrato real 13 % (base real) | 13 % con retrato real; descarga bloqueada por la red |
 | M-091 | P1 | PARCIAL | Botines: variedad añadida, pero sin modelos distintos por forma | `VestidorQ._botin_de` varía modelo/color por dorsal; no hay mallas de bota alta/calcetín |
 | M-094 | P1 | PARCIAL | Animación de caminata del DT: 6 estilos (✅) | «Mi caminata» con 6 estilos para el DT; peatones y jugadores no |
-| M-095 | P1 | PARCIAL | Auditoría automática de clips usados | hecha para ciudad/UAL (`p3_clips_ual`) y para el partido (`p3_clips_partido`, 2-11: los 38 nombres que el partido pide y las 22 categorías de variantes existen en un futbolista, que trae 350 animaciones); falta que cada clip de las 350 se use o se descarte a propósito |
 | M-037 | P2 | PENDIENTE | Sin sector «barra brava»/torcida con comportamiento diferente (de… | sin sector ultra con bengalas/humo |
 | M-038 | P2 | PENDIENTE | Hinchas sentados con piernas invisibles (se cortan en la cadera) | público horneado cortado en la cadera |
 | M-039 | P2 | PARCIAL | Tres niveles de detalle; el salto «cerca→medio→lejos» puede verse | detalle por distancia por tramos de grada (16-10, 2,24→1,72 M tris); sin mezcla por dithering |
