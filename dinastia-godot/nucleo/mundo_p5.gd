@@ -2,6 +2,10 @@ extends "res://nucleo/mundo_p5_p2.gd"
 ## [Capa 7/10 de `mundo.gd`] avanzar_semana, _semana_modulos_del_club, _semana_banco, _semana_ingresos_comerciales, _semana_enfermeria, _semana_entrenamiento … (+3)
 ## enfermería, entrenamiento, federación y plantel, continental y copa) y el guion `avanzar_semana`.
 
+## (Fase 0 §7.2, 31-10) La partida se guardó al salir de la entrada con el prólogo 3D aún por hacer:
+## «Continuar» vuelve al prólogo (`VidaCiudad.arranque_3d` → "prologo").
+var prologo_pendiente := false
+
 ## Avanza una semana: jornada, dinero, mercado y recuperación, en ese orden.
 ##
 ## Es un guion: cada línea es una fase con nombre (fases 1-4 en `mundo_p5_p1.gd`, 5-13 en
@@ -19,6 +23,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 		ya_jugado.cerrar_notas_mirado()
 	_semana_contexto_de_partidos()
 	_semana_once_antes_de_jugar()
+	if necesidades.preparacion_cambio():   ## §2.5: cansado o con hambre, el partido de esta semana lo nota
+		aplicar_bonificadores()
 	var jugaron_en_casa := _semana_jugar_ligas(ya_jugado)
 	_semana_caja_y_plantillas(jugaron_en_casa)
 	CrisisCaja.semana(self)   ## multas, recortes de patrocinio y obras que se encarecen (M-208)

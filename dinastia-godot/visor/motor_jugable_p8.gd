@@ -9,9 +9,9 @@ func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	## La pizarra (con todo a 1, lo de siempre): la línea adelanta o retrasa el
 	## bloque, la mentalidad lo empuja y la amplitud abre a los de banda.
 	var loc := bool(p["es_local"])
-	var lin := float(_tac(loc, "linea") - 1)
-	var men := float(_tac(loc, "mentalidad") - 1)
-	var amp := float(_tac(loc, "amplitud") - 1)
+	var lin := float(_tac(loc, "linea") - 1) + MotorTacticaViva.f(self as Object as MotorJugable, loc, "linea")   ## + estilo del club (U8)
+	var men := float(_tac(loc, "mentalidad") - 1) + MotorTacticaViva.urgencia(self as Object as MotorJugable, loc)   ## + marcador y reloj (U2, 01-11)
+	var amp := float(_tac(loc, "amplitud") - 1) + MotorTacticaViva.f(self as Object as MotorJugable, loc, "amplitud")
 	var z := base.z * 0.55 + b.z * 0.45 + (d * (9.0 + men * 3.0) if en_posesion else -d * 3.0)
 	z += d * (lin * 3.5 + men * 2.0)
 	var x := base.x * (0.8 + (amp * 0.12 if en_posesion else 0.0)) + b.x * 0.22
@@ -118,6 +118,8 @@ func _gatillo_presion(dueno: Dictionary) -> bool:
 	var mira := Vector3(sin(float(dueno.get("mirar", 0.0))), 0, cos(float(dueno.get("mirar", 0.0))))
 	if mira.dot((propio - q).normalized()) > 0.6:
 		return true
+	if MotorPresion.zona(self as Object as MotorJugable, dueno):   ## presión por zona (U1, 01-11)
+		return true
 	return q.distance_to(propio) < 24.0 and _rol(dueno) in ["DFC", "LD", "LI", "POR"]
 
 func _linea_defensiva(local: bool) -> float:
@@ -167,12 +169,9 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	p["correr"] = false
 	var b := balon.position
 	var arco := _arco_propio(p)
-	var cercanos: Array = []
-	for q: Dictionary in jugadores:
-		if bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and not (q == usuario and not autopiloto):
-			cercanos.append([pos(q).distance_to(b), q])
-	cercanos.sort_custom(func(a: Array, c: Array) -> bool: return float(a[0]) < float(c[0]))
-	## El más cercano presiona; el segundo cubre entre el balón y el arco.
+	## El que presiona y el segundo, estables (R3, 01-11: `MotorPresion`); el segundo cubre entre el balón y el arco.
+	var pp := MotorPresion.papeles(self as Object as MotorJugable, bool(p["es_local"]))
+	var yo := String(p.get("id", ""))
 	## Presión baja: lejos de su área se temporiza; presión alta: van dos.
 	var pres := _tac(bool(p["es_local"]), "presion")
 	## GATILLOS DE PRESIÓN (21-10-2026, M-124): hay momentos en que hasta un
@@ -180,7 +179,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	var gatillo := false
 	if not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]):
 		gatillo = _gatillo_presion(poseedor)
-	if not cercanos.is_empty() and cercanos[0][1] == p:
+	if yo != "" and pp[0] == yo:
 		if pres == 0 and not gatillo and b.distance_to(arco) > 42.0 and pos(p).distance_to(b) > 9.0:
 			return b + (arco - b).normalized() * 5.0
 		p["correr"] = true
@@ -189,7 +188,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 			var ba := b + _plano(poseedor["vel"] as Vector3) * clampf(pos(p).distance_to(b) / 8.0, 0.0, 0.5)
 			return ba + (arco - ba).normalized() * 0.8
 		return b + (arco - b).normalized() * 0.8
-	if cercanos.size() > 1 and cercanos[1][1] == p:
+	if yo != "" and pp[1] == yo:
 		if pres == 2 or (pres == 1 and gatillo):
 			p["correr"] = true
 			return b + (arco - b).normalized() * 2.5
@@ -197,7 +196,8 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	## Los demás: zona, marcando al rival más cercano.
 	var obj := _forma(p, false)
 	var rival: Dictionary = {}
-	var md := 11.0
+	var al_hombre := MotorTacticaViva.bandera(self as Object as MotorJugable, bool(p["es_local"]), "marca")   ## pizarra: marca al hombre (01-11)
+	var md := 16.0 if al_hombre else 11.0
 	for q: Dictionary in jugadores:
 		if bool(q["es_local"]) != bool(p["es_local"]) and not bool(q["por"]):
 			var d := pos(q).distance_to(obj)
@@ -206,7 +206,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 				rival = q
 	if not rival.is_empty():
 		## Marca a distancia de zona: entre el rival y el arco, a 2,4 m.
-		obj = pos(rival) + (arco - pos(rival)).normalized() * 2.4
+		obj = pos(rival) + (arco - pos(rival)).normalized() * (1.2 if al_hombre else 2.4)
 	## La defensa no persigue a cada delantero hacia su arco: se queda en la
 	## línea común (M-123) y solo cierra por dentro hacia el que marca.
 	if _rol(p) in ["DFC", "LD", "LI"] and not _SIN_LINEA:
@@ -337,12 +337,24 @@ func _lanzar_barrida(p: Dictionary) -> void:
 	_mirar(p, atan2(dir.x, dir.z), 0.45)
 	p["barrida_hasta"] = t + 0.45
 	p["barrida_dir"] = dir
-	_anim(p, ["barrida_lateral", "barrida_corta", "barrida_rapida", "barrida_larga"][_rng.randi() % 4], true)
+	## (31-10) Una de cada tres, la barrida de la UAL2: entra, se desliza y se levanta (1,8 s; las hechas a mano duran menos).
+	if _rng.randf() < 0.34 and AnimExtra.unir(p.get("anim"), FutbolistaQ.esqueleto_de(p["node"]), "barrida_real", AnimExtra.BARRIDA_REAL):
+		_anim(p, "barrida_real", true, 1.9)
+	else:
+		_anim(p, ["barrida_lateral", "barrida_corta", "barrida_rapida", "barrida_larga"][_rng.randi() % 4], true)
 
 ## Mientras dura, el que barre no maneja nada (está en el suelo): true.
 func _seguir_barrida(p: Dictionary) -> bool:
+	## LEVANTÁNDOSE (31-10): tras la barrida de la UAL2 sigue en el suelo, frenando, hasta que el clip lo pone de pie (si no, se le
+	## veía deslizarse tumbado a velocidad de carrera).
+	if float(p.get("levanta_hasta", 0.0)) > t:
+		p["objetivo"] = pos(p)
+		p["correr"] = false
+		return true
 	if float(p.get("barrida_hasta", 0.0)) <= 0.0:
 		return false
+	if String(p.get("anim_actual", "")) == "barrida_real":
+		p["levanta_hasta"] = float(p.get("gesto_hasta", 0.0)) - 0.15
 	if not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]) and pos(poseedor).distance_to(pos(p)) < 1.4:
 		p["barrida_hasta"] = 0.0
 		_entrada(p, true)

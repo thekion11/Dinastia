@@ -1,0 +1,70 @@
+#ifndef _HPP_OBJECT_CAMERA
+#define _HPP_OBJECT_CAMERA
+
+#include "base/math/quaternion.hpp"
+#include "base/math/vector3.hpp"
+#include "defines.hpp"
+#include "scene/object.hpp"
+#include "types/interpreter.hpp"
+
+namespace blunted {
+
+class Light;
+class Geometry;
+class Skybox;
+
+class Camera : public Object {
+public:
+  Camera(const std::string& name);
+  virtual ~Camera();
+
+  virtual void Init();
+  virtual void Exit();
+
+  virtual void SetFOV(float fov);
+  virtual float GetFOV() const {
+    std::unique_lock<std::mutex> blah(subjectMutex);
+    return fov;
+  }
+  virtual void SetCapping(float nearCap, float farCap);
+  virtual void GetCapping(float& nearCap, float& farCap) const {
+    std::unique_lock<std::mutex> blah(subjectMutex);
+    nearCap = this->nearCap;
+    farCap = this->farCap;
+  }
+
+  // todo: const lists?
+  virtual void EnqueueView(std::deque<boost::intrusive_ptr<Geometry>>& visibleGeometry,
+                           std::deque<boost::intrusive_ptr<Light>>& visibleLights,
+                           std::deque<boost::intrusive_ptr<Skybox>>& skyboxes);
+  virtual void Poke(e_SystemType targetSystemType);
+
+  virtual void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType,
+                                          e_SystemType excludeSystem = e_SystemType_None);
+
+protected:
+  float fov;
+  float nearCap;
+  float farCap;
+};
+
+class ICameraInterpreter : public Interpreter {
+public:
+  virtual void OnLoad(const Properties& properties) = 0;
+  virtual void OnUnload() = 0;
+  virtual void SetFOV(float fov) = 0;
+  virtual void SetCapping(float nearCap, float farCap) = 0;
+  virtual void OnSpatialChange(const Vector3& position, const Quaternion& rotation) = 0;
+  // todo: const lists?
+  virtual void EnqueueView(const std::string& camName,
+                           std::deque<boost::intrusive_ptr<Geometry>>& visibleGeometry,
+                           std::deque<boost::intrusive_ptr<Light>>& visibleLights,
+                           std::deque<boost::intrusive_ptr<Skybox>>& skyboxes) = 0;
+  virtual void OnPoke() = 0;
+
+protected:
+};
+
+}  // namespace blunted
+
+#endif

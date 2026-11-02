@@ -5,6 +5,9 @@ extends RefCounted
 ## `PanelCajero` con la cartera del DT. Dos bancos inventados: el propio (sin comisión) y uno ajeno (2 € por retirada). Sin azar: nada toca `_rng`.
 const BANCOS := [{"nombre": "Banco Andino", "comision": 0}, {"nombre": "Caja Costera", "comision": 2}]
 
+## (31-10, M-476) Más allá de esto el cajero no se dibuja (mide 2 m: a 300 m son unos 6 píxeles de alto, imposible de usar).
+const VISIBLE_HASTA := 300.0
+
 static func banco_de(k: String) -> Dictionary:
 	return BANCOS[absi(k.hash()) % BANCOS.size()]
 
@@ -33,6 +36,7 @@ static func montar(ex: CiudadExpansion, pos: Vector3, giro: float) -> void:
 	rot.modulate = Color(0.05, 0.15, 0.1)
 	rot.outline_size = 0
 	rot.position = Vector3(0.0, 2.0, 0.385)
+	rot.visibility_range_end = VISIBLE_HASTA
 	n.add_child(rot)
 	b.add_child(n)
 	b.puntos_clic.append({"k": k, "n": Idiomas.t("Cajero automático"), "pos": pos, "estado": "ciudad", "radio": 8.0, "alcance": 3.0})
@@ -44,6 +48,7 @@ static func _caja(centro: Vector3, tam: Vector3, mat: Material) -> MeshInstance3
 	mi.mesh = bm
 	mi.material_override = mat
 	mi.position = centro
+	mi.visibility_range_end = VISIBLE_HASTA   ## M-476: de lejos no se ve
 	return mi
 
 ## La E ante un cajero: abre el panel. true si era un cajero.

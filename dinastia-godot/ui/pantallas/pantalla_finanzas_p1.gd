@@ -1,4 +1,4 @@
-extends RefCounted
+extends PantallaBase
 ## [Capa 1/2 de `pantalla_finanzas.gd`] _init, _pintar_finanzas
 
 ## FINANZAS, CAMARÍN Y ROL: las cuentas, el vestuario, la equipación, las directrices y la carrera en el club.
@@ -8,13 +8,9 @@ extends RefCounted
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 ## La pestaña entera de cuentas (`_pintar_finanzas`) llegó aquí el 27-10 (fase 6, paso 6).
 
-var p: Principal
 ## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
 ## El mismo doble toque, para "Vender el club" -`vista.confVender` del HTML-.
 var _confirmar_venta_club: bool = false
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 ## La pestaña FINANZAS: precio de la entrada, tienda, proyección anual, balance y caja,
 ## auspicios, patrocinio, banco, resumen, plusvalías y libro de movimientos.

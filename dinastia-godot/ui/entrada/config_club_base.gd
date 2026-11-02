@@ -296,8 +296,9 @@ func _process(delta: float) -> void:
 
 func _rehacer_previa() -> void:
 	var c := datos.club
-	Escudo.limpiar_cache()
-	_p_escudo.texture = Escudo.textura(c, 118)
+	## (2-11-2026) Ya no se vacía la caché de escudos en cada repintado: su clave lleva colores, forma, patrón
+	## y nombre, así que no sirve nada viejo, y rasterizar de nuevo cada escudo en cada cambio era el gasto.
+	_p_escudo.texture = EscudoTexto.textura(c, 118)
 	_p_kit.texture = DisenosKit.textura_completa(kit_previa(), _espalda, 150)
 	_p_nombre.text = c.nombre.strip_edges() if c.nombre.strip_edges() != "" else Idiomas.t("(sin nombre)")
 	_p_nombre.add_theme_color_override("font_color", Tema.TEXTO if c.nombre.strip_edges() != "" else Tema.SUAVE)

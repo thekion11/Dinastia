@@ -95,6 +95,8 @@ func _process(_d: float) -> void:
 		_m.append(_muestra())
 	if _n == 131:
 		_res["a_pie"] = _media(_m)
+		if OS.get_environment("DETALLE") != "":
+			_detalle_a_pie()
 		var ex: ExploradorCiudad = _v.get("_explorador")
 		_res["circulos"] = ex.cb.circulos.size()
 		var tipos := {}
@@ -123,6 +125,7 @@ func _process(_d: float) -> void:
 ## el nombre del nodo padre. Sirve para elegir dónde atacar.
 func _detalle() -> void:
 	var grupos := {}
+	var ejemplos := {}
 	for n in _v.find_children("*", "GeometryInstance3D", true, false):
 		var g := n as GeometryInstance3D
 		if not g.is_visible_in_tree() or g.visibility_range_end > 0.0:
@@ -248,3 +251,81 @@ func _medir_prim() -> int:
 	for i in 4:
 		await get_tree().process_frame
 	return int(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
+
+## Con DETALLE=1, a pie (31-10, M-476): qué se DIBUJA de verdad desde la cámara de la calle (en el campo de visión y dentro
+## de su distancia de corte), sumado por los dos nodos de arriba; y por qué `Optimizar.agrupar` dejó piezas sueltas.
+func _detalle_a_pie() -> void:
+	var cam := get_viewport().get_camera_3d()
+	if cam == null:
+		return
+	var grupos := {}
+	var ejemplos := {}
+	for n in _v.find_children("*", "GeometryInstance3D", true, false):
+		var g := n as GeometryInstance3D
+		if not g.is_visible_in_tree():
+			continue
+		var c := g.global_transform * g.get_aabb().get_center()
+		var d := cam.global_position.distance_to(c)
+		if (g.visibility_range_end > 0.0 and d > g.visibility_range_end) or not cam.is_position_in_frustum(c):
+			continue
+		var a := g.get_parent()
+		var clave := g.get_class()
+		for k in 2:
+			if a == null or a == _v:
+				break
+			var nom := String(a.name)
+			clave = (a.get_class() if nom.begins_with("@") else nom.rstrip("0123456789_")) + "/" + clave
+			a = a.get_parent()
+		grupos[clave] = int(grupos.get(clave, 0)) + 1
+		if not ejemplos.has(clave):
+			var sc := ""
+			var q2: Node = g.get_parent()
+			while q2 != null and q2 != _v:
+				if q2.get_script() != null:
+					sc = String((q2.get_script() as Script).resource_path).get_file()
+					break
+				q2 = q2.get_parent()
+			ejemplos[clave] = "%s malla=%s script=%s pos=%s" % [g.name, g.get("mesh").get_class() if g.get("mesh") != null else "-", sc, g.global_position.round()]
+		## El primer grupo de Godot hacia arriba: lo que impide a `agrupar` juntarla.
+		var q: Node = g
+		while q != null and q != _v:
+			if not q.get_groups().is_empty():
+				var gk := "GRUPO " + str(q.get_groups()[0])
+				grupos[gk] = int(grupos.get(gk, 0)) + 1
+				break
+			q = q.get_parent()
+	var orden := grupos.keys()
+	orden.sort_custom(func(x, y): return grupos[x] > grupos[y])
+	for k in orden.slice(0, 30):
+		print("A_PIE ", grupos[k], "  ", k, "  ej: ", ejemplos.get(k, ""))
+	for m in Optimizar._motivos:
+		print("MOTIVO ", Optimizar._motivos[m], "  ", m)
+	## Todas las mallas (vean o no) que un grupo impide juntar, por nombre de grupo (M-476).
+	var por_grupo := {}
+	for n in _v.find_children("*", "MeshInstance3D", true, false):
+		var q2: Node = n
+		while q2 != null and q2 != _v:
+			if not q2.get_groups().is_empty():
+				var gk2 := String(q2.get_groups()[0])
+				por_grupo[gk2] = int(por_grupo.get(gk2, 0)) + 1
+				break
+			q2 = q2.get_parent()
+	## Dentro de `Trafico`: mallas por vehículo (nombre del hijo directo sin números) (M-476).
+	var traf := _v.find_child("Trafico", true, false)
+	if traf != null:
+		var por_veh := {}
+		for n in traf.find_children("*", "MeshInstance3D", true, false):
+			var top: Node = n
+			while top.get_parent() != null and top.get_parent() != traf:
+				top = top.get_parent()
+			var nom := String(top.name).rstrip("0123456789_") if not String(top.name).begins_with("@") else top.get_class()
+			por_veh[nom] = Vector2i(int(por_veh.get(nom, Vector2i.ZERO).x) + 1, 0)
+		var ov := por_veh.keys()
+		ov.sort_custom(func(x, y): return por_veh[x].x > por_veh[y].x)
+		for k in ov.slice(0, 12):
+			print("TRAFICO_MALLAS ", por_veh[k].x, "  ", k)
+	var og := por_grupo.keys()
+	og.sort_custom(func(x, y): return por_grupo[x] > por_grupo[y])
+	for k in og.slice(0, 12):
+		print("GRUPO_TODAS ", por_grupo[k], "  ", k)
+

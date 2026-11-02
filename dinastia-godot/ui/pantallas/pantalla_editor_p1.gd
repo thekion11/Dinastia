@@ -1,4 +1,4 @@
-extends RefCounted
+extends PantallaBase
 ## [Capa 1/2 de `pantalla_editor.gd`] _init, _texto_con, _par, _letra_12, _pintar_editor_competiciones, _fila_mas_menos … (+6)
 
 ## EL EDITOR: competiciones, clubes, jugadores y CSV.
@@ -7,15 +7,11 @@ extends RefCounted
 ## 15.000 líneas). `p` es la pantalla principal: sus ayudantes (`p._texto`,
 ## `p._boton`...), el mundo (`p.mundo`) y el repintado (`p._refrescar()`).
 
-var p: Principal
 ## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
 var _ed_filtro: String = ""
 var _ed_club: String = ""
 var _ed_jugador: String = ""
 var _ed_confirmar_regen: String = ""
-
-func _init(principal: Principal) -> void:
-	p = principal
 
 func _texto_con(tam: int, col: Color, txt: String) -> Label:
 	var l := p._texto(tam, col)

@@ -1,0 +1,509 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main", "master", "copilot/**", "claude/**", "cursor/**" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  format-check:
+    name: Check formatting (clang-format)
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Install clang-format
+        run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends clang-format
+
+      - name: Check changed files
+        run: |
+          BASE="${{ github.event.pull_request.base.sha || 'HEAD~1' }}"
+          FILES=$(git diff --name-only --diff-filter=d "$BASE"...HEAD -- '*.cpp' '*.hpp' 2>/dev/null || true)
+          if [ -z "$FILES" ]; then
+            echo "No C++ files changed – skipping format check."
+            exit 0
+          fi
+          echo "Checking format of: $FILES"
+          echo "$FILES" | xargs clang-format --dry-run --Werror
+
+  # Task 2.2: headless test job – builds and runs all tests with no SDL/OpenGL
+  # dependency, proving tests run without a display server.
+  test-headless:
+    name: Headless tests (no display required)
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install minimal dependencies
+        run: bash scripts/setup_linux_deps.sh --minimal
+
+      - name: Configure (tests only, no game build)
+        run: |
+          cmake -S . -B build-headless \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DGAMEPLAYFOOTBALL_BUILD_GAME=OFF \
+            -DBUILD_TESTING=ON
+
+      - name: Build tests
+        run: cmake --build build-headless --parallel 2
+
+      - name: Run tests (headless – no DISPLAY needed)
+        run: ctest --test-dir build-headless --output-on-failure
+
+  clang-tidy:
+    name: Static analysis (clang-tidy)
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: bash scripts/setup_linux_deps.sh --with-tools
+
+      - name: Configure (generate compile_commands.json)
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      - name: Run clang-tidy on changed files
+        run: |
+          BASE="${{ github.event.pull_request.base.sha || 'HEAD~1' }}"
+          FILES=$(git diff --name-only --diff-filter=d "$BASE"...HEAD -- 'src/*.cpp' 'src/**/*.cpp' 2>/dev/null || true)
+          if [ -z "$FILES" ]; then
+            echo "No C++ source files changed – skipping clang-tidy."
+            exit 0
+          fi
+          echo "Running clang-tidy on: $FILES"
+          echo "$FILES" | xargs -r clang-tidy -p build \
+            --header-filter='src/.*' 2>&1 | tee tidy-output.txt
+          grep -c "error:" tidy-output.txt && exit 1 || true
+
+  build-linux:
+    name: Build (Ubuntu 22.04)
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install dependencies
+        run: bash scripts/setup_linux_deps.sh
+
+      - name: Configure (Debug)
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      - name: Build (Debug)
+        run: cmake --build build --parallel 3
+
+      - name: Test (Debug)
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Smoke test Quick Match
+        run: |
+          chmod +x tests/run_menu_smoke.sh
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_quick_match.config" 40 \
+            "[menu-smoke] Main menu ready, opening Quick Match" \
+            "[menu-smoke] Gameplay page reached and live match is active" \
+            "[menu-smoke] Quick Match verification succeeded, quitting test run"
+
+      - name: Smoke test Controller Disconnect (SDL virtual gamepad)
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_controller_disconnect.config" 60 \
+            "[menu-smoke] Virtual gamepad attached: yes" \
+            "[menu-smoke] Virtual gamepad unplugged during the match" \
+            "[menu-smoke] Controller disconnect prompt shown, focus on button_controllerselect"
+
+      - name: Smoke test Full Match
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_full_match.config" 420 \
+            "[menu-smoke] Main menu ready, opening Quick Match" \
+            "[menu-smoke] Full match complete:" \
+            "[menu-smoke] Full-match verification succeeded, quitting test run"
+
+      - name: Smoke test Gamepad Controls (full match)
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_gamepad_match.config" 600 \
+            "[menu-smoke] Main menu ready, opening Quick Match" \
+            "[menu-smoke] scripted gamepad: input sampled, driving a human player in a live match" \
+            "[menu-smoke] Full-match verification succeeded, quitting test run"
+
+      - name: Smoke test League Mode
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_league.config" 90 \
+            "[menu-smoke] Main menu ready, opening League Mode" \
+            "[menu-smoke] League save created, entering league page" \
+            "[menu-smoke] League page flow succeeded"
+
+      - name: Smoke test Career Mode menu
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_career.config" 40 \
+            "[menu-smoke] Main menu ready, opening Career Mode" \
+            "[menu-smoke] Career mode menu reached successfully"
+
+      - name: Smoke test Career 3D match (Player mode)
+        run: |
+          cd build
+          # The game writes to the save directory, so play a copy of the fixture.
+          save_dir="$(mktemp -d)"
+          cp "${GITHUB_WORKSPACE}/data/menu_smoke_career_match/career.save" "$save_dir/"
+          config="$save_dir/career_match.config"
+          printf '"debug" "true"\n"quick_start" "false"\n"menu_smoke_test_page" "career_match"\n"menu_smoke_career_save_directory" "%s"\n"menu_smoke_test_full_match" "true"\n"menu_smoke_test_gamepad_match" "true"\n"match_duration_minutes" "5.000000"\n"menu_smoke_match_time_scale" "12.0"\n' "$save_dir" > "$config"
+          ../tests/run_menu_smoke.sh ./gameplayfootball "$config" 420 \
+            "[career-squad] Ajax fields 16 career players, controller locked to 99999" \
+            "[career-squad] Controller locked to Smoke Pro" \
+            "[menu-smoke] Career match: lock checked, CPU plays on for the user's side" \
+            "[menu-smoke] Career match recorded: week now 2, 11 appearances" \
+            "[menu-smoke] Full-match verification succeeded, quitting test run"
+
+      - name: Smoke test League Dashboard
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_league_dashboard.config" 90 \
+            "[menu-smoke] Main menu ready, opening League Mode" \
+            "[menu-smoke] League page ready, opening dashboard" \
+            "[menu-smoke] League dashboard reached successfully"
+
+      - name: Smoke test League Inbox
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_league_inbox.config" 90 \
+            "[menu-smoke] Main menu ready, opening League Mode" \
+            "[menu-smoke] League dashboard opening Inbox" \
+            "[menu-smoke] League inbox reached successfully"
+
+      - name: Smoke test League Calendar
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_league_calendar.config" 90 \
+            "[menu-smoke] Main menu ready, opening League Mode" \
+            "[menu-smoke] League dashboard opening Calendar" \
+            "[menu-smoke] League calendar reached successfully"
+
+      - name: Smoke test League Standings
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_league_standings.config" 90 \
+            "[menu-smoke] Main menu ready, opening League Mode" \
+            "[menu-smoke] Standings page opening league standings" \
+            "[menu-smoke] League standings table reached successfully"
+
+      - name: Smoke test League Team
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_league_team.config" 90 \
+            "[menu-smoke] Main menu ready, opening League Mode" \
+            "[menu-smoke] Team management opening player overview" \
+            "[menu-smoke] Team player overview reached successfully"
+
+      - name: Smoke test League Management
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_league_management.config" 90 \
+            "[menu-smoke] Main menu ready, opening League Mode" \
+            "[menu-smoke] League dashboard opening Management" \
+            "[menu-smoke] League management reached successfully"
+
+      - name: Smoke test League System
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_league_system.config" 90 \
+            "[menu-smoke] Main menu ready, opening League Mode" \
+            "[menu-smoke] System page opening settings" \
+            "[menu-smoke] League system settings reached successfully"
+
+      - name: Smoke test League damaged save
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_league_damaged_save.config" 90 \
+            "[menu-smoke] League start reached, opening saved leagues" \
+            "[menu-smoke] League damaged save rejected"
+
+      - name: Smoke test Settings
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_settings.config" 40 \
+            "[menu-smoke] Main menu ready, opening Settings" \
+            "[menu-smoke] Settings page reached successfully"
+
+      - name: Smoke test Settings Gameplay
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_settings_gameplay.config" 40 \
+            "[menu-smoke] Main menu ready, opening Settings" \
+            "[menu-smoke] Settings page reached, opening Gameplay" \
+            "[menu-smoke] Settings Gameplay page reached successfully"
+
+      - name: Smoke test Settings Graphics
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_settings_graphics.config" 40 \
+            "[menu-smoke] Main menu ready, opening Settings" \
+            "[menu-smoke] Settings page reached, opening Graphics" \
+            "[menu-smoke] Settings Graphics page reached successfully"
+
+      - name: Smoke test Settings Audio
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_settings_audio.config" 40 \
+            "[menu-smoke] Main menu ready, opening Settings" \
+            "[menu-smoke] Settings page reached, opening Audio" \
+            "[menu-smoke] Settings Audio page reached successfully"
+
+      - name: Smoke test Credits
+        run: |
+          cd build
+          ../tests/run_menu_smoke.sh ./gameplayfootball "${GITHUB_WORKSPACE}/data/menu_smoke_credits.config" 40 \
+            "[menu-smoke] Main menu ready, opening Credits" \
+            "[menu-smoke] Credits page reached successfully"
+
+      - name: Configure (Release)
+        run: |
+          cmake -S . -B build-release \
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build (Release)
+        run: cmake --build build-release --parallel 3
+
+      - name: Test (Release)
+        run: ctest --test-dir build-release --output-on-failure
+
+      - name: Stage Linux release package
+        run: |
+          chmod +x scripts/package_linux.sh
+          ./scripts/package_linux.sh --build-dir build-release --out-dir dist/linux-x64 --strip
+
+      - name: Upload Linux release artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: gameplayfootball-linux-x64
+          path: dist/linux-x64/
+          if-no-files-found: error
+
+  build-void:
+    name: Build (Void Linux ${{ matrix.libc }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        libc: [glibc, musl]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      # Run the container by hand rather than with `container:`: the runner's
+      # Node-based actions cannot start inside a musl image other than Alpine.
+      - name: Build and test in Void Linux (${{ matrix.libc }})
+        run: |
+          docker run --rm -v "$PWD:/src" -w /src \
+            ghcr.io/void-linux/void-${{ matrix.libc }}-full:latest \
+            sh scripts/ci_void_linux.sh
+
+  build-macos:
+    name: Build (macOS 15)
+    # Homebrew treats macOS 14 as a Tier 3 platform without bottles, so the
+    # dependencies (down to Python, for sdl2_ttf) were built from source and
+    # the step failed after ~40 minutes on every run.
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install dependencies
+        # OpenAL comes from the system OpenAL.framework (found by FindOpenAL).
+        # Homebrew's openal-soft pulls in llvm and z3, and installing them
+        # failed inside Homebrew after ~40 minutes on every run.
+        run: bash scripts/setup_macos_deps.sh
+
+      - name: Configure (Debug)
+        run: |
+          cmake -S . -B build-macos -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      - name: Build (Debug)
+        run: cmake --build build-macos --parallel 3
+
+      - name: Test (Debug)
+        run: ctest --test-dir build-macos --output-on-failure
+
+      - name: Configure (Release)
+        run: |
+          cmake -S . -B build-macos-release -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build (Release)
+        run: cmake --build build-macos-release --parallel 3
+
+      - name: Package the app
+        run: ./scripts/package_macos.sh --build-dir build-macos-release --out-dir dist/macos --strip --zip
+
+      - name: Check the packaged app starts self-contained
+        # GitHub's macOS runners have no display, so the game cannot open a
+        # window there and waits for one. Before that it has loaded every
+        # library and set up its data folder, which is what this checks:
+        # every library must come from the bundle or the system, and the
+        # data must be reached through ~/Library/Application Support.
+        # The game is stopped after 20 s; if it is still running, `sample`
+        # shows where it waits.
+        timeout-minutes: 5
+        run: |
+          app="dist/macos/Gameplay Football.app"
+          config="$(mktemp -d)/quick_match.config"
+          cp data/menu_smoke_quick_match.config "$config"
+          log="$(mktemp)"
+          ls "$app/Contents/Resources"
+          DYLD_PRINT_LIBRARIES=1 "$app/Contents/MacOS/gameplayfootball" "$config" >"$log" 2>&1 &
+          pid=$!
+          sleep 20
+          if kill -0 "$pid" 2>/dev/null; then
+            # Still running (waiting for a window): show where.
+            sample "$pid" 2 -file sample.txt >/dev/null 2>&1 || true
+            sed -n '/Call graph:/,/Total number in stack/p' sample.txt | head -n 80
+            kill "$pid" || true
+          fi
+          wait "$pid" || true
+          grep "dyld" "$log" | sed 's/^dyld\[[0-9]*\]: <[^>]*> //' | sort -u
+          grep -q "Contents/Frameworks/libSDL2-" "$log"
+          # sdl2-compat loads SDL3 at run time; it must come from the bundle.
+          grep -q "Contents/Frameworks/libSDL3" "$log"
+          if grep "dyld" "$log" | grep -E "/opt/homebrew|/usr/local"; then
+            echo "::error::The app loaded a Homebrew library"; exit 1
+          fi
+          support="$HOME/Library/Application Support/Gameplay Football"
+          ls -l "$support"
+          test -f "$support/football.config"
+          case "$(readlink "$support/media")" in
+            *"Gameplay Football.app/Contents/Resources/media") ;;
+            *) echo "::error::media is not linked to the app"; exit 1 ;;
+          esac
+
+      - name: Upload macOS app
+        uses: actions/upload-artifact@v7
+        with:
+          name: gameplayfootball-macos-arm64
+          path: dist/macos/*.zip
+          if-no-files-found: error
+
+  build-windows:
+    name: Build (Windows 2022 + MSVC + vcpkg)
+    runs-on: windows-2022
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}\vcpkg
+      VCPKG_DEFAULT_TRIPLET: x64-windows
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Bootstrap vcpkg
+        shell: pwsh
+        run: |
+          git clone https://github.com/microsoft/vcpkg $env:VCPKG_ROOT
+          & "$env:VCPKG_ROOT\bootstrap-vcpkg.bat" -disableMetrics
+
+      - name: Cache vcpkg packages
+        uses: actions/cache@v6
+        with:
+          path: |
+            ${{ env.VCPKG_ROOT }}/downloads
+            ${{ github.workspace }}/build-win/vcpkg_installed
+          key: vcpkg-win-${{ hashFiles('vcpkg.json') }}-${{ env.VCPKG_DEFAULT_TRIPLET }}
+          restore-keys: |
+            vcpkg-win-${{ hashFiles('vcpkg.json') }}-
+            vcpkg-win-
+
+      - name: Configure
+        shell: pwsh
+        run: |
+          cmake -S . -B build-win `
+            -G "Visual Studio 17 2022" -A x64 `
+            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" `
+            -DVCPKG_TARGET_TRIPLET="$env:VCPKG_DEFAULT_TRIPLET"
+
+      - name: Build (Debug)
+        shell: pwsh
+        run: cmake --build build-win --config Debug --parallel 4
+
+      - name: Test (Debug)
+        shell: pwsh
+        run: ctest --test-dir build-win -C Debug --output-on-failure
+
+      - name: Build (Release)
+        shell: pwsh
+        run: cmake --build build-win --config Release --parallel 4
+
+      - name: Test (Release)
+        shell: pwsh
+        run: ctest --test-dir build-win -C Release --output-on-failure
+
+      - name: Package runnable Windows build
+        shell: pwsh
+        run: |
+          .\scripts\package_windows.ps1 `
+            -BuildDir "build-win\Release" `
+            -OutDir "dist\windows-x64" `
+            -VcpkgRoot $env:VCPKG_ROOT `
+            -Triplet $env:VCPKG_DEFAULT_TRIPLET `
+            -RepoRoot $env:GITHUB_WORKSPACE
+
+      - name: Upload Windows release artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: gameplayfootball-windows-x64
+          path: dist/windows-x64/
+          if-no-files-found: error
+
+  # Task 5.1: build Doxygen HTML docs and upload as a CI artifact
+  docs:
+    name: Generate Doxygen docs
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install dependencies (Doxygen + tools)
+        run: bash scripts/setup_linux_deps.sh --minimal --with-tools
+
+      - name: Generate Doxyfile from template
+        run: |
+          cmake -S . -B /tmp/build-docs \
+            -DGAMEPLAYFOOTBALL_BUILD_GAME=OFF \
+            -DBUILD_TESTING=OFF \
+            -DGAMEPLAYFOOTBALL_BUILD_DOCS=ON \
+            -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=OFF
+
+      - name: Generate docs
+        run: doxygen Doxyfile
+
+      - name: Upload docs artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: gameplayfootball-docs
+          path: docs/html/
+          if-no-files-found: error

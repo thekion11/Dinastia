@@ -1,0 +1,278 @@
+#include "replaymenu.hpp"
+
+#include "../../hid/gamepad.hpp"
+#include "../../hid/keyboard.hpp"
+#include "framework/scheduler.hpp"
+#include "main.hpp"
+#include "managers/environmentmanager.hpp"
+#include "utils/gui2/widgets/caption.hpp"
+#include "utils/gui2/widgets/frame.hpp"
+#include "utils/localization.hpp"
+
+using namespace blunted;
+
+ReplayPage::ReplayPage(Gui2WindowManager* windowManager, const Gui2PageData& pageData)
+    : Gui2Page(windowManager, pageData) {
+  match = GetGameTask()->GetMatch();
+
+  this->SetFocus();
+  this->Show();
+
+  signed long tmp =
+      match->GetActualTime_ms() - match->GetReplaySize_ms();  // must be signed for negative numbers
+  minTime_ms = std::max((signed long)10, tmp);
+  signed long tmp2 = static_cast<signed long>(match->GetActualTime_ms()) - 10;
+  maxTime_ms = static_cast<unsigned long>(std::max(10L, tmp2));
+  actualTime_ms = clamp(maxTime_ms - 3000, minTime_ms, maxTime_ms);
+  replayCamCount = match->GetReplayCamCount();
+
+  cam = 0;
+  modifierValue = 0.0f;
+  autoRun = false;
+  slowMotion = false;
+  stayInReplay = true;
+  closeWhenAutorunCompletes = false;
+
+  // Below the scoreboard (top ~6% of the screen), which stays visible.
+  Gui2Frame* header = new Gui2Frame(windowManager, "frame_replay_header", 36, 8, 28, 7, true);
+  this->AddView(header);
+  header->Show();
+  Gui2Caption* title =
+      new Gui2Caption(windowManager, "caption_replay_title", 2, 2, 24, 3,
+                      Localization::GetInstance().Translate("ingame_replay_title"));
+  title->SetPosition(14.0f - title->GetTextWidthPercent() * 0.5f, 2.0f);
+  header->AddView(title);
+  title->Show();
+
+  Gui2Frame* footer = new Gui2Frame(windowManager, "frame_replay_footer", 15, 89, 70, 9, true);
+  this->AddView(footer);
+  footer->Show();
+  Gui2Caption* help = new Gui2Caption(windowManager, "caption_replay_help", 2, 1.2f, 66, 2.5f,
+                                      Localization::GetInstance().Translate("ingame_replay_help"));
+  help->SetPosition(35.0f - help->GetTextWidthPercent() * 0.5f, 1.2f);
+  footer->AddView(help);
+  help->Show();
+
+  timeLabel = new Gui2Caption(windowManager, "caption_replay_time", 2, 4.5f, 66, 3, "");
+  footer->AddView(timeLabel);
+  timeLabel->Show();
+  UpdateTimeLabel();
+
+  sig_OnClose.connect([this](...) { OnClose(); });
+
+  match->SetAutoUpdateIngameCamera(false);
+
+  match->replayState.Lock();
+  match->replayState->viewTime_ms = actualTime_ms;  // minTime_ms;
+  match->replayState->cam = cam;
+  match->replayState->modifierValue = 0.0f;
+  match->replayState->dirty = true;
+  match->replayState.Unlock();
+}
+
+ReplayPage::~ReplayPage() {}
+
+void ReplayPage::OnClose() {
+  match->replayState.Lock();
+  match->replayState->viewTime_ms = maxTime_ms;
+  match->replayState->cam = cam;
+  match->replayState->modifierValue = 0.0f;
+  match->replayState->dirty = true;
+  match->replayState.Unlock();
+
+  GetScheduler()->ResetTaskSequenceTime("game");
+  match->SetAutoUpdateIngameCamera(true);
+
+  if (stayInReplay)
+    match->Pause(false);  // todo: handle gracefully instead of using stayInReplay :p only unpause
+                          // when started from gamepage instead of ingame page
+}
+
+void ReplayPage::Autorun(int replayHistoryOffset_ms, bool stayInReplay) {
+  autoRun = true;
+  closeWhenAutorunCompletes = true;
+  cam = 1;
+  modifierValue = 0.0;
+  signed long tmp = maxTime_ms - replayHistoryOffset_ms;
+  actualTime_ms = clamp(tmp, minTime_ms, maxTime_ms);
+  this->stayInReplay = stayInReplay;
+}
+
+void ReplayPage::UpdateTimeLabel() {
+  unsigned long replaySize_ms = maxTime_ms - minTime_ms;
+  unsigned long elapsed_ms = actualTime_ms - minTime_ms;
+  float positionPct = (replaySize_ms > 0) ? (elapsed_ms * 100.0f / replaySize_ms) : 0.0f;
+  // "elapsed / length (position%)"; the old trailing "-Ns" repeated the same
+  // information and read as "-0s" at the end of a replay.
+  std::string label = std::string(slowMotion ? "[0.5x] " : "") + int_to_str(elapsed_ms / 1000) +
+                      "s / " + int_to_str(replaySize_ms / 1000) + "s  (" +
+                      int_to_str(static_cast<int>(round(positionPct))) + "%)";
+  timeLabel->SetCaption(label);
+  timeLabel->SetPosition(35.0f - timeLabel->GetTextWidthPercent() * 0.5f, 4.5f);
+}
+
+void ReplayPage::Process() {
+  if (autoRun) {
+    Vector3 direction;
+    direction.coords[0] = slowMotion ? 0.25f : 0.5f;
+    ProcessInput(direction, false, false, false);
+  }
+}
+
+void ReplayPage::ProcessKeyboardEvent(KeyboardEvent* event) {
+  const std::vector<IHIDevice*>& controllers = GetControllers();
+  HIDKeyboard* keyboard = nullptr;
+  for (IHIDevice* c : controllers) {
+    if (c && c->GetDeviceType() == e_HIDeviceType_Keyboard) {
+      keyboard = static_cast<HIDKeyboard*>(c);
+      break;
+    }
+  }
+  if (!keyboard) {
+    return;
+  }
+
+  bool button1 = false;
+  bool button2 = false;
+  bool slowMo = false;
+  if (event->GetKeyOnce(keyboard->GetFunctionMapping(e_ButtonFunction_ShortPass)))
+    button1 = true;
+  if (event->GetKeyOnce(keyboard->GetFunctionMapping(e_ButtonFunction_HighPass)))
+    button2 = true;
+  if (event->GetKeyContinuous(keyboard->GetFunctionMapping(e_ButtonFunction_Sprint)))
+    slowMo = true;
+
+  Vector3 direction;
+  if (event->GetKeyContinuous(keyboard->GetFunctionMapping(e_ButtonFunction_Left)))
+    direction.coords[0] += -0.5f;
+  if (event->GetKeyContinuous(keyboard->GetFunctionMapping(e_ButtonFunction_Right)))
+    direction.coords[0] += 0.5f;
+  if (event->GetKeyContinuous(keyboard->GetFunctionMapping(e_ButtonFunction_Up)))
+    direction.coords[1] += -0.5f;
+  if (event->GetKeyContinuous(keyboard->GetFunctionMapping(e_ButtonFunction_Down)))
+    direction.coords[1] += 0.5f;
+
+  ProcessInput(direction, button1, button2, slowMo);
+}
+
+void ReplayPage::ProcessJoystickEvent(JoystickEvent* event) {
+  int controllerID = 0;
+  const std::vector<IHIDevice*>& controllers = GetControllers();
+
+  // Find the gamepad driving Player 1. Do not assume the keyboard is at index 0
+  // and a gamepad at index 1 - with no pad connected that cast would be OOB.
+  HIDGamepad* gamepad = nullptr;
+  for (IHIDevice* c : controllers) {
+    if (c && c->GetDeviceType() == e_HIDeviceType_Gamepad) {
+      gamepad = static_cast<HIDGamepad*>(c);
+      break;
+    }
+  }
+  if (!gamepad) {
+    return;
+  }
+
+  bool button1 =
+      event->GetButton(0, gamepad->GetControllerMapping(
+                              gamepad->GetFunctionMapping(e_ButtonFunction_LongPass))) ||
+      event->GetButton(0,
+                       gamepad->GetControllerMapping(gamepad->GetFunctionMapping(
+                           e_ButtonFunction_ShortPass)));  // need 2 options because maybe the first
+                                                           // is set to gui's 'escape' function
+  bool button2 =
+      event->GetButton(0, gamepad->GetControllerMapping(
+                              gamepad->GetFunctionMapping(e_ButtonFunction_HighPass))) ||
+      event->GetButton(0, gamepad->GetControllerMapping(gamepad->GetFunctionMapping(
+                              e_ButtonFunction_Shot)));  // need 2 options because maybe the first
+                                                         // is set to gui's 'escape' function
+  bool slowMo = event->GetButton(
+      0, gamepad->GetControllerMapping(gamepad->GetFunctionMapping(e_ButtonFunction_Sprint)));
+
+  Vector3 direction;
+  direction.coords[0] = event->GetAxis(0, 0);
+  direction.coords[1] = event->GetAxis(0, 1);
+
+  float deadzone = 0.2f;
+  if (fabs(direction.coords[0]) < deadzone) {
+    direction.coords[0] = 0.0f;
+  } else {
+    direction.coords[0] =
+        pow((fabs(direction.coords[0]) - deadzone) * (1.0f / (1.0f - deadzone)), 2.0f) *
+        signSide(direction.coords[0]);
+  }
+  deadzone = 0.4f;
+  if (fabs(direction.coords[1]) < deadzone) {
+    direction.coords[1] = 0.0f;
+  } else {
+    direction.coords[1] =
+        pow((fabs(direction.coords[1]) - deadzone) * (1.0f / (1.0f - deadzone)), 4.0f) *
+        signSide(direction.coords[1]);
+  }
+
+  ProcessInput(direction, button1, button2, slowMo);
+}
+
+void ReplayPage::ProcessInput(const Vector3& direction, bool button1, bool button2,
+                              bool slowMoInput) {
+  // slow-motion: held sprint button halves playback speed
+  slowMotion = slowMoInput;
+
+  // autorun
+  if (button2 && autoRun == false) {
+    actualTime_ms = minTime_ms;
+    autoRun = true;
+    closeWhenAutorunCompletes = false;
+  } else if (button2) {
+    autoRun = false;
+    closeWhenAutorunCompletes = false;
+  }
+  if (button1 && autoRun == true) {
+    autoRun = false;
+    closeWhenAutorunCompletes = false;
+  } else if (button1) {
+    cam++;
+    if (cam == replayCamCount)
+      cam = 0;
+  }
+
+  if (!autoRun) {
+    modifierValue += direction.coords[1] * 0.05f;
+  }
+
+  if (cam == 2) {
+    if (modifierValue < -1.0f)
+      modifierValue += 2.0f;
+    if (modifierValue > 1.0f)
+      modifierValue -= 2.0f;
+  } else {
+    modifierValue = clamp(modifierValue, -1.0f, 1.0f);
+  }
+
+  float speedMultiplier = slowMotion ? 0.5f : 1.0f;
+  float timeMovement = direction.coords[0] * 2.0f * speedMultiplier;
+  actualTime_ms += int(round(timeMovement * 10.0f));
+
+  if (autoRun && actualTime_ms >= (signed int)maxTime_ms) {
+    autoRun = false;
+    if (closeWhenAutorunCompletes) {
+      closeWhenAutorunCompletes = false;
+      GoBack();
+      return;
+    }
+  }
+
+  actualTime_ms = clamp(actualTime_ms, minTime_ms, maxTime_ms);
+
+  UpdateTimeLabel();
+
+  unsigned long resultTime = actualTime_ms;
+
+  // feed results to match - replays are effectively replayed there
+
+  match->replayState.Lock();
+  match->replayState->viewTime_ms = resultTime;
+  match->replayState->cam = cam;
+  match->replayState->modifierValue = modifierValue;
+  match->replayState->dirty = true;
+  match->replayState.Unlock();
+}

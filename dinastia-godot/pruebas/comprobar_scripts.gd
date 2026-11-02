@@ -22,7 +22,8 @@ func _initialize() -> void:
 
 func _buscar(dir: String, salida: Array[String]) -> void:
 	for d in DirAccess.get_directories_at(dir):
-		if d.begins_with(".") or d == "addons" or d == "capturas":
+		## (31-10) Lo que Godot ignora (`.gdignore`: `nativo/`, con godot-cpp descargado al compilar) tampoco se comprueba.
+		if d.begins_with(".") or d == "addons" or d == "capturas" or FileAccess.file_exists(dir.path_join(d).path_join(".gdignore")):
 			continue
 		_buscar(dir.path_join(d), salida)
 	for f in DirAccess.get_files_at(dir):

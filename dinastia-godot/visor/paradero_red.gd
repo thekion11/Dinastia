@@ -237,6 +237,7 @@ static func montar(raiz: Node3D, ancho: float, semilla: int, nombre := "", secto
 	pm.position = Vector3(xp, 1.35, 0.9)
 	m.add_child(pm)
 	_cartel(m, Vector3(xp, 0, 0.9), nombre, rs, cod)
+	FundirPiezas.fundir(m, 450.0, "Paradero")   ## M-476: ~30 cajas sueltas → una superficie por material (el grupo impide agrupar)
 
 ## El cartel negro: bus (arriba izquierda), esquina roja «Red» (arriba derecha), nombre, 2 columnas de recorridos con su divisoria, QR y franja roja.
 static func _cartel(m: Node3D, pos: Vector3, nombre: String, rs: Array[String], cod := "") -> void:
@@ -271,3 +272,4 @@ static func _cartel(m: Node3D, pos: Vector3, nombre: String, rs: Array[String], 
 	## QR abajo a la izquierda y franja roja abajo.
 	_quad(c, qr(), Vector3(-0.2, yc - 0.37, z + 0.002), Vector2(0.12, 0.12))
 	_caja(c, Vector3(0, yc - 0.48, z), Vector3(ancho - 0.02, 0.05, 0.01), _luz(ROJO, 0.3))
+	FundirPiezas.fundir(c, 450.0, "Cartel")   ## M-476

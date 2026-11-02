@@ -1,5 +1,5 @@
 {
- "_leeme": "Países jugables que no vienen del HTML (fila 26 de la propuesta s4, sesión 6). Ligas, clubes y competiciones FICTICIOS (nombres de barrio, río o comarca; nada registrado). Datos.gd los suma encima de tablas.json/pack sin pisar nada. «paises» se suma por código de país; «tablas» por clave (HISTORIA_CLUBES: por nombre de club). «paises» se suma por código de país; «tablas» por clave (HISTORIA_CLUBES: por nombre de club). Lote 1 (26-10-2026): POR, NED, BEL, CRO, DEN.",
+ "_leeme": "Países jugables que no vienen del HTML (fila 26 de la propuesta s4, sesión 6). Ligas, clubes y competiciones FICTICIOS (nombres de barrio, río o comarca; nada registrado). Datos.gd los suma encima de tablas.json/pack sin pisar nada. «paises» se suma por código de país; «tablas» por clave (HISTORIA_CLUBES: por nombre de club). «paises» se suma por código de país; «tablas» por clave (HISTORIA_CLUBES: por nombre de club). Lote 1 (26-10-2026): POR, NED, BEL, CRO, DEN. (01-11-2026) NED ya no es inventado: su liga y su copa salen del pack real (`herramientas/liga_paises_bajos.py` + `base_ficticia.py`); aquí quedan su selección, nivel, bolsas de nombres y torneos.",
  "paises": {
   "POR": {
    "PAISES_LIGAS": {
@@ -166,130 +166,12 @@
    ]
   },
   "NED": {
-   "PAISES_LIGAS": {
-    "liga": "Liga Holandesa",
-    "clubes": [
-     [
-      "Amstel FC",
-      "#d50032",
-      "#ffffff",
-      84,
-      55000
-     ],
-     [
-      "Lichtstad FC",
-      "#d50032",
-      "#ffffff",
-      83,
-      35000
-     ],
-     [
-      "Maas Rotterdam",
-      "#d50032",
-      "#ffffff",
-      82,
-      51000
-     ],
-     [
-      "Kaasstad FC",
-      "#d50032",
-      "#ffffff",
-      77,
-      19000
-     ],
-     [
-      "Grens Oost",
-      "#d50032",
-      "#ffffff",
-      76,
-      30000
-     ],
-     [
-      "Domstad Utrecht",
-      "#d50032",
-      "#ffffff",
-      73,
-      23000
-     ],
-     [
-      "Veluwe FC",
-      "#ffd100",
-      "#000000",
-      71,
-      21000
-     ],
-     [
-      "Hofstad FC",
-      "#ffd100",
-      "#00843d",
-      70,
-      15000
-     ],
-     [
-      "Friese Meren",
-      "#0038a8",
-      "#ffffff",
-      70,
-      26000
-     ],
-     [
-      "Noorderzon FC",
-      "#00843d",
-      "#ffffff",
-      70,
-      22000
-     ],
-     [
-      "Waal FC",
-      "#d50032",
-      "#00843d",
-      68,
-      12000
-     ],
-     [
-      "Isala FC",
-      "#0038a8",
-      "#ffffff",
-      66,
-      14000
-     ],
-     [
-      "Brabant Noord",
-      "#ffd100",
-      "#000000",
-      65,
-      15000
-     ],
-     [
-      "Mijnstreek FC",
-      "#ffd100",
-      "#000000",
-      64,
-      12000
-     ],
-     [
-      "Polder FC",
-      "#0038a8",
-      "#ffffff",
-      64,
-      4500
-     ],
-     [
-      "Zeeland FC",
-      "#0067b1",
-      "#ffffff",
-      63,
-      6000
-     ]
-    ]
-   },
    "PAIS_SELECCION": "Holanda",
    "TIER_PAIS": 0.95,
    "GLOBO_PAIS": [
     4.9,
     52.37
    ],
-   "COPA_NOM": "Copa de Holanda",
    "POOLS_EU": [
     [
      "Daan",
@@ -903,86 +785,6 @@
     "fundado": 1943,
     "apodo": "os Montanheses",
     "estadio": "Estádio do Montes"
-   },
-   "Amstel FC": {
-    "fundado": 1897,
-    "apodo": "de Grachten",
-    "estadio": "Amstel Stadion"
-   },
-   "Lichtstad FC": {
-    "fundado": 1894,
-    "apodo": "de Lichtstad",
-    "estadio": "Lichtstad Stadion"
-   },
-   "Maas Rotterdam": {
-    "fundado": 1911,
-    "apodo": "de Havenbazen",
-    "estadio": "Maas Stadion"
-   },
-   "Kaasstad FC": {
-    "fundado": 1926,
-    "apodo": "de Kaaskoppen",
-    "estadio": "Kaasstad Stadion"
-   },
-   "Grens Oost": {
-    "fundado": 1923,
-    "apodo": "de Grenslanders",
-    "estadio": "Grens Stadion"
-   },
-   "Domstad Utrecht": {
-    "fundado": 1931,
-    "apodo": "de Domstedelingen",
-    "estadio": "Domstad Stadion"
-   },
-   "Veluwe FC": {
-    "fundado": 1934,
-    "apodo": "de Veluwnaren",
-    "estadio": "Veluwe Stadion"
-   },
-   "Hofstad FC": {
-    "fundado": 1936,
-    "apodo": "de Hofstedelingen",
-    "estadio": "Hofstad Stadion"
-   },
-   "Friese Meren": {
-    "fundado": 1931,
-    "apodo": "de Friezen",
-    "estadio": "Friese Stadion"
-   },
-   "Noorderzon FC": {
-    "fundado": 1934,
-    "apodo": "de Noorderlingen",
-    "estadio": "Noorderzon Stadion"
-   },
-   "Waal FC": {
-    "fundado": 1946,
-    "apodo": "de Waalboys",
-    "estadio": "Waal Stadion"
-   },
-   "Isala FC": {
-    "fundado": 1942,
-    "apodo": "de Isalaners",
-    "estadio": "Isala Stadion"
-   },
-   "Brabant Noord": {
-    "fundado": 1941,
-    "apodo": "de Brabanders",
-    "estadio": "Brabant Stadion"
-   },
-   "Mijnstreek FC": {
-    "fundado": 1939,
-    "apodo": "de Mijnwerkers",
-    "estadio": "Mijnstreek Stadion"
-   },
-   "Polder FC": {
-    "fundado": 1940,
-    "apodo": "de Polderjongens",
-    "estadio": "Polder Stadion"
-   },
-   "Zeeland FC": {
-    "fundado": 1939,
-    "apodo": "de Zeeuwen",
-    "estadio": "Zeeland Stadion"
    },
    "Senne Bruselas": {
     "fundado": 1901,

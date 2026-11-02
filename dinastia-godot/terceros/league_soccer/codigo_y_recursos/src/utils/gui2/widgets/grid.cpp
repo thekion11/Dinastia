@@ -1,0 +1,385 @@
+#include "grid.hpp"
+
+#include "../gridlayout.hpp"
+#include "../windowmanager.hpp"
+
+namespace blunted {
+
+Gui2Grid::Gui2Grid(Gui2WindowManager* windowManager, const std::string& name, float x_percent,
+                   float y_percent, float width_percent, float height_percent)
+    : Gui2View(windowManager, name, x_percent, y_percent, width_percent, height_percent) {
+  int x, y, w, h;
+  windowManager->GetCoordinates(x_percent, y_percent, width_percent, height_percent, x, y, w, h);
+
+  rows = 0;
+  cols = 0;
+
+  selectedRow = 0;
+  selectedCol = 0;
+
+  minSwitchDelay_ms = 180;
+  switchDelay_ms = minSwitchDelay_ms;
+
+  offsetRows = 0;
+  maxVisibleRows = 10000;
+
+  quickScroll = false;
+  // At an edge, let the event bubble to Gui2Page so focus can move into a
+  // neighbouring panel or a standalone footer action. Pages that intentionally
+  // need wrapping can still opt in with SetWrapping().
+  rowWrap = false;
+  colWrap = false;
+  hasSelectables = false;
+
+  margin_left_percent = 0.5f;
+  margin_right_percent = 0.5f;
+  margin_top_percent = 0.5f;
+  margin_bottom_percent = 0.5f;
+
+  scrollX = 0;
+  scrollY = 0;
+}
+
+Gui2Grid::~Gui2Grid() {}
+
+void Gui2Grid::Process() {
+  if (switchDelay_ms < minSwitchDelay_ms)
+    switchDelay_ms += windowManager->GetTimeStep_ms();
+
+  Gui2View::Process();
+}
+
+void Gui2Grid::AddView(Gui2View* view, int row, int col) {
+  Gui2View::AddView(view);
+
+  int adaptedRow = row;
+  int adaptedCol = col;
+  if (adaptedRow == -1)
+    adaptedRow = rows;
+
+  GridContainer gridContainer;
+  gridContainer.row = adaptedRow;
+  gridContainer.col = adaptedCol;
+  gridContainer.view = view;
+  container.push_back(gridContainer);
+
+  // update maximum grid size?
+  if (adaptedRow >= rows)
+    rows = adaptedRow + 1;
+  if (adaptedCol >= cols)
+    cols = adaptedCol + 1;
+
+  if (view->IsSelectable())
+    hasSelectables = true;
+}
+
+void Gui2Grid::RemoveView(Gui2View* view) {
+  auto iter = container.begin();
+  while (iter != container.end()) {
+    if (iter->view == view)
+      iter = container.erase(iter);
+    else
+      iter++;
+  }
+  Gui2View::RemoveView(view);
+
+  hasSelectables = false;
+  for (unsigned int i = 0; i < container.size(); i++) {
+    if (container.at(i).view->IsSelectable()) {
+      hasSelectables = true;
+      break;
+    }
+  }
+}
+
+void Gui2Grid::RemoveView(int row, int col) {
+  Gui2View* view = nullptr;
+  auto iter = container.begin();
+  while (iter != container.end()) {
+    if (iter->row == row && iter->col == col) {
+      view = iter->view;
+      iter = container.erase(iter);
+    } else
+      iter++;
+  }
+  Gui2View::RemoveView(view);
+}
+
+Gui2View* Gui2Grid::FindView(int row, int col) {
+  Gui2View* target = nullptr;
+  for (int i = 0; i < (signed int)container.size(); i++) {
+    if (container.at(i).row == row && container.at(i).col == col) {
+      target = container.at(i).view;
+      break;
+    }
+  }
+  return target;
+}
+
+int Gui2Grid::GetRow(Gui2View* view) {
+  auto iter = container.begin();
+  while (iter != container.end()) {
+    if (iter->view == view) {
+      return iter->row;
+    }
+    iter++;
+  }
+  return -1;
+}
+
+int Gui2Grid::GetColumn(Gui2View* view) {
+  auto iter = container.begin();
+  while (iter != container.end()) {
+    if (iter->view == view) {
+      return iter->col;
+    }
+    iter++;
+  }
+  return -1;
+}
+
+void Gui2Grid::SetMaxVisibleRows(int visibleRowCount) {
+  this->maxVisibleRows = std::max(1, visibleRowCount);
+}
+
+void Gui2Grid::UpdateLayout(float margin_left_percent, float margin_right_percent,
+                            float margin_top_percent, float margin_bottom_percent) {
+  if (maxVisibleRows != 10000)
+    UpdateScrolling();
+
+  this->margin_left_percent = margin_left_percent;
+  this->margin_right_percent = margin_right_percent;
+  this->margin_top_percent = margin_top_percent;
+  this->margin_bottom_percent = margin_bottom_percent;
+
+  std::vector<GridLayoutCell> cells;
+  cells.reserve(container.size());
+  for (const auto& item : container) {
+    float width, height;
+    item.view->GetSize(width, height);
+    cells.push_back({item.row, item.col, width, height});
+  }
+  const GridLayout layout =
+      CalculateGridLayout(cells, rows, cols, offsetRows, maxVisibleRows, margin_left_percent,
+                          margin_right_percent, margin_top_percent, margin_bottom_percent);
+  SetSize(layout.width, layout.height);
+  for (const auto& item : container) {
+    if (item.row >= offsetRows && item.row < offsetRows + maxVisibleRows)
+      item.view->SetPosition(layout.x[item.col], layout.y[item.row]);
+  }
+
+  UpdateScrollbars();
+}
+
+void Gui2Grid::UpdateScrolling() {
+  if (selectedRow >= offsetRows + maxVisibleRows) {
+    offsetRows = selectedRow - maxVisibleRows + 1;
+  }
+
+  if (selectedRow < offsetRows) {
+    offsetRows = selectedRow;
+  }
+
+  for (unsigned int i = 0; i < container.size(); i++) {
+    if (container.at(i).row >= offsetRows && container.at(i).row < offsetRows + maxVisibleRows)
+      container.at(i).view->Show();
+    else
+      container.at(i).view->Hide();
+  }
+}
+
+void Gui2Grid::UpdateScrollbars() {
+  return;  // disabled: grids with scrollbars somehow crash on deletion
+  if (rows > maxVisibleRows) {
+    if (scrollY == 0) {
+      scrollY = new Gui2Scrollbar(windowManager, name + "_scroll_vert",
+                                  x_percent + width_percent - 1, y_percent, 1, height_percent);
+      Gui2View::AddView(scrollY);
+      scrollY->Show();
+    }
+    scrollY->SetSizePercent((maxVisibleRows / (float)rows) * 100);
+    scrollY->SetProgressPercent((offsetRows / (float)(rows - maxVisibleRows)) * 100);
+    scrollY->Redraw();
+  } else {
+    if (scrollY != 0) {
+      this->RemoveView(scrollY);
+      scrollY->Exit();
+      delete scrollY;
+      scrollY = 0;
+    }
+  }
+}
+
+void Gui2Grid::ProcessWindowingEvent(WindowingEvent* event) {
+  if (container.size() == 0)
+    return;
+
+  // check if someone else changed the focus and update likewise
+  for (int i = 0; i < (signed int)container.size(); i++) {
+    if (container.at(i).view->IsInFocusPath()) {
+      if (container.at(i).row != selectedRow)
+        selectedRow = container.at(i).row;
+      if (container.at(i).col != selectedCol)
+        selectedCol = container.at(i).col;
+      break;
+    }
+  }
+
+  Vector3 direction = event->GetDirection();
+  int xoffset = 0;
+  int yoffset = 0;
+  if (direction.coords[0] < -0.75)
+    xoffset = -1;
+  if (direction.coords[0] > 0.75)
+    xoffset = 1;
+  if (direction.coords[1] < -0.75)
+    yoffset = -1;
+  if (direction.coords[1] > 0.75)
+    yoffset = 1;
+
+  if (xoffset != 0 || yoffset != 0)
+    event->Accept();
+  else
+    event->Ignore();
+
+  bool movedOutOfGrid =
+      false;  // maybe we need to ignore this event so parent can receive it instead
+
+  if ((xoffset != 0 || yoffset != 0) && switchDelay_ms >= minSwitchDelay_ms && IsSelectable()) {
+    movedOutOfGrid = false;
+
+    int provisionalSelectedRow = selectedRow;
+    int provisionalSelectedCol = selectedCol;
+
+    Gui2View* provisionalTarget = nullptr;
+    bool selectableFound = false;
+    int remainingCells = std::max(1, rows * cols);
+    while (!selectableFound && !movedOutOfGrid && remainingCells-- > 0) {
+      provisionalSelectedRow += yoffset;
+
+      if (rowWrap) {
+        if (provisionalSelectedRow > rows - 1)
+          provisionalSelectedRow = 0;
+        if (provisionalSelectedRow < 0)
+          provisionalSelectedRow = rows - 1;
+      } else {
+        if (provisionalSelectedRow > rows - 1) {
+          provisionalSelectedRow = rows - 1;
+          movedOutOfGrid = true;
+        }
+        if (provisionalSelectedRow < 0) {
+          provisionalSelectedRow = 0;
+          movedOutOfGrid = true;
+        }
+      }
+
+      provisionalSelectedCol += xoffset;
+
+      if (colWrap) {
+        if (provisionalSelectedCol > cols - 1)
+          provisionalSelectedCol = 0;
+        if (provisionalSelectedCol < 0)
+          provisionalSelectedCol = cols - 1;
+      } else {
+        if (provisionalSelectedCol > cols - 1) {
+          provisionalSelectedCol = cols - 1;
+          movedOutOfGrid = true;
+        }
+        if (provisionalSelectedCol < 0) {
+          provisionalSelectedCol = 0;
+          movedOutOfGrid = true;
+        }
+      }
+
+      provisionalTarget = FindView(provisionalSelectedRow, provisionalSelectedCol);
+
+      if (provisionalTarget)
+        if (provisionalTarget->IsSelectable() || readOnlyScrolling)
+          selectableFound = true;
+    }
+
+    // A wrapped row/column may contain no selectable controls.
+    if (!selectableFound)
+      movedOutOfGrid = true;
+
+    if (selectableFound && !movedOutOfGrid) {
+      if (!provisionalTarget->IsFocussed())
+        provisionalTarget->SetFocus();
+      selectedRow = provisionalSelectedRow;
+      selectedCol = provisionalSelectedCol;
+      switchDelay_ms = 0;
+    }
+
+    UpdateLayout(margin_left_percent, margin_right_percent, margin_top_percent,
+                 margin_bottom_percent);
+
+  }  // something happened
+
+  if (movedOutOfGrid == true) {
+    event->Ignore();
+    switchDelay_ms = 0;
+  }
+}
+
+void Gui2Grid::OnGainFocus() {
+  switchDelay_ms = 0;
+
+  if (IsSelectable()) {
+    for (unsigned int i = 0; i < container.size(); i++) {
+      if (container.at(i).view->IsSelectable() || readOnlyScrolling) {
+        container.at(i).view->SetFocus();
+        selectedRow = container.at(i).row;
+        selectedCol = container.at(i).col;
+        break;
+      }
+    }
+  }
+}
+
+void Gui2Grid::SetInFocusPath(bool onOff) {
+  Gui2View::SetInFocusPath(onOff);
+
+  if (onOff == true) {
+    if (IsSelectable()) {
+      for (unsigned int i = 0; i < container.size(); i++) {
+        if (container.at(i).view->IsInFocusPath()) {
+          selectedRow = container.at(i).row;
+          selectedCol = container.at(i).col;
+          if (maxVisibleRows != 10000)
+            UpdateLayout(margin_left_percent, margin_right_percent, margin_top_percent,
+                         margin_bottom_percent);
+          break;
+        }
+      }
+    }
+  }
+}
+
+void Gui2Grid::Show() {
+  for (int i = 0; i < (signed int)container.size(); i++) {
+    if (container.at(i).row >= offsetRows && container.at(i).row < offsetRows + maxVisibleRows)
+      container.at(i).view->Show();
+    else
+      container.at(i).view->Hide();
+  }
+  if (scrollX)
+    scrollX->Show();
+  if (scrollY)
+    scrollY->Show();
+
+  Gui2View::Show();
+}
+
+void Gui2Grid::Hide() {
+  for (int i = 0; i < (signed int)container.size(); i++) {
+    container.at(i).view->Hide();
+  }
+  if (scrollX)
+    scrollX->Hide();
+  if (scrollY)
+    scrollY->Hide();
+
+  Gui2View::Hide();
+}
+
+}  // namespace blunted

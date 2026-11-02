@@ -218,7 +218,7 @@ func _probar_mascota() -> void:
 	var m := EstadioExtras.mascota(raiz, c)
 	_comprobar(m != null and m.name == "Mascota" and m.position == Vector3(-35.6, 0, -12.0) and is_equal_approx(m.rotation_degrees.y, 90.0), "EstadioExtras.mascota(): en la banda, mirando a la grada")
 	var ctl := m.get_node_or_null("Animador") as MascotaQ
-	var cola := m.get_node_or_null("Cola") as Node3D
+	var cola := m.get_node_or_null("ColaSoporte/Cola") as Node3D
 	_comprobar(ctl != null and cola != null, "con su animador y su cola")
 	var fundidas := m.find_children("Fundida", "MeshInstance3D", true, false)
 	_comprobar(fundidas.size() >= 3, "los adornos fundidos en una malla por parte (%d partes)" % fundidas.size())

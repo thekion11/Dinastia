@@ -23,9 +23,12 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 - Contenedor nuevo: `git lfs pull --include="dinastia-godot/**"` ANTES de abrir Godot. Godot 4.7.2 se baja de GitHub releases.
   Clonar con `--single-branch --branch main` (las ramas viejas pesan). Tras clases nuevas: `godot --headless --import`.
 - Datos de caras reales fuera de los builds públicos. Legal: la licencia libre cubre la foto, no el derecho de imagen.
+  (30-10, opción B) TODOS los presets son públicos; lo real va en `caras_reales.pck` (`herramientas/empaquetar_caras.gd`),
+  que `PaqueteReal` monta si está junto al ejecutable o en user://. El .pck NO se publica ni va al repo.
 - `datos/idiomas_extra.json` (9 idiomas) round-trips con `json.dumps(ensure_ascii=False, indent=1)`; textos nuevos de UI con `Idiomas.t`.
 - Diálogos de ciudad y narración se GENERAN (`herramientas/dialogos_ciudad.py`, `montar_narracion.py`): no editar a mano los resultados.
 - En el motor del partido, no usar dicts de jugador como clave: usar `p["id"]`.
+- Extensión C++ (`nativo/src` → `bin_nativo/`, 30-10): cada función es copia exacta de su versión GDScript (que se queda como respaldo para Android/Web). Si se toca una de las dos, recompilar (`herramientas/compilar_nativo.sh`) y `pruebas/probar_nativo.tscn` debe dar «FIN. 0 fallos».
 
 ## Órdenes vigentes del dueño (24-10)
 1. Fases 0-6 del guion y decisiones validadas (punto 4 = separar `Principal` en clases + cifras fase 4): en `docs/PLAN_DEL_LUNES.md` §2.
@@ -56,7 +59,7 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     butacas por nivel según el color del club (y elegible en la personalización del menú inicial).
 14. (27-10 tarde, decisiones del dueño) SÍ a clasificar las ~1.200 ideas (lanzamiento / después / descartar). `main` limpio y las
     ramas viejas: el dueño dice que ya lo hizo (verificar). PANTALLA DE ENTRADA nueva: APROBADA. «EL BLOQUEO» de modos: ACEPTADO
-    (opción en Ajustes). Las 53 escenas de prueba sin mención: ver qué se puede REUTILIZAR antes de borrar. PEATONES: SÍ suben al
+    (opción en Ajustes). Escenas de prueba sin mención: reutilizadas las 62 que pasan (bloque «reutilizadas» de `especiales.sh`, 2-11); capturas, diagnósticos y vídeos se quedan; no borrar nada sin decirlo. PEATONES: SÍ suben al
     bus y a los demás transportes. DIFICULTAD DE LA CPU en 8 categorías: Practicante, Cadete, DEBUTANTE (la normal), Semiprofesional,
     Profesional, Experto, Maestro, Ultimate; y además dificultades fuera del partido (eventos, probabilidades, retos, poca ayuda,
     asistentes deficientes, malos consejos y otras). POLICÍA Y BOMBEROS: sí. MUSEO: mejorarlo más y poder INTERACTUAR con los
@@ -82,3 +85,18 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 18. (28-10) CIERRE hasta el lunes: tras la limpieza de código y lo pendiente de las sesiones, guardar todo y dejar registros
     al limpio. Registro: `docs/04_auditorias/CIERRE_2026-10-28.md`; estado para retomar arriba de `PLAN_DEL_LUNES.md`.
     Correo de contacto del dueño (informe de fallos y privacidad): en `Registro.CONTACTO`.
+19. (2-11) 120 FPS mínimo en equipos modestos (4 GB DDR3, Intel UHD/HD, Pentium): optimizar sin quitar nada sin decirlo y medir con `herramientas/hw_modesto.sh` (llvmpipe: comparar triángulos, llamadas, memoria; NUNCA el tiempo de fotograma `--headless`, tiene un suelo de 6,9 ms). El dueño ordenó (2-11) pasar todo a `main`. Estado y pendientes: `docs/04_auditorias/rendimiento_120fps.md` y arriba de `PLAN_DEL_LUNES.md`.
+19. (01-11) TERCEROS: «agarrar todo» de League-Soccer (Apache 2.0) y soccer5v5 (MIT) y quedarse siempre con lo MEJOR; lo que no
+    se use queda de respaldo en `dinastia-godot/terceros/` (Godot no lo importa). Sus datos REALES (jugadores, escudos, uniformes,
+    competiciones) NO se copian: solo su DIRECCIÓN en `terceros/league_soccer/DIRECCION_DATOS_REALES.md`, para recrearlos
+    después de forma legal. Animaciones de League-Soccer: `herramientas/league_anim_a_res.gd` → `anims_league/league.res`.
+20. (01-11) ORDEN DE TRABAJO del dueño: 1) FALLOS (los 8 que League-Soccer ya resolvió, `docs/04_auditorias/terceros_gestion_recursos_2026-11-01.md` U7),
+    2) CLUBES (recrear de forma legal con `terceros/league_soccer/DIRECCION_DATOS_REALES.md`), 3) IA (R1-R3, U1-U8 de `terceros_ia_motor_2026-11-01.md`),
+    4) jugabilidad, 5) optimización, 6) detectar fallos, 7) sonidos de sistema, 8) minijuegos, 9) entrenamiento.
+21. (01-11 noche) Seguir las fases de la orden 20 SIN parar hasta terminarlas TODAS (3 IA: R2 y U8; 4-9) y avisar al dueño
+    (Calendar) SOLO al final, con el resumen; no avisar fase por fase. Al final: dos VÍDEOS (un partido con la cámara real y un
+    recorrido del juego entero: menú, ciudad, estadio, museo, gestión, partido, minijuego), grabados con `--write-movie` + xvfb +
+    ffmpeg, fuera del repo (scratchpad → app y Drive). El dueño pone nota 1-100 con argumentos, que pasan a la lista de mejoras.
+    (02-11) El dueño pidió SOLO el vídeo del partido (enviado: 2 partes comprimidas a 960x540, Lautaro 2-1 Marga Marga); su nota queda
+    pendiente. Lo pidió más nítido: la regrabación en 1080p se cortó a medias (tarda ~7 h por software); queda el script
+    `herramientas/grabar_partido_hd.sh` para hacerlo en un PC con GPU o rehacerlo aquí.

@@ -96,7 +96,31 @@ static func textura(claro: Color, oscuro: Color, diseno: String = "clasico") -> 
 	var clave := "%s|%s|%s" % [claro.to_html(false), oscuro.to_html(false), diseno]
 	if _cache_tex.has(clave):
 		return _cache_tex[clave]
+	## En disco (30-10-2026): el PNG sin pérdida de la sesión anterior, si el script no cambió.
+	var en_disco := "balon|%s|%s" % [clave, CacheDisco.huella("balon", PackedStringArray(["res://visor/balon_3d.gd"]))]
+	var guardada := CacheDisco.cargar_imagen(en_disco)
+	if guardada != null and guardada.get_format() == Image.FORMAT_RGB8 and guardada.get_width() == ANCHO_TEX:
+		guardada.generate_mipmaps()
+		_cache_tex[clave] = ImageTexture.create_from_image(guardada)
+		return _cache_tex[clave]
+	var tex := _textura_nueva(claro, oscuro, diseno)
+	CacheDisco.guardar_imagen(en_disco, tex.get_image())
+	_cache_tex[clave] = tex
+	return tex
+
+static func _textura_nueva(claro: Color, oscuro: Color, diseno: String) -> ImageTexture:
 	var img := Image.create(ANCHO_TEX, ALTO_TEX, false, Image.FORMAT_RGB8)
+	if diseno != "moderno" and diseno != "retro":
+		## El clásico con el plano de paneles ya calculado (30-10-2026): mismos colores.
+		var plano := _plano_clasico()
+		var costura_c := claro.darkened(0.45)
+		for y in ALTO_TEX:
+			for x in ANCHO_TEX:
+				var i := y * ANCHO_TEX + x
+				var tipo := plano[0][i] as int
+				img.set_pixel(x, y, costura_c if tipo == 0 else (oscuro if tipo == 1 else claro).darkened(plano[1][i]))
+		img.generate_mipmaps()
+		return ImageTexture.create_from_image(img)
 	var centros_p := _icosaedro()
 	var centros_h := _caras_icosaedro(centros_p)
 	var ejes := [Vector3.RIGHT, Vector3.LEFT, Vector3.UP, Vector3.DOWN, Vector3.FORWARD, Vector3.BACK]
@@ -117,9 +141,53 @@ static func textura(claro: Color, oscuro: Color, diseno: String = "clasico") -> 
 					col = _pixel_clasico(d, centros_p, centros_h, claro, oscuro, costura)
 			img.set_pixel(x, y, col)
 	img.generate_mipmaps()
-	var tex := ImageTexture.create_from_image(img)
-	_cache_tex[clave] = tex
-	return tex
+	return ImageTexture.create_from_image(img)
+
+## QUÉ PANEL ES CADA PÍXEL DEL CLÁSICO (30-10-2026, rendimiento): no depende de los colores, así
+## que se calcula una vez (32.768 píxeles × 32 ángulos) y cada balón nuevo solo se colorea.
+## [tipo (0 costura, 1 pentágono, 2 hexágono), oscurecido]: las mismas cuentas que `_pixel_clasico`.
+static var _plano: Array = []
+
+static func _plano_clasico() -> Array:
+	if not _plano.is_empty():
+		return _plano
+	var cp := _icosaedro()
+	var ch := _caras_icosaedro(cp)
+	var tipos := PackedByteArray()
+	var osc := []   ## Array (float de 64 bits): el mismo oscurecido exacto que antes
+	for y in ALTO_TEX:
+		var th := (float(y) + 0.5) / float(ALTO_TEX) * PI
+		for x in ANCHO_TEX:
+			var ph := (float(x) + 0.5) / float(ANCHO_TEX) * TAU
+			var d := Vector3(sin(ph) * sin(th), cos(th), cos(ph) * sin(th))
+			var m := _medidas_clasico(d, cp, ch)
+			tipos.append(0 if m[1] - m[0] < 0.045 else (1 if m[2] else 2))
+			osc.append(clampf(0.12 - (m[1] - m[0]) * 0.35, 0.0, 0.12))
+	_plano = [tipos, osc]
+	return _plano
+
+## m1, m2 y si el más cercano es un pentágono (lo mismo que mira `_pixel_clasico`).
+static func _medidas_clasico(d: Vector3, cp: Array[Vector3], ch: Array[Vector3]) -> Array:
+	var m1 := 99.0
+	var m2 := 99.0
+	var es_pent := false
+	for c: Vector3 in cp:
+		var a := d.angle_to(c) / deg_to_rad(16.47)
+		if a < m1:
+			m2 = m1
+			m1 = a
+			es_pent = true
+		elif a < m2:
+			m2 = a
+	for c: Vector3 in ch:
+		var a := d.angle_to(c) / deg_to_rad(20.9)
+		if a < m1:
+			m2 = m1
+			m1 = a
+			es_pent = false
+		elif a < m2:
+			m2 = a
+	return [m1, m2, es_pent]
 
 ## Los 12 vértices del icosaedro: los centros de los pentágonos.
 static func _icosaedro() -> Array[Vector3]:
@@ -152,30 +220,12 @@ static func _caras_icosaedro(v: Array[Vector3]) -> Array[Vector3]:
 ## en un hexágono. Comparar las distancias YA divididas por eso pone la
 ## frontera justo en la arista, con las proporciones del balón de verdad.
 static func _pixel_clasico(d: Vector3, cp: Array[Vector3], ch: Array[Vector3], claro: Color, oscuro: Color, costura: Color) -> Color:
-	var m1 := 99.0
-	var m2 := 99.0
-	var es_pent := false
-	for c: Vector3 in cp:
-		var a := d.angle_to(c) / deg_to_rad(16.47)
-		if a < m1:
-			m2 = m1
-			m1 = a
-			es_pent = true
-		elif a < m2:
-			m2 = a
-	for c: Vector3 in ch:
-		var a := d.angle_to(c) / deg_to_rad(20.9)
-		if a < m1:
-			m2 = m1
-			m1 = a
-			es_pent = false
-		elif a < m2:
-			m2 = a
-	if m2 - m1 < 0.045:
+	var m := _medidas_clasico(d, cp, ch)
+	if m[1] - m[0] < 0.045:
 		return costura
-	var base := oscuro if es_pent else claro
+	var base: Color = oscuro if m[2] else claro
 	## Relieve: el panel se oscurece un poco hacia la costura.
-	return base.darkened(clampf(0.12 - (m2 - m1) * 0.35, 0.0, 0.12))
+	return base.darkened(clampf(0.12 - (m[1] - m[0]) * 0.35, 0.0, 0.12))
 
 ## Seis paneles torcidos (el giro depende de la altura, por eso se curvan) con
 ## una franja del color secundario pegada a cada costura.

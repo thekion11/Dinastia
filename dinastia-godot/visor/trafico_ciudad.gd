@@ -33,7 +33,10 @@ func _process(delta_real: float) -> void:
 			if is_instance_valid(nv):
 				var q := nv.position
 				var lejos := maxf(absf(q.x - ojo.x), absf(q.z - ojo.z))
-				v["lod"] = 0 if lejos < 150.0 else (1 if lejos < 260.0 else 2)
+				var nl := 0 if lejos < 150.0 else (1 if lejos < 260.0 else 2)
+				if nl != int(v.get("lod", 0)) and (nl == 2 or int(v.get("lod", 0)) == 2):
+					_pausar_anim(v, nl == 2)   ## 2-11-2026: a más de 260 m (no se dibuja) su AnimationPlayer no corre
+				v["lod"] = nl
 		if float(v.get("espera", 0.0)) > 0.0:
 			v["espera"] = float(v["espera"]) - delta
 			if float(v["espera"]) <= 0.0 and v.has("pausa"):
@@ -50,6 +53,9 @@ func _process(delta_real: float) -> void:
 			PeatonVida.esperar(self, v, randf())
 			continue
 		var avance := float(v["vel"]) * delta
+		if float(v.get("susto", 0.0)) > 0.0:   ## mejora G: asustado, aprieta el paso
+			v["susto"] = float(v["susto"]) - delta
+			avance *= SUSTO_PASO
 		var ruta := int(v["ruta"])
 		var s0 := float(v["s"])
 		var largo := (_rutas[ruta] as Ruta).largo

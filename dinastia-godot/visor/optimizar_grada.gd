@@ -10,7 +10,15 @@ const MIN_INSTANCIAS := 600
 static var activo := true   ## las comprobaciones de «antes» (imágenes sin trocear) lo apagan
 
 ## Parte los MultiMesh grandes de la grada colgados de `raiz`. Devuelve cuántos partió.
+## 2-11-2026 (120 FPS): en calidad MEDIO (y en el perfil ligero automático) las butacas cercanas llevan desde el principio la malla
+## liviana (84 triángulos en vez de 1 944): medido en el partido, −36 % de triángulos (1,34 M → 0,85 M). ALTO y ULTRA no cambian.
 static func trocear(raiz: Node, tramos := 8) -> int:
+	var hechos := _trocear(raiz, tramos)
+	if Calidad.elegida == Calidad.MEDIO:
+		Optimizar.butacas_livianas(raiz, true)
+	return hechos
+
+static func _trocear(raiz: Node, tramos: int) -> int:
 	if not activo or DisplayServer.get_name() == "headless":
 		return 0   ## sin pantalla los MultiMesh no guardan sus datos
 	var hechos := 0
@@ -78,3 +86,25 @@ static func _partir(mmi: MultiMeshInstance3D, tramos: int) -> void:
 		padre.add_child(m2)
 	padre.remove_child(mmi)
 	mmi.free()
+
+## EL PRÓLOGO NO NECESITA VER LEJOS (2-11-2026): tope de distancia de dibujo para todo lo pequeño o mediano que no tenga uno más
+## corto (lo grande -terreno, horizonte, edificios de más de `GRANDE` m- se queda). Fuera del estadio (`sin_corte`) y sin rótulos.
+## Devuelve cuántos objetos recibieron el tope.
+static func limitar_vista(raiz: Node, hasta: float, grande := 90.0) -> int:
+	var fuera := {}
+	for r in raiz.find_children("*", "Node3D", true, false):
+		if r.has_meta("sin_corte"):
+			for x in r.find_children("*", "GeometryInstance3D", true, false):
+				fuera[x] = true
+	var n := 0
+	for g_n in raiz.find_children("*", "GeometryInstance3D", true, false):
+		var g := g_n as GeometryInstance3D
+		if fuera.has(g) or g is Label3D or (g.visibility_range_end > 0.0 and g.visibility_range_end <= hasta):
+			continue
+		if g.get_aabb().size.length() > grande:
+			continue
+		g.visibility_range_end = hasta
+		g.visibility_range_end_margin = hasta * 0.1
+		n += 1
+	return n
+

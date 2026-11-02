@@ -55,7 +55,43 @@ var _fila_base: HBoxContainer
 var _lbl_base: Label
 
 var _panel_continuar: VBoxContainer
-var _mundo_guardado: Mundo = null
+var _mundo_guardado = null   ## un `Mundo`, sin nombrar la clase (ver `inicio_pesado.gd`)
+
+## LO PESADO, EN UN HILO (30-10-2026, arranque): `inicio_pesado.gd` (Partida, Escudo, Logros, Meta…)
+## se compila en segundo plano; lo que lo necesita espera en `_con_pesado` y se pinta al llegar.
+## Si el jugador pulsa algo antes, `_P()` lo espera (load() aguarda al mismo hilo).
+const PESADO := "res://ui/inicio_pesado.gd"
+var _pesado: Script = null
+var _pendientes: Array[Callable] = []
+
+func _P() -> Script:
+	if _pesado == null:
+		_pesado = load(PESADO)
+	return _pesado
+
+func _con_pesado(f: Callable) -> void:
+	if _pesado != null:
+		f.call()
+		return
+	_pendientes.append(f)
+	if _pendientes.size() == 1:
+		ResourceLoader.load_threaded_request(PESADO)
+		get_tree().process_frame.connect(_mirar_pesado)
+
+func _mirar_pesado() -> void:
+	var st := ResourceLoader.load_threaded_get_status(PESADO)
+	if st == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+		return
+	get_tree().process_frame.disconnect(_mirar_pesado)
+	if _pesado == null:
+		_pesado = ResourceLoader.load_threaded_get(PESADO) if st == ResourceLoader.THREAD_LOAD_LOADED else load(PESADO)
+	## Y el resto, de uno en uno y en orden: primero la escena de «Nuevo juego», luego los scripts.
+	CompilarFondo.empezar(get_tree(), PackedStringArray(["res://escenas/entrada.tscn"]))
+	var lista := _pendientes
+	_pendientes = []
+	for f in lista:
+		if f.is_valid():
+			f.call()
 
 ## LA PORTADA QUE CAMBIA SOLA (8-10-2026, pedido: «que el fondo de ahí se vaya
 ## cambiando cada 30 segundos por sus variantes»). Cada 30 s pasa a la
@@ -161,6 +197,19 @@ func _construir_banner(raiz: VBoxContainer) -> void:
 	_overlay.stretch_mode = TextureRect.STRETCH_SCALE
 	_banner.add_child(_overlay)
 
+	## El logo definitivo (26-10-2026), a la derecha de la franja.
+	var logo := TextureRect.new()
+	logo.name = "LogoPortada"
+	logo.texture = load("res://assets/logo/logo_512.png")
+	logo.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
+	logo.offset_left = -214; logo.offset_right = -22
+	logo.offset_top = -96; logo.offset_bottom = 96
+	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_banner.add_child(logo)
+
 	var textos := VBoxContainer.new()
 	textos.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	textos.offset_left = 22; textos.offset_top = -108
@@ -224,8 +273,7 @@ func _panel() -> PanelContainer:
 ## de Logros (`Logros.perfil_leer()`/`perfil_nivel()`); aquí solo hacía falta
 ## enseñarlo también en el menú, que es donde el HTML lo pone.
 func _construir_perfil(raiz: VBoxContainer) -> void:
-	var perfil := Logros.perfil_leer()
-	var nivel := Logros.perfil_nivel(int(perfil["xp"]))
+	var nivel: Dictionary = _P().perfil()
 	var caja := _panel()
 	raiz.add_child(caja)
 	var v := VBoxContainer.new()
@@ -255,17 +303,17 @@ func _construir_meta(raiz: VBoxContainer) -> void:
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 10)
 	raiz.add_child(fila)
-	var d := Meta.leer()
+	var d: Dictionary = _P().meta()
 	var b := Button.new()
 	b.text = Idiomas.t("📒 Álbum y museo  ·  %d cromos, %d títulos") % [(d["cromos"] as Dictionary).size(), (d["museo"] as Array).size()]
-	b.pressed.connect(func() -> void: PanelMeta.abrir(self))
+	b.pressed.connect(func() -> void: _P().abrir_meta(self))
 	fila.add_child(b)
-	if Meta.hay_legado():
+	if _P().hay_legado():
 		var leg: Dictionary = d["legado"]
 		var h := CheckButton.new()
 		h.text = Idiomas.t("🌍 Heredar el mundo de tu última partida (temporada %d)") % int(leg.get("anio", 0))
-		h.button_pressed = Meta.heredar_proximo
-		h.toggled.connect(func(si: bool) -> void: Meta.heredar_proximo = si)
+		h.button_pressed = _P().heredar()
+		h.toggled.connect(func(si: bool) -> void: _P().heredar(si))
 		fila.add_child(h)
 
 func _elegir_dificultad(k: String) -> void:

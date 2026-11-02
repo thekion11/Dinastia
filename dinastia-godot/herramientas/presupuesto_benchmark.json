@@ -1,0 +1,9 @@
+{
+  "_nota": "Topes del benchmark (nucleo/medicion.gd) en Compatibilidad: lo medido el 2-11-2026 con herramientas/hw_modesto.sh + 15 %. BAJAN, no suben: quien suba uno lo justifica en docs/04_auditorias/rendimiento_120fps.md. El tiempo de CPU/FPS no entra (depende de la maquina); si en un equipo real se mide, se compara a mano.",
+  "partes": {
+    "menú": {"llamadas": 150, "triangulos": 6000, "memoria_mb": 900, "video_mb": 70},
+    "estadio (cámara TV)": {"llamadas": 1200, "triangulos": 1290000, "memoria_mb": 1100, "video_mb": 260},
+    "ciudad": {"llamadas": 4500, "triangulos": 2730000, "memoria_mb": 2050, "video_mb": 630}
+  },
+  "objetivo_pico_ram_mb": 4096
+}

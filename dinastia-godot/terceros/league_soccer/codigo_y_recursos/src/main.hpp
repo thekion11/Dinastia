@@ -1,0 +1,68 @@
+#ifndef _HPP_MAIN
+#define _HPP_MAIN
+
+#include "base/properties.hpp"
+#include "blunted.hpp"
+#include "gametask.hpp"
+#include "hid/ihidevice.hpp"
+#include "menu/menutask.hpp"
+#include "sqlite3.h"
+#include "systems/graphics/graphics_system.hpp"
+#include "utils/database.hpp"
+
+enum e_DebugMode { e_DebugMode_Off, e_DebugMode_Tactical, e_DebugMode_AI };
+
+class Match;
+
+void SetGreenDebugPilon(const Vector3& pos);
+void SetBlueDebugPilon(const Vector3& pos);
+void SetYellowDebugPilon(const Vector3& pos);
+void SetRedDebugPilon(const Vector3& pos);
+
+void SetSmallDebugCircle1(const Vector3& pos);
+void SetSmallDebugCircle2(const Vector3& pos);
+void SetLargeDebugCircle(const Vector3& pos);
+
+boost::intrusive_ptr<Geometry> GetGreenDebugPilon();
+boost::intrusive_ptr<Geometry> GetBlueDebugPilon();
+boost::intrusive_ptr<Geometry> GetYellowDebugPilon();
+boost::intrusive_ptr<Geometry> GetRedDebugPilon();
+
+boost::intrusive_ptr<Geometry> GetSmallDebugCircle1();
+boost::intrusive_ptr<Geometry> GetSmallDebugCircle2();
+boost::intrusive_ptr<Geometry> GetLargeDebugCircle();
+
+std::string GetConfigFilename();
+std::shared_ptr<Scene2D> GetScene2D();
+std::shared_ptr<Scene3D> GetScene3D();
+GraphicsSystem* GetGraphicsSystem();
+std::shared_ptr<GameTask> GetGameTask();
+std::shared_ptr<MenuTask> GetMenuTask();
+
+bool IsReleaseVersion();
+bool Verbose();
+bool UpdateNonImportableDB();
+
+Database* GetDB();
+Properties* GetConfiguration();
+std::string GetActiveSaveDirectory();
+void SetActiveSaveDirectory(const std::string& dir);
+bool SuperDebug();
+e_DebugMode GetDebugMode();
+boost::intrusive_ptr<Image2D> GetDebugImage();
+boost::intrusive_ptr<Image2D> GetDebugOverlay();
+void GetDebugOverlayCoord(Match* match, const Vector3& worldPos, int& x, int& y);
+
+int PredictFrameTimeToGo_ms(int frameCount);
+
+const std::vector<IHIDevice*>& GetControllers();
+// Controller-list indices of gamepads unplugged since the last call, in
+// removal order (each index is relative to the list at that moment).
+std::vector<int> TakeRemovedControllerIndices();
+// Smoke tests only: unplugs the virtual gamepad attached when the config sets
+// "menu_smoke_virtual_gamepad". Returns false if there is none.
+bool DetachSmokeVirtualGamepad();
+
+int main(int argc, const char** argv);
+
+#endif

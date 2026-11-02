@@ -118,6 +118,10 @@ var _t_marca := 0
 ## Círculos [x, z, radio] de lo pequeño y sólido (farolas, troncos, coches...).
 var circulos := PackedVector3Array()
 static var _medir_tiempos := OS.get_environment("TIEMPOS") != ""
+## MODO PRÓLOGO (2-11-2026, orden urgente del dueño): el prólogo solo enseña el barrio del club. Con esto encendido la
+## ciudad se arma recortada a esa zona (`CiudadExpansion._recortar_a_zona`) y sin lo lejano (autopista, parque eólico,
+## depósito de agua, teleférico): ~1/3 de lo que se construye, y la carga y la memoria bajan en proporción. Lo pone `PrologoDT`.
+static var modo_prologo := false
 
 ## ============================================================================
 ##  EL TERRENO (12-9-2026, tercera pasada)

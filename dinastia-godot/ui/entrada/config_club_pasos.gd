@@ -224,42 +224,20 @@ func _mini_escudo(forma: String, patron: String) -> Texture2D:
 # ----------------------------------------------------------------- EQUIPACIÓN
 
 func _paso_equipacion() -> void:
+	## (2-11-2026) EL EDITOR COMPLETO, incrustado: 70 diseños, cinco colores, pantalón, medias, botines,
+	## accesorios y números, con el jugador en 3D. Cada cambio va al club al momento.
 	var c := datos.club
-	_seccion(Idiomas.t("Colores de la camiseta"), Idiomas.t("Lo que no toques, lo hereda del club."))
-	_fila_color(Idiomas.t("Color 1 de la camiseta"), c.color_kit1(), func(h: String) -> void:
-		_color_kit(0, h))
-	_fila_color(Idiomas.t("Color 2 de la camiseta"), c.color_kit2(), func(h: String) -> void:
-		_color_kit(1, h))
-	_contenido.add_child(_opcion("↺ " + Idiomas.t("Volver a los colores del club"), false, func() -> void:
-		_color_kit(0, "")
-		_color_kit(1, "")
-		_pintar_paso(), Vector2(0, 34)))
-	_seccion(Idiomas.t("Diseño"))
-	var f := _flujo(null, 5)
-	var botones: Array = []
-	for k: String in Jersey.KITS:
-		var estilo := k
-		var b := _opcion("", c.kit_estilo == k, func() -> void:
-			c.kit_estilo = estilo
-			if c.kit_x.has("dis"):
-				c.kit_x["dis"] = estilo
-			_cambio(), Vector2(64, 66), Idiomas.t(String(DisenosKit.diseno(k)[1])))
-		var ic := _imagen(Vector2.ZERO)
-		ic.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 5)
-		b.add_child(ic)
-		f.add_child(b)
-		botones.append(b)
-		_minis_kit.append([ic, k])
-	_grupo(botones)
-	if not (c.kit_estilo in Jersey.KITS):
-		_contenido.add_child(Tema.etiqueta(13, Tema.ORO, Idiomas.t("Diseño elegido en el diseñador: %s") % Idiomas.t(String(DisenosKit.diseno(c.kit_estilo)[1]))))
-	_encolar_miniaturas()
-	var bd := _opcion(Idiomas.t("🎽  Abrir el diseñador de equipación"), false, _abrir_disenador, Vector2(0, 46))
-	bd.add_theme_font_size_override("font_size", 16)
-	_contenido.add_child(bd)
-	var nota := Tema.etiqueta(12, Tema.SUAVE, Idiomas.t("70 diseños, cinco colores, pantalón, medias, botines, accesorios y números, con el jugador en 3D."))
-	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_contenido.add_child(nota)
+	var antes := Mundo.actual()
+	var m := Mundo.new()
+	m.clubes[c.id] = c
+	m.mi_club_id = c.id
+	var dz := DisenadorKit.incrustar(_contenido, c, m)
+	dz.cambiado.connect(_cambio_colores)
+	dz.tree_exiting.connect(func() -> void:
+		m.clubes.clear()
+		if antes != null:
+			Mundo._ultimo = weakref(antes))
+	_minis_kit.clear()
 	_seccion(Idiomas.t("Interfaz"), Idiomas.t("El color de los botones y del menú del juego."))
 	_fila_color(Idiomas.t("Color de acento (botones y menú)"), c.color_acento(), func(h: String) -> void:
 		c.ui_acento = h

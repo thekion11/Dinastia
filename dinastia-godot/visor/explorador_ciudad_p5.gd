@@ -3,9 +3,9 @@ extends "res://visor/explorador_ciudad_p4.gd"
 
 ## Factor de densidad de peatones del club (−1 = sin leer todavía).
 var _densidad_gente: float = -1.0
+var _vel_antes := 0.0   ## velocidad a pie del fotograma anterior (echarse adelante al acelerar, 31-10)
 
-## ¿Hay una fachada de manzana al alcance de este punto (3 m)? Devuelve la
-## clave de la sala con el nombre propio, o vacío.
+## ¿Hay una fachada de manzana al alcance de este punto (3 m)? Devuelve la clave de la sala con el nombre propio, o vacío.
 func edificio_en(p: Vector3) -> Dictionary:
 	if cb == null:
 		return {}
@@ -65,8 +65,7 @@ func _actualizar_mano(modo_mano: String, km_h: float, maxima: float, metros: flo
 			if _minimapa.red == null and cb != null:
 				_minimapa.red = cb.expansion
 			_minimapa.poner(cuerpo.position, rumbo if modo == "coche" else cuerpo.rotation.y, get_physics_process_delta_time())
-	## Las paredes de oclusión, solo en la calle: dentro de un edificio taparían
-	## lo que se ve por la puerta (`OclusoresCiudad`).
+	## Las paredes de oclusión, solo en la calle: dentro de un edificio taparían lo que se ve por la puerta (`OclusoresCiudad`).
 	if cb != null:
 		OclusoresCiudad.activar(cb, estado == "calle")
 	if _boton_e != null:
@@ -151,12 +150,10 @@ func _andar_solo(delta: float) -> void:
 	cuerpo.rotation.y = lerp_angle(cuerpo.rotation.y, rumbo, 1.0 - exp(-9.0 * delta))
 	cuerpo.position += hacia / d * minf(d, VEL_PIE * delta)
 	_animar_dt(VEL_PIE)
-	## La cámara se queda donde estaba (detrás, en la calle) y le sigue con
-	## la mirada: así se ve al DT cruzar la puerta.
+	## La cámara se queda donde estaba (detrás, en la calle) y le sigue con la mirada: así se ve al DT cruzar la puerta.
 	camara.look_at(cuerpo.position + Vector3(0, 1.3, 0), Vector3.UP)
 
-## En la calle, con la puerta abierta y ya lejos: se cierra sola. Y si te
-## vas a mitad de la charla con el portero, la charla se acaba.
+## En la calle, con la puerta abierta y ya lejos: se cierra sola. Y si te vas a mitad de la charla con el portero, la charla se acaba.
 func _cerrar_puerta_si_lejos() -> void:
 	if _est.is_empty():
 		return
@@ -171,16 +168,25 @@ func _cerrar_puerta_si_lejos() -> void:
 	if lejos and EntradaClub.abierta(get_tree()):
 		EntradaClub.abrir(get_tree(), false)
 
+## (31-10, auditoría del coche) Sin gasolina el pedal no empuja: antes `VidaCiudad` paraba el coche en `_process`
+## y `_conducir` lo volvía a acelerar en cada paso de física (avanzaba a trompicones con el depósito vacío).
+var sin_gasolina := false
+var _t_susto := 0.0
+## Mejora B (31-10): hacia dónde va de verdad el coche; con el freno de mano se queda atrás del morro (derrape).
+var _rumbo_mov := 0.0
+var deriva := 0.0
+var freno_mano_prueba := false   ## las pruebas tiran del freno de mano sin teclado
+
 func _conducir(e: Vector2, delta: float) -> void:
 	if _motor_sonido == null:
 		_motor_sonido = MotorCocheSonido.new()
 		add_child(_motor_sonido)
 	_motor_sonido.poner(vel, maxf(e.y, 0.0))
-	var freno_mano := Input.is_physical_key_pressed(KEY_SPACE) or Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+	var freno_mano := Input.is_physical_key_pressed(KEY_SPACE) or Input.is_joy_button_pressed(0, JOY_BUTTON_B) or freno_mano_prueba
 	_volante = lerpf(_volante, e.x, clampf(delta * 4.5, 0.0, 1.0))
 	## El pedal no salta: sube en un tercio de segundo y se suelta más deprisa (27-10, pieza F: suavizar la conducción).
 	_pedal = move_toward(_pedal, e.y, (3.5 if absf(e.y) > absf(_pedal) else 7.0) * delta)
-	if _pedal > 0.0:
+	if _pedal > 0.0 and not sin_gasolina:
 		var potencia := 6.5 * (1.0 - clampf(maxf(vel, 0.0) / VEL_COCHE, 0.0, 1.0) * 0.75) + 1.2
 		vel = clampf(vel + _pedal * potencia * delta, -8.0, VEL_COCHE)
 	elif _pedal < 0.0:
@@ -197,6 +203,15 @@ func _conducir(e: Vector2, delta: float) -> void:
 	## A más velocidad el volante gira menos (no se vuelca a 90 km/h).
 	var cierre := clampf(absf(vel) / 8.0, 0.0, 1.0) * (1.0 - clampf(absf(vel) / VEL_COCHE, 0.0, 1.0) * 0.45)
 	rumbo -= _volante * delta * giro * cierre * signf(vel if vel != 0.0 else 1.0)
+	## Mejora B: con el freno de mano a más de 6 m/s las ruedas pierden agarre: la trayectoria tarda en seguir
+	## al morro (el coche cruza), se pierde velocidad según lo cruzado y al soltar se recupera.
+	var agarre := 1.6 if (freno_mano or freno_mano_prueba) and absf(vel) > 6.0 else 20.0
+	if agarre > 2.0 and absf(angle_difference(_rumbo_mov, rumbo)) > 0.8:
+		_rumbo_mov = rumbo   ## un rumbo puesto de golpe (al subir al coche, un guion): sin derrape fantasma
+	_rumbo_mov = lerp_angle(_rumbo_mov, rumbo, 1.0 - exp(-agarre * delta))
+	deriva = absf(angle_difference(_rumbo_mov, rumbo))
+	if agarre < 2.0 and deriva > 0.15:
+		vel = move_toward(vel, 0.0, deriva * 4.0 * delta)
 	var acel_real := _pedal if absf(vel) < VEL_COCHE else 0.0
 	_cabeceo = lerpf(_cabeceo, clampf(-acel_real * 0.035 - (0.03 if freno_mano else 0.0), -0.06, 0.06), clampf(delta * 4.0, 0.0, 1.0))
 	_balanceo = lerpf(_balanceo, clampf(_volante * absf(vel) * 0.0035, -0.07, 0.07), clampf(delta * 5.0, 0.0, 1.0))
@@ -256,8 +271,7 @@ func _buscar_cerca() -> void:
 			if de < mejor and d < float(pc.get("radio", 99.0)):
 				mejor = de
 				_cerca = {"tipo": "lugar", "k": String(pc["k"]), "n": String(pc["n"])}
-	## Cualquier fachada de manzana: se puede entrar (etapa 6). El tipo y el
-	## nombre salen del tramo de calle, así que son siempre los mismos.
+	## Cualquier fachada de manzana: se puede entrar (etapa 6). El tipo y el nombre salen del tramo de calle, así que son siempre los mismos.
 	if _cerca.is_empty() and modo == "pie":
 		var ed := edificio_en(p)
 		if not ed.is_empty():
@@ -274,6 +288,8 @@ func _physics_process(delta: float) -> void:
 		return
 	if estado in ["anden", "estadio", "interior", "puerta", "subsuelo", "cima"]:
 		_actualizar_mano("pie", 0.0, 1.0, 0.0)
+		cuerpo.rotation.z = 0.0   ## sin la inclinación de la carrera por la calle
+		cuerpo.rotation.x = 0.0
 	if estado == "anden":
 		_mover_en_anden(delta)
 		return
@@ -320,7 +336,10 @@ func _physics_process(delta: float) -> void:
 				_t_gesto_propio = 0.0
 				_anim.speed_scale = absf(vel) / 1.4 if absf(vel) > 0.05 else 0.0
 			_sonar_pasos(vel)
-	var adelante := Vector3(sin(rumbo), 0, cos(rumbo))
+	if modo != "coche":
+		_rumbo_mov = rumbo
+	var rm := _rumbo_mov if modo == "coche" else rumbo   ## mejora B: en coche, la trayectoria (derrape)
+	var adelante := Vector3(sin(rm), 0, cos(rm))
 	var r := RADIO_COCHE if modo == "coche" else RADIO_PIE
 	## En pasos de 30 cm como mucho (17-10, caza de bugs): con un tirón de
 	## fotogramas el coche avanzaba metros de golpe y se saltaba vallas finas.
@@ -330,10 +349,16 @@ func _physics_process(delta: float) -> void:
 		if not _mover_un_trozo(paso_total / float(trozos), r):
 			break
 	## Giro con inercia (26-10, §2.2e P2): el cuerpo persigue el rumbo en vez de saltar a él.
+	var giro_antes := cuerpo.rotation.y
 	cuerpo.rotation.y = lerp_angle(cuerpo.rotation.y, rumbo, 1.0 - exp(-9.0 * delta))
 	if modo == "coche":
 		cuerpo.rotation.x = _cabeceo
 		cuerpo.rotation.z = _balanceo
+	elif delta > 0.0:
+		## A pie, corriendo, se inclina hacia dentro de la curva (31-10, §2.2e P2).
+		cuerpo.rotation.z = MovimientoNatural.inclinacion(cuerpo.rotation.z, angle_difference(giro_antes, cuerpo.rotation.y) / delta, vel, delta)
+		cuerpo.rotation.x = MovimientoNatural.cabeceo(cuerpo.rotation.x, (vel - _vel_antes) / delta if vel >= 0.0 else 0.0, delta)
+		_vel_antes = vel
 	_colocar_camara(delta)
 	## Qué hay cerca (puertas, metro, vecinos, fachadas): ~370 µs por búsqueda;
 	## basta unas 8 veces por segundo o al dar medio metro (15-10-2026).
@@ -344,14 +369,18 @@ func _physics_process(delta: float) -> void:
 		_buscar_cerca()
 	## Gente alrededor: los peatones lejanos reaparecen cerca (a la espalda).
 	_t_gente -= delta
+	## Mejora G: a más de 40 km/h, los peatones a menos de 6 m se asustan (cada 0,3 s).
+	_t_susto -= delta
+	if _t_susto <= 0.0 and modo == "coche" and absf(vel) * 3.6 > 40.0 and trafico != null and estado == "calle":
+		_t_susto = 0.3
+		trafico.asustar(cuerpo.position, 6.0)
 	if _t_gente <= 0.0 and trafico != null and estado == "calle":
 		var mira := -camara.global_transform.basis.z
 		## La primera vez (al empezar a pasear) se llena el entorno de golpe.
 		## Cuánta gente alrededor: menos en calidad media o con el motor ligero.
 		var max_gente := 18 if (Calidad.motor_ligero or Calidad.elegida == Calidad.MEDIO) else 34
 		## Y la densidad elegida al crear el club (0.6 tranquila … 1.4 bulliciosa). Se lee
-		## una vez por paseo (el archivo no cambia mientras se pasea) y se acota por si
-		## el ajuste viniera corrupto.
+		## una vez por paseo (el archivo no cambia mientras se pasea) y se acota por si el ajuste viniera corrupto.
 		if _densidad_gente < 0.0:
 			_densidad_gente = clampf(float(AjustesCiudad.valor("densidad_factor", 1.0)), 0.3, 1.6)
 		max_gente = maxi(4, roundi(max_gente * _densidad_gente))
@@ -364,6 +393,8 @@ func _physics_process(delta: float) -> void:
 		int(absf(vel) * 3.6), "" if modo == "coche" else Idiomas.t("Mayús: correr · V: vista · ")]
 	if vida != null:
 		_hud.text = "🕒 %s · %s" % [vida.etiqueta_hora(), _hud.text]
+		if modo == "coche":
+			_hud.text += "  ·  " + vida.texto_gasolina()   ## mejora A: gasolina y reserva
 	## Dónde estás: el nombre de la calle (o el cruce).
 	if cb != null and cb.expansion != null:
 		var calle := cb.expansion.nombre_calle_en(cuerpo.position)
@@ -400,6 +431,14 @@ func _unhandled_input(ev: InputEvent) -> void:
 	elif k == KEY_T and vida != null:
 		get_viewport().set_input_as_handled()
 		vida.abrir_telefono()
+	elif k == KEY_F and estado == "calle":   ## mejora D: bajarse del coche / volver a subir
+		get_viewport().set_input_as_handled()
+		_aviso.text = AparcarCoche.alternar(self)
+	elif k == KEY_H and modo == "coche" and estado == "calle":   ## mejora E: el claxon (y la gente se aparta, mejora G)
+		get_viewport().set_input_as_handled()
+		Sonido.toca("claxon", Sonido.Bus.AMBIENTE)
+		if trafico != null:
+			trafico.asustar(cuerpo.position + Vector3(sin(rumbo), 0, cos(rumbo)) * 8.0, 12.0)
 	elif k == KEY_V and modo == "coche" and estado == "calle":
 		cam_coche = (cam_coche + 1) % 3
 		_aviso.text = [Idiomas.t("Cámara: tercera persona"), Idiomas.t("Cámara: capó"), Idiomas.t("Cámara: primera persona")][cam_coche]

@@ -1,0 +1,441 @@
+#include "pagefactory.hpp"
+
+#include "../main.hpp"
+#include "cameramenu.hpp"
+#include "career/career_save_page.hpp"
+#include "career/career_standings_page.hpp"
+#include "career/careerpages.hpp"
+#include "career/ownerpages.hpp"
+#include "controllerselect.hpp"
+#include "credits.hpp"
+#include "gameplan.hpp"
+#include "ingame/gameover.hpp"
+#include "ingame/gamepage.hpp"
+#include "ingame/ingame.hpp"
+#include "ingame/matchhistorypage.hpp"
+#include "ingame/phasemenu.hpp"
+#include "ingame/replaymenu.hpp"
+#include "ingame/setpieceeditor.hpp"
+#include "layout_audit.hpp"
+#include "league/league.hpp"
+#include "league/league_calendar.hpp"
+#include "league/league_forward.hpp"
+#include "league/league_inbox.hpp"
+#include "league/league_management.hpp"
+#include "league/league_matchday.hpp"
+#include "league/league_prematch.hpp"
+#include "league/league_standings.hpp"
+#include "league/league_system.hpp"
+#include "league/league_team.hpp"
+#include "mainmenu.hpp"
+#include "settings.hpp"
+#include "startmatch/loadingmatch.hpp"
+#include "startmatch/matchoptions.hpp"
+#include "startmatch/teamselect.hpp"
+#include "utils/localization.hpp"
+#include "visualoptions.hpp"
+
+Gui2Page* PageFactory::CreatePage(const Gui2PageData& pageData) {
+  Gui2Page* page = nullptr;
+
+  if (GetGameTask()->GetMenuScene()) {
+    GetGameTask()->GetMenuScene()->RandomizeTargetLocation();
+  }
+
+  switch (pageData.pageID) {
+    case e_PageID_MainMenu:
+      page = new MainMenuPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Game:
+      page = new GamePage(windowManager, pageData);
+      break;
+
+    case e_PageID_Intro:
+      page = new IntroPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Outro:
+      page = new OutroPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Credits:
+      page = new CreditsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Settings:
+      page = new SettingsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_ControllerSelect:
+      page = new ControllerSelectPage(windowManager, pageData);
+      break;
+
+    case e_PageID_TeamSelect:
+      page = new TeamSelectPage(windowManager, pageData);
+      break;
+
+    case e_PageID_MatchOptions:
+      page = new MatchOptionsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_LoadingMatch:
+      page = new LoadingMatchPage(windowManager, pageData);
+      break;
+
+    case e_PageID_MatchPhase:
+      page = new MatchPhasePage(windowManager, pageData);
+      break;
+
+    case e_PageID_GameOver:
+      page = new GameOverPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Ingame:
+      page = new IngamePage(windowManager, pageData);
+      break;
+
+    case e_PageID_PreQuit:
+      page = new PreQuitPage(windowManager, pageData);
+      break;
+
+    case e_PageID_GamePlan:
+      page = new GamePlanPage(windowManager, pageData);
+      break;
+
+    case e_PageID_VisualOptions:
+      page = new VisualOptionsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Replay:
+      page = new ReplayPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Camera:
+      page = new CameraPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Gameplay:
+      page = new GameplayPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Controller:
+      page = new ControllerPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Keyboard:
+      page = new KeyboardPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Gamepads:
+      page = new GamepadsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_GamepadSetup:
+      page = new GamepadSetupPage(windowManager, pageData);
+      break;
+
+    case e_PageID_GamepadCalibration:
+      page = new GamepadCalibrationPage(windowManager, pageData);
+      break;
+
+    case e_PageID_GamepadMapping:
+      page = new GamepadMappingPage(windowManager, pageData);
+      break;
+
+    case e_PageID_GamepadFunction:
+      page = new GamepadFunctionPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Graphics:
+      page = new GraphicsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Audio:
+      page = new AudioPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Language:
+      page = new LanguagePage(windowManager, pageData);
+      break;
+
+      // league mode
+
+    case e_PageID_League_Start:
+      page = new LeagueStartPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Start_Load:
+      page = new LeagueStartLoadPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Start_New:
+      page = new LeagueStartNewPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League:
+      page = new LeaguePage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Forward:
+      page = new LeagueForwardPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Inbox:
+      page = new LeagueInboxPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Team:
+      page = new LeagueTeamPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Team_Formation:
+      page = new LeagueTeamFormationPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Team_PlayerSelection:
+      page = new LeagueTeamPlayerSelectionPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Team_Tactics:
+      page = new LeagueTeamTacticsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Team_PlayerOverview:
+      page = new LeagueTeamPlayerOverviewPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Team_PlayerDevelopment:
+      page = new LeagueTeamPlayerDevelopmentPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Team_Setup:
+      page = new LeagueTeamSetupPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Calendar:
+      page = new LeagueCalendarPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Standings:
+      page = new LeagueStandingsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Standings_League_Table:
+      page = new LeagueStandingsLeagueTablePage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Standings_League_Stats:
+      page = new LeagueStandingsLeagueStatsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Management:
+      page = new LeagueManagementPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Management_Contracts:
+      page = new LeagueManagementContractsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Management_Transfers:
+      page = new LeagueManagementTransfersPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_System:
+      page = new LeagueSystemPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_System_Save:
+      page = new LeagueSystemSavePage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_System_Settings:
+      page = new LeagueSystemSettingsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_PreMatch:
+      page = new LeaguePreMatchPage(windowManager, pageData);
+      break;
+
+    case e_PageID_League_Matchday:
+      page = new LeagueMatchdayPage(windowManager, pageData);
+      break;
+
+    case e_PageID_MatchHistory:
+      page = new MatchHistoryPage(windowManager, pageData);
+      break;
+
+    case e_PageID_SetPieceEditor:
+      page = new SetPieceEditorPage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerMenu:
+      page = new CareerMenuPage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerNewGame:
+      page = new CareerNewGamePage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerHub:
+      page = new CareerHubPage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerTransferMarket:
+      page = new CareerTransferMarketPage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerTransferBids:
+      page = new CareerTransferBidsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerTransferBidDetail:
+      page = new CareerTransferBidDetailPage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerPressConference:
+      page = new CareerPressConferencePage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerLeagueExpansion:
+      page = new CareerLeagueExpansionPage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerCustomLeague:
+      page = new CareerCustomLeaguePage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerFreeAgency:
+      page = new CareerFreeAgencyPage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerTraining:
+      page = new CareerTrainingPage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerStrategy:
+      page = new CareerStrategyPage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerYouthAcademy:
+      page = new CareerYouthAcademyPage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerSquadRoster:
+      page = new CareerSquadRosterPage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerSeason:
+      page = new CareerSeasonPage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerMatchday:
+      page = new CareerMatchdayPage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerSave:
+      page = new CareerSavePage(windowManager, pageData);
+      break;
+
+    case e_PageID_CareerStandings:
+      page = new CareerStandingsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_OwnerHub:
+      page = new CareerHubPage(windowManager, pageData);  // Legacy hub route.
+      break;
+
+    case e_PageID_OwnerStadium:
+      page = new OwnerStadiumPage(windowManager, pageData);
+      break;
+
+    case e_PageID_OwnerFinances:
+      page = new OwnerFinancesPage(windowManager, pageData);
+      break;
+
+    case e_PageID_OwnerStaff:
+      page = new OwnerStaffPage(windowManager, pageData);
+      break;
+
+    case e_PageID_OwnerStaffHire:
+      page = new OwnerStaffHirePage(windowManager, pageData);
+      break;
+
+    case e_PageID_OwnerSponsors:
+      page = new OwnerSponsorsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_OwnerBoardRoom:
+      page = new OwnerBoardRoomPage(windowManager, pageData);
+      break;
+
+    default:
+      page = nullptr;
+      break;
+  }
+
+  if (page != nullptr) {
+    windowManager->GetPagePath()->Push(pageData);
+    windowManager->GetRoot()->AddView(page);
+    if (GetConfiguration()->GetBool("menu_layout_audit", false)) {
+      printf("[menu-layout] Page %d\n", pageData.pageID);
+      AuditMenuLayout(page);
+    }
+    const std::string smokeRoute = GetConfiguration()->Get("menu_smoke_test_page", "");
+    // career_match plays the fixture from the matchday page and finishes at
+    // full time (CareerMatchdayPage::Process, GameOverPage::Process).
+    if (!smokeRoute.empty() && smokeRoute != "career_match" &&
+        pageData.pageID == StandaloneMenuSmokePage(smokeRoute)) {
+      bool passed = true;
+      if (smokeRoute == "career_season_pending") {
+        const auto* save = CareerDatabase::GetInstance().GetActiveSave();
+        auto* warning = dynamic_cast<Gui2Caption*>(FindCareerHubView(page, "caption_season_warn"));
+        auto* advance = FindCareerHubView(page, "btn_season_advance");
+        passed = save && warning && advance && !CareerDatabase::GetInstance().CanAdvanceSeason() &&
+                 save->season.currentWeek == save->season.maxWeeks &&
+                 warning->GetCaption() ==
+                     TRF("career_season_wait", {std::to_string(save->season.currentWeek),
+                                                std::to_string(save->season.maxWeeks)});
+      }
+      if (smokeRoute == "career_roster" || smokeRoute == "career_roster_player")
+        passed = SmokeCareerRoster(windowManager, page);
+      if (smokeRoute == "career_tactics" || smokeRoute == "career_tactics_delegated")
+        passed = windowManager->GetFocus() &&
+                 windowManager->GetFocus()->GetName() ==
+                     (smokeRoute == "career_tactics" ? "career_tactic_1" : "btn_st_back");
+      if (smokeRoute == "career_training")
+        passed = SmokeCareerTraining(windowManager, page);
+      if (smokeRoute == "gamepad_setup_virtual")
+        passed = FindCareerHubView(page, "button_gamepadsetupmenu_layout") &&
+                 FindCareerHubView(page, "button_gamepadsetupmenu_invert") &&
+                 FindCareerHubView(page, "button_gamepadsetupmenu_deadzone") &&
+                 FindCareerHubView(page, "button_gamepadsetupmenu_rumble") &&
+                 windowManager->GetFocus() &&
+                 windowManager->GetFocus()->GetName() == "button_gamepadsetupmenu_layout";
+      if (pageData.pageID == e_PageID_CareerHub || pageData.pageID == e_PageID_OwnerHub)
+        passed =
+            SmokeCareerHub(windowManager, page,
+                           atoi(GetConfiguration()->Get("menu_smoke_career_section", "0").c_str()));
+      if (smokeRoute == "career_player_training")
+        passed = FindCareerHubView(page, "personal_training_summary") &&
+                 FindCareerHubView(page, "training_session_0") &&
+                 !FindCareerHubView(page, "training_plans") &&
+                 !FindCareerHubView(page, "development_players") && windowManager->GetFocus() &&
+                 windowManager->GetFocus()->GetName() ==
+                     (CareerDatabase::GetInstance().GetActiveSave()->trainingPoints > 0
+                          ? "training_session_0"
+                          : "btn_tr_back");
+      if (passed)
+        printf("[menu-smoke] Standalone %s reached successfully\n", smokeRoute.c_str());
+      else
+        printf("[menu-smoke] Career navigation checks failed\n");
+      const int quitDelay_ms = GetConfiguration()->GetInt("menu_smoke_quit_delay_ms", 0);
+      if (quitDelay_ms > 0)
+        GetMenuTask()->QuitGameAfter(static_cast<unsigned long>(quitDelay_ms));
+      else
+        GetMenuTask()->QuitGame();
+    }
+  }
+
+  return page;
+}

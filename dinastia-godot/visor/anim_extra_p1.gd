@@ -41,7 +41,7 @@ const ESPEJABLES := ["patear", "pase", "penal", "penal_2", "regate_finta", "rega
 
 ## Acción -> variantes posibles (las que existan en la librería del jugador).
 const CATEGORIAS := {
-	"regate": ["regate_finta", "regate_finta_espejo", "regate_pausa", "regate_pausa_espejo", "voltereta"],
+	"regate": ["regate_finta", "regate_finta_espejo", "regate_pausa", "regate_pausa_espejo"],   ## (31-10: sin «voltereta»: nadie regatea rodando y el clip sale de rango en la auditoría biomecánica; sigue cargada)
 	"conducir": ["conducir", "conducir_espejo"],
 	"patear": ["patear", "patear_espejo"],
 	"pase": ["pase", "pase_espejo"],
@@ -49,8 +49,8 @@ const CATEGORIAS := {
 	"atajar": ["atajar_izq", "atajar_der", "atajar_bajo", "atajar_izq_espejo", "atajar_der_espejo", "atajar_bajo_espejo"],
 	"cabezazo": ["cabezazo", "cabezazo_espejo", "saltar_inicio"],
 	"celebrar": ["celebrar", "celebrar_espejo", "celebrar_rodillas", "celebrar_rodillas_espejo", "celebrar_carrera",
-		"celebrar_carrera_espejo", "baile", "puno_al_aire", "besar_escudo", "senalar_cielo", "aplaudir"],
-	"lamento": ["lamento", "rabia", "rabia_espejo", "manos_cabeza", "cabeza_gacha", "cansado", "mirar_cielo"],
+		"celebrar_carrera_espejo", "baile", "puno_al_aire", "besar_escudo", "senalar_cielo", "aplaudir", "celebrar_ls", "celebrar_ls_espejo"],
+	"lamento": ["lamento", "rabia", "rabia_espejo", "manos_cabeza", "cabeza_gacha", "cansado", "mirar_cielo", "lamento_ls"],
 	"protesta": ["protestar", "brazos_jarra", "charla", "pedir_calma"],
 	"pedir_balon": ["pedir_balon", "pedir_con_brazo", "senalar_adelante"],
 	"defender": ["marcar", "marcar_espejo", "falta_empujon", "falta_empujon_espejo", "empujar", "falta_barrida", "falta_barrida_espejo"],
@@ -294,6 +294,7 @@ static func extender(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) ->
 			var an: Animation = nuevas[k]
 			_completar(an, esq, prefijo)
 			lib.add_animation(k, an)
+	LeagueAnim.golpeos(lib, esq, prefijo)   ## tiro y pase en carrera de League-Soccer (01-11)
 	var a_espejar: Array = ESPEJABLES.duplicate()
 	a_espejar.append_array(AnimFutbol.espejables())
 	for k: String in a_espejar:

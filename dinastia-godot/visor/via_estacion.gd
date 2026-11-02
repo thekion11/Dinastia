@@ -47,7 +47,7 @@ static func montar(est: Node3D, b: CityBuilder, beton: Material) -> PackedFloat3
 	var largo := Z_BOCA_A - Z_BOCA_B
 	var balasto := b._mat_simple(Color(0.5, 0.48, 0.45), 0.95)
 	var acero := b._mat_simple(Color(0.45, 0.47, 0.5), 0.4)
-	var madera := b._mat_simple(Color(0.34, 0.25, 0.18), 0.9)
+	var madera := b._mat_unico(Color(0.34, 0.25, 0.18), 0.9)
 	var poste := b._mat_simple(Color(0.3, 0.32, 0.34), 0.5)
 	## Tramos de 10 m: terraplén de balasto (de 1,5 m bajo tierra hasta la cota de la vía), carriles y hilos, cada uno con la pendiente de su tramo.
 	var z0 := Z_BOCA_B
