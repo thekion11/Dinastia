@@ -32,15 +32,15 @@ func _process(_d: float) -> void:
 	var ancho := CiudadExpansion.ANCHO_AV * 0.5 + 1.2
 	if f == 0:
 		print("senales ", _e.cb.expansion.cuenta.get("senales_velocidad", 0))
-		var en := c + Vector3(ancho + 4.5 + 9.0, 0, ancho - 4.0)
+		var en := c + Vector3(ancho + 4.5 + 5.0, 0, ancho)   ## a 5 m de la señal, mirándola de frente
 		_e.cuerpo.position = Vector3(en.x, _e.altura_suelo(en.x, en.z), en.z)
 		_e.set("rumbo", PI * 0.5)
 	if f == 30:
 		get_viewport().get_texture().get_image().save_png("/tmp/senal_0.png")
 	if f == 31:
-		var en2 := c + Vector3(-ancho + 4.0, 0, ancho + 4.5 + 9.0)
+		var en2 := c + Vector3(-ancho, 0, ancho + 4.5 + 5.0)
 		_e.cuerpo.position = Vector3(en2.x, _e.altura_suelo(en2.x, en2.z), en2.z)
-		_e.set("rumbo", PI)
+		_e.set("rumbo", 0.0)
 	if f == 60:
 		get_viewport().get_texture().get_image().save_png("/tmp/senal_1.png")
 		print("FIN. 0 fallos")
