@@ -215,6 +215,25 @@ func _probar_peaton_fuera_del_arbol() -> void:
 	nodo.queue_free()
 	(ref["nodo"] as Node).queue_free()
 
+## 2-11-2026: el perfil «ligero» automático según el hardware (visor/calidad_auto.gd).
+func _probar_calidad_auto() -> void:
+	_titulo("CALIDAD AUTOMÁTICA SEGÚN HARDWARE")
+	var d := CalidadAuto.detectar("Intel(R) UHD Graphics 620", 8192, 8)
+	_comprobar(d["debil"] and "UHD" in String(d["motivos"][0]), "una Intel UHD se considera modesta aunque tenga 8 GB y 8 hilos")
+	d = CalidadAuto.detectar("NVIDIA GeForce GTX 1060", 16384, 12)
+	_comprobar(not d["debil"] and d["motivos"].is_empty(), "una gráfica dedicada con 16 GB y 12 hilos NO es modesta")
+	d = CalidadAuto.detectar("NVIDIA GeForce GTX 1060", 4096, 8)
+	_comprobar(d["debil"] and d["motivos"].size() == 1, "con 4 GB de RAM es modesta por la RAM (un solo motivo)")
+	d = CalidadAuto.detectar("Intel Pentium", 4096, 2)
+	_comprobar(d["motivos"].size() == 2, "RAM 4 GB + 2 hilos = dos motivos")
+	d = CalidadAuto.detectar("llvmpipe (LLVM 20.1.2, 256 bits)", 16000, 4)
+	_comprobar(d["debil"], "el render por software (llvmpipe) cuenta como modesto")
+	## Con archivo guardado, la elección del jugador manda: no se toca nada.
+	var antes := Calidad.elegida
+	_comprobar(FileAccess.file_exists(Calidad.ARCHIVO) == false or CalidadAuto.aplicar_si_primera_vez({"debil": true, "motivos": ["x"]}).is_empty(),
+		"si ya hay grafica.cfg el perfil automático no hace nada")
+	_comprobar(Calidad.elegida == antes or not FileAccess.file_exists(Calidad.ARCHIVO), "y la calidad elegida no cambia")
+
 ## M-476 / M-404: `FundirPiezas` junta los hijos directos con material en una malla por (material, sombra), respeta
 ## `excluir` y deja los mismos materiales y la misma geometría.
 func _probar_fundir_piezas() -> void:
