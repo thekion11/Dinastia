@@ -79,6 +79,10 @@ static func corregir_clip(a: Animation, esq: Skeleton3D, prefijo: String, ref: D
 		a.track_remove_key(pista, 0)
 	for nv: Array in nuevas:
 		a.position_track_insert_key(pista, float(nv[0]), nv[1])
+	## LINEAL (01-11, fallo encontrado en el barrido de pruebas): con claves cada 1/30 s la cúbica no suaviza nada, y en un
+	## clip en bucle con el último tramo más corto (0,52 s → 0,50 y 0,52) se disparaba al dar la vuelta: la pelvis de la
+	## guardia lateral del portero bajaba a −821 m durante 0,03 s (el portero desaparecía un instante).
+	a.track_set_interpolation_type(pista, Animation.INTERPOLATION_LINEAR)
 	return true
 
 ## Altura (y del esqueleto) de pies y puntas en el instante `tk` del clip.

@@ -104,7 +104,8 @@ func _exit_tree() -> void:
 
 ## Reproduce un efecto. Si no existe, no hace nada y no se queja: un sonido que
 ## falta no puede tumbar un partido.
-func toca(nombre: String, bus: Bus = Bus.EFECTOS) -> void:
+## `extra_db` (01-11, M-320): un ajuste de volumen de esta vez (la patada suena según su potencia).
+func toca(nombre: String, bus: Bus = Bus.EFECTOS, extra_db := 0.0) -> void:
 	_aviso_visual(nombre)
 	if not encendido:
 		return
@@ -120,7 +121,7 @@ func toca(nombre: String, bus: Bus = Bus.EFECTOS) -> void:
 	## una vez en este proyecto con un feed cosmetico, y solo la caza el banco.
 	## Aqui basta con ir rotando: el oido no distingue una rueda de un sorteo.
 	p.stream = variantes[_siguiente % variantes.size()]
-	p.volume_db = linear_to_db(maxf(0.001, float(volumen[bus]))) + float(AJUSTE_DB.get(nombre, 0.0))
+	p.volume_db = linear_to_db(maxf(0.001, float(volumen[bus]))) + float(AJUSTE_DB.get(nombre, 0.0)) + extra_db
 	p.play()
 
 ## M-283: el aviso escrito del sonido (aunque el sonido esté apagado). La capa se crea la primera vez que hace falta.
