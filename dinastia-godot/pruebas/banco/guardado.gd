@@ -205,6 +205,13 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 	_comprobar(jx != null and jx.pos_sec.size() == 1 and jx.pos_sec[0] == "MC" and jx.adapt == 3 \
 		and jx.fidelidad_hasta == m.anio + 2 and jx.notas.size() == 2, "vuelven posiciones secundarias, adaptación, fidelidad y notas")
 	_comprobar(Partido.ex_de_mi_club.has("j_prueba_ex"), "vuelven los «ex de mi club»")
+	## 2-11: los gastos de entrenamiento, médico y vestuario llegan al libro financiero (también tras cargar).
+	var n_libro := m2.libro_financiero.size()
+	m2.entrenamiento.gasto.emit("Prueba de entrenamiento", 500)
+	m2.medico.gasto.emit("Prueba médica", 300)
+	m2.vestuario.gasto.emit("Prueba de vestuario", 200)
+	_comprobar(m2.libro_financiero.size() == n_libro + 3 and int(m2.libro_financiero[-1]["monto"]) == -200 and int(m2.libro_financiero[-3]["monto"]) == -500,
+		"los gastos de entrenamiento, médico y vestuario quedan en el libro, con signo de gasto (%d apuntes nuevos)" % (m2.libro_financiero.size() - n_libro))
 	_comprobar(m2.anios_en_club == 1 and m2.rotacion_activa and is_equal_approx(m2.bono_analisis, 1.04)
 		and String(m2.fin_partida.get("motivo", "")) == "invicto" and int(m2.fin_partida.get("anio", 0)) == m.anio,
 		"vuelven años en el club, rotación, bono de análisis y fin de partida (%d %s %.2f %s)" % [m2.anios_en_club, str(m2.rotacion_activa), m2.bono_analisis, str(m2.fin_partida)])
