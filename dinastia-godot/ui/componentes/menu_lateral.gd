@@ -313,6 +313,11 @@ func desplegar() -> void:
 	_velo.visible = true
 	_velo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_cajon.visible = true
+	if Animar.reducidas():   ## M-304: con animaciones reducidas, el cajón aparece sin deslizarse
+		_cajon.modulate.a = 1.0
+		_cajon.position.x = ANCHO_RIEL
+		_velo.color.a = 0.45
+		return
 	_cajon.modulate.a = 0.0
 	_cajon.position.x = ANCHO_RIEL - 40.0
 	var tw := create_tween().set_parallel(true)

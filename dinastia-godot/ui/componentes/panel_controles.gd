@@ -47,7 +47,10 @@ func _montar() -> void:
 	_montar_perfiles(col)
 	_montar_pie(col)
 	_pintar()
-	## Entrada: aparece y sube un poco.
+	## Entrada: aparece y sube un poco (con animaciones reducidas, al instante).
+	if Animar.reducidas():
+		(_items_menu[_pestana] as Control).grab_focus.call_deferred()
+		return
 	_raiz.modulate.a = 0.0
 	_raiz.position.y += 16.0
 	var tw := create_tween().set_parallel(true)

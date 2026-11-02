@@ -168,3 +168,23 @@ func _probar_teclado_pantalla() -> void:
 	_comprobar(enviado == ["Ani"] and TecladoPantalla._saltar_foco == false and campo.has_focus(), "Aceptar envía el texto y devuelve el foco al campo sin reabrir el teclado")
 	TecladoPantalla.forzar = false
 	campo.queue_free()
+
+## M-304 (2-11-2026): la entrada común de pantallas y diálogos respeta las animaciones reducidas.
+func _probar_entrada_comun() -> void:
+	_titulo("ENTRADA COMÚN DE PANTALLAS (M-304)")
+	var antes := Animar._reducidas
+	var c := Control.new()
+	add_child(c)
+	Animar._reducidas = 1
+	c.modulate.a = 0.0
+	Animar.entrar(c)
+	_comprobar(is_equal_approx(c.modulate.a, 1.0), "con animaciones reducidas aparece al instante (nunca transparente)")
+	Animar._reducidas = 0
+	Animar.entrar(c)
+	_comprobar(c.modulate.a == 0.0 and c.scale.x < 1.0, "sin ellas, entra con fundido y leve escala")
+	var fuera := Control.new()
+	Animar.entrar(fuera)
+	_comprobar(fuera.modulate.a == 0.0 and fuera.tree_entered.get_connections().size() == 1, "si aún no está en pantalla, espera a entrar")
+	fuera.free()
+	c.queue_free()
+	Animar._reducidas = antes
