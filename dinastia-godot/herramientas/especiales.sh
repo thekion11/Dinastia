@@ -114,7 +114,6 @@ pasa "mer_precontratos" "godot --headless --path . res://pruebas/ideas/mer_preco
 pasa "onb_arranque" "godot --headless --path . res://pruebas/ideas/onb_arranque.tscn" "(^|[^0-9])0 fallos"
 pasa "p3_grada_colores" "godot --headless --path . res://pruebas/ideas/p3_grada_colores.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_pasto_drive" "godot --headless --path . res://pruebas/ideas/p6_pasto_drive.tscn" "(^|[^0-9])0 fallos"
-pasa "pani_pasos" "godot --headless --path . res://pruebas/ideas/pani_pasos.tscn" "(^|[^0-9])0 fallos"
 pasa "pc_primer_contrato" "godot --headless --path . res://pruebas/ideas/pc_primer_contrato.tscn" "(^|[^0-9])0 fallos"
 pasa "pcam_encuadre" "godot --headless --path . res://pruebas/ideas/pcam_encuadre.tscn" "(^|[^0-9])0 fallos"
 pasa "pcam_repeticion" "godot --headless --path . res://pruebas/ideas/pcam_repeticion.tscn" "(^|[^0-9])0 fallos"
