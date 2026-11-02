@@ -120,8 +120,10 @@ func pagar_clausula(j: Jugador, comprador: Club) -> Dictionary:
 ## `factor` es el recargo del mercado del momento (la fiebre de fichajes del
 ## HTML lo pone en 1,2). Devuelve el monto y si es obligatoria; monto 0 significa
 ## que no hay clausulazo y la oferta sigue su camino normal.
-func oferta_por_clausula(j: Jugador, monto: int, factor: float = 1.0) -> Dictionary:
-	var clau := clausula_de(j)
+## `solo_pactadas`: cuenta únicamente la cláusula firmada (la de tus jugadores: la inventada de `clausula_de` no la
+## ve el jugador y no puede obligarle a vender; lo usa `Mercado.buscar_oferta_por_mi_jugador`, 2-11-2026).
+func oferta_por_clausula(j: Jugador, monto: int, factor: float = 1.0, solo_pactadas := false) -> Dictionary:
+	var clau := int(clausulas.get(j.id, 0)) if solo_pactadas else clausula_de(j)
 	if clau <= 0:
 		return {"monto": 0, "obligatoria": false}
 	if float(monto) * factor < float(clau) * 0.85:

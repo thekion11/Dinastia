@@ -37,6 +37,10 @@ func _probar_cesiones() -> void:
 			figura = j
 	var monto1 := m.cesiones.pactar_clausula(figura)
 	_comprobar(m.cesiones.clausula_de(figura) == monto1, "pactar cláusula queda fijado (%s)" % _dinero_prueba(monto1))
+	## 2-11: la regla «la cláusula es ley» vive en `oferta_por_clausula` y la usa el mercado para tus jugadores.
+	var ofc := m.cesiones.oferta_por_clausula(figura, int(float(monto1) * 0.9), 1.0, true)
+	_comprobar(bool(ofc["obligatoria"]) and int(ofc["monto"]) == monto1, "una oferta del 90 % de la cláusula pactada obliga a pagarla entera")
+	_comprobar(not bool(m.cesiones.oferta_por_clausula(figura, int(float(monto1) * 0.5), 1.0, true)["obligatoria"]), "una oferta del 50 % no obliga a nada")
 	var monto2 := m.cesiones.blindar(figura)
 	_comprobar(monto2 > monto1, "blindar sube la cláusula sobre la pactada (%s -> %s)" % [_dinero_prueba(monto1), _dinero_prueba(monto2)])
 
