@@ -6947,7 +6947,9 @@
   "Mejorar al nivel %d": "Upgrade to level %d",
   "no disponible": "not available",
   "Al máximo.": "At maximum.",
-  "🚪 Ver por dentro": "🚪 See inside"
+  "🚪 Ver por dentro": "🚪 See inside",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 €%d fine for speeding (limit %d km/h): %s.",
+  "no pudiste pagarla y queda anotada": "you couldn't pay it and it stays on record"
  },
  "pt": {
   "Historia": "História",
@@ -13897,7 +13899,9 @@
   "Mejorar al nivel %d": "Melhorar para o nível %d",
   "no disponible": "indisponível",
   "Al máximo.": "No máximo.",
-  "🚪 Ver por dentro": "🚪 Ver por dentro"
+  "🚪 Ver por dentro": "🚪 Ver por dentro",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Multa de %d € por excesso de velocidade (limite %d km/h): %s.",
+  "no pudiste pagarla y queda anotada": "você não pôde pagar e ela fica registrada"
  },
  "patrones": [
   [
@@ -26624,7 +26628,9 @@
   "Mejorar al nivel %d": "Améliorer au niveau %d",
   "no disponible": "indisponible",
   "Al máximo.": "Au maximum.",
-  "🚪 Ver por dentro": "🚪 Voir l'intérieur"
+  "🚪 Ver por dentro": "🚪 Voir l'intérieur",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Amende de %d € pour excès de vitesse (limite %d km/h) : %s.",
+  "no pudiste pagarla y queda anotada": "tu n'as pas pu la payer, elle reste notée"
  },
  "it": {
   "Historia": "Storia",
@@ -33574,7 +33580,9 @@
   "Mejorar al nivel %d": "Migliora al livello %d",
   "no disponible": "non disponibile",
   "Al máximo.": "Al massimo.",
-  "🚪 Ver por dentro": "🚪 Guarda dentro"
+  "🚪 Ver por dentro": "🚪 Guarda dentro",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Multa di %d € per eccesso di velocità (limite %d km/h): %s.",
+  "no pudiste pagarla y queda anotada": "non hai potuto pagarla e resta annotata"
  },
  "de": {
   "Historia": "Geschichte",
@@ -40524,7 +40532,9 @@
   "Mejorar al nivel %d": "Auf Stufe %d ausbauen",
   "no disponible": "nicht verfügbar",
   "Al máximo.": "Auf dem Maximum.",
-  "🚪 Ver por dentro": "🚪 Innen ansehen"
+  "🚪 Ver por dentro": "🚪 Innen ansehen",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 %d € Strafe wegen Geschwindigkeitsüberschreitung (Limit %d km/h): %s.",
+  "no pudiste pagarla y queda anotada": "du konntest sie nicht bezahlen, sie bleibt vermerkt"
  },
  "ca": {
   "Historia": "Història",
@@ -47474,7 +47484,9 @@
   "Mejorar al nivel %d": "Millorar al nivell %d",
   "no disponible": "no disponible",
   "Al máximo.": "Al màxim.",
-  "🚪 Ver por dentro": "🚪 Veure per dins"
+  "🚪 Ver por dentro": "🚪 Veure per dins",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Multa de %d € per excés de velocitat (límit %d km/h): %s.",
+  "no pudiste pagarla y queda anotada": "no vas poder pagar-la i queda anotada"
  },
  "pl": {
   "Club": "Klub",
@@ -54700,7 +54712,9 @@
   "Mejorar al nivel %d": "Ulepsz do poziomu %d",
   "no disponible": "niedostępne",
   "Al máximo.": "Na maksimum.",
-  "🚪 Ver por dentro": "🚪 Zobacz wnętrze"
+  "🚪 Ver por dentro": "🚪 Zobacz wnętrze",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Mandat %d € za przekroczenie prędkości (limit %d km/h): %s.",
+  "no pudiste pagarla y queda anotada": "nie mogłeś zapłacić i została zapisana"
  },
  "tr": {
   "Club": "Kulüp",
@@ -61926,6 +61940,8 @@
   "Mejorar al nivel %d": "%d. seviyeye yükselt",
   "no disponible": "kullanılamaz",
   "Al máximo.": "En üst seviyede.",
-  "🚪 Ver por dentro": "🚪 İçini gör"
+  "🚪 Ver por dentro": "🚪 İçini gör",
+  "🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.": "🚓 Hız ihlali için %d € ceza (sınır %d km/h): %s.",
+  "no pudiste pagarla y queda anotada": "ödeyemedin ve kayıtta kaldı"
  }
 }
