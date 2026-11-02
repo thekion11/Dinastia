@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cocssattjkl1s"
-path="res://.godot/imported/maquina_garra_Color.jpg-048f6fbccac7ae09c4193201adc65979.ctex"
+path.s3tc="res://.godot/imported/maquina_garra_Color.jpg-048f6fbccac7ae09c4193201adc65979.s3tc.ctex"
+path.etc2="res://.godot/imported/maquina_garra_Color.jpg-048f6fbccac7ae09c4193201adc65979.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "d6e2afdc6f75168f735c1569afcdccc4"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/peluches/maquina_garra_Color.jpg"
-dest_files=["res://.godot/imported/maquina_garra_Color.jpg-048f6fbccac7ae09c4193201adc65979.ctex"]
+dest_files=["res://.godot/imported/maquina_garra_Color.jpg-048f6fbccac7ae09c4193201adc65979.s3tc.ctex", "res://.godot/imported/maquina_garra_Color.jpg-048f6fbccac7ae09c4193201adc65979.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

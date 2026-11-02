@@ -650,7 +650,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-404 | P1 | PARCIAL | Módulos de `visor/` sin prueba directa | medido el 27-10: 22 de 131 (2-11: `FundirPiezas` y 8 rellenos de ciudad y 5 módulos pequeños (foto de equipo, sillón, banco, obra, tienda) ya tienen prueba en el banco: `_probar_fundir_piezas`, `_probar_rellenos_ciudad`, `_probar_visor_pequenos`; recalculado el 2-11 por `class_name` en `visor/`: 9 de 194 sin referencia en `pruebas/` (antes 29; `_probar_rellenos_ciudad` ya incluye CiudadServicios; `_probar_visor_efectos` cubre IncendioVisual, BanderasGrada y TelefericoEstacion; `_probar_vomitorios`, VomitoriosGrada y EstadioObra): AtropelloCiudad, MiradorCerro, PanelMando, PcOficina, PrologoHud, PrologoPrensa, SubsueloDetalle, SubsueloMando, TelefericoPaisaje), casi todos rellenos de ciudad (`CiudadMercado`, `CiudadSolar`, `FachadaModular`…) que solo se ejercitan al construir la ciudad en las sondas `p3_*`/`tre_*`; falta una sonda que compruebe que cada relleno deja piezas |
 | M-379 | P2 | PARCIAL | 70 funciones > 120 líneas (medido 28-10): las 5 peores eran `_butacas` 354, `_control_usuario` 274, `Estadio._construir` 254, `_piscina` 239, `_estacion` 233 | 28-10: partidas `_butacas` (stadium_builder_p6: paleta, poblar, hinchas, montar; hash idéntico de todos los MultiMesh en 2 calidades × 3 clubes), `Estadio._construir` (HUD y cajón aparte) y `_piscina` (8 zonas; mismo árbol de nodos). `_control_usuario` partido con la huella de `igualdad_motor` idéntica. Quedan 66 (siguientes: `_estacion` 233, `_ver_ficha` 212, `_pintar_dispositivo` 211) |
 | M-382 | P2 | PENDIENTE | Sin análisis estático | sin gdlint |
 | M-383 | P2 | PENDIENTE | Tipado: muchos `Dictionary` sin forma (jugadores del motor) | sin `JugadorMotor` tipado |
@@ -675,8 +674,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-279 | P1 | PENDIENTE | 27 módulos de `visor/` y 8 de `nucleo/` sin referencia directa en… | los módulos siguen sin prueba directa |
-| M-280 | P1 | PENDIENTE | 105 módulos de UI/visor sin referencia en banco/pruebas | sin prueba visual automática |
+| M-280 | P1 | PARCIAL | Clases de UI que ninguna prueba nombra | 2-11: visor y núcleo ya al 100 % (`vis_sueltos`, `_probar_nucleo_sueltos`); en `ui/` 62 clases no se nombran, pero las pantallas las recorre `recorrido_pantallas` (34 secciones, 9 idiomas); falta prueba directa de las piezas que el recorrido no abre (tanda, garra, vitrina, móvil en la mano) |
 | M-284 | P2 | PARCIAL | Lectura de pantalla (TTS) | 2-11: `LectorPantalla` lee con la voz del sistema el control que toma el foco (texto, pista, estado, ayuda), interruptor en Accesibilidad; falta leer las listas largas (tablas) y los avisos emergentes, y probarlo con voces reales en el PC del dueño |
 | M-285 | P2 | PARCIAL | Navegación por mando en menús | 2-11: con mando, la primera tarjeta de cada menú toma el foco y la cruceta recorre las tarjetas (`PantallaMenu.portada`); el panel de controles ya lo hacía; faltan las listas de las pantallas de gestión (foco inicial y orden de tabulación) |
 | M-287 | P2 | PENDIENTE | Rendimiento de menús: refresco ya 14× más rápido; sin pruebas de… | sin medida de apertura de pantallas |
@@ -735,7 +733,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-219 | P1 | PARCIAL | `Banco` e `Insolvencia` existen pero con pocos eventos de gravedad | administrador, tope salarial, venta de lo que sobra, refundación (`Insolvencia`); descenso administrativo ya hecho (`Insolvencia.descenso_administrativo`, cableado en `mundo_p6`, prueba del 2-11) |
 | M-359 | P1 | PENDIENTE | Estadio real en 46 % de clubes (C-01) | 46 % |
 | M-209 | P2 | PARCIAL | La prueba larga sólo comprueba que no hay errores, no el equilibrio | `prueba_larga` comprueba medias en rango; sin métricas de equilibrio |
 | M-211 | P2 | PARCIAL | Cláusulas de rescisión: sin «cláusulazo» automático de IA | el mercado reconoce pagos de cláusula (`Mercado` l.345); sin «clausulazo» de IA deliberado |
@@ -827,7 +824,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-091 | P1 | PARCIAL | Botines: variedad añadida, pero sin modelos distintos por forma | `VestidorQ._botin_de` varía modelo/color por dorsal; no hay mallas de bota alta/calcetín |
 | M-094 | P1 | PARCIAL | Animación de caminata del DT: 6 estilos (✅) | «Mi caminata» con 6 estilos para el DT; peatones y jugadores no |
 | M-095 | P1 | PARCIAL | Auditoría automática de clips usados | hecha para ciudad/UAL (`p3_clips_ual`) y para el partido (`p3_clips_partido`, 2-11: los 38 nombres que el partido pide y las 22 categorías de variantes existen en un futbolista, que trae 350 animaciones); falta que cada clip de las 350 se use o se descarte a propósito |
-| M-447 | P1 | PARCIAL | Las cadenas en español escritas directo en `ui/` (I-02): antes 573… | ✅ 15-10 salvo ~11 textos (2-11: traducidos 4: ayuda de la ciudad, título del interior, «Jugar aquí», aviso de caja) |
 | M-037 | P2 | PENDIENTE | Sin sector «barra brava»/torcida con comportamiento diferente (de… | sin sector ultra con bengalas/humo |
 | M-038 | P2 | PENDIENTE | Hinchas sentados con piernas invisibles (se cortan en la cadera) | público horneado cortado en la cadera |
 | M-039 | P2 | PARCIAL | Tres niveles de detalle; el salto «cerca→medio→lejos» puede verse | detalle por distancia por tramos de grada (16-10, 2,24→1,72 M tris); sin mezcla por dithering |
@@ -899,7 +895,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-119 | P1 | PARCIAL | Penales: el portero «decide una vez» pero sin lectura del lanzador | 20-10: en la TANDA el portero de la IA se tira más al lado natural del pie del lanzador (46/36/18) y, según sus reflejos (4-16 %), lee la carrera (`_lado_portero_tanda`); falta en los penales del part |
 | M-147 | P1 | PARCIAL | Hitbox del balón vs cuerpo: 0 casos atravesando (sonda); pero… | balón con altura y cabezazo en el motor; colisión por distancia, sin cápsulas |
 | M-120 | P2 | PARCIAL | Córners con 3 variantes | receptor/2.º/3.er lanzador en córners (14-10); sin jugadas ensayadas de `CatalogoJugadas` |
 | M-121 | P2 | PARCIAL | Tiros libres: barrera simple | barrera de 4 a 9,15 m fija |

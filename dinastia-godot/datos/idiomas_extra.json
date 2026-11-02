@@ -6941,7 +6941,13 @@
   "Despertando": "Waking up",
   "Vendedor del andén": "Platform vendor",
   "Una empanada caliente por %d € (%s). «¡Buen provecho, míster!»": "A hot empanada for %d € (%s). “Enjoy, boss!”",
-  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E: buy an empanada from the vendor (3 €)"
+  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E: buy an empanada from the vendor (3 €)",
+  "%s  ·  %s  ·  %d sem": "%s  ·  %s  ·  %d wk",
+  "Construir": "Build",
+  "Mejorar al nivel %d": "Upgrade to level %d",
+  "no disponible": "not available",
+  "Al máximo.": "At maximum.",
+  "🚪 Ver por dentro": "🚪 See inside"
  },
  "pt": {
   "Historia": "História",
@@ -13885,7 +13891,13 @@
   "Despertando": "Acordando",
   "Vendedor del andén": "Vendedor da plataforma",
   "Una empanada caliente por %d € (%s). «¡Buen provecho, míster!»": "Uma empanada quentinha por %d € (%s). «Bom apetite, professor!»",
-  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E: comprar uma empanada do vendedor (3 €)"
+  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E: comprar uma empanada do vendedor (3 €)",
+  "%s  ·  %s  ·  %d sem": "%s  ·  %s  ·  %d sem",
+  "Construir": "Construir",
+  "Mejorar al nivel %d": "Melhorar para o nível %d",
+  "no disponible": "indisponível",
+  "Al máximo.": "No máximo.",
+  "🚪 Ver por dentro": "🚪 Ver por dentro"
  },
  "patrones": [
   [
@@ -26606,7 +26618,13 @@
   "Despertando": "Réveil",
   "Vendedor del andén": "Vendeur du quai",
   "Una empanada caliente por %d € (%s). «¡Buen provecho, míster!»": "Une empanada chaude pour %d € (%s). « Bon appétit, coach ! »",
-  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E : acheter une empanada au vendeur (3 €)"
+  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E : acheter une empanada au vendeur (3 €)",
+  "%s  ·  %s  ·  %d sem": "%s  ·  %s  ·  %d sem",
+  "Construir": "Construire",
+  "Mejorar al nivel %d": "Améliorer au niveau %d",
+  "no disponible": "indisponible",
+  "Al máximo.": "Au maximum.",
+  "🚪 Ver por dentro": "🚪 Voir l'intérieur"
  },
  "it": {
   "Historia": "Storia",
@@ -33550,7 +33568,13 @@
   "Despertando": "Si svegliano",
   "Vendedor del andén": "Venditore sul binario",
   "Una empanada caliente por %d € (%s). «¡Buen provecho, míster!»": "Una empanada calda per %d € (%s). «Buon appetito, mister!»",
-  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E: comprare un'empanada dal venditore (3 €)"
+  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E: comprare un'empanada dal venditore (3 €)",
+  "%s  ·  %s  ·  %d sem": "%s  ·  %s  ·  %d sett",
+  "Construir": "Costruire",
+  "Mejorar al nivel %d": "Migliora al livello %d",
+  "no disponible": "non disponibile",
+  "Al máximo.": "Al massimo.",
+  "🚪 Ver por dentro": "🚪 Guarda dentro"
  },
  "de": {
   "Historia": "Geschichte",
@@ -40494,7 +40518,13 @@
   "Despertando": "Aufwachen",
   "Vendedor del andén": "Händler am Bahnsteig",
   "Una empanada caliente por %d € (%s). «¡Buen provecho, míster!»": "Eine heiße Empanada für %d € (%s). „Guten Appetit, Trainer!“",
-  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E: beim Händler eine Empanada kaufen (3 €)"
+  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E: beim Händler eine Empanada kaufen (3 €)",
+  "%s  ·  %s  ·  %d sem": "%s  ·  %s  ·  %d Wo",
+  "Construir": "Bauen",
+  "Mejorar al nivel %d": "Auf Stufe %d ausbauen",
+  "no disponible": "nicht verfügbar",
+  "Al máximo.": "Auf dem Maximum.",
+  "🚪 Ver por dentro": "🚪 Innen ansehen"
  },
  "ca": {
   "Historia": "Història",
@@ -47438,7 +47468,13 @@
   "Despertando": "Despertant-se",
   "Vendedor del andén": "Venedor de l'andana",
   "Una empanada caliente por %d € (%s). «¡Buen provecho, míster!»": "Una empanada calenta per %d € (%s). «Bon profit, míster!»",
-  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E: comprar una empanada al venedor (3 €)"
+  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E: comprar una empanada al venedor (3 €)",
+  "%s  ·  %s  ·  %d sem": "%s  ·  %s  ·  %d set",
+  "Construir": "Construir",
+  "Mejorar al nivel %d": "Millorar al nivell %d",
+  "no disponible": "no disponible",
+  "Al máximo.": "Al màxim.",
+  "🚪 Ver por dentro": "🚪 Veure per dins"
  },
  "pl": {
   "Club": "Klub",
@@ -54658,7 +54694,13 @@
   "Despertando": "Budzą się",
   "Vendedor del andén": "Sprzedawca na peronie",
   "Una empanada caliente por %d € (%s). «¡Buen provecho, míster!»": "Gorąca empanada za %d € (%s). „Smacznego, trenerze!”",
-  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E: kup empanadę u sprzedawcy (3 €)"
+  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E: kup empanadę u sprzedawcy (3 €)",
+  "%s  ·  %s  ·  %d sem": "%s  ·  %s  ·  %d tyg",
+  "Construir": "Zbuduj",
+  "Mejorar al nivel %d": "Ulepsz do poziomu %d",
+  "no disponible": "niedostępne",
+  "Al máximo.": "Na maksimum.",
+  "🚪 Ver por dentro": "🚪 Zobacz wnętrze"
  },
  "tr": {
   "Club": "Kulüp",
@@ -61878,6 +61920,12 @@
   "Despertando": "Uyanıyorlar",
   "Vendedor del andén": "Peron satıcısı",
   "Una empanada caliente por %d € (%s). «¡Buen provecho, míster!»": "%d € karşılığında sıcak bir empanada (%s). “Afiyet olsun hocam!”",
-  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E: satıcıdan empanada al (3 €)"
+  "🥟 E: comprar una empanada al vendedor (3 €)": "🥟 E: satıcıdan empanada al (3 €)",
+  "%s  ·  %s  ·  %d sem": "%s  ·  %s  ·  %d hf",
+  "Construir": "İnşa et",
+  "Mejorar al nivel %d": "%d. seviyeye yükselt",
+  "no disponible": "kullanılamaz",
+  "Al máximo.": "En üst seviyede.",
+  "🚪 Ver por dentro": "🚪 İçini gör"
  }
 }
