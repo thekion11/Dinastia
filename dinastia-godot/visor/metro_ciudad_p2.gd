@@ -21,6 +21,15 @@ func _kenney(clave: String, pos: Vector3, mira: Vector3, padre: Node3D = null, r
 	return n
 
 var billeteras: Array[Vector3] = []   ## dónde hay máquinas de billetes en los andenes
+var vendedores: Array[Dictionary] = []   ## M-180: puestos de vendedor en los andenes: {p (el mostrador), yo (donde está él), giro}
+
+## ¿Hay un puesto de vendedor a `radio` m (en planta) de `p`?
+func vendedor_cerca(p: Vector3, radio := 2.4) -> bool:
+	for v: Dictionary in vendedores:
+		var q: Vector3 = v["p"]
+		if Vector2(q.x - p.x, q.z - p.z).length() < radio and absf(q.y - p.y) < 3.0:
+			return true
+	return false
 
 ## ¿Hay una máquina de billetes a `radio` m (en planta) de `p`?
 func billetes_cerca(p: Vector3, radio := 2.6) -> bool:
@@ -57,6 +66,13 @@ func _amueblar_anden(p: Vector3, fondo: Vector3, hacia: Vector3, lon: Vector3, y
 	_kenney("billetes", en.call(0.5, -23.6), hacia)
 	_kenney("billetes", en.call(0.5, -22.6), hacia)
 	billeteras.append(en.call(0.5, -23.1))   ## M-182: la E aquí recarga la tarjeta Red
+	## M-180: un puesto de empanadas y bebidas (mostrador con toldo); el vendedor lo crea `MetroCiudad._gente_cerca` con la estación. La E compra (`VidaCiudad.usar_vendedor`).
+	var mostrador: Vector3 = en.call(1.5, 14.5)
+	var giro_v := atan2(hacia.x, hacia.z)
+	vendedores.append({"p": mostrador, "yo": en.call(0.55, 14.5), "giro": giro_v})
+	Mini3D.caja(self, mostrador + Vector3(0, 0.5, 0), _tam_lon(lon, Vector3(1.8, 1.0, 0.7)), Mini3D.mat(Color(0.55, 0.32, 0.16), 0.8))
+	Mini3D.caja(self, mostrador + Vector3(0, 2.3, 0) - hacia * 0.5, _tam_lon(lon, Vector3(2.1, 0.07, 1.4)), Mini3D.mat(Color(0.85, 0.2, 0.12), 0.7))
+	Mini3D.caja(self, mostrador + Vector3(0, 1.1, 0), _tam_lon(lon, Vector3(0.5, 0.12, 0.3)), Mini3D.mat(Color(0.95, 0.8, 0.4), 0.6))
 	## Bancos de espaldas a la pared, papeleras entre ellos y plantas grandes.
 	for f: float in [-12.0, -4.0, 4.0, 12.0]:
 		## El banco del kit mira a su -Z (el respaldo queda en +Z): de espaldas a

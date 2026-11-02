@@ -58,6 +58,9 @@ static func lanzar(raiz: Node3D, c1: Color, c2: Color, motivo := "gol", dura := 
 		for i in mini(3 if motivo == "salida" else 2, sitios.size()):
 			var s: Vector3 = sitios[i]
 			f.add_child(_bengala(s + Vector3(1.5, 0, 0), humo_a if i % 2 == 0 else humo_b, dura))
+	## Banderas grandes con los colores del club local sobre la grada, solo en el gol (con la cámara de TV el festejo de cada hincha no se lee).
+	if motivo == "gol" and not medio:
+		BanderasGrada.lanzar(raiz, colores[0], colores[1], sitios, dura)
 	return f
 
 ## SENTADOS NERVIOSOS (26-10): 0..1, qué parte de la grada se cruza de brazos o

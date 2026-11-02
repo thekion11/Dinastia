@@ -35,7 +35,7 @@ func _probar_async() -> void:
 	_comprobar(not OrquestadorMundo.con_prologo("dt"), "las pruebas pueden apagarlo")
 	OrquestadorMundo.sin_prologo = false
 	## --- el guion ------------------------------------------------------------------
-	_comprobar(PrologoPasos.PASOS.size() == 8 and PrologoPasos.indice("oficina") == 7, "el guion tiene 8 pasos y termina en tu oficina")
+	_comprobar(PrologoPasos.PASOS.size() == 12 and PrologoPasos.indice("oficina") == 11, "el guion tiene 12 pasos (túnel, utilería, sala de vídeo y comedor incluidos) y termina en tu oficina")
 	var sin_traducir: Array[String] = []
 	var idioma_antes: String = Idiomas.idioma
 	Idiomas.idioma = "en"
@@ -45,6 +45,11 @@ func _probar_async() -> void:
 				sin_traducir.append(f.left(30))
 	Idiomas.idioma = idioma_antes
 	_comprobar(sin_traducir.is_empty(), "todas las frases del mentor están traducidas %s" % [sin_traducir])
+	var con_saludo: Array[String] = []
+	for paso: Dictionary in PrologoPasos.PASOS:
+		if paso.has("saluda"):
+			con_saludo.append(String(paso["clave"]))
+	_comprobar(con_saludo == ["utileria", "enfermeria", "video", "comedor"], "el personal saluda en su sala %s" % [con_saludo])
 	## --- el mundo y la escena --------------------------------------------------------
 	_m = _mundo(4242)
 	PedidoPartida.mundo_pregenerado = _m
@@ -89,7 +94,7 @@ func _probar_async() -> void:
 	await _frames(2)
 	_comprobar(_p.paso_i == 2 and String(_e.estado) == "estadio", "al cruzar la puerta empieza el recorrido (vestuario)")
 	## Las salas, una tras otra.
-	for clave: String in ["vestuario", "campo", "enfermeria"]:
+	for clave: String in ["vestuario", "tunel", "campo", "utileria", "enfermeria"]:
 		var ok := await _llegar_y_escuchar(clave)
 		_comprobar(ok, "sala «%s»: el mentor espera allí y habla al llegar" % clave)
 	## Directiva.
@@ -102,6 +107,9 @@ func _probar_async() -> void:
 	_comprobar(_p.dialogo.visible and _p._directivos.size() == 2, "el presidente contesta y hay dos directivos de cuerpo presente")
 	_p._hablar()
 	await _frames(2)
+	## La sala de vídeo (el ojeador saluda) y la prensa.
+	var ok_video := await _llegar_y_escuchar("video")
+	_comprobar(ok_video, "sala de vídeo: el mentor espera allí y habla al llegar")
 	## Prensa.
 	var ok_prensa := await _llegar_y_escuchar("prensa", false)
 	_comprobar(ok_prensa and is_instance_valid(_p.prensa), "en la sala de prensa se abre la presentación")
@@ -112,7 +120,9 @@ func _probar_async() -> void:
 	for b: Button in _p.prensa._botones.get_children():
 		b.pressed.emit()
 	await _frames(2)
-	_comprobar(_p.paso_i == 7 and _p.prensa == null, "al salir de la sala de prensa toca la oficina")
+	_comprobar(_p.paso_i == PrologoPasos.indice("comedor") and _p.prensa == null, "al salir de la sala de prensa toca el comedor")
+	var ok_com := await _llegar_y_escuchar("comedor")
+	_comprobar(ok_com and _p.paso_i == PrologoPasos.indice("oficina"), "comedor: el mentor habla y de ahí a tu oficina")
 	## La oficina y el PC.
 	var ok_of := await _llegar_y_escuchar("oficina", false)
 	_comprobar(ok_of and _p.pc != null, "en la oficina aparece el PC")

@@ -212,7 +212,21 @@ func _hablar() -> void:
 	mentor.mirar_a(explorador.cuerpo.position)
 	if frase_i == 0:
 		mentor.hablar(true)
+		_saludan(PrologoPasos.PASOS[paso_i])
 	dialogo.decir(mentor.nombre, frases[frase_i], Color(club.color1).lerp(Color.WHITE, 0.35), frase_i, frases.size())
+
+## El personal del puesto (`saluda` del paso) te mira y te saluda al llegar a su sala; luego vuelve a lo suyo.
+func _saludan(p: Dictionary) -> void:
+	var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+	if pe == null:
+		return
+	for clave: String in p.get("saluda", []):
+		var g := pe.buscar(clave)
+		if g.is_empty():
+			continue
+		pe.atender(g, explorador.cuerpo.position, true)
+		pe.gesto(g, ["saludo_mano", "saludar_publico", "senalar"])
+		get_tree().create_timer(4.0).timeout.connect(func() -> void: pe.atender(g, Vector3.ZERO, false))
 
 ## Lo que pasa cuando el mentor termina de hablar en este paso.
 func _tras_hablar() -> void:

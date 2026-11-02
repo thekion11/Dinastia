@@ -103,6 +103,9 @@ func _pintar() -> void:
 func _responder(tono: String, d: int) -> void:
 	_tonos.append(tono)
 	## El DT gesticula ahora mismo en el plató (el reloj del gesto salta a cero).
+	var g: Array = PrologoPasos.GESTO_TONO.get(tono, ["charla", "neutral"])
+	_escena._gesto_pedido = String(g[0])
+	_escena._cara_pedida = String(g[1])
 	_escena._t_gesto_dt = 0.0
 	## Lo que opina la prensa: el mismo mecanismo que la rueda semanal.
 	if mundo != null and mundo.prensa != null:

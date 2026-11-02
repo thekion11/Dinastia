@@ -81,8 +81,14 @@ func _probar() -> void:
 			ce = x
 	_comprobar(not ce.is_empty() and int(ce["dia"]) == 2 and String(ce["quien"]) == j.nombre and m.citas.opciones(m, ce).size() == 3, "el fichaje te cita mañana a las 10:00 con tres tonos")
 	var moral0 := j.moral
+	_comprobar(Citas.RONDAS == 3, "la entrevista tiene %d preguntas" % Citas.RONDAS)
+	var r1 := m.citas.resolver(m, String(ce["id"]), 0)
+	_comprobar(bool(r1.get("sigue", false)) and String(ce["estado"]) == "pendiente" and m.citas.opciones(m, ce)[0] != "" and int(ce["ronda"]) == 1, "tras la 1.ª respuesta la cita sigue abierta con otra pregunta")
+	var p2 := m.citas.pregunta(ce)
+	var r2 := m.citas.resolver(m, String(ce["id"]), 0)
+	_comprobar(bool(r2.get("sigue", false)) and m.citas.pregunta(ce) != p2, "y con una tercera distinta")
 	var re := m.citas.resolver(m, String(ce["id"]), 0)
-	_comprobar(not re.is_empty() and j.moral == mini(moral0 + 2, 100), "el tono seguro sube la moral del recién llegado (+2)")
+	_comprobar(not re.is_empty() and not bool(re.get("sigue", false)) and String(ce["estado"]) == "hecha" and j.moral == mini(moral0 + 4, 100), "tres respuestas seguras suben la moral del recién llegado (+4, tope) y cierran la cita")
 	## Fotos a Tribuna (bloque 6): una publicación «paseo» suma seguidores.
 	var seg0 := int(m.redes.cuentas["dt"]["seguidores"])
 	var pub := m.redes.publicar(m, "paseo", ["#MiCiudad"])

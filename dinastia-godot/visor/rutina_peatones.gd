@@ -65,6 +65,14 @@ static func lleva_mochila(h: float, i: int) -> bool:
 	return float(posmod(hash([i, 131]), 1000)) / 1000.0 < prob
 
 ## Ritmo de paso: 1 normal, hasta 1,25 en hora punta y hasta 0,85 paseando.
+## La velocidad de un peatón = su base × la prisa de la hora (`rut_f`) × la de la lluvia (`lluvia_f`): cada sistema cambia solo SU factor y esto recompone,
+## así que ni se acumulan ni se deshacen mal al escampar (antes la lluvia guardaba `vel0` con el factor de la rutina ya metido).
+static func poner_factor(v: Dictionary, clave: String, valor: float) -> void:
+	if not v.has("vel_base"):
+		v["vel_base"] = float(v["vel"]) / maxf(float(v.get("rut_f", 1.0)) * float(v.get("lluvia_f", 1.0)), 0.01)
+	v[clave] = valor
+	v["vel"] = float(v["vel_base"]) * float(v.get("rut_f", 1.0)) * float(v.get("lluvia_f", 1.0))
+
 static func prisa(h: float, sector: int) -> float:
 	if sector == 600:
 		return 1.0
@@ -103,8 +111,7 @@ static func tick(vehiculos: Array, hora: float) -> Dictionary:
 		var f_nuevo := prisa(hora, sector)
 		var f_viejo := float(v.get("rut_f", 1.0))
 		if absf(f_nuevo - f_viejo) > 0.03:
-			v["vel"] = float(v["vel"]) / f_viejo * f_nuevo
-			v["rut_f"] = f_nuevo
+			poner_factor(v, "rut_f", f_nuevo)
 		v["rut_pausa"] = pausa(hora, sector)
 		var con_mochila := lleva_mochila(hora, i) and not lleva_maletin(hora, rumbo.dot(al_trabajo), i)
 		if not v.has("mochila_hora") or con_mochila != bool(v["mochila_hora"]):

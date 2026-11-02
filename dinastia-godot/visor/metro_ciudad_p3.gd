@@ -352,6 +352,12 @@ func _crear_persona(item: Dictionary) -> void:
 			if d.is_empty():
 				return
 			_asentar(d, s, item["e"])
+		"vendedor":   ## M-180: de pie tras su mostrador, ofreciendo (gesto de charla)
+			var dv := Mini3D.persona(_gente, _rng_gente, item["p"], [Color(0.85, 0.45, 0.15), Color(0.2, 0.2, 0.25), true])
+			if dv.is_empty():
+				return
+			(dv["nodo"] as Node3D).rotation.y = float(item["giro"])
+			Mini3D.anim(dv, "charla", "")
 		"bajar":
 			var ruta: Array = item["ruta"]
 			var d2 := Mini3D.persona(_gente, _rng_gente, ruta[0])
