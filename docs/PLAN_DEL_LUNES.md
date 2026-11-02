@@ -6,6 +6,8 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 ## CIERRE DEL 2-11 (revisiones que faltan y ramas viejas)
 
+**Hiper auditoría del 2-11**: `docs/04_auditorias/HIPER_AUDITORIA_2026-11-02.md` (errores H-01 a H-11, optimización, efectos, jugabilidad y físicas, con prioridad P0-P2). Primero: H-01 interpolación de física (el partido corre a 60 Hz sin interpolar, a 120 FPS da tirones) y H-02 la prueba inestable «estadio y ciudad por partes».
+
 **Estado**: todo el trabajo de las sesiones del 2-11 está en `main` (PR #93-#100, #105, #106; CI verde: banco y los 6 tramos de especiales). Las ramas de las sesiones no tienen nada por delante. Registros: `docs/04_auditorias/rendimiento_120fps.md`, `fallos_crear_partida_2026-11-02.md`, `CLAUDE.md` (órdenes 19-21).
 
 **Revisiones que faltan (solo las puede cerrar el dueño o un equipo con GPU)**
