@@ -17,7 +17,16 @@ extends RefCounted
 ## (da igual que un fotograma tarde segundos), ALTO para una pantalla grande, y
 ## MEDIO para jugar con soltura. El nivel se puede forzar por linea de ordenes.
 
-enum { MEDIO, ALTO, ULTRA }
+## MÍNIMO (2-11-2026, pedido del dueño: «una versión ultra ligera dentro del juego» para móviles y PC muy modestos):
+## por debajo de MEDIO y con valor −1, para que lo guardado (0, 1, 2) siga valiendo y todo lo que decide con
+## «>= ALTO» lo trate como ligero. Sin sombras, sin suavizado, el 3D al 70 % de resolución, sin reflejos del cielo
+## en los materiales, y grada, gente y césped como en MEDIO o menos (ver `escala_3d` y quien mira `<= MEDIO`).
+enum { MINIMO = -1, MEDIO, ALTO, ULTRA }
+const ESCALA_MINIMO := 0.7
+
+## La resolución base del 3D del nivel (1.0 salvo en MÍNIMO). La calidad adaptativa vuelve a esta, no a 1.0.
+static func escala_3d(nivel: int = -99) -> float:
+	return ESCALA_MINIMO if (elegida if nivel == -99 else nivel) <= MINIMO else 1.0
 
 ## EL NIVEL QUE HA ELEGIDO EL JUGADOR en Ajustes. Vive aqui y no en la pantalla
 ## de ajustes porque quien lo necesita es el visor 3D, que se monta desde otro
@@ -46,6 +55,7 @@ static func nivel_de_argumentos(por_defecto: int = ALTO) -> int:
 			"ultra": return ULTRA
 			"alto": return ALTO
 			"medio": return MEDIO
+			"minimo", "mínimo": return MINIMO
 	return por_defecto
 
 # --------------------------------------------------------------------- cielo
@@ -97,7 +107,7 @@ static func entorno(nivel: int, momento: int = TARDE) -> WorldEnvironment:
 
 	## Reflejos del cielo en los materiales. Es lo que hace que el asfalto mojado
 	## y los cristales dejen de parecer carton pintado.
-	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
+	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY if nivel > MINIMO else Environment.REFLECTION_SOURCE_DISABLED
 
 	## MAPEADO DE TONOS. Lo mas barato y lo que mas cambia: sin esto los colores
 	## se saturan y se aplastan en las luces, y todo parece plastico.
@@ -215,7 +225,7 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 			luz.rotation_degrees = Vector3(-48, -38, 0)
 			luz.light_color = Color(1.0, 0.97, 0.92)
 			luz.light_energy = 1.25
-	luz.shadow_enabled = true
+	luz.shadow_enabled = nivel > MINIMO   ## MÍNIMO: sin sombras (la pasada de sombras es ~1/4 de las llamadas del partido)
 	## Sombras suaves de verdad: `angular_distance` es el tamano aparente del sol,
 	## y es lo que hace que la sombra se vaya abriendo con la distancia al objeto,
 	## como en la realidad. Con 0 salen recortadas con tijera.
@@ -264,9 +274,13 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 		vp.msaa_3d = Viewport.MSAA_2X
 		if avanzado:
 			vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
-	else:
+	elif nivel >= MEDIO:
 		vp.msaa_3d = Viewport.MSAA_2X
-	vp.use_debanding = true
+	else:
+		vp.msaa_3d = Viewport.MSAA_DISABLED
+	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+	vp.scaling_3d_scale = escala_3d(nivel)
+	vp.use_debanding = nivel > MINIMO
 	## Atlas de sombra: 4096 a 2048 en ALTO -un cuarto de la memoria/ancho de
 	## banda-, mismo criterio que el MSAA de arriba. 8192 se guarda para ULTRA.
 	if nivel >= ULTRA:
@@ -294,7 +308,7 @@ static func cargar() -> void:
 		CalidadAuto.aplicar_si_primera_vez()   ## primera vez: perfil según el hardware
 		return
 	if cf.has_section_key("grafica", "calidad"):
-		elegida = clampi(int(cf.get_value("grafica", "calidad")), MEDIO, ULTRA)
+		elegida = clampi(int(cf.get_value("grafica", "calidad")), MINIMO, ULTRA)
 	if cf.has_section_key("grafica", "adaptativa"):
 		adaptativa = bool(cf.get_value("grafica", "adaptativa"))
 	if cf.has_section_key("grafica", "motor_ligero"):

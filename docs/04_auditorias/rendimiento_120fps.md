@@ -81,3 +81,16 @@ Una escena vacía con `godot --headless` da **6,90 ms por fotograma** (con o sin
 - Los cambios de la tanda 4/4b (pausa de AnimationPlayer a >260 m, personal lejano, AnimTransiciones, semáforos) siguen siendo correctos (banco 0 fallos) pero **sin ganancia demostrada**.
 - Método válido: **CPU del proceso** (`/proc/self/stat`, utime+stime, todos los hilos) por fotograma, como hace `pruebas/medir_cpu_partido.gd`, en máquina SIN otras cargas y con ≥150 fotogramas por muestra (el reloj de /proc va a 10 ms). El primer intento de esa medición salió inservible (otras cargas en paralelo); falta repetirla en limpio.
 - Lo que sí es fiable y comparable: triángulos, llamadas, objetos y memoria (tandas 1-3), y el presupuesto del recorrido.
+
+## Nivel gráfico MÍNIMO, la versión ultra ligera dentro del juego (2-11-2026, pedido del dueño)
+Un cuarto nivel por debajo de MEDIO (`Calidad.MINIMO = -1`, lo guardado antes sigue valiendo): sin sombras del sol (ciudad y estadio),
+sin suavizado (MSAA), el 3D al 70 % de resolución (la calidad adaptativa parte de ahí), sin reflejos del cielo ni debanding, y grada,
+gente, festejos y césped como en MEDIO. Se elige en Ajustes («Mínima») y en la configuración inicial, y `CalidadAuto` lo pone solo la
+primera vez en equipos muy débiles (≤ 3 GB de RAM, gráficas de móvil antiguas Mali-400/T, Adreno 3xx/4xx, PowerVR, o gráfica débil con
+2 hilos). Mismo juego en todas las plataformas: la versión «ligera» de cada dispositivo es este nivel elegido por detección, no builds aparte.
+Medido con `hw_modesto.sh` (partido, lavapipe 2 núcleos, sin tope de RAM; por software, solo para comparar):
+
+| nivel | llamadas | triángulos | VRAM | fotograma (software) | pico RAM |
+|---|---|---|---|---|---|
+| MEDIO | 830 | 1.002.242 | 356 MB | 809 ms | 7.470 MB |
+| MÍNIMO | 568 | 741.502 | 274 MB | 473 ms | 6.327 MB |

@@ -7022,7 +7022,9 @@
   "Barrio del club": "Club neighbourhood",
   "Árboles y parques": "Trees and parks",
   "Tráfico y gente": "Traffic and people",
-  "Últimos detalles": "Final touches"
+  "Últimos detalles": "Final touches",
+  "Mínima": "Minimum",
+  "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución": "Ultra light for phones and very modest computers: no shadows or anti-aliasing and 3D at a lower resolution"
  },
  "pt": {
   "Historia": "História",
@@ -14047,7 +14049,9 @@
   "Barrio del club": "Bairro do clube",
   "Árboles y parques": "Árvores e parques",
   "Tráfico y gente": "Trânsito e gente",
-  "Últimos detalles": "Últimos detalhes"
+  "Últimos detalles": "Últimos detalhes",
+  "Mínima": "Mínima",
+  "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución": "Ultraleve para celulares e equipamentos muito modestos: sem sombras nem suavização e o 3D em menor resolução"
  },
  "patrones": [
   [
@@ -26849,7 +26853,9 @@
   "Barrio del club": "Quartier du club",
   "Árboles y parques": "Arbres et parcs",
   "Tráfico y gente": "Circulation et gens",
-  "Últimos detalles": "Derniers détails"
+  "Últimos detalles": "Derniers détails",
+  "Mínima": "Minimale",
+  "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución": "Ultra légère pour les téléphones et les machines très modestes : sans ombres ni anticrénelage et la 3D en plus basse résolution"
  },
  "it": {
   "Historia": "Storia",
@@ -33874,7 +33880,9 @@
   "Barrio del club": "Quartiere del club",
   "Árboles y parques": "Alberi e parchi",
   "Tráfico y gente": "Traffico e gente",
-  "Últimos detalles": "Ultimi dettagli"
+  "Últimos detalles": "Ultimi dettagli",
+  "Mínima": "Minima",
+  "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución": "Ultraleggera per telefoni e computer molto modesti: senza ombre né antialiasing e il 3D a risoluzione più bassa"
  },
  "de": {
   "Historia": "Geschichte",
@@ -40899,7 +40907,9 @@
   "Barrio del club": "Vereinsviertel",
   "Árboles y parques": "Bäume und Parks",
   "Tráfico y gente": "Verkehr und Menschen",
-  "Últimos detalles": "Letzte Details"
+  "Últimos detalles": "Letzte Details",
+  "Mínima": "Minimal",
+  "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución": "Ultraleicht für Handys und sehr schwache Rechner: ohne Schatten und Kantenglättung, 3D in geringerer Auflösung"
  },
  "ca": {
   "Historia": "Història",
@@ -47924,7 +47934,9 @@
   "Barrio del club": "Barri del club",
   "Árboles y parques": "Arbres i parcs",
   "Tráfico y gente": "Trànsit i gent",
-  "Últimos detalles": "Últims detalls"
+  "Últimos detalles": "Últims detalls",
+  "Mínima": "Mínima",
+  "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución": "Ultralleugera per a mòbils i equips molt modestos: sense ombres ni suavitzat i el 3D a menys resolució"
  },
  "pl": {
   "Club": "Klub",
@@ -55224,7 +55236,9 @@
   "Barrio del club": "Dzielnica klubu",
   "Árboles y parques": "Drzewa i parki",
   "Tráfico y gente": "Ruch i ludzie",
-  "Últimos detalles": "Ostatnie szczegóły"
+  "Últimos detalles": "Ostatnie szczegóły",
+  "Mínima": "Minimalna",
+  "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución": "Ultralekka dla telefonów i bardzo słabych komputerów: bez cieni i wygładzania, 3D w niższej rozdzielczości"
  },
  "tr": {
   "Club": "Kulüp",
@@ -62524,6 +62538,8 @@
   "Barrio del club": "Kulüp mahallesi",
   "Árboles y parques": "Ağaçlar ve parklar",
   "Tráfico y gente": "Trafik ve insanlar",
-  "Últimos detalles": "Son rötuşlar"
+  "Últimos detalles": "Son rötuşlar",
+  "Mínima": "En düşük",
+  "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución": "Telefonlar ve çok zayıf bilgisayarlar için ultra hafif: gölge ve kenar yumuşatma yok, 3D daha düşük çözünürlükte"
  }
 }

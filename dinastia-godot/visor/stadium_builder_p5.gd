@@ -401,7 +401,7 @@ static func _malla_hincha_minima() -> Mesh:
 	return _malla_hincha_min
 
 static func _malla_hincha_cache() -> Mesh:
-	if Calidad.elegida == Calidad.MEDIO:
+	if Calidad.elegida <= Calidad.MEDIO:
 		return _malla_hincha_minima()
 	if _malla_hincha != null:
 		return _malla_hincha

@@ -14,7 +14,7 @@ static var activo := true   ## las comprobaciones de «antes» (imágenes sin tr
 ## liviana (84 triángulos en vez de 1 944): medido en el partido, −36 % de triángulos (1,34 M → 0,85 M). ALTO y ULTRA no cambian.
 static func trocear(raiz: Node, tramos := 8) -> int:
 	var hechos := _trocear(raiz, tramos)
-	if Calidad.elegida == Calidad.MEDIO:
+	if Calidad.elegida <= Calidad.MEDIO:
 		Optimizar.butacas_livianas(raiz, true)
 	return hechos
 
