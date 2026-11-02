@@ -33,7 +33,7 @@ func _ready() -> void:
 	## Mientras se mira el menú, los modelos pesados se cargan en un hilo.
 	Precarga.empezar(get_tree())
 	RuidosFondo.empezar()   ## las texturas de ruido, en hilos mientras se usan los menús
-	if "--medir" in OS.get_cmdline_user_args():   ## el recorrido de medición (nucleo/medicion.gd)
+	if Medicion.pedida():   ## el recorrido de medición (nucleo/medicion.gd)
 		_con_pesado(func() -> void: _P().medir(get_tree()))   ## cuando llegue lo pesado
 	_clave = _leer_ajuste()
 	_construir()
