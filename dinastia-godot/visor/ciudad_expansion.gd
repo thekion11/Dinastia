@@ -1,6 +1,6 @@
 class_name CiudadExpansion
 extends "res://visor/ciudad_expansion_p8.gd"
-## [Capa 9/9 de `ciudad_expansion.gd`] _kenney_calles, _parque_eolico, _deposito_agua, _volcar_lotes, construir, _kit_apilado … (+6)
+## [Capa 9/9 de `ciudad_expansion.gd`] _kenney_calles, _parque_eolico, _deposito_agua, _volcar_lotes, construir, encender … (+5)
 
 var _mat_cartel: StandardMaterial3D
 ## Luz, agua, drenaje y gasolineras (27-10-2026): `RedesCiudadVista`.
@@ -187,15 +187,6 @@ func construir() -> void:
 	await b._marca("exp.afueras")
 	_volcar_lotes()
 	await b._marca("exp_lotes")
-
-## Un bloque alto hecho con el mismo modelo apilado planta sobre planta (en
-## vez de estirarlo): crece en pisos y las ventanas conservan su forma.
-func _kit_apilado(esc: PackedScene, pos: Vector3, s: float, pisos: int, giro: float) -> void:
-	## (28-10) La altura sale de la malla cacheada (`_malla_kit`), sin instanciar y soltar un nodo por bloque.
-	var k0 := _malla_kit(esc.resource_path)
-	var alto: float = ((k0["caja"] as AABB).size.y if not k0.is_empty() else 0.0) * s
-	for k in pisos:
-		_kit(esc, pos + Vector3(0, float(k) * alto * 0.98, 0), Vector3.ONE * s, giro)
 
 ## 0 de día, 1 de noche: guirnaldas, farolas y ventanas lejanas.
 func encender(noche: float) -> void:

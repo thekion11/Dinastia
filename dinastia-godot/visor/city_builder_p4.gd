@@ -324,26 +324,7 @@ func _ventanas(pos: Vector3, ancho: float, fondo: float, plantas: int) -> void:
 				add_child(m2)
 				add_child(v)
 
-## (28-10) El cristal de una tira de ventanas: uno de `N_MAT_VENTANA` materiales compartidos según su azar.
-## De día un reflejo apagado; de noche, luz encendida dentro: lo sube `encender_luces()`, que lee
-## `_azar_ventana` (el centro del cubo de azar que le tocó, así cada tira se enciende en su umbral).
-const N_MAT_VENTANA := 12
-func _mat_ventana(azar: float) -> StandardMaterial3D:
-	if _ventanas_comp.is_empty():
-		for i in N_MAT_VENTANA:
-			var mat := StandardMaterial3D.new()
-			mat.albedo_color = Color(0.10, 0.14, 0.18)
-			mat.metallic = 0.95
-			mat.metallic_specular = 0.9
-			mat.roughness = 0.06
-			mat.emission_enabled = true
-			mat.emission = Color(0.98, 0.86, 0.58)
-			mat.emission_energy_multiplier = 0.18
-			mat.set_meta("_azar_ventana", (float(i) + 0.5) / float(N_MAT_VENTANA))
-			_ventanas_comp.append(mat)
-	if _ventanas_mat.is_empty():   ## `build` la vacía: los 12 se apuntan una vez por ciudad
-		_ventanas_mat.append_array(_ventanas_comp)
-	return _ventanas_comp[clampi(int(azar * N_MAT_VENTANA), 0, N_MAT_VENTANA - 1)]
+
 
 func _vidrio_oscuro() -> StandardMaterial3D:
 	var v := StandardMaterial3D.new()
