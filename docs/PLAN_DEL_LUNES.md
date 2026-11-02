@@ -631,7 +631,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-401 | P2 | PENDIENTE | Dependencia de nombres de nodo (`find_child`) frágil | sin cambio |
 | M-402 | P2 | PENDIENTE | Duplicación de carga de JSON (`Datos` 212 tablas) | sin carga perezosa |
 | M-406 | P2 | PENDIENTE | `Retrato3D` no se ejercita en headless | sin prueba con xvfb |
-| M-408 | P2 | PARCIAL | Sin pruebas de minijuegos 3D | `prueba_minijuegos_nuevos` (2D); minijuegos 3D sin prueba |
 | M-410 | P2 | PARCIAL | Pruebas de rendimiento con umbrales | la simulación tiene umbral (`eq_diez_temporadas`, EQ_MODO=rendimiento: la semana del año 20 < 2× la del año 1 + 20 ms) y el banco mide ms por paso del motor; faltan umbrales de FPS en hardware real (dueño) |
 | M-417 | P2 | PENDIENTE | `herramientas/banco.sh` sólo bash | sin unificar |
 | M-418 | P2 | PENDIENTE | Sin informes de cobertura | sin cobertura |
@@ -889,7 +888,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-146 | P2 | PENDIENTE | Balón con skins pero sin desgaste/mojado | balón sin desgaste/mojado |
 | M-148 | P2 | PARCIAL | Sin rebotes contra postes/larguero realistas con física propia | poste y larguero detectados en el motor; rebote sin comprobar |
 | M-150 | P2 | PENDIENTE | Sin balones adicionales (calentamiento, reserva) | sin balones decorativos |
-| M-152 | P2 | PENDIENTE | Sin modo de entrenamiento libre (probar controles) | sin entrenamiento libre |
 | M-153 | P2 | PENDIENTE | Sin modo multijugador local | sin multijugador local |
 | M-155 | P2 | PARCIAL | Penal de usuario con barra, sin variantes por pierna | el zurdo usa clips en espejo; penal del usuario sin variante por pierna |
 | M-156 | P2 | PENDIENTE | Sin decisión de capitán (protesta) | sin protesta del capitán |
@@ -907,6 +905,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 |---|---|---|---|---|
 | M-339 | P1 | PENDIENTE | Césped en capas ≈ 230 k tris/57 llamadas | capas del césped hasta 46 m sin LOD extra |
 | M-469 | P2 | MEDIDO | (01-11, fase 5) Cuánto espera el jugador por semana (`pruebas/zz_medir_semana.tscn`) | 1 país: 68 ms (máx 120); 6 países: 187 ms (máx 242); las 22 ligas a la vez: 665 ms (máx 866), el 87 % en jugar ~200 partidos simulados (2,5 ms cada uno: 1,2 en armar los dos onces, 1,2 en los 90 minutos). `LeyesPais.ajustar_once` con salida rápida si el once ya cumple (0,035 → 0,012 ms). Queda: `Club.once()` ~0,6 ms por las ~275 `media_en` (su memoria compara el diccionario de atributos en cada llamada); bajarlo pide invalidar la memoria al cambiar atributos (riesgo de medias viejas) |
+| M-470 | P2 | MEDIDO | (01-11, fase 6 «detectar fallos») Barrido de las 211 pruebas de `pruebas/ideas` que no están en especiales (de 6 en 6, 90 s) | 160 pasan. ARREGLADOS: pelvis de clips en bucle que se disparaba (la guardia lateral del portero a −821 m 0,03 s: `SueloAnim` ahora lineal), sonido «pase» inexistente en malabares, mensaje del patrocinio sin traducir (patrón + 5 zonas), y 5 pruebas viejas (portero con la parada al llegar, taquilla con clima, vitrinas tras el palmarés, editor tras la mudanza a `PantallaEditor`, bandera EUS = región); `p1_movimiento_natural` falla solo con la máquina cargada. PENDIENTES (no de esta sesión): `optA_persona` cadera 4 cm sobre el reposo en «persona/parado»; `pers_ropa` sin mochilas en la muestra; `f0m_visor_ciudad` 21 tramos de carretera al revés; `s3_coste_cruce` 4,15 ms (tope 3,2); `pest_estadio` pide GPU (torres en MultiMesh); 15 pruebas agotan los 90 s (capturas o lentas: `cop_prorroga_tanda`, `fugas_menus`, `s3_rotacion_menus`, `s5_ocasiones`, `s5_tactica_roles`, `s6_paises_lote1`, `sen_conexiones`, `uipl_plantel`, `uipl_textos`, `f0e_resolver`, `f0s_huellas_sonido`, `s3_auditoria_interfaz`…) |
 | M-343 | P2 | PARCIAL | Draw calls 700 | 30-10: `EntornoEstadio.agrupar` (coches, árboles y edificios repetidos en MultiMesh): TV 1.158→981, ras de campo 1.645→1.323; el entorno aún suma ~440 llamadas con sus sombras; sin atlas |
 | M-344 | P2 | PARCIAL | Overdraw en grada por butacas y personas | 21-10: oclusión en la CIUDAD (`OclusoresCiudad`, 1.120 paredes): −16 % de llamadas a pie de calle (12.128 → 10.192 en 4 calles, `medir_oclusion`); en la grada del estadio sigue sin `OccluderInstance3D |
 | M-346 | P2 | PARCIAL | Texturas con compresión (s3tc en PC); sin variantes móviles… | 21-10: revisado: las texturas grandes de 3D ya están en VRAM (s3tc) y limitadas (ropa 4K → 1024); las 3.103 sin comprimir son caras reales, iconos 2D y paletas de Kenney, que se dejan sin pérdida a pr |

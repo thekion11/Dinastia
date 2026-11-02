@@ -15,11 +15,14 @@ func _probar() -> void:
 	m.mi_club_id = m.ligas[0].clubes[0].id
 	m.roles.sumar_trofeo("Liga", {"final": "Campeón de liga con X", "goleadores": ["A (10)", "B (7)"]})
 	m.roles.sumar_trofeo("Mundial de Clubes")
-	var f0 := MuseoVitrinas.ficha(0, m)
-	_comprobar(String(f0["titulo"]) == "Liga" and String(f0["final"]) != "" and (f0["goleadores"] as Array).size() == 2, "la primera vitrina enseña la liga con su final y goleadores")
-	var f1 := MuseoVitrinas.ficha(1, m)
+	## (01-11) Desde el palmarés real (orden 15 f, 28-10) las primeras vitrinas son los títulos históricos del club: los dos
+	## nuevos van al final, por año.
+	var n_hitos := MuseoVitrinas.hitos(m).size()
+	var f0 := MuseoVitrinas.ficha(n_hitos - 2, m)
+	_comprobar(String(f0["titulo"]) == "Liga" and String(f0["final"]) != "" and (f0["goleadores"] as Array).size() == 2, "la vitrina de la liga ganada enseña su final y goleadores")
+	var f1 := MuseoVitrinas.ficha(n_hitos - 1, m)
 	_comprobar(String(f1["titulo"]) == "Mundial de Clubes" and String(f1["final"]) == "", "un título sin datos guardados sale sin final (Sin datos en el visor)")
-	_comprobar(bool(MuseoVitrinas.ficha(5, m)["vacia"]), "una vitrina sin título está libre")
+	_comprobar(bool(MuseoVitrinas.ficha(n_hitos, m)["vacia"]), "una vitrina sin título está libre")
 	## El visor.
 	var capa := CanvasLayer.new()
 	add_child(capa)

@@ -41,7 +41,7 @@ func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 
 		h = d / dist * vh
 	vel_balon = Vector3(h.x, vy, h.z)
 	giro_balon = Vector3(0, efecto, 0)
-	Sonido.toca("tiro_potente" if vh > 22.0 else "pase_corto")   ## el golpeo grabado de League-Soccer (01-11)
+	Sonido.toca("tiro_potente" if vh > 22.0 else "pase_corto", Sonido.Bus.EFECTOS, clampf(remap(vh, 6.0, 30.0, -9.0, 2.0), -9.0, 2.0))   ## golpeo de League-Soccer; más fuerte cuanto más potente (M-320)
 	if anim == "saque_mano":
 		## Lo retiene en la mano mientras carga el brazo y lo suelta al lanzar (`_retener_en_mano`, 31-10).
 		_en_mano = {"p": p, "hasta": t + SUELTA_MANO, "vel": vel_balon}

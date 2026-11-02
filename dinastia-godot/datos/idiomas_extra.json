@@ -6792,7 +6792,12 @@
   "%s (lesionado)": "%s (injured)",
   "%s (sancionado)": "%s (suspended)",
   "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "In your chosen XI, these can't play: %s. The automatic XI will start unless you change it.",
-  "Tu once elegido no vale": "Your chosen XI isn't valid"
+  "Tu once elegido no vale": "Your chosen XI isn't valid",
+  "Pecho (principal)": "Chest (main)",
+  "Manga": "Sleeve",
+  "Espalda": "Back",
+  "Short": "Shorts",
+  "Ropa de entrenamiento": "Training kit"
  },
  "pt": {
   "Historia": "História",
@@ -13587,7 +13592,12 @@
   "%s (lesionado)": "%s (lesionado)",
   "%s (sancionado)": "%s (suspenso)",
   "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "No teu onze escolhido não pode jogar: %s. Sairá o onze automático se não o mudares.",
-  "Tu once elegido no vale": "O teu onze escolhido não vale"
+  "Tu once elegido no vale": "O teu onze escolhido não vale",
+  "Pecho (principal)": "Peito (principal)",
+  "Manga": "Manga",
+  "Espalda": "Costas",
+  "Short": "Calção",
+  "Ropa de entrenamiento": "Roupa de treino"
  },
  "patrones": [
   [
@@ -19320,6 +19330,17 @@
    "Deu setmanes més de feina a la banqueta. Tens $1 punt(s) per gastar al teu arbre de carrera.",
    "Kolejne dziesięć tygodni pracy na ławce. Masz $1 pkt do wydania w drzewku kariery.",
    "Kulübede on hafta daha. Kariyer ağacında harcayacak $1 puanın var."
+  ],
+  [
+   "^quiere cerrar (.+) por (.+) al año\\.?$",
+   "wants to close $1 for $2 a year.",
+   "quer fechar $1 por $2 ao ano.",
+   "veut conclure $1 pour $2 par an.",
+   "vuole chiudere $1 per $2 all'anno.",
+   "will $1 für $2 im Jahr abschließen.",
+   "vol tancar $1 per $2 l'any.",
+   "chce zamknąć $1 za $2 rocznie.",
+   "$1 için yılda $2 ile anlaşmak istiyor."
   ]
  ],
  "fr": {
@@ -26115,7 +26136,12 @@
   "%s (lesionado)": "%s (blessé)",
   "%s (sancionado)": "%s (suspendu)",
   "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "Dans ton onze choisi, ne peut pas jouer : %s. Le onze automatique jouera si tu ne le changes pas.",
-  "Tu once elegido no vale": "Ton onze choisi n'est pas valable"
+  "Tu once elegido no vale": "Ton onze choisi n'est pas valable",
+  "Pecho (principal)": "Poitrine (principal)",
+  "Manga": "Manche",
+  "Espalda": "Dos",
+  "Short": "Short",
+  "Ropa de entrenamiento": "Tenue d'entraînement"
  },
  "it": {
   "Historia": "Storia",
@@ -32910,7 +32936,12 @@
   "%s (lesionado)": "%s (infortunato)",
   "%s (sancionado)": "%s (squalificato)",
   "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "Nel tuo undici scelto non può giocare: %s. Uscirà l'undici automatico se non lo cambi.",
-  "Tu once elegido no vale": "Il tuo undici scelto non è valido"
+  "Tu once elegido no vale": "Il tuo undici scelto non è valido",
+  "Pecho (principal)": "Petto (principale)",
+  "Manga": "Manica",
+  "Espalda": "Schiena",
+  "Short": "Pantaloncini",
+  "Ropa de entrenamiento": "Divisa d'allenamento"
  },
  "de": {
   "Historia": "Geschichte",
@@ -39705,7 +39736,12 @@
   "%s (lesionado)": "%s (verletzt)",
   "%s (sancionado)": "%s (gesperrt)",
   "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "In deiner gewählten Elf kann nicht spielen: %s. Die automatische Elf spielt, wenn du sie nicht änderst.",
-  "Tu once elegido no vale": "Deine gewählte Elf ist ungültig"
+  "Tu once elegido no vale": "Deine gewählte Elf ist ungültig",
+  "Pecho (principal)": "Brust (Hauptsponsor)",
+  "Manga": "Ärmel",
+  "Espalda": "Rücken",
+  "Short": "Hose",
+  "Ropa de entrenamiento": "Trainingskleidung"
  },
  "ca": {
   "Historia": "Història",
@@ -46500,7 +46536,12 @@
   "%s (lesionado)": "%s (lesionat)",
   "%s (sancionado)": "%s (sancionat)",
   "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "Al teu onze triat no pot jugar: %s. Sortirà l'onze automàtic si no el canvies.",
-  "Tu once elegido no vale": "El teu onze triat no val"
+  "Tu once elegido no vale": "El teu onze triat no val",
+  "Pecho (principal)": "Pit (principal)",
+  "Manga": "Màniga",
+  "Espalda": "Esquena",
+  "Short": "Pantaló",
+  "Ropa de entrenamiento": "Roba d'entrenament"
  },
  "pl": {
   "Club": "Klub",
@@ -53572,7 +53613,12 @@
   "%s (lesionado)": "%s (kontuzjowany)",
   "%s (sancionado)": "%s (zawieszony)",
   "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "W wybranej jedenastce nie może zagrać: %s. Wyjdzie automatyczna jedenastka, jeśli jej nie zmienisz.",
-  "Tu once elegido no vale": "Twoja wybrana jedenastka jest nieważna"
+  "Tu once elegido no vale": "Twoja wybrana jedenastka jest nieważna",
+  "Pecho (principal)": "Pierś (główny)",
+  "Manga": "Rękaw",
+  "Espalda": "Plecy",
+  "Short": "Spodenki",
+  "Ropa de entrenamiento": "Strój treningowy"
  },
  "tr": {
   "Club": "Kulüp",
@@ -60644,6 +60690,11 @@
   "%s (lesionado)": "%s (sakat)",
   "%s (sancionado)": "%s (cezalı)",
   "En tu once elegido no puede jugar: %s. Saldrá el once automático si no lo cambias.": "Seçtiğin ilk 11'de oynayamayacak: %s. Değiştirmezsen otomatik ilk 11 çıkacak.",
-  "Tu once elegido no vale": "Seçtiğin ilk 11 geçersiz"
+  "Tu once elegido no vale": "Seçtiğin ilk 11 geçersiz",
+  "Pecho (principal)": "Göğüs (ana)",
+  "Manga": "Kol",
+  "Espalda": "Sırt",
+  "Short": "Şort",
+  "Ropa de entrenamiento": "Antrenman kıyafeti"
  }
 }
