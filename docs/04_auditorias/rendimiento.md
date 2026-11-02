@@ -65,3 +65,9 @@ Cronometrado por pieza en la primera apertura (con `PrecalentarAnim` y los archi
 - En equipos con dos gráficas, comprobar en la consola cuál elige Godot (suele coger la integrada); y el plan de energía de Windows «ahorro» baja el rendimiento. Sin aplicar (es consejo para el jugador). — https://forum.godotengine.org/t/cant-run-godot-4-in-archcraft-with-nvidia/57370
 - Texturas grandes son la causa típica de mal rendimiento en gráficas integradas; ya se reducen (`docs/04_auditorias/presupuesto_partido.md`, −48 % de vídeo).
 Por medición propia: las butacas cercanas con malla liviana quitan 36 % de triángulos del partido; acortar la sombra no cambia nada medible (ver `rendimiento_120fps.md`).
+
+## Resumen 120 FPS (2-11-2026, rama `ccr-120fps-optimizar`) — detalle y método en `rendimiento_120fps.md`
+Partido, MEDIO, Compatibilidad (llvmpipe, 4 núcleos, 640×360), antes → después: triángulos **1 335 662 → 883 602 (−34 %)**, llamadas 794 → 794, pico de RAM 3 145 → 2 366 MB. Palanca aplicada: butacas cercanas livianas desde el inicio en MEDIO.
+Descartadas con medición: acortar la sombra, quitar la sombra de la grada, cascada única (−7 % de triángulos pero cambia la iluminación).
+Nuevo: `herramientas/hw_modesto.sh` (límites de equipo modesto), benchmark `--benchmark`/botón de Ajustes, `herramientas/presupuesto.sh` (topes del recorrido), `CalidadAuto` (perfil ligero por hardware).
+Aviso abierto: abrir la ciudad lleva el proceso a ~4,4-5 GB de RAM (objetivo 4 GB) y tarda ~9,7 s: lo lleva la sesión del recorte de ciudad.
