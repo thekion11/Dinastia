@@ -96,12 +96,7 @@ func _ready() -> void:
 	boton_si.pressed.connect(_aceptar)
 	boton_otro.pressed.connect(cerrar)
 	## Entra con un fundido y un pequeño «acercarse»: aparece, no salta.
-	modulate.a = 0.0
-	_panel.pivot_offset = _panel.size * 0.5
-	_panel.scale = Vector2(0.94, 0.94)
-	var tw := create_tween().set_parallel(true)
-	tw.tween_property(self, "modulate:a", 1.0, 0.18)
-	tw.tween_property(_panel, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	Animar.entrar(_panel, 0.2)   ## M-304: la entrada común (respeta las animaciones reducidas)
 	_panel.resized.connect(func() -> void: _panel.pivot_offset = _panel.size * 0.5)
 	## Al momento (no diferido): la pantalla engancha el sonido de foco DESPUÉS de
 	## añadir el cuadro, así el foco inicial no suena encima del «abrir».

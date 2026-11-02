@@ -1,5 +1,5 @@
-extends "res://pruebas/banco/ideas_p1.gd"
-## [Capa 2/2 de `ideas.gd`] _probar_ideas_simulacion_del_partido, _probar_ideas_club_y_calendario_de_pretemporada, _probar_ideas_dinero_ciudad_y_lesiones, _probar_ideas_tribunal_antidopaje_y_asamblea, _probar_ideas_medicina_y_vestuario, _probar_ideas_entrenamiento_prensa_y_dueno … (+8)
+extends "res://pruebas/banco/ideas_p2.gd"
+## [Capa 3/3 de `ideas.gd`] _probar_ideas_simulacion_del_partido, _probar_ideas_club_y_calendario_de_pretemporada, _probar_ideas_dinero_ciudad_y_lesiones, _probar_ideas_tribunal_antidopaje_y_asamblea, _probar_ideas_medicina_y_vestuario, _probar_ideas_entrenamiento_prensa_y_dueno … (+8)
 
 func _probar_ideas_simulacion_del_partido() -> void:
 	_titulo("IDEAS DEL DUEÑO: simulación del partido — cronología, tarjetas, cambios, MVP, estadísticas (301-315)")
@@ -310,37 +310,3 @@ func _probar_ideas_lote_b3() -> void:
 func _probar_ideas_lote_b4() -> void:
 	_titulo("IDEAS DEL DUEÑO: lote b4, editor, modos de juego, progresión, interfaz y audio (911-1097)")
 	_IDEAS_B4.new(self).ejecutar()
-
-## M-279 (2-11-2026): las clases del núcleo que ninguna prueba nombraba.
-func _probar_nucleo_sueltos() -> void:
-	_titulo("NÚCLEO SIN PRUEBA (M-279): pesos por puesto, letra que cabe, paquete real y medición")
-	## PesosPuesto: la lista rápida suma lo mismo que la tabla POSD y da su grupo.
-	var posd: Dictionary = Datos.tabla("POSD")
-	var bien := posd.size() > 5
-	for dem: String in posd:
-		var e := PesosPuesto.de(dem)
-		var suma := 0.0
-		for k: String in posd[dem]["p"]:
-			suma += float(posd[dem]["p"][k])
-		bien = bien and e.size() == 2 and is_equal_approx(Array(e[1]).reduce(func(a, x): return a + x, 0.0), suma) \
-			and PesosPuesto.grupo(dem) == String(posd[dem].get("g", ""))
-	_comprobar(bien, "los pesos rápidos de %d demarcaciones coinciden con POSD" % posd.size())
-	_comprobar(PesosPuesto.de("NO_EXISTE").is_empty() and PesosPuesto.grupo("NO_EXISTE") == "", "una demarcación que no existe no da pesos ni grupo")
-	## TextoQueCabe: un botón estrecho encoge su letra (nunca bajo el 72 %) y la recupera si el texto vuelve a caber.
-	var bt := Button.new()
-	bt.size = Vector2(90, 30)
-	add_child(bt)
-	var base := bt.get_theme_font_size("font_size")
-	bt.text = "Un rótulo bastante más largo que el botón"
-	TextoQueCabe.ajustar(bt)
-	var chica := bt.get_theme_font_size("font_size")
-	bt.text = "Ok"
-	TextoQueCabe.ajustar(bt)
-	_comprobar(chica < base and chica >= int(ceil(base * TextoQueCabe.MINIMO)) and bt.get_theme_font_size("font_size") == base,
-		"la letra que no cabe baja (%d → %d) y vuelve a su tamaño" % [base, chica])
-	bt.queue_free()
-	## PaqueteReal y Medicion: sin el paquete privado ni `--medir`, el juego arranca público y sin medir.
-	PaqueteReal.montar()
-	_comprobar(PaqueteReal.montado == "", "sin caras_reales.pck no se monta nada (build público)")
-	_comprobar(not Medicion.pedida() and not Medicion.es_largo(), "sin --medir ni --benchmark no se mide")
-	_comprobar(CompilarFondo.CARPETAS_FUERA.has("res://pruebas"), "la compilación de fondo no gasta tiempo en las pruebas")
