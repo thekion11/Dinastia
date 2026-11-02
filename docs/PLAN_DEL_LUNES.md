@@ -675,7 +675,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
 | M-280 | P1 | PARCIAL | Clases de UI que ninguna prueba nombra | 2-11: visor y núcleo ya al 100 % (`vis_sueltos`, `_probar_nucleo_sueltos`); en `ui/` 62 clases no se nombran, pero las pantallas las recorre `recorrido_pantallas` (34 secciones, 9 idiomas); falta prueba directa de las piezas que el recorrido no abre (tanda, garra, vitrina, móvil en la mano) |
-| M-284 | P2 | PARCIAL | Lectura de pantalla (TTS) | 2-11: `LectorPantalla` lee con la voz del sistema el control que toma el foco (texto, pista, estado, ayuda), interruptor en Accesibilidad; falta leer las listas largas (tablas) y los avisos emergentes, y probarlo con voces reales en el PC del dueño |
+| M-284 | P2 | PARCIAL | Lectura de pantalla (TTS) |  2-11: `LectorPantalla` lee el control con foco y, en cola, los avisos emergentes y las notificaciones del móvil (`anunciar`); falta leer las tablas largas fila a fila y probarlo con voces reales en el PC del dueño |
 | M-285 | P2 | PARCIAL | Navegación por mando en menús | 2-11: con mando, la primera tarjeta de cada menú toma el foco y la cruceta recorre las tarjetas (`PantallaMenu.portada`); el panel de controles ya lo hacía; faltan las listas de las pantallas de gestión (foco inicial y orden de tabulación) |
 | M-287 | P2 | PENDIENTE | Rendimiento de menús: refresco ya 14× más rápido; sin pruebas de… | sin medida de apertura de pantallas |
 | M-435 | P2 | PENDIENTE | Sin gatillos analógicos para potencia de pase | sin gatillos analógicos |

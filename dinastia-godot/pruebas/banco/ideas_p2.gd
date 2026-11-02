@@ -188,3 +188,16 @@ func _probar_entrada_comun() -> void:
 	fuera.free()
 	c.queue_free()
 	Animar._reducidas = antes
+
+## M-284 (2-11-2026): los avisos emergentes pasan por el lector de pantalla si está encendido.
+func _probar_lector_avisos() -> void:
+	_titulo("LECTOR: AVISOS EMERGENTES (M-284)")
+	var antes := LectorPantalla.activo()
+	LectorPantalla.ultimo_anuncio = ""
+	LectorPantalla.fijar(false)
+	LectorPantalla.anunciar("No debería")
+	_comprobar(LectorPantalla.ultimo_anuncio == "", "apagado, no lee nada")
+	LectorPantalla.fijar(true)
+	Aviso.mostrar(self, "logro", "🏆", "Primer día", "Terminaste el prólogo.")
+	_comprobar(LectorPantalla.ultimo_anuncio.begins_with("Primer día"), "encendido, lee el aviso de logro (%s)" % LectorPantalla.ultimo_anuncio)
+	LectorPantalla.fijar(antes)

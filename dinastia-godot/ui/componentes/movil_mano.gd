@@ -111,6 +111,7 @@ var reloj_texto := ""
 var gasolina_texto := ""
 var reserva := false
 func notificar(texto: String, segundos := 3.5) -> void:
+	LectorPantalla.anunciar(texto)   ## M-284
 	_nota = texto
 	_t_nota = segundos
 
