@@ -110,7 +110,7 @@ static func tick(vehiculos: Array, lluvia: bool, puertas: Array, cuenta: int) ->
 			v["resguardo"] = true
 			resguardados += 1
 			parado = true
-			Mini3D.anim(v, "parado")
+			PeatonVida.gesto(nodo, "parado")   ## (antes `Mini3D.anim(v, …)`: el registro del tráfico no trae «anim» y daba un error de script cada repaso con lluvia)
 		var quiere := lluvia and not parado
 		## Un solo `find_child` por peatón y repaso (antes 3); solo se vuelve a mirar si se abrió o cerró uno.
 		var tiene := nodo.find_child(NOMBRE, true, false) != null
