@@ -191,6 +191,8 @@ const SECCIONES := [
 	"_probar_no_atravesar_paredes",
 	"_probar_paridad_idiomas",
 	"_probar_insignia_version",
+	"_probar_lanzamiento_tactica",
+	"_probar_lanzamiento_accesibilidad",
 ]
 
 ## Dónde vive cada grupo, en el orden en que se buscan las secciones.
@@ -204,6 +206,7 @@ const ARCHIVOS := {
 	"textos": "res://pruebas/banco/textos.gd",
 	"ideas": "res://pruebas/banco/ideas.gd",
 	"varios": "res://pruebas/banco/varios.gd",
+	"lanzamiento": "res://pruebas/banco/lanzamiento.gd",
 }
 
 var _tiempos: Array = []
@@ -231,6 +234,7 @@ const GRUPOS := {
 	"competicion": ["_probar_calendario", "_probar_copa", "_probar_continental", "_probar_selecciones",
 		"_probar_ascensos", "_probar_temporadas"],
 	"textos": ["_probar_paridad_idiomas", "_probar_narracion_traducida", "_probar_tema_y_ortografia", "_probar_carga_de_ui", "_probar_palabras_prohibidas", "_probar_glifos_idiomas", "_probar_logo", "_probar_insignia_version"],
+	"lanzamiento": ["_probar_lanzamiento_tactica", "_probar_lanzamiento_accesibilidad"],
 }
 
 const COSTES := {
