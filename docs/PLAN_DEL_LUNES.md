@@ -733,7 +733,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
-| M-219 | P1 | PARCIAL | `Banco` e `Insolvencia` existen pero con pocos eventos de gravedad | administrador, tope salarial, venta de lo que sobra, refundación (`Insolvencia`); descenso administrativo ya hecho (`Insolvencia.descenso_administrativo`, cableado en `mundo_p6`, prueba del 2-11) |
 | M-359 | P1 | PENDIENTE | Estadio real en 46 % de clubes (C-01) | 46 % |
 | M-209 | P2 | PARCIAL | La prueba larga sólo comprueba que no hay errores, no el equilibrio | `prueba_larga` comprueba medias en rango; sin métricas de equilibrio |
 | M-211 | P2 | PARCIAL | Cláusulas de rescisión: sin «cláusulazo» automático de IA | el mercado reconoce pagos de cláusula (`Mercado` l.345); sin «clausulazo» de IA deliberado |
