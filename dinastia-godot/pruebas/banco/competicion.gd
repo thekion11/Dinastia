@@ -127,6 +127,25 @@ func _probar_copa() -> void:
 	var aspirantes: Array[Club] = []
 	for c: Club in m.clubes.values():
 		aspirantes.append(c)
+	## M-207 / C-05 (2-11-2026): TODOS los clubes arrancan con 25 jugadores (el plan de demarcaciones suma 25).
+	var m25 := Mundo.new()
+	m25.generar(["CHI", "ARG", "ESP", "ENG", "BRA"], 25)
+	var chicos := 0
+	for c25: Club in m25.clubes.values():
+		if c25.plantilla.size() < 25:
+			chicos += 1
+	_comprobar(chicos == 0, "los %d clubes de 5 países arrancan con al menos 25 jugadores (%d con menos)" % [m25.clubes.size(), chicos])
+	## M-219 (2-11-2026): el club intervenido de Primera baja aunque la tabla lo salvara, y sube en su lugar el mejor sano de Segunda.
+	var t1: Array = m25.ligas[0].tabla()
+	var t2: Array = m25.ligas[1].tabla()
+	var intervenido: Club = (t1[0] as Dictionary)["club"]   ## el líder: ni cerca de bajar
+	var ins := Insolvencia.new()
+	ins.rojo_ia[intervenido.id] = Banco.SEM_VEEDOR
+	var bajan: Array[Club] = []
+	var suben: Array[Club] = []
+	var castigados := ins.descenso_administrativo(m25, t1, t2, bajan, suben)
+	_comprobar(castigados.has(intervenido) and bajan.has(intervenido) and suben.size() == 1 and not ins.intervenido(m25, suben[0]),
+		"descenso administrativo: el intervenido baja y sube en su lugar un club sano (%d bajan, %d suben)" % [bajan.size(), suben.size()])
 	var copa := Copa.new("Copa de prueba")
 	copa.preparar(aspirantes)
 	_linea("  %d clubes inscritos -> %d en el cuadro (%s)" % [
@@ -162,6 +181,14 @@ func _probar_copa() -> void:
 	## El premio es fijo y se cobra. Es lo que hace que una copa cambie el ano
 	## de un club chico.
 	var antes := copa.campeon.saldo
+	## 2-11 (auditoría 28-10): con un número impar de vivos el último club pasa con un «bye», no se descarta.
+	var copa_i := Copa.new("Impar")
+	var impares: Array[Club] = []
+	for i in 3:
+		impares.append(aspirantes[i])
+	copa_i.vivos = impares.duplicate()
+	copa_i.jugar_ronda()
+	_comprobar(copa_i.vivos.size() == 2 and copa_i.vivos.has(impares[2]), "copa con 3 vivos: el último pasa con bye (%d vivos)" % copa_i.vivos.size())
 	var copa2 := Copa.new("Otra")
 	copa2.preparar(aspirantes)
 	var c2 := copa2.jugar_hasta_el_final()

@@ -215,7 +215,21 @@ func _solar_libre(e: Dictionary, pos: Vector3) -> void:
 	_rotulo(pos + Vector3(0, 6.0, 0), "＋ %s" % str(e["n"]), Color(0.75, 0.85, 0.78, 0.8), 22)
 	puntos_clic.append({"k": String(e["k"]), "n": str(e["n"]), "pos": pos + Vector3(0, 1.0, 0), "estado": "solar"})
 
+## MATERIALES COMPARTIDOS (2-11-2026, auditoría 28-10 §1): `_mat_simple` devuelve el MISMO material para el mismo
+## color/rugosidad/emisión, así la ciudad rompe menos lotes de dibujo. Por eso quien lo vaya a MODIFICAR (metálico,
+## transparencia, guardarlo para animarlo…) tiene que pedir `_mat_unico`, una copia suya. `materiales_alterados()`
+## lo vigila: el banco comprueba que ningún material compartido salió cambiado.
+var _cache_mat := {}
+
 func _mat_simple(c: Color, rug := 0.6, emi := 0.0) -> StandardMaterial3D:
+	var k := "%s|%.3f|%.3f" % [c.to_html(true), rug, emi]
+	if _cache_mat.has(k):
+		return (_cache_mat[k] as Dictionary)["m"]
+	var m := _mat_unico(c, rug, emi)
+	_cache_mat[k] = {"m": m, "c": c, "rug": rug, "emi": emi}
+	return m
+
+func _mat_unico(c: Color, rug := 0.6, emi := 0.0) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = c
 	m.roughness = rug
@@ -385,7 +399,7 @@ func _cuerpo_instalacion(forma: String, pos: Vector3, ancho: float, fondo: float
 			_ventanas(pos, ancho, fondo, plantas)
 		"templo":
 			## Museo: podio, cuerpo, columnata delante y frontón.
-			var piedra := _mat_simple(Color(0.86, 0.82, 0.72), 0.75)
+			var piedra := _mat_unico(Color(0.86, 0.82, 0.72), 0.75)
 			_caja_en(pos + Vector3(0, 0.8, 1.5), Vector3(ancho + 4.0, 1.6, fondo + 7.0), piedra)
 			var h2 := maxf(9.0, alto)
 			_caja_en(pos + Vector3(0, 1.6 + h2 * 0.5, -1.0), Vector3(ancho, h2, fondo - 2.0), piedra)

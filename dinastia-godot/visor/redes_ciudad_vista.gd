@@ -42,8 +42,8 @@ static func crear(exp: CiudadExpansion, semilla: int = 1) -> RedesCiudadVista:
 	return v
 
 func montar() -> void:
-	_gris = b._mat_simple(Color(0.58, 0.6, 0.62), 0.7)
-	_acero = b._mat_simple(Color(0.36, 0.38, 0.4), 0.45)
+	_gris = b._mat_unico(Color(0.58, 0.6, 0.62), 0.7)
+	_acero = b._mat_unico(Color(0.36, 0.38, 0.4), 0.45)
 	_calles()
 	_subestacion()
 	_central()
@@ -109,7 +109,7 @@ func _calles() -> void:
 	e._multimesh(cil, b._mat_simple(Color(0.8, 0.12, 0.1), 0.5), hidrantes, Vector3.ONE)
 	e._multimesh(BoxMesh.new(), b._mat_simple(Color(0.4, 0.46, 0.42), 0.7), cajas, Vector3.ONE)
 	for sec: Vector2i in por_sector:
-		var m := b._mat_simple(Color(0.1, 0.8, 0.2), 0.4, 1.6)
+		var m := b._mat_unico(Color(0.1, 0.8, 0.2), 0.4, 1.6)
 		_lamparas[sec] = m
 		var lista: Array[Transform3D] = []
 		lista.assign(por_sector[sec])
@@ -154,7 +154,7 @@ func _cuadrillas_montar(candidatas: Array) -> void:
 	var camion := load("res://assets/ciudad/kenney_cars/delivery-flat.glb") as PackedScene
 	var cono := load("res://assets/ciudad/kenney_cars/cone.glb") as PackedScene
 	var lado := float(RedesCiudad.LADO_SECTOR) * CiudadExpansion.CELDA
-	var baliza := b._mat_simple(Color(1.0, 0.55, 0.05), 0.4, 3.0)
+	var baliza := b._mat_unico(Color(1.0, 0.55, 0.05), 0.4, 3.0)
 	for sec in RedesCiudad.sectores():
 		var centro := Vector3((float(sec.x * RedesCiudad.LADO_SECTOR - 12) - 0.5) * CiudadExpansion.CELDA + lado * 0.5, 0, \
 			(float(sec.y * RedesCiudad.LADO_SECTOR - 12) - 0.5) * CiudadExpansion.CELDA + lado * 0.5)
@@ -335,7 +335,7 @@ func _gasolineras() -> void:
 
 func _inundaciones() -> void:
 	var lado := float(RedesCiudad.LADO_SECTOR) * CiudadExpansion.CELDA
-	var agua := b._mat_simple(Color(0.25, 0.45, 0.6), 0.1)
+	var agua := b._mat_unico(Color(0.25, 0.45, 0.6), 0.1)
 	agua.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	agua.albedo_color = Color(0.25, 0.45, 0.6, 0.55)
 	for sec in RedesCiudad.sectores():
