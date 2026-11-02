@@ -110,4 +110,21 @@ func _mascota() -> void:
 	pass
 
 func _equipacion() -> void:
-	pass
+	var p := PantallaConfigClub.new()
+	p.set_anchors_preset(Control.PRESET_FULL_RECT)
+	p.configurar({"mundo": _m, "modo": "creador"})
+	add_child(p)
+	await _esperar_s(0.6)
+	p.ir_a(2)
+	await _esperar_s(2.0)
+	await _foto("paso_equipacion")
+	var dz: DisenadorKit = null
+	for n in p.find_children("*", "Control", true, false):
+		if n is DisenadorKit:
+			dz = n
+	print("diseñador incrustado: ", dz)
+	if dz != null:
+		dz._aleatorio()
+		await _esperar_s(1.0)
+		print("kit_x del club tras Aleatorio: ", p.datos.club.kit_x.keys())
+		await _foto("paso_equipacion_aleatorio")

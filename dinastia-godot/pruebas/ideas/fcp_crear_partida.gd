@@ -8,6 +8,8 @@ func _ready() -> void:
 	await _elegir_varias_veces()
 	_titulo("CREAR PARTIDA: la cola de la mascota sigue al cuerpo")
 	await _cola_mascota()
+	_titulo("CREAR PARTIDA: el escudo propio sale en la camiseta 2D")
+	_escudo_en_camiseta()
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())
 	get_tree().quit(0 if _fallos.is_empty() else 1)
@@ -72,3 +74,19 @@ func _cola_mascota() -> void:
 		_comprobar(peor < 0.35, "%s: la cola no se separa de la pelvis (máx. %.2f m)" % [animal, peor])
 		masc.queue_free()
 	raiz.queue_free()
+
+## La camiseta 2D lleva el escudo del club (antes solo un escudete genérico).
+func _escudo_en_camiseta() -> void:
+	var c := _mundo(779).mi_club()
+	var kit := DisenosKit.kit_de_club(c)
+	kit["sp"] = {}
+	var con := DisenosKit.textura_completa(kit, false, 200).get_image()
+	var sin_kit := kit.duplicate()
+	sin_kit.erase("escudo_tex")
+	var sin := DisenosKit.textura_completa(sin_kit, false, 200).get_image()
+	_comprobar(kit.get("escudo_tex") is Texture2D, "el kit del club trae su escudo")
+	_comprobar(con.get_data() != sin.get_data(), "la camiseta de frente cambia con el escudo puesto")
+	var kit_e := kit.duplicate()
+	var esp_con := DisenosKit.textura_completa(kit_e, true, 200).get_image()
+	var esp_sin := DisenosKit.textura_completa(sin_kit, true, 200).get_image()
+	_comprobar(esp_con.get_data() == esp_sin.get_data(), "y de espaldas no lleva escudo")
