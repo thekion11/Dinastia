@@ -205,7 +205,7 @@ static func foto_de_ruta(ruta: String) -> Texture2D:
 static func foto_real(j: Jugador) -> Texture2D:
 	## Con la base ficticia no se enseña ninguna foto de una persona real,
 	## aunque el guardado traiga jugadores marcados como reales.
-	if not j.real or not Datos.base_real or not usar_fotos:
+	if not j.real or not Datos.base_real or not fotos_permitidas():
 		return null
 	var ruta := String(_indice_fotos_de().get(Nombres.limpiar(j.nombre), ""))
 	if ruta == "":
@@ -244,7 +244,7 @@ static func textura(j: Jugador, k1: String, k2: String, alto_px: int = 40) -> Te
 
 ## La ruta del retrato real de un jugador, o "" (mismas reglas que `foto_real`).
 static func ruta_foto(j: Jugador) -> String:
-	if not j.real or not Datos.base_real or not usar_fotos:
+	if not j.real or not Datos.base_real or not fotos_permitidas():
 		return ""
 	return String(_indice_fotos_de().get(Nombres.limpiar(j.nombre), ""))
 
