@@ -711,7 +711,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 |---|---|---|---|---|
 | M-210 | P1 | PARCIAL | Mercado: precios por reputación sin burbujas ni crisis | eras con precios (`Eras`, `_probar_eras_y_precios`); sin burbujas |
 | M-219 | P1 | PARCIAL | `Banco` e `Insolvencia` existen pero con pocos eventos de gravedad | administrador, tope salarial, venta de lo que sobra, refundación (`Insolvencia`); descenso administrativo ya hecho (`Insolvencia.descenso_administrativo`, cableado en `mundo_p6`, prueba del 2-11) |
-| M-235 | P1 | PARCIAL | Lesiones: duración y recaídas ok; sin prevención visible (carga… | carga y riesgo en `Medico` (l.244-254); indicador por jugador sin confirmar |
+| M-235 | P1 | PARCIAL | Lesiones: duración y recaídas ok; sin prevención visible (carga… | carga y riesgo en `Medico`; 2-11: la lista «RIESGO DE LESIÓN» del Médico (8 más cargados, sanos) muestra también la probabilidad de baja esta semana de cada jugador; falta verlo en captura |
 | M-359 | P1 | PENDIENTE | Estadio real en 46 % de clubes (C-01) | 46 % |
 | M-209 | P2 | PARCIAL | La prueba larga sólo comprueba que no hay errores, no el equilibrio | `prueba_larga` comprueba medias en rango; sin métricas de equilibrio |
 | M-211 | P2 | PARCIAL | Cláusulas de rescisión: sin «cláusulazo» automático de IA | el mercado reconoce pagos de cláusula (`Mercado` l.345); sin «clausulazo» de IA deliberado |

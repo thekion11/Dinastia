@@ -27,6 +27,118 @@ const MODELOS := {
 	"female": MODELO_FEMALE,
 }
 
+## MODELOS BASE EXTRA (2-11-2026, pedido del dueño: «tenemos otros modelos y no están como opciones
+## básicas»): los trajes completos de «Modular Character Outfits - Fantasy» (Quaternius, CC0), que
+## comparten el esqueleto de 65 huesos y por eso llevan todas las animaciones. Vienen vestidos: el
+## vestidor de equipación y el pelo no se les aplican. Clave → [nombre, hombre, mujer].
+const MODELOS_BASE := {
+	"campesino": ["Campesino", "res://assets/characters/outfits/Male_Peasant.gltf", "res://assets/characters/outfits/Female_Peasant.gltf"],
+	"explorador": ["Explorador", "res://assets/characters/outfits/Male_Ranger.gltf", "res://assets/characters/outfits/Female_Ranger.gltf"],
+}
+## MODELOS AJENOS (otro esqueleto, con sus propias animaciones dentro del .glb): KayKit (CC0). No pasan
+## por el vestidor ni las animaciones de Quaternius; `ajeno()` los arma con su «Idle».
+const MODELOS_AJENOS := {
+	"kk_barbaro": ["Bárbaro", "res://assets/characters/kaykit/Barbarian.glb"],
+	"kk_caballero": ["Caballero", "res://assets/characters/kaykit/Knight.glb"],
+	"kk_mago": ["Mago", "res://assets/characters/kaykit/Mage.glb"],
+	"kk_picaro": ["Pícaro", "res://assets/characters/kaykit/Rogue.glb"],
+	"kk_picaro_capucha": ["Pícaro con capucha", "res://assets/characters/kaykit/Rogue_Hooded.glb"],
+	"kk_esq_guerrero": ["Esqueleto guerrero", "res://assets/characters/kaykit/Skeleton_Warrior.glb"],
+	"kk_esq_mago": ["Esqueleto mago", "res://assets/characters/kaykit/Skeleton_Mage.glb"],
+	"kk_esq_picaro": ["Esqueleto pícaro", "res://assets/characters/kaykit/Skeleton_Rogue.glb"],
+	"kk_esq_secuaz": ["Esqueleto secuaz", "res://assets/characters/kaykit/Skeleton_Minion.glb"],
+}
+## Los «Modular Men/Women» de Quaternius (CC0): civiles sin animaciones; `IdleProcedural` les da vida.
+## Clave → [nombre, ruta, cuerpo].
+const MODULARES_H := {"Adventurer": "Aventurero", "Beach": "Playa", "Casual": "Casual", "Casual2": "Casual 2", "Farmer": "Granjero",
+	"King": "Rey", "Punk": "Punk", "Spacesuit": "Astronauta", "Suit": "Traje", "Swat": "SWAT", "Worker": "Obrero"}
+const MODULARES_M := {"Adventurer": "Aventurera", "Casual": "Casual", "Formal": "Formal", "Medieval": "Medieval", "Punk": "Punk",
+	"SciFi": "Ciencia ficción", "Soldier": "Soldado", "Suit": "Traje", "Witch": "Bruja", "Worker": "Obrera"}
+static var _modulares: Dictionary = {}
+## Todos los modelos ajenos: los KayKit y los modulares.
+static func todos_ajenos() -> Dictionary:
+	if _modulares.is_empty():
+		for k: String in MODULARES_H:
+			_modulares["mh_" + k.to_lower()] = [MODULARES_H[k], "res://assets/characters/modular/men/%s.glb" % k, "male"]
+		for k: String in MODULARES_M:
+			_modulares["mm_" + k.to_lower()] = [MODULARES_M[k], "res://assets/characters/modular/women/%s.glb" % k, "female"]
+		for k: String in MODELOS_AJENOS:
+			var f: Array = MODELOS_AJENOS[k]
+			_modulares[k] = [f[0], f[1], ""]
+		## Avatares VRM CC0 de PabloFMM (importados como glTF).
+		_modulares["vrm_starter"] = ["Avatar Starter", "res://assets/characters/vrm/Starter01.glb", ""]
+		_modulares["vrm_arla"] = ["Avatar Arla", "res://assets/characters/vrm/Arla.glb", ""]
+	return _modulares
+
+const ARMAS := ["shield", "sword", "axe", "staff", "knife", "spellbook", "wand", "crossbow", "bow", "arrow", "blade", "mug", "hammer", "dagger", "quiver", "cross"]
+
+## ¿Está el modelo ajeno en el juego?
+static func ajeno_disponible(clave: String) -> bool:
+	var t := todos_ajenos()
+	return t.has(clave) and ResourceLoader.exists(String((t[clave] as Array)[1]))
+
+## Arma un modelo ajeno a `altura` m (medida por sus mallas) con su «Idle» en bucle y sin armas.
+## Devuelve {"nodo","modelo","anim","altura","cuerpo","ajeno"} (sin esqueleto Quaternius). `padre` en el árbol.
+static func ajeno(padre: Node3D, clave: String, altura: float) -> Dictionary:
+	if not ajeno_disponible(clave):
+		return {}
+	var packed: PackedScene = load(String((todos_ajenos()[clave] as Array)[1]))
+	if packed == null:
+		return {}
+	var modelo: Node3D = packed.instantiate()
+	var raiz := Node3D.new()
+	raiz.add_child(modelo)
+	padre.add_child(raiz)
+	for mi in modelo.find_children("*", "MeshInstance3D", true, false):
+		var nom := String(mi.name).to_lower()
+		for a: String in ARMAS:
+			if nom.contains(a):
+				(mi as MeshInstance3D).visible = false
+				break
+	## Altura: de los pies a la coronilla de las mallas visibles.
+	var ymin := 1e9
+	var ymax := -1e9
+	for mi in modelo.find_children("*", "MeshInstance3D", true, false):
+		var m := mi as MeshInstance3D
+		if m.visible and m.mesh != null:
+			var bb := m.global_transform * m.get_aabb()
+			ymin = minf(ymin, bb.position.y)
+			ymax = maxf(ymax, bb.end.y)
+	var h := ymax - ymin
+	if h > 0.1:
+		modelo.scale = Vector3.ONE * (altura / h)
+		modelo.position.y = -ymin * altura / h
+	var ap: AnimationPlayer = null
+	var aps := modelo.find_children("*", "AnimationPlayer", true, false)
+	## Un AnimationPlayer sin clips (los VRM lo traen vacío) cuenta como «sin animaciones».
+	aps = aps.filter(func(n: Node) -> bool: return not (n as AnimationPlayer).get_animation_list().is_empty())
+	if aps.is_empty():
+		## Sin clips (los modulares): reposo procedural.
+		var sks := modelo.find_children("*", "Skeleton3D", true, false)
+		if not sks.is_empty():
+			var ip := IdleProcedural.new()
+			raiz.add_child(ip)
+			ip.configurar(sks[0] as Skeleton3D)
+	else:
+		ap = aps[0] as AnimationPlayer
+		for n: String in ["Idle", "Unarmed_Idle"]:
+			if ap.has_animation(n):
+				ap.get_animation(n).loop_mode = Animation.LOOP_LINEAR
+				ap.play(n)
+				break
+	return {"nodo": raiz, "modelo": modelo, "anim": ap, "altura": altura, "cuerpo": "male", "ajeno": true}
+
+static var _extra: Dictionary = {}
+
+## ¿Existe (y carga) ese modelo base extra para ese cuerpo?
+static func base_extra(modelo: String, cuerpo: String) -> PackedScene:
+	if not MODELOS_BASE.has(modelo):
+		return null
+	var ruta := String((MODELOS_BASE[modelo] as Array)[2 if cuerpo == "female" else 1])
+	if not _extra.has(ruta):
+		_extra[ruta] = load(ruta) if ResourceLoader.exists(ruta) else null
+	return _extra[ruta]
+
 static var _packed_male: PackedScene
 static var _packed_female: PackedScene
 
@@ -74,8 +186,10 @@ static func _altura_natural(esq: Skeleton3D) -> float:
 ## altura pedida (en metros). `cuerpo` es "male" o "female" -cualquier otro
 ## valor cae en "male"-. Devuelve {"nodo":Node3D, "esqueleto":Skeleton3D}
 ## -sin "anim" todavia, ver cabecera-.
-static func crear(altura: float = ALTURA_BASE, cuerpo: String = "male") -> Dictionary:
-	var packed := _cargar(cuerpo)
+static func crear(altura: float = ALTURA_BASE, cuerpo: String = "male", modelo_base: String = "") -> Dictionary:
+	var packed := base_extra(modelo_base, cuerpo) if modelo_base != "" else null
+	if packed == null:
+		packed = _cargar(cuerpo)
 	if packed == null:
 		push_error("FutbolistaQ: no se pudo cargar el modelo '%s'" % cuerpo)
 		return {}

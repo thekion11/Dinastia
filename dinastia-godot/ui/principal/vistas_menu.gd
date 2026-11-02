@@ -90,8 +90,7 @@ func _ver_ciudad_con_carga() -> void:
 		return
 	PantallaCarga.club = p.mundo.mi_club() if p.mundo != null else null
 	var carga := PantallaCarga.mostrar(p, Idiomas.t("Construyendo la ciudad…"))
-	await p.get_tree().process_frame
-	await p.get_tree().process_frame
+	await PantallaCarga.dejar_pintar(p.get_tree())
 	await _ver_ciudad_propia(true)
 	## Si algo la cerró mientras se esperaba (otra pantalla encima, o el
 	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).
@@ -346,8 +345,7 @@ func _ver_estadio_propio(por_partes := false) -> void:
 func _ver_estadio_con_carga() -> void:
 	PantallaCarga.club = p.mundo.mi_club() if p.mundo != null else null
 	var carga := PantallaCarga.mostrar(p, Idiomas.t("Levantando el estadio…"))
-	await p.get_tree().process_frame
-	await p.get_tree().process_frame
+	await PantallaCarga.dejar_pintar(p.get_tree())
 	await _ver_estadio_propio(true)
 	## Si algo la cerró mientras se esperaba (otra pantalla encima, o el
 	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).

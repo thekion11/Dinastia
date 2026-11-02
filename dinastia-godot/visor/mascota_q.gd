@@ -49,11 +49,22 @@ static func crear(root: Node3D, c: Club, animal: String, pos: Vector3, giro_y: f
 			_esf(pie, Vector3(dedo * 0.05, 0.0, 0.17), 0.04, mat_claro)
 
 	## La cola, colgando de la cintura por detrás (el modelo mira a +Z).
+	## (2-11-2026) SIGUE A LA PELVIS: antes colgaba del nodo raíz en un punto fijo y, al gesticular o
+	## caminar, el cuerpo se movía y la cola se quedaba flotando en el aire. `soporte` va a la pelvis
+	## cada fotograma (ver `_process`); la cola se menea dentro.
+	var soporte := Node3D.new()
+	soporte.name = "ColaSoporte"
+	nodo.add_child(soporte)
 	var cola := Node3D.new()
 	cola.name = "Cola"
-	cola.position = Vector3(0, 0.95, -0.17)
-	nodo.add_child(cola)
+	soporte.add_child(cola)
 	_cola_de(cola, String(fila[3]), mat_pelo, mat_claro, c2)
+	var i_pelvis := esq.find_bone("pelvis")
+	var desde_pelvis := Transform3D.IDENTITY
+	soporte.transform = Transform3D(Basis.IDENTITY, Vector3(0, 0.95, -0.17))
+	if i_pelvis >= 0:
+		var hueso_g := esq.global_transform * esq.get_bone_global_pose(i_pelvis)
+		desde_pelvis = hueso_g.affine_inverse() * (nodo.global_transform * soporte.transform)
 
 	## UNA MALLA POR PARTE (20-10-2026): cada adorno era una pieza con su
 	## llamada de dibujo (y otra para la sombra): la mascota de la banda costaba
@@ -66,6 +77,10 @@ static func crear(root: Node3D, c: Club, animal: String, pos: Vector3, giro_y: f
 	ctl._ap = d["anim"]
 	ctl._cuerpo = nodo
 	ctl._cola = cola
+	ctl._soporte = soporte
+	ctl._esq = esq
+	ctl._i_pelvis = i_pelvis
+	ctl._desde_pelvis = desde_pelvis
 	ctl._giro0 = nodo.rotation.y
 	ctl._rng.seed = hash(c.id + "|mascota_baile")
 	nodo.add_child(ctl)
@@ -76,6 +91,12 @@ var _ida := -1.0
 
 func _gesto() -> void:
 	if _ap == null:
+		return
+	if en_sitio and _ap.has_animation("parado"):
+		## En la configuración del club: de pie y quieta (los gestos con los brazos en alto la
+		## deformaban y se veía fea).
+		_ap.play("parado", 0.25)
+		_hasta = 6.0
 		return
 	var hay: Array[String] = []
 	for g: String in GESTOS:
@@ -96,6 +117,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	delta = minf(delta, 0.1)
 	_t += delta
+	if _soporte != null and _esq != null and _i_pelvis >= 0:
+		_soporte.global_transform = _esq.global_transform * _esq.get_bone_global_pose(_i_pelvis) * _desde_pelvis
 	if _cola != null:
 		_cola.rotation.y = sin(_t * (9.0 if not _caminando else 5.0)) * 0.45
 		_cola.rotation.x = -0.25 + sin(_t * 3.1) * 0.08
@@ -114,7 +137,7 @@ func _process(delta: float) -> void:
 			_caminando = false
 			_cuerpo.rotation.y = _giro0
 			_gesto()
-		elif _rng.randf() < 0.3 and _ap.has_animation("caminar"):
+		elif not en_sitio and _rng.randf() < 0.3 and _ap.has_animation("caminar"):
 			## Camina a lo largo de la banda (de lado respecto de la
 			## hinchada), una vez hacia cada lado: siempre vuelve a su sitio.
 			_caminando = true

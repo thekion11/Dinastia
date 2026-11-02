@@ -208,6 +208,18 @@ static func textura_completa(kit: Dictionary, espalda: bool = false, ancho_px: i
 				out.set_pixel(px, py, Color(clampf(col.r * luz, 0.0, 1.0), clampf(col.g * luz, 0.0, 1.0), clampf(col.b * luz, 0.0, 1.0), 1.0))
 	## La camiseta, encima del pantalón (el bajo cae por delante de la cintura).
 	out.blend_rect(camiseta, Rect2i(0, 0, w, camiseta.get_height()), Vector2i(0, 0))
+	## EL ESCUDO DEL CLUB, el de verdad (2-11-2026: «el escudo personalizado no aparece en el
+	## uniforme»): sobre el escudete genérico del dibujo, en el mismo sitio del pecho. Solo de frente.
+	if not espalda and kit.get("escudo_tex") is Texture2D:
+		var ei := (kit["escudo_tex"] as Texture2D).get_image()
+		if ei != null and not ei.is_empty():
+			ei = ei.duplicate()
+			if ei.is_compressed():
+				ei.decompress()
+			ei.convert(Image.FORMAT_RGBA8)
+			var lado := int(7.8 * escala)
+			ei.resize(lado, lado, Image.INTERPOLATE_LANCZOS)
+			out.blend_rect(ei, Rect2i(0, 0, lado, lado), Vector2i(int(38.5 * escala) - lado / 2, int(15.5 * escala) - lado / 2))
 	out.resize(w / ss, h / ss, Image.INTERPOLATE_LANCZOS)
 	return ImageTexture.create_from_image(out)
 

@@ -12,24 +12,35 @@ extends ColorRect
 ## El club para teñir la pantalla (lo fija quien la abre, si lo sabe).
 static var club: Club = null
 
-var _puntos: Array[ColorRect] = []
 var _t := 0.0
+var _anillo: Control
+var _barra: ColorRect
+var _tarjeta_txt: Label
+var _contador: Label
+var _tarjeta: Control
+var _orden: Array = []
+var _k := 0
+var _cambia_en := 4.5
+var _tono := Color(0.2, 0.45, 0.3)
 
+## REHECHA (2-11-2026, queja del dueño: «una pantalla gris, debería notarse que es de carga»): fondo con
+## el color del club y franjas en diagonal, escudo grande, un anillo con un balón que gira, una barra
+## que corre, el título y un consejo que cambia cada pocos segundos (ahora hay 18).
 static func mostrar(padre: Node, mensaje: String) -> PantallaCarga:
 	var n := PantallaCarga.new()
 	var c1 := Color(club.color1) if club != null else Color(0.12, 0.3, 0.2)
-	n.color = Color(0.03, 0.04, 0.04, 1.0)
+	n.color = Color(0.03, 0.05, 0.04, 1.0)
 	n.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	n.mouse_filter = Control.MOUSE_FILTER_STOP
 	n.z_index = 200
-	## Degradado: el color del club, muy oscuro, sube desde abajo.
+	var tono := c1 if c1.get_luminance() > 0.12 else (Color(club.color2) if club != null and Color(club.color2).get_luminance() > 0.12 else Color(0.2, 0.45, 0.3))
+	n._tono = tono
+	## Degradado: el color del club, oscuro, sube desde abajo.
 	var fondo := TextureRect.new()
 	var g := GradientTexture2D.new()
 	var gr := Gradient.new()
-	gr.set_color(0, Color(0.03, 0.04, 0.04))
-	## Si el color del club es casi negro, el segundo color (si no, un verde).
-	var tono := c1 if c1.get_luminance() > 0.12 else (Color(club.color2) if club != null and Color(club.color2).get_luminance() > 0.12 else Color(0.2, 0.45, 0.3))
-	gr.set_color(1, tono.darkened(0.7))
+	gr.set_color(0, Color(0.02, 0.03, 0.03))
+	gr.set_color(1, tono.darkened(0.78))
 	g.gradient = gr
 	g.fill_from = Vector2(0.5, 0.0)
 	g.fill_to = Vector2(0.5, 1.0)
@@ -39,77 +50,172 @@ static func mostrar(padre: Node, mensaje: String) -> PantallaCarga:
 	fondo.stretch_mode = TextureRect.STRETCH_SCALE
 	fondo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	n.add_child(fondo)
-	## El escudo, grande y tenue, como marca de agua.
-	if club != null:
-		var esc := TextureRect.new()
-		esc.texture = Escudo.textura(club, 256)
-		esc.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-		esc.offset_left = -170
-		esc.offset_right = 170
-		esc.offset_top = -230
-		esc.offset_bottom = 110
-		esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		esc.modulate = Color(1, 1, 1, 0.07)
-		esc.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		n.add_child(esc)
+	## Franjas en diagonal que se deslizan despacio (se dibujan en `_Franjas`).
+	var fr := _Franjas.new()
+	fr.tono = tono
+	fr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	n.add_child(fr)
 	var caja := VBoxContainer.new()
 	caja.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	caja.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	caja.grow_vertical = Control.GROW_DIRECTION_BOTH
 	caja.alignment = BoxContainer.ALIGNMENT_CENTER
-	caja.add_theme_constant_override("separation", 18)
+	caja.add_theme_constant_override("separation", 16)
 	n.add_child(caja)
+	## El anillo con el balón, y dentro el escudo.
+	var cont := CenterContainer.new()
+	caja.add_child(cont)
+	var zona := Control.new()
+	zona.custom_minimum_size = Vector2(190, 190)
+	cont.add_child(zona)
+	n._anillo = _Anillo.new()
+	(n._anillo as _Anillo).tono = tono
+	n._anillo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	zona.add_child(n._anillo)
+	if club != null:
+		var esc := TextureRect.new()
+		esc.texture = EscudoTexto.textura(club, 256)
+		esc.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 38)
+		esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		esc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		zona.add_child(esc)
 	var t := Label.new()
 	t.text = mensaje
 	t.add_theme_font_size_override("font_size", 30)
-	t.add_theme_color_override("font_color", Color(0.92, 0.95, 0.92))
+	t.add_theme_color_override("font_color", Color(0.94, 0.97, 0.94))
+	t.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.5))
+	t.add_theme_constant_override("outline_size", 4)
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	caja.add_child(t)
-	## Tres puntos que laten (el juego no está colgado).
-	var fila := HBoxContainer.new()
-	fila.alignment = BoxContainer.ALIGNMENT_CENTER
-	fila.add_theme_constant_override("separation", 10)
-	caja.add_child(fila)
-	for i in 3:
-		var p := ColorRect.new()
-		p.custom_minimum_size = Vector2(9, 9)
-		p.color = Color(1.0, 0.82, 0.35)
-		fila.add_child(p)
-		n._puntos.append(p)
+	## La barra que corre (no sabemos cuánto falta: va y viene).
+	var pista := ColorRect.new()
+	pista.color = Color(1, 1, 1, 0.12)
+	pista.custom_minimum_size = Vector2(360, 6)
+	pista.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	pista.clip_contents = true
+	caja.add_child(pista)
+	n._barra = ColorRect.new()
+	n._barra.color = Color(1.0, 0.82, 0.35)
+	n._barra.size = Vector2(110, 6)
+	pista.add_child(n._barra)
 	## El consejo en una tarjeta, con el mismo estilo que los diálogos.
 	var tarjeta := PanelContainer.new()
 	tarjeta.add_theme_stylebox_override("panel", CuadroDialogo.estilo_panel())
 	tarjeta.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	n._tarjeta = tarjeta
 	var v := VBoxContainer.new()
 	tarjeta.add_child(v)
+	n._contador = Label.new()
+	n._contador.add_theme_font_size_override("font_size", 13)
+	n._contador.add_theme_color_override("font_color", Color(1.0, 0.82, 0.35))
 	v.add_child(CuadroDialogo.placa(Idiomas.t("Consejo")))
-	var c := Label.new()
-	var txt := consejo().trim_prefix(Idiomas.t("Consejo: "))
-	c.text = txt.substr(0, 1).to_upper() + txt.substr(1)
-	c.add_theme_font_size_override("font_size", 17)
-	c.add_theme_color_override("font_color", Color(0.86, 0.88, 0.86))
-	c.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	c.custom_minimum_size = Vector2(520, 0)
-	v.add_child(c)
+	v.add_child(n._contador)
+	n._tarjeta_txt = Label.new()
+	n._tarjeta_txt.add_theme_font_size_override("font_size", 18)
+	n._tarjeta_txt.add_theme_color_override("font_color", Color(0.9, 0.92, 0.9))
+	n._tarjeta_txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	n._tarjeta_txt.custom_minimum_size = Vector2(560, 56)
+	v.add_child(n._tarjeta_txt)
 	caja.add_child(tarjeta)
+	n._orden = range(lista_consejos().size())
+	n._orden.shuffle()
+	n._poner_consejo()
 	padre.add_child(n)
 	return n
 
+## Deja que el sistema PINTE la pantalla antes de bloquear con la construcción. Dos fotogramas de
+## `process_frame` no bastan: en Windows la ventana se quedaba en gris porque el primer dibujo aún no había
+## salido. Esperar al dibujo de verdad (`frame_post_draw`) lo arregla.
+static func dejar_pintar(arbol: SceneTree) -> void:
+	for _i in 2:
+		await arbol.process_frame
+		## En headless no hay dibujo (la señal no llega nunca): solo fotogramas.
+		if DisplayServer.get_name() != "headless":
+			await RenderingServer.frame_post_draw
+
+func _poner_consejo() -> void:
+	var l := lista_consejos()
+	var txt := String(l[int(_orden[_k % _orden.size()])]).trim_prefix(Idiomas.t("Consejo: "))
+	_tarjeta_txt.text = txt.substr(0, 1).to_upper() + txt.substr(1)
+	_contador.text = "%d / %d" % [(_k % _orden.size()) + 1, _orden.size()]
+
 func _process(delta: float) -> void:
 	_t += delta
-	for i in _puntos.size():
-		_puntos[i].modulate.a = 0.35 + 0.65 * maxf(0.0, sin(_t * 5.0 - float(i) * 0.9))
+	if _anillo != null:
+		_anillo.queue_redraw()
+	if _barra != null:
+		var ancho := (_barra.get_parent() as Control).size.x
+		var u := (sin(_t * 2.2) + 1.0) * 0.5
+		_barra.position.x = -_barra.size.x + u * (ancho + _barra.size.x)
+	_cambia_en -= delta
+	if _cambia_en <= 0.0 and _tarjeta != null:
+		_cambia_en = 4.5
+		_k += 1
+		var tw := create_tween()
+		tw.tween_property(_tarjeta, "modulate:a", 0.0, 0.2)
+		tw.tween_callback(_poner_consejo)
+		tw.tween_property(_tarjeta, "modulate:a", 1.0, 0.25)
 
-static func consejo() -> String:
-	var l := [
+## Franjas diagonales suaves que se deslizan.
+class _Franjas extends Control:
+	var tono := Color.WHITE
+	var _t := 0.0
+	func _process(d: float) -> void:
+		_t += d
+		queue_redraw()
+	func _draw() -> void:
+		var paso := 120.0
+		var desp := fposmod(_t * 14.0, paso * 2.0)
+		var a := Color(tono.r, tono.g, tono.b, 0.055)
+		var h := size.y
+		var x := -h - paso * 2.0 + desp
+		while x < size.x + h:
+			draw_colored_polygon(PackedVector2Array([Vector2(x, h), Vector2(x + paso, h), Vector2(x + paso + h * 0.6, 0), Vector2(x + h * 0.6, 0)]), a)
+			x += paso * 2.0
+
+## El anillo del escudo: un aro tenue y un arco brillante con un balón que lo recorre.
+class _Anillo extends Control:
+	var tono := Color.WHITE
+	var _t := 0.0
+	func _process(d: float) -> void:
+		_t += d
+	func _draw() -> void:
+		var c := size * 0.5
+		var r := minf(size.x, size.y) * 0.5 - 8.0
+		draw_arc(c, r, 0.0, TAU, 64, Color(1, 1, 1, 0.1), 5.0, true)
+		var a0 := _t * 3.2
+		draw_arc(c, r, a0, a0 + 1.7, 32, Color(1.0, 0.82, 0.35), 5.0, true)
+		var p := c + Vector2(cos(a0 + 1.7), sin(a0 + 1.7)) * r
+		draw_circle(p, 9.0, Color(0.97, 0.97, 0.95))
+		draw_circle(p, 3.6, Color(0.12, 0.12, 0.12))
+
+static func lista_consejos() -> Array:
+	return [
 		Idiomas.t("Consejo: los días de partido el estadio se llena más si el equipo viene ganando."),
 		Idiomas.t("Consejo: el Centro médico acelera la recuperación entre partidos."),
 		Idiomas.t("Consejo: pulsa V al pasear para cambiar a primera persona."),
 		Idiomas.t("Consejo: entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte."),
 		Idiomas.t("Consejo: la Academia juvenil mejora el potencial de los canteranos."),
 		Idiomas.t("Consejo: de noche las ventanas se encienden y las farolas alumbran la calle."),
+		Idiomas.t("Consejo: arrastra al personaje para girarlo y usa la rueda del ratón para acercarte."),
+		Idiomas.t("Consejo: la mascota de tu club gesticula en la banda durante los partidos."),
+		Idiomas.t("Consejo: los patrocinadores de tu camiseta salen de los contratos de Finanzas."),
+		Idiomas.t("Consejo: el escudo y los colores que elijas se ven en la camiseta, el estadio y la ciudad."),
+		Idiomas.t("Consejo: el museo del club guarda los trofeos que vas ganando."),
+		Idiomas.t("Consejo: puedes cambiar el aspecto de tu personaje cuando quieras desde el menú."),
+		Idiomas.t("Consejo: descansar a los jugadores cansados baja el riesgo de lesión."),
+		Idiomas.t("Consejo: cuida la caja del club: una plantilla demasiado cara puede ahogarte."),
+		Idiomas.t("Consejo: cambia la táctica durante el partido si el rival te sorprende."),
+		Idiomas.t("Consejo: tu móvil tiene una agenda con las citas y reuniones del día."),
+		Idiomas.t("Consejo: una buena rueda de prensa mantiene contenta a la hinchada."),
+		Idiomas.t("Consejo: la ciudad tiene metro, buses y teleférico para moverte sin prisa."),
 	]
+
+## Un consejo al azar (lo usa quien quiera mostrar uno suelto).
+static func consejo() -> String:
+	var l := lista_consejos()
 	return String(l[randi() % l.size()])
 
 ## Quita la pantalla con un fundido corto.
