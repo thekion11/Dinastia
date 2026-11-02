@@ -73,3 +73,5 @@ dinastia-godot/assets/characters/outfits/*.gltf -filter -diff -merge binary
 dinastia-godot/assets/characters/outfits/*.bin -filter -diff -merge binary
 dinastia-godot/assets/characters/outfits/*.png -filter -diff -merge binary
 dinastia-godot/assets/characters/outfits/*.txt -filter -diff -merge binary
+dinastia-godot/assets/characters/kaykit/*.glb -filter -diff -merge binary
+dinastia-godot/assets/characters/kaykit/*.txt -filter -diff -merge binary
