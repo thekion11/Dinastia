@@ -60,7 +60,7 @@ La luz del partido se configura en `visor/ambience.gd` (no en `Calidad.sol`): ME
 |---|---|---|---|
 | Cascada ortogonal única (`ambience.gd`) | 784 | 823 k | **Descartada**: −7 % de triángulos pero la iluminación del césped cambia (más clara, menos relieve) |
 | Cambiar `Calidad.sol` (distancia/modo) | 793 | 882 k | Sin efecto: esa luz no es la del partido |
-Pendiente (palancas reales que quedan): EntornoEstadio (333 llamadas), apagar la sombra solar en «ligero» (−205 llamadas, es quitar un efecto: solo con aviso), rótulos de las vallas en un solo atlas.
+Aplicado como último recurso: **escalón 6 de `RendimientoAdaptativo` «sin sombra del sol»** (−205 llamadas): solo si tras SSAO, sombras cortas, butacas, 80 % y 67 % el equipo sigue bajo 40 FPS; el pie del partido lo avisa. Pendiente: EntornoEstadio (333 llamadas), rótulos de las vallas en un atlas.
 
 ## Tanda 3 (2-11) — qué hay en `EntornoEstadio` (333 llamadas en vista)
 Herramienta: `pruebas/medir_entorno_nodos.tscn` (sin pantalla; recuento por tipo y superficies). Resultado: 445 superficies visibles en 27 tipos; **241 son `MultiMeshInstance3D`** (el agrupado por malla+material+celda de 160 m de `Optimizar.agrupar`), 52 ruedas + 13 coches + 13 carrocerías sueltas, 38 quads, ~65 edificios de ~15 modelos distintos.
