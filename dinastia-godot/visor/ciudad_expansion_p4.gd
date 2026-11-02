@@ -1,5 +1,5 @@
 extends "res://visor/ciudad_expansion_p3.gd"
-## [Capa 4/9 de `ciudad_expansion.gd`] _detalles_parque, _parque, _acera_bloque, _caja_det, _detalle_edificio, _kit … (+10)
+## [Capa 4/9 de `ciudad_expansion.gd`] _detalles_parque, _parque, _acera_bloque, _detalle_edificio, _kit … (+10)
 
 ## LOS DETALLES DEL PARQUE (7-10-2026): el portón con su nombre, una fuente
 ## en la cruz de los caminos, parterres de flores, bancos y farolas a lo largo
@@ -154,18 +154,8 @@ func _parque(r: Rect2, lago: bool) -> void:
 func _acera_bloque(r: Rect2) -> void:
 	_lote("solar", Vector3(r.get_center().x, 0.12, r.get_center().y), Vector3(r.size.x, 0.24, r.size.y))
 
-func _caja_det(centro: Vector3, tam: Vector3, giro: float, m: Material) -> void:
-	var mi := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = tam
-	mi.mesh = bm
-	mi.material_override = m
-	mi.position = centro
-	mi.rotation.y = giro
-	b.add_child(mi)
-
-func _detalle_edificio(n: Node3D, escala: Vector3, giro: float, pos: Vector3, azotea_plana: bool) -> void:
-	var caja := b._caja_de(n)
+## (28-10) Los detalles ya no son un nodo y una malla por caja: van a `_lote_det` (MultiMesh por clave y celda).
+func _detalle_edificio(caja: AABB, escala: Vector3, giro: float, pos: Vector3, azotea_plana: bool) -> void:
 	var tam := Vector3(caja.size.x * escala.x, caja.size.y * escala.y, caja.size.z * escala.z)
 	if tam.y < 7.0 or tam.x < 4.0 or tam.z < 4.0:
 		return
@@ -177,36 +167,41 @@ func _detalle_edificio(n: Node3D, escala: Vector3, giro: float, pos: Vector3, az
 	var base_y := pos.y + caja.position.y * escala.y
 	var techo_y := base_y + tam.y
 	## Zócalo: más oscuro y áspero, como la base sucia de salpicaduras.
-	_caja_det(Vector3(centro.x, base_y + 0.45, centro.z),
-		Vector3(tam.x + 0.3, 0.9, tam.z + 0.3), giro, _mat_det("zocalo", Color(0.30, 0.29, 0.28), 0.95))
+	_mat_det("zocalo", Color(0.30, 0.29, 0.28), 0.95)
+	_lote_det("zocalo", Vector3(centro.x, base_y + 0.45, centro.z), Vector3(tam.x + 0.3, 0.9, tam.z + 0.3), giro)
 	if not azotea_plana:
 		return
 	## Cornisa con parapeto.
-	_caja_det(Vector3(centro.x, techo_y + 0.25, centro.z), Vector3(tam.x + 0.5, 0.5, tam.z + 0.5), giro,
-		_mat_det("cornisa", Color(0.80, 0.78, 0.74), 0.7))
+	_mat_det("cornisa", Color(0.80, 0.78, 0.74), 0.7)
+	_lote_det("cornisa", Vector3(centro.x, techo_y + 0.25, centro.z), Vector3(tam.x + 0.5, 0.5, tam.z + 0.5), giro)
 	## Azotea: equipos y depósito (ligeros: 3 cajas y un cilindro).
-	var util := _mat_det("equipo", Color(0.55, 0.57, 0.58), 0.5)
+	_mat_det("equipo", Color(0.55, 0.57, 0.58), 0.5)
 	var n_eq := 1 + rng.randi() % 3
 	for i in n_eq:
 		var dx := rng.randf_range(-0.3, 0.3) * tam.x
 		var dz := rng.randf_range(-0.3, 0.3) * tam.z
 		var off := rot * Vector3(dx, 0, dz)
-		_caja_det(Vector3(centro.x + off.x, techo_y + 0.5 + 0.45, centro.z + off.z),
-			Vector3(1.8, 0.9, 1.2) * rng.randf_range(0.8, 1.3), giro + rng.randf() * 0.4, util)
+		_lote_det("equipo", Vector3(centro.x + off.x, techo_y + 0.5 + 0.45, centro.z + off.z),
+			Vector3(1.8, 0.9, 1.2) * rng.randf_range(0.8, 1.3), giro + rng.randf() * 0.4)
 	if rng.randf() < 0.5:
-		var cil := MeshInstance3D.new()
-		var cm := CylinderMesh.new()
-		cm.top_radius = 0.9
-		cm.bottom_radius = 0.9
-		cm.height = 1.8
-		cil.mesh = cm
-		cil.material_override = _mat_det("deposito", Color(0.42, 0.30, 0.22), 0.8)
+		_mat_det("deposito", Color(0.42, 0.30, 0.22), 0.8)
 		var off2 := rot * Vector3(tam.x * 0.25, 0, -tam.z * 0.2)
-		cil.position = Vector3(centro.x + off2.x, techo_y + 0.5 + 0.9, centro.z + off2.z)
-		b.add_child(cil)
+		_lote_det("deposito", Vector3(centro.x + off2.x, techo_y + 0.5 + 0.9, centro.z + off2.z), Vector3.ONE, 0.0)
 
 func _kit(esc: PackedScene, pos: Vector3, escala: Vector3, giro: float, azotea_plana := false) -> Node3D:
-	var n: Node3D = esc.instantiate()
+	## (28-10) Kit «simple» (una malla sin transformación propia, todo el kit de edificios): una
+	## `MeshInstance3D` directa con la malla compartida, sin instanciar la escena ni recorrerla.
+	var k := _malla_kit(esc.resource_path)
+	var n: Node3D
+	var caja: AABB
+	if not k.is_empty() and bool(k.get("simple", false)):
+		var mi := MeshInstance3D.new()
+		mi.mesh = k["malla"]
+		n = mi
+		caja = k["caja"]
+	else:
+		n = esc.instantiate()
+		caja = b._caja_de(n)
 	if azotea_plana:
 		## Torre: fachada con ventanas de verdad (el tono sale de la posición).
 		b.vestir_torre(n, hash(Vector2(pos.x, pos.z)))
@@ -223,7 +218,7 @@ func _kit(esc: PackedScene, pos: Vector3, escala: Vector3, giro: float, azotea_p
 	n.position = pos
 	b.add_child(n)
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
-	_detalle_edificio(n, escala, giro, pos, azotea_plana)
+	_detalle_edificio(caja, escala, giro, pos, azotea_plana)
 	return n
 
 func _rotulo_comercio(frente: Vector3, giro: float, ancho: float) -> void:
