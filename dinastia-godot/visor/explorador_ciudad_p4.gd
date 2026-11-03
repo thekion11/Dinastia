@@ -319,8 +319,16 @@ func _rotulos_de_paseo(si: bool) -> void:
 		var l := n as Label3D
 		if l == null:
 			continue
-		l.visibility_range_end = (60.0 if modo == "pie" else 140.0) if si else 0.0
+		## (3-11, prueba del dueño: «nombres flotando visibles de lejos») A pie o en coche el nombre es un CARTEL del
+		## lugar: tamaño de mundo (se ve grande cerca y pequeño lejos), tapado por lo que haya delante y solo
+		## a pocos metros; en la vista aérea vuelve a ser la etiqueta de tamaño fijo.
+		l.visibility_range_end = (45.0 if modo == "pie" else 90.0) if si else 0.0
+		l.visibility_range_end_margin = 12.0 if si else 0.0
+		l.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF if si else GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED
 		l.no_depth_test = not si
+		l.fixed_size = not si
+		l.pixel_size = 0.0145 if si else 0.0007
+		l.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y if si else BaseMaterial3D.BILLBOARD_ENABLED
 
 func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, estado_animo: String) -> void:
 	cb = builder
