@@ -52,6 +52,7 @@ static func paso(m: MotorJugable) -> void:
 		e["suelta_ctx"] = String(m._ctx_golpeo)
 		e["suelta_rol"] = String(e.get("dueno_rol", ""))
 		e["suelta_v"] = m.vel_balon.length()
+	_linea(m, e)
 	var eq := int(e["eq"])
 	if eq == -1:
 		return
@@ -103,3 +104,27 @@ static func cortar(m: MotorJugable, p: Dictionary) -> void:
 	var dt := m.t - float(g["t"])
 	m._contar("traza_corte_perp_" + ("en_linea" if perp < 1.2 else ("cerca" if perp < 3.0 else "corriendo")))
 	m._contar("traza_corte_t_" + ("rapido" if dt < 0.3 else ("normal" if dt < 1.0 else "lento")))
+
+## Forma de la línea de 4 al defender (ciclo 17, 3-11): una vez por segundo, cuando el RIVAL tiene el balón, anota (en decímetros, sin tocar el motor) la separación
+## media entre defensas vecinos en el ancho, el ancho total de la línea y su desfase en profundidad. Referencia (FIFA Training Centre y manuales): 6-8 m entre defensas, línea plana.
+static func _linea(m: MotorJugable, e: Dictionary) -> void:
+	if m.poseedor.is_empty() or m.t - float(e.get("linea_t", -9.0)) < 1.0:
+		return
+	e["linea_t"] = m.t
+	for local: bool in [true, false]:
+		if bool(m.poseedor["es_local"]) == local:
+			continue
+		var xs: Array = []
+		var zs: Array = []
+		for q: Dictionary in m.jugadores:
+			if bool(q["es_local"]) == local and m._rol(q) in ["DFC", "LD", "LI"]:
+				xs.append(m.pos(q).x)
+				zs.append(m.pos(q).z)
+		if xs.size() != 4:
+			continue
+		xs.sort()
+		zs.sort()
+		m.diag["traza_linea_n"] = int(m.diag.get("traza_linea_n", 0)) + 1
+		m.diag["traza_linea_ancho_dm"] = int(m.diag.get("traza_linea_ancho_dm", 0)) + int(10.0 * (float(xs[3]) - float(xs[0])))
+		m.diag["traza_linea_prof_dm"] = int(m.diag.get("traza_linea_prof_dm", 0)) + int(10.0 * (float(zs[3]) - float(zs[0])))
+		m.diag["traza_linea_centrales_dm"] = int(m.diag.get("traza_linea_centrales_dm", 0)) + int(10.0 * (float(xs[2]) - float(xs[1])))
