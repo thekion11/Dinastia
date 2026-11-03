@@ -52,6 +52,15 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 7) sonidos de sistema → 8) minijuegos → 9) entrenamiento.
 
 ## IDEAS Y TAREAS DEL DUEÑO (3-11 noche, conversación casual) — se borran al completarse del todo
+**DECISIÓN DEL DUEÑO (3-11 noche): se mantienen los «4 juegos en 1» (gestor, partido jugable, ciudad abierta, vida del DT), pero las IDEAS NUEVAS quedan EN PAUSA. Foco: los puntos más débiles de la evaluación del líder (44/100) y pulir lo que ya existe. Cuando esté muy pulido, se abarca más.** Orden por debilidad:
+1. Rendimiento en el aparato real (15/100): FPS medidos en el teléfono del dueño en MÍNIMA; ciudad ≤900 llamadas; ideas de rendimiento de abajo, midiendo.
+2. Partido (30/100): que pases, tiros, área y córneres se sientan como fútbol (sesión PES 6) + **MODO JUGAR PARTIDO EN MÓVIL** (falta: controles táctiles para jugar el partido en el teléfono).
+3. Foco (25/100): recortar lo que no está a la altura antes de sumar nada.
+4. Ciudad (45/100) y aspecto visual (55/100): rellenar y pulir lo que ya está, sobre todo en MÍNIMA.
+5. Calidad técnica (60/100): bancos (abajo) y mega auditoría.
+
+**Banco EXTRA DE RENDIMIENTO** (además de los más de 30 especializados): FPS, tiempos de fotograma, llamadas de dibujo, triángulos, memoria y tiempos de carga por pantalla y por calidad, con topes que fallen si algo empeora.
+
 **Evaluación del menú nuevo: 90/100.** Para llegar a 100:
 - Tablas densas (Dinero → Finanzas, Competiciones → Ligas y clubes…): guías horizontales (línea de 1 px de baja opacidad o filas alternas «cebra») para no perder la fila al leer de izquierda a derecha.
 - Deslizadores (Ajustes → Dispositivo, Ciudad → Diseño…) demasiado finos: más gruesos y con más área de toque (pantallas táctiles y mando).

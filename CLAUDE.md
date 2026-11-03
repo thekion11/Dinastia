@@ -117,4 +117,7 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     líder solo revisa y les asigna. (b) Toda tarea o idea nueva del dueño se registra en `docs/PLAN_GENERAL.md` (el antiguo
     plan del lunes, renombrado) y se BORRA de ahí cuando está completa del todo. (c) Ante dudas o dificultades: buscar en
     internet y en las fuentes que existan del tema antes de decidir.
+26. (3-11 noche) DECISIÓN DEL DUEÑO: seguimos siendo «4 juegos en 1», pero las IDEAS NUEVAS QUEDAN EN PAUSA: solo los puntos más
+    débiles de la evaluación (rendimiento real, partido + modo jugar partido en MÓVIL, foco, ciudad/visual, calidad técnica) y
+    pulir lo que existe. Bancos: más de 30 especializados + uno EXTRA de rendimiento. Detalle y orden en `PLAN_GENERAL.md`.
 
