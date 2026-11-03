@@ -54,7 +54,7 @@ func _process(_d: float) -> void:
 	if _fase == 1 and _k == 8:
 		_img_a = get_viewport().get_texture().get_image()
 		_oc.set_process(false)
-		_oc.entorno.visible = true
+		_oc.fijar(true)
 		_k = 0
 		_fase = 2
 	elif _fase == 2 and _k == 4:
@@ -68,6 +68,6 @@ func _process(_d: float) -> void:
 		print("OCLUSION cámara %d «%s»: %d de %d píxeles difieren (%.2f %%)  oculto=%s" % [_cam, rig.camera_names[_cam], dif, tot, 100.0 * dif / tot, str(_oc.tapado(rig.cameras[_cam].global_position))])
 		_img_a.save_png("%s/ocl_%d_con.png" % [_out, _cam])
 		b.save_png("%s/ocl_%d_sin.png" % [_out, _cam])
-		_oc.entorno.visible = not _oc.tapado(rig.cameras[_cam].global_position)
+		_oc.fijar(not _oc.tapado(rig.cameras[_cam].global_position))
 		_cam += 1
 		_fase = 0
