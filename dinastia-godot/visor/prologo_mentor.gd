@@ -167,7 +167,7 @@ func hablar(si: bool) -> void:
 	if anim == null:
 		return
 	if si:
-		if AnimExtra.asegurar(anim, FutbolistaQ.esqueleto_de(self), "charla"):
+		if load("res://visor/anim_extra.gd").asegurar(anim, FutbolistaQ.esqueleto_de(self), "charla"):
 			anim.play("charla", 0.3)
 	else:
 		_animar("parado")

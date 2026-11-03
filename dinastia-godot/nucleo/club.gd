@@ -295,7 +295,7 @@ func perfil_estadio() -> Dictionary:
 			p["asiento1"] = String(r["asientos"][0])
 			p["asiento2"] = String(r["asientos"][1])
 		## El apodo del estadio (genérico, nunca el oficial): sale en el rótulo.
-		var ap := GuinosEstadio.apodo(p)
+		var ap = load("res://visor/guinos_estadio.gd").apodo(p)
 		if ap != "":
 			p["apodo"] = ap
 	var asi: Variant = AspectoClub.fila(self).get("asientos", [])   ## orden 15: las butacas del club real si su estadio no trae las suyas

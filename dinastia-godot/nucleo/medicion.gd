@@ -132,10 +132,10 @@ func _process(delta: float) -> void:
 				_mundo.tomar_el_mando(_mundo.ligas[0].clubes[0].id))
 			_cargar("abrir el estadio", func() -> void:
 				var par := _mundo.proximo_partido()
-				_vista = VistaEstadio.new()
+				_vista = load("res://ui/estadio.gd").new()
 				get_tree().root.add_child(_vista)
 				_vista.abrir(par[0], 0.85, par[1], Partido.new(par[0], par[1]))
-				var rig: CameraRig = _vista.get("_rig")
+				var rig = _vista.get("_rig")
 				if rig != null:
 					rig.switch_to(maxi(0, rig.camera_names.find("Principal (TV)"))))
 			_empezar_parte("estadio (cámara TV)")

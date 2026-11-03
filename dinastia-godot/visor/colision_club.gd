@@ -26,12 +26,12 @@ static var _forma: CylinderShape3D
 ## Una unión de zonas vale: cada punto de control puede estar en una distinta
 ## (así se cruza una puerta o el paso del túnel al vestuario).
 static func cabe(zonas: Array, local: Vector3, planta: int, radio := RADIO) -> bool:
-	if TunelVestuario.zona_en(zonas, local, planta).is_empty():
+	if TunelMedidas.zona_en(zonas, local, planta).is_empty():
 		return false
 	for i in 8:
 		var a := TAU * float(i) / 8.0
 		var q := local + Vector3(cos(a), 0.0, sin(a)) * radio
-		if TunelVestuario.zona_en(zonas, q, planta).is_empty():
+		if TunelMedidas.zona_en(zonas, q, planta).is_empty():
 			return false
 	return true
 
@@ -58,7 +58,7 @@ static func toca_mueble(cuerpo: Node3D, pos: Vector3, radio := RADIO) -> bool:
 
 ## ¿Se mete `local` dentro de alguien del personal? (`desde`: dónde estaba; si
 ## ya estaba pegado a esa persona, solo cuenta si se acerca más.)
-static func toca_gente(pe: PersonalEstadio, local: Vector3, desde: Vector3, planta: int) -> bool:
+static func toca_gente(pe, local: Vector3, desde: Vector3, planta: int) -> bool:
 	if pe == null:
 		return false
 	var lim := RADIO + RADIO_GENTE
@@ -75,7 +75,7 @@ static func toca_gente(pe: PersonalEstadio, local: Vector3, desde: Vector3, plan
 ## `desfase`: lo que se resta a la posición del cuerpo para tener coordenadas
 ## del estadio (en la ciudad, el estadio está en `CargaCiudad.de("CityBuilder").ESTADIO_EN`).
 static func libre(cuerpo: Node3D, pos: Vector3, desde: Vector3, zonas: Array, planta: int,
-		desfase: Vector3, pe: PersonalEstadio, ya_dentro: bool) -> bool:
+		desfase: Vector3, pe, ya_dentro: bool) -> bool:
 	var local := pos - desfase
 	if not cabe(zonas, local, planta):
 		return false
@@ -86,7 +86,7 @@ static func libre(cuerpo: Node3D, pos: Vector3, desde: Vector3, zonas: Array, pl
 ## Mueve de `desde` a `hasta` por trozos, deslizando por las paredes. Devuelve
 ## dónde queda (misma altura que `desde`).
 static func mover(cuerpo: Node3D, desde: Vector3, hasta: Vector3, zonas: Array, planta: int,
-		desfase: Vector3, pe: PersonalEstadio) -> Vector3:
+		desfase: Vector3, pe) -> Vector3:
 	var pos := desde
 	var total := hasta - desde
 	total.y = 0.0

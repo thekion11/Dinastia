@@ -175,7 +175,7 @@ func _cerrar_puerta_si_lejos() -> void:
 	var lejos := Vector2(pu.x - cuerpo.position.x, pu.z - cuerpo.position.z).length() > 5.5
 	if lejos and is_instance_valid(_menu_asc) and _menu_asc.has_meta("portero"):
 		var g: Dictionary = _menu_asc.get_meta("portero")
-		var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+		var pe = get_tree().get_first_node_in_group("personal_club")
 		if pe != null:
 			pe.atender(g, Vector3.ZERO, false)
 		_menu_asc.queue_free()

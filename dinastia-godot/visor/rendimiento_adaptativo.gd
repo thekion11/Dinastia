@@ -95,7 +95,7 @@ func bajar() -> void:
 			for n in raiz3d.find_children("ButacasCerca*", "MultiMeshInstance3D", true, false):
 				var mmi := n as MultiMeshInstance3D
 				if mmi.multimesh != null:
-					mmi.multimesh.mesh = StadiumBuilder._malla_butaca_lejos()
+					mmi.multimesh.mesh = load("res://visor/stadium_builder.gd")._malla_butaca_lejos()
 		4:
 			_escala(0.8)
 		5:

@@ -1,5 +1,5 @@
 import os,re,sys,json,collections
-RAIZ='/home/user/Dinastia/dinastia-godot'
+RAIZ=os.environ.get('GRAFO_RAIZ','/home/user/Dinastia/dinastia-godot')
 EXCL=('pruebas','terceros','addons','.godot','herramientas')
 scripts={}   # ruta res -> dict
 for r,d,fs in os.walk(RAIZ):
