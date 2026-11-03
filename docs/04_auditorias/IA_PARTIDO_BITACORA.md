@@ -96,6 +96,9 @@ Pendiente de estudiar (fuentes ya localizadas): triangulación de Delaunay para 
     Lección: una mejora vista en 16 partidos hay que confirmarla en 32 antes de creerla (el ruido en pases es ±1-2 puntos y en goles ±0,4).
     Sigue en 72-73 % de pases buenos tras muchas palancas (velocidad del pase, riesgo, distancia, descarga, saques, entradas): el 80-85 % probablemente exige un cambio de mecánica (geometría de intercepción, control del receptor, velocidad de los defensas), no de afinado de la nota del pase.
     CI: `control del equipo` («L3 + R3 = bloqueo de jugador») salió rojo una vez en `especiales 3/6`; es una de las pruebas inestables arregladas en la rama de la líder, no se persigue aquí.
+15. **Ciclo 14 (geometría de la intercepción, control del receptor).** Traza `MotorTraza.cortar` en 32 partidos (405 pases cortados, 12,7/p): distancia del cortador a la línea del pase al patear: sobre la línea (<1,2 m) 7,4 %, cerca (1,2-3 m) 24,4 %, **corriendo (>3 m) 68,1 %**; tiempo de vuelo hasta el corte: rápido (<0,3 s) 5,4 %, normal 8,4 %, **lento (>1 s) 86,2 %**. El defensa no corta a >1,2 m sin tiempo de reacción: llega corriendo durante vuelos largos. No hay mecánica irreal que corregir.
+    Control del receptor (`MotorControl`): 21-22 controles largos por 16 partidos (≈1,3/p) frente a ≈52 pases completados/p → ≈2,5 % de fallos; no es la palanca.
+    Conclusión: el 72-73 % de pases buenos es el valor natural de este motor con vuelos largos (43 % de los pases son largos). Sin cambios de comportamiento en este ciclo (solo la traza, cuenta sin afectar la huella 1143991806). Falta la comparación de velocidades defensa/atacante.
 
 ## Cifras reales de fútbol que se persiguen (orden de la sesión líder)
 ≈2,5-2,8 goles, ≈25 tiros, ≈80-85 % de pases buenos por partido. Estado: tiros ≈10-12 por partido y pases buenos ≈53-59 (conteo, no porcentaje): **faltan por debajo**; `zz_medir_partido` no da el porcentaje de pases, hay que añadirlo.
