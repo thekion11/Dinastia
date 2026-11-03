@@ -496,3 +496,41 @@ func _probar_imagen_mental() -> void:
 	motor.dificultad_cpu = "ultimate"
 	_comprobar(MotorMente.retardo(motor, cpu) == 0.0, "Ultimate tampoco tiene retardo")
 	(r[1] as Node3D).queue_free()
+
+## ROLES DINÁMICOS (03-11-2026, IA F2, `MotorRoles`): si dos laterales se cruzan de banda, intercambian el puesto; el húngaro es óptimo.
+func _probar_roles_dinamicos() -> void:
+	_titulo("ROLES DINÁMICOS CON EL ALGORITMO HÚNGARO")
+	## El húngaro solo: la matriz 3×3 clásica.
+	var c := [[4.0, 1.0, 3.0], [2.0, 0.0, 5.0], [3.0, 2.0, 2.0]]
+	var a := MotorRoles.hungaro(c)
+	var coste := float(c[0][a[0]]) + float(c[1][a[1]]) + float(c[2][a[2]])
+	_comprobar(absf(coste - 5.0) < 0.001, "el húngaro halla el coste mínimo 5 (halló %.1f)" % coste)
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var ld: Dictionary = {}
+	var li: Dictionary = {}
+	for p: Dictionary in motor.jugadores:
+		if bool(p["es_local"]):
+			if motor._rol(p) == "LD" and ld.is_empty():
+				ld = p
+			elif motor._rol(p) == "LI" and li.is_empty():
+				li = p
+	if ld.is_empty() or li.is_empty():
+		_comprobar(false, "la formación de prueba tiene LD y LI")
+		(r[1] as Node3D).queue_free()
+		return
+	## En su sitio: cada uno su puesto.
+	(ld["node"] as Node3D).position = ld["base_pos"]
+	(li["node"] as Node3D).position = li["base_pos"]
+	motor.t = 20.0
+	_comprobar(MotorRoles.base(motor, ld) == ld["base_pos"] and MotorRoles.base(motor, li) == li["base_pos"], "en su sitio, cada uno conserva su puesto")
+	## Cruzados de banda (mucho): intercambian.
+	(ld["node"] as Node3D).position = li["base_pos"]
+	(li["node"] as Node3D).position = ld["base_pos"]
+	motor.t = 21.0
+	_comprobar(MotorRoles.base(motor, ld) == li["base_pos"] and MotorRoles.base(motor, li) == ld["base_pos"], "cruzados de banda, intercambian el puesto")
+	## Histéresis: un pequeño desplazamiento no devuelve el puesto al instante.
+	(ld["node"] as Node3D).position = (li["base_pos"] as Vector3) + Vector3(-1.0, 0, 0)
+	motor.t = 21.6
+	_comprobar(MotorRoles.base(motor, ld) == li["base_pos"], "con el reparto vigente y casi sin mejora, no parpadea")
+	(r[1] as Node3D).queue_free()
