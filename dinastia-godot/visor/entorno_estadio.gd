@@ -64,6 +64,7 @@ static func montar(raiz: Node3D, est: Dictionary, niveles: int, optimizar := fal
 		e.set_meta("agrupado", Optimizar.agrupar(e))
 		e.set_meta("cortes", Optimizar.distancias(e))
 		OptimizarGrada.trocear(raiz)   ## M-345: las tribunas ya construidas, en trozos con su propia caja
+	EntornoOclusion.montar(e, hx, hz, g)   ## (3-11) en MÍNIMO, el exterior no se dibuja mientras las gradas lo tapan
 	return e
 
 ## Mástiles con las banderas del club en la plaza, delante de la tribuna
