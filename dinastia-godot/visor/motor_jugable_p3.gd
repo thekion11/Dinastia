@@ -390,9 +390,9 @@ func _palos_y_lineas(antes: Vector3) -> void:
 				_gol(signo > 0.0)
 				return
 			## Fuera por la línea de fondo: córner o saque de puerta.
-			_cerrar_tiro("fallo")
+			var desvio := MotorCorner.desvio(self as Object as MotorJugable); _cerrar_tiro("fallo")   ## ciclo 26: remate desviado = córner
 			var defiende_local := signo < 0.0   ## el local defiende -Z
-			var toco_defensor := not ultimo_toque.is_empty() and bool(ultimo_toque["es_local"]) == defiende_local
+			var toco_defensor := desvio or (not ultimo_toque.is_empty() and bool(ultimo_toque["es_local"]) == defiende_local)
 			if toco_defensor:
 				_empezar_saque("corner", not defiende_local, Vector3(signf(p.x) * (ANCHO - 0.3), R, linea - signo * 0.3))
 			else:
