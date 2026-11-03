@@ -246,15 +246,15 @@ func _tarjeta(sub: Dictionary, i: int) -> Button:
 	b.clip_contents = true
 	var st := StyleBoxFlat.new()
 	st.bg_color = Color(0, 0, 0, 0.5)
-	st.border_color = Color(_color(2), 0.35)
+	st.border_color = Color(1, 1, 1, 0.16)   ## borde de 1 px ~10-15 % más claro que el fondo de la tarjeta
 	st.set_border_width_all(1)
-	st.border_width_bottom = 4
 	st.set_corner_radius_all(16)
-	st.shadow_color = Color(0, 0, 0, 0.35)
-	st.shadow_size = 10
+	st.shadow_color = Color(0, 0, 0, 0.35); st.shadow_size = 10
 	var enc := st.duplicate() as StyleBoxFlat
 	enc.bg_color = Color(_color(2), 0.22)
 	enc.border_color = _color(2).lightened(0.2)
+	var barra := ColorRect.new(); barra.color = Color(_color(2), 0.7); barra.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)   ## el filo de color (antes un borde inferior de 4 px)
+	barra.offset_left = 14; barra.offset_right = -14; barra.offset_top = -4; barra.offset_bottom = -1; barra.mouse_filter = Control.MOUSE_FILTER_IGNORE; b.add_child(barra)
 	b.add_theme_stylebox_override("normal", st)
 	b.add_theme_stylebox_override("hover", enc)
 	b.add_theme_stylebox_override("focus", enc)
