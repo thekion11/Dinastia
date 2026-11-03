@@ -218,6 +218,7 @@ func _mover_arbitros(delta: float) -> void:
 		if not is_instance_valid(n):
 			continue
 		if String(a.get("id", "")) == "arbitro" and _gestos_del_arbitro(a, delta):
+			n.position = LimitesArbitro.limitar(jugadores, "arbitro", n.position)   ## P3: también mientras hace el gesto, o lo atravesaban
 			continue
 		var obj: Vector3
 		match String(a.get("id", "")):
@@ -232,13 +233,7 @@ func _mover_arbitros(delta: float) -> void:
 		## En la tanda: el principal al borde del área chica y un asistente en la
 		## línea de gol (fuera del plano del lanzador).
 		if estado == "tanda":
-			match String(a.get("id", "")):
-				"arbitro":
-					obj = Vector3(-7.5, 0, LARGO - 12.0)
-				"linea_a":
-					obj = Vector3(-36.5, 0, 0.0)
-				_:
-					obj = Vector3(PALO + 2.2, 0, LARGO - 0.3)
+			obj = LimitesArbitro.objetivo_tanda(String(a.get("id", "")))
 		var hacia := obj - n.position
 		hacia.y = 0.0
 		var v := minf(hacia.length() * 1.6, 6.5)
@@ -246,6 +241,7 @@ func _mover_arbitros(delta: float) -> void:
 		if hacia.length() > 0.4:
 			n.position += hacia.normalized() * v * delta
 			sp = v
+		n.position = LimitesArbitro.limitar(jugadores, String(a.get("id", "")), n.position)   ## P3 (3-11)
 		## Siempre de cara al juego.
 		var mira := b - n.position
 		mira.y = 0.0
