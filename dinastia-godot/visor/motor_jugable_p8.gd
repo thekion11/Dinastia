@@ -79,7 +79,9 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 	## Apoyo: los dos más cercanos al portador se ofrecen en ángulo.
 	if not poseedor.is_empty():
 		var d := pos(p).distance_to(pos(poseedor))
-		if d < 14.0:
+		if MotorApoyo.activo():
+			obj = MotorApoyo.punto(self as Object as MotorJugable, p, poseedor, obj)   ## campo de fuerzas (F3, 03-11)
+		elif d < 14.0:
 			var lado := signf(pos(p).x - pos(poseedor).x)
 			if lado == 0.0:
 				lado = 1.0

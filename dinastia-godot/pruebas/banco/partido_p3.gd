@@ -534,3 +534,47 @@ func _probar_roles_dinamicos() -> void:
 	motor.t = 21.6
 	_comprobar(MotorRoles.base(motor, ld) == li["base_pos"], "con el reparto vigente y casi sin mejora, no parpadea")
 	(r[1] as Node3D).queue_free()
+
+## APOYO POR CAMPO DE FUERZAS (03-11-2026, IA F3, `MotorApoyo`): anillo de pase, repulsión de compañeros y salida de la línea tapada.
+func _probar_apoyo_fuerzas() -> void:
+	_titulo("APOYO POR CAMPO DE FUERZAS")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var locales: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]))
+	for q: Dictionary in motor.jugadores:
+		(q["node"] as Node3D).position = Vector3(-55.0 + randf() * 2.0, 0, 90.0)
+	var c: Dictionary = locales[0]
+	var p: Dictionary = locales[1]
+	var otro: Dictionary = locales[2]
+	var nc := c["node"] as Node3D
+	var np := p["node"] as Node3D
+	nc.position = Vector3(0, 0, 0)
+	## 1) Muy lejos del anillo: lo atrae hacia el portador.
+	np.position = Vector3(16.0, 0, 0)
+	var f1 := MotorApoyo.fuerza(motor, p, c)
+	_comprobar(f1.x < 0.0, "a 16 m del portador, el anillo lo acerca (fuerza x %.1f)" % f1.x)
+	## 2) Pegado al portador: lo aparta.
+	np.position = Vector3(4.0, 0, 0)
+	var f2 := MotorApoyo.fuerza(motor, p, c)
+	_comprobar(f2.x > 0.0, "a 4 m del portador, lo aparta (fuerza x %.1f)" % f2.x)
+	## 3) Un compañero encima: se repelen.
+	np.position = Vector3(12.0, 0, 0)
+	var f_solo := MotorApoyo.fuerza(motor, p, c)
+	(otro["node"] as Node3D).position = Vector3(12.0, 0, 3.0)
+	var f_comp := MotorApoyo.fuerza(motor, p, c)
+	_comprobar(f_comp.z < f_solo.z - 1.0, "con un compañero a 3 m (por +z), se aparta hacia -z (%.1f frente a %.1f)" % [f_comp.z, f_solo.z])
+	(otro["node"] as Node3D).position = Vector3(-55.0, 0, 90.0)
+	## 4) Rival en la línea de pase: sale al lado libre.
+	var rival: Dictionary = vis.filter(func(q: Dictionary) -> bool: return not bool(q["por"]))[0]
+	(rival["node"] as Node3D).position = Vector3(6.0, 0, 0.4)
+	var f_t := MotorApoyo.fuerza(motor, p, c)
+	_comprobar(absf(f_t.z) > absf(f_solo.z) + 1.0, "con la línea tapada se desvía hacia un lado (|z| %.1f frente a %.1f)" % [absf(f_t.z), absf(f_solo.z)])
+	(rival["node"] as Node3D).position = Vector3(-55.0, 0, 90.0)
+	## 5) Fuera de alcance: no cambia su puesto. Tope de la fuerza.
+	np.position = Vector3(30.0, 0, 0)
+	_comprobar(MotorApoyo.punto(motor, p, c, Vector3(30, 0, 0)) == Vector3(30, 0, 0), "a más de 18 m no interviene")
+	(otro["node"] as Node3D).position = Vector3(12.0, 0, 0.5)
+	np.position = Vector3(12.0, 0, 0)
+	_comprobar(MotorApoyo.fuerza(motor, p, c).length() <= MotorApoyo.TOPE + 0.01, "la fuerza nunca pasa del tope")
+	(r[1] as Node3D).queue_free()
