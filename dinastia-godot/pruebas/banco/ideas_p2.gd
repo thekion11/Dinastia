@@ -300,3 +300,21 @@ func _probar_carrera_salidas() -> void:
 	_comprobar(m.roles.aceptar_trabajo(a[0].id) == "" and m.mi_club_id == a[0].id and m.mi_club_id != viejo, "firmar con otro club te lleva a él")
 	m.roles.quedar_sin_banco()
 	_comprobar(m.roles.sin_club and not m.roles.ofertas_trabajo().is_empty(), "dimitir te deja sin club y con ofertas para elegir")
+
+## (3-11, orden 22) La grada suena siempre: el fondo en bucle sube con el peligro y con el gol.
+func _probar_grada_fondo() -> void:
+	_titulo("FONDO DE LA GRADA (sonido continuo del estadio)")
+	var w := GradaFondo.onda()
+	_comprobar(w != null and w.loop_mode == AudioStreamWAV.LOOP_FORWARD and w.data.size() > Sonido.FRECUENCIA * 2 * 6, "un bucle de varios segundos")
+	_comprobar(GradaFondo.onda() == w, "se sintetiza una vez y se reutiliza")
+	var peligro := [0.0]
+	var raiz := Node.new()
+	add_child(raiz)
+	var g := GradaFondo.montar(raiz, func() -> float: return peligro[0])
+	var calma := g._objetivo_db()
+	peligro[0] = 1.0
+	var area := g._objetivo_db()
+	g.gol()
+	var tras_gol := g._objetivo_db()
+	_comprobar(area > calma and tras_gol > area, "sube con el balón en el área y más tras un gol (%.0f → %.0f → %.0f dB)" % [calma, area, tras_gol])
+	raiz.queue_free()
