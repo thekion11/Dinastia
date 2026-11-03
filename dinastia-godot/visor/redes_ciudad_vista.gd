@@ -199,6 +199,7 @@ func _rotulo(p: Vector3, texto: String) -> void:
 	l.pixel_size = 0.05
 	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	l.outline_size = 10
+	l.visibility_range_end = 150.0   ## (3-11) el cartel de la instalación solo se lee de cerca
 	l.position = p
 	b.add_child(l)
 
