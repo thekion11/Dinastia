@@ -120,9 +120,9 @@ func _disp_ropa() -> void:
 	et_ra.tooltip_text = Idiomas.t("La equipación con volumen propio (más realista). Cuesta tres mallas más por jugador en el partido.")
 	fila_ra.add_child(et_ra)
 	var b_ra := Button.new()
-	b_ra.text = "SÍ" if VestidorQ.ropa_aparte else "NO"
+	b_ra.text = "SÍ" if load("res://visor/vestidor_q.gd").ropa_aparte else "NO"
 	b_ra.pressed.connect(func() -> void:
-		VestidorQ.ropa_aparte = not VestidorQ.ropa_aparte
+		load("res://visor/vestidor_q.gd").ropa_aparte = not load("res://visor/vestidor_q.gd").ropa_aparte
 		p._guardar_preferencias()
 		p._refrescar())
 	fila_ra.add_child(b_ra)
@@ -178,7 +178,7 @@ func _disp_controles() -> void:
 	fila_ct.add_child(et_ct)
 	var b_ct := Button.new()
 	b_ct.text = Idiomas.t("🎮 Configurar")
-	b_ct.pressed.connect(func() -> void: PanelControles.abrir(p))
+	b_ct.pressed.connect(func() -> void: load("res://ui/componentes/panel_controles.gd").abrir(p))
 	fila_ct.add_child(b_ct)
 
 

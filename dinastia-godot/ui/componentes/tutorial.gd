@@ -52,8 +52,8 @@ func _construir_prologo(mundo: Mundo, ctx: Dictionary) -> void:
 	fila_prologo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	centro.add_child(fila_prologo)
 	var ancho_texto := minf(720.0, get_viewport_rect().size.x - 48.0)
-	if PersonaRealista.disponible() and get_viewport_rect().size.x > 900.0:
-		var figura := PersonaRealista.retrato(_aspecto, Vector2i(250, 380), Color(0.03, 0.04, 0.04), "medio")
+	if load("res://visor/persona_realista.gd").disponible() and get_viewport_rect().size.x > 900.0:
+		var figura = load("res://visor/persona_realista.gd").retrato(_aspecto, Vector2i(250, 380), Color(0.03, 0.04, 0.04), "medio")
 		figura.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		fila_prologo.add_child(figura)
 		ancho_texto = minf(600.0, get_viewport_rect().size.x - 350.0)

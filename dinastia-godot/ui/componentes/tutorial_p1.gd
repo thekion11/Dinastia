@@ -384,7 +384,7 @@ static func aspecto_mentor(modo: String, m: Dictionary) -> Dictionary:
 		if guardado is Dictionary:
 			for k: String in guardado:
 				pedido[k] = guardado[k]
-	return PersonaRealista.aspecto(String(m.get("semilla", modo)), pedido)
+	return load("res://visor/persona_realista.gd").aspecto(String(m.get("semilla", modo)), pedido)
 
 static func _cara_mentor(m: Dictionary, ctx: Dictionary) -> Texture2D:
 	var j := Jugador.new()
@@ -398,8 +398,8 @@ static func _cara_mentor(m: Dictionary, ctx: Dictionary) -> Texture2D:
 func _pintar_retrato(ctx: Dictionary) -> void:
 	for h in _marco_cara.get_children():
 		h.queue_free()
-	if PersonaRealista.disponible():
-		_marco_cara.add_child(PersonaRealista.retrato(_aspecto, Vector2i(100, 120), _fondo_retrato, "cara"))
+	if load("res://visor/persona_realista.gd").disponible():
+		_marco_cara.add_child(load("res://visor/persona_realista.gd").retrato(_aspecto, Vector2i(100, 120), _fondo_retrato, "cara"))
 	else:
 		var r := TextureRect.new()
 		r.custom_minimum_size = Vector2(84, 84)

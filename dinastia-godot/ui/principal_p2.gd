@@ -104,7 +104,6 @@ var _secc_club: String = "directorio"
 var _aviso_abierto: int = 0
 ## La cinemática de pantalla completa de la rueda de prensa, o null si no hay
 ## ninguna abierta: un `ui/principal/rueda_prensa.gd` (fase 0, paso 6b).
-const _PrincipalRuedaPrensa := preload("res://ui/principal/rueda_prensa.gd")
 var _rueda_pop: Control = null
 
 
