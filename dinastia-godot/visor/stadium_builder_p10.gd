@@ -78,6 +78,15 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 		_sombra_unica(root)
 		_tm("sombra")
 		await _ceder_paso()
+	## R2 (3-11, MÍNIMO): las piezas sueltas, los arcos y los banquillos, en una malla por material (ver `FundirPiezas`). MEDIA y superiores quedan como estaban.
+	if Calidad.elegida <= Calidad.MINIMO and FundirPiezas.activo_r2:
+		FundirPiezas.fundir_sueltas(root)
+		FundirPiezas.unir_multimesh(root, ["Pasillos", "Barandillas", "CantosPasillo", "BarandasPasillo", "ZancasPasillo", "CantosAcceso", "PasamanosAcceso",
+			"ZancasAcceso", "EscalerasAcceso", "VomitoriosHormigon", "VomitoriosHueco", "VomitoriosRotulo"])
+		for arco in ["Arco_Norte", "Arco_Sur", "BanquilloLocal", "BanquilloVisita"]:
+			var a := root.get_node_or_null(arco) as Node3D
+			if a != null:
+				FundirPiezas.fundir_profundo(a, "Fundido")
 
 ## LAS ESQUINAS TAMBIÉN LLEVAN GENTE (22-9-2026). "Falta un tramo" -el
 ## usuario lo vio de inmediato justo después de la ronda de las butacas

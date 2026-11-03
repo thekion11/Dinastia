@@ -57,6 +57,8 @@ func _ready() -> void:
 	var perfil := mundo.perfil_estadio_de(a).duplicate()
 	Ambience.apply(_raiz, perfil, null, nivel)
 	StadiumBuilder.build_pitch(_raiz, perfil, a)
+	if _env("R2", "1") == "0":   ## el «antes» de R2: sin piezas fundidas ni texto de las vallas en atlas (solo MÍNIMA)
+		FundirPiezas.activo_r2 = false
 	if _env("ESTADIO", "0") == "1":
 		StadiumBuilder.build(_raiz, perfil, int(perfil.get("aforo", 20000)), 0.8, a._hash_id(), a)
 	_montar_jugadores(a, b)
@@ -197,6 +199,13 @@ func _ocultar_y_informar() -> void:
 		for q: String in quitar:
 			if (String(h.name).to_lower() + "|" + _categoria(h)).contains(q.to_lower()) and h is Node3D:
 				(h as Node3D).visible = false
+	var tipos := _env("OCULTAR_TIPO", "").split(",", false)
+	if not tipos.is_empty():
+		for g in _raiz.find_children("*", "VisualInstance3D", true, false):
+			var k := "%s | %s" % [g.get_class(), String(g.name).rstrip("0123456789@")]
+			for q: String in tipos:
+				if k.contains(q):
+					(g as Node3D).visible = false
 	if _env("INFORME", "0") != "1":
 		return
 	var filas: Array = []
@@ -240,6 +249,45 @@ func _ocultar_y_informar() -> void:
 			claves.sort_custom(func(a: String, b: String) -> bool: return resto[a] > resto[b])
 			for k: String in claves.slice(0, 8):
 				print("   ", resto[k], " × ", k)
+	if _env("DETALLE", "") != "":
+		for h in _raiz.get_children():
+			if String(h.name).begins_with(_env("DETALLE", "")):
+				_arbol(h, 0)
+	var por_dueno := {}
+	for g in _raiz.find_children("*", "Label3D", true, false):
+		var a: Node = g
+		while a.get_parent() != null and a.get_parent() != _raiz:
+			a = a.get_parent()
+		var kd := "%s (%s)" % [String(a.name).rstrip("0123456789@"), a.get_class()]
+		por_dueno[kd] = int(por_dueno.get(kd, 0)) + 1
+	print("LABEL3D por dueño: ", por_dueno)
+	var sup := {}
+	for g in _raiz.find_children("*", "GeometryInstance3D", true, false):
+		var gi := g as GeometryInstance3D
+		if not gi.is_visible_in_tree():
+			continue
+		var cuantas := 1
+		if gi is MeshInstance3D and (gi as MeshInstance3D).mesh != null:
+			cuantas = maxi(1, (gi as MeshInstance3D).mesh.get_surface_count())
+		elif gi is MultiMeshInstance3D and (gi as MultiMeshInstance3D).multimesh != null and (gi as MultiMeshInstance3D).multimesh.mesh != null:
+			cuantas = maxi(1, (gi as MultiMeshInstance3D).multimesh.mesh.get_surface_count())
+		var k := "%s | %s" % [gi.get_class(), String(gi.name).rstrip("0123456789@")]
+		var antes: Array = sup.get(k, [0, 0])
+		sup[k] = [int(antes[0]) + 1, int(antes[1]) + cuantas]
+	var ksup := sup.keys()
+	ksup.sort_custom(func(a: String, b: String) -> bool: return sup[a][1] > sup[b][1])
+	print("LLAMADAS POTENCIALES por tipo y nombre (nodos · superficies):")
+	for k: String in ksup.slice(0, 30):
+		print("  %4d %4d  %s" % [sup[k][0], sup[k][1], k])
+	var por_cat := {}
+	for fila: Array in filas:
+		var cat := String(fila[3]).get_slice("[", 1).trim_suffix("]")
+		var tot: Array = por_cat.get(cat, [0, 0, 0])
+		tot[0] += int(fila[0])
+		tot[1] += int(fila[1])
+		tot[2] += 1
+		por_cat[cat] = tot
+	print("INFORME por categoría (triángulos · objetos · piezas): ", por_cat)
 	print("INFORME de piezas (triángulos · objetos · con sombra):")
 	for fila: Array in filas.slice(0, 25):
 		print("  %9d  %5d  %5d   %s" % [fila[0], fila[1], fila[2], fila[3]])
@@ -247,8 +295,33 @@ func _ocultar_y_informar() -> void:
 		var otros := filas.filter(func(r: Array) -> bool: return String(r[3]).ends_with("[otros]"))
 		otros.sort_custom(func(a: Array, b: Array) -> bool: return a[1] > b[1])
 		print("OTROS por objetos:")
-		for r: Array in otros.slice(0, 20):
+		for r: Array in otros.slice(0, int(_env("INFORME_N", "20"))):
 			print("  %9d  %5d  %5d   %s" % [r[0], r[1], r[2], r[3]])
+		if _env("INFORME_SUELTAS", "0") == "1":
+			var agg := {}
+			for h in _raiz.get_children():
+				if h is MeshInstance3D and (h as MeshInstance3D).mesh != null and _categoria(h) == "otros":
+					var mi := h as MeshInstance3D
+					var mat := mi.material_override if mi.material_override != null else mi.get_active_material(0)
+					var k := "%s tri=%d mat=%s vis=%s sombra=%d grupos=%s" % [mi.mesh.get_class(), mi.mesh.get_faces().size() / 3, mat.resource_name if mat != null and mat.resource_name != "" else (mat.get_class() if mat != null else "-"), mi.visible, mi.cast_shadow, mi.get_groups()]
+					agg[k] = int(agg.get(k, 0)) + 1
+			var inst := {}
+			var firmas := {}
+			for h in _raiz.get_children():
+				if h is MeshInstance3D and (h as MeshInstance3D).mesh != null and _categoria(h) == "otros":
+					var mi2 := h as MeshInstance3D
+					var m2 := mi2.material_override if mi2.material_override != null else mi2.get_active_material(0)
+					if m2 == null:
+						continue
+					inst[m2.get_instance_id()] = true
+					var sm := m2 as StandardMaterial3D
+					firmas[(var_to_str([sm.albedo_color, sm.roughness, sm.metallic, sm.emission_enabled, sm.emission, sm.transparency, sm.cull_mode, sm.albedo_texture != null]) if sm != null else str(m2.get_instance_id())) + str(mi2.cast_shadow)] = true
+			print("SUELTAS materiales distintos: instancias=", inst.size(), " firmas=", firmas.size())
+			var ks := agg.keys()
+			ks.sort_custom(func(a: String, b: String) -> bool: return agg[a] > agg[b])
+			print("SUELTAS (MeshInstance3D hijos de la raíz, por tipo):")
+			for k: String in ks.slice(0, 40):
+				print("  ", agg[k], " × ", k)
 
 ## Todos los MultiMesh del campo juntos, por nombre: instancias, triángulos por malla y total (el público y las butacas son MultiMesh).
 func _informe_multimesh() -> void:
@@ -273,3 +346,13 @@ func _informe_multimesh() -> void:
 	for c: String in claves.slice(0, 16):
 		var r: Array = por_nombre[c]
 		print("  %-28s %4d %8d %6d %10d %4d" % [c, r[0], r[1], r[3], r[2], r[4]])
+
+func _arbol(n: Node, nivel: int) -> void:
+	var extra := ""
+	if n is MeshInstance3D:
+		var mi := n as MeshInstance3D
+		extra = " %s tri=%d mat=%s" % [mi.mesh.get_class() if mi.mesh != null else "-", (mi.mesh.get_faces().size() / 3) if mi.mesh != null else 0, str(mi.material_override.get_class()) if mi.material_override != null else "-"]
+	print("  ".repeat(nivel), n.name, " (", n.get_class(), ")", extra, " script=", n.get_script() != null, " grupos=", n.get_groups(), " meta=", n.get_meta_list())
+	if nivel < 3:
+		for c in n.get_children():
+			_arbol(c, nivel + 1)
