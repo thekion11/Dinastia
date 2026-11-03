@@ -187,3 +187,9 @@ Lo de `anim_futbol`/`anim_quaternius` (14 MB cada uno): NO son tablas `const` si
 ### Idiomas bajo demanda (3-11)
 `Idiomas` cargaba `idiomas_extra.json` con los 9 idiomas al arrancar (~36-46 MB). Ahora `_asegurar(idioma)` lee solo la tabla del idioma ELEGIDO (setter de `Idiomas.idioma`): en castellano no se carga ninguna; al cambiar se suma la nueva y `origen()` mira solo los ya cargados (un texto solo puede estar en un idioma que se haya cargado). `_asegurar_todos()` para las pruebas y herramientas que recorren los 9.
 Menú, primer fotograma (editor, sin ventana): **749 → 713 MB (−36 MB)** en castellano; autocargas 77 → 44 MB. Prueba: `p6_idiomas_perezoso`. En un idioma no castellano el ahorro es de ~30 MB (se carga solo el suyo).
+
+### Caras reales y autocargas (3-11)
+- Los JSON de caras reales (`caras_reales_mallas.json` 9,6 MB, `biblioteca_caras`, `reales_lista`, `caras_reales_*`) están en el `exclude_filter` de TODOS los presets: el juego público NO los lleva. Medido en `medir_prologo` (CPU, sin ventana, MÍNIMO) con esos archivos ocultos
+  (equivale al build del teléfono): **memoria estática del prólogo 972 MB** frente a 1 199 MB con ellos (en el repo de desarrollo, los datos reales cuestan ~225 MB). El teléfono parte, pues, de ~970 MB estáticos en el prólogo, no de 1,2 GB.
+- Autocargas restantes: tras los idiomas bajo demanda quedan ~13 MB sobre el motor (31 → 44 MB al primer fotograma): no hay nada que merezca tocar.
+- Estado de la RAM del juego en MÍNIMO (prólogo, estático + vídeo): ~970 MB + 216 MB de vídeo; el grueso, ~420 MB de compilar GDScript (ver `compilacion_menu_2026-11-03.md`).
