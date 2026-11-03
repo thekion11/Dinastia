@@ -23,7 +23,8 @@ penales, física del balón): varias cifras ya mejoraron, pero hay que volver a 
 - P1. El partido «sigue siendo un asco»: jugabilidad, movilidad del jugador horrible.
 - P2. En modo jugar: triángulo invertido de color fuerte sobre el jugador controlado.
 - P3. Límites físicos de las zonas de los árbitros (no se meten donde no deben).
-- P4. Cajas de colisión (hitbox): los personajes atraviesan su propio cuerpo y el suelo.
+- P4. Cajas de colisión (hitbox): los personajes atraviesan su propio cuerpo y el suelo. En la FOTO DE EQUIPO los brazos
+  atraviesan a los compañeros (prioridad, 3-11); revisar también la salida de los equipos y el sorteo.
 
 ## Ciudad y mundo abierto (sesión de ciudad)
 - C1. El prólogo aún no carga en su teléfono.
