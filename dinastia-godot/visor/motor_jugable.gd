@@ -36,6 +36,7 @@ func paso(delta: float) -> void:
 			MotorColocacion.actualizar(self, delta)
 			MotorMente.actualizar(self)
 			MotorAdaptacion.actualizar(self, delta)
+			MotorTraza.paso(self)
 			if estado != "juego":
 				_mover_jugadores(delta)
 				_actualizar_balon_visual(delta)

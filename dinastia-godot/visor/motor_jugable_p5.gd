@@ -289,6 +289,7 @@ func _pitar_offside(p: Dictionary) -> bool:
 func _tomar(p: Dictionary) -> void:
 	if poseedor == p:
 		return
+	MotorTraza.tomar(self as Object as MotorJugable, p)   ## traza de posesiones (ciclo 9, solo cuenta)
 	if not _tiro_vivo.is_empty() and _tiro_vivo["p"] != p:
 		## Un tiro fuerte que se topa con un defensor no se controla: se
 		## desvía (muchas veces a córner), como un bloqueo de verdad.
