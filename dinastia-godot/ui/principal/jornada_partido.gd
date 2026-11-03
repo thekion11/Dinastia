@@ -122,6 +122,12 @@ func _dirigir() -> void:
 	var info_clima := Clima.del_partido(p.local.pais, pr.mundo.semana, pr.mundo.anio, p.local.id + p.visita.id)
 	p.fijar_clima(info_clima)
 	pr._escribir("[color=#8ea595]%s Parte del tiempo: %s.[/color]" % [Clima.icono(info_clima), String(info_clima["texto"])])
+	## U6 (3-11): lo que cuesta ESTE partido, desglosado: el viaje si es fuera, abrir el estadio si es en casa.
+	var mio := pr.mundo.mi_club()
+	if p.visita == mio and p.local != mio:
+		pr._escribir("[color=#8ea595]%s[/color]" % Viajes.linea_previa_fuera(p.local.nombre, Viajes.viaje_euros(mio.pais, p.local.pais, mio.rep)))
+	elif p.local == mio:
+		pr._escribir("[color=#8ea595]%s[/color]" % Viajes.linea_previa_casa(Viajes.dia_de_partido_euros(mio.pais, Finanzas.new(mio).asistencia(), mio.estadio_aforo)))
 	var consejo := Clima.consejo(info_clima, p.local == pr.mundo.mi_club())
 	if consejo != "":
 		MentorVoz.decir(pr, pr.mundo, "%s %s" % [Clima.icono(info_clima), String(info_clima["texto"])], consejo)
