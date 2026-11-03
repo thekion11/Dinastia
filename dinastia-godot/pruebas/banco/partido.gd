@@ -168,3 +168,22 @@ func _probar_entrada_momento() -> void:
 	_comprobar(absf(MotorEntrada.radio(motor, def_, victima, 1.25) - (1.25 + MotorEntrada.BANDA)) < 0.001, "pegado a la banda: radio + %.1f" % MotorEntrada.BANDA)
 	MotorEntrada._on = antes
 	(r[1] as Node3D).queue_free()
+
+## GEOMETRÍA DE LA INTERCEPCIÓN (03-11-2026, ciclo 14, `MotorTraza.cortar`): distancia perpendicular del cortador a la línea del pase y tiempo de vuelo; solo cuenta.
+func _probar_traza_corte() -> void:
+	_titulo("TRAZA DE LA INTERCEPCIÓN: DISTANCIA Y TIEMPO")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var rival: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))[0]
+	motor.diag = {}
+	motor.set_meta("_traza_geo", {"t": 10.0, "a": Vector3(0, 0, 0), "b": Vector3(0, 0, 20.0), "rivales": {String(rival["id"]): Vector3(5.0, 0, 10.0)}})
+	motor.t = 11.5
+	MotorTraza.cortar(motor, rival)
+	_comprobar(int(motor.diag.get("traza_corte_perp_corriendo", 0)) == 1, "un defensa a 5 m de la línea tuvo que correr («corriendo»)")
+	_comprobar(int(motor.diag.get("traza_corte_t_lento", 0)) == 1, "un corte a 1,5 s del pase es «lento»")
+	motor.set_meta("_traza_geo", {"t": 20.0, "a": Vector3(0, 0, 0), "b": Vector3(0, 0, 20.0), "rivales": {String(rival["id"]): Vector3(0.5, 0, 8.0)}})
+	motor.t = 20.2
+	MotorTraza.cortar(motor, rival)
+	_comprobar(int(motor.diag.get("traza_corte_perp_en_linea", 0)) == 1, "un defensa a 0,5 m de la línea estaba «en_linea»")
+	_comprobar(int(motor.diag.get("traza_corte_t_rapido", 0)) == 1, "un corte a 0,2 s del pase es «rapido» (sin tiempo de reacción)")
+	(r[1] as Node3D).queue_free()
