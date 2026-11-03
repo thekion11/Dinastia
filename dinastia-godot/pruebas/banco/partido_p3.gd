@@ -355,6 +355,14 @@ func _probar_tiro_fallido() -> void:
 		if d != destino and absf(d.x) < motor.PALO and d.y < motor.LARGUERO:
 			dentro += 1
 	_comprobar(dentro == 0, "un tiro fallido nunca queda dentro del arco (%d de 200)" % dentro)
+	var modo_antes := motor._mod_tiro
+	motor._mod_tiro = "raso"
+	var altos := 0
+	for i in 200:
+		if MotorTiroLimpio.fallar(motor, tirador, Vector3(2.0, 0.3, arco.z), 28.0, 1.0).y > 0.8:
+			altos += 1
+	motor._mod_tiro = modo_antes
+	_comprobar(altos == 0, "un tiro raso fallido nunca sube por encima de 0,8 m (%d de 200)" % altos)
 	MotorTiroLimpio._real = antes
 	(r[1] as Node3D).queue_free()
 
