@@ -61,7 +61,7 @@ func _ver_ciudad_propia(por_partes := false) -> void:
 			ocultados.append(h)
 	var vista := VistaCiudad.new()
 	p.add_child(vista)
-	vista.construir = p._ui_club_vida._empezar_obra
+	vista.construir = func(clave: String) -> String: return p._ui_club_vida._empezar_obra(clave)
 	var prox := p.mundo.proximo_partido()
 	vista.dia_partido = not prox.is_empty() and prox[0] == c
 	vista.animo = CiudadAnimo.de(p.mundo, c)
