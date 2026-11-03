@@ -33,8 +33,9 @@ const GRAVEDAD := 9.81
 const ARRASTRE_K := 0.0128
 const CRISIS_V := 20.7
 const CRISIS_DESC := 8.3
-## Magnus: a = K·(ω×v). Con ω≈50 rad/s y v=25 m/s da ≈8 m/s² (CL≈0,25 real).
-const MAGNUS_K := 0.0064
+## Magnus: a = K·(ω×v). El giro del juego (catalogo_jugadas: 2-22) va en unidades propias,
+## ≈ ω_real/2,5: con giro 15 y v=25 m/s da ≈7,5 m/s² (CL≈0,25 real). No tocar sin revisar el catálogo.
+const MAGNUS_K := 0.02
 ## Restitución en césped: 0,53 + 0,0083·v_horizontal, tope 0,63 (cae más lento = bota menos).
 const RESTITUCION_MIN := 0.53
 const RESTITUCION_MAX := 0.63
