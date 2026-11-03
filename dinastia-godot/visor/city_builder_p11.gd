@@ -153,7 +153,7 @@ func build(d: Dictionary) -> void:
 	await _marca("_suelo")
 	_calles()
 	await _marca("_calles")
-	_estadio()
+	await _estadio()
 	await _marca("_estadio")
 	_campos()
 	await _marca("_campos")
@@ -234,6 +234,8 @@ func _resto() -> void:
 	_t_respiro = Time.get_ticks_usec()
 	_t_marca = _t_respiro
 	await get_tree().process_frame
+	por_partes = true   ## (3-11) quien llamó a `build` lo apaga al volver: sin esto todo lo diferido corría en UN fotograma (~3 s en el servidor, ~30 s en un teléfono)
+	_t_respiro = Time.get_ticks_usec()
 	_karting()
 	await _marca("_karting")
 	_trafico()
