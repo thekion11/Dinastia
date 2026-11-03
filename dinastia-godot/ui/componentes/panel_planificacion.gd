@@ -17,11 +17,32 @@ const MAX_TERMO := 6
 ## Bloques abiertos (se recuerdan mientras dure la sesión).
 static var abiertos := {"plan": true, "tablon": false, "termo": false}
 
+## (2-11, rendimiento) Los textos llevan emojis y darles forma costaba ~30 ms por repintado: los nodos se reusan mientras no cambie
+## nada de lo que muestran (`_firma`), y se marcan `META_AJENO` para que `PanelPlantel.pintar` no los borre.
+const META_FIRMA := "uipl_plan_firma"
+
 static func pintar(lista: VBoxContainer, m: Mundo, texto: Callable, al_cambiar: Callable) -> void:
 	if m == null or m.mi_club() == null:
 		return
 	var c := m.mi_club()
 	var plan := PlanificadorPlantilla.analizar(c)
+	var tab := TablonLiga.necesidades(m, MAX_TABLON)
+	var candidatos: Array = []
+	for n: Dictionary in tab:
+		candidatos.append(candidato(m, n))
+	var mdt := MercadoDT.de(m)
+	var termo := mdt.termometro(m) if mdt != null else []
+	var firma := _firma(m, plan, tab, candidatos, termo, mdt)
+	var propios: Array = []
+	for h in lista.get_children():
+		if h.has_meta(PanelPlantel.META_AJENO):
+			propios.append(h)
+	if not propios.is_empty() and String(lista.get_meta(META_FIRMA, "")) == firma:
+		return
+	for h: Node in propios:
+		lista.remove_child(h)
+		h.queue_free()
+	var antes := lista.get_child_count()
 	var avisos: Array = plan["avisos"]
 	var caja := _bloque(lista, "plan", Idiomas.t("PLANIFICADOR DE PLANTILLA") + ("  ·  %d" % avisos.size() if not avisos.is_empty() else ""), texto)
 	if avisos.is_empty():
@@ -33,8 +54,18 @@ static func pintar(lista: VBoxContainer, m: Mundo, texto: Callable, al_cambiar: 
 		var l: Dictionary = plan["lineas"][g]
 		resumen += "%s %d (%d)   " % [g, int(l["total"]), int(l["quedan"])]
 	_linea(caja, Idiomas.t("Por línea, hoy y (tras el verano): ") + resumen, Principal.COL_SUAVE, texto)
-	_pintar_tablon(lista, m, texto, al_cambiar)
-	_pintar_termometro(lista, m, texto)
+	_pintar_tablon(lista, m, tab, candidatos, texto, al_cambiar)
+	_pintar_termometro(lista, m, termo, mdt, texto)
+	for i in range(antes, lista.get_child_count()):
+		lista.get_child(i).set_meta(PanelPlantel.META_AJENO, true)
+	lista.set_meta(META_FIRMA, firma)
+
+## Todo lo que decide lo que se ve: los datos (objetos por su id, números), la fecha, el idioma, las ofertas ya hechas y la accesibilidad.
+static func _firma(m: Mundo, plan: Dictionary, tab: Array, candidatos: Array, termo: Array, mdt: MercadoDT) -> String:
+	var ofertas := m.mercado.ofertas_recibidas.size() if m.mercado != null else 0
+	var hist := mdt.historial.size() if mdt != null else 0
+	return "%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % [plan, tab, candidatos, termo, m.anio, m.semana, ofertas, hist, Idiomas.idioma,
+		Tema.escala_texto, Tema.daltonico, Tema.contraste]
 
 ## La frase de un aviso del planificador.
 static func frase_aviso(a: Dictionary) -> String:
@@ -59,13 +90,13 @@ static func candidato(m: Mundo, n: Dictionary) -> Jugador:
 			mejor = j
 	return mejor
 
-static func _pintar_tablon(lista: VBoxContainer, m: Mundo, texto: Callable, al_cambiar: Callable) -> void:
-	var tab := TablonLiga.necesidades(m, MAX_TABLON)
+static func _pintar_tablon(lista: VBoxContainer, m: Mundo, tab: Array, candidatos: Array, texto: Callable, al_cambiar: Callable) -> void:
 	var caja := _bloque(lista, "tablon", Idiomas.t("TABLÓN DE LA LIGA: QUÉ BUSCA CADA CLUB"), texto)
 	if tab.is_empty():
 		_linea(caja, Idiomas.t("Ningún club de tu país busca a nadie que pueda pagar."), Principal.COL_SUAVE, texto)
 		return
-	for n: Dictionary in tab:
+	for k in tab.size():
+		var n: Dictionary = tab[k]
 		var fila := HBoxContainer.new()
 		fila.add_theme_constant_override("separation", 8)
 		caja.add_child(fila)
@@ -75,7 +106,7 @@ static func _pintar_tablon(lista: VBoxContainer, m: Mundo, texto: Callable, al_c
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		fila.add_child(l)
-		var j := candidato(m, n)
+		var j := candidatos[k] as Jugador
 		if j == null:
 			continue
 		var b := Button.new()
@@ -91,9 +122,7 @@ static func _pintar_tablon(lista: VBoxContainer, m: Mundo, texto: Callable, al_c
 				al_cambiar.call())
 		fila.add_child(b)
 
-static func _pintar_termometro(lista: VBoxContainer, m: Mundo, texto: Callable) -> void:
-	var mdt := MercadoDT.de(m)
-	var termo := mdt.termometro(m) if mdt != null else []
+static func _pintar_termometro(lista: VBoxContainer, _m: Mundo, termo: Array, mdt: MercadoDT, texto: Callable) -> void:
 	var caja := _bloque(lista, "termo", Idiomas.t("BANQUILLOS CALIENTES"), texto)
 	if termo.is_empty():
 		_linea(caja, Idiomas.t("Aún es pronto: la presión se mide desde la jornada %d.") % MercadoDT.JORNADA_MINIMA, Principal.COL_SUAVE, texto)
