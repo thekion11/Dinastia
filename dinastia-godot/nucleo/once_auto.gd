@@ -1,22 +1,22 @@
 class_name OnceAuto
 ## LA PRIMERA VUELTA DEL ONCE AUTOMÁTICO (M-469, 3-11-2026), sacada de `Club.once`: para cada ranura de la formación (porteros primero) el mejor de los libres según su media en ese
-## puesto, su forma, su moral y lo cómodo que está ahí. Es el bucle que más pesa de la semana (466 onces × ~275 `media_en`): con la extensión nativa (`nativo/src`, `once_asignar`)
+## puesto, su forma, su moral y lo cómodo que está ahí. Es el bucle que más pesa de la semana (466 onces × ~275 `media_en`): con la extensión nativa (`nativo/src`, `once_asignar_libres`)
 ## corre en C++ con las mismas cuentas; sin ella (Web, `DINASTIA_SIN_NATIVO=1`, binario viejo) corre `asignar_gd`, el bucle de siempre. `pruebas/probar_nativo.tscn` compara los dos.
 
 ## {ranura: Jugador} para las ranuras que algún libre pudo ocupar, insertadas en el orden de `orden`.
 static func asignar(libres: Array, ranuras: Array, orden: Array) -> Dictionary:
 	var nat := Nativo.obj()
-	if nat != null and nat.has_method("once_asignar"):
+	if nat != null and nat.has_method("once_asignar_libres"):
 		return _nativo(nat, libres, ranuras, orden)
 	return asignar_gd(libres, ranuras, orden)
 
+## demarcación → grupo (POR/DEF/MED/DEL), una vez: el nativo la pide para el encaje por línea.
+static var _grupo_de: Dictionary = {}
+
 static func _nativo(nat: Object, libres: Array, ranuras: Array, orden: Array) -> Dictionary:
-	var pos_e := PackedStringArray(); var ovr := PackedInt32Array(); var sec: Array = []; var attr: Array = []
-	var fa := PackedFloat64Array(); var fb := PackedFloat64Array(); var por := PackedByteArray(); var ge := PackedStringArray()
-	for j: Jugador in libres:
-		pos_e.append(j.pos_e); ovr.append(j.ovr); sec.append(j.pos_sec); attr.append(j.atributos)
-		fa.append(0.7 + 0.003 * j.forma); fb.append(0.9 + 0.002 * j.moral)
-		por.append(1 if j.pos_e == "POR" else 0); ge.append(PesosPuesto.grupo(j.pos_e))
+	if _grupo_de.is_empty():
+		for k: String in Datos.posd().keys():
+			_grupo_de[k] = PesosPuesto.grupo(k)
 	var puestos := PackedStringArray(); var ks: Array = []; var ws: Array = []
 	var grupos := PackedStringArray(); var por_r := PackedByteArray()
 	for r: Array in ranuras:
@@ -30,8 +30,7 @@ static func _nativo(nat: Object, libres: Array, ranuras: Array, orden: Array) ->
 	var o := PackedInt32Array()
 	for i: int in orden:
 		o.append(i)
-	var res: PackedInt32Array = nat.once_asignar({"puestos": puestos, "ks": ks, "ws": ws, "grupos": grupos, "por": por_r},
-		{"pos_e": pos_e, "ovr": ovr, "sec": sec, "attr": attr, "fa": fa, "fb": fb, "por": por, "ge": ge}, o)
+	var res: PackedInt32Array = nat.once_asignar_libres({"puestos": puestos, "ks": ks, "ws": ws, "grupos": grupos, "por": por_r}, libres, _grupo_de, o)
 	var asignado := {}
 	for i: int in orden:
 		if res[i] >= 0:
