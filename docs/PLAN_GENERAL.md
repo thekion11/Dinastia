@@ -59,6 +59,8 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 4. Ciudad (45/100) y aspecto visual (55/100): rellenar y pulir lo que ya está, sobre todo en MÍNIMA.
 5. Calidad técnica (60/100): bancos (abajo) y mega auditoría.
 
+**Recorte AUTORIZADO por el dueño (3-11) SOLO en calidad MÍNIMA:** tráfico del anillo a la mitad, sin detalles de fachadas (EdificiosDet) y menos peatones lejanos (sesión de ciudad).
+
 **Banco EXTRA DE RENDIMIENTO** (además de los más de 30 especializados): FPS, tiempos de fotograma, llamadas de dibujo, triángulos, memoria y tiempos de carga por pantalla y por calidad, con topes que fallen si algo empeora.
 
 **Evaluación del menú nuevo: 90/100.** Para llegar a 100:
