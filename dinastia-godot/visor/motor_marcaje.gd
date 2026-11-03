@@ -43,6 +43,10 @@ static func objetivo(m: MotorJugable, p: Dictionary, arco: Vector3) -> Vector3:
 		var carril := pm + (m.balon.position - pm).normalized() * 1.6
 		om = om.lerp(carril, 0.5)
 	om.z = clampf(om.z, -m.LARGO + 2.0, m.LARGO - 2.0)
+	## La defensa mantiene la LÍNEA COMÚN en profundidad (M-123) y solo sigue al rival en el ancho: sin esto, los marcadores rompían la línea
+	## y los delanteros quedaban solos (medido: +30 % de goles en 16 partidos).
+	if m._rol(p) in ["DFC", "LD", "LI"] and not m._SIN_LINEA:
+		om.z = m._linea_defensiva(bool(p["es_local"]))
 	return om
 
 ## Reparto vigente {id_del_rival: id_del_marcador} del equipo `local` cuando defiende.
