@@ -16,6 +16,8 @@ func _comprobar(c: bool, que: String) -> void:
 		_fallos += 1
 
 func _ready() -> void:
+	## Los escalones se bajan desde una calidad con sombras: desde el 3-11 la de fábrica es MÍNIMA (sin sol con sombra).
+	Calidad.elegida = Calidad.ALTO
 	var m := Mundo.new()
 	m.generar(["CHI"], 4711)
 	var club: Club = m.ligas[0].clubes[0]
