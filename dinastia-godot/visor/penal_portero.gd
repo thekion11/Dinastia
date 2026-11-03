@@ -17,11 +17,13 @@ static func en_juego(m: MotorJugable, gk: Dictionary, cruce: Vector3) -> void:
 		para = absf(cruce.x) < 1.1 and cruce.y < 2.0
 	elif signf(cruce.x) == float(sitio):
 		var alcance := 1.4 + (float(gk["attr"]["div"]) + ref) * 0.6
-		para = absf(cruce.x) < alcance and cruce.y < (1.6 if absf(cruce.x) > 2.3 else 2.1) and m._rng.randf() < 0.62 + ref * 0.3
+		para = absf(cruce.x) < alcance and cruce.y < (1.6 if absf(cruce.x) > 2.3 else 2.1) and m._rng.randf() < Balance.PENAL_PARA + ref * 0.3
 	if para:
 		MotorParada.programar(m, gk, cruce, sitio != 0)
 		return
-	## Se tira al lado que eligió (y el balón entra o se va por el otro).
+	## Se tira al lado que eligió (y el balón entra o se va por el otro). Si no la paró con el modelo de arriba, tampoco la «ataja» con el
+	## cuerpo al pasar cerca (el recogida de balón suelto lo contaba como parada: la sonda daba ~45 % de penales parados, en el fútbol ~17 %).
+	gk["enfriar"] = maxf(float(gk.get("enfriar", 0.0)), 1.2)
 	if sitio != 0:
 		var lado_anim := "izq" if float(sitio) * m.dir_ataque(bool(gk["es_local"])) > 0.0 else "der"
 		m._anim(gk, "estirada_media_%s" % lado_anim, true)
