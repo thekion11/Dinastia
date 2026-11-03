@@ -38,6 +38,7 @@ func _ready() -> void:
 		_con_pesado(func() -> void: _P().medir(get_tree()))   ## cuando llegue lo pesado
 	_clave = _leer_ajuste()
 	_construir()
+	add_child(AhorroMenu.new())   ## (3-11) en MÍNIMA, sin 3D a la vista: bajo consumo y motas en pausa
 	_pintar_banner()
 	_actualizar_picker()
 	_actualizar_continuar()

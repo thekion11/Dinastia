@@ -188,6 +188,7 @@ func _construir_banner(raiz: VBoxContainer) -> void:
 	_banner.add_child(_fondo_banner2)
 	## Luces desenfocadas flotando sobre la foto, bajo el texto.
 	_bokeh_banner = FondoParticulas.new("bokeh")
+	_bokeh_banner.add_to_group("fondo_particulas")   ## `AhorroMenu` las pausa en MÍNIMA (3-11)
 	_bokeh_banner.amount = 9
 	_banner.add_child(_bokeh_banner)
 

@@ -72,6 +72,7 @@ func _ready() -> void:
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
 	fondo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(fondo)
+	add_child(AhorroMenu.new())   ## (3-11) en MÍNIMA, sin 3D a la vista: bajo consumo y motas en pausa
 	_velo = ColorRect.new()
 	_velo.color = Color.BLACK
 	_velo.set_anchors_preset(Control.PRESET_FULL_RECT)

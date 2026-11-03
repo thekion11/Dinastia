@@ -7,20 +7,46 @@ var _n := 0
 var _dibujados := 0
 var _t0 := 0
 
+## PANTALLA (3-11, orden del líder): qué pantalla se deja quieta y se mide. Vacío = la central; `lateral:<id>` = un menú del panel lateral (plantel, dinero, competiciones,
+## historia, gente, carrera, operaciones, vida, editar, ajustes, ciudad); `inicio` = la portada; `modos` = el menú de modos; `idioma`, `club` = pantallas de la entrada.
+var _pantalla := ""
+
 func _ready() -> void:
 	Calidad.elegida = Calidad.MINIMO if OS.get_environment("MEDIO") == "" else Calidad.MEDIO
+	_pantalla = OS.get_environment("PANTALLA")
+	match _pantalla.get_slice(":", 0):
+		"inicio":
+			_p = load("res://escenas/inicio.tscn").instantiate()
+			add_child(_p)
+			return
+		"idioma", "pais", "config":
+			var ant := {"idioma": PantallaIdioma, "pais": PantallaPais}
+			_p = (ant[_pantalla] as GDScript).new() if ant.has(_pantalla) else PantallaConfigClub.new()
+			add_child(_p)
+			add_child(AhorroMenu.new())
+			return
+		"modos":
+			_p = PantallaModos.new()
+			add_child(_p)
+			add_child(AhorroMenu.new())   ## como el que lleva el orquestador de la entrada
+			return
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 
 func _process(_d: float) -> void:
 	_n += 1
-	if _n == 5:
+	if _n == 5 and _p.has_method("_refrescar"):
 		var m := Mundo.new()
 		m.generar(["CHI", "ARG"], 4711)
 		m.tomar_el_mando(m.ligas[0].clubes[0].id)
 		_p.set("mundo", m)
 		_p.call("_refrescar")
-	if _n == 90:
+	if _n == 30 and _pantalla.begins_with("lateral:"):
+		var id := _pantalla.get_slice(":", 1)
+		for mn: Dictionary in MenuLateral.MENUS:
+			if String(mn["id"]) == id:
+				PantallaMenu.abrir(_p as Principal, mn)
+	if _n == 120:
 		var vp := get_viewport()
 		print("MENU llamadas %d  objetos %d  primitivas %d" % [
 			vp.get_render_info(Viewport.RENDER_INFO_TYPE_VISIBLE, Viewport.RENDER_INFO_DRAW_CALLS_IN_FRAME),
@@ -61,6 +87,6 @@ func _process(_d: float) -> void:
 		_dibujados = 0
 		RenderingServer.frame_post_draw.connect(func() -> void: _dibujados += 1)
 		_t0 = Time.get_ticks_msec()
-	if _n > 90 and _t0 > 0 and Time.get_ticks_msec() - _t0 > 3000:
-		print("MENU en 3 s (bajo consumo=%s): %d fotogramas dibujados" % [str(OS.low_processor_usage_mode), _dibujados])
+	if _n > 120 and _t0 > 0 and Time.get_ticks_msec() - _t0 > 3000:
+		print("MENU %s en 3 s (bajo consumo=%s): %d fotogramas dibujados" % [_pantalla if _pantalla != "" else "central", str(OS.low_processor_usage_mode), _dibujados])
 		get_tree().quit()
