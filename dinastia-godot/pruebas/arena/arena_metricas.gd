@@ -5,7 +5,7 @@ extends Node
 ## llamadas de dibujo, triángulos, objetos 3D, nodos y memoria de vídeo. Al terminar imprime la mediana de cada columna.
 ## En una máquina sin GPU (llvmpipe) el tiempo no vale entre máquinas: comparar llamadas, triángulos y memoria (CLAUDE.md, orden 19).
 
-const COLUMNAS := ["fps_medio", "fps_min", "ms_fotograma", "ms_proceso", "ms_fisica", "llamadas", "triangulos", "objetos", "nodos", "vram_mb"]
+const COLUMNAS := ["fps_medio", "fps_min", "ms_fotograma", "ms_proceso", "ms_fisica", "llamadas", "triangulos", "objetos", "nodos", "vram_mb", "hilos"]
 
 var modo := "arena"
 var _t := 0.0
@@ -45,6 +45,7 @@ func _process(delta: float) -> void:
 		"objetos": Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME),
 		"nodos": Performance.get_monitor(Performance.OBJECT_NODE_COUNT),
 		"vram_mb": Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0,
+		"hilos": float(hilos_del_proceso()),
 	}
 	filas.append(fila)
 	if _archivo != null:
@@ -83,3 +84,40 @@ func imprimir_resumen() -> void:
 	print("ARENA %s · %d s medidos · medianas:" % [modo, filas.size()])
 	for c: String in COLUMNAS:
 		print("  %-14s %.2f" % [c, m[c]])
+
+## Hilos del proceso (Linux y Android: /proc/self/task); 0 donde no existe. R5: los subprocesos que de verdad corren durante el partido.
+static func hilos_del_proceso() -> int:
+	var d := DirAccess.open("/proc/self/task")
+	return d.get_directories().size() if d != null else 0
+
+## Nombre de cada hilo y cuántos hay con ese nombre (comm del kernel; los de Godot se nombran: «WorkerThread», «Audio»…).
+static func hilos_por_nombre() -> Dictionary:
+	var out := {}
+	var d := DirAccess.open("/proc/self/task")
+	if d == null:
+		return out
+	for id: String in d.get_directories():
+		var fa := FileAccess.open("/proc/self/task/%s/comm" % id, FileAccess.READ)
+		var n := fa.get_line().strip_edges() if fa != null else "?"
+		out[n] = int(out.get(n, 0)) + 1
+	return out
+
+## CPU consumida por cada hilo hasta ahora (ticks del kernel, 1/100 s): {tid: [nombre, utime+stime]}. Se resta una muestra de otra para ver
+## qué hilos trabajan durante el partido y cuáles están parados (R5).
+static func cpu_por_hilo() -> Dictionary:
+	var out := {}
+	var d := DirAccess.open("/proc/self/task")
+	if d == null:
+		return out
+	for id: String in d.get_directories():
+		var f := FileAccess.open("/proc/self/task/%s/stat" % id, FileAccess.READ)
+		if f == null:
+			continue
+		var linea := f.get_line()
+		var a := linea.find("(")
+		var b := linea.rfind(")")
+		if a < 0 or b < 0:
+			continue
+		var campos := linea.substr(b + 2).split(" ")
+		out[id] = [linea.substr(a + 1, b - a - 1), int(campos[11]) + int(campos[12])]
+	return out
