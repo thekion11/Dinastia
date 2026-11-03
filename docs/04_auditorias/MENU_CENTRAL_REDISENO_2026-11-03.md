@@ -39,3 +39,11 @@ jugador elige cuáles (los «favoritos» de Ajustes ya existen). Junto con la se
 3. Central nuevo (próximo partido 1-2 días antes, objetivos minimizados, ☀️, confianza arriba).
 4. Guardado automático + pregunta al salir; Guardar/Cargar/Otro mundo a Ajustes.
 5. Medir la RAM del menú (.pck precompilado) tras cada paso.
+
+## Decisiones del dueño (3-11, respuesta)
+- ATAJOS: NO se ven en pantalla. Son teclas internas (p. ej. «P» abre la central de plantilla), reasignables en Ajustes, y
+  CUALQUIER menú (del central o secundario) puede tener una. Base: `AtajosCentrales` (ya existe, 1-9/0, N, F3, F5, InputMap y
+  `TeclasInterfaz`): se amplía a todas las pantallas y se cambian las teclas por defecto a letras con sentido.
+  En el teléfono (sin teclado) se entra por el lateral; con mando, los atajos que ya tenga.
+- TABLA DE LA LIGA: se queda en el central tal cual; la versión detallada va a Competiciones.
+- PRÓXIMO PARTIDO: línea mínima siempre; la tarjeta grande solo 1-2 días antes.
