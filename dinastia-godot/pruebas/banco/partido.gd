@@ -112,3 +112,30 @@ func _probar_saque_seguro() -> void:
 	_comprobar(apagado.is_empty() or bool(apagado["es_local"]), "apagado delega en el selector de siempre (devuelve un compañero)")
 	MotorSaque._on = antes
 	(r[1] as Node3D).queue_free()
+
+## LOS COMPAÑEROS SE OFRECEN EN EL SAQUE DE BANDA (03-11-2026, ciclo 11, `MotorSaque.oferta`, bandera SAQUE_OFRECE): los dos más cercanos al lanzador se ofrecen hacia dentro; apagado = base.
+func _probar_saque_ofrece() -> void:
+	_titulo("LOS COMPAÑEROS SE OFRECEN EN EL SAQUE DE BANDA")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var locales: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var rival: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))[0]
+	var lugar := Vector3(motor.ANCHO, 0, 10.0)
+	var lanzador: Dictionary = locales[0]
+	motor.saque = {"tipo": "banda", "local": true, "lugar": lugar, "lanzador": lanzador}
+	for i in locales.size():
+		(locales[i]["node"] as Node3D).position = Vector3(lugar.x - 3.0 * i - 2.0, 0, lugar.z + 1.5 * i)
+	var base := Vector3(1.0, 0, 2.0)
+	var antes := MotorSaque._ofrece
+	MotorSaque._ofrece = false
+	_comprobar(MotorSaque.oferta(motor, locales[1], lugar, true, base) == base, "apagado devuelve la posición base")
+	MotorSaque._ofrece = true
+	var o1 := MotorSaque.oferta(motor, locales[1], lugar, true, base)
+	var o2 := MotorSaque.oferta(motor, locales[2], lugar, true, base)
+	_comprobar(o1 != base and o1.x < lugar.x and absf(o1.x - lugar.x) < 8.0, "el más cercano se ofrece corto, hacia dentro del campo (x %.1f)" % o1.x)
+	_comprobar(o2 != base and o2.x < o1.x, "el segundo se ofrece más adentro y en diagonal (x %.1f)" % o2.x)
+	_comprobar(MotorSaque.oferta(motor, locales[5], lugar, true, base) == base, "el tercero y los demás siguen con su base")
+	_comprobar(MotorSaque.oferta(motor, rival, lugar, true, base) == base, "el equipo que no saca no se coloca por este sistema")
+	_comprobar(MotorSaque.oferta(motor, lanzador, lugar, true, base) == base, "el lanzador no cambia")
+	MotorSaque._ofrece = antes
+	(r[1] as Node3D).queue_free()

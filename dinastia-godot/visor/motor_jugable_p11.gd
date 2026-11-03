@@ -23,6 +23,8 @@ func _colocar_saque(delta: float) -> void:
 			obj = _pos_balon_parado(p, lugar, saca_local)
 		else:
 			obj = _forma(p, bool(p["es_local"]) == saca_local)
+			if tipo == "banda":
+				obj = MotorSaque.oferta(self as Object as MotorJugable, p, lugar, saca_local, obj)   ## los compañeros se ofrecen (ciclo 11, SAQUE_OFRECE)
 		if bool(p["por"]) and tipo != "puerta" and not (tipo == "penal"):
 			obj = _ia_portero_saque(p)
 		p["objetivo"] = obj

@@ -29,3 +29,31 @@ static func receptor(m: MotorJugable, p: Dictionary, tipo: String) -> Dictionary
 			mejor_nota = nota
 			mejor = q
 	return mejor if not mejor.is_empty() else m._mejor_pase(p)
+
+## LOS COMPAÑEROS SE OFRECEN EN EL SAQUE DE BANDA (ciclo 11, bandera `SAQUE_OFRECE=1`). Antes, mientras el lanzador sacaba, todos iban a su puesto normal (`_forma`) y nadie se ofrecía cerca.
+## Ahora los DOS compañeros más cercanos al lanzador (sin porteros) se ofrecen hacia dentro del campo: el primero corto y algo adelantado (5 m al interior, 4 m hacia el arco rival) y el segundo
+## en diagonal (9 m al interior, 3 m atrás). Los demás y el equipo que no saca siguen con `base`. Apagado: devuelve `base`.
+const OFERTA_A := Vector3(5.0, 0.0, 4.0)
+const OFERTA_B := Vector3(9.0, 0.0, -3.0)
+static var _ofrece := OS.get_environment("SAQUE_OFRECE") == "1"
+
+static func oferta(m: MotorJugable, p: Dictionary, lugar: Vector3, saca_local: bool, base: Vector3) -> Vector3:
+	if not _ofrece or bool(p["es_local"]) != saca_local or bool(p["por"]):
+		return base
+	var lanzador: Dictionary = (m.saque as Dictionary).get("lanzador", {})
+	var cercanos: Array = []
+	for q: Dictionary in m.jugadores:
+		if bool(q["es_local"]) == saca_local and not bool(q["por"]) and q != lanzador:
+			cercanos.append(q)
+	cercanos.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var da := m.pos(a).distance_to(lugar)
+		var db := m.pos(b).distance_to(lugar)
+		return da < db if absf(da - db) > 0.01 else String(a["id"]) < String(b["id"]))
+	var rango := cercanos.find(p)
+	if rango != 0 and rango != 1:
+		return base
+	var dentro := -signf(lugar.x) if absf(lugar.x) > 0.01 else 1.0
+	var dz := m.dir_ataque(saca_local)
+	var o := OFERTA_A if rango == 0 else OFERTA_B
+	var obj := Vector3(lugar.x + dentro * o.x, 0.0, lugar.z + dz * o.z)
+	return Vector3(clampf(obj.x, -m.ANCHO + 1.0, m.ANCHO - 1.0), 0.0, clampf(obj.z, -m.LARGO + 1.0, m.LARGO - 1.0))
