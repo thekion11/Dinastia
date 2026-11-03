@@ -119,7 +119,7 @@ static func factor_visita(info: Dictionary, pais_visita: String, pais_local: Str
 ## Un emoji para el parte.
 static func icono(info: Dictionary) -> String:
 	if bool(info.get("calor", false)):
-		return "🥵"
+		return "☀️"   ## (3-11, pedido del dueño: «solo un sol»)
 	return {"nieve": "❄️", "lluvia": "🌧️", "tormenta": "⛈️", "niebla": "🌫️",
 		"noche": "🌙", "tarde": "🌇", "dia": "☀️"}.get(String(info.get("clave", "")), "🌤️")
 

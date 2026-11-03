@@ -7149,7 +7149,15 @@
   "Guardar y salir": "Save and quit",
   "Salir sin guardar": "Quit without saving",
   "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "The game [b]saves by itself[/b]: every day, every week and at the end of every match; and when you quit it asks whether to save. Saving and loading by hand is in [b]Settings → Game and saving[/b] (the ⚙️ button).",
-  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Saves by itself every day, every week and at the end of every match, without stopping the game, in the same slot as \"Save\"."
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Saves by itself every day, every week and at the end of every match, without stopping the game, in the same slot as \"Save\".",
+  "⚽ Semana sin partido: entrenamiento doble.": "⚽ No match this week: double training.",
+  "Próximo:": "Next:",
+  "sin tecla": "no key",
+  "El menú entero": "The whole menu",
+  "General": "General",
+  "Atajos del menú": "Menu shortcuts",
+  "Atajos generales": "General shortcuts",
+  "Quitar": "Remove"
  },
  "pt": {
   "Historia": "História",
@@ -14301,7 +14309,15 @@
   "Guardar y salir": "Guardar e sair",
   "Salir sin guardar": "Sair sem guardar",
   "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "O jogo [b]guarda sozinho[/b]: todos os dias, todas as semanas e no fim de cada partida; e ao sair pergunta se queres guardar. Guardar e carregar à mão está em [b]Ajustes → Partida e salvamento[/b] (o botão ⚙️).",
-  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Guarda sozinho em cada dia, em cada semana e no fim de cada partida, sem parar o jogo, na mesma ranhura de \"Guardar\"."
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Guarda sozinho em cada dia, em cada semana e no fim de cada partida, sem parar o jogo, na mesma ranhura de \"Guardar\".",
+  "⚽ Semana sin partido: entrenamiento doble.": "⚽ Semana sem jogo: treino duplo.",
+  "Próximo:": "Próximo:",
+  "sin tecla": "sem tecla",
+  "El menú entero": "O menu inteiro",
+  "General": "Geral",
+  "Atajos del menú": "Atalhos do menu",
+  "Atajos generales": "Atalhos gerais",
+  "Quitar": "Remover"
  },
  "patrones": [
   [
@@ -20100,6 +20116,28 @@
    "$1S'ha quedat en $2 graderia(es): per a més cal pujar la tribuna a Obres. Reforma en obres: $3 setmana(es). Fins aleshores es juga a l'estadi de sempre.",
    "$1Zostało $2 poziom(ów): aby było więcej, trzeba podnieść trybunę w Robotach. Przebudowa w toku: $3 tydz. Do tego czasu gramy na zwykłym stadionie.",
    "$1$2 katta kaldı: daha fazlası için tribünü İnşaat'ta yükseltmek gerekiyor. Tadilat sürüyor: $3 hafta. O zamana kadar her zamanki stadyumda oynanıyor."
+  ],
+  [
+   "^El segundo informe confirma punto por punto el diagnóstico del cuerpo médico\\. Dinero bien gastado en tranquilidad\\. Se queda en (\\d+) semana\\(s\\)\\.$",
+   "The second report confirms the medical staff's diagnosis point by point. Money well spent on peace of mind. He stays out for $1 week(s).",
+   "O segundo relatório confirma ponto por ponto o diagnóstico do corpo médico. Dinheiro bem gasto em tranquilidade. Fica $1 semana(s).",
+   "Le second avis confirme point par point le diagnostic du staff médical. De l'argent bien dépensé pour être tranquille. Il reste $1 semaine(s).",
+   "Il secondo referto conferma punto per punto la diagnosi dello staff medico. Soldi ben spesi per stare tranquilli. Resta fuori $1 settimana/e.",
+   "Das zweite Gutachten bestätigt die Diagnose der medizinischen Abteilung Punkt für Punkt. Gut angelegtes Geld für die Ruhe. Er fällt $1 Woche(n) aus.",
+   "El segon informe confirma punt per punt el diagnòstic del cos mèdic. Diners ben gastats en tranquil·litat. Es queda $1 setmana(es).",
+   "Druga opinia potwierdza punkt po punkcie diagnozę sztabu medycznego. Dobrze wydane pieniądze dla spokoju. Pauzuje $1 tydz.",
+   "İkinci rapor sağlık ekibinin teşhisini madde madde doğruluyor. Huzur için iyi harcanmış para. $1 hafta yok."
+  ],
+  [
+   "^No se puede becar: no hay caja: cuesta (\\d+) y tienes (\\d+)\\.$",
+   "Can't grant the scholarship: no cash: it costs $1 and you have $2.",
+   "Não é possível dar a bolsa: não há caixa: custa $1 e tens $2.",
+   "Impossible d'accorder la bourse : pas de trésorerie : elle coûte $1 et tu as $2.",
+   "Non si può dare la borsa: non c'è cassa: costa $1 e hai $2.",
+   "Stipendium nicht möglich: keine Kasse: kostet $1 und du hast $2.",
+   "No es pot becar: no hi ha caixa: costa $1 i tens $2.",
+   "Nie można przyznać stypendium: brak środków: kosztuje $1, a masz $2.",
+   "Burs verilemez: kasa yok: maliyeti $1, sende $2 var."
   ]
  ],
  "fr": {
@@ -27252,7 +27290,15 @@
   "Guardar y salir": "Sauvegarder et quitter",
   "Salir sin guardar": "Quitter sans sauvegarder",
   "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "Le jeu [b]sauvegarde tout seul[/b] : chaque jour, chaque semaine et à la fin de chaque match ; en quittant, il demande s'il faut sauvegarder. Sauvegarder et charger à la main se fait dans [b]Réglages → Partie et sauvegarde[/b] (le bouton ⚙️).",
-  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Sauvegarde tout seul chaque jour, chaque semaine et à la fin de chaque match, sans arrêter le jeu, dans le même emplacement que « Sauvegarder »."
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Sauvegarde tout seul chaque jour, chaque semaine et à la fin de chaque match, sans arrêter le jeu, dans le même emplacement que « Sauvegarder ».",
+  "⚽ Semana sin partido: entrenamiento doble.": "⚽ Semaine sans match : double entraînement.",
+  "Próximo:": "Prochain :",
+  "sin tecla": "sans touche",
+  "El menú entero": "Le menu entier",
+  "General": "Général",
+  "Atajos del menú": "Raccourcis du menu",
+  "Atajos generales": "Raccourcis généraux",
+  "Quitar": "Retirer"
  },
  "it": {
   "Historia": "Storia",
@@ -34404,7 +34450,15 @@
   "Guardar y salir": "Salva ed esci",
   "Salir sin guardar": "Esci senza salvare",
   "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "Il gioco [b]salva da solo[/b]: ogni giorno, ogni settimana e alla fine di ogni partita; e quando esci chiede se salvare. Salvare e caricare a mano si fa in [b]Impostazioni → Partita e salvataggio[/b] (il pulsante ⚙️).",
-  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Salva da solo ogni giorno, ogni settimana e alla fine di ogni partita, senza fermare il gioco, nello stesso slot di \"Salva\"."
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Salva da solo ogni giorno, ogni settimana e alla fine di ogni partita, senza fermare il gioco, nello stesso slot di \"Salva\".",
+  "⚽ Semana sin partido: entrenamiento doble.": "⚽ Settimana senza partita: doppio allenamento.",
+  "Próximo:": "Prossimo:",
+  "sin tecla": "nessun tasto",
+  "El menú entero": "L'intero menu",
+  "General": "Generale",
+  "Atajos del menú": "Scorciatoie del menu",
+  "Atajos generales": "Scorciatoie generali",
+  "Quitar": "Rimuovi"
  },
  "de": {
   "Historia": "Geschichte",
@@ -41556,7 +41610,15 @@
   "Guardar y salir": "Speichern und beenden",
   "Salir sin guardar": "Ohne Speichern beenden",
   "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "Das Spiel [b]speichert von selbst[/b]: jeden Tag, jede Woche und am Ende jedes Spiels; beim Beenden fragt es, ob gespeichert werden soll. Manuell speichern und laden findest du unter [b]Einstellungen → Spielstand und Speichern[/b] (die Schaltfläche ⚙️).",
-  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Speichert von selbst jeden Tag, jede Woche und am Ende jedes Spiels, ohne das Spiel anzuhalten, im selben Platz wie \"Speichern\"."
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Speichert von selbst jeden Tag, jede Woche und am Ende jedes Spiels, ohne das Spiel anzuhalten, im selben Platz wie \"Speichern\".",
+  "⚽ Semana sin partido: entrenamiento doble.": "⚽ Woche ohne Spiel: doppeltes Training.",
+  "Próximo:": "Nächstes:",
+  "sin tecla": "keine Taste",
+  "El menú entero": "Das ganze Menü",
+  "General": "Allgemein",
+  "Atajos del menú": "Menü-Tastenkürzel",
+  "Atajos generales": "Allgemeine Tastenkürzel",
+  "Quitar": "Entfernen"
  },
  "ca": {
   "Historia": "Història",
@@ -48708,7 +48770,15 @@
   "Guardar y salir": "Desar i sortir",
   "Salir sin guardar": "Sortir sense desar",
   "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "El joc [b]desa tot sol[/b]: cada dia, cada setmana i en acabar cada partit; i en sortir et pregunta si vols desar. Desar i carregar a mà és a [b]Ajustos → Partida i desament[/b] (el botó ⚙️).",
-  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Desa tot sol cada dia, cada setmana i en acabar cada partit, sense aturar el joc, a la mateixa ranura de \"Desar\"."
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Desa tot sol cada dia, cada setmana i en acabar cada partit, sense aturar el joc, a la mateixa ranura de \"Desar\".",
+  "⚽ Semana sin partido: entrenamiento doble.": "⚽ Setmana sense partit: entrenament doble.",
+  "Próximo:": "Proper:",
+  "sin tecla": "sense tecla",
+  "El menú entero": "El menú sencer",
+  "General": "General",
+  "Atajos del menú": "Dreceres del menú",
+  "Atajos generales": "Dreceres generals",
+  "Quitar": "Treure"
  },
  "pl": {
   "Club": "Klub",
@@ -56129,7 +56199,15 @@
   "Guardar y salir": "Zapisz i wyjdź",
   "Salir sin guardar": "Wyjdź bez zapisywania",
   "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "Gra [b]zapisuje się sama[/b]: każdego dnia, co tydzień i po każdym meczu; przy wyjściu pyta, czy zapisać. Ręczny zapis i wczytanie są w [b]Ustawienia → Gra i zapis[/b] (przycisk ⚙️).",
-  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Zapisuje się sam co dzień, co tydzień i po każdym meczu, bez zatrzymywania gry, w tym samym miejscu co \"Zapisz\"."
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Zapisuje się sam co dzień, co tydzień i po każdym meczu, bez zatrzymywania gry, w tym samym miejscu co \"Zapisz\".",
+  "⚽ Semana sin partido: entrenamiento doble.": "⚽ Tydzień bez meczu: podwójny trening.",
+  "Próximo:": "Następny:",
+  "sin tecla": "brak klawisza",
+  "El menú entero": "Całe menu",
+  "General": "Ogólne",
+  "Atajos del menú": "Skróty menu",
+  "Atajos generales": "Skróty ogólne",
+  "Quitar": "Usuń"
  },
  "tr": {
   "Club": "Kulüp",
@@ -63550,6 +63628,14 @@
   "Guardar y salir": "Kaydet ve çık",
   "Salir sin guardar": "Kaydetmeden çık",
   "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "Oyun [b]kendiliğinden kaydeder[/b]: her gün, her hafta ve her maçın sonunda; çıkarken kaydetmek isteyip istemediğini sorar. Elle kaydetme ve yükleme [b]Ayarlar → Oyun ve kayıt[/b] bölümündedir (⚙️ düğmesi).",
-  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Her gün, her hafta ve her maçın sonunda, oyunu durdurmadan, \"Kaydet\" ile aynı yuvaya kendiliğinden kaydeder."
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Her gün, her hafta ve her maçın sonunda, oyunu durdurmadan, \"Kaydet\" ile aynı yuvaya kendiliğinden kaydeder.",
+  "⚽ Semana sin partido: entrenamiento doble.": "⚽ Maçsız hafta: çift antrenman.",
+  "Próximo:": "Sıradaki:",
+  "sin tecla": "tuş yok",
+  "El menú entero": "Tüm menü",
+  "General": "Genel",
+  "Atajos del menú": "Menü kısayolları",
+  "Atajos generales": "Genel kısayollar",
+  "Quitar": "Kaldır"
  }
 }

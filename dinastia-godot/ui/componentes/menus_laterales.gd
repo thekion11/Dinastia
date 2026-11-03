@@ -7,7 +7,7 @@ extends RefCounted
 const MENUS := [
 	## 3-11 (orden 22 U6): el día a día (plantel, plata y competiciones) solo se abría tocando zonas de la
 	## pantalla central (los HUBS de `principal_p1.gd`); el dueño no lo encontraba. Ahora también aquí.
-	{"id": "plantel", "icono": "👔", "nombre": "Plantel", "estilo": 8,
+	{"id": "plantel", "icono": "👔", "nombre": "Plantel", "estilo": 8, "ficha": true,
 		"lema": "Tus jugadores: el once, la pizarra y cómo llegan al partido.",
 		"colores": ["#07130c", "#113a22", "#9be7b4"], "subs": [
 		{"tab": "Mi plantel", "label": "Mi plantel", "icono": "👥", "desc": "Fichas, forma, moral y el once."},

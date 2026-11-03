@@ -39,8 +39,9 @@ static func crear(principal: Node, modo: String) -> PanelObjetivos:
 		principal.connect("vista_cambiada", p._avisado)
 	## Sin preferencia guardada: en pantallas estrechas (1280x720) arranca
 	## plegado; desplegado tapaba la ficha del jugador (MEGAPLAN fase 1).
-	var guardado: Variant = _leer("plegado_v2", null)
-	p._plegado = bool(guardado) if guardado != null else _pantalla_estrecha(principal)
+	## (3-11, pedido del dueño) Minimizados por defecto, en cualquier pantalla; se estiran al tocar la pestaña 🎯.
+	var guardado: Variant = _leer("plegado_v3", null)
+	p._plegado = bool(guardado) if guardado != null else true
 	p._montar()
 	return p
 
@@ -128,7 +129,7 @@ func _montar() -> void:
 	_pestana.tooltip_text = Idiomas.t("Mostrar u ocultar los objetivos")
 	_pestana.pressed.connect(func() -> void:
 		_plegado = not _plegado
-		_escribir("plegado_v2", _plegado)
+		_escribir("plegado_v3", _plegado)
 		_aplicar_plegado())
 	h.add_child(_pestana)
 	_cuerpo = VBoxContainer.new()
