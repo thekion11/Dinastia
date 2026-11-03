@@ -65,8 +65,19 @@ static func _md5(b: PackedByteArray) -> PackedByteArray:
 
 ## Escribe con temporal, comprobación y rotación de copias. Si algo falla, el
 ## principal y sus copias quedan como estaban.
-static func escribir(ruta: String, crudo: PackedByteArray) -> bool:
-	Partida._cabeceras.erase(ruta)   ## la cabecera en caché de `Partida.listar` ya no vale
+## `invalidar_cabecera`: false desde el hilo del guardado en segundo plano (la caché es del hilo principal y la invalida quien lo pide). El cerrojo evita que
+## dos escrituras (la del hilo y un guardado normal) toquen el mismo archivo a la vez.
+static var _cerrojo := Mutex.new()
+
+static func escribir(ruta: String, crudo: PackedByteArray, invalidar_cabecera := true) -> bool:
+	_cerrojo.lock()
+	var ok_escrito := _escribir_con_cerrojo(ruta, crudo, invalidar_cabecera)
+	_cerrojo.unlock()
+	return ok_escrito
+
+static func _escribir_con_cerrojo(ruta: String, crudo: PackedByteArray, invalidar_cabecera: bool) -> bool:
+	if invalidar_cabecera:
+		Partida._cabeceras.erase(ruta)   ## la cabecera en caché de `Partida.listar` ya no vale
 	var t0 := Time.get_ticks_msec()
 	var paquete := empaquetar(crudo)
 	var tmp := ruta + TEMPORAL

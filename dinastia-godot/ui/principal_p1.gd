@@ -153,7 +153,8 @@ var _lista_clubes: VBoxContainer
 var _lista_desafios: VBoxContainer
 var _lista_tactica: VBoxContainer
 var _clubes_ficha: Club = null
-var _autoguardado := false
+## Siempre activo por defecto (3-11): guarda al pasar cada día, cada semana y al acabar cada partido, en segundo plano (`GuardadoSegundoPlano`).
+var _autoguardado := true
 ## `vCorreo()` del HTML lee `G.noticias`, poblado por su función
 ## `noticia(titulo,cuerpo)` en **372 sitios** del juego. Aquí el motor solo
 ## dispara los ~20 avisos que ya conecta `_conectar_noticias()` -ponerlos al
