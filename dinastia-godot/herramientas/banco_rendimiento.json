@@ -1,0 +1,18 @@
+{
+ "partido_minima": {
+  "llamadas": 491.7,
+  "triangulos": 591741.7,
+  "objetos": 683.1,
+  "vram_mb": 140.0
+ },
+ "partido_media": {
+  "llamadas": 1404.7,
+  "triangulos": 1838439.9,
+  "objetos": 1600.5,
+  "vram_mb": 189.2
+ },
+ "aperturas": {
+  "peor_ms": 1925.0,
+  "pantallas": 134.0
+ }
+}
