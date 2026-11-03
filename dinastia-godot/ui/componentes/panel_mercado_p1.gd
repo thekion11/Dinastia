@@ -309,6 +309,7 @@ func _pintar_lista(mio: Club) -> void:
 		_caja_lista.add_child(vac)
 		return
 	var g := GridContainer.new()
+	CebraRejilla.poner(g)
 	g.columns = 6
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 8)
