@@ -39,7 +39,8 @@ static func escala_3d(nivel: int = -99) -> float:
 ## el bueno: ALTO se aligero por dentro (sombra 600m/4096 -> 420m/2048, MSAA
 ## x4 -> x2 -ver `sol()`/`aplicar_viewport()` mas abajo-) en vez de bajar de
 ## nivel. Medido con `pruebas/medir_rendimiento.gd` antes/despues, ver LEEME.md del historial de git.
-static var elegida: int = ALTO
+## R1 (3-11, prueba del dueño: 5 FPS en MEDIA en su teléfono): el nivel por defecto es el MÁS BAJO en todas las plataformas; el jugador sube si quiere.
+static var elegida: int = MINIMO
 ## Bajar efectos durante el partido si los FPS caen de 40 (ver
 ## `RendimientoAdaptativo`). Encendido por defecto; se apaga en Ajustes.
 static var adaptativa: bool = true

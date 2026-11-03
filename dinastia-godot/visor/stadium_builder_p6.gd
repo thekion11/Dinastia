@@ -104,6 +104,8 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var filas_semilla := filas
 	if butaca_detalle_filas < 99:
 		filas = mini(filas, butaca_detalle_filas) if bandeja == 0 else 0
+	if Calidad.elegida <= Calidad.MINIMO:
+		filas = 0   ## R2 (3-11): en MÍNIMO ninguna butaca de 1.944 triángulos (~1,2 M potenciales): todas la ligera
 	## ¿QUÉ BORDE DEL DECK ES EL DE ABAJO? (29-9-2026). Se daba por hecho que
 	## el lado local negativo, y en las tribunas giradas al revés -la mitad-
 	## las filas de butacas 3D y el público denso acababan ARRIBA DEL TODO,
@@ -168,9 +170,9 @@ static func _paleta_grada(est: Dictionary, bandeja: int, largo: float, lateral: 
 	## bueno): más filas con la persona de detalle (4 → 7 en ALTO) y con la de
 	## nivel medio (8 → 12). Desde la quinta fila se veían bloques sin cabeza.
 	var filas_medio := 12
-	var filas_detalle: int = (10 if Calidad.elegida >= Calidad.ULTRA else 7) if Calidad.elegida >= Calidad.ALTO else 3
+	var filas_detalle: int = (10 if Calidad.elegida >= Calidad.ULTRA else 7) if Calidad.elegida >= Calidad.ALTO else (0 if Calidad.elegida <= Calidad.MINIMO else 3)
 	## Un hincha por asiento ocupado: tres por grupo (dos en calidad Media).
-	var por_grupo: int = 3 if Calidad.elegida >= Calidad.ALTO else 2
+	var por_grupo: int = 3 if Calidad.elegida >= Calidad.ALTO else (1 if Calidad.elegida <= Calidad.MINIMO else 2)   ## MÍNIMO: uno por grupo (R2)
 	var eje_largo := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
 	var eje_rake := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
 	return {"base_i1": base_i1, "base_i2": base_i2, "colores_hincha": colores_hincha, "visita": visita, "v1": v1, "v2": v2, "corte_visita": corte_visita,
@@ -345,7 +347,8 @@ static func _montar_grada(deck: MeshInstance3D, mm: MultiMesh, mm_lejos: MultiMe
 	if mm_lejos.instance_count > 0:
 		_nodo_butacas(deck, mm_lejos, "ButacasLejos", 0.5, 0.0, 0.25, 0.4)
 	## Plástico de butaca con brillo suave de barniz (calidad de material, 27-10-2026): el respaldo y el asiento recogen la luz del sol bajo.
-	_nodo_butacas(deck, mm, "ButacasCerca", 0.45, 0.05, 0.3, 0.35)
+	if mm.instance_count > 0:
+		_nodo_butacas(deck, mm, "ButacasCerca", 0.45, 0.05, 0.3, 0.35)
 
 	## Personas reales (mallas horneadas) en la bandeja baja; el maniquí queda para
 	## el resto y como respaldo si faltan los recursos.

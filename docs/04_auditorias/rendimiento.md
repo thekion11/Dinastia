@@ -117,3 +117,22 @@ Mismo mecanismo que filtros y leyenda: lo que lleva símbolos de fuente de respa
 Medido (`medir_interfaz`, la pieza `_pintar_plantel`, tres pasadas cada uno, máquina con ruido): **~100 ms → ~40 ms** (base 90-127; ahora 33-53). Aislado: el planificador 38 → ~6 ms (solo los datos); el resto sale de las filas. Prueba ampliada `pruebas/ideas/rend_plantel_fijas.tscn`: repintar sin cambios deja las mismas 156 celdas; cambiar un jugador rehace solo su fila (150 de 156 celdas intactas); el planificador sobrevive al repintado del plantel y se rehace al pasar la semana; plantel vacío libera todo. `uipl_plantel`, `uipl_textos`, `s3_accesibilidad`, `s6_panel_plan` y banco: 0 fallos.
 Visual: `visual.sh` da 20/20 «CAMBIÓ» en este entorno también con la rama del líder SIN mis cambios (mismo bloque (31,15)), así que comparé a mano las 20 capturas con y sin el cambio: idénticas salvo ~17 píxeles de ruido en todas, y en `plantel` y `tactica` unos píxeles de más en las caras en miniatura (tono de la textura de cara, no el diseño; ya pasaba en la pasada anterior).
 
+## R1 + R2 · Calidad MÍNIMA por defecto y qué pesa el estadio (3-11, orden 22: 5 FPS en el teléfono del dueño, GPU al 100 %)
+**R1.** El nivel por defecto es **MÍNIMA en todas las plataformas** (`Calidad.elegida`, el asistente de configuración, `CalidadAuto` y la «recomendada» del paso de gráficos); el sorteo y la rueda de prensa ya no fuerzan ALTO: usan el nivel elegido. Se sube desde el asistente o Ajustes.
+**Cómo se midió.** Con la arena (`pruebas/arena/`, P5): `ARENA=partido ESTADIO=1 CAMARAS=1 DURACION=9 CALIDAD=<nivel>` con `--rendering-driver opengl3` (el motor de los móviles) en software: llamadas de dibujo, triángulos y objetos son comparables entre máquinas, los FPS no (llvmpipe da ~7 con cualquier cosa: no son del teléfono). El informe de piezas (`INFORME=1`, `OCULTAR=<categoría>`) apaga una pieza y mira cuánto baja.
+**Dónde estaba el peso** (MÍNIMA, antes): el partido sin estadio son 247 llamadas / 88 k triángulos; con el estadio entero, **1020 / 1,44 M**. Apagando por categorías: las gradas 1,18 M de triángulos (butacas de 1.944 triángulos en las primeras filas, 634 butacas = 1,2 M potenciales; 8.661 butacas lejanas de 84; los hinchas de detalle de 658 triángulos), y el **túnel de vestuarios y el edificio del club ~540 llamadas** (~540 mallas sueltas: cajas, taquillas, bancos, duchas).
+**Qué se bajó en MÍNIMA** (ALTO/MEDIA/ULTRA quedan como estaban):
+- Butacas: ninguna de 1.944 triángulos (todas la ligera), y la ligera pasa de 84 a 36 triángulos por grupo de tres (asiento, respaldo corrido y viga).
+- Hinchas: ninguno de detalle de 658 triángulos y uno por grupo de butacas (antes dos) con la malla barata.
+- Túnel de vestuarios + edificio del club + personal estático: `FundirPiezas.fundir_profundo` (nueva: funde TODOS los descendientes con su transformación acumulada, una superficie por material y sombra; no toca esqueletos ni nodos con script) → **de 441 mallas a 3**; las colisiones no se tocan; las luces del túnel se apagan a distancia (28 m).
+**Resultado** (arena, 1 cámara, partido de 22 + árbitros + estadio entero; llamadas / triángulos / objetos):
+| nivel | llamadas | triángulos | objetos |
+|---|---|---|---|
+| ALTA (el defecto de PC hasta hoy) | 1314 | 1,66 M | 1492 |
+| MEDIA | 1243 | 1,58 M | 1421 |
+| MÍNIMA antes | 1020 | 1,44 M | ~1190 |
+| **MÍNIMA ahora** | **682** | **0,55 M** | **856** |
+(−33 % de llamadas y −62 % de triángulos frente a la MÍNIMA de antes; −48 % y −67 % frente a ALTA.) Lo que queda en las 682 llamadas: jugadores y árbitros ~115, gradas ~66, vallas LED (51 objetos sueltos), arcos, camarógrafos, banquillos y otras ~160 de «piezas sueltas», y el túnel fundido; el siguiente paso natural son las vallas LED y esas piezas sueltas, y bajar aún más las gradas lejanas (impostores).
+**Sin verificar en el teléfono**: no hay GPU ni el aparato aquí. Falta medirlo allí (FPS con `CALIDAD=minima`, contador de FPS del juego) y decidir si hace falta bajar más (resolución 3D 0,7 → 0,6, quitar el MSAA x2 de MÍNIMA: `aplicar_viewport` aún lo lleva «para las líneas lejanas del campo»).
+**Pruebas tocadas**: `estadio.gd` (el 3D vuelve a la escala de SU nivel, no a 1,0), `f0b_huella` (construye en ALTO: es la estructura completa), `pint_vestuario` (en MÍNIMA las taquillas están en «Fundido»). Ya fallaba en la rama base, sin relación: `pest_estadio` («cuatro torres con 18 proyectores», «los bastidores miran al campo»).
+

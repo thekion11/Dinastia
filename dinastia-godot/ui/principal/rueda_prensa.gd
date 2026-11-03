@@ -135,7 +135,7 @@ func _montar_plato() -> void:
 		if liga != null:
 			clubes = liga.clubes
 	_ctx = _contexto_rueda()
-	escena.montar(mio, p.COL_ACENTO, Calidad.ALTO, _look_dt(), clubes, _ctx)
+	escena.montar(mio, p.COL_ACENTO, Calidad.elegida, _look_dt(), clubes, _ctx)
 
 ## Arriba a la izquierda: «RUEDA DE PRENSA» y la placa del DT (foto y nombre).
 func _cabecera() -> Control:

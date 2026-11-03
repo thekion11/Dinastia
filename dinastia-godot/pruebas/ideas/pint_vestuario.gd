@@ -90,7 +90,10 @@ func _probar() -> void:
 			anchas += 1
 	_comprobar(anchas == 0, "ningún texto de taquilla es más ancho que la taquilla (%d)" % anchas)
 	var mallas := tv.find_children("Taquillas*", "MeshInstance3D", false, false).size()
-	_comprobar(mallas >= 5 and mallas <= 16, "las taquillas van juntas en pocas mallas (%d)" % mallas)
+	## En MÍNIMO (el nivel por defecto desde el 3-11) todo el túnel se funde en una malla por material («Fundido»): las taquillas ya no tienen nombre propio.
+	var fundido := tv.find_children("Fundido*", "MeshInstance3D", false, false).size()
+	_comprobar((mallas >= 5 and mallas <= 16) or (Calidad.elegida <= Calidad.MINIMO and fundido >= 1 and fundido <= 6),
+		"las taquillas van juntas en pocas mallas (%d sueltas, %d fundidas)" % [mallas, fundido])
 	## Cada taquilla tiene choque: el centro de cada una (16) está dentro de una caja.
 	var d := TunelVestuario.datos(perfil, 2)
 	var x0: float = d["x0"]
