@@ -129,6 +129,12 @@ func _dirigir() -> void:
 		for jb: Jugador in al_borde:
 			nombres.append(jb.nombre)
 		pr._escribir("[color=#c9a227]%s[/color]" % (Idiomas.t("🟨 A una amarilla de la sanción: %s.") % ", ".join(nombres)))
+	## U6 (3-11): lo que cuesta ESTE partido, desglosado: el viaje si es fuera, abrir el estadio si es en casa.
+	var mio := pr.mundo.mi_club()
+	if p.visita == mio and p.local != mio:
+		pr._escribir("[color=#8ea595]%s[/color]" % Viajes.linea_previa_fuera(p.local.nombre, Viajes.viaje_euros(mio.pais, p.local.pais, mio.rep)))
+	elif p.local == mio:
+		pr._escribir("[color=#8ea595]%s[/color]" % Viajes.linea_previa_casa(Viajes.dia_de_partido_euros(mio.pais, Finanzas.new(mio).asistencia(), mio.estadio_aforo)))
 	var consejo := Clima.consejo(info_clima, p.local == pr.mundo.mi_club())
 	if consejo != "":
 		MentorVoz.decir(pr, pr.mundo, "%s %s" % [Clima.icono(info_clima), String(info_clima["texto"])], consejo)

@@ -4,6 +4,7 @@ extends "res://visor/vida_ciudad_p1.gd"
 
 var _mq_estadio := false
 var _balon: BalonSuelto
+var _panel_pin: Control      ## el teclado del PIN al pagar (`PagoCiudad`), si está abierto
 var _panel_cajero: Control   ## el panel abierto (cajero, ventanilla o caja de la tienda), si lo hay
 
 ## Las redes de la ciudad (luz, agua, drenaje, gas), si la ciudad ya está levantada.
@@ -55,12 +56,12 @@ func usar_surtidor(k: String, tipo := "") -> bool:
 		surtido.append({"tipo": t, "nombre": String(RedesCiudad.COMBUSTIBLES[t][0]), "precio": roundi(litros * redes.modelo.precio_litro(int(s["id"]), t))})
 	var saldo := func() -> String:
 		return Idiomas.t("En el bolsillo") + ": " + Eco.dinero_euros(float(mundo.roles.cartera.efectivo)) if mundo.roles != null else ""
-	_panel_cajero = PanelTienda.abrir(expl._capa, Idiomas.t("Gasolinera"), surtido, func(it: Dictionary) -> String: return repostar(k, String(it["tipo"])),
+	_panel_cajero = PanelTienda.abrir(expl._capa, Idiomas.t("Gasolinera"), surtido, func(it: Dictionary) -> String: return repostar(k, String(it["tipo"]), "", bool(it.get("con_pin", false))),
 		saldo, expl.cuerpo.position, expl.cuerpo)
 	return true
 
 ## Llena el depósito con `tipo` en el surtidor `k`. Devuelve el mensaje (traducido).
-func repostar(k: String, tipo: String) -> String:
+func repostar(k: String, tipo: String, pin := "", con_pin := false) -> String:
 	var redes := _redes()
 	var s := redes.surtidor(int(k.get_slice("_", 1))) if redes != null else {}
 	if s.is_empty():
@@ -73,7 +74,9 @@ func repostar(k: String, tipo: String) -> String:
 	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
 	if cartera != null:
 		var tope := roundi(minf(falta, float(redes.modelo.gas.get(int(s["id"]), 0.0))) * redes.modelo.precio_litro(int(s["id"]), tipo))
-		var motivo := cartera.puede_cobrar(mundo.roles, tope, dia)
+		var motivo := cartera.puede_cobrar(mundo.roles, tope, dia) if pin == "" and not con_pin else cartera.puede_cobrar_con_pin(mundo.roles, tope, dia)
+		if pin == "" and tope > 0 and (motivo == "pin" or (con_pin and motivo == "")):   ## a partir de 100 € o con «tarjeta y PIN»: teclea el PIN y se repostará al validarlo (U6)
+			return PagoCiudad.pedir_pin(self, tope, "Gasolina", func(p: String) -> void: _decir(Idiomas.t("Gasolinera"), repostar(k, tipo, p)))
 		if motivo != "" and tope > 0:
 			return CarteraDT.texto_error(motivo, tope)
 	var r := redes.modelo.repostar(int(s["id"]), s["sector"], falta, tipo)
@@ -85,7 +88,7 @@ func repostar(k: String, tipo: String) -> String:
 		mundo.vida.premium = tipo == "premium"
 	var via := ""
 	if cartera != null:
-		via = String(cartera.cobrar(mundo.roles, int(r["coste"]), "Gasolina", dia)["via"])
+		via = String(PagoCiudad.cobrar(self, int(r["coste"]), "Gasolina", dia, pin)["via"])
 	elif mundo.mi_club() != null:
 		mundo.mi_club().mover_saldo(-maxi(1, roundi(float(r["coste"]) / Eco.ECO)))   ## sin cartera (partida sin roles) paga el club (puntos internos): nunca gratis
 	Sonido.toca("clic", Sonido.Bus.EFECTOS)
@@ -161,16 +164,7 @@ func usar_banco(k: String) -> bool:
 func usar_expendedora() -> bool:
 	if mundo.roles == null or mundo.necesidades == null:
 		return false
-	var it := Expendedora.elegir(mundo.necesidades.energia(), mundo.necesidades.hambre())
-	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
-	var r := mundo.roles.cartera.cobrar(mundo.roles, int(it["precio"]), String(it["nombre"]), dia)
-	if String(r["error"]) != "":
-		_decir(Idiomas.t("Máquina expendedora"), CarteraDT.texto_error(String(r["error"]), int(it["precio"])))
-		return true
-	mundo.necesidades.animar(int(it["energia"]))
-	mundo.necesidades.picar(int(it["hambre"]))
-	_decir(Idiomas.t("Máquina expendedora"), Idiomas.t("%s por %d € (%s).") % [Idiomas.t(String(it["nombre"])), int(it["precio"]), Idiomas.t(String(r["via"]))])
-	Sonido.toca("clic", Sonido.Bus.EFECTOS)
+	_decir(Idiomas.t("Máquina expendedora"), PagoCiudad.comprar(self, Expendedora.elegir(mundo.necesidades.energia(), mundo.necesidades.hambre())))
 	return true
 
 ## E ante una máquina de billetes del metro: recarga la tarjeta Red con `CarteraDT.RECARGA` € de la cartera (M-182).
@@ -218,17 +212,7 @@ func usar_tienda() -> bool:
 
 ## Compra un artículo del surtido: lo cobra la cartera del DT, baja el hambre o sube la energía. Devuelve el mensaje (traducido) para la caja.
 func comprar_surtido(it: Dictionary) -> String:
-	if mundo.roles == null:
-		return ""
-	var dia := CarteraDT.clave_dia(mundo.anio, mundo.semana, mundo.reloj.dia)
-	var r := mundo.roles.cartera.cobrar(mundo.roles, int(it["precio"]), String(it["nombre"]), dia)
-	if String(r["error"]) != "":
-		return CarteraDT.texto_error(String(r["error"]), int(it["precio"]))
-	if mundo.necesidades != null:
-		mundo.necesidades.picar(int(it.get("hambre", 0)))
-		mundo.necesidades.animar(int(it.get("energia", 0)))
-	Sonido.toca("clic", Sonido.Bus.EFECTOS)
-	return Idiomas.t("%s por %d € (%s).") % [Idiomas.t(String(it["nombre"])), int(it["precio"]), Idiomas.t(String(r["via"]))]
+	return "" if mundo.roles == null else PagoCiudad.comprar(self, it)
 
 func _comer(texto: String) -> void:
 	mundo.reloj.avanzar_minutos(30, "comer")
