@@ -37,6 +37,10 @@ const COLUMNAS := [["NOMBRE", "nombre", "Ordenar por nombre"], ["POS", "pos", "P
 const META_LINEA := "uipl_linea"
 ## (2-11, M-293) El segundo filtro: por estado. [clave, rótulo, ayuda].
 const META_ESTADO := "uipl_estado"
+## (2-11, rendimiento) Las filas de filtros y la leyenda llevan emojis, y darles forma cuesta ~3 ms por botón y ~17 ms la leyenda
+## (fuente de respaldo): se crean UNA vez y cada repintado solo les cambia el texto (igual = sin coste).
+const META_FIJO := "uipl_fijo"
+const META_REPINTAR := "uipl_repintar"
 const ESTADOS := [["todos", "Todos", "Sin filtro de estado"], ["disponibles", "✅ Disponibles", "Pueden jugar el próximo partido"],
 	["bajas", "🩹 Bajas", "Lesionados o sancionados"], ["riesgo", "⚠ En riesgo", "Riesgo de lesión alto o medio: dales descanso"],
 	["transferibles", "🔻 Transferibles", "Los que pusiste en venta"], ["jovenes", "↗ Jóvenes", "21 años o menos"],
@@ -55,7 +59,7 @@ static func _estado_ok(mundo: Mundo, j: Jugador, estado: String) -> bool:
 static func pintar(lista: VBoxContainer, c: Club, mundo: Mundo, orden: String, orden_desc: bool,
 		col_acento: Color, color_de_paleta: Callable, fila_jugador: Callable,
 		al_pulsar_columna: Callable) -> void:
-	_limpiar(lista)
+	var fijos := _vaciar(lista)
 	## ESTADO VACÍO: sin esto la pestaña quedaba con seis cabeceras sueltas y
 	## ninguna pista de qué hacer.
 	if c == null or c.plantilla.is_empty():
@@ -63,14 +67,15 @@ static func pintar(lista: VBoxContainer, c: Club, mundo: Mundo, orden: String, o
 		vacio.text = Idiomas.t("Tu plantel está vacío. Ficha jugadores en el Mercado o sube canteranos desde la Cantera.")
 		vacio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lista.add_child(vacio)
+		_soltar(fijos)
 		return
-	_resumen(lista, c, color_de_paleta)
+	var n_resumen := _resumen(lista, c, color_de_paleta)
 	var linea := String(lista.get_meta(META_LINEA, "todos"))
-	var repintar := func() -> void:
-		pintar(lista, c, mundo, orden, orden_desc, col_acento, color_de_paleta, fila_jugador, al_pulsar_columna)
-	_filtros(lista, c, linea, repintar)
+	lista.set_meta(META_REPINTAR, func() -> void:
+		pintar(lista, c, mundo, orden, orden_desc, col_acento, color_de_paleta, fila_jugador, al_pulsar_columna))
+	var n_filtros := _filtros(lista, c, linea, fijos)
 	var estado := String(lista.get_meta(META_ESTADO, "todos"))
-	_filtros_estado(lista, c, mundo, estado, repintar)
+	var n_estado := _filtros_estado(lista, c, mundo, estado, fijos)
 
 	var g := GridContainer.new()
 	g.columns = 6
@@ -135,11 +140,21 @@ static func pintar(lista: VBoxContainer, c: Club, mundo: Mundo, orden: String, o
 			var celda := g.get_child(antes) as Control
 			celda.tooltip_text = _texto_riesgo(mundo, j, riesgo)
 			celda.mouse_filter = Control.MOUSE_FILTER_PASS
+	var n_nadie: Control = null
 	if lista_ordenada.is_empty():
 		var nadie := _texto(12, color_de_paleta.call(COL_SUAVE))
 		nadie.text = Idiomas.t("Nadie en esa línea ahora mismo.") if estado == "todos" else Idiomas.t("Nadie cumple ese filtro ahora mismo.")
 		lista.add_child(nadie)
-	_leyenda(lista, color_de_paleta)
+		n_nadie = nadie
+	var n_leyenda := _leyenda(lista, color_de_paleta, fijos)
+	_soltar(fijos)
+	## Las filas fijas siguen en su sitio y lo nuevo se añadió al final: se deja el orden de siempre.
+	var orden_nodos: Array = [n_resumen, n_filtros, n_estado, g, n_nadie, n_leyenda]
+	var pos := 0
+	for n: Variant in orden_nodos:
+		if n != null:
+			lista.move_child(n, pos)
+			pos += 1
 
 ## Riesgo de lesión de un jugador sano: "alto", "medio" o "" (bajo). Junta el informe del médico (historial y rasgo)
 ## con el físico que le queda; lesionado no se marca (ya lleva 🩹).
@@ -170,7 +185,7 @@ static func _linea_de(j: Jugador) -> String:
 
 ## Una línea con el plantel de un vistazo: cuántos, qué media, qué edad y
 ## cuántos no están para jugar. Es lo que se viene a mirar antes de la tabla.
-static func _resumen(lista: VBoxContainer, c: Club, color_de_paleta: Callable) -> void:
+static func _resumen(lista: VBoxContainer, c: Club, color_de_paleta: Callable) -> Control:
 	var n := c.plantilla.size()
 	var suma_ovr := 0
 	var suma_edad := 0
@@ -189,53 +204,94 @@ static func _resumen(lista: VBoxContainer, c: Club, color_de_paleta: Callable) -
 	var f := _texto(12, color_de_paleta.call(COL_ROJO if fuera > 0 else COL_VERDE))
 	f.text = Idiomas.t("%d no disponibles") % fuera if fuera > 0 else Idiomas.t("todos disponibles")
 	fila.add_child(f)
+	return fila
 
 ## Los botones de línea, con cuántos hay en cada una. Conmutables: el pulsado
 ## se ve encendido, y con el mando se recorren como cualquier botón.
-static func _filtros(lista: VBoxContainer, c: Club, linea: String, repintar: Callable) -> void:
+static func _filtros(lista: VBoxContainer, c: Club, linea: String, fijos: Dictionary) -> Control:
 	var cuenta := {"todos": c.plantilla.size()}
 	for j: Jugador in c.plantilla:
 		var l := _linea_de(j)
 		cuenta[l] = int(cuenta.get(l, 0)) + 1
-	var fila := HFlowContainer.new()
-	fila.add_theme_constant_override("h_separation", 6)
-	fila.add_theme_constant_override("v_separation", 6)
-	lista.add_child(fila)
-	for par: Array in LINEAS:
+	var fila := _fila_fija(lista, "filtros", fijos)
+	var nuevo := fila.get_child_count() == 0
+	for i in LINEAS.size():
+		var par: Array = LINEAS[i]
 		var clave := String(par[0])
-		var b := Button.new()
+		var b: Button
+		if nuevo:
+			b = Button.new()
+			b.toggle_mode = true
+			b.add_theme_font_size_override("font_size", 11)
+			b.pressed.connect(func() -> void:
+				lista.set_meta(META_LINEA, clave)
+				(lista.get_meta(META_REPINTAR) as Callable).call())
+			fila.add_child(b)
+		else:
+			b = fila.get_child(i) as Button
 		b.text = "%s  %d" % [Idiomas.t(String(par[1])), int(cuenta.get(clave, 0))]
-		b.toggle_mode = true
-		b.button_pressed = linea == clave
-		b.add_theme_font_size_override("font_size", 11)
-		b.pressed.connect(func() -> void:
-			lista.set_meta(META_LINEA, clave)
-			repintar.call())
-		fila.add_child(b)
+		b.set_pressed_no_signal(linea == clave)
+	return fila
 
 ## La fila de filtros por estado (M-293), con cuántos cumple cada uno dentro de la línea elegida.
-static func _filtros_estado(lista: VBoxContainer, c: Club, mundo: Mundo, estado: String, repintar: Callable) -> void:
+static func _filtros_estado(lista: VBoxContainer, c: Club, mundo: Mundo, estado: String, fijos: Dictionary) -> Control:
 	var linea := String(lista.get_meta(META_LINEA, "todos"))
-	var fila := HFlowContainer.new()
-	fila.add_theme_constant_override("h_separation", 6)
-	fila.add_theme_constant_override("v_separation", 6)
-	lista.add_child(fila)
-	for par: Array in ESTADOS:
+	var fila := _fila_fija(lista, "estado", fijos)
+	var nuevo := fila.get_child_count() == 0
+	for i in ESTADOS.size():
+		var par: Array = ESTADOS[i]
 		var clave := String(par[0])
 		var n := 0
 		for j: Jugador in c.plantilla:
 			if (linea == "todos" or _linea_de(j) == linea) and _estado_ok(mundo, j, clave):
 				n += 1
-		var b := Button.new()
+		var b: Button
+		if nuevo:
+			b = Button.new()
+			b.toggle_mode = true
+			b.add_theme_font_size_override("font_size", 11)
+			b.pressed.connect(func() -> void:
+				lista.set_meta(META_ESTADO, clave)
+				(lista.get_meta(META_REPINTAR) as Callable).call())
+			fila.add_child(b)
+		else:
+			b = fila.get_child(i) as Button
 		b.text = "%s  %d" % [Idiomas.t(String(par[1])), n]
 		b.tooltip_text = Idiomas.t(String(par[2]))
-		b.toggle_mode = true
-		b.button_pressed = estado == clave
-		b.add_theme_font_size_override("font_size", 11)
-		b.pressed.connect(func() -> void:
-			lista.set_meta(META_ESTADO, clave)
-			repintar.call())
-		fila.add_child(b)
+		b.set_pressed_no_signal(estado == clave)
+	return fila
+
+## Libera lo que no es fijo; las filas fijas SE QUEDAN dentro de `lista` (sacarlas y volver a ponerlas rehace la forma de
+## todo su texto: el tema se notifica al entrar en el árbol). Devuelve las fijas por nombre.
+static func _vaciar(lista: Node) -> Dictionary:
+	var fijos := {}
+	for h in lista.get_children():
+		if h.has_meta(META_FIJO):
+			fijos[String(h.get_meta(META_FIJO))] = h
+		else:
+			lista.remove_child(h)
+			h.queue_free()
+	return fijos
+
+## Lo que no se volvió a usar (p. ej. el plantel quedó vacío) se libera.
+static func _soltar(fijos: Dictionary) -> void:
+	for h: Node in fijos.values():
+		h.get_parent().remove_child(h)
+		h.queue_free()
+	fijos.clear()
+
+## La fila fija `nombre`: la guardada si la hay, o una HFlow nueva; ya puesta en `lista`.
+static func _fila_fija(lista: VBoxContainer, nombre: String, fijos: Dictionary) -> HFlowContainer:
+	var fila := fijos.get(nombre) as HFlowContainer
+	if fila != null:
+		fijos.erase(nombre)
+	else:
+		fila = HFlowContainer.new()
+		fila.add_theme_constant_override("h_separation", 6)
+		fila.add_theme_constant_override("v_separation", 6)
+		fila.set_meta(META_FIJO, nombre)
+		lista.add_child(fila)
+	return fila
 
 ## El botón del nombre lo crea `Principal._fila_jugador()` sin `clip_text`, y un
 ## Button sin recorte pide de ancho todo su texto: con un nombre largo y sus
@@ -262,11 +318,18 @@ static func _ajustar_nombre(g: GridContainer, desde: int, j: Jugador) -> void:
 
 ## Qué quiere decir cada marca y cada color: sin esto, el verde de los jóvenes
 ## y los iconos solo los entendía quien había leído el código.
-static func _leyenda(lista: VBoxContainer, color_de_paleta: Callable) -> void:
-	var l := _texto(10, color_de_paleta.call(COL_SUAVE))
+static func _leyenda(lista: VBoxContainer, color_de_paleta: Callable, fijos: Dictionary) -> Control:
+	var l := fijos.get("leyenda") as Label
+	if l != null:
+		fijos.erase("leyenda")
+		l.add_theme_color_override("font_color", color_de_paleta.call(COL_SUAVE))
+	else:
+		l = _texto(10, color_de_paleta.call(COL_SUAVE))
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.set_meta(META_FIJO, "leyenda")
+		lista.add_child(l)
 	l.text = Idiomas.t("Ⓒ capitán  ·  🔻 transferible  ·  🩹 lesionado  ·  🚫 sancionado  ·  ✦ habilidad especial  ·  ↗ (verde): joven con margen  ·  ⚠/△ riesgo de lesión alto/medio  ·  rojo: no disponible")
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lista.add_child(l)
+	return l
 
 ## Calcado de `Principal._comparar_plantel()`, con `orden`/`orden_desc` como
 ## parámetros en vez de leídos de estado propio -pura del todo-. Mismo cuidado
