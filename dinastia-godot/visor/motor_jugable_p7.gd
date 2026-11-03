@@ -398,6 +398,10 @@ func _ia_portador(p: Dictionary) -> void:
 	## verdad; con más pegada, desde más lejos.
 	var lejano := MotorTacticaViva.bandera(self as Object as MotorJugable, bool(p["es_local"]), "tiro_lejano")   ## pizarra: tiro lejano (01-11)
 	var ganas_tiro := (1.0 - dist_arco / (40.0 if lejano else 34.0)) * (0.7 + float(p["attr"]["tir"]) * 0.6) - angulo * 0.25
+	## F6 (03-11): tres puntos del arco puntuados por la línea limpia; tapada = menos ganas, limpia = más.
+	var linea_limpia: Array = MotorTiroLimpio.mejor(self as Object as MotorJugable, p) if dist_arco < 34.0 else [0.0, -1.0]
+	if float(linea_limpia[1]) >= 0.0:
+		ganas_tiro *= MotorTiroLimpio.factor_ganas(float(linea_limpia[1])) if ganas_tiro > 0.0 else 1.0
 	## MÁS CHISPA (20-10-2026): el sorteo era muy conservador y el partido se quedaba en ~0,8 tiros por minuto
 	## y equipo (FC ronda 1,5). Ahora se anima más desde la frontal; la calidad del tiro no cambia.
 	if dist_arco < (34.0 if lejano else 30.0) and ganas_tiro > 0.05 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * CHISPA_TIRO / pow(prisa(), 1.3):
@@ -405,6 +409,8 @@ func _ia_portador(p: Dictionary) -> void:
 		## y el portero lo paraba casi todo: 27 de 29 en la sonda).
 		## (Pulido: más pegado al palo, lejos del portero, a riesgo de irse fuera.)
 		var palo := (1.0 if _rng.randf() < 0.5 else -1.0) * (_rng.randf_range(PALO_TIRO, 1.0) if TIRO_PULIDO else _rng.randf_range(0.55, 0.95))
+		if float(linea_limpia[1]) >= 0.0:
+			palo = clampf(float(linea_limpia[0]) + _rng.randf_range(-0.08, 0.08), -1.0, 1.0)   ## al punto más limpio (F6)
 		var alto := -0.45 if _rng.randf() < 0.6 else 0.55
 		_tirar(p, Vector2(palo, alto), clampf(0.55 + _rng.randf() * 0.4, 0.0, 1.0))
 		return
