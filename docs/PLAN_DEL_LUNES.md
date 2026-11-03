@@ -692,7 +692,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-170 | P2 | PARCIAL | Semáforos peatonales con botón | 28-10: botón y hombrecito (`visor/semaforos.gd pedir`); FALLO: el ciclo es global a toda la ciudad y los peatones de `TraficoCiudad` no respetan la fase; cabeza peatonal pequeña |
 | M-173 | P2 | PARCIAL | Sin sonido de motor/marchas/derrape | 21-10: el motor del coche suena, sintetizado en vivo con revoluciones y 5 marchas (`visor/motor_coche_sonido.gd`); sin radio |
 | M-176 | P2 | PENDIENTE | Sin tipos de vehículo (moto, bus conducible, camión) | solo coche conducible |
-| M-180 | P2 | PARCIAL | Metro: sin vendedores/música/anuncios | anuncios en el vagón y vendedor con puesto en cada andén (28-10, `MetroCiudad.vendedores`, E compra una empanada: 3 €); sin música (el audio lo maneja el dueño) |
+| M-180 | P2 | PARCIAL | Metro: sin vendedores/música/anuncios | anuncios en el vagón, vendedor con puesto en cada andén (28-10) y, 3-11, carteles publicitarios en la pared de los andenes subterráneos y megafonía EN TEXTO rotando en las pantallas (`MetroPublicidad`); falta solo la música (el audio lo maneja el dueño) |
 | M-182 | P2 | PARCIAL | Tarjeta de transporte y coste | 28-10: `CarteraDT.saldo_transporte`, metro 1 €, teleférico 3 €; falta cobrar el bus, saldo en la app Red y abono |
 | M-183 | P2 | PARCIAL | Peatones: rutinas | 28-10: densidad por sector y hora, flujo direccional, maletines y mochilas (`visor/rutina_peatones.gd`); falta rutina por PERSONA (casa→trabajo→casa) |
 | M-184 | P2 | PENDIENTE | Sin NPC con nombre y memoria (te reconocen) | sin vecinos con memoria |
