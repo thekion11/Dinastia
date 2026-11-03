@@ -177,3 +177,9 @@ Sin medir / pendiente: el resto de la memoria estática (1,0 GB en el prólogo: 
   - los JSON grandes se cargan solo al usarlos: `caras_reales_mallas.json` (9,6 MB de texto, ~85 MB en memoria) al aparecer una cara real.
   - No hay precargas que sobren (`preload` solo se usa 19 veces, todas scripts o shaders pequeños).
   Palancas que quedan (cambios de arquitectura, no se hicieron): desacoplar los tipos `Roles`/`Mundo` en las firmas para que el menú no compile el partido y la ciudad; sacar las tablas `const` de animación a recursos `.res` cargados al entrar al partido.
+
+### Confirmado con scripts precompilados (3-11)
+Sin plantillas de exportación en este contenedor, pero `godot --export-pack "Windows"` (con `script_export_mode=2`, tokens binarios, el mismo que usan los presets) produce el `.pck` y se corre con el binario del editor: `godot --main-pack juego.pck --script mem3.gd`.
+Resultado: `load(principal.tscn)` = **455 MB** (editor: 509 MB) y el primer fotograma del menú **696 MB** (editor: 751 MB). El coste de compilar GDScript se confirma en el export (~423 MB de los 455); los tokens binarios solo quitan ~55 MB.
+Lo de `anim_futbol`/`anim_quaternius` (14 MB cada uno): NO son tablas `const` sino funciones con los fotogramas escritos dentro (el código compilado), así que sacarlas a recursos exige reescribir los constructores de animación
+(~2 000 líneas) por ~4 % de los 750 MB: no se hace. El desacoplado de tipos `Roles`/`Mundo`, tampoco (orden de la líder): queda documentado con esta cifra.
