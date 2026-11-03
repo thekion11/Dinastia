@@ -183,3 +183,7 @@ Sin plantillas de exportación en este contenedor, pero `godot --export-pack "Wi
 Resultado: `load(principal.tscn)` = **455 MB** (editor: 509 MB) y el primer fotograma del menú **696 MB** (editor: 751 MB). El coste de compilar GDScript se confirma en el export (~423 MB de los 455); los tokens binarios solo quitan ~55 MB.
 Lo de `anim_futbol`/`anim_quaternius` (14 MB cada uno): NO son tablas `const` sino funciones con los fotogramas escritos dentro (el código compilado), así que sacarlas a recursos exige reescribir los constructores de animación
 (~2 000 líneas) por ~4 % de los 750 MB: no se hace. El desacoplado de tipos `Roles`/`Mundo`, tampoco (orden de la líder): queda documentado con esta cifra.
+
+### Idiomas bajo demanda (3-11)
+`Idiomas` cargaba `idiomas_extra.json` con los 9 idiomas al arrancar (~36-46 MB). Ahora `_asegurar(idioma)` lee solo la tabla del idioma ELEGIDO (setter de `Idiomas.idioma`): en castellano no se carga ninguna; al cambiar se suma la nueva y `origen()` mira solo los ya cargados (un texto solo puede estar en un idioma que se haya cargado). `_asegurar_todos()` para las pruebas y herramientas que recorren los 9.
+Menú, primer fotograma (editor, sin ventana): **749 → 713 MB (−36 MB)** en castellano; autocargas 77 → 44 MB. Prueba: `p6_idiomas_perezoso`. En un idioma no castellano el ahorro es de ~30 MB (se carga solo el suyo).
