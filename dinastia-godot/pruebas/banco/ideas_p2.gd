@@ -318,3 +318,25 @@ func _probar_grada_fondo() -> void:
 	var tras_gol := g._objetivo_db()
 	_comprobar(area > calma and tras_gol > area, "sube con el balón en el área y más tras un gol (%.0f → %.0f → %.0f dB)" % [calma, area, tras_gol])
 	raiz.queue_free()
+
+## (3-11, orden 22) Cualquier bloque de la pantalla principal se abre a pantalla completa y vuelve a su sitio.
+func _probar_pantalla_ampliada() -> void:
+	_titulo("BLOQUE A PANTALLA COMPLETA (⤢)")
+	var raiz := Control.new()
+	add_child(raiz)
+	var caja := VBoxContainer.new()
+	raiz.add_child(caja)
+	var antes := Label.new()
+	caja.add_child(antes)
+	var bloque := VBoxContainer.new()
+	bloque.add_child(Label.new())
+	caja.add_child(bloque)
+	caja.add_child(Label.new())
+	var a := PantallaAmpliada.abrir(raiz, bloque, "PRUEBA")
+	_comprobar(a != null and a.is_ancestor_of(bloque) and not caja.is_ancestor_of(bloque), "el bloque se muda entero a la pantalla completa (el mismo nodo)")
+	_comprobar(PantallaAmpliada.abrir(raiz, bloque, "PRUEBA") == null, "pulsar «⤢» otra vez la cierra")
+	_comprobar(bloque.get_parent() == caja and bloque.get_index() == 1, "y vuelve exactamente a su sitio")
+	var b := PantallaAmpliada.abrir(raiz, bloque, "PRUEBA")
+	b.free()   ## otra pantalla la borra sin cerrarla
+	_comprobar(is_instance_valid(bloque) and not b.is_ancestor_of(bloque) if is_instance_valid(b) else is_instance_valid(bloque), "si la borran sin cerrar, el bloque no muere con ella (vuelve al siguiente momento libre)")
+	raiz.queue_free()
