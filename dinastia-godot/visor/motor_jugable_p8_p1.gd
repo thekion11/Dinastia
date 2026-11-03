@@ -1,7 +1,7 @@
 extends "res://visor/motor_jugable_p7.gd"
 ## (Parte 1 de 2 de `motor_jugable_p8.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `motor_jugable_p8.gd`, conserva la clase.)
 
-static var ANTICIPA := OS.get_environment("PMOT_ANT") == "1"
+static var ANTICIPA := OS.get_environment("PMOT_ANT") != "0"   ## encendido el 3-11 (vídeo del dueño: persecución en vez de intercepción); PMOT_ANT=0 = antes
 ## [Capa 8/12 de `motor_jugable.gd`] _forma, _zona_de_llegada, _ia_ataque_sin_balon, _gatillo_presion, _linea_defensiva, _ia_defensa … (+10)
 
 ## La forma del equipo: la posición de la formación, movida con el balón.
@@ -19,7 +19,7 @@ func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	var amp := float(_tac(loc, "amplitud") - 1) + MotorTacticaViva.f(self as Object as MotorJugable, loc, "amplitud")
 	var z := base.z * pesos[2] + b.z * pesos[0] + (d * (9.0 + men * 3.0) if en_posesion else -d * 3.0)
 	z += d * (lin * 3.5 + men * 2.0)
-	var x := base.x * (pesos[3] + (amp * 0.12 if en_posesion else 0.0)) + b.x * pesos[1]
+	var x := base.x * (pesos[3] + (amp * 0.12 if en_posesion else 0.0)) + b.x * pesos[1] + MotorAdaptacion.desvio_x(self as Object as MotorJugable, loc0, en_posesion)   ## cubre el lado fuerte del rival (3-11)
 	## Nadie se mete detrás de su propio arco ni más allá del rival.
 	z = clampf(z, -LARGO + 4.0, LARGO - 4.0)
 	return Vector3(clampf(x, -ANCHO + 2.0, ANCHO - 2.0), 0, z)
@@ -204,14 +204,10 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 			p["correr"] = true
 			return b + (arco - b).normalized() * 2.5
 		return b + (arco - b).normalized() * 7.0
-	## MARCAJE A LOS PELIGROSOS (F4, 03-11): a cada uno de los 3 rivales más peligrosos le toca UN marcador, entre él y el arco.
-	var marcado := MotorMarcaje.rival_de(self as Object as MotorJugable, p)
-	if not marcado.is_empty():
-		var pm := MotorMente.pos_vista(self as Object as MotorJugable, p, marcado)   ## donde lo ve (F8)
-		p["correr"] = pos(p).distance_to(pm) > 6.0
-		var om := pm + (arco - pm).normalized() * 1.8
-		om.z = clampf(om.z, -LARGO + 2.0, LARGO - 2.0)
-		return om
+	## MARCAJE A LOS PELIGROSOS (F4, 03-11): un marcador por cada uno de los 3 más peligrosos, con ancla a su puesto.
+	var om := MotorMarcaje.objetivo(self as Object as MotorJugable, p, arco)
+	if om != Vector3.INF:
+		return MotorAncla.limitar(self as Object as MotorJugable, p, om)
 	## Los demás: zona, marcando al rival más cercano.
 	var obj := _forma(p, false)
 	var rival: Dictionary = {}
@@ -231,7 +227,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	## línea común (M-123) y solo cierra por dentro hacia el que marca.
 	if _rol(p) in ["DFC", "LD", "LI"] and not _SIN_LINEA:
 		obj.z = _linea_defensiva(bool(p["es_local"]))
-	return obj
+	return MotorAncla.limitar(self as Object as MotorJugable, p, MotorRegiones.libre(self as Object as MotorJugable, p, obj))   ## región propia + ancla (3-11)
 
 # ---------------------------------------------------------------- IA
 

@@ -11,9 +11,9 @@ const RETARDO_MAX := 3.8   ## s de retardo con el balón lejos de todos
 const RETARDO_MIN := 1.8   ## s cuando un compañero está encima del balón
 const MEMORIA_POSESION := 4.0
 const PESO_Z_CON := 0.34    ## seguimiento del balón en profundidad con balón (antes 0,45)
-const PESO_Z_SIN := 0.55    ## y sin balón: el bloque se junta y lo persigue
+const PESO_Z_SIN := 0.45    ## y sin balón: lo de siempre (0,55 de la primera versión sobreactuaba el enjambre, vídeo 3-11)
 const PESO_X_CON := 0.18
-const PESO_X_SIN := 0.30
+const PESO_X_SIN := 0.22
 static var _sin := OS.has_environment("SIN_COLOCACION")
 
 static func _est(m: MotorJugable, local: bool) -> Dictionary:

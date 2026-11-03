@@ -11,6 +11,7 @@ const MAX_MARCAS := 3
 const RADIO_MARCADOR := 28.0      ## el marcador no se va tan lejos de su sitio
 const ZONA_PELIGRO := 40.0        ## los rivales a más de esto de nuestro arco no se marcan al hombre
 const REVISION := 0.5
+const CERCA_BALON := 9.0          ## los rivales a menos de esto del balón los cubre la presión
 static var _sin := OS.has_environment("SIN_MARCAJE")
 
 static func _peligro(m: MotorJugable, q: Dictionary, arco: Vector3, dir_gol: float) -> float:
@@ -18,11 +19,31 @@ static func _peligro(m: MotorJugable, q: Dictionary, arco: Vector3, dir_gol: flo
 	var d_arco := pq.distance_to(arco)
 	if d_arco > ZONA_PELIGRO:
 		return -1.0
-	var s := 1.0 - d_arco / ZONA_PELIGRO                                   ## cerca del arco
-	s += (1.0 - clampf(pq.distance_to(m.balon.position) / 35.0, 0.0, 1.0)) * 0.6   ## a distancia de recibir
+	## Los pegados al balón (< CERCA_BALON m) ya los cubren el que presiona y el segundo, salvo que estén en plena área.
+	var d_balon := pq.distance_to(m.balon.position)
+	if d_balon < CERCA_BALON and d_arco > 20.0:
+		return -1.0
+	var s := 1.0 - d_arco / ZONA_PELIGRO                                         ## cerca del arco
+	if (m.balon.position.z - pq.z) * dir_gol < 0.0:                               ## por delante del balón, hacia nuestro arco
+		s += 0.5
+	s += (1.0 - clampf(d_balon / 35.0, 0.0, 1.0)) * 0.25                          ## a distancia de recibir (peso bajo)
 	var v := q["vel"] as Vector3
-	s += clampf(v.z * dir_gol / 6.0, 0.0, 1.0) * 0.4                        ## lanzado hacia el gol
+	s += clampf(v.z * dir_gol / 6.0, 0.0, 1.0) * 0.4                              ## lanzado hacia el gol
 	return s
+
+## Dónde se pone `p` si le toca marcar a un peligroso (INF si no): del lado del arco; cerca de su área, mezclado con tapar la línea de pase.
+static func objetivo(m: MotorJugable, p: Dictionary, arco: Vector3) -> Vector3:
+	var marcado := rival_de(m, p)
+	if marcado.is_empty():
+		return Vector3.INF
+	var pm := MotorMente.pos_vista(m, p, marcado)
+	p["correr"] = m.pos(p).distance_to(pm) > 6.0
+	var om := pm + (arco - pm).normalized() * 1.8
+	if m.balon.position.distance_to(arco) < 32.0:
+		var carril := pm + (m.balon.position - pm).normalized() * 1.6
+		om = om.lerp(carril, 0.5)
+	om.z = clampf(om.z, -m.LARGO + 2.0, m.LARGO - 2.0)
+	return om
 
 ## Reparto vigente {id_del_rival: id_del_marcador} del equipo `local` cuando defiende.
 static func reparto(m: MotorJugable, local: bool) -> Dictionary:
