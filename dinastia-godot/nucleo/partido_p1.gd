@@ -435,3 +435,7 @@ func _aporte_remate(c: Club, autor: Jugador, tipo: String, _m: int) -> void:
 				break
 	elif tipo == "poste":
 		_aporte(autor, 0.15)
+
+## Falta dentro del área en una llegada: la implementa `partido.gd` (necesita `_anotar`, de una capa más alta). Aquí, sin penal.
+func _penal_en_area(_c: Club, _once: Array[Jugador], _es_local: bool) -> bool:
+	return false
