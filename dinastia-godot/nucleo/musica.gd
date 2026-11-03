@@ -213,7 +213,18 @@ func _pista(clave: String) -> AudioStreamWAV:
 	_mutex.unlock()
 	return w
 
+## R5 (3-11): de la caché en disco si ya se compuso en otro arranque (`CacheAudio`); si no, se compone y se guarda.
 func _componer(clave: String) -> AudioStreamWAV:
+	if CacheAudio.activa():
+		var guardadas := CacheAudio.leer("m_" + clave)
+		if guardadas.size() == 1:
+			return guardadas[0] as AudioStreamWAV
+	var w := _componer_sin_cache(clave)
+	if CacheAudio.activa():
+		CacheAudio.escribir("m_" + clave, [w])
+	return w
+
+func _componer_sin_cache(clave: String) -> AudioStreamWAV:
 	var p: Dictionary = PIEZAS[clave]
 	var bpm := float(p["bpm"])
 	var raiz := float(p["raiz"])
