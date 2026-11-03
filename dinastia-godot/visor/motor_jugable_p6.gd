@@ -342,7 +342,7 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 		var riesgo: float = lr[1]
 		var nota := progreso * (CHISPA_AVANCE * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1) \
 				+ 0.03 * float(_tac(bool(p["es_local"]), "verticalidad") - 1)) \
-			+ minf(libre, 10.0) * 0.18 - riesgo * MotorPaseMejora.RIESGO_K - dist * 0.02
+			+ minf(libre, 10.0) * 0.18 - riesgo * MotorPaseMejora.RIESGO_K - dist * MotorPaseMejora.DIST_K
 		## Un buen pasador ve el fuera de juego: con más visión (pase) casi
 		## nunca se la da a un compañero adelantado.
 		if _adelantado(q, p) and _rng.randf() < 0.55 + float(p["attr"]["pas"]) * 0.4:
