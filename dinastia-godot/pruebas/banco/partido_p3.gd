@@ -163,3 +163,106 @@ func _probar_apoyo_fuerzas() -> void:
 	np.position = Vector3(12.0, 0, 0)
 	_comprobar(MotorApoyo.fuerza(motor, p, c).length() <= MotorApoyo.TOPE + 0.01, "la fuerza nunca pasa del tope")
 	(r[1] as Node3D).queue_free()
+
+## ANCLA Y ENJAMBRE (03-11-2026, vídeo del dueño): nadie se aleja de su puesto más de su radio, y los pegados al balón no se marcan al hombre.
+func _probar_ancla_enjambre() -> void:
+	_titulo("ANCLA A LA POSICIÓN BASE Y SIN ENJAMBRE")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var locales: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var def: Dictionary = locales.filter(func(p: Dictionary) -> bool: return motor._rol(p) == "DFC")[0]
+	var base: Vector3 = MotorRoles.base(motor, def)
+	var lejos := MotorAncla.limitar(motor, def, base + Vector3(40.0, 0, 0))
+	_comprobar(absf(Vector2(lejos.x - base.x, lejos.z - base.z).length() - MotorAncla.radio(motor, def)) < 0.01, "un objetivo a 40 m de su puesto se recorta al radio (%.1f m)" % Vector2(lejos.x - base.x, lejos.z - base.z).length())
+	var cerca := base + Vector3(6.0, 0, 3.0)
+	_comprobar(MotorAncla.limitar(motor, def, cerca) == cerca, "un objetivo cercano no se toca")
+	var delantero: Variant = locales.filter(func(p: Dictionary) -> bool: return motor._rol(p) == "DC")
+	if not (delantero as Array).is_empty():
+		_comprobar(MotorAncla.radio(motor, def) < MotorAncla.radio(motor, delantero[0]), "la defensa tiene menos radio que el delantero")
+	## Sin enjambre: un rival pegado al balón no entra entre los marcados al hombre.
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	var arco := motor._arco_propio(def)
+	var hacia := (Vector3.ZERO - arco).normalized()
+	for i in vis.size():
+		(vis[i]["node"] as Node3D).position = Vector3(-30.0 + i * 5.0, 0, -arco.z * 0.9)
+	var balon := arco + hacia * 30.0
+	motor.balon.position = Vector3(balon.x, 0.11, balon.z)
+	(vis[0]["node"] as Node3D).position = balon + Vector3(4.0, 0, 0)       ## pegado al balón
+	(vis[1]["node"] as Node3D).position = arco + hacia * 14.0 + Vector3(-8.0, 0, 0)   ## libre y cerca del arco
+	motor.poseedor = {}
+	motor.t += 1.0
+	var mapa := MotorMarcaje.reparto(motor, true)
+	_comprobar(not mapa.has(String(vis[0]["id"])), "el rival pegado al balón (4 m) no se marca al hombre: lo cubre la presión")
+	_comprobar(mapa.has(String(vis[1]["id"])), "el libre cerca del arco sí tiene marcador")
+	(r[1] as Node3D).queue_free()
+
+## EL MAPA DE REGIONES NUMERADAS (03-11-2026, `MotorRegiones`): número de región, centro y ocupación (nadie comparte región).
+func _probar_regiones() -> void:
+	_titulo("MAPA DE REGIONES NUMERADAS Y OCUPACIÓN")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var ok := true
+	for n in MotorRegiones.COLS * MotorRegiones.FILAS:
+		var c := MotorRegiones.centro(motor, n)
+		ok = ok and MotorRegiones.numero(motor, c.x, c.z) == n
+	_comprobar(ok, "el centro de cada una de las %d regiones vuelve a su número" % (MotorRegiones.COLS * MotorRegiones.FILAS))
+	_comprobar(MotorRegiones.numero(motor, -999.0, -999.0) == 0 and MotorRegiones.numero(motor, 999.0, 999.0) == MotorRegiones.COLS * MotorRegiones.FILAS - 1, "fuera del campo se recorta a la región de la esquina")
+	var locales: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	motor.t += 1.0
+	var punto := MotorRegiones.centro(motor, 17) + Vector3(1.0, 0, 1.0)
+	var a := MotorRegiones.libre(motor, locales[0], punto)
+	var b := MotorRegiones.libre(motor, locales[1], punto)
+	var c := MotorRegiones.libre(motor, locales[2], punto)
+	_comprobar(a == punto, "el primero se queda con su región")
+	var rb := MotorRegiones.numero(motor, b.x, b.z)
+	var rc := MotorRegiones.numero(motor, c.x, c.z)
+	_comprobar(rb != 17 and rc != 17 and rb != rc, "el segundo y el tercero van a regiones distintas y libres (%d y %d)" % [rb, rc])
+	_comprobar(MotorRegiones.libre(motor, locales[0], punto) == punto, "el dueño de la región la conserva en el mismo fotograma")
+	motor.t += 0.5
+	_comprobar(MotorRegiones.libre(motor, locales[1], punto) == punto, "en el fotograma siguiente la ocupación se reinicia")
+	(r[1] as Node3D).queue_free()
+
+## ADAPTABILIDAD, HABILIDADES, FORMACIÓN Y ENTORNO (03-11-2026, `MotorAdaptacion`): lado fuerte del rival y radio de acción por jugador.
+func _probar_adaptacion() -> void:
+	_titulo("ADAPTACIÓN AL RIVAL, HABILIDADES Y ENTORNO")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var locales: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	_comprobar(MotorAdaptacion.desvio_x(motor, true, false) == 0.0, "al principio no se desplaza (aún no sabe por dónde ataca el rival)")
+	motor.poseedor = vis[0]
+	motor.balon.position = Vector3(25.0, 0.11, 10.0)
+	for i in 700:
+		MotorAdaptacion.actualizar(motor, 0.1)
+	var d := MotorAdaptacion.desvio_x(motor, true, false)
+	_comprobar(d > 1.5 and d <= MotorAdaptacion.TOPE_LADO, "tras 70 s con el rival atacando por la derecha, el bloque se corre hacia ese lado (%.1f m)" % d)
+	_comprobar(MotorAdaptacion.desvio_x(motor, false, true) == 0.0, "el equipo que ataca no se desplaza")
+	_comprobar(MotorAdaptacion.desvio_x(motor, true, true) == 0.0, "con la posesión propia tampoco")
+	## Habilidades: un jugador veloz y fuerte tiene más radio que uno lento y débil.
+	var p: Dictionary = locales[1]
+	var attr_viejo: Dictionary = (p["attr"] as Dictionary).duplicate()
+	p["attr"]["rit"] = 1.0
+	p["attr"]["fis"] = 1.0
+	var rapido := MotorAdaptacion.escala_radio(motor, p)
+	p["attr"]["rit"] = 0.15
+	p["attr"]["fis"] = 0.15
+	var lento := MotorAdaptacion.escala_radio(motor, p)
+	p["attr"] = attr_viejo
+	_comprobar(rapido > lento + 0.2, "el rápido y fuerte llega más lejos (%.2f frente a %.2f)" % [rapido, lento])
+	## Formación: el carrilero tiene más radio.
+	var q: Dictionary = locales[2]
+	var slot_viejo: Variant = q.get("slot_code", "")
+	q["slot_code"] = "LD"
+	var normal := MotorAdaptacion.escala_radio(motor, q)
+	q["slot_code"] = "CAD"
+	var carrilero := MotorAdaptacion.escala_radio(motor, q)
+	q["slot_code"] = slot_viejo
+	_comprobar(absf(carrilero / normal - 1.3) < 0.01, "el carrilero (CAD) tiene 1,3× de radio (%.2f)" % (carrilero / normal))
+	## Entorno: la lluvia junta al bloque.
+	motor.clima = ""
+	var seco := MotorAdaptacion.escala_radio(motor, p)
+	motor.clima = "lluvia"
+	var lluvia := MotorAdaptacion.escala_radio(motor, p)
+	motor.clima = ""
+	_comprobar(absf(lluvia / seco - 0.9) < 0.01, "con lluvia el radio baja un 10 % (%.2f)" % (lluvia / seco))
+	(r[1] as Node3D).queue_free()
