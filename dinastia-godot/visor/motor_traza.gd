@@ -34,6 +34,8 @@ static func tomar(m: MotorJugable, p: Dictionary) -> void:
 			var tiro_suyo := not m._tiro_vivo.is_empty() and (0 if bool((m._tiro_vivo["p"] as Dictionary)["es_local"]) else 1) == antes
 			var causa := ("pase_" + String(m.get_meta("_traza_pase", "otro"))) if m._pase_eq == antes else ("tiro" if tiro_suyo else ("entrada" if m.t - float(m.get_meta("_traza_ent", -9.0)) < 0.2 else (("saque_" + String(m.get_meta("_traza_saque_tipo", "otro"))) if m._t_estado < 4.0 else ("toque_largo" if m.t - float(m.get_meta("_traza_tl", -9.0)) < 0.2 else (_suelto(m, e, antes) if m.poseedor.is_empty() else "directo")))))
 			m._contar("traza_perdida_%s_%s" % [zona(m, antes), causa])
+			if causa.begins_with("pase_") and m.has_meta("_traza_geo"):
+				cortar(m, p)
 	e["eq"] = nuevo
 
 ## Llamar una vez por fotograma de juego: cuenta las entradas del balón al área rival (equipo = el último dueño).
@@ -83,3 +85,21 @@ static func pase(m: MotorJugable, p: Dictionary, q: Dictionary, dist: float) -> 
 	var clase := "%s_%s_%s" % [mueve, linea, d]
 	m._contar("traza_pase_" + clase)
 	m.set_meta("_traza_pase", clase)
+	var rivales := {}
+	for r: Dictionary in m.jugadores:
+		if bool(r["es_local"]) != bool(p["es_local"]):
+			rivales[String(r["id"])] = m.pos(r)
+	m.set_meta("_traza_geo", {"t": m.t, "a": m.pos(p), "b": m.pos(q), "rivales": rivales})
+
+## Un pase suyo lo corta el rival `p` (ciclo 14: mecánica de la intercepción): a qué distancia PERPENDICULAR de la línea del pase estaba `p` cuando salió el balón (`en_linea` < 1,2 m; `cerca` 1,2-3 m;
+## `corriendo` > 3 m: tuvo que correr a la línea) y cuánto tardó en cortarlo (`rapido` < 0,3 s: apenas hubo tiempo de reaccionar; `normal` 0,3-1,0 s; `lento` > 1,0 s).
+static func cortar(m: MotorJugable, p: Dictionary) -> void:
+	var g: Dictionary = m.get_meta("_traza_geo")
+	var pos0: Vector3 = (g["rivales"] as Dictionary).get(String(p["id"]), m.pos(p))
+	var a: Vector3 = g["a"]
+	var b: Vector3 = g["b"]
+	var cerca_linea := Geometry3D.get_closest_point_to_segment(Vector3(pos0.x, 0.0, pos0.z), Vector3(a.x, 0.0, a.z), Vector3(b.x, 0.0, b.z))
+	var perp := cerca_linea.distance_to(Vector3(pos0.x, 0.0, pos0.z))
+	var dt := m.t - float(g["t"])
+	m._contar("traza_corte_perp_" + ("en_linea" if perp < 1.2 else ("cerca" if perp < 3.0 else "corriendo")))
+	m._contar("traza_corte_t_" + ("rapido" if dt < 0.3 else ("normal" if dt < 1.0 else "lento")))
