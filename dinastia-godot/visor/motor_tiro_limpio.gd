@@ -98,7 +98,7 @@ static func fallar(m: MotorJugable, p: Dictionary, destino: Vector3, lejos: floa
 
 ## ALCANCE DEL TIRO (ciclo 7): con `TIRO_REAL=1` la IA tira desde más lejos (el 40 % de los tiros reales vienen de fuera del área; aquí solo el 16 %),
 ## con la distancia máxima y el divisor de las ganas multiplicados por `TIRO_ALCANCE` (1,2 por defecto). Apagado devuelve `x` tal cual.
-static var ALCANCE_K := float(OS.get_environment("TIRO_ALCANCE")) if OS.get_environment("TIRO_ALCANCE") != "" else 1.25
+static var ALCANCE_K := float(OS.get_environment("TIRO_ALCANCE")) if OS.get_environment("TIRO_ALCANCE") != "" else 1.5   ## 3-11 ciclo 22: 1,25 → 1,5 (más tiros: 16,6 → 21 por partido)
 
 static func alcance(x: float) -> float:
 	return x * ALCANCE_K if _real else x
@@ -106,7 +106,7 @@ static func alcance(x: float) -> float:
 ## BONO DE AREA (ciclo 7): con `TIRO_REAL=1`, dentro de `AREA_BONO` m del arco las ganas de tirar suben `TIRO_BONO` (0,25 por defecto), para que el reparto de tiros se
 ## parezca al real (≈60 % desde dentro del área; el motor tiraba sobre todo de lejos). Apagado suma 0,0.
 const AREA_BONO := 18.0
-static var BONO_K := float(OS.get_environment("TIRO_BONO")) if OS.get_environment("TIRO_BONO") != "" else 0.25
+static var BONO_K := float(OS.get_environment("TIRO_BONO")) if OS.get_environment("TIRO_BONO") != "" else 0.4   ## 3-11 ciclo 22: 0,25 → 0,4
 
 static func bono_area(dist_arco: float) -> float:
 	return BONO_K if (_real and dist_arco < AREA_BONO) else 0.0
