@@ -64,8 +64,21 @@ static func aplicar(mundo: Mundo) -> int:
 	return total
 
 static func _aplicar_en_club(club: Club, lista: Array, posd: Dictionary) -> int:
-	var usados: Dictionary = {}
 	var aplicados := 0
+	## M-349 (3-11): la demarcación y el grupo de cada puesto se miran UNA vez por club (antes, un `Callable` por jugador y por real: ~25 × 3 llamadas).
+	## Solo cuentan los aún libres, y esos no cambian de `pos_e` durante el bucle: el resultado es idéntico.
+	var plantilla := club.plantilla
+	var ds := PackedStringArray()
+	var gs := PackedStringArray()
+	var libres := PackedByteArray()
+	ds.resize(plantilla.size())
+	gs.resize(plantilla.size())
+	libres.resize(plantilla.size())
+	libres.fill(1)
+	for k in plantilla.size():
+		var dp: Dictionary = posd.get(plantilla[k].pos_e, {})
+		ds[k] = String(dp.get("d", ""))
+		gs[k] = String(dp.get("g", ""))
 	for fila: Variant in lista:
 		var partes := String(fila).split("|")
 		if partes.size() < 4:
@@ -86,17 +99,16 @@ static func _aplicar_en_club(club: Club, lista: Array, posd: Dictionary) -> int:
 		## central generado y el club acababa con seis centrales, ningún carril
 		## y las bandas cubiertas por gente de área-. Dentro de cada nivel, el
 		## de media más baja aún libre.
-		var candidato := _mas_flojo_libre(club.plantilla, usados, func(j: Jugador) -> bool:
-			return String((posd.get(j.pos_e, {}) as Dictionary).get("d", "")) == demarcacion)
-		if candidato == null:
-			candidato = _mas_flojo_libre(club.plantilla, usados, func(j: Jugador) -> bool:
-				return String((posd.get(j.pos_e, {}) as Dictionary).get("g", "")) == grupo)
-		if candidato == null:
-			candidato = _mas_flojo_libre(club.plantilla, usados, func(_j: Jugador) -> bool: return true)
-		if candidato == null:
+		var k_cand := _mas_flojo(plantilla, libres, ds, demarcacion)
+		if k_cand < 0:
+			k_cand = _mas_flojo(plantilla, libres, gs, grupo)
+		if k_cand < 0:
+			k_cand = _mas_flojo(plantilla, libres, PackedStringArray(), "")
+		if k_cand < 0:
 			break
 
-		usados[candidato.id] = true
+		libres[k_cand] = 0
+		var candidato: Jugador = plantilla[k_cand]
 		candidato.nombre = nombre
 		candidato.real = true
 		candidato.pos_e = pos_e
@@ -137,13 +149,18 @@ static func _aplicar_en_club(club: Club, lista: Array, posd: Dictionary) -> int:
 		_reescalar_generados(club)
 	return aplicados
 
-static func _mas_flojo_libre(plantilla: Array[Jugador], usados: Dictionary, filtro: Callable) -> Jugador:
-	var mejor: Jugador = null
-	for j: Jugador in plantilla:
-		if usados.has(j.id) or not filtro.call(j):
+## El índice del libre de media más baja (el primero si empatan) cuya clave en `claves` es `valor`; con `claves` vacío, cualquiera. -1 si no hay.
+static func _mas_flojo(plantilla: Array[Jugador], libres: PackedByteArray, claves: PackedStringArray, valor: String) -> int:
+	var mejor := -1
+	var ovr_mejor := 0
+	var filtrar := not claves.is_empty()
+	for k in plantilla.size():
+		if libres[k] == 0 or (filtrar and claves[k] != valor):
 			continue
-		if mejor == null or j.ovr < mejor.ovr:
-			mejor = j
+		var o := plantilla[k].ovr
+		if mejor < 0 or o < ovr_mejor:
+			mejor = k
+			ovr_mejor = o
 	return mejor
 
 ## Un suplente inventado no puede salir mejor que el fondo de plantel real -el
