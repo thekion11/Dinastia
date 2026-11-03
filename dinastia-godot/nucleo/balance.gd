@@ -90,7 +90,15 @@ const SENSIBILIDAD := 3.2
 ## por partido (sin ella, hoy, 2,63). Con 0,28 queda en 2,70. Se baja la conversión y no las llegadas (`BASE_ATAQUE`) porque deja intactos los remates y el xG por llegada
 ## (media 0,27: `0,09 + f^0,25 · 0,22`, la auditoría del 26-10), y los goles pasan a ser ~1,05 veces el xG en vez de ~1,13. Sube la mitad que el 0,30 de antes en la
 ## cuota de atajadas (entre CONVERSION y R_ATAJADA): los tiros a puerta (gol + atajada, hasta R_ATAJADA) no cambian.
-const CONVERSION := 0.28
+const CONVERSION := 0.267
+
+## LOS PENALES (3-11-2026, orden del líder): medido con `pruebas/zz_medir_stats.tscn` el partido simulado daba 0,00 penales por partido (solo el árbitro «estricto» los cobraba, 0,004 por llegada);
+## el fútbol real: ~0,25-0,3, convertidos ~76 %. `P_PENAL` es la probabilidad base de que una llegada acabe en falta dentro del área (con ~9,6 llegadas por partido: ~0,29 penales),
+## `PENAL_PERFIL` la escala por el perfil del árbitro (el estricto pita más, el permisivo menos). Cada penal convertido es un gol que no pasa por `CONVERSION` (y la llegada ya no es un
+## remate normal): `CONVERSION` baja de 0,28 a 0,267 para que los goles sigan en ~2,7 por partido.
+const P_PENAL := 0.03
+const CONVERSION_PENAL := 0.77
+const PENAL_PERFIL := {"estricto": 1.6, "tarjetero": 1.2, "permisivo": 0.6}
 
 ## LAS ESTADÍSTICAS DE RELLENO DEL PARTIDO SIMULADO (3-11-2026, orden del líder): córners, faltas y fueras de juego son solo contadores que se enseñan en las pantallas del partido (no
 ## deciden nada), una tirada por minuto y lado. Eran las del HTML (córners 0,10/0,09, faltas 0,16/0,17, fueras 0,05/0,05 por minuto) y daban 17,1 córners, 29,6 faltas y 9,0 fueras por
