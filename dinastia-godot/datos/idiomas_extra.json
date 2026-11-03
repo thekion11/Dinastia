@@ -7157,7 +7157,9 @@
   "General": "General",
   "Atajos del menú": "Menu shortcuts",
   "Atajos generales": "General shortcuts",
-  "Quitar": "Remove"
+  "Quitar": "Remove",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "The whole club is in the buttons of the [b]rail on the left[/b]: Squad, Match, Money, People, Stadium, Settings... Each one opens its menu full screen.",
+  "Abre cualquier menú del riel": "Open any menu on the rail"
  },
  "pt": {
   "Historia": "História",
@@ -14317,7 +14319,9 @@
   "General": "Geral",
   "Atajos del menú": "Atalhos do menu",
   "Atajos generales": "Atalhos gerais",
-  "Quitar": "Remover"
+  "Quitar": "Remover",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "O clube inteiro está nos botões do [b]trilho da esquerda[/b]: Plantel, Jogo, Dinheiro, Pessoas, Estádio, Ajustes... Cada um abre o seu menu em ecrã inteiro.",
+  "Abre cualquier menú del riel": "Abre qualquer menu do trilho"
  },
  "patrones": [
   [
@@ -20138,6 +20142,17 @@
    "No es pot becar: no hi ha caixa: costa $1 i tens $2.",
    "Nie można przyznać stypendium: brak środków: kosztuje $1, a masz $2.",
    "Burs verilemez: kasa yok: maliyeti $1, sende $2 var."
+  ],
+  [
+   "^Puedes\\ pedirle\\ cosas\\ a\\ (.+?)\\ \\-más\\ minutos\\ para\\ la\\ cantera,\\ rotar\\ a\\ los\\ cansados\\-,\\ pero\\ cada\\ vez\\ que\\ te\\ metes\\ en\\ su\\ trabajo\\ la\\ relación\\ se\\ desgasta\\.\\ Eso\\ está\\ en\\ \\[b\\]GENTE\\ →\\ Personal\\ del\\ club\\[/b\\]\\.$",
+   "You can ask $1 for things -more minutes for the academy kids, resting the tired ones-, but every time you meddle in his work the relationship wears thin. That's in [b]PEOPLE → Club Staff[/b].",
+   "Você pode pedir coisas a $1 -mais minutos para a base, rodar os cansados-, mas cada vez que se mete no trabalho dele a relação se desgasta. Isso fica em [b]PESSOAS → Equipe do Clube[/b].",
+   "Tu peux demander des choses à $1 -plus de temps de jeu pour les jeunes, faire tourner les joueurs fatigués-, mais chaque fois que tu te mêles de son travail, la relation s'use. C'est dans [b]GENS → Personnel du club[/b].",
+   "Puoi chiedere cose a $1 -più minuti per il vivaio, far ruotare gli stanchi-, ma ogni volta che ti intrometti nel suo lavoro il rapporto si logora. Lo trovi in [b]GENTE → Staff del club[/b].",
+   "Du kannst $1 um Dinge bitten -mehr Einsatzzeit für die Jugend, die Müden schonen-, aber jedes Mal, wenn du dich in seine Arbeit einmischst, leidet das Verhältnis. Das findest du unter [b]LEUTE → Vereinsmitarbeiter[/b].",
+   "Pots demanar coses a $1 -més minuts per al planter, fer rotar els cansats-, però cada vegada que et fiques en la seva feina la relació es desgasta. Això és a [b]GENT → Personal del club[/b].",
+   "Możesz prosić o różne rzeczy ($1) -więcej minut dla akademii, rotację zmęczonych-, ale za każdym razem, gdy wtrącasz się w jego pracę, relacja się psuje. To jest w [b]LUDZIE → Personel klubu[/b].",
+   "$1 ile bazı şeyler isteyebilirsin -altyapıya daha çok süre, yorgunları dinlendirmek-, ama işine her karıştığında ilişki yıpranır. Bunu [b]İNSANLAR → Kulüp Personeli[/b] bölümünde bulursun."
   ]
  ],
  "fr": {
@@ -27298,7 +27313,9 @@
   "General": "Général",
   "Atajos del menú": "Raccourcis du menu",
   "Atajos generales": "Raccourcis généraux",
-  "Quitar": "Retirer"
+  "Quitar": "Retirer",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Tout le club est dans les boutons du [b]rail de gauche[/b] : Effectif, Match, Argent, Gens, Stade, Réglages... Chacun ouvre son menu en plein écran.",
+  "Abre cualquier menú del riel": "Ouvre n'importe quel menu du rail"
  },
  "it": {
   "Historia": "Storia",
@@ -34458,7 +34475,9 @@
   "General": "Generale",
   "Atajos del menú": "Scorciatoie del menu",
   "Atajos generales": "Scorciatoie generali",
-  "Quitar": "Rimuovi"
+  "Quitar": "Rimuovi",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Tutto il club è nei pulsanti della [b]barra a sinistra[/b]: Rosa, Partita, Soldi, Gente, Stadio, Impostazioni... Ognuno apre il suo menu a schermo intero.",
+  "Abre cualquier menú del riel": "Apri un menu qualsiasi della barra"
  },
  "de": {
   "Historia": "Geschichte",
@@ -41618,7 +41637,9 @@
   "General": "Allgemein",
   "Atajos del menú": "Menü-Tastenkürzel",
   "Atajos generales": "Allgemeine Tastenkürzel",
-  "Quitar": "Entfernen"
+  "Quitar": "Entfernen",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Der ganze Klub steckt in den Knöpfen der [b]Leiste links[/b]: Kader, Spiel, Geld, Leute, Stadion, Einstellungen... Jeder öffnet sein Menü im Vollbild.",
+  "Abre cualquier menú del riel": "Öffne ein beliebiges Menü der Leiste"
  },
  "ca": {
   "Historia": "Història",
@@ -48778,7 +48799,9 @@
   "General": "General",
   "Atajos del menú": "Dreceres del menú",
   "Atajos generales": "Dreceres generals",
-  "Quitar": "Treure"
+  "Quitar": "Treure",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Tot el club és als botons del [b]carril de l'esquerra[/b]: Plantilla, Partit, Diners, Gent, Estadi, Ajustos... Cadascun obre el seu menú a pantalla completa.",
+  "Abre cualquier menú del riel": "Obre qualsevol menú del carril"
  },
  "pl": {
   "Club": "Klub",
@@ -56207,7 +56230,9 @@
   "General": "Ogólne",
   "Atajos del menú": "Skróty menu",
   "Atajos generales": "Skróty ogólne",
-  "Quitar": "Usuń"
+  "Quitar": "Usuń",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Cały klub jest w przyciskach [b]paska po lewej[/b]: Skład, Mecz, Pieniądze, Ludzie, Stadion, Ustawienia... Każdy otwiera swoje menu na pełnym ekranie.",
+  "Abre cualquier menú del riel": "Otwórz dowolne menu na pasku"
  },
  "tr": {
   "Club": "Kulüp",
@@ -63636,6 +63661,8 @@
   "General": "Genel",
   "Atajos del menú": "Menü kısayolları",
   "Atajos generales": "Genel kısayollar",
-  "Quitar": "Kaldır"
+  "Quitar": "Kaldır",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Kulübün tamamı [b]soldaki şeridin[/b] düğmelerinde: Kadro, Maç, Para, İnsanlar, Stadyum, Ayarlar... Her biri menüsünü tam ekran açar.",
+  "Abre cualquier menú del riel": "Şeritten herhangi bir menüyü aç"
  }
 }

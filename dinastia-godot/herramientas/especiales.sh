@@ -198,6 +198,7 @@ pasa "s7t_tutorial_capas" "godot --headless --path . res://pruebas/ideas/s7t_tut
 pasa "s7x_desafios_dificultad" "godot --headless --path . res://pruebas/ideas/s7x_desafios_dificultad.tscn" "(^|[^0-9])0 fallos"
 pasa "trad_prensa" "godot --headless --path . res://pruebas/ideas/trad_prensa.tscn" "(^|[^0-9])0 fallos"
 pasa "trad_tutorial" "godot --headless --path . res://pruebas/ideas/trad_tutorial.tscn" "(^|[^0-9])0 fallos"
+pasa "tut_guia_visible" "godot --headless --path . res://pruebas/ideas/tut_guia_visible.tscn" "(^|[^0-9])0 fallos"
 pasa "tre_coches" "godot --headless --path . res://pruebas/ideas/tre_coches.tscn" "(^|[^0-9])0 fallos"
 pasa "zz_alt" "godot --headless --path . res://pruebas/ideas/zz_alt.tscn" "(^|[^0-9])0 fallos"
 pasa "timing_disparo_jugadas" "godot --headless --path . res://pruebas/timing_disparo_jugadas.tscn" "(^|[^0-9])0 fallos"
