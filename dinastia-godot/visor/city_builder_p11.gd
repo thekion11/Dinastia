@@ -133,7 +133,7 @@ func build(d: Dictionary) -> void:
 		c.free()
 	etiquetas.clear()
 	circulos = PackedVector3Array()
-	_mats_torre.clear()
+	_mats_torre.clear(); _n_torre = 0
 	puntos_clic.clear()
 	_rotulos = Node3D.new()
 	_rotulos.name = "Rotulos"
@@ -395,7 +395,7 @@ func _manzana(c: Vector3, comercial: Array[PackedScene], naves: Array[PackedScen
 			u += ancho + rng.randf_range(0.3, 2.0)
 	if not naves.is_empty() and rng.randf() < 0.85:
 		var b: Node3D = naves[rng.randi() % naves.size()].instantiate()
-		vestir_torre(b, int(b.get_instance_id()))
+		vestir_torre(b, _siguiente_torre())
 		var sb: float = 5.5 * rng.randf_range(0.9, 1.2)
 		b.scale = Vector3.ONE * sb
 		b.rotation.y = float(rng.randi() % 4) * PI * 0.5
