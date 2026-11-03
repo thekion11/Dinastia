@@ -106,3 +106,6 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 23. (3-11) El DUEÑO se encarga de la JUGABILIDAD del partido y de los F1-F8 de la pasada final del motor (colocación sin balón,
     roles dinámicos, desmarques, marcaje, carreras al espacio, línea de tiro, portero, «imagen mental»): las sesiones no los tocan.
     Sin 4.ª sesión.
+24. (3-11 noche) La sesión «PES 6» (session_015HWWmjio56aXxN6bLo3tob, rama ccr-454350d9-9chain, PR #128) lleva TODO el partido puro:
+    IA de los 22 (F1-F8) y comportamiento físico, trabajando sin parar (medir, investigar, cambiar con bandera, volver a medir);
+    bitácora en docs/04_auditorias/IA_PARTIDO_BITACORA.md. La líder la dirige y la empuja cada ~20 min. Su rama no se une sin OK del dueño.
