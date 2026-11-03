@@ -322,7 +322,7 @@ func _fin_de_mitad() -> void:
 func _gol(en_arco_visita: bool) -> void:
 	## El arco de +Z es el de la visita: gol del local.
 	var de_local := en_arco_visita
-	_contar("gol_%s" % String(_tiro_vivo.get("clase", "sin_tiro")))
+	_contar("gol_%s" % String(_tiro_vivo.get("clase", "sin_tiro"))); MotorTraza.gol(self as Object as MotorJugable, de_local)   ## (ciclo 23) solo cuenta
 	_tiro_vivo = {}
 	goles[0 if de_local else 1] += 1
 	var autor := ultimo_toque

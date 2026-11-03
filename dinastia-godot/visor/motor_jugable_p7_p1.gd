@@ -303,7 +303,7 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	_patear(p, destino, vh, loft, efecto, "patear")
 	tiros[0 if bool(p["es_local"]) else 1] += 1
 	_cerrar_tiro("fallo")   ## (01-11) el remate anterior aún abierto se cierra: si no, el mapa de tiros lo contaba y el acta no
-	_tiro_vivo = {"p": p, "t": t, "clase": clase}
+	_tiro_vivo = {"p": p, "t": t, "clase": clase}; MotorTraza.tiro(self as Object as MotorJugable, p, lejos)   ## (ciclo 23) solo cuenta
 	_contar("tiro_%s" % clase)
 	_contar("tiro_%s_%s" % [clase, "dentro" if lejos < 16.5 else ("frontal" if lejos < 25.0 else "lejos")])
 	if absf(destino.x) < PALO and destino.y < LARGUERO:

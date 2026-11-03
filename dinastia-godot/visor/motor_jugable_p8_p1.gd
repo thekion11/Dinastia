@@ -29,7 +29,7 @@ func _zona_de_llegada(p: Dictionary) -> Vector3:
 		return Vector3.INF
 	var arco := _arco_rival(p)
 	var pb := pos(poseedor)
-	if pb.distance_to(arco) > 32.0:
+	if pb.distance_to(arco) > MotorApoyo.LLEGADA_R:
 		return Vector3.INF
 	## Los dos apoyos cercanos siguen ofreciéndose al portador.
 	if pos(p).distance_to(pb) < 9.0:
