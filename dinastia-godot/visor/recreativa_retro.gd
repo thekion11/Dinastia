@@ -35,7 +35,7 @@ static func montar(b: Node3D, pos: Vector3) -> bool:
 	b.add_child(rot)
 	return true
 
-## El gancho de la E (`ComercioCiudad.servicio`).
+## El gancho de la E (`CargaCiudad.de("ComercioCiudad").servicio`).
 static func servicio(e, k: String) -> bool:
 	if k != CLAVE:
 		return false

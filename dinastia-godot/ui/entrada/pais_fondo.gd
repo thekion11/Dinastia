@@ -164,7 +164,7 @@ func poner_pais(p: String) -> void:
 
 ## El siguiente de los cinco (lo llama el reloj de 30 s; la prueba también).
 func avanzar() -> void:
-	var n := PaisDatos.monumentos(pais).size()
+	var n = CargaCiudad.de("PaisDatos").monumentos(pais).size()
 	if n == 0:
 		return
 	indice = (indice + 1) % n
@@ -172,7 +172,7 @@ func avanzar() -> void:
 	_mostrar()
 
 func monumento_actual() -> Array:
-	var lista := PaisDatos.monumentos(pais)
+	var lista = CargaCiudad.de("PaisDatos").monumentos(pais)
 	return lista[indice] if indice < lista.size() else []
 
 func segundos_para_el_siguiente() -> float:

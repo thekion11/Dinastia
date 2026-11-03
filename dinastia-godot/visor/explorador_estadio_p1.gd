@@ -59,7 +59,7 @@ var _butaca: Dictionary = {}
 var _hinchas_quitados: Array = []
 
 func _aplicar_ajustes() -> void:
-	_ayudas = bool(AjustesCiudad.valor("ayudas", false))
+	_ayudas = bool(CargaCiudad.de("AjustesCiudad").valor("ayudas", false))
 	if _hud != null:
 		_hud.visible = _ayudas
 	if _aviso != null:
@@ -98,12 +98,12 @@ func _crear_cuerpo() -> Node3D:
 		raiz.queue_free()
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 7
-	var d := PeatonQ.crear(rng)
+	var d = CargaCiudad.de("PeatonQ").crear(rng)
 	if d.is_empty():
 		return Node3D.new()
 	var n: Node3D = d["nodo"]
 	add_child(n)
-	PeatonQ.terminar(d)
+	CargaCiudad.de("PeatonQ").terminar(d)
 	remove_child(n)
 	_anim = _buscar_anim(n)
 	return n
@@ -261,7 +261,7 @@ func _montar_hud() -> void:
 	base.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	base.offset_left = 24
 	base.offset_top = -tam * 3.0 - 24
-	base.visible = ExploradorCiudad.es_tactil()
+	base.visible = CargaCiudad.de("ExploradorCiudad").es_tactil()
 	_capa.add_child(base)
 	for d: Array in [["▲", Vector2(1, 0), Vector2(0, 1)], ["▼", Vector2(1, 2), Vector2(0, -1)],
 			["◀", Vector2(0, 1), Vector2(-1, 0)], ["▶", Vector2(2, 1), Vector2(1, 0)]]:
@@ -300,7 +300,7 @@ func _montar_hud() -> void:
 	engranaje.focus_mode = Control.FOCUS_NONE
 	engranaje.pressed.connect(func() -> void:
 		if _capa.get_node_or_null("AjustesCiudad") == null:
-			var a := AjustesCiudad.crear(_aplicar_ajustes)
+			var a = CargaCiudad.de("AjustesCiudad").crear(_aplicar_ajustes)
 			a.name = "AjustesCiudad"
 			_capa.add_child(a))
 	_capa.add_child(engranaje)
@@ -326,7 +326,7 @@ func _montar_hud() -> void:
 	bs.modulate = Color(1, 1, 1, 0.75)
 	bs.focus_mode = Control.FOCUS_NONE
 	bs.pressed.connect(func() -> void: salir.emit())
-	bs.visible = ExploradorCiudad.es_tactil()
+	bs.visible = CargaCiudad.de("ExploradorCiudad").es_tactil()
 	_capa.add_child(bs)
 
 func iniciar(est: Dictionary, niveles: int, club: Club) -> void:

@@ -222,7 +222,7 @@ static func _multi(e: Node3D, malla: Mesh, xfs: Array[Transform3D], mat: Materia
 ## Un aparcamiento: hileras de plazas con rayas blancas y coches (no todas
 ## ocupadas). `centro` en el suelo; `a_lo_largo_z`: si las hileras corren en z.
 static func _aparcamiento(e: Node3D, centro: Vector3, a_lo_largo_z: bool, largo: float, rng: RandomNumberGenerator) -> void:
-	var flota := CityBuilder.flota_coches()
+	var flota = CargaCiudad.de("CityBuilder").flota_coches()
 	var raya := QuadMesh.new()
 	raya.size = Vector2(0.14, 5.0)
 	var rayas: Array[Transform3D] = []
@@ -238,7 +238,7 @@ static func _aparcamiento(e: Node3D, centro: Vector3, a_lo_largo_z: bool, largo:
 			rayas.append(Transform3D((Basis(Vector3.UP, PI * 0.5) if a_lo_largo_z else Basis()) * acostada, centro + pos + (Vector3(0, -0.06, 1.35) if a_lo_largo_z else Vector3(1.35, -0.06, 0))))
 			if flota.is_empty() or rng.randf() > 0.62:
 				continue
-			var coche := CityBuilder.instanciar_coche(flota[rng.randi() % flota.size()], rng)
+			var coche = CargaCiudad.de("CityBuilder").instanciar_coche(flota[rng.randi() % flota.size()], rng)
 			coche.position = centro + pos
 			## Aparcados de morro hacia el pasillo central (cada hilera mira a la otra).
 			var mira: float = -hilera

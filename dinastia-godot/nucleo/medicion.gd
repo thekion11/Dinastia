@@ -142,7 +142,7 @@ func _process(delta: float) -> void:
 		2:
 			_vista.queue_free()
 			_cargar("abrir la ciudad", func() -> void:
-				_vista = VistaCiudad.new()
+				_vista = CargaCiudad.de("VistaCiudad").new()
 				get_tree().root.add_child(_vista)
 				_vista.abrir(_mundo.mi_club(), _mundo.obras, _mundo.ciudad, _mundo.perfil_estadio_de(_mundo.mi_club())))
 			_empezar_parte("ciudad")

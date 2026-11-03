@@ -138,7 +138,7 @@ static var ctx_medico: Medico = null
 static var ctx_club_id: String = ""
 static var ctx_anio: int = 0
 static var ctx_semana: int = 0
-## `Ciudad.penalizacion_cesped()` de tu estadio, 1.0 si está en condiciones o
+## `CargaCiudad.de("Ciudad").penalizacion_cesped()` de tu estadio, 1.0 si está en condiciones o
 ## no tienes -Ciudad se crea con el primer terreno, no desde el arranque-.
 ## Solo pega cuando juegas de LOCAL: el pasto que se destroza es el tuyo.
 static var ctx_cesped_local: float = 1.0

@@ -70,14 +70,14 @@ var pendiente: Dictionary = {}   ## asunto de la vida abierto
 var perfil: Dictionary = {}      ## {pareja, hijos:[...], mascota}
 var historial: Array = []        ## [{anio, semana, texto}], lo más nuevo primero
 var bienvenida: bool = false
-## EL DEPÓSITO DEL COCHE (27-10-2026): se gasta al conducir por la ciudad en 3D (`VidaCiudad.gasolina_tick`), vacío no arranca
+## EL DEPÓSITO DEL COCHE (27-10-2026): se gasta al conducir por la ciudad en 3D (`CargaCiudad.de("VidaCiudad").gasolina_tick`), vacío no arranca
 ## y se llena en los surtidores. `aviso_comb` = la semana (año*100+semana) del último aviso de «menos del 15 %».
 const DEPOSITO_L := 45.0
 const L_POR_KM := 0.5   ## (31-10, decisión del dueño) antes 2,5: 18 km por depósito; ahora ~90 km
 var combustible: float = DEPOSITO_L
 var premium := false
 ## (31-10, mejora C del coche) Los golpes del coche: 0 = nuevo, 100 = destrozado. Con `DANIO_TALLER` o más
-## el coche va al taller esa semana (`VidaCiudad.transporte`) y vuelve reparado la siguiente.
+## el coche va al taller esa semana (`CargaCiudad.de("VidaCiudad").transporte`) y vuelve reparado la siguiente.
 var danio := 0
 const DANIO_TALLER := 70   ## (§2.5) el último repostaje fue premium: rinde un 15 % más
 var aviso_comb: int = -1

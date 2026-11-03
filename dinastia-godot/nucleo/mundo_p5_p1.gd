@@ -20,7 +20,7 @@ func _semana_contexto_de_partidos() -> void:
 	Partido.ctx_club_id = mi_club_id
 	Partido.ctx_anio = anio
 	Partido.ctx_semana = semana
-	## EL CÉSPED DE TU ESTADIO. `Ciudad.penalizacion_cesped()` -"el único
+	## EL CÉSPED DE TU ESTADIO. `CargaCiudad.de("Ciudad").penalizacion_cesped()` -"el único
 	## efecto" del césped, dice su propio comentario- llevaba escrita desde
 	## siempre sin que nadie la multiplicara en ningún cálculo de partido:
 	## alquilar el estadio para un concierto rompía el pasto solo en

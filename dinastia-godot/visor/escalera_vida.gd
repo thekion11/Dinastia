@@ -1,6 +1,6 @@
 class_name EscaleraVida
 extends Node3D
-## PEATONES QUE SUBEN Y BAJAN ESCALERAS (calidad visual P3, 27-10-2026). Cada escalera registra en `CityBuilder.escaleras`
+## PEATONES QUE SUBEN Y BAJAN ESCALERAS (calidad visual P3, 27-10-2026). Cada escalera registra en `CargaCiudad.de("CityBuilder").escaleras`
 ## {pie: Vector3 (suelo del primer peldaño), cima: Vector3 (suelo del último), n: peldaños}. Cerca del jugador, alguien la sube o
 ## la baja con los pasos SINCRONIZADOS: el cuerpo avanza peldaño a peldaño (sube de golpe en la mitad de cada paso) y el ciclo de
 ## «caminar» se ajusta para que cada pie caiga en un peldaño. Las bocas del metro se tragan al que baja y escupen al que sube.
@@ -9,19 +9,19 @@ const ALCANCE := 60.0
 const MAX_ACTIVAS := 2
 const V_PASO := 0.55   ## s por peldaño
 
-var expl: ExploradorCiudad
+var expl
 var _activas: Array = []   ## {i, sube, t, fig, dur}
 var _t := 5.0
 var _cuenta := 0
 
-static func crear(v: VidaCiudad) -> EscaleraVida:
+static func crear(v) -> EscaleraVida:
 	var s := EscaleraVida.new()
 	s.name = "EscalerasVivas"
 	s.expl = v.expl
 	v.add_child(s)
 	return s
 
-static func registrar(b: CityBuilder, pie: Vector3, cima: Vector3, peldanos: int) -> void:
+static func registrar(b, pie: Vector3, cima: Vector3, peldanos: int) -> void:
 	b.escaleras.append({"pie": pie, "cima": cima, "n": peldanos})
 
 ## Altura del cuerpo con el avance `u` (0..1): escalonada y suavizada, un salto por peldaño.
@@ -64,7 +64,7 @@ func _en_uso(i: int) -> bool:
 
 func iniciar(i: int, sube: bool) -> void:
 	var e: Dictionary = expl.cb.escaleras[i]
-	var fig := PeatonVida.nuevo(expl.cb, 8100 + i * 17 + _cuenta)
+	var fig = CargaCiudad.de("PeatonVida").nuevo(expl.cb, 8100 + i * 17 + _cuenta)
 	if fig.is_empty():
 		return
 	var pie: Vector3 = e["pie"]
