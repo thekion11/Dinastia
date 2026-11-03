@@ -368,6 +368,7 @@ static func _seq_de(id: String, prefijo: String, defecto: int) -> int:
 	return int(n) if id.begins_with(prefijo) and n.is_valid_int() else defecto
 
 static func cargar(nombre: String) -> Mundo:
+	GuardadoSegundoPlano.esperar()   ## (3-11) no leer un archivo mientras el autoguardado lo está escribiendo
 	var t0 := Time.get_ticks_msec()
 	var m := desde_instantanea(_leer_con_respaldo(ruta_de(nombre)))
 	PartidaArchivo.ms_carga = Time.get_ticks_msec() - t0
