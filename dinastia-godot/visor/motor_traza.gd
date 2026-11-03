@@ -125,6 +125,14 @@ static func _linea(m: MotorJugable, e: Dictionary) -> void:
 				zs.append(m.pos(q).z)
 		if xs.size() != 4:
 			continue
+		## Sin el defensa más cercano al balón (el que presiona sale de la línea): desfase de los otros tres.
+		var ord: Array = []
+		for q: Dictionary in m.jugadores:
+			if bool(q["es_local"]) == local and m._rol(q) in ["DFC", "LD", "LI"]:
+				ord.append([m.pos(q).distance_to(m.balon.position), m.pos(q).z])
+		ord.sort_custom(func(u: Array, v: Array) -> bool: return u[0] < v[0])
+		var z3 := [float(ord[1][1]), float(ord[2][1]), float(ord[3][1])]
+		m.diag["traza_linea_prof3_dm"] = int(m.diag.get("traza_linea_prof3_dm", 0)) + int(10.0 * (maxf(z3[0], maxf(z3[1], z3[2])) - minf(z3[0], minf(z3[1], z3[2]))))
 		xs.sort()
 		zs.sort()
 		m.diag["traza_linea_n"] = int(m.diag.get("traza_linea_n", 0)) + 1
@@ -197,6 +205,7 @@ static func tiro(m: MotorJugable, p: Dictionary, lejos: float) -> void:
 
 static func gol(m: MotorJugable, de_local: bool) -> void:
 	m._contar("traza_gol_zona_" + String(m.get_meta("_traza_tiro_zona", "sin")))
+	m._contar("traza_gol_origen_" + ("parado" if m._t_estado < 8.0 else "juego"))
 	var a: Dictionary = m.penultimo_toque
 	m._contar("traza_gol_con_asist" if (not a.is_empty() and bool(a["es_local"]) == de_local and a != m.ultimo_toque) else "traza_gol_sin_asist")
 
