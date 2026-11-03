@@ -75,6 +75,7 @@ pasa "minijuegos 3D (penales y tiro libre)" "godot --headless --path . res://pru
 pasa "el entrenamiento se nota" "godot --headless --path . res://pruebas/ideas/j9_entrenamiento.tscn" "FIN. 0 fallos"
 pasa "portero de la Carrera" "godot --headless --path . res://pruebas/ideas/cpor_portero.tscn" "FIN. 0 fallos"
 pasa "penales en partido: ~75 % marcados (sonda)" "godot --headless --path . res://pruebas/ideas/sonda_penales.tscn" "FIN. 0 fallos"
+pasa "aviso de amarillas antes de la sanción (U6)" "godot --headless --path . res://pruebas/ideas/u6_amarillas.tscn" "FIN. 0 fallos"
 pasa "coste del viaje y del día de partido desglosado (U6)" "godot --headless --path . res://pruebas/ideas/u6_viaje.tscn" "FIN. 0 fallos"
 pasa "pago con tarjeta y PIN en tienda, gasolinera y expendedora (U6)" "godot --headless --path . res://pruebas/ideas/u6_tarjeta.tscn" "FIN. 0 fallos"
 pasa "caché en disco del audio sintetizado (R5)" "godot --headless --path . res://pruebas/ideas/r5_cache_audio.tscn" "FIN. 0 fallos"

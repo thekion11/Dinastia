@@ -21,3 +21,22 @@ static func sanciona(j: Jugador) -> void:
 
 static func frase(j: Jugador) -> String:
 	return Idiomas.t("%s ve su amarilla número %d de la temporada: se pierde el próximo partido.") % [j.nombre, j.amarillas]
+
+## ¿A UNA AMARILLA DE LA SANCIÓN? (U6, 3-11): la regla existía pero nadie avisaba antes de la tarjeta que cuesta un partido. Con 4, 9, 14… amarillas
+## (una menos que el ciclo) y sin estar ya sancionado, la próxima amarilla lo deja fuera. Lo usan Mi plantel (marca 🟨) y la previa del partido.
+static func a_una(j: Jugador) -> bool:
+	return j != null and j.suspension <= 0 and j.amarillas > 0 and j.amarillas % AMARILLAS_CICLO == AMARILLAS_CICLO - 1
+
+## Los del club que están a una amarilla de la sanción, en el orden del plantel.
+static func al_borde(c: Club) -> Array[Jugador]:
+	var out: Array[Jugador] = []
+	if c == null:
+		return out
+	for j: Jugador in c.plantilla:
+		if a_una(j):
+			out.append(j)
+	return out
+
+static func frase_borde(j: Jugador) -> String:
+	return Idiomas.t("%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.") % [j.nombre, j.amarillas, AMARILLAS_CICLO]
+
