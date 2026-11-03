@@ -7126,7 +7126,8 @@
   "Chándal de entrenamiento": "Training tracksuit",
   "Botines de tacos": "Studded boots",
   "Balón de entrenamiento": "Training ball",
-  "Balón de playa": "Beach ball"
+  "Balón de playa": "Beach ball",
+  "lo que compraste en la tienda deportiva": "what you bought at the sports shop"
  },
  "pt": {
   "Historia": "História",
@@ -14255,7 +14256,8 @@
   "Chándal de entrenamiento": "Agasalho de treino",
   "Botines de tacos": "Chuteiras",
   "Balón de entrenamiento": "Bola de treino",
-  "Balón de playa": "Bola de praia"
+  "Balón de playa": "Bola de praia",
+  "lo que compraste en la tienda deportiva": "o que você comprou na loja de esportes"
  },
  "patrones": [
   [
@@ -27161,7 +27163,8 @@
   "Chándal de entrenamiento": "Survêtement d'entraînement",
   "Botines de tacos": "Crampons",
   "Balón de entrenamiento": "Ballon d'entraînement",
-  "Balón de playa": "Ballon de plage"
+  "Balón de playa": "Ballon de plage",
+  "lo que compraste en la tienda deportiva": "ce que vous avez acheté au magasin de sport"
  },
  "it": {
   "Historia": "Storia",
@@ -34290,7 +34293,8 @@
   "Chándal de entrenamiento": "Tuta d'allenamento",
   "Botines de tacos": "Scarpini da calcio",
   "Balón de entrenamiento": "Pallone da allenamento",
-  "Balón de playa": "Pallone da spiaggia"
+  "Balón de playa": "Pallone da spiaggia",
+  "lo que compraste en la tienda deportiva": "ciò che hai comprato al negozio sportivo"
  },
  "de": {
   "Historia": "Geschichte",
@@ -41419,7 +41423,8 @@
   "Chándal de entrenamiento": "Trainingsanzug",
   "Botines de tacos": "Fußballschuhe",
   "Balón de entrenamiento": "Trainingsball",
-  "Balón de playa": "Wasserball"
+  "Balón de playa": "Wasserball",
+  "lo que compraste en la tienda deportiva": "was du im Sportgeschäft gekauft hast"
  },
  "ca": {
   "Historia": "Història",
@@ -48548,7 +48553,8 @@
   "Chándal de entrenamiento": "Xandall d'entrenament",
   "Botines de tacos": "Botes de tacs",
   "Balón de entrenamiento": "Pilota d'entrenament",
-  "Balón de playa": "Pilota de platja"
+  "Balón de playa": "Pilota de platja",
+  "lo que compraste en la tienda deportiva": "el que vas comprar a la botiga esportiva"
  },
  "pl": {
   "Club": "Klub",
@@ -55946,7 +55952,8 @@
   "Chándal de entrenamiento": "Dres treningowy",
   "Botines de tacos": "Korki",
   "Balón de entrenamiento": "Piłka treningowa",
-  "Balón de playa": "Piłka plażowa"
+  "Balón de playa": "Piłka plażowa",
+  "lo que compraste en la tienda deportiva": "co kupiłeś w sklepie sportowym"
  },
  "tr": {
   "Club": "Kulüp",
@@ -63344,6 +63351,7 @@
   "Chándal de entrenamiento": "Antrenman eşofmanı",
   "Botines de tacos": "Krampon",
   "Balón de entrenamiento": "Antrenman topu",
-  "Balón de playa": "Plaj topu"
+  "Balón de playa": "Plaj topu",
+  "lo que compraste en la tienda deportiva": "spor mağazasından aldıkların"
  }
 }
