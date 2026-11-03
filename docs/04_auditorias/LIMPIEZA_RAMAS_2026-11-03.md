@@ -7,9 +7,16 @@ Si el árbol resultante es idéntico, todo su contenido ya está en la rama de t
 - `main`, `claude/dazzling-rubin-v7rfyi` (líder, PR #120), `ccr-630aba3a-nnd93p` (sesión de ciudad, activa), `claude/inspiring-hamilton-667tns` (ejecutora).
 - `ccr-454350d9-9chain` y su PR #128: experimento personal del dueño (no se toca).
 - `respaldo-historia-2026-10-24` (regla de CLAUDE.md).
-- `ccr-76d707c5-dwse9h` y `ccr-76d707c5-dwse9h-respaldo-wip`: historia de antes del 24-10 con archivos que NO están en ningún otro sitio (p. ej. la carpeta «Escudos especiales» con imágenes de referencia). Decide el dueño.
 
-## Con contenido propio ya superado (decide el dueño; propuesta: borrar)
+## DECISIÓN DEL DUEÑO (3-11): borrar las 117
+Desde el contenedor GitHub rechaza borrar ramas (solo deja subir a la rama propia): se borran con
+`herramientas/limpiar_github.ps1` en el PC del dueño (y con `-Fallidas`, las ejecuciones fallidas del CI).
+
+- `ccr-76d707c5-dwse9h` y `ccr-76d707c5-dwse9h-respaldo-wip` (historia de antes del 24-10): verificado que no se pierde nada. La carpeta
+  «Escudos especiales» (111 imágenes) ya está en `material/escudos_especiales_originales` (se movió el 24-10); los otros 42 archivos que
+  solo tiene su punta son pruebas y scripts de antes del 26-10 sustituidos después.
+
+## Con contenido propio ya superado
 - `ccr-a64d04fd-r5uoai` (6d600ea3): Cierre 26-10: estado de ramas y pendientes de las sesiones
 - `claude/inspiring-hamilton-667tns-escudos2` (77e81092): Escudos: biblioteca de figuras y letras vectoriales (en curso)
 - `claude/inspiring-hamilton-667tns-presupuesto` (0ae56070): Presupuesto del partido: API de estadísticas de dibujo corregida
