@@ -59,7 +59,9 @@ static func paso(m: MotorJugable) -> void:
 	var dentro := zona(m, eq) == "area"
 	if dentro and not bool(e["en_area"]):
 		m._contar("traza_entrada_area")
+		e["ent"] = {"eq": eq, "t": m.t, "tiros": int(m.tiros[eq])}
 	e["en_area"] = dentro
+	_fin_entrada(m, e, dentro)
 
 ## Subcausa de un balón suelto que recoge el rival: `despeje`/`centro`/`filtrado` si el último gesto del equipo fue ese y lo soltó hace menos de 3 s; si no, `control` (perdió el control: toque largo, duelo, rebote de entrada).
 static func _suelto(m: MotorJugable, e: Dictionary, antes: int) -> String:
@@ -208,4 +210,23 @@ static func gol(m: MotorJugable, de_local: bool) -> void:
 	m._contar("traza_gol_origen_" + ("parado" if m._t_estado < 8.0 else "juego"))
 	var a: Dictionary = m.penultimo_toque
 	m._contar("traza_gol_con_asist" if (not a.is_empty() and bool(a["es_local"]) == de_local and a != m.ultimo_toque) else "traza_gol_sin_asist")
+
+## Ciclo 24: cómo TERMINA cada entrada del balón en el área rival: `traza_ent_fin_{tiro, pierde (el rival toma el balón), sale_con_balon (el balón sale del área en pies del equipo: pase atrás o regate fuera), sale_suelto (balón suelto o del rival), tiempo (> 12 s)}`.
+static func _fin_entrada(m: MotorJugable, e: Dictionary, dentro: bool) -> void:
+	if not e.has("ent"):
+		return
+	var ent: Dictionary = e["ent"]
+	var eq := int(ent["eq"])
+	var fin := ""
+	if int(m.tiros[eq]) > int(ent["tiros"]):
+		fin = "tiro"
+	elif not m.poseedor.is_empty() and (0 if bool(m.poseedor["es_local"]) else 1) != eq:
+		fin = "pierde"
+	elif not dentro:
+		fin = "sale_con_balon" if (not m.poseedor.is_empty() and (0 if bool(m.poseedor["es_local"]) else 1) == eq) else "sale_suelto"
+	elif m.t - float(ent["t"]) > 12.0:
+		fin = "tiempo"
+	if fin != "":
+		m._contar("traza_ent_fin_" + fin)
+		e.erase("ent")
 
