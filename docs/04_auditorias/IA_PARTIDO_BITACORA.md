@@ -88,6 +88,13 @@ Pendiente de estudiar (fuentes ya localizadas): triangulación de Delaunay para 
 13. **Ciclo 12 (la defensa entra poco): ENCENDIDO `ENTRADA_MOMENTO`** (`MotorEntrada`: el radio de la entrada crece +0,5 m con el portador de espaldas, +0,5 con control largo (balón a >0,8 m), +0,3 pegado a la banda, tope +0,8; el resto, contención como antes).
     32 partidos: intentos de entrada por equipo 10,5 → **20,3** (real ≈16-20), éxito 13,2 → 14,7 %, entradas con éxito 2,75 → 5,95/p, faltas 4,7 → 7,6/p, entradas al área 20,9 → 20,3/p, pases 72,6 → 72,9 %, goles 2,60 → 2,56.
     Huella nueva 1143991806; con todo apagado (+ ENTRADA_MOMENTO=0) vuelve a 3180886866. Faltan: pases buenos (72,9 % frente a 80-85 %), reparto de tiros por zona, y el receptor que se ofrece en juego (los pases cortados son el 30 % de las pérdidas).
+14. **Ciclo 13 (receptor que se ofrece / pases cortados).** Traza de cada pase en el instante de la patada (32 partidos, 70,2 pases/partido, 18,0 % cortados por un rival = 12,7/p): por receptor, en movimiento 60,3 pases/p con 20,2 % de corte; **quieto 9,9 pases/p con solo 4,4 %** (el «receptor quieto» NO es el problema).
+    Por línea: libre 57,2 pases/p, 16,0 % de corte (9,2 cortados/p); tapada 13,0 pases/p, 26,9 % (3,5/p) → 9,2 de los 12,7 cortes ocurren con la línea LIBRE al salir el pase. Por distancia: largo 30,2 pases/p, 21,2 %; medio 28,5, 13,5 %; corto 11,5, 20,9 %.
+    Clase dominante: receptor en movimiento + línea libre + pase largo = 23,0 pases/p (33 % de todos) y 4,6 cortados/p. Medido: los pases largos son 43 % de los pases.
+    **`PMOT_DIST`** (penalización por metro de distancia en la nota del pase; 0,02 = la de siempre): semillas 1-16: 0,05 → pases 72,4 → 75,6 %, goles 2,56 → 2,31, entradas al área 20,1 → 18,3; 0,09 → 74,2 %, goles 1,81, área 15,9 (demasiado).
+    **Confirmación en 32 partidos con 0,035: pases 72,8 → 72,3 %, cortados 12,7 → 13,2/p, goles 2,56 → 2,12 → NO mejora → se queda APAGADA (0,02).** La mejora de 16 semillas era ruido. Reducir los pases largos no reduce los cortes.
+    Lección: una mejora vista en 16 partidos hay que confirmarla en 32 antes de creerla (el ruido en pases es ±1-2 puntos y en goles ±0,4).
+    Sigue en 72-73 % de pases buenos tras muchas palancas (velocidad del pase, riesgo, distancia, descarga, saques, entradas): el 80-85 % probablemente exige un cambio de mecánica (geometría de intercepción, control del receptor, velocidad de los defensas), no de afinado de la nota del pase.
     CI: `control del equipo` («L3 + R3 = bloqueo de jugador») salió rojo una vez en `especiales 3/6`; es una de las pruebas inestables arregladas en la rama de la líder, no se persigue aquí.
 
 ## Cifras reales de fútbol que se persiguen (orden de la sesión líder)
