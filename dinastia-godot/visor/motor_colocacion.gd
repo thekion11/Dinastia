@@ -23,6 +23,11 @@ static func _est(m: MotorJugable, local: bool) -> Dictionary:
 	return m.get_meta(k)
 
 ## Llamar una vez por fotograma de juego (`paso`).
+## El retardo del balón estabiliza al equipo que lo TIENE; si el rival tiene el balón, el equipo lo sigue casi en directo (`RETARDO_RIVAL`),
+## y la memoria de posesión cae rápido (`CAIDA_POSESION`) al perderlo: medido, un retardo de hasta 3,8 s justo cuando atacaba el rival
+## regalaba goles de contra (+30 % en 16 partidos).
+const RETARDO_RIVAL := 0.5
+const CAIDA_POSESION := 0.8
 static func actualizar(m: MotorJugable, delta: float) -> void:
 	if _sin:
 		return
@@ -34,10 +39,14 @@ static func actualizar(m: MotorJugable, delta: float) -> void:
 				cerca = minf(cerca, m.pos(q).distance_to(m.balon.position))
 		var urg := 1.0 - clampf((cerca - 2.0) / 28.0, 0.0, 1.0)
 		var tau := lerpf(RETARDO_MAX, RETARDO_MIN, urg)
+		var rival_con_balon := not m.poseedor.is_empty() and bool(m.poseedor["es_local"]) != local
+		if rival_con_balon:
+			tau = RETARDO_RIVAL
 		e["bal"] = (e["bal"] as Vector3).lerp(m.balon.position, 1.0 - exp(-delta / tau))
 		if not m.poseedor.is_empty():
-			var meta := 1.0 if bool(m.poseedor["es_local"]) == local else 0.0
-			e["sesgo"] = lerpf(float(e["sesgo"]), meta, 1.0 - exp(-delta / MEMORIA_POSESION))
+			var meta := 0.0 if rival_con_balon else 1.0
+			var k := CAIDA_POSESION if meta < float(e["sesgo"]) else MEMORIA_POSESION
+			e["sesgo"] = lerpf(float(e["sesgo"]), meta, 1.0 - exp(-delta / k))
 
 ## Balón que «ve» el equipo, y sesgo de posesión (0-1).
 static func balon_lento(m: MotorJugable, local: bool) -> Vector3:
