@@ -467,3 +467,32 @@ func _probar_portero_anticipa() -> void:
 	var d2 := MotorParada.destino(motor, gk)
 	_comprobar(absf(d2.x - 0.3) < 0.01, "si el tiro va casi a él, se pone en la línea (%.2f)" % d2.x)
 	(r[1] as Node3D).queue_free()
+
+## LA IMAGEN MENTAL (03-11-2026, IA F8, `MotorMente`): la CPU de nivel bajo ve a los rivales donde estaban hace un rato.
+func _probar_imagen_mental() -> void:
+	_titulo("LA IMAGEN MENTAL DE LA CPU")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	motor.control_equipo = 0   ## el usuario lleva al local; la CPU es la visita
+	var local: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))[0]
+	var cpu: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))[0]
+	var nodo := local["node"] as Node3D
+	motor.dificultad_cpu = "practicante"
+	motor.t = 10.0
+	nodo.position = Vector3(0, 0, 0)
+	MotorMente.actualizar(motor)
+	motor.t = 10.2
+	nodo.position = Vector3(5, 0, 0)
+	MotorMente.actualizar(motor)
+	motor.t = 10.6
+	nodo.position = Vector3(10, 0, 0)
+	MotorMente.actualizar(motor)
+	_comprobar(absf(MotorMente.retardo(motor, cpu) - 0.5) < 0.001, "el Practicante ve con 0,5 s de retardo")
+	var visto := MotorMente.pos_vista(motor, cpu, local)
+	_comprobar(visto.x < 5.1, "la CPU de Practicante ve al rival en x=%.1f, no en x=10" % visto.x)
+	_comprobar(MotorMente.retardo(motor, local) == 0.0 and MotorMente.pos_vista(motor, local, cpu) == motor.pos(cpu), "el equipo del usuario ve el presente")
+	motor.dificultad_cpu = "debutante"
+	_comprobar(MotorMente.retardo(motor, cpu) == 0.0 and absf(MotorMente.pos_vista(motor, cpu, local).x - 10.0) < 0.01, "el Debutante lo ve en el presente (calibración de siempre)")
+	motor.dificultad_cpu = "ultimate"
+	_comprobar(MotorMente.retardo(motor, cpu) == 0.0, "Ultimate tampoco tiene retardo")
+	(r[1] as Node3D).queue_free()
