@@ -320,7 +320,7 @@ static var LLEGADA := OS.get_environment("SIN_LLEGADA") == ""
 ## sonda de física marca como imposibles). `_mirar` lo deja pedido `dur` s.
 const GIRO_RAPIDO := 12.0
 ## El margen aleatorio del sorteo de tiro (menos = se tira más). Ver `_ia_portador`.
-static var CHISPA_TIRO := float(OS.get_environment("CHISPA_TIRO")) if OS.get_environment("CHISPA_TIRO") != "" else 0.16
+static var CHISPA_TIRO := float(OS.get_environment("CHISPA_TIRO")) if OS.get_environment("CHISPA_TIRO") != "" else (0.16 if OS.get_environment("TIRO_REAL") == "0" else 0.0)   ## con TIRO_REAL (por defecto) se tira sin el ruido extra (ciclo 7)
 ## Cuánto vale cada metro que avanza un pase al elegirlo (más = más vertical).
 static var CHISPA_AVANCE := float(OS.get_environment("CHISPA_AVANCE")) if OS.get_environment("CHISPA_AVANCE") != "" else 0.08
 ## Multiplica lo que piensa el portador antes de decidir (menos = juego más rápido).
