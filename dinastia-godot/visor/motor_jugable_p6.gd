@@ -336,7 +336,7 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 		var dist := qp.distance_to(yo)
 		if dist < 4.0 or dist > 42.0:
 			continue
-		var progreso := (qp.z - yo.z) * d
+		var progreso := MotorPaseMejora.progreso((qp.z - yo.z) * d)
 		var lr := MotorPaseMejora.libre_y_riesgo(self as Object as MotorJugable, p, q, yo, qp)   ## (R2, 01-11: con PMOT_PASE=1, previsto)
 		var libre: float = lr[0]
 		var riesgo: float = lr[1]
