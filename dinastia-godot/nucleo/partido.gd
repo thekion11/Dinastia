@@ -29,8 +29,8 @@ func simular_minuto() -> void:
 	var fv := _fza_visita
 	## Sin empuje de local en cancha neutral: es lo que hace que una final en
 	## campo neutro se sienta distinta de una en casa.
-	var bono_l := 1.0 if neutral else 1.08
-	var bono_v := 1.0 if neutral else 0.94
+	var bono_l := 1.0 if neutral else Balance.BONO_LOCAL
+	var bono_v := 1.0 if neutral else Balance.BONO_VISITA
 
 	var p_l := _probabilidad(fl["ata"], fv["def"]) * bono_l * clima
 	var p_v := _probabilidad(fv["ata"], fl["def"]) * bono_v * clima * _f_clima_visita

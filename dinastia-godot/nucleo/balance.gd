@@ -97,6 +97,12 @@ const CONVERSION := 0.267
 ## `PENAL_PERFIL` la escala por el perfil del árbitro (el estricto pita más, el permisivo menos). Cada penal convertido es un gol que no pasa por `CONVERSION` (y la llegada ya no es un
 ## remate normal): `CONVERSION` baja de 0,28 a 0,267 para que los goles sigan en ~2,7 por partido.
 const P_PENAL := 0.03
+
+## LA VENTAJA DE CAMPO (3-11-2026, orden del líder): factor sobre la probabilidad de llegada por minuto del que juega en casa y del que visita (1,0 en cancha neutral). Con 1,08/0,94 la victoria
+## local salía al 39,8 % (fútbol real ~45 %, empates ~25 %, visita ~30 %). Con 1,18/0,86 (suma 2,04, como antes: el total de llegadas no sube) sale 46,3 % local, 26,6 % empates, 27,1 % visita y
+## 2,72 goles (medido con `zz_medir_stats`, 2.880 partidos).
+const BONO_LOCAL := 1.18
+const BONO_VISITA := 0.86
 const CONVERSION_PENAL := 0.77
 const PENAL_PERFIL := {"estricto": 1.6, "tarjetero": 1.2, "permisivo": 0.6}
 
