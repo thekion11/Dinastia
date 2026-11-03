@@ -153,8 +153,8 @@ func _karting() -> void:
 	var radio := 22.0
 	var ancho_p := 9.0
 	var asf := Texturas.asfalto(Color(0.15, 0.15, 0.16), 77)
-	var cesp := StandardMaterial3D.new()
-	cesp.albedo_color = Color(0.2, 0.42, 0.16)
+	await _marca("k_asfalto")   ## (3-11) el karting cede fotogramas: antes era UN cuadro
+	var cesp := _mat_simple(Color(0.2, 0.42, 0.16), 1.0)
 	## El óvalo: tramo recto + dos curvas (discos), y dentro el césped.
 	for capa: Array in [[radio, asf, 0.05], [radio - ancho_p, cesp, 0.07]]:
 		var r: float = capa[0]
@@ -177,10 +177,8 @@ func _karting() -> void:
 			disco.position = c + Vector3(s * largo * 0.5, capa[2], 0)
 			add_child(disco)
 	## Piano rojo y blanco en el borde interior de las rectas.
-	var rojo := StandardMaterial3D.new()
-	rojo.albedo_color = Color(0.85, 0.12, 0.12)
-	var blanco := StandardMaterial3D.new()
-	blanco.albedo_color = Color(0.95, 0.95, 0.95)
+	var rojo := _mat_simple(Color(0.85, 0.12, 0.12), 1.0)
+	var blanco := _mat_simple(Color(0.95, 0.95, 0.95), 1.0)
 	for s in [-1.0, 1.0]:
 		for k in 14:
 			var pz := MeshInstance3D.new()
@@ -197,6 +195,8 @@ func _karting() -> void:
 		var p := _en_ovalo(c, largo, radio + 1.5, t)
 		_poner_extra("wheel-dark" if k % 3 != 0 else "wheel-default", p, 2.4, 0.0)
 		_poner_extra("wheel-dark", p + Vector3(0, 0.5, 0), 2.4, 0.4)
+		if k % 8 == 7:
+			await _marca("k_neumaticos")   ## (3-11) cede fotogramas: antes TODO el karting era un solo cuadro de segundos
 	## Conos en las curvas.
 	for k in 10:
 		var t2 := 0.2 + 0.05 * k if k < 5 else 0.7 + 0.05 * (k - 5)
@@ -218,6 +218,7 @@ func _karting() -> void:
 	add_child(techo)
 	_desguace(c + Vector3(largo * 0.5 + radio + 10.0, 0, -radio - 6.0), 9021)
 	CartelFachada.con_mapa(self, c + Vector3(0, 10.0, -radio - 9.0), "🏎 Karting", Color(1, 1, 1), 26)
+	await _marca("k_cartel")
 	_frentes.append(Rect2(c.x - largo * 0.5 - radio - 18.0, c.z - radio - 16.0, largo + radio * 2.0 + 36.0, radio * 2.0 + 20.0))
 	## Los cinco karts en carrera.
 	var ruta := PackedVector3Array()
