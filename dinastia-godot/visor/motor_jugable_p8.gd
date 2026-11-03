@@ -3,7 +3,7 @@ extends "res://visor/motor_jugable_p7.gd"
 
 ## La forma del equipo: la posición de la formación, movida con el balón.
 func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
-	var base: Vector3 = p["base_pos"]
+	var base: Vector3 = MotorRoles.base(self as Object as MotorJugable, p)   ## puesto dinámico (F2, 03-11)
 	var loc0 := bool(p["es_local"])
 	var b := MotorColocacion.balon_lento(self as Object as MotorJugable, loc0)   ## balón con retardo (F1, 03-11)
 	var pesos := MotorColocacion.pesos(self as Object as MotorJugable, loc0, en_posesion)
