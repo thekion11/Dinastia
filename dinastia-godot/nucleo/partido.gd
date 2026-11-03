@@ -87,6 +87,8 @@ func simular_minuto() -> void:
 
 	_incidencias()
 	minuto_jugado.emit(minuto)
+	if prorroga_si_empate and minuto >= minutos_fin and minutos_fin == MINUTOS and goles_local == goles_visita:
+		prorroga_externa()
 	if minuto >= minutos_fin:
 		terminado_ya = true
 		_devolver_tactica()
