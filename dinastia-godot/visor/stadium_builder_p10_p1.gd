@@ -7,6 +7,18 @@ extends "res://visor/estadio_partes_tribuna.gd"
 ## resto del recinto (esquinas, vallas, fachada…) en `stadium_builder_p10.gd`. Mismo árbol, mismo orden:
 ## lo vigila `pruebas/ideas/f0b_huella.gd`.
 
+## (3-11, el prólogo no cargaba en el móvil) El estadio de la ciudad cede el hilo entre zonas para que ninguna pieza
+## congele la pantalla más de ~0,5 s: `ceder` es el `CityBuilder` que construye por partes; los demás llamantes
+## (partido, visor, cinemática) lo dejan en `null` y `build` corre de un tirón, como siempre.
+static var ceder: CityBuilder = null
+static var _t_ceder := 0
+
+static func _ceder_paso() -> void:
+	if ceder == null or not ceder.por_partes or Time.get_ticks_usec() - _t_ceder < 40000:
+		return
+	await ceder.get_tree().process_frame
+	_t_ceder = Time.get_ticks_usec()
+
 ## Lo que se calcula una vez al empezar: la geometría de la forma, las bandejas, la altura y los
 ## materiales que comparten todas las tribunas.
 static func _preparar_obra(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: float, seed_val: int, mi: Club) -> EstadioObra:

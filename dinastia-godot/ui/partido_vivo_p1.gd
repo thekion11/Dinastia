@@ -327,8 +327,8 @@ func _ver_estadio() -> void:
 	## Eliminatoria: con el motor real, prórroga y penales se juegan en el 3D.
 	vista.eliminatoria = es_eliminatoria
 	await vista.abrir(partido.local, clampf(gente, 0.05, 1.0), partido.visita, partido, perfil_estadio, colores_balon)
-	if is_instance_valid(carga):
-		carga.cerrar()
+	await PantallaCarga.estabilizar(get_tree())   ## (3-11) shaders listos debajo de la carga
+	if is_instance_valid(carga): carga.cerrar()
 	vista.cerrado.connect(func() -> void:
 		vista.queue_free()
 		for h in ocultados:
