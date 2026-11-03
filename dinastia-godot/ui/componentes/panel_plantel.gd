@@ -41,6 +41,10 @@ const META_ESTADO := "uipl_estado"
 ## (fuente de respaldo): se crean UNA vez y cada repintado solo les cambia el texto (igual = sin coste).
 const META_FIJO := "uipl_fijo"
 const META_REPINTAR := "uipl_repintar"
+const META_COL := "uipl_col"
+## Nodos de OTRO panel puestos en la misma lista (`PanelPlanificacion`): `pintar` los deja donde están.
+const META_AJENO := "uipl_ajeno"
+const META_FILAS := "uipl_filas"
 const ESTADOS := [["todos", "Todos", "Sin filtro de estado"], ["disponibles", "✅ Disponibles", "Pueden jugar el próximo partido"],
 	["bajas", "🩹 Bajas", "Lesionados o sancionados"], ["riesgo", "⚠ En riesgo", "Riesgo de lesión alto o medio: dales descanso"],
 	["transferibles", "🔻 Transferibles", "Los que pusiste en venta"], ["jovenes", "↗ Jóvenes", "21 años o menos"],
@@ -77,33 +81,76 @@ static func pintar(lista: VBoxContainer, c: Club, mundo: Mundo, orden: String, o
 	var estado := String(lista.get_meta(META_ESTADO, "todos"))
 	var n_estado := _filtros_estado(lista, c, mundo, estado, fijos)
 
-	var g := GridContainer.new()
-	g.columns = 6
-	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	g.add_theme_constant_override("h_separation", 10)
-	g.add_theme_constant_override("v_separation", 3)
-	lista.add_child(g)
-	for i in COLUMNAS.size():
-		var par: Array = COLUMNAS[i]
-		var clave := String(par[1])
-		var b := Button.new()
-		b.text = Idiomas.t(String(par[0])) + ("  ▾" if orden == clave and orden_desc else ("  ▴" if orden == clave else ""))
-		b.tooltip_text = Idiomas.t(String(par[2]))
-		b.flat = true
-		## Los números se alinean a la derecha en sus celdas: la cabecera también,
-		## o «EDAD» queda a un lado y las edades al otro.
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT if i < 2 else HORIZONTAL_ALIGNMENT_RIGHT
-		b.add_theme_font_size_override("font_size", 11)
-		b.add_theme_color_override("font_color",
-			color_de_paleta.call(col_acento if orden == clave else COL_SUAVE))
-		b.pressed.connect(func() -> void: al_pulsar_columna.call(clave))
-		g.add_child(b)
-
+	lista.set_meta(META_COL, al_pulsar_columna)
+	var g := _rejilla(lista, fijos, orden, orden_desc, col_acento, color_de_paleta)
 	var lista_ordenada := c.plantilla.filter(func(j: Jugador) -> bool:
 		return (linea == "todos" or _linea_de(j) == linea) and _estado_ok(mundo, j, estado))
 	lista_ordenada.sort_custom(func(a: Jugador, b: Jugador) -> bool:
 		return _comparar(a, b, orden, orden_desc))
-	for j: Jugador in lista_ordenada:
+	_filas(g, c, mundo, lista_ordenada, fila_jugador, color_de_paleta)
+	var n_nadie: Control = null
+	if lista_ordenada.is_empty():
+		var nadie := _texto(12, color_de_paleta.call(COL_SUAVE))
+		nadie.text = Idiomas.t("Nadie en esa línea ahora mismo.") if estado == "todos" else Idiomas.t("Nadie cumple ese filtro ahora mismo.")
+		lista.add_child(nadie)
+		n_nadie = nadie
+	var n_leyenda := _leyenda(lista, color_de_paleta, fijos)
+	_soltar(fijos)
+	## Las filas fijas siguen en su sitio y lo nuevo se añadió al final: se deja el orden de siempre.
+	var orden_nodos: Array = [n_resumen, n_filtros, n_estado, g, n_nadie, n_leyenda]
+	var pos := 0
+	for n: Variant in orden_nodos:
+		if n != null:
+			lista.move_child(n, pos)
+			pos += 1
+
+## La rejilla (cabeceras + una fila por jugador) es FIJA: se reusa entre repintados. Cada fila de jugador (cara, nombre con marcas y cinco celdas)
+## se rehace solo si cambió algo de lo que se ve (`_firma`); si no, se queda como estaba y solo se recoloca. Sin esto, cada repintado
+## daba forma otra vez al nombre de los 25 jugadores (con símbolos de fuente de respaldo) y creaba ~200 nodos.
+static func _rejilla(lista: VBoxContainer, fijos: Dictionary, orden: String, orden_desc: bool, col_acento: Color, color_de_paleta: Callable) -> GridContainer:
+	var g := fijos.get("rejilla") as GridContainer
+	if g != null:
+		fijos.erase("rejilla")
+	else:
+		g = GridContainer.new()
+		g.columns = 6
+		g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		g.add_theme_constant_override("h_separation", 10)
+		g.add_theme_constant_override("v_separation", 3)
+		g.set_meta(META_FIJO, "rejilla")
+		lista.add_child(g)
+		for i in COLUMNAS.size():
+			var clave := String((COLUMNAS[i] as Array)[1])
+			var b := Button.new()
+			b.flat = true
+			## Los números se alinean a la derecha en sus celdas: la cabecera también,
+			## o «EDAD» queda a un lado y las edades al otro.
+			b.alignment = HORIZONTAL_ALIGNMENT_LEFT if i < 2 else HORIZONTAL_ALIGNMENT_RIGHT
+			b.add_theme_font_size_override("font_size", 11)
+			b.pressed.connect(func() -> void: (lista.get_meta(META_COL) as Callable).call(clave))
+			g.add_child(b)
+	for i in COLUMNAS.size():
+		var par: Array = COLUMNAS[i]
+		var clave := String(par[1])
+		var b := g.get_child(i) as Button
+		b.text = Idiomas.t(String(par[0])) + ("  ▾" if orden == clave and orden_desc else ("  ▴" if orden == clave else ""))
+		b.tooltip_text = Idiomas.t(String(par[2]))
+		b.add_theme_color_override("font_color", color_de_paleta.call(col_acento if orden == clave else COL_SUAVE))
+	return g
+
+## Todo lo que cambia lo que se ve de una fila: textos, colores ya pasados por la paleta, accesibilidad, idioma, caras y el kit del club.
+static func _firma(c: Club, textos: Array, colores: Array, ayuda: String, color_de_paleta: Callable) -> String:
+	var cs := PackedStringArray()
+	for col: Color in colores:
+		cs.append((color_de_paleta.call(col) as Color).to_html())
+	return "%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % [";".join(PackedStringArray(textos)), ",".join(cs), ayuda, c.color1, c.color2,
+		Tema.escala_texto, Tema.daltonico, Tema.contraste, Idiomas.idioma, "%s%s%s" % [Cara.usar_fotos, Cara.modo_streamer, Datos.base_real]]
+
+static func _filas(g: GridContainer, c: Club, mundo: Mundo, orden_jugadores: Array, fila_jugador: Callable, color_de_paleta: Callable) -> void:
+	var cache: Dictionary = g.get_meta(META_FILAS, {})
+	var vivos := {}
+	var nodos_en_orden: Array = []
+	for j: Jugador in orden_jugadores:
 		var color := COL_TEXTO
 		if not j.disponible():
 			color = COL_ROJO
@@ -131,30 +178,38 @@ static func pintar(lista: VBoxContainer, c: Club, mundo: Mundo, orden: String, o
 			marcas += " ⚠"
 		elif riesgo == "medio":
 			marcas += " △"
-		var antes := g.get_child_count()
-		fila_jugador.call(g, j,
-			[j.nombre + marcas, j.pos_e, str(j.edad), str(j.ovr), str(j.pot), _dinero(j.valor)],
-			[color, COL_SUAVE, color, color, COL_SUAVE, color])
-		_ajustar_nombre(g, antes, j)
-		if riesgo != "" and antes < g.get_child_count():
-			var celda := g.get_child(antes) as Control
-			celda.tooltip_text = _texto_riesgo(mundo, j, riesgo)
-			celda.mouse_filter = Control.MOUSE_FILTER_PASS
-	var n_nadie: Control = null
-	if lista_ordenada.is_empty():
-		var nadie := _texto(12, color_de_paleta.call(COL_SUAVE))
-		nadie.text = Idiomas.t("Nadie en esa línea ahora mismo.") if estado == "todos" else Idiomas.t("Nadie cumple ese filtro ahora mismo.")
-		lista.add_child(nadie)
-		n_nadie = nadie
-	var n_leyenda := _leyenda(lista, color_de_paleta, fijos)
-	_soltar(fijos)
-	## Las filas fijas siguen en su sitio y lo nuevo se añadió al final: se deja el orden de siempre.
-	var orden_nodos: Array = [n_resumen, n_filtros, n_estado, g, n_nadie, n_leyenda]
-	var pos := 0
-	for n: Variant in orden_nodos:
-		if n != null:
-			lista.move_child(n, pos)
-			pos += 1
+		var textos := [j.nombre + marcas, j.pos_e, str(j.edad), str(j.ovr), str(j.pot), _dinero(j.valor)]
+		var colores := [color, COL_SUAVE, color, color, COL_SUAVE, color]
+		var ayuda := _texto_riesgo(mundo, j, riesgo) if riesgo != "" else ""
+		var firma := _firma(c, textos, colores, ayuda, color_de_paleta)
+		var id := j.get_instance_id()
+		var fila: Dictionary = cache.get(id, {})
+		if fila.is_empty() or String(fila["firma"]) != firma:
+			for n: Node in fila.get("nodos", []):
+				g.remove_child(n)
+				n.queue_free()
+			var antes := g.get_child_count()
+			fila_jugador.call(g, j, textos, colores)
+			_ajustar_nombre(g, antes, j)
+			if riesgo != "" and antes < g.get_child_count():
+				var celda := g.get_child(antes) as Control
+				celda.tooltip_text = ayuda
+				celda.mouse_filter = Control.MOUSE_FILTER_PASS
+			fila = {"firma": firma, "nodos": g.get_children().slice(antes)}
+			cache[id] = fila
+		vivos[id] = true
+		nodos_en_orden.append_array(fila["nodos"])
+	for id: int in cache.keys():
+		if not vivos.has(id):
+			for n: Node in (cache[id] as Dictionary)["nodos"]:
+				g.remove_child(n)
+				n.queue_free()
+			cache.erase(id)
+	g.set_meta(META_FILAS, cache)
+	var pos := COLUMNAS.size()
+	for n: Node in nodos_en_orden:
+		g.move_child(n, pos)
+		pos += 1
 
 ## Riesgo de lesión de un jugador sano: "alto", "medio" o "" (bajo). Junta el informe del médico (historial y rasgo)
 ## con el físico que le queda; lesionado no se marca (ya lleva 🩹).
@@ -266,6 +321,8 @@ static func _filtros_estado(lista: VBoxContainer, c: Club, mundo: Mundo, estado:
 static func _vaciar(lista: Node) -> Dictionary:
 	var fijos := {}
 	for h in lista.get_children():
+		if h.has_meta(META_AJENO):
+			continue
 		if h.has_meta(META_FIJO):
 			fijos[String(h.get_meta(META_FIJO))] = h
 		else:
