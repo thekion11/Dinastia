@@ -494,7 +494,11 @@ func _probar_imagen_mental() -> void:
 	motor.dificultad_cpu = "debutante"
 	_comprobar(MotorMente.retardo(motor, cpu) == 0.0 and absf(MotorMente.pos_vista(motor, cpu, local).x - 10.0) < 0.01, "el Debutante lo ve en el presente (calibración de siempre)")
 	motor.dificultad_cpu = "ultimate"
-	_comprobar(MotorMente.retardo(motor, cpu) == 0.0, "Ultimate tampoco tiene retardo")
+	local["vel"] = Vector3(4.0, 0, 0)
+	_comprobar(MotorMente.retardo(motor, cpu) < 0.0, "Ultimate se adelanta (retardo negativo)")
+	_comprobar(absf(MotorMente.pos_vista(motor, cpu, local).x - (10.0 + 4.0 * 0.3)) < 0.01, "Ultimate ve al rival donde ESTARÁ (x=%.1f)" % MotorMente.pos_vista(motor, cpu, local).x)
+	motor.dificultad_cpu = "semiprofesional"
+	_comprobar(MotorMente.retardo(motor, cpu) == 0.0, "Semiprofesional ve el presente")
 	(r[1] as Node3D).queue_free()
 
 ## ROLES DINÁMICOS (03-11-2026, IA F2, `MotorRoles`): si dos laterales se cruzan de banda, intercambian el puesto; el húngaro es óptimo.

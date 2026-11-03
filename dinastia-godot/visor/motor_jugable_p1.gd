@@ -220,10 +220,10 @@ const DIFICULTADES := {   ## 8 categorías del dueño (27-10); «debutante» = e
 	"cadete": {"nombre": "Cadete", "vista": 0.3, "attr": 0.84, "pausa": 1.0, "presion": -1, "error": 1.18},
 	"debutante": {"nombre": "Debutante", "attr": 1.0, "pausa": 1.0, "presion": 0, "error": 1.0},
 	"semiprofesional": {"nombre": "Semiprofesional", "attr": 1.03, "pausa": 1.0, "presion": 0, "error": 0.95},
-	"profesional": {"nombre": "Profesional", "attr": 1.06, "pausa": 1.0, "presion": 1, "error": 0.9},
-	"experto": {"nombre": "Experto", "attr": 1.09, "pausa": 1.0, "presion": 1, "error": 0.86},
-	"maestro": {"nombre": "Maestro", "attr": 1.13, "pausa": 1.0, "presion": 1, "error": 0.81},
-	"ultimate": {"nombre": "Ultimate", "attr": 1.18, "pausa": 1.0, "presion": 1, "error": 0.75},
+	"profesional": {"nombre": "Profesional", "vista": -0.08, "attr": 1.06, "pausa": 1.0, "presion": 1, "error": 0.9},
+	"experto": {"nombre": "Experto", "vista": -0.14, "attr": 1.09, "pausa": 1.0, "presion": 1, "error": 0.86},
+	"maestro": {"nombre": "Maestro", "vista": -0.2, "attr": 1.13, "pausa": 1.0, "presion": 1, "error": 0.81},
+	"ultimate": {"nombre": "Ultimate", "vista": -0.3, "attr": 1.18, "pausa": 1.0, "presion": 1, "error": 0.75},
 }
 const ORDEN_DIFICULTAD := ["practicante", "cadete", "debutante", "semiprofesional", "profesional", "experto", "maestro", "ultimate"]
 var dificultad_cpu := "debutante"
