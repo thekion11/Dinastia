@@ -72,6 +72,7 @@ func _process(_d: float) -> void:
 				tp = pc["pos"]
 		_cola.append(["dt_ropero", "natural", PI, _e.cuerpo.position])
 		_cola.append(["plaza_tienda_pie", "natural", PI, tp + Vector3(0, 0.2, 10.0)])
+		_cartel("c_peaje", "PEAJE", 14.0)
 		_cartel("c_tienda_banco", "DEPORTIVA", 14.0)
 		_cartel("c_gasolinera", "Gasolina", 22.0)
 		_cartel("c_lavado", "LAVADO", 18.0)
@@ -84,7 +85,6 @@ func _process(_d: float) -> void:
 		_cartel("c_casa_grande", "Casa Grande", 40.0)
 		_cartel("c_vip", "VIP", 18.0)
 		_cartel("c_autopista", "Autopista", 40.0)
-		_cartel("c_peaje", "PEAJE", 14.0)
 		_fase = 1
 	if _fase == 1 and _i < _cola.size():
 		var s: Array = _cola[_i]
@@ -102,7 +102,7 @@ func _process(_d: float) -> void:
 			_e.camara.global_position = s[1]
 			_e.camara.look_at(s[2], Vector3.UP)
 			_k += 1
-			if _k == 4:
+			if _k == 3:
 				_foto(String(s[0]))
 				_i += 1
 				_k = 0
