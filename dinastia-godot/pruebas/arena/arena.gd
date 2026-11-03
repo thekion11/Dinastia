@@ -100,7 +100,7 @@ func _montar_jugadores(a: Club, b: Club) -> void:
 		_motor = MotorJugable.new()
 		add_child(_motor)
 		_motor.autopiloto = modo == "partido"
-		_motor.preparar(_lista.filter(func(p: Dictionary) -> bool: return p.has("base_pos") and p.has("id") and str(p["id"]) != "arbitro" and not str(p["id"]).begins_with("linea")), _balon, "", int(_env("SEMILLA", "4711")))
+		_motor.preparar(_lista, _balon, "", int(_env("SEMILLA", "4711")))   ## `preparar` separa solo a los árbitros (`arbitro: true`)
 		if modo == "partido":
 			_motor._saque_de_centro(true)
 
