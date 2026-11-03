@@ -61,22 +61,21 @@ func simular_minuto() -> void:
 	var dominio := p_l / maxf(p_l + p_v, 0.0001)
 	var empuje := 1.06 if local.tactica.ritmo == 0 else 1.0
 	posesion_local = clampf(posesion_local * 0.94 + dominio * 100.0 * empuje * 0.06, 22.0, 78.0)
-	## Córners, faltas y fueras de juego con las probabilidades por minuto del
-	## HTML, tal cual. El local saca algún córner más y comete alguna falta
-	## menos: no es simetría rota, es la ventaja de campo contada en detalle.
+	## Córners, faltas y fueras de juego: contadores de relleno, con las probabilidades por minuto de `Balance` (3-11: las del HTML daban 17 córners, 30 faltas y 9 fueras por partido).
+	## El local saca algún córner más y comete alguna falta menos: no es simetría rota, es la ventaja de campo contada en detalle.
 	## (El generador de `Azar` directo: es justo lo que hace `Azar.suerte`, sin la llamada.)
 	var rng: RandomNumberGenerator = Azar._rng
-	if rng.randf() < 0.10:
+	if rng.randf() < Balance.P_CORNER_LOCAL:
 		corners_local += 1
-	if rng.randf() < 0.09:
+	if rng.randf() < Balance.P_CORNER_VISITA:
 		corners_visita += 1
-	if rng.randf() < 0.16:
+	if rng.randf() < Balance.P_FALTA_LOCAL:
 		faltas_local += 1
-	if rng.randf() < 0.17:
+	if rng.randf() < Balance.P_FALTA_VISITA:
 		faltas_visita += 1
-	if rng.randf() < 0.05:
+	if rng.randf() < Balance.P_FUERA:
 		fueras_local += 1
-	if rng.randf() < 0.05:
+	if rng.randf() < Balance.P_FUERA:
 		fueras_visita += 1
 
 	if not motor_externo:
