@@ -90,6 +90,12 @@ func evento(palabras: Array, c1: Color, c2: Color, seg: float = 6.0) -> void:
 	var tinta1 := Color.WHITE if c1.get_luminance() < 0.55 else Color(0.08, 0.08, 0.1)
 	var tinta2 := Color.WHITE if c2.get_luminance() < 0.55 else Color(0.08, 0.08, 0.1)
 	_evento = {"palabras": palabras, "hasta": _t + seg, "tintas": [tinta1, tinta2], "paso": -1}
+	if _atlas_mm != null:
+		var extra: Array = []
+		for w in palabras:
+			for t in [tinta1, tinta2]:
+				extra.append([String(w), t])
+		_construir_atlas(extra)
 
 func _pintar_evento() -> void:
 	var paso := int(floor(_t / 0.35))
@@ -105,6 +111,8 @@ func _pintar_evento() -> void:
 		if is_instance_valid(l):
 			l.text = String(palabras[i % palabras.size()])
 			l.modulate = tintas[k]
+		elif _atlas_mm != null:
+			_atlas_poner(p, String(palabras[i % palabras.size()]), tintas[k])
 		_poner(p, _mat_evento[k])
 
 ## LAS CAJAS EN DOS MULTIMESH (20-10-2026): eran 36 piezas con su llamada de
@@ -186,6 +194,8 @@ func _montar_multimesh() -> void:
 		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(mmi)
 		_multis[k] = mm
+	if Calidad.elegida <= Calidad.MINIMO and FundirPiezas.activo_r2 and _atlas_mm == null:
+		_montar_atlas()
 
 ## El color de un material de panel: albedo, y en alfa el brillo (emisión).
 static func _color_de(m: Material) -> Color:
@@ -238,4 +248,148 @@ func _pintar(p: Dictionary, ciclo: int) -> void:
 	if is_instance_valid(l):
 		l.text = String(a.get("texto", ""))
 		l.modulate = a.get("tinta", Color.WHITE)
+	elif _atlas_mm != null:
+		_atlas_poner(p, String(a.get("texto", "")), a.get("tinta", Color.WHITE))
 	_poner(p, _materiales[posmod(ciclo, _materiales.size())])
+
+## EL TEXTO DE LAS VALLAS EN UNA SOLA LLAMADA (R2, 3-11, solo MÍNIMO). Cada valla llevaba su `Label3D` (~50 llamadas de dibujo). Aquí los textos
+## que se muestran (los anuncios y, en un gol, las palabras del evento con sus dos tintas) se pintan UNA vez en una textura-atlas (con la misma
+## fuente, tamaño, contorno negro y color que el rótulo) y los paneles son instancias de un `MultiMesh` de quads que leen su celda (datos por
+## instancia). Los rótulos sueltos se quitan cuando el atlas está listo; mientras tanto se ven los de siempre. MEDIA y superiores no cambian.
+const CELDA := Vector2i(720, 160)   ## px: el ancho del rótulo (720) y alto para dos líneas
+const COLUMNAS := 2
+const SHADER_TEXTO := """
+shader_type spatial;
+render_mode unshaded, cull_back;
+uniform sampler2D atlas : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+varying vec4 celda;
+void vertex() { celda = INSTANCE_CUSTOM; }
+void fragment() {
+	vec4 c = texture(atlas, celda.xy + UV * celda.zw);
+	ALBEDO = c.rgb;
+	ALPHA = c.a;
+	ALPHA_SCISSOR_THRESHOLD = 0.5;
+}
+"""
+var _atlas_mm: MultiMesh = null
+var _atlas_mat: ShaderMaterial = null
+var _atlas_celdas := {}      ## "texto|color" -> índice de celda
+var _atlas_n := 0            ## filas × columnas del atlas actual
+var _atlas_ocupado := false
+
+func _clave_celda(texto: String, tinta: Color) -> String:
+	return texto + "|" + tinta.to_html()
+
+func _atlas_poner(p: Dictionary, texto: String, tinta: Color) -> void:
+	if not p.has("ai") or _atlas_n == 0:
+		return
+	var k := _clave_celda(texto, tinta)
+	if not _atlas_celdas.has(k):
+		return   ## todavía no está en el atlas (se construye con la siguiente tanda): se queda el anterior
+	var i := int(_atlas_celdas[k])
+	var filas := int(ceil(float(_atlas_n) / COLUMNAS))
+	var du := 1.0 / COLUMNAS
+	var dv := 1.0 / float(filas)
+	_atlas_mm.set_instance_custom_data(int(p["ai"]), Color((i % COLUMNAS) * du, (i / COLUMNAS) * dv, du, dv))
+
+func _montar_atlas() -> void:
+	if _atlas_mm != null or _paneles.is_empty():
+		return
+	var quad := QuadMesh.new()
+	quad.size = Vector2(CELDA.x, CELDA.y) * 0.0068
+	_atlas_mm = MultiMesh.new()
+	_atlas_mm.transform_format = MultiMesh.TRANSFORM_3D
+	_atlas_mm.use_custom_data = true
+	_atlas_mm.mesh = quad
+	var con_label: Array = []
+	for p: Dictionary in _paneles:
+		if is_instance_valid(p["label"]):
+			con_label.append(p)
+	_atlas_mm.instance_count = con_label.size()
+	for i in con_label.size():
+		var p: Dictionary = con_label[i]
+		var l: Label3D = p["label"]
+		_atlas_mm.set_instance_transform(i, Transform3D(Basis(Vector3.UP, l.rotation.y), l.position))
+		_atlas_mm.set_instance_custom_data(i, Color(0, 0, 0, 0))
+		p["ai"] = i
+	var sh := Shader.new()
+	sh.code = SHADER_TEXTO
+	_atlas_mat = ShaderMaterial.new()
+	_atlas_mat.shader = sh
+	var mmi := MultiMeshInstance3D.new()
+	mmi.name = "TextosVallas"
+	mmi.multimesh = _atlas_mm
+	mmi.material_override = _atlas_mat
+	mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mmi.visible = false   ## hasta que el atlas esté pintado
+	add_child(mmi)
+	var celdas: Array = []
+	for a: Dictionary in _anuncios:
+		celdas.append([String(a.get("texto", "")), a.get("tinta", Color.WHITE)])
+	await _construir_atlas(celdas)
+	if not is_instance_valid(self) or _atlas_mm == null:
+		return
+	## Ya pintado: los rótulos sueltos sobran.
+	mmi.visible = true
+	for p: Dictionary in con_label:
+		var l: Label3D = p["label"]
+		if is_instance_valid(l):
+			l.queue_free()
+		p["label"] = null
+		p["ult"] = -999   ## que el siguiente fotograma ponga su celda
+
+## Pinta (texto, tinta) en una textura-atlas y la pone en el material. Las celdas ya conocidas se conservan.
+func _construir_atlas(nuevas: Array) -> void:
+	if _atlas_ocupado:
+		await get_tree().process_frame
+		if not is_instance_valid(self):
+			return
+	_atlas_ocupado = true
+	var lista: Array = []
+	var vistas := {}
+	for k: String in _atlas_celdas.keys():
+		var par := k.rsplit("|", true, 1)
+		lista.append([par[0], Color.from_string(par[1], Color.WHITE)])
+		vistas[k] = true
+	for par: Array in nuevas:
+		var k := _clave_celda(par[0], par[1])
+		if not vistas.has(k):
+			vistas[k] = true
+			lista.append([par[0], par[1]])
+	var filas := int(ceil(float(lista.size()) / COLUMNAS))
+	var vp := SubViewport.new()
+	vp.size = Vector2i(CELDA.x * COLUMNAS, CELDA.y * filas)
+	vp.transparent_bg = true
+	vp.disable_3d = true
+	vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	add_child(vp)
+	var nuevo := {}
+	for i in lista.size():
+		var lb := Label.new()
+		lb.text = String(lista[i][0])
+		lb.size = Vector2(CELDA)
+		lb.position = Vector2((i % COLUMNAS) * CELDA.x, (i / COLUMNAS) * CELDA.y)
+		lb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lb.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		lb.add_theme_font_size_override("font_size", 64)
+		lb.add_theme_color_override("font_color", lista[i][1])
+		lb.add_theme_color_override("font_outline_color", Color.BLACK)
+		lb.add_theme_constant_override("outline_size", 12)
+		vp.add_child(lb)
+		nuevo[_clave_celda(String(lista[i][0]), lista[i][1])] = i
+	await RenderingServer.frame_post_draw
+	await RenderingServer.frame_post_draw
+	if not is_instance_valid(self):
+		return
+	var img := vp.get_texture().get_image()
+	vp.queue_free()
+	_atlas_ocupado = false
+	if img == null or img.is_empty():
+		return
+	img.generate_mipmaps()
+	_atlas_mat.set_shader_parameter("atlas", ImageTexture.create_from_image(img))
+	_atlas_celdas = nuevo
+	_atlas_n = lista.size()
+	for p: Dictionary in _paneles:
+		p["ult"] = -999
