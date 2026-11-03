@@ -114,7 +114,7 @@ func _escala(e: float) -> void:
 	## equipos más modestos): ahí se reescala bilineal, que también existe.
 	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR if Calidad.es_compatibilidad() \
 		else Viewport.SCALING_3D_MODE_FSR
-	vp.scaling_3d_scale = minf(e, Calidad.escala_3d())   ## en MÍNIMO ya se parte del 70 %
+	vp.scaling_3d_scale = minf(e, Calidad.escala_3d())   ## en MÍNIMO ya se parte del 50 %
 
 func _exit_tree() -> void:
 	## El viewport es el de la ventana entera: si no se devuelve, el resto del
