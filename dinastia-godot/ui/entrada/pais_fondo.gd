@@ -53,7 +53,7 @@ func _ready() -> void:
 		b.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var m := ShaderMaterial.new()
-		m.shader = SHADER
+		m.shader = AhorroMenu.shader(SHADER)
 		b.material = m
 		b.modulate.a = 0.0
 		add_child(b)

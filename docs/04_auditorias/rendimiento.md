@@ -173,3 +173,17 @@ Pedido por el líder tras medir: el bucle de puestos de `Club.once` (~275 `media
 `pruebas/zz_medir_simular.tscn` (nuevo): ~200 cruces de un mundo entero, por fases. Antes: ~1,38 ms por partido = armar los dos onces 43 % (~300 µs cada uno), los 90 minutos 51 % (~700 µs: `_atacar` ~270, `_incidencias` ~160, señal `minuto_jugado` ~65, el resto el minuto en sí), crear el partido 5 %, el cierre 3 %. Huella de los resultados (marcadores, remates, crónica, árbitro): 2010990920, igual antes y después.
 Hecho: `once_asignar` pasaba al nativo 14 arrays que se preparaban en GDScript (75 µs) y leía cada atributo con una búsqueda por clave (90 µs en C++). Ahora `once_asignar_libres` recibe los `Jugador`, los lee en C++ y extrae los atributos una sola vez por jugador (las claves que piden las ranuras, sin repetir): el camino nativo baja de ~180 a ~108 µs por once y `Club.once()` completo de 290 a 242 µs. Partido simulado 1,38 → 1,29 ms; semana con todas las ligas (`zz_medir_semana PAISES=TODOS`) ~440 → ~418 ms. Misma salida byte a byte que el GDScript (`probar_nativo`, 0 fallos en ~466 clubes × todas las formaciones); igualdad_mundo 998022970 e igualdad_motor 2265294183 intactas.
 Descartado: los 90 minutos son decenas de llamadas pequeñas de GDScript (`Azar`, señales, listas de jugadores) sin un tramo dominante; `Datos.grupo` ya está en caché y los pesos del goleador dependen de los roles de la táctica, así que guardarlos arriesga dejarlos viejos tras un cambio. Lo que queda por bajar de verdad es el once restante (~240 µs: `disponibles` 31, `ajustar_once` 14, el orden por porteros y el resto del armado) y la señal por minuto.
+
+## Menús en MÍNIMA: pantalla quieta, sin repintar (3-11, orden del líder)
+Mismo método que `AhorroMenu` (pantalla central: 50 → 1 fotogramas en 3 s): `zz_medir_menu_gpu.tscn` mide ahora cada pantalla con `PANTALLA=lateral:<id>|inicio|modos|idioma|pais|config` (xvfb + opengl3, MÍNIMA, 3 s con la pantalla quieta).
+| pantalla | antes | después |
+|---|---|---|
+| menús laterales (los 11) | 92 | 1 |
+| portada / inicio | 127 | 1 |
+| menú de modos | 110 | 1 |
+| idioma | 121 | 1 |
+| configurar club | 157 | 1 |
+| país (visor 3D de monumentos) | 47 | 46 (animación legítima, no se toca) |
+Dos causas: (1) un shader con `TIME` (fondo de pantalla completa, banderas que ondean, reflejo del logo) pide un repintado por fotograma aunque `low_processor_usage_mode` esté puesto; (2) la portada, el menú de modos y la entrada no llevaban `AhorroMenu`, así que ni entraban en bajo consumo ni pausaban sus motas.
+Hecho: `AhorroMenu.fondo_estatico()` (motor ligero o MÍNIMA con pantalla) y `AhorroMenu.shader(s)`, que da una copia del shader con `TIME` fijo (mismos uniformes, así los tweens y parámetros de quien lo usa no cambian); `PantallaMenu`, `CarreraJugadorUi` y `MenuModosFondo` usan color fijo; idioma, banderas, configurar club, país y el logo usan el shader congelado; `Inicio` y `OrquestadorEntrada` llevan su `AhorroMenu`, que ahora también pausa las motas y el bokeh de la portada y del menú de modos (grupo «fondo_particulas»; `informe_rival` y `panel_controles` no entran). En MEDIA o más, nada cambia (lateral 79 y idioma 112 fotogramas, como antes). Prueba `ahorro_menus` (en especiales).
+No se toca: el visor 3D de monumentos del país (animación real). `visual.sh` mira pestañas de la pantalla central, que no pasan por estos fondos.
