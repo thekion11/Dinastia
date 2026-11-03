@@ -102,3 +102,11 @@ static var ALCANCE_K := float(OS.get_environment("TIRO_ALCANCE")) if OS.get_envi
 
 static func alcance(x: float) -> float:
 	return x * ALCANCE_K if _real else x
+
+## BONO DE AREA (ciclo 7): con `TIRO_REAL=1`, dentro de `AREA_BONO` m del arco las ganas de tirar suben `TIRO_BONO` (0,25 por defecto), para que el reparto de tiros se
+## parezca al real (≈60 % desde dentro del área; el motor tiraba sobre todo de lejos). Apagado suma 0,0.
+const AREA_BONO := 18.0
+static var BONO_K := float(OS.get_environment("TIRO_BONO")) if OS.get_environment("TIRO_BONO") != "" else 0.25
+
+static func bono_area(dist_arco: float) -> float:
+	return BONO_K if (_real and dist_arco < AREA_BONO) else 0.0
