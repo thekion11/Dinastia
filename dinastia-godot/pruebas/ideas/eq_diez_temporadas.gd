@@ -43,7 +43,10 @@ const MARGEN_MAX := 20
 const NOMINA_MIN_SEGUNDA := 0.45
 const ROJO_MAX := 0.15
 const INTERV_MAX := 2
-const GOLES := Vector2(2.1, 3.2)
+const GOLES := Vector2(2.1, 3.2)   ## la MEDIA de las temporadas de una corrida: ahí se nota una deriva de verdad
+## Una temporada suelta: una liga son ~240 partidos, así que sus goles por partido bailan ±0,12 (1σ) alrededor de la media (~3,07 en 9 corridas del 3-11, sin tendencia: 2,86 en t1 y
+## ~3,1 desde t5). Con el techo de la media (3,2) a solo 1σ, una de cada seis temporadas «fallaba» por puro azar de semilla: la banda de una temporada es la media + 4,5σ.
+const GOLES_TEMPORADA := Vector2(2.0, 3.65)
 
 func _probar() -> void:
 	if OS.get_environment("TV_IGUAL") != "":   ## medir otro reparto de la tele
@@ -92,6 +95,7 @@ func _una(semilla: int, temporadas: int, grande: bool, gestionado := false) -> v
 	var f := f0
 	var perdida_primera := 0.0
 	var en_primera := 0
+	var suma_goles := 0.0
 	var bajadas := 0   ## temporadas en que la caja bajó (con las crisis de `CrisisCaja` no sube en línea recta)
 	for t in temporadas:
 		var caja_antes := yo.saldo
@@ -105,10 +109,13 @@ func _una(semilla: int, temporadas: int, grande: bool, gestionado := false) -> v
 		if yo.saldo < caja_antes:
 			bajadas += 1
 		_linea("  t%-2d " % (t + 1) + _texto(f))
+		suma_goles += float(f["gpp"])
 		_revisar(f, f0, t + 1, fallos)
 		if div_antes == 1:
 			en_primera += 1
 			perdida_primera += float(yo.saldo - caja_antes) / Eco.ref_caja(yo.rep)
+	var media_goles := suma_goles / maxf(1.0, float(temporadas))
+	_comprobar(media_goles >= GOLES.x and media_goles <= GOLES.y, "%s: goles por partido de la corrida (media de %d temporadas) %.2f dentro de %.1f-%.1f" % [et, temporadas, media_goles, GOLES.x, GOLES.y])
 	## Caja: tendencia en todo el tramo (la de un año suelto es ruido de premios y ascensos).
 	var ref := Eco.ref_caja(yo.rep)
 	if grande:
@@ -140,7 +147,7 @@ func _revisar(f: Dictionary, f0: Dictionary, t: int, fallos: Array[String]) -> v
 		"IA en rojo %d" % f["rojo"]: float(f["rojo"]) <= ROJO_MAX * float(f["clubes"]),
 		"intervenidos %d" % f["interv"]: int(f["interv"]) <= INTERV_MAX,
 		"85+ <22: %d" % f["precoces"]: int(f["precoces"]) <= maxi(2, int(f0["precoces"]) + 1),
-		"goles %.2f" % f["gpp"]: f["gpp"] >= GOLES.x and f["gpp"] <= GOLES.y,
+		"goles %.2f" % f["gpp"]: f["gpp"] >= GOLES_TEMPORADA.x and f["gpp"] <= GOLES_TEMPORADA.y,
 	}
 	for k: String in pruebas:
 		if not pruebas[k]:
