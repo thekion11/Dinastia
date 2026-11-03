@@ -85,6 +85,8 @@ static func pase(m: MotorJugable, p: Dictionary, q: Dictionary, dist: float) -> 
 	var d := "corto" if dist < 12.0 else ("medio" if dist < 22.0 else "largo")
 	var clase := "%s_%s_%s" % [mueve, linea, d]
 	m._contar("traza_pase_" + clase)
+	if dist >= 22.0:
+		_opcion_corta(m, p, q)
 	m.set_meta("_traza_pase", clase)
 	var rivales := {}
 	for r: Dictionary in m.jugadores:
@@ -128,3 +130,24 @@ static func _linea(m: MotorJugable, e: Dictionary) -> void:
 		m.diag["traza_linea_ancho_dm"] = int(m.diag.get("traza_linea_ancho_dm", 0)) + int(10.0 * (float(xs[3]) - float(xs[0])))
 		m.diag["traza_linea_prof_dm"] = int(m.diag.get("traza_linea_prof_dm", 0)) + int(10.0 * (float(zs[3]) - float(zs[0])))
 		m.diag["traza_linea_centrales_dm"] = int(m.diag.get("traza_linea_centrales_dm", 0)) + int(10.0 * (float(xs[2]) - float(xs[1])))
+
+## Ciclo 19: por qué se elige un pase LARGO. Para cada largo busca la mejor opción CORTA (compañero a 4-15 m con un rival a >= 3 m) y compara las notas: `sin_corta` (no había), `cercana` (la corta
+## quedó a < 0,7 de nota del largo), `media` (< 2,0) o `lejana`. Si abundan `cercana`/`media`, el problema es el peso de la nota (avance frente a riesgo), no la falta de apoyos.
+static func _opcion_corta(m: MotorJugable, p: Dictionary, elegido: Dictionary) -> void:
+	var n_largo := MotorPaseMejora.nota_base(m, p, elegido)
+	var mejor := -999.0
+	for q: Dictionary in m.jugadores:
+		if q == p or q == elegido or bool(q["es_local"]) != bool(p["es_local"]) or bool(q["por"]):
+			continue
+		var d := m.pos(q).distance_to(m.pos(p))
+		if d < 4.0 or d > 15.0:
+			continue
+		var r := MotorPaseMejora.nota_base(m, p, q)
+		if float(r[1]) >= 3.0:
+			mejor = maxf(mejor, float(r[0]))
+	if mejor < -900.0:
+		m._contar("traza_largo_sin_corta")
+		return
+	var gap := float(n_largo[0]) - mejor
+	m._contar("traza_largo_corta_" + ("mejor" if gap < 0.0 else ("cercana" if gap < 0.7 else ("media" if gap < 2.0 else "lejana"))))
+

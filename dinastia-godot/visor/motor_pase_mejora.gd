@@ -56,3 +56,16 @@ static var PROG_TOPE := float(OS.get_environment("PMOT_PROG")) if OS.get_environ
 
 static func progreso(x: float) -> float:
 	return minf(x, PROG_TOPE)
+
+## Nota SIN azar de pasar de `p` a `q` (la misma fórmula de `_mejor_pase`, sin los términos aleatorios, fuera de juego ni jugada); [nota, libre, dist]. Solo para medir (ciclo 19).
+static func nota_base(m: MotorJugable, p: Dictionary, q: Dictionary) -> Array:
+	var yo := m.pos(p)
+	var qp := m.pos(q)
+	var d := m.dir_ataque(bool(p["es_local"]))
+	var dist := qp.distance_to(yo)
+	var lr := libre_y_riesgo(m, p, q, yo, qp)
+	var loc := bool(p["es_local"])
+	var nota := progreso((qp.z - yo.z) * d) * (MotorJugable.CHISPA_AVANCE * pow(m.prisa(), 0.7) + 0.025 * float(m._tac(loc, "mentalidad") - 1) + 0.015 * float(m._tac(loc, "ritmo") - 1) + 0.03 * float(m._tac(loc, "verticalidad") - 1)) \
+		+ minf(float(lr[0]), 10.0) * 0.18 - float(lr[1]) * RIESGO_K - dist * DIST_K
+	return [nota, float(lr[0]), dist]
+
