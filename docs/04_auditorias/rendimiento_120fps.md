@@ -106,3 +106,10 @@ Prólogo en calidad MÍNIMA con motor ligero, Compatibilidad (llvmpipe, 960x540)
   Conclusión: el coste de dibujo está CERCA (el estadio, su público y las butacas), no en lo lejano. Queda apagada por defecto (ajuste `zonas_vista`); el streaming real (crear/destruir manzanas) no compensa el riesgo
   (colisiones, agrupado de mallas) para ese 4 %. Siguiente palanca para la GPU del teléfono: el estadio en el prólogo (público como impostores, butacas, sombras) y la resolución del 3D en MÍNIMO.
 - Carga: el cuadro más largo del prólogo pasó de 3,4 s a 0,5 s (lo diferido corría en un solo fotograma) y «hasta ver la ciudad» de ~5,3 s a ~2,9 s (servidor, MÍNIMO).
+
+## Estadio en MÍNIMO (3-11) — reparto y resolución 3D
+`medir_partido -- minimo` (cámara de TV, opengl3 llvmpipe 640x360, `PARTES=1`): **454 k triángulos · 542 llamadas**. Quitando cada grupo: butacas −103 k tris/−47 llamadas · público (hinchas) −51 k/−32 · jugadores −55 k/−60 ·
+pelo −34 k/−27 · resto de multimallas −91 k/−123 · sombras 0 (ya apagadas en MÍNIMO). Las butacas livianas ya se aplican siempre (`OptimizarGrada.trocear` → `butacas_livianas(true)`): no hay más que ganar ahí.
+El público entero pesa ~11 % de los triángulos: pasarlo a impostores ahorraría como mucho eso, así que no se tocó.
+**Resolución 3D de MÍNIMO 70 % → 50 %** (`Calidad.ESCALA_MINIMO`): mismo partido a 1280x720, fotograma en llvmpipe (limitado por relleno de píxeles) **754 ms → 546 ms (−28 %)**, mismos triángulos y llamadas.
+Coste visual: más suave (rótulos de vallas y líneas finas); el HUD 2D no se escala. Se cambia con la constante; veredicto del dueño pendiente.
