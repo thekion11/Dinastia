@@ -132,7 +132,7 @@ func _saturacion_animo() -> float:
 func _aplicar_hora() -> void:
 	var sol_nominal := 1.0   ## energía nominal / real del sol: el halo del cielo no debe crecer con el refuerzo del sol bajo
 	## La gente del club del estadio trabaja de 8 a 21 h.
-	PersonalEstadio.hora = _hora
+	load("res://visor/personal_estadio.gd").hora = _hora
 	## Altura del sol: -1 a medianoche, +1 a mediodía. El seno hace justo esta
 	## curva si se desplaza para que el cero caiga a las 6 y a las 18.
 	var t: float = (_hora - 6.0) / 12.0 * PI

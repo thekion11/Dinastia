@@ -27,7 +27,7 @@ static func lanzar(cuerpos: Array = ["male", "female"]) -> int:
 	_tarea = WorkerThreadPool.add_task(func() -> void:
 		for t: Array in trabajos:
 			for acciones in [true, false]:
-				AnimQuaternius._en_cache(t[0], t[1], acciones)
+				load("res://visor/anim_quaternius.gd")._en_cache(t[0], t[1], acciones)
 			(t[2] as Node).queue_free.call_deferred())
 	return _tarea
 

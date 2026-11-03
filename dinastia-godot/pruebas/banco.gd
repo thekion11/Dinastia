@@ -329,7 +329,7 @@ func _cerrar() -> void:
 	## MATERIALES COMPARTIDOS (2-11-2026): lo que construyó este proceso no dejó ningún material compartido modificado.
 	_titulo("MATERIALES COMPARTIDOS: NINGUNO MODIFICADO")
 	_comprobar(Mini3D.materiales_alterados().is_empty(), "Mini3D.mat (%d distintos) %s" % [Mini3D._cache_mat.size(), str(Mini3D.materiales_alterados())])
-	_comprobar(TunelVestuario.materiales_alterados().is_empty(), "TunelVestuario._mat (%d distintos) %s" % [TunelVestuario._cache_mat.size(), str(TunelVestuario.materiales_alterados())])
+	_comprobar(TunelVestuario.materiales_alterados().is_empty(), "TunelVestuario._mat (%d distintos) %s" % [PiezasObra._cache_mat.size(), str(TunelVestuario.materiales_alterados())])
 	var suma := 0
 	for tt: Array in _tiempos:
 		suma += int(tt[0])

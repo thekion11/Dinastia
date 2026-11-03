@@ -346,7 +346,7 @@ func _paso_carrera(t: float) -> void:
 	var pj: PartidoJugable = _x["pj"]
 	if not is_instance_valid(pj):
 		return
-	var m := pj.motor
+	var m = pj.motor
 	var c: Variant = pj.get("_ceremonia")
 	var en_cer := c != null and is_instance_valid(c) and (c as CeremoniaPartido).activa
 	if en_cer:

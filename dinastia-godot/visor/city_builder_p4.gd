@@ -64,7 +64,7 @@ func _estadio() -> void:
 		## Antes la semilla era el aforo y sin club: butacas y detalles distintos.
 		var club_obj: Club = datos.get("club_obj") as Club
 		var semilla := club_obj._hash_id() if club_obj != null else aforo
-		StadiumBuilder.build_pitch(nodo, perfil, club_obj)
+		load("res://visor/stadium_builder.gd").build_pitch(nodo, perfil, club_obj)
 		await _marca("estadio.campo")   ## (3-11, el prólogo no cargaba en el móvil) el estadio ya no es UN solo fotograma de ~3 s
 		## Ocupación media-baja: fuera de partido el estadio no está lleno, pero
 		## con 0,06 la grada salía de un gris uniforme y desde el mapa el
@@ -75,22 +75,22 @@ func _estadio() -> void:
 		## El estadio es lo que se mira en el mapa: sin cortes por distancia
 		## (si no, los jugadores del campo desaparecían desde la vista aérea).
 		nodo.set_meta("sin_corte", true)
-		StadiumBuilder.ceder = self
-		await StadiumBuilder.build(nodo, perfil, aforo, 0.85 if bool(datos.get("dia_partido", false)) else 0.35, semilla, club_obj)
-		StadiumBuilder.ceder = null
+		load("res://visor/stadium_builder.gd").ceder = self
+		await load("res://visor/stadium_builder.gd").build(nodo, perfil, aforo, 0.85 if bool(datos.get("dia_partido", false)) else 0.35, semilla, club_obj)
+		load("res://visor/stadium_builder.gd").ceder = null
 		GaleriaClub.en_ciudad = false
 		await _marca("estadio.grada")
 		BanquilloTour.montar(nodo, club_obj)   ## los suplentes sentados en el banquillo local (P3)
 		huellas.append(Rect2(ESTADIO_EN.x - 62.0, ESTADIO_EN.z - 80.0, 124.0, 160.0))
 		## El vestuario del túnel sobresale por detrás de la tribuna (estadio 2.0).
-		var tv := TunelVestuario.datos(perfil, StadiumBuilder.niveles_de(perfil, aforo))
+		var tv = load("res://visor/tunel_vestuario.gd").datos(perfil, load("res://visor/stadium_builder.gd").niveles_de(perfil, aforo))
 		## La galería que une el sótano del club con el complejo, y su caseta.
 		var g1 := _color_club("c1", Color(0.2, 0.5, 0.3))
 		var g2 := _color_club("c2", Color(0.95, 0.95, 0.95))
 		GaleriaClub.montar(nodo, tv, g1, g2, String(perfil.get("club_nombre", "")))
 		GaleriaClub.montar_caseta(self, tv, g1)
-		_rect_vestuario = Rect2(ESTADIO_EN.x + float(tv["x0"]) - TunelVestuario.VEST_MEDIO - 0.4,
-			ESTADIO_EN.z + float(tv["z_out"]), TunelVestuario.VEST_MEDIO * 2.0 + 0.8, TunelVestuario.VEST_FONDO + 0.4)
+		_rect_vestuario = Rect2(ESTADIO_EN.x + float(tv["x0"]) - TunelMedidas.VEST_MEDIO - 0.4,
+			ESTADIO_EN.z + float(tv["z_out"]), TunelMedidas.VEST_MEDIO * 2.0 + 0.8, TunelMedidas.VEST_FONDO + 0.4)
 		huellas.append(_rect_vestuario)
 		## La entrada del club (8-10-2026): la garita del portero es sólida y
 		## delante de la puerta no puede haber bolardos, bancos ni papeleras.
@@ -155,7 +155,7 @@ func _un_campo(pos: Vector3, principal: bool) -> void:
 	## cortado: el damero de un estadio de verdad es mucho más fino que el que
 	## sale aquí a esta escala. Dos direcciones de raya bastan para que los
 	## campos no parezcan copiados y sigan leyéndose como campos.
-	mat.albedo_texture = StadiumBuilder._make_grass_texture(
+	mat.albedo_texture = load("res://visor/stadium_builder.gd")._make_grass_texture(
 		"rayas" if principal else "rayasH",
 		Color(0.29, 0.60, 0.30), Color(0.17, 0.42, 0.20))
 	mat.roughness = 0.98

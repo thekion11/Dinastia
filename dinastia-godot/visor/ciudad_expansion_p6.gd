@@ -349,7 +349,7 @@ func _feria(r: Rect2) -> void:
 		## club: con un club de negro, la del mástil derecho era un CUADRADO NEGRO
 		## flotando junto a la noria. Ahora es una bandera de tela que ondea, con
 		## las tres franjas del club (el color claro fuera, el oscuro en medio).
-		var bnd := StadiumBuilder._bandera_ondeante(b, mastil + Vector3(0, 7.4, 0), Vector2(1.6, 1.0),
+		var bnd = load("res://visor/stadium_builder.gd")._bandera_ondeante(b, mastil + Vector3(0, 7.4, 0), Vector2(1.6, 1.0),
 			Color.WHITE, 0.0 if sx > 0.0 else PI, 0.4 if sx > 0.0 else 1.3)
 		var mb := bnd.material_override as ShaderMaterial
 		mb.set_shader_parameter("dibujo", tex_franjas)

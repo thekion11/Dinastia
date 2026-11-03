@@ -51,7 +51,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	var cp: Dictionary = CLIMA_PARTIDO.get(clima_key, CLIMA_PARTIDO["despejado"])
 
 	var oscuro: float = clampf(float(amb["oscuro"]) + float(cp["oscuro"]) * 0.6, 0.0, 1.0)
-	StadiumBuilder.encender_conos(oscuro)
+	load("res://visor/stadium_builder.gd").encender_conos(oscuro)
 	var niebla: float = float(cp["niebla"])
 
 	var top := Color(str(amb["top"])).darkened(float(cp["oscuro"]) * 0.5)
@@ -128,7 +128,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 		fill.rotation_degrees = Vector3(-78, 130, 0)
 		fill.light_energy = 0.40 + oscuro * 0.35
 		## B6.1: del color que se eligió para los focos.
-		fill.light_color = StadiumBuilder.color_luz(est)
+		fill.light_color = load("res://visor/stadium_builder.gd").color_luz(est)
 		fill.shadow_enabled = false
 		## Sin brillo especular: es una luz de RELLENO. Casi vertical, su
 		## reflejo caía en el centro del campo y era media causa de la

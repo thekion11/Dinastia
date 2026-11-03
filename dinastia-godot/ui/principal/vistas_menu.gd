@@ -329,7 +329,7 @@ func _ver_estadio_propio(por_partes := false) -> void:
 		if h is CanvasItem and (h as CanvasItem).visible and not h is PantallaCarga:   ## la carga sigue encima
 			(h as CanvasItem).visible = false
 			ocultados.append(h)
-	var vista := VistaEstadio.new()
+	var vista = load("res://ui/estadio.gd").new()
 	vista.por_partes = por_partes   ## con carga: se arma entre fotogramas y la carga sigue viva
 	## Sin partido la pantalla gigante enseña bienvenida + tabla + goleadores,
 	## que es lo que hace un estadio de verdad un día entre semana. Va antes de
@@ -362,14 +362,15 @@ func _ver_vuelta_olimpica(titulo: String) -> void:
 	if c == null or not bool(CargaCiudad.de("AjustesCiudad").valor("vuelta_olimpica", true)) or DisplayServer.get_name() == "headless":
 		return
 	for h in p.get_children():
-		if h is VistaEstadio or is_instance_of(h, CargaCiudad.de("VistaCiudad")):
+		var sc := h.get_script() as Script   ## (por el nombre de la clase: nombrar `VistaEstadio` o `VistaCiudad` aquí cargaría el estadio o la ciudad enteros al abrir el menú)
+		if sc != null and String(sc.get_global_name()) in ["VistaEstadio", "VistaCiudad"]:
 			return   ## ya hay un 3D abierto (un partido, la ciudad): no se le pisa
 	var ocultados: Array = []
 	for h in p.get_children():
 		if h is CanvasItem and (h as CanvasItem).visible and not h is PantallaCarga:   ## la carga sigue encima
 			(h as CanvasItem).visible = false
 			ocultados.append(h)
-	var vista := VistaEstadio.new()
+	var vista = load("res://ui/estadio.gd").new()
 	vista.datos_pantalla = p._datos_pantalla_estadio(c)
 	p.add_child(vista)
 	vista.abrir(c, 1.0, null, null, p.mundo.perfil_estadio_de(c), Comercial.color_balon(p.mundo.comercial.balon, c))
