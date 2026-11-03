@@ -289,7 +289,7 @@ func _cerrar_dialogo(con_sonido := true) -> void:
 	tw.tween_property(d, "modulate:a", 0.0, 0.12)
 	tw.tween_callback(d.queue_free)
 	if _fila_activa != null and is_instance_valid(_fila_activa):
-		_fila_activa.grab_focus.call_deferred()
+		FocoSeguro.dar(_fila_activa)
 
 ## Un diálogo de confirmación con zoom de entrada; el primer botón tiene el foco.
 func _preguntar(titulo: String, texto: String, botones: Array) -> void:
@@ -353,7 +353,7 @@ func _preguntar(titulo: String, texto: String, botones: Array) -> void:
 	tw.tween_property(caja, "modulate:a", 1.0, 0.18)
 	tw.tween_property(caja, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	if primero != null:
-		primero.grab_focus.call_deferred()
+		FocoSeguro.dar(primero)
 
 func _pedir_restaurar() -> void:
 	_preguntar(Idiomas.t("¿Restaurar de fábrica?"), Idiomas.t("Se vuelve a la configuración clásica de FC con todas las ayudas por defecto. Después puedes guardar o descartar."),

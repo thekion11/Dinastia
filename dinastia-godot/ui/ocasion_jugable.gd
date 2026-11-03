@@ -113,7 +113,7 @@ func _pintar() -> void:
 	_caja.visible = true
 	_franjas_visibles(true)
 	var b0: Button = _botones[String(_lect["recomendada"])]
-	b0.call_deferred("grab_focus")
+	FocoSeguro.dar(b0)
 
 func _avisar(resultado: String) -> void:
 	var txt := ""

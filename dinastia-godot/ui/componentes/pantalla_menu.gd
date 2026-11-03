@@ -241,7 +241,7 @@ func portada() -> void:
 		Idiomas.traducir_arbol(tarjeta)
 		## M-285 (2-11): con mando, la primera tarjeta toma el foco; la cruceta pasa de una a otra y A entra.
 		if i == 0 and not Input.get_connected_joypads().is_empty():
-			tarjeta.call_deferred("grab_focus")
+			FocoSeguro.dar(tarjeta)
 		## Entran escalonadas.
 		tarjeta.modulate.a = 0.0
 		var tw := tarjeta.create_tween()
