@@ -27,17 +27,35 @@ static func mostrar(padre: Control, clave: String) -> PanelContainer:
 	tarjeta.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	tarjeta.z_index = 40
 	tarjeta.add_theme_stylebox_override("panel", Tema.caja(Tema.PANEL, Tema.RADIO_GRANDE, Tema.ORO))
+	## (3-11, rediseño) Con un menú del riel abierto la tarjeta sale PLEGADA (solo «💡 título ▾»): desplegada tapaba la ficha, los botones...
+	var menu: Variant = padre.get("_menu_lateral")
+	var plegada: bool = bool(padre.get("_redirigiendo")) or (menu != null and is_instance_valid(menu.get("pantalla_abierta")) and not menu.get("pantalla_abierta").cerrando())
+	if plegada:
+		tarjeta.offset_top = tarjeta.offset_bottom - 1.0
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 6)
 	tarjeta.add_child(v)
-	v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.ORO, "💡 " + Idiomas.t(clave)))
+	var cabeza := Button.new()
+	cabeza.flat = true
+	cabeza.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	cabeza.add_theme_color_override("font_color", Tema.ORO)
+	cabeza.text = "💡 " + Idiomas.t(clave) + ("  ▾" if plegada else "")
+	v.add_child(cabeza)
+	var cuerpo := VBoxContainer.new()
+	cuerpo.add_theme_constant_override("separation", 6)
+	cuerpo.visible = not plegada
+	v.add_child(cuerpo)
+	cabeza.pressed.connect(func() -> void:
+		cuerpo.visible = not cuerpo.visible
+		tarjeta.offset_top = tarjeta.offset_bottom - 1.0 if plegada else -260.0
+		cabeza.text = "💡 " + Idiomas.t(clave) + (("  ▴" if cuerpo.visible else "  ▾") if plegada else ""))
 	for l: String in AyudaPestana.lineas(clave):
 		var e := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "• " + l)
 		e.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		v.add_child(e)
+		cuerpo.add_child(e)
 	var fila := HFlowContainer.new()
 	fila.add_theme_constant_override("h_separation", 8)
-	v.add_child(fila)
+	cuerpo.add_child(fila)
 	var ok := Button.new()
 	ok.text = Idiomas.t("Entendido")
 	ok.name = "Entendido"
