@@ -212,7 +212,7 @@ func _marcar(c: Club) -> void:
 	## Sin señal, el ButtonGroup no suelta al anterior: se marca uno y se sueltan los demás.
 	for b in _cuerpo.get_children():
 		if b is Button:
-			(b as Button).set_pressed_no_signal(b.get_meta("club", null) == c)
+			(b as Button).set_pressed_no_signal((b.get_meta("club") if b.has_meta("club") else null) == c)
 	club_elegido.emit(c.id)
 
 ## El club marcado ahora (o null): para el texto de la confirmación.
