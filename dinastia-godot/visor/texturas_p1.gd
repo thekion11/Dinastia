@@ -51,6 +51,8 @@ static func _tex_ruido(frec: float, semilla: int, normal: bool = false,
 
 ## M-347: los granos van a 512² y los mapas de normales a 1024² solo en calidad ALTO.
 static func _lado(normal: bool) -> int:
+	if Calidad.elegida <= Calidad.MINIMO:   ## (3-11, memoria en MÍNIMO) granos y normales a 256² (128 px/m a 2 m por repetición): un cuarto de memoria por ruido
+		return 256
 	return TEX if (normal and Calidad.elegida >= Calidad.ULTRA) else TEX_GRANO
 
 static func _con_disco(clave: String, lado: int, crear: Callable) -> Texture2D:
