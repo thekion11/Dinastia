@@ -19,8 +19,17 @@ func _huella(diferir: bool, prologo := true) -> Dictionary:
 	while not cb.completa and espera < 4000:
 		await get_tree().process_frame
 		espera += 1
-	for i in 40:   ## los trabajos «para el siguiente fotograma» (zapatillas de los peatones…) terminan igual en los dos modos
+	## Los trabajos «para el siguiente fotograma» (zapatillas de los peatones…): se espera a que el árbol no cambie
+	## en 8 fotogramas seguidos (mínimo 40, tope 400). Con 40 fijos, en el CI (más lento) faltaban ~170 mallas (3-11).
+	var antes := -1
+	var quietos := 0
+	for i in 400:
 		await get_tree().process_frame
+		var ahora := cb.find_children("*", "", true, false).size()
+		quietos = quietos + 1 if ahora == antes else 0
+		antes = ahora
+		if i >= 40 and quietos >= 8:
+			break
 	var d := {"ms_visible": ms_visible, "completa": cb.completa, "circulos": cb.circulos.size(), "frames": espera}
 	var instancias := 0
 	var mallas := 0
@@ -29,7 +38,8 @@ func _huella(diferir: bool, prologo := true) -> Dictionary:
 		multis += 1
 		instancias += (n as MultiMeshInstance3D).multimesh.instance_count
 	for n in cb.find_children("*", "MeshInstance3D", true, false):
-		mallas += 1
+		if String(n.get_parent().name) != PeatonVida.NOMBRE_MOVIL:   ## el móvil que sacan los peatones al pararse es vida en marcha (3-11)
+			mallas += 1
 	var nombres := {}
 	for n in cb.find_children("*", "", true, false):
 		var k := "%s:%s" % [n.get_class(), String(n.name).rstrip("0123456789@")]
