@@ -28,7 +28,7 @@ func _ready() -> void:
 	z_index = 5
 
 static func leer(e: Node, respaldo: Vector2) -> Vector2:
-	var m := e.get_meta(META, null) as MandoTactil
+	var m := (e.get_meta(META) if e.has_meta(META) else null) as MandoTactil
 	if m != null and m.valor != Vector2.ZERO:
 		return m.valor
 	return respaldo
@@ -50,7 +50,7 @@ static func boton_camara(tam: float, visible_: bool) -> Button:
 
 ## Corre cuando la palanca está casi a tope hacia delante.
 static func corre(e: Node) -> bool:
-	var m := e.get_meta(META, null) as MandoTactil
+	var m := (e.get_meta(META) if e.has_meta(META) else null) as MandoTactil
 	return m != null and m.valor.y > 0.93
 
 func zona_mando(p: Vector2) -> bool:

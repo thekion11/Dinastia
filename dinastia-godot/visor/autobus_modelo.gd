@@ -257,8 +257,8 @@ static func _caja(raiz: Node3D, tam: Vector3, pos: Vector3, mat: Material) -> vo
 
 ## De noche (n de 0 a 1): los faros y las luces traseras brillan de verdad y el foco ilumina la calle.
 static func encender(bus: Node3D, n: float) -> void:
-	var d: StandardMaterial3D = bus.get_meta("luz_d", null)
-	var t: StandardMaterial3D = bus.get_meta("luz_t", null)
+	var d: StandardMaterial3D = (bus.get_meta("luz_d") if bus.has_meta("luz_d") else null)
+	var t: StandardMaterial3D = (bus.get_meta("luz_t") if bus.has_meta("luz_t") else null)
 	if d == null or t == null:
 		return
 	d.emission_energy_multiplier = lerpf(0.6, 9.0, n)
