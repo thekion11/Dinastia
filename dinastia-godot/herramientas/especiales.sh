@@ -76,6 +76,7 @@ pasa "el entrenamiento se nota" "godot --headless --path . res://pruebas/ideas/j
 pasa "portero de la Carrera" "godot --headless --path . res://pruebas/ideas/cpor_portero.tscn" "FIN. 0 fallos"
 pasa "penales en partido: ~75 % marcados (sonda)" "godot --headless --path . res://pruebas/ideas/sonda_penales.tscn" "FIN. 0 fallos"
 pasa "coste del viaje y del día de partido desglosado (U6)" "godot --headless --path . res://pruebas/ideas/u6_viaje.tscn" "FIN. 0 fallos"
+pasa "pago con tarjeta y PIN en tienda, gasolinera y expendedora (U6)" "godot --headless --path . res://pruebas/ideas/u6_tarjeta.tscn" "FIN. 0 fallos"
 pasa "caché en disco del audio sintetizado (R5)" "godot --headless --path . res://pruebas/ideas/r5_cache_audio.tscn" "FIN. 0 fallos"
 pasa "arena de pruebas (cada modo monta lo que dice)" "godot --headless --path . res://pruebas/ideas/arena_humo.tscn" "FIN. 0 fallos"
 pasa "triángulo sobre el jugador controlado (P2)" "godot --headless --path . res://pruebas/ideas/p2_triangulo.tscn" "FIN. 0 fallos"
