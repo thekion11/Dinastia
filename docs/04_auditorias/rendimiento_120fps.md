@@ -96,3 +96,13 @@ Medido con `hw_modesto.sh` (partido, lavapipe 2 núcleos, sin tope de RAM; por s
 | MÍNIMO | 568 | 741.502 | 274 MB | 473 ms | 6.327 MB |
 
 Con el motor de compatibilidad (el de los equipos débiles): MEDIO 824 llamadas y 204 MB de vídeo → MÍNIMO 565 y 192 MB. Hoja antes/después con la cámara real del partido: `capturas_ciudad_c2/partido_medio_vs_minimo.jpg` (arriba MEDIO, abajo MÍNIMO).
+
+## R3 (3-11) — ¿streaming/ocultar lo lejano de la ciudad? MEDIDO: casi no sirve
+Prólogo en calidad MÍNIMA con motor ligero, Compatibilidad (llvmpipe, 960x540), `pruebas/medir_prologo.tscn` (`CALIDAD=minimo`):
+- Recién cargado: **2 170–2 270 llamadas de dibujo · 1,57 M triángulos · 19 550 nodos · 40 400 objetos · 1 026 MB** de memoria estática.
+- Reparto de la geometría por distancia al jugador (`MEDIDA zonas`, headless, solo mallas): <200 m 0,91 M · 200-400 m 0,29 M · 400-700 m 2,28 M · 700-1000 m 1,08 M · >1000 m 0,38 M triángulos «potenciales» (cuentan piezas
+  que luego el frustum o `limitar_vista` descartan); las multimallas (público, hierba) suman ~34 M potenciales y están a <200 m (el estadio).
+- `ZonasVista` (oculta lo GRANDE a más de 640 m con histéresis 560 m; no crea ni destruye nada): **−95 llamadas (−4 %) y 0 % de triángulos** (2 272→2 177 llamadas; 1,574 M→1,573 M).
+  Conclusión: el coste de dibujo está CERCA (el estadio, su público y las butacas), no en lo lejano. Queda apagada por defecto (ajuste `zonas_vista`); el streaming real (crear/destruir manzanas) no compensa el riesgo
+  (colisiones, agrupado de mallas) para ese 4 %. Siguiente palanca para la GPU del teléfono: el estadio en el prólogo (público como impostores, butacas, sombras) y la resolución del 3D en MÍNIMO.
+- Carga: el cuadro más largo del prólogo pasó de 3,4 s a 0,5 s (lo diferido corría en un solo fotograma) y «hasta ver la ciudad» de ~5,3 s a ~2,9 s (servidor, MÍNIMO).

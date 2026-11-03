@@ -49,6 +49,12 @@ func _medir() -> void:
 	for i in 30:
 		await get_tree().process_frame
 	_foto("recién cargado")
+	_zonas()
+	var zv := _p.vista.get("_ciudad").get_node_or_null("ZonasVista") as ZonasVista
+	if zv != null:
+		zv.revisar(_p.explorador.cuerpo.global_position + Vector3(0, 2, 0))
+		_zonas()
+	print("MEDIDA zonas_vista: %s" % ("apagado" if zv == null else "%d piezas grandes, %d ocultas" % [zv.total(), zv.ocultas()]))
 	var e: ExploradorCiudad = _p.explorador
 	## Camina 40 s de juego a ~6 m/s hacia el centro de la ciudad, midiendo el coste por cuadro.
 	var cuadros := 0
@@ -108,3 +114,41 @@ func _desglose(raiz: Node) -> void:
 	claves.sort_custom(func(a: String, b: String) -> bool: return int(por[a]) > int(por[b]))
 	for k: String in claves.slice(0, 14):
 		print("MEDIDA   dibujo≈%5d  %s" % [int(por[k]), k])
+
+## R3 (3-11): de dónde sale el coste de dibujo según la distancia a la cámara: triángulos y objetos por anillo.
+func _zonas() -> void:
+	var c: Vector3 = _p.explorador.cuerpo.global_position if _p.explorador != null and _p.explorador.cuerpo != null else Vector3.ZERO
+	var cortes := [200.0, 400.0, 700.0, 1000.0, 1e9]
+	var tris := [0, 0, 0, 0, 0]
+	var objs := [0, 0, 0, 0, 0]
+	var tmm := [0, 0, 0, 0, 0]   ## triángulos de MultiMesh (instancias × malla)
+	for n in _p.find_children("*", "GeometryInstance3D", true, false):
+		var g := n as GeometryInstance3D
+		if not g.is_visible_in_tree():
+			continue
+		var d := Vector2(g.global_position.x - c.x, g.global_position.z - c.z).length()
+		var t := 0
+		if g is MeshInstance3D and (g as MeshInstance3D).mesh != null:
+			var m := (g as MeshInstance3D).mesh
+			for i in m.get_surface_count():
+				var a := m.surface_get_arrays(i)
+				var idx = a[Mesh.ARRAY_INDEX]
+				t += (idx.size() if idx != null else (a[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()) / 3
+		elif g is MultiMeshInstance3D and (g as MultiMeshInstance3D).multimesh != null and (g as MultiMeshInstance3D).multimesh.mesh != null:
+			var mm := (g as MultiMeshInstance3D).multimesh
+			var tm := 0
+			for i in mm.mesh.get_surface_count():
+				var a2 := mm.mesh.surface_get_arrays(i)
+				var idx2 = a2[Mesh.ARRAY_INDEX]
+				tm += (idx2.size() if idx2 != null else (a2[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()) / 3
+			t = 0
+			var kk := 0
+			while kk < cortes.size() - 1 and Vector2(g.global_position.x - c.x, g.global_position.z - c.z).length() >= cortes[kk]:
+				kk += 1
+			tmm[kk] += tm * (mm.visible_instance_count if mm.visible_instance_count >= 0 else mm.instance_count)
+		for k in cortes.size():
+			if d < cortes[k]:
+				tris[k] += t
+				objs[k] += 1
+				break
+	print("MEDIDA zonas (triángulos de malla/objetos; triángulos de multimalla) <200 m %d/%d/%d · 200-400 %d/%d/%d · 400-700 %d/%d/%d · 700-1000 %d/%d/%d · >1000 %d/%d/%d" % [tris[0], objs[0], tmm[0], tris[1], objs[1], tmm[1], tris[2], objs[2], tmm[2], tris[3], objs[3], tmm[3], tris[4], objs[4], tmm[4]])
