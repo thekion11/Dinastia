@@ -54,7 +54,7 @@ func _tren_real(col: Color) -> Node3D:
 			for q in TRAMOS_ASIENTO.size():
 				var ad := Label3D.new()
 				var texto: String = ANUNCIOS[(k * 6 + q * 2 + (0 if lado > 0.0 else 1)) % ANUNCIOS.size()]
-				ad.text = texto
+				ad.text = Idiomas.t(texto)
 				ad.font_size = 30
 				ad.pixel_size = 0.0033
 				ad.outline_size = 5

@@ -334,7 +334,7 @@ func _process(delta: float) -> void:
 				mejor = minf(mejor, t.eta(float(pa["s"])))
 			var lab: Label3D = pa["label"]
 			var cuando := "llegando" if mejor < 20.0 else "%d min" % int(ceil(mejor / 60.0))
-			var txt_p := ("%s · %s\nPróximo tren: %s" % [String((pa["linea"] as Dictionary)["nombre"]), String(pa["est"]), cuando]) if pa.has("pantalla") \
+			var txt_p := ("%s · %s\nPróximo tren: %s\n%s" % [String((pa["linea"] as Dictionary)["nombre"]), String(pa["est"]), cuando, MetroPublicidad.mensaje(Time.get_ticks_msec() / 1000.0)]) if pa.has("pantalla") \
 					else ("%s · próximo tren: %s" % [String((pa["linea"] as Dictionary)["nombre"]), cuando])
 			if lab.text != txt_p:   ## (28-10) cada asignación rehace la malla del texto: solo si cambió
 				lab.text = txt_p
