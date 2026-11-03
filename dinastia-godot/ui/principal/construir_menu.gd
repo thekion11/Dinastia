@@ -148,16 +148,10 @@ func _montar_cabecera() -> VBoxContainer:
 	## abajo se salia por la derecha. Se veia como la ficha del jugador cortada.
 	p._selector.fit_to_longest_item = false
 	p._selector.item_selected.connect(p._al_elegir_club)
+	## (3-11, rediseño del menú central) El selector y el 🌎 dejan la barra: elegir otro club se hace en
+	## Competiciones → «Ver otro club» (el mapa). El desplegable sigue existiendo (se llena igual), oculto.
+	p._selector.visible = false
 	p._botones.add_child(p._selector)
-	## Y el boton que abre el selector DE VERDAD: mapa del pais, escudos y datos
-	## del club. El desplegable de al lado se queda para cambiar rapido entre dos
-	## que ya conoces, que es para lo unico que servia.
-	var b_mapa := Button.new()
-	b_mapa.text = "🌎"
-	b_mapa.tooltip_text = Idiomas.t("Elegir club con el mapa: países, escudos y datos de cada equipo")
-	b_mapa.custom_minimum_size = Vector2(34, 34)
-	b_mapa.pressed.connect(p._abrir_elegir_club)
-	p._botones.add_child(b_mapa)
 	## EL MENÚ DE CALENDARIO. Antes estos cuatro eran botones sueltos en la
 	## fila, y con el buscador al lado la fila entera ya no entraba ni
 	## recortada: cada botón se veía a media palabra ("Dirigir el parti",
@@ -189,27 +183,8 @@ func _montar_cabecera() -> VBoxContainer:
 	p._botones.add_child(b_dia)
 	p._guia.nodos["un_dia"] = b_dia
 	p._guia.nodos["calendario"] = menu_calendario
-	## Las otras dos puertas contextuales, como iconos: el partido de esta
-	## semana y la plata. Van aquí y no en la cabecera porque la cabecera es
-	## un solo Label y partirla en zonas clicables habría costado más de lo
-	## que da.
-	var b_hub_partido := Button.new()
-	b_hub_partido.text = "⚽"
-	b_hub_partido.tooltip_text = Idiomas.t("Partido y calendario")
-	b_hub_partido.custom_minimum_size = Vector2(34, 32)
-	b_hub_partido.pressed.connect(func() -> void: p._abrir_hub("partido"))
-	p._botones.add_child(b_hub_partido)
-	p._guia.nodos["partido"] = b_hub_partido
-	var b_hub_dinero := Button.new()
-	b_hub_dinero.text = "💰"
-	b_hub_dinero.tooltip_text = Idiomas.t("Finanzas, mercado y agentes libres")
-	b_hub_dinero.custom_minimum_size = Vector2(34, 32)
-	b_hub_dinero.pressed.connect(func() -> void: p._abrir_hub("dinero"))
-	p._botones.add_child(b_hub_dinero)
-	p._guia.nodos["dinero"] = b_hub_dinero
-	p._guia.nodos["guardar"] = p._boton("Guardar", p._guardar)
-	p._boton("Cargar", p._partida.cargar)
-	p._boton("Otro mundo", p._partida.nueva)
+	## (3-11, rediseño) El ⚽ y el 💰 tienen su menú en el panel lateral (Partido, Dinero); Guardar, Cargar y Otro mundo
+	## viven en Ajustes → Partida y guardado. La guía del tutorial señala sus botones del riel (abajo, al crear el panel).
 	## El buscador va en la fila de acciones, no en la cabecera: ahí arriba lo
 	## tapaba el aviso de mercado, que flota en la esquina derecha.
 	p._buscador = LineEdit.new()
@@ -426,4 +401,7 @@ func _montar_columnas(raiz: VBoxContainer) -> void:
 	raiz.offset_left = 18.0 + MenuLateral.ANCHO_RIEL
 	p._menu_lateral = MenuLateral.crear(p)
 	p.add_child(p._menu_lateral)
+	p._guia.nodos["partido"] = p._menu_lateral.boton_de("partido")
+	p._guia.nodos["dinero"] = p._menu_lateral.boton_de("dinero")
+	p._guia.nodos["guardar"] = p._menu_lateral.boton_de("ajustes")
 	p._estilos.montar_reloj()

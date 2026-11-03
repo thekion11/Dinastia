@@ -7128,7 +7128,19 @@
   "lo que compraste en la tienda deportiva": "what you bought at the sports shop",
   "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s takes %s for %s a year (+5%% for closing it in person).",
   "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "“I represent %d of your players. Treat my people well and the next table will be cheaper.” (−5%% in his next negotiation.)",
-  "DEPORTES": "SPORTS"
+  "DEPORTES": "SPORTS",
+  "El próximo partido, el rival y el calendario.": "The next match, the opponent and the fixtures.",
+  "El rival, cómo llega y la previa.": "The opponent, their form and the preview.",
+  "Todos los partidos de la temporada.": "Every match of the season.",
+  "El once, el dibujo y las órdenes.": "The starting eleven, the shape and the instructions.",
+  "Reglas": "Rules",
+  "Qué significa cada cosa y qué dice el reglamento.": "What everything means and what the rulebook says.",
+  "Cada término del juego, explicado.": "Every term in the game, explained.",
+  "Ver otro club": "View another club",
+  "El mapa de países con sus clubes: elige cuál mirar.": "The map of countries and their clubs: pick one to look at.",
+  "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Save, load, new world, slots, autosave, bug report and credits.",
+  "📂 Cargar": "📂 Load",
+  "🌍 Otro mundo": "🌍 New world"
  },
  "pt": {
   "Historia": "História",
@@ -14259,7 +14271,19 @@
   "lo que compraste en la tienda deportiva": "o que você comprou na loja de esportes",
   "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s fecha %s por %s ao ano (+5 %% por fechar em pessoa).",
   "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "«Represento %d dos teus. Trata bem a minha gente e a próxima mesa sai mais barata.» (−5 %% na próxima negociação dele.)",
-  "DEPORTES": "ESPORTES"
+  "DEPORTES": "ESPORTES",
+  "El próximo partido, el rival y el calendario.": "O próximo jogo, o adversário e o calendário.",
+  "El rival, cómo llega y la previa.": "O adversário, como chega e a antevisão.",
+  "Todos los partidos de la temporada.": "Todos os jogos da temporada.",
+  "El once, el dibujo y las órdenes.": "O onze, o esquema e as instruções.",
+  "Reglas": "Regras",
+  "Qué significa cada cosa y qué dice el reglamento.": "O que significa cada coisa e o que diz o regulamento.",
+  "Cada término del juego, explicado.": "Cada termo do jogo, explicado.",
+  "Ver otro club": "Ver outro clube",
+  "El mapa de países con sus clubes: elige cuál mirar.": "O mapa dos países com os seus clubes: escolhe qual ver.",
+  "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Guardar, carregar, outro mundo, ranhuras, gravação automática, relatório de erros e créditos.",
+  "📂 Cargar": "📂 Carregar",
+  "🌍 Otro mundo": "🌍 Outro mundo"
  },
  "patrones": [
   [
@@ -27167,7 +27191,19 @@
   "lo que compraste en la tienda deportiva": "ce que vous avez acheté au magasin de sport",
   "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s prend %s pour %s par an (+5 %% pour avoir conclu en personne).",
   "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "« Je représente %d de tes joueurs. Traite bien mes gars et la prochaine table coûtera moins cher. » (−5 %% à sa prochaine négociation.)",
-  "DEPORTES": "SPORTS"
+  "DEPORTES": "SPORTS",
+  "El próximo partido, el rival y el calendario.": "Le prochain match, l'adversaire et le calendrier.",
+  "El rival, cómo llega y la previa.": "L'adversaire, sa forme et l'avant-match.",
+  "Todos los partidos de la temporada.": "Tous les matchs de la saison.",
+  "El once, el dibujo y las órdenes.": "Le onze, le dispositif et les consignes.",
+  "Reglas": "Règles",
+  "Qué significa cada cosa y qué dice el reglamento.": "Ce que signifie chaque chose et ce que dit le règlement.",
+  "Cada término del juego, explicado.": "Chaque terme du jeu, expliqué.",
+  "Ver otro club": "Voir un autre club",
+  "El mapa de países con sus clubes: elige cuál mirar.": "La carte des pays et de leurs clubs : choisis lequel regarder.",
+  "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Sauvegarder, charger, autre monde, emplacements, sauvegarde auto, rapport de bugs et crédits.",
+  "📂 Cargar": "📂 Charger",
+  "🌍 Otro mundo": "🌍 Autre monde"
  },
  "it": {
   "Historia": "Storia",
@@ -34298,7 +34334,19 @@
   "lo que compraste en la tienda deportiva": "ciò che hai comprato al negozio sportivo",
   "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s chiude %s per %s all'anno (+5 %% per averlo chiuso di persona).",
   "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "«Rappresento %d dei tuoi. Tratta bene la mia gente e il prossimo tavolo costerà meno.» (−5 %% nella sua prossima trattativa.)",
-  "DEPORTES": "SPORT"
+  "DEPORTES": "SPORT",
+  "El próximo partido, el rival y el calendario.": "La prossima partita, l'avversario e il calendario.",
+  "El rival, cómo llega y la previa.": "L'avversario, come arriva e la vigilia.",
+  "Todos los partidos de la temporada.": "Tutte le partite della stagione.",
+  "El once, el dibujo y las órdenes.": "L'undici, il modulo e le istruzioni.",
+  "Reglas": "Regole",
+  "Qué significa cada cosa y qué dice el reglamento.": "Cosa significa ogni cosa e cosa dice il regolamento.",
+  "Cada término del juego, explicado.": "Ogni termine del gioco, spiegato.",
+  "Ver otro club": "Vedi un altro club",
+  "El mapa de países con sus clubes: elige cuál mirar.": "La mappa dei paesi con i loro club: scegli quale guardare.",
+  "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Salva, carica, altro mondo, slot, salvataggio automatico, segnalazione errori e crediti.",
+  "📂 Cargar": "📂 Carica",
+  "🌍 Otro mundo": "🌍 Altro mondo"
  },
  "de": {
   "Historia": "Geschichte",
@@ -41429,7 +41477,19 @@
   "lo que compraste en la tienda deportiva": "was du im Sportgeschäft gekauft hast",
   "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s übernimmt %s für %s im Jahr (+5 %% für den persönlichen Abschluss).",
   "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "„Ich vertrete %d deiner Spieler. Behandle meine Leute gut, dann wird der nächste Tisch billiger.“ (−5 %% bei seiner nächsten Verhandlung.)",
-  "DEPORTES": "SPORT"
+  "DEPORTES": "SPORT",
+  "El próximo partido, el rival y el calendario.": "Das nächste Spiel, der Gegner und der Spielplan.",
+  "El rival, cómo llega y la previa.": "Der Gegner, seine Form und die Vorschau.",
+  "Todos los partidos de la temporada.": "Alle Spiele der Saison.",
+  "El once, el dibujo y las órdenes.": "Die Startelf, die Formation und die Anweisungen.",
+  "Reglas": "Regeln",
+  "Qué significa cada cosa y qué dice el reglamento.": "Was alles bedeutet und was im Regelwerk steht.",
+  "Cada término del juego, explicado.": "Jeder Begriff im Spiel, erklärt.",
+  "Ver otro club": "Anderen Verein ansehen",
+  "El mapa de países con sus clubes: elige cuál mirar.": "Die Karte der Länder mit ihren Vereinen: wähle einen aus.",
+  "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Speichern, laden, neue Welt, Speicherplätze, automatisches Speichern, Fehlerbericht und Mitwirkende.",
+  "📂 Cargar": "📂 Laden",
+  "🌍 Otro mundo": "🌍 Neue Welt"
  },
  "ca": {
   "Historia": "Història",
@@ -48560,7 +48620,19 @@
   "lo que compraste en la tienda deportiva": "el que vas comprar a la botiga esportiva",
   "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s tanca %s per %s l'any (+5 %% per tancar-ho en persona).",
   "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "«Represento %d dels teus. Tractem bé la meva gent i la pròxima taula serà més barata.» (−5 %% a la seva pròxima negociació.)",
-  "DEPORTES": "ESPORTS"
+  "DEPORTES": "ESPORTS",
+  "El próximo partido, el rival y el calendario.": "El proper partit, el rival i el calendari.",
+  "El rival, cómo llega y la previa.": "El rival, com arriba i la prèvia.",
+  "Todos los partidos de la temporada.": "Tots els partits de la temporada.",
+  "El once, el dibujo y las órdenes.": "L'onze, el dibuix i les ordres.",
+  "Reglas": "Regles",
+  "Qué significa cada cosa y qué dice el reglamento.": "Què vol dir cada cosa i què diu el reglament.",
+  "Cada término del juego, explicado.": "Cada terme del joc, explicat.",
+  "Ver otro club": "Veure un altre club",
+  "El mapa de países con sus clubes: elige cuál mirar.": "El mapa de països amb els seus clubs: tria quin mirar.",
+  "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Desar, carregar, un altre món, ranures, desament automàtic, informe d'errors i crèdits.",
+  "📂 Cargar": "📂 Carregar",
+  "🌍 Otro mundo": "🌍 Un altre món"
  },
  "pl": {
   "Club": "Klub",
@@ -55960,7 +56032,19 @@
   "lo que compraste en la tienda deportiva": "co kupiłeś w sklepie sportowym",
   "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s bierze %s za %s rocznie (+5%% za domknięcie osobiście).",
   "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "„Reprezentuję %d twoich zawodników. Traktuj moich ludzi dobrze, a następny stół będzie tańszy.” (−5 %% w jego następnych negocjacjach.)",
-  "DEPORTES": "SPORT"
+  "DEPORTES": "SPORT",
+  "El próximo partido, el rival y el calendario.": "Najbliższy mecz, rywal i terminarz.",
+  "El rival, cómo llega y la previa.": "Rywal, jego forma i zapowiedź.",
+  "Todos los partidos de la temporada.": "Wszystkie mecze sezonu.",
+  "El once, el dibujo y las órdenes.": "Jedenastka, ustawienie i polecenia.",
+  "Reglas": "Zasady",
+  "Qué significa cada cosa y qué dice el reglamento.": "Co znaczy każda rzecz i co mówi regulamin.",
+  "Cada término del juego, explicado.": "Każde pojęcie w grze, wyjaśnione.",
+  "Ver otro club": "Zobacz inny klub",
+  "El mapa de países con sus clubes: elige cuál mirar.": "Mapa krajów z ich klubami: wybierz, który obejrzeć.",
+  "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Zapis, wczytanie, nowy świat, sloty, autozapis, raport błędów i autorzy.",
+  "📂 Cargar": "📂 Wczytaj",
+  "🌍 Otro mundo": "🌍 Nowy świat"
  },
  "tr": {
   "Club": "Kulüp",
@@ -63360,6 +63444,18 @@
   "lo que compraste en la tienda deportiva": "spor mağazasından aldıkların",
   "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s, %s için yılda %s ödüyor (yüz yüze kapatma için +%%5).",
   "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "«Senin oyuncularından %d tanesini temsil ediyorum. Benimkilere iyi davran, bir sonraki masa daha ucuz olur.» (Bir sonraki pazarlığında −%%5.)",
-  "DEPORTES": "SPOR"
+  "DEPORTES": "SPOR",
+  "El próximo partido, el rival y el calendario.": "Sıradaki maç, rakip ve fikstür.",
+  "El rival, cómo llega y la previa.": "Rakip, formu ve maç önü.",
+  "Todos los partidos de la temporada.": "Sezonun tüm maçları.",
+  "El once, el dibujo y las órdenes.": "İlk on bir, diziliş ve talimatlar.",
+  "Reglas": "Kurallar",
+  "Qué significa cada cosa y qué dice el reglamento.": "Her şeyin anlamı ve yönetmeliğin söyledikleri.",
+  "Cada término del juego, explicado.": "Oyundaki her terim, açıklamalı.",
+  "Ver otro club": "Başka bir kulübe bak",
+  "El mapa de países con sus clubes: elige cuál mirar.": "Ülkeler ve kulüpleri haritası: bakmak istediğini seç.",
+  "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Kaydet, yükle, yeni dünya, yuvalar, otomatik kayıt, hata raporu ve emeği geçenler.",
+  "📂 Cargar": "📂 Yükle",
+  "🌍 Otro mundo": "🌍 Yeni dünya"
  }
 }
