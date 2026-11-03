@@ -208,7 +208,11 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 			(o as OmniLight3D).distance_fade_enabled = true
 			(o as OmniLight3D).distance_fade_begin = 28.0
 			(o as OmniLight3D).distance_fade_length = 8.0
-		FundirPiezas.fundir_profundo(nodo, "Fundido")
+		if FundirPiezas.activo_r2:
+			for lb in nodo.find_children("*", "Label3D", true, false):
+				(lb as Label3D).visibility_range_end = 30.0   ## los rótulos del túnel (taquillas, puertas) solo se leen de cerca: una llamada de dibujo cada uno
+				(lb as Label3D).visibility_range_end_margin = 4.0
+		FundirPiezas.fundir_profundo(nodo, "Fundido", [], FundirPiezas.activo_r2)
 
 static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: Color, c2: Color,
 		pared: StandardMaterial3D, suelo: StandardMaterial3D, techo: StandardMaterial3D,
