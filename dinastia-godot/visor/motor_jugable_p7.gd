@@ -23,13 +23,13 @@ func _ia_portador(p: Dictionary) -> void:
 	p["correr"] = dist_arco < 35.0 or presion < 4.0
 	if _intentar_regate(p, rival, dist_arco):
 		return
-	if t < _decision_en:
+	if t < _decision_en and not MotorDescarga.urge(self as Object as MotorJugable, p, presion):   ## descarga bajo presión (ciclo 9)
 		return
 	## Conduce algo más antes de decidir (antes se la quitaba de encima en
 	## medio segundo: el balón en los pies solo el 24 % del tiempo).
 	## Con espacio se conduce más (1 a 1,6 s): en un partido de verdad el balón
 	## pasa más tiempo en los pies que viajando.
-	var holgura := 1.7 if presion > 6.0 else (1.0 if presion > 3.5 else 0.5)
+	var holgura := 1.7 if presion > 6.0 else (1.0 if presion > 3.5 else MotorDescarga.holgura(0.5))
 	_decision_en = t + (0.45 + _rng.randf() * 0.45) * (1.0 - 0.15 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) * (1.0 + holgura) * CHISPA_PAUSA * _pausa_dificultad(p) / pow(prisa(), 0.8)
 	if OS.get_environment("DEPURAR_PORTADOR") != "" and dist_arco < 40.0:
 		Registro.depurar("PORTADOR", "%s(%s) a %.0f m del arco, x %.0f, presión %.1f" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", dist_arco, yo.x, presion])
