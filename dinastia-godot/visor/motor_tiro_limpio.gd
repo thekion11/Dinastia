@@ -19,12 +19,12 @@ static func _portero_rival(m: MotorJugable, p: Dictionary) -> Dictionary:
 	return {}
 
 ## Probabilidad (0-1) de que el tiro a la fracción `f` del arco no sea tapado ni esté al alcance del portero.
-static func limpieza(m: MotorJugable, p: Dictionary, f: float) -> float:
+static func limpieza(m: MotorJugable, p: Dictionary, f: float, con_portero := true) -> float:
 	var arco := m._arco_rival(p)
 	var desde := m.pos(p)
 	var punto := Vector3(f * (m.PALO - 0.35), 0, arco.z)
 	var odds := 1.0
-	var por := _portero_rival(m, p)
+	var por := _portero_rival(m, p) if con_portero else {}
 	if not por.is_empty():
 		odds *= clampf(absf(m.pos(por).x - punto.x) / DIST_PORTERO, 0.15, 1.0)
 	var seg := Vector2(punto.x - desde.x, punto.z - desde.z)
@@ -65,3 +65,33 @@ static func activo() -> bool:
 ## Factor sobre las ganas de tirar según la línea más limpia (0,7 tapada .. 1,15 limpia).
 static func factor_ganas(limpia: float) -> float:
 	return lerpf(0.7, 1.15, clampf(limpia, 0.0, 1.0))
+
+## EL TIRO NO SIEMPRE SALE BIEN (03-11-2026, ciclo 7 de la sesión líder: en el motor el 68 % de los tiros iban a puerta; en el fútbol real, ≈33 %).
+## Con la bandera `TIRO_REAL=1` cada remate puede fallar por mala ejecución, con probabilidad creciente con la DISTANCIA y la PRESIÓN, y por BLOQUEO si un
+## defensa tapa la línea de tiro. Un tiro fallido se va fuera de los palos o por encima del larguero; cuenta como tiro pero no va a puerta. Apagado por defecto
+## (no cambia la huella del motor). Fuente de las cifras objetivo: ≈25 tiros entre los dos equipos y ≈10 % de acierto (Premier League, estadística publicada).
+const FALLO_BASE := 0.10
+const FALLO_POR_METRO := 0.012
+const FALLO_PRESION := 0.15
+const BLOQUEO_MAX := 0.7
+static var _real := OS.get_environment("TIRO_REAL") == "1"
+
+static func probabilidad_fallo(m: MotorJugable, p: Dictionary, destino: Vector3, lejos: float, presion: float) -> float:
+	var f := clampf(destino.x / maxf(m.PALO - 0.35, 0.1), -1.0, 1.0)
+	var bloqueo := (1.0 - limpieza(m, p, f, false)) * BLOQUEO_MAX
+	var ejecucion := FALLO_BASE + FALLO_POR_METRO * lejos + (FALLO_PRESION if presion < 1.8 else 0.0)
+	return clampf(1.0 - (1.0 - bloqueo) * (1.0 - ejecucion), 0.0, 0.95)
+
+## Devuelve el destino del remate, desviado fuera o por encima si falla (con la bandera apagada, el mismo).
+static func fallar(m: MotorJugable, p: Dictionary, destino: Vector3, lejos: float, presion: float) -> Vector3:
+	if not _real:
+		return destino
+	if m._rng.randf() >= probabilidad_fallo(m, p, destino, lejos, presion):
+		return destino
+	var d := destino
+	if m._rng.randf() < 0.6:
+		var lado := signf(d.x) if absf(d.x) > 0.3 else (1.0 if m._rng.randf() < 0.5 else -1.0)
+		d.x = lado * (m.PALO + m._rng.randf_range(0.4, 3.0))   ## fuera de los palos
+	else:
+		d.y = m.LARGUERO + m._rng.randf_range(0.4, 2.2)         ## por encima del larguero
+	return d
