@@ -43,12 +43,12 @@ const MARGEN_MAX := 20
 const NOMINA_MIN_SEGUNDA := 0.45
 const ROJO_MAX := 0.15
 const INTERV_MAX := 2
-## La MEDIA de las temporadas de una corrida: ahí se nota una deriva de verdad. Medido el 3-11 (9 corridas): chico 2,98-3,02, grande 3,06-3,20 (al mando del grande el mundo se le
-## parece menos al real: sin gestionar, sube de rep y juega más contra los suyos). Pasa de 3,2 a 3,3: el 3,2 estaba pegado a la media del grande (3,20) y la deriva que se busca es otra cosa.
-const GOLES := Vector2(2.1, 3.3)
+## La MEDIA de las temporadas de una corrida: ahí se nota una deriva de verdad. Tras la calibración del 3-11 (`Balance.CONVERSION` 0,28) las 9 corridas dan 2,76-2,93 (las ligas reales,
+## 2,4-2,9); el techo vuelve de 3,3 (donde se había puesto con el nivel de 3,07) a 3,1: ~4σ de la media de una corrida (σ ≈ 0,05).
+const GOLES := Vector2(2.1, 3.1)
 ## Una temporada suelta: una liga son ~240 partidos, así que sus goles por partido bailan ±0,12 (1σ) alrededor de la media (~3,07 en 9 corridas del 3-11, sin tendencia: 2,86 en t1 y
 ## ~3,1 desde t5). Con el techo de la media (3,2) a solo 1σ, una de cada seis temporadas «fallaba» por puro azar de semilla: la banda de una temporada es la media + 4,5σ.
-const GOLES_TEMPORADA := Vector2(2.0, 3.65)
+const GOLES_TEMPORADA := Vector2(2.0, 3.4)   ## (3,65 con el nivel anterior de ~3,1; ahora, media ~2,85 + 4,5σ ≈ 3,4)
 
 func _probar() -> void:
 	if OS.get_environment("TV_IGUAL") != "":   ## medir otro reparto de la tele
