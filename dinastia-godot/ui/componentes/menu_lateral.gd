@@ -183,6 +183,10 @@ func _montar() -> void:
 	var hamb := _boton_riel("☰", "Abrir el panel (o deslizar hacia la derecha)")
 	hamb.pressed.connect(alternar)
 	_riel.add_child(hamb)
+	## (3-11, C7 del dueño: «¿dónde está lo de salir al mundo abierto?») Siempre a la vista, arriba del riel.
+	var salir := _boton_riel("🚶", "Salir al mundo abierto")
+	salir.pressed.connect(func() -> void: ejecutar(_p, "ciudad_pie"))
+	_riel.add_child(salir)
 	_riel.add_child(HSeparator.new())
 	for m: Dictionary in MENUS:
 		var b := _boton_riel(String(m["icono"]), String(m["nombre"]))
@@ -216,6 +220,16 @@ func _montar() -> void:
 	_lista.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_lista.add_theme_constant_override("separation", 2)
 	scroll.add_child(_lista)
+	var mundo := Button.new()   ## y el primero del cajón, con letra grande
+	mundo.set_meta("_es", ["cab", "🚶", "Salir al mundo abierto"])
+	mundo.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	mundo.add_theme_font_size_override("font_size", Tema.letra(16))
+	mundo.add_theme_color_override("font_color", Color(1.0, 0.85, 0.45))
+	mundo.pressed.connect(func() -> void:
+		plegar()
+		ejecutar(_p, "ciudad_pie"))
+	_lista.add_child(mundo)
+	_lista.add_child(HSeparator.new())
 	for m: Dictionary in MENUS:
 		var id := String(m["id"])
 		var cab := Button.new()
