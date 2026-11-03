@@ -1,7 +1,7 @@
 class_name MotorEntrada
 extends RefCounted
 ## ENTRAR EN EL MOMENTO BUENO (03-11-2026, ciclo 12 de la sesión líder: «la defensa entra poco»). Hoy la IA intenta la entrada siempre que un rival está a menos de ≈1,25 m del portador,
-## sin mirar el momento: ≈10 intentos por equipo y partido (reales ≈16-20). Con `ENTRADA_MOMENTO=1` el radio de la entrada CRECE en los momentos en que el fútbol real manda entrar:
+## sin mirar el momento: ≈10 intentos por equipo y partido (reales ≈16-20). Con `ENTRADA_MOMENTO` (por defecto; `=0` lo apaga) el radio de la entrada CRECE en los momentos en que el fútbol real manda entrar:
 ##  · el portador va de ESPALDAS al defensor (+`ESPALDAS` m);
 ##  · el balón se le ha ido (más de `LARGO_MIN` m de su pie: control largo) (+`LEJOS` m);
 ##  · está pegado a la banda (a menos de `BANDA_MAX` m de la línea) (+`BANDA` m);
@@ -12,7 +12,7 @@ const BANDA := 0.3
 const LARGO_MIN := 0.8
 const BANDA_MAX := 3.0
 const TOPE := 0.8
-static var _on := OS.get_environment("ENTRADA_MOMENTO") == "1"
+static var _on := OS.get_environment("ENTRADA_MOMENTO") != "0"   ## ENCENDIDO por defecto desde el 3-11 (ciclo 12: intentos por equipo 10,5 → 20,3, goles 2,56 en 32 partidos); `ENTRADA_MOMENTO=0` = como antes
 
 static func radio(m: MotorJugable, p: Dictionary, victima: Dictionary, base: float) -> float:
 	if not _on:

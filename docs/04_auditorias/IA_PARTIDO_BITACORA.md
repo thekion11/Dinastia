@@ -85,6 +85,9 @@ Pendiente de estudiar (fuentes ya localizadas): triangulación de Delaunay para 
     **`SAQUE_OFRECE=1`** (`MotorSaque.oferta`: los dos compañeros más cercanos al lanzador se ofrecen hacia dentro, uno corto y otro en diagonal; 32 partidos): retención banda 45 → 41,5 %, centro 49 → 47 %, pérdidas por reanudación 9,75 → 10,05/p, pases 72,6 → 72,4 %, goles 2,60 → 2,50. **No mejora → APAGADO.**
     Dos intervenciones distintas sobre las reanudaciones (a quién se saca; que los compañeros se ofrezcan) dan lo mismo: la retención (≈40-45 %) no depende de cómo se sirve el saque sino de lo que ocurre después (receptor presionado). Reanudaciones zanjadas.
     Dato para después (de la líder): ≈10 intentos de entrada por equipo frente a ≈16-20 reales; probar MÁS entradas (el barrido hecho solo probó menos intentos / menos éxito).
+13. **Ciclo 12 (la defensa entra poco): ENCENDIDO `ENTRADA_MOMENTO`** (`MotorEntrada`: el radio de la entrada crece +0,5 m con el portador de espaldas, +0,5 con control largo (balón a >0,8 m), +0,3 pegado a la banda, tope +0,8; el resto, contención como antes).
+    32 partidos: intentos de entrada por equipo 10,5 → **20,3** (real ≈16-20), éxito 13,2 → 14,7 %, entradas con éxito 2,75 → 5,95/p, faltas 4,7 → 7,6/p, entradas al área 20,9 → 20,3/p, pases 72,6 → 72,9 %, goles 2,60 → 2,56.
+    Huella nueva 1143991806; con todo apagado (+ ENTRADA_MOMENTO=0) vuelve a 3180886866. Faltan: pases buenos (72,9 % frente a 80-85 %), reparto de tiros por zona, y el receptor que se ofrece en juego (los pases cortados son el 30 % de las pérdidas).
     CI: `control del equipo` («L3 + R3 = bloqueo de jugador») salió rojo una vez en `especiales 3/6`; es una de las pruebas inestables arregladas en la rama de la líder, no se persigue aquí.
 
 ## Cifras reales de fútbol que se persiguen (orden de la sesión líder)
