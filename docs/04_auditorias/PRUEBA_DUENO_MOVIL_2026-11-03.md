@@ -31,13 +31,13 @@ penales, física del balón): varias cifras ya mejoraron, pero hay que volver a 
 - C2. Nombres flotando sobre los lugares, visibles de lejos: deben ir EN el edificio (cartel) y solo de cerca.
 
 ## Interfaz y contenido (líder)
-- U4. Clubes y cifras reales: HECHO el 3-11 lo que se podía sin red (375 de 402 clubes con plantel, 402 con su estadio
-  real). Queda: contrastar con una fuente (necesita red) los planteles escritos de memoria, sobre todo los de baja
-  confianza (Marruecos salvo los 4 grandes, Sudáfrica salvo los 4 grandes, Egipto chico, Corea chica, Volendam, Telstar);
-  11 clubes siguen con jugadores generados (Pharco, El Gouna, Baladiyat, Tala'ea, Arab Contractors, ZED, Ansan, Cheonan,
-  Canberra, Geelong, Darwin). Los guiños raros («Kuurtois», «Gllokeres») ya se corrigieron.
-- U6. Partes del juego que existen en el código pero no se encuentran jugando: ya visibles «Mi carrera» (ofertas,
-  dimitir, confianza de la directiva) y «Directorio y consejeros» en el menú; seguir auditando el resto.
+- U4. Clubes y cifras reales: 372 de 402 clubes con plantel y 402 con su estadio real; Egipto, Marruecos,
+  Sudáfrica y los clubes chicos de Corea, Australia y Holanda contrastados con búsqueda web (fuentes en
+  docs/05_referencia/fuentes_planteles_2026-11-03.md). Queda: con Wikipedia permitida en la red, rehacer la
+  verificación con más rigor; segundas divisiones (hoy solo Chile tiene dos) si el dueño las pide.
+- U6. Hecho el 3-11: meta de cantera, roles del once en el partido, perillas de la pizarra y menú lateral con
+  Plantel, Dinero y Competiciones. Quedan menores: pagar con tarjeta y PIN en tiendas, contador de amarillas antes
+  de la sanción, detalle del coste de cada viaje, y revisar si vuelven los cedidos por un evento de prensa.
 - U7. Revisar si a `main` le falta algo.
 
 ## Preguntas del dueño (respondidas en el chat del 3-11)
