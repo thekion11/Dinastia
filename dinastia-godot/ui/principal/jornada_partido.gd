@@ -122,6 +122,13 @@ func _dirigir() -> void:
 	var info_clima := Clima.del_partido(p.local.pais, pr.mundo.semana, pr.mundo.anio, p.local.id + p.visita.id)
 	p.fijar_clima(info_clima)
 	pr._escribir("[color=#8ea595]%s Parte del tiempo: %s.[/color]" % [Clima.icono(info_clima), String(info_clima["texto"])])
+	## U6 (3-11): quién está a una amarilla de la sanción, ANTES de salir al campo.
+	var al_borde := Disciplina.al_borde(pr.mundo.mi_club())
+	if not al_borde.is_empty():
+		var nombres: Array[String] = []
+		for jb: Jugador in al_borde:
+			nombres.append(jb.nombre)
+		pr._escribir("[color=#c9a227]%s[/color]" % (Idiomas.t("🟨 A una amarilla de la sanción: %s.") % ", ".join(nombres)))
 	var consejo := Clima.consejo(info_clima, p.local == pr.mundo.mi_club())
 	if consejo != "":
 		MentorVoz.decir(pr, pr.mundo, "%s %s" % [Clima.icono(info_clima), String(info_clima["texto"])], consejo)
