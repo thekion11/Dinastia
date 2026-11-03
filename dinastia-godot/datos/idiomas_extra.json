@@ -7084,7 +7084,9 @@
   "El cuadro de la copa nacional.": "The national cup bracket.",
   "Renovaciones, cláusulas y salidas.": "Renewals, clauses and departures.",
   "Academia, camada del año y los que suben.": "Academy, this year's intake and those moving up.",
-  "Convocatorias y torneos de selecciones.": "Call-ups and national team tournaments."
+  "Convocatorias y torneos de selecciones.": "Call-ups and national team tournaments.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s is one yellow card away from a suspension (%d of %d): another one and they miss the next match.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 One yellow card away from a suspension: %s."
  },
  "pt": {
   "Historia": "História",
@@ -14171,7 +14173,9 @@
   "El cuadro de la copa nacional.": "O quadro da taça nacional.",
   "Renovaciones, cláusulas y salidas.": "Renovações, cláusulas e saídas.",
   "Academia, camada del año y los que suben.": "Academia, a fornada do ano e os que sobem.",
-  "Convocatorias y torneos de selecciones.": "Convocatórias e torneios de seleções."
+  "Convocatorias y torneos de selecciones.": "Convocatórias e torneios de seleções.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s está a um cartão amarelo da suspensão (%d de %d): se levar outro, perde o próximo jogo.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 A um cartão amarelo da suspensão: %s."
  },
  "patrones": [
   [
@@ -27035,7 +27039,9 @@
   "El cuadro de la copa nacional.": "Le tableau de la coupe nationale.",
   "Renovaciones, cláusulas y salidas.": "Prolongations, clauses et départs.",
   "Academia, camada del año y los que suben.": "Académie, la promotion de l'année et ceux qui montent.",
-  "Convocatorias y torneos de selecciones.": "Convocations et tournois de sélections."
+  "Convocatorias y torneos de selecciones.": "Convocations et tournois de sélections.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s est à un carton jaune de la suspension (%d sur %d) : un de plus et il manque le prochain match.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 À un carton jaune de la suspension : %s."
  },
  "it": {
   "Historia": "Storia",
@@ -34122,7 +34128,9 @@
   "El cuadro de la copa nacional.": "Il tabellone della coppa nazionale.",
   "Renovaciones, cláusulas y salidas.": "Rinnovi, clausole e partenze.",
   "Academia, camada del año y los que suben.": "Accademia, la leva dell'anno e chi sale.",
-  "Convocatorias y torneos de selecciones.": "Convocazioni e tornei per nazionali."
+  "Convocatorias y torneos de selecciones.": "Convocazioni e tornei per nazionali.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s è a un giallo dalla squalifica (%d su %d): se ne prende un altro, salta la prossima partita.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 A un giallo dalla squalifica: %s."
  },
  "de": {
   "Historia": "Geschichte",
@@ -41209,7 +41217,9 @@
   "El cuadro de la copa nacional.": "Der Turnierbaum des nationalen Pokals.",
   "Renovaciones, cláusulas y salidas.": "Verlängerungen, Klauseln und Abgänge.",
   "Academia, camada del año y los que suben.": "Akademie, der Jahrgang und wer aufrückt.",
-  "Convocatorias y torneos de selecciones.": "Nominierungen und Turniere der Nationalteams."
+  "Convocatorias y torneos de selecciones.": "Nominierungen und Turniere der Nationalteams.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s ist eine Gelbe Karte von der Sperre entfernt (%d von %d): mit einer weiteren verpasst er das nächste Spiel.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 Eine Gelbe Karte von der Sperre entfernt: %s."
  },
  "ca": {
   "Historia": "Història",
@@ -48296,7 +48306,9 @@
   "El cuadro de la copa nacional.": "El quadre de la copa nacional.",
   "Renovaciones, cláusulas y salidas.": "Renovacions, clàusules i sortides.",
   "Academia, camada del año y los que suben.": "Acadèmia, la fornada de l'any i els que pugen.",
-  "Convocatorias y torneos de selecciones.": "Convocatòries i tornejos de seleccions."
+  "Convocatorias y torneos de selecciones.": "Convocatòries i tornejos de seleccions.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s és a una targeta groga de la sanció (%d de %d): si en veu una altra, es perd el proper partit.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 A una targeta groga de la sanció: %s."
  },
  "pl": {
   "Club": "Klub",
@@ -55652,7 +55664,9 @@
   "El cuadro de la copa nacional.": "Drabinka krajowego pucharu.",
   "Renovaciones, cláusulas y salidas.": "Przedłużenia, klauzule i odejścia.",
   "Academia, camada del año y los que suben.": "Akademia, tegoroczny rocznik i awansujący.",
-  "Convocatorias y torneos de selecciones.": "Powołania i turnieje reprezentacji."
+  "Convocatorias y torneos de selecciones.": "Powołania i turnieje reprezentacji.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s jest o jedną żółtą kartkę od zawieszenia (%d z %d): jeśli dostanie kolejną, opuści następny mecz.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 O jedną żółtą kartkę od zawieszenia: %s."
  },
  "tr": {
   "Club": "Kulüp",
@@ -63008,6 +63022,8 @@
   "El cuadro de la copa nacional.": "Ulusal kupanın eşleşme tablosu.",
   "Renovaciones, cláusulas y salidas.": "Yenilemeler, maddeler ve ayrılıklar.",
   "Academia, camada del año y los que suben.": "Akademi, bu yılın grubu ve yükselenler.",
-  "Convocatorias y torneos de selecciones.": "Kadro davetleri ve milli takım turnuvaları."
+  "Convocatorias y torneos de selecciones.": "Kadro davetleri ve milli takım turnuvaları.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s cezaya bir sarı kart uzakta (%d / %d): bir tane daha görürse bir sonraki maçı kaçırır.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 Cezaya bir sarı kart uzakta: %s."
  }
 }
