@@ -71,7 +71,7 @@ func _actualizar_mano(modo_mano: String, km_h: float, maxima: float, metros: flo
 			_m_antes = not _m_antes
 			if _m_antes:
 				_gps_oculto = not _gps_oculto
-		_minimapa.visible = estado == "calle" and not _gps_oculto
+		_minimapa.visible = estado == "calle" and modo == "coche" and not _gps_oculto   ## (3-11) el minimapa solo dentro de un vehículo
 		if _minimapa.visible:
 			if _minimapa.red == null and cb != null:
 				_minimapa.red = cb.expansion
@@ -82,7 +82,7 @@ func _actualizar_mano(modo_mano: String, km_h: float, maxima: float, metros: flo
 	if _boton_e != null:
 		var hay := _aviso.text.strip_edges() != ""
 		_boton_e.modulate = Color(1.0, 0.82, 0.3, 1.0) if hay else Color(1, 1, 1, 0.55)
-		_boton_e.visible = hay or es_tactil()
+		_boton_e.visible = hay   ## (3-11) el botón «E» solo aparece al estar junto a algo que se pueda usar (en el móvil es el botón táctil contextual)
 		_boton_e.tooltip_text = _aviso.text
 
 func _mover_en_anden(delta: float) -> void:
@@ -331,7 +331,7 @@ func _physics_process(delta: float) -> void:
 		if vida != null and vida.servicios != null:
 			vida.servicios.vigilar(cuerpo.position, absf(vel))   ## multa por semáforo en rojo si la policía lo ve (pieza E)
 	else:
-		var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+		var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A) or MandoTactil.corre(self)
 		## Aceleración y frenada suaves: arrancar y parar no es instantáneo.
 		var objetivo := (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
 		vel = move_toward(vel, objetivo, (7.0 if absf(objetivo) > absf(vel) else 12.0) * delta)

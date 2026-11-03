@@ -131,6 +131,8 @@ pasa "onb_arranque" "godot --headless --path . res://pruebas/ideas/onb_arranque.
 pasa "p3_grada_colores" "godot --headless --path . res://pruebas/ideas/p3_grada_colores.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_pasto_drive" "godot --headless --path . res://pruebas/ideas/p6_pasto_drive.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_rotulos_cartel" "godot --headless --path . res://pruebas/ideas/p6_rotulos_cartel.tscn" "(^|[^0-9])0 fallos"
+pasa "p6_boton_e_minimapa" "godot --headless --path . res://pruebas/ideas/p6_boton_e_minimapa.tscn" "(^|[^0-9])0 fallos"
+pasa "p6_mando_tactil" "godot --headless --path . res://pruebas/ideas/p6_mando_tactil.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_banderas_grada" "godot --headless --path . res://pruebas/ideas/p6_banderas_grada.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_bus_dt" "godot --headless --path . res://pruebas/ideas/p6_bus_dt.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_camiseta_rapida" "godot --headless --path . res://pruebas/ideas/p6_camiseta_rapida.tscn" "(^|[^0-9])0 fallos"
