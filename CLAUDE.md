@@ -28,6 +28,9 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 - `datos/idiomas_extra.json` (9 idiomas) round-trips con `json.dumps(ensure_ascii=False, indent=1)`; textos nuevos de UI con `Idiomas.t`.
 - Diálogos de ciudad y narración se GENERAN (`herramientas/dialogos_ciudad.py`, `montar_narracion.py`): no editar a mano los resultados.
 - En el motor del partido, no usar dicts de jugador como clave: usar `p["id"]`.
+- Memoria del menú (3-11): el menú NO nombra clases de la ciudad, del estadio/partido 3D ni de las pantallas perezosas (Godot compila todo lo
+  que se nombra). Ciudad: `CargaCiudad.de("Clase")`; resto: `load("res://…")` o `_pantalla_perezosa`; nada de `var _x := Clase.new(self)` en `Principal`.
+  Pruebas: `mem_menu_estadio`, `prueba_menu_ciudad_pie`; medir con el `.pck` precompilado (`docs/04_auditorias/compilacion_menu_2026-11-03.md`).
 - Extensión C++ (`nativo/src` → `bin_nativo/`, 30-10): cada función es copia exacta de su versión GDScript (que se queda como respaldo para Android/Web). Si se toca una de las dos, recompilar (`herramientas/compilar_nativo.sh`) y `pruebas/probar_nativo.tscn` debe dar «FIN. 0 fallos».
 
 ## Órdenes vigentes del dueño (24-10)
