@@ -17,9 +17,9 @@ func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	var lin := float(_tac(loc, "linea") - 1) + MotorTacticaViva.f(self as Object as MotorJugable, loc, "linea")   ## + estilo del club (U8)
 	var men := float(_tac(loc, "mentalidad") - 1) + MotorTacticaViva.urgencia(self as Object as MotorJugable, loc)   ## + marcador y reloj (U2, 01-11)
 	var amp := float(_tac(loc, "amplitud") - 1) + MotorTacticaViva.f(self as Object as MotorJugable, loc, "amplitud")
-	var z := base.z * (1.0 - pesos.x) + b.z * pesos.x + (d * (9.0 + men * 3.0) if en_posesion else -d * 3.0)
+	var z := base.z * pesos.z + b.z * pesos.x + (d * (9.0 + men * 3.0) if en_posesion else -d * 3.0)
 	z += d * (lin * 3.5 + men * 2.0)
-	var x := base.x * (1.0 - pesos.y + (amp * 0.12 if en_posesion else 0.0)) + b.x * pesos.y
+	var x := base.x * (pesos.w + (amp * 0.12 if en_posesion else 0.0)) + b.x * pesos.y
 	## Nadie se mete detrás de su propio arco ni más allá del rival.
 	z = clampf(z, -LARGO + 4.0, LARGO - 4.0)
 	return Vector3(clampf(x, -ANCHO + 2.0, ANCHO - 2.0), 0, z)
