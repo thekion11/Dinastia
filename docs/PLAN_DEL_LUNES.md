@@ -698,6 +698,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-184 | P2 | PENDIENTE | Sin NPC con nombre y memoria (te reconocen) | sin vecinos con memoria |
 | M-185 | P2 | PENDIENTE | Diálogos por oficio (hecho) pero sin ramas ni consecuencias | diálogos sin consecuencias |
 | M-186 | P2 | PARCIAL | Interiores: 15 salas; edificios entrables «la mayoría» sin… | gimnasio, piscina, estación central, recreativos con muebles Kenney (15/16-10); 21-10: edificio del club con muebles de verdad del catálogo común `Modulos` (oficina del DT, despacho, sala de vídeo, pr |
+| M-188 | P2 | PARCIAL | Sin tiendas con compra real (ropa, balones) | 3-11 (decisión del dueño: opción b): tienda deportiva en la plaza + ropero guardado en la partida (`RoperoDT`, `Roles.ropero`) hechos; falta que se VEA en Mi personaje y la casa |
 | M-189 | P2 | PENDIENTE | Sin bares/restaurantes con minijuego | sin bar con minijuego |
 | M-192 | P2 | SIN VERIFICAR | Aceras/pavimentos: 3 texturas | no se midió la variedad de aceras por barrio |
 | M-196 | P2 | PENDIENTE | Botes sin sonido/estela | sin estela de botes |
