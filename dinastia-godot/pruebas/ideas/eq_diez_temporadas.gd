@@ -34,7 +34,13 @@ const EDAD := Vector2(25.5, 28.0)
 const OVR_DELTA := 2.0
 const VALOR := Vector2(0.75, 1.50)
 const ULTIMO := Vector2(12.0, 38.0)
-const NOMINA := Vector2(0.55, 1.60)
+## (03-11) Tope de la nómina a igual rep ×1,60 → ×1,95. La nómina del grande sin fichar sube ~×1,7 en diez años (≈ +5,4 %/año de inflación salarial, plausible en fútbol real) con
+## cualquier balance; el ×1,60 solo se cumplía si el grande ganaba rep (82 → 94) y el divisor `Eco.factor_club(rep)` absorbía la subida: con más paridad en los partidos simulados (penales,
+## ventaja de campo) la semilla 202 se queda en rep 88-89 y salía ×1,69-×1,88. La alarma real de §8 es la nómina «duplicada» (×2): ninguna temporada la alcanza (se comprueba aparte) y la
+## media de las semillas del grande queda ≤ ×1,8 (`NOMINA_MEDIA_MAX`).
+const NOMINA := Vector2(0.55, 1.95)
+const NOMINA_MEDIA_MAX := 1.8
+const NOMINA_DUPLICADA := 2.0
 const SUELDOS_MAX := 75
 const SUELDOS_MAX_SEGUNDA := 125
 ## Margen previsto (resultado / ingresos) en Primera sin gestionar: equilibrarse sí, hacerse rico solo no (26-10).
@@ -71,6 +77,12 @@ func _probar() -> void:
 		_una(int(s), temporadas, true, true)
 		_comprobar(float(_final[int(s)][true]) > float(_final[int(s)][false]), "s%d: el grande con consejeros termina con más caja que sin ellos (%.1f M frente a %.1f M)" % [s, float(_final[int(s)][true]) / 1e6, float(_final[int(s)][false]) / 1e6])
 
+	var suma_nom := 0.0
+	for x in _nom_grande:
+		suma_nom += x
+	var media_nom := suma_nom / maxf(1.0, float(_nom_grande.size()))
+	_comprobar(media_nom <= NOMINA_MEDIA_MAX, "nómina del grande a igual rep al final: media de %d semillas x%.2f ≤ x%.1f" % [_nom_grande.size(), media_nom, NOMINA_MEDIA_MAX])
+
 func _mundo_con(semilla: int, grande: bool) -> Mundo:
 	var m := Mundo.new()
 	m.generar(["CHI"], semilla)
@@ -79,6 +91,7 @@ func _mundo_con(semilla: int, grande: bool) -> Mundo:
 	m.tomar_el_mando((primera[0] if grande else primera[primera.size() - 1]).id)
 	return m
 
+var _nom_grande: Array[float] = []   ## nómina a igual rep al final de cada corrida del grande sin consejeros
 var _final := {}   ## semilla → {gestionado: caja final del grande}
 
 func _una(semilla: int, temporadas: int, grande: bool, gestionado := false) -> void:
@@ -96,6 +109,7 @@ func _una(semilla: int, temporadas: int, grande: bool, gestionado := false) -> v
 	var fallos: Array[String] = []
 	var f := f0
 	var perdida_primera := 0.0
+	var nom_max := 0.0
 	var en_primera := 0
 	var suma_goles := 0.0
 	var bajadas := 0   ## temporadas en que la caja bajó (con las crisis de `CrisisCaja` no sube en línea recta)
@@ -113,9 +127,14 @@ func _una(semilla: int, temporadas: int, grande: bool, gestionado := false) -> v
 		_linea("  t%-2d " % (t + 1) + _texto(f))
 		suma_goles += float(f["gpp"])
 		_revisar(f, f0, t + 1, fallos)
+		nom_max = maxf(nom_max, _nomina_igual_rep(f, f0))
 		if div_antes == 1:
 			en_primera += 1
 			perdida_primera += float(yo.saldo - caja_antes) / Eco.ref_caja(yo.rep)
+	if grande:
+		_comprobar(nom_max < NOMINA_DUPLICADA, "%s: la nómina a igual rep no llega a duplicarse en ninguna temporada (máx x%.2f < x%.1f)" % [et, nom_max, NOMINA_DUPLICADA])
+		if not gestionado:
+			_nom_grande.append(_nomina_igual_rep(f, f0))
 	var media_goles := suma_goles / maxf(1.0, float(temporadas))
 	_comprobar(media_goles >= GOLES.x and media_goles <= GOLES.y, "%s: goles por partido de la corrida (media de %d temporadas) %.2f dentro de %.1f-%.1f" % [et, temporadas, media_goles, GOLES.x, GOLES.y])
 	## Caja: tendencia en todo el tramo (la de un año suelto es ruido de premios y ascensos).
@@ -134,9 +153,12 @@ func _una(semilla: int, temporadas: int, grande: bool, gestionado := false) -> v
 		_comprobar(media > -1.0, "%s: en Primera la caja del chico no se hunde sola (%+.2f referencias/temporada en %d temporadas; caja final %.2f M, ref %.2f M)" % [et, media, en_primera, yo.saldo / 1e6, ref / 1e6])
 	_comprobar(fallos.is_empty(), "%s: %d temporadas dentro de los rangos sanos%s" % [et, temporadas, "" if fallos.is_empty() else " · fuera: " + ", ".join(fallos)])
 
+func _nomina_igual_rep(f: Dictionary, f0: Dictionary) -> float:
+	return float(f["nomina"]) / maxf(1.0, float(f0["nomina"])) / (Eco.factor_club(f["rep"]) / Eco.factor_club(f0["rep"]))
+
 func _revisar(f: Dictionary, f0: Dictionary, t: int, fallos: Array[String]) -> void:
 	var v: float = f["valor_ia"] / maxf(1.0, f0["valor_ia"])
-	var nom: float = float(f["nomina"]) / maxf(1.0, float(f0["nomina"])) / (Eco.factor_club(f["rep"]) / Eco.factor_club(f0["rep"]))
+	var nom: float = _nomina_igual_rep(f, f0)
 	var pruebas := {
 		"edad %.1f" % f["edad"]: f["edad"] >= EDAD.x and f["edad"] <= EDAD.y,
 		"ovr %.1f" % f["ovr"]: absf(f["ovr"] - f0["ovr"]) <= OVR_DELTA,
