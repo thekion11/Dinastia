@@ -125,3 +125,8 @@ Coste visual: más suave (rótulos de vallas y líneas finas); el HUD 2D no se e
 Medido con `OCULTAR=EntornoEstadio` (partido, TV, MÍNIMO, 640x360): **560 → 337 llamadas (−40 %), 451 k → 366 k triángulos**, sin cambio visible (las tribunas lo tapan).
 `EntornoOclusion` lo oculta solo en MÍNIMO, en estadios cerrados y mientras la cámara está dentro del recinto a menos de 45 m de altura; fuera o más alto vuelve a verse. Captura 1280x720 idéntica (559 → 335 llamadas).
 Herramientas nuevas en `medir_partido`: `LISTA_MM=1` (mallas/multimallas por nombre con triángulos potenciales) y más grupos de `PARTES` (el método de apagar-y-comparar sale desordenado a partir de «sombras»: úsalo con `OCULTAR=` para medir una pieza suelta).
+
+## Filas cerradas del plan (3-11)
+- **M-339 césped en capas (230 k tris/57 llamadas)**: ya no es así. `CespedCapas` solo existe en ALTO (8 capas) y ULTRA (12) y son capas de UN quad: medido en ALTO (TV) con `OCULTAR=CespedCapas`: −2 k triángulos, 0 llamadas (1 objeto) de 1,66 M; en MEDIO y MÍNIMO no existe.
+- **M-356 memoria de la ciudad por celdas / streaming**: medido (apartado R3): ocultar lo lejano quita −4 % de llamadas y 0 % de triángulos; crear/destruir manzanas no compensa su riesgo. Descartado; queda `ZonasVista` (apagada, ajuste `zonas_vista`).
+- **M-355 modo batería**: botón «🔋 Modo batería» en Ajustes → Fotogramas: 30 FPS + calidad Mínima de un toque (8 idiomas). Para volver, se eligen otros FPS y otra calidad.
