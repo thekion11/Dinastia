@@ -48,7 +48,7 @@ func _ia_portador(p: Dictionary) -> void:
 	## verdad; con más pegada, desde más lejos.
 	var lejano := MotorTacticaViva.bandera(self as Object as MotorJugable, bool(p["es_local"]), "tiro_lejano")   ## pizarra: tiro lejano (01-11)
 	var ganas_tiro := (1.0 - dist_arco / MotorTiroLimpio.alcance(40.0 if lejano else 34.0)) * (0.7 + float(p["attr"]["tir"]) * 0.6) - angulo * 0.25
-	ganas_tiro += MotorTiroLimpio.bono_area(dist_arco)   ## TIRO_REAL: más ganas dentro del área (ciclo 7)
+	ganas_tiro = (ganas_tiro + MotorTiroLimpio.bono_area(dist_arco)) * MotorTiroLimpio.paciencia(dist_arco)   ## TIRO_REAL: más ganas dentro del área (ciclo 7)
 	## F6 (03-11): tres puntos del arco puntuados por la línea limpia; tapada = menos ganas, limpia = más.
 	var linea_limpia: Array = MotorTiroLimpio.mejor(self as Object as MotorJugable, p) if dist_arco < MotorTiroLimpio.alcance(34.0) else [0.0, -1.0]
 	if float(linea_limpia[1]) >= 0.0:
