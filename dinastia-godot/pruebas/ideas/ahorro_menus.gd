@@ -31,6 +31,29 @@ func _ready() -> void:
 		var sh := load(ruta) as Shader
 		var f := AhorroMenu.shader(sh)
 		_comprobar(not f.code.contains("TIME") and f.get_shader_uniform_list().size() == sh.get_shader_uniform_list().size(), "%s se congela sin perder uniformes" % ruta.get_file())
+	## El globo de la pantalla de país: en MÍNIMA se queda quieto (una pasada de dibujo) y despierta al tocarlo.
+	var globo := Globo3D.new()
+	add_child(globo)
+	globo.size = Vector2(600, 300)
+	for i in 120:
+		await get_tree().process_frame
+	_comprobar(globo._reposo and globo._viewport.render_target_update_mode != SubViewport.UPDATE_ALWAYS, "en MÍNIMA el globo se queda quieto y deja de repintarse")
+	var lon0: float = globo.lon
+	for i in 20:
+		await get_tree().process_frame
+	_comprobar(globo.lon == lon0, "y no deriva solo")
+	globo.ir_a("ESP")
+	_comprobar(not globo._reposo and globo._viewport.render_target_update_mode == SubViewport.UPDATE_ALWAYS, "al elegir un país vuelve a repintarse")
+	for i in 240:
+		await get_tree().process_frame
+	_comprobar(globo._reposo and absf(globo.lon - float(Globo3D.GLOBO_PAIS["ESP"].x)) < 1.0, "llega al país y vuelve a quedarse quieto")
+	Calidad.motor_ligero = false
+	for i in 30:
+		await get_tree().process_frame
+	var lon1: float = globo.lon
+	for i in 30:
+		await get_tree().process_frame
+	_comprobar(not globo._reposo and globo.lon != lon1, "con los fondos en movimiento el globo vuelve a girar solo")
 	Calidad.motor_ligero = antes
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())
