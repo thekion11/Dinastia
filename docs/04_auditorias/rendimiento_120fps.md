@@ -113,3 +113,10 @@ pelo −34 k/−27 · resto de multimallas −91 k/−123 · sombras 0 (ya apaga
 El público entero pesa ~11 % de los triángulos: pasarlo a impostores ahorraría como mucho eso, así que no se tocó.
 **Resolución 3D de MÍNIMO 70 % → 50 %** (`Calidad.ESCALA_MINIMO`): mismo partido a 1280x720, fotograma en llvmpipe (limitado por relleno de píxeles) **754 ms → 546 ms (−28 %)**, mismos triángulos y llamadas.
 Coste visual: más suave (rótulos de vallas y líneas finas); el HUD 2D no se escala. Se cambia con la constante; veredicto del dueño pendiente.
+
+## R2 tanda 2 (3-11) — MÍNIMO: jugadores, pelo y resolución elegible
+- `Viewport.mesh_lod_threshold` = 6 en MÍNIMO (1 en el resto): los jugadores cambian antes a sus mallas de bajo detalle (−55 k → −33 k triángulos medidos al quitarlos).
+- Pelo por capas en MÍNIMO: 4 capas cerca y 2 lejos (antes 14 y 4): el pelo pasa de −34 k a ~0 triángulos.
+- Total del partido en MÍNIMO (TV, 640x360): **454 k → 376 k triángulos (−17 %)**, mismas llamadas (542).
+- La resolución del 3D en MÍNIMO ya es elegible en Ajustes → Dispositivo (35-100 %, por defecto 50 %; se guarda en `grafica/escala_minimo`). Para medir sin tocar Ajustes: variable `ESCALA3D=0.35`.
+  Fotograma del mismo partido a 1280x720 (llvmpipe, limitado por relleno): 70 % 754 ms · 50 % 518 ms · 35 % 414 ms.

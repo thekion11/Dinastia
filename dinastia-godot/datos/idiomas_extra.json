@@ -7085,6 +7085,8 @@
   "Renovaciones, cláusulas y salidas.": "Renewals, clauses and departures.",
   "Academia, camada del año y los que suben.": "Academy, this year's intake and those moving up.",
   "Convocatorias y torneos de selecciones.": "Call-ups and national team tournaments.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s is one yellow card away from a suspension (%d of %d): another one and they miss the next match.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 One yellow card away from a suspension: %s.",
   "autocar": "coach",
   "avión": "plane",
   "chárter": "charter flight",
@@ -7093,7 +7095,8 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "A typical trip within your country: %d km by %s, %d night(s), %d people (transport %s + hotel %s + meals %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "That's %d €: enter your card PIN.",
   "Pago con tarjeta": "Card payment",
-  "Pagar con tarjeta y PIN": "Pay by card and PIN"
+  "Pagar con tarjeta y PIN": "Pay by card and PIN",
+  "Resolución del 3D en Mínima: %d %%": "3D resolution in Minimum: %d %%"
  },
  "pt": {
   "Historia": "História",
@@ -14181,6 +14184,8 @@
   "Renovaciones, cláusulas y salidas.": "Renovações, cláusulas e saídas.",
   "Academia, camada del año y los que suben.": "Academia, a fornada do ano e os que sobem.",
   "Convocatorias y torneos de selecciones.": "Convocatórias e torneios de seleções.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s está a um cartão amarelo da suspensão (%d de %d): se levar outro, perde o próximo jogo.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 A um cartão amarelo da suspensão: %s.",
   "autocar": "autocarro",
   "avión": "avião",
   "chárter": "voo fretado",
@@ -14189,7 +14194,8 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Uma viagem típica pelo seu país: %d km de %s, %d noite(s), %d pessoas (transporte %s + hotel %s + refeições %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "São %d €: digite o PIN do cartão.",
   "Pago con tarjeta": "Pagamento com cartão",
-  "Pagar con tarjeta y PIN": "Pagar com cartão e PIN"
+  "Pagar con tarjeta y PIN": "Pagar com cartão e PIN",
+  "Resolución del 3D en Mínima: %d %%": "Resolução do 3D no Mínimo: %d %%"
  },
  "patrones": [
   [
@@ -27054,6 +27060,8 @@
   "Renovaciones, cláusulas y salidas.": "Prolongations, clauses et départs.",
   "Academia, camada del año y los que suben.": "Académie, la promotion de l'année et ceux qui montent.",
   "Convocatorias y torneos de selecciones.": "Convocations et tournois de sélections.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s est à un carton jaune de la suspension (%d sur %d) : un de plus et il manque le prochain match.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 À un carton jaune de la suspension : %s.",
   "autocar": "autocar",
   "avión": "avion",
   "chárter": "vol charter",
@@ -27062,7 +27070,8 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Un déplacement typique dans ton pays : %d km en %s, %d nuit(s), %d personnes (transport %s + hôtel %s + repas %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "Cela fait %d € : saisissez le code PIN de la carte.",
   "Pago con tarjeta": "Paiement par carte",
-  "Pagar con tarjeta y PIN": "Payer par carte et code PIN"
+  "Pagar con tarjeta y PIN": "Payer par carte et code PIN",
+  "Resolución del 3D en Mínima: %d %%": "Résolution de la 3D en Minimum : %d %%"
  },
  "it": {
   "Historia": "Storia",
@@ -34150,6 +34159,8 @@
   "Renovaciones, cláusulas y salidas.": "Rinnovi, clausole e partenze.",
   "Academia, camada del año y los que suben.": "Accademia, la leva dell'anno e chi sale.",
   "Convocatorias y torneos de selecciones.": "Convocazioni e tornei per nazionali.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s è a un giallo dalla squalifica (%d su %d): se ne prende un altro, salta la prossima partita.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 A un giallo dalla squalifica: %s.",
   "autocar": "pullman",
   "avión": "aereo",
   "chárter": "volo charter",
@@ -34158,7 +34169,8 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Una trasferta tipica nel tuo paese: %d km in %s, %d notte/i, %d persone (trasporto %s + albergo %s + pasti %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "Sono %d €: digita il PIN della carta.",
   "Pago con tarjeta": "Pagamento con carta",
-  "Pagar con tarjeta y PIN": "Paga con carta e PIN"
+  "Pagar con tarjeta y PIN": "Paga con carta e PIN",
+  "Resolución del 3D en Mínima: %d %%": "Risoluzione del 3D al Minimo: %d %%"
  },
  "de": {
   "Historia": "Geschichte",
@@ -41246,6 +41258,8 @@
   "Renovaciones, cláusulas y salidas.": "Verlängerungen, Klauseln und Abgänge.",
   "Academia, camada del año y los que suben.": "Akademie, der Jahrgang und wer aufrückt.",
   "Convocatorias y torneos de selecciones.": "Nominierungen und Turniere der Nationalteams.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s ist eine Gelbe Karte von der Sperre entfernt (%d von %d): mit einer weiteren verpasst er das nächste Spiel.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 Eine Gelbe Karte von der Sperre entfernt: %s.",
   "autocar": "Reisebus",
   "avión": "Flugzeug",
   "chárter": "Charterflug",
@@ -41254,7 +41268,8 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Eine typische Reise im eigenen Land: %d km per %s, %d Nacht/Nächte, %d Personen (Transport %s + Hotel %s + Verpflegung %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "Das sind %d €: Gib die PIN der Karte ein.",
   "Pago con tarjeta": "Kartenzahlung",
-  "Pagar con tarjeta y PIN": "Mit Karte und PIN zahlen"
+  "Pagar con tarjeta y PIN": "Mit Karte und PIN zahlen",
+  "Resolución del 3D en Mínima: %d %%": "3D-Auflösung im Minimum: %d %%"
  },
  "ca": {
   "Historia": "Història",
@@ -48342,6 +48357,8 @@
   "Renovaciones, cláusulas y salidas.": "Renovacions, clàusules i sortides.",
   "Academia, camada del año y los que suben.": "Acadèmia, la fornada de l'any i els que pugen.",
   "Convocatorias y torneos de selecciones.": "Convocatòries i tornejos de seleccions.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s és a una targeta groga de la sanció (%d de %d): si en veu una altra, es perd el proper partit.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 A una targeta groga de la sanció: %s.",
   "autocar": "autocar",
   "avión": "avió",
   "chárter": "vol xàrter",
@@ -48350,7 +48367,8 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Un viatge típic pel teu país: %d km en %s, %d nit(s), %d persones (transport %s + hotel %s + dietes %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "Són %d €: teclegeu el PIN de la targeta.",
   "Pago con tarjeta": "Pagament amb targeta",
-  "Pagar con tarjeta y PIN": "Pagar amb targeta i PIN"
+  "Pagar con tarjeta y PIN": "Pagar amb targeta i PIN",
+  "Resolución del 3D en Mínima: %d %%": "Resolució del 3D en Mínim: %d %%"
  },
  "pl": {
   "Club": "Klub",
@@ -55707,6 +55725,8 @@
   "Renovaciones, cláusulas y salidas.": "Przedłużenia, klauzule i odejścia.",
   "Academia, camada del año y los que suben.": "Akademia, tegoroczny rocznik i awansujący.",
   "Convocatorias y torneos de selecciones.": "Powołania i turnieje reprezentacji.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s jest o jedną żółtą kartkę od zawieszenia (%d z %d): jeśli dostanie kolejną, opuści następny mecz.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 O jedną żółtą kartkę od zawieszenia: %s.",
   "autocar": "autokar",
   "avión": "samolot",
   "chárter": "lot czarterowy",
@@ -55715,7 +55735,8 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Typowy wyjazd po twoim kraju: %d km (%s), %d nocleg(i), %d osób (transport %s + hotel %s + wyżywienie %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "To %d €: wpisz PIN karty.",
   "Pago con tarjeta": "Płatność kartą",
-  "Pagar con tarjeta y PIN": "Zapłać kartą i PIN-em"
+  "Pagar con tarjeta y PIN": "Zapłać kartą i PIN-em",
+  "Resolución del 3D en Mínima: %d %%": "Rozdzielczość 3D w Minimum: %d %%"
  },
  "tr": {
   "Club": "Kulüp",
@@ -63072,6 +63093,8 @@
   "Renovaciones, cláusulas y salidas.": "Yenilemeler, maddeler ve ayrılıklar.",
   "Academia, camada del año y los que suben.": "Akademi, bu yılın grubu ve yükselenler.",
   "Convocatorias y torneos de selecciones.": "Kadro davetleri ve milli takım turnuvaları.",
+  "%s está a una amarilla de la sanción (%d de %d): si ve otra, se pierde el siguiente partido.": "%s cezaya bir sarı kart uzakta (%d / %d): bir tane daha görürse bir sonraki maçı kaçırır.",
+  "🟨 A una amarilla de la sanción: %s.": "🟨 Cezaya bir sarı kart uzakta: %s.",
   "autocar": "otobüs",
   "avión": "uçak",
   "chárter": "charter uçuşu",
@@ -63080,6 +63103,7 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Ülkende tipik bir deplasman: %d km, %s ile, %d gece, %d kişi (ulaşım %s + otel %s + yemek %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "Tutar %d €: kartın PIN'ini gir.",
   "Pago con tarjeta": "Kartla ödeme",
-  "Pagar con tarjeta y PIN": "Kart ve PIN ile öde"
+  "Pagar con tarjeta y PIN": "Kart ve PIN ile öde",
+  "Resolución del 3D en Mínima: %d %%": "Minimum'da 3D çözünürlüğü: %d %%"
  }
 }

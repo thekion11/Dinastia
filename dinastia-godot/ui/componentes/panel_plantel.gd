@@ -178,9 +178,13 @@ static func _filas(g: GridContainer, c: Club, mundo: Mundo, orden_jugadores: Arr
 			marcas += " ⚠"
 		elif riesgo == "medio":
 			marcas += " △"
+		## U6 (3-11): 🟨 = a una amarilla de la sanción (`Disciplina`); su ayuda explica cuántas lleva.
+		var ayuda := _texto_riesgo(mundo, j, riesgo) if riesgo != "" else ""
+		if Disciplina.a_una(j):
+			marcas += " 🟨"
+			ayuda += ("\n" if ayuda != "" else "") + Disciplina.frase_borde(j)
 		var textos := [j.nombre + marcas, j.pos_e, str(j.edad), str(j.ovr), str(j.pot), _dinero(j.valor)]
 		var colores := [color, COL_SUAVE, color, color, COL_SUAVE, color]
-		var ayuda := _texto_riesgo(mundo, j, riesgo) if riesgo != "" else ""
 		var firma := _firma(c, textos, colores, ayuda, color_de_paleta)
 		var id := j.get_instance_id()
 		var fila: Dictionary = cache.get(id, {})
@@ -191,7 +195,7 @@ static func _filas(g: GridContainer, c: Club, mundo: Mundo, orden_jugadores: Arr
 			var antes := g.get_child_count()
 			fila_jugador.call(g, j, textos, colores)
 			_ajustar_nombre(g, antes, j)
-			if riesgo != "" and antes < g.get_child_count():
+			if ayuda != "" and antes < g.get_child_count():
 				var celda := g.get_child(antes) as Control
 				celda.tooltip_text = ayuda
 				celda.mouse_filter = Control.MOUSE_FILTER_PASS
