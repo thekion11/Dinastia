@@ -71,6 +71,14 @@ Pendiente de estudiar (fuentes ya localizadas): triangulación de Delaunay para 
       **Elegido y ENCENDIDO por defecto: `PMOT_VEL=1,2` solo** (`PMOT_VEL=1.0` lo apaga). Huella nueva 2257420708; con todo apagado vuelve a 3180886866. Mejora los pases buenos (+4,4 puntos), los tiros y devuelve los goles al rango pedido.
       Sigue lejos de 80-85 % de pases buenos: el 77 % de los fallos son cortes de un rival; faltan receptor que se ofrece y mejor elección del pase con riesgo.
 
+11. **Ciclo 10 (robos al portador): CORRECCIÓN.** La primera traza etiquetaba como «robo» (65 %) cualquier pérdida sin pase propio en vuelo; esa etiqueta era demasiado ancha y mi lectura («hay que calibrar las entradas») era errónea.
+    Contadores de `_entrada` (16 partidos): ≈10 intentos por equipo y partido, 15 % de éxito, ≈2,9 entradas con éxito por partido entre los dos equipos (reales: ≈16-20 entradas por equipo, StatMuse 2025-26; no hay fuente fiable de % de entradas ganadas ni de regates en lo que se pudo abrir).
+    Barrido `ENTRADA_K` (éxito ×0,6) y `ENTRADA_ENF` (espera ×2-2,5): robos 70 → 66-68 %, sin mejorar pases ni entradas al área → **se quedan neutras (1,0) y apagadas**.
+    **Traza con 5+ causas (16 partidos, 37,4 pérdidas/partido):** pase cortado 29,9 % (11,2/p); reanudación (saque de banda/córner/falta/puerta que acaba en el rival, pérdida en los 4 s tras reanudar) 27,8 % (10,4/p); balón suelto por otros motivos 20,1 % (7,5/p);
+    entrada 11,4 % (4,2/p); tiro parado/desviado 8,2 % (3,1/p); toque largo 2,7 % (1,0/p). Lo que más pesa y es corregible: pase cortado y la calidad de las reanudaciones.
+    Lección de método: la traza solo seguía la posesión en juego vivo; las reanudaciones dejaban el dato de «quién soltó el balón» anticuado y se leían como balones sueltos largos. Aviso: una etiqueta ancha lleva a calibrar lo que no es.
+    Siguiente (ciclo 11): calidad de las reanudaciones (el receptor del saque de banda, del córner y del saque de puerta se elige y se sirve mejor) y el receptor que se ofrece.
+
 ## Cifras reales de fútbol que se persiguen (orden de la sesión líder)
 ≈2,5-2,8 goles, ≈25 tiros, ≈80-85 % de pases buenos por partido. Estado: tiros ≈10-12 por partido y pases buenos ≈53-59 (conteo, no porcentaje): **faltan por debajo**; `zz_medir_partido` no da el porcentaje de pases, hay que añadirlo.
 

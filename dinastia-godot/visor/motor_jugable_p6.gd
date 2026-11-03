@@ -237,6 +237,7 @@ func _disputas(delta: float) -> void:
 			if dq < 0.6 and dq < lejos_dueno * 0.6:
 				poseedor["enfriar"] = 0.4
 				poseedor = {}
+				set_meta("_traza_tl", self.t)   ## traza (ciclo 10): toque largo
 				_tomar(q)
 				return
 	for p: Dictionary in jugadores:
