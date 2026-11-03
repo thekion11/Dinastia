@@ -439,6 +439,7 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 		## Con pace: el balón llega al compañero con fuerza, no muriéndose.
 		_patear(p, destino, clampf(velocidad_para(dist, 4.0 + dist * 1.5) * MotorPaseMejora.VEL_K, 7.0, 26.0 * MotorPaseMejora.VEL_K), 0.0, 0.0, "pase")
 	pase_a = q
+	MotorTraza.pase(self as Object as MotorJugable, p, q, dist)   ## traza (ciclo 13): solo cuenta
 	_pase_eq = 0 if bool(p["es_local"]) else 1
 	pases[_pase_eq] += 1
 	if p == usuario:

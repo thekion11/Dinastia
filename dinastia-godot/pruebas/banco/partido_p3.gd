@@ -382,7 +382,7 @@ func _probar_traza() -> void:
 	## El rival corta un pase del local dentro del área.
 	motor._pase_eq = 0
 	MotorTraza.tomar(motor, vis)
-	_comprobar(int(motor.diag.get("traza_perdida_area_pase", 0)) == 1, "pase cortado dentro del área: «perdida_area_pase»")
+	_comprobar(int(motor.diag.get("traza_perdida_area_pase_otro", 0)) == 1, "pase cortado dentro del área (sin clasificar): «perdida_area_pase_otro»")
 	## La visita pierde el balón en un duelo en el medio campo.
 	motor.balon.position = Vector3(0, 0.11, 0)
 	motor._pase_eq = -1
