@@ -46,14 +46,15 @@ static func balon_lento(m: MotorJugable, local: bool) -> Vector3:
 static func sesgo(m: MotorJugable, local: bool) -> float:
 	return 0.5 if _sin else float(_est(m, local)["sesgo"])
 
-## Pesos con los que `_forma` mezcla la base con el balón: (z del balón, x del balón, z de la base, x de la base).
-## Apagado devuelve EXACTAMENTE los de siempre (0,45 · 0,22 · 0,55 · 0,8; los de X sumaban 1,02): ni un bit de diferencia.
-static func pesos(m: MotorJugable, local: bool, en_posesion: bool) -> Vector4:
+## Pesos con los que `_forma` mezcla la base con el balón: [z del balón, x del balón, z de la base, x de la base].
+## Apagado devuelve EXACTAMENTE los de siempre (0,45 · 0,22 · 0,55 · 0,8; los de X sumaban 1,02). Van en un arreglo de 64 bits
+## a propósito: un Vector3/Vector4 de Godot guarda 32 bits y cambiaba la huella del motor.
+static func pesos(m: MotorJugable, local: bool, en_posesion: bool) -> PackedFloat64Array:
 	if _sin:
-		return Vector4(0.45, 0.22, 0.55, 0.8)
+		return PackedFloat64Array([0.45, 0.22, 0.55, 0.8])
 	var s := sesgo(m, local)
 	if en_posesion:
 		s = maxf(s, 0.6)
 	var zb := lerpf(PESO_Z_SIN, PESO_Z_CON, s)
 	var xb := lerpf(PESO_X_SIN, PESO_X_CON, s)
-	return Vector4(zb, xb, 1.0 - zb, 1.0 - xb)
+	return PackedFloat64Array([zb, xb, 1.0 - zb, 1.0 - xb])

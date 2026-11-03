@@ -334,8 +334,8 @@ func _probar_colocacion() -> void:
 	_comprobar(s_l > 0.9 and s_v < 0.1, "tras 15 s con el balón, sesgo local %.2f y rival %.2f" % [s_l, s_v])
 	var con := MotorColocacion.pesos(motor, true, false)
 	var sin := MotorColocacion.pesos(motor, false, false)
-	_comprobar(con.x < sin.x and con.y < sin.y, "con balón sigue menos al balón (%.2f frente a %.2f) y sin él se junta" % [con.x, sin.x])
-	_comprobar(con.x > 0.2 and sin.x < 0.7, "los pesos son razonables")
+	_comprobar(con[0] < sin[0] and con[1] < sin[1], "con balón sigue menos al balón (%.2f frente a %.2f) y sin él se junta" % [con[0], sin[0]])
+	_comprobar(con[0] > 0.2 and sin[0] < 0.7, "los pesos son razonables")
 	(r[1] as Node3D).queue_free()
 
 ## MARCAJE A LOS 3 RIVALES MÁS PELIGROSOS (03-11-2026, IA F4, `MotorMarcaje`): un marcador por peligroso, distintos y estables.
