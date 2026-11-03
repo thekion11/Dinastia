@@ -18,7 +18,10 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	anc.bone_name = "Head"
 	esq.add_child(anc)
 	var al_hueso := esq.get_bone_global_rest(hueso).affine_inverse()
-	var reduce := 1.0 if nivel >= 1 else 0.6
+	if Calidad.elegida <= Calidad.MINIMO:
+		nivel = -1   ## (3-11, R2) MÍNIMO: pelo simple (pocas capas); MEDIO/ALTO/ULTRA no cambian
+	var reduce := 1.0 if nivel >= 1 else (0.6 if nivel == 0 else 0.3)
+	var capas_lejos := CAPAS_LEJOS if nivel >= 0 else 2
 	var normales := _normales(pos, tri)
 	## BARBA y CEJAS: sobre la malla de la cara, con el color de la foto.
 	## PASO 1 (orden del usuario: primero la piel/cara, después el pelo): la
@@ -126,11 +129,11 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	## arriba no se mueve) y del mismo color; solo se pierde la separación
 	## entre capas, que de lejos no llega a un píxel.
 	var capas_cerca := int(CAPAS_CUERO * reduce)
-	if capas_cerca > CAPAS_LEJOS:
-		var clave_l := _clave_cuero(cuerpo, hd, pos, CAPAS_LEJOS)
+	if capas_cerca > capas_lejos:
+		var clave_l := _clave_cuero(cuerpo, hd, pos, capas_lejos)
 		var lejos: ArrayMesh = _cache_cuero.get(clave_l)
 		if lejos == null:
-			lejos = _cuero(cuerpo, pos, datos, hd, CAPAS_LEJOS)
+			lejos = _cuero(cuerpo, pos, datos, hd, capas_lejos)
 			if lejos != null:
 				_cache_cuero[clave_l] = lejos
 		if lejos != null:
