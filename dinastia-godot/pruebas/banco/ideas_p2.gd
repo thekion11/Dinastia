@@ -265,3 +265,19 @@ func _probar_calidad_minima() -> void:
 		Calidad.guardar()
 	else:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(Calidad.ARCHIVO))
+
+## (3-11, orden 22) La pantalla de antes del partido: jugar, solo las importantes o simular.
+func _probar_eleccion_partido() -> void:
+	_titulo("ANTES DEL PARTIDO: JUGAR, SOLO LAS IMPORTANTES O SIMULAR")
+	var j := EleccionPartido.eleccion("jugar")
+	var i := EleccionPartido.eleccion("importantes")
+	var s := EleccionPartido.eleccion("simular", "vivo")
+	_comprobar(j["modo"] == "completo" and j["control"] and not j["ocasiones"], "jugar = 3D completo manejando a tu equipo")
+	_comprobar(i["modo"] == "destacados" and not i["control"] and i["ocasiones"], "solo las importantes = corre solo y para en tus ocasiones")
+	_comprobar(s["modo"] == "vivo" and not s["control"] and not s["ocasiones"], "simular respeta cómo quieres verlo")
+	_comprobar(EleccionPartido.eleccion("simular", "raro")["modo"] == "resumen", "un modo desconocido simula en resumen")
+	var el := EleccionPartido.new()
+	el.titulo = "A vs B"
+	add_child(el)
+	_comprobar(el.find_child("Opcion_jugar", true, false) != null and el.find_child("Opcion_importantes", true, false) != null and el.find_child("Opcion_simular", true, false) != null, "las tres tarjetas a pantalla completa")
+	el.queue_free()

@@ -279,6 +279,19 @@ func _pintar_qol() -> void:
 	var t := p._texto(11, Principal.COL_SUAVE)
 	t.text = Idiomas.t("LA INTERFAZ A TU MEDIDA")
 	p._lista_ajustes.add_child(t)
+	## (3-11, orden 22) La pantalla de antes de cada partido: jugar, solo las importantes o simular.
+	var fp := HBoxContainer.new()
+	p._lista_ajustes.add_child(fp)
+	var ep := p._texto(12, Principal.COL_TEXTO)
+	ep.text = Idiomas.t("Preguntar cómo jugar antes de cada partido")
+	ep.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fp.add_child(ep)
+	var bp := Button.new()
+	bp.text = Idiomas.t("SÍ") if EleccionPartido.preguntar() else Idiomas.t("NO")
+	bp.pressed.connect(func() -> void:
+		EleccionPartido.fijar_preguntar(not EleccionPartido.preguntar())
+		p._refrescar())
+	fp.add_child(bp)
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila)
