@@ -335,3 +335,44 @@ func _probar_colocacion() -> void:
 	_comprobar(con.x < sin.x and con.y < sin.y, "con balón sigue menos al balón (%.2f frente a %.2f) y sin él se junta" % [con.x, sin.x])
 	_comprobar(con.x > 0.2 and sin.x < 0.7, "los pesos son razonables")
 	(r[1] as Node3D).queue_free()
+
+## MARCAJE A LOS 3 RIVALES MÁS PELIGROSOS (03-11-2026, IA F4, `MotorMarcaje`): un marcador por peligroso, distintos y estables.
+func _probar_marcaje() -> void:
+	_titulo("MARCAJE A LOS PELIGROSOS")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var locales: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	var arco := motor._arco_propio(locales[0])
+	var hacia := (Vector3(0, 0, 0) - arco).normalized()
+	## Toda la visita lejos, salvo tres delanteros en el área; los locales repartidos por detrás.
+	for i in vis.size():
+		(vis[i]["node"] as Node3D).position = Vector3(-30.0 + i * 5.0, 0, -arco.z * 0.9 + 0.0)
+	for i in 3:
+		(vis[i]["node"] as Node3D).position = arco + hacia * (12.0 + i * 3.0) + Vector3(-6.0 + i * 6.0, 0, 0)
+	for i in locales.size():
+		(locales[i]["node"] as Node3D).position = arco + hacia * 18.0 + Vector3(-12.0 + i * 2.5, 0, 0)
+	motor.balon.position = Vector3(0, 0.11, 0)
+	motor.poseedor = {}
+	motor.t += 1.0
+	var mapa := MotorMarcaje.reparto(motor, true)
+	var marcadores := mapa.values()
+	_comprobar(mapa.size() == 3, "los 3 delanteros tienen marcador (%d)" % mapa.size())
+	var unicos := {}
+	for mid in marcadores:
+		unicos[mid] = true
+	_comprobar(unicos.size() == mapa.size(), "ningún defensa marca a dos")
+	var ok := true
+	for qid in mapa:
+		var mid: String = mapa[qid]
+		var p: Variant = locales.filter(func(x: Dictionary) -> bool: return String(x["id"]) == mid)
+		var marcado := MotorMarcaje.rival_de(motor, p[0]) if not p.is_empty() else {}
+		ok = ok and not p.is_empty() and String(marcado.get("id", "")) == String(qid)
+	_comprobar(ok, "cada marcador sabe a quién marca")
+	## Estabilidad: se mueven un poco y, medio segundo después, el reparto es el mismo.
+	for i in 3:
+		(vis[i]["node"] as Node3D).position += Vector3(1.0, 0, 0.5)
+	motor.t += 0.7
+	var mapa2 := MotorMarcaje.reparto(motor, true)
+	_comprobar(mapa2 == mapa, "el reparto no cambia por moverse un poco")
+	(r[1] as Node3D).queue_free()

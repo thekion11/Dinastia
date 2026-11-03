@@ -195,6 +195,14 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 			p["correr"] = true
 			return b + (arco - b).normalized() * 2.5
 		return b + (arco - b).normalized() * 7.0
+	## MARCAJE A LOS PELIGROSOS (F4, 03-11): a cada uno de los 3 rivales más peligrosos le toca UN marcador, entre él y el arco.
+	var marcado := MotorMarcaje.rival_de(self as Object as MotorJugable, p)
+	if not marcado.is_empty():
+		var pm := pos(marcado)
+		p["correr"] = pos(p).distance_to(pm) > 6.0
+		var om := pm + (arco - pm).normalized() * 1.8
+		om.z = clampf(om.z, -LARGO + 2.0, LARGO - 2.0)
+		return om
 	## Los demás: zona, marcando al rival más cercano.
 	var obj := _forma(p, false)
 	var rival: Dictionary = {}
