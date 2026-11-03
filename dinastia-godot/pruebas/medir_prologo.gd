@@ -192,6 +192,63 @@ func _grupos() -> void:
 				(n as Node3D).visible = true
 		for i in 3:
 			await get_tree().process_frame
+	if OS.get_environment("GRUPOS") == "2":
+		await _grupos_nombre(ciudad, base)
+
+## GRUPOS=2 (3-11): lo mismo por NOMBRE (nodo o, si no tiene nombre propio, su padre): cuántas llamadas quita ocultar cada grupo de mallas/multimallas.
+func _grupos_nombre(ciudad: Node, base: Vector2) -> void:
+	if OS.get_environment("RUTAS") != "":
+		var cam := get_viewport().get_camera_3d()
+		var hist := {}
+		for n in ciudad.find_children(OS.get_environment("RUTAS"), "GeometryInstance3D", true, false):
+			var dd := cam.global_position.distance_to((n as Node3D).global_position)
+			var clave := "d<%d fin=%d" % [int(ceil(dd / 25.0) * 25.0), int((n as GeometryInstance3D).visibility_range_end)]
+			hist[clave] = int(hist.get(clave, 0)) + 1
+		for k in hist:
+			print("RUTAS_DIST %s %d" % [k, hist[k]])
+		var cuenta := {}
+		for n in ciudad.find_children(OS.get_environment("RUTAS"), "GeometryInstance3D", true, false):
+			var r := ""
+			var q: Node = n.get_parent()
+			for i in 5:
+				if q == null or q == ciudad:
+					break
+				r += String(q.name).rstrip("0123456789@_") + "<"
+				q = q.get_parent()
+			cuenta[r] = int(cuenta.get(r, 0)) + 1
+		for k in cuenta:
+			print("RUTAS %s %d" % [k, cuenta[k]])
+	var por := {}
+	for n in ciudad.find_children("*", "GeometryInstance3D", true, false):
+		if n is Label3D or not (n as Node3D).visible:
+			continue
+		var nm := String(n.name).rstrip("0123456789@_").lstrip("@")
+		var pa := n.get_parent()
+		while nm == "" or nm.begins_with("Node3D") or nm.begins_with("MeshInstance3D") or nm.begins_with("MultiMeshInstance3D"):
+			nm = String(pa.name).rstrip("0123456789@_").lstrip("@")
+			pa = pa.get_parent()
+			if pa == null:
+				break
+		nm = "(" + nm + ")"
+		if not por.has(nm):
+			por[nm] = []
+		por[nm].append(n)
+	var ks := por.keys()
+	ks.sort_custom(func(a, b): return por[a].size() > por[b].size())
+	for k in ks.slice(0, 30):
+		var lista: Array = por[k]
+		for n in lista:
+			if is_instance_valid(n):
+				(n as Node3D).visible = false
+		for i in 3:
+			await get_tree().process_frame
+		var m := Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME), Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
+		print("GRUPOS2 %-34s %5d nodos  -%d llamadas  -%d tris" % [k, lista.size(), base.x - m.x, base.y - m.y])
+		for n in lista:
+			if is_instance_valid(n):
+				(n as Node3D).visible = true
+		for i in 2:
+			await get_tree().process_frame
 
 ## TEXTURAS=1 (3-11, R4 memoria): las texturas únicas que cuelgan de los materiales de la escena, con tamaño, formato y megas estimados (con mipmaps), de mayor a menor.
 func _texturas() -> void:
