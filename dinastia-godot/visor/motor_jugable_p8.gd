@@ -4,7 +4,9 @@ extends "res://visor/motor_jugable_p7.gd"
 ## La forma del equipo: la posición de la formación, movida con el balón.
 func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	var base: Vector3 = p["base_pos"]
-	var b := balon.position
+	var loc0 := bool(p["es_local"])
+	var b := MotorColocacion.balon_lento(self as Object as MotorJugable, loc0)   ## balón con retardo (F1, 03-11)
+	var pesos := MotorColocacion.pesos(self as Object as MotorJugable, loc0, en_posesion)
 	var d := dir_ataque(bool(p["es_local"]))
 	## La pizarra (con todo a 1, lo de siempre): la línea adelanta o retrasa el
 	## bloque, la mentalidad lo empuja y la amplitud abre a los de banda.
@@ -12,9 +14,9 @@ func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	var lin := float(_tac(loc, "linea") - 1) + MotorTacticaViva.f(self as Object as MotorJugable, loc, "linea")   ## + estilo del club (U8)
 	var men := float(_tac(loc, "mentalidad") - 1) + MotorTacticaViva.urgencia(self as Object as MotorJugable, loc)   ## + marcador y reloj (U2, 01-11)
 	var amp := float(_tac(loc, "amplitud") - 1) + MotorTacticaViva.f(self as Object as MotorJugable, loc, "amplitud")
-	var z := base.z * 0.55 + b.z * 0.45 + (d * (9.0 + men * 3.0) if en_posesion else -d * 3.0)
+	var z := base.z * (1.0 - pesos.x) + b.z * pesos.x + (d * (9.0 + men * 3.0) if en_posesion else -d * 3.0)
 	z += d * (lin * 3.5 + men * 2.0)
-	var x := base.x * (0.8 + (amp * 0.12 if en_posesion else 0.0)) + b.x * 0.22
+	var x := base.x * (1.0 - pesos.y + (amp * 0.12 if en_posesion else 0.0)) + b.x * pesos.y
 	## Nadie se mete detrás de su propio arco ni más allá del rival.
 	z = clampf(z, -LARGO + 4.0, LARGO - 4.0)
 	return Vector3(clampf(x, -ANCHO + 2.0, ANCHO - 2.0), 0, z)

@@ -1,0 +1,56 @@
+class_name MotorColocacion
+extends RefCounted
+## COLOCACIÓN SIN BALÓN CON MEMORIA (03-11-2026, IA F1 de `docs/04_auditorias/terceros_ia_motor_2026-11-01.md`; la idea viene de
+## League-Soccer `GetAdaptedFormationPosition`, escrita aparte y mucho más corta). Antes `_forma` mezclaba la base con el balón
+## de ESTE fotograma: toda la línea se mecía con cada rebote. Ahora:
+##  - el equipo mira un balón «lento» (promedio con retardo de 2-4 s: más rápido cuanto más cerca está su jugador más cercano),
+##  - lleva un sesgo de POSESIÓN suavizado (1 = el balón es suyo, 0 = del rival, ~4 s de memoria), y
+##  - con balón el bloque se alarga y se abre (sigue menos al balón); sin balón se junta y lo sigue más.
+## `SIN_COLOCACION=1` = el `_forma` de antes.
+const RETARDO_MAX := 3.8   ## s de retardo con el balón lejos de todos
+const RETARDO_MIN := 1.8   ## s cuando un compañero está encima del balón
+const MEMORIA_POSESION := 4.0
+const PESO_Z_CON := 0.34    ## seguimiento del balón en profundidad con balón (antes 0,45)
+const PESO_Z_SIN := 0.55    ## y sin balón: el bloque se junta y lo persigue
+const PESO_X_CON := 0.18
+const PESO_X_SIN := 0.30
+static var _sin := OS.has_environment("SIN_COLOCACION")
+
+static func _est(m: MotorJugable, local: bool) -> Dictionary:
+	var k := "_colocacion_%s" % ("l" if local else "v")
+	if not m.has_meta(k):
+		m.set_meta(k, {"bal": m.balon.position, "sesgo": 0.5})
+	return m.get_meta(k)
+
+## Llamar una vez por fotograma de juego (`paso`).
+static func actualizar(m: MotorJugable, delta: float) -> void:
+	if _sin:
+		return
+	for local: bool in [true, false]:
+		var e := _est(m, local)
+		var cerca := 40.0
+		for q: Dictionary in m.jugadores:
+			if bool(q["es_local"]) == local:
+				cerca = minf(cerca, m.pos(q).distance_to(m.balon.position))
+		var urg := 1.0 - clampf((cerca - 2.0) / 28.0, 0.0, 1.0)
+		var tau := lerpf(RETARDO_MAX, RETARDO_MIN, urg)
+		e["bal"] = (e["bal"] as Vector3).lerp(m.balon.position, 1.0 - exp(-delta / tau))
+		if not m.poseedor.is_empty():
+			var meta := 1.0 if bool(m.poseedor["es_local"]) == local else 0.0
+			e["sesgo"] = lerpf(float(e["sesgo"]), meta, 1.0 - exp(-delta / MEMORIA_POSESION))
+
+## Balón que «ve» el equipo, y sesgo de posesión (0-1).
+static func balon_lento(m: MotorJugable, local: bool) -> Vector3:
+	return m.balon.position if _sin else (_est(m, local)["bal"] as Vector3)
+
+static func sesgo(m: MotorJugable, local: bool) -> float:
+	return 0.5 if _sin else float(_est(m, local)["sesgo"])
+
+## Pesos con los que `_forma` mezcla la base con el balón: [profundidad, ancho].
+static func pesos(m: MotorJugable, local: bool, en_posesion: bool) -> Vector2:
+	if _sin:
+		return Vector2(0.45, 0.22)
+	var s := sesgo(m, local)
+	if en_posesion:
+		s = maxf(s, 0.6)
+	return Vector2(lerpf(PESO_Z_SIN, PESO_Z_CON, s), lerpf(PESO_X_SIN, PESO_X_CON, s))
