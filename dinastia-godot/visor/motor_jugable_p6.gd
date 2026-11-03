@@ -433,7 +433,7 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 		_patear(p, destino, clampf(dist * 0.45 + 6.0, 10.0, 19.0), 0.25 if (tapada and dist < 25.0) else 2.0, 0.0, "pase")
 	else:
 		## Con pace: el balón llega al compañero con fuerza, no muriéndose.
-		_patear(p, destino, clampf(velocidad_para(dist, 4.0 + dist * 1.5), 7.0, 26.0), 0.0, 0.0, "pase")
+		_patear(p, destino, clampf(velocidad_para(dist, 4.0 + dist * 1.5) * MotorPaseMejora.VEL_K, 7.0, 26.0 * MotorPaseMejora.VEL_K), 0.0, 0.0, "pase")
 	pase_a = q
 	_pase_eq = 0 if bool(p["es_local"]) else 1
 	pases[_pase_eq] += 1

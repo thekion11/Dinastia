@@ -56,6 +56,12 @@ Pendiente de estudiar (fuentes ya localizadas): triangulación de Delaunay para 
 8. **Ciclo 8 (pases), diagnóstico en 4 partidos**: de 313 pases, 97 fallados: 60 cortes con receptor, 15 cortes con el balón ya suelto, 22 otros (fuera/parado). `PMOT_PASE=1` no mejora (68,9 % frente a 69,5 %); subir el peso del riesgo (`PMOT_RIESGO`) 2 → 69,9 %, 3,5 → 71,3 %, a costa de ≈30 % de tiros y goles. Elegir mejor al receptor NO es la palanca principal.
 9. **CI**: `probar_por_partes` y `control del equipo` salen intermitentes en esta rama; están arregladas en la rama de la líder (claude/dazzling-rubin-v7rfyi) y no se persiguen aquí.
 
+10. **Ciclo 9 (construcción del ataque), traza de posesiones** (`MotorTraza`, solo cuenta; `MEDIDA3`), 32 partidos: 41,0 posesiones por partido, 18,3 entradas al área por partido; las pérdidas son 65 % ROBOS en un duelo y 35 % pases cortados;
+   por zona: 50 % en el medio campo, 24 % último tercio, 13 % propio campo, 12 % dentro del área. Es decir, los ataques no mueren por falta de pases sino porque al portador se lo quitan en un duelo antes de soltarlo.
+    - **Descarga bajo presión** (`MotorDescarga`, `PASE_DESCARGA=1`: con un rival a menos de 2,6 m decide ya, pausa mínima 0,4 s, espera 0,15): robos 64,5 → 58,4 %, pero posesiones 41,0 → 39,7, entradas al área 18,3 → 17,7, pases buenos 68,2 → 68,1 %,
+      tiros 15,9 → 16,1, goles 2,34 → 2,31. NO mejora lo que importa → **se queda APAGADA**. Lo que antes era robo se pierde ahora de otra forma.
+    - Siguiente probada: pase raso más rápido (`PMOT_VEL`, 1,0 = igual): menos tiempo para cortarlo.
+
 ## Cifras reales de fútbol que se persiguen (orden de la sesión líder)
 ≈2,5-2,8 goles, ≈25 tiros, ≈80-85 % de pases buenos por partido. Estado: tiros ≈10-12 por partido y pases buenos ≈53-59 (conteo, no porcentaje): **faltan por debajo**; `zz_medir_partido` no da el porcentaje de pases, hay que añadirlo.
 
