@@ -57,6 +57,17 @@ const ENCAJE := {
 static func existe(clave: String) -> bool:
 	return CATALOGO.has(clave)
 
+## 3-11 (orden 22 U6): la pantalla de Táctica elige los roles con las claves de la tabla `ROLES` del vestuario
+## (porArea, latOf…), y el partido simulado solo mira `Tactica.roles` con las claves de aquí: sin este puente
+## lo que elegías no cambiaba nada en el partido.
+const DE_VESTUARIO := {
+	"porArea": "portero_clasico", "porLibero": "portero_libero", "centralSal": "central_salida",
+	"centralMar": "central_marcador", "latOf": "carrilero", "latDef": "lateral_defensivo", "pivote": "pivote",
+	"boxToBox": "box_to_box", "organizad": "organizador", "llegador": "mediapunta", "interior": "box_to_box",
+	"extAbierto": "extremo", "extCambiad": "extremo", "nueveFijo": "nueve_area", "falsoNueve": "falso_nueve",
+	"segPunta": "delantero_presionante",
+}
+
 ## Los roles que puede hacer un jugador de esa línea ("POR", "DEF", "MED", "DEL").
 static func de_grupo(grupo: String) -> Array:
 	var r: Array = []

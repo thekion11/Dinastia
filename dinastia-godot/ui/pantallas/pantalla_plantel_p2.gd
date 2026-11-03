@@ -35,13 +35,16 @@ func _pintar_tactica(c: Club) -> void:
 		i_f += 1
 	p._lista_tactica.add_child(HSeparator.new())
 
-	## Las seis perillas, con los mismos tres niveles que usa el partido en vivo.
+	## Las siete perillas, con los mismos tres niveles que usa el partido en vivo.
 	var perillas := [
 		["Mentalidad", "mentalidad", ["Defensiva", "Equilibrada", "Ofensiva"]],
 		["Presión", "presion", ["Baja", "Media", "Alta"]],
 		["Ritmo", "ritmo", ["Lento", "Medio", "Alto"]],
 		["Línea", "linea", ["Baja", "Media", "Adelantada"]],
 		["Amplitud", "amplitud", ["Estrecha", "Media", "Abierta"]],
+		## 3-11 (orden 22 U6): las dos que el partido ya usaba y la pizarra no enseñaba.
+		["Verticalidad", "verticalidad", ["Paciente", "Mixta", "Vertical"]],
+		["Tras perder el balón", "tras_perdida", ["Replegar", "Equilibrio", "Contrapresión"]],
 	]
 	var tp := p._texto(11, Principal.COL_SUAVE)
 	tp.text = Idiomas.t("PIZARRA")
