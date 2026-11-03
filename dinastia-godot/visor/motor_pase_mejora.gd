@@ -52,7 +52,7 @@ static func libre_y_riesgo(m: MotorJugable, p: Dictionary, q: Dictionary, yo: Ve
 
 ## CICLO 15 (3-11, distribución del pase): el 43 % de los pases son largos (real ≈10-15 %). La nota premia el avance por metro sin tope, así que un
 ## envío de 30 m siempre gana a un pase corto. `PMOT_PROG` = tope en metros del avance que cuenta (999 = sin tope, como antes).
-static var PROG_TOPE := float(OS.get_environment("PMOT_PROG")) if OS.get_environment("PMOT_PROG") != "" else 999.0
+static var PROG_TOPE := float(OS.get_environment("PMOT_PROG")) if OS.get_environment("PMOT_PROG") != "" else 10.0   ## ENCENDIDO el 3-11 (ciclo 15, 32 partidos: pases largos 43→31 %, pases buenos 72,8→76,8 %, goles 2,56→2,47); `PMOT_PROG=999` = sin tope, como antes
 
 static func progreso(x: float) -> float:
 	return minf(x, PROG_TOPE)
