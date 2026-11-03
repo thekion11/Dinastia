@@ -7159,7 +7159,15 @@
   "Atajos generales": "General shortcuts",
   "Quitar": "Remove",
   "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "The whole club is in the buttons of the [b]rail on the left[/b]: Squad, Match, Money, People, Stadium, Settings... Each one opens its menu full screen.",
-  "Abre cualquier menú del riel": "Open any menu on the rail"
+  "Abre cualquier menú del riel": "Open any menu on the rail",
+  "Controles táctiles del partido": "Touch controls in matches",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "On-screen stick and buttons. Automatic: only on devices with a touchscreen.",
+  "Automático": "Automatic",
+  "Siempre": "Always",
+  "Nunca": "Never",
+  "Tamaño de los botones": "Button size",
+  "Opacidad de los botones": "Button opacity",
+  "Mod": "Mod"
  },
  "pt": {
   "Historia": "História",
@@ -14321,7 +14329,15 @@
   "Atajos generales": "Atalhos gerais",
   "Quitar": "Remover",
   "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "O clube inteiro está nos botões do [b]trilho da esquerda[/b]: Plantel, Jogo, Dinheiro, Pessoas, Estádio, Ajustes... Cada um abre o seu menu em ecrã inteiro.",
-  "Abre cualquier menú del riel": "Abre qualquer menu do trilho"
+  "Abre cualquier menú del riel": "Abre qualquer menu do trilho",
+  "Controles táctiles del partido": "Controlos táteis do jogo",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "Stick e botões no ecrã. Automático: só em aparelhos com ecrã tátil.",
+  "Automático": "Automático",
+  "Siempre": "Sempre",
+  "Nunca": "Nunca",
+  "Tamaño de los botones": "Tamanho dos botões",
+  "Opacidad de los botones": "Opacidade dos botões",
+  "Mod": "Mod"
  },
  "patrones": [
   [
@@ -27326,7 +27342,15 @@
   "Atajos generales": "Raccourcis généraux",
   "Quitar": "Retirer",
   "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Tout le club est dans les boutons du [b]rail de gauche[/b] : Effectif, Match, Argent, Gens, Stade, Réglages... Chacun ouvre son menu en plein écran.",
-  "Abre cualquier menú del riel": "Ouvre n'importe quel menu du rail"
+  "Abre cualquier menú del riel": "Ouvre n'importe quel menu du rail",
+  "Controles táctiles del partido": "Commandes tactiles du match",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "Stick et boutons à l'écran. Automatique : seulement sur les appareils tactiles.",
+  "Automático": "Automatique",
+  "Siempre": "Toujours",
+  "Nunca": "Jamais",
+  "Tamaño de los botones": "Taille des boutons",
+  "Opacidad de los botones": "Opacité des boutons",
+  "Mod": "Mod"
  },
  "it": {
   "Historia": "Storia",
@@ -34488,7 +34512,15 @@
   "Atajos generales": "Scorciatoie generali",
   "Quitar": "Rimuovi",
   "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Tutto il club è nei pulsanti della [b]barra a sinistra[/b]: Rosa, Partita, Soldi, Gente, Stadio, Impostazioni... Ognuno apre il suo menu a schermo intero.",
-  "Abre cualquier menú del riel": "Apri un menu qualsiasi della barra"
+  "Abre cualquier menú del riel": "Apri un menu qualsiasi della barra",
+  "Controles táctiles del partido": "Controlli touch della partita",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "Stick e pulsanti sullo schermo. Automatico: solo sui dispositivi touch.",
+  "Automático": "Automatico",
+  "Siempre": "Sempre",
+  "Nunca": "Mai",
+  "Tamaño de los botones": "Dimensione dei pulsanti",
+  "Opacidad de los botones": "Opacità dei pulsanti",
+  "Mod": "Mod"
  },
  "de": {
   "Historia": "Geschichte",
@@ -41650,7 +41682,15 @@
   "Atajos generales": "Allgemeine Tastenkürzel",
   "Quitar": "Entfernen",
   "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Der ganze Klub steckt in den Knöpfen der [b]Leiste links[/b]: Kader, Spiel, Geld, Leute, Stadion, Einstellungen... Jeder öffnet sein Menü im Vollbild.",
-  "Abre cualquier menú del riel": "Öffne ein beliebiges Menü der Leiste"
+  "Abre cualquier menú del riel": "Öffne ein beliebiges Menü der Leiste",
+  "Controles táctiles del partido": "Touch-Steuerung im Spiel",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "Stick und Tasten auf dem Bildschirm. Automatisch: nur auf Geräten mit Touchscreen.",
+  "Automático": "Automatisch",
+  "Siempre": "Immer",
+  "Nunca": "Nie",
+  "Tamaño de los botones": "Tastengröße",
+  "Opacidad de los botones": "Tastentransparenz",
+  "Mod": "Mod"
  },
  "ca": {
   "Historia": "Història",
@@ -48812,7 +48852,15 @@
   "Atajos generales": "Dreceres generals",
   "Quitar": "Treure",
   "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Tot el club és als botons del [b]carril de l'esquerra[/b]: Plantilla, Partit, Diners, Gent, Estadi, Ajustos... Cadascun obre el seu menú a pantalla completa.",
-  "Abre cualquier menú del riel": "Obre qualsevol menú del carril"
+  "Abre cualquier menú del riel": "Obre qualsevol menú del carril",
+  "Controles táctiles del partido": "Controls tàctils del partit",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "Estic i botons a la pantalla. Automàtic: només en aparells amb pantalla tàctil.",
+  "Automático": "Automàtic",
+  "Siempre": "Sempre",
+  "Nunca": "Mai",
+  "Tamaño de los botones": "Mida dels botons",
+  "Opacidad de los botones": "Opacitat dels botons",
+  "Mod": "Mod"
  },
  "pl": {
   "Club": "Klub",
@@ -56243,7 +56291,15 @@
   "Atajos generales": "Skróty ogólne",
   "Quitar": "Usuń",
   "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Cały klub jest w przyciskach [b]paska po lewej[/b]: Skład, Mecz, Pieniądze, Ludzie, Stadion, Ustawienia... Każdy otwiera swoje menu na pełnym ekranie.",
-  "Abre cualquier menú del riel": "Otwórz dowolne menu na pasku"
+  "Abre cualquier menú del riel": "Otwórz dowolne menu na pasku",
+  "Controles táctiles del partido": "Sterowanie dotykowe w meczu",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "Drążek i przyciski na ekranie. Automatycznie: tylko na urządzeniach z ekranem dotykowym.",
+  "Automático": "Automatycznie",
+  "Siempre": "Zawsze",
+  "Nunca": "Nigdy",
+  "Tamaño de los botones": "Rozmiar przycisków",
+  "Opacidad de los botones": "Przezroczystość przycisków",
+  "Mod": "Mod"
  },
  "tr": {
   "Club": "Kulüp",
@@ -63674,6 +63730,14 @@
   "Atajos generales": "Genel kısayollar",
   "Quitar": "Kaldır",
   "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Kulübün tamamı [b]soldaki şeridin[/b] düğmelerinde: Kadro, Maç, Para, İnsanlar, Stadyum, Ayarlar... Her biri menüsünü tam ekran açar.",
-  "Abre cualquier menú del riel": "Şeritten herhangi bir menüyü aç"
+  "Abre cualquier menú del riel": "Şeritten herhangi bir menüyü aç",
+  "Controles táctiles del partido": "Maçta dokunmatik kontroller",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "Ekranda çubuk ve düğmeler. Otomatik: yalnızca dokunmatik ekranlı cihazlarda.",
+  "Automático": "Otomatik",
+  "Siempre": "Her zaman",
+  "Nunca": "Asla",
+  "Tamaño de los botones": "Düğme boyutu",
+  "Opacidad de los botones": "Düğme opaklığı",
+  "Mod": "Mod"
  }
 }
