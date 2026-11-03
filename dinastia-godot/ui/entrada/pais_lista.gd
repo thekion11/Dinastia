@@ -21,7 +21,7 @@ func _ready() -> void:
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	v.add_theme_constant_override("separation", 2)
 	_scroll.add_child(v)
-	for c: Array in PaisDatos.CONTINENTES:
+	for c: Array in CargaCiudad.de("PaisDatos").CONTINENTES:
 		var r := Tema.rotulo(Idiomas.t(String(c[0])))
 		r.add_theme_color_override("font_color", Tema.ORO)
 		if v.get_child_count() > 0:
@@ -37,7 +37,7 @@ func _fila(p: String) -> Button:
 	b.toggle_mode = true
 	b.button_group = _grupo
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	b.text = PaisDatos.nombre(p)
+	b.text = CargaCiudad.de("PaisDatos").nombre(p)
 	b.icon = Banderas.textura(p)
 	b.expand_icon = false
 	b.add_theme_constant_override("icon_max_width", 26)
@@ -62,7 +62,7 @@ func _fila(p: String) -> Button:
 	b.add_theme_stylebox_override("hover_pressed", marcado)
 	b.add_theme_color_override("font_pressed_color", Color.WHITE)
 	b.add_theme_color_override("font_hover_pressed_color", Color.WHITE)
-	if not PaisDatos.tiene_liga(p):
+	if not CargaCiudad.de("PaisDatos").tiene_liga(p):
 		b.add_theme_color_override("font_color", Tema.SUAVE)
 		b.tooltip_text = Idiomas.t("Este país aún no tiene liga en el juego.")
 	b.pressed.connect(func() -> void: elegido.emit(p))
@@ -82,8 +82,8 @@ func marcar(p: String) -> void:
 
 ## El país anterior o siguiente en el orden de la lista (para teclado y mando).
 func vecino(p: String, paso: int) -> String:
-	var orden := PaisDatos.todos()
-	var i := orden.find(p)
+	var orden = CargaCiudad.de("PaisDatos").todos()
+	var i = orden.find(p)
 	if i < 0:
 		return orden[0]
 	return orden[posmod(i + paso, orden.size())]

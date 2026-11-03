@@ -98,7 +98,7 @@ static func _explanada_de_fondo(root: Node3D) -> void:
 	mi.material_override = mat_explanada
 	root.add_child(mi)
 static func _tm(que: String) -> void:
-	if CityBuilder._medir_tiempos:
+	if CargaCiudad.de("CityBuilder")._medir_tiempos:
 		var ahora := Time.get_ticks_usec()
 		if que != "":
 			Registro.depurar("TIEMPO", "estadio.%-16s %6.0f ms  mem %6.0f MB" % [que, (ahora - _t_tm) / 1000.0, Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0])

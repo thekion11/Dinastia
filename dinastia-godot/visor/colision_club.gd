@@ -73,7 +73,7 @@ static func toca_gente(pe: PersonalEstadio, local: Vector3, desde: Vector3, plan
 
 ## Un punto es pisable si cabe en las zonas, no toca muebles y no pisa a nadie.
 ## `desfase`: lo que se resta a la posición del cuerpo para tener coordenadas
-## del estadio (en la ciudad, el estadio está en `CityBuilder.ESTADIO_EN`).
+## del estadio (en la ciudad, el estadio está en `CargaCiudad.de("CityBuilder").ESTADIO_EN`).
 static func libre(cuerpo: Node3D, pos: Vector3, desde: Vector3, zonas: Array, planta: int,
 		desfase: Vector3, pe: PersonalEstadio, ya_dentro: bool) -> bool:
 	var local := pos - desfase

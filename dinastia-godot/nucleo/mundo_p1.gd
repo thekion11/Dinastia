@@ -84,7 +84,7 @@ var hinchada: Hinchada
 ## `vGente()`: las diez personas del club. Ver `nucleo/gente.gd`.
 var gente: Gente
 ## Las salas del edificio del club decoradas a tu gusto (estadio 2.0).
-var interiores := InterioresClub.new()
+var interiores = CargaCiudad.de("InterioresClub").new()
 ## `vClubIn()`: vestuario, sala de prensa, palco y lo digital.
 var club_dentro: ClubDentro
 ## El presidente del club, los accionistas y la junta trimestral (C5).
@@ -133,7 +133,7 @@ var auspicio: Auspicio
 ## Lo que se vende del club: kits, proveedor, zonas de patrocinio y naming.
 var comercial: Comercial
 ## El club y su barrio: terrenos, negocios, vecinos, permisos y seguridad.
-var ciudad: Ciudad
+var ciudad
 ## Si tu club gano su ultimo partido. Lo escribe `_avisar_a_la_directiva()` y lo
 ## lee el desgaste del entrenador: ganar descansa.
 var _gano_la_ultima: bool = false

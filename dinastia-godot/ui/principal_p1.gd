@@ -28,7 +28,7 @@ var _ui_club_estadio := PantallaClubEstadio.new(self)
 var _ui_cantera:
 	get: return _pantalla_perezosa("cantera")
 var _ui_legado := PantallaLegado.new(self)
-var _ui_ciudad := PantallaCiudad.new(self)
+var _ui_ciudad = CargaCiudad.de("PantallaCiudad").new(self)
 var _ui_editor:
 	get: return _pantalla_perezosa("editor")
 var _ui_opciones := PantallaOpciones.new(self)

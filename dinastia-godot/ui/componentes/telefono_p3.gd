@@ -136,7 +136,7 @@ func _agenda() -> void:
 	var hora := Tema.etiqueta(46, Tema.TEXTO, r.texto_hora())
 	hora.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(hora)
-	var dia := Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO, "%s · %s %d" % [Idiomas.t(VidaCiudad.DIAS[clampi(r.dia, 0, 6)]), Idiomas.t("Semana"), m.semana])
+	var dia = Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO, "%s · %s %d" % [Idiomas.t(CargaCiudad.de("VidaCiudad").DIAS[clampi(r.dia, 0, 6)]), Idiomas.t("Semana"), m.semana])
 	dia.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(dia)
 	_cuerpo.add_child(caja)
@@ -185,7 +185,7 @@ func _proximos(r: Reloj) -> Array[String]:
 		sal.append(Idiomas.t("Entrenamiento: %s a las 10:00") % (Idiomas.t("hoy") if r.hora() < 10 else Idiomas.t("mañana")))
 	var prox := m.proximo_partido()
 	if prox.size() >= 2 and r.dia <= 5:
-		sal.append(Idiomas.t("Partido: sábado a las %02d:00 · %s - %s") % [VidaCiudad.HORA_PARTIDO, (prox[0] as Club).nombre, (prox[1] as Club).nombre])
+		sal.append(Idiomas.t("Partido: sábado a las %02d:00 · %s - %s") % [CargaCiudad.de("VidaCiudad").HORA_PARTIDO, (prox[0] as Club).nombre, (prox[1] as Club).nombre])
 	if r.dia <= 4:
 		sal.append(Idiomas.t("Rueda de prensa: viernes a las 12:00"))
 	if sal.is_empty():
@@ -199,7 +199,7 @@ func _adelantar(que: String) -> void:
 	match que:
 		"1h": mins = Reloj.MINUTOS_HORA
 		"manana": mins = (r.dia + 1) * Reloj.MINUTOS_DIA + Reloj.HORA_INICIO * Reloj.MINUTOS_HORA - ahora
-		"partido": mins = 5 * Reloj.MINUTOS_DIA + VidaCiudad.HORA_PARTIDO * Reloj.MINUTOS_HORA - ahora
+		"partido": mins = 5 * Reloj.MINUTOS_DIA + CargaCiudad.de("VidaCiudad").HORA_PARTIDO * Reloj.MINUTOS_HORA - ahora
 	if mins <= 0:
 		_decir(Idiomas.t("Ya pasó esta semana: la semana avanza en el PC o durmiendo el domingo."))
 		return

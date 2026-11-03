@@ -128,7 +128,7 @@ static func respuesta_oficio(clave: String, m: Mundo) -> String:
 			_ultima_mala = true
 			return Idiomas.t("Están apagados. Ni el postre les levanta el ánimo.")
 		"jardinero":
-			var cesped := m.ciudad.cesped if m.ciudad != null else 100
+			var cesped = m.ciudad.cesped if m.ciudad != null else 100
 			if cesped >= 85:
 				return Idiomas.t("Como una alfombra. Que no me lo pisen en los rondos.")
 			if cesped >= 60:

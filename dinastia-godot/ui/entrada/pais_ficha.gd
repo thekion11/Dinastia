@@ -69,9 +69,9 @@ func _ready() -> void:
 func mostrar(p: String, crear_club: bool, mundo: Mundo) -> void:
 	crear = crear_club
 	_bandera.texture = Banderas.textura(p)
-	var tiene := PaisDatos.tiene_liga(p)
-	_liga.text = PaisDatos.nombre_liga(p) if tiene else Idiomas.t("Sin liga profesional")
-	var n := PaisDatos.estrellas(p)
+	var tiene = CargaCiudad.de("PaisDatos").tiene_liga(p)
+	_liga.text = CargaCiudad.de("PaisDatos").nombre_liga(p) if tiene else Idiomas.t("Sin liga profesional")
+	var n = CargaCiudad.de("PaisDatos").estrellas(p)
 	_nivel.text = ("★".repeat(n) + "☆".repeat(5 - n)) if tiene else ""
 	_nivel.tooltip_text = Idiomas.t("Nivel de la liga")
 	_capital.text = Idiomas.t("Capital: %s") % Idiomas.t(String(Globo3D.CAPITAL.get(p, "?")))
@@ -85,7 +85,7 @@ func mostrar(p: String, crear_club: bool, mundo: Mundo) -> void:
 		_nota(Idiomas.t("Este país aún no tiene liga en el juego."), Idiomas.t("Elige otro país para empezar."))
 		return
 	if crear_club:
-		_nota(Idiomas.t("Fundarás tu propio club en %s.") % PaisDatos.nombre(p),
+		_nota(Idiomas.t("Fundarás tu propio club en %s.") % CargaCiudad.de("PaisDatos").nombre(p),
 			Idiomas.t("Los clubes que ya existen no se muestran: el tuyo empieza de cero."))
 		_rivales(_clubes_de(p, mundo))
 		return
@@ -148,7 +148,7 @@ func _clubes_de(p: String, mundo: Mundo) -> Array[Club]:
 			if l.pais == p and l.division() == 1:
 				salida.assign(l.clubes)
 				return salida
-	for fila: Array in PaisDatos.filas_clubes(p):
+	for fila: Array in CargaCiudad.de("PaisDatos").filas_clubes(p):
 		var c := Club.new("", Nombres.de_tabla(String(fila[0])))
 		c.pais = p
 		c.color1 = String(fila[1]) if fila.size() > 1 else "#2b6b45"

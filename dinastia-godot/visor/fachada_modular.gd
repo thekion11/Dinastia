@@ -10,7 +10,7 @@ const MODULO := 6.4
 const PISO := 4.0
 const FONDO := 1.6
 
-static func _pieza(ex: CiudadExpansion, nombre: String, pos: Vector3, tam: Vector3, giro := 0.0) -> void:
+static func _pieza(ex, nombre: String, pos: Vector3, tam: Vector3, giro = 0.0) -> void:
 	var k: Dictionary = ex._malla_kit(KIT % nombre)
 	if k.is_empty():
 		return
@@ -24,7 +24,7 @@ static func _pieza(ex: CiudadExpansion, nombre: String, pos: Vector3, tam: Vecto
 ## Con `entrada`, los módulos centrales llevan puerta de cristal y una marquesina al frente.
 ## Con `fino`, cada módulo es la mitad (3,2 m) y cada piso lleva DOS hileras de piezas: las ventanas miden ~3 × 2 m y no 6 × 6 m
 ## (en edificios de 4 o más pisos las ventanas de 6,4 m se veían estiradas, 27-10-2026).
-static func montar(ex: CiudadExpansion, x: float, zf: float, y0: float, ancho: float, pisos: int, entrada := true, fino := false) -> void:
+static func montar(ex, x: float, zf: float, y0: float, ancho: float, pisos: int, entrada = true, fino := false) -> void:
 	var mod := MODULO * (0.5 if fino else 1.0)
 	var hil := 2 if fino else 1
 	var n := maxi(int(ancho / mod), 3)

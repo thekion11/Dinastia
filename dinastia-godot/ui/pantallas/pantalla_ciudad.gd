@@ -338,7 +338,7 @@ func _pintar_seguridad(ci: Ciudad, c: Club) -> void:
 ## semanas del año, jueguen o no, y tienen un freno que no es dinero —el permiso
 ## municipal y la relación con los vecinos—, así que no basta con tener caja.
 func _pintar_ciudad(c: Club) -> void:
-	var ci := p.mundo.ciudad
+	var ci = p.mundo.ciudad
 	if ci == null:
 		return
 	p._limpiar(p._lista_ciudad)

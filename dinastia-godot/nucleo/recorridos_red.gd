@@ -13,7 +13,7 @@ extends RefCounted
 ## calle, la app usa la posición y la velocidad reales de los buses (`BusesRed.llegadas`).
 ## TODO ES DETERMINISTA: no toca `Azar` ni la hora del sistema.
 
-## Las medidas de la ciudad grande que definen las zonas (copiadas de `CiudadExpansion` y `CityBuilder.RIO_X`; la prueba
+## Las medidas de la ciudad grande que definen las zonas (copiadas de `CiudadExpansion` y `CargaCiudad.de("CityBuilder").RIO_X`; la prueba
 ## `pruebas/ideas/red_app.gd` comprueba que siguen iguales). El núcleo es el club con sus anillos.
 const NUC_X0 := -550.0
 const NUC_X1 := 440.0
@@ -43,7 +43,7 @@ const FIN_LOCAL := 1320           ## 22:00
 const OCUPACION := ["Con asientos", "De pie", "Lleno"]
 const VEL_COMERCIAL := 330.0     ## m por minuto de reloj (~20 km/h con paradas y semáforos)
 
-## La zona de la ciudad de un punto, como `CiudadExpansion._zona`: oeste del río, centro de torres al norte del club,
+## La zona de la ciudad de un punto, como `CargaCiudad.de("CiudadExpansion")._zona`: oeste del río, centro de torres al norte del club,
 ## comercio al este, casas al sur y el núcleo del club; más allá de 1.100 m, la periferia.
 static func sector_de(pos: Vector3) -> int:
 	if maxf(absf(pos.x), absf(pos.z)) > PERIFERIA:
@@ -203,7 +203,7 @@ static func llegadas(cod: String, minuto_semana: int, por_recorrido := 2) -> Arr
 		return String(a["recorrido"]) < String(b["recorrido"]))
 	return out
 
-## El paradero más cercano a `pos` entre los montados (`ParaderoRed.montar` los mete en el grupo «paradero_red» con su
+## El paradero más cercano a `pos` entre los montados (`CargaCiudad.de("ParaderoRed").montar` los mete en el grupo «paradero_red» con su
 ## código en la meta «codigo_red»). {codigo, distancia} o {} si no hay ninguno a menos de `radio` metros.
 static func paradero_cercano(arbol: SceneTree, pos: Vector3, radio := 40.0) -> Dictionary:
 	var mejor := {}

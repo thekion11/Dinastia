@@ -18,10 +18,10 @@ static func borrar(nombre: String) -> void:
 ## Entra a una partida cargada: con el prólogo visto y la vida encendida, en 3D; si no, el menú.
 static func entrar_en(arbol: SceneTree, m: Mundo) -> void:
 	PedidoPartida.mundo_a_cargar = m
-	var d := VidaCiudad.arranque_3d(m)
+	var d = CargaCiudad.de("VidaCiudad").arranque_3d(m)
 	if d != "":
-		PrologoDT.directo = "" if d == "prologo" else d   ## "prologo": el guion entero
-		arbol.change_scene_to_file(OrquestadorMundo.PROLOGO)
+		CargaCiudad.de("PrologoDT").directo = "" if d == "prologo" else d   ## "prologo": el guion entero
+		arbol.change_scene_to_file(CargaCiudad.de("OrquestadorMundo").PROLOGO)
 		return
 	arbol.change_scene_to_file("res://escenas/principal.tscn")
 
