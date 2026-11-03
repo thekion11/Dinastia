@@ -77,3 +77,7 @@ static func punto(m: MotorJugable, p: Dictionary, c: Dictionary, obj: Vector3) -
 	res.x = clampf(res.x, -m.ANCHO + 1.5, m.ANCHO - 1.5)
 	res.z = clampf(res.z, -m.LARGO + 3.0, m.LARGO - 3.0)
 	return res
+
+## Ciclo 23: distancia del portador al arco rival a partir de la cual el ataque ocupa el área (`_zona_de_llegada`); 32 m = como antes. `APOYO_LLEGADA` la sube.
+static var LLEGADA_R := float(OS.get_environment("APOYO_LLEGADA")) if OS.get_environment("APOYO_LLEGADA") != "" else 32.0
+

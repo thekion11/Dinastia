@@ -184,3 +184,19 @@ static func _bloque(m: MotorJugable) -> void:
 		if con and cerca < 900.0:
 			m.diag["traza_blq_cerca_dm"] = int(m.diag.get("traza_blq_cerca_dm", 0)) + int(10.0 * cerca)
 
+## Ciclo 23 (llegadas al área): al disparar, cuántos compañeros (sin contar al tirador ni al portero) hay a < 18 m del centro del arco rival (`traza_area_n_{0,1,2,3mas}`) y, por separado, cuántos de esos tiros son
+## desde dentro (`lejos` < 16,5 m). Al marcar, de dónde salió el gol (`traza_gol_zona_{dentro,frontal,lejos}`) y si tuvo asistencia de un compañero (`traza_gol_con_asist` / `_sin_asist`).
+static func tiro(m: MotorJugable, p: Dictionary, lejos: float) -> void:
+	var arco := m._arco_rival(p)
+	var n := 0
+	for q: Dictionary in m.jugadores:
+		if q != p and bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and m.pos(q).distance_to(arco) < 18.0:
+			n += 1
+	m._contar("traza_area_n_" + (str(n) if n < 3 else "3mas"))
+	m.set_meta("_traza_tiro_zona", "dentro" if lejos < 16.5 else ("frontal" if lejos < 25.0 else "lejos"))
+
+static func gol(m: MotorJugable, de_local: bool) -> void:
+	m._contar("traza_gol_zona_" + String(m.get_meta("_traza_tiro_zona", "sin")))
+	var a: Dictionary = m.penultimo_toque
+	m._contar("traza_gol_con_asist" if (not a.is_empty() and bool(a["es_local"]) == de_local and a != m.ultimo_toque) else "traza_gol_sin_asist")
+
