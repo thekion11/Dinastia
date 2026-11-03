@@ -350,7 +350,7 @@ func _ejecutar_saque_ia(p: Dictionary, tipo: String, lugar: Vector3) -> void:
 			pase_a = _companero_cerca(p, destino)
 		"penal":
 			## Algún penal se va fuera o al palo (antes el apunte nunca salía del arco).
-			_tirar(p, Vector2(_rng.randf_range(-1.06, 1.06), _rng.randf_range(-0.3, 0.45)), 0.7)
+			_tirar(p, Vector2(_rng.randf_range(-PENAL_IA_X, PENAL_IA_X), _rng.randf_range(-0.3, 0.45)), 0.7)
 		"falta":
 			var dist := Vector2(lugar.x - arco.x, lugar.z - arco.z).length()
 			if dist < 30.0:
