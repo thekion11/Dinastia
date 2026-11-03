@@ -9,7 +9,7 @@ extends RefCounted
 ##  · LÍNEA DE PASE: si un rival tapa la línea al portador, sale hacia el lado libre;
 ##  · AVANCE: delanteros y extremos empujan hacia el arco rival; defensas, un poco hacia atrás.
 ## La fuerza total se limita a `TOPE` m para que el compañero no se vaya de su zona. `SIN_APOYO=1` = el ofrecimiento fijo de antes.
-const ALCANCE := 18.0
+static var ALCANCE := float(OS.get_environment("APOYO_ALCANCE")) if OS.get_environment("APOYO_ALCANCE") != "" else 18.0   ## perilla ciclo 19 (3-11)
 static var ANILLO := float(OS.get_environment("APOYO_ANILLO")) if OS.get_environment("APOYO_ANILLO") != "" else 12.0   ## perilla del ciclo 15 (3-11)
 const SEPARA := 9.0
 const LEJOS_RIVAL := 6.0
