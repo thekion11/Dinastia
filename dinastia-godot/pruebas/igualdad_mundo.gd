@@ -11,7 +11,8 @@ extends Node
 ## 0,22 → 0,15 rojas por partido); más tarjetas consumen más azar y cambian marcadores, plantillas y tablas; era 4013618777. `igualdad_motor` no cambia.
 ## 3-11 (penales, a propósito): cada llegada puede acabar en falta dentro del área (`Balance.P_PENAL` 0,03 × perfil del árbitro; 0,00 → 0,31 penales por partido, convertidos al 77 %) y
 ## `Balance.CONVERSION` baja de 0,28 a 0,267 para mantener los goles en ~2,7. Cambian marcadores, tablas y primas; era 1935461399. `igualdad_motor` no cambia.
-const ESPERADO := "1992993185"
+## 3-11 (ventaja de campo, a propósito): `Balance.BONO_LOCAL`/`BONO_VISITA` 1,08/0,94 → 1,18/0,86 (victoria local 39,8 % → 46,3 %; goles 2,72). Cambian marcadores, tablas y primas; era 1992993185. `igualdad_motor` no cambia.
+const ESPERADO := "4140416706"
 
 func _ready() -> void:
 	var m := Mundo.new()

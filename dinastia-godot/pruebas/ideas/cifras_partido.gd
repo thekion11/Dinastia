@@ -2,7 +2,7 @@ extends BaseIdea
 ## LAS CIFRAS DEL PARTIDO SIMULADO, CONTRA EL FÚTBOL REAL (3-11-2026): juega todos los cruces (ida y vuelta) de las primeras de CHI y ARG (480 partidos, semilla fija) y comprueba que
 ## los promedios por partido caen en el rango real, con margen para el ruido de la muestra (σ del promedio ≈ 0,12 en amarillas, ≈ 0,03 en goles). Para medir más ancho y por partes:
 ## `zz_medir_stats.tscn`. Si una de estas cifras sale a propósito de su rango (se retoca el balance), se cambia aquí diciéndolo.
-##   goles 2,4-2,95 · amarillas 3,3-4,2 · rojas 0,08-0,25 · penales 0,2-0,4 · córners 9-11,5 · faltas 20-25 · fueras 3-5 · empates 20-31 %
+##   goles 2,4-2,95 · amarillas 3,3-4,2 · rojas 0,08-0,25 · penales 0,2-0,4 · córners 9-11,5 · faltas 20-25 · fueras 3-5 · empates 20-31 % · victoria local 40-52 %
 var _amarillas := 0
 var _rojas := 0
 var _penales := 0
@@ -31,6 +31,7 @@ func _ready() -> void:
 	var faltas := 0.0
 	var fueras := 0.0
 	var empates := 0
+	var locales := 0
 	for liga: Liga in m.ligas:
 		if liga.division() != 1:
 			continue
@@ -53,6 +54,8 @@ func _ready() -> void:
 				fueras += p.fueras_local + p.fueras_visita
 				if p.goles_local == p.goles_visita:
 					empates += 1
+				elif p.goles_local > p.goles_visita:
+					locales += 1
 	var f := float(maxi(1, n))
 	print("  %d partidos: goles %.2f · amarillas %.2f · rojas %.2f · penales %.2f · córners %.1f · faltas %.1f · fueras %.1f · empates %.1f %%" % [n, goles / f, _amarillas / f, _rojas / f, _penales / f, corners / f, faltas / f, fueras / f, 100.0 * empates / f])
 	_comprobar(n >= 400, "se jugaron %d partidos" % n)
@@ -64,6 +67,7 @@ func _ready() -> void:
 	_comprobar(faltas / f >= 20.0 and faltas / f <= 25.0, "faltas por partido %.1f dentro de 20-25" % (faltas / f))
 	_comprobar(fueras / f >= 3.0 and fueras / f <= 5.0, "fueras de juego por partido %.1f dentro de 3-5" % (fueras / f))
 	_comprobar(100.0 * empates / f >= 20.0 and 100.0 * empates / f <= 31.0, "empates %.1f %% dentro de 20-31 %%" % (100.0 * empates / f))
+	_comprobar(100.0 * locales / f >= 40.0 and 100.0 * locales / f <= 52.0, "victoria local %.1f %% dentro de 40-52 %%" % (100.0 * locales / f))
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())
 	get_tree().quit(0 if _fallos.is_empty() else 1)
