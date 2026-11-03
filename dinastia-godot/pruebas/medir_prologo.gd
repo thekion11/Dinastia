@@ -50,6 +50,8 @@ func _medir() -> void:
 		await get_tree().process_frame
 	_foto("recién cargado")
 	_zonas()
+	if OS.get_environment("GRUPOS") != "" and DisplayServer.get_name() != "headless":
+		await _grupos()
 	var zv := _p.vista.get("_ciudad").get_node_or_null("ZonasVista") as ZonasVista
 	if zv != null:
 		zv.revisar(_p.explorador.cuerpo.global_position + Vector3(0, 2, 0))
@@ -152,3 +154,37 @@ func _zonas() -> void:
 				objs[k] += 1
 				break
 	print("MEDIDA zonas (triángulos de malla/objetos; triángulos de multimalla) <200 m %d/%d/%d · 200-400 %d/%d/%d · 400-700 %d/%d/%d · 700-1000 %d/%d/%d · >1000 %d/%d/%d" % [tris[0], objs[0], tmm[0], tris[1], objs[1], tmm[1], tris[2], objs[2], tmm[2], tris[3], objs[3], tmm[3], tris[4], objs[4], tmm[4]])
+
+## GRUPOS=1 (con ventana): a pie de calle, apaga por tipo y mide cuántas llamadas/triángulos quita cada tipo.
+func _grupos() -> void:
+	for i in 6:
+		await get_tree().process_frame
+	var base := Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME), Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
+	print("GRUPOS base llamadas=%d tris=%d" % [base.x, base.y])
+	var hist := {}
+	for n in _p.vista.get("_ciudad").find_children("*", "Label3D", true, false):
+		var l := n as Label3D
+		var r := "sin límite" if l.visibility_range_end <= 0.0 else "<=%d" % int(ceil(l.visibility_range_end / 25.0) * 25.0)
+		var clave := "%s|%s" % [r, String(l.get_parent().name).rstrip("0123456789@_")]
+		hist[clave] = int(hist.get(clave, 0)) + 1
+	var ks := hist.keys()
+	ks.sort_custom(func(a, b): return hist[a] > hist[b])
+	for k in ks.slice(0, 14):
+		print("GRUPOS label %-40s %d" % [k, hist[k]])
+	var tipos := {"MultiMesh": "MultiMeshInstance3D", "Mesh": "MeshInstance3D", "Label3D": "Label3D", "Luces": "Light3D", "Particulas": "GPUParticles3D"}
+	var ciudad: Node = _p.vista.get("_ciudad")
+	for k: String in tipos:
+		var lista: Array = []
+		for n in ciudad.find_children("*", String(tipos[k]), true, false):
+			if (n as Node3D).visible:
+				(n as Node3D).visible = false
+				lista.append(n)
+		for i in 4:
+			await get_tree().process_frame
+		var m := Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME), Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
+		print("GRUPOS sin %-10s (%5d nodos): -%d llamadas  -%d tris" % [k, lista.size(), base.x - m.x, base.y - m.y])
+		for n in lista:
+			if is_instance_valid(n):
+				(n as Node3D).visible = true
+		for i in 3:
+			await get_tree().process_frame

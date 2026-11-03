@@ -35,6 +35,8 @@ static func comprar(vc: VidaCiudad, it: Dictionary, pin := "") -> String:
 		return pedir_pin(vc, importe, String(it["nombre"]), func(p: String) -> void: vc._decir(Idiomas.t("Pago con tarjeta"), comprar(vc, it, p)))
 	if String(r["error"]) != "":
 		return CarteraDT.texto_error(String(r["error"]), importe)
+	if it.has("inv"):
+		RoperoDT.agregar(vc.mundo.roles.ropero, String(it["inv"]))   ## M-188: lo comprado va al ropero (se guarda con la partida)
 	if vc.mundo.necesidades != null:
 		vc.mundo.necesidades.picar(int(it.get("hambre", 0)))
 		vc.mundo.necesidades.animar(int(it.get("energia", 0)))

@@ -7117,7 +7117,16 @@
   "ESCUELA DE IDIOMAS\naprende en 3 meses": "ESCUELA DE IDIOMAS\nlearn in 3 months",
   "CINE AURORA\nestrenos los viernes": "CINE AURORA\nnew releases on Fridays",
   "SEGUROS LA BRÚJULA\nviaja tranquilo": "SEGUROS LA BRÚJULA\ntravel with peace of mind",
-  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\nfrom the mountains"
+  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\nfrom the mountains",
+  "TIENDA DEPORTIVA": "SPORTS SHOP",
+  "Tienda deportiva": "Sports shop",
+  "Tu ropero": "Your wardrobe",
+  "Ya tienes %s.": "You already have %s.",
+  "Camiseta del club": "Club shirt",
+  "Chándal de entrenamiento": "Training tracksuit",
+  "Botines de tacos": "Studded boots",
+  "Balón de entrenamiento": "Training ball",
+  "Balón de playa": "Beach ball"
  },
  "pt": {
   "Historia": "História",
@@ -14237,7 +14246,16 @@
   "ESCUELA DE IDIOMAS\naprende en 3 meses": "ESCUELA DE IDIOMAS\naprenda em 3 meses",
   "CINE AURORA\nestrenos los viernes": "CINE AURORA\nestreias às sextas",
   "SEGUROS LA BRÚJULA\nviaja tranquilo": "SEGUROS LA BRÚJULA\nviaje tranquilo",
-  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\nda serra"
+  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\nda serra",
+  "TIENDA DEPORTIVA": "LOJA DE ESPORTES",
+  "Tienda deportiva": "Loja de esportes",
+  "Tu ropero": "Seu guarda-roupa",
+  "Ya tienes %s.": "Você já tem %s.",
+  "Camiseta del club": "Camisa do clube",
+  "Chándal de entrenamiento": "Agasalho de treino",
+  "Botines de tacos": "Chuteiras",
+  "Balón de entrenamiento": "Bola de treino",
+  "Balón de playa": "Bola de praia"
  },
  "patrones": [
   [
@@ -27134,7 +27152,16 @@
   "ESCUELA DE IDIOMAS\naprende en 3 meses": "ESCUELA DE IDIOMAS\napprenez en 3 mois",
   "CINE AURORA\nestrenos los viernes": "CINE AURORA\nnouveautés le vendredi",
   "SEGUROS LA BRÚJULA\nviaja tranquilo": "SEGUROS LA BRÚJULA\nvoyagez l'esprit tranquille",
-  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\nde la montagne"
+  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\nde la montagne",
+  "TIENDA DEPORTIVA": "MAGASIN DE SPORT",
+  "Tienda deportiva": "Magasin de sport",
+  "Tu ropero": "Votre garde-robe",
+  "Ya tienes %s.": "Vous avez déjà %s.",
+  "Camiseta del club": "Maillot du club",
+  "Chándal de entrenamiento": "Survêtement d'entraînement",
+  "Botines de tacos": "Crampons",
+  "Balón de entrenamiento": "Ballon d'entraînement",
+  "Balón de playa": "Ballon de plage"
  },
  "it": {
   "Historia": "Storia",
@@ -34254,7 +34281,16 @@
   "ESCUELA DE IDIOMAS\naprende en 3 meses": "ESCUELA DE IDIOMAS\nimpara in 3 mesi",
   "CINE AURORA\nestrenos los viernes": "CINE AURORA\nnovità il venerdì",
   "SEGUROS LA BRÚJULA\nviaja tranquilo": "SEGUROS LA BRÚJULA\nviaggia tranquillo",
-  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\ndalla montagna"
+  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\ndalla montagna",
+  "TIENDA DEPORTIVA": "NEGOZIO SPORTIVO",
+  "Tienda deportiva": "Negozio sportivo",
+  "Tu ropero": "Il tuo guardaroba",
+  "Ya tienes %s.": "Hai già %s.",
+  "Camiseta del club": "Maglia del club",
+  "Chándal de entrenamiento": "Tuta d'allenamento",
+  "Botines de tacos": "Scarpini da calcio",
+  "Balón de entrenamiento": "Pallone da allenamento",
+  "Balón de playa": "Pallone da spiaggia"
  },
  "de": {
   "Historia": "Geschichte",
@@ -41374,7 +41410,16 @@
   "ESCUELA DE IDIOMAS\naprende en 3 meses": "ESCUELA DE IDIOMAS\nlerne in 3 Monaten",
   "CINE AURORA\nestrenos los viernes": "CINE AURORA\nNeustarts freitags",
   "SEGUROS LA BRÚJULA\nviaja tranquilo": "SEGUROS LA BRÚJULA\nreise sorgenfrei",
-  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\naus den Bergen"
+  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\naus den Bergen",
+  "TIENDA DEPORTIVA": "SPORTGESCHÄFT",
+  "Tienda deportiva": "Sportgeschäft",
+  "Tu ropero": "Dein Kleiderschrank",
+  "Ya tienes %s.": "Du hast %s bereits.",
+  "Camiseta del club": "Vereinstrikot",
+  "Chándal de entrenamiento": "Trainingsanzug",
+  "Botines de tacos": "Fußballschuhe",
+  "Balón de entrenamiento": "Trainingsball",
+  "Balón de playa": "Wasserball"
  },
  "ca": {
   "Historia": "Història",
@@ -48494,7 +48539,16 @@
   "ESCUELA DE IDIOMAS\naprende en 3 meses": "ESCUELA DE IDIOMAS\naprèn en 3 mesos",
   "CINE AURORA\nestrenos los viernes": "CINE AURORA\nestrenes els divendres",
   "SEGUROS LA BRÚJULA\nviaja tranquilo": "SEGUROS LA BRÚJULA\nviatja tranquil",
-  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\nde la serra"
+  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\nde la serra",
+  "TIENDA DEPORTIVA": "BOTIGA ESPORTIVA",
+  "Tienda deportiva": "Botiga esportiva",
+  "Tu ropero": "El teu armari",
+  "Ya tienes %s.": "Ja tens %s.",
+  "Camiseta del club": "Samarreta del club",
+  "Chándal de entrenamiento": "Xandall d'entrenament",
+  "Botines de tacos": "Botes de tacs",
+  "Balón de entrenamiento": "Pilota d'entrenament",
+  "Balón de playa": "Pilota de platja"
  },
  "pl": {
   "Club": "Klub",
@@ -55883,7 +55937,16 @@
   "ESCUELA DE IDIOMAS\naprende en 3 meses": "ESCUELA DE IDIOMAS\nnauczysz się w 3 miesiące",
   "CINE AURORA\nestrenos los viernes": "CINE AURORA\npremiery w piątki",
   "SEGUROS LA BRÚJULA\nviaja tranquilo": "SEGUROS LA BRÚJULA\npodróżuj spokojnie",
-  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\nz gór"
+  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\nz gór",
+  "TIENDA DEPORTIVA": "SKLEP SPORTOWY",
+  "Tienda deportiva": "Sklep sportowy",
+  "Tu ropero": "Twoja szafa",
+  "Ya tienes %s.": "Masz już %s.",
+  "Camiseta del club": "Koszulka klubu",
+  "Chándal de entrenamiento": "Dres treningowy",
+  "Botines de tacos": "Korki",
+  "Balón de entrenamiento": "Piłka treningowa",
+  "Balón de playa": "Piłka plażowa"
  },
  "tr": {
   "Club": "Kulüp",
@@ -63272,6 +63335,15 @@
   "ESCUELA DE IDIOMAS\naprende en 3 meses": "ESCUELA DE IDIOMAS\n3 ayda öğren",
   "CINE AURORA\nestrenos los viernes": "CINE AURORA\ncuma günleri vizyon",
   "SEGUROS LA BRÚJULA\nviaja tranquilo": "SEGUROS LA BRÚJULA\nrahat seyahat et",
-  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\ndağlardan"
+  "AGUA MANANTIAL\nde la sierra": "AGUA MANANTIAL\ndağlardan",
+  "TIENDA DEPORTIVA": "SPOR MAĞAZASI",
+  "Tienda deportiva": "Spor mağazası",
+  "Tu ropero": "Gardırobun",
+  "Ya tienes %s.": "%s zaten sende var.",
+  "Camiseta del club": "Kulüp forması",
+  "Chándal de entrenamiento": "Antrenman eşofmanı",
+  "Botines de tacos": "Krampon",
+  "Balón de entrenamiento": "Antrenman topu",
+  "Balón de playa": "Plaj topu"
  }
 }
