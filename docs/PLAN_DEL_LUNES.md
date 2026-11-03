@@ -683,7 +683,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-439 | P2 | PENDIENTE | Orientación vertical no soportada | sin vertical |
 | M-440 | P2 | PENDIENTE | Sin modo una mano | sin modo una mano |
 
-### F3 vida en 3D (42)
+### F3 vida en 3D (41)
 
 | id | P | estado | idea | qué falta |
 |---|---|---|---|---|
@@ -702,7 +702,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-189 | P2 | PENDIENTE | Sin bares/restaurantes con minijuego | sin bar con minijuego |
 | M-192 | P2 | SIN VERIFICAR | Aceras/pavimentos: 3 texturas | no se midió la variedad de aceras por barrio |
 | M-196 | P2 | PENDIENTE | Botes sin sonido/estela | sin estela de botes |
-| M-197 | P2 | PENDIENTE | Autopista sin peajes ni estaciones | sin peajes |
 | M-198 | P2 | PARCIAL | Viajes: estación de tren y aeropuerto | 28-10: Estación Central con andén y trenes (`visor/estacion_central.gd`); sin viajes ni aeropuerto |
 | M-203 | P2 | PENDIENTE | Sin colisión/oclusión de sonido en interiores | sin filtro de sonido en interiores |
 | M-204 | P2 | PENDIENTE | LOD de edificios lejanos con ventanas (cristal) pero sin siluetas… | sin impostores de edificios |
