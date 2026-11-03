@@ -174,54 +174,10 @@ func once(f: String = "") -> Array[Jugador]:
 	orden.sort_custom(func(a: int, b: int) -> bool:
 		return _es_puesto_portero(ranuras[a]) and not _es_puesto_portero(ranuras[b]))
 
-	var asignado := {}
-	## Lo que no depende de la ranura, una vez por jugador (30-10, rendimiento): mismas cuentas.
-	var n_libres := libres.size()
-	var fa := PackedFloat64Array(); var fb := PackedFloat64Array(); var por := PackedByteArray()
-	var ge := PackedStringArray()
-	for j in libres:
-		fa.append(0.7 + 0.003 * j.forma); fb.append(0.9 + 0.002 * j.moral)
-		por.append(1 if j.pos_e == "POR" else 0); ge.append(PesosPuesto.grupo(j.pos_e))
-	var tomado := PackedByteArray(); tomado.resize(n_libres)
-	for i: int in orden:
-		var puesto: String = ranuras[i][0]
-		var puesto_por := 1 if PesosPuesto.es_portero(puesto) else 0
-		var grupo_puesto := PesosPuesto.grupo(puesto)
-		var mejor: Jugador = null
-		var mejor_v := -1.0
-		var mejor_k := -1
-		for k in n_libres:
-			if tomado[k] == 1 or por[k] != puesto_por:
-				continue
-			var j: Jugador = libres[k]
-			## LA FAMILIARIDAD CON EL PUESTO. Antes solo se miraban los atributos, y
-			## por eso el once automático ponía a un extremo veloz de lateral por
-			## delante de un lateral de verdad: el extremo tiene el ritmo que pide la
-			## posición. Pero saber jugar ahí es otra cosa, y el pizarrón nuevo lo
-			## dejó a la vista -salía media plantilla en rojo-.
-			##
-			## No es un veto: un extremo MUY superior sigue ganando el puesto. Solo
-			## deja de ser gratis sacarlo de su sitio.
-			var encaja := 1.0
-			if j.pos_e != puesto:
-				encaja = 0.94 if j.pos_sec.has(puesto) else 0.86
-				## Cambiar de LÍNEA (un delantero de lateral, un central de
-				## extremo) cuesta más que moverse dentro de ella (17-10: el
-				## informe del rival enseñaba DC jugando de LI).
-				if not j.pos_sec.has(puesto) and grupo_puesto != ge[k]:
-					encaja = 0.62
-			## Fuera de su puesto no rinde más que en el suyo (los atributos de un
-			## delantero rápido daban 76 de lateral con 74 de media).
-			var en_puesto := j.media_en(puesto) if j.pos_e == puesto else mini(j.media_en(puesto), j.ovr)
-			var v := float(en_puesto) * encaja * fa[k] * fb[k]
-			if v > mejor_v:
-				mejor_v = v
-				mejor = j
-				mejor_k = k
-		if mejor != null:
-			usados[mejor.id] = true
-			tomado[mejor_k] = 1
-			asignado[i] = mejor
+	## La primera vuelta (el mejor libre para cada ranura, porteros primero) vive en `OnceAuto`: en C++ si la extensión está, y si no, el mismo bucle en GDScript.
+	var asignado := OnceAuto.asignar(libres, ranuras, orden)
+	for i: int in asignado:
+		usados[(asignado[i] as Jugador).id] = true
 	## Segunda vuelta sin el filtro de porteria, para las ranuras que quedaron
 	## vacias porque no habia nadie de ese perfil.
 	for i in ranuras.size():
