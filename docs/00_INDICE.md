@@ -1,10 +1,10 @@
 # Índice de la documentación (Dinastía)
 
-Regla: **un tema = un documento. Lo pendiente vive en UN solo sitio: [`PLAN_DEL_LUNES.md`](PLAN_DEL_LUNES.md).** Lo completado se borra (el historial de git lo conserva).
+Regla: **un tema = un documento. Lo pendiente vive en UN solo sitio: [`PLAN_GENERAL.md`](PLAN_GENERAL.md).** Lo completado se borra (el historial de git lo conserva).
 
 | Ruta | Qué contiene |
 |---|---|
-| `PLAN_DEL_LUNES.md` | Todo lo que falta: dueño, fases 0–6, ruta de lanzamiento, mejoras de código, 356 mejoras, tus ideas sin cerrar |
+| `PLAN_GENERAL.md` | Todo lo que falta: dueño, fases 0–6, ruta de lanzamiento, mejoras de código, 356 mejoras, tus ideas sin cerrar |
 | `01_metodo/METODO.md` | Cascada + Modelo V, compuertas, trazabilidad |
 | `02_vision/ideas_del_dueno/` | Instrucciones y notas originales del dueño (las listas de 300 y 750 ideas pasaron al plan) |
 | `04_auditorias/MEGA_AUDITORIA_3.md` | Auditoría del 24-10 con cifras (datos repetibles: `herramientas/auditoria_repo.py`) |

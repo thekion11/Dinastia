@@ -1,5 +1,5 @@
 extends BaseIdea
-## ENTRADA AL CAMPEONATO (fase 1, etapa 5): cada cifra validada por el dueño (PLAN_DEL_LUNES §2.3), aplicada
+## ENTRADA AL CAMPEONATO (fase 1, etapa 5): cada cifra validada por el dueño (PLAN_GENERAL §2.3), aplicada
 ## sobre un mundo de verdad, y la pantalla que la explica. Las cifras esperadas se calculan aquí A MANO
 ## (media de reputación de la liga → `Eco.ref_caja`), no con las funciones que se prueban.
 

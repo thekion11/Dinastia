@@ -1,6 +1,6 @@
 class_name IncidentesCiudad
 extends RefCounted
-## INCIDENTES DE LA CIUDAD (27-10-2026, pieza E «policía y bomberos», `PLAN_DEL_LUNES.md` §2.2h): de vez en cuando hay un robo, un incendio o un
+## INCIDENTES DE LA CIUDAD (27-10-2026, pieza E «policía y bomberos», `PLAN_GENERAL.md` §2.2h): de vez en cuando hay un robo, un incendio o un
 ## accidente en una calle; salen los vehículos de emergencia de su edificio, llegan, atienden y vuelven. Esto es la parte PURA (sin escena):
 ## cuándo pasa, dónde, quién acude, cuánto tarda en resolverse y cuánto cuesta saltarse un semáforo. La escena (`ServiciosVida`) solo lo dibuja.
 ##

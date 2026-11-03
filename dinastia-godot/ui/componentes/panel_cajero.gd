@@ -1,6 +1,6 @@
 class_name PanelCajero
 extends PanelContainer
-## EL CAJERO AUTOMÁTICO (27-10-2026, pieza B de `PLAN_DEL_LUNES.md` §2.2h): un panel con teclado de PIN y, dentro, retirar (20/50/100/200 €), ingresar todo el
+## EL CAJERO AUTOMÁTICO (27-10-2026, pieza B de `PLAN_GENERAL.md` §2.2h): un panel con teclado de PIN y, dentro, retirar (20/50/100/200 €), ingresar todo el
 ## efectivo y cambiar el PIN. Lo abre `VidaCiudad.usar_cajero` (E ante un `cajero_<n>`), se cierra solo si el DT se aleja o pulsa «Salir». Las reglas
 ## están en `CarteraDT` (límite de cajero, comisión de banco ajeno, bloqueo a los tres PIN malos); aquí solo se pinta y se teclea. Dinero en euros de pantalla.
 const IMPORTES := [20, 50, 100, 200]

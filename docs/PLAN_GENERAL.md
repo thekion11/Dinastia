@@ -1,4 +1,4 @@
-# PLAN DEL LUNES — el único documento de lo pendiente (24-10-2026)
+# PLAN GENERAL — el único documento de lo pendiente (antes «plan del lunes», 24-10-2026; renombrado el 3-11)
 
 Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de lanzamiento, las mejoras de código, las 356 mejoras abiertas y tus ideas que no están hechas del todo. **Lo ya hecho se borra** (queda en el historial de git). Reglas de trabajo: `CLAUDE.md`; método: `docs/01_metodo/METODO.md`; auditoría con cifras: `docs/04_auditorias/MEGA_AUDITORIA_3.md`.
 
@@ -51,12 +51,30 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 1) fallos (los 8 de League-Soccer) → 2) clubes (recreación legal) → 3) IA → 4) jugabilidad → 5) optimización → 6) detectar fallos →
 7) sonidos de sistema → 8) minijuegos → 9) entrenamiento.
 
-## TRABAJO FUTURO DEL DUEÑO (3-11 noche): MEGARREFORMA DE LOS BANCOS DE PRUEBAS
-Pedido: «la megarreforma a los bancos: deben ser más de 30 especiales, modulares y ultra detallados, incluso si eso implica
-mayor demora». Interpretación del líder (pendiente de que el dueño la confirme): rehacer `banco.sh` / `especiales.sh` en más
-de 30 bancos ESPECIALIZADOS (uno por área: partido, IA, física, ciudad, estadio, menú, guardado, idiomas, rendimiento,
-memoria, tutorial, economía…), cada uno un módulo independiente que se pueda correr solo, con comprobaciones mucho más
-finas, aunque tarden más. No empezar hasta cerrar lo que está en curso.
+## IDEAS Y TAREAS DEL DUEÑO (3-11 noche, conversación casual) — se borran al completarse del todo
+**Evaluación del menú nuevo: 90/100.** Para llegar a 100:
+- Tablas densas (Dinero → Finanzas, Competiciones → Ligas y clubes…): guías horizontales (línea de 1 px de baja opacidad o filas alternas «cebra») para no perder la fila al leer de izquierda a derecha.
+- Deslizadores (Ajustes → Dispositivo, Ciudad → Diseño…) demasiado finos: más gruesos y con más área de toque (pantallas táctiles y mando).
+- Tarjetas de las portadas: borde de 1 px con ~10 % más de luminosidad que el fondo para delimitar lo pulsable (hoy solo contraste de relleno).
+
+**Rendimiento (ideas del dueño; revisar cuáles ya están y aplicar las que falten, midiendo):**
+- Escalado 3D FSR 2.2 (Rendering > Scaling 3D) a 0,75-0,85 con salida nativa.
+- Renderizador Mobile o Compatibility en móvil y equipos viejos (Forward+ solo PC alta).
+- Sombras: apagarlas en luces que no las necesiten (OmniLight3D/SpotLight3D) y bajar la resolución del mapa de sombras.
+- VoxelGI o ReflectionProbes en lugar de SDFGI; LightmapGI (iluminación horneada) para lo estático.
+- MultiMeshInstance3D para todo lo repetido; LOD automático activado en las mallas importadas.
+- VisibleOnScreenNotifier3D en objetos dinámicos: sin proceso ni física fuera de pantalla.
+- Oclusión con OccluderInstance3D horneado; capas y máscaras de colisión estrictas.
+- MODO ULTRA RENDIMIENTO (gráficos ultra bajos): el público existe solo al inicio del partido y luego desaparece, con una cámara desde un punto donde no se note (el público como ruido).
+- Mejorar el recolector de basura / la gestión de memoria.
+
+**Bancos de pruebas (confirmado: los del juego):** megarreforma en más de 30 bancos ESPECIALIZADOS, modulares (uno por área, corribles solos) y ultra detallados aunque tarden más.
+
+**Exportador de GitHub (CI de builds):** más eficiente, con los bancos nuevos; selección fácil del sistema operativo destino; y en un apartado APARTE, un exportador ACTUALIZADOR que genera solo los cambios de la versión nueva (parche) para quien ya tiene el juego, sin volver a bajarlo entero.
+
+**Mega auditoría nueva:** comprobar que todo funciona, que todo está conectado y que todo es accesible.
+
+**Pulido pedido:** el «control de representación» debe verse mejor (aclarar con el dueño qué pantalla es); los ESCUDOS deben poder profundizarse más (más detalle/edición); buscar MÚSICA totalmente libre y agregarla (la música la decide el dueño: proponer pistas con su licencia antes de meterlas).
 
 ## 0. Lo que espera una decisión tuya (lista corta)
 
