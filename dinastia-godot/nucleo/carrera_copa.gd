@@ -27,9 +27,9 @@ static func es_copa(m: Mundo, par: Array) -> bool:
 ## empate, se tiran los penales del acta (`Partido.penales()`).
 static func simular(p: Partido) -> void:
 	p.preparar()
+	## 3-11: antes se miraba el empate ANTES de jugar el 90', y un gol del empate en ese minuto iba directo a penales.
+	p.prorroga_si_empate = true
 	while not p.terminado_ya:
-		if p.minuto == Partido.MINUTOS - 1 and p.minutos_fin == Partido.MINUTOS and p.goles_local == p.goles_visita:
-			p.prorroga_externa()
 		p.simular_minuto()
 	p._cerrar_notas()
 	p.guardar_si_es_mio()

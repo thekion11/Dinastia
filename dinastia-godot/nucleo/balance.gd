@@ -145,3 +145,9 @@ const PENAL_IA_X := 1.0
 const PENAL_ERROR := 0.8
 const PENAL_PARA := 0.38
 
+
+## EL CAMPO Y EL CUERPO, UNA SOLA VEZ (M-391, 3-11): `MatchPlayback` (el partido simulado en 3D) y `MotorJugable` (el jugable) los declaraban cada uno
+## por su lado. El campo mide 105 × 68 m (el motor jugable usa la MITAD de cada medida, centrado en el origen); el cuerpo de un jugador, 0,31 m de radio.
+const CAMPO_LARGO := 105.0
+const CAMPO_ANCHO := 68.0
+const RADIO_CUERPO := 0.31

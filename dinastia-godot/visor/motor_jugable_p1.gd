@@ -42,8 +42,8 @@ signal tanda_empieza
 signal tanda_tiro(equipo: int, jugador_id: String, marcado: bool)
 signal tanda_terminada(goles_local: int, goles_visita: int)
 
-const LARGO := 52.5
-const ANCHO := 34.0
+const LARGO := Balance.CAMPO_LARGO * 0.5   ## el motor jugable usa la mitad de cada medida del campo (M-391)
+const ANCHO := Balance.CAMPO_ANCHO * 0.5
 const PALO := 3.66
 const LARGUERO := 2.44
 const AREA_X := 20.16
@@ -276,7 +276,7 @@ var tarjetas_motor := [[0, 0], [0, 0]]
 var duelos_activos := true
 var cuerpos_activos := true
 var duelos := {"hombro": 0, "dividido": 0, "agarron": 0, "faltas": 0, "balon_perdido": 0, "rebote": 0}
-const RADIO_CUERPO := 0.31
+const RADIO_CUERPO := Balance.RADIO_CUERPO
 
 ## Fuerza, equilibrio y agresividad de 0 a 1. La ficha no tiene agresividad:
 ## sale de la defensa y el físico (los que van al choque), del rasgo
