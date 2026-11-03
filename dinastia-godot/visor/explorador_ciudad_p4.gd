@@ -421,26 +421,3 @@ func _n_fijos(q: Vector3, r: float) -> int:
 		if not libre_obst(c, r) or _choca_circulos(c, r):
 			n += 1
 	return n
-
-## El coche no gira metiendo el morro o la cola en una pared o en otro coche: si
-## con el rumbo nuevo choca y con el de antes no, se queda el de antes (con un
-## círculo daba igual hacia dónde mirase; con la forma real, no).
-func _girar_si_cabe(rumbo_antes: float) -> void:
-	if modo != "coche" or rumbo == rumbo_antes or cuerpo == null:
-		return
-	if not libre_forma(cuerpo.position, rumbo) and libre_forma(cuerpo.position, rumbo_antes):
-		rumbo = rumbo_antes
-
-## El rótulo de comercio cuya fachada está junto a `p`, o vacío.
-func _rotulo_en(p: Vector3) -> Dictionary:
-	if cb == null or cb.expansion == null:
-		return {}
-	var mejor: Dictionary = {}
-	var md := INF
-	for r: Dictionary in cb.expansion.rotulos:
-		var q: Vector3 = r["pos"]
-		var d := Vector2(q.x - p.x, q.z - p.z).length()
-		if d < float(r["ancho"]) * 0.5 + 2.5 and d < md:
-			md = d
-			mejor = r
-	return mejor
