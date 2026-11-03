@@ -37,20 +37,24 @@ func _cabecera() -> void:
 			vistos += 1
 			if String((b as Button).tooltip_text).strip_edges() == "":
 				sin_ayuda.append(t)
-	_comprobar(vistos >= 3 and sin_ayuda.is_empty(), "los botones de la cabecera que son solo un icono dicen qué hacen al pasar por encima (%d, sin ayuda: %s)" % [vistos, str(sin_ayuda)])
+	## (3-11, rediseño del menú central) La barra de arriba ya no tiene botones de solo icono (🌎 ⚽ 💰 pasaron al panel
+	## lateral): basta con que los que queden tengan su ayuda.
+	_comprobar(sin_ayuda.is_empty(), "los botones de la cabecera que son solo un icono dicen qué hacen al pasar por encima (%d, sin ayuda: %s)" % [vistos, str(sin_ayuda)])
 
 func _objetivos() -> void:
 	get_tree().root.size = Vector2i(1280, 720)
 	var po: PanelObjetivos = _p.get("_panel_obj")
-	var guardado_antes: Variant = PanelObjetivos._leer("plegado_v2", null)
-	po._plegado = false
-	po._aplicar_plegado()
-	for i in 3:
-		await get_tree().process_frame
+	## (3-11, rediseño del menú central, pedido del dueño) Los objetivos salen MINIMIZADOS por defecto y la ficha del
+	## jugador ya no está en el central (se ve en el menú Plantel): no hay nada que tapar.
+	var guardado: Variant = PanelObjetivos._leer("plegado_v3", null)
+	_comprobar(guardado != null or po._plegado, "los objetivos empiezan minimizados si el jugador no eligió otra cosa")
 	var j: Jugador = _p.mundo.mi_club().plantilla[2]
 	_p._ver_ficha(j)
-	_comprobar(po._plegado, "a 1280×720, abrir la ficha de un jugador pliega el panel de objetivos que la tapaba")
-	_comprobar(PanelObjetivos._leer("plegado_v2", null) == guardado_antes, "y ese plegado no se guarda como preferencia")
+	var bloque: Control = _p.get("_bloque_ficha")
+	_comprobar(bloque != null and not bloque.is_visible_in_tree(), "la ficha del jugador no se ve en el central (va en su pantalla completa)")
+	for i in 3:
+		await get_tree().process_frame
+	_comprobar(PanelObjetivos._leer("plegado_v3", null) == guardado, "y ver una ficha no cambia la preferencia guardada de los objetivos")
 
 func _tutorial() -> void:
 	for t in get_tree().root.find_children("*", "", true, false):

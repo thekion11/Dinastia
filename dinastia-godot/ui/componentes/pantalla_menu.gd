@@ -378,6 +378,8 @@ func _montar_detalle() -> void:
 	_mudar(_p._marco_paginas, _hueco_contenido)
 	if _hueco_ficha != null and _p._col_derecha != null:
 		_mudar(_p._col_derecha, _hueco_ficha)
+		if _p._bloque_ficha != null:
+			_p._bloque_ficha.visible = true   ## en el central va oculta (rediseño 3-11): aquí se ve
 
 func submenu_activo() -> int:
 	return _activo
@@ -422,6 +424,8 @@ func _devolver_contenido() -> void:
 		nodo.size_flags_horizontal = int(d[3])
 		nodo.size_flags_stretch_ratio = float(d[4])
 	_devolver.clear()
+	if _p._bloque_ficha != null and is_instance_valid(_p._bloque_ficha):
+		_p._bloque_ficha.visible = false
 
 func _al_redimensionar() -> void:
 	if _fondo != null and _fondo.material != null and size.y > 0.0:
