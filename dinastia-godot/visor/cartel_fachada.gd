@@ -19,3 +19,8 @@ static func poner(b: CityBuilder, pos: Vector3, texto: String, color: Color, tam
 	l.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	b.add_child(l)
 	return l
+
+## Un lugar con nombre: la etiqueta del MAPA (vista aérea, de tamaño fijo) Y su cartel de pared (al pasear, de cerca). Cada una solo se ve donde toca.
+static func con_mapa(b: CityBuilder, pos: Vector3, texto: String, color: Color, tam: int = 28) -> void:
+	b._rotulo(pos, texto, color, tam)
+	poner(b, pos, texto, color, tam)
