@@ -4,7 +4,8 @@ extends RefCounted
 ## escrita aparte). Antes todos los jugadores de la CPU leían la posición EXACTA de los rivales en cada fotograma: la dificultad solo
 ## tocaba atributos, presión y error. Ahora el motor guarda un historial corto de posiciones (cada 0,1 s, 1,2 s de memoria) y la CPU
 ## «ve» a los rivales con RETARDO según su nivel (`vista` en `DIFICULTADES`): Practicante 0,5 s, Cadete 0,3 s; de Debutante en
-## adelante 0 (el motor calibrado de siempre). Así los niveles bajos marcan donde estaba el rival, no donde está. Solo afecta a los
+## adelante 0 (el motor calibrado de siempre) y los altos LEEN MEJOR: retardo negativo = ven al rival donde ESTARÁ (posición +
+## velocidad × adelanto): Profesional 0,08 s, Experto 0,14, Maestro 0,20, Ultimate 0,30. Así los niveles bajos marcan donde estaba el rival, no donde está. Solo afecta a los
 ## jugadores de la CPU (nunca al equipo que maneja el usuario). `SIN_MENTE=1` = todos ven el presente.
 const CADA := 0.1
 const MEMORIA := 1.2
@@ -31,7 +32,7 @@ static func actualizar(m: MotorJugable) -> void:
 	while h.size() > 1 and m.t - float(h[0]["t"]) > MEMORIA:
 		h.pop_front()
 
-## Segundos de retardo con los que el jugador `obs` ve a los rivales (0 = presente).
+## Segundos de retardo con los que el jugador `obs` ve a los rivales (0 = presente; NEGATIVO = se adelanta: ve dónde ESTARÁ).
 static func retardo(m: MotorJugable, obs: Dictionary) -> float:
 	if _sin or m.equipo_cpu() != (0 if bool(obs["es_local"]) else 1):
 		return 0.0
@@ -40,7 +41,10 @@ static func retardo(m: MotorJugable, obs: Dictionary) -> float:
 ## Dónde ve `obs` al jugador `q` (rival suyo): su posición de hace `retardo` segundos.
 static func pos_vista(m: MotorJugable, obs: Dictionary, q: Dictionary) -> Vector3:
 	var r := retardo(m, obs)
-	if r <= 0.0:
+	if r < 0.0:
+		var v: Vector3 = q.get("vel", Vector3.ZERO)
+		return m.pos(q) + Vector3(v.x, 0.0, v.z) * (-r)
+	if r == 0.0:
 		return m.pos(q)
 	var e := _est(m)
 	var h: Array = e["h"]
