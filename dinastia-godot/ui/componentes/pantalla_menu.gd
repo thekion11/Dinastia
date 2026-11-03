@@ -65,7 +65,7 @@ func _montar() -> void:
 	mat.set_shader_parameter("c3", _color(2))
 	## M-288 (20-10): con el motor ligero (gama baja), fondo de color fijo: el
 	## shader usa TIME y obliga a redibujar la pantalla en cada fotograma.
-	if Calidad.motor_ligero:
+	if AhorroMenu.fondo_estatico():
 		_fondo.color = _color(1)
 	else:
 		_fondo.material = mat

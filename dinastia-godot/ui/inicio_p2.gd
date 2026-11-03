@@ -162,10 +162,12 @@ func _construir() -> void:
 	## Etapa 1 (8-10-2026): DETRÁS del contenido (entre el fondo y el scroll).
 	## Encima, las motas tapaban letras y botones como manchas blancas.
 	_bokeh_fondo = FondoParticulas.new("bokeh")
+	_bokeh_fondo.add_to_group("fondo_particulas")   ## `AhorroMenu` las pausa en MÍNIMA (3-11)
 	_bokeh_fondo.ajustar_area(get_viewport_rect().size)
 	add_child(_bokeh_fondo)
 	move_child(_bokeh_fondo, 3)
 	_motas = FondoParticulas.new("motas")
+	_motas.add_to_group("fondo_particulas")   ## `AhorroMenu` las pausa en MÍNIMA (3-11)
 	_motas.ajustar_area(get_viewport_rect().size)
 	add_child(_motas)
 	move_child(_motas, 4)

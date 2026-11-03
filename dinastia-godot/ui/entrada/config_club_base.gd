@@ -68,7 +68,7 @@ func _montar() -> void:
 	_fondo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_fondo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var sm := ShaderMaterial.new()
-	sm.shader = FONDO_SHADER
+	sm.shader = AhorroMenu.shader(FONDO_SHADER)
 	sm.set_shader_parameter("velocidad", 0.0 if Animar.reducidas() else 0.035)
 	_fondo.material = sm
 	add_child(_fondo)
