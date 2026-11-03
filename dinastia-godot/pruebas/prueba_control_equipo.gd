@@ -47,11 +47,15 @@ func _process(_d: float) -> void:
 		_ok(false, "hay motor real")
 		_fin()
 		return
-	## (3-11) Solo los pasos de la prueba (`_avanzar`) mueven el motor: su propio paso de física también corría y, con
-	## fotogramas lentos (el CI), se colaban varios entre dos fotogramas de la prueba: el rival se movía o cambiaba el
-	## usuario antes de comprobar («contener», «RB presiona», «mantener tiro carga»). Se reproduce con `--max-fps 8`.
+	## (3-11) Solo los pasos de la prueba (`_avanzar`) mueven el motor. La vista del estadio también lo avanza en cada
+	## fotograma con el tiempo REAL (hasta 16 pasos de golpe) y su propio paso de física también corría: con fotogramas
+	## lentos (el CI) se colaban pasos entre dos fotogramas de la prueba (el rival se movía, cambiaba el usuario o se
+	## acababa la cámara lenta antes de comprobar). Se reproduce con `--max-fps 8`. Vista en PAUSA (velocidad 0).
 	if _motor.is_physics_processing():
 		_motor.set_physics_process(false)
+	var juego: Variant = _vista.get("_juego")
+	if juego != null and int(juego.get("vel_idx")) != 0:
+		juego.set("vel_idx", 0)
 	if _t == 3 and not _dato.has("cesped_ok"):
 		## EL VOLUMEN DEL CÉSPED NO SE PIERDE EN SILENCIO (14-10-2026): en calidad
 		## ALTO/ULTRA el partido tiene sus capas de hierba y se dibujan.
@@ -181,6 +185,29 @@ func _balon_a_usuario(x: float, z: float) -> Dictionary:
 	_motor.call("_tomar", u)
 	return u
 
+## (3-11) «Contener» y «RB presiona» fallaban a veces en el CI y nunca en local: el defensor que manejas queda FIJO
+## (un jugador de campo local entre el rival y su arco, sin barrida pendiente ni cambio automático en medio).
+func _fijar_defensor() -> void:
+	var r: Dictionary = _dato["rival"]
+	for q: Dictionary in _motor.jugadores:
+		if bool(q["es_local"]) and not bool(q["por"]):
+			var arco: Vector3 = _motor.call("_arco_propio", q)
+			var rp: Vector3 = _motor.pos(r)
+			(q["node"] as Node3D).position = rp + (arco - rp).normalized() * 6.0
+			q["vel"] = Vector3.ZERO
+			q["barrida_hasta"] = 0.0
+			q["levanta_hasta"] = 0.0
+			_motor.call("_poner_usuario", q)
+			_motor.bloqueo = true
+			_motor.set("_manual_hasta", _motor.t + 10.0)
+			return
+
+func _diagnostico(u: Dictionary, r: Dictionary) -> void:
+	print("    usuario=", u.get("id", "-"), " por=", u.get("por", "-"), " local=", u.get("es_local", "-"), " pos=", _motor.pos(u), " obj=", u.get("objetivo", "-"),
+		" | rival pos=", _motor.pos(r), " poseedor=", _motor.poseedor.get("id", "-"), " estado=", _motor.estado, " t=", _motor.t,
+		" levanta=", u.get("levanta_hasta", 0.0), " barrida=", u.get("barrida_hasta", 0.0), " autopiloto=", _motor.autopiloto, " bloqueo=", _motor.bloqueo,
+		" pase=", Input.is_action_pressed("jugar_pase"), " mod=", Input.is_action_pressed("jugar_mod"), " fisica_motor=", _motor.is_physics_processing())
+
 func _balon_a_rival() -> Dictionary:
 	for q: Dictionary in _motor.jugadores:
 		if not bool(q["es_local"]) and not bool(q["por"]):
@@ -249,6 +276,7 @@ func _paso_fc() -> void:
 			_avanzar(30)
 			var r := _balon_a_rival()
 			_dato["rival"] = r
+			_fijar_defensor()
 			_pulsar("jugar_pase", true)
 			_avanzar(1)
 		23:
@@ -257,7 +285,10 @@ func _paso_fc() -> void:
 			var r: Dictionary = _dato["rival"]
 			var obj: Vector3 = u.get("objetivo", Vector3.ZERO)
 			var arco: Vector3 = _motor.call("_arco_propio", u)
-			_ok(obj.distance_to(_motor.pos(r)) < 2.0 and obj.distance_to(arco) < _motor.pos(r).distance_to(arco), "FC: Pase mantenido sin balón = contener (entre el rival y tu arco)")
+			var bien := obj.distance_to(_motor.pos(r)) < 2.0 and obj.distance_to(arco) < _motor.pos(r).distance_to(arco)
+			_ok(bien, "FC: Pase mantenido sin balón = contener (entre el rival y tu arco)")
+			if not bien:
+				_diagnostico(u, r)
 			_pulsar("jugar_pase", false)
 			## RB mantenido: presiona el segundo jugador.
 			_pulsar("jugar_mod", true)
@@ -265,8 +296,14 @@ func _paso_fc() -> void:
 		24:
 			var u: Dictionary = _motor.usuario
 			var ayuda: Dictionary = _motor.call("_segundo_presionador", u)
-			_ok(not ayuda.is_empty() and (ayuda.get("objetivo", Vector3.ZERO) as Vector3).distance_to(_motor.pos(_dato["rival"])) < 0.5, "FC: RB mantenido = el compañero más cercano presiona")
+			var bien_rb := not ayuda.is_empty() and (ayuda.get("objetivo", Vector3.ZERO) as Vector3).distance_to(_motor.pos(_dato["rival"])) < 0.5
+			_ok(bien_rb, "FC: RB mantenido = el compañero más cercano presiona")
+			if not bien_rb:
+				_diagnostico(u, _dato["rival"])
+				print("    ayuda=", ayuda.get("id", "-"), " obj=", ayuda.get("objetivo", "-"))
 			_pulsar("jugar_mod", false)
+			_motor.bloqueo = false   ## el de `_fijar_defensor`
+			_motor.set("_manual_hasta", 0.0)
 			## Cruceta arriba: más ofensiva.
 			_dato["ment"] = int((_motor.tacticas[0] as Dictionary).get("mentalidad", 1))
 			_pulsar("jugar_tac_arriba", true)
