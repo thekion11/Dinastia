@@ -17,6 +17,7 @@ func _ready() -> void:
 	_p.call("_avanzar_semana")
 	await _fotogramas(3)
 	await _vuelta()
+	await _vuelta()   ## (3-11) dos de calentamiento: con el rediseño, cada pestaña se pinta también a pantalla completa
 	var c1 := _contar(get_tree().root)
 	var h1 := _histo(_p, {})
 	var o1 := int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))
@@ -66,7 +67,11 @@ func _vuelta() -> void:
 		for ch: Dictionary in g["tabs"]:
 			if String(ch.get("secc", "")) != "kits":
 				_p.call("_ir_a_chip", ch)
-	await _fotogramas(2)
+	## (3-11, rediseño del menú central) Cada chip abre ahora su menú del panel lateral: se cierra el último y se
+	## espera a que termine de irse (su fundido) antes de contar.
+	if is_instance_valid(ml.pantalla_abierta):
+		ml.pantalla_abierta.cerrar()
+	await get_tree().create_timer(0.6).timeout   ## tiempo real: sin ventana, 12 fotogramas duran menos que el fundido
 	_fase("chips")
 	for i in 4:
 		_p.call("_ver_ficha", m.mi_club().plantilla[i])

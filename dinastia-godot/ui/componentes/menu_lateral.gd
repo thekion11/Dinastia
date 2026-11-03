@@ -307,8 +307,16 @@ func abrir_menu(id: String, sub: int = -1) -> PantallaMenu:
 		return pantalla_abierta
 	if is_instance_valid(pantalla_abierta):
 		pantalla_abierta.cerrar()
+	## Mientras se abre, la pantalla cambia de pestaña por dentro: eso no debe abrir OTRO menú (`_abrir_en_lateral`).
+	var antes: bool = _p._redirigiendo
+	_p._redirigiendo = true
 	pantalla_abierta = PantallaMenu.abrir(_p, m, -1 if es_accion else sub)
+	_p._redirigiendo = antes
 	pantalla_abierta.cerrada.connect(_marcar_riel.bind(""))
+	## (3-11, rediseño) Al cerrar, el central vuelve a su Inicio (ya no tiene pestañas para volver a mano).
+	pantalla_abierta.cerrada.connect(func() -> void:
+		if not is_instance_valid(pantalla_abierta) or pantalla_abierta.cerrando():
+			_p._ir_a_pestana("Inicio"))
 	## El panel queda por encima de la pantalla del menú.
 	get_parent().move_child(self, get_parent().get_child_count() - 1)
 	_marcar_riel(id)

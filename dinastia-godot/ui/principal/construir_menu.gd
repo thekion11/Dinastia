@@ -207,6 +207,9 @@ func _montar_cabecera() -> VBoxContainer:
 	## encima de las tres columnas, con el ancho de la pantalla.
 	p._fila_grupos = HBoxContainer.new()
 	p._fila_grupos.add_theme_constant_override("separation", 6)
+	## (3-11, rediseño del menú central) Sin fila de bloques ni de pestañas: cada sección se abre en su menú del
+	## panel lateral. Siguen existiendo (la navegación por chips y las pruebas los usan), ocultas.
+	p._fila_grupos.visible = false
 	raiz.add_child(p._fila_grupos)
 	return raiz
 
@@ -220,6 +223,7 @@ func _montar_carril(raiz: VBoxContainer) -> void:
 	carril.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	carril.custom_minimum_size = Vector2(0, 36)
 	carril.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	carril.visible = false   ## (3-11, rediseño) ver `_fila_grupos`
 	raiz.add_child(carril)
 	p._fila_sub = HBoxContainer.new()
 	p._fila_sub.add_theme_constant_override("separation", 6)

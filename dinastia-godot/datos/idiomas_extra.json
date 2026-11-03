@@ -7140,7 +7140,10 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "The map of countries and their clubs: pick one to look at.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Save, load, new world, slots, autosave, bug report and credits.",
   "📂 Cargar": "📂 Load",
-  "🌍 Otro mundo": "🌍 New world"
+  "🌍 Otro mundo": "🌍 New world",
+  "Gente que se organiza sola para seguir al club desde lejos.": "People who organise themselves to follow the club from afar.",
+  "Menos riesgo de que se lo lleven gratis.": "Less risk of losing him for free.",
+  "Puertas abiertas, entrenamiento a la vista de todos, firma de autógrafos y partido de leyendas. El estadio fue una fiesta y los socios lo van a recordar.": "Open doors, training in front of everyone, autograph signing and a legends match. The stadium was a party and the members will remember it."
  },
  "pt": {
   "Historia": "História",
@@ -14283,7 +14286,10 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "O mapa dos países com os seus clubes: escolhe qual ver.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Guardar, carregar, outro mundo, ranhuras, gravação automática, relatório de erros e créditos.",
   "📂 Cargar": "📂 Carregar",
-  "🌍 Otro mundo": "🌍 Outro mundo"
+  "🌍 Otro mundo": "🌍 Outro mundo",
+  "Gente que se organiza sola para seguir al club desde lejos.": "Gente que se organiza sozinha para seguir o clube de longe.",
+  "Menos riesgo de que se lo lleven gratis.": "Menos risco de o levarem de graça.",
+  "Puertas abiertas, entrenamiento a la vista de todos, firma de autógrafos y partido de leyendas. El estadio fue una fiesta y los socios lo van a recordar.": "Portas abertas, treino à vista de todos, sessão de autógrafos e jogo de lendas. O estádio foi uma festa e os sócios vão lembrar-se."
  },
  "patrones": [
   [
@@ -20060,6 +20066,28 @@
    "vol tancar $1 per $2 l'any.",
    "chce zamknąć $1 za $2 rocznie.",
    "$1 için yılda $2 ile anlaşmak istiyor."
+  ],
+  [
+   "^Se quedó en (\\d+) bandeja\\(s\\): para más hay que subir la tribuna en Obras\\.$",
+   "It stayed at $1 tier(s): for more, the stand must be raised in Works.",
+   "Ficou em $1 bancada(s): para mais é preciso subir a tribuna em Obras.",
+   "Resté à $1 gradin(s) : pour plus, il faut surélever la tribune dans Travaux.",
+   "Rimasto a $1 anello/i: per averne di più bisogna alzare la tribuna in Lavori.",
+   "Bei $1 Rang/Rängen geblieben: für mehr muss die Tribüne unter Bauarbeiten aufgestockt werden.",
+   "S'ha quedat en $1 graderia(es): per a més cal pujar la tribuna a Obres.",
+   "Zostało $1 poziom(ów): aby było więcej, trzeba podnieść trybunę w Robotach.",
+   "$1 katta kaldı: daha fazlası için tribünü İnşaat'ta yükseltmek gerekiyor."
+  ],
+  [
+   "^(🏟️ )?Se quedó en (\\d+) bandeja\\(s\\): para más hay que subir la tribuna en Obras\\. Reforma en obras: (\\d+) semana\\(s\\)\\. Hasta entonces se juega en el estadio de siempre\\.$",
+   "$1It stayed at $2 tier(s): for more, the stand must be raised in Works. Renovation under way: $3 week(s). Until then we play in the usual stadium.",
+   "$1Ficou em $2 bancada(s): para mais é preciso subir a tribuna em Obras. Remodelação em obras: $3 semana(s). Até lá joga-se no estádio de sempre.",
+   "$1Resté à $2 gradin(s) : pour plus, il faut surélever la tribune dans Travaux. Rénovation en cours : $3 semaine(s). D'ici là, on joue dans le stade habituel.",
+   "$1Rimasto a $2 anello/i: per averne di più bisogna alzare la tribuna in Lavori. Ristrutturazione in corso: $3 settimana/e. Fino ad allora si gioca nel solito stadio.",
+   "$1Bei $2 Rang/Rängen geblieben: für mehr muss die Tribüne unter Bauarbeiten aufgestockt werden. Umbau läuft: $3 Woche(n). Bis dahin wird im üblichen Stadion gespielt.",
+   "$1S'ha quedat en $2 graderia(es): per a més cal pujar la tribuna a Obres. Reforma en obres: $3 setmana(es). Fins aleshores es juga a l'estadi de sempre.",
+   "$1Zostało $2 poziom(ów): aby było więcej, trzeba podnieść trybunę w Robotach. Przebudowa w toku: $3 tydz. Do tego czasu gramy na zwykłym stadionie.",
+   "$1$2 katta kaldı: daha fazlası için tribünü İnşaat'ta yükseltmek gerekiyor. Tadilat sürüyor: $3 hafta. O zamana kadar her zamanki stadyumda oynanıyor."
   ]
  ],
  "fr": {
@@ -27203,7 +27231,10 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "La carte des pays et de leurs clubs : choisis lequel regarder.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Sauvegarder, charger, autre monde, emplacements, sauvegarde auto, rapport de bugs et crédits.",
   "📂 Cargar": "📂 Charger",
-  "🌍 Otro mundo": "🌍 Autre monde"
+  "🌍 Otro mundo": "🌍 Autre monde",
+  "Gente que se organiza sola para seguir al club desde lejos.": "Des gens qui s'organisent seuls pour suivre le club de loin.",
+  "Menos riesgo de que se lo lleven gratis.": "Moins de risque de le perdre gratuitement.",
+  "Puertas abiertas, entrenamiento a la vista de todos, firma de autógrafos y partido de leyendas. El estadio fue una fiesta y los socios lo van a recordar.": "Portes ouvertes, entraînement devant tout le monde, séance d'autographes et match des légendes. Le stade était en fête et les socios s'en souviendront."
  },
  "it": {
   "Historia": "Storia",
@@ -34346,7 +34377,10 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "La mappa dei paesi con i loro club: scegli quale guardare.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Salva, carica, altro mondo, slot, salvataggio automatico, segnalazione errori e crediti.",
   "📂 Cargar": "📂 Carica",
-  "🌍 Otro mundo": "🌍 Altro mondo"
+  "🌍 Otro mundo": "🌍 Altro mondo",
+  "Gente que se organiza sola para seguir al club desde lejos.": "Gente che si organizza da sola per seguire il club da lontano.",
+  "Menos riesgo de que se lo lleven gratis.": "Meno rischio di perderlo a zero.",
+  "Puertas abiertas, entrenamiento a la vista de todos, firma de autógrafos y partido de leyendas. El estadio fue una fiesta y los socios lo van a recordar.": "Porte aperte, allenamento davanti a tutti, firma di autografi e partita delle leggende. Lo stadio è stato una festa e i soci lo ricorderanno."
  },
  "de": {
   "Historia": "Geschichte",
@@ -41489,7 +41523,10 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "Die Karte der Länder mit ihren Vereinen: wähle einen aus.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Speichern, laden, neue Welt, Speicherplätze, automatisches Speichern, Fehlerbericht und Mitwirkende.",
   "📂 Cargar": "📂 Laden",
-  "🌍 Otro mundo": "🌍 Neue Welt"
+  "🌍 Otro mundo": "🌍 Neue Welt",
+  "Gente que se organiza sola para seguir al club desde lejos.": "Leute, die sich selbst organisieren, um den Verein aus der Ferne zu verfolgen.",
+  "Menos riesgo de que se lo lleven gratis.": "Weniger Risiko, ihn ablösefrei zu verlieren.",
+  "Puertas abiertas, entrenamiento a la vista de todos, firma de autógrafos y partido de leyendas. El estadio fue una fiesta y los socios lo van a recordar.": "Tag der offenen Tür, öffentliches Training, Autogrammstunde und Legendenspiel. Das Stadion war ein Fest, und die Mitglieder werden sich daran erinnern."
  },
  "ca": {
   "Historia": "Història",
@@ -48632,7 +48669,10 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "El mapa de països amb els seus clubs: tria quin mirar.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Desar, carregar, un altre món, ranures, desament automàtic, informe d'errors i crèdits.",
   "📂 Cargar": "📂 Carregar",
-  "🌍 Otro mundo": "🌍 Un altre món"
+  "🌍 Otro mundo": "🌍 Un altre món",
+  "Gente que se organiza sola para seguir al club desde lejos.": "Gent que s'organitza sola per seguir el club des de lluny.",
+  "Menos riesgo de que se lo lleven gratis.": "Menys risc que se l'emportin gratis.",
+  "Puertas abiertas, entrenamiento a la vista de todos, firma de autógrafos y partido de leyendas. El estadio fue una fiesta y los socios lo van a recordar.": "Portes obertes, entrenament a la vista de tothom, signatura d'autògrafs i partit de llegendes. L'estadi va ser una festa i els socis ho recordaran."
  },
  "pl": {
   "Club": "Klub",
@@ -56044,7 +56084,10 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "Mapa krajów z ich klubami: wybierz, który obejrzeć.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Zapis, wczytanie, nowy świat, sloty, autozapis, raport błędów i autorzy.",
   "📂 Cargar": "📂 Wczytaj",
-  "🌍 Otro mundo": "🌍 Nowy świat"
+  "🌍 Otro mundo": "🌍 Nowy świat",
+  "Gente que se organiza sola para seguir al club desde lejos.": "Ludzie, którzy sami się organizują, by śledzić klub z daleka.",
+  "Menos riesgo de que se lo lleven gratis.": "Mniejsze ryzyko, że odejdzie za darmo.",
+  "Puertas abiertas, entrenamiento a la vista de todos, firma de autógrafos y partido de leyendas. El estadio fue una fiesta y los socios lo van a recordar.": "Drzwi otwarte, trening na oczach wszystkich, rozdawanie autografów i mecz legend. Stadion był świętem, a członkowie to zapamiętają."
  },
  "tr": {
   "Club": "Kulüp",
@@ -63456,6 +63499,9 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "Ülkeler ve kulüpleri haritası: bakmak istediğini seç.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Kaydet, yükle, yeni dünya, yuvalar, otomatik kayıt, hata raporu ve emeği geçenler.",
   "📂 Cargar": "📂 Yükle",
-  "🌍 Otro mundo": "🌍 Yeni dünya"
+  "🌍 Otro mundo": "🌍 Yeni dünya",
+  "Gente que se organiza sola para seguir al club desde lejos.": "Kulübü uzaktan takip etmek için kendi kendine örgütlenen insanlar.",
+  "Menos riesgo de que se lo lleven gratis.": "Bedavaya gitme riski daha az.",
+  "Puertas abiertas, entrenamiento a la vista de todos, firma de autógrafos y partido de leyendas. El estadio fue una fiesta y los socios lo van a recordar.": "Açık kapılar, herkesin gözü önünde antrenman, imza günü ve efsaneler maçı. Stadyum bayram yeriydi ve üyeler bunu hatırlayacak."
  }
 }
