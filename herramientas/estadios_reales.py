@@ -27,7 +27,7 @@ ESTADIOS = {
     "U. Católica": e("herradura", 1, "sin", False, "mixto", "hormigon", "Herradura abierta a la cordillera"),
     "Coquimbo Unido": e("rect", 1, "parcial", False, "mixto", "metal", "Cuatro tribunas modernas junto al mar"),
     "Cobresal": e("rect", 1, "sin", False, "torres", "hormigon", "Estadio minero en pleno desierto"),
-    "Palestino": e("rect", 1, "sin", False, "torres", "hormigon", "Estadio de barrio con tribuna principal"),
+    "Palestino": e("principal", 1, "sin", False, "torres", "hormigon", "Estadio de barrio con tribuna principal"),
     "Unión Española": e("ingles", 1, "parcial", False, "torres", "ladrillo", "Estadio antiguo, tribunas pegadas a la cancha"),
     "Audax Italiano": e("rect", 1, "parcial", False, "mixto", "metal", "Estadio municipal renovado"),
     "Huachipato": e("ingles", 1, "parcial", False, "mixto", "metal", "Estadio acerero, techado y pegado al campo"),
@@ -219,6 +219,12 @@ ESTADIOS = {
     "Orlando City": e("rect", 2, "anillo", False, "halo", "metal", ""),
     "FC Cincinnati": e("rect", 2, "anillo", False, "halo", "metal", ""),
 }
+
+
+# 3-11-2026 (orden 22 U4): los 226 clubes que faltaban, en `estadios_reales_p2.py`.
+from estadios_reales_p2 import ESTADIOS_MAS  # noqa: E402
+for _k, _v in ESTADIOS_MAS.items():
+    ESTADIOS.setdefault(_k, _v)
 
 
 # ---------------------------------------------------------------------------

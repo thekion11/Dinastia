@@ -255,7 +255,7 @@ func _montar(duracion_mitad: float) -> void:
 	_repe.terminada.connect(_fin_repeticion)
 	motor.terminado.connect(_al_terminar)
 	motor.eliminatoria = eliminatoria
-	PartidoJugableTanda.poner(self)
+	PartidoJugableTanda.poner(self); MarcadorJugador.poner(self)   ## el triángulo sobre tu jugador (P2, 3-11)
 	## La cámara, detrás de tu jugador.
 	_cam = Camera3D.new()
 	_cam.fov = 58.0
