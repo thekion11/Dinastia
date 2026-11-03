@@ -10,7 +10,7 @@ static func montar(ex: CiudadExpansion, x: float, y: float, z_pared: float) -> v
 	b._caja_en(Vector3(x, y + 0.55, z_pared + 3.0), Vector3(3.2, 1.1, 0.8), madera)             ## mostrador
 	b._caja_en(Vector3(x, y + 1.5, z_pared + 2.6), Vector3(3.0, 0.9, 0.5), blanco)              ## camisetas dobladas
 	b._caja_en(Vector3(x, y + 3.35, z_pared + 1.75), Vector3(5.4, 1.2, 0.25), verde)             ## panel del rótulo
-	CartelFachada.poner(b, Vector3(x, y + 3.35, z_pared + 1.95), "TIENDA DEPORTIVA", Color(1, 1, 1), 22)
+	CartelFachada.poner(b, Vector3(x, y + 3.35, z_pared + 1.95), "DEPORTES", Color(1, 1, 1), 22)
 	b.puntos_clic.append({"k": "deportes_%d" % (absi(hash(Vector2(x, z_pared))) % 100000), "n": Idiomas.t("Tienda deportiva"),
 		"pos": Vector3(x, 0.0, z_pared + 4.6), "estado": "ciudad", "radio": 9.0, "alcance": 2.5})
 
