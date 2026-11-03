@@ -29,10 +29,10 @@ func _process(_d: float) -> bool:
 	var c := _nuevo(Vector3(0, 30, 0), Vector3(30, 0, 0), Vector3.ZERO)
 	_correr(c, 0.5)
 	_comprobar(c.velocidad_vectorial.x < 28.0 and c.velocidad_vectorial.x > 25.0, "30 m/s pierde 2-5 m/s en 0,5 s (%.2f)" % c.velocidad_vectorial.x)
-	## 2) Magnus: tiro libre a 25 m/s con ~50 rad/s curva 2-6 m en el primer segundo.
-	var l := _nuevo(Vector3(0, 30, 0), Vector3(25, 0, 0), Vector3(0, 50, 0))
+	## 2) Magnus: tiro libre a 25 m/s con giro 15 (unidades del catálogo) curva 2-6 m en el primer segundo.
+	var l := _nuevo(Vector3(0, 30, 0), Vector3(25, 0, 0), Vector3(0, 15, 0))
 	_correr(l, 1.0)
-	_comprobar(absf(l.position.z) > 2.0 and absf(l.position.z) < 6.0, "efecto 50 rad/s: curva %.1f m en 1 s" % absf(l.position.z))
+	_comprobar(absf(l.position.z) > 2.0 and absf(l.position.z) < 6.0, "efecto giro 15: curva %.1f m en 1 s" % absf(l.position.z))
 	## 3) Rebote: cae de 5 m; cociente de velocidad vertical entre 0,5 y 0,65.
 	var r := _nuevo(Vector3(0, 5, 0), Vector3.ZERO, Vector3.ZERO)
 	var vmax := 0.0
