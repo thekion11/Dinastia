@@ -307,3 +307,31 @@ func _probar_perfiles_ayuda() -> void:
 	_comprobar(Mando.perfil() == "arcade", "Arcade: todo asistido")
 	for k: String in antes:
 		Mando.fijar_ayuda(k, String(antes[k]))
+
+## COLOCACIÓN SIN BALÓN CON MEMORIA (03-11-2026, IA F1, `MotorColocacion`): el bloque mira un balón con retardo y recuerda quién tuvo la posesión.
+func _probar_colocacion() -> void:
+	_titulo("COLOCACIÓN SIN BALÓN CON MEMORIA")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	motor.balon.position = Vector3(0, 0.11, 0)
+	MotorColocacion.actualizar(motor, 0.1)
+	motor.balon.position = Vector3(0, 0.11, 30.0)
+	for i in 10:
+		MotorColocacion.actualizar(motor, 0.1)
+	var z1 := MotorColocacion.balon_lento(motor, true).z
+	_comprobar(z1 > 1.0 and z1 < 24.0, "al segundo el balón lento va por detrás del real (%.1f de 30 m)" % z1)
+	for i in 300:
+		MotorColocacion.actualizar(motor, 0.1)
+	_comprobar(MotorColocacion.balon_lento(motor, true).z > 28.0, "a los 30 s ya lo alcanzó")
+	var loc: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	motor.poseedor = loc[0]
+	for i in 150:
+		MotorColocacion.actualizar(motor, 0.1)
+	var s_l := MotorColocacion.sesgo(motor, true)
+	var s_v := MotorColocacion.sesgo(motor, false)
+	_comprobar(s_l > 0.9 and s_v < 0.1, "tras 15 s con el balón, sesgo local %.2f y rival %.2f" % [s_l, s_v])
+	var con := MotorColocacion.pesos(motor, true, false)
+	var sin := MotorColocacion.pesos(motor, false, false)
+	_comprobar(con.x < sin.x and con.y < sin.y, "con balón sigue menos al balón (%.2f frente a %.2f) y sin él se junta" % [con.x, sin.x])
+	_comprobar(con.x > 0.2 and sin.x < 0.7, "los pesos son razonables")
+	(r[1] as Node3D).queue_free()
