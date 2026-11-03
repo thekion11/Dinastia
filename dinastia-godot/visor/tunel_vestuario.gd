@@ -201,6 +201,14 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 		var personal := PersonalEstadio.new()
 		personal.preparar(d, c1, c2)
 		nodo.add_child(personal)
+	## R2 (3-11, MÍNIMO): ~540 mallas sueltas (túnel, vestuario y edificio del club) = ~540 llamadas de dibujo; se funden en una malla por material, y las luces de dentro
+	## se apagan a distancia (en un móvil cada luz puntual es una pasada más sobre todo lo que toca). Las colisiones no se tocan.
+	if Calidad.elegida <= Calidad.MINIMO:
+		for o in nodo.find_children("*", "OmniLight3D", true, false):
+			(o as OmniLight3D).distance_fade_enabled = true
+			(o as OmniLight3D).distance_fade_begin = 28.0
+			(o as OmniLight3D).distance_fade_length = 8.0
+		FundirPiezas.fundir_profundo(nodo, "Fundido")
 
 static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: Color, c2: Color,
 		pared: StandardMaterial3D, suelo: StandardMaterial3D, techo: StandardMaterial3D,

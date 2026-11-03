@@ -60,7 +60,7 @@ static func aplicar_si_primera_vez(info: Dictionary = {}) -> Dictionary:
 		info = detectar()
 	if not info["debil"]:
 		return {}
-	Calidad.elegida = Calidad.MINIMO if muy_debil(info) else Calidad.MEDIO
+	Calidad.elegida = Calidad.MINIMO   ## R1 (3-11): siempre la más baja (antes MEDIO si el equipo no era «muy débil»)
 	Calidad.adaptativa = true
 	Calidad.motor_ligero = Calidad.puede_relanzar() and not Calidad.es_compatibilidad()
 	Calidad.guardar()

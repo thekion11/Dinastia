@@ -11,6 +11,8 @@ extends Node
 ##   MOTOR=0|1       el motor jugable lleva a los 22 (1 en «partido» y «balon»/«porteria», 0 en el resto)
 ##   ESTADIO=0|1     monta además el estadio entero (público, vallas, focos) para medir lo que cuesta
 ##   SEMILLA=4711    mundo y motor
+##   INFORME=1       al montar, imprime qué pesa cada pieza del campo (triángulos, objetos, sombras)
+##   OCULTAR=a,b     oculta las piezas cuyo nombre contenga a o b (para medir lo que cuestan)
 ##   CAPTURA=ruta.jpg   guarda la pantalla a los 4 s (revisión a ojo sin GPU)
 ##
 ##   godot --path . --rendering-driver vulkan --resolution 1280x720 res://pruebas/arena/arena.tscn
@@ -55,6 +57,7 @@ func _ready() -> void:
 	if _env("ESTADIO", "0") == "1":
 		StadiumBuilder.build(_raiz, perfil, int(perfil.get("aforo", 20000)), 0.8, a._hash_id(), a)
 	_montar_jugadores(a, b)
+	_ocultar_y_informar()
 	_camaras.foco = _foco
 	_metricas = ArenaMetricas.new()
 	add_child(_metricas)
@@ -144,3 +147,102 @@ func _unhandled_input(e: InputEvent) -> void:
 		elif k == KEY_ESCAPE:
 			_metricas.imprimir_resumen()
 			get_tree().quit()
+
+## Una categoría por hijo de la raíz, para poder apagar «lo mismo» aunque los nodos no tengan nombre propio:
+## gradas (mallas con decenas de MultiMesh), personal (muñecos de 9-10 mallas), tunel, mascota, edificios, otros.
+func _categoria(h: Node) -> String:
+	var n := String(h.name)
+	if n.begins_with("Tunel"):
+		return "tunel"
+	if n.begins_with("Mascota"):
+		return "mascota"
+	var geom := h.find_children("*", "GeometryInstance3D", true, false).size()
+	if h is MeshInstance3D and geom >= 10:
+		return "gradas"
+	if h.get_class() == "Node3D" and geom >= 8 and geom <= 12:
+		return "personal"
+	return "otros"
+
+## INFORME y OCULTAR (R2): qué pesa cada hijo directo de la raíz del campo, y apagar piezas por nombre para medir el resto.
+func _ocultar_y_informar() -> void:
+	var quitar := _env("OCULTAR", "").split(",", false)
+	for h in _raiz.get_children():
+		for q: String in quitar:
+			if (String(h.name).to_lower() + "|" + _categoria(h)).contains(q.to_lower()) and h is Node3D:
+				(h as Node3D).visible = false
+	if _env("INFORME", "0") != "1":
+		return
+	var filas: Array = []
+	for h in _raiz.get_children():
+		var tri := 0
+		var obj := 0
+		var sombras := 0
+		var nodos: Array = h.find_children("*", "GeometryInstance3D", true, false)
+		if h is GeometryInstance3D:
+			nodos.append(h)
+		for n: GeometryInstance3D in nodos:
+			var veces := 1
+			var malla: Mesh = null
+			if n is MultiMeshInstance3D and (n as MultiMeshInstance3D).multimesh != null:
+				var mm := (n as MultiMeshInstance3D).multimesh
+				malla = mm.mesh
+				veces = mm.visible_instance_count if mm.visible_instance_count >= 0 else mm.instance_count
+			elif n is MeshInstance3D:
+				malla = (n as MeshInstance3D).mesh
+			if malla == null:
+				continue
+			tri += (malla.get_faces().size() / 3) * veces
+			obj += 1
+			sombras += 1 if n.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF else 0
+		filas.append([tri, obj, sombras, "%s (%s) [%s]" % [h.name, h.get_class(), _categoria(h)]])
+	filas.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0])
+	_informe_multimesh()
+	for h in _raiz.get_children():
+		if String(h.name).begins_with("Tunel"):
+			var por_clase := {}
+			for d in h.find_children("*", "", true, false):
+				var k := d.get_class() + (" (con hijos)" if d.get_child_count() > 0 and d is MeshInstance3D else "")
+				por_clase[k] = int(por_clase.get(k, 0)) + 1
+			print("TUNEL por clase: ", por_clase)
+			var resto := {}
+			for d in h.find_children("*", "MeshInstance3D", true, false):
+				var mi := d as MeshInstance3D
+				var k := "%s | mat_override=%s | hijos=%d | visible=%s | tri=%d" % [mi.mesh.get_class() if mi.mesh != null else "sin malla", mi.material_override != null, mi.get_child_count(), mi.visible, (mi.mesh.get_faces().size() / 3) if mi.mesh != null else 0]
+				resto[k] = int(resto.get(k, 0)) + 1
+			var claves := resto.keys()
+			claves.sort_custom(func(a: String, b: String) -> bool: return resto[a] > resto[b])
+			for k: String in claves.slice(0, 8):
+				print("   ", resto[k], " × ", k)
+	print("INFORME de piezas (triángulos · objetos · con sombra):")
+	for fila: Array in filas.slice(0, 25):
+		print("  %9d  %5d  %5d   %s" % [fila[0], fila[1], fila[2], fila[3]])
+	if _env("INFORME_OTROS", "0") == "1":
+		var otros := filas.filter(func(r: Array) -> bool: return String(r[3]).ends_with("[otros]"))
+		otros.sort_custom(func(a: Array, b: Array) -> bool: return a[1] > b[1])
+		print("OTROS por objetos:")
+		for r: Array in otros.slice(0, 20):
+			print("  %9d  %5d  %5d   %s" % [r[0], r[1], r[2], r[3]])
+
+## Todos los MultiMesh del campo juntos, por nombre: instancias, triángulos por malla y total (el público y las butacas son MultiMesh).
+func _informe_multimesh() -> void:
+	var por_nombre := {}
+	for n in _raiz.find_children("*", "MultiMeshInstance3D", true, false):
+		var m := n as MultiMeshInstance3D
+		if m.multimesh == null or m.multimesh.mesh == null:
+			continue
+		var veces := m.multimesh.visible_instance_count if m.multimesh.visible_instance_count >= 0 else m.multimesh.instance_count
+		var por := m.multimesh.mesh.get_faces().size() / 3
+		var clave := "%s" % [String(m.name).rstrip("0123456789@")]
+		var fila: Array = por_nombre.get(clave, [0, 0, 0, por, 0])
+		fila[0] += 1
+		fila[1] += veces
+		fila[2] += por * veces
+		fila[3] = por
+		fila[4] += 1 if m.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF else 0
+		por_nombre[clave] = fila
+	var claves := por_nombre.keys()
+	claves.sort_custom(func(a: String, b: String) -> bool: return por_nombre[a][2] > por_nombre[b][2])
+	print("MULTIMESH del campo (nombre · nodos · instancias · tri/malla · triángulos totales · con sombra):")
+	for c: String in claves.slice(0, 16):
+		var r: Array = por_nombre[c]
+		print("  %-28s %4d %8d %6d %10d %4d" % [c, r[0], r[1], r[3], r[2], r[4]])
