@@ -6,6 +6,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 	var tot := {"goles": 0, "tiros": 0, "faltas": 0, "pases_ok": 0, "duelos": 0}
 	var traza := {}
+	var duelos_tot := {}
 	var ext := {"pases": 0, "pases_ok": 0, "poses_local": 0.0, "dentro": 0, "frontal": 0, "lejos": 0, "a_puerta": 0, "tiros_pie": 0}
 	var n := int(OS.get_environment("N_PARTIDOS")) if OS.get_environment("N_PARTIDOS") != "" else 16
 	for semilla in range(int(OS.get_environment("DESDE")) if OS.get_environment("DESDE") != "" else 1, (int(OS.get_environment("DESDE")) if OS.get_environment("DESDE") != "" else 1) + n):
@@ -43,6 +44,8 @@ func _ready() -> void:
 		ext["pases_ok"] += int(motor.pases_ok[0]) + int(motor.pases_ok[1])
 		var pt := float(motor.posesion[0]) + float(motor.posesion[1])
 		ext["poses_local"] += float(motor.posesion[0]) / pt if pt > 0.0 else 0.5
+		for k: String in motor.duelos:
+			duelos_tot[k] = int(duelos_tot.get(k, 0)) + int(motor.duelos[k])
 		for k: String in motor.diag:
 			var cuenta := int(motor.diag[k])
 			if k.begins_with("traza_"):
@@ -58,6 +61,7 @@ func _ready() -> void:
 		raiz.queue_free()
 	print("MEDIDA ", OS.get_environment("SIN_LEAGUE"), " ", tot)
 	print("MEDIDA3 ", traza)
+	print("MEDIDA4 ", duelos_tot)
 	## MEDIDA2 (03-11): lo que pide la sesión líder. xG aproximado por zona (medias de la literatura, no datos medidos): dentro 0,13 · frontal 0,05 · lejos 0,03.
 	var con_zona := int(ext["dentro"]) + int(ext["frontal"]) + int(ext["lejos"])
 	var xg := float(ext["dentro"]) * 0.13 + float(ext["frontal"]) * 0.05 + float(ext["lejos"]) * 0.03
