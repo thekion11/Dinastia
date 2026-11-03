@@ -83,7 +83,14 @@ const SENSIBILIDAD := 3.2
 ## goles, da LLEGADAS. Portandola como si diera goles salian ocho por partido en
 ## vez de dos y medio. Lo caza la prueba de "goles por partido" del banco, que
 ## esta puesta justo para esto.
-const CONVERSION := 0.30
+##
+## 3-11-2026 (calibración, orden del líder): 0,30 → **0,28**. El partido simulado daba ~2,92 goles por partido en la primera temporada (6 semillas × CHI, ARG, ESP;
+## `pruebas/zz_medir_goles.tscn`) cuando las ligas reales andan en 2,4-2,9. Se bisecó (7e98acbe, 26-10: 2,62; 7e27a84b, 1-11: 2,60) hasta `1b176389` (1-11, idea 378):
+## desde el minuto 60 la IA que va perdiendo se vuelca (`ofensivo`) y la débil que gana se cierra (`cerrojo`) -una función buena, no se toca- y eso sumó +0,32 goles
+## por partido (sin ella, hoy, 2,63). Con 0,28 queda en 2,70. Se baja la conversión y no las llegadas (`BASE_ATAQUE`) porque deja intactos los remates y el xG por llegada
+## (media 0,27: `0,09 + f^0,25 · 0,22`, la auditoría del 26-10), y los goles pasan a ser ~1,05 veces el xG en vez de ~1,13. Sube la mitad que el 0,30 de antes en la
+## cuota de atajadas (entre CONVERSION y R_ATAJADA): los tiros a puerta (gol + atajada, hasta R_ATAJADA) no cambian.
+const CONVERSION := 0.28
 
 ## Los mismos cortes de `ataque()` en juego.js (linea ~2139 y ~2144), sobre el
 ## mismo `r` que decide el gol: entre CONVERSION y R_ATAJADA para la atajada,
