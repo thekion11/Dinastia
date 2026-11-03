@@ -5,6 +5,7 @@ extends Node
 func _ready() -> void:
 	await get_tree().process_frame
 	var tot := {"goles": 0, "tiros": 0, "faltas": 0, "pases_ok": 0, "duelos": 0}
+	var ext := {"pases": 0, "pases_ok": 0, "poses_local": 0.0, "dentro": 0, "frontal": 0, "lejos": 0, "a_puerta": 0, "tiros_pie": 0}
 	var n := int(OS.get_environment("N_PARTIDOS")) if OS.get_environment("N_PARTIDOS") != "" else 16
 	for semilla in range(int(OS.get_environment("DESDE")) if OS.get_environment("DESDE") != "" else 1, (int(OS.get_environment("DESDE")) if OS.get_environment("DESDE") != "" else 1) + n):
 		var m := Mundo.new()
@@ -37,6 +38,35 @@ func _ready() -> void:
 		for k: String in motor.duelos:
 			d += int(motor.duelos[k])
 		tot["duelos"] += d
+		ext["pases"] += int(motor.pases[0]) + int(motor.pases[1])
+		ext["pases_ok"] += int(motor.pases_ok[0]) + int(motor.pases_ok[1])
+		var pt := float(motor.posesion[0]) + float(motor.posesion[1])
+		ext["poses_local"] += float(motor.posesion[0]) / pt if pt > 0.0 else 0.5
+		for k: String in motor.diag:
+			var cuenta := int(motor.diag[k])
+			if k.begins_with("tiro_") and k.ends_with("_dentro"):
+				ext["dentro"] += cuenta
+			elif k.begins_with("tiro_") and k.ends_with("_frontal"):
+				ext["frontal"] += cuenta
+			elif k.begins_with("tiro_") and k.ends_with("_lejos"):
+				ext["lejos"] += cuenta
+			elif k.begins_with("a_puerta_"):
+				ext["a_puerta"] += cuenta
 		raiz.queue_free()
 	print("MEDIDA ", OS.get_environment("SIN_LEAGUE"), " ", tot)
+	## MEDIDA2 (03-11): lo que pide la sesión líder. xG aproximado por zona (medias de la literatura, no datos medidos): dentro 0,13 · frontal 0,05 · lejos 0,03.
+	var con_zona := int(ext["dentro"]) + int(ext["frontal"]) + int(ext["lejos"])
+	var xg := float(ext["dentro"]) * 0.13 + float(ext["frontal"]) * 0.05 + float(ext["lejos"]) * 0.03
+	print("MEDIDA2 ", {
+		"partidos": n,
+		"pases_pct": snappedf(100.0 * float(ext["pases_ok"]) / maxf(float(ext["pases"]), 1.0), 0.1),
+		"posesion_local_pct": snappedf(100.0 * float(ext["poses_local"]) / maxf(float(n), 1.0), 0.1),
+		"tiros_dentro": ext["dentro"], "tiros_frontal": ext["frontal"], "tiros_lejos": ext["lejos"],
+		"pct_dentro": snappedf(100.0 * float(ext["dentro"]) / maxf(float(con_zona), 1.0), 0.1),
+		"a_puerta": ext["a_puerta"],
+		"a_puerta_pct": snappedf(100.0 * float(ext["a_puerta"]) / maxf(float(tot["tiros"]), 1.0), 0.1),
+		"xg_por_tiro": snappedf(xg / maxf(float(con_zona), 1.0), 0.001),
+		"acierto_pct": snappedf(100.0 * float(tot["goles"]) / maxf(float(tot["tiros"]), 1.0), 0.1),
+		"tiros_por_partido": snappedf(float(tot["tiros"]) / maxf(float(n), 1.0), 0.1),
+		"goles_por_partido": snappedf(float(tot["goles"]) / maxf(float(n), 1.0), 0.01)})
 	get_tree().quit()
