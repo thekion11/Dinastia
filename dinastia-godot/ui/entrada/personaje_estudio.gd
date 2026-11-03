@@ -264,3 +264,29 @@ static func _dar_vida(d: Dictionary) -> void:
 ## Para las pruebas: el modelo que se ve ahora ({} si aún no se armó).
 func modelo() -> Dictionary:
 	return _actual
+
+## LA FOTO DEL PERSONAJE (3-11-2026, orden 22: «"Sí, ese soy yo" debería ser una foto del personaje 3D»). De frente,
+## en primer plano, con la luz del estudio; vuelve después al encuadre de antes. null si no hay imagen (sin pantalla).
+func foto(lado := 256) -> Texture2D:
+	if _vp == null or _pivote == null or DisplayServer.get_name() == "headless":
+		return null
+	var antes := [_zoom, _zoom_obj, girar, _pivote.rotation.y]
+	girar = false
+	_pivote.rotation.y = 0.0
+	_zoom = 1.0
+	_zoom_obj = 1.0
+	_colocar_camara()
+	await RenderingServer.frame_post_draw
+	await RenderingServer.frame_post_draw
+	var img := _vp.get_texture().get_image()
+	_zoom = antes[0]
+	_zoom_obj = antes[1]
+	girar = antes[2]
+	_pivote.rotation.y = antes[3]
+	_colocar_camara()
+	if img == null or img.is_empty():
+		return null
+	var m := mini(img.get_width(), img.get_height())
+	img = img.get_region(Rect2i((img.get_width() - m) / 2, (img.get_height() - m) / 2, m, m))
+	img.resize(lado, lado, Image.INTERPOLATE_LANCZOS)
+	return ImageTexture.create_from_image(img)

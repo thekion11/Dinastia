@@ -319,8 +319,16 @@ func _rotulos_de_paseo(si: bool) -> void:
 		var l := n as Label3D
 		if l == null:
 			continue
-		l.visibility_range_end = (60.0 if modo == "pie" else 140.0) if si else 0.0
+		## (3-11, prueba del dueño: «nombres flotando visibles de lejos») A pie o en coche el nombre es un CARTEL del
+		## lugar: tamaño de mundo (se ve grande cerca y pequeño lejos), tapado por lo que haya delante y solo
+		## a pocos metros; en la vista aérea vuelve a ser la etiqueta de tamaño fijo.
+		l.visibility_range_end = (45.0 if modo == "pie" else 90.0) if si else 0.0
+		l.visibility_range_end_margin = 12.0 if si else 0.0
+		l.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF if si else GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED
 		l.no_depth_test = not si
+		l.fixed_size = not si
+		l.pixel_size = 0.0145 if si else 0.0007
+		l.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y if si else BaseMaterial3D.BILLBOARD_ENABLED
 
 func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, estado_animo: String) -> void:
 	cb = builder
@@ -425,26 +433,3 @@ func _n_fijos(q: Vector3, r: float) -> int:
 		if not libre_obst(c, r) or _choca_circulos(c, r):
 			n += 1
 	return n
-
-## El coche no gira metiendo el morro o la cola en una pared o en otro coche: si
-## con el rumbo nuevo choca y con el de antes no, se queda el de antes (con un
-## círculo daba igual hacia dónde mirase; con la forma real, no).
-func _girar_si_cabe(rumbo_antes: float) -> void:
-	if modo != "coche" or rumbo == rumbo_antes or cuerpo == null:
-		return
-	if not libre_forma(cuerpo.position, rumbo) and libre_forma(cuerpo.position, rumbo_antes):
-		rumbo = rumbo_antes
-
-## El rótulo de comercio cuya fachada está junto a `p`, o vacío.
-func _rotulo_en(p: Vector3) -> Dictionary:
-	if cb == null or cb.expansion == null:
-		return {}
-	var mejor: Dictionary = {}
-	var md := INF
-	for r: Dictionary in cb.expansion.rotulos:
-		var q: Vector3 = r["pos"]
-		var d := Vector2(q.x - p.x, q.z - p.z).length()
-		if d < float(r["ancho"]) * 0.5 + 2.5 and d < md:
-			md = d
-			mejor = r
-	return mejor

@@ -132,6 +132,17 @@ func _dirigir() -> void:
 	## CÓMO SE MIRA (25-9-2026, plan maestro B2). Los cinco modos juegan el
 	## MISMO `Partido` con los mismos `simular_minuto()`: solo cambia la vista.
 	var modo := _modo_simulacion(_competicion_de_la_semana())
+	## (3-11, orden 22) Antes de cada partido, a pantalla completa: jugar, solo las jugadas importantes o simular.
+	if DisplayServer.get_name() != "headless" and OS.get_environment("SIN_ELECCION_PARTIDO") == "":
+		if EleccionPartido.preguntar():
+			var el := EleccionPartido.new()
+			el.titulo = "%s  vs  %s" % [p.local.nombre, p.visita.nombre]
+			pr.add_child(el)
+			var e: Dictionary = await el.elegido
+			el.queue_free()
+			modo = String(e["modo"])
+		elif not EleccionPartido.ultima().is_empty():
+			modo = String(EleccionPartido.ultima().get("modo", modo))
 	if modo == "instantaneo" or modo == "resumen":
 		p.preparar()
 		p.fijar_hinchada(pr.mundo.mi_club(), pr.mundo.prensa.animo if pr.mundo.prensa != null else 60)

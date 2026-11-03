@@ -21,7 +21,8 @@ func _foto(fase: String, extra := "") -> void:
 		int(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)), extra])
 
 func _medir() -> void:
-	Calidad.elegida = Calidad.MEDIO
+	Calidad.elegida = Calidad.MINIMO if OS.get_environment("CALIDAD") == "minimo" else Calidad.MEDIO
+	Calidad.motor_ligero = OS.get_environment("CALIDAD") == "minimo"
 	var m := _mundo(4242)
 	_foto("antes del prólogo")
 	PedidoPartida.mundo_pregenerado = m
@@ -37,6 +38,8 @@ func _medir() -> void:
 		await get_tree().process_frame
 		var ahora := Time.get_ticks_msec()
 		largo = maxi(largo, ahora - anterior)
+		if ahora - anterior > 500:
+			print("MEDIDA cuadro largo %d ms en t=%d ms (cuadro %d)" % [ahora - anterior, ahora - t0, i])
 		anterior = ahora
 		if _p._listo:
 			break

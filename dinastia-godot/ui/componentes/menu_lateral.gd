@@ -42,7 +42,8 @@ const MENUS := [
 	{"id": "carrera", "icono": "🎓", "nombre": "Mi Carrera", "estilo": 2,
 		"lema": "Tu camino como entrenador: rol, habilidades y reputación.",
 		"colores": ["#0f0d06", "#211b0b", "#f2c84b"], "subs": [
-		{"tab": "Club", "secc": "carrera", "label": "Mi carrera", "icono": "🧭", "desc": "Tu rol, tu currículum y el siguiente escalón."},
+		{"tab": "Club", "secc": "carrera", "label": "Mi carrera", "icono": "🧭", "desc": "Tu puesto, los clubes que te quieren, dimitir y el siguiente escalón."},
+		{"tab": "Club", "secc": "directorio", "label": "Directorio y consejeros", "icono": "🎩", "desc": "La directiva, su confianza en ti y hasta dos consejeros que te ayudan."},
 		{"tab": "Habilidades", "label": "Árbol de habilidades", "icono": "🌳", "desc": "Aprende técnicas y sube de nivel."},
 		{"tab": "Correo", "label": "Correo", "icono": "✉️", "desc": "Mensajes del club, agentes y la federación."},
 		{"tab": "Federación", "label": "Normas y federación", "icono": "⚖️", "desc": "Reglamento, licencias, votaciones y árbitros."}]},
