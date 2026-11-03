@@ -51,6 +51,13 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 1) fallos (los 8 de League-Soccer) → 2) clubes (recreación legal) → 3) IA → 4) jugabilidad → 5) optimización → 6) detectar fallos →
 7) sonidos de sistema → 8) minijuegos → 9) entrenamiento.
 
+## TRABAJO FUTURO DEL DUEÑO (3-11 noche): MEGARREFORMA DE LOS BANCOS DE PRUEBAS
+Pedido: «la megarreforma a los bancos: deben ser más de 30 especiales, modulares y ultra detallados, incluso si eso implica
+mayor demora». Interpretación del líder (pendiente de que el dueño la confirme): rehacer `banco.sh` / `especiales.sh` en más
+de 30 bancos ESPECIALIZADOS (uno por área: partido, IA, física, ciudad, estadio, menú, guardado, idiomas, rendimiento,
+memoria, tutorial, economía…), cada uno un módulo independiente que se pueda correr solo, con comprobaciones mucho más
+finas, aunque tarden más. No empezar hasta cerrar lo que está en curso.
+
 ## 0. Lo que espera una decisión tuya (lista corta)
 
 Sin esto, las filas que dependen de ello no avanzan. El detalle está en la sección que se cita.
