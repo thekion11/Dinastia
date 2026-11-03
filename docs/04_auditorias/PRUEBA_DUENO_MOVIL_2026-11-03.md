@@ -31,8 +31,11 @@ penales, física del balón): varias cifras ya mejoraron, pero hay que volver a 
 - C2. Nombres flotando sobre los lugares, visibles de lejos: deben ir EN el edificio (cartel) y solo de cerca.
 
 ## Interfaz y contenido (líder)
-- U4. Faltan clubes y las cifras reales de jugadores e información del club (en curso: planteles de las 8 ligas sin
-  plantel y la arquitectura de los 226 estadios que faltaban).
+- U4. Clubes y cifras reales: HECHO el 3-11 lo que se podía sin red (375 de 402 clubes con plantel, 402 con su estadio
+  real). Queda: contrastar con una fuente (necesita red) los planteles escritos de memoria, sobre todo los de baja
+  confianza (Marruecos salvo los 4 grandes, Sudáfrica salvo los 4 grandes, Egipto chico, Corea chica, Volendam, Telstar);
+  11 clubes siguen con jugadores generados (Pharco, El Gouna, Baladiyat, Tala'ea, Arab Contractors, ZED, Ansan, Cheonan,
+  Canberra, Geelong, Darwin); los guiños de nombres coreanos y algunos holandeses salen raros («Sung-rllong», «Geeei»).
 - U6. Partes del juego que existen en el código pero no se encuentran jugando: ya visibles «Mi carrera» (ofertas,
   dimitir, confianza de la directiva) y «Directorio y consejeros» en el menú; seguir auditando el resto.
 - U7. Revisar si a `main` le falta algo.
