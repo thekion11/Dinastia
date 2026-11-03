@@ -33,10 +33,14 @@ Pendiente de estudiar (fuentes ya localizadas): triangulación de Delaunay para 
    (c) los pesos de F1 con la bandera apagada no eran exactos (los `Vector3` de Godot son de 32 bits): se usan arreglos de 64 bits.
 5. **Ruido**: con 16 partidos, ±6 goles; las ablaciones de una sola pieza no son concluyentes (sin F7 dio 33 contra 44 con él, con el F7 defectuoso). Para decidir se necesitan ≥32 partidos por lado.
 
+6. **Medición final** (32 partidos, semillas 1-32, versión `0c1253ea`): goles 74 → **84 (2,63 por partido)**, tiros 330 → 323 (10,1), pases buenos 1873 → 1734 (54,2), duelos 1545 → 1819, faltas 137 → 160, fueras de juego 24 → 19.
+   Los goles ya están en el rango real (2,5-2,8). Pero se tira poco (≈10 tiros por partido entre los dos equipos; real ≈25) y se acierta demasiado (26 % de los tiros acaban en gol; real ≈10 %): los goles cuadran por compensación.
+
 ## Cifras reales de fútbol que se persiguen (orden de la sesión líder)
 ≈2,5-2,8 goles, ≈25 tiros, ≈80-85 % de pases buenos por partido. Estado: tiros ≈10-12 por partido y pases buenos ≈53-59 (conteo, no porcentaje): **faltan por debajo**; `zz_medir_partido` no da el porcentaje de pases, hay que añadirlo.
 
 ## Siguiente
+- **Ciclo 7 (tiros y acierto):** más remates y menos acierto por remate (ganas de tirar desde la frontal, error de puntería por distancia, `CHISPA_TIRO`, `PUNTERIA`), medido contra ≈25 tiros y ≈10 % de acierto. Ojo: mover los tiros mueve los goles; recalibrar a ≈2,5-2,8.
 - Medición final de 32 partidos con todo lo anterior (en curso).
 - Añadir a `zz_medir_partido` la posesión y el % de pases buenos.
 - Casos concretos en `pruebas/arena/arena.tscn`: amontonamientos, defensas que no cierran, porteros que no salen.
