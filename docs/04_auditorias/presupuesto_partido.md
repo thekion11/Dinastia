@@ -81,3 +81,6 @@ Desglose (`TEXTURAS=45`): 11 mapas de normales de ruido de 1024² (5,3 MB cada u
 | 5 | **Butacas lejanas en un solo MultiMesh con `visibility_range`** en vez de elegirlas al construir | −0,1 a −0,2 M y mejor comportamiento al mover la cámara; lo más caro de las tres |
 
 Subir un techo exige decir aquí por qué.
+
+### El balón (3-11)
+El techo de `balon` pasó de 50 triángulos / 4 llamadas (una holgura: «mide 0 con la cámara del saque») a **2.760 / 4**. El balón es una `SphereMesh` de 48 × 24 (`visor/balon_3d.gd`; ~2.400 triángulos con las tapas, 1 llamada), y no cambia desde el 30-10. Cuando entra en cuadro cuesta eso; cuando no entra mide 0. Que entre depende del instante del saque y de la velocidad de la máquina: en llvmpipe (6 FPS) entra, también con `XDG_DATA_HOME` vacío (comprobado), y en la CI no, así que con la holgura de 50 la prueba fallaba en unas máquinas y pasaba en otras sin que hubiera cambiado el balón. Sube un techo, así que se dice: no es una regresión, es dejar de suponer que mide 0.
