@@ -29,7 +29,10 @@ static func tomar(m: MotorJugable, p: Dictionary) -> void:
 	if antes != nuevo:
 		m._contar("traza_posesiones")
 		if antes != -1:
-			var causa := "pase" if m._pase_eq == antes else "robo"
+			## Causa de la pérdida (ciclo 10, afinada): `pase` = un pase suyo en vuelo lo corta el rival; `tiro` = un remate suyo en vuelo; `entrada` = entrada con éxito hace <0,2 s;
+			## `suelto` = recoge un balón que ya no tenía dueño (rechace, despeje, toque largo, balón dividido); `directo` = se lo quitan con el balón aún en sus pies por otra vía.
+			var tiro_suyo := not m._tiro_vivo.is_empty() and (0 if bool((m._tiro_vivo["p"] as Dictionary)["es_local"]) else 1) == antes
+			var causa := "pase" if m._pase_eq == antes else ("tiro" if tiro_suyo else ("entrada" if m.t - float(m.get_meta("_traza_ent", -9.0)) < 0.2 else ("suelto" if m.poseedor.is_empty() else "directo")))
 			m._contar("traza_perdida_%s_%s" % [zona(m, antes), causa])
 	e["eq"] = nuevo
 

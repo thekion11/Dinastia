@@ -126,6 +126,7 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 		exito *= 0.55
 	if p == usuario:
 		stats["entradas"] += 1
+	_contar("traza_entrada_intento")   ## ciclo 10: solo cuenta
 	var de_lado := absf((pos(victima) - pos(p)).normalized().dot(Vector3(sin((p["node"] as Node3D).rotation.y), 0, cos((p["node"] as Node3D).rotation.y)))) < 0.5
 	var gesto_e := "entrada_de_pie"
 	if barrida:
@@ -142,6 +143,8 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 	if r < exito:
 		if p == usuario:
 			stats["entradas_ok"] += 1
+		_contar("traza_entrada_exito")
+		set_meta("_traza_ent", self.t)
 		poseedor = {}
 		ultimo_toque = p
 		_offside = {}
