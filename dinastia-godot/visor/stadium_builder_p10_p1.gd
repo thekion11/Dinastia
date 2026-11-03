@@ -10,7 +10,7 @@ extends "res://visor/estadio_partes_tribuna.gd"
 ## (3-11, el prólogo no cargaba en el móvil) El estadio de la ciudad cede el hilo entre zonas para que ninguna pieza
 ## congele la pantalla más de ~0,5 s: `ceder` es el `CityBuilder` que construye por partes; los demás llamantes
 ## (partido, visor, cinemática) lo dejan en `null` y `build` corre de un tirón, como siempre.
-static var ceder: CityBuilder = null
+static var ceder = null
 static var _t_ceder := 0
 
 static func _ceder_paso() -> void:

@@ -9,11 +9,11 @@ const MEDIO_ANCHO := 8.5   ## la rampa mide 16 m
 ## Cada peaje: {p: centro en la rampa, n: dirección hacia la ciudad (sube a la autopista quien va en -n), a: distancia con signo del último fotograma}.
 static var puntos: Array[Dictionary] = []
 
-static func montar(b: CityBuilder, enlaces: Array, alto: float, ancho: float, rampa: float) -> void:
+static func montar(b, enlaces: Array, alto: float, ancho: float, rampa: float) -> void:
 	puntos.clear()
-	var gris := b._mat_simple(Color(0.62, 0.63, 0.65), 0.6)
-	var rojo := b._mat_simple(Color(0.78, 0.12, 0.1), 0.6)
-	var cartel := b._mat_simple(Color(0.05, 0.28, 0.5), 0.7)
+	var gris = b._mat_simple(Color(0.62, 0.63, 0.65), 0.6)
+	var rojo = b._mat_simple(Color(0.78, 0.12, 0.1), 0.6)
+	var cartel = b._mat_simple(Color(0.05, 0.28, 0.5), 0.7)
 	for e: Vector3 in enlaces:
 		var n := -e.normalized()
 		var lat := Vector3(-n.z, 0, n.x)
@@ -49,7 +49,7 @@ static func sube(punto: Dictionary, antes: Vector3, ahora: Vector3) -> bool:
 static var _antes := Vector3(1e9, 0, 0)
 
 ## Cada fotograma en coche: cobra si cruzó un peaje hacia arriba.
-static func vigilar(vida: VidaCiudad, pos: Vector3) -> void:
+static func vigilar(vida, pos: Vector3) -> void:
 	var previo := _antes
 	_antes = pos
 	if previo.x > 1e8:
@@ -59,7 +59,7 @@ static func vigilar(vida: VidaCiudad, pos: Vector3) -> void:
 			cobrar(vida)
 			return
 
-static func cobrar(vida: VidaCiudad) -> bool:
+static func cobrar(vida) -> bool:
 	var m: Mundo = vida.mundo
 	if m == null or m.roles == null:
 		return false

@@ -120,7 +120,7 @@ func desde_estado(estado: Dictionary) -> void:
 		desde_dic(estado["config"] as Dictionary)
 
 ## ¿Se funda un club (y entonces el nombre se elige aquí)? La misma regla que
-## `OrquestadorMundo.crea_club()` sin mirar «config», que es lo que emite esta etapa.
+## `CargaCiudad.de("OrquestadorMundo").crea_club()` sin mirar «config», que es lo que emite esta etapa.
 static func _pide_crear(estado: Dictionary) -> bool:
 	var modo: Variant = estado.get("modo")
 	if (modo is String and String(modo) == "creador") or (modo is Dictionary and
@@ -141,7 +141,7 @@ func _leer_maquina() -> void:
 		var f := int(cf.get_value("pantalla", "fps", fps))
 		fps = f if f in FPS else 60
 		contador_fps = bool(cf.get_value("pantalla", "contador_fps", contador_fps))
-	var d := String(AjustesCiudad.valor("densidad", densidad))
+	var d = String(CargaCiudad.de("AjustesCiudad").valor("densidad", densidad))
 	densidad = d if DENSIDADES.has(d) else "media"
 
 ## LO QUE SE VE ES LO QUE QUEDA. El escudo y la camiseta «por sorteo» salen del
@@ -394,5 +394,5 @@ static func aplicar_maquina(config: Dictionary, ruta_prefs: String = PREFS, arbo
 	var den := String(d.get("densidad", "media"))
 	if not DENSIDADES.has(den):
 		den = "media"
-	AjustesCiudad.guardar("densidad", den)
-	AjustesCiudad.guardar("densidad_factor", float(DENSIDADES[den][2]))
+	CargaCiudad.de("AjustesCiudad").guardar("densidad", den)
+	CargaCiudad.de("AjustesCiudad").guardar("densidad_factor", float(DENSIDADES[den][2]))

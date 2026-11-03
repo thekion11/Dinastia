@@ -331,7 +331,7 @@ func _operador(raiz: Node3D, pos: Vector3, lado: float) -> void:
 	FutbolistaQ.terminar(d, false)
 	PersonajeDT.adelgazar(d, false)
 	var piel := Color("b98a66") if lado < 0 else Color("7a5238")
-	var pelo_col: Color = PeatonQ.PELOS[rng.randi() % 3]
+	var pelo_col: Color = CargaCiudad.de("PeatonQ").PELOS[rng.randi() % 3]
 	var polo := Color("1b1f27")
 	var ribete := Color("3fa9f5")
 	var pant := Color("22252c")
@@ -356,9 +356,9 @@ func _operador(raiz: Node3D, pos: Vector3, lado: float) -> void:
 	if ap.has_animation("sentado"):
 		ap.play("sentado")
 	## Sentado de verdad: la cadera sobre el asiento (como en los bancos del
-	## metro, `MetroCiudad.altura_cadera`), no flotando a la altura de pie.
+	## metro, `CargaCiudad.de("MetroCiudad").altura_cadera`), no flotando a la altura de pie.
 	const ASIENTO := 0.48
-	var cadera := MetroCiudad.altura_cadera(nodo)
+	var cadera = CargaCiudad.de("MetroCiudad").altura_cadera(nodo)
 	if cadera > 0.0:
 		nodo.position.y = pos.y + ASIENTO + 0.08 - cadera * 0.99
 	## La silla de oficina: asiento, respaldo (detrás: el operador mira a −Z),

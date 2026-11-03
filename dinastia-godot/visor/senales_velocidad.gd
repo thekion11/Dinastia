@@ -48,11 +48,11 @@ static func textura(v: int) -> ImageTexture:
 	return t
 
 ## Pone las señales en los cruces de `ex` y devuelve cuántas.
-static func montar(ex: CiudadExpansion) -> int:
-	var b := ex.b
+static func montar(ex) -> int:
+	var b = ex.b
 	var por_valor: Dictionary = {}   ## límite -> [Transform3D]
 	var postes: Array[Transform3D] = []
-	var off := CiudadExpansion.ANCHO_AV * 0.5 + 1.2 + 4.5
+	var off = CargaCiudad.de("CiudadExpansion").ANCHO_AV * 0.5 + 1.2 + 4.5
 	var n := 0
 	for i in ex.cruces_semaforo.size():
 		if i % CADA != 0:
@@ -60,7 +60,7 @@ static func montar(ex: CiudadExpansion) -> int:
 		var p: Vector3 = ex.cruces_semaforo[i]
 		var v := limite(p)
 		## [posición relativa, hacia dónde mira (al tráfico que llega)]
-		for par: Array in [[Vector3(off, 0, CiudadExpansion.ANCHO_AV * 0.5 + 1.2), Vector3(1, 0, 0)], [Vector3(-(CiudadExpansion.ANCHO_AV * 0.5 + 1.2), 0, off), Vector3(0, 0, 1)]]:
+		for par: Array in [[Vector3(off, 0, CargaCiudad.de("CiudadExpansion").ANCHO_AV * 0.5 + 1.2), Vector3(1, 0, 0)], [Vector3(-(CargaCiudad.de("CiudadExpansion").ANCHO_AV * 0.5 + 1.2), 0, off), Vector3(0, 0, 1)]]:
 			var base: Vector3 = p + par[0]
 			var fd: Vector3 = par[1]
 			postes.append(Transform3D(Basis.from_scale(Vector3(0.07, 2.4, 0.07)), base + Vector3(0, 1.2, 0)))

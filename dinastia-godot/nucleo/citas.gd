@@ -20,7 +20,7 @@ const BONO_PATROCINIO := 0.05     ## +5 % de renta la zona firmada en persona
 const BONO_JUNTA := 1             ## +1 de confianza por dar la cara en el despacho
 const DIAS := ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 ## tipo → dónde y cuándo. `donde` "estadio" = zona del edificio del club (con planta);
-## "ciudad" = punto de `CityBuilder.puntos_clic` (clave `ciudad_<uso>`).
+## "ciudad" = punto de `CargaCiudad.de("CityBuilder").puntos_clic` (clave `ciudad_<uso>`).
 const TIPOS := {
 	"junta": {"icono": "🏛️", "dia": 1, "hora": 11, "donde": "estadio", "lugar": "Despacho del presidente", "planta": 1, "nombre_lugar": "el despacho del presidente"},
 	"patrocinio": {"icono": "🤝", "dia": 2, "hora": 16, "donde": "ciudad", "lugar": "ciudad_centro_comercial", "planta": 0, "nombre_lugar": "el centro comercial"},

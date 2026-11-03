@@ -158,7 +158,7 @@ static func menu_por_id(id: String) -> Dictionary:
 static func ejecutar(p: Principal, accion: String) -> void:
 	match accion:
 		"casa":
-			CasaEscena3D.abrir(p, p.mundo, p.get("_bandeja"))
+			CargaCiudad.de("CasaEscena3D").abrir(p, p.mundo, p.get("_bandeja"))
 		"movil":
 			Telefono.abrir(p, p.mundo)
 		"ver_estadio":

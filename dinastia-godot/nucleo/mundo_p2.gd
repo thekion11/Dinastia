@@ -379,7 +379,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	banco.dueno = weakref(self)   ## para que el banco sepa de los desafíos («Sin dinero»)
 	auspicio = Auspicio.new(self)
 	comercial = Comercial.new(self)
-	ciudad = Ciudad.new(self)
+	ciudad = CargaCiudad.de("Ciudad").new(self)
 	comercial.generar_ofertas_zona(mi_club(), roles.multiplicador_sponsor() if roles != null else 1.0)
 	comercial.generar_ofertas_naming(mi_club())
 	citas.semana(self, semana)   ## fase 4: las citas de la primera semana

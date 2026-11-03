@@ -31,20 +31,20 @@ const CINTA := 2.2
 static var en_ciudad := false
 
 static func trazado(est: Dictionary) -> Dictionary:
-	var o := CityBuilder.ESTADIO_EN
+	var o = CargaCiudad.de("CityBuilder").ESTADIO_EN
 	var xa := float(est.get("x0", 0.0)) + TunelVestuario.PUERTA_X
-	var xb := X_SALIDA - o.x
+	var xb = X_SALIDA - o.x
 	## Si la puerta cae casi encima de la escalera, todo recto.
 	if absf(xb - xa) < MEDIO * 2.0 + 1.0:
 		xb = xa
-	var zc := Z_CRUCE - o.z
+	var zc = Z_CRUCE - o.z
 	return {"xa": xa, "xb": xb, "z0": float(est.get("z_fin", 0.0)), "zc": zc,
 		"z_esc": zc + MEDIO, "z_arriba": zc + MEDIO + LARGO_ESCALERA}
 
 ## Dónde se sale (y se entra) en la calle, en coordenadas del MUNDO.
 static func boca_mundo(est: Dictionary) -> Vector3:
 	var t := trazado(est)
-	return CityBuilder.ESTADIO_EN + Vector3(float(t["xb"]), 0.0, float(t["z_arriba"]))
+	return CargaCiudad.de("CityBuilder").ESTADIO_EN + Vector3(float(t["xb"]), 0.0, float(t["z_arriba"]))
 
 static func zonas(est: Dictionary) -> Array:
 	var t := trazado(est)
