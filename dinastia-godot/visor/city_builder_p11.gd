@@ -186,7 +186,7 @@ func build(d: Dictionary) -> void:
 	await _marca("expansion.construir")
 	var tardio := diferir   ## (2-11) prólogo: lo que no se ve en los primeros segundos se construye DESPUÉS (`_resto`)
 	if not tardio:
-		_karting()
+		await _karting()
 		await _marca("_karting")
 	_arbolado()
 	await _marca("_arbolado")
@@ -237,7 +237,7 @@ func _resto() -> void:
 	por_partes = true   ## (3-11) quien llamó a `build` lo apaga al volver: sin esto todo lo diferido corría en UN fotograma (~3 s en el servidor, ~30 s en un teléfono)
 	_t_respiro = Time.get_ticks_usec()
 	await ExpansionTardia.precargar_vehiculos(self)
-	_karting()
+	await _karting()
 	await _marca("_karting")
 	_trafico()
 	await _marca("_trafico")
