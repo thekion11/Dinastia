@@ -120,3 +120,8 @@ Coste visual: más suave (rótulos de vallas y líneas finas); el HUD 2D no se e
 - Total del partido en MÍNIMO (TV, 640x360): **454 k → 376 k triángulos (−17 %)**, mismas llamadas (542).
 - La resolución del 3D en MÍNIMO ya es elegible en Ajustes → Dispositivo (35-100 %, por defecto 50 %; se guarda en `grafica/escala_minimo`). Para medir sin tocar Ajustes: variable `ESCALA3D=0.35`.
   Fotograma del mismo partido a 1280x720 (llvmpipe, limitado por relleno): 70 % 754 ms · 50 % 518 ms · 35 % 414 ms.
+
+## R2 tanda 3 (3-11) — el entorno exterior del estadio, tapado en MÍNIMO
+Medido con `OCULTAR=EntornoEstadio` (partido, TV, MÍNIMO, 640x360): **560 → 337 llamadas (−40 %), 451 k → 366 k triángulos**, sin cambio visible (las tribunas lo tapan).
+`EntornoOclusion` lo oculta solo en MÍNIMO, en estadios cerrados y mientras la cámara está dentro del recinto a menos de 45 m de altura; fuera o más alto vuelve a verse. Captura 1280x720 idéntica (559 → 335 llamadas).
+Herramientas nuevas en `medir_partido`: `LISTA_MM=1` (mallas/multimallas por nombre con triángulos potenciales) y más grupos de `PARTES` (el método de apagar-y-comparar sale desordenado a partir de «sombras»: úsalo con `OCULTAR=` para medir una pieza suelta).
