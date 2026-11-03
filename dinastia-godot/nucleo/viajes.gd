@@ -138,3 +138,30 @@ static func dia_de_partido_euros(pais: String, gente: int, aforo: int) -> Dictio
 
 static func dia_de_partido_interno(pais: String, gente: int, aforo: int) -> int:
 	return int(round(float(dia_de_partido_euros(pais, gente, aforo)["total"]) * ESCALA_JUEGO / Eco.ECO))
+
+# ----------------------------------------------------------------- LO QUE SE VE (U6, 3-11)
+## El desglose del viaje y del día de partido en texto, para la previa del partido y la línea de Finanzas: antes todo esto se descontaba de la caja sin que
+## el jugador viera de dónde salía. Los importes van en dinero del juego (lo que se descuenta), no en euros reales.
+static func _en_juego(euros: float) -> String:
+	return Eco.dinero(euros * ESCALA_JUEGO / Eco.ECO)
+
+static func nombre_medio(m: String) -> String:
+	return Idiomas.t({"bus": "autocar", "avion": "avión", "charter": "chárter"}.get(m, m))
+
+## Previa de un partido FUERA: adónde, cuántos km, en qué, cuántas noches, quiénes viajan y el coste desglosado.
+static func linea_previa_fuera(sede: String, v: Dictionary) -> String:
+	return Idiomas.t("✈ Viaje a %s: %d km en %s, %d noche(s) de hotel, delegación de %d personas. Transporte %s + hotel %s + dietas %s = %s.") % [
+		sede, int(v["km"]), nombre_medio(String(v["medio"])), int(v["noches"]), int(v["personas"]),
+		_en_juego(float(v["transporte"])), _en_juego(float(v["hotel"])), _en_juego(float(v["dietas"])), _en_juego(float(v["total"]))]
+
+## Previa de un partido EN CASA: lo que cuesta abrir el estadio ese día.
+static func linea_previa_casa(d: Dictionary) -> String:
+	return Idiomas.t("🏟 Día de partido en casa: seguridad %s + limpieza %s + personal %s + sanitario %s + apertura %s = %s.") % [
+		_en_juego(float(d["seguridad"])), _en_juego(float(d["limpieza"])), _en_juego(float(d["personal"])),
+		_en_juego(float(d["sanitario"])), _en_juego(float(d["apertura"])), _en_juego(float(d["total"]))]
+
+## La línea de Finanzas «Viajes a domicilio»: cómo sale un viaje típico por tu país.
+static func linea_finanzas(v: Dictionary) -> String:
+	return Idiomas.t("Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).") % [
+		int(v["km"]), nombre_medio(String(v["medio"])), int(v["noches"]), int(v["personas"]),
+		_en_juego(float(v["transporte"])), _en_juego(float(v["hotel"])), _en_juego(float(v["dietas"])), _en_juego(float(v["total"]))]

@@ -7084,7 +7084,13 @@
   "El cuadro de la copa nacional.": "The national cup bracket.",
   "Renovaciones, cláusulas y salidas.": "Renewals, clauses and departures.",
   "Academia, camada del año y los que suben.": "Academy, this year's intake and those moving up.",
-  "Convocatorias y torneos de selecciones.": "Call-ups and national team tournaments."
+  "Convocatorias y torneos de selecciones.": "Call-ups and national team tournaments.",
+  "autocar": "coach",
+  "avión": "plane",
+  "chárter": "charter flight",
+  "✈ Viaje a %s: %d km en %s, %d noche(s) de hotel, delegación de %d personas. Transporte %s + hotel %s + dietas %s = %s.": "✈ Trip to %s: %d km by %s, %d hotel night(s), delegation of %d people. Transport %s + hotel %s + meals %s = %s.",
+  "🏟 Día de partido en casa: seguridad %s + limpieza %s + personal %s + sanitario %s + apertura %s = %s.": "🏟 Home matchday: security %s + cleaning %s + staff %s + medical %s + stadium opening %s = %s.",
+  "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "A typical trip within your country: %d km by %s, %d night(s), %d people (transport %s + hotel %s + meals %s = %s)."
  },
  "pt": {
   "Historia": "História",
@@ -14171,7 +14177,13 @@
   "El cuadro de la copa nacional.": "O quadro da taça nacional.",
   "Renovaciones, cláusulas y salidas.": "Renovações, cláusulas e saídas.",
   "Academia, camada del año y los que suben.": "Academia, a fornada do ano e os que sobem.",
-  "Convocatorias y torneos de selecciones.": "Convocatórias e torneios de seleções."
+  "Convocatorias y torneos de selecciones.": "Convocatórias e torneios de seleções.",
+  "autocar": "autocarro",
+  "avión": "avião",
+  "chárter": "voo fretado",
+  "✈ Viaje a %s: %d km en %s, %d noche(s) de hotel, delegación de %d personas. Transporte %s + hotel %s + dietas %s = %s.": "✈ Viagem a %s: %d km de %s, %d noite(s) de hotel, comitiva de %d pessoas. Transporte %s + hotel %s + refeições %s = %s.",
+  "🏟 Día de partido en casa: seguridad %s + limpieza %s + personal %s + sanitario %s + apertura %s = %s.": "🏟 Dia de jogo em casa: segurança %s + limpeza %s + pessoal %s + sanitário %s + abertura %s = %s.",
+  "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Uma viagem típica pelo seu país: %d km de %s, %d noite(s), %d pessoas (transporte %s + hotel %s + refeições %s = %s)."
  },
  "patrones": [
   [
@@ -27035,7 +27047,13 @@
   "El cuadro de la copa nacional.": "Le tableau de la coupe nationale.",
   "Renovaciones, cláusulas y salidas.": "Prolongations, clauses et départs.",
   "Academia, camada del año y los que suben.": "Académie, la promotion de l'année et ceux qui montent.",
-  "Convocatorias y torneos de selecciones.": "Convocations et tournois de sélections."
+  "Convocatorias y torneos de selecciones.": "Convocations et tournois de sélections.",
+  "autocar": "autocar",
+  "avión": "avion",
+  "chárter": "vol charter",
+  "✈ Viaje a %s: %d km en %s, %d noche(s) de hotel, delegación de %d personas. Transporte %s + hotel %s + dietas %s = %s.": "✈ Déplacement à %s : %d km en %s, %d nuit(s) d'hôtel, délégation de %d personnes. Transport %s + hôtel %s + repas %s = %s.",
+  "🏟 Día de partido en casa: seguridad %s + limpieza %s + personal %s + sanitario %s + apertura %s = %s.": "🏟 Jour de match à domicile : sécurité %s + nettoyage %s + personnel %s + santé %s + ouverture %s = %s.",
+  "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Un déplacement typique dans ton pays : %d km en %s, %d nuit(s), %d personnes (transport %s + hôtel %s + repas %s = %s)."
  },
  "it": {
   "Historia": "Storia",
@@ -34122,7 +34140,13 @@
   "El cuadro de la copa nacional.": "Il tabellone della coppa nazionale.",
   "Renovaciones, cláusulas y salidas.": "Rinnovi, clausole e partenze.",
   "Academia, camada del año y los que suben.": "Accademia, la leva dell'anno e chi sale.",
-  "Convocatorias y torneos de selecciones.": "Convocazioni e tornei per nazionali."
+  "Convocatorias y torneos de selecciones.": "Convocazioni e tornei per nazionali.",
+  "autocar": "pullman",
+  "avión": "aereo",
+  "chárter": "volo charter",
+  "✈ Viaje a %s: %d km en %s, %d noche(s) de hotel, delegación de %d personas. Transporte %s + hotel %s + dietas %s = %s.": "✈ Trasferta a %s: %d km in %s, %d notte/i d'albergo, comitiva di %d persone. Trasporto %s + albergo %s + pasti %s = %s.",
+  "🏟 Día de partido en casa: seguridad %s + limpieza %s + personal %s + sanitario %s + apertura %s = %s.": "🏟 Giorno di partita in casa: sicurezza %s + pulizia %s + personale %s + sanitario %s + apertura %s = %s.",
+  "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Una trasferta tipica nel tuo paese: %d km in %s, %d notte/i, %d persone (trasporto %s + albergo %s + pasti %s = %s)."
  },
  "de": {
   "Historia": "Geschichte",
@@ -41209,7 +41233,13 @@
   "El cuadro de la copa nacional.": "Der Turnierbaum des nationalen Pokals.",
   "Renovaciones, cláusulas y salidas.": "Verlängerungen, Klauseln und Abgänge.",
   "Academia, camada del año y los que suben.": "Akademie, der Jahrgang und wer aufrückt.",
-  "Convocatorias y torneos de selecciones.": "Nominierungen und Turniere der Nationalteams."
+  "Convocatorias y torneos de selecciones.": "Nominierungen und Turniere der Nationalteams.",
+  "autocar": "Reisebus",
+  "avión": "Flugzeug",
+  "chárter": "Charterflug",
+  "✈ Viaje a %s: %d km en %s, %d noche(s) de hotel, delegación de %d personas. Transporte %s + hotel %s + dietas %s = %s.": "✈ Reise nach %s: %d km per %s, %d Hotelnacht/-nächte, Delegation von %d Personen. Transport %s + Hotel %s + Verpflegung %s = %s.",
+  "🏟 Día de partido en casa: seguridad %s + limpieza %s + personal %s + sanitario %s + apertura %s = %s.": "🏟 Heimspieltag: Sicherheit %s + Reinigung %s + Personal %s + Sanitäter %s + Stadionöffnung %s = %s.",
+  "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Eine typische Reise im eigenen Land: %d km per %s, %d Nacht/Nächte, %d Personen (Transport %s + Hotel %s + Verpflegung %s = %s)."
  },
  "ca": {
   "Historia": "Història",
@@ -48296,7 +48326,13 @@
   "El cuadro de la copa nacional.": "El quadre de la copa nacional.",
   "Renovaciones, cláusulas y salidas.": "Renovacions, clàusules i sortides.",
   "Academia, camada del año y los que suben.": "Acadèmia, la fornada de l'any i els que pugen.",
-  "Convocatorias y torneos de selecciones.": "Convocatòries i tornejos de seleccions."
+  "Convocatorias y torneos de selecciones.": "Convocatòries i tornejos de seleccions.",
+  "autocar": "autocar",
+  "avión": "avió",
+  "chárter": "vol xàrter",
+  "✈ Viaje a %s: %d km en %s, %d noche(s) de hotel, delegación de %d personas. Transporte %s + hotel %s + dietas %s = %s.": "✈ Viatge a %s: %d km en %s, %d nit(s) d'hotel, delegació de %d persones. Transport %s + hotel %s + dietes %s = %s.",
+  "🏟 Día de partido en casa: seguridad %s + limpieza %s + personal %s + sanitario %s + apertura %s = %s.": "🏟 Dia de partit a casa: seguretat %s + neteja %s + personal %s + sanitari %s + obertura %s = %s.",
+  "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Un viatge típic pel teu país: %d km en %s, %d nit(s), %d persones (transport %s + hotel %s + dietes %s = %s)."
  },
  "pl": {
   "Club": "Klub",
@@ -55652,7 +55688,13 @@
   "El cuadro de la copa nacional.": "Drabinka krajowego pucharu.",
   "Renovaciones, cláusulas y salidas.": "Przedłużenia, klauzule i odejścia.",
   "Academia, camada del año y los que suben.": "Akademia, tegoroczny rocznik i awansujący.",
-  "Convocatorias y torneos de selecciones.": "Powołania i turnieje reprezentacji."
+  "Convocatorias y torneos de selecciones.": "Powołania i turnieje reprezentacji.",
+  "autocar": "autokar",
+  "avión": "samolot",
+  "chárter": "lot czarterowy",
+  "✈ Viaje a %s: %d km en %s, %d noche(s) de hotel, delegación de %d personas. Transporte %s + hotel %s + dietas %s = %s.": "✈ Wyjazd do %s: %d km (%s), %d nocleg(i) w hotelu, delegacja %d osób. Transport %s + hotel %s + wyżywienie %s = %s.",
+  "🏟 Día de partido en casa: seguridad %s + limpieza %s + personal %s + sanitario %s + apertura %s = %s.": "🏟 Dzień meczowy u siebie: ochrona %s + sprzątanie %s + personel %s + służby medyczne %s + otwarcie stadionu %s = %s.",
+  "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Typowy wyjazd po twoim kraju: %d km (%s), %d nocleg(i), %d osób (transport %s + hotel %s + wyżywienie %s = %s)."
  },
  "tr": {
   "Club": "Kulüp",
@@ -63008,6 +63050,12 @@
   "El cuadro de la copa nacional.": "Ulusal kupanın eşleşme tablosu.",
   "Renovaciones, cláusulas y salidas.": "Yenilemeler, maddeler ve ayrılıklar.",
   "Academia, camada del año y los que suben.": "Akademi, bu yılın grubu ve yükselenler.",
-  "Convocatorias y torneos de selecciones.": "Kadro davetleri ve milli takım turnuvaları."
+  "Convocatorias y torneos de selecciones.": "Kadro davetleri ve milli takım turnuvaları.",
+  "autocar": "otobüs",
+  "avión": "uçak",
+  "chárter": "charter uçuşu",
+  "✈ Viaje a %s: %d km en %s, %d noche(s) de hotel, delegación de %d personas. Transporte %s + hotel %s + dietas %s = %s.": "✈ %s deplasmanı: %d km, %s ile, %d gece otel, %d kişilik heyet. Ulaşım %s + otel %s + yemek %s = %s.",
+  "🏟 Día de partido en casa: seguridad %s + limpieza %s + personal %s + sanitario %s + apertura %s = %s.": "🏟 Evde maç günü: güvenlik %s + temizlik %s + personel %s + sağlık %s + stat açılışı %s = %s.",
+  "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Ülkende tipik bir deplasman: %d km, %s ile, %d gece, %d kişi (ulaşım %s + otel %s + yemek %s = %s)."
  }
 }
