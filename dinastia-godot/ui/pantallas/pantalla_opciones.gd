@@ -278,10 +278,10 @@ func _pintar_velocidad_partido() -> void:
 	## Del 1 al 3: "Pausa" (índice 0) no tiene sentido como velocidad de
 	## arranque -nadie quiere que el partido empiece parado-, igual que el
 	## HTML se salta esa opción en este mismo selector.
-	for i in range(1, load("res://ui/partido_vivo.gd").VELOCIDADES.size()):
+	for i in range(1, VelocidadesPartido.LISTA.size()):
 		var idx := i
 		var b := Button.new()
-		b.text = String(load("res://ui/partido_vivo.gd").VELOCIDADES[i]["txt"])
+		b.text = String(VelocidadesPartido.LISTA[i]["txt"])
 		b.toggle_mode = true
 		b.button_pressed = (p._velocidad_partido == idx)
 		b.custom_minimum_size = Vector2(90, 30)
