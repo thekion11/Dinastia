@@ -229,6 +229,7 @@ static func _aparcamiento(e: Node3D, centro: Vector3, a_lo_largo_z: bool, largo:
 	var acostada := Basis(Vector3.RIGHT, -PI * 0.5)
 	var giro_r := Basis() if a_lo_largo_z else Basis(Vector3.UP, PI * 0.5)
 	var plazas := int(largo / 2.7)
+	var hechos := 0   ## MÍNIMO: de cada 3 coches se queda 1 (cada coche son ~2 llamadas de dibujo; el azar se gasta igual y el resto sale idéntico)
 	for hilera: float in [-1.0, 1.0]:
 		for i in plazas:
 			var a := -largo * 0.5 + float(i) * 2.7
@@ -239,6 +240,10 @@ static func _aparcamiento(e: Node3D, centro: Vector3, a_lo_largo_z: bool, largo:
 			if flota.is_empty() or rng.randf() > 0.62:
 				continue
 			var coche = CargaCiudad.de("CityBuilder").instanciar_coche(flota[rng.randi() % flota.size()], rng)
+			hechos += 1
+			if Calidad.elegida <= Calidad.MINIMO and hechos % 3 != 0:
+				coche.free()
+				continue
 			coche.position = centro + pos
 			## Aparcados de morro hacia el pasillo central (cada hilera mira a la otra).
 			var mira: float = -hilera
