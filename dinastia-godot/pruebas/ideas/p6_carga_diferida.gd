@@ -15,6 +15,11 @@ func _huella(diferir: bool, prologo := true) -> Dictionary:
 	await vista.abrir(club, m.obras, m.ciudad, m.perfil_estadio_de(club))
 	var ms_visible := Time.get_ticks_msec() - t0
 	var cb := vista.get("_ciudad") as CityBuilder
+	## El día se para a las 13:00: con el ciclo en marcha, los faros (que solo se crean de noche) y los móviles y maletines de los peatones
+	## dependen del reloj de pared, y en el CI (lento) el árbol salía distinto aunque la ciudad fuera la misma (3-11).
+	vista.set("_ciclo_activo", false)
+	vista.set("_hora", 13.0)
+	vista.call("_aplicar_hora")
 	var espera := 0
 	while not cb.completa and espera < 4000:
 		await get_tree().process_frame
@@ -38,7 +43,7 @@ func _huella(diferir: bool, prologo := true) -> Dictionary:
 		multis += 1
 		instancias += (n as MultiMeshInstance3D).multimesh.instance_count
 	for n in cb.find_children("*", "MeshInstance3D", true, false):
-		if String(n.get_parent().name) != PeatonVida.NOMBRE_MOVIL:   ## el móvil que sacan los peatones al pararse es vida en marcha (3-11)
+		if not _de_hueso(n):   ## el móvil que sacan los peatones al pararse es vida en marcha (3-11)
 			mallas += 1
 	var nombres := {}
 	for n in cb.find_children("*", "", true, false):
@@ -56,6 +61,16 @@ func _huella(diferir: bool, prologo := true) -> Dictionary:
 	CityBuilder.diferir = false
 	await get_tree().process_frame
 	return d
+
+## Lo que cuelga de un hueso (móvil, maletín, paraguas, zapatillas de los peatones) es vida en marcha: depende de cuánto tiempo lleva
+## andando cada peatón (pausas al azar por tiempo de juego), no de qué se construyó; en el CI, más lento, salían ~170 mallas menos (3-11).
+func _de_hueso(n: Node) -> bool:
+	var p := n.get_parent()
+	while p != null:
+		if p is BoneAttachment3D:
+			return true
+		p = p.get_parent()
+	return false
 
 ## Iguales con un 1 % de margen.
 func _casi(x: Variant, y: Variant) -> bool:
