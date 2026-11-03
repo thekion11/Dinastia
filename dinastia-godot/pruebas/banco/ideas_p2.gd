@@ -340,3 +340,36 @@ func _probar_pantalla_ampliada() -> void:
 	b.free()   ## otra pantalla la borra sin cerrarla
 	_comprobar(is_instance_valid(bloque) and not b.is_ancestor_of(bloque) if is_instance_valid(b) else is_instance_valid(bloque), "si la borran sin cerrar, el bloque no muere con ella (vuelve al siguiente momento libre)")
 	raiz.queue_free()
+
+func _probar_funciones_escondidas() -> void:
+	_titulo("ORDEN 22 U6: LO QUE EXISTÍA Y NO SE USABA (cesión de prensa, roles del once, cantera)")
+	var m := Mundo.new()
+	m.generar(["CHI"], 3111)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var mio := m.mi_club()
+	var joven: Jugador = null
+	for j: Jugador in mio.plantilla:
+		if j.edad <= 21:
+			joven = j
+			break
+	if joven == null:
+		joven = mio.plantilla[0]
+		joven.edad = 19
+	while mio.plantilla.size() <= 18:
+		mio.plantilla.append(mio.plantilla[0])
+	var cedio := m.prensa._ceder(m, mio, joven)
+	_comprobar(cedio and m.cesiones.esta_cedido(joven.id) and not m.prensa.cesiones.has(joven.id), "la cesión de un evento de prensa se firma en Cesiones (la que se resuelve)")
+	m.cesiones.resolver(m.anio + 1)
+	_comprobar(joven.club_id == mio.id and not m.cesiones.esta_cedido(joven.id), "y al cambiar de temporada el chico vuelve a casa")
+	var ok := true
+	for k: String in RolTactico.DE_VESTUARIO:
+		var t: Variant = (Datos.tabla("ROLES") as Dictionary).get(k)
+		ok = ok and t != null and RolTactico.existe(String(RolTactico.DE_VESTUARIO[k])) and String((t as Array)[1]) == String(RolTactico.CATALOGO[RolTactico.DE_VESTUARIO[k]]["grupo"])
+	_comprobar(ok and RolTactico.DE_VESTUARIO.size() == (Datos.tabla("ROLES") as Dictionary).size(), "cada rol de la pantalla de Táctica tiene su rol del partido, de la misma línea")
+	var por: Jugador = null
+	for j: Jugador in mio.once():
+		if Datos.grupo(j.pos_e) == "POR":
+			por = j
+	if por != null:
+		_comprobar(mio.tactica.poner_rol(por, String(RolTactico.DE_VESTUARIO["porLibero"])) == "" and mio.tactica.roles.has(por.id), "elegir «Portero-líbero» llega a Tactica.roles (lo que lee el partido)")
+	_comprobar(m.roles.subir_al_primer_equipo(joven) != "", "subir al primer equipo solo vale siendo director de cantera (si no, dice por qué)")
