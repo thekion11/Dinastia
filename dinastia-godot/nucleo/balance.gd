@@ -137,3 +137,11 @@ const FACTOR_TAQUILLA := 3.5
 ## mitad por reputación. Ojo: la cuota del «club medio» (rep 70) no sirve de parte igual: la media de la
 ## Primera chilena es 0,64 M/mes, el doble de la del rep 70, porque la arrastran los tres grandes.
 const REPARTO_TV_IGUAL := 0.5   ## activado el 26-10 (decisión del dueño)
+
+## PENALES EN PARTIDO (2-11, sonda `pruebas/ideas/sonda_penales.tscn`: objetivo ~75 % marcados, ~17-20 % parados, el resto fuera o al palo).
+## A dónde apunta la IA (fracción del arco; 1 = el palo), cuánto del error de un tiro cualquiera conserva (quieto y a 11 m) y la parte fija de la
+## probabilidad de que el portero pare cuando adivinó el lado (`PenalPortero`).
+const PENAL_IA_X := 1.0
+const PENAL_ERROR := 0.8
+const PENAL_PARA := 0.38
+
