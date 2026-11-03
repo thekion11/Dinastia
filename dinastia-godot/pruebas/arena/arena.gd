@@ -33,6 +33,7 @@ var _t := 0.0
 var _duracion := 0.0
 var _proximo_toque := 1.0
 var _capturada := false
+var _cpu_ini: Dictionary = {}
 
 static func _env(nombre: String, defecto: String) -> String:
 	var v := OS.get_environment(nombre)
@@ -146,10 +147,22 @@ func _process(delta: float) -> void:
 			_motor.vel_balon = hacia.normalized() * (rng.randf_range(14.0, 26.0) if modo == "porteria" else rng.randf_range(6.0, 16.0))
 			_motor.vel_balon.y += 3.0
 	_rotulo.text = "ARENA «%s» · ×%.0f · %s\n%s" % [modo, Engine.time_scale, _metricas.resumen_corto(), "1-4 cámara · 0 cuadrícula · T velocidad · Esc salir"]
+	if _cpu_ini.is_empty() and _t >= 4.0:   ## tras el arranque: desde aquí se mide qué hilos trabajan
+		_cpu_ini = ArenaMetricas.cpu_por_hilo()
 	if not _capturada and _t >= 4.0 and _env("CAPTURA", "") != "":
 		_capturada = true
 		get_viewport().get_texture().get_image().save_jpg(_env("CAPTURA", ""), 0.9)
 	if _duracion > 0.0 and _t >= _duracion:
+		print("HILOS por nombre: ", ArenaMetricas.hilos_por_nombre())
+		var ahora := ArenaMetricas.cpu_por_hilo()
+		var trabajo: Array = []
+		for id: String in ahora:
+			var antes: int = int(_cpu_ini[id][1]) if _cpu_ini.has(id) else 0
+			trabajo.append([int(ahora[id][1]) - antes, String(ahora[id][0]), id])
+		trabajo.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0])
+		print("CPU por hilo desde los 4 s (1/100 s de CPU en ~%.0f s):" % (_t - 4.0))
+		for h: Array in trabajo.slice(0, 12):
+			print("  %6d  %-18s tid %s" % [h[0], h[1], h[2]])
 		_metricas.imprimir_resumen()
 		get_tree().quit()
 
