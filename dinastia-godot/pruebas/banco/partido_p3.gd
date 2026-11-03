@@ -355,3 +355,39 @@ func _probar_tiro_fallido() -> void:
 	_comprobar(dentro == 0, "un tiro fallido nunca queda dentro del arco (%d de 200)" % dentro)
 	MotorTiroLimpio._real = antes
 	(r[1] as Node3D).queue_free()
+
+## LA TRAZA DE POSESIONES (03-11-2026, ciclo 9, `MotorTraza`): cuenta dónde y por qué se pierde la posesión y cuántas veces se entra al área; no decide nada.
+func _probar_traza() -> void:
+	_titulo("TRAZA DE POSESIONES Y ENTRADAS AL ÁREA")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var loc: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))[0]
+	var vis: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))[0]
+	motor.diag = {}
+	var d := motor.dir_ataque(true)
+	var arco_z := motor.LARGO * d
+	motor.balon.position = Vector3(0, 0.11, 0)
+	motor._pase_eq = -1
+	MotorTraza.tomar(motor, loc)
+	_comprobar(int(motor.diag.get("traza_posesiones", 0)) == 1, "la primera posesión se cuenta")
+	_comprobar(MotorTraza.zona(motor, 0) == "medio", "el centro del campo es «medio» (%s)" % MotorTraza.zona(motor, 0))
+	motor.balon.position = Vector3(0, 0.11, arco_z - d * 8.0)
+	_comprobar(MotorTraza.zona(motor, 0) == "area" and MotorTraza.zona(motor, 1) == "propio", "a 8 m del arco rival es «area» para el local y «propio» para la visita")
+	MotorTraza.paso(motor)
+	MotorTraza.paso(motor)
+	_comprobar(int(motor.diag.get("traza_entrada_area", 0)) == 1, "una entrada al área cuenta una sola vez aunque el balón siga dentro")
+	## El rival corta un pase del local dentro del área.
+	motor._pase_eq = 0
+	MotorTraza.tomar(motor, vis)
+	_comprobar(int(motor.diag.get("traza_perdida_area_pase", 0)) == 1, "pase cortado dentro del área: «perdida_area_pase»")
+	## La visita pierde el balón en un duelo en el medio campo.
+	motor.balon.position = Vector3(0, 0.11, 0)
+	motor._pase_eq = -1
+	MotorTraza.tomar(motor, loc)
+	_comprobar(int(motor.diag.get("traza_perdida_medio_robo", 0)) == 1, "balón robado en el medio campo: «perdida_medio_robo»")
+	## Sale del área y vuelve a entrar: segunda entrada.
+	MotorTraza.paso(motor)
+	motor.balon.position = Vector3(0, 0.11, arco_z - d * 8.0)
+	MotorTraza.paso(motor)
+	_comprobar(int(motor.diag.get("traza_entrada_area", 0)) == 2, "salir y volver a entrar cuenta otra entrada")
+	(r[1] as Node3D).queue_free()
