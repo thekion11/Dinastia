@@ -1,15 +1,16 @@
 extends Node
 ## CUÁNTO TARDA UNA SEMANA (01-11-2026, fase 5 «optimización»): mide `Mundo.avanzar_semana()` en un mundo de 6 países con el
 ## perfilador de funciones apagado; imprime la media, el máximo y las 3 semanas más lentas. Herramienta, no prueba del banco.
-##   godot --headless --path . res://pruebas/zz_medir_semana.tscn   (PAISES=CHI,ESP,ENG SEMANAS=20)
+##   godot --headless --path . res://pruebas/zz_medir_semana.tscn   (PAISES=CHI,ESP,ENG o PAISES=TODOS; SEMANAS=20)
 func _ready() -> void:
 	var paises := (OS.get_environment("PAISES") if OS.get_environment("PAISES") != "" else "CHI,ARG,BRA,ESP,ENG,ITA").split(",")
 	var n := int(OS.get_environment("SEMANAS")) if OS.get_environment("SEMANAS") != "" else 20
 	var m := Mundo.new()
 	var t0 := Time.get_ticks_usec()
 	var lista: Array[String] = []
-	for x in paises:
-		lista.append(String(x))
+	if paises != PackedStringArray(["TODOS"]):   ## PAISES=TODOS: el mundo entero (las ligas de todos los países), como en la partida
+		for x in paises:
+			lista.append(String(x))
 	m.generar(lista, 4711)
 	print("generar: %.0f ms (%d clubes)" % [(Time.get_ticks_usec() - t0) / 1000.0, m.clubes.size()])
 	var tiempos: Array = []
