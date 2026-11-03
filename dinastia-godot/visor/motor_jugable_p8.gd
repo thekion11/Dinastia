@@ -202,7 +202,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	## MARCAJE A LOS PELIGROSOS (F4, 03-11): a cada uno de los 3 rivales más peligrosos le toca UN marcador, entre él y el arco.
 	var marcado := MotorMarcaje.rival_de(self as Object as MotorJugable, p)
 	if not marcado.is_empty():
-		var pm := pos(marcado)
+		var pm := MotorMente.pos_vista(self as Object as MotorJugable, p, marcado)   ## donde lo ve (F8)
 		p["correr"] = pos(p).distance_to(pm) > 6.0
 		var om := pm + (arco - pm).normalized() * 1.8
 		om.z = clampf(om.z, -LARGO + 2.0, LARGO - 2.0)
@@ -214,13 +214,14 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	var md := 16.0 if al_hombre else 11.0
 	for q: Dictionary in jugadores:
 		if bool(q["es_local"]) != bool(p["es_local"]) and not bool(q["por"]):
-			var d := pos(q).distance_to(obj)
+			var d := MotorMente.pos_vista(self as Object as MotorJugable, p, q).distance_to(obj)
 			if d < md:
 				md = d
 				rival = q
 	if not rival.is_empty():
-		## Marca a distancia de zona: entre el rival y el arco, a 2,4 m.
-		obj = pos(rival) + (arco - pos(rival)).normalized() * (1.2 if al_hombre else 2.4)
+		## Marca a distancia de zona: entre el rival y el arco, a 2,4 m (donde LO VE: F8, 03-11).
+		var pv := MotorMente.pos_vista(self as Object as MotorJugable, p, rival)
+		obj = pv + (arco - pv).normalized() * (1.2 if al_hombre else 2.4)
 	## La defensa no persigue a cada delantero hacia su arco: se queda en la
 	## línea común (M-123) y solo cierra por dentro hacia el que marca.
 	if _rol(p) in ["DFC", "LD", "LI"] and not _SIN_LINEA:

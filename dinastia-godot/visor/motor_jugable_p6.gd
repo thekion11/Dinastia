@@ -369,7 +369,7 @@ func _rival_mas_cercano(p: Dictionary) -> Dictionary:
 
 func _presion(p: Dictionary) -> float:
 	var r := _rival_mas_cercano(p)
-	return pos(r).distance_to(pos(p)) if not r.is_empty() else 99.0
+	return MotorMente.pos_vista(self as Object as MotorJugable, p, r).distance_to(pos(p)) if not r.is_empty() else 99.0   ## lo que VE (F8, 03-11)
 
 func _linea_tapada(a: Vector3, c: Vector3, local: bool) -> bool:
 	for r: Dictionary in jugadores:
