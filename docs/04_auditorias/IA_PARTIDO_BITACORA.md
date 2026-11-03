@@ -60,7 +60,16 @@ Pendiente de estudiar (fuentes ya localizadas): triangulación de Delaunay para 
    por zona: 50 % en el medio campo, 24 % último tercio, 13 % propio campo, 12 % dentro del área. Es decir, los ataques no mueren por falta de pases sino porque al portador se lo quitan en un duelo antes de soltarlo.
     - **Descarga bajo presión** (`MotorDescarga`, `PASE_DESCARGA=1`: con un rival a menos de 2,6 m decide ya, pausa mínima 0,4 s, espera 0,15): robos 64,5 → 58,4 %, pero posesiones 41,0 → 39,7, entradas al área 18,3 → 17,7, pases buenos 68,2 → 68,1 %,
       tiros 15,9 → 16,1, goles 2,34 → 2,31. NO mejora lo que importa → **se queda APAGADA**. Lo que antes era robo se pierde ahora de otra forma.
-    - Siguiente probada: pase raso más rápido (`PMOT_VEL`, 1,0 = igual): menos tiempo para cortarlo.
+    - **Pase raso más rápido** (`PMOT_VEL`, menos tiempo para cortarlo): semillas 1-16: ×1,2 → pases 70,1 → 73,9 %, goles 2,5 → 3,25; ×1,4 → 73,8 % pero 36 controles largos (el receptor no controla). Con 32 partidos:
+
+      | 32 partidos | Pases buenos | Tiros | Acierto | Goles | Controles largos (por 16 p.) |
+      |---|---|---|---|---|---|
+      | Base | 68,2 % | 15,9 | 14,8 % | 2,34 | 14,5 |
+      | **Pase ×1,2 solo** | **72,6 %** | 17,8 | 14,6 % | **2,59** | 13,5 |
+      | Pase ×1,2 + fallo de tiro más duro (0,11 + 0,010/m) | 72,3 % | 17,5 | 14,8 % | 2,59 | 16,0 |
+
+      **Elegido y ENCENDIDO por defecto: `PMOT_VEL=1,2` solo** (`PMOT_VEL=1.0` lo apaga). Huella nueva 2257420708; con todo apagado vuelve a 3180886866. Mejora los pases buenos (+4,4 puntos), los tiros y devuelve los goles al rango pedido.
+      Sigue lejos de 80-85 % de pases buenos: el 77 % de los fallos son cortes de un rival; faltan receptor que se ofrece y mejor elección del pase con riesgo.
 
 ## Cifras reales de fútbol que se persiguen (orden de la sesión líder)
 ≈2,5-2,8 goles, ≈25 tiros, ≈80-85 % de pases buenos por partido. Estado: tiros ≈10-12 por partido y pases buenos ≈53-59 (conteo, no porcentaje): **faltan por debajo**; `zz_medir_partido` no da el porcentaje de pases, hay que añadirlo.
