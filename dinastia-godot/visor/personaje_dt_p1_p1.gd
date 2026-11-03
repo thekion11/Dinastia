@@ -56,17 +56,13 @@ const GAFAS := [["", "Sin gafas"], ["ver", "De ver"], ["sol", "De sol"], ["redon
 ## `Principal._refrescar()`; la vista del estadio no tiene el mundo delante).
 ## Si el DT del usuario está sancionado (ve el partido desde la grada).
 static var sancionado := false
-## (Viven en `UsuarioEn3D`, sin dependencias: el menú los fija sin compilar el personaje 3D; aquí los mismos nombres de siempre.)
+## (Viven en `UsuarioEn3D`, sin dependencias: el menú los fija sin compilar el personaje 3D; mismos nombres de siempre.)
 static var del_usuario: Dictionary:
-	get:
-		return UsuarioEn3D.aspecto
-	set(v):
-		UsuarioEn3D.aspecto = v
+	get: return UsuarioEn3D.aspecto
+	set(v): UsuarioEn3D.aspecto = v
 static var club_usuario: String:
-	get:
-		return UsuarioEn3D.club
-	set(v):
-		UsuarioEn3D.club = v
+	get: return UsuarioEn3D.club
+	set(v): UsuarioEn3D.club = v
 
 class _GestosBanda extends Node:
 	const GESTOS := ["banda/brazos_jarra", "banda/aplaudir", "banda/pedir_calma", "banda/protestar", "banda/manos_cabeza", "banda/senalar", "banda/llamar_hinchada"]
