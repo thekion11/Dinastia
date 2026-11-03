@@ -53,3 +53,10 @@ variable con la velocidad de caída; (3) ideas baratas y visibles: arrastre redu
   correr Ghidra en su PC y compartir solo números (no el ejecutable ni assets) para añadirlos a este informe.
 - Modelos de esos juegos: no se extraen (copyright). Se usan los del Drive con licencia confirmada.
 - Comparación visual con vídeo real: pendiente de vídeo.
+
+## Aplicado en la rama experimental (3-11)
+`visor/balon_3d.gd` (modo física `disparar()`): arrastre cuadrático `0,0128·v_ef·v` con descuento de 8,3 m/s por encima de 20,7 m/s;
+restitución variable 0,53-0,63 según la velocidad horizontal; roce de rodadura 1,4 → 0,9 m/s²; Magnus 0,02 → 0,0064 (el anterior curvaba ~3x de más).
+Medido (Godot 4.7.2, sin LFS, proyecto mínimo): tiro raso a 10 m/s llega a 34,5 m (antes 23,2); a 30 m/s con 12° llega a 91 m en 8 s (antes 105);
+tiro libre a 25 m/s con 50 rad/s curva 3,6 m en 1 s. Prueba: `pruebas/probar_fisica_balon.gd` (0 fallos). NO está en el banco (banco.gd y varios.gd rozan las 450 líneas);
+el banco completo (`banco.sh`) no se corrió porque falta `git lfs pull`. No hay copia nativa de estas funciones. Nadie llama aún a `disparar()` fuera de esta clase.
