@@ -72,3 +72,29 @@ static func afueras(ex: CiudadExpansion) -> void:
 	ex._deposito_agua()
 	ex.tele_nodo = Teleferico.montar(ex.b)
 	ex.teleferico = ex.tele_nodo.datos()
+
+## (3-11, el prólogo no cargaba en el móvil) Los modelos de coches y karts se leen del disco en HILOS aparte antes de montarlos:
+## `load` en el hilo principal congelaba la pantalla ~0,8 s en un servidor (decenas de segundos en un teléfono). Espera
+## fotograma a fotograma; si algo falla, `load` lo vuelve a pedir de forma normal después.
+static func precargar_vehiculos(b: CityBuilder) -> void:
+	var rutas: Array[String] = []
+	rutas.append_array([CityBuilder.RUTA_COCHE_REAL_1, CityBuilder.RUTA_COCHE_REAL_2])
+	rutas.append_array(CityBuilder.RUTAS_COCHES_KENNEY)
+	rutas.append_array(CityBuilder.RUTAS_SERVICIO)
+	for lista: Array in [CityBuilder.KARTS, CityBuilder.RUEDAS, CityBuilder.PIEZAS]:
+		for n: String in lista:
+			rutas.append("res://assets/ciudad/kenney_cars_extra/%s.glb" % n)
+	var pedidas: Array[String] = []
+	for r in rutas:
+		if ResourceLoader.exists(r) and ResourceLoader.load_threaded_request(r) == OK:
+			pedidas.append(r)
+	var t0 := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - t0 < 20000:
+		var pendiente := false
+		for r in pedidas:
+			if ResourceLoader.load_threaded_get_status(r) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+				pendiente = true
+				break
+		if not pendiente:
+			break
+		await b.get_tree().process_frame

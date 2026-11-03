@@ -93,6 +93,7 @@ func _ver_ciudad_con_carga() -> void:
 	await PantallaCarga.dejar_pintar(p.get_tree())
 	CityBuilder.diferir = true   ## (2-11) la ciudad se muestra en cuanto está lo cercano; lo demás se construye después (`CityBuilder._resto`)
 	await _ver_ciudad_propia(true)
+	await PantallaCarga.estabilizar(p.get_tree())
 	## Si algo la cerró mientras se esperaba (otra pantalla encima, o el
 	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).
 	if is_instance_valid(carga):
@@ -348,6 +349,7 @@ func _ver_estadio_con_carga() -> void:
 	var carga := PantallaCarga.mostrar(p, Idiomas.t("Levantando el estadio…"))
 	await PantallaCarga.dejar_pintar(p.get_tree())
 	await _ver_estadio_propio(true)
+	await PantallaCarga.estabilizar(p.get_tree())
 	## Si algo la cerró mientras se esperaba (otra pantalla encima, o el
 	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).
 	if is_instance_valid(carga):

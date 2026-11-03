@@ -49,7 +49,7 @@ func _colocar_camara(delta: float) -> void:
 	if primera_persona and (modo != "coche"):
 		var dir_fp := Vector3(sin(rumbo), 0, cos(rumbo))
 		camara.position = cuerpo.position + Vector3(0, 1.62, 0) + dir_fp * 0.18
-		camara.look_at(camara.position + dir_fp * 5.0 + Vector3(0, -0.15, 0), Vector3.UP)
+		camara.look_at(camara.position + dir_fp * 5.0 + Vector3(0, float(get_meta("cabeceo", -0.15)), 0), Vector3.UP)
 		cuerpo.visible = false
 		return
 	if modo != "coche" and not cuerpo.visible and not _sentado_fp():
@@ -297,7 +297,7 @@ func _mover_en_interior(delta: float) -> void:
 		_salir_del_edificio()
 		return
 	var e := _entrada()
-	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A) or MandoTactil.corre(self)
 	var objetivo := (3.4 if corre else 1.6) * clampf(e.y, -0.5, 1.0)
 	_vel_pie = move_toward(_vel_pie, objetivo, (7.0 if absf(objetivo) > absf(_vel_pie) else 12.0) * delta)
 	vel = _vel_pie
@@ -390,10 +390,8 @@ func _entrada() -> Vector2:
 		x = jx
 	if absf(jy) > 0.2:
 		y = jy
-	if _tactil_vec != Vector2.ZERO:
-		x = clampf(_tactil_vec.x, -1.0, 1.0)
-		y = clampf(_tactil_vec.y, -1.0, 1.0)
-	return Vector2(x, y)
+	var t := MandoTactil.leer(self, _tactil_vec)   ## la palanca analógica del móvil (suave)
+	return Vector2(x, y) if t == Vector2.ZERO else Vector2(clampf(t.x, -1.0, 1.0), clampf(t.y, -1.0, 1.0))
 
 ## Arriba de la escalera mecánica: a la calle, delante de la caseta.
 func _subir_de_la_galeria() -> void:

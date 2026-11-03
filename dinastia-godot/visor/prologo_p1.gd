@@ -80,6 +80,7 @@ func _ready() -> void:
 	CityBuilder.modo_prologo = OS.get_environment("PROLOGO_COMPLETO") == ""   ## solo el barrio del club (2-11); PROLOGO_COMPLETO=1 = la ciudad entera, para comparar
 	CityBuilder.diferir = OS.get_environment("SIN_DIFERIR") == ""   ## y lo que no se ve de entrada, después de mostrarla (SIN_DIFERIR=1: todo antes, para comparar)
 	await _construir_mundo()
+	await PantallaCarga.estabilizar(get_tree())   ## (3-11) shaders y texturas listos debajo de la carga
 	if is_instance_valid(carga):
 		carga.cerrar()
 	Registro.depurar("TIEMPO", "HASTA VER LA CIUDAD (prólogo)  %d ms" % (Time.get_ticks_msec() - t_carga))

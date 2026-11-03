@@ -176,6 +176,16 @@ static func dejar_pintar(arbol: SceneTree) -> void:
 		if DisplayServer.get_name() != "headless":
 			await RenderingServer.frame_post_draw
 
+## (3-11, R4 del dueño) Antes de quitar la pantalla de carga, la escena ya montada se dibuja unos fotogramas DEBAJO de ella:
+## así los sombreadores se compilan y las texturas suben a la gráfica mientras el jugador aún ve la carga, en vez de dar
+## tirones al empezar. En headless solo pasan los fotogramas.
+static func estabilizar(arbol: SceneTree, fotogramas: int = 10) -> void:
+	var n := fotogramas if DisplayServer.get_name() != "headless" else 2
+	for _i in n:
+		await arbol.process_frame
+		if DisplayServer.get_name() != "headless":
+			await RenderingServer.frame_post_draw
+
 func _poner_consejo() -> void:
 	var l := lista_consejos()
 	var txt := String(l[int(_orden[_k % _orden.size()])]).trim_prefix(Idiomas.t("Consejo: "))
