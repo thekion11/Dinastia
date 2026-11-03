@@ -297,7 +297,7 @@ func _montar_banderas(club: Club) -> void:
 		var tela := MeshInstance3D.new()
 		tela.mesh = qm
 		var mat := ShaderMaterial.new()
-		mat.shader = StadiumBuilder.SHADER_BANDERA
+		mat.shader = load("res://visor/stadium_builder.gd").SHADER_BANDERA
 		mat.set_shader_parameter("usa_dibujo", true)
 		mat.set_shader_parameter("espejo", lado > 0.0)
 		mat.set_shader_parameter("dibujo", texs[i])

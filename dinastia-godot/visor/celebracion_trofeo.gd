@@ -48,7 +48,7 @@ static func iniciar(raiz3d: Node3D, club: Club, titulo: String, pantalla: Contro
 	return c
 
 func _montar() -> void:
-	var g := StadiumBuilder.geom_de_forma(String(_club.perfil_estadio().get("forma", "oval")))
+	var g = load("res://visor/stadium_builder.gd").geom_de_forma(String(_club.perfil_estadio().get("forma", "oval")))
 	_rx = minf(float(g["dx"]) - 6.0, 31.0)   ## la vuelta va por dentro de las vallas, sobre el césped, para que la cámara no las atraviese
 	_rz = minf(float(g["dz"]) - 8.0, 49.0)
 	var l := Puente3D.once(_club.once())
@@ -91,7 +91,7 @@ func _preparar_clips(d: Dictionary) -> void:
 	var ap := d["anim"] as AnimationPlayer
 	var esq := FutbolistaQ.esqueleto_de(d["nodo"])
 	for clip: String in ["celebrar_carrera", "puno_al_aire", "aplaudir", "baile"]:
-		AnimExtra.asegurar(ap, esq, clip)
+		load("res://visor/anim_extra.gd").asegurar(ap, esq, clip)
 
 ## La copa del capitán: en alto sobre su cabeza (entre las manos levantadas), colgada de su nodo para que lo siga en la vuelta.
 func _poner_copa() -> void:

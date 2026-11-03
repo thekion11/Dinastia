@@ -134,10 +134,10 @@ func _salir_del_edificio() -> void:
 	_colocar_camara(1.0)
 
 func _portero() -> Dictionary:
-	var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+	var pe = get_tree().get_first_node_in_group("personal_club")
 	if pe == null:
 		return {}
-	var g := pe.buscar("portero")
+	var g = pe.buscar("portero")
 	if g.is_empty() or not is_instance_valid(g["nodo"]) or not (g["nodo"] as Node3D).visible:
 		return {}
 	return g
@@ -156,7 +156,7 @@ func _salir_del_estadio() -> void:
 	## El portero despide con la mano.
 	var port := _portero()
 	if not port.is_empty():
-		var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+		var pe = get_tree().get_first_node_in_group("personal_club")
 		pe.atender(port, cuerpo.position - CityBuilder.ESTADIO_EN, true)
 		pe.gesto(port, ["saludo_mano", "saludar_publico"])
 		port["quieto"] = false

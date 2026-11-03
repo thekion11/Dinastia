@@ -147,7 +147,7 @@ func _construir_mundo() -> void:
 	EdificioClub.fijar_ctx(mundo, club)
 	var perfil := mundo.perfil_estadio_de(club)
 	await vista.abrir(club, mundo.obras, mundo.ciudad, perfil)
-	est = TunelVestuario.datos(perfil, StadiumBuilder.niveles_de(perfil, int(perfil.get("aforo", 20000))))
+	est = load("res://visor/tunel_vestuario.gd").datos(perfil, load("res://visor/stadium_builder.gd").niveles_de(perfil, int(perfil.get("aforo", 20000))))
 	puerta = CityBuilder.ESTADIO_EN + (est["puerta"] as Vector3)
 	## La cámara aérea mira al estadio mientras dura la presentación.
 	vista._objetivo_deseado = CityBuilder.ESTADIO_EN
@@ -262,10 +262,10 @@ func _meter_saludo() -> void:
 
 ## El personal del club con esa clave, si está a la vista (o vacío).
 func _personal(clave: String) -> Dictionary:
-	var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio if is_inside_tree() else null
+	var pe = get_tree().get_first_node_in_group("personal_club") if is_inside_tree() else null
 	if pe == null:
 		return {}
-	var g := pe.buscar(clave)
+	var g = pe.buscar(clave)
 	if g.is_empty() or not is_instance_valid(g["nodo"]) or not (g["nodo"] as Node3D).visible:
 		return {}
 	return g
@@ -275,7 +275,7 @@ func _atender_personal(clave: String, si: bool) -> Dictionary:
 	var g := _personal(clave)
 	if g.is_empty():
 		return g
-	var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+	var pe = get_tree().get_first_node_in_group("personal_club")
 	pe.atender(g, explorador.cuerpo.position - CityBuilder.ESTADIO_EN, si)
 	if si:
 		pe.gesto(g, ["saludo_mano", "saludar_publico"])

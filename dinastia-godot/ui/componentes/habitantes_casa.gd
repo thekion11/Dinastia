@@ -6,7 +6,7 @@ extends RefCounted
 
 ## La hora del reloj de la ciudad (0-24).
 static func hora_actual() -> float:
-	return PersonalEstadio.hora if PersonalEstadio.hora >= 0.0 else 12.0
+	return load("res://visor/personal_estadio.gd").hora if load("res://visor/personal_estadio.gd").hora >= 0.0 else 12.0
 
 static func _en(h: float, desde: float, hasta: float) -> bool:
 	return h >= desde and h < hasta

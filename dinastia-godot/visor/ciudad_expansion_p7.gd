@@ -3,7 +3,7 @@ extends "res://visor/ciudad_expansion_p6.gd"
 
 func _bandera_mastil(p: Vector3) -> void:
 	b._cil_en(p + Vector3(0, 7.0, 0), 0.15, 14.0, _mat["claro"])
-	StadiumBuilder._bandera_ondeante(b, p + Vector3(1.6, 12.6, 0), Vector2(3.2, 2.0),
+	load("res://visor/stadium_builder.gd")._bandera_ondeante(b, p + Vector3(1.6, 12.6, 0), Vector2(3.2, 2.0),
 		b._color_club("c1", Color(0.2, 0.5, 0.3)), 0.0, 0.3)
 
 ## Cartel de metro: poste con la «M» en un disco del color de la línea.

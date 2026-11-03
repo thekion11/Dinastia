@@ -278,10 +278,10 @@ func _pintar_velocidad_partido() -> void:
 	## Del 1 al 3: "Pausa" (índice 0) no tiene sentido como velocidad de
 	## arranque -nadie quiere que el partido empiece parado-, igual que el
 	## HTML se salta esa opción en este mismo selector.
-	for i in range(1, PartidoVivo.VELOCIDADES.size()):
+	for i in range(1, load("res://ui/partido_vivo.gd").VELOCIDADES.size()):
 		var idx := i
 		var b := Button.new()
-		b.text = String(PartidoVivo.VELOCIDADES[i]["txt"])
+		b.text = String(load("res://ui/partido_vivo.gd").VELOCIDADES[i]["txt"])
 		b.toggle_mode = true
 		b.button_pressed = (p._velocidad_partido == idx)
 		b.custom_minimum_size = Vector2(90, 30)
@@ -302,9 +302,9 @@ func _pintar_qol() -> void:
 	ep.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fp.add_child(ep)
 	var bp := Button.new()
-	bp.text = Idiomas.t("SÍ") if EleccionPartido.preguntar() else Idiomas.t("NO")
+	bp.text = Idiomas.t("SÍ") if load("res://ui/componentes/eleccion_partido.gd").preguntar() else Idiomas.t("NO")
 	bp.pressed.connect(func() -> void:
-		EleccionPartido.fijar_preguntar(not EleccionPartido.preguntar())
+		load("res://ui/componentes/eleccion_partido.gd").fijar_preguntar(not load("res://ui/componentes/eleccion_partido.gd").preguntar())
 		p._refrescar())
 	fp.add_child(bp)
 	var fila := HBoxContainer.new()

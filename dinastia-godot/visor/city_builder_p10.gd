@@ -257,7 +257,7 @@ func _banderas_anillo(c1: Color, c2: Color) -> void:
 			mastil.material_override = gris
 			mastil.position = Vector3(x, 4.5, z)
 			add_child(mastil)
-			StadiumBuilder._bandera_ondeante(self, Vector3(x + 1.3, 7.6, z), Vector2(2.6, 1.6),
+			load("res://visor/stadium_builder.gd")._bandera_ondeante(self, Vector3(x + 1.3, 7.6, z), Vector2(2.6, 1.6),
 				c1 if i % 2 == 0 else c2, 0.0, float(i) * 0.7)
 
 static func _mallas_hincha_de_pie() -> Array:

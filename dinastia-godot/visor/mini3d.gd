@@ -67,7 +67,7 @@ static func _todas_las_animaciones(d: Dictionary) -> void:
 	var esq: Skeleton3D = d["esqueleto"]
 	if ap.has_animation_library(""):
 		ap.remove_animation_library("")
-	ap.add_animation_library("", AnimQuaternius.construir(esq, str(ap.get_path_to(esq)), true))
+	ap.add_animation_library("", load("res://visor/anim_quaternius.gd").construir(esq, str(ap.get_path_to(esq)), true))
 
 ## De corto (o manga larga, el portero), vestido una sola vez como los
 ## futbolistas del partido.

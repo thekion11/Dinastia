@@ -60,11 +60,11 @@ func _montar(mundo: Mundo, j: Jugador, de: Club) -> void:
 	## Las presentaciones son de día, con el sol de frente a la cámara.
 	perfil["clima"] = "dia"
 	Ambience.apply(_raiz, perfil, null, Calidad.elegida)
-	StadiumBuilder.build_pitch(_raiz, perfil, mio)
+	load("res://visor/stadium_builder.gd").build_pitch(_raiz, perfil, mio)
 	var aforo := int(perfil.get("aforo", 20000))
 	## La grada responde a quién presentas: llena para una estrella, a medias
 	## para uno de rotación (lo mismo que dice la noticia de `aplicar()`).
-	StadiumBuilder.build(_raiz, perfil, aforo, 0.92 if estrella else 0.4, mio._hash_id(), mio)
+	load("res://visor/stadium_builder.gd").build(_raiz, perfil, aforo, 0.92 if estrella else 0.4, mio._hash_id(), mio)
 	## El balón de las dominadas es el del club (Club → Detalles del club).
 	if mundo.comercial != null:
 		var cb := Comercial.color_balon(mundo.comercial.balon, mio)
@@ -236,7 +236,7 @@ func plano(t: float) -> int:
 	return 1 if t < PLANO_2 else (2 if t < PLANO_3 else 3)
 
 func _process(delta: float) -> void:
-	StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())
+	load("res://visor/stadium_builder.gd").ocultar_techo_ante(get_viewport().get_camera_3d())
 	if _cerrando:
 		return
 	_t += delta

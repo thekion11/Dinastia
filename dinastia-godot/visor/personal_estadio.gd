@@ -186,7 +186,7 @@ func _ruta(clave: String, planta: int, zona: String) -> Array:
 	var y := RecorridoClub.y_de(planta)
 	match zona:
 		"Vestuario":
-			var px := x0 + TunelVestuario.PUERTA_X
+			var px := x0 + TunelMedidas.PUERTA_X
 			return [Vector3(px - 1.2, y, z_fin - 1.8), Vector3(px - 2.5, y, z_fin - 4.0)]
 		"Campo":
 			return [Vector3(x0 + 12.0, y, 48.0), Vector3(x0 - 12.0, y, 46.0), Vector3(x0 - 14.0, y, 30.0)]

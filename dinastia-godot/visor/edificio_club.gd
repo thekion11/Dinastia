@@ -25,7 +25,7 @@ static func _objeto(nodo: Node3D, clave: String, p: Vector3, giro: float, c1: Co
 	var oro: StandardMaterial3D = Texturas.metal(Color(0.95, 0.78, 0.3), 0.25)
 	match clave:
 		"planta":
-			TunelVestuario._caja(raiz, Vector3(0, 0.25, 0), Vector3(0.45, 0.5, 0.45), _m(Color(0.55, 0.35, 0.25)), true)
+			PiezasObra._caja(raiz, Vector3(0, 0.25, 0), Vector3(0.45, 0.5, 0.45), _m(Color(0.55, 0.35, 0.25)), true)
 			var copa := MeshInstance3D.new()
 			var sm := SphereMesh.new()
 			sm.radius = 0.45
@@ -35,10 +35,10 @@ static func _objeto(nodo: Node3D, clave: String, p: Vector3, giro: float, c1: Co
 			copa.material_override = _m(Color(0.22, 0.5, 0.22), 0.9)
 			raiz.add_child(copa)
 		"sofa":
-			TunelVestuario._caja(raiz, Vector3(0, 0.25, 0), Vector3(1.8, 0.5, 0.8), _m(c1.lerp(Color(0.2, 0.2, 0.22), 0.3), 0.9), true)
-			TunelVestuario._caja(raiz, Vector3(0, 0.6, -0.33), Vector3(1.8, 0.7, 0.15), _m(c1.lerp(Color(0.2, 0.2, 0.22), 0.3), 0.9), false)
+			PiezasObra._caja(raiz, Vector3(0, 0.25, 0), Vector3(1.8, 0.5, 0.8), _m(c1.lerp(Color(0.2, 0.2, 0.22), 0.3), 0.9), true)
+			PiezasObra._caja(raiz, Vector3(0, 0.6, -0.33), Vector3(1.8, 0.7, 0.15), _m(c1.lerp(Color(0.2, 0.2, 0.22), 0.3), 0.9), false)
 		"trofeo":
-			TunelVestuario._caja(raiz, Vector3(0, 0.45, 0), Vector3(0.6, 0.9, 0.6), _m(Color(0.15, 0.15, 0.17)), true)
+			PiezasObra._caja(raiz, Vector3(0, 0.45, 0), Vector3(0.6, 0.9, 0.6), _m(Color(0.15, 0.15, 0.17)), true)
 			var cm := CylinderMesh.new()
 			cm.top_radius = 0.18
 			cm.bottom_radius = 0.06
@@ -49,23 +49,23 @@ static func _objeto(nodo: Node3D, clave: String, p: Vector3, giro: float, c1: Co
 			copa2.material_override = oro
 			raiz.add_child(copa2)
 		"bandera":
-			TunelVestuario._caja(raiz, Vector3(0, 1.2, 0), Vector3(0.05, 2.4, 0.05), Texturas.metal(Color(0.8, 0.8, 0.82), 0.3), false)
-			TunelVestuario._caja(raiz, Vector3(0.45, 1.9, 0), Vector3(0.8, 0.5, 0.02), _m(c1), false)
-			TunelVestuario._caja(raiz, Vector3(0.45, 1.75, 0.012), Vector3(0.8, 0.15, 0.01), _m(c2), false)
+			PiezasObra._caja(raiz, Vector3(0, 1.2, 0), Vector3(0.05, 2.4, 0.05), Texturas.metal(Color(0.8, 0.8, 0.82), 0.3), false)
+			PiezasObra._caja(raiz, Vector3(0.45, 1.9, 0), Vector3(0.8, 0.5, 0.02), _m(c1), false)
+			PiezasObra._caja(raiz, Vector3(0.45, 1.75, 0.012), Vector3(0.8, 0.15, 0.01), _m(c2), false)
 		"tele":
-			TunelVestuario._caja(raiz, Vector3(0, 0.35, 0), Vector3(1.4, 0.7, 0.45), _m(Color(0.3, 0.2, 0.12)), true)
+			PiezasObra._caja(raiz, Vector3(0, 0.35, 0), Vector3(1.4, 0.7, 0.45), _m(Color(0.3, 0.2, 0.12)), true)
 			var pt := _m(Color(0.15, 0.3, 0.5), 0.2) as StandardMaterial3D
 			pt.emission_enabled = true
 			pt.emission = Color(0.2, 0.45, 0.8)
-			TunelVestuario._caja(raiz, Vector3(0, 1.15, -0.1), Vector3(1.3, 0.75, 0.05), pt, false)
+			PiezasObra._caja(raiz, Vector3(0, 1.15, -0.1), Vector3(1.3, 0.75, 0.05), pt, false)
 		"alfombra":
-			TunelVestuario._caja(raiz, Vector3(0, 0.04, 0.8), Vector3(1.8, 0.02, 1.3), _m(c1.lerp(Color(0.6, 0.1, 0.1), 0.3), 1.0), false)
+			PiezasObra._caja(raiz, Vector3(0, 0.04, 0.8), Vector3(1.8, 0.02, 1.3), _m(c1.lerp(Color(0.6, 0.1, 0.1), 0.3), 1.0), false)
 		"lampara":
-			TunelVestuario._caja(raiz, Vector3(0, 0.8, 0), Vector3(0.05, 1.6, 0.05), _m(Color(0.15, 0.15, 0.17)), false)
+			PiezasObra._caja(raiz, Vector3(0, 0.8, 0), Vector3(0.05, 1.6, 0.05), _m(Color(0.15, 0.15, 0.17)), false)
 			var pan := _m(Color(1, 0.95, 0.8), 0.6) as StandardMaterial3D
 			pan.emission_enabled = true
 			pan.emission = Color(1, 0.9, 0.7)
-			TunelVestuario._caja(raiz, Vector3(0, 1.7, 0), Vector3(0.4, 0.3, 0.4), pan, false)
+			PiezasObra._caja(raiz, Vector3(0, 1.7, 0), Vector3(0.4, 0.3, 0.4), pan, false)
 			var luz := OmniLight3D.new()
 			luz.position = Vector3(0, 1.6, 0)
 			luz.omni_range = 3.5
@@ -73,15 +73,15 @@ static func _objeto(nodo: Node3D, clave: String, p: Vector3, giro: float, c1: Co
 			luz.light_color = Color(1, 0.88, 0.7)
 			raiz.add_child(luz)
 		"estanteria":
-			TunelVestuario._caja(raiz, Vector3(0, 1.0, 0), Vector3(1.2, 2.0, 0.35), _m(Color(0.45, 0.3, 0.18)), true)
+			PiezasObra._caja(raiz, Vector3(0, 1.0, 0), Vector3(1.2, 2.0, 0.35), _m(Color(0.45, 0.3, 0.18)), true)
 			for k in 4:
-				TunelVestuario._caja(raiz, Vector3(-0.3 + (k % 2) * 0.6, 0.6 + (k / 2) * 0.7, 0.05), Vector3(0.4, 0.3, 0.2),
+				PiezasObra._caja(raiz, Vector3(-0.3 + (k % 2) * 0.6, 0.6 + (k / 2) * 0.7, 0.05), Vector3(0.4, 0.3, 0.2),
 					_m([Color(0.7, 0.2, 0.2), Color(0.2, 0.4, 0.7), c1, Color(0.85, 0.8, 0.6)][k]), false)
 		"cafe":
-			TunelVestuario._caja(raiz, Vector3(0, 0.45, 0), Vector3(0.6, 0.9, 0.5), _m(Color(0.85, 0.85, 0.85)), true)
-			TunelVestuario._caja(raiz, Vector3(0, 1.15, 0), Vector3(0.45, 0.5, 0.4), _m(Color(0.1, 0.1, 0.11), 0.3), false)
+			PiezasObra._caja(raiz, Vector3(0, 0.45, 0), Vector3(0.6, 0.9, 0.5), _m(Color(0.85, 0.85, 0.85)), true)
+			PiezasObra._caja(raiz, Vector3(0, 1.15, 0), Vector3(0.45, 0.5, 0.4), _m(Color(0.1, 0.1, 0.11), 0.3), false)
 		"balon":
-			TunelVestuario._caja(raiz, Vector3(0, 0.5, 0), Vector3(0.4, 1.0, 0.4), _m(Color(0.15, 0.15, 0.17)), true)
+			PiezasObra._caja(raiz, Vector3(0, 0.5, 0), Vector3(0.4, 1.0, 0.4), _m(Color(0.15, 0.15, 0.17)), true)
 			var bm := SphereMesh.new()
 			bm.radius = 0.12
 			bm.height = 0.24
@@ -91,24 +91,24 @@ static func _objeto(nodo: Node3D, clave: String, p: Vector3, giro: float, c1: Co
 			bal.material_override = _m(Color(0.97, 0.97, 0.97), 0.4)
 			raiz.add_child(bal)
 		"bufanda":
-			TunelVestuario._caja(raiz, Vector3(0, 1.3, 0), Vector3(0.05, 1.2, 0.05), _m(Color(0.35, 0.25, 0.15)), false)
+			PiezasObra._caja(raiz, Vector3(0, 1.3, 0), Vector3(0.05, 1.2, 0.05), _m(Color(0.35, 0.25, 0.15)), false)
 			for k in 6:
-				TunelVestuario._caja(raiz, Vector3(0.05, 1.75 - k * 0.18, 0), Vector3(0.03, 0.18, 0.22), _m(c1 if k % 2 == 0 else c2), false)
+				PiezasObra._caja(raiz, Vector3(0.05, 1.75 - k * 0.18, 0), Vector3(0.03, 0.18, 0.22), _m(c1 if k % 2 == 0 else c2), false)
 		"pizarra":
-			TunelVestuario._caja(raiz, Vector3(0, 1.3, 0), Vector3(1.2, 0.9, 0.05), _m(Color(0.12, 0.3, 0.2), 0.8), false)
-			TunelVestuario._caja(raiz, Vector3(0, 0.45, 0), Vector3(0.05, 0.9, 0.05), _m(Color(0.35, 0.25, 0.15)), false)
-			TunelVestuario._rotulo(raiz, "○ ○ ○\n  ✕ →", Vector3(0, 1.3, 0.04), 0.0, 40, Color(0.95, 0.95, 0.9))
+			PiezasObra._caja(raiz, Vector3(0, 1.3, 0), Vector3(1.2, 0.9, 0.05), _m(Color(0.12, 0.3, 0.2), 0.8), false)
+			PiezasObra._caja(raiz, Vector3(0, 0.45, 0), Vector3(0.05, 0.9, 0.05), _m(Color(0.35, 0.25, 0.15)), false)
+			PiezasObra._rotulo(raiz, "○ ○ ○\n  ✕ →", Vector3(0, 1.3, 0.04), 0.0, 40, Color(0.95, 0.95, 0.9))
 		"maqueta":
-			TunelVestuario._caja(raiz, Vector3(0, 0.45, 0), Vector3(0.9, 0.9, 0.7), _m(Color(0.3, 0.2, 0.12)), true)
-			TunelVestuario._caja(raiz, Vector3(0, 0.95, 0), Vector3(0.6, 0.1, 0.45), _m(Color(0.2, 0.5, 0.25)), false)
-			TunelVestuario._caja(raiz, Vector3(0, 1.0, 0), Vector3(0.75, 0.15, 0.6), _m(c1.lerp(Color(0.7, 0.7, 0.7), 0.5)), false)
+			PiezasObra._caja(raiz, Vector3(0, 0.45, 0), Vector3(0.9, 0.9, 0.7), _m(Color(0.3, 0.2, 0.12)), true)
+			PiezasObra._caja(raiz, Vector3(0, 0.95, 0), Vector3(0.6, 0.1, 0.45), _m(Color(0.2, 0.5, 0.25)), false)
+			PiezasObra._caja(raiz, Vector3(0, 1.0, 0), Vector3(0.75, 0.15, 0.6), _m(c1.lerp(Color(0.7, 0.7, 0.7), 0.5)), false)
 		"guitarra":
-			TunelVestuario._caja(raiz, Vector3(0, 0.45, 0), Vector3(0.35, 0.5, 0.1), _m(Color(0.6, 0.35, 0.15), 0.4), false)
-			TunelVestuario._caja(raiz, Vector3(0, 0.95, 0), Vector3(0.06, 0.6, 0.04), _m(Color(0.25, 0.15, 0.08), 0.4), false)
+			PiezasObra._caja(raiz, Vector3(0, 0.45, 0), Vector3(0.35, 0.5, 0.1), _m(Color(0.6, 0.35, 0.15), 0.4), false)
+			PiezasObra._caja(raiz, Vector3(0, 0.95, 0), Vector3(0.06, 0.6, 0.04), _m(Color(0.25, 0.15, 0.08), 0.4), false)
 
 ## Un marco colgado con una foto del modo foto (`user://fotos/*.png`).
 static func _marco_foto(nodo: Node3D, ruta: String, p: Vector3, lado: float) -> void:
-	TunelVestuario._caja(nodo, p, Vector3(0.05, 0.95, 1.35), TunelVestuario._mat(Color(0.1, 0.08, 0.06), 0.5), false)
+	PiezasObra._caja(nodo, p, Vector3(0.05, 0.95, 1.35), PiezasObra._mat(Color(0.1, 0.08, 0.06), 0.5), false)
 	var img := Image.load_from_file(ProjectSettings.globalize_path(ruta)) if FileAccess.file_exists(ruta) else null
 	if img == null:
 		return
@@ -134,15 +134,15 @@ static func _decorar(nodo: Node3D, sala: String, a: float, b: float, z_out: floa
 	var zc := (z_out + z_tab) / 2.0
 	var fondo := z_tab - z_out
 	if String(gusto.get("pared", "")) != "":
-		var pm := TunelVestuario._mat(Color(String(gusto["pared"])), 0.85)
+		var pm := PiezasObra._mat(Color(String(gusto["pared"])), 0.85)
 		## Una piel de pintura sobre las cuatro paredes de la sala (la del
 		## pasillo, a los lados de la puerta).
-		TunelVestuario._caja(nodo, Vector3((a + b) / 2.0, y0 + ALTO_LIBRE / 2.0, z_out + 0.06), Vector3(b - a - 0.25, ALTO_LIBRE - 0.05, 0.02), pm, false)
-		TunelVestuario._caja(nodo, Vector3(a + 0.13, y0 + ALTO_LIBRE / 2.0, zc), Vector3(0.02, ALTO_LIBRE - 0.05, fondo - 0.25), pm, false)
-		TunelVestuario._caja(nodo, Vector3(b - 0.13, y0 + ALTO_LIBRE / 2.0, zc), Vector3(0.02, ALTO_LIBRE - 0.05, fondo - 0.25), pm, false)
+		PiezasObra._caja(nodo, Vector3((a + b) / 2.0, y0 + ALTO_LIBRE / 2.0, z_out + 0.06), Vector3(b - a - 0.25, ALTO_LIBRE - 0.05, 0.02), pm, false)
+		PiezasObra._caja(nodo, Vector3(a + 0.13, y0 + ALTO_LIBRE / 2.0, zc), Vector3(0.02, ALTO_LIBRE - 0.05, fondo - 0.25), pm, false)
+		PiezasObra._caja(nodo, Vector3(b - 0.13, y0 + ALTO_LIBRE / 2.0, zc), Vector3(0.02, ALTO_LIBRE - 0.05, fondo - 0.25), pm, false)
 		var c := (a + b) / 2.0
-		for tr: Vector2 in StadiumBuilder._tramos_sin_hueco(c, b - a - 0.25, c - PUERTA / 2.0, c + PUERTA / 2.0):
-			TunelVestuario._caja(nodo, Vector3(tr.x, y0 + ALTO_LIBRE / 2.0, z_tab - 0.12), Vector3(tr.y, ALTO_LIBRE - 0.05, 0.02), pm, false)
+		for tr: Vector2 in load("res://visor/stadium_builder.gd")._tramos_sin_hueco(c, b - a - 0.25, c - PUERTA / 2.0, c + PUERTA / 2.0):
+			PiezasObra._caja(nodo, Vector3(tr.x, y0 + ALTO_LIBRE / 2.0, z_tab - 0.12), Vector3(tr.y, ALTO_LIBRE - 0.05, 0.02), pm, false)
 	## Los seis huecos: las cuatro esquinas y el medio de cada lado.
 	var huecos := [Vector3(a + 0.7, 0, z_out + 0.7), Vector3(b - 0.7, 0, z_out + 0.7), Vector3(a + 0.6, 0, zc),
 		Vector3(b - 0.6, 0, zc), Vector3(a + 0.7, 0, z_tab - 0.9), Vector3(b - 0.7, 0, z_tab - 0.9)]
@@ -173,13 +173,13 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 	## Para rehacerlo al decorar (`reconstruir`).
 	nodo.set_meta("args", [x0, z_out, z_fin, c1, c2, horm, luz, nombre_club])
 	padre.add_child(nodo)
-	var ancho := TunelVestuario.VEST_MEDIO * 2.0
+	var ancho := TunelMedidas.VEST_MEDIO * 2.0
 	var zc := (z_out + z_fin) / 2.0
 	var fondo := z_fin - z_out
 	var z_tabique := z_fin - PASILLO - 0.1
 	## Etapa 2: 0,94 se quemaba a blanco puro con las luces de sala.
-	var pared := TunelVestuario._mat(Color(0.82, 0.81, 0.78), 0.85)
-	var suelo := TunelVestuario._mat(Color(0.5, 0.5, 0.52), 0.9)
+	var pared := PiezasObra._mat(Color(0.82, 0.81, 0.78), 0.85)
+	var suelo := PiezasObra._mat(Color(0.5, 0.5, 0.52), 0.9)
 	var vidrio: StandardMaterial3D = Texturas.cristal(true, true)
 	## El ascensor de la planta 0 (dentro del vestuario, junto a la pizarra).
 	_ascensor(nodo, x0, z_fin, 0.0)
@@ -188,55 +188,55 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 		var y0 := float(p) * ALTO_PLANTA
 		var bajo_tierra := p < 0
 		## El cascarón de la planta.
-		TunelVestuario._caja(nodo, Vector3(x0, y0 - 0.1, zc), Vector3(ancho + 0.6, 0.2, fondo + 0.6), horm, true)
-		TunelVestuario._caja(nodo, Vector3(x0, y0 + 0.01, zc), Vector3(ancho, 0.02, fondo), suelo, false)
-		TunelVestuario._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE + 0.25, zc), Vector3(ancho + 0.6, 0.5, fondo + 0.6), horm, true)
+		PiezasObra._caja(nodo, Vector3(x0, y0 - 0.1, zc), Vector3(ancho + 0.6, 0.2, fondo + 0.6), horm, true)
+		PiezasObra._caja(nodo, Vector3(x0, y0 + 0.01, zc), Vector3(ancho, 0.02, fondo), suelo, false)
+		PiezasObra._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE + 0.25, zc), Vector3(ancho + 0.6, 0.5, fondo + 0.6), horm, true)
 		for lado in [-1.0, 1.0]:
-			TunelVestuario._caja(nodo, Vector3(x0 + lado * (TunelVestuario.VEST_MEDIO + 0.15), y0 + ALTO_LIBRE / 2.0, zc),
+			PiezasObra._caja(nodo, Vector3(x0 + lado * (TunelMedidas.VEST_MEDIO + 0.15), y0 + ALTO_LIBRE / 2.0, zc),
 				Vector3(0.3, ALTO_LIBRE, fondo + 0.6), horm, true)
-			TunelVestuario._caja(nodo, Vector3(x0 + lado * (TunelVestuario.VEST_MEDIO - 0.02), y0 + ALTO_LIBRE / 2.0, zc),
+			PiezasObra._caja(nodo, Vector3(x0 + lado * (TunelMedidas.VEST_MEDIO - 0.02), y0 + ALTO_LIBRE / 2.0, zc),
 				Vector3(0.04, ALTO_LIBRE, fondo), pared, false)
-		TunelVestuario._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_out - 0.15), Vector3(ancho + 0.6, ALTO_LIBRE, 0.3), horm, true)
+		PiezasObra._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_out - 0.15), Vector3(ancho + 0.6, ALTO_LIBRE, 0.3), horm, true)
 		if p == GaleriaClub.PLANTA:
 			_pared_galeria(nodo, x0, z_fin, y0, ancho, horm, pared, c1)
 		else:
-			TunelVestuario._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_fin + 0.15), Vector3(ancho + 0.6, ALTO_LIBRE, 0.3), horm, true)
-			TunelVestuario._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_fin - 0.02), Vector3(ancho, ALTO_LIBRE, 0.04), pared, false)
-		TunelVestuario._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_out + 0.02), Vector3(ancho, ALTO_LIBRE, 0.04), pared, false)
+			PiezasObra._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_fin + 0.15), Vector3(ancho + 0.6, ALTO_LIBRE, 0.3), horm, true)
+			PiezasObra._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_fin - 0.02), Vector3(ancho, ALTO_LIBRE, 0.04), pared, false)
+		PiezasObra._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_out + 0.02), Vector3(ancho, ALTO_LIBRE, 0.04), pared, false)
 		## Ventanas corridas en las plantas de arriba (a la calle y a los lados).
 		if not bajo_tierra:
-			TunelVestuario._caja(nodo, Vector3(x0, y0 + 1.9, z_fin + 0.31), Vector3(ancho - 1.0, 1.4, 0.04), vidrio, false)
+			PiezasObra._caja(nodo, Vector3(x0, y0 + 1.9, z_fin + 0.31), Vector3(ancho - 1.0, 1.4, 0.04), vidrio, false)
 		## El tabique del pasillo, con una puerta por sala.
 		var huecos: Array = []
 		for sala: Array in f[2]:
 			var c := x0 + (float(sala[1]) + float(sala[2])) / 2.0
 			huecos.append(Vector2(c - PUERTA / 2.0, c + PUERTA / 2.0))
-		var tramos: Array = [Vector2(x0 - TunelVestuario.VEST_MEDIO, x0 + TunelVestuario.VEST_MEDIO)]
+		var tramos: Array = [Vector2(x0 - TunelMedidas.VEST_MEDIO, x0 + TunelMedidas.VEST_MEDIO)]
 		for h: Vector2 in huecos:
 			var nuevos: Array = []
 			for t: Vector2 in tramos:
-				for tr: Vector2 in StadiumBuilder._tramos_sin_hueco((t.x + t.y) / 2.0, t.y - t.x, h.x, h.y):
+				for tr: Vector2 in load("res://visor/stadium_builder.gd")._tramos_sin_hueco((t.x + t.y) / 2.0, t.y - t.x, h.x, h.y):
 					nuevos.append(Vector2(tr.x - tr.y / 2.0, tr.x + tr.y / 2.0))
 			tramos = nuevos
 		for t: Vector2 in tramos:
-			TunelVestuario._caja(nodo, Vector3((t.x + t.y) / 2.0, y0 + ALTO_LIBRE / 2.0, z_tabique), Vector3(t.y - t.x, ALTO_LIBRE, 0.2), pared, true)
+			PiezasObra._caja(nodo, Vector3((t.x + t.y) / 2.0, y0 + ALTO_LIBRE / 2.0, z_tabique), Vector3(t.y - t.x, ALTO_LIBRE, 0.2), pared, true)
 		for h: Vector2 in huecos:
-			TunelVestuario._caja(nodo, Vector3((h.x + h.y) / 2.0, y0 + (ALTO_LIBRE + 2.4) / 2.0, z_tabique), Vector3(h.y - h.x, ALTO_LIBRE - 2.4, 0.2), pared, false)
+			PiezasObra._caja(nodo, Vector3((h.x + h.y) / 2.0, y0 + (ALTO_LIBRE + 2.4) / 2.0, z_tabique), Vector3(h.y - h.x, ALTO_LIBRE - 2.4, 0.2), pared, false)
 		## Tabiques entre salas.
 		var salas: Array = f[2]
 		for i in range(1, salas.size()):
 			var xs := x0 + float(salas[i][1])
-			TunelVestuario._caja(nodo, Vector3(xs, y0 + ALTO_LIBRE / 2.0, (z_out + z_tabique) / 2.0),
+			PiezasObra._caja(nodo, Vector3(xs, y0 + ALTO_LIBRE / 2.0, (z_out + z_tabique) / 2.0),
 				Vector3(0.2, ALTO_LIBRE, z_tabique - z_out), pared, true)
-		TunelVestuario._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE - 0.01, z_fin - PASILLO / 2.0), Vector3(ancho - 0.1, 0.02, PASILLO - 0.1),
-			TunelVestuario._mat(Color(0.8, 0.8, 0.78), 0.9), false)
+		PiezasObra._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE - 0.01, z_fin - PASILLO / 2.0), Vector3(ancho - 0.1, 0.02, PASILLO - 0.1),
+			PiezasObra._mat(Color(0.8, 0.8, 0.78), 0.9), false)
 		## Luz del pasillo y rótulo de la planta junto al ascensor.
 		var lp := OmniLight3D.new()
 		lp.position = Vector3(x0, y0 + ALTO_LIBRE - 0.4, z_fin - PASILLO / 2.0)
 		lp.omni_range = 10.0
 		lp.light_energy = 0.75
 		nodo.add_child(lp)
-		TunelVestuario._rotulo(nodo, Idiomas.t("PLANTA %d · %s") % [p, Idiomas.t(String(f[1])).to_upper()],
+		PiezasObra._rotulo(nodo, Idiomas.t("PLANTA %d · %s") % [p, Idiomas.t(String(f[1])).to_upper()],
 			Vector3(x0 + (ASC_X0 + ASC_X1) / 2.0, y0 + ALTO_LIBRE - 0.45, z_fin - 0.06), PI, 34, c1.lerp(Color(0.1, 0.1, 0.12), 0.2))
 		_ascensor(nodo, x0, z_fin, y0)
 		## Cada sala: su rótulo sobre la puerta (del lado del pasillo), su luz y
@@ -245,20 +245,20 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 			var a: float = x0 + float(sala[1])
 			var b: float = x0 + float(sala[2])
 			var c := (a + b) / 2.0
-			TunelVestuario._rotulo(nodo, Idiomas.t(String(sala[0])).to_upper(), Vector3(c, y0 + 2.75, z_tabique + 0.12), 0.0, 34, Color(0.15, 0.16, 0.2))
+			PiezasObra._rotulo(nodo, Idiomas.t(String(sala[0])).to_upper(), Vector3(c, y0 + 2.75, z_tabique + 0.12), 0.0, 34, Color(0.15, 0.16, 0.2))
 			var o := OmniLight3D.new()
 			o.position = Vector3(c, y0 + ALTO_LIBRE - 0.4, (z_out + z_tabique) / 2.0)
 			o.omni_range = maxf(6.0, (b - a) * 0.9)
 			o.light_energy = 0.9
 			nodo.add_child(o)
-			TunelVestuario._caja(nodo, Vector3(c, y0 + ALTO_LIBRE - 0.03, (z_out + z_tabique) / 2.0), Vector3(1.8, 0.05, 0.6), luz, false)
+			PiezasObra._caja(nodo, Vector3(c, y0 + ALTO_LIBRE - 0.03, (z_out + z_tabique) / 2.0), Vector3(1.8, 0.05, 0.6), luz, false)
 			## Suelo y techo propios de la sala.
 			var gusto := _gusto(String(sala[0]))
 			var col_suelo := Color(String(gusto["suelo"])) if String(gusto.get("suelo", "")) != "" else _suelo_de(String(sala[0]))
-			TunelVestuario._caja(nodo, Vector3(c, y0 + 0.025, (z_out + z_tabique) / 2.0), Vector3(b - a - 0.2, 0.01, z_tabique - z_out - 0.1),
-				TunelVestuario._mat(col_suelo, 0.75), false)
-			TunelVestuario._caja(nodo, Vector3(c, y0 + ALTO_LIBRE - 0.01, (z_out + z_tabique) / 2.0), Vector3(b - a - 0.2, 0.02, z_tabique - z_out - 0.1),
-				TunelVestuario._mat(Color(0.8, 0.8, 0.78), 0.9), false)
+			PiezasObra._caja(nodo, Vector3(c, y0 + 0.025, (z_out + z_tabique) / 2.0), Vector3(b - a - 0.2, 0.01, z_tabique - z_out - 0.1),
+				PiezasObra._mat(col_suelo, 0.75), false)
+			PiezasObra._caja(nodo, Vector3(c, y0 + ALTO_LIBRE - 0.01, (z_out + z_tabique) / 2.0), Vector3(b - a - 0.2, 0.02, z_tabique - z_out - 0.1),
+				PiezasObra._mat(Color(0.8, 0.8, 0.78), 0.9), false)
 			var caja := Rect2(a + 0.2, z_out + 0.2, b - a - 0.4, z_tabique - z_out - 0.4)
 			_amueblar(nodo, String(sala[0]), caja, y0, c1, c2, nombre_club)
 			_decorar(nodo, String(sala[0]), a, b, z_out, z_tabique, y0, c1, c2, gusto)

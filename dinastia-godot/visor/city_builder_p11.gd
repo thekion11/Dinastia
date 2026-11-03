@@ -300,7 +300,7 @@ func encender_luces(noche: float) -> void:
 		if expansion != null and expansion.textura_luz != null:   ## apagón por sector (§2.2g)
 			mt.set_shader_parameter("luz_sectores", expansion.textura_luz)
 			mt.set_shader_parameter("usa_sectores", true)
-	StadiumBuilder.encender_conos(f)
+	load("res://visor/stadium_builder.gd").encender_conos(f)
 	for l in _farolas_luz:
 		if is_instance_valid(l):
 			## 5,4 y no 2,4: se midió que a 2,4 las farolas SÍ estaban

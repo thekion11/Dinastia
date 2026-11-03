@@ -151,7 +151,7 @@ func sentarse(al_momento := false) -> void:
 
 ## ¿En qué zona de la planta actual cae este punto? (vacío: no se pisa).
 func zona_en(p: Vector3, _radio: float = 0.0) -> Dictionary:
-	return TunelVestuario.zona_en(zonas, p, planta)
+	return TunelMedidas.zona_en(zonas, p, planta)
 
 ## Cámara en tercera persona. Dentro del vestuario y del túnel no sale de las
 ## paredes ni pasa del techo: si no, se vería el exterior de la caja.
@@ -415,5 +415,5 @@ func _caminar_ruta(delta: float) -> void:
 
 func _junto_a_la_persiana() -> bool:
 	var x0 := float(_datos.get("x0", 0.0))
-	return absf(cuerpo.position.x - (x0 + TunelVestuario.PUERTA_X)) < GaleriaClub.MEDIO + 0.6 \
+	return absf(cuerpo.position.x - (x0 + TunelMedidas.PUERTA_X)) < GaleriaClub.MEDIO + 0.6 \
 		and cuerpo.position.z > float(_datos.get("z_fin", 0.0)) - 1.6
