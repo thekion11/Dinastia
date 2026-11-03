@@ -34,8 +34,9 @@ public:
 	// `CityBuilder._imagen_hierba_gd`: la textura de hierba (azar del motor, misma secuencia).
 	Ref<Image> hierba(const Ref<Image> &manchas, int64_t semilla) const;
 	// `OnceAuto.asignar_gd` (el once automático de `Club.once`, M-469): para cada ranura (en `orden`) el índice del libre que la ocupa (-1 si nadie).
-	// `ranuras` = {puestos, ks, ws, grupos, por}; `jug` = {pos_e, ovr, sec, attr, fa, fb, por, ge}. Calcula `Jugador.media_en` con los mismos pasos.
-	PackedInt32Array once_asignar(const Dictionary &ranuras, const Dictionary &jug, const PackedInt32Array &orden) const;
+	// `ranuras` = {puestos, ks, ws, grupos, por}; `libres` = los `Jugador` (se leen aquí: pos_e, ovr, pos_sec, atributos, forma, moral); `grupo_de` = {pos_e: grupo}.
+	// Calcula `Jugador.media_en` con los mismos pasos (los atributos de cada jugador se leen una sola vez).
+	PackedInt32Array once_asignar_libres(const Dictionary &ranuras, const Array &libres, const Dictionary &grupo_de, const PackedInt32Array &orden) const;
 };
 
 } // namespace godot
