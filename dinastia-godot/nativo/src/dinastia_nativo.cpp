@@ -17,7 +17,7 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("alisado", "pos", "nor", "idx"), &DinastiaNativo::alisado);
 	ClassDB::bind_method(D_METHOD("terreno", "ruido", "detalle", "lado", "celdas", "baldosas", "llano_radio", "llano_trans", "alto", "monte", "monte_alto", "monte_radio"), &DinastiaNativo::terreno);
 	ClassDB::bind_method(D_METHOD("hierba", "manchas", "semilla"), &DinastiaNativo::hierba);
-	ClassDB::bind_method(D_METHOD("once_asignar", "ranuras", "jug", "orden"), &DinastiaNativo::once_asignar);
+	ClassDB::bind_method(D_METHOD("once_asignar_libres", "ranuras", "libres", "grupo_de", "orden"), &DinastiaNativo::once_asignar_libres);
 }
 
 PackedByteArray DinastiaNativo::rampa(const PackedByteArray &src, const PackedByteArray &lut) const {
@@ -159,17 +159,17 @@ Array DinastiaNativo::alisado(const PackedVector3Array &pos, const PackedVector3
 	return salida;
 }
 
-// `Jugador.media_en(demarcacion)` sin memoria: media ponderada de los atributos presentes; sin pesos (o suma de pesos <= 0) vale `ovr`.
-static int64_t media_en_cpp(const Dictionary &attr, const PackedStringArray &ks, const PackedFloat64Array &ws, int64_t ovr) {
-	if (ks.size() == 0) {
+// `Jugador.media_en(demarcacion)` sin memoria: media ponderada de los atributos presentes (en el orden de `ks`); sin pesos, o con suma de pesos <= 0, vale `ovr`.
+// `val`/`hay` son los atributos del jugador ya leídos (por índice de clave); `ids` dice qué clave de `val` es cada `ks[i]`.
+static int64_t media_en_cpp(const std::vector<double> &val, const std::vector<uint8_t> &hay, const std::vector<int> &ids, const PackedFloat64Array &ws, int64_t ovr) {
+	if (ids.empty()) {
 		return ovr;
 	}
 	double suma = 0.0;
 	double peso_total = 0.0;
-	for (int64_t i = 0; i < ks.size(); i++) {
-		const Variant a = attr.get(ks[i], Variant());
-		if (a.get_type() != Variant::NIL) {
-			suma += double(a) * ws[i];
+	for (size_t i = 0; i < ids.size(); i++) {
+		if (hay[ids[i]]) {
+			suma += val[ids[i]] * ws[i];
 			peso_total += ws[i];
 		}
 	}
@@ -179,25 +179,66 @@ static int64_t media_en_cpp(const Dictionary &attr, const PackedStringArray &ks,
 	return int64_t(std::round(suma / peso_total)); // int(round(x)): redondeo lejos de cero y luego truncado, como GDScript
 }
 
-PackedInt32Array DinastiaNativo::once_asignar(const Dictionary &ranuras, const Dictionary &jug, const PackedInt32Array &orden) const {
+PackedInt32Array DinastiaNativo::once_asignar_libres(const Dictionary &ranuras, const Array &libres, const Dictionary &grupo_de, const PackedInt32Array &orden) const {
 	const PackedStringArray puestos = ranuras["puestos"];
 	const Array ks_r = ranuras["ks"];
 	const Array ws_r = ranuras["ws"];
 	const PackedStringArray grupos = ranuras["grupos"];
 	const PackedByteArray por_r = ranuras["por"];
-	const PackedStringArray pos_e = jug["pos_e"];
-	const PackedInt32Array ovr = jug["ovr"];
-	const Array sec = jug["sec"];
-	const Array attr = jug["attr"];
-	const PackedFloat64Array fa = jug["fa"];
-	const PackedFloat64Array fb = jug["fb"];
-	const PackedByteArray por = jug["por"];
-	const PackedStringArray ge = jug["ge"];
-	const int64_t n = pos_e.size();
+	const int64_t n = libres.size();
+	const int64_t ns = puestos.size();
 	PackedInt32Array res;
-	res.resize(puestos.size());
-	for (int64_t i = 0; i < res.size(); i++) {
+	res.resize(ns);
+	for (int64_t i = 0; i < ns; i++) {
 		res.set(i, -1);
+	}
+	// Las claves de atributo que piden las ranuras, sin repetir, y para cada ranura el índice de cada una de sus claves.
+	std::vector<String> claves;
+	std::vector<std::vector<int>> ids_r(ns);
+	for (int64_t i = 0; i < ns; i++) {
+		const PackedStringArray ks = ks_r[i];
+		for (int64_t q = 0; q < ks.size(); q++) {
+			int id = -1;
+			for (size_t c = 0; c < claves.size(); c++) {
+				if (claves[c] == ks[q]) {
+					id = int(c);
+					break;
+				}
+			}
+			if (id < 0) {
+				id = int(claves.size());
+				claves.push_back(ks[q]);
+			}
+			ids_r[i].push_back(id);
+		}
+	}
+	// Cada libre, leído una sola vez.
+	std::vector<String> pos_e(n);
+	std::vector<int64_t> ovr(n);
+	std::vector<Array> sec(n);
+	std::vector<double> fa(n);
+	std::vector<double> fb(n);
+	std::vector<uint8_t> por(n);
+	std::vector<String> ge(n);
+	std::vector<std::vector<double>> val(n, std::vector<double>(claves.size(), 0.0));
+	std::vector<std::vector<uint8_t>> hay(n, std::vector<uint8_t>(claves.size(), 0));
+	for (int64_t k = 0; k < n; k++) {
+		Object *o = libres[k];
+		pos_e[k] = o->get("pos_e");
+		ovr[k] = int64_t(o->get("ovr"));
+		sec[k] = o->get("pos_sec");
+		fa[k] = 0.7 + 0.003 * double(int64_t(o->get("forma")));
+		fb[k] = 0.9 + 0.002 * double(int64_t(o->get("moral")));
+		por[k] = pos_e[k] == String("POR") ? 1 : 0;
+		ge[k] = grupo_de.get(pos_e[k], String(""));
+		const Dictionary attr = o->get("atributos");
+		for (size_t c = 0; c < claves.size(); c++) {
+			const Variant a = attr.get(claves[c], Variant());
+			if (a.get_type() != Variant::NIL) {
+				val[k][c] = double(a);
+				hay[k][c] = 1;
+			}
+		}
 	}
 	std::vector<uint8_t> tomado(n, 0);
 	for (int64_t oi = 0; oi < orden.size(); oi++) {
@@ -205,7 +246,6 @@ PackedInt32Array DinastiaNativo::once_asignar(const Dictionary &ranuras, const D
 		const String puesto = puestos[i];
 		const int puesto_por = por_r[i];
 		const String grupo_puesto = grupos[i];
-		const PackedStringArray ks = ks_r[i];
 		const PackedFloat64Array ws = ws_r[i];
 		int64_t mejor_k = -1;
 		double mejor_v = -1.0;
@@ -216,15 +256,14 @@ PackedInt32Array DinastiaNativo::once_asignar(const Dictionary &ranuras, const D
 			double encaja = 1.0;
 			const bool su_puesto = pos_e[k] == puesto;
 			if (!su_puesto) {
-				const Array sk = sec[k];
-				const bool en_sec = sk.has(puesto);
+				const bool en_sec = sec[k].has(puesto);
 				encaja = en_sec ? 0.94 : 0.86;
 				if (!en_sec && grupo_puesto != ge[k]) {
 					encaja = 0.62;
 				}
 			}
-			const int64_t me = media_en_cpp(attr[k], ks, ws, ovr[k]);
-			const int64_t en_puesto = su_puesto ? me : (me < int64_t(ovr[k]) ? me : int64_t(ovr[k]));
+			const int64_t me = media_en_cpp(val[k], hay[k], ids_r[i], ws, ovr[k]);
+			const int64_t en_puesto = su_puesto ? me : (me < ovr[k] ? me : ovr[k]);
 			const double v = ((double(en_puesto) * encaja) * fa[k]) * fb[k];
 			if (v > mejor_v) {
 				mejor_v = v;
