@@ -83,7 +83,8 @@ func _probar() -> void:
 	_comprobar(bool(a["completa"]) and bool(b["completa"]), "las dos terminan (la diferida en %d fotogramas)" % int(b["frames"]))
 	## (Dos construcciones idénticas ya difieren en ±0,1 % —azar global de los peatones y de los edificios lejanos—: se compara con 1 % de margen, y exacto lo que es del código.)
 	_comprobar(_casi(a["instancias"], b["instancias"]) and _casi(a["multimesh"], b["multimesh"]), "mismas instancias de MultiMesh (%d / %d) y MultiMesh (%d / %d)" % [int(a["instancias"]), int(b["instancias"]), int(a["multimesh"]), int(b["multimesh"])])
-	_comprobar(_casi(a["mallas"], b["mallas"]), "mismas mallas sueltas (%d / %d)" % [int(a["mallas"]), int(b["mallas"])])
+	_comprobar(_casi(a["mallas"], b["mallas"]), "mismas mallas sueltas (%d / %d)%s" % [int(a["mallas"]), int(b["mallas"]),
+		"" if _casi(a["mallas"], b["mallas"]) else " · difieren: " + ", ".join(dif.slice(0, 8))])
 	_comprobar(a["vehiculos"] == b["vehiculos"] and bool(b["trafico"]), "mismo tráfico (%d vehículos)" % int(b["vehiculos"]))
 	_comprobar(_casi(a["circulos"], b["circulos"]), "mismos obstáculos de colisión (%d / %d)" % [int(a["circulos"]), int(b["circulos"])])
 	_comprobar(a["edificios"] == b["edificios"], "mismos edificios contados (%d / %d)" % [int(a["edificios"]), int(b["edificios"])])
