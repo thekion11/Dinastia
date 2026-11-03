@@ -47,6 +47,11 @@ func _process(_d: float) -> void:
 		_ok(false, "hay motor real")
 		_fin()
 		return
+	## (3-11) Solo los pasos de la prueba (`_avanzar`) mueven el motor: su propio paso de física también corría y, con
+	## fotogramas lentos (el CI), se colaban varios entre dos fotogramas de la prueba: el rival se movía o cambiaba el
+	## usuario antes de comprobar («contener», «RB presiona», «mantener tiro carga»). Se reproduce con `--max-fps 8`.
+	if _motor.is_physics_processing():
+		_motor.set_physics_process(false)
 	if _t == 3 and not _dato.has("cesped_ok"):
 		## EL VOLUMEN DEL CÉSPED NO SE PIERDE EN SILENCIO (14-10-2026): en calidad
 		## ALTO/ULTRA el partido tiene sus capas de hierba y se dibujan.
