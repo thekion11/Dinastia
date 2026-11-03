@@ -166,3 +166,14 @@ A pie de calle (prólogo, MÍNIMO) lo que más llamadas cuesta: MultiMesh −455
 | Prólogo: texturas únicas estimadas | 205 MB | 128 MB |
 | Partido (TV): pico de RAM del proceso (`hw_modesto`, software) | 2 362 MB | **2 152 MB** |
 Sin medir / pendiente: el resto de la memoria estática (1,0 GB en el prólogo: mallas del renderizador, nodos, cachés) y el audio sintetizado (`Sonido._sintetizar`, cargado en RAM); lo siguiente más grande por texturas son los dos cuerpos base de 2048² (5 MB cada uno) y ~100 texturas procedurales de 512² (1,3 MB cada una) de gradas, túnel y exterior del estadio.
+
+## MEMORIA en MÍNIMO, 2.ª tanda (3-11)
+- **Granos y normales a 256²** (`Texturas._lado`) en MÍNIMO (antes 512²; ULTRA sigue en 1024): los ~100 ruidos procedurales de gradas, túnel, fachadas y suelo ocupan un cuarto, se generan 4× más rápido y se guardan en disco aparte.
+  Captura del partido (cámara de TV, 1280×720) idéntica a ojo. Vídeo del partido 169 → **132 MB**; vídeo del prólogo 275 → **216 MB** (texturas 158 → 99). Acumulado desde el 3-11 por la mañana: prólogo 430 → 216 MB (−50 %).
+- **Los dos cuerpos base de 2048²** (5 MB cada uno): no se tocan; bajarlos a 1024² solo ahorra ~8 MB y se vería peor de cerca.
+- **Qué ocupa los ~750 MB estáticos del menú** (medido con `load()` de un script y `Performance.MEMORY_STATIC`, headless):
+  - motor + autocargas: 31 MB → 77 MB tras el primer fotograma (autocargas ≈ 46 MB, sobre todo `idiomas_extra.json` con sus 9 idiomas).
+  - **+479 MB: compilar GDScript.** Cargar CUALQUIER script que nombre `Roles`/`Mundo` (p. ej. `cartera_dt.gd`, `roles_p1.gd`, `principal.gd`, `city_builder.gd`) compila de golpe casi todo el proyecto (~900 scripts por las anotaciones de tipo): ~0,5 MB por script, 14 MB solo `anim_futbol` o `anim_quaternius` (tablas `const` de fotogramas clave).
+  - los JSON grandes se cargan solo al usarlos: `caras_reales_mallas.json` (9,6 MB de texto, ~85 MB en memoria) al aparecer una cara real.
+  - No hay precargas que sobren (`preload` solo se usa 19 veces, todas scripts o shaders pequeños).
+  Palancas que quedan (cambios de arquitectura, no se hicieron): desacoplar los tipos `Roles`/`Mundo` en las firmas para que el menú no compile el partido y la ciudad; sacar las tablas `const` de animación a recursos `.res` cargados al entrar al partido.
