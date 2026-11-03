@@ -19,10 +19,10 @@ extends RefCounted
 
 ## MÍNIMO (2-11-2026, pedido del dueño: «una versión ultra ligera dentro del juego» para móviles y PC muy modestos):
 ## por debajo de MEDIO y con valor −1, para que lo guardado (0, 1, 2) siga valiendo y todo lo que decide con
-## «>= ALTO» lo trate como ligero. Sin sombras, suavizado mínimo (MSAA x2), el 3D al 70 % de resolución, sin reflejos del cielo
+## «>= ALTO» lo trate como ligero. Sin sombras, suavizado mínimo (MSAA x2), el 3D al 50 % de resolución (3-11; antes 70 %), sin reflejos del cielo
 ## en los materiales, y grada, gente y césped como en MEDIO o menos (ver `escala_3d` y quien mira `<= MEDIO`).
 enum { MINIMO = -1, MEDIO, ALTO, ULTRA }
-const ESCALA_MINIMO := 0.7
+const ESCALA_MINIMO := 0.5
 
 ## La resolución base del 3D del nivel (1.0 salvo en MÍNIMO). La calidad adaptativa vuelve a esta, no a 1.0.
 static func escala_3d(nivel: int = -99) -> float:
