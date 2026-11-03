@@ -91,7 +91,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 				var cruce_gk := b + vel_balon * tg
 				cruce_gk.y = b.y + vel_balon.y * tg - 0.5 * G * tg * tg
 				var lat := absf(cruce_gk.x - pos(p).x)
-				var prob := 0.47 + float(p["attr"]["ref"]) * 0.42
+				var prob := (0.47 + float(p["attr"]["ref"]) * 0.42) * MotorParada.K
 				if manual:
 					if absf(guia) < 0.3:
 						## No actuó: reacción automática más floja.

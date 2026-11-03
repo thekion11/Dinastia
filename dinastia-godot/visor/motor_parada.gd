@@ -53,3 +53,7 @@ static func destino(m: MotorJugable, gk: Dictionary) -> Vector3:
 	var tope := DESLIZA * (0.6 + 0.4 * float(gk["attr"]["ref"]))
 	gk["correr"] = true
 	return Vector3(yo.x + clampf(cruce.x - yo.x, -tope, tope), 0, yo.z)
+
+## CICLO 20 (3-11): el motor para ≈59 % de los tiros a puerta (real ≈70 %). `PARADA_K` multiplica la probabilidad base de atajar (1,0 = como antes).
+static var K := float(OS.get_environment("PARADA_K")) if OS.get_environment("PARADA_K") != "" else 1.0
+
