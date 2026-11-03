@@ -116,6 +116,12 @@ func puede_cobrar(roles: Roles, importe: int, dia: int) -> String:
 		return "pin"
 	return _cargo_tarjeta(roles, importe, "", dia, true)
 
+## Con el PIN ya validado en el comercio: ¿se podría cobrar `importe` con la tarjeta (límite diario y saldo)? "" = sí. No toca nada.
+func puede_cobrar_con_pin(roles: Roles, importe: int, dia: int) -> String:
+	if importe <= 0:
+		return "importe"
+	return "bloqueada" if bloqueada else _cargo_tarjeta(roles, importe, "", dia, true)
+
 ## Cobra en el comercio sin pantalla de PIN: primero el efectivo del bolsillo y, si no alcanza, la tarjeta sin contacto (hasta `SIN_PIN` €).
 ## Devuelve {"error": "" o código, "via": "efectivo" | "tarjeta"}.
 func cobrar(roles: Roles, importe: int, concepto: String, dia: int) -> Dictionary:

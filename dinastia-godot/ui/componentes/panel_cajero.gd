@@ -75,33 +75,13 @@ func _pintar() -> void:
 		_pintar_teclado()
 
 func _pintar_teclado() -> void:
-	var titulo := Label.new()
+	var titulo := Idiomas.t("Introduce tu PIN")
 	match _estado:
 		"pin_actual":
-			titulo.text = Idiomas.t("Teclea tu PIN actual")
+			titulo = Idiomas.t("Teclea tu PIN actual")
 		"pin_nuevo":
-			titulo.text = Idiomas.t("Teclea el PIN nuevo (4 cifras)")
-		_:
-			titulo.text = Idiomas.t("Introduce tu PIN")
-	titulo.add_theme_font_size_override("font_size", 19)
-	_caja.add_child(titulo)
-	var pantalla := Label.new()
-	pantalla.text = "•".repeat(_tecleado.length()) + "·".repeat(4 - _tecleado.length())
-	pantalla.add_theme_font_size_override("font_size", 34)
-	pantalla.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_caja.add_child(pantalla)
-	var rejilla := GridContainer.new()
-	rejilla.columns = 3
-	rejilla.add_theme_constant_override("h_separation", 6)
-	rejilla.add_theme_constant_override("v_separation", 6)
-	_caja.add_child(rejilla)
-	for t in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "⌫", "0", "✕"]:
-		var b := Button.new()
-		b.text = t
-		b.custom_minimum_size = Vector2(120, 54)
-		b.add_theme_font_size_override("font_size", 24)
-		b.pressed.connect(_tecla.bind(t))
-		rejilla.add_child(b)
+			titulo = Idiomas.t("Teclea el PIN nuevo (4 cifras)")
+	TecladoPin.pintar(_caja, titulo, _tecleado, _tecla)
 
 func _pintar_ventanilla() -> void:
 	var saldos := Label.new()
