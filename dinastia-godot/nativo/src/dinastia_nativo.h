@@ -33,6 +33,9 @@ public:
 			double monte_radio) const;
 	// `CityBuilder._imagen_hierba_gd`: la textura de hierba (azar del motor, misma secuencia).
 	Ref<Image> hierba(const Ref<Image> &manchas, int64_t semilla) const;
+	// `OnceAuto.asignar_gd` (el once automático de `Club.once`, M-469): para cada ranura (en `orden`) el índice del libre que la ocupa (-1 si nadie).
+	// `ranuras` = {puestos, ks, ws, grupos, por}; `jug` = {pos_e, ovr, sec, attr, fa, fb, por, ge}. Calcula `Jugador.media_en` con los mismos pasos.
+	PackedInt32Array once_asignar(const Dictionary &ranuras, const Dictionary &jug, const PackedInt32Array &orden) const;
 };
 
 } // namespace godot
