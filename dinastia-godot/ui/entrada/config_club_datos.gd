@@ -102,7 +102,7 @@ func desde_estado(estado: Dictionary) -> void:
 		club.rep = base.rep
 		club.estadio_aforo = base.estadio_aforo
 		club.identidad_desde_dic(base.identidad_a_dic())
-		mascota = EstadioExtras.animal_de(base)
+		mascota = load("res://visor/estadio_extras.gd").animal_de(base)
 		crea_club = false
 	if String(estado.get("nombre_club", "")).strip_edges() != "":
 		club.nombre = String(estado["nombre_club"]).strip_edges()

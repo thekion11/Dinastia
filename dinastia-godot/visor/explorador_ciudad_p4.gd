@@ -36,7 +36,7 @@ func _mover_en_estadio(delta: float) -> void:
 		_salir_del_estadio()
 		return
 	var ant := cuerpo.position
-	var pe_col := (get_tree().get_first_node_in_group("personal_club") as PersonalEstadio) if is_inside_tree() else null
+	var pe_col = (get_tree().get_first_node_in_group("personal_club")) if is_inside_tree() else null
 	var llega := ColisionClub.mover(cuerpo, ant, nueva, zonas, _planta, CityBuilder.ESTADIO_EN, pe_col)
 	var pedido := Vector2(nueva.x - ant.x, nueva.z - ant.z).length()
 	var hecho := Vector2(llega.x - ant.x, llega.z - ant.z).length()
@@ -47,12 +47,12 @@ func _mover_en_estadio(delta: float) -> void:
 		elif hecho < pedido * 0.9:
 			_vel_pie *= 0.92
 	cuerpo.position = Vector3(llega.x, RecorridoClub.y_de(_planta), llega.z)
-	PersonalEstadio.avisar_jugador(cuerpo.position - CityBuilder.ESTADIO_EN, _planta)
+	load("res://visor/personal_estadio.gd").avisar_jugador(cuerpo.position - CityBuilder.ESTADIO_EN, _planta)
 	cuerpo.rotation.y = rumbo
 	_animar_dt(vel)
-	var z := TunelVestuario.zona_en(zonas, cuerpo.position - CityBuilder.ESTADIO_EN, _planta)
+	var z := TunelMedidas.zona_en(zonas, cuerpo.position - CityBuilder.ESTADIO_EN, _planta)
 	var nombre := String(z.get("nombre", ""))
-	var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+	var pe = get_tree().get_first_node_in_group("personal_club")
 	var g: Dictionary = pe.cercano(cuerpo.position - CityBuilder.ESTADIO_EN, _planta) if pe != null else {}
 	if not g.is_empty():
 		_aviso.text = Idiomas.t("E: hablar con %s (%s)") % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]
@@ -151,7 +151,7 @@ func _usar() -> void:
 			return
 		if MuseoVitrinas.usar(self, loc):
 			return
-		var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+		var pe = get_tree().get_first_node_in_group("personal_club")
 		var g: Dictionary = pe.cercano(cuerpo.position - CityBuilder.ESTADIO_EN, _planta) if pe != null else {}
 		if not g.is_empty():
 			_menu_asc = RecorridoClub.dialogo(_capa, pe, g, cuerpo.position - CityBuilder.ESTADIO_EN)
@@ -197,7 +197,7 @@ func _usar() -> void:
 	if _cerca["tipo"] == "portero":
 		if is_instance_valid(_menu_asc):
 			return
-		var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+		var pe = get_tree().get_first_node_in_group("personal_club")
 		_menu_asc = RecorridoClub.dialogo_portero(_capa, pe, _cerca["g"], cuerpo.position - CityBuilder.ESTADIO_EN, _cruzar_puerta)
 		_menu_asc.set_meta("portero", _cerca["g"])
 		return
@@ -331,7 +331,7 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 	var perfil: Dictionary = cb.datos.get("perfil_estadio", {})
 	if not perfil.is_empty():
 		var aforo := int(perfil.get("aforo", 20000))
-		_est = TunelVestuario.datos(perfil, StadiumBuilder.niveles_de(perfil, aforo))
+		_est = load("res://visor/tunel_vestuario.gd").datos(perfil, load("res://visor/stadium_builder.gd").niveles_de(perfil, aforo))
 		## La galería subterránea al complejo (fase 6) solo existe aquí.
 		_est["zonas"] = GaleriaClub.zonas(_est) + (_est["zonas"] as Array)
 	position = Vector3.ZERO

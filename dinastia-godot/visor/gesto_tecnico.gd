@@ -82,7 +82,7 @@ static func factor_clima(m: Object, por_el_aire: bool) -> float:
 static func factor(m: Object, p: Dictionary, por_el_aire: bool) -> float:
 	var f := factor_clima(m, por_el_aire)
 	if int(m.call("equipo_cpu")) == (0 if bool(p.get("es_local", true)) else 1):
-		f *= float((MotorJugable.DIFICULTADES.get(String(m.get("dificultad_cpu")), {}) as Dictionary).get("error", 1.0))
+		f *= float((load("res://visor/motor_jugable.gd").DIFICULTADES.get(String(m.get("dificultad_cpu")), {}) as Dictionary).get("error", 1.0))
 	return f
 
 ## Cuánto se le resbala al portero (multiplica su probabilidad de blocar en vez de rechazar).

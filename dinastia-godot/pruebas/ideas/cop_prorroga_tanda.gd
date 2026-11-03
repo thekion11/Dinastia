@@ -46,7 +46,7 @@ func _llegar_a_semana_de_copa(m: Mundo, club: Club) -> void:
 ## Corre el motor con empates forzados al final de la segunda parte (y de la prórroga). En la tanda, cuando
 ## el lanzador eres tú, mantiene TIRO medio segundo (como un jugador) y suelta.
 func _correr(pj: PartidoJugable, empatar_prorroga: bool) -> Dictionary:
-	var motor := pj.motor
+	var motor = pj.motor
 	motor.set_physics_process(false)
 	motor._cambio_decidido = true
 	## Durante el juego, tu futbolista en piloto automático (sin mando no lanzaría sus córners); en la
@@ -108,7 +108,7 @@ func _copa_en_cesped(m: Mundo, club: Club) -> void:
 		if String(p["id"]) == pj.motor.id_usuario:
 			p["attr"]["tir"] = 0.99
 	var r := _correr(pj, true)
-	var motor := pj.motor
+	var motor = pj.motor
 	var res := pj.resultado()
 	_linea("  (motor: estado %s, mitad %d, goles %s, minuto %d, r %s)" % [motor.estado, motor.mitad, str(motor.goles), motor.minuto(), str(r)])
 	var pen: Array = res["penales"]

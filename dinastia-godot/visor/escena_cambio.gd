@@ -30,7 +30,7 @@ var congelar := false
 ## Carrera de Jugador: el nodo del que sale es del motor; al final se esconde
 ## (no se borra) por si algo lo sigue mirando.
 var borrar_al_salir := true
-var _motor: MotorJugable
+var _motor
 var _sale: Node3D
 var _ap_sale: AnimationPlayer
 var _entra: Dictionary = {}
@@ -42,11 +42,11 @@ var _anim_actual := ""
 var _sujeto := true
 var _fuera := Vector3.INF
 
-static func iniciar(raiz: Node3D, spawner: PlayerSpawner, motor: MotorJugable, nodo_sale: Node3D, anim_sale: AnimationPlayer,
+static func iniciar(raiz: Node3D, spawner: PlayerSpawner, motor, nodo_sale: Node3D, anim_sale: AnimationPlayer,
 		entra: Dictionary, dorsal_sale: int, dorsal_entra: int, kit: Dictionary = {}) -> EscenaCambio:
 	if raiz == null or motor == null or not is_instance_valid(nodo_sale) or entra.is_empty():
 		return null
-	CuartoArbitro.levantar_cambio(raiz, spawner, dorsal_sale, dorsal_entra, kit)
+	load("res://visor/cuarto_arbitro.gd").levantar_cambio(raiz, spawner, dorsal_sale, dorsal_entra, kit)
 	## Dos cambios a la vez (doble cambio): el segundo espera un metro más allá.
 	var ya := 0
 	for h in raiz.get_children():

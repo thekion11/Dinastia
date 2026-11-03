@@ -436,12 +436,12 @@ func _gesticular_dt(delta: float) -> void:
 	var ap: AnimationPlayer = _dt_3d.get("anim")
 	var gesto: String = GESTOS_PRENSA[_rng_dt.randi() % GESTOS_PRENSA.size()]
 	var cara: String = ["concentrado", "alegre", "neutral", "enfado"][_rng_dt.randi() % 4]
-	if AnimExtra.asegurar_gesto_tono(ap, _dt_3d.get("esqueleto"), tono_dt) != "":   ## §2.5: el gesto de su tono
-		gesto = AnimExtra.GESTO_TONO[tono_dt]; cara = AnimExtra.CARA_TONO[tono_dt]; tono_dt = ""
+	if load("res://visor/anim_extra.gd").asegurar_gesto_tono(ap, _dt_3d.get("esqueleto"), tono_dt) != "":   ## §2.5: el gesto de su tono
+		gesto = load("res://visor/anim_extra.gd").GESTO_TONO[tono_dt]; cara = load("res://visor/anim_extra.gd").CARA_TONO[tono_dt]; tono_dt = ""
 	if ap != null:
 		var lib := ap.get_animation_library("")
 		if lib != null:
-			AnimExtra.asegurar(ap, _dt_3d.get("esqueleto"), gesto)
+			load("res://visor/anim_extra.gd").asegurar(ap, _dt_3d.get("esqueleto"), gesto)
 		if ap.has_animation(gesto):
 			ap.play(gesto, 0.3)
 			ap.queue("parado")

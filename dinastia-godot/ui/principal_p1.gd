@@ -6,7 +6,14 @@ var _ui_plantel := PantallaPlantel.new(self)
 var _ui_ficha := PantallaFicha.new(self)
 var _ui_despacho := PantallaDespacho.new(self)
 var _ui_club_vida := PantallaClubVida.new(self)
-var _ui_club_estadio := PantallaClubEstadio.new(self)
+## (3-11, memoria del menú) Estas dos pantallas se crean al USARLAS: nombrarlas y construirlas al abrir el menú cargaba el estadio y el partido 3D enteros
+## (~85 scripts, ~65 MB) que solo hacen falta al jugar. Se acceden como siempre (`_ui_club_estadio.abrir(...)`, `_jornada._dirigir()`).
+var _ui_club_estadio_o = null
+var _ui_club_estadio:
+	get:
+		if _ui_club_estadio_o == null:
+			_ui_club_estadio_o = load("res://ui/pantallas/pantalla_club_estadio.gd").new(self)
+		return _ui_club_estadio_o
 var _ui_cantera := PantallaCantera.new(self)
 var _ui_legado := PantallaLegado.new(self)
 var _ui_ciudad := PantallaCiudad.new(self)
@@ -315,7 +322,12 @@ var _hubs := Hubs.new(self)
 ## Elegir club: `PantallaElegirClub` (fase 6, paso 4).
 var _ui_elegir_club := PantallaElegirClub.new(self)
 ## La jornada de partido (dirigir, cerrar, jugar temporada): `JornadaPartido` (fase 6, paso 7).
-var _jornada := JornadaPartido.new(self)
+var _jornada_o = null
+var _jornada:
+	get:
+		if _jornada_o == null:
+			_jornada_o = load("res://ui/principal/jornada_partido.gd").new(self)
+		return _jornada_o
 var _construccion := ConstruirMenu.new(self)
 var _avance := AvanceSemana.new(self)
 var _federacion := FederacionMenu.new(self)

@@ -219,7 +219,7 @@ func spawn_sentados(root: Node3D, jugadores: Array, es_local: bool, kit: Diction
 		## `pruebas/diagnostico_altura_cadera_q.gd`: cadera de pie a 1,03m,
 		## banco a 0,45m) baja la RAIZ del modelo -la pose "sentado" solo
 		## dobla las piernas, no mueve la cadera en el espacio por si sola-.
-		n.position = Vector3(x_banda, AnimQuaternius.ALTO_ASIENTO_OFFSET, z)
+		n.position = Vector3(x_banda, load("res://visor/anim_quaternius.gd").ALTO_ASIENTO_OFFSET, z)
 		n.rotation.y = -PI * 0.5
 		var ap: AnimationPlayer = nodo["anim"]
 		if is_instance_valid(ap) and ap.has_animation("sentado"):

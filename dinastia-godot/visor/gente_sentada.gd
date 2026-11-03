@@ -179,7 +179,7 @@ func _llegadas(delta: float) -> void:
 				s["fase"] = 1
 				s["t"] = 0.0
 				var ap: AnimationPlayer = d["anim"]
-				AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(n), "sentarse")
+				load("res://visor/anim_extra.gd").asegurar(ap, FutbolistaQ.esqueleto_de(n), "sentarse")
 				Mini3D.anim(d, "sentarse" if ap.has_animation("sentarse") else "sentado", "sentado")
 		else:
 			n.rotation.y = MovimientoNatural.girar(n.rotation.y, float(s["giro"]), delta)
@@ -203,7 +203,7 @@ func _levantar(i: int) -> void:
 	var d: Dictionary = c["d"]
 	var n: Node3D = d["nodo"]
 	var ap: AnimationPlayer = d["anim"]
-	if not is_instance_valid(n) or not AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(n), "levantarse"):
+	if not is_instance_valid(n) or not load("res://visor/anim_extra.gd").asegurar(ap, FutbolistaQ.esqueleto_de(n), "levantarse"):
 		if is_instance_valid(n):
 			n.queue_free()
 		return
