@@ -37,7 +37,7 @@ penales, física del balón): varias cifras ya mejoraron, pero hay que volver a 
   verificación con más rigor; segundas divisiones (hoy solo Chile tiene dos) si el dueño las pide.
 - U6. Hecho el 3-11: meta de cantera, roles del once en el partido, perillas de la pizarra y menú lateral con
   Plantel, Dinero y Competiciones. Quedan menores: pagar con tarjeta y PIN en tiendas, contador de amarillas antes
-  de la sanción, detalle del coste de cada viaje, y revisar si vuelven los cedidos por un evento de prensa.
+  de la sanción y detalle del coste de cada viaje (los cedidos por la prensa ya vuelven, 3-11).
 - U7. Revisar si a `main` le falta algo.
 
 ## Preguntas del dueño (respondidas en el chat del 3-11)
