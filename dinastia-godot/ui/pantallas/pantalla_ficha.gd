@@ -91,7 +91,7 @@ func _ver_ficha(j: Jugador) -> void:
 	## el jugador anterior hasta la siguiente semana.
 	## Diferido (29-9-2026): solo se repinta si la pestaña está a la vista; si
 	## no, al abrirla. Era 0,3-0,5 s en cada clic de la ficha.
-	p._perezoso(p._lista_entren, p._ui_club_vida._pintar_entrenamiento.bind(p.mundo.mi_club()))
+	p._perezoso(p._lista_entren, func() -> void: p._ui_club_vida._pintar_entrenamiento(p.mundo.mi_club()))
 	for n in p._ficha.get_children():
 		if n.has_meta("titulo_bloque"):
 			continue

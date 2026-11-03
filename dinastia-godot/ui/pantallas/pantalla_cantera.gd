@@ -1,6 +1,6 @@
 class_name PantallaCantera
 extends "res://ui/pantallas/pantalla_cantera_p2.gd"
-## [Capa 3/3 de `pantalla_cantera.gd`] _pintar_comparar, _pintar_informe
+## [Capa 3/3 de `pantalla_cantera.gd`] _pintar_comparar
 
 ## `vComparador()` de vistas.js -un archivo aparte de juego.js que esta sesión
 ## no había mirado hasta ahora, y donde vive el render real de las 33
@@ -139,41 +139,6 @@ func _pintar_comparar() -> void:
 ## No repite información: la RESUME y la enlaza. Los cuatro recuadros son atajos
 ## -pulsarlos lleva a la pestaña donde de verdad se decide-, que es lo que hace
 ## que una portada sirva para algo en vez de ser un adorno de bienvenida.
-## EL INFORME DE GESTIÓN. Lo primero de la pantalla de Inicio: las seis cosas
-## que hay que mirar cada lunes, juntas y con el botón que lleva a arreglarlas.
-##
-## No añade ninguna mecánica: junta lo que ya está repartido por ocho pestañas.
-## Este juego tiene dieciocho, y sin esto un jugador nuevo no sabe cuáles mirar
-## y uno veterano se olvida siempre de la misma.
-func _pintar_informe() -> void:
-	var lineas := p.mundo.informe_de_gestion()
-	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = Idiomas.t("📋 INFORME DE LA SEMANA")
-	p._lista_inicio.add_child(t)
-	for f: Dictionary in lineas:
-		var grave := bool(f["grave"])
-		var tab := String(f.get("tab", ""))
-		var fila := HBoxContainer.new()
-		fila.add_theme_constant_override("separation", 6)
-		p._lista_inicio.add_child(fila)
-		var n := p._texto(12, Principal.COL_ROJO if grave else Principal.COL_TEXTO)
-		## Traducido ANTES de ponerle la viñeta: los patrones con números
-		## («5 contratos terminan…») empiezan en la frase, no en «●».
-		n.text = "%s %s" % ["●" if grave else "○", Idiomas.t(String(f["txt"]))]
-		n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		n.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		fila.add_child(n)
-		if tab == "":
-			continue
-		var b := Button.new()
-		b.text = Idiomas.t(tab)
-		b.add_theme_font_size_override("font_size", 10)
-		b.clip_text = true
-		b.custom_minimum_size = Vector2(92, 24)
-		b.pressed.connect(func() -> void: p._ir_a_pestana(tab))
-		fila.add_child(b)
-	p._lista_inicio.add_child(HSeparator.new())
-
 ## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
 func secciones() -> Dictionary:
 	return {"seleccion": _pintar_seleccion, "cantera": _pintar_cantera, "contratos": _pintar_contratos, "comparar": _pintar_comparar}
