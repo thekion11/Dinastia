@@ -113,6 +113,7 @@ static func _linea(m: MotorJugable, e: Dictionary) -> void:
 	if m.poseedor.is_empty() or m.t - float(e.get("linea_t", -9.0)) < 1.0:
 		return
 	e["linea_t"] = m.t
+	_bloque(m)
 	for local: bool in [true, false]:
 		if bool(m.poseedor["es_local"]) == local:
 			continue
@@ -155,4 +156,31 @@ static func _opcion_corta(m: MotorJugable, p: Dictionary, elegido: Dictionary) -
 		return
 	var gap := float(n_largo[0]) - mejor
 	m._contar("traza_largo_corta_" + ("mejor" if gap < 0.0 else ("cercana" if gap < 0.7 else ("media" if gap < 2.0 else "lejana"))))
+
+## Ciclo 21 (compacidad): una vez por segundo, por equipo y según tenga o no el balón, largo del bloque (z del jugador de campo más adelantado menos el más retrasado, SIN portero), ancho (x máxima menos mínima) y,
+## con balón, distancia del poseedor a su compañero más cercano. Todo en decímetros acumulados + número de muestras: `traza_blq_{con|sin}_{n,largo_dm,ancho_dm}`, `traza_blq_cerca_dm`.
+static func _bloque(m: MotorJugable) -> void:
+	for local: bool in [true, false]:
+		var con := not m.poseedor.is_empty() and bool(m.poseedor["es_local"]) == local
+		var zmin := 999.0
+		var zmax := -999.0
+		var xmin := 999.0
+		var xmax := -999.0
+		var cerca := 999.0
+		for q: Dictionary in m.jugadores:
+			if bool(q["es_local"]) != local or bool(q["por"]):
+				continue
+			var pq := m.pos(q)
+			zmin = minf(zmin, pq.z)
+			zmax = maxf(zmax, pq.z)
+			xmin = minf(xmin, pq.x)
+			xmax = maxf(xmax, pq.x)
+			if con and q != m.poseedor:
+				cerca = minf(cerca, pq.distance_to(m.pos(m.poseedor)))
+		var k := "traza_blq_" + ("con" if con else "sin")
+		m.diag[k + "_n"] = int(m.diag.get(k + "_n", 0)) + 1
+		m.diag[k + "_largo_dm"] = int(m.diag.get(k + "_largo_dm", 0)) + int(10.0 * (zmax - zmin))
+		m.diag[k + "_ancho_dm"] = int(m.diag.get(k + "_ancho_dm", 0)) + int(10.0 * (xmax - xmin))
+		if con and cerca < 900.0:
+			m.diag["traza_blq_cerca_dm"] = int(m.diag.get("traza_blq_cerca_dm", 0)) + int(10.0 * cerca)
 
