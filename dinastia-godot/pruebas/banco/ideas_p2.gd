@@ -281,3 +281,22 @@ func _probar_eleccion_partido() -> void:
 	add_child(el)
 	_comprobar(el.find_child("Opcion_jugar", true, false) != null and el.find_child("Opcion_importantes", true, false) != null and el.find_child("Opcion_simular", true, false) != null, "las tres tarjetas a pantalla completa")
 	el.queue_free()
+
+## (3-11, orden 22) Cambiar de club, dimitir y ver a cuánto estás del despido, desde «Mi carrera».
+func _probar_carrera_salidas() -> void:
+	_titulo("TU PUESTO Y TUS SALIDAS (cambiar de club, dimitir, despido)")
+	var m := Mundo.new()
+	m.generar(["CHI"], 3110)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var antes := Azar._rng.state
+	var a := CarreraSalidas.ofertas(m)
+	var b := CarreraSalidas.ofertas(m)
+	_comprobar(a.size() > 0 and a.size() <= 3 and a == b and Azar._rng.state == antes, "hasta 3 ofertas, estables en la semana y sin gastar el azar del mundo (%d)" % a.size())
+	var ok := true
+	for c: Club in a:
+		ok = ok and c.id != m.mi_club_id and c.rep <= m.roles.prestigio + 18
+	_comprobar(ok, "solo clubes alcanzables con tu prestigio, nunca el tuyo")
+	var viejo := m.mi_club_id
+	_comprobar(m.roles.aceptar_trabajo(a[0].id) == "" and m.mi_club_id == a[0].id and m.mi_club_id != viejo, "firmar con otro club te lleva a él")
+	m.roles.quedar_sin_banco()
+	_comprobar(m.roles.sin_club and not m.roles.ofertas_trabajo().is_empty(), "dimitir te deja sin club y con ofertas para elegir")
