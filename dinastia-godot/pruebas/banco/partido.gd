@@ -86,3 +86,29 @@ func _probar_partido_abandonado() -> void:
 	d["minuto"] = 90
 	var r3 := PartidoPendiente.resolver(m, d)
 	_comprobar(r3 != null and r3.goles_local == 0 and r3.goles_visita == 2, "si ya se había pitado el final, queda el resultado tal cual")
+
+## EL RECEPTOR SEGURO DE LOS SAQUES (03-11-2026, ciclo 11, `MotorSaque`, bandera SAQUE_SEGURO): banda y centro van al compañero más libre y cercano; apagado no cambia nada.
+func _probar_saque_seguro() -> void:
+	_titulo("RECEPTOR SEGURO EN SAQUES DE BANDA Y CENTRO")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var locales: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	for q: Dictionary in motor.jugadores:
+		(q["node"] as Node3D).position = Vector3(-33.0, 0, -50.0 + randf())
+	var sacador: Dictionary = locales[0]
+	(sacador["node"] as Node3D).position = Vector3(30.0, 0, 0)
+	var cerca_libre: Dictionary = locales[1]
+	var cerca_tapado: Dictionary = locales[2]
+	(cerca_libre["node"] as Node3D).position = Vector3(24.0, 0, 6.0)
+	(cerca_tapado["node"] as Node3D).position = Vector3(22.0, 0, -7.0)
+	(vis[0]["node"] as Node3D).position = Vector3(22.0, 0, -8.5)   ## encima del segundo
+	var antes := MotorSaque._on
+	MotorSaque._on = true
+	var elegido := MotorSaque.receptor(motor, sacador, "banda")
+	_comprobar(not elegido.is_empty() and String(elegido["id"]) == String(cerca_libre["id"]), "el saque de banda va al compañero libre, no al tapado")
+	MotorSaque._on = false
+	var apagado := MotorSaque.receptor(motor, sacador, "banda")
+	_comprobar(apagado.is_empty() or bool(apagado["es_local"]), "apagado delega en el selector de siempre (devuelve un compañero)")
+	MotorSaque._on = antes
+	(r[1] as Node3D).queue_free()

@@ -32,7 +32,7 @@ static func tomar(m: MotorJugable, p: Dictionary) -> void:
 			## Causa de la pérdida (ciclo 10, afinada): `pase` = un pase suyo en vuelo lo corta el rival; `tiro` = un remate suyo en vuelo; `entrada` = entrada con éxito hace <0,2 s;
 			## `suelto` = recoge un balón que ya no tenía dueño (rechace, despeje, toque largo, balón dividido); `directo` = se lo quitan con el balón aún en sus pies por otra vía.
 			var tiro_suyo := not m._tiro_vivo.is_empty() and (0 if bool((m._tiro_vivo["p"] as Dictionary)["es_local"]) else 1) == antes
-			var causa := "pase" if m._pase_eq == antes else ("tiro" if tiro_suyo else ("entrada" if m.t - float(m.get_meta("_traza_ent", -9.0)) < 0.2 else ("saque" if m._t_estado < 4.0 else ("toque_largo" if m.t - float(m.get_meta("_traza_tl", -9.0)) < 0.2 else (_suelto(m, e, antes) if m.poseedor.is_empty() else "directo")))))
+			var causa := "pase" if m._pase_eq == antes else ("tiro" if tiro_suyo else ("entrada" if m.t - float(m.get_meta("_traza_ent", -9.0)) < 0.2 else (("saque_" + String(m.get_meta("_traza_saque_tipo", "otro"))) if m._t_estado < 4.0 else ("toque_largo" if m.t - float(m.get_meta("_traza_tl", -9.0)) < 0.2 else (_suelto(m, e, antes) if m.poseedor.is_empty() else "directo")))))
 			m._contar("traza_perdida_%s_%s" % [zona(m, antes), causa])
 	e["eq"] = nuevo
 
@@ -68,3 +68,8 @@ static func _suelto(m: MotorJugable, e: Dictionary, antes: int) -> String:
 	var propio := int(e.get("suelta_eq", -1)) == antes
 	var tiempo := "t0" if dt < 0.5 else ("t1" if dt < 2.0 else "t2")
 	return "suelto_control_%s_%s%s" % ["propio" if propio else "ajeno", tiempo, ("_" + ("fuerte" if float(e.get("suelta_v", 0.0)) >= 9.0 else ("media" if float(e.get("suelta_v", 0.0)) >= 4.0 else "suave"))) if (propio and tiempo != "t0") else ""]   ## quién lo soltó, cuánto lleva suelto y, si no es inmediato, con qué velocidad salió el balón (fuerte ≥9, media ≥4, suave)
+
+## Una reanudación de la IA (`banda`, `corner`, `falta`, `puerta`, `penal`): cuenta cuántas hay por tipo y recuerda el tipo para etiquetar la pérdida que siga.
+static func saque(m: MotorJugable, tipo: String) -> void:
+	m._contar("traza_saque_" + tipo)
+	m.set_meta("_traza_saque_tipo", tipo)
