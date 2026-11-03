@@ -68,13 +68,12 @@ static func factor_ganas(limpia: float) -> float:
 
 ## EL TIRO NO SIEMPRE SALE BIEN (03-11-2026, ciclo 7 de la sesión líder: en el motor el 68 % de los tiros iban a puerta; en el fútbol real, ≈33 %).
 ## Con la bandera `TIRO_REAL=1` cada remate puede fallar por mala ejecución, con probabilidad creciente con la DISTANCIA y la PRESIÓN, y por BLOQUEO si un
-## defensa tapa la línea de tiro. Un tiro fallido se va fuera de los palos o por encima del larguero; cuenta como tiro pero no va a puerta. Apagado por defecto
-## (no cambia la huella del motor). Fuente de las cifras objetivo: ≈25 tiros entre los dos equipos y ≈10 % de acierto (Premier League, estadística publicada).
-static var FALLO_BASE := float(OS.get_environment("TIRO_FALLO_BASE")) if OS.get_environment("TIRO_FALLO_BASE") != "" else 0.10      ## perillas para barrer (3-11)
-static var FALLO_POR_METRO := float(OS.get_environment("TIRO_FALLO_METRO")) if OS.get_environment("TIRO_FALLO_METRO") != "" else 0.012
+## defensa tapa la línea de tiro. Un tiro fallido se va fuera de los palos o por encima del larguero; cuenta como tiro pero no va a puerta. ENCENDIDO por defecto (`TIRO_REAL=0` lo apaga). Fuente de las cifras objetivo: ≈25 tiros entre los dos equipos y ≈10 % de acierto (Premier League, estadística publicada).
+static var FALLO_BASE := float(OS.get_environment("TIRO_FALLO_BASE")) if OS.get_environment("TIRO_FALLO_BASE") != "" else 0.07      ## perillas para barrer (3-11)
+static var FALLO_POR_METRO := float(OS.get_environment("TIRO_FALLO_METRO")) if OS.get_environment("TIRO_FALLO_METRO") != "" else 0.008
 const FALLO_PRESION := 0.15
 const BLOQUEO_MAX := 0.7
-static var _real := OS.get_environment("TIRO_REAL") == "1"
+static var _real := OS.get_environment("TIRO_REAL") != "0"   ## ENCENDIDO por defecto desde el 3-11 (ciclo 7, medido en 32 partidos); `TIRO_REAL=0` = el motor de antes
 
 static func probabilidad_fallo(m: MotorJugable, p: Dictionary, destino: Vector3, lejos: float, presion: float) -> float:
 	var f := clampf(destino.x / maxf(m.PALO - 0.35, 0.1), -1.0, 1.0)
@@ -98,7 +97,7 @@ static func fallar(m: MotorJugable, p: Dictionary, destino: Vector3, lejos: floa
 
 ## ALCANCE DEL TIRO (ciclo 7): con `TIRO_REAL=1` la IA tira desde más lejos (el 40 % de los tiros reales vienen de fuera del área; aquí solo el 16 %),
 ## con la distancia máxima y el divisor de las ganas multiplicados por `TIRO_ALCANCE` (1,2 por defecto). Apagado devuelve `x` tal cual.
-static var ALCANCE_K := float(OS.get_environment("TIRO_ALCANCE")) if OS.get_environment("TIRO_ALCANCE") != "" else 1.2
+static var ALCANCE_K := float(OS.get_environment("TIRO_ALCANCE")) if OS.get_environment("TIRO_ALCANCE") != "" else 1.25
 
 static func alcance(x: float) -> float:
 	return x * ALCANCE_K if _real else x

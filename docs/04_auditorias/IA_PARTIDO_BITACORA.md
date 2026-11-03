@@ -36,6 +36,26 @@ Pendiente de estudiar (fuentes ya localizadas): triangulación de Delaunay para 
 6. **Medición final** (32 partidos, semillas 1-32, versión `0c1253ea`): goles 74 → **84 (2,63 por partido)**, tiros 330 → 323 (10,1), pases buenos 1873 → 1734 (54,2), duelos 1545 → 1819, faltas 137 → 160, fueras de juego 24 → 19.
    Los goles ya están en el rango real (2,5-2,8). Pero se tira poco (≈10 tiros por partido entre los dos equipos; real ≈25) y se acierta demasiado (26 % de los tiros acaban en gol; real ≈10 %): los goles cuadran por compensación.
 
+7. **Ciclo 7 (tiros), medido con `MEDIDA2` en 32 partidos**: la perilla `CHISPA_TIRO` sola sube los tiros solo +20 % (10,2 → 12,3 con valor 0; ojo: se SUMA al umbral, valores altos tiran menos);
+   `PMOT_PUNT`/`PMOT_PALO` solo bajan los tiros a puerta del 69 % al 56-59 %. Hizo falta un modelo de fallo real (`MotorTiroLimpio.fallar`, bandera `TIRO_REAL`): fallo por ejecución (base + por metro + presión) y bloqueo por defensas en la línea de tiro,
+   más alcance de tiro (`TIRO_ALCANCE`). El bono de ganas dentro del área (`TIRO_BONO`) no cambió el reparto: los tiros desde dentro no están limitados por las ganas sino por las pocas veces que se llega al área (construcción del ataque).
+   Barrido (semillas 1-16): alcance 1,45 → 23 tiros, 10,3 % acierto, 2,38 goles pero 14 % de tiros desde dentro (descartado por irreal); alcance 1,2-1,3 con fallos 0,05-0,07 + 0,005-0,008 por metro → de 15 a 21 tiros y de 1,9 a 3,2 goles (ruido ±0,4).
+   **Elegido y ENCENDIDO por defecto (`TIRO_REAL=0` lo apaga)**: alcance 1,25, fallo 0,07 + 0,008/m, `CHISPA_TIRO` 0 (huella nueva 1354138242; con todo apagado vuelve a 3180886866).
+
+   | 32 partidos | Antes | Ahora | Real (orientativo) |
+   |---|---|---|---|
+   | Tiros por partido | 10,1 | **15,9** | ≈25 |
+   | Tiros a puerta | 68,4 % | **42,7 %** | ≈33 % |
+   | Acierto (goles por tiro) | 26 % | **14,7 %** | ≈10 % |
+   | Goles por partido | 2,63 | 2,35 | 2,5-2,8 |
+   | Tiros desde dentro del área | 44,5 % | 23,5 % | ≈60 % |
+   | xG por tiro (aprox.) | 0,083 | 0,058 | ≈0,09 |
+   | Pases buenos | 69,2 % | 68,2 % | 80-85 % |
+
+   Pendiente de ajuste fino: goles algo bajos (2,35) y reparto por zona (más tiros de lejos). **Aviso**: el partido es una versión comprimida (≈39 pases por equipo, no ≈450); medir proporciones, no recuentos brutos.
+8. **Ciclo 8 (pases), diagnóstico en 4 partidos**: de 313 pases, 97 fallados: 60 cortes con receptor, 15 cortes con el balón ya suelto, 22 otros (fuera/parado). `PMOT_PASE=1` no mejora (68,9 % frente a 69,5 %); subir el peso del riesgo (`PMOT_RIESGO`) 2 → 69,9 %, 3,5 → 71,3 %, a costa de ≈30 % de tiros y goles. Elegir mejor al receptor NO es la palanca principal.
+9. **CI**: `probar_por_partes` y `control del equipo` salen intermitentes en esta rama; están arregladas en la rama de la líder (claude/dazzling-rubin-v7rfyi) y no se persiguen aquí.
+
 ## Cifras reales de fútbol que se persiguen (orden de la sesión líder)
 ≈2,5-2,8 goles, ≈25 tiros, ≈80-85 % de pases buenos por partido. Estado: tiros ≈10-12 por partido y pases buenos ≈53-59 (conteo, no porcentaje): **faltan por debajo**; `zz_medir_partido` no da el porcentaje de pases, hay que añadirlo.
 
