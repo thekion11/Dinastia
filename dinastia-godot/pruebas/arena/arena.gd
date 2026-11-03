@@ -11,6 +11,8 @@ extends Node
 ##   MOTOR=0|1       el motor jugable lleva a los 22 (1 en «partido» y «balon»/«porteria», 0 en el resto)
 ##   ESTADIO=0|1     monta además el estadio entero (público, vallas, focos) para medir lo que cuesta
 ##   SEMILLA=4711    mundo y motor
+##   ANIM_T=0.5      con ANIM, congela el clip a esa fracción de su duración
+##   ANIM=clip       el primer jugador repite ese clip (p. ej. entrada_tijera, estirada_alta_der); SIN_ANCLA=1 le quita AnclaSuelo (P4)
 ##   CAPTURA=ruta.jpg   guarda la pantalla a los 4 s (revisión a ojo sin GPU)
 ##
 ##   godot --path . --rendering-driver vulkan --resolution 1280x720 res://pruebas/arena/arena.tscn
@@ -93,6 +95,18 @@ func _montar_jugadores(a: Club, b: Club) -> void:
 		for p: Dictionary in _lista:
 			if p.has("base_pos"):
 				(p["node"] as Node3D).position = Vector3(0, 0, 0)
+	if _env("ANIM", "") != "" and not _lista.is_empty():
+		var ap: AnimationPlayer = _lista[0]["anim"]
+		if ap.has_animation(_env("ANIM", "")):
+			ap.get_animation(_env("ANIM", "")).loop_mode = Animation.LOOP_LINEAR
+			ap.play(_env("ANIM", ""))
+			if _env("ANIM_T", "") != "":   ## congela el clip en esa fracción (0-1) de su duración
+				ap.seek(float(_env("ANIM_T", "0")) * ap.get_animation(_env("ANIM", "")).length, true)
+				ap.pause()
+		if _env("SIN_ANCLA", "0") == "1":
+			var an := (_lista[0]["node"] as Node).find_child("AnclaSuelo", false, false)
+			if an != null:
+				an.queue_free()
 	if modo in ["partido", "balon", "porteria"]:
 		_balon = StadiumBuilder.spawn_ball(_raiz, Vector3(0, 0.11, 0))
 	var con_motor := _env("MOTOR", "1" if modo in ["partido", "balon", "porteria"] else "0") == "1"
