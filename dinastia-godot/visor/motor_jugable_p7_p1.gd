@@ -132,9 +132,12 @@ func _ia_portero(p: Dictionary) -> Vector3:
 				_patear(p, lejos, 18.0, 3.0, 0.0, "patear")
 		return pos(p)
 	## Tiro que viene: ¿llega a tapar?
-	if _reaccion_portero(p):
-		var desliza := MotorParada.destino(self as Object as MotorJugable, p)   ## se anticipa hacia el cruce (F7, 03-11)
-		return desliza if desliza != Vector3.INF else pos(p)
+	var reacciona := _reaccion_portero(p)
+	var desliza := MotorParada.destino(self as Object as MotorJugable, p)   ## F7 (3-11): se desliza hacia el cruce MIENTRAS la parada está pendiente
+	if desliza != Vector3.INF:
+		return desliza
+	if reacciona:
+		return pos(p)
 	var sc := SalidaPortero.punto(self, p)   ## un centro que cae en su zona: sale a por él (semana 3)
 	if sc != Vector3.INF:
 		p["correr"] = true
