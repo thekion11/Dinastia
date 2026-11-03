@@ -87,7 +87,7 @@ func _process(_d: float) -> void:
 		_fase = 1
 	if _fase == 1 and _i < _cola.size():
 		var s: Array = _cola[_i]
-		if String(s[1]) == "natural":
+		if typeof(s[1]) == TYPE_STRING:
 			if _k == 0:
 				_e.cuerpo.position = s[3]
 				_e.rumbo = float(s[2])
