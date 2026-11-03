@@ -5,16 +5,16 @@ extends RefCounted
 ## y desaparece a más de `ALCANCE` m. Mira siempre a quien lo lee (solo gira en vertical, como un cartel de verdad).
 const ALCANCE := 70.0
 
-static func poner(b: CityBuilder, pos: Vector3, texto: String, color: Color, tam: int = 28) -> Label3D:
+static func poner(b: CityBuilder, pos: Vector3, texto: String, color: Color, tam: int = 28, escala: float = 1.0) -> Label3D:
 	var l := Label3D.new()
 	l.text = Idiomas.t(texto)
 	l.font_size = tam
-	l.pixel_size = 0.0145
+	l.pixel_size = 0.0145 * escala
 	l.outline_size = 8
 	l.modulate = color
 	l.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	l.position = pos
-	l.visibility_range_end = ALCANCE
+	l.visibility_range_end = ALCANCE * maxf(1.0, escala * 0.6)
 	l.visibility_range_end_margin = 10.0
 	l.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	b.add_child(l)
@@ -23,4 +23,4 @@ static func poner(b: CityBuilder, pos: Vector3, texto: String, color: Color, tam
 ## Un lugar con nombre: la etiqueta del MAPA (vista aérea, de tamaño fijo) Y su cartel de pared (al pasear, de cerca). Cada una solo se ve donde toca.
 static func con_mapa(b: CityBuilder, pos: Vector3, texto: String, color: Color, tam: int = 28) -> void:
 	b._rotulo(pos, texto, color, tam)
-	poner(b, pos, texto, color, tam)
+	poner(b, pos, texto, color, tam, 2.6)   ## un lugar se lee de lejos (el parque, el Karting): letra grande
