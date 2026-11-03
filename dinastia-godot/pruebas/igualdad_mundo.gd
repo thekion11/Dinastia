@@ -5,7 +5,9 @@ extends Node
 ## 2-11 (fusión con main): cambia a propósito, entra el día de partido por aforo y precios reales y los viajes por distancia (`Viajes`).
 ## 3-11 (orden 22 U4): cambia a propósito, solo por los NOMBRES de guiño corregidos (vocales y letras dobles, guiones):
 ## algunos rasgos se siembran con el nombre del jugador. Ni el balance ni el motor cambian.
-const ESPERADO := "998022970"
+## 3-11 (calibración de goles, a propósito): `Balance.CONVERSION` 0,30 → 0,28 (el partido simulado daba 2,92 goles/partido; ahora 2,70). Cambian los marcadores y, con ellos, tablas y primas;
+## era 998022970. `igualdad_motor` no cambia (el motor jugable no usa `CONVERSION`).
+const ESPERADO := "4013618777"
 
 func _ready() -> void:
 	var m := Mundo.new()
