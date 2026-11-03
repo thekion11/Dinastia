@@ -35,7 +35,7 @@ penales, física del balón): varias cifras ya mejoraron, pero hay que volver a 
   real). Queda: contrastar con una fuente (necesita red) los planteles escritos de memoria, sobre todo los de baja
   confianza (Marruecos salvo los 4 grandes, Sudáfrica salvo los 4 grandes, Egipto chico, Corea chica, Volendam, Telstar);
   11 clubes siguen con jugadores generados (Pharco, El Gouna, Baladiyat, Tala'ea, Arab Contractors, ZED, Ansan, Cheonan,
-  Canberra, Geelong, Darwin); los guiños de nombres coreanos y algunos holandeses salen raros («Sung-rllong», «Geeei»).
+  Canberra, Geelong, Darwin). Los guiños raros («Kuurtois», «Gllokeres») ya se corrigieron.
 - U6. Partes del juego que existen en el código pero no se encuentran jugando: ya visibles «Mi carrera» (ofertas,
   dimitir, confianza de la directiva) y «Directorio y consejeros» en el menú; seguir auditando el resto.
 - U7. Revisar si a `main` le falta algo.
