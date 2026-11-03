@@ -326,7 +326,7 @@ func _pintar_ajustes() -> void:
 				p._refrescar())
 			fila2.add_child(b2)
 			var ex2 := p._texto(11, Principal.COL_SUAVE)
-			ex2.text = Idiomas.t("Guarda solo al avanzar cada semana o cerrar temporada, en la misma ranura de \"Guardar\".")
+			ex2.text = Idiomas.t("Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".")
 			ex2.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_ajustes.add_child(ex2)
 			p._lista_ajustes.add_child(HSeparator.new())

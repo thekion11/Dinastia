@@ -9,6 +9,7 @@ var _hijos_base: Dictionary = {}
 
 func _ready() -> void:
 	super()
+	add_child(SalidaGuardada.new(self))   ## cerrar la ventana / «atrás» / pausa en Android: ¿guardar antes de salir?
 	for h: Node in get_children():
 		_hijos_base[h.get_instance_id()] = true
 

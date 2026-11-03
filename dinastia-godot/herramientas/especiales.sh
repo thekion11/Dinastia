@@ -84,6 +84,7 @@ pasa "ruido de registros: arreglos (3-11)" "godot --headless --path . res://prue
 pasa "siglas y códigos cortos (3-11)" "godot --headless --path . res://pruebas/ideas/codigos_siglas.tscn" "FIN. 0 fallos"
 pasa "cifras del partido simulado contra el fútbol real (3-11)" "godot --headless --path . res://pruebas/ideas/cifras_partido.tscn" "FIN. 0 fallos"
 pasa "el menú no carga el estadio ni el partido 3D (3-11)" "godot --headless --path . res://pruebas/ideas/mem_menu_estadio.tscn" "FIN. 0 fallos"
+pasa "guardado: autoguardado en segundo plano y pregunta al salir (3-11)" "godot --headless --path . res://pruebas/ideas/gua_autoguardado_salir.tscn" "FIN. 0 fallos"
 pasa "caché en disco del audio sintetizado (R5)" "godot --headless --path . res://pruebas/ideas/r5_cache_audio.tscn" "FIN. 0 fallos"
 pasa "arena de pruebas (cada modo monta lo que dice)" "godot --headless --path . res://pruebas/ideas/arena_humo.tscn" "FIN. 0 fallos"
 pasa "triángulo sobre el jugador controlado (P2)" "godot --headless --path . res://pruebas/ideas/p2_triangulo.tscn" "FIN. 0 fallos"

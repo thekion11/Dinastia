@@ -235,6 +235,7 @@ func _avanzar_dia() -> void:
 	if p.mundo.prensa != null and not p.mundo.prensa.titular_pendiente.is_empty():
 		var tit := p.mundo.prensa.publicar_titular_pendiente()
 		Aviso.mostrar(p, "prensa", "🗞️", "La portada de hoy", tit)
+	p._partida.autoguardar_si_toca()   ## (3-11) también al pasar cada día (la semana entera ya lo hace en `_avanzar_semana`)
 	_refrescar()
 ## Los siete días con el de hoy encendido. El sábado lleva el balón porque es
 ## cuando cae la jornada: sin esa marca, la tira sería un adorno.

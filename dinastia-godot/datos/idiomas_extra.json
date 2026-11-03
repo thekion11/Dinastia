@@ -7140,7 +7140,13 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "The map of countries and their clubs: pick one to look at.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Save, load, new world, slots, autosave, bug report and credits.",
   "📂 Cargar": "📂 Load",
-  "🌍 Otro mundo": "🌍 New world"
+  "🌍 Otro mundo": "🌍 New world",
+  "Salir del juego": "Quit the game",
+  "¿Guardar antes de salir?": "Save before quitting?",
+  "Guardar y salir": "Save and quit",
+  "Salir sin guardar": "Quit without saving",
+  "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "The game [b]saves by itself[/b]: every day, every week and at the end of every match; and when you quit it asks whether to save. Saving and loading by hand is in [b]Settings → Game and saving[/b] (the ⚙️ button).",
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Saves by itself every day, every week and at the end of every match, without stopping the game, in the same slot as \"Save\"."
  },
  "pt": {
   "Historia": "História",
@@ -14283,7 +14289,13 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "O mapa dos países com os seus clubes: escolhe qual ver.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Guardar, carregar, outro mundo, ranhuras, gravação automática, relatório de erros e créditos.",
   "📂 Cargar": "📂 Carregar",
-  "🌍 Otro mundo": "🌍 Outro mundo"
+  "🌍 Otro mundo": "🌍 Outro mundo",
+  "Salir del juego": "Sair do jogo",
+  "¿Guardar antes de salir?": "Guardar antes de sair?",
+  "Guardar y salir": "Guardar e sair",
+  "Salir sin guardar": "Sair sem guardar",
+  "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "O jogo [b]guarda sozinho[/b]: todos os dias, todas as semanas e no fim de cada partida; e ao sair pergunta se queres guardar. Guardar e carregar à mão está em [b]Ajustes → Partida e salvamento[/b] (o botão ⚙️).",
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Guarda sozinho em cada dia, em cada semana e no fim de cada partida, sem parar o jogo, na mesma ranhura de \"Guardar\"."
  },
  "patrones": [
   [
@@ -27203,7 +27215,13 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "La carte des pays et de leurs clubs : choisis lequel regarder.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Sauvegarder, charger, autre monde, emplacements, sauvegarde auto, rapport de bugs et crédits.",
   "📂 Cargar": "📂 Charger",
-  "🌍 Otro mundo": "🌍 Autre monde"
+  "🌍 Otro mundo": "🌍 Autre monde",
+  "Salir del juego": "Quitter le jeu",
+  "¿Guardar antes de salir?": "Sauvegarder avant de quitter ?",
+  "Guardar y salir": "Sauvegarder et quitter",
+  "Salir sin guardar": "Quitter sans sauvegarder",
+  "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "Le jeu [b]sauvegarde tout seul[/b] : chaque jour, chaque semaine et à la fin de chaque match ; en quittant, il demande s'il faut sauvegarder. Sauvegarder et charger à la main se fait dans [b]Réglages → Partie et sauvegarde[/b] (le bouton ⚙️).",
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Sauvegarde tout seul chaque jour, chaque semaine et à la fin de chaque match, sans arrêter le jeu, dans le même emplacement que « Sauvegarder »."
  },
  "it": {
   "Historia": "Storia",
@@ -34346,7 +34364,13 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "La mappa dei paesi con i loro club: scegli quale guardare.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Salva, carica, altro mondo, slot, salvataggio automatico, segnalazione errori e crediti.",
   "📂 Cargar": "📂 Carica",
-  "🌍 Otro mundo": "🌍 Altro mondo"
+  "🌍 Otro mundo": "🌍 Altro mondo",
+  "Salir del juego": "Esci dal gioco",
+  "¿Guardar antes de salir?": "Salvare prima di uscire?",
+  "Guardar y salir": "Salva ed esci",
+  "Salir sin guardar": "Esci senza salvare",
+  "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "Il gioco [b]salva da solo[/b]: ogni giorno, ogni settimana e alla fine di ogni partita; e quando esci chiede se salvare. Salvare e caricare a mano si fa in [b]Impostazioni → Partita e salvataggio[/b] (il pulsante ⚙️).",
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Salva da solo ogni giorno, ogni settimana e alla fine di ogni partita, senza fermare il gioco, nello stesso slot di \"Salva\"."
  },
  "de": {
   "Historia": "Geschichte",
@@ -41489,7 +41513,13 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "Die Karte der Länder mit ihren Vereinen: wähle einen aus.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Speichern, laden, neue Welt, Speicherplätze, automatisches Speichern, Fehlerbericht und Mitwirkende.",
   "📂 Cargar": "📂 Laden",
-  "🌍 Otro mundo": "🌍 Neue Welt"
+  "🌍 Otro mundo": "🌍 Neue Welt",
+  "Salir del juego": "Spiel beenden",
+  "¿Guardar antes de salir?": "Vor dem Beenden speichern?",
+  "Guardar y salir": "Speichern und beenden",
+  "Salir sin guardar": "Ohne Speichern beenden",
+  "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "Das Spiel [b]speichert von selbst[/b]: jeden Tag, jede Woche und am Ende jedes Spiels; beim Beenden fragt es, ob gespeichert werden soll. Manuell speichern und laden findest du unter [b]Einstellungen → Spielstand und Speichern[/b] (die Schaltfläche ⚙️).",
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Speichert von selbst jeden Tag, jede Woche und am Ende jedes Spiels, ohne das Spiel anzuhalten, im selben Platz wie \"Speichern\"."
  },
  "ca": {
   "Historia": "Història",
@@ -48632,7 +48662,13 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "El mapa de països amb els seus clubs: tria quin mirar.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Desar, carregar, un altre món, ranures, desament automàtic, informe d'errors i crèdits.",
   "📂 Cargar": "📂 Carregar",
-  "🌍 Otro mundo": "🌍 Un altre món"
+  "🌍 Otro mundo": "🌍 Un altre món",
+  "Salir del juego": "Sortir del joc",
+  "¿Guardar antes de salir?": "Desar abans de sortir?",
+  "Guardar y salir": "Desar i sortir",
+  "Salir sin guardar": "Sortir sense desar",
+  "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "El joc [b]desa tot sol[/b]: cada dia, cada setmana i en acabar cada partit; i en sortir et pregunta si vols desar. Desar i carregar a mà és a [b]Ajustos → Partida i desament[/b] (el botó ⚙️).",
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Desa tot sol cada dia, cada setmana i en acabar cada partit, sense aturar el joc, a la mateixa ranura de \"Desar\"."
  },
  "pl": {
   "Club": "Klub",
@@ -56044,7 +56080,13 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "Mapa krajów z ich klubami: wybierz, który obejrzeć.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Zapis, wczytanie, nowy świat, sloty, autozapis, raport błędów i autorzy.",
   "📂 Cargar": "📂 Wczytaj",
-  "🌍 Otro mundo": "🌍 Nowy świat"
+  "🌍 Otro mundo": "🌍 Nowy świat",
+  "Salir del juego": "Wyjdź z gry",
+  "¿Guardar antes de salir?": "Zapisać przed wyjściem?",
+  "Guardar y salir": "Zapisz i wyjdź",
+  "Salir sin guardar": "Wyjdź bez zapisywania",
+  "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "Gra [b]zapisuje się sama[/b]: każdego dnia, co tydzień i po każdym meczu; przy wyjściu pyta, czy zapisać. Ręczny zapis i wczytanie są w [b]Ustawienia → Gra i zapis[/b] (przycisk ⚙️).",
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Zapisuje się sam co dzień, co tydzień i po każdym meczu, bez zatrzymywania gry, w tym samym miejscu co \"Zapisz\"."
  },
  "tr": {
   "Club": "Kulüp",
@@ -63456,6 +63498,12 @@
   "El mapa de países con sus clubes: elige cuál mirar.": "Ülkeler ve kulüpleri haritası: bakmak istediğini seç.",
   "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos.": "Kaydet, yükle, yeni dünya, yuvalar, otomatik kayıt, hata raporu ve emeği geçenler.",
   "📂 Cargar": "📂 Yükle",
-  "🌍 Otro mundo": "🌍 Yeni dünya"
+  "🌍 Otro mundo": "🌍 Yeni dünya",
+  "Salir del juego": "Oyundan çık",
+  "¿Guardar antes de salir?": "Çıkmadan önce kaydedilsin mi?",
+  "Guardar y salir": "Kaydet ve çık",
+  "Salir sin guardar": "Kaydetmeden çık",
+  "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).": "Oyun [b]kendiliğinden kaydeder[/b]: her gün, her hafta ve her maçın sonunda; çıkarken kaydetmek isteyip istemediğini sorar. Elle kaydetme ve yükleme [b]Ayarlar → Oyun ve kayıt[/b] bölümündedir (⚙️ düğmesi).",
+  "Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".": "Her gün, her hafta ve her maçın sonunda, oyunu durdurmadan, \"Kaydet\" ile aynı yuvaya kendiliğinden kaydeder."
  }
 }

@@ -397,6 +397,7 @@ static func motivo_sin_cargar(m: Mundo) -> String:
 	return ""
 
 static func guardar(m: Mundo, nombre: String) -> bool:
+	GuardadoSegundoPlano.esperar()   ## (3-11) un autoguardado en curso termina antes: si no, podría pisar este con un estado más viejo
 	nombre = ranura_para(m, nombre)
 	var t0 := Time.get_ticks_msec()
 	var datos := instantanea(m)
