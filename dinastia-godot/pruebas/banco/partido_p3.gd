@@ -386,7 +386,7 @@ func _probar_traza() -> void:
 	motor.balon.position = Vector3(0, 0.11, 0)
 	motor._pase_eq = -1
 	MotorTraza.tomar(motor, loc)
-	_comprobar(int(motor.diag.get("traza_perdida_medio_robo", 0)) == 1, "balón robado en el medio campo: «perdida_medio_robo»")
+	_comprobar(int(motor.diag.get("traza_perdida_medio_suelto", 0)) == 1, "balón suelto recogido en el medio campo: «perdida_medio_suelto»")
 	## Sale del área y vuelve a entrar: segunda entrada.
 	MotorTraza.paso(motor)
 	motor.balon.position = Vector3(0, 0.11, arco_z - d * 8.0)
