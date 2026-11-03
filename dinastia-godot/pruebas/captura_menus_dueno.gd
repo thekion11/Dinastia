@@ -46,6 +46,12 @@ func _ready() -> void:
 	for t in get_tree().root.find_children("*", "", true, false):
 		if t is Tutorial:
 			(t as Tutorial)._terminar(false)
+	## Las tarjetas de ayuda («Entendido»…) se quedan encima de los menús y tapan lo que se quiere ver: AYUDAS=1 las deja.
+	var ayudas_antes := CapasTutorial.activas()
+	if OS.get_environment("AYUDAS") != "1":
+		CapasTutorial.poner_activas(false)
+	for c in _p.find_children("CapaTutorial", "", true, false):
+		c.queue_free()
 	await _espera(1.0)
 	await _foto("central_lunes")
 	var menus: Array = MenusLaterales.MENUS
@@ -80,8 +86,13 @@ func _ready() -> void:
 	_p._menu_lateral.abrir_menu("competiciones", otro)
 	await _foto("competiciones_ver_otro_club")
 	await _cerrar()
+	for w in get_tree().root.find_children("*", "Window", true, false):
+		if w != get_tree().root and w is Window:
+			(w as Window).hide()
+	await _espera(0.6)
 	for k in 3:
 		_p._avanzar_dia()
 		await _espera(1.5)
 	await _foto("central_jueves")
+	CapasTutorial.poner_activas(ayudas_antes)
 	get_tree().quit()
