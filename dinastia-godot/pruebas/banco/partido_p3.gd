@@ -391,3 +391,27 @@ func _probar_traza() -> void:
 	MotorTraza.paso(motor)
 	_comprobar(int(motor.diag.get("traza_entrada_area", 0)) == 2, "salir y volver a entrar cuenta otra entrada")
 	(r[1] as Node3D).queue_free()
+
+## LA DESCARGA BAJO PRESIÓN (03-11-2026, ciclo 9, `MotorDescarga`, bandera PASE_DESCARGA): con un rival encima decide ya; apagado no cambia nada.
+func _probar_descarga() -> void:
+	_titulo("DESCARGA BAJO PRESIÓN")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var p: Dictionary = motor.jugadores.filter(func(q: Dictionary) -> bool: return bool(q["es_local"]) and not bool(q["por"]))[0]
+	var antes := MotorDescarga._on
+	MotorDescarga._on = false
+	_comprobar(not MotorDescarga.urge(motor, p, 1.0) and MotorDescarga.holgura(0.5) == 0.5, "apagada no urge ni cambia la espera")
+	MotorDescarga._on = true
+	motor.t = 50.0
+	p["tomo_en"] = 40.0
+	_comprobar(MotorDescarga.urge(motor, p, 1.5), "con un rival a 1,5 m, decide ya")
+	_comprobar(not MotorDescarga.urge(motor, p, 1.5), "pero no dos veces seguidas (pausa mínima)")
+	motor.t += MotorDescarga.PAUSA + 0.05
+	_comprobar(not MotorDescarga.urge(motor, p, 4.0), "con el rival lejos (4 m) no urge")
+	_comprobar(MotorDescarga.urge(motor, p, 1.5), "pasada la pausa vuelve a poder")
+	motor.t += 1.0
+	p["tomo_en"] = motor.t - 0.1
+	_comprobar(not MotorDescarga.urge(motor, p, 1.5), "recién recibido el balón (0,1 s) no decide aún")
+	_comprobar(MotorDescarga.holgura(0.5) == MotorDescarga.HOLGURA and MotorDescarga.holgura(1.0) == 1.0, "la espera con presión baja a %.2f y sin presión no cambia" % MotorDescarga.HOLGURA)
+	MotorDescarga._on = antes
+	(r[1] as Node3D).queue_free()
