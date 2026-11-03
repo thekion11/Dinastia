@@ -73,6 +73,11 @@ func necesario() -> float:
 	return peor
 
 func _process(delta: float) -> void:
+	## Si el reproductor o el modelo se tiraron (la ceremonia de carrera cambia de cuerpo; un futbolista se retira), no hay nada que anclar: se apaga solo
+	## (antes: «assigned_animation on Nil» en cada fotograma, 650 veces en un recorrido).
+	if not is_instance_valid(_anim) or not is_instance_valid(_modelo) or not is_instance_valid(_esq) or not is_instance_valid(_nodo):
+		set_process(false)
+		return
 	var activo := CLIPS.has(String(_anim.assigned_animation))   ## `assigned`: el clip que acaba sin bucle deja su última pose
 	if not activo and offset < 0.002:
 		return

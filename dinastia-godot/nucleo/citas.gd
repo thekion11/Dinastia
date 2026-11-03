@@ -292,13 +292,13 @@ func resolver(m: Mundo, id: String, opcion: int, extra: Array = []) -> Dictionar
 				return {"titulo": String(ct["quien"]), "texto": Idiomas.t("No se pudo firmar: %s.") % Idiomas.t(error)}
 			var z: Dictionary = m.comercial.zonas_firmadas[partes[0]]
 			z["monto"] = int(round(float(z["monto"]) * (1.0 + BONO_PATROCINIO) / 10000.0)) * 10000
-			return {"titulo": Idiomas.t("Firmado en persona"), "texto": Idiomas.t("%s cierra %s por %s al año (+5 % por cerrarlo en persona).") % [
+			return {"titulo": Idiomas.t("Firmado en persona"), "texto": Idiomas.t("%s cierra %s por %s al año (+5 %% por cerrarlo en persona).") % [
 				String(z["marca"]), Comercial._nombre_zona(partes[0]), Eco.dinero(int(z["monto"]))]}
 		"agente":
 			if opcion != 0:
 				return {"titulo": String(ct["quien"]), "texto": Idiomas.t("«Como quieras. Ya sabes dónde encontrarme.»")}
 			favor_agente = m.anio * 60 + m.semana
-			return {"titulo": String(ct["quien"]), "texto": Idiomas.t("«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 % en su próxima negociación.)") % m.mercado_av.clientes.size()}
+			return {"titulo": String(ct["quien"]), "texto": Idiomas.t("«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)") % m.mercado_av.clientes.size()}
 		"entrevista":
 			var j: Jugador = null
 			for x: Jugador in c.plantilla:

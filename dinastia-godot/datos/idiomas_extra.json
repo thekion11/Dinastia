@@ -5887,9 +5887,7 @@
   "«Piénsalo; la oferta sigue en pie unos días.»": "“Think it over; the offer stands for a few days.”",
   "No se pudo firmar: %s.": "Couldn't sign: %s.",
   "Firmado en persona": "Signed in person",
-  "%s cierra %s por %s al año (+5 % por cerrarlo en persona).": "%s takes %s for %s a year (+5% for closing it in person).",
   "«Como quieras. Ya sabes dónde encontrarme.»": "“As you wish. You know where to find me.”",
-  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 % en su próxima negociación.)": "“I represent %d of your players. Treat my people well and the next table will be cheaper.” (−5% in his next negotiation.)",
   "«Lo entiendo. El fútbol es de todos.»": "“I understand. Football belongs to everyone.”",
   "«El alcalde lo recordará.» El club apoya al gobierno en la próxima rueda; la prensa crítica toma nota (−2 de relación).": "“The mayor will remember.” The club backs the government at the next press conference; the critical press takes note (−2 relationship).",
   "CITAS": "APPOINTMENTS",
@@ -7127,7 +7125,9 @@
   "Botines de tacos": "Studded boots",
   "Balón de entrenamiento": "Training ball",
   "Balón de playa": "Beach ball",
-  "lo que compraste en la tienda deportiva": "what you bought at the sports shop"
+  "lo que compraste en la tienda deportiva": "what you bought at the sports shop",
+  "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s takes %s for %s a year (+5%% for closing it in person).",
+  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "“I represent %d of your players. Treat my people well and the next table will be cheaper.” (−5%% in his next negotiation.)"
  },
  "pt": {
   "Historia": "História",
@@ -13017,9 +13017,7 @@
   "«Piénsalo; la oferta sigue en pie unos días.»": "«Pensa nisso; a oferta mantém-se uns dias.»",
   "No se pudo firmar: %s.": "Não foi possível assinar: %s.",
   "Firmado en persona": "Assinado em pessoa",
-  "%s cierra %s por %s al año (+5 % por cerrarlo en persona).": "%s fecha %s por %s ao ano (+5 % por fechar em pessoa).",
   "«Como quieras. Ya sabes dónde encontrarme.»": "«Como queiras. Já sabes onde me encontrar.»",
-  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 % en su próxima negociación.)": "«Represento %d dos teus. Trata bem a minha gente e a próxima mesa sai mais barata.» (−5 % na próxima negociação dele.)",
   "«Lo entiendo. El fútbol es de todos.»": "«Compreendo. O futebol é de todos.»",
   "«El alcalde lo recordará.» El club apoya al gobierno en la próxima rueda; la prensa crítica toma nota (−2 de relación).": "«O prefeito vai lembrar-se.» O clube apoia o governo na próxima conferência; a imprensa crítica toma nota (−2 de relação).",
   "CITAS": "ENCONTROS",
@@ -14257,7 +14255,9 @@
   "Botines de tacos": "Chuteiras",
   "Balón de entrenamiento": "Bola de treino",
   "Balón de playa": "Bola de praia",
-  "lo que compraste en la tienda deportiva": "o que você comprou na loja de esportes"
+  "lo que compraste en la tienda deportiva": "o que você comprou na loja de esportes",
+  "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s fecha %s por %s ao ano (+5 %% por fechar em pessoa).",
+  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "«Represento %d dos teus. Trata bem a minha gente e a próxima mesa sai mais barata.» (−5 %% na próxima negociação dele.)"
  },
  "patrones": [
   [
@@ -25924,9 +25924,7 @@
   "«Piénsalo; la oferta sigue en pie unos días.»": "« Réfléchis ; l'offre tient encore quelques jours. »",
   "No se pudo firmar: %s.": "Impossible de signer : %s.",
   "Firmado en persona": "Signé en personne",
-  "%s cierra %s por %s al año (+5 % por cerrarlo en persona).": "%s prend %s pour %s par an (+5 % pour avoir conclu en personne).",
   "«Como quieras. Ya sabes dónde encontrarme.»": "« Comme tu veux. Tu sais où me trouver. »",
-  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 % en su próxima negociación.)": "« Je représente %d de tes joueurs. Traite bien mes gars et la prochaine table coûtera moins cher. » (−5 % à sa prochaine négociation.)",
   "«Lo entiendo. El fútbol es de todos.»": "« Je comprends. Le football est à tout le monde. »",
   "«El alcalde lo recordará.» El club apoya al gobierno en la próxima rueda; la prensa crítica toma nota (−2 de relación).": "« Le maire s'en souviendra. » Le club soutient le gouvernement à la prochaine conférence ; la presse critique en prend note (−2 de relation).",
   "CITAS": "RENDEZ-VOUS",
@@ -27164,7 +27162,9 @@
   "Botines de tacos": "Crampons",
   "Balón de entrenamiento": "Ballon d'entraînement",
   "Balón de playa": "Ballon de plage",
-  "lo que compraste en la tienda deportiva": "ce que vous avez acheté au magasin de sport"
+  "lo que compraste en la tienda deportiva": "ce que vous avez acheté au magasin de sport",
+  "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s prend %s pour %s par an (+5 %% pour avoir conclu en personne).",
+  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "« Je représente %d de tes joueurs. Traite bien mes gars et la prochaine table coûtera moins cher. » (−5 %% à sa prochaine négociation.)"
  },
  "it": {
   "Historia": "Storia",
@@ -33054,9 +33054,7 @@
   "«Piénsalo; la oferta sigue en pie unos días.»": "«Pensaci; l'offerta resta valida qualche giorno.»",
   "No se pudo firmar: %s.": "Impossibile firmare: %s.",
   "Firmado en persona": "Firmato di persona",
-  "%s cierra %s por %s al año (+5 % por cerrarlo en persona).": "%s chiude %s per %s all'anno (+5 % per averlo chiuso di persona).",
   "«Como quieras. Ya sabes dónde encontrarme.»": "«Come vuoi. Sai dove trovarmi.»",
-  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 % en su próxima negociación.)": "«Rappresento %d dei tuoi. Tratta bene la mia gente e il prossimo tavolo costerà meno.» (−5 % nella sua prossima trattativa.)",
   "«Lo entiendo. El fútbol es de todos.»": "«Capisco. Il calcio è di tutti.»",
   "«El alcalde lo recordará.» El club apoya al gobierno en la próxima rueda; la prensa crítica toma nota (−2 de relación).": "«Il sindaco se ne ricorderà.» Il club sostiene il governo alla prossima conferenza; la stampa critica prende nota (−2 di rapporto).",
   "CITAS": "APPUNTAMENTI",
@@ -34294,7 +34292,9 @@
   "Botines de tacos": "Scarpini da calcio",
   "Balón de entrenamiento": "Pallone da allenamento",
   "Balón de playa": "Pallone da spiaggia",
-  "lo que compraste en la tienda deportiva": "ciò che hai comprato al negozio sportivo"
+  "lo que compraste en la tienda deportiva": "ciò che hai comprato al negozio sportivo",
+  "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s chiude %s per %s all'anno (+5 %% per averlo chiuso di persona).",
+  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "«Rappresento %d dei tuoi. Tratta bene la mia gente e il prossimo tavolo costerà meno.» (−5 %% nella sua prossima trattativa.)"
  },
  "de": {
   "Historia": "Geschichte",
@@ -40184,9 +40184,7 @@
   "«Piénsalo; la oferta sigue en pie unos días.»": "„Überleg es dir; das Angebot steht noch ein paar Tage.“",
   "No se pudo firmar: %s.": "Unterschrift nicht möglich: %s.",
   "Firmado en persona": "Persönlich unterschrieben",
-  "%s cierra %s por %s al año (+5 % por cerrarlo en persona).": "%s übernimmt %s für %s im Jahr (+5 % für den persönlichen Abschluss).",
   "«Como quieras. Ya sabes dónde encontrarme.»": "„Wie du willst. Du weißt, wo du mich findest.“",
-  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 % en su próxima negociación.)": "„Ich vertrete %d deiner Spieler. Behandle meine Leute gut, dann wird der nächste Tisch billiger.“ (−5 % bei seiner nächsten Verhandlung.)",
   "«Lo entiendo. El fútbol es de todos.»": "„Verstehe. Fußball gehört allen.“",
   "«El alcalde lo recordará.» El club apoya al gobierno en la próxima rueda; la prensa crítica toma nota (−2 de relación).": "„Der Bürgermeister wird sich erinnern.“ Der Verein unterstützt die Regierung auf der nächsten Pressekonferenz; die kritische Presse merkt es sich (−2 Beziehung).",
   "CITAS": "TERMINE",
@@ -41424,7 +41422,9 @@
   "Botines de tacos": "Fußballschuhe",
   "Balón de entrenamiento": "Trainingsball",
   "Balón de playa": "Wasserball",
-  "lo que compraste en la tienda deportiva": "was du im Sportgeschäft gekauft hast"
+  "lo que compraste en la tienda deportiva": "was du im Sportgeschäft gekauft hast",
+  "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s übernimmt %s für %s im Jahr (+5 %% für den persönlichen Abschluss).",
+  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "„Ich vertrete %d deiner Spieler. Behandle meine Leute gut, dann wird der nächste Tisch billiger.“ (−5 %% bei seiner nächsten Verhandlung.)"
  },
  "ca": {
   "Historia": "Història",
@@ -47314,9 +47314,7 @@
   "«Piénsalo; la oferta sigue en pie unos días.»": "«Pensa-t'ho; l'oferta es manté uns dies.»",
   "No se pudo firmar: %s.": "No s'ha pogut signar: %s.",
   "Firmado en persona": "Signat en persona",
-  "%s cierra %s por %s al año (+5 % por cerrarlo en persona).": "%s tanca %s per %s l'any (+5 % per tancar-ho en persona).",
   "«Como quieras. Ya sabes dónde encontrarme.»": "«Com vulguis. Ja saps on trobar-me.»",
-  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 % en su próxima negociación.)": "«Represento %d dels teus. Tractem bé la meva gent i la pròxima taula serà més barata.» (−5 % a la seva pròxima negociació.)",
   "«Lo entiendo. El fútbol es de todos.»": "«Ho entenc. El futbol és de tothom.»",
   "«El alcalde lo recordará.» El club apoya al gobierno en la próxima rueda; la prensa crítica toma nota (−2 de relación).": "«L'alcalde ho recordarà.» El club dona suport al govern a la pròxima roda; la premsa crítica en pren nota (−2 de relació).",
   "CITAS": "CITES",
@@ -48554,7 +48552,9 @@
   "Botines de tacos": "Botes de tacs",
   "Balón de entrenamiento": "Pilota d'entrenament",
   "Balón de playa": "Pilota de platja",
-  "lo que compraste en la tienda deportiva": "el que vas comprar a la botiga esportiva"
+  "lo que compraste en la tienda deportiva": "el que vas comprar a la botiga esportiva",
+  "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s tanca %s per %s l'any (+5 %% per tancar-ho en persona).",
+  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "«Represento %d dels teus. Tractem bé la meva gent i la pròxima taula serà més barata.» (−5 %% a la seva pròxima negociació.)"
  },
  "pl": {
   "Club": "Klub",
@@ -54723,9 +54723,7 @@
   "«Piénsalo; la oferta sigue en pie unos días.»": "„Przemyśl to; oferta jest aktualna jeszcze kilka dni.”",
   "No se pudo firmar: %s.": "Nie udało się podpisać: %s.",
   "Firmado en persona": "Podpisane osobiście",
-  "%s cierra %s por %s al año (+5 % por cerrarlo en persona).": "%s bierze %s za %s rocznie (+5% za domknięcie osobiście).",
   "«Como quieras. Ya sabes dónde encontrarme.»": "„Jak chcesz. Wiesz, gdzie mnie znaleźć.”",
-  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 % en su próxima negociación.)": "„Reprezentuję %d twoich zawodników. Traktuj moich ludzi dobrze, a następny stół będzie tańszy.” (−5% w jego następnych negocjacjach.)",
   "«Lo entiendo. El fútbol es de todos.»": "„Rozumiem. Piłka należy do wszystkich.”",
   "«El alcalde lo recordará.» El club apoya al gobierno en la próxima rueda; la prensa crítica toma nota (−2 de relación).": "„Burmistrz to zapamięta.” Klub popiera rząd na następnej konferencji; krytyczna prasa odnotowuje (−2 relacji).",
   "CITAS": "SPOTKANIA",
@@ -55953,7 +55951,9 @@
   "Botines de tacos": "Korki",
   "Balón de entrenamiento": "Piłka treningowa",
   "Balón de playa": "Piłka plażowa",
-  "lo que compraste en la tienda deportiva": "co kupiłeś w sklepie sportowym"
+  "lo que compraste en la tienda deportiva": "co kupiłeś w sklepie sportowym",
+  "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s bierze %s za %s rocznie (+5%% za domknięcie osobiście).",
+  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "„Reprezentuję %d twoich zawodników. Traktuj moich ludzi dobrze, a następny stół będzie tańszy.” (−5 %% w jego następnych negocjacjach.)"
  },
  "tr": {
   "Club": "Kulüp",
@@ -62122,9 +62122,7 @@
   "«Piénsalo; la oferta sigue en pie unos días.»": "«Düşün; teklif birkaç gün daha geçerli.»",
   "No se pudo firmar: %s.": "İmzalanamadı: %s.",
   "Firmado en persona": "Yüz yüze imzalandı",
-  "%s cierra %s por %s al año (+5 % por cerrarlo en persona).": "%s, %s için yılda %s ödüyor (yüz yüze kapatma için +%5).",
   "«Como quieras. Ya sabes dónde encontrarme.»": "«Nasıl istersen. Beni nerede bulacağını biliyorsun.»",
-  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 % en su próxima negociación.)": "«Senin oyuncularından %d tanesini temsil ediyorum. Benimkilere iyi davran, bir sonraki masa daha ucuz olur.» (Bir sonraki pazarlığında −%5.)",
   "«Lo entiendo. El fútbol es de todos.»": "«Anlıyorum. Futbol herkesindir.»",
   "«El alcalde lo recordará.» El club apoya al gobierno en la próxima rueda; la prensa crítica toma nota (−2 de relación).": "«Belediye başkanı bunu hatırlayacak.» Kulüp bir sonraki basın toplantısında hükümeti destekliyor; eleştirel basın not alıyor (−2 ilişki).",
   "CITAS": "RANDEVULAR",
@@ -63352,6 +63350,8 @@
   "Botines de tacos": "Krampon",
   "Balón de entrenamiento": "Antrenman topu",
   "Balón de playa": "Plaj topu",
-  "lo que compraste en la tienda deportiva": "spor mağazasından aldıkların"
+  "lo que compraste en la tienda deportiva": "spor mağazasından aldıkların",
+  "%s cierra %s por %s al año (+5 %% por cerrarlo en persona).": "%s, %s için yılda %s ödüyor (yüz yüze kapatma için +%%5).",
+  "«Represento a %d de los tuyos. Tratemos bien a mi gente y la próxima mesa será más barata.» (−5 %% en su próxima negociación.)": "«Senin oyuncularından %d tanesini temsil ediyorum. Benimkilere iyi davran, bir sonraki masa daha ucuz olur.» (Bir sonraki pazarlığında −%%5.)"
  }
 }
