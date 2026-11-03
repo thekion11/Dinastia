@@ -95,7 +95,7 @@ func _estacion_rusa(origen: Vector3, base: Basis, e: float) -> void:
 	var ruta_v := RUTA_FERIA + "queue-straight.glb"
 	for k in 3:
 		_pieza_kit(ruta_v, Vector3(anden.x - largo * 0.25 + 3.0 + float(k) * 2.5, 0.12, anden.z - 4.6), 2.5, PI * 0.5)
-	b._rotulo(Vector3(anden.x, BASE_RUSA + 5.2, anden.z), "🎢 Montaña rusa", Color(1.0, 0.9, 0.5), 18)
+	CartelFachada.con_mapa(b, Vector3(anden.x, BASE_RUSA + 5.2, anden.z), "🎢 Montaña rusa", Color(1.0, 0.9, 0.5), 18)
 	feria["estacion"] = anden
 
 ## Punto y orientación (mirando hacia donde avanza) a `s` metros del recorrido.
@@ -355,7 +355,7 @@ func _feria(r: Rect2) -> void:
 		mb.set_shader_parameter("dibujo", tex_franjas)
 		mb.set_shader_parameter("usa_dibujo", true)
 		mb.set_shader_parameter("espejo", sx < 0.0)
-	b._rotulo(Vector3(c.x, 30.0, c.z), "🎡 Parque de atracciones", Color(1.0, 0.85, 0.55), 22)
+	CartelFachada.con_mapa(b, Vector3(c.x, 30.0, c.z), "🎡 Parque de atracciones", Color(1.0, 0.85, 0.55), 22)
 	feria["puerta"] = puerta
 	_noria(c + Vector3(-hx * 0.55, 0, -hz * 0.42))
 	_recreativos(c, r)
