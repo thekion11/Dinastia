@@ -322,7 +322,7 @@ func _construir() -> void:
 	_vista3d.add_child(vp)
 	_escena = SorteoEscena3D.new()
 	vp.add_child(_escena)
-	_escena.montar(Color(String(p["acento"])), Color(String(p["fondo"])))
+	_escena.montar(Color(String(p["acento"])), Color(String(p["fondo"])), Calidad.elegida)
 	_escena.rotular(String(p["nombre"]), Idiomas.t(_titulo_ronda))
 	_escena.poner_banderas(_paises_del_sorteo())
 
