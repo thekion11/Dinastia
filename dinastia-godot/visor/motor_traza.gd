@@ -78,6 +78,7 @@ static func _suelto(m: MotorJugable, e: Dictionary, antes: int) -> String:
 static func saque(m: MotorJugable, tipo: String) -> void:
 	m._contar("traza_saque_" + tipo)
 	m.set_meta("_traza_saque_tipo", tipo)
+	m.set_meta("_traza_saque_t", m.t)
 
 ## Un pase de la IA acaba de salir (ciclo 13: «el receptor que se ofrece»): lo clasifica en el instante de la patada por receptor `quieto`/`mueve` (velocidad < 1,0 m/s), línea `tapada`/`libre` (un rival a < 1,3 m del
 ## trayecto) y distancia `corto` (< 12 m) / `medio` (< 22 m) / `largo`; cuenta cuántos hay de cada clase y recuerda la clase para etiquetar el corte si el rival lo intercepta.
@@ -207,7 +208,7 @@ static func tiro(m: MotorJugable, p: Dictionary, lejos: float) -> void:
 
 static func gol(m: MotorJugable, de_local: bool) -> void:
 	m._contar("traza_gol_zona_" + String(m.get_meta("_traza_tiro_zona", "sin")))
-	m._contar("traza_gol_origen_" + ("parado" if m._t_estado < 8.0 else "juego"))
+	m._contar("traza_gol_origen_" + (String(m.get_meta("_traza_saque_tipo", "otro")) if m.t - float(m.get_meta("_traza_saque_t", -99.0)) < 8.0 else "juego"))
 	var a: Dictionary = m.penultimo_toque
 	m._contar("traza_gol_con_asist" if (not a.is_empty() and bool(a["es_local"]) == de_local and a != m.ultimo_toque) else "traza_gol_sin_asist")
 
