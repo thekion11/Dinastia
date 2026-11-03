@@ -27,14 +27,8 @@ const COL_VERDE := Tema.BIEN
 const COL_ROJO := Tema.MAL
 const COL_ORO := Tema.ORO
 
-## Milisegundos por minuto de juego en cada velocidad. La pausa es la primera
-## porque es la que más se usa: es cuando se piensa el cambio.
-const VELOCIDADES := [
-	{"txt": "Pausa", "ms": 0.0},
-	{"txt": "Lento", "ms": 600.0},
-	{"txt": "Normal", "ms": 250.0},
-	{"txt": "Rápido", "ms": 80.0},
-]
+## Milisegundos por minuto de juego en cada velocidad (viven en `VelocidadesPartido`: Ajustes las enseña sin compilar el partido en vivo).
+const VELOCIDADES := VelocidadesPartido.LISTA
 
 var partido: Partido
 var mi_club: Club
