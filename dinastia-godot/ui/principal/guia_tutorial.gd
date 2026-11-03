@@ -53,11 +53,13 @@ func quizas(modo: String) -> void:
 func objetivo(clave: String) -> Control:
 	match clave:
 		"estado": return p._sub
-		"grupos": return p._fila_grupos
-		"chips": return p._fila_sub.get_parent() as Control
-		"ficha": return p._ficha
+		## (3-11, rediseño) Ya no hay fila de bloques ni carril de chips: se señala el RIEL del menú lateral o uno de sus botones.
+		"riel": return p._menu_lateral._riel.get_parent() as Control
+		"ficha": return p._menu_lateral.boton_de("plantel")
 		"tabla": return p._lista_tabla
 		"registro": return p._registro
+	if clave.begins_with("menu:"):
+		return p._menu_lateral.boton_de(clave.substr(5))
 	return nodos.get(clave) as Control
 
 ## Lo que completa un paso sin pulsar "Siguiente": que el jugador haya hecho
@@ -72,11 +74,14 @@ func hecho(clave: String) -> bool:
 		return titulo == clave.substr(4)
 	if clave.begins_with("chip:"):
 		var partes := clave.substr(5).split("|")
+		## La equipación abre su diseñador a pantalla completa (Principal se esconde): cuenta como hecha mientras está abierto.
+		if partes.size() > 1 and partes[1] == "kits" and not p.visible:
+			return true
 		return titulo == partes[0] and p._seccion_activa({"tab": partes[0], "secc": partes[1] if partes.size() > 1 else ""})
 	if clave.begins_with("ficha:"):
 		return p._seleccionado != null and p._seleccionado.id == clave.substr(6)
 	match clave:
-		"grupo": return p._grupo_actual != "central"
+		"menu": return is_instance_valid(p._menu_lateral.pantalla_abierta) and not p._menu_lateral.pantalla_abierta.cerrando()
 		"ficha": return p._seleccionado != null
 		"plantel": return (Principal.HUBS["plantel"]["tabs"] as Array).has(titulo)
 		"dinero": return (Principal.HUBS["dinero"]["tabs"] as Array).has(titulo)
@@ -103,7 +108,7 @@ func accion(clave: String) -> void:
 		"ficha":
 			if not p.mundo.mi_club().plantilla.is_empty():
 				p._ver_ficha(p.mundo.mi_club().plantilla[0])
-		"grupo_club": p._elegir_grupo("club")
+		"menu": p._menu_lateral.abrir_menu("plantel")
 		"plantel": p._ir_a_pestana("Mi plantel")
 		"dinero": p._ir_a_pestana("Finanzas")
 		"partido": p._ir_a_pestana("Partido")
