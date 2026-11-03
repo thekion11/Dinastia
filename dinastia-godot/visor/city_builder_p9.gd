@@ -217,7 +217,7 @@ func _karting() -> void:
 	techo.position = c + Vector3(0, 5.2, -radio - 9.0)
 	add_child(techo)
 	_desguace(c + Vector3(largo * 0.5 + radio + 10.0, 0, -radio - 6.0), 9021)
-	_rotulo(c + Vector3(0, 10.0, -radio - 9.0), "🏎 Karting", Color(1, 1, 1), 26)
+	CartelFachada.con_mapa(self, c + Vector3(0, 10.0, -radio - 9.0), "🏎 Karting", Color(1, 1, 1), 26)
 	_frentes.append(Rect2(c.x - largo * 0.5 - radio - 18.0, c.z - radio - 16.0, largo + radio * 2.0 + 36.0, radio * 2.0 + 20.0))
 	## Los cinco karts en carrera.
 	var ruta := PackedVector3Array()

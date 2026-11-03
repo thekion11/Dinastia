@@ -152,7 +152,7 @@ func _instalacion(uso: String, r: Rect2) -> void:
 	CiudadServicios.fachada(self, uso, c, w, f)
 	CiudadServicios.portico(self, uso, c, w, f)
 	if nombre != "":
-		b._rotulo(c + Vector3(0, 30.0, 0), nombre, Color(1, 1, 1), 22)
+		CartelFachada.con_mapa(b, c + Vector3(0, 30.0, 0), nombre, Color(1, 1, 1), 22)
 		b.puntos_clic.append({"k": "ciudad_" + uso, "n": nombre, "pos": c, "estado": "ciudad"})
 	cuenta["instalaciones"] = int(cuenta.get("instalaciones", 0)) + 1
 

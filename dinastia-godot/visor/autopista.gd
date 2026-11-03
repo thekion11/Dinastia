@@ -61,7 +61,7 @@ static func montar(b: CityBuilder) -> Dictionary:
 			r.rotation.x = ang * signf(hacia.z)
 		else:
 			r.rotation.z = -ang * signf(hacia.x)
-		b._rotulo(e + Vector3(0, ALTO + 14.0, 0), "🛣️ Autopista · salida", Color(0.6, 0.9, 1.0), 18)
+		CartelFachada.con_mapa(b, e + Vector3(0, ALTO + 14.0, 0), "🛣️ Autopista · salida", Color(0.6, 0.9, 1.0), 18)
 	Peaje.montar(b, enlaces, ALTO, ANCHO, RAMPA)   ## M-197: un peaje en cada rampa
 	## Las carreteras al horizonte: siguen el terreno, a tramos cortos.
 	for s: Vector3 in SALIDAS:
