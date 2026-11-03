@@ -217,7 +217,7 @@ var _cache_tintes := {}
 ## FACHADAS DE TORRE (etapa 6): el kit de rascacielos trae una textura de
 ## cuadros azules borrosos. Se cambia por `fachada_torre.gdshader`, con seis
 ## tonos de pared, y de noche las ventanas se encienden (`encender_luces`).
-var _mats_torre: Array[ShaderMaterial] = []
+var _mats_torre: Array[ShaderMaterial] = []; var _n_torre := 0   ## _n_torre: tono de cada torre (antes get_instance_id: cambiaba entre armados)
 const TONOS_TORRE := [Color(0.80, 0.82, 0.86), Color(0.86, 0.80, 0.72), Color(0.74, 0.78, 0.82), Color(0.84, 0.84, 0.80), Color(0.70, 0.74, 0.70), Color(0.88, 0.84, 0.86)]
 
 ## EL PERSONAL, A LA VISTA (26-9-2026, "que tengan trabajadores reales"): en la
