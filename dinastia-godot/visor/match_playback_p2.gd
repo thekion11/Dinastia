@@ -95,18 +95,14 @@ func _resolver_choques() -> void:
 			var b: Node3D = players[j].get("node")
 			if not is_instance_valid(b):
 				continue
-			var dx := b.position.x - a.position.x
-			var dz := b.position.z - a.position.z
-			var d2 := dx * dx + dz * dz
-			if d2 >= minimo * minimo:
+			var s := CuerposFisica.solape(b.position.x - a.position.x, b.position.z - a.position.z, minimo, float(i * 7 + j))   ## M-391
+			if s == Vector3.ZERO:
 				continue
-			var d := sqrt(d2)
-			var dir := Vector2(dx, dz) / d if d > 0.001 else Vector2(1.0, 0.0).rotated(float(i * 7 + j))
-			var mitad := (minimo - d) * 0.5
-			a.position.x -= dir.x * mitad
-			a.position.z -= dir.y * mitad
-			b.position.x += dir.x * mitad
-			b.position.z += dir.y * mitad
+			var mitad := s.y * 0.5
+			a.position.x -= s.x * mitad
+			a.position.z -= s.z * mitad
+			b.position.x += s.x * mitad
+			b.position.z += s.z * mitad
 
 func _mover(delta: float) -> void:
 	if is_instance_valid(ball) and ball is Balon3D:

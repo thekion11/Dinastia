@@ -17,10 +17,10 @@ signal revision_var(minuto: int, motivo: String)
 const PROB_JUGADA_AMBIENTE := 0.4
 var _jugadas_ambiente := true
 
-const LARGO := 105.0
-const ANCHO := 68.0
-const MEDIO_LARGO := 52.5
-const MEDIO_ANCHO := 34.0
+const LARGO := Balance.CAMPO_LARGO
+const ANCHO := Balance.CAMPO_ANCHO
+const MEDIO_LARGO := Balance.CAMPO_LARGO * 0.5
+const MEDIO_ANCHO := Balance.CAMPO_ANCHO * 0.5
 
 ## Los 5 puestos que juegan de defensa central o lateral -mismos codigos que
 ## `visor/puente3d.gd::ALTURA`. Se usa en mas de un lugar (marca al hombre,
@@ -107,7 +107,7 @@ var _anadido_mostrado := false
 ## cada par (rivales y árbitro incluidos) que quede a menos de dos «radios de
 ## hombro» se aparta a medias por la línea que los une. 22+3 cuerpos: ~300
 ## comparaciones baratas por fotograma.
-const RADIO_CUERPO := 0.31
+const RADIO_CUERPO := Balance.RADIO_CUERPO
 
 ## Empuje de separacion respecto a los companeros de equipo que esten
 ## demasiado cerca (radio `SEPARACION_RADIO`). Solo mira jugadores de campo

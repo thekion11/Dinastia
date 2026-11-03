@@ -658,7 +658,6 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-383 | P2 | PENDIENTE | Tipado: muchos `Dictionary` sin forma (jugadores del motor) | sin `JugadorMotor` tipado |
 | M-384 | P2 | PARCIAL | `Mundo` 2.921 líneas, `Roles` 2.065, `Prensa` 2.541: acoplamiento alto | sin extraer servicios (28-10: ya en capas de <450 líneas; queda repartir por responsabilidad) |
 | M-387 | P2 | PENDIENTE | Mensajes de error silenciosos (`return` sin aviso) | sin registro de errores |
-| M-391 | P2 | PENDIENTE | Duplicación entre `MatchPlayback` y `MotorJugable` | duplicación sin retirar |
 | M-392 | P3 | PARCIAL | `MotorLibre` (567 líneas): NO es código muerto | 28-10: lo usa `OcasionesDT.lectura` (las ocasiones jugables del partido del DT: lee la jugada y propone pase, conducción o tiro). Lo que sobra es su prueba `_probar_motor_libre`, la más lenta del banco (38 s de 129): acortarla (menos partidos simulados con los mismos umbrales) |
 | M-393 | P2 | PENDIENTE | Código de pruebas mezclado con herramientas (`herramientas/*.ps1`) | sin separar |
 | M-394 | P2 | PENDIENTE | Herramientas `.exe`/`.cs` binarias en repo | `herramientas/*.exe` siguen en el repo |
