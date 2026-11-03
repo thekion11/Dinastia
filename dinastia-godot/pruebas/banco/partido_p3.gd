@@ -366,6 +366,7 @@ func _probar_traza() -> void:
 	var loc: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))[0]
 	var vis: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))[0]
 	motor.diag = {}
+	motor._t_estado = 10.0   ## no es una reanudación reciente
 	var d := motor.dir_ataque(true)
 	var arco_z := motor.LARGO * d
 	motor.balon.position = Vector3(0, 0.11, 0)
@@ -386,7 +387,7 @@ func _probar_traza() -> void:
 	motor.balon.position = Vector3(0, 0.11, 0)
 	motor._pase_eq = -1
 	MotorTraza.tomar(motor, loc)
-	_comprobar(int(motor.diag.get("traza_perdida_medio_suelto", 0)) == 1, "balón suelto recogido en el medio campo: «perdida_medio_suelto»")
+	_comprobar(int(motor.diag.get("traza_perdida_medio_suelto_control_ajeno_t2", 0)) == 1, "balón suelto sin dueño reciente recogido en el medio campo: «perdida_medio_suelto_control_ajeno_t2»")
 	## Sale del área y vuelve a entrar: segunda entrada.
 	MotorTraza.paso(motor)
 	motor.balon.position = Vector3(0, 0.11, arco_z - d * 8.0)

@@ -32,13 +32,24 @@ static func tomar(m: MotorJugable, p: Dictionary) -> void:
 			## Causa de la pérdida (ciclo 10, afinada): `pase` = un pase suyo en vuelo lo corta el rival; `tiro` = un remate suyo en vuelo; `entrada` = entrada con éxito hace <0,2 s;
 			## `suelto` = recoge un balón que ya no tenía dueño (rechace, despeje, toque largo, balón dividido); `directo` = se lo quitan con el balón aún en sus pies por otra vía.
 			var tiro_suyo := not m._tiro_vivo.is_empty() and (0 if bool((m._tiro_vivo["p"] as Dictionary)["es_local"]) else 1) == antes
-			var causa := "pase" if m._pase_eq == antes else ("tiro" if tiro_suyo else ("entrada" if m.t - float(m.get_meta("_traza_ent", -9.0)) < 0.2 else ("suelto" if m.poseedor.is_empty() else "directo")))
+			var causa := "pase" if m._pase_eq == antes else ("tiro" if tiro_suyo else ("entrada" if m.t - float(m.get_meta("_traza_ent", -9.0)) < 0.2 else ("saque" if m._t_estado < 4.0 else ("toque_largo" if m.t - float(m.get_meta("_traza_tl", -9.0)) < 0.2 else (_suelto(m, e, antes) if m.poseedor.is_empty() else "directo")))))
 			m._contar("traza_perdida_%s_%s" % [zona(m, antes), causa])
 	e["eq"] = nuevo
 
 ## Llamar una vez por fotograma de juego: cuenta las entradas del balón al área rival (equipo = el último dueño).
 static func paso(m: MotorJugable) -> void:
 	var e := _est(m)
+	## Cuándo y cómo se queda el balón sin dueño (ciclo 10): equipo que lo soltaba, instante y último gesto con el pie (`despeje`, `centro`, `filtrado`, `tiro`, «»).
+	if not m.poseedor.is_empty():
+		e["dueno_eq"] = 0 if bool(m.poseedor["es_local"]) else 1
+		e["dueno_t"] = m.t
+		e["dueno_rol"] = m._rol(m.poseedor)
+	elif e.has("dueno_t") and float(e["dueno_t"]) > float(e.get("suelta_t", -9.0)):
+		e["suelta_t"] = m.t
+		e["suelta_eq"] = int(e["dueno_eq"])
+		e["suelta_ctx"] = String(m._ctx_golpeo)
+		e["suelta_rol"] = String(e.get("dueno_rol", ""))
+		e["suelta_v"] = m.vel_balon.length()
 	var eq := int(e["eq"])
 	if eq == -1:
 		return
@@ -46,3 +57,14 @@ static func paso(m: MotorJugable) -> void:
 	if dentro and not bool(e["en_area"]):
 		m._contar("traza_entrada_area")
 	e["en_area"] = dentro
+
+## Subcausa de un balón suelto que recoge el rival: `despeje`/`centro`/`filtrado` si el último gesto del equipo fue ese y lo soltó hace menos de 3 s; si no, `control` (perdió el control: toque largo, duelo, rebote de entrada).
+static func _suelto(m: MotorJugable, e: Dictionary, antes: int) -> String:
+	if int(e.get("suelta_eq", -1)) == antes and m.t - float(e.get("suelta_t", -99.0)) < 3.0:
+		var c := String(e.get("suelta_ctx", ""))
+		if c in ["despeje", "centro", "filtrado", "tiro"]:   ## «tiro»: remate parado o desviado cuyo rebote recoge el rival (el remate ya estaba cerrado)
+			return "suelto_" + c
+	var dt := m.t - float(e.get("suelta_t", -99.0))
+	var propio := int(e.get("suelta_eq", -1)) == antes
+	var tiempo := "t0" if dt < 0.5 else ("t1" if dt < 2.0 else "t2")
+	return "suelto_control_%s_%s%s" % ["propio" if propio else "ajeno", tiempo, ("_" + ("fuerte" if float(e.get("suelta_v", 0.0)) >= 9.0 else ("media" if float(e.get("suelta_v", 0.0)) >= 4.0 else "suave"))) if (propio and tiempo != "t0") else ""]   ## quién lo soltó, cuánto lleva suelto y, si no es inmediato, con qué velocidad salió el balón (fuerte ≥9, media ≥4, suave)
