@@ -197,3 +197,20 @@ El único que seguía dibujando (47 fotogramas en 3 s con la pantalla quieta) no
 **El ajuste.** `Balance.CONVERSION` 0,30 → **0,28** (2,70 goles/partido). Se baja la conversión y no las llegadas (`BASE_ATAQUE`): deja intactos remates y xG por llegada (media 0,27), y los goles pasan de ~1,13 veces el xG a ~1,05; los tiros a puerta (gol + atajada, hasta `R_ATAJADA`) no cambian, solo se reparten más atajadas. Lo usa `Previa` (goles esperados = llegadas × `CONVERSION`) y baja en consecuencia.
 **Sellos.** `igualdad_mundo` cambia A PROPÓSITO (998022970 → 4013618777); `igualdad_motor` no cambia (2265294183: el motor jugable no usa `CONVERSION`). Prueba de 10 temporadas (9 corridas): medias de 2,76 a 2,93, 0 fallos; sus techos vuelven a 3,1 (media de la corrida) y 3,4 (una temporada).
 **Para la próxima vez.** Un cambio de táctica de la IA mueve los goles medios: medir con `zz_medir_goles` antes y después (22 s).
+
+## Las cifras del partido simulado contra el fútbol real (3-11, orden del líder)
+`pruebas/zz_medir_stats.tscn` (nueva): juega TODOS los cruces (ida y vuelta) de las primeras de CHI, ARG, ESP y ENG en 3 semillas (2.880 partidos, 15 s) y da por partido goles, amarillas, rojas, penales, córners, faltas, remates, fueras, posesión y el reparto de resultados. Medido con `CONVERSION` 0,28:
+| cifra | medido | fútbol real | |
+|---|---|---|---|
+| goles | 2,68 | 2,4-2,9 | bien |
+| empates | 25,7 % | ~25 % | bien |
+| victoria local | 42,8 % | ~45 % | un poco baja, sin tocar |
+| córners (los dos) | **17,1** | ~10 | **ajustado (este PR)** → 10,3 |
+| faltas | **29,6** | ~22-24 | **ajustado (este PR)** → 22,5 |
+| fueras de juego | **9,0** | ~4 | **ajustado (este PR)** → 3,9 |
+| amarillas | **2,74** | 3,5-4 | pendiente (PR siguiente) |
+| rojas | 0,22 | 0,1-0,2 | pendiente (con las amarillas) |
+| penales | **0,00** | 0,25-0,3 | pendiente: solo los pita el árbitro «estricto», 0,4 % por llegada |
+| remates (los dos) | 9,6 (5,2 a puerta) | ~25 (~8-9 a puerta) | no se toca: cada llegada es un remate; subirlos obligaría a rehacer el motor de ocasiones |
+| posesión del grande en casa vs chico | 70 % (el chico en casa: 36 % al grande: 64 %) | ~58-65 % | un poco alta; es solo una cifra de pantalla (`clampf(22, 78)`), sin tocar |
+**Este PR:** córners, faltas y fueras de juego son contadores de relleno (se enseñan en las pantallas del partido, no deciden nada): sus probabilidades por minuto pasan a `Balance.P_CORNER_*`, `P_FALTA_*`, `P_FUERA` con los valores del fútbol real, y mantienen la ventaja de campo (el local, más córners y menos faltas). Cambiar el umbral no cambia el número de tiradas: **`igualdad_mundo` (4013618777) e `igualdad_motor` (2265294183) no cambian**.

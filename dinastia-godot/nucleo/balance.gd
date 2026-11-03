@@ -92,6 +92,16 @@ const SENSIBILIDAD := 3.2
 ## cuota de atajadas (entre CONVERSION y R_ATAJADA): los tiros a puerta (gol + atajada, hasta R_ATAJADA) no cambian.
 const CONVERSION := 0.28
 
+## LAS ESTADÍSTICAS DE RELLENO DEL PARTIDO SIMULADO (3-11-2026, orden del líder): córners, faltas y fueras de juego son solo contadores que se enseñan en las pantallas del partido (no
+## deciden nada), una tirada por minuto y lado. Eran las del HTML (córners 0,10/0,09, faltas 0,16/0,17, fueras 0,05/0,05 por minuto) y daban 17,1 córners, 29,6 faltas y 9,0 fueras por
+## partido (medido con `pruebas/zz_medir_stats.tscn`, 2.880 partidos). El fútbol real: ~10 córners, ~22-24 faltas y ~4 fueras de juego. Se mantiene la ventaja de campo en detalle (el
+## local saca más córners y comete menos faltas). Cambiar el umbral no cambia cuántas tiradas se hacen: los resultados de los partidos no se mueven.
+const P_CORNER_LOCAL := 0.062
+const P_CORNER_VISITA := 0.052
+const P_FALTA_LOCAL := 0.120
+const P_FALTA_VISITA := 0.130
+const P_FUERA := 0.022
+
 ## Los mismos cortes de `ataque()` en juego.js (linea ~2139 y ~2144), sobre el
 ## mismo `r` que decide el gol: entre CONVERSION y R_ATAJADA para la atajada,
 ## entre R_ATAJADA y R_POSTE para el palo, el resto para el fallo.
