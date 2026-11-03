@@ -55,5 +55,5 @@ static func destino(m: MotorJugable, gk: Dictionary) -> Vector3:
 	return Vector3(yo.x + clampf(cruce.x - yo.x, -tope, tope), 0, yo.z)
 
 ## CICLO 20 (3-11): el motor para ≈59 % de los tiros a puerta (real ≈70 %). `PARADA_K` multiplica la probabilidad base de atajar (1,0 = como antes).
-static var K := float(OS.get_environment("PARADA_K")) if OS.get_environment("PARADA_K") != "" else 1.0
+static var K := float(OS.get_environment("PARADA_K")) if OS.get_environment("PARADA_K") != "" else 1.3   ## ENCENDIDO 3-11 (ciclo 22, con más tiros): 1,0 = como antes
 
