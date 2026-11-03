@@ -108,7 +108,7 @@ func _adornar_puente(rx: float, z: float, ancho: float, agua0: float, agua1: flo
 		l.rotation.y = -PI * 0.5 if xe < rx else PI * 0.5
 		l.visibility_range_end = 120.0
 		b.add_child(l)
-	b._rotulo(Vector3(rx, PUENTE_ALTO + 9.0, z), "🌉 " + nombre, Color(0.95, 0.9, 0.75), 16)
+	CartelFachada.con_mapa(b, Vector3(rx, PUENTE_ALTO + 9.0, z), "🌉 " + nombre, Color(0.95, 0.9, 0.75), 16)
 	## Luces bajo el tablero, reflejadas en el agua de noche.
 	var luces: Array[Transform3D] = []
 	for k in 16:
@@ -310,7 +310,7 @@ func _puerto(r: Rect2) -> void:
 	b._grua(Vector3(rx - 62.0, 0, r.get_center().y), 26.0)
 	var alm := b._mat_simple(Color(0.6, 0.45, 0.32), 0.8)
 	b._caja_en(Vector3(r.position.x + 22.0, 5.0, r.get_center().y), Vector3(30.0, 10.0, r.size.y * 0.6), alm)
-	b._rotulo(Vector3(rx - 40.0, 22.0, r.get_center().y), "⚓ Puerto fluvial", Color(0.8, 0.9, 1.0), 22)
+	CartelFachada.con_mapa(b, Vector3(rx - 40.0, 22.0, r.get_center().y), "⚓ Puerto fluvial", Color(0.8, 0.9, 1.0), 22)
 	b.puntos_clic.append({"k": "ciudad_puerto", "n": "Puerto · pescar", "pos": Vector3(rx - 30.0, 0, r.get_center().y), "estado": "ciudad"})
 
 ## La finca de la Casa Grande: césped, seto alrededor con portón al norte
