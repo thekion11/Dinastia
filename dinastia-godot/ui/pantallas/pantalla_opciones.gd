@@ -180,6 +180,7 @@ func _disp_controles() -> void:
 	b_ct.text = Idiomas.t("🎮 Configurar")
 	b_ct.pressed.connect(func() -> void: load("res://ui/componentes/panel_controles.gd").abrir(p))
 	fila_ct.add_child(b_ct)
+	load("res://ui/componentes/ajustes_tactil.gd").pintar(p)
 
 
 func _disp_calidad() -> void:
