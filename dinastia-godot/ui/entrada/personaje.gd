@@ -271,11 +271,15 @@ func _confirmar() -> void:
 		return
 	if _capa_confirmar != null:
 		return
+	var reserva := Control.new()   ## reserva el sitio mientras se saca la foto (evita dos ventanas con dos clics)
+	_capa_confirmar = reserva
+	var foto: Texture2D = await _estudio.foto() if _estudio != null else null
+	reserva.free()
 	_capa_confirmar = PersonajeConfirmacion.crear(personaje(), _c1, func() -> void: _cerrar_confirmacion(),
 		func() -> void:
 			var p := personaje()
 			_cerrar_confirmacion()
-			terminado.emit({"personaje": p}))
+			terminado.emit({"personaje": p}), foto)
 	add_child(_capa_confirmar)
 
 func _cerrar_confirmacion() -> void:

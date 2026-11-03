@@ -187,6 +187,7 @@ func _pintar_carrera(r: Roles) -> void:
 		e.text = escalon
 		e.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_club.add_child(e)
+	CarreraSalidas.pintar(p, p._lista_club)   ## (3-11, orden 22) tu puesto, quién te quiere y dimitir
 	if r.puede_ascender() != "":
 		p._boton("Ascender a %s" % Roles.PERMISOS[r.puede_ascender()]["cargo"], _ascender_rol, p._lista_club)
 
