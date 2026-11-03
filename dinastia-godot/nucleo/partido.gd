@@ -411,3 +411,17 @@ func fuerza(once: Array[Jugador], c: Club) -> Dictionary:
 	f["def"] = float(f["def"]) * float(m[1])
 	return f
 
+## LOS PENALES DEL PARTIDO SIMULADO (3-11-2026, orden del líder): antes solo el árbitro «estricto» los cobraba (0,00 por partido; el fútbol real: ~0,25-0,3).
+## Ahora cada llegada puede acabar en falta dentro del área (`Balance.P_PENAL`, escalada por el perfil del árbitro): se pita para el que ataca y
+## el penal se cobra en el acto (`Balance.CONVERSION_PENAL`). Sustituye al remate de esa llegada.
+func _penal_en_area(c: Club, once: Array[Jugador], es_local: bool) -> bool:
+	if not Azar.suerte(Balance.P_PENAL * float(Balance.PENAL_PERFIL.get(String(arbitro.get("perfil", "")), 1.0))):
+		return false
+	var nombre := String(arbitro.get("nombre", Idiomas.t("El árbitro")))
+	decision_arbitral.emit(Idiomas.t("⚽ Penal para %s: %s no dudó en cobrarlo.") % [c.nombre, nombre], minuto)
+	_contar_penal(es_local)
+	if Azar.suerte(Balance.CONVERSION_PENAL):
+		_anotar(c, once, es_local)
+	else:
+		remate.emit(c, _elegir_goleador(once), "atajada", minuto)
+	return true

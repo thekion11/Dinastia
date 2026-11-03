@@ -9,7 +9,9 @@ extends Node
 ## era 998022970. `igualdad_motor` no cambia (el motor jugable no usa `CONVERSION`).
 ## 3-11 (cifras del partido, a propósito): amarillas y rojas del partido simulado al fútbol real (`Balance.P_AMARILLA` 0,031 → 0,040 y `P_ROJA_SEGUNDA` 0,18 → 0,09: 2,74 → 3,71 amarillas y
 ## 0,22 → 0,15 rojas por partido); más tarjetas consumen más azar y cambian marcadores, plantillas y tablas; era 4013618777. `igualdad_motor` no cambia.
-const ESPERADO := "1935461399"
+## 3-11 (penales, a propósito): cada llegada puede acabar en falta dentro del área (`Balance.P_PENAL` 0,03 × perfil del árbitro; 0,00 → 0,31 penales por partido, convertidos al 77 %) y
+## `Balance.CONVERSION` baja de 0,28 a 0,267 para mantener los goles en ~2,7. Cambian marcadores, tablas y primas; era 1935461399. `igualdad_motor` no cambia.
+const ESPERADO := "1992993185"
 
 func _ready() -> void:
 	var m := Mundo.new()

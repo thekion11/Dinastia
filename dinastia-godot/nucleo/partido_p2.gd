@@ -367,13 +367,13 @@ func _chequeo_arbitral() -> void:
 ## tiro de dados, como en el HTML, no uno para el gol y otro aparte para el
 ## resto- para que las proporciones no se descuadren.
 func _atacar(c: Club, once: Array[Jugador], es_local: bool) -> void:
-	## EL ÁRBITRO, antes que nada: en el HTML sus chequeos van al principio de
-	## `ataque()`, sobre CADA llegada, sin que le importe si termina en gol,
-	## atajada o fallo -son sucesos aparte, no una consecuencia del remate-.
+	## EL ÁRBITRO, antes que nada: en el HTML sus chequeos van al principio de `ataque()`, sobre CADA llegada,
+	## sin que le importe si termina en gol, atajada o fallo -son sucesos aparte, no una consecuencia del remate-.
 	_chequeo_arbitral()
-	## El xG de cada llegada: la tirada del HTML (0,09-0,31), escalada. Sumado a lo
-	## largo del partido es lo que permite decir "generamos para tres y metimos
-	## uno" sin que sea una impresión, sino un número.
+	if _penal_en_area(c, once, es_local):
+		return   ## la llegada acabó en falta dentro del área (`Balance.P_PENAL`)
+	## El xG de cada llegada: la tirada del HTML (0,09-0,31), escalada. Sumado a lo largo del partido es lo que
+	## permite decir "generamos para tres y metimos uno" sin que sea una impresión, sino un número.
 	##
 	## AUDITORÍA 26-10 (50 partidos): repartido plano en 0,09-0,31, su media (0,20) quedaba por debajo
 	## de la conversión real (~0,27) y el xG total salía un 26 % por debajo de los goles: todos los
