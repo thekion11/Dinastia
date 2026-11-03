@@ -67,7 +67,7 @@ func _ready() -> void:
 	bandera.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	bandera.fuerza = 0.8
 	v.add_child(bandera)
-	var fuente: Font = get_meta("fuente_titulo", null)
+	var fuente: Font = (get_meta("fuente_titulo") if has_meta("fuente_titulo") else null)
 	var nombre := _etiqueta(String((Idiomas.NOMBRES.get(codigo, ["?"]) as Array)[0]), 34, TEXTO, fuente)
 	v.add_child(nombre)
 	v.add_child(_etiqueta(String(_textos.get("pregunta", "")), 20, ORO, fuente))

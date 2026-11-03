@@ -290,7 +290,7 @@ func _construir() -> void:
 	b.custom_minimum_size = Vector2(200, 44)
 	b.pressed.connect(func() -> void: cerrado.emit())
 	pie.add_child(b)
-	b.call_deferred("grab_focus")
+	FocoSeguro.dar(b)
 	Animar.entrar(self, 0.25)   ## M-304: la entrada común
 
 func _escudo(c: Club, px: int) -> TextureRect:

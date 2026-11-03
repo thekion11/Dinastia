@@ -69,6 +69,7 @@ func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	## Colgada de un Node (no de un Control) los anclajes no tienen a qué agarrarse: toma la ventana.
 	if not (get_parent() is Control):
+		set_anchors_preset(Control.PRESET_TOP_LEFT)   ## sin padre Control los anclajes no valen; con ellos abiertos Godot avisa al fijar el tamaño
 		position = Vector2.ZERO
 		size = get_viewport_rect().size
 		get_viewport().size_changed.connect(func() -> void: size = get_viewport_rect().size)

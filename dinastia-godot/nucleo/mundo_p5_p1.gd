@@ -106,7 +106,7 @@ func _finanzas_de_la_semana(c: Club) -> Finanzas:
 		directiva.honorarios_semanales() if soy_yo and directiva != null else 0,
 		(0.1 if soy_yo and directiva != null and directiva.tiene_consejero("mkt") else 0.0))
 	if soy_yo:
-		f.movimiento.connect(_anotar_movimiento)
+		Conexion.una_vez(f.movimiento, _anotar_movimiento)
 		## LOS TRES MULTIPLICADORES DE LA TELEVISION, que existian los tres y
 		## no movian una moneda: el reparto que vota la asamblea y el modelo de
 		## contrato que elige el club. El del horario se cobra aparte, por

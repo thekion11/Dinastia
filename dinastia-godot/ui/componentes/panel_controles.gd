@@ -49,14 +49,14 @@ func _montar() -> void:
 	_pintar()
 	## Entrada: aparece y sube un poco (con animaciones reducidas, al instante).
 	if Animar.reducidas():
-		(_items_menu[_pestana] as Control).grab_focus.call_deferred()
+		FocoSeguro.dar((_items_menu[_pestana] as Control))
 		return
 	_raiz.modulate.a = 0.0
 	_raiz.position.y += 16.0
 	var tw := create_tween().set_parallel(true)
 	tw.tween_property(_raiz, "modulate:a", 1.0, 0.28)
 	tw.tween_property(_raiz, "position:y", _raiz.position.y - 16.0, 0.32).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	(_items_menu[_pestana] as Control).grab_focus.call_deferred()
+	FocoSeguro.dar((_items_menu[_pestana] as Control))
 
 ## PERFILES DE MANDO (M-442): «Cargar N» y «Guardar en N» para los tres huecos de `MandoPerfiles`.
 func _montar_perfiles(col: VBoxContainer) -> void:
