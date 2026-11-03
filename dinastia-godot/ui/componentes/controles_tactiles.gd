@@ -72,7 +72,7 @@ func _exit_tree() -> void:
 func centro_de(nombre: String) -> Vector2:
 	var r := radio_boton()
 	if nombre == "Pausa":
-		return Vector2(size.x - r * 0.9 - 20.0, r * 0.9 + 20.0)
+		return Vector2(size.x - r * 0.9 - 20.0, r * 0.9 + 70.0)   ## bajo la ficha de estadísticas de arriba a la derecha
 	var b: Array = BOTONES[nombre]
 	return size - Vector2(r * 1.6, r * 1.6) - Vector2(float(b[2]), float(b[3])) * r * 2.5 * Vector2(1.0, 1.0)
 
