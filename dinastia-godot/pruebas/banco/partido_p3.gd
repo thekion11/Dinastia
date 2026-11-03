@@ -376,3 +376,46 @@ func _probar_marcaje() -> void:
 	var mapa2 := MotorMarcaje.reparto(motor, true)
 	_comprobar(mapa2 == mapa, "el reparto no cambia por moverse un poco")
 	(r[1] as Node3D).queue_free()
+
+## CARRERAS AL ESPACIO (03-11-2026, IA F5, `MotorCarreras`): un solo delantero corre al hueco; los demás mantienen la forma.
+func _probar_carreras() -> void:
+	_titulo("CARRERAS AL ESPACIO CON TEMPORIZADOR")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var locales: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var delanteros: Array = locales.filter(func(p: Dictionary) -> bool: return motor._rol(p) in MotorCarreras.ROLES)
+	var otros: Array = locales.filter(func(p: Dictionary) -> bool: return not (motor._rol(p) in MotorCarreras.ROLES))
+	if delanteros.size() < 2 or otros.is_empty():
+		_comprobar(false, "hay al menos 2 delanteros y otro jugador (%d)" % delanteros.size())
+		(r[1] as Node3D).queue_free()
+		return
+	var dz := motor.dir_ataque(true)
+	var linea := 20.0 * dz
+	for i in delanteros.size():
+		(delanteros[i]["node"] as Node3D).position = Vector3(-10.0 + i * 8.0, 0, linea - dz * 4.0)
+	(otros[0]["node"] as Node3D).position = Vector3(0, 0, 0)
+	motor.poseedor = otros[0]
+	motor.t = 10.0
+	var en_linea := 0
+	for p: Dictionary in delanteros:
+		var o := MotorCarreras.objetivo(motor, p, Vector3(pos_x(p), 0, linea - dz * 9.0), linea, dz)
+		if absf(o.z - (linea - dz * 0.6)) < 0.01 and bool(p["correr"]):
+			en_linea += 1
+	_comprobar(en_linea == 1, "solo un delantero hace la carrera (%d)" % en_linea)
+	var detras := true
+	for p: Dictionary in delanteros:
+		var o2 := MotorCarreras.objetivo(motor, p, Vector3(pos_x(p), 0, linea - dz * 9.0), linea, dz)
+		if absf(o2.z - (linea - dz * 0.6)) > 0.01:
+			detras = detras and (linea - o2.z) * dz >= 3.0
+	_comprobar(detras, "los demás se quedan al menos 3 m por detrás de la línea")
+	## Termina: pasado el tiempo máximo, nadie corre durante el descanso.
+	motor.t += MotorCarreras.DUR_MAX + 0.2
+	for p: Dictionary in delanteros:
+		MotorCarreras.objetivo(motor, p, Vector3(pos_x(p), 0, linea - dz * 9.0), linea, dz)
+	var e: Dictionary = motor.get_meta("_carrera_l")
+	_comprobar(String(e["id"]) == "" and float(e["libre"]) > motor.t, "tras la carrera hay un descanso antes de la siguiente")
+	_comprobar(MotorCarreras.hueco(motor, true) >= -motor.ANCHO and MotorCarreras.hueco(motor, true) <= motor.ANCHO, "el hueco cae dentro del campo")
+	(r[1] as Node3D).queue_free()
+
+func pos_x(p: Dictionary) -> float:
+	return (p["node"] as Node3D).position.x
