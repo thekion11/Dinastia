@@ -290,3 +290,26 @@ func _probar_colocacion_defensa() -> void:
 	var z := MotorColocacion.balon_lento(motor, true).z
 	_comprobar(z > 22.0, "y el balón que ve el que defiende va casi en directo: %.1f de 30 m en 1 s" % z)
 	(r[1] as Node3D).queue_free()
+
+## EL PORTERO SE DESLIZA MIENTRAS ESPERA (03-11-2026, F7 corregida): con la parada pendiente, `_ia_portero` devuelve el punto de deslizamiento en TODOS los fotogramas.
+func _probar_portero_desliza_pendiente() -> void:
+	_titulo("EL PORTERO SE DESLIZA TODO EL TIEMPO QUE ESPERA LA PARADA")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var gk: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["por"]) and bool(p["es_local"]))[0]
+	var arco := motor._arco_propio(gk)
+	(gk["node"] as Node3D).position = Vector3(0.0, 0, arco.z - signf(arco.z) * 1.0)
+	motor.poseedor = {}
+	motor.estado = "juego"
+	var sg := signf(arco.z)
+	motor.balon.position = Vector3(0, 1.0, arco.z - sg * 30.0)
+	motor.vel_balon = Vector3(0, 0, sg * 20.0)   ## el tiro viene hacia el arco: la parada sigue pendiente (1,5 s)
+	gk["_patada_vista"] = motor._n_patada           ## ya decidió: no vuelve a decidir
+	gk["parada_pend"] = {"cruce": Vector3(3.0, 1.0, arco.z), "estirada": true, "n": motor._n_patada}
+	var d1 := motor._ia_portero(gk)
+	_comprobar(d1.x > 0.5, "con la parada pendiente se desliza hacia el cruce en este fotograma (%.2f m)" % d1.x)
+	var d2 := motor._ia_portero(gk)
+	_comprobar(d2.x > 0.5, "y también en el siguiente (%.2f m)" % d2.x)
+	gk.erase("parada_pend")
+	_comprobar(absf(motor._ia_portero(gk).x) < d1.x, "sin parada pendiente vuelve a su colocación")
+	(r[1] as Node3D).queue_free()
