@@ -92,7 +92,7 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 	## LLEGADA AL ÁREA (20-10-2026, más chispa): con el balón de un compañero
 	## en el último tercio, el ataque ocupa el área como en el fútbol de verdad
 	## (antes casi nadie pisaba el área y no había a quién centrar).
-	var zona := _zona_de_llegada(p)
+	var zona := _zona_de_llegada(p); zona = zona if zona != Vector3.INF else MotorRebote.objetivo(self as Object as MotorJugable, p)   ## ciclo 28: rebote / segundo palo
 	if zona != Vector3.INF:
 		obj = zona
 		p["correr"] = true
