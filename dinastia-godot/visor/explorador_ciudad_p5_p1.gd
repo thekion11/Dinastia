@@ -329,6 +329,7 @@ func _physics_process(delta: float) -> void:
 		_conducir(e, delta)
 		_girar_si_cabe(rumbo_antes)
 		if vida != null and vida.servicios != null:
+			Peaje.vigilar(vida, cuerpo.position)   ## M-197: peaje al subir a la autopista
 			vida.servicios.vigilar(cuerpo.position, absf(vel))   ## multa por semáforo en rojo si la policía lo ve (pieza E)
 	else:
 		var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A) or MandoTactil.corre(self)
