@@ -14,6 +14,7 @@ func _ready() -> void:
 	get_tree().quit(0)
 
 func _foto(fase: String, extra := "") -> void:
+	extra += " vram=%.0f MB (texturas %.0f, buffers %.0f) audio_ram=%.0f MB" % [Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0, Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED) / 1048576.0, Performance.get_monitor(Performance.RENDER_BUFFER_MEM_USED) / 1048576.0, 0.0]
 	print("MEDIDA %-22s nodos %6d  objetos %7d  mem_estatica %6.0f MB  dibujo %5d  prim %8d %s" % [fase,
 		int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)), int(Performance.get_monitor(Performance.OBJECT_COUNT)),
 		Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0,
@@ -50,6 +51,8 @@ func _medir() -> void:
 		await get_tree().process_frame
 	_foto("recién cargado")
 	_zonas()
+	if OS.get_environment("TEXTURAS") != "":
+		_texturas()
 	if OS.get_environment("GRUPOS") != "" and DisplayServer.get_name() != "headless":
 		await _grupos()
 	var zv := _p.vista.get("_ciudad").get_node_or_null("ZonasVista") as ZonasVista
@@ -188,3 +191,56 @@ func _grupos() -> void:
 				(n as Node3D).visible = true
 		for i in 3:
 			await get_tree().process_frame
+
+## TEXTURAS=1 (3-11, R4 memoria): las texturas únicas que cuelgan de los materiales de la escena, con tamaño, formato y megas estimados (con mipmaps), de mayor a menor.
+func _texturas() -> void:
+	var vistas := {}
+	var total := 0.0
+	for n in _p.find_children("*", "GeometryInstance3D", true, false):
+		var g := n as GeometryInstance3D
+		var mats: Array = []
+		if g.material_override != null:
+			mats.append(g.material_override)
+		if g is MeshInstance3D and (g as MeshInstance3D).mesh != null:
+			for i in (g as MeshInstance3D).mesh.get_surface_count():
+				var m := (g as MeshInstance3D).get_active_material(i)
+				if m != null:
+					mats.append(m)
+		elif g is MultiMeshInstance3D and (g as MultiMeshInstance3D).multimesh != null and (g as MultiMeshInstance3D).multimesh.mesh != null:
+			var mm := (g as MultiMeshInstance3D).multimesh.mesh
+			for i in mm.get_surface_count():
+				if mm.surface_get_material(i) != null:
+					mats.append(mm.surface_get_material(i))
+		for mat in mats:
+			var lista: Array = []
+			if mat is BaseMaterial3D:
+				for k in [BaseMaterial3D.TEXTURE_ALBEDO, BaseMaterial3D.TEXTURE_NORMAL, BaseMaterial3D.TEXTURE_ROUGHNESS, BaseMaterial3D.TEXTURE_METALLIC, BaseMaterial3D.TEXTURE_EMISSION, BaseMaterial3D.TEXTURE_AMBIENT_OCCLUSION]:
+					var t := (mat as BaseMaterial3D).get_texture(k)
+					if t != null:
+						lista.append(t)
+			elif mat is ShaderMaterial:
+				for pr in (mat as ShaderMaterial).shader.get_shader_uniform_list():
+					var v: Variant = (mat as ShaderMaterial).get_shader_parameter(String(pr["name"]))
+					if v is Texture2D:
+						lista.append(v)
+			for t: Texture2D in lista:
+				if vistas.has(t):
+					continue
+				var mb := float(t.get_width() * t.get_height()) * 4.0 * 1.33 / 1048576.0
+				if t is CompressedTexture2D:
+					mb /= 4.0   ## ~1 byte/píxel comprimida en VRAM
+				vistas[t] = [mb, "%dx%d %s  (%s)" % [t.get_width(), t.get_height(), t.resource_path.get_file() if t.resource_path != "" else t.get_class(), String(g.get_path()).right(60)] + " mesh=%s mat=%s aabb=%s" % [(g as MeshInstance3D).mesh.resource_name if g is MeshInstance3D and (g as MeshInstance3D).mesh != null else "", String(mat.resource_name), str((g as MeshInstance3D).mesh.get_aabb().size.round()) if g is MeshInstance3D and (g as MeshInstance3D).mesh != null else ""]]
+				total += mb
+	var l2 := vistas.values()
+	l2.sort_custom(func(a, b): return a[0] > b[0])
+	print("TEXTURAS únicas=%d total estimado=%.0f MB" % [vistas.size(), total])
+	if l2.size() > 0 and vistas.size() > 0:
+		for t in vistas:
+			if (vistas[t][0] as float) == (l2[0][0] as float):
+				var im := (t as Texture2D).get_image()
+				if im != null:
+					im.decompress() if im.is_compressed() else null
+					im.resize(256, 280, Image.INTERPOLATE_BILINEAR)
+					im.save_png(OS.get_environment("TEXTURA_PNG") if OS.get_environment("TEXTURA_PNG") != "" else "/tmp/textura_grande.png")
+	for e in l2.slice(0, 25):
+		print("TEXTURA %7.1f MB  %s" % [e[0], e[1]])
