@@ -74,7 +74,9 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 **Mega auditoría nueva:** comprobar que todo funciona, que todo está conectado y que todo es accesible.
 
-**Pulido pedido:** el «control de representación» debe verse mejor (aclarar con el dueño qué pantalla es); los ESCUDOS deben poder profundizarse más (más detalle/edición); buscar MÚSICA totalmente libre y agregarla (la música la decide el dueño: proponer pistas con su licencia antes de meterlas).
+**Mundo abierto:** el botón de interactuar debe aparecer SOLO cuando estás muy cerca del objeto con el que se puede interactuar.
+
+**Pulido pedido:** la CONFIGURACIÓN DE LOS CONTROLES DEL MANDO EN EL PARTIDO debe verse mejor; los ESCUDOS deben poder profundizarse más (más detalle/edición); buscar MÚSICA totalmente libre (dominio público / CC0) y proponer cada pista con su fuente y licencia al dueño, que decide cuáles entran (aprobado así el 3-11).
 
 ## 0. Lo que espera una decisión tuya (lista corta)
 
