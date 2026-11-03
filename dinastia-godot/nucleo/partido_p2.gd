@@ -201,14 +201,14 @@ func _alguien(l: Array[Jugador]) -> Jugador:
 	return l[Azar.ent(0, l.size() - 1)]
 
 ## Reparte una amarilla arbitral igual que `_incidencias()` reparte las
-## normales -segunda amarilla con 18% de ir a la roja-, y la narra con la frase
+## normales -segunda amarilla con `Balance.P_ROJA_SEGUNDA` de ir a la roja-, y la narra con la frase
 ## que le toca a esta personalidad.
 func _tarjeta_arbitral(arr: Array[Jugador], plantilla: String, arbitro_nombre: String) -> void:
 	var j := _alguien(arr)
 	if j == null:
 		return
 	j.amarillas += 1
-	var roja := j.amarillas % 2 == 0 and Azar.suerte(0.18)
+	var roja := j.amarillas % 2 == 0 and Azar.suerte(Balance.P_ROJA_SEGUNDA)
 	if roja:
 		Disciplina.sanciona(j)
 	decision_arbitral.emit(Idiomas.t(plantilla) % [arbitro_nombre, j.nombre], minuto)
@@ -418,11 +418,11 @@ func _incidencias() -> void:
 	## EL PERFIL DEL ÁRBITRO SE NOTA (01-11, verificación 801): su chequeo propio apenas sumaba 0,1 tarjetas por partido; ahora
 	## pesa en la tasa normal y el casero carga las tarjetas al que visita.
 	var casero := String(arbitro.get("perfil", "")) == "casero"
-	if Azar.suerte(0.031 * ctx_factor_tarjetas * float({"tarjetero": 1.4, "estricto": 1.15, "permisivo": 0.7}.get(String(arbitro.get("perfil", "")), 1.0))) and not motor_externo:
+	if Azar.suerte(Balance.P_AMARILLA * ctx_factor_tarjetas * float({"tarjetero": 1.4, "estricto": 1.15, "permisivo": 0.7}.get(String(arbitro.get("perfil", "")), 1.0))) and not motor_externo:
 		var l := _alguien(once_visita if casero and Azar.suerte(0.35) else _todos)
 		if l != null:
 			l.amarillas += 1
-			var roja := l.amarillas % 2 == 0 and Azar.suerte(0.18)
+			var roja := l.amarillas % 2 == 0 and Azar.suerte(Balance.P_ROJA_SEGUNDA)
 			if roja:
 				l.suspension = max(l.suspension, 1)
 			tarjeta.emit(l, roja, minuto)
