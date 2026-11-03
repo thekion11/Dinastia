@@ -329,7 +329,10 @@ func _probar_tiro_fallido() -> void:
 	var antes := MotorTiroLimpio._real
 	MotorTiroLimpio._real = false
 	_comprobar(MotorTiroLimpio.fallar(motor, tirador, destino, 14.0, 5.0) == destino, "con la bandera apagada el destino no cambia")
+	_comprobar(MotorTiroLimpio.alcance(30.0) == 30.0, "con la bandera apagada el alcance de tiro no cambia")
+	_comprobar(MotorPaseMejora.RIESGO_K == 1.0 or OS.get_environment("PMOT_RIESGO") != "", "el peso del riesgo del pase es 1,0 por defecto")
 	MotorTiroLimpio._real = true
+	_comprobar(absf(MotorTiroLimpio.alcance(30.0) - 30.0 * MotorTiroLimpio.ALCANCE_K) < 0.001 and MotorTiroLimpio.ALCANCE_K > 1.0, "con la bandera encendida el alcance de tiro crece")
 	var cerca := MotorTiroLimpio.probabilidad_fallo(motor, tirador, destino, 8.0, 5.0)
 	var lejos := MotorTiroLimpio.probabilidad_fallo(motor, tirador, destino, 28.0, 5.0)
 	var apretado := MotorTiroLimpio.probabilidad_fallo(motor, tirador, destino, 8.0, 1.0)

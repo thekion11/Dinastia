@@ -95,3 +95,10 @@ static func fallar(m: MotorJugable, p: Dictionary, destino: Vector3, lejos: floa
 	else:
 		d.y = m.LARGUERO + m._rng.randf_range(0.4, 2.2)         ## por encima del larguero
 	return d
+
+## ALCANCE DEL TIRO (ciclo 7): con `TIRO_REAL=1` la IA tira desde más lejos (el 40 % de los tiros reales vienen de fuera del área; aquí solo el 16 %),
+## con la distancia máxima y el divisor de las ganas multiplicados por `TIRO_ALCANCE` (1,2 por defecto). Apagado devuelve `x` tal cual.
+static var ALCANCE_K := float(OS.get_environment("TIRO_ALCANCE")) if OS.get_environment("TIRO_ALCANCE") != "" else 1.2
+
+static func alcance(x: float) -> float:
+	return x * ALCANCE_K if _real else x
