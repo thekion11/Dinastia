@@ -49,7 +49,9 @@ func _pintar_idioma() -> void:
 		b.button_pressed = Idiomas.idioma == clave
 		b.clip_text = true
 		b.custom_minimum_size = Vector2(150, 26)
-		b.tooltip_text = Idiomas.t("Idioma original, sin traducir nada.") if clave == "es" else Idiomas.t("%d frases de interfaz traducidas.") % Idiomas.cobertura(clave)
+		## El tooltip se calcula al pasar el ratón: `cobertura` recorre la tabla entera de cada idioma (y carga su JSON) y eran ~1,5 s al abrir Ajustes → Juego.
+		b.mouse_entered.connect(func() -> void:
+			b.tooltip_text = Idiomas.t("Idioma original, sin traducir nada.") if clave == "es" else Idiomas.t("%d frases de interfaz traducidas.") % Idiomas.cobertura(clave))
 		b.pressed.connect(func() -> void:
 			var antes := Idiomas.idioma
 			Idiomas.idioma = clave
