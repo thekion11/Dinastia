@@ -17,6 +17,30 @@ const ANCHO_ABIERTO := 310.0
 ## Cada menú: icono, nombre, estilo del fondo (`fondo_menu.gdshader`), sus tres
 ## colores y sus submenús -chips de siempre ({tab, secc, label}) o acciones-.
 const MENUS := [
+	## 3-11 (orden 22 U6): el día a día (plantel, plata y competiciones) solo se abría tocando zonas de la
+	## pantalla central (los HUBS de `principal_p1.gd`); el dueño no lo encontraba. Ahora también aquí.
+	{"id": "plantel", "icono": "👔", "nombre": "Plantel", "estilo": 8,
+		"lema": "Tus jugadores: el once, la pizarra y cómo llegan al partido.",
+		"colores": ["#07130c", "#113a22", "#9be7b4"], "subs": [
+		{"tab": "Mi plantel", "label": "Mi plantel", "icono": "👥", "desc": "Fichas, forma, moral y el once."},
+		{"tab": "Táctica", "label": "Táctica", "icono": "📋", "desc": "Dibujo, pizarra, roles y balón parado."},
+		{"tab": "Entrenar", "label": "Entrenamiento", "icono": "🏋️", "desc": "Sesiones, cargas y habilidades."},
+		{"tab": "Enfermería", "label": "Enfermería", "icono": "🩺", "desc": "Lesionados, plazos y riesgo."},
+		{"tab": "Cantera", "label": "Cantera", "icono": "🌱", "desc": "Academia, camada del año y los que suben."},
+		{"tab": "Contratos", "label": "Contratos", "icono": "📝", "desc": "Renovaciones, cláusulas y salidas."}]},
+	{"id": "dinero", "icono": "💰", "nombre": "Dinero", "estilo": 2,
+		"lema": "La caja del club: lo que entra, lo que sale y lo que se mueve en el mercado.",
+		"colores": ["#05110d", "#0b231c", "#5fe0b8"], "subs": [
+		{"tab": "Finanzas", "label": "Finanzas", "icono": "💵", "desc": "Presupuesto, banco, fondo de inversión y tu puesto."},
+		{"tab": "Mercado", "label": "Mercado de fichajes", "icono": "🔁", "desc": "Comprar, vender y ceder."},
+		{"tab": "Libres", "label": "Jugadores libres", "icono": "🆓", "desc": "Sin club y sin traspaso."}]},
+	{"id": "competiciones", "icono": "🏆", "nombre": "Competiciones", "estilo": 0,
+		"lema": "Las tablas, las copas y el resto del mundo.",
+		"colores": ["#140d07", "#2a1d10", "#e0a95a"], "subs": [
+		{"tab": "Clubes", "label": "Ligas y clubes", "icono": "📊", "desc": "Tablas, rivales y el resto de ligas."},
+		{"tab": "Copa", "label": "Copa", "icono": "🏆", "desc": "El cuadro de la copa nacional."},
+		{"tab": "Continental", "label": "Continental", "icono": "🌎", "desc": "El torneo de clubes del continente."},
+		{"tab": "Selección", "label": "Selección", "icono": "🎌", "desc": "Convocatorias y torneos de selecciones."}]},
 	{"id": "historia", "icono": "📜", "nombre": "Historia", "estilo": 0,
 		"lema": "Lo que el club fue y lo que tú estás escribiendo.",
 		"colores": ["#140d07", "#2a1d10", "#e0a95a"], "subs": [
@@ -38,6 +62,7 @@ const MENUS := [
 		{"tab": "Gente", "secc": "personas", "label": "La gente del club", "icono": "🤝", "desc": "Utileros, cocineros, la señora del kiosco..."},
 		{"tab": "Gente", "secc": "identidad", "label": "Identidad visual", "icono": "🎨", "desc": "Colores, escudo, apodo y tipografía."},
 		{"tab": "Gente", "secc": "kits", "label": "Equipación", "icono": "👕", "desc": "El diseñador de camisetas, a pantalla completa."},
+		{"tab": "Gente", "secc": "interno", "label": "El club por dentro", "icono": "🏢", "desc": "Palco, prensa, vestuario, la app y la web del club."},
 		{"tab": "Camarín", "label": "Camarín", "icono": "🚪", "desc": "Clima del vestuario, camarillas y capitanes."}]},
 	{"id": "carrera", "icono": "🎓", "nombre": "Mi Carrera", "estilo": 2,
 		"lema": "Tu camino como entrenador: rol, habilidades y reputación.",
