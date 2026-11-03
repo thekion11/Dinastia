@@ -419,3 +419,34 @@ func _probar_carreras() -> void:
 
 func pos_x(p: Dictionary) -> float:
 	return (p["node"] as Node3D).position.x
+
+## TIRO POR LÍNEA LIMPIA (03-11-2026, IA F6, `MotorTiroLimpio`): apunta al punto del arco que ni el portero ni un defensa tapan.
+func _probar_tiro_limpio() -> void:
+	_titulo("TIRO POR PROBABILIDAD DE LÍNEA LIMPIA")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var tirador: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))[0]
+	var arco := motor._arco_rival(tirador)
+	var d := signf(arco.z)
+	var rivales: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]))
+	var por: Dictionary = rivales.filter(func(p: Dictionary) -> bool: return bool(p["por"]))[0]
+	var campo: Array = rivales.filter(func(p: Dictionary) -> bool: return not bool(p["por"]))
+	for i in campo.size():
+		(campo[i]["node"] as Node3D).position = Vector3(-30.0 + i * 5.0, 0, -d * 30.0)
+	(tirador["node"] as Node3D).position = Vector3(0, 0, arco.z - d * 16.0)
+	## Portero en el palo izquierdo (x negativo) y un defensa tapando el centro.
+	(por["node"] as Node3D).position = Vector3(-2.6, 0, arco.z - d * 0.5)
+	(campo[0]["node"] as Node3D).position = Vector3(0, 0, arco.z - d * 8.0)
+	var izq := MotorTiroLimpio.limpieza(motor, tirador, -0.82)
+	var cen := MotorTiroLimpio.limpieza(motor, tirador, 0.0)
+	var der := MotorTiroLimpio.limpieza(motor, tirador, 0.82)
+	_comprobar(der > izq and der > cen, "el palo libre (%.2f) es más limpio que el del portero (%.2f) y que el centro tapado (%.2f)" % [der, izq, cen])
+	_comprobar(cen < 0.5, "con un defensa en la línea el centro queda tapado (%.2f)" % cen)
+	var elegido := 0
+	for i in 20:
+		var mj := MotorTiroLimpio.mejor(motor, tirador)
+		if float(mj[0]) > 0.5:
+			elegido += 1
+	_comprobar(elegido >= 18, "apunta al palo libre %d de 20 veces" % elegido)
+	_comprobar(MotorTiroLimpio.factor_ganas(1.0) > MotorTiroLimpio.factor_ganas(0.0), "limpia da más ganas que tapada")
+	(r[1] as Node3D).queue_free()
