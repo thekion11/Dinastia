@@ -56,9 +56,8 @@ const SEPARACION_ROTULO := 0.24
 var _pulsado_en := Vector2.ZERO
 var _movido := 0.0
 
-## El sol del HTML: MUY oblicuo a propósito (línea ~14670 de `juego.js`). Con la
-## z alta el planeta entero quedaba iluminado y las luces de noche nunca se
-## veían; a 0.28 el terminador siempre cruza el disco visible.
+## El sol del HTML: MUY oblicuo a propósito (línea ~14670 de `juego.js`). Con la z alta el planeta entero quedaba iluminado y las luces de noche nunca se veían;
+## a 0.28 el terminador siempre cruza el disco visible.
 const SOL := Vector3(-0.62, 0.44, 0.28)
 
 var _viewport: SubViewport
@@ -72,6 +71,7 @@ var lat := -20.0
 var _lon_obj := -70.0
 var _lat_obj := -20.0
 var _arrastrando := false
+var _reposo := false   ## (3-11) en MÍNIMA, quieto: la última imagen se pinta una vez y no se repinta hasta que alguien lo toque
 var _giro_idle := 6.0 ## grados por segundo cuando nadie lo toca -la "deriva lenta" del HTML.
 var pais_actual := ""
 
@@ -158,17 +158,9 @@ func _ready() -> void:
 
 	set_process(true)
 
-## BUG REAL (18-9-2026), encontrado por la consola del navegador jugando en la
-## build Web: `Image.load_from_file(ProjectSettings.globalize_path(ruta))` lee
-## el archivo del disco DIRECTO, saltándose el cargador de recursos de Godot.
-## En escritorio `res://` apunta a una carpeta real y esto "funciona" de
-## casualidad; en Web (y en cualquier build empaquetada con `.pck`) no hay
-## sistema de archivos real detrás de `res://`, así que `globalize_path()` no
-## da una ruta legible y la carga fallaba siempre -"Error opening file
-## 'recursos/tierra/luces4k.jpg'"- dejando el globo sin luces nocturnas ni
-## nubes. Las tres imágenes SÍ están importadas como recurso de Godot
-## (`.import` al lado de cada .jpg): `load()` es el cargador normal, funciona
-## igual en escritorio, Web y móvil porque lee del `.pck`, no del disco.
+## BUG REAL (18-9-2026, consola del navegador en la build Web): `Image.load_from_file(globalize_path(ruta))` lee el disco DIRECTO y en Web o en un `.pck` no hay
+## disco detrás de `res://` («Error opening file 'recursos/tierra/luces4k.jpg'»): el globo quedaba sin luces nocturnas ni nubes. Las tres imágenes SÍ están importadas
+## como recurso: `load()` es el cargador normal y funciona igual en escritorio, Web y móvil.
 func _cargar(ruta: String) -> Texture2D:
 	return load(ruta) as Texture2D
 
@@ -233,6 +225,12 @@ func rotular(pais: String, texto: String = "") -> void:
 	var r: Label3D = _rotulos.get(pais)
 	if r != null:
 		r.text = texto if texto != "" else pais
+		_activar()
+
+## Vuelve a repintar el globo cada fotograma (algo cambió: se tocó, se eligió un país, se rotuló).
+func _activar() -> void:
+	_reposo = false
+	_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 
 ## El país cuyo pin está más cerca de un punto de la pantalla (en píxeles del
 ## control), o "" si no hay ninguno a menos de 22 px o está de espaldas.
@@ -373,6 +371,7 @@ func ir_a(pais: String, instantaneo: bool = false) -> void:
 	if not GLOBO_PAIS.has(pais):
 		return
 	pais_actual = pais
+	_activar()
 	var c: Vector2 = GLOBO_PAIS[pais]
 	_lon_obj = c.x
 	_lat_obj = clampf(c.y * 0.72, -55.0, 55.0)
@@ -388,14 +387,21 @@ func ir_a(pais: String, instantaneo: bool = false) -> void:
 		_marcador.position = _cartesiano(c.x, c.y) * 1.03
 
 func _process(delta: float) -> void:
+	if _reposo:
+		if not _arrastrando and AhorroMenu.fondo_estatico():
+			return
+		_activar()
 	if not _arrastrando:
 		lon += (_lon_obj - lon) * minf(1.0, 4.5 * delta)
 		lat += (_lat_obj - lat) * minf(1.0, 4.5 * delta)
 		if absf(_lon_obj - lon) < 0.3 and absf(_lat_obj - lat) < 0.3:
-			## Deriva lenta perpetua, como el HTML: el globo nunca se queda
-			## clavado del todo, sigue vivo aunque nadie lo toque.
-			_lon_obj -= _giro_idle * delta
-			lon -= _giro_idle * delta
+			if AhorroMenu.fondo_estatico():
+				_reposo = true   ## MÍNIMA (3-11): sin deriva; se pinta esta imagen una vez y queda quieto hasta que lo toquen
+				_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+			else:
+				## Deriva lenta perpetua, como el HTML: el globo sigue vivo aunque nadie lo toque.
+				_lon_obj -= _giro_idle * delta
+				lon -= _giro_idle * delta
 	_orientar_pivote(lon, lat)
 	## El elegido lleva su nombre completo; los vecinos (ARG, URU) se le montaban encima.
 	var sel: Label3D = _rotulos.get(pais_actual)
@@ -409,15 +415,10 @@ func _process(delta: float) -> void:
 		var c: Vector2 = GLOBO_PAIS.get(pais_actual, Vector2.ZERO)
 		_marcador.position = _cartesiano(c.x, c.y) * 1.03
 
-## Orienta el pivote para que el punto (lon_g, lat_g) quede mirando de frente
-## a la cámara (+Z local). NO usa `rotation_degrees.x/y` -eso fue el bug real:
-## Godot compone los tres ejes de Euler como Y·X·Z, así que con `.y` y `.x`
-## puestos a mano la X se aplicaba ANTES que la Y, no después como parecía al
-## leer el código, y el punto elegido quedaba en el canto de la esfera (x≈1,
-## z≈0.05, comprobado imprimiendo la posición) en vez de centrado. Aquí se
-## construye la base ortonormal directamente -adelante = el punto, arriba y
-## derecha por producto cruz- y se usa su traspuesta -su inversa, por ser
-## ortonormal- como rotación: no hay ángulo que adivinar ni orden que acertar.
+## Orienta el pivote para que el punto (lon_g, lat_g) quede mirando de frente a la cámara (+Z local). NO usa `rotation_degrees.x/y` -eso fue el bug real: Godot compone
+## los tres ejes de Euler como Y·X·Z, así que con `.y` y `.x` a mano la X se aplicaba ANTES que la Y, y el punto elegido quedaba en el canto de la esfera (x≈1, z≈0.05,
+## comprobado imprimiendo la posición) en vez de centrado-. Aquí se construye la base ortonormal -adelante = el punto, arriba y derecha por producto cruz- y se usa su
+## traspuesta (su inversa) como rotación: no hay ángulo que adivinar ni orden que acertar.
 func _orientar_pivote(lon_g: float, lat_g: float) -> void:
 	var adelante := _cartesiano(lon_g, lat_g).normalized()
 	var arriba_mundo := Vector3.UP
@@ -441,10 +442,7 @@ func _orientar_pivote(lon_g: float, lat_g: float) -> void:
 func _cartesiano(lon_g: float, lat_g: float) -> Vector3:
 	var theta := deg_to_rad(90.0 - lat_g)
 	var phi := deg_to_rad(lon_g + 180.0)
-	## C14 (26-9-2026): la fórmula de arriba suponía x=-cos(phi), z=sin(phi),
-	## pero con las UV del `SphereMesh` de Godot 4 el punto (lon, lat) de la
-	## textura cae en x=sin(phi), z=cos(phi): los pines quedaban 90° corridos
-	## (Australia en el océano Índico) y el país elegido no era el que se veía.
-	## Comprobado a ojo con las fronteras dibujadas: Sídney, Brasilia y las
-	## capitales andinas caen en su sitio.
+	## C14 (26-9-2026): la fórmula de arriba suponía x=-cos(phi), z=sin(phi), pero con las UV del `SphereMesh` de Godot 4 el punto (lon, lat) de la textura cae
+	## en x=sin(phi), z=cos(phi): los pines quedaban 90° corridos (Australia en el océano Índico) y el país elegido no era el que se veía. Comprobado a ojo con las
+	## fronteras dibujadas: Sídney, Brasilia y las capitales andinas caen en su sitio.
 	return Vector3(sin(phi) * sin(theta), cos(theta), cos(phi) * sin(theta))

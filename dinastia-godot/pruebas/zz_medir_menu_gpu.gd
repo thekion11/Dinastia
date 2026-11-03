@@ -89,4 +89,6 @@ func _process(_d: float) -> void:
 		_t0 = Time.get_ticks_msec()
 	if _n > 120 and _t0 > 0 and Time.get_ticks_msec() - _t0 > 3000:
 		print("MENU %s en 3 s (bajo consumo=%s): %d fotogramas dibujados" % [_pantalla if _pantalla != "" else "central", str(OS.low_processor_usage_mode), _dibujados])
+		if OS.get_environment("FOTO") != "":
+			get_viewport().get_texture().get_image().save_jpg(OS.get_environment("FOTO"), 0.85)   ## lo que se ve con la pantalla quieta
 		get_tree().quit()
