@@ -380,6 +380,10 @@ func _montar_columnas(raiz: VBoxContainer) -> void:
 	## pantalla sin forma de llegar (el botón "Jugar el partido", el final de la
 	## tabla). Medido con `pruebas/captura_modos_partido.gd`.
 	p._ficha = p._con_scroll(p._ficha)
+	## (3-11, rediseño del menú central, pedido del dueño) La ficha del jugador ya no está en el central: se ve en su
+	## pantalla completa (menú Plantel, al lado del plantel). Debajo queda «Lo que va pasando», que crece.
+	p._bloque_ficha = der.get_child(0) as Control
+	p._bloque_ficha.visible = false
 	## LA PUERTA AL PLANTEL. Tocar la zona del jugador lleva al hub con todo
 	## lo que se hace con futbolistas -plantel, táctica, entrenar, enfermería,
 	## camarín, cantera, contratos-, en vez de tener siete pestañas más

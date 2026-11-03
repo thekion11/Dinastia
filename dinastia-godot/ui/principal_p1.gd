@@ -377,6 +377,8 @@ var _rotar_diseno: bool:
 var _marco_paginas: MarginContainer
 ## La columna de la ficha, para mudarla a los menús a pantalla completa.
 var _col_derecha: Control
+## (3-11, rediseño) El bloque de la ficha del jugador: oculto en el central, visible en el menú Plantel (pantalla completa).
+var _bloque_ficha: Control = null
 var _menu_lateral: MenuLateral
 
 # --- tutorial guiado: vive en `ui/principal/guia_tutorial.gd` (`_guia`) -------

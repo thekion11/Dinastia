@@ -3,12 +3,8 @@ extends Control
 ## UN MENÚ ENTERO, A PANTALLA COMPLETA (29-9-2026, mapa de metas 23). Pedido del usuario: *"las cosas más importantes deben
 ## tener su propio menú y no estar incrustadas en un mini menú sobre el menú central"*, con fondo animado, como en Soccer Manager.
 ##
-## DOS ESTADOS, para que no quede todo amontonado a un lado:
-##   - PORTADA: el título grande y un mosaico de tarjetas, una por submenú, con
-##     su icono, qué hay dentro y un dato vivo ("3 sin leer", "47.000 butacas").
-##   - DETALLE: los submenús como pestañas arriba, el contenido en el centro y
-##     sin la ficha del jugador (el contenido ocupa todo el ancho).
-##
+## DOS ESTADOS: PORTADA (título grande y una tarjeta por submenú con su icono, qué hay y un dato vivo: «3 sin leer») y
+## DETALLE (los submenús como pestañas arriba y el contenido en el centro; la ficha al lado solo en Plantel).
 ## No hay una segunda copia de cada pantalla: el contenido de verdad -el `TabContainer` de la principal y la columna de la
 ## ficha- se MUDA aquí mientras está en detalle y vuelve a su sitio al salir: todo lo que ya funcionaba sigue.
 
@@ -368,8 +364,7 @@ func _montar_detalle() -> void:
 	_hueco_contenido.add_theme_stylebox_override("panel", caja)
 	h.add_child(_hueco_contenido)
 	_hueco_ficha = null
-	## Sin ficha del jugador en estos menús (pedido del usuario): el contenido
-	## ocupa todo el ancho.
+	## Sin ficha del jugador en estos menús (pedido del usuario): el contenido ocupa todo el ancho.
 	if bool(_menu.get("ficha", false)):
 		_hueco_ficha = MarginContainer.new()
 		_hueco_ficha.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -378,6 +373,7 @@ func _montar_detalle() -> void:
 	_mudar(_p._marco_paginas, _hueco_contenido)
 	if _hueco_ficha != null and _p._col_derecha != null:
 		_mudar(_p._col_derecha, _hueco_ficha)
+		_ver_ficha(true)
 
 func submenu_activo() -> int:
 	return _activo
@@ -422,6 +418,11 @@ func _devolver_contenido() -> void:
 		nodo.size_flags_horizontal = int(d[3])
 		nodo.size_flags_stretch_ratio = float(d[4])
 	_devolver.clear()
+	_ver_ficha(false)
+
+## La ficha del jugador va oculta en el central (rediseño 3-11) y se ve aquí.
+func _ver_ficha(si: bool) -> void:
+	if _p._bloque_ficha != null and is_instance_valid(_p._bloque_ficha): _p._bloque_ficha.visible = si
 
 func _al_redimensionar() -> void:
 	if _fondo != null and _fondo.material != null and size.y > 0.0:
