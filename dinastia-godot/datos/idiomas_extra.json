@@ -7035,7 +7035,8 @@
   "Sin jugar. Elige cómo verlo:": "Without playing. Choose how to watch it:",
   "⚡ Al instante": "⚡ Instant",
   "No volver a preguntar (se cambia en Ajustes)": "Don't ask again (change it in Settings)",
-  "Preguntar cómo jugar antes de cada partido": "Ask how to play before each match"
+  "Preguntar cómo jugar antes de cada partido": "Ask how to play before each match",
+  "Así te verán": "This is how you'll look"
  },
  "pt": {
   "Historia": "História",
@@ -14073,7 +14074,8 @@
   "Sin jugar. Elige cómo verlo:": "Sem jogar. Escolha como ver:",
   "⚡ Al instante": "⚡ Na hora",
   "No volver a preguntar (se cambia en Ajustes)": "Não perguntar de novo (muda em Ajustes)",
-  "Preguntar cómo jugar antes de cada partido": "Perguntar como jogar antes de cada partida"
+  "Preguntar cómo jugar antes de cada partido": "Perguntar como jogar antes de cada partida",
+  "Así te verán": "É assim que vão te ver"
  },
  "patrones": [
   [
@@ -26888,7 +26890,8 @@
   "Sin jugar. Elige cómo verlo:": "Sans jouer. Choisis comment le voir :",
   "⚡ Al instante": "⚡ Instantané",
   "No volver a preguntar (se cambia en Ajustes)": "Ne plus demander (modifiable dans Réglages)",
-  "Preguntar cómo jugar antes de cada partido": "Demander comment jouer avant chaque match"
+  "Preguntar cómo jugar antes de cada partido": "Demander comment jouer avant chaque match",
+  "Así te verán": "Voilà comment on te verra"
  },
  "it": {
   "Historia": "Storia",
@@ -33926,7 +33929,8 @@
   "Sin jugar. Elige cómo verlo:": "Senza giocare. Scegli come vederla:",
   "⚡ Al instante": "⚡ Istantaneo",
   "No volver a preguntar (se cambia en Ajustes)": "Non chiedere più (si cambia in Impostazioni)",
-  "Preguntar cómo jugar antes de cada partido": "Chiedere come giocare prima di ogni partita"
+  "Preguntar cómo jugar antes de cada partido": "Chiedere come giocare prima di ogni partita",
+  "Así te verán": "Così ti vedranno"
  },
  "de": {
   "Historia": "Geschichte",
@@ -40964,7 +40968,8 @@
   "Sin jugar. Elige cómo verlo:": "Ohne zu spielen. Wähle, wie du es siehst:",
   "⚡ Al instante": "⚡ Sofort",
   "No volver a preguntar (se cambia en Ajustes)": "Nicht mehr fragen (in den Einstellungen änderbar)",
-  "Preguntar cómo jugar antes de cada partido": "Vor jedem Spiel fragen, wie gespielt wird"
+  "Preguntar cómo jugar antes de cada partido": "Vor jedem Spiel fragen, wie gespielt wird",
+  "Así te verán": "So wirst du gesehen"
  },
  "ca": {
   "Historia": "Història",
@@ -48002,7 +48007,8 @@
   "Sin jugar. Elige cómo verlo:": "Sense jugar. Tria com veure-ho:",
   "⚡ Al instante": "⚡ A l'instant",
   "No volver a preguntar (se cambia en Ajustes)": "No tornar a preguntar (es canvia a Ajustos)",
-  "Preguntar cómo jugar antes de cada partido": "Preguntar com jugar abans de cada partit"
+  "Preguntar cómo jugar antes de cada partido": "Preguntar com jugar abans de cada partit",
+  "Así te verán": "Així et veuran"
  },
  "pl": {
   "Club": "Klub",
@@ -55315,7 +55321,8 @@
   "Sin jugar. Elige cómo verlo:": "Bez grania. Wybierz, jak oglądać:",
   "⚡ Al instante": "⚡ Natychmiast",
   "No volver a preguntar (se cambia en Ajustes)": "Nie pytaj ponownie (zmień w Ustawieniach)",
-  "Preguntar cómo jugar antes de cada partido": "Pytaj, jak grać, przed każdym meczem"
+  "Preguntar cómo jugar antes de cada partido": "Pytaj, jak grać, przed każdym meczem",
+  "Así te verán": "Tak będą cię widzieć"
  },
  "tr": {
   "Club": "Kulüp",
@@ -62628,6 +62635,7 @@
   "Sin jugar. Elige cómo verlo:": "Oynamadan. Nasıl izleyeceğini seç:",
   "⚡ Al instante": "⚡ Anında",
   "No volver a preguntar (se cambia en Ajustes)": "Bir daha sorma (Ayarlar'dan değiştirilir)",
-  "Preguntar cómo jugar antes de cada partido": "Her maçtan önce nasıl oynanacağını sor"
+  "Preguntar cómo jugar antes de cada partido": "Her maçtan önce nasıl oynanacağını sor",
+  "Así te verán": "Seni böyle görecekler"
  }
 }
