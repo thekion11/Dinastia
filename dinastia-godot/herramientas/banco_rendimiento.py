@@ -94,7 +94,7 @@ def guardado():
     """Guardar el mundo ENTERO: lo que bloquea el hilo principal (el resto va en segundo plano) y el total."""
     out = correr(["godot", "--headless", "--path", RAIZ, "res://pruebas/zz_medir_guardado.tscn"], {"PAISES": "TODOS"}, timeout=1200)
     return {"hilo_principal_ms": num(r"segundo plano #\d+: hilo principal (\d+) ms", out),
-            "total_ms": num(r"segundo plano #\d+: hilo principal \d+ ms · total (\d+) ms", out)}
+            "total_ms": num(r"segundo plano #\d+: hilo principal \d+ ms[^·]*· total (\d+) ms", out)}
 
 
 def equipo_modesto():
