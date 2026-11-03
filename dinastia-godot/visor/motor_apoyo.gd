@@ -10,7 +10,7 @@ extends RefCounted
 ##  · AVANCE: delanteros y extremos empujan hacia el arco rival; defensas, un poco hacia atrás.
 ## La fuerza total se limita a `TOPE` m para que el compañero no se vaya de su zona. `SIN_APOYO=1` = el ofrecimiento fijo de antes.
 const ALCANCE := 18.0
-const ANILLO := 12.0
+static var ANILLO := float(OS.get_environment("APOYO_ANILLO")) if OS.get_environment("APOYO_ANILLO") != "" else 12.0   ## perilla del ciclo 15 (3-11)
 const SEPARA := 9.0
 const LEJOS_RIVAL := 6.0
 const TOPE := 12.0
