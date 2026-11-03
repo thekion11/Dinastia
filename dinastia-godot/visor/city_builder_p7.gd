@@ -284,6 +284,10 @@ func _casa_ribera(centro: Vector3) -> void:
 	raiz.position = centro
 	raiz.rotation.y = PI * 0.5
 
+func _siguiente_torre() -> int:
+	_n_torre += 1
+	return _n_torre
+
 func vestir_torre(n: Node, semilla: int) -> void:
 	if _mats_torre.is_empty():
 		var sh := load("res://visor/fachada_torre.gdshader") as Shader
@@ -345,7 +349,7 @@ func _zona_industrial() -> void:
 	## salía del terreno por el fondo).
 	for i in range(mini(naves.size(), 6)):
 		var nave: Node3D = (naves[(i * 5 + 2) % naves.size()] as PackedScene).instantiate()
-		vestir_torre(nave, int(nave.get_instance_id()))
+		vestir_torre(nave, _siguiente_torre())
 		nave.scale = Vector3.ONE * 7.0
 		nave.position = base + Vector3(-32.0 + (i % 2) * 58.0, 0, -46.0 + (i / 2) * 56.0)
 		nave.rotation.y = PI * 0.5
