@@ -3,7 +3,7 @@ extends Node
 ## Cada momento se fija en el reloj de la ceremonia y se espera unos fotogramas a que los jugadores lleguen a su sitio. Salen en /tmp/sorteo_salida_<n>.png.
 ##   RESOLUCION=1280x720 herramientas/captura.sh res://pruebas/captura_sorteo_salida.tscn --compat
 const MOMENTOS := [7.0, 12.5, 17.0, 22.0, 29.0, 30.8]      ## salida, salida (mitad), fila local, fila visita, sorteo, sorteo (moneda)
-const ESPERA := 30
+const ESPERA := 12
 
 var _vista: VistaEstadio
 var _cer: CeremoniaPartido
@@ -39,10 +39,10 @@ func _process(_d: float) -> void:
 		_desde = _n
 	if _n < 40 or not is_instance_valid(_cer):
 		return
-	## El reloj avanza a mano desde el momento anterior: así los pasos y los gestos se asientan antes de cada foto.
-	var t0 := float(MOMENTOS[maxi(_i - 1, 0)]) if _i > 0 else 0.0
-	var frac := clampf(float(_n - _desde) / float(ESPERA), 0.0, 1.0)
-	_cer.set("_t", lerpf(t0, float(MOMENTOS[_i]), frac))
+	## El reloj avanza a paso real (0,1 s) hasta el momento: así los jugadores caminan de verdad y llegan a su sitio, como en el partido.
+	if _n == _desde + 1:
+		while float(_cer.get("_t")) < float(MOMENTOS[_i]) and is_instance_valid(_cer):
+			_cer._process(0.1)
 	if _n - _desde >= ESPERA + 3:
 		get_viewport().get_texture().get_image().save_png("/tmp/sorteo_salida_%d.png" % (_i + 1))
 		print("FOTO %d a los %.1f s" % [_i + 1, float(MOMENTOS[_i])])
