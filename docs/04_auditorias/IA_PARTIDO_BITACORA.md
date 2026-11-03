@@ -79,6 +79,11 @@ Pendiente de estudiar (fuentes ya localizadas): triangulación de Delaunay para 
     Lección de método: la traza solo seguía la posesión en juego vivo; las reanudaciones dejaban el dato de «quién soltó el balón» anticuado y se leían como balones sueltos largos. Aviso: una etiqueta ancha lleva a calibrar lo que no es.
     Siguiente (ciclo 11): calidad de las reanudaciones (el receptor del saque de banda, del córner y del saque de puerta se elige y se sirve mejor) y el receptor que se ofrece.
 
+12. **Ciclo 11 (reanudaciones).** Retención por tipo en 16 partidos (pérdida = cambio de posesión en los 4 s siguientes): puerta 72 %, banda 41 %, centro (tras gol/inicio de parte) 41 %, falta 83 %, córner 77 %.
+    `MotorSaque` (`SAQUE_SEGURO=1`: banda y centro al compañero más libre a 4-22 m con la línea limpia; 32 partidos): retención banda 45 → 40 %, centro 48 → 44 %, pérdidas por reanudación 9,7 → 9,8 por partido, pases 72,6 → 73,0 %, goles 2,59 → 2,79. **No mejora → APAGADO.**
+    Causa probable: la métrica cuenta cualquier cambio de posesión en los 4 s tras el saque, no solo que el rival lo coja; el receptor recibe presionado y lo pierde. A quién se saca no es la palanca.
+    CI: `control del equipo` («L3 + R3 = bloqueo de jugador») salió rojo una vez en `especiales 3/6`; es una de las pruebas inestables arregladas en la rama de la líder, no se persigue aquí.
+
 ## Cifras reales de fútbol que se persiguen (orden de la sesión líder)
 ≈2,5-2,8 goles, ≈25 tiros, ≈80-85 % de pases buenos por partido. Estado: tiros ≈10-12 por partido y pases buenos ≈53-59 (conteo, no porcentaje): **faltan por debajo**; `zz_medir_partido` no da el porcentaje de pases, hay que añadirlo.
 
