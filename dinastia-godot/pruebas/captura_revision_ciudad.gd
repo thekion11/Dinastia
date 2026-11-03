@@ -52,6 +52,7 @@ func _process(_d: float) -> void:
 		for id in ["camiseta_club", "gorra_club", "bufanda_club"]:
 			asp = RoperoDT.aplicar(asp, id, Color(club.color1), Color(club.color2))
 		m.roles.look["p3d"] = asp
+		PersonajeDT.del_usuario = asp   ## lo que hace `PersonajeDatos.aplicar_aspecto` al guardar en «Mi personaje»
 		_p.call("_ver_ciudad_propia")
 		for h in _p.get_children():
 			if h is VistaCiudad:
