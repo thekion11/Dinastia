@@ -110,3 +110,11 @@ static var BONO_K := float(OS.get_environment("TIRO_BONO")) if OS.get_environmen
 
 static func bono_area(dist_arco: float) -> float:
 	return BONO_K if (_real and dist_arco < AREA_BONO) else 0.0
+
+## PACIENCIA (ciclo 23): desde más de `PACIENCIA_D` m del arco las ganas de tirar se multiplican por `TIRO_PACIENCIA` (1,0 = como antes; <1 = el atacante prefiere seguir la jugada hasta el área). Objetivo: más tiros desde dentro (real ≈60 %).
+const PACIENCIA_D := 24.0
+static var PACIENCIA_K := float(OS.get_environment("TIRO_PACIENCIA")) if OS.get_environment("TIRO_PACIENCIA") != "" else 1.0
+
+static func paciencia(dist_arco: float) -> float:
+	return PACIENCIA_K if dist_arco > PACIENCIA_D else 1.0
+
