@@ -244,6 +244,9 @@ static var TIRO_PULIDO := PULIDO and OS.get_environment("PMOT_TIRO") != "0"   ##
 static var PARADA_LEJOS := float(OS.get_environment("PMOT_PLEJOS")) if OS.get_environment("PMOT_PLEJOS") != "" else 0.5
 ## Error extra por metro de distancia del tiro y desde dónde apunta la IA (fracción del palo).
 static var PUNTERIA := float(OS.get_environment("PMOT_PUNT")) if OS.get_environment("PMOT_PUNT") != "" else 0.045
+const PENAL_IA_X := Balance.PENAL_IA_X
+const PENAL_ERROR := Balance.PENAL_ERROR
+const PENAL_PARA := Balance.PENAL_PARA
 static var PALO_TIRO := float(OS.get_environment("PMOT_PALO")) if OS.get_environment("PMOT_PALO") != "" else 0.7
 ## La última falta pitada: {"puntos", "factores": [claves de PESO_FALTA], "sancion"}.
 var ultima_falta := {}
