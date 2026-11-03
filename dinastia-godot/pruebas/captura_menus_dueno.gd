@@ -1,0 +1,87 @@
+extends Node
+## RECORRIDO CON FOTOS DEL MENÚ NUEVO, para que el dueño lo revise (3-11-2026): el central (lunes y jueves), cada menú del
+## riel en su PORTADA y en su primer submenú, Ajustes → Partida y → Accesibilidad, el diálogo de salir y Competiciones →
+## «Ver otro club». Las fotos van FUERA del repo (OUT, por defecto /tmp/fotos_menus) y de ahí salen las hojas de contacto
+## (`herramientas/hoja_contacto.py`). Lanzar con: herramientas/captura_menus.sh
+var _p: Principal
+var _dir := "/tmp/fotos_menus"
+var _n := 0
+
+func _espera(s: float = 1.2) -> void:
+	await get_tree().create_timer(s).timeout
+	await get_tree().process_frame
+
+func _foto(nombre: String) -> void:
+	await _espera(0.8)
+	_n += 1
+	var img := get_viewport().get_texture().get_image()
+	var ruta := "%s/%02d_%s.jpg" % [_dir, _n, nombre]
+	img.save_jpg(ruta, 0.9)
+	print("foto %s (%dx%d)" % [ruta, img.get_width(), img.get_height()])
+
+func _cerrar() -> void:
+	var pm = _p._menu_lateral.pantalla_abierta
+	if is_instance_valid(pm) and not pm.cerrando():
+		pm.cerrar()
+	await _espera(0.9)
+
+func _sub_de(menu: Dictionary, secc: String) -> int:
+	var subs: Array = menu["subs"]
+	for i in subs.size():
+		if String((subs[i] as Dictionary).get("secc", "")) == secc:
+			return i
+	return 0
+
+func _ready() -> void:
+	if OS.get_environment("OUT") != "":
+		_dir = OS.get_environment("OUT")
+	DirAccess.make_dir_recursive_absolute(_dir)
+	var m := Mundo.new()
+	m.generar(["CHI"], 20261103)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	PedidoPartida.mundo_pregenerado = m
+	_p = load("res://escenas/principal.tscn").instantiate()
+	add_child(_p)
+	await _espera(2.5)
+	for t in get_tree().root.find_children("*", "", true, false):
+		if t is Tutorial:
+			(t as Tutorial)._terminar(false)
+	await _espera(1.0)
+	await _foto("central_lunes")
+	var menus: Array = MenusLaterales.MENUS
+	for mn: Dictionary in menus:
+		var id := String(mn["id"])
+		_p._menu_lateral.abrir_menu(id, -1)
+		await _foto("%s_portada" % id)
+		var primero := 0
+		for i in (mn["subs"] as Array).size():
+			if (mn["subs"][i] as Dictionary).has("tab"):
+				primero = i
+				break
+		_p._menu_lateral.abrir_menu(id, primero)
+		await _foto("%s_sub_%s" % [id, String(mn["subs"][primero].get("label", "0")).to_lower().replace(" ", "_")])
+		await _cerrar()
+	var aj := MenusLaterales.menu_por_id("ajustes")
+	_p._menu_lateral.abrir_menu("ajustes", _sub_de(aj, "partida"))
+	await _foto("ajustes_partida")
+	_p._menu_lateral.abrir_menu("ajustes", _sub_de(aj, "acceso"))
+	await _foto("ajustes_accesibilidad_teclas")
+	await _cerrar()
+	_p.get_node("SalidaGuardada").pedir_salir(false)
+	await _foto("dialogo_guardar_antes_de_salir")
+	for d in _p.find_children("DialogoSalir", "", true, false):
+		(d as Window).hide()
+	await _espera(0.5)
+	var co := MenusLaterales.menu_por_id("competiciones")
+	var otro := 0
+	for i in (co["subs"] as Array).size():
+		if String(co["subs"][i].get("accion", "")) == "elegir_club":
+			otro = i
+	_p._menu_lateral.abrir_menu("competiciones", otro)
+	await _foto("competiciones_ver_otro_club")
+	await _cerrar()
+	for k in 3:
+		_p._avanzar_dia()
+		await _espera(1.5)
+	await _foto("central_jueves")
+	get_tree().quit()
