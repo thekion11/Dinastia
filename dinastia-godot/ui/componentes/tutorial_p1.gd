@@ -223,7 +223,7 @@ static func _pasos_comunes(dirige: bool) -> Array[Dictionary]:
 		p.append(_paso("El tiempo", "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b] para que se juegue solo.", "", "calendario"))
 	else:
 		p.append(_paso("El tiempo", "El calendario avanza desde aquí: [b]Avanzar semana[/b], o día a día con [b]Un día[/b].", "", "calendario"))
-	p.append(_paso("Guardar", "Y una cosa que aquí nadie hace por usted: [b]guardar[/b]. Antes de irse, siempre.", "", "guardar"))
+	p.append(_paso("Guardar", "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).", "", "guardar"))
 	return p
 
 static func _final(despedida: String) -> Dictionary:
