@@ -38,3 +38,7 @@ dinastia-godot/AUDITORIA_CLUBES.csv.import
 
 # Paquete PRIVADO de caras y datos reales (herramientas/empaquetar_caras.gd): nunca al repositorio.
 caras_reales.pck
+
+# Cachés de Python (3-11): se generan solas al correr las herramientas
+__pycache__/
+*.pyc
