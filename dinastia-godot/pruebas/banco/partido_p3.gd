@@ -266,3 +266,27 @@ func _probar_adaptacion() -> void:
 	motor.clima = ""
 	_comprobar(absf(lluvia / seco - 0.9) < 0.01, "con lluvia el radio baja un 10 % (%.2f)" % (lluvia / seco))
 	(r[1] as Node3D).queue_free()
+
+## LA DEFENSA NO VE UN BALÓN VIEJO (03-11-2026, `MotorColocacion`): con el rival atacando el balón «lento» va casi en directo y el sesgo cae rápido.
+func _probar_colocacion_defensa() -> void:
+	_titulo("COLOCACIÓN: LA DEFENSA SIGUE AL BALÓN EN DIRECTO")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var loc: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	for q: Dictionary in motor.jugadores:
+		(q["node"] as Node3D).position = Vector3(-30.0, 0, -40.0)
+	motor.poseedor = loc[0]
+	motor.balon.position = Vector3(0, 0.11, 0)
+	for i in 100:
+		MotorColocacion.actualizar(motor, 0.1)
+	_comprobar(MotorColocacion.sesgo(motor, true) > 0.9, "el equipo con balón tiene sesgo de posesión alto")
+	## El rival roba el balón y sube rápido.
+	motor.poseedor = vis[0]
+	motor.balon.position = Vector3(0, 0.11, 30.0)
+	for i in 10:
+		MotorColocacion.actualizar(motor, 0.1)
+	_comprobar(MotorColocacion.sesgo(motor, true) < 0.5, "al perder el balón el sesgo cae en 1 s (%.2f)" % MotorColocacion.sesgo(motor, true))
+	var z := MotorColocacion.balon_lento(motor, true).z
+	_comprobar(z > 22.0, "y el balón que ve el que defiende va casi en directo: %.1f de 30 m en 1 s" % z)
+	(r[1] as Node3D).queue_free()
