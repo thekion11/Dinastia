@@ -7095,7 +7095,8 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "A typical trip within your country: %d km by %s, %d night(s), %d people (transport %s + hotel %s + meals %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "That's %d €: enter your card PIN.",
   "Pago con tarjeta": "Card payment",
-  "Pagar con tarjeta y PIN": "Pay by card and PIN"
+  "Pagar con tarjeta y PIN": "Pay by card and PIN",
+  "Resolución del 3D en Mínima: %d %%": "3D resolution in Minimum: %d %%"
  },
  "pt": {
   "Historia": "História",
@@ -14193,7 +14194,8 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Uma viagem típica pelo seu país: %d km de %s, %d noite(s), %d pessoas (transporte %s + hotel %s + refeições %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "São %d €: digite o PIN do cartão.",
   "Pago con tarjeta": "Pagamento com cartão",
-  "Pagar con tarjeta y PIN": "Pagar com cartão e PIN"
+  "Pagar con tarjeta y PIN": "Pagar com cartão e PIN",
+  "Resolución del 3D en Mínima: %d %%": "Resolução do 3D no Mínimo: %d %%"
  },
  "patrones": [
   [
@@ -27068,7 +27070,8 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Un déplacement typique dans ton pays : %d km en %s, %d nuit(s), %d personnes (transport %s + hôtel %s + repas %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "Cela fait %d € : saisissez le code PIN de la carte.",
   "Pago con tarjeta": "Paiement par carte",
-  "Pagar con tarjeta y PIN": "Payer par carte et code PIN"
+  "Pagar con tarjeta y PIN": "Payer par carte et code PIN",
+  "Resolución del 3D en Mínima: %d %%": "Résolution de la 3D en Minimum : %d %%"
  },
  "it": {
   "Historia": "Storia",
@@ -34166,7 +34169,8 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Una trasferta tipica nel tuo paese: %d km in %s, %d notte/i, %d persone (trasporto %s + albergo %s + pasti %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "Sono %d €: digita il PIN della carta.",
   "Pago con tarjeta": "Pagamento con carta",
-  "Pagar con tarjeta y PIN": "Paga con carta e PIN"
+  "Pagar con tarjeta y PIN": "Paga con carta e PIN",
+  "Resolución del 3D en Mínima: %d %%": "Risoluzione del 3D al Minimo: %d %%"
  },
  "de": {
   "Historia": "Geschichte",
@@ -41264,7 +41268,8 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Eine typische Reise im eigenen Land: %d km per %s, %d Nacht/Nächte, %d Personen (Transport %s + Hotel %s + Verpflegung %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "Das sind %d €: Gib die PIN der Karte ein.",
   "Pago con tarjeta": "Kartenzahlung",
-  "Pagar con tarjeta y PIN": "Mit Karte und PIN zahlen"
+  "Pagar con tarjeta y PIN": "Mit Karte und PIN zahlen",
+  "Resolución del 3D en Mínima: %d %%": "3D-Auflösung im Minimum: %d %%"
  },
  "ca": {
   "Historia": "Història",
@@ -48362,7 +48367,8 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Un viatge típic pel teu país: %d km en %s, %d nit(s), %d persones (transport %s + hotel %s + dietes %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "Són %d €: teclegeu el PIN de la targeta.",
   "Pago con tarjeta": "Pagament amb targeta",
-  "Pagar con tarjeta y PIN": "Pagar amb targeta i PIN"
+  "Pagar con tarjeta y PIN": "Pagar amb targeta i PIN",
+  "Resolución del 3D en Mínima: %d %%": "Resolució del 3D en Mínim: %d %%"
  },
  "pl": {
   "Club": "Klub",
@@ -55729,7 +55735,8 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Typowy wyjazd po twoim kraju: %d km (%s), %d nocleg(i), %d osób (transport %s + hotel %s + wyżywienie %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "To %d €: wpisz PIN karty.",
   "Pago con tarjeta": "Płatność kartą",
-  "Pagar con tarjeta y PIN": "Zapłać kartą i PIN-em"
+  "Pagar con tarjeta y PIN": "Zapłać kartą i PIN-em",
+  "Resolución del 3D en Mínima: %d %%": "Rozdzielczość 3D w Minimum: %d %%"
  },
  "tr": {
   "Club": "Kulüp",
@@ -63096,6 +63103,7 @@
   "Un viaje típico por tu país: %d km en %s, %d noche(s), %d personas (transporte %s + hotel %s + dietas %s = %s).": "Ülkende tipik bir deplasman: %d km, %s ile, %d gece, %d kişi (ulaşım %s + otel %s + yemek %s = %s).",
   "Son %d €: teclea el PIN de la tarjeta.": "Tutar %d €: kartın PIN'ini gir.",
   "Pago con tarjeta": "Kartla ödeme",
-  "Pagar con tarjeta y PIN": "Kart ve PIN ile öde"
+  "Pagar con tarjeta y PIN": "Kart ve PIN ile öde",
+  "Resolución del 3D en Mínima: %d %%": "Minimum'da 3D çözünürlüğü: %d %%"
  }
 }

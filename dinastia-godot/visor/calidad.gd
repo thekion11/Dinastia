@@ -22,11 +22,13 @@ extends RefCounted
 ## «>= ALTO» lo trate como ligero. Sin sombras, suavizado mínimo (MSAA x2), el 3D al 50 % de resolución (3-11; antes 70 %), sin reflejos del cielo
 ## en los materiales, y grada, gente y césped como en MEDIO o menos (ver `escala_3d` y quien mira `<= MEDIO`).
 enum { MINIMO = -1, MEDIO, ALTO, ULTRA }
-const ESCALA_MINIMO := 0.5
+const ESCALA_MINIMO := 0.5   ## el valor por defecto; el jugador lo elige en Ajustes (35-100 %)
+const ESCALA_MIN_POSIBLE := 0.35
+static var escala_minimo := (float(OS.get_environment("ESCALA3D")) if OS.get_environment("ESCALA3D") != "" else ESCALA_MINIMO)
 
 ## La resolución base del 3D del nivel (1.0 salvo en MÍNIMO). La calidad adaptativa vuelve a esta, no a 1.0.
 static func escala_3d(nivel: int = -99) -> float:
-	return ESCALA_MINIMO if (elegida if nivel == -99 else nivel) <= MINIMO else 1.0
+	return escala_minimo if (elegida if nivel == -99 else nivel) <= MINIMO else 1.0
 
 ## EL NIVEL QUE HA ELEGIDO EL JUGADOR en Ajustes. Vive aqui y no en la pantalla
 ## de ajustes porque quien lo necesita es el visor 3D, que se monta desde otro
@@ -281,6 +283,7 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 		vp.msaa_3d = Viewport.MSAA_2X
 	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
 	vp.scaling_3d_scale = escala_3d(nivel)
+	vp.mesh_lod_threshold = 6.0 if nivel <= MINIMO else 1.0   ## (3-11, R2) MÍNIMO: las mallas con LOD (jugadores) cambian a detalle bajo antes; el resto de niveles, el valor de siempre
 	vp.use_debanding = nivel > MINIMO
 	## Atlas de sombra: 4096 a 2048 en ALTO -un cuarto de la memoria/ancho de
 	## banda-, mismo criterio que el MSAA de arriba. 8192 se guarda para ULTRA.
@@ -314,12 +317,15 @@ static func cargar() -> void:
 		adaptativa = bool(cf.get_value("grafica", "adaptativa"))
 	if cf.has_section_key("grafica", "motor_ligero"):
 		motor_ligero = bool(cf.get_value("grafica", "motor_ligero"))
+	if cf.has_section_key("grafica", "escala_minimo"):
+		escala_minimo = clampf(float(cf.get_value("grafica", "escala_minimo")), ESCALA_MIN_POSIBLE, 1.0)
 
 static func guardar() -> void:
 	var cf := ConfigFile.new()
 	cf.set_value("grafica", "calidad", elegida)
 	cf.set_value("grafica", "adaptativa", adaptativa)
 	cf.set_value("grafica", "motor_ligero", motor_ligero)
+	cf.set_value("grafica", "escala_minimo", escala_minimo)
 	cf.save(ARCHIVO)
 
 ## ¿Se puede relanzar el juego? Solo en un ejecutable de escritorio (en el
