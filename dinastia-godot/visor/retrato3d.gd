@@ -186,10 +186,7 @@ func _servir() -> void:
 		else:
 			_cam.position = Vector3(0.0, alto * 0.915, 1.62)
 			_cam.look_at(Vector3(0.0, alto * 0.885, 0.0), Vector3.UP)
-		_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-		await get_tree().process_frame
-		await get_tree().process_frame
-		await get_tree().process_frame
+		await _fotografiar(raiz)
 		var img := _vp.get_texture().get_image()
 		_vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
 		if img != null and not img.is_empty():
@@ -219,10 +216,7 @@ func _servir_dt(job: Dictionary) -> void:
 		else:
 			_cam.position = Vector3(0.0, alto * 0.915, 1.62)
 			_cam.look_at(Vector3(0.0, alto * 0.885, 0.0), Vector3.UP)
-		_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-		await get_tree().process_frame
-		await get_tree().process_frame
-		await get_tree().process_frame
+		await _fotografiar(raiz)
 		var img := _vp.get_texture().get_image()
 		_vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
 		if img != null and not img.is_empty():
@@ -232,3 +226,27 @@ func _servir_dt(job: Dictionary) -> void:
 			else:
 				tex.set_image(img)
 	raiz.queue_free()
+
+## (3-11) La foto, igual siempre: la animación de reposo se congela en su primer instante (antes la pose dependía de
+## cuándo se tomaba) y se espera a que el SubViewport se DIBUJE de verdad (antes eran 3 fotogramas de proceso, que en
+## una máquina cargada o con el ahorro del menú podían no llegar a dibujar).
+func _fotografiar(raiz: Node) -> void:
+	await get_tree().process_frame
+	for ap: Node in raiz.find_children("*", "AnimationPlayer", true, false):
+		var a := ap as AnimationPlayer
+		if a.current_animation != "":
+			a.seek(0.0, true)
+		a.pause()
+	_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	## Dos dibujos de verdad, con tope: sin gráfica (pruebas sin pantalla) o si nada pide repintar, no llegan nunca.
+	_dibujos = 0
+	if not RenderingServer.frame_post_draw.is_connected(_contar_dibujo):
+		RenderingServer.frame_post_draw.connect(_contar_dibujo)
+	for i in 12:
+		await get_tree().process_frame
+		if _dibujos >= 2 and i >= 2:
+			break
+
+var _dibujos := 0
+func _contar_dibujo() -> void:
+	_dibujos += 1
