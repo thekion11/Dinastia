@@ -28,10 +28,18 @@ var _altura_max := 0.0
 ## Física Magnus (documento maestro): convive con el arco `enviar()`.
 ## Si `_modo_fisica`, `avanzar()` integra velocidad+giro en vez de la parábola.
 const GRAVEDAD := 9.81
-const RESISTENCIA_AIRE := 0.12
-const RESTITUCION_CESPED := 0.58
+## Arrastre cuadrático: a = -K·v_ef·v (≈0,0122·v² medido; Cd 0,23). Por encima de
+## ~20,7 m/s se descuentan 8,3 m/s a v_ef (el arrastre cae al pasar la «crisis»).
+const ARRASTRE_K := 0.0128
+const CRISIS_V := 20.7
+const CRISIS_DESC := 8.3
+## Magnus: a = K·(ω×v). Con ω≈50 rad/s y v=25 m/s da ≈8 m/s² (CL≈0,25 real).
+const MAGNUS_K := 0.0064
+## Restitución en césped: 0,53 + 0,0083·v_horizontal, tope 0,63 (cae más lento = bota menos).
+const RESTITUCION_MIN := 0.53
+const RESTITUCION_MAX := 0.63
 ## Frenada del balón rodando por césped (m/s²).
-const ROCE_RODADA := 1.4
+const ROCE_RODADA := 0.9
 var _modo_fisica := false
 var velocidad_vectorial := Vector3.ZERO
 var giro_angular := Vector3.ZERO
@@ -365,8 +373,10 @@ func _recorrido(t: float) -> float:
 func _avanzar_fisica(delta: float) -> void:
 	var dt := maxf(delta, 0.0001)
 	var pos_antes := position
-	var fuerza_magnus := giro_angular.cross(velocidad_vectorial) * 0.02
-	var arrastre := -velocidad_vectorial * RESISTENCIA_AIRE
+	var fuerza_magnus := giro_angular.cross(velocidad_vectorial) * MAGNUS_K
+	var rapidez := velocidad_vectorial.length()
+	var v_ef := rapidez - CRISIS_DESC if rapidez > CRISIS_V else rapidez
+	var arrastre := -velocidad_vectorial * (ARRASTRE_K * v_ef)
 	var aceleracion := Vector3(0.0, -GRAVEDAD, 0.0) + fuerza_magnus + arrastre
 	velocidad_vectorial += aceleracion * dt
 	position += velocidad_vectorial * dt
@@ -377,7 +387,8 @@ func _avanzar_fisica(delta: float) -> void:
 		## en medio segundo. Ahora: si cae con fuerza, bota (pierde altura y un
 		## poco de velocidad); si ya rueda, solo el roce del césped (~1,4 m/s²).
 		if velocidad_vectorial.y < -1.2:
-			velocidad_vectorial.y = -velocidad_vectorial.y * RESTITUCION_CESPED
+			var v_h := Vector2(velocidad_vectorial.x, velocidad_vectorial.z).length()
+			velocidad_vectorial.y = -velocidad_vectorial.y * minf(RESTITUCION_MIN + 0.0083 * v_h, RESTITUCION_MAX)
 			velocidad_vectorial.x *= 0.9
 			velocidad_vectorial.z *= 0.9
 			giro_angular *= 0.7
