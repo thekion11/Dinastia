@@ -168,11 +168,11 @@ static func ejecutar(p: Principal, accion: String) -> void:
 		"ciudad_pie", "ciudad_coche":
 			p._ver_ciudad_explorando("coche" if accion == "ciudad_coche" else "pie")
 		"mi_personaje":
-			CreadorPersonaje.abrir(p, p.mundo)
+			load("res://ui/componentes/creador_personaje.gd").abrir(p, p.mundo)
 		"album":
 			PanelMeta.abrir(p, p.mundo)
 		"minijuegos":
-			SalaMinijuegos.abrir(p, p.mundo)
+			load("res://ui/componentes/sala_minijuegos.gd").abrir(p, p.mundo)
 		"documental":
 			## El último cerrado; si todavía no hay, el avance de la que se juega.
 			var caps := DocumentalTemporada.ultimo if not DocumentalTemporada.ultimo.is_empty() else DocumentalTemporada.guion(p.mundo)

@@ -17,7 +17,7 @@ var _cola: Array = []
 var _mundo: WeakRef = null   ## el mundo para el que se precalienta: si se cierra la partida o cambia de club, se suelta lo pendiente
 var _club_id := ""
 var _espera := 0
-var _spawner := PlayerSpawner.new()
+var _spawner = load("res://visor/player_spawner.gd").new()
 
 ## El once del club `c` (al tomar el mando).
 static func club(c: Club) -> void:
@@ -108,7 +108,7 @@ func _uno(it: Dictionary) -> void:
 	_hechos[it["clave"]] = true
 	var jug: Dictionary = it["jug"]
 	var k: Dictionary = it["kit"]
-	var look := PlayerSpawner._look_de(jug)
+	var look = load("res://visor/player_spawner.gd")._look_de(jug)
 	var raiz := Node3D.new()
 	raiz.visible = false
 	add_child(raiz)

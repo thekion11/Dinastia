@@ -29,10 +29,32 @@ const ASC_X1 := -2.2
 
 ## {inst: {clave: nivel}, dentro: {vestuario, sala_prensa, palco},
 ##  plantilla: [[dorsal, nombre]], titulos: int, presidente: String}
-static var ctx: Dictionary = {}
+static var _ctx: Dictionary = {}
+static var ctx: Dictionary:
+	get:
+		_aplicar_pendiente()
+		return _ctx
+	set(v):
+		_ctx = v
 ## El mundo, para hablar con la gente en persona (`Gente.charlar`, la junta…).
 ## Débil: el edificio no debe sujetar la partida en memoria.
-static var mundo_ref: WeakRef
+static var _mundo_ref: WeakRef
+static var mundo_ref: WeakRef:
+	get:
+		_aplicar_pendiente()
+		return _mundo_ref
+	set(v):
+		_mundo_ref = v
+
+## El menú solo ANOTA el mundo y el club en `PendienteClub` (sin cargar esto); aquí se aplica al leer `ctx` o `mundo_ref` por primera vez.
+static func _aplicar_pendiente() -> void:
+	if PendienteClub.mundo_ref == null or PendienteClub.club_ref == null:
+		return
+	var m := PendienteClub.mundo_ref.get_ref() as Mundo
+	var c := PendienteClub.club_ref.get_ref() as Club
+	PendienteClub.limpiar()
+	if m != null and c != null:
+		fijar_ctx(m, c)
 
 ## Lo que el edificio pinta del mundo: niveles, salas elegidas, plantilla con dorsales,
 ## títulos y presidente. Lo fijan en `ctx` TODOS los que abren la ciudad con el mundo
@@ -41,8 +63,9 @@ static var mundo_ref: WeakRef
 static func fijar_ctx(mundo: Mundo, c: Club) -> void:
 	if mundo == null or c == null:
 		return
-	ctx = contexto_de(mundo, c)
-	mundo_ref = weakref(mundo)
+	PendienteClub.limpiar()
+	_ctx = contexto_de(mundo, c)
+	_mundo_ref = weakref(mundo)
 
 ## Lo que el edificio del club pinta del mundo.
 static func contexto_de(mundo: Mundo, c: Club) -> Dictionary:

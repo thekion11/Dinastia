@@ -22,7 +22,7 @@ for n,_ in fam[nombre_fam]: sub(n)
 todas={nombre[x]:x for x in prot if x in nombre}
 manual=[]; cambios=0; lineas_cambiadas=0
 for res in sorted(scripts):
-    if res in prot: continue
+    if res in prot or res not in base: continue   # solo los que el menú compila (los demás ya se cargan al usarlos)
     p=RAIZ+'/'+res[6:]
     src=open(p,encoding='utf-8').read(); lineas=src.split('\n'); orig=list(lineas)
     for i,l in enumerate(lineas):
