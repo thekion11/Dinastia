@@ -32,7 +32,7 @@ static func tomar(m: MotorJugable, p: Dictionary) -> void:
 			## Causa de la pérdida (ciclo 10, afinada): `pase` = un pase suyo en vuelo lo corta el rival; `tiro` = un remate suyo en vuelo; `entrada` = entrada con éxito hace <0,2 s;
 			## `suelto` = recoge un balón que ya no tenía dueño (rechace, despeje, toque largo, balón dividido); `directo` = se lo quitan con el balón aún en sus pies por otra vía.
 			var tiro_suyo := not m._tiro_vivo.is_empty() and (0 if bool((m._tiro_vivo["p"] as Dictionary)["es_local"]) else 1) == antes
-			var causa := "pase" if m._pase_eq == antes else ("tiro" if tiro_suyo else ("entrada" if m.t - float(m.get_meta("_traza_ent", -9.0)) < 0.2 else (("saque_" + String(m.get_meta("_traza_saque_tipo", "otro"))) if m._t_estado < 4.0 else ("toque_largo" if m.t - float(m.get_meta("_traza_tl", -9.0)) < 0.2 else (_suelto(m, e, antes) if m.poseedor.is_empty() else "directo")))))
+			var causa := ("pase_" + String(m.get_meta("_traza_pase", "otro"))) if m._pase_eq == antes else ("tiro" if tiro_suyo else ("entrada" if m.t - float(m.get_meta("_traza_ent", -9.0)) < 0.2 else (("saque_" + String(m.get_meta("_traza_saque_tipo", "otro"))) if m._t_estado < 4.0 else ("toque_largo" if m.t - float(m.get_meta("_traza_tl", -9.0)) < 0.2 else (_suelto(m, e, antes) if m.poseedor.is_empty() else "directo")))))
 			m._contar("traza_perdida_%s_%s" % [zona(m, antes), causa])
 	e["eq"] = nuevo
 
@@ -73,3 +73,13 @@ static func _suelto(m: MotorJugable, e: Dictionary, antes: int) -> String:
 static func saque(m: MotorJugable, tipo: String) -> void:
 	m._contar("traza_saque_" + tipo)
 	m.set_meta("_traza_saque_tipo", tipo)
+
+## Un pase de la IA acaba de salir (ciclo 13: «el receptor que se ofrece»): lo clasifica en el instante de la patada por receptor `quieto`/`mueve` (velocidad < 1,0 m/s), línea `tapada`/`libre` (un rival a < 1,3 m del
+## trayecto) y distancia `corto` (< 12 m) / `medio` (< 22 m) / `largo`; cuenta cuántos hay de cada clase y recuerda la clase para etiquetar el corte si el rival lo intercepta.
+static func pase(m: MotorJugable, p: Dictionary, q: Dictionary, dist: float) -> void:
+	var mueve := "mueve" if (q["vel"] as Vector3).length() >= 1.0 else "quieto"
+	var linea := "tapada" if m._linea_tapada(m.pos(p), m.pos(q), bool(p["es_local"])) else "libre"
+	var d := "corto" if dist < 12.0 else ("medio" if dist < 22.0 else "largo")
+	var clase := "%s_%s_%s" % [mueve, linea, d]
+	m._contar("traza_pase_" + clase)
+	m.set_meta("_traza_pase", clase)
