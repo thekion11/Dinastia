@@ -20164,6 +20164,17 @@
    "El segon especialista és més optimista: la lesió és menys greu del que semblava i el termini s'escurça. Es queda $1 setmana(es).",
    "Drugi specjalista jest bardziej optymistyczny: uraz jest mniej poważny, niż się wydawało, i przerwa się skraca. Pauzuje $1 tydz.",
    "İkinci uzman daha iyimser: sakatlık göründüğünden hafif ve süre kısalıyor. $1 hafta yok."
+  ],
+  [
+   "^El ánimo sube (\\d+) y los socios se sienten escuchados\\.$",
+   "Morale rises $1 and the members feel listened to.",
+   "O ânimo sobe $1 e os sócios sentem-se ouvidos.",
+   "Le moral monte de $1 et les socios se sentent écoutés.",
+   "Il morale sale di $1 e i soci si sentono ascoltati.",
+   "Die Stimmung steigt um $1 und die Mitglieder fühlen sich gehört.",
+   "L'ànim puja $1 i els socis se senten escoltats.",
+   "Nastroje rosną o $1, a członkowie czują się wysłuchani.",
+   "Moral $1 artıyor ve üyeler dinlendiklerini hissediyor."
   ]
  ],
  "fr": {
