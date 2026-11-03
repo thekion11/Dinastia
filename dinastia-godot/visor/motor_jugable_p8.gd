@@ -94,8 +94,12 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 	## Los delanteros atacan el espacio a la espalda de la defensa.
 	var linea := _ultima_linea(not bool(p["es_local"]))
 	var dz := dir_ataque(bool(p["es_local"]))
+	var obj0 := obj
 	if _rol(p) in ["DC", "ED", "EI", "SD"]:
 		obj.z = clampf(linea - dz * 0.6, -LARGO + 6.0, LARGO - 6.0) if (linea - pos(p).z) * dz > -8.0 else obj.z
+		## Solo UN delantero a la vez hace la carrera al hueco; los demás mantienen la forma (F5, 03-11).
+		if MotorCarreras.activo() and (linea - pos(p).z) * dz > -8.0:
+			obj = MotorCarreras.objetivo(self as Object as MotorJugable, p, obj0, linea, dz)
 	## Y NADIE se queda en fuera de juego esperando (MEGAPLAN fase 3): el
 	## central que subió al córner o el lateral que se proyectó vuelven a
 	## estar habilitados mientras el balón no pase la línea.
