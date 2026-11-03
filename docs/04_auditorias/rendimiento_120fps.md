@@ -198,3 +198,10 @@ Menú, primer fotograma (editor, sin ventana): **749 → 713 MB (−36 MB)** en 
 `medir_partido -- minimo` (TV, opengl3 llvmpipe 640x360): base 453 llamadas. Quitando cada función de `EntornoEstadio.montar` (ENT_SIN temporal): suelos 0 · avenida −2 · jardín −2 · árboles y farolas −15 · **aparcamientos −151** · horizonte −8 · banderas 0.
 El impostor del horizonte (un cilindro con la silueta) se probó y se descartó: 492 vs 493 llamadas.
 Palanca aplicada en MÍNIMO: de cada 3 coches aparcados se queda 1 (el azar se gasta igual, el resto del entorno sale idéntico): **453 → 361 llamadas**, 502 → 409 objetos, −18 k triángulos. MEDIO+ igual. Captura TV antes/después: `capturas_ciudad_c2/aparcamiento_minimo_tv_{antes,despues}.jpg` (los aparcamientos no salen en la cámara de TV; los coches faltantes solo se notan desde fuera del estadio).
+
+## Ciudad en MÍNIMO: llamadas de dibujo por grupo (3-11, `medir_prologo` GRUPOS=2 / RUTAS=<malla>)
+Recién cargada (opengl3 llvmpipe 640x360, MÍNIMO): **2 062 llamadas**, 19 452 nodos. Por tipo (se oculta cada tipo y se resta): Mesh −1 302 · MultiMesh −422 · Label3D −290 (2 553 nodos, ya con alcance ≤50 m) · luces −23 · partículas −32.
+- `zonas_vista` ENCENDIDA en MÍNIMA: 2 062 → 2 062 recién cargado y 2 007 vs 2 003 tras caminar 120 m (661 piezas ocultas de 1 617): **sin efecto** (se probó y se dejó apagada).
+- Peatones (`PeatonQ`): de 85 cuerpos Superhero solo ~18 están a <150 m del punto de medida; acortar su alcance a 55 m (22 m ojos) no cambió nada (2 062 → 2 062): no son el coste.
+- Las sombras ya están apagadas en MÍNIMO; `Optimizar.distancias` (CORTE 180/320/600 m según tamaño) ya está aplicado a la ciudad.
+- Grupos con más llamadas por nodo (ocultar el grupo, con solapes entre ellos): Semáforos 15 nodos −111 · carrocerías 49 nodos −132 · maletines 52 nodos −87 · zócalos de edificios 56 −78 · ejes 242 −85 · paraderos 124 −65 · carteles 124 −56 · conos 100 −54 · ruedas 4×44 −55 c/u. Son los candidatos a fundir por material o a MultiMesh; ninguno pasa de ~130 llamadas.
