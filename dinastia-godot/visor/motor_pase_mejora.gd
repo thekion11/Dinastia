@@ -12,6 +12,8 @@ const PREVE_RIVAL := 0.3
 const GIRO := 1.2
 static var ACTIVO := OS.get_environment("PMOT_PASE") == "1"
 ## Peso del riesgo de corte en la nota del pase (ciclo 8, 03-11; 1,0 = la cuenta de siempre). `PMOT_RIESGO=2` = el receptor tapado pesa el doble.
+## Velocidad del pase raso (ciclo 9, 03-11; 1,0 = la de siempre): un pase más rápido da menos tiempo a cortarlo. `PMOT_VEL=1.2` = un 20 % más rápido.
+static var VEL_K := float(OS.get_environment("PMOT_VEL")) if OS.get_environment("PMOT_VEL") != "" else 1.0
 static var RIESGO_K := float(OS.get_environment("PMOT_RIESGO")) if OS.get_environment("PMOT_RIESGO") != "" else 1.0
 
 ## [libre (m al rival más cercano del receptor), riesgo de corte] del pase de `p` a `q`.

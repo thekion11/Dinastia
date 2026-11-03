@@ -332,6 +332,7 @@ func _probar_tiro_fallido() -> void:
 	_comprobar(MotorTiroLimpio.alcance(30.0) == 30.0, "con la bandera apagada el alcance de tiro no cambia")
 	_comprobar(MotorTiroLimpio.bono_area(10.0) == 0.0, "con la bandera apagada no hay bono de área")
 	_comprobar(MotorPaseMejora.RIESGO_K == 1.0 or OS.get_environment("PMOT_RIESGO") != "", "el peso del riesgo del pase es 1,0 por defecto")
+	_comprobar(MotorPaseMejora.VEL_K == 1.0 or OS.get_environment("PMOT_VEL") != "", "la velocidad del pase raso es 1,0 por defecto")
 	MotorTiroLimpio._real = true
 	_comprobar(absf(MotorTiroLimpio.alcance(30.0) - 30.0 * MotorTiroLimpio.ALCANCE_K) < 0.001 and MotorTiroLimpio.ALCANCE_K > 1.0, "con la bandera encendida el alcance de tiro crece")
 	_comprobar(MotorTiroLimpio.bono_area(10.0) > 0.0 and MotorTiroLimpio.bono_area(30.0) == 0.0, "encendida, el bono solo vale dentro del área")
