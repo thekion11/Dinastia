@@ -14,6 +14,12 @@ var _ahorrando := false
 static func toca() -> bool:
 	return Calidad.elegida <= Calidad.MINIMO and DisplayServer.get_name() != "headless"
 
+## ¿Los fondos de los menús van quietos? Con el motor ligero y, desde el 3-11, también en MÍNIMA: un shader con `TIME` (los fondos de pantalla completa, las banderas que ondean, el
+## reflejo del logo) obliga a redibujar la pantalla en cada fotograma aunque `low_processor_usage_mode` esté puesto (medido: 92 fotogramas en 3 s con el menú quieto). Quien monta uno
+## pregunta aquí y, si toca, pone un color fijo o nada en vez del shader.
+static func fondo_estatico() -> bool:
+	return Calidad.motor_ligero or toca()
+
 func _process(delta: float) -> void:
 	_t += delta
 	if _t < CADA:
@@ -22,6 +28,8 @@ func _process(delta: float) -> void:
 	var quiero := toca() and not hay_3d(get_tree().root)
 	if quiero != _ahorrando:
 		_poner(quiero)
+	elif quiero:
+		_pausar_motas(true)   ## las que se hayan montado después (otra pantalla)
 
 ## Hay 3D a la vista si la ventana tiene cámara 3D o algún SubViewportContainer visible muestra una (el retrato
 ## del jugador en la ficha va en un SubViewport que no se actualiza solo: no cuenta).
@@ -38,9 +46,42 @@ static func hay_3d(raiz: Node) -> bool:
 				return true
 	return false
 
+static var _quietos: Dictionary = {}
+static var _re_tiempo: RegEx = null
+
+## El mismo shader pero congelado (3-11): con `TIME` cambiado por un valor fijo, el shader deja de usar el tiempo y de pedir un repintado por fotograma. Los uniformes son los mismos, así
+## que quien le pone parámetros o los anima con un tween no cambia nada. Con los fondos en movimiento (`fondo_estatico()` falso) devuelve el shader tal cual.
+static func shader(s: Shader) -> Shader:
+	if s == null or not fondo_estatico() or not s.code.contains("TIME"):
+		return s
+	if not _quietos.has(s):
+		if _re_tiempo == null:
+			_re_tiempo = RegEx.create_from_string("\\bTIME\\b")
+		var q := Shader.new()
+		q.code = _re_tiempo.sub(s.code, "(7.3)", true)
+		_quietos[s] = q
+	return _quietos[s]
+
+## Las motas y el bokeh de las portadas (`FondoParticulas`, grupo «fondo_particulas»): quietas y ocultas mientras se ahorra, como el clima.
+func _pausar_motas(si: bool) -> void:
+	for n: Node in get_tree().get_nodes_in_group("fondo_particulas"):
+		var cp := n as CPUParticles2D
+		if cp == null:
+			continue
+		if si and not cp.has_meta("ahorro"):
+			cp.set_meta("ahorro", true)
+			cp.set_meta("emitia", cp.emitting)
+			cp.emitting = false
+			cp.visible = false
+		elif not si and cp.has_meta("ahorro"):
+			cp.remove_meta("ahorro")
+			cp.emitting = bool(cp.get_meta("emitia", cp.emitting))
+			cp.visible = true
+
 func _poner(si: bool) -> void:
 	_ahorrando = si
 	OS.low_processor_usage_mode = si
+	_pausar_motas(si)
 	var clima: Variant = principal.get("_clima") if principal != null else null
 	if clima is CPUParticles2D:
 		var cp := clima as CPUParticles2D
