@@ -100,3 +100,6 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     (02-11) El dueño pidió SOLO el vídeo del partido (enviado: 2 partes comprimidas a 960x540, Lautaro 2-1 Marga Marga); su nota queda
     pendiente. Lo pidió más nítido: la regrabación en 1080p se cortó a medias (tarda ~7 h por software); queda el script
     `herramientas/grabar_partido_hd.sh` para hacerlo en un PC con GPU o rehacerlo aquí.
+22. (3-11) PRUEBA DEL DUEÑO EN SU TELÉFONO: el plan del lunes queda en PAUSA salvo el código duplicado (M-391) y el
+    rendimiento. Manda `docs/04_auditorias/PRUEBA_DUENO_MOVIL_2026-11-03.md` (5 FPS en MEDIA con la GPU al 100 % y la CPU al 0 %;
+    objetivo 60 FPS; calidad por defecto la más baja; jugabilidad «muy mala»; ARENA DE PRUEBAS aislada para probar piezas sueltas).
