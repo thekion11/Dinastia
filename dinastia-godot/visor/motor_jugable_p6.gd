@@ -109,14 +109,14 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 	if poseedor.is_empty():
 		return
 	var victima := poseedor
-	p["enfriar"] = 1.0 if not barrida else 1.6
+	p["enfriar"] = (1.0 if not barrida else 1.6) * MotorDuelo.ENF   ## ciclo 10: menos intentos de entrada (1,0 = como antes)
 	var def_ := float(p["attr"]["def"])
 	var reg := float(victima["attr"]["reg"])
 	if t < float(victima["regate_hasta"]):
 		reg += 0.35
 	## Defensa contra regate al cuadrado: el buen defensor roba bastante más
 	## que el malo (antes la proporción lineal igualaba a todos).
-	var exito := def_ * def_ / (def_ * def_ + reg * reg) * (0.55 if barrida else 0.32)
+	var exito := def_ * def_ / (def_ * def_ + reg * reg) * (0.55 if barrida else 0.32) * MotorDuelo.K
 	## La entrada de pie también es cuerpo: el fuerte se impone al débil (y
 	## el que tiene equilibrio aguanta). De media no cambia nada.
 	if not barrida:
