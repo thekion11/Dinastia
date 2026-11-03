@@ -82,6 +82,9 @@ Pendiente de estudiar (fuentes ya localizadas): triangulación de Delaunay para 
 12. **Ciclo 11 (reanudaciones).** Retención por tipo en 16 partidos (pérdida = cambio de posesión en los 4 s siguientes): puerta 72 %, banda 41 %, centro (tras gol/inicio de parte) 41 %, falta 83 %, córner 77 %.
     `MotorSaque` (`SAQUE_SEGURO=1`: banda y centro al compañero más libre a 4-22 m con la línea limpia; 32 partidos): retención banda 45 → 40 %, centro 48 → 44 %, pérdidas por reanudación 9,7 → 9,8 por partido, pases 72,6 → 73,0 %, goles 2,59 → 2,79. **No mejora → APAGADO.**
     Causa probable: la métrica cuenta cualquier cambio de posesión en los 4 s tras el saque, no solo que el rival lo coja; el receptor recibe presionado y lo pierde. A quién se saca no es la palanca.
+    **`SAQUE_OFRECE=1`** (`MotorSaque.oferta`: los dos compañeros más cercanos al lanzador se ofrecen hacia dentro, uno corto y otro en diagonal; 32 partidos): retención banda 45 → 41,5 %, centro 49 → 47 %, pérdidas por reanudación 9,75 → 10,05/p, pases 72,6 → 72,4 %, goles 2,60 → 2,50. **No mejora → APAGADO.**
+    Dos intervenciones distintas sobre las reanudaciones (a quién se saca; que los compañeros se ofrezcan) dan lo mismo: la retención (≈40-45 %) no depende de cómo se sirve el saque sino de lo que ocurre después (receptor presionado). Reanudaciones zanjadas.
+    Dato para después (de la líder): ≈10 intentos de entrada por equipo frente a ≈16-20 reales; probar MÁS entradas (el barrido hecho solo probó menos intentos / menos éxito).
     CI: `control del equipo` («L3 + R3 = bloqueo de jugador») salió rojo una vez en `especiales 3/6`; es una de las pruebas inestables arregladas en la rama de la líder, no se persigue aquí.
 
 ## Cifras reales de fútbol que se persiguen (orden de la sesión líder)
