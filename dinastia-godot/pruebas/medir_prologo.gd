@@ -24,6 +24,7 @@ func _foto(fase: String, extra := "") -> void:
 func _medir() -> void:
 	Calidad.elegida = Calidad.MINIMO if OS.get_environment("CALIDAD") == "minimo" else Calidad.MEDIO
 	Calidad.motor_ligero = OS.get_environment("CALIDAD") == "minimo"
+	_foto("inicio (autocargas)")
 	var m := _mundo(4242)
 	_foto("antes del prólogo")
 	PedidoPartida.mundo_pregenerado = m
