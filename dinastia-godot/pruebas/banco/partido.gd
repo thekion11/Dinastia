@@ -139,3 +139,32 @@ func _probar_saque_ofrece() -> void:
 	_comprobar(MotorSaque.oferta(motor, lanzador, lugar, true, base) == base, "el lanzador no cambia")
 	MotorSaque._ofrece = antes
 	(r[1] as Node3D).queue_free()
+
+## ENTRAR EN EL MOMENTO BUENO (03-11-2026, ciclo 12, `MotorEntrada`, bandera ENTRADA_MOMENTO): el radio de la entrada crece con el portador de espaldas, con control largo o en la banda.
+func _probar_entrada_momento() -> void:
+	_titulo("ENTRAR EN EL MOMENTO BUENO")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var victima: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))[0]
+	var def_: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))[0]
+	var nv := victima["node"] as Node3D
+	nv.position = Vector3(0, 0, 0)
+	(def_["node"] as Node3D).position = Vector3(0, 0, 2.0)   ## el defensa está en +z
+	motor.balon.position = Vector3(0, 0.11, 0.3)
+	var antes := MotorEntrada._on
+	MotorEntrada._on = false
+	_comprobar(MotorEntrada.radio(motor, def_, victima, 1.25) == 1.25, "apagado devuelve el radio base")
+	MotorEntrada._on = true
+	nv.rotation.y = 0.0   ## mira a +z: DE FRENTE al defensa
+	_comprobar(MotorEntrada.radio(motor, def_, victima, 1.25) == 1.25, "de frente, con el balón en los pies y en el centro: radio base")
+	nv.rotation.y = PI    ## mira a -z: DE ESPALDAS al defensa
+	_comprobar(absf(MotorEntrada.radio(motor, def_, victima, 1.25) - (1.25 + MotorEntrada.ESPALDAS)) < 0.001, "de espaldas: radio + %.1f" % MotorEntrada.ESPALDAS)
+	motor.balon.position = Vector3(0, 0.11, -1.5)   ## el balón se le ha ido
+	_comprobar(absf(MotorEntrada.radio(motor, def_, victima, 1.25) - (1.25 + MotorEntrada.TOPE)) < 0.001, "de espaldas y con control largo: radio + tope %.1f" % MotorEntrada.TOPE)
+	nv.rotation.y = 0.0
+	motor.balon.position = Vector3(motor.ANCHO - 1.0, 0.11, 0.3)
+	nv.position = Vector3(motor.ANCHO - 1.0, 0, 0)
+	(def_["node"] as Node3D).position = Vector3(motor.ANCHO - 1.0, 0, 2.0)
+	_comprobar(absf(MotorEntrada.radio(motor, def_, victima, 1.25) - (1.25 + MotorEntrada.BANDA)) < 0.001, "pegado a la banda: radio + %.1f" % MotorEntrada.BANDA)
+	MotorEntrada._on = antes
+	(r[1] as Node3D).queue_free()
