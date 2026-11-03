@@ -44,7 +44,9 @@ func _modal(pr: Principal) -> void:
 		"con el móvil encima, L1/R1, L2/R2 y Ctrl+E no cambian la pestaña de detrás")
 	pop.free()
 	_pulsar(pr, "dinastia_bloque_siguiente")
-	_comprobar(pr._grupo_actual != grupo_m or not cambia, "cerrado el móvil, L2/R2 vuelven a cambiar de bloque (antes %s)" % grupo)
+	## (3-11, rediseño del menú central) Sin fila de bloques: L2/R2 abren el menú del panel lateral de al lado.
+	var ml: MenuLateral = pr.get("_menu_lateral")
+	_comprobar(ml != null and is_instance_valid(ml.pantalla_abierta), "cerrado el móvil, L2/R2 vuelven a moverse: abren el menú lateral de al lado (antes %s)" % grupo)
 
 func _tema(pr: Principal) -> void:
 	pr._daltonico = true
