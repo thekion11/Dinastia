@@ -73,6 +73,8 @@ func _amueblar_anden(p: Vector3, fondo: Vector3, hacia: Vector3, lon: Vector3, y
 	Mini3D.caja(self, mostrador + Vector3(0, 0.5, 0), _tam_lon(lon, Vector3(1.8, 1.0, 0.7)), Mini3D.mat(Color(0.55, 0.32, 0.16), 0.8))
 	Mini3D.caja(self, mostrador + Vector3(0, 2.3, 0) - hacia * 0.5, _tam_lon(lon, Vector3(2.1, 0.07, 1.4)), Mini3D.mat(Color(0.85, 0.2, 0.12), 0.7))
 	Mini3D.caja(self, mostrador + Vector3(0, 1.1, 0), _tam_lon(lon, Vector3(0.5, 0.12, 0.3)), Mini3D.mat(Color(0.95, 0.8, 0.4), 0.6))
+	if not elevada:   ## M-180: carteles publicitarios en la pared (el andén elevado no tiene pared: cerraría la vista)
+		MetroPublicidad.carteles(self, fondo, hacia, lon, y, int(absf(fondo.x) + absf(fondo.z)) % 7)
 	## Bancos de espaldas a la pared, papeleras entre ellos y plantas grandes.
 	for f: float in [-12.0, -4.0, 4.0, 12.0]:
 		## El banco del kit mira a su -Z (el respaldo queda en +Z): de espaldas a
