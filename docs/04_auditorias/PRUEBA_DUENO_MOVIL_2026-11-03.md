@@ -12,12 +12,9 @@ penales, física del balón): varias cifras ya mejoraron, pero hay que volver a 
 - Objetivo del dueño: **60 FPS**; la calidad por defecto debe ser **la más baja**.
 
 ## Rendimiento (ejecutora)
-- R1. Calidad por defecto = MÍNIMA en todas las plataformas (el jugador sube si quiere).
-- R2. Cuello de botella de GPU en móvil: resolución del 3D, sombras, público (miles de figuras), vallas, focos, edificios
-  lejanos. Medir qué pesa en el partido y bajarlo en MÍNIMA hasta 60 FPS en gama media.
+- R2. Cuello de botella de GPU en móvil: MÍNIMA ya es la calidad por defecto y el estadio va más ligero (3-11); falta MEDIR
+  en su teléfono si llega a 60 FPS y, si no, seguir bajando (píxel 50 %, recorte en CPU, impostores).
 - R3. Lo lejano no se carga (streaming por cercanía); edificios y público lejanos como impostores/MultiMesh.
-- R4. Pantallas de carga más largas y más usadas: cargar también lo que vendrá y dejar que el juego se estabilice
-  (compilar shaders, precalentar) antes de mostrar.
 - R5. Menos subprocesos/hilos innecesarios.
 - R6. M-391: código duplicado entre MatchPlayback y MotorJugable.
 - R7. «Modo rendimiento» (la prueba del dispositivo): se buggea y deja volver atrás y crear partida mientras corre.
@@ -26,28 +23,21 @@ penales, física del balón): varias cifras ya mejoraron, pero hay que volver a 
 - P1. El partido «sigue siendo un asco»: jugabilidad, movilidad del jugador horrible.
 - P2. En modo jugar: triángulo invertido de color fuerte sobre el jugador controlado.
 - P3. Límites físicos de las zonas de los árbitros (no se meten donde no deben).
-- P4. Cajas de colisión (hitbox): los personajes atraviesan su propio cuerpo y el suelo.
-- P5. **ARENA DE PRUEBAS**: un banco aislado para probar una cosa sola (solo la cancha + un jugador + el árbitro, sin
-  público ni menú), mirarla desde varios ángulos a la vez y medirla; reutilizable para cualquier pieza del juego
-  (prueba de la pieza sola y de integración).
+- P4. Cajas de colisión (hitbox): los personajes atraviesan su propio cuerpo y el suelo. En la FOTO DE EQUIPO los brazos
+  atraviesan a los compañeros (prioridad, 3-11); revisar también la salida de los equipos y el sorteo.
 
 ## Ciudad y mundo abierto (sesión de ciudad)
 - C1. El prólogo aún no carga en su teléfono.
 - C2. Nombres flotando sobre los lugares, visibles de lejos: deben ir EN el edificio (cartel) y solo de cerca.
-- C3. Minimapa solo al subirse a un vehículo.
-- C4. Botón «E»: solo en PC y solo muy cerca del objeto.
-- C5. Primera persona en móvil: imposible hoy.
-- C6. Movilidad del personaje mala (controles táctiles).
-- C7. «¿Dónde está lo de salir al mundo abierto?»: que se encuentre fácil.
 
 ## Interfaz y contenido (líder)
-- U1. Antes de cada partido, una pantalla completa: **Simular / Jugar / Jugar solo las jugadas importantes**.
-- U2. Muchas partes de la pantalla inicial deben salir a su propia pantalla completa.
-- U3. «¿Empezamos así?» / «Sí, ese soy yo»: debe ser una foto del personaje 3D, no un dibujo que no se le parece.
-- U4. Faltan clubes y las cifras reales de jugadores e información del club.
-- U5. Sonido apagado: más sonidos y más presencia.
-- U6. Partes del juego que existen en el código pero no se encuentran jugando (consejero, cambiar de club, comprar
-  árbitros…): auditar y hacerlas visibles.
+- U4. Clubes y cifras reales: HECHO el 3-11 lo que se podía sin red (375 de 402 clubes con plantel, 402 con su estadio
+  real). Queda: contrastar con una fuente (necesita red) los planteles escritos de memoria, sobre todo los de baja
+  confianza (Marruecos salvo los 4 grandes, Sudáfrica salvo los 4 grandes, Egipto chico, Corea chica, Volendam, Telstar);
+  11 clubes siguen con jugadores generados (Pharco, El Gouna, Baladiyat, Tala'ea, Arab Contractors, ZED, Ansan, Cheonan,
+  Canberra, Geelong, Darwin). Los guiños raros («Kuurtois», «Gllokeres») ya se corrigieron.
+- U6. Partes del juego que existen en el código pero no se encuentran jugando: ya visibles «Mi carrera» (ofertas,
+  dimitir, confianza de la directiva) y «Directorio y consejeros» en el menú; seguir auditando el resto.
 - U7. Revisar si a `main` le falta algo.
 
 ## Preguntas del dueño (respondidas en el chat del 3-11)
