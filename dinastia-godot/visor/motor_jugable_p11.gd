@@ -362,16 +362,13 @@ func _cuerpos() -> void:
 			var b: Node3D = pb["node"]
 			if not is_instance_valid(b):
 				continue
-			var dx := b.position.x - a.position.x
-			var dz := b.position.z - a.position.z
-			var d2 := dx * dx + dz * dz
-			if d2 >= minimo * minimo:
+			var s := CuerposFisica.solape(b.position.x - a.position.x, b.position.z - a.position.z, minimo, float(i * 7 + j), -1.0)   ## M-391
+			if s == Vector3.ZERO:
 				continue
-			var d := sqrt(d2)
-			var nrm := Vector3(dx, 0, dz) / d if d > 0.001 else Vector3(1, 0, 0).rotated(Vector3.UP, float(i * 7 + j))
+			var nrm := Vector3(s.x, 0, s.z)
 			var ma := 0.6 + _fuerza(pa) * 0.8
 			var mb := 0.6 + _fuerza(pb) * 0.8
-			var hueco := minimo - d
+			var hueco := s.y
 			a.position -= nrm * hueco * mb / (ma + mb)
 			b.position += nrm * hueco * ma / (ma + mb)
 			var va: Vector3 = pa["vel"]
