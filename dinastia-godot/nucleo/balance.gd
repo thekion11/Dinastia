@@ -102,6 +102,12 @@ const P_FALTA_LOCAL := 0.120
 const P_FALTA_VISITA := 0.130
 const P_FUERA := 0.022
 
+## LAS TARJETAS DEL PARTIDO SIMULADO (3-11-2026, orden del líder): medido con `pruebas/zz_medir_stats.tscn` (2.880 partidos) daba 2,74 amarillas y 0,22 rojas por partido; el fútbol real
+## ~3,5-4 amarillas y ~0,1-0,2 rojas. `P_AMARILLA` es la tirada por minuto (por el perfil del árbitro y el VAR de la liga: `_incidencias`); la roja llega con la SEGUNDA amarilla con
+## probabilidad `P_ROJA_SEGUNDA` (también en `_tarjeta_arbitral`). Subir las amarillas arrastra a las rojas (más segundas amarillas), por eso baja también la segunda.
+const P_AMARILLA := 0.040
+const P_ROJA_SEGUNDA := 0.09
+
 ## Los mismos cortes de `ataque()` en juego.js (linea ~2139 y ~2144), sobre el
 ## mismo `r` que decide el gol: entre CONVERSION y R_ATAJADA para la atajada,
 ## entre R_ATAJADA y R_POSTE para el palo, el resto para el fallo.

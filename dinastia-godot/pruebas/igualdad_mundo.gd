@@ -7,7 +7,9 @@ extends Node
 ## algunos rasgos se siembran con el nombre del jugador. Ni el balance ni el motor cambian.
 ## 3-11 (calibración de goles, a propósito): `Balance.CONVERSION` 0,30 → 0,28 (el partido simulado daba 2,92 goles/partido; ahora 2,70). Cambian los marcadores y, con ellos, tablas y primas;
 ## era 998022970. `igualdad_motor` no cambia (el motor jugable no usa `CONVERSION`).
-const ESPERADO := "4013618777"
+## 3-11 (cifras del partido, a propósito): amarillas y rojas del partido simulado al fútbol real (`Balance.P_AMARILLA` 0,031 → 0,040 y `P_ROJA_SEGUNDA` 0,18 → 0,09: 2,74 → 3,71 amarillas y
+## 0,22 → 0,15 rojas por partido); más tarjetas consumen más azar y cambian marcadores, plantillas y tablas; era 4013618777. `igualdad_motor` no cambia.
+const ESPERADO := "1935461399"
 
 func _ready() -> void:
 	var m := Mundo.new()
