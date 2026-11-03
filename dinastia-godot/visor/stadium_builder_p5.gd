@@ -101,7 +101,7 @@ static func _tm(que: String) -> void:
 	if CityBuilder._medir_tiempos:
 		var ahora := Time.get_ticks_usec()
 		if que != "":
-			Registro.depurar("TIEMPO", "estadio.%-16s %6.0f ms" % [que, (ahora - _t_tm) / 1000.0])
+			Registro.depurar("TIEMPO", "estadio.%-16s %6.0f ms  mem %6.0f MB" % [que, (ahora - _t_tm) / 1000.0, Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0])
 		_t_tm = ahora
 
 static func _primera_malla(n: Node) -> Mesh:

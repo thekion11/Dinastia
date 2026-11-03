@@ -122,6 +122,7 @@ func _deposito_agua() -> void:
 	l.modulate = b._color_club("c1", Color(0.2, 0.5, 0.3))
 	l.outline_size = 10
 	l.position = p + Vector3(0, 33.0, 0)
+	l.visibility_range_end = 220.0   ## (3-11) el nombre del club en el depósito, solo de cerca
 	b.add_child(l)
 
 func _volcar_lotes() -> void:

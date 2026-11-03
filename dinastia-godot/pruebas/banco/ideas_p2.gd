@@ -265,3 +265,56 @@ func _probar_calidad_minima() -> void:
 		Calidad.guardar()
 	else:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(Calidad.ARCHIVO))
+
+## (3-11, orden 22) La pantalla de antes del partido: jugar, solo las importantes o simular.
+func _probar_eleccion_partido() -> void:
+	_titulo("ANTES DEL PARTIDO: JUGAR, SOLO LAS IMPORTANTES O SIMULAR")
+	var j := EleccionPartido.eleccion("jugar")
+	var i := EleccionPartido.eleccion("importantes")
+	var s := EleccionPartido.eleccion("simular", "vivo")
+	_comprobar(j["modo"] == "completo" and j["control"] and not j["ocasiones"], "jugar = 3D completo manejando a tu equipo")
+	_comprobar(i["modo"] == "destacados" and not i["control"] and i["ocasiones"], "solo las importantes = corre solo y para en tus ocasiones")
+	_comprobar(s["modo"] == "vivo" and not s["control"] and not s["ocasiones"], "simular respeta cómo quieres verlo")
+	_comprobar(EleccionPartido.eleccion("simular", "raro")["modo"] == "resumen", "un modo desconocido simula en resumen")
+	var el := EleccionPartido.new()
+	el.titulo = "A vs B"
+	add_child(el)
+	_comprobar(el.find_child("Opcion_jugar", true, false) != null and el.find_child("Opcion_importantes", true, false) != null and el.find_child("Opcion_simular", true, false) != null, "las tres tarjetas a pantalla completa")
+	el.queue_free()
+
+## (3-11, orden 22) Cambiar de club, dimitir y ver a cuánto estás del despido, desde «Mi carrera».
+func _probar_carrera_salidas() -> void:
+	_titulo("TU PUESTO Y TUS SALIDAS (cambiar de club, dimitir, despido)")
+	var m := Mundo.new()
+	m.generar(["CHI"], 3110)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var antes := Azar._rng.state
+	var a := CarreraSalidas.ofertas(m)
+	var b := CarreraSalidas.ofertas(m)
+	_comprobar(a.size() > 0 and a.size() <= 3 and a == b and Azar._rng.state == antes, "hasta 3 ofertas, estables en la semana y sin gastar el azar del mundo (%d)" % a.size())
+	var ok := true
+	for c: Club in a:
+		ok = ok and c.id != m.mi_club_id and c.rep <= m.roles.prestigio + 18
+	_comprobar(ok, "solo clubes alcanzables con tu prestigio, nunca el tuyo")
+	var viejo := m.mi_club_id
+	_comprobar(m.roles.aceptar_trabajo(a[0].id) == "" and m.mi_club_id == a[0].id and m.mi_club_id != viejo, "firmar con otro club te lleva a él")
+	m.roles.quedar_sin_banco()
+	_comprobar(m.roles.sin_club and not m.roles.ofertas_trabajo().is_empty(), "dimitir te deja sin club y con ofertas para elegir")
+
+## (3-11, orden 22) La grada suena siempre: el fondo en bucle sube con el peligro y con el gol.
+func _probar_grada_fondo() -> void:
+	_titulo("FONDO DE LA GRADA (sonido continuo del estadio)")
+	var w := GradaFondo.onda()
+	_comprobar(w != null and w.loop_mode == AudioStreamWAV.LOOP_FORWARD and w.data.size() > Sonido.FRECUENCIA * 2 * 6, "un bucle de varios segundos")
+	_comprobar(GradaFondo.onda() == w, "se sintetiza una vez y se reutiliza")
+	var peligro := [0.0]
+	var raiz := Node.new()
+	add_child(raiz)
+	var g := GradaFondo.montar(raiz, func() -> float: return peligro[0])
+	var calma := g._objetivo_db()
+	peligro[0] = 1.0
+	var area := g._objetivo_db()
+	g.gol()
+	var tras_gol := g._objetivo_db()
+	_comprobar(area > calma and tras_gol > area, "sube con el balón en el área y más tras un gol (%.0f → %.0f → %.0f dB)" % [calma, area, tras_gol])
+	raiz.queue_free()

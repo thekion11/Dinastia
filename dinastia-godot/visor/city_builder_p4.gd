@@ -65,6 +65,7 @@ func _estadio() -> void:
 		var club_obj: Club = datos.get("club_obj") as Club
 		var semilla := club_obj._hash_id() if club_obj != null else aforo
 		StadiumBuilder.build_pitch(nodo, perfil, club_obj)
+		await _marca("estadio.campo")   ## (3-11, el prólogo no cargaba en el móvil) el estadio ya no es UN solo fotograma de ~3 s
 		## Ocupación media-baja: fuera de partido el estadio no está lleno, pero
 		## con 0,06 la grada salía de un gris uniforme y desde el mapa el
 		## estadio se leía como una pista de hockey. Con 0,35 se distinguen las
@@ -76,6 +77,7 @@ func _estadio() -> void:
 		nodo.set_meta("sin_corte", true)
 		StadiumBuilder.build(nodo, perfil, aforo, 0.85 if bool(datos.get("dia_partido", false)) else 0.35, semilla, club_obj)
 		GaleriaClub.en_ciudad = false
+		await _marca("estadio.grada")
 		BanquilloTour.montar(nodo, club_obj)   ## los suplentes sentados en el banquillo local (P3)
 		huellas.append(Rect2(ESTADIO_EN.x - 62.0, ESTADIO_EN.z - 80.0, 124.0, 160.0))
 		## El vestuario del túnel sobresale por detrás de la tribuna (estadio 2.0).
