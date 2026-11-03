@@ -298,6 +298,7 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 			vh += 9.0
 			destino.x = clampf(apunte_.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error) * (0.7 if tec > 0.75 else 1.3)
 			aviso.emit("💥 ¡Tiro potente!")
+	destino = MotorTiroLimpio.fallar(self as Object as MotorJugable, p, destino, lejos, _presion(p))   ## tiro fallido / bloqueado (TIRO_REAL, ciclo 7)
 	_ctx_golpeo = "tiro"
 	_patear(p, destino, vh, loft, efecto, "patear")
 	tiros[0 if bool(p["es_local"]) else 1] += 1

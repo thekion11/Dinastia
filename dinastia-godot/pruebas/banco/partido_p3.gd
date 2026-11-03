@@ -313,3 +313,40 @@ func _probar_portero_desliza_pendiente() -> void:
 	gk.erase("parada_pend")
 	_comprobar(absf(motor._ia_portero(gk).x) < d1.x, "sin parada pendiente vuelve a su colocación")
 	(r[1] as Node3D).queue_free()
+
+## EL TIRO FALLIDO (03-11-2026, ciclo 7, `MotorTiroLimpio.fallar`, bandera TIRO_REAL): más distancia y presión = más fallos; apagado no cambia el destino.
+func _probar_tiro_fallido() -> void:
+	_titulo("TIRO FALLIDO Y BLOQUEADO (TIRO_REAL)")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var tirador: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))[0]
+	for q: Dictionary in motor.jugadores:
+		if q != tirador:
+			(q["node"] as Node3D).position = Vector3(-33.0, 0, -45.0)
+	var arco := motor._arco_rival(tirador)
+	(tirador["node"] as Node3D).position = Vector3(0, 0, arco.z - signf(arco.z) * 14.0)
+	var destino := Vector3(2.0, 0.8, arco.z)
+	var antes := MotorTiroLimpio._real
+	MotorTiroLimpio._real = false
+	_comprobar(MotorTiroLimpio.fallar(motor, tirador, destino, 14.0, 5.0) == destino, "con la bandera apagada el destino no cambia")
+	MotorTiroLimpio._real = true
+	var cerca := MotorTiroLimpio.probabilidad_fallo(motor, tirador, destino, 8.0, 5.0)
+	var lejos := MotorTiroLimpio.probabilidad_fallo(motor, tirador, destino, 28.0, 5.0)
+	var apretado := MotorTiroLimpio.probabilidad_fallo(motor, tirador, destino, 8.0, 1.0)
+	_comprobar(lejos > cerca + 0.15, "más lejos, más fallos (%.2f a 28 m frente a %.2f a 8 m)" % [lejos, cerca])
+	_comprobar(apretado > cerca + 0.1, "con un rival encima, más fallos (%.2f frente a %.2f)" % [apretado, cerca])
+	## Un defensa en la línea de tiro bloquea.
+	var libre := MotorTiroLimpio.probabilidad_fallo(motor, tirador, destino, 14.0, 5.0)
+	var rival: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))[0]
+	(rival["node"] as Node3D).position = Vector3(1.0, 0, arco.z - signf(arco.z) * 7.0)
+	var tapado := MotorTiroLimpio.probabilidad_fallo(motor, tirador, destino, 14.0, 5.0)
+	_comprobar(tapado > libre + 0.1, "un defensa en la línea sube el fallo (%.2f frente a %.2f)" % [tapado, libre])
+	## Los fallos salen de los palos o por encima: ninguno cae dentro del arco.
+	var dentro := 0
+	for i in 200:
+		var d := MotorTiroLimpio.fallar(motor, tirador, destino, 28.0, 1.0)
+		if d != destino and absf(d.x) < motor.PALO and d.y < motor.LARGUERO:
+			dentro += 1
+	_comprobar(dentro == 0, "un tiro fallido nunca queda dentro del arco (%d de 200)" % dentro)
+	MotorTiroLimpio._real = antes
+	(r[1] as Node3D).queue_free()
