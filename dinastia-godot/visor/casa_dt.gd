@@ -81,6 +81,7 @@ func montar(raiz3d: Node3D, mundo_: Mundo, origen: Vector3) -> void:
 	_sin_desconocidos()
 	_dormitorio()
 	_familia()
+	RoperoCasa.montar(self, mundo.roles.ropero if mundo != null and mundo.roles != null else {}, club)   ## M-188: lo comprado en la tienda deportiva
 
 ## La vivienda de serie trae un cocinero y un paseante inventados: fuera, que
 ## aquí vive tu familia. Se vacían las listas para que nada los mueva.
