@@ -222,7 +222,7 @@ func _pintar_legado() -> void:
 			m2.text = Idiomas.t(motivo)
 			m2.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_legado.add_child(m2)
-		p._boton(Idiomas.t("🎮 Minijuegos: penales, tiros libres y trivia"), func() -> void: SalaMinijuegos.abrir(p, p.mundo), p._lista_legado)
+		p._boton(Idiomas.t("🎮 Minijuegos: penales, tiros libres y trivia"), func() -> void: load("res://ui/componentes/sala_minijuegos.gd").abrir(p, p.mundo), p._lista_legado)
 
 	var escalon := r.siguiente_escalon()
 	if escalon != "":

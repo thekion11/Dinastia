@@ -29,6 +29,7 @@ func _probar() -> void:
 	_copa_simulada()
 	_titulo("CARRERA SIMULADA EN SEMANA DE COPA")
 	_semana_de_copa_simulada(m, club)
+	Partida.borrar("carrera_jugador")   ## (la carrera guardada que deja esta prueba rompía `banco_inicio` en local: «sin guardado, _hay_partida() da false»)
 
 ## Semanas simuladas hasta la de copa; si el sorteo dejó fuera a tu club, se le hace sitio (preparación).
 func _llegar_a_semana_de_copa(m: Mundo, club: Club) -> void:

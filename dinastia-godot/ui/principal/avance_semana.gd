@@ -28,12 +28,12 @@ func _refrescar() -> void:
 	p._panel_obj.refrescar()
 	## Tu personaje 3D, a mano para la banda de cualquier estadio (la vista
 	## del partido no tiene el mundo delante).
-	PersonajeDT.del_usuario = p.mundo.roles.aspecto_3d()
-	PersonajeDT.club_usuario = c.id if c != null else ""
+	UsuarioEn3D.aspecto = p.mundo.roles.aspecto_3d()
+	UsuarioEn3D.club = c.id if c != null else ""
 	## El edificio del club (estadio 2.0) también necesita saber del mundo.
-	EdificioClub.fijar_ctx(p.mundo, c)
-	## Entrenadora: si tu personaje es mujer, toda la interfaz te trata como tal.
-	Genero.fijar(String(PersonajeDT.aspecto(PersonajeDT.del_usuario)["cuerpo"]) == "female")
+	PendienteClub.fijar(p.mundo, c)   ## (se aplica al entrar al edificio: no compilarlo al abrir el menú)
+	## Entrenadora: si tu personaje es mujer, toda la interfaz te trata como tal (el cuerpo por defecto es «male», como `PersonajeDT.BASE`).
+	Genero.fijar(String(UsuarioEn3D.aspecto.get("cuerpo", "male")) == "female")
 	var liga := p._liga_de(c)
 	var acento_antes := p.COL_ACENTO
 	p.COL_ACENTO = p._acento_de(c)

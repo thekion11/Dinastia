@@ -158,7 +158,7 @@ static func _hogar(lista: VBoxContainer, p: Control, mundo: Mundo) -> void:
 	var pend := mundo.redes.pendientes() if mundo.redes != null else 0
 	movil.text = Idiomas.t("📱 Abrir el móvil (Tribuna)") + (Idiomas.t("  · %d comentarios sin responder") % pend if pend > 0 else "")
 	movil.custom_minimum_size = Vector2(0, 34)
-	movil.pressed.connect(func() -> void: Telefono.abrir(p, mundo))
+	movil.pressed.connect(func() -> void: load("res://ui/componentes/telefono.gd").abrir(p, mundo))   ## (por load: el móvil no se compila al abrir el menú)
 	lista.add_child(movil)
 	_opciones(lista, p, "🏠 DÓNDE VIVES (la mudanza cuesta cuatro semanas de la casa nueva)", VidaDT.VIVIENDAS,
 		VidaDT.ORDEN_VIVIENDA, v.vivienda, "vives aquí", func(k: String) -> void:

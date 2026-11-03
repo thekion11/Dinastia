@@ -121,7 +121,7 @@ func ir_a_chip(chip: Dictionary) -> void:
 	var secc := String(chip.get("secc", ""))
 	## «Equipación» es su propia pantalla, entera: el diseñador.
 	if secc == "kits" and p.mundo != null and p.mundo.mi_club() != null:
-		var dz := DisenadorKit.abrir(p, p.mundo)
+		var dz = load("res://ui/componentes/disenador_kit.gd").abrir(p, p.mundo)
 		dz.cerrado.connect(p._refrescar)
 		return
 	if secc != "":

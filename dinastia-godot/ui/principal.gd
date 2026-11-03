@@ -27,7 +27,8 @@ func _al_paso_nuevo() -> void:
 	## Si hay un periódico abierto (de esta semana o de otra que pasó de
 	## corrido), la entrevista espera a que se cierre.
 	for h in get_children():
-		if h is PortadaPeriodico and not h.is_queued_for_deletion():
+		var sc := h.get_script() as Script   ## (por el nombre de la clase: nombrar `PortadaPeriodico` aquí la cargaría al abrir el menú)
+		if sc != null and sc.get_global_name() == &"PortadaPeriodico" and not h.is_queued_for_deletion():
 			if not h.cerrado.is_connected(_al_paso_nuevo):
 				h.cerrado.connect(_al_paso_nuevo)
 			return
@@ -46,6 +47,6 @@ func _portada_nueva() -> void:
 	var nueva := bool(d.get("nueva", false))
 	for x: Dictionary in mundo.prensa.portadas:
 		x.erase("nueva")
-	if nueva and PortadaPeriodico.auto():
-		PortadaPeriodico.mostrar(self, mundo, d)
+	if nueva and load("res://ui/componentes/portada_periodico.gd").auto():
+		load("res://ui/componentes/portada_periodico.gd").mostrar(self, mundo, d)
 	_al_paso_nuevo()

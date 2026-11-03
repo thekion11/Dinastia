@@ -16,7 +16,7 @@ static func lanzar(cuerpos: Array = ["male", "female"]) -> int:
 		return -1
 	var trabajos: Array = []
 	for cuerpo: String in cuerpos:
-		var d := FutbolistaQ.crear(1.9, cuerpo)
+		var d = load("res://visor/futbolista_q.gd").crear(1.9, cuerpo)
 		if d.is_empty():
 			continue
 		var esq: Skeleton3D = d["esqueleto"]

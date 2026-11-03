@@ -59,7 +59,7 @@ static func vibracion(p: Principal) -> void:
 	et.text = Idiomas.t("Vibración del mando")
 	et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila.add_child(et)
-	var nombres: Dictionary = (PanelControles.NOMBRES_AYUDA["vibracion"] as Array)[1]
+	var nombres: Dictionary = (load("res://ui/componentes/panel_controles.gd").NOMBRES_AYUDA["vibracion"] as Array)[1]
 	for modo: String in Mando.AYUDAS["vibracion"]:
 		var clave := modo
 		var b := Button.new()

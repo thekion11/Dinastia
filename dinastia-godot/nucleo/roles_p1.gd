@@ -422,7 +422,7 @@ func aspecto_3d() -> Dictionary:
 	var l := look_efectivo()
 	var a := {}
 	var corte := String(l.get("pelo", ""))
-	if corte in PersonajeDT.CORTES:
+	if corte in load("res://visor/personaje_dt.gd").CORTES:
 		a["pelo"] = corte
 	if l.get("pelo_c") != null:
 		a["color_pelo"] = String(l["pelo_c"]).trim_prefix("#")
@@ -430,7 +430,7 @@ func aspecto_3d() -> Dictionary:
 		a["piel"] = String(l["piel"]).trim_prefix("#")
 	a["barba"] = int(l.get("barba", 0)) > 0
 	var traje := String(l.get("traje", ""))
-	for r: Array in PersonajeDT.ROPAS:
+	for r: Array in load("res://visor/personaje_dt.gd").ROPAS:
 		if String(r[0]) == traje:
 			a["ropa"] = traje
 	if bool(l.get("gafas", false)):

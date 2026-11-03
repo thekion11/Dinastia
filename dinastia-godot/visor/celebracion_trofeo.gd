@@ -52,8 +52,8 @@ func _montar() -> void:
 	_rx = minf(float(g["dx"]) - 6.0, 31.0)   ## la vuelta va por dentro de las vallas, sobre el césped, para que la cámara no las atraviese
 	_rz = minf(float(g["dz"]) - 8.0, 49.0)
 	var l := Puente3D.once(_club.once())
-	var spawner := PlayerSpawner.new()
-	var filas := spawner.spawn_team(_raiz, l["xi"], l["jugadores"], Puente3D.formacion(_club.tactica.formacion), true,
+	var spawner = load("res://visor/player_spawner.gd").new()
+	var filas = spawner.spawn_team(_raiz, l["xi"], l["jugadores"], Puente3D.formacion(_club.tactica.formacion), true,
 		Puente3D.kit(_club), Puente3D.kit_portero(_club))
 	var k := 0
 	for f: Dictionary in filas:
@@ -61,7 +61,7 @@ func _montar() -> void:
 		var d := {"nodo": n, "anim": f["anim"], "base": n.position, "extra": 0.0, "id": String(f["id"]), "i": k,
 			"capi": bool((f["jugador"] as Dictionary).get("capitan", false)) and String(f.get("slot_code", "")) != "POR"}
 		_preparar_clips(d)
-		var rot := n.get_node_or_null(NodePath(PlayerSpawner.ROTULO))
+		var rot = n.get_node_or_null(NodePath(load("res://visor/player_spawner.gd").ROTULO))
 		if rot != null:
 			(rot as Node3D).visible = false   ## sin nombres flotando: es una foto de equipo
 		_jug.append(d)
@@ -89,7 +89,7 @@ func _montar() -> void:
 
 func _preparar_clips(d: Dictionary) -> void:
 	var ap := d["anim"] as AnimationPlayer
-	var esq := FutbolistaQ.esqueleto_de(d["nodo"])
+	var esq = load("res://visor/futbolista_q.gd").esqueleto_de(d["nodo"])
 	for clip: String in ["celebrar_carrera", "puno_al_aire", "aplaudir", "baile"]:
 		load("res://visor/anim_extra.gd").asegurar(ap, esq, clip)
 
