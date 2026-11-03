@@ -13,6 +13,11 @@ func _init(principal: Principal) -> void:
 	p = principal
 
 func _input(evento: InputEvent) -> void:
+	## LOS ATAJOS DE LOS MENÚS (3-11, etapa 5) valen también con un menú del panel lateral abierto (cambiar de menú con una tecla); solo callan ante otra capa encima
+	## (un partido, un diálogo, un minijuego) o escribiendo en un campo.
+	if not _capa_modal_ajena() and AtajosCentrales.manejar(p, evento):
+		p.get_viewport().set_input_as_handled()
+		return
 	## Con una capa modal encima, ni gatillos ni Ctrl+Q/E ni desliz tocan las
 	## pestañas de detrás. No se consume el evento: Q y E sueltas también son
 	## «pestaña» y hay campos de texto en el móvil donde hay que poder teclearlas.
@@ -42,10 +47,6 @@ func _input(evento: InputEvent) -> void:
 		return
 	## Un desliz que empieza sobre el riel es del panel (abrirlo), no del menú.
 	if evento is InputEventScreenDrag and (evento as InputEventScreenDrag).position.x < MenuLateral.ANCHO_RIEL + 30.0:
-		return
-	## Los atajos del menú central (1-9, 0, N, F3, F5; s3).
-	if AtajosCentrales.manejar(p, evento):
-		p.get_viewport().set_input_as_handled()
 		return
 	## Los gatillos cambian de pestaña. Se mira aquí y no en `_unhandled_input`
 	## porque los contenedores de la interfaz se comen los eventos de navegación
@@ -93,9 +94,15 @@ func _input(evento: InputEvent) -> void:
 		_arrastre_y = 0.0
 ## ¿Hay una capa modal tapando el menú? Con el móvil u otro popup abierto, los
 ## gatillos y Ctrl+Q/E no deben cambiar la pestaña escondida detrás.
-func _capa_modal_encima() -> bool:
+## Como `_capa_modal_encima`, pero sin contar el menú del panel lateral (que sí deja pasar los atajos).
+func _capa_modal_ajena() -> bool:
+	return _capa_modal_encima(true)
+
+func _capa_modal_encima(sin_lateral := false) -> bool:
 	for h: Node in p.get_children():
 		if p._hijos_base.has(h.get_instance_id()) or not (h is Control):
+			continue
+		if sin_lateral and p._menu_lateral != null and h == p._menu_lateral.pantalla_abierta:
 			continue
 		var c := h as Control
 		if c.visible and not c.is_queued_for_deletion() \
