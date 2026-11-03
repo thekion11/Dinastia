@@ -85,6 +85,9 @@ func _process(_d: float) -> void:
 		_cartel("c_casa_grande", "Casa Grande", 40.0)
 		_cartel("c_vip", "VIP", 18.0)
 		_cartel("c_autopista", "Autopista", 40.0)
+		var solo := OS.get_environment("SOLO")   ## SOLO=a,b: solo esas tomas
+		if solo != "":
+			_cola = _cola.filter(func(s): return String(s[0]) in solo.split(","))
 		_fase = 1
 	if _fase == 1 and _i < _cola.size():
 		var s: Array = _cola[_i]

@@ -23,4 +23,4 @@ static func poner(b: CityBuilder, pos: Vector3, texto: String, color: Color, tam
 ## Un lugar con nombre: la etiqueta del MAPA (vista aérea, de tamaño fijo) Y su cartel de pared (al pasear, de cerca). Cada una solo se ve donde toca.
 static func con_mapa(b: CityBuilder, pos: Vector3, texto: String, color: Color, tam: int = 28) -> void:
 	b._rotulo(pos, texto, color, tam)
-	poner(b, pos, texto, color, tam, 2.6)   ## un lugar se lee de lejos (el parque, el Karting): letra grande
+	poner(b, pos, texto, color, tam, 4.0)   ## un lugar se lee de lejos (el parque, el Karting): letra grande
