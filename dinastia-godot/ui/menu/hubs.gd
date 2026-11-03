@@ -22,6 +22,10 @@ func abrir(clave: String) -> void:
 	var hub: Dictionary = Principal.HUBS.get(clave, {})
 	if hub.is_empty():
 		return
+	## (3-11, rediseño del menú central) Plantel, Partido, Dinero y Competiciones son menús del panel lateral.
+	if p._menu_lateral != null and not MenusLaterales.menu_por_id(clave).is_empty():
+		p._menu_lateral.abrir_menu(clave, -1)
+		return
 	var capa := PanelContainer.new()
 	capa.set_anchors_preset(Control.PRESET_FULL_RECT)
 	var estilo := StyleBoxFlat.new()

@@ -124,3 +124,9 @@ const MENUS := [
 		{"tab": "Club", "secc": "infra", "label": "Infraestructura", "icono": "🏗️", "desc": "Obras, ciudad deportiva y academia."},
 		{"accion": "ver_estadio", "label": "Verlo en 3D", "icono": "👁️", "desc": "Tu estadio tal y como se juega."}]},
 ]
+
+static func menu_por_id(id: String) -> Dictionary:
+	for m: Dictionary in MENUS:
+		if String(m["id"]) == id:
+			return m
+	return {}

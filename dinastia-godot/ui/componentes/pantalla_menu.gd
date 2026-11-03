@@ -1,9 +1,7 @@
 class_name PantallaMenu
 extends Control
-## UN MENÚ ENTERO, A PANTALLA COMPLETA (29-9-2026, mapa de metas 23). Pedido del
-## usuario: *"las cosas más importantes deben tener su propio menú y no estar
-## incrustadas en un mini menú sobre el menú central"*, con un fondo único
-## animado y pantalla completa, como en Soccer Manager.
+## UN MENÚ ENTERO, A PANTALLA COMPLETA (29-9-2026, mapa de metas 23). Pedido del usuario: *"las cosas más importantes deben
+## tener su propio menú y no estar incrustadas en un mini menú sobre el menú central"*, con fondo animado, como en Soccer Manager.
 ##
 ## DOS ESTADOS, para que no quede todo amontonado a un lado:
 ##   - PORTADA: el título grande y un mosaico de tarjetas, una por submenú, con
@@ -11,10 +9,8 @@ extends Control
 ##   - DETALLE: los submenús como pestañas arriba, el contenido en el centro y
 ##     sin la ficha del jugador (el contenido ocupa todo el ancho).
 ##
-## No hay una segunda copia de cada pantalla: el contenido de verdad -el
-## `TabContainer` de la pantalla principal y la columna de la ficha- se MUDA a
-## esta pantalla mientras está en detalle y vuelve a su sitio al salir. Así
-## todo lo que ya funcionaba (botones, fichas, repintados, traducción) sigue.
+## No hay una segunda copia de cada pantalla: el contenido de verdad -el `TabContainer` de la principal y la columna de la
+## ficha- se MUDA aquí mientras está en detalle y vuelve a su sitio al salir: todo lo que ya funcionaba sigue.
 
 signal cerrada
 
@@ -317,8 +313,7 @@ func _tarjeta(sub: Dictionary, i: int) -> Button:
 
 # ---------------------------------------------------------------- detalle
 
-## Abre el submenú `i`: una sección (misma navegación que los chips de
-## siempre) o una acción (ver el estadio en 3D, la casa, el móvil...).
+## Abre el submenú `i`: una sección (como los chips de siempre) o una acción (estadio 3D, casa, móvil...).
 func elegir(i: int) -> void:
 	## Una pantalla que ya se está cerrando no vuelve a coger el contenido: se
 	## borraría con ella (estrés de menús, 17-10-2026).
@@ -337,7 +332,10 @@ func elegir(i: int) -> void:
 	_activo = i
 	_marcar_pestana()
 	_titulo_sub.text = "%s  %s" % [String(sub.get("icono", "")), Idiomas.t(String(sub["label"]))]
+	var antes: bool = _p._redirigiendo   ## la pestaña se cambia aquí dentro: que no se vuelva a elegir ni abra otro menú
+	_p._redirigiendo = true
 	_p._ir_a_chip(sub)
+	_p._redirigiendo = antes
 	_p._refrescar()
 	if _hueco_contenido != null:
 		_hueco_contenido.modulate.a = 0.35
@@ -394,6 +392,9 @@ func submenu_vecino(paso: int) -> void:
 			break
 	elegir(i)
 
+func menu() -> Dictionary:   ## el menú que enseña (datos de `MenusLaterales`)
+	return _menu
+
 func cerrando() -> bool:
 	return _cerrando
 
@@ -410,10 +411,10 @@ func _mudar(nodo: Control, a: Control) -> void:
 ## Devuelve el contenido a su sitio en la pantalla principal.
 func _devolver_contenido() -> void:
 	for d: Array in _devolver:
+		if not is_instance_valid(d[0]) or not is_instance_valid(d[1]):
+			continue
 		var nodo: Control = d[0]
 		var padre: Node = d[1]
-		if not is_instance_valid(nodo) or not is_instance_valid(padre):
-			continue
 		if nodo.get_parent() != null:
 			nodo.get_parent().remove_child(nodo)
 		padre.add_child(nodo)
