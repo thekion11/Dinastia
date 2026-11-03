@@ -138,3 +138,19 @@ solo en calidad MÍNIMA y sin 3D a la vista: modo de bajo consumo de Godot (`OS.
 cuando algo cambia) y las partículas del fondo en pausa (lo único que deja de verse; en MEDIA o más, todo igual).
 Medido (`pruebas/zz_medir_menu_gpu.tscn`, xvfb + opengl3, pantalla central quieta 3 s): 50 → 1 fotogramas dibujados.
 Al tocar algo repinta al momento. Falta medirlo en el teléfono del dueño.
+## TABLA FINAL EN MÍNIMO (3-11) — para comparar con el teléfono del dueño
+Medido en este servidor SIN GPU (llvmpipe, `opengl3`): las llamadas, triángulos y memoria SÍ se comparan con otras máquinas; los milisegundos NO.
+| | Antes (2-11, MEDIA/MÍNIMO viejo) | Ahora (MÍNIMO) |
+|---|---|---|
+| Partido, cámara de TV: llamadas de dibujo | 794 (MEDIA) / 559 (MÍNIMO) | **336** |
+| Partido, cámara de TV: triángulos | 884 k (MEDIA) / 454 k (MÍNIMO) | **365 k** |
+| Partido: resolución 3D | 100 % (MEDIA) / 70 % | **50 %** (elegible 35-100 % en Ajustes) |
+| Partido: pico de RAM del proceso (`hw_modesto`, software) | 2 366 MB (MEDIA) | 2 362 MB (incluye el renderizador por software) |
+| Prólogo a pie: llamadas / triángulos | 2 170-2 270 / 1,57 M | **2 154 / 1,33 M** (con los rótulos a ≤ 45 m) |
+| Prólogo: memoria estática | 1 026 MB | 1 031 MB |
+| Prólogo: «hasta ver la ciudad» (CPU, sin dibujo) | 7,2 s | **2,9-4,1 s** (según la pasada) |
+| Prólogo: cuadro más largo durante la carga | 3,4 s (un solo cuadro con todo lo diferido) | **0,5 s** |
+| Ciudad entera diferida: hasta verla | 5,7 s | 1,5 s |
+En el teléfono el cuello era la GPU (5 FPS en MEDIA, GPU al 100 %, CPU al 0 %): lo que más ayuda es lo que baja llamadas y relleno de píxeles (entorno tapado −40 % llamadas, 3D al 50 %, LOD de jugadores, pelo simple).
+Pendiente de medir en el teléfono: FPS reales, tiempo hasta ver la ciudad y si el prólogo ya carga (C1).
+A pie de calle (prólogo, MÍNIMO) lo que más llamadas cuesta: MultiMesh −455, Mesh −1 377 (de 2 279), rótulos Label3D −429 antes del tope de 45 m y −311 después.

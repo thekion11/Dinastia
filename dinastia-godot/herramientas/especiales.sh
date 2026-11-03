@@ -143,6 +143,7 @@ pasa "p6_mando_tactil" "godot --headless --path . res://pruebas/ideas/p6_mando_t
 pasa "p6_zonas_vista" "godot --headless --path . res://pruebas/ideas/p6_zonas_vista.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_entorno_oclusion" "godot --headless --path . res://pruebas/ideas/p6_entorno_oclusion.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_peaje" "godot --headless --path . res://pruebas/ideas/p6_peaje.tscn" "(^|[^0-9])0 fallos"
+pasa "p6_ropero" "godot --headless --path . res://pruebas/ideas/p6_ropero.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_metro_publicidad" "godot --headless --path . res://pruebas/ideas/p6_metro_publicidad.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_banderas_grada" "godot --headless --path . res://pruebas/ideas/p6_banderas_grada.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_bus_dt" "godot --headless --path . res://pruebas/ideas/p6_bus_dt.tscn" "(^|[^0-9])0 fallos"
