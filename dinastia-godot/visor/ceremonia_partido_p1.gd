@@ -22,6 +22,7 @@ extends Node
 
 signal terminada
 
+const X_CARRIL := 13.2      ## el carril por el que llegan los jugadores antes de entrar en la fila (x = 11)
 const T_VUELO := 4.5
 const T_SALIDA := 10.0
 const T_FILA := 5.0
@@ -139,10 +140,11 @@ func _preparar_salida() -> void:
 			## Salida escalonada desde la boca del túnel, en dos hileras.
 			## Ya fuera del túnel, en la línea de fondo, en dos hileras (la
 			## salida del túnel se ve en el plano: corto a la cancha).
-			var inicio := Vector3(_x_boca + lado * 0.9, 0, 40.0 + float(i) * 1.4 + (0.0 if eq == 0 else 0.7))
+			var inicio := Vector3(_x_boca - lado * 0.9, 0, 40.0 + float(i) * 1.4 + (0.0 if eq == 0 else 0.7))
 			nd.position = inicio
 			nd.rotation.y = PI
-			_destinos[nd] = [Vector3(11.0, 0, final.z + 6.0 * lado), final]
+			var carril := X_CARRIL + (0.0 if eq == 0 else 1.3)   ## cada equipo por su carril
+			_destinos[nd] = [Vector3(carril, 0, 20.0), Vector3(carril, 0, final.z), final]   ## bajan por un carril exterior (x = 13,2 el local, 14,5 la visita: así las dos hileras no se cruzan al bajar ni al entrar), giran a su altura y entran en la fila: antes cortaban en diagonal y atravesaban a los ya parados
 			_anim_de(p.get("anim"), "caminar")
 			var nino := _nino(club, inicio + Vector3(0.55, 0, -0.35))
 			if not nino.is_empty():
