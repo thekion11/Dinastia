@@ -160,7 +160,7 @@ static func ejecutar(p: Principal, accion: String) -> void:
 		"casa":
 			CargaCiudad.de("CasaEscena3D").abrir(p, p.mundo, p.get("_bandeja"))
 		"movil":
-			Telefono.abrir(p, p.mundo)
+			load("res://ui/componentes/telefono.gd").abrir(p, p.mundo)   ## (por load: el móvil no se compila al abrir el menú)
 		"ver_estadio":
 			p._ver_estadio_con_carga()
 		"ver_ciudad":

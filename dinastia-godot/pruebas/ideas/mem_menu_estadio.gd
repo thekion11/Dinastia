@@ -9,7 +9,7 @@ const GORDOS := ["res://ui/estadio.gd", "res://visor/stadium_builder.gd", "res:/
 	## Los grupos chicos (3-11, 2.ª tanda): partido jugable y sus extras, edificio del club y museo, rueda de prensa 3D, creador de personaje, kits, minijuegos.
 	"res://ui/partido_jugable.gd", "res://visor/edificio_club.gd", "res://visor/galeria_club.gd", "res://visor/recorrido_club.gd", "res://visor/museo_ampliado.gd",
 	"res://ui/principal/rueda_prensa.gd", "res://ui/rueda_prensa_escena3d.gd", "res://ui/componentes/creador_personaje.gd", "res://ui/componentes/sala_minijuegos.gd",
-	"res://ui/componentes/panel_controles.gd", "res://ui/componentes/disenador_kit.gd", "res://visor/repeticion.gd", "res://visor/cine_gol.gd"]
+	"res://ui/componentes/panel_controles.gd", "res://ui/componentes/telefono.gd", "res://ui/componentes/disenador_kit.gd", "res://visor/repeticion.gd", "res://visor/cine_gol.gd"]
 
 func _probar() -> void:
 	_titulo("EL MENÚ NO CARGA EL ESTADIO NI EL PARTIDO 3D")
