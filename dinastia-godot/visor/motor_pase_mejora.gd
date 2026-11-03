@@ -11,6 +11,8 @@ const PREVE_RECEPTOR := 0.5
 const PREVE_RIVAL := 0.3
 const GIRO := 1.2
 static var ACTIVO := OS.get_environment("PMOT_PASE") == "1"
+## Peso del riesgo de corte en la nota del pase (ciclo 8, 03-11; 1,0 = la cuenta de siempre). `PMOT_RIESGO=2` = el receptor tapado pesa el doble.
+static var RIESGO_K := float(OS.get_environment("PMOT_RIESGO")) if OS.get_environment("PMOT_RIESGO") != "" else 1.0
 
 ## [libre (m al rival más cercano del receptor), riesgo de corte] del pase de `p` a `q`.
 static func libre_y_riesgo(m: MotorJugable, p: Dictionary, q: Dictionary, yo: Vector3, qp: Vector3) -> Array:
