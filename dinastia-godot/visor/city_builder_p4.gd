@@ -75,7 +75,9 @@ func _estadio() -> void:
 		## El estadio es lo que se mira en el mapa: sin cortes por distancia
 		## (si no, los jugadores del campo desaparecían desde la vista aérea).
 		nodo.set_meta("sin_corte", true)
-		StadiumBuilder.build(nodo, perfil, aforo, 0.85 if bool(datos.get("dia_partido", false)) else 0.35, semilla, club_obj)
+		StadiumBuilder.ceder = self
+		await StadiumBuilder.build(nodo, perfil, aforo, 0.85 if bool(datos.get("dia_partido", false)) else 0.35, semilla, club_obj)
+		StadiumBuilder.ceder = null
 		GaleriaClub.en_ciudad = false
 		await _marca("estadio.grada")
 		BanquilloTour.montar(nodo, club_obj)   ## los suplentes sentados en el banquillo local (P3)
