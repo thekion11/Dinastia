@@ -22,7 +22,7 @@ extends "res://ui/entrada/idioma_p1.gd"
 ## «abrir» al elegirla y un «aceptar» al confirmar. Antes de seguir pide
 ## CONFIRMACIÓN (`ConfirmacionIdioma`); al confirmar aplica el idioma
 ## (`Idiomas.idioma`) y emite `terminado({"idioma": código})`. Guardarlo en las
-## preferencias es cosa del orquestador (`OrquestadorMundo.aplicar_idioma`).
+## preferencias es cosa del orquestador (`CargaCiudad.de("OrquestadorMundo").aplicar_idioma`).
 ##
 ## CONTRATO de las pantallas de entrada (ver `orquestador.gd`): `terminado`,
 ## `volver` y `configurar(estado)`; se crea con `Script.new()` y se configura

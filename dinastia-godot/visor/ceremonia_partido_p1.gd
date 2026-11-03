@@ -105,8 +105,8 @@ func _nino(club: Club, pos: Vector3) -> Dictionary:
 	FutbolistaQ.terminar(d, true)
 	var c1 := Color(club.color1)
 	var c2 := Color(club.color2)
-	var piel := Color(String(PeatonQ.PIELES[_rng.randi() % PeatonQ.PIELES.size()]))
-	var pelo: Color = PeatonQ.PELOS[_rng.randi() % 4]
+	var piel = Color(String(CargaCiudad.de("PeatonQ").PIELES[_rng.randi() % CargaCiudad.de("PeatonQ").PIELES.size()]))
+	var pelo: Color = CargaCiudad.de("PeatonQ").PELOS[_rng.randi() % 4]
 	var kit := {"dis": "liso", "cols": [c1.to_html(false), c1.to_html(false), c2.to_html(false), "ffffff", "111111"],
 		"trim": 1, "cuello": 1, "manga_corta": true,
 		"pant": {"dis": "liso", "c1": c2.to_html(false), "c2": c2.to_html(false)},
@@ -114,7 +114,7 @@ func _nino(club: Club, pos: Vector3) -> Dictionary:
 		"bot": {"mod": "clasico", "c1": "1c1c1e", "c2": "1c1c1e", "c3": "eeeeee"}, "acc": {}, "civil": true}
 	VestidorQ.vestir_equipacion(d, c1, c2, "liso", piel, pelo, c2, c1, true, kit, 0)
 	PersonajeDT.adelgazar(d, false)
-	var cortes: Array = PeatonQ.CORTES_M if mujer else PeatonQ.CORTES_H
+	var cortes: Array = CargaCiudad.de("PeatonQ").CORTES_M if mujer else CargaCiudad.de("PeatonQ").CORTES_H
 	PeloQ.poner(d, String(cortes[_rng.randi() % cortes.size()]), pelo, false)
 	_anim_de(d.get("anim"), "caminar")
 	return {"nodo": nodo, "anim": d.get("anim")}

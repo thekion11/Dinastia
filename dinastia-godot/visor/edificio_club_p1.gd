@@ -76,7 +76,7 @@ static func contexto_de(mundo: Mundo, c: Club) -> Dictionary:
 		## Por referencia: lo que decores en el 3D se guarda en la partida.
 		"interiores": mundo.interiores}
 
-## Máquinas expendedoras del complejo (posición en el marco del estadio): la E las compra en `VidaCiudad.usar_en_estadio`.
+## Máquinas expendedoras del complejo (posición en el marco del estadio): la E las compra en `CargaCiudad.de("VidaCiudad").usar_en_estadio`.
 static var expendedoras := {}
 
 static func expendedora_cerca(loc: Vector3, radio := 2.2) -> bool:
@@ -207,8 +207,8 @@ static func _pared_galeria(nodo: Node3D, x0: float, z_fin: float, y0: float, anc
 ## Lo que el usuario eligió para esta sala (`InterioresClub`), o vacío.
 static func _gusto(sala: String) -> Dictionary:
 	var it: Variant = ctx.get("interiores")
-	if it is InterioresClub:
-		return (it as InterioresClub).salas.get(sala, {})
+	if is_instance_of(it, CargaCiudad.de("InterioresClub")):
+		return (it).salas.get(sala, {})
 	return {}
 
 static func _suelo_de(sala: String) -> Color:
@@ -383,9 +383,9 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			if tipo == "television":
 				for k in 3:
 					TunelVestuario._caja(nodo, Vector3(caja.position.x + 1.5 + k * 2.2, y0 + 1.5, caja.end.y - 0.5), Vector3(0.4, 0.3, 0.6), oscuro, false)
-			## Una máquina expendedora en el pasillo, pegada a la pared del fondo (cobra de la cartera: `VidaCiudad.usar_en_estadio`).
+			## Una máquina expendedora en el pasillo, pegada a la pared del fondo (cobra de la cartera: `CargaCiudad.de("VidaCiudad").usar_en_estadio`).
 			var pos_mq := Vector3(caja.end.x - 0.6, y0, caja.get_center().y)
-			nodo.add_child(ExpendedoraCiudad.nodo(pos_mq, -PI * 0.5))
+			nodo.add_child(CargaCiudad.de("ExpendedoraCiudad").nodo(pos_mq, -PI * 0.5))
 			expendedoras[Vector3i(roundi(pos_mq.x), 0, roundi(pos_mq.z))] = pos_mq
 		"Museo ampliado":
 			MuseoAmpliado.montar(nodo, caja, y0, c1, c2, ctx)

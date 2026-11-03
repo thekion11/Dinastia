@@ -6,7 +6,7 @@ func _probar_ciudad() -> void:
 	var m := Mundo.new()
 	m.generar(["CHI"], 3131)
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
-	var ci := m.ciudad
+	var ci = m.ciudad
 	var mio := m.mi_club()
 	mio.mover_saldo(200000000)
 
@@ -19,7 +19,7 @@ func _probar_ciudad() -> void:
 	_comprobar(ci.comprar_terreno("centro", mio) != "", "y no dos veces")
 	_comprobar(ci.construir_negocio("comercial", mio) == "", "y ahora si se levanta el centro comercial")
 	_comprobar(ci.tiene_negocio("comercial"), "queda operando")
-	var renta := ci.renta_negocios(mio, 60)
+	var renta = ci.renta_negocios(mio, 60)
 	_linea("  el centro comercial renta %s por semana" % _dinero(renta))
 	_comprobar(renta > 0, "y renta todas las semanas")
 	## Los negocios sin terreno se pueden construir directamente.
@@ -51,7 +51,7 @@ func _probar_ciudad() -> void:
 	_comprobar(is_equal_approx(ci.penalizacion_cesped(), 1.0), "sin penalizacion")
 
 	## VECINOS Y PERMISO. Una gestion al mes.
-	var vec0 := ci.vecinos
+	var vec0 = ci.vecinos
 	_comprobar(ci.gestion_vecinal("entradas", mio) == "", "se puede hacer una gestion vecinal")
 	_comprobar(ci.vecinos > vec0, "repartir entradas mejora la relacion (%d -> %d)" % [vec0, ci.vecinos])
 	_comprobar(ci.gestion_vecinal("obra", mio) != "", "y solo cabe una gestion al mes")
@@ -67,10 +67,10 @@ func _probar_ciudad() -> void:
 	_comprobar(ci.permiso.is_empty(), "a las diez semanas la solicitud ya se resolvio")
 
 	## SEGURIDAD Y SANCIONES.
-	var r0 := ci.riesgo_incidente(60, 0)
+	var r0 = ci.riesgo_incidente(60, 0)
 	ci.mejorar_seguridad("privada", mio)
 	ci.mejorar_seguridad("camaras", mio)
-	var r1 := ci.riesgo_incidente(60, 0)
+	var r1 = ci.riesgo_incidente(60, 0)
 	_linea("  riesgo de incidente: %.1f%% -> %.1f%% tras invertir en seguridad" % [r0 * 100.0, r1 * 100.0])
 	_comprobar(r1 < r0, "pagar seguridad baja el riesgo de incidente")
 	_comprobar(ci.riesgo_incidente(20, 90) > ci.riesgo_incidente(90, 0),
@@ -90,7 +90,7 @@ func _probar_ciudad() -> void:
 	ci.instalar_paneles(mio)
 	_comprobar(ci.ahorro_energetico(mio) > 0, "los paneles ahorran de verdad cada semana")
 	_comprobar(ci.certificar(mio) == "", "con dos niveles de paneles ya se puede certificar")
-	var sub := ci.subvencion_anual(mio)
+	var sub = ci.subvencion_anual(mio)
 	_linea("  subvencion municipal estimada: %s (vecinos %d, negocios %d)" % [
 		_dinero(sub), ci.vecinos, ci.negocios.size()])
 	_comprobar(sub > 0, "y el municipio paga por el deporte de base")

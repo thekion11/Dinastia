@@ -1,6 +1,6 @@
 class_name AutobusModelo
 extends RefCounted
-## EL AUTOBÚS DE LA CIUDAD (modelo procedural; antes `CityBuilder.autobus`, sacado el 28-10-2026 al crecer con la librea «Red»,
+## EL AUTOBÚS DE LA CIUDAD (modelo procedural; antes `CargaCiudad.de("CityBuilder").autobus`, sacado el 28-10-2026 al crecer con la librea «Red»,
 ## los pasos de rueda, el parabrisas inclinado y los espejos). Mira a +Z; las puertas van del lado de la acera (`PasajerosBus.lado_puerta`).
 
 static func crear(col: Color, destino: String = "", numero: String = "") -> Node3D:
@@ -17,7 +17,7 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 	blanco.albedo_color = Color(0.95, 0.95, 0.94)
 	blanco.roughness = 0.5
 	blanco.metallic_specular = 0.3
-	var vidrio := InteriorBus.vidrio()
+	var vidrio = CargaCiudad.de("InteriorBus").vidrio()
 	var goma := StandardMaterial3D.new()
 	goma.albedo_color = Color(0.05, 0.05, 0.055)
 	goma.roughness = 0.9
@@ -55,7 +55,7 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 			led.emission_energy_multiplier = 1.5
 			mi.material_override = led
 		raiz.add_child(mi)
-	## Faros delanteros y luces traseras (rojas, con un resplandor suave: de noche `TraficoCiudad.faros` pone los de verdad).
+	## Faros delanteros y luces traseras (rojas, con un resplandor suave: de noche `CargaCiudad.de("TraficoCiudad").faros` pone los de verdad).
 	var luz_d := StandardMaterial3D.new()
 	luz_d.albedo_color = Color(1.0, 0.97, 0.85)
 	luz_d.emission_enabled = true
@@ -175,7 +175,7 @@ static func crear(col: Color, destino: String = "", numero: String = "") -> Node
 			arco.rotation.z = PI * 0.5
 			arco.position = Vector3(signf(xr) * 1.29, 0.62, zr)
 			raiz.add_child(arco)
-	InteriorBus.montar(raiz)
+	CargaCiudad.de("InteriorBus").montar(raiz)
 	## Un solo foco por autobús (apagado de día): ilumina la calzada delante de los faros.
 	var foco := SpotLight3D.new()
 	foco.name = "FocoFaros"

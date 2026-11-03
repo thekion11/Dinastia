@@ -2,7 +2,7 @@ class_name GenteSentada
 extends Node
 ## GENTE SENTADA EN LOS BANCOS (calidad visual P3, pasada 2, 27-10-2026). Plan §2.2e: *«sentarse
 ## de verdad (butaca, sofá, banquillo)»*. Los bancos de acera (`CiudadExpansion`) y de las paradas de
-## bus (`CityBuilder._paradas_bus`) registran sus asientos en `CityBuilder.asientos`; aquí, cada
+## bus (`CargaCiudad.de("CityBuilder")._paradas_bus`) registran sus asientos en `CargaCiudad.de("CityBuilder").asientos`; aquí, cada
 ## segundo, se sientan hasta `MAXIMO` peatones (`PeatonQ`, con el clip «sentado» y la raíz bajada a
 ## la altura del asiento, como en el metro) en los asientos a menos de `CERCA` metros de ti, y se
 ## van los que quedan a más de `LEJOS`. Qué asiento está ocupado se decide por hash del asiento y
@@ -21,8 +21,8 @@ const ASIENTO_CIUDAD := 0.65
 const PIES_AL_SUELO := 0.04
 const OCUPACION := 0.45   ## fracción de asientos cercanos con alguien
 
-var vida: VidaCiudad
-var expl: ExploradorCiudad
+var vida
+var expl
 var cuerpos: Dictionary = {}   ## índice del asiento → {d: Dictionary (PeatonQ), p: Vector3}
 var _rng := RandomNumberGenerator.new()
 var _t := 0.0
@@ -32,7 +32,7 @@ var _saliendo: Array = []   ## {d, t, fase, a, b}: quien deja el asiento a la vi
 var _llegando: Array = []   ## {i, d, a, b, t, dur, fase}: quien llega andando, se vuelve y se sienta
 var _eventos: Array[Vector3] = []   ## dónde subieron y bajaron pasajeros (a los 3 s de parar el autobús)
 
-static func crear(v: VidaCiudad) -> GenteSentada:
+static func crear(v) -> GenteSentada:
 	var s := GenteSentada.new()
 	s.name = "Sentados"
 	s.vida = v
@@ -53,7 +53,7 @@ func _process(delta: float) -> void:
 
 ## ¿Este asiento tiene a alguien a esta hora? (estable por hash)
 func ocupado(i: int) -> bool:
-	var hora := vida.mundo.reloj.hora() if vida != null and vida.mundo != null and vida.mundo.reloj != null else 12
+	var hora = vida.mundo.reloj.hora() if vida != null and vida.mundo != null and vida.mundo.reloj != null else 12
 	## Cada vez que un autobús para junto al asiento, suben y bajan pasajeros: cambia quién está sentado.
 	var visitas := 0
 	if expl != null and expl.cb != null and i < expl.cb.asientos.size():
@@ -133,16 +133,16 @@ func revisar() -> void:
 
 func _sentar(i: int, asiento: Dictionary, llegando := false) -> void:
 	_rng.seed = 2710 + i
-	var d := PeatonQ.crear(_rng)
+	var d = CargaCiudad.de("PeatonQ").crear(_rng)
 	if d.is_empty():
 		return
 	var n: Node3D = d["nodo"]
 	expl.cb.add_child(n)
-	PeatonQ.terminar(d)
+	CargaCiudad.de("PeatonQ").terminar(d)
 	var p: Vector3 = asiento["p"]
 	n.position = p
 	n.rotation.y = float(asiento["giro"])
-	var cadera := MetroCiudad.altura_cadera(n)
+	var cadera = CargaCiudad.de("MetroCiudad").altura_cadera(n)
 	if cadera > 0.0:
 		n.position.y = p.y + 0.08 - cadera * 0.99 - PIES_AL_SUELO
 	cuerpos[i] = {"d": d, "p": p}
@@ -151,7 +151,7 @@ func _sentar(i: int, asiento: Dictionary, llegando := false) -> void:
 		var fuera := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
 		var a := p + fuera * 3.2
 		var raiz := n.position.y
-		var suelo := ExploradorCiudad.altura_suelo(p.x, p.z)
+		var suelo = CargaCiudad.de("ExploradorCiudad").altura_suelo(p.x, p.z)
 		a.y = suelo
 		n.position = a
 		n.rotation.y = atan2(-fuera.x, -fuera.z)
@@ -210,7 +210,7 @@ func _levantar(i: int) -> void:
 	Mini3D.anim(d, "levantarse", "")
 	var lado := Vector3(cos(n.rotation.y), 0, -sin(n.rotation.y)) * (1.0 if i % 2 == 0 else -1.0)
 	var fuera := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
-	var suelo := ExploradorCiudad.altura_suelo(n.position.x, n.position.z)
+	var suelo = CargaCiudad.de("ExploradorCiudad").altura_suelo(n.position.x, n.position.z)
 	var a := Vector3(n.position.x, suelo, n.position.z)
 	_saliendo.append({"d": d, "t": 0.0, "fase": 0, "a": a, "b": a + fuera * 1.5 + lado * 8.0, "raiz": n.position.y, "suelo": suelo})
 

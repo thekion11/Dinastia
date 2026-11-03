@@ -29,7 +29,7 @@ var _dedos := {}                       ## índice de dedo → nombre del botón
 
 ## Lo añade al partido si el aparato es táctil (o `forzar`). Devuelve el control (null si no hacía falta).
 static func poner(padre: Node) -> ControlesTactiles:
-	if not (forzar or ExploradorCiudad.es_tactil()):
+	if not (forzar or CargaCiudad.de("ExploradorCiudad").es_tactil()):
 		return null
 	var c := ControlesTactiles.new()
 	c.name = "ControlesTactiles"

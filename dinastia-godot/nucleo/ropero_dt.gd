@@ -2,7 +2,7 @@ class_name RoperoDT
 extends RefCounted
 ## EL ROPERO DEL DT (M-188, 3-11-2026; decisión del dueño: inventario que se guarda). Lo que compra en la tienda deportiva de la plaza: camiseta, bufanda y gorra del club,
 ## chándal, botines y balones. Es un diccionario `{id: cantidad}` en `Roles.ropero` (se guarda con la partida). Cada prenda se compra una sola vez; los balones se pueden repetir.
-## No toca el mundo simulado (clubes, ligas, motor): solo la cartera y el ánimo del DT. `PagoCiudad.comprar` lo llena (clave `inv` del artículo).
+## No toca el mundo simulado (clubes, ligas, motor): solo la cartera y el ánimo del DT. `CargaCiudad.de("PagoCiudad").comprar` lo llena (clave `inv` del artículo).
 const CATALOGO := [
 	{"id": "camiseta_club", "nombre": "Camiseta del club", "precio": 40, "animo": 6, "una": true},
 	{"id": "bufanda_club", "nombre": "Bufanda del club", "precio": 15, "animo": 3, "una": true},

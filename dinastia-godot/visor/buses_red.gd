@@ -15,12 +15,12 @@ const CARRIL_AV := 6.0
 const CARRIL_CALLE := 3.5
 const CARRIL_NUCLEO := 4.0
 
-var trafico: TraficoCiudad
+var trafico
 var buses: Array = []   ## {nodo, ida, vuelta, s_vuelta, largo, paradas: {código: s}, rotulo: Label3D, sentido}
 var _t := 0.0
 
-## Los paraderos del mapa (menos los cuatro del anillo, que monta `CityBuilder._paradas_bus`) y su sitio de espera para los pasajeros.
-static func montar_paraderos(ex: CiudadExpansion) -> int:
+## Los paraderos del mapa (menos los cuatro del anillo, que monta `CargaCiudad.de("CityBuilder")._paradas_bus`) y su sitio de espera para los pasajeros.
+static func montar_paraderos(ex) -> int:
 	var n := 0
 	for cod: String in RecorridosMapa.datos()["orden"]:
 		var p := RecorridosMapa.paradero(cod)
@@ -30,7 +30,7 @@ static func montar_paraderos(ex: CiudadExpansion) -> int:
 		raiz.position = p["pos"]
 		raiz.rotation.y = float(p["giro"])
 		ex.b.add_child(raiz)
-		ParaderoRed.montar(raiz, 3.8, 0, String(p["nombre"]), int(p["sector"]), cod)
+		CargaCiudad.de("ParaderoRed").montar(raiz, 3.8, 0, String(p["nombre"]), int(p["sector"]), cod)
 		ex.b.esperas_bus.append((p["pos"] as Vector3) + raiz.basis * Vector3(0, 0.24, 0.3))
 		n += 1
 	return n
@@ -58,7 +58,7 @@ static func _ancho_carril(a: Vector2, c: Vector2) -> float:
 	return CARRIL_NUCLEO if ac == RecorridosMapa.ACERA_NUCLEO else (CARRIL_AV if ac == RecorridosMapa.ACERA_AV else CARRIL_CALLE)
 
 ## Monta los buses de todos los recorridos en `t`. Devuelve cuántos.
-static func montar(ex: CiudadExpansion, t: TraficoCiudad) -> int:
+static func montar(ex, t) -> int:
 	var g := BusesRed.new()
 	g.name = "BusesRed"
 	g.trafico = t
@@ -73,17 +73,17 @@ static func montar(ex: CiudadExpansion, t: TraficoCiudad) -> int:
 		var pv := carril(vuelta["ejes"], 0.3)
 		var pts := pi.duplicate()
 		pts.append_array(pv)
-		var id := t.agregar_ruta(ex.b._redondear(ex._subir_puentes(pts), 12.0))
+		var id = t.agregar_ruta(ex.b._redondear(ex._subir_puentes(pts), 12.0))
 		ex._controles_de(t, id)
 		var paradas := {}
 		var lista: Array = []
 		for cod: String in ida["paraderos"]:
 			paradas[cod] = t.s_mas_cercano(id, RecorridosMapa.paradero(cod)["pos"])
-		var s_vuelta := t.s_mas_cercano(id, pv[0])
+		var s_vuelta = t.s_mas_cercano(id, pv[0])
 		for cod: String in vuelta["paraderos"]:
 			if not paradas.has(cod):
 				paradas[cod] = t.s_mas_cercano(id, RecorridosMapa.paradero(cod)["pos"])
-		var largo := t.largo_de(id)
+		var largo = t.largo_de(id)
 		## El bus para con su PUERTA DELANTERA frente al paradero: el centro del bus queda PUERTA_ADELANTE m antes del punto del paradero.
 		for cod: String in paradas:
 			paradas[cod] = fposmod(float(paradas[cod]) - PUERTA_ADELANTE, largo)
@@ -92,7 +92,7 @@ static func montar(ex: CiudadExpansion, t: TraficoCiudad) -> int:
 		var col := RecorridosRed.color(num)
 		for k in cuantos:
 			var pat := RecorridosRed.patente(num, k + (4 if num.ends_with("e") else 0))   ## el «e» usa otros buses de la flota de su base
-			var nb: Node3D = CityBuilder.autobus(col, "%s · %s" % [num, String(ida["destino"]).to_upper()], num)
+			var nb: Node3D = CargaCiudad.de("CityBuilder").autobus(col, "%s · %s" % [num, String(ida["destino"]).to_upper()], num)
 			nb.name = "Bus_%s_%d" % [num, k]
 			nb.add_to_group("bus_red")
 			nb.set_meta("red_recorrido", num)

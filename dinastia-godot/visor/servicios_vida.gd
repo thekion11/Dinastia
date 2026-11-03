@@ -14,7 +14,7 @@ const ESC := 2.3
 const VISTA_POLICIA := 70.0
 const SEPARA := 9.0                         ## metros entre vehículos parados en el sitio
 
-## uso → [posición de salida]: la registra `CiudadExpansion._instalacion` al montar cada edificio (frente de la manzana, ya en la acera).
+## uso → [posición de salida]: la registra `CargaCiudad.de("CiudadExpansion")._instalacion` al montar cada edificio (frente de la manzana, ya en la acera).
 static var estaciones := {}
 
 static func registrar(uso: String, c: Vector3, w: float, f: float) -> void:
@@ -24,7 +24,7 @@ static func registrar(uso: String, c: Vector3, w: float, f: float) -> void:
 		l.append(p)
 	estaciones[uso] = l
 
-var vida: VidaCiudad
+var vida
 var incidente := {}
 var vehiculos: Array[Dictionary] = []
 var multas_puestas := 0
@@ -35,7 +35,7 @@ var _pos_ant := Vector3.INF
 var _cruce_multado := Vector2i(1 << 20, 0)
 var _cruces: Dictionary = {}
 
-static func crear(v: VidaCiudad) -> ServiciosVida:
+static func crear(v) -> ServiciosVida:
 	var s := ServiciosVida.new()
 	s.name = "ServiciosVida"
 	s.vida = v
@@ -53,7 +53,7 @@ func al_cambiar_hora(hora: int, dia: int) -> void:
 	if d.is_empty():
 		return
 	var pos: Vector3 = d["pos"]
-	var exp: CiudadExpansion = vida.expl.cb.expansion if vida.expl.cb != null else null
+	var exp = vida.expl.cb.expansion if vida.expl.cb != null else null
 	if exp != null and exp.nombre_calle_en(Vector3(pos.x - 11.0, 0, pos.z)) == "":
 		return   ## cae fuera de las calles (el núcleo, el río): hoy no pasa nada
 	iniciar(String(d["tipo"]), pos)
@@ -144,10 +144,10 @@ func _barra(v: Dictionary) -> void:
 
 func _sirena(v: Dictionary, on: bool) -> void:
 	var nodo: Node3D = v["nodo"]
-	if on and not TraficoCiudad.sirenas.has(nodo):
-		TraficoCiudad.sirenas.append(nodo)   ## el tráfico frena ante la sirena
+	if on and not CargaCiudad.de("TraficoCiudad").sirenas.has(nodo):
+		CargaCiudad.de("TraficoCiudad").sirenas.append(nodo)   ## el tráfico frena ante la sirena
 	elif not on:
-		TraficoCiudad.sirenas.erase(nodo)
+		CargaCiudad.de("TraficoCiudad").sirenas.erase(nodo)
 	var p := nodo.get_node_or_null("Sirena") as AudioStreamPlayer3D
 	if not on:
 		if p != null:
@@ -187,7 +187,7 @@ func _poner_patrulla() -> void:
 
 func _exit_tree() -> void:
 	for v in vehiculos:
-		TraficoCiudad.sirenas.erase(v["nodo"])
+		CargaCiudad.de("TraficoCiudad").sirenas.erase(v["nodo"])
 
 func _process(delta: float) -> void:
 	t += delta
@@ -195,7 +195,7 @@ func _process(delta: float) -> void:
 	while i >= 0:
 		if not _mover(vehiculos[i], delta):
 			var n: Node3D = vehiculos[i]["nodo"]
-			TraficoCiudad.sirenas.erase(n)
+			CargaCiudad.de("TraficoCiudad").sirenas.erase(n)
 			if is_instance_valid(n):
 				n.queue_free()
 			vehiculos.remove_at(i)
@@ -214,10 +214,10 @@ func _process(delta: float) -> void:
 		_resolver()
 
 func _hay_presion(pos: Vector3) -> bool:
-	var red: RedesCiudadVista = vida._redes() if vida != null else null
+	var red = vida._redes() if vida != null else null
 	if red == null or red.modelo == null:
 		return true
-	return bool(red.modelo.presion.get(RedesCiudad.sector_en(pos.x, pos.z), true))
+	return bool(red.modelo.presion.get(CargaCiudad.de("RedesCiudad").sector_en(pos.x, pos.z), true))
 
 func _resolver() -> void:
 	var tipo := String(incidente["tipo"])
@@ -312,7 +312,7 @@ func policia_cerca(pos: Vector3) -> bool:
 
 ## Lo llama el explorador cada fotograma que conduce el DT: ¿cruza en rojo (no ámbar) a más de 12 km/h con la policía delante?
 func vigilar(pos: Vector3, vel_ms: float) -> void:
-	var exp: CiudadExpansion = vida.expl.cb.expansion if vida.expl.cb != null else null
+	var exp = vida.expl.cb.expansion if vida.expl.cb != null else null
 	if exp == null or exp.semaforos == null:
 		return
 	if _cruces.is_empty():
