@@ -57,7 +57,7 @@ var asiento_nivel: String = "por_nivel"   ## cómo se reparte el color de las bu
 var vivienda: String = "depto"
 var fps: int = 60
 var contador_fps: bool = false
-var calidad: int = Calidad.ALTO
+var calidad: int = Calidad.MINIMO
 var adaptativa: bool = true
 var motor_ligero: bool = false
 var densidad: String = "media"
@@ -305,9 +305,7 @@ static func _equipo_modesto() -> bool:
 
 ## La calidad que se recomienda para este equipo.
 static func calidad_recomendada() -> int:
-	if CalidadAuto.muy_debil():
-		return Calidad.MINIMO
-	return Calidad.MEDIO if _equipo_modesto() else Calidad.ALTO
+	return Calidad.MINIMO   ## R1 (3-11): la más baja en todas las plataformas; se sube desde aquí o desde Ajustes
 
 # --------------------------------------------------------------- APLICAR
 
@@ -385,7 +383,7 @@ static func aplicar_maquina(config: Dictionary, ruta_prefs: String = PREFS, arbo
 	if ruta_prefs != PREFS:
 		return
 	Engine.max_fps = f
-	Calidad.elegida = clampi(int(d.get("calidad", Calidad.ALTO)), Calidad.MINIMO, Calidad.ULTRA)
+	Calidad.elegida = clampi(int(d.get("calidad", Calidad.MINIMO)), Calidad.MINIMO, Calidad.ULTRA)
 	Calidad.adaptativa = bool(d.get("adaptativa", true))
 	Calidad.motor_ligero = bool(d.get("motor_ligero", false))
 	Calidad.guardar()

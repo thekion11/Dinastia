@@ -115,7 +115,28 @@ static func _primera_malla(n: Node) -> Mesh:
 			return r
 	return null
 
+## R2 (3-11): la butaca de MÍNIMO, tres cajas por grupo de tres (36 triángulos en vez de 84): asiento, un respaldo corrido y la viga.
+static var _butaca_minima: Mesh = null
+static func _malla_butaca_minima() -> Mesh:
+	if _butaca_minima != null:
+		return _butaca_minima
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var asiento := BoxMesh.new()
+	asiento.size = Vector3(1.46, 0.07, 0.40)
+	st.append_from(asiento, 0, Transform3D(Basis(), Vector3(-0.05, 0.40, 0.04)))
+	var respaldo := BoxMesh.new()
+	respaldo.size = Vector3(1.46, 0.38, 0.05)
+	st.append_from(respaldo, 0, Transform3D(Basis(Vector3(1, 0, 0), -0.14), Vector3(-0.05, 0.58, -0.20)))
+	var viga := BoxMesh.new()
+	viga.size = Vector3(1.40, 0.30, 0.06)
+	st.append_from(viga, 0, Transform3D(Basis(), Vector3(-0.05, 0.20, -0.08)))
+	_butaca_minima = st.commit()
+	return _butaca_minima
+
 static func _malla_butaca_lejos() -> Mesh:
+	if Calidad.elegida <= Calidad.MINIMO:
+		return _malla_butaca_minima()
 	if _butaca_lejos != null:
 		return _butaca_lejos
 	var st := SurfaceTool.new()

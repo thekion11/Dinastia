@@ -178,7 +178,7 @@ func _probar_rendimiento_adaptativo() -> void:
 		"con FPS malos sostenidos llega al último escalón (%d) y avisa de cada uno, sin pasarse" % ra.escalon)
 	ra.free()
 	raiz.free()
-	_comprobar(is_equal_approx(get_viewport().scaling_3d_scale, 1.0), "al quitarlo, el 3D del juego vuelve al 100 %")
+	_comprobar(is_equal_approx(get_viewport().scaling_3d_scale, Calidad.escala_3d()), "al quitarlo, el 3D del juego vuelve a la escala de su nivel (%.0f %%)" % (100.0 * Calidad.escala_3d()))
 
 func _ra_nuevo(raiz: Node3D, calentado := false) -> RendimientoAdaptativo:
 	var ra := RendimientoAdaptativo.new()
