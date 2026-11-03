@@ -3,7 +3,9 @@ extends Node
 ## (o cualquier perilla de la economía y del partido simulado) sabiendo si el resultado cambia: si cambia a propósito, se actualiza `ESPERADO` diciéndolo.
 ##   godot --headless --path . res://pruebas/igualdad_mundo.tscn          (ACTUALIZAR=1 imprime la huella)
 ## 2-11 (fusión con main): cambia a propósito, entra el día de partido por aforo y precios reales y los viajes por distancia (`Viajes`).
-const ESPERADO := "172655799"
+## 3-11 (orden 22 U4): cambia a propósito, solo por los NOMBRES de guiño corregidos (vocales y letras dobles, guiones):
+## algunos rasgos se siembran con el nombre del jugador. Ni el balance ni el motor cambian.
+const ESPERADO := "998022970"
 
 func _ready() -> void:
 	var m := Mundo.new()
