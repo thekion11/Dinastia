@@ -10,7 +10,7 @@ func _mover_en_estadio(delta: float) -> void:
 		camara.position = cuerpo.position + Vector3(0, 1.2, 0) + Vector3(sin(rumbo), 0, cos(rumbo)) * 0.1
 		camara.look_at(camara.position + dir * 10.0 + Vector3(0, -1.6, 0), Vector3.UP)
 		return
-	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A) or MandoTactil.corre(self)
 	var objetivo_e := (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
 	_vel_pie = move_toward(_vel_pie, objetivo_e, (7.0 if absf(objetivo_e) > absf(_vel_pie) else 12.0) * delta)
 	vel = _vel_pie
@@ -211,33 +211,21 @@ func _usar() -> void:
 
 func _tactil(capa: CanvasLayer) -> void:
 	var tam := 74.0
-	var base := Control.new()
-	base.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	base.offset_left = 24
-	base.offset_top = -tam * 3.0 - 24
-	## Solo en pantallas táctiles (en PC ocupaba el rincón del GPS).
-	base.visible = es_tactil()
-	capa.add_child(base)
-	for d: Array in [["▲", Vector2(1, 0), Vector2(0, 1)], ["▼", Vector2(1, 2), Vector2(0, -1)],
-			["◀", Vector2(0, 1), Vector2(-1, 0)], ["▶", Vector2(2, 1), Vector2(1, 0)]]:
-		var b := Button.new()
-		b.text = String(d[0])
-		b.position = (d[1] as Vector2) * tam
-		b.size = Vector2(tam - 6, tam - 6)
-		b.add_theme_font_size_override("font_size", 28)
-		b.modulate = Color(1, 1, 1, 0.7)
-		var v: Vector2 = d[2]
-		b.button_down.connect(func() -> void: _tactil_vec += v)
-		b.button_up.connect(func() -> void: _tactil_vec -= v)
-		base.add_child(b)
+	## (3-11) Móvil: palanca analógica a la izquierda y mirar arrastrando a la derecha (`MandoTactil`); en PC no existe.
+	if es_tactil():
+		var mando := MandoTactil.new()
+		mando.explorador = self
+		set_meta(MandoTactil.META, mando)
+		capa.add_child(mando)
 	var der := HBoxContainer.new()
 	der.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	der.offset_left = -260
+	der.offset_left = -340
 	der.offset_top = -100
 	der.offset_right = -24
 	der.offset_bottom = -24
 	der.add_theme_constant_override("separation", 12)
 	capa.add_child(der)
+	der.add_child(MandoTactil.boton_camara(tam, es_tactil()))   ## la cámara: primera / tercera persona
 	var be := Button.new()
 	be.text = "E"
 	be.custom_minimum_size = Vector2(tam, tam)

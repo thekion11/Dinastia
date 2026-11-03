@@ -269,7 +269,7 @@ var _env_guardado := {}
 var _soles_apagados: Array = []
 ## Captura el cursor en primera persona (para mirar con el ratón) y lo suelta fuera.
 func _raton_en_primera_persona() -> void:
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if primera_persona and DisplayServer.get_name() != "headless" else Input.MOUSE_MODE_VISIBLE
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if primera_persona and DisplayServer.get_name() != "headless" and not DisplayServer.is_touchscreen_available() else Input.MOUSE_MODE_VISIBLE
 func _sentado_fp() -> bool:
 	return _sentado
 
