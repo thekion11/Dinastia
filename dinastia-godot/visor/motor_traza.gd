@@ -136,6 +136,8 @@ static func _linea(m: MotorJugable, e: Dictionary) -> void:
 static func _opcion_corta(m: MotorJugable, p: Dictionary, elegido: Dictionary) -> void:
 	var n_largo := MotorPaseMejora.nota_base(m, p, elegido)
 	var mejor := -999.0
+	var max_libre := 0.0
+	var hay := false
 	for q: Dictionary in m.jugadores:
 		if q == p or q == elegido or bool(q["es_local"]) != bool(p["es_local"]) or bool(q["por"]):
 			continue
@@ -143,10 +145,13 @@ static func _opcion_corta(m: MotorJugable, p: Dictionary, elegido: Dictionary) -
 		if d < 4.0 or d > 15.0:
 			continue
 		var r := MotorPaseMejora.nota_base(m, p, q)
+		hay = true
+		max_libre = maxf(max_libre, minf(float(r[1]), 3.0))
 		if float(r[1]) >= 3.0:
 			mejor = maxf(mejor, float(r[0]))
 	if mejor < -900.0:
 		m._contar("traza_largo_sin_corta")
+		m._contar("traza_largo_sc_" + ("nadie" if not hay else ("lt1_5" if max_libre < 1.5 else ("lt2_2" if max_libre < 2.2 else "lt3"))))
 		return
 	var gap := float(n_largo[0]) - mejor
 	m._contar("traza_largo_corta_" + ("mejor" if gap < 0.0 else ("cercana" if gap < 0.7 else ("media" if gap < 2.0 else "lejana"))))
