@@ -20,13 +20,19 @@ static func nodo(pos: Vector3, giro: float) -> Node3D:
 			n.add_child(_caja(Vector3(-0.3 + float(col) * 0.2, 1.65 - float(fila) * 0.27, 0.43), Vector3(0.12, 0.2, 0.08), _mat(colores[(fila + col) % colores.size()], 0.5)))
 	n.add_child(_caja(Vector3(0.36, 1.35, 0.41), Vector3(0.16, 0.5, 0.04), gris))      ## teclado y ranura
 	n.add_child(_caja(Vector3(0.0, 0.3, 0.41), Vector3(0.7, 0.2, 0.04), gris))          ## trampilla de salida
+	FundirPiezas.fundir(n, 150.0, "Fundido")   ## (3-11) 18 cajas → 1 malla con 7 superficies (cada máquina costaba ~18 llamadas de dibujo)
 	return n
 
+static var _mats := {}
+
 static func _mat(c: Color, rug: float) -> StandardMaterial3D:
-	var m := StandardMaterial3D.new()
-	m.albedo_color = c
-	m.roughness = rug
-	return m
+	var k := "%s|%.2f" % [c.to_html(), rug]
+	if not _mats.has(k):   ## compartidos: las cajas del mismo color se funden en una superficie
+		var m := StandardMaterial3D.new()
+		m.albedo_color = c
+		m.roughness = rug
+		_mats[k] = m
+	return _mats[k]
 
 ## En la ciudad: el nodo más su punto `expendedora_<n>` (E).
 static func montar(b: CityBuilder, pos: Vector3, giro: float) -> void:
