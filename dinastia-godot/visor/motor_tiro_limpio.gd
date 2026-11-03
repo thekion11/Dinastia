@@ -88,7 +88,8 @@ static func fallar(m: MotorJugable, p: Dictionary, destino: Vector3, lejos: floa
 	if m._rng.randf() >= probabilidad_fallo(m, p, destino, lejos, presion):
 		return destino
 	var d := destino
-	if m._rng.randf() < 0.6:
+	## Un tiro RASO (LT + B) nunca se va por encima del larguero: si falla, solo hacia los lados (s3p_salida_centros: «el tiro raso no pasa de 0,8 m»).
+	if m._mod_tiro == "raso" or m._rng.randf() < 0.6:
 		var lado := signf(d.x) if absf(d.x) > 0.3 else (1.0 if m._rng.randf() < 0.5 else -1.0)
 		d.x = lado * (m.PALO + m._rng.randf_range(0.4, 3.0))   ## fuera de los palos
 	else:
