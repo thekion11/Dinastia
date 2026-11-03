@@ -154,3 +154,15 @@ Medido en este servidor SIN GPU (llvmpipe, `opengl3`): las llamadas, triángulos
 En el teléfono el cuello era la GPU (5 FPS en MEDIA, GPU al 100 %, CPU al 0 %): lo que más ayuda es lo que baja llamadas y relleno de píxeles (entorno tapado −40 % llamadas, 3D al 50 %, LOD de jugadores, pelo simple).
 Pendiente de medir en el teléfono: FPS reales, tiempo hasta ver la ciudad y si el prólogo ya carga (C1).
 A pie de calle (prólogo, MÍNIMO) lo que más llamadas cuesta: MultiMesh −455, Mesh −1 377 (de 2 279), rótulos Label3D −429 antes del tope de 45 m y −311 después.
+
+## MEMORIA en MÍNIMO (3-11) — qué la ocupa y qué se bajó
+`medir_prologo` (con ventana, opengl3, MÍNIMO) ahora imprime memoria de vídeo (`vram`, texturas, buffers); `TEXTURAS=1` lista las texturas únicas de los materiales con su tamaño y dónde cuelgan; `hw_modesto` da el pico de RAM del proceso.
+- Base antes de empezar el prólogo: 576 MB estáticos (autocargas, datos, mundo generado) y 11 MB de vídeo. Tras cargar el prólogo: +455 MB estáticos y +420 MB de vídeo.
+- **Hallazgo**: UNA textura de 3745×4096 (78 MB de vídeo + su copia en RAM) era el escudo pintado en el círculo central del campo (`StadiumBuilder`): `Escudo.textura(club, alto)` rasteriza a 4× el alto pedido y se pedían 1024.
+  Ahora se piden 256 (1024 px, 114 px/m en un círculo de 9 m), 512 en ULTRA y 128 en MÍNIMO (512 px).
+| | Antes | Ahora (MÍNIMO) |
+|---|---|---|
+| Prólogo: memoria de vídeo | 430 MB (texturas 313) | **275 MB** (texturas 158) |
+| Prólogo: texturas únicas estimadas | 205 MB | 128 MB |
+| Partido (TV): pico de RAM del proceso (`hw_modesto`, software) | 2 362 MB | **2 152 MB** |
+Sin medir / pendiente: el resto de la memoria estática (1,0 GB en el prólogo: mallas del renderizador, nodos, cachés) y el audio sintetizado (`Sonido._sintetizar`, cargado en RAM); lo siguiente más grande por texturas son los dos cuerpos base de 2048² (5 MB cada uno) y ~100 texturas procedurales de 512² (1,3 MB cada una) de gradas, túnel y exterior del estadio.

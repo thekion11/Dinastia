@@ -334,7 +334,9 @@ static func _escudo_cancha(root: Node3D, mi: Club, donde: String) -> void:
 	## Ahora: 1024 px con mipmaps y filtro anisótropo (bordes limpios de cerca y
 	## sin parpadeo de lejos), recibe el sol y las sombras como el césped, y la
 	## pintura deja ver un poco la hierba.
-	var tex := Escudo.textura(mi, 1024)
+	## (3-11, memoria en MÍNIMO) `Escudo.textura(c, alto)` rasteriza a 4× el alto pedido: pedir 1024 daba un PNG de 3745×4096 (78 MB de vídeo, más su copia en RAM) para un círculo
+	## de 9 m. Con 256 salen 1024 px (114 px/m, de sobra a la distancia de cualquier cámara); ULTRA 512 (2048 px); MÍNIMO 128 (512 px).
+	var tex := Escudo.textura(mi, 512 if Calidad.elegida >= Calidad.ULTRA else (128 if Calidad.elegida <= Calidad.MINIMO else 256))
 	if tex == null:
 		return
 	var img := tex.get_image()
