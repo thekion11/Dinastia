@@ -5,7 +5,14 @@ extends Node
 ## 2-11 (fusión con main): cambia a propósito, entra el día de partido por aforo y precios reales y los viajes por distancia (`Viajes`).
 ## 3-11 (orden 22 U4): cambia a propósito, solo por los NOMBRES de guiño corregidos (vocales y letras dobles, guiones):
 ## algunos rasgos se siembran con el nombre del jugador. Ni el balance ni el motor cambian.
-const ESPERADO := "998022970"
+## 3-11 (calibración de goles, a propósito): `Balance.CONVERSION` 0,30 → 0,28 (el partido simulado daba 2,92 goles/partido; ahora 2,70). Cambian los marcadores y, con ellos, tablas y primas;
+## era 998022970. `igualdad_motor` no cambia (el motor jugable no usa `CONVERSION`).
+## 3-11 (cifras del partido, a propósito): amarillas y rojas del partido simulado al fútbol real (`Balance.P_AMARILLA` 0,031 → 0,040 y `P_ROJA_SEGUNDA` 0,18 → 0,09: 2,74 → 3,71 amarillas y
+## 0,22 → 0,15 rojas por partido); más tarjetas consumen más azar y cambian marcadores, plantillas y tablas; era 4013618777. `igualdad_motor` no cambia.
+## 3-11 (penales, a propósito): cada llegada puede acabar en falta dentro del área (`Balance.P_PENAL` 0,03 × perfil del árbitro; 0,00 → 0,31 penales por partido, convertidos al 77 %) y
+## `Balance.CONVERSION` baja de 0,28 a 0,267 para mantener los goles en ~2,7. Cambian marcadores, tablas y primas; era 1935461399. `igualdad_motor` no cambia.
+## 3-11 (ventaja de campo, a propósito): `Balance.BONO_LOCAL`/`BONO_VISITA` 1,08/0,94 → 1,18/0,86 (victoria local 39,8 % → 46,3 %; goles 2,72). Cambian marcadores, tablas y primas; era 1992993185. `igualdad_motor` no cambia.
+const ESPERADO := "4140416706"
 
 func _ready() -> void:
 	var m := Mundo.new()

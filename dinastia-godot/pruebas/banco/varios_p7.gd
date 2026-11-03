@@ -316,8 +316,14 @@ func _probar_entrevistas() -> void:
 			for o: Dictionary in q["opciones"]:
 				todas_con_tono = todas_con_tono and String(o.get("tono", "")) in ["calma", "soberbia", "evasiva"]
 	_comprobar(todas_con_tono, "cada respuesta del guion tiene tono")
+	pr.cola_rueda.clear()   ## (cuántas preguntas «del momento» trae la rueda se sortea: aquí se prueba solo la primera)
 	## Calma y a tiempo: se cierra, sin repregunta, y deja titular pendiente.
-	var r := pr.responder(0, 2.0)
+	## (La opción en calma no siempre es la 0: la pregunta se sortea con `Azar`, así que se busca por su tono.)
+	var calma0 := 0
+	for i in (e["opciones"] as Array).size():
+		if String(e["opciones"][i]["tono"]) == "calma":
+			calma0 = i
+	var r := pr.responder(calma0, 2.0)
 	_comprobar(not bool(r["sigue"]) and not pr.hay_rueda(), "respuesta en calma cierra la rueda")
 	_comprobar(not pr.titular_pendiente.is_empty(), "queda un titular para mañana")
 	var tit := pr.publicar_titular_pendiente()
@@ -325,6 +331,7 @@ func _probar_entrevistas() -> void:
 	_comprobar(pr.memoria.has(String(e["periodista"])), "el periodista recuerda la frase")
 	## Titubeo: repregunta el mismo periodista.
 	pr.abrir_rueda(false, true)
+	pr.cola_rueda.clear()
 	var per := String(pr.entrevista["periodista"])
 	var calma_i := 0
 	for i in (pr.entrevista["opciones"] as Array).size():
@@ -335,7 +342,11 @@ func _probar_entrevistas() -> void:
 	_comprobar(bool(r["titubeo"]) and bool(r["sigue"]), "tardar en contestar trae repregunta")
 	_comprobar(pr.hay_rueda() and String(pr.entrevista["periodista"]) == per and int(pr.entrevista["paso"]) == 1, "repregunta el mismo, una sola vez")
 	_comprobar(pr.funa > funa0 or funa0 >= 98, "el titubeo se nota en la calle")
-	r = pr.responder(1, 1.0)   ## evasiva, pero ya no hay tercera pregunta
+	var evasiva_i := 1
+	for i in (pr.entrevista["opciones"] as Array).size():
+		if String(pr.entrevista["opciones"][i]["tono"]) == "evasiva":
+			evasiva_i = i
+	r = pr.responder(evasiva_i, 1.0)   ## evasiva, pero ya no hay tercera pregunta
 	_comprobar(not bool(r["sigue"]) and not pr.hay_rueda(), "tras la repregunta se cierra aunque evadas")
 	## Memoria: soberbia hoy, derrota la semana que viene -> te la devuelven.
 	pr.memoria.clear()

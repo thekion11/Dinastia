@@ -190,3 +190,34 @@ No se toca: el visor 3D de monumentos del país (animación real). `visual.sh` m
 
 ### Pantalla de país en MÍNIMA: el globo 3D quieto (3-11)
 El único que seguía dibujando (47 fotogramas en 3 s con la pantalla quieta) no eran los monumentos —son siluetas 2D, `PaisMonumento`/`PaisTrazo`— sino el globo (`Globo3D`): un `SubViewport` 3D que se repinta cada fotograma y gira solo a 6°/s (la «deriva lenta» del HTML). En MÍNIMA (`AhorroMenu.fondo_estatico()`) ya no deriva: cuando llega a donde iba pide UNA pasada de dibujo (`UPDATE_ONCE`) y queda quieto; despierta (`UPDATE_ALWAYS`) al arrastrarlo, tocar un país, elegir uno o rotularlo. 47 → 1 fotograma; se ve igual (la captura bajo xvfb muestra el globo sobre Chile con sus pines y rótulos). Con los fondos en movimiento, nada cambia: sigue girando solo. Prueba en `ahorro_menus`: quieto y sin derivar, vuelve a pintar al elegir un país, y con `motor_ligero` apagado vuelve a girar.
+
+## Balance: goles por partido del partido simulado, calibrados (3-11)
+**Qué pasaba.** El partido SIMULADO (`Partido`, el de las ligas de la IA; no el motor 3D) daba ~2,92 goles por partido en la primera temporada (6 semillas × CHI, ARG y ESP, `pruebas/zz_medir_goles.tscn`, ±0,04) y subía a ~3,1 con las temporadas, cuando las ligas reales andan en 2,4-2,9 y la propia prueba de 10 temporadas lo citaba.
+**Quién lo subió** (`git bisect run` sobre la sonda, umbral 2,78): `7e98acbe` (26-10) **2,62**; `7e27a84b` (1-11) **2,60**; `1b176389` (1-11 22:37, idea 378: «la IA también reacciona») **2,92**. Desde el minuto 60 la IA que va perdiendo se vuelca (`ofensivo`) y la débil que gana se cierra (`cerrojo`): una función buena, que se queda. Confirmado quitando solo esa línea en el tip: 2,63. No eran los penales (son del motor 3D), ni la prórroga (solo copas), ni el once nativo (misma salida).
+**El ajuste.** `Balance.CONVERSION` 0,30 → **0,28** (2,70 goles/partido). Se baja la conversión y no las llegadas (`BASE_ATAQUE`): deja intactos remates y xG por llegada (media 0,27), y los goles pasan de ~1,13 veces el xG a ~1,05; los tiros a puerta (gol + atajada, hasta `R_ATAJADA`) no cambian, solo se reparten más atajadas. Lo usa `Previa` (goles esperados = llegadas × `CONVERSION`) y baja en consecuencia.
+**Sellos.** `igualdad_mundo` cambia A PROPÓSITO (998022970 → 4013618777); `igualdad_motor` no cambia (2265294183: el motor jugable no usa `CONVERSION`). Prueba de 10 temporadas (9 corridas): medias de 2,76 a 2,93, 0 fallos; sus techos vuelven a 3,1 (media de la corrida) y 3,4 (una temporada).
+**Para la próxima vez.** Un cambio de táctica de la IA mueve los goles medios: medir con `zz_medir_goles` antes y después (22 s).
+
+## Las cifras del partido simulado contra el fútbol real (3-11, orden del líder)
+`pruebas/zz_medir_stats.tscn` (nueva): juega TODOS los cruces (ida y vuelta) de las primeras de CHI, ARG, ESP y ENG en 3 semillas (2.880 partidos, 15 s) y da por partido goles, amarillas, rojas, penales, córners, faltas, remates, fueras, posesión y el reparto de resultados. Medido con `CONVERSION` 0,28:
+| cifra | medido | fútbol real | |
+|---|---|---|---|
+| goles | 2,68 | 2,4-2,9 | bien |
+| empates | 25,7 % | ~25 % | bien |
+| victoria local | 42,8 % | ~45 % | un poco baja, sin tocar |
+| córners (los dos) | **17,1** | ~10 | **ajustado (este PR)** → 10,3 |
+| faltas | **29,6** | ~22-24 | **ajustado (este PR)** → 22,5 |
+| fueras de juego | **9,0** | ~4 | **ajustado (este PR)** → 3,9 |
+| amarillas | **2,74** | 3,5-4 | pendiente (PR siguiente) |
+| rojas | 0,22 | 0,1-0,2 | pendiente (con las amarillas) |
+| penales | **0,00** → 0,31 (3.ª parte) | 0,25-0,3 | resuelto: falta en el área por llegada, ver abajo |
+| remates (los dos) | 9,6 (5,2 a puerta) | ~25 (~8-9 a puerta) | no se toca: cada llegada es un remate; subirlos obligaría a rehacer el motor de ocasiones |
+| posesión del grande en casa vs chico | 70 % (el chico en casa: 36 % al grande: 64 %) | ~58-65 % | un poco alta; es solo una cifra de pantalla (`clampf(22, 78)`), sin tocar |
+**Este PR:** córners, faltas y fueras de juego son contadores de relleno (se enseñan en las pantallas del partido, no deciden nada): sus probabilidades por minuto pasan a `Balance.P_CORNER_*`, `P_FALTA_*`, `P_FUERA` con los valores del fútbol real, y mantienen la ventaja de campo (el local, más córners y menos faltas). Cambiar el umbral no cambia el número de tiradas: **`igualdad_mundo` (4013618777) e `igualdad_motor` (2265294183) no cambian**.
+
+### Tarjetas del partido simulado (3-11, 2.ª parte)
+`Balance.P_AMARILLA` 0,031 → **0,040** y `Balance.P_ROJA_SEGUNDA` 0,18 → **0,09** (antes literales en `_incidencias` y `_tarjeta_arbitral`). Medido (`zz_medir_stats`, 2.880 partidos): amarillas **2,74 → 3,71** (real 3,5-4) y rojas **0,22 → 0,15** (real 0,1-0,2). Subir las amarillas arrastra a las rojas (más segundas amarillas), por eso baja también la probabilidad de la segunda. Goles 2,65 y empates 25,8 %: sin efecto. **`igualdad_mundo` cambia A PROPÓSITO** (4013618777 → 1935461399: más tarjetas consumen más azar); `igualdad_motor` no (2265294183). Prueba nueva `cifras_partido` (en especiales; 480 partidos, 9 s): fija el rango real de goles, amarillas, rojas, córners, faltas, fueras y empates; con las cifras de antes (17 córners, 2,7 amarillas) habría fallado.
+### Penales del partido simulado (3-11, 3.ª parte)
+Antes solo el árbitro «estricto» los pitaba (0,004 por llegada: 0,00 por partido). Ahora cada llegada puede acabar en falta dentro del área (`Balance.P_PENAL` 0,03, escalada por el perfil del árbitro con `Balance.PENAL_PERFIL`: estricto 1,6, tarjetero 1,2, permisivo 0,6); se pita para el que ataca, se cobra en el acto (`Balance.CONVERSION_PENAL` 0,77) y sustituye al remate de esa llegada (`Partido._penal_en_area`, `partido.gd`; esqueleto en `partido_p1.gd`). Como cada penal convertido suma goles, `Balance.CONVERSION` baja 0,28 → **0,267**. Medido (`zz_medir_stats`, 2.880 partidos): penales **0,00 → 0,31**, goles **2,69** (con 0,28 daría 2,82), córners/faltas/tarjetas sin cambio, remates 9,5. `igualdad_mundo` re-sellada a propósito (1935461399 → 1992993185); `igualdad_motor` no cambia. La prueba `cifras_partido` fija penales 0,2-0,4. Aparte, la prueba de entrevistas (`varios_p7`) dependía de cuántas preguntas «del momento» sorteaba la rueda: ahora vacía esa cola.
+### Ventaja de campo del partido simulado (3-11, 4.ª parte)
+`bono_l`/`bono_v` (1,08/0,94, literales en `Partido.simular_minuto`) pasan a `Balance.BONO_LOCAL`/`BONO_VISITA` = **1,18/0,86** (la suma sigue ~2,04: el total de llegadas no sube). Medido (`zz_medir_stats`, 2.880 partidos): victoria local **39,8 → 46,3 %**, empates 26,6 %, visita 27,1 %, goles 2,72, resto sin cambio (1,12/0,92 daba 40,9 %; 1,20/0,88 daba 45,8 % pero 2,82 goles). `igualdad_mundo` re-sellada a propósito (1992993185 → 4140416706); `igualdad_motor` no cambia. `cifras_partido` fija victoria local 40-52 %.
