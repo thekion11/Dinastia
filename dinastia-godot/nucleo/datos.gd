@@ -136,6 +136,8 @@ func usar_base_real(activar: bool) -> bool:
 	## menú. Si `Reales` aún no se cargó, su índice está vacío y no hay nada que invalidar.
 	if ResourceLoader.has_cached("res://nucleo/reales.gd"):
 		load("res://nucleo/reales.gd").invalidar()
+	if ResourceLoader.has_cached("res://nucleo/sorteo_nombre.gd"):
+		load("res://nucleo/sorteo_nombre.gd").invalidar()   ## las bolsas de nombres resueltas (M-349)
 	if cambio:
 		base_cambiada.emit(real)
 	return real

@@ -131,6 +131,13 @@ Herramientas nuevas en `medir_partido`: `LISTA_MM=1` (mallas/multimallas por nom
 - **M-356 memoria de la ciudad por celdas / streaming**: medido (apartado R3): ocultar lo lejano quita −4 % de llamadas y 0 % de triángulos; crear/destruir manzanas no compensa su riesgo. Descartado; queda `ZonasVista` (apagada, ajuste `zonas_vista`).
 - **M-355 modo batería**: botón «🔋 Modo batería» en Ajustes → Fotogramas: 30 FPS + calidad Mínima de un toque (8 idiomas). Para volver, se eligen otros FPS y otra calidad.
 
+## Menú en MÍNIMA: ahorro de la gráfica (3-11, prueba del dueño: menú a 28 FPS con la GPU al 100 %)
+La pantalla central son ~407 llamadas de dibujo (539 elementos visibles, nada en 3D) y se repintaba ENTERA en cada
+fotograma: las partículas del fondo («motas», el clima elegido) cambian siempre. `AhorroMenu` (ui/componentes/ahorro_menu.gd),
+solo en calidad MÍNIMA y sin 3D a la vista: modo de bajo consumo de Godot (`OS.low_processor_usage_mode`: repinta solo
+cuando algo cambia) y las partículas del fondo en pausa (lo único que deja de verse; en MEDIA o más, todo igual).
+Medido (`pruebas/zz_medir_menu_gpu.tscn`, xvfb + opengl3, pantalla central quieta 3 s): 50 → 1 fotogramas dibujados.
+Al tocar algo repinta al momento. Falta medirlo en el teléfono del dueño.
 ## TABLA FINAL EN MÍNIMO (3-11) — para comparar con el teléfono del dueño
 Medido en este servidor SIN GPU (llvmpipe, `opengl3`): las llamadas, triángulos y memoria SÍ se comparan con otras máquinas; los milisegundos NO.
 | | Antes (2-11, MEDIA/MÍNIMO viejo) | Ahora (MÍNIMO) |

@@ -44,6 +44,9 @@ func _montar_fondo() -> void:
 	p._clima.modo = p._clima_elegido
 	p._clima.interactivo = p._clima_interactivo
 	p.add_child(p._clima)
+	var ahorro := AhorroMenu.new()   ## (3-11) en MÍNIMA, sin 3D a la vista: bajo consumo y partículas en pausa
+	ahorro.principal = p
+	p.add_child(ahorro)
 	p.resized.connect(func() -> void:
 		if p._clima != null:
 			p._clima.ajustar_area(p.size))
