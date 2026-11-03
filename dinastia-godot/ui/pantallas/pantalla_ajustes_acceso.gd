@@ -122,41 +122,59 @@ static func contraste(p: Principal) -> void:
 		p._refrescar())
 	fila.add_child(b)
 
-## REASIGNAR LAS TECLAS DE LA INTERFAZ (s3): aceptar, volver y cambiar de pestaña.
-## Las del partido están en Controles (botón de abajo del todo de esta sección).
+## REASIGNAR LAS TECLAS DE LA INTERFAZ (s3): aceptar, volver, cambiar de pestaña y (3-11, etapa 5) el atajo de CADA menú y submenú del panel lateral.
+## Los atajos no se enseñan en ninguna otra parte: aquí se ven («sin tecla» si no tienen) y se cambian o se quitan. Las del partido están en Controles.
 static func teclas(p: Principal) -> void:
 	var t := p._texto(10, Principal.COL_SUAVE)
 	t.text = Idiomas.t("Teclas de la interfaz (pulsa «Cambiar» y luego la tecla o el botón; Esc cancela)")
-	## Los atajos del menú central (1-9, 0, N, F3, F5) van en la misma lista.
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ajustes.add_child(t)
-	for par: Array in TeclasInterfaz.acciones():
-		var accion := String(par[0])
-		var fila := HBoxContainer.new()
-		fila.add_theme_constant_override("separation", 8)
-		p._lista_ajustes.add_child(fila)
-		var et := p._texto(12, Principal.COL_TEXTO)
-		et.text = Idiomas.t(String(par[1]))
-		et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		fila.add_child(et)
-		var actual := p._texto(12, Principal.COL_SUAVE)
-		actual.text = TeclasInterfaz.texto_de(accion)
-		fila.add_child(actual)
-		var b := Button.new()
-		b.text = Idiomas.t("Cambiar")
-		b.pressed.connect(func() -> void:
-			b.text = Idiomas.t("Pulsa…")
-			var e := TeclasInterfaz.Escucha.new()
-			e.accion = accion
-			e.al_terminar = p._refrescar
-			p.add_child(e))
-		fila.add_child(b)
+	for par: Array in TeclasInterfaz.ACCIONES:
+		_fila_tecla(p, String(par[0]), Idiomas.t(String(par[1])), false)
+	var grupo_visto := ""
+	for par: Array in AtajosCentrales.lista():
+		var grupo := String(par[2])
+		if grupo != grupo_visto:
+			grupo_visto = grupo
+			var cab := p._texto(11, Principal.COL_SUAVE)
+			cab.text = Idiomas.t("Atajos del menú") + " · " + Idiomas.t(grupo) if grupo != "General" else Idiomas.t("Atajos generales")
+			p._lista_ajustes.add_child(cab)
+		_fila_tecla(p, String(par[0]), Idiomas.t(String(par[1])), true)
 	var r := Button.new()
 	r.text = Idiomas.t("Restaurar las teclas de fábrica")
 	r.pressed.connect(func() -> void:
 		TeclasInterfaz.restaurar()
 		p._refrescar())
 	p._lista_ajustes.add_child(r)
+
+## Una fila: nombre, la tecla de ahora, «Cambiar» y (en los atajos) «Quitar».
+static func _fila_tecla(p: Principal, accion: String, nombre: String, con_quitar: bool) -> void:
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	p._lista_ajustes.add_child(fila)
+	var et := p._texto(12, Principal.COL_TEXTO)
+	et.text = nombre
+	et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fila.add_child(et)
+	var actual := p._texto(12, Principal.COL_SUAVE)
+	actual.text = TeclasInterfaz.texto_de(accion)
+	fila.add_child(actual)
+	var b := Button.new()
+	b.text = Idiomas.t("Cambiar")
+	b.pressed.connect(func() -> void:
+		b.text = Idiomas.t("Pulsa…")
+		var e := TeclasInterfaz.Escucha.new()
+		e.accion = accion
+		e.al_terminar = p._refrescar
+		p.add_child(e))
+	fila.add_child(b)
+	if con_quitar:
+		var q := Button.new()
+		q.text = Idiomas.t("Quitar")
+		q.pressed.connect(func() -> void:
+			TeclasInterfaz.quitar(accion)
+			p._refrescar())
+		fila.add_child(q)
 
 ## Subtítulos: no hay voces (se dice), pero los sonidos con significado pueden salir escritos (M-283, `AvisosSonido`).
 static func nota_subtitulos(p: Principal) -> void:
