@@ -7098,7 +7098,10 @@
   "Pagar con tarjeta y PIN": "Pay by card and PIN",
   "Resolución del 3D en Mínima: %d %%": "3D resolution in Minimum: %d %%",
   "🔋 Modo batería (30 FPS y calidad Mínima)": "🔋 Battery mode (30 FPS and Minimum quality)",
-  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "For a phone or a laptop off the charger: less power and less heat. Sets frames to 30 and graphics quality to Minimum."
+  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "For a phone or a laptop off the charger: less power and less heat. Sets frames to 30 and graphics quality to Minimum.",
+  "PEAJE · %d €": "TOLL · %d €",
+  "🛣️ Peaje de %d €: ": "🛣️ Toll of %d €: ",
+  "🛣️ Peaje de %d € (pagado en %s).": "🛣️ Toll of %d € (paid with %s)."
  },
  "pt": {
   "Historia": "História",
@@ -14199,7 +14202,10 @@
   "Pagar con tarjeta y PIN": "Pagar com cartão e PIN",
   "Resolución del 3D en Mínima: %d %%": "Resolução do 3D no Mínimo: %d %%",
   "🔋 Modo batería (30 FPS y calidad Mínima)": "🔋 Modo bateria (30 FPS e qualidade Mínima)",
-  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "Para o celular ou o portátil sem tomada: menos consumo e menos calor. Muda os quadros para 30 e a qualidade gráfica para Mínima."
+  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "Para o celular ou o portátil sem tomada: menos consumo e menos calor. Muda os quadros para 30 e a qualidade gráfica para Mínima.",
+  "PEAJE · %d €": "PEDÁGIO · %d €",
+  "🛣️ Peaje de %d €: ": "🛣️ Pedágio de %d €: ",
+  "🛣️ Peaje de %d € (pagado en %s).": "🛣️ Pedágio de %d € (pago com %s)."
  },
  "patrones": [
   [
@@ -27077,7 +27083,10 @@
   "Pagar con tarjeta y PIN": "Payer par carte et code PIN",
   "Resolución del 3D en Mínima: %d %%": "Résolution de la 3D en Minimum : %d %%",
   "🔋 Modo batería (30 FPS y calidad Mínima)": "🔋 Mode batterie (30 FPS et qualité Minimale)",
-  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "Pour le mobile ou l'ordinateur sur batterie : moins de consommation et de chaleur. Passe les images à 30 et la qualité graphique à Minimale."
+  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "Pour le mobile ou l'ordinateur sur batterie : moins de consommation et de chaleur. Passe les images à 30 et la qualité graphique à Minimale.",
+  "PEAJE · %d €": "PÉAGE · %d €",
+  "🛣️ Peaje de %d €: ": "🛣️ Péage de %d € : ",
+  "🛣️ Peaje de %d € (pagado en %s).": "🛣️ Péage de %d € (payé avec %s)."
  },
  "it": {
   "Historia": "Storia",
@@ -34178,7 +34187,10 @@
   "Pagar con tarjeta y PIN": "Paga con carta e PIN",
   "Resolución del 3D en Mínima: %d %%": "Risoluzione del 3D al Minimo: %d %%",
   "🔋 Modo batería (30 FPS y calidad Mínima)": "🔋 Modalità batteria (30 FPS e qualità Minima)",
-  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "Per il telefono o il portatile a batteria: meno consumo e meno calore. Imposta i fotogrammi a 30 e la qualità grafica a Minima."
+  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "Per il telefono o il portatile a batteria: meno consumo e meno calore. Imposta i fotogrammi a 30 e la qualità grafica a Minima.",
+  "PEAJE · %d €": "PEDAGGIO · %d €",
+  "🛣️ Peaje de %d €: ": "🛣️ Pedaggio di %d €: ",
+  "🛣️ Peaje de %d € (pagado en %s).": "🛣️ Pedaggio di %d € (pagato con %s)."
  },
  "de": {
   "Historia": "Geschichte",
@@ -41279,7 +41291,10 @@
   "Pagar con tarjeta y PIN": "Mit Karte und PIN zahlen",
   "Resolución del 3D en Mínima: %d %%": "3D-Auflösung im Minimum: %d %%",
   "🔋 Modo batería (30 FPS y calidad Mínima)": "🔋 Akkumodus (30 FPS und minimale Qualität)",
-  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "Für Handy oder Laptop ohne Netzteil: weniger Verbrauch und Wärme. Stellt die Bilder auf 30 und die Grafikqualität auf Minimal."
+  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "Für Handy oder Laptop ohne Netzteil: weniger Verbrauch und Wärme. Stellt die Bilder auf 30 und die Grafikqualität auf Minimal.",
+  "PEAJE · %d €": "MAUT · %d €",
+  "🛣️ Peaje de %d €: ": "🛣️ Maut von %d €: ",
+  "🛣️ Peaje de %d € (pagado en %s).": "🛣️ Maut von %d € (bezahlt mit %s)."
  },
  "ca": {
   "Historia": "Història",
@@ -48380,7 +48395,10 @@
   "Pagar con tarjeta y PIN": "Pagar amb targeta i PIN",
   "Resolución del 3D en Mínima: %d %%": "Resolució del 3D en Mínim: %d %%",
   "🔋 Modo batería (30 FPS y calidad Mínima)": "🔋 Mode bateria (30 FPS i qualitat Mínima)",
-  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "Per al mòbil o el portàtil sense endoll: menys consum i menys calor. Canvia els fotogrames a 30 i la qualitat gràfica a Mínima."
+  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "Per al mòbil o el portàtil sense endoll: menys consum i menys calor. Canvia els fotogrames a 30 i la qualitat gràfica a Mínima.",
+  "PEAJE · %d €": "PEATGE · %d €",
+  "🛣️ Peaje de %d €: ": "🛣️ Peatge de %d €: ",
+  "🛣️ Peaje de %d € (pagado en %s).": "🛣️ Peatge de %d € (pagat amb %s)."
  },
  "pl": {
   "Club": "Klub",
@@ -55750,7 +55768,10 @@
   "Pagar con tarjeta y PIN": "Zapłać kartą i PIN-em",
   "Resolución del 3D en Mínima: %d %%": "Rozdzielczość 3D w Minimum: %d %%",
   "🔋 Modo batería (30 FPS y calidad Mínima)": "🔋 Tryb baterii (30 FPS i jakość Minimalna)",
-  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "Dla telefonu lub laptopa bez zasilacza: mniejsze zużycie i mniej ciepła. Ustawia 30 klatek i minimalną jakość grafiki."
+  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "Dla telefonu lub laptopa bez zasilacza: mniejsze zużycie i mniej ciepła. Ustawia 30 klatek i minimalną jakość grafiki.",
+  "PEAJE · %d €": "OPŁATA · %d €",
+  "🛣️ Peaje de %d €: ": "🛣️ Opłata %d €: ",
+  "🛣️ Peaje de %d € (pagado en %s).": "🛣️ Opłata %d € (zapłacono: %s)."
  },
  "tr": {
   "Club": "Kulüp",
@@ -63120,6 +63141,9 @@
   "Pagar con tarjeta y PIN": "Kart ve PIN ile öde",
   "Resolución del 3D en Mínima: %d %%": "Minimum'da 3D çözünürlüğü: %d %%",
   "🔋 Modo batería (30 FPS y calidad Mínima)": "🔋 Pil modu (30 FPS ve Minimum kalite)",
-  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "Telefon veya prizsiz dizüstü için: daha az güç ve ısı. Kareleri 30'a, grafik kalitesini Minimum'a ayarlar."
+  "Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.": "Telefon veya prizsiz dizüstü için: daha az güç ve ısı. Kareleri 30'a, grafik kalitesini Minimum'a ayarlar.",
+  "PEAJE · %d €": "GEÇİŞ ÜCRETİ · %d €",
+  "🛣️ Peaje de %d €: ": "🛣️ %d € geçiş ücreti: ",
+  "🛣️ Peaje de %d € (pagado en %s).": "🛣️ %d € geçiş ücreti (%s ile ödendi)."
  }
 }
