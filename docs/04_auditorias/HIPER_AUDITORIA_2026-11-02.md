@@ -92,4 +92,4 @@ Orden por impacto **(est.)** sobre la meta de 120 FPS en equipos modestos (orden
 | P2 | H-09, H-10, H-11 · funciones > 200 líneas · pruebas sin mención · filas visuales M-xxx | cualquiera |
 
 Nada de esto se ha cambiado en el código: es la lista para la próxima sesión. Lo que se cierre se borra de aquí y de
-`PLAN_DEL_LUNES.md` tras su prueba (banco / especiales / captura con la cámara real).
+`PLAN_GENERAL.md` tras su prueba (banco / especiales / captura con la cámara real).

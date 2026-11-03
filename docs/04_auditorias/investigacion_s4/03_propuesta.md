@@ -1,6 +1,6 @@
 # 03 — Propuesta: qué agregar o mejorar en Dinastía (26-10-2026)
 
-Sale de `01_recursos_libres.md` (recursos libres) y `02_otros_juegos.md` (mercado). Es una **propuesta**: el dueño decide qué entra en `docs/PLAN_DEL_LUNES.md`, y no se cambió código.
+Sale de `01_recursos_libres.md` (recursos libres) y `02_otros_juegos.md` (mercado). Es una **propuesta**: el dueño decide qué entra en `docs/PLAN_GENERAL.md`, y no se cambió código.
 
 **Leyenda**
 - Prioridad: **alta** bloquea el lanzamiento o la primera impresión; **media** se nota en la primera semana; **baja** es pulido.
@@ -82,7 +82,7 @@ Ninguno de los 21 juegos revisados junta gestión de club, vida en una ciudad 3D
 
 ## D. Lo que se recomienda al dueño decidir primero
 
-1. Pasar las filas 1-14 (o las que elija) a `docs/PLAN_DEL_LUNES.md` como tareas.
+1. Pasar las filas 1-14 (o las que elija) a `docs/PLAN_GENERAL.md` como tareas.
 2. **Monetización** (fila 12): pago único.
 3. **Banderas detalladas** (flag-icons, MIT) o seguir con las dibujadas (`visor/banderas.gd` dice «sin símbolos oficiales detallados»).
 4. **LFS** para música con muestras, sonidos fuera de `audio/ui/` y modelos nuevos `.glb`: hoy fallan las subidas desde el contenedor (orden 7).

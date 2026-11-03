@@ -1,7 +1,7 @@
 # Memoria del proyecto Dinastía (para Claude)
 
 Se lee al empezar cada sesión. Corta a propósito (la memoria larga se borró el 24-10; sigue en el historial de git).
-Índice de docs: `docs/00_INDICE.md`. Método: `docs/01_metodo/METODO.md`. TODO lo pendiente: `docs/PLAN_DEL_LUNES.md`.
+Índice de docs: `docs/00_INDICE.md`. Método: `docs/01_metodo/METODO.md`. TODO lo pendiente: `docs/PLAN_GENERAL.md` (antes «plan del lunes»).
 Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completado se BORRA de los documentos (no se tacha).
 
 ## Reglas fijas
@@ -34,8 +34,8 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 - Extensión C++ (`nativo/src` → `bin_nativo/`, 30-10): cada función es copia exacta de su versión GDScript (que se queda como respaldo para Android/Web). Si se toca una de las dos, recompilar (`herramientas/compilar_nativo.sh`) y `pruebas/probar_nativo.tscn` debe dar «FIN. 0 fallos».
 
 ## Órdenes vigentes del dueño (24-10)
-1. Fases 0-6 del guion y decisiones validadas (punto 4 = separar `Principal` en clases + cifras fase 4): en `docs/PLAN_DEL_LUNES.md` §2.
-2. **Lunes (26-10)**: Foundry/Azure, red a Wikimedia, imagen Godot 4.7 para el CI, empezar la fase 0 real (`PLAN_DEL_LUNES.md` §1-2).
+1. Fases 0-6 del guion y decisiones validadas (punto 4 = separar `Principal` en clases + cifras fase 4): en `docs/PLAN_GENERAL.md` §2.
+2. **Lunes (26-10)**: Foundry/Azure, red a Wikimedia, imagen Godot 4.7 para el CI, empezar la fase 0 real (`PLAN_GENERAL.md` §1-2).
    Hasta entonces: solo fallas, pendientes, mejoras y limpieza.
 3. El dueño borra él las 8 ramas viejas (4 originales + 4 `borrar-*`) y la etiqueta `latest`.
 4. Mega auditoría 3 hecha el 24-10 (`docs/04_auditorias/`); método Cascada + V en `docs/01_metodo/`. El 24-10 se borró lo viejo (planes, informes, capturas, vídeos, filas hechas) y el dueño pidió: ideas hechas se revisan «realmente bien», no solo «decentes»; lo no cerrado vive en el plan del lunes.
@@ -45,7 +45,7 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 8. Avisos (26-10): avisar al dueño con un evento de Google Calendar (recordatorio emergente a los 0 min, título «Dinastía: …») cuando haya una pregunta para él, se acaben las tareas, o la otra sesión pida algo o termine. La notificación push no le llega.
 9. Sesiones (26-10): coordina y reparte la sesión «Sesiones abiertas» (session_01Vh9g2WJE8b9XRhTkoJQkJC). La sesión de trabajo principal (session_01MtJBCsXzXVcDXqPJ2uAkHW, rama ccr-76d707c5-dwse9h) evalúa, trabaja, une ramas y pregunta ante dudas; las dos se consultan como balanza. Nadie queda parado: al terminar, auditar o pulir del plan.
 10. (26-10 noche) Calidad visual: ciudad por zonas (detalle, construcción, coherencia) y personajes (anatomía, movimiento natural,
-    más animaciones, profundidad) por PASADAS con captura antes/después y veredicto del dueño; plan en `PLAN_DEL_LUNES.md` §2.2e.
+    más animaciones, profundidad) por PASADAS con captura antes/después y veredicto del dueño; plan en `PLAN_GENERAL.md` §2.2e.
     La sesión líder (session_016d4XAEpSpuptrGg8J4Wene) manda y reparte; la ejecutora (session_01VUJiyfwiM2ZPT2H3gaDzqg) nunca queda parada.
 11. (26-10 noche, decisiones del dueño) Fases 1-3 APROBADAS sin jugarlas aún, dejando constancia de que a futuro hay que pulirlas.
     Fusionar a `main` los PR #12 y #13: concedido («funciona»). Borrar capturas e informes viejos de `dinastia-godot/`: concedido
@@ -86,9 +86,9 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     `CiudadExpansion`, el mapa de transporte), y de ahí salen los paraderos (en las paradas de cada recorrido), su NOMBRE (la calle y
     la que cruza), su código PA####, los números de recorrido (por sector, con su «c») y las patentes de los buses.
 18. (28-10) CIERRE hasta el lunes: tras la limpieza de código y lo pendiente de las sesiones, guardar todo y dejar registros
-    al limpio. Registro: `docs/04_auditorias/CIERRE_2026-10-28.md`; estado para retomar arriba de `PLAN_DEL_LUNES.md`.
+    al limpio. Registro: `docs/04_auditorias/CIERRE_2026-10-28.md`; estado para retomar arriba de `PLAN_GENERAL.md`.
     Correo de contacto del dueño (informe de fallos y privacidad): en `Registro.CONTACTO`.
-19. (2-11) 120 FPS mínimo en equipos modestos (4 GB DDR3, Intel UHD/HD, Pentium): optimizar sin quitar nada sin decirlo y medir con `herramientas/hw_modesto.sh` (llvmpipe: comparar triángulos, llamadas, memoria; NUNCA el tiempo de fotograma `--headless`, tiene un suelo de 6,9 ms). El dueño ordenó (2-11) pasar todo a `main`. Estado y pendientes: `docs/04_auditorias/rendimiento_120fps.md` y arriba de `PLAN_DEL_LUNES.md`.
+19. (2-11) 120 FPS mínimo en equipos modestos (4 GB DDR3, Intel UHD/HD, Pentium): optimizar sin quitar nada sin decirlo y medir con `herramientas/hw_modesto.sh` (llvmpipe: comparar triángulos, llamadas, memoria; NUNCA el tiempo de fotograma `--headless`, tiene un suelo de 6,9 ms). El dueño ordenó (2-11) pasar todo a `main`. Estado y pendientes: `docs/04_auditorias/rendimiento_120fps.md` y arriba de `PLAN_GENERAL.md`.
 19. (01-11) TERCEROS: «agarrar todo» de League-Soccer (Apache 2.0) y soccer5v5 (MIT) y quedarse siempre con lo MEJOR; lo que no
     se use queda de respaldo en `dinastia-godot/terceros/` (Godot no lo importa). Sus datos REALES (jugadores, escudos, uniformes,
     competiciones) NO se copian: solo su DIRECCIÓN en `terceros/league_soccer/DIRECCION_DATOS_REALES.md`, para recrearlos
@@ -112,3 +112,9 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 24. (3-11 noche) La sesión «PES 6» (session_015HWWmjio56aXxN6bLo3tob, rama ccr-454350d9-9chain, PR #128) lleva TODO el partido puro:
     IA de los 22 (F1-F8) y comportamiento físico, trabajando sin parar (medir, investigar, cambiar con bandera, volver a medir);
     bitácora en docs/04_auditorias/IA_PARTIDO_BITACORA.md. La líder la dirige y la empuja cada ~20 min. Su rama no se une sin OK del dueño.
+25. (3-11 noche) REGLAS DEL DUEÑO: (a) «CONVERSACIÓN CASUAL»: con esa palabra clave empieza un modo en que SOLO se habla y se
+    anota (nada de trabajo), y termina cuando el dueño vuelve a decir la misma palabra; las sesiones siguen con lo suyo y el
+    líder solo revisa y les asigna. (b) Toda tarea o idea nueva del dueño se registra en `docs/PLAN_GENERAL.md` (el antiguo
+    plan del lunes, renombrado) y se BORRA de ahí cuando está completa del todo. (c) Ante dudas o dificultades: buscar en
+    internet y en las fuentes que existan del tema antes de decidir.
+

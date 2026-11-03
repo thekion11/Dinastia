@@ -1,7 +1,7 @@
 class_name OrquestadorEntrada
 extends Control
 ## LA ENTRADA AL JUEGO (fase 1 del MEGAPLAN, 25-10-2026). Encadena las etapas 0-6 de
-## `docs/PLAN_DEL_LUNES.md` §2.1 («El flujo»): intro → idioma → menú de modos → país →
+## `docs/PLAN_GENERAL.md` §2.1 («El flujo»): intro → idioma → menú de modos → país →
 ## configuración del club → entrada al campeonato → personaje. Cada etapa es una pantalla
 ## PROPIA a pantalla completa (`ui/entrada/*.gd`, las construyen otros); aquí solo se
 ## decide cuál toca, se funde de una a otra (nunca dos a la vez: la anterior se libera
