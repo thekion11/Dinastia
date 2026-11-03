@@ -450,3 +450,20 @@ func _probar_tiro_limpio() -> void:
 	_comprobar(elegido >= 18, "apunta al palo libre %d de 20 veces" % elegido)
 	_comprobar(MotorTiroLimpio.factor_ganas(1.0) > MotorTiroLimpio.factor_ganas(0.0), "limpia da más ganas que tapada")
 	(r[1] as Node3D).queue_free()
+
+## ANTICIPACIÓN DEL PORTERO (03-11-2026, IA F7, `MotorParada.destino`): con la parada decidida se desliza hacia el cruce, sin pasarse.
+func _probar_portero_anticipa() -> void:
+	_titulo("EL PORTERO SE ANTICIPA AL CRUCE")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var gk: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["por"]))[0]
+	(gk["node"] as Node3D).position = Vector3(0.0, 0, 50.0)
+	_comprobar(MotorParada.destino(motor, gk) == Vector3.INF, "sin parada pendiente no se mueve")
+	gk["parada_pend"] = {"cruce": Vector3(3.0, 1.0, 52.0), "estirada": true, "n": 0}
+	var d := MotorParada.destino(motor, gk)
+	_comprobar(d.x > 0.5 and d.x <= MotorParada.DESLIZA + 0.01, "se desliza hacia el cruce sin pasarse (%.2f m)" % d.x)
+	_comprobar(absf(d.z - 50.0) < 0.01, "no se adelanta ni retrocede")
+	gk["parada_pend"] = {"cruce": Vector3(0.3, 1.0, 52.0), "estirada": false, "n": 0}
+	var d2 := MotorParada.destino(motor, gk)
+	_comprobar(absf(d2.x - 0.3) < 0.01, "si el tiro va casi a él, se pone en la línea (%.2f)" % d2.x)
+	(r[1] as Node3D).queue_free()
