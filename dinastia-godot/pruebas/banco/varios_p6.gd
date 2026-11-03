@@ -297,9 +297,9 @@ func _probar_aspecto_y_audio() -> void:
 ## propio y ningún paso apunta a un control que `Principal` no sepa encontrar.
 func _probar_tutorial() -> void:
 	_titulo("TUTORIAL INMERSIVO")
-	const OBJETIVOS := ["estado", "grupos", "chips", "plantel", "ficha", "dinero", "partido",
+	const OBJETIVOS := ["riel", "estado", "grupos", "chips", "plantel", "ficha", "dinero", "partido",
 		"tabla", "registro", "calendario", "un_dia", "guardar"]
-	const SIMPLES := ["grupo", "ficha", "grupo_club", "plantel", "dinero", "partido"]
+	const SIMPLES := ["menu", "grupo", "ficha", "grupo_club", "plantel", "dinero", "partido"]
 	var modos := ["dt", "dir", "ayudante", "interino", "cantera", "imperio", "jeque", "creador"]
 	## Con una partida de verdad: el mentor tiene que hablar de ELLA.
 	var m := Mundo.new()
@@ -326,7 +326,7 @@ func _probar_tutorial() -> void:
 				misiones += 1
 				if not p.has("hecho"):
 					malos.append("%s: misión sin forma de cumplirse (%s)" % [modo, p["mision"]])
-			if p.has("objetivo") and not OBJETIVOS.has(String(p["objetivo"])):
+			if p.has("objetivo") and not OBJETIVOS.has(String(p["objetivo"])) and not (String(p["objetivo"]).begins_with("menu:") and MenusLaterales.menu_por_id(String(p["objetivo"]).substr(5)).size() > 0):
 				malos.append("%s: objetivo %s" % [modo, p["objetivo"]])
 			for k in ["hecho", "mostrar"]:
 				if not p.has(k):
