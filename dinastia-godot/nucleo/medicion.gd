@@ -15,6 +15,8 @@ const SEG_LARGO_PARTIDO := 180.0
 const SEG_LARGO_OTRAS := 20.0
 ## Se pone a true desde el botón de Ajustes (sin argumentos de línea de comandos; vale en Android).
 static var forzada := false
+## R7 (3-11): la prueba está corriendo y la pantalla está BLOQUEADA (ver `_montar_bloqueo`): nada del menú de detrás responde.
+static var en_curso := false
 static var largo := false
 var _vsync_antes := DisplayServer.VSYNC_ENABLED
 var _max_fps_antes := 0
@@ -30,6 +32,9 @@ var _ult := 0
 var _mundo: Mundo
 var _vista: Node
 var _paso := 0
+var _capa_bloqueo: CanvasLayer
+var _rotulo_bloqueo: Label
+var _salir_con_atras_antes := true
 
 static func pedida() -> bool:
 	var a := OS.get_cmdline_user_args()
@@ -77,6 +82,7 @@ func _ready() -> void:
 		"sí" if Datos.hay_pack_real() else "no", DirAccess.get_files_at("res://recursos/caras_reales_256").size()])
 	_linea("Arranque hasta ver el menú: %d ms" % int(Engine.get_meta("menu_ms", Time.get_ticks_msec())))
 	_linea("Menú completo (partida en curso, perfil, álbum): %d ms" % Time.get_ticks_msec())
+	_montar_bloqueo()
 	_empezar_parte("menú")
 
 func _linea(t: String) -> void:
@@ -85,6 +91,8 @@ func _linea(t: String) -> void:
 
 func _empezar_parte(nombre: String) -> void:
 	_parte = nombre
+	if is_instance_valid(_rotulo_bloqueo):
+		_rotulo_bloqueo.text = "PRUEBA DE RENDIMIENTO EN CURSO · %s\nSe recorre sola: no toques nada. (Unos minutos.)" % nombre
 	_t_parte = 0.0
 	_frames = PackedFloat32Array()
 	_ult = Time.get_ticks_usec()
@@ -185,6 +193,7 @@ func _cerrar_parte() -> void:
 		% [_parte, 1000.0 / media, 1000.0 / maxf(peor_1, 0.001), f[-1], f.size()])
 
 func _terminar() -> void:
+	_quitar_bloqueo()
 	DisplayServer.window_set_vsync_mode(_vsync_antes)
 	Engine.max_fps = _max_fps_antes
 	DirAccess.make_dir_recursive_absolute("user://mediciones")
@@ -237,3 +246,69 @@ func _mostrar_resultado(texto: String, ruta: String) -> void:
 	caja.add_child(b)
 	get_tree().root.add_child(capa)
 	queue_free()
+
+## R7 (3-11, prueba del dueño: «el modo rendimiento se buggea y deja volver atrás y crear partida mientras corre»). Mientras la prueba recorre menú,
+## estadio y ciudad, el menú de detrás SEGUÍA vivo: se podía pulsar «Crear partida», volver atrás o cambiar de pantalla, y la medición se mezclaba
+## con lo que hiciera la persona. Ahora una capa por encima de todo (128) se come el ratón y el dedo; el teclado y el mando se tragan; el botón
+## «atrás» de Android no cierra el juego; y solo queda un botón, «Cancelar la prueba», que restaura todo y vuelve al menú.
+func _montar_bloqueo(forzar := false) -> void:
+	if DisplayServer.get_name() == "headless" and not forzar:   ## sin pantalla no hay nadie que toque nada (`forzar`: la prueba)
+		return
+	en_curso = true
+	_salir_con_atras_antes = get_tree().quit_on_go_back
+	get_tree().quit_on_go_back = false
+	_capa_bloqueo = CanvasLayer.new()
+	_capa_bloqueo.layer = 128
+	_capa_bloqueo.name = "BloqueoMedicion"
+	var fondo := ColorRect.new()
+	fondo.color = Color(0, 0, 0, 0.0)
+	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
+	fondo.mouse_filter = Control.MOUSE_FILTER_STOP
+	_capa_bloqueo.add_child(fondo)
+	var barra := PanelContainer.new()
+	barra.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	barra.mouse_filter = Control.MOUSE_FILTER_STOP
+	_capa_bloqueo.add_child(barra)
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 16)
+	barra.add_child(fila)
+	_rotulo_bloqueo = Label.new()
+	_rotulo_bloqueo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_rotulo_bloqueo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	fila.add_child(_rotulo_bloqueo)
+	var cancelar := Button.new()
+	cancelar.text = "Cancelar la prueba"
+	cancelar.custom_minimum_size = Vector2(0, 56)
+	cancelar.pressed.connect(_cancelar)
+	fila.add_child(cancelar)
+	get_tree().root.add_child(_capa_bloqueo)
+
+func _quitar_bloqueo() -> void:
+	if not en_curso:
+		return
+	en_curso = false
+	get_tree().quit_on_go_back = _salir_con_atras_antes
+	if is_instance_valid(_capa_bloqueo):
+		_capa_bloqueo.queue_free()
+
+## Cancelar a mano: deja la pantalla y los ajustes como estaban y vuelve al menú, sin informe.
+func _cancelar() -> void:
+	_quitar_bloqueo()
+	DisplayServer.window_set_vsync_mode(_vsync_antes)
+	Engine.max_fps = _max_fps_antes
+	forzada = false
+	largo = false
+	if is_instance_valid(_vista):
+		_vista.queue_free()
+	var arbol := get_tree()
+	queue_free()
+	arbol.change_scene_to_file("res://escenas/inicio.tscn")
+
+## El teclado y el mando no llegan al menú de detrás mientras corre la prueba (el ratón y el dedo ya los para la capa).
+func _input(e: InputEvent) -> void:
+	if en_curso and (e is InputEventKey or e is InputEventJoypadButton or e is InputEventJoypadMotion or e is InputEventShortcut):
+		get_viewport().set_input_as_handled()
+
+func _exit_tree() -> void:
+	_quitar_bloqueo()
+
