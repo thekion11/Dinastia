@@ -103,3 +103,6 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 22. (3-11) PRUEBA DEL DUEÑO EN SU TELÉFONO: el plan del lunes queda en PAUSA salvo el código duplicado (M-391) y el
     rendimiento. Manda `docs/04_auditorias/PRUEBA_DUENO_MOVIL_2026-11-03.md` (5 FPS en MEDIA con la GPU al 100 % y la CPU al 0 %;
     objetivo 60 FPS; calidad por defecto la más baja; jugabilidad «muy mala»; ARENA DE PRUEBAS aislada para probar piezas sueltas).
+23. (3-11) El DUEÑO se encarga de la JUGABILIDAD del partido y de los F1-F8 de la pasada final del motor (colocación sin balón,
+    roles dinámicos, desmarques, marcaje, carreras al espacio, línea de tiro, portero, «imagen mental»): las sesiones no los tocan.
+    Sin 4.ª sesión.
