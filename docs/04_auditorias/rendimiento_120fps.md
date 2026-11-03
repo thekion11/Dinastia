@@ -193,3 +193,8 @@ Menú, primer fotograma (editor, sin ventana): **749 → 713 MB (−36 MB)** en 
   (equivale al build del teléfono): **memoria estática del prólogo 972 MB** frente a 1 199 MB con ellos (en el repo de desarrollo, los datos reales cuestan ~225 MB). El teléfono parte, pues, de ~970 MB estáticos en el prólogo, no de 1,2 GB.
 - Autocargas restantes: tras los idiomas bajo demanda quedan ~13 MB sobre el motor (31 → 44 MB al primer fotograma): no hay nada que merezca tocar.
 - Estado de la RAM del juego en MÍNIMO (prólogo, estático + vídeo): ~970 MB + 216 MB de vídeo; el grueso, ~420 MB de compilar GDScript (ver `compilacion_menu_2026-11-03.md`).
+
+## MÍNIMO: el entorno del estadio, llamadas por función (3-11, sesión de ciudad)
+`medir_partido -- minimo` (TV, opengl3 llvmpipe 640x360): base 453 llamadas. Quitando cada función de `EntornoEstadio.montar` (ENT_SIN temporal): suelos 0 · avenida −2 · jardín −2 · árboles y farolas −15 · **aparcamientos −151** · horizonte −8 · banderas 0.
+El impostor del horizonte (un cilindro con la silueta) se probó y se descartó: 492 vs 493 llamadas.
+Palanca aplicada en MÍNIMO: de cada 3 coches aparcados se queda 1 (el azar se gasta igual, el resto del entorno sale idéntico): **453 → 361 llamadas**, 502 → 409 objetos, −18 k triángulos. MEDIO+ igual. Captura TV antes/después: `capturas_ciudad_c2/aparcamiento_minimo_tv_{antes,despues}.jpg` (los aparcamientos no salen en la cámara de TV; los coches faltantes solo se notan desde fuera del estadio).
