@@ -65,7 +65,7 @@ const P_FUSION := 3.0
 ## La cámara se aleja lo justo para que el mando entre entre las dos columnas
 ## de etiquetas (que ocupan ~100 px a cada lado) y no se corte al girarlo.
 func _ajustar_camara() -> void:
-	_vp.size = Vector2i(maxi(int(size.x), 16), maxi(int(size.y), 16))
+	## (El tamaño del visor lo pone su `SubViewportContainer` con `stretch`: ponerlo a mano no valía y escribía un aviso en cada cambio de tamaño.)
 	if _sombra != null:
 		var ancho := minf(size.x * 0.82, 520.0)
 		_sombra.size = Vector2(ancho, ancho * 0.36)

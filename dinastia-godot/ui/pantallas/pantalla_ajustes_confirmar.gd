@@ -85,7 +85,7 @@ func _montar(que: String) -> void:
 	_boton_mantener.pressed.connect(mantener)
 	fila.add_child(_boton_mantener)
 	## Con mando o teclado se contesta sin buscar nada: A/Enter mantiene, B/Esc deshace.
-	_boton_mantener.grab_focus.call_deferred()
+	FocoSeguro.dar(_boton_mantener)
 
 func _process(delta: float) -> void:
 	_queda -= delta

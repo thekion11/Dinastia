@@ -77,7 +77,7 @@ func _montar(p: Principal, suma: Dictionary, titular: Dictionary, medio: String,
 	CuadroDialogo.respuesta(b)
 	b.pressed.connect(cerrar)
 	v.add_child(b)
-	b.grab_focus.call_deferred()
+	FocoSeguro.dar(b)
 	Animar.aparecer(caja, 0.05, 0.3)
 
 func _unhandled_input(ev: InputEvent) -> void:
