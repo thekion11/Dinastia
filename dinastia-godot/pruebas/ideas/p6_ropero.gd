@@ -36,3 +36,19 @@ func _probar() -> void:
 	var dia := CarteraDT.clave_dia(m.anio, m.semana, m.reloj.dia)
 	var res: Dictionary = m.roles.cartera.cobrar(m.roles, 12, "Gorra del club", dia)
 	_comprobar(String(res["error"]) == "" and m.roles.cartera.efectivo == antes - 12, "la compra se cobra de la cartera")
+
+	## Partidas viejas: sin el campo «ropero» cargan con el ropero vacío.
+	var d_viejo: Dictionary = m.roles.a_dic()
+	d_viejo.erase("ropero")
+	m2.roles.desde_dic(d_viejo)
+	_comprobar(m2.roles.ropero.is_empty(), "una partida vieja (sin «ropero») carga con el ropero vacío")
+	## Que se vea: la ropa del personaje y el rincón de la casa.
+	var asp := RoperoDT.aplicar({"ropa": "traje", "corbata": true}, "camiseta_club", Color("1f5fa8"), Color("ffffff"))
+	_comprobar(String(asp["ropa"]) == "polo" and String(asp["c_ropa"]) == "1f5fa8" and not bool(asp["corbata"]), "la camiseta del club viste al personaje con los colores del club")
+	_comprobar(bool(RoperoDT.aplicar({}, "gorra_club", Color.RED, Color.WHITE)["gorra"]) and bool(RoperoDT.aplicar({}, "bufanda_club", Color.RED, Color.WHITE)["bufanda"]), "la gorra y la bufanda se ponen")
+	_comprobar(RoperoDT.aplicar({}, "balon", Color.RED, Color.WHITE).is_empty() and RoperoDT.aplicar({}, "botines", Color.RED, Color.WHITE).is_empty(), "balones y botines no son prendas del aspecto (se ven en casa)")
+	var casa := Node3D.new()
+	add_child(casa)
+	_comprobar(RoperoCasa.montar(casa, {}, null) == 0 and casa.get_child_count() == 0, "sin compras, la casa queda igual")
+	var n := RoperoCasa.montar(casa, {"balon": 2, "balon_playa": 1, "botines": 1, "camiseta_club": 1, "bufanda_club": 1}, null)
+	_comprobar(n == 6 and casa.get_child_count() > 10, "con compras, la casa muestra balones, botines, camiseta y bufanda (%d piezas)" % n)

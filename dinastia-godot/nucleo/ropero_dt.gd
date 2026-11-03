@@ -43,6 +43,29 @@ static func surtido(ropero: Dictionary) -> Array:
 		s.append(it)
 	return s
 
+## Lo que se PONE el personaje: el aspecto (`PersonajeDT`) con esa prenda, en los colores del club. Vacío si no es una prenda que se vista (botines y balones se ven en casa).
+static func aplicar(asp: Dictionary, id: String, c1: Color, c2: Color) -> Dictionary:
+	var a := asp.duplicate()
+	match id:
+		"camiseta_club":
+			a["ropa"] = "polo"
+			a["c_ropa"] = c1.to_html(false)
+			a["c_ropa2"] = c2.to_html(false)
+			a["manga_corta"] = true
+			a["corbata"] = false
+		"chandal":
+			a["ropa"] = "chandal"
+			a["c_ropa"] = c1.to_html(false)
+			a["c_ropa2"] = c2.to_html(false)
+			a["corbata"] = false
+		"bufanda_club":
+			a["bufanda"] = true
+		"gorra_club":
+			a["gorra"] = true
+		_:
+			return {}
+	return a
+
 ## «Tu ropero: camiseta del club, balón ×2…» (vacío si no hay nada).
 static func resumen(ropero: Dictionary) -> String:
 	var partes: PackedStringArray = []
