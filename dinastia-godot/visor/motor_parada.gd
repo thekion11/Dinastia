@@ -37,3 +37,19 @@ static func revisar(m: MotorJugable, gk: Dictionary) -> bool:
 		m._parada(gk, pp["cruce"], bool(pp["estirada"]))
 		return true
 	return false
+
+## ANTICIPACIÓN (03-11-2026, IA F7, idea de League-Soccer `goalie_default.cpp::CalculateIfBallIsBoundForGoal`): con la parada ya decidida y
+## el balón aún en camino, el portero NO se queda clavado: se desliza hacia donde va a cruzar el tiro (hasta `DESLIZA` m, más cuanto
+## mejores reflejos tenga) y llega a la parada ya en su sitio. Devuelve el punto al que ir, o Vector3.INF si no hay parada pendiente.
+## `SIN_ANTICIPA=1` = quieto, como antes.
+const DESLIZA := 1.2
+static var _sin_anticipa := OS.has_environment("SIN_ANTICIPA")
+
+static func destino(m: MotorJugable, gk: Dictionary) -> Vector3:
+	if _sin_anticipa or not gk.has("parada_pend"):
+		return Vector3.INF
+	var cruce: Vector3 = (gk["parada_pend"] as Dictionary)["cruce"]
+	var yo := m.pos(gk)
+	var tope := DESLIZA * (0.6 + 0.4 * float(gk["attr"]["ref"]))
+	gk["correr"] = true
+	return Vector3(yo.x + clampf(cruce.x - yo.x, -tope, tope), 0, yo.z)
