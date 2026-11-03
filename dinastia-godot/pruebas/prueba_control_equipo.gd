@@ -281,12 +281,13 @@ func _paso_fc() -> void:
 			_motor.call("_filigrana", u, "elastica", 1.0)
 			_ok(_motor.poseedor != u, "FC: la elástica (5★) le queda grande a un jugador de 2★: pierde el balón")
 			## L3 + R3 a la vez: bloqueo de jugador.
-			_avanzar(30)
-			_balon_a_usuario(0.0, 0.0)
-			_avanzar(3)
+			_avanzar(33)
+			_balon_a_usuario(0.0, 0.0)   ## justo antes de pulsar: en juego y con el balón (antes había 3 pasos libres en medio)
 			_pulsar("jugar_pedir", true)
 			_pulsar("jugar_sombrero", true)
-			_avanzar(1)
+			## 3 fotogramas y no 1 (3-11): el motor lee los botones en el paso de física, y en un solo fotograma
+			## a veces no corre ninguno (fallaba de vez en cuando en el CI). El bloqueo cambia al PULSAR, no al mantener.
+			_avanzar(3)
 		26:
 			_pulsar("jugar_pedir", false)
 			_pulsar("jugar_sombrero", false)

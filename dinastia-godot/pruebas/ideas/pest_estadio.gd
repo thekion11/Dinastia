@@ -109,6 +109,21 @@ func _visitantes(raiz: Node3D) -> void:
 	_comprobar(mal_puestos == 0, "los visitantes están en el fondo −Z (%d fuera)" % mal_puestos)
 
 func _focos(raiz: Node3D) -> void:
+	## Desde el 27-10 las torres son el modelo del Drive (`TorreFocos`); los bastidores de cajas solo salen sin él.
+	if TorreFocos.disponible():
+		var torres: Array[Node] = []
+		for n: Node in raiz.find_children("*", "Node3D", true, false):
+			if n.is_in_group("torres_focos"):
+				torres.append(n)
+		var bien := 0
+		for t: Node in torres:
+			var tt := _en_raiz(t as Node3D, raiz)
+			var hacia := Vector2(-tt.origin.x, -tt.origin.z).normalized()
+			var mira := Vector2(tt.basis.z.x, tt.basis.z.z).normalized()
+			if mira.dot(hacia) > 0.9:
+				bien += 1
+		_comprobar(torres.size() == 4 and bien == 4, "cuatro torres del modelo, mirando al campo (%d/%d)" % [bien, torres.size()])
+		return
 	var pr := raiz.find_child("ProyectoresFocos", true, false) as MultiMeshInstance3D
 	_comprobar(pr != null and pr.multimesh.instance_count == 4 * 18, "cuatro torres con 18 proyectores cada una")
 	var bastidores := raiz.find_children("BastidorFoco*", "MeshInstance3D", true, false)

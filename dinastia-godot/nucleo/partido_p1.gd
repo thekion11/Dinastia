@@ -49,6 +49,8 @@ const MINUTOS := 90
 ## cambio más (como el reglamento). Sin motor el empate va directo a penales.
 var minutos_fin := MINUTOS
 var cambios_extra := 0
+## 3-11: eliminatoria. Si al llegar al 90' hay empate, se juega la prórroga (también si el empate llega EN el 90').
+var prorroga_si_empate := false
 const BASE_ATAQUE := Balance.BASE_ATAQUE   ## (valor en `nucleo/balance.gd`)
 const EXPONENTE := Balance.EXPONENTE   ## (valor en `nucleo/balance.gd`)
 const REPARTO := Balance.REPARTO   ## (valor en `nucleo/balance.gd`)
