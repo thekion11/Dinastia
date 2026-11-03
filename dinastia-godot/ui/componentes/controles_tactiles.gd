@@ -7,6 +7,8 @@ extends Control
 ##   A          Pase · Presión (con y sin balón: `Mando.accion_de`)     B   Tiro · Entrada
 ##   X          Centro · Barrida                                         Y   Pase al hueco
 ##   Cambiar    cambia de jugador                                         Sprint   se mantiene mientras se toca
+##   Mod        el modificador (rosca, tenso, vaselina…)                  II       pausa / táctica y cambios (arriba a la derecha)
+## Tamaño y opacidad salen de Ajustes → Dispositivo (`AjustesTactil`); también eligen si salen siempre, nunca o solo en pantallas táctiles.
 const RADIO_STICK := 120.0
 const RADIO_BOTON := 54.0
 const DIRS := {"jugar_izquierda": Vector2.LEFT, "jugar_derecha": Vector2.RIGHT, "jugar_arriba": Vector2.UP, "jugar_abajo": Vector2.DOWN}
@@ -18,6 +20,8 @@ const BOTONES := {
 	"Y": ["Al hueco", "jugar_filtrado", 1.0, 2.0],
 	"Cambiar": ["Cambiar", "jugar_cambiar", 3.2, 0.2],
 	"Sprint": ["Sprint", "jugar_sprint", 2.3, 2.5],
+	"Mod": ["Mod", "jugar_mod", 3.4, 1.4],
+	"Pausa": ["II", "jugar_pausa", 0.0, 0.0],   ## arriba a la derecha (ver `centro_de`)
 }
 
 static var forzar := false             ## las pruebas lo encienden; en el teléfono sale solo
@@ -29,7 +33,8 @@ var _dedos := {}                       ## índice de dedo → nombre del botón
 
 ## Lo añade al partido si el aparato es táctil (o `forzar`). Devuelve el control (null si no hacía falta).
 static func poner(padre: Node) -> ControlesTactiles:
-	if not (forzar or CargaCiudad.de("ExploradorCiudad").es_tactil()):
+	var modo := AjustesTactil.modo()
+	if modo == "no" or not (forzar or modo == "si" or CargaCiudad.de("ExploradorCiudad").es_tactil()):
 		return null
 	var c := ControlesTactiles.new()
 	c.name = "ControlesTactiles"
@@ -40,7 +45,22 @@ static func poner(padre: Node) -> ControlesTactiles:
 		(ayuda as CanvasItem).modulate.a = 0.0
 	return c
 
+var esc := 1.0                         ## tamaño elegido en Ajustes (1 = el de siempre)
+var opac := 1.0                        ## opacidad elegida en Ajustes
+
+## El tamaño elegido, sin pasar de lo que cabe: la columna de botones mide ~9 radios de alto (480 px de alto = tamaño 1).
+func esc_real() -> float:
+	return minf(esc, maxf(size.y / 480.0, AjustesTactil.TAM_MIN)) if size.y > 0.0 else esc
+
+func radio_boton() -> float:
+	return RADIO_BOTON * esc_real()
+
+func radio_stick() -> float:
+	return RADIO_STICK * esc_real()
+
 func _ready() -> void:
+	esc = AjustesTactil.tamano()
+	opac = AjustesTactil.opacidad()
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	z_index = 20
@@ -50,15 +70,18 @@ func _exit_tree() -> void:
 
 ## Dónde está el centro de un botón en este tamaño de pantalla.
 func centro_de(nombre: String) -> Vector2:
+	var r := radio_boton()
+	if nombre == "Pausa":
+		return Vector2(size.x - r * 0.9 - 20.0, r * 0.9 + 20.0)
 	var b: Array = BOTONES[nombre]
-	return size - Vector2(RADIO_BOTON * 1.6, RADIO_BOTON * 1.6) - Vector2(float(b[2]), float(b[3])) * RADIO_BOTON * 2.5 * Vector2(1.0, 1.0)
+	return size - Vector2(r * 1.6, r * 1.6) - Vector2(float(b[2]), float(b[3])) * r * 2.5 * Vector2(1.0, 1.0)
 
 func centro_reposo() -> Vector2:
-	return Vector2(RADIO_STICK + 40.0, size.y - RADIO_STICK - 110.0)   ## por encima de la ficha del jugador (abajo a la izquierda)
+	return Vector2(radio_stick() + 40.0, size.y - radio_stick() - 110.0)   ## por encima de la ficha del jugador (abajo a la izquierda)
 
 func _boton_en(pos: Vector2) -> String:
 	for n: String in BOTONES:
-		if centro_de(n).distance_to(pos) <= RADIO_BOTON * 1.15:
+		if centro_de(n).distance_to(pos) <= radio_boton() * (0.9 if n == "Pausa" else 1.15):
 			return n
 	return ""
 
@@ -98,7 +121,7 @@ func _suelta(dedo: int) -> void:
 	queue_redraw()
 
 func _mueve_stick(pos: Vector2) -> void:
-	_vec = ((pos - _centro_stick) / RADIO_STICK).limit_length(1.0)
+	_vec = ((pos - _centro_stick) / radio_stick()).limit_length(1.0)
 	_aplicar_stick()
 	queue_redraw()
 
@@ -122,16 +145,18 @@ func soltar_todo() -> void:
 
 func _draw() -> void:
 	var c0 := _centro_stick if _dedo_stick >= 0 else centro_reposo()
-	draw_circle(c0, RADIO_STICK, Color(1, 1, 1, 0.10))
-	draw_arc(c0, RADIO_STICK, 0.0, TAU, 48, Color(1, 1, 1, 0.45), 3.0)
-	draw_circle(c0 + _vec * RADIO_STICK, RADIO_BOTON * 0.7, Color(1, 1, 1, 0.38))
+	var rs := radio_stick()
+	draw_circle(c0, rs, Color(1, 1, 1, 0.10 * opac))
+	draw_arc(c0, rs, 0.0, TAU, 48, Color(1, 1, 1, 0.45 * opac), 3.0)
+	draw_circle(c0 + _vec * rs, radio_boton() * 0.7, Color(1, 1, 1, 0.38 * opac))
 	var fuente := ThemeDB.fallback_font
 	for n: String in BOTONES:
 		var c := centro_de(n)
+		var r := radio_boton() * (0.9 if n == "Pausa" else 1.0)
 		var activo := _dedos.values().has(n)
-		draw_circle(c, RADIO_BOTON, Color(0.9, 0.9, 0.2, 0.55) if activo else Color(0.05, 0.05, 0.08, 0.45))
-		draw_arc(c, RADIO_BOTON, 0.0, TAU, 32, Color(1, 1, 1, 0.7), 3.0)
+		draw_circle(c, r, Color(0.9, 0.9, 0.2, 0.55 * opac) if activo else Color(0.05, 0.05, 0.08, 0.45 * opac))
+		draw_arc(c, r, 0.0, TAU, 32, Color(1, 1, 1, 0.7 * opac), 3.0)
 		var lineas := Idiomas.t(String(BOTONES[n][0])).split("\n")
 		for k in lineas.size():
-			var y := c.y + 5.0 + (float(k) - float(lineas.size() - 1) * 0.5) * 17.0
-			draw_string(fuente, Vector2(c.x - RADIO_BOTON, y), lineas[k], HORIZONTAL_ALIGNMENT_CENTER, RADIO_BOTON * 2.0, 15, Color.WHITE)
+			var y := c.y + 5.0 + (float(k) - float(lineas.size() - 1) * 0.5) * 17.0 * esc
+			draw_string(fuente, Vector2(c.x - r, y), lineas[k], HORIZONTAL_ALIGNMENT_CENTER, r * 2.0, int(15.0 * esc_real()), Color(1, 1, 1, opac))
