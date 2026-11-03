@@ -376,6 +376,6 @@ static func datos_3d(j: Jugador) -> Dictionary:
 	var ruta := ruta_foto(j)
 	## Una foto marcada como mala para 3D (muy de lado o desde arriba) no se
 	## proyecta: queda la recreación con sus colores.
-	if ruta != "" and (not puntos_foto(ruta).is_empty() or CaraMalla.tiene(nombre_de_ruta(ruta))):
+	if ruta != "" and (not puntos_foto(ruta).is_empty() or load("res://visor/cara_malla.gd").tiene(nombre_de_ruta(ruta))):
 		d["foto"] = ruta
 	return d

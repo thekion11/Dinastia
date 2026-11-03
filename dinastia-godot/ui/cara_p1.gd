@@ -205,7 +205,7 @@ static func look_de(j: Jugador) -> Dictionary:
 		var r: Variant = _rasgos_reales_de().get(Nombres.limpiar(j.nombre))
 		## Sin rasgos viejos: la piel y el pelo medidos para su cara 3D.
 		if not (r is Dictionary):
-			var e := CaraMalla.entrada(Nombres.limpiar(j.nombre))
+			var e = load("res://visor/cara_malla.gd").entrada(Nombres.limpiar(j.nombre))
 			if String(e.get("s", "")) != "":
 				r = {"piel": String(e["s"])}
 				if e.get("h") is Dictionary:

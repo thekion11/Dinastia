@@ -168,12 +168,12 @@ func _presidente_3d(marco: Control, c1: Color, c2: Color) -> bool:
 	vp.add_child(raiz)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash("presidente_" + _nombre_pres)
-	var asp := PersonajeDT.aleatorio(rng)
+	var asp = load("res://visor/personaje_dt.gd").aleatorio(rng)
 	asp.merge({"cuerpo": "male", "ropa": "traje", "c_ropa": "15171c", "c_ropa2": "f2f2f2", "corbata": true,
 		"color_pelo": ["9b9b98", "c8c8c4", "6e6a66"][rng.randi() % 3], "gorra": false, "bufanda": false,
 		"auriculares": false, "pendiente": false, "cadena": false, "manga_corta": false, "tatuaje": 0,
 		"pelo": ["corto", "calvo", "rapado"][rng.randi() % 3]}, true)
-	var d := PersonajeDT.crear(raiz, asp, c1, c2)
+	var d = load("res://visor/personaje_dt.gd").crear(raiz, asp, c1, c2)
 	if d.is_empty():
 		cont.queue_free()
 		return false
