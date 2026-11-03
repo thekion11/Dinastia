@@ -43,7 +43,9 @@ const MARGEN_MAX := 20
 const NOMINA_MIN_SEGUNDA := 0.45
 const ROJO_MAX := 0.15
 const INTERV_MAX := 2
-const GOLES := Vector2(2.1, 3.2)   ## la MEDIA de las temporadas de una corrida: ahí se nota una deriva de verdad
+## La MEDIA de las temporadas de una corrida: ahí se nota una deriva de verdad. Medido el 3-11 (9 corridas): chico 2,98-3,02, grande 3,06-3,20 (al mando del grande el mundo se le
+## parece menos al real: sin gestionar, sube de rep y juega más contra los suyos). Pasa de 3,2 a 3,3: el 3,2 estaba pegado a la media del grande (3,20) y la deriva que se busca es otra cosa.
+const GOLES := Vector2(2.1, 3.3)
 ## Una temporada suelta: una liga son ~240 partidos, así que sus goles por partido bailan ±0,12 (1σ) alrededor de la media (~3,07 en 9 corridas del 3-11, sin tendencia: 2,86 en t1 y
 ## ~3,1 desde t5). Con el techo de la media (3,2) a solo 1σ, una de cada seis temporadas «fallaba» por puro azar de semilla: la banda de una temporada es la media + 4,5σ.
 const GOLES_TEMPORADA := Vector2(2.0, 3.65)
@@ -146,7 +148,7 @@ func _revisar(f: Dictionary, f0: Dictionary, t: int, fallos: Array[String]) -> v
 		"margen previsto %d%% en Primera" % f["margen"]: int(f["div"]) != 1 or int(f["margen"]) <= MARGEN_MAX,
 		"IA en rojo %d" % f["rojo"]: float(f["rojo"]) <= ROJO_MAX * float(f["clubes"]),
 		"intervenidos %d" % f["interv"]: int(f["interv"]) <= INTERV_MAX,
-		"85+ <22: %d" % f["precoces"]: int(f["precoces"]) <= maxi(2, int(f0["precoces"]) + 1),
+		"85+ <22: %d" % f["precoces"]: int(f["precoces"]) <= maxi(3, int(f0["precoces"]) + 2),   ## un recuento pequeño y entero: con media ~0,5 sale un 3 una de cada ~80 temporadas (visto 1 en 90, s303 t8)
 		"goles %.2f" % f["gpp"]: f["gpp"] >= GOLES_TEMPORADA.x and f["gpp"] <= GOLES_TEMPORADA.y,
 	}
 	for k: String in pruebas:
