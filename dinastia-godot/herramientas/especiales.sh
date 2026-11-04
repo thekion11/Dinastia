@@ -205,6 +205,7 @@ pasa "a4_metro_museo 1/2 (metro por dentro, con pantalla: ~250 s)" "A4_PARTE=1 x
 pasa "a4_metro_museo 2/2 (museo ampliado, con pantalla: ~120 s)" "A4_PARTE=2 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_metro_museo.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_limite_mundo (2/3 calidad y horas)" "A4_PARTE=2 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_limite_mundo (3/3 estadios y tráfico)" "A4_PARTE=3 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_estadio_reformas (estadio propio: 6 reformas, reabrir, nombres; con pantalla ~115 s)" "xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_estadio_reformas.tscn" "(^|[^0-9])0 fallos"
 fi
 pasa "p6_calidad_minima" "godot --headless --path . res://pruebas/ideas/p6_calidad_minima.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_idiomas_perezoso" "godot --headless --path . res://pruebas/ideas/p6_idiomas_perezoso.tscn" "(^|[^0-9])0 fallos"
