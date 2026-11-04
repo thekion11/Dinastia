@@ -23,7 +23,11 @@ Orden del dueño: «mejora la posición y el estándar, basándote en las redes 
 ## Fuentes (orientativas)
 Guías de tamaño de objetivo táctil (Apple 44 pt, Material 48 dp, NN/g 1 cm, Smashing Magazine «Finger-friendly design»), regla del pulgar de Josh Clark, patrón de juegos de fútbol de móvil (stick izquierdo flotante, acciones a la derecha, sprint mantenido).
 
+## Unión con main (4-11-2026)
+Main ya traía otra versión de los controles (PR #159 de la ejecutora: botón II de pausa, botón Mod y `AjustesTactil` con modo/tamaño/opacidad). Se combinaron: de main se conservan II, Mod, `AjustesTactil` (TAM_MIN, modo siempre/nunca/auto) y la ayuda de teclado escondida; de este trabajo, el arco del pulgar, el tamaño por dpi (× el tamaño de Ajustes, con tope para que el arco no suba del 35 % de arriba), el área segura, el stick flotante y el zurdo, que ahora se elige en Ajustes → Dispositivo (`AjustesTactil.zurdo`, traducido a los 8 idiomas). Pruebas: `tac_controles` (incluye zurdo y Ajustes), captura táctil a 1280×720 y 2400×1080, banco 0 fallos, líneas 0.
+
 ## Pendiente
-- Interruptor de zurdo y de tamaño de botones en Ajustes.
+- Etiquetas según el contexto (con/sin balón) en lugar de «Pase / Presión» (hecho en la lista siguiente).
+- HUD del partido (marcador, ficha del jugador) legible a 1080×2400.
 - Probar en un móvil real (FPS, tamaño percibido, latencia del dedo).
 - Etiquetas según el contexto (con/sin balón) en lugar de «Pase / Presión».
