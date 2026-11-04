@@ -369,8 +369,7 @@ func _terreno_bajo_lo_construido(ex: Object, cb: Node) -> void:
 			peor_t = maxf(peor_t, h2)
 	print("  manzanas sobre terreno > 1 m: %d (peor %.1f m) por uso %s · tramos: %d (peor %.1f m)" % [bajo_cerro_m, peor_m, str(por_uso), bajo_cerro_t, peor_t])
 	_comprobar(bajo_cerro_m == 0, "ninguna manzana queda bajo una colina (%d, peor %.1f m)" % [bajo_cerro_m, peor_m])
-	## Deuda conocida: la circunvalación exterior atraviesa cerros (53 tramos, hasta 63 m): invisibles bajo el terreno; el tope vigila que no crezca.
-	_comprobar(bajo_cerro_t <= 60, "tramos de calle bajo una colina no crece (%d de tope 60, peor %.1f m)" % [bajo_cerro_t, peor_t])
+	_comprobar(bajo_cerro_t == 0, "ninguna calle queda bajo una colina (%d, peor %.1f m)" % [bajo_cerro_t, peor_t])
 
 ## ---- accesos: cada punto de interacción tiene una calle cerca por la que llegar, y las puertas de los bloques modulares no quedan tapadas
 func _accesos(ex: Object, cb: Node) -> void:

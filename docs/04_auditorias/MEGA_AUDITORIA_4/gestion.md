@@ -1,5 +1,12 @@
 # Mega auditoría 4 — gestion
 
+
+## Repaso 5 (cruzado, hecho por la sesión Ciudad, 4-11)
+Método: sonda `pruebas/ideas/a4_gestion_cruzado.tscn` (en `especiales.sh`): invariantes cada 4 semanas (jugador en un solo lugar, `club_id` coherente, rangos de edad/ovr/pot/forma/moral/físico/sueldo/contrato/goles/lesión/sanción, finanzas finitas y rangos de confianza/reputación/socios/aforo/entradas, plantel ≥ 11, tablas: Σgf = Σgc, pts = victorias×puntos + empates − sanción, pj = g+e+p). Corridas: 2 semillas × 70 semanas × Chile+Argentina; 10 temporadas (520 semanas, `LARGO=1`, 131 muestras); 6 casos absurdos (plantel vacío, saldo ±2 000 M, todos ovr 1, sin libres, 3 jugadores) × 6 semanas. Más los bancos especializados economía, mercado_contratos y calendario_competiciones: 0 fallos.
+
+- [A4-GESTION-001] (repaso 5, gravedad: bajo) Falso positivo propio, no fallo del juego: con 10 temporadas el invariante «pts = 3g + e» saltó 84 veces porque la insolvencia resta puntos (`Liga.sancionar`, que ya los anota en `sancion` de la fila). Cómo reproducirlo: `LARGO=1` con la versión anterior de la sonda. `pruebas/ideas/a4_gestion_cruzado.gd:80`. Estado: arreglado (la sonda descuenta `sancion`; commit de esta rama).
+
+Resultado: 0 fallos reales en 10 temporadas y casos extremos; no se encontró nada crítico, alto ni medio. Fuera de alcance de esta sonda (no repasado a fondo): federación y carrera del jugador con guardado a mitad (cubiertos por el banco `guardado`), ofertas/traspasos con mercado saturado.
 Prueba al límite del área: `dinastia-godot/pruebas/ideas/a4_gestion_limite.tscn` (8 temporadas con guardado cada dos años, integridad,
 caja −250 M, todos lesionados y sancionados, club con 48 jugadores y otro vacío, año 2099).
 
@@ -34,3 +41,8 @@ caja −250 M, todos lesionados y sancionados, club con 48 jugadores y otro vac�
 - Sin hallazgos: integridad del mundo en 8 temporadas (un club por jugador, club_id, libres, contratos, sueldos, edades, medias, cajas,
   planteles, ligas y divisiones); caja a −250 M seis semanas; club con todos lesionados y sancionados (saca 11); club con 48 jugadores y
   otro vacío; año 2099.
+
+### Repaso 5, segunda tanda (cesiones y ventas al límite)
+Sonda `pruebas/ideas/a4_gestion_cesiones.tscn` (en `especiales.sh`): 2 semillas, cesiones simples/con opción/con obligación de todo el plantel + 110 semanas + `resolver`; y ventas con monto 0, negativo, 10¹², 0/50/100 % y −20 % de futura venta, a sí mismo. 0 fallos: nadie en dos plantillas ni perdido, ninguna cesión queda viva, el plantel no baja de 18.
+
+- [A4-GESTION-002] (repaso 5, gravedad: bajo) `Cesiones.vender` no comprueba que el comprador tenga dinero ni que `monto` sea positivo: con comprador a 0 y monto 10¹² el comprador queda en −10¹² (y con monto negativo el vendedor paga). Cómo reproducirlo: `a4_gestion_cesiones` (caso `[999999999999, 0]`). `nucleo/cesiones_p2.gd:228`. Los llamadores reales (`mercado_p1.gd:402`, `insolvencia.gd:102`) sí filtran por saldo, salvo que la oferta recibida (`ofertas_recibidas`) se acepta DESPUÉS de crearse y el comprador pudo gastar entretanto. Estado: ARREGLADO por el líder (A4-GES-008): `vender` rechaza montos negativos y `responder_oferta` deja caer la operación si el comprador ya no tiene el dinero al aceptar.
