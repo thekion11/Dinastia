@@ -202,6 +202,33 @@ func _llamadas() -> float:
 	return Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 
 func _grupos_nombre(ciudad: Node, base: Vector2) -> void:
+	if OS.get_environment("MMHIST") != "":
+		var nodos := ciudad.find_children("*", "MultiMeshInstance3D", true, false)
+		var por := {}
+		var tam := {}
+		for n in nodos:
+			var mm := (n as MultiMeshInstance3D).multimesh
+			if mm == null or mm.mesh == null:
+				continue
+			var g := n as MultiMeshInstance3D
+			var c := g.global_position
+			var k := "%d|%d|%d,%d|%d|%d" % [mm.mesh.get_instance_id(), g.material_override.get_instance_id() if g.material_override != null else 0, floori(c.x / 160.0), floori(c.z / 160.0), int(g.visibility_range_end), int(mm.use_colors)]
+			por[k] = int(por.get(k, 0)) + 1
+			var b2 := "%d" % mini(mm.instance_count, 64)
+			tam[b2] = int(tam.get(b2, 0)) + 1
+		var mas := 0
+		var ahorro := 0
+		for k in por:
+			if por[k] > 1:
+				mas += 1
+				ahorro += por[k] - 1
+		print("MMHIST nodos=%d grupos=%d grupos_con_varios=%d nodos_que_sobran=%d" % [nodos.size(), por.size(), mas, ahorro])
+		var ks2 := tam.keys()
+		ks2.sort_custom(func(a, b): return int(a) < int(b))
+		var linea := ""
+		for k in ks2.slice(0, 12):
+			linea += "%s:%d " % [k, tam[k]]
+		print("MMHIST instancias->nodos ", linea)
 	if OS.get_environment("ESCENAS") != "":
 		var ce := {}
 		for h in ciudad.get_children():
