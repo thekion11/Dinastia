@@ -26,17 +26,21 @@ func _comprobar(ok: bool, texto: String) -> void:
 	if not ok:
 		_fallos += 1
 
+## Las posiciones del juego son del lienzo; el evento de pantalla lleva píxeles de la ventana (con el escalado del proyecto no son lo mismo a otra resolución que 1280×720).
+func _a_ventana(pos: Vector2) -> Vector2:
+	return pos * (float(DisplayServer.window_get_size().x) / get_viewport().get_visible_rect().size.x)
+
 func _toque(dedo: int, pos: Vector2, pulsa: bool) -> void:
 	var e := InputEventScreenTouch.new()
 	e.index = dedo
-	e.position = pos
+	e.position = _a_ventana(pos)
 	e.pressed = pulsa
 	Input.parse_input_event(e)
 
 func _arrastre(dedo: int, pos: Vector2) -> void:
 	var e := InputEventScreenDrag.new()
 	e.index = dedo
-	e.position = pos
+	e.position = _a_ventana(pos)
 	Input.parse_input_event(e)
 
 func _foto(nombre: String) -> void:
@@ -56,7 +60,7 @@ func _process(_d: float) -> void:
 		_comprobar(not _pj._ayuda.visible, "la línea de ayuda de teclado está oculta con los controles táctiles")
 	if _n == 80:
 		_p0 = _pj.motor.pos(_pj.motor.usuario)
-		var c0 := Vector2(200, get_viewport().get_visible_rect().size.y - 160)
+		var c0 := _ct.centro_reposo()
 		_toque(0, c0, true)
 		_arrastre(0, c0 + Vector2(0, -90))
 		_toque(1, _ct.centro_de("Sprint"), true)
@@ -77,7 +81,7 @@ func _process(_d: float) -> void:
 		_foto("tactil_partido_pase")
 		_toque(2, _ct.centro_de("A"), false)
 		_toque(1, _ct.centro_de("Sprint"), false)
-		_toque(0, Vector2(200, 560), false)
+		_toque(0, _ct.centro_reposo(), false)
 	if _n == 160:
 		_comprobar(Mando.movimiento() == Vector2.ZERO and not Input.is_action_pressed("jugar_sprint"), "al levantar los dedos todo se suelta")
 		_toque(5, _ct.centro_de("Pausa"), true)

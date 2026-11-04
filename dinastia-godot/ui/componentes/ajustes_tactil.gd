@@ -30,6 +30,13 @@ static func tamano() -> float:
 static func opacidad() -> float:
 	return clampf(float(_cargar().get_value(SECCION, "opacidad", 1.0)), OP_MIN, OP_MAX)
 
+## Modo zurdo (4-11-2026): el stick a la derecha y los botones a la izquierda.
+static func zurdo() -> bool:
+	return bool(_cargar().get_value(SECCION, "zurdo", false))
+
+static func poner_zurdo(v: bool) -> void:
+	_poner("zurdo", v)
+
 static func poner_modo(m: String) -> void:
 	_poner("modo", m if MODOS.has(m) else "auto")
 
@@ -68,6 +75,17 @@ static func pintar(p: Principal) -> void:
 				(botones[k] as Button).set_pressed_no_signal(k == m))
 		botones[m] = b
 		fila.add_child(b)
+	var fila_z := HBoxContainer.new()
+	fila_z.add_theme_constant_override("separation", 8)
+	p._lista_ajustes.add_child(fila_z)
+	var et_z := p._texto(12, Principal.COL_TEXTO)
+	et_z.text = Idiomas.t("Modo zurdo (stick a la derecha)")
+	et_z.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fila_z.add_child(et_z)
+	var caja_z := CheckButton.new()
+	caja_z.button_pressed = zurdo()
+	caja_z.toggled.connect(func(v: bool) -> void: poner_zurdo(v))
+	fila_z.add_child(caja_z)
 	_deslizador(p, "Tamaño de los botones", TAM_MIN, TAM_MAX, tamano(), poner_tamano)
 	_deslizador(p, "Opacidad de los botones", OP_MIN, OP_MAX, opacidad(), poner_opacidad)
 
