@@ -33,7 +33,7 @@ static func problemas(raiz: Node, alto_toque: float) -> Array[String]:
 				r.append("botón por debajo «%s» +%d px" % [b.text.left(18), int(rect.end.y - vp.y)])
 		if c is Button or c is Label:
 			var t: String = c.get("text")
-			if t.strip_edges() == "" or t.contains("\n"):
+			if t.strip_edges() == "" or t.contains("\n") or (c is Label and t.strip_edges().length() <= 3):   ## las iniciales de los escudos (LF, PD…) son decoración recortada por su caja
 				continue
 			var corta: bool = c.get("clip_text") or int(c.get("text_overrun_behavior")) != TextServer.OVERRUN_NO_TRIMMING
 			var envuelve: bool = int(c.get("autowrap_mode")) != TextServer.AUTOWRAP_OFF
