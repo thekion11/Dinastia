@@ -13,6 +13,18 @@ var _dia_pintado: int = -1
 func _init(principal: Principal) -> void:
 	p = principal
 
+## La música según lo que pasa en la partida: las tres últimas jornadas del año, tensión («final»); si no, «menu». Antes vivía en `PantallaOpciones`, que así se compilaba al abrir el menú.
+func situacion_musical() -> String:
+	if p.mundo == null:
+		return "menu"
+	var c := p.mundo.mi_club()
+	if c == null:
+		return "menu"
+	var liga := p._liga_de(c)
+	if liga != null and liga.jornada_actual >= liga.jornadas() - 2:
+		return "final"
+	return "menu"
+
 func _refrescar() -> void:
 	var c := p.mundo.mi_club()
 	## Los interruptores de accesibilidad llegan también a lo que se pinta con
@@ -98,7 +110,7 @@ func _refrescar() -> void:
 			"oro":    p._color_accesible(p.COL_ORO),
 			"escala": p._escala_texto,
 		}))
-	p._perezoso(p._lista_plantel, p._ui_plantel.abrir.bind("plantel", {"club": c}))
+	p._perezoso(p._lista_plantel, p._abrir_perezosa.bind("plantel", "plantel", {"club": c}))
 	## El panel de mercado se actualiza con la paleta del club activo para que
 	## el color de acento refleje siempre al equipo que se dirige.
 	##
@@ -121,8 +133,8 @@ func _refrescar() -> void:
 				"rojo":   p._color_accesible(p.COL_ROJO),
 				"oro":    p._color_accesible(p.COL_ORO),
 			}, p._negociacion_ultimo))
-	p._perezoso(p._lista_copa, p._ui_plantel.abrir.bind("copa", {"club": c}))
-	p._perezoso(p._lista_club, p._ui_ficha.abrir.bind("club", {"club": c}))
+	p._perezoso(p._lista_copa, p._abrir_perezosa.bind("plantel", "copa", {"club": c}))
+	p._perezoso(p._lista_club, p._abrir_perezosa.bind("ficha", "club", {"club": c}))
 	p._perezoso(p._lista_conti, p._abrir_perezosa.bind("club_vida", "conti", {"club": c}))
 	p._perezoso(p._lista_medico, p._abrir_perezosa.bind("club_vida", "medico", {"club": c}))
 	p._perezoso(p._lista_logros, p._abrir_perezosa.bind("club_vida", "logros"))
@@ -133,9 +145,9 @@ func _refrescar() -> void:
 	p._perezoso(p._lista_cantera, p._abrir_perezosa.bind("cantera", "cantera", {"club": c}))
 	p._perezoso(p._lista_contratos, p._abrir_perezosa.bind("cantera", "contratos", {"club": c}))
 	p._perezoso(p._lista_comparar, p._abrir_perezosa.bind("cantera", "comparar"))
-	p._perezoso(p._lista_records, p._ui_legado.abrir.bind("records"))
-	p._perezoso(p._lista_legado, p._ui_legado.abrir.bind("legado"))
-	p._perezoso(p._lista_inicio, p._ui_legado.abrir.bind("inicio", {"club": c}))
+	p._perezoso(p._lista_records, p._abrir_perezosa.bind("legado", "records"))
+	p._perezoso(p._lista_legado, p._abrir_perezosa.bind("legado", "legado"))
+	p._perezoso(p._lista_inicio, p._abrir_perezosa.bind("legado", "inicio", {"club": c}))
 	## Las otras tres viven DENTRO de `_pintar_gente()` ahora -un chip por
 	## sección, solo se pinta la que está activa- en vez de apilarse las
 	## cuatro siempre, aunque solo una se vea.
@@ -144,22 +156,22 @@ func _refrescar() -> void:
 	p._perezoso(p._lista_camarin, p._abrir_perezosa.bind("finanzas", "camarin", {"club": c}))
 	p._perezoso(p._lista_ciudad, p._ui_ciudad.abrir.bind("ciudad", {"club": c}))
 	p._perezoso(p._lista_editor, p._abrir_perezosa.bind("editor", "editor"))
-	p._perezoso(p._lista_glosario, p._ui_opciones.abrir.bind("glosario"))
+	p._perezoso(p._lista_glosario, p._abrir_perezosa.bind("opciones", "glosario"))
 	p._perezoso(p._lista_ajustes, p._ui_ajustes.abrir.bind("ajustes"))
 	p._perezoso(p._lista_correo, p._abrir_perezosa.bind("gente", "correo"))
 	p._perezoso(p._lista_redes, p._abrir_perezosa.bind("gente", "redes"))
 	## Diferidas como las demás (etapa 1, 2.ª pasada): llamadas a pelo, con
 	## la pestaña oculta no pintaban NI quedaban pendientes, y al entrar en
 	## «Vida» o «Habilidades» la hoja salía vacía.
-	p._perezoso(p._lista_vida, p._ui_legado.abrir.bind("vida"))
-	p._perezoso(p._lista_habilidades, p._ui_legado.abrir.bind("habilidades"))
-	p._perezoso(p._lista_libres, p._ui_plantel.abrir.bind("libres", {"club": c}))
-	p._perezoso(p._lista_premios, p._ui_plantel.abrir.bind("premios"))
+	p._perezoso(p._lista_vida, p._abrir_perezosa.bind("legado", "vida"))
+	p._perezoso(p._lista_habilidades, p._abrir_perezosa.bind("legado", "habilidades"))
+	p._perezoso(p._lista_libres, p._abrir_perezosa.bind("plantel", "libres", {"club": c}))
+	p._perezoso(p._lista_premios, p._abrir_perezosa.bind("plantel", "premios"))
 	p._perezoso(p._lista_clubes, p._pintar_clubes)
-	p._perezoso(p._lista_desafios, p._ui_plantel.abrir.bind("desafios"))
-	p._perezoso(p._lista_tactica, p._ui_plantel.abrir.bind("tactica", {"club": c}))
-	p._perezoso(p._lista_partido, p._ui_plantel.abrir.bind("partido", {"club": c}))
-	p._perezoso(p._lista_calendario, p._ui_plantel.abrir.bind("calendario", {"club": c}))
+	p._perezoso(p._lista_desafios, p._abrir_perezosa.bind("plantel", "desafios"))
+	p._perezoso(p._lista_tactica, p._abrir_perezosa.bind("plantel", "tactica", {"club": c}))
+	p._perezoso(p._lista_partido, p._abrir_perezosa.bind("plantel", "partido", {"club": c}))
+	p._perezoso(p._lista_calendario, p._abrir_perezosa.bind("plantel", "calendario", {"club": c}))
 	_pintar_dias()
 	p._actualizar_badges()
 	p._ui_despacho.abrir("despacho")
@@ -171,7 +183,7 @@ func _refrescar() -> void:
 	## mil cadenas con `tr()` en un archivo de diez mil líneas-.
 	p._traducir_pantalla(p)
 	## Y la música, que también depende de lo que esté pasando.
-	Musica.ambientar(p._ui_opciones._situacion_musical())
+	Musica.ambientar(situacion_musical())   ## (A4 memoria) sin crear `PantallaOpciones` en cada refresco
 func _avanzar_semana() -> void:
 	if not p.mundo.temporada_en_curso():
 		p._escribir("[color=#e05555]La temporada está terminada. Pulsa «Temporada siguiente».[/color]")
@@ -219,7 +231,7 @@ func _avanzar_semana() -> void:
 	p._partida.autoguardar_si_toca()
 	_refrescar()
 	## El partido simulado también cuenta para la racha del plan.
-	PreguntaPlan.mostrar_si_toca(p, mio)
+	load("res://ui/componentes/pregunta_plan.gd").mostrar_si_toca(p, mio)
 ## Avanza UN día. Si con eso se pasa del domingo, la semana del motor corre de
 ## verdad -es el único punto donde esto toca la simulación-.
 func _avanzar_dia() -> void:
