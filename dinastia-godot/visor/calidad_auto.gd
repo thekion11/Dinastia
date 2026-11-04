@@ -33,6 +33,25 @@ static func detectar(gpu: String = "", ram_mb: int = -1, hilos: int = -1) -> Dic
 		motivos.append("%d hilos de CPU" % hilos)
 	return {"gpu": gpu, "ram_mb": ram_mb, "hilos": hilos, "debil": not motivos.is_empty(), "motivos": motivos}
 
+## MUY DÉBIL (2-11-2026): donde ni MEDIO va suelto y se parte del nivel MÍNIMO. 3 GB de RAM o menos, una gráfica de
+## móvil antigua, o gráfica débil con 2 hilos o menos. (Los renderizadores por software de los servidores de
+## pruebas no cuentan: no son equipos de jugador.)
+const GPU_MOVIL_VIEJA := ["mali-4", "mali-t", "adreno (tm) 3", "adreno (tm) 4", "powervr", "vivante", "gma"]
+const RAM_MUY_DEBIL_MB := 3200
+static func muy_debil(info: Dictionary = {}) -> bool:
+	if info.is_empty():
+		info = detectar()
+	var g := String(info.get("gpu", "")).to_lower()
+	if g.contains("llvmpipe") or g.contains("swiftshader") or g.contains("lavapipe"):
+		return false
+	var ram := int(info.get("ram_mb", 0))
+	if ram > 0 and ram <= RAM_MUY_DEBIL_MB:
+		return true
+	for k: String in GPU_MOVIL_VIEJA:
+		if g.contains(k):
+			return true
+	return bool(info.get("debil", false)) and int(info.get("hilos", 8)) <= HILOS_DEBIL
+
 ## Llamado desde `Calidad.cargar()` cuando aún no hay archivo. Devuelve el perfil aplicado ({} si no hizo nada).
 static func aplicar_si_primera_vez(info: Dictionary = {}) -> Dictionary:
 	if FileAccess.file_exists(Calidad.ARCHIVO) or OS.get_environment("DINASTIA_SIN_AUTO") != "":
@@ -41,9 +60,9 @@ static func aplicar_si_primera_vez(info: Dictionary = {}) -> Dictionary:
 		info = detectar()
 	if not info["debil"]:
 		return {}
-	Calidad.elegida = Calidad.MEDIO
+	Calidad.elegida = Calidad.MINIMO   ## R1 (3-11): siempre la más baja (antes MEDIO si el equipo no era «muy débil»)
 	Calidad.adaptativa = true
 	Calidad.motor_ligero = Calidad.puede_relanzar() and not Calidad.es_compatibilidad()
 	Calidad.guardar()
-	print("CALIDAD AUTO: equipo modesto (%s) → MEDIO, adaptativa, motor ligero=%s" % [", ".join(info["motivos"]), Calidad.motor_ligero])
+	print("CALIDAD AUTO: equipo modesto (%s) → %s, adaptativa, motor ligero=%s" % [", ".join(info["motivos"]), "MÍNIMO" if Calidad.elegida == Calidad.MINIMO else "MEDIO", Calidad.motor_ligero])
 	return info

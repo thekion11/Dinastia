@@ -124,7 +124,7 @@ static func butacas_livianas(raiz: Node, si: bool) -> void:
 		if si:
 			if not n.has_meta("malla_buena"):
 				n.set_meta("malla_buena", mm.mesh)
-			mm.mesh = StadiumBuilder._malla_butaca_lejos()
+			mm.mesh = load("res://visor/stadium_builder.gd")._malla_butaca_lejos()
 		elif n.has_meta("malla_buena"):
 			mm.mesh = n.get_meta("malla_buena")
 

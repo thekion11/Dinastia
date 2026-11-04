@@ -6,15 +6,25 @@ extends RefCounted
 ## uno vuelve a su sitio de la fila (es un corte de cámara: nadie se teletransporta en el plano).
 
 const X_ATRAS := 9.0
-const X_DELANTE := 9.9
+const X_DELANTE := 10.15
 const PASO := 0.95
 const CAMARA := Vector3(15.2, 1.7, -6.0)
 const MIRA := Vector3(9.4, 1.0, -6.0)
 const Z_GRUPO := -6.0
 
+## 3-11 (prueba del dueño: «los brazos atraviesan a los compañeros»): el equipo VISITANTE seguía en su fila de la alineación, DENTRO del encuadre de la foto
+## (cuatro rivales de pie delante del grupo, con las piernas y los brazos cruzados con los agachados). La foto es del once local: el rival no sale en ella.
+## Se esconde mientras dura y reaparece en su sitio al acabar (no se mueve: sigue andando después como antes).
+static var _ocultos: Array = []
+
 ## Coloca a los once locales para la foto. Devuelve [nodo, posición, rotación] para devolverlos luego.
 static func colocar(jugadores: Array, anim_de: Callable) -> Array:
 	var guardado: Array = []
+	_ocultos.clear()
+	for p: Dictionary in jugadores:
+		if not bool(p["es_local"]) and not bool(p.get("arbitro", false)) and (p["node"] as Node3D).visible:
+			(p["node"] as Node3D).visible = false
+			_ocultos.append(p["node"])
 	var once: Array = []
 	for p: Dictionary in jugadores:
 		if bool(p["es_local"]):
@@ -33,6 +43,10 @@ static func colocar(jugadores: Array, anim_de: Callable) -> Array:
 	return guardado
 
 static func devolver(guardado: Array, jugadores: Array, anim_de: Callable) -> void:
+	for nd: Variant in _ocultos:
+		if is_instance_valid(nd):
+			(nd as Node3D).visible = true
+	_ocultos.clear()
 	for g: Array in guardado:
 		var nd: Node3D = g[0]
 		if is_instance_valid(nd):

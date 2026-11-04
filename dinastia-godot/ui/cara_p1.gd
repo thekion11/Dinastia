@@ -100,6 +100,11 @@ static var _indice_fotos_listo := false
 ## AJUSTES → «Caras reales»: true = la foto (si la hay); false = solo la
 ## recreación procedural. Lo guarda `Principal._guardar_preferencias()`.
 static var usar_fotos := true
+## MODO STREAMER (2-11-2026, M-312): para emitir o grabar partidas. Manda sobre `usar_fotos`: ninguna foto de
+## una persona real en pantalla (la licencia libre cubre la foto, no el derecho de imagen), sin tocar tu preferencia.
+static var modo_streamer := false
+static func fotos_permitidas() -> bool:
+	return usar_fotos and not modo_streamer
 const RUTA_RASGOS_REALES := "res://datos/caras_reales_rasgos.json"
 static var _rasgos_reales: Dictionary = {}
 static var _rasgos_reales_listos := false
@@ -200,7 +205,7 @@ static func look_de(j: Jugador) -> Dictionary:
 		var r: Variant = _rasgos_reales_de().get(Nombres.limpiar(j.nombre))
 		## Sin rasgos viejos: la piel y el pelo medidos para su cara 3D.
 		if not (r is Dictionary):
-			var e := CaraMalla.entrada(Nombres.limpiar(j.nombre))
+			var e = load("res://visor/cara_malla.gd").entrada(Nombres.limpiar(j.nombre))
 			if String(e.get("s", "")) != "":
 				r = {"piel": String(e["s"])}
 				if e.get("h") is Dictionary:

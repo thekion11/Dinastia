@@ -54,7 +54,7 @@ func _tren_real(col: Color) -> Node3D:
 			for q in TRAMOS_ASIENTO.size():
 				var ad := Label3D.new()
 				var texto: String = ANUNCIOS[(k * 6 + q * 2 + (0 if lado > 0.0 else 1)) % ANUNCIOS.size()]
-				ad.text = texto
+				ad.text = Idiomas.t(texto)
 				ad.font_size = 30
 				ad.pixel_size = 0.0033
 				ad.outline_size = 5
@@ -357,6 +357,12 @@ func _crear_persona(item: Dictionary) -> void:
 			if d.is_empty():
 				return
 			_asentar(d, s, item["e"])
+		"vendedor":   ## M-180: de pie tras su mostrador, ofreciendo (gesto de charla)
+			var dv := Mini3D.persona(_gente, _rng_gente, item["p"], [Color(0.85, 0.45, 0.15), Color(0.2, 0.2, 0.25), true])
+			if dv.is_empty():
+				return
+			(dv["nodo"] as Node3D).rotation.y = float(item["giro"])
+			Mini3D.anim(dv, "charla", "")
 		"bajar":
 			var ruta: Array = item["ruta"]
 			var d2 := Mini3D.persona(_gente, _rng_gente, ruta[0])

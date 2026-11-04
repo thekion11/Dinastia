@@ -122,6 +122,7 @@ func _frases_de_idiomas_t(dir: String, re: RegEx, frases: Dictionary) -> void:
 ## (generado por `herramientas/dialogos_ciudad.py`) tienen que estar en todos.
 func _probar_paridad_idiomas() -> void:
 	_titulo("IDIOMAS: LOS 8 TIENEN LAS MISMAS FRASES QUE EL CASTELLANO")
+	Idiomas._asegurar_todos()   ## (3-11) la prueba mira los 9 idiomas: se cargan todos
 	var antes := Idiomas.idioma
 	var castellano := {}
 	for k: String in Idiomas.TABLA:
@@ -225,6 +226,7 @@ func _probar_tema_y_ortografia() -> void:
 
 func _probar_glifos_idiomas() -> void:
 	_titulo("M-335: GLIFOS DE LOS 9 IDIOMAS")
+	Idiomas._asegurar_todos()   ## (3-11) la prueba mira los 9 idiomas: se cargan todos
 	var fuente: Font = ThemeDB.fallback_font
 	var vistos := {}
 	for idi: String in Idiomas.ORDEN:

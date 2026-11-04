@@ -172,6 +172,7 @@ func sembrar_leyendas(cuantas: int = LEYENDAS_SEMILLA) -> void:
 			"nivel": Azar.ent(78, 93),
 			"anio_hijo": m.anio + Azar.ent(0, 6),
 			"usado": false,
+			"propio": false,   ## (4-11) como al cargar (`desde_dic`): si no, guardar y cargar cambiaba el mundo
 		})
 
 ## El linaje del chico: de quién es hijo, de qué club era su padre y a qué nivel
@@ -198,6 +199,7 @@ func registrar_retiro(j: Jugador, club: Club) -> bool:
 		"nivel": j.ovr,
 		"anio_hijo": m.anio + 1 + Azar.ent(2, 8),
 		"usado": false,
+		"propio": false,
 	})
 	if club != null and club.id == m.mi_club_id:
 		noticia.emit("Se retira una figura",

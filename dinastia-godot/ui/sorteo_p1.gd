@@ -309,7 +309,7 @@ func _construir() -> void:
 	var vp := SubViewport.new()
 	vp.own_world_3d = true
 	vp.transparent_bg = false
-	vp.msaa_3d = Viewport.MSAA_4X
+	vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
 	if not Calidad.es_compatibilidad():
 		vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 	## UPDATE_ALWAYS y no el "cuando sea visible" por defecto: la física de las
@@ -322,7 +322,7 @@ func _construir() -> void:
 	_vista3d.add_child(vp)
 	_escena = SorteoEscena3D.new()
 	vp.add_child(_escena)
-	_escena.montar(Color(String(p["acento"])), Color(String(p["fondo"])))
+	_escena.montar(Color(String(p["acento"])), Color(String(p["fondo"])), Calidad.elegida)
 	_escena.rotular(String(p["nombre"]), Idiomas.t(_titulo_ronda))
 	_escena.poner_banderas(_paises_del_sorteo())
 

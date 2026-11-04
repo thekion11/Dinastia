@@ -1,6 +1,6 @@
 class_name Peluches
 extends RefCounted
-## LOS PELUCHES COLECCIONABLES (27-10-2026, pieza D de `PLAN_DEL_LUNES.md` §2.2h; decisión del dueño: los peluches dan LOGROS). Tres máquinas de garra en
+## LOS PELUCHES COLECCIONABLES (27-10-2026, pieza D de `PLAN_GENERAL.md` §2.2h; decisión del dueño: los peluches dan LOGROS). Tres máquinas de garra en
 ## UNA sala del centro comercial; cada intento cuesta una moneda de 1 € del EFECTIVO (no de la tarjeta). Lo que cae a la salida va al álbum del DT
 ## (`Roles.peluches`, con su estantería en la vivienda y su resumen en el móvil). Un LOGRO por serie completa y otro por la colección entera.
 ## `PELUCHES` es la TABLA donde se enchufan los modelos: `modelo` vacío = peluche de relleno hecho con esferas (`PelucheModelo`). Desde el 27-10 son los

@@ -97,6 +97,7 @@ static func _siguiente() -> void:
 	aviso._desc = String(d["desc"])
 	aviso._sfx = String(d.get("sfx", ""))
 	padre.add_child(aviso)
+	LectorPantalla.anunciar("%s. %s" % [aviso._titulo, aviso._desc])   ## M-284
 
 var _tipo := "logro"
 var _icono := "🏆"

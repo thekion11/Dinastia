@@ -52,8 +52,9 @@ func _process(_d: float) -> void:
 	if _clima != null:
 		var cam := get_viewport().get_camera_3d()
 		var hay_3d := cam != null and cam.is_inside_tree() and cam.is_visible_in_tree()
-		if _clima.visible == hay_3d:
-			_clima.visible = not hay_3d
+		var ver := not hay_3d and not _clima.has_meta("ahorro")   ## (3-11) `AhorroMenu` la pausa en MÍNIMA
+		if _clima.visible != ver:
+			_clima.visible = ver
 
 
 ## Puentes (fase 6, paso 7): viven en `PanelesClub`.

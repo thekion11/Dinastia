@@ -90,6 +90,10 @@ static func _mats_de(raiz: Node) -> Array:
 	var ahora := Time.get_ticks_msec()
 	var c: Array = _cache.get(clave, [])
 	if c.is_empty() or ahora - int(c[0]) > 5000:
+		## Los estadios ya liberados no se guardan (M-386): cada entrada retenía los materiales de una grada entera.
+		for k: int in _cache.keys():
+			if not is_instance_id_valid(k):
+				_cache.erase(k)
 		c = [ahora, materiales(raiz)]
 		_cache[clave] = c
 	return c[1]

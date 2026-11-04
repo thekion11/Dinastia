@@ -91,7 +91,7 @@ func _ver_ficha(j: Jugador) -> void:
 	## el jugador anterior hasta la siguiente semana.
 	## Diferido (29-9-2026): solo se repinta si la pestaña está a la vista; si
 	## no, al abrirla. Era 0,3-0,5 s en cada clic de la ficha.
-	p._perezoso(p._lista_entren, p._ui_club_vida._pintar_entrenamiento.bind(p.mundo.mi_club()))
+	p._perezoso(p._lista_entren, func() -> void: p._ui_club_vida._pintar_entrenamiento(p.mundo.mi_club()))
 	for n in p._ficha.get_children():
 		if n.has_meta("titulo_bloque"):
 			continue
@@ -127,6 +127,9 @@ func _ver_ficha(j: Jugador) -> void:
 	det.text = Idiomas.t("%s · %d años · %s · %s") % [
 		j.pos_e, j.edad, suyo.nombre if suyo else Idiomas.t("sin club"),
 		Nombres.limpiar(String((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, [Idiomas.t("sin rasgo")])[0])) if j.rasgo != "" else Idiomas.t("sin rasgo")]
+	if j.rasgo != "":   ## (M-305) qué hace su rasgo
+		det.tooltip_text = Idiomas.t(String(((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, ["", ""]) as Array)[1]))
+		det.mouse_filter = Control.MOUSE_FILTER_PASS
 	p._ficha.add_child(det)
 	var credito := Cara.credito_foto(j)
 	if credito != "":
@@ -175,7 +178,9 @@ func _ver_ficha(j: Jugador) -> void:
 		## Los atributos, que son la razón de que un central de 90 de ritmo no
 		## sea un central de 90.
 		for k: String in j.atributos:
-			p._celda(g, String(p.NOMBRES_ATRIBUTOS.get(k, k)), Principal.COL_SUAVE, false, 11)
+			var cn := p._celda(g, String(p.NOMBRES_ATRIBUTOS.get(k, k)), Principal.COL_SUAVE, false, 11)
+			cn.tooltip_text = Idiomas.t(String(TablasMenu.AYUDA_ATRIBUTOS.get(k, "")))
+			cn.mouse_filter = Control.MOUSE_FILTER_PASS
 			var v := int(j.atributos[k])
 			p._celda(g, str(v), Principal.COL_VERDE if v >= 80 else (Principal.COL_TEXTO if v >= 65 else Principal.COL_SUAVE), true, 12)
 

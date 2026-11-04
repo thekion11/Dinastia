@@ -41,7 +41,7 @@ static func lanzar(raiz: Node3D, c1: Color, c2: Color, motivo := "gol", dura := 
 	f.name = "FestejoGrada"
 	f._dura = dura
 	raiz.add_child(f)
-	var medio := Calidad.elegida == Calidad.MEDIO
+	var medio := Calidad.elegida <= Calidad.MEDIO
 	var factor := 0.5 if medio else (1.5 if Calidad.elegida == Calidad.ULTRA else 1.0)
 	## Un papelito negro sobre la grada no se ve: los colores muy oscuros se
 	## cambian por dorado (y el humo, si el club no tiene un color vivo, es el
@@ -89,6 +89,9 @@ static func _sitios_de_grada(raiz: Node3D) -> Array:
 	var clave := raiz.get_instance_id()
 	if _cache_sitios.has(clave):
 		return _cache_sitios[clave]
+	for k: int in _cache_sitios.keys():   ## estadios ya liberados (M-386); un id reutilizado daría los sitios de otro estadio
+		if not is_instance_id_valid(k):
+			_cache_sitios.erase(k)
 	var mejores: Array = []
 	var dist: Array = []
 	for i in 8:

@@ -44,15 +44,48 @@ func _montar() -> void:
 	_montar_menu(cuerpo)
 	_montar_centro(cuerpo)
 	_montar_mando(cuerpo)
+	_montar_perfiles(col)
 	_montar_pie(col)
 	_pintar()
-	## Entrada: aparece y sube un poco.
+	## Entrada: aparece y sube un poco (con animaciones reducidas, al instante).
+	if Animar.reducidas():
+		FocoSeguro.dar((_items_menu[_pestana] as Control))
+		return
 	_raiz.modulate.a = 0.0
 	_raiz.position.y += 16.0
 	var tw := create_tween().set_parallel(true)
 	tw.tween_property(_raiz, "modulate:a", 1.0, 0.28)
 	tw.tween_property(_raiz, "position:y", _raiz.position.y - 16.0, 0.32).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	(_items_menu[_pestana] as Control).grab_focus.call_deferred()
+	FocoSeguro.dar((_items_menu[_pestana] as Control))
+
+## PERFILES DE MANDO (M-442): «Cargar N» y «Guardar en N» para los tres huecos de `MandoPerfiles`.
+func _montar_perfiles(col: VBoxContainer) -> void:
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	col.add_child(fila)
+	var t := Tema.etiqueta(13, Tema.SUAVE, Idiomas.t("Perfiles de mando"))
+	t.tooltip_text = Idiomas.t("Guarda tus teclas, botones y ayudas en un hueco y cárgalos cuando juegue otra persona o cambies de mando.")
+	t.mouse_filter = Control.MOUSE_FILTER_PASS
+	fila.add_child(t)
+	for n in range(1, MandoPerfiles.HUECOS + 1):
+		var bc := Button.new()
+		bc.text = Idiomas.t("Cargar %d") % n
+		bc.disabled = not MandoPerfiles.tiene(n)
+		bc.set_meta("perfil", n)
+		bc.pressed.connect(func() -> void:
+			if MandoPerfiles.cargar_de(n):
+				_foto = {"propio": Mando.propio.duplicate(true), "esquema": Mando.esquema, "ayudas": Mando.ayudas.duplicate()}
+				_pintar()
+				_aviso.text = Idiomas.t("Perfil %d cargado.") % n)
+		fila.add_child(bc)
+		var bg := Button.new()
+		bg.text = Idiomas.t("Guardar en %d") % n
+		bg.flat = true
+		bg.pressed.connect(func() -> void:
+			MandoPerfiles.guardar_en(n)
+			bc.disabled = false
+			_aviso.text = Idiomas.t("Controles guardados en el perfil %d.") % n)
+		fila.add_child(bg)
 
 ## Cuántas filas de acción reasignable tiene la sección «Asignar botones».
 func filas_de_acciones() -> int:

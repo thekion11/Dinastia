@@ -31,10 +31,15 @@ func _ready() -> void:
 	add_child(_vista)
 	_vista.abrir(par[0], 0.85, par[1], Partido.new(par[0], par[1]))
 
+var _disparo := 0
 func _process(_d: float) -> void:
 	_n += 1
 	var repe: Repeticion = _vista.get("_repe")
-	if _n == 600:
+	## 2-11: el cuadro fijo (600) fallaba cada vez que algo nuevo retiene el reloj al abrir (ceremonia, salida del túnel,
+	## precalentado): se dispara cuando hay 8 s grabados, con tope en 1500 cuadros.
+	if _disparo == 0 and repe != null and (repe.segundos_guardados() >= 8.0 or _n >= 1500):
+		_disparo = _n
+	if _n == _disparo and _disparo > 0:
 		_ok(repe.segundos_guardados() >= 8.0, "se graban los últimos segundos (%.1f s)" % repe.segundos_guardados())
 		_minuto_antes = (_vista.get("partido") as Partido).minuto
 		_pos_antes.clear()
@@ -51,7 +56,7 @@ func _process(_d: float) -> void:
 			return   ## sin pantalla (--headless) no hay imagen que guardar
 		img.resize(640, 360)
 		_imgs.append(img)
-	if _n == 600 + 5 and repe.reproduciendo:
+	if _disparo > 0 and _n == _disparo + 5 and repe.reproduciendo:
 		## A mitad de la repetición los jugadores están en OTRO sitio (el pasado).
 		var movidos := 0
 		var i := 0
@@ -60,7 +65,7 @@ func _process(_d: float) -> void:
 				movidos += 1
 			i += 1
 		_ok(movidos > 5, "durante la repetición los jugadores vuelven a donde estaban antes (%d movidos)" % movidos)
-	if _n > 610 and repe != null and not repe.reproduciendo and not has_meta("fin"):
+	if _disparo > 0 and _n > _disparo + 10 and repe != null and not repe.reproduciendo and not has_meta("fin"):
 		set_meta("fin", true)
 		_ok((_vista.get("partido") as Partido).minuto == _minuto_antes, "el reloj del partido no avanzó durante la repetición")
 		var peor := 0.0

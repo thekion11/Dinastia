@@ -291,6 +291,7 @@ var patrimonio: int = 0
 var presets_tactica := PresetsTactica.new()   ## las pizarras con nombre del DT (`presets_tactica.gd`)
 var crisis_pendiente: Array = []   ## golpes de caja ya avisados y aún sin cobrar (`crisis_caja.gd`)
 var peluches := Peluches.new()   ## el álbum de peluches de las recreativas y sus logros (`peluches.gd`)
+var ropero := {}   ## M-188: lo que ha comprado en la tienda deportiva (`RoperoDT`): {id: cantidad}
 var cartera := CarteraDT.new()   ## efectivo, tarjeta y movimientos; la CUENTA es `patrimonio` (ver `cartera_dt.gd`)
 var licencia: int = 0            ## 0 ninguna, 1 B, 2 A, 3 PRO
 var bienes: Dictionary = {}      ## clave -> true, para lo que no es licencia
@@ -421,7 +422,7 @@ func aspecto_3d() -> Dictionary:
 	var l := look_efectivo()
 	var a := {}
 	var corte := String(l.get("pelo", ""))
-	if corte in PersonajeDT.CORTES:
+	if corte in load("res://visor/personaje_dt.gd").CORTES:
 		a["pelo"] = corte
 	if l.get("pelo_c") != null:
 		a["color_pelo"] = String(l["pelo_c"]).trim_prefix("#")
@@ -429,7 +430,7 @@ func aspecto_3d() -> Dictionary:
 		a["piel"] = String(l["piel"]).trim_prefix("#")
 	a["barba"] = int(l.get("barba", 0)) > 0
 	var traje := String(l.get("traje", ""))
-	for r: Array in PersonajeDT.ROPAS:
+	for r: Array in load("res://visor/personaje_dt.gd").ROPAS:
 		if String(r[0]) == traje:
 			a["ropa"] = traje
 	if bool(l.get("gafas", false)):

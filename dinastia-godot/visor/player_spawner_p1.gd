@@ -396,6 +396,7 @@ func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dicti
 		if not es_local:
 			n.rotation.y = PI
 		poner_rotulo(n, jug, es_local)
+		AnclaSuelo.poner(n, nodo["anim"])   ## P4 (3-11): el suelo no se atraviesa
 
 		out.append({"node": n, "anim": nodo["anim"], "id": jid, "jugador": jug,
 			"base_pos": base_pos, "slot_code": slot[0], "es_local": es_local,
@@ -430,6 +431,7 @@ func spawn_arbitros(root: Node3D, kit: Dictionary = {}) -> Array:
 		var n: Node3D = d["nodo"]
 		n.position = p["pos"]
 		n.rotation.y = float(p["rot"])
+		AnclaSuelo.poner(n, d["anim"])
 		out.append({"node": n, "anim": d["anim"], "id": p["id"], "jugador": {},
 			"base_pos": p["pos"], "slot_code": "ARB", "es_local": true,
 			"realista": d["realista"], "arbitro": true})

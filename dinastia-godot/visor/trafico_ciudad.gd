@@ -72,11 +72,19 @@ func _process(delta_real: float) -> void:
 			for c: Dictionary in _controles[ruta]:
 				var d := fposmod(float(c["s"]) - s0, largo)
 				var visto := d < mira if suave else (d < avance + 0.5 and d < 12.0)
-				if visto and not semaforos.verde(int(c["eje"])):
+				## Un peatón cruza con SU fase (verde fijo; ya no empieza en el intermitente), un coche con la del tráfico.
+				var libre := semaforos.peatonal(int(c["eje"])) == "v" if es_peaton else semaforos.verde(int(c["eje"]))
+				if visto and not libre:
+					if es_peaton and not bool(v.get("pidio", false)):   ## M-170: el peatón pulsa el botón del cruce (una vez por espera) y hace el gesto
+						v["pidio"] = true
+						semaforos.pulsa_npc(int(c["eje"]))
+						_gesto(v, "saludo_mano")
 					avance = minf(avance, maxf(0.0, d - 0.3)) if suave else maxf(0.0, d - 0.3)
 					tope = minf(tope, sqrt(2.0 * PLAN * maxf(d - 0.3, 0.0)))
 					frena = true
 					break
+		if es_peaton and not frena:
+			v.erase("pidio")
 		## SIRENAS (27-10-2026, pieza E): ante un vehículo de emergencia con la sirena puesta, coches y buses frenan (con su rampa de siempre).
 		if suave and not sirenas.is_empty() and sirena_cerca((v["nodo"] as Node3D).position):
 			tope = 0.0
@@ -92,7 +100,7 @@ func _process(delta_real: float) -> void:
 				var d2 := fposmod(ps - s0, largo)
 				if suave and d2 < mira:
 					tope = minf(tope, sqrt(2.0 * PLAN * maxf(d2 - 0.3, 0.0)))
-				if d2 < (0.35 if suave else avance):
+				if d2 < (maxf(0.35, vact * delta) if suave else avance):   ## (4-11) también si la parada queda ENTRE la posición y la del paso: a paso grueso (LOD lejano) se saltaba la parada
 					aterriza = d2 + 0.05   ## llega con la velocidad ya casi a cero y se posa justo en la parada
 					avance = d2 + 0.05
 					v["espera"] = float(v.get("espera_parada", 8.0))

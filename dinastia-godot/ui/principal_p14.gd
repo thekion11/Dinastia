@@ -34,6 +34,8 @@ func _al_cambiar_pestana(_idx: int) -> void:
 	_reconstruir_fila_sub()
 	## El contenido de la pestaña entra escalonado (plan maestro B11).
 	_animar_pestana.call_deferred()
+	## M-285: con mando, el foco entra en el contenido de la pestaña.
+	FocoMando.enfocar.call_deferred(_pestanas.get_current_tab_control())
 
 ## Puentes (fase 6, paso 7): viven en `ui/principal/piezas_ui.gd`.
 func _bloque(padre: VBoxContainer, titulo: String, ratio: float) -> VBoxContainer: return _piezas._bloque(padre, titulo, ratio)

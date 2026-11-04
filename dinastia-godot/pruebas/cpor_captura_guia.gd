@@ -33,7 +33,7 @@ func _process(_d: float) -> void:
 		_foto("cpor_guia_sin_balon")
 		print("GUIA: ", _pj._ayuda.text)
 	if _n == 270:
-		var m := _pj.motor
+		var m = _pj.motor
 		m.poseedor = m.usuario
 		m.balon.position = m.pos(m.usuario) + Vector3(0, 1.0, 0)
 		m.vel_balon = Vector3.ZERO

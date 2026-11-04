@@ -47,7 +47,7 @@ const DEFS := [
 	["630", [Vector2(1320, 0), Vector2(1320, 1320), Vector2(-1320, 1320), Vector2(-1320, 0)], "Las Tinajas", "Cerro Blanco"],
 	["648", [Vector2(-1320, 0), Vector2(-1320, -1320), Vector2(1320, -1320), Vector2(1320, 0)], "Cerro Blanco", "Las Tinajas"],
 ]
-## Los cuatro paraderos del anillo del club (los monta `CityBuilder._paradas_bus`): [punto del eje, sentido, esquina con nombre].
+## Los cuatro paraderos del anillo del club (los monta `CargaCiudad.de("CityBuilder")._paradas_bus`): [punto del eje, sentido, esquina con nombre].
 const DEL_CLUB := [
 	[Vector2(205, -170), Vector2(0, 1), "Estadio"],
 	[Vector2(205, 140), Vector2(0, 1), "Zona Industrial"],
@@ -168,8 +168,8 @@ static func _servicio(num: String, ejes: PackedVector2Array, destino: String, tm
 				var ancho := _acera(a, c)
 				var pos := e + lado * ancho
 				tmp[k] = {"eje": e, "dir": dir, "lado": lado, "pos": Vector3(pos.x, 0.0, pos.y),
-					"giro": atan2(-lado.x, -lado.y), "sector": RecorridosRed.sector_de(Vector3(e.x, 0.0, e.y)),
-					"calle": CallesCiudad.calle_del_eje(a, c), "cruce": String(q[1]) if String(q[1]) != "" else CallesCiudad.cruce(e, dir),
+					"giro": atan2(-lado.x, -lado.y), "sector": RecorridosRed.sector_de(Vector3(pos.x, 0.0, pos.y)),   ## el de DONDE queda el paradero (en un borde el eje caía en otro sector)
+					"calle": CargaCiudad.de("CallesCiudad").calle_del_eje(a, c), "cruce": String(q[1]) if String(q[1]) != "" else CargaCiudad.de("CallesCiudad").cruce(e, dir),
 					"club": String(q[1]) != "", "servicios": []}
 			if not (tmp[k]["servicios"] as Array).has(num):
 				(tmp[k]["servicios"] as Array).append(num)
@@ -183,12 +183,12 @@ static func _servicio(num: String, ejes: PackedVector2Array, destino: String, tm
 ## Medio ancho de calzada más acera del tramo: las calles del club, las avenidas (y el bulevar) y las calles de la rejilla.
 static func _acera(a: Vector2, c: Vector2) -> float:
 	var vertical := absf(a.x - c.x) < 0.5
-	var linea := (a.x if vertical else a.y) / CallesCiudad.CELDA
+	var linea = (a.x if vertical else a.y) / CargaCiudad.de("CallesCiudad").CELDA
 	if absf(linea - roundf(linea)) > 0.001:
 		return ACERA_NUCLEO
 	if vertical:
-		return ACERA_AV if CallesCiudad.es_avenida_columna(roundi(linea)) else ACERA_CALLE
-	return ACERA_AV if CallesCiudad.es_avenida_fila(roundi(linea)) else ACERA_CALLE
+		return ACERA_AV if CargaCiudad.de("CallesCiudad").es_avenida_columna(roundi(linea)) else ACERA_CALLE
+	return ACERA_AV if CargaCiudad.de("CallesCiudad").es_avenida_fila(roundi(linea)) else ACERA_CALLE
 
 ## Los paraderos de un tramo recto de `a` a `c`, en orden: [punto del eje, esquina con nombre ("" = la calcula `CallesCiudad`)].
 static func _paradas_tramo(a: Vector2, c: Vector2) -> Array:
@@ -200,12 +200,12 @@ static func _paradas_tramo(a: Vector2, c: Vector2) -> Array:
 	var lo := minf(v0, v1)
 	var hi := maxf(v0, v1)
 	var dir := (c - a).normalized()
-	if absf(eje / CallesCiudad.CELDA - roundf(eje / CallesCiudad.CELDA)) < 0.001:
+	if absf(eje / CargaCiudad.de("CallesCiudad").CELDA - roundf(eje / CargaCiudad.de("CallesCiudad").CELDA)) < 0.001:
 		var k := ceili((lo - DESFASE) / PASO)
 		while DESFASE + PASO * float(k) <= hi:
 			var v := DESFASE + PASO * float(k)
 			var pt := Vector2(v, eje) if horizontal else Vector2(eje, v)
-			if v > lo + MARGEN and v < hi - MARGEN and absf(pt.x - CallesCiudad.RIO_X) >= LADO_RIO:
+			if v > lo + MARGEN and v < hi - MARGEN and absf(pt.x - CargaCiudad.de("CallesCiudad").RIO_X) >= LADO_RIO:
 				out.append([pt, ""])
 			k += 1
 	for q: Array in DEL_CLUB:

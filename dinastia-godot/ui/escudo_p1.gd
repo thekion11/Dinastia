@@ -435,4 +435,4 @@ static func svg_de(c: Club) -> String:
 <path d="%s" fill="url(#br)"/>
 <path d="%s" fill="none" stroke="#00000055" stroke-width="1.4"/>
 <path d="%s" transform="translate(32 35) scale(.86) translate(-32 -35)" fill="none" stroke="#ffffff" stroke-opacity=".55" stroke-width="1.1"/>
-</svg>""" % [d, d, c.color_escudo1(), _patron_svg(p, c.color_escudo2(), AspectoClub.esc(c, 2, "")), d, _borde_de(c), d, EscudoEmblemas.capa_de(c, c.color_escudo1()), d, d, d]
+</svg>""" % [d, d, c.color_escudo1(), _patron_svg(p, c.color_escudo2(), AspectoClub.esc(c, 2, "")), d, _borde_de(c), d, load("res://ui/escudo_emblemas.gd").capa_de(c, c.color_escudo1()), d, d, d]

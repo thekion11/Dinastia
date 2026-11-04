@@ -12,18 +12,18 @@ static func sala_decorable(nombre: String) -> bool:
 
 ## Las salas del club que decoras: las de la partida o, sin partida, unas
 ## de usar y tirar (vista previa).
-static func interiores() -> InterioresClub:
+static func interiores() -> Variant:
 	var it: Variant = EdificioClub.ctx.get("interiores")
-	if it is InterioresClub:
+	if is_instance_of(it, CargaCiudad.de("InterioresClub")):
 		return it
-	var nuevo := InterioresClub.new()
+	var nuevo = CargaCiudad.de("InterioresClub").new()
 	EdificioClub.ctx["interiores"] = nuevo
 	return nuevo
 
 ## EL PANEL DE DECORAR (fase 5): paredes, suelo, objetos y tus fotos. Cada
 ## cambio rehace el edificio al momento (`EdificioClub.reconstruir`).
 static func panel_decorar(capa: CanvasLayer, arbol: SceneTree, sala: String) -> PanelContainer:
-	var it := interiores()
+	var it = interiores()
 	var panel := PanelContainer.new()
 	panel.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
 	panel.offset_left = -430
@@ -51,7 +51,7 @@ static func panel_decorar(capa: CanvasLayer, arbol: SceneTree, sala: String) -> 
 		caja.add_child(l)
 		var fila := HFlowContainer.new()
 		caja.add_child(fila)
-		for hex: String in InterioresClub.COLORES:
+		for hex: String in CargaCiudad.de("InterioresClub").COLORES:
 			var b := Button.new()
 			b.custom_minimum_size = Vector2(34, 30)
 			b.text = "↺" if hex == "" else "■"
@@ -68,8 +68,8 @@ static func panel_decorar(capa: CanvasLayer, arbol: SceneTree, sala: String) -> 
 	caja.add_child(ld)
 	var objs := HFlowContainer.new()
 	caja.add_child(objs)
-	for clave: String in InterioresClub.CATALOGO:
-		var f: Array = InterioresClub.CATALOGO[clave]
+	for clave: String in CargaCiudad.de("InterioresClub").CATALOGO:
+		var f: Array = CargaCiudad.de("InterioresClub").CATALOGO[clave]
 		if bool(f[2]) and sala != "Oficina del DT":
 			continue
 		var b2 := Button.new()

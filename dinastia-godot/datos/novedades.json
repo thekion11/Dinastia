@@ -2,6 +2,64 @@
  "_leeme": "Notas de versión que enseña la pantalla «Novedades» (ui/pantallas/pantalla_novedades.gd). La primera es la más reciente. Cada texto pasa por Idiomas.t: al añadir uno, súmalo con herramientas/sumar_traducciones.py.",
  "versiones": [
   {
+   "version": "0.9.1",
+   "fecha": "2-11-2026",
+   "titulo": "Más rápido, más fiable y una ciudad con transporte de verdad",
+   "secciones": [
+    {
+     "titulo": "Velocidad",
+     "puntos": [
+      "El estadio abre tres veces más rápido y el partido usa la mitad de memoria de vídeo.",
+      "Los menús, el radar, los semáforos y el metro ya no rehacen su trabajo en cada fotograma.",
+      "Las texturas del césped y de la grada se guardan y no se vuelven a dibujar."
+     ]
+    },
+    {
+     "titulo": "Partidas guardadas",
+     "puntos": [
+      "Cargar una partida ya no repite la misma suerte que la semana 1: seguir es lo mismo que no haber cargado.",
+      "Se guardan las posiciones secundarias, la adaptación, la fidelidad pagada y las notas de cada jugador.",
+      "«Deshacer» funciona de verdad, también al reconvertir a un jugador."
+     ]
+    },
+    {
+     "titulo": "Gestión",
+     "puntos": [
+      "«Simular toda la temporada» avanza semana a semana con barra de progreso y se puede detener.",
+      "«Deshacer» en la pizarra táctica: dibujo, perillas, interruptores y once, hasta 20 pasos.",
+      "La bandeja de avisos se filtra por tema: mercado, plantel, cantera, competición, club, prensa y vida.",
+      "«Tu carrera» en Legado: temporadas, partidos, victorias, goles y títulos.",
+      "Las decisiones sin vuelta piden un segundo toque, también al fichar por otro club o vender participaciones."
+     ]
+    },
+    {
+     "titulo": "Ciudad",
+     "puntos": [
+      "Recorridos de bus «Red» sobre el mapa real: 22 recorridos, 124 paraderos con su código y una app en el móvil que dice qué micro pasa, en cuánto llega y su patente.",
+      "La gente sube y baja del bus, del teleférico y del metro; va al trabajo por la mañana y vuelve por la tarde, con maletines y mochilas.",
+      "Semáforos peatonales con botón, una rotonda, lavado de autos, tarjeta de transporte, lluvia con charcos y paraderos iluminados de noche.",
+      "Correos, Deportes, Pizzería, Heladería y la Peña del club tienen su sala por dentro."
+     ]
+    },
+    {
+     "titulo": "Tu club",
+     "puntos": [
+      "Escudos más parecidos a los reales y los trofeos que tiene hoy cada club, en la vitrina y el museo.",
+      "Al ganar un título, la celebración en el estadio: la copa en alto, la vuelta olímpica y la grada de pie.",
+      "La guía de controles del partido muestra los botones del mando que tienes conectado."
+     ]
+    },
+    {
+     "titulo": "Accesibilidad e idiomas",
+     "puntos": [
+      "Avisos visuales de sonido: silbato, goles, grada, tarjetas y sirena salen escritos, también con el sonido apagado.",
+      "Los carteles 3D de la ciudad y los textos que quedaban en castellano ya salen en tu idioma.",
+      "Si la última vez hubo errores, el juego lo dice al arrancar y explica cómo mandar el informe."
+     ]
+    }
+   ]
+  },
+  {
    "version": "0.9.0",
    "fecha": "26-10-2026",
    "titulo": "Primera hora más clara y un mundo con más memoria",

@@ -63,7 +63,7 @@ func _process(_d: float) -> void:
 		return
 	if _n == 14:
 		_foto()                                    # 1: la oficina de fábrica
-		var it := RecorridoClub.interiores()
+		var it = RecorridoClub.interiores()
 		it.pintar("Oficina del DT", "pared", "1f3f6b")
 		it.pintar("Oficina del DT", "suelo", "e9dcc9")
 		for k: String in ["sillon", "bufanda", "planta", "estanteria", "trofeo", "radio"]:
@@ -73,7 +73,7 @@ func _process(_d: float) -> void:
 		EdificioClub.reconstruir(get_tree().get_first_node_in_group("edificio_club"))
 	if _n == 20:
 		_foto()                                    # 2: la oficina decorada
-		var it2 := RecorridoClub.interiores()
+		var it2 = RecorridoClub.interiores()
 		it2.pintar("Sala de prensa", "pared", "7a1f2b")
 		for k: String in ["bandera", "tele", "planta", "cafe"]:
 			it2.poner("Sala de prensa", k)

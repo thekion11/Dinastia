@@ -20,9 +20,9 @@ var activo := false
 var jugadores_equipo: Array = []
 var todos_los_jugadores: Array = []
 var balon: Balon3D = null
-var rig: CameraRig = null
-var radar: RadarPartido = null
-var playback: MatchPlayback = null
+var rig = null
+var radar = null
+var playback = null
 var es_local_user := true
 
 var jugador_activo: Dictionary = {}
@@ -35,7 +35,7 @@ var _cursor_root: Node3D
 var _cursor_malla: MeshInstance3D
 var _cursor_anillo: MeshInstance3D
 
-func setup(all_players: Array, ball_ref: Balon3D, camera_rig: CameraRig, es_local: bool, pb: MatchPlayback, rad: RadarPartido = null) -> void:
+func setup(all_players: Array, ball_ref: Balon3D, camera_rig, es_local: bool, pb, rad = null) -> void:
 	todos_los_jugadores = all_players
 	balon = ball_ref
 	rig = camera_rig

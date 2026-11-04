@@ -20,6 +20,12 @@ static func paradero_elegido(tel: Telefono) -> Dictionary:
 	return {}
 
 ## El minuto de la semana del reloj de la partida (lunes 00:00 = 0). Sin reloj (pruebas sueltas), el lunes a las 18:00.
+## Saldo de la tarjeta Red del DT en €, o -1 si no hay cartera (sin partida).
+static func saldo_tarjeta(m: Mundo) -> int:
+	if m == null or m.roles == null or m.roles.cartera == null:
+		return -1
+	return m.roles.cartera.saldo_transporte
+
 static func minuto_semana(m: Mundo) -> int:
 	if m != null and m.reloj != null and m.reloj.semana >= 0:
 		return m.reloj.minuto_de_semana()
@@ -61,6 +67,13 @@ static func pintar(tel: Telefono) -> void:
 	marca.add_child(_fijo(Tema.etiqueta(Tema.TAM_DESTACADO + 2, Color.WHITE, "Red")))
 	marca.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	fila.add_child(marca)
+	## El saldo de la tarjeta de transporte (la misma que cobra el metro, el teleférico y el bus; se recarga en las máquinas de billetes).
+	var saldo := saldo_tarjeta(tel.m)
+	if saldo >= 0:
+		var sp := Control.new()
+		sp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fila.add_child(sp)
+		fila.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.ORO, Idiomas.t("Tarjeta: %d €") % saldo))
 	cuerpo.add_child(fila)
 	_buscador(tel, cuerpo)
 	var par := paradero_elegido(tel)

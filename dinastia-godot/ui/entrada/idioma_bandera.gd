@@ -79,7 +79,7 @@ func _ready() -> void:
 	_tela.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_tela.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_material = ShaderMaterial.new()
-	_material.shader = SHADER
+	_material.shader = AhorroMenu.shader(SHADER)
 	_material.set_shader_parameter("margen", MARGEN)
 	## Cada bandera en su propio punto de la onda: nueve telas al unísono parecen
 	## una sola animación copiada.

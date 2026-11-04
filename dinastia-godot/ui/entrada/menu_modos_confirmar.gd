@@ -98,14 +98,8 @@ func abrir(titulo: String, sub: String, luz: Color) -> void:
 	_pintar_boton(_btn_si, luz, true)
 	_pintar_boton(_btn_no, luz, false)
 	visible = true
-	_velo.modulate.a = 0.0
-	_panel.modulate.a = 0.0
-	_panel.pivot_offset = _panel.size * 0.5
-	_panel.scale = Vector2(0.94, 0.94)
-	var tw := create_tween().set_parallel(true)
-	tw.tween_property(_velo, "modulate:a", 1.0, 0.18)
-	tw.tween_property(_panel, "modulate:a", 1.0, 0.18)
-	tw.tween_property(_panel, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_velo.modulate.a = 1.0
+	Animar.entrar(_panel, 0.2)   ## M-304: la entrada común (respeta las animaciones reducidas)
 	if is_inside_tree():
 		_btn_si.grab_focus()
 

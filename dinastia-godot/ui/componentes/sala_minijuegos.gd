@@ -99,7 +99,7 @@ func _montar(p: Control, mundo: Mundo) -> void:
 func _abrir_practica(p: Control, mundo: Mundo) -> void:
 	if mundo == null:
 		return
-	var v := VistaEstadio.abrir_practica(p, mundo)
+	var v = load("res://ui/estadio.gd").abrir_practica(p, mundo)
 	if v != null:
 		visible = false
 		v.cerrado.connect(func() -> void:

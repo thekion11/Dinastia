@@ -159,7 +159,7 @@ const CLIP_REAL := {
 	"correr": "Sprint",
 }
 
-## Pasos extra para elegir «mi caminata» (ver `ExploradorCiudad.ESTILOS_CAMINATA`).
+## Pasos extra para elegir «mi caminata» (ver `CargaCiudad.de("ExploradorCiudad").ESTILOS_CAMINATA`).
 const CLIP_CAMINATA := {
 	"caminar_normal": "Walk",
 	"caminar_agachado": "Crouch_Fwd",

@@ -111,6 +111,10 @@ func _distintas(a: PackedStringArray, b: PackedStringArray) -> int:
 	return n
 
 func _recorrer(n: Node, filas: PackedStringArray) -> void:
+	## El móvil que un peatón saca al pararse (`PeatonVida.movil`) es vida en marcha, como su posición:
+	## sale y se guarda al azar mientras camina, no forma parte del armado (3-11).
+	if str(n.name) == PeatonVida.NOMBRE_MOVIL:
+		return
 	var nombre := str(n.name)
 	if nombre.begins_with("@"):
 		nombre = nombre.get_slice("@", 1)

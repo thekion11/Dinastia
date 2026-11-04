@@ -47,7 +47,7 @@ subida; especiales en orden.
 - Barrido de las 211 pruebas de `pruebas/ideas` que no estaban en especiales: 160 pasan. Arreglados: la pelvis de los
   clips en bucle que se disparaba (la guardia lateral del portero bajaba a −821 m durante 0,03 s: `SueloAnim` lineal),
   un sonido inexistente en malabares, el mensaje del patrocinio sin traducir y 5 pruebas viejas. Lo que queda abierto
-  está en `PLAN_DEL_LUNES.md` (fila M-470).
+  está en `PLAN_GENERAL.md` (fila M-470).
 
 ## 7. Sonidos de sistema
 - `ideas/s7_sonidos_sistema`: los 64 sonidos que pide el juego existen; buses separados; gol propio distinto del rival;

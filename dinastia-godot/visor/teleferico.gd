@@ -24,6 +24,7 @@ var _t := 0.0
 var _balanceo := [{"th": 0.0, "om": 0.0, "d": 0.0}, {"th": 0.0, "om": 0.0, "d": 0.0}]
 var cuenta := {}
 var estacion_base: Node3D = null             ## la estación de abajo (para `PasajerosTeleferico`)
+var estacion_cima: Node3D = null             ## la de arriba (la gente que sube y baja allí también)
 
 static func montar(b: CityBuilder) -> Teleferico:
 	var t := Teleferico.new()
@@ -69,52 +70,53 @@ func _rotulo(pos: Vector3, texto: String, tam: float, giro: float = 0.0) -> void
 	l.rotation.y = giro
 	add_child(l)
 
-func _estacion(b: CityBuilder, suelo: Vector3, giro: float, nombre: String, mats: Dictionary) -> void:
-	## Edificio de la estación (cuerpo, tejado inclinado, rueda del cable) con su rótulo; `giro` orienta la fachada.
-	var base_n := Node3D.new()
-	base_n.position = suelo
-	base_n.rotation.y = giro
-	add_child(base_n)
-	if estacion_base == null:
-		estacion_base = base_n   ## la primera que se monta es la de abajo
-	for par in [[Vector3(0, 0.6, 0), Vector3(22, 1.2, 12), mats["losa"]], [Vector3(0, 3.4, 0), Vector3(16, 5.6, 9), mats["muro"]],
-			[Vector3(0, 6.6, 0), Vector3(18, 0.7, 11), mats["tejado"]], [Vector3(0, 8.6, 0), Vector3(1.2, 4.0, 1.2), mats["acero"]]]:
+## Una caja de la estación: [posición, tamaño, material] sobre `padre`.
+func _cajas_de(padre: Node3D, lista: Array) -> void:
+	for par: Array in lista:
 		var mi := MeshInstance3D.new()
 		var bm := BoxMesh.new()
 		bm.size = par[1]
 		mi.mesh = bm
 		mi.material_override = par[2]
 		mi.position = par[0]
-		base_n.add_child(mi)
+		padre.add_child(mi)
+
+## Edificio de la estación (cuerpo, tejado inclinado, rueda del cable) con su rótulo; `giro` orienta la fachada.
+func _estacion(b: CityBuilder, suelo: Vector3, giro: float, nombre: String, mats: Dictionary) -> void:
+	var base_n := Node3D.new()
+	base_n.position = suelo
+	base_n.rotation.y = giro
+	add_child(base_n)
+	if estacion_base == null:
+		estacion_base = base_n   ## la primera que se monta es la de abajo
+	else:
+		estacion_cima = base_n
+	_cajas_de(base_n, [[Vector3(0, 0.6, 0), Vector3(22, 1.2, 12), mats["losa"]], [Vector3(0, 3.4, 0), Vector3(16, 5.6, 9), mats["muro"]],
+			[Vector3(0, 6.6, 0), Vector3(18, 0.7, 11), mats["tejado"]], [Vector3(0, 8.6, 0), Vector3(1.2, 4.0, 1.2), mats["acero"]]])
+	_rueda_del_cable(base_n, mats["acero"])
+	_anden_y_rotulo(base_n, nombre, mats)
+	_escalera_lateral(b, base_n, suelo, mats["losa"])
+	cuenta["detalles_estacion"] = int(cuenta.get("detalles_estacion", 0)) + TelefericoEstacion.detalles(base_n, estacion_cima == base_n)
+
+func _rueda_del_cable(base_n: Node3D, acero: Material) -> void:
 	var rueda := MeshInstance3D.new()
 	var cm := CylinderMesh.new()
 	cm.top_radius = 2.6
 	cm.bottom_radius = 2.6
 	cm.height = 0.8
 	rueda.mesh = cm
-	rueda.material_override = mats["acero"]
+	rueda.material_override = acero
 	rueda.rotation.x = PI * 0.5
 	rueda.position = Vector3(0, ALTO_CABLE - 0.8, -4.5)
 	base_n.add_child(rueda)
-	## Andén cubierto delante, con marquesina sobre cuatro columnas, y el rótulo grande sobre la fachada.
-	for par in [[Vector3(0, 0.25, 9.8), Vector3(22, 0.5, 8), mats["losa"]], [Vector3(0, 5.4, 9.8), Vector3(23, 0.4, 8.8), mats["tejado"]],
-			[Vector3(0, 9.4, 2.4), Vector3(17, 2.2, 0.4), mats["acero"]]]:
-		var mi2 := MeshInstance3D.new()
-		var bm2 := BoxMesh.new()
-		bm2.size = par[1]
-		mi2.mesh = bm2
-		mi2.material_override = par[2]
-		mi2.position = par[0]
-		base_n.add_child(mi2)
+
+## Andén cubierto delante, con marquesina sobre cuatro columnas, y el rótulo grande sobre la fachada.
+func _anden_y_rotulo(base_n: Node3D, nombre: String, mats: Dictionary) -> void:
+	_cajas_de(base_n, [[Vector3(0, 0.25, 9.8), Vector3(22, 0.5, 8), mats["losa"]], [Vector3(0, 5.4, 9.8), Vector3(23, 0.4, 8.8), mats["tejado"]],
+			[Vector3(0, 9.4, 2.4), Vector3(17, 2.2, 0.4), mats["acero"]]])
 	for cx: float in [-10.0, 10.0]:
 		for cz: float in [6.4, 13.2]:
-			var col := MeshInstance3D.new()
-			var bc := BoxMesh.new()
-			bc.size = Vector3(0.5, 5.0, 0.5)
-			col.mesh = bc
-			col.material_override = mats["acero"]
-			col.position = Vector3(cx, 2.9, cz)
-			base_n.add_child(col)
+			_cajas_de(base_n, [[Vector3(cx, 2.9, cz), Vector3(0.5, 5.0, 0.5), mats["acero"]]])
 	var l := Label3D.new()
 	l.text = nombre
 	l.font_size = 64
@@ -122,18 +124,13 @@ func _estacion(b: CityBuilder, suelo: Vector3, giro: float, nombre: String, mats
 	l.outline_size = 12
 	l.position = Vector3(0, 9.4, 2.7)
 	base_n.add_child(l)
-	## Escalera lateral del suelo (-0,2) a la losa (1,2): 6 peldaños que `EscaleraVida` hace subir y bajar a la gente.
+
+## Escalera lateral del suelo (-0,2) a la losa (1,2): 6 peldaños que `EscaleraVida` hace subir y bajar a la gente.
+func _escalera_lateral(b: CityBuilder, base_n: Node3D, suelo: Vector3, losa: Material) -> void:
 	for s in 6:
 		var alto_s := 1.4 * float(s + 1) / 6.0
-		var peld := MeshInstance3D.new()
-		var bp := BoxMesh.new()
-		bp.size = Vector3(0.4, alto_s, 2.6)
-		peld.mesh = bp
-		peld.material_override = mats["losa"]
-		peld.position = Vector3(13.4 - 0.4 * float(s), -0.2 + alto_s * 0.5, 0.0)
-		base_n.add_child(peld)
+		_cajas_de(base_n, [[Vector3(13.4 - 0.4 * float(s), -0.2 + alto_s * 0.5, 0.0), Vector3(0.4, alto_s, 2.6), losa]])
 	EscaleraVida.registrar(b, suelo + base_n.basis * Vector3(13.6, -0.2, 0), suelo + base_n.basis * Vector3(11.4, 1.2, 0), 6)
-	cuenta["detalles_estacion"] = int(cuenta.get("detalles_estacion", 0)) + TelefericoEstacion.detalles(base_n)
 
 func _construir(b: CityBuilder) -> void:
 	base = _suelo(b, BASE_XZ)
@@ -176,6 +173,7 @@ func _construir(b: CityBuilder) -> void:
 		cabinas.append(cab)
 	TelefericoPaisaje.montar(self, b, base, cima)
 	PasajerosTeleferico.crear(self, estacion_base)   ## la gente que sube y baja en la estación de abajo
+	PasajerosTeleferico.crear(self, estacion_cima, true)   ## y en la de arriba
 	mirador = MiradorCerro.new()
 	mirador.configurar(self, b, giro)
 	b.puntos_clic.append({"k": "tele_base", "n": "Teleférico: subir al Cerro", "pos": base + dir * -9.0, "estado": "ciudad", "radio": 22.0, "alcance": 8.0})

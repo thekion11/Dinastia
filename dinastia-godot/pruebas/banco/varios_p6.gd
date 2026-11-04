@@ -299,7 +299,7 @@ func _probar_tutorial() -> void:
 	_titulo("TUTORIAL INMERSIVO")
 	const OBJETIVOS := ["estado", "grupos", "chips", "plantel", "ficha", "dinero", "partido",
 		"tabla", "registro", "calendario", "un_dia", "guardar"]
-	const SIMPLES := ["grupo", "ficha", "grupo_club", "plantel", "dinero", "partido"]
+	const SIMPLES := ["grupo", "ficha", "grupo_club", "plantel", "dinero", "partido", "menu"]
 	var modos := ["dt", "dir", "ayudante", "interino", "cantera", "imperio", "jeque", "creador"]
 	## Con una partida de verdad: el mentor tiene que hablar de ELLA.
 	var m := Mundo.new()
@@ -326,7 +326,11 @@ func _probar_tutorial() -> void:
 				misiones += 1
 				if not p.has("hecho"):
 					malos.append("%s: misión sin forma de cumplirse (%s)" % [modo, p["mision"]])
-			if p.has("objetivo") and not OBJETIVOS.has(String(p["objetivo"])):
+			## (3-11, rediseño del menú central) También «riel» y «menu:<id>» (el botón del riel de ese menú).
+			var obj := String(p.get("objetivo", ""))
+			if obj.begins_with("menu:") and not MenusLaterales.menu_por_id(obj.substr(5)).is_empty():
+				pass
+			elif p.has("objetivo") and obj != "riel" and not OBJETIVOS.has(obj):
 				malos.append("%s: objetivo %s" % [modo, p["objetivo"]])
 			for k in ["hecho", "mostrar"]:
 				if not p.has(k):

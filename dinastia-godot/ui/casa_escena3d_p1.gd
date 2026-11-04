@@ -257,10 +257,10 @@ func _entorno() -> void:
 	## MÁS REALISMO (28-9-2026, "falta realismo al ambiente"): sombras de
 	## contacto (SSAO), un poco de resplandor en lo que brilla, y la bruma de
 	## la tarde que aclara y azula lo lejano -los cerros del fondo-.
-	e.ssao_enabled = true
+	e.ssao_enabled = Calidad.elegida > Calidad.MINIMO
 	e.ssao_radius = 1.2
 	e.ssao_intensity = 1.6
-	e.glow_enabled = true
+	e.glow_enabled = Calidad.elegida > Calidad.MINIMO
 	e.glow_intensity = 0.35
 	e.fog_enabled = true
 	e.fog_light_color = Color(0.78, 0.8, 0.84)
@@ -277,7 +277,7 @@ func _entorno() -> void:
 	sol.rotation_degrees = Vector3(-28.0, -55.0, 0.0)
 	sol.light_energy = 1.25
 	sol.light_color = Color(1.0, 0.9, 0.78)
-	sol.shadow_enabled = true
+	sol.shadow_enabled = Calidad.elegida > Calidad.MINIMO
 	sol.shadow_blur = 1.5
 	sol.directional_shadow_max_distance = 60.0
 	add_child(sol)

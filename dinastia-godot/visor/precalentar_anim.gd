@@ -16,7 +16,7 @@ static func lanzar(cuerpos: Array = ["male", "female"]) -> int:
 		return -1
 	var trabajos: Array = []
 	for cuerpo: String in cuerpos:
-		var d := FutbolistaQ.crear(1.9, cuerpo)
+		var d = load("res://visor/futbolista_q.gd").crear(1.9, cuerpo)
 		if d.is_empty():
 			continue
 		var esq: Skeleton3D = d["esqueleto"]
@@ -27,7 +27,7 @@ static func lanzar(cuerpos: Array = ["male", "female"]) -> int:
 	_tarea = WorkerThreadPool.add_task(func() -> void:
 		for t: Array in trabajos:
 			for acciones in [true, false]:
-				AnimQuaternius._en_cache(t[0], t[1], acciones)
+				load("res://visor/anim_quaternius.gd")._en_cache(t[0], t[1], acciones)
 			(t[2] as Node).queue_free.call_deferred())
 	return _tarea
 
