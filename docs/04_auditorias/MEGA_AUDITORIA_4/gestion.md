@@ -32,7 +32,7 @@ caja −250 M, todos lesionados y sancionados, club con 48 jugadores y otro vac�
   juveniles la media del plan por defecto saltaba de +3,6 a +2,8 (suelo 3,0) solo porque A4-GES-003 dejó de gastar azar al leer
   la ficha mental. Arreglo: 6 semillas (24 juveniles). Cifras con la muestra grande: plan por defecto +3,4 (el dueño pidió +4-6) y
   buen plan +5,7 con un máximo de +11 (pidió ≤ +8; el freno de `Entrenamiento.freno_temporada` es probabilístico y la curva anual
-  `ProgresoJugador.anual` suma aparte). Queda como DEUDA DE CALIBRACIÓN (no es un fallo de código). Prueba: ARREGLADA.
+  `ProgresoJugador.anual` suma aparte). Prueba: ARREGLADA. Calibración: SALDADA (4-11, repaso 5): `Entrenamiento` 0,10→0,13 y 0,014→0,018, umbral del freno 4/6 y curva 0,5-0,2·sobra: con 6 semillas el plan por defecto da +4,2 (pedido +4-6) y el buen plan +7,1 de media, p90 +10, máx +10 (pedido ≤ +8 de media); la prueba vuelve a exigir +4-6 y ≤ +8.
 - [A4-GES-007] (caza, gravedad: alto, cambia el juego) CEDIDOS: mientras está cedido el jugador figura en el plantel del club que lo
   recibe, y nadie lo miraba: (a) la IA podía COMPRÁRSELO a ese club (que cobraba por un jugador prestado) y al acabar la cesión volvía a
   su dueño, con el comprador sin jugador ni dinero; (b) te llegaban OFERTAS por un jugador que solo tienes cedido (vendías algo ajeno);
@@ -68,3 +68,8 @@ Sonda `pruebas/ideas/a4_noticias_idiomas.tscn` (en `especiales.sh`): recoge toda
 Sondas `a4_gestion_directiva` (en el banco `club_directiva`: objetivos de las 29 ligas de los países generados en 6 mundos, 1000 derrotas/500 victorias, cierres con puestos 0/−3/500, dueño que no puede ser despedido, 60 trimestres de junta con respuestas a/b/inválida en 4 situaciones) y `a4_gestion_prensa` (15 ruedas encadenadas con índices −1/99 y tiempos −5/0/10⁹ s, abrir con otra abierta, delegar a media rueda, previa forzada, club sin plantel, 120 semanas con ánimo y relación en 0-100). 0 fallos salvo lo siguiente.
 
 - [A4-GESTION-005] (repaso 5, gravedad: medio, cambia cómo se juega) La junta repartía DIVIDENDOS aunque el club estuviera en números rojos o sin caja: aceptar «Repartir dividendos» bajaba el saldo de −5 000 000 a −7 360 009 (nada en `pantalla_despacho.gd` ni `citas.gd` lo impedía). `nucleo/junta.gd` (`resolver`, rama «dividendos»). Estado: arreglado (commit de esta rama): se paga como mucho lo que haya en caja (`min(monto, max(saldo, 0))`), con texto propio para pago parcial y para caja vacía (traducido en los 8 idiomas); el saldo ya no baja de 0 por dividendos. Prueba: `a4_gestion_directiva`.
+
+### Repaso 5, sexta tanda (entrenamiento, lesiones, médico y maestría)
+Sonda `pruebas/ideas/a4_gestion_entrenamiento.tscn`: 12 temporadas con el plan más duro (técnico, «al límite», 3 prioritarios), 60 lesiones encadenadas con severidades 0/1/2/99/−3, chequeo de fatiga con carga 0/−5/10⁹, recuperación con 0 semanas, terapia con caja 0, en rojo y repetida, maestría hasta el nivel máximo en las 15 categorías, árbol del DT sin puntos/con 1000/inexistente/repetido. 0 fallos salvo lo siguiente.
+
+- [A4-GESTION-006] (repaso 5, gravedad: bajo) `Medico.riesgo_por_fatiga` devolvía una «probabilidad» sin tope (con carga 10⁹ salían 9·10⁷): inocuo para `Azar.suerte`, pero la ficha o el informe podrían mostrar porcentajes absurdos. `nucleo/medico_p1.gd:298`. Estado: arreglado (commit de esta rama): tope 1.
