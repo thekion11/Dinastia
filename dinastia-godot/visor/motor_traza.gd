@@ -88,6 +88,7 @@ static func pase(m: MotorJugable, p: Dictionary, q: Dictionary, dist: float) -> 
 	var d := "corto" if dist < 12.0 else ("medio" if dist < 22.0 else "largo")
 	var clase := "%s_%s_%s" % [mueve, linea, d]
 	m._contar("traza_pase_" + clase)
+	_progresion(m, p, q)
 	if dist >= 22.0:
 		_opcion_corta(m, p, q)
 	m.set_meta("_traza_pase", clase)
@@ -230,4 +231,19 @@ static func _fin_entrada(m: MotorJugable, e: Dictionary, dentro: bool) -> void:
 	if fin != "":
 		m._contar("traza_ent_fin_" + fin)
 		e.erase("ent")
+
+## Zona de un PUNTO (no del balón) vista desde `eq`: `propio`/`medio`/`ataque` (último tercio sin área)/`area` (área rival).
+static func zona_punto(m: MotorJugable, eq: int, pt: Vector3) -> String:
+	var d := m.dir_ataque(eq == 0)
+	if absf(pt.x) < m.AREA_X and absf(pt.z - m.LARGO * d) < m.AREA_Z:
+		return "area"
+	var progreso := (pt.z * d + m.LARGO) / (2.0 * m.LARGO)
+	return "propio" if progreso < 0.33 else ("medio" if progreso < 0.66 else "ataque")
+
+## Ciclo 29 (plan «construir hasta el área», C1): de cada pase de la IA, zona de origen → zona del receptor (`traza_prog_{origen}_{destino}`), y cuántos son progresivos (el balón gana ≥ 10 m hacia el arco rival).
+static func _progresion(m: MotorJugable, p: Dictionary, q: Dictionary) -> void:
+	var eq := 0 if bool(p["es_local"]) else 1
+	m._contar("traza_prog_%s_%s" % [zona_punto(m, eq, m.pos(p)), zona_punto(m, eq, m.pos(q))])
+	if (m.pos(q).z - m.pos(p).z) * m.dir_ataque(bool(p["es_local"])) >= 10.0:
+		m._contar("traza_prog_progresivo")
 
