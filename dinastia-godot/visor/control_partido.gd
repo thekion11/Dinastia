@@ -299,7 +299,7 @@ func _ejecutar_disparo(potencia: float) -> void:
 	var node: Node3D = jugador_activo["node"]
 	var z_arco: float = -52.5 if es_local_user else 52.5
 	var dist := Vector2(node.global_position.x, node.global_position.z - z_arco).length()
-	var tiro := ControlPartido.resolver_tiro(potencia, dist, randf(), randf())
+	var tiro := ControlPartido.resolver_tiro(potencia, dist, Azar.f(), Azar.f())   ## con la semilla del juego (antes `randf()` global: no se repetía)
 	var target_tiro := Vector3(tiro["x"], tiro["y"], z_arco - (0.8 if es_local_user else -0.8))
 
 	var ap: AnimationPlayer = jugador_activo.get("anim")

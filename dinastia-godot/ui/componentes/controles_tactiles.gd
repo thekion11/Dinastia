@@ -243,8 +243,8 @@ func _toca(dedo: int, pos: Vector2) -> void:
 		_dedo_stick = dedo
 		_centro_stick = pos
 		_mueve_stick(pos)
-	elif _gestos():
-		_gesto[dedo] = {"tipo": "libre", "ini": pos}   ## zona libre de la derecha: tocar = pase, deslizar hacia arriba = tiro
+	elif _gestos() and not _en_zona_stick(pos):
+		_gesto[dedo] = {"tipo": "libre", "ini": pos}   ## (un segundo dedo en la zona del stick, con el stick ya en uso, no cuenta: antes daba pases al levantarlo)   ## zona libre de la derecha: tocar = pase, deslizar hacia arriba = tiro
 	queue_redraw()
 
 ## Un dedo que empezó un gesto se mueve: desde Tiro, rosca (Mod); desde Pase, pase largo.
