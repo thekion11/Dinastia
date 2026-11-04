@@ -112,6 +112,10 @@ func _process(_d: float) -> void:
 			FileAccess.open(OS.get_environment("RECORRIDO_LARGOS"), FileAccess.WRITE).store_string(JSON.stringify(_largos, " "))
 			var cortados := _largos.values().filter(func(v: String) -> bool: return v.begins_with("cortado")).size()
 			print("LARGOS: %d textos que no caben (%d cortados)" % [_largos.size(), cortados])
+			## RECORRIDO_ACCESO_MAX=n: prueba. Falla si hay más de n controles que el teclado no enfoca o que el lector leería en blanco.
+			if OS.get_environment("RECORRIDO_ACCESO_MAX") != "":
+				var sin := _largos.keys().filter(func(k: String) -> bool: return k.contains("| acceso")).size()
+				print("FIN ACCESO. %d fallos" % (1 if sin > int(OS.get_environment("RECORRIDO_ACCESO_MAX")) else 0))
 			## RECORRIDO_ANCHO_MAX=n: prueba. Falla si hay más de n paneles deslizables cuyo contenido sea más ancho que ellos (la tabla de Mi plantel, de 10-50 px de más, está aceptada: se desliza).
 			if OS.get_environment("RECORRIDO_ANCHO_MAX") != "":
 				var anchos := _largos.keys().filter(func(k: String) -> bool: return k.contains("| ancho") and not k.begins_with("tab Mi plantel")).size()
@@ -179,6 +183,22 @@ func _informe_tiempos() -> void:
 ## (clip o «…») porque es más ancho que el propio control.
 func _medir() -> void:
 	var ancho := get_viewport().get_visible_rect().size.x
+	## Con RECORRIDO_ACCESO (accesibilidad al límite): un control que se pulsa o se escribe, visible, que el teclado/mando no puede enfocar, o que el lector de pantalla leería en blanco.
+	if OS.get_environment("RECORRIDO_ACCESO") != "":
+		for n2 in _p.find_children("*", "Control", true, false):
+			var c2 := n2 as Control
+			if not (c2 is Button or c2 is LineEdit or c2 is TextEdit or c2 is Slider) or not c2.is_visible_in_tree() or c2.get_window() != get_tree().root or c2.size.x < 4.0:
+				continue
+			if c2 is Button and (c2 as Button).disabled:
+				continue
+			var nom2 := LectorPantalla.texto_de(c2)
+			var que := ""
+			if c2.focus_mode == Control.FOCUS_NONE and not (c2 is Button and (c2 as Button).toggle_mode and false):
+				que = "sin foco (teclado/mando no llega)"
+			elif nom2 == "" and not (c2 is Slider or c2 is SpinBox or c2 is TextEdit):
+				que = "el lector lo leería en blanco"
+			if que != "":
+				_largos["%s | acceso %s %s" % [_donde, c2.get_class(), nom2.left(30)]] = que + " @" + str(c2.get_path()).right(60)
 	## Con RECORRIDO_ANCHO: un ScrollContainer visible cuyo contenido es más ANCHO que él (un texto sin salto de línea ensancha todo el panel: en alemán o en el lienzo del móvil).
 	if OS.get_environment("RECORRIDO_ANCHO") != "":
 		for sc2 in _p.find_children("*", "ScrollContainer", true, false):

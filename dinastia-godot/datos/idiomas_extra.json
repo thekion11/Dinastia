@@ -7517,7 +7517,9 @@
   "Familias enteras al estadio": "Whole families at the stadium",
   "Se juega replegado y a la espalda. Los bloques bajos ganan partidos.": "Teams sit deep and play in behind. Low blocks win matches.",
   "Los accionistas cobran solo una parte: la caja no da para más.": "The shareholders only get part of it: the cash box can't stretch further.",
-  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "There is no cash for dividends: the shareholders settle for the promise."
+  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "There is no cash for dividends: the shareholders settle for the promise.",
+  "Opción %d de %d": "Option %d of %d",
+  "elegida": "selected"
  },
  "pt": {
   "Historia": "História",
@@ -15037,7 +15039,9 @@
   "Familias enteras al estadio": "Famílias inteiras no estádio",
   "Se juega replegado y a la espalda. Los bloques bajos ganan partidos.": "Joga-se recuado e nas costas. Os blocos baixos ganham jogos.",
   "Los accionistas cobran solo una parte: la caja no da para más.": "Os acionistas recebem só uma parte: o cofre não dá para mais.",
-  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Não há caixa para dividendos: os acionistas contentam-se com a promessa."
+  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Não há caixa para dividendos: os acionistas contentam-se com a promessa.",
+  "Opción %d de %d": "Opção %d de %d",
+  "elegida": "escolhida"
  },
  "patrones": [
   [
@@ -28532,7 +28536,9 @@
   "Familias enteras al estadio": "Des familles entières au stade",
   "Se juega replegado y a la espalda. Los bloques bajos ganan partidos.": "On joue en retrait et dans le dos. Les blocs bas gagnent des matchs.",
   "Los accionistas cobran solo una parte: la caja no da para más.": "Les actionnaires n'en touchent qu'une partie : la caisse ne peut pas faire plus.",
-  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Il n'y a pas de quoi verser des dividendes : les actionnaires se contentent de la promesse."
+  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Il n'y a pas de quoi verser des dividendes : les actionnaires se contentent de la promesse.",
+  "Opción %d de %d": "Option %d sur %d",
+  "elegida": "choisie"
  },
  "it": {
   "Historia": "Storia",
@@ -36052,7 +36058,9 @@
   "Familias enteras al estadio": "Famiglie intere allo stadio",
   "Se juega replegado y a la espalda. Los bloques bajos ganan partidos.": "Si gioca arretrati e alle spalle. I blocchi bassi vincono le partite.",
   "Los accionistas cobran solo una parte: la caja no da para más.": "Gli azionisti incassano solo una parte: la cassa non basta per di più.",
-  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Non c'è cassa per i dividendi: gli azionisti si accontentano della promessa."
+  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Non c'è cassa per i dividendi: gli azionisti si accontentano della promessa.",
+  "Opción %d de %d": "Opzione %d di %d",
+  "elegida": "scelta"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43572,7 +43580,9 @@
   "Familias enteras al estadio": "Ganze Familien im Stadion",
   "Se juega replegado y a la espalda. Los bloques bajos ganan partidos.": "Man spielt tief und in den Rücken der Abwehr. Tiefe Blöcke gewinnen Spiele.",
   "Los accionistas cobran solo una parte: la caja no da para más.": "Die Aktionäre bekommen nur einen Teil: Die Kasse gibt nicht mehr her.",
-  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Es ist kein Geld für Dividenden da: Die Aktionäre begnügen sich mit dem Versprechen."
+  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Es ist kein Geld für Dividenden da: Die Aktionäre begnügen sich mit dem Versprechen.",
+  "Opción %d de %d": "Option %d von %d",
+  "elegida": "gewählt"
  },
  "ca": {
   "Historia": "Història",
@@ -51092,7 +51102,9 @@
   "Familias enteras al estadio": "Famílies senceres a l'estadi",
   "Se juega replegado y a la espalda. Los bloques bajos ganan partidos.": "Es juga replegat i a l'esquena. Els blocs baixos guanyen partits.",
   "Los accionistas cobran solo una parte: la caja no da para más.": "Els accionistes cobren només una part: la caixa no dóna per més.",
-  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "No hi ha caixa per a dividends: els accionistes es conformen amb la promesa."
+  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "No hi ha caixa per a dividends: els accionistes es conformen amb la promesa.",
+  "Opción %d de %d": "Opció %d de %d",
+  "elegida": "triada"
  },
  "pl": {
   "Club": "Klub",
@@ -58612,7 +58624,9 @@
   "Familias enteras al estadio": "Całe rodziny na stadionie",
   "Se juega replegado y a la espalda. Los bloques bajos ganan partidos.": "Gra się cofniętym blokiem i za plecy obrońców. Niski blok wygrywa mecze.",
   "Los accionistas cobran solo una parte: la caja no da para más.": "Akcjonariusze dostają tylko część: kasa nie pozwala na więcej.",
-  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Nie ma gotówki na dywidendy: akcjonariusze zadowalają się obietnicą."
+  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Nie ma gotówki na dywidendy: akcjonariusze zadowalają się obietnicą.",
+  "Opción %d de %d": "Opcja %d z %d",
+  "elegida": "wybrana"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66132,6 +66146,8 @@
   "Familias enteras al estadio": "Stadyumda koca aileler",
   "Se juega replegado y a la espalda. Los bloques bajos ganan partidos.": "Geride durup arkaya oynanıyor. Alçak bloklar maç kazanıyor.",
   "Los accionistas cobran solo una parte: la caja no da para más.": "Hissedarlar yalnızca bir kısmını alıyor: kasa daha fazlasına yetmiyor.",
-  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Temettü için nakit yok: hissedarlar söze razı oluyor."
+  "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Temettü için nakit yok: hissedarlar söze razı oluyor.",
+  "Opción %d de %d": "Seçenek %d / %d",
+  "elegida": "seçili"
  }
 }
