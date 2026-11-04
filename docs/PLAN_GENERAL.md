@@ -29,6 +29,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   MSAA y cierra el informe con «MSAA a N %: con X FPS · sin Y FPS · apagarlo gana Z %»: el informe de TU teléfono dirá cuánto cuesta allí; con esos
   números se decide (MÍNIMA sin MSAA, o un ajuste «Suavizado de bordes»).
   (7) **DECISIÓN — bonos del humano al simular** (A4-GESTION-010): el club del humano lleva bonos de staff, DT, maestría, vestuario, entrenamiento y obras que ningún club de la IA tiene y que valen aunque no toque nada (por eso, con el humano en el club más grande, gana 15-17 ligas de 30; con la IA sola, 13 de media): ¿deben valer también cuando el mundo se simula sin gestionar?
+  (8) **DECISIÓN — grada del estadio propio** (sesión ciudad, 4-11): las butacas visibles se saturan: aforo 5 700 → 2 135, 18 700 → 2 688 y desde ~30 000 siempre 2 912 (techo de instancias + llenado 50-100 %). Que la grada crezca más con el aforo exige subir ese techo (coste de rendimiento en el móvil): ¿se sube?
 - Fallos abiertos: ver `docs/04_auditorias/MEGA_AUDITORIA_4/reglas_y_codigo.md` (A4-REGLAS-001 y 005 esperan decisión del dueño).
 
 
