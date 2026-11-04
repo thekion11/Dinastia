@@ -110,7 +110,7 @@ func _process(delta_real: float) -> void:
 				if o == v:
 					continue
 				var d3 := fposmod(float(o["s"]) - s0, largo)
-				if d3 < 9.0:
+				if d3 < 9.0 + avance:   ## A4-M3D-012: a paso grueso (LOD lejano, ~20 m) la distancia de seguridad cuenta también el avance del paso
 					avance = minf(avance, maxf(0.0, d3 - 8.0))
 				if suave and d3 < mira + 9.0:
 					tope = minf(tope, float(o.get("vact", o["vel"])) + sqrt(2.0 * PLAN * maxf(d3 - 9.0, 0.0)))
