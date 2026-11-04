@@ -5,8 +5,8 @@ extends "res://ui/componentes/tutorial_p1.gd"
 func _pintar_panel_aspecto(ctx: Dictionary) -> void:
 	for h in _panel_aspecto.get_children():
 		h.queue_free()
-	for fila: Array in [["ropa", "Chaqueta", PersonaRealista.ROPAS], ["pelo", "Pelo", PersonaRealista.PELOS],
-			["piel", "Piel", PersonaRealista.PIELES]]:
+	for fila: Array in [["ropa", "Chaqueta", load("res://visor/persona_realista.gd").ROPAS], ["pelo", "Pelo", load("res://visor/persona_realista.gd").PELOS],
+			["piel", "Piel", load("res://visor/persona_realista.gd").PIELES]]:
 		var clave := String(fila[0])
 		var opciones: Array = (fila[2] as Dictionary).keys()
 		var h := HBoxContainer.new()
@@ -290,7 +290,7 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	_lbl_cargo.add_theme_font_size_override("font_size", 12)
 	_lbl_cargo.add_theme_color_override("font_color", COL_SUAVE)
 	quien.add_child(_lbl_cargo)
-	if PersonaRealista.disponible():
+	if load("res://visor/persona_realista.gd").disponible():
 		var editar := Button.new()
 		editar.text = "✎"
 		editar.flat = true

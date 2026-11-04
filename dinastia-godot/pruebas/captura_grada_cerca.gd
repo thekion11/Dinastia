@@ -24,7 +24,7 @@ func _process(_d: float) -> void:
 		var club := _ui.carrera.club(CarreraJugadorUI.mundo)
 		var par := _ui._partido_de_la_semana(club)
 		_pj = PartidoJugable.abrir(_ui, CarreraJugadorUI.mundo, _ui.carrera, par[0], par[1], 60.0)
-		var m := _pj.motor
+		var m = _pj.motor
 		var d := MotorJugable.dir_ataque(bool(m.usuario["es_local"]))
 		m._empezar_saque("corner", bool(m.usuario["es_local"]), Vector3(33.7, 0.11, 52.2 * d))
 	if _n == 70:

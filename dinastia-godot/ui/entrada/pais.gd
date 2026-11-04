@@ -1,6 +1,6 @@
 class_name PantallaPais
 extends Control
-## ETAPA 3 DE LA ENTRADA: ELEGIR PAÍS (fase 1 del MEGAPLAN, `docs/PLAN_DEL_LUNES.md`
+## ETAPA 3 DE LA ENTRADA: ELEGIR PAÍS (fase 1 del MEGAPLAN, `docs/PLAN_GENERAL.md`
 ## §3.1, «Globo»). Pantalla propia a pantalla completa que monta `OrquestadorEntrada`:
 ##   · el globo 3D de siempre (`Globo3D`) para elegir girándolo o tocando un pin, y al
 ##     lado la lista por continentes (la vía rápida, y la accesible con teclado/mando);
@@ -10,7 +10,7 @@ extends Control
 ##   · a la derecha la ficha: liga, nivel, capital y sus clubes para elegir cuál dirigir.
 ##     Si el modo es CREAR CLUB, los clubes existentes no se muestran (`PaisFicha`).
 ## Al confirmar emite `terminado({"pais": código})` -más `"club_id"` si se eligió un club
-## del mundo ya generado, que es lo que `OrquestadorMundo.club_elegido_id` busca-.
+## del mundo ya generado, que es lo que `CargaCiudad.de("OrquestadorMundo").club_elegido_id` busca-.
 ##
 ## CONTRATO (el de `OrquestadorEntrada`): `signal terminado(datos)`, `signal volver()`,
 ## `func configurar(estado)` -se llama ANTES de entrar al árbol-.
@@ -45,7 +45,7 @@ func configurar(estado: Dictionary) -> void:
 	crear = PantallaPais.crea_club(estado)
 	_mundo = estado.get("mundo") if estado.get("mundo") is Mundo else null
 	var p := PantallaPais.pais_del_estado(estado)
-	if PaisDatos.NOMBRE.has(p):
+	if CargaCiudad.de("PaisDatos").NOMBRE.has(p):
 		_pais_inicial = p
 	if is_node_ready():
 		_subtitulo.text = _texto_subtitulo()
@@ -53,7 +53,7 @@ func configurar(estado: Dictionary) -> void:
 		_elegir(_pais_inicial, true)
 
 ## Lee el modo venga como venga: «creador» (Crear tu Club) es el id de MODOS_JUEGO; los
-## demás nombres son los que también acepta `OrquestadorMundo.crea_club`. Se lee aquí
+## demás nombres son los que también acepta `CargaCiudad.de("OrquestadorMundo").crea_club`. Se lee aquí
 ## y no se llama a esa clase para que esta pantalla funcione sola (pruebas, capturas).
 static func crea_club(estado: Dictionary) -> bool:
 	var m: Variant = estado.get("modo")
@@ -66,7 +66,7 @@ static func crea_club(estado: Dictionary) -> bool:
 		return true
 	if bool(estado.get("crear", false)) or bool(estado.get("crear_club", false)):
 		return true
-	## Como `OrquestadorMundo.crea_club`: la marca también puede venir dentro del país.
+	## Como `CargaCiudad.de("OrquestadorMundo").crea_club`: la marca también puede venir dentro del país.
 	var pd: Variant = estado.get("pais")
 	if pd is Dictionary and bool((pd as Dictionary).get("crear", false)):
 		return true
@@ -209,27 +209,27 @@ func _ajustar_zona() -> void:
 
 ## Marca un país en todas partes: globo, lista, nombre, fondo y ficha.
 func _elegir(p: String, instantaneo := false) -> void:
-	if not PaisDatos.NOMBRE.has(p):
+	if not CargaCiudad.de("PaisDatos").NOMBRE.has(p):
 		return
 	var antes := pais
 	pais = p
 	if antes != "" and antes != p:
 		_globo.rotular(antes)
-	_globo.rotular(p, PaisDatos.nombre(p))
+	_globo.rotular(p, CargaCiudad.de("PaisDatos").nombre(p))
 	if _globo.pais_actual != p:
 		_globo.ir_a(p, instantaneo)
 	_lista.marcar(p)
 	_fondo.poner_pais(p)
-	_nombre.text = PaisDatos.nombre(p)
-	_oficial.text = PaisDatos.oficial(p)
+	_nombre.text = CargaCiudad.de("PaisDatos").nombre(p)
+	_oficial.text = CargaCiudad.de("PaisDatos").oficial(p)
 	if not instantaneo and antes != p:
 		_nombre.modulate.a = 0.0
 		create_tween().tween_property(_nombre, "modulate:a", 1.0, 0.35)
 	_ficha.mostrar(p, crear, _mundo)
-	_btn_confirmar.disabled = not PaisDatos.tiene_liga(p)
+	_btn_confirmar.disabled = not CargaCiudad.de("PaisDatos").tiene_liga(p)
 
 func _al_pasar(p: String) -> void:
-	_pista.text = PaisDatos.nombre(p) if p != "" else _texto_pista
+	_pista.text = CargaCiudad.de("PaisDatos").nombre(p) if p != "" else _texto_pista
 
 func _al_cambiar_monumento(indice: int, nombre: String) -> void:
 	_rotulo_mon.text = Idiomas.t(nombre)
@@ -238,7 +238,7 @@ func _al_cambiar_monumento(indice: int, nombre: String) -> void:
 
 ## Abre la confirmación (botón, Enter o A del mando). Sin liga no hay nada que confirmar.
 func pedir_confirmacion() -> void:
-	if pais == "" or not PaisDatos.tiene_liga(pais):
+	if pais == "" or not CargaCiudad.de("PaisDatos").tiene_liga(pais):
 		return
 	var detalle := ""
 	if crear:
@@ -246,7 +246,7 @@ func pedir_confirmacion() -> void:
 	else:
 		var c := _ficha.club_marcado()
 		if c != null:
-			detalle = Idiomas.t("Dirigirás a %s, de la %s.") % [c.nombre, PaisDatos.nombre_liga(pais)]
+			detalle = Idiomas.t("Dirigirás a %s, de la %s.") % [c.nombre, CargaCiudad.de("PaisDatos").nombre_liga(pais)]
 	_conf.abrir(pais, detalle)
 
 func _confirmado() -> void:

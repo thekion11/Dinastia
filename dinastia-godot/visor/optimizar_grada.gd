@@ -14,7 +14,7 @@ static var activo := true   ## las comprobaciones de «antes» (imágenes sin tr
 ## liviana (84 triángulos en vez de 1 944): medido en el partido, −36 % de triángulos (1,34 M → 0,85 M). ALTO y ULTRA no cambian.
 static func trocear(raiz: Node, tramos := 8) -> int:
 	var hechos := _trocear(raiz, tramos)
-	if Calidad.elegida == Calidad.MEDIO:
+	if Calidad.elegida <= Calidad.MEDIO:
 		Optimizar.butacas_livianas(raiz, true)
 	return hechos
 
@@ -90,6 +90,8 @@ static func _partir(mmi: MultiMeshInstance3D, tramos: int) -> void:
 ## EL PRÓLOGO NO NECESITA VER LEJOS (2-11-2026): tope de distancia de dibujo para todo lo pequeño o mediano que no tenga uno más
 ## corto (lo grande -terreno, horizonte, edificios de más de `GRANDE` m- se queda). Fuera del estadio (`sin_corte`) y sin rótulos.
 ## Devuelve cuántos objetos recibieron el tope.
+const ROTULO_MINIMO := 45.0
+
 static func limitar_vista(raiz: Node, hasta: float, grande := 90.0) -> int:
 	var fuera := {}
 	for r in raiz.find_children("*", "Node3D", true, false):
@@ -99,7 +101,14 @@ static func limitar_vista(raiz: Node, hasta: float, grande := 90.0) -> int:
 	var n := 0
 	for g_n in raiz.find_children("*", "GeometryInstance3D", true, false):
 		var g := g_n as GeometryInstance3D
-		if fuera.has(g) or g is Label3D or (g.visibility_range_end > 0.0 and g.visibility_range_end <= hasta):
+		if g is Label3D:
+			## (3-11, R2 en MÍNIMO) Un rótulo no se lee a más de ~45 m y cada uno cuesta una llamada de dibujo: a pie de calle eran 2.584 y quitaban −19 % de llamadas.
+			if not fuera.has(g) and Calidad.elegida <= Calidad.MINIMO and (g.visibility_range_end <= 0.0 or g.visibility_range_end > ROTULO_MINIMO):
+				g.visibility_range_end = ROTULO_MINIMO
+				g.visibility_range_end_margin = 8.0
+				n += 1
+			continue
+		if fuera.has(g) or (g.visibility_range_end > 0.0 and g.visibility_range_end <= hasta):
 			continue
 		if g.get_aabb().size.length() > grande:
 			continue

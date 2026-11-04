@@ -109,7 +109,8 @@ func _dato(etiqueta: String, valor: String, color: Color, padre: Node = null) ->
 	a.text = etiqueta
 	a.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	a.clip_text = true
-	a.tooltip_text = etiqueta
+	a.tooltip_text = AyudaDatos.de(etiqueta)   ## (M-305) qué es el dato, si hay explicación
+	a.mouse_filter = Control.MOUSE_FILTER_PASS
 	h.add_child(a)
 	var b := p._texto(12, color)
 	b.text = valor
@@ -144,7 +145,19 @@ func _bloque(padre: VBoxContainer, titulo: String, ratio: float) -> VBoxContaine
 	v.set_anchors_preset(Control.PRESET_FULL_RECT)
 	v.offset_left = 12; v.offset_top = 10; v.offset_right = -12; v.offset_bottom = -10
 	caja.add_child(v)
+	## (3-11, orden 22) Cabecera con «⤢»: el bloque entero a pantalla completa (`PantallaAmpliada`).
+	var cab := HBoxContainer.new()
+	cab.set_meta("titulo_bloque", true)
+	v.add_child(cab)
 	var t := p._texto(11, p.COL_SUAVE); t.text = titulo
 	t.set_meta("titulo_bloque", true)
-	v.add_child(t)
+	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cab.add_child(t)
+	var amp := Button.new()
+	amp.text = "⤢"
+	amp.flat = true
+	amp.tooltip_text = Idiomas.t("Ver a pantalla completa")
+	amp.custom_minimum_size = Vector2(28, 22)
+	amp.pressed.connect(func() -> void: PantallaAmpliada.abrir(p, v, Idiomas.t(titulo)))
+	cab.add_child(amp)
 	return v

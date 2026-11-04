@@ -65,3 +65,27 @@ static func montar(ex: CiudadExpansion) -> void:
 		var tri := b._caja_en(entrada + Vector3(0, 2.3, 0), Vector3(0.9, 0.9, 0.05), b._mat_simple(Color(0.9, 0.12, 0.1), 0.5))
 		tri.rotation = Vector3(0, atan2(dir.x, dir.z), PI * 0.25)
 	b.circulos.append(Vector3(c.x, c.z, R_ISLA + 0.9))
+
+## TRÁFICO DE LA ROTONDA (28-10-2026): un carril circular (radio `R_CARRIL`) con `COCHES` autos que la recorren sin parar, en sentido antihorario visto desde arriba
+## (se circula por la derecha). Es una ruta cerrada más del tráfico, con su cola para que no se pisen. Devuelve cuántos coches puso.
+const R_CARRIL := 9.6
+const COCHES := 3
+
+## Los puntos del carril: ángulo decreciente = antihorario visto desde arriba (+x a la derecha, +z hacia abajo).
+static func carril() -> PackedVector3Array:
+	var pts := PackedVector3Array()
+	for i in 36:
+		var a := -TAU * float(i) / 36.0
+		pts.append(CENTRO + Vector3(cos(a) * R_CARRIL, 0.25, sin(a) * R_CARRIL))
+	return pts
+
+static func trafico(ex: CiudadExpansion, t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> int:
+	if OS.get_environment("SIN_ROTONDA") != "" or coches.is_empty():
+		return 0
+	var id := t.agregar_ruta(carril())
+	var largo := t.largo_de(id)
+	for i in COCHES:
+		var nodo: Node3D = CityBuilder.instanciar_coche(coches[rng.randi() % coches.size()], rng)
+		t.agregar_vehiculo(nodo, id, largo * float(i) / float(COCHES), rng.randf_range(5.0, 6.5), 0.0, 0.0)
+		t.marcar_cola_al_ultimo()
+	return COCHES

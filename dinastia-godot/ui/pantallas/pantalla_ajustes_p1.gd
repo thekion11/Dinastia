@@ -29,6 +29,19 @@ func _pintar_fotogramas() -> void:
 			Engine.max_fps = valor
 			p._refrescar())
 		fila.add_child(b)
+	## M-355 (3-11): MODO BATERÍA de un toque: 30 FPS y calidad Mínima (sin sombras, 3D a menor resolución). Se vuelve atrás eligiendo otros FPS y otra calidad.
+	var bb := Button.new()
+	bb.text = Idiomas.t("🔋 Modo batería (30 FPS y calidad Mínima)")
+	bb.tooltip_text = Idiomas.t("Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.")
+	bb.add_theme_font_size_override("font_size", 11)
+	bb.pressed.connect(func() -> void:
+		p._ui_ajustes.fps_elegido = 30
+		Engine.max_fps = 30
+		Calidad.elegida = Calidad.MINIMO
+		Calidad.guardar()
+		p._guardar_preferencias()
+		p._refrescar())
+	p._lista_ajustes.add_child(bb)
 	## M-358: el contador de FPS en una esquina, en todas las escenas.
 	var bf := Button.new()
 	bf.text = Idiomas.t("Mostrar contador de FPS")

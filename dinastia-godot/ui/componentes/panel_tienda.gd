@@ -1,7 +1,7 @@
 class_name PanelTienda
 extends PanelContainer
-## LA CAJA DE LA TIENDA (27-10-2026, pieza C de `PLAN_DEL_LUNES.md` §2.2h): una lista del surtido con su precio y un botón por artículo. No sabe cobrar: llama a
-## `al_comprar(item) -> String` (en `VidaCiudad.comprar_surtido`: cartera, hambre y energía) y enseña el mensaje que devuelve, ya traducido. Se cierra sola si el DT se aleja.
+## LA CAJA DE LA TIENDA (27-10-2026, pieza C de `PLAN_GENERAL.md` §2.2h): una lista del surtido con su precio y un botón por artículo. No sabe cobrar: llama a
+## `al_comprar(item) -> String` (en `CargaCiudad.de("VidaCiudad").comprar_surtido`: cartera, hambre y energía) y enseña el mensaje que devuelve, ya traducido. Se cierra sola si el DT se aleja.
 const DISTANCIA_MAX := 6.0
 
 signal cerrado
@@ -11,6 +11,7 @@ var saldo_texto: Callable          ## () -> String: «Efectivo … · Cuenta …
 var surtido: Array = []
 var cajero_pos := Vector3.ZERO
 var jugador: Node3D
+var con_tarjeta := false           ## «Pagar con tarjeta y PIN» (U6): cada compra pide el PIN en vez de gastar efectivo
 var _aviso := ""
 var _caja := VBoxContainer.new()
 
@@ -43,7 +44,7 @@ func salir() -> void:
 	queue_free()
 
 func comprar(item: Dictionary) -> void:
-	_aviso = String(al_comprar.call(item))
+	_aviso = String(al_comprar.call(item.merged({"con_pin": true}) if con_tarjeta else item))
 	_pintar()
 
 func _pintar() -> void:
@@ -61,6 +62,11 @@ func _pintar() -> void:
 		av.add_theme_font_size_override("font_size", 17)
 		av.add_theme_color_override("font_color", Color(1.0, 0.8, 0.35))
 		_caja.add_child(av)
+	var bt := CheckButton.new()
+	bt.text = "💳 " + Idiomas.t("Pagar con tarjeta y PIN")
+	bt.button_pressed = con_tarjeta
+	bt.toggled.connect(func(v: bool) -> void: con_tarjeta = v)
+	_caja.add_child(bt)
 	for it: Dictionary in surtido:
 		var b := Button.new()
 		b.text = "%s — %s" % [Idiomas.t(String(it["nombre"])), Eco.dinero_euros(float(it["precio"]))]

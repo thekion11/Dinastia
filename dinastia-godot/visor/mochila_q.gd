@@ -88,13 +88,13 @@ static func poner(h: Node3D, col: Color) -> void:
 	if _cuerpo == null:
 		_cuerpo = caja_redonda(Vector3(0.28, 0.36, 0.15), RADIO)
 		_bolsillo = caja_redonda(Vector3(0.20, 0.15, 0.07), 0.025)
-	PeatonQ._pieza(h, _cuerpo, PeatonQ._m(col, 0.75), Vector3(0, -0.03, -0.19))
-	PeatonQ._pieza(h, _bolsillo, PeatonQ._m(col.darkened(0.2), 0.75), Vector3(0, -0.10, -0.275))
+	CargaCiudad.de("PeatonQ")._pieza(h, _cuerpo, CargaCiudad.de("PeatonQ")._m(col, 0.75), Vector3(0, -0.03, -0.19))
+	CargaCiudad.de("PeatonQ")._pieza(h, _bolsillo, CargaCiudad.de("PeatonQ")._m(col.darkened(0.2), 0.75), Vector3(0, -0.10, -0.275))
 	## El asa de arriba: un arco pequeño.
 	var asa := TorusMesh.new()
 	asa.inner_radius = 0.022
 	asa.outer_radius = 0.03
 	asa.rings = 10
 	asa.ring_segments = 6
-	PeatonQ._pieza(h, asa, PeatonQ._m(col.darkened(0.35), 0.6), Vector3(0, 0.155, -0.19), Vector3(90, 0, 0)).scale = Vector3(1.4, 1.4, 0.5)
-	PeatonQ._pieza(h, _malla_correas(), PeatonQ._m(col.darkened(0.12), 0.7), Vector3.ZERO)
+	CargaCiudad.de("PeatonQ")._pieza(h, asa, CargaCiudad.de("PeatonQ")._m(col.darkened(0.35), 0.6), Vector3(0, 0.155, -0.19), Vector3(90, 0, 0)).scale = Vector3(1.4, 1.4, 0.5)
+	CargaCiudad.de("PeatonQ")._pieza(h, _malla_correas(), CargaCiudad.de("PeatonQ")._m(col.darkened(0.12), 0.7), Vector3.ZERO)

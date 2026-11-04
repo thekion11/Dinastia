@@ -78,7 +78,7 @@ static func crear(asp: Dictionary) -> Node3D:
 	var ap := AnimationPlayer.new()
 	ap.name = "Anim"
 	raiz.add_child(ap)
-	var idle := AnimQuaternius.cargar_real("Idle", "Modelo/Armature/Skeleton3D")
+	var idle = load("res://visor/anim_quaternius.gd").cargar_real("Idle", "Modelo/Armature/Skeleton3D")
 	if idle != null:
 		var lib := AnimationLibrary.new()
 		lib.add_animation("idle", idle)

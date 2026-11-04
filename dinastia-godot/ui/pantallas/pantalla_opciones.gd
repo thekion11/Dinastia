@@ -28,7 +28,15 @@ func _pintar_dispositivo() -> void:
 				p._refrescar())
 		p._refrescar())
 	fila.add_child(b)
+	_disp_zoom()
+	_disp_tv()
+	_disp_ropa()
+	_disp_caras()
+	_disp_controles()
+	_disp_calidad()
+	p._lista_ajustes.add_child(HSeparator.new())
 
+func _disp_zoom() -> void:
 	var fila2 := HBoxContainer.new()
 	fila2.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila2)
@@ -38,7 +46,7 @@ func _pintar_dispositivo() -> void:
 	fila2.add_child(et2)
 	var sl := HSlider.new()
 	sl.min_value = 0.8
-	sl.max_value = 1.4
+	sl.max_value = 1.8
 	sl.step = 0.05
 	sl.value = p._zoom_interfaz
 	sl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -69,6 +77,8 @@ func _pintar_dispositivo() -> void:
 	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ajustes.add_child(ex)
 
+
+func _disp_tv() -> void:
 	## MODO TELEVISIÓN. Para HDMI y pantallas grandes: se mira desde el sofá, a
 	## tres metros, y lo que a medio metro es cómodo a tres metros no se lee. Es
 	## un zoom fuerte de golpe, no un ajuste fino.
@@ -97,6 +107,8 @@ func _pintar_dispositivo() -> void:
 		p._refrescar())
 	fila_tv.add_child(b_tv)
 
+
+func _disp_ropa() -> void:
 	## ROPA APARTE (26-9-2026): camiseta, pantalón y medias como mallas propias
 	## con volumen en el partido 3D (en el diseñador siempre).
 	var fila_ra := HBoxContainer.new()
@@ -108,13 +120,15 @@ func _pintar_dispositivo() -> void:
 	et_ra.tooltip_text = Idiomas.t("La equipación con volumen propio (más realista). Cuesta tres mallas más por jugador en el partido.")
 	fila_ra.add_child(et_ra)
 	var b_ra := Button.new()
-	b_ra.text = "SÍ" if VestidorQ.ropa_aparte else "NO"
+	b_ra.text = "SÍ" if load("res://visor/vestidor_q.gd").ropa_aparte else "NO"
 	b_ra.pressed.connect(func() -> void:
-		VestidorQ.ropa_aparte = not VestidorQ.ropa_aparte
+		load("res://visor/vestidor_q.gd").ropa_aparte = not load("res://visor/vestidor_q.gd").ropa_aparte
 		p._guardar_preferencias()
 		p._refrescar())
 	fila_ra.add_child(b_ra)
 
+
+func _disp_caras() -> void:
 	## CARAS REALES (29-9-2026): con la base real, la foto libre del jugador o
 	## solo su recreación (piel, pelo y barba sacados de la foto).
 	if Datos.base_real:
@@ -133,7 +147,25 @@ func _pintar_dispositivo() -> void:
 			p._guardar_preferencias()
 			p._refrescar())
 		fila_cf.add_child(b_cf)
+		## M-312: modo streamer, para emitir sin fotos de personas reales.
+		var fila_st := HBoxContainer.new()
+		fila_st.add_theme_constant_override("separation", 8)
+		p._lista_ajustes.add_child(fila_st)
+		var et_st := p._texto(12, Principal.COL_TEXTO)
+		et_st.text = Idiomas.t("Modo streamer")
+		et_st.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		et_st.tooltip_text = Idiomas.t("Para emitir o grabar: las caras de la base real se ven siempre recreadas, nunca la foto, sin cambiar tu ajuste de caras.")
+		fila_st.add_child(et_st)
+		var b_st := Button.new()
+		b_st.text = Idiomas.t("SÍ") if Cara.modo_streamer else Idiomas.t("NO")
+		b_st.pressed.connect(func() -> void:
+			Cara.modo_streamer = not Cara.modo_streamer
+			p._guardar_preferencias()
+			p._refrescar())
+		fila_st.add_child(b_st)
 
+
+func _disp_controles() -> void:
 	## CONTROLES DEL PARTIDO (14-10-2026): teclas, mando y ayudas, los mismos
 	## que se abren desde el ⚙ del estadio y la pausa de la Carrera de Jugador.
 	var fila_ct := HBoxContainer.new()
@@ -146,9 +178,12 @@ func _pintar_dispositivo() -> void:
 	fila_ct.add_child(et_ct)
 	var b_ct := Button.new()
 	b_ct.text = Idiomas.t("🎮 Configurar")
-	b_ct.pressed.connect(func() -> void: PanelControles.abrir(p))
+	b_ct.pressed.connect(func() -> void: load("res://ui/componentes/panel_controles.gd").abrir(p))
 	fila_ct.add_child(b_ct)
+	load("res://ui/componentes/ajustes_tactil.gd").pintar(p)
 
+
+func _disp_calidad() -> void:
 	## CALIDAD GRÁFICA. Manda en el visor 3D del estadio, que es lo único del
 	## juego que puede ir lento: la interfaz son etiquetas y no cuesta nada.
 	## `Calidad` ya tenía los tres niveles montados desde el porte del visor.
@@ -162,14 +197,15 @@ func _pintar_dispositivo() -> void:
 			[Calidad.ULTRA, "Ultra", "Todos los efectos, sombras y reflejos"],
 			[Calidad.ALTO, "Alta", "El equilibrio: sombras sí, lo más caro no"],
 			[Calidad.MEDIO, "Media", "Sin efectos pesados: máxima fluidez"],
+			[Calidad.MINIMO, "Mínima", "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución"],
 		]:
 		var clave: int = nivel[0]
 		var b_c := Button.new()
-		b_c.text = String(nivel[1])
+		b_c.text = Idiomas.t(String(nivel[1]))
 		b_c.add_theme_font_size_override("font_size", 11)
 		b_c.toggle_mode = true
 		b_c.button_pressed = Calidad.elegida == clave
-		b_c.tooltip_text = String(nivel[2])
+		b_c.tooltip_text = Idiomas.t(String(nivel[2]))
 		b_c.custom_minimum_size = Vector2(70, 0)
 		b_c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b_c.pressed.connect(func() -> void:
@@ -177,6 +213,7 @@ func _pintar_dispositivo() -> void:
 			Calidad.guardar()
 			p._refrescar())
 		fila_c.add_child(b_c)
+	AjusteResolucion3D.crear(p)   ## (3-11 / 4-11, pedido del dueño) resolución del 3D en Mínima (35-100 %) y en Media (50-100 %)
 	var ad := CheckButton.new()
 	ad.text = Idiomas.t("Ajustar sola para mantener 40 FPS en el partido")
 	ad.tooltip_text = Idiomas.t("Si tu equipo no llega a 40 FPS, el partido apaga por escalones la oclusión ambiental, acorta las sombras y baja la resolución del 3D.")
@@ -212,7 +249,6 @@ func _pintar_dispositivo() -> void:
 		ec.text = Idiomas.t("Si el estadio en 3D se siente lento, baja la calidad. La interfaz no cambia: son etiquetas y no cuestan nada.")
 		ec.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_ajustes.add_child(ec)
-	p._lista_ajustes.add_child(HSeparator.new())
 
 ## "Velocidad de partido por defecto" de `vAjustes()`: con qué velocidad
 ## arranca cada partido dirigido en vivo. Antes de esta tanda el juego lo
@@ -229,10 +265,10 @@ func _pintar_velocidad_partido() -> void:
 	## Del 1 al 3: "Pausa" (índice 0) no tiene sentido como velocidad de
 	## arranque -nadie quiere que el partido empiece parado-, igual que el
 	## HTML se salta esa opción en este mismo selector.
-	for i in range(1, PartidoVivo.VELOCIDADES.size()):
+	for i in range(1, VelocidadesPartido.LISTA.size()):
 		var idx := i
 		var b := Button.new()
-		b.text = String(PartidoVivo.VELOCIDADES[i]["txt"])
+		b.text = String(VelocidadesPartido.LISTA[i]["txt"])
 		b.toggle_mode = true
 		b.button_pressed = (p._velocidad_partido == idx)
 		b.custom_minimum_size = Vector2(90, 30)
@@ -245,6 +281,19 @@ func _pintar_qol() -> void:
 	var t := p._texto(11, Principal.COL_SUAVE)
 	t.text = Idiomas.t("LA INTERFAZ A TU MEDIDA")
 	p._lista_ajustes.add_child(t)
+	## (3-11, orden 22) La pantalla de antes de cada partido: jugar, solo las importantes o simular.
+	var fp := HBoxContainer.new()
+	p._lista_ajustes.add_child(fp)
+	var ep := p._texto(12, Principal.COL_TEXTO)
+	ep.text = Idiomas.t("Preguntar cómo jugar antes de cada partido")
+	ep.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fp.add_child(ep)
+	var bp := Button.new()
+	bp.text = Idiomas.t("SÍ") if load("res://ui/componentes/eleccion_partido.gd").preguntar() else Idiomas.t("NO")
+	bp.pressed.connect(func() -> void:
+		load("res://ui/componentes/eleccion_partido.gd").fijar_preguntar(not load("res://ui/componentes/eleccion_partido.gd").preguntar())
+		p._refrescar())
+	fp.add_child(bp)
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila)

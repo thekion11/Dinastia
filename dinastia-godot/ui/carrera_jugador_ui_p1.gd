@@ -252,7 +252,7 @@ func _jugar_seleccion() -> void:
 	var eq := carrera.equipos_seleccion(mundo)
 	if eq.size() < 2:
 		return
-	var pj := PartidoJugable.abrir(self, mundo, carrera, eq[0], eq[1], 240.0, -1, eq[0])
+	var pj = load("res://ui/partido_jugable.gd").abrir(self, mundo, carrera, eq[0], eq[1], 240.0, -1, eq[0])
 	pj.terminado.connect(func(res: Dictionary) -> void: _cerrar_seleccion(res))
 
 func _simular_seleccion() -> void:
@@ -418,7 +418,7 @@ func _jugar_partido() -> void:
 	if par.is_empty():
 		return
 	_msg = carrera.entrenar(mundo)
-	var pj := PartidoJugable.abrir(self, mundo, carrera, par[0], par[1], 240.0, -1, null, CarreraCopa.es_copa(mundo, par))
+	var pj = load("res://ui/partido_jugable.gd").abrir(self, mundo, carrera, par[0], par[1], 240.0, -1, null, CarreraCopa.es_copa(mundo, par))
 	pj.terminado.connect(func(res: Dictionary) -> void: _cerrar_semana(res, true))
 
 ## Suplente: el DT decide si entras y cuándo. Si entras, juegas desde ese
@@ -435,5 +435,5 @@ func _ir_al_banco() -> void:
 		_msg += "  ·  " + Idiomas.t("Calentaste toda la segunda parte, pero el DT no te hizo entrar.")
 		_cerrar_semana({"sin_minutos": true}, true)
 		return
-	var pj := PartidoJugable.abrir(self, mundo, carrera, par[0], par[1], 240.0, minuto, null, CarreraCopa.es_copa(mundo, par))
+	var pj = load("res://ui/partido_jugable.gd").abrir(self, mundo, carrera, par[0], par[1], 240.0, minuto, null, CarreraCopa.es_copa(mundo, par))
 	pj.terminado.connect(func(res: Dictionary) -> void: _cerrar_semana(res, true))

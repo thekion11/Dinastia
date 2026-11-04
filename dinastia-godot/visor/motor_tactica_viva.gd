@@ -9,14 +9,14 @@ const POR_GOL := 0.35
 const TOPE := 0.7
 static var _sin := OS.has_environment("SIN_TACTICA_VIVA")
 
-static func urgencia(m: MotorJugable, local: bool) -> float:
+static func urgencia(m, local: bool) -> float:
 	var eq := 0 if local else 1
 	if _sin or eq == m.control_equipo:
 		return 0.0
 	var dif := int(m.goles[1 - eq]) - int(m.goles[eq])
 	if dif == 0:
 		return 0.0
-	var frac := m.tiempo_jugado() / maxf(2.0 * m.duracion_mitad, 0.001)
+	var frac = m.tiempo_jugado() / maxf(2.0 * m.duracion_mitad, 0.001)
 	return clampf(float(dif) * POR_GOL, -TOPE, TOPE) * smoothstep(0.3, 1.0, frac)
 
 ## EL ESTILO PROPIO DE CADA CLUB (01-11-2026, IA U8, idea de League-Soccer `TeamAIController`: parámetros tácticos continuos por
@@ -36,16 +36,16 @@ static func estilo_club(c: Club) -> Dictionary:
 	return {"f_linea": clampf(a * MATIZ + (float(c.rep) - 75.0) / 100.0, -0.5, 0.5), "f_amplitud": b * MATIZ}
 
 ## El matiz continuo `k` («linea», «amplitud») del equipo en la táctica del motor (0 si no lo trae).
-static func f(m: MotorJugable, local: bool, k: String) -> float:
+static func f(m, local: bool, k: String) -> float:
 	return float((m.tacticas[0 if local else 1] as Dictionary).get("f_" + k, 0.0))
 
 ## TRES PERILLAS QUE EL 3D NO OÍA (01-11-2026, verificación de jugabilidad 389-391): «salida corta», «marca al hombre» y «tiro
 ## lejano» solo cambiaban el motor simulado (`Tactica.multiplicador_*`); `tactica_desde` no se las pasaba al partido 3D. Ahora
 ## llegan como 0/1 (sin la clave = no, como antes) y las leen el portero (`_ia_portero`), la defensa (`_ia_defensa`) y el portador
 ## (`_ia_portador`).
-static func bandera(m: MotorJugable, local: bool, k: String) -> bool:
+static func bandera(m, local: bool, k: String) -> bool:
 	return int((m.tacticas[0 if local else 1] as Dictionary).get(k, 0)) == 1
 
 ## Con salida corta el portero juega en corto 19 de cada 20 veces (sin ella, 4 de 5: la de siempre).
-static func prob_salida_jugada(m: MotorJugable, local: bool) -> float:
+static func prob_salida_jugada(m, local: bool) -> float:
 	return 0.95 if bandera(m, local, "salida_corta") else 0.8

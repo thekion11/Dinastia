@@ -20,9 +20,9 @@ func _pintar_inicio(c: Club) -> void:
 	var liga := p._liga_de(c)
 	## EL TABLERO (25-9-2026): próximo partido con los dos escudos, anillos de
 	## valoración, la cara de la estrella y la racha. Ver `TableroInicio`.
-	TableroInicio.pintar(p._lista_inicio, c, p.mundo, liga, p._ir_a_pestana, p._ver_ficha)
+	TableroInicio.pintar(p._lista_inicio, c, p.mundo, liga, p._ir_a_pestana, p._ver_ficha, 5 - int(p._dia_semana))
 	p._lista_inicio.add_child(HSeparator.new())
-	p._ui_cantera._pintar_informe()
+	InformeSemana.pintar(p)
 	p._lista_inicio.add_child(HSeparator.new())
 
 	## LOS ACCESOS RÁPIDOS. Se marcan en Ajustes y salen aquí, que es donde se

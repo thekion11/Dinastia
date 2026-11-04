@@ -11,7 +11,7 @@ static func servicio(e, k: String) -> bool:
 	var v = e.vida
 	if v == null or v.mundo == null or v.mundo.roles == null:
 		return false
-	var abierto = e.get_meta("panel_peluches", null)
+	var abierto = (e.get_meta("panel_peluches") if e.has_meta("panel_peluches") else null)
 	if abierto != null and is_instance_valid(abierto):
 		return true
 	var m := clampi(int(k.substr(9)), 0, 2)

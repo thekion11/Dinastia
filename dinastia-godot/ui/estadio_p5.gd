@@ -278,6 +278,7 @@ func _arrancar_partido() -> void:
 	## juega- nunca reproducía.
 	Sonido.toca("saque_inicial")
 	Sonido.toca("murmullo", Sonido.Bus.AMBIENTE)
+	GradaFondo.para_estadio(self, partido)   ## (3-11) la capa continua de grada
 	## SONIDOS QUE EXISTÍAN Y NUNCA SONABAN (25-9-2026): de los 205 del
 	## catálogo, 157 no tenían ningún disparador. Aquí los del partido: la
 	## salida del túnel, el ambiente según el clima del estadio, los tiempos
@@ -323,7 +324,6 @@ func _arrancar_partido() -> void:
 		add_child(_control)
 		var es_local_user: bool = (partido.local == club)
 		_control.setup(_en_campo, _balon, _rig, es_local_user, _juego, _radar)
-
 
 	var caja := PanelContainer.new()
 	var e := StyleBoxFlat.new()

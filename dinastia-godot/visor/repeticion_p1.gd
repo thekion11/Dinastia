@@ -219,7 +219,7 @@ func _cuadro_de(t: float) -> int:
 func _planificar() -> void:
 	planos.clear()
 	var fin := _b(_cuadros.size() - 1)
-	es_gol = congelar or (absf(fin.z) > MotorJugable.LARGO - 0.9 and absf(fin.x) < 5.0)
+	es_gol = congelar or (absf(fin.z) > load("res://visor/motor_jugable.gd").LARGO - 0.9 and absf(fin.x) < 5.0)
 	t_clave = _momento_clave()
 	var tk := t_clave
 	## Hacia qué portería va la jugada: la del gol, o hacia donde salió el golpeo.
@@ -277,7 +277,7 @@ func _montar_camaras() -> void:
 		_cams[n] = c
 	## Los planos fijos se colocan ya; los que siguen al balón, en cada fotograma.
 	var x_tv := minf(dx - 7.5, 40.0)
-	var gol_z := _lado * MotorJugable.LARGO
+	var gol_z = _lado * load("res://visor/motor_jugable.gd").LARGO
 	if _cams.has("remate"):
 		var k := _cuadro_de(t_clave if t_clave >= 0.0 else _rep_desde)
 		var b := _b(k)
@@ -291,7 +291,7 @@ func _montar_camaras() -> void:
 		(_cams["remate"] as Camera3D).global_position = Vector3(clampf(p.x, -32.5, 32.5), 2.5, clampf(p.z, -51.0, 51.0))
 	if _cams.has("arco"):
 		var fin := _b(_cuadros.size() - 1)
-		(_cams["arco"] as Camera3D).global_position = Vector3(fin.x * 0.3, 4.2, _lado * minf(MotorJugable.LARGO + 8.0, dz - 6.5))
+		(_cams["arco"] as Camera3D).global_position = Vector3(fin.x * 0.3, 4.2, _lado * minf(load("res://visor/motor_jugable.gd").LARGO + 8.0, dz - 6.5))
 	if _cams.has("linea"):
 		## La cámara de la LÍNEA DE GOL (M-135): sobre la propia línea, del lado de la tribuna
 		## principal, baja: se ve si el balón entró entero.
@@ -322,7 +322,7 @@ func _elegir_plano(_delta: float) -> Dictionary:
 func _objetivo(n: String) -> Vector3:
 	var b := _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO
 	if n == "linea":
-		return Vector3(0.0, 1.1, _lado * MotorJugable.LARGO).lerp(Vector3(b.x, maxf(b.y, 0.5), _lado * MotorJugable.LARGO), 0.35)
+		return Vector3(0.0, 1.1, _lado * load("res://visor/motor_jugable.gd").LARGO).lerp(Vector3(b.x, maxf(b.y, 0.5), _lado * load("res://visor/motor_jugable.gd").LARGO), 0.35)
 	return b + Vector3(0, 0.35, 0)
 
 ## Mueve y encuadra la cámara del plano `n`. `k`: cuánto se acerca a su objetivo este fotograma.

@@ -83,9 +83,9 @@ func nueva_temporada() -> Dictionary:
 			mi_club().plantilla.append(joya)
 	## Los cedidos vuelven a casa: sin esto, aceptar una cesion regalaba al
 	## canterano para siempre aunque el texto prometiera que volvia.
-	## Las cesiones las resuelve `Cesiones`, que es quien sabe si habia opcion de
-	## compra. `prensa.volver_de_cesion` se queda sin usar a proposito: tenia el
-	## mismo fallo que el HTML, devolver a todos a casa antes de mirar la opcion.
+	## Las cesiones las resuelve `Cesiones`, que sabe si habia opcion de compra.
+	if prensa != null and not prensa.cesiones.is_empty():   ## cesiones de prensa de partidas de antes del 3-11 (sin opción)
+		prensa.volver_de_cesion(anio)
 	if cesiones != null:
 		cesiones.resolver(anio)
 		cesiones.cobrar_plusvalias(anio)

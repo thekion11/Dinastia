@@ -35,13 +35,16 @@ func _pintar_tactica(c: Club) -> void:
 		i_f += 1
 	p._lista_tactica.add_child(HSeparator.new())
 
-	## Las seis perillas, con los mismos tres niveles que usa el partido en vivo.
+	## Las siete perillas, con los mismos tres niveles que usa el partido en vivo.
 	var perillas := [
 		["Mentalidad", "mentalidad", ["Defensiva", "Equilibrada", "Ofensiva"]],
 		["Presión", "presion", ["Baja", "Media", "Alta"]],
 		["Ritmo", "ritmo", ["Lento", "Medio", "Alto"]],
 		["Línea", "linea", ["Baja", "Media", "Adelantada"]],
 		["Amplitud", "amplitud", ["Estrecha", "Media", "Abierta"]],
+		## 3-11 (orden 22 U6): las dos que el partido ya usaba y la pizarra no enseñaba.
+		["Verticalidad", "verticalidad", ["Paciente", "Mixta", "Vertical"]],
+		["Tras perder el balón", "tras_perdida", ["Replegar", "Equilibrio", "Contrapresión"]],
 	]
 	var tp := p._texto(11, Principal.COL_SUAVE)
 	tp.text = Idiomas.t("PIZARRA")
@@ -162,6 +165,7 @@ func _pintar_tactica(c: Club) -> void:
 		p._refrescar(), fila_b)
 
 	var g := GridContainer.new()
+	CebraRejilla.poner(g)
 	g.columns = 7
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 8)
@@ -326,6 +330,12 @@ func _pintar_ficha_club(club: Club) -> void:
 	var t := p._texto(13, Principal.COL_ORO)
 	t.text = Idiomas.t("%s  ·  reputación %d  ·  aforo %s") % [club.nombre, club.rep, p._miles(club.estadio_aforo)]
 	p._lista_clubes.add_child(t)
+	## M-292 (2-11): seguir al club: su resultado de cada semana llega a la bandeja.
+	if p.mundo.ojeadores != null and club != p.mundo.mi_club():
+		var bs := p._boton(Idiomas.t("👁️ Dejar de seguir al club") if p.mundo.ojeadores.sigue_club(club) else Idiomas.t("👁️ Seguir al club"), func() -> void:
+			p.mundo.ojeadores.alternar_club(club)
+			_pintar_ficha_club_refresco(), p._lista_clubes)
+		bs.tooltip_text = Idiomas.t("Cada semana, su resultado te llega al correo.")
 	var hi_c := _historia_de(club)
 	for linea: String in ["📜 " + HistoriaClub.resumen(hi_c), HistoriaClub.texto_historia(hi_c), HistoriaClub.texto_clasicos(hi_c), HistoriaClub.texto_palmares(hi_c)]:
 		if linea.strip_edges() == "":
@@ -349,6 +359,7 @@ func _pintar_ficha_club(club: Club) -> void:
 	if not once.is_empty():
 		media_once /= float(once.size())
 	p._dato("Media del mejor once", "%.1f" % media_once, Principal.COL_TEXTO, p._lista_clubes)
+	ComparaClubes.pintar(p._lista_clubes, p.mundo.mi_club(), club, Principal.COL_SUAVE, Principal.COL_TEXTO, Principal.COL_VERDE, Principal.COL_ROJO)   ## M-294
 	if p.mundo.roles != null and club == p.mundo.mi_club() and not p.mundo.roles.dt_empleado.is_empty():
 		p._dato("Entrenador", p.mundo.roles.dt_nombre(), Principal.COL_TEXTO, p._lista_clubes)
 	## El aviso de clásico: cambia cómo se juega ese partido -aforo, ánimo,
@@ -359,6 +370,7 @@ func _pintar_ficha_club(club: Club) -> void:
 		cl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_clubes.add_child(cl)
 	var g := GridContainer.new()
+	CebraRejilla.poner(g)
 	g.columns = 7
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 10)
@@ -402,6 +414,7 @@ func _pintar_goleadores(pais: String) -> void:
 		return
 	todos.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.goles > b.goles)
 	var g := GridContainer.new()
+	CebraRejilla.poner(g)
 	g.columns = 5
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 10)
@@ -431,3 +444,6 @@ func _boton_deshacer(c: Club) -> void:
 			p._refrescar(), p._lista_tactica)
 	b.disabled = n == 0
 	b.tooltip_text = Idiomas.t("Vuelve atrás el último cambio de la táctica o del once (hasta 20).")
+
+func _pintar_ficha_club_refresco() -> void:
+	p._vistas._pintar_clubes()

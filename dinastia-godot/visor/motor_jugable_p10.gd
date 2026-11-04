@@ -1,5 +1,5 @@
 extends "res://visor/motor_jugable_p9.gd"
-## [Capa 10/12 de `motor_jugable.gd`] _anillo_serenidad, tanda_equipo_usuario, tanda_me_toca_parar, tanda_me_toca_tirar, tanda_turno, _lado_portero_tanda … (+14)
+## [Capa 10/12 de `motor_jugable.gd`] _anillo_serenidad, tanda_equipo_usuario, tanda_me_toca_parar, tanda_me_toca_tirar, tanda_turno, … (+13)
 
 ## Un aro alrededor del balón mientras apuntas un penal: verde cuando es chico.
 func _anillo_serenidad(ver: bool) -> void:
@@ -51,19 +51,6 @@ func tanda_turno() -> int:
 		return -1
 	var hechos: int = (tanda["tiros"][0] as Array).size() + (tanda["tiros"][1] as Array).size()
 	return (int(tanda["empieza"]) + hechos) % 2
-
-## LA LECTURA DEL LANZADOR (M-119, 20-10): el portero de la IA se tira más al
-## lado natural del pie del que patea (el diestro, a su izquierda = +X; el
-## zurdo, al revés) y, según sus reflejos, a veces lee la carrera y va al lado
-## bueno. Antes adivinaba 40/40/20 a ciegas.
-func _lado_portero_tanda(lz: Dictionary, gk: Dictionary) -> int:
-	var ref := float((gk.get("attr", {}) as Dictionary).get("ref", 0.5))
-	if _rng.randf() < 0.04 + 0.12 * ref:
-		var x := vel_balon.x
-		return 0 if absf(x) < 0.6 else int(signf(x))
-	var natural := -1 if AnimExtra.es_zurdo(String(lz.get("id", ""))) else 1
-	var r := _rng.randf()
-	return natural if r < 0.46 else (-natural if r < 0.82 else 0)
 
 ## Tras el golpeo (desde `_reanudar`): el tiro no cuenta como remate del
 ## partido y el portero se tira.
@@ -364,7 +351,7 @@ func _ejecutar_saque_ia(p: Dictionary, tipo: String, lugar: Vector3) -> void:
 			pase_a = _companero_cerca(p, destino)
 		"penal":
 			## Algún penal se va fuera o al palo (antes el apunte nunca salía del arco).
-			_tirar(p, Vector2(_rng.randf_range(-1.06, 1.06), _rng.randf_range(-0.3, 0.45)), 0.7)
+			_tirar(p, Vector2(_rng.randf_range(-PENAL_IA_X, PENAL_IA_X), _rng.randf_range(-0.3, 0.45)), 0.7)
 		"falta":
 			var dist := Vector2(lugar.x - arco.x, lugar.z - arco.z).length()
 			if dist < 30.0:

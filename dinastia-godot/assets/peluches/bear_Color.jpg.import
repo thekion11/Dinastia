@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cvuayd74hkdaq"
-path="res://.godot/imported/bear_Color.jpg-a39b9f2bdc0b51251dfb02a9972d25db.ctex"
+path.s3tc="res://.godot/imported/bear_Color.jpg-a39b9f2bdc0b51251dfb02a9972d25db.s3tc.ctex"
+path.etc2="res://.godot/imported/bear_Color.jpg-a39b9f2bdc0b51251dfb02a9972d25db.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "d6e2afdc6f75168f735c1569afcdccc4"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/peluches/bear_Color.jpg"
-dest_files=["res://.godot/imported/bear_Color.jpg-a39b9f2bdc0b51251dfb02a9972d25db.ctex"]
+dest_files=["res://.godot/imported/bear_Color.jpg-a39b9f2bdc0b51251dfb02a9972d25db.s3tc.ctex", "res://.godot/imported/bear_Color.jpg-a39b9f2bdc0b51251dfb02a9972d25db.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

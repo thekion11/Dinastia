@@ -13,6 +13,7 @@ func _pintar_records() -> void:
 	tr.text = Idiomas.t("RACHAS")
 	p._lista_records.add_child(tr)
 	var gr := GridContainer.new()
+	CebraRejilla.poner(gr)
 	gr.columns = 4
 	gr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	gr.add_theme_constant_override("h_separation", 14)
@@ -89,6 +90,7 @@ func _pintar_records() -> void:
 		th.text = Idiomas.t("CARA A CARA")
 		p._lista_records.add_child(th)
 		var g2 := GridContainer.new()
+		CebraRejilla.poner(g2)
 		g2.columns = 5
 		g2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		g2.add_theme_constant_override("h_separation", 10)
@@ -153,6 +155,7 @@ func _pintar_records() -> void:
 			if not abierto:
 				continue
 			var rej := GridContainer.new()
+			CebraRejilla.poner(rej)
 			rej.columns = 6
 			rej.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			p._lista_records.add_child(rej)
@@ -194,6 +197,7 @@ func _resumen_carrera(lg: Logros) -> void:
 	t.text = Idiomas.t("TU CARRERA")
 	p._lista_records.add_child(t)
 	var g := GridContainer.new()
+	CebraRejilla.poner(g)
 	g.columns = 6
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 14)

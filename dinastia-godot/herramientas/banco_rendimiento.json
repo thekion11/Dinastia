@@ -1,0 +1,33 @@
+{
+ "partido_minima": {
+  "llamadas": 491.7,
+  "triangulos": 591741.7,
+  "objetos": 683.1,
+  "vram_mb": 140.0
+ },
+ "partido_media": {
+  "llamadas": 1404.7,
+  "triangulos": 1838439.9,
+  "objetos": 1600.5,
+  "vram_mb": 189.2
+ },
+ "aperturas": {
+  "peor_ms": 1925.0,
+  "pantallas": 134.0
+ },
+ "menu_memoria": {
+  "carga_escena_mb": 205.7,
+  "primer_fotograma_mb": 410.3
+ },
+ "guardado": {
+  "hilo_principal_ms": 394.9,
+  "total_ms": 1135.2
+ },
+ "prologo": {
+  "carga_ms": 8786.8,
+  "cuadro_largo_ms": 1615.9,
+  "mem_pico_mb": 1081.3,
+  "nodos_max": 16535.2,
+  "llamadas_max": 1244.1
+ }
+}

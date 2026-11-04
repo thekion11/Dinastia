@@ -91,7 +91,7 @@ static func _cargar_trofeo() -> void:
 
 ## Una copa con su peana, `p` es la base. Con el modelo del trofeo, esa malla; si falta el
 ## archivo, la procedimental: pie, tallo, copa abierta y dos asas.
-static func copa(lote: PiezasVestuario.Lote, p: Vector3, oro: Material, peana: Material, receta: Dictionary = {}) -> void:
+static func copa(lote, p: Vector3, oro: Material, peana: Material, receta: Dictionary = {}) -> void:
 	lote.caja(peana, _en(p + Vector3(0, 0.04, 0)), Vector3(0.24, 0.08, 0.24))
 	## La copa de SU competición (orden 15 e): receta de `TrofeosReales` armada con `TrofeoModelo`.
 	if not receta.is_empty() and TrofeoModelo.disponible():
@@ -117,7 +117,7 @@ static func copa(lote: PiezasVestuario.Lote, p: Vector3, oro: Material, peana: M
 		lote.malla(oro, Transform3D(Basis(Vector3.FORWARD, PI / 2.0), p + Vector3(s * 0.15, 0.37, 0)), asa)
 
 ## Una vitrina con su peana, vidrio, cantoneras, tira de luz y caja de choque; `p` es el suelo bajo ella (`Lote` + `m` de `PiezasVestuario.materiales`).
-static func vitrina(lote: PiezasVestuario.Lote, nodo: Node3D, m: Dictionary, base: Material, vidrio: Material, p: Vector3) -> void:
+static func vitrina(lote, nodo: Node3D, m: Dictionary, base: Material, vidrio: Material, p: Vector3) -> void:
 	lote.caja(base, _en(Vector3(p.x, p.y + 0.5, p.z)), Vector3(0.7, 1.0, 0.7))
 	lote.caja(m["placa"], _en(Vector3(p.x, p.y + 0.98, p.z)), Vector3(0.74, 0.04, 0.74))
 	lote.caja(vidrio, _en(Vector3(p.x, p.y + 1.45, p.z)), Vector3(0.68, 0.9, 0.68))
@@ -140,13 +140,13 @@ static func vidrio_vitrina() -> StandardMaterial3D:
 	vidrio.cull_mode = BaseMaterial3D.CULL_DISABLED
 	return vidrio
 
-static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, titulos: int, nivel_museo: int, hitos: Array = [], pais := "") -> PiezasVestuario.Lote:
-	var lote := PiezasVestuario.Lote.new()
-	var m := PiezasVestuario.materiales(c1, c2)
+static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, titulos: int, nivel_museo: int, hitos: Array = [], pais = "") -> Variant:
+	var lote = load("res://visor/tunel_vestuario_piezas.gd").Lote.new()
+	var m = load("res://visor/tunel_vestuario_piezas.gd").materiales(c1, c2)
 	var oro: StandardMaterial3D = Texturas.metal(Color(0.95, 0.78, 0.3), 0.22)
-	var base := TunelVestuario._mat(Color(0.1, 0.1, 0.12), 0.4)
+	var base := PiezasObra._mat(Color(0.1, 0.1, 0.12), 0.4)
 	var vidrio := vidrio_vitrina()
-	var cuero := TunelVestuario._mat(Color(0.45, 0.28, 0.14), 0.6)
+	var cuero := PiezasObra._mat(Color(0.45, 0.28, 0.14), 0.6)
 	var cx := caja.get_center().x
 	## La alfombra del recorrido, de la puerta al fondo, con ribete.
 	lote.caja(m["placa"], _en(Vector3(cx, y0 + 0.035, caja.get_center().y)), Vector3(1.3, 0.01, caja.size.y - 0.3))
@@ -180,8 +180,8 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 		lote.caja(base, _en(Vector3(px, y0 + 1.55, pz)), Vector3(0.95, 1.15, 0.05))
 		lote.caja(m["toalla"], _en(Vector3(px, y0 + 1.55, pz + 0.03)), Vector3(0.85, 1.05, 0.01))
 		var alterna := k % 2 == 1
-		PiezasVestuario.camiseta(lote, _en(Vector3(px, y0 + 1.6, pz + 0.06)), m["cam2"] if alterna else m["cam1"], m["cam1"] if alterna else m["cam2"])
-		TunelVestuario._rotulo(nodo, str(anios[k % anios.size()]), Vector3(px, y0 + 1.07, pz + 0.07), 0.0, 22, Color(0.12, 0.12, 0.14))
+		load("res://visor/tunel_vestuario_piezas.gd").camiseta(lote, _en(Vector3(px, y0 + 1.6, pz + 0.06)), m["cam2"] if alterna else m["cam1"], m["cam1"] if alterna else m["cam2"])
+		PiezasObra._rotulo(nodo, str(anios[k % anios.size()]), Vector3(px, y0 + 1.07, pz + 0.07), 0.0, 22, Color(0.12, 0.12, 0.14))
 	## Una franja con los colores del club bajo el rótulo de los títulos.
 	lote.caja(m["cam1"], _en(Vector3(cx, y0 + 2.62, caja.position.y - 0.14)), Vector3(caja.size.x, 0.36, 0.02))
 	lote.montar(nodo, "Museo")
@@ -191,7 +191,7 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 		total = 0
 		for h: Variant in hitos:
 			total += maxi(1, int((h as Dictionary).get("cantidad", 1)))
-	TunelVestuario._rotulo(nodo, Idiomas.t("%d títulos") % total, Vector3(cx, y0 + 2.62, caja.position.y - 0.11), 0.0, 44,
+	PiezasObra._rotulo(nodo, Idiomas.t("%d títulos") % total, Vector3(cx, y0 + 2.62, caja.position.y - 0.11), 0.0, 44,
 		Color(1.0, 0.86, 0.45))
 	_luces_museo(nodo, caja, y0, cx)
 	return lote
@@ -206,12 +206,12 @@ static func _luces_museo(nodo: Node3D, caja: Rect2, y0: float, cx: float) -> voi
 		o.light_color = Color(1, 0.9, 0.75)
 		nodo.add_child(o)
 
-static func utileria(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color) -> PiezasVestuario.Lote:
-	var lote := PiezasVestuario.Lote.new()
-	var m := PiezasVestuario.materiales(c1, c2)
+static func utileria(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color) -> Variant:
+	var lote = load("res://visor/tunel_vestuario_piezas.gd").Lote.new()
+	var m = load("res://visor/tunel_vestuario_piezas.gd").materiales(c1, c2)
 	var acero: StandardMaterial3D = Texturas.metal(Color(0.55, 0.58, 0.62), 0.4)
-	var cuero := TunelVestuario._mat(Color(0.96, 0.96, 0.96), 0.45)
-	var naranja := TunelVestuario._mat(Color(1.0, 0.45, 0.1), 0.6)
+	var cuero := PiezasObra._mat(Color(0.96, 0.96, 0.96), 0.45)
+	var naranja := PiezasObra._mat(Color(1.0, 0.45, 0.1), 0.6)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 404
 	## LA ESTANTERÍA de la pared izquierda: montantes, cuatro baldas y lo suyo.
@@ -252,7 +252,7 @@ static func utileria(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color)
 	var n := int(lb / 0.55)
 	for k in n:
 		var z := zb - lb / 2.0 + (float(k) + 0.5) * lb / float(n)
-		PiezasVestuario.camiseta(lote, _en(Vector3(xb, y0 + 1.48, z), -PI / 2.0 + rng.randf_range(-0.08, 0.08)), m["cam1"], m["cam2"])
+		load("res://visor/tunel_vestuario_piezas.gd").camiseta(lote, _en(Vector3(xb, y0 + 1.48, z), -PI / 2.0 + rng.randf_range(-0.08, 0.08)), m["cam1"], m["cam2"])
 	_choque(nodo, Vector3(xb, y0 + 1.0, zb), Vector3(0.45, 2.0, lb))
 	## LA JAULA DE BALONES, el cesto de toallas y los conos, en el centro.
 	var cx := caja.get_center().x + 0.2

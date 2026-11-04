@@ -68,7 +68,7 @@ var premios: Array = []
 
 func registrar_temporada(anio: int, club_nombre: String) -> void:
 	historial.append({"anio": anio, "club": club_nombre, "pj": partidos, "goles": goles,
-		"as": asistencias, "ovr": ovr})
+		"as": asistencias, "ovr": ovr, "val": valor})   ## (2-11, M-295) el valor, para el gráfico de la ficha
 	if historial.size() > 12:
 		historial.pop_front()
 

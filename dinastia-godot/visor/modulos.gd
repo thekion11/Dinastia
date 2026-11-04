@@ -29,15 +29,15 @@ static var _reserva := {}
 
 ## La ruta del modelo de una pieza (la misma regla de siempre).
 static func ruta(nombre: String) -> String:
-	return InteriorInstalacion._ruta_pieza(nombre)
+	return CargaCiudad.de("InteriorInstalacion")._ruta_pieza(nombre)
 
 ## La escala a medidas reales (medida por kit; la comida, pieza a pieza).
 static func escala(nombre: String, forzada: Variant = null) -> Vector3:
-	return InteriorInstalacion._escala_de(nombre, forzada)
+	return CargaCiudad.de("InteriorInstalacion")._escala_de(nombre, forzada)
 
 ## Mallas centradas (huella en el origen, base en y = 0), caja y asiento.
 static func datos(nombre: String) -> Dictionary:
-	return InteriorInstalacion._pieza(nombre)
+	return CargaCiudad.de("InteriorInstalacion")._pieza(nombre)
 
 static func existe(nombre: String) -> bool:
 	return ResourceLoader.exists(ruta(nombre))
@@ -46,7 +46,7 @@ static func existe(nombre: String) -> bool:
 ## `tonos`: {material: Color} para teñirla («carpet» = la tela, «wood» = la
 ## madera...), como en los interiores; sin nada, los tonos propios de la pieza.
 static func tomar(nombre: String, forzada: Variant = null, tonos: Dictionary = {}) -> Node3D:
-	var t := (InteriorInstalacion.TONOS_PIEZA.get(nombre, {}) as Dictionary).duplicate() if not nombre.contains("/") else {}
+	var t = (CargaCiudad.de("InteriorInstalacion").TONOS_PIEZA.get(nombre, {}) as Dictionary).duplicate() if not nombre.contains("/") else {}
 	t.merge(tonos, true)
 	var clave := _clave(nombre, t)
 	var lista: Array = _reserva.get(clave, [])
@@ -77,7 +77,7 @@ static func _nueva(nombre: String, forzada: Variant, tonos: Dictionary) -> Node3
 	raiz.add_child(cuerpo)
 	for e: Array in datos(nombre)["mallas"]:
 		var mi := MeshInstance3D.new()
-		mi.mesh = InteriorInstalacion._malla_tenida(e[0], tonos)
+		mi.mesh = CargaCiudad.de("InteriorInstalacion")._malla_tenida(e[0], tonos)
 		mi.transform = e[1]
 		cuerpo.add_child(mi)
 	return raiz

@@ -36,7 +36,7 @@ func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 
 	elif destino.y > R + 0.05:
 		vy = ((destino.y - b.y) + 0.5 * G * tv * tv) / tv
 	## El arrastre frena: se compensa un poco para que llegue.
-	var h := d / dist * vh * (1.0 + ARRASTRE * tv * 0.6)
+	var h := d / dist * vh * compensa_arrastre(vh, tv)
 	if vy <= 0.0:
 		h = d / dist * vh
 	vel_balon = Vector3(h.x, vy, h.z)
@@ -363,10 +363,12 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 
 func _rival_mas_cercano(p: Dictionary) -> Dictionary:
 	var mejor: Dictionary = {}
-	var md := 999.0
+	var md := 999.0 * 999.0
+	var yo := pos(p)
+	var local := bool(p["es_local"])
 	for q: Dictionary in jugadores:
-		if bool(q["es_local"]) != bool(p["es_local"]):
-			var d := pos(q).distance_to(pos(p))
+		if bool(q["es_local"]) != local:
+			var d := (q["node"] as Node3D).position.distance_squared_to(yo)
 			if d < md:
 				md = d
 				mejor = q
@@ -447,3 +449,7 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 		stats["pases"] += 1
 		_pase_usuario_vivo = true
 		_pase_usuario_de = p
+
+## Cuánto más rápido hay que lanzar para llegar con el tiempo previsto: el aire quita ≈ K·v²·t en el vuelo; tope +25 % (a más, el balón pasaría de 36 m/s y la sonda de física lo contaría como salto).
+static func compensa_arrastre(vh: float, tv: float) -> float:
+	return 1.0 / (1.0 - minf(ARRASTRE_CUAD * vh * tv, 0.2))

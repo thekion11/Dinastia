@@ -25,7 +25,7 @@ var _luces := {}   ## "eje|color" -> StandardMaterial3D
 var botones: Array[Vector3] = []   ## dónde está cada botón peatonal (en el poste, a 1,1 m)
 var _ult_aplicado := ""   ## (28-10) estado ya escrito en los materiales: solo se reescriben cuando cambia
 
-func montar(lista: Array, exp: CiudadExpansion) -> void:
+func montar(lista: Array, exp) -> void:
 	cruces = lista
 	var postes: Array[Transform3D] = []
 	var cabezas: Array[Transform3D] = []
@@ -36,7 +36,7 @@ func montar(lista: Array, exp: CiudadExpansion) -> void:
 	var cab_p: Array[Transform3D] = []
 	var brazos: Array[Transform3D] = []
 	var botones_t: Array[Transform3D] = []
-	var off := CiudadExpansion.ANCHO_AV * 0.5 + 1.2
+	var off = CargaCiudad.de("CiudadExpansion").ANCHO_AV * 0.5 + 1.2
 	for p: Vector3 in cruces:
 		for esquina: Vector2 in [Vector2(1, 1), Vector2(-1, -1)]:
 			var base := p + Vector3(esquina.x * off, 0, esquina.y * off)
@@ -181,6 +181,20 @@ func para_cruzar() -> float:
 		var fase := fmod(t - (0.0 if eje == 0 else CICLO * 0.5) + CICLO, CICLO)
 		mejor = minf(mejor, 0.0 if fase < VERDE - INTERMITE else CICLO - fase)
 	return mejor
+
+## Un peatón NPC pulsa el botón (M-170): adelanta el verde peatonal como `pedir`, pero como mucho una vez cada `ENFRIA_NPC` s en todo el mapa (si no, entre todos acortarían el ciclo de los coches).
+const ENFRIA_NPC := 25.0
+var _t_npc := -100000
+func pulsa_npc(eje: int) -> bool:
+	if Time.get_ticks_msec() - _t_npc < int(ENFRIA_NPC * 1000.0):
+		return false
+	var fase := fmod(t - (0.0 if eje == 0 else CICLO * 0.5) + CICLO, CICLO)
+	var falta := 0.0 if fase < VERDE - INTERMITE else CICLO - fase   ## lo que falta para el verde peatonal de SU eje
+	if falta <= 2.0:
+		return false
+	_t_npc = Time.get_ticks_msec()
+	t = fposmod(t + falta - 2.0, CICLO)
+	return true
 
 ## El botón: si ya se puede cruzar, «ya»; si no, adelanta el siguiente verde para que llegue en 2 s y devuelve «espera».
 func pedir() -> String:

@@ -69,7 +69,7 @@ static func montar(ex: CiudadExpansion, c: Vector3, w: float, f: float) -> void:
 	## Arcos de entrada y salida con el rótulo y la luz azul interior.
 	for sz: float in [-1.0, 1.0]:
 		b._caja_en(Vector3(x0, y0 + 4.5, z0 + sz * (LARGO * 0.5 + 0.1)), Vector3(ANCHO + 1.0, 1.3, 0.3), azul)
-	b._rotulo(Vector3(x0, y0 + 4.6, z0 - LARGO * 0.5 - 0.35), "LAVADO DE AUTOS", Color(1, 1, 1), 34)
+	CartelFachada.poner(b, Vector3(x0, y0 + 4.6, z0 - LARGO * 0.5 - 0.35), "LAVADO DE AUTOS", Color(1, 1, 1), 34)
 	b._caja_en(Vector3(x0, y0 + 3.9, z0), Vector3(ANCHO - 1.0, 0.06, LARGO - 1.0), b._mat_simple(Color(0.7, 0.9, 1.0), 0.4, 1.4))
 	## Semáforo de entrada (rojo/verde) a un lado.
 	b._caja_en(Vector3(x0 + ANCHO * 0.5 + 1.0, y0 + 2.2, z0 - LARGO * 0.5 - 0.6), Vector3(0.3, 1.0, 0.3), oscuro)

@@ -241,7 +241,7 @@ func _ready() -> void:
 	mat.set_shader_parameter("c2", Color("0e1218"))
 	mat.set_shader_parameter("c3", LIMA)
 	mat.set_shader_parameter("aspecto", Vector2(1.78, 1.0))
-	if Calidad.motor_ligero:
+	if AhorroMenu.fondo_estatico():
 		fondo.color = Color("0e1218")
 	else:
 		fondo.material = mat

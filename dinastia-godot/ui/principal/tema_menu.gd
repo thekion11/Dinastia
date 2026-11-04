@@ -76,9 +76,7 @@ func _aplicar_tema() -> void:
 	t.set_stylebox("focus", "LineEdit", p._caja(p._mezcla(panel, p._pal_fondo(), 0.55), p.COL_ACENTO, radio, 2))
 
 	## Barras y deslizadores.
-	t.set_stylebox("slider", "HSlider", p._caja(p._mezcla(panel, p._pal_fondo(), 0.5), borde, 3, 0))
-	t.set_stylebox("grabber_area", "HSlider", p._caja(p.COL_ACENTO, p.COL_ACENTO, 3, 0))
-	t.set_stylebox("grabber_area_highlight", "HSlider", p._caja(p.COL_ACENTO, p.COL_ACENTO, 3, 0))
+	TemaSliders.aplicar(t, p.COL_ACENTO, p._mezcla(panel, p._pal_fondo(), 0.5), borde, p.get_tree())   ## deslizadores gruesos (pista 8, tirador 28, área 44)
 	t.set_stylebox("background", "ProgressBar", p._caja(p._mezcla(panel, p._pal_fondo(), 0.5), borde, 3, 0))
 	t.set_stylebox("fill", "ProgressBar", p._caja(p.COL_ACENTO, p.COL_ACENTO, 3, 0))
 
@@ -308,9 +306,19 @@ func _columna(padre: HBoxContainer, titulo: String, ratio: float) -> VBoxContain
 	v.set_anchors_preset(Control.PRESET_FULL_RECT)
 	v.offset_left = 12; v.offset_top = 10; v.offset_right = -12; v.offset_bottom = -10
 	caja.add_child(v)
+	var cab := HBoxContainer.new()   ## (3-11, orden 22) título + «⤢» a pantalla completa
+	v.add_child(cab)
 	var t := p._texto(11, p.COL_SUAVE); t.text = titulo
 	t.clip_text = true
-	v.add_child(t)
+	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cab.add_child(t)
+	var amp := Button.new()
+	amp.text = "⤢"
+	amp.flat = true
+	amp.tooltip_text = Idiomas.t("Ver a pantalla completa")
+	amp.custom_minimum_size = Vector2(28, 22)
+	amp.pressed.connect(func() -> void: PantallaAmpliada.abrir(p, v, t.text))
+	cab.add_child(amp)
 	## Se deja a mano el último título creado para las columnas cuyo encabezado
 	## cambia solo -la de la izquierda dice "PRIMERA DIVISION" o "COPA
 	## LIBERTADORES · CUARTOS" según lo que se juegue el domingo-.

@@ -179,6 +179,10 @@ func _gente_cerca(delta: float) -> void:
 				if bool(s["sentado"]) and _rng_gente.randf() < 0.45:
 					continue
 				_cola_gente.append({"tipo": "sitio", "s": s, "e": e})
+	## M-180: el vendedor ambulante de los puestos de esta estación.
+	for v: Dictionary in vendedores:
+		if (v["p"] as Vector3).distance_to(mejor["centro"]) < 70.0 and absf((v["p"] as Vector3).y - (mejor["centro"] as Vector3).y) < 6.0:
+			_cola_gente.append({"tipo": "vendedor", "p": v["yo"], "giro": v["giro"]})
 	## Qué línea y qué estación es (para saber cuándo para su tren).
 	for l: Dictionary in lineas:
 		if bool(l["elevada"]) != bool(mejor["elevada"]):
@@ -330,7 +334,7 @@ func _process(delta: float) -> void:
 				mejor = minf(mejor, t.eta(float(pa["s"])))
 			var lab: Label3D = pa["label"]
 			var cuando := "llegando" if mejor < 20.0 else "%d min" % int(ceil(mejor / 60.0))
-			var txt_p := ("%s · %s\nPróximo tren: %s" % [String((pa["linea"] as Dictionary)["nombre"]), String(pa["est"]), cuando]) if pa.has("pantalla") \
+			var txt_p := ("%s · %s\nPróximo tren: %s\n%s" % [String((pa["linea"] as Dictionary)["nombre"]), String(pa["est"]), cuando, MetroPublicidad.mensaje(Time.get_ticks_msec() / 1000.0)]) if pa.has("pantalla") \
 					else ("%s · próximo tren: %s" % [String((pa["linea"] as Dictionary)["nombre"]), cuando])
 			if lab.text != txt_p:   ## (28-10) cada asignación rehace la malla del texto: solo si cambió
 				lab.text = txt_p

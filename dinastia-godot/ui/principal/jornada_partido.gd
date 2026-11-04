@@ -122,6 +122,19 @@ func _dirigir() -> void:
 	var info_clima := Clima.del_partido(p.local.pais, pr.mundo.semana, pr.mundo.anio, p.local.id + p.visita.id)
 	p.fijar_clima(info_clima)
 	pr._escribir("[color=#8ea595]%s Parte del tiempo: %s.[/color]" % [Clima.icono(info_clima), String(info_clima["texto"])])
+	## U6 (3-11): quién está a una amarilla de la sanción, ANTES de salir al campo.
+	var al_borde := Disciplina.al_borde(pr.mundo.mi_club())
+	if not al_borde.is_empty():
+		var nombres: Array[String] = []
+		for jb: Jugador in al_borde:
+			nombres.append(jb.nombre)
+		pr._escribir("[color=#c9a227]%s[/color]" % (Idiomas.t("🟨 A una amarilla de la sanción: %s.") % ", ".join(nombres)))
+	## U6 (3-11): lo que cuesta ESTE partido, desglosado: el viaje si es fuera, abrir el estadio si es en casa.
+	var mio := pr.mundo.mi_club()
+	if p.visita == mio and p.local != mio:
+		pr._escribir("[color=#8ea595]%s[/color]" % Viajes.linea_previa_fuera(p.local.nombre, Viajes.viaje_euros(mio.pais, p.local.pais, mio.rep)))
+	elif p.local == mio:
+		pr._escribir("[color=#8ea595]%s[/color]" % Viajes.linea_previa_casa(Viajes.dia_de_partido_euros(mio.pais, Finanzas.new(mio).asistencia(), mio.estadio_aforo)))
 	var consejo := Clima.consejo(info_clima, p.local == pr.mundo.mi_club())
 	if consejo != "":
 		MentorVoz.decir(pr, pr.mundo, "%s %s" % [Clima.icono(info_clima), String(info_clima["texto"])], consejo)
@@ -132,6 +145,17 @@ func _dirigir() -> void:
 	## CÓMO SE MIRA (25-9-2026, plan maestro B2). Los cinco modos juegan el
 	## MISMO `Partido` con los mismos `simular_minuto()`: solo cambia la vista.
 	var modo := _modo_simulacion(_competicion_de_la_semana())
+	## (3-11, orden 22) Antes de cada partido, a pantalla completa: jugar, solo las jugadas importantes o simular.
+	if DisplayServer.get_name() != "headless" and OS.get_environment("SIN_ELECCION_PARTIDO") == "":
+		if EleccionPartido.preguntar():
+			var el := EleccionPartido.new()
+			el.titulo = "%s  vs  %s" % [p.local.nombre, p.visita.nombre]
+			pr.add_child(el)
+			var e: Dictionary = await el.elegido
+			el.queue_free()
+			modo = String(e["modo"])
+		elif not EleccionPartido.ultima().is_empty():
+			modo = String(EleccionPartido.ultima().get("modo", modo))
 	if modo == "instantaneo" or modo == "resumen":
 		p.preparar()
 		p.fijar_hinchada(pr.mundo.mi_club(), pr.mundo.prensa.animo if pr.mundo.prensa != null else 60)

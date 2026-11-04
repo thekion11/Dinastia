@@ -25,7 +25,7 @@ CONSONANTES = [
     (r"v", "b"), (r"b", "v"), (r"ll", "y"), (r"z", "s"), (r"ss", "s"), (r"tt", "t"),
     (r"qu", "k"), (r"c(?=[aou])", "k"), (r"k", "c"), (r"x", "j"), (r"ph", "f"), (r"th", "t"),
     (r"w", "v"), (r"ck", "k"), (r"rr", "r"), (r"ff", "f"), (r"gu(?=[ei])", "g"),
-    (r"(?<=.)h", ""), (r"y(?=[aeiou])", "ll"), (r"(?<=[aeiou])s(?=[aeiou])", "z"),
+    (r"(?<=.)h", ""), (r"(?<![b-df-hj-np-tv-z])y(?=[aeiou])", "ll"), (r"(?<=[aeiou])s(?=[aeiou])", "z"),
     (r"(?<=[aeiou])d(?=[aeiou])", "t"), (r"(?<=[aeiou])t(?=[aeiou])", "d"),
     (r"(?<=[aeiou])g(?=[aou])", "c"), (r"(?<=[aeiou])p(?=[aeiou])", "b"),
     (r"(?<=[aeiou])n(?=[aeiou])", "ñ"), (r"(?<=[aeiou])l(?=[aeiou])", "r"),
@@ -61,13 +61,22 @@ def _capitaliza(orig, nuevo):
     if not nuevo:
         return nuevo
     if orig[:1].isupper():
-        return nuevo[0].upper() + nuevo[1:]
-    return nuevo
+        nuevo = nuevo[0].upper() + nuevo[1:]
+    ## 3-11-2026: también cada trozo tras un guion, como en el original («Alexander-Arnold»),
+    ## que antes quedaba en minúscula; «Heung-min» sigue igual.
+    trozos_o = orig.split("-")
+    trozos_n = nuevo.split("-")
+    if len(trozos_o) == len(trozos_n):
+        for k in range(1, len(trozos_n)):
+            if trozos_o[k][:1].isupper() and trozos_n[k]:
+                trozos_n[k] = trozos_n[k][0].upper() + trozos_n[k][1:]
+    return "-".join(trozos_n)
 
 
 def _vocal(palabra, desde=1):
     for i in range(desde, len(palabra) - 1):
-        if palabra[i] in VOCALES:
+        ## 3-11-2026: no la vocal cuyo cambio la duplica con su vecina («Courtois» daba «Kuurtois»).
+        if palabra[i] in VOCALES and VOCALES[palabra[i]] not in (palabra[i - 1], palabra[i + 1]):
             return palabra[:i] + VOCALES[palabra[i]] + palabra[i + 1:], i
     return palabra, -1
 
@@ -82,8 +91,14 @@ def guinar_palabra(palabra, semilla):
     aplicables = [r for r in CONSONANTES if re.search(r[0], base)]
     if aplicables:
         ## Entre las dos primeras aplicables elige el nombre (siempre la misma).
-        pat, cambio = aplicables[semilla % min(2, len(aplicables))]
-        actual = re.sub(pat, cambio, actual, count=1)
+        ## 3-11-2026: se salta el cambio que deja una letra doble nueva («Dovbyk» daba «Duvvyk»).
+        primero = semilla % min(2, len(aplicables))
+        for pat, cambio in aplicables[primero:] + aplicables[:primero]:
+            prueba = re.sub(pat, cambio, actual, count=1)
+            if not any(prueba[k] == prueba[k + 1] and prueba[k] not in "lr" and
+                       base.count(prueba[k] * 2) < prueba.count(prueba[k] * 2) for k in range(len(prueba) - 1)):
+                actual = prueba
+                break
     if _dist(actual, base) < 2:
         actual, i = _vocal(actual, 1)
         if _dist(actual, base) < 2:

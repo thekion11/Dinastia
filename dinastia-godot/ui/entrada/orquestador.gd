@@ -1,12 +1,12 @@
 class_name OrquestadorEntrada
 extends Control
 ## LA ENTRADA AL JUEGO (fase 1 del MEGAPLAN, 25-10-2026). Encadena las etapas 0-6 de
-## `docs/PLAN_DEL_LUNES.md` §2.1 («El flujo»): intro → idioma → menú de modos → país →
+## `docs/PLAN_GENERAL.md` §2.1 («El flujo»): intro → idioma → menú de modos → país →
 ## configuración del club → entrada al campeonato → personaje. Cada etapa es una pantalla
 ## PROPIA a pantalla completa (`ui/entrada/*.gd`, las construyen otros); aquí solo se
 ## decide cuál toca, se funde de una a otra (nunca dos a la vez: la anterior se libera
 ## antes de enseñar la siguiente), se guarda lo elegido y se puede volver atrás.
-## Al final, `OrquestadorMundo.preparar()` crea la partida con el MISMO camino de siempre
+## Al final, `CargaCiudad.de("OrquestadorMundo").preparar()` crea la partida con el MISMO camino de siempre
 ## (`PedidoPartida.mundo_pregenerado`, como `ui/eleccion_club.gd`) y se pasa a Principal.
 ##
 ## CONTRATO de cada pantalla (no cambiarlo: lo cumplen siete pantallas hechas en paralelo):
@@ -72,6 +72,7 @@ func _ready() -> void:
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
 	fondo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(fondo)
+	add_child(AhorroMenu.new())   ## (3-11) en MÍNIMA, sin 3D a la vista: bajo consumo y motas en pausa
 	_velo = ColorRect.new()
 	_velo.color = Color.BLACK
 	_velo.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -91,7 +92,7 @@ func _ready() -> void:
 	## La intro lo lee para ofrecer «saltar» desde el primer momento si ya se vio.
 	estado["intro_vista"] = intro_vista()
 	## A/B del mando para toda la entrada (lo define la pantalla de idioma).
-	OrquestadorMundo._llamar("res://ui/entrada/idioma.gd", "preparar_mando", [])
+	CargaCiudad.de("OrquestadorMundo")._llamar("res://ui/entrada/idioma.gd", "preparar_mando", [])
 	## Primera etapa en el frame siguiente: quien lo instancia (prueba, escena) puede
 	## ajustar `duracion_fundido`/`forzar_intro` antes de que arranque.
 	_empezar.call_deferred()
@@ -127,9 +128,9 @@ func etapa_aplica(i: int) -> bool:
 		"intro":
 			return forzar_intro or not intro_vista()
 		"pais":
-			return OrquestadorMundo.modo_id(estado) != "retos"
+			return CargaCiudad.de("OrquestadorMundo").modo_id(estado) != "retos"
 		"entrada":
-			return OrquestadorMundo.crea_club(estado) and OrquestadorMundo.modo_id(estado) != "retos"
+			return CargaCiudad.de("OrquestadorMundo").crea_club(estado) and CargaCiudad.de("OrquestadorMundo").modo_id(estado) != "retos"
 	return true
 
 func _siguiente_desde(i: int) -> int:
@@ -141,7 +142,7 @@ func _siguiente_desde(i: int) -> int:
 ## Tras elegir modo, algunos no siguen por aquí: la Carrera de Jugador tiene su propia
 ## creación y «continuar» carga la partida guardada.
 func _sale_del_flujo() -> bool:
-	return etapa_actual() == "modo" and OrquestadorMundo.modo_id(estado) in ["carrera-m", "continuar"]
+	return etapa_actual() == "modo" and CargaCiudad.de("OrquestadorMundo").modo_id(estado) in ["carrera-m", "continuar"]
 
 # --- avanzar y volver -------------------------------------------------------------
 
@@ -155,7 +156,7 @@ func _al_terminar(datos: Dictionary, quien: Control) -> void:
 			marcar_intro_vista()
 		"idioma":
 			## Al momento: las pantallas siguientes ya se pintan en el idioma elegido.
-			OrquestadorMundo.aplicar_idioma(estado)
+			CargaCiudad.de("OrquestadorMundo").aplicar_idioma(estado)
 	etapa_cambiada.emit(clave)
 	if _sale_del_flujo():
 		_finalizar()
@@ -228,7 +229,7 @@ func crear_pantalla(i: int) -> Control:
 		var sus: Control = (load(SUSTITUTO) as Script).new()
 		sus.set("clave", String(ETAPAS[i]["clave"]))
 		sus.set("titulo", String(ETAPAS[i]["titulo"]))
-		sus.set("por_defecto", OrquestadorMundo.por_defecto(String(ETAPAS[i]["clave"]), estado))
+		sus.set("por_defecto", CargaCiudad.de("OrquestadorMundo").por_defecto(String(ETAPAS[i]["clave"]), estado))
 		n = sus
 	n.set_meta("sustituto", n.get_script() != null and (n.get_script() as Script).resource_path == SUSTITUTO)
 	return n
@@ -294,13 +295,13 @@ func _ir_a(i: int, avanza: bool) -> void:
 func asegurar_mundo() -> Mundo:
 	if estado.get("mundo") is Mundo:
 		return estado["mundo"]
-	var m := OrquestadorMundo.generar_mundo()
+	var m = CargaCiudad.de("OrquestadorMundo").generar_mundo()
 	estado["mundo"] = m
 	return m
 
 func _finalizar() -> void:
 	_terminado = true
-	var res := OrquestadorMundo.preparar(estado)
+	var res = CargaCiudad.de("OrquestadorMundo").preparar(estado)
 	partida_lista.emit(res)
 	if not cambiar_escena or not is_inside_tree():
 		return

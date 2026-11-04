@@ -201,6 +201,7 @@ static func _rejilla(lista: VBoxContainer, columnas: int, paleta: Dictionary) ->
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 10)
 	g.add_theme_constant_override("v_separation", 3)
+	CebraRejilla.poner(g)
 	lista.add_child(g)
 	return g
 

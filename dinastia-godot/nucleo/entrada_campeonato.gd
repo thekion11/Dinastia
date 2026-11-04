@@ -2,7 +2,7 @@ class_name EntradaCampeonato
 extends RefCounted
 ## ENTRADA AL CAMPEONATO (MEGAPLAN, fase 1 / etapa 5 del flujo; «fase 4» del menú inicial).
 ## Un club recién creado no aparece de la nada en el calendario: entra de una de dos maneras, con las
-## cifras que el dueño VALIDÓ el 24-10 (`docs/PLAN_DEL_LUNES.md` §2.3). Sea B el presupuesto inicial que
+## cifras que el dueño VALIDÓ el 24-10 (`docs/PLAN_GENERAL.md` §2.3). Sea B el presupuesto inicial que
 ## tendría un club de esa división:
 ##
 ## |                        | A · REEMPLAZAR un club              | B · PAGAR a la confederación          |

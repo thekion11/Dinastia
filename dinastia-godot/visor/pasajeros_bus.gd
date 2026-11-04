@@ -4,7 +4,7 @@ extends Node
 ## otros que bajaban sin relación. Ahora hay CONTINUIDAD: en cada parada con marquesina esperan 2 personas (de pie, con el móvil) mientras el jugador
 ## está cerca; cuando el autobús para (a los 3 s, `GenteSentada.vigilar_buses`), los que esperan CAMINAN hasta la puerta y SUBEN: su «semilla»
 ## (la persona: cara, ropa, paso) se anota en el autobús (`meta "pasajeros"`). En otra parada BAJAN los que llevan más tiempo dentro: la misma
-## persona (misma semilla) sale por la puerta y se va andando. Se reutiliza `PeatonQ`/`PeatonVida.nuevo` y sus clips; no hay nodos de más:
+## persona (misma semilla) sale por la puerta y se va andando. Se reutiliza `PeatonQ`/`CargaCiudad.de("PeatonVida").nuevo` y sus clips; no hay nodos de más:
 ## solo existen los que esperan o andan, y se borran al llegar. Los trenes y el teleférico los hace otra sesión.
 
 const ESPERAN := 2
@@ -12,13 +12,13 @@ const ALCANCE := 70.0
 const MAX_ABORDO := 10
 const BAJAN := 2
 
-var expl: ExploradorCiudad
+var expl
 var _esperando := {}   ## índice de la parada → [{d, semilla}]
 var _andando: Array = []   ## {d, semilla, a, b, t, dur, sube, bus}
 var _t := 1.0
 var _ronda := 0
 
-static func crear(v: VidaCiudad) -> PasajerosBus:
+static func crear(v) -> PasajerosBus:
 	var s := PasajerosBus.new()
 	s.name = "PasajerosBus"
 	s.expl = v.expl
@@ -50,7 +50,7 @@ func _poblar() -> void:
 				var fig := _persona(sem, sitio_espera(p, k))
 				if fig.is_empty():
 					break
-				PeatonVida.en_anden(fig["d"], float(posmod(hash([sem, 5]), 100)) / 100.0)
+				CargaCiudad.de("PeatonVida").en_anden(fig["d"], float(posmod(hash([sem, 5]), 100)) / 100.0)
 				lista.append(fig)
 		elif d > ALCANCE + 30.0 and _esperando.has(i):
 			for fig: Dictionary in _esperando[i]:
@@ -75,7 +75,7 @@ static func semilla(parada: int, k: int, ronda: int) -> int:
 	return 6100 + posmod(hash([parada, k, ronda]), 90000)
 
 func _persona(sem: int, pos: Vector3) -> Dictionary:
-	var d := PeatonVida.nuevo(expl.cb, sem)
+	var d = CargaCiudad.de("PeatonVida").nuevo(expl.cb, sem)
 	if d.is_empty():
 		return {}
 	var n: Node3D = d["nodo"]
@@ -124,7 +124,7 @@ func parada(bus: Node3D) -> void:
 		var n: Node3D = (fig["d"] as Dictionary)["nodo"]
 		_andar(fig, [n.position, puerta, dentro1, dentro2], true, bus)   ## sube: a la puerta, el escalón y se adentra en el pasillo
 	bus.set_meta("pasajeros", abordo)
-	InteriorBus.actualizar(bus)
+	CargaCiudad.de("InteriorBus").actualizar(bus)
 
 func _andar(fig: Dictionary, pts: Array, sube: bool, bus: Node3D) -> void:
 	var d: Dictionary = fig["d"]
@@ -175,7 +175,7 @@ func _mover(delta: float) -> void:
 				if abordo.size() < MAX_ABORDO:
 					abordo.append(int(f["semilla"]))
 				bus.set_meta("pasajeros", abordo)
-				InteriorBus.actualizar(bus)
+				CargaCiudad.de("InteriorBus").actualizar(bus)
 			n.queue_free()
 			_andando.remove_at(k)
 

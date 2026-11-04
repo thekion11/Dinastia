@@ -32,14 +32,14 @@ func _conectar_2() -> void:
 			p._escribir("[color=#c9a227][b]%s.[/b][/color] %s" % [titulo, texto])
 			p._anotar(titulo, texto)
 			Aviso.mostrar(p, "contrato", "🏙️", titulo, texto, "patrocinio_nuevo"))
-		p.mundo.ciudad.movimiento.connect(p.mundo._anotar_movimiento)
+		Conexion.una_vez(p.mundo.ciudad.movimiento, p.mundo._anotar_movimiento)
 	if p.mundo.junta != null and not p.mundo.junta.movimiento.is_connected(p.mundo._anotar_movimiento):
-		p.mundo.junta.movimiento.connect(p.mundo._anotar_movimiento)
+		Conexion.una_vez(p.mundo.junta.movimiento, p.mundo._anotar_movimiento)
 	if p.mundo.comercial != null:
 		p.mundo.comercial.noticia.connect(func(titulo: String, texto: String) -> void:
 			p._escribir("[color=#c9a227][b]%s.[/b][/color] %s" % [titulo, texto])
 			p._anotar(titulo, texto))
-		p.mundo.comercial.movimiento.connect(p.mundo._anotar_movimiento)
+		Conexion.una_vez(p.mundo.comercial.movimiento, p.mundo._anotar_movimiento)
 	## `eras` es del MUNDO, no de tu club -se crea una vez en `generar()` y su
 	## propio comentario dice que no se recrea al tomar el mando-, así que
 	## necesita el mismo candado que `mercado`, `copa` y `cesiones`.
@@ -105,7 +105,7 @@ func _conectar_2() -> void:
 					p._escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
 					p._anotar(titulo, cuerpo))
 				if fuente.has_signal("movimiento"):
-					fuente.movimiento.connect(p.mundo._anotar_movimiento)
+					Conexion.una_vez(fuente.movimiento, p.mundo._anotar_movimiento)
 		if p.mundo.licencia != null:
 			p.mundo.licencia.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 				p._escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
