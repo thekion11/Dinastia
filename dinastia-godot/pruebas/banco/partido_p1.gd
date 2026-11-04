@@ -87,7 +87,8 @@ func _probar_partidos() -> void:
 	var pct_atajada := float(tipos["atajada"]) / maxf(1.0, float(no_gol))
 	var pct_poste := float(tipos["poste"]) / maxf(1.0, float(no_gol))
 	_comprobar(pct_atajada > 0.22 and pct_atajada < 0.50, "atajada ronda su proporcion del HTML (%.0f%%)" % (pct_atajada * 100.0))
-	_comprobar(pct_poste > 0.03 and pct_poste < 0.20, "poste ronda su proporcion del HTML (%.0f%%)" % (pct_poste * 100.0))
+	## (4-11, recalibración del simulado) ahora hay ~25 remates por partido y el palo es ~3 % de ellos (R_POSTE − R_ATAJADA = 0,03): ~3-4 % de los NO goles.
+	_comprobar(pct_poste > 0.01 and pct_poste < 0.12, "poste ronda su proporcion real (%.0f%%)" % (pct_poste * 100.0))
 
 	## Las estadisticas de `M.st` del HTML: posesion, tiros a puerta, xG,
 	## corners, faltas y fueras de juego. No mueven el marcador, pero si alguna
@@ -101,14 +102,23 @@ func _probar_partidos() -> void:
 	var faltas_totales := 0
 	var fueras_totales := 0
 	var partidos_st := 0
+	var minutos_st := 0
+	var suspendidos_st := 0
 	for i2 in 40:
 		var a4: Club = l.clubes[i2 % l.clubes.size()]
 		var b4: Club = l.clubes[(i2 + 5) % l.clubes.size()]
 		if a4 == b4:
 			continue
+		## (4-11) Sin pasar semanas, las rojas y lesiones de un partido dejaban a los mismos clubes sin once en los siguientes (en la muestra anterior 21 de 40 se suspendían con menos de siete): cada uno sale sano.
+		for c4: Club in [a4, b4]:
+			for j4: Jugador in c4.plantilla:
+				j4.suspension = 0
+				j4.lesion = 0
 		var p4 := Partido.new(a4, b4)
 		p4.simular()
 		partidos_st += 1
+		minutos_st += p4.minuto
+		suspendidos_st += 1 if p4.suspendido else 0
 		if p4.tiros_puerta_local > p4.remates_local or p4.tiros_puerta_visita > p4.remates_visita:
 			mal_puerta += 1
 		if not p4.suspendido and (p4.goles_local > p4.tiros_puerta_local or p4.goles_visita > p4.tiros_puerta_visita):   ## el 3-0 de mesa no tiene tiros
@@ -122,6 +132,7 @@ func _probar_partidos() -> void:
 	var corners_media := float(corners_totales) / maxf(1.0, float(partidos_st))
 	var faltas_media := float(faltas_totales) / maxf(1.0, float(partidos_st))
 	var fueras_media := float(fueras_totales) / maxf(1.0, float(partidos_st))
+	_linea("  minutos por partido %.1f, suspendidos %d de %d" % [float(minutos_st) / maxf(1.0, float(partidos_st)), suspendidos_st, partidos_st])
 	_linea("  por partido: %.1f corners, %.1f faltas, %.1f fueras de juego, %.2f xG" % [
 		corners_media, faltas_media, fueras_media, xg_total / maxf(1.0, float(partidos_st))])
 	_comprobar(mal_puerta == 0, "nunca hay mas tiros a puerta que remates (%d mal)" % mal_puerta)
@@ -130,8 +141,9 @@ func _probar_partidos() -> void:
 	## Con las probabilidades del HTML (10%+9% corners, 16%+17% faltas, 5%+5%
 	## fueras por minuto sobre 90) lo esperable ronda 17 corners, 30 faltas y 9
 	## fueras por partido. Margen ancho: es un sorteo, no una cuenta fija.
-	_comprobar(corners_media > 9.0 and corners_media < 26.0, "los corners por partido son creibles (%.1f)" % corners_media)
-	_comprobar(faltas_media > 18.0 and faltas_media < 42.0, "las faltas por partido son creibles (%.1f)" % faltas_media)
+	## (4-11) Las cifras de verdad: ~10 córners y ~22 faltas por partido (el balance las bajó del HTML); la muestra de este banco es corta, de ahí el margen ancho.
+	_comprobar(corners_media > 8.0 and corners_media < 14.0, "los corners por partido son creibles (%.1f)" % corners_media)
+	_comprobar(faltas_media > 17.0 and faltas_media < 30.0, "las faltas por partido son creibles (%.1f)" % faltas_media)
 	_comprobar(fueras_media > 3.0 and fueras_media < 16.0, "los fueras de juego por partido son creibles (%.1f)" % fueras_media)
 	_comprobar(xg_total > 0.0, "el xG se acumula de verdad (%.1f en %d partidos)" % [xg_total, partidos_st])
 
