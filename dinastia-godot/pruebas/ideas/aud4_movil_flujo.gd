@@ -61,6 +61,7 @@ func _probar() -> void:
 	Partida.guardar(m, "aud4_movil")
 	var c := Partida.cargar("aud4_movil")
 	_comprobar(c != null and c.mi_club().id == m.mi_club().id, "guardar y cargar da el mismo club")
+	var nodos0 := _p.find_children("*", "", true, false).size()
 	var mal: Array[String] = []
 	var fm: Array[String] = []
 	for mn: Dictionary in MenusLaterales.MENUS:
@@ -80,6 +81,9 @@ func _probar() -> void:
 			await _frames(20)
 	_comprobar(mal.is_empty(), "todos los submenús abren en el móvil %s" % str(mal.slice(0, 5)))
 	_comprobar(fm.is_empty(), "sin botones bajos ni listas bloqueadas en los menús: %d %s" % [fm.size(), str(fm.slice(0, 4))])
+	await _frames(200)   ## las pestañas que ya no se ven se sueltan (A4-INT-R01)
+	var nodos1 := _p.find_children("*", "", true, false).size()
+	_comprobar(nodos1 <= nodos0 + 1500, "tras recorrer todos los menús en el móvil los nodos no se acumulan (%d → %d)" % [nodos0, nodos1])
 	Partida.borrar("aud4_movil")
 	PantallaMovil.dpi_forzado = 0.0
 	PantallaMovil.ventana_forzada = Vector2i.ZERO
