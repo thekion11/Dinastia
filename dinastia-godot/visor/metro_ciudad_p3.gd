@@ -238,6 +238,7 @@ func montar(exp: CiudadExpansion) -> void:
 		var nodos_x: Array = []
 		for k in 3:
 			var t := Tren.new(largo, est_s, largo * (float(k) + 0.5) / 3.0, 1.0 if k % 2 == 0 else -1.0)
+			t.arrancar_en_estacion()
 			trenes.append(t)
 			var real := _tren_real(col)
 			add_child(real)

@@ -73,6 +73,7 @@ func _estadios_extremos() -> void:
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
 	var club := m.mi_club()
 	var base: Dictionary = m.perfil_estadio_de(club)
+	var vistas := {}
 	var casos := {
 		"aforo 0": {"aforo": 0},
 		"aforo 1": {"aforo": 1},
@@ -98,10 +99,16 @@ func _estadios_extremos() -> void:
 		var r: Node3D = v.get("_raiz3d")
 		var butacas := 0
 		for g in r.find_children("Butacas*", "MultiMeshInstance3D", true, false):
-			butacas += (g as MultiMeshInstance3D).multimesh.instance_count
+			var mm := (g as MultiMeshInstance3D).multimesh
+			for q in mm.instance_count:
+				if mm.get_instance_color(q).a > 0.5 and mm.get_instance_transform(q).basis.get_scale().y > 0.01:
+					butacas += 1
+		vistas[nombre] = butacas
 		print("  estadio «%s»: %d nodos, %d butacas" % [nombre, r.find_children("*", "Node", true, false).size(), butacas])
 		_comprobar(r.get_node_or_null("Cesped") != null, "estadio «%s»: se construye con su césped" % nombre)
 		v.free()
+	print("  butacas visibles por aforo: ", vistas)
+	_comprobar(int(vistas["aforo 1"]) < int(vistas["aforo 500000"]), "el aforo manda en las butacas: aforo 1 → %d visibles, aforo 500 000 → %d" % [int(vistas["aforo 1"]), int(vistas["aforo 500000"])])
 
 ## ---- 10 minutos de tráfico y gente a paso fino: nada se pierde, nada sale NaN, los nodos no crecen
 func _trafico_estres() -> void:
