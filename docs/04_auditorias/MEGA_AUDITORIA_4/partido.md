@@ -36,3 +36,7 @@ equipos de 7 y sin portero; en `especiales.sh`).
   Va con la deuda de recalibración del simulado (`PLAN_GENERAL.md`); la prueba vigila que no empeore (tope 20).
 - Sin hallazgos: marcador = señales de gol, tiros a puerta ≥ goles, remates ≥ a puerta, cambios ≤ máximo, posesión y xG finitos en 150
   partidos absurdos; el equipo de 7 y el sin portero terminan.
+
+## Cierre de A4-PARTIDO-005 y 006 (4-11)
+- [A4-PARTIDO-005] arreglado: la sonda «pizarra» usa N=10 (con 6 el ruido de los tiros daba falsos fallos); con N=10 pasa con holgura (ofensivo 24,7 vs defensivo 15,5 tiros). Umbral sin tocar.
+- [A4-PARTIDO-006] arreglado: el gol anulado por el VAR ya no cuenta remate, a puerta ni xG, y la «peor diferencia» se rehace desde la crónica (antes un gol anulado podía dar la «remontada de 3»). Reglamento: un tanto invalidado no es tiro. Cambia las estadísticas, no el juego. Prueba en `auditoria_partido_limite`.
