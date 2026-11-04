@@ -133,7 +133,7 @@ func _process(delta: float) -> void:
 	_frames.append((ahora - _ult) / 1000.0)
 	_ult = ahora
 	_t_parte += delta
-	if _frames.size() % 30 == 0:
+	if _frames.size() % 10 == 0:   ## (4-11) antes cada 30: en software caían 2 muestras por parte y una sola mala decidía
 		_muestras.append([Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,
 			Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
 			Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),
@@ -213,7 +213,7 @@ func _mediana_col(c: int) -> float:
 	if v.is_empty():
 		return 0.0
 	v.sort()
-	return v[v.size() / 2]
+	return v[(v.size() - 1) / 2]   ## la mediana baja: con 2 muestras, la mejor (la otra puede ser de carga)
 
 func _fps_de(f: Array) -> float:
 	var t := 0.0
