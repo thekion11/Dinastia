@@ -185,18 +185,14 @@ func remate_externo(es_local: bool, autor_id: String, tipo: String) -> void:
 	_momentum_push(1, es_local)
 	remate.emit(c, _por_id(autor_id), tipo, minuto)
 
-## Una tarjeta que sacó el árbitro del 3D. La roja deja al equipo con uno menos
-## también aquí (sale del once: la fuerza se vuelve a medir).
+## Tarjeta del árbitro del 3D: la roja saca al jugador del once (la fuerza se vuelve a medir).
 func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 	var j := _por_id(jugador_id)
-	if j == null:
-		return
-	## Una ROJA DIRECTA no es una amarilla de temporada (mega auditoría 4): solo cuenta la amarilla de verdad y la segunda amarilla (la que la motiva: ya hubo una en este partido).
+	if j == null: return
+	## Roja directa no suma amarilla de temporada (A4): solo la amarilla real y la 2.ª que la motiva.
 	var previas := int(_amarillas_hoy.get(jugador_id, 0))
-	if not roja or previas > 0:
-		j.amarillas += 1
-	if not roja:
-		_amarillas_hoy[jugador_id] = previas + 1
+	if not roja or previas > 0: j.amarillas += 1
+	if not roja: _amarillas_hoy[jugador_id] = previas + 1
 	if roja:
 		Disciplina.sanciona(j)
 		once_local.erase(j)
@@ -320,11 +316,6 @@ func penales() -> Array:
 
 ## Cierra las notas del partido y actualiza la forma (al terminar). Del HTML: la nota base se mueve con el resultado del EQUIPO
 ## (±0,6) más azar, y la forma se arrastra hacia esa nota con un 30 % de peso: la racha se nota sin que un mal partido hunda a nadie.
-
-## ¿Es del equipo local? Mira su club, no el once: el que salió cambiado o expulsado ya no está en `once_local` y las notas lo contaban como visitante (bono de resultado al revés).
-func es_del_local(j: Jugador) -> bool:
-	return once_local.has(j) or (not once_visita.has(j) and local.plantilla.has(j))
-
 func _cerrar_notas() -> void:
 	_notas_cerradas = true
 	var gano_local := goles_local > goles_visita
