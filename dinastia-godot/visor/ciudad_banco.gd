@@ -1,6 +1,6 @@
 class_name CiudadBanco
 extends RefCounted
-## LA SUCURSAL BANCARIA (27-10-2026, pieza B de `PLAN_DEL_LUNES.md` §2.2h): una ventanilla bajo los soportales de la plaza mayor (mostrador, cristal y rótulo del
+## LA SUCURSAL BANCARIA (27-10-2026, pieza B de `PLAN_GENERAL.md` §2.2h): una ventanilla bajo los soportales de la plaza mayor (mostrador, cristal y rótulo del
 ## banco propio, «Banco Andino»). E ante ella abre `PanelCajero` en modo ventanilla: sin PIN, desbloquea la tarjeta, restablece el PIN (el banco te identifica) y ve los
 ## movimientos. Sin azar: nada toca `_rng`.
 static func montar(ex: CiudadExpansion, x: float, y: float, z_pared: float) -> void:

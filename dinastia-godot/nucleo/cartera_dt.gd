@@ -1,6 +1,6 @@
 class_name CarteraDT
 extends RefCounted
-## LA CARTERA DEL DT (27-10-2026, pieza A de `PLAN_DEL_LUNES.md` §2.2h; OK del líder: el dinero de la ciudad sale del BOLSILLO DEL DT, no del club).
+## LA CARTERA DEL DT (27-10-2026, pieza A de `PLAN_GENERAL.md` §2.2h; OK del líder: el dinero de la ciudad sale del BOLSILLO DEL DT, no del club).
 ## La CUENTA es `Roles.patrimonio` (todo lo que ya cobra y gasta el DT sigue funcionando); aquí se suma el EFECTIVO en el bolsillo, la TARJETA de
 ## débito (PIN de 4 cifras, límite diario, bloqueo tras tres PIN erróneos) y los últimos movimientos. Todo en euros y ficticio.
 ## UNIDADES: la cartera habla en EUROS de pantalla; `Roles.patrimonio` va en puntos internos (1 punto = `Eco.ECO` = 12 EUR). `cargo_pend` (0..11 €) guarda lo

@@ -1,6 +1,6 @@
 class_name PanelTienda
 extends PanelContainer
-## LA CAJA DE LA TIENDA (27-10-2026, pieza C de `PLAN_DEL_LUNES.md` §2.2h): una lista del surtido con su precio y un botón por artículo. No sabe cobrar: llama a
+## LA CAJA DE LA TIENDA (27-10-2026, pieza C de `PLAN_GENERAL.md` §2.2h): una lista del surtido con su precio y un botón por artículo. No sabe cobrar: llama a
 ## `al_comprar(item) -> String` (en `CargaCiudad.de("VidaCiudad").comprar_surtido`: cartera, hambre y energía) y enseña el mensaje que devuelve, ya traducido. Se cierra sola si el DT se aleja.
 const DISTANCIA_MAX := 6.0
 

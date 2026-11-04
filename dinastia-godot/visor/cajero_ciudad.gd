@@ -1,6 +1,6 @@
 class_name CajeroCiudad
 extends RefCounted
-## LOS CAJEROS AUTOMÁTICOS DE LA CIUDAD (27-10-2026, pieza B de `PLAN_DEL_LUNES.md` §2.2h). `montar` pone un cajero (cuerpo, pantalla verde, teclado,
+## LOS CAJEROS AUTOMÁTICOS DE LA CIUDAD (27-10-2026, pieza B de `PLAN_GENERAL.md` §2.2h). `montar` pone un cajero (cuerpo, pantalla verde, teclado,
 ## ranura) con su punto `cajero_<n>`; `servicio` es el gancho de la E (aparte de `SubsueloCiudad.servicio` para no tocar el archivo de las redes) y abre
 ## `PanelCajero` con la cartera del DT. Dos bancos inventados: el propio (sin comisión) y uno ajeno (2 € por retirada). Sin azar: nada toca `_rng`.
 const BANCOS := [{"nombre": "Banco Andino", "comision": 0}, {"nombre": "Caja Costera", "comision": 2}]

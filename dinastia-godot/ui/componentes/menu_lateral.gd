@@ -66,6 +66,10 @@ static func ejecutar(p: Principal, accion: String) -> void:
 		"album":
 			PanelMeta.abrir(p, p.mundo)
 		"elegir_club":
+			## El menú de Competiciones se cierra: «Elegir club» es una ventana propia y debajo quedaba su fondo marrón.
+			var ml: Variant = p.get("_menu_lateral")
+			if ml != null and is_instance_valid(ml.pantalla_abierta) and not ml.pantalla_abierta.cerrando():
+				ml.pantalla_abierta.cerrar()
 			p._abrir_elegir_club()
 		"minijuegos":
 			load("res://ui/componentes/sala_minijuegos.gd").abrir(p, p.mundo)
@@ -307,6 +311,9 @@ func abrir_menu(id: String, sub: int = -1) -> PantallaMenu:
 		return pantalla_abierta
 	if is_instance_valid(pantalla_abierta):
 		pantalla_abierta.cerrar()
+	## La tarjeta de ayuda del menú anterior no pasa al siguiente.
+	for c in _p.find_children("CapaTutorial", "", false, false):
+		c.queue_free()
 	## Mientras se abre, la pantalla cambia de pestaña por dentro: eso no debe abrir OTRO menú (`_abrir_en_lateral`).
 	var antes: bool = _p._redirigiendo
 	_p._redirigiendo = true

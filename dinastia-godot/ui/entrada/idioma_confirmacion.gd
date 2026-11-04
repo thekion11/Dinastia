@@ -1,7 +1,7 @@
 class_name ConfirmacionIdioma
 extends Control
 ## LA CONFIRMACIÓN DEL IDIOMA (fase 1, etapa 1; 25-10-2026). Las etapas de la
-## entrada son obligatorias y se confirman al rellenarlas (`docs/PLAN_DEL_LUNES.md`
+## entrada son obligatorias y se confirman al rellenarlas (`docs/PLAN_GENERAL.md`
 ## §3.1): elegir un idioma por error deja al jugador ante menús que no entiende,
 ## así que antes de seguir se pregunta, EN EL IDIOMA ELEGIDO («¿Quieres jugar en
 ## este idioma?») y, si es otro, también en el que estaba puesto: quien pulsó sin

@@ -7157,7 +7157,17 @@
   "General": "General",
   "Atajos del menú": "Menu shortcuts",
   "Atajos generales": "General shortcuts",
-  "Quitar": "Remove"
+  "Quitar": "Remove",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "The whole club is in the buttons of the [b]rail on the left[/b]: Squad, Match, Money, People, Stadium, Settings... Each one opens its menu full screen.",
+  "Abre cualquier menú del riel": "Open any menu on the rail",
+  "Controles táctiles del partido": "Touch controls in matches",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "On-screen stick and buttons. Automatic: only on devices with a touchscreen.",
+  "Automático": "Automatic",
+  "Siempre": "Always",
+  "Nunca": "Never",
+  "Tamaño de los botones": "Button size",
+  "Opacidad de los botones": "Button opacity",
+  "Mod": "Mod"
  },
  "pt": {
   "Historia": "História",
@@ -14317,7 +14327,17 @@
   "General": "Geral",
   "Atajos del menú": "Atalhos do menu",
   "Atajos generales": "Atalhos gerais",
-  "Quitar": "Remover"
+  "Quitar": "Remover",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "O clube inteiro está nos botões do [b]trilho da esquerda[/b]: Plantel, Jogo, Dinheiro, Pessoas, Estádio, Ajustes... Cada um abre o seu menu em ecrã inteiro.",
+  "Abre cualquier menú del riel": "Abre qualquer menu do trilho",
+  "Controles táctiles del partido": "Controlos táteis do jogo",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "Stick e botões no ecrã. Automático: só em aparelhos com ecrã tátil.",
+  "Automático": "Automático",
+  "Siempre": "Sempre",
+  "Nunca": "Nunca",
+  "Tamaño de los botones": "Tamanho dos botões",
+  "Opacidad de los botones": "Opacidade dos botões",
+  "Mod": "Mod"
  },
  "patrones": [
   [
@@ -20138,6 +20158,39 @@
    "No es pot becar: no hi ha caixa: costa $1 i tens $2.",
    "Nie można przyznać stypendium: brak środków: kosztuje $1, a masz $2.",
    "Burs verilemez: kasa yok: maliyeti $1, sende $2 var."
+  ],
+  [
+   "^Puedes\\ pedirle\\ cosas\\ a\\ (.+?)\\ \\-más\\ minutos\\ para\\ la\\ cantera,\\ rotar\\ a\\ los\\ cansados\\-,\\ pero\\ cada\\ vez\\ que\\ te\\ metes\\ en\\ su\\ trabajo\\ la\\ relación\\ se\\ desgasta\\.\\ Eso\\ está\\ en\\ \\[b\\]GENTE\\ →\\ Personal\\ del\\ club\\[/b\\]\\.$",
+   "You can ask $1 for things -more minutes for the academy kids, resting the tired ones-, but every time you meddle in his work the relationship wears thin. That's in [b]PEOPLE → Club Staff[/b].",
+   "Você pode pedir coisas a $1 -mais minutos para a base, rodar os cansados-, mas cada vez que se mete no trabalho dele a relação se desgasta. Isso fica em [b]PESSOAS → Equipe do Clube[/b].",
+   "Tu peux demander des choses à $1 -plus de temps de jeu pour les jeunes, faire tourner les joueurs fatigués-, mais chaque fois que tu te mêles de son travail, la relation s'use. C'est dans [b]GENS → Personnel du club[/b].",
+   "Puoi chiedere cose a $1 -più minuti per il vivaio, far ruotare gli stanchi-, ma ogni volta che ti intrometti nel suo lavoro il rapporto si logora. Lo trovi in [b]GENTE → Staff del club[/b].",
+   "Du kannst $1 um Dinge bitten -mehr Einsatzzeit für die Jugend, die Müden schonen-, aber jedes Mal, wenn du dich in seine Arbeit einmischst, leidet das Verhältnis. Das findest du unter [b]LEUTE → Vereinsmitarbeiter[/b].",
+   "Pots demanar coses a $1 -més minuts per al planter, fer rotar els cansats-, però cada vegada que et fiques en la seva feina la relació es desgasta. Això és a [b]GENT → Personal del club[/b].",
+   "Możesz prosić o różne rzeczy ($1) -więcej minut dla akademii, rotację zmęczonych-, ale za każdym razem, gdy wtrącasz się w jego pracę, relacja się psuje. To jest w [b]LUDZIE → Personel klubu[/b].",
+   "$1 ile bazı şeyler isteyebilirsin -altyapıya daha çok süre, yorgunları dinlendirmek-, ama işine her karıştığında ilişki yıpranır. Bunu [b]İNSANLAR → Kulüp Personeli[/b] bölümünde bulursun."
+  ],
+  [
+   "^El segundo especialista es más optimista: la lesión es menos grave de lo que parecía y el plazo se acorta\\. Se queda en (\\d+) semana\\(s\\)\\.$",
+   "The second specialist is more optimistic: the injury is less serious than it looked and the timeline is shorter. He stays out for $1 week(s).",
+   "O segundo especialista é mais otimista: a lesão é menos grave do que parecia e o prazo encurta. Fica $1 semana(s).",
+   "Le second spécialiste est plus optimiste : la blessure est moins grave qu'il n'y paraissait et le délai se raccourcit. Il reste $1 semaine(s).",
+   "Il secondo specialista è più ottimista: l'infortunio è meno grave di quanto sembrava e i tempi si accorciano. Resta fuori $1 settimana/e.",
+   "Der zweite Spezialist ist optimistischer: Die Verletzung ist weniger schlimm als gedacht, die Ausfallzeit verkürzt sich. Er fällt $1 Woche(n) aus.",
+   "El segon especialista és més optimista: la lesió és menys greu del que semblava i el termini s'escurça. Es queda $1 setmana(es).",
+   "Drugi specjalista jest bardziej optymistyczny: uraz jest mniej poważny, niż się wydawało, i przerwa się skraca. Pauzuje $1 tydz.",
+   "İkinci uzman daha iyimser: sakatlık göründüğünden hafif ve süre kısalıyor. $1 hafta yok."
+  ],
+  [
+   "^El ánimo sube (\\d+) y los socios se sienten escuchados\\.$",
+   "Morale rises $1 and the members feel listened to.",
+   "O ânimo sobe $1 e os sócios sentem-se ouvidos.",
+   "Le moral monte de $1 et les socios se sentent écoutés.",
+   "Il morale sale di $1 e i soci si sentono ascoltati.",
+   "Die Stimmung steigt um $1 und die Mitglieder fühlen sich gehört.",
+   "L'ànim puja $1 i els socis se senten escoltats.",
+   "Nastroje rosną o $1, a członkowie czują się wysłuchani.",
+   "Moral $1 artıyor ve üyeler dinlendiklerini hissediyor."
   ]
  ],
  "fr": {
@@ -27298,7 +27351,17 @@
   "General": "Général",
   "Atajos del menú": "Raccourcis du menu",
   "Atajos generales": "Raccourcis généraux",
-  "Quitar": "Retirer"
+  "Quitar": "Retirer",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Tout le club est dans les boutons du [b]rail de gauche[/b] : Effectif, Match, Argent, Gens, Stade, Réglages... Chacun ouvre son menu en plein écran.",
+  "Abre cualquier menú del riel": "Ouvre n'importe quel menu du rail",
+  "Controles táctiles del partido": "Commandes tactiles du match",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "Stick et boutons à l'écran. Automatique : seulement sur les appareils tactiles.",
+  "Automático": "Automatique",
+  "Siempre": "Toujours",
+  "Nunca": "Jamais",
+  "Tamaño de los botones": "Taille des boutons",
+  "Opacidad de los botones": "Opacité des boutons",
+  "Mod": "Mod"
  },
  "it": {
   "Historia": "Storia",
@@ -34458,7 +34521,17 @@
   "General": "Generale",
   "Atajos del menú": "Scorciatoie del menu",
   "Atajos generales": "Scorciatoie generali",
-  "Quitar": "Rimuovi"
+  "Quitar": "Rimuovi",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Tutto il club è nei pulsanti della [b]barra a sinistra[/b]: Rosa, Partita, Soldi, Gente, Stadio, Impostazioni... Ognuno apre il suo menu a schermo intero.",
+  "Abre cualquier menú del riel": "Apri un menu qualsiasi della barra",
+  "Controles táctiles del partido": "Controlli touch della partita",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "Stick e pulsanti sullo schermo. Automatico: solo sui dispositivi touch.",
+  "Automático": "Automatico",
+  "Siempre": "Sempre",
+  "Nunca": "Mai",
+  "Tamaño de los botones": "Dimensione dei pulsanti",
+  "Opacidad de los botones": "Opacità dei pulsanti",
+  "Mod": "Mod"
  },
  "de": {
   "Historia": "Geschichte",
@@ -41618,7 +41691,17 @@
   "General": "Allgemein",
   "Atajos del menú": "Menü-Tastenkürzel",
   "Atajos generales": "Allgemeine Tastenkürzel",
-  "Quitar": "Entfernen"
+  "Quitar": "Entfernen",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Der ganze Klub steckt in den Knöpfen der [b]Leiste links[/b]: Kader, Spiel, Geld, Leute, Stadion, Einstellungen... Jeder öffnet sein Menü im Vollbild.",
+  "Abre cualquier menú del riel": "Öffne ein beliebiges Menü der Leiste",
+  "Controles táctiles del partido": "Touch-Steuerung im Spiel",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "Stick und Tasten auf dem Bildschirm. Automatisch: nur auf Geräten mit Touchscreen.",
+  "Automático": "Automatisch",
+  "Siempre": "Immer",
+  "Nunca": "Nie",
+  "Tamaño de los botones": "Tastengröße",
+  "Opacidad de los botones": "Tastentransparenz",
+  "Mod": "Mod"
  },
  "ca": {
   "Historia": "Història",
@@ -48778,7 +48861,17 @@
   "General": "General",
   "Atajos del menú": "Dreceres del menú",
   "Atajos generales": "Dreceres generals",
-  "Quitar": "Treure"
+  "Quitar": "Treure",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Tot el club és als botons del [b]carril de l'esquerra[/b]: Plantilla, Partit, Diners, Gent, Estadi, Ajustos... Cadascun obre el seu menú a pantalla completa.",
+  "Abre cualquier menú del riel": "Obre qualsevol menú del carril",
+  "Controles táctiles del partido": "Controls tàctils del partit",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "Estic i botons a la pantalla. Automàtic: només en aparells amb pantalla tàctil.",
+  "Automático": "Automàtic",
+  "Siempre": "Sempre",
+  "Nunca": "Mai",
+  "Tamaño de los botones": "Mida dels botons",
+  "Opacidad de los botones": "Opacitat dels botons",
+  "Mod": "Mod"
  },
  "pl": {
   "Club": "Klub",
@@ -56207,7 +56300,17 @@
   "General": "Ogólne",
   "Atajos del menú": "Skróty menu",
   "Atajos generales": "Skróty ogólne",
-  "Quitar": "Usuń"
+  "Quitar": "Usuń",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Cały klub jest w przyciskach [b]paska po lewej[/b]: Skład, Mecz, Pieniądze, Ludzie, Stadion, Ustawienia... Każdy otwiera swoje menu na pełnym ekranie.",
+  "Abre cualquier menú del riel": "Otwórz dowolne menu na pasku",
+  "Controles táctiles del partido": "Sterowanie dotykowe w meczu",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "Drążek i przyciski na ekranie. Automatycznie: tylko na urządzeniach z ekranem dotykowym.",
+  "Automático": "Automatycznie",
+  "Siempre": "Zawsze",
+  "Nunca": "Nigdy",
+  "Tamaño de los botones": "Rozmiar przycisków",
+  "Opacidad de los botones": "Przezroczystość przycisków",
+  "Mod": "Mod"
  },
  "tr": {
   "Club": "Kulüp",
@@ -63636,6 +63739,16 @@
   "General": "Genel",
   "Atajos del menú": "Menü kısayolları",
   "Atajos generales": "Genel kısayollar",
-  "Quitar": "Kaldır"
+  "Quitar": "Kaldır",
+  "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.": "Kulübün tamamı [b]soldaki şeridin[/b] düğmelerinde: Kadro, Maç, Para, İnsanlar, Stadyum, Ayarlar... Her biri menüsünü tam ekran açar.",
+  "Abre cualquier menú del riel": "Şeritten herhangi bir menüyü aç",
+  "Controles táctiles del partido": "Maçta dokunmatik kontroller",
+  "Stick y botones en pantalla. Automático: solo en aparatos con pantalla táctil.": "Ekranda çubuk ve düğmeler. Otomatik: yalnızca dokunmatik ekranlı cihazlarda.",
+  "Automático": "Otomatik",
+  "Siempre": "Her zaman",
+  "Nunca": "Asla",
+  "Tamaño de los botones": "Düğme boyutu",
+  "Opacidad de los botones": "Düğme opaklığı",
+  "Mod": "Mod"
  }
 }

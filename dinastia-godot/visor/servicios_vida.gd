@@ -1,6 +1,6 @@
 class_name ServiciosVida
 extends Node3D
-## POLICÍA, BOMBEROS Y AMBULANCIA CON VIDA (27-10-2026, pieza E, `PLAN_DEL_LUNES.md` §2.2h). Cada hora de juego puede estallar un incidente
+## POLICÍA, BOMBEROS Y AMBULANCIA CON VIDA (27-10-2026, pieza E, `PLAN_GENERAL.md` §2.2h). Cada hora de juego puede estallar un incidente
 ## (`IncidentesCiudad.sortear`): el móvil avisa, los vehículos salen de su edificio con luces y sirena por las calles de la rejilla, se
 ## paran junto al sitio, atienden (el incendio se apaga más despacio si el sector no tiene presión de agua: `redes`) y vuelven al
 ## parque. Un coche patrulla recorre siempre las calles junto a la comisaría: si el DT cruza un semáforo en ROJO con la policía a
