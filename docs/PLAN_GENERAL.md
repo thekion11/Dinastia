@@ -120,6 +120,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 ## FALLOS DETECTADOS
 Los hallazgos de la auditoría viven en `docs/04_auditorias/MEGA_AUDITORIA_4/*.md` (uno por área); aquí solo lo que espera al dueño.
+- **Propuesta (A4-INT-R03, 4-11): la tabla de «Mi plantel» en el móvil.** Cuesta ~537 llamadas de dibujo y ~36.000 primitivas al pintarse (25 jugadores × cara, nombre y cinco celdas, cada celda una etiqueta). Con el ahorro de MÍNIMA solo se paga al abrirla o cambiar algo, no en cada fotograma. Sin cambiar el aspecto no hay forma pequeña: dibujarla en un solo control con `_draw` o crear solo las ~15 filas visibles obliga a reescribir el orden por columnas, las marcas, los botones de la fila y la cebra. Se deja como está hasta que el dueño diga si le importa más la velocidad de abrirla en un móvil modesto que el riesgo de rehacer la tabla.
 
 ## 0. Lo que espera una decisión tuya (lista corta)
 
