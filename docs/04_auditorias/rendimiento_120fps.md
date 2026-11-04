@@ -209,3 +209,10 @@ Recién cargada (opengl3 llvmpipe 640x360, MÍNIMO): **2 062 llamadas**, 19 452 
 - PROBADO Y DESCARTADO: fundir los edificios/accesorios sueltos por celda y material (`FundirCiudad`, ~800 escenas): 2 062 → 1 998 llamadas (−64) a cambio de +786 ms de carga, +50 k triángulos (sin corte por LOD) y +20 MB de vídeo. No vale. Los edificios ya costaban poco (el recorte por distancia los deja fuera).
 - HECHO: máquina expendedora con materiales compartidos y fundida (18 cajas → 1 malla): −17 llamadas.
 - Queda el grueso en el TRÁFICO (−140: ~50 coches con carrocería + 4 ruedas + placas/faros por separado; fundirlos rompería los faros de noche) y en los miles de MultiMesh/Mesh sueltos de la propia ciudad y del estadio. No hay una palanca única; llegar a ≤900 llamadas no es realista sin recortar contenido.
+
+## Recortes de contenido AUTORIZADOS por el dueño (3-11), solo MÍNIMO (media y alta iguales) — medidos uno a uno (`medir_prologo`, opengl3 640x360)
+Base (con la expendedora fundida): 2 052 llamadas recién cargada · 19 330 nodos · 39 041 objetos · 943 MB · 217 MB de vídeo.
+- (b) SIN detalles de fachada (`EdificiosDet_*`): −85 nodos, −200 objetos, **±0 llamadas** (los MultiMesh por celda ya los recortaba la distancia). **No se aplicó**: quitaba contenido sin ganancia medible.
+- (a) Tráfico y peatones del ANILLO a la mitad (`CityBuilder._n_pro` ×0,5 en MÍNIMO): **2 052 → 1 975 llamadas (−77)**, 19 330 → 18 752 nodos (−580), −7 MB de vídeo. Tras caminar 120 m: 1 990 → 1 963.
+- (c) Menos peatones de reserva (los 34 de `CiudadExpansion` → 17): 1 975 → 1 973 llamadas, −510 nodos, −4 MB de vídeo. Los peatones lejanos ya no se dibujan (alcance), así que el ahorro es de nodos y memoria, no de llamadas.
+Total (a)+(c): 2 052 → 1 973 llamadas (−4 %), nodos −1 090 (−5,6 %), vídeo −11 MB. La meta de ≤900 llamadas sigue sin ser alcanzable solo con recortes: el grueso son los ~5 500 MultiMesh y ~1 700 mallas sueltas de la ciudad y el estadio.
