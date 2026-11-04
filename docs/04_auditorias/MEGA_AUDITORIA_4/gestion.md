@@ -21,6 +21,11 @@ caja −250 M, todos lesionados y sancionados, club con 48 jugadores y otro vac�
   (dos fuentes de verdad distintas; el club viejo lo seguía alineando). Además, si el jugador cambiaba de club mientras la mesa
   seguía abierta, cerrar el fichaje lo dejaba en DOS planteles. Arreglo: `_se_lo_lleva` (soltar + fichar de verdad) y la mesa se
   rompe si el jugador ya no está en el club con el que hablabas (`nucleo/negociacion.gd`). Prueba en `a4_gestion_limite`. ARREGLADO.
+- [A4-GES-006] (repaso 2, gravedad: bajo) `clau_descenso_entreno` (banco `plantel_cantera`) fallaba según el ORDEN del azar: con 12
+  juveniles la media del plan por defecto saltaba de +3,6 a +2,8 (suelo 3,0) solo porque A4-GES-003 dejó de gastar azar al leer
+  la ficha mental. Arreglo: 6 semillas (24 juveniles). Cifras con la muestra grande: plan por defecto +3,4 (el dueño pidió +4-6) y
+  buen plan +5,7 con un máximo de +11 (pidió ≤ +8; el freno de `Entrenamiento.freno_temporada` es probabilístico y la curva anual
+  `ProgresoJugador.anual` suma aparte). Queda como DEUDA DE CALIBRACIÓN (no es un fallo de código). Prueba: ARREGLADA.
 - Sin hallazgos: integridad del mundo en 8 temporadas (un club por jugador, club_id, libres, contratos, sueldos, edades, medias, cajas,
   planteles, ligas y divisiones); caja a −250 M seis semanas; club con todos lesionados y sancionados (saca 11); club con 48 jugadores y
   otro vacío; año 2099.
