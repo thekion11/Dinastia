@@ -118,6 +118,7 @@ pasa "HUD y cámara del partido en el móvil (mide mm de letra y distancia de c�
 #     (casi todo es el arranque de Godot): en el CI se reparten entre las partes de `ESPECIALES_PARTE`. `ESPECIALES_SOLO=reutilizadas` corre solo este bloque.
 BLOQUE=reutilizadas
 pasa "ciudad: construir y soltar 5 veces sin fugas (A4-M3D-001)" "godot --headless --path . res://pruebas/ideas/a4_m3d_ciclos.tscn" "FIN. 0 fallos"
+pasa "estadio: construir y soltar 5 veces sin fugas (A4-M3D-002)" "godot --headless --path . res://pruebas/ideas/a4_m3d_estadio_ciclos.tscn" "FIN. 0 fallos"
 pasa "banco_inicio" "XDG_DATA_HOME=\$(mktemp -d) godot --headless --path . res://pruebas/banco_inicio.tscn" "(^|[^0-9])0 fallos"
 pasa "bug_semilla" "godot --headless --path . res://pruebas/ideas/bug_semilla.tscn" "(^|[^0-9])0 fallos"
 pasa "cierre_anio_deudas" "godot --headless --path . res://pruebas/ideas/cierre_anio_deudas.tscn" "(^|[^0-9])0 fallos"

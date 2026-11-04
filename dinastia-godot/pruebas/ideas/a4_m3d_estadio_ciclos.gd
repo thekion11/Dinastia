@@ -7,6 +7,9 @@ func _medir() -> Dictionary:
 
 func _probar() -> void:
 	_titulo("CICLOS DE ESTADIO")
+	## El autoload Sonido sintetiza sus ~820 sonidos en un hilo durante los primeros segundos: sin esperar a que
+	## termine, esa carga (objetos y MB) parece una fuga del estadio.
+	get_node("/root/Sonido")._generar_todo()
 	var m := _mundo(5)
 	m.tomar_el_mando(m.ligas[0].clubes[2].id)
 	var mio := m.mi_club()
