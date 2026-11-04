@@ -253,14 +253,14 @@ static func pintar_vida_personal(lista: VBoxContainer, j: Jugador, mundo: Mundo,
 ## baja?» (`FichaPorque`, 26-10-2026), que sale aunque aún no haya temporadas.
 static func pintar_historial(lista: VBoxContainer, j: Jugador, paleta: Dictionary) -> void:
 	lista.add_child(HSeparator.new())
-	FichaPorque.pintar(lista, j, paleta)
+	load("res://ui/componentes/ficha_porque.gd").pintar(lista, j, paleta)   ## (A4 memoria) por ruta
 	if j.historial.is_empty():
 		return
 	var t := _texto(11, paleta["suave"], paleta)
 	t.text = Idiomas.t("CRECIMIENTO POR TEMPORADA")
 	lista.add_child(t)
 	if j.historial.size() >= 2:   ## (M-295) la media y el valor de un vistazo
-		lista.add_child(GraficoEvolucion.de(j.historial, paleta))
+		lista.add_child(load("res://ui/componentes/grafico_evolucion.gd").de(j.historial, paleta))
 	for i in range(j.historial.size() - 1, -1, -1):
 		var h: Dictionary = j.historial[i]
 		var fila := HBoxContainer.new()
