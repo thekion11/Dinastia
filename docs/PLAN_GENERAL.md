@@ -21,7 +21,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - Lo que espera al DUEÑO: (1) probar en el teléfono el APK de `main` (Actions → «Compilar y probar Dinastia» → android) y pasar el informe de
   Ajustes → «Prueba de rendimiento» (barrido del estadio al 35/50/70/100 %) para ajustar MÍNIMA a 60 FPS; (2) nota 1-100 a las pasadas visuales
   de la ciudad 1-3 (`04_auditorias/pasada_ciudad_{1,2,3}_2026-11-04.md`); (3) matas de hierba del Drive en el césped de las casas: ¿más juntas o
-  así?; (4) recalibrar los remates del partido simulado y las goleadas entre divisiones (§0); (5) publicar parches: Release llamada
+  así?; (5) publicar parches: Release llamada
   `parche-<versión>-<escritorio|android>` con el `parche_<versión>.pck` que genera «Actualizar Dinastia (parche)».
   (6) **DECISIÓN R01 — MSAA en MÍNIMA** (A4-PARTIDO-R01): apagar el suavizado de bordes (MSAA x2) fue lo único que movió el fotograma del partido 3D en
   el contenedor (llvmpipe, escena congelada: 182 → 86 ms, −53 %; nada más del HUD, luces, niebla ni tonos salía del ruido), pero quita algo visible
