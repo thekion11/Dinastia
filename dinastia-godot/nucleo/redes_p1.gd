@@ -201,7 +201,7 @@ func _publicar_club(m: Mundo, tipo: String, hashtags: Array) -> Dictionary:
 	var ingreso := int(p["likes"]) * int(t[5])
 	var c := m.mi_club()
 	if ingreso > 0 and c != null:
-		c.saldo += ingreso
+		c.mover_saldo(ingreso)   ## (4-11, banco de economía) por mover_saldo: si no, el cambio de caja no se avisaba
 		p["ingreso"] = ingreso
 		if m.has_method("_anotar_movimiento"):
 			m._anotar_movimiento("Redes del club: %s" % String(t[1]).to_lower(), ingreso)
