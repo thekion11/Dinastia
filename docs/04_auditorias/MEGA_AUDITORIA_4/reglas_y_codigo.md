@@ -15,5 +15,7 @@ Sesión «Búsqueda de fallos». Repasos 1 (lectura de reglas) y 2 (ejecución) 
 - [A4-REGLAS-004] (repaso 2, gravedad: bajo) F-007 era un FALSO POSITIVO: `idiomas_extra.json` tiene 269 frases menos en en/pt/fr/it/de/ca que en pl/tr, pero las tablas integradas de `Idiomas` (`idiomas_p1.gd`) las cubren; medido con `Idiomas.t`: lo «sin traducir» son palabras iguales en ese idioma («Música», «Todos», «A favor», «Editor»…). Estado: cerrado, sin cambios.
 - [A4-REGLAS-005] (repaso 1, gravedad: bajo) La regla dice «`*.zip`, `.avi`, `.mp4` nunca al repo», pero hay 18 en el repo (punteros LFS: `marca/*.mp4`, `recursos/*.zip`, `material/*.zip`). Moverlos está prohibido («no tocar lo ya en LFS»). Estado: **pregunta al dueño** (aclarar la regla: «ninguno NUEVO»).
 
+- [A4-REGLAS-006] (repaso 4, gravedad: bajo) `pruebas/ideas/zz_alt.gd` (en `especiales.sh`) solo imprimía alturas y pendientes del monte, sin ninguna comprobación: siempre daba «0 fallos». Reproducir: romper `CityBuilder.altura_en` y correrla. Estado: **arreglado** (comprueba altura finita y `ny >= 0,6` en los 9 puntos; medido 0,80-0,99; no cambia el juego). Las otras 13 pruebas sin `_comprobar` visible que revisé sí marcan FALLO por otros medios.
+
 ## Pendiente (repasos 3 y 4)
 Estrés y casos absurdos de las reglas (guardar/cargar, idiomas a mitad), CI (`actualizar.yml`, `compilar.yml`), pruebas vacías, documentos desactualizados, rutas `res://` y señales.
