@@ -7,6 +7,16 @@ func _frames(n: int = 2) -> void:
 	for i in n:
 		await get_tree().process_frame
 
+## Lo que una persona cierra con un clic al acabar la temporada: portadas de prensa, sorteos y cualquier ventana.
+func _cerrar_pantallas_de_temporada() -> void:
+	for c in _p.get_children():
+		if c is Control and not c is Tutorial and c.get_script() != null and (c as Control).mouse_filter == Control.MOUSE_FILTER_STOP and (c as Control).anchor_right == 1.0 and (c as Control).anchor_bottom == 1.0 and (c as Control).visible:
+			c.queue_free()
+	for w in _p.find_children("*", "Window", true, false):
+		if (w as Window).visible:
+			(w as Window).hide()
+	_p.visible = true
+
 func _probar() -> void:
 	_titulo("AUDITORÍA 4 · INTERFAZ · 20 TEMPORADAS")
 	_respaldar_user()
@@ -33,6 +43,8 @@ func _probar() -> void:
 		_p._al_elegir_calendario(2)   ## «Jugar la temporada»
 		await _frames(2)
 		_p._al_elegir_calendario(3)   ## «Temporada siguiente»
+		await _frames(2)
+		_cerrar_pantallas_de_temporada()
 		await _frames(2)
 		semanas += 52
 		nodos.append(int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)))
