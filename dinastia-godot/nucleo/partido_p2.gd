@@ -435,3 +435,7 @@ func _incidencias() -> void:
 					semanas += Azar.ent(1, 3)
 				h.lesionar(semanas)
 			lesion.emit(h, semanas, minuto)
+
+## ¿Es del local? Mira su club, no el once (el cambiado/expulsado ya no está en él).
+func es_del_local(j: Jugador) -> bool:
+	return once_local.has(j) or (not once_visita.has(j) and local.plantilla.has(j))
