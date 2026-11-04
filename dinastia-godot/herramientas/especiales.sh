@@ -100,6 +100,7 @@ pasa "aud4_primer_contacto" "godot --headless --path . res://pruebas/ideas/aud4_
 pasa "aud4_tutorial_movil" "godot --headless --path . res://pruebas/ideas/aud4_tutorial_movil.tscn" "FIN. 0 fallos"
 pasa "aud4_prologo_movil" "godot --headless --path . res://pruebas/ideas/aud4_prologo_movil.tscn" "FIN. 0 fallos"
 pasa "aud4_arranque_movil" "godot --headless --path . res://pruebas/ideas/aud4_arranque_movil.tscn" "FIN. 0 fallos"
+pasa "aud4_sonido_perezoso" "godot --headless --path . res://pruebas/ideas/aud4_sonido_perezoso.tscn" "FIN. 0 fallos"
 pasa "aud4_interfaz_limite" "godot --headless --path . res://pruebas/ideas/aud4_interfaz_limite.tscn" "FIN. 0 fallos"
 pasa "aud4_largo_plazo_ui" "LIMITE_S=120 godot --headless --path . res://pruebas/ideas/aud4_largo_plazo_ui.tscn" "FIN. 0 fallos"
 pasa "act_actualizador" "godot --headless --path . res://pruebas/ideas/act_actualizador.tscn" "FIN. 0 fallos"
