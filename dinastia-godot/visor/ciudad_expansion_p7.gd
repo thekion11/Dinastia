@@ -46,8 +46,8 @@ func _instalacion(uso: String, r: Rect2) -> void:
 			CiudadPlaza.montar(self, c, w, f)
 		"ayuntamiento":
 			nombre = "Ayuntamiento"
-			b._caja_en(c + Vector3(0, 9.0, -6.0), Vector3(w * 0.8, 18.0, f * 0.55), _mat["piedra"])
-			b._caja_en(c + Vector3(0, 26.0, -6.0), Vector3(9.0, 16.0, 9.0), _mat["piedra"])
+			MuroCivico.vestir(b, b._caja_en(c + Vector3(0, 9.0, -6.0), Vector3(w * 0.8, 18.0, f * 0.55), _mat["piedra"]), Color(0.84, 0.8, 0.7))   ## (4-11) muros con ventanas, no una caja lisa
+			MuroCivico.vestir(b, b._caja_en(c + Vector3(0, 26.0, -6.0), Vector3(9.0, 16.0, 9.0), _mat["piedra"]), Color(0.84, 0.8, 0.7))
 			b._cil_en(c + Vector3(0, 36.0, -6.0), 4.0, 4.0, b._mat_simple(Color(0.35, 0.5, 0.45), 0.4), 0.2)
 			_bandera_mastil(c + Vector3(0, 0, f * 0.4))
 		"estacion_central":
@@ -56,18 +56,18 @@ func _instalacion(uso: String, r: Rect2) -> void:
 			_cartel_m(c + Vector3(w * 0.4, 0, f * 0.45), Color(0.85, 0.15, 0.15))
 		"mercado":
 			nombre = "Mercado municipal"   ## «Mercado» a secas se traduce como el de fichajes
-			b._caja_en(c + Vector3(0, 4.5, 0), Vector3(w * 0.8, 9.0, f * 0.7), b._mat_simple(Color(0.7, 0.4, 0.3), 0.8))
+			MuroCivico.vestir(b, b._caja_en(c + Vector3(0, 4.5, 0), Vector3(w * 0.8, 9.0, f * 0.7), b._mat_simple(Color(0.7, 0.4, 0.3), 0.8)), Color(0.74, 0.45, 0.34))   ## (4-11) el mercado con ventanas
 			b._boveda(c + Vector3(0, 9.0, 0), w * 0.8, f * 0.7, b._mat_simple(Color(0.35, 0.45, 0.4), 0.5), 0.25)
 			CiudadMercado.montar(self, c, w, f)
 		"cine":
 			nombre = "Cine"
-			b._caja_en(c + Vector3(0, 9.0, 0), Vector3(w * 0.7, 18.0, f * 0.7), b._mat_simple(Color(0.25, 0.22, 0.3), 0.5))
+			MuroCivico.vestir(b, b._caja_en(c + Vector3(0, 9.0, 0), Vector3(w * 0.7, 18.0, f * 0.7), b._mat_simple(Color(0.25, 0.22, 0.3), 0.5)), Color(0.36, 0.3, 0.44))
 			var neon := b._mat_simple(Color(1.0, 0.3, 0.6), 0.3, 2.0)
 			b._caja_en(c + Vector3(0, 14.0, f * 0.35 + FachadaModular.FONDO + 0.3), Vector3(w * 0.5, 3.0, 0.3), neon)
 		"hospital":
 			nombre = "Hospital"
 			var blanco := b._mat_simple(Color(0.96, 0.96, 0.97), 0.5)
-			b._caja_en(c + Vector3(0, 12.0, -8.0), Vector3(w * 0.8, 24.0, f * 0.4), blanco)
+			MuroCivico.vestir(b, b._caja_en(c + Vector3(0, 12.0, -8.0), Vector3(w * 0.8, 24.0, f * 0.4), blanco), Color(0.93, 0.94, 0.96))
 			b._caja_en(c + Vector3(-w * 0.25, 5.0, f * 0.15), Vector3(w * 0.35, 10.0, f * 0.4), blanco)
 			var rojo := b._mat_simple(Color(0.85, 0.1, 0.1), 0.5, 0.4)
 			b._caja_en(c + Vector3(0, 20.0, -8.0 + f * 0.2 + FachadaModular.FONDO + 0.3), Vector3(7.0, 2.0, 0.3), rojo)
@@ -75,7 +75,7 @@ func _instalacion(uso: String, r: Rect2) -> void:
 			b._cil_en(c + Vector3(w * 0.2, 24.2, -8.0), 5.0, 0.3, b._mat_simple(Color(0.3, 0.3, 0.32), 0.6))
 		"comisaria":
 			nombre = "Comisaría"
-			b._caja_en(c + Vector3(0, 6.0, 0), Vector3(w * 0.7, 12.0, f * 0.6), b._mat_simple(Color(0.75, 0.78, 0.84), 0.6))
+			MuroCivico.vestir(b, b._caja_en(c + Vector3(0, 6.0, 0), Vector3(w * 0.7, 12.0, f * 0.6), b._mat_simple(Color(0.75, 0.78, 0.84), 0.6)), Color(0.75, 0.78, 0.84))
 			b._caja_en(c + Vector3(0, 9.5, f * 0.3 + FachadaModular.FONDO + 0.2), Vector3(w * 0.5, 1.6, 0.3), b._mat_simple(Color(0.15, 0.3, 0.75), 0.5, 0.3))
 		"bomberos":
 			nombre = "Bomberos"
@@ -148,7 +148,7 @@ func _instalacion(uso: String, r: Rect2) -> void:
 				b.add_child(n)
 			CiudadServicios.cocheras(self, c, w, f)
 		_:
-			b._caja_en(c + Vector3(0, 6.0, 0), Vector3(w * 0.7, 12.0, f * 0.6), _mat["claro"])
+			MuroCivico.vestir(b, b._caja_en(c + Vector3(0, 6.0, 0), Vector3(w * 0.7, 12.0, f * 0.6), _mat["claro"]), (_mat["claro"] as StandardMaterial3D).albedo_color)
 	CiudadServicios.fachada(self, uso, c, w, f)
 	CiudadServicios.portico(self, uso, c, w, f)
 	if nombre != "":

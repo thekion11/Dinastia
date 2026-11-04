@@ -313,4 +313,4 @@ func _dibujar_etiquetas() -> void:
 	_capa.draw_string(_fuente, Vector2(8, size.y - 8), txt, HORIZONTAL_ALIGNMENT_LEFT, size.x - 16, 11, Color(1, 1, 1, 0.5))
 	if ocultas > 0:
 		var aviso := Idiomas.t("Desde aquí no se ven %d botones: gira el mando o cambia de vista") % ocultas
-		_capa.draw_string(_fuente, Vector2(8, 18), aviso, HORIZONTAL_ALIGNMENT_LEFT, size.x - 16, 12, Color(1.0, 0.82, 0.25, 0.8))
+		_capa.draw_multiline_string(_fuente, Vector2(8, 18), aviso, HORIZONTAL_ALIGNMENT_LEFT, size.x - 16, 12, 2, Color(1.0, 0.82, 0.25, 0.8))   ## (4-11) en dos líneas: en el panel más estrecho se cortaba
