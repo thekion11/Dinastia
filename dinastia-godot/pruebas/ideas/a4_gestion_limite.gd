@@ -19,13 +19,14 @@ func _probar() -> void:
 	var tamanos := {}
 	for l: Liga in m.ligas:
 		tamanos[l.nombre] = l.clubes.size()
-	for t in int(OS.get_environment("A4_TEMPORADAS")) if OS.get_environment("A4_TEMPORADAS") != "" else 8:
+	var n_temp := int(OS.get_environment("A4_TEMPORADAS")) if OS.get_environment("A4_TEMPORADAS") != "" else 8
+	for t in n_temp:
 		m.jugar_temporada()
 		m.nueva_temporada()
 		_integridad(m, "temporada %d" % (t + 1), tamanos)
 		if t % 2 == 1 or OS.get_environment("A4_TEMPORADAS") != "":
 			m = _ida_y_vuelta(m, t + 1)
-	_comprobar(_malos.is_empty(), "8 temporadas: integridad del mundo y guardado exacto cada dos años%s" % ("" if _malos.is_empty() else " — " + str(_malos.slice(0, 8))))
+	_comprobar(_malos.is_empty(), "%d temporadas: integridad del mundo y guardado exacto (cada dos, o cada una con A4_TEMPORADAS)%s" % [n_temp, "" if _malos.is_empty() else " — " + str(_malos.slice(0, 8))])
 	_absurdos(m)
 	for f in DirAccess.get_files_at(Partida.ruta_de(PREFIJO + "x").get_base_dir()):
 		if f.begins_with(PREFIJO):
@@ -121,6 +122,27 @@ func _absurdos(m: Mundo) -> void:
 		movidos += 1
 	m.avanzar_semana()
 	_comprobar(grande.plantilla.size() >= 40, "un club con %d jugadores y otro vacío (%d): la semana se juega" % [grande.plantilla.size(), donante.plantilla.size()])
+	## A4-GES-005: un rival se lleva al jugador en mitad de tu negociación → pasa de verdad a su plantel.
+	var vend: Club = m.ligas[0].clubes[6]
+	var rico: Club = m.ligas[0].clubes[7]
+	rico.mover_saldo(2_000_000_000)
+	c.mover_saldo(500_000_000 - c.saldo)   ## tras la caja hundida: si no, todo sale «sin caja»
+	var tipos := {}
+	var llevado: Jugador = null
+	for intento in 300:
+		if vend.plantilla.is_empty():
+			break
+		var obj: Jugador = vend.plantilla[intento % vend.plantilla.size()]
+		var n := Negociacion.new(m, obj)
+		n.rival_id = rico.id
+		n.fijo = 0
+		var r := n.enviar_oferta()
+		tipos[String(r.get("tipo", ""))] = int(tipos.get(String(r.get("tipo", "")), 0)) + 1
+		if String(r.get("tipo", "")) in ["rival_traspaso", "rival_firma"]:
+			llevado = obj
+			break
+	_comprobar(llevado != null and rico.plantilla.has(llevado) and not vend.plantilla.has(llevado) and llevado.club_id == rico.id,
+		"un rival que se lo lleva en plena negociación lo pasa a SU plantel (y sale del viejo) %s" % str(tipos))
 	## Año extremo.
 	m.anio = 2099
 	m.avanzar_semana()
