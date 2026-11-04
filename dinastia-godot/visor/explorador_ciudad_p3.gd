@@ -198,7 +198,7 @@ func _usar_en_anden() -> void:
 	_luz_cam.visible = false
 	_bajo_tierra(false)
 	var pie: Vector3 = _acc.get("pie", cuerpo.position)
-	cuerpo.position = Vector3(pie.x, altura_suelo(pie.x, pie.z), pie.z)
+	cuerpo.position = buscar_libre(Vector3(pie.x, altura_suelo(pie.x, pie.z), pie.z))   ## (A4) nunca dentro de una manzana
 	_colocar_camara(1.0)
 
 # ============================================================== EL METRO
@@ -255,6 +255,8 @@ func _bajar_del_tren() -> void:
 		cuerpo.position = _anden_c + _anden_lon * lo
 
 func _entrar_en_edificio(k: String) -> void:
+	if estado == "interior" or is_instance_valid(_int_raiz):
+		return   ## A4: una segunda pulsación con el interior abierto dejaba un interior huérfano y la «calle» a la que volver quedaba DENTRO del primero (salía a 443 m)
 	_fundido()
 	_int_raiz = Node3D.new()
 	_int_raiz.name = "InteriorPaseo"

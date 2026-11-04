@@ -36,7 +36,7 @@ func _probar() -> void:
 	todos.sort_custom(func(x: Club, y: Club) -> bool: return x.media() > y.media())
 	var mejor: Club = todos[0]
 	var peor: Club = todos[todos.size() - 1]
-	_tope = 20   ## A4-PAR-L02: hoy llega a 15-0 (deuda de calibración del simulado, anotada); el tope solo vigila que no EMPEORE
+	_tope = 20   ## A4-PAR-L02: resuelto el 4-11 (el cociente ataque/defensa se satura): 71 contra 48 da ~3,8 goles y como mucho ~8; el tope de `_jugar` sigue holgado, el de abajo vigila los números
 	var maximo := 0
 	var total := 0
 	for i in 60:
@@ -46,6 +46,8 @@ func _probar() -> void:
 		maximo = maxi(maximo, maxi(pr.goles_local, pr.goles_visita))
 		total += pr.goles_local + pr.goles_visita
 	_linea("  mejor (%d) contra peor (%d): %.1f goles por partido, goleada máxima %d en 60 partidos" % [mejor.media(), peor.media(), total / 60.0, maximo])
+	_comprobar(total / 60.0 >= 2.8 and total / 60.0 <= 5.5, "71 contra 48: %.1f goles por partido (2,8-5,5: gana claro, sin goleadas de 7-8 de media)" % (total / 60.0))
+	_comprobar(maximo <= 11, "…y la goleada máxima es %d (≤ 11; antes llegaba a 15-0)" % maximo)
 	## TARJETAS en partidos normales (A4-PAR-L01): 200 partidos de liga entre clubes reales.
 	var cuenta := {"am": 0, "ro": 0}
 	for i in 200:

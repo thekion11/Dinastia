@@ -160,6 +160,10 @@ func _ready() -> void:
 	tit.text = Idiomas.t(_titulo)
 	tit.add_theme_font_size_override("font_size", Tema.letra(18))
 	tit.add_theme_color_override("font_color", acento)
+	## Un título largo (en inglés o alemán) ensanchaba el panel más allá de ANCHO y se
+	## salía por la derecha: se parte en líneas como la descripción.
+	tit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	tit.custom_minimum_size = Vector2(ANCHO - 80.0, 0)
 	tit.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	col.add_child(tit)
 	var des := Label.new()

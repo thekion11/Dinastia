@@ -6,6 +6,18 @@ extends "res://nucleo/carrera_jugador_p1.gd"
 var aviso_agenda := ""
 ## Partidos de portero sin encajar (con una hora jugada como mínimo).
 var vallas_invictas := 0
+## (4-11, caza de fugas) El entreno de la semana se hace UNA vez: `_jugar_partido` entrena al abrir el partido, y si se abandona (salir al menú, «atrás») y se vuelve a jugar, se volvía a
+## entrenar: mejora de atributo y 14 de energía por cada intento (se podían farmear atributos abandonando partidos). La semana absoluta (año × 60 + semana) y el mensaje se guardan.
+var entreno_semana := -1
+var entreno_msg := ""
+
+func entrenar(m: Mundo) -> String:
+	var ahora := m.anio * 60 + m.semana
+	if entreno_semana == ahora:
+		return entreno_msg
+	entreno_msg = super(m)
+	entreno_semana = ahora
+	return entreno_msg
 
 ## Lo que pasa cada semana fuera del campo. Devuelve los eventos nuevos.
 func semana(m: Mundo) -> Array:
@@ -315,7 +327,8 @@ func a_dic() -> Dictionary:
 		"goles_carrera": goles_carrera, "pj_carrera": pj_carrera, "caps": caps, "goles_sel": goles_sel,
 		"convocatoria": convocatoria, "capitan": capitan, "licencia": licencia,
 		"retiro_anunciado": retiro_anunciado, "retirado": retirado, "clubes_pasados": clubes_pasados,
-		"agenda": agenda, "racha_social": racha_social, "ovr_inicio": ovr_inicio, "vallas_invictas": vallas_invictas}
+		"agenda": agenda, "racha_social": racha_social, "ovr_inicio": ovr_inicio, "vallas_invictas": vallas_invictas,
+		"entreno_semana": entreno_semana, "entreno_msg": entreno_msg}
 
 ## (4-11, caza de fallos) Un guardado dañado o a mano con el tipo equivocado (texto donde va un diccionario) reventaba al CARGAR la carrera: se usa el valor por omisión.
 static func _tipo(d: Dictionary, clave: String, defecto: Variant) -> Variant:
@@ -370,4 +383,6 @@ static func desde_dic(d: Dictionary) -> CarreraJugador:
 	c.racha_social = int(d.get("racha_social", 0))
 	c.ovr_inicio = int(d.get("ovr_inicio", -1))
 	c.vallas_invictas = int(d.get("vallas_invictas", 0))
+	c.entreno_semana = int(d.get("entreno_semana", -1))
+	c.entreno_msg = String(d.get("entreno_msg", ""))
 	return c

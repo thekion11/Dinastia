@@ -7519,7 +7519,11 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "The shareholders only get part of it: the cash box can't stretch further.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "There is no cash for dividends: the shareholders settle for the promise.",
   "Opción %d de %d": "Option %d of %d",
-  "elegida": "selected"
+  "elegida": "selected",
+  "¿Salir del juego?": "Quit the game?",
+  "CERRADO · abre de 8:00 a 20:00": "CLOSED · open 8:00–20:00",
+  "Partido ligero (extra, en cualquier calidad)": "Light match (extra, at any quality)",
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Removes the colour grading, 3D signs and stadium floodlights for smoother play. It changes the look; applied when the stadium opens."
  },
  "pt": {
   "Historia": "História",
@@ -15041,7 +15045,11 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "Os acionistas recebem só uma parte: o cofre não dá para mais.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Não há caixa para dividendos: os acionistas contentam-se com a promessa.",
   "Opción %d de %d": "Opção %d de %d",
-  "elegida": "escolhida"
+  "elegida": "escolhida",
+  "¿Salir del juego?": "Sair do jogo?",
+  "CERRADO · abre de 8:00 a 20:00": "FECHADO · abre das 8:00 às 20:00",
+  "Partido ligero (extra, en cualquier calidad)": "Partida leve (extra, em qualquer qualidade)",
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Remove o ajuste de cor, os letreiros 3D e os refletores do estádio para ganhar fluidez. Muda o visual; aplica-se ao abrir o estádio."
  },
  "patrones": [
   [
@@ -28538,7 +28546,11 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "Les actionnaires n'en touchent qu'une partie : la caisse ne peut pas faire plus.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Il n'y a pas de quoi verser des dividendes : les actionnaires se contentent de la promesse.",
   "Opción %d de %d": "Option %d sur %d",
-  "elegida": "choisie"
+  "elegida": "choisie",
+  "¿Salir del juego?": "Quitter le jeu ?",
+  "CERRADO · abre de 8:00 a 20:00": "FERMÉ · ouvert de 8h00 à 20h00",
+  "Partido ligero (extra, en cualquier calidad)": "Match allégé (extra, à toute qualité)",
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Supprime l'étalonnage des couleurs, les panneaux 3D et les projecteurs du stade pour gagner en fluidité. Change l'aspect ; s'applique à l'ouverture du stade."
  },
  "it": {
   "Historia": "Storia",
@@ -36060,7 +36072,11 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "Gli azionisti incassano solo una parte: la cassa non basta per di più.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Non c'è cassa per i dividendi: gli azionisti si accontentano della promessa.",
   "Opción %d de %d": "Opzione %d di %d",
-  "elegida": "scelta"
+  "elegida": "scelta",
+  "¿Salir del juego?": "Uscire dal gioco?",
+  "CERRADO · abre de 8:00 a 20:00": "CHIUSO · aperto dalle 8:00 alle 20:00",
+  "Partido ligero (extra, en cualquier calidad)": "Partita leggera (extra, a qualsiasi qualità)",
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Toglie la regolazione del colore, le scritte 3D e i riflettori dello stadio per guadagnare fluidità. Cambia l'aspetto; si applica all'apertura dello stadio."
  },
  "de": {
   "Historia": "Geschichte",
@@ -43582,7 +43598,11 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "Die Aktionäre bekommen nur einen Teil: Die Kasse gibt nicht mehr her.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Es ist kein Geld für Dividenden da: Die Aktionäre begnügen sich mit dem Versprechen.",
   "Opción %d de %d": "Option %d von %d",
-  "elegida": "gewählt"
+  "elegida": "gewählt",
+  "¿Salir del juego?": "Spiel beenden?",
+  "CERRADO · abre de 8:00 a 20:00": "GESCHLOSSEN · geöffnet 8:00–20:00",
+  "Partido ligero (extra, en cualquier calidad)": "Leichtes Spiel (Extra, bei jeder Qualität)",
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Entfernt Farbanpassung, 3D-Schilder und Flutlichter des Stadions für mehr Flüssigkeit. Ändert das Aussehen; gilt beim Öffnen des Stadions."
  },
  "ca": {
   "Historia": "Història",
@@ -51104,7 +51124,11 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "Els accionistes cobren només una part: la caixa no dóna per més.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "No hi ha caixa per a dividends: els accionistes es conformen amb la promesa.",
   "Opción %d de %d": "Opció %d de %d",
-  "elegida": "triada"
+  "elegida": "triada",
+  "¿Salir del juego?": "Sortir del joc?",
+  "CERRADO · abre de 8:00 a 20:00": "TANCAT · obert de 8:00 a 20:00",
+  "Partido ligero (extra, en cualquier calidad)": "Partit lleuger (extra, en qualsevol qualitat)",
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Treu l'ajust de color, els rètols 3D i els focus de l'estadi per guanyar fluïdesa. Canvia l'aspecte; s'aplica en obrir l'estadi."
  },
  "pl": {
   "Club": "Klub",
@@ -58626,7 +58650,11 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "Akcjonariusze dostają tylko część: kasa nie pozwala na więcej.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Nie ma gotówki na dywidendy: akcjonariusze zadowalają się obietnicą.",
   "Opción %d de %d": "Opcja %d z %d",
-  "elegida": "wybrana"
+  "elegida": "wybrana",
+  "¿Salir del juego?": "Wyjść z gry?",
+  "CERRADO · abre de 8:00 a 20:00": "ZAMKNIĘTE · czynne 8:00–20:00",
+  "Partido ligero (extra, en cualquier calidad)": "Lekki mecz (dodatek, w każdej jakości)",
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Usuwa korekcję kolorów, napisy 3D i reflektory stadionu, by gra była płynniejsza. Zmienia wygląd; działa po otwarciu stadionu."
  },
  "tr": {
   "Club": "Kulüp",
@@ -66148,6 +66176,10 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "Hissedarlar yalnızca bir kısmını alıyor: kasa daha fazlasına yetmiyor.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Temettü için nakit yok: hissedarlar söze razı oluyor.",
   "Opción %d de %d": "Seçenek %d / %d",
-  "elegida": "seçili"
+  "elegida": "seçili",
+  "¿Salir del juego?": "Oyundan çıkılsın mı?",
+  "CERRADO · abre de 8:00 a 20:00": "KAPALI · 8:00–20:00 arası açık",
+  "Partido ligero (extra, en cualquier calidad)": "Hafif maç (ek, her kalitede)",
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Daha akıcı oyun için renk ayarını, 3D yazıları ve stadyum projektörlerini kaldırır. Görünümü değiştirir; stadyum açılınca uygulanır."
  }
 }

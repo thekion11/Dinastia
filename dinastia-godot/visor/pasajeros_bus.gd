@@ -108,13 +108,20 @@ func parada(bus: Node3D) -> void:
 	## SUBEN: los de la marquesina más cercana a la puerta; si allí no esperaba nadie, llega alguien por la acera.
 	var subir: Array = []
 	var esperas: Array[Vector3] = expl.cb.esperas_bus
+	## (A4-M3D-X12) Solo suben los que CABEN: a bordo + los que ya van hacia la puerta de este bus no pasan de `MAX_ABORDO`; el resto sigue esperando en la acera.
+	var libres := MAX_ABORDO - abordo.size()
+	for f: Dictionary in _andando:
+		if bool(f["sube"]) and f["bus"] == bus:
+			libres -= 1
 	for i in esperas.size():
 		var p: Vector3 = esperas[i]
 		if Vector2(p.x - puerta.x, p.z - puerta.z).length() < 16.0 and _esperando.has(i):
 			var lista: Array = _esperando[i]
-			while not lista.is_empty() and subir.size() < 2:
-				subir.append(lista.pop_front())
-	if subir.is_empty():
+			while not lista.is_empty() and subir.size() < mini(2, libres):
+				var fig: Dictionary = lista.pop_front()
+				fig["de"] = i
+				subir.append(fig)
+	if subir.is_empty() and libres > 0:
 		_ronda += 1
 		var sem2 := semilla(int(puerta.x), int(puerta.z), _ronda)
 		var llega := _persona(sem2, puerta + der * 3.5 - delante * 9.0)
@@ -141,7 +148,7 @@ func _andar(fig: Dictionary, pts: Array, sube: bool, bus: Node3D) -> void:
 	n.position = ruta[0]
 	n.rotation.y = atan2(ruta[1].x - ruta[0].x, ruta[1].z - ruta[0].z)
 	Mini3D.anim(d, "caminar", "")
-	_andando.append({"d": d, "semilla": int(fig["semilla"]), "ruta": ruta, "t": 0.0, "dur": maxf(largo / 1.4, 0.5), "largo": largo, "sube": sube, "bus": bus})
+	_andando.append({"d": d, "semilla": int(fig["semilla"]), "ruta": ruta, "t": 0.0, "dur": maxf(largo / 1.4, 0.5), "largo": largo, "sube": sube, "bus": bus, "ancla": bus.global_position, "de": int(fig.get("de", -1))})
 
 ## Lado de la puerta en el modelo del autobús (−1: el de la acera; BUS_PUERTA_ANTIGUA=1 pone el de antes, +1, para las capturas «antes»).
 static func lado_puerta() -> float:
@@ -153,6 +160,13 @@ func _mover(delta: float) -> void:
 		var n: Node3D = (f["d"] as Dictionary)["nodo"]
 		if not is_instance_valid(n):
 			_andando.remove_at(k)
+			continue
+		## (A4-M3D-X12) El bus se fue (o desapareció) mientras subían o bajaban: antes seguían andando hacia el hueco a la altura del escalón, flotando.
+		var bus = f["bus"]
+		var bus_ok: bool = bus != null and is_instance_valid(bus) and (bus as Node3D).is_inside_tree()
+		if not bool(f.get("libre", false)) and (not bus_ok or (bus as Node3D).global_position.distance_to(f["ancla"]) > 1.5):
+			if _bus_se_fue(f, n, bus if bus_ok else null):
+				_andando.remove_at(k)
 			continue
 		f["t"] = float(f["t"]) + delta
 		var u := clampf(float(f["t"]) / float(f["dur"]), 0.0, 1.0)
@@ -169,15 +183,47 @@ func _mover(delta: float) -> void:
 				break
 			resto -= seg
 		if u >= 1.0:
-			var bus := f["bus"] as Node3D
-			if bool(f["sube"]) and bus != null and is_instance_valid(bus):
-				var abordo: Array = bus.get_meta("pasajeros", [])
+			if bool(f["sube"]) and bus_ok:
+				var abordo: Array = (bus as Node3D).get_meta("pasajeros", [])
 				if abordo.size() < MAX_ABORDO:
 					abordo.append(int(f["semilla"]))
-				bus.set_meta("pasajeros", abordo)
+				(bus as Node3D).set_meta("pasajeros", abordo)
 				CargaCiudad.de("InteriorBus").actualizar(bus)
 			n.queue_free()
 			_andando.remove_at(k)
+
+## El bus de `f` ya no está donde paró. true si la figura se da por terminada (y se borró o volvió a la parada).
+## · Sube y aún está fuera: vuelve a su sitio en la marquesina (o se aleja y desaparece si llegó por la acera).
+## · Sube y ya estaba dentro: queda anotado a bordo (si el bus existe) y desaparece (iba dentro).
+## · Baja y aún está dentro: se coloca en la puerta, a pie de acera, y sigue su camino desde ahí (sin flotar).
+func _bus_se_fue(f: Dictionary, n: Node3D, bus: Node3D) -> bool:
+	var dentro := n.position.y > 0.3
+	if bool(f["sube"]):
+		if dentro and bus != null:
+			var abordo: Array = bus.get_meta("pasajeros", [])
+			if abordo.size() < MAX_ABORDO:
+				abordo.append(int(f["semilla"]))
+			bus.set_meta("pasajeros", abordo)
+		elif not dentro and int(f["de"]) >= 0 and _esperando.has(int(f["de"])) and (_esperando[int(f["de"])] as Array).size() < ESPERAN:
+			var ruta0: Vector3 = (f["ruta"] as Array)[0]
+			n.position = ruta0
+			CargaCiudad.de("PeatonVida").en_anden(f["d"], 0.5)
+			(_esperando[int(f["de"])] as Array).append({"d": f["d"], "semilla": int(f["semilla"]), "de": int(f["de"])})
+			return true
+		n.queue_free()
+		return true
+	f["libre"] = true   ## baja: ya no depende del bus
+	if dentro:
+		var resto: Array = (f["ruta"] as Array).slice(2)   ## de la puerta en adelante
+		var largo := 0.0
+		for i in resto.size() - 1:
+			largo += (resto[i] as Vector3).distance_to(resto[i + 1])
+		f["ruta"] = resto
+		f["largo"] = largo
+		f["t"] = 0.0
+		f["dur"] = maxf(largo / 1.4, 0.5)
+		n.position = resto[0]
+	return false
 
 func _exit_tree() -> void:
 	for f: Dictionary in _andando:

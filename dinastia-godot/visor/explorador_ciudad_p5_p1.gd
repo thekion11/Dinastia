@@ -299,7 +299,7 @@ func _buscar_cerca() -> void:
 	elif _cerca["tipo"] == "peaton":
 		_aviso.text = Idiomas.t("E: hablar con %s") % _cerca["n"]
 	else:
-		_aviso.text = "E: %s" % _cerca["n"]
+		_aviso.text = ComercioCiudad.aviso(self, String(_cerca["k"]), String(_cerca["n"]))
 
 func _physics_process(delta: float) -> void:
 	if cuerpo == null:

@@ -104,7 +104,7 @@ func _process(delta: float) -> void:
 		if is_instance_valid(ap) and ap.current_animation != "":
 			anim = ap.current_animation
 			pos = ap.current_animation_position
-		j.append([n.global_transform, anim, pos])
+		j.append([n.global_transform, anim, pos, n])   ## el nodo: un cambio (otro nodo en ese puesto) no hereda el recorrido del que salió
 	_cuadros.append({"t": _t, "j": j, "b": _balon.global_transform if is_instance_valid(_balon) else Transform3D.IDENTITY})
 	while not _cuadros.is_empty() and _t - float(_cuadros[0]["t"]) > SEGUNDOS_GUARDADOS:
 		_cuadros.pop_front()
@@ -133,7 +133,7 @@ func reproducir(segundos: float = 8.0, con_barrido := false) -> bool:
 		var anim: String = ap.current_animation if is_instance_valid(ap) else ""
 		var pos: float = ap.current_animation_position if is_instance_valid(ap) and anim != "" else 0.0
 		var vel: float = ap.speed_scale if is_instance_valid(ap) else 1.0
-		_vivo.append([n.global_transform, anim, pos, vel])
+		_vivo.append([n.global_transform, anim, pos, vel, n])
 		if is_instance_valid(ap):
 			ap.speed_scale = 0.0
 	_vivo.append(_balon.global_transform if is_instance_valid(_balon) else Transform3D.IDENTITY)
@@ -419,6 +419,8 @@ func _aplicar(t: float) -> void:
 		var ap: AnimationPlayer = fd.get("anim")
 		if not is_instance_valid(n):
 			continue
+		if (ea as Array).size() > 3 and (ea as Array)[3] != n:
+			continue   ## otro jugador en ese puesto (cambio durante o antes de la repetición): no se le aplica el recorrido del que salió
 		var xa: Transform3D = (ea as Array)[0]
 		var xb: Transform3D = (eb as Array)[0]
 		## Un salto de sitio (cambio, reinicio) no se interpola: se corta.

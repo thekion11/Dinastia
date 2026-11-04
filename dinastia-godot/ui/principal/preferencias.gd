@@ -65,6 +65,8 @@ func cargar() -> void:
 		p._tipografia = tp
 	var idi := String(cf.get_value("juego", "idioma", Idiomas.idioma))
 	if idi == "es" or Idiomas.NOMBRES.has(idi):
+		if idi != Idiomas.idioma and OS.get_environment("PREF_IDIOMA_DIAG") != "":
+			print("PREF_PISA_IDIOMA ", Idiomas.idioma, " -> ", idi)   ## diagnóstico de pruebas (A4): el guardado manda sobre el idioma puesto antes
 		Idiomas.idioma = idi
 	p._velocidad_partido = clampi(int(cf.get_value("juego", "velocidad_partido", p._velocidad_partido)), 1, 3)
 	Musica.encendida = bool(cf.get_value("musica", "encendida", Musica.encendida))

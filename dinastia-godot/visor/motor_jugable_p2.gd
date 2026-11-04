@@ -112,6 +112,7 @@ func _gesto_arbitro(nombre: String, retraso := 0.0, dur := 1.6, extra := {}) -> 
 # ---------------------------------------------------------------- balón parado
 
 func _empezar_saque(tipo: String, saca_local: bool, lugar: Vector3) -> void:
+	if estado == "fin": return   ## partido suspendido (menos de 7) en plena falta: el penal ya no se saca
 	estado = "saque"
 	_t_estado = 0.0
 	poseedor = {}
@@ -386,16 +387,15 @@ func reemplazar(sale_id: String, entra: Dictionary) -> bool:
 	n.position = Vector3(signf(pos(sale).x + 0.01) * (ANCHO - 0.5), 0, clampf(pos(sale).z, -8.0, 8.0))
 	n.visible = true
 	jugadores[i] = entra
-	if poseedor == sale:
-		poseedor = {}
-	if pase_a == sale:
-		pase_a = {}
-	if usuario == sale:
-		usuario = {}
+	if poseedor == sale: poseedor = {}
+	if pase_a == sale: pase_a = {}
+	if usuario == sale: usuario = {}
+	MotorTandaCambio.reemplazar(self as Object as MotorJugable, sale, entra)   ## cambio en plena tanda
 	return true
 
 ## La roja: sale del campo y el equipo sigue con uno menos.
 func _expulsar(p: Dictionary) -> void:
+	if expulsados.has(p): return   ## ya salió (la lista y el tiempo añadido contaban dos veces)
 	_sumar_anadido(0.5)
 	jugadores.erase(p)
 	expulsados.append(p)

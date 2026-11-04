@@ -213,6 +213,7 @@ func _disp_calidad() -> void:
 			Calidad.guardar()
 			p._refrescar())
 		fila_c.add_child(b_c)
+	PartidoLigero.crear(p)   ## (4-11, orden 32) agregado aparte de la calidad: se ve en todas
 	AjusteResolucion3D.crear(p)   ## (3-11 / 4-11, pedido del dueño) resolución del 3D en Mínima (35-100 %) y en Media (50-100 %)
 	var ad := CheckButton.new()
 	ad.text = Idiomas.t("Ajustar sola para mantener 40 FPS en el partido")

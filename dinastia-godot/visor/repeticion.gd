@@ -23,6 +23,8 @@ func _terminar() -> void:
 		var ap: AnimationPlayer = f.get("anim")
 		if not is_instance_valid(n):
 			continue
+		if (e as Array).size() > 4 and (e as Array)[4] != n:
+			continue   ## cambio durante la repetición: el que entró se queda donde está
 		n.global_transform = (e as Array)[0]
 		if is_instance_valid(ap):
 			if String(e[1]) != "" and ap.has_animation(String(e[1])):

@@ -158,6 +158,7 @@ func _trafico() -> void:
 			## Giro 0: `instanciar_coche` ya deja el morro en +Z (ver arriba).
 			t.agregar_vehiculo(nodo, id, rng.randf() * 1800.0,
 				rng.randf_range(13.0, 22.0), 0.0, 0.0)
+			t.marcar_cola_al_ultimo()   ## A4-M3D-012: sin cola, los coches de una misma ruta con distinta velocidad se atravesaban
 
 	## 1b) EL EJE EXTERIOR, con su propio tráfico -si la circunvalación estuviera
 	## vacía se notaría más que si no existiera-.
@@ -178,6 +179,7 @@ func _trafico() -> void:
 			var n_ex: Node3D = instanciar_trafico(coches[rng.randi() % coches.size()], rng)
 			t.agregar_vehiculo(n_ex, id_ex, rng.randf() * 2200.0,
 				rng.randf_range(15.0, 24.0), 0.0, 0.0)
+			t.marcar_cola_al_ultimo()
 		## Los autobuses del anillo (la vieja línea 5 amarilla) ya no van aquí (28-10-2026): las cuatro marquesinas del anillo son
 		## paraderos de los recorridos «Red» 101c, 190, 122, C02, 150, 502c y 506c, que pasan por el anillo con sus buses (`BusesRed`).
 
@@ -203,6 +205,7 @@ func _trafico() -> void:
 			var nodo2: Node3D = instanciar_trafico(coches[rng.randi() % coches.size()], rng)
 			t.agregar_vehiculo(nodo2, id2, rng.randf() * 600.0,
 				rng.randf_range(9.0, 15.0), 0.0, 0.0)
+			t.marcar_cola_al_ultimo()
 
 	## 5) LOS PEATONES (26-9-2026, B7): por las aceras del anillo y de la
 	## avenida, en los dos sentidos, más cuanto más grande es el club.

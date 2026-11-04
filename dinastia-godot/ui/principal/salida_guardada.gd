@@ -34,8 +34,9 @@ func _notification(que: int) -> void:
 		## (Diferido: mientras el árbol reparte la notificación `Principal` no deja colgarle hijos, y el diálogo es un hijo.)
 		NOTIFICATION_WM_CLOSE_REQUEST:
 			pedir_salir.call_deferred(false)
+		## «Atrás» lo atiende `VidaGlobal` (cierra la ventana o vuelve; solo si nadie lo atiende llega aquí `pedir_salir(true)`) o el partido (`VidaApp`).
 		NOTIFICATION_WM_GO_BACK_REQUEST:
-			pedir_salir.call_deferred(true)
+			pass
 		NOTIFICATION_APPLICATION_PAUSED:
 			if p != null and p.mundo != null and OS.has_feature("mobile"):
 				guardar_ya()

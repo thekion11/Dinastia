@@ -23,7 +23,8 @@ func _pintar_dias() -> void: _avance._pintar_dias()
 func _exit_tree() -> void:
 	load("res://visor/edificio_club.gd").ctx = {}
 	load("res://visor/edificio_club.gd").mundo_ref = null
-	CarreraJugadorUI.mundo = null
+	if ResourceLoader.has_cached("res://ui/carrera_jugador_ui.gd"):   ## (A4 memoria) solo si se llegó a cargar
+		(load("res://ui/carrera_jugador_ui.gd") as GDScript).mundo = null
 	Trabajadores.actual = null
 	Partido.ctx_medico = null
 	PedidoPartida.mundo_a_cargar = null

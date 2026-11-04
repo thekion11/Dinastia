@@ -54,22 +54,27 @@ const GIRO_RAPIDO := 12.0
 ## la presión y el error de sus tiros y pases (`error`, en `GestoTecnico.factor`).
 ## (La «pausa» NO es dificultad: pensar más con el balón hace que conduzca y tire MÁS; contra el nivel
 ## más bajo la CPU tiraba 7 veces. Queda en 1,0 para todos.)
+## (4-11) ESCALONES IGUALADOS tras medir 30 partidos por nivel (docs/04_auditorias/MEGA_AUDITORIA_4/partido.md): antes Cadete→Debutante valía ~2,5 goles y Debutante→Semiprofesional ~0,2.
 const DIFICULTADES := {   ## 8 categorías del dueño (27-10); «debutante» = el motor calibrado de siempre (antes «profesional»)
 	"practicante": {"nombre": "Practicante", "vista": 0.5, "attr": 0.72, "pausa": 1.0, "presion": -1, "error": 1.35},
-	"cadete": {"nombre": "Cadete", "vista": 0.3, "attr": 0.84, "pausa": 1.0, "presion": -1, "error": 1.18},
+	"cadete": {"nombre": "Cadete", "vista": 0.2, "attr": 0.90, "pausa": 1.0, "presion": -1, "error": 1.12},
 	"debutante": {"nombre": "Debutante", "attr": 1.0, "pausa": 1.0, "presion": 0, "error": 1.0},
-	"semiprofesional": {"nombre": "Semiprofesional", "attr": 1.03, "pausa": 1.0, "presion": 0, "error": 0.95},
-	"profesional": {"nombre": "Profesional", "vista": -0.08, "attr": 1.06, "pausa": 1.0, "presion": 1, "error": 0.9},
-	"experto": {"nombre": "Experto", "vista": -0.14, "attr": 1.09, "pausa": 1.0, "presion": 1, "error": 0.86},
-	"maestro": {"nombre": "Maestro", "vista": -0.2, "attr": 1.13, "pausa": 1.0, "presion": 1, "error": 0.81},
-	"ultimate": {"nombre": "Ultimate", "vista": -0.3, "attr": 1.18, "pausa": 1.0, "presion": 1, "error": 0.75},
+	"semiprofesional": {"nombre": "Semiprofesional", "attr": 1.035, "pausa": 1.0, "presion": 0, "error": 0.94},
+	"profesional": {"nombre": "Profesional", "vista": -0.08, "attr": 1.07, "pausa": 1.0, "presion": 1, "error": 0.89},
+	"experto": {"nombre": "Experto", "vista": -0.16, "attr": 1.115, "pausa": 1.0, "presion": 1, "error": 0.84},
+	"maestro": {"nombre": "Maestro", "vista": -0.24, "attr": 1.15, "pausa": 1.0, "presion": 1, "error": 0.78},
+	"ultimate": {"nombre": "Ultimate", "vista": -0.3, "attr": 1.20, "pausa": 1.0, "presion": 1, "error": 0.72},
 }
 
 const ORDEN_DIFICULTAD := ["practicante", "cadete", "debutante", "semiprofesional", "profesional", "experto", "maestro", "ultimate"]
 
 # ----- EL PARTIDO SIMULADO (`Partido`): ocasiones, conversión, atajadas, arenga y la «ley del ex»
 
-const BASE_ATAQUE := 0.048
+## RECALIBRACIÓN DEL SIMULADO (4-11-2026, decisión del dueño): hasta hoy una «llegada» ERA un remate (~10 por partido, 5,6 a puerta, 27 % de gol por remate). El fútbol real:
+## ~25 remates, ~8,5 a puerta, ~11 % de conversión y el portero para el 60-80 % de lo que va dentro. Ahora hay `LLEGADAS_K` = 2,5 veces más remates (`BASE_ATAQUE` × K) y cada uno vale
+## K veces menos (`CONVERSION`, `P_PENAL`, el xG y los chequeos del árbitro se dividen por K): los goles siguen en ~2,7-2,8 por partido, las atajadas pasan a ser el 68 % de lo que va a puerta.
+const LLEGADAS_K := 2.5
+const BASE_ATAQUE := 0.048 * LLEGADAS_K
 
 const EXPONENTE := 1.6
 
@@ -77,6 +82,11 @@ const REPARTO := 1.9
 
 ## Cuánto pesa la diferencia de calidad (ver `_probabilidad`).
 const SENSIBILIDAD := 3.2
+
+## A4-PAR-L02 (4-11-2026, decisión del dueño): el cociente ataque/defensa se SATURA en el logaritmo (`SATURA_LN · tanh(ln(cociente) / SATURA_LN)`): entre equipos parecidos casi no cambia, pero un
+## 71 contra un 48 daba 7,7 goles por partido y hasta 15-0 (a4_partido_cruzado) porque `cociente ^ 3,2` crece sin tope. Con 0,45 el que domina saca como mucho e^(3,2 · 0,45)
+## más remates que entre iguales (0,45 → 4,2 veces): sigue ganando claro, sin marcadores absurdos.
+const SATURA_LN := 0.45
 
 ## De cada ataque que se genera, este porcentaje termina dentro. Es el `r<0.30`
 ## del HTML, y es facil de pasar por alto al portar: la formula de arriba NO da
@@ -90,13 +100,13 @@ const SENSIBILIDAD := 3.2
 ## por partido (sin ella, hoy, 2,63). Con 0,28 queda en 2,70. Se baja la conversión y no las llegadas (`BASE_ATAQUE`) porque deja intactos los remates y el xG por llegada
 ## (media 0,27: `0,09 + f^0,25 · 0,22`, la auditoría del 26-10), y los goles pasan a ser ~1,05 veces el xG en vez de ~1,13. Sube la mitad que el 0,30 de antes en la
 ## cuota de atajadas (entre CONVERSION y R_ATAJADA): los tiros a puerta (gol + atajada, hasta R_ATAJADA) no cambian.
-const CONVERSION := 0.267
+const CONVERSION := 0.262 / LLEGADAS_K   ## por remate (antes 0,267 por «llegada»; ajustada tras medir: 24 remates y ~2,7 goles)
 
 ## LOS PENALES (3-11-2026, orden del líder): medido con `pruebas/zz_medir_stats.tscn` el partido simulado daba 0,00 penales por partido (solo el árbitro «estricto» los cobraba, 0,004 por llegada);
 ## el fútbol real: ~0,25-0,3, convertidos ~76 %. `P_PENAL` es la probabilidad base de que una llegada acabe en falta dentro del área (con ~9,6 llegadas por partido: ~0,29 penales),
 ## `PENAL_PERFIL` la escala por el perfil del árbitro (el estricto pita más, el permisivo menos). Cada penal convertido es un gol que no pasa por `CONVERSION` (y la llegada ya no es un
 ## remate normal): `CONVERSION` baja de 0,28 a 0,267 para que los goles sigan en ~2,7 por partido.
-const P_PENAL := 0.03
+const P_PENAL := 0.03 / LLEGADAS_K
 
 ## LA VENTAJA DE CAMPO (3-11-2026, orden del líder): factor sobre la probabilidad de llegada por minuto del que juega en casa y del que visita (1,0 en cancha neutral). Con 1,08/0,94 la victoria
 ## local salía al 39,8 % (fútbol real ~45 %, empates ~25 %, visita ~30 %). Con 1,18/0,86 (suma 2,04, como antes: el total de llegadas no sube) sale 46,3 % local, 26,6 % empates, 27,1 % visita y
@@ -125,9 +135,9 @@ const P_ROJA_SEGUNDA := 0.09   ## ya no la usa el simulado (A4-PAR-L01); se qued
 ## Los mismos cortes de `ataque()` en juego.js (linea ~2139 y ~2144), sobre el
 ## mismo `r` que decide el gol: entre CONVERSION y R_ATAJADA para la atajada,
 ## entre R_ATAJADA y R_POSTE para el palo, el resto para el fallo.
-const R_ATAJADA := 0.55
+const R_ATAJADA := 0.34   ## a puerta = gol + atajada = 34 % de los remates (~8,5 de 25); el portero para (0,34 − 0,107) / 0,34 = 68 % de lo que va dentro
 
-const R_POSTE := 0.62
+const R_POSTE := 0.37   ## el palo, ~3 % de los remates (antes 7 %); el 63 % restante, fuera o bloqueado
 
 ## LAS ARENGAS. `impulsos` guarda hasta qué minuto le dura el subidón a cada
 ## jugador al que le hayas gritado desde la banda.
