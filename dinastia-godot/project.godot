@@ -37,6 +37,8 @@ Sonido="*res://nucleo/sonido.gd"
 Musica="*res://nucleo/musica.gd"
 Idiomas="*res://nucleo/idiomas.gd"
 Cierre="*res://nucleo/cierre.gd"
+; La vida de la app en el móvil FUERA del partido: segundo plano, «atrás» y poca memoria (nucleo/vida_global.gd).
+VidaGlobal="*res://nucleo/vida_global.gd"
 ; La textura de borde suave de Antialiased Line2D (MIT, addons/antialiased_line2d/, ui/componentes/trazo_suave.gd).
 AntialiasedLine2DTexture="*res://addons/antialiased_line2d/texture.gd"
 KeyUtils="*res://minijuegos/retro5v5/utils/key_utils.gd"
