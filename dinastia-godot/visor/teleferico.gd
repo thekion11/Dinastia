@@ -118,7 +118,7 @@ func _anden_y_rotulo(base_n: Node3D, nombre: String, mats: Dictionary) -> void:
 		for cz: float in [6.4, 13.2]:
 			_cajas_de(base_n, [[Vector3(cx, 2.9, cz), Vector3(0.5, 5.0, 0.5), mats["acero"]]])
 	var l := Label3D.new()
-	l.text = nombre
+	l.text = Idiomas.t(nombre)
 	l.font_size = 64
 	l.pixel_size = 0.03
 	l.outline_size = 12

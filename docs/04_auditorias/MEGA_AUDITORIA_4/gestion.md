@@ -38,6 +38,10 @@ caja −250 M, todos lesionados y sancionados, club con 48 jugadores y otro vac�
   su dueño, con el comprador sin jugador ni dinero; (b) te llegaban OFERTAS por un jugador que solo tienes cedido (vendías algo ajeno);
   (c) podías negociar por un cedido y pagarle al club que lo tiene prestado. Arreglo: `Mercado._cedido` en `_buscar_objetivo`,
   `buscar_oferta_por_mi_jugador` y `responder_oferta`; `abrir_negociacion` lo rechaza con frase traducida. Prueba en `a4_gestion_limite`. ARREGLADO.
+- [A4-GES-009] (caza, gravedad: medio, cambia el juego) CONTRATOS DE LOS CEDIDOS: vencían ANTES de que volvieran (`nueva_temporada`:
+  contratos y luego `Cesiones.resolver`) y decidía el club donde estaba, no su dueño: un jugador de la IA cedido a tu club se iba LIBRE
+  si tú no lo renovabas (la IA renueva ~88 %), y uno tuyo cedido a la IA lo «renovaba» un club que no era el suyo. Arreglo:
+  `_vence_contrato` (mundo_p6 y mundo_p7) decide con el club DUEÑO de la cesión. Prueba en `a4_gestion_limite` (de 17 se iban 17; ahora 0). ARREGLADO.
 - Sin hallazgos: integridad del mundo en 8 temporadas (un club por jugador, club_id, libres, contratos, sueldos, edades, medias, cajas,
   planteles, ligas y divisiones); caja a −250 M seis semanas; club con todos lesionados y sancionados (saca 11); club con 48 jugadores y
   otro vacío; año 2099.
@@ -46,6 +50,7 @@ caja −250 M, todos lesionados y sancionados, club con 48 jugadores y otro vac�
 Sonda `pruebas/ideas/a4_gestion_cesiones.tscn` (en `especiales.sh`): 2 semillas, cesiones simples/con opción/con obligación de todo el plantel + 110 semanas + `resolver`; y ventas con monto 0, negativo, 10¹², 0/50/100 % y −20 % de futura venta, a sí mismo. 0 fallos: nadie en dos plantillas ni perdido, ninguna cesión queda viva, el plantel no baja de 18.
 
 - [A4-GESTION-002] (repaso 5, gravedad: bajo) `Cesiones.vender` no comprueba que el comprador tenga dinero ni que `monto` sea positivo: con comprador a 0 y monto 10¹² el comprador queda en −10¹² (y con monto negativo el vendedor paga). Cómo reproducirlo: `a4_gestion_cesiones` (caso `[999999999999, 0]`). `nucleo/cesiones_p2.gd:228`. Los llamadores reales (`mercado_p1.gd:402`, `insolvencia.gd:102`) sí filtran por saldo, salvo que la oferta recibida (`ofertas_recibidas`) se acepta DESPUÉS de crearse y el comprador pudo gastar entretanto. Estado: abierto (riesgo bajo; no se toca por si alguien depende de ello; si el líder quiere, un `monto = maxi(monto, 0)` y comprobar saldo al aceptar la oferta).
+- [A4-GESTION-002] (repaso 5, gravedad: bajo) `Cesiones.vender` no comprueba que el comprador tenga dinero ni que `monto` sea positivo: con comprador a 0 y monto 10¹² el comprador queda en −10¹² (y con monto negativo el vendedor paga). Cómo reproducirlo: `a4_gestion_cesiones` (caso `[999999999999, 0]`). `nucleo/cesiones_p2.gd:228`. Los llamadores reales (`mercado_p1.gd:402`, `insolvencia.gd:102`) sí filtran por saldo, salvo que la oferta recibida (`ofertas_recibidas`) se acepta DESPUÉS de crearse y el comprador pudo gastar entretanto. Estado: ARREGLADO por el líder (A4-GES-008): `vender` rechaza montos negativos y `responder_oferta` deja caer la operación si el comprador ya no tiene el dinero al aceptar.
 
 ### Repaso 5, tercera tanda (mercado saturado y federación)
 Sonda `pruebas/ideas/a4_gestion_mercado_fed.tscn` (banco `mercado_contratos`): 200 compradores por semana × 40 semanas (688 traspasos; nadie duplicado, planteles de la IA entre 19 y 26, ningún cedido traspasado, saldos enteros); federación: todas las mociones en las opciones a/b/inválida con asambleas de 0, 1 y 20 clubes, casos con fechas 0/negativas/100 000 y sin jugador, antidopaje con plantel vacío, playoffs con tablas de 0/3/4/8 filas y con clubes inexistentes. 0 fallos.

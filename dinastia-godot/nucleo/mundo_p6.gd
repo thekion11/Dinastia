@@ -337,8 +337,10 @@ func _sigue_retasado(siguen: Array[Jugador], j: Jugador) -> void:
 ##   - en TU club, si no lo renovaste, se va a la bolsa de libres y es noticia.
 ## La decisión sale de un hash (jugador + año), no de `Azar`: así no cambia
 ## ninguna otra tirada de la simulación. Devuelve true si el jugador se va.
-func _vence_contrato(j: Jugador, c: Club) -> bool:
+func _vence_contrato(j: Jugador, en: Club) -> bool:
 	j.anios_contrato -= 1
+	## A4-GES-009: el contrato es con su DUEÑO, no con el club que lo tiene cedido (antes uno de la IA cedido a ti se iba libre si no lo renovabas tú).
+	var c: Club = clubes.get(String(cesiones.cesion_de(j.id).get("de", "")), en) if cesiones != null else en
 	if j.anios_contrato > 0:
 		return false
 	if c.id != mi_club_id and Precontratos.llega(self, j):
