@@ -87,17 +87,29 @@ func _foto(m: Mundo, gpp: float, ms: int) -> Dictionary:
 				val_ia += j.valor
 				sal_ia += j.sueldo
 				n_ia += 1
+	var por_div := {}   ## división → [suma de valoraciones, jugadores]
+	for l: Liga in m.ligas:
+		var d := l.division()
+		for c: Club in l.clubes:
+			for j: Jugador in c.plantilla:
+				var a: Array = por_div.get(d, [0, 0])
+				a[0] += j.ovr
+				a[1] += 1
+				por_div[d] = a
+	var ovr_div := {}
+	for d in por_div:
+		ovr_div[d] = float((por_div[d] as Array)[0]) / maxf(1.0, float((por_div[d] as Array)[1]))
 	cajas.sort()
 	var kb := 0
 	if ms > 0 and (m.anio % 5 == 0 or true):
 		kb = JSON.stringify(Partida.instantanea(m)).length() / 1024
 	return {"n": n, "libres": m.libres.size(), "edad": edad / maxf(1.0, n), "ovr": ovr / maxf(1.0, n), "top": top, "val": val_ia / maxf(1.0, n_ia), "sal": sal_ia / maxf(1.0, n_ia),
 		"caja_med": cajas[cajas.size() / 2] if not cajas.is_empty() else 0, "rojos": rojos, "clubes": m.clubes.size(), "pmin": pmin, "pmax": pmax, "cortos": cortos,
-		"gpp": gpp, "kb": kb, "ms": ms}
+		"gpp": gpp, "kb": kb, "ms": ms, "ovr_div": ovr_div}
 
 func _texto(f: Dictionary, t: int) -> String:
-	return "  t%-2d jug %d libres %d edad %.1f ovr %.1f 85+ %d | valor IA %.0f sueldo IA %.0f | caja mediana IA %.1f M, en rojo %d/%d | plantel %d-%d (cortos %d) | goles %.2f | guardado %d KB | %d ms" % [
-		t, f["n"], f["libres"], f["edad"], f["ovr"], f["top"], f["val"], f["sal"], float(f["caja_med"]) / 1e6, f["rojos"], f["clubes"], f["pmin"], f["pmax"], f["cortos"], f["gpp"], f["kb"], f["ms"]]
+	return "  t%-2d jug %d libres %d edad %.1f ovr %.1f 85+ %d | valor IA %.0f sueldo IA %.0f | caja mediana IA %.1f M, en rojo %d/%d | plantel %d-%d (cortos %d) | ovr por división %s | goles %.2f | guardado %d KB | %d ms" % [
+		t, f["n"], f["libres"], f["edad"], f["ovr"], f["top"], f["val"], f["sal"], float(f["caja_med"]) / 1e6, f["rojos"], f["clubes"], f["pmin"], f["pmax"], f["cortos"], _div_txt(f["ovr_div"]), f["gpp"], f["kb"], f["ms"]]
 
 func _analizar(campeones: Array[Dictionary], temp: int) -> void:
 	var f0: Dictionary = _fotos[0]
@@ -157,3 +169,11 @@ func _detalle(m: Mundo, t: int) -> void:
 			top14 += ovrs[i]
 		partes.append("%s rep %d caja %.1fM top14 %.1f nómina %.2fM" % [c.nombre.left(9), c.rep, float(c.saldo) / 1e6, top14 / 14.0, float(nomina) / 1e6])
 	_linea("    t%d: %s" % [t, " | ".join(partes)])
+
+func _div_txt(d: Dictionary) -> String:
+	var ks := d.keys()
+	ks.sort()
+	var partes: Array[String] = []
+	for k in ks:
+		partes.append("D%d %.1f" % [int(k), float(d[k])])
+	return " ".join(partes)
