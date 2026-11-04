@@ -9,14 +9,7 @@ const BASE_PEQUENA := 15.0
 const MAX_FACTOR := 2.0
 
 ## Píxeles del lienzo por milímetro de pantalla (0 si no se sabe).
-static func px_por_mm(nodo: Node) -> float:
-	var dpi := ControlesTactiles.dpi()
-	var vent := ControlesTactiles.ventana()
-	var vp := nodo.get_viewport()
-	if dpi <= 0.0 or vent.y <= 0 or vp == null:
-		return 0.0
-	var lienzo := ControlesTactiles.lienzo_forzado if ControlesTactiles.lienzo_forzado.y > 0.0 else vp.get_visible_rect().size
-	return lienzo.y / float(vent.y) * dpi / 25.4
+static func px_por_mm(nodo: Node) -> float: return PantallaMovil.px_por_mm(nodo)
 
 ## ¿Hay controles táctiles en este partido?
 static func activo(nodo: Node) -> bool:

@@ -117,6 +117,8 @@ func _plan_por_dias(c: Club, carg: Dictionary, ritmo: float, res: Dictionary) ->
 func freno_temporada(j: Jugador) -> float:
 	var umbral := 6 if j.partidos >= 12 else 4
 	var sobra := int(_subidas.get(j.id, 0)) - umbral
+	if int(_subidas.get(j.id, 0)) >= TOPE_TEMPORADA:
+		return 0.0   ## TOPE DURO (4-11, orden del dueño «no más de +8»): +6 de entrenamiento y hasta +2 de la curva anual
 	return 1.0 if sobra < 0 else clampf(0.5 - 0.2 * float(sobra), 0.08, 0.5)
 
 func _hay_capitan(c: Club) -> bool:
@@ -225,9 +227,10 @@ func procesar_ajeno(j: Jugador) -> void:
 	## La probabilidad la da `ProgresoJugador` (baja con la edad); antes un 0,10 plano hasta los 24.
 	var p := ProgresoJugador.prob_semanal(j)
 	if p > 0.0:
-		if Azar.suerte(p):
+		if freno_temporada(j) > 0.0 and Azar.suerte(p):
 			var antes := j.ovr
 			j.ajustar_media(1)
+			_subidas[j.id] = int(_subidas.get(j.id, 0)) + 1   ## cuenta para el tope de la temporada
 			if not j.atributos.is_empty():
 				var k := String(Azar.uno(j.atributos.keys()))
 				j.atributos[k] = clampi(int(j.atributos[k]) + Azar.ent(1, 2), 22, 99)

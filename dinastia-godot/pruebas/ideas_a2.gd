@@ -80,6 +80,7 @@ func _ideas_a_entrenamiento() -> void:
 		var total := 0
 		for rep in 8:
 			jj.ovr = 50
+			e3._subidas.clear()   ## cada repetición es una temporada nueva (el tope de +6 por temporada del entrenamiento se cuenta aparte)
 			Azar.sembrar(700 + rep)
 			for sem in 40:
 				e3.procesar_semana(cl, 2030, sem % 38 + 1)
