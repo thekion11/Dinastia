@@ -7,7 +7,9 @@ extends Node
 ##   godot --headless --path . res://pruebas/auditoria_partido3d_limite.tscn
 ## Termina en «===== FIN. n fallos =====»; los errores de script salen como SCRIPT ERROR en el registro.
 const LIENZO := Vector2(1600, 720)
-const TOPE_FOTOGRAMAS := 60 * 150
+## Tope duro de fotogramas y tope SIN PROGRESO (el reloj del partido, el estado y el marcador sin moverse): el ritmo del ordenador cambia cuántos fotogramas hacen falta (CI: más goles con su celebración y repetición de ~1.500 fotogramas cada una).
+const TOPE_FOTOGRAMAS := 60 * 600
+const TOPE_SIN_PROGRESO := 60 * 120
 var _n := 0
 var _fase := 0
 var _fallos := 0
@@ -22,6 +24,8 @@ var _nivel_gol := 0
 var _espera_gol := 0
 var _marcador_antes := 0
 var _susp := 0
+var _firma_progreso := ""
+var _f_progreso := 0
 var _pj_viejo: PartidoJugable
 
 func _comprobar(ok: bool, texto: String) -> void:
@@ -161,7 +165,11 @@ func _fuzz() -> void:
 			_comprobar(false, "fotograma %d: %s" % [f, e])
 			_fase = 2
 			return
-	if m.estado == "fin" or f > TOPE_FOTOGRAMAS:
+	var firma := "%s|%d|%.1f|%s|%d" % [m.estado, m.mitad, m.t, str(m.goles), 1 if _pj.realizando_gol() else 0]
+	if firma != _firma_progreso:
+		_firma_progreso = firma
+		_f_progreso = f
+	if m.estado == "fin" or f > TOPE_FOTOGRAMAS or (f - _f_progreso > TOPE_SIN_PROGRESO and _pj._pausa == null):
 		_soltar_todo()
 		print("    DIAG estado=%s pausa=%s fisica=%s apuntando=%s cargando=%s usuario_vacio=%s t=%.1f saque=%s" % [m.estado, str(_pj._pausa), str(m.is_physics_processing()), str(m.apuntando), str(m.cargando), str(m.usuario.is_empty()), m.t, str(m.get("_t_estado"))])
 		_comprobar(m.estado == "fin", "el partido entero con toques al azar llega a «fin» (estado %s, %d fotogramas)" % [m.estado, f])
