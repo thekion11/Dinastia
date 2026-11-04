@@ -50,6 +50,7 @@ func _probar() -> void:
 			var jj := cc.jugador(mm)
 			var antes := int(jj.atributos["tir"])
 			cc.entrenar(mm)
+			mm.semana += 1   ## (4-11) el entreno es UNA vez por semana
 			if int(jj.atributos["tir"]) > antes:
 				mejoras[k] += 1
 			jj.atributos["tir"] = antes

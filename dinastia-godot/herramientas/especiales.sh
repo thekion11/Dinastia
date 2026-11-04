@@ -117,6 +117,8 @@ pasa "igualdad del motor con usuario" "godot --headless --path . res://pruebas/i
 pasa "motor jugable (unidad)" "godot --headless --path . res://pruebas/prueba_motor_jugable.tscn" "FIN MOTOR. 0 fallos"
 # 5c. Movimiento suave y vida de la ciudad (27-10, orden del líder: que el tirón de los vehículos no vuelva a romperse sin que se note; ~1 min)
 pasa "tráfico, metro y bus suaves" "godot --headless --path . res://pruebas/ideas/pmov_suavidad_trafico.tscn" "FIN. 0 fallos"
+pasa "fugas en sesiones largas, partido táctil (auditoría 4: 24 partidos 3D jugados, abandonados, en pausa y cerrados con atrás: nodos, objetos, memoria, señales, voces)" "godot --headless --path . res://pruebas/auditoria_fugas_limite.tscn" "FIN. 0 fallos"
+pasa "guardado antes y después del partido de la carrera, partidos abandonados, carrera del jugador (auditoría 4)" "godot --headless --path . res://pruebas/auditoria_guardado_partido_limite.tscn" "FIN. 0 fallos"
 pasa "fotogramas malos al límite (auditoría 4: pasos grandes, 5 FPS y tirones = mismo estado que a 60 FPS, repetición con cambio)" "godot --headless --path . res://pruebas/auditoria_fps_malos_limite.tscn" "FIN. 0 fallos"
 pasa "reglas del partido al límite (auditoría 4: 7 y 6 jugadores, lesionado sin cambios, portero lesionado, cambio en tanda y descanso, banco vacío)" "godot --headless --path . res://pruebas/auditoria_reglas_3d_limite.tscn" "FIN. 0 fallos"
 pasa "atrás en el tutorial y el prólogo, música en segundo plano (auditoría 4, menú táctil)" "godot --headless --path . res://pruebas/auditoria_atras_pantallas_limite.tscn" "FIN. 0 fallos"
