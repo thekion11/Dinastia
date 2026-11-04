@@ -366,10 +366,10 @@ func _mover_moral(j: Jugador, d: int) -> void:
 	j.cambiar_moral(d, "Vida del vestuario")
 
 func ansiedad(j: Jugador) -> int:
-	return int(mente(j)["ansiedad"])
+	return int((_mente[j.id] if _mente.has(j.id) else _ficha_inicial(j))["ansiedad"])
 
 func confianza(j: Jugador) -> int:
-	return int(mente(j)["confianza"])
+	return int((_mente[j.id] if _mente.has(j.id) else _ficha_inicial(j))["confianza"])
 
 # ---------------------------------------------------------------------------
 #  2 · LA CABEZA
@@ -381,22 +381,24 @@ func confianza(j: Jugador) -> int:
 ## confianza de salida.
 func mente(j: Jugador) -> Dictionary:
 	if not _mente.has(j.id):
-		var ansiedad := Azar.ent(4, 34)
-		if j.edad < 20:
-			ansiedad += 10
-		if j.rasgo == "fragil":
-			ansiedad += 8
-		var confianza := Azar.ent(45, 80)
-		if j.rasgo == "lider":
-			confianza += 10
-		_mente[j.id] = {
-			"ansiedad": clampi(ansiedad, 0, 100),
-			"confianza": clampi(confianza, 0, 100),
-			"terapia": 0,
-			"descanso": 0,
-			"baja": 0,
-		}
+		_mente[j.id] = _ficha_inicial(j)
 	return _mente[j.id]
+
+## A4-GES-003 (4-11): la ficha inicial ya NO sale de `Azar`, sino de un hash del jugador (mismos rangos del HTML). Antes, solo
+## con LEER la ansiedad de un fichaje nuevo (al cargar, `aplicar_bonificadores`) se creaba su ficha gastando números del azar
+## compartido: la partida cargada divergía de la guardada. Leer (`ansiedad`/`confianza`) ya no crea fichas.
+func _ficha_inicial(j: Jugador) -> Dictionary:
+	var h := absi(hash("mente|" + j.id))
+	var ansiedad := 4 + h % 31
+	if j.edad < 20:
+		ansiedad += 10
+	if j.rasgo == "fragil":
+		ansiedad += 8
+	var confianza := 45 + (h / 31) % 36
+	if j.rasgo == "lider":
+		confianza += 10
+	return {"ansiedad": clampi(ansiedad, 0, 100), "confianza": clampi(confianza, 0, 100), "terapia": 0, "descanso": 0, "baja": 0}
+
 func _mover_ansiedad(j: Jugador, d: int) -> void:
 	var f := mente(j)
 	f["ansiedad"] = clampi(int(f["ansiedad"]) + d, 0, 100)

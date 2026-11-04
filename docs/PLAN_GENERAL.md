@@ -21,10 +21,9 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - Lo que espera al DUEÑO: (1) probar en el teléfono el APK de `main` (Actions → «Compilar y probar Dinastia» → android) y pasar el informe de
   Ajustes → «Prueba de rendimiento» (barrido del estadio al 35/50/70/100 %) para ajustar MÍNIMA a 60 FPS; (2) nota 1-100 a las pasadas visuales
   de la ciudad 1-3 (`04_auditorias/pasada_ciudad_{1,2,3}_2026-11-04.md`); (3) matas de hierba del Drive en el césped de las casas: ¿más juntas o
-  así?; (4) recalibrar los remates del partido simulado y la «segunda amarilla» por temporada (§0); (5) publicar parches: Release llamada
+  así?; (4) recalibrar los remates del partido simulado y las goleadas entre divisiones (§0); (5) publicar parches: Release llamada
   `parche-<versión>-<escritorio|android>` con el `parche_<versión>.pck` que genera «Actualizar Dinastia (parche)».
-- Fallos abiertos: ver «FALLOS DETECTADOS» (F-004 rutas rotas en 3 pruebas viejas; F-007 269 frases solo en pl/tr; F-008 banco_inicio depende
-  de user:// limpio, mitigado al limpiar el banco guardado).
+- Fallos abiertos: ver `docs/04_auditorias/MEGA_AUDITORIA_4/reglas_y_codigo.md` (A4-REGLAS-001 y 005 esperan decisión del dueño).
 
 
 - (2-11) SIGUIENTE PASO DE CARGA (meta del dueño: ≤5 s en móvil): hecha la carga diferida (hasta ver la ciudad 7,2→3,5 s; ciudad entera 5,7→1,5 s en servidor). Falta: STREAMING POR CERCANÍA en móvil (idea del dueño: no construir los bloques lejanos hasta acercarse; PRIMEROS menor y límite de vista), diferir túnel/sombra del estadio (~1,3 s) y que el .so de Android llegue a `bin_nativo/` (dueño/CI, M-353).
@@ -119,12 +118,8 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - Líder: rendimiento móvil (barrido de resolución en la prueba de rendimiento; MÍNIMA hasta 60 FPS con los datos del teléfono del dueño)
   y pasar la rama a `main` (PR #120, el dueño dijo SÍ el 4-11) cuando el CI esté verde.
 
-## FALLOS DETECTADOS (ronda de búsqueda continua; solo se registran, se corrigen aparte)
-- [F-004] (4-11) Rutas `res://` rotas en pruebas: `pruebas/probar_foto_real.gd` y `pruebas/ver_pieza_ropa.gd` cargan `assets/characters/quaternius/ropa_temp/Male_Peasant_Body.gltf` (no existe); `pruebas/captura_viento_arboles.gd` lee `pruebas/capturas/viento_arboles_a.png` (carpeta borrada el 27-10). (Revalidar sobre la rama viva.)
-- [F-007] (4-11, ronda 4) `dinastia-godot/datos/idiomas_extra.json`: `pl` y `tr` tienen 7.439 claves y `en`, `pt`, `fr`, `it`, `de`, `ca` solo 7.170: faltan 269 frases (p. ej. «ACCESIBILIDAD», «ACERCA DE», «A QUIÉN CEDER», «AL MÁXIMO») en 6 de los 9 idiomas, que en esos idiomas saldrán en español. Reproducir: contar claves por idioma con `json.load` y `set(d['pl']) - set(d['en'])`. Arreglo: `sumar_traducciones.py` (regla 5 de CLAUDE.md).
-- [F-008] (4-11, ronda 5) `pruebas/banco_inicio.tscn` (línea de `herramientas/especiales.sh:117`) depende de que NO haya partidas guardadas: con una carpeta `user://partidas` ya existente (la deja otra especial o haber abierto el juego) da «FALLO sin guardado, _hay_partida() da false». Reproducir: `godot --headless --path . res://pruebas/banco_inicio.tscn` tras correr cualquier otra prueba (falla) y con `XDG_DATA_HOME=$(mktemp -d)` (pasa, 0 fallos). `banco.sh` aísla `user://` por proceso; `especiales.sh` no: la prueba debería borrar/aislar su guardado.
-- Cierre de la sesión de búsqueda (4-11, orden del dueño): banco.sh «FIN. 0 fallos»; `especiales.sh todo` cortado tras 166 pruebas OK (solo `banco_inicio` = F-008; la norma de 450 líneas ya pasa en main). Sin correr: las pruebas largas finales. Para reanudar: `herramientas/especiales.sh todo` con `XDG_DATA_HOME` limpio.
-- Descartados (4-11): F-002 (el BOM no estorba: Godot 4.7.2 parsea ambos JSON); por el líder: F-001 (la norma se comprueba con `python3 herramientas/revisar_lineas.py --todos` desde la raíz) y F-003 (`addons/` y `terceros/` no cuentan).
+## FALLOS DETECTADOS
+Los hallazgos de la auditoría viven en `docs/04_auditorias/MEGA_AUDITORIA_4/*.md` (uno por área); aquí solo lo que espera al dueño.
 
 ## 0. Lo que espera una decisión tuya (lista corta)
 
@@ -139,7 +134,8 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 - **(4-11, bancos fase 2) Recalibrar los remates del partido SIMULADO**: da 10 remates, 5,6 a puerta y 2,73 goles por partido con un 27 % de gol
   por remate (real ~25 remates, ~8,5 a puerta, ~11 %), así que el portero para el 51 % (real 60-80 %). Arreglarlo = más llegadas con menos
   conversión (`Balance.BASE_ATAQUE`/`CONVERSION`/`R_ATAJADA`), manteniendo 2,7 goles: cambian las estadísticas de todos los partidos y la huella
-  del mundo. ¿Se hace? (el banco `partido_porteros` vigila que no empeore). Y la «segunda amarilla» contada por temporada (`partido_reglas`).
+  del mundo. ¿Se hace? (el banco `partido_porteros` vigila que no empeore). Además (A4-PAR-L02) el mejor club (media 71) contra el peor (48)
+  promedia 7,7 goles y llega a 15-0 (`pruebas/ideas/a4_partido_cruzado.tscn`): el cociente de `_probabilidad` pesa demasiado entre divisiones.
 - Solo tuyo, sin decisión de diseño: FPS en hardware real, builds, keystore (cambiar contraseña), licencias, derechos de imagen, música y voces, binarios al Drive (§1).
 
 ## 1. Lunes 26-10 — del dueño

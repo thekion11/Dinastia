@@ -66,6 +66,8 @@ pasa "contador de FPS" "godot --headless --path . res://pruebas/prueba_contador_
 pasa "dominadas" "godot --headless --path . res://pruebas/prueba_dominadas.tscn" "DOMINADAS: 0 fallos"
 pasa "minijuego retro 5v5" "godot --headless --path . res://pruebas/ideas/m5_retro5v5.tscn" "FIN. 0 fallos"
 pasa "barrida, saque de mano, caídas y bloqueos" "godot --headless --path . res://pruebas/ideas/p4_saque_barrida.tscn" "FIN. 0 fallos"
+pasa "A4 cruzado: partido simulado con equipos absurdos y tarjetas reales" "godot --headless --path . res://pruebas/ideas/a4_partido_cruzado.tscn" "FIN. 0 fallos"
+pasa "A4 gestión al límite (8 temporadas, guardado exacto, absurdos)" "godot --headless --path . res://pruebas/ideas/a4_gestion_limite.tscn" "FIN. 0 fallos"
 pasa "fallos de League-Soccer (posesión, menos de siete, libres)" "godot --headless --path . res://pruebas/ideas/fallos_terceros.tscn" "FIN. 0 fallos"
 pasa "la pizarra se nota (simulado y 3D)" "godot --headless --path . res://pruebas/ideas/j4_pizarra.tscn" "FIN. 0 fallos"
 pasa "el partido simulado tiene vida" "godot --headless --path . res://pruebas/ideas/j4_partido_vivo.tscn" "FIN. 0 fallos"
@@ -117,7 +119,7 @@ pasa "HUD y cámara del partido en el móvil (mide mm de letra y distancia de c�
 #     lanzaba (ni banco, ni especiales, ni CI ni documentos); se corrieron una por una y las que pasan quedan aquí. Cada una cuesta ~10 s
 #     (casi todo es el arranque de Godot): en el CI se reparten entre las partes de `ESPECIALES_PARTE`. `ESPECIALES_SOLO=reutilizadas` corre solo este bloque.
 BLOQUE=reutilizadas
-pasa "banco_inicio" "godot --headless --path . res://pruebas/banco_inicio.tscn" "(^|[^0-9])0 fallos"
+pasa "banco_inicio" "XDG_DATA_HOME=\$(mktemp -d) godot --headless --path . res://pruebas/banco_inicio.tscn" "(^|[^0-9])0 fallos"
 pasa "bug_semilla" "godot --headless --path . res://pruebas/ideas/bug_semilla.tscn" "(^|[^0-9])0 fallos"
 pasa "cierre_anio_deudas" "godot --headless --path . res://pruebas/ideas/cierre_anio_deudas.tscn" "(^|[^0-9])0 fallos"
 pasa "clau_descenso_entreno" "godot --headless --path . res://pruebas/ideas/clau_descenso_entreno.tscn" "(^|[^0-9])0 fallos"

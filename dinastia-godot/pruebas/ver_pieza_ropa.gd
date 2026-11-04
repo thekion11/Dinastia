@@ -8,6 +8,10 @@ var _idx := 0
 var _frame := 0
 
 func _ready() -> void:
+	if not ResourceLoader.exists("res://assets/characters/quaternius/ropa_temp/Male_Peasant_Body.gltf"):
+		print("OMITIDA: falta ropa_temp/ (experimento viejo, sin los recursos temporales)")
+		get_tree().quit()
+		return
 	var amb := WorldEnvironment.new()
 	var ent := Environment.new()
 	ent.background_mode = Environment.BG_COLOR
