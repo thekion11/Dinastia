@@ -7168,7 +7168,8 @@
   "Tamaño de los botones": "Button size",
   "Opacidad de los botones": "Button opacity",
   "Mod": "Mod",
-  "Resolución del 3D en Media: %d %%": "3D resolution in Medium: %d %%"
+  "Resolución del 3D en Media: %d %%": "3D resolution in Medium: %d %%",
+  "quien ya salió no puede volver a entrar": "a player who has come off cannot come back on"
  },
  "pt": {
   "Historia": "História",
@@ -14339,7 +14340,8 @@
   "Tamaño de los botones": "Tamanho dos botões",
   "Opacidad de los botones": "Opacidade dos botões",
   "Mod": "Mod",
-  "Resolución del 3D en Media: %d %%": "Resolução do 3D no Médio: %d %%"
+  "Resolución del 3D en Media: %d %%": "Resolução do 3D no Médio: %d %%",
+  "quien ya salió no puede volver a entrar": "quem já saiu não pode voltar a entrar"
  },
  "patrones": [
   [
@@ -27364,7 +27366,8 @@
   "Tamaño de los botones": "Taille des boutons",
   "Opacidad de los botones": "Opacité des boutons",
   "Mod": "Mod",
-  "Resolución del 3D en Media: %d %%": "Résolution de la 3D en Moyen : %d %%"
+  "Resolución del 3D en Media: %d %%": "Résolution de la 3D en Moyen : %d %%",
+  "quien ya salió no puede volver a entrar": "un joueur remplacé ne peut pas revenir"
  },
  "it": {
   "Historia": "Storia",
@@ -34535,7 +34538,8 @@
   "Tamaño de los botones": "Dimensione dei pulsanti",
   "Opacidad de los botones": "Opacità dei pulsanti",
   "Mod": "Mod",
-  "Resolución del 3D en Media: %d %%": "Risoluzione del 3D al Medio: %d %%"
+  "Resolución del 3D en Media: %d %%": "Risoluzione del 3D al Medio: %d %%",
+  "quien ya salió no puede volver a entrar": "chi è già uscito non può rientrare"
  },
  "de": {
   "Historia": "Geschichte",
@@ -41706,7 +41710,8 @@
   "Tamaño de los botones": "Tastengröße",
   "Opacidad de los botones": "Tastentransparenz",
   "Mod": "Mod",
-  "Resolución del 3D en Media: %d %%": "3D-Auflösung im Mittel: %d %%"
+  "Resolución del 3D en Media: %d %%": "3D-Auflösung im Mittel: %d %%",
+  "quien ya salió no puede volver a entrar": "wer ausgewechselt wurde, darf nicht wieder rein"
  },
  "ca": {
   "Historia": "Història",
@@ -48877,7 +48882,8 @@
   "Tamaño de los botones": "Mida dels botons",
   "Opacidad de los botones": "Opacitat dels botons",
   "Mod": "Mod",
-  "Resolución del 3D en Media: %d %%": "Resolució del 3D en Mitjà: %d %%"
+  "Resolución del 3D en Media: %d %%": "Resolució del 3D en Mitjà: %d %%",
+  "quien ya salió no puede volver a entrar": "qui ja ha sortit no pot tornar a entrar"
  },
  "pl": {
   "Club": "Klub",
@@ -56317,7 +56323,8 @@
   "Tamaño de los botones": "Rozmiar przycisków",
   "Opacidad de los botones": "Przezroczystość przycisków",
   "Mod": "Mod",
-  "Resolución del 3D en Media: %d %%": "Rozdzielczość 3D w Średnim: %d %%"
+  "Resolución del 3D en Media: %d %%": "Rozdzielczość 3D w Średnim: %d %%",
+  "quien ya salió no puede volver a entrar": "zawodnik, który zszedł, nie może wrócić na boisko"
  },
  "tr": {
   "Club": "Kulüp",
@@ -63757,6 +63764,7 @@
   "Tamaño de los botones": "Düğme boyutu",
   "Opacidad de los botones": "Düğme opaklığı",
   "Mod": "Mod",
-  "Resolución del 3D en Media: %d %%": "Orta'da 3D çözünürlüğü: %d %%"
+  "Resolución del 3D en Media: %d %%": "Orta'da 3D çözünürlüğü: %d %%",
+  "quien ya salió no puede volver a entrar": "oyundan çıkan oyuncu tekrar giremez"
  }
 }
