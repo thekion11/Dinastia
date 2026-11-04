@@ -165,7 +165,7 @@ func radio_stick() -> float:
 	return RADIO_STICK * escala()
 
 ## Márgenes por muescas y esquinas redondeadas: x = izquierda, y = derecha (en píxeles del lienzo). 0 fuera de un móvil.
-func margenes() -> Vector2:
+func margenes(ancho_lienzo := 0.0) -> Vector2:
 	if not OS.has_feature("mobile"):
 		return Vector2.ZERO
 	var vent := ventana()
@@ -173,7 +173,7 @@ func margenes() -> Vector2:
 	var pant := DisplayServer.screen_get_size()
 	if vent.x <= 0 or pant.x <= 0 or seg.size.x <= 0:
 		return Vector2.ZERO
-	var k := size.x / float(vent.x)
+	var k := (ancho_lienzo if ancho_lienzo > 0.0 else size.x) / float(vent.x)
 	return Vector2(maxf(0.0, float(seg.position.x)), maxf(0.0, float(pant.x - seg.position.x - seg.size.x))) * k
 
 ## Radio de un botón en este tamaño de pantalla.
