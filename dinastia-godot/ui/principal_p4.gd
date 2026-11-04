@@ -45,8 +45,29 @@ func _perezoso(cont: Control, pintar: Callable) -> void:
 	if pintar_todo or cont == null or not cont.is_inside_tree() or cont.is_visible_in_tree():
 		_pendientes.erase(cont)
 		pintar.call()
+		if cont != null and soltar_ocultos_activo():
+			_pintados[cont] = pintar
 	else:
 		_pendientes[cont] = pintar
+
+## (4-11-2026, A4-INT-R01) En MÍNIMA y en el móvil lo pintado de una pestaña que ya no se ve se SUELTA (los nodos y la memoria vuelven):
+## quedaba construido para siempre (11 pantallas visitadas = 5.700 nodos, +390 MB). Al volver a verla se repinta por la vía de siempre (`_pendientes`).
+func soltar_ocultos_activo() -> bool:
+	return Calidad.elegida == Calidad.MINIMO or PantallaMovil.dpi() > 0.0
+
+func _soltar_ocultos() -> void:
+	if not visible or not is_inside_tree():
+		return
+	for cont: Variant in _pintados.keys():
+		if not is_instance_valid(cont):
+			_pintados.erase(cont)
+			continue
+		var ctl := cont as Control
+		if ctl.is_inside_tree() and not ctl.is_visible_in_tree() and ctl.get_child_count() > 0:
+			var pintar: Callable = _pintados[cont]
+			_pintados.erase(cont)
+			_limpiar(ctl)
+			_pendientes[cont] = pintar
 
 ## TODA la interfaz pasa por aqui, y por eso los dos ajustes de accesibilidad
 ## -el tamano del texto y la paleta para daltonismo- se aplican en este punto y
