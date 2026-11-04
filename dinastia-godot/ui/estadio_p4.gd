@@ -186,6 +186,15 @@ func _a_la_lesion(j: Jugador, semanas: int, minuto: int) -> void:
 		"jugadorId": j.id,
 	})
 
+## Se lesionó y no se le pudo cambiar (sin cambios o sin suplente): sale del campo y su equipo sigue con uno menos (en el 3D, como una baja sin tarjeta).
+func _a_la_baja(j: Jugador, _minuto: int) -> void:
+	if _motor == null:
+		return
+	for p: Dictionary in _motor.jugadores:
+		if String(p["id"]) == j.id:
+			_motor._expulsar(p)
+			return
+
 func _a_la_decision_arbitral(texto: String, minuto: int) -> void:
 	if _juego == null:
 		return

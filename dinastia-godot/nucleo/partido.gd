@@ -16,7 +16,7 @@ func simular_minuto() -> void:
 		var sus_goles: int = goles_visita if soy_local else goles_local
 		if chequear_invasion(_hinchada_animo, soy_local, mis_goles < sus_goles):
 			invasion_de_campo.emit(minuto)
-	minuto += 1
+	minuto += 1; PartidoLesiones.atender(self)   ## el lesionado sale del campo (cambio o con uno menos)
 	## LOS PLANES SEGÚN EL MARCADOR. A partir del minuto 60 el entrenador aplica
 	## lo que dejó preparado: ir a por el partido si va perdiendo, cerrarlo si va
 	## ganando. Va en el 60 y no antes porque cambiar el plan en el 20 no es un

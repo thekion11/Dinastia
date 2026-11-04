@@ -28,6 +28,7 @@ signal tarjeta(jugador: Jugador, roja: bool, minuto: int)
 signal lesion(jugador: Jugador, semanas: int, minuto: int)
 signal minuto_jugado(minuto: int)
 signal cambio_hecho(sale: Jugador, entra: Jugador, minuto: int)
+signal baja_sin_cambio(jugador: Jugador, minuto: int)   ## un lesionado sale sin cambio posible: el equipo sigue con uno menos (`PartidoLesiones`)
 signal terminado(goles_local: int, goles_visita: int)
 ## Una llegada que no fue gol: "atajada" (la para el arquero), "poste" (pega en
 ## el palo) o "fallo" (la manda afuera). En el HTML esto ya narraba y sonaba
@@ -369,6 +370,7 @@ func _media_linea(once: Array[Jugador], grupo: String) -> float:
 ## ataque, 0.5/0.3/0.2 en defensa) son los del HTML.
 func fuerza(once: Array[Jugador], c: Club) -> Dictionary:
 	var por := _media_linea(once, "POR")
+	if por <= 0.0: por = 35.0   ## sin portero en el once (lesionado sin cambios): un jugador de campo bajo los palos
 	var defe := _media_linea(once, "DEF")
 	var med := _media_linea(once, "MED")
 	var del := _media_linea(once, "DEL")
