@@ -153,7 +153,7 @@ func build(d: Dictionary) -> void:
 	await _marca("_suelo")
 	_calles()
 	await _marca("_calles")
-	_estadio()
+	await _estadio()
 	await _marca("_estadio")
 	_campos()
 	await _marca("_campos")
@@ -184,14 +184,17 @@ func build(d: Dictionary) -> void:
 	expansion = CiudadExpansion.new(self)
 	await expansion.construir()
 	await _marca("expansion.construir")
-	_karting()
-	await _marca("_karting")
+	var tardio := diferir   ## (2-11) prólogo: lo que no se ve en los primeros segundos se construye DESPUÉS (`_resto`)
+	if not tardio:
+		await _karting()
+		await _marca("_karting")
 	_arbolado()
 	await _marca("_arbolado")
 	_horizonte()
 	await _marca("_horizonte")
-	_trafico()
-	await _marca("_trafico")
+	if not tardio:
+		_trafico()
+		await _marca("_trafico")
 	## B7: el día de partido, el ánimo del barrio y los rótulos flotantes.
 	if bool(datos.get("dia_partido", false)):
 		_dia_de_partido()
@@ -213,13 +216,56 @@ func build(d: Dictionary) -> void:
 			if m4 is ArrayMesh and Optimizar._tris(m4) > 1500:
 				nombres[m4.resource_name] = int(nombres.get(m4.resource_name, 0)) + 1
 		Registro.depurar("TORRES", "vestidas %d  mallas pesadas: %s" % [n_torres, str(nombres)])
+	if tardio:
+		completa = false
+		_resto()   ## sin esperar: sigue entre fotogramas mientras el jugador ya ve la ciudad
+	else:
+		await _optimizar()
+
+## LO QUE SE DIFIERE (2-11-2026, queja del dueño: «se demora demasiado»; meta 5 s): con `diferir` (el prólogo) la ciudad se muestra en cuanto está lo que se ve de
+## entrada y esto se construye entre fotogramas mientras dura la presentación: el karting, el mobiliario urbano, el tráfico y las pasadas de optimización. El
+## resultado final es el mismo (mismas piezas, mismo orden de optimización: va al final). `completa` / `resto_listo` avisan a quien necesite la ciudad entera
+## (el recorrido a pie necesita las colisiones y el tráfico).
+signal resto_listo
+var completa := true
+
+func _resto() -> void:
+	por_partes = true
+	_t_respiro = Time.get_ticks_usec()
+	_t_marca = _t_respiro
+	await get_tree().process_frame
+	por_partes = true   ## (3-11) quien llamó a `build` lo apaga al volver: sin esto todo lo diferido corría en UN fotograma (~3 s en el servidor, ~30 s en un teléfono)
+	_t_respiro = Time.get_ticks_usec()
+	await ExpansionTardia.precargar_vehiculos(self)
+	await _karting()
+	await _marca("_karting")
+	_trafico()
+	await _marca("_trafico")
+	await ExpansionTardia.bloques_restantes(expansion)
+	await ExpansionTardia.mobiliario(expansion)
+	if not modo_prologo:
+		ExpansionTardia.afueras(expansion)
+		await _marca("exp.afueras_tardio")
+	expansion._volcar_lotes()
+	vestir_todas_las_torres()   ## las torres de las manzanas tardías (las de antes ya llevan su material: no se repiten)
+	await _marca("exp_lotes_tardio")
+	await _optimizar()
+	completa = true
+	if not modo_prologo:
+		diferir = false
+	resto_listo.emit()
+
+## Las pasadas de optimización y las colisiones.
+func _optimizar() -> void:
 	if OS.get_environment("SIN_OPTIMIZAR") == "":
 		Optimizar.primitivas(self)
 		Optimizar.trocear(self)
 		Optimizar.butacas_livianas(self, true)
 		Optimizar.distancias(self)
-		if modo_prologo:
-			OptimizarGrada.limitar_vista(self, 380.0)   ## prólogo (2-11): nada pequeño se dibuja a más de 380 m
+		if modo_prologo:   ## (sigue puesto hasta que `completa`: el prólogo lo apaga al acabar `_resto`)
+			OptimizarGrada.limitar_vista(self, 380.0)
+		elif EscalaMovil.es_movil() or Calidad.motor_ligero or OS.get_environment("MOVIL_SIM") != "":   ## móvil / motor ligero: no se dibuja lo pequeño a más de 450 m
+			OptimizarGrada.limitar_vista(self, 450.0)   ## prólogo (2-11): nada pequeño se dibuja a más de 380 m
 		await _marca("despejar")
 		## (30-10-2026: aquí se repetían primitivas, butacas livianas y distancias -una copia de
 		## una fusión vieja-; la segunda pasada no cambiaba nada de la escena y costaba ~150 ms.)
@@ -234,6 +280,7 @@ func build(d: Dictionary) -> void:
 		await _marca("oclusores")
 		Optimizar.agrupar(self)
 		await _marca("opt_agrupar")
+		ZonasVista.montar(self)
 
 ## `noche` va de 0 (pleno día) a 1 (noche cerrada). Lo llama el ciclo del sol
 ## de `VistaCiudad` en cada fotograma. Las farolas se encienden con la luz, y
@@ -253,7 +300,7 @@ func encender_luces(noche: float) -> void:
 		if expansion != null and expansion.textura_luz != null:   ## apagón por sector (§2.2g)
 			mt.set_shader_parameter("luz_sectores", expansion.textura_luz)
 			mt.set_shader_parameter("usa_sectores", true)
-	StadiumBuilder.encender_conos(f)
+	load("res://visor/stadium_builder.gd").encender_conos(f)
 	for l in _farolas_luz:
 		if is_instance_valid(l):
 			## 5,4 y no 2,4: se midió que a 2,4 las farolas SÍ estaban

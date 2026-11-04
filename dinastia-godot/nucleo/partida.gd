@@ -296,7 +296,7 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	m.necesidades.desde_dic(datos.get("necesidades", {}))
 	m.citas.desde_dic(datos.get("citas", {}))
 	if not (datos.get("redes_ciudad", {}) as Dictionary).is_empty():
-		m.redes_ciudad = RedesCiudad.new(int(datos["redes_ciudad"].get("semilla", 1)))
+		m.redes_ciudad = CargaCiudad.de("RedesCiudad").new(int(datos["redes_ciudad"].get("semilla", 1)))
 		m.redes_ciudad.desde_dic(datos["redes_ciudad"])
 	m.afinidad.desde_dic(datos.get("afinidad", {}))
 	m.imprevistos.desde_dic(datos.get("imprevistos", {}))
@@ -334,6 +334,9 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 		if n_guardadas.has(k):
 			m.normas[k] = bool(n_guardadas[k])
 	_restaurar_lo_tuyo(datos, m)
+	## (4-11, banco de guardado) `tomar_el_mando` (dentro de `_restaurar_lo_tuyo`) vuelve a sembrar las citas de la semana:
+	## sin esto, cada carga añadía citas repetidas y movía su contador. Las guardadas mandan.
+	m.citas.desde_dic(datos.get("citas", {}))
 	## La Carrera de Jugador va aparte: no tiene club de entrenador, y
 	## `_restaurar_lo_tuyo()` sale en seco sin él.
 	var cj: Dictionary = datos.get("carrera_jugador", {})
@@ -368,12 +371,14 @@ static func _seq_de(id: String, prefijo: String, defecto: int) -> int:
 	return int(n) if id.begins_with(prefijo) and n.is_valid_int() else defecto
 
 static func cargar(nombre: String) -> Mundo:
+	GuardadoSegundoPlano.esperar()   ## (3-11) no leer un archivo mientras el autoguardado lo está escribiendo
 	var t0 := Time.get_ticks_msec()
 	var m := desde_instantanea(_leer_con_respaldo(ruta_de(nombre)))
 	PartidaArchivo.ms_carga = Time.get_ticks_msec() - t0
 	return m
 
 static func borrar(nombre: String) -> void:
+	_cabeceras.erase(ruta_de(nombre))
 	for suf: String in PartidaArchivo.sufijos():
 		if FileAccess.file_exists(ruta_de(nombre) + suf):
 			DirAccess.remove_absolute(ruta_de(nombre) + suf)

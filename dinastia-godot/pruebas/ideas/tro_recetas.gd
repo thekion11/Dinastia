@@ -76,7 +76,7 @@ func _probar_trofeos() -> void:
 	var raiz := Node3D.new()
 	add_child(raiz)
 	var hitos := [{"anio": 1999, "titulo": "Liga"}, {"anio": 2001, "titulo": "Mundial de Clubes"}]
-	var lote := SalasClub.museo(raiz, Rect2(0.0, 0.0, 3.6, 6.0), 0.0, Color.RED, Color.WHITE, 2, 4, hitos, "ESP")
+	var lote = SalasClub.museo(raiz, Rect2(0.0, 0.0, 3.6, 6.0), 0.0, Color.RED, Color.WHITE, 2, 4, hitos, "ESP")
 	_comprobar(lote != null, "el museo se monta con las copas de receta")
 	var capa := CanvasLayer.new()
 	add_child(capa)

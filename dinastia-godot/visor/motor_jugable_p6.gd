@@ -1,8 +1,7 @@
 extends "res://visor/motor_jugable_p5.gd"
 ## [Capa 6/12 de `motor_jugable.gd`] _patear, _companero_cerca, _cabezazo, _entrada, _disputas, _punto_de_recepcion … (+11)
 
-## Patea el balón hacia `destino` con una velocidad horizontal `vh` y la
-## parábola que haga falta para llegar ahí (más `loft` de altura extra).
+## Patea el balón hacia `destino` con una velocidad horizontal `vh` y la parábola que haga falta para llegar ahí (más `loft` de altura extra).
 ## El saque de mano: el balón sigue en la mano del portero hasta `SUELTA_MANO` s después (el clip carga el brazo antes de lanzar).
 const SUELTA_MANO := 0.45
 var _en_mano: Dictionary = {}
@@ -36,7 +35,7 @@ func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 
 	elif destino.y > R + 0.05:
 		vy = ((destino.y - b.y) + 0.5 * G * tv * tv) / tv
 	## El arrastre frena: se compensa un poco para que llegue.
-	var h := d / dist * vh * (1.0 + ARRASTRE * tv * 0.6)
+	var h := d / dist * vh * compensa_arrastre(vh, tv)
 	if vy <= 0.0:
 		h = d / dist * vh
 	vel_balon = Vector3(h.x, vy, h.z)
@@ -273,10 +272,8 @@ func _aplicar_fase() -> void:
 	_jugada["destinos"] = dest
 	_jugada["pase_a"] = String(fase.get("pase_a", ""))
 
-## LAS JUGADAS PREHECHAS COMO GUÍA. Cuando un equipo tiene el balón en campo
-## rival, elige una del catálogo y sus fases le dicen a cada puesto adónde
-## desmarcarse y a quién conviene pasarla. El catálogo está escrito para un
-## ataque hacia -Z; para el que ataca hacia +Z se da la vuelta.
+## LAS JUGADAS PREHECHAS COMO GUÍA. Cuando un equipo tiene el balón en campo rival, elige una del catálogo y sus fases le dicen a cada
+## puesto adónde desmarcarse y a quién conviene pasarla. El catálogo está escrito para un ataque hacia -Z; para el que ataca hacia +Z se da la vuelta.
 func _guiar_jugada(delta: float) -> void:
 	var local := bool(poseedor["es_local"])
 	var d := dir_ataque(local)
@@ -322,9 +319,7 @@ func _adelantado(q: Dictionary, p: Dictionary) -> bool:
 	prof.sort()
 	return z > float(prof[prof.size() - 2]) + 0.3
 
-## El mejor pase: progresión hacia el arco, compañero libre y línea limpia.
-## Bonificaciones: el destinatario que marca la jugada prehecha, y tú si
-## pediste el balón.
+## El mejor pase: progresión hacia el arco, compañero libre y línea limpia. Bonificaciones: el destinatario que marca la jugada prehecha, y tú si pediste el balón.
 func _mejor_pase(p: Dictionary) -> Dictionary:
 	var yo := pos(p)
 	var d := dir_ataque(bool(p["es_local"]))
@@ -363,10 +358,12 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 
 func _rival_mas_cercano(p: Dictionary) -> Dictionary:
 	var mejor: Dictionary = {}
-	var md := 999.0
+	var md := 999.0 * 999.0
+	var yo := pos(p)
+	var local := bool(p["es_local"])
 	for q: Dictionary in jugadores:
-		if bool(q["es_local"]) != bool(p["es_local"]):
-			var d := pos(q).distance_to(pos(p))
+		if bool(q["es_local"]) != local:
+			var d := (q["node"] as Node3D).position.distance_squared_to(yo)
 			if d < md:
 				md = d
 				mejor = q
@@ -392,8 +389,7 @@ static func distancia_rodando(v0: float) -> float:
 	var c := ROCE_FIJO
 	return v0 / k - c / (k * k) * log(1.0 + k * v0 / c)
 
-## La velocidad para que un pase raso muera `sobra` metros después del
-## destino: el compañero lo recibe en carrera sin que se le pase de largo.
+## La velocidad para que un pase raso muera `sobra` metros después del destino: el compañero lo recibe en carrera sin que se le pase de largo.
 static func velocidad_para(dist: float, sobra := 2.5) -> float:
 	var lo := 1.0
 	var hi := 40.0
@@ -447,3 +443,7 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 		stats["pases"] += 1
 		_pase_usuario_vivo = true
 		_pase_usuario_de = p
+
+## Cuánto más rápido hay que lanzar para llegar con el tiempo previsto: el aire quita ≈ K·v²·t en el vuelo; tope +25 % (a más, el balón pasaría de 36 m/s y la sonda de física lo contaría como salto).
+static func compensa_arrastre(vh: float, tv: float) -> float:
+	return 1.0 / (1.0 - minf(ARRASTRE_CUAD * vh * tv, 0.2))

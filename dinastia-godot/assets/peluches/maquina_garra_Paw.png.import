@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b5jk50qyww0jg"
-path="res://.godot/imported/maquina_garra_Paw.png-871620945b40e23a8ad3823e4d857106.ctex"
+path.s3tc="res://.godot/imported/maquina_garra_Paw.png-871620945b40e23a8ad3823e4d857106.s3tc.ctex"
+path.etc2="res://.godot/imported/maquina_garra_Paw.png-871620945b40e23a8ad3823e4d857106.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "a3782523d4856329255f12f67f452136"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/peluches/maquina_garra_Paw.png"
-dest_files=["res://.godot/imported/maquina_garra_Paw.png-871620945b40e23a8ad3823e4d857106.ctex"]
+dest_files=["res://.godot/imported/maquina_garra_Paw.png-871620945b40e23a8ad3823e4d857106.s3tc.ctex", "res://.godot/imported/maquina_garra_Paw.png-871620945b40e23a8ad3823e4d857106.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

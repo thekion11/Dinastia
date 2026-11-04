@@ -3,7 +3,7 @@ extends "res://nucleo/mundo_p5_p2.gd"
 ## enfermería, entrenamiento, federación y plantel, continental y copa) y el guion `avanzar_semana`.
 
 ## (Fase 0 §7.2, 31-10) La partida se guardó al salir de la entrada con el prólogo 3D aún por hacer:
-## «Continuar» vuelve al prólogo (`VidaCiudad.arranque_3d` → "prologo").
+## «Continuar» vuelve al prólogo (`CargaCiudad.de("VidaCiudad").arranque_3d` → "prologo").
 var prologo_pendiente := false
 
 ## Avanza una semana: jornada, dinero, mercado y recuperación, en ese orden.

@@ -5,18 +5,18 @@ extends BaseIdea
 ## abierto = 1; un chip de otro bloque (barra de arriba o riel lateral) = 2; una pestaña de hub
 ## (⚽ 💰 de la cabecera o el enlace de la columna) = 2. Y cada atajo se pulsa de verdad.
 var _p: Principal
-## [tarea, pestaña, sección, acción del atajo]
+## [tarea, pestaña, sección]  (3-11: los atajos de teclado, ahora uno por menú y submenú, los prueba `ate_atajos_menus`)
 const TAREAS := [
-	["Ver el plantel", "Mi plantel", "", "dinastia_ir_plantel"],
-	["Poner el once", "Táctica", "", "dinastia_ir_tactica"],
-	["Entrenar", "Entrenar", "", "dinastia_ir_entrenar"],
-	["Fichar", "Mercado", "", "dinastia_ir_mercado"],
-	["Renovar", "Contratos", "", "dinastia_ir_contratos"],
-	["Mirar las cuentas", "Finanzas", "", "dinastia_ir_finanzas"],
-	["Ver el calendario", "Calendario", "", "dinastia_ir_calendario"],
-	["Leer el correo", "Correo", "", "dinastia_ir_correo"],
-	["Atender a la prensa", "Redes", "prensa", "dinastia_ir_prensa"],
-	["Volver al inicio", "Inicio", "", "dinastia_ir_inicio"],
+	["Ver el plantel", "Mi plantel", ""] ,
+	["Poner el once", "Táctica", ""] ,
+	["Entrenar", "Entrenar", ""] ,
+	["Fichar", "Mercado", ""] ,
+	["Renovar", "Contratos", ""] ,
+	["Mirar las cuentas", "Finanzas", ""] ,
+	["Ver el calendario", "Calendario", ""] ,
+	["Leer el correo", "Correo", ""] ,
+	["Atender a la prensa", "Redes", "prensa"] ,
+	["Volver al inicio", "Inicio", ""] ,
 ]
 
 func _ready() -> void:
@@ -40,15 +40,6 @@ func _ready() -> void:
 		caras.append("%s %d" % [t[0], c])
 		_comprobar(c <= 2, "«%s» a %d clic%s desde el inicio" % [t[0], c, "" if c == 1 else "s"])
 	_linea("  clics: " + ", ".join(caras))
-	for t: Array in TAREAS:
-		_p._ir_a_chip({"tab": "Glosario", "label": "Glosario"})
-		await get_tree().process_frame
-		var ev := _tecla(String(t[3]))
-		var hizo := AtajosCentrales.manejar(_p, ev)
-		await get_tree().process_frame
-		var titulo := _p._pestanas.get_tab_title(_p._pestanas.current_tab)
-		var ok := hizo and titulo == String(t[1]) and (String(t[2]) == "" or _p._seccion_activa({"tab": t[1], "secc": t[2]}))
-		_comprobar(ok, "la tecla %s lleva a «%s» (%s)" % [TeclasInterfaz.texto_de(String(t[3])), t[0], titulo])
 	## N pasa un día.
 	var dia_antes: int = _p.get("_dia_semana")
 	var sem_antes := _p.mundo.semana
@@ -59,16 +50,15 @@ func _ready() -> void:
 	await get_tree().process_frame
 	var b: LineEdit = _p.get("_buscador")
 	_comprobar(b.has_focus(), "F3 pone el cursor en el buscador")
-	_comprobar(not AtajosCentrales.manejar(_p, _tecla("dinastia_ir_plantel")), "con el cursor en un campo de texto, «2» se escribe y no salta de pestaña")
+	_comprobar(not AtajosCentrales.manejar(_p, _tecla("dinastia_menu_plantel")), "con el cursor en un campo de texto, la «P» se escribe y no abre el menú del plantel")
 	b.release_focus()
 	## Se reasignan como las demás teclas de la interfaz.
 	var f8 := InputEventKey.new()
 	f8.physical_keycode = KEY_F8
 	f8.pressed = true
-	TeclasInterfaz.reasignar("dinastia_ir_mercado", f8)
-	_p._ir_a_chip({"tab": "Glosario", "label": "Glosario"})
-	_comprobar(AtajosCentrales.manejar(_p, f8) and _p._pestanas.get_tab_title(_p._pestanas.current_tab) == "Mercado",
-		"reasignado a F8, el atajo del mercado responde a F8")
+	TeclasInterfaz.reasignar("dinastia_sub_dinero_mercado", f8)
+	_comprobar(AtajosCentrales.manejar(_p, f8) and String(_p._menu_lateral.pantalla_abierta.get_meta("id", "")) == "dinero",
+		"reasignado a F8, el atajo del mercado responde a F8 (abre el menú Dinero)")
 	TeclasInterfaz.restaurar()
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())

@@ -53,7 +53,7 @@ func _ready() -> void:
 		b.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var m := ShaderMaterial.new()
-		m.shader = SHADER
+		m.shader = AhorroMenu.shader(SHADER)
 		b.material = m
 		b.modulate.a = 0.0
 		add_child(b)
@@ -164,7 +164,7 @@ func poner_pais(p: String) -> void:
 
 ## El siguiente de los cinco (lo llama el reloj de 30 s; la prueba también).
 func avanzar() -> void:
-	var n := PaisDatos.monumentos(pais).size()
+	var n = CargaCiudad.de("PaisDatos").monumentos(pais).size()
 	if n == 0:
 		return
 	indice = (indice + 1) % n
@@ -172,7 +172,7 @@ func avanzar() -> void:
 	_mostrar()
 
 func monumento_actual() -> Array:
-	var lista := PaisDatos.monumentos(pais)
+	var lista = CargaCiudad.de("PaisDatos").monumentos(pais)
 	return lista[indice] if indice < lista.size() else []
 
 func segundos_para_el_siguiente() -> float:

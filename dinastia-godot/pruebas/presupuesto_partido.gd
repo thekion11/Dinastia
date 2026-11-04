@@ -7,13 +7,15 @@ extends Node
 const MARGEN := 1.15   ## lo que se mide más un 15 % es el techo que se escribe en el presupuesto
 ## categoría: [triángulos máx., llamadas de dibujo máx.]: lo medido el 28-10 DESPUÉS de las rebajas #1-#3 más un 15 % (ver `docs/04_auditorias/presupuesto_partido.md`). Bajan, no suben:
 ## quien suba un techo tiene que decir por qué en el doc. «estadio» INCLUYE a «publico» y «butacas» (son MultiMesh de las tribunas), así que las categorías no suman el total.
-## «extras», «cesped» y «balon» miden 0 o casi con la cámara del saque (fuera de cuadro o demasiado pequeños): sus techos son holguras, no medidas.
+## «extras» y «cesped» miden 0 o casi con la cámara del saque (fuera de cuadro o demasiado pequeños): sus techos son holguras, no medidas. «balon» NO: si el balón entra en cuadro cuesta
+## 2.400 triángulos y 1 llamada (medido el 3-11 con la ceremonia apagada, en un contenedor limpio) y si no entra mide 0; que entre depende del instante del saque y de lo rápida que vaya la máquina
+## (con llvmpipe, 6 FPS, entra; en la CI no), así que el techo es lo que cuesta CUANDO se ve (2.400 + 15 %), no una holgura que dependa del entorno.
 const PRESUPUESTO := {
 	"total": [1948324, 1408], "jugadores": [82076, 76], "publico": [884967, 53], "butacas": [724487, 14], "estadio": [1778760, 372],
-	"entorno": [159157, 943], "extras": [8000, 83], "cesped": [50, 10], "balon": [50, 4],
+	"entorno": [159157, 943], "extras": [8000, 83], "cesped": [50, 10], "balon": [2760, 4],
 }
-## Techo de memoria de vídeo del partido (M-347), en MB: medido 309 en 28-10 (eran 603 antes de compartir y reducir los ruidos).
-const TECHO_VRAM_MB := 380.0
+## Techo de memoria de vídeo del partido (M-347), en MB: medido 253 en 2-11 (309 en 28-10; 603 antes de compartir y reducir los ruidos).
+const TECHO_VRAM_MB := 300.0
 const CATEGORIAS := ["jugadores", "publico", "butacas", "estadio", "entorno", "extras", "cesped", "balon"]
 var _n := 0
 var _ui: CarreraJugadorUI
@@ -226,6 +228,6 @@ func _texturas_pesadas(raiz: Node) -> void:
 	var total := 0
 	for f: Array in filas:
 		total += int(f[0])
-	print("TEXTURAS en el árbol: %d, %.0f MB en total (leídas de la CPU); las %d más pesadas:" % [filas.size(), total / 1048576.0, mini(14, filas.size())])
-	for i in mini(14, filas.size()):
+	print("TEXTURAS en el árbol: %d, %.0f MB en total (leídas de la CPU); las %d más pesadas:" % [filas.size(), total / 1048576.0, mini(int(OS.get_environment("TEXTURAS")) if OS.get_environment("TEXTURAS").is_valid_int() and int(OS.get_environment("TEXTURAS")) > 1 else 14, filas.size())])
+	for i in mini(int(OS.get_environment("TEXTURAS")) if OS.get_environment("TEXTURAS").is_valid_int() and int(OS.get_environment("TEXTURAS")) > 1 else 14, filas.size()):
 		print("  %6.1f MB  %s" % [int(filas[i][0]) / 1048576.0, filas[i][1]])

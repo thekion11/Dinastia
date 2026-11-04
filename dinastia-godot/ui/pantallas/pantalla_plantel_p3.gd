@@ -267,6 +267,7 @@ func _pintar_partido(c: Club) -> void:
 	ta.text = Idiomas.t("LOS ONCES")
 	p._lista_partido.add_child(ta)
 	var g := GridContainer.new()
+	CebraRejilla.poner(g)
 	g.columns = 4
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 12)

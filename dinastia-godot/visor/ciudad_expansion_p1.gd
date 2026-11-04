@@ -298,6 +298,9 @@ var _casas_mat: ShaderMaterial   ## (§2.5) el material de las casas del kit: no
 ## césped) se juntan por material en un MultiMesh cada una. Eran miles de
 ## nodos; así son cuatro.
 var _lotes := {}
+## (28-10) Detalles de edificio (zócalo, cornisa, equipos, depósito): antes un nodo y una malla por caja;
+## ahora transformaciones por clave, volcadas en MultiMesh por celda en `_volcar_lotes_det`.
+var _lotes_det := {}
 
 func _init(builder: CityBuilder) -> void:
 	b = builder
@@ -410,3 +413,6 @@ func _armar_brazos() -> void:
 		_sumar_brazo(c, -d, float(t["ancho"]))
 	for p: Vector3 in cruces_semaforo:
 		_con_semaforo[clave_cruce(p)] = true
+
+var tardio_pendiente := false   ## el mobiliario urbano espera a `ExpansionTardia.mobiliario` (carga diferida)
+var bloques_diferidos: Array = []   ## manzanas que esperan a `ExpansionTardia.bloques_restantes` (carga diferida)

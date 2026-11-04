@@ -403,7 +403,7 @@ func _montar_jugable() -> void:
 
 func _paso_jugable(t: float) -> void:
 	var pj: PartidoJugable = _x["pj"]
-	var m := pj.motor
+	var m = pj.motor
 	if _una_vez("corner", t, 11.0):
 		m.autopiloto = false
 		var d := MotorJugable.dir_ataque(bool(m.usuario["es_local"]))

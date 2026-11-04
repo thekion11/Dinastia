@@ -38,9 +38,7 @@ func _marco_aviso(color: Color) -> VBoxContainer:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 6)
 	caja.add_child(v)
-	caja.modulate.a = 0.0
-	var tw := p.create_tween()
-	tw.tween_property(caja, "modulate:a", 1.0, 0.22).set_trans(Tween.TRANS_SINE)
+	Animar.entrar(caja, 0.22)   ## M-304: la entrada común
 	## Las respuestas del aviso, con el estilo de los diálogos (13-10-2026);
 	## diferido: los botones se añaden después de este marco.
 	(func() -> void:

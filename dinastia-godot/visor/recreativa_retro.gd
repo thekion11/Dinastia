@@ -35,11 +35,11 @@ static func montar(b: Node3D, pos: Vector3) -> bool:
 	b.add_child(rot)
 	return true
 
-## El gancho de la E (`ComercioCiudad.servicio`).
+## El gancho de la E (`CargaCiudad.de("ComercioCiudad").servicio`).
 static func servicio(e, k: String) -> bool:
 	if k != CLAVE:
 		return false
-	var abierto = e.get_meta("retro5v5", null)
+	var abierto = (e.get_meta("retro5v5") if e.has_meta("retro5v5") else null)
 	if abierto != null and is_instance_valid(abierto):
 		return true
 	e.set_meta("retro5v5", Retro5v5.abrir(e.get_tree()))

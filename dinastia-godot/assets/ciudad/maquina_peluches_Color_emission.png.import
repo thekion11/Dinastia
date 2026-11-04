@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c6mnrjcf4bgr0"
-path="res://.godot/imported/maquina_peluches_Color_emission.png-6bb1b2df96367eca15ee53c5d7c29799.ctex"
+path.s3tc="res://.godot/imported/maquina_peluches_Color_emission.png-6bb1b2df96367eca15ee53c5d7c29799.s3tc.ctex"
+path.etc2="res://.godot/imported/maquina_peluches_Color_emission.png-6bb1b2df96367eca15ee53c5d7c29799.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "7e3aaf29f5f138a800aee45100fab53b"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/ciudad/maquina_peluches_Color_emission.png"
-dest_files=["res://.godot/imported/maquina_peluches_Color_emission.png-6bb1b2df96367eca15ee53c5d7c29799.ctex"]
+dest_files=["res://.godot/imported/maquina_peluches_Color_emission.png-6bb1b2df96367eca15ee53c5d7c29799.s3tc.ctex", "res://.godot/imported/maquina_peluches_Color_emission.png-6bb1b2df96367eca15ee53c5d7c29799.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

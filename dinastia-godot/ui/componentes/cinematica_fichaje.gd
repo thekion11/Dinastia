@@ -50,7 +50,7 @@ func _montar(mundo: Mundo, j: Jugador, de: Club) -> void:
 	add_child(cont)
 	var vp := SubViewport.new()
 	vp.own_world_3d = true
-	vp.msaa_3d = Viewport.MSAA_4X
+	vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
 	cont.add_child(vp)
 	_raiz = Node3D.new()
 	vp.add_child(_raiz)
@@ -60,11 +60,11 @@ func _montar(mundo: Mundo, j: Jugador, de: Club) -> void:
 	## Las presentaciones son de día, con el sol de frente a la cámara.
 	perfil["clima"] = "dia"
 	Ambience.apply(_raiz, perfil, null, Calidad.elegida)
-	StadiumBuilder.build_pitch(_raiz, perfil, mio)
+	load("res://visor/stadium_builder.gd").build_pitch(_raiz, perfil, mio)
 	var aforo := int(perfil.get("aforo", 20000))
 	## La grada responde a quién presentas: llena para una estrella, a medias
 	## para uno de rotación (lo mismo que dice la noticia de `aplicar()`).
-	StadiumBuilder.build(_raiz, perfil, aforo, 0.92 if estrella else 0.4, mio._hash_id(), mio)
+	load("res://visor/stadium_builder.gd").build(_raiz, perfil, aforo, 0.92 if estrella else 0.4, mio._hash_id(), mio)
 	## El balón de las dominadas es el del club (Club → Detalles del club).
 	if mundo.comercial != null:
 		var cb := Comercial.color_balon(mundo.comercial.balon, mio)
@@ -98,23 +98,23 @@ func _montar(mundo: Mundo, j: Jugador, de: Club) -> void:
 
 func _poner_jugador(j: Jugador, mio: Club) -> void:
 	var jd := Puente3D.jugador(j)
-	var d := FutbolistaQ.crear(PlayerSpawner.altura_de(jd, j.id, j.pos_e), "male")
+	var d = load("res://visor/futbolista_q.gd").crear(load("res://visor/player_spawner.gd").altura_de(jd, j.id, j.pos_e), "male")
 	if d.is_empty():
 		return
 	var nodo: Node3D = d["nodo"]
 	_raiz.add_child(nodo)
-	FutbolistaQ.terminar(d, true)
-	var look := PlayerSpawner._look_de(jd)
+	load("res://visor/futbolista_q.gd").terminar(d, true)
+	var look = load("res://visor/player_spawner.gd")._look_de(jd)
 	var kit := Puente3D.kit(mio)
 	var kx: Dictionary = {} if j.pos_e == "POR" else kit.get("x", {})
-	if not VestidorQ.vestir_equipacion(d, Color(String(kit["c1"])), Color(String(kit["c2"])), String(kit["estilo"]),
+	if not load("res://visor/vestidor_q.gd").vestir_equipacion(d, Color(String(kit["c1"])), Color(String(kit["c2"])), String(kit["estilo"]),
 			look[0], look[1], Color(0, 0, 0, 0), Color(0, 0, 0, 0), false, kx, maxi(j.dorsal, 1)):
-		VestidorQ.vestir(d, Color(String(kit["c1"])))
+		load("res://visor/vestidor_q.gd").vestir(d, Color(String(kit["c1"])))
 	var lk: Dictionary = jd.get("look", {}) if jd.get("look") is Dictionary else {}
 	PeloQ.poner(d, String(lk.get("pelo", "corto")), look[1], int(look[2]) in [1, 4, 6])
 	## Su cara de la ficha, moldeada sobre la cabeza (plano cercano).
 	if not lk.is_empty():
-		VestidorQ.poner_cara(d, {"look": lk, "foto": String(jd.get("foto", ""))}, look[0])
+		load("res://visor/vestidor_q.gd").poner_cara(d, {"look": lk, "foto": String(jd.get("foto", ""))}, look[0])
 	## De frente a la cámara del plano final (que mira desde +X).
 	nodo.rotation.y = PI * 0.5
 	var ap: AnimationPlayer = d["anim"]
@@ -236,7 +236,7 @@ func plano(t: float) -> int:
 	return 1 if t < PLANO_2 else (2 if t < PLANO_3 else 3)
 
 func _process(delta: float) -> void:
-	StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())
+	load("res://visor/stadium_builder.gd").ocultar_techo_ante(get_viewport().get_camera_3d())
 	if _cerrando:
 		return
 	_t += delta

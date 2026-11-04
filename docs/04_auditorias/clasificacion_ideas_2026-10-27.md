@@ -1,7 +1,7 @@
 # Clasificación de las ideas pendientes del plan (27-10-2026)
 
 > **2-11-2026**: se borraron 21 filas ya hechas y probadas (desafíos 951/956/971, precontratos, glifos, migraciones de guardado, CI y presets, RendimientoAdaptativo, perillas tácticas 385-392, texto escalable y daltonismo, contraste, perfiles de árbitro; ver `pruebas/banco/lanzamiento.gd` y el bloque «reutilizadas» de `especiales.sh`). Las cifras de la tabla son las del 27-10.
-Fuente: `docs/PLAN_DEL_LUNES.md` §5, §6 y §7 tal como estaban el 27-10. Criterio: LANZAMIENTO = hace falta para lanzar el 15-12-2026; DESPUÉS = vale la pena, tras lanzar; DESCARTAR = repetida, superada por algo hecho, contraria a una decisión del dueño o sin aporte. Las «Existen: falta una prueba» y las «Declaradas hechas sin prueba» van en un bloque aparte «verificar»: LANZAMIENTO si tocan el partido o la primera hora, DESPUÉS el resto. En la duda entre DESPUÉS y DESCARTAR, DESPUÉS.
+Fuente: `docs/PLAN_GENERAL.md` §5, §6 y §7 tal como estaban el 27-10. Criterio: LANZAMIENTO = hace falta para lanzar el 15-12-2026; DESPUÉS = vale la pena, tras lanzar; DESCARTAR = repetida, superada por algo hecho, contraria a una decisión del dueño o sin aporte. Las «Existen: falta una prueba» y las «Declaradas hechas sin prueba» van en un bloque aparte «verificar»: LANZAMIENTO si tocan el partido o la primera hora, DESPUÉS el resto. En la duda entre DESPUÉS y DESCARTAR, DESPUÉS.
 
 ## 1. Resumen
 

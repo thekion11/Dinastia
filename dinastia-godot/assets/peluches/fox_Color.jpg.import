@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c1hl0j643564p"
-path="res://.godot/imported/fox_Color.jpg-502def6af42fe83f2cc9965b74f28a87.ctex"
+path.s3tc="res://.godot/imported/fox_Color.jpg-502def6af42fe83f2cc9965b74f28a87.s3tc.ctex"
+path.etc2="res://.godot/imported/fox_Color.jpg-502def6af42fe83f2cc9965b74f28a87.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "d6e2afdc6f75168f735c1569afcdccc4"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/peluches/fox_Color.jpg"
-dest_files=["res://.godot/imported/fox_Color.jpg-502def6af42fe83f2cc9965b74f28a87.ctex"]
+dest_files=["res://.godot/imported/fox_Color.jpg-502def6af42fe83f2cc9965b74f28a87.s3tc.ctex", "res://.godot/imported/fox_Color.jpg-502def6af42fe83f2cc9965b74f28a87.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

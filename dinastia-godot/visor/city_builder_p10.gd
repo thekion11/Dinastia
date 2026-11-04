@@ -109,7 +109,10 @@ func _hacer_bote(k: int) -> Node3D:
 
 ## En el prólogo (2-11) el tráfico y los peatones del anillo son el 40 %: la calle se ve viva y se arma bastante antes.
 func _n_pro(n: int) -> int:
-	return maxi(1, int(round(float(n) * 0.4))) if CityBuilder.modo_prologo else n
+	var f := 0.4 if CityBuilder.modo_prologo else 1.0
+	if Calidad.elegida <= Calidad.MINIMO:
+		f *= 0.5   ## (3-11, recorte autorizado por el dueño) MÍNIMO: tráfico y peatones del anillo a la mitad
+	return maxi(1, int(round(float(n) * f)))
 
 func _trafico() -> void:
 	var t := TraficoCiudad.new()
@@ -257,7 +260,7 @@ func _banderas_anillo(c1: Color, c2: Color) -> void:
 			mastil.material_override = gris
 			mastil.position = Vector3(x, 4.5, z)
 			add_child(mastil)
-			StadiumBuilder._bandera_ondeante(self, Vector3(x + 1.3, 7.6, z), Vector2(2.6, 1.6),
+			load("res://visor/stadium_builder.gd")._bandera_ondeante(self, Vector3(x + 1.3, 7.6, z), Vector2(2.6, 1.6),
 				c1 if i % 2 == 0 else c2, 0.0, float(i) * 0.7)
 
 static func _mallas_hincha_de_pie() -> Array:

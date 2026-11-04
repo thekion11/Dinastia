@@ -200,15 +200,14 @@ func _alguien(l: Array[Jugador]) -> Jugador:
 		return null
 	return l[Azar.ent(0, l.size() - 1)]
 
-## Reparte una amarilla arbitral igual que `_incidencias()` reparte las
-## normales -segunda amarilla con 18% de ir a la roja-, y la narra con la frase
-## que le toca a esta personalidad.
+## Reparte una amarilla arbitral igual que `_incidencias()` reparte las normales -segunda amarilla con
+## `Balance.P_ROJA_SEGUNDA` de ir a la roja-, y la narra con la frase que le toca a esta personalidad.
 func _tarjeta_arbitral(arr: Array[Jugador], plantilla: String, arbitro_nombre: String) -> void:
 	var j := _alguien(arr)
 	if j == null:
 		return
 	j.amarillas += 1
-	var roja := j.amarillas % 2 == 0 and Azar.suerte(0.18)
+	var roja := j.amarillas % 2 == 0 and Azar.suerte(Balance.P_ROJA_SEGUNDA)
 	if roja:
 		Disciplina.sanciona(j)
 	decision_arbitral.emit(Idiomas.t(plantilla) % [arbitro_nombre, j.nombre], minuto)
@@ -367,13 +366,13 @@ func _chequeo_arbitral() -> void:
 ## tiro de dados, como en el HTML, no uno para el gol y otro aparte para el
 ## resto- para que las proporciones no se descuadren.
 func _atacar(c: Club, once: Array[Jugador], es_local: bool) -> void:
-	## EL ÁRBITRO, antes que nada: en el HTML sus chequeos van al principio de
-	## `ataque()`, sobre CADA llegada, sin que le importe si termina en gol,
-	## atajada o fallo -son sucesos aparte, no una consecuencia del remate-.
+	## EL ÁRBITRO, antes que nada: en el HTML sus chequeos van al principio de `ataque()`, sobre CADA llegada,
+	## sin que le importe si termina en gol, atajada o fallo -son sucesos aparte, no una consecuencia del remate-.
 	_chequeo_arbitral()
-	## El xG de cada llegada: la tirada del HTML (0,09-0,31), escalada. Sumado a lo
-	## largo del partido es lo que permite decir "generamos para tres y metimos
-	## uno" sin que sea una impresión, sino un número.
+	if _penal_en_area(c, once, es_local):
+		return   ## la llegada acabó en falta dentro del área (`Balance.P_PENAL`)
+	## El xG de cada llegada: la tirada del HTML (0,09-0,31), escalada. Sumado a lo largo del partido es lo que
+	## permite decir "generamos para tres y metimos uno" sin que sea una impresión, sino un número.
 	##
 	## AUDITORÍA 26-10 (50 partidos): repartido plano en 0,09-0,31, su media (0,20) quedaba por debajo
 	## de la conversión real (~0,27) y el xG total salía un 26 % por debajo de los goles: todos los
@@ -418,16 +417,17 @@ func _incidencias() -> void:
 	## EL PERFIL DEL ÁRBITRO SE NOTA (01-11, verificación 801): su chequeo propio apenas sumaba 0,1 tarjetas por partido; ahora
 	## pesa en la tasa normal y el casero carga las tarjetas al que visita.
 	var casero := String(arbitro.get("perfil", "")) == "casero"
-	if Azar.suerte(0.031 * ctx_factor_tarjetas * float({"tarjetero": 1.4, "estricto": 1.15, "permisivo": 0.7}.get(String(arbitro.get("perfil", "")), 1.0))) and not motor_externo:
+	if Azar.suerte(Balance.P_AMARILLA * ctx_factor_tarjetas * float({"tarjetero": 1.4, "estricto": 1.15, "permisivo": 0.7}.get(String(arbitro.get("perfil", "")), 1.0))) and not motor_externo:
 		var l := _alguien(once_visita if casero and Azar.suerte(0.35) else _todos)
 		if l != null:
 			l.amarillas += 1
-			var roja := l.amarillas % 2 == 0 and Azar.suerte(0.18)
+			var roja := l.amarillas % 2 == 0 and Azar.suerte(Balance.P_ROJA_SEGUNDA)
 			if roja:
-				l.suspension = max(l.suspension, 1)
+				Disciplina.sanciona(l)   ## (4-11, banco partido_reglas) antes la roja se descontaba esa semana y la 5.ª amarilla no sancionaba
 			tarjeta.emit(l, roja, minuto)
-	## Una sola tirada siempre: la superficie cambia la probabilidad, no cuántas
-	## veces se consulta `Azar`.
+			if not roja and Disciplina.acumula(l):
+				decision_arbitral.emit(Disciplina.frase(l), minuto)
+	## Una sola tirada siempre: la superficie cambia la probabilidad, no cuántas veces se consulta `Azar`.
 	var f_sup := (ctx_lesion_local if local != null and local.id == ctx_club_id else 1.0) * (ctx_lesion_mio if (local != null and local.id == ctx_club_id) or (visita != null and visita.id == ctx_club_id) else 1.0)
 	if Azar.suerte(0.0024 * f_sup):
 		var h := _alguien(_todos)

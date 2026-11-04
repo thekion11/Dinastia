@@ -34,7 +34,7 @@ static func en(caja: Control, rect: Rect2) -> VistaGarra3D:
 func _ready() -> void:
 	_vp.own_world_3d = true
 	_vp.transparent_bg = false
-	_vp.msaa_3d = Viewport.MSAA_4X
+	_vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
 	add_child(_vp)
 	_vp.add_child(_raiz)
 	_montar_escena()
@@ -77,7 +77,7 @@ func _montar_escena() -> void:
 	var luz := DirectionalLight3D.new()
 	luz.rotation_degrees = Vector3(-62, 28, 0)
 	luz.light_energy = 1.1
-	luz.shadow_enabled = true
+	luz.shadow_enabled = Calidad.elegida > Calidad.MINIMO
 	_raiz.add_child(luz)
 	var foco := OmniLight3D.new()                       ## la luz del techo de la máquina
 	foco.position = Vector3(0, 0.9, 0)

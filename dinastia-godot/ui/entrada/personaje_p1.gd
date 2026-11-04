@@ -129,7 +129,7 @@ func _linea(caja: BoxContainer, campo: String, sugerencia: String) -> LineEdit:
 	ln.text = String(_p.get(campo, ""))
 	ln.placeholder_text = Idiomas.t(sugerencia)
 	ln.max_length = PersonajeDatos.LARGO_MAX
-	ln.custom_minimum_size = Vector2(0, 40)
+	ln.custom_minimum_size = Vector2(0, EscalaMovil.campo_alto(40))
 	ln.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	ln.add_theme_font_size_override("font_size", Tema.TAM_DESTACADO)
 	ln.text_changed.connect(func(t: String) -> void:

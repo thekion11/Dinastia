@@ -205,6 +205,7 @@ func _construir() -> void:
 	## 2) El once probable con su rendimiento.
 	var c2 := _columna(cuerpo, Idiomas.t("ONCE PROBABLE"), 1.25)
 	var tabla := GridContainer.new()
+	CebraRejilla.poner(tabla)
 	tabla.columns = 5
 	tabla.add_theme_constant_override("h_separation", 14)
 	tabla.add_theme_constant_override("v_separation", 5)
@@ -290,9 +291,8 @@ func _construir() -> void:
 	b.custom_minimum_size = Vector2(200, 44)
 	b.pressed.connect(func() -> void: cerrado.emit())
 	pie.add_child(b)
-	b.call_deferred("grab_focus")
-	modulate.a = 0.0
-	create_tween().tween_property(self, "modulate:a", 1.0, 0.25)
+	FocoSeguro.dar(b)
+	Animar.entrar(self, 0.25)   ## M-304: la entrada común
 
 func _escudo(c: Club, px: int) -> TextureRect:
 	var esc := TextureRect.new()

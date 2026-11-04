@@ -34,6 +34,59 @@ const BONO_DECADENCIA := 0.90
 ## país -> {tipo, desde, hasta}
 var activas: Dictionary = {}
 
+## EL CICLO DEL MERCADO (2-11, M-210): el mercado mundial de traspasos no está siempre igual. A veces se
+## INFLA (burbuja: los clubes piden y pagan bastante más) y a veces se HUNDE (crisis: nadie tiene caja y los
+## precios caen). Una burbuja tiende a estallar en crisis. Solo mueve lo que se pide y se ofrece en un
+## traspaso (`Mercado.valor_pedido`, las ofertas por tus jugadores): el valor y los sueldos no cambian.
+## Se sortea con un hash de la semilla y el año, no con `Azar`: así no desplaza el resto del mundo.
+const FACTOR_BURBUJA := 1.30
+const FACTOR_CRISIS := 0.75
+const PROB_BURBUJA := 0.15
+const PROB_CRISIS := 0.10
+const PROB_ESTALLA := 0.55   ## al acabar una burbuja, cuántas veces termina en crisis
+## {tipo: "normal"|"burbuja"|"crisis", hasta}
+var mercado: Dictionary = {"tipo": "normal", "hasta": 0}
+
+func ciclo_mercado(anio: int) -> String:
+	return String(mercado.get("tipo", "normal")) if int(mercado.get("hasta", 0)) >= anio else "normal"
+
+func factor_mercado(anio: int) -> float:
+	match ciclo_mercado(anio):
+		"burbuja":
+			return FACTOR_BURBUJA
+		"crisis":
+			return FACTOR_CRISIS
+	return 1.0
+
+## El cierre de temporada del mercado: la burbuja o la crisis caducan (la burbuja puede estallar) y,
+## si está normal, puede empezar otra. `semilla` = la del mundo; lo mismo con la misma partida.
+func _rodar_mercado(anio: int, semilla: int) -> void:
+	var antes := String(mercado.get("tipo", "normal"))
+	if antes != "normal" and int(mercado.get("hasta", 0)) >= anio:
+		return
+	var r := float(absi(hash([semilla, anio, "mercado"])) % 10000) / 10000.0
+	var dura: int = 1 + absi(hash([semilla, anio, "dura"])) % 2
+	if antes == "burbuja" and r < PROB_ESTALLA:
+		mercado = {"tipo": "crisis", "hasta": anio + dura}
+		noticia.emit("💥 Estalla la burbuja del mercado",
+			"Los traspasos inflados de los últimos años pasan factura: los clubes no tienen caja y los precios se hunden. Es momento de comprar barato; vender será difícil.")
+		return
+	mercado = {"tipo": "normal", "hasta": 0}
+	if antes == "crisis":
+		noticia.emit("📈 El mercado se recupera", "Vuelve el dinero a los traspasos: los precios regresan a lo normal.")
+		return
+	if antes == "burbuja":
+		noticia.emit("🫧 La burbuja se desinfla sin ruido", "Los precios de traspaso vuelven a lo normal sin que nadie quiebre.")
+		return
+	if r < PROB_CRISIS:
+		mercado = {"tipo": "crisis", "hasta": anio + dura}
+		noticia.emit("📉 Crisis en el mercado de traspasos",
+			"Los derechos de televisión se renegocian a la baja y los clubes cierran el grifo: los traspasos valen bastante menos.")
+	elif r < PROB_CRISIS + PROB_BURBUJA:
+		mercado = {"tipo": "burbuja", "hasta": anio + dura}
+		noticia.emit("🫧 Burbuja en el mercado de traspasos",
+			"Entra dinero nuevo en el fútbol y los clubes pagan cifras nunca vistas: vender ahora es negocio, comprar sale caro.")
+
 var _ref: WeakRef
 
 func _init(mundo: Mundo = null) -> void:
@@ -71,6 +124,7 @@ func cierre_de_temporada() -> void:
 			noticia.emit("Se apaga una generación",
 				"Los expertos dan por cerrada la época dorada de %s. Aquella camada ya pasó los treinta y el relevo no aparece. Quedan las fotos y dos o tres apellidos que nadie va a olvidar." % k)
 
+	_rodar_mercado(m.anio, Azar.semilla)
 	if activas.size() >= MAX_A_LA_VEZ:
 		return
 	if not Azar.suerte(PROBABILIDAD):
@@ -126,7 +180,9 @@ func mapa_del_talento(anio: int) -> Array[Dictionary]:
 	return salida
 
 func a_dic() -> Dictionary:
-	return {"activas": activas.duplicate(true)}
+	return {"activas": activas.duplicate(true), "mercado": mercado.duplicate()}
 
 func desde_dic(d: Dictionary) -> void:
 	activas = (d.get("activas", {}) as Dictionary).duplicate(true)
+	var mc: Dictionary = d.get("mercado", {})
+	mercado = {"tipo": String(mc.get("tipo", "normal")), "hasta": int(mc.get("hasta", 0))}

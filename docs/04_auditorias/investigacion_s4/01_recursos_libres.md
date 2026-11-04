@@ -77,7 +77,7 @@ Junto con el plugin VAT de antzGames (MIT, Godot 4.7, funciona en Compatibility)
 
 | Recurso | URL | Licencia | Peso / Godot | Calidad | Encaje | Prioridad |
 |---|---|---|---|---|---|---|
-| **godot-ci**: imagen Docker con Godot y plantillas | github.com/abarichello/godot-ci | `LICENSE`: MIT. Etiquetas **`4.7.2-stable`**, `4.7.1-stable` y `4.7-stable` (comprobado con `git ls-remote --tags`) | — | 5 | **La «imagen Godot 4.7 para el CI» de las órdenes del lunes** (`docs/PLAN_DEL_LUNES.md` §1, `compilar.yml`): correr `herramientas/banco.sh` y exportar. No se comprobó Docker Hub | **alta** |
+| **godot-ci**: imagen Docker con Godot y plantillas | github.com/abarichello/godot-ci | `LICENSE`: MIT. Etiquetas **`4.7.2-stable`**, `4.7.1-stable` y `4.7-stable` (comprobado con `git ls-remote --tags`) | — | 5 | **La «imagen Godot 4.7 para el CI» de las órdenes del lunes** (`docs/PLAN_GENERAL.md` §1, `compilar.yml`): correr `herramientas/banco.sh` y exportar. No se comprobó Docker Hub | **alta** |
 | setup-godot (GitHub Action) | github.com/chickensoft-games/setup-godot | `LICENSE`: MIT | — | 4 | Alternativa a Docker para el mismo CI | **alta** |
 | **Debug Menu**: FPS, tiempo por fotograma, CPU y GPU | github.com/godot-extended-libraries/godot-debug-menu | `LICENSE.md`: MIT (Calinou) | 116 KB | 4 | Más completo que `ui/componentes/contador_fps.gd`; útil para la medida de FPS en hardware real (M-337, del dueño) | **alta** |
 | **Antialiased Line2D** | github.com/godot-extended-libraries/godot-antialiased-line2d | `LICENSE.md`: MIT (Calinou) | 104 KB | 4 | Líneas suaves en `ui/radar_partido.gd`, `ui/componentes/radar_atributos.gd`, `pizarra_tactica.gd` y `minimapa_ciudad.gd`, que hoy usan `draw_line`/`draw_polyline` con dientes de sierra | **alta** (barato) |

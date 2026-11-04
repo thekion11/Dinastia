@@ -34,7 +34,7 @@ static var _cola: Array = []
 var _vp: SubViewport
 var _cam: Camera3D
 var _ocupado := false
-var _spawner := PlayerSpawner.new()
+var _spawner = load("res://visor/player_spawner.gd").new()
 
 static func disponible() -> bool:
 	return DisplayServer.get_name() != "headless" and Engine.get_main_loop() is SceneTree
@@ -162,22 +162,22 @@ func _servir() -> void:
 	var raiz := Node3D.new()
 	_vp.add_child(raiz)
 	var datos := Puente3D.jugador(j)
-	var look: Array = PlayerSpawner._look_de(datos)
+	var look: Array = load("res://visor/player_spawner.gd")._look_de(datos)
 	var puesto := "POR" if j.pos_e == "POR" else "DEL"
 	## La camiseta completa del CLUB del jugador (escudo y patrocinadores), si se sabe.
 	var m := Mundo.actual()
 	_spawner._kit_x = {}
 	if m != null and m.clubes.has(j.club_id):
-		_spawner._kit_x = DisenosKit.kit_de_club(m.clubes[j.club_id])
+		_spawner._kit_x = load("res://ui/disenos_kit.gd").kit_de_club(m.clubes[j.club_id])
 	## En los retratos la camiseta va con VOLUMEN (la ropa aparte, la prenda modelada
 	## con mangas y bajo), aunque en el partido siga pintada sobre el cuerpo.
-	var aparte_antes := VestidorQ.ropa_aparte
-	VestidorQ.ropa_aparte = true
-	var nodo := _spawner._crear_jugador(raiz, j.id, puesto, "", Color(job["k1"]), Color(job["k2"]), "liso",
+	var aparte_antes = load("res://visor/vestidor_q.gd").ropa_aparte
+	load("res://visor/vestidor_q.gd").ropa_aparte = true
+	var nodo = _spawner._crear_jugador(raiz, j.id, puesto, "", Color(job["k1"]), Color(job["k2"]), "liso",
 		maxi(j.dorsal, 1), look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
-	VestidorQ.ropa_aparte = aparte_antes
+	load("res://visor/vestidor_q.gd").ropa_aparte = aparte_antes
 	if not nodo.is_empty():
-		var alto := PlayerSpawner.altura_de(datos, j.id, puesto)
+		var alto = load("res://visor/player_spawner.gd").altura_de(datos, j.id, puesto)
 		## De pecho para arriba, de frente (el modelo mira a +Z); en las filas de las
 		## listas, la cabeza y el cuello de la camiseta.
 		if bool(job.get("cabeza", false)):
@@ -186,10 +186,7 @@ func _servir() -> void:
 		else:
 			_cam.position = Vector3(0.0, alto * 0.915, 1.62)
 			_cam.look_at(Vector3(0.0, alto * 0.885, 0.0), Vector3.UP)
-		_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-		await get_tree().process_frame
-		await get_tree().process_frame
-		await get_tree().process_frame
+		await _fotografiar(raiz)
 		var img := _vp.get_texture().get_image()
 		_vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
 		if img != null and not img.is_empty():
@@ -210,19 +207,16 @@ func _servir_dt(job: Dictionary) -> void:
 	env.background_color = fondo_de(String(job["k1"]))
 	var raiz := Node3D.new()
 	_vp.add_child(raiz)
-	var d := PersonajeDT.crear(raiz, job["dt"], Color(job["k1"]), Color(job["k2"]))
+	var d = load("res://visor/personaje_dt.gd").crear(raiz, job["dt"], Color(job["k1"]), Color(job["k2"]))
 	if not d.is_empty():
-		var alto := float(PersonajeDT.aspecto(job["dt"]).get("altura", 1.78))
+		var alto = float(load("res://visor/personaje_dt.gd").aspecto(job["dt"]).get("altura", 1.78))
 		if bool(job.get("cabeza", false)):
 			_cam.position = Vector3(0.0, alto * 0.925, 0.98)
 			_cam.look_at(Vector3(0.0, alto * 0.915, 0.0), Vector3.UP)
 		else:
 			_cam.position = Vector3(0.0, alto * 0.915, 1.62)
 			_cam.look_at(Vector3(0.0, alto * 0.885, 0.0), Vector3.UP)
-		_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-		await get_tree().process_frame
-		await get_tree().process_frame
-		await get_tree().process_frame
+		await _fotografiar(raiz)
 		var img := _vp.get_texture().get_image()
 		_vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
 		if img != null and not img.is_empty():
@@ -232,3 +226,27 @@ func _servir_dt(job: Dictionary) -> void:
 			else:
 				tex.set_image(img)
 	raiz.queue_free()
+
+## (3-11) La foto, igual siempre: la animación de reposo se congela en su primer instante (antes la pose dependía de
+## cuándo se tomaba) y se espera a que el SubViewport se DIBUJE de verdad (antes eran 3 fotogramas de proceso, que en
+## una máquina cargada o con el ahorro del menú podían no llegar a dibujar).
+func _fotografiar(raiz: Node) -> void:
+	await get_tree().process_frame
+	for ap: Node in raiz.find_children("*", "AnimationPlayer", true, false):
+		var a := ap as AnimationPlayer
+		if a.current_animation != "":
+			a.seek(0.0, true)
+		a.pause()
+	_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	## Dos dibujos de verdad, con tope: sin gráfica (pruebas sin pantalla) o si nada pide repintar, no llegan nunca.
+	_dibujos = 0
+	if not RenderingServer.frame_post_draw.is_connected(_contar_dibujo):
+		RenderingServer.frame_post_draw.connect(_contar_dibujo)
+	for i in 12:
+		await get_tree().process_frame
+		if _dibujos >= 2 and i >= 2:
+			break
+
+var _dibujos := 0
+func _contar_dibujo() -> void:
+	_dibujos += 1

@@ -28,7 +28,7 @@ func _probar() -> void:
 	var r := m.citas.resolver(m, String(ct["id"]), 0)
 	_comprobar(not r.is_empty() and m.comercial.zonas_firmadas.has(partes[0]), "firmar en la cita vende la zona")
 	var monto1 := int(m.comercial.zonas_firmadas[partes[0]]["monto"])
-	_comprobar(monto1 > monto0 and monto1 <= int(monto0 * 1.06), "con el +5 % por hacerlo en persona (%d → %d)" % [monto0, monto1])
+	_comprobar(monto1 > monto0 and monto1 <= int(monto0 * 1.06), "con el +5 %% por hacerlo en persona (%d → %d)" % [monto0, monto1])
 	_comprobar(m.citas.por_id(String(ct["id"]))["estado"] == "hecha" and m.citas.pendientes().size() == pend.size() - 1, "la cita queda hecha")
 	## La junta: con un asunto abierto, el presidente te cita en su despacho.
 	m.junta.formar(c)

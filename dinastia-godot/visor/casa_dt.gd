@@ -81,6 +81,7 @@ func montar(raiz3d: Node3D, mundo_: Mundo, origen: Vector3) -> void:
 	_sin_desconocidos()
 	_dormitorio()
 	_familia()
+	RoperoCasa.montar(self, mundo.roles.ropero if mundo != null and mundo.roles != null else {}, club)   ## M-188: lo comprado en la tienda deportiva
 
 ## La vivienda de serie trae un cocinero y un paseante inventados: fuera, que
 ## aquí vive tu familia. Se vacían las listas para que nada los mueva.
@@ -151,7 +152,7 @@ func _persona(clave: String, nombre: String, pos: Vector3, giro: float, edad: in
 	add_child(raiz)
 	var rng := _rng(semilla)
 	var asp := PersonajeDT.aleatorio(rng)
-	var mujer := PersonalEstadio.nombre_de_mujer(nombre)
+	var mujer = load("res://visor/personal_estadio.gd").nombre_de_mujer(nombre)
 	asp["cuerpo"] = "female" if mujer else "male"
 	asp["barba"] = bool(asp["barba"]) and not mujer and edad < 0
 	if mujer and String(asp["pelo"]) in ["calvo", "rapado", "fade", "samurai"]:
@@ -295,7 +296,7 @@ func _charla(clave: String, nombre: String) -> Dictionary:
 	for c: Dictionary in cuerpos:
 		if String(c["nombre"]) == nombre and c.get("anim") != null and is_instance_valid(c["anim"]):
 			var ap: AnimationPlayer = c["anim"]
-			if AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(c["nodo"]), "charla"):
+			if load("res://visor/anim_extra.gd").asegurar(ap, FutbolistaQ.esqueleto_de(c["nodo"]), "charla"):
 				ap.play("charla", 0.3)
 				get_tree().create_timer(4.0).timeout.connect(func() -> void:
 					if is_instance_valid(ap) and ap.current_animation == "charla" and ap.has_animation("parado"):

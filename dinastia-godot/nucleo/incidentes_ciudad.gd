@@ -1,12 +1,13 @@
 class_name IncidentesCiudad
 extends RefCounted
-## INCIDENTES DE LA CIUDAD (27-10-2026, pieza E «policía y bomberos», `PLAN_DEL_LUNES.md` §2.2h): de vez en cuando hay un robo, un incendio o un
+## INCIDENTES DE LA CIUDAD (27-10-2026, pieza E «policía y bomberos», `PLAN_GENERAL.md` §2.2h): de vez en cuando hay un robo, un incendio o un
 ## accidente en una calle; salen los vehículos de emergencia de su edificio, llegan, atienden y vuelven. Esto es la parte PURA (sin escena):
 ## cuándo pasa, dónde, quién acude, cuánto tarda en resolverse y cuánto cuesta saltarse un semáforo. La escena (`ServiciosVida`) solo lo dibuja.
 ##
 ## SIN `Azar`: todo sale de un hash de (semilla, día, hora). Los incidentes no tocan la liga ni la partida; con la misma semilla, el mismo día
 ## y la misma hora ocurre lo mismo (y se puede probar).
 const CELDA := 110.0
+const MULTA_VELOCIDAD := 60               ## € por pasar de `SenalesVelocidad.MARGEN` km/h sobre el límite con la policía delante (M-199)
 const MULTA_SEMAFORO := 90                ## € de la cartera por cruzar en rojo con la policía delante
 const HORA_DESDE := 7                     ## no hay incidentes de madrugada
 const UNO_DE_CADA := 8                    ## una hora de cada 8 (≈ 2 incidentes por día de juego)

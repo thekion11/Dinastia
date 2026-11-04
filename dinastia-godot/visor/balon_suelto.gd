@@ -4,7 +4,8 @@ extends Node3D
 ## `ExploradorCiudad.altura_suelo`): gravedad, bote, rozamiento al rodar y rebote en los bordes del parque. El DT patea al pasar a menos de 0,8 m
 ## andando (la dirección mezcla hacia dónde va y por dónde le entra el balón); en coche no. Sin azar: nada toca `_rng`.
 const RADIO := 0.22
-const GRAVEDAD := 18.0
+const GRAVEDAD := Balance.GRAVEDAD   ## H-05: la misma gravedad que el partido (antes 18, «para que se sintiera»)
+const ESCALA_VERTICAL := 0.7378       ## sqrt(9,81 / 18): con la gravedad real la patada sube lo mismo que antes (1 m de apogeo) y tarda 1,35 veces más en caer
 const REBOTE := 0.55
 const ROZAMIENTO := 1.4        ## fracción de la velocidad que pierde por segundo al rodar
 const ALCANCE := 0.8
@@ -100,6 +101,6 @@ func _patear(dt: float) -> void:
 		return
 	var dir := (d.normalized() * 0.4 + vel_j.normalized() * 0.6).normalized()
 	var v := clampf(vel_j.length() * 2.0 + 3.0, 4.0, 13.0)
-	vel = Vector3(dir.x * v, 2.5 + v * 0.15, dir.y * v)
+	vel = Vector3(dir.x * v, (2.5 + v * 0.15) * ESCALA_VERTICAL, dir.y * v)
 	_enfriar = ENFRIAR
 	patadas += 1

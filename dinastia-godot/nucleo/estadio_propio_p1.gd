@@ -278,7 +278,7 @@ const CATALOGO_B6 := {
 }
 ## Cuánto multiplica cada superficie la probabilidad de lesión en TU campo.
 const LESION_POR_SUPERFICIE := {"natural": 1.0, "hibrido": 0.85, "artificial": 1.3}
-## Y cuánto del desgaste del césped (conciertos, `Ciudad.penalizacion_cesped`)
+## Y cuánto del desgaste del césped (conciertos, `CargaCiudad.de("Ciudad").penalizacion_cesped`)
 ## llega al juego: el artificial no se estropea, el híbrido aguanta la mitad.
 const DESGASTE_POR_SUPERFICIE := {"natural": 1.0, "hibrido": 0.5, "artificial": 0.0}
 

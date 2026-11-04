@@ -91,14 +91,14 @@ func _conectar_1() -> void:
 		p.mundo.academia.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 			p._escribir("[color=#4caf6d][b]%s[/b][/color] %s" % [titulo, cuerpo])
 			p._anotar(titulo, cuerpo))
-		p.mundo.academia.movimiento.connect(p.mundo._anotar_movimiento)
+		Conexion.una_vez(p.mundo.academia.movimiento, p.mundo._anotar_movimiento)
 	if p.mundo.ojeadores != null:
 		## El modelo de datos y las academias hablan por su propia senal: son
 		## hallazgos y llegadas, no informes de ojeo, y se leen distinto.
 		p.mundo.ojeadores.noticia_ojeo.connect(func(titulo: String, cuerpo: String) -> void:
 			p._escribir("[color=#c9a227][b]%s.[/b][/color] %s" % [titulo, cuerpo])
 			p._anotar(titulo, cuerpo))
-		p.mundo.ojeadores.movimiento_ojeo.connect(p.mundo._anotar_movimiento)
+		Conexion.una_vez(p.mundo.ojeadores.movimiento_ojeo, p.mundo._anotar_movimiento)
 		p.mundo.ojeadores.noticia.connect(func(titulo: String, cuerpo: String) -> void:
 			p._escribir("[color=#c9a227][b]%s[/b][/color] %s" % [titulo, cuerpo])
 			p._anotar(titulo, cuerpo))
@@ -404,7 +404,7 @@ func _conectar_1_3() -> void:
 			Aviso.mostrar(p, "alerta", "🏦", titulo, texto))
 		## El libro de movimientos lo lleva `Mundo`, no la pantalla: es el mismo
 		## sitio donde se anotan taquilla, sueldos y fichajes.
-		p.mundo.banco.movimiento.connect(p.mundo._anotar_movimiento)
+		Conexion.una_vez(p.mundo.banco.movimiento, p.mundo._anotar_movimiento)
 	## LA HINCHADA (13-9-2026, hallazgo de la auditoría de conectores): tenía
 	## sus dos señales -campañas de abonos, la barra plantándose, encuestas a
 	## los socios- escritas y disparándose de verdad desde hace tiempo, y
@@ -417,4 +417,4 @@ func _conectar_1_3() -> void:
 		p.mundo.hinchada.noticia.connect(func(titulo: String, texto: String) -> void:
 			p._escribir("[color=#c9a227][b]%s.[/b][/color] %s" % [titulo, texto])
 			p._anotar(titulo, texto))
-		p.mundo.hinchada.movimiento.connect(p.mundo._anotar_movimiento)
+		Conexion.una_vez(p.mundo.hinchada.movimiento, p.mundo._anotar_movimiento)
