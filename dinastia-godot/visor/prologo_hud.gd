@@ -21,6 +21,7 @@ func _init() -> void:
 	layer = 45
 
 func _ready() -> void:
+	EscalaMovil.vigilar(get_tree())   ## móvil: los botones de la pregunta de la directiva y de «saltar» miden ≥ 7 mm (A4-INT-028)
 	_flecha = Label.new()
 	_flecha.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	_flecha.offset_top = 16
