@@ -199,6 +199,9 @@ pasa "a4_camara_estadio (la cámara del partido ve el campo en 6 estadios reform
 pasa "a4_ciudad_noche (de noche, 6 sirenas, 6 min: sin atascos, gente ni buses parados)" "godot --headless --path . res://pruebas/ideas/a4_ciudad_noche.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_sirena_movimiento (vehículo de emergencia con sirena en medio del tráfico: no atraviesa a nadie)" "godot --headless --path . res://pruebas/ideas/a4_sirena_movimiento.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_lluvia_cambios (lluvia y paraguas con 172 peatones de noche, 20 cambios de clima: sin duplicados, sin restos, sin crecer)" "godot --headless --path . res://pruebas/ideas/a4_lluvia_cambios.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_museo_limite (museo con 220 hitos: vitrinas y rótulos sin pisarse, ampliar, 20 entradas y la animación cortada)" "godot --headless --path . res://pruebas/ideas/a4_museo_limite.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_pasajeros_limite (gente de bus y teleférico: bus lleno, bus que se va, 60 paradas)" "godot --headless --path . res://pruebas/ideas/a4_pasajeros_limite.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_comercios_horario (comercios de 8:00 a 20:00 por el reloj del juego: cerrado no entra ni compra)" "godot --headless --path . res://pruebas/ideas/a4_comercios_horario.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_metro_museo (metro por dentro y museo ampliado, sin pantalla)" "godot --headless --path . res://pruebas/ideas/a4_metro_museo.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_cruzado" "godot --headless --path . res://pruebas/ideas/a4_gestion_cruzado.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_cesiones" "godot --headless --path . res://pruebas/ideas/a4_gestion_cesiones.tscn" "(^|[^0-9])0 fallos"
@@ -218,6 +221,7 @@ pasa "a4_metro_museo 2/2 (museo ampliado, con pantalla: ~120 s)" "A4_PARTE=2 xvf
 pasa "a4_limite_mundo (2/3 calidad y horas)" "A4_PARTE=2 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_limite_mundo (3/3 estadios y tráfico)" "A4_PARTE=3 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_estadio_reformas (estadio propio: 6 reformas, reabrir, nombres; con pantalla ~115 s)" "xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_estadio_reformas.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_grada_alta (la grada crece con el aforo >30 000 solo en calidad ALTA; con pantalla ~60 s)" "xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_grada_alta.tscn" "(^|[^0-9])0 fallos"
 fi
 pasa "p6_calidad_minima" "godot --headless --path . res://pruebas/ideas/p6_calidad_minima.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_idiomas_perezoso" "godot --headless --path . res://pruebas/ideas/p6_idiomas_perezoso.tscn" "(^|[^0-9])0 fallos"

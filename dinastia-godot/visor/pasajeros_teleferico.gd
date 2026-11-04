@@ -63,14 +63,21 @@ func _process(delta: float) -> void:
 		## Ventana de 9 s: si la cámara llega tarde no salen de golpe los de una cabina que ya se fue.
 		if not _hecho.has("b%d" % i) and u >= t_ev + 0.5 and u < t_ev + 9.0:
 			_hecho["b%d" % i] = true
-			cambiar_viajeros(_cabina_acoplada(), true)
-			for k in 2:
+			for k in _cuantos(_cabina_acoplada(), true):   ## (A4) tantas figuras como viajeros bajan de verdad
 				_salir(k, true)
 		if not _hecho.has("s%d" % i) and u >= t_ev + 4.5 and u < t_ev + 9.5:
 			_hecho["s%d" % i] = true
-			cambiar_viajeros(_cabina_acoplada(), false)
-			for k in 2:
+			for k in _cuantos(_cabina_acoplada(), false):
 				_salir(k, false)
+
+## Cuántas figuras salen o entran: los viajeros que cambian de verdad; una cabina sin viajeros modelados (calidad baja) deja los dos de siempre.
+static func _cuantos(cab: Node3D, baja: bool) -> int:
+	var hay := false
+	if cab != null:
+		for h in cab.get_children():
+			if h.has_meta("viajero"):
+				hay = true
+	return cambiar_viajeros(cab, baja) if hay else 2
 
 ## La cabina que está en esta estación ahora (la más cercana).
 func _cabina_acoplada() -> Node3D:
@@ -94,7 +101,7 @@ static func cambiar_viajeros(cab: Node3D, baja: bool) -> int:
 		if baja and (h as Node3D).visible and n < 2:
 			(h as Node3D).visible = false
 			n += 1
-		elif not baja and not (h as Node3D).visible:
+		elif not baja and not (h as Node3D).visible and n < 2:
 			(h as Node3D).visible = true
 			n += 1
 	return n
