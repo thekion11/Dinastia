@@ -17,7 +17,22 @@ func _lista() -> Array:
 			break
 	var jug: Jugador = otro.plantilla[0]
 	var largo := "Una descripción bastante larga para ver cómo se parte en varias líneas dentro de la tarjeta del aviso en un móvil"
-	return [
+	var apps: Array = []
+	for app: String in ["tribuna", "mensajes", "noticias", "banco", "calendario", "fotos", "agenda", "red", "ajustes"]:
+		apps.append(["teléfono · " + app, func() -> Control:
+			var t: Control = Telefono.abrir(_p, _m)
+			await _frames(6)
+			var tel: Node = t if t.has_method("abrir_app") else null
+			if tel == null:
+				for h in t.find_children("*", "Control", true, false):
+					if h.has_method("abrir_app"):
+						tel = h
+						break
+			if tel != null:
+				tel.call("abrir_app", app)
+			return t])
+	apps.append(["cinemática de fichaje (solo botones)", func() -> Control: return CinematicaFichaje.mostrar(_p, _m, jug, otro, true), true])
+	return apps + [
 		["aviso", func() -> Control: Aviso.mostrar(_p, "logro", "🏆", "Campeón de liga con una racha histórica", largo); return null],
 		["presentación de fichaje", func() -> Control: return PresentacionFichaje.mostrar(_p, _m, jug, otro)],
 		["despido", func() -> Control: return EscenaDespido.mostrar(_p, _m, "Los resultados no acompañan y la directiva pierde la confianza")],
@@ -40,6 +55,16 @@ func _lista() -> Array:
 			_p._ui_plantel._abrir_negociacion(jug)
 			await _frames(10)
 			return _p._menu_lateral.pantalla_abierta as Control],
+		["mesa del agente", func() -> Control:
+			var mesa := MesaAgente.new({"tipo": "mejora", "agente": "R. Maldonado", "perfil": "tiburon", "pid": jug.id}, 0, 0.0, 4242)
+			var ui := MesaAgenteUI.new(mesa, func(_mm: MesaAgente) -> void: pass)
+			_p.add_child(ui)
+			return ui],
+		["elección de cómo jugar el partido", func() -> Control:
+			var el := EleccionPartido.new()
+			el.titulo = "%s  vs  %s" % [mio.nombre, otro.nombre]
+			_p.add_child(el)
+			return el],
 		["trivia", func() -> Control: return TriviaClub.mostrar(_p, _m)],
 		["examen de licencia", func() -> Control: return ExamenLicencia.mostrar(_p, _m)],
 		["minijuego de reflejos", func() -> Control: return MinijuegoReflejos.mostrar(_p, _m)],
@@ -85,8 +110,10 @@ func _probar() -> void:
 					_linea("      %dx%d %s: %s no devolvió pantalla" % [ventana.x, ventana.y, idi, nombre])
 					continue
 				var pr := AyudaMovil.problemas(c, alto)
-				var graves := pr.filter(func(x: String) -> bool: return x.begins_with("toque") or x.begins_with("botón fuera") or x.begins_with("botón por debajo") or x.begins_with("texto fuera") or x.begins_with("texto por debajo"))
-				_comprobar(graves.is_empty(), "%dx%d %s · %s: %d fallos %s" % [ventana.x, ventana.y, idi, nombre, graves.size(), str(graves.slice(0, 4))])
+				var solo_botones := it.size() > 2 and bool(it[2])   ## decoración recortada por diseño (fachadas de la cinemática): solo se miden los botones
+				var graves := pr.filter(func(x: String) -> bool: return x.begins_with("toque") or x.begins_with("botón fuera") or x.begins_with("botón por debajo") or (not solo_botones and (x.begins_with("texto fuera") or x.begins_with("texto por debajo"))))
+				var n_bot := c.find_children("*", "Button", true, false).filter(func(x: Node) -> bool: return (x as Control).is_visible_in_tree()).size()
+				_comprobar(graves.is_empty(), "%dx%d %s · %s (%d botones): %d fallos %s" % [ventana.x, ventana.y, idi, nombre, n_bot, graves.size(), str(graves.slice(0, 4))])
 				if is_instance_valid(c):
 					if c is PantallaMenu:
 						(c as PantallaMenu).cerrar()   ## devuelve el contenido a Principal (liberarla a pelo lo rompía)

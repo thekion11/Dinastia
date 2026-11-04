@@ -153,7 +153,9 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 	lote.caja(m["cojin"], _en(Vector3(cx, y0 + 0.04, caja.get_center().y)), Vector3(1.1, 0.01, caja.size.y - 0.5))
 	## Las vitrinas, alternando lado, en el tramo libre (ni la puerta ni el fondo).
 	## Capacidad real: una vitrina por título (hasta seis); el nivel de obra da el mínimo. Del séptimo en adelante, la planta 3.
-	var n_vitrinas := clampi(maxi(titulos, 2 + nivel_museo / 2), 2, MAX_SALA)
+	## A4-GESTION: con más de seis hitos se enseñan los SEIS MÁS RECIENTES (los tuyos); antes eran los seis más antiguos y los títulos nuevos no salían nunca. Los anteriores, en la planta 3.
+	var off := maxi(0, hitos.size() - MAX_SALA)
+	var n_vitrinas := clampi(maxi(titulos - off, 2 + nivel_museo / 2), 2, MAX_SALA)
 	var por_lado := int(ceil(float(n_vitrinas) / 2.0))
 	vitrinas.clear()
 	var z0 := caja.position.y + 1.7
@@ -164,9 +166,9 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 		var pz := z0 + (z1 - z0) * (float(i) + 0.5) / float(por_lado)
 		var px := (caja.position.x + 0.45) if lado < 0.0 else (caja.end.x - 0.45)
 		vitrina(lote, nodo, m, base, vidrio, Vector3(px, y0, pz))
-		vitrinas.append({"p": Vector3(px, y0, pz), "k": k})
-		if k < titulos:
-			copa(lote, Vector3(px, y0 + 1.0, pz), oro, m["madera"], TrofeosReales.para_titulo(String((hitos[k] as Dictionary).get("titulo", "")), pais) if k < hitos.size() else {})
+		vitrinas.append({"p": Vector3(px, y0, pz), "k": off + k})
+		if off + k < titulos:
+			copa(lote, Vector3(px, y0 + 1.0, pz), oro, m["madera"], TrofeosReales.para_titulo(String((hitos[off + k] as Dictionary).get("titulo", "")), pais) if off + k < hitos.size() else {})
 		else:
 			## Aún sin copa: un balón de cuero antiguo en su soporte.
 			lote.malla(m["metal"], _en(Vector3(px, y0 + 1.05, pz)), _cilindro(0.06, 0.08, 0.06))

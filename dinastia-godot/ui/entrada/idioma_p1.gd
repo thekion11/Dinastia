@@ -86,9 +86,9 @@ func _construir() -> void:
 	var margen := MarginContainer.new()
 	margen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for lado: String in ["left", "right"]:
-		margen.add_theme_constant_override("margin_" + lado, 64)
-	margen.add_theme_constant_override("margin_top", 34)
-	margen.add_theme_constant_override("margin_bottom", 24)
+		margen.add_theme_constant_override("margin_" + lado, 28 if _bajo() else 64)
+	margen.add_theme_constant_override("margin_top", 12 if _bajo() else 34)
+	margen.add_theme_constant_override("margin_bottom", 10 if _bajo() else 24)
 	add_child(margen)
 	var raiz := VBoxContainer.new()
 	raiz.add_theme_constant_override("separation", 0)
@@ -96,11 +96,12 @@ func _construir() -> void:
 	raiz.add_child(_cabecera())
 	var cuerpo := HBoxContainer.new()
 	cuerpo.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	cuerpo.add_theme_constant_override("separation", 40)
+	cuerpo.add_theme_constant_override("separation", 24 if _bajo() else 40)
 	raiz.add_child(cuerpo)
 	cuerpo.add_child(_columna_tarjetas())
 	cuerpo.add_child(_vista_previa())
-	raiz.add_child(_pie())
+	if not _bajo():   ## las pistas de teclado (← ↑ ↓ →, ↵, Esc) no sirven con el dedo y quitan 21 px a una pantalla de ~480
+		raiz.add_child(_pie())
 
 func _cabecera() -> Control:
 	var fila := HBoxContainer.new()
@@ -130,7 +131,7 @@ func _cabecera() -> Control:
 func _columna_tarjetas() -> Control:
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 0)
-	_lbl_titulo = _etiqueta(44, TEXTO, _serif)
+	_lbl_titulo = _etiqueta(30 if _bajo() else 44, TEXTO, _serif)
 	col.add_child(_lbl_titulo)
 	var raya := ColorRect.new()
 	raya.color = Color(ORO, 0.8)
@@ -138,21 +139,28 @@ func _columna_tarjetas() -> Control:
 	raya.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	col.add_child(raya)
 	var hueco := Control.new()
-	hueco.custom_minimum_size = Vector2(0, 22)
+	hueco.custom_minimum_size = Vector2(0, 8 if _bajo() else 22)
 	col.add_child(hueco)
 	var rejilla := GridContainer.new()
 	rejilla.columns = 3
-	rejilla.add_theme_constant_override("h_separation", 14)
-	rejilla.add_theme_constant_override("v_separation", 14)
+	rejilla.add_theme_constant_override("h_separation", 10 if _bajo() else 14)
+	rejilla.add_theme_constant_override("v_separation", 8 if _bajo() else 14)
 	col.add_child(rejilla)
 	for c: String in Idiomas.NOMBRES:
 		rejilla.add_child(_tarjeta(c))
 	return col
 
+## (A4-INT-026) En un móvil apaisado (~480 px de alto) las 9 tarjetas de 150 px de alto no cabían: la tercera fila quedaba fuera de la pantalla y tres idiomas no se podían elegir.
+func _bajo() -> bool:
+	return get_viewport_rect().size.y < 600.0
+
+func _tam_tarjeta() -> Vector2:
+	return Vector2(192, 92) if _bajo() else TAM_TARJETA
+
 func _tarjeta(c: String) -> Button:
 	var b := Button.new()
 	b.name = "Tarjeta_" + c
-	b.custom_minimum_size = TAM_TARJETA
+	b.custom_minimum_size = _tam_tarjeta()
 	b.focus_mode = Control.FOCUS_ALL
 	b.set_meta("sin_sonido", true)
 	b.tooltip_text = ""
@@ -173,12 +181,12 @@ func _tarjeta(c: String) -> Button:
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(v)
 	var bandera := BanderaIdioma.new(c, Vector2i(300, 200))
-	bandera.custom_minimum_size = Vector2(136, 90)
+	bandera.custom_minimum_size = Vector2(78, 52) if _bajo() else Vector2(136, 90)
 	bandera.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	bandera.fuerza = 0.18
 	v.add_child(bandera)
 	_banderas[c] = bandera
-	var nombre := _etiqueta(19, TEXTO, _serif)
+	var nombre := _etiqueta(16 if _bajo() else 19, TEXTO, _serif)
 	nombre.text = String((Idiomas.NOMBRES[c] as Array)[0])
 	nombre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(nombre)
@@ -190,7 +198,7 @@ func _tarjeta(c: String) -> Button:
 		## El que está puesto ahora: un punto dorado en la esquina.
 		var punto := _etiqueta(12, ORO)
 		punto.text = "●"
-		punto.position = Vector2(TAM_TARJETA.x - 22, 6)
+		punto.position = Vector2(_tam_tarjeta().x - 22, 6)
 		punto.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(punto)
 	_tarjetas[c] = b
@@ -199,13 +207,13 @@ func _tarjeta(c: String) -> Button:
 func _vista_previa() -> Control:
 	var panel := PanelContainer.new()
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	panel.custom_minimum_size = Vector2(350, 0)
+	panel.custom_minimum_size = Vector2(300 if _bajo() else 350, 0)
 	var caja := _caja(Color(0.04, 0.05, 0.08, 0.72), Color(1, 1, 1, 0.07), 1)
 	caja.set_corner_radius_all(18)
-	caja.content_margin_left = 30
-	caja.content_margin_right = 30
-	caja.content_margin_top = 24
-	caja.content_margin_bottom = 24
+	caja.content_margin_left = 20 if _bajo() else 30
+	caja.content_margin_right = 20 if _bajo() else 30
+	caja.content_margin_top = 12 if _bajo() else 24
+	caja.content_margin_bottom = 12 if _bajo() else 24
 	panel.add_theme_stylebox_override("panel", caja)
 	_vista = VBoxContainer.new()
 	_vista.add_theme_constant_override("separation", 6)
@@ -213,18 +221,18 @@ func _vista_previa() -> Control:
 	_lbl_vista = _etiqueta(11, SUAVE)
 	_vista.add_child(_lbl_vista)
 	_bandera_grande = BanderaIdioma.new(_inicial, Vector2i(540, 360))
-	_bandera_grande.custom_minimum_size = Vector2(290, 193)
+	_bandera_grande.custom_minimum_size = Vector2(150, 100) if _bajo() else Vector2(290, 193)
 	_bandera_grande.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_bandera_grande.fuerza = 0.7
 	_vista.add_child(_bandera_grande)
-	_lbl_nombre = _etiqueta(32, TEXTO, _serif)
+	_lbl_nombre = _etiqueta(24 if _bajo() else 32, TEXTO, _serif)
 	_vista.add_child(_lbl_nombre)
 	_lbl_etiqueta = _etiqueta(11, ORO)
 	_vista.add_child(_lbl_etiqueta)
 	var hueco := Control.new()
 	hueco.custom_minimum_size = Vector2(0, 6)
 	_vista.add_child(hueco)
-	_lbl_saludo = _etiqueta(21, Color(TEXTO, 0.92), _serif_cursiva)
+	_lbl_saludo = _etiqueta(15 if _bajo() else 21, Color(TEXTO, 0.92), _serif_cursiva)
 	_lbl_saludo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_vista.add_child(_lbl_saludo)
 	var raya := ColorRect.new()
