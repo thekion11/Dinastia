@@ -110,6 +110,12 @@ func _probar_tactil() -> void:
 	_comprobar(gz.centro_de("A").x < 640.0 and gz.centro_reposo().x > 640.0, "el zurdo elegido en Ajustes espeja los controles")
 	gz.free()
 	AjustesTactil.restaurar()
+	## Etiquetas por contexto: con balón Pase/Tiro/Centro; sin balón Presión/Entrada/Barrida; «Al hueco» se apaga sin balón.
+	_comprobar(c.etiqueta_de("A", true) == "Pase" and c.etiqueta_de("A", false) == "Presión", "etiqueta de A: Pase con balón, Presión sin balón")
+	_comprobar(c.etiqueta_de("B", true) == "Tiro" and c.etiqueta_de("B", false) == "Entrada", "etiqueta de B: Tiro con balón, Entrada sin balón")
+	_comprobar(c.etiqueta_de("X", true) == "Centro" and c.etiqueta_de("X", false) == "Barrida", "etiqueta de X: Centro con balón, Barrida sin balón")
+	_comprobar(c.etiqueta_de("Y", true) == "Al hueco" and c.etiqueta_de("Y", false) == "", "«Al hueco» sin balón se apaga")
+	_comprobar(c.etiqueta_de("Sprint", true) == "Sprint", "los botones sin contexto conservan su etiqueta")
 	## Ajustes: tamaño y opacidad (se leen al crear el control) y cuándo salen.
 	c.soltar_todo()
 	c.queue_free()
