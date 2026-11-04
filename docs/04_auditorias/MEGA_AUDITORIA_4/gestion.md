@@ -33,6 +33,11 @@ caja −250 M, todos lesionados y sancionados, club con 48 jugadores y otro vac�
   la ficha mental. Arreglo: 6 semillas (24 juveniles). Cifras con la muestra grande: plan por defecto +3,4 (el dueño pidió +4-6) y
   buen plan +5,7 con un máximo de +11 (pidió ≤ +8; el freno de `Entrenamiento.freno_temporada` es probabilístico y la curva anual
   `ProgresoJugador.anual` suma aparte). Queda como DEUDA DE CALIBRACIÓN (no es un fallo de código). Prueba: ARREGLADA.
+- [A4-GES-007] (caza, gravedad: alto, cambia el juego) CEDIDOS: mientras está cedido el jugador figura en el plantel del club que lo
+  recibe, y nadie lo miraba: (a) la IA podía COMPRÁRSELO a ese club (que cobraba por un jugador prestado) y al acabar la cesión volvía a
+  su dueño, con el comprador sin jugador ni dinero; (b) te llegaban OFERTAS por un jugador que solo tienes cedido (vendías algo ajeno);
+  (c) podías negociar por un cedido y pagarle al club que lo tiene prestado. Arreglo: `Mercado._cedido` en `_buscar_objetivo`,
+  `buscar_oferta_por_mi_jugador` y `responder_oferta`; `abrir_negociacion` lo rechaza con frase traducida. Prueba en `a4_gestion_limite`. ARREGLADO.
 - Sin hallazgos: integridad del mundo en 8 temporadas (un club por jugador, club_id, libres, contratos, sueldos, edades, medias, cajas,
   planteles, ligas y divisiones); caja a −250 M seis semanas; club con todos lesionados y sancionados (saca 11); club con 48 jugadores y
   otro vacío; año 2099.
