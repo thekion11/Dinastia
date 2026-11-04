@@ -44,7 +44,7 @@ func _complejo() -> void:
 			var total := float(Instalaciones.SEMANAS.get(String(e["k"]), Instalaciones.SEMANAS_POR_DEFECTO))
 			var faltan := float(enObra[e["k"]])
 			_obra_en_curso(pos, float(e["ancho"]), float(e["fondo"]), 6.0 * maxi(1, niv + 1), 1.0 - faltan / maxf(total, 1.0))
-		var texto_r: String = ("%s 🏗 %d sem" % [str(e["n"]), int(enObra[e["k"]])]) if obra else ("%s  N%d" % [str(e["n"]), niv])
+		var texto_r: String = ("%s 🏗 %d %s" % [Idiomas.t(str(e["n"])), int(enObra[e["k"]]), Idiomas.t("sem")]) if obra else ("%s  N%d" % [Idiomas.t(str(e["n"])), niv])
 		CartelFachada.con_mapa(self, pos + Vector3(0, 6.0 * maxi(1, niv) + 8.0, 0), texto_r,
 			Color(1.0, 0.85, 0.4) if obra else Color(1, 1, 1))
 		puntos_clic.append({"k": String(e["k"]), "n": str(e["n"]), "pos": pos + Vector3(0, 6.0 * maxi(1, niv) * 0.5, 0),
