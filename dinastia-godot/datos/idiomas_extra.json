@@ -7170,7 +7170,11 @@
   "Mod": "Mod",
   "Resolución del 3D en Media: %d %%": "3D resolution in Medium: %d %%",
   "quien ya salió no puede volver a entrar": "a player who has come off cannot come back on",
-  "Modo zurdo (stick a la derecha)": "Left-handed mode (stick on the right)"
+  "Modo zurdo (stick a la derecha)": "Left-handed mode (stick on the right)",
+  "Centro": "Cross",
+  "Al hueco": "Through ball",
+  "Entrada": "Tackle",
+  "Barrida": "Slide"
  },
  "pt": {
   "Historia": "História",
@@ -14343,7 +14347,11 @@
   "Mod": "Mod",
   "Resolución del 3D en Media: %d %%": "Resolução do 3D no Médio: %d %%",
   "quien ya salió no puede volver a entrar": "quem já saiu não pode voltar a entrar",
-  "Modo zurdo (stick a la derecha)": "Modo canhoto (stick à direita)"
+  "Modo zurdo (stick a la derecha)": "Modo canhoto (stick à direita)",
+  "Centro": "Cruzamento",
+  "Al hueco": "Passe em profundidade",
+  "Entrada": "Desarme",
+  "Barrida": "Carrinho"
  },
  "patrones": [
   [
@@ -27370,7 +27378,11 @@
   "Mod": "Mod",
   "Resolución del 3D en Media: %d %%": "Résolution de la 3D en Moyen : %d %%",
   "quien ya salió no puede volver a entrar": "un joueur remplacé ne peut pas revenir",
-  "Modo zurdo (stick a la derecha)": "Mode gaucher (stick à droite)"
+  "Modo zurdo (stick a la derecha)": "Mode gaucher (stick à droite)",
+  "Centro": "Centre",
+  "Al hueco": "Passe en profondeur",
+  "Entrada": "Tacle",
+  "Barrida": "Tacle glissé"
  },
  "it": {
   "Historia": "Storia",
@@ -34543,7 +34555,11 @@
   "Mod": "Mod",
   "Resolución del 3D en Media: %d %%": "Risoluzione del 3D al Medio: %d %%",
   "quien ya salió no puede volver a entrar": "chi è già uscito non può rientrare",
-  "Modo zurdo (stick a la derecha)": "Modalità mancino (stick a destra)"
+  "Modo zurdo (stick a la derecha)": "Modalità mancino (stick a destra)",
+  "Centro": "Cross",
+  "Al hueco": "Filtrante",
+  "Entrada": "Contrasto",
+  "Barrida": "Scivolata"
  },
  "de": {
   "Historia": "Geschichte",
@@ -41716,7 +41732,11 @@
   "Mod": "Mod",
   "Resolución del 3D en Media: %d %%": "3D-Auflösung im Mittel: %d %%",
   "quien ya salió no puede volver a entrar": "wer ausgewechselt wurde, darf nicht wieder rein",
-  "Modo zurdo (stick a la derecha)": "Linkshändermodus (Stick rechts)"
+  "Modo zurdo (stick a la derecha)": "Linkshändermodus (Stick rechts)",
+  "Centro": "Flanke",
+  "Al hueco": "Steilpass",
+  "Entrada": "Tackling",
+  "Barrida": "Grätsche"
  },
  "ca": {
   "Historia": "Història",
@@ -48889,7 +48909,11 @@
   "Mod": "Mod",
   "Resolución del 3D en Media: %d %%": "Resolució del 3D en Mitjà: %d %%",
   "quien ya salió no puede volver a entrar": "qui ja ha sortit no pot tornar a entrar",
-  "Modo zurdo (stick a la derecha)": "Mode esquerrà (stick a la dreta)"
+  "Modo zurdo (stick a la derecha)": "Mode esquerrà (stick a la dreta)",
+  "Centro": "Centre",
+  "Al hueco": "Passada al buit",
+  "Entrada": "Entrada",
+  "Barrida": "Rellisqada"
  },
  "pl": {
   "Club": "Klub",
@@ -56331,7 +56355,11 @@
   "Mod": "Mod",
   "Resolución del 3D en Media: %d %%": "Rozdzielczość 3D w Średnim: %d %%",
   "quien ya salió no puede volver a entrar": "zawodnik, który zszedł, nie może wrócić na boisko",
-  "Modo zurdo (stick a la derecha)": "Tryb dla leworęcznych (drążek po prawej)"
+  "Modo zurdo (stick a la derecha)": "Tryb dla leworęcznych (drążek po prawej)",
+  "Centro": "Dośrodkowanie",
+  "Al hueco": "Prostopadłe",
+  "Entrada": "Odbiór",
+  "Barrida": "Wślizg"
  },
  "tr": {
   "Club": "Kulüp",
@@ -63773,6 +63801,10 @@
   "Mod": "Mod",
   "Resolución del 3D en Media: %d %%": "Orta'da 3D çözünürlüğü: %d %%",
   "quien ya salió no puede volver a entrar": "oyundan çıkan oyuncu tekrar giremez",
-  "Modo zurdo (stick a la derecha)": "Solak modu (çubuk sağda)"
+  "Modo zurdo (stick a la derecha)": "Solak modu (çubuk sağda)",
+  "Centro": "Orta",
+  "Al hueco": "Ara pas",
+  "Entrada": "Müdahale",
+  "Barrida": "Kayarak müdahale"
  }
 }

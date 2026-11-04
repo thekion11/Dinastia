@@ -22,6 +22,8 @@ const BOTONES := {
 	"Mod": ["Mod", "jugar_mod", Vector2(75, 330), 44.0, Color(0.75, 0.6, 1.0)],
 	"Pausa": ["II", "jugar_pausa", Vector2.ZERO, 44.0, Color(0.8, 0.8, 0.85)],   ## arriba a la derecha (ver `centro_de`)
 }
+## Etiqueta de cada botón según tengas o no el balón (4-11-2026; mismas acciones que `Mando.CON_BALON` / `Mando.SIN_BALON`): [con balón, sin balón]. «Al hueco» sin balón no hace nada y se ve apagado.
+const CONTEXTO := {"A": ["Pase", "Presión"], "B": ["Tiro", "Entrada"], "X": ["Centro", "Barrida"], "Y": ["Al hueco", ""]}
 const ZONA_STICK_X := 0.45              ## el stick solo nace en este tramo del ancho (el lado del pulgar izquierdo)
 const ZONA_STICK_Y := 0.2               ## y por debajo de este tramo de arriba (no tapa el marcador)
 const ALTO_ARCO := 370.0                ## lo que sube el arco de botones desde la esquina (px del lienzo con escala 1): tope del tamaño
@@ -36,6 +38,7 @@ var _dedos := {}                       ## índice de dedo → nombre del botón
 var esc := 1.0                         ## tamaño elegido en Ajustes (1 = el de siempre)
 var opac := 1.0                        ## opacidad elegida en Ajustes
 var _zurdo := false
+var _con_balon := true                 ## el jugador que llevas tiene el balón (cambia las etiquetas de A, B, X e Y)
 
 ## Lo añade al partido si el aparato es táctil (o `forzar`). Devuelve el control (null si no hacía falta).
 static func poner(padre: Node) -> ControlesTactiles:
@@ -61,6 +64,24 @@ func _process(_d: float) -> void:
 	var ayuda: Variant = get_parent().get("_ayuda") if get_parent() != null else null
 	if ayuda is CanvasItem and (ayuda as CanvasItem).visible:
 		(ayuda as CanvasItem).visible = false
+	var cb := _tengo_balon()
+	if cb != _con_balon:
+		_con_balon = cb
+		queue_redraw()
+
+## ¿Tiene el balón el jugador que manejas? Sin motor (pruebas sueltas) se queda como con balón.
+func _tengo_balon() -> bool:
+	var motor: Variant = get_parent().get("motor") if get_parent() != null else null
+	if motor == null:
+		return true
+	var yo: Dictionary = motor.usuario
+	return not yo.is_empty() and motor.poseedor == yo
+
+## Las líneas de la etiqueta de un botón en este momento (con o sin balón); vacío = botón apagado sin acción.
+func etiqueta_de(nombre: String, con_balon: bool) -> String:
+	if not CONTEXTO.has(nombre):
+		return String((BOTONES[nombre] as Array)[0])
+	return String((CONTEXTO[nombre] as Array)[0 if con_balon else 1])
 
 func _exit_tree() -> void:
 	soltar_todo()
@@ -207,12 +228,15 @@ func _draw() -> void:
 		var r := radio_de(n)
 		var col: Color = (BOTONES[n] as Array)[4]
 		var activo := _dedos.values().has(n)
-		draw_circle(c, r, Color(col.r * 0.6, col.g * 0.6, col.b * 0.6, 0.62 * opac) if activo else Color(0.04, 0.05, 0.08, 0.42 * opac))
-		draw_arc(c, r, 0.0, TAU, 40, Color(col.r, col.g, col.b, (0.95 if activo else 0.75) * opac), 4.0 * s)
-		var lineas := Idiomas.t(String(BOTONES[n][0])).split("\n")
+		var etiqueta := etiqueta_de(n, _con_balon)
+		var apagado := etiqueta == ""
+		var op_b := opac * (0.45 if apagado else 1.0)
+		draw_circle(c, r, Color(col.r * 0.6, col.g * 0.6, col.b * 0.6, 0.62 * op_b) if activo else Color(0.04, 0.05, 0.08, 0.42 * op_b))
+		draw_arc(c, r, 0.0, TAU, 40, Color(col.r, col.g, col.b, (0.95 if activo else 0.75) * op_b), 4.0 * s)
+		var lineas := Idiomas.t(etiqueta if not apagado else String(BOTONES[n][0])).split("\n")
 		var tam := int(roundf(clampf(r * 0.30, 11.0, 24.0)))
 		for k in lineas.size():
 			var y := c.y + float(tam) * 0.35 + (float(k) - float(lineas.size() - 1) * 0.5) * float(tam) * 1.15
 			var tk := tam if k == 0 else int(tam * 0.85)
-			draw_string_outline(fuente, Vector2(c.x - r, y), lineas[k], HORIZONTAL_ALIGNMENT_CENTER, r * 2.0, tk, 5, Color(0, 0, 0, 0.8 * opac))
-			draw_string(fuente, Vector2(c.x - r, y), lineas[k], HORIZONTAL_ALIGNMENT_CENTER, r * 2.0, tk, Color(1, 1, 1, (1.0 if k == 0 else 0.85) * opac))
+			draw_string_outline(fuente, Vector2(c.x - r, y), lineas[k], HORIZONTAL_ALIGNMENT_CENTER, r * 2.0, tk, 5, Color(0, 0, 0, 0.8 * op_b))
+			draw_string(fuente, Vector2(c.x - r, y), lineas[k], HORIZONTAL_ALIGNMENT_CENTER, r * 2.0, tk, Color(1, 1, 1, (1.0 if k == 0 else 0.85) * op_b))
