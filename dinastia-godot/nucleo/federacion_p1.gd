@@ -52,6 +52,7 @@ const BONO_JUVENIL := 35000.0
 const TOPE_EXTRANJEROS := 6
 const CLUB_GRANDE := 78            ## de aquí para arriba mandas en la asamblea
 const MAX_CASOS := 30
+const MAX_FECHAS := 40            ## tope de una sanción: una temporada larga
 const MAX_CONTROLES := 12
 ## Ventaja en el duelo de playoffs por haber acabado arriba en la tabla.
 const VENTAJA_PRIMERO := 4.0
@@ -273,6 +274,7 @@ func abrir_votacion() -> Dictionary:
 ## Abre un expediente y aplica la sanción. Lo llaman el partido (rojas,
 ## agresiones) y el control antidopaje de aquí abajo.
 func abrir_caso(tipo: String, j: Jugador, fechas: int, motivo: String, anio: int, semana_n: int) -> Dictionary:
+	fechas = clampi(fechas, 0, MAX_FECHAS)   ## A4-GESTION-003: una sanción no puede ser negativa ni eterna
 	_sec += 1
 	var caso := {
 		"id": "k%d" % _sec, "tipo": tipo,

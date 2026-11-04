@@ -278,17 +278,22 @@ func cb_altura(ex: Object, p: Vector3) -> float:
 
 ## ---- 5. coches (al armar)
 func _coches_armado(t: Object) -> void:
-	var coches: Array = []
+	## A4-X04: se mide el REPARTO INICIAL (ruta + `s_ini`), no donde estén los coches tras los fotogramas que corrieron mientras se abría la ciudad (dependían del reloj: intermitente).
+	var rutas: Array = t.get("_rutas")
+	var puntos: Array[Dictionary] = []
 	for v: Dictionary in t.get("_vehiculos"):
-		if is_instance_valid(v["nodo"]) and not bool(v.get("peaton", false)) and float(v.get("alto", 0.0)) < 0.05 and not String((v["nodo"] as Node3D).name).begins_with("kart"):
-			coches.append(v)
+		if is_instance_valid(v["nodo"]) and not bool(v.get("peaton", false)) and float(v.get("alto", 0.0)) < 0.05 and not String((v["nodo"] as Node3D).name).begins_with("kart") and v.has("s_ini"):
+			var pos: Vector3 = (rutas[int(v["ruta"])] as Object).call("en", float(v["s_ini"]))[0]
+			puntos.append({"pos": pos, "ruta": int(v["ruta"]), "nombre": String((v["nodo"] as Node3D).name)})
+	var coches := puntos
 	var pegados := 0
 	var quienes: Array[String] = []
 	for i in coches.size():
 		for j in range(i + 1, coches.size()):
-			if (coches[i]["nodo"] as Node3D).position.distance_to((coches[j]["nodo"] as Node3D).position) < 1.0:
+			var d: float = (coches[i]["pos"] as Vector3).distance_to(coches[j]["pos"])
+			if d < 1.0:
 				pegados += 1
-				quienes.append("%s/%s a %.2f m en (%.0f,%.0f) rutas %d/%d" % [(coches[i]["nodo"] as Node3D).name, (coches[j]["nodo"] as Node3D).name, (coches[i]["nodo"] as Node3D).position.distance_to((coches[j]["nodo"] as Node3D).position), (coches[i]["nodo"] as Node3D).position.x, (coches[i]["nodo"] as Node3D).position.z, int(coches[i]["ruta"]), int(coches[j]["ruta"])])
+				quienes.append("%s/%s a %.2f m en (%.0f,%.0f) rutas %d/%d" % [coches[i]["nombre"], coches[j]["nombre"], d, (coches[i]["pos"] as Vector3).x, (coches[i]["pos"] as Vector3).z, int(coches[i]["ruta"]), int(coches[j]["ruta"])])
 	for q in quienes:
 		print("    PEGADOS ", q)
 	_comprobar(pegados == 0, "ningún vehículo a menos de 1 m de otro al armar (%d pares, %d vehículos)" % [pegados, coches.size()])
