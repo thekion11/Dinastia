@@ -32,6 +32,22 @@ static var CX := float(OS.get_environment("CENTRO_X")) if OS.get_environment("CE
 static var CZ := float(OS.get_environment("CENTRO_Z")) if OS.get_environment("CENTRO_Z") != "" else 20.0
 static var CP := float(OS.get_environment("CENTRO_P")) if OS.get_environment("CENTRO_P") != "" else 0.55
 
-static func centrar(m: MotorJugable, yo: Vector3, arco: Vector3) -> bool:
-	return absf(yo.x) > CX and absf(arco.z - yo.z) < CZ and m._rng.randf() < CP
+## Con `CENTRO_ESPERA=s` (segundos; 0 = como antes) el centrador ESPERA a que haya al menos 2 compañeros a < 18 m del arco (máximo `s` segundos desde que entra en la zona de centro): antes el centro salía al instante y
+## nadie había llegado al área.
+static var ESPERA := float(OS.get_environment("CENTRO_ESPERA")) if OS.get_environment("CENTRO_ESPERA") != "" else 0.0
 
+static func centrar(m: MotorJugable, p: Dictionary, yo: Vector3, arco: Vector3) -> bool:
+	var zona := absf(yo.x) > CX and absf(arco.z - yo.z) < CZ
+	if ESPERA > 0.0:
+		if not zona:
+			p.erase("_centro_t0")
+		else:
+			if not p.has("_centro_t0"):
+				p["_centro_t0"] = m.t
+			var n := 0
+			for q: Dictionary in m.jugadores:
+				if q != p and bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and m.pos(q).distance_to(arco) < 18.0:
+					n += 1
+			if n < 2 and m.t - float(p["_centro_t0"]) < ESPERA:
+				return false
+	return zona and m._rng.randf() < CP
