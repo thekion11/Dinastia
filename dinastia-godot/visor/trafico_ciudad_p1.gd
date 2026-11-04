@@ -222,7 +222,7 @@ func agregar_vehiculo(nodo: Node3D, ruta: int, s: float, vel: float,
 	var peaton := alto > 0.05 and alto < 0.3 and not String(nodo.name).begins_with("Bote")
 	add_child(nodo)
 	_vehiculos.append({
-		"nodo": nodo, "ruta": ruta, "s": s, "vel": vel,
+		"nodo": nodo, "ruta": ruta, "s": s, "s_ini": s, "vel": vel,   ## s_ini: dónde se reparte al armar (A4-X04: la prueba de «al armar» no depende del tiempo que corrió antes)
 		"alto": alto, "giro": giro_base, "peaton": peaton,
 	})
 	if peaton:
