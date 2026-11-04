@@ -343,8 +343,9 @@ func _simular(t: Object) -> void:
 							ejemplos.append("%s/%s a %.2f m en t=%.0f s" % [(coches[a]["nodo"] as Node3D).name, (coches[b]["nodo"] as Node3D).name, d, float(i) * paso])
 					min_dist = minf(min_dist, d)
 	print("  tráfico completo 120 s: distancia mínima entre vehículos %.2f m, %d instantes bajo 1,2 m %s" % [min_dist, chocan, str(ejemplos)])
-	## DEUDA CONOCIDA: en los cruces los coches de rutas que se cortan a veces se solapan unos instantes (57 de ~240 000 comparaciones): el tope vigila que no crezca.
-	_comprobar(chocan <= 80, "solapes entre vehículos en 2 min no crecen (%d instantes de tope 80, mínimo %.2f m)" % [chocan, min_dist])
+	## (A4-M3D-012, 4-11) Los solapes eran de coches de la MISMA ruta sin cola (los del anillo y la avenida no seguían al de delante) y, a paso grueso del LOD, de coches que saltaban al de delante: arreglado (36-43 → ≤ 5);
+	## quedan unos pocos instantes de rutas que se cortan en un cruce LEJANO (LOD 2, a ~20 m por paso, fuera de vista).
+	_comprobar(chocan <= 12, "solapes entre vehículos en 2 min (%d instantes, tope 12; antes 36-43; mínimo %.2f m)" % [chocan, min_dist])
 	## 2) solo los buses (sin coches ni gente que los frenen), con los semáforos avanzando
 	var todos: Array = (t.get("_vehiculos") as Array).duplicate()
 	var solo: Array = []

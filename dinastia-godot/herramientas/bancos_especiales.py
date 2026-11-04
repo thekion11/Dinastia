@@ -68,7 +68,7 @@ BANCOS = [
     ("ciudad_construccion", "ciudad: construcción, módulos, rellenos, oclusión, ciudad grande",
      r"ciudad_b7|ciudad_grande|rellenos_ciudad|modulos|optimizacion|f0m_visor_ciudad|zonas_vista|entorno_oclusion|texturas en disco|cierre_ciudad|escala_movil|p4_mobiliario|construir y soltar|ciudad en marcha"),
     ("ciudad_vida", "vida en la ciudad: peatones, comercios, parques, casas",
-     r"peaton|rotulos_cartel|comercio|parque|cancha_patos|habitantes|salas_comercio|ropero|ciudad_animo|redes_ciudad|_ciudad$|expendedora|peluches|luces_calle|ciudad a pie"),
+     r"peaton|rotulos_cartel|comercio|parque|cancha_patos|habitantes|salas_comercio|ropero|ciudad_animo|redes_ciudad|_ciudad$|expendedora|peluches|luces_calle|ciudad a pie|a4_interiores"),
     ("ciudad_transporte", "transporte: tráfico, metro, bus, tren, teleférico, sirenas, paraderos",
      r"tráfico|trafico|tre_coches|metro|bus|tren|teleférico|teleferico|sirenas|emergencias|paradero|app Red|peaje|semaforo|senales|tarjeta_transporte|faros_coches|p6_boton_e"),
     ("personajes_3d", "personajes 3D: cuerpos, caras, pelo, ropa, animaciones",
