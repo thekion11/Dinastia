@@ -23,9 +23,12 @@ func hay_partido() -> bool:
 func _notification(que: int) -> void:
 	match que:
 		NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_WM_WINDOW_FOCUS_OUT:
-			if _es_movil() and not hay_partido():
-				pausar_arbol()
+			if _es_movil():
+				Musica.en_segundo_plano(true)   ## la música se calla donde está (también con un partido abierto)
+				if not hay_partido():
+					pausar_arbol()
 		NOTIFICATION_APPLICATION_RESUMED, NOTIFICATION_APPLICATION_FOCUS_IN, NOTIFICATION_WM_WINDOW_FOCUS_IN:
+			Musica.en_segundo_plano(false)
 			reanudar_arbol()
 		NOTIFICATION_WM_GO_BACK_REQUEST:
 			atras.call_deferred()
