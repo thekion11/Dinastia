@@ -36,6 +36,9 @@ func _bajar(x: Node, prof: int, sangria: String) -> void:
 		if hs[i][0] > 600:
 			_bajar(hs[i][1], prof + 1, sangria + "    ")
 
+func return_ok() -> void:
+	get_tree().quit()
+
 func _process(_d: float) -> void:
 	_n += 1
 	Engine.max_fps = 0
@@ -45,6 +48,24 @@ func _process(_d: float) -> void:
 		var v: Node = null
 		for h in _p.get_children():
 			if h is VistaCiudad: v = h
-		print("ARBOL total=", _tam(v))
-		_bajar(v, 0, "")
+		var raiz: Node = null
+		for c in v.get_children():
+			if c.get_child_count() > 20000: raiz = c
+		var hs := raiz.get_children()
+		var vacios := []
+		var tipos := {}
+		for i in hs.size():
+			var c: Node = hs[i]
+			tipos[c.get_class()] = int(tipos.get(c.get_class(), 0)) + 1
+			if c.get_class() == "Node3D" and c.get_child_count() == 0:
+				vacios.append(i)
+		print("RAIZ hijos=", hs.size(), " tipos=", tipos, " vacios=", vacios.size())
+		for k in [0, 1, 2, 500, 1500, 3000]:
+			if k < vacios.size():
+				var i: int = vacios[k]
+				print("VACIO #", i, " ", _etiqueta(hs[i]), " pos=", (hs[i] as Node3D).position, " metas=", hs[i].get_meta_list(), " grupos=", hs[i].get_groups())
+				for d in [-2, -1, 1, 2]:
+					if i + d >= 0 and i + d < hs.size(): print("      vecino", d, _etiqueta(hs[i + d]))
+		return_ok()
+		return
 		get_tree().quit()
