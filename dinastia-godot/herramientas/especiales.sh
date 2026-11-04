@@ -170,6 +170,8 @@ pasa "a4_gestion_cesiones" "godot --headless --path . res://pruebas/ideas/a4_ges
 <<<<<<< HEAD
 pasa "a4_gestion_mercado_fed" "godot --headless --path . res://pruebas/ideas/a4_gestion_mercado_fed.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_noticias_idiomas" "godot --headless --path . res://pruebas/ideas/a4_noticias_idiomas.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_gestion_directiva" "godot --headless --path . res://pruebas/ideas/a4_gestion_directiva.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_gestion_prensa" "godot --headless --path . res://pruebas/ideas/a4_gestion_prensa.tscn" "(^|[^0-9])0 fallos"
 =======
 >>>>>>> origin/claude/dazzling-rubin-v7rfyi
 # a4_limite_mundo necesita pantalla virtual (opengl3): el contenedor del CI no trae xvfb-run (A4, 4-11), como el bloque 6a
