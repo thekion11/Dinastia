@@ -98,10 +98,9 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   y pasar la rama a `main` (PR #120, el dueño dijo SÍ el 4-11) cuando el CI esté verde.
 
 ## FALLOS DETECTADOS (ronda de búsqueda continua; solo se registran, se corrigen aparte)
-- [F-002] (4-11) POR VERIFICAR CON GODOT: `dinastia-godot/datos/reales_lista.json` y `datos/caras_reales_reporte.json` empiezan con BOM UTF-8; `json.load` de Python los rechaza. Comprobar con `JSON.parse_string`/`Datos`; si Godot los acepta, no es fallo.
 - [F-004] (4-11) Rutas `res://` rotas en pruebas: `pruebas/probar_foto_real.gd` y `pruebas/ver_pieza_ropa.gd` cargan `assets/characters/quaternius/ropa_temp/Male_Peasant_Body.gltf` (no existe); `pruebas/captura_viento_arboles.gd` lee `pruebas/capturas/viento_arboles_a.png` (carpeta borrada el 27-10). (Revalidar sobre la rama viva.)
-- [F-005] (4-11) Este contenedor no tiene Godot: `banco.sh` no corre aquí; las rondas hacen análisis estático hasta bajar Godot 4.7.2.
-- Descartados por el líder (4-11): F-001 (la norma se comprueba con `python3 herramientas/revisar_lineas.py --todos` desde la raíz) y F-003 (`addons/` y `terceros/` no cuentan).
+- [F-006] (4-11) `dinastia-godot/visor/motor_jugable_p6.gd` tiene 455 líneas (>450); `python3 herramientas/revisar_lineas.py --todos` lo marca. Partir con `partir_gd.py`.
+- Descartados (4-11): F-002 (el BOM no estorba: Godot 4.7.2 parsea ambos JSON); por el líder: F-001 (la norma se comprueba con `python3 herramientas/revisar_lineas.py --todos` desde la raíz) y F-003 (`addons/` y `terceros/` no cuentan).
 
 ## 0. Lo que espera una decisión tuya (lista corta)
 
