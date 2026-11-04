@@ -133,7 +133,7 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 	var lienzo := Control.new()
 	lienzo.custom_minimum_size = Vector2(200, 240)
 	colm.add_child(lienzo)
-	var pol := MapaPais.poligono(_pais_elegido, Vector2(200, 240))
+	var pol: PackedVector2Array = load("res://ui/mapa_pais.gd").poligono(_pais_elegido, Vector2(200, 240))   ## (A4 memoria) por ruta
 	if pol.size() >= 3:
 		var forma := Polygon2D.new()
 		forma.polygon = pol

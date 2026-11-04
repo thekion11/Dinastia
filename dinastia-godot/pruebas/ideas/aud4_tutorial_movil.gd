@@ -15,7 +15,7 @@ func _probar() -> void:
 	for idi: String in ["es", "de"]:
 		PedidoPartida.mundo_pregenerado = m
 		AyudaMovil.poner(Vector2i(2400, 1080), get_window())
-		Idiomas.idioma = idi
+		_fijar_idioma(idi)
 		CapasTutorial.poner_activas(true)
 		PedidoPartida.tutorial_pedido = true   ## como si fuera la primera carrera
 		var t0 := Time.get_ticks_msec()

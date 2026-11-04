@@ -43,7 +43,7 @@ func _columna(padre: HBoxContainer, titulo: String, ratio: float) -> VBoxContain
 ## La ficha completa de la competición, encima de todo. Sale de `principal.gd`
 ## para no engordar más este archivo, que ya pasa de las cinco mil líneas.
 func _abrir_competicion() -> void:
-	var v := Competicion.new()
+	var v: Control = load("res://ui/competicion.gd").new()   ## (A4 memoria) por ruta
 	v.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(v)
 	v.abrir(mundo, _liga_de(mundo.mi_club()))
