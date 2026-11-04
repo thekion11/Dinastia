@@ -236,7 +236,11 @@ func _fila(cols: Array, fichas: Array, al_pulsar: Callable = Callable()) -> Pane
 	b.mouse_filter = Control.MOUSE_FILTER_STOP
 	b.set_meta("fila", true)
 	b.set_meta("fichas", fichas)
-	var e := StyleBoxEmpty.new()
+	## (4-11) Filas alternas y una guía de 1 px (como el resto de las tablas): la mirada sigue la fila de la acción hasta sus tres columnas.
+	var e := StyleBoxFlat.new()
+	e.bg_color = Color(0.62, 0.62, 0.62, 0.07 if _contenido.get_child_count() % 2 == 1 else 0.0)
+	e.border_color = Color(0.62, 0.62, 0.62, 0.10)
+	e.border_width_bottom = 1
 	e.content_margin_left = 10
 	e.content_margin_right = 8
 	e.content_margin_top = 6

@@ -68,19 +68,54 @@ func _probar_tactil() -> void:
 	_arrastre(c, 7, Vector2(1000, 100))
 	_comprobar(Mando.movimiento() == Vector2.ZERO, "un dedo en la mitad derecha, fuera de los botones, no mueve")
 	_toque(c, 7, Vector2(900, 100), false)
-	## Todos los botones caben en pantalla de 1280×720 y de móvil (800×360) sin pisarse.
-	for tam: Vector2 in [Vector2(1280, 720), Vector2(960, 480)]:
+	## Todos los botones caben en pantalla de 1280×720, de 1600×720 (móvil 20:9) y de móvil pequeño (960×480), sin pisarse (≥ 4 px entre ellos), en el pulgar (mitad inferior) y sin tapar el marcador (nada en el 45 % de arriba).
+	for tam: Vector2 in [Vector2(1280, 720), Vector2(1600, 720), Vector2(960, 480)]:
 		c.size = tam
 		var ok := true
 		var ns: Array = nombres.keys()
 		for i in ns.size():
 			var p := c.centro_de(String(ns[i]))
-			if p.x < ControlesTactiles.RADIO_BOTON or p.y < ControlesTactiles.RADIO_BOTON or p.x > tam.x or p.y > tam.y:
+			var ri := c.radio_de(String(ns[i]))
+			if p.x < ri or (p.y < tam.y * 0.45 and ns[i] != "Pausa") or p.x > tam.x - ri or p.y > tam.y - ri:
 				ok = false
 			for j in range(i + 1, ns.size()):
-				if p.distance_to(c.centro_de(String(ns[j]))) < ControlesTactiles.RADIO_BOTON * 1.9:
+				if p.distance_to(c.centro_de(String(ns[j]))) < ri + c.radio_de(String(ns[j])) + 4.0:
 					ok = false
-		_comprobar(ok, "en %d×%d los botones caben y no se pisan" % [int(tam.x), int(tam.y)])
+		_comprobar(ok, "en %d×%d los botones caben, no se pisan (≥ 4 px) y quedan en la zona del pulgar" % [int(tam.x), int(tam.y)])
+		_comprobar(c.radio_de("A") * 2.0 >= 0.1 * tam.y, "en %d×%d el botón grande es del tamaño de un dedo (≥ 10 %% de la altura)" % [int(tam.x), int(tam.y)])
+	## El stick no nace arriba (donde va el marcador) ni en la mitad de los botones.
+	c.size = Vector2(1280, 720)
+	_toque(c, 8, Vector2(200, 60), true)
+	_arrastre(c, 8, Vector2(260, 60))
+	_comprobar(Mando.movimiento() == Vector2.ZERO, "un dedo arriba a la izquierda (marcador) no crea stick")
+	_toque(c, 8, Vector2(200, 60), false)
+	## Zurdo: todo espejado (botones a la izquierda, stick a la derecha).
+	ControlesTactiles.zurdo = true
+	_comprobar(c.centro_de("A").x < 640.0 and c.centro_reposo().x > 640.0, "zurdo: botones a la izquierda y stick a la derecha")
+	_toque(c, 9, Vector2(1100, 500), true)
+	_arrastre(c, 9, Vector2(1160, 500))
+	_comprobar(Mando.movimiento().x > 0.2, "zurdo: el stick nace a la derecha")
+	_toque(c, 9, Vector2(1100, 500), false)
+	_toque(c, 10, c.centro_de("B"), true)
+	_comprobar(Input.is_action_pressed("jugar_tiro"), "zurdo: el botón B pulsa «jugar_tiro»")
+	_toque(c, 10, c.centro_de("B"), false)
+	_comprobar(c.centro_de("Pausa").x > 640.0, "zurdo: el botón de pausa sigue arriba a la derecha")
+	ControlesTactiles.zurdo = false
+	## Ajustes: el modo zurdo se guarda y llega a los controles.
+	AjustesTactil.restaurar()
+	_comprobar(not AjustesTactil.zurdo(), "por defecto no es zurdo")
+	AjustesTactil.poner_zurdo(true)
+	var gz := ControlesTactiles.poner(self)
+	gz.size = Vector2(1280, 720)
+	_comprobar(gz.centro_de("A").x < 640.0 and gz.centro_reposo().x > 640.0, "el zurdo elegido en Ajustes espeja los controles")
+	gz.free()
+	AjustesTactil.restaurar()
+	## Etiquetas por contexto: con balón Pase/Tiro/Centro; sin balón Presión/Entrada/Barrida; «Al hueco» se apaga sin balón.
+	_comprobar(c.etiqueta_de("A", true) == "Pase" and c.etiqueta_de("A", false) == "Presión", "etiqueta de A: Pase con balón, Presión sin balón")
+	_comprobar(c.etiqueta_de("B", true) == "Tiro" and c.etiqueta_de("B", false) == "Entrada", "etiqueta de B: Tiro con balón, Entrada sin balón")
+	_comprobar(c.etiqueta_de("X", true) == "Centro" and c.etiqueta_de("X", false) == "Barrida", "etiqueta de X: Centro con balón, Barrida sin balón")
+	_comprobar(c.etiqueta_de("Y", true) == "Al hueco" and c.etiqueta_de("Y", false) == "", "«Al hueco» sin balón se apaga")
+	_comprobar(c.etiqueta_de("Sprint", true) == "Sprint", "los botones sin contexto conservan su etiqueta")
 	## Ajustes: tamaño y opacidad (se leen al crear el control) y cuándo salen.
 	c.soltar_todo()
 	c.queue_free()

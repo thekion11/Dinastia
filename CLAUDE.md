@@ -123,3 +123,11 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 27. (4-11) El líder se activa SOLO cada 20 min (cadena send_later «Revisar las 3 sesiones» + respaldo horario fijo) para unir lo
     terminado y asignar tareas a TODAS las sesiones; y el líder TAMBIÉN trabaja (no solo ordena): bloque propio del plan.
 28. (4-11, sesión «Búsqueda de fallos») Cada 20 min, antes de buscar, comprobar que `main` está actualizado (`git fetch origin main`), fusionarlo en la rama de trabajo y revalidar los fallos anotados; los que `main` ya resolvió se BORRAN del apartado «FALLOS DETECTADOS» de `docs/PLAN_GENERAL.md`. Esa sesión solo busca y registra; no corrige.
+29. (4-11 madrugada) PAUSA ordenada por el dueño: todas las sesiones terminaron su bloque, se unió todo y se apagaron las revisiones
+    automáticas (cadena de 20 min y respaldo horario). Para retomar: «ESTADO AL CIERRE DEL 4-11» arriba de `PLAN_GENERAL.md`.
+30. (4-11) REGLA DEL DUEÑO: al dueño se le habla SOLO en español, siempre (todas las sesiones, también en avisos y resúmenes).
+31. (4-11) MODO CAZA DE FALLOS (orden del dueño, hasta nueva orden): todo a `main`; MEGA AUDITORÍA 4 con 5 repasos (líder + todas las
+    sesiones, `docs/04_auditorias/MEGA_AUDITORIA_4/`); después TODAS las sesiones solo detectan y ARREGLAN fallos (bugs, cuelgues, lo que
+    no se repite igual, reglas del proyecto incumplidas), llevando el juego al límite, sin parar; el líder las controla cada 20 min.
+    Los fallos se ARREGLAN SIN PREGUNTAR al dueño (también los que cambian cómo se juega: se anotan en el hallazgo). La auditoría
+    empieza SOLO cuando todo esté en `main` (PR #166 de PES 6 y PR #165 del líder); hasta entonces se ayuda a llegar a eso.

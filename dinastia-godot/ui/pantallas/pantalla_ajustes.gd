@@ -330,6 +330,7 @@ func _pintar_ajustes() -> void:
 			ex2.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_ajustes.add_child(ex2)
 			p._lista_ajustes.add_child(HSeparator.new())
+			AjustesActualizar.pintar(p)
 			var t3 := p._texto(11, Principal.COL_SUAVE)
 			t3.text = Idiomas.t("ACERCA DE")
 			p._lista_ajustes.add_child(t3)
@@ -343,7 +344,7 @@ func _pintar_ajustes() -> void:
 			t5.text = Idiomas.t("PRIVACIDAD")
 			p._lista_ajustes.add_child(t5)
 			var pv := p._texto(11, Principal.COL_TEXTO)
-			pv.text = Idiomas.t("DINASTÍA no se conecta a internet: no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada a nadie. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.")
+			pv.text = Idiomas.t("DINASTÍA solo se conecta a internet cuando tú pulsas «Buscar actualización» (para ver si hay una versión nueva y, si lo aceptas, bajarla de GitHub); no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada tuyo. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.")
 			pv.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_ajustes.add_child(pv)
 			## M-309: créditos y licencias de lo que no es propio.
