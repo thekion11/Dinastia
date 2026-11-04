@@ -26,6 +26,9 @@ static func montar_paraderos(ex) -> int:
 		var p := RecorridosMapa.paradero(cod)
 		if bool(p["club"]):
 			continue
+		var q: Vector3 = p["pos"]
+		if ex.b.altura_en(q.x, q.z) > 1.0:
+			continue   ## (4-11, banco de construcción) en la circunvalación exterior el terreno sube hasta 40 m: el paradero quedaba ENTERRADO en el cerro
 		var raiz := Node3D.new()
 		raiz.position = p["pos"]
 		raiz.rotation.y = float(p["giro"])
