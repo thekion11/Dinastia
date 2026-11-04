@@ -20,5 +20,5 @@ Profunda, de TODO el juego, con 5 repasos. Después: caza y arreglo de fallos si
 
 ## Formato de cada hallazgo
 `- [A4-<AREA>-NNN] (repaso N, gravedad: crítico|alto|medio|bajo) Qué falla. Cómo reproducirlo. Archivo:línea. Estado: abierto|arreglado (commit)|pregunta al dueño.`
-- Se arreglan SOLO bugs claros (con prueba que lo cubra). Lo que cambie cómo se juega → «pregunta al dueño» y se sigue con otro.
+- Los fallos se ARREGLAN SIN PREGUNTAR (con prueba que lo cubra); si cambian cómo se juega, se dice en el hallazgo. Empieza cuando todo esté en `main`.
 - Arreglos: rama propia de cada sesión → PR contra `claude/dazzling-rubin-v7rfyi` (el líder une y pasa a `main`). Banco 0 y líneas 0 antes de subir.

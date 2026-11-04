@@ -129,5 +129,5 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 31. (4-11) MODO CAZA DE FALLOS (orden del dueño, hasta nueva orden): todo a `main`; MEGA AUDITORÍA 4 con 5 repasos (líder + todas las
     sesiones, `docs/04_auditorias/MEGA_AUDITORIA_4/`); después TODAS las sesiones solo detectan y ARREGLAN fallos (bugs, cuelgues, lo que
     no se repite igual, reglas del proyecto incumplidas), llevando el juego al límite, sin parar; el líder las controla cada 20 min.
-    Se arreglan SOLO bugs claros; lo que cambie cómo se juega (balance, partido) se anota y se pregunta al dueño, y mientras no
-    responde se sigue buscando otros fallos.
+    Los fallos se ARREGLAN SIN PREGUNTAR al dueño (también los que cambian cómo se juega: se anotan en el hallazgo). La auditoría
+    empieza SOLO cuando todo esté en `main` (PR #166 de PES 6 y PR #165 del líder); hasta entonces se ayuda a llegar a eso.
