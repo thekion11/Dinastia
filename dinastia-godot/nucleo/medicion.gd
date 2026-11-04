@@ -107,12 +107,33 @@ func _cargar(nombre: String, f: Callable) -> void:
 	f.call()
 	_linea("Carga %-22s %7d ms" % [nombre, (Time.get_ticks_usec() - t) / 1000])
 
+## (4-11, A4-REND) La parte «ciudad» medía también la CARGA: `abrir` construye por etapas entre fotogramas y, hasta que
+## `completa` es verdadero, la ciudad se dibuja sin agrupar ni ocluir (9.273 llamadas y 13,5 M de triángulos en esos
+## fotogramas). Según lo lenta que fuera la máquina, esos fotogramas entraban más o menos en la media y el presupuesto
+## daba FALLO unas veces y 0 fallos otras. Ahora la parte no empieza a contar hasta que la ciudad está completa
+## (con tope de 180 s por si nunca lo estuviera) y la espera se anota.
+var _espera_ciudad := 0.0
+
+func _ciudad_lista() -> bool:
+	var c: Variant = _vista.get("_ciudad") if _vista != null else null
+	return c == null or bool(c.get("completa"))
+
 func _process(delta: float) -> void:
 	var ahora := Time.get_ticks_usec()
+	if _parte == "ciudad" and _espera_ciudad < 180.0 and not _ciudad_lista():
+		_espera_ciudad += delta
+		_t_parte = 0.0
+		_frames = PackedFloat32Array()
+		_muestras = []
+		_ult = ahora
+		return
+	if _parte == "ciudad" and _espera_ciudad > 0.0 and not _json.has("ciudad_espera_s"):
+		_json["ciudad_espera_s"] = snappedf(_espera_ciudad, 0.1)
+		_linea("La ciudad terminó de construirse a los %.1f s de abrirla: la medición empieza ahí" % _espera_ciudad)
 	_frames.append((ahora - _ult) / 1000.0)
 	_ult = ahora
 	_t_parte += delta
-	if _frames.size() % 30 == 0:
+	if _frames.size() % 10 == 0:   ## (4-11) antes cada 30: en software caían 2 muestras por parte y una sola mala decidía
 		_muestras.append([Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,
 			Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
 			Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),
@@ -198,6 +219,25 @@ func _media_col(c: int) -> float:
 		t += float(m[c])
 	return t / maxf(1.0, _muestras.size())
 
+## (4-11, A4-REND) MEDIANA de una columna de muestras. Las llamadas, triángulos y objetos de la parte se miden con ella y no
+## con la media: con ~5 muestras por parte (una cada 30 fotogramas, en una máquina lenta), UNA sola tomada mientras
+## se asientan el agrupado, la oclusión o las texturas (13,5 M de triángulos) desplazaba la media por encima del tope y el
+## presupuesto daba FALLO unas veces y 0 fallos otras sin cambiar el código.
+func _max_col(c: int) -> float:
+	var m0 := 0.0
+	for m: Array in _muestras:
+		m0 = maxf(m0, float(m[c]))
+	return m0
+
+func _mediana_col(c: int) -> float:
+	var v: Array = []
+	for m: Array in _muestras:
+		v.append(float(m[c]))
+	if v.is_empty():
+		return 0.0
+	v.sort()
+	return v[(v.size() - 1) / 2]   ## la mediana baja: con 2 muestras, la mejor (la otra puede ser de carga)
+
 func _fps_de(f: Array) -> float:
 	var t := 0.0
 	for x: float in f:
@@ -216,8 +256,8 @@ func _cerrar_parte() -> void:
 	var peor_1: float = f[int(f.size() * 0.99)]
 	var d := {"parte": _parte, "fps_medio": snappedf(1000.0 / media, 0.1), "fps_p1": snappedf(1000.0 / maxf(peor_1, 0.001), 0.1),
 		"fps_min": snappedf(1000.0 / maxf(f[-1], 0.001), 0.1), "peor_ms": snappedf(f[-1], 0.1), "fotogramas": f.size(),
-		"cpu_ms": snappedf(_media_col(0), 0.01), "llamadas": int(_media_col(1)), "triangulos": int(_media_col(2)),
-		"objetos": int(_media_col(3)), "memoria_mb": snappedf(_media_col(4), 0.1), "video_mb": snappedf(_media_col(5), 0.1)}
+		"cpu_ms": snappedf(_media_col(0), 0.01), "llamadas": int(_mediana_col(1)), "triangulos": int(_mediana_col(2)),
+		"objetos": int(_mediana_col(3)), "triangulos_max": int(_max_col(2)), "muestras": _muestras.size(), "memoria_mb": snappedf(_media_col(4), 0.1), "video_mb": snappedf(_media_col(5), 0.1)}
 	if largo and _frames.size() > 90:
 		## Calor: FPS del primer tercio de la parte frente al último (en orden de tiempo, no ordenado).
 		var orden := Array(_frames.slice(3))
