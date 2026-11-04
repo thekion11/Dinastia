@@ -7,10 +7,15 @@ const DATOS := {"club": {"nombre": "Andino FC", "c1": Color(0.8, 0.1, 0.1), "c2"
 
 func _medir() -> Dictionary:
 	return {"nodos": int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)), "objetos": int(Performance.get_monitor(Performance.OBJECT_COUNT)),
-		"huerfanos": int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT)), "mem": int(OS.get_static_memory_usage() / 1048576)}
+		"huerfanos": int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT)), "mem": int(OS.get_static_memory_usage() / 1048576),
+		"tris_cache": (load("res://visor/optimizar.gd") as Script).get("_tris_cache").size(), "unidad": (load("res://visor/optimizar.gd") as Script).get("_unidad").size(),
+		"bancos_sonido": (get_node("/root/Sonido").get("_bancos") as Dictionary).size(), "ext_nativa": ClassDB.class_exists("DinastiaNativo")}
 
 func _probar() -> void:
 	_titulo("CICLOS DE CIUDAD Y TERRENO EXTREMO")
+	## El autoload Sonido sintetiza sus ~820 sonidos en un hilo durante los primeros segundos (en una máquina lenta,
+	## como el CI, tarda más que unos cuantos ciclos): sin esperar a que termine, esa carga parece una fuga.
+	get_node("/root/Sonido")._generar_todo()
 	var tras: Array = []
 	for i in (int(OS.get_environment("CICLOS")) if OS.get_environment("CICLOS") != "" else 5):
 		var b := CityBuilder.new()
@@ -26,7 +31,7 @@ func _probar() -> void:
 	## El primer ciclo calienta cachés; del 2.º al 4.º no debe crecer nada de forma sostenida.
 	_comprobar(tras[tras.size() - 1]["nodos"] <= tras[1]["nodos"] + 50, "los nodos no crecen entre ciclos (%d → %d)" % [tras[1]["nodos"], tras[tras.size() - 1]["nodos"]])
 	_comprobar(tras[tras.size() - 1]["huerfanos"] <= tras[1]["huerfanos"] + 20, "no se acumulan nodos huérfanos (%d → %d)" % [tras[1]["huerfanos"], tras[tras.size() - 1]["huerfanos"]])
-	_comprobar(tras[tras.size() - 1]["objetos"] <= tras[1]["objetos"] + 12 * (tras.size() - 2), "los objetos no crecen entre ciclos (%d → %d)" % [tras[1]["objetos"], tras[tras.size() - 1]["objetos"]])
+	_comprobar(tras[tras.size() - 1]["objetos"] <= tras[1]["objetos"] + 12 * (tras.size() - 2), "los objetos no crecen entre ciclos (%d → %d) detalle %s → %s" % [tras[1]["objetos"], tras[tras.size() - 1]["objetos"], str(tras[1]), str(tras[tras.size() - 1])])
 	_comprobar(tras[tras.size() - 1]["mem"] <= tras[1]["mem"] + 2 * (tras.size() - 2), "la memoria estática no crece entre ciclos (%d → %d MB)" % [tras[1]["mem"], tras[tras.size() - 1]["mem"]])
 	var b2 := CityBuilder.new()
 	add_child(b2)
