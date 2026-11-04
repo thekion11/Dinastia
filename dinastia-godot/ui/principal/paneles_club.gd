@@ -104,7 +104,7 @@ func _resolver(op: String) -> void:
 		Aviso.mostrar(p, "contrato", "📰", titulo, cuerpo)
 	p._refrescar()
 func _pintar_decision(e: Dictionary) -> void:
-	var v := p._ui_despacho._marco_aviso(p.COL_ORO)
+	var v: VBoxContainer = p._ui_despacho._marco_aviso(p.COL_ORO)
 	var t := p._texto(11, p.COL_ORO)
 	t.text = Idiomas.t("HAY QUE DECIDIR")
 	v.add_child(t)

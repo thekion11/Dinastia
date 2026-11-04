@@ -14,12 +14,13 @@ func _nueva_temporada() -> void:
 		return
 	## EL DOCUMENTAL (fase 5): se arma ANTES del cierre, que reinicia la tabla
 	## y las estadísticas; se proyecta al final del cierre.
-	var guion_doc := DocumentalTemporada.guion(p.mundo)
+	var documental: GDScript = load("res://ui/componentes/documental_temporada.gd")   ## (A4 memoria) por ruta
+	var guion_doc: Array = documental.guion(p.mundo)
 	if p.mundo.mercado != null:
 		p.mundo.mercado.fichajes_temporada.clear()
 	var resumen := p.mundo.nueva_temporada()
 	if not guion_doc.is_empty():
-		(func() -> void: DocumentalTemporada.abrir(p, guion_doc, p._retrato)).call_deferred()
+		(func() -> void: documental.abrir(p, guion_doc, p._retrato)).call_deferred()
 	## `mundo.nueva_temporada()` resortea los continentales por dentro
 	## (`_sortear_continentales()`, instancias NUEVAS cada vez): sin esta llamada,
 	## el sorteo y el aviso de campeón/ronda de Champions-Libertadores solo

@@ -219,3 +219,17 @@ Total (a)+(c): 2 052 → 1 973 llamadas (−4 %), nodos −1 090 (−5,6 %), ví
 
 ## MultiMesh sueltos de la ciudad en MÍNIMO (4-11): unirlos por (malla, material, celda) — PROBADO Y DESCARTADO
 `medir_prologo` MMHIST=1: 5 708 `MultiMeshInstance3D` en la ciudad, 759 combinaciones distintas (malla, material, celda de 160 m, sombra, alcance), 316 con varias; la mayoría con 1-4 instancias (787 con 1, 1 308 con 2, 668 con 3). Se unió (`UnirMultiMesh`, solo los hijos directos sin nombre propio, sin grupo/meta/script): nodos 18 228 → 15 870 (−2 358), objetos 37 701 → 32 974, RAM −10 MB, vídeo igual, **llamadas 1 973 → 1 951 (−22, −1 %)**, triángulos +2 k, a cambio de **+411 ms de carga** (más en un móvil). No compensa: se retiró (el código no queda). Las llamadas de dibujo siguen en lo que sí se ve (estadio, tráfico, mallas sueltas) y no en el número de nodos.
+
+## Memoria antes de la ciudad (4-11-2026, sesión ejecutora; pedido del líder)
+Medido con el `.pck` precompilado (`godot --headless --path . --export-pack Windows x.pck` con `script_export_mode=2` y `godot --headless --main-pack x.pck --script mem.gd`: carga `principal.tscn`, la instancia y mide la memoria estática tras 2 fotogramas). Herramienta de inventario: `pruebas/a4_mem_cache.tscn` (qué scripts quedan compilados tras abrir el menú, por carpeta y por tamaño).
+| | Carga de la escena | 1.er fotograma | Scripts compilados (dev) |
+|---|---|---|---|
+| Antes (rama del líder 4-11) | 188 MB | 373 MB | 433 (3.719 KB de fuente) |
+| Después | **163 MB** | **352 MB** (−21 MB, −5,6 %) | **387** (3.288 KB) |
+Qué se hizo (nada visible cambia; todo se carga al USAR, por `load("res://…")` o `_pantalla_perezosa`):
+- `Principal` creaba al instanciarse `PantallaPlantel`, `PantallaFicha`, `PantallaLegado`, `PantallaOpciones`, `PantallaDespacho` y `PantallaElegirClub`: pasan a `_pantalla_perezosa` (mismos nombres de acceso). Plantel, ficha y opciones ya no se crean al arrancar (`avance_semana.gd` usa `_abrir_perezosa.bind(…)`; la señal del mercado es una lambda); legado, despacho y elegir club sí se crean en el primer fotograma (el Inicio y el selector de club los usan).
+- `situacion_musical()` (antes en `PantallaOpciones`, la llamaba cada refresco del menú) vive en `AvanceSemana`.
+- Modales por ruta: `EscenaDespido`, `PresentacionFichaje` (y con ella `CinematicaFichaje`), `DocumentalTemporada`, `MesaAgenteUI`, `PreguntaPlan`, `Sorteo` (+ `SorteoEscena3D`, ≈ 100 KB), `CelebracionTrofeo`; `PcOficina` se reconoce por `Script.get_global_name()` en vez de nombrarlo.
+- Tipos explícitos donde antes se inferían del valor de una pantalla perezosa (`var pal: Dictionary = …`).
+- `mem_menu_estadio` comprueba ahora también estas 11 clases (no deben estar en memoria tras abrir el menú). Banco 0 fallos; `prueba_menu_ciudad_pie` 0.
+Lo que queda a propósito (el menú lo usa al arrancar): `nucleo/` (186 scripts, 1,9 MB: la partida entera), `Tutorial` (lo usa el panel de objetivos), los kits/camisetas, el retrato 3D del DT, `Legado` (pestaña Inicio). Siguiente corte posible (no hecho): ~25 scripts de `ui/` con 150 KB (`carrera_jugador_ui`, `trofeo_3d`, competiciones) con un punto único `abrir(...)`.

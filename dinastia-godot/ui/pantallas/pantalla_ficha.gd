@@ -261,7 +261,7 @@ func _ver_ficha(j: Jugador) -> void:
 	p._ficha.add_child(bc2)
 
 	if propio:
-		var pal := p._ui_ficha._paleta_ficha()
+		var pal: Dictionary = p._ui_ficha._paleta_ficha()
 		FichaJugadorInfo.pintar_estadisticas(p._ficha, j, pal)
 		FichaJugadorInfo.pintar_perfil_y_premios(p._ficha, j, pal)
 		FichaJugadorInfo.pintar_cabeza(p._ficha, j, p.mundo, pal)
@@ -310,7 +310,7 @@ func _ver_ficha_2(j: Jugador, mio: Club) -> void:
 			(p as Principal)._refrescar()
 			_ver_ficha(j))
 		p._ficha.add_child(bs)
-	var pal_ajeno := p._ui_ficha._paleta_ficha()
+	var pal_ajeno: Dictionary = p._ui_ficha._paleta_ficha()
 	FichaJugadorInfo.pintar_estadisticas(p._ficha, j, pal_ajeno)
 	FichaJugadorInfo.pintar_habilidades(p._ficha, j, p.mundo, pal_ajeno)
 	FichaJugadorAcciones.pintar_similares(p._ficha, j, mio, p.mundo, pal_ajeno,
