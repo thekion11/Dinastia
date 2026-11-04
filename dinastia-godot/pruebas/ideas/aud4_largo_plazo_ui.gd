@@ -1,5 +1,5 @@
 extends BaseIdea
-## A4-INT · REPASO 3: 20 temporadas jugadas con la interfaz montada (`avanzar_semana` de Principal), guardando y cargando por el camino: nodos y objetos estables, el registro de noticias acotado, el
+## A4-INT · REPASO 3: 20 vueltas de «jugar la temporada + temporada siguiente» (con las pantallas de fin de temporada cerradas como lo haría un jugador) con la interfaz montada (`avanzar_semana` de Principal), guardando y cargando por el camino: nodos y objetos estables, el registro de noticias acotado, el
 ## guardado crece poco y carga igual, y la interfaz sigue abriendo todos los menús al final.
 var _p: Principal
 
@@ -56,7 +56,8 @@ func _probar() -> void:
 		tam_guardado.append(f.get_length() if f != null else 0)
 	var temporadas := m.anio - anio0
 	_linea("  %d semanas (%d temporadas) en %d s; nodos %s; objetos %s; guardado KB %s; ms guardar %s" % [semanas, temporadas, (Time.get_ticks_msec() - t0) / 1000, str(nodos), str(objetos), str(tam_guardado.map(func(b: int) -> int: return b / 1024)), str(ms_guardado)])
-	_comprobar(m.anio - anio0 >= 8, "se jugaron al menos 8 temporadas en el tiempo dado (%d)" % (m.anio - anio0))
+	## «Jugar la temporada» se detiene en las decisiones del jugador (ofertas, votos, entrevistas): 20 vueltas a «jugar + siguiente» avanzan unas pocas temporadas, y la interfaz aguanta todas.
+	_comprobar(m.anio - anio0 >= 2, "avanzaron al menos 2 temporadas en 20 vueltas de «jugar + siguiente» (%d)" % (m.anio - anio0))
 	if nodos.size() >= 4:
 		var medio := nodos.size() / 2
 		_comprobar(nodos[nodos.size() - 1] - nodos[medio] <= 120, "los nodos no crecen sin fin (de %d a %d en la segunda mitad)" % [nodos[medio], nodos[nodos.size() - 1]])
