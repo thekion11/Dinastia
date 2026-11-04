@@ -88,6 +88,8 @@ BANCOS = [
 ]
 
 
+CON_PANTALLA = {"estadio_3d"}   ## bancos que corren con xvfb + OpenGL (llvmpipe) en vez de --headless
+
 def especiales():
     """[(nombre, comando, patrón)] de especiales.sh (todas, también las del bloque «todo»)."""
     out = []
@@ -141,7 +143,9 @@ def correr_banco(nombre, r):
                 print("        " + l.strip()[:160])
     propia = os.path.join(RAIZ, "pruebas", "bancos", nombre + ".tscn")
     if os.path.exists(propia):
-        p = subprocess.run(["godot", "--headless", "--path", RAIZ, "res://pruebas/bancos/%s.tscn" % nombre], capture_output=True, text=True, timeout=1800)
+        ## Los que leen los datos de los MultiMesh (transformaciones y colores de butacas, gente, pelo…) necesitan pantalla: sin ella el motor no los guarda.
+        orden = (["xvfb-run", "-a", "godot", "--rendering-driver", "opengl3", "--resolution", "640x360"] if nombre in CON_PANTALLA else ["godot", "--headless"]) + ["--path", RAIZ, "res://pruebas/bancos/%s.tscn" % nombre]
+        p = subprocess.run(orden, capture_output=True, text=True, timeout=1800)
         out = p.stdout + p.stderr
         ok = "FIN. 0 fallos" in out and "SCRIPT ERROR" not in out
         fallos += 0 if ok else 1
