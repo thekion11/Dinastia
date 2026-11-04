@@ -90,6 +90,7 @@ pasa "guardado: autoguardado en segundo plano y pregunta al salir (3-11)" "godot
 pasa "atajos de teclado por menú y submenú (3-11)" "godot --headless --path . res://pruebas/ideas/ate_atajos_menus.tscn" "FIN. 0 fallos"
 pasa "ate_ayuda_en_menu" "godot --headless --path . res://pruebas/ideas/ate_ayuda_en_menu.tscn" "(^|[^0-9])0 fallos"
 pasa "aud4_idiomas_cache" "godot --headless --path . res://pruebas/ideas/aud4_idiomas_cache.tscn" "FIN. 0 fallos"
+pasa "aud4_carteles_3d" "godot --headless --path . res://pruebas/ideas/aud4_carteles_3d.tscn" "FIN. 0 fallos"
 pasa "aud4_interfaz_limite" "godot --headless --path . res://pruebas/ideas/aud4_interfaz_limite.tscn" "FIN. 0 fallos"
 pasa "aud4_largo_plazo_ui" "LIMITE_S=120 godot --headless --path . res://pruebas/ideas/aud4_largo_plazo_ui.tscn" "FIN. 0 fallos"
 pasa "act_actualizador" "godot --headless --path . res://pruebas/ideas/act_actualizador.tscn" "FIN. 0 fallos"
@@ -167,6 +168,8 @@ pasa "p6_alcance_e" "godot --headless --path . res://pruebas/ideas/p6_alcance_e.
 pasa "p6_resolucion3d" "godot --headless --path . res://pruebas/ideas/p6_resolucion3d.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_recorrido_mapa" "godot --headless --path . res://pruebas/ideas/a4_recorrido_mapa.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_cruzado" "godot --headless --path . res://pruebas/ideas/a4_gestion_cruzado.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_gestion_cesiones" "godot --headless --path . res://pruebas/ideas/a4_gestion_cesiones.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_gestion_mercado_fed" "godot --headless --path . res://pruebas/ideas/a4_gestion_mercado_fed.tscn" "(^|[^0-9])0 fallos"
 # a4_limite_mundo necesita pantalla virtual (opengl3): el contenedor del CI no trae xvfb-run (A4, 4-11), como el bloque 6a
 if command -v xvfb-run >/dev/null; then
 pasa "a4_limite_mundo" "xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
