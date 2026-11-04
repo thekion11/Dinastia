@@ -12,6 +12,7 @@ var _vista: VistaCiudad
 var _mundo: Mundo
 
 func _ready() -> void:
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://pruebas/capturas"))
 	_mundo = Mundo.new()
 	_mundo.generar(["CHI"], 4713)
 	_mundo.tomar_el_mando(_mundo.ligas[0].clubes[0].id)
