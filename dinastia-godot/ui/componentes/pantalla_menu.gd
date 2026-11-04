@@ -1,20 +1,12 @@
 class_name PantallaMenu
 extends Control
-## UN MENÚ ENTERO, A PANTALLA COMPLETA (29-9-2026, mapa de metas 23). Pedido del
-## usuario: *"las cosas más importantes deben tener su propio menú y no estar
-## incrustadas en un mini menú sobre el menú central"*, con un fondo único
-## animado y pantalla completa, como en Soccer Manager.
+## UN MENÚ ENTERO, A PANTALLA COMPLETA (29-9-2026, mapa de metas 23). Pedido del usuario: *"las cosas más importantes deben
+## tener su propio menú y no estar incrustadas en un mini menú sobre el menú central"*, con fondo animado, como en Soccer Manager.
 ##
-## DOS ESTADOS, para que no quede todo amontonado a un lado:
-##   - PORTADA: el título grande y un mosaico de tarjetas, una por submenú, con
-##     su icono, qué hay dentro y un dato vivo ("3 sin leer", "47.000 butacas").
-##   - DETALLE: los submenús como pestañas arriba, el contenido en el centro y
-##     sin la ficha del jugador (el contenido ocupa todo el ancho).
-##
-## No hay una segunda copia de cada pantalla: el contenido de verdad -el
-## `TabContainer` de la pantalla principal y la columna de la ficha- se MUDA a
-## esta pantalla mientras está en detalle y vuelve a su sitio al salir. Así
-## todo lo que ya funcionaba (botones, fichas, repintados, traducción) sigue.
+## DOS ESTADOS: PORTADA (título grande y una tarjeta por submenú con su icono, qué hay y un dato vivo: «3 sin leer») y
+## DETALLE (los submenús como pestañas arriba y el contenido en el centro; la ficha al lado solo en Plantel).
+## No hay una segunda copia de cada pantalla: el contenido de verdad -el `TabContainer` de la principal y la columna de la
+## ficha- se MUDA aquí mientras está en detalle y vuelve a su sitio al salir: todo lo que ya funcionaba sigue.
 
 signal cerrada
 
@@ -65,7 +57,7 @@ func _montar() -> void:
 	mat.set_shader_parameter("c3", _color(2))
 	## M-288 (20-10): con el motor ligero (gama baja), fondo de color fijo: el
 	## shader usa TIME y obliga a redibujar la pantalla en cada fotograma.
-	if Calidad.motor_ligero:
+	if AhorroMenu.fondo_estatico():
 		_fondo.color = _color(1)
 	else:
 		_fondo.material = mat
@@ -239,6 +231,9 @@ func portada() -> void:
 		var tarjeta := _tarjeta(subs[i], i)
 		rej.add_child(tarjeta)
 		Idiomas.traducir_arbol(tarjeta)
+		## M-285 (2-11): con mando, la primera tarjeta toma el foco; la cruceta pasa de una a otra y A entra.
+		if i == 0 and not Input.get_connected_joypads().is_empty():
+			FocoSeguro.dar(tarjeta)
 		## Entran escalonadas.
 		tarjeta.modulate.a = 0.0
 		var tw := tarjeta.create_tween()
@@ -251,15 +246,15 @@ func _tarjeta(sub: Dictionary, i: int) -> Button:
 	b.clip_contents = true
 	var st := StyleBoxFlat.new()
 	st.bg_color = Color(0, 0, 0, 0.5)
-	st.border_color = Color(_color(2), 0.35)
+	st.border_color = Color(1, 1, 1, 0.16)   ## borde de 1 px ~10-15 % más claro que el fondo de la tarjeta
 	st.set_border_width_all(1)
-	st.border_width_bottom = 4
 	st.set_corner_radius_all(16)
-	st.shadow_color = Color(0, 0, 0, 0.35)
-	st.shadow_size = 10
+	st.shadow_color = Color(0, 0, 0, 0.35); st.shadow_size = 10
 	var enc := st.duplicate() as StyleBoxFlat
 	enc.bg_color = Color(_color(2), 0.22)
 	enc.border_color = _color(2).lightened(0.2)
+	var barra := ColorRect.new(); barra.color = Color(_color(2), 0.7); barra.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)   ## el filo de color (antes un borde inferior de 4 px)
+	barra.offset_left = 14; barra.offset_right = -14; barra.offset_top = -4; barra.offset_bottom = -1; barra.mouse_filter = Control.MOUSE_FILTER_IGNORE; b.add_child(barra)
 	b.add_theme_stylebox_override("normal", st)
 	b.add_theme_stylebox_override("hover", enc)
 	b.add_theme_stylebox_override("focus", enc)
@@ -314,8 +309,7 @@ func _tarjeta(sub: Dictionary, i: int) -> Button:
 
 # ---------------------------------------------------------------- detalle
 
-## Abre el submenú `i`: una sección (misma navegación que los chips de
-## siempre) o una acción (ver el estadio en 3D, la casa, el móvil...).
+## Abre el submenú `i`: una sección (como los chips de siempre) o una acción (estadio 3D, casa, móvil...).
 func elegir(i: int) -> void:
 	## Una pantalla que ya se está cerrando no vuelve a coger el contenido: se
 	## borraría con ella (estrés de menús, 17-10-2026).
@@ -334,7 +328,10 @@ func elegir(i: int) -> void:
 	_activo = i
 	_marcar_pestana()
 	_titulo_sub.text = "%s  %s" % [String(sub.get("icono", "")), Idiomas.t(String(sub["label"]))]
+	var antes: bool = _p._redirigiendo   ## la pestaña se cambia aquí dentro: que no se vuelva a elegir ni abra otro menú
+	_p._redirigiendo = true
 	_p._ir_a_chip(sub)
+	_p._redirigiendo = antes
 	_p._refrescar()
 	if _hueco_contenido != null:
 		_hueco_contenido.modulate.a = 0.35
@@ -367,8 +364,7 @@ func _montar_detalle() -> void:
 	_hueco_contenido.add_theme_stylebox_override("panel", caja)
 	h.add_child(_hueco_contenido)
 	_hueco_ficha = null
-	## Sin ficha del jugador en estos menús (pedido del usuario): el contenido
-	## ocupa todo el ancho.
+	## Sin ficha del jugador en estos menús (pedido del usuario): el contenido ocupa todo el ancho.
 	if bool(_menu.get("ficha", false)):
 		_hueco_ficha = MarginContainer.new()
 		_hueco_ficha.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -377,6 +373,7 @@ func _montar_detalle() -> void:
 	_mudar(_p._marco_paginas, _hueco_contenido)
 	if _hueco_ficha != null and _p._col_derecha != null:
 		_mudar(_p._col_derecha, _hueco_ficha)
+		_ver_ficha(true)
 
 func submenu_activo() -> int:
 	return _activo
@@ -390,6 +387,9 @@ func submenu_vecino(paso: int) -> void:
 		if not (subs[i] as Dictionary).has("accion"):
 			break
 	elegir(i)
+
+func menu() -> Dictionary:   ## el menú que enseña (datos de `MenusLaterales`)
+	return _menu
 
 func cerrando() -> bool:
 	return _cerrando
@@ -407,10 +407,10 @@ func _mudar(nodo: Control, a: Control) -> void:
 ## Devuelve el contenido a su sitio en la pantalla principal.
 func _devolver_contenido() -> void:
 	for d: Array in _devolver:
+		if not is_instance_valid(d[0]) or not is_instance_valid(d[1]):
+			continue
 		var nodo: Control = d[0]
 		var padre: Node = d[1]
-		if not is_instance_valid(nodo) or not is_instance_valid(padre):
-			continue
 		if nodo.get_parent() != null:
 			nodo.get_parent().remove_child(nodo)
 		padre.add_child(nodo)
@@ -418,6 +418,11 @@ func _devolver_contenido() -> void:
 		nodo.size_flags_horizontal = int(d[3])
 		nodo.size_flags_stretch_ratio = float(d[4])
 	_devolver.clear()
+	_ver_ficha(false)
+
+## La ficha del jugador va oculta en el central (rediseño 3-11) y se ve aquí.
+func _ver_ficha(si: bool) -> void:
+	if _p._bloque_ficha != null and is_instance_valid(_p._bloque_ficha): _p._bloque_ficha.visible = si
 
 func _al_redimensionar() -> void:
 	if _fondo != null and _fondo.material != null and size.y > 0.0:

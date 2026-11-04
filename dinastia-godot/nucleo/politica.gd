@@ -200,14 +200,32 @@ func semana(c: Club, anio: int, sem: int, prensa: Prensa) -> void:
 			## §2.5: el apoyo del club pesa. Si repite el gobierno apoyado, sigue de aliado; si gana otro, recela.
 			if apoyo:
 				gobiernos[pais]["apoyo_club" if sigue else "recelo_club"] = anio
+				## (2-11, guion §2.5.6) El premio o el castigo también se ven: el reelegido devuelve el favor con una
+				## subvención; el que gana contra el club lo dice en prensa (y recela: `relacion` = −1).
+				if sigue:
+					var bono := Eco.escalar(15000.0, float(c.rep))
+					c.mover_saldo(bono)
+					movimiento.emit("Subvención extraordinaria (el gobierno devuelve el apoyo)", bono)
+					noticia.emit("🤝 El alcalde cumple", "El gobierno reelegido devuelve el apoyo del club: subvención extraordinaria de %s." % Eco.dinero(bono))
+				else:
+					noticia.emit("🧊 El nuevo gobierno no olvida", "%s apoyó al gobierno anterior. El nuevo no lo olvida: recela del club y recorta sus ayudas." % c.nombre)
 			campana.erase(pais)
 			var pos: Array = POSTURAS[String(gana["postura"])]
 			noticia.emit("🗳️ Elecciones en %s" % pais, "%s. Gobierna %s (%s). Su prioridad: %s — %s" % [
 				"Repite el mismo partido" if sigue else "Cambio de gobierno", String(gana["lider"]),
 				String(gana["partido"]), String(pos[0]).to_lower(), String(pos[1])])
+	## EL APOYO DEL CLUB (2-11, guion §2.5.6): si el DT respaldó al gobierno en la cita del funcionario (`Citas`, pone
+	## `apoyo_club` = año), lo declara en la prensa una vez, y el gobierno se lo devuelve ese año (`_efecto`). Si en las
+	## urnas gana OTRO partido, el nuevo gobierno se acuerda: recela (`recelo_club`, `relacion` = −1) y recorta las ayudas.
+	var gob: Dictionary = gobiernos[pais]
+	if int(gob.get("apoyo_club", -1)) == anio and not gob.has("declarado"):
+		gob["declarado"] = anio
+		noticia.emit("📰 El club respalda al gobierno", "%s declara en rueda de prensa su apoyo a %s (%s). La afición más crítica no lo celebra." % [c.nombre, String(gob["lider"]), String(gob["partido"])])
+		if prensa != null:
+			prensa.mover_animo(-1)
 	## El efecto de la postura, cada cuatro semanas.
 	if sem % 4 == 0:
-		_efecto(c, String(gobiernos[pais]["postura"]), prensa, relacion(gobiernos[pais]))
+		_efecto(c, String(gob["postura"]), prensa, relacion(gob))
 
 ## (§2.5, 30-10) La relación del club con el gobierno: +1 aliado (lo apoyaste en este mandato),
 ## −1 recelo (apoyaste al que perdió), 0 neutral. Mueve un 25 % lo que el gobierno da o cobra.

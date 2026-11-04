@@ -56,6 +56,8 @@ func _process(_d: float) -> void:
 		_pj = PartidoJugable.abrir(_ui, CarreraJugadorUI.mundo, _ui.carrera, par[0], par[1], 120.0)
 		_ct = _pj.get_node_or_null("ControlesTactiles") as ControlesTactiles
 		_comprobar(_ct != null, "el partido monta los controles táctiles")
+	if _n == 70:
+		_comprobar(not _pj._ayuda.visible, "la línea de ayuda de teclado está oculta con los controles táctiles")
 	if _n == 80:
 		_p0 = _pj.motor.pos(_pj.motor.usuario)
 		var c0 := _ct.centro_reposo()
@@ -69,7 +71,12 @@ func _process(_d: float) -> void:
 		_comprobar(p0_distancia(p1) > 1.0, "el jugador se ha movido con el dedo (%.1f m)" % p0_distancia(p1))
 		_foto("tactil_partido_mueve")
 		_toque(2, _ct.centro_de("A"), true)
+		_toque(3, _ct.centro_de("B"), true)
+		_toque(4, _ct.centro_de("Mod"), true)
 	if _n == 150:
+		_comprobar(Input.is_action_pressed("jugar_tiro") and Input.is_action_pressed("jugar_mod"), "tiro y modificador pulsados con otros dedos a la vez")
+		_toque(3, _ct.centro_de("B"), false)
+		_toque(4, _ct.centro_de("Mod"), false)
 		_comprobar(Input.is_action_pressed("jugar_pase"), "el botón A (pase / presión) está pulsado")
 		_foto("tactil_partido_pase")
 		_toque(2, _ct.centro_de("A"), false)
@@ -77,6 +84,12 @@ func _process(_d: float) -> void:
 		_toque(0, _ct.centro_reposo(), false)
 	if _n == 160:
 		_comprobar(Mando.movimiento() == Vector2.ZERO and not Input.is_action_pressed("jugar_sprint"), "al levantar los dedos todo se suelta")
+		_toque(5, _ct.centro_de("Pausa"), true)
+	if _n == 165:
+		_toque(5, _ct.centro_de("Pausa"), false)
+	if _n == 190:
+		_comprobar(_pj.get("_pausa") != null, "el botón II abre la pausa (táctica y cambios)")
+		_foto("tactil_partido_pausa")
 		print("===== FIN. %d fallos =====" % _fallos)
 		ControlesTactiles.forzar = false
 		get_tree().quit(0 if _fallos == 0 else 1)

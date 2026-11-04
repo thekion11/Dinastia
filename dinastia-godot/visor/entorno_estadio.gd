@@ -64,6 +64,7 @@ static func montar(raiz: Node3D, est: Dictionary, niveles: int, optimizar := fal
 		e.set_meta("agrupado", Optimizar.agrupar(e))
 		e.set_meta("cortes", Optimizar.distancias(e))
 		OptimizarGrada.trocear(raiz)   ## M-345: las tribunas ya construidas, en trozos con su propia caja
+	EntornoOclusion.montar(e, hx, hz, g)   ## (3-11) en MÍNIMO, el exterior no se dibuja mientras las gradas lo tapan
 	return e
 
 ## Mástiles con las banderas del club en la plaza, delante de la tribuna
@@ -221,13 +222,14 @@ static func _multi(e: Node3D, malla: Mesh, xfs: Array[Transform3D], mat: Materia
 ## Un aparcamiento: hileras de plazas con rayas blancas y coches (no todas
 ## ocupadas). `centro` en el suelo; `a_lo_largo_z`: si las hileras corren en z.
 static func _aparcamiento(e: Node3D, centro: Vector3, a_lo_largo_z: bool, largo: float, rng: RandomNumberGenerator) -> void:
-	var flota := CityBuilder.flota_coches()
+	var flota = CargaCiudad.de("CityBuilder").flota_coches()
 	var raya := QuadMesh.new()
 	raya.size = Vector2(0.14, 5.0)
 	var rayas: Array[Transform3D] = []
 	var acostada := Basis(Vector3.RIGHT, -PI * 0.5)
 	var giro_r := Basis() if a_lo_largo_z else Basis(Vector3.UP, PI * 0.5)
 	var plazas := int(largo / 2.7)
+	var hechos := 0   ## MÍNIMO: de cada 3 coches se queda 1 (cada coche son ~2 llamadas de dibujo; el azar se gasta igual y el resto sale idéntico)
 	for hilera: float in [-1.0, 1.0]:
 		for i in plazas:
 			var a := -largo * 0.5 + float(i) * 2.7
@@ -237,7 +239,11 @@ static func _aparcamiento(e: Node3D, centro: Vector3, a_lo_largo_z: bool, largo:
 			rayas.append(Transform3D((Basis(Vector3.UP, PI * 0.5) if a_lo_largo_z else Basis()) * acostada, centro + pos + (Vector3(0, -0.06, 1.35) if a_lo_largo_z else Vector3(1.35, -0.06, 0))))
 			if flota.is_empty() or rng.randf() > 0.62:
 				continue
-			var coche := CityBuilder.instanciar_coche(flota[rng.randi() % flota.size()], rng)
+			var coche = CargaCiudad.de("CityBuilder").instanciar_coche(flota[rng.randi() % flota.size()], rng)
+			hechos += 1
+			if Calidad.elegida <= Calidad.MINIMO and hechos % 3 != 0:
+				coche.free()
+				continue
 			coche.position = centro + pos
 			## Aparcados de morro hacia el pasillo central (cada hilera mira a la otra).
 			var mira: float = -hilera

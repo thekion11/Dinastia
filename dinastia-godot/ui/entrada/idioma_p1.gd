@@ -80,7 +80,7 @@ func _construir() -> void:
 	_fondo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_fondo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_mat_fondo = ShaderMaterial.new()
-	_mat_fondo.shader = FONDO
+	_mat_fondo.shader = AhorroMenu.shader(FONDO)
 	_fondo.material = _mat_fondo
 	add_child(_fondo)
 	var margen := MarginContainer.new()

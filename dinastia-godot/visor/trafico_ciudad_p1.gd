@@ -399,7 +399,7 @@ func _gesto(v: Dictionary, gesto: String) -> void:
 		var lib := ap.get_animation_library("")
 		if lib == null:
 			continue
-		AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(nodo), gesto)
+		load("res://visor/anim_extra.gd").asegurar(ap, FutbolistaQ.esqueleto_de(nodo), gesto)
 		if lib.has_animation(gesto):
 			ap.play(gesto, 0.3)
 

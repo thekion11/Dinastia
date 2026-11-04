@@ -35,6 +35,16 @@ static func cargar() -> void:
 		var a := String(par[0])
 		if cf.has_section_key("teclas", a):
 			_propio[a] = cf.get_value("teclas", a, {})
+	## (3-11) Las teclas 1-9/0 de las pestañas ya no existen: lo que alguien había cambiado pasa a su menú o submenú de ahora.
+	var migrado := false
+	for vieja: String in AtajosCentrales.MIGRACION:
+		if cf.has_section_key("teclas", vieja):
+			var nueva := AtajosCentrales.accion_de_clave(String(AtajosCentrales.MIGRACION[vieja]))
+			if nueva != "" and not _propio.has(nueva):
+				_propio[nueva] = cf.get_value("teclas", vieja, {})
+				migrado = true
+	if migrado:
+		guardar()
 
 static func guardar() -> void:
 	var cf := ConfigFile.new()
@@ -52,7 +62,9 @@ static func aplicar() -> void:
 			_defectos[a] = InputMap.action_get_events(a).duplicate()
 	for a: String in _propio:
 		var d: Dictionary = _propio[a]
-		if d.has("tecla"):
+		if d.has("tecla") and int(d["tecla"]) == 0:
+			_quitar_teclas(a)   ## «sin tecla»: se la quitaron a propósito
+		elif d.has("tecla"):
 			var ev := InputEventKey.new()
 			ev.physical_keycode = int(d["tecla"]) as Key
 			_poner(a, ev)
@@ -84,6 +96,23 @@ static func reasignar(accion: String, ev: InputEvent) -> void:
 				o.erase(campo)
 	guardar()
 	aplicar()
+
+## Deja la acción SIN tecla (el botón del mando, si tiene, se queda).
+static func quitar(accion: String) -> void:
+	if not _cargado:
+		cargar()
+	var d: Dictionary = _propio.get(accion, {})
+	d["tecla"] = 0
+	_propio[accion] = d
+	guardar()
+	aplicar()
+
+static func _quitar_teclas(accion: String) -> void:
+	if not InputMap.has_action(accion):
+		return
+	for viejo: InputEvent in InputMap.action_get_events(accion):
+		if viejo is InputEventKey:
+			InputMap.action_erase_event(accion, viejo)
 
 ## Vuelve a las de fábrica.
 static func restaurar() -> void:
@@ -139,7 +168,7 @@ static func texto_de(accion: String) -> String:
 			var nb := String(Mando.NOMBRE_BOTON.get(b, "B%d" % b))
 			if not bs.has(nb):
 				bs.append(nb)
-	var t := ", ".join(ts) if not ts.is_empty() else "—"
+	var t := ", ".join(ts) if not ts.is_empty() else Idiomas.t("sin tecla")
 	if not bs.is_empty():
 		t += "  ·  🎮 " + ", ".join(bs)
 	return t

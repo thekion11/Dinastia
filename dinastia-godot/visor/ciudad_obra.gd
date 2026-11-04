@@ -81,4 +81,5 @@ static func montar(ex: CiudadExpansion, r: Rect2) -> void:
 	rotulo.outline_modulate = Color(0.1, 0.1, 0.1)
 	rotulo.position = Vector3(c.x, 5.0, z1 - 0.2)
 	rotulo.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	rotulo.visibility_range_end = 90.0   ## (3-11) solo de cerca
 	b.add_child(rotulo)

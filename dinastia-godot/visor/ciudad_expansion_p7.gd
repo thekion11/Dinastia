@@ -3,7 +3,7 @@ extends "res://visor/ciudad_expansion_p6.gd"
 
 func _bandera_mastil(p: Vector3) -> void:
 	b._cil_en(p + Vector3(0, 7.0, 0), 0.15, 14.0, _mat["claro"])
-	StadiumBuilder._bandera_ondeante(b, p + Vector3(1.6, 12.6, 0), Vector2(3.2, 2.0),
+	load("res://visor/stadium_builder.gd")._bandera_ondeante(b, p + Vector3(1.6, 12.6, 0), Vector2(3.2, 2.0),
 		b._color_club("c1", Color(0.2, 0.5, 0.3)), 0.0, 0.3)
 
 ## Cartel de metro: poste con la «M» en un disco del color de la línea.
@@ -152,7 +152,7 @@ func _instalacion(uso: String, r: Rect2) -> void:
 	CiudadServicios.fachada(self, uso, c, w, f)
 	CiudadServicios.portico(self, uso, c, w, f)
 	if nombre != "":
-		b._rotulo(c + Vector3(0, 30.0, 0), nombre, Color(1, 1, 1), 22)
+		CartelFachada.con_mapa(b, c + Vector3(0, 30.0, 0), nombre, Color(1, 1, 1), 22)
 		b.puntos_clic.append({"k": "ciudad_" + uso, "n": nombre, "pos": c, "estado": "ciudad"})
 	cuenta["instalaciones"] = int(cuenta.get("instalaciones", 0)) + 1
 
@@ -219,7 +219,7 @@ func _edificios_lejanos() -> void:
 	var ts: Array[Transform3D] = []
 	var cs: Array[Color] = []
 	for r in _lejanos:
-		var libre := r in _sin_lejano
+		var libre := r in _sin_lejano or b.altura_en(r.get_center().x, r.get_center().y) > 2.0   ## (4-11) bajo un cerro no se levantan torres lejanas (quedaban enterradas)
 		if not libre:
 			_lote("acera", Vector3(r.get_center().x, 0.12, r.get_center().y), Vector3(r.size.x, 0.24, r.size.y))
 		for k in 4:

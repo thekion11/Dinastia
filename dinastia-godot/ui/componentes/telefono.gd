@@ -435,6 +435,8 @@ static func abrir(p: Control, mundo: Mundo) -> Control:
 		if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
 			guardar.call())
 	Sonido.toca("abrir", Sonido.Bus.INTERFAZ)
-	Telefono.animar_pop.call_deferred(pop, tel, true)
+	(func() -> void:   ## (3-11) si el móvil se cierra en el mismo cuadro, `pop` ya no existe y la llamada diferida con un objeto tirado daba ERROR
+		if is_instance_valid(pop) and is_instance_valid(tel):
+			Telefono.animar_pop(pop, tel, true)).call_deferred()
 	tel.enfocar.call_deferred()
 	return pop

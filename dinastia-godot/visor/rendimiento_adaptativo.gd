@@ -95,7 +95,7 @@ func bajar() -> void:
 			for n in raiz3d.find_children("ButacasCerca*", "MultiMeshInstance3D", true, false):
 				var mmi := n as MultiMeshInstance3D
 				if mmi.multimesh != null:
-					mmi.multimesh.mesh = StadiumBuilder._malla_butaca_lejos()
+					mmi.multimesh.mesh = load("res://visor/stadium_builder.gd")._malla_butaca_lejos()
 		4:
 			_escala(0.8)
 		5:
@@ -114,7 +114,7 @@ func _escala(e: float) -> void:
 	## equipos más modestos): ahí se reescala bilineal, que también existe.
 	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR if Calidad.es_compatibilidad() \
 		else Viewport.SCALING_3D_MODE_FSR
-	vp.scaling_3d_scale = e
+	vp.scaling_3d_scale = minf(e, Calidad.escala_3d())   ## en MÍNIMO ya se parte del 50 %
 
 func _exit_tree() -> void:
 	## El viewport es el de la ventana entera: si no se devuelve, el resto del
@@ -122,7 +122,7 @@ func _exit_tree() -> void:
 	if escalon >= 4:
 		var vp := get_viewport()
 		if vp != null:
-			vp.scaling_3d_scale = 1.0
+			vp.scaling_3d_scale = Calidad.escala_3d()
 			vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
 
 static func _todos(n: Node, clase: String) -> Array[Node]:

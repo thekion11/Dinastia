@@ -31,16 +31,10 @@ extends "res://pruebas/banco/nucleo.gd"
 
 const SECCIONES := [
 	"_probar_carga_de_ui",
-	"_probar_datos",
-	"_probar_repetibilidad",
-	"_probar_mundo",
-	"_probar_reales",
-	"_probar_base_ficticia",
-	"_probar_cubierta_nombres",
+	"_probar_datos", "_probar_repetibilidad", "_probar_mundo",
+	"_probar_reales", "_probar_base_ficticia", "_probar_cubierta_nombres",
 	"_probar_calendario",
-	"_probar_partidos",
-	"_probar_previa",
-	"_probar_arbitros",
+	"_probar_partidos", "_probar_previa", "_probar_arbitros",
 	"_probar_pie_habil",
 	"_probar_banquillo",
 	"_probar_finanzas",
@@ -135,9 +129,24 @@ const SECCIONES := [
 	"_probar_entrevistas",
 	"_probar_estadio_b6",
 	"_probar_ciudad_b7",
-	"_probar_fundir_piezas",
+	"_probar_fundir_piezas", "_probar_fundir_r2",
 	"_probar_rellenos_ciudad",
 	"_probar_visor_pequenos",
+	"_probar_nucleo_sueltos",
+	"_probar_filtros_plantel",
+	"_probar_compara_clubes",
+	"_probar_modo_streamer",
+	"_probar_perfiles_mando",
+	"_probar_teclado_pantalla",
+	"_probar_entrada_comun",
+	"_probar_lector_avisos",
+	"_probar_foco_mando",
+	"_probar_calidad_minima",
+	"_probar_eleccion_partido",
+	"_probar_carrera_salidas",
+	"_probar_grada_fondo",
+	"_probar_pantalla_ampliada",
+	"_probar_funciones_escondidas",
 	"_probar_visor_efectos",
 	"_probar_vomitorios",
 	"_probar_coherencia_c1",
@@ -243,7 +252,7 @@ const GRUPOS := {
 	"guardado": ["_probar_guardado", "_probar_guardado_seguro", "_probar_partido_abandonado", "_probar_repetibilidad"],
 	"ciudad": ["_probar_modulos", "_probar_faros_coches", "_probar_ciudad", "_probar_ciudad_b7", "_probar_ciudad_animo", "_probar_ciudad_grande",
 		"_probar_redes_ciudad", "_probar_cartera_dt", "_probar_cajero", "_probar_expendedora_balon", "_probar_parque_lleno", "_probar_cancha_patos", "_probar_comercio_lleno", "_probar_no_atravesar_paredes", "_probar_minijuegos", "_probar_optimizacion"],
-	"estadio": ["_probar_fundir_piezas", "_probar_vomitorios", "_probar_visor_efectos", "_probar_visor_pequenos", "_probar_rellenos_ciudad", "_probar_estadio", "_probar_estadio_b6", "_probar_b6_formas_led", "_probar_tunel_navegable",
+	"estadio": ["_probar_fundir_piezas", "_probar_fundir_r2", "_probar_vomitorios", "_probar_visor_efectos", "_probar_visor_pequenos", "_probar_nucleo_sueltos", "_probar_filtros_plantel", "_probar_compara_clubes", "_probar_modo_streamer", "_probar_perfiles_mando", "_probar_teclado_pantalla", "_probar_entrada_comun", "_probar_lector_avisos", "_probar_foco_mando", "_probar_calidad_minima", "_probar_eleccion_partido", "_probar_carrera_salidas", "_probar_grada_fondo", "_probar_pantalla_ampliada", "_probar_funciones_escondidas", "_probar_rellenos_ciudad", "_probar_estadio", "_probar_estadio_b6", "_probar_b6_formas_led", "_probar_tunel_navegable",
 		"_probar_edificio_club", "_probar_personal_estadio", "_probar_peaton_fuera_del_arbol", "_probar_interiores_club", "_probar_galeria_club",
 		"_probar_reforma_con_obra", "_probar_guinos_estadio", "_probar_vallas_led", "_probar_ola_grada",
 		"_probar_rendimiento_adaptativo", "_probar_calidad_auto"],
@@ -318,7 +327,7 @@ func _cerrar() -> void:
 	## MATERIALES COMPARTIDOS (2-11-2026): lo que construyó este proceso no dejó ningún material compartido modificado.
 	_titulo("MATERIALES COMPARTIDOS: NINGUNO MODIFICADO")
 	_comprobar(Mini3D.materiales_alterados().is_empty(), "Mini3D.mat (%d distintos) %s" % [Mini3D._cache_mat.size(), str(Mini3D.materiales_alterados())])
-	_comprobar(TunelVestuario.materiales_alterados().is_empty(), "TunelVestuario._mat (%d distintos) %s" % [TunelVestuario._cache_mat.size(), str(TunelVestuario.materiales_alterados())])
+	_comprobar(TunelVestuario.materiales_alterados().is_empty(), "TunelVestuario._mat (%d distintos) %s" % [PiezasObra._cache_mat.size(), str(TunelVestuario.materiales_alterados())])
 	var suma := 0
 	for tt: Array in _tiempos:
 		suma += int(tt[0])
@@ -415,7 +424,7 @@ func _ready() -> void:
 		## La carga de la interfaz va en todas: es barata y si falla, mejor saberlo ya.
 		if i > 0 and _parte_de(i, total) != mia:
 			continue
-		if solo != "" and SECCIONES[i] != solo:
+		if solo != "" and not solo.split(",").has(SECCIONES[i]):   ## (4-11) también lista «a,b,c» (bancos especializados)
 			continue
 		if grupo != "" and GRUPOS.has(grupo) and not (GRUPOS[grupo] as Array).has(SECCIONES[i]):
 			continue

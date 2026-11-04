@@ -1,14 +1,31 @@
 extends "res://nucleo/idiomas_p1.gd"
 ## [Capa 2/2 de `idiomas.gd`] _cargar_extra, _ready, _ordinales, mayusculas, _directa, _tiene_letras … (+13)
 
-func _cargar_extra() -> void:
+## (3-11-2026, memoria en el móvil) `idiomas_extra.json` con los 9 idiomas ocupaba ~46 MB al arrancar. Ahora solo se guarda la tabla de los idiomas PEDIDOS (`_asegurar`): en castellano
+## (que no traduce) no se carga ninguna; al elegir otro, la suya; lo que necesita varias a la vez (buscar el origen de un texto, medir coberturas) llama a `_asegurar_todos`.
+func _asegurar(idi: String) -> void:
+	if idi == "es" or _cargados.has(idi) or not ORDEN.has(idi):
+		return
+	_cargar_extra([idi])
+
+func _asegurar_todos() -> void:
+	var faltan: Array = []
+	for k: String in ORDEN:
+		if k != "es" and not _cargados.has(k):
+			faltan.append(k)
+	if not faltan.is_empty():
+		_cargar_extra(faltan)
+
+func _cargar_extra(cuales: Array = []) -> void:
 	if not FileAccess.file_exists(EXTRA):
 		return
 	var d: Variant = JSON.parse_string(FileAccess.get_file_as_string(EXTRA))
 	if not (d is Dictionary):
 		return
-	for k: String in ORDEN:
+	for k: String in cuales:
 		_extra[k] = (d as Dictionary).get(k, {})
+		_cargados[k] = true
+	_inverso.clear()   ## el origen de un texto puede estar en el idioma recién cargado
 	## Cada patrón: [regex, plantilla en, pt, fr, it, de, ca, ...] en el orden
 	## de `ORDEN`; una plantilla que falte deja la frase en castellano.
 	_patrones.clear()
@@ -22,8 +39,10 @@ func _cargar_extra() -> void:
 	_cargar_narracion()
 
 func _ready() -> void:
-	_cargar_extra()
+	_asegurar(idioma)
 	TextoQueCabe.vigilar(get_tree())
+	LectorPantalla.vigilar(get_tree())   ## M-284: lectura de pantalla, si está encendida
+	TecladoPantalla.vigilar(get_tree())   ## M-441: teclado en pantalla con mando en PC/TV
 func _ordinales(texto: String) -> String:
 	if idioma == "fr":
 		if _re_ord_fr == null:
@@ -196,6 +215,7 @@ func _t(frase: String, prof: int) -> String:
 ## una clave castellana o no se conoce.
 var _inverso := {}
 func origen(texto: String) -> String:
+	## Un texto solo puede estar en un idioma que ya se haya cargado (para pintarlo hubo que elegirlo): no hace falta cargar los demás.
 	if texto == "" or _directa_es(texto):
 		return ""
 	if _inverso.is_empty():
@@ -277,6 +297,7 @@ func traducir_arbol(n: Node) -> void:
 ## ajustes para decir la verdad sobre la cobertura en vez de prometer un juego
 ## entero traducido.
 func cobertura(cual: String) -> int:
+	_asegurar(cual)
 	var i := ORDEN.find(cual)
 	if i < 0:
 		return TABLA.size()
@@ -324,6 +345,7 @@ func _retraducir(n: Node, antes: String, inv: Dictionary) -> void:
 
 ## Diccionario traducción -> castellano de un idioma (de las dos tablas).
 func _inverso_de(cual: String) -> Dictionary:
+	_asegurar(cual)
 	var inv := {}
 	if cual == "es":
 		return inv

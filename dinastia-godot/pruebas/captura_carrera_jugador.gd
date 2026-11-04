@@ -33,7 +33,7 @@ func _process(_d: float) -> void:
 		_foto("partido_jugable_1")
 	if _n == 230:
 		## Un córner para el equipo del jugador, lanzado por él.
-		var m := _pj.motor
+		var m = _pj.motor
 		m.autopiloto = false
 		var d := MotorJugable.dir_ataque(bool(m.usuario["es_local"]))
 		m._empezar_saque("corner", bool(m.usuario["es_local"]), Vector3(33.7, 0.11, 52.2 * d))
@@ -46,7 +46,7 @@ func _process(_d: float) -> void:
 	if _n == 360:
 		_foto("partido_jugable_2")
 	if _n == 370:
-		var m2 := _pj.motor
+		var m2 = _pj.motor
 		m2.autopiloto = false
 		m2.lanza_usuario["penal"] = true
 		var d2 := MotorJugable.dir_ataque(bool(m2.usuario["es_local"]))

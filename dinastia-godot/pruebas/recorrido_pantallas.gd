@@ -24,6 +24,9 @@ var _largos := {}
 var _donde := ""
 var _espera := -1
 var _idioma_antes := ""
+## M-287 (2-11-2026): lo que tarda en abrirse cada pantalla (pintarla, sin pulsar botones). Con RECORRIDO_MS_MAX=n
+## falla si alguna pasa de n ms (la máquina sin GPU pinta más despacio que un PC: el tope es holgado).
+var _tiempos := {}
 
 func _ready() -> void:
 	_p = load("res://escenas/principal.tscn").instantiate()
@@ -87,6 +90,7 @@ func _process(_d: float) -> void:
 			h.queue_free()
 	if _cola.is_empty():
 		print("RECORRIDO: %d pantallas, %d botones" % [_pantallas, _botones])
+		_informe_tiempos()
 		if _idioma_antes != "":
 			_castellano()
 		## Ajustes guarda las preferencias al pintarse: sin esto, el idioma de la prueba quedaba como el del juego.
@@ -107,6 +111,7 @@ func _process(_d: float) -> void:
 		get_tree().quit()
 		return
 	var paso: Array = _cola.pop_front()
+	var t0 := Time.get_ticks_usec()
 	match String(paso[0]):
 		"chip":
 			var ch: Dictionary = paso[1]
@@ -114,10 +119,12 @@ func _process(_d: float) -> void:
 				return
 			_p.call("_ir_a_chip", ch)
 			_p.call("_refrescar")
+			_tiempos["chip " + String(ch["tab"]) + "/" + String(ch.get("secc", ""))] = (Time.get_ticks_usec() - t0) / 1000.0
 			print("PANTALLA chip %s/%s" % [ch["tab"], ch.get("secc", "")])
 		"tab":
 			_p.call("_ir_a_pestana", String(paso[1]))
 			_p.call("_refrescar")
+			_tiempos["tab " + String(paso[1])] = (Time.get_ticks_usec() - t0) / 1000.0
 			print("PANTALLA tab %s" % paso[1])
 			_pulsar_botones()
 		"menu":
@@ -146,6 +153,16 @@ func _process(_d: float) -> void:
 		_recoger(_p)
 	if OS.get_environment("RECORRIDO_LARGOS") != "":
 		_espera = 2
+
+func _informe_tiempos() -> void:
+	var claves := _tiempos.keys()
+	claves.sort_custom(func(a, b) -> bool: return float(_tiempos[a]) > float(_tiempos[b]))
+	for k in claves.slice(0, 5):
+		print("  LENTA %7.1f ms  %s" % [float(_tiempos[k]), k])
+	if OS.get_environment("RECORRIDO_MS_MAX") != "":
+		var tope := float(OS.get_environment("RECORRIDO_MS_MAX"))
+		var malas := claves.filter(func(k) -> bool: return float(_tiempos[k]) > tope)
+		print("FIN TIEMPOS. %d fallos (tope %d ms, la peor %.0f ms)" % [malas.size(), int(tope), float(_tiempos[claves[0]]) if not claves.is_empty() else 0.0])
 
 ## Lo que no cabe: un control visible que se sale por la derecha de la ventana, o un texto que el control recorta
 ## (clip o «…») porque es más ancho que el propio control.

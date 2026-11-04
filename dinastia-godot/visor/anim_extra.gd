@@ -126,7 +126,7 @@ static func asegurar(ap: AnimationPlayer, esq: Skeleton3D, clave: String) -> boo
 
 
 ## ------------------------------------------------- GESTOS DE LA RUEDA (§2.5)
-## (30-10) El DT contesta a la prensa con el gesto de su TONO (`PrologoPasos.TONOS`):
+## (30-10) El DT contesta a la prensa con el gesto de su TONO (`CargaCiudad.de("PrologoPasos").TONOS`):
 ## seguro = manos abiertas, evasivo = mano al cuello, humilde = manos juntas.
 const GESTO_TONO := {"seguro": "manos_abiertas", "evasivo": "mano_cuello", "humilde": "manos_juntas"}
 const CARA_TONO := {"seguro": "alegre", "evasivo": "neutral", "humilde": "concentrado"}

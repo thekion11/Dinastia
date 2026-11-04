@@ -68,7 +68,7 @@ func _montar() -> void:
 	_fondo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_fondo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var sm := ShaderMaterial.new()
-	sm.shader = FONDO_SHADER
+	sm.shader = AhorroMenu.shader(FONDO_SHADER)
 	sm.set_shader_parameter("velocidad", 0.0 if Animar.reducidas() else 0.035)
 	_fondo.material = sm
 	add_child(_fondo)
@@ -124,7 +124,7 @@ func _barra_pasos() -> Control:
 		b.clip_text = true
 		b.add_theme_font_size_override("font_size", 13)
 		var idx := i
-		b.pressed.connect(func() -> void: ir_a(idx))
+		b.pressed.connect(func() -> void: ir_a_chip(idx))
 		fila.add_child(b)
 		_chips.append(b)
 	return fila
@@ -220,6 +220,17 @@ func ir_a(i: int) -> void:
 	_vistos[_paso] = true
 	_pintar_paso()
 	_actualizar_estado()
+
+## Un toque en los pasos de arriba (2-11, queja del dueño): se puede VOLVER a cualquier paso, pero no saltar hacia delante por encima de un
+## paso con un error grave: te lleva al primer paso con error en vez de dejarte saltártelo.
+func ir_a_chip(i: int) -> void:
+	if i > _paso:
+		for p: Dictionary in datos.validar():
+			if bool(p["grave"]) and int(p["paso"]) < i:
+				ir_a(int(p["paso"]))
+				_actualizar_estado(true)
+				return
+	ir_a(i)
 
 ## Avanza; no deja salir de un paso con un error grave (sí con un aviso leve).
 func siguiente() -> void:

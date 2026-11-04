@@ -67,45 +67,19 @@ static func _bolsa_extra(pais: String) -> Array:
 	return _bolsas_extra.get(pais, _bolsas_extra.get("_GENERAL", [])) if pais != "" else _bolsas_extra.get("_GENERAL", [])
 
 func _sortear_nombre(pais: String, region: String = "") -> String:
-	var n: Array = Datos.tabla("NOMBRES")
-	var a: Array = Datos.tabla("APELLIDOS")
-	var pools: Variant = Datos.tabla("POOLS_EU")
-	## España con su región (C3): bolsa general o vasca, ya no todos vascos.
-	var propias := Regiones.bolsas(pais, region)
-	if not propias.is_empty():
-		n = propias[0]
-		a = propias[1]
-	elif pools is Dictionary and (pools as Dictionary).has(pais):
-		var par: Array = (pools as Dictionary)[pais]
-		if par.size() >= 2 and not (par[0] as Array).is_empty() and not (par[1] as Array).is_empty():
-			n = par[0]
-			a = par[1]
-	elif pais == "BRA":
-		var nb: Variant = Datos.tabla("NOMBRES_BRA")
-		var ab: Variant = Datos.tabla("APELLIDOS_BRA")
-		if nb is Array and not (nb as Array).is_empty() and ab is Array and not (ab as Array).is_empty():
-			n = nb
-			a = ab
-	if n == null or a == null or n.is_empty() or a.is_empty():
+	var par := SorteoNombre.bolsas(pais, region)   ## resueltas una vez por país y región (M-349)
+	if par.is_empty():
 		return "Jugador %d" % _seq_jugador
-	## M-331: las bolsas de la base eran de 14×14; se suman las de
-	## `datos/bolsas_nombres.json` (la vasca se deja tal cual: es un sabor).
-	if region != "EUS":
-		var extra := _bolsa_extra(pais)
-		if not extra.is_empty():
-			## Unidas una vez por país (30-10, rendimiento: se copiaban en cada nombre sorteado).
-			if not _bolsas_unidas.has(pais):
-				_bolsas_unidas[pais] = [n + (extra[0] as Array), a + (extra[1] as Array)]
-			n = _bolsas_unidas[pais][0]; a = _bolsas_unidas[pais][1]
-	return "%s %s" % [Azar.uno(n), Azar.uno(a)]
+	return "%s %s" % [Azar.uno(par[0]), Azar.uno(par[1])]
 func _nombre_al_azar(pais: String = "", region: String = "") -> String:
 	if _nombres_usados.is_empty():
 		for c: Club in clubes.values():
 			for j: Jugador in c.plantilla:
 				_nombres_usados[j.nombre] = true
 	var nombre := ""
+	var sortear := _sortear_nombre.bind(pais, region)   ## una sola vez por nombre, no por intento
 	for _i in 8:
-		nombre = Nombres.sin_vetar(func() -> String: return _sortear_nombre(pais, region))
+		nombre = Nombres.sin_vetar(sortear)
 		if not _nombres_usados.has(nombre):
 			break
 	_nombres_usados[nombre] = true
@@ -405,7 +379,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	banco.dueno = weakref(self)   ## para que el banco sepa de los desafíos («Sin dinero»)
 	auspicio = Auspicio.new(self)
 	comercial = Comercial.new(self)
-	ciudad = Ciudad.new(self)
+	ciudad = CargaCiudad.de("Ciudad").new(self)
 	comercial.generar_ofertas_zona(mi_club(), roles.multiplicador_sponsor() if roles != null else 1.0)
 	comercial.generar_ofertas_naming(mi_club())
 	citas.semana(self, semana)   ## fase 4: las citas de la primera semana

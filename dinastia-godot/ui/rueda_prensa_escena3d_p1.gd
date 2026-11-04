@@ -297,7 +297,7 @@ func _montar_banderas(club: Club) -> void:
 		var tela := MeshInstance3D.new()
 		tela.mesh = qm
 		var mat := ShaderMaterial.new()
-		mat.shader = StadiumBuilder.SHADER_BANDERA
+		mat.shader = load("res://visor/stadium_builder.gd").SHADER_BANDERA
 		mat.set_shader_parameter("usa_dibujo", true)
 		mat.set_shader_parameter("espejo", lado > 0.0)
 		mat.set_shader_parameter("dibujo", texs[i])
@@ -327,7 +327,7 @@ func _montar_luces() -> void:
 	clave.spot_range = 8.0
 	clave.spot_angle = 34.0
 	clave.spot_attenuation = 1.4
-	clave.shadow_enabled = true
+	clave.shadow_enabled = Calidad.elegida > Calidad.MINIMO
 	add_child(clave)
 	clave.look_at_from_position(Vector3(-1.0, 2.6, 1.6), Vector3(0, 1.55, -0.45), Vector3.UP)
 

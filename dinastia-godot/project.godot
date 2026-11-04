@@ -4,7 +4,7 @@ config_version=5
 
 config/name="DINASTIA"
 ; (31-10) Sin tilde a propósito: este nombre decide la carpeta user:// (partidas, caché, caras_reales.pck).
-config/version="0.9.0"
+config/version="0.9.1"
 config/description="Manager de futbol. Nucleo portado del HTML, no reescrito."
 run/main_scene="res://escenas/inicio.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
@@ -25,7 +25,10 @@ movie_writer/mjpeg_quality=0.55
 
 [autoload]
 
-; Registro va el primero: así oye también los fallos al arrancar los demás (nucleo/registro.gd).
+; Parches va el PRIMERO de todos (4-11-2026): monta los parche_*.pck del actualizador en su _init, antes de que se cargue
+; ningún otro script, para que los demás ya salgan del parche (nucleo/parches.gd).
+Parches="*res://nucleo/parches.gd"
+; Registro va justo después: así oye también los fallos al arrancar los demás (nucleo/registro.gd).
 Registro="*res://nucleo/registro.gd"
 Datos="*res://nucleo/datos.gd"
 Azar="*res://nucleo/azar.gd"
@@ -47,6 +50,10 @@ GameManager="*res://minijuegos/retro5v5/scenes/game_manager/game_manager.gd"
 ; responden: Godot no convierte el toque en clic por defecto, y la interfaz
 ; entera de este juego son botones.
 pointing/emulate_mouse_from_touch=true
+
+[physics]
+
+common/physics_interpolation=true
 
 [rendering]
 

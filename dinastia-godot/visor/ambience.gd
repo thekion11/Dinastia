@@ -31,7 +31,7 @@ const CLIMA_PARTIDO := {
 	"niebla":    {"oscuro": 0.30, "niebla": 0.75},
 }
 
-## `nivel`: el mismo `Calidad.MEDIO/ALTO/ULTRA` que ya respeta `ciudad_vista.gd`.
+## `nivel`: el mismo `Calidad.MINIMO/MEDIO/ALTO/ULTRA` que ya respeta `ciudad_vista.gd`.
 ## HASTA AHORA EL PARTIDO IGNORABA POR COMPLETO EL AJUSTE DE CALIDAD -a
 ## diferencia de la ciudad, que sí lo mira (`ciudad_vista.gd:78`)-: la oclusión
 ## ambiental y las sombras en 4 cascadas salían encendidas siempre, aunque el
@@ -51,7 +51,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	var cp: Dictionary = CLIMA_PARTIDO.get(clima_key, CLIMA_PARTIDO["despejado"])
 
 	var oscuro: float = clampf(float(amb["oscuro"]) + float(cp["oscuro"]) * 0.6, 0.0, 1.0)
-	StadiumBuilder.encender_conos(oscuro)
+	load("res://visor/stadium_builder.gd").encender_conos(oscuro)
 	var niebla: float = float(cp["niebla"])
 
 	var top := Color(str(amb["top"])).darkened(float(cp["oscuro"]) * 0.5)
@@ -69,7 +69,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	env.sky = sky
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
 	env.ambient_light_sky_contribution = 1.0
-	env.glow_enabled = true
+	env.glow_enabled = nivel > Calidad.MINIMO   ## (4-11) MÍNIMO: sin resplandor (pasada de pantalla completa)
 	env.glow_intensity = 0.5 + oscuro * 0.5
 	## EL UMBRAL, QUE FALTABA (23-9-2026). Se quedaba en 1.0, o sea que
 	## cualquier blanco puro entraba entero al bloom -incluidas las rayas de cal
@@ -89,7 +89,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
 	env.tonemap_exposure = lerpf(1.05, 1.35, oscuro)
 	env.tonemap_white = 6.0
-	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
+	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY if nivel > Calidad.MINIMO else Environment.REFLECTION_SOURCE_DISABLED   ## (4-11) MÍNIMO: sin reflejos del cielo también aquí (se los devolvía el ambiente)
 	if nivel >= Calidad.ALTO:
 		env.ssao_enabled = true
 		env.ssao_radius = 1.4
@@ -108,7 +108,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	key.rotation_degrees = Vector3(-58.0 + oscuro * 18.0, -35, 0)
 	key.light_energy = lerpf(1.35, 0.25, oscuro)
 	key.light_color = Color(1.0, 0.97, 0.90).lerp(Color(0.65, 0.72, 0.95), oscuro)
-	key.shadow_enabled = true
+	key.shadow_enabled = nivel > Calidad.MINIMO   ## MÍNIMO: sin la pasada de sombras (~1/4 de las llamadas del partido)
 	## Sombras suaves de verdad: el tamano aparente del sol hace que la sombra se
 	## abra con la distancia, como en la realidad. Sin esto salen recortadas.
 	key.light_angular_distance = 0.5
@@ -128,7 +128,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 		fill.rotation_degrees = Vector3(-78, 130, 0)
 		fill.light_energy = 0.40 + oscuro * 0.35
 		## B6.1: del color que se eligió para los focos.
-		fill.light_color = StadiumBuilder.color_luz(est)
+		fill.light_color = load("res://visor/stadium_builder.gd").color_luz(est)
 		fill.shadow_enabled = false
 		## Sin brillo especular: es una luz de RELLENO. Casi vertical, su
 		## reflejo caía en el centro del campo y era media causa de la

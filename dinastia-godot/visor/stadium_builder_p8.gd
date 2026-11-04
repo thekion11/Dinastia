@@ -118,7 +118,7 @@ static func _exterior(root: Node3D, est: Dictionary, dx: float, dz: float, nivel
 	## (puerta, portero y garita) queda al este y no puede tener taquillas
 	## delante.
 	for i in 4:
-		var x := tx - (TunelVestuario.VEST_MEDIO + 4.0 + float(i) * 4.5)
+		var x := tx - (TunelMedidas.VEST_MEDIO + 4.0 + float(i) * 4.5)
 		var z := fuera_z + 9.0
 		_box(ext, Vector3(x, 1.3, z), Vector3(3.0, 2.6, 2.4), caseta)
 		## La ventanilla mira a la calle (+Z), no al muro del estadio.
@@ -131,7 +131,7 @@ static func _exterior(root: Node3D, est: Dictionary, dx: float, dz: float, nivel
 	rot.modulate = Color(1, 1, 1)
 	rot.outline_size = 12
 	## Un `Label3D` sin girar ya mira a +Z, que es la calle.
-	rot.position = Vector3(tx - (TunelVestuario.VEST_MEDIO + 4.0 + 6.75), 4.6, fuera_z + 9.0)
+	rot.position = Vector3(tx - (TunelMedidas.VEST_MEDIO + 4.0 + 6.75), 4.6, fuera_z + 9.0)
 	ext.add_child(rot)
 	## La tienda oficial, en la esquina sureste.
 	var tienda_pos := Vector3(fuera_x - 6.0, 0.0, fuera_z + 20.0)

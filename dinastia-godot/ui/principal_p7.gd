@@ -11,6 +11,10 @@ func _actualizar_badges() -> void: _vistas._actualizar_badges()
 
 
 func _ir_a_pestana(titulo: String) -> void:
+	## (3-11, rediseño del menú central) Desde el central, cualquier sección que no sea Inicio se abre en su menú del
+	## panel lateral, a pantalla completa (el central ya no tiene fila de pestañas).
+	if _abrir_en_lateral(titulo):
+		return
 	for i in _pestanas.get_tab_count():
 		if _pestanas.get_tab_title(i) == titulo:
 			_pestanas.current_tab = i
@@ -43,3 +47,49 @@ func _pedir_informe_medico(j: Jugador) -> void: _acciones_fichaje._pedir_informe
 
 
 
+
+## La sección de una pestaña vive en su menú lateral: lo busca (si hay varios submenús con la misma pestaña, el de la
+## sección elegida) y lo abre. No redirige mientras un menú lateral ya está abierto (él mismo cambia de pestaña así).
+var _redirigiendo := false
+const _SECC_DE_PESTANA := {"Club": "_secc_club", "Gente": "_secc_gente", "Ajustes": "_secc_ajustes",
+	"Récords": "_secc_records", "Redes": "_secc_redes", "Vida": "_secc_vida"}
+func _abrir_en_lateral(titulo: String) -> bool:
+	if _redirigiendo or titulo == "Inicio" or _menu_lateral == null or not _menu_lateral.is_inside_tree():
+		return false
+	var secc := String(get(_SECC_DE_PESTANA[titulo])) if _SECC_DE_PESTANA.has(titulo) else ""
+	## Con un menú ya abierto: si la sección es suya, la elige él (cambia también el título); si no, se abre el suyo.
+	var abierta: PantallaMenu = _menu_lateral.pantalla_abierta if is_instance_valid(_menu_lateral.pantalla_abierta) else null
+	if abierta != null and not abierta.cerrando():
+		var propio := _sub_de(abierta.menu(), titulo, secc)
+		if propio >= 0:
+			_redirigiendo = true
+			abierta.elegir(propio)
+			_redirigiendo = false
+			return true
+	var elegido := []
+	for m: Dictionary in MenusLaterales.MENUS:
+		var subs: Array = m["subs"]
+		for i in subs.size():
+			var sub: Dictionary = subs[i]
+			if String(sub.get("tab", "")) != titulo:
+				continue
+			if elegido.is_empty() or (secc != "" and String(sub.get("secc", "")) == secc):
+				elegido = [String(m["id"]), i]
+	if elegido.is_empty():
+		return false
+	_redirigiendo = true
+	_menu_lateral.abrir_menu(String(elegido[0]), int(elegido[1]))
+	_redirigiendo = false
+	return true
+
+## El índice del submenú de `menu` que abre la pestaña `titulo` (el de la sección `secc` si hay varios), o -1.
+func _sub_de(menu: Dictionary, titulo: String, secc: String) -> int:
+	var subs: Array = menu.get("subs", [])
+	var idx := -1
+	for i in subs.size():
+		var sub: Dictionary = subs[i]
+		if String(sub.get("tab", "")) != titulo:
+			continue
+		if idx < 0 or (secc != "" and String(sub.get("secc", "")) == secc):
+			idx = i
+	return idx

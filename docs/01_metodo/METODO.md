@@ -22,7 +22,7 @@ Cada ítem HECHO cita su prueba (escena o sección de banco). Un ítem sin prueb
 
 ## Reglas de higiene
 - Tareas terminadas **salen** del plan (quedan solo en el historial de git).
-- Idea postergada = fila en `PLAN_DEL_LUNES.md` con fase destino; cada auditoría revisa las que llevan > 2 fases sin moverse.
+- Idea postergada = fila en `PLAN_GENERAL.md` con fase destino; cada auditoría revisa las que llevan > 2 fases sin moverse.
 - Código nuevo nace < 450 líneas; documento nuevo se registra en `00_INDICE.md`.
 - Nada irreversible (borrar ramas, reescribir historia, tocar LFS, keystore, licencias) sin orden explícita del dueño.
 - **Lo completado se borra, no se tacha**: ni `~~tachado~~` ni filas «HECHO» en tableros o catálogos; la historia vive en git.

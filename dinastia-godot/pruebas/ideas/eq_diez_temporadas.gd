@@ -34,7 +34,13 @@ const EDAD := Vector2(25.5, 28.0)
 const OVR_DELTA := 2.0
 const VALOR := Vector2(0.75, 1.50)
 const ULTIMO := Vector2(12.0, 38.0)
-const NOMINA := Vector2(0.55, 1.60)
+## (03-11) Tope de la nómina a igual rep ×1,60 → ×1,95. La nómina del grande sin fichar sube ~×1,7 en diez años (≈ +5,4 %/año de inflación salarial, plausible en fútbol real) con
+## cualquier balance; el ×1,60 solo se cumplía si el grande ganaba rep (82 → 94) y el divisor `Eco.factor_club(rep)` absorbía la subida: con más paridad en los partidos simulados (penales,
+## ventaja de campo) la semilla 202 se queda en rep 88-89 y salía ×1,69-×1,88. La alarma real de §8 es la nómina «duplicada» (×2): ninguna temporada la alcanza (se comprueba aparte) y la
+## media de las semillas del grande queda ≤ ×1,8 (`NOMINA_MEDIA_MAX`).
+const NOMINA := Vector2(0.55, 1.95)
+const NOMINA_MEDIA_MAX := 1.8
+const NOMINA_DUPLICADA := 2.0
 const SUELDOS_MAX := 75
 const SUELDOS_MAX_SEGUNDA := 125
 ## Margen previsto (resultado / ingresos) en Primera sin gestionar: equilibrarse sí, hacerse rico solo no (26-10).
@@ -43,7 +49,12 @@ const MARGEN_MAX := 20
 const NOMINA_MIN_SEGUNDA := 0.45
 const ROJO_MAX := 0.15
 const INTERV_MAX := 2
-const GOLES := Vector2(2.1, 3.2)
+## La MEDIA de las temporadas de una corrida: ahí se nota una deriva de verdad. Tras la calibración del 3-11 (`Balance.CONVERSION` 0,28) las 9 corridas dan 2,76-2,93 (las ligas reales,
+## 2,4-2,9); el techo vuelve de 3,3 (donde se había puesto con el nivel de 3,07) a 3,1: ~4σ de la media de una corrida (σ ≈ 0,05).
+const GOLES := Vector2(2.1, 3.1)
+## Una temporada suelta: una liga son ~240 partidos, así que sus goles por partido bailan ±0,12 (1σ) alrededor de la media (~3,07 en 9 corridas del 3-11, sin tendencia: 2,86 en t1 y
+## ~3,1 desde t5). Con el techo de la media (3,2) a solo 1σ, una de cada seis temporadas «fallaba» por puro azar de semilla: la banda de una temporada es la media + 4,5σ.
+const GOLES_TEMPORADA := Vector2(2.0, 3.4)   ## (3,65 con el nivel anterior de ~3,1; ahora, media ~2,85 + 4,5σ ≈ 3,4)
 
 func _probar() -> void:
 	if OS.get_environment("TV_IGUAL") != "":   ## medir otro reparto de la tele
@@ -66,6 +77,12 @@ func _probar() -> void:
 		_una(int(s), temporadas, true, true)
 		_comprobar(float(_final[int(s)][true]) > float(_final[int(s)][false]), "s%d: el grande con consejeros termina con más caja que sin ellos (%.1f M frente a %.1f M)" % [s, float(_final[int(s)][true]) / 1e6, float(_final[int(s)][false]) / 1e6])
 
+	var suma_nom := 0.0
+	for x in _nom_grande:
+		suma_nom += x
+	var media_nom := suma_nom / maxf(1.0, float(_nom_grande.size()))
+	_comprobar(media_nom <= NOMINA_MEDIA_MAX, "nómina del grande a igual rep al final: media de %d semillas x%.2f ≤ x%.1f" % [_nom_grande.size(), media_nom, NOMINA_MEDIA_MAX])
+
 func _mundo_con(semilla: int, grande: bool) -> Mundo:
 	var m := Mundo.new()
 	m.generar(["CHI"], semilla)
@@ -74,6 +91,7 @@ func _mundo_con(semilla: int, grande: bool) -> Mundo:
 	m.tomar_el_mando((primera[0] if grande else primera[primera.size() - 1]).id)
 	return m
 
+var _nom_grande: Array[float] = []   ## nómina a igual rep al final de cada corrida del grande sin consejeros
 var _final := {}   ## semilla → {gestionado: caja final del grande}
 
 func _una(semilla: int, temporadas: int, grande: bool, gestionado := false) -> void:
@@ -91,7 +109,9 @@ func _una(semilla: int, temporadas: int, grande: bool, gestionado := false) -> v
 	var fallos: Array[String] = []
 	var f := f0
 	var perdida_primera := 0.0
+	var nom_max := 0.0
 	var en_primera := 0
+	var suma_goles := 0.0
 	var bajadas := 0   ## temporadas en que la caja bajó (con las crisis de `CrisisCaja` no sube en línea recta)
 	for t in temporadas:
 		var caja_antes := yo.saldo
@@ -105,10 +125,18 @@ func _una(semilla: int, temporadas: int, grande: bool, gestionado := false) -> v
 		if yo.saldo < caja_antes:
 			bajadas += 1
 		_linea("  t%-2d " % (t + 1) + _texto(f))
+		suma_goles += float(f["gpp"])
 		_revisar(f, f0, t + 1, fallos)
+		nom_max = maxf(nom_max, _nomina_igual_rep(f, f0))
 		if div_antes == 1:
 			en_primera += 1
 			perdida_primera += float(yo.saldo - caja_antes) / Eco.ref_caja(yo.rep)
+	if grande:
+		_comprobar(nom_max < NOMINA_DUPLICADA, "%s: la nómina a igual rep no llega a duplicarse en ninguna temporada (máx x%.2f < x%.1f)" % [et, nom_max, NOMINA_DUPLICADA])
+		if not gestionado:
+			_nom_grande.append(_nomina_igual_rep(f, f0))
+	var media_goles := suma_goles / maxf(1.0, float(temporadas))
+	_comprobar(media_goles >= GOLES.x and media_goles <= GOLES.y, "%s: goles por partido de la corrida (media de %d temporadas) %.2f dentro de %.1f-%.1f" % [et, temporadas, media_goles, GOLES.x, GOLES.y])
 	## Caja: tendencia en todo el tramo (la de un año suelto es ruido de premios y ascensos).
 	var ref := Eco.ref_caja(yo.rep)
 	if grande:
@@ -125,9 +153,12 @@ func _una(semilla: int, temporadas: int, grande: bool, gestionado := false) -> v
 		_comprobar(media > -1.0, "%s: en Primera la caja del chico no se hunde sola (%+.2f referencias/temporada en %d temporadas; caja final %.2f M, ref %.2f M)" % [et, media, en_primera, yo.saldo / 1e6, ref / 1e6])
 	_comprobar(fallos.is_empty(), "%s: %d temporadas dentro de los rangos sanos%s" % [et, temporadas, "" if fallos.is_empty() else " · fuera: " + ", ".join(fallos)])
 
+func _nomina_igual_rep(f: Dictionary, f0: Dictionary) -> float:
+	return float(f["nomina"]) / maxf(1.0, float(f0["nomina"])) / (Eco.factor_club(f["rep"]) / Eco.factor_club(f0["rep"]))
+
 func _revisar(f: Dictionary, f0: Dictionary, t: int, fallos: Array[String]) -> void:
 	var v: float = f["valor_ia"] / maxf(1.0, f0["valor_ia"])
-	var nom: float = float(f["nomina"]) / maxf(1.0, float(f0["nomina"])) / (Eco.factor_club(f["rep"]) / Eco.factor_club(f0["rep"]))
+	var nom: float = _nomina_igual_rep(f, f0)
 	var pruebas := {
 		"edad %.1f" % f["edad"]: f["edad"] >= EDAD.x and f["edad"] <= EDAD.y,
 		"ovr %.1f" % f["ovr"]: absf(f["ovr"] - f0["ovr"]) <= OVR_DELTA,
@@ -139,8 +170,8 @@ func _revisar(f: Dictionary, f0: Dictionary, t: int, fallos: Array[String]) -> v
 		"margen previsto %d%% en Primera" % f["margen"]: int(f["div"]) != 1 or int(f["margen"]) <= MARGEN_MAX,
 		"IA en rojo %d" % f["rojo"]: float(f["rojo"]) <= ROJO_MAX * float(f["clubes"]),
 		"intervenidos %d" % f["interv"]: int(f["interv"]) <= INTERV_MAX,
-		"85+ <22: %d" % f["precoces"]: int(f["precoces"]) <= maxi(2, int(f0["precoces"]) + 1),
-		"goles %.2f" % f["gpp"]: f["gpp"] >= GOLES.x and f["gpp"] <= GOLES.y,
+		"85+ <22: %d" % f["precoces"]: int(f["precoces"]) <= maxi(3, int(f0["precoces"]) + 2),   ## un recuento pequeño y entero: con media ~0,5 sale un 3 una de cada ~80 temporadas (visto 1 en 90, s303 t8)
+		"goles %.2f" % f["gpp"]: f["gpp"] >= GOLES_TEMPORADA.x and f["gpp"] <= GOLES_TEMPORADA.y,
 	}
 	for k: String in pruebas:
 		if not pruebas[k]:

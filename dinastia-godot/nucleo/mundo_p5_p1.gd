@@ -20,7 +20,7 @@ func _semana_contexto_de_partidos() -> void:
 	Partido.ctx_club_id = mi_club_id
 	Partido.ctx_anio = anio
 	Partido.ctx_semana = semana
-	## EL CÉSPED DE TU ESTADIO. `Ciudad.penalizacion_cesped()` -"el único
+	## EL CÉSPED DE TU ESTADIO. `CargaCiudad.de("Ciudad").penalizacion_cesped()` -"el único
 	## efecto" del césped, dice su propio comentario- llevaba escrita desde
 	## siempre sin que nadie la multiplicara en ningún cálculo de partido:
 	## alquilar el estadio para un concierto rompía el pasto solo en
@@ -106,7 +106,7 @@ func _finanzas_de_la_semana(c: Club) -> Finanzas:
 		directiva.honorarios_semanales() if soy_yo and directiva != null else 0,
 		(0.1 if soy_yo and directiva != null and directiva.tiene_consejero("mkt") else 0.0))
 	if soy_yo:
-		f.movimiento.connect(_anotar_movimiento)
+		Conexion.una_vez(f.movimiento, _anotar_movimiento)
 		## LOS TRES MULTIPLICADORES DE LA TELEVISION, que existian los tres y
 		## no movian una moneda: el reparto que vota la asamblea y el modelo de
 		## contrato que elige el club. El del horario se cobra aparte, por

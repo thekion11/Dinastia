@@ -90,7 +90,10 @@ func _probar() -> void:
 			anchas += 1
 	_comprobar(anchas == 0, "ningún texto de taquilla es más ancho que la taquilla (%d)" % anchas)
 	var mallas := tv.find_children("Taquillas*", "MeshInstance3D", false, false).size()
-	_comprobar(mallas >= 5 and mallas <= 16, "las taquillas van juntas en pocas mallas (%d)" % mallas)
+	## En MÍNIMO (el nivel por defecto desde el 3-11) todo el túnel se funde en una malla por material («Fundido»): las taquillas ya no tienen nombre propio.
+	var fundido := tv.find_children("Fundido*", "MeshInstance3D", false, false).size()
+	_comprobar((mallas >= 5 and mallas <= 16) or (Calidad.elegida <= Calidad.MINIMO and fundido >= 1 and fundido <= 6),
+		"las taquillas van juntas en pocas mallas (%d sueltas, %d fundidas)" % [mallas, fundido])
 	## Cada taquilla tiene choque: el centro de cada una (16) está dentro de una caja.
 	var d := TunelVestuario.datos(perfil, 2)
 	var x0: float = d["x0"]
@@ -113,7 +116,7 @@ func _probar() -> void:
 	var puerta := AABB(Vector3(sala.get_center().x - 0.6, 0.0, sala.end.y - 1.6), Vector3(1.2, 2.0, 1.6))
 	var mu := Node3D.new()
 	add_child(mu)
-	var lm := SalasClub.museo(mu, sala, 0.0, Color(0.1, 0.4, 0.2), Color.WHITE, 3, 4)
+	var lm = SalasClub.museo(mu, sala, 0.0, Color(0.1, 0.4, 0.2), Color.WHITE, 3, 4)
 	var sm := _sin_apoyo(lm, sala)
 	_comprobar(lm.piezas.size() > 60 and sm == 0, "ninguna pieza del museo flota (%d de %d)" % [sm, lm.piezas.size()])
 	var cm := _cajas(mu)
@@ -126,7 +129,7 @@ func _probar() -> void:
 	mu.queue_free()
 	var ut := Node3D.new()
 	add_child(ut)
-	var lu := SalasClub.utileria(ut, sala, 0.0, Color(0.1, 0.4, 0.2), Color.WHITE)
+	var lu = SalasClub.utileria(ut, sala, 0.0, Color(0.1, 0.4, 0.2), Color.WHITE)
 	var su := _sin_apoyo(lu, sala)
 	_comprobar(lu.piezas.size() > 60 and su == 0, "ninguna pieza de la utilería flota (%d de %d)" % [su, lu.piezas.size()])
 	var cu := _cajas(ut)

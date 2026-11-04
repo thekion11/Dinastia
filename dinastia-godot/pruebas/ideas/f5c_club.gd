@@ -62,7 +62,7 @@ func _probar() -> void:
 	## §2.5: la rama también pide VISIBILIDAD (un partido en el estadio) y celebra sus títulos.
 	_comprobar(m.citas.opciones(m, cr).size() == 3, "la coordinadora ofrece tres respuestas: presupuesto, no o visibilidad")
 	var socios0 := c.socios
-	var cesped0 := m.ciudad.cesped
+	var cesped0 = m.ciudad.cesped
 	var cv := cr.duplicate()
 	cv["estado"] = "pendiente"
 	cv["id"] = "prueba_vis"

@@ -22,7 +22,7 @@ static func _muro_y_zocalo(obra: EstadioObra, t: EstadioObra.Tribuna) -> void:
 			_box(root, Vector3(tr.x, muro_pos.y, muro_pos.z), Vector3(tr.y, t.alto_s, 1.0), stand_mat)
 			_box(root, Vector3(tr.x, ALTURA_PIE / 2.0, pie.z), Vector3(tr.y, ALTURA_PIE, FONDO_BANDEJA), stand_mat)
 		## Sobre la puerta del muro, el muro sigue.
-		var alto_puerta: float = TunelVestuario.ALTO + 0.4
+		var alto_puerta: float = TunelMedidas.ALTO + 0.4
 		if t.alto_s > alto_puerta:
 			_box(root, Vector3(tunel_x0, (t.alto_s + alto_puerta) / 2.0, muro_pos.z),
 				Vector3(TUNEL_HUECO * 2.0, t.alto_s - alto_puerta, 1.0), stand_mat)
@@ -246,10 +246,10 @@ static func _fachada_tribuna(obra: EstadioObra, t: EstadioObra.Tribuna) -> void:
 	var u_f: Vector3 = cara_f["u"]
 	if t.i == 0:
 		var tx_v := tunel_x(obra.est)
-		var s_a := (Vector3(tx_v - TunelVestuario.VEST_MEDIO - 0.8, 0, pie_f.z) - o_f).dot(u_f)
-		var s_b := (Vector3(tx_v + TunelVestuario.VEST_MEDIO + 0.8, 0, pie_f.z) - o_f).dot(u_f)
+		var s_a := (Vector3(tx_v - TunelMedidas.VEST_MEDIO - 0.8, 0, pie_f.z) - o_f).dot(u_f)
+		var s_b := (Vector3(tx_v + TunelMedidas.VEST_MEDIO + 0.8, 0, pie_f.z) - o_f).dot(u_f)
 		cara_f["excluir"] = [Vector2(minf(s_a, s_b), maxf(s_a, s_b))]
 		## El escudo, al oeste del edificio del club: sobre las taquillas.
 		cara_f["escudo"] = true
-		cara_f["escudo_s"] = (Vector3(tx_v - TunelVestuario.VEST_MEDIO - 9.0, 0, pie_f.z) - o_f).dot(u_f)
+		cara_f["escudo_s"] = (Vector3(tx_v - TunelMedidas.VEST_MEDIO - 9.0, 0, pie_f.z) - o_f).dot(u_f)
 	obra.caras_fachada.append(cara_f)

@@ -120,7 +120,7 @@ func _paraderos() -> void:
 		codigos[cod] = true
 		por_sector[p["sector"]] = int(por_sector.get(p["sector"], 0)) + 1
 		var e2: Vector2 = p["eje"]
-		if rx.search(cod) == null or RecorridosRed.sector_del_codigo(cod) != RecorridosRed.sector_de(Vector3(e2.x, 0, e2.y)):
+		if rx.search(cod) == null or RecorridosRed.sector_del_codigo(cod) != RecorridosRed.sector_de(p["pos"]):
 			mal.append(cod)
 		## El nombre: la calle real del mapa en ese punto y la esquina.
 		var calle := CallesCiudad.calle_en(Vector3(e2.x, 0, e2.y))

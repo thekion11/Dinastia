@@ -86,6 +86,23 @@ func _hoja_conjuntos() -> Control:
 		_pestanas.pintar())
 	bg.toggle_mode = false
 	fila.add_child(bg)
+	## (3-11, M-188) Lo comprado en la tienda deportiva que se viste: un toque y el personaje lo lleva, con los colores del club.
+	var puestas: Array = []
+	for a: Dictionary in RoperoDT.CATALOGO:
+		if RoperoDT.tiene(_mundo.roles.ropero, String(a["id"])) and not RoperoDT.aplicar({}, String(a["id"]), _c1, _c2).is_empty():
+			puestas.append(a)
+	if not puestas.is_empty():
+		ControlesPersonaje.rotulo(vb, "Tu ropero", "lo que compraste en la tienda deportiva")
+		for a: Dictionary in puestas:
+			var id := String(a["id"])
+			var fr := HBoxContainer.new()
+			vb.add_child(fr)
+			var er := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "🛍 " + Idiomas.t(String(a["nombre"])))
+			er.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			fr.add_child(er)
+			var br := ControlesPersonaje.chip(Idiomas.t("Ponérmelo"), false, func() -> void: _pestanas.poner(RoperoDT.aplicar(aspecto(), id, _c1, _c2)))
+			br.toggle_mode = false
+			fr.add_child(br)
 	ControlesPersonaje.rotulo(vb, "Tus conjuntos", "como mucho cinco: el más viejo deja sitio al nuevo")
 	if conjuntos.is_empty():
 		ControlesPersonaje.nota(vb, "Todavía no guardaste ninguno.")

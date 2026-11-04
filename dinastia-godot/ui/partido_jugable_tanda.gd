@@ -44,16 +44,16 @@ func _al_empezar_tanda() -> void:
 	_pintar()
 
 func _pintar() -> void:
-	var m := pj.motor
+	var m = pj.motor
 	if _marcador == null or m == null or m.tanda.is_empty():
 		return
-	var turno := -1 if String(m.tanda.get("fase", "")) == "fin" else m.tanda_turno()
+	var turno = -1 if String(m.tanda.get("fase", "")) == "fin" else m.tanda_turno()
 	_marcador.pintar(pj._abrev(pj.local.nombre), pj._abrev(pj.visita.nombre), m.tanda["tiros"], turno)
 
 ## La ayuda y el reloj de cada momento (corre después del `_process` de la
 ## pantalla, que es su padre).
 func _process(_delta: float) -> void:
-	var m := pj.motor
+	var m = pj.motor
 	if m == null or m.tanda.is_empty() or pj._ayuda == null:
 		return
 	pj._reloj.text = Idiomas.t("PEN")
@@ -69,11 +69,11 @@ func _process(_delta: float) -> void:
 
 func _al_terminar() -> void:
 	_pintar()
-	var m := pj.motor
+	var m = pj.motor
 	if m.tanda.is_empty() or not is_instance_valid(pj._resumen):
 		return
-	var gl := m.goles_tanda(0)
-	var gv := m.goles_tanda(1)
+	var gl = m.goles_tanda(0)
+	var gv = m.goles_tanda(1)
 	var gana := pj.local if gl > gv else pj.visita
 	var caja: VBoxContainer = pj._resumen.find_children("*", "VBoxContainer", true, false)[0]
 	var linea := pj._etiqueta(22, PartidoJugable.FUCSIA)

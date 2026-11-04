@@ -74,7 +74,8 @@ func _mover_balon(delta: float) -> void:
 	var en_aire := p.y > R + 0.02 or absf(vel_balon.y) > 0.2
 	if en_aire:
 		var magnus := giro_balon.cross(vel_balon) * 0.012
-		vel_balon += (Vector3(0, -G, 0) + magnus - vel_balon * ARRASTRE) * delta
+		vel_balon += (Vector3(0, -G, 0) + magnus - vel_balon * vel_balon.length() * ARRASTRE_CUAD) * delta
+		giro_balon *= exp(-Balance.GIRO_AIRE * delta)
 	else:
 		var h := Vector3(vel_balon.x, 0, vel_balon.z)
 		var v := h.length()
@@ -82,7 +83,7 @@ func _mover_balon(delta: float) -> void:
 			var nv := maxf(0.0, v - (v * ROCE_SUELO + ROCE_FIJO) * _roce_clima * delta)
 			h = h / v * nv
 		vel_balon = Vector3(h.x, 0.0, h.z)
-		giro_balon *= 0.97
+		giro_balon *= pow(Balance.GIRO_SUELO, delta * 60.0)
 	var antes := p
 	p += vel_balon * delta
 	if p.y < R:

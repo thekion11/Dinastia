@@ -105,5 +105,6 @@ static func poblar(raiz: Node3D, semilla: int) -> int:
 		var n: Node3D = d["nodo"]
 		n.scale = Vector3.ONE / ESCALA_MUNDO
 		n.rotation.y = float(g[2])
+		n.set_meta("viajero", true)   ## los que cambian en cada estación (`PasajerosTeleferico`)
 		hechos += 1
 	return hechos

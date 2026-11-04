@@ -52,6 +52,47 @@ func _probar() -> void:
 	u2 = Time.get_ticks_usec()
 	_comprobar(hg.get_data() == hn.get_data(), "hierba igual byte a byte")
 	print("hierba: GDScript %d ms, C++ %d ms" % [(u1 - u0) / 1000, (u2 - u1) / 1000])
+	## El once automático (M-469, 3-11): el bucle de puestos de `Club.once` en C++ elige a los mismos, en el mismo orden, que su versión GDScript, en todos los clubes
+	## del mundo, con todas las formaciones, y con forma, moral y puestos secundarios al azar (para que cuenten el encaje y los desempates).
+	var mundo := Mundo.new()
+	mundo.generar([], 777)
+	var forms: Dictionary = Datos.tabla("FORMS")
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5
+	var puestos_sec := ["MC", "DFC", "LD", "LI", "MCO", "ED", "EI", "DC", "MCD"]
+	var comparados := 0
+	var distintos := 0
+	var t_gd := 0
+	var t_cpp := 0
+	for c: Club in mundo.clubes.values():
+		for j: Jugador in c.plantilla:
+			j.forma = rng.randi_range(30, 100)
+			j.moral = rng.randi_range(30, 100)
+			if rng.randf() < 0.35:
+				j.pos_sec.append(String(puestos_sec[rng.randi() % puestos_sec.size()]))
+		for fk: String in forms:
+			var ranuras: Array = (forms[fk] as Dictionary).get("s", [])
+			var orden: Array = []
+			for i in ranuras.size():
+				orden.append(i)
+			orden.sort_custom(func(a: int, b: int) -> bool: return PesosPuesto.es_portero(String(ranuras[a][0])) and not PesosPuesto.es_portero(String(ranuras[b][0])))
+			var libres: Array = c.disponibles()
+			var w0 := Time.get_ticks_usec()
+			var ag := OnceAuto.asignar_gd(libres, ranuras, orden)
+			var w1 := Time.get_ticks_usec()
+			var an := OnceAuto._nativo(nat, libres, ranuras, orden)
+			var w2 := Time.get_ticks_usec()
+			t_gd += w1 - w0
+			t_cpp += w2 - w1
+			comparados += 1
+			var igual := ag.keys() == an.keys()
+			if igual:
+				for i: int in ag:
+					igual = igual and (ag[i] as Jugador).id == (an[i] as Jugador).id
+			if not igual:
+				distintos += 1
+	_comprobar(comparados > 1000 and distintos == 0, "once automático: C++ = GDScript en %d armados de %d clubes (distintos: %d)" % [comparados, mundo.clubes.size(), distintos])
+	print("once automático: GDScript %.0f µs, C++ %.0f µs por once" % [t_gd / float(comparados), t_cpp / float(comparados)])
 	## El alisado, con las mallas reales de los cuerpos.
 	for ruta in [FutbolistaQ.MODELO_MALE, FutbolistaQ.MODELO_FEMALE]:
 		var raiz: Node = (load(ruta) as PackedScene).instantiate()

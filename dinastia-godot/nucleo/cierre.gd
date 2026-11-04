@@ -125,6 +125,10 @@ const CACHES := [
 	["res://visor/vestidor_q.gd", "_mallas_reposo", {}],
 ]
 
+## H-01: la interpolación de la física está encendida en el proyecto, pero solo la usa el partido (`InterpolacionPartido`); el resto se mueve en `_process`.
+func _ready() -> void:
+	get_tree().root.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+
 func _exit_tree() -> void:
 	## La traducción de «entrenadora» es un script registrado en el servidor de
 	## traducciones: fuera, antes que nada (era la causa del fallo al salir).

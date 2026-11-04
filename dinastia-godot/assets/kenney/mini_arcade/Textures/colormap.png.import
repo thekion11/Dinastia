@@ -3,19 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c5dte8ilnk2rt"
-path="res://.godot/imported/colormap.png-9fd2fd68c88ece883a50f55349930f1d.ctex"
+path.s3tc="res://.godot/imported/colormap.png-9fd2fd68c88ece883a50f55349930f1d.s3tc.ctex"
+path.etc2="res://.godot/imported/colormap.png-9fd2fd68c88ece883a50f55349930f1d.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/kenney/mini_arcade/Textures/colormap.png"
-dest_files=["res://.godot/imported/colormap.png-9fd2fd68c88ece883a50f55349930f1d.ctex"]
+dest_files=["res://.godot/imported/colormap.png-9fd2fd68c88ece883a50f55349930f1d.s3tc.ctex", "res://.godot/imported/colormap.png-9fd2fd68c88ece883a50f55349930f1d.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

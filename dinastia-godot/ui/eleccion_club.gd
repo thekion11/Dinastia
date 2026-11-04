@@ -177,7 +177,7 @@ func _construir_fundar(raiz: VBoxContainer) -> void:
 		e.set_border_width_all(2)
 		t.text = Idiomas.t("🛠️ FUNDA TU CLUB")
 		t.add_theme_color_override("font_color", COL_ACENTO)
-		_campo_nombre_club.call_deferred("grab_focus")
+		FocoSeguro.dar(_campo_nombre_club)
 	var b := Button.new()
 	b.text = Idiomas.t("Fundar en el país elegido")
 	b.custom_minimum_size = Vector2(0, 32)

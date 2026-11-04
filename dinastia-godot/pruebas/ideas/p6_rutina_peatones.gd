@@ -103,3 +103,12 @@ func _probar() -> void:
 		if RutinaPeatones.lleva_mochila(2.0, k):
 			noche += 1
 	_comprobar(cole > 180 and comida < 140 and noche < 60, "mochilas: colegio %d, media mañana %d, madrugada %d (de 400)" % [cole, comida, noche])
+	## Lluvia × rutina: los factores se componen y se deshacen cada uno por su lado.
+	var pv := {"vel": 1.4}
+	RutinaPeatones.poner_factor(pv, "rut_f", 1.25)
+	RutinaPeatones.poner_factor(pv, "lluvia_f", ParaguasVida.FACTOR_PRISA)
+	_comprobar(is_equal_approx(float(pv["vel"]), 1.4 * 1.25 * ParaguasVida.FACTOR_PRISA), "prisa de la hora y de la lluvia se multiplican una sola vez (%.3f)" % float(pv["vel"]))
+	RutinaPeatones.poner_factor(pv, "lluvia_f", 1.0)
+	_comprobar(is_equal_approx(float(pv["vel"]), 1.4 * 1.25), "al escampar queda solo la de la hora")
+	RutinaPeatones.poner_factor(pv, "rut_f", 0.85)
+	_comprobar(is_equal_approx(float(pv["vel"]), 1.4 * 0.85), "y al cambiar la hora vuelve a recomponerse sobre la base")

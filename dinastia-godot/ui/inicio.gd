@@ -27,6 +27,7 @@ func _ready() -> void:
 	## Lo gráfico va primero: si el jugador eligió el motor ligero, el juego
 	## se relanza con él antes de montar nada.
 	Calidad.cargar()
+	EscalaMovil.aplicar(get_tree(), Principal.PREFS)   ## móvil: interfaz más grande la primera vez (y se respeta lo elegido en Ajustes)
 	BotonFx.activar(get_tree())
 	if Calidad.relanzar_si_hace_falta(get_tree()):
 		return
@@ -37,6 +38,7 @@ func _ready() -> void:
 		_con_pesado(func() -> void: _P().medir(get_tree()))   ## cuando llegue lo pesado
 	_clave = _leer_ajuste()
 	_construir()
+	add_child(AhorroMenu.new())   ## (3-11) en MÍNIMA, sin 3D a la vista: bajo consumo y motas en pausa
 	_pintar_banner()
 	_actualizar_picker()
 	_actualizar_continuar()

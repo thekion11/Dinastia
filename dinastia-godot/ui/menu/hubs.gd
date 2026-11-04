@@ -22,6 +22,10 @@ func abrir(clave: String) -> void:
 	var hub: Dictionary = Principal.HUBS.get(clave, {})
 	if hub.is_empty():
 		return
+	## (3-11, rediseño del menú central) Plantel, Partido, Dinero y Competiciones son menús del panel lateral.
+	if p._menu_lateral != null and not MenusLaterales.menu_por_id(clave).is_empty():
+		p._menu_lateral.abrir_menu(clave, -1)
+		return
 	var capa := PanelContainer.new()
 	capa.set_anchors_preset(Control.PRESET_FULL_RECT)
 	var estilo := StyleBoxFlat.new()
@@ -60,6 +64,8 @@ func abrir(clave: String) -> void:
 	caja.add_child(cerrar)
 	## La entrada con un desliz corto hacia arriba: es lo que hace que el hub
 	## se sienta una capa que sube y no un cambio de pantalla seco.
+	if Animar.reducidas():   ## M-304: con animaciones reducidas, sin desliz
+		return
 	caja.modulate.a = 0.0
 	caja.position.y += 18.0
 	var tw := p.create_tween().set_parallel(true)
@@ -119,7 +125,7 @@ func ir_a_chip(chip: Dictionary) -> void:
 	var secc := String(chip.get("secc", ""))
 	## «Equipación» es su propia pantalla, entera: el diseñador.
 	if secc == "kits" and p.mundo != null and p.mundo.mi_club() != null:
-		var dz := DisenadorKit.abrir(p, p.mundo)
+		var dz = load("res://ui/componentes/disenador_kit.gd").abrir(p, p.mundo)
 		dz.cerrado.connect(p._refrescar)
 		return
 	if secc != "":

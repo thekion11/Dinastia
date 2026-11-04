@@ -1,7 +1,7 @@
 class_name PuertaVida
 extends Node3D
 ## PEATONES QUE ABREN PUERTAS (calidad visual P3, 27-10-2026). Las entradas de los edificios con fachada modular registran su
-## puerta en `CityBuilder.puertas_vida` ({p: suelo ante la puerta, n: hacia la calle}). Cerca del jugador, de vez en cuando un
+## puerta en `CargaCiudad.de("CityBuilder").puertas_vida` ({p: suelo ante la puerta, n: hacia la calle}). Cerca del jugador, de vez en cuando un
 ## vecino llega andando, tiende la mano (clip «Interact» del pack) y la hoja de la puerta gira hacia dentro; entra y la puerta
 ## se cierra. Otras veces sale: abre, camina hacia la calle y cierra. Máximo 2 a la vez; nada usa el azar de la partida.
 
@@ -10,20 +10,20 @@ const MAX_ACTIVAS := 2
 const ABIERTA := -100.0   ## grados que gira la hoja (hacia dentro)
 const ANCHO_HOJA := 1.3
 
-var expl: ExploradorCiudad
+var expl
 var _hojas := {}        ## índice de puerta → {pivote, abierta: float 0..1, objetivo: float}
 var _activas: Array = []   ## {i, entra, fase, t, fig, a, b}
 var _t := 4.0
 var _cuenta := 0
 
-static func crear(v: VidaCiudad) -> PuertaVida:
+static func crear(v) -> PuertaVida:
 	var s := PuertaVida.new()
 	s.name = "PuertasVivas"
 	s.expl = v.expl
 	v.add_child(s)
 	return s
 
-static func registrar(b: CityBuilder, pos: Vector3, normal: Vector3) -> void:
+static func registrar(b, pos: Vector3, normal: Vector3) -> void:
 	b.puertas_vida.append({"p": pos, "n": normal.normalized()})
 
 func _process(delta: float) -> void:
@@ -61,7 +61,7 @@ func iniciar(i: int, entra: bool) -> void:
 	var p: Vector3 = ps[i]["p"]
 	var n: Vector3 = ps[i]["n"]
 	_hoja(i, p, n)
-	var fig := PeatonVida.nuevo(expl.cb, 7000 + i * 13 + _cuenta)
+	var fig = CargaCiudad.de("PeatonVida").nuevo(expl.cb, 7000 + i * 13 + _cuenta)
 	if fig.is_empty():
 		return
 	var a := p + n * 8.0 + n.cross(Vector3.UP) * 3.0 if entra else p - n * 0.6
@@ -114,7 +114,7 @@ func _mover(delta: float) -> void:
 				if entra and u >= 0.88 and float(hoja["objetivo"]) == 0.0:
 					hoja["objetivo"] = 1.0
 					Mini3D.anim(fig, "saludo_mano", "")   ## tiende la mano al picaporte (si el clip no está, queda parado)
-					PeatonVida.gesto(nodo, "saludo_mano")
+					CargaCiudad.de("PeatonVida").gesto(nodo, "saludo_mano")
 				if not entra and u >= 0.25:
 					hoja["objetivo"] = 0.0
 				if u >= 1.0:

@@ -40,8 +40,17 @@ func _crear_banco(nombre: String) -> Array:
 
 func _sintetizar_banco(nombre: String) -> Array[AudioStreamWAV]:
 	var b: Array[AudioStreamWAV] = []
+	## R5 (3-11): de la caché en disco si ya se sintetizó en otro arranque (`CacheAudio`); si no, se sintetiza y se guarda.
+	if CacheAudio.activa():
+		for w: Variant in CacheAudio.leer("s_" + nombre):
+			b.append(w as AudioStreamWAV)
+		if b.size() == VARIANTES:
+			return b
+		b.clear()
 	for v in VARIANTES:
 		b.append(_sintetizar(nombre, float(v) / float(VARIANTES)))
+	if CacheAudio.activa():
+		CacheAudio.escribir("s_" + nombre, b)
 	return b
 
 ## EN SEGUNDO PLANO (25-9-2026). Antes `_ready()` sintetizaba los 820 sonidos

@@ -6,7 +6,7 @@ extends RefCounted
 ## Es parte de la etapa, no otra pantalla: la regla del dueño es que cada etapa
 ## pida confirmación al rellenarla.
 
-static func crear(p: Dictionary, c1: Color, cancelar: Callable, aceptar: Callable) -> Control:
+static func crear(p: Dictionary, c1: Color, cancelar: Callable, aceptar: Callable, foto: Texture2D = null) -> Control:
 	var capa := ColorRect.new()
 	capa.name = "Confirmacion"
 	capa.color = Color(0, 0, 0, 0.66)
@@ -51,12 +51,13 @@ static func crear(p: Dictionary, c1: Color, cancelar: Callable, aceptar: Callabl
 	for k: String in (p.get("look", {}) as Dictionary):
 		look[k] = p["look"][k]
 	var img := TextureRect.new()
-	img.texture = CaraDT.textura(look, 128)
-	img.custom_minimum_size = Vector2(128, 128)
+	## (3-11) La foto del personaje 3D si la hay; si no (sin pantalla), el retrato 2D de siempre.
+	img.texture = foto if foto != null else CaraDT.textura(look, 128)
+	img.custom_minimum_size = Vector2(160, 160) if foto != null else Vector2(128, 128)
 	img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	marco.add_child(img)
-	var pie := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, Idiomas.t("Así sales en las fichas"))
+	var pie := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, Idiomas.t("Así te verán") if foto != null else Idiomas.t("Así sales en las fichas"))
 	pie.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	col_r.add_child(pie)
 	## El resumen.

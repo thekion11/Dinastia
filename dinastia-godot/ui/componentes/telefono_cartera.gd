@@ -1,6 +1,6 @@
 class_name TelefonoCartera
 extends RefCounted
-## LAS FILAS DE LA CARTERA en la app «Banco» del móvil (27-10-2026, pieza A de `PLAN_DEL_LUNES.md` §2.2h): efectivo del bolsillo, estado de la tarjeta
+## LAS FILAS DE LA CARTERA en la app «Banco» del móvil (27-10-2026, pieza A de `PLAN_GENERAL.md` §2.2h): efectivo del bolsillo, estado de la tarjeta
 ## y los últimos movimientos. Cada fila es [texto, valor, color] como las de `Telefono._banco`. Aparte para no pasar de 450 líneas en `telefono.gd`.
 const ULTIMOS := 4
 
