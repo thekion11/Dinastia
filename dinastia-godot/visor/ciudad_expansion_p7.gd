@@ -219,7 +219,7 @@ func _edificios_lejanos() -> void:
 	var ts: Array[Transform3D] = []
 	var cs: Array[Color] = []
 	for r in _lejanos:
-		var libre := r in _sin_lejano
+		var libre := r in _sin_lejano or b.altura_en(r.get_center().x, r.get_center().y) > 2.0   ## (4-11) bajo un cerro no se levantan torres lejanas (quedaban enterradas)
 		if not libre:
 			_lote("acera", Vector3(r.get_center().x, 0.12, r.get_center().y), Vector3(r.size.x, 0.24, r.size.y))
 		for k in 4:
