@@ -26,8 +26,23 @@ Guías de tamaño de objetivo táctil (Apple 44 pt, Material 48 dp, NN/g 1 cm, S
 ## Unión con main (4-11-2026)
 Main ya traía otra versión de los controles (PR #159 de la ejecutora: botón II de pausa, botón Mod y `AjustesTactil` con modo/tamaño/opacidad). Se combinaron: de main se conservan II, Mod, `AjustesTactil` (TAM_MIN, modo siempre/nunca/auto) y la ayuda de teclado escondida; de este trabajo, el arco del pulgar, el tamaño por dpi (× el tamaño de Ajustes, con tope para que el arco no suba del 35 % de arriba), el área segura, el stick flotante y el zurdo, que ahora se elige en Ajustes → Dispositivo (`AjustesTactil.zurdo`, traducido a los 8 idiomas). Pruebas: `tac_controles` (incluye zurdo y Ajustes), captura táctil a 1280×720 y 2400×1080, banco 0 fallos, líneas 0.
 
+## HUD y cámara en el móvil (4-11-2026, segunda pasada; la primera dio el HUD por bueno sin medirlo)
+La revisión de la líder (por orden del dueño) lo desmintió: a 2400×1080 y 400 ppp la letra de las estadísticas medía ≈1,6 mm, el jugador era un punto y el balón a veces no se veía. Ahora se MIDE:
+- `ui/componentes/hud_tactil.gd`: con los controles táctiles puestos, el marcador, las estadísticas y la ficha del jugador crecen por los puntos por pulgada del aparato (factor 1-2) para que la letra más pequeña mida ≥ 2,5 mm y el marcador ≥ 3,2 mm, y se apartan de las muescas (área segura). Sin controles táctiles (PC) el factor es 1.
+- `visor/camara_tactil.gd`: la cámara del partido va a 0,6 de la distancia de siempre y mira casi al jugador (peso del balón 0,12) cuando el balón está cerca de él; cuando el balón se aleja (14-30 m) pasa a seguir al balón (peso 0,9, distancia 0,95): con el balón a la espalda del jugador la cámara «detrás del jugador» de siempre no podía enseñarlo. Se elige en Ajustes → Dispositivo (Automático: cercana con controles táctiles; Siempre; Nunca = la de siempre).
+- El stick en reposo sube para no quedar pegado a la ficha del jugador; el botón II baja para no pisar las estadísticas grandes.
+- Prueba que MIDE: `pruebas/ideas/tac_hud.gd` (en `especiales.sh`), con un teléfono simulado de 400 ppp y 2400×1080: 10,5 px por mm; letra estadísticas ≥ 2,5 mm (2,5), marcador 4,0 mm, nombre 3,05 mm; ninguna caja del HUD pisa el stick ni los botones y todas caben en el lienzo; cámara a 12,4 m del jugador (la de siempre ≈19,5 m) y el jugador mide el 11,9 % de la altura de la pantalla (≥ 11 %); el balón dentro de cuadro con el jugador cerca y con el balón lejos; Ajustes automático/siempre/nunca.
+- Capturas antes/después a 2400×1080 con `DPI_PRUEBA=400` (y `CAMARA_PRUEBA=no` para el «antes») en `pruebas/captura_tactil_partido.gd`.
+
+## Evaluación frente a FC Mobile y DLS (líder, 65/100) y lo hecho (4-11-2026, tercera pasada)
+Fuentes: guías públicas de FC Mobile y DLS (ea.com no es accesible desde aquí). Lo que hacen y no se hacía aquí, y lo corregido en `ui/componentes/controles_tactiles.gd` / `ajustes_tactil.gd`:
+- MENOS BOTONES a la vez: con balón se ven Pase, Al hueco, Tiro, Sprint y II (5); el Centro solo con balón en la banda cerca del área; sin balón, Pase/Presión, Entrada, Barrida, Cambiar y Sprint (+ II = 6); Cambiar solo en defensa; Mod fuera de la vista (solo en el modo «Botones»).
+- GESTOS: tocar la zona libre de la derecha = pase; deslizar hacia arriba = tiro (más largo, más fuerte: 0,2-0,7 s); deslizar desde Tiro = rosca (Mod); deslizar desde Pase = pase largo; tocar Sprint = regate, mantener = correr (≥ 200 ms).
+- AJUSTES (Ajustes → Dispositivo): modo de control Ambos / Botones / Gestos (por defecto Ambos), separación entre botones 100-130 %, opacidad por defecto 60 % (antes 100 %); tamaño, zurdo y cámara como antes. Botones fijos (no se mueven).
+- Pruebas (`tac_controles`, en `especiales.sh`): número de botones visibles por contexto y modo, cada gesto reconocido (rosca, pase largo, pase, tiro, regate, correr), modos Botones/Gestos, separación al 130 % dentro de pantalla, valores por defecto. Capturas a 2400×1080 con 400 ppp.
+- Límites: «tocar a un compañero = pase a él» y «deslizar hacia la portería» con puntería no están: el motor del partido no recibe un destinatario concreto del pase desde el dedo (el pase sale hacia donde apunta el stick/jugador); haría falta un pase dirigido en el motor.
+
 ## Pendiente
-- Etiquetas según el contexto (con/sin balón) en lugar de «Pase / Presión» (hecho en la lista siguiente).
-- HUD del partido (marcador, ficha del jugador) legible a 1080×2400.
 - Probar en un móvil real (FPS, tamaño percibido, latencia del dedo).
-- Etiquetas según el contexto (con/sin balón) en lugar de «Pase / Presión».
+- Pase dirigido por toque sobre un compañero (requiere motor).
+- Con el balón MUY lejos el jugador que llevas puede quedar fuera de cuadro (la cámara sigue al balón); falta decidir si conviene un indicador en el borde de la pantalla.
