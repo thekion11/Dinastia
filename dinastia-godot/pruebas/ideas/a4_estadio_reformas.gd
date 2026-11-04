@@ -91,7 +91,7 @@ func _butacas(raiz: Node3D) -> int:
 	return n
 
 func _nombres(m: Mundo) -> void:
-	var casos := ["", "   ", "Estadio Ñuñoa 🏟️ ¡Hola! ✓", "[b]negrita[/b] [color=red]x", "línea1\nlínea2\ttab", "%s %d %%", "A".repeat(200), "ÀÉÎÕÜ".repeat(40), "‮abc"]
+	var casos := ["", "   ", "Estadio Ñuñoa 🏟️ ¡Hola! ✓", "[b]negrita[/b] [color=red]x", "línea1\nlínea2\ttab", "%s %d %%", "A".repeat(200), "ÀÉÎÕÜ".repeat(40), "\u202Eabc"]
 	var mal: Array[String] = []
 	for c in casos:
 		m.estadio.renombrar(c)
