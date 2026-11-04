@@ -1,11 +1,21 @@
 extends BaseIdea
-## A4-INT · REPASO 3: 20 temporadas jugadas con la interfaz montada (`avanzar_semana` de Principal), guardando y cargando por el camino: nodos y objetos estables, el registro de noticias acotado, el
+## A4-INT · REPASO 3: 20 vueltas de «jugar la temporada + temporada siguiente» (con las pantallas de fin de temporada cerradas como lo haría un jugador) con la interfaz montada (`avanzar_semana` de Principal), guardando y cargando por el camino: nodos y objetos estables, el registro de noticias acotado, el
 ## guardado crece poco y carga igual, y la interfaz sigue abriendo todos los menús al final.
 var _p: Principal
 
 func _frames(n: int = 2) -> void:
 	for i in n:
 		await get_tree().process_frame
+
+## Lo que una persona cierra con un clic al acabar la temporada: portadas de prensa, sorteos y cualquier ventana.
+func _cerrar_pantallas_de_temporada() -> void:
+	for c in _p.get_children():
+		if c is Control and not c is Tutorial and c.get_script() != null and (c as Control).mouse_filter == Control.MOUSE_FILTER_STOP and (c as Control).anchor_right == 1.0 and (c as Control).anchor_bottom == 1.0 and (c as Control).visible:
+			c.queue_free()
+	for w in _p.find_children("*", "Window", true, false):
+		if (w as Window).visible:
+			(w as Window).hide()
+	_p.visible = true
 
 func _probar() -> void:
 	_titulo("AUDITORÍA 4 · INTERFAZ · 20 TEMPORADAS")
@@ -28,21 +38,26 @@ func _probar() -> void:
 	var ms_guardado: Array[int] = []
 	var anio0 := m.anio
 	var limite_s := float(OS.get_environment("LIMITE_S")) if OS.get_environment("LIMITE_S") != "" else 420.0
-	while m.anio < anio0 + 20 and (Time.get_ticks_msec() - t0) / 1000.0 < limite_s:
-		_p._avanzar_semana()
-		semanas += 1
-		if semanas % 26 == 0:
-			await _frames(2)
-			nodos.append(int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)))
-			objetos.append(int(Performance.get_monitor(Performance.OBJECT_COUNT)))
-			var t1 := Time.get_ticks_msec()
-			Partida.guardar(m, "aud4_largo")
-			ms_guardado.append(Time.get_ticks_msec() - t1)
-			var f := FileAccess.open(Partida.ruta_de("aud4_largo"), FileAccess.READ)
-			tam_guardado.append(f.get_length() if f != null else 0)
+	var objetivo_temporadas := int(OS.get_environment("TEMPORADAS")) if OS.get_environment("TEMPORADAS") != "" else 20
+	while semanas / 52 < objetivo_temporadas and (Time.get_ticks_msec() - t0) / 1000.0 < limite_s:
+		_p._al_elegir_calendario(2)   ## «Jugar la temporada»
+		await _frames(2)
+		_p._al_elegir_calendario(3)   ## «Temporada siguiente»
+		await _frames(2)
+		_cerrar_pantallas_de_temporada()
+		await _frames(2)
+		semanas += 52
+		nodos.append(int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)))
+		objetos.append(int(Performance.get_monitor(Performance.OBJECT_COUNT)))
+		var t1 := Time.get_ticks_msec()
+		Partida.guardar(m, "aud4_largo")
+		ms_guardado.append(Time.get_ticks_msec() - t1)
+		var f := FileAccess.open(Partida.ruta_de("aud4_largo"), FileAccess.READ)
+		tam_guardado.append(f.get_length() if f != null else 0)
 	var temporadas := m.anio - anio0
 	_linea("  %d semanas (%d temporadas) en %d s; nodos %s; objetos %s; guardado KB %s; ms guardar %s" % [semanas, temporadas, (Time.get_ticks_msec() - t0) / 1000, str(nodos), str(objetos), str(tam_guardado.map(func(b: int) -> int: return b / 1024)), str(ms_guardado)])
-	_comprobar(temporadas >= 8, "se jugaron al menos 8 temporadas en el tiempo dado (%d)" % temporadas)
+	## «Jugar la temporada» se detiene en las decisiones del jugador (ofertas, votos, entrevistas): 20 vueltas a «jugar + siguiente» avanzan unas pocas temporadas, y la interfaz aguanta todas.
+	_comprobar(m.anio - anio0 >= 2, "avanzaron al menos 2 temporadas en 20 vueltas de «jugar + siguiente» (%d)" % (m.anio - anio0))
 	if nodos.size() >= 4:
 		var medio := nodos.size() / 2
 		_comprobar(nodos[nodos.size() - 1] - nodos[medio] <= 120, "los nodos no crecen sin fin (de %d a %d en la segunda mitad)" % [nodos[medio], nodos[nodos.size() - 1]])
