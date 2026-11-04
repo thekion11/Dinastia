@@ -99,6 +99,7 @@ func _industrial(r: Rect2) -> void:
 	for k in 9:
 		_lote_det("patio_blanco", Vector3(c.x - r.size.x * 0.34 + float(k) * 3.2, 0.14, c.z + r.size.y * 0.38), Vector3(0.18, 0.04, 5.0), 0.0)
 	_lote_det("patio_amarillo", Vector3(c.x - r.size.x * 0.18, 0.14, c.z + r.size.y * 0.3), Vector3(r.size.x * 0.46, 0.04, 0.22), 0.0)
+	CiudadIndustrial.patio_central(self, r)   ## (4-11, pasada 3) solo en MEDIA o más
 	CiudadIndustrial.rellenar(self, r)
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
 

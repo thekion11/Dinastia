@@ -44,3 +44,20 @@ static func rellenar(ex: CiudadExpansion, r: Rect2) -> void:
 	b._caja_en(c + Vector3(0, 1.0, -iz), Vector3(w - 3.0, 2.0, 0.12), valla)
 	for sx: float in [-1.0, 1.0]:
 		b._caja_en(c + Vector3(sx * ix, 1.0, 0), Vector3(0.12, 2.0, f - 3.0), valla)
+
+## (4-11, pasada 3) El centro de la parcela, solo en MEDIA o más (en MÍNIMA no suma llamadas): tres pilas de palés y cajas, en los MultiMesh de detalles por celda.
+static func patio_central(ex: CiudadExpansion, r: Rect2) -> void:
+	if Calidad.elegida <= Calidad.MINIMO:
+		return
+	ex._mat_det("palet_madera", Color(0.55, 0.4, 0.25), 0.9)
+	ex._mat_det("caja_azul", Color(0.2, 0.35, 0.6), 0.7)
+	ex._mat_det("caja_gris", Color(0.6, 0.62, 0.64), 0.7)
+	var c := Vector3(r.get_center().x, 0, r.get_center().y)
+	var hp := absi(hash(Vector2(c.x * 0.37, c.z * 1.3)))
+	for pila in 3:
+		var base := c + Vector3(-r.size.x * 0.12 + float(pila) * r.size.x * 0.17, 0.0, r.size.y * 0.05 + float((hp + pila) % 3 - 1) * r.size.y * 0.04)
+		for ix in 3:
+			for iz in 2:
+				ex._lote_det("palet_madera", base + Vector3(float(ix) * 1.45, 0.2, float(iz) * 1.45), Vector3(1.3, 0.16, 1.3), 0.0)
+				for nivel in 1 + (hp + ix + iz + pila) % 2:
+					ex._lote_det("caja_azul" if (ix + iz + pila) % 2 == 0 else "caja_gris", base + Vector3(float(ix) * 1.45, 0.93 + float(nivel) * 1.1, float(iz) * 1.45), Vector3(1.2, 1.1, 1.2), 0.0)
