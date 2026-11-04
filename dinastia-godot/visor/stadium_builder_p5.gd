@@ -20,11 +20,17 @@ static func _tramos_sin_hueco(centro: float, largo: float, g0: float, g1: float)
 ## falso-. `EstadioPropio.niveles_maximos()` repite este criterio a proposito,
 ## para no ofrecer en la pantalla de diseño una bandeja que el visor no va a
 ## dibujar (y cobrarla).
+const ALTA_DESDE := 30000   ## aforo desde el que la calidad ALTA añade bandejas
 static func niveles_de(est: Dictionary, cap_efectiva: int) -> int:
 	var niveles_est := int(est.get("niveles", 2))
 	var niveles_cap: int = clampi(
 		int(floor(float(cap_efectiva) / 22000.0)) + 1, 1, NIVELES_MAX)
-	return clampi(mini(niveles_est, niveles_cap), 1, NIVELES_MAX)
+	var n := clampi(mini(niveles_est, niveles_cap), 1, NIVELES_MAX)
+	## (A4, orden del dueño 4-11) SOLO en calidad ALTA o más: por encima de ~30 000 de aforo la grada sigue creciendo (una bandeja más cada ~16 000),
+	## que antes se quedaba en 2 912 butacas desde 34 000 hasta 76 500. En el resto de calidades, igual que siempre.
+	if cap_efectiva > ALTA_DESDE and Calidad.elegida >= Calidad.ALTO:
+		n = maxi(n, clampi(int(floor(float(cap_efectiva) / 16000.0)) + 1, 1, NIVELES_MAX))
+	return n
 
 ## Lo que sube UNA bandeja.
 static func subida_bandeja() -> float:
