@@ -63,6 +63,7 @@ func _pintar_comparar() -> void:
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 14)
 	g.add_theme_constant_override("v_separation", 3)
+	CebraRejilla.poner(g)
 	p._lista_comparar.add_child(g)
 
 	## `mostrar_de` es aparte de `valor_de` para que Valor/Sueldo comparen el

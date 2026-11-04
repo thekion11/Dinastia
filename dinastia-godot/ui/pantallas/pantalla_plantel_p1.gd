@@ -357,6 +357,7 @@ func _pintar_moda_tactica(c: Club) -> void:
 	tr.text = Idiomas.t("📊 LO QUE TE HA FUNCIONADO")
 	p._lista_tactica.add_child(tr)
 	var g := GridContainer.new()
+	CebraRejilla.poner(g)
 	g.columns = 5
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	p._lista_tactica.add_child(g)

@@ -65,6 +65,13 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	z_index = 20
 
+## La línea de ayuda de teclado y mando del partido sobra con los botones en pantalla y tapa su borde: se mantiene oculta aunque el partido
+## la vuelva a mostrar (`_ver_hud`, `_ver_hud_abajo`) o le cambie el texto cada fotograma.
+func _process(_d: float) -> void:
+	var ayuda: Variant = get_parent().get("_ayuda") if get_parent() != null else null
+	if ayuda is CanvasItem and (ayuda as CanvasItem).visible:
+		(ayuda as CanvasItem).visible = false
+
 func _exit_tree() -> void:
 	soltar_todo()
 
