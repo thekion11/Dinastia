@@ -87,6 +87,12 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 **Pulido pedido:** la CONFIGURACIÓN DE LOS CONTROLES DEL MANDO EN EL PARTIDO debe verse mejor; los ESCUDOS deben poder profundizarse más (más detalle/edición); buscar MÚSICA totalmente libre (dominio público / CC0) y proponer cada pista con su fuente y licencia al dueño, que decide cuáles entran (aprobado así el 3-11).
 
+## REPARTO DEL 4-11 (decisión del dueño: menos bancos, más lo que se siente al jugar) — se borra al completarse
+- Ejecutora: MODO PARTIDO EN MÓVIL (controles táctiles configurables, HUD y cámara para teléfono, safe area, prueba de toques).
+- Líder: RENDIMIENTO MÓVIL (Mobile vs Compatibility, calidad más baja por defecto en móvil, preparar la versión para que el dueño mida FPS en su teléfono).
+- Ciudad: paradas saltadas por LOD + banco estadio_3d; luego PASADAS VISUALES con antes/después para la nota del dueño. (Banco personajes_3d descartado por ahora.)
+- PES 6: IA del partido (portero a corta distancia, C3 centros, C4 pases atrás).
+
 ## 0. Lo que espera una decisión tuya (lista corta)
 
 Sin esto, las filas que dependen de ello no avanzan. El detalle está en la sección que se cita.
