@@ -8,11 +8,15 @@ const RADIO := 1.5
 
 ## La vitrina a menos de `RADIO` m (en el plano) de `loc` (posición dentro del estadio) y a la altura del suelo de la sala: {p, k} o {}.
 static func cercana(loc: Vector3) -> Dictionary:
+	var mejor: Dictionary = {}
+	var d_mejor := RADIO
 	for v: Dictionary in SalasClub.vitrinas + MuseoAmpliado.vitrinas:
 		var p: Vector3 = v["p"]
-		if Vector2(p.x - loc.x, p.z - loc.z).length() < RADIO and absf(p.y - loc.y) < 1.5:
-			return v
-	return {}
+		var d := Vector2(p.x - loc.x, p.z - loc.z).length()
+		if d < d_mejor and absf(p.y - loc.y) < 1.5:   ## (A4) la MÁS cercana, no la primera de la lista: con vitrinas juntas (500 trofeos) abría la ficha de la vecina
+			d_mejor = d
+			mejor = v
+	return mejor
 
 ## Los hitos del club por orden de año (la lista con la que se llenan las vitrinas de la planta 2 y de la 3): los títulos de `Roles.trofeos`
 ## con su ficha y los de las ramas de otros deportes. [{anio, titulo, final, goleadores}]
