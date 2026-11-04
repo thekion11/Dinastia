@@ -43,7 +43,7 @@ static func curvar(malla: Mesh) -> Mesh:
 	var sal := ArrayMesh.new()
 	sal.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
 	sal.surface_set_material(0, malla.surface_get_material(0))
-	## (4-11, A4-M3D-002) La clave es la malla de origen, que se vuelve a cargar en cada estadio: sin esto cada
+	## (4-11, A4-M3D-X02) La clave es la malla de origen, que se vuelve a cargar en cada estadio: sin esto cada
 	## estadio construido dejaba ~17 mallas curvas vivas para siempre. Se tiran las de mallas que ya no existen.
 	if _cache.size() > 24:
 		for k in _cache.keys():

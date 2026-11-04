@@ -321,11 +321,6 @@ func penales() -> Array:
 
 ## Cierra las notas del partido y actualiza la forma (al terminar). Del HTML: la nota base se mueve con el resultado del EQUIPO
 ## (±0,6) más azar, y la forma se arrastra hacia esa nota con un 30 % de peso: la racha se nota sin que un mal partido hunda a nadie.
-
-## ¿Es del equipo local? Mira su club, no el once: el que salió cambiado o expulsado ya no está en `once_local` y las notas lo contaban como visitante (bono de resultado al revés).
-func es_del_local(j: Jugador) -> bool:
-	return once_local.has(j) or (not once_visita.has(j) and local.plantilla.has(j))
-
 func _cerrar_notas() -> void:
 	_notas_cerradas = true
 	var gano_local := goles_local > goles_visita

@@ -38,6 +38,8 @@ func abrir_negociacion(j: Jugador) -> String:
 	var mio := m.mi_club()
 	if j == null or mio == null or j.club_id == mio.id:
 		return Idiomas.t("ese jugador ya es tuyo")
+	if m.cesiones != null and m.cesiones.esta_cedido(j.id):   ## A4-GES-007: se le pagaría al club que solo lo tiene prestado
+		return Idiomas.t("Está cedido: hasta que vuelva a su club no se puede negociar por él.")
 	if m.roles != null and not m.roles.puede_fichar():
 		return Idiomas.t(String(m.roles.motivo_bloqueo("fichar")))
 	if m.tiene_desafio("cantera"):

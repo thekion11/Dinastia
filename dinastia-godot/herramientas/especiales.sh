@@ -89,6 +89,9 @@ pasa "el menú no carga el estadio ni el partido 3D (3-11)" "godot --headless --
 pasa "guardado: autoguardado en segundo plano y pregunta al salir (3-11)" "godot --headless --path . res://pruebas/ideas/gua_autoguardado_salir.tscn" "FIN. 0 fallos"
 pasa "atajos de teclado por menú y submenú (3-11)" "godot --headless --path . res://pruebas/ideas/ate_atajos_menus.tscn" "FIN. 0 fallos"
 pasa "ate_ayuda_en_menu" "godot --headless --path . res://pruebas/ideas/ate_ayuda_en_menu.tscn" "(^|[^0-9])0 fallos"
+pasa "aud4_idiomas_cache" "godot --headless --path . res://pruebas/ideas/aud4_idiomas_cache.tscn" "FIN. 0 fallos"
+pasa "aud4_interfaz_limite" "godot --headless --path . res://pruebas/ideas/aud4_interfaz_limite.tscn" "FIN. 0 fallos"
+pasa "aud4_largo_plazo_ui" "LIMITE_S=120 godot --headless --path . res://pruebas/ideas/aud4_largo_plazo_ui.tscn" "FIN. 0 fallos"
 pasa "act_actualizador" "godot --headless --path . res://pruebas/ideas/act_actualizador.tscn" "FIN. 0 fallos"
 pasa "caché en disco del audio sintetizado (R5)" "godot --headless --path . res://pruebas/ideas/r5_cache_audio.tscn" "FIN. 0 fallos"
 pasa "arena de pruebas (cada modo monta lo que dice)" "godot --headless --path . res://pruebas/ideas/arena_humo.tscn" "FIN. 0 fallos"
@@ -122,6 +125,7 @@ pasa "HUD y cámara del partido en el móvil (mide mm de letra y distancia de c�
 BLOQUE=reutilizadas
 pasa "ciudad: construir y soltar 5 veces sin fugas (A4-M3D-001)" "godot --headless --path . res://pruebas/ideas/a4_m3d_ciclos.tscn" "FIN. 0 fallos"
 pasa "estadio: construir y soltar 5 veces sin fugas (A4-M3D-002)" "godot --headless --path . res://pruebas/ideas/a4_m3d_estadio_ciclos.tscn" "FIN. 0 fallos"
+pasa "ciudad en marcha 600 fotogramas sin acumular nada (A4-M3D)" "godot --headless --path . res://pruebas/ideas/a4_m3d_tiempo.tscn" "FIN. 0 fallos"
 pasa "banco_inicio" "XDG_DATA_HOME=\$(mktemp -d) godot --headless --path . res://pruebas/banco_inicio.tscn" "(^|[^0-9])0 fallos"
 pasa "bug_semilla" "godot --headless --path . res://pruebas/ideas/bug_semilla.tscn" "(^|[^0-9])0 fallos"
 pasa "cierre_anio_deudas" "godot --headless --path . res://pruebas/ideas/cierre_anio_deudas.tscn" "(^|[^0-9])0 fallos"
@@ -161,6 +165,12 @@ pasa "p6_entorno_oclusion" "godot --headless --path . res://pruebas/ideas/p6_ent
 pasa "p6_peaje" "godot --headless --path . res://pruebas/ideas/p6_peaje.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_alcance_e" "godot --headless --path . res://pruebas/ideas/p6_alcance_e.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_resolucion3d" "godot --headless --path . res://pruebas/ideas/p6_resolucion3d.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_recorrido_mapa" "godot --headless --path . res://pruebas/ideas/a4_recorrido_mapa.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_gestion_cruzado" "godot --headless --path . res://pruebas/ideas/a4_gestion_cruzado.tscn" "(^|[^0-9])0 fallos"
+# a4_limite_mundo necesita pantalla virtual (opengl3): el contenedor del CI no trae xvfb-run (A4, 4-11), como el bloque 6a
+if command -v xvfb-run >/dev/null; then
+pasa "a4_limite_mundo" "xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
+fi
 pasa "p6_calidad_minima" "godot --headless --path . res://pruebas/ideas/p6_calidad_minima.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_idiomas_perezoso" "godot --headless --path . res://pruebas/ideas/p6_idiomas_perezoso.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_ropero" "godot --headless --path . res://pruebas/ideas/p6_ropero.tscn" "(^|[^0-9])0 fallos"

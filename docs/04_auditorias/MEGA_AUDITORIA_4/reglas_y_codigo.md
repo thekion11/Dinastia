@@ -19,7 +19,9 @@ Sesión «Búsqueda de fallos». Repasos 1 (lectura de reglas) y 2 (ejecución) 
 
 - [A4-REGLAS-007] (repaso 4, gravedad: medio) El CI (`compilar.yml`) corre `especiales.sh` a secas; el bloque `todo` (balance en 10 y 20 temporadas, «el mejor gana al peor» y «la pizarra se nota», recorrido de pantallas en alemán, accesibilidad, presupuestos del partido y del recorrido, ~20 pruebas, +9 min) no corre en ningún CI: una regresión del motor o de los textos solo se vería si alguien lo lanza a mano. Reproducir: `grep -n "todo" .github/workflows/*.yml` (solo el selector de builds). Estado: **arreglado** con `.github/workflows/especiales-todo.yml` (cada noche 05:17 UTC y a mano; 6 partes en paralelo; no bloquea compilaciones). Sin probar en GitHub todavía (YAML válido, mismas acciones que `compilar.yml`): revisar la primera ejecución.
 
+- [A4-REGLAS-008] (repaso 4, gravedad: bajo) Documentos desactualizados: de 901 rutas de archivo citadas entre comillas en `docs/**/*.md`, solo 1 apuntaba a algo que no existe en el código vivo: `docs/PLAN_GENERAL.md` citaba `visor/peluches_juego.gd` (no existe; la máquina de peluches vive en `visor/ciudad_arcade.gd` y `visor/peluches_ciudad.gd`). Estado: **arreglado**. Las otras 8 rutas «rotas» son atajos (`_plantilla.gd/.tscn`), documentos de terceros citados en informes (League-Soccer) o archivos de ramas viejas: no son fallos. Todas las rutas de `CLAUDE.md`, `README.md`, `docs/00_INDICE.md` y `docs/PLAN_GENERAL.md` existen.
+
 ## Repaso 3 (al límite) y 4 (coherencia), hecho en parte
 - Idiomas: 3 vueltas por los 9 idiomas más códigos inválidos («xx», vacío) con 276 frases (vacías, `%s`, 5.000 caracteres, saltos de línea, emoji): ninguna traducción vacía, sin errores.
 - Pruebas vacías: revisadas las 14 que no tienen `_comprobar` visible; solo `zz_alt` no comprobaba nada (A4-REGLAS-006, arreglado).
-- CI revisado (A4-REGLAS-007). Pendiente: señales sin desconectar y documentos desactualizados.
+- CI revisado (A4-REGLAS-007); documentos revisados (A4-REGLAS-008); señales sin desconectar: ver `mundo_3d.md` (repaso 5).

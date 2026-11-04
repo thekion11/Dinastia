@@ -238,9 +238,9 @@ func _actualizar() -> void:
 		var ok := m.hay_luz(sec)
 		(a["lampara"] as StandardMaterial3D).albedo_color = Color(0.1, 0.8, 0.2) if ok else Color(0.9, 0.1, 0.1)
 		(a["lampara"] as StandardMaterial3D).emission = (a["lampara"] as StandardMaterial3D).albedo_color
-		(a["rotulo"] as Label3D).text = "SECTOR %d·%d\n%s" % [sec.x, sec.y, "CON LUZ" if ok else "SIN LUZ"]
+		(a["rotulo"] as Label3D).text = Idiomas.t("SECTOR %d·%d\n%s") % [sec.x, sec.y, Idiomas.t("CON LUZ") if ok else Idiomas.t("SIN LUZ")]
 	SubsueloMando.actualizar(self)
-	_rotulo_agua.text = "💧 AGUA POTABLE\nDepósito %d%%" % roundi(m.agua_nivel / RedesCiudad.AGUA_DEPOSITO * 100.0)
+	_rotulo_agua.text = Idiomas.t("💧 AGUA POTABLE\nDepósito %d%%") % roundi(m.agua_nivel / RedesCiudad.AGUA_DEPOSITO * 100.0)
 	var g := "🔥 GAS · NO FUMAR\n"
 	for id in m.gas:
 		g += "Gasolinera %d: %d%%\n" % [int(id) + 1, roundi(float(m.gas[id]) / RedesCiudad.GAS_DEPOSITO * 100.0)]
