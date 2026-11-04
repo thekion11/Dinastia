@@ -20195,6 +20195,28 @@
    "L'ànim puja $1 i els socis se senten escoltats.",
    "Nastroje rosną o $1, a członkowie czują się wysłuchani.",
    "Moral $1 artıyor ve üyeler dinlendiklerini hissediyor."
+  ],
+  [
+   "^No se pudo organizar: cuesta (.+) y no hay caja\\.$",
+   "Couldn't organise it: it costs $1 and there is no cash.",
+   "Não foi possível organizar: custa $1 e não há caixa.",
+   "Impossible à organiser : cela coûte $1 et il n'y a pas de trésorerie.",
+   "Impossibile organizzarlo: costa $1 e non c'è cassa.",
+   "Konnte nicht organisiert werden: kostet $1 und es ist keine Kasse da.",
+   "No s'ha pogut organitzar: costa $1 i no hi ha caixa.",
+   "Nie udało się zorganizować: kosztuje $1, a w kasie brak środków.",
+   "Düzenlenemedi: maliyeti $1 ve kasada para yok."
+  ],
+  [
+   "^No se pudo organizar: no hay club\\.$",
+   "Couldn't organise it: there is no club.",
+   "Não foi possível organizar: não há clube.",
+   "Impossible à organiser : il n'y a pas de club.",
+   "Impossibile organizzarlo: non c'è nessun club.",
+   "Konnte nicht organisiert werden: kein Verein vorhanden.",
+   "No s'ha pogut organitzar: no hi ha club.",
+   "Nie udało się zorganizować: brak klubu.",
+   "Düzenlenemedi: kulüp yok."
   ]
  ],
  "fr": {
