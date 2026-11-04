@@ -34,9 +34,9 @@ func _ready() -> void:
 	Input.emulate_mouse_from_touch = false   ## los toques al azar no deben pulsar los botones del menú de pausa (¡Controles! ¡Simular!)
 	PartidoJugable.con_ceremonia = false
 	ControlesTactiles.forzar = true
-	ControlesTactiles.dpi_forzado = 400.0
-	ControlesTactiles.ventana_forzada = Vector2i(2400, 1080)
-	ControlesTactiles.lienzo_forzado = LIENZO
+	PantallaMovil.dpi_forzado = 400.0
+	PantallaMovil.ventana_forzada = Vector2i(2400, 1080)
+	PantallaMovil.lienzo_forzado = LIENZO
 	AjustesTactil.restaurar()
 	CarreraJugadorUI.mundo = null
 	_ui = load("res://escenas/carrera_jugador.tscn").instantiate()
@@ -93,9 +93,9 @@ func _soltar_todo() -> void:
 func _fin() -> void:
 	_soltar_todo()
 	ControlesTactiles.forzar = false
-	ControlesTactiles.dpi_forzado = 0.0
-	ControlesTactiles.ventana_forzada = Vector2i.ZERO
-	ControlesTactiles.lienzo_forzado = Vector2.ZERO
+	PantallaMovil.dpi_forzado = 0.0
+	PantallaMovil.ventana_forzada = Vector2i.ZERO
+	PantallaMovil.lienzo_forzado = Vector2.ZERO
 	AjustesTactil.restaurar()
 	Calidad.elegida = Calidad.MINIMO
 	Input.emulate_mouse_from_touch = true
