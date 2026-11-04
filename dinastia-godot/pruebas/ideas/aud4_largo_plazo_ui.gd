@@ -1,0 +1,80 @@
+extends BaseIdea
+## A4-INT · REPASO 3: 20 temporadas jugadas con la interfaz montada (`avanzar_semana` de Principal), guardando y cargando por el camino: nodos y objetos estables, el registro de noticias acotado, el
+## guardado crece poco y carga igual, y la interfaz sigue abriendo todos los menús al final.
+var _p: Principal
+
+func _frames(n: int = 2) -> void:
+	for i in n:
+		await get_tree().process_frame
+
+func _probar() -> void:
+	_titulo("AUDITORÍA 4 · INTERFAZ · 20 TEMPORADAS")
+	_respaldar_user()
+	var m := _mundo(20261104)
+	PedidoPartida.mundo_pregenerado = m
+	_p = load("res://escenas/principal.tscn").instantiate()
+	add_child(_p)
+	await _frames(6)
+	for t in get_tree().root.find_children("*", "", true, false):
+		if t is Tutorial:
+			(t as Tutorial)._terminar(false)
+	CapasTutorial.poner_activas(false)
+	_p._autoguardado = false
+	var t0 := Time.get_ticks_msec()
+	var semanas := 0
+	var nodos: Array[int] = []
+	var objetos: Array[int] = []
+	var tam_guardado: Array[int] = []
+	var ms_guardado: Array[int] = []
+	var anio0 := m.anio
+	var limite_s := float(OS.get_environment("LIMITE_S")) if OS.get_environment("LIMITE_S") != "" else 420.0
+	while m.anio < anio0 + 20 and (Time.get_ticks_msec() - t0) / 1000.0 < limite_s:
+		_p._avanzar_semana()
+		semanas += 1
+		if semanas % 26 == 0:
+			await _frames(2)
+			nodos.append(int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)))
+			objetos.append(int(Performance.get_monitor(Performance.OBJECT_COUNT)))
+			var t1 := Time.get_ticks_msec()
+			Partida.guardar(m, "aud4_largo")
+			ms_guardado.append(Time.get_ticks_msec() - t1)
+			var f := FileAccess.open(Partida.ruta_de("aud4_largo"), FileAccess.READ)
+			tam_guardado.append(f.get_length() if f != null else 0)
+	var temporadas := m.anio - anio0
+	_linea("  %d semanas (%d temporadas) en %d s; nodos %s; objetos %s; guardado KB %s; ms guardar %s" % [semanas, temporadas, (Time.get_ticks_msec() - t0) / 1000, str(nodos), str(objetos), str(tam_guardado.map(func(b: int) -> int: return b / 1024)), str(ms_guardado)])
+	_comprobar(temporadas >= 8, "se jugaron al menos 8 temporadas en el tiempo dado (%d)" % temporadas)
+	if nodos.size() >= 4:
+		var medio := nodos.size() / 2
+		_comprobar(nodos[nodos.size() - 1] - nodos[medio] <= 120, "los nodos no crecen sin fin (de %d a %d en la segunda mitad)" % [nodos[medio], nodos[nodos.size() - 1]])
+		_comprobar(objetos[objetos.size() - 1] - objetos[medio] <= 40000, "ni los objetos (de %d a %d)" % [objetos[medio], objetos[objetos.size() - 1]])
+		_comprobar(tam_guardado[tam_guardado.size() - 1] <= tam_guardado[medio] * 2, "el guardado no se dispara (%d KB → %d KB)" % [tam_guardado[medio] / 1024, tam_guardado[tam_guardado.size() - 1] / 1024])
+	_comprobar(ms_guardado.is_empty() or ms_guardado.max() < 5000, "guardar tarda menos de 5 s (máx %d ms)" % (ms_guardado.max() if not ms_guardado.is_empty() else 0))
+	## El registro de «lo que va pasando» no crece sin fin.
+	var largo_registro := 0
+	if _p._registro != null:
+		largo_registro = _p._registro.get_parsed_text().length()
+	_comprobar(largo_registro < 200000, "el registro de la pantalla tiene %d caracteres (< 200.000)" % largo_registro)
+	## Cargar lo guardado da el mismo mundo.
+	var c := Partida.cargar("aud4_largo")
+	_comprobar(c != null and c.anio >= m.anio - 1 and c.mi_club().id == m.mi_club().id, "lo guardado se carga (año %d de %d)" % [c.anio if c != null else -1, m.anio])
+	## La interfaz sigue entera: todos los menús abren.
+	var mal: Array[String] = []
+	for mn: Dictionary in MenusLaterales.MENUS:
+		var subs: Array = mn["subs"]
+		for i in subs.size():
+			if (subs[i] as Dictionary).has("accion") or String((subs[i] as Dictionary).get("secc", "")) == "kits":
+				continue
+			_p._menu_lateral.abrir_menu(String(mn["id"]), i)
+			await _frames(4)
+			var pm: Variant = _p._menu_lateral.pantalla_abierta
+			if not is_instance_valid(pm) or (pm as PantallaMenu).cerrando():
+				mal.append("%s/%d" % [mn["id"], i])
+			else:
+				(pm as PantallaMenu).cerrar()
+			await _frames(20)
+	_comprobar(mal.is_empty(), "tras %d temporadas se abren los submenús %s" % [temporadas, str(mal.slice(0, 5))])
+	Partida.borrar("aud4_largo")
+	for e in DirAccess.get_files_at(Partida.CARPETA):
+		if e.begins_with("aud4_largo"):
+			DirAccess.remove_absolute(Partida.CARPETA + "/" + e)
+	_restaurar_user()

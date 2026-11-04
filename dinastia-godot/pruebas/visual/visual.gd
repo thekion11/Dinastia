@@ -57,9 +57,17 @@ var _nuevas: Array[String] = []
 ## las pruebas de Ajustes: la foto se hace con las de serie y las del jugador se devuelven al acabar.
 const RESPALDO_PREFS := Principal.PREFS + ".visual_respaldo"
 
+var _objetivos_antes: Dictionary = {}   ## (A4-INT) la sección «objetivos» de ajustes.cfg: si el panel está plegado y qué misiones hay hechas cambia la pantalla de Inicio
+
 func _ready() -> void:
 	if FileAccess.file_exists(Principal.PREFS):
 		DirAccess.rename_absolute(Principal.PREFS, RESPALDO_PREFS)
+	var cf := ConfigFile.new()
+	if cf.load(PanelObjetivos.AJUSTES) == OK and cf.has_section(PanelObjetivos.SECCION):
+		for k: String in cf.get_section_keys(PanelObjetivos.SECCION):
+			_objetivos_antes[k] = cf.get_value(PanelObjetivos.SECCION, k)
+		cf.erase_section(PanelObjetivos.SECCION)   ## la pantalla se mide con el panel de objetivos de fábrica
+		cf.save(PanelObjetivos.AJUSTES)
 	AjustesCiudad.guardar("tutorial_visto", true)
 	## (30-10) Sin el aviso «la última vez el juego anotó N errores» (M-430): depende de cómo
 	## acabó la sesión anterior de Godot en esa máquina, no de la pantalla.
@@ -232,6 +240,12 @@ static func mapa(a: Image, b: Image) -> Image:
 	return out
 
 func _terminar() -> void:
+	if not _objetivos_antes.is_empty():
+		var cf := ConfigFile.new()
+		cf.load(PanelObjetivos.AJUSTES)
+		for k: String in _objetivos_antes:
+			cf.set_value(PanelObjetivos.SECCION, k, _objetivos_antes[k])
+		cf.save(PanelObjetivos.AJUSTES)
 	CapasTutorial.poner_activas(_ayudas_antes)
 	if _idioma_antes != "" and _idioma_antes != Idiomas.idioma:
 		Idiomas.idioma = _idioma_antes

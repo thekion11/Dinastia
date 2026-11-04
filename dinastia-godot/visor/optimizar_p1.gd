@@ -362,6 +362,10 @@ static func _montar_proxies(raiz: Node3D, proxies: Array) -> void:
 ## `con_proxies` = false: solo junta piezas iguales, sin la caja lejana (el entorno del estadio).
 static func agrupar(raiz: Node3D, con_proxies: bool = true) -> Dictionary:
 	_motivos.clear()
+	## (4-11, A4-M3D-X01) Estas dos cachés tenían como CLAVE una malla / un material y no se vaciaban nunca: cada
+	## ciudad o estadio construido dejaba vivas sus mallas y unidades para siempre (+123 objetos y +5 MB por entrada).
+	_tris_cache.clear()
+	_unidad.clear()
 	var grupos := {}
 	var mallas_con_mat := {}
 	var mats := {}

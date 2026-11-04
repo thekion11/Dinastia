@@ -111,7 +111,7 @@ func _probar_partidos() -> void:
 		partidos_st += 1
 		if p4.tiros_puerta_local > p4.remates_local or p4.tiros_puerta_visita > p4.remates_visita:
 			mal_puerta += 1
-		if p4.goles_local > p4.tiros_puerta_local or p4.goles_visita > p4.tiros_puerta_visita:
+		if not p4.suspendido and (p4.goles_local > p4.tiros_puerta_local or p4.goles_visita > p4.tiros_puerta_visita):   ## el 3-0 de mesa no tiene tiros
 			mal_goles += 1
 		if p4.posesion_local < 22.0 or p4.posesion_local > 78.0:
 			mal_posesion += 1

@@ -386,6 +386,8 @@ func responder_oferta(idx: int, acepta: bool) -> void:
 	var j: Jugador = o["jugador"]
 	var comprador: Club = o["club"]
 	var monto: int = int(o["monto"])
+	if j.club_id != _mundo().mi_club_id:
+		return   ## A4-GES-002: ya no es tuyo (se fue libre o lo vendiste): no se puede vender
 	if acepta:
 		var vendedor: Club = _mundo().clubes.get(j.club_id)
 		## `Cesiones.vender()` es el `responderOferta()` de verdad -estaba escrito
@@ -424,6 +426,8 @@ func responder_oferta(idx: int, acepta: bool) -> void:
 func a_dic() -> Dictionary:
 	var lista: Array = []
 	for o: Dictionary in ofertas_recibidas:
+		if _mundo() != null and (o["jugador"] as Jugador).club_id != _mundo().mi_club_id:
+			continue   ## A4-GES-002: oferta por quien ya no es tuyo (libre o vendido): no vale y no se guarda
 		lista.append({
 			"jugador_id": (o["jugador"] as Jugador).id, "club_id": (o["club"] as Club).id,
 			"monto": int(o["monto"]), "semana": int(o["semana"]), "clausula": bool(o["clausula"]),

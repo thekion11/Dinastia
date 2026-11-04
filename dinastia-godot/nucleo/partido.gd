@@ -185,13 +185,14 @@ func remate_externo(es_local: bool, autor_id: String, tipo: String) -> void:
 	_momentum_push(1, es_local)
 	remate.emit(c, _por_id(autor_id), tipo, minuto)
 
-## Una tarjeta que sacó el árbitro del 3D. La roja deja al equipo con uno menos
-## también aquí (sale del once: la fuerza se vuelve a medir).
+## Tarjeta del árbitro del 3D: la roja saca al jugador del once (la fuerza se vuelve a medir).
 func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 	var j := _por_id(jugador_id)
-	if j == null:
-		return
-	j.amarillas += 1
+	if j == null: return
+	## Roja directa no suma amarilla de temporada (A4): solo la amarilla real y la 2.ª que la motiva.
+	var previas := int(_amarillas_hoy.get(jugador_id, 0))
+	if not roja or previas > 0: j.amarillas += 1
+	if not roja: _amarillas_hoy[jugador_id] = previas + 1
 	if roja:
 		Disciplina.sanciona(j)
 		once_local.erase(j)
@@ -203,9 +204,24 @@ func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 	if roja:
 		_revisar_siete()
 
+## UNA AMARILLA DEL SIMULADO (A4-PAR-L01, 4-11): la 2.ª amarilla de ESTE partido es roja (antes: total par de la temporada) y el
+## expulsado sale del once; el ya amonestado se cuida (evita la 2.ª el 60 %): ~0,1 rojas por partido, como en las ligas reales.
+func _amonestar(j: Jugador, frase: String = "") -> void:
+	var previas := int(_amarillas_hoy.get(j.id, 0))
+	if previas >= 1 and Azar.suerte(0.6):
+		return
+	j.amarillas += 1; _amarillas_hoy[j.id] = previas + 1
+	var roja := previas >= 1
+	if roja:
+		Disciplina.sanciona(j); once_local.erase(j); once_visita.erase(j); invalidar_fuerza()
+	if frase != "": decision_arbitral.emit(frase, minuto)
+	tarjeta.emit(j, roja, minuto)
+	if not roja and Disciplina.acumula(j):
+		decision_arbitral.emit(Disciplina.frase(j), minuto)
+	if roja: _revisar_siete()
+
 ## MENOS DE SIETE (01-11, fallo que League-Soccer ya resolvió): el reglamento no deja jugar a un equipo con menos de 7; el
-## partido se suspende y se le da por perdido 3-0, o con el marcador si su rival ya ganaba por 3 o más. Solo pasa en el 3D (en el
-## simulado una roja no saca a nadie del once: solo lo sanciona).
+## partido se suspende y se le da por perdido 3-0, o con el marcador si su rival ya ganaba por 3 o más (3D y, desde A4-PAR-L01, simulado).
 func _revisar_siete() -> void:
 	if terminado_ya:
 		return
@@ -218,7 +234,7 @@ func _revisar_siete() -> void:
 			goles_visita = 3 if lado_local else 0
 		decision_arbitral.emit(Idiomas.t("Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.") % [
 			(local if lado_local else visita).nombre, goles_local, goles_visita], minuto)
-		terminado_ya = true
+		terminado_ya = true; suspendido = true
 		_devolver_tactica()
 		terminado.emit(goles_local, goles_visita)
 		return
@@ -236,13 +252,8 @@ func fijar_estadisticas(pos_local: float, corners: Array, faltas_: Array, fueras
 		fueras_local = int(fueras_[0])
 		fueras_visita = int(fueras_[1])
 
-## Mete a `entra` por `sale`. Devuelve por qué no se pudo, o cadena vacía si se
-## hizo: quien llama necesita poder decírselo al jugador, no adivinarlo.
-##
-## Después de tocar el once hay que volver a medirlo. La fuerza está cacheada
-## porque no cambia durante los noventa minutos, y un cambio es justo la
-## excepción: sin `invalidar_fuerza()` el equipo seguiría jugando con la fuerza
-## del once que ya no está en el campo, y el cambio no serviría para nada.
+## Mete a `entra` por `sale`. Devuelve por qué no se pudo ("" si se hizo). Después de tocar el once se vuelve a medir
+## (`invalidar_fuerza()`): sin eso el equipo seguiría jugando con la fuerza del once que ya no está en el campo.
 func cambiar(sale: Jugador, entra: Jugador) -> String:
 	var es_local := once_local.has(sale)
 	if not es_local and not once_visita.has(sale):
@@ -303,21 +314,14 @@ func penales() -> Array:
 	_penales = [l, v]
 	return _penales
 
-## Cierra las notas del partido y actualiza la forma.
-##
-## Portado del HTML: la nota base se mueve con el resultado del EQUIPO (+0,6 si
-## ganas, -0,6 si pierdes) mas un margen de azar, y despues la forma se arrastra
-## hacia esa nota con un 30% de peso. Eso es lo que hace que una racha se note en
-## la forma sin que un solo partido malo hunda a nadie.
-##
-## Se llama al terminar, no minuto a minuto: una nota a mitad de partido no
-## significa nada y ademas el resultado todavia no se sabe.
+## Cierra las notas del partido y actualiza la forma (al terminar). Del HTML: la nota base se mueve con el resultado del EQUIPO
+## (±0,6) más azar, y la forma se arrastra hacia esa nota con un 30 % de peso: la racha se nota sin que un mal partido hunda a nadie.
 func _cerrar_notas() -> void:
 	_notas_cerradas = true
 	var gano_local := goles_local > goles_visita
 	var empate := goles_local == goles_visita
 	for j in _todos:
-		var suyo := once_local.has(j)
+		var suyo := es_del_local(j)
 		var bono := 0.0
 		if not empate:
 			bono = 0.6 if (gano_local == suyo) else -0.6

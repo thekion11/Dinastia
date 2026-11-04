@@ -17,7 +17,43 @@ var _mundo_elegido: Mundo
 var _club_elegido_id := ""
 var _n := 0
 
+## (4-11, F-008) La prueba mide «hay partida guardada»: con partidas ajenas en `user://partidas` (de otra especial, o de quien abrió el juego) daba falso. Se aparta esa carpeta mientras
+## corre y se devuelve al salir.
+const RESPALDO := "user://partidas_respaldo_banco_inicio"
+var _aislado := false
+
+func _aislar_guardado() -> void:
+	var d := DirAccess.open("user://")
+	if d == null:
+		return
+	if d.dir_exists("partidas_respaldo_banco_inicio"):
+		_borrar_dir(RESPALDO)   ## resto de una corrida cortada: ya era una copia vieja
+	if d.dir_exists("partidas"):
+		d.rename("partidas", "partidas_respaldo_banco_inicio")
+		_aislado = true
+
+func _exit_tree() -> void:
+	var d := DirAccess.open("user://")
+	if d == null or not _aislado:
+		return
+	if d.dir_exists("partidas"):
+		_borrar_dir("user://partidas")
+	d.rename("partidas_respaldo_banco_inicio", "partidas")
+	_aislado = false
+
+func _borrar_dir(ruta: String) -> void:
+	var d := DirAccess.open(ruta)
+	if d == null:
+		return
+	for f: String in d.get_files():
+		d.remove(f)
+	for sub: String in d.get_directories():
+		_borrar_dir(ruta + "/" + sub)
+		d.remove(sub)
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(ruta))
+
 func _ready() -> void:
+	_aislar_guardado()
 	_linea("===== BANCO: PANTALLA DE INICIO =====")
 	_probar_deteccion_de_partida()
 	_arrancar_carga_desde_inicio()
