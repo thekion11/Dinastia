@@ -7483,7 +7483,8 @@
   "SECTOR %d·%d\n%s": "SECTOR %d·%d\n%s",
   "CON LUZ": "POWERED",
   "SIN LUZ": "NO POWER",
-  "💧 AGUA POTABLE\nDepósito %d%%": "💧 DRINKING WATER\nTank %d%%"
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 DRINKING WATER\nTank %d%%",
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "He is on loan: you cannot negotiate for him until he returns to his club."
  },
  "pt": {
   "Historia": "História",
@@ -14969,7 +14970,8 @@
   "SECTOR %d·%d\n%s": "SETOR %d·%d\n%s",
   "CON LUZ": "COM LUZ",
   "SIN LUZ": "SEM LUZ",
-  "💧 AGUA POTABLE\nDepósito %d%%": "💧 ÁGUA POTÁVEL\nReservatório %d%%"
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 ÁGUA POTÁVEL\nReservatório %d%%",
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Está emprestado: até voltar ao seu clube não se pode negociar por ele."
  },
  "patrones": [
   [
@@ -28408,7 +28410,8 @@
   "SECTOR %d·%d\n%s": "SECTEUR %d·%d\n%s",
   "CON LUZ": "ALIMENTÉ",
   "SIN LUZ": "SANS COURANT",
-  "💧 AGUA POTABLE\nDepósito %d%%": "💧 EAU POTABLE\nRéservoir %d%%"
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 EAU POTABLE\nRéservoir %d%%",
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Il est prêté : impossible de négocier pour lui avant son retour dans son club."
  },
  "it": {
   "Historia": "Storia",
@@ -35894,7 +35897,8 @@
   "SECTOR %d·%d\n%s": "SETTORE %d·%d\n%s",
   "CON LUZ": "CON LUCE",
   "SIN LUZ": "SENZA LUCE",
-  "💧 AGUA POTABLE\nDepósito %d%%": "💧 ACQUA POTABILE\nSerbatoio %d%%"
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 ACQUA POTABILE\nSerbatoio %d%%",
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "È in prestito: finché non torna al suo club non si può trattare per lui."
  },
  "de": {
   "Historia": "Geschichte",
@@ -43380,7 +43384,8 @@
   "SECTOR %d·%d\n%s": "SEKTOR %d·%d\n%s",
   "CON LUZ": "MIT STROM",
   "SIN LUZ": "OHNE STROM",
-  "💧 AGUA POTABLE\nDepósito %d%%": "💧 TRINKWASSER\nTank %d%%"
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 TRINKWASSER\nTank %d%%",
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Er ist ausgeliehen: Bis er zu seinem Verein zurückkehrt, kann nicht über ihn verhandelt werden."
  },
  "ca": {
   "Historia": "Història",
@@ -50866,7 +50871,8 @@
   "SECTOR %d·%d\n%s": "SECTOR %d·%d\n%s",
   "CON LUZ": "AMB LLUM",
   "SIN LUZ": "SENSE LLUM",
-  "💧 AGUA POTABLE\nDepósito %d%%": "💧 AIGUA POTABLE\nDipòsit %d%%"
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 AIGUA POTABLE\nDipòsit %d%%",
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Està cedit: fins que no torni al seu club no es pot negociar per ell."
  },
  "pl": {
   "Club": "Klub",
@@ -58352,7 +58358,8 @@
   "SECTOR %d·%d\n%s": "SEKTOR %d·%d\n%s",
   "CON LUZ": "Z PRĄDEM",
   "SIN LUZ": "BEZ PRĄDU",
-  "💧 AGUA POTABLE\nDepósito %d%%": "💧 WODA PITNA\nZbiornik %d%%"
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 WODA PITNA\nZbiornik %d%%",
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Jest wypożyczony: dopóki nie wróci do swojego klubu, nie można o niego negocjować."
  },
  "tr": {
   "Club": "Kulüp",
@@ -65838,6 +65845,7 @@
   "SECTOR %d·%d\n%s": "BÖLGE %d·%d\n%s",
   "CON LUZ": "ELEKTRİKLİ",
   "SIN LUZ": "ELEKTRİKSİZ",
-  "💧 AGUA POTABLE\nDepósito %d%%": "💧 İÇME SUYU\nDepo %d%%"
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 İÇME SUYU\nDepo %d%%",
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Kiralık oynuyor: kulübüne dönene kadar onun için pazarlık yapılamaz."
  }
 }
