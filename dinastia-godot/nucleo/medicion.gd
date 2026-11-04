@@ -107,8 +107,29 @@ func _cargar(nombre: String, f: Callable) -> void:
 	f.call()
 	_linea("Carga %-22s %7d ms" % [nombre, (Time.get_ticks_usec() - t) / 1000])
 
+## (4-11, A4-REND) La parte «ciudad» medía también la CARGA: `abrir` construye por etapas entre fotogramas y, hasta que
+## `completa` es verdadero, la ciudad se dibuja sin agrupar ni ocluir (9.273 llamadas y 13,5 M de triángulos en esos
+## fotogramas). Según lo lenta que fuera la máquina, esos fotogramas entraban más o menos en la media y el presupuesto
+## daba FALLO unas veces y 0 fallos otras. Ahora la parte no empieza a contar hasta que la ciudad está completa
+## (con tope de 180 s por si nunca lo estuviera) y la espera se anota.
+var _espera_ciudad := 0.0
+
+func _ciudad_lista() -> bool:
+	var c: Variant = _vista.get("_ciudad") if _vista != null else null
+	return c == null or bool(c.get("completa"))
+
 func _process(delta: float) -> void:
 	var ahora := Time.get_ticks_usec()
+	if _parte == "ciudad" and _espera_ciudad < 180.0 and not _ciudad_lista():
+		_espera_ciudad += delta
+		_t_parte = 0.0
+		_frames = PackedFloat32Array()
+		_muestras = []
+		_ult = ahora
+		return
+	if _parte == "ciudad" and _espera_ciudad > 0.0 and not _json.has("ciudad_espera_s"):
+		_json["ciudad_espera_s"] = snappedf(_espera_ciudad, 0.1)
+		_linea("La ciudad terminó de construirse a los %.1f s de abrirla: la medición empieza ahí" % _espera_ciudad)
 	_frames.append((ahora - _ult) / 1000.0)
 	_ult = ahora
 	_t_parte += delta
