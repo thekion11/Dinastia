@@ -1,0 +1,51 @@
+# Pruebas especiales COMPLETAS (4-11-2026, auditoría 4, A4-REGLAS-007): `especiales.sh todo` añade el balance a largo
+# plazo, el motor (el mejor gana al peor), el recorrido de pantallas en alemán, accesibilidad, presupuestos… (+9 min) y
+# NO corre en el CI de cada push (`compilar.yml` usa `especiales.sh` a secas). Aquí corre una vez por noche y a mano.
+# No bloquea ninguna compilación: si algo falla, el aviso sale en esta ejecución.
+name: Especiales completas (todo)
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+jobs:
+  especiales-todo:
+    name: ⚪ especiales (todo) ${{ matrix.parte }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        parte: [ "0/6", "1/6", "2/6", "3/6", "4/6", "5/6" ]
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - name: Python (la norma de 450 líneas lo necesita; la imagen no lo trae)
+        run: command -v python3 >/dev/null || (apt-get update -qq && apt-get install -y -qq python3)
+
+      - name: Pruebas especiales completas (parte ${{ matrix.parte }})
+        working-directory: dinastia-godot
+        env:
+          ESPECIALES_PARTE: ${{ matrix.parte }}
+        run: |
+          set +e
+          bash herramientas/especiales.sh todo | tee /tmp/especiales.txt
+          { echo "### ⚪ Especiales (todo), parte ${ESPECIALES_PARTE}"; echo '```'; cat /tmp/especiales.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          grep -q "^FALLO" /tmp/especiales.txt && { echo "Hay pruebas especiales que fallan."; exit 1; }
+          exit 0
+
+      - name: Subir el registro
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: especiales-todo-registro-${{ strategy.job-index }}
+          path: /tmp/especiales.txt
+          if-no-files-found: ignore

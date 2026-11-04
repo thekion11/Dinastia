@@ -400,7 +400,7 @@ func desde_dic(d: Dictionary) -> void:
 	lista.clear()
 	for ct: Variant in d.get("lista", []):
 		if ct is Dictionary:
-			lista.append(ct as Dictionary)
+			lista.append((ct as Dictionary).duplicate(true))   ## copia (A4-GES-001): `semana()` las caduca en el sitio y estropeaba los datos guardados
 	objetivo = String(d.get("objetivo", ""))
 	favor_agente = int(d.get("favor_agente", -1))
 	rueda_semana = int(d.get("rueda", -1))

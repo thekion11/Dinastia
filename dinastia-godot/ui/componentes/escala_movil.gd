@@ -27,3 +27,47 @@ static func aplicar(arbol: SceneTree, prefs_ruta: String) -> void:
 ## Alto mínimo de un cuadro de texto: el normal en escritorio, mayor en el móvil.
 static func campo_alto(normal: int) -> int:
 	return maxi(normal, ALTO_CAMPO_MOVIL) if es_movil() else normal
+
+## EL TOQUE (4-11-2026, caza de fallos del móvil): un botón de 25 px en un 6,5" a 2400×1080 mide ≈3,5 mm y se falla con el dedo. En el móvil los botones, desplegables, casillas y pestañas
+## miden al menos `MIN_MM_TOQUE` mm de alto (con tope `MAX_TOQUE` px del lienzo para que la pantalla no se llene de botones gordos). En PC (sin puntos por pulgada) no cambia nada.
+const MIN_MM_TOQUE := 7.0
+const MAX_TOQUE := 52.0
+
+## Alto mínimo de un toque en píxeles del lienzo (0 si no es un móvil o no se sabe).
+static func alto_toque(nodo: Node) -> float:
+	var ppm := PantallaMovil.px_por_mm(nodo)
+	return 0.0 if ppm <= 0.0 else minf(MIN_MM_TOQUE * ppm, MAX_TOQUE)
+
+## Estira los márgenes de arriba y abajo de los botones del tema hasta que midan `alto` con la letra por defecto.
+static func ampliar_toque(t: Theme, alto: float) -> void:
+	if alto <= 0.0:
+		return
+	var letra := float(t.default_font_size if t.default_font_size > 0 else 16)
+	var margen := maxf(0.0, (alto - letra * 1.25) * 0.5)
+	for clase: String in ["Button", "OptionButton", "MenuButton", "CheckBox", "CheckButton"]:
+		for estado: String in ["normal", "hover", "pressed", "disabled", "focus"]:
+			var sb := t.get_stylebox(estado, clase) if t.has_stylebox(estado, clase) else null
+			if sb is StyleBoxFlat:
+				var f := sb as StyleBoxFlat
+				f.content_margin_top = maxf(f.content_margin_top, margen)
+				f.content_margin_bottom = maxf(f.content_margin_bottom, margen)
+	for estado2: String in ["tab_selected", "tab_unselected", "tab_hovered"]:
+		var sb2 := t.get_stylebox(estado2, "TabContainer") if t.has_stylebox(estado2, "TabContainer") else null
+		if sb2 is StyleBoxFlat:
+			var g := sb2 as StyleBoxFlat
+			g.content_margin_top = maxf(g.content_margin_top, margen)
+			g.content_margin_bottom = maxf(g.content_margin_bottom, margen)
+
+## Red de seguridad: los botones con estilo propio (chips de asuntos, muestras de tema, ✕ de las tarjetas) no pasan por el tema; los que nacen después de llamar a `vigilar` se estiran a `alto_toque`.
+static func vigilar(arbol: SceneTree) -> void:
+	if arbol.root.has_meta("toque_vigilado") or alto_toque(arbol.root) <= 0.0:
+		return
+	arbol.root.set_meta("toque_vigilado", true)
+	arbol.node_added.connect(_nodo_nuevo)
+
+static func _nodo_nuevo(n: Node) -> void:
+	if n is BaseButton and n is Button:
+		var b := n as Button
+		var alto := alto_toque(b)
+		if alto > b.custom_minimum_size.y:
+			b.custom_minimum_size.y = alto

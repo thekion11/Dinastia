@@ -9,14 +9,7 @@ const BASE_PEQUENA := 15.0
 const MAX_FACTOR := 2.0
 
 ## Píxeles del lienzo por milímetro de pantalla (0 si no se sabe).
-static func px_por_mm(nodo: Node) -> float:
-	var dpi := ControlesTactiles.dpi()
-	var vent := ControlesTactiles.ventana()
-	var vp := nodo.get_viewport()
-	if dpi <= 0.0 or vent.y <= 0 or vp == null:
-		return 0.0
-	var lienzo := ControlesTactiles.lienzo_forzado if ControlesTactiles.lienzo_forzado.y > 0.0 else vp.get_visible_rect().size
-	return lienzo.y / float(vent.y) * dpi / 25.4
+static func px_por_mm(nodo: Node) -> float: return PantallaMovil.px_por_mm(nodo)
 
 ## ¿Hay controles táctiles en este partido?
 static func activo(nodo: Node) -> bool:
@@ -45,6 +38,5 @@ static func margen(nodo: Node) -> Vector2:
 	if c == null:
 		return Vector2.ZERO
 	var vp := nodo.get_viewport()
-	if vp != null:
-		c.size = vp.get_visible_rect().size if c.size.x <= 0.0 else c.size
-	return c.margenes()
+	## (4-11) Sin escribir `c.size`: el control tiene anclas opuestas y Godot avisaba de cada llamada; se le pasa el ancho del lienzo.
+	return c.margenes(vp.get_visible_rect().size.x if vp != null and c.size.x <= 0.0 else 0.0)

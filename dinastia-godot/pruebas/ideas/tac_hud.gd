@@ -9,15 +9,16 @@ var _pj: PartidoJugable
 var _ct: ControlesTactiles
 var _fallos := 0
 var _lejos := false
+var _q: Dictionary = {}
 const LIENZO := Vector2(1600, 720)
 const VENTANA := Vector2i(2400, 1080)
 
 func _ready() -> void:
 	PartidoJugable.con_ceremonia = false
 	ControlesTactiles.forzar = true
-	ControlesTactiles.dpi_forzado = 400.0
-	ControlesTactiles.ventana_forzada = VENTANA
-	ControlesTactiles.lienzo_forzado = LIENZO
+	PantallaMovil.dpi_forzado = 400.0
+	PantallaMovil.ventana_forzada = VENTANA
+	PantallaMovil.lienzo_forzado = LIENZO
 	AjustesTactil.restaurar()
 	CarreraJugadorUI.mundo = null
 	_ui = load("res://escenas/carrera_jugador.tscn").instantiate()
@@ -28,14 +29,20 @@ func _comprobar(ok: bool, texto: String) -> void:
 	if not ok:
 		_fallos += 1
 
+func _accion(nombre: String, pulsa: bool) -> void:
+	var e := InputEventAction.new()
+	e.action = nombre
+	e.pressed = pulsa
+	Input.parse_input_event(e)
+
 func _rect_de(c: Control) -> Rect2:
 	return Rect2(c.global_position, c.size * c.scale)
 
 func _fin() -> void:
 	ControlesTactiles.forzar = false
-	ControlesTactiles.dpi_forzado = 0.0
-	ControlesTactiles.ventana_forzada = Vector2i.ZERO
-	ControlesTactiles.lienzo_forzado = Vector2.ZERO
+	PantallaMovil.dpi_forzado = 0.0
+	PantallaMovil.ventana_forzada = Vector2i.ZERO
+	PantallaMovil.lienzo_forzado = Vector2.ZERO
 	AjustesTactil.restaurar()
 	print("===== FIN. %d fallos =====" % _fallos)
 	get_tree().quit(0 if _fallos == 0 else 1)
@@ -120,4 +127,50 @@ func _process(_d: float) -> void:
 		_comprobar(AjustesTactil.camara_cercana(true) and not AjustesTactil.camara_cercana(false), "«Automático»: cercana solo con controles táctiles")
 		AjustesTactil.poner_camara("si")
 		_comprobar(AjustesTactil.camara_cercana(false), "«Siempre»: cercana aunque no haya controles")
+	## PASE DIRIGIDO (mega auditoría 4): tocar a un compañero en la pantalla = el siguiente pase va a él, sea cual sea la dirección del stick.
+	if _n == 340:
+		var m3: MotorJugable = _pj.motor
+		var cam3: Camera3D = _pj._cam
+		_q = {}
+		for c: Dictionary in m3.jugadores:
+			if MotorPaseDirigido.valido(m3.usuario, c):
+				_q = c
+				break
+		var delante := -cam3.global_basis.z
+		delante.y = 0.0
+		var sitio := cam3.global_position + delante.normalized() * 14.0 + cam3.global_basis.x * 5.0
+		(_q["node"] as Node3D).position = Vector3(sitio.x, 0.0, sitio.z)
+		var en_pantalla := cam3.unproject_position(m3.pos(_q) + Vector3(0, 1.0, 0))
+		var hallado := PaseTactil.receptor_en(_pj, en_pantalla)
+		_comprobar(not hallado.is_empty() and String(hallado["id"]) == String(_q["id"]), "tocar sobre un compañero en la pantalla lo encuentra (%s)" % str(en_pantalla))
+		_comprobar(PaseTactil.receptor_en(_pj, en_pantalla + Vector2(600, 0)).get("id", "") != _q["id"], "un toque lejos de él no lo elige")
+		_comprobar(not MotorPaseDirigido.valido(m3.usuario, m3.usuario) and not MotorPaseDirigido.valido(m3.usuario, {}), "el propio jugador y «nadie» no son receptores válidos")
+		for r: Dictionary in m3.jugadores:
+			if bool(r["es_local"]) != bool(m3.usuario["es_local"]):
+				_comprobar(not MotorPaseDirigido.valido(m3.usuario, r), "un rival no es receptor válido")
+				break
+		## El toque real sobre los controles: tocar (sin deslizar) al compañero guarda la petición.
+		_ct._modo_mando = "ambos"
+		_ct._toca(40, en_pantalla)
+		_ct._suelta(40)
+		_comprobar(not m3.pase_dirigido.is_empty() and String(m3.pase_dirigido["id"]) == String(_q["id"]), "el toque en la zona libre sobre el compañero pide el pase dirigido a él")
+		m3.pase_dirigido = {}
+		MotorPaseDirigido.pedir(m3, _q)
+		_comprobar(String(MotorPaseDirigido.receptor(m3, m3.usuario, Vector3(0, 0, 1)).get("id", "")) == String(_q["id"]), "con la petición, el receptor es el tocado (dirección +Z)")
+		MotorPaseDirigido.pedir(m3, _q)
+		_comprobar(String(MotorPaseDirigido.receptor(m3, m3.usuario, Vector3(0, 0, -1)).get("id", "")) == String(_q["id"]), "…y también con la dirección contraria (-Z)")
+		MotorPaseDirigido.pedir(m3, _q)
+		m3._reanudar()   ## el partido espera el saque inicial: se pone en juego
+		(m3.usuario["node"] as Node3D).position = Vector3(m3.balon.position.x, 0.0, m3.balon.position.z)   ## el jugador junto al balón, que lleva él
+		m3._tomar(m3.usuario)
+		_accion("jugar_pase", true)   ## como un evento real: así el motor lo ve como «recién pulsado»
+	if _n == 350:
+		_accion("jugar_pase", false)
+		var m4: MotorJugable = _pj.motor
+		_comprobar(not m4.pase_a.is_empty() and String(m4.pase_a["id"]) == String(_q["id"]), "el pase del usuario fue al compañero tocado (pase_a = %s)" % String(m4.pase_a.get("id", "—")))
+		_comprobar(m4.pase_dirigido.is_empty(), "la petición se gasta con el pase")
+		MotorPaseDirigido.pedir(m4, _q)
+		m4.pase_dirigido_hasta = m4.t - 1.0
+		MotorPaseDirigido.receptor(m4, m4.usuario, Vector3(0, 0, 1))
+		_comprobar(m4.pase_dirigido.is_empty(), "una petición caducada se descarta y se usa la dirección de siempre")
 		_fin()

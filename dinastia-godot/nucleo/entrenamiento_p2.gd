@@ -31,7 +31,7 @@ func _sesion_general(j: Jugador, mult: float, ritmo: float, joven: float, res: D
 	## centro de entrenamiento y foco técnico. Todos son del HTML.
 	if j.edad < 24 and j.ovr < j.pot:
 		## `ProgresoJugador.freno()`: más lento con la edad y al acercarse al techo (antes, 0,10 plano).
-		var p := 0.10 * mult * ritmo * ProgresoJugador.freno(j) * freno_temporada(j)
+		var p := 0.13 * mult * ritmo * ProgresoJugador.freno(j) * freno_temporada(j)
 		if j.edad < 23:
 			p *= joven
 		if j.rasgo == "motor":
@@ -104,7 +104,7 @@ func _plan_por_dias(c: Club, carg: Dictionary, ritmo: float, res: Dictionary) ->
 		## El riesgo de romperse por acumulación NO se tira aquí: lo tira
 		## `Medico.chequeo_de_fatiga` con la carga que devuelve `carga_riesgo()`.
 		if j.edad < 24 and j.ovr < j.pot:
-			var p := float(carg["ovr"]) * 0.014 * ritmo * ProgresoJugador.freno(j) * freno_temporada(j)
+			var p := float(carg["ovr"]) * 0.018 * ritmo * ProgresoJugador.freno(j) * freno_temporada(j)
 			if j.rasgo == "motor":
 				p *= 1.5
 			if Azar.suerte(p):
@@ -113,11 +113,13 @@ func _plan_por_dias(c: Club, carg: Dictionary, ritmo: float, res: Dictionary) ->
 ## EL FRENO DE LA TEMPORADA (26-10, decisión del dueño): lo que gana un juvenil de tu plantel en un año,
 ## típico +4-6 y +8 excepcional con buen plan y minutos. Foco técnico, al límite y prioritario se
 ## multiplicaban (×3,4) y un chico de 17 llegaba a +13-15. Ahora cada punto de entrenamiento ganado esta
-## temporada (`_subidas`) por encima del umbral cuesta más: 3 sin minutos, 5 si ya jugó 12 partidos.
+## temporada (`_subidas`) por encima del umbral cuesta más: 4 sin minutos, 6 si ya jugó 12 partidos.
 func freno_temporada(j: Jugador) -> float:
-	var umbral := 5 if j.partidos >= 12 else 3
+	var umbral := 6 if j.partidos >= 12 else 4
 	var sobra := int(_subidas.get(j.id, 0)) - umbral
-	return 1.0 if sobra < 0 else clampf(0.6 - 0.2 * float(sobra), 0.08, 0.6)
+	if int(_subidas.get(j.id, 0)) >= TOPE_TEMPORADA:
+		return 0.0   ## TOPE DURO (4-11, orden del dueño «no más de +8»): +6 de entrenamiento y hasta +2 de la curva anual
+	return 1.0 if sobra < 0 else clampf(0.5 - 0.2 * float(sobra), 0.08, 0.5)
 
 func _hay_capitan(c: Club) -> bool:
 	for j in c.plantilla:
@@ -225,9 +227,10 @@ func procesar_ajeno(j: Jugador) -> void:
 	## La probabilidad la da `ProgresoJugador` (baja con la edad); antes un 0,10 plano hasta los 24.
 	var p := ProgresoJugador.prob_semanal(j)
 	if p > 0.0:
-		if Azar.suerte(p):
+		if freno_temporada(j) > 0.0 and Azar.suerte(p):
 			var antes := j.ovr
 			j.ajustar_media(1)
+			_subidas[j.id] = int(_subidas.get(j.id, 0)) + 1   ## cuenta para el tope de la temporada
 			if not j.atributos.is_empty():
 				var k := String(Azar.uno(j.atributos.keys()))
 				j.atributos[k] = clampi(int(j.atributos[k]) + Azar.ent(1, 2), 22, 99)

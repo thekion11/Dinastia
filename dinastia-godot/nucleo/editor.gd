@@ -154,7 +154,7 @@ func fijar_campo(j: Jugador, campo: String, valor: Variant) -> String:
 ## la media es un promedio ponderado.
 func _cuadrar_media(j: Jugador) -> void:
 	var objetivo := j.ovr
-	for intento in 6:
+	for intento in 40:   ## A4: 6 vueltas no bastaban junto al suelo de 20 (los atributos topan y la media baja menos que la diferencia)
 		var actual := j.media_en(j.pos_e)
 		var dif := objetivo - actual
 		if dif == 0:

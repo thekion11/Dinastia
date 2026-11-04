@@ -31,19 +31,9 @@ const ALTO_ARCO := 370.0                ## lo que sube el arco de botones desde 
 
 static var forzar := false             ## las pruebas lo encienden; en el teléfono sale solo
 static var zurdo := false              ## espejo forzado por las pruebas; el de verdad sale de Ajustes (`AjustesTactil.zurdo`)
-static var dpi_forzado := 0.0          ## las pruebas simulan los puntos por pulgada de un móvil (p. ej. 400); 0 = los del aparato
-
-static var ventana_forzada := Vector2i.ZERO   ## las pruebas simulan el tamaño de la ventana (p. ej. 2400×1080); 0 = el real
-static var lienzo_forzado := Vector2.ZERO    ## y el del lienzo del juego (con el escalado del proyecto, 2400×1080 son 1600×720); 0 = el real
-
-static func ventana() -> Vector2i:
-	return ventana_forzada if ventana_forzada.x > 0 else DisplayServer.window_get_size()
-
-## Puntos por pulgada de la pantalla: los forzados por una prueba o, en un móvil de verdad, los del aparato (0 = no se sabe / no es móvil).
-static func dpi() -> float:
-	if dpi_forzado > 0.0:
-		return dpi_forzado
-	return float(DisplayServer.screen_get_dpi()) if OS.has_feature("mobile") else 0.0
+## ppp, ventana y lienzo (y sus valores forzados por las pruebas) viven en `PantallaMovil` (A4, 4-11: el menú no debe arrastrar el partido).
+static func ventana() -> Vector2i: return PantallaMovil.ventana()
+static func dpi() -> float: return PantallaMovil.dpi()
 
 var _dedo_stick := -1
 var _centro_stick := Vector2.ZERO
@@ -165,7 +155,7 @@ func radio_stick() -> float:
 	return RADIO_STICK * escala()
 
 ## Márgenes por muescas y esquinas redondeadas: x = izquierda, y = derecha (en píxeles del lienzo). 0 fuera de un móvil.
-func margenes() -> Vector2:
+func margenes(ancho_lienzo := 0.0) -> Vector2:
 	if not OS.has_feature("mobile"):
 		return Vector2.ZERO
 	var vent := ventana()
@@ -173,7 +163,7 @@ func margenes() -> Vector2:
 	var pant := DisplayServer.screen_get_size()
 	if vent.x <= 0 or pant.x <= 0 or seg.size.x <= 0:
 		return Vector2.ZERO
-	var k := size.x / float(vent.x)
+	var k := (ancho_lienzo if ancho_lienzo > 0.0 else size.x) / float(vent.x)
 	return Vector2(maxf(0.0, float(seg.position.x)), maxf(0.0, float(pant.x - seg.position.x - seg.size.x))) * k
 
 ## Radio de un botón en este tamaño de pantalla.
@@ -243,8 +233,8 @@ func _toca(dedo: int, pos: Vector2) -> void:
 		_dedo_stick = dedo
 		_centro_stick = pos
 		_mueve_stick(pos)
-	elif _gestos():
-		_gesto[dedo] = {"tipo": "libre", "ini": pos}   ## zona libre de la derecha: tocar = pase, deslizar hacia arriba = tiro
+	elif _gestos() and not _en_zona_stick(pos):
+		_gesto[dedo] = {"tipo": "libre", "ini": pos}   ## (un segundo dedo en la zona del stick, con el stick ya en uso, no cuenta: antes daba pases al levantarlo)   ## zona libre de la derecha: tocar = pase, deslizar hacia arriba = tiro
 	queue_redraw()
 
 ## Un dedo que empezó un gesto se mueve: desde Tiro, rosca (Mod); desde Pase, pase largo.
@@ -299,6 +289,9 @@ func _fin_gesto(dedo: int) -> void:
 		"libre":
 			var d: Vector2 = (g["fin"] as Vector2 if g.has("fin") else g["ini"] as Vector2) - (g["ini"] as Vector2)
 			if d.length() < PX_DESLIZA * 0.5:
+				var q := PaseTactil.receptor_en(get_parent(), g["ini"] as Vector2)   ## tocar a un compañero = pase a él
+				if not q.is_empty():
+					MotorPaseDirigido.pedir(get_parent().get("motor"), q)
 				_pulsar("jugar_pase", 0.08)
 			elif d.y < -PX_DESLIZA * 0.6 and absf(d.y) >= absf(d.x) * 0.5:
 				_pulsar("jugar_tiro", clampf(d.length() / 500.0, 0.2, 0.7))
