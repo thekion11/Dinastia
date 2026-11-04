@@ -83,7 +83,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 					_penal_en_juego(p, cruce)
 					return true
 				## Alcance: hasta ~3 m con un gran portero, menos con menos tiempo; a la escuadra cuesta más.
-				var alcance: float = (1.1 + float(p["attr"]["div"]) * 2.0 + float(p["attr"]["ref"]) * 0.8) * clampf((tz - 0.1) * 2.4, 0.3, 1.0)
+				var alcance: float = (1.1 + float(p["attr"]["div"]) * 2.0 + float(p["attr"]["ref"]) * 0.8) * clampf((tz - 0.1) * 2.4, MotorParada.SUELO, 1.0)
 				if cruce.y > 1.8:
 					alcance *= 0.85
 				## El alcance se mide donde está ÉL (adelantado tapa más ángulo), no en la línea de gol.
