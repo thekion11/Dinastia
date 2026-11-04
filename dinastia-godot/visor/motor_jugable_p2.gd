@@ -396,6 +396,8 @@ func reemplazar(sale_id: String, entra: Dictionary) -> bool:
 
 ## La roja: sale del campo y el equipo sigue con uno menos.
 func _expulsar(p: Dictionary) -> void:
+	if expulsados.has(p):
+		return   ## ya salió (caza de fallos 4-11: la lista y el tiempo añadido contaban dos veces)
 	_sumar_anadido(0.5)
 	jugadores.erase(p)
 	expulsados.append(p)
