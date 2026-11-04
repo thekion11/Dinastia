@@ -4,34 +4,24 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
-## PLAN DEL DUEÑO TRAS LA PAUSA (4-11, conversación) — se borra al completarse
-1. Dejar TODO en `main` y bien (lo único trabajando: la sesión del táctil del partido; el líder la ayuda si puede).
-2. MEGA AUDITORÍA profunda nueva, dirigida por el líder con ayuda de todas las sesiones, con ~5 REPASOS.
-3. Después, y SIN PARAR hasta nueva orden del dueño, todas las sesiones SOLO a detectar y ARREGLAR fallos: bugs, cuelgues (crasheos),
-   reglas del proyecto que se incumplan, cosas que no se repiten igual, fallos de todo tipo. Recorrer todo el juego, todo el mapa, todo el
-   código, llevándolo al límite (pruebas de estrés, entradas absurdas, partidas largas). El líder controla a todas y se activa cada 20 min.
+## ESTADO AL CIERRE DEL 4-11 TARDE (orden 32 del dueño) — para retomar
+- Caza de fallos (orden 31) CERRADA por el dueño. Mega auditoría 4 hecha (5 repasos) y sus hallazgos en `docs/04_auditorias/MEGA_AUDITORIA_4/`
+  (gestión, partido, interfaz, mundo 3D, móvil, rendimiento). Todo en `main` por los PR #169, #181 y #182.
+- Las 4 sesiones (PES 6, ejecutora, ciudad, «Búsqueda de fallos») ARCHIVADAS; revisiones automáticas del líder APAGADAS.
+- Decisiones del dueño aplicadas: bonos del humano también al simular (sin cambio), más butacas solo en ALTA, MSAA fuera en MÍNIMA,
+  partido simulado recalibrado (≈24 remates, 8,3 a puerta, 11,7 % de conversión, ≈2,7 goles; goleadas entre divisiones saturadas),
+  comercios de 8:00 a 20:00, entorno del estadio tapado también en MEDIA y el agregado «Partido ligero» en Ajustes (apagado por defecto).
+- Lo que espera al DUEÑO (lo más importante): probar en su teléfono el APK de `main` (Actions → «Compilar y probar Dinastia» → android) y
+  pasar el informe de Ajustes → «Prueba de rendimiento»; con eso se ataca la GPU del partido en el aparato real. Luego, jugar y decir
+  qué se siente mal del partido (orden 23).
+- Recomendación del líder (4-11, a petición del dueño): menos sesiones en paralelo (2 enfocadas), caza de fallos en segundo plano.
+- Pendientes anotados: cartel/puerta 3D de «cerrado» en los comercios (hoy solo aviso en pantalla); POR_TICK de los carteles 3D perezosos;
+  ~670 MB antes de la ciudad (cargar principal.tscn +195 MB, mundo+interfaz +168 MB); muesca/área segura y tiempos en el teléfono real.
 
-## ESTADO AL CIERRE DEL 4-11 (pausa del dueño, ~04:30 UTC) — para retomar
-- `main` = todo hasta el PR #120 (b921e7fd) + el PR de cierre desde `claude/dazzling-rubin-v7rfyi` (lo de después: actualizador dentro del juego,
-  bancos de interfaz y arreglo del mando, controles táctiles combinados de PES 6, pasadas visuales 1-3, arreglo del banco guardado, registro de fallos).
-- Sesiones EN PAUSA (no retoman solas): PES 6 (siguiente: etiquetas táctiles por contexto y HUD legible a 1080×2400), ciudad (siguiente: rellenar
-  el centro de las parcelas industriales y posición propia de la toma a pie de la plaza), ejecutora (pulido de idiomas y texto al 160 %, ver su PR),
-  «Búsqueda de fallos» (rondas apagadas cuando el dueño lo confirme en esa sesión).
-- Revisiones automáticas del líder APAGADAS (cadena de 20 min y respaldo horario).
-- Lo que espera al DUEÑO: (1) probar en el teléfono el APK de `main` (Actions → «Compilar y probar Dinastia» → android) y pasar el informe de
-  Ajustes → «Prueba de rendimiento» (barrido del estadio al 35/50/70/100 %) para ajustar MÍNIMA a 60 FPS; (2) nota 1-100 a las pasadas visuales
-  de la ciudad 1-3 (`04_auditorias/pasada_ciudad_{1,2,3}_2026-11-04.md`); (3) matas de hierba del Drive en el césped de las casas: ¿más juntas o
-  así?; (5) publicar parches: Release llamada
-  `parche-<versión>-<escritorio|android>` con el `parche_<versión>.pck` que genera «Actualizar Dinastia (parche)».
-  (6) **DECISIÓN R01 — MSAA en MÍNIMA** (A4-PARTIDO-R01): apagar el suavizado de bordes (MSAA x2) fue lo único que movió el fotograma del partido 3D en
-  el contenedor (llvmpipe, escena congelada: 182 → 86 ms, −53 %; nada más del HUD, luces, niebla ni tonos salía del ruido), pero quita algo visible
-  (escalones en líneas lejanas del campo y en la grada). La «Prueba de rendimiento» de Ajustes ahora mide CADA escala (35/50/70/100 %) CON y SIN
-  MSAA y cierra el informe con «MSAA a N %: con X FPS · sin Y FPS · apagarlo gana Z %»: el informe de TU teléfono dirá cuánto cuesta allí; con esos
-  números se decide (MÍNIMA sin MSAA, o un ajuste «Suavizado de bordes»).
-  (8) **DECISIÓN — grada del estadio propio** (sesión ciudad, 4-11): las butacas visibles se saturan: aforo 5 700 → 2 135, 18 700 → 2 688 y desde ~30 000 siempre 2 912 (techo de instancias + llenado 50-100 %). Que la grada crezca más con el aforo exige subir ese techo (coste de rendimiento en el móvil): ¿se sube?
-- Fallos abiertos: ver `docs/04_auditorias/MEGA_AUDITORIA_4/reglas_y_codigo.md` (A4-REGLAS-001 y 005 esperan decisión del dueño).
-
-
+- Otros pendientes del DUEÑO (siguen): nota 1-100 a las pasadas visuales de la ciudad 1-3 (`04_auditorias/pasada_ciudad_{1,2,3}_2026-11-04.md`);
+  matas de hierba del Drive en el césped de las casas (¿más juntas o así?); publicar parches (Release `parche-<versión>-<escritorio|android>`
+  con el `parche_<versión>.pck` de «Actualizar Dinastia (parche)»). Fallos abiertos que esperan decisión: `MEGA_AUDITORIA_4/reglas_y_codigo.md`
+  (A4-REGLAS-001 y 005).
 - (2-11) SIGUIENTE PASO DE CARGA (meta del dueño: ≤5 s en móvil): hecha la carga diferida (hasta ver la ciudad 7,2→3,5 s; ciudad entera 5,7→1,5 s en servidor). Falta: STREAMING POR CERCANÍA en móvil (idea del dueño: no construir los bloques lejanos hasta acercarse; PRIMEROS menor y límite de vista), diferir túnel/sombra del estadio (~1,3 s) y que el .so de Android llegue a `bin_nativo/` (dueño/CI, M-353).
 
 ## CIERRE DEL 2-11 (revisiones que faltan y ramas viejas)
