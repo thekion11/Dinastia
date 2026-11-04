@@ -36,3 +36,8 @@ caja −250 M, todos lesionados y sancionados, club con 48 jugadores y otro vac�
 - Sin hallazgos: integridad del mundo en 8 temporadas (un club por jugador, club_id, libres, contratos, sueldos, edades, medias, cajas,
   planteles, ligas y divisiones); caja a −250 M seis semanas; club con todos lesionados y sancionados (saca 11); club con 48 jugadores y
   otro vacío; año 2099.
+
+### Repaso 5, segunda tanda (cesiones y ventas al límite)
+Sonda `pruebas/ideas/a4_gestion_cesiones.tscn` (en `especiales.sh`): 2 semillas, cesiones simples/con opción/con obligación de todo el plantel + 110 semanas + `resolver`; y ventas con monto 0, negativo, 10¹², 0/50/100 % y −20 % de futura venta, a sí mismo. 0 fallos: nadie en dos plantillas ni perdido, ninguna cesión queda viva, el plantel no baja de 18.
+
+- [A4-GESTION-002] (repaso 5, gravedad: bajo) `Cesiones.vender` no comprueba que el comprador tenga dinero ni que `monto` sea positivo: con comprador a 0 y monto 10¹² el comprador queda en −10¹² (y con monto negativo el vendedor paga). Cómo reproducirlo: `a4_gestion_cesiones` (caso `[999999999999, 0]`). `nucleo/cesiones_p2.gd:228`. Los llamadores reales (`mercado_p1.gd:402`, `insolvencia.gd:102`) sí filtran por saldo, salvo que la oferta recibida (`ofertas_recibidas`) se acepta DESPUÉS de crearse y el comprador pudo gastar entretanto. Estado: abierto (riesgo bajo; no se toca por si alguien depende de ello; si el líder quiere, un `monto = maxi(monto, 0)` y comprobar saldo al aceptar la oferta).
