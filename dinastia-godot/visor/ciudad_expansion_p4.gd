@@ -231,16 +231,9 @@ func _rotulo_comercio(frente: Vector3, giro: float, ancho: float) -> void:
 	var centro := frente + Vector3(0, 4.1, 0)
 	var placa := b._caja_en(centro, Vector3(minf(ancho * 0.8, 7.0), 0.9, 0.18), b._mat_simple(col, 0.5, 0.25))
 	placa.rotation.y = giro
-	var l := Label3D.new()
-	l.text = Idiomas.t(String(com[0]))   ## M-333 (en `rotulos` queda el castellano: con él se elige la sala)
-	l.font_size = 48
-	l.pixel_size = 0.012
-	l.outline_size = 8
-	l.outline_modulate = col.darkened(0.6)
-	l.position = centro + basis * Vector3(0, 0, 0.12)
-	l.rotation.y = giro
-	l.visibility_range_end = 110.0
-	b.add_child(l)
+	## M-333 (en `rotulos` queda el castellano: con él se elige la sala). A4-REND-004: el nodo solo existe cerca de la cámara.
+	RotulosPerezosos.de(b).anadir({"texto": String(com[0]), "traducir": true, "pos": centro + basis * Vector3(0, 0, 0.12), "giro": giro, "rango": 110.0,
+			"font_size": 48, "pixel_size": 0.012, "outline_size": 8, "borde": col.darkened(0.6)})
 	if String(com[0]).contains("Farmacia"):
 		var cruz := b._mat_simple(Color(0.2, 1.0, 0.4), 0.4, 2.0)
 		var pc := frente + basis * Vector3(minf(ancho * 0.4, 3.5) + 0.6, 0, 0.5) + Vector3(0, 5.2, 0)

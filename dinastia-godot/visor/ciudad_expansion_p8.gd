@@ -357,18 +357,9 @@ func _placas_de_calle() -> void:
 			var centro := esquina + Vector3(0, alto, 0) + (Vector3(-1.2 * sx, 0, 0) if cual == 0 else Vector3(0, 0, -1.2))
 			placas.append(Transform3D(Basis(Vector3.UP, giro) * Basis.from_scale(Vector3(2.4, 0.46, 0.05)), centro))
 			for cara: float in [1.0, -1.0]:
-				var l := Label3D.new()
-				l.text = texto
-				l.font_size = 34
-				l.pixel_size = 0.0055
-				l.modulate = Color.WHITE
-				l.outline_size = 0
-				l.width = 420.0
-				l.autowrap_mode = TextServer.AUTOWRAP_OFF
-				l.position = centro + Basis(Vector3.UP, giro) * Vector3(0, 0, 0.035 * cara)
-				l.rotation.y = giro + (0.0 if cara > 0.0 else PI)
-				l.visibility_range_end = 70.0
-				b.add_child(l)
+				RotulosPerezosos.de(b).anadir({"texto": texto, "pos": centro + Basis(Vector3.UP, giro) * Vector3(0, 0, 0.035 * cara),
+						"giro": giro + (0.0 if cara > 0.0 else PI), "rango": 70.0, "font_size": 34, "pixel_size": 0.0055,
+						"outline_size": 0, "modulate": Color.WHITE, "ancho": 420.0})   ## A4-REND-004: solo existen cerca de la cámara
 				cuantas += 1
 	_multimesh(CylinderMesh.new(), b._mat_simple(Color(0.25, 0.27, 0.3), 0.5), postes, Vector3(1, 0.5, 1))
 	var azul := b._mat_simple(Color(0.08, 0.22, 0.55), 0.4)
