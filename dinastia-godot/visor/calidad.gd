@@ -255,9 +255,9 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 # ------------------------------------------------------------------ viewport
 
 ## ¿Renderizador de compatibilidad (OpenGL: móvil, web, capturas)?
-## (4-11) MSAA de las vistas 3D SECUNDARIAS (retratos, casa, rueda de prensa, sorteo…): en MÍNIMO nunca más de x2.
+## (4-11) MSAA de las vistas 3D SECUNDARIAS (retratos, casa, rueda de prensa, sorteo…): en MÍNIMO apagado (decisión del dueño, A4-PARTIDO-R01: igual que el partido).
 static func msaa_ui(m: int) -> int:
-	return Viewport.MSAA_2X if elegida <= MINIMO and m > Viewport.MSAA_2X else m
+	return Viewport.MSAA_DISABLED if elegida <= MINIMO else m
 
 static func es_compatibilidad() -> bool:
 	return RenderingServer.get_current_rendering_method() == "gl_compatibility"
@@ -288,9 +288,10 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 		if avanzado:
 			vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 	else:
-		## MÍNIMO también lleva MSAA x2: sin él, a 70 % de resolución, las líneas finas del campo lejanas salían
-		## entrecortadas (visto en la captura del 2-11). En las gráficas de móvil (por teselas) x2 cuesta poco.
-		vp.msaa_3d = Viewport.MSAA_2X
+		## MÍNIMO SIN MSAA (4-11-2026, A4-PARTIDO-R01, decisión del dueño): lo medido con la cámara de TV en llvmpipe a 1280x720 (limitada por relleno, como una GPU de móvil)
+		## dice que el MSAA x2 es lo más caro del partido con diferencia (el fotograma baja ~77 % al apagarlo); el dueño tiene 5 FPS con la GPU al 100 % en su teléfono.
+		## Coste visual: bordes más dentados (las líneas finas del campo lejanas); MEDIO y superiores siguen igual.
+		vp.msaa_3d = Viewport.MSAA_DISABLED if nivel <= MINIMO else Viewport.MSAA_2X
 	if sin_msaa:
 		vp.msaa_3d = Viewport.MSAA_DISABLED
 	## Por debajo de 100 % en Forward+/Mobile, FSR (más nítido que el bilineal); en Compatibilidad no existe y queda el bilineal.
