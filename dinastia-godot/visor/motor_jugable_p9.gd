@@ -296,7 +296,7 @@ func _control_pases(p: Dictionary, d: float, mundo: Vector3, lb: bool, rb: bool,
 			## buscar compañero; el que esté cerca corre a por él.
 			_pase_manual(p, dir_mira, 16.0 if rb else 12.0, false)
 		else:
-			var q := _companero_en_direccion(p, dir_mira)
+			var q := MotorPaseDirigido.receptor(self as Object as MotorJugable, p, dir_mira)   ## el que tocaste en la pantalla (táctil) o el de la dirección
 			if not q.is_empty():
 				_pasar_a(p, q, false, false, rb)
 				if lb:

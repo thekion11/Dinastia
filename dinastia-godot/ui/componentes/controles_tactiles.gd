@@ -299,6 +299,9 @@ func _fin_gesto(dedo: int) -> void:
 		"libre":
 			var d: Vector2 = (g["fin"] as Vector2 if g.has("fin") else g["ini"] as Vector2) - (g["ini"] as Vector2)
 			if d.length() < PX_DESLIZA * 0.5:
+				var q := PaseTactil.receptor_en(get_parent(), g["ini"] as Vector2)   ## tocar a un compañero = pase a él
+				if not q.is_empty():
+					MotorPaseDirigido.pedir(get_parent().get("motor"), q)
 				_pulsar("jugar_pase", 0.08)
 			elif d.y < -PX_DESLIZA * 0.6 and absf(d.y) >= absf(d.x) * 0.5:
 				_pulsar("jugar_tiro", clampf(d.length() / 500.0, 0.2, 0.7))
