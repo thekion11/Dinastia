@@ -198,8 +198,9 @@ static func preparar(estado: Dictionary) -> Dictionary:
 			return {"escena": PRINCIPAL, "mundo": guardado}
 		modo = "dt"
 	if modo == "carrera-m":
-		CarreraJugadorUI.mundo = null
-		CarreraJugadorUI.nombre_pedido = nombre_dt(estado)
+		var cj: GDScript = load("res://ui/carrera_jugador_ui.gd")   ## (A4 memoria) por ruta
+		cj.mundo = null
+		cj.nombre_pedido = nombre_dt(estado)
 		return {"escena": CARRERA_JUGADOR, "mundo": null}
 	var m: Mundo = estado.get("mundo") if estado.get("mundo") is Mundo else generar_mundo()
 	PedidoPartida.tutorial_pedido = modo == "tutorial"

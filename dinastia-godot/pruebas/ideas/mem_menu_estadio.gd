@@ -13,7 +13,10 @@ const GORDOS := ["res://ui/estadio.gd", "res://visor/stadium_builder.gd", "res:/
 	## A4 (4-11, memoria antes de la ciudad): pantallas de gestión que no pinta el menú al arrancar y pantallas modales que solo salen en un evento.
 	"res://ui/pantallas/pantalla_plantel.gd", "res://ui/pantallas/pantalla_ficha.gd", "res://ui/pantallas/pantalla_opciones.gd",
 	"res://ui/componentes/escena_despido.gd", "res://ui/componentes/presentacion_fichaje.gd", "res://ui/componentes/documental_temporada.gd",
-	"res://ui/componentes/mesa_agente_ui.gd", "res://ui/sorteo.gd", "res://ui/sorteo_escena3d.gd", "res://visor/celebracion_trofeo.gd", "res://visor/pc_oficina.gd"]
+	"res://ui/componentes/mesa_agente_ui.gd", "res://ui/sorteo.gd", "res://ui/sorteo_escena3d.gd", "res://visor/celebracion_trofeo.gd", "res://visor/pc_oficina.gd",
+	## A4 (2.º corte): secciones de Legado y de la ficha que solo se pintan al abrirlas, la competición completa y la carrera de jugador.
+	"res://ui/competiciones/vitrina_trofeos.gd", "res://ui/componentes/panel_vida.gd", "res://ui/componentes/arbol_habilidades.gd", "res://ui/componentes/panel_maestrias.gd",
+	"res://ui/competicion.gd", "res://ui/componentes/ficha_porque.gd", "res://ui/componentes/grafico_evolucion.gd", "res://ui/mapa_pais.gd", "res://ui/carrera_jugador_ui.gd"]
 
 func _probar() -> void:
 	_titulo("EL MENÚ NO CARGA EL ESTADIO NI EL PARTIDO 3D")
