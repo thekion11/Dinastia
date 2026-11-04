@@ -196,7 +196,49 @@ func _grupos() -> void:
 		await _grupos_nombre(ciudad, base)
 
 ## GRUPOS=2 (3-11): lo mismo por NOMBRE (nodo o, si no tiene nombre propio, su padre): cuántas llamadas quita ocultar cada grupo de mallas/multimallas.
+func _llamadas() -> float:
+	for i in 3:
+		await get_tree().process_frame
+	return Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
+
 func _grupos_nombre(ciudad: Node, base: Vector2) -> void:
+	if OS.get_environment("ESCENAS") != "":
+		var ce := {}
+		for h in ciudad.get_children():
+			if h.get_class() == "Node3D" and String(h.name).begins_with("@"):
+				var m := ""
+				for g in h.find_children("*", "MeshInstance3D", true, false).slice(0, 1):
+					m = String(g.name) + "/" + String((g as MeshInstance3D).mesh.get_class())
+				var k := "%s | grupos=%s | script=%s | hijos=%d | %s" % [h.scene_file_path.get_file(), str(h.get_groups()), str(h.get_script() != null), h.get_child_count(), m]
+				ce[k] = int(ce.get(k, 0)) + 1
+		var kc := ce.keys()
+		kc.sort_custom(func(a, b): return ce[a] > ce[b])
+		for k in kc.slice(0, 25):
+			print("ESCENAS %4d  %s" % [ce[k], k])
+	if OS.get_environment("HIJOS") != "":
+		var raiz := ciudad if OS.get_environment("HIJOS") == "." else ciudad.find_child(OS.get_environment("HIJOS"), true, false)
+		if raiz != null:
+			var gr := {}
+			for h in raiz.get_children():
+				if h is Node3D and (h as Node3D).visible and not (h.get_class() == "Node3D" and h.get_child_count() == 0) and (OS.get_environment("NOMBRADOS") == "" or (h.get_class() == "Node3D" and not String(h.name).begins_with("@"))):
+					var kk := "%s:%s" % [h.get_class(), String(h.name).rstrip("0123456789@_").lstrip("@")]
+					if kk == "Node3D:Node3D":
+						kk = "Node3D:%s%s h=%d" % [h.scene_file_path.get_file() if h.scene_file_path != "" else String(h.name), str(h.get_groups()), mini(h.get_child_count(), 1)]
+					if not gr.has(kk):
+						gr[kk] = []
+					gr[kk].append(h)
+			var kg := gr.keys()
+			kg.sort_custom(func(a, b): return gr[a].size() > gr[b].size())
+			for kk in kg.slice(0, 40):
+				var antes: float = await _llamadas()
+				for h in gr[kk]:
+					(h as Node3D).visible = false
+				var m0: float = await _llamadas()
+				print("HIJOS %-44s %5d nodos  -%d llamadas" % [kk, gr[kk].size(), antes - m0])
+				for h in gr[kk]:
+					(h as Node3D).visible = true
+				for i in 2:
+					await get_tree().process_frame
 	if OS.get_environment("RUTAS") != "":
 		var cam := get_viewport().get_camera_3d()
 		var hist := {}
@@ -237,13 +279,12 @@ func _grupos_nombre(ciudad: Node, base: Vector2) -> void:
 	ks.sort_custom(func(a, b): return por[a].size() > por[b].size())
 	for k in ks.slice(0, 30):
 		var lista: Array = por[k]
+		var antes: float = await _llamadas()
 		for n in lista:
 			if is_instance_valid(n):
 				(n as Node3D).visible = false
-		for i in 3:
-			await get_tree().process_frame
-		var m := Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME), Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
-		print("GRUPOS2 %-34s %5d nodos  -%d llamadas  -%d tris" % [k, lista.size(), base.x - m.x, base.y - m.y])
+		var despues: float = await _llamadas()
+		print("GRUPOS2 %-34s %5d nodos  -%d llamadas" % [k, lista.size(), antes - despues])
 		for n in lista:
 			if is_instance_valid(n):
 				(n as Node3D).visible = true

@@ -73,7 +73,7 @@ func _fila_urbana(calle: Vector3, dir: Vector3, afuera: Vector3, medio_largo: fl
 		## encima de la fachada como en cualquier centro.
 		if not bloques.is_empty() and rng.randf() < 0.8:
 			var b: Node3D = bloques[rng.randi() % bloques.size()].instantiate()
-			vestir_torre(b, int(b.get_instance_id()))
+			vestir_torre(b, _siguiente_torre())
 			if rng.randf() < 0.45:
 				tenir(b, rng.randi())
 			var sb: float = 6.0 * rng.randf_range(0.9, 1.2)
