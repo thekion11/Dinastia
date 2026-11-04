@@ -96,6 +96,7 @@ func _rejilla_ajustes() -> GridContainer:
 	g.columns = 4
 	g.add_theme_constant_override("h_separation", 8)
 	g.add_theme_constant_override("v_separation", 3)
+	CebraRejilla.poner(g)
 	add_child(g)
 	return g
 

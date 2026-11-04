@@ -334,6 +334,9 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 		if n_guardadas.has(k):
 			m.normas[k] = bool(n_guardadas[k])
 	_restaurar_lo_tuyo(datos, m)
+	## (4-11, banco de guardado) `tomar_el_mando` (dentro de `_restaurar_lo_tuyo`) vuelve a sembrar las citas de la semana:
+	## sin esto, cada carga añadía citas repetidas y movía su contador. Las guardadas mandan.
+	m.citas.desde_dic(datos.get("citas", {}))
 	## La Carrera de Jugador va aparte: no tiene club de entrenador, y
 	## `_restaurar_lo_tuyo()` sale en seco sin él.
 	var cj: Dictionary = datos.get("carrera_jugador", {})
