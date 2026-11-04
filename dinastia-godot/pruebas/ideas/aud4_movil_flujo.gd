@@ -29,8 +29,8 @@ func _probar() -> void:
 	_respaldar_user()
 	get_window().size = Vector2i(2400, 1080)
 	get_window().content_scale_factor = EscalaMovil.ZOOM_MOVIL
-	ControlesTactiles.dpi_forzado = 400.0
-	ControlesTactiles.ventana_forzada = Vector2i(2400, 1080)
+	PantallaMovil.dpi_forzado = 400.0
+	PantallaMovil.ventana_forzada = Vector2i(2400, 1080)
 	var m := _mundo(20261104)
 	PedidoPartida.mundo_pregenerado = m
 	_p = load("res://escenas/principal.tscn").instantiate()
@@ -81,7 +81,7 @@ func _probar() -> void:
 	_comprobar(mal.is_empty(), "todos los submenús abren en el móvil %s" % str(mal.slice(0, 5)))
 	_comprobar(fm.is_empty(), "sin botones bajos ni listas bloqueadas en los menús: %d %s" % [fm.size(), str(fm.slice(0, 4))])
 	Partida.borrar("aud4_movil")
-	ControlesTactiles.dpi_forzado = 0.0
-	ControlesTactiles.ventana_forzada = Vector2i.ZERO
+	PantallaMovil.dpi_forzado = 0.0
+	PantallaMovil.ventana_forzada = Vector2i.ZERO
 	get_window().content_scale_factor = 1.0
 	_restaurar_user()
