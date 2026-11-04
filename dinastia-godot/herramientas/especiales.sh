@@ -173,6 +173,7 @@ pasa "p6_alcance_e" "godot --headless --path . res://pruebas/ideas/p6_alcance_e.
 pasa "p6_resolucion3d" "godot --headless --path . res://pruebas/ideas/p6_resolucion3d.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_recorrido_mapa" "godot --headless --path . res://pruebas/ideas/a4_recorrido_mapa.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_peatones_limite" "godot --headless --path . res://pruebas/ideas/a4_peatones_limite.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_interiores_limite" "godot --headless --path . res://pruebas/ideas/a4_interiores_limite.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_cruzado" "godot --headless --path . res://pruebas/ideas/a4_gestion_cruzado.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_cesiones" "godot --headless --path . res://pruebas/ideas/a4_gestion_cesiones.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_mercado_fed" "godot --headless --path . res://pruebas/ideas/a4_gestion_mercado_fed.tscn" "(^|[^0-9])0 fallos"
