@@ -322,10 +322,16 @@ static var motor_ligero := false
 static func cargar() -> void:
 	var cf := ConfigFile.new()
 	if cf.load(ARCHIVO) != OK:
+		var antes := elegida
 		CalidadAuto.aplicar_si_primera_vez()   ## primera vez: perfil según el hardware
+		if elegida != antes and OS.get_environment("PREF_IDIOMA_DIAG") != "":
+			print("PREF_PISA_CALIDAD_AUTO ", antes, " -> ", elegida)
 		return
 	if cf.has_section_key("grafica", "calidad"):
-		elegida = clampi(int(cf.get_value("grafica", "calidad")), MINIMO, ULTRA)
+		var guardada := clampi(int(cf.get_value("grafica", "calidad")), MINIMO, ULTRA)
+		if guardada != elegida and OS.get_environment("PREF_IDIOMA_DIAG") != "":
+			print("PREF_PISA_CALIDAD ", elegida, " -> ", guardada)   ## diagnóstico de pruebas (A4): el guardado manda sobre la calidad puesta antes
+		elegida = guardada
 	if cf.has_section_key("grafica", "adaptativa"):
 		adaptativa = bool(cf.get_value("grafica", "adaptativa"))
 	if cf.has_section_key("grafica", "motor_ligero"):
