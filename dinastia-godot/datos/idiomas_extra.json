@@ -20217,6 +20217,17 @@
    "No s'ha pogut organitzar: no hi ha club.",
    "Nie udało się zorganizować: brak klubu.",
    "Düzenlenemedi: kulüp yok."
+  ],
+  [
+   "^La federación convoca sobre: (.+)\\.$",
+   "The federation is calling a vote on: $1.",
+   "A federação convoca uma votação sobre: $1.",
+   "La fédération convoque un vote sur : $1.",
+   "La federazione convoca una votazione su: $1.",
+   "Der Verband beruft eine Abstimmung ein über: $1.",
+   "La federació convoca una votació sobre: $1.",
+   "Federacja zwołuje głosowanie w sprawie: $1.",
+   "Federasyon şu konuda oylama çağrısı yapıyor: $1."
   ]
  ],
  "fr": {

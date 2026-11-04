@@ -245,7 +245,7 @@ const PALABRAS_ES := ["que", "se", "tu", "tus", "con", "para", "por", "del", "la
 
 ## Palabras de la lista que SON también del idioma de destino (en portugués «que», «se», «para», «por» y «tu» son suyas; «del», «una» y «tu» son catalanas): se quitan
 ## de la cuenta en ese idioma, o una frase ya traducida (que vuelve a pasar por `Idiomas.t` y queda igual) parecería castellano (4-11-2026).
-const COMPARTIDAS := {"pt": ["que", "se", "para", "por", "tu", "tus"], "ca": ["que", "se", "tu", "del", "una"], "it": ["se", "tu", "con", "una", "del"],
+const COMPARTIDAS := {"pt": ["que", "se", "para", "por", "tu", "tus", "semanas"], "ca": ["que", "se", "tu", "del", "una"], "it": ["se", "tu", "con", "una", "del"],
 	"fr": ["que", "se", "tu"]}
 
 func _castellano() -> void:

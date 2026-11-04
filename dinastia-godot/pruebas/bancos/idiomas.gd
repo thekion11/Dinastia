@@ -7,9 +7,9 @@ extends BaseIdea
 const LANGS := ["en", "pt", "fr", "it", "de", "ca", "pl", "tr"]
 const MARCADOR := "%[-+0#]*\\d*(?:\\.\\d+)?[sdfxXc%]"
 const ETIQUETA := "\\[/?[a-z_]+(?:=[^\\]]*)?\\]"
-## Frases que la heurística del recorrido toma por castellano sin traducir (la mayoría son aciertos falsos: nombres de columnas de un CSV, «menus», cognados). Son
-## topes de regresión por idioma, medidos el 4-11-2026: en, de y tr limpios (tope 2: alguna frase dinámica sale según el azar de la partida); en pt, ca, fr, it y pl hay que revisarlas a mano (`RECORRIDO_FALTAN=<ruta>`).
-const TOPE_CASTELLANO := {"en": 2, "de": 2, "tr": 2, "pt": 30, "ca": 20, "fr": 15, "it": 8, "pl": 3}
+## Frases que el recorrido da por castellano sin traducir (el detector ya descuenta las palabras compartidas con pt/ca/it/fr, `COMPARTIDAS` en recorrido_pantallas.gd). Medido el 4-11-2026: 0-1 por idioma;
+## el tope 3 deja margen a las frases que salen según el azar de la partida (eventos, noticias).
+const TOPE_CASTELLANO := {"en": 3, "de": 3, "tr": 3, "pt": 3, "ca": 3, "fr": 3, "it": 3, "pl": 3}
 var _d: Dictionary = {}
 var _re_marca: RegEx
 var _re_tag: RegEx
