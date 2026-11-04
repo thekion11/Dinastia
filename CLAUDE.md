@@ -126,3 +126,8 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 29. (4-11 madrugada) PAUSA ordenada por el dueño: todas las sesiones terminaron su bloque, se unió todo y se apagaron las revisiones
     automáticas (cadena de 20 min y respaldo horario). Para retomar: «ESTADO AL CIERRE DEL 4-11» arriba de `PLAN_GENERAL.md`.
 30. (4-11) REGLA DEL DUEÑO: al dueño se le habla SOLO en español, siempre (todas las sesiones, también en avisos y resúmenes).
+31. (4-11) MODO CAZA DE FALLOS (orden del dueño, hasta nueva orden): todo a `main`; MEGA AUDITORÍA 4 con 5 repasos (líder + todas las
+    sesiones, `docs/04_auditorias/MEGA_AUDITORIA_4/`); después TODAS las sesiones solo detectan y ARREGLAN fallos (bugs, cuelgues, lo que
+    no se repite igual, reglas del proyecto incumplidas), llevando el juego al límite, sin parar; el líder las controla cada 20 min.
+    Se arreglan SOLO bugs claros; lo que cambie cómo se juega (balance, partido) se anota y se pregunta al dueño, y mientras no
+    responde se sigue buscando otros fallos.
