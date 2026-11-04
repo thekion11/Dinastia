@@ -29,7 +29,7 @@ func _foto(n: String) -> void:
 ## Aérea: 55 m de alto y 75 de retranqueo; a pie: a 1,7 m desde el borde de la manzana mirando a su centro.
 func _zona(nombre: String, centro: Vector3, fuera := Vector3(0, 0, -1)) -> void:
 	_cola.append([nombre + "_aerea", centro + fuera.normalized() * 75.0 + Vector3(0, 55.0, 0), centro])
-	_cola.append([nombre + "_pie", centro + fuera.normalized() * 26.0 + Vector3(0, 1.7, 0), centro + Vector3(0, 4.0, 0)])
+	_cola.append([nombre + "_pie", centro + fuera.normalized() * 48.0 + Vector3(0, 1.7, 0), centro + Vector3(0, 7.0, 0)])   ## (a 48 m: a 26 m caía dentro de rótulos y muros)
 
 func _process(_d: float) -> void:
 	_n += 1

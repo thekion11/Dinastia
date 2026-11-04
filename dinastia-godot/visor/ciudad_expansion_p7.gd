@@ -56,7 +56,7 @@ func _instalacion(uso: String, r: Rect2) -> void:
 			_cartel_m(c + Vector3(w * 0.4, 0, f * 0.45), Color(0.85, 0.15, 0.15))
 		"mercado":
 			nombre = "Mercado municipal"   ## «Mercado» a secas se traduce como el de fichajes
-			b._caja_en(c + Vector3(0, 4.5, 0), Vector3(w * 0.8, 9.0, f * 0.7), b._mat_simple(Color(0.7, 0.4, 0.3), 0.8))
+			MuroCivico.vestir(b, b._caja_en(c + Vector3(0, 4.5, 0), Vector3(w * 0.8, 9.0, f * 0.7), b._mat_simple(Color(0.7, 0.4, 0.3), 0.8)), Color(0.74, 0.45, 0.34))   ## (4-11) el mercado con ventanas
 			b._boveda(c + Vector3(0, 9.0, 0), w * 0.8, f * 0.7, b._mat_simple(Color(0.35, 0.45, 0.4), 0.5), 0.25)
 			CiudadMercado.montar(self, c, w, f)
 		"cine":
