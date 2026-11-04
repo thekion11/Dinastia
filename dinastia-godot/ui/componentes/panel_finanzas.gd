@@ -308,6 +308,7 @@ static func pintar_banco(lista: VBoxContainer, c: Club, mundo: Mundo, paleta: Di
 	g.columns = 5
 	g.add_theme_constant_override("h_separation", 10)
 	g.add_theme_constant_override("v_separation", 3)
+	CebraRejilla.poner(g)
 	lista.add_child(g)
 	for cab: Array in [[Idiomas.t("BANCO"), false], [Idiomas.t("MONTO"), true], [Idiomas.t("CUOTAS"), true],
 			[Idiomas.t("TASA/SEM"), true], ["", false]]:

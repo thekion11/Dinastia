@@ -309,6 +309,7 @@ func _pintar_camarin(c: Club) -> void:
 	t.text = Idiomas.t("CLIMA DEL VESTUARIO")
 	p._lista_camarin.add_child(t)
 	var gr := GridContainer.new()
+	CebraRejilla.poner(gr)
 	gr.columns = 4
 	gr.add_theme_constant_override("h_separation", 14)
 	p._lista_camarin.add_child(gr)

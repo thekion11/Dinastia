@@ -120,4 +120,6 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 26. (3-11 noche) DECISIÓN DEL DUEÑO: seguimos siendo «4 juegos en 1», pero las IDEAS NUEVAS QUEDAN EN PAUSA: solo los puntos más
     débiles de la evaluación (rendimiento real, partido + modo jugar partido en MÓVIL, foco, ciudad/visual, calidad técnica) y
     pulir lo que existe. Bancos: más de 30 especializados + uno EXTRA de rendimiento. Detalle y orden en `PLAN_GENERAL.md`.
+27. (4-11) El líder se activa SOLO cada 20 min (cadena send_later «Revisar las 3 sesiones» + respaldo horario fijo) para unir lo
+    terminado y asignar tareas a TODAS las sesiones; y el líder TAMBIÉN trabaja (no solo ordena): bloque propio del plan.
 

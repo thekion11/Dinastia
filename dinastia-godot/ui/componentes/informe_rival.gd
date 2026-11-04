@@ -205,6 +205,7 @@ func _construir() -> void:
 	## 2) El once probable con su rendimiento.
 	var c2 := _columna(cuerpo, Idiomas.t("ONCE PROBABLE"), 1.25)
 	var tabla := GridContainer.new()
+	CebraRejilla.poner(tabla)
 	tabla.columns = 5
 	tabla.add_theme_constant_override("h_separation", 14)
 	tabla.add_theme_constant_override("v_separation", 5)

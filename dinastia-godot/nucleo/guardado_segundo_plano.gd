@@ -42,7 +42,7 @@ static func iniciar(m: Mundo, nombre: String, al_acabar := Callable()) -> void:
 	_tarea = WorkerThreadPool.add_task(_escribir.bind(datos, ruta, t0, _id), false, "Guardado")
 
 static func _escribir(datos: Dictionary, ruta: String, t0: int, id: int) -> void:
-	var ok := PartidaArchivo.escribir(ruta, JSON.stringify(datos).to_utf8_buffer(), false)
+	var ok := PartidaArchivo.escribir(ruta, JSON.stringify(datos, "", false, true).to_utf8_buffer(), false)
 	_resultado = [ok, Time.get_ticks_msec() - t0]
 	_terminado.call_deferred(id)
 

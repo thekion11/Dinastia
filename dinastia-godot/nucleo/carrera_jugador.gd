@@ -311,7 +311,7 @@ func a_dic() -> Dictionary:
 		"seguidores": seguidores, "agente": agente, "foco": foco, "lanzador": lanzador,
 		"convocatorias": convocatorias, "partidos_jugables": partidos_jugables, "stats_temp": stats_temp,
 		"temporadas": temporadas, "eventos": eventos, "historial": historial, "ofertas": ofertas,
-		"hitos": hitos, "ultima_vez": ultima_vez, "semilla": _rng.seed,
+		"hitos": hitos, "ultima_vez": ultima_vez, "semilla": _rng.seed, "rng": str(_rng.state),
 		"goles_carrera": goles_carrera, "pj_carrera": pj_carrera, "caps": caps, "goles_sel": goles_sel,
 		"convocatoria": convocatoria, "capitan": capitan, "licencia": licencia,
 		"retiro_anunciado": retiro_anunciado, "retirado": retirado, "clubes_pasados": clubes_pasados,
@@ -337,6 +337,8 @@ static func desde_dic(d: Dictionary) -> CarreraJugador:
 	c.hitos = d.get("hitos", {})
 	c.ultima_vez = d.get("ultima_vez", {})
 	c._rng.seed = int(d.get("semilla", 1))
+	if d.has("rng"):
+		c._rng.state = int(String(d["rng"]))   ## (4-11) el estado, no solo la semilla: cargar y seguir da lo mismo
 	c.goles_carrera = int(d.get("goles_carrera", 0))
 	c.pj_carrera = int(d.get("pj_carrera", 0))
 	c.caps = int(d.get("caps", 0))
