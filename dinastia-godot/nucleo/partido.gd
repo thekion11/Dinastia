@@ -191,7 +191,12 @@ func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 	var j := _por_id(jugador_id)
 	if j == null:
 		return
-	j.amarillas += 1
+	## Una ROJA DIRECTA no es una amarilla de temporada (mega auditoría 4): solo cuenta la amarilla de verdad y la segunda amarilla (la que la motiva: ya hubo una en este partido).
+	var previas := int(_amarillas_hoy.get(jugador_id, 0))
+	if not roja or previas > 0:
+		j.amarillas += 1
+	if not roja:
+		_amarillas_hoy[jugador_id] = previas + 1
 	if roja:
 		Disciplina.sanciona(j)
 		once_local.erase(j)
@@ -327,12 +332,17 @@ func penales() -> Array:
 ##
 ## Se llama al terminar, no minuto a minuto: una nota a mitad de partido no
 ## significa nada y ademas el resultado todavia no se sabe.
+
+## ¿Es del equipo local? Mira su club, no el once: el que salió cambiado o expulsado ya no está en `once_local` y las notas lo contaban como visitante (bono de resultado al revés).
+func es_del_local(j: Jugador) -> bool:
+	return once_local.has(j) or (not once_visita.has(j) and local.plantilla.has(j))
+
 func _cerrar_notas() -> void:
 	_notas_cerradas = true
 	var gano_local := goles_local > goles_visita
 	var empate := goles_local == goles_visita
 	for j in _todos:
-		var suyo := once_local.has(j)
+		var suyo := es_del_local(j)
 		var bono := 0.0
 		if not empate:
 			bono = 0.6 if (gano_local == suyo) else -0.6

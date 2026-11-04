@@ -167,6 +167,12 @@ func _probar_tactil() -> void:
 	_comprobar(Input.is_action_pressed("jugar_sprint"), "mantener Sprint corre")
 	_toque(c, 25, c.centro_de("Sprint"), false)
 	_comprobar(not Input.is_action_pressed("jugar_regate") and not Input.is_action_pressed("jugar_sprint"), "mantener Sprint no hace regate")
+	## Un segundo dedo en la zona del stick, con el stick ya en uso, NO es un gesto (antes, al levantarlo daba un pase).
+	_toque(c, 28, Vector2(150, 500), true)            ## el stick
+	_toque(c, 29, Vector2(220, 420), true)            ## un segundo dedo en la misma zona (p. ej. la palma)
+	_toque(c, 29, Vector2(220, 420), false)
+	_comprobar(not Input.is_action_pressed("jugar_pase"), "un segundo dedo en la zona del stick no da un pase al levantarlo")
+	_toque(c, 28, Vector2(150, 500), false)
 	c._modo_mando = "botones"
 	_toque(c, 26, Vector2(700, 300), true)
 	_toque(c, 26, Vector2(700, 300), false)
