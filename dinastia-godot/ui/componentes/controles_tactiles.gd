@@ -58,6 +58,7 @@ var _modo_mando := "ambos"             ## botones / gestos / ambos (Ajustes)
 var _sep := 1.0                        ## separación entre botones (Ajustes, 1-1,3)
 var _gesto := {}                       ## índice de dedo → estado del gesto que empezó (sprint/tiro/pase/zona libre)
 static var mando_forzado := ""         ## las pruebas fuerzan el modo de control
+static var contexto_forzado := ""      ## y el contexto de las capturas: «con» (balón), «banda» (balón en la banda cerca del área) o «sin» (defensa); vacío = el del juego
 const MS_TOQUE := 200                  ## un toque en Sprint más corto que esto = regate; más largo = correr
 const PX_DESLIZA := 70.0               ## lo que hay que arrastrar en la zona libre para que cuente como deslizar (px del lienzo)
 
@@ -87,8 +88,8 @@ func _process(_d: float) -> void:
 	var ayuda: Variant = get_parent().get("_ayuda") if get_parent() != null else null
 	if ayuda is CanvasItem and (ayuda as CanvasItem).visible:
 		(ayuda as CanvasItem).visible = false
-	var cb := _tengo_balon()
-	var eb := _estoy_en_banda()
+	var cb := _tengo_balon() if contexto_forzado == "" else contexto_forzado != "sin"
+	var eb := _estoy_en_banda() if contexto_forzado == "" else contexto_forzado == "banda"
 	if cb != _con_balon or eb != _en_banda:
 		_con_balon = cb
 		_en_banda = eb
