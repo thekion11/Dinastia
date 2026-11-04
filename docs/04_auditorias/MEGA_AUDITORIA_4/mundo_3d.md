@@ -18,9 +18,9 @@ Bancos del área, todos «FIN. 0 fallos»: `ciudad_construccion` (117 s), `ciuda
 - [A4-M3D-010] (repaso 2, gravedad: medio) Edificios de servicios (ayuntamiento, hospital, comisaría, cine, mercado, soportales de la plaza) eran cajas lisas por detrás y de lado. Estado: arreglado (pasadas visuales 1-2; hojas en `pasada_ciudad_*`).
 - [A4-M3D-011] (repaso 2, gravedad: bajo) 53 tramos de la circunvalación exterior pasan bajo cerros (hasta 63 m): invisibles. Estado: abierto (deuda con tope 60 en el banco; arreglarlo exige subir las calles al terreno: pregunta al dueño).
 - [A4-M3D-012] (repaso 2, gravedad: bajo) En los cruces, coches de rutas que se cortan se solapan unos instantes (57 de ~240 000 comparaciones en 2 min). `trafico_ciudad.gd` (`_cede_paso`). Estado: abierto (tope 80 en el banco).
-- [A4-M3D-013] (repaso 2, gravedad: bajo) 4 de 212 llegadas del metro al andén van a 4,4-4,6 m/s (la primera aproximación desde la posición inicial). `metro_ciudad_p1.gd` (`Tren.simular`). Estado: abierto (tope 3 %).
+- [A4-M3D-013] (repaso 2, gravedad: bajo) 4 de 212 llegadas del metro al andén van a 4,4-4,6 m/s (la primera aproximación desde la posición inicial). `metro_ciudad_p1.gd` (`Tren.simular`). Estado: arreglado (el primer tren de cada línea arranca parado en la estación más cercana por delante: `Tren.arrancar_en_estacion`).
 - [A4-M3D-014] (repaso 2, gravedad: bajo) La ciudad no tiene horarios de apertura de comercios (0 puntos con horario). Estado: pregunta al dueño (función nueva).
-- [A4-M3D-015] (repaso 2, gravedad: bajo) Peatones que rozan postes y farolas (≤ 0,5 % de las muestras de sus rutas). Estado: abierto (cosmético).
+- [A4-M3D-015] (repaso 2, gravedad: bajo) Peatones que rozan postes y farolas (≤ 0,5 % de las muestras de sus rutas). Estado: arreglado (postes y brazos a 0,9 de acera en `ciudad_expansion.gd`, fuera del paso peatonal).
 - [A4-M3D-016] (repaso 2, gravedad: bajo) Los MultiMesh de la ciudad no guardan datos con `--headless`: cualquier prueba que lea transformaciones o colores necesita pantalla (xvfb + OpenGL); `estadio_3d` ya corre así. Estado: documentado (`bancos_especiales.py CON_PANTALLA`).
 
 ## Repaso 3 — al límite
@@ -30,7 +30,7 @@ Pruebas nuevas (en `especiales.sh`): `a4_limite_mundo` (fugas, calidad a mitad, 
 - Horas −5, 24, 25, 100 y 0,0001 y `encender_luces(−5…7)`: el sol queda finito y no negativo y la «noche» de las torres recortada a 0-1.
 - 8 estadios extremos (aforo 0, 1 y 500 000; 3 niveles; forma desconocida; colores vacíos; colores rotos; perfil sin claves): todos se construyen con césped y sin «SCRIPT ERROR».
 - 10 minutos de tráfico y gente a paso de 0,1 s (380 vehículos): ninguno se pierde, ninguna posición NaN ni fuera del mundo, nodos +198 en 10 min (crecen por el reciclaje de peatones, sin dispararse).
-- [A4-M3D-017] (repaso 3, gravedad: bajo) El `aforo` del perfil no cambia la geometría del estadio: 0, 1 y 500 000 dan las mismas 4 485 butacas; solo mandan `niveles` y `forma` (3 niveles: 14 365). Es una decisión de diseño más que un fallo. Estado: pregunta al dueño (¿que el aforo escale la grada?).
+- [A4-M3D-017] (repaso 3, gravedad: bajo) El `aforo` del perfil no cambia la geometría del estadio: 0, 1 y 500 000 dan las mismas 4 485 butacas; solo mandan `niveles` y `forma` (3 niveles: 14 365). Es una decisión de diseño más que un fallo. Estado: arreglado (`aforo` fija la fracción de filas con butaca, 50-100 %: `llenado_aforo`; prueba `a4_limite_mundo`: 2135 vs 3965 butacas visibles).
 
 ## Repaso 4 — reglas y coherencia
 - Determinismo: ciudad armada dos veces y por partes = de una vez, 0 filas distintas (`probar_por_partes`, banco `ciudad_construccion`); estadio idéntico; el mundo 3D no usa azar sin semilla al construir (A4-M3D-002, A4-M3D-004).

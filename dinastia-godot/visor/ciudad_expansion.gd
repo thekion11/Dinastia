@@ -31,7 +31,7 @@ func _kenney_calles() -> void:
 				var f := (float(q) + 0.5) / float(maxi(1, n))
 				var p := a.lerp(c, f)
 				var lado := 1.0 if q % 2 == 0 else -1.0
-				var off := (ancho * 0.5 + ACERA * 0.6) * lado
+				var off := (ancho * 0.5 + ACERA * 0.9) * lado
 				var pos := p + (Vector3(off, 0.24, 0) if vertical else Vector3(0, 0.24, off))
 				## El brazo (+Z local del modelo) apunta hacia la calzada.
 				var giro := (PI * 0.5 if lado > 0.0 else -PI * 0.5) if vertical else (PI if lado > 0.0 else 0.0)
@@ -40,7 +40,7 @@ func _kenney_calles() -> void:
 		elif r.randf() < 0.22 and largo > 60.0:
 			## Calles de barrio: un poste con cable a un lado.
 			var lado2 := 1.0 if r.randf() < 0.5 else -1.0
-			var off2 := (ancho * 0.5 + ACERA * 0.8) * lado2
+			var off2 := (ancho * 0.5 + ACERA * 0.92) * lado2
 			var pos2 := m + (Vector3(off2, 0.24, 0) if vertical else Vector3(0, 0.24, off2))
 			var giro2 := 0.0 if vertical else PI * 0.5
 			if _prop_kenney("electricity-pole", pos2, giro2, 9.0) != null:
@@ -61,7 +61,7 @@ func _kenney_calles() -> void:
 						ant = sig
 	## Carteles colgantes sobre la calzada en cada cruce con semáforo.
 	for p: Vector3 in cruces_semaforo:
-		var esq := p + Vector3(ANCHO_AV * 0.5 + ACERA * 0.6, 0.24, -ANCHO_AV * 0.5 - ACERA * 0.6)
+		var esq := p + Vector3(ANCHO_AV * 0.5 + ACERA * 0.9, 0.24, -ANCHO_AV * 0.5 - ACERA * 0.9)
 		var cartel := _prop_kenney("road-sign-empty-hanging", esq, PI * 0.5, 12.0)
 		if cartel != null:
 			## 26-10-2026 (pciu): el báculo del cartel, del mismo grafito que las

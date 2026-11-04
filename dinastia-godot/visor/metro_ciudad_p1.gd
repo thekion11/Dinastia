@@ -1,22 +1,10 @@
 extends Node3D
 ## [Capa 1/4 de `metro_ciudad.gd`] _mat, _caja, _viaducto, _tunel_xray, _tunel, _estacion_elevada … (+2)
 
-## EL METRO DE LA CIUDAD (7-10-2026, pedido: «metro… la ciudad debe ser real,
-## interactiva»). Dos líneas que FUNCIONAN:
-##
-##  · LÍNEA 1 (roja), ELEVADA: un viaducto sobre la mediana de la avenida
-##    x = 660, de punta a punta de la ciudad, con siete estaciones de andén
-##    alto. Sus trenes se ven pasar por encima del tráfico.
-##  · LÍNEA 2 (azul), SUBTERRÁNEA: bajo la avenida z = -660, cruzando por
-##    debajo del río, con sus bocas en la acera. Desde arriba no se ve; el
-##    botón «🚇 Metro» del mapa activa la vista de rayos X: el túnel y los
-##    trenes se dibujan a través del suelo.
-##  · Transbordo entre las dos en (660, -660).
-##
-## Cada tren (tres coches) va y vuelve por su línea: acelera, va a su
-## velocidad de crucero, frena antes de cada estación, abre unos segundos y
-## sigue (`Tren.simular`, lógica pura y comprobable). Los paneles de cada
-## estación dicen cuánto falta para el próximo tren.
+## EL METRO DE LA CIUDAD (7-10-2026, «la ciudad debe ser real, interactiva»). Dos líneas que FUNCIONAN: LÍNEA 1 (roja), ELEVADA, un viaducto sobre la mediana de la avenida
+## x = 660 con siete estaciones de andén alto; LÍNEA 2 (azul), SUBTERRÁNEA, bajo la avenida z = -660 y por debajo del río, con bocas en la acera (el botón «🚇 Metro» del mapa
+## activa los rayos X: túnel y trenes a través del suelo). Transbordo en (660, -660). Cada tren (tres coches) va y vuelve: acelera, crucero, frena antes de cada estación,
+## abre unos segundos y sigue (`Tren.simular`, lógica pura y comprobable). Los paneles de cada estación dicen cuánto falta para el próximo tren.
 
 const ALTO_VIADUCTO := 11.0
 const PROF_TUNEL := -12.0
@@ -42,6 +30,13 @@ class Tren:
 		estaciones = est
 		s = s0
 		sentido = sentido0
+
+	func arrancar_en_estacion() -> void:   ## (4-11, A4-M3D-013) salir a <150 m de una estación llegaba al andén a 4,5 m/s: empieza parado en ella
+		var objetivo := proxima()
+		if objetivo != INF and absf(objetivo - s) < 150.0:
+			s = objetivo
+			ultima_parada = objetivo
+			espera = PARADA * 0.5
 
 	## La próxima estación en el sentido de la marcha (INF si no queda ninguna:
 	## está en la cabecera).
