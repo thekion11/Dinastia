@@ -110,7 +110,7 @@ static func montar(ex, t) -> int:
 			lp.double_sided = false
 			lp.visibility_range_end = 40.0
 			nb.add_child(lp)
-			t.agregar_vehiculo(nb, id, largo * float(k) / float(cuantos), VEL, 0.0, 0.0)
+			t.agregar_vehiculo(nb, id, largo * float(k) / float(cuantos) + float(g.buses.size() % 7) * 22.0, VEL, 0.0, 0.0)   ## (4-11, banco) escalonados: dos recorridos que arrancan en la misma cabecera salían uno ENCIMA del otro
 			t.agregar_paradas_al_ultimo(lista, ESPERA)
 			t.marcar_cola_al_ultimo()
 			var rotulo: Label3D = null
