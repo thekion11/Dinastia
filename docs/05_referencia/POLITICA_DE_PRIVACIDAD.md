@@ -17,8 +17,14 @@ Comprobado en el código el 27-10-2026: no hay ninguna conexión de red (ni `HTT
 
 DINASTÍA es un juego para un solo jugador que funciona sin conexión.
 
-**Qué datos recoge.** Ninguno. El juego no se conecta a internet, no tiene cuentas ni inicio de
-sesión, no muestra anuncios, no mide cómo juegas y no envía nada a nosotros ni a terceros.
+**Qué datos recoge.** Ninguno. El juego no tiene cuentas ni inicio de sesión, no muestra anuncios, no mide
+cómo juegas y no envía nada a nosotros ni a terceros. **Única conexión:** solo cuando pulsas «Buscar
+actualización» en Ajustes, el juego pide a GitHub (API pública de Releases del repositorio) la lista de versiones
+publicadas, con una petición GET normal y un nombre de cliente genérico (sin identificador, sin correo, sin tus
+datos); si hay una versión nueva y TÚ aceptas, baja el parche (`parche_<versión>.pck`) a la carpeta del juego.
+Nada se consulta, se baja ni se instala sin que lo pidas. Al conectarte, GitHub ve tu dirección IP como en
+cualquier descarga (su política: https://docs.github.com/privacy). En Android, el permiso de INTERNET existe solo
+para esto.
 
 **Qué guarda en tu dispositivo.** Para funcionar, guarda en la carpeta del juego de tu dispositivo:
 - tus partidas y tus ajustes (idioma, sonido, controles, aspecto);
