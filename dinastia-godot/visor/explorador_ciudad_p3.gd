@@ -198,7 +198,7 @@ func _usar_en_anden() -> void:
 	_luz_cam.visible = false
 	_bajo_tierra(false)
 	var pie: Vector3 = _acc.get("pie", cuerpo.position)
-	cuerpo.position = Vector3(pie.x, altura_suelo(pie.x, pie.z), pie.z)
+	cuerpo.position = buscar_libre(Vector3(pie.x, altura_suelo(pie.x, pie.z), pie.z))   ## (A4) nunca dentro de una manzana
 	_colocar_camara(1.0)
 
 # ============================================================== EL METRO
