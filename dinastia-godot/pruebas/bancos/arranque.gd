@@ -23,6 +23,7 @@ func _quitar_tutorial() -> void:
 
 func _probar() -> void:
 	_titulo("BANCO ARRANQUE · cada modo, cada dificultad, cargar, prólogo")
+	_respaldar_user()
 	_tabla_de_modos()
 	_linea("-- modos y dificultades")
 	await _modos_y_dificultades()
@@ -32,6 +33,7 @@ func _probar() -> void:
 	await _guardar_y_cargar()
 	_linea("-- escenas de entrada")
 	await _escenas_de_entrada()
+	_restaurar_user()
 
 ## Los modos del menú: tabla completa y coherente.
 func _tabla_de_modos() -> void:

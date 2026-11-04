@@ -30,6 +30,7 @@ func _tags(s: String) -> Array:
 
 func _probar() -> void:
 	_titulo("BANCO IDIOMAS · los 9 idiomas, tabla por tabla")
+	_respaldar_user()
 	_re_marca = RegEx.create_from_string(MARCADOR)
 	_re_tag = RegEx.create_from_string(ETIQUETA)
 	var d: Variant = JSON.parse_string(FileAccess.get_file_as_string(Idiomas.EXTRA))
@@ -48,6 +49,7 @@ func _probar() -> void:
 	_comportamiento()
 	if OS.get_environment("IDIOMAS_RAPIDO") == "":
 		await _pantallas()
+	_restaurar_user()
 
 ## Mismas claves en los 8 idiomas, nada vacío.
 func _estructura() -> void:

@@ -12,6 +12,7 @@ extends Node
 ## Termina con «===== FIN. N fallos =====» y código de salida 0/1.
 
 var _fallos: Array[String] = []
+var _respaldo_user := {}   ## (4-11) `user://*.cfg` tal como estaba: lo recuperan las pruebas que tocan preferencias (`_respaldar_user` / `_restaurar_user`)
 
 func _ready() -> void:
 	await get_tree().process_frame
@@ -48,3 +49,28 @@ func _mundo(semilla: int, caja: int = 300000000) -> Mundo:
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
 	m.mi_club().mover_saldo(caja)
 	return m
+
+## Guarda los `.cfg` de `user://` (ajustes, controles, entrada…) para devolverlos al terminar: una prueba que pulsa botones o cambia idioma o escala
+## ensucia las preferencias del JUGADOR (misiones del tutorial «hechas», capas de ayuda vistas…) y las pruebas siguientes ven otra pantalla.
+func _respaldar_user() -> void:
+	_respaldo_user.clear()
+	var d := DirAccess.open("user://")
+	if d == null:
+		return
+	for f: String in d.get_files():
+		if f.ends_with(".cfg"):
+			_respaldo_user[f] = FileAccess.get_file_as_bytes("user://" + f)
+	_respaldo_user["__ya"] = true
+
+func _restaurar_user() -> void:
+	if not _respaldo_user.has("__ya"):
+		return
+	var d := DirAccess.open("user://")
+	for f: String in d.get_files():
+		if f.ends_with(".cfg") and not _respaldo_user.has(f):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path("user://" + f))
+	for f: String in _respaldo_user:
+		if f != "__ya":
+			var a := FileAccess.open("user://" + f, FileAccess.WRITE)
+			a.store_buffer(_respaldo_user[f])
+	_respaldo_user.clear()

@@ -63,6 +63,7 @@ static func _lab(c: Color) -> Vector3:
 
 func _probar() -> void:
 	_titulo("BANCO ACCESIBILIDAD_TUTORIAL · contraste, daltonismo, escala de texto, tutorial, lector")
+	_respaldar_user()
 	Idiomas.idioma = "es"
 	_contraste()
 	_daltonismo()
@@ -86,6 +87,7 @@ func _probar() -> void:
 	_lector_y_avisos()
 	CapasTutorial.poner_activas(ayudas)
 	_p._escala_texto = 1.0
+	_restaurar_user()
 
 ## (A) Razones de contraste (WCAG): texto normal ≥ 4,5; texto principal ≥ 7; lo grande o de interfaz ≥ 3.
 func _contraste() -> void:
