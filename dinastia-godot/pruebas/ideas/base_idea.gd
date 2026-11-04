@@ -62,6 +62,16 @@ func _respaldar_user() -> void:
 			_respaldo_user[f] = FileAccess.get_file_as_bytes("user://" + f)
 	_respaldo_user["__ya"] = true
 
+## (4-11, A4) Pone el idioma de la prueba Y lo guarda en las preferencias: `Principal` carga `user://preferencias.cfg` al abrir y
+## el idioma guardado manda sobre el que se puso antes (con un guardado en castellano la vuelta «de» se medía en castellano: la
+## prueba pasaba en local y no medía nada). Llamar a `_respaldar_user()` antes; `_restaurar_user()` devuelve el guardado del jugador.
+func _fijar_idioma(idi: String) -> void:
+	Idiomas.idioma = idi
+	var cf := ConfigFile.new()
+	cf.load("user://preferencias.cfg")
+	cf.set_value("juego", "idioma", idi)
+	cf.save("user://preferencias.cfg")
+
 func _restaurar_user() -> void:
 	if not _respaldo_user.has("__ya"):
 		return
