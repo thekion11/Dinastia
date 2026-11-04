@@ -187,6 +187,7 @@ pasa "a4_interiores_limite" "godot --headless --path . res://pruebas/ideas/a4_in
 pasa "a4_camara_estadio (la cámara del partido ve el campo en 6 estadios reformados, rayos por triángulo)" "godot --headless --path . res://pruebas/ideas/a4_camara_estadio.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_ciudad_noche (de noche, 6 sirenas, 6 min: sin atascos, gente ni buses parados)" "godot --headless --path . res://pruebas/ideas/a4_ciudad_noche.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_sirena_movimiento (vehículo de emergencia con sirena en medio del tráfico: no atraviesa a nadie)" "godot --headless --path . res://pruebas/ideas/a4_sirena_movimiento.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_lluvia_cambios (lluvia y paraguas con 172 peatones de noche, 20 cambios de clima: sin duplicados, sin restos, sin crecer)" "godot --headless --path . res://pruebas/ideas/a4_lluvia_cambios.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_metro_museo (metro por dentro y museo ampliado, sin pantalla)" "godot --headless --path . res://pruebas/ideas/a4_metro_museo.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_cruzado" "godot --headless --path . res://pruebas/ideas/a4_gestion_cruzado.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_cesiones" "godot --headless --path . res://pruebas/ideas/a4_gestion_cesiones.tscn" "(^|[^0-9])0 fallos"
