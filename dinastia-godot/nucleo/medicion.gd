@@ -196,6 +196,25 @@ func _media_col(c: int) -> float:
 		t += float(m[c])
 	return t / maxf(1.0, _muestras.size())
 
+## (4-11, A4-REND) MEDIANA de una columna de muestras. Las llamadas, triángulos y objetos de la parte se miden con ella y no
+## con la media: con ~5 muestras por parte (una cada 30 fotogramas, en una máquina lenta), UNA sola tomada mientras
+## se asientan el agrupado, la oclusión o las texturas (13,5 M de triángulos) desplazaba la media por encima del tope y el
+## presupuesto daba FALLO unas veces y 0 fallos otras sin cambiar el código.
+func _max_col(c: int) -> float:
+	var m0 := 0.0
+	for m: Array in _muestras:
+		m0 = maxf(m0, float(m[c]))
+	return m0
+
+func _mediana_col(c: int) -> float:
+	var v: Array = []
+	for m: Array in _muestras:
+		v.append(float(m[c]))
+	if v.is_empty():
+		return 0.0
+	v.sort()
+	return v[v.size() / 2]
+
 func _fps_de(f: Array) -> float:
 	var t := 0.0
 	for x: float in f:
@@ -214,8 +233,8 @@ func _cerrar_parte() -> void:
 	var peor_1: float = f[int(f.size() * 0.99)]
 	var d := {"parte": _parte, "fps_medio": snappedf(1000.0 / media, 0.1), "fps_p1": snappedf(1000.0 / maxf(peor_1, 0.001), 0.1),
 		"fps_min": snappedf(1000.0 / maxf(f[-1], 0.001), 0.1), "peor_ms": snappedf(f[-1], 0.1), "fotogramas": f.size(),
-		"cpu_ms": snappedf(_media_col(0), 0.01), "llamadas": int(_media_col(1)), "triangulos": int(_media_col(2)),
-		"objetos": int(_media_col(3)), "memoria_mb": snappedf(_media_col(4), 0.1), "video_mb": snappedf(_media_col(5), 0.1)}
+		"cpu_ms": snappedf(_media_col(0), 0.01), "llamadas": int(_mediana_col(1)), "triangulos": int(_mediana_col(2)),
+		"objetos": int(_mediana_col(3)), "triangulos_max": int(_max_col(2)), "muestras": _muestras.size(), "memoria_mb": snappedf(_media_col(4), 0.1), "video_mb": snappedf(_media_col(5), 0.1)}
 	if largo and _frames.size() > 90:
 		## Calor: FPS del primer tercio de la parte frente al último (en orden de tiempo, no ordenado).
 		var orden := Array(_frames.slice(3))
