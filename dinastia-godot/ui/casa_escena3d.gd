@@ -22,7 +22,7 @@ static func abrir(p: Control, m: Mundo, _bandeja: Array = []) -> Control:
 	pop.add_child(vp_cont)
 	var vp := SubViewport.new()
 	vp.own_world_3d = true
-	vp.msaa_3d = Viewport.MSAA_4X
+	vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	vp_cont.add_child(vp)
 	var escena := CasaEscena3D.new()

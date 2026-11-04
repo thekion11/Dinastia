@@ -50,7 +50,7 @@ func _montar(mundo: Mundo, j: Jugador, de: Club) -> void:
 	add_child(cont)
 	var vp := SubViewport.new()
 	vp.own_world_3d = true
-	vp.msaa_3d = Viewport.MSAA_4X
+	vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
 	cont.add_child(vp)
 	_raiz = Node3D.new()
 	vp.add_child(_raiz)

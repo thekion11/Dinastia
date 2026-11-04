@@ -147,6 +147,7 @@ func _pintar_clubes() -> void:
 		tl.text = l.nombre
 		p._lista_clubes.add_child(tl)
 		var g := GridContainer.new()
+		CebraRejilla.poner(g)
 		g.columns = 7
 		g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		g.add_theme_constant_override("h_separation", 10)

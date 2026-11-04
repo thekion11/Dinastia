@@ -165,6 +165,7 @@ func _pintar_tactica(c: Club) -> void:
 		p._refrescar(), fila_b)
 
 	var g := GridContainer.new()
+	CebraRejilla.poner(g)
 	g.columns = 7
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 8)
@@ -369,6 +370,7 @@ func _pintar_ficha_club(club: Club) -> void:
 		cl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_clubes.add_child(cl)
 	var g := GridContainer.new()
+	CebraRejilla.poner(g)
 	g.columns = 7
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 10)
@@ -412,6 +414,7 @@ func _pintar_goleadores(pais: String) -> void:
 		return
 	todos.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.goles > b.goles)
 	var g := GridContainer.new()
+	CebraRejilla.poner(g)
 	g.columns = 5
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 10)

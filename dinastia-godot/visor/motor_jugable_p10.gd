@@ -338,6 +338,7 @@ func _colocados() -> bool:
 	return true
 
 func _ejecutar_saque_ia(p: Dictionary, tipo: String, lugar: Vector3) -> void:
+	MotorTraza.saque(self as Object as MotorJugable, tipo)   ## traza (ciclo 11): solo cuenta
 	var arco := _arco_rival(p)
 	match tipo:
 		"corner":
@@ -371,7 +372,7 @@ func _ejecutar_saque_ia(p: Dictionary, tipo: String, lugar: Vector3) -> void:
 				var lejos := Vector3(_rng.randf_range(-16, 16), 0, dir_ataque(bool(p["es_local"])) * 3.0)
 				_patear(p, lejos, 19.0, 3.5, 0.0, "patear")
 		_:
-			var m := _mejor_pase(p)
+			var m := MotorSaque.receptor(self as Object as MotorJugable, p, tipo)   ## receptor seguro en banda y centro (ciclo 11, SAQUE_SEGURO)
 			if not m.is_empty():
 				_pasar_a(p, m)
 				if tipo == "banda":

@@ -345,10 +345,22 @@ func desde_dic(d: Dictionary) -> void:
 	ocio_semana = int(d.get("oc", -1))
 	baja_hasta = int(d.get("baja", -1))
 	pendiente = (d.get("pend", {}) as Dictionary).duplicate(true)
-	perfil = (d.get("perfil", {}) as Dictionary).duplicate(true)
+	perfil = _enteros((d.get("perfil", {}) as Dictionary).duplicate(true))   ## (4-11) el JSON devuelve 6.0: el sorteo de asuntos usa str(perfil)
 	historial = (d.get("hist", []) as Array).duplicate(true)
 	bienvenida = bool(d.get("bienv", false))
 	combustible = clampf(float(d.get("comb", DEPOSITO_L)), 0.0, DEPOSITO_L)
 	aviso_comb = int(d.get("avc", -1))
 	premium = bool(d.get("prem", false))
 	danio = clampi(int(d.get("dan", 0)), 0, 100)
+
+## Los números enteros del perfil vuelven del guardado como decimales (6.0): se devuelven a enteros, como se crearon.
+static func _enteros(v: Variant) -> Variant:
+	if v is float and is_equal_approx(v, roundf(v)):
+		return int(v)
+	if v is Dictionary:
+		for k in (v as Dictionary):
+			v[k] = _enteros(v[k])
+	elif v is Array:
+		for i in (v as Array).size():
+			v[i] = _enteros(v[i])
+	return v

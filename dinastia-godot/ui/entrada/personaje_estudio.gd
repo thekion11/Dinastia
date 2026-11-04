@@ -50,7 +50,7 @@ func _ready() -> void:
 	add_child(cont)
 	_vp = SubViewport.new()
 	_vp.transparent_bg = true
-	_vp.msaa_3d = Viewport.MSAA_4X
+	_vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
 	_vp.own_world_3d = true
 	cont.add_child(_vp)
 	_montar_escena()
@@ -115,7 +115,7 @@ func _montar_escena() -> void:
 		luz.rotation_degrees = l[0]
 		luz.light_energy = float(l[1])
 		luz.light_color = l[2]
-		luz.shadow_enabled = bool(l[3])
+		luz.shadow_enabled = bool(l[3]) and Calidad.elegida > Calidad.MINIMO
 		mundo3.add_child(luz)
 	var env := WorldEnvironment.new()
 	var e := Environment.new()

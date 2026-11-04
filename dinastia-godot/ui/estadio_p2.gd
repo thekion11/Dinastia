@@ -333,7 +333,7 @@ func _cambio_ia(c: Club, es_local: bool) -> void:
 	var grupo := Datos.grupo(sale.pos_e)
 	var mejor: Jugador = null
 	for j: Jugador in VistaEstadio.disponibles_fuera_del_once(c, once):
-		if j.es_portero():
+		if j.es_portero() or partido.ya_salio(j):
 			continue
 		if mejor == null or (Datos.grupo(j.pos_e) == grupo and Datos.grupo(mejor.pos_e) != grupo) \
 				or (Datos.grupo(j.pos_e) == Datos.grupo(mejor.pos_e) and j.ovr > mejor.ovr):

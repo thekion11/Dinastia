@@ -52,6 +52,8 @@ func _process(_d: float) -> void:
 		_pj = PartidoJugable.abrir(_ui, CarreraJugadorUI.mundo, _ui.carrera, par[0], par[1], 120.0)
 		_ct = _pj.get_node_or_null("ControlesTactiles") as ControlesTactiles
 		_comprobar(_ct != null, "el partido monta los controles táctiles")
+	if _n == 70:
+		_comprobar(not _pj._ayuda.visible, "la línea de ayuda de teclado está oculta con los controles táctiles")
 	if _n == 80:
 		_p0 = _pj.motor.pos(_pj.motor.usuario)
 		var c0 := Vector2(200, get_viewport().get_visible_rect().size.y - 160)

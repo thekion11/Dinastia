@@ -76,9 +76,7 @@ func _aplicar_tema() -> void:
 	t.set_stylebox("focus", "LineEdit", p._caja(p._mezcla(panel, p._pal_fondo(), 0.55), p.COL_ACENTO, radio, 2))
 
 	## Barras y deslizadores.
-	t.set_stylebox("slider", "HSlider", p._caja(p._mezcla(panel, p._pal_fondo(), 0.5), borde, 3, 0))
-	t.set_stylebox("grabber_area", "HSlider", p._caja(p.COL_ACENTO, p.COL_ACENTO, 3, 0))
-	t.set_stylebox("grabber_area_highlight", "HSlider", p._caja(p.COL_ACENTO, p.COL_ACENTO, 3, 0))
+	TemaSliders.aplicar(t, p.COL_ACENTO, p._mezcla(panel, p._pal_fondo(), 0.5), borde, p.get_tree())   ## deslizadores gruesos (pista 8, tirador 28, área 44)
 	t.set_stylebox("background", "ProgressBar", p._caja(p._mezcla(panel, p._pal_fondo(), 0.5), borde, 3, 0))
 	t.set_stylebox("fill", "ProgressBar", p._caja(p.COL_ACENTO, p.COL_ACENTO, 3, 0))
 

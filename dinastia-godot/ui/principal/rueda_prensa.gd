@@ -119,7 +119,7 @@ func _montar_plato() -> void:
 	var vp := SubViewport.new()
 	vp.own_world_3d = true
 	vp.transparent_bg = false
-	vp.msaa_3d = Viewport.MSAA_4X
+	vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	vp_cont.add_child(vp)
 	var escena := RuedaPrensaEscena3D.new()

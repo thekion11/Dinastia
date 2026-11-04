@@ -221,6 +221,13 @@ func _conducir(e: Vector2, delta: float) -> void:
 	_cabeceo = lerpf(_cabeceo, clampf(-acel_real * 0.035 - (0.03 if freno_mano else 0.0), -0.06, 0.06), clampf(delta * 4.0, 0.0, 1.0))
 	_balanceo = lerpf(_balanceo, clampf(_volante * absf(vel) * 0.0035, -0.07, 0.07), clampf(delta * 5.0, 0.0, 1.0))
 
+## Distancia común del aviso «E:» a un lugar (se suma el `alcance` propio del punto si el objeto es grande: Casa Grande, teleférico…).
+const ALCANCE_PIE := 4.5
+const ALCANCE_COCHE := 9.0
+
+static func alcance_base(modo: String) -> float:
+	return ALCANCE_COCHE if modo == "coche" else ALCANCE_PIE
+
 ## Lo que hay al alcance de la E: un peatón (a pie) o un lugar.
 func _buscar_cerca() -> void:
 	_cerca = {}
@@ -272,7 +279,7 @@ func _buscar_cerca() -> void:
 				_cerca = {"tipo": "peaton", "v": v, "n": "un vecino"}
 				break
 	if _cerca.is_empty():
-		var alcance := 30.0 if modo == "coche" else 14.0
+		var alcance := alcance_base(modo)   ## (4-11, pedido del dueño) el aviso de E solo CERCA del objeto (antes 14 m a pie y 30 en coche)
 		var mejor := alcance
 		for pc: Dictionary in cb.puntos_clic:
 			var q: Vector3 = pc["pos"]

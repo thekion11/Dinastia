@@ -254,6 +254,8 @@ func cambiar(sale: Jugador, entra: Jugador) -> String:
 		return "%s no está en condiciones de entrar" % entra.nombre
 	if once_local.has(entra) or once_visita.has(entra):
 		return "%s ya está jugando" % entra.nombre
+	if ya_salio(entra):
+		return "quien ya salió no puede volver a entrar"
 	var once := once_local if es_local else once_visita
 	once[once.find(sale)] = entra
 	if es_local:
@@ -265,6 +267,11 @@ func cambiar(sale: Jugador, entra: Jugador) -> String:
 	cronica.append({"min": minuto, "tipo": "cambio", "sale": sale.nombre, "entra": entra.nombre})
 	cambio_hecho.emit(sale, entra, minuto)
 	return ""
+
+## El reglamento no deja volver al que ya dejó el campo (por un cambio o por una roja en el 3D): lo encontró el banco
+## `partido_reglas` (4-11): `cambiar()` lo dejaba entrar otra vez y el DT de la IA del estadio podía elegirlo.
+func ya_salio(j: Jugador) -> bool:
+	return _todos.has(j) and not once_local.has(j) and not once_visita.has(j)
 
 ## La tanda que se jugó en el 3D. Va ANTES del pitido final del acta: quien
 ## escuche `terminado` y pida `penales()` recibe la del césped.

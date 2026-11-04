@@ -209,3 +209,13 @@ Recién cargada (opengl3 llvmpipe 640x360, MÍNIMO): **2 062 llamadas**, 19 452 
 - PROBADO Y DESCARTADO: fundir los edificios/accesorios sueltos por celda y material (`FundirCiudad`, ~800 escenas): 2 062 → 1 998 llamadas (−64) a cambio de +786 ms de carga, +50 k triángulos (sin corte por LOD) y +20 MB de vídeo. No vale. Los edificios ya costaban poco (el recorte por distancia los deja fuera).
 - HECHO: máquina expendedora con materiales compartidos y fundida (18 cajas → 1 malla): −17 llamadas.
 - Queda el grueso en el TRÁFICO (−140: ~50 coches con carrocería + 4 ruedas + placas/faros por separado; fundirlos rompería los faros de noche) y en los miles de MultiMesh/Mesh sueltos de la propia ciudad y del estadio. No hay una palanca única; llegar a ≤900 llamadas no es realista sin recortar contenido.
+
+## Recortes de contenido AUTORIZADOS por el dueño (3-11), solo MÍNIMO (media y alta iguales) — medidos uno a uno (`medir_prologo`, opengl3 640x360)
+Base (con la expendedora fundida): 2 052 llamadas recién cargada · 19 330 nodos · 39 041 objetos · 943 MB · 217 MB de vídeo.
+- (b) SIN detalles de fachada (`EdificiosDet_*`): −85 nodos, −200 objetos, **±0 llamadas** (los MultiMesh por celda ya los recortaba la distancia). **No se aplicó**: quitaba contenido sin ganancia medible.
+- (a) Tráfico y peatones del ANILLO a la mitad (`CityBuilder._n_pro` ×0,5 en MÍNIMO): **2 052 → 1 975 llamadas (−77)**, 19 330 → 18 752 nodos (−580), −7 MB de vídeo. Tras caminar 120 m: 1 990 → 1 963.
+- (c) Menos peatones de reserva (los 34 de `CiudadExpansion` → 17): 1 975 → 1 973 llamadas, −510 nodos, −4 MB de vídeo. Los peatones lejanos ya no se dibujan (alcance), así que el ahorro es de nodos y memoria, no de llamadas.
+Total (a)+(c): 2 052 → 1 973 llamadas (−4 %), nodos −1 090 (−5,6 %), vídeo −11 MB. La meta de ≤900 llamadas sigue sin ser alcanzable solo con recortes: el grueso son los ~5 500 MultiMesh y ~1 700 mallas sueltas de la ciudad y el estadio.
+
+## MultiMesh sueltos de la ciudad en MÍNIMO (4-11): unirlos por (malla, material, celda) — PROBADO Y DESCARTADO
+`medir_prologo` MMHIST=1: 5 708 `MultiMeshInstance3D` en la ciudad, 759 combinaciones distintas (malla, material, celda de 160 m, sombra, alcance), 316 con varias; la mayoría con 1-4 instancias (787 con 1, 1 308 con 2, 668 con 3). Se unió (`UnirMultiMesh`, solo los hijos directos sin nombre propio, sin grupo/meta/script): nodos 18 228 → 15 870 (−2 358), objetos 37 701 → 32 974, RAM −10 MB, vídeo igual, **llamadas 1 973 → 1 951 (−22, −1 %)**, triángulos +2 k, a cambio de **+411 ms de carga** (más en un móvil). No compensa: se retiró (el código no queda). Las llamadas de dibujo siguen en lo que sí se ve (estadio, tráfico, mallas sueltas) y no en el número de nodos.
