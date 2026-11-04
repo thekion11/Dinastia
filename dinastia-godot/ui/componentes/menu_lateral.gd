@@ -75,8 +75,9 @@ static func ejecutar(p: Principal, accion: String) -> void:
 			load("res://ui/componentes/sala_minijuegos.gd").abrir(p, p.mundo)
 		"documental":
 			## El último cerrado; si todavía no hay, el avance de la que se juega.
-			var caps := DocumentalTemporada.ultimo if not DocumentalTemporada.ultimo.is_empty() else DocumentalTemporada.guion(p.mundo)
-			DocumentalTemporada.abrir(p, caps, p._retrato)
+			var documental: GDScript = load("res://ui/componentes/documental_temporada.gd")   ## (A4 memoria) por ruta
+			var caps: Array = documental.ultimo if not documental.ultimo.is_empty() else documental.guion(p.mundo)
+			documental.abrir(p, caps, p._retrato)
 
 func _montar() -> void:
 	set_anchors_preset(Control.PRESET_LEFT_WIDE)

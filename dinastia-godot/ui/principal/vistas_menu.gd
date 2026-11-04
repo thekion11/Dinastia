@@ -31,11 +31,12 @@ func _idolo_del_club(c: Club) -> String:
 ## (§2.5-1 del plan, 30-10) Si el menú central vive dentro del PC de la oficina, la ciudad ya es
 ## el mundo en el que estás: «Ver la ciudad», «Pasear» y «Conducir» te levantan del PC en vez de
 ## construir una segunda ciudad dentro del menú (eso rompía el prólogo y la vida en 3D).
-func pc_oficina() -> PcOficina:
+func pc_oficina() -> Node:   ## (A4 memoria) sin nombrar `PcOficina`: se reconoce por su script
 	var n: Node = p.get_parent()
 	while n != null:
-		if n is PcOficina:
-			return n as PcOficina
+		var sc: Script = n.get_script()
+		if sc != null and sc.get_global_name() == &"PcOficina":
+			return n
 		n = n.get_parent()
 	return null
 
@@ -375,7 +376,7 @@ func _ver_vuelta_olimpica(titulo: String) -> void:
 	vista.datos_pantalla = p._datos_pantalla_estadio(c)
 	p.add_child(vista)
 	vista.abrir(c, 1.0, null, null, p.mundo.perfil_estadio_de(c), Comercial.color_balon(p.mundo.comercial.balon, c))
-	var cel := CelebracionTrofeo.iniciar(vista._raiz3d, c, titulo, vista)
+	var cel = load("res://visor/celebracion_trofeo.gd").iniciar(vista._raiz3d, c, titulo, vista)   ## (A4 memoria) por ruta
 	var volver := func() -> void:
 		if is_instance_valid(vista):
 			vista.queue_free()

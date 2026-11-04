@@ -121,7 +121,7 @@ func _pintar_finanzas(c: Club) -> void:
 	nota.text = Idiomas.t("La proyección solo cuenta lo fijo de la temporada: no incluye premios, copas, ventas de jugadores ni abonos.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_finanzas.add_child(nota)
-	var pal := p._ui_ficha._paleta_ficha()
+	var pal: Dictionary = p._ui_ficha._paleta_ficha()
 	PanelFinanzas.pintar_balance_y_caja(p._lista_finanzas, c, p.mundo, proy, pal)
 	PanelFinanzas.pintar_auspicio(p._lista_finanzas, c, p.mundo, pal,
 		func(idx: int) -> void: p._ui_gente._firmar_auspicio(idx))

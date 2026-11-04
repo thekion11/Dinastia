@@ -100,7 +100,7 @@ func _abrir_mesa(e: Dictionary) -> void:
 	var mesa := MesaAgente.new(e, c.confianza_de(String(e.get("agente", ""))), bono, Azar.ent(1, 1 << 30))
 	if p.mundo.citas != null and p.mundo.citas.favor_agente == p.mundo.anio * 60 + p.mundo.semana:
 		mesa.aplicar_favor()   ## §2.5: le debías un café al agente
-	p.add_child(MesaAgenteUI.new(mesa, func(m: MesaAgente) -> void:
+	p.add_child(load("res://ui/componentes/mesa_agente_ui.gd").new(mesa, func(m: MesaAgente) -> void:
 		var r: Dictionary
 		match m.estado:
 			"acuerdo":
