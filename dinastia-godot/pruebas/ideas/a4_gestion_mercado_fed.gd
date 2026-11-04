@@ -76,7 +76,8 @@ func _federacion(semilla: int) -> void:
 			f.voto_pendiente = (libres[0] as Dictionary).duplicate()
 			var r := f.votar(opcion, mi, asam)
 			n += 1
-			_comprobar(f.voto_pendiente.is_empty(), "votar «%s» con asamblea de %d: la votación queda cerrada (%s)" % [opcion, asam.size(), str(r.get("pasa"))])
+			var valida: bool = opcion == "a" or opcion == "b"
+			_comprobar(f.voto_pendiente.is_empty() == valida and r.is_empty() != valida, "votar «%s» con asamblea de %d: %s" % [opcion, asam.size(), "se cuenta y cierra la votación" if valida else "opción inválida: se rechaza y la votación sigue abierta"])
 	_comprobar(f.votos.size() <= catalogo_n + 4, "el historial de votos no se desborda (%d de %d mociones)" % [f.votos.size(), catalogo_n])
 	_comprobar(f.votar("a", null, []).is_empty(), "votar sin club no hace nada")
 	var j: Jugador = mi.plantilla[0]
@@ -86,7 +87,7 @@ func _federacion(semilla: int) -> void:
 	for i in 80:
 		f.abrir_caso("roja", j, 1, "relleno", m.anio, i)
 	_comprobar(f.casos.size() <= Federacion.MAX_CASOS, "casos de disciplina acotados (%d)" % f.casos.size())
-	_comprobar(j.suspension >= 0, "suspensión no negativa (%d)" % j.suspension)
+	_comprobar(j.suspension >= 0 and j.suspension <= Federacion.MAX_FECHAS, "suspensión entre 0 y %d fechas aunque pidan 100 000 (%d)" % [Federacion.MAX_FECHAS, j.suspension])
 	var vacio := Club.new()
 	_comprobar(f.control_antidopaje(vacio, m.anio, 1).is_empty(), "antidopaje con plantel vacío no hace nada")
 	f.control_antidopaje(null, m.anio, 1)

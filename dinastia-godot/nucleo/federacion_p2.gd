@@ -9,8 +9,8 @@ extends "res://nucleo/federacion_p1.gd"
 ## una rareza suya, pero cambiarla movería el umbral de aprobación de las seis
 ## mociones a la vez, así que se porta tal cual.
 func votar(opcion: String, mi: Club, asamblea: Array) -> Dictionary:
-	if voto_pendiente.is_empty() or mi == null:
-		return {}
+	if voto_pendiente.is_empty() or mi == null or (opcion != "a" and opcion != "b"):
+		return {}   ## (A4-GESTION-003: una opción que no existe no vota «b» a escondidas)
 	var v := voto_pendiente
 	var id := String(v.get("id", ""))
 	var reglas: Dictionary = VOTO_IA.get(id, {})
