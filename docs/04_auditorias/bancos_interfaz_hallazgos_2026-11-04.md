@@ -7,14 +7,16 @@ Bancos: `idiomas`, `menu_navegacion`, `accesibilidad_tutorial`, `arranque` (`din
 - **Mando con un menú del panel lateral abierto**: L1/R1 (submenú) y L2/R2 (menú) no navegaban, porque `AtajosMenu._input` salía por
   `_capa_modal_encima()` (el propio menú cuenta como capa) antes de llegar a la rama del panel. Ahora usa `_capa_modal_ajena()`.
 
-## Hallazgos abiertos (no son fallos del banco: están medidos y con tope de regresión)
-1. **Texto sin traducir en pantallas** (recorrido de todas las pantallas, por idioma): `en`, `de`, `tr` limpios; `pt` 25, `ca` 15, `fr` 11,
-   `it` 5, `pl` 1 frases que la heurística toma por castellano (muchas son falsos positivos: nombres de columna de un CSV, «menus», cognados;
-   revisar con `RECORRIDO_IDIOMA=<l> RECORRIDO_FALTAN=/tmp/faltan.txt godot --headless --path dinastia-godot res://pruebas/recorrido_pantallas.tscn`).
-   Reales a revisar: «hombros» suelto en una frase en portugués, «Escritório (menus)», líneas de retos del día («Não sofras golos»…) en pt.
-2. **Escala de texto 160 % en idiomas de palabras largas** (de, fr, tr): ~44 controles se salen por la derecha en 5 pantallas
-   (en castellano 0). Ejemplo: «POR · 33 yaş · Lautaro FC · öz» en la ficha del plantel se sale 31 px. Tope actual del banco: 120.
-3. **Pruebas de toque sin pantalla**: el viewport sin ventana no entrega ratón ni toques a la interfaz (`Viewport.gui_get_hovered_control` es
+## Hallazgos cerrados en el pulido (4-11)
+1. **Castellano suelto en pantallas**: eran casi todo falsos positivos del detector (palabras que son también de pt/ca/it/fr/pl: «que», «se», «para», «por»,
+   «tu», «del», «una», «semanas»…; y frases ya traducidas que volvían a pasar por `Idiomas.t`). El detector (`COMPARTIDAS` en `recorrido_pantallas.gd`) las descuenta por idioma.
+   Real: la frase «La federación convoca sobre: …» (votación de la asamblea) no tenía patrón → añadido en los 8 idiomas. Ahora 0-1 por idioma (tope del banco 3).
+2. **Texto al 160 % en de/fr/tr**: los «44 controles que se salen por la derecha» eran falsos positivos (estaban dentro de columnas con desplazamiento horizontal, p. ej. la ficha del
+   jugador). Medido bien da 0 en de/fr/tr (y en castellano); el banco lo exige (tope 0 de salidas y 12 cortados).
+3. **Pantalla de controles del mando**: el manual gana ancho (acciones de 3-4 líneas a 2), filas alternas con guía, y el aviso del mando 3D en dos líneas.
+
+## Hallazgo abierto
+- **Pruebas de toque sin pantalla**: el viewport sin ventana no entrega ratón ni toques a la interfaz (`Viewport.gui_get_hovered_control` es
    nulo y `push_input` no llega a los botones), así que el banco busca con las reglas del motor el control que recibiría el toque
    (nada tapa los botones del riel, con el central y con un menú abierto) y no el clic real.
 
