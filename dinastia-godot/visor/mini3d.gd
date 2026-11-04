@@ -16,7 +16,7 @@ static func vista(padre: Control, momento: int = Calidad.DIA) -> Dictionary:
 	cont.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var vp := SubViewport.new()
 	vp.own_world_3d = true
-	vp.msaa_3d = Viewport.MSAA_4X
+	vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
 	vp.handle_input_locally = false
 	cont.add_child(vp)
 	padre.add_child(cont)

@@ -24,11 +24,14 @@ extends RefCounted
 enum { MINIMO = -1, MEDIO, ALTO, ULTRA }
 const ESCALA_MINIMO := 0.5   ## el valor por defecto; el jugador lo elige en Ajustes (35-100 %)
 const ESCALA_MIN_POSIBLE := 0.35
+const ESCALA_MEDIA_MIN := 0.5   ## (4-11) la resolución del 3D también se elige en MEDIA (50-100 %, por defecto 100 %)
+static var escala_media := 1.0
 static var escala_minimo := (float(OS.get_environment("ESCALA3D")) if OS.get_environment("ESCALA3D") != "" else ESCALA_MINIMO)
 
 ## La resolución base del 3D del nivel (1.0 salvo en MÍNIMO). La calidad adaptativa vuelve a esta, no a 1.0.
 static func escala_3d(nivel: int = -99) -> float:
-	return escala_minimo if (elegida if nivel == -99 else nivel) <= MINIMO else 1.0
+	var n := elegida if nivel == -99 else nivel
+	return escala_minimo if n <= MINIMO else (escala_media if n == MEDIO else 1.0)
 
 ## EL NIVEL QUE HA ELEGIDO EL JUGADOR en Ajustes. Vive aqui y no en la pantalla
 ## de ajustes porque quien lo necesita es el visor 3D, que se monta desde otro
@@ -252,6 +255,10 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 # ------------------------------------------------------------------ viewport
 
 ## ¿Renderizador de compatibilidad (OpenGL: móvil, web, capturas)?
+## (4-11) MSAA de las vistas 3D SECUNDARIAS (retratos, casa, rueda de prensa, sorteo…): en MÍNIMO nunca más de x2.
+static func msaa_ui(m: int) -> int:
+	return Viewport.MSAA_2X if elegida <= MINIMO and m > Viewport.MSAA_2X else m
+
 static func es_compatibilidad() -> bool:
 	return RenderingServer.get_current_rendering_method() == "gl_compatibility"
 
@@ -281,7 +288,8 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 		## MÍNIMO también lleva MSAA x2: sin él, a 70 % de resolución, las líneas finas del campo lejanas salían
 		## entrecortadas (visto en la captura del 2-11). En las gráficas de móvil (por teselas) x2 cuesta poco.
 		vp.msaa_3d = Viewport.MSAA_2X
-	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+	## Por debajo de 100 % en Forward+/Mobile, FSR (más nítido que el bilineal); en Compatibilidad no existe y queda el bilineal.
+	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR if (nivel == MEDIO and not es_compatibilidad() and escala_3d(nivel) < 0.99) else Viewport.SCALING_3D_MODE_BILINEAR
 	vp.scaling_3d_scale = escala_3d(nivel)
 	vp.mesh_lod_threshold = 6.0 if nivel <= MINIMO else 1.0   ## (3-11, R2) MÍNIMO: las mallas con LOD (jugadores) cambian a detalle bajo antes; el resto de niveles, el valor de siempre
 	vp.use_debanding = nivel > MINIMO
@@ -317,6 +325,8 @@ static func cargar() -> void:
 		adaptativa = bool(cf.get_value("grafica", "adaptativa"))
 	if cf.has_section_key("grafica", "motor_ligero"):
 		motor_ligero = bool(cf.get_value("grafica", "motor_ligero"))
+	if cf.has_section_key("grafica", "escala_media"):
+		escala_media = clampf(float(cf.get_value("grafica", "escala_media")), ESCALA_MEDIA_MIN, 1.0)
 	if cf.has_section_key("grafica", "escala_minimo"):
 		escala_minimo = clampf(float(cf.get_value("grafica", "escala_minimo")), ESCALA_MIN_POSIBLE, 1.0)
 
@@ -326,6 +336,7 @@ static func guardar() -> void:
 	cf.set_value("grafica", "adaptativa", adaptativa)
 	cf.set_value("grafica", "motor_ligero", motor_ligero)
 	cf.set_value("grafica", "escala_minimo", escala_minimo)
+	cf.set_value("grafica", "escala_media", escala_media)
 	cf.save(ARCHIVO)
 
 ## ¿Se puede relanzar el juego? Solo en un ejecutable de escritorio (en el

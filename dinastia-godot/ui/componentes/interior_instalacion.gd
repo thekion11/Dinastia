@@ -307,7 +307,7 @@ func _montar() -> void:
 			env.ambient_light_color = Color(0.9, 0.88, 0.85)
 			env.ambient_light_energy = 0.5
 			env.tonemap_exposure = 1.0
-			env.ssao_enabled = true
+			env.ssao_enabled = Calidad.elegida > Calidad.MINIMO
 			env.ssao_radius = 0.8
 			env.ssao_intensity = 1.6
 			env.ssao_power = 1.4
