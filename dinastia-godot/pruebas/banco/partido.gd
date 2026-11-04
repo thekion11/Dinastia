@@ -86,3 +86,104 @@ func _probar_partido_abandonado() -> void:
 	d["minuto"] = 90
 	var r3 := PartidoPendiente.resolver(m, d)
 	_comprobar(r3 != null and r3.goles_local == 0 and r3.goles_visita == 2, "si ya se había pitado el final, queda el resultado tal cual")
+
+## EL RECEPTOR SEGURO DE LOS SAQUES (03-11-2026, ciclo 11, `MotorSaque`, bandera SAQUE_SEGURO): banda y centro van al compañero más libre y cercano; apagado no cambia nada.
+func _probar_saque_seguro() -> void:
+	_titulo("RECEPTOR SEGURO EN SAQUES DE BANDA Y CENTRO")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var locales: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
+	for q: Dictionary in motor.jugadores:
+		(q["node"] as Node3D).position = Vector3(-33.0, 0, -50.0 + randf())
+	var sacador: Dictionary = locales[0]
+	(sacador["node"] as Node3D).position = Vector3(30.0, 0, 0)
+	var cerca_libre: Dictionary = locales[1]
+	var cerca_tapado: Dictionary = locales[2]
+	(cerca_libre["node"] as Node3D).position = Vector3(24.0, 0, 6.0)
+	(cerca_tapado["node"] as Node3D).position = Vector3(22.0, 0, -7.0)
+	(vis[0]["node"] as Node3D).position = Vector3(22.0, 0, -8.5)   ## encima del segundo
+	var antes := MotorSaque._on
+	MotorSaque._on = true
+	var elegido := MotorSaque.receptor(motor, sacador, "banda")
+	_comprobar(not elegido.is_empty() and String(elegido["id"]) == String(cerca_libre["id"]), "el saque de banda va al compañero libre, no al tapado")
+	MotorSaque._on = false
+	var apagado := MotorSaque.receptor(motor, sacador, "banda")
+	_comprobar(apagado.is_empty() or bool(apagado["es_local"]), "apagado delega en el selector de siempre (devuelve un compañero)")
+	MotorSaque._on = antes
+	(r[1] as Node3D).queue_free()
+
+## LOS COMPAÑEROS SE OFRECEN EN EL SAQUE DE BANDA (03-11-2026, ciclo 11, `MotorSaque.oferta`, bandera SAQUE_OFRECE): los dos más cercanos al lanzador se ofrecen hacia dentro; apagado = base.
+func _probar_saque_ofrece() -> void:
+	_titulo("LOS COMPAÑEROS SE OFRECEN EN EL SAQUE DE BANDA")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var locales: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	var rival: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))[0]
+	var lugar := Vector3(motor.ANCHO, 0, 10.0)
+	var lanzador: Dictionary = locales[0]
+	motor.saque = {"tipo": "banda", "local": true, "lugar": lugar, "lanzador": lanzador}
+	for i in locales.size():
+		(locales[i]["node"] as Node3D).position = Vector3(lugar.x - 3.0 * i - 2.0, 0, lugar.z + 1.5 * i)
+	var base := Vector3(1.0, 0, 2.0)
+	var antes := MotorSaque._ofrece
+	MotorSaque._ofrece = false
+	_comprobar(MotorSaque.oferta(motor, locales[1], lugar, true, base) == base, "apagado devuelve la posición base")
+	MotorSaque._ofrece = true
+	var o1 := MotorSaque.oferta(motor, locales[1], lugar, true, base)
+	var o2 := MotorSaque.oferta(motor, locales[2], lugar, true, base)
+	_comprobar(o1 != base and o1.x < lugar.x and absf(o1.x - lugar.x) < 8.0, "el más cercano se ofrece corto, hacia dentro del campo (x %.1f)" % o1.x)
+	_comprobar(o2 != base and o2.x < o1.x, "el segundo se ofrece más adentro y en diagonal (x %.1f)" % o2.x)
+	_comprobar(MotorSaque.oferta(motor, locales[5], lugar, true, base) == base, "el tercero y los demás siguen con su base")
+	_comprobar(MotorSaque.oferta(motor, rival, lugar, true, base) == base, "el equipo que no saca no se coloca por este sistema")
+	_comprobar(MotorSaque.oferta(motor, lanzador, lugar, true, base) == base, "el lanzador no cambia")
+	MotorSaque._ofrece = antes
+	(r[1] as Node3D).queue_free()
+
+## ENTRAR EN EL MOMENTO BUENO (03-11-2026, ciclo 12, `MotorEntrada`, bandera ENTRADA_MOMENTO): el radio de la entrada crece con el portador de espaldas, con control largo o en la banda.
+func _probar_entrada_momento() -> void:
+	_titulo("ENTRAR EN EL MOMENTO BUENO")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var victima: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))[0]
+	var def_: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))[0]
+	var nv := victima["node"] as Node3D
+	nv.position = Vector3(0, 0, 0)
+	(def_["node"] as Node3D).position = Vector3(0, 0, 2.0)   ## el defensa está en +z
+	motor.balon.position = Vector3(0, 0.11, 0.3)
+	var antes := MotorEntrada._on
+	MotorEntrada._on = false
+	_comprobar(MotorEntrada.radio(motor, def_, victima, 1.25) == 1.25, "apagado devuelve el radio base")
+	MotorEntrada._on = true
+	nv.rotation.y = 0.0   ## mira a +z: DE FRENTE al defensa
+	_comprobar(MotorEntrada.radio(motor, def_, victima, 1.25) == 1.25, "de frente, con el balón en los pies y en el centro: radio base")
+	nv.rotation.y = PI    ## mira a -z: DE ESPALDAS al defensa
+	_comprobar(absf(MotorEntrada.radio(motor, def_, victima, 1.25) - (1.25 + MotorEntrada.ESPALDAS)) < 0.001, "de espaldas: radio + %.1f" % MotorEntrada.ESPALDAS)
+	motor.balon.position = Vector3(0, 0.11, -1.5)   ## el balón se le ha ido
+	_comprobar(absf(MotorEntrada.radio(motor, def_, victima, 1.25) - (1.25 + MotorEntrada.TOPE)) < 0.001, "de espaldas y con control largo: radio + tope %.1f" % MotorEntrada.TOPE)
+	nv.rotation.y = 0.0
+	motor.balon.position = Vector3(motor.ANCHO - 1.0, 0.11, 0.3)
+	nv.position = Vector3(motor.ANCHO - 1.0, 0, 0)
+	(def_["node"] as Node3D).position = Vector3(motor.ANCHO - 1.0, 0, 2.0)
+	_comprobar(absf(MotorEntrada.radio(motor, def_, victima, 1.25) - (1.25 + MotorEntrada.BANDA)) < 0.001, "pegado a la banda: radio + %.1f" % MotorEntrada.BANDA)
+	MotorEntrada._on = antes
+	(r[1] as Node3D).queue_free()
+
+## GEOMETRÍA DE LA INTERCEPCIÓN (03-11-2026, ciclo 14, `MotorTraza.cortar`): distancia perpendicular del cortador a la línea del pase y tiempo de vuelo; solo cuenta.
+func _probar_traza_corte() -> void:
+	_titulo("TRAZA DE LA INTERCEPCIÓN: DISTANCIA Y TIEMPO")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var rival: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))[0]
+	motor.diag = {}
+	motor.set_meta("_traza_geo", {"t": 10.0, "a": Vector3(0, 0, 0), "b": Vector3(0, 0, 20.0), "rivales": {String(rival["id"]): Vector3(5.0, 0, 10.0)}})
+	motor.t = 11.5
+	MotorTraza.cortar(motor, rival)
+	_comprobar(int(motor.diag.get("traza_corte_perp_corriendo", 0)) == 1, "un defensa a 5 m de la línea tuvo que correr («corriendo»)")
+	_comprobar(int(motor.diag.get("traza_corte_t_lento", 0)) == 1, "un corte a 1,5 s del pase es «lento»")
+	motor.set_meta("_traza_geo", {"t": 20.0, "a": Vector3(0, 0, 0), "b": Vector3(0, 0, 20.0), "rivales": {String(rival["id"]): Vector3(0.5, 0, 8.0)}})
+	motor.t = 20.2
+	MotorTraza.cortar(motor, rival)
+	_comprobar(int(motor.diag.get("traza_corte_perp_en_linea", 0)) == 1, "un defensa a 0,5 m de la línea estaba «en_linea»")
+	_comprobar(int(motor.diag.get("traza_corte_t_rapido", 0)) == 1, "un corte a 0,2 s del pase es «rapido» (sin tiempo de reacción)")
+	(r[1] as Node3D).queue_free()

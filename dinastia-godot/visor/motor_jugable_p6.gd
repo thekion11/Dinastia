@@ -90,6 +90,7 @@ func _cabezazo(p: Dictionary) -> void:
 			var err := (0.5 + (1.0 - GestoTecnico.tiro(p, "cabeza")) * 1.4) * (0.4 + absf(pos(p).z - arco.z) / 11.0) * GestoTecnico.factor(self, p, true)
 			destino = Vector3((1.0 if _rng.randf() < 0.5 else -1.0) * _rng.randf_range(0.8, PALO - 0.3) + _rng.randf_range(-err, err),
 				clampf(_rng.randf_range(0.3, 1.4) + _rng.randf_range(-err, err) * 0.6, 0.15, 3.5), arco.z)
+		destino = MotorCorner.cabeza(self as Object as MotorJugable, p, destino)   ## ciclo 26: el cabezazo con marca falla más
 		_patear(p, destino, 14.0 + float(p["attr"]["tir"]) * 6.0, 0.0, 0.0, "cabezazo")
 		tiros[0 if bool(p["es_local"]) else 1] += 1
 		_cerrar_tiro("fallo")   ## (01-11) el remate anterior aún abierto se cierra (ver `_tirar`)
@@ -109,14 +110,14 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 	if poseedor.is_empty():
 		return
 	var victima := poseedor
-	p["enfriar"] = 1.0 if not barrida else 1.6
+	p["enfriar"] = (1.0 if not barrida else 1.6) * MotorDuelo.ENF   ## ciclo 10: menos intentos de entrada (1,0 = como antes)
 	var def_ := float(p["attr"]["def"])
 	var reg := float(victima["attr"]["reg"])
 	if t < float(victima["regate_hasta"]):
 		reg += 0.35
 	## Defensa contra regate al cuadrado: el buen defensor roba bastante más
 	## que el malo (antes la proporción lineal igualaba a todos).
-	var exito := def_ * def_ / (def_ * def_ + reg * reg) * (0.55 if barrida else 0.32)
+	var exito := def_ * def_ / (def_ * def_ + reg * reg) * (0.55 if barrida else 0.32) * MotorDuelo.K
 	## La entrada de pie también es cuerpo: el fuerte se impone al débil (y
 	## el que tiene equilibrio aguanta). De media no cambia nada.
 	if not barrida:
@@ -126,6 +127,7 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 		exito *= 0.55
 	if p == usuario:
 		stats["entradas"] += 1
+	_contar("traza_entrada_intento")   ## ciclo 10: solo cuenta
 	var de_lado := absf((pos(victima) - pos(p)).normalized().dot(Vector3(sin((p["node"] as Node3D).rotation.y), 0, cos((p["node"] as Node3D).rotation.y)))) < 0.5
 	var gesto_e := "entrada_de_pie"
 	if barrida:
@@ -142,6 +144,8 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 	if r < exito:
 		if p == usuario:
 			stats["entradas_ok"] += 1
+		_contar("traza_entrada_exito")
+		set_meta("_traza_ent", self.t)
 		poseedor = {}
 		ultimo_toque = p
 		_offside = {}
@@ -234,6 +238,7 @@ func _disputas(delta: float) -> void:
 			if dq < 0.6 and dq < lejos_dueno * 0.6:
 				poseedor["enfriar"] = 0.4
 				poseedor = {}
+				set_meta("_traza_tl", self.t)   ## traza (ciclo 10): toque largo
 				_tomar(q)
 				return
 	for p: Dictionary in jugadores:
@@ -241,7 +246,7 @@ func _disputas(delta: float) -> void:
 			continue
 		if float(p["enfriar"]) > 0.0 or bool(p["por"]):
 			continue
-		if pos(p).distance_to(pos(poseedor)) < 1.25 + 0.12 * float(_tac(bool(p["es_local"]), "presion") - 1):
+		if pos(p).distance_to(pos(poseedor)) < MotorEntrada.radio(self as Object as MotorJugable, p, poseedor, 1.25 + 0.12 * float(_tac(bool(p["es_local"]), "presion") - 1)):   ## ciclo 12: entrar en el momento bueno
 			_entrada(p, false)
 			break
 
@@ -332,13 +337,13 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 		var dist := qp.distance_to(yo)
 		if dist < 4.0 or dist > 42.0:
 			continue
-		var progreso := (qp.z - yo.z) * d
+		var progreso := MotorPaseMejora.progreso((qp.z - yo.z) * d)
 		var lr := MotorPaseMejora.libre_y_riesgo(self as Object as MotorJugable, p, q, yo, qp)   ## (R2, 01-11: con PMOT_PASE=1, previsto)
 		var libre: float = lr[0]
 		var riesgo: float = lr[1]
 		var nota := progreso * (CHISPA_AVANCE * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1) \
 				+ 0.03 * float(_tac(bool(p["es_local"]), "verticalidad") - 1)) \
-			+ minf(libre, 10.0) * 0.18 - riesgo - dist * 0.02
+			+ minf(libre, 10.0) * 0.18 - riesgo * MotorPaseMejora.RIESGO_K - dist * MotorPaseMejora.DIST_K + MotorPaseMejora.bono_tercio(self as Object as MotorJugable, p, qp)
 		## Un buen pasador ve el fuera de juego: con más visión (pase) casi
 		## nunca se la da a un compañero adelantado.
 		if _adelantado(q, p) and _rng.randf() < 0.55 + float(p["attr"]["pas"]) * 0.4:
@@ -369,7 +374,7 @@ func _rival_mas_cercano(p: Dictionary) -> Dictionary:
 
 func _presion(p: Dictionary) -> float:
 	var r := _rival_mas_cercano(p)
-	return pos(r).distance_to(pos(p)) if not r.is_empty() else 99.0
+	return MotorMente.pos_vista(self as Object as MotorJugable, p, r).distance_to(pos(p)) if not r.is_empty() else 99.0   ## lo que VE (F8, 03-11)
 
 func _linea_tapada(a: Vector3, c: Vector3, local: bool) -> bool:
 	for r: Dictionary in jugadores:
@@ -433,8 +438,9 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 		_patear(p, destino, clampf(dist * 0.45 + 6.0, 10.0, 19.0), 0.25 if (tapada and dist < 25.0) else 2.0, 0.0, "pase")
 	else:
 		## Con pace: el balón llega al compañero con fuerza, no muriéndose.
-		_patear(p, destino, clampf(velocidad_para(dist, 4.0 + dist * 1.5), 7.0, 26.0), 0.0, 0.0, "pase")
+		_patear(p, destino, clampf(velocidad_para(dist, 4.0 + dist * 1.5) * MotorPaseMejora.VEL_K, 7.0, 26.0 * MotorPaseMejora.VEL_K), 0.0, 0.0, "pase")
 	pase_a = q
+	MotorTraza.pase(self as Object as MotorJugable, p, q, dist)   ## traza (ciclo 13): solo cuenta
 	_pase_eq = 0 if bool(p["es_local"]) else 1
 	pases[_pase_eq] += 1
 	if p == usuario:

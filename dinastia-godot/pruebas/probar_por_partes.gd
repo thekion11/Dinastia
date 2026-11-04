@@ -25,6 +25,17 @@ func _esperar_estable(raiz: Node) -> void:
 		if quietos >= 8:
 			return
 
+## (3-11) La ciudad diferida (`CityBuilder._resto`) espera a la carga de modelos en hilos: con el árbol quieto 8 cuadros seguidos NO basta para saber que acabó
+## (en un CI lento se miraba a medias y «dos armados de una vez» salía distinto). Se espera a su señal `completa` (tope 6 000 cuadros).
+func _esperar_completa(vc: Node) -> void:
+	var cb: Variant = vc.get("_ciudad")
+	if cb == null:
+		return
+	for i in 6000:
+		if bool(cb.get("completa")):
+			return
+		await get_tree().process_frame
+
 func _ready() -> void:
 	_correr.call_deferred()
 
@@ -57,6 +68,7 @@ func _correr() -> void:
 		await vc.abrir(c, m.obras, m.ciudad, m.perfil_estadio_de(c))
 		var n2 := _cuadros - f1
 		_comprobar(not partes or n2 >= 3, "ciudad por partes cede fotogramas (%d)" % n2)
+		await _esperar_completa(vc)
 		await _esperar_estable(vc)   ## lo que se crea diferido (gente, tráfico) en los dos modos
 		huellas["ciudad%s" % partes] = huellas.get("ciudad%s" % partes, []) + [_huella(vc)]
 		vc.free()
