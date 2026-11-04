@@ -38,6 +38,8 @@ func _probar() -> void:
 			m.directiva.confianza = 60
 		m.nueva_temporada()
 		_fotos.append(_foto(m, gpp, Time.get_ticks_msec() - t0))
+		if OS.get_environment("DERIVA_DETALLE") != "" and (t + 1) % 3 == 0:
+			_detalle(m, t + 1)
 		if (t + 1) % 5 == 0:
 			_linea(_texto(_fotos[t + 1], t + 1))
 			await get_tree().process_frame
@@ -135,3 +137,23 @@ func _analizar(campeones: Array[Dictionary], temp: int) -> void:
 			vistos[String(campeones[i].get(liga, ""))] = true
 		_linea("  campeones distintos en %s (últimas %d): %d" % [liga, campeones.size() - desde, vistos.size()])
 		## DOMINIO (A4-GESTION-010): se imprime, no se exige: el campeón repite hasta 26 años seguidos con la reputación en el tope (96) y está documentado como deuda de balance con su propuesta.
+
+## Los 4 clubes de mayor reputación de la primera liga: reputación, caja, media de sus 14 mejores, sueldos y valor del plantel (para ver POR DÓNDE se hace la bola de nieve).
+func _detalle(m: Mundo, t: int) -> void:
+	var l: Liga = m.ligas[0]
+	var cs: Array = l.clubes.duplicate()
+	cs.sort_custom(func(a: Club, b: Club) -> bool: return a.rep > b.rep)
+	var partes: Array[String] = []
+	for c: Club in cs.slice(0, 4):
+		var ovrs: Array[int] = []
+		var nomina := 0
+		for j: Jugador in c.plantilla:
+			ovrs.append(j.ovr)
+			nomina += j.sueldo
+		ovrs.sort()
+		ovrs.reverse()
+		var top14 := 0.0
+		for i in mini(14, ovrs.size()):
+			top14 += ovrs[i]
+		partes.append("%s rep %d caja %.1fM top14 %.1f nómina %.2fM" % [c.nombre.left(9), c.rep, float(c.saldo) / 1e6, top14 / 14.0, float(nomina) / 1e6])
+	_linea("    t%d: %s" % [t, " | ".join(partes)])
