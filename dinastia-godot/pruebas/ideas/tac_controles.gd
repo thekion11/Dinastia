@@ -44,7 +44,10 @@ func _probar_tactil() -> void:
 	## Botones con otro dedo a la vez que el stick.
 	var nombres := {"A": "jugar_pase", "B": "jugar_tiro", "X": "jugar_centro", "Y": "jugar_filtrado", "Cambiar": "jugar_cambiar", "Sprint": "jugar_sprint", "Mod": "jugar_mod", "Pausa": "jugar_pausa"}
 	var dedo := 1
+	c._modo_mando = "botones"
 	for n: String in nombres:
+		c._con_balon = n != "Cambiar"       ## cada botón en el contexto en que se ve
+		c._en_banda = true
 		_toque(c, dedo, c.centro_de(n), true)
 		_comprobar(Input.is_action_pressed(String(nombres[n])), "el botón %s pulsa «%s»" % [n, nombres[n]])
 		_comprobar(Mando.movimiento().x > 0.0, "…y el stick sigue moviendo")
@@ -116,11 +119,88 @@ func _probar_tactil() -> void:
 	_comprobar(c.etiqueta_de("X", true) == "Centro" and c.etiqueta_de("X", false) == "Barrida", "etiqueta de X: Centro con balón, Barrida sin balón")
 	_comprobar(c.etiqueta_de("Y", true) == "Al hueco" and c.etiqueta_de("Y", false) == "", "«Al hueco» sin balón se apaga")
 	_comprobar(c.etiqueta_de("Sprint", true) == "Sprint", "los botones sin contexto conservan su etiqueta")
+	## MENOS BOTONES a la vez (evaluación frente a FC Mobile y DLS): cuántos se ven en cada contexto.
+	var cuenta := func(cb: bool, banda: bool, modo: String) -> int:
+		var k := 0
+		for n2: String in ControlesTactiles.BOTONES:
+			if c.visible_en(n2, cb, banda, modo):
+				k += 1
+		return k
+	_comprobar(int(cuenta.call(true, false, "ambos")) == 5, "con balón (ambos): Pase, Al hueco, Tiro, Sprint y II = 5 botones (%d)" % int(cuenta.call(true, false, "ambos")))
+	_comprobar(c.visible_en("X", true, true, "ambos") and not c.visible_en("X", true, false, "ambos"), "Centro solo con balón en la banda cerca del área")
+	_comprobar(int(cuenta.call(false, false, "ambos")) == 6 and c.visible_en("Cambiar", false, false, "ambos") and not c.visible_en("Y", false, false, "ambos"), "sin balón: Pase/Presión, Entrada, Barrida, Cambiar, Sprint y II = 6; Al hueco no")
+	_comprobar(not c.visible_en("Cambiar", true, true, "ambos"), "Cambiar solo en defensa (sin balón)")
+	_comprobar(not c.visible_en("Mod", true, false, "ambos") and c.visible_en("Mod", true, false, "botones"), "Mod solo en el modo «Botones» (los gestos lo sustituyen)")
+	_comprobar(int(cuenta.call(true, false, "gestos")) == 2, "en el modo «Gestos» con balón solo quedan Sprint y II (%d)" % int(cuenta.call(true, false, "gestos")))
+	## GESTOS: deslizar desde Tiro = rosca, desde Pase = pase largo, tocar la zona libre = pase, deslizar hacia arriba = tiro, tocar Sprint = regate.
+	c._modo_mando = "ambos"
+	c._con_balon = true
+	c._en_banda = false
+	var cb_ := c.centro_de("B")
+	_toque(c, 20, cb_, true)
+	_comprobar(Input.is_action_pressed("jugar_tiro") and not Input.is_action_pressed("jugar_mod"), "tocar Tiro solo pulsa Tiro")
+	_arrastre(c, 20, cb_ + Vector2(0, -c.radio_de("B") * 1.3))
+	_comprobar(Input.is_action_pressed("jugar_tiro") and Input.is_action_pressed("jugar_mod"), "deslizar desde Tiro pulsa también Mod (rosca)")
+	_toque(c, 20, cb_, false)
+	_comprobar(not Input.is_action_pressed("jugar_tiro") and not Input.is_action_pressed("jugar_mod"), "soltar suelta Tiro y Mod")
+	var ca_ := c.centro_de("A")
+	_toque(c, 21, ca_, true)
+	_arrastre(c, 21, ca_ + Vector2(0, -c.radio_de("A") * 1.3))
+	_comprobar(Input.is_action_pressed("jugar_pase_largo") and not Input.is_action_pressed("jugar_pase"), "deslizar desde Pase da el pase largo")
+	_toque(c, 21, ca_, false)
+	_comprobar(not Input.is_action_pressed("jugar_pase_largo"), "soltar suelta el pase largo")
+	_toque(c, 22, Vector2(700, 300), true)
+	_toque(c, 22, Vector2(700, 300), false)
+	_comprobar(Input.is_action_pressed("jugar_pase"), "tocar la zona libre de la derecha da un pase")
+	Input.action_release("jugar_pase")
+	_toque(c, 23, Vector2(700, 520), true)
+	_arrastre(c, 23, Vector2(715, 300))
+	_toque(c, 23, Vector2(715, 300), false)
+	_comprobar(Input.is_action_pressed("jugar_tiro"), "deslizar hacia arriba en la zona libre tira")
+	Input.action_release("jugar_tiro")
+	_toque(c, 24, c.centro_de("Sprint"), true)
+	_toque(c, 24, c.centro_de("Sprint"), false)
+	_comprobar(Input.is_action_pressed("jugar_regate"), "un toque corto en Sprint hace el regate")
+	Input.action_release("jugar_regate")
+	_toque(c, 25, c.centro_de("Sprint"), true)
+	(c._gesto[25] as Dictionary)["t"] = int((c._gesto[25] as Dictionary)["t"]) - 600   ## lo mantiene un rato
+	_comprobar(Input.is_action_pressed("jugar_sprint"), "mantener Sprint corre")
+	_toque(c, 25, c.centro_de("Sprint"), false)
+	_comprobar(not Input.is_action_pressed("jugar_regate") and not Input.is_action_pressed("jugar_sprint"), "mantener Sprint no hace regate")
+	c._modo_mando = "botones"
+	_toque(c, 26, Vector2(700, 300), true)
+	_toque(c, 26, Vector2(700, 300), false)
+	_comprobar(not Input.is_action_pressed("jugar_pase"), "en el modo «Botones» la zona libre no da pases")
+	c._modo_mando = "gestos"
+	_toque(c, 27, Vector2(700, 300), true)
+	_toque(c, 27, Vector2(700, 300), false)
+	_comprobar(Input.is_action_pressed("jugar_pase"), "en el modo «Gestos» el toque en la zona libre da el pase")
+	Input.action_release("jugar_pase")
+	c.soltar_todo()
+	## Separación entre botones: a 1,3 caben y no se pisan; el modo y la separación se guardan en Ajustes.
+	AjustesTactil.restaurar()
+	_comprobar(AjustesTactil.mando() == "ambos" and absf(AjustesTactil.separacion() - 1.0) < 0.001, "por defecto: modo «Ambos» y separación 100 %")
+	AjustesTactil.poner_mando("gestos")
+	AjustesTactil.poner_separacion(1.3)
+	var gs := ControlesTactiles.poner(self)
+	gs.size = Vector2(1280, 720)
+	_comprobar(gs._modo_mando == "gestos" and absf(gs._sep - 1.3) < 0.001, "el modo de control y la separación elegidos llegan a los controles")
+	var ok_sep := true
+	for n3: String in nombres:
+		var p3 := gs.centro_de(n3)
+		var r3 := gs.radio_de(n3)
+		if p3.x < r3 or p3.x > 1280.0 - r3 or p3.y > 720.0 - r3 or (n3 != "Pausa" and p3.y < 720.0 * 0.3):
+			ok_sep = false
+	_comprobar(ok_sep, "con la separación al 130 % los botones siguen cabiendo en pantalla")
+	gs.free()
+	AjustesTactil.poner_mando("zzz")
+	_comprobar(AjustesTactil.mando() == "ambos", "un modo de control desconocido vuelve a «Ambos»")
+	AjustesTactil.restaurar()
 	## Ajustes: tamaño y opacidad (se leen al crear el control) y cuándo salen.
 	c.soltar_todo()
 	c.queue_free()
 	AjustesTactil.restaurar()
-	_comprobar(AjustesTactil.modo() == "auto" and absf(AjustesTactil.tamano() - 1.0) < 0.001 and absf(AjustesTactil.opacidad() - 1.0) < 0.001, "por defecto: automático, tamaño 100 %, opacidad 100 %")
+	_comprobar(AjustesTactil.modo() == "auto" and absf(AjustesTactil.tamano() - 1.0) < 0.001 and absf(AjustesTactil.opacidad() - 0.6) < 0.001, "por defecto: automático, tamaño 100 %, opacidad 60 %")
 	AjustesTactil.poner_tamano(1.4)
 	AjustesTactil.poner_opacidad(0.4)
 	var g := ControlesTactiles.poner(self)
