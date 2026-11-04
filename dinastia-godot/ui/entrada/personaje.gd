@@ -42,7 +42,7 @@ func _ready() -> void:
 	var marco := MarginContainer.new()
 	marco.set_anchors_preset(Control.PRESET_FULL_RECT)
 	for lado: String in ["left", "right", "top", "bottom"]:
-		marco.add_theme_constant_override("margin_" + lado, 28 if lado in ["left", "right"] else 22)
+		marco.add_theme_constant_override("margin_" + lado, (16 if lado in ["left", "right"] else 8) if get_viewport_rect().size.y < 600.0 else (28 if lado in ["left", "right"] else 22))   ## móvil apaisado (~480 px): «Atrás/Siguiente» quedaban fuera (A4-INT-027)
 	add_child(marco)
 	var cuerpo := HBoxContainer.new()
 	cuerpo.add_theme_constant_override("separation", 26)
@@ -63,7 +63,7 @@ func _columna_estudio() -> Control:
 	_estudio.c1 = _c1
 	_estudio.c2 = _c2
 	_estudio.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_estudio.custom_minimum_size = Vector2(380, 380)
+	_estudio.custom_minimum_size = Vector2(380, 300 if get_viewport_rect().size.y < 600.0 else 380)
 	var borde := PanelContainer.new()
 	var e := Tema.caja(Color("0b120e"), Tema.RADIO_GRANDE, Color("ffffff14"))
 	e.content_margin_left = 0

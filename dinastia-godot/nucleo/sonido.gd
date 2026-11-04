@@ -118,6 +118,9 @@ func toca(nombre: String, bus: Bus = Bus.EFECTOS, extra_db := 0.0) -> void:
 	_aviso_visual(nombre)
 	if not encendido:
 		return
+	var vol := float(volumen.get(bus, 0.5))
+	if is_nan(vol) or vol <= 0.0:
+		return   ## volumen 0 = mudo de verdad (antes sonaba a −60 dB)
 	var variantes: Array = banco(nombre)
 	if variantes.is_empty():
 		return
@@ -130,7 +133,9 @@ func toca(nombre: String, bus: Bus = Bus.EFECTOS, extra_db := 0.0) -> void:
 	## una vez en este proyecto con un feed cosmetico, y solo la caza el banco.
 	## Aqui basta con ir rotando: el oido no distingue una rueda de un sorteo.
 	p.stream = variantes[_siguiente % variantes.size()]
-	p.volume_db = linear_to_db(maxf(0.001, float(volumen[bus]))) + float(AJUSTE_DB.get(nombre, 0.0)) + extra_db
+	## Un volumen guardado roto (a mano, o dañado: NaN, 1e9) sonaba a +180 dB o daba error de motor (caza de fallos 4-11): se acota.
+	var db := linear_to_db(clampf(vol, 0.001, 2.0)) + float(AJUSTE_DB.get(nombre, 0.0)) + (extra_db if is_finite(extra_db) else 0.0)
+	p.volume_db = clampf(db, -80.0, 12.0)
 	p.play()
 
 ## M-283: el aviso escrito del sonido (aunque el sonido esté apagado). La capa se crea la primera vez que hace falta.

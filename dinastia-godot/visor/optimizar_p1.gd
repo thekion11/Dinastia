@@ -31,6 +31,8 @@ const CORTE := [[1.5, 180.0], [4.0, 320.0], [10.0, 600.0]]
 ## Solo lo QUIETO: se salta todo lo que cuelga de un nodo con script (tráfico,
 ## metro, semáforos, peatones), de un grupo (puertas que se abren) o con hijos.
 const CELDA := 160.0
+## (4-11, A4-REND-003) En MÍNIMA la celda es el doble: mismas instancias y rangos, la mitad de grupos pequeños.
+const CELDA_MINIMA := 320.0
 const MIN_GRUPO := 2
 const UMBRAL_PESADO := 1500       ## triángulos a partir de los cuales hay proxy lejano
 const RANGO_EDIFICIO := 520.0     ## hasta dónde se dibuja el edificio entero
@@ -366,6 +368,7 @@ static func agrupar(raiz: Node3D, con_proxies: bool = true) -> Dictionary:
 	## ciudad o estadio construido dejaba vivas sus mallas y unidades para siempre (+123 objetos y +5 MB por entrada).
 	_tris_cache.clear()
 	_unidad.clear()
+	var cel := CELDA_MINIMA if Calidad.elegida == Calidad.MINIMO else CELDA
 	var grupos := {}
 	var mallas_con_mat := {}
 	var mats := {}
@@ -383,14 +386,14 @@ static func agrupar(raiz: Node3D, con_proxies: bool = true) -> Dictionary:
 		## y, más allá, como una caja de su color medio (12 triángulos).
 		if con_proxies and mi.mesh is ArrayMesh and _tris(mi.mesh) > UMBRAL_PESADO and mi.visibility_range_end <= 0.0 and not _sin_lod(mi):
 			var caja_e := mi.get_aabb()
-			proxies.append([t * Transform3D(Basis.from_scale(caja_e.size), caja_e.get_center()), _color_medio(mi, colores), Vector2i(floori(t.origin.x / CELDA), floori(t.origin.z / CELDA))])
+			proxies.append([t * Transform3D(Basis.from_scale(caja_e.size), caja_e.get_center()), _color_medio(mi, colores), Vector2i(floori(t.origin.x / cel), floori(t.origin.z / cel))])
 			mi.visibility_range_end = RANGO_EDIFICIO
 			mi.visibility_range_end_margin = 20.0
 		var pleg := _plegar(mi, malla)
 		if not pleg.is_empty():
 			malla = pleg[0]
 			t = t * Transform3D(Basis.from_scale(pleg[1]), Vector3.ZERO)
-		var celda := Vector2i(floori(t.origin.x / CELDA), floori(t.origin.z / CELDA))
+		var celda := Vector2i(floori(t.origin.x / cel), floori(t.origin.z / cel))
 		var clave := [malla, mi.material_override, mi.cast_shadow, mi.visibility_range_end, mi.layers, celda]
 		var k := str(clave.map(func(x): return x.get_instance_id() if x is Object else x))
 		if not grupos.has(k):
