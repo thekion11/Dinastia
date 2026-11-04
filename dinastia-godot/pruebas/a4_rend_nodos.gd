@@ -63,7 +63,7 @@ func _process(_d: float) -> void:
 				print("PADRE748 ruta=", x.get_path(), " script=", sc.resource_path if sc != null else "-", " hijos=", x.get_child_count())
 				var nombres := {}
 				for ch in x.get_children().slice(0, 4000):
-					var key := ch.get_class() + ":" + String(ch.name).left(10).rstrip("0123456789@") + (":label=" + (ch as Label3D).text.left(14) if ch is Label3D else "")
+					var key: String = ch.get_class() + ":" + String(ch.name).left(10).rstrip("0123456789@") + (":label=" + (ch as Label3D).text.left(14) if ch is Label3D else "")
 					nombres[key] = int(nombres.get(key, 0)) + 1
 				var nk := nombres.keys(); nk.sort_custom(func(a, b): return nombres[a] > nombres[b])
 				for k in nk.slice(0, 8): print("  HIJO748 ", nombres[k], " ", k)
