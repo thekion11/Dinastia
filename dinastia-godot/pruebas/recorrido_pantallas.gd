@@ -34,8 +34,8 @@ func _ready() -> void:
 		var wh := OS.get_environment("RECORRIDO_MOVIL").split("x")
 		get_window().size = Vector2i(int(wh[0]), int(wh[1]))
 		get_window().content_scale_factor = EscalaMovil.ZOOM_MOVIL
-		ControlesTactiles.dpi_forzado = 400.0
-		ControlesTactiles.ventana_forzada = Vector2i(int(wh[0]), int(wh[1]))
+		PantallaMovil.dpi_forzado = 400.0
+		PantallaMovil.ventana_forzada = Vector2i(int(wh[0]), int(wh[1]))
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 	## Después de abrir: la principal carga el idioma de las preferencias guardadas.

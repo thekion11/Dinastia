@@ -16,9 +16,9 @@ const VENTANA := Vector2i(2400, 1080)
 func _ready() -> void:
 	PartidoJugable.con_ceremonia = false
 	ControlesTactiles.forzar = true
-	ControlesTactiles.dpi_forzado = 400.0
-	ControlesTactiles.ventana_forzada = VENTANA
-	ControlesTactiles.lienzo_forzado = LIENZO
+	PantallaMovil.dpi_forzado = 400.0
+	PantallaMovil.ventana_forzada = VENTANA
+	PantallaMovil.lienzo_forzado = LIENZO
 	AjustesTactil.restaurar()
 	CarreraJugadorUI.mundo = null
 	_ui = load("res://escenas/carrera_jugador.tscn").instantiate()
@@ -40,9 +40,9 @@ func _rect_de(c: Control) -> Rect2:
 
 func _fin() -> void:
 	ControlesTactiles.forzar = false
-	ControlesTactiles.dpi_forzado = 0.0
-	ControlesTactiles.ventana_forzada = Vector2i.ZERO
-	ControlesTactiles.lienzo_forzado = Vector2.ZERO
+	PantallaMovil.dpi_forzado = 0.0
+	PantallaMovil.ventana_forzada = Vector2i.ZERO
+	PantallaMovil.lienzo_forzado = Vector2.ZERO
 	AjustesTactil.restaurar()
 	print("===== FIN. %d fallos =====" % _fallos)
 	get_tree().quit(0 if _fallos == 0 else 1)
