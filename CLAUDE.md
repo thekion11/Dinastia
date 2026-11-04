@@ -125,3 +125,4 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 28. (4-11, sesión «Búsqueda de fallos») Cada 20 min, antes de buscar, comprobar que `main` está actualizado (`git fetch origin main`), fusionarlo en la rama de trabajo y revalidar los fallos anotados; los que `main` ya resolvió se BORRAN del apartado «FALLOS DETECTADOS» de `docs/PLAN_GENERAL.md`. Esa sesión solo busca y registra; no corrige.
 29. (4-11 madrugada) PAUSA ordenada por el dueño: todas las sesiones terminaron su bloque, se unió todo y se apagaron las revisiones
     automáticas (cadena de 20 min y respaldo horario). Para retomar: «ESTADO AL CIERRE DEL 4-11» arriba de `PLAN_GENERAL.md`.
+30. (4-11) REGLA DEL DUEÑO: al dueño se le habla SOLO en español, siempre (todas las sesiones, también en avisos y resúmenes).
