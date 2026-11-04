@@ -19,6 +19,10 @@ const TANDAS := [
 ]
 
 func _ready() -> void:
+	if not ResourceLoader.exists("res://assets/characters/quaternius/ropa_temp/T_Peasant_BaseColor.png"):
+		print("OMITIDA: falta ropa_temp/ (experimento viejo, sin los recursos temporales)")
+		get_tree().quit()
+		return
 	var original := Image.load_from_file("res://assets/characters/quaternius/ropa_temp/T_Peasant_BaseColor.png")
 	if original == null:
 		print("ERROR: no cargo la imagen")
