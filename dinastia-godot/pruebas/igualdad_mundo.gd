@@ -14,7 +14,8 @@ extends Node
 ## 3-11 (ventaja de campo, a propósito): `Balance.BONO_LOCAL`/`BONO_VISITA` 1,08/0,94 → 1,18/0,86 (victoria local 39,8 % → 46,3 %; goles 2,72). Cambian marcadores, tablas y primas; era 1992993185. `igualdad_motor` no cambia.
 ## 4-11 (reglas, a propósito; banco `partido_reglas`): en el simulado la roja sanciona el partido SIGUIENTE (`Disciplina.sanciona`) y la 5.ª
 ## amarilla de la temporada sanciona (`Disciplina.acumula`). Cambian los onces y, con ellos, marcadores y tablas; era 4140416706. `igualdad_motor` no cambia.
-const ESPERADO := "324543228"
+## 4-11 (A4-GES-003): la ficha mental de cada jugador sale de un hash y no del azar → cambia la huella a propósito; era 324543228. `igualdad_motor` no cambia.
+const ESPERADO := "31094042"
 
 func _ready() -> void:
 	var m := Mundo.new()

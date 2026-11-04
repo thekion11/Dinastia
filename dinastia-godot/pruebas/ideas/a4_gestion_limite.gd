@@ -19,11 +19,11 @@ func _probar() -> void:
 	var tamanos := {}
 	for l: Liga in m.ligas:
 		tamanos[l.nombre] = l.clubes.size()
-	for t in 8:
+	for t in int(OS.get_environment("A4_TEMPORADAS")) if OS.get_environment("A4_TEMPORADAS") != "" else 8:
 		m.jugar_temporada()
 		m.nueva_temporada()
 		_integridad(m, "temporada %d" % (t + 1), tamanos)
-		if t % 2 == 1:
+		if t % 2 == 1 or OS.get_environment("A4_TEMPORADAS") != "":
 			m = _ida_y_vuelta(m, t + 1)
 	_comprobar(_malos.is_empty(), "8 temporadas: integridad del mundo y guardado exacto cada dos años%s" % ("" if _malos.is_empty() else " — " + str(_malos.slice(0, 8))))
 	_absurdos(m)
@@ -38,7 +38,19 @@ func _malo(t: String) -> void:
 func _foto(m: Mundo) -> String:
 	var d := Partida.instantanea(m)
 	d.erase("guardado")
-	return JSON.stringify(JSON.parse_string(JSON.stringify(d)), "\t", true)
+	return JSON.stringify(_redondear(JSON.parse_string(JSON.stringify(d))), "\t", true)
+
+## Los decimales se comparan a 9 cifras: el JSON guarda ~15 cifras y la última puede bailar al ir y volver (0.41695652173913 / …131).
+func _redondear(v: Variant) -> Variant:
+	if v is float:
+		return snappedf(v, 1e-9)
+	if v is Dictionary:
+		for k in v:
+			v[k] = _redondear(v[k])
+	elif v is Array:
+		for i in (v as Array).size():
+			v[i] = _redondear(v[i])
+	return v
 
 func _ida_y_vuelta(m: Mundo, t: int) -> Mundo:
 	var antes := _foto(m)
@@ -50,8 +62,9 @@ func _ida_y_vuelta(m: Mundo, t: int) -> Mundo:
 	if c == null:
 		_malo("temporada %d: no se carga" % t)
 		return m
-	if _foto(c) != antes:
-		_malo("temporada %d: la partida cargada NO es idéntica" % t)
+	var despues := _foto(c)
+	if despues != antes:
+		_malo("temporada %d: la partida cargada NO es idéntica — %s" % [t, _diferencia(antes, despues)])
 	return c
 
 func _integridad(m: Mundo, cuando: String, tamanos: Dictionary) -> void:
@@ -112,3 +125,18 @@ func _absurdos(m: Mundo) -> void:
 	m.anio = 2099
 	m.avanzar_semana()
 	_comprobar(m.anio >= 2099, "el año 2099 no rompe el calendario (año %d)" % m.anio)
+
+func _diferencia(a: String, b: String) -> String:
+	var la := a.split("\n")
+	var lb := b.split("\n")
+	for i in mini(la.size(), lb.size()):
+		if la[i] != lb[i]:
+			var camino: Array[String] = []
+			var nivel := la[i].length() - la[i].strip_edges(true, false).length()
+			for k in range(i - 1, -1, -1):
+				var s := la[k].length() - la[k].strip_edges(true, false).length()
+				if s < nivel and la[k].contains("\":"):
+					camino.push_front(la[k].strip_edges().get_slice("\"", 1))
+					nivel = s
+			return "%s · «%s» ≠ «%s»" % ["/".join(camino), la[i].strip_edges().left(70), lb[i].strip_edges().left(70)]
+	return "tamaños %d / %d líneas" % [la.size(), lb.size()]
