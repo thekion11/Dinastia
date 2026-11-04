@@ -53,6 +53,11 @@ func _variantes() -> Array:
 	_env = we.environment if we != null else null
 	for l in _vista.find_children("*", "Light3D", true, false):
 		_sombra_orig[l] = (l as Light3D).shadow_enabled
+		_vis_orig[l] = (l as Node3D).visible
+	for g in _vista.find_children("*", "GeometryInstance3D", true, false):
+		_vis_orig[g] = (g as Node3D).visible
+	for t in _vista.find_children("*", "Label3D", true, false):
+		_vis_orig[t] = (t as Node3D).visible
 	_vp = get_viewport()
 	return [
 		["BASE (como en el juego)", func() -> void: pass],
@@ -132,15 +137,15 @@ func _restaurar() -> void:
 		_env.background_mode = Environment.BG_SKY
 		_env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
 	Calidad.aplicar_viewport(_vp, Calidad.elegida)
-	for n in _vista.find_children("*", "GeometryInstance3D", true, false):
-		(n as GeometryInstance3D).visible = true
-	for l in _vista.find_children("*", "Light3D", true, false):
-		(l as Light3D).visible = true
+	for n: Variant in _vis_orig:   ## cada cosa vuelve a como estaba al empezar (lo que el juego ya tenía oculto sigue oculto)
+		if is_instance_valid(n):
+			(n as Node3D).visible = _vis_orig[n]
 	## las sombras se vuelven a encender según el nivel (Ambience las puso): se reaplican las de la luz solar
 	for l in _vista.find_children("*", "Light3D", true, false):
 		(l as Light3D).shadow_enabled = _sombra_orig.get(l, (l as Light3D).shadow_enabled)
 
 var _sombra_orig := {}
+var _vis_orig := {}
 
 ## Qué hay: materiales transparentes, de shader, luces, texturas.
 func _inventario() -> void:
