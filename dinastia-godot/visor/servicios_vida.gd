@@ -254,7 +254,8 @@ func _mover(v: Dictionary, delta: float) -> bool:
 	var vel := float(v["vel"])
 	match String(v["estado"]):
 		"patrulla":
-			vel = V_PATRULLA
+			var yp := float((IncidentesCiudad.punto_en(ruta, s))[1])
+			vel = minf(V_PATRULLA, limite_por_delante(v["nodo"].position, Vector3(sin(yp), 0.0, cos(yp)), _trafico()))
 			s = fposmod(s + vel * delta, largo)
 		"atiende":
 			vel = 0.0
@@ -265,7 +266,9 @@ func _mover(v: Dictionary, delta: float) -> bool:
 				objetivo = minf(objetivo, sqrt(2.0 * FRENA * maxf(resta, 0.0)) + 0.4)
 			else:
 				objetivo = minf(objetivo * 0.7, sqrt(2.0 * FRENA * maxf(resta, 0.0)) + 0.4)
-			var antes := float((IncidentesCiudad.punto_en(ruta, s))[1])
+			var yaw := float((IncidentesCiudad.punto_en(ruta, s))[1])
+			objetivo = minf(objetivo, limite_por_delante(v["nodo"].position, Vector3(sin(yaw), 0.0, cos(yaw)), _trafico()))   ## A4: no atraviesa a nadie
+			var antes := yaw
 			var despues := float((IncidentesCiudad.punto_en(ruta, s + 12.0))[1])
 			objetivo = minf(objetivo, lerpf(V_MAX, 6.0, clampf(absf(angle_difference(antes, despues)) / 0.8, 0.0, 1.0)))
 			vel = move_toward(vel, objetivo, (ACEL if objetivo > vel else FRENA) * delta)
@@ -284,6 +287,32 @@ func _mover(v: Dictionary, delta: float) -> bool:
 	if v["estado"] == "atiende":
 		_sirena(v, false)
 	return true
+
+## (A4) Los vehículos de emergencia iban por su ruta a 15 m/s sin mirar al tráfico y atravesaban al coche que se quedaba parado en su carril. Velocidad máxima para no alcanzar a quien va DELANTE
+## (coche, bus o peatón en su pasillo, a < 60 m): la suya más lo que da para frenar a FRENA hasta 6,5 m de él (con un margen de 0,6 de FRENA).
+static func limite_por_delante(pos: Vector3, dir: Vector3, trafico: Object) -> float:
+	var limite := INF
+	if trafico == null:
+		return limite
+	var rutas: Array = trafico.get("_rutas")
+	for o: Dictionary in trafico.get("_vehiculos"):
+		if not is_instance_valid(o.get("nodo")):
+			continue
+		## La posición de la RUTA, no la del nodo: los coches ocultos (lejos del jugador) no mueven su nodo, pero siguen circulando.
+		var pr: Array = (rutas[int(o["ruta"])] as Object).call("en", float(o["s"]))
+		var rel: Vector3 = (pr[0] as Vector3) - pos
+		var frente := rel.x * dir.x + rel.z * dir.z
+		var d_o: Vector3 = pr[1]
+		var mismo := d_o.x * dir.x + d_o.z * dir.z   ## 1 = va en mi sentido, −1 = de frente, ~0 = cruza
+		## Ancho del pasillo: 4 m para los que van en mi sentido (se abren y cierran del carril al adelantar/volver), 2,6 m para los demás (el carril contrario queda a ~3,4 m).
+		if frente < 0.5 or frente > 60.0 or absf(rel.x * dir.z - rel.z * dir.x) > (4.0 if mismo > 0.5 else 2.6) or absf(rel.y) > 2.5:
+			continue
+		var vo := maxf(0.0, float(o.get("vact", o.get("vel", 0.0))) * mismo)   ## solo lo que avanza en MI sentido (el que cruza o viene de frente cuenta como parado)
+		limite = minf(limite, sqrt(vo * vo + 1.2 * FRENA * maxf(frente - 6.5, 0.0)))   ## con margen: 0,6 de lo que frena de verdad
+	return limite
+
+func _trafico() -> Object:
+	return vida.expl.cb.get_node_or_null("Trafico") if vida != null and vida.expl != null and vida.expl.cb != null else null
 
 func _colocar(v: Dictionary) -> void:
 	var nodo: Node3D = v["nodo"]
