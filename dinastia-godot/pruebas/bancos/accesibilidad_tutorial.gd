@@ -194,9 +194,20 @@ func _escala_con_idiomas() -> void:
 				(pm as PantallaMenu).cerrar()
 			await _frames(22)
 		_linea("  %s al %d %%: %d textos cortados y %d que se salen (5 pantallas)" % [config[0], int(float(config[1]) * 100.0), n_cort, n_sale])
-		_comprobar(n_sale <= 120 and n_cort <= 25, "%s al %d %%: se salen %d (tope 120) y se cortan %d (tope 25)" % [config[0], int(float(config[1]) * 100.0), n_sale, n_cort])
+		_comprobar(n_sale == 0 and n_cort <= 12, "%s al %d %%: se salen %d (tope 0) y se cortan %d (tope 12)" % [config[0], int(float(config[1]) * 100.0), n_sale, n_cort])
 	Idiomas.idioma = antes
 	_p._escala_texto = 1.0
+
+## ¿Tiene `c` un ScrollContainer por encima cuya ventana cabe en la pantalla y que se desplaza en horizontal?
+func _en_desplazable(c: Control) -> bool:
+	var q: Node = c.get_parent()
+	var ancho := get_viewport().get_visible_rect().size.x
+	while q != null:
+		if q is ScrollContainer and (q as ScrollContainer).horizontal_scroll_mode != ScrollContainer.SCROLL_MODE_DISABLED \
+				and (q as ScrollContainer).get_global_rect().end.x <= ancho + 2.0:
+			return true
+		q = q.get_parent()
+	return false
 
 ## Tamaño medio de la letra de las etiquetas y botones visibles (la prueba de que la escala llega al contenido de las pantallas).
 func _media_letra() -> float:
@@ -222,6 +233,8 @@ func _medir() -> Array:
 		if t.strip_edges() == "" or c.size.x < 4.0:
 			continue
 		if c.get_global_rect().end.x > ancho + 2.0 and c.get_global_rect().position.x < ancho:
+			if _en_desplazable(c):
+				continue   ## dentro de un ScrollContainer con desplazamiento horizontal: se llega con el dedo, no se sale
 			sale += 1
 			ej.append("«%s» se sale %d px" % [t.left(30), int(c.get_global_rect().end.x - ancho)])
 			continue

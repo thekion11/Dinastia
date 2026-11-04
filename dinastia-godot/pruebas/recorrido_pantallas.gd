@@ -243,8 +243,14 @@ func _pulsar_botones() -> void:
 const PALABRAS_ES := ["que", "se", "tu", "tus", "con", "para", "por", "del", "las", "los", "una", "está", "hay", "más",
 	"pero", "muy", "sin", "años", "semanas", "jugadores", "partido", "partidos", "equipo", "tienes", "puedes", "cuando"]
 
+## Palabras de la lista que SON también del idioma de destino (en portugués «que», «se», «para», «por» y «tu» son suyas; «del», «una» y «tu» son catalanas): se quitan
+## de la cuenta en ese idioma, o una frase ya traducida (que vuelve a pasar por `Idiomas.t` y queda igual) parecería castellano (4-11-2026).
+const COMPARTIDAS := {"pt": ["que", "se", "para", "por", "tu", "tus"], "ca": ["que", "se", "tu", "del", "una"], "it": ["se", "tu", "con", "una", "del"],
+	"fr": ["que", "se", "tu"]}
+
 func _castellano() -> void:
-	var re := RegEx.create_from_string("(?i)(?<![\\p{L}])(" + "|".join(PALABRAS_ES) + ")(?![\\p{L}])")
+	var palabras: Array = PALABRAS_ES.filter(func(w: String) -> bool: return not (COMPARTIDAS.get(Idiomas.idioma, []) as Array).has(w))
+	var re := RegEx.create_from_string("(?i)(?<![\\p{L}])(" + "|".join(palabras) + ")(?![\\p{L}])")
 	## Las siglas de posición (POR, DEF, MED, DEL) se quedan en castellano en todos los idiomas (orden 15) y «POR»/«DEL»
 	## parecían «por»/«del»: se quitan antes de contar, igual que el formato del editor («Club;Nombre;POS;Edad…»).
 	var siglas := RegEx.create_from_string("\\b(POR|DEF|MED|DEL|DFC|LAT|BAN|POS)\\b|Club;Nombre;[^ ]*")
