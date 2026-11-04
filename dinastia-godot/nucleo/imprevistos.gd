@@ -257,7 +257,7 @@ func aplicar(m: Object, c: Club, fila: Dictionary, j: Jugador, sem: int) -> void
 	if e.has("forma_eq_sem"):
 		activos.append({"id": fila["id"], "jid": "", "q": "forma_eq_sem", "v": int(e["forma_eq_sem"]), "s": sem, "dep": dep})
 	if e.has("saldo"):
-		c.saldo += int(round(float(masa(c)) * float(e["saldo"])))
+		c.mover_saldo(int(round(float(masa(c)) * float(e["saldo"]))))   ## (4-11) por mover_saldo, con aviso
 	if e.has("saldo_sem"):
 		activos.append({"id": fila["id"], "jid": "", "q": "saldo_sem", "v": int(round(float(masa(c)) * float(e["saldo_sem"]))), "s": sem})
 
@@ -269,7 +269,7 @@ func correr_activos(c: Club) -> void:
 		var q := String(a["q"])
 		var v := int(a["v"])
 		if q == "saldo_sem":
-			c.saldo += v
+			c.mover_saldo(v)
 		elif q == "forma_eq_sem":
 			for x: Jugador in c.plantilla:
 				if not (x.real and not bool(a.get("dep", false))):

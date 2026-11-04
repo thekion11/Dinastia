@@ -6,7 +6,7 @@ extends BaseIdea
 func _probar() -> void:
 	_titulo("S6: NOVEDADES (notas de versión)")
 	var vs := PantallaNovedades.leer()
-	_comprobar(not vs.is_empty() and String((vs[0] as Dictionary).get("version", "")) == PantallaNovedades.version() and PantallaNovedades.version() == "0.9.0",
+	_comprobar(not vs.is_empty() and String((vs[0] as Dictionary).get("version", "")) == PantallaNovedades.version() and PantallaNovedades.version() == String(ProjectSettings.get_setting("application/config/version", "")),
 		"el JSON abre con las notas de la versión del proyecto (%s)" % PantallaNovedades.version())
 	_comprobar(PantallaNovedades.leer("res://datos/no_existe.json").is_empty(), "sin archivo no se rompe: lista vacía")
 	## Todas las frases, traducidas en los ocho idiomas.
@@ -36,7 +36,7 @@ func _probar() -> void:
 	for v2: Dictionary in vs:
 		for s2: Dictionary in v2["secciones"]:
 			puntos += (s2["puntos"] as Array).size()
-	_comprobar(textos.contains("Versión 0.9.0") and textos.count("•  ") == puntos, "la pantalla enseña la versión y los %d puntos" % puntos)
+	_comprobar(textos.contains("Versión " + PantallaNovedades.version()) and textos.count("•  ") == puntos, "la pantalla enseña la versión y los %d puntos" % puntos)
 	_comprobar(not PantallaNovedades.hay_sin_ver(), "al abrirla quedan vistas")
 	var esc := InputEventAction.new()
 	esc.action = "ui_cancel"
@@ -50,7 +50,7 @@ func _probar() -> void:
 	for b in menu.find_children("*", "Button", true, false):
 		if (b as Button).text.contains("Novedades"):
 			boton = b
-	_comprobar(boton != null and boton.text.contains("0.9.0"), "el menú de modos tiene «✨ Novedades 0.9.0» en el pie")
+	_comprobar(boton != null and boton.text.contains(PantallaNovedades.version()), "el menú de modos tiene «✨ Novedades %s» en el pie" % PantallaNovedades.version())
 	if boton != null:
 		boton.pressed.emit()
 		_comprobar(menu._algo_abierto() and menu.get_node_or_null("Novedades") != null, "y al pulsarlo se abre encima (las flechas del menú quedan quietas)")

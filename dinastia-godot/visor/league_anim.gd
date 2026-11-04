@@ -11,8 +11,8 @@ const CICLOS := {"correr": "ls_movement__sprint__000_idlelevel1"}
 static func ciclo(clave: String, prefijo: String) -> Animation:
 	if not CICLOS.has(clave) or OS.get_environment("SIN_LEAGUE") != "":
 		return null
-	var a: Animation = AnimQuaternius.cargar_real(String(CICLOS[clave]), prefijo)
-	var b: Animation = AnimQuaternius.cargar_real(String(CICLOS[clave]) + "_espejo", prefijo)
+	var a: Animation = load("res://visor/anim_quaternius.gd").cargar_real(String(CICLOS[clave]), prefijo)
+	var b: Animation = load("res://visor/anim_quaternius.gd").cargar_real(String(CICLOS[clave]) + "_espejo", prefijo)
 	if a == null or b == null:
 		return null
 	var sal := a.duplicate(true) as Animation
@@ -58,10 +58,10 @@ static func golpeos(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) -> 
 	for clave: String in GOLPEOS:
 		var g: Array = GOLPEOS[clave]
 		for lado in ["", "_espejo"]:
-			var base: Animation = AnimQuaternius.cargar_real(String(g[0]) + lado, prefijo)
+			var base: Animation = load("res://visor/anim_quaternius.gd").cargar_real(String(g[0]) + lado, prefijo)
 			if base == null:
 				continue
-			var a := AnimQuaternius.recortar(base, maxf(float(g[1]) - ANTES_CONTACTO, 0.0) / base.length, 1.0, false, true, rp)
+			var a = load("res://visor/anim_quaternius.gd").recortar(base, maxf(float(g[1]) - ANTES_CONTACTO, 0.0) / base.length, 1.0, false, true, rp)
 			var nombre: String = clave + lado
 			if lib.has_animation(nombre):
 				if bool(g[2]) and not lib.has_animation(clave + "_mano" + lado):

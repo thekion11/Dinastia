@@ -155,6 +155,7 @@ var por_partes := false
 var _t_respiro := 0
 
 func _marca(que: String) -> void:
+	PantallaCarga.paso(que)   ## la barra de carga avanza con las etapas conocidas
 	if por_partes and Time.get_ticks_usec() - _t_respiro > 40000:
 		await get_tree().process_frame
 		_t_respiro = Time.get_ticks_usec()

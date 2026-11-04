@@ -106,12 +106,12 @@ func _montar_persona(pos: Vector3, mat_silla: Material) -> void:
 		_montar_un_periodista(pos, mat_silla)
 		return
 	var n: Node3D = d["nodo"]
-	PeatonQ.calzar(d, "1c1c1e")
+	CargaCiudad.de("PeatonQ").calzar(d, "1c1c1e")
 	var ap: AnimationPlayer = d.get("anim") as AnimationPlayer
 	if ap != null and ap.has_animation("sentado"):
 		ap.play("sentado")
 		ap.seek(_rng_sala.randf() * 0.6, true)
-	var cadera := MetroCiudad.altura_cadera(n)
+	var cadera = CargaCiudad.de("MetroCiudad").altura_cadera(n)
 	if cadera > 0.0:
 		n.position.y += 0.44 + 0.04 - cadera * 0.99
 	_sala.append({"raiz": raiz, "ap": ap, "esq": d.get("esqueleto"), "fase": _rng_sala.randf() * TAU})
@@ -240,7 +240,7 @@ func _poner_pose(i: int, pose: String) -> void:
 		return
 	var lib := ap.get_animation_library("")
 	if lib != null and not ap.has_animation(pose) and _sala[i].get("esq") != null:
-		if AnimExtra.asegurar(ap, _sala[i]["esq"], pose):
+		if load("res://visor/anim_extra.gd").asegurar(ap, _sala[i]["esq"], pose):
 			ap.get_animation(pose).loop_mode = Animation.LOOP_LINEAR
 	if ap.has_animation(pose):
 		ap.play(pose, 0.4)

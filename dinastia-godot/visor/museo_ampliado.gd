@@ -47,7 +47,7 @@ static func _mat_oro_vivo() -> StandardMaterial3D:
 
 ## Una copa suelta (nodo propio, con su material para poder iluminarla): el trofeo real si está, o una copa de cilindros.
 static func _copa(nodo: Node3D, p: Vector3, madera: Material, receta: Dictionary = {}) -> MeshInstance3D:
-	TunelVestuario._caja(nodo, p + Vector3(0, 0.04, 0), Vector3(0.24, 0.08, 0.24), madera, false)
+	PiezasObra._caja(nodo, p + Vector3(0, 0.04, 0), Vector3(0.24, 0.08, 0.24), madera, false)
 	## La copa de su competición (orden 15 e): las piezas de la receta; la que se ilumina es la copa en sí (la última del montaje).
 	if not receta.is_empty() and TrofeoModelo.disponible():
 		var pz := TrofeoModelo.partes(receta)
@@ -89,9 +89,9 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 	if en_obra(ctx):
 		_obra(nodo, caja, y0, ctx)
 		return
-	var lote := PiezasVestuario.Lote.new()
-	var m := PiezasVestuario.materiales(c1, c2)
-	var base := TunelVestuario._mat_unico(Color(0.1, 0.1, 0.12), 0.4)
+	var lote = load("res://visor/tunel_vestuario_piezas.gd").Lote.new()
+	var m = load("res://visor/tunel_vestuario_piezas.gd").materiales(c1, c2)
+	var base := PiezasObra._mat_unico(Color(0.1, 0.1, 0.12), 0.4)
 	var vidrio := SalasClub.vidrio_vitrina()
 	var cx := caja.get_center().x
 	var hs := hitos(ctx)
@@ -112,7 +112,7 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 		vitrinas.append({"p": Vector3(px, y0, pz), "k": SalasClub.MAX_SALA + k})
 		var h: Dictionary = hs[SalasClub.MAX_SALA + k]
 		copas.append(_copa(nodo, Vector3(px, y0 + 1.0, pz), m["madera"], TrofeosReales.para_titulo(String(h.get("titulo", "")), String(ctx.get("pais", "")))))
-		TunelVestuario._rotulo(nodo, "%s · %d" % [Idiomas.t(String(h.get("titulo", ""))), int(h.get("anio", 0))],
+		PiezasObra._rotulo(nodo, "%s · %d" % [Idiomas.t(String(h.get("titulo", ""))), int(h.get("anio", 0))],
 			Vector3(px - lado * 0.38, y0 + 1.2, pz), -lado * PI / 2.0, 14, Color(0.12, 0.12, 0.14))
 	## Camisetas por década en la pared del fondo (la del ascensor queda a un lado).
 	var decadas: Array = []
@@ -126,19 +126,19 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 		lote.caja(base, SalasClub._en(Vector3(px, y0 + 1.55, pz)), Vector3(0.95, 1.15, 0.05))
 		lote.caja(m["toalla"], SalasClub._en(Vector3(px, y0 + 1.55, pz + 0.03)), Vector3(0.85, 1.05, 0.01))
 		var alterna := k % 2 == 1
-		PiezasVestuario.camiseta(lote, SalasClub._en(Vector3(px, y0 + 1.6, pz + 0.06)), m["cam2"] if alterna else m["cam1"], m["cam1"] if alterna else m["cam2"])
+		load("res://visor/tunel_vestuario_piezas.gd").camiseta(lote, SalasClub._en(Vector3(px, y0 + 1.6, pz + 0.06)), m["cam2"] if alterna else m["cam1"], m["cam1"] if alterna else m["cam2"])
 		if k < decadas.size():
-			TunelVestuario._rotulo(nodo, "%ds" % int(decadas[k]), Vector3(px, y0 + 1.07, pz + 0.07), 0.0, 22, Color(0.12, 0.12, 0.14))
+			PiezasObra._rotulo(nodo, "%ds" % int(decadas[k]), Vector3(px, y0 + 1.07, pz + 0.07), 0.0, 22, Color(0.12, 0.12, 0.14))
 	## El panel de hitos y el balón de la primera copa, en el cuarto hueco de la pared del fondo.
 	var px4 := caja.position.x + caja.size.x * 0.875
 	var texto := Idiomas.t("HITOS DEL CLUB")
 	for h: Dictionary in hs.slice(0, 12):
 		texto += "\n%d · %s" % [int(h.get("anio", 0)), Idiomas.t(String(h.get("titulo", "")))]
-	TunelVestuario._rotulo(nodo, texto, Vector3(px4, y0 + 1.75, caja.position.y - 0.1), 0.0, 17, Color(1.0, 0.86, 0.45))
+	PiezasObra._rotulo(nodo, texto, Vector3(px4, y0 + 1.75, caja.position.y - 0.1), 0.0, 17, Color(1.0, 0.86, 0.45))
 	if not hs.is_empty():
 		lote.malla(m["metal"], SalasClub._en(Vector3(px4, y0 + 0.4, caja.position.y + 0.7)), SalasClub._cilindro(0.1, 0.14, 0.8))
-		lote.malla(TunelVestuario._mat_unico(Color(0.45, 0.28, 0.14), 0.6), SalasClub._en(Vector3(px4, y0 + 0.92, caja.position.y + 0.7)), SalasClub._esfera(0.13))
-		TunelVestuario._rotulo(nodo, Idiomas.t("Primer título") + " · %d" % int((hs[0] as Dictionary).get("anio", 0)),
+		lote.malla(PiezasObra._mat_unico(Color(0.45, 0.28, 0.14), 0.6), SalasClub._en(Vector3(px4, y0 + 0.92, caja.position.y + 0.7)), SalasClub._esfera(0.13))
+		PiezasObra._rotulo(nodo, Idiomas.t("Primer título") + " · %d" % int((hs[0] as Dictionary).get("anio", 0)),
 			Vector3(px4, y0 + 0.5, caja.position.y + 0.86), 0.0, 14, Color(0.9, 0.9, 0.85))
 	lote.caja(m["cam1"], SalasClub._en(Vector3(cx, y0 + 2.7, caja.position.y - 0.14)), Vector3(caja.size.x, 0.3, 0.02))
 	lote.montar(nodo, "MuseoAmpliado")
@@ -155,7 +155,7 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 ## La planta en obra: andamios, lona y un cartel con las semanas que faltan.
 static func _obra(nodo: Node3D, caja: Rect2, y0: float, ctx: Dictionary) -> void:
 	var acero: StandardMaterial3D = Texturas.metal(Color(0.62, 0.64, 0.66), 0.5)
-	var tablon := TunelVestuario._mat_unico(Color(0.62, 0.46, 0.28), 0.8)
+	var tablon := PiezasObra._mat_unico(Color(0.62, 0.46, 0.28), 0.8)
 	var lona := StandardMaterial3D.new()
 	lona.albedo_color = Color(0.2, 0.42, 0.66, 0.55)
 	lona.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -165,13 +165,13 @@ static func _obra(nodo: Node3D, caja: Rect2, y0: float, ctx: Dictionary) -> void
 		var z := caja.position.y + 1.0 + float(fila) * (caja.size.y - 2.0) / 2.0
 		for col in 6:
 			var x := caja.position.x + 1.0 + float(col) * (caja.size.x - 2.0) / 5.0
-			TunelVestuario._caja(nodo, Vector3(x, y0 + 1.5, z), Vector3(0.08, 3.0, 0.08), acero, false)
+			PiezasObra._caja(nodo, Vector3(x, y0 + 1.5, z), Vector3(0.08, 3.0, 0.08), acero, false)
 			if col < 5:
-				TunelVestuario._caja(nodo, Vector3(x + (caja.size.x - 2.0) / 10.0, y0 + 1.1, z), Vector3((caja.size.x - 2.0) / 5.0, 0.06, 0.08), acero, false)
-				TunelVestuario._caja(nodo, Vector3(x + (caja.size.x - 2.0) / 10.0, y0 + 2.1, z), Vector3((caja.size.x - 2.0) / 5.0, 0.06, 0.08), tablon, false)
-	TunelVestuario._caja(nodo, Vector3(cx, y0 + 1.5, caja.position.y + 0.9), Vector3(caja.size.x - 1.0, 3.0, 0.03), lona, false)
+				PiezasObra._caja(nodo, Vector3(x + (caja.size.x - 2.0) / 10.0, y0 + 1.1, z), Vector3((caja.size.x - 2.0) / 5.0, 0.06, 0.08), acero, false)
+				PiezasObra._caja(nodo, Vector3(x + (caja.size.x - 2.0) / 10.0, y0 + 2.1, z), Vector3((caja.size.x - 2.0) / 5.0, 0.06, 0.08), tablon, false)
+	PiezasObra._caja(nodo, Vector3(cx, y0 + 1.5, caja.position.y + 0.9), Vector3(caja.size.x - 1.0, 3.0, 0.03), lona, false)
 	var semanas := int(((ctx.get("obras", {}) as Dictionary).get("museo", 1)))
-	TunelVestuario._rotulo(nodo, Idiomas.t("EN OBRA · faltan %d semanas") % semanas, Vector3(cx, y0 + 2.4, caja.position.y + 0.85), 0.0, 36, Color(1.0, 0.85, 0.2))
+	PiezasObra._rotulo(nodo, Idiomas.t("EN OBRA · faltan %d semanas") % semanas, Vector3(cx, y0 + 2.4, caja.position.y + 0.85), 0.0, 36, Color(1.0, 0.85, 0.2))
 	var o := OmniLight3D.new()
 	o.position = Vector3(cx, y0 + 3.0, caja.get_center().y)
 	o.omni_range = 9.0

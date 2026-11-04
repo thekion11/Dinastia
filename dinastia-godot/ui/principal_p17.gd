@@ -7,24 +7,24 @@ extends "res://ui/principal_p16.gd"
 ## Puente: cuándo salió la pregunta de la rueda abierta (lo ajustan capturas).
 var _rueda_desde: int:
 	get:
-		return (_rueda_pop as _PrincipalRuedaPrensa).desde if is_instance_valid(_rueda_pop) else 0
+		return int(_rueda_pop.get("desde")) if is_instance_valid(_rueda_pop) else 0
 	set(v):
 		if is_instance_valid(_rueda_pop):
-			(_rueda_pop as _PrincipalRuedaPrensa).desde = v
+			_rueda_pop.set("desde", v)
 
 func _abrir_rueda_pantalla_completa(e: Dictionary) -> void:
-	var r := _PrincipalRuedaPrensa.new(self)
+	var r: Control = load("res://ui/principal/rueda_prensa.gd").new(self)   ## (por load: la rueda de prensa no se compila al abrir el menú)
 	add_child(r)
 	_rueda_pop = r
-	r.abrir(e)
+	r.call("abrir", e)
 
 func _repintar_posturas() -> void:
 	if is_instance_valid(_rueda_pop):
-		(_rueda_pop as _PrincipalRuedaPrensa).repintar_posturas()
+		_rueda_pop.call("repintar_posturas")
 
 func _responder(i: int) -> void:
 	if is_instance_valid(_rueda_pop):
-		(_rueda_pop as _PrincipalRuedaPrensa).responder(i)
+		_rueda_pop.call("responder", i)
 
 # --- las tres pestañas nuevas ----------------------------------------------
 

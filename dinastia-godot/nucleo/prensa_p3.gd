@@ -55,6 +55,13 @@ func _ceder(m: Mundo, mio: Club, j: Jugador) -> bool:
 	if candidatos.is_empty():
 		return false
 	var destino: Club = Azar.uno(candidatos)
+	## 3-11 (orden 22 U6): la cesión se firma en `Cesiones`, el único que la resuelve al cambiar de temporada.
+	## Guardada solo aquí, el chico no volvía nunca (`volver_de_cesion` no se llama a propósito).
+	if m.cesiones != null:
+		if m.cesiones.esta_cedido(j.id):
+			return false
+		m.cesiones._firmar_cesion(j, mio, destino, Cesiones.CESION_SIMPLE, 0, 0.0)
+		return true
 	cesiones[j.id] = {"de": mio.id, "vuelve": m.anio + 1}
 	mio.soltar(j)
 	destino.fichar(j)

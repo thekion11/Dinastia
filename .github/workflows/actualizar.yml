@@ -1,0 +1,172 @@
+# ACTUALIZADOR de Dinastía (4-11-2026, pedido del dueño: «un exportador aparte que genere solo los cambios de la versión nueva»).
+# Va APARTE de «Compilar y probar»: no construye el juego entero, solo un PARCHE (`parche_<versión>.pck`) con los archivos que
+# cambiaron desde la versión que ya tiene la gente. Quien tiene el juego deja el parche junto al ejecutable (o en
+# user://parches/) y el autoload `Parches` (dinastia-godot/nucleo/parches.gd) lo monta al arrancar.
+#
+# Cómo: el banco corre primero; luego se exporta el paquete de la versión DESDE (`--export-pack`, la base) y, con el código de
+# ahora, `godot --export-patch <preset> parche.pck --patches base.pck` (Godot guarda solo lo distinto).
+# Lo que un parche NO puede cambiar (el flujo lo AVISA en el resumen y entonces hay que usar «Compilar y probar»):
+# project.godot (autoloads, ajustes), nucleo/parches.gd, clases nuevas con `class_name`, la extensión C++ (bin_nativo/).
+name: Actualizar Dinastia (parche)
+
+run-name: ${{ format('🩹 parche {0} · desde {1} · {2}', inputs.version, inputs.desde, inputs.sistema) }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      sistema:
+        description: "Para qué sistema es el parche (Windows y Linux comparten el mismo)"
+        type: choice
+        default: escritorio
+        options: [ escritorio, android ]
+      desde:
+        description: "Versión que ya tiene la gente: etiqueta (p. ej. v0.9.1) o commit"
+        type: string
+        required: true
+      version:
+        description: "Nombre de la versión nueva (p. ej. 0.9.2): el archivo será parche_<versión>.pck"
+        type: string
+        required: true
+      release_borrador:
+        description: "Al terminar, crear un BORRADOR de Release con el parche (no es público hasta que lo publiques tú)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: actualizar-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  banco:
+    name: 🟣 banco
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+      - name: Banco de pruebas entero
+        working-directory: dinastia-godot
+        run: |
+          set +e
+          bash herramientas/banco.sh /tmp/banco.txt
+          codigo=$?
+          set -e
+          tail -n 20 /tmp/banco.txt
+          [ "$codigo" -eq 0 ] && grep -q "FIN. 0 fallos" /tmp/banco.txt || { echo "El banco no terminó en «FIN. 0 fallos»: no se hace el parche."; exit 1; }
+
+  parche:
+    name: 🩹 parche ${{ inputs.sistema }}
+    needs: banco
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          fetch-depth: 0
+
+      - name: Preparar (LFS, caché e importación) de la versión nueva
+        uses: ./.github/actions/preparar
+
+      - name: Qué cambió y si un parche alcanza
+        id: revision
+        env:
+          DESDE: ${{ inputs.desde }}
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git rev-parse --verify "$DESDE^{commit}" >/dev/null || { echo "::error::No existe la versión «$DESDE» (etiqueta o commit)."; exit 1; }
+          git diff --name-only "$DESDE" HEAD -- dinastia-godot > /tmp/cambiados.txt
+          echo "Archivos cambiados: $(wc -l < /tmp/cambiados.txt)"
+          AVISOS=""
+          grep -qx "dinastia-godot/project.godot" /tmp/cambiados.txt && AVISOS="$AVISOS project.godot (ajustes o autoloads);"
+          grep -qx "dinastia-godot/nucleo/parches.gd" /tmp/cambiados.txt && AVISOS="$AVISOS el propio cargador de parches;"
+          grep -q "^dinastia-godot/bin_nativo/" /tmp/cambiados.txt && AVISOS="$AVISOS la extensión C++;"
+          NUEVAS=$(git diff "$DESDE" HEAD -- 'dinastia-godot/*.gd' | grep -E '^\+class_name ' | sed 's/^+class_name //' | tr '\n' ' ')
+          [ -n "$NUEVAS" ] && AVISOS="$AVISOS clases nuevas ($NUEVAS);"
+          echo "avisos=$AVISOS" >> "$GITHUB_OUTPUT"
+          if [ -n "$AVISOS" ]; then
+            echo "::warning title=El parche no alcanza::Cambió:$AVISOS esos cambios necesitan la instalación completa («Compilar y probar»)."
+          fi
+
+      - name: Paquete base (la versión ${{ inputs.desde }})
+        env:
+          DESDE: ${{ inputs.desde }}
+          PRESET: ${{ inputs.sistema == 'android' && 'Android' || 'Windows' }}
+        run: |
+          git worktree add /tmp/base "$DESDE"
+          cd /tmp/base
+          git lfs install --local
+          git lfs pull --include="dinastia-godot/**"
+          cd dinastia-godot
+          timeout 1500 godot --headless --path . --import > /tmp/importar_base.txt 2>&1 || true
+          timeout 1500 godot --headless --path . --export-pack "$PRESET" /tmp/base.pck > /tmp/base_export.txt 2>&1 || true
+          tail -n 5 /tmp/base_export.txt
+          test -s /tmp/base.pck || { echo "No se pudo exportar el paquete base."; exit 1; }
+          ls -la /tmp/base.pck
+
+      - name: Parche (solo lo cambiado)
+        working-directory: dinastia-godot
+        env:
+          VERSION: ${{ inputs.version }}
+          PRESET: ${{ inputs.sistema == 'android' && 'Android' || 'Windows' }}
+        run: |
+          mkdir -p ../salida
+          timeout 1500 godot --headless --path . --export-patch "$PRESET" "../salida/parche_${VERSION}.pck" --patches /tmp/base.pck > /tmp/parche.txt 2>&1 || true
+          test -s "../salida/parche_${VERSION}.pck" || { tail -n 30 /tmp/parche.txt; echo "No se generó el parche."; exit 1; }
+          grep -o "Storing File: res://[^[:cntrl:]]*" /tmp/parche.txt | sed 's/Storing File: //' | sort -u > ../salida/contenido.txt || true
+          cat > ../salida/COMO_INSTALAR.txt <<EOF
+          Parche de Dinastía ${VERSION} (desde ${{ inputs.desde }}, sistema ${{ inputs.sistema }}).
+          Copia parche_${VERSION}.pck en la MISMA carpeta que el ejecutable del juego (o en la carpeta del usuario, subcarpeta «parches»)
+          y abre el juego: se aplica solo. Para quitarlo, borra el archivo. Los parches se aplican en orden de nombre.
+          EOF
+          ls -la ../salida
+
+      - name: Resumen
+        env:
+          AVISOS: ${{ steps.revision.outputs.avisos }}
+        run: |
+          P=$(ls salida/parche_*.pck)
+          {
+            echo "### 🩹 Parche ${{ inputs.version }} (desde ${{ inputs.desde }}, ${{ inputs.sistema }})"
+            echo "| | |"; echo "|---|---|"
+            echo "| tamaño del parche | $(du -k "$P" | cut -f1) KB |"
+            echo "| paquete entero (para comparar) | $(du -k /tmp/base.pck | cut -f1) KB |"
+            echo "| archivos de código/datos cambiados | $(wc -l < /tmp/cambiados.txt) |"
+            echo "| archivos dentro del parche | $(wc -l < salida/contenido.txt) |"
+            [ -n "$AVISOS" ] && echo "" && echo "⚠️ **El parche no alcanza**: cambió$AVISOS esto necesita la instalación completa («Compilar y probar»)."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Subir el parche
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dinastia-parche-${{ inputs.version }}-${{ inputs.sistema }}
+          path: salida/
+
+  release:
+    name: 📦 release del parche (borrador)
+    needs: parche
+    if: ${{ inputs.release_borrador }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Dinastia-parche-${{ inputs.version }}-${{ inputs.sistema }}
+          path: salida
+      - name: Crear el borrador
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ETIQUETA: parche-${{ inputs.version }}-${{ inputs.sistema }}
+        run: |
+          gh release create "$ETIQUETA" salida/parche_*.pck salida/COMO_INSTALAR.txt --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --draft \
+            --title "Dinastía ${{ inputs.version }} (parche desde ${{ inputs.desde }}, ${{ inputs.sistema }})" --notes-file salida/COMO_INSTALAR.txt
+          echo "### 📦 Borrador de Release «$ETIQUETA» creado. Publícalo desde la pestaña Releases." >> "$GITHUB_STEP_SUMMARY"

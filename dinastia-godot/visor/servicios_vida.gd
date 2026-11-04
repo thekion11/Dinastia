@@ -1,6 +1,6 @@
 class_name ServiciosVida
 extends Node3D
-## POLICÍA, BOMBEROS Y AMBULANCIA CON VIDA (27-10-2026, pieza E, `PLAN_DEL_LUNES.md` §2.2h). Cada hora de juego puede estallar un incidente
+## POLICÍA, BOMBEROS Y AMBULANCIA CON VIDA (27-10-2026, pieza E, `PLAN_GENERAL.md` §2.2h). Cada hora de juego puede estallar un incidente
 ## (`IncidentesCiudad.sortear`): el móvil avisa, los vehículos salen de su edificio con luces y sirena por las calles de la rejilla, se
 ## paran junto al sitio, atienden (el incendio se apaga más despacio si el sector no tiene presión de agua: `redes`) y vuelven al
 ## parque. Un coche patrulla recorre siempre las calles junto a la comisaría: si el DT cruza un semáforo en ROJO con la policía a
@@ -14,7 +14,7 @@ const ESC := 2.3
 const VISTA_POLICIA := 70.0
 const SEPARA := 9.0                         ## metros entre vehículos parados en el sitio
 
-## uso → [posición de salida]: la registra `CiudadExpansion._instalacion` al montar cada edificio (frente de la manzana, ya en la acera).
+## uso → [posición de salida]: la registra `CargaCiudad.de("CiudadExpansion")._instalacion` al montar cada edificio (frente de la manzana, ya en la acera).
 static var estaciones := {}
 
 static func registrar(uso: String, c: Vector3, w: float, f: float) -> void:
@@ -24,7 +24,7 @@ static func registrar(uso: String, c: Vector3, w: float, f: float) -> void:
 		l.append(p)
 	estaciones[uso] = l
 
-var vida: VidaCiudad
+var vida
 var incidente := {}
 var vehiculos: Array[Dictionary] = []
 var multas_puestas := 0
@@ -35,7 +35,7 @@ var _pos_ant := Vector3.INF
 var _cruce_multado := Vector2i(1 << 20, 0)
 var _cruces: Dictionary = {}
 
-static func crear(v: VidaCiudad) -> ServiciosVida:
+static func crear(v) -> ServiciosVida:
 	var s := ServiciosVida.new()
 	s.name = "ServiciosVida"
 	s.vida = v
@@ -53,7 +53,7 @@ func al_cambiar_hora(hora: int, dia: int) -> void:
 	if d.is_empty():
 		return
 	var pos: Vector3 = d["pos"]
-	var exp: CiudadExpansion = vida.expl.cb.expansion if vida.expl.cb != null else null
+	var exp = vida.expl.cb.expansion if vida.expl.cb != null else null
 	if exp != null and exp.nombre_calle_en(Vector3(pos.x - 11.0, 0, pos.z)) == "":
 		return   ## cae fuera de las calles (el núcleo, el río): hoy no pasa nada
 	iniciar(String(d["tipo"]), pos)
@@ -144,10 +144,10 @@ func _barra(v: Dictionary) -> void:
 
 func _sirena(v: Dictionary, on: bool) -> void:
 	var nodo: Node3D = v["nodo"]
-	if on and not TraficoCiudad.sirenas.has(nodo):
-		TraficoCiudad.sirenas.append(nodo)   ## el tráfico frena ante la sirena
+	if on and not CargaCiudad.de("TraficoCiudad").sirenas.has(nodo):
+		CargaCiudad.de("TraficoCiudad").sirenas.append(nodo)   ## el tráfico frena ante la sirena
 	elif not on:
-		TraficoCiudad.sirenas.erase(nodo)
+		CargaCiudad.de("TraficoCiudad").sirenas.erase(nodo)
 	var p := nodo.get_node_or_null("Sirena") as AudioStreamPlayer3D
 	if not on:
 		if p != null:
@@ -187,7 +187,7 @@ func _poner_patrulla() -> void:
 
 func _exit_tree() -> void:
 	for v in vehiculos:
-		TraficoCiudad.sirenas.erase(v["nodo"])
+		CargaCiudad.de("TraficoCiudad").sirenas.erase(v["nodo"])
 
 func _process(delta: float) -> void:
 	t += delta
@@ -195,7 +195,7 @@ func _process(delta: float) -> void:
 	while i >= 0:
 		if not _mover(vehiculos[i], delta):
 			var n: Node3D = vehiculos[i]["nodo"]
-			TraficoCiudad.sirenas.erase(n)
+			CargaCiudad.de("TraficoCiudad").sirenas.erase(n)
 			if is_instance_valid(n):
 				n.queue_free()
 			vehiculos.remove_at(i)
@@ -214,10 +214,10 @@ func _process(delta: float) -> void:
 		_resolver()
 
 func _hay_presion(pos: Vector3) -> bool:
-	var red: RedesCiudadVista = vida._redes() if vida != null else null
+	var red = vida._redes() if vida != null else null
 	if red == null or red.modelo == null:
 		return true
-	return bool(red.modelo.presion.get(RedesCiudad.sector_en(pos.x, pos.z), true))
+	return bool(red.modelo.presion.get(CargaCiudad.de("RedesCiudad").sector_en(pos.x, pos.z), true))
 
 func _resolver() -> void:
 	var tipo := String(incidente["tipo"])
@@ -312,7 +312,7 @@ func policia_cerca(pos: Vector3) -> bool:
 
 ## Lo llama el explorador cada fotograma que conduce el DT: ¿cruza en rojo (no ámbar) a más de 12 km/h con la policía delante?
 func vigilar(pos: Vector3, vel_ms: float) -> void:
-	var exp: CiudadExpansion = vida.expl.cb.expansion if vida.expl.cb != null else null
+	var exp = vida.expl.cb.expansion if vida.expl.cb != null else null
 	if exp == null or exp.semaforos == null:
 		return
 	if _cruces.is_empty():
@@ -320,7 +320,12 @@ func vigilar(pos: Vector3, vel_ms: float) -> void:
 			_cruces[Vector2i(roundi(p.x / IncidentesCiudad.CELDA), roundi(p.z / IncidentesCiudad.CELDA))] = p
 	vigilar_en(pos, vel_ms, exp.semaforos)
 
+var _t_exceso := -100000   ## ms del último aviso por exceso de velocidad (M-199)
+
 func vigilar_en(pos: Vector3, vel_ms: float, sem: Semaforos) -> void:
+	if vel_ms * 3.6 > float(SenalesVelocidad.limite(pos)) + SenalesVelocidad.MARGEN and Time.get_ticks_msec() - _t_exceso > int(SenalesVelocidad.ENFRIA * 1000.0) and policia_cerca(pos):
+		_t_exceso = Time.get_ticks_msec()
+		multar(IncidentesCiudad.MULTA_VELOCIDAD, true)
 	var dir := Vector3.ZERO if _pos_ant == Vector3.INF else pos - _pos_ant
 	_pos_ant = pos
 	var clave := Vector2i(roundi(pos.x / IncidentesCiudad.CELDA), roundi(pos.z / IncidentesCiudad.CELDA))
@@ -340,7 +345,7 @@ func vigilar_en(pos: Vector3, vel_ms: float, sem: Semaforos) -> void:
 	multar(IncidentesCiudad.MULTA_SEMAFORO)
 
 ## Cobra la multa de la cartera del DT (efectivo y, si no alcanza, la tarjeta); si no puede pagarla, queda anotada.
-func multar(importe: int) -> String:
+func multar(importe: int, velocidad := false) -> String:
 	multas_puestas += 1
 	var m: Mundo = vida.mundo
 	var via := ""
@@ -351,7 +356,9 @@ func multar(importe: int) -> String:
 		via = String(r["via"])
 	vida.expl.multas += 1
 	Sonido.toca("sirena", Sonido.Bus.AMBIENTE)
-	if via != "":
+	if velocidad:
+		vida._notificar(Idiomas.t("🚓 Multa de %d € por exceso de velocidad (límite %d km/h): %s.") % [importe, SenalesVelocidad.limite(vida.expl.cuerpo.position), Idiomas.t(via) if via != "" else Idiomas.t("no pudiste pagarla y queda anotada")])
+	elif via != "":
 		vida._notificar(Idiomas.t("🚓 Multa de %d € por saltarte un semáforo en rojo (pagada en %s).") % [importe, Idiomas.t(via)])
 	else:
 		vida._notificar(Idiomas.t("🚓 Multa de %d € por saltarte un semáforo en rojo: no pudiste pagarla y queda anotada.") % importe)

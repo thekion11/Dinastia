@@ -38,28 +38,12 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 		p["enfriar"] = 0.6
 		aviso.emit("¡Qué parada!")
 
-## EL PENAL EN EL PARTIDO (25-10-2026): a 11 m no da tiempo a reaccionar, así que
-## el portero adivina el lado, como en la tanda (antes reaccionaba al tiro y paraba
-## 4 de cada 9: la sonda medía un 43 % de penales marcados; en el fútbol, ~76 %).
+## PENAL EN PLENO PARTIDO: en `PenalPortero` (2-11, para la norma de 450 líneas).
 func _penal_en_juego(gk: Dictionary, cruce: Vector3) -> void:
-	var r := _rng.randf()
-	var lado := 1 if r < 0.42 else (-1 if r < 0.84 else 0)
-	var ref := float(gk["attr"]["ref"])
-	var para := false
-	if lado == 0:
-		para = absf(cruce.x) < 1.1 and cruce.y < 2.0
-	elif signf(cruce.x) == float(lado):
-		var alcance := 1.4 + (float(gk["attr"]["div"]) + ref) * 0.6
-		para = absf(cruce.x) < alcance and cruce.y < (1.6 if absf(cruce.x) > 2.3 else 2.1) and _rng.randf() < 0.62 + ref * 0.3
-	if para:
-		MotorParada.programar(self as Object as MotorJugable, gk, cruce, lado != 0)
-		return
-	## Se tira al lado que eligió (y el balón entra o se va por el otro).
-	if lado != 0:
-		var lado_anim := "izq" if float(lado) * dir_ataque(bool(gk["es_local"])) > 0.0 else "der"
-		_anim(gk, "estirada_media_%s" % lado_anim, true)
-		gk["vel"] = Vector3(float(lado) * 6.0, 0, 0)
-		gk["objetivo"] = Vector3(pos(gk).x + float(lado) * 2.2, 0, pos(gk).z)
+	PenalPortero.en_juego(self as Object as MotorJugable, gk, cruce)
+
+func _lado_portero_tanda(lz: Dictionary, gk: Dictionary, mira := 1) -> int:
+	return PenalPortero.lado(self as Object as MotorJugable, lz, gk, mira)
 
 ## TIRO QUE VIENE: ¿llega a tapar? (de `_ia_portero`, 25-10, para el portero de la Carrera en `_control_usuario`).
 ## Devuelve true si ya actuó (parada o penal). `manual`: lo maneja el usuario, que elige lado con el stick (`guia`,
@@ -265,6 +249,8 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	var lejos := Vector2(pos(p).x - arco.x, pos(p).z - arco.z).length()
 	var error := ((1.0 - tec) * 2.6 + maxf(0.0, fuerza - 0.8) * 2.5) * (0.55 + lejos / 26.0) * (1.25 if _manual_tiro else 1.0) * _error_extra * preset_error * GestoTecnico.factor_pie(p, pos(p), arco) * GestoTecnico.factor(self, p, _mod_tiro == "vaselina")
 	var clase := String(saque.get("tipo", "pie")) if estado == "saque" else "pie"
+	if clase == "penal":
+		error *= PENAL_ERROR   ## quieto y a 11 m: el error es una fracción del de un tiro cualquiera (sonda de penales, 2-11)
 	## LA PUNTERÍA DE VERDAD (25-10-2026). La sonda medía 3 de cada 4 tiros entre
 	## los palos (en el fútbol, 1 de cada 3; en FC, la mitad) y el portero los
 	## paraba casi todos (84 %). Ahora hasta el bueno se desvía algo más desde

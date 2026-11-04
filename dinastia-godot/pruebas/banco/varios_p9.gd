@@ -33,6 +33,17 @@ func _probar_politica_c15() -> void:
 	var g2 := pol.gobierno("CHI", 2026)
 	_comprobar(int(g2["desde"]) == 2026 and int(g2["proxima"]) == 2030, "el nuevo gobierno dura 4 años")
 	_comprobar(c.saldo != saldo0, "la postura del gobierno se nota en la caja")
+	## El apoyo del club (2-11, guion §2.5.6): se declara en prensa y, tras las urnas, el gobierno lo premia o lo castiga.
+	var pol2 := Politica.new()
+	var g3 := pol2.gobierno("CHI", 2027)
+	g3["proxima"] = 2027
+	g3["apoyo_club"] = 2027
+	var titulos: Array = []
+	pol2.noticia.connect(func(t: String, _b: String) -> void: titulos.append(t))
+	for s in range(1, 45):
+		pol2.semana(c, 2027, s, m.prensa)
+	_comprobar(titulos.has("📰 El club respalda al gobierno") and (titulos.has("🤝 El alcalde cumple") or titulos.has("🧊 El nuevo gobierno no olvida")),
+		"el apoyo al gobierno se declara una vez y tiene consecuencia en las urnas")
 	## Arabia Saudí: nunca vota.
 	var c2 := m.ligas[0].clubes[1]
 	c2.pais = "KSA"

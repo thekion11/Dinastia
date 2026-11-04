@@ -39,6 +39,27 @@ static func aparecer(n: Control, retraso: float = 0.0, dur: float = 0.28) -> voi
 	tw.tween_property(n, "modulate:a", 1.0, dur).set_delay(retraso)
 	tw.tween_property(n, "scale", Vector2.ONE, dur).set_delay(retraso)
 
+## LA ENTRADA ESTÁNDAR DE UNA PANTALLA O DIÁLOGO (2-11-2026, M-304): fundido con una leve escala, igual en todas.
+## Con «animaciones reducidas» aparece al instante (nunca se queda transparente). Si aún no está en el árbol,
+## espera a entrar.
+static func entrar(n: Control, dur: float = 0.24) -> void:
+	if n == null:
+		return
+	if reducidas():
+		n.modulate.a = 1.0
+		n.scale = Vector2.ONE
+		return
+	if not n.is_inside_tree():
+		n.modulate.a = 0.0
+		n.tree_entered.connect(entrar.bind(n, dur), CONNECT_ONE_SHOT)
+		return
+	n.modulate.a = 0.0
+	n.pivot_offset = (n.size if n.size != Vector2.ZERO else n.custom_minimum_size) * 0.5
+	n.scale = Vector2(0.97, 0.97)
+	var tw := n.create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(n, "modulate:a", 1.0, dur)
+	tw.tween_property(n, "scale", Vector2.ONE, dur)
+
 ## Hasta `maximo` hijos visibles, cada uno `paso` segundos después del anterior.
 ## Más allá de eso entran todos juntos: una lista de 40 filas no puede tardar
 ## dos segundos en aparecer.

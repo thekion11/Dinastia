@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b44yjv3eowwks"
-path="res://.godot/imported/trofeo_base_000000017D69.png-76b348191ef14993da4231febf1c2af0.ctex"
+path.s3tc="res://.godot/imported/trofeo_base_000000017D69.png-76b348191ef14993da4231febf1c2af0.s3tc.ctex"
+path.etc2="res://.godot/imported/trofeo_base_000000017D69.png-76b348191ef14993da4231febf1c2af0.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "3efb57fd17b3353cc4aedf25eff3b6f3"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/trofeos/trofeo_base_000000017D69.png"
-dest_files=["res://.godot/imported/trofeo_base_000000017D69.png-76b348191ef14993da4231febf1c2af0.ctex"]
+dest_files=["res://.godot/imported/trofeo_base_000000017D69.png-76b348191ef14993da4231febf1c2af0.s3tc.ctex", "res://.godot/imported/trofeo_base_000000017D69.png-76b348191ef14993da4231febf1c2af0.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

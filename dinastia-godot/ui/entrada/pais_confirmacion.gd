@@ -75,7 +75,7 @@ func _ready() -> void:
 
 func abrir(p: String, detalle: String) -> void:
 	_bandera.texture = Banderas.textura(p)
-	_titulo.text = Idiomas.t("¿Empezar en %s?") % PaisDatos.nombre(p)
+	_titulo.text = Idiomas.t("¿Empezar en %s?") % CargaCiudad.de("PaisDatos").nombre(p)
 	_texto.text = detalle
 	visible = true
 	FocoSeguro.dar(_si)

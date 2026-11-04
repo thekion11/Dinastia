@@ -21,7 +21,7 @@ var mundo: Mundo
 var carrera: CarreraJugador
 var local: Club
 var visita: Club
-var motor: MotorJugable
+var motor
 var _camarografos: CamarografosSiguen
 var _raiz: Node3D
 var _cam: Camera3D
@@ -57,9 +57,10 @@ var eliminatoria := false
 ## en el gol. Las capturas sin ceremonia la apagan con `con_ceremonia = false`.
 static var con_ceremonia := true
 var _en_campo: Array = []
-var _ceremonia: CeremoniaPartido
+var _ceremonia
 var _btn_saltar: Button
 var _cine: CineGol
+var _interp: InterpolacionPartido
 var _repe: Repeticion
 var _rotulo_repe: PanelContainer
 var _hud: Array[Control] = []
@@ -108,10 +109,10 @@ func _montar_pantalla(perfil: Dictionary) -> void:
 	var pantallas := _raiz.find_children("PantallaMarcador*", "MeshInstance3D", true, false)
 	if pantallas.is_empty():
 		return
-	var pe := PantallaEstadio.new()
+	var pe = load("res://ui/pantalla_estadio.gd").new()
 	add_child(pe)
 	pe.montar(local, visita, null, {}, String(perfil.get("nombre", local.estadio_nombre)))
-	var tex := pe.get_texture()
+	var tex = pe.get_texture()
 	for m: MeshInstance3D in pantallas:
 		var mat := StandardMaterial3D.new()
 		mat.albedo_texture = tex
@@ -298,7 +299,7 @@ func _cine_gol(de_local: bool, autor_id: String) -> void:
 			return {}
 		return {"dorsal": int(jd.get("dorsal", 0)), "nombre": String(jd.get("nombre", "")),
 			"tiros": int(_tiros_de.get(autor_id, 1)), "goles": int(_goles_de.get(autor_id, 1))}
-	var gc := StadiumBuilder.geom_de_forma(String(_perfil.get("forma", "oval")))
+	var gc = load("res://visor/stadium_builder.gd").geom_de_forma(String(_perfil.get("forma", "oval")))
 	_cine = CineGol.iniciar(self, _raiz, club_gol, de_local, nodo, carta, float(gc["dx"]))
 	_ver_rotulos(false)
 	_ver_hud_abajo(false)
@@ -364,7 +365,7 @@ func _caja_centro(titulo: String, botones: Array) -> Control:
 	return capa
 
 func resultado() -> Dictionary:
-	var s := motor.stats
+	var s = motor.stats
 	return {"goles_local": motor.goles[0], "goles_visita": motor.goles[1], "goles": s["goles"], "asist": s["asist"],
 		"nota": motor.nota_usuario(), "minutos": int(round(motor.minutos_usuario)), "titular": entra_al < 0,
 		"sustituido": motor.usuario_sustituido, "paradas": s["paradas"],
@@ -384,7 +385,7 @@ func _al_terminar() -> void:
 			_cam.current = true
 	_ver_rotulos(true)
 	_ver_hud_abajo(true)
-	var s := motor.stats
+	var s = motor.stats
 	var yo := carrera.jugador(mundo) if carrera != null else null
 	_resumen = _caja_centro("FINAL  %s %d - %d %s" % [Nombres.visible(local.nombre), motor.goles[0], motor.goles[1], Nombres.visible(visita.nombre)], [
 		["Continuar", _cerrar]])

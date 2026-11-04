@@ -323,9 +323,9 @@ func _montar_pantalla_gigante(fondo: Color) -> void:
 	add_child(m)
 
 func _montar_presentador_realista() -> bool:
-	if not PersonaRealista.disponible():
+	if not load("res://visor/persona_realista.gd").disponible():
 		return false
-	var p := PersonaRealista.crear(PersonaRealista.aspecto("presentador_sorteo",
+	var p = load("res://visor/persona_realista.gd").crear(load("res://visor/persona_realista.gd").aspecto("presentador_sorteo",
 		{"ropa": "negro", "pantalon": "gris", "pelo": "negro", "piel": "media", "alto": 1.82, "ancho": 1.0}))
 	if p == null:
 		return false
@@ -339,20 +339,20 @@ func _montar_presentador_realista() -> bool:
 ## El presentador es el mismo cuerpo que usan los 22 del campo, con "parado"
 ## y "mostrar_tarjeta" en su catálogo.
 func _montar_presentador_quaternius() -> bool:
-	var d := FutbolistaQ.crear(1.78, "male")
+	var d = load("res://visor/futbolista_q.gd").crear(1.78, "male")
 	if d.is_empty():
 		return false
 	var raiz: Node3D = d["nodo"]
 	raiz.position = Vector3(1.15, 0.42, -0.35)
 	raiz.rotation.y = deg_to_rad(-32.0)
 	add_child(raiz)
-	FutbolistaQ.terminar(d, true)
+	load("res://visor/futbolista_q.gd").terminar(d, true)
 	## Traje azul marino oscuro, de manga y pantalón largos: mismo tono que la
 	## silueta de respaldo. Solapa un poco más clara que el traje.
 	var traje := Color(0.12, 0.13, 0.19)
-	if not VestidorQ.vestir_equipacion(d, traje, Color(0.2, 0.22, 0.3), "liso",
+	if not load("res://visor/vestidor_q.gd").vestir_equipacion(d, traje, Color(0.2, 0.22, 0.3), "liso",
 			Color(0.82, 0.63, 0.5), Color(0.14, 0.11, 0.09), traje, Color(0.05, 0.05, 0.06), true):
-		VestidorQ.vestir(d, traje)
+		load("res://visor/vestidor_q.gd").vestir(d, traje)
 	_anim_presentador = d["anim"]
 	if _anim_presentador != null and _anim_presentador.has_animation("parado"):
 		_anim_presentador.play("parado")

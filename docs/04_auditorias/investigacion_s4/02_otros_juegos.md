@@ -256,7 +256,7 @@ Sesión 4 (investigación). Va con `01_recursos_libres.md` y `03_propuesta.md`.
 - **Nosotros**
   - Vida del DT (`nucleo/vida_dt.gd`), casa 3D (`ui/casa_escena3d*.gd`) y ciudad: vamos más lejos que WAF.
   - **Hay que poder apagarla o reducirla.** Hoy las necesidades (`nucleo/necesidades.gd`) castigan si no comes ni duermes.
-- **Riesgo**: lo visible del partido es lo que más se castiga en el género. Está en las semanas 2-4 de la ruta (`docs/PLAN_DEL_LUNES.md` §3).
+- **Riesgo**: lo visible del partido es lo que más se castiga en el género. Está en las semanas 2-4 de la ruta (`docs/PLAN_GENERAL.md` §3).
 
 ## 11. Football, Tactics & Glory
 - **Bien**: partido por turnos y cada atributo se nota; más de 100.000 copias.

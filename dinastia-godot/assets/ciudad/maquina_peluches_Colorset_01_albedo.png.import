@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c7i1si5s0j4k"
-path="res://.godot/imported/maquina_peluches_Colorset_01_albedo.png-5e4b89580f129a58b780a7e0620a4301.ctex"
+path.s3tc="res://.godot/imported/maquina_peluches_Colorset_01_albedo.png-5e4b89580f129a58b780a7e0620a4301.s3tc.ctex"
+path.etc2="res://.godot/imported/maquina_peluches_Colorset_01_albedo.png-5e4b89580f129a58b780a7e0620a4301.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "54e6111bd80b5886b8cccd6b7faa0537"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/ciudad/maquina_peluches_Colorset_01_albedo.png"
-dest_files=["res://.godot/imported/maquina_peluches_Colorset_01_albedo.png-5e4b89580f129a58b780a7e0620a4301.ctex"]
+dest_files=["res://.godot/imported/maquina_peluches_Colorset_01_albedo.png-5e4b89580f129a58b780a7e0620a4301.s3tc.ctex", "res://.godot/imported/maquina_peluches_Colorset_01_albedo.png-5e4b89580f129a58b780a7e0620a4301.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -9,7 +9,7 @@ extends "res://nucleo/mundo_p7.gd"
 ## se escala hasta él al cerrar la temporada. Claves = las de la tabla `DIF`.
 const TOPE_VALOR_IA := {"facil": 1.35, "normal": 1.50, "leyenda": 1.65}
 ## El estado de las redes de la ciudad (luz, agua, drenaje, gas; se guarda). Null: aún no se ha pisado la ciudad en 3D o partida vieja.
-var redes_ciudad: RedesCiudad = null
+var redes_ciudad = null
 ## La dificultad de la partida (la pone `CicloPartida.arrancar_con`; se guarda) y el valor medio de la IA de
 ## referencia (al tomar el mando; 0 = todavía no).
 ## (`dificultad` vive en mundo_p6, que la usa para los premios.)

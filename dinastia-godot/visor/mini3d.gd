@@ -16,7 +16,7 @@ static func vista(padre: Control, momento: int = Calidad.DIA) -> Dictionary:
 	cont.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var vp := SubViewport.new()
 	vp.own_world_3d = true
-	vp.msaa_3d = Viewport.MSAA_4X
+	vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
 	vp.handle_input_locally = false
 	cont.add_child(vp)
 	padre.add_child(cont)
@@ -47,15 +47,15 @@ static var sala_deportiva := true
 static func persona(padre: Node3D, rng: RandomNumberGenerator, pos: Vector3, deporte: Array = []) -> Dictionary:
 	if deporte.size() >= 2:
 		return _deportista(padre, rng, pos, deporte)
-	var d := PeatonQ.crear(rng)
+	var d = CargaCiudad.de("PeatonQ").crear(rng)
 	if d.is_empty():
 		return d
 	var nodo: Node3D = d["nodo"]
 	padre.add_child(nodo)
 	nodo.position = pos
-	PeatonQ.terminar(d)
+	CargaCiudad.de("PeatonQ").terminar(d)
 	## Zapatillas de verdad: de cerca y sentados, la pintada parecía un pie descalzo.
-	PeatonQ.calzar(d)
+	CargaCiudad.de("PeatonQ").calzar(d)
 	_todas_las_animaciones(d)
 	for mi in nodo.find_children("*", "MeshInstance3D", true, false):
 		(mi as MeshInstance3D).visibility_range_end = 0.0
@@ -67,7 +67,7 @@ static func _todas_las_animaciones(d: Dictionary) -> void:
 	var esq: Skeleton3D = d["esqueleto"]
 	if ap.has_animation_library(""):
 		ap.remove_animation_library("")
-	ap.add_animation_library("", AnimQuaternius.construir(esq, str(ap.get_path_to(esq)), true))
+	ap.add_animation_library("", load("res://visor/anim_quaternius.gd").construir(esq, str(ap.get_path_to(esq)), true))
 
 ## De corto (o manga larga, el portero), vestido una sola vez como los
 ## futbolistas del partido.
@@ -82,8 +82,8 @@ static func _deportista(padre: Node3D, rng: RandomNumberGenerator, pos: Vector3,
 	FutbolistaQ.terminar(d, true)
 	var c1: Color = deporte[0]
 	var c2: Color = deporte[1]
-	var piel := Color(String(PeatonQ.PIELES[rng.randi() % PeatonQ.PIELES.size()]))
-	var pelo: Color = PeatonQ.PELOS[rng.randi() % PeatonQ.PELOS.size()]
+	var piel = Color(String(CargaCiudad.de("PeatonQ").PIELES[rng.randi() % CargaCiudad.de("PeatonQ").PIELES.size()]))
+	var pelo: Color = CargaCiudad.de("PeatonQ").PELOS[rng.randi() % CargaCiudad.de("PeatonQ").PELOS.size()]
 	var largo := deporte.size() > 2 and bool(deporte[2])
 	if largo or not sala_deportiva:
 		## Manga larga = ropa de TRABAJO (panaderos, médicos, bomberos,
@@ -98,10 +98,10 @@ static func _deportista(padre: Node3D, rng: RandomNumberGenerator, pos: Vector3,
 			kit["manga_corta"] = true
 		VestidorQ.vestir_equipacion(d, c1, c2, "liso", piel, pelo, c2, c2, true, kit, 0)
 		PersonajeDT.adelgazar(d, false)
-		PeatonQ.calzar(d, "1c1c1e")
+		CargaCiudad.de("PeatonQ").calzar(d, "1c1c1e")
 	else:
 		VestidorQ.vestir_equipacion(d, c1, c2, "liso", piel, pelo, c2, c1, false)
-	PeloQ.poner(d, String(PeatonQ.CORTES_H[rng.randi() % PeatonQ.CORTES_H.size()]), pelo, rng.randf() < 0.3)
+	PeloQ.poner(d, String(CargaCiudad.de("PeatonQ").CORTES_H[rng.randi() % CargaCiudad.de("PeatonQ").CORTES_H.size()]), pelo, rng.randf() < 0.3)
 	anim(d, "parado")
 	return d
 

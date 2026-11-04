@@ -377,7 +377,7 @@ func _probar_cajero() -> void:
 	for h in pt._caja.get_children():
 		if h is Button:
 			n_boton += 1
-	_comprobar(n_boton == TiendaGasolinera.SURTIDO.size() + 1, "la caja de la tienda tiene un botón por artículo y «Salir»")
+	_comprobar(n_boton == TiendaGasolinera.SURTIDO.size() + 2, "la caja de la tienda tiene un botón por artículo, la casilla «Pagar con tarjeta y PIN» (U6) y «Salir»")
 	pt.comprar(TiendaGasolinera.SURTIDO[1])
 	_comprobar(comprados == ["bolleria"] and pt._aviso == "ok bolleria", "comprar llama a la compra y enseña su mensaje")
 	capa.queue_free()

@@ -216,13 +216,13 @@ func _pintar_legado() -> void:
 		p._lista_legado.add_child(lic)
 		var motivo := p.mundo.licencia.puede_presentarse(p.mundo.anio, p.mundo.semana)
 		if motivo == "":
-			p._boton(Idiomas.t("Presentarse al examen de %s") % Idiomas.t(String(Licencia.NIVELES[p.mundo.licencia.nivel + 1])), p._ui_finanzas._abrir_examen, p._lista_legado)
+			p._boton(Idiomas.t("Presentarse al examen de %s") % Idiomas.t(String(Licencia.NIVELES[p.mundo.licencia.nivel + 1])), func() -> void: p._ui_finanzas._abrir_examen(), p._lista_legado)
 		else:
 			var m2 := p._texto(11, Principal.COL_SUAVE)
 			m2.text = Idiomas.t(motivo)
 			m2.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_legado.add_child(m2)
-		p._boton(Idiomas.t("🎮 Minijuegos: penales, tiros libres y trivia"), func() -> void: SalaMinijuegos.abrir(p, p.mundo), p._lista_legado)
+		p._boton(Idiomas.t("🎮 Minijuegos: penales, tiros libres y trivia"), func() -> void: load("res://ui/componentes/sala_minijuegos.gd").abrir(p, p.mundo), p._lista_legado)
 
 	var escalon := r.siguiente_escalon()
 	if escalon != "":
@@ -231,7 +231,7 @@ func _pintar_legado() -> void:
 		e.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(e)
 	if r.puede_ascender() != "":
-		p._boton(Idiomas.t("📈 Ascender a %s") % Idiomas.t(String(Roles.PERMISOS[r.puede_ascender()]["cargo"])), p._ui_finanzas._ascender_rol, p._lista_legado)
+		p._boton(Idiomas.t("📈 Ascender a %s") % Idiomas.t(String(Roles.PERMISOS[r.puede_ascender()]["cargo"])), func() -> void: p._ui_finanzas._ascender_rol(), p._lista_legado)
 	p._lista_legado.add_child(HSeparator.new())
 
 	## LA OFERTA DE OTRO CLUB. Va arriba del legado porque es lo unico de esta

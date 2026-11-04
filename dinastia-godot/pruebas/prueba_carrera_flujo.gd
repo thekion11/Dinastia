@@ -24,4 +24,5 @@ func _ready() -> void:
 	print("FLUJO semana %d -> %d  pj %d  partidos_jugables %d  resultado %d-%d  nota %.1f  guardado %s" % [sem, m.semana, int(ui.carrera.stats_temp["pj"]), ui.carrera.partidos_jugables, int(res["goles_local"]), int(res["goles_visita"]), float(res["nota"]), str(FileAccess.file_exists("user://partidas/carrera_jugador.json") or Partida.listar().size() > 0)])
 	var m2 := Partida.cargar("carrera_jugador")
 	print("CARGA carrera=%s jugador=%s" % [str(m2 != null and m2.carrera_jugador != null), m2.carrera_jugador.jugador(m2).nombre if m2 != null and m2.carrera_jugador != null else "-"])
+	Partida.borrar("carrera_jugador")   ## (la carrera guardada que deja esta prueba rompía `banco_inicio` en local)
 	get_tree().quit()

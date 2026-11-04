@@ -156,6 +156,10 @@ func _pintar_decision(e: Dictionary) -> void:
 ## teclado y el arrastre con el dedo en Android: una sola puerta para las
 ## tres formas de pedir lo mismo.
 func _bloque_vecino(paso: int) -> void:
+	## (3-11, rediseño del menú central) Sin fila de bloques: L2/R2 (Ctrl+Q/E) pasan de un menú del panel lateral al de al lado.
+	if p._menu_lateral != null:
+		p._menu_lateral.menu_vecino(paso)
+		return
 	var i := p._indice_grupo(p._grupo_actual)
 	var siguiente := (i + paso + Principal.GRUPOS.size()) % Principal.GRUPOS.size()
 	## Se saltan los grupos que viven en el panel lateral.
@@ -173,6 +177,7 @@ func _rejilla(lista: VBoxContainer, columnas: int) -> GridContainer:
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 10)
 	g.add_theme_constant_override("v_separation", 3)
+	CebraRejilla.poner(g)
 	lista.add_child(g)
 	return g
 func _fila_jugador(g: GridContainer, j: Jugador, columnas: Array, colores: Array) -> void:

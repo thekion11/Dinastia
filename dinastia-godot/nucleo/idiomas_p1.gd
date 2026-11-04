@@ -63,7 +63,10 @@ const NOMBRES := {
 	"tr": ["Türkçe", "🇹🇷"],
 }
 
-var idioma := "es"
+var idioma := "es":
+	set(v):
+		idioma = v
+		call("_asegurar", v)   ## (3-11, memoria) solo se carga el idioma elegido (`idiomas.gd`)
 
 ## clave castellana -> [en, pt, fr, it, de, ca]
 const TABLA := {
@@ -397,6 +400,7 @@ const TABLA := {
 ##   {"en": {castellano: inglés}, "pt": {...}, "patrones": [[regex, en, pt]]}
 const EXTRA := "res://datos/idiomas_extra.json"
 var _extra := {}
+var _cargados := {}   ## los idiomas de `_extra` ya leídos (ver `_asegurar` en `idiomas.gd`)
 var _patrones: Array = []   ## [RegEx, {"en": plantilla, "pt": plantilla}]
 var _cache := {}
 
@@ -421,6 +425,8 @@ func _cargar_narracion() -> void:
 		return
 	var directas: Dictionary = (d as Dictionary).get("directas", {})
 	for k: String in directas:
+		if not _cargados.has(k):   ## (3-11) solo los idiomas cargados; el resto, cuando se pidan (`_cargar_extra` repite esto)
+			continue
 		var tabla: Dictionary = _extra.get(k, {})
 		for frase: String in (directas[k] as Dictionary):
 			if not tabla.has(frase):

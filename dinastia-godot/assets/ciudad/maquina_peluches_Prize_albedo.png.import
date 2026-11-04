@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dfs6ulcx3r1vy"
-path="res://.godot/imported/maquina_peluches_Prize_albedo.png-58f7fedbf1b2c7181c9e21d046a3a51b.ctex"
+path.s3tc="res://.godot/imported/maquina_peluches_Prize_albedo.png-58f7fedbf1b2c7181c9e21d046a3a51b.s3tc.ctex"
+path.etc2="res://.godot/imported/maquina_peluches_Prize_albedo.png-58f7fedbf1b2c7181c9e21d046a3a51b.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "7daec946437b4035c756d0ede83ddcef"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/ciudad/maquina_peluches_Prize_albedo.png"
-dest_files=["res://.godot/imported/maquina_peluches_Prize_albedo.png-58f7fedbf1b2c7181c9e21d046a3a51b.ctex"]
+dest_files=["res://.godot/imported/maquina_peluches_Prize_albedo.png-58f7fedbf1b2c7181c9e21d046a3a51b.s3tc.ctex", "res://.godot/imported/maquina_peluches_Prize_albedo.png-58f7fedbf1b2c7181c9e21d046a3a51b.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

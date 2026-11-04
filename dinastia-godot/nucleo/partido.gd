@@ -29,8 +29,8 @@ func simular_minuto() -> void:
 	var fv := _fza_visita
 	## Sin empuje de local en cancha neutral: es lo que hace que una final en
 	## campo neutro se sienta distinta de una en casa.
-	var bono_l := 1.0 if neutral else 1.08
-	var bono_v := 1.0 if neutral else 0.94
+	var bono_l := 1.0 if neutral else Balance.BONO_LOCAL
+	var bono_v := 1.0 if neutral else Balance.BONO_VISITA
 
 	var p_l := _probabilidad(fl["ata"], fv["def"]) * bono_l * clima
 	var p_v := _probabilidad(fv["ata"], fl["def"]) * bono_v * clima * _f_clima_visita
@@ -61,22 +61,21 @@ func simular_minuto() -> void:
 	var dominio := p_l / maxf(p_l + p_v, 0.0001)
 	var empuje := 1.06 if local.tactica.ritmo == 0 else 1.0
 	posesion_local = clampf(posesion_local * 0.94 + dominio * 100.0 * empuje * 0.06, 22.0, 78.0)
-	## Córners, faltas y fueras de juego con las probabilidades por minuto del
-	## HTML, tal cual. El local saca algún córner más y comete alguna falta
-	## menos: no es simetría rota, es la ventaja de campo contada en detalle.
+	## Córners, faltas y fueras de juego: contadores de relleno, con las probabilidades por minuto de `Balance` (3-11: las del HTML daban 17 córners, 30 faltas y 9 fueras por partido).
+	## El local saca algún córner más y comete alguna falta menos: no es simetría rota, es la ventaja de campo contada en detalle.
 	## (El generador de `Azar` directo: es justo lo que hace `Azar.suerte`, sin la llamada.)
 	var rng: RandomNumberGenerator = Azar._rng
-	if rng.randf() < 0.10:
+	if rng.randf() < Balance.P_CORNER_LOCAL:
 		corners_local += 1
-	if rng.randf() < 0.09:
+	if rng.randf() < Balance.P_CORNER_VISITA:
 		corners_visita += 1
-	if rng.randf() < 0.16:
+	if rng.randf() < Balance.P_FALTA_LOCAL:
 		faltas_local += 1
-	if rng.randf() < 0.17:
+	if rng.randf() < Balance.P_FALTA_VISITA:
 		faltas_visita += 1
-	if rng.randf() < 0.05:
+	if rng.randf() < Balance.P_FUERA:
 		fueras_local += 1
-	if rng.randf() < 0.05:
+	if rng.randf() < Balance.P_FUERA:
 		fueras_visita += 1
 
 	if not motor_externo:
@@ -87,6 +86,8 @@ func simular_minuto() -> void:
 
 	_incidencias()
 	minuto_jugado.emit(minuto)
+	if prorroga_si_empate and minuto >= minutos_fin and minutos_fin == MINUTOS and goles_local == goles_visita:
+		prorroga_externa()
 	if minuto >= minutos_fin:
 		terminado_ya = true
 		_devolver_tactica()
@@ -253,6 +254,8 @@ func cambiar(sale: Jugador, entra: Jugador) -> String:
 		return "%s no está en condiciones de entrar" % entra.nombre
 	if once_local.has(entra) or once_visita.has(entra):
 		return "%s ya está jugando" % entra.nombre
+	if ya_salio(entra):
+		return "quien ya salió no puede volver a entrar"
 	var once := once_local if es_local else once_visita
 	once[once.find(sale)] = entra
 	if es_local:
@@ -264,6 +267,11 @@ func cambiar(sale: Jugador, entra: Jugador) -> String:
 	cronica.append({"min": minuto, "tipo": "cambio", "sale": sale.nombre, "entra": entra.nombre})
 	cambio_hecho.emit(sale, entra, minuto)
 	return ""
+
+## El reglamento no deja volver al que ya dejó el campo (por un cambio o por una roja en el 3D): lo encontró el banco
+## `partido_reglas` (4-11): `cambiar()` lo dejaba entrar otra vez y el DT de la IA del estadio podía elegirlo.
+func ya_salio(j: Jugador) -> bool:
+	return _todos.has(j) and not once_local.has(j) and not once_visita.has(j)
 
 ## La tanda que se jugó en el 3D. Va ANTES del pitido final del acta: quien
 ## escuche `terminado` y pida `penales()` recibe la del césped.
@@ -410,3 +418,17 @@ func fuerza(once: Array[Jugador], c: Club) -> Dictionary:
 	f["def"] = float(f["def"]) * float(m[1])
 	return f
 
+## LOS PENALES DEL PARTIDO SIMULADO (3-11-2026, orden del líder): antes solo el árbitro «estricto» los cobraba (0,00 por partido; el fútbol real: ~0,25-0,3).
+## Ahora cada llegada puede acabar en falta dentro del área (`Balance.P_PENAL`, escalada por el perfil del árbitro): se pita para el que ataca y
+## el penal se cobra en el acto (`Balance.CONVERSION_PENAL`). Sustituye al remate de esa llegada.
+func _penal_en_area(c: Club, once: Array[Jugador], es_local: bool) -> bool:
+	if not Azar.suerte(Balance.P_PENAL * float(Balance.PENAL_PERFIL.get(String(arbitro.get("perfil", "")), 1.0))):
+		return false
+	var nombre := String(arbitro.get("nombre", Idiomas.t("El árbitro")))
+	decision_arbitral.emit(Idiomas.t("⚽ Penal para %s: %s no dudó en cobrarlo.") % [c.nombre, nombre], minuto)
+	_contar_penal(es_local)
+	if Azar.suerte(Balance.CONVERSION_PENAL):
+		_anotar(c, once, es_local)
+	else:
+		remate.emit(c, _elegir_goleador(once), "atajada", minuto)
+	return true

@@ -28,12 +28,12 @@ func _refrescar() -> void:
 	p._panel_obj.refrescar()
 	## Tu personaje 3D, a mano para la banda de cualquier estadio (la vista
 	## del partido no tiene el mundo delante).
-	PersonajeDT.del_usuario = p.mundo.roles.aspecto_3d()
-	PersonajeDT.club_usuario = c.id if c != null else ""
+	UsuarioEn3D.aspecto = p.mundo.roles.aspecto_3d()
+	UsuarioEn3D.club = c.id if c != null else ""
 	## El edificio del club (estadio 2.0) también necesita saber del mundo.
-	EdificioClub.fijar_ctx(p.mundo, c)
-	## Entrenadora: si tu personaje es mujer, toda la interfaz te trata como tal.
-	Genero.fijar(String(PersonajeDT.aspecto(PersonajeDT.del_usuario)["cuerpo"]) == "female")
+	PendienteClub.fijar(p.mundo, c)   ## (se aplica al entrar al edificio: no compilarlo al abrir el menú)
+	## Entrenadora: si tu personaje es mujer, toda la interfaz te trata como tal (el cuerpo por defecto es «male», como `PersonajeDT.BASE`).
+	Genero.fijar(String(UsuarioEn3D.aspecto.get("cuerpo", "male")) == "female")
 	var liga := p._liga_de(c)
 	var acento_antes := p.COL_ACENTO
 	p.COL_ACENTO = p._acento_de(c)
@@ -123,31 +123,31 @@ func _refrescar() -> void:
 			}, p._negociacion_ultimo))
 	p._perezoso(p._lista_copa, p._ui_plantel.abrir.bind("copa", {"club": c}))
 	p._perezoso(p._lista_club, p._ui_ficha.abrir.bind("club", {"club": c}))
-	p._perezoso(p._lista_conti, p._ui_club_vida.abrir.bind("conti", {"club": c}))
-	p._perezoso(p._lista_medico, p._ui_club_vida.abrir.bind("medico", {"club": c}))
-	p._perezoso(p._lista_logros, p._ui_club_vida.abrir.bind("logros"))
-	p._perezoso(p._lista_entren, p._ui_club_vida.abrir.bind("entrenamiento", {"club": c}))
+	p._perezoso(p._lista_conti, p._abrir_perezosa.bind("club_vida", "conti", {"club": c}))
+	p._perezoso(p._lista_medico, p._abrir_perezosa.bind("club_vida", "medico", {"club": c}))
+	p._perezoso(p._lista_logros, p._abrir_perezosa.bind("club_vida", "logros"))
+	p._perezoso(p._lista_entren, p._abrir_perezosa.bind("club_vida", "entrenamiento", {"club": c}))
 	p._perezoso(p._lista_fed, p._pintar_federacion.bind(c))
 	p._perezoso(p._lista_estadio, p._ui_club_estadio.abrir.bind("estadio", {"club": c}))
-	p._perezoso(p._lista_seleccion, p._ui_cantera.abrir.bind("seleccion", {"club": c}))
-	p._perezoso(p._lista_cantera, p._ui_cantera.abrir.bind("cantera", {"club": c}))
-	p._perezoso(p._lista_contratos, p._ui_cantera.abrir.bind("contratos", {"club": c}))
-	p._perezoso(p._lista_comparar, p._ui_cantera.abrir.bind("comparar"))
+	p._perezoso(p._lista_seleccion, p._abrir_perezosa.bind("cantera", "seleccion", {"club": c}))
+	p._perezoso(p._lista_cantera, p._abrir_perezosa.bind("cantera", "cantera", {"club": c}))
+	p._perezoso(p._lista_contratos, p._abrir_perezosa.bind("cantera", "contratos", {"club": c}))
+	p._perezoso(p._lista_comparar, p._abrir_perezosa.bind("cantera", "comparar"))
 	p._perezoso(p._lista_records, p._ui_legado.abrir.bind("records"))
 	p._perezoso(p._lista_legado, p._ui_legado.abrir.bind("legado"))
 	p._perezoso(p._lista_inicio, p._ui_legado.abrir.bind("inicio", {"club": c}))
 	## Las otras tres viven DENTRO de `_pintar_gente()` ahora -un chip por
 	## sección, solo se pinta la que está activa- en vez de apilarse las
 	## cuatro siempre, aunque solo una se vea.
-	p._perezoso(p._lista_gente, p._ui_gente.abrir.bind("gente"))
-	p._perezoso(p._lista_finanzas, p._ui_finanzas.abrir.bind("finanzas", {"club": c}))
-	p._perezoso(p._lista_camarin, p._ui_finanzas.abrir.bind("camarin", {"club": c}))
+	p._perezoso(p._lista_gente, p._abrir_perezosa.bind("gente", "gente"))
+	p._perezoso(p._lista_finanzas, p._abrir_perezosa.bind("finanzas", "finanzas", {"club": c}))
+	p._perezoso(p._lista_camarin, p._abrir_perezosa.bind("finanzas", "camarin", {"club": c}))
 	p._perezoso(p._lista_ciudad, p._ui_ciudad.abrir.bind("ciudad", {"club": c}))
-	p._perezoso(p._lista_editor, p._ui_editor.abrir.bind("editor"))
+	p._perezoso(p._lista_editor, p._abrir_perezosa.bind("editor", "editor"))
 	p._perezoso(p._lista_glosario, p._ui_opciones.abrir.bind("glosario"))
 	p._perezoso(p._lista_ajustes, p._ui_ajustes.abrir.bind("ajustes"))
-	p._perezoso(p._lista_correo, p._ui_gente.abrir.bind("correo"))
-	p._perezoso(p._lista_redes, p._ui_gente.abrir.bind("redes"))
+	p._perezoso(p._lista_correo, p._abrir_perezosa.bind("gente", "correo"))
+	p._perezoso(p._lista_redes, p._abrir_perezosa.bind("gente", "redes"))
 	## Diferidas como las demás (etapa 1, 2.ª pasada): llamadas a pelo, con
 	## la pestaña oculta no pintaban NI quedaban pendientes, y al entrar en
 	## «Vida» o «Habilidades» la hoja salía vacía.
@@ -211,6 +211,7 @@ func _avanzar_semana() -> void:
 	liga.jornada_terminada.disconnect(oyente)
 	if visto["txt"] != "":
 		p._escribir(visto["txt"])
+	_clubes_seguidos()
 	if p.mundo.semana % Finanzas.SEMANAS_DEL_MES == 1 and p.mundo.semana > 1:
 		var delta := mio.saldo - caja_antes
 		p._escribir("[color=#c9a227]Cierre de mes:[/color] la caja %s %s" % [
@@ -234,6 +235,7 @@ func _avanzar_dia() -> void:
 	if p.mundo.prensa != null and not p.mundo.prensa.titular_pendiente.is_empty():
 		var tit := p.mundo.prensa.publicar_titular_pendiente()
 		Aviso.mostrar(p, "prensa", "🗞️", "La portada de hoy", tit)
+	p._partida.autoguardar_si_toca()   ## (3-11) también al pasar cada día (la semana entera ya lo hace en `_avanzar_semana`)
 	_refrescar()
 ## Los siete días con el de hoy encendido. El sábado lleva el balón porque es
 ## cuando cae la jornada: sin esa marca, la tira sería un adorno.
@@ -322,3 +324,21 @@ func _anotar(titulo: String, cuerpo: String) -> void:
 			p.mundo.movil.recibir(String(de[0]), String(de[1]), "%s %s", p.mundo.anio, p.mundo.semana, [titulo, cuerpo], true)
 	if p._bandeja.size() > Principal.BANDEJA_MAX:
 		p._bandeja.resize(Principal.BANDEJA_MAX)
+
+## M-292 (2-11): el último resultado de cada club que sigues, una vez por jornada jugada, a la bandeja.
+var _seguido_jornada := {}
+func _clubes_seguidos() -> void:
+	if p.mundo.ojeadores == null:
+		return
+	for cid: String in p.mundo.ojeadores.clubes_seguidos:
+		var c: Club = p.mundo.clubes.get(cid)
+		if c == null:
+			continue
+		var l := p._liga_de(c)
+		if l.historial.is_empty() or int(_seguido_jornada.get(cid, -1)) == l.jornada_actual:
+			continue
+		_seguido_jornada[cid] = l.jornada_actual
+		for r: Dictionary in l.historial[-1]:
+			if r["local"] == c or r["visita"] == c:
+				_anotar(Idiomas.t("📌 Club seguido: %s") % c.nombre, Idiomas.t("Jornada %d: %s %d-%d %s.") % [
+					l.jornada_actual, (r["local"] as Club).nombre, int(r["gl"]), int(r["gv"]), (r["visita"] as Club).nombre])

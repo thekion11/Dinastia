@@ -88,24 +88,24 @@ static func texto(padre: Node3D, t: String, pos: Vector3, tam: int, col: Color, 
 
 ## Los materiales de las taquillas de un vestuario, de una vez (se comparten).
 static func materiales(c1: Color, c2: Color) -> Dictionary:
-	var madera := TunelVestuario._mat(Color(0.56, 0.4, 0.25).lerp(c1, 0.12), 0.55)
-	var fondo := TunelVestuario._mat(Color(0.2, 0.21, 0.23).lerp(c1, 0.25), 0.7)
-	var cojin := TunelVestuario._mat(c1.lerp(Color(0.08, 0.08, 0.1), 0.15), 0.9)
-	var placa := TunelVestuario._mat_unico(Color(0.1, 0.1, 0.12), 0.35)
+	var madera := PiezasObra._mat(Color(0.56, 0.4, 0.25).lerp(c1, 0.12), 0.55)
+	var fondo := PiezasObra._mat(Color(0.2, 0.21, 0.23).lerp(c1, 0.25), 0.7)
+	var cojin := PiezasObra._mat(c1.lerp(Color(0.08, 0.08, 0.1), 0.15), 0.9)
+	var placa := PiezasObra._mat_unico(Color(0.1, 0.1, 0.12), 0.35)
 	placa.metallic = 0.4
-	var tira := TunelVestuario._mat_unico(Color(1, 0.93, 0.78), 0.4)
+	var tira := PiezasObra._mat_unico(Color(1, 0.93, 0.78), 0.4)
 	tira.emission_enabled = true
 	tira.emission = Color(1, 0.88, 0.62)
 	tira.emission_energy_multiplier = 1.8
 	tira.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	var bota := TunelVestuario._mat(Color(0.07, 0.07, 0.08), 0.35)
-	var suela := TunelVestuario._mat(c2.lerp(Color(0.9, 0.9, 0.9), 0.4), 0.5)
-	var bolsa := TunelVestuario._mat(c1.lerp(Color(0.05, 0.05, 0.06), 0.45), 0.8)
-	var toalla := TunelVestuario._mat(Color(0.94, 0.94, 0.92), 0.95)
+	var bota := PiezasObra._mat(Color(0.07, 0.07, 0.08), 0.35)
+	var suela := PiezasObra._mat(c2.lerp(Color(0.9, 0.9, 0.9), 0.4), 0.5)
+	var bolsa := PiezasObra._mat(c1.lerp(Color(0.05, 0.05, 0.06), 0.45), 0.8)
+	var toalla := PiezasObra._mat(Color(0.94, 0.94, 0.92), 0.95)
 	var metal: StandardMaterial3D = Texturas.metal(Color(0.75, 0.76, 0.78), 0.3)
 	return {"madera": madera, "fondo": fondo, "cojin": cojin, "placa": placa, "tira": tira, "bota": bota,
 		"suela": suela, "bolsa": bolsa, "toalla": toalla, "metal": metal,
-		"cam1": TunelVestuario._mat(c1, 0.85), "cam2": TunelVestuario._mat(c2, 0.85), "c1": c1, "c2": c2}
+		"cam1": PiezasObra._mat(c1, 0.85), "cam2": PiezasObra._mat(c2, 0.85), "c1": c1, "c2": c2}
 
 ## Una caja de la taquilla en coordenadas locales (girada `gz` en Z, `gy` en Y).
 static func _pon(lote: Lote, xf: Transform3D, p: Vector3, tam: Vector3, mat: Material, gz := 0.0, gy := 0.0) -> void:

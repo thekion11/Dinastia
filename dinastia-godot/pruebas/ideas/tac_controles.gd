@@ -42,7 +42,7 @@ func _probar_tactil() -> void:
 	_arrastre(c, 0, ini + Vector2(30, 0))
 	_comprobar(Mando.movimiento().x > 0.0 and Mando.movimiento().x < 0.5, "a medio stick, medio paso (analógico)")
 	## Botones con otro dedo a la vez que el stick.
-	var nombres := {"A": "jugar_pase", "B": "jugar_tiro", "X": "jugar_centro", "Y": "jugar_filtrado", "Cambiar": "jugar_cambiar", "Sprint": "jugar_sprint"}
+	var nombres := {"A": "jugar_pase", "B": "jugar_tiro", "X": "jugar_centro", "Y": "jugar_filtrado", "Cambiar": "jugar_cambiar", "Sprint": "jugar_sprint", "Mod": "jugar_mod", "Pausa": "jugar_pausa"}
 	var dedo := 1
 	for n: String in nombres:
 		_toque(c, dedo, c.centro_de(n), true)
@@ -81,6 +81,32 @@ func _probar_tactil() -> void:
 				if p.distance_to(c.centro_de(String(ns[j]))) < ControlesTactiles.RADIO_BOTON * 1.9:
 					ok = false
 		_comprobar(ok, "en %d×%d los botones caben y no se pisan" % [int(tam.x), int(tam.y)])
+	## Ajustes: tamaño y opacidad (se leen al crear el control) y cuándo salen.
 	c.soltar_todo()
 	c.queue_free()
+	AjustesTactil.restaurar()
+	_comprobar(AjustesTactil.modo() == "auto" and absf(AjustesTactil.tamano() - 1.0) < 0.001 and absf(AjustesTactil.opacidad() - 1.0) < 0.001, "por defecto: automático, tamaño 100 %, opacidad 100 %")
+	AjustesTactil.poner_tamano(1.4)
+	AjustesTactil.poner_opacidad(0.4)
+	var g := ControlesTactiles.poner(self)
+	_comprobar(g != null and absf(g.esc - 1.4) < 0.001 and absf(g.opac - 0.4) < 0.001, "el tamaño (140 %) y la opacidad (40 %) elegidos llegan a los controles")
+	g.size = Vector2(1280, 720)
+	_comprobar(g.radio_boton() * 2.0 >= 64.0, "los botones miden más de 64 px (%d)" % int(g.radio_boton() * 2.0))
+	g.size = Vector2(960, 480)
+	_comprobar(g.radio_boton() <= ControlesTactiles.RADIO_BOTON + 0.01, "en una pantalla baja el tamaño no pasa de lo que cabe (radio %d)" % int(g.radio_boton()))
+	g.free()
+	AjustesTactil.poner_tamano(0.1)
+	AjustesTactil.poner_opacidad(5.0)
+	_comprobar(absf(AjustesTactil.tamano() - AjustesTactil.TAM_MIN) < 0.001 and absf(AjustesTactil.opacidad() - 1.0) < 0.001, "los valores se acotan (70–140 %, 20–100 %)")
+	AjustesTactil.restaurar()
 	ControlesTactiles.forzar = false
+	AjustesTactil.poner_modo("no")
+	ControlesTactiles.forzar = true
+	_comprobar(ControlesTactiles.poner(self) == null, "con «Nunca» no salen, ni siquiera forzados por la pantalla")
+	AjustesTactil.poner_modo("si")
+	ControlesTactiles.forzar = false
+	var h := ControlesTactiles.poner(self)
+	_comprobar(h != null, "con «Siempre» salen aunque el aparato no sea táctil")
+	if h != null:
+		h.free()
+	AjustesTactil.restaurar()

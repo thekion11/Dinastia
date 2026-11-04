@@ -14,7 +14,7 @@ func _ready() -> void:
 	pr._bandeja.clear()
 	for t: String in ["Firmado: Pérez", "Renovado: Soto", "Lesión en entrenamiento", "Crédito concedido"]:
 		pr._bandeja.append({"titulo": t, "cuerpo": "x", "semana": 1, "anio": 2026, "leida": false})
-	var g := pr._ui_gente
+	var g: Object = pr._ui_gente
 	g._correo_tema = "mercado"
 	g._pintar_correo()
 	var titulos: Array[String] = []

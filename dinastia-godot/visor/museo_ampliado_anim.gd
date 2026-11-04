@@ -12,7 +12,7 @@ var titulos := 0
 var _hecho := false
 
 func _ready() -> void:
-	if int(AjustesCiudad.valor("museo_ampliado_visto", 0)) >= nivel:
+	if int(CargaCiudad.de("AjustesCiudad").valor("museo_ampliado_visto", 0)) >= nivel:
 		_encender(copas.size())
 		_hecho = true
 
@@ -25,7 +25,7 @@ func _process(_d: float) -> void:
 	var p := to_local(cam.global_position)
 	if absf(p.y - y0 - 1.6) < 1.8 and sala.grow(0.1).has_point(Vector2(p.x, p.z)):
 		_hecho = true
-		AjustesCiudad.guardar("museo_ampliado_visto", nivel)
+		CargaCiudad.de("AjustesCiudad").guardar("museo_ampliado_visto", nivel)
 		_animar()
 
 func _encender(hasta: int) -> void:

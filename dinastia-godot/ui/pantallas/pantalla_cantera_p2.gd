@@ -410,6 +410,20 @@ func _fila_canterano(j: Jugador, ct: Cantera, c: Club) -> HBoxContainer:
 		rf.mouse_filter = Control.MOUSE_FILTER_PASS
 		rf.custom_minimum_size = Vector2(64, 0)
 		fila.add_child(rf)
+	## 3-11 (orden 22 U6): en el modo DIRECTOR DE CANTERA la meta de la temporada son los debutantes, y
+	## `Roles.subir_al_primer_equipo` (lo único que los cuenta) no tenía botón: la meta fallaba siempre.
+	var r: Roles = p.mundo.roles
+	if r != null and r.es_cantera() and j.edad <= 21 and not (r.cantera.get("subidos", []) as Array).has(j.id):
+		var bs := Button.new()
+		bs.text = Idiomas.t("⬆ Subir al primer equipo")
+		bs.add_theme_font_size_override("font_size", 11)
+		bs.tooltip_text = Idiomas.t("Cuenta para la meta de debutantes. Si aún no está listo, le queda grande y se le nota.")
+		bs.pressed.connect(func() -> void:
+			var err := r.subir_al_primer_equipo(j)
+			if err != "":
+				p._escribir("[color=#e05555]%s.[/color]" % err.capitalize())
+			p._refrescar())
+		fila.add_child(bs)
 	if ct.tiene_beca(j):
 		var tag := p._texto(11, Principal.COL_VERDE)
 		tag.text = Idiomas.t("becado")

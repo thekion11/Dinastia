@@ -278,9 +278,9 @@ func _poner_banca_de(c: Club, once_c: Array[Jugador], es_local: bool) -> void:
 ## a ~0,45 m: se baja la cadera hasta el asiento (la misma cuenta que los bancos
 ## del metro). Antes, el DT sancionado y la directiva flotaban medio metro.
 static func _a_la_butaca(n: Node3D) -> void:
-	var cadera := MetroCiudad.altura_cadera(n)
+	var cadera = CargaCiudad.de("MetroCiudad").altura_cadera(n)
 	if cadera > 0.0:
-		n.position.y += MetroCiudad.BANCO_ASIENTO + 0.08 - cadera * 0.99
+		n.position.y += CargaCiudad.de("MetroCiudad").BANCO_ASIENTO + 0.08 - cadera * 0.99
 
 ## LA DIRECTIVA EN SU SITIO (21-10-2026, M-040): el presidente y dos directivos
 ## del club de casa, de traje, sentados en la segunda fila de la tribuna
@@ -311,7 +311,7 @@ static func poner_directiva(raiz: Node3D, c: Club, perfil: Dictionary) -> Array:
 		n.rotation.y = float(b["rumbo"])
 		_a_la_butaca(n)
 		## Zapatos de vestir (sin ellos, sentados se les veían los pies descalzos).
-		PeatonQ.calzar(d, "1c1c1e")
+		CargaCiudad.de("PeatonQ").calzar(d, "1c1c1e")
 		var ap: AnimationPlayer = d.get("anim") as AnimationPlayer
 		if ap != null and ap.has_animation("sentado"):
 			ap.play("sentado")

@@ -305,6 +305,7 @@ func _pintar_roles_tacticos(c: Club) -> void:
 		var lista := claves
 		op.item_selected.connect(func(idx: int) -> void:
 			v.fijar_rol_tactico(jug, String(lista[idx]))
+			c.tactica.poner_rol(jug, String(RolTactico.DE_VESTUARIO.get(String(lista[idx]), "")))
 			p._refrescar())
 		fila.add_child(op)
 		## El número que justifica todo el bloque: por debajo de 1,00 le estás
@@ -356,6 +357,7 @@ func _pintar_moda_tactica(c: Club) -> void:
 	tr.text = Idiomas.t("📊 LO QUE TE HA FUNCIONADO")
 	p._lista_tactica.add_child(tr)
 	var g := GridContainer.new()
+	CebraRejilla.poner(g)
 	g.columns = 5
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	p._lista_tactica.add_child(g)

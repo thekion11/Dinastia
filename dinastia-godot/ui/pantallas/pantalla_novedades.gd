@@ -101,7 +101,7 @@ func _ready() -> void:
 	_cerrar.pressed.connect(cerrar)
 	col.add_child(_cerrar)
 	marcar_vistas()
-	_cerrar.grab_focus.call_deferred()
+	FocoSeguro.dar(_cerrar)
 
 func _pintar_version(lista: VBoxContainer, v: Dictionary) -> void:
 	var t := _etiqueta(19, Tema.TEXTO)

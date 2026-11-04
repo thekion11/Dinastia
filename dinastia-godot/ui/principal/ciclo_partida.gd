@@ -21,6 +21,18 @@ var p: Principal
 ## Una sola ranura por ahora, con el nombre de tu club. Cuando haya menú de
 ## partidas se aprovecha `Partida.listar()`, que ya devuelve club, año y fecha.
 const RANURA := "partida"
+## Las pruebas usan otra para no pisar la partida de la máquina.
+static var ranura_prueba := ""
+
+func _ranura() -> String:
+	return ranura_prueba if ranura_prueba != "" else RANURA
+
+## La del AUTOGUARDADO. Sin pantalla (`--headless`: las pruebas) va a otra ranura: con el autoguardado siempre activo, cada prueba que avanza semanas sobre
+## `Principal` machacaría la partida de la máquina («Continuar»).
+func _ranura_auto() -> String:
+	if ranura_prueba != "":
+		return ranura_prueba
+	return "prueba_sin_pantalla" if DisplayServer.get_name() == "headless" else RANURA
 
 # DESHACER. El HTML guardaba `JSON.stringify(G)` antes de dos decisiones -responder
 # a una oferta y rescindir a un jugador- y las devolvía con un `JSON.parse`. Aquí
@@ -104,7 +116,7 @@ func _adoptar(m: Mundo) -> void:
 # --- guardar y cargar ---------------------------------------------------------
 
 func guardar() -> void:
-	if Partida.guardar(p.mundo, RANURA):
+	if Partida.guardar(p.mundo, _ranura()):
 		p._escribir("[color=#4caf6d]Partida guardada.[/color] %s, %d, semana %d." % [
 			p.mundo.mi_club().nombre, p.mundo.anio, p.mundo.semana])
 	else:
@@ -115,7 +127,7 @@ func cargar() -> void:
 	if veto != "":
 		p._escribir("[color=#c9a227]%s[/color]" % veto)
 		return
-	var m := Partida.cargar(RANURA)
+	var m := Partida.cargar(_ranura())
 	if m == null:
 		p._escribir("[color=#c9a227]No hay ninguna partida guardada todavía.[/color]")
 		return
@@ -148,8 +160,14 @@ func cargar_de(nombre: String) -> void:
 ## El interruptor de Ajustes → Guardado (`p._autoguardado`). Silencioso a
 ## propósito -uno por semana durante toda una carrera sería puro ruido en el
 ## registro-, en la misma ranura que ya usa el botón "Guardar".
+## (3-11) Siempre activo por defecto y en SEGUNDO PLANO (`GuardadoSegundoPlano`): el hilo principal solo toma la instantánea; el JSON, la compresión y el disco no lo congelan.
 func autoguardar_si_toca() -> void:
-	if (p._autoguardado or p.mundo.tiene_desafio("sinRecarga")) and Partida.guardar(p.mundo, RANURA):
+	if p.mundo == null or not (p._autoguardado or p.mundo.tiene_desafio("sinRecarga")):
+		return
+	GuardadoSegundoPlano.iniciar(p.mundo, _ranura_auto(), _tras_autoguardar)
+
+func _tras_autoguardar(ok: bool) -> void:
+	if ok:
 		_indicador_guardado()
 
 ## Si el guardado principal estaba roto y se recuperó la copia (guardado
@@ -183,7 +201,7 @@ func _resolver_partido_abandonado() -> void:
 
 ## El «💾 Partida guardada» cuelga de Principal (esta clase no es un nodo).
 func _indicador_guardado() -> void:
-	if not p.is_inside_tree():
+	if not is_instance_valid(p) or not p.is_inside_tree():
 		return
 	if not is_instance_valid(_ind_guardado):
 		_ind_guardado = Label.new()

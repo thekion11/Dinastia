@@ -19,7 +19,7 @@ const VIA_X := 8.0
 const Y_TREN := 0.25 + 0.36 * S              ## altura del tren sobre la vía en el andén
 const LARGO_TUNEL := 26.0
 
-## El reloj de la partida (lo pone `VidaCiudad.enganchar`); null = tiempo real.
+## El reloj de la partida (lo pone `CargaCiudad.de("VidaCiudad").enganchar`); null = tiempo real.
 static var reloj: Reloj = null
 
 var _trenes: Array = []
@@ -35,7 +35,7 @@ var z_vestibulo := 0.0                   ## z (local) donde los pasajeros entran
 var _gente: Array = []                   ## los pasajeros (`PasajerosEstacion`), creados al primer tren con servicio
 
 ## `c` centro del bloque (y = suelo), `w` x `f` su tamaño; `mats` = materiales de la ciudad (claro, vidrio, piedra).
-static func montar(b: CityBuilder, c: Vector3, w: float, f: float, mats: Dictionary, ex: CiudadExpansion = null) -> EstacionCentral:
+static func montar(b, c: Vector3, w: float, f: float, mats: Dictionary, ex = null) -> EstacionCentral:
 	var s := EstacionCentral.new()
 	s.name = "EstacionCentral"
 	s.position = c
@@ -43,8 +43,8 @@ static func montar(b: CityBuilder, c: Vector3, w: float, f: float, mats: Diction
 	s._construir(b, w, f, mats, ex)
 	return s
 
-func _caja(b: CityBuilder, pos: Vector3, tam: Vector3, mat: Material) -> void:
-	var mi := b._caja_en(pos, tam, mat)
+func _caja(b, pos: Vector3, tam: Vector3, mat: Material) -> void:
+	var mi = b._caja_en(pos, tam, mat)
 	b.remove_child(mi)
 	mi.position = pos
 	add_child(mi)
@@ -60,19 +60,19 @@ func _pieza(nombre: String, pos: Vector3, giro: float = 0.0) -> Node3D:
 	add_child(n)
 	return n
 
-func _construir(b: CityBuilder, w: float, f: float, mats: Dictionary, ex: CiudadExpansion) -> void:
+func _construir(b, w: float, f: float, mats: Dictionary, ex) -> void:
 	var z_h0 := -f * 0.5 + 2.0
 	var z_h1 := z_h0 + LARGO_TUNEL               ## la boca del túnel, hacia el andén
 	var z_tope := f * 0.13                        ## los topes de las vías
-	var gris := b._mat_simple(Color(0.62, 0.63, 0.64), 0.8)
+	var gris = b._mat_simple(Color(0.62, 0.63, 0.64), 0.8)
 	var beton := StandardMaterial3D.new()          ## hormigón con manchas (el ruido del subsuelo), triplanar
 	beton.albedo_texture = SubsueloDetalle._ruido(31, 0.04, FastNoiseLite.TYPE_SIMPLEX_SMOOTH)
 	beton.albedo_color = Color(0.62, 0.62, 0.6)
 	beton.uv1_triplanar = true
 	beton.uv1_scale = Vector3(0.12, 0.12, 0.12)
 	beton.roughness = 0.9
-	var oscuro := b._mat_simple(Color(0.08, 0.08, 0.09), 0.9)
-	var acero := b._mat_simple(Color(0.3, 0.32, 0.34), 0.5)
+	var oscuro = b._mat_simple(Color(0.08, 0.08, 0.09), 0.9)
+	var acero = b._mat_simple(Color(0.3, 0.32, 0.34), 0.5)
 	## Vías: tramos del kit de 9,6 m desde el fondo del túnel hasta los topes.
 	var n_tramos := int(ceil((z_tope - z_h0) / (4.0 * S)))
 	for sx: float in [-VIA_X, VIA_X]:
@@ -132,10 +132,10 @@ func _construir(b: CityBuilder, w: float, f: float, mats: Dictionary, ex: Ciudad
 	else:
 		_caja(b, Vector3(0, 5.0, z_front + 0.1), Vector3(w * 0.6, 7.0, 0.2), mats["vidrio"])
 	_rotulo(Vector3(0, 15.0, z_front + 0.8), "ESTACIÓN CENTRAL", 0.035)
-	ExpendedoraCiudad.montar(b, position + Vector3(12.5, 0.3, z_front + 4.0), 0.0)   ## una máquina expendedora junto a las puertas (cobra de la cartera; en +2 quedaba dentro de la fachada)
+	CargaCiudad.de("ExpendedoraCiudad").montar(b, position + Vector3(12.5, 0.3, z_front + 4.0), 0.0)   ## una máquina expendedora junto a las puertas (cobra de la cartera; en +2 quedaba dentro de la fachada)
 	if ex != null:
-		CajeroCiudad.montar(ex, position + Vector3(15.0, 0.3, z_front + 4.0), 0.0)   ## y un cajero al lado (§2.5; a la izquierda lo tapaba la parada de taxis)
-	var disco := b._cil_en(position + Vector3(0, 12.0, z_front + 1.6), 1.6, 0.4, b._mat_simple(Color(0.95, 0.95, 0.9), 0.4))
+		CargaCiudad.de("CajeroCiudad").montar(ex, position + Vector3(15.0, 0.3, z_front + 4.0), 0.0)   ## y un cajero al lado (§2.5; a la izquierda lo tapaba la parada de taxis)
+	var disco = b._cil_en(position + Vector3(0, 12.0, z_front + 1.6), 1.6, 0.4, b._mat_simple(Color(0.95, 0.95, 0.9), 0.4))
 	disco.rotation.x = PI * 0.5
 	_reloj_rotulo = Label3D.new()
 	_reloj_rotulo.text = "--:--"
