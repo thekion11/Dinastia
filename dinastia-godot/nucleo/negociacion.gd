@@ -149,7 +149,9 @@ func enviar_oferta() -> Dictionary:
 	var m := _mundo()
 	var club: Club = m.clubes.get(club_vendedor_id)
 	var mio := m.mi_club()
-	if club == null or mio == null:
+	## A4-GES-005: si mientras hablabas el jugador cambió de club (o ya no está en su plantel), la mesa se rompe; cerrar
+	## aquí lo dejaba en DOS planteles (el `soltar` del club viejo no lo encontraba).
+	if club == null or mio == null or jugador.club_id != club_vendedor_id or not club.plantilla.has(jugador):
 		estado = "rota"
 		return {"tipo": "rota"}
 	var inmediato := costo_inmediato()
@@ -179,7 +181,7 @@ func enviar_oferta() -> Dictionary:
 				var precio := int(round(float(pedido) * (0.95 + Azar.f() * 0.20) / 1000.0)) * 1000
 				rc.mover_saldo(-precio)
 				club.mover_saldo(precio)
-				jugador.club_id = rc.id
+				_se_lo_lleva(club, rc)
 				jugador.cambiar_moral(-6, "Mercado y contratos")
 				estado = "rota"
 				return {"tipo": "rival_firma", "club": rc, "precio": precio}
@@ -203,7 +205,7 @@ func enviar_oferta() -> Dictionary:
 			var precio2 := int(round(float(pedido) * (0.92 + Azar.f() * 0.18) / 1000.0)) * 1000
 			rc2.mover_saldo(-precio2)
 			club.mover_saldo(precio2)
-			jugador.club_id = rc2.id
+			_se_lo_lleva(club, rc2)
 			jugador.cambiar_moral(-6, "Mercado y contratos")
 			estado = "rota"
 			return {"tipo": "rival_traspaso", "club": rc2, "precio": precio2}
@@ -225,6 +227,12 @@ func enviar_oferta() -> Dictionary:
 	elif pct > 25:
 		prefiere = "que te olvides del porcentaje y subas la parte fija"
 	return {"tipo": "club_pide_mas", "falta": falta, "prefiere": Idiomas.t(prefiere)}
+
+## Un rival se lo lleva (A4-GES-005): antes solo cambiaba `club_id` y el jugador seguía en el plantel del club viejo
+## (y no aparecía en el del rival). Ahora pasa de verdad de un plantel al otro.
+func _se_lo_lleva(club: Club, rival: Club) -> void:
+	club.soltar(jugador)
+	rival.fichar(jugador)
 
 func _respuesta_del_jugador(m: Mundo) -> Dictionary:
 	var mio := m.mi_club()
