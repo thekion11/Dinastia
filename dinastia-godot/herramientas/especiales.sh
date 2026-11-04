@@ -185,6 +185,7 @@ pasa "a4_recorrido_mapa" "godot --headless --path . res://pruebas/ideas/a4_recor
 pasa "a4_peatones_limite" "godot --headless --path . res://pruebas/ideas/a4_peatones_limite.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_interiores_limite" "godot --headless --path . res://pruebas/ideas/a4_interiores_limite.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_camara_estadio (la cámara del partido ve el campo en 6 estadios reformados, rayos por triángulo)" "godot --headless --path . res://pruebas/ideas/a4_camara_estadio.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_ciudad_noche (de noche, 6 sirenas, 6 min: sin atascos, gente ni buses parados)" "godot --headless --path . res://pruebas/ideas/a4_ciudad_noche.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_metro_museo (metro por dentro y museo ampliado, sin pantalla)" "godot --headless --path . res://pruebas/ideas/a4_metro_museo.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_cruzado" "godot --headless --path . res://pruebas/ideas/a4_gestion_cruzado.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_cesiones" "godot --headless --path . res://pruebas/ideas/a4_gestion_cesiones.tscn" "(^|[^0-9])0 fallos"
