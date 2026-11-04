@@ -93,6 +93,7 @@ pasa "aud4_idiomas_cache" "godot --headless --path . res://pruebas/ideas/aud4_id
 pasa "aud4_carteles_3d" "godot --headless --path . res://pruebas/ideas/aud4_carteles_3d.tscn" "FIN. 0 fallos"
 pasa "aud4_movil_toque" "godot --headless --path . res://pruebas/ideas/aud4_movil_toque.tscn" "FIN. 0 fallos"
 pasa "aud4_movil_flujo" "godot --headless --path . res://pruebas/ideas/aud4_movil_flujo.tscn" "FIN. 0 fallos"
+pasa "aud4_teclado_solo" "godot --headless --path . res://pruebas/ideas/aud4_teclado_solo.tscn" "FIN. 0 fallos"
 pasa "aud4_interfaz_limite" "godot --headless --path . res://pruebas/ideas/aud4_interfaz_limite.tscn" "FIN. 0 fallos"
 pasa "aud4_largo_plazo_ui" "LIMITE_S=120 godot --headless --path . res://pruebas/ideas/aud4_largo_plazo_ui.tscn" "FIN. 0 fallos"
 pasa "act_actualizador" "godot --headless --path . res://pruebas/ideas/act_actualizador.tscn" "FIN. 0 fallos"
