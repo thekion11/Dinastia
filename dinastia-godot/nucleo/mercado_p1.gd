@@ -237,7 +237,7 @@ func _buscar_objetivo(comprador: Club) -> Jugador:
 		if otro.id == _mundo().mi_club_id:
 			continue                       ## a ti te fichan negociando, no solos
 		var j: Jugador = otro.plantilla[Azar.ent(0, otro.plantilla.size() - 1)]
-		if j.edad > 33:
+		if j.edad > 33 or _cedido(j):   ## A4-GES-007: un cedido no es del club que lo tiene: no se le compra
 			continue
 		## CON SENTIDO DE PUESTO (7-10-2026, la prueba larga): la IA compraba al
 		## que mejorara su media sin mirar dónde juega, y en diez temporadas había
@@ -335,7 +335,7 @@ func buscar_oferta_por_mi_jugador() -> void:
 		return
 	var elegibles: Array[Jugador] = []
 	var listados: Array[Jugador] = []
-	for j in mio.plantilla:
+	for j in mio.plantilla.filter(func(x: Jugador) -> bool: return not _cedido(x)):   ## A4-GES-007: no te ofertan por un cedido
 		if j.ovr >= 68:
 			elegibles.append(j)
 		if j.transferible:
@@ -386,7 +386,7 @@ func responder_oferta(idx: int, acepta: bool) -> void:
 	var j: Jugador = o["jugador"]
 	var comprador: Club = o["club"]
 	var monto: int = int(o["monto"])
-	if j.club_id != _mundo().mi_club_id:
+	if j.club_id != _mundo().mi_club_id or _cedido(j):
 		return   ## A4-GES-002: ya no es tuyo (se fue libre o lo vendiste): no se puede vender
 	if acepta:
 		var vendedor: Club = _mundo().clubes.get(j.club_id)
@@ -438,6 +438,7 @@ func a_dic() -> Dictionary:
 		pre.append({"id": String(e["id"]), "sueldo": int(e["sueldo"]), "anios": int(e["anios"])})
 	return {"ofertas_recibidas": lista, "precontratos": pre}
 
+func _cedido(j: Jugador) -> bool: return _mundo().cesiones != null and _mundo().cesiones.esta_cedido(j.id)
 func _jugador_por_id(id: String) -> Jugador:
 	if id == "":
 		return null
