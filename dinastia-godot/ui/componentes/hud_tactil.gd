@@ -45,6 +45,5 @@ static func margen(nodo: Node) -> Vector2:
 	if c == null:
 		return Vector2.ZERO
 	var vp := nodo.get_viewport()
-	if vp != null:
-		c.size = vp.get_visible_rect().size if c.size.x <= 0.0 else c.size
-	return c.margenes()
+	## (4-11) Sin escribir `c.size`: el control tiene anclas opuestas y Godot avisaba de cada llamada; se le pasa el ancho del lienzo.
+	return c.margenes(vp.get_visible_rect().size.x if vp != null and c.size.x <= 0.0 else 0.0)

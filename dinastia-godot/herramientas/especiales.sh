@@ -114,6 +114,7 @@ pasa "aspecto de los clubes" "godot --headless --path . res://pruebas/ideas/asp_
 pasa "trofeos por competición" "godot --headless --path . res://pruebas/ideas/tro_recetas.tscn" "FIN. 0 fallos"
 pasa "app Red del móvil" "godot --headless --path . res://pruebas/ideas/red_app.tscn" "FIN. 0 fallos"
 pasa "palmarés en la historia del club" "godot --headless --path . res://pruebas/ideas/pal_clubes.tscn" "FIN. 0 fallos"
+pasa "partido jugable 3D al límite con mando táctil (auditoría 4: toques al azar, pausas, calidad a mitad, expulsiones hasta 5, gol en cada calidad)" "godot --headless --path . res://pruebas/auditoria_partido3d_limite.tscn" "FIN. 0 fallos"
 pasa "Países Bajos real y ficticio" "godot --headless --path . res://pruebas/ideas/c1_paises_bajos.tscn" "FIN. 0 fallos"
 pasa "controles táctiles del partido" "godot --headless --path . res://pruebas/ideas/tac_controles.tscn" "FIN. 0 fallos"
 pasa "partido al límite (auditoría 4: pasos de tiempo absurdos, actas, tarjetas amarillas y notas)" "godot --headless --path . res://pruebas/auditoria_partido_limite.tscn" "FIN. 0 fallos"
