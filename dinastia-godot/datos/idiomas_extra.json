@@ -7167,7 +7167,8 @@
   "Nunca": "Never",
   "Tamaño de los botones": "Button size",
   "Opacidad de los botones": "Button opacity",
-  "Mod": "Mod"
+  "Mod": "Mod",
+  "Resolución del 3D en Media: %d %%": "3D resolution in Medium: %d %%"
  },
  "pt": {
   "Historia": "História",
@@ -14337,7 +14338,8 @@
   "Nunca": "Nunca",
   "Tamaño de los botones": "Tamanho dos botões",
   "Opacidad de los botones": "Opacidade dos botões",
-  "Mod": "Mod"
+  "Mod": "Mod",
+  "Resolución del 3D en Media: %d %%": "Resolução do 3D no Médio: %d %%"
  },
  "patrones": [
   [
@@ -27361,7 +27363,8 @@
   "Nunca": "Jamais",
   "Tamaño de los botones": "Taille des boutons",
   "Opacidad de los botones": "Opacité des boutons",
-  "Mod": "Mod"
+  "Mod": "Mod",
+  "Resolución del 3D en Media: %d %%": "Résolution de la 3D en Moyen : %d %%"
  },
  "it": {
   "Historia": "Storia",
@@ -34531,7 +34534,8 @@
   "Nunca": "Mai",
   "Tamaño de los botones": "Dimensione dei pulsanti",
   "Opacidad de los botones": "Opacità dei pulsanti",
-  "Mod": "Mod"
+  "Mod": "Mod",
+  "Resolución del 3D en Media: %d %%": "Risoluzione del 3D al Medio: %d %%"
  },
  "de": {
   "Historia": "Geschichte",
@@ -41701,7 +41705,8 @@
   "Nunca": "Nie",
   "Tamaño de los botones": "Tastengröße",
   "Opacidad de los botones": "Tastentransparenz",
-  "Mod": "Mod"
+  "Mod": "Mod",
+  "Resolución del 3D en Media: %d %%": "3D-Auflösung im Mittel: %d %%"
  },
  "ca": {
   "Historia": "Història",
@@ -48871,7 +48876,8 @@
   "Nunca": "Mai",
   "Tamaño de los botones": "Mida dels botons",
   "Opacidad de los botones": "Opacitat dels botons",
-  "Mod": "Mod"
+  "Mod": "Mod",
+  "Resolución del 3D en Media: %d %%": "Resolució del 3D en Mitjà: %d %%"
  },
  "pl": {
   "Club": "Klub",
@@ -56310,7 +56316,8 @@
   "Nunca": "Nigdy",
   "Tamaño de los botones": "Rozmiar przycisków",
   "Opacidad de los botones": "Przezroczystość przycisków",
-  "Mod": "Mod"
+  "Mod": "Mod",
+  "Resolución del 3D en Media: %d %%": "Rozdzielczość 3D w Średnim: %d %%"
  },
  "tr": {
   "Club": "Kulüp",
@@ -63749,6 +63756,7 @@
   "Nunca": "Asla",
   "Tamaño de los botones": "Düğme boyutu",
   "Opacidad de los botones": "Düğme opaklığı",
-  "Mod": "Mod"
+  "Mod": "Mod",
+  "Resolución del 3D en Media: %d %%": "Orta'da 3D çözünürlüğü: %d %%"
  }
 }
