@@ -97,6 +97,10 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 - **Foundry/Azure** sí o no; **abrir la red a Wikimedia** (caras y escudos que faltan) (§1).
 - **Texturas de caras**: permiso para probar BC7 en una muestra y medir ΔE de piel (§4).
 - **20 decisiones de producto** (monetización y estética) (§7, final) y las prioridades de «Huecos y mejoras propuestas» (§10).
+- **(4-11, bancos fase 2) Recalibrar los remates del partido SIMULADO**: da 10 remates, 5,6 a puerta y 2,73 goles por partido con un 27 % de gol
+  por remate (real ~25 remates, ~8,5 a puerta, ~11 %), así que el portero para el 51 % (real 60-80 %). Arreglarlo = más llegadas con menos
+  conversión (`Balance.BASE_ATAQUE`/`CONVERSION`/`R_ATAJADA`), manteniendo 2,7 goles: cambian las estadísticas de todos los partidos y la huella
+  del mundo. ¿Se hace? (el banco `partido_porteros` vigila que no empeore). Y la «segunda amarilla» contada por temporada (`partido_reglas`).
 - Solo tuyo, sin decisión de diseño: FPS en hardware real, builds, keystore (cambiar contraseña), licencias, derechos de imagen, música y voces, binarios al Drive (§1).
 
 ## 1. Lunes 26-10 — del dueño
