@@ -203,9 +203,24 @@ func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 	if roja:
 		_revisar_siete()
 
+## UNA AMARILLA DEL SIMULADO (A4-PAR-L01, 4-11): la 2.ª amarilla de ESTE partido es roja (antes: total par de la temporada) y el
+## expulsado sale del once; el ya amonestado se cuida (evita la 2.ª el 60 %): ~0,1 rojas por partido, como en las ligas reales.
+func _amonestar(j: Jugador, frase: String = "") -> void:
+	var previas := int(_amarillas_hoy.get(j.id, 0))
+	if previas >= 1 and Azar.suerte(0.6):
+		return
+	j.amarillas += 1; _amarillas_hoy[j.id] = previas + 1
+	var roja := previas >= 1
+	if roja:
+		Disciplina.sanciona(j); once_local.erase(j); once_visita.erase(j); invalidar_fuerza()
+	if frase != "": decision_arbitral.emit(frase, minuto)
+	tarjeta.emit(j, roja, minuto)
+	if not roja and Disciplina.acumula(j):
+		decision_arbitral.emit(Disciplina.frase(j), minuto)
+	if roja: _revisar_siete()
+
 ## MENOS DE SIETE (01-11, fallo que League-Soccer ya resolvió): el reglamento no deja jugar a un equipo con menos de 7; el
-## partido se suspende y se le da por perdido 3-0, o con el marcador si su rival ya ganaba por 3 o más. Solo pasa en el 3D (en el
-## simulado una roja no saca a nadie del once: solo lo sanciona).
+## partido se suspende y se le da por perdido 3-0, o con el marcador si su rival ya ganaba por 3 o más (3D y, desde A4-PAR-L01, simulado).
 func _revisar_siete() -> void:
 	if terminado_ya:
 		return
@@ -218,7 +233,7 @@ func _revisar_siete() -> void:
 			goles_visita = 3 if lado_local else 0
 		decision_arbitral.emit(Idiomas.t("Partido suspendido: %s se queda con menos de siete jugadores y lo pierde %d-%d.") % [
 			(local if lado_local else visita).nombre, goles_local, goles_visita], minuto)
-		terminado_ya = true
+		terminado_ya = true; suspendido = true
 		_devolver_tactica()
 		terminado.emit(goles_local, goles_visita)
 		return

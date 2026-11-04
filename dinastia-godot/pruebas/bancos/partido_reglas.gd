@@ -10,7 +10,7 @@ extends BaseIdea
 ##   5. DISCIPLINA: la 5.ª amarilla de la temporada sanciona; la roja sanciona el partido SIGUIENTE (no se descuenta esa
 ##      misma semana); un sancionado no sale en el once siguiente. (También se mira en cada tarjeta de los 40 partidos.)
 ##   6. TABLA tras 12 semanas: puntos = 3G + E, PJ = G + E + P, goles a favor = goles en contra, victorias = derrotas.
-## Lo que es SIMPLIFICACIÓN conocida del simulado (la roja no saca a nadie del once) se informa como AVISO, no como fallo.
+## Lo que antes era SIMPLIFICACIÓN del simulado (la roja no sacaba a nadie del once; arreglado en A4-PAR-L01) sigue como AVISO.
 
 var _goles_aviso := {"l": 0, "v": 0}
 var _en_campo := {}        ## jugador id -> "l" / "v" mientras esté en el campo
