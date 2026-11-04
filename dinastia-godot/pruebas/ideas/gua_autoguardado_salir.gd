@@ -20,6 +20,12 @@ func _probar() -> void:
 	var pr: Principal = (load("res://escenas/principal.tscn") as PackedScene).instantiate()
 	add_child(pr)
 	await get_tree().process_frame
+	## Con un user:// limpio (el CI) sale el tutorial de la primera vez, y «atrás» lo
+	## cierra a él antes que preguntar por salir (A4-MOVIL-008): aquí se cierra antes.
+	for t in get_tree().root.find_children("*", "Tutorial", true, false):
+		(t as Tutorial)._terminar(false)
+	CapasTutorial.poner_activas(false)
+	await get_tree().process_frame
 	var salida := pr.get_node_or_null("SalidaGuardada") as SalidaGuardada
 	_comprobar(bool(pr.get("_autoguardado")), "el autoguardado viene activo por defecto")
 	_comprobar(salida != null and not get_tree().auto_accept_quit and not get_tree().quit_on_go_back, "Principal retiene el cierre del juego y el «atrás» (para preguntar)")

@@ -93,7 +93,7 @@ func caducar_ofertas(m: Mundo) -> int:
 	var caidas := 0
 	for o: Dictionary in m.mercado.ofertas_recibidas:
 		var j: Jugador = o["jugador"]
-		if j == null or j.club_id != m.mi_club_id:
+		if j == null or j.club_id != m.mi_club_id or not m.mi_club().plantilla.has(j):   ## también un retirado (conserva el club_id)
 			caidas += 1
 			continue
 		if ahora - int(o.get("abs", ahora)) < CADUCA_SEMANAS:
