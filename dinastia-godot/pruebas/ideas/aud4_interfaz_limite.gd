@@ -109,17 +109,34 @@ func _doble_pulsacion() -> void:
 func _idioma_a_mitad() -> void:
 	var antes := Idiomas.idioma
 	_p._menu_lateral.abrir_menu("plantel", 0)
-	await _frames(6)
+	await _frames(100)   ## el menú se asienta (lo oculto de debajo se suelta cada 90 fotogramas, A4-INT-R01)
 	var cuenta_es := _etiquetas()
+	var textos_es := _textos_pantalla()
 	for l: String in ["en", "ja", "tr", "pl", "ca", "de", "it", "fr", "pt", "es"]:
 		Idiomas.idioma = l
 		_p._refrescar()
 		await _frames(3)
 		_comprobar(_abierto() != null, "cambiar a «%s» con el menú abierto no lo cierra ni lo rompe" % l)
+	await _frames(100)
 	var cuenta_fin := _etiquetas()
 	_comprobar(absi(cuenta_fin - cuenta_es) <= 4, "tras la vuelta por 10 idiomas, la pantalla tiene las mismas etiquetas (%d → %d)" % [cuenta_es, cuenta_fin])
+	await _frames(100)
+	var textos_fin := _textos_pantalla()
+	_comprobar(textos_fin == textos_es, "y los textos de la pantalla abierta son los mismos tras repintar (%d → %d etiquetas)" % [textos_es.size(), textos_fin.size()])
 	Idiomas.idioma = antes
 	await _cerrar()
+
+## Los textos visibles de la pantalla que está abierta (no los de la página de debajo, que se suelta al ocultarse).
+func _textos_pantalla() -> Array:
+	var r: Array = []
+	var pm := _abierto()
+	if pm == null:
+		return r
+	for l in pm.find_children("*", "Label", true, false):
+		if (l as Label).is_visible_in_tree() and (l as Label).text.strip_edges() != "":
+			r.append((l as Label).text)
+	r.sort()
+	return r
 
 func _etiquetas() -> int:
 	var n := 0
