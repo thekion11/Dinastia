@@ -165,6 +165,7 @@ func anular_gol_externo(es_local: bool, autor_id: String) -> void:
 		if String(e.get("tipo", "")) == "gol" and String(e.get("club", "")) == c.id:
 			e["tipo"] = "gol_anulado"
 			break
+	_deshacer_remate_gol(es_local)
 	_momentum_push(1, not es_local)
 
 ## Un remate que no fue gol: "atajada", "poste" o "fallo".
