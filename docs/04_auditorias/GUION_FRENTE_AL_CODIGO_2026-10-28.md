@@ -1,6 +1,6 @@
 # EL GUION FRENTE AL CÓDIGO (auditoría del 28-10-2026)
 
-Comprobación punto por punto de `PLAN_DEL_LUNES.md` §2 (fases 0-6 y diseños 2.2b-2.2h) contra el código. Hecho por el líder al cierre; lo que falta está también resumido en el plan, §2.5.
+Comprobación punto por punto de `PLAN_GENERAL.md` §2 (fases 0-6 y diseños 2.2b-2.2h) contra el código. Hecho por el líder al cierre; lo que falta está también resumido en el plan, §2.5.
 
 
 Fecha: 28-10-2026. Método: para cada punto del guion se buscó el código (rg en `nucleo/`, `ui/`, `visor/`,

@@ -1,6 +1,6 @@
 class_name PantallaPais
 extends Control
-## ETAPA 3 DE LA ENTRADA: ELEGIR PAÍS (fase 1 del MEGAPLAN, `docs/PLAN_DEL_LUNES.md`
+## ETAPA 3 DE LA ENTRADA: ELEGIR PAÍS (fase 1 del MEGAPLAN, `docs/PLAN_GENERAL.md`
 ## §3.1, «Globo»). Pantalla propia a pantalla completa que monta `OrquestadorEntrada`:
 ##   · el globo 3D de siempre (`Globo3D`) para elegir girándolo o tocando un pin, y al
 ##     lado la lista por continentes (la vía rápida, y la accesible con teclado/mando);

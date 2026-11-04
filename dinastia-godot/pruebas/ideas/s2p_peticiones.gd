@@ -1,5 +1,5 @@
 extends BaseIdea
-## PETICIONES ABIERTAS DE LA SESIÓN 2 (26-10-2026, PLAN_DEL_LUNES §9). Comprueba los arreglos:
+## PETICIONES ABIERTAS DE LA SESIÓN 2 (26-10-2026, PLAN_GENERAL §9). Comprueba los arreglos:
 ## capa modal que bloquea los gatillos de detrás, accesibilidad volcada en `Tema`, teclas
 ## legibles en el mando del partido, rachas en partidos simulados, peñas y el mentor.
 ##

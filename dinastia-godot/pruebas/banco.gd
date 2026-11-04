@@ -426,7 +426,7 @@ func _ready() -> void:
 		## La carga de la interfaz va en todas: es barata y si falla, mejor saberlo ya.
 		if i > 0 and _parte_de(i, total) != mia:
 			continue
-		if solo != "" and SECCIONES[i] != solo:
+		if solo != "" and not solo.split(",").has(SECCIONES[i]):   ## (4-11) también lista «a,b,c» (bancos especializados)
 			continue
 		if grupo != "" and GRUPOS.has(grupo) and not (GRUPOS[grupo] as Array).has(SECCIONES[i]):
 			continue
