@@ -175,6 +175,7 @@ func _montar_rotulos(mio: Club, j: Jugador, de: Club) -> void:
 	saltar.offset_left = -130
 	saltar.offset_top = 16
 	saltar.offset_right = -20
+	saltar.grow_horizontal = Control.GROW_DIRECTION_BEGIN   ## un texto largo («⏭ Überspringen») crece hacia dentro, no fuera de la pantalla
 	saltar.pressed.connect(cerrar)
 	add_child(saltar)
 	## El rótulo de abajo, el de la tele: aparece en el tercer plano.
