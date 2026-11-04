@@ -401,8 +401,8 @@ func _alternar_pausa() -> void:
 			if _controles == null:
 				_controles = PanelControles.abrir(self)
 				_controles.cerrado.connect(func() -> void: _controles = null; _guia_cache.clear())],
-		["⏩  Simular lo que queda", _simular_resto],
-	])
+		["⏩  Simular lo que queda", _simular_resto]])
+	DificultadPartido.boton_en_pausa(self, _pausa)   ## 🤖 dificultad de la CPU (4-11)
 
 func _process(delta: float) -> void:
 	load("res://visor/stadium_builder.gd").ocultar_techo_ante(get_viewport().get_camera_3d())
