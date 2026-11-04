@@ -17,7 +17,8 @@ extends Node
 ## 4-11 (A4-GES-003): la ficha mental de cada jugador sale de un hash y no del azar → cambia la huella a propósito; era 324543228. `igualdad_motor` no cambia.
 ## 4-11 (A4-PAR-L01, tarjetas del simulado, a propósito): la 2.ª amarilla cuenta en el PARTIDO (antes, total par de la temporada), la roja
 ## saca del once y la tarjeta solo cae en quien juega; `P_AMARILLA` 0,040 → 0,045 (3,65 amarillas y 0,16 rojas). Era 31094042.
-const ESPERADO := "2563391786"
+## 4-11 (A4-PAR-003 de PES 6, a propósito): la nota y la forma del cambiado/expulsado ya no usan el bono del equipo contrario. Era 2563391786.
+const ESPERADO := "450552767"
 
 func _ready() -> void:
 	var m := Mundo.new()
