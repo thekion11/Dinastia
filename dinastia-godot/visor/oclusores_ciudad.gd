@@ -11,7 +11,8 @@ class_name OclusoresCiudad
 ##   · Fuera el estadio (su cuenco está abierto por dentro).
 ##   · Con el jugador DENTRO de un edificio se apagan (`activar`): por la puerta
 ##     se tiene que seguir viendo la calle.
-## En Compatibility (motor ligero, móvil) Godot no hace oclusión: no cuesta nada.
+## En Compatibility (motor ligero, móvil, web) Godot no hace oclusión: ahí NO se crean las paredes (A4-REND-005, 4-11: eran
+## 1.128 nodos y recursos que no servían de nada; `montar` devuelve el contenedor vacío y `activar` y `cuantas` siguen valiendo).
 
 const ALTO := 6.0
 const GROSOR := 0.4
@@ -21,6 +22,8 @@ static func montar(b: CityBuilder) -> Node3D:
 	var raiz := Node3D.new()
 	raiz.name = "Oclusores"
 	b.add_child(raiz)
+	if RenderingServer.get_current_rendering_method() == "gl_compatibility":
+		return raiz
 	var estadio := Rect2(CityBuilder.ESTADIO_EN.x - 80.0, CityBuilder.ESTADIO_EN.z - 100.0, 160.0, 200.0)
 	var hechos := {}
 	var rects: Array[Rect2] = []
