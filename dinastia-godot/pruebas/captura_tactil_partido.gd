@@ -17,6 +17,12 @@ func _ready() -> void:
 		return
 	PartidoJugable.con_ceremonia = false
 	ControlesTactiles.forzar = true
+	## DPI_PRUEBA=400 simula un teléfono de 400 ppp (HUD y botones por dpi); CAMARA_PRUEBA=no deja la cámara de siempre (para la captura «antes»).
+	if OS.get_environment("DPI_PRUEBA") != "":
+		ControlesTactiles.dpi_forzado = float(OS.get_environment("DPI_PRUEBA"))
+	ControlesTactiles.contexto_forzado = OS.get_environment("CONTEXTO_PRUEBA")   ## con / banda / sin: qué botones salen en la captura
+	if OS.get_environment("CAMARA_PRUEBA") != "":
+		AjustesTactil.poner_camara(OS.get_environment("CAMARA_PRUEBA"))
 	CarreraJugadorUI.mundo = null
 	_ui = load("res://escenas/carrera_jugador.tscn").instantiate()
 	add_child(_ui)
@@ -72,11 +78,10 @@ func _process(_d: float) -> void:
 		_foto("tactil_partido_mueve")
 		_toque(2, _ct.centro_de("A"), true)
 		_toque(3, _ct.centro_de("B"), true)
-		_toque(4, _ct.centro_de("Mod"), true)
+		_arrastre(3, _ct.centro_de("B") + Vector2(0, -_ct.radio_de("B") * 1.3))   ## deslizar desde Tiro = rosca (Mod), el botón Mod ya no se ve
 	if _n == 150:
-		_comprobar(Input.is_action_pressed("jugar_tiro") and Input.is_action_pressed("jugar_mod"), "tiro y modificador pulsados con otros dedos a la vez")
+		_comprobar(Input.is_action_pressed("jugar_tiro") and Input.is_action_pressed("jugar_mod"), "tiro y modificador (deslizando desde Tiro) pulsados con otros dedos a la vez")
 		_toque(3, _ct.centro_de("B"), false)
-		_toque(4, _ct.centro_de("Mod"), false)
 		_comprobar(Input.is_action_pressed("jugar_pase"), "el botón A (pase / presión) está pulsado")
 		_foto("tactil_partido_pase")
 		_toque(2, _ct.centro_de("A"), false)
@@ -92,6 +97,9 @@ func _process(_d: float) -> void:
 		_foto("tactil_partido_pausa")
 		print("===== FIN. %d fallos =====" % _fallos)
 		ControlesTactiles.forzar = false
+		ControlesTactiles.dpi_forzado = 0.0
+		ControlesTactiles.contexto_forzado = ""
+		AjustesTactil.restaurar()
 		get_tree().quit(0 if _fallos == 0 else 1)
 
 func p0_distancia(p: Vector3) -> float:
