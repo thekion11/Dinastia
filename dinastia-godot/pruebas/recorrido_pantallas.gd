@@ -29,6 +29,13 @@ var _idioma_antes := ""
 var _tiempos := {}
 
 func _ready() -> void:
+	## RECORRIDO_MOVIL=2400x1080 (4-11-2026, caza de fallos del móvil): emula la ventana de un teléfono con el zoom de interfaz del móvil.
+	if OS.get_environment("RECORRIDO_MOVIL") != "":
+		var wh := OS.get_environment("RECORRIDO_MOVIL").split("x")
+		get_window().size = Vector2i(int(wh[0]), int(wh[1]))
+		get_window().content_scale_factor = EscalaMovil.ZOOM_MOVIL
+		ControlesTactiles.dpi_forzado = 400.0
+		ControlesTactiles.ventana_forzada = Vector2i(int(wh[0]), int(wh[1]))
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 	## Después de abrir: la principal carga el idioma de las preferencias guardadas.
@@ -187,6 +194,11 @@ func _medir() -> void:
 				var hueco := c.size.x - (c.get_theme_stylebox("normal").get_minimum_size().x if c is Button else 0.0)
 				if w > hueco + 2.0:
 					motivo = "cortado %d/%d px (%s)" % [int(w), int(hueco), c.get_class()]
+		## RECORRIDO_TOQUE=<mm> (móvil): un botón más bajo que el toque cómodo (7 mm a ~400 ppp en 2400×1080 con zoom: ~49 px del lienzo).
+		if motivo == "" and c is Button and OS.get_environment("RECORRIDO_TOQUE") != "":
+			var tope := float(OS.get_environment("RECORRIDO_TOQUE"))
+			if c.get_global_rect().size.y * c.get_viewport().get_final_transform().get_scale().y < tope:
+				motivo = "toque bajo %.1f px reales" % (c.get_global_rect().size.y * c.get_viewport().get_final_transform().get_scale().y)
 		if motivo != "":
 			_largos["%s | %s" % [_donde, t.left(80)]] = motivo
 
