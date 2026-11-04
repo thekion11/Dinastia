@@ -98,6 +98,7 @@ func _ready() -> void:
 	_empezar.call_deferred()
 
 func _empezar() -> void:
+	EscalaMovil.vigilar(get_tree())   ## móvil: los botones de las etapas de entrada miden ≥ 7 mm (A4-INT-024)
 	if _indice >= 0 or _terminado:
 		return
 	var primera := _siguiente_desde(-1)

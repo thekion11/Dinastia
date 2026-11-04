@@ -96,6 +96,8 @@ pasa "aud4_movil_flujo" "godot --headless --path . res://pruebas/ideas/aud4_movi
 pasa "aud4_teclado_solo" "godot --headless --path . res://pruebas/ideas/aud4_teclado_solo.tscn" "FIN. 0 fallos"
 pasa "aud4_movil_partido" "godot --headless --path . res://pruebas/ideas/aud4_movil_partido.tscn" "FIN. 0 fallos"
 pasa "aud4_movil_modales" "godot --headless --path . res://pruebas/ideas/aud4_movil_modales.tscn" "FIN. 0 fallos"
+pasa "aud4_primer_contacto" "godot --headless --path . res://pruebas/ideas/aud4_primer_contacto.tscn" "FIN. 0 fallos"
+pasa "aud4_tutorial_movil" "godot --headless --path . res://pruebas/ideas/aud4_tutorial_movil.tscn" "FIN. 0 fallos"
 pasa "aud4_interfaz_limite" "godot --headless --path . res://pruebas/ideas/aud4_interfaz_limite.tscn" "FIN. 0 fallos"
 pasa "aud4_largo_plazo_ui" "LIMITE_S=120 godot --headless --path . res://pruebas/ideas/aud4_largo_plazo_ui.tscn" "FIN. 0 fallos"
 pasa "act_actualizador" "godot --headless --path . res://pruebas/ideas/act_actualizador.tscn" "FIN. 0 fallos"
