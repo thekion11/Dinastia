@@ -122,4 +122,4 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
     pulir lo que existe. Bancos: más de 30 especializados + uno EXTRA de rendimiento. Detalle y orden en `PLAN_GENERAL.md`.
 27. (4-11) El líder se activa SOLO cada 20 min (cadena send_later «Revisar las 3 sesiones» + respaldo horario fijo) para unir lo
     terminado y asignar tareas a TODAS las sesiones; y el líder TAMBIÉN trabaja (no solo ordena): bloque propio del plan.
-
+22. (4-11, sesión «Búsqueda de fallos») Cada 20 min, antes de buscar, comprobar que `main` está actualizado (`git fetch origin main`), fusionarlo en la rama de trabajo y revalidar los fallos anotados; los que `main` ya resolvió se BORRAN del apartado «FALLOS DETECTADOS» de `docs/PLAN_GENERAL.md`. Esa sesión solo busca y registra; no corrige.
