@@ -71,7 +71,7 @@ static func nota_base(m: MotorJugable, p: Dictionary, q: Dictionary) -> Array:
 
 ## CICLO 29 (plan «construir hasta el área», C2): solo el 13 % de los pases de la IA acaba en el último tercio (real ≈28-35 %) y el 0,4 % en el área. `PMOT_TERCIO` = bono de nota a un pase cuyo receptor está en el último
 ## tercio (o en el área); 0 = como antes. No usa números aleatorios.
-static var TERCIO_K := float(OS.get_environment("PMOT_TERCIO")) if OS.get_environment("PMOT_TERCIO") != "" else 0.0
+static var TERCIO_K := float(OS.get_environment("PMOT_TERCIO")) if OS.get_environment("PMOT_TERCIO") != "" else 1.0   ## ENCENDIDO 3-11 (ciclo 30, con TIRO_FALLO_METRO 0,010): 0 = como antes
 
 static func bono_tercio(m: MotorJugable, p: Dictionary, qp: Vector3) -> float:
 	if TERCIO_K <= 0.0:

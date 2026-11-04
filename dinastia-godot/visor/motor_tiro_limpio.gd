@@ -70,7 +70,7 @@ static func factor_ganas(limpia: float) -> float:
 ## Con la bandera `TIRO_REAL=1` cada remate puede fallar por mala ejecución, con probabilidad creciente con la DISTANCIA y la PRESIÓN, y por BLOQUEO si un
 ## defensa tapa la línea de tiro. Un tiro fallido se va fuera de los palos o por encima del larguero; cuenta como tiro pero no va a puerta. ENCENDIDO por defecto (`TIRO_REAL=0` lo apaga). Fuente de las cifras objetivo: ≈25 tiros entre los dos equipos y ≈10 % de acierto (Premier League, estadística publicada).
 static var FALLO_BASE := float(OS.get_environment("TIRO_FALLO_BASE")) if OS.get_environment("TIRO_FALLO_BASE") != "" else 0.07      ## perillas para barrer (3-11)
-static var FALLO_POR_METRO := float(OS.get_environment("TIRO_FALLO_METRO")) if OS.get_environment("TIRO_FALLO_METRO") != "" else 0.008
+static var FALLO_POR_METRO := float(OS.get_environment("TIRO_FALLO_METRO")) if OS.get_environment("TIRO_FALLO_METRO") != "" else 0.010
 const FALLO_PRESION := 0.15
 const BLOQUEO_MAX := 0.7
 static var _real := OS.get_environment("TIRO_REAL") != "0"   ## ENCENDIDO por defecto desde el 3-11 (ciclo 7, medido en 32 partidos); `TIRO_REAL=0` = el motor de antes
