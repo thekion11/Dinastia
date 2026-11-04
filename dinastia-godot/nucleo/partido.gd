@@ -165,6 +165,7 @@ func anular_gol_externo(es_local: bool, autor_id: String) -> void:
 		if String(e.get("tipo", "")) == "gol" and String(e.get("club", "")) == c.id:
 			e["tipo"] = "gol_anulado"
 			break
+	_deshacer_remate_gol(es_local)
 	_momentum_push(1, not es_local)
 
 ## Un remate que no fue gol: "atajada", "poste" o "fallo".
@@ -185,14 +186,18 @@ func remate_externo(es_local: bool, autor_id: String, tipo: String) -> void:
 	_momentum_push(1, es_local)
 	remate.emit(c, _por_id(autor_id), tipo, minuto)
 
-## Tarjeta del árbitro del 3D: la roja saca al jugador del once (la fuerza se vuelve a medir).
+## Una tarjeta que sacó el árbitro del 3D. La roja deja al equipo con uno menos
+## también aquí (sale del once: la fuerza se vuelve a medir).
 func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 	var j := _por_id(jugador_id)
-	if j == null: return
-	## Roja directa no suma amarilla de temporada (A4): solo la amarilla real y la 2.ª que la motiva.
+	if j == null:
+		return
+	## Una ROJA DIRECTA no es una amarilla de temporada (mega auditoría 4): solo cuenta la amarilla de verdad y la segunda amarilla (la que la motiva: ya hubo una en este partido).
 	var previas := int(_amarillas_hoy.get(jugador_id, 0))
-	if not roja or previas > 0: j.amarillas += 1
-	if not roja: _amarillas_hoy[jugador_id] = previas + 1
+	if not roja or previas > 0:
+		j.amarillas += 1
+	if not roja:
+		_amarillas_hoy[jugador_id] = previas + 1
 	if roja:
 		Disciplina.sanciona(j)
 		once_local.erase(j)

@@ -230,7 +230,7 @@ func vender(j: Jugador, comprador: Club, monto: int, pct_futuro: int = 0) -> Dic
 	if m == null:
 		return {}
 	var vendedor: Club = m.clubes.get(j.club_id)
-	if vendedor == null or comprador == null or vendedor.id == comprador.id:
+	if vendedor == null or comprador == null or vendedor.id == comprador.id or monto < 0:   ## A4-GES-008: un monto negativo cobraba al VENDEDOR
 		return {}
 	var pct := clampi(pct_futuro, 0, 50)
 	var neto := int(round(float(monto) * (1.0 - float(pct) * 0.012)))

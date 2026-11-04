@@ -7484,7 +7484,17 @@
   "CON LUZ": "POWERED",
   "SIN LUZ": "NO POWER",
   "💧 AGUA POTABLE\nDepósito %d%%": "💧 DRINKING WATER\nTank %d%%",
-  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "He is on loan: you cannot negotiate for him until he returns to his club."
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "He is on loan: you cannot negotiate for him until he returns to his club.",
+  "Museo": "Museum",
+  "Tienda": "Shop",
+  "sem": "wk",
+  "Huerto del club": "Club vegetable garden",
+  "Tenis y pádel": "Tennis and padel",
+  "MUSEO DEL CLUB": "CLUB MUSEUM",
+  "TELEFÉRICO DEL CERRO": "HILL CABLE CAR",
+  "Línea 1": "Line 1",
+  "Línea 2": "Line 2",
+  "Próximo tren: %s": "Next train: %s"
  },
  "pt": {
   "Historia": "História",
@@ -14971,7 +14981,17 @@
   "CON LUZ": "COM LUZ",
   "SIN LUZ": "SEM LUZ",
   "💧 AGUA POTABLE\nDepósito %d%%": "💧 ÁGUA POTÁVEL\nReservatório %d%%",
-  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Está emprestado: até voltar ao seu clube não se pode negociar por ele."
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Está emprestado: até voltar ao seu clube não se pode negociar por ele.",
+  "Museo": "Museu",
+  "Tienda": "Loja",
+  "sem": "sem",
+  "Huerto del club": "Horta do clube",
+  "Tenis y pádel": "Ténis e pádel",
+  "MUSEO DEL CLUB": "MUSEU DO CLUBE",
+  "TELEFÉRICO DEL CERRO": "TELEFÉRICO DO MORRO",
+  "Línea 1": "Linha 1",
+  "Línea 2": "Linha 2",
+  "Próximo tren: %s": "Próximo trem: %s"
  },
  "patrones": [
   [
@@ -28411,7 +28431,17 @@
   "CON LUZ": "ALIMENTÉ",
   "SIN LUZ": "SANS COURANT",
   "💧 AGUA POTABLE\nDepósito %d%%": "💧 EAU POTABLE\nRéservoir %d%%",
-  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Il est prêté : impossible de négocier pour lui avant son retour dans son club."
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Il est prêté : impossible de négocier pour lui avant son retour dans son club.",
+  "Museo": "Musée",
+  "Tienda": "Boutique",
+  "sem": "sem.",
+  "Huerto del club": "Potager du club",
+  "Tenis y pádel": "Tennis et padel",
+  "MUSEO DEL CLUB": "MUSÉE DU CLUB",
+  "TELEFÉRICO DEL CERRO": "TÉLÉPHÉRIQUE DE LA COLLINE",
+  "Línea 1": "Ligne 1",
+  "Línea 2": "Ligne 2",
+  "Próximo tren: %s": "Prochain train : %s"
  },
  "it": {
   "Historia": "Storia",
@@ -35898,7 +35928,17 @@
   "CON LUZ": "CON LUCE",
   "SIN LUZ": "SENZA LUCE",
   "💧 AGUA POTABLE\nDepósito %d%%": "💧 ACQUA POTABILE\nSerbatoio %d%%",
-  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "È in prestito: finché non torna al suo club non si può trattare per lui."
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "È in prestito: finché non torna al suo club non si può trattare per lui.",
+  "Museo": "Museo",
+  "Tienda": "Negozio",
+  "sem": "sett.",
+  "Huerto del club": "Orto del club",
+  "Tenis y pádel": "Tennis e padel",
+  "MUSEO DEL CLUB": "MUSEO DEL CLUB",
+  "TELEFÉRICO DEL CERRO": "FUNIVIA DEL COLLE",
+  "Línea 1": "Linea 1",
+  "Línea 2": "Linea 2",
+  "Próximo tren: %s": "Prossimo treno: %s"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43385,7 +43425,17 @@
   "CON LUZ": "MIT STROM",
   "SIN LUZ": "OHNE STROM",
   "💧 AGUA POTABLE\nDepósito %d%%": "💧 TRINKWASSER\nTank %d%%",
-  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Er ist ausgeliehen: Bis er zu seinem Verein zurückkehrt, kann nicht über ihn verhandelt werden."
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Er ist ausgeliehen: Bis er zu seinem Verein zurückkehrt, kann nicht über ihn verhandelt werden.",
+  "Museo": "Museum",
+  "Tienda": "Laden",
+  "sem": "Wo.",
+  "Huerto del club": "Vereinsgarten",
+  "Tenis y pádel": "Tennis und Padel",
+  "MUSEO DEL CLUB": "VEREINSMUSEUM",
+  "TELEFÉRICO DEL CERRO": "BERGSEILBAHN",
+  "Línea 1": "Linie 1",
+  "Línea 2": "Linie 2",
+  "Próximo tren: %s": "Nächster Zug: %s"
  },
  "ca": {
   "Historia": "Història",
@@ -50872,7 +50922,17 @@
   "CON LUZ": "AMB LLUM",
   "SIN LUZ": "SENSE LLUM",
   "💧 AGUA POTABLE\nDepósito %d%%": "💧 AIGUA POTABLE\nDipòsit %d%%",
-  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Està cedit: fins que no torni al seu club no es pot negociar per ell."
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Està cedit: fins que no torni al seu club no es pot negociar per ell.",
+  "Museo": "Museu",
+  "Tienda": "Botiga",
+  "sem": "set.",
+  "Huerto del club": "Hort del club",
+  "Tenis y pádel": "Tennis i pàdel",
+  "MUSEO DEL CLUB": "MUSEU DEL CLUB",
+  "TELEFÉRICO DEL CERRO": "TELEFÈRIC DEL TURÓ",
+  "Línea 1": "Línia 1",
+  "Línea 2": "Línia 2",
+  "Próximo tren: %s": "Proper tren: %s"
  },
  "pl": {
   "Club": "Klub",
@@ -58359,7 +58419,17 @@
   "CON LUZ": "Z PRĄDEM",
   "SIN LUZ": "BEZ PRĄDU",
   "💧 AGUA POTABLE\nDepósito %d%%": "💧 WODA PITNA\nZbiornik %d%%",
-  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Jest wypożyczony: dopóki nie wróci do swojego klubu, nie można o niego negocjować."
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Jest wypożyczony: dopóki nie wróci do swojego klubu, nie można o niego negocjować.",
+  "Museo": "Muzeum",
+  "Tienda": "Sklep",
+  "sem": "tyg.",
+  "Huerto del club": "Ogródek klubowy",
+  "Tenis y pádel": "Tenis i padel",
+  "MUSEO DEL CLUB": "MUZEUM KLUBU",
+  "TELEFÉRICO DEL CERRO": "KOLEJKA NA WZGÓRZE",
+  "Línea 1": "Linia 1",
+  "Línea 2": "Linia 2",
+  "Próximo tren: %s": "Następny pociąg: %s"
  },
  "tr": {
   "Club": "Kulüp",
@@ -65846,6 +65916,16 @@
   "CON LUZ": "ELEKTRİKLİ",
   "SIN LUZ": "ELEKTRİKSİZ",
   "💧 AGUA POTABLE\nDepósito %d%%": "💧 İÇME SUYU\nDepo %d%%",
-  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Kiralık oynuyor: kulübüne dönene kadar onun için pazarlık yapılamaz."
+  "Está cedido: hasta que vuelva a su club no se puede negociar por él.": "Kiralık oynuyor: kulübüne dönene kadar onun için pazarlık yapılamaz.",
+  "Museo": "Müze",
+  "Tienda": "Mağaza",
+  "sem": "hf.",
+  "Huerto del club": "Kulüp bostanı",
+  "Tenis y pádel": "Tenis ve padel",
+  "MUSEO DEL CLUB": "KULÜP MÜZESİ",
+  "TELEFÉRICO DEL CERRO": "TEPE TELEFERİĞİ",
+  "Línea 1": "Hat 1",
+  "Línea 2": "Hat 2",
+  "Próximo tren: %s": "Sonraki tren: %s"
  }
 }

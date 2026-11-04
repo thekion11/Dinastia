@@ -386,8 +386,8 @@ func responder_oferta(idx: int, acepta: bool) -> void:
 	var j: Jugador = o["jugador"]
 	var comprador: Club = o["club"]
 	var monto: int = int(o["monto"])
-	if j.club_id != _mundo().mi_club_id or _cedido(j):
-		return   ## A4-GES-002: ya no es tuyo (se fue libre o lo vendiste): no se puede vender
+	if j.club_id != _mundo().mi_club_id or _cedido(j) or (acepta and float(comprador.saldo) < float(monto)):
+		return   ## A4-GES-002/008: ya no es tuyo, está cedido, o el comprador ya no tiene el dinero: la operación cae
 	if acepta:
 		var vendedor: Club = _mundo().clubes.get(j.club_id)
 		## `Cesiones.vender()` es el `responderOferta()` de verdad -estaba escrito
