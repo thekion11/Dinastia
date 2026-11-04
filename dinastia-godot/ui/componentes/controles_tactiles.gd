@@ -30,6 +30,19 @@ const ALTO_ARCO := 370.0                ## lo que sube el arco de botones desde 
 
 static var forzar := false             ## las pruebas lo encienden; en el teléfono sale solo
 static var zurdo := false              ## espejo forzado por las pruebas; el de verdad sale de Ajustes (`AjustesTactil.zurdo`)
+static var dpi_forzado := 0.0          ## las pruebas simulan los puntos por pulgada de un móvil (p. ej. 400); 0 = los del aparato
+
+static var ventana_forzada := Vector2i.ZERO   ## las pruebas simulan el tamaño de la ventana (p. ej. 2400×1080); 0 = el real
+static var lienzo_forzado := Vector2.ZERO    ## y el del lienzo del juego (con el escalado del proyecto, 2400×1080 son 1600×720); 0 = el real
+
+static func ventana() -> Vector2i:
+	return ventana_forzada if ventana_forzada.x > 0 else DisplayServer.window_get_size()
+
+## Puntos por pulgada de la pantalla: los forzados por una prueba o, en un móvil de verdad, los del aparato (0 = no se sabe / no es móvil).
+static func dpi() -> float:
+	if dpi_forzado > 0.0:
+		return dpi_forzado
+	return float(DisplayServer.screen_get_dpi()) if OS.has_feature("mobile") else 0.0
 
 var _dedo_stick := -1
 var _centro_stick := Vector2.ZERO
@@ -93,11 +106,11 @@ func _espejo() -> bool:
 ## cabe (el arco de botones no sube del 35 % de arriba). Nunca menos de 0,5.
 func escala() -> float:
 	var base := clampf(size.y / 720.0, 0.6, 1.25)
-	if OS.has_feature("mobile"):
-		var dpi := float(DisplayServer.screen_get_dpi())
-		var vent := DisplayServer.window_get_size()
-		if dpi > 0.0 and vent.y > 0:
-			var px_por_cm := dpi / 2.54 * size.y / float(vent.y)   ## píxeles del lienzo por cm de pantalla
+	var dpi_v := dpi()
+	if dpi_v > 0.0:
+		var vent := ventana()
+		if vent.y > 0:
+			var px_por_cm := dpi_v / 2.54 * size.y / float(vent.y)   ## píxeles del lienzo por cm de pantalla
 			base = clampf(0.75 * px_por_cm / 66.0, 0.6, 1.5)        ## radio grande = 0,75 cm
 	var cabe := 0.65 * size.y / ALTO_ARCO if size.y > 0.0 else base
 	return maxf(minf(base * esc, maxf(cabe, base)), 0.5)
@@ -112,7 +125,7 @@ func radio_stick() -> float:
 func margenes() -> Vector2:
 	if not OS.has_feature("mobile"):
 		return Vector2.ZERO
-	var vent := DisplayServer.window_get_size()
+	var vent := ventana()
 	var seg := DisplayServer.get_display_safe_area()
 	var pant := DisplayServer.screen_get_size()
 	if vent.x <= 0 or pant.x <= 0 or seg.size.x <= 0:
@@ -129,7 +142,7 @@ func centro_de(nombre: String) -> Vector2:
 	var s := escala()
 	var m := margenes()
 	if nombre == "Pausa":
-		return Vector2(size.x - m.y - 24.0 * s - radio_de(nombre), 62.0 * s + radio_de(nombre))   ## bajo la ficha de estadísticas de arriba a la derecha
+		return Vector2(size.x - m.y - 24.0 * s - radio_de(nombre), 96.0 * s + radio_de(nombre))   ## bajo la ficha de estadísticas de arriba a la derecha
 	var off: Vector2 = (BOTONES[nombre] as Array)[2]
 	var x := (m.x + off.x * s) if _espejo() else (size.x - m.y - off.x * s)
 	return Vector2(x, size.y - off.y * s)
@@ -139,7 +152,7 @@ func centro_reposo() -> Vector2:
 	var s := escala()
 	var m := margenes()
 	var x := (size.x - m.y - (RADIO_STICK + 60.0) * s) if _espejo() else (m.x + (RADIO_STICK + 60.0) * s)
-	return Vector2(x, size.y - (RADIO_STICK + 120.0) * s)
+	return Vector2(x, size.y - (RADIO_STICK + 185.0) * s)   ## por encima de la ficha del jugador (abajo a la izquierda, que con letra grande mide más)
 
 func _boton_en(pos: Vector2) -> String:
 	var mejor := ""

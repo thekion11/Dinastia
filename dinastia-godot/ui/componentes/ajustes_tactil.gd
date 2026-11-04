@@ -30,6 +30,18 @@ static func tamano() -> float:
 static func opacidad() -> float:
 	return clampf(float(_cargar().get_value(SECCION, "opacidad", 1.0)), OP_MIN, OP_MAX)
 
+## Cámara cercana del partido (4-11-2026): «auto» = cercana solo con controles táctiles; «si» siempre; «no» nunca (la de siempre).
+static func camara() -> String:
+	var m := String(_cargar().get_value(SECCION, "camara", "auto"))
+	return m if MODOS.has(m) else "auto"
+
+static func poner_camara(m: String) -> void:
+	_poner("camara", m if MODOS.has(m) else "auto")
+
+static func camara_cercana(tactil: bool) -> bool:
+	var m := camara()
+	return m == "si" or (m == "auto" and tactil)
+
 ## Modo zurdo (4-11-2026): el stick a la derecha y los botones a la izquierda.
 static func zurdo() -> bool:
 	return bool(_cargar().get_value(SECCION, "zurdo", false))
@@ -75,6 +87,26 @@ static func pintar(p: Principal) -> void:
 				(botones[k] as Button).set_pressed_no_signal(k == m))
 		botones[m] = b
 		fila.add_child(b)
+	var fila_c := HBoxContainer.new()
+	fila_c.add_theme_constant_override("separation", 8)
+	p._lista_ajustes.add_child(fila_c)
+	var et_c := p._texto(12, Principal.COL_TEXTO)
+	et_c.text = Idiomas.t("Cámara cercana del partido")
+	et_c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	et_c.tooltip_text = Idiomas.t("Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.")
+	fila_c.add_child(et_c)
+	var botones_c := {}
+	for m: String in MODOS:
+		var bc := Button.new()
+		bc.text = Idiomas.t(String(nombres[m]))
+		bc.toggle_mode = true
+		bc.button_pressed = camara() == m
+		bc.pressed.connect(func() -> void:
+			poner_camara(m)
+			for k: String in botones_c:
+				(botones_c[k] as Button).set_pressed_no_signal(k == m))
+		botones_c[m] = bc
+		fila_c.add_child(bc)
 	var fila_z := HBoxContainer.new()
 	fila_z.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila_z)
