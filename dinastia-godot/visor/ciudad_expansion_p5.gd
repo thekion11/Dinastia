@@ -93,6 +93,12 @@ func _industrial(r: Rect2) -> void:
 		## ×4: a ×9 parecía una torre de refrigeración de 25 m de ancho.
 		if _pieza_kit(RUTA_IND + "chimney-large.glb", pc, 4.0, 0.0) == null:
 			b._cil_en(c + Vector3(-r.size.x * 0.38, 14.0, r.size.y * 0.3), 1.4, 28.0, b._mat_simple(Color(0.55, 0.3, 0.25), 0.8))
+	## (4-11, pasada 2) Marcas de patio: una hilera de plazas de aparcamiento y una línea amarilla de carga, en los MultiMesh de detalles por celda (sin llamadas nuevas).
+	_mat_det("patio_blanco", Color(0.9, 0.9, 0.85), 0.8)
+	_mat_det("patio_amarillo", Color(0.95, 0.78, 0.15), 0.8)
+	for k in 9:
+		_lote_det("patio_blanco", Vector3(c.x - r.size.x * 0.34 + float(k) * 3.2, 0.14, c.z + r.size.y * 0.38), Vector3(0.18, 0.04, 5.0), 0.0)
+	_lote_det("patio_amarillo", Vector3(c.x - r.size.x * 0.18, 0.14, c.z + r.size.y * 0.3), Vector3(r.size.x * 0.46, 0.04, 0.22), 0.0)
 	CiudadIndustrial.rellenar(self, r)
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + 1
 
