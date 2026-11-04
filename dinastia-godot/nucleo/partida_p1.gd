@@ -401,7 +401,7 @@ static func guardar(m: Mundo, nombre: String) -> bool:
 	nombre = ranura_para(m, nombre)
 	var t0 := Time.get_ticks_msec()
 	var datos := instantanea(m)
-	var crudo := JSON.stringify(datos).to_utf8_buffer()
+	var crudo := JSON.stringify(datos, "", false, true).to_utf8_buffer()   ## (4-11) sin ordenar las claves (el orden de los atributos decide qué toca al azar) y con precisión completa: si no, cargar y seguir se desviaba
 	var ruta := ruta_de(nombre)
 	## GUARDADO SEGURO: temporal comprobado, tres copias rotativas y huella
 	## (ver `PartidaArchivo`). Antes se escribía encima del archivo y un corte

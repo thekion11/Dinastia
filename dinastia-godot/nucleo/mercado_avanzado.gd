@@ -279,7 +279,7 @@ func resolver(m: Mundo, op: String) -> Dictionary:
 
 func a_dic() -> Dictionary:
 	return {"pend": pendiente.duplicate(true), "agente": superagente, "clientes": clientes.duplicate(),
-		"pujas": pujas.duplicate(), "ult": ultima_semana_asunto}
+		"pujas": pujas.duplicate(), "ult": ultima_semana_asunto, "rng": str(_rng.state)}   ## (4-11, banco de guardado) el estado de su azar propio: sin él, cargar y seguir no daba lo mismo
 
 func desde_dic(d: Dictionary) -> void:
 	if d.is_empty():
@@ -291,3 +291,5 @@ func desde_dic(d: Dictionary) -> void:
 		clientes.append(String(x))
 	pujas = (d.get("pujas", {}) as Dictionary).duplicate()
 	ultima_semana_asunto = int(d.get("ult", -99))
+	if d.has("rng"):
+		_rng.state = int(String(d["rng"]))

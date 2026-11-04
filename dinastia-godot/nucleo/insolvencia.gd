@@ -208,7 +208,7 @@ func _avisar(m: Mundo, c: Club, baja: bool) -> void:
 
 func a_dic() -> Dictionary:
 	return {"pend": pendiente.duplicate(true), "sancion": sancion_anio, "tope": tope_salarial, "refundado": refundado_anio,
-		"rojo_ia": rojo_ia.duplicate()}
+		"rojo_ia": rojo_ia.duplicate(), "rng": str(_rng.state)}   ## (4-11, banco de guardado) el estado de su azar propio: sin él, cargar y seguir no daba lo mismo
 
 func desde_dic(d: Dictionary) -> void:
 	if d.is_empty():
@@ -218,3 +218,5 @@ func desde_dic(d: Dictionary) -> void:
 	tope_salarial = int(d.get("tope", 0))
 	refundado_anio = int(d.get("refundado", -1))
 	rojo_ia = (d.get("rojo_ia", {}) as Dictionary).duplicate()
+	if d.has("rng"):
+		_rng.state = int(String(d["rng"]))
