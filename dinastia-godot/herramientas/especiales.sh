@@ -259,6 +259,7 @@ fi
   pasa "textos largos en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_LARGOS=/tmp/largos_de.json RECORRIDO_CORTADOS_MAX=4 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN LARGOS. 0 fallos"
   pasa "paneles más anchos que su hueco (móvil, alemán)" "RECORRIDO_ANCHO=1 RECORRIDO_ANCHO_MAX=0 RECORRIDO_IDIOMA=de RECORRIDO_MOVIL=2400x1080 RECORRIDO_LARGOS=/tmp/ancho_de.json godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN ANCHO. 0 fallos"
   pasa "paneles más anchos que su hueco (móvil, francés)" "RECORRIDO_ANCHO=1 RECORRIDO_ANCHO_MAX=0 RECORRIDO_IDIOMA=fr RECORRIDO_MOVIL=2400x1080 RECORRIDO_LARGOS=/tmp/ancho_fr.json godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN ANCHO. 0 fallos"
+  pasa "controles sin foco o sin nombre para el lector (todas las pantallas)" "RECORRIDO_ACCESO=1 RECORRIDO_ACCESO_MAX=0 RECORRIDO_LARGOS=/tmp/acceso.json godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN ACCESO. 0 fallos"
   # M-463: en alemán no queda castellano sin traducir (las siglas POR/DEF/MED/DEL y el formato del editor ya no cuentan)
   pasa "sin castellano en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_CASTELLANO_MAX=0 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN CASTELLANO. 0 fallos"
   pasa "apertura de pantallas (M-287, tope 2 s sin GPU)" "RECORRIDO_MS_MAX=2000 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN TIEMPOS. 0 fallos"
