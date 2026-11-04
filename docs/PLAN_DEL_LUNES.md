@@ -50,6 +50,8 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - [F-001] (4-11) `herramientas/revisar_lineas.py` NO existe, pero CLAUDE.md y `especiales.sh` lo citan. La norma «ningún script > 450 líneas» no tiene herramienta que la compruebe. Reproducir: `ls dinastia-godot/herramientas | grep revis`.
 - [F-002] (4-11) `dinastia-godot/datos/reales_lista.json` y `datos/caras_reales_reporte.json` empiezan con BOM UTF-8 (EF BB BF): `json.load` estricto falla («Unexpected UTF-8 BOM»). Comprobar que `JSON.parse_string` de Godot los acepta o quitar el BOM.
 - [F-003] (4-11) `dinastia-godot/addons/debug_menu/debug_menu.gd` tiene 480 líneas (>450). Es de terceros: confirmar que la norma lo excluye o partirlo.
+- [F-004] (4-11) Rutas `res://` rotas en pruebas: `pruebas/probar_foto_real.gd` y `pruebas/ver_pieza_ropa.gd` cargan `assets/characters/quaternius/ropa_temp/Male_Peasant_Body.gltf` (no existe); `pruebas/captura_viento_arboles.gd` lee `pruebas/capturas/viento_arboles_a.png` (carpeta de capturas borrada el 27-10). Esas escenas fallarán al ejecutarlas.
+- [F-005] (4-11) Este contenedor no tiene Godot instalado: `banco.sh` no se pudo correr en la ronda 2; las rondas siguientes solo hacen análisis estático hasta que se baje Godot 4.7.2.
 
 ## 0. Lo que espera una decisión tuya (lista corta)
 
