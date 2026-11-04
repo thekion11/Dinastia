@@ -27,6 +27,8 @@ func _bytes_tex(t: Texture2D) -> int:
 func _process(_d: float) -> void:
 	_n += 1
 	Engine.max_fps = 0
+	if _n <= 12 or _n % 10 == 0 and _n < 60:
+		print("MEM_FOTOGRAMA ", _n, " estática=", int(OS.get_static_memory_usage() / 1048576), " MB nodos=", int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)), " recursos=", int(Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT)))
 	if _n == 5:
 		_p.call("_ver_ciudad_propia")
 	if _n == 60:
