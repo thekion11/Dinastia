@@ -190,7 +190,7 @@ func remate_externo(es_local: bool, autor_id: String, tipo: String) -> void:
 ## también aquí (sale del once: la fuerza se vuelve a medir).
 func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 	var j := _por_id(jugador_id)
-	if j == null:
+	if j == null or _expulsados_hoy.has(jugador_id):
 		return
 	## Una ROJA DIRECTA no es una amarilla de temporada (mega auditoría 4): solo cuenta la amarilla de verdad y la segunda amarilla (la que la motiva: ya hubo una en este partido).
 	var previas := int(_amarillas_hoy.get(jugador_id, 0))
@@ -199,6 +199,7 @@ func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 	if not roja:
 		_amarillas_hoy[jugador_id] = previas + 1
 	if roja:
+		_expulsados_hoy[jugador_id] = true
 		Disciplina.sanciona(j)
 		once_local.erase(j)
 		once_visita.erase(j)

@@ -111,7 +111,7 @@ func preparar() -> void:
 	minutos_fin = MINUTOS
 	cambios_extra = 0
 	terminado_ya = false
-	cronica.clear(); _amarillas_hoy.clear(); suspendido = false
+	cronica.clear(); _amarillas_hoy.clear(); _expulsados_hoy.clear(); suspendido = false
 	_todos = once_local + once_visita
 	_notas_cerradas = false
 	_notas.clear()
