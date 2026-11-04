@@ -85,6 +85,7 @@ func _velocidades() -> void:
 		if bool(v.get("_entretiempo")) and rng.randf() < 0.5:
 			v.call("_salir_segunda")
 		vueltas += 1
+	print("    DIAG min=%d entretiempo=%s hecho=%s vel=%d terminado=%s" % [p.minuto, str(v.get("_entretiempo")), str(v.get("_entretiempo_hecho")), int(v.get("_velocidad")), str(p.terminado_ya)])
 	_comprobar(hacia_atras == 0, "el reloj nunca va hacia atrás con saltos de tiempo absurdos (%d retrocesos)" % hacia_atras)
 	_comprobar(p.minuto <= Partido.MINUTOS + 1, "ni pasa del final (minuto %d)" % p.minuto)
 	_comprobar(p.terminado_ya, "el partido termina aunque se cambie de velocidad en cada vuelta (%d vueltas)" % vueltas)
@@ -103,6 +104,7 @@ func _descanso_y_saltos() -> void:
 			v.call("_poner_velocidad", 3)
 		v._process(1.0)
 		vueltas += 1
+	v._process(1.0)   ## (el reloj llega al 45' y el fotograma siguiente es el que lo detiene)
 	_comprobar(bool(v.get("_entretiempo")), "el reloj se para en el descanso")
 	for tono in Vestuario.TONOS.keys():
 		v.call("_dar_charla", String(tono))

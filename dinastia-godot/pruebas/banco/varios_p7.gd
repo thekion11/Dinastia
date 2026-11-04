@@ -188,10 +188,11 @@ func _probar_modos_simulacion() -> void:
 	var reanudar := func() -> void:
 		if int(vh.get("_velocidad")) == 0 and not bool(vh.get("_entretiempo")):
 			vh.call("_poner_velocidad", 2)
-	while ph.minuto < 45 and vueltas < 2000:
+	while ph.minuto < 45 and vueltas < 8000:   ## (4-11) cada _process avanza como mucho 0,25 s: tras segundo plano el delta no se traga el partido
 		reanudar.call()
 		vh._process(1.0)
 		vueltas += 1
+	vh._process(1.0)   ## (4-11) con el tope de 0,25 s por fotograma el reloj llega al 45' sin dar el paso que lo detiene: un fotograma más
 	var parado := bool(vh.get("_entretiempo"))
 	var min_parado := ph.minuto
 	for _i in 20:
@@ -200,7 +201,7 @@ func _probar_modos_simulacion() -> void:
 	vh.call("_dar_charla", String(Vestuario.TONOS.keys()[0]))
 	vh.call("_salir_segunda")
 	vueltas = 0
-	while not ph.terminado_ya and vueltas < 5000:
+	while not ph.terminado_ya and vueltas < 20000:
 		reanudar.call()
 		vh._process(1.0)
 		vueltas += 1

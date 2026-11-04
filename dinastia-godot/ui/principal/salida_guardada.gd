@@ -35,7 +35,8 @@ func _notification(que: int) -> void:
 		NOTIFICATION_WM_CLOSE_REQUEST:
 			pedir_salir.call_deferred(false)
 		NOTIFICATION_WM_GO_BACK_REQUEST:
-			pedir_salir.call_deferred(true)
+			if get_tree().root.find_child("VidaApp", true, false) == null:   ## con un partido abierto, «atrás» lo atiende el partido (la pausa), no la pregunta de salir
+				pedir_salir.call_deferred(true)
 		NOTIFICATION_APPLICATION_PAUSED:
 			if p != null and p.mundo != null and OS.has_feature("mobile"):
 				guardar_ya()
