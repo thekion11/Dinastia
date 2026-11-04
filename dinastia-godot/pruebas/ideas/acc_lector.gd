@@ -15,6 +15,33 @@ func _probar() -> void:
 	ch.text = "Autoguardado"
 	ch.button_pressed = true
 	_comprobar(LectorPantalla.texto_de(ch) == "Autoguardado. activado", "de un interruptor lee su estado")
+	## A4 (accesibilidad al límite): lo que no tiene rótulo se nombra por su contexto.
+	var fila := HBoxContainer.new()
+	add_child(fila)
+	var et := Label.new()
+	et.text = "Color del bus"
+	fila.add_child(et)
+	var cp := ColorPickerButton.new()
+	fila.add_child(cp)
+	_comprobar(LectorPantalla.texto_de(cp) == "Color del bus", "un selector de color se nombra por la etiqueta de su fila (%s)" % LectorPantalla.texto_de(cp))
+	var tarjeta := Button.new()
+	var lt := Label.new()
+	lt.text = "Próximo partido"
+	tarjeta.add_child(lt)
+	add_child(tarjeta)
+	_comprobar(LectorPantalla.texto_de(tarjeta) == "Próximo partido", "un botón-tarjeta lee las etiquetas que lleva dentro (%s)" % LectorPantalla.texto_de(tarjeta))
+	var simbolos := HFlowContainer.new()
+	add_child(simbolos)
+	var emoji := Button.new()
+	emoji.text = "🌋"
+	emoji.toggle_mode = true
+	emoji.button_pressed = true
+	simbolos.add_child(Button.new())
+	simbolos.add_child(emoji)
+	_comprobar(LectorPantalla.texto_de(emoji) == "Opción 2 de 2. elegida", "un botón de solo emoji dice su lugar y si está elegido (%s)" % LectorPantalla.texto_de(emoji))
+	fila.free()
+	tarjeta.free()
+	simbolos.free()
 	var antes := LectorPantalla.activo()
 	LectorPantalla.fijar(true)
 	_comprobar(LectorPantalla.activo(), "el interruptor se guarda")

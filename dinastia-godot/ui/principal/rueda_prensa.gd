@@ -213,7 +213,18 @@ func _columna_respuestas(e: Dictionary) -> PanelContainer:
 	caja.add_theme_stylebox_override("panel", _caja(0.6, 10, 14.0))
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 10)
-	caja.add_child(v)
+	## Móvil apaisado (~480 px de alto, A4-INT-023): las respuestas (≈500 px) pisaban la franja de la pregunta y se salían por abajo; la columna acaba en la franja y lo que sobra se desliza.
+	if p.get_viewport_rect().size.y < 700.0:
+		caja.anchor_bottom = 1.0
+		caja.offset_bottom = -float(ALTO_FRANJA + MARGEN)
+		var desliza := ScrollContainer.new()
+		desliza.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		desliza.follow_focus = true
+		caja.add_child(desliza)
+		v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		desliza.add_child(v)
+	else:
+		caja.add_child(v)
 	var tit := p._texto(11, Principal.COL_SUAVE)
 	tit.text = Idiomas.t("Tu respuesta")
 	tit.uppercase = true

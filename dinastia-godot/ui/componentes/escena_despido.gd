@@ -73,8 +73,9 @@ void fragment() {
 	fila.set_anchors_preset(Control.PRESET_FULL_RECT)
 	fila.offset_left = 90
 	fila.offset_right = -90
-	fila.offset_top = 70
-	fila.offset_bottom = -260
+	var bajo := get_viewport_rect().size.y < 600.0   ## móvil apaisado (~480 px): el presidente y la etapa no cabían entre el borde y el botón (A4-INT-022)
+	fila.offset_top = 16 if bajo else 70
+	fila.offset_bottom = -126 if bajo else -260
 	fila.add_theme_constant_override("separation", 60)
 	fila.alignment = BoxContainer.ALIGNMENT_CENTER
 	add_child(fila)
@@ -86,11 +87,11 @@ void fragment() {
 	var marco := PanelContainer.new()
 	marco.add_theme_stylebox_override("panel", Tema.caja(Color(0, 0, 0, 0.35), Tema.RADIO_GRANDE, Color(c2, 0.6)))
 	izq.add_child(marco)
-	if not _presidente_3d(marco, c1, c2):
+	if not _presidente_3d(marco, c1, c2, bajo):
 		## Sin modelo (no debería pasar): el busto 3D de los mentores.
 		var cara := TextureRect.new()
 		cara.name = "CaraPresidente"
-		cara.custom_minimum_size = Vector2(280, 280)
+		cara.custom_minimum_size = Vector2(200, 200) if bajo else Vector2(280, 280)
 		cara.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		cara.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		cara.texture = Tutorial._cara_mentor({"semilla": "presidente_" + _nombre_pres, "nombre": _nombre_pres, "canas": true},
@@ -134,10 +135,10 @@ void fragment() {
 ## (`PersonajeDT.crear`) con traje oscuro, corbata y canas, en un pequeño
 ## mundo propio (fondo con el color del club, dos luces), de pecho para arriba
 ## y respirando (clip `parado`). Mismo aspecto siempre para el mismo nombre.
-func _presidente_3d(marco: Control, c1: Color, c2: Color) -> bool:
+func _presidente_3d(marco: Control, c1: Color, c2: Color, bajo := false) -> bool:
 	var cont := SubViewportContainer.new()
 	cont.name = "CaraPresidente"
-	cont.custom_minimum_size = Vector2(300, 330)
+	cont.custom_minimum_size = Vector2(210, 220) if bajo else Vector2(300, 330)
 	cont.stretch = true
 	marco.add_child(cont)
 	var vp := SubViewport.new()
