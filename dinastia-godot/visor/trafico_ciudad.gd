@@ -100,7 +100,7 @@ func _process(delta_real: float) -> void:
 				var d2 := fposmod(ps - s0, largo)
 				if suave and d2 < mira:
 					tope = minf(tope, sqrt(2.0 * PLAN * maxf(d2 - 0.3, 0.0)))
-				if d2 < (0.35 if suave else avance):
+				if d2 < (maxf(0.35, vact * delta) if suave else avance):   ## (4-11) también si la parada queda ENTRE la posición y la del paso: a paso grueso (LOD lejano) se saltaba la parada
 					aterriza = d2 + 0.05   ## llega con la velocidad ya casi a cero y se posa justo en la parada
 					avance = d2 + 0.05
 					v["espera"] = float(v.get("espera_parada", 8.0))
