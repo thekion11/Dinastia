@@ -49,6 +49,8 @@ static var elegida: int = MINIMO
 ## Bajar efectos durante el partido si los FPS caen de 40 (ver
 ## `RendimientoAdaptativo`). Encendido por defecto; se apaga en Ajustes.
 static var adaptativa: bool = true
+## PARTIDO LIGERO (4-11, orden 32): agregado aparte de la calidad, apagado por defecto en todas (ver `PartidoLigero`).
+static var partido_ligero: bool = false
 
 ## Hora del dia. El atardecer es el que mejor sienta a un complejo deportivo:
 ## luz rasante, sombras largas y contraste, que es lo que hace que un render
@@ -335,6 +337,7 @@ static func cargar() -> void:
 		elegida = guardada
 	if cf.has_section_key("grafica", "adaptativa"):
 		adaptativa = bool(cf.get_value("grafica", "adaptativa"))
+	partido_ligero = bool(cf.get_value("grafica", "partido_ligero", false))
 	if cf.has_section_key("grafica", "motor_ligero"):
 		motor_ligero = bool(cf.get_value("grafica", "motor_ligero"))
 	if cf.has_section_key("grafica", "escala_media"):
@@ -347,6 +350,7 @@ static func guardar() -> void:
 	cf.set_value("grafica", "calidad", elegida)
 	cf.set_value("grafica", "adaptativa", adaptativa)
 	cf.set_value("grafica", "motor_ligero", motor_ligero)
+	cf.set_value("grafica", "partido_ligero", partido_ligero)
 	cf.set_value("grafica", "escala_minimo", escala_minimo)
 	cf.set_value("grafica", "escala_media", escala_media)
 	cf.save(ARCHIVO)

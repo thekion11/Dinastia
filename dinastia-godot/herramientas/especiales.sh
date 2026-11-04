@@ -191,6 +191,7 @@ pasa "p6_boton_e_minimapa" "godot --headless --path . res://pruebas/ideas/p6_bot
 pasa "p6_mando_tactil" "godot --headless --path . res://pruebas/ideas/p6_mando_tactil.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_zonas_vista" "godot --headless --path . res://pruebas/ideas/p6_zonas_vista.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_entorno_oclusion" "godot --headless --path . res://pruebas/ideas/p6_entorno_oclusion.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_partido_ligero (agregado aparte de la calidad, orden 32)" "godot --headless --path . res://pruebas/ideas/a4_partido_ligero.tscn" "FIN. 0 fallos"
 pasa "p6_peaje" "godot --headless --path . res://pruebas/ideas/p6_peaje.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_alcance_e" "godot --headless --path . res://pruebas/ideas/p6_alcance_e.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_resolucion3d" "godot --headless --path . res://pruebas/ideas/p6_resolucion3d.tscn" "(^|[^0-9])0 fallos"
