@@ -59,8 +59,20 @@ func _sintetizar_banco(nombre: String) -> Array[AudioStreamWAV]:
 ## y si alguien pide uno que todavía no está, `banco()` hace solo ese, al
 ## momento -unos milisegundos-. La síntesis no toca `Azar` (cada receta usa su
 ## propio generador), así que el hilo no altera ninguna partida.
-func _generar_en_fondo() -> void:
-	for nombre: String in NOMBRES:
+## (4-11-2026, A4 memoria antes de la ciudad) Los 800 flujos sintetizados ocupan ~42 MB y el menú de gestión solo usa un puñado (clics, avisos, dinero, fichajes…).
+## Hasta que alguien pide un sonido de PARTIDO, de ciudad o de evento (cualquiera que no esté en `BASICOS`), el hilo de fondo solo sintetiza los básicos; en cuanto se pide el
+## primero (o una pantalla llama a `completar()`), sigue con el catálogo entero. Cada banco sale igual de las mismas recetas (determinista, sin `Azar`): no cambia lo que suena.
+const BASICOS := ["clic", "clic_suave", "abrir", "cerrar", "error", "aviso", "correo", "guardado", "menu_mover", "menu_aceptar", "menu_atras", "menu_cambio", "menu_seccion",
+	"telefono", "moneda", "logro", "fichaje", "contrato", "despido", "dinero_entra", "dinero_sale", "sorteo", "fin_temporada", "clausula", "contrato_vence", "oferta", "venta",
+	"obra", "lesion", "lesion_grave", "ronda_superada", "trofeo", "ascenso", "descenso", "cambio", "silbato", "pitido_final", "poste", "travesano", "tambor"]
+var _completo := false
+
+## Pide el catálogo entero (lo llama el primer sonido que no es básico; también se puede llamar al entrar a un partido o a la ciudad).
+func completar() -> void:
+	_completo = true
+
+func _generar_lista(lista: Array) -> void:
+	for nombre: String in lista:
 		if _parar:
 			return
 		_mutex.lock()
@@ -73,6 +85,12 @@ func _generar_en_fondo() -> void:
 		if not _bancos.has(nombre):
 			_bancos[nombre] = b
 		_mutex.unlock()
+
+func _generar_en_fondo() -> void:
+	_generar_lista(BASICOS)
+	while not _completo and not _parar:
+		OS.delay_msec(250)
+	_generar_lista(NOMBRES)
 
 func _ready() -> void:
 	for i in VOCES:
@@ -91,6 +109,8 @@ func banco(nombre: String) -> Array:
 		return b
 	if not NOMBRES.has(nombre):
 		return []
+	if not _completo and not BASICOS.has(nombre):
+		completar()   ## el primer sonido de partido/ciudad/evento pone en marcha el resto del catálogo
 	var nuevo := _crear_banco(nombre)
 	_mutex.lock()
 	if not _bancos.has(nombre):
@@ -103,6 +123,7 @@ func banco(nombre: String) -> Array:
 ## Genera TODO de golpe, en el hilo que llama. Solo para pruebas y
 ## herramientas: el juego usa el hilo de fondo de `_ready()`.
 func _generar_todo() -> void:
+	completar()
 	for nombre: String in NOMBRES:
 		banco(nombre)
 
