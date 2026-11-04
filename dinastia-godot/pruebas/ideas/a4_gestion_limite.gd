@@ -157,6 +157,20 @@ func _absurdos(m: Mundo) -> void:
 			se_mueve = true
 	_comprobar(not se_mueve and m.mercado.abrir_negociacion(ced) != "" and presta.plantilla.has(ced),
 		"un cedido no lo busca la IA ni se puede negociar por él (sigue en %s)" % presta.nombre)
+	## A4-GES-009: el contrato de un cedido lo decide su DUEÑO. 20 jugadores de la IA cedidos a tu club, en su último año: la IA
+	## renueva ~88 %; antes se iban TODOS libres (decidía tu club, que no los había renovado).
+	var se_van := 0
+	var cedidos := 0
+	for club_ia: Club in m.ligas[1].clubes.slice(0, 10):
+		for jj: Jugador in club_ia.plantilla.slice(0, 2):
+			if jj.edad >= 33:
+				continue
+			m.cesiones._firmar_cesion(jj, club_ia, c, "simple", 0, 0.0)
+			jj.anios_contrato = 1
+			cedidos += 1
+			if m._vence_contrato(jj, c):
+				se_van += 1
+	_comprobar(cedidos >= 10 and se_van <= cedidos / 2, "el contrato de un cedido lo decide su dueño: de %d cedidos a tu club con el contrato acabado se van %d" % [cedidos, se_van])
 	## Año extremo.
 	m.anio = 2099
 	m.avanzar_semana()
