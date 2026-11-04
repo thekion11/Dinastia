@@ -33,7 +33,21 @@ Pruebas nuevas (en `especiales.sh`): `a4_limite_mundo` (fugas, calidad a mitad, 
 - [A4-M3D-017] (repaso 3, gravedad: bajo) El `aforo` del perfil no cambia la geometría del estadio: 0, 1 y 500 000 dan las mismas 4 485 butacas; solo mandan `niveles` y `forma` (3 niveles: 14 365). Es una decisión de diseño más que un fallo. Estado: pregunta al dueño (¿que el aforo escale la grada?).
 
 ## Repaso 4 — reglas y coherencia
-(pendiente)
+- Determinismo: ciudad armada dos veces y por partes = de una vez, 0 filas distintas (`probar_por_partes`, banco `ciudad_construccion`); estadio idéntico; el mundo 3D no usa azar sin semilla al construir (A4-M3D-002, A4-M3D-004).
+- Norma de 450 líneas: 0 scripts por encima (`revisar_lineas.py --todos`, 1 848 scripts).
+- Memoria del menú (regla de CLAUDE.md): tras instanciar `Principal` solo quedan cargados 3 de los 32 scripts de la familia ciudad (`nucleo/ciudad.gd`, `interiores_club.gd`, `pantalla_ciudad.gd`); menú 188 MB al cargar la escena y 372 MB al primer fotograma (.pck precompilado): sin regresión.
+- Rutas `res://` de `visor/` y `ui/`: 1 rota (A4-M3D-001, `PersonaMH`, intencionada y protegida por `disponible()`).
+- Señales: ninguna conexión de `visor/` a autocargas, `get_tree()` ni ventana; 14 `_exit_tree`. Cachés estáticas (`static var` de 28 diccionarios): todas acotadas (paletas, colores, mallas); `ServiciosVida.estaciones` deduplica por posición.
+- [A4-M3D-018] (repaso 4, gravedad: bajo) Textos de la sala de control subterránea sin traducir: «SECTOR %d·%d / CON LUZ / SIN LUZ» y «AGUA POTABLE / Depósito %d%%» (`visor/subsuelo_ciudad_p1.gd:241,243`). Estado: arreglado (traducidos a los 8 idiomas con `sumar_traducciones.py`, 32 claves).
+- [A4-M3D-019] (repaso 4, gravedad: bajo) El rótulo «METRO · línea» de `tren_detalle.gd:73` está fijo en castellano; «METRO» es una marca internacional y la línea es un nombre propio. Estado: aceptado.
+- Los rótulos 3D de la ciudad entera pasan por `Idiomas.t` (`CartelFachada`, `_cartel`, `_rotulo`): barrido de 25 llamadas con texto literal, todas traducidas por dentro; la prueba M-333 de `especiales.sh` lo vigila.
 
 ## Repaso 4 — reglas y coherencia
-(pendiente)
+- Determinismo: ciudad armada dos veces y por partes = de una vez, 0 filas distintas (`probar_por_partes`, banco `ciudad_construccion`); estadio idéntico; el mundo 3D no usa azar sin semilla al construir (A4-M3D-002, A4-M3D-004).
+- Norma de 450 líneas: 0 scripts por encima (`revisar_lineas.py --todos`, 1 848 scripts).
+- Memoria del menú (regla de CLAUDE.md): tras instanciar `Principal` solo quedan cargados 3 de los 32 scripts de la familia ciudad (`nucleo/ciudad.gd`, `interiores_club.gd`, `pantalla_ciudad.gd`); menú 188 MB al cargar la escena y 372 MB al primer fotograma (.pck precompilado): sin regresión.
+- Rutas `res://` de `visor/` y `ui/`: 1 rota (A4-M3D-001, `PersonaMH`, intencionada y protegida por `disponible()`).
+- Señales: ninguna conexión de `visor/` a autocargas, `get_tree()` ni ventana; 14 `_exit_tree`. Cachés estáticas (`static var` de 28 diccionarios): todas acotadas (paletas, colores, mallas); `ServiciosVida.estaciones` deduplica por posición.
+- [A4-M3D-018] (repaso 4, gravedad: bajo) Textos de la sala de control subterránea sin traducir: «SECTOR %d·%d / CON LUZ / SIN LUZ» y «AGUA POTABLE / Depósito %d%%» (`visor/subsuelo_ciudad_p1.gd:241,243`). Estado: arreglado (traducidos a los 8 idiomas con `sumar_traducciones.py`, 32 claves).
+- [A4-M3D-019] (repaso 4, gravedad: bajo) El rótulo «METRO · línea» de `tren_detalle.gd:73` está fijo en castellano; «METRO» es una marca internacional y la línea es un nombre propio. Estado: aceptado.
+- Los rótulos 3D de la ciudad entera pasan por `Idiomas.t` (`CartelFachada`, `_cartel`, `_rotulo`): barrido de 25 llamadas con texto literal, todas traducidas por dentro; la prueba M-333 de `especiales.sh` lo vigila.
