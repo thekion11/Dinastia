@@ -296,7 +296,8 @@ func _coches_armado(t: Object) -> void:
 ## ---- 4 y 5. simulación del tráfico: primero TODO el tráfico 2 min (choques), luego solo los buses hasta completar sus paradas
 func _paso_trafico(t: Object, sem: Object, paso: float) -> void:
 	for v: Dictionary in t.get("_vehiculos"):
-		v["lod"] = 0   ## sin nivel de detalle por distancia a la cámara: los lejanos se actualizan cada 3-12 cuadros y a paso grueso se saltarían la parada
+		if OS.get_environment("SIN_LOD") != "":
+			v["lod"] = 0   ## (solo para comparar) sin nivel de detalle: por defecto se prueba CON el LOD real, donde los lejanos se actualizan cada 3-12 cuadros
 	if sem != null:
 		sem.call("_process", paso)
 	t.call("_process", paso)
