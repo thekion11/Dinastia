@@ -116,6 +116,8 @@ pasa "el tráfico cede a las sirenas" "godot --headless --path . res://pruebas/i
 pasa "estación y trenes" "godot --headless --path . res://pruebas/ideas/tre_estacion.tscn" "FIN. 0 fallos"
 pasa "teleférico" "godot --headless --path . res://pruebas/ideas/tre_teleferico.tscn" "FIN. 0 fallos"
 pasa "aspecto de los clubes" "godot --headless --path . res://pruebas/ideas/asp_clubes.tscn" "FIN. 0 fallos"
+pasa "partido en vivo al límite (auditoría 4: 9 idiomas sin marcas sueltas, velocidades con saltos absurdos, descanso, saltos al final)" "godot --headless --path . res://pruebas/auditoria_partido_vivo_limite.tscn" "FIN. 0 fallos"
+pasa "sonido al límite (auditoría 4: 400 efectos, volúmenes 0/NaN/1e9, nombres que no existen, música)" "godot --headless --path . res://pruebas/auditoria_sonido_limite.tscn" "FIN. 0 fallos"
 pasa "trofeos por competición" "godot --headless --path . res://pruebas/ideas/tro_recetas.tscn" "FIN. 0 fallos"
 pasa "arbitros y VAR al límite (auditoría 4: márgenes absurdos, tarjetas repetidas, gol anulado tras el final, expulsión doble)" "godot --headless --path . res://pruebas/auditoria_arbitro_limite.tscn" "FIN. 0 fallos"
 pasa "dificultad_cpu en el partido jugable de la carrera (el rival es la CPU con el nivel guardado)" "godot --headless --path . res://pruebas/dificultad_partido_jugable.tscn" "FIN. 0 fallos"
