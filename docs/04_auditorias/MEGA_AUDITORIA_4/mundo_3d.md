@@ -1,2 +1,30 @@
-# Mega auditoría 4 — mundo_3d
+# Mega auditoría 4 — mundo_3d (ciudad, estadio, transporte, personajes, peatones, calidad gráfica y rendimiento visual)
+Método de cada repaso en el LEEME. Los fallos ya cerrados hoy (4-11) en bancos y pasadas se listan con su commit para que quede el rastro completo.
 
+## Repaso 1 — lectura (escaneos automáticos de `visor/` y `ui/`, 360 scripts / 67 k líneas, más lo leído al construir los bancos)
+- [A4-M3D-001] (repaso 1, gravedad: bajo) `PersonaMH` apunta a `res://assets/personas/persona_mh_cuerpo.glb` y `persona_mh_ropa.glb`, que NO están en el repositorio (van por LFS y el contenedor no puede subirlos). Es la única ruta `res://` rota de `visor/` y `ui/` (0 más). `PersonaMH.disponible()` es falso y `PersonaRealista` cae al escaneo, así que no hay fallo en el juego. Archivo: `visor/persona_mh.gd:19-20`. Estado: pregunta al dueño (subir los dos .glb o regenerarlos con `herramientas/makehuman/README.md`).
+- [A4-M3D-002] (repaso 1, gravedad: bajo) Azar suelto (`randf()`, `shuffle()`) solo en comportamiento en marcha (pausas y miradas del tráfico, balanceo de la ola de la grada, sacudida de cámara): no entra en ninguna huella ni en la construcción. La construcción de la ciudad (`city_builder*`, `ciudad_expansion*`) no usa azar sin semilla. Estado: aceptado (informativo).
+- [A4-M3D-003] (repaso 1, gravedad: bajo) `find_children(...)[0]` sin comprobar que no esté vacío en `ui/partido_jugable_p1.gd:392` y `ui/partido_jugable_tanda.gd:78` (resumen del partido). Es del área de partido/interfaz: se pasa a esas sesiones. Estado: abierto (otra área).
+- [A4-M3D-004] (repaso 1, gravedad: medio) El tono de cada torre/nave salía de `get_instance_id()` y cambiaba entre armados; `Optimizar.agrupar` fundía o no según los ids y la prueba «ciudad: dos armados de una vez dan lo mismo» fallaba a ratos (3-7 filas distintas, tope 12). `visor/city_builder_p7/p9/p11.gd`. Estado: arreglado (c0407146; 0 filas distintas en 8 ejecuciones).
+
+## Repaso 2 — ejecución (bancos especializados del área, recorrido del mapa, capturas con la cámara real)
+Bancos del área, todos «FIN. 0 fallos»: `ciudad_construccion` (117 s), `ciudad_vida` (143 s), `ciudad_transporte` (~7 min), `estadio_3d` (168 s, con pantalla), `personajes_3d` (62 s). Prueba nueva `pruebas/ideas/a4_recorrido_mapa.tscn`: rejilla de 16 m sobre ±1 480 m, a pie (radio 0,4) y en coche (radio 2,2), en calidad MÍNIMA, MEDIA y ALTA.
+- Resultado del recorrido: 74 % del mapa pisable a pie (72 % en coche), 100 % alcanzable desde la puerta del club, **0 islas aisladas, 0 alturas NaN**, el terreno (mallas de 950 m) existe en los 5 puntos del borde probados, y solo 4 pasos entre celdas pisables con más de 60 % de pendiente (peor 64 %): sin caídas fuera del mundo ni zonas inalcanzables.
+- [A4-M3D-005] (repaso 2, gravedad: crítico) En MÍNIMA la ciudad volvía a encender la sombra del sol en cada actualización del ciclo (`ui/ciudad_vista_p1_p1.gd:185`): 1 973 → 1 153 llamadas de dibujo (−42 %) al corregirlo. Estado: arreglado (341cc0f2). Vigilante `p6_calidad_minima` (bd4f6989): luces con sombra, glow, SSAO, SSIL, SSR, SDFGI, niebla volumétrica y MSAA ≥ x4 sin mirar la calidad; también arregló el glow del partido (`Ambience`), el MSAA x4 de 11 vistas 3D de interfaz y el SSAO/glow/sombra de casa, mando, rueda de prensa, garra, sorteo, VAR e interiores.
+- [A4-M3D-006] (repaso 2, gravedad: alto) 15 paraderos «Red» de la circunvalación exterior, 22 manzanas «lejano» con sus torres y varios postes, señales y conos quedaban ENTERRADOS en cerros (terreno de 1 a 42 m, ellos a y = 0). `buses_red.gd`, `ciudad_expansion_p7.gd`, `ciudad_expansion_p8.gd`. Estado: arreglado (b40c30ab, banco `ciudad_construccion`).
+- [A4-M3D-007] (repaso 2, gravedad: medio) Buses de recorridos distintos arrancaban uno ENCIMA del otro en la cabecera (0,00 m). `buses_red.gd`. Estado: arreglado (c97941b7).
+- [A4-M3D-008] (repaso 2, gravedad: alto) A paso grueso (LOD lejano de la cámara) un bus podía saltarse una parada. `trafico_ciudad.gd` (parada). Estado: arreglado (commit «Tráfico: la parada de bus se detecta…», banco `ciudad_transporte` con el LOD real: 26 buses, 402 paradas, 0 saltadas).
+- [A4-M3D-009] (repaso 2, gravedad: medio) El aviso «E:» de interactuar salía a 14 m a pie y 30 m en coche. Estado: arreglado (33554736; ahora 4,5 m y 9 m, prueba `p6_alcance_e`).
+- [A4-M3D-010] (repaso 2, gravedad: medio) Edificios de servicios (ayuntamiento, hospital, comisaría, cine, mercado, soportales de la plaza) eran cajas lisas por detrás y de lado. Estado: arreglado (pasadas visuales 1-2; hojas en `pasada_ciudad_*`).
+- [A4-M3D-011] (repaso 2, gravedad: bajo) 53 tramos de la circunvalación exterior pasan bajo cerros (hasta 63 m): invisibles. Estado: abierto (deuda con tope 60 en el banco; arreglarlo exige subir las calles al terreno: pregunta al dueño).
+- [A4-M3D-012] (repaso 2, gravedad: bajo) En los cruces, coches de rutas que se cortan se solapan unos instantes (57 de ~240 000 comparaciones en 2 min). `trafico_ciudad.gd` (`_cede_paso`). Estado: abierto (tope 80 en el banco).
+- [A4-M3D-013] (repaso 2, gravedad: bajo) 4 de 212 llegadas del metro al andén van a 4,4-4,6 m/s (la primera aproximación desde la posición inicial). `metro_ciudad_p1.gd` (`Tren.simular`). Estado: abierto (tope 3 %).
+- [A4-M3D-014] (repaso 2, gravedad: bajo) La ciudad no tiene horarios de apertura de comercios (0 puntos con horario). Estado: pregunta al dueño (función nueva).
+- [A4-M3D-015] (repaso 2, gravedad: bajo) Peatones que rozan postes y farolas (≤ 0,5 % de las muestras de sus rutas). Estado: abierto (cosmético).
+- [A4-M3D-016] (repaso 2, gravedad: bajo) Los MultiMesh de la ciudad no guardan datos con `--headless`: cualquier prueba que lea transformaciones o colores necesita pantalla (xvfb + OpenGL); `estadio_3d` ya corre así. Estado: documentado (`bancos_especiales.py CON_PANTALLA`).
+
+## Repaso 3 — al límite
+(pendiente)
+
+## Repaso 4 — reglas y coherencia
+(pendiente)
