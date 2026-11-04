@@ -39,7 +39,19 @@ func _foto(m: Mundo) -> String:
 	d.erase("guardado")
 	## Canónica: por JSON ida y vuelta (todos los números como en el archivo), así 10 y 10.0 cuentan igual.
 	## Los TIPOS que cambian al cargar (entero → decimal) los vigila `_tipos_al_cargar`.
-	return JSON.stringify(JSON.parse_string(JSON.stringify(d)), "\t", true)
+	return JSON.stringify(_redondear(JSON.parse_string(JSON.stringify(d))), "\t", true)
+
+## Decimales a 9 cifras (A4): el JSON guarda ~15 y la última baila al ir y volver («62.03155990839» / «…83901»).
+func _redondear(v: Variant) -> Variant:
+	if v is float:
+		return snappedf(v, 1e-9)
+	if v is Dictionary:
+		for k in v:
+			v[k] = _redondear(v[k])
+	elif v is Array:
+		for i in (v as Array).size():
+			v[i] = _redondear(v[i])
+	return v
 
 ## Primera diferencia entre dos textos JSON (para que el fallo diga DÓNDE, no solo que algo cambió).
 func _diferencia(a: String, b: String) -> String:
