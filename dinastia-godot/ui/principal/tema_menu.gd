@@ -93,6 +93,8 @@ func _aplicar_tema() -> void:
 	var sep := Principal.SEPARACION_COMPACTA if p._vista_compacta else Principal.SEPARACION_NORMAL
 	for clase3: String in ["BoxContainer", "VBoxContainer", "HBoxContainer"]:
 		t.set_constant("separation", clase3, sep)
+	EscalaMovil.ampliar_toque(t, EscalaMovil.alto_toque(p))   ## móvil: botones de al menos 7 mm
+	EscalaMovil.vigilar(p.get_tree())
 	p.theme = t
 ## Un escudo con sus iniciales encima, listo para meter en una fila.
 ##
