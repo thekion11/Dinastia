@@ -271,7 +271,7 @@ func _arrancar_partido() -> void:
 		if a != null:
 			_tiros_de[a.id] = int(_tiros_de.get(a.id, 0)) + 1
 			_goles_de[a.id] = int(_goles_de.get(a.id, 0)) + 1)
-	partido.lesion.connect(_a_la_lesion)
+	partido.lesion.connect(_a_la_lesion); partido.baja_sin_cambio.connect(_a_la_baja)
 	partido.decision_arbitral.connect(_a_la_decision_arbitral)
 	## Saque inicial + murmullo de fondo: lo mismo que ya sonaba en la pantalla
 	## 2D de `partido_vivo.gd`, que hasta hoy este visor 3D -el que de verdad se
