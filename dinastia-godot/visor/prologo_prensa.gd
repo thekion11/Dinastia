@@ -34,7 +34,7 @@ func montar(m: Mundo, club: Club, acento: Color, look_dt: Dictionary) -> void:
 	raiz.add_child(vpc)
 	var vp := SubViewport.new()
 	vp.own_world_3d = true
-	vp.msaa_3d = Viewport.MSAA_4X
+	vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	vpc.add_child(vp)
 	_escena = RuedaPrensaEscena3D.new()

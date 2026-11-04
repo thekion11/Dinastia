@@ -252,6 +252,10 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 # ------------------------------------------------------------------ viewport
 
 ## ¿Renderizador de compatibilidad (OpenGL: móvil, web, capturas)?
+## (4-11) MSAA de las vistas 3D SECUNDARIAS (retratos, casa, rueda de prensa, sorteo…): en MÍNIMO nunca más de x2.
+static func msaa_ui(m: int) -> int:
+	return Viewport.MSAA_2X if elegida <= MINIMO and m > Viewport.MSAA_2X else m
+
 static func es_compatibilidad() -> bool:
 	return RenderingServer.get_current_rendering_method() == "gl_compatibility"
 

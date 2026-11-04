@@ -140,7 +140,7 @@ static func retrato(asp: Dictionary, tam: Vector2i, fondo: Color, plano: String 
 	vp.size = tam
 	vp.own_world_3d = true
 	vp.transparent_bg = false
-	vp.msaa_3d = Viewport.MSAA_4X
+	vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
 	cont.add_child(vp)
 	var plato := PlatoRetrato.new()
 	plato.montar(asp, fondo, plano)
