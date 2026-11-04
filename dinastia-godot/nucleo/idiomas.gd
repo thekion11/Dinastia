@@ -25,7 +25,7 @@ func _cargar_extra(cuales: Array = []) -> void:
 	for k: String in cuales:
 		_extra[k] = (d as Dictionary).get(k, {})
 		_cargados[k] = true
-	_inverso.clear()   ## el origen de un texto puede estar en el idioma recién cargado
+	_plantillas_de.clear(); _inverso.clear()   ## el origen de un texto puede estar en el idioma recién cargado
 	## Cada patrón: [regex, plantilla en, pt, fr, it, de, ca, ...] en el orden
 	## de `ORDEN`; una plantilla que falte deja la frase en castellano.
 	_patrones.clear()
@@ -112,6 +112,75 @@ func _patron(frase: String, prof: int) -> String:
 				v = _t(v, prof + 1)
 			plantilla = plantilla.replace("$%d" % g, v)
 		return plantilla
+	return _por_plantilla(frase, prof)
+
+## (4-11, A4) PLANTILLAS CON %s / %d: una clave con marcadores («Efecto durante %d semanas.») traduce también la frase ya FORMADA («…durante 5 semanas.»).
+var _plantillas_de := {}   ## idioma → [[trozo literal más largo, RegEx, traducción], ...]
+
+static func _escapar_re(t: String) -> String:
+	var r := t
+	for c: String in ["\\", ".", "^", "$", "|", "(", ")", "[", "]", "{", "}", "*", "+", "?"]:
+		r = r.replace(c, "\\" + c)
+	return r
+
+func _plantillas() -> Array:
+	if _plantillas_de.has(idioma):
+		return _plantillas_de[idioma]
+	var lista: Array = []
+	var marca := RegEx.create_from_string("%[sd]")
+	var ex: Dictionary = _extra.get(idioma, {})
+	for k: String in ex:
+		if not (k.contains("%s") or k.contains("%d")):
+			continue
+		var v := String(ex[k])
+		var ms := marca.search_all(k)
+		var mv := marca.search_all(v)
+		if ms.size() != mv.size():
+			continue
+		var mismo := true
+		for i in ms.size():
+			mismo = mismo and ms[i].get_string() == mv[i].get_string()
+		if not mismo:
+			continue
+		var patron := "^"
+		var lit := ""
+		var pos := 0
+		for m: RegExMatch in ms:
+			var trozo := k.substr(pos, m.get_start() - pos)
+			patron += _escapar_re(trozo) + ("(.+?)" if m.get_string() == "%s" else "(-?\\d+)")
+			if trozo.length() > lit.length():
+				lit = trozo
+			pos = m.get_end()
+		var cola := k.substr(pos)
+		patron += _escapar_re(cola) + "$"
+		lit = cola if cola.length() > lit.length() else lit
+		var re := RegEx.create_from_string(patron)
+		if re.is_valid() and lit.length() >= 3:
+			lista.append([lit, re, v])
+	_plantillas_de[idioma] = lista
+	return lista
+
+func _por_plantilla(frase: String, prof: int) -> String:
+	if frase.length() <= 6 or prof > 2:
+		return ""
+	for fila: Array in _plantillas():
+		if not frase.contains(String(fila[0])):
+			continue
+		var m: RegExMatch = (fila[1] as RegEx).search(frase)
+		if m == null:
+			continue
+		var salida := String(fila[2])
+		var hueco := 0
+		var res := ""
+		var pos := 0
+		for mm: RegExMatch in RegEx.create_from_string("%[sd]").search_all(salida):
+			hueco += 1
+			var g := m.get_string(hueco)
+			if mm.get_string() == "%s" and _tiene_letras(g):
+				g = _t(g, prof + 1)
+			res += salida.substr(pos, mm.get_start() - pos) + g
+			pos = mm.get_end()
+		return res + salida.substr(pos)
 	return ""
 
 ## Parte un texto en oraciones, conservando los espacios de entre medio.
