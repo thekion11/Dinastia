@@ -114,6 +114,7 @@ pasa "motor jugable (unidad)" "godot --headless --path . res://pruebas/prueba_mo
 pasa "tráfico, metro y bus suaves" "godot --headless --path . res://pruebas/ideas/pmov_suavidad_trafico.tscn" "FIN. 0 fallos"
 pasa "tráfico: derecha y adelantar" "godot --headless --path . res://pruebas/ideas/tra_adelantar_y_derecha.tscn" "FIN. 0 fallos"
 pasa "emergencias y sirenas" "godot --headless --path . res://pruebas/ideas/emerg_servicios.tscn" "FIN. 0 fallos"
+pasa "vida de la app fuera del partido, menú táctil (auditoría 4: segundo plano pausa el árbol, atrás cierra ventana/pantalla/pregunta, poca memoria)" "godot --headless --path . res://pruebas/auditoria_vida_global_limite.tscn" "FIN. 0 fallos"
 pasa "el tráfico cede a las sirenas" "godot --headless --path . res://pruebas/ideas/emerg_cede_paso.tscn" "FIN. 0 fallos"
 pasa "estación y trenes" "godot --headless --path . res://pruebas/ideas/tre_estacion.tscn" "FIN. 0 fallos"
 pasa "vida de la app en el móvil al límite, partido táctil (auditoría 4: segundo plano, atrás, foco, girar, poca memoria, delta de 10 minutos)" "godot --headless --path . res://pruebas/auditoria_vida_app_limite.tscn" "FIN. 0 fallos"
