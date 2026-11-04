@@ -66,7 +66,7 @@ func _ia_portador(p: Dictionary) -> void:
 		_tirar(p, Vector2(palo, alto), clampf(0.55 + _rng.randf() * 0.4, 0.0, 1.0))
 		return
 	## Centro desde la banda, cerca del fondo.
-	if MotorCorner.centrar(self as Object as MotorJugable, yo, arco):
+	if MotorCorner.centrar(self as Object as MotorJugable, p, yo, arco):
 		var err_c := (1.0 - float(p["attr"]["pas"])) * 7.0
 		var destino := Vector3(_rng.randf_range(-4, 4) + _rng.randf_range(-err_c, err_c), 1.6, arco.z - d * _rng.randf_range(4, 10))
 		_ctx_golpeo = "centro"; MotorTraza.centro(self as Object as MotorJugable, p)   ## ciclo 32: solo cuenta
