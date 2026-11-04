@@ -149,5 +149,5 @@ func estimar_taquilla(c: Club) -> Dictionary:
 		if pp.size() == 2:
 			rep_rival = (pp[1] as Club).rep if pp[0] == c else (pp[0] as Club).rep
 		precio = float(hinchada.precio_efectivo(int(round(c.precio_entrada)), rep_rival))
-	var gente := int(round(float(f.asistencia()) * f_publico))
+	var gente := maxi(0, int(round(float(f.asistencia()) * f_publico)))   ## (A4) con un aforo negativo la gente salía negativa
 	return {"gente": gente, "precio": precio, "monto": int(round(float(gente) * Finanzas.ingreso_por_espectador(precio)))}
