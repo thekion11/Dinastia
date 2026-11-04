@@ -46,6 +46,11 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 1) fallos (los 8 de League-Soccer) → 2) clubes (recreación legal) → 3) IA → 4) jugabilidad → 5) optimización → 6) detectar fallos →
 7) sonidos de sistema → 8) minijuegos → 9) entrenamiento.
 
+## FALLOS DETECTADOS (ronda de búsqueda continua; solo se registran, se corrigen aparte)
+- [F-001] (4-11) `herramientas/revisar_lineas.py` NO existe, pero CLAUDE.md y `especiales.sh` lo citan. La norma «ningún script > 450 líneas» no tiene herramienta que la compruebe. Reproducir: `ls dinastia-godot/herramientas | grep revis`.
+- [F-002] (4-11) `dinastia-godot/datos/reales_lista.json` y `datos/caras_reales_reporte.json` empiezan con BOM UTF-8 (EF BB BF): `json.load` estricto falla («Unexpected UTF-8 BOM»). Comprobar que `JSON.parse_string` de Godot los acepta o quitar el BOM.
+- [F-003] (4-11) `dinastia-godot/addons/debug_menu/debug_menu.gd` tiene 480 líneas (>450). Es de terceros: confirmar que la norma lo excluye o partirlo.
+
 ## 0. Lo que espera una decisión tuya (lista corta)
 
 Sin esto, las filas que dependen de ello no avanzan. El detalle está en la sección que se cita.
