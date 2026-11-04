@@ -35,3 +35,11 @@ Avisos (simplificaciones del simulado, para el dueño o la sesión PES 6; no se 
 - La «segunda amarilla» se cuenta sobre las amarillas de la TEMPORADA (par), no del partido: ~8 de cada 40 partidos sale una roja
   a alguien con una sola amarilla en ese partido. `P_ROJA_SEGUNDA` (0,09) está calibrada con esa regla.
 - En el simulado la roja no saca al jugador del once (documentado en `_revisar_siete`): puede marcar después de expulsado (raro: 0-1 en 40).
+
+### mercado_contratos y calendario_competiciones (4-11, líder)
+- `mercado_contratos`: integridad de planteles durante una temporada y el cambio de año (un club por jugador, `club_id` coherente,
+  libres fuera de planteles, 16-34 jugadores y portero), traspasos, contratos FIFA (5 años; 3 menores), vencimientos, reglas del trato
+  (92 % de lo pedido, 45 % de la caja de la IA, dinero exacto). Sin fallos del juego.
+- `calendario_competiciones`: ida y vuelta de cada liga, copa (potencia de 2, ganadores y tandas, premio), Pascua/Ramadán y fechas,
+  temporada completa y ascensos/descensos. Sin fallos del juego. AVISO: con número IMPAR de clubes (solo posible desde el editor) el
+  método del círculo deja rachas de 4 partidos en el mismo campo; las ligas reales (pares) no pasan de 2.
