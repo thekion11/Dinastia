@@ -252,6 +252,8 @@ func _directa_es(texto: String) -> bool:
 ## interfaz medio traducida se lee; una llena de claves crudas, no.
 ## En orden: la frase entera; sin el icono o la flecha de los extremos; por
 ## tramos separados con « · »; y por patrones con números ("Jornada 3 de 30").
+const TOPE_CACHE := 20000   ## frases por idioma en la caché de `t`
+
 func t(frase: String) -> String:
 	if idioma == "es" or frase == "":
 		return frase
@@ -259,6 +261,8 @@ func t(frase: String) -> String:
 	if cache.has(frase):
 		return cache[frase]
 	var r := _ordinales(_t(frase, 0))
+	if cache.size() >= TOPE_CACHE:
+		cache.clear()   ## (A4-INT) las frases con nombres y cifras no se repiten: sin tope la caché crecía toda la partida
 	cache[frase] = r
 	_cache[idioma] = cache
 	## M-463 (28-10-2026): lo que se queda igual se anota, en vez de callar. Muchas son nombres propios o cifras
