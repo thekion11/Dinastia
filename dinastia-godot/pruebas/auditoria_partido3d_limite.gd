@@ -1,7 +1,7 @@
 extends Node
 ## CAZA DE FALLOS (4-11-2026, orden de la líder): el partido 3D jugable llevado al límite, con el mando táctil simulado.
 ## Un partido ENTERO (2 × 12 s de reloj de juego) mientras cada fotograma llegan toques al azar (uno y dos dedos, arrastres, soltar sin pulsar),
-## acciones sueltas, pausas y reanudaciones, cambios de calidad a mitad y expulsiones del equipo del jugador hasta quedarse con menos de 7.
+## acciones sueltas, pausas y reanudaciones, cambios de calidad a mitad y expulsiones del equipo del jugador hasta quedarse con 7.
 ## Después: un gol en cada calidad (la realización y la repetición terminan solas). Comprueba cada 10 fotogramas que nadie se vuelve NaN/infinito
 ## ni sale del mundo, y al final que el partido llegó a «fin» y que la pausa no dejó el motor parado.
 ##   godot --headless --path . res://pruebas/auditoria_partido3d_limite.tscn
@@ -21,6 +21,8 @@ var _calidades := 0
 var _nivel_gol := 0
 var _espera_gol := 0
 var _marcador_antes := 0
+var _susp := 0
+var _pj_viejo: PartidoJugable
 
 func _comprobar(ok: bool, texto: String) -> void:
 	print(("  ok     " if ok else "  FALLO  ") + texto)
@@ -112,13 +114,16 @@ func _process(_d: float) -> void:
 		_pj.size = LIENZO
 		_ct.size = LIENZO
 		_pj.motor.autopiloto = false
+		if OS.get_environment("SOLO_SUSP") != "":
+			_fase = 2   ## (depuración) solo la suspensión por menos de 7
 		return
-	if _n < 30 or _pj == null:
+	if _n < 30 or (_pj == null and _fase < 2):
 		return
 	match _fase:
 		0: _golazos()
 		1: _fuzz()
-		2: _fin()
+		2: _suspension()
+		3: _fin()
 
 func _fuzz() -> void:
 	var m = _pj.motor
@@ -138,10 +143,10 @@ func _fuzz() -> void:
 		Calidad.elegida = [Calidad.MINIMO, Calidad.MEDIO, Calidad.ALTO][_calidades % 3]
 		Calidad.aplicar_viewport(_pj._vp, Calidad.elegida)
 		_calidades += 1
-	## Expulsiones de los míos hasta quedarse con menos de 7 (nunca el portero); una sustitución forzada de vez en cuando.
+	## Expulsiones de los míos hasta quedarse con 7 (nunca el portero); una sustitución forzada de vez en cuando.
 	if f % 500 == 400 and m.estado == "juego":
 		var mios: Array = m.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) == _pj._es_local_usuario)
-		if mios.size() > 5:
+		if mios.size() > 7:
 			var cand: Array = mios.filter(func(p: Dictionary) -> bool: return not p["por"] and p != m.usuario)
 			if not cand.is_empty():
 				m._expulsar(cand[0])
@@ -165,7 +170,9 @@ func _fuzz() -> void:
 		_comprobar(_pj._pausa == null, "al final no queda una pausa abierta")
 		var r := _pj.resultado()
 		_comprobar(int(r["goles_local"]) >= 0 and int(r["goles_visita"]) >= 0, "el resultado es coherente (%d-%d)" % [r["goles_local"], r["goles_visita"]])
+		_comprobar(not m.suspendido, "con 7 jugadores el partido NO se suspende")
 		_fase = 2
+		_susp = 0
 
 ## Un gol en cada calidad (MÍNIMO, MEDIO, ALTO): la realización y la repetición terminan solas y el partido sigue.
 func _golazos() -> void:
@@ -191,3 +198,36 @@ func _golazos() -> void:
 		_comprobar(int(m.goles[0]) + int(m.goles[1]) == _marcador_antes + 1, "gol con calidad %d: el marcador sube uno (%d)" % [niveles[_nivel_gol], int(m.goles[0]) + int(m.goles[1])])
 		_nivel_gol += 1
 		_espera_gol = 0
+
+## Menos de siete: partido NUEVO; se expulsa a los suyos de uno en uno y, al quedar 6, se suspende y se pierde 3-0 (o con el marcador si ya perdía por 3+).
+func _suspension() -> void:
+	_susp += 1
+	if _susp == 1:
+		_pj.queue_free()
+		return
+	if _susp == 5:
+		var club := _ui.carrera.club(CarreraJugadorUI.mundo)
+		var par := _ui._partido_de_la_semana(club)
+		_pj = PartidoJugable.abrir(_ui, CarreraJugadorUI.mundo, _ui.carrera, par[0], par[1], 12.0)
+		_pj.motor.autopiloto = true
+		return
+	if _susp < 60 or _pj == null:
+		return
+	var m = _pj.motor
+	if _susp % 120 == 0: print("    susp=%d estado=%s" % [_susp, m.estado])
+	var mios: Array = m.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) == _pj._es_local_usuario)
+	if m.estado != "fin" and m.estado != "juego" and m.estado != "saque":
+		return
+	if m.estado == "fin" and mios.size() > 6:
+		_comprobar(false, "el partido terminó con %d míos en el campo sin llegar a la suspensión" % mios.size())
+		_fase = 3
+		return
+	if mios.size() > 6:
+		var cand: Array = mios.filter(func(p: Dictionary) -> bool: return not p["por"] and p != m.usuario)
+		if _susp % 20 == 0 and not cand.is_empty():
+			m._expulsar(cand[0])
+		return
+	_comprobar(m.estado == "fin" and m.suspendido, "con menos de 7 el partido se suspende (estado %s)" % m.estado)
+	var mi_lado := 0 if _pj._es_local_usuario else 1
+	_comprobar(int(m.goles[mi_lado]) < int(m.goles[1 - mi_lado]) and int(m.goles[1 - mi_lado]) >= 3, "se da por perdido: marcador %d-%d" % [m.goles[0], m.goles[1]])
+	_fase = 3
