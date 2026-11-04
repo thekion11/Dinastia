@@ -213,21 +213,7 @@ func _disp_calidad() -> void:
 			Calidad.guardar()
 			p._refrescar())
 		fila_c.add_child(b_c)
-	## (3-11, pedido del dueño) La resolución del 3D en Mínima: del 35 % (lo más ligero) al 100 %.
-	var er := Label.new()
-	er.text = Idiomas.t("Resolución del 3D en Mínima: %d %%") % int(round(Calidad.escala_minimo * 100.0))
-	p._lista_ajustes.add_child(er)
-	var sr := HSlider.new()
-	sr.min_value = 35.0
-	sr.max_value = 100.0
-	sr.step = 5.0
-	sr.value = Calidad.escala_minimo * 100.0
-	sr.value_changed.connect(func(v: float) -> void:
-		Calidad.escala_minimo = clampf(v / 100.0, Calidad.ESCALA_MIN_POSIBLE, 1.0)
-		Calidad.guardar()
-		er.text = Idiomas.t("Resolución del 3D en Mínima: %d %%") % int(v)
-		Calidad.aplicar_viewport(p.get_viewport(), Calidad.elegida))
-	p._lista_ajustes.add_child(sr)
+	AjusteResolucion3D.crear(p)   ## (3-11 / 4-11, pedido del dueño) resolución del 3D en Mínima (35-100 %) y en Media (50-100 %)
 	var ad := CheckButton.new()
 	ad.text = Idiomas.t("Ajustar sola para mantener 40 FPS en el partido")
 	ad.tooltip_text = Idiomas.t("Si tu equipo no llega a 40 FPS, el partido apaga por escalones la oclusión ambiental, acorta las sombras y baja la resolución del 3D.")

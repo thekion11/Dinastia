@@ -25,7 +25,7 @@ static func exportar(nombre: String, destino: String) -> String:
 		return Idiomas.t("No se encontró esa partida o está dañada.")
 	if destino.get_extension() == "":
 		destino += String(EXTENSIONES[0])
-	var paquete := PartidaArchivo.empaquetar(JSON.stringify(d).to_utf8_buffer())
+	var paquete := PartidaArchivo.empaquetar(JSON.stringify(d, "", false, true).to_utf8_buffer())
 	var f := FileAccess.open(destino, FileAccess.WRITE)
 	if f == null:
 		return Idiomas.t("No se pudo escribir el archivo (¿carpeta sin permiso?).")
@@ -105,7 +105,7 @@ static func importar(ruta: String, nombre: String = "") -> Dictionary:
 	## (Reconstruir toca estado global, igual que cargar: es lo que se hará al abrirla.)
 	if Partida.desde_instantanea(r["datos"]) == null:
 		return {"error": Idiomas.t("La partida no se pudo abrir con esta versión del juego.")}
-	if not PartidaArchivo.escribir(Partida.ruta_de(nombre), JSON.stringify(r["datos"]).to_utf8_buffer()):
+	if not PartidaArchivo.escribir(Partida.ruta_de(nombre), JSON.stringify(r["datos"], "", false, true).to_utf8_buffer()):
 		return {"error": Idiomas.t("No se pudo guardar la partida importada.")}
 	return {"ok": true, "nombre": nombre}
 

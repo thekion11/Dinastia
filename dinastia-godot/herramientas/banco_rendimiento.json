@@ -24,10 +24,10 @@
   "total_ms": 1135.2
  },
  "prologo": {
-  "carga_ms": 9312.6,
-  "cuadro_largo_ms": 1736.9,
-  "mem_pico_mb": 1093.4,
-  "nodos_max": 17838.7,
-  "llamadas_max": 2270.4
+  "carga_ms": 8786.8,
+  "cuadro_largo_ms": 1615.9,
+  "mem_pico_mb": 1081.3,
+  "nodos_max": 16535.2,
+  "llamadas_max": 1244.1
  }
 }

@@ -39,7 +39,7 @@ func _ready() -> void:
 	_vp = SubViewport.new()
 	_vp.own_world_3d = true
 	_vp.transparent_bg = true
-	_vp.msaa_3d = Viewport.MSAA_4X
+	_vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
 	## Se renderiza solo cuando algo cambia (`_process` lo pide fotograma a
 	## fotograma mientras gira o late): quieto, el mando no gasta GPU.
 	_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
@@ -63,7 +63,7 @@ func _ready() -> void:
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	## Oclusión ambiental: las junturas, los botones y las empuñaduras se oscurecen
 	## donde se tocan (solo en el renderizador completo; en móvil no hace nada).
-	env.ssao_enabled = true
+	env.ssao_enabled = Calidad.elegida > Calidad.MINIMO
 	env.ssao_radius = 1.2
 	env.ssao_intensity = 2.4
 	env.ssao_power = 1.6
@@ -73,7 +73,7 @@ func _ready() -> void:
 	_luz = DirectionalLight3D.new()
 	_luz.rotation_degrees = Vector3(-50, 25, 0)
 	_luz.light_energy = 1.25
-	_luz.shadow_enabled = true
+	_luz.shadow_enabled = Calidad.elegida > Calidad.MINIMO
 	_luz.shadow_bias = 0.03
 	_luz.directional_shadow_max_distance = 60.0
 	_vp.add_child(_luz)
