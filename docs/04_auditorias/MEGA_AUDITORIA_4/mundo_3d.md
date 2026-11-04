@@ -24,6 +24,15 @@ Bancos del área, todos «FIN. 0 fallos»: `ciudad_construccion` (117 s), `ciuda
 - [A4-M3D-016] (repaso 2, gravedad: bajo) Los MultiMesh de la ciudad no guardan datos con `--headless`: cualquier prueba que lea transformaciones o colores necesita pantalla (xvfb + OpenGL); `estadio_3d` ya corre así. Estado: documentado (`bancos_especiales.py CON_PANTALLA`).
 
 ## Repaso 3 — al límite
+Pruebas nuevas (en `especiales.sh`): `a4_limite_mundo` (fugas, calidad a mitad, horas absurdas, estadios extremos, 10 min de tráfico) y `a4_recorrido_mapa`. Todo «FIN. 0 fallos».
+- Abrir y cerrar la ciudad 3 veces: 25 → 25 → 25 nodos y 0 huérfanos: sin fugas de nodos.
+- Calidad cambiada a mitad con la ciudad abierta (MÍNIMO → MEDIO → ULTRA → MÍNIMO → ALTO, con las 5 horas del día): a mediodía hay 1 luz con sombra en MEDIO o más y 0 en MÍNIMO, siempre.
+- Horas −5, 24, 25, 100 y 0,0001 y `encender_luces(−5…7)`: el sol queda finito y no negativo y la «noche» de las torres recortada a 0-1.
+- 8 estadios extremos (aforo 0, 1 y 500 000; 3 niveles; forma desconocida; colores vacíos; colores rotos; perfil sin claves): todos se construyen con césped y sin «SCRIPT ERROR».
+- 10 minutos de tráfico y gente a paso de 0,1 s (380 vehículos): ninguno se pierde, ninguna posición NaN ni fuera del mundo, nodos +198 en 10 min (crecen por el reciclaje de peatones, sin dispararse).
+- [A4-M3D-017] (repaso 3, gravedad: bajo) El `aforo` del perfil no cambia la geometría del estadio: 0, 1 y 500 000 dan las mismas 4 485 butacas; solo mandan `niveles` y `forma` (3 niveles: 14 365). Es una decisión de diseño más que un fallo. Estado: pregunta al dueño (¿que el aforo escale la grada?).
+
+## Repaso 4 — reglas y coherencia
 (pendiente)
 
 ## Repaso 4 — reglas y coherencia
