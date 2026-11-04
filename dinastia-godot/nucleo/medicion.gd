@@ -143,14 +143,18 @@ func _process(delta: float) -> void:
 				if rig != null:
 					rig.switch_to(maxi(0, rig.camera_names.find("Principal (TV)"))))
 			_empezar_parte("estadio (cámara TV)")
-		2, 3, 4, 5:
+		2, 3, 4, 5, 6, 7, 8, 9:
 			## BARRIDO DE RESOLUCIÓN 3D (4-11, rendimiento móvil): el mismo estadio en MÍNIMA al 35/50/70/100 % para saber, con una
 			## sola prueba en el teléfono, qué ajuste llega a 60 FPS (la gráfica del móvil manda: 3-11, GPU al 100 % y CPU al 0 %).
-			var e: float = ESCALAS_BARRIDO[_paso - 2]
+			## Las cuatro primeras CON el MSAA x2 de MÍNIMA y las cuatro siguientes SIN él (R01): lo que cuesta el suavizado de bordes en ESTE teléfono.
+			var e: float = ESCALAS_BARRIDO[(_paso - 2) % 4]
+			Calidad.sin_msaa = _paso >= 6
 			Calidad.escala_minimo = e
 			Calidad.aplicar_viewport(get_viewport(), Calidad.MINIMO)
-			_empezar_parte("estadio MÍNIMA al %d %%" % int(round(e * 100.0)))
-		6:
+			_empezar_parte("estadio MÍNIMA al %d %%%s" % [int(round(e * 100.0)), " sin MSAA" if Calidad.sin_msaa else ""])
+		10:
+			Calidad.sin_msaa = false
+			_resumen_msaa()
 			Calidad.escala_minimo = _escala_antes
 			Calidad.aplicar_viewport(get_viewport(), Calidad.elegida)
 			_vista.queue_free()
@@ -161,6 +165,25 @@ func _process(delta: float) -> void:
 			_empezar_parte("ciudad")
 		_:
 			_terminar()
+
+## Resumen del MSAA: por cada escala del barrido, los FPS con y sin él y lo que se gana al apagarlo.
+func _resumen_msaa() -> void:
+	var con_m := {}
+	var sin_m := {}
+	for d: Dictionary in _json["partes"]:
+		var n := String(d["parte"])
+		if not n.begins_with("estadio MÍNIMA al "):
+			continue
+		var esc := n.get_slice("%", 0).trim_prefix("estadio MÍNIMA al ").strip_edges()
+		if n.ends_with("sin MSAA"):
+			sin_m[esc] = float(d["fps_medio"])
+		else:
+			con_m[esc] = float(d["fps_medio"])
+	for esc: String in con_m:
+		if sin_m.has(esc):
+			var gana := 100.0 * (float(sin_m[esc]) / maxf(float(con_m[esc]), 0.001) - 1.0)
+			_linea("MSAA a %s %%: con %.1f FPS · sin %.1f FPS · apagarlo %s %.0f %%" % [esc, con_m[esc], sin_m[esc], "gana" if gana >= 0.0 else "pierde", absf(gana)])
+			_json["msaa_" + esc] = {"con": con_m[esc], "sin": sin_m[esc], "gana_pct": snappedf(gana, 0.1)}
 
 func _duracion() -> float:
 	if _parte.contains("MÍNIMA al"):
@@ -313,7 +336,8 @@ func _cancelar() -> void:
 	Engine.max_fps = _max_fps_antes
 	forzada = false
 	largo = false
-	if not is_equal_approx(Calidad.escala_minimo, _escala_antes):   ## cancelada en mitad del barrido de resolución
+	if not is_equal_approx(Calidad.escala_minimo, _escala_antes) or Calidad.sin_msaa:   ## cancelada en mitad del barrido de resolución o de MSAA
+		Calidad.sin_msaa = false
 		Calidad.escala_minimo = _escala_antes
 		Calidad.aplicar_viewport(get_viewport(), Calidad.elegida)
 	if is_instance_valid(_vista):
@@ -328,5 +352,6 @@ func _input(e: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func _exit_tree() -> void:
+	Calidad.sin_msaa = false   ## por si se sale de golpe en mitad del barrido de MSAA
 	_quitar_bloqueo()
 
