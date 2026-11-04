@@ -5,46 +5,46 @@ extends "res://ui/partido_jugable_p1.gd"
 func _montar_hud() -> void:
 	var caja := PanelContainer.new()
 	caja.add_theme_stylebox_override("panel", _panel(LIMA))
-	caja.position = Vector2(24, 18)
+	caja.position = Vector2(24.0 + HudTactil.margen(self).x, 18)   ## HUD del móvil: crece por dpi y respeta la muesca (HudTactil, 4-11)
 	add_child(caja)
 	_hud.append(caja)
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 14)
 	caja.add_child(h)
-	_marcador = _etiqueta(24, Color.WHITE)
+	_marcador = _etiqueta(HudTactil.tam(24, self), Color.WHITE)
 	h.add_child(_marcador)
-	_reloj = _etiqueta(22, LIMA)
+	_reloj = _etiqueta(HudTactil.tam(22, self), LIMA)
 	h.add_child(_reloj)
 	var caja2 := PanelContainer.new()
 	caja2.add_theme_stylebox_override("panel", _panel(FUCSIA))
 	caja2.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	caja2.offset_left = -330
-	caja2.offset_right = -24
+	caja2.offset_left = -24.0 - HudTactil.margen(self).y - 306.0 * HudTactil.f(self)
+	caja2.offset_right = -24.0 - HudTactil.margen(self).y
 	caja2.offset_top = 18
 	add_child(caja2)
 	_hud.append(caja2)
-	_mis_stats = _etiqueta(15, Color.WHITE)
+	_mis_stats = _etiqueta(HudTactil.tam(15, self), Color.WHITE)
 	caja2.add_child(_mis_stats)
 	## Tu jugador y su aguante, abajo a la izquierda.
 	var caja3 := PanelContainer.new()
 	caja3.add_theme_stylebox_override("panel", _panel(LIMA))
 	caja3.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	caja3.offset_left = 24
-	caja3.offset_top = -92
+	caja3.offset_left = 24.0 + HudTactil.margen(self).x
+	caja3.offset_top = -20.0 - 72.0 * HudTactil.f(self)
 	caja3.offset_bottom = -20
-	caja3.offset_right = 360
+	caja3.offset_right = 24.0 + HudTactil.margen(self).x + 336.0 * HudTactil.f(self)
 	add_child(caja3)
 	_hud.append(caja3)
 	_hud_abajo.append(caja3)
 	var v := VBoxContainer.new()
 	caja3.add_child(v)
 	var yo := carrera.jugador(mundo) if carrera != null else null
-	var nom := _etiqueta(18, LIMA)
+	var nom := _etiqueta(HudTactil.tam(18, self), LIMA)
 	nom.text = ("%d  %s" % [yo.dorsal, yo.nombre.to_upper()]) if yo != null else "—"
 	v.add_child(nom)
 	_aguante = ProgressBar.new()
 	_aguante.show_percentage = false
-	_aguante.custom_minimum_size = Vector2(300, 10)
+	_aguante.custom_minimum_size = Vector2(300, 10) * HudTactil.f(self)
 	_aguante.max_value = 1.0
 	var fondo_b := StyleBoxFlat.new()
 	fondo_b.bg_color = Color(1, 1, 1, 0.12)
@@ -279,10 +279,10 @@ func _actualizar_camara(delta: float) -> void:
 	if motor.apuntando or motor.estado == "saque" and not motor.usuario.is_empty() and motor.saque.get("lanzador") == motor.usuario:
 		foco = motor.balon.position
 	elif not motor.usuario.is_empty():
-		foco = motor.pos(motor.usuario).lerp(motor.balon.position, 0.35)
+		foco = motor.pos(motor.usuario).lerp(motor.balon.position, CamaraTactil.peso_balon(self, motor))
 	else:
 		foco = motor.balon.position
-	var detras := Vector3(0, 12.5, -15.0 * d)
+	var detras := Vector3(0, 12.5, -15.0 * d) * CamaraTactil.zoom(self, motor)   ## en el móvil, más cerca del jugador (CamaraTactil, 4-11)
 	var mira := foco + Vector3(0, 0.5, 10.0 * d)
 	## En la tanda, todos tiran al arco de +Z: siempre detrás del punto de penal.
 	if not motor.tanda.is_empty() or motor.estado == "saque" and String(motor.saque.get("tipo", "")) == "penal":
