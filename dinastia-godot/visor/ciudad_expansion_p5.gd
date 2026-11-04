@@ -56,7 +56,7 @@ func _es_largo_x(ruta: String) -> bool:
 	return caja.size.x > caja.size.z
 
 func _industrial(r: Rect2) -> void:
-	b._caja_en(Vector3(r.get_center().x, 0.06, r.get_center().y), Vector3(r.size.x, 0.12, r.size.y), b._mat_simple(Color(0.42, 0.42, 0.41), 0.9))
+	b._caja_en(Vector3(r.get_center().x, 0.06, r.get_center().y), Vector3(r.size.x, 0.12, r.size.y), _mat["solar"] if _mat.has("solar") else b._mat_simple(Color(0.42, 0.42, 0.41), 0.9))   ## (4-11) hormigón con textura: las parcelas industriales eran un gris liso
 	var c := Vector3(r.get_center().x, 0, r.get_center().y)
 	var color_nave: Color = [Color(0.62, 0.64, 0.66), Color(0.55, 0.5, 0.42), Color(0.5, 0.56, 0.6)][_rng.randi() % 3]
 	var w := r.size.x * 0.62
