@@ -21,7 +21,7 @@ func _input(evento: InputEvent) -> void:
 	## Con una capa modal encima, ni gatillos ni Ctrl+Q/E ni desliz tocan las
 	## pestañas de detrás. No se consume el evento: Q y E sueltas también son
 	## «pestaña» y hay campos de texto en el móvil donde hay que poder teclearlas.
-	if _capa_modal_encima():
+	if _capa_modal_ajena():   ## (4-11) ajena: el propio menú del panel lateral no cuenta, o L1/R1/L2/R2 no lo navegarían
 		_arrastre_x = 0.0
 		_arrastre_y = 0.0
 		return
