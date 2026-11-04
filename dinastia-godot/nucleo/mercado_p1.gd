@@ -386,7 +386,7 @@ func responder_oferta(idx: int, acepta: bool) -> void:
 	var j: Jugador = o["jugador"]
 	var comprador: Club = o["club"]
 	var monto: int = int(o["monto"])
-	if j.club_id != _mundo().mi_club_id or _cedido(j) or (acepta and float(comprador.saldo) < float(monto)):
+	if not _es_mio(j) or _cedido(j) or (acepta and float(comprador.saldo) < float(monto)):
 		return   ## A4-GES-002/008: ya no es tuyo, está cedido, o el comprador ya no tiene el dinero: la operación cae
 	if acepta:
 		var vendedor: Club = _mundo().clubes.get(j.club_id)
@@ -426,8 +426,8 @@ func responder_oferta(idx: int, acepta: bool) -> void:
 func a_dic() -> Dictionary:
 	var lista: Array = []
 	for o: Dictionary in ofertas_recibidas:
-		if _mundo() != null and (o["jugador"] as Jugador).club_id != _mundo().mi_club_id:
-			continue   ## A4-GES-002: oferta por quien ya no es tuyo (libre o vendido): no vale y no se guarda
+		if _mundo() != null and not _es_mio(o["jugador"] as Jugador):
+			continue   ## A4-GES-002: oferta por quien ya no es tuyo (libre, vendido o retirado): no vale y no se guarda
 		lista.append({
 			"jugador_id": (o["jugador"] as Jugador).id, "club_id": (o["club"] as Club).id,
 			"monto": int(o["monto"]), "semana": int(o["semana"]), "clausula": bool(o["clausula"]),
@@ -438,6 +438,7 @@ func a_dic() -> Dictionary:
 		pre.append({"id": String(e["id"]), "sueldo": int(e["sueldo"]), "anios": int(e["anios"])})
 	return {"ofertas_recibidas": lista, "precontratos": pre}
 
+func _es_mio(j: Jugador) -> bool: return j.club_id == _mundo().mi_club_id and _mundo().mi_club() != null and _mundo().mi_club().plantilla.has(j)   ## un retirado conserva el club_id
 func _cedido(j: Jugador) -> bool: return _mundo().cesiones != null and _mundo().cesiones.esta_cedido(j.id)
 func _jugador_por_id(id: String) -> Jugador:
 	if id == "":
