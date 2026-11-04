@@ -35,7 +35,7 @@ const MAX_TOQUE := 52.0
 
 ## Alto mínimo de un toque en píxeles del lienzo (0 si no es un móvil o no se sabe).
 static func alto_toque(nodo: Node) -> float:
-	var ppm := HudTactil.px_por_mm(nodo)
+	var ppm := PantallaMovil.px_por_mm(nodo)
 	return 0.0 if ppm <= 0.0 else minf(MIN_MM_TOQUE * ppm, MAX_TOQUE)
 
 ## Estira los márgenes de arriba y abajo de los botones del tema hasta que midan `alto` con la letra por defecto.

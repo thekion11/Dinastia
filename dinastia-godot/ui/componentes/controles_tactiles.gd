@@ -31,19 +31,9 @@ const ALTO_ARCO := 370.0                ## lo que sube el arco de botones desde 
 
 static var forzar := false             ## las pruebas lo encienden; en el teléfono sale solo
 static var zurdo := false              ## espejo forzado por las pruebas; el de verdad sale de Ajustes (`AjustesTactil.zurdo`)
-static var dpi_forzado := 0.0          ## las pruebas simulan los puntos por pulgada de un móvil (p. ej. 400); 0 = los del aparato
-
-static var ventana_forzada := Vector2i.ZERO   ## las pruebas simulan el tamaño de la ventana (p. ej. 2400×1080); 0 = el real
-static var lienzo_forzado := Vector2.ZERO    ## y el del lienzo del juego (con el escalado del proyecto, 2400×1080 son 1600×720); 0 = el real
-
-static func ventana() -> Vector2i:
-	return ventana_forzada if ventana_forzada.x > 0 else DisplayServer.window_get_size()
-
-## Puntos por pulgada de la pantalla: los forzados por una prueba o, en un móvil de verdad, los del aparato (0 = no se sabe / no es móvil).
-static func dpi() -> float:
-	if dpi_forzado > 0.0:
-		return dpi_forzado
-	return float(DisplayServer.screen_get_dpi()) if OS.has_feature("mobile") else 0.0
+## ppp, ventana y lienzo (y sus valores forzados por las pruebas) viven en `PantallaMovil` (A4, 4-11: el menú no debe arrastrar el partido).
+static func ventana() -> Vector2i: return PantallaMovil.ventana()
+static func dpi() -> float: return PantallaMovil.dpi()
 
 var _dedo_stick := -1
 var _centro_stick := Vector2.ZERO
