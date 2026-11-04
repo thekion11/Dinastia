@@ -110,17 +110,15 @@ func _idioma_a_mitad() -> void:
 	var antes := Idiomas.idioma
 	_p._menu_lateral.abrir_menu("plantel", 0)
 	await _frames(100)   ## el menú se asienta (lo oculto de debajo se suelta cada 90 fotogramas, A4-INT-R01)
-	var cuenta_es := _etiquetas()
 	var textos_es := _textos_pantalla()
 	for l: String in ["en", "ja", "tr", "pl", "ca", "de", "it", "fr", "pt", "es"]:
 		Idiomas.idioma = l
 		_p._refrescar()
 		await _frames(3)
 		_comprobar(_abierto() != null, "cambiar a «%s» con el menú abierto no lo cierra ni lo rompe" % l)
-	await _frames(100)
-	var cuenta_fin := _etiquetas()
-	_comprobar(absi(cuenta_fin - cuenta_es) <= 4, "tras la vuelta por 10 idiomas, la pantalla tiene las mismas etiquetas (%d → %d)" % [cuenta_es, cuenta_fin])
-	await _frames(100)
+	## (A4, líder) Ya no se cuenta el árbol ENTERO: la página de debajo se suelta o no según la calidad guardada en cada máquina
+	## (A4-INT-R01, solo en MÍNIMA/móvil) y la cuenta daba 363 → 356 en una y pasaba en otra. Se comparan los textos de la pantalla abierta.
+	await _frames(200)
 	var textos_fin := _textos_pantalla()
 	_comprobar(textos_fin == textos_es, "y los textos de la pantalla abierta son los mismos tras repintar (%d → %d etiquetas)" % [textos_es.size(), textos_fin.size()])
 	Idiomas.idioma = antes

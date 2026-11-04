@@ -5,10 +5,21 @@ const Comun := preload("res://pruebas/bancos/ciudad_comun.gd")
 
 func _probar() -> void:
 	_titulo("A4 MUNDO_3D: al límite (fugas, calidad a mitad, horas absurdas, estadios extremos)")
-	await _fugas()
-	await _calidad_y_horas()
-	await _estadios_extremos()
-	await _trafico_estres()
+	## A4_PARTE=1 (fugas) | 2 (calidad a mitad y horas) | 3 (estadios extremos y tráfico): cada trozo cabe holgado en los 600 s de `especiales.sh` (software, sin GPU: 1 ≈ 190 s, 2 ≈ 190 s).
+	## Sin variable, todo.
+	var parte := OS.get_environment("A4_PARTE")
+	var t0 := Time.get_ticks_msec()
+	if parte == "" or parte == "1":
+		await _fugas()
+		_linea("  (tiempo) fugas: %d s" % ((Time.get_ticks_msec() - t0) / 1000))
+	if parte == "" or parte == "2":
+		await _calidad_y_horas()
+		_linea("  (tiempo) calidad y horas: %d s" % ((Time.get_ticks_msec() - t0) / 1000))
+	if parte == "" or parte == "3":
+		await _estadios_extremos()
+		_linea("  (tiempo) estadios extremos: %d s" % ((Time.get_ticks_msec() - t0) / 1000))
+		await _trafico_estres()
+		_linea("  (tiempo) estadios + tráfico: %d s" % ((Time.get_ticks_msec() - t0) / 1000))
 
 func _nodos() -> int:
 	return int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT))

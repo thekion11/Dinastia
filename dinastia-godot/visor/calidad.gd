@@ -264,6 +264,9 @@ static func es_compatibilidad() -> bool:
 
 ## Ajustes del propio viewport: suavizado de bordes y filtrado de texturas. Sin
 ## esto, a 4K se ven los dientes de sierra de cada farola.
+## (4-11, R01) Solo la «Prueba de rendimiento» de Ajustes lo enciende: mide cada escala CON y SIN MSAA para que el dueño decida con datos de su teléfono.
+static var sin_msaa := false
+
 static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 	if vp == null:
 		return
@@ -288,6 +291,8 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 		## MÍNIMO también lleva MSAA x2: sin él, a 70 % de resolución, las líneas finas del campo lejanas salían
 		## entrecortadas (visto en la captura del 2-11). En las gráficas de móvil (por teselas) x2 cuesta poco.
 		vp.msaa_3d = Viewport.MSAA_2X
+	if sin_msaa:
+		vp.msaa_3d = Viewport.MSAA_DISABLED
 	## Por debajo de 100 % en Forward+/Mobile, FSR (más nítido que el bilineal); en Compatibilidad no existe y queda el bilineal.
 	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR if (nivel == MEDIO and not es_compatibilidad() and escala_3d(nivel) < 0.99) else Viewport.SCALING_3D_MODE_BILINEAR
 	vp.scaling_3d_scale = escala_3d(nivel)
