@@ -15,12 +15,12 @@ func _probar() -> void:
 	var bueno := _crecimiento(true)
 	_linea("  plan por defecto: media %+.1f (min %+d, max %+d) · buen plan: media %+.1f (max %+d)" % [
 		normal["media"], normal["min"], normal["max"], bueno["media"], bueno["max"]])
-	## (01-11) Con 12 juveniles el ruido es de ±0,5: el mismo código daba +4,2 con unas semillas y +3,4 con otras; el suelo baja a 3,0.
-	_comprobar(normal["media"] >= 3.0 and normal["media"] <= 6.5, "plan por defecto: +%.1f por temporada (objetivo +4-6)" % normal["media"])
+	## (01-11) Con 12 juveniles el ruido es de ±0,5: el mismo código daba +4,2 con unas semillas y +3,4 con otras; el suelo bajó a 3,0; (4-11, A4-GES-006) la calibración se subió (0,10→0,13 y 0,014→0,018 en `Entrenamiento`, umbral del freno 4/6) y el objetivo del dueño, +4-6, vuelve a exigirse.
+	_comprobar(normal["media"] >= 4.0 and normal["media"] <= 6.0, "plan por defecto: +%.1f por temporada (objetivo +4-6)" % normal["media"])
 	_comprobar(bueno["media"] > normal["media"], "el buen plan sigue notándose (%+.1f contra %+.1f)" % [bueno["media"], normal["media"]])
 	## (03-11) El «nadie más de +10» sobre 12 juveniles de un mundo concreto era puro ruido del azar (cualquier cambio del partido simulado movía el mundo: el máximo salió +12 con media +6,1).
 	## Lo que protege es el freno: la MEDIA (antes +10-11) y la cola alta. Se mira la media, el percentil 90 y un tope duro de +13 para el máximo.
-	_comprobar(bueno["media"] <= 8.5 and bueno["p90"] <= 11 and bueno["max"] <= 13, "buen plan: media %+.1f ≤ +8,5, p90 %+d ≤ +11, máx %+d ≤ +13" % [bueno["media"], bueno["p90"], bueno["max"]])
+	_comprobar(bueno["media"] <= 8.0 and bueno["p90"] <= 11 and bueno["max"] <= 13, "buen plan: media %+.1f ≤ +8, p90 %+d ≤ +11, máx %+d ≤ +13" % [bueno["media"], bueno["p90"], bueno["max"]])
 
 func _clausula() -> void:
 	var m := Mundo.new()
