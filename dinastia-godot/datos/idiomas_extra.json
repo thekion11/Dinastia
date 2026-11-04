@@ -7176,7 +7176,13 @@
   "Entrada": "Tackle",
   "Barrida": "Slide",
   "Cámara cercana del partido": "Close match camera",
-  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Brings the camera closer to the player you control. Automatic: only with the touch controls."
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Brings the camera closer to the player you control. Automatic: only with the touch controls.",
+  "Modo de control del partido": "Match control mode",
+  "Ambos": "Both",
+  "Botones": "Buttons",
+  "Gestos": "Gestures",
+  "Botones: todo en pantalla. Gestos: toca para pasar y desliza hacia arriba para tirar. Ambos: las dos cosas.": "Buttons: everything on screen. Gestures: tap to pass and swipe up to shoot. Both: the two together.",
+  "Separación entre los botones": "Spacing between buttons"
  },
  "pt": {
   "Historia": "História",
@@ -14355,7 +14361,13 @@
   "Entrada": "Desarme",
   "Barrida": "Carrinho",
   "Cámara cercana del partido": "Câmera próxima da partida",
-  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Aproxima a câmera do jogador que você controla. Automático: só com os controles de toque."
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Aproxima a câmera do jogador que você controla. Automático: só com os controles de toque.",
+  "Modo de control del partido": "Modo de controle da partida",
+  "Ambos": "Ambos",
+  "Botones": "Botões",
+  "Gestos": "Gestos",
+  "Botones: todo en pantalla. Gestos: toca para pasar y desliza hacia arriba para tirar. Ambos: las dos cosas.": "Botões: tudo na tela. Gestos: toque para passar e deslize para cima para chutar. Ambos: as duas coisas.",
+  "Separación entre los botones": "Espaço entre os botões"
  },
  "patrones": [
   [
@@ -27388,7 +27400,13 @@
   "Entrada": "Tacle",
   "Barrida": "Tacle glissé",
   "Cámara cercana del partido": "Caméra rapprochée du match",
-  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Rapproche la caméra du joueur que vous contrôlez. Automatique : uniquement avec les commandes tactiles."
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Rapproche la caméra du joueur que vous contrôlez. Automatique : uniquement avec les commandes tactiles.",
+  "Modo de control del partido": "Mode de contrôle du match",
+  "Ambos": "Les deux",
+  "Botones": "Boutons",
+  "Gestos": "Gestes",
+  "Botones: todo en pantalla. Gestos: toca para pasar y desliza hacia arriba para tirar. Ambos: las dos cosas.": "Boutons : tout à l'écran. Gestes : touchez pour passer et glissez vers le haut pour tirer. Les deux : les deux ensemble.",
+  "Separación entre los botones": "Espacement des boutons"
  },
  "it": {
   "Historia": "Storia",
@@ -34567,7 +34585,13 @@
   "Entrada": "Contrasto",
   "Barrida": "Scivolata",
   "Cámara cercana del partido": "Camera ravvicinata della partita",
-  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Avvicina la camera al giocatore che controlli. Automatico: solo con i comandi touch."
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Avvicina la camera al giocatore che controlli. Automatico: solo con i comandi touch.",
+  "Modo de control del partido": "Modalità di controllo della partita",
+  "Ambos": "Entrambi",
+  "Botones": "Pulsanti",
+  "Gestos": "Gesti",
+  "Botones: todo en pantalla. Gestos: toca para pasar y desliza hacia arriba para tirar. Ambos: las dos cosas.": "Pulsanti: tutto sullo schermo. Gesti: tocca per passare e scorri verso l'alto per tirare. Entrambi: tutte e due.",
+  "Separación entre los botones": "Spaziatura tra i pulsanti"
  },
  "de": {
   "Historia": "Geschichte",
@@ -41746,7 +41770,13 @@
   "Entrada": "Tackling",
   "Barrida": "Grätsche",
   "Cámara cercana del partido": "Nahe Spielkamera",
-  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Bringt die Kamera näher an den gesteuerten Spieler. Automatisch: nur mit Touch-Steuerung."
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Bringt die Kamera näher an den gesteuerten Spieler. Automatisch: nur mit Touch-Steuerung.",
+  "Modo de control del partido": "Steuerungsmodus im Spiel",
+  "Ambos": "Beides",
+  "Botones": "Tasten",
+  "Gestos": "Gesten",
+  "Botones: todo en pantalla. Gestos: toca para pasar y desliza hacia arriba para tirar. Ambos: las dos cosas.": "Tasten: alles auf dem Bildschirm. Gesten: tippen zum Passen, nach oben wischen zum Schießen. Beides: beides zusammen.",
+  "Separación entre los botones": "Abstand zwischen den Tasten"
  },
  "ca": {
   "Historia": "Història",
@@ -48925,7 +48955,13 @@
   "Entrada": "Entrada",
   "Barrida": "Rellisqada",
   "Cámara cercana del partido": "Càmera propera del partit",
-  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Apropa la càmera al jugador que portes. Automàtic: només amb els controls tàctils."
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Apropa la càmera al jugador que portes. Automàtic: només amb els controls tàctils.",
+  "Modo de control del partido": "Mode de control del partit",
+  "Ambos": "Tots dos",
+  "Botones": "Botons",
+  "Gestos": "Gestos",
+  "Botones: todo en pantalla. Gestos: toca para pasar y desliza hacia arriba para tirar. Ambos: las dos cosas.": "Botons: tot a la pantalla. Gestos: toca per passar i llisca cap amunt per xutar. Tots dos: les dues coses.",
+  "Separación entre los botones": "Separació entre els botons"
  },
  "pl": {
   "Club": "Klub",
@@ -56373,7 +56409,13 @@
   "Entrada": "Odbiór",
   "Barrida": "Wślizg",
   "Cámara cercana del partido": "Bliska kamera meczu",
-  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Przybliża kamerę do sterowanego zawodnika. Automatycznie: tylko ze sterowaniem dotykowym."
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Przybliża kamerę do sterowanego zawodnika. Automatycznie: tylko ze sterowaniem dotykowym.",
+  "Modo de control del partido": "Tryb sterowania meczem",
+  "Ambos": "Oba",
+  "Botones": "Przyciski",
+  "Gestos": "Gesty",
+  "Botones: todo en pantalla. Gestos: toca para pasar y desliza hacia arriba para tirar. Ambos: las dos cosas.": "Przyciski: wszystko na ekranie. Gesty: dotknij, by podać, przesuń w górę, by strzelić. Oba: jedno i drugie.",
+  "Separación entre los botones": "Odstęp między przyciskami"
  },
  "tr": {
   "Club": "Kulüp",
@@ -63821,6 +63863,12 @@
   "Entrada": "Müdahale",
   "Barrida": "Kayarak müdahale",
   "Cámara cercana del partido": "Yakın maç kamerası",
-  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Kamerayı kontrol ettiğiniz oyuncuya yaklaştırır. Otomatik: yalnızca dokunmatik kontrollerle."
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Kamerayı kontrol ettiğiniz oyuncuya yaklaştırır. Otomatik: yalnızca dokunmatik kontrollerle.",
+  "Modo de control del partido": "Maç kontrol modu",
+  "Ambos": "İkisi de",
+  "Botones": "Düğmeler",
+  "Gestos": "Hareketler",
+  "Botones: todo en pantalla. Gestos: toca para pasar y desliza hacia arriba para tirar. Ambos: las dos cosas.": "Düğmeler: her şey ekranda. Hareketler: pas için dokun, şut için yukarı kaydır. İkisi de: ikisi birlikte.",
+  "Separación entre los botones": "Düğmeler arası boşluk"
  }
 }

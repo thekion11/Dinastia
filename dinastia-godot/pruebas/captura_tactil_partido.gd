@@ -77,11 +77,10 @@ func _process(_d: float) -> void:
 		_foto("tactil_partido_mueve")
 		_toque(2, _ct.centro_de("A"), true)
 		_toque(3, _ct.centro_de("B"), true)
-		_toque(4, _ct.centro_de("Mod"), true)
+		_arrastre(3, _ct.centro_de("B") + Vector2(0, -_ct.radio_de("B") * 1.3))   ## deslizar desde Tiro = rosca (Mod), el botón Mod ya no se ve
 	if _n == 150:
-		_comprobar(Input.is_action_pressed("jugar_tiro") and Input.is_action_pressed("jugar_mod"), "tiro y modificador pulsados con otros dedos a la vez")
+		_comprobar(Input.is_action_pressed("jugar_tiro") and Input.is_action_pressed("jugar_mod"), "tiro y modificador (deslizando desde Tiro) pulsados con otros dedos a la vez")
 		_toque(3, _ct.centro_de("B"), false)
-		_toque(4, _ct.centro_de("Mod"), false)
 		_comprobar(Input.is_action_pressed("jugar_pase"), "el botón A (pase / presión) está pulsado")
 		_foto("tactil_partido_pase")
 		_toque(2, _ct.centro_de("A"), false)
