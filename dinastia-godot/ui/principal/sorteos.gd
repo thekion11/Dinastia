@@ -122,7 +122,7 @@ func _siguiente() -> void:
 		return
 	_abierto = true
 	var d: Dictionary = _cola.pop_front()
-	var v := Sorteo.new()
+	var v: Control = load("res://ui/sorteo.gd").new()   ## (A4 memoria) por ruta: el sorteo 3D (≈100 KB) solo se compila al hacerse uno
 	v.set_anchors_preset(Control.PRESET_FULL_RECT)
 	p.add_child(v)
 	v.terminado.connect(func() -> void:

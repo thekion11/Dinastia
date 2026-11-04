@@ -48,7 +48,7 @@ func _seguir_tras_partido(p: Partido) -> void:
 	pr._partida.autoguardar_si_toca()
 	pr._refrescar()
 	## Seis partidos seguidos con el mismo cambio del plan: se pregunta.
-	PreguntaPlan.mostrar_si_toca(pr, pr.mundo.mi_club())
+	load("res://ui/componentes/pregunta_plan.gd").mostrar_si_toca(pr, pr.mundo.mi_club())
 
 ## Se avanza la semana con el partido ya jugado en la mano. Si se avanzara sin
 ## él, la jornada se volvería a simular por dentro y en la tabla aparecería un

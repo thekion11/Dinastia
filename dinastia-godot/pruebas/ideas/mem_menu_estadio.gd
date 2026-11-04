@@ -9,7 +9,11 @@ const GORDOS := ["res://ui/estadio.gd", "res://visor/stadium_builder.gd", "res:/
 	## Los grupos chicos (3-11, 2.ª tanda): partido jugable y sus extras, edificio del club y museo, rueda de prensa 3D, creador de personaje, kits, minijuegos.
 	"res://ui/partido_jugable.gd", "res://visor/edificio_club.gd", "res://visor/galeria_club.gd", "res://visor/recorrido_club.gd", "res://visor/museo_ampliado.gd",
 	"res://ui/principal/rueda_prensa.gd", "res://ui/rueda_prensa_escena3d.gd", "res://ui/componentes/creador_personaje.gd", "res://ui/componentes/sala_minijuegos.gd",
-	"res://ui/componentes/panel_controles.gd", "res://ui/componentes/telefono.gd", "res://ui/componentes/disenador_kit.gd", "res://visor/repeticion.gd", "res://visor/cine_gol.gd"]
+	"res://ui/componentes/panel_controles.gd", "res://ui/componentes/telefono.gd", "res://ui/componentes/disenador_kit.gd", "res://visor/repeticion.gd", "res://visor/cine_gol.gd",
+	## A4 (4-11, memoria antes de la ciudad): pantallas de gestión que no pinta el menú al arrancar y pantallas modales que solo salen en un evento.
+	"res://ui/pantallas/pantalla_plantel.gd", "res://ui/pantallas/pantalla_ficha.gd", "res://ui/pantallas/pantalla_opciones.gd",
+	"res://ui/componentes/escena_despido.gd", "res://ui/componentes/presentacion_fichaje.gd", "res://ui/componentes/documental_temporada.gd",
+	"res://ui/componentes/mesa_agente_ui.gd", "res://ui/sorteo.gd", "res://ui/sorteo_escena3d.gd", "res://visor/celebracion_trofeo.gd", "res://visor/pc_oficina.gd"]
 
 func _probar() -> void:
 	_titulo("EL MENÚ NO CARGA EL ESTADIO NI EL PARTIDO 3D")

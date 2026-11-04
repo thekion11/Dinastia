@@ -46,7 +46,7 @@ func _conectar_1() -> void:
 			## te lo dice en su despacho (`EscenaDespido`, M-238); sin pantalla
 			## (banco) sigue el aviso de siempre.
 			if DisplayServer.get_name() != "headless":
-				EscenaDespido.mostrar(p, p.mundo, motivo)
+				load("res://ui/componentes/escena_despido.gd").mostrar(p, p.mundo, motivo)   ## (A4 memoria) por ruta: no se compila al abrir el menú
 			else:
 				Aviso.mostrar(p, "alerta", "🚪", "ESTÁS DESPEDIDO",
 					"La directiva te destituye tras la %s. Elige tu próximo club entre las ofertas de abajo." % motivo, "despido")
@@ -177,7 +177,7 @@ func _conectar_1() -> void:
 		p.mundo.mercado.traspaso.connect(func(j: Jugador, de: Club, a: Club, _monto: int) -> void:
 			## TU FICHAJE SE PRESENTA (C7): la tarjeta con su cara y tu camiseta.
 			if a == p.mundo.mi_club():
-				PresentacionFichaje.mostrar.call_deferred(p, p.mundo, j, de)
+				Callable(load("res://ui/componentes/presentacion_fichaje.gd"), "mostrar").call_deferred(p, p.mundo, j, de)
 				return
 			if de == p.mundo.mi_club():
 				return
