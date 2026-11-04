@@ -20,7 +20,7 @@ func _probar() -> void:
 	_comprobar(bueno["media"] > normal["media"], "el buen plan sigue notándose (%+.1f contra %+.1f)" % [bueno["media"], normal["media"]])
 	## (03-11) El «nadie más de +10» sobre 12 juveniles de un mundo concreto era puro ruido del azar (cualquier cambio del partido simulado movía el mundo: el máximo salió +12 con media +6,1).
 	## Lo que protege es el freno: la MEDIA (antes +10-11) y la cola alta. Se mira la media, el percentil 90 y un tope duro de +13 para el máximo.
-	_comprobar(bueno["media"] <= 8.0 and bueno["p90"] <= 11 and bueno["max"] <= 13, "buen plan: media %+.1f ≤ +8, p90 %+d ≤ +11, máx %+d ≤ +13" % [bueno["media"], bueno["p90"], bueno["max"]])
+	_comprobar(bueno["media"] <= 8.0 and bueno["max"] <= 8, "buen plan: media %+.1f ≤ +8 y NADIE pasa de +8 (máx %+d; tope duro: +6 de entrenamiento + hasta +2 de la curva anual)" % [bueno["media"], bueno["max"]])
 
 func _clausula() -> void:
 	var m := Mundo.new()

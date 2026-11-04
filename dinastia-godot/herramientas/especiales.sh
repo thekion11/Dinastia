@@ -92,6 +92,7 @@ pasa "ate_ayuda_en_menu" "godot --headless --path . res://pruebas/ideas/ate_ayud
 pasa "aud4_idiomas_cache" "godot --headless --path . res://pruebas/ideas/aud4_idiomas_cache.tscn" "FIN. 0 fallos"
 pasa "aud4_carteles_3d" "godot --headless --path . res://pruebas/ideas/aud4_carteles_3d.tscn" "FIN. 0 fallos"
 pasa "aud4_movil_toque" "godot --headless --path . res://pruebas/ideas/aud4_movil_toque.tscn" "FIN. 0 fallos"
+pasa "aud4_movil_flujo" "godot --headless --path . res://pruebas/ideas/aud4_movil_flujo.tscn" "FIN. 0 fallos"
 pasa "aud4_interfaz_limite" "godot --headless --path . res://pruebas/ideas/aud4_interfaz_limite.tscn" "FIN. 0 fallos"
 pasa "aud4_largo_plazo_ui" "LIMITE_S=120 godot --headless --path . res://pruebas/ideas/aud4_largo_plazo_ui.tscn" "FIN. 0 fallos"
 pasa "act_actualizador" "godot --headless --path . res://pruebas/ideas/act_actualizador.tscn" "FIN. 0 fallos"
@@ -176,6 +177,7 @@ pasa "a4_noticias_idiomas" "godot --headless --path . res://pruebas/ideas/a4_not
 pasa "a4_gestion_directiva" "godot --headless --path . res://pruebas/ideas/a4_gestion_directiva.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_prensa" "godot --headless --path . res://pruebas/ideas/a4_gestion_prensa.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_entrenamiento" "godot --headless --path . res://pruebas/ideas/a4_gestion_entrenamiento.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_gestion_estadio" "godot --headless --path . res://pruebas/ideas/a4_gestion_estadio.tscn" "(^|[^0-9])0 fallos"
 # a4_limite_mundo necesita pantalla virtual (opengl3): el contenedor del CI no trae xvfb-run (A4, 4-11), como el bloque 6a
 if command -v xvfb-run >/dev/null; then
 pasa "a4_limite_mundo" "xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
