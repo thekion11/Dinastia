@@ -172,6 +172,15 @@ func misiones_cumplidas() -> int:
 func escribiendo() -> bool:
 	return _escribiendo
 
+## Escape / «atrás» de Android (4-11, caza móvil): con el texto escribiéndose lo completa; si no, cierra el tutorial como «Saltar tutorial» (nunca cae en «¿Salir del juego?»).
+func _input(ev: InputEvent) -> void:
+	if ev is InputEventKey and (ev as InputEventKey).pressed and not (ev as InputEventKey).echo and (ev as InputEventKey).keycode == KEY_ESCAPE and is_visible_in_tree():
+		get_viewport().set_input_as_handled()
+		if _escribiendo:
+			_completar_escritura()
+		else:
+			_terminar(false)
+
 func _process(delta: float) -> void:
 	## Siempre por encima: los hubs y los avisos se cuelgan de la misma raíz
 	## después de nosotros.

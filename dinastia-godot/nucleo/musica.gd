@@ -166,10 +166,19 @@ func poner(clave: String) -> void:
 	_voz.stream = _pista(clave)
 	_voz.volume_db = _db()
 	_voz.play()
+	_voz.stream_paused = en_fondo
 
 ## El volumen en dB, acotado: un valor guardado roto (NaN, 1e9) daba error de motor o +180 dB (caza de fallos 4-11).
 func _db() -> float:
 	return clampf(linear_to_db(clampf(volumen if not is_nan(volumen) else 0.3, 0.001, 2.0)), -80.0, 6.0)
+
+## App en segundo plano (4-11, caza móvil): la música se PAUSA donde está y sigue donde estaba al volver, sin corte ni salto. Con el árbol pausado el reproductor ya lo hace solo;
+## con un partido abierto el árbol sigue corriendo y hay que pedírselo (y quitarlo al volver). `stream_paused` es idempotente: pedirlo dos veces no hace nada.
+var en_fondo := false   ## la app está en segundo plano (una pieza que empiece entonces arranca en pausa)
+func en_segundo_plano(si: bool) -> void:
+	en_fondo = si
+	if _voz != null and is_instance_valid(_voz):
+		_voz.stream_paused = si
 
 ## Aplica el volumen a lo que ya está sonando, sin cortarlo. Lo llama el
 ## deslizador de Ajustes: subir el volumen no debe reiniciar la pieza.
