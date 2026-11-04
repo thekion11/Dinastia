@@ -16,7 +16,7 @@ func simular_minuto() -> void:
 		var sus_goles: int = goles_visita if soy_local else goles_local
 		if chequear_invasion(_hinchada_animo, soy_local, mis_goles < sus_goles):
 			invasion_de_campo.emit(minuto)
-	minuto += 1
+	minuto += 1; PartidoLesiones.atender(self)   ## el lesionado sale del campo (cambio o con uno menos)
 	## LOS PLANES SEGÚN EL MARCADOR. A partir del minuto 60 el entrenador aplica
 	## lo que dejó preparado: ir a por el partido si va perdiendo, cerrarlo si va
 	## ganando. Va en el 60 y no antes porque cambiar el plan en el 20 no es un
@@ -190,7 +190,7 @@ func remate_externo(es_local: bool, autor_id: String, tipo: String) -> void:
 ## también aquí (sale del once: la fuerza se vuelve a medir).
 func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 	var j := _por_id(jugador_id)
-	if j == null:
+	if j == null or _expulsados_hoy.has(jugador_id):
 		return
 	## Una ROJA DIRECTA no es una amarilla de temporada (mega auditoría 4): solo cuenta la amarilla de verdad y la segunda amarilla (la que la motiva: ya hubo una en este partido).
 	var previas := int(_amarillas_hoy.get(jugador_id, 0))
@@ -199,6 +199,7 @@ func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 	if not roja:
 		_amarillas_hoy[jugador_id] = previas + 1
 	if roja:
+		_expulsados_hoy[jugador_id] = true
 		Disciplina.sanciona(j)
 		once_local.erase(j)
 		once_visita.erase(j)

@@ -21,6 +21,7 @@ func _init() -> void:
 	layer = 45
 
 func _ready() -> void:
+	EscalaMovil.vigilar(get_tree())   ## móvil: los botones de la pregunta de la directiva y de «saltar» miden ≥ 7 mm (A4-INT-028)
 	_flecha = Label.new()
 	_flecha.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	_flecha.offset_top = 16
@@ -169,6 +170,13 @@ func pedir_saltar() -> void:
 		saltar_confirmado.emit())
 	fila.add_child(si)
 	FocoSeguro.dar(no)
+
+## Escape / «atrás» de Android con «¿Saltar el prólogo?» abierta: «Seguir aquí» (antes `pedir_saltar` no hacía nada con la pregunta ya puesta y el «atrás» caía en «¿Salir del juego?»).
+func _input(ev: InputEvent) -> void:
+	if is_instance_valid(_confirmar) and ev is InputEventKey and (ev as InputEventKey).pressed and not (ev as InputEventKey).echo and (ev as InputEventKey).keycode == KEY_ESCAPE:
+		get_viewport().set_input_as_handled()
+		_confirmar.queue_free()
+		_confirmar = null
 
 func confirmando_salto() -> bool:
 	return is_instance_valid(_confirmar)

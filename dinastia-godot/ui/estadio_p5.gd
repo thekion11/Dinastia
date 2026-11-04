@@ -271,7 +271,7 @@ func _arrancar_partido() -> void:
 		if a != null:
 			_tiros_de[a.id] = int(_tiros_de.get(a.id, 0)) + 1
 			_goles_de[a.id] = int(_goles_de.get(a.id, 0)) + 1)
-	partido.lesion.connect(_a_la_lesion)
+	partido.lesion.connect(_a_la_lesion); partido.baja_sin_cambio.connect(_a_la_baja)
 	partido.decision_arbitral.connect(_a_la_decision_arbitral)
 	## Saque inicial + murmullo de fondo: lo mismo que ya sonaba en la pantalla
 	## 2D de `partido_vivo.gd`, que hasta hoy este visor 3D -el que de verdad se
@@ -405,7 +405,7 @@ func abrir(c: Club, ocupacion: float = 0.8, rival: Club = null, p: Partido = nul
 		perfil_forzado: Dictionary = {}, colores_balon: Array = []) -> void:
 	club = c
 	visitante = rival
-	partido = p
+	partido = p; VidaApp.poner(self)
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	if por_partes:   ## en pausa mientras se arma entre fotogramas (`_respiro`)
 		process_mode = Node.PROCESS_MODE_DISABLED

@@ -128,7 +128,7 @@ func _pintar_epilogo(r: Roles) -> void:
 		vit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(vit)
 		## La vitrina 3D con la forma de cada trofeo (26-10).
-		var v3 := VitrinaTrofeos.crear(ult)
+		var v3: Control = load("res://ui/competiciones/vitrina_trofeos.gd").crear(ult)   ## (A4 memoria) por ruta
 		if v3 != null:
 			p._lista_legado.add_child(v3)
 
@@ -140,7 +140,7 @@ func _pintar_legado() -> void:
 	var p_local: Dictionary = p.mundo.puntaje_carrera()
 
 	## C4: LA HISTORIA DEL CLUB, antes que la tuya.
-	var hi := p._ui_plantel._historia_de(p.mundo.mi_club())
+	var hi: Dictionary = p._ui_plantel._historia_de(p.mundo.mi_club())
 	var th := p._texto(11, Principal.COL_SUAVE)
 	th.text = Idiomas.t("HISTORIA DEL CLUB")
 	p._lista_legado.add_child(th)
@@ -172,7 +172,7 @@ func _pintar_legado() -> void:
 		va.text = String(par[1])
 		col.add_child(va)
 	## Tu vitrina en 3D (26-10): los últimos títulos con su trofeo.
-	var vit3 := VitrinaTrofeos.crear(r.trofeos)
+	var vit3: Control = load("res://ui/competiciones/vitrina_trofeos.gd").crear(r.trofeos)
 	if vit3 != null:
 		p._lista_legado.add_child(vit3)
 	## El multiplicador solo se enseña si es distinto de 1: si no, es una línea
@@ -295,7 +295,7 @@ func _pintar_legado() -> void:
 func _pintar_vida() -> void:
 	if p._lista_vida == null:
 		return
-	PanelVida.pintar(p._lista_vida, p, p.mundo, p._secc_vida)
+	load("res://ui/componentes/panel_vida.gd").pintar(p._lista_vida, p, p.mundo, p._secc_vida)
 
 ## EL ÁRBOL DE HABILIDADES, COMO ESQUEMA (26-9-2026): columnas por rama, nodos
 ## y líneas de requisito, y la ficha de la elegida debajo.
@@ -322,13 +322,13 @@ func _pintar_habilidades() -> void:
 		(func() -> void: Animar.pulso(pts, 1.15)).call_deferred()
 	var grande := Button.new()
 	grande.text = Idiomas.t("⛶ En grande")
-	grande.pressed.connect(func() -> void: ArbolHabilidades.abrir_en_grande(p, e, p._refrescar))
+	grande.pressed.connect(func() -> void: load("res://ui/componentes/arbol_habilidades.gd").abrir_en_grande(p, e, p._refrescar))
 	cab.add_child(grande)
-	var arbol := ArbolHabilidades.crear(e)
+	var arbol: Control = load("res://ui/componentes/arbol_habilidades.gd").crear(e)
 	p._lista_habilidades.add_child(arbol)
 	p._lista_habilidades.add_child(arbol.ficha())
 	## Las 15 maestrías de 30 niveles, debajo del árbol.
-	PanelMaestrias.pintar(p._lista_habilidades, p.mundo, p)
+	load("res://ui/componentes/panel_maestrias.gd").pintar(p._lista_habilidades, p.mundo, p)
 	arbol.aprendida.connect(func(_k: String) -> void:
 		Aviso.mostrar(p, "nivel", "🎓", "Habilidad aprendida", e.dt_nombre(_k))
 		p._refrescar())

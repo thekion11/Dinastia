@@ -93,18 +93,7 @@ func _pintar_moneda() -> void:
 ## Qué le toca sonar según lo que está pasando en la partida. Es la única regla
 ## de la música que sabe algo del juego, y por eso vive aquí y no en `Musica`.
 func _situacion_musical() -> String:
-	if p.mundo == null:
-		return "menu"
-	var c := p.mundo.mi_club()
-	if c == null:
-		return "menu"
-	## Las tres últimas jornadas del año: tensión. Es lo único que sabe la música
-	## de la partida, y con esto basta —el resto de situaciones las manda quien
-	## llama, no una regla que hay que mantener al día.
-	var liga := p._liga_de(c)
-	if liga != null and liga.jornada_actual >= liga.jornadas() - 2:
-		return "final"
-	return "menu"
+	return p._avance.situacion_musical()
 
 func _pintar_musica() -> void:
 

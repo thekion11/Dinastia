@@ -49,6 +49,8 @@ static var elegida: int = MINIMO
 ## Bajar efectos durante el partido si los FPS caen de 40 (ver
 ## `RendimientoAdaptativo`). Encendido por defecto; se apaga en Ajustes.
 static var adaptativa: bool = true
+## PARTIDO LIGERO (4-11, orden 32): agregado aparte de la calidad, apagado por defecto en todas (ver `PartidoLigero`).
+static var partido_ligero: bool = false
 
 ## Hora del dia. El atardecer es el que mejor sienta a un complejo deportivo:
 ## luz rasante, sombras largas y contraste, que es lo que hace que un render
@@ -255,9 +257,9 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 # ------------------------------------------------------------------ viewport
 
 ## ¿Renderizador de compatibilidad (OpenGL: móvil, web, capturas)?
-## (4-11) MSAA de las vistas 3D SECUNDARIAS (retratos, casa, rueda de prensa, sorteo…): en MÍNIMO nunca más de x2.
+## (4-11) MSAA de las vistas 3D SECUNDARIAS (retratos, casa, rueda de prensa, sorteo…): en MÍNIMO apagado (decisión del dueño, A4-PARTIDO-R01: igual que el partido).
 static func msaa_ui(m: int) -> int:
-	return Viewport.MSAA_2X if elegida <= MINIMO and m > Viewport.MSAA_2X else m
+	return Viewport.MSAA_DISABLED if elegida <= MINIMO else m
 
 static func es_compatibilidad() -> bool:
 	return RenderingServer.get_current_rendering_method() == "gl_compatibility"
@@ -288,9 +290,10 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 		if avanzado:
 			vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 	else:
-		## MÍNIMO también lleva MSAA x2: sin él, a 70 % de resolución, las líneas finas del campo lejanas salían
-		## entrecortadas (visto en la captura del 2-11). En las gráficas de móvil (por teselas) x2 cuesta poco.
-		vp.msaa_3d = Viewport.MSAA_2X
+		## MÍNIMO SIN MSAA (4-11-2026, A4-PARTIDO-R01, decisión del dueño): lo medido con la cámara de TV en llvmpipe a 1280x720 (limitada por relleno, como una GPU de móvil)
+		## dice que el MSAA x2 es lo más caro del partido con diferencia (el fotograma baja ~77 % al apagarlo); el dueño tiene 5 FPS con la GPU al 100 % en su teléfono.
+		## Coste visual: bordes más dentados (las líneas finas del campo lejanas); MEDIO y superiores siguen igual.
+		vp.msaa_3d = Viewport.MSAA_DISABLED if nivel <= MINIMO else Viewport.MSAA_2X
 	if sin_msaa:
 		vp.msaa_3d = Viewport.MSAA_DISABLED
 	## Por debajo de 100 % en Forward+/Mobile, FSR (más nítido que el bilineal); en Compatibilidad no existe y queda el bilineal.
@@ -322,12 +325,19 @@ static var motor_ligero := false
 static func cargar() -> void:
 	var cf := ConfigFile.new()
 	if cf.load(ARCHIVO) != OK:
+		var antes := elegida
 		CalidadAuto.aplicar_si_primera_vez()   ## primera vez: perfil según el hardware
+		if elegida != antes and OS.get_environment("PREF_IDIOMA_DIAG") != "":
+			print("PREF_PISA_CALIDAD_AUTO ", antes, " -> ", elegida)
 		return
 	if cf.has_section_key("grafica", "calidad"):
-		elegida = clampi(int(cf.get_value("grafica", "calidad")), MINIMO, ULTRA)
+		var guardada := clampi(int(cf.get_value("grafica", "calidad")), MINIMO, ULTRA)
+		if guardada != elegida and OS.get_environment("PREF_IDIOMA_DIAG") != "":
+			print("PREF_PISA_CALIDAD ", elegida, " -> ", guardada)   ## diagnóstico de pruebas (A4): el guardado manda sobre la calidad puesta antes
+		elegida = guardada
 	if cf.has_section_key("grafica", "adaptativa"):
 		adaptativa = bool(cf.get_value("grafica", "adaptativa"))
+	partido_ligero = bool(cf.get_value("grafica", "partido_ligero", false))
 	if cf.has_section_key("grafica", "motor_ligero"):
 		motor_ligero = bool(cf.get_value("grafica", "motor_ligero"))
 	if cf.has_section_key("grafica", "escala_media"):
@@ -340,6 +350,7 @@ static func guardar() -> void:
 	cf.set_value("grafica", "calidad", elegida)
 	cf.set_value("grafica", "adaptativa", adaptativa)
 	cf.set_value("grafica", "motor_ligero", motor_ligero)
+	cf.set_value("grafica", "partido_ligero", partido_ligero)
 	cf.set_value("grafica", "escala_minimo", escala_minimo)
 	cf.set_value("grafica", "escala_media", escala_media)
 	cf.save(ARCHIVO)

@@ -70,3 +70,16 @@ static func _rotulo(padre: Node3D, texto: String, pos: Vector3, giro: float, tam
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	padre.add_child(l)
 
+
+## Un rótulo que NO pasa de `ancho_max` m (el hueco entre dos vitrinas): si el texto es más ancho, baja el cuerpo de la letra (mínimo 8) y, si
+## aun así no cabe, lo corta con «…». (A4-M3D-X11: «Supercopa de Campeones Continentales · 2031» pisaba el rótulo de la vitrina de al lado.)
+static func _rotulo_ajustado(padre: Node3D, texto: String, pos: Vector3, giro: float, tam: int, col: Color, ancho_max: float) -> void:
+	var fuente := ThemeDB.fallback_font
+	var t := texto
+	var px := tam
+	var ancho := func(cadena: String, cuerpo: int) -> float: return fuente.get_string_size(cadena, HORIZONTAL_ALIGNMENT_LEFT, -1, cuerpo).x * 0.006
+	if ancho.call(t, px) > ancho_max:
+		px = maxi(8, int(float(tam) * ancho_max / float(ancho.call(t, tam))))
+	while ancho.call(t, px) > ancho_max and t.length() > 6:
+		t = t.left(t.length() - 2).strip_edges() + "…"
+	_rotulo(padre, t, pos, giro, px, col)

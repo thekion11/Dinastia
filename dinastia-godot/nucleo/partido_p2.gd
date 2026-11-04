@@ -111,7 +111,7 @@ func preparar() -> void:
 	minutos_fin = MINUTOS
 	cambios_extra = 0
 	terminado_ya = false
-	cronica.clear(); _amarillas_hoy.clear(); suspendido = false
+	cronica.clear(); _amarillas_hoy.clear(); _expulsados_hoy.clear(); suspendido = false
 	_todos = once_local + once_visita
 	_notas_cerradas = false
 	_notas.clear()
@@ -188,12 +188,10 @@ func _devolver_tactica() -> void:
 			c.tactica.anotar_plan(String(plan_activado.get(c.id, "")))
 
 func _probabilidad(ata: float, def_rival: float) -> float:
-	## REALISMO (13-10-2026): con la fórmula vieja un once de media 86 contra
-	## uno de 69 llegaba solo un 17 % más, y los campeones sacaban el 56-64 % de
-	## los puntos (en las ligas de verdad, 70-85 %). Ahora cuenta el cociente
-	## ataque/defensa con más peso; entre iguales, la misma probabilidad de antes.
+	## REALISMO (13-10-2026): el cociente ataque/defensa pesa más (campeones 70-85 % de los puntos); entre iguales, la misma probabilidad de antes.
 	var igual: float = pow(REPARTO / 2.0, EXPONENTE)
-	return BASE_ATAQUE * igual * pow(ata / maxf(def_rival, 0.001), SENSIBILIDAD)
+	var l: float = Balance.SATURA_LN * tanh(log(maxf(ata / maxf(def_rival, 0.001), 0.001)) / Balance.SATURA_LN)   ## A4-PAR-L02: sin tope un gran desfase daba marcadores absurdos
+	return BASE_ATAQUE * igual * exp(SENSIBILIDAD * l)
 
 func _alguien(l: Array[Jugador]) -> Jugador:
 	if l.is_empty():
@@ -313,7 +311,7 @@ func _anotar(c: Club, once: Array[Jugador], es_local: bool) -> void:
 func _chequeo_arbitral() -> void:
 	if arbitro.is_empty():
 		return
-	var f_var := ctx_factor_tarjetas
+	var f_var := ctx_factor_tarjetas / Balance.LLEGADAS_K   ## el chequeo es por llegada y ahora hay K veces más (recalibración 4-11)
 	var nombre := String(arbitro.get("nombre", ""))
 	match String(arbitro.get("perfil", "")):
 		"tarjetero":
@@ -370,7 +368,7 @@ func _atacar(c: Club, once: Array[Jugador], es_local: bool) -> void:
 	## de la conversión real (~0,27) y el xG total salía un 26 % por debajo de los goles: todos los
 	## informes decían «convertimos más de lo que la estadística decía». Mismo rango y misma tirada de
 	## `Azar`, curvada hacia arriba: la media pasa a ~0,27.
-	var xg_de_esta := 0.09 + pow(Azar.f(), 0.25) * 0.22
+	var xg_de_esta := (0.09 + pow(Azar.f(), 0.25) * 0.22) / Balance.LLEGADAS_K   ## por remate (media ~0,11)
 	if es_local:
 		remates_local += 1
 		xg_local += xg_de_esta
@@ -434,7 +432,7 @@ func _incidencias() -> void:
 				if h.rasgo == "fragil":
 					semanas += Azar.ent(1, 3)
 				h.lesionar(semanas)
-			lesion.emit(h, semanas, minuto)
+			lesion.emit(h, semanas, minuto); PartidoLesiones.nueva(self as Object as Partido, h)
 
 ## ¿Es del local? Mira su club, no el once (el cambiado/expulsado ya no está en él).
 func es_del_local(j: Jugador) -> bool:

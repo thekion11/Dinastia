@@ -58,6 +58,25 @@ func _process(_d: float) -> void:
 				_comprobar(cpu_mas == 0 and cpu_menos == 0, "debutante: nada cambia (el motor de siempre)")
 			pj.queue_free()
 			await get_tree().process_frame
+		## El botón de la pausa cicla los 8 niveles, guarda y aplica al momento.
+		_poner("debutante")
+		var pj2 := PartidoJugable.abrir(_ui, CarreraJugadorUI.mundo, _ui.carrera, par[0], par[1], 20.0)
+		pj2._alternar_pausa()
+		var boton: Button = null
+		for b in pj2._pausa.find_children("*", "Button", true, false):
+			if (b as Button).text.contains("Dificultad"):
+				boton = b
+		_comprobar(boton != null, "la pausa tiene el botón de dificultad de la CPU")
+		if boton != null:
+			var vistos: Array = []
+			for i in 8:
+				boton.pressed.emit()
+				vistos.append(pj2.motor.dificultad_cpu)
+			_comprobar(vistos[0] == "semiprofesional" and vistos[7] == "debutante" and vistos.has("ultimate") and vistos.has("practicante"), "ocho pulsaciones recorren los 8 niveles y vuelven a Debutante (%s)" % ", ".join(vistos))
+			boton.pressed.emit()
+			_comprobar(VistaEstadio.dificultad_cpu_guardada() == "semiprofesional" and pj2.motor.dificultad_cpu == "semiprofesional" and boton.text.contains("Semiprofesional"), "se guarda en los ajustes, se aplica al motor y el botón lo dice")
+		pj2._alternar_pausa()
+		pj2.queue_free()
 		_poner(_guardado)
 		print("===== FIN. %d fallos =====" % _fallos)
 		set_process(false)

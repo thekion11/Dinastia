@@ -18,7 +18,9 @@ pasa() {  # nombre, comando, patrón de éxito
   CONT=$((CONT + 1))
   if [ -n "$PARTE_I" ] && [ $((CONT % PARTE_N)) -ne "$PARTE_I" ]; then return; fi
   local t0=$(date +%s)
-  timeout 600 bash -c "$2" > "$LOG" 2>&1
+  ## (4-11, A4) Cada prueba con SU carpeta user:// vacía, como en el CI: con el guardado de un jugador (idioma, ajustes, partidas)
+  ## las pruebas que ponen un idioma antes de abrir el juego medían otra cosa (el guardado manda) y pasaban sin probar lo que decían.
+  XDG_DATA_HOME=$(mktemp -d) timeout 600 bash -c "$2" > "$LOG" 2>&1
   local seg=$(( $(date +%s) - t0 ))
   if grep -q "SCRIPT ERROR" "$LOG" || ! grep -qE "$3" "$LOG"; then
     FALLOS=$((FALLOS + 1)); printf 'FALLO  %-34s %3d s\n' "$1" "$seg"; grep -E "FALLO|SCRIPT ERROR" "$LOG" | head -3
@@ -94,6 +96,13 @@ pasa "aud4_carteles_3d" "godot --headless --path . res://pruebas/ideas/aud4_cart
 pasa "aud4_movil_toque" "godot --headless --path . res://pruebas/ideas/aud4_movil_toque.tscn" "FIN. 0 fallos"
 pasa "aud4_movil_flujo" "godot --headless --path . res://pruebas/ideas/aud4_movil_flujo.tscn" "FIN. 0 fallos"
 pasa "aud4_teclado_solo" "godot --headless --path . res://pruebas/ideas/aud4_teclado_solo.tscn" "FIN. 0 fallos"
+pasa "aud4_movil_partido" "godot --headless --path . res://pruebas/ideas/aud4_movil_partido.tscn" "FIN. 0 fallos"
+pasa "aud4_movil_modales" "godot --headless --path . res://pruebas/ideas/aud4_movil_modales.tscn" "FIN. 0 fallos"
+pasa "aud4_primer_contacto" "godot --headless --path . res://pruebas/ideas/aud4_primer_contacto.tscn" "FIN. 0 fallos"
+pasa "aud4_tutorial_movil" "godot --headless --path . res://pruebas/ideas/aud4_tutorial_movil.tscn" "FIN. 0 fallos"
+pasa "aud4_prologo_movil" "godot --headless --path . res://pruebas/ideas/aud4_prologo_movil.tscn" "FIN. 0 fallos"
+pasa "aud4_arranque_movil" "godot --headless --path . res://pruebas/ideas/aud4_arranque_movil.tscn" "FIN. 0 fallos"
+pasa "aud4_sonido_perezoso" "godot --headless --path . res://pruebas/ideas/aud4_sonido_perezoso.tscn" "FIN. 0 fallos"
 pasa "aud4_interfaz_limite" "godot --headless --path . res://pruebas/ideas/aud4_interfaz_limite.tscn" "FIN. 0 fallos"
 pasa "aud4_largo_plazo_ui" "LIMITE_S=120 godot --headless --path . res://pruebas/ideas/aud4_largo_plazo_ui.tscn" "FIN. 0 fallos"
 pasa "act_actualizador" "godot --headless --path . res://pruebas/ideas/act_actualizador.tscn" "FIN. 0 fallos"
@@ -108,13 +117,24 @@ pasa "igualdad del motor con usuario" "godot --headless --path . res://pruebas/i
 pasa "motor jugable (unidad)" "godot --headless --path . res://pruebas/prueba_motor_jugable.tscn" "FIN MOTOR. 0 fallos"
 # 5c. Movimiento suave y vida de la ciudad (27-10, orden del líder: que el tirón de los vehículos no vuelva a romperse sin que se note; ~1 min)
 pasa "tráfico, metro y bus suaves" "godot --headless --path . res://pruebas/ideas/pmov_suavidad_trafico.tscn" "FIN. 0 fallos"
+pasa "fugas en sesiones largas, partido táctil (auditoría 4: 24 partidos 3D jugados, abandonados, en pausa y cerrados con atrás: nodos, objetos, memoria, señales, voces)" "godot --headless --path . res://pruebas/auditoria_fugas_limite.tscn" "FIN. 0 fallos"
+pasa "guardado antes y después del partido de la carrera, partidos abandonados, carrera del jugador (auditoría 4)" "godot --headless --path . res://pruebas/auditoria_guardado_partido_limite.tscn" "FIN. 0 fallos"
+pasa "fotogramas malos al límite (auditoría 4: pasos grandes, 5 FPS y tirones = mismo estado que a 60 FPS, repetición con cambio)" "godot --headless --path . res://pruebas/auditoria_fps_malos_limite.tscn" "FIN. 0 fallos"
+pasa "reglas del partido al límite (auditoría 4: 7 y 6 jugadores, lesionado sin cambios, portero lesionado, cambio en tanda y descanso, banco vacío)" "godot --headless --path . res://pruebas/auditoria_reglas_3d_limite.tscn" "FIN. 0 fallos"
+pasa "atrás en el tutorial y el prólogo, música en segundo plano (auditoría 4, menú táctil)" "godot --headless --path . res://pruebas/auditoria_atras_pantallas_limite.tscn" "FIN. 0 fallos"
+pasa "partido táctil al límite en el móvil (auditoría 4: 50 pausas con giro y calidad, segundo plano en descanso, tanda y repetición)" "godot --headless --path . res://pruebas/auditoria_partido_movil_limite.tscn" "FIN. 0 fallos"
 pasa "tráfico: derecha y adelantar" "godot --headless --path . res://pruebas/ideas/tra_adelantar_y_derecha.tscn" "FIN. 0 fallos"
 pasa "emergencias y sirenas" "godot --headless --path . res://pruebas/ideas/emerg_servicios.tscn" "FIN. 0 fallos"
+pasa "vida de la app fuera del partido, menú táctil (auditoría 4: segundo plano pausa el árbol, atrás cierra ventana/pantalla/pregunta, poca memoria)" "godot --headless --path . res://pruebas/auditoria_vida_global_limite.tscn" "FIN. 0 fallos"
 pasa "el tráfico cede a las sirenas" "godot --headless --path . res://pruebas/ideas/emerg_cede_paso.tscn" "FIN. 0 fallos"
 pasa "estación y trenes" "godot --headless --path . res://pruebas/ideas/tre_estacion.tscn" "FIN. 0 fallos"
+pasa "vida de la app en el móvil al límite, partido táctil (auditoría 4: segundo plano, atrás, foco, girar, poca memoria, delta de 10 minutos)" "godot --headless --path . res://pruebas/auditoria_vida_app_limite.tscn" "FIN. 0 fallos"
 pasa "teleférico" "godot --headless --path . res://pruebas/ideas/tre_teleferico.tscn" "FIN. 0 fallos"
 pasa "aspecto de los clubes" "godot --headless --path . res://pruebas/ideas/asp_clubes.tscn" "FIN. 0 fallos"
+pasa "partido en vivo al límite (auditoría 4: 9 idiomas sin marcas sueltas, velocidades con saltos absurdos, descanso, saltos al final)" "godot --headless --path . res://pruebas/auditoria_partido_vivo_limite.tscn" "FIN. 0 fallos"
+pasa "sonido al límite (auditoría 4: 400 efectos, volúmenes 0/NaN/1e9, nombres que no existen, música)" "godot --headless --path . res://pruebas/auditoria_sonido_limite.tscn" "FIN. 0 fallos"
 pasa "trofeos por competición" "godot --headless --path . res://pruebas/ideas/tro_recetas.tscn" "FIN. 0 fallos"
+pasa "arbitros y VAR al límite (auditoría 4: márgenes absurdos, tarjetas repetidas, gol anulado tras el final, expulsión doble)" "godot --headless --path . res://pruebas/auditoria_arbitro_limite.tscn" "FIN. 0 fallos"
 pasa "dificultad_cpu en el partido jugable de la carrera (el rival es la CPU con el nivel guardado)" "godot --headless --path . res://pruebas/dificultad_partido_jugable.tscn" "FIN. 0 fallos"
 pasa "carrera del jugador al límite (auditoría 4: puestos, atributos 1 y 99, lesión grave, club sin plantel, retiro, guardado roto)" "godot --headless --path . res://pruebas/auditoria_carrera_limite.tscn" "FIN. 0 fallos"
 pasa "minijuegos 2D al límite (auditoría 4: teclas dobles, idioma y calidad a mitad, Escape, sin mundo)" "godot --headless --path . res://pruebas/auditoria_minijuegos_limite.tscn" "FIN. 0 fallos"
@@ -134,6 +154,7 @@ BLOQUE=reutilizadas
 pasa "ciudad: construir y soltar 5 veces sin fugas (A4-M3D-001)" "godot --headless --path . res://pruebas/ideas/a4_m3d_ciclos.tscn" "FIN. 0 fallos"
 pasa "estadio: construir y soltar 5 veces sin fugas (A4-M3D-002)" "godot --headless --path . res://pruebas/ideas/a4_m3d_estadio_ciclos.tscn" "FIN. 0 fallos"
 pasa "ciudad en marcha 600 fotogramas sin acumular nada (A4-M3D)" "godot --headless --path . res://pruebas/ideas/a4_m3d_tiempo.tscn" "FIN. 0 fallos"
+pasa "carteles 3D perezosos: existen los cercanos y solo esos (A4-REND-004)" "godot --headless --path . res://pruebas/ideas/a4_rotulos_perezosos.tscn" "FIN. 0 fallos"
 pasa "banco_inicio" "XDG_DATA_HOME=\$(mktemp -d) godot --headless --path . res://pruebas/banco_inicio.tscn" "(^|[^0-9])0 fallos"
 pasa "bug_semilla" "godot --headless --path . res://pruebas/ideas/bug_semilla.tscn" "(^|[^0-9])0 fallos"
 pasa "cierre_anio_deudas" "godot --headless --path . res://pruebas/ideas/cierre_anio_deudas.tscn" "(^|[^0-9])0 fallos"
@@ -170,10 +191,21 @@ pasa "p6_boton_e_minimapa" "godot --headless --path . res://pruebas/ideas/p6_bot
 pasa "p6_mando_tactil" "godot --headless --path . res://pruebas/ideas/p6_mando_tactil.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_zonas_vista" "godot --headless --path . res://pruebas/ideas/p6_zonas_vista.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_entorno_oclusion" "godot --headless --path . res://pruebas/ideas/p6_entorno_oclusion.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_partido_ligero (agregado aparte de la calidad, orden 32)" "godot --headless --path . res://pruebas/ideas/a4_partido_ligero.tscn" "FIN. 0 fallos"
 pasa "p6_peaje" "godot --headless --path . res://pruebas/ideas/p6_peaje.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_alcance_e" "godot --headless --path . res://pruebas/ideas/p6_alcance_e.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_resolucion3d" "godot --headless --path . res://pruebas/ideas/p6_resolucion3d.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_recorrido_mapa" "godot --headless --path . res://pruebas/ideas/a4_recorrido_mapa.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_peatones_limite" "godot --headless --path . res://pruebas/ideas/a4_peatones_limite.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_interiores_limite" "godot --headless --path . res://pruebas/ideas/a4_interiores_limite.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_camara_estadio (la cámara del partido ve el campo en 6 estadios reformados, rayos por triángulo)" "godot --headless --path . res://pruebas/ideas/a4_camara_estadio.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_ciudad_noche (de noche, 6 sirenas, 6 min: sin atascos, gente ni buses parados)" "godot --headless --path . res://pruebas/ideas/a4_ciudad_noche.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_sirena_movimiento (vehículo de emergencia con sirena en medio del tráfico: no atraviesa a nadie)" "godot --headless --path . res://pruebas/ideas/a4_sirena_movimiento.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_lluvia_cambios (lluvia y paraguas con 172 peatones de noche, 20 cambios de clima: sin duplicados, sin restos, sin crecer)" "godot --headless --path . res://pruebas/ideas/a4_lluvia_cambios.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_museo_limite (museo con 220 hitos: vitrinas y rótulos sin pisarse, ampliar, 20 entradas y la animación cortada)" "godot --headless --path . res://pruebas/ideas/a4_museo_limite.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_pasajeros_limite (gente de bus y teleférico: bus lleno, bus que se va, 60 paradas)" "godot --headless --path . res://pruebas/ideas/a4_pasajeros_limite.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_comercios_horario (comercios de 8:00 a 20:00 por el reloj del juego: cerrado no entra ni compra)" "godot --headless --path . res://pruebas/ideas/a4_comercios_horario.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_metro_museo (metro por dentro y museo ampliado, sin pantalla)" "godot --headless --path . res://pruebas/ideas/a4_metro_museo.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_cruzado" "godot --headless --path . res://pruebas/ideas/a4_gestion_cruzado.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_cesiones" "godot --headless --path . res://pruebas/ideas/a4_gestion_cesiones.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_mercado_fed" "godot --headless --path . res://pruebas/ideas/a4_gestion_mercado_fed.tscn" "(^|[^0-9])0 fallos"
@@ -187,8 +219,12 @@ pasa "a4_gestion_selecciones" "godot --headless --path . res://pruebas/ideas/a4_
 # a4_limite_mundo (partido en 3 de ~190, ~190 y ~150 s para caber holgado en los 600 s) necesita pantalla virtual (opengl3): el contenedor del CI no trae xvfb-run (A4, 4-11), como el bloque 6a
 if command -v xvfb-run >/dev/null; then
 pasa "a4_limite_mundo (1/3 calidad: fugas al reabrir)" "A4_PARTE=1 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_metro_museo 1/2 (metro por dentro, con pantalla: ~250 s)" "A4_PARTE=1 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_metro_museo.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_metro_museo 2/2 (museo ampliado, con pantalla: ~120 s)" "A4_PARTE=2 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_metro_museo.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_limite_mundo (2/3 calidad y horas)" "A4_PARTE=2 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_limite_mundo (3/3 estadios y tráfico)" "A4_PARTE=3 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_estadio_reformas (estadio propio: 6 reformas, reabrir, nombres; con pantalla ~115 s)" "xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_estadio_reformas.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_grada_alta (la grada crece con el aforo >30 000 solo en calidad ALTA; con pantalla ~60 s)" "xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_grada_alta.tscn" "(^|[^0-9])0 fallos"
 fi
 pasa "p6_calidad_minima" "godot --headless --path . res://pruebas/ideas/p6_calidad_minima.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_idiomas_perezoso" "godot --headless --path . res://pruebas/ideas/p6_idiomas_perezoso.tscn" "(^|[^0-9])0 fallos"

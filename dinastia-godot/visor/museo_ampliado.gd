@@ -103,17 +103,19 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 	var por_lado := clampi(int((caja.size.y - 2.6) / 1.3), 2, POR_LADO)
 	var z0 := caja.position.y + 1.4
 	var z1 := caja.end.y - 1.2
+	var paso_z := (z1 - z0) / float(por_lado)   ## lo que separa dos vitrinas del mismo lado: ahí tiene que caber el rótulo
 	var n := mini(hs.size() - SalasClub.MAX_SALA, por_lado * 2)
+	var ini := hs.size() - SalasClub.MAX_SALA - maxi(n, 0)   ## A4: la planta 2 enseña los 6 más recientes; esta, los anteriores (los más cercanos a esos)
 	for k in maxi(n, 0):
 		var lado := -1.0 if k % 2 == 0 else 1.0
 		var pz := z0 + (z1 - z0) * (float(k / 2) + 0.5) / float(por_lado)
 		var px := (caja.position.x + 0.45) if lado < 0.0 else (caja.end.x - 0.45)
 		SalasClub.vitrina(lote, nodo, m, base, vidrio, Vector3(px, y0, pz))
-		vitrinas.append({"p": Vector3(px, y0, pz), "k": SalasClub.MAX_SALA + k})
-		var h: Dictionary = hs[SalasClub.MAX_SALA + k]
+		vitrinas.append({"p": Vector3(px, y0, pz), "k": ini + k})
+		var h: Dictionary = hs[ini + k]
 		copas.append(_copa(nodo, Vector3(px, y0 + 1.0, pz), m["madera"], TrofeosReales.para_titulo(String(h.get("titulo", "")), String(ctx.get("pais", "")))))
-		PiezasObra._rotulo(nodo, "%s · %d" % [Idiomas.t(String(h.get("titulo", ""))), int(h.get("anio", 0))],
-			Vector3(px - lado * 0.38, y0 + 1.2, pz), -lado * PI / 2.0, 14, Color(0.12, 0.12, 0.14))
+		PiezasObra._rotulo_ajustado(nodo, "%s · %d" % [Idiomas.t(String(h.get("titulo", ""))), int(h.get("anio", 0))],
+			Vector3(px - lado * 0.38, y0 + 1.2, pz), -lado * PI / 2.0, 14, Color(0.12, 0.12, 0.14), paso_z * 0.92)
 	## Camisetas por década en la pared del fondo (la del ascensor queda a un lado).
 	var decadas: Array = []
 	for h: Dictionary in hs:

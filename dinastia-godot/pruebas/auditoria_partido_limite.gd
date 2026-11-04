@@ -64,12 +64,16 @@ func _motor_3d() -> void:
 	_comprobar(_sano(motor, ball) == "", "600 pasos de 1/30 s tras los pasos absurdos: sano (%s)" % _sano(motor, ball))
 	_comprobar(motor.t > t0 or motor.estado != "juego", "el reloj del partido avanza (t %.1f → %.1f, estado %s)" % [t0, motor.t, motor.estado])
 	## 3) el balón teletransportado muy lejos y otro con velocidad enorme no rompen nada.
+	for i in 3000:   ## (4-11) con el balón en juego: en «saque» el motor no toca el balón hasta que se saca
+		if motor.estado == "juego":
+			break
+		motor.paso(1.0 / 30.0)
 	ball.position = Vector3(500.0, 3.0, -700.0)
 	motor.paso(1.0 / 30.0)
 	motor.vel_balon = Vector3(900.0, 400.0, -900.0)
 	for i in 30:
 		motor.paso(1.0 / 30.0)
-	_comprobar(_sano(motor, ball) == "", "balón fuera del campo y a 1.000 m/s: el motor lo recoge y sigue (%s)" % _sano(motor, ball))
+	_comprobar(_sano(motor, ball) == "", "balón fuera del campo y a 1.000 m/s: el motor lo recoge y sigue (%s, estado %s, minuto %d)" % [_sano(motor, ball), motor.estado, motor.minuto()])
 	raiz.queue_free()
 
 func _acta() -> void:

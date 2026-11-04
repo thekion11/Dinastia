@@ -20,7 +20,9 @@ extends Node
 ## 4-11 (A4-PAR-003 de PES 6, a propósito): la nota y la forma del cambiado/expulsado ya no usan el bono del equipo contrario. Era 2563391786.
 ## 4-11 (A4-GES-006, a propósito): el entrenamiento sube más (0,10→0,13 y 0,014→0,018, freno 4/6) para que el juvenil haga +4-6 con el plan normal. Era 450552767.
 ## 4-11 (A4-GES-006, tope duro, a propósito): lo ganado por entrenamiento (semanal, mentorías, prob. semanal) no pasa de +6 en la temporada (+2 de la curva anual = «no más de +8» del dueño). Era 194965960.
-const ESPERADO := "689438746"
+## 4-11 (PES 6, reglas al límite, a propósito): un lesionado SALE del campo (cambio de la CPU en el acto, el ayudante del DT a los 3 minutos; sin cambios, el equipo sigue con uno menos) y sin portero la defensa supone un «portero» de 35 (`PartidoLesiones`). Era 689438746. `igualdad_motor` no cambia.
+## 4-11 (RECALIBRACIÓN DEL SIMULADO, decisión del dueño, a propósito): ~25 remates por partido (antes ~10; `Balance.LLEGADAS_K`), ~8,5 a puerta, ~11 % de conversión, el portero para el ~68 % de lo que va a puerta, y el cociente ataque/defensa se satura (`SATURA_LN`, A4-PAR-L02: 71 contra 48 da ~3,8 goles y como mucho ~8 en vez de 7,7 y hasta 15-0). Los goles siguen en ~2,7. Era 2200717894. `igualdad_motor` no cambia.
+const ESPERADO := "3463485184"
 
 func _ready() -> void:
 	var m := Mundo.new()

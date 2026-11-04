@@ -80,8 +80,8 @@ func _montar() -> void:
 	marco.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for lado: String in ["left", "right"]:
 		marco.add_theme_constant_override("margin_" + lado, 28)
-	marco.add_theme_constant_override("margin_top", 18)
-	marco.add_theme_constant_override("margin_bottom", 16)
+	marco.add_theme_constant_override("margin_top", 8 if get_viewport_rect().size.y < 600.0 else 18)
+	marco.add_theme_constant_override("margin_bottom", 8 if get_viewport_rect().size.y < 600.0 else 16)
 	add_child(marco)
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 12)
@@ -140,7 +140,8 @@ func _panel_previa() -> Control:
 	var arriba := HBoxContainer.new()
 	arriba.add_theme_constant_override("separation", 12)
 	v.add_child(arriba)
-	_p_escudo = _imagen(Vector2(118, 118))
+	var bajo := get_viewport_rect().size.y < 600.0   ## móvil apaisado (~480 px): la vista previa pedía 451 px y empujaba «Volver/Siguiente» fuera de la pantalla (A4-INT-025)
+	_p_escudo = _imagen(Vector2(72, 72) if bajo else Vector2(118, 118))
 	arriba.add_child(_p_escudo)
 	var datos_v := VBoxContainer.new()
 	datos_v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -158,7 +159,7 @@ func _panel_previa() -> Control:
 	_p_mascota = Tema.etiqueta(13, Tema.TEXTO)
 	datos_v.add_child(_p_mascota)
 	## La equipación entera; un clic la da vuelta (la espalda lleva el número).
-	_p_kit = _imagen(Vector2(0, 250))
+	_p_kit = _imagen(Vector2(0, 90 if bajo else 250))
 	_p_kit.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_p_kit.mouse_filter = Control.MOUSE_FILTER_STOP
 	_p_kit.tooltip_text = Idiomas.t("Clic para ver la espalda")

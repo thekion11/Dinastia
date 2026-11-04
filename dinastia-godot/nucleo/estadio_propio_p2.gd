@@ -185,7 +185,8 @@ func nombre_de(mi: Club) -> String:
 	return "Estadio " + Nombres.visible(mi.nombre)
 
 func renombrar(nuevo: String) -> void:
-	nombre = nuevo.strip_edges()
+	## A4: sin saltos de línea ni tabulaciones y con tope de 60 letras (un nombre de 200 se salía de la tarjeta, la pantalla del club y el marcador).
+	nombre = nuevo.replace("\n", " ").replace("\r", " ").replace("\t", " ").strip_edges().left(60).strip_edges()
 	renombrado.emit(nombre)
 
 ## Contrapartida de lo anterior: cuanto más compacto y cerrado, más ruido. Es un

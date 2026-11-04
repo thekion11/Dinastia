@@ -226,7 +226,7 @@ func _montar(duracion_mitad: float) -> void:
 	if _camarografos != null:
 		_camarografos.balon = balon
 	motor = load("res://visor/motor_jugable.gd").new()
-	add_child(motor); ControlesTactiles.poner(self)   ## M-433: stick y botones en el teléfono
+	add_child(motor); ControlesTactiles.poner(self); VidaApp.poner(self)   ## M-433: stick y botones en el teléfono
 	motor.duracion_mitad = duracion_mitad; GestoTecnico.fijar_clima(motor, String(perfil.get("clima", "")))   ## el clima pesa en el juego
 	motor.preparar(lista, balon, yo.id if yo != null else "", hash(local.id + visita.id))
 	## La cabeza de cada jugador sigue al balón (M-098, como en el modo DT).
@@ -401,11 +401,11 @@ func _alternar_pausa() -> void:
 			if _controles == null:
 				_controles = PanelControles.abrir(self)
 				_controles.cerrado.connect(func() -> void: _controles = null; _guia_cache.clear())],
-		["⏩  Simular lo que queda", _simular_resto],
-	])
+		["⏩  Simular lo que queda", _simular_resto]])
+	DificultadPartido.boton_en_pausa(self, _pausa)   ## 🤖 dificultad de la CPU (4-11)
 
 func _process(delta: float) -> void:
-	load("res://visor/stadium_builder.gd").ocultar_techo_ante(get_viewport().get_camera_3d())
+	delta = minf(delta, 0.25); load("res://visor/stadium_builder.gd").ocultar_techo_ante(get_viewport().get_camera_3d())
 	## La grada sigue el balón con la cabeza (M-049), como en el modo DT.
 	if Engine.get_process_frames() % 4 == 0 and motor != null and motor.balon != null:
 		OlaGrada.mirar(_raiz, motor.balon.global_position)

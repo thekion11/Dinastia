@@ -7,6 +7,13 @@ extends "res://visor/motor_jugable_p11.gd"
 func paso(delta: float) -> void:
 	if estado == "fin":
 		return
+	## Un paso MUY grande (más de 0,1 s: el juego a `Engine.time_scale` alto, un tirón que la física no repartió, una herramienta) se parte en pasos de ≤ 1/30 s: a 0,2 s el balón
+	## recorre 6 m por paso y atravesaría postes y jugadores. Los pasos de siempre (1/60, 1/30, 1/20) no se tocan: las huellas y las calibraciones no cambian.
+	if delta > 0.1:
+		var n := ceili(delta * 30.0)
+		for i in n:
+			paso(delta / float(n))
+		return
 	## CÁMARA LENTA del tiro potente (FC 26): medio segundo real a un tercio.
 	if lento > 0.0:
 		lento -= delta

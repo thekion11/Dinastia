@@ -81,7 +81,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	OlaGrada.piel_de_pais(_raiz3d, club.pais if club != null else "")
 	if club != null:
 		OlaGrada.colores_club(_raiz3d, Color(club.color1), Color(club.color2))
-	EntornoEstadio.agrupar(_raiz3d)   ## piezas repetidas del entorno en MultiMesh (rendimiento)
+	EntornoEstadio.agrupar(_raiz3d); PartidoLigero.montar(self)   ## entorno en MultiMesh; «Partido ligero» si está encendido (orden 32)
 	OptimizarGrada.trocear(_raiz3d)   ## M-345: butacas e hinchas en trozos con su propia caja
 	await _respiro()
 	## LA PANTALLA GIGANTE (22-9-2026, rehecha el 23-9). Ahora se monta SIEMPRE,
