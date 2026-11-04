@@ -26,13 +26,14 @@ func _fuera(ancho: float) -> int:
 	var fuera := 0
 	for n in _p.find_children("*", "Control", true, false):
 		var c := n as Control
-		if not (c is Button or c is Label) or not c.is_visible_in_tree() or c.get_window() != get_tree().root:
+		if not (c is Button or c is Label) or not c.is_visible_in_tree() or c.get_viewport() != get_viewport():   ## (lo de un SubViewport pinta en su propia textura)
 			continue
 		if String(c.get("text")).strip_edges() == "" or c.size.x < 4.0:
 			continue
 		var r := c.get_global_rect()
 		if r.end.x > ancho + 2.0 and r.position.x < ancho:
 			fuera += 1
+			print("    se sale %d px: %s | %s" % [int(r.end.x - ancho), c.get_path().get_concatenated_names().right(70), String(c.get("text")).left(50)])
 	return fuera
 
 func _process(_d: float) -> void:
@@ -46,12 +47,15 @@ func _process(_d: float) -> void:
 	if _n < 10:
 		return
 	var ml: MenuLateral = _p.get("_menu_lateral")
+	if _n % 20 == 0: print("  fase %d ciclo %d" % [_fase, _ciclo])
 	match _fase:
 		0:
 			## 100 aperturas/cierres de los menús laterales: ni nodos ni huérfanos ni memoria crecen sin parar.
-			if _ciclo == 10:
+			if _ciclo == 30:   ## las primeras vueltas construyen (y guardan) las pantallas perezosas
 				_nodos_base = int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT))
 				_huerfanos_base = int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))
+			if _ciclo % 20 == 10:
+				print("    ciclo %d: %d nodos" % [_ciclo, int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT))])
 			if _ciclo < 110:
 				var id: String = _ids[_ciclo % _ids.size()]
 				ml.abrir_menu(id, 0)
