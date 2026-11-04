@@ -21,6 +21,16 @@ for n in tope["partes"]:
     if n not in vistas:
         print("  FALLO: el informe no trae la parte «%s»" % n)
         fallos += 1
+## R01 (4-11): el barrido de resolución mide cada escala CON y SIN MSAA y el informe trae su resumen (msaa_35/50/70/100 y sus partes).
+for e in ("35", "50", "70", "100"):
+    for sufijo in ("", " sin MSAA"):
+        n = "estadio MÍNIMA al %s %%%s" % (e, sufijo)
+        if n not in [p["parte"] for p in inf["partes"]]:
+            print("  FALLO: el informe no trae la parte «%s»" % n)
+            fallos += 1
+    if ("msaa_" + e) not in inf:
+        print("  FALLO: el informe no trae el resumen del MSAA a %s %%" % e)
+        fallos += 1
 if len(sys.argv) > 2:
     pico = float(sys.argv[2])
     meta = tope["objetivo_pico_ram_mb"]
