@@ -39,7 +39,7 @@ static func montar(ex: CiudadExpansion, c: Vector3, w: float, f: float) -> void:
 	var zn := c.z - f * 0.5 + 6.0
 	var ancho := w - 16.0
 	var claro := b._mat_simple(Color(0.86, 0.8, 0.7), 0.85)
-	b._caja_en(Vector3(c.x, y + 4.5, zn - 4.0), Vector3(ancho, 9.0, 8.0), claro)
+	MuroCivico.vestir(b, b._caja_en(Vector3(c.x, y + 4.5, zn - 4.0), Vector3(ancho, 9.0, 8.0), claro), Color(0.86, 0.8, 0.7))   ## (4-11) ventanas por detrás y de lado
 	FachadaModular.montar(ex, c.x, zn, y, ancho, 2, false)
 	b._caja_en(Vector3(c.x, y + 4.6, zn + 4.4), Vector3(ancho, 0.4, 5.2), claro)
 	var piedra := b._mat_simple(Color(0.78, 0.74, 0.68), 0.8)
