@@ -104,10 +104,14 @@ func resolver(op: String, c: Club, directiva: Directiva, prensa: Prensa) -> Dict
 	match String(p["exige"]):
 		"dividendos":
 			if sube:
-				c.mover_saldo(-int(p["monto"]))
-				movimiento.emit("Dividendos a los accionistas", -int(p["monto"]))
-				d_conf = 2
-				cuerpo = "Los accionistas cobran. La caja lo nota."
+				## A4-GESTION-005: no se reparten dividendos con la caja vacía ni en números rojos: se paga lo que haya (como mucho el monto).
+				var pago := mini(int(p["monto"]), maxi(c.saldo, 0))
+				if pago > 0:
+					c.mover_saldo(-pago)
+					movimiento.emit("Dividendos a los accionistas", -pago)
+				d_conf = 2 if pago >= int(p["monto"]) else (1 if pago > 0 else 0)
+				cuerpo = "Los accionistas cobran. La caja lo nota." if pago >= int(p["monto"]) else \
+					("Los accionistas cobran solo una parte: la caja no da para más." if pago > 0 else "No hay caja para dividendos: los accionistas se conforman con la promesa.")
 			else:
 				cuerpo = "Todo se reinvierte. Algunos accionistas se van de la sala sin saludar."
 		"titulos":
