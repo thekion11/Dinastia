@@ -166,3 +166,8 @@ func _limpiar() -> void:
 	for p: Dictionary in Partida.listar():
 		if String(p.get("fichero", "")).begins_with(PREFIJO):
 			Partida.borrar(String(p["fichero"]))
+	## Las rotas a propósito no salen en listar() (no se pueden leer): se borran por nombre de archivo, con todas sus copias.
+	var dir := Partida.ruta_de(PREFIJO + "x").get_base_dir()
+	for f in DirAccess.get_files_at(dir):
+		if f.begins_with(PREFIJO):
+			DirAccess.remove_absolute(dir.path_join(f))
