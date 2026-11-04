@@ -230,7 +230,7 @@ func _montar(duracion_mitad: float) -> void:
 	motor.duracion_mitad = duracion_mitad; GestoTecnico.fijar_clima(motor, String(perfil.get("clima", "")))   ## el clima pesa en el juego
 	motor.preparar(lista, balon, yo.id if yo != null else "", hash(local.id + visita.id))
 	## La cabeza de cada jugador sigue al balón (M-098, como en el modo DT).
-	MiradaBalon.poner(motor.jugadores, balon)
+	MiradaBalon.poner(motor.jugadores, balon); DificultadPartido.aplicar(motor, _es_local_usuario)
 	_preparar_cambio(sp, yo)
 	if carrera != null:
 		motor.lanza_usuario = {"corner": bool(carrera.lanzador.get("corners", true)),
