@@ -163,8 +163,15 @@ func _bbcode_accesible(t: String) -> String:
 	return t.replace("#4caf6d", "#56b4e9").replace("#e05555", "#d55e00").replace("#c9a227", "#e69f00")
 
 
+const MAX_LINEAS_REGISTRO := 600   ## (A4-INT) «Lo que va pasando» guarda las últimas; sin tope crecía toda la carrera (8 MB de texto tras 140.000 mensajes)
+
 func _escribir(bbcode: String) -> void:
 	_registro.append_text(_bbcode_accesible(_traducir_bbcode(CompeticionInfo.visibles_en(bbcode))) + "\n")
+	var sobran := _registro.get_paragraph_count() - MAX_LINEAS_REGISTRO
+	if sobran > 0:
+		for i in sobran:
+			_registro.remove_paragraph(0, true)
+		_registro.queue_redraw()
 
 func _liga_de(c: Club) -> Liga:
 	for l in mundo.ligas:

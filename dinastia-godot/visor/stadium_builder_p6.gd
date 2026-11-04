@@ -5,6 +5,7 @@ extends "res://visor/stadium_builder_p5.gd"
 const TOPE_OCUPACION := 0.86
 ## Cuántas filas de la bandeja de abajo llevan la butaca con respaldo curvo (1.944 triángulos); 99 o más = como antes de la rebaja #1 (las capturas «antes»).
 static var butaca_detalle_filas := 2
+static var llenado_aforo := 1.0   ## (4-11) fracción de filas con butaca según el AFORO (aforo/22 000 por nivel, 0,5-1)
 
 ## Lo que sale de poblar una grada: la hinchada por nivel de detalle, y los peldaños y pasillos.
 class _Gente:
@@ -73,21 +74,8 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	var reales: int = 2 if Calidad.elegida <= Calidad.MEDIO else FILAS_REALES
 	var presupuesto: int = reales if bandeja == 0 \
 		else (maxi(1, reales / 2) if bandeja == 1 and reales == FILAS_REALES else 0)
-	## LA HINCHADA LLEGA ARRIBA DEL TODO; LAS BUTACAS 3D, NO (23-9-2026).
-	##
-	## Pedido directo del usuario -"ese modelo de público debe estar en toda la
-	## grada, siempre falta una parte"-, y tenía razón: con 3 niveles las 15
-	## filas de butacas cubrían 13 m de una rampa de 21, o sea que **el tercio
-	## de arriba de cada tribuna no tenía ni una persona en 3D**, solo la
-	## textura. Se notaba como un corte horizontal a media grada.
-	##
-	## Se separan los dos presupuestos, que es lo que faltaba: una fila de tres
-	## butacas del modelo real cuesta **988 vértices** y un hincha cuesta
-	## **~70**. Subir las butacas a toda la rampa sería pasar de 4,4 a 6,7
-	## millones de vértices -una Intel UHD no lo mueve, que es justo el motivo
-	## documentado de que estuvieran limitadas-. Subir SOLO los hinchas cuesta
-	## unos 400.000 en total: se puede de sobra, y es lo que de verdad se ve,
-	## porque las butacas de arriba ya las dibuja la textura de la grada.
+	## LA HINCHADA LLEGA ARRIBA DEL TODO; LAS BUTACAS 3D, NO (23-9-2026, «el modelo de público debe estar en toda la grada»): una fila de tres butacas del modelo
+	## real cuesta 988 vértices y un hincha ~70, así que los presupuestos van separados: butacas reales solo abajo, hinchas (~400 000 en total) en toda la rampa.
 	var filas_todas: int = maxi(1, int(fondo / PASO_FILA))
 	## LA GRADA ENTERA CON BUTACAS (29-9-2026). Pedido del usuario: «ponelas en
 	## la totalidad de la grada, deja de hacer lo de poner una versión fea en la
@@ -198,12 +186,20 @@ static func _poblar_grada(mm: MultiMesh, mm_lejos: MultiMesh, g: Dictionary) -> 
 	var gt := _Gente.new()
 	var i := 0
 	var j := 0
+	var f_llenas: int = mini(filas_todas, maxi(filas, ceili(float(filas_todas) * llenado_aforo)))
 	for f in range(filas_todas):
 		## Se empieza por el borde de abajo del deck (el que da al cesped).
 		var d: float = sentido * (-fondo * 0.5 + 0.6 + f * PASO_FILA)
 		for c in range(cuantas_fila):
 			var l: float = -largo * 0.5 + 0.8 + c * PASO_BUTACA
 			var p: Vector3 = Vector3(d, 0.24, l) if lateral else Vector3(l, 0.24, d)
+			if f >= f_llenas:   ## fila de arriba que el aforo no justifica: sin butaca ni hinchas (instancia a escala 0)
+				(mm if f < filas else mm_lejos).set_instance_transform(i if f < filas else j, Transform3D(Basis().scaled(Vector3.ZERO), p))
+				if f < filas:
+					i += 1
+				else:
+					j += 1
+				continue
 			## La contrarrotacion que las deja DE PIE: primero el giro y despues
 			## la contrarrotacion del rake (`rotated()` premultiplica).
 			var base := Basis().rotated(Vector3.UP, giro)

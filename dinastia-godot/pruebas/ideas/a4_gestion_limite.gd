@@ -143,6 +143,20 @@ func _absurdos(m: Mundo) -> void:
 			break
 	_comprobar(llevado != null and rico.plantilla.has(llevado) and not vend.plantilla.has(llevado) and llevado.club_id == rico.id,
 		"un rival que se lo lleva en plena negociación lo pasa a SU plantel (y sale del viejo) %s" % str(tipos))
+	## A4-GES-007: un CEDIDO no se compra ni se negocia (se le pagaría al club que solo lo tiene prestado).
+	var duenio: Club = m.ligas[0].clubes[8]
+	var presta: Club = m.ligas[0].clubes[9]
+	var ced: Jugador = duenio.plantilla[0]
+	for jj: Jugador in duenio.plantilla:
+		if jj.ovr > ced.ovr:
+			ced = jj   ## el mejor: el que más querría comprar la IA
+	m.cesiones._firmar_cesion(ced, duenio, presta, "simple", 0, 0.0)
+	var se_mueve := false
+	for k in 300:
+		if m.mercado._buscar_objetivo(m.ligas[0].clubes[k % 7 + 1]) == ced:
+			se_mueve = true
+	_comprobar(not se_mueve and m.mercado.abrir_negociacion(ced) != "" and presta.plantilla.has(ced),
+		"un cedido no lo busca la IA ni se puede negociar por él (sigue en %s)" % presta.nombre)
 	## Año extremo.
 	m.anio = 2099
 	m.avanzar_semana()
