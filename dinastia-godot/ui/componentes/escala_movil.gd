@@ -23,6 +23,7 @@ static func aplicar(arbol: SceneTree, prefs_ruta: String) -> void:
 	if cf.load(prefs_ruta) == OK and cf.has_section_key("pantalla", "zoom"):
 		guardado = cf.get_value("pantalla", "zoom")
 	arbol.root.content_scale_factor = zoom(guardado)
+	vigilar(arbol)   ## desde el arranque: también las pantallas de entrada (idioma, país, club, personaje) con botones de 7 mm
 
 ## Alto mínimo de un cuadro de texto: el normal en escritorio, mayor en el móvil.
 static func campo_alto(normal: int) -> int:
