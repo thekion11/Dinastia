@@ -1,28 +1,32 @@
 extends BaseIdea
-## MEGA AUDITORÍA 4 (4-11-2026), repaso 5 CRUZADO desde mundo_3d sobre GESTIÓN: invariantes del mundo simulado, cada 4 semanas, durante 2,3 temporadas y 3 semillas con 2 países.
+## MEGA AUDITORÍA 4 (4-11-2026), repaso 5 CRUZADO desde mundo_3d sobre GESTIÓN: invariantes del mundo simulado, cada 4 semanas, durante 2,3 temporadas y 2 semillas (LARGO=1 añade 10 temporadas) con 2 países.
 ##   1. Cada jugador está en UN solo sitio (un plantel o los libres) y su `club_id` es el de su plantel.
 ##   2. Rangos: edad, valoración, forma, moral, físico, sueldo, años de contrato, goles; clubes: saldo, confianza, reputación, socios, aforo, entrada.
 ##   3. Tablas: la suma de goles a favor = en contra; pts = victoria×g + e; pj = g + e + p.
 const SEMILLAS := [101, 5150]
 const SEMANAS := 70
+const SEMANAS_LARGO := 520   ## 10 temporadas, una semilla, solo Chile
 
 func _probar() -> void:
 	_titulo("A4 CRUZADO (gestión): invariantes del mundo simulado, 2 semillas × %d semanas × 2 países + casos extremos" % SEMANAS)
 	for semilla in SEMILLAS:
 		await _simular_mundo(semilla)
 	await _extremos()
+	if OS.get_environment("LARGO") == "1":
+		await _simular_mundo(31, SEMANAS_LARGO, ["CHI"])
 
-func _simular_mundo(semilla: int) -> void:
+func _simular_mundo(semilla: int, semanas: int = SEMANAS, paises_sel: Array = ["CHI", "ARG"]) -> void:
 	Partido.limpiar_contexto()
 	var m := Mundo.new()
-	var paises: Array[String] = ["CHI", "ARG"]
+	var paises: Array[String] = []
+	paises.assign(paises_sel)
 	m.generar(paises, semilla)
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
 	var fallos: Dictionary = {}
 	var muestras := 0
 	var min_plantel := 999
 	var max_plantel := 0
-	for sem in SEMANAS + 1:
+	for sem in semanas + 1:
 		if sem % 4 == 0:
 			muestras += 1
 			var r := _revisar(m)
@@ -30,7 +34,7 @@ func _simular_mundo(semilla: int) -> void:
 				fallos[k] = int(fallos.get(k, 0)) + int(r[k])
 			min_plantel = mini(min_plantel, int(r.get("_min", 999)))
 			max_plantel = maxi(max_plantel, int(r.get("_max", 0)))
-		if sem < SEMANAS:
+		if sem < semanas:
 			m.avanzar_semana()
 		if sem % 20 == 0:
 			await get_tree().process_frame
@@ -73,7 +77,7 @@ func _revisar(m: Mundo) -> Dictionary:
 			var t: Dictionary = l.tabla_puntos[id]
 			gf += int(t.get("gf", 0))
 			gc += int(t.get("gc", 0))
-			if int(t.get("pts", 0)) != l.puntos_victoria * int(t.get("g", 0)) + int(t.get("e", 0)):
+			if int(t.get("pts", 0)) != l.puntos_victoria * int(t.get("g", 0)) + int(t.get("e", 0)) - int(t.get("sancion", 0)):
 				_suma(f, "puntos distintos de victorias×%d + empates" % l.puntos_victoria)
 			if int(t.get("pj", 0)) != int(t.get("g", 0)) + int(t.get("e", 0)) + int(t.get("p", 0)):
 				_suma(f, "partidos jugados distintos de g+e+p")
