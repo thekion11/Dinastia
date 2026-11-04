@@ -388,7 +388,17 @@ func _ideas_b_sin_red() -> void:
 	for dir in ["res://nucleo", "res://ui", "res://visor"]:
 		_escanear(dir, prohibidos, n_archivos, hallazgos, pistas)
 	_comprobar(n_archivos[0] > 300 and pistas[0] > 10, "el escáner vio %d scripts (y encuentra «FileAccess» %d veces)" % [n_archivos[0], pistas[0]])
-	_comprobar(hallazgos.is_empty(), "ninguna clase de red, telemetría ni compras en nucleo/ui/visor (942, 1080, 1096, 1097): %s" % ", ".join(hallazgos))
+	## (4-11) ÚNICA excepción: el actualizador (`nucleo/actualizador.gd`, HTTPRequest) que solo trabaja cuando la persona pulsa «Buscar actualización» en Ajustes.
+	var fuera_del_actualizador: Array[String] = []
+	var del_actualizador := 0
+	for h: String in hallazgos:
+		if h.begins_with("actualizador.gd:HTTPRequest"):
+			del_actualizador += 1
+		else:
+			fuera_del_actualizador.append(h)
+	_comprobar(fuera_del_actualizador.is_empty(), "ninguna clase de red, telemetría ni compras en nucleo/ui/visor salvo el actualizador (942, 1080, 1096, 1097): %s" % ", ".join(fuera_del_actualizador))
+	_comprobar(del_actualizador >= 1 and FileAccess.get_file_as_string("res://ui/pantallas/ajustes_actualizar.gd").contains("act.consultar()") and not FileAccess.get_file_as_string("res://ui/pantallas/pantalla_ajustes.gd").contains("consultar()"),
+		"la red del actualizador solo se activa desde el botón «Buscar actualización» (nada al arrancar)")
 
 func _escanear(dir: String, prohibidos: Array, n_archivos: Array, hallazgos: Array[String], pistas: Array) -> void:
 	var d := DirAccess.open(dir)
