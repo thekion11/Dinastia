@@ -53,6 +53,6 @@ func _process(_d: float) -> void:
 			if _p.terminado_ya:
 				print("FIN OK: %d-%d en %d fotogramas" % [_p.goles_local, _p.goles_visita, _n])
 				get_tree().quit()
-	if _n > 20000:
+	if _n > 60000:   ## (4-11) el reloj del partido en vivo avanza como mucho 0,25 s por fotograma (tras segundo plano no se traga el partido)
 		print("FALLO: fase %d, minuto %d" % [_fase, _p.minuto])
 		get_tree().quit()
