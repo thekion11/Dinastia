@@ -38,6 +38,10 @@ caja −250 M, todos lesionados y sancionados, club con 48 jugadores y otro vac�
   su dueño, con el comprador sin jugador ni dinero; (b) te llegaban OFERTAS por un jugador que solo tienes cedido (vendías algo ajeno);
   (c) podías negociar por un cedido y pagarle al club que lo tiene prestado. Arreglo: `Mercado._cedido` en `_buscar_objetivo`,
   `buscar_oferta_por_mi_jugador` y `responder_oferta`; `abrir_negociacion` lo rechaza con frase traducida. Prueba en `a4_gestion_limite`. ARREGLADO.
+- [A4-GES-009] (caza, gravedad: medio, cambia el juego) CONTRATOS DE LOS CEDIDOS: vencían ANTES de que volvieran (`nueva_temporada`:
+  contratos y luego `Cesiones.resolver`) y decidía el club donde estaba, no su dueño: un jugador de la IA cedido a tu club se iba LIBRE
+  si tú no lo renovabas (la IA renueva ~88 %), y uno tuyo cedido a la IA lo «renovaba» un club que no era el suyo. Arreglo:
+  `_vence_contrato` (mundo_p6 y mundo_p7) decide con el club DUEÑO de la cesión. Prueba en `a4_gestion_limite` (de 17 se iban 17; ahora 0). ARREGLADO.
 - Sin hallazgos: integridad del mundo en 8 temporadas (un club por jugador, club_id, libres, contratos, sueldos, edades, medias, cajas,
   planteles, ligas y divisiones); caja a −250 M seis semanas; club con todos lesionados y sancionados (saca 11); club con 48 jugadores y
   otro vacío; año 2099.

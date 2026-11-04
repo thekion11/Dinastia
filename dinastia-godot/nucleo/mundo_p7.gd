@@ -438,6 +438,7 @@ func informe_de_gestion() -> Array[Dictionary]:
 	return salida
 ## LA IA RENUEVA UN AÑO ANTES (25-10; antes 60% del mundo en su último año; 26-10: 0,65/0,30, con 0,8 bajaba al 11%). Tu club no.
 func _vence_contrato(j: Jugador, c: Club) -> bool:
+	c = clubes.get(String(cesiones.cesion_de(j.id).get("de", "")), c) if cesiones != null else c   ## A4-GES-009: decide su DUEÑO, no quien lo tiene cedido
 	var h := absi(hash("%s|%d|anticipada" % [j.id, anio]))
 	if c.id != mi_club_id and j.anios_contrato == 2 and float(h % 1000) / 1000.0 < (0.3 if j.edad >= 32 else 0.65):
 		j.anios_contrato = Contratos.ajustar_anios(j, 1 + (h / 1000) % 2 if j.edad >= 32 else 2 + (h / 1000) % 3)
