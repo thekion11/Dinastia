@@ -11,6 +11,13 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 ; El icono de la app. Sale de la marca del proyecto -el mismo que llevaba el
 ; APK viejo de la WebView-: Android se niega a exportar sin uno.
 config/icon="res://assets/logo/logo_256.png"
+; (4-11, A4) La PANTALLA DE ARRANQUE: el logo del juego sobre el fondo oscuro del menú mientras cargan los autoloads y el primer menú (3-5 s en un
+; teléfono). Sin esto salía el logo de Godot o una pantalla negra sin aviso.
+boot_splash/bg_color=Color(0.039, 0.055, 0.047, 1)
+boot_splash/show_image=true
+boot_splash/image="res://assets/logo/logo_512.png"
+boot_splash/fullsize=false
+boot_splash/use_filter=true
 
 [editor]
 
