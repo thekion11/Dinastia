@@ -66,6 +66,7 @@ pasa "contador de FPS" "godot --headless --path . res://pruebas/prueba_contador_
 pasa "dominadas" "godot --headless --path . res://pruebas/prueba_dominadas.tscn" "DOMINADAS: 0 fallos"
 pasa "minijuego retro 5v5" "godot --headless --path . res://pruebas/ideas/m5_retro5v5.tscn" "FIN. 0 fallos"
 pasa "barrida, saque de mano, caídas y bloqueos" "godot --headless --path . res://pruebas/ideas/p4_saque_barrida.tscn" "FIN. 0 fallos"
+pasa "A4 cruzado: partido simulado con equipos absurdos y tarjetas reales" "godot --headless --path . res://pruebas/ideas/a4_partido_cruzado.tscn" "FIN. 0 fallos"
 pasa "A4 gestión al límite (8 temporadas, guardado exacto, absurdos)" "godot --headless --path . res://pruebas/ideas/a4_gestion_limite.tscn" "FIN. 0 fallos"
 pasa "fallos de League-Soccer (posesión, menos de siete, libres)" "godot --headless --path . res://pruebas/ideas/fallos_terceros.tscn" "FIN. 0 fallos"
 pasa "la pizarra se nota (simulado y 3D)" "godot --headless --path . res://pruebas/ideas/j4_pizarra.tscn" "FIN. 0 fallos"
