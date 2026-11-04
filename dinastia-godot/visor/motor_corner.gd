@@ -26,3 +26,12 @@ static func cabeza(m: MotorJugable, p: Dictionary, destino: Vector3) -> Vector3:
 		d.y = m.LARGUERO + m._rng.randf_range(0.4, 1.8)
 	return d
 
+## CENTROS (ciclo 32, plan «construir hasta el área» C3): la IA centraba 3 veces en 16 partidos (real ≈25 por partido; ≈2,8 % de los pases), con 0 compañeros en el área. El centro exigía estar a > 17 m del
+## eje y a < 20 m de la línea de fondo, con un 55 % de probabilidad. `CENTRO_X`/`CENTRO_Z`/`CENTRO_P` (17 · 20 · 0,55 = como antes) relajan esas tres condiciones. Mismo orden de sorteo que antes.
+static var CX := float(OS.get_environment("CENTRO_X")) if OS.get_environment("CENTRO_X") != "" else 17.0
+static var CZ := float(OS.get_environment("CENTRO_Z")) if OS.get_environment("CENTRO_Z") != "" else 20.0
+static var CP := float(OS.get_environment("CENTRO_P")) if OS.get_environment("CENTRO_P") != "" else 0.55
+
+static func centrar(m: MotorJugable, yo: Vector3, arco: Vector3) -> bool:
+	return absf(yo.x) > CX and absf(arco.z - yo.z) < CZ and m._rng.randf() < CP
+

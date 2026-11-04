@@ -247,3 +247,13 @@ static func _progresion(m: MotorJugable, p: Dictionary, q: Dictionary) -> void:
 	if (m.pos(q).z - m.pos(p).z) * m.dir_ataque(bool(p["es_local"])) >= 10.0:
 		m._contar("traza_prog_progresivo")
 
+## Ciclo 32 (C3, centros): al salir un centro de la IA cuenta cuántos compañeros (sin portero ni centrador) hay a < 18 m del arco (`traza_centro_n_{0,1,2,3mas}`) y cuántos centros hay (`traza_centro`). Referencia: ≈3 atacantes en el área al centrar.
+static func centro(m: MotorJugable, p: Dictionary) -> void:
+	var arco := m._arco_rival(p)
+	var n := 0
+	for q: Dictionary in m.jugadores:
+		if q != p and bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and m.pos(q).distance_to(arco) < 18.0:
+			n += 1
+	m._contar("traza_centro")
+	m._contar("traza_centro_n_" + (str(n) if n < 3 else "3mas"))
+
