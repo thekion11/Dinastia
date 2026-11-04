@@ -175,6 +175,15 @@ func _informe_tiempos() -> void:
 ## (clip o «…») porque es más ancho que el propio control.
 func _medir() -> void:
 	var ancho := get_viewport().get_visible_rect().size.x
+	## Con RECORRIDO_TOQUE: un ScrollContainer visible cuyo contenido no cabe y que no se puede deslizar (el final queda inalcanzable).
+	if OS.get_environment("RECORRIDO_TOQUE") != "":
+		for sc in _p.find_children("*", "ScrollContainer", true, false):
+			var sk := sc as ScrollContainer
+			if not sk.is_visible_in_tree() or sk.get_child_count() == 0 or sk.get_window() != get_tree().root:
+				continue
+			var hijo := sk.get_child(0) as Control
+			if hijo != null and hijo.get_combined_minimum_size().y > sk.size.y + 2.0 and sk.vertical_scroll_mode == ScrollContainer.SCROLL_MODE_DISABLED:
+				_largos["%s | scroll %s" % [_donde, sk.name]] = "no se desliza: contenido %d > %d" % [int(hijo.get_combined_minimum_size().y), int(sk.size.y)]
 	for n in _p.find_children("*", "Control", true, false):
 		var c := n as Control
 		if not (c is Button or c is Label) or not c.is_visible_in_tree() or c.get_window() != get_tree().root:
