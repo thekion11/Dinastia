@@ -289,6 +289,7 @@ func _pitar_offside(p: Dictionary) -> bool:
 func _tomar(p: Dictionary) -> void:
 	if poseedor == p:
 		return
+	MotorTraza.tomar(self as Object as MotorJugable, p)   ## traza de posesiones (ciclo 9, solo cuenta)
 	if not _tiro_vivo.is_empty() and _tiro_vivo["p"] != p:
 		## Un tiro fuerte que se topa con un defensor no se controla: se
 		## desvía (muchas veces a córner), como un bloqueo de verdad.
@@ -304,10 +305,9 @@ func _tomar(p: Dictionary) -> void:
 	if _pase_eq >= 0:
 		if (0 if bool(p["es_local"]) else 1) == _pase_eq:
 			pases_ok[_pase_eq] += 1
-		elif OS.get_environment("DEPURAR_PASES") != "" and not pase_a.is_empty():
-			Registro.depurar("PASE PERDIDO", "recibía %s a %.1f m del balón; lo cortó %s a %.1f m; balón a %.1f m/s, alto %.1f" % [
-				String(pase_a.get("slot_code", "")), pos(pase_a).distance_to(balon.position), String(p.get("slot_code", "")),
-				pos(p).distance_to(balon.position), vel_balon.length(), balon.position.y])
+		elif OS.get_environment("DEPURAR_PASES") != "":   ## (3-11) también los cortes sin receptor (`pase_a` vacío): receptor -1 m
+			Registro.depurar("PASE PERDIDO", "recibía %s a %.1f m del balón; lo cortó %s a %.1f m; balón a %.1f m/s, alto %.1f" % [String(pase_a.get("slot_code", "NINGUNO")),
+				pos(pase_a).distance_to(balon.position) if not pase_a.is_empty() else -1.0, String(p.get("slot_code", "")), pos(p).distance_to(balon.position), vel_balon.length(), balon.position.y])
 		_pase_eq = -1
 	if _pitar_offside(p):
 		return

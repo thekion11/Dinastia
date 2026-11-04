@@ -79,7 +79,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 **Bancos de pruebas (confirmado: los del juego):** megarreforma en más de 30 bancos ESPECIALIZADOS, modulares (uno por área, corribles solos) y ultra detallados aunque tarden más.
 
-**Exportador de GitHub (CI de builds):** más eficiente, con los bancos nuevos; selección fácil del sistema operativo destino; y en un apartado APARTE, un exportador ACTUALIZADOR que genera solo los cambios de la versión nueva (parche) para quien ya tiene el juego, sin volver a bajarlo entero.
+**Exportador de GitHub (CI de builds):** más eficiente, con los bancos nuevos. (La selección del sistema ya está en «Compilar y probar» → `objetivo`; el ACTUALIZADOR aparte se hizo el 4-11: flujo «Actualizar Dinastia (parche)» + autoload `Parches`. Queda: que Android pueda bajar e instalar el parche desde el propio juego, porque en el teléfono no se puede copiar a la carpeta interna.)
 
 **Mega auditoría nueva:** comprobar que todo funciona, que todo está conectado y que todo es accesible.
 
@@ -88,10 +88,14 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 **Pulido pedido:** la CONFIGURACIÓN DE LOS CONTROLES DEL MANDO EN EL PARTIDO debe verse mejor; los ESCUDOS deben poder profundizarse más (más detalle/edición); buscar MÚSICA totalmente libre (dominio público / CC0) y proponer cada pista con su fuente y licencia al dueño, que decide cuáles entran (aprobado así el 3-11).
 
 ## REPARTO DEL 4-11 (decisión del dueño: menos bancos, más lo que se siente al jugar) — se borra al completarse
-- Ejecutora: MODO PARTIDO EN MÓVIL (controles táctiles configurables, HUD y cámara para teléfono, safe area, prueba de toques).
-- Líder: RENDIMIENTO MÓVIL (Mobile vs Compatibility, calidad más baja por defecto en móvil, preparar la versión para que el dueño mida FPS en su teléfono).
-- Ciudad: paradas saltadas por LOD + banco estadio_3d; luego PASADAS VISUALES con antes/después para la nota del dueño. (Banco personajes_3d descartado por ahora.)
-- PES 6: IA del partido (portero a corta distancia, C3 centros, C4 pases atrás).
+- PES 6 (orden DIRECTA del dueño, 4-11 03:00): su rama (PR #128) unida a `main`; ahora el modo JUGAR PARTIDO en MÓVIL (controles táctiles,
+  UI del partido en pantalla pequeña, safe area). En pausa: juego por bandas (centros con el área ocupada) y velocidad defensa-atacante.
+- Ejecutora: subir sus 4 bancos de interfaz; luego «Buscar actualización» dentro del juego (baja el parche de los Releases publicados a
+  user://parches y pide reiniciar; Android incluido).
+- Ciudad: PASADAS VISUALES con antes/después para la nota del dueño + dejar estable la prueba «estadio y ciudad por partes».
+- «Búsqueda de fallos» (4.ª sesión, abierta por el dueño 4-11 03:16): ronda cada 20 min que solo REGISTRA fallos (sección «FALLOS DETECTADOS»).
+- Líder: rendimiento móvil (barrido de resolución en la prueba de rendimiento; MÍNIMA hasta 60 FPS con los datos del teléfono del dueño)
+  y pasar la rama a `main` (PR #120, el dueño dijo SÍ el 4-11) cuando el CI esté verde.
 
 ## 0. Lo que espera una decisión tuya (lista corta)
 
