@@ -391,6 +391,8 @@ func _orillas_nucleo() -> void:
 		_lote("acera", Vector3(rx + lado * 51.5, 0.1, (NUC_Z0 + NUC_Z1) * 0.5), Vector3(4.0, 0.2, NUC_Z1 - NUC_Z0))
 
 func _prop_kenney(nombre: String, pos: Vector3, giro: float, esc: float = KENNEY_ESC) -> Node3D:
+	if b.altura_en(pos.x, pos.z) > 1.0:
+		return null   ## (4-11, banco de construcción) en los cerros exteriores el mobiliario quedaba enterrado
 	var e: PackedScene = _kenney_cache.get(nombre)
 	if e == null:
 		e = load(KENNEY + nombre + ".glb")
@@ -420,6 +422,8 @@ func _obras_en_calle() -> void:
 		var c: Vector3 = t["b"]
 		var vertical := absf(a.x - c.x) < 0.1
 		var m := (a + c) * 0.5
+		if b.altura_en(m.x, m.z) > 1.0:
+			continue   ## (4-11) bajo un cerro no hay obras
 		var lado := ANCHO_CALLE * 0.25
 		var centro := m + (Vector3(lado, 0, 0) if vertical else Vector3(0, 0, lado))
 		b._caja_en(centro + Vector3(0, 0.14, 0), Vector3(3.0, 0.06, 16.0) if vertical else Vector3(16.0, 0.06, 3.0), zanja)
