@@ -296,7 +296,7 @@ func riesgo_por_fatiga(j: Jugador, carga: float = CARGA_POR_DEFECTO) -> float:
 		r *= 1.6
 	if j.fisico < 55:
 		r *= 1.5
-	return maxf(0.0, r * 0.09)
+	return clampf(r * 0.09, 0.0, 1.0)   ## (A4) es una probabilidad: con una carga absurda no pasa de 1
 
 ## Tira el dado de la fatiga. Devuelve las semanas de baja, o 0 si aguantó.
 func chequeo_de_fatiga(j: Jugador, carga: float = CARGA_POR_DEFECTO, anio: int = 0, semana: int = 0) -> int:

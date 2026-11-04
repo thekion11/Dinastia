@@ -18,7 +18,8 @@ extends Node
 ## 4-11 (A4-PAR-L01, tarjetas del simulado, a propósito): la 2.ª amarilla cuenta en el PARTIDO (antes, total par de la temporada), la roja
 ## saca del once y la tarjeta solo cae en quien juega; `P_AMARILLA` 0,040 → 0,045 (3,65 amarillas y 0,16 rojas). Era 31094042.
 ## 4-11 (A4-PAR-003 de PES 6, a propósito): la nota y la forma del cambiado/expulsado ya no usan el bono del equipo contrario. Era 2563391786.
-const ESPERADO := "450552767"
+## 4-11 (A4-GES-006, a propósito): el entrenamiento sube más (0,10→0,13 y 0,014→0,018, freno 4/6) para que el juvenil haga +4-6 con el plan normal. Era 450552767.
+const ESPERADO := "194965960"
 
 func _ready() -> void:
 	var m := Mundo.new()
