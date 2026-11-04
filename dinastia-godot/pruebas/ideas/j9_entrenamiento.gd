@@ -3,9 +3,20 @@ extends BaseIdea
 ## entrena 12 semanas con decisiones distintas y se comparan el progreso (suma de medias), el físico y las lesiones: la
 ## intensidad, el foco y el plan de días tienen que cambiar el resultado, no ser adornos.
 
+## (4-11, A4-GES-006) 8 semillas sumadas: con una sola, +9 contra +10 en una decena de jóvenes era ruido del azar (cualquier ajuste del entrenamiento movía el resultado).
+const SEMILLAS := [4711, 4712, 4713, 4714, 4715, 4716, 4717, 4718]
+
 func _entrenar(config: Callable) -> Dictionary:
+	var tot := {"sube": 0, "jovenes": 0, "fisico": 0.0, "lesiones": 0}
+	for semilla in SEMILLAS:
+		var r := _entrenar_una(config, semilla)
+		for k: String in tot:
+			tot[k] = tot[k] + r[k]
+	return tot
+
+func _entrenar_una(config: Callable, semilla: int) -> Dictionary:
 	var m := Mundo.new()
-	m.generar(["CHI"], 4711)
+	m.generar(["CHI"], semilla)
 	var c: Club = m.ligas[0].clubes[0]
 	var e := Entrenamiento.new()
 	config.call(e)
