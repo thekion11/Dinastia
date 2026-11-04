@@ -59,12 +59,12 @@ func _ver_ciudad_propia(por_partes := false) -> void:
 		if h is CanvasItem and (h as CanvasItem).visible and not h is PantallaCarga:   ## la carga sigue encima
 			(h as CanvasItem).visible = false
 			ocultados.append(h)
-	var vista := VistaCiudad.new()
+	var vista = CargaCiudad.de("VistaCiudad").new()
 	p.add_child(vista)
-	vista.construir = p._ui_club_vida._empezar_obra
+	vista.construir = func(clave: String) -> String: return p._ui_club_vida._empezar_obra(clave)
 	var prox := p.mundo.proximo_partido()
 	vista.dia_partido = not prox.is_empty() and prox[0] == c
-	vista.animo = CiudadAnimo.de(p.mundo, c)
+	vista.animo = CargaCiudad.de("CiudadAnimo").de(p.mundo, c)
 	vista.idolo = _idolo_del_club(c)
 	vista.por_partes = por_partes
 	await vista.abrir(c, p.mundo.obras, p.mundo.ciudad, p.mundo.perfil_estadio_de(c))
@@ -91,7 +91,9 @@ func _ver_ciudad_con_carga() -> void:
 	PantallaCarga.club = p.mundo.mi_club() if p.mundo != null else null
 	var carga := PantallaCarga.mostrar(p, Idiomas.t("Construyendo la ciudad…"))
 	await PantallaCarga.dejar_pintar(p.get_tree())
+	CargaCiudad.de("CityBuilder").diferir = true   ## (2-11) la ciudad se muestra en cuanto está lo cercano; lo demás se construye después (`CityBuilder._resto`)
 	await _ver_ciudad_propia(true)
+	await PantallaCarga.estabilizar(p.get_tree())
 	## Si algo la cerró mientras se esperaba (otra pantalla encima, o el
 	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).
 	if is_instance_valid(carga):
@@ -145,12 +147,13 @@ func _pintar_clubes() -> void:
 		tl.text = l.nombre
 		p._lista_clubes.add_child(tl)
 		var g := GridContainer.new()
+		CebraRejilla.poner(g)
 		g.columns = 7
 		g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		g.add_theme_constant_override("h_separation", 10)
 		p._lista_clubes.add_child(g)
 		for enc in ["#", "CLUB", "PJ", "G", "E", "P", "PTS"]:
-			var ce := p._celda(g, enc, p.COL_SUAVE, enc != "CLUB" and enc != "#", 11)
+			var ce := p._celda(g, CompeticionFilas.sigla(enc), p.COL_SUAVE, enc != "CLUB" and enc != "#", 11)   ## la sigla de la tabla, no el código en crudo: «G E P» no se traducen solos (3-11)
 			if CompeticionFilas._sigla_larga(enc) != enc:   ## M-305: la sigla, explicada al pasar el ratón
 				ce.tooltip_text = Idiomas.t(CompeticionFilas._sigla_larga(enc))
 				ce.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -294,15 +297,15 @@ func _ver_ciudad_explorando(modo: String) -> void:
 	if _levantarse_si_pc():
 		return
 	## Fase 3: sin coche propio (o en el taller) se sale a pie, y la vida se engancha al paseo.
-	var transp := VidaCiudad.transporte(p.mundo)
+	var transp = CargaCiudad.de("VidaCiudad").transporte(p.mundo)
 	if modo == "coche" and not bool(transp["coche"]):
 		Aviso.mostrar(p, "vida", "🚌", Idiomas.t("Sin coche esta semana"), Idiomas.t(String(transp["motivo"])))
 		modo = "pie"
 	await p._ver_ciudad_con_carga()
 	for h in p.get_children():
-		if h is VistaCiudad:
-			(h as VistaCiudad).explorar(modo)
-			VidaCiudad.enganchar((h as VistaCiudad)._explorador, h as VistaCiudad, p.mundo)
+		if is_instance_of(h, CargaCiudad.de("VistaCiudad")):
+			(h).explorar(modo)
+			CargaCiudad.de("VidaCiudad").enganchar((h)._explorador, h, p.mundo)
 
 func _ver_estadio_propio(por_partes := false) -> void:
 	p._fundido_entrada()
@@ -327,7 +330,7 @@ func _ver_estadio_propio(por_partes := false) -> void:
 		if h is CanvasItem and (h as CanvasItem).visible and not h is PantallaCarga:   ## la carga sigue encima
 			(h as CanvasItem).visible = false
 			ocultados.append(h)
-	var vista := VistaEstadio.new()
+	var vista = load("res://ui/estadio.gd").new()
 	vista.por_partes = por_partes   ## con carga: se arma entre fotogramas y la carga sigue viva
 	## Sin partido la pantalla gigante enseña bienvenida + tabla + goleadores,
 	## que es lo que hace un estadio de verdad un día entre semana. Va antes de
@@ -347,6 +350,7 @@ func _ver_estadio_con_carga() -> void:
 	var carga := PantallaCarga.mostrar(p, Idiomas.t("Levantando el estadio…"))
 	await PantallaCarga.dejar_pintar(p.get_tree())
 	await _ver_estadio_propio(true)
+	await PantallaCarga.estabilizar(p.get_tree())
 	## Si algo la cerró mientras se esperaba (otra pantalla encima, o el
 	## recorrido de pantallas), llamarla aquí tumbaba el juego (señal 11).
 	if is_instance_valid(carga):
@@ -356,17 +360,18 @@ func _ver_estadio_con_carga() -> void:
 ## Termina sola o con cualquier tecla; después se devuelve la pantalla tal cual estaba. Se apaga en Ajustes con `vuelta_olimpica`.
 func _ver_vuelta_olimpica(titulo: String) -> void:
 	var c := p.mundo.mi_club() if p.mundo != null else null
-	if c == null or not bool(AjustesCiudad.valor("vuelta_olimpica", true)) or DisplayServer.get_name() == "headless":
+	if c == null or not bool(CargaCiudad.de("AjustesCiudad").valor("vuelta_olimpica", true)) or DisplayServer.get_name() == "headless":
 		return
 	for h in p.get_children():
-		if h is VistaEstadio or h is VistaCiudad:
+		var sc := h.get_script() as Script   ## (por el nombre de la clase: nombrar `VistaEstadio` o `VistaCiudad` aquí cargaría el estadio o la ciudad enteros al abrir el menú)
+		if sc != null and String(sc.get_global_name()) in ["VistaEstadio", "VistaCiudad"]:
 			return   ## ya hay un 3D abierto (un partido, la ciudad): no se le pisa
 	var ocultados: Array = []
 	for h in p.get_children():
 		if h is CanvasItem and (h as CanvasItem).visible and not h is PantallaCarga:   ## la carga sigue encima
 			(h as CanvasItem).visible = false
 			ocultados.append(h)
-	var vista := VistaEstadio.new()
+	var vista = load("res://ui/estadio.gd").new()
 	vista.datos_pantalla = p._datos_pantalla_estadio(c)
 	p.add_child(vista)
 	vista.abrir(c, 1.0, null, null, p.mundo.perfil_estadio_de(c), Comercial.color_balon(p.mundo.comercial.balon, c))

@@ -68,7 +68,7 @@ static func gesto(nodo: Node3D, g: String) -> void:
 		var lib := ap.get_animation_library("")
 		if lib == null:
 			continue
-		AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(nodo), g)   ## (con la variante sin «_Loop» del pack: la «charla» nunca se cargaba)
+		load("res://visor/anim_extra.gd").asegurar(ap, FutbolistaQ.esqueleto_de(nodo), g)   ## (con la variante sin «_Loop» del pack: la «charla» nunca se cargaba)
 		if lib.has_animation(g):
 			ap.play(g, 0.3)
 

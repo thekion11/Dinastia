@@ -98,10 +98,10 @@ static func _explanada_de_fondo(root: Node3D) -> void:
 	mi.material_override = mat_explanada
 	root.add_child(mi)
 static func _tm(que: String) -> void:
-	if CityBuilder._medir_tiempos:
+	if CargaCiudad.de("CityBuilder")._medir_tiempos:
 		var ahora := Time.get_ticks_usec()
 		if que != "":
-			Registro.depurar("TIEMPO", "estadio.%-16s %6.0f ms" % [que, (ahora - _t_tm) / 1000.0])
+			Registro.depurar("TIEMPO", "estadio.%-16s %6.0f ms  mem %6.0f MB" % [que, (ahora - _t_tm) / 1000.0, Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0])
 		_t_tm = ahora
 
 static func _primera_malla(n: Node) -> Mesh:
@@ -115,7 +115,28 @@ static func _primera_malla(n: Node) -> Mesh:
 			return r
 	return null
 
+## R2 (3-11): la butaca de MÍNIMO, tres cajas por grupo de tres (36 triángulos en vez de 84): asiento, un respaldo corrido y la viga.
+static var _butaca_minima: Mesh = null
+static func _malla_butaca_minima() -> Mesh:
+	if _butaca_minima != null:
+		return _butaca_minima
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var asiento := BoxMesh.new()
+	asiento.size = Vector3(1.46, 0.07, 0.40)
+	st.append_from(asiento, 0, Transform3D(Basis(), Vector3(-0.05, 0.40, 0.04)))
+	var respaldo := BoxMesh.new()
+	respaldo.size = Vector3(1.46, 0.38, 0.05)
+	st.append_from(respaldo, 0, Transform3D(Basis(Vector3(1, 0, 0), -0.14), Vector3(-0.05, 0.58, -0.20)))
+	var viga := BoxMesh.new()
+	viga.size = Vector3(1.40, 0.30, 0.06)
+	st.append_from(viga, 0, Transform3D(Basis(), Vector3(-0.05, 0.20, -0.08)))
+	_butaca_minima = st.commit()
+	return _butaca_minima
+
 static func _malla_butaca_lejos() -> Mesh:
+	if Calidad.elegida <= Calidad.MINIMO:
+		return _malla_butaca_minima()
 	if _butaca_lejos != null:
 		return _butaca_lejos
 	var st := SurfaceTool.new()
@@ -401,7 +422,7 @@ static func _malla_hincha_minima() -> Mesh:
 	return _malla_hincha_min
 
 static func _malla_hincha_cache() -> Mesh:
-	if Calidad.elegida == Calidad.MEDIO:
+	if Calidad.elegida <= Calidad.MEDIO:
 		return _malla_hincha_minima()
 	if _malla_hincha != null:
 		return _malla_hincha

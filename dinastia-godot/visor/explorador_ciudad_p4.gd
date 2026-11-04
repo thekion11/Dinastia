@@ -10,7 +10,7 @@ func _mover_en_estadio(delta: float) -> void:
 		camara.position = cuerpo.position + Vector3(0, 1.2, 0) + Vector3(sin(rumbo), 0, cos(rumbo)) * 0.1
 		camara.look_at(camara.position + dir * 10.0 + Vector3(0, -1.6, 0), Vector3.UP)
 		return
-	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A) or MandoTactil.corre(self)
 	var objetivo_e := (VEL_CORRER if corre else VEL_PIE) * clampf(e.y, -0.5, 1.0)
 	_vel_pie = move_toward(_vel_pie, objetivo_e, (7.0 if absf(objetivo_e) > absf(_vel_pie) else 12.0) * delta)
 	vel = _vel_pie
@@ -36,7 +36,7 @@ func _mover_en_estadio(delta: float) -> void:
 		_salir_del_estadio()
 		return
 	var ant := cuerpo.position
-	var pe_col := (get_tree().get_first_node_in_group("personal_club") as PersonalEstadio) if is_inside_tree() else null
+	var pe_col = (get_tree().get_first_node_in_group("personal_club")) if is_inside_tree() else null
 	var llega := ColisionClub.mover(cuerpo, ant, nueva, zonas, _planta, CityBuilder.ESTADIO_EN, pe_col)
 	var pedido := Vector2(nueva.x - ant.x, nueva.z - ant.z).length()
 	var hecho := Vector2(llega.x - ant.x, llega.z - ant.z).length()
@@ -47,12 +47,12 @@ func _mover_en_estadio(delta: float) -> void:
 		elif hecho < pedido * 0.9:
 			_vel_pie *= 0.92
 	cuerpo.position = Vector3(llega.x, RecorridoClub.y_de(_planta), llega.z)
-	PersonalEstadio.avisar_jugador(cuerpo.position - CityBuilder.ESTADIO_EN, _planta)
+	load("res://visor/personal_estadio.gd").avisar_jugador(cuerpo.position - CityBuilder.ESTADIO_EN, _planta)
 	cuerpo.rotation.y = rumbo
 	_animar_dt(vel)
-	var z := TunelVestuario.zona_en(zonas, cuerpo.position - CityBuilder.ESTADIO_EN, _planta)
+	var z := TunelMedidas.zona_en(zonas, cuerpo.position - CityBuilder.ESTADIO_EN, _planta)
 	var nombre := String(z.get("nombre", ""))
-	var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+	var pe = get_tree().get_first_node_in_group("personal_club")
 	var g: Dictionary = pe.cercano(cuerpo.position - CityBuilder.ESTADIO_EN, _planta) if pe != null else {}
 	if not g.is_empty():
 		_aviso.text = Idiomas.t("E: hablar con %s (%s)") % [String(g["nombre"]), Idiomas.t(String(g["puesto"]))]
@@ -151,7 +151,7 @@ func _usar() -> void:
 			return
 		if MuseoVitrinas.usar(self, loc):
 			return
-		var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+		var pe = get_tree().get_first_node_in_group("personal_club")
 		var g: Dictionary = pe.cercano(cuerpo.position - CityBuilder.ESTADIO_EN, _planta) if pe != null else {}
 		if not g.is_empty():
 			_menu_asc = RecorridoClub.dialogo(_capa, pe, g, cuerpo.position - CityBuilder.ESTADIO_EN)
@@ -186,8 +186,8 @@ func _usar() -> void:
 				and MinijuegosCiudad.juego_de(String(_cerca["k"])) == "")):
 		_entrar_en_edificio(String(_cerca["k"]))
 		return
-	if _cerca["tipo"] == "boton_peatonal":   ## M-170: pide el verde peatonal
-		return cb.expansion.semaforos.pedir_con_aviso(self)
+	if _cerca["tipo"] == "boton_peatonal" or _cerca["tipo"] == "bus_parada":   ## M-170 pide el verde; M-182 sube al bus (pasaje)
+		return BusDT.usar(self, _cerca)
 	if _cerca["tipo"] == "metro" and (vida == null or vida.cobrar_pasaje("metro")):   ## M-182: el pasaje sale de la tarjeta Red
 		_entrar_al_anden(_cerca["acc"])
 		return
@@ -197,7 +197,7 @@ func _usar() -> void:
 	if _cerca["tipo"] == "portero":
 		if is_instance_valid(_menu_asc):
 			return
-		var pe := get_tree().get_first_node_in_group("personal_club") as PersonalEstadio
+		var pe = get_tree().get_first_node_in_group("personal_club")
 		_menu_asc = RecorridoClub.dialogo_portero(_capa, pe, _cerca["g"], cuerpo.position - CityBuilder.ESTADIO_EN, _cruzar_puerta)
 		_menu_asc.set_meta("portero", _cerca["g"])
 		return
@@ -211,33 +211,21 @@ func _usar() -> void:
 
 func _tactil(capa: CanvasLayer) -> void:
 	var tam := 74.0
-	var base := Control.new()
-	base.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	base.offset_left = 24
-	base.offset_top = -tam * 3.0 - 24
-	## Solo en pantallas táctiles (en PC ocupaba el rincón del GPS).
-	base.visible = es_tactil()
-	capa.add_child(base)
-	for d: Array in [["▲", Vector2(1, 0), Vector2(0, 1)], ["▼", Vector2(1, 2), Vector2(0, -1)],
-			["◀", Vector2(0, 1), Vector2(-1, 0)], ["▶", Vector2(2, 1), Vector2(1, 0)]]:
-		var b := Button.new()
-		b.text = String(d[0])
-		b.position = (d[1] as Vector2) * tam
-		b.size = Vector2(tam - 6, tam - 6)
-		b.add_theme_font_size_override("font_size", 28)
-		b.modulate = Color(1, 1, 1, 0.7)
-		var v: Vector2 = d[2]
-		b.button_down.connect(func() -> void: _tactil_vec += v)
-		b.button_up.connect(func() -> void: _tactil_vec -= v)
-		base.add_child(b)
+	## (3-11) Móvil: palanca analógica a la izquierda y mirar arrastrando a la derecha (`MandoTactil`); en PC no existe.
+	if es_tactil():
+		var mando := MandoTactil.new()
+		mando.explorador = self
+		set_meta(MandoTactil.META, mando)
+		capa.add_child(mando)
 	var der := HBoxContainer.new()
 	der.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	der.offset_left = -260
+	der.offset_left = -340
 	der.offset_top = -100
 	der.offset_right = -24
 	der.offset_bottom = -24
 	der.add_theme_constant_override("separation", 12)
 	capa.add_child(der)
+	der.add_child(MandoTactil.boton_camara(tam, es_tactil()))   ## la cámara: primera / tercera persona
 	var be := Button.new()
 	be.text = "E"
 	be.custom_minimum_size = Vector2(tam, tam)
@@ -319,8 +307,16 @@ func _rotulos_de_paseo(si: bool) -> void:
 		var l := n as Label3D
 		if l == null:
 			continue
-		l.visibility_range_end = (60.0 if modo == "pie" else 140.0) if si else 0.0
+		## (3-11, prueba del dueño: «nombres flotando visibles de lejos») A pie o en coche el nombre es un CARTEL del
+		## lugar: tamaño de mundo (se ve grande cerca y pequeño lejos), tapado por lo que haya delante y solo
+		## a pocos metros; en la vista aérea vuelve a ser la etiqueta de tamaño fijo.
+		l.visibility_range_end = (45.0 if modo == "pie" else 90.0) if si else 0.0
+		l.visibility_range_end_margin = 12.0 if si else 0.0
+		l.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF if si else GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED
 		l.no_depth_test = not si
+		l.fixed_size = not si
+		l.pixel_size = 0.0145 if si else 0.0007
+		l.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y if si else BaseMaterial3D.BILLBOARD_ENABLED
 
 func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, estado_animo: String) -> void:
 	cb = builder
@@ -335,7 +331,7 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 	var perfil: Dictionary = cb.datos.get("perfil_estadio", {})
 	if not perfil.is_empty():
 		var aforo := int(perfil.get("aforo", 20000))
-		_est = TunelVestuario.datos(perfil, StadiumBuilder.niveles_de(perfil, aforo))
+		_est = load("res://visor/tunel_vestuario.gd").datos(perfil, load("res://visor/stadium_builder.gd").niveles_de(perfil, aforo))
 		## La galería subterránea al complejo (fase 6) solo existe aquí.
 		_est["zonas"] = GaleriaClub.zonas(_est) + (_est["zonas"] as Array)
 	position = Vector3.ZERO
@@ -425,26 +421,3 @@ func _n_fijos(q: Vector3, r: float) -> int:
 		if not libre_obst(c, r) or _choca_circulos(c, r):
 			n += 1
 	return n
-
-## El coche no gira metiendo el morro o la cola en una pared o en otro coche: si
-## con el rumbo nuevo choca y con el de antes no, se queda el de antes (con un
-## círculo daba igual hacia dónde mirase; con la forma real, no).
-func _girar_si_cabe(rumbo_antes: float) -> void:
-	if modo != "coche" or rumbo == rumbo_antes or cuerpo == null:
-		return
-	if not libre_forma(cuerpo.position, rumbo) and libre_forma(cuerpo.position, rumbo_antes):
-		rumbo = rumbo_antes
-
-## El rótulo de comercio cuya fachada está junto a `p`, o vacío.
-func _rotulo_en(p: Vector3) -> Dictionary:
-	if cb == null or cb.expansion == null:
-		return {}
-	var mejor: Dictionary = {}
-	var md := INF
-	for r: Dictionary in cb.expansion.rotulos:
-		var q: Vector3 = r["pos"]
-		var d := Vector2(q.x - p.x, q.z - p.z).length()
-		if d < float(r["ancho"]) * 0.5 + 2.5 and d < md:
-			md = d
-			mejor = r
-	return mejor

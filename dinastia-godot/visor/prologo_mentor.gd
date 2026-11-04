@@ -11,7 +11,7 @@ extends Node3D
 ## camino de verdad sería otro sistema; así siempre te espera donde toca).
 ##
 ## Coordenadas: las del mundo del explorador (`ExploradorCiudad`), que es el
-## origen (0,0,0) de la ciudad; el estadio está en `CityBuilder.ESTADIO_EN`.
+## origen (0,0,0) de la ciudad; el estadio está en `CargaCiudad.de("CityBuilder").ESTADIO_EN`.
 
 signal llegado
 
@@ -167,7 +167,7 @@ func hablar(si: bool) -> void:
 	if anim == null:
 		return
 	if si:
-		if AnimExtra.asegurar(anim, FutbolistaQ.esqueleto_de(self), "charla"):
+		if load("res://visor/anim_extra.gd").asegurar(anim, FutbolistaQ.esqueleto_de(self), "charla"):
 			anim.play("charla", 0.3)
 	else:
 		_animar("parado")

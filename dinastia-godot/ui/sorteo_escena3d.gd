@@ -151,7 +151,7 @@ func montar(acento: Color, fondo: Color, nivel: int = Calidad.ALTO) -> void:
 	env.ambient_light_energy = 1.0
 	## El resplandor sube respecto al estadio: en un plató las luces SON el
 	## decorado, y sin bloom los focos parecen bombillas pintadas.
-	env.glow_enabled = true
+	env.glow_enabled = Calidad.elegida > Calidad.MINIMO
 	env.glow_intensity = 0.95
 	env.glow_bloom = 0.2
 	env.glow_hdr_threshold = 1.0
@@ -222,7 +222,7 @@ func poner_banderas(codigos: Array) -> void:
 		var tela := MeshInstance3D.new()
 		tela.mesh = qm
 		var mat := ShaderMaterial.new()
-		mat.shader = StadiumBuilder.SHADER_BANDERA
+		mat.shader = load("res://visor/stadium_builder.gd").SHADER_BANDERA
 		mat.set_shader_parameter("usa_dibujo", true)
 		mat.set_shader_parameter("espejo", base.x > 0.0)
 		mat.set_shader_parameter("dibujo", Banderas.textura(cod))

@@ -10,6 +10,21 @@ const NOMBRES_ATRIBUTOS := {
 	"rit": "Ritmo", "tir": "Tiro", "pas": "Pase", "reg": "Regate", "def": "Defensa", "fis": "Físico",
 	"div": "Estirada", "par": "Paradas", "saq": "Saque", "ref": "Reflejos", "vel": "Salidas", "pos": "Colocación",
 }
+## (2-11, M-305) Qué hace cada atributo en el partido: la ayuda al pasar el ratón por la ficha.
+const AYUDA_ATRIBUTOS := {
+	"rit": "Velocidad punta y aceleración: llegar antes al balón y ganar las carreras.",
+	"tir": "Potencia y precisión al rematar: cuántas ocasiones acaban en gol.",
+	"pas": "Precisión y visión del pase: cuánto avanza el equipo con el balón.",
+	"reg": "Control y regate: superar rivales sin perder el balón.",
+	"def": "Marca, anticipación y entradas: robar sin cometer falta.",
+	"fis": "Fuerza y resistencia: aguantar el partido y los choques; con poco, más riesgo de lesión.",
+	"div": "Alcance de la estirada: llegar a los tiros esquinados.",
+	"par": "Blocar o desviar los tiros que le llegan.",
+	"saq": "Distancia y precisión de los saques y despejes del portero.",
+	"ref": "Reacción a tiros cercanos y a los penales.",
+	"vel": "Salir a cortar centros y balones al espacio.",
+	"pos": "Estar bien colocado bajo palos: reduce el ángulo del rival.",
+}
 
 ## LOS CINCO MODOS DE MIRAR UN PARTIDO (plan maestro B2): [clave, rótulo, qué es].
 const MODOS_SIMULACION := [

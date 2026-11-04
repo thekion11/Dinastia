@@ -300,6 +300,13 @@ func _pintar_ajustes() -> void:
 		"acceso":
 			_pintar_accesibilidad()
 		"partida":
+			## (3-11, rediseño) Guardar, cargar y empezar otro mundo viven aquí (salieron de la barra del menú central).
+			var acciones := HBoxContainer.new()
+			acciones.add_theme_constant_override("separation", 8)
+			p._lista_ajustes.add_child(acciones)
+			p._boton("💾 Guardar", p._guardar, acciones)
+			p._boton("📂 Cargar", p._partida.cargar, acciones)
+			p._boton("🌍 Otro mundo", p._partida.nueva, acciones)
 			_pintar_ranuras()
 			_pintar_traspaso_partida()
 			AjustesRegistro.pintar(p)
@@ -319,7 +326,7 @@ func _pintar_ajustes() -> void:
 				p._refrescar())
 			fila2.add_child(b2)
 			var ex2 := p._texto(11, Principal.COL_SUAVE)
-			ex2.text = Idiomas.t("Guarda solo al avanzar cada semana o cerrar temporada, en la misma ranura de \"Guardar\".")
+			ex2.text = Idiomas.t("Guarda solo al pasar cada día, cada semana y al acabar cada partido, sin parar el juego, en la misma ranura de \"Guardar\".")
 			ex2.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			p._lista_ajustes.add_child(ex2)
 			p._lista_ajustes.add_child(HSeparator.new())

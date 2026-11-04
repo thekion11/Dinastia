@@ -42,7 +42,8 @@ func _probar_fisica_motor() -> void:
 			prev[id] = pa
 			rprev[id] = nd.rotation.y
 		var pb := ball.position
-		if bprev != Vector3.INF and pb.distance_to(bprev) > 1.2 and motor.estado == "juego":
+		## Salto = moverse MÁS de lo que permite su velocidad (4-11: un tiro fuerte de ~37 m/s recorre 1,2 m en un fotograma sin saltar).
+		if bprev != Vector3.INF and pb.distance_to(bprev) > maxf(1.2, motor.vel_balon.length() * dt * 1.3) and motor.estado == "juego":
 			c["tele"] += 1
 
 		bprev = pb

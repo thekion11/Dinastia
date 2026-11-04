@@ -3,16 +3,25 @@ extends BaseIdea
 ## huecos, ya arreglados: el clima no tocaba la asistencia (`Clima.factor_publico`) y los clubes de la IA nunca cambiaban de
 ## plan en el minuto 60 (solo había plan si lo ponía el usuario).
 
+## (03-11) 40 partidos por lado daban un error de ±0,37 goles en la diferencia, del tamaño del efecto (~0,3): con cualquier cambio del partido simulado el signo salía al revés. Ahora 600 por lado (±0,1).
 func _goles(m: Mundo, riesgo: bool) -> float:
 	var g := 0
-	for i in 40:
+	for i in 600:
+		## (Los partidos lesionan y suspenden en serio: sin esto, 600 partidos dejan a las plantillas hechas polvo y la medida —y las pruebas de después— se tuercen.)
+		for c: Club in [m.ligas[0].clubes[i % 8], m.ligas[0].clubes[8 + i % 8]]:
+			for jg: Jugador in c.plantilla:
+				jg.lesion = 0
+				jg.suspension = 0
 		var p := Partido.new(m.ligas[0].clubes[i % 8], m.ligas[0].clubes[8 + i % 8])
 		p.preparar()
 		p.instr_riesgo = riesgo
+		## Las instrucciones solo pegan de TU lado (`ctx_club_id`): sin un club propio, «arriesgar» no hacía NADA y la prueba comparaba dos veces lo mismo (pasaba o fallaba por suerte).
+		Partido.ctx_club_id = p.local.id
 		while not p.terminado_ya:
 			p.simular_minuto()
 		g += p.goles_local + p.goles_visita
-	return float(g) / 40.0
+	Partido.ctx_club_id = ""
+	return float(g) / 600.0
 
 func _probar() -> void:
 	_titulo("EL PARTIDO REACCIONA")

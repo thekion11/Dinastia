@@ -18,7 +18,7 @@ extends RefCounted
 const TEX := 1024
 ## M-347 (28-10-2026): el partido tenía ~60 ruidos de 1024² (5,3 MB cada uno con mipmaps, ~320 MB de los 600 de vídeo). Los que MULTIPLICAN color o
 ## rugosidad (granos sin relieve) bajan a 512²: a 2 m por repetición son 256 px/m, más que suficiente para un grano. Los mapas de normales
-## conservan 1024² solo en calidad ALTO.
+## conservan 1024² solo en calidad ULTRA (H-06, 2-11: en ALTO también bajan a 512²).
 const TEX_GRANO := 512
 const METRO_POR_TILE := 2.0
 
@@ -49,9 +49,9 @@ static func _tex_ruido(frec: float, semilla: int, normal: bool = false,
 		_ruidos[clave] = _con_disco(clave, lado, func() -> NoiseTexture2D: return _nuevo_ruido(frec, semilla, normal, octavas, tipo, lado))
 	return _ruidos[clave]
 
-## M-347: los granos van a 512² y los mapas de normales a 1024² solo en calidad ALTO.
 static func _lado(normal: bool) -> int:
-	return TEX if (normal and Calidad.elegida >= Calidad.ALTO) else TEX_GRANO
+	if Calidad.elegida <= Calidad.MINIMO: return 256   ## (3-11) MÍNIMO: granos y normales a 256² (128 px/m a 2 m por repetición), un cuarto de memoria
+	return TEX if (normal and Calidad.elegida >= Calidad.ULTRA) else TEX_GRANO
 
 static func _con_disco(clave: String, lado: int, crear: Callable) -> Texture2D:
 	var en_disco := RuidosFondo.clave_disco(clave)

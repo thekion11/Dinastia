@@ -100,7 +100,7 @@ func comentar_jugador(m: Mundo, pub_id: int, tono: String) -> String:
 func a_dic() -> Dictionary:
 	return {"cuentas": cuentas.duplicate(true), "pubs": publicaciones.duplicate(true), "tend": tendencia,
 		"sig": _siguiente_id, "ps": _propias_semana, "sp": _semana_propias,
-		"acceso": acceso_club, "clave": clave_club, "sesion": sesion, "sem_club": _semanas_club}
+		"acceso": acceso_club, "clave": clave_club, "sesion": sesion, "sem_club": _semanas_club, "rng": str(_rng.state)}   ## (4-11, banco de guardado) el estado de su azar propio: sin él, cargar y seguir no daba lo mismo
 
 func desde_dic(d: Dictionary) -> void:
 	if d.is_empty():
@@ -113,6 +113,8 @@ func desde_dic(d: Dictionary) -> void:
 	_siguiente_id = int(d.get("sig", 1))
 	_propias_semana = int(d.get("ps", 0))
 	_semana_propias = int(d.get("sp", -1))
+	if d.has("rng"):
+		_rng.state = int(String(d["rng"]))
 	acceso_club = bool(d.get("acceso", false))
 	clave_club = String(d.get("clave", ""))
 	sesion = String(d.get("sesion", "dt"))

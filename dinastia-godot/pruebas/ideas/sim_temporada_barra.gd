@@ -14,7 +14,7 @@ func _ready() -> void:
 	var pr: Principal = load("res://escenas/principal.tscn").instantiate()
 	add_child(pr)
 	pr._autoguardado = false
-	var j := pr._jornada
+	var j = pr._jornada
 	var liga: Liga = pr._liga_de(pr.mundo.mi_club())
 	var desde := liga.jornada_actual
 	j._jugar_temporada()

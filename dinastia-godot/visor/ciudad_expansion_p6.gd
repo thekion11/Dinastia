@@ -95,7 +95,7 @@ func _estacion_rusa(origen: Vector3, base: Basis, e: float) -> void:
 	var ruta_v := RUTA_FERIA + "queue-straight.glb"
 	for k in 3:
 		_pieza_kit(ruta_v, Vector3(anden.x - largo * 0.25 + 3.0 + float(k) * 2.5, 0.12, anden.z - 4.6), 2.5, PI * 0.5)
-	b._rotulo(Vector3(anden.x, BASE_RUSA + 5.2, anden.z), "🎢 Montaña rusa", Color(1.0, 0.9, 0.5), 18)
+	CartelFachada.con_mapa(b, Vector3(anden.x, BASE_RUSA + 5.2, anden.z), "🎢 Montaña rusa", Color(1.0, 0.9, 0.5), 18)
 	feria["estacion"] = anden
 
 ## Punto y orientación (mirando hacia donde avanza) a `s` metros del recorrido.
@@ -160,7 +160,7 @@ func _tren_rusa(origen: Vector3, base: Basis, e: float, camino: Array) -> void:
 		while i_seg < acum.size() - 2 and acum[i_seg + 1] < s:
 			i_seg += 1
 		var y := pts[i_seg].y
-		var v := 3.0 if tipo[i_seg] > 0.5 else 4.0 + sqrt(maxf(2.0 * 9.8 * (y_max - y), 0.0)) * 0.8
+		var v := 3.0 if tipo[i_seg] > 0.5 else 4.0 + sqrt(maxf(2.0 * Balance.GRAVEDAD * (y_max - y), 0.0)) * 0.8
 		s += v * dt
 		t += dt
 		tiempos.append(t)
@@ -349,13 +349,13 @@ func _feria(r: Rect2) -> void:
 		## club: con un club de negro, la del mástil derecho era un CUADRADO NEGRO
 		## flotando junto a la noria. Ahora es una bandera de tela que ondea, con
 		## las tres franjas del club (el color claro fuera, el oscuro en medio).
-		var bnd := StadiumBuilder._bandera_ondeante(b, mastil + Vector3(0, 7.4, 0), Vector2(1.6, 1.0),
+		var bnd = load("res://visor/stadium_builder.gd")._bandera_ondeante(b, mastil + Vector3(0, 7.4, 0), Vector2(1.6, 1.0),
 			Color.WHITE, 0.0 if sx > 0.0 else PI, 0.4 if sx > 0.0 else 1.3)
 		var mb := bnd.material_override as ShaderMaterial
 		mb.set_shader_parameter("dibujo", tex_franjas)
 		mb.set_shader_parameter("usa_dibujo", true)
 		mb.set_shader_parameter("espejo", sx < 0.0)
-	b._rotulo(Vector3(c.x, 30.0, c.z), "🎡 Parque de atracciones", Color(1.0, 0.85, 0.55), 22)
+	CartelFachada.con_mapa(b, Vector3(c.x, 30.0, c.z), "🎡 Parque de atracciones", Color(1.0, 0.85, 0.55), 22)
 	feria["puerta"] = puerta
 	_noria(c + Vector3(-hx * 0.55, 0, -hz * 0.42))
 	_recreativos(c, r)

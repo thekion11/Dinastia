@@ -262,7 +262,7 @@ func _dt(asp: Dictionary, c1: Color, c2: Color) -> void:
 	## SENTADO EN EL SILLÓN ("debería estar en esa silla y haber una
 	## animación"): la pose "sentado" de los suplentes, con la raíz bajada lo
 	## que baja la cadera (`ALTO_ASIENTO_OFFSET`) sobre la tarima.
-	n.position = Vector3(0.0, 0.16 + AnimQuaternius.ALTO_ASIENTO_OFFSET, 0.05)
+	n.position = Vector3(0.0, 0.16 + load("res://visor/anim_quaternius.gd").ALTO_ASIENTO_OFFSET, 0.05)
 	n.rotation.y = 0.35
 	var ap: AnimationPlayer = d["anim"]
 	if ap.has_animation("sentado"):

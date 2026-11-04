@@ -29,7 +29,7 @@ const VARIANTES := 4
 ## del partido, el ambiente del estadio y los clics de la interfaz.
 enum Bus { EFECTOS, AMBIENTE, INTERFAZ }
 
-var volumen := {Bus.EFECTOS: 0.8, Bus.AMBIENTE: 0.5, Bus.INTERFAZ: 0.35}
+var volumen := {Bus.EFECTOS: 0.8, Bus.AMBIENTE: 0.7, Bus.INTERFAZ: 0.45}   ## (3-11) ambiente 0,5 → 0,7 e interfaz 0,35 → 0,45: «el sonido se siente apagado»
 var encendido := true
 
 var _bancos: Dictionary = {}       ## nombre -> Array de AudioStream (WAV sintetizados u Ogg grabado)

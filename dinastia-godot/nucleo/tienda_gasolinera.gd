@@ -1,6 +1,6 @@
 class_name TiendaGasolinera
 extends RefCounted
-## LA TIENDA DE LA GASOLINERA (27-10-2026, pieza C de `PLAN_DEL_LUNES.md` §2.2h). E ante el mostrador abre `PanelTienda` con este surtido; cada compra se cobra con `CarteraDT.cobrar`
+## LA TIENDA DE LA GASOLINERA (27-10-2026, pieza C de `PLAN_GENERAL.md` §2.2h). E ante el mostrador abre `PanelTienda` con este surtido; cada compra se cobra con `CarteraDT.cobrar`
 ## y baja el hambre (`Necesidades.picar`) o sube la energía (`Necesidades.animar`) sin gastar tiempo. `elegir` (qué compraría alguien con ese hambre) queda para las pruebas.
 const SURTIDO := [
 	{"id": "bocadillo", "nombre": "Bocadillo", "precio": 4, "hambre": 25, "energia": 0},

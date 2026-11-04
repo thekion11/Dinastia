@@ -68,6 +68,18 @@ var presupuesto: int = PRESUPUESTO_INICIAL
 ## Guarda solo el ID, no el jugador: si se guardara el objeto, un fichaje o un
 ## retiro dejarían la lista apuntando a alguien que ya no existe.
 var seguidos: Dictionary = {}
+## M-292 (2-11): clubes que sigues (club_id → true). Cada semana su resultado llega a la bandeja.
+var clubes_seguidos: Dictionary = {}
+func sigue_club(c: Club) -> bool:
+	return c != null and clubes_seguidos.has(c.id)
+func alternar_club(c: Club) -> bool:
+	if c == null:
+		return false
+	if clubes_seguidos.has(c.id):
+		clubes_seguidos.erase(c.id)
+		return false
+	clubes_seguidos[c.id] = true
+	return true
 
 ## EL INFORME DE PERSONALIDAD -informePersonal()/costoInfPers() del HTML-: a
 ## diferencia del informe de ojeo (media/potencial exactos), este paga por
@@ -404,7 +416,7 @@ func informe_personalidad(j: Jugador, c: Club) -> String:
 
 func a_dic() -> Dictionary:
 	return {"red": red, "ojeadores": ojeadores, "presupuesto": presupuesto, "modo_ciego": modo_ciego,
-		"seguidos": seguidos.duplicate(),
+		"seguidos": seguidos.duplicate(), "clubes_seg": clubes_seguidos.duplicate(),
 		"analitica": analitica_nivel, "tension": analitica_tension, "avisado": analitica_avisado,
 		"hallazgos": hallazgos.duplicate(true), "academias": academias.duplicate(),
 		"informes_personalidad": _informes_personalidad.duplicate(true)}
@@ -415,6 +427,7 @@ func desde_dic(d: Dictionary) -> void:
 	presupuesto = int(d.get("presupuesto", PRESUPUESTO_INICIAL))
 	modo_ciego = bool(d.get("modo_ciego", false))
 	seguidos = (d.get("seguidos", {}) as Dictionary).duplicate()
+	clubes_seguidos = (d.get("clubes_seg", {}) as Dictionary).duplicate()
 	analitica_nivel = int(d.get("analitica", 0))
 	analitica_tension = int(d.get("tension", 0))
 	analitica_avisado = bool(d.get("avisado", false))

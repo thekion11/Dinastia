@@ -15,6 +15,9 @@ func _ready() -> void:
 	if OS.get_environment("GRADA") == "0":   ## sin trocear la grada: para comprobar que el culling por trozos no deja butacas sin dibujar
 		OptimizarGrada.activo = false
 		_nombre = "sin_trozos"
+	if OS.get_environment("R2") == "0":   ## sin las piezas sueltas fundidas ni el texto de las vallas en atlas (R2, solo MÍNIMA): el «antes» de R2
+		FundirPiezas.activo_r2 = false
+		_nombre = "antes_r2"
 	if OS.get_environment("REBAJAS") == "0":
 		StadiumBuilder.butaca_detalle_filas = 99
 		EntornoEstadio.optimizar_partido = false
@@ -49,6 +52,24 @@ func _process(_d: float) -> void:
 		cam.make_current()
 	if _n == 114:
 		_foto("repe")
+		## Un plano del túnel de vestuarios desde el césped (R2: rótulos y materiales del túnel).
+		var tun := _pj._raiz.get_node_or_null("TunelVestuario") as Node3D
+		if tun != null:
+			var c3 := Vector3.ZERO
+			var cuenta := 0
+			for lb in tun.find_children("*", "Label3D", true, false):
+				c3 += (lb as Label3D).global_position
+				cuenta += 1
+			c3 = c3 / float(maxi(1, cuenta))
+			var cam2 := Camera3D.new()
+			cam2.fov = 62.0
+			_pj._raiz.add_child(cam2)
+			var hacia := Vector3(-c3.x, 0.0, -c3.z).normalized()
+			cam2.global_position = c3 + hacia * 13.0 + Vector3(0, 0.6 - c3.y + 1.8, 0)
+			cam2.look_at(c3, Vector3.UP)
+			cam2.make_current()
+	if _n == 118:
+		_foto("tunel")
 		Engine.time_scale = 1.0
 		print("===== FIN. 0 fallos =====")
 		get_tree().quit()

@@ -45,7 +45,7 @@ func _complejo() -> void:
 			var faltan := float(enObra[e["k"]])
 			_obra_en_curso(pos, float(e["ancho"]), float(e["fondo"]), 6.0 * maxi(1, niv + 1), 1.0 - faltan / maxf(total, 1.0))
 		var texto_r: String = ("%s 🏗 %d sem" % [str(e["n"]), int(enObra[e["k"]])]) if obra else ("%s  N%d" % [str(e["n"]), niv])
-		_rotulo(pos + Vector3(0, 6.0 * maxi(1, niv) + 8.0, 0), texto_r,
+		CartelFachada.con_mapa(self, pos + Vector3(0, 6.0 * maxi(1, niv) + 8.0, 0), texto_r,
 			Color(1.0, 0.85, 0.4) if obra else Color(1, 1, 1))
 		puntos_clic.append({"k": String(e["k"]), "n": str(e["n"]), "pos": pos + Vector3(0, 6.0 * maxi(1, niv) * 0.5, 0),
 			"estado": "obra" if obra else "hecho"})
@@ -438,6 +438,6 @@ func _aparcamiento() -> void:
 	## presidente y el de la estrella del equipo).
 	for k in 2:
 		_poner_extra(["race", "race-future"][k], Vector3(141.0, 0, -62.0 + k * 8.0), 1.65, PI)
-	_rotulo(Vector3(141.0, 4.0, -58.0), "VIP", Color(1.0, 0.85, 0.4), 22)
+	CartelFachada.con_mapa(self, Vector3(141.0, 4.0, -58.0), "VIP", Color(1.0, 0.85, 0.4), 22)
 
 	_farolas()

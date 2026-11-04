@@ -20,16 +20,16 @@ static func visible_en(z: float, largo: float, z_tunel_anden: float) -> bool:
 const PASO_PERFIL := 10.0
 const MARGEN_PERFIL := 40.0
 
-## Altura del terreno (la MISMA función que pinta la malla, `CityBuilder.altura_en` vía `TelefericoFlora.altura_malla`) a lo largo de la vía exterior, respecto al suelo
+## Altura del terreno (la MISMA función que pinta la malla, `CargaCiudad.de("CityBuilder").altura_en` vía `CargaCiudad.de("TelefericoFlora").altura_malla`) a lo largo de la vía exterior, respecto al suelo
 ## de la estación: una muestra cada 10 m, la mayor de las dos vías y el centro, y nunca por debajo de 0. La loma del norte sube hasta ~2 m: la vía y el balasto la siguen
 ## (terraplén) en vez de quedar enterrados.
-static func perfil(est: Node3D, b: CityBuilder) -> PackedFloat32Array:
+static func perfil(est: Node3D, b) -> PackedFloat32Array:
 	var r := PackedFloat32Array()
 	var z := Z_BOCA_B - MARGEN_PERFIL
 	while z <= Z_BOCA_A + MARGEN_PERFIL + 0.01:
 		var h := 0.0
 		for dx: float in [-VIA_X, 0.0, VIA_X]:
-			h = maxf(h, TelefericoFlora.altura_malla(b, est.position.x + dx, est.position.z + z) - est.position.y)
+			h = maxf(h, CargaCiudad.de("TelefericoFlora").altura_malla(b, est.position.x + dx, est.position.z + z) - est.position.y)
 		r.append(h)
 		z += PASO_PERFIL
 	return r
@@ -42,13 +42,13 @@ static func altura(p: PackedFloat32Array, z: float) -> float:
 	var i := mini(int(f), p.size() - 2)
 	return lerpf(p[i], p[i + 1], f - float(i))
 
-static func montar(est: Node3D, b: CityBuilder, beton: Material) -> PackedFloat32Array:
+static func montar(est: Node3D, b, beton: Material) -> PackedFloat32Array:
 	var prf := perfil(est, b)
 	var largo := Z_BOCA_A - Z_BOCA_B
-	var balasto := b._mat_simple(Color(0.5, 0.48, 0.45), 0.95)
-	var acero := b._mat_simple(Color(0.45, 0.47, 0.5), 0.4)
-	var madera := b._mat_unico(Color(0.34, 0.25, 0.18), 0.9)
-	var poste := b._mat_simple(Color(0.3, 0.32, 0.34), 0.5)
+	var balasto = b._mat_simple(Color(0.5, 0.48, 0.45), 0.95)
+	var acero = b._mat_simple(Color(0.45, 0.47, 0.5), 0.4)
+	var madera = b._mat_unico(Color(0.34, 0.25, 0.18), 0.9)
+	var poste = b._mat_simple(Color(0.3, 0.32, 0.34), 0.5)
 	## Tramos de 10 m: terraplén de balasto (de 1,5 m bajo tierra hasta la cota de la vía), carriles y hilos, cada uno con la pendiente de su tramo.
 	var z0 := Z_BOCA_B
 	while z0 < Z_BOCA_A - 0.01:
@@ -123,8 +123,8 @@ static func montar(est: Node3D, b: CityBuilder, beton: Material) -> PackedFloat3
 	est.set_meta("via_exterior", {"z_a": Z_BOCA_A, "z_b": Z_BOCA_B, "porticos": k_p, "perfil_max": _maximo(prf)})
 	return prf
 
-static func _caja(est: Node3D, b: CityBuilder, pos: Vector3, tam: Vector3, mat: Material, pitch: float = 0.0) -> void:
-	var mi := b._caja_en(pos, tam, mat)
+static func _caja(est: Node3D, b, pos: Vector3, tam: Vector3, mat: Material, pitch: float = 0.0) -> void:
+	var mi = b._caja_en(pos, tam, mat)
 	b.remove_child(mi)
 	mi.position = pos
 	mi.rotation.x = pitch

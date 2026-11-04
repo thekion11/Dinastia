@@ -8,7 +8,7 @@ extends RefCounted
 ## `TablaCompeticion` (25-9-2026): esto tampoco tiene estado propio.
 ##
 ## POR QUÉ SOLO ESTAS OCHO Y NO TODA LA FICHA (que sigue en `principal.gd`,
-## anotado en `docs/PLAN_DEL_LUNES.md`): la ficha completa mide 850+ líneas repartidas en
+## anotado en `docs/PLAN_GENERAL.md`): la ficha completa mide 850+ líneas repartidas en
 ## 14 funciones con QUINCE Y PICO botones distintos -pedir informe, comparar,
 ## ofrecer, negociar, pagar cláusula, desarrollo prioritario, reconvertir,
 ## fidelidad, vender, rescindir...-, cada uno tendría que convertirse en una
@@ -59,7 +59,7 @@ static func pintar_ciega(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta:
 	_dato(lista, "Partidos esta temporada", Idiomas.t("%d · %d goles · %d asistencias") % [j.partidos, j.goles, j.asistencias], paleta["texto"], paleta)
 	_dato(lista, "Nota media", ("%.1f" % j.media_notas()) if j.notas.size() >= 3 else Idiomas.t("sin datos"), paleta["texto"], paleta)
 	_dato(lista, "Carácter", Idiomas.t(Nombres.limpiar(String((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, [Idiomas.t("sin rasgos marcados")])[0]))) if j.rasgo != "" else Idiomas.t("sin rasgos marcados"), paleta["texto"], paleta)
-	_dato(lista, "Celebración", Idiomas.t(String(AnimExtra.NOMBRE_CELEBRACION.get(AnimExtra.celebracion_firma(j.rasgo, j.id), "Salto y abrazo"))), paleta["texto"], paleta)
+	_dato(lista, "Celebración", Idiomas.t(String(load("res://visor/anim_extra.gd").NOMBRE_CELEBRACION.get(load("res://visor/anim_extra.gd").celebracion_firma(j.rasgo, j.id), "Salto y abrazo"))), paleta["texto"], paleta)
 	_dato(lista, "Fiabilidad del informe", Idiomas.t(oj.fiabilidad_de(j)), paleta["suave"], paleta)
 
 ## Lo que ha hecho esta temporada.
@@ -259,6 +259,8 @@ static func pintar_historial(lista: VBoxContainer, j: Jugador, paleta: Dictionar
 	var t := _texto(11, paleta["suave"], paleta)
 	t.text = Idiomas.t("CRECIMIENTO POR TEMPORADA")
 	lista.add_child(t)
+	if j.historial.size() >= 2:   ## (M-295) la media y el valor de un vistazo
+		lista.add_child(GraficoEvolucion.de(j.historial, paleta))
 	for i in range(j.historial.size() - 1, -1, -1):
 		var h: Dictionary = j.historial[i]
 		var fila := HBoxContainer.new()

@@ -1,6 +1,6 @@
 class_name CiudadExpansion
 extends "res://visor/ciudad_expansion_p8.gd"
-## [Capa 9/9 de `ciudad_expansion.gd`] _kenney_calles, _parque_eolico, _deposito_agua, _volcar_lotes, construir, _kit_apilado … (+6)
+## [Capa 9/9 de `ciudad_expansion.gd`] _kenney_calles, _parque_eolico, _deposito_agua, _volcar_lotes, construir, encender … (+5)
 
 var _mat_cartel: StandardMaterial3D
 ## Luz, agua, drenaje y gasolineras (27-10-2026): `RedesCiudadVista`.
@@ -122,6 +122,7 @@ func _deposito_agua() -> void:
 	l.modulate = b._color_club("c1", Color(0.2, 0.5, 0.3))
 	l.outline_size = 10
 	l.position = p + Vector3(0, 33.0, 0)
+	l.visibility_range_end = 220.0   ## (3-11) el nombre del club en el depósito, solo de cerca
 	b.add_child(l)
 
 func _volcar_lotes() -> void:
@@ -130,6 +131,7 @@ func _volcar_lotes() -> void:
 		lista.assign(_lotes[clave])
 		_multimesh(BoxMesh.new(), _mat[clave], lista, Vector3.ONE)
 	_lotes.clear()
+	_volcar_lotes_det()
 
 # ============================================================================
 #  EL DIBUJO
@@ -150,13 +152,14 @@ func construir() -> void:
 	semaforos.name = "Semaforos"
 	b.add_child(semaforos)
 	semaforos.montar(cruces_semaforo, self)
+	cuenta["senales_velocidad"] = SenalesVelocidad.montar(self)   ## M-199: límites de velocidad en los cruces
 	cuenta["edificios"] = 0
-	for bl: Dictionary in bloques:
-		_dibujar_bloque(bl)
+	await b._marca("exp_calles")   ## (28-10) marcas de tiempo por tramo, solo con TIEMPOS=1
+	for bl: Dictionary in ExpansionTardia.primeros_bloques(self):
+		ExpansionTardia.bloque(self, bl)
 		await b._marca("exp.bloque")
-	_edificios_lejanos()
-	_casas_multimesh()
-	_modular_multimesh()
+	if not CityBuilder.diferir:   ## con carga diferida, esto va tras las manzanas que faltan (`ExpansionTardia.bloques_restantes`)
+		ExpansionTardia.casas(self)
 	await b._marca("exp.casas")
 	metro = MetroCiudad.new()
 	metro.name = "Metro"
@@ -165,32 +168,16 @@ func construir() -> void:
 		metro.montar(self)
 		_bocas_metro()
 	await b._marca("exp.metro")
-	_marquesinas_bus()
-	_guirnaldas()
-	_farolas()
-	_mobiliario_urbano()
-	_placas_de_calle()
-	_orillas_nucleo()
-	_obras_en_calle()
-	_kenney_calles()
-	await b._marca("exp.mobiliario")
-	if not CityBuilder.modo_prologo:   ## lo lejano, fuera del prólogo
-		cuenta["autopista"] = Autopista.montar(b)
-		_parque_eolico()
-		_deposito_agua()
+	if CityBuilder.diferir:
+		tardio_pendiente = true   ## el mobiliario urbano se hace después (`ExpansionTardia`)
+	else:
+		await ExpansionTardia.mobiliario(self)
 	redes = RedesCiudadVista.crear(self, 20261027)
-	if not CityBuilder.modo_prologo:
-		tele_nodo = Teleferico.montar(b)
-		teleferico = tele_nodo.datos()
+	if not CityBuilder.modo_prologo and not CityBuilder.diferir:   ## lo lejano (autopista, eólico, depósito, teleférico), fuera del prólogo y, con carga diferida, después
+		ExpansionTardia.afueras(self)
 	await b._marca("exp.afueras")
 	_volcar_lotes()
-
-## Un bloque alto hecho con el mismo modelo apilado planta sobre planta (en
-## vez de estirarlo): crece en pisos y las ventanas conservan su forma.
-func _kit_apilado(esc: PackedScene, pos: Vector3, s: float, pisos: int, giro: float) -> void:
-	var alto := b._caja_de_escena(esc).size.y * s
-	for k in pisos:
-		_kit(esc, pos + Vector3(0, float(k) * alto * 0.98, 0), Vector3.ONE * s, giro)
+	await b._marca("exp_lotes")
 
 ## 0 de día, 1 de noche: guirnaldas, farolas y ventanas lejanas.
 func encender(noche: float) -> void:
@@ -351,6 +338,7 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 				t.agregar_vehiculo(nodo, id, largo * (float(i) + rng.randf() * 0.5) / float(por_sentido), rng.randf_range(10.0, 15.0), 0.0, 0.0)
 				t.marcar_cola_al_ultimo()
 				n_coches += 1
+	n_coches += CiudadRotonda.trafico(self, t, coches, rng)   ## y los tres de la rotonda
 	cuenta["coches"] = n_coches
 	## La autopista: tráfico más rápido, sin semáforos.
 	for pts_a: PackedVector3Array in ([] if CityBuilder.modo_prologo else Autopista.rutas()):
@@ -400,11 +388,12 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 		t.registrar_ruta_gente(t.agregar_ruta(b._redondear(pts4, 3.0)))
 	## Y más gente para repartir: el reciclaje la lleva donde estés.
 	var rutas_g: Array = t.rutas_gente()
-	for q2 in 34:
+	for q2 in (17 if Calidad.elegida <= Calidad.MINIMO else 34):   ## (3-11, recorte autorizado) MÍNIMO: la mitad de la gente de reserva
 		if rutas_g.is_empty():
 			break
 		b._un_peaton(t, rng, int(rutas_g[rng.randi() % rutas_g.size()]), rng.randf() * 300.0)
 		n_p += 1
+	n_p += PeatonesCruce.montar(self, t, rng)   ## y los que CRUZAN las avenidas con su semáforo
 	cuenta["peatones"] = n_p
 
 ## Cable combado entre dos postes (S5): tres hilos (uno por brazo del travesaño) en tramos rectos de ~5 m que bajan hasta la flecha

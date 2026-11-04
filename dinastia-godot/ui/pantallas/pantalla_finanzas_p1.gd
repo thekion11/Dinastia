@@ -112,6 +112,11 @@ func _pintar_finanzas(c: Club) -> void:
 		p._dato(k, p._dinero(int(proy["ingresos"][k])), p.COL_VERDE, p._lista_finanzas)
 	for k2: String in proy["gastos"]:
 		p._dato(k2, "−%s" % p._dinero(int(proy["gastos"][k2])), p.COL_ROJO, p._lista_finanzas)
+		if k2.begins_with("Viajes a domicilio"):   ## U6 (3-11): de dónde sale esa cifra
+			var tv := p._texto(10, p.COL_SUAVE)
+			tv.text = Viajes.linea_finanzas(Viajes.viaje_euros(c.pais, c.pais, c.rep))
+			tv.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			p._lista_finanzas.add_child(tv)
 	var nota := p._texto(10, p.COL_SUAVE)
 	nota.text = Idiomas.t("La proyección solo cuenta lo fijo de la temporada: no incluye premios, copas, ventas de jugadores ni abonos.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

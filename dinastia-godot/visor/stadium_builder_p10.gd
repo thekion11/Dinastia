@@ -15,8 +15,10 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 			continue
 		_levantar_tribuna(obra, s)
 	_tm("tribunas")
+	await _ceder_paso()
 	_esquinas(obra)
 	_tm("esquinas")
+	await _ceder_paso()
 	## Cantos amarillos, zancas y pasamanos de las escaleras de la grada (26-10-2026,
 	## `DetalleGrada`): sin ellos eran cuñas grises lisas vistas desde la tele.
 	DetalleGrada.vestir_escaleras(root, _mat_baranda)
@@ -27,6 +29,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	## cosas que EXISTEN en el catálogo, se cobran, y no las mira nadie. En el
 	## visor había cuatro, y una de ellas es el capítulo MÁS CARO del diseñador.
 	_tm("vallas")
+	await _ceder_paso()
 	est = obra.est
 	var dx := obra.dx
 	var dz := obra.dz
@@ -35,27 +38,36 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	_pista_atletismo(root, est, dx, dz)
 	## El túnel de verdad: pasillo, cubierta del hueco y vestuario.
 	_tm("pista")
+	await _ceder_paso()
 	TunelVestuario.montar(root, est, niveles, mi)
 	_tm("tunel")
+	await _ceder_paso()
 	_banderas(root, est, dx, dz, alto, niveles, mi)
 	## LOS GUIÑOS DEL ESTADIO REAL (MEGAPLAN fase 4, E9): lo que dice su rasgo.
 	_tm("banderas")
+	await _ceder_paso()
 	GuinosEstadio.montar(root, est, dx, dz, fondo_tribuna(niveles), alto)
 	_tm("guinos")
+	await _ceder_paso()
 	_focos(root, str(est.get("focos", "torres")), dx, dz, alto, color_luz(est), str(est.get("focosCol", "")))
 	## B6.2: lo que hay FUERA del recinto: taquillas, tienda y estacionamiento.
 	_tm("focos")
+	await _ceder_paso()
 	if bool(est.get("exterior", false)):
 		_exterior(root, est, dx, dz, niveles, mi)
 	_tm("exterior")
+	await _ceder_paso()
 	_pantallas(root, str(est.get("pantalla", "dos")), dz, alto, est, mi, obra.abierta, obra.abiertas)
 	_tm("pantallas")
+	await _ceder_paso()
 	_fachada_y_escudo(obra)
 	## Obras con andamios y grúa, palcos, prensa, museo, tienda y la mascota
 	## (26-9-2026, `EstadioExtras`).
 	_tm("club")
+	await _ceder_paso()
 	EstadioExtras.construir(root, est, dx, dz, alto, niveles, mi)
 	_tm("extras")
+	await _ceder_paso()
 	## La grada del club de casa: rayas, bufandas y gorras con SUS colores y pieles de su país. Antes solo lo
 	## hacían el partido y la visita al estadio; en la ciudad y en la cinemática de fichaje salía el verde por
 	## defecto del sombreador (27-10-2026, visto en la captura P3 del banquillo de un club negro y blanco).
@@ -65,6 +77,16 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	if OS.get_environment("SIN_SOMBRA_UNICA") == "":
 		_sombra_unica(root)
 		_tm("sombra")
+		await _ceder_paso()
+	## R2 (3-11, MÍNIMO): las piezas sueltas, los arcos y los banquillos, en una malla por material (ver `FundirPiezas`). MEDIA y superiores quedan como estaban.
+	if Calidad.elegida <= Calidad.MINIMO and FundirPiezas.activo_r2:
+		FundirPiezas.fundir_sueltas(root)
+		FundirPiezas.unir_multimesh(root, ["Pasillos", "Barandillas", "CantosPasillo", "BarandasPasillo", "ZancasPasillo", "CantosAcceso", "PasamanosAcceso",
+			"ZancasAcceso", "EscalerasAcceso", "VomitoriosHormigon", "VomitoriosHueco", "VomitoriosRotulo"])
+		for arco in ["Arco_Norte", "Arco_Sur", "BanquilloLocal", "BanquilloVisita"]:
+			var a := root.get_node_or_null(arco) as Node3D
+			if a != null:
+				FundirPiezas.fundir_profundo(a, "Fundido")
 
 ## LAS ESQUINAS TAMBIÉN LLEVAN GENTE (22-9-2026). "Falta un tramo" -el
 ## usuario lo vio de inmediato justo después de la ronda de las butacas

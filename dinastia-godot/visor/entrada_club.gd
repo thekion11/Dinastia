@@ -13,12 +13,12 @@ extends RefCounted
 ## El portero es una persona más de `PersonalEstadio` (puesto «Puerta»): desde
 ## la calle se habla con él (`RecorridoClub.dialogo_portero`) y es él quien abre.
 
-const HOJA := TunelVestuario.PUERTA_MEDIO
+const HOJA := TunelMedidas.PUERTA_MEDIO
 const ALTO_HOJA := 2.55
 const SEG_ABRIR := 0.9
 
 static func centro(x0: float) -> float:
-	return x0 + TunelVestuario.PUERTA_X
+	return x0 + TunelMedidas.PUERTA_X
 
 ## Donde espera el portero (junto a la puerta, del lado de la garita) y la
 ## garita (para que la ciudad no meta gente ni coches dentro).
@@ -35,11 +35,11 @@ static func montar(nodo: Node3D, x0: float, z_fin: float, c1: Color, c2: Color,
 	var e := Node3D.new()
 	e.name = "EntradaClub"
 	nodo.add_child(e)
-	var acero := TunelVestuario._mat_unico(Color(0.3, 0.32, 0.35), 0.35)
+	var acero := PiezasObra._mat_unico(Color(0.3, 0.32, 0.35), 0.35)
 	acero.metallic = 0.7
-	var granito := TunelVestuario._mat(Color(0.36, 0.37, 0.4), 0.45)
-	var club := TunelVestuario._mat(c1, 0.5)
-	var club_osc := TunelVestuario._mat(c1.lerp(Color(0.08, 0.08, 0.1), 0.35), 0.5)
+	var granito := PiezasObra._mat(Color(0.36, 0.37, 0.4), 0.45)
+	var club := PiezasObra._mat(c1, 0.5)
+	var club_osc := PiezasObra._mat(c1.lerp(Color(0.08, 0.08, 0.1), 0.35), 0.5)
 	var vidrio := StandardMaterial3D.new()
 	vidrio.albedo_color = Color(0.55, 0.7, 0.78, 0.35)
 	vidrio.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -60,21 +60,21 @@ static func montar(nodo: Node3D, x0: float, z_fin: float, c1: Color, c2: Color,
 		hoja.set_meta("cerrada", hoja.position)
 		hoja.set_meta("abierta", Vector3(lado * HOJA * 1.45, 0, 0.0))
 		puerta.add_child(hoja)
-		TunelVestuario._caja(hoja, Vector3(0, ALTO_HOJA / 2.0, 0), Vector3(HOJA - 0.06, ALTO_HOJA - 0.1, 0.03), vidrio, false)
+		PiezasObra._caja(hoja, Vector3(0, ALTO_HOJA / 2.0, 0), Vector3(HOJA - 0.06, ALTO_HOJA - 0.1, 0.03), vidrio, false)
 		for yy in [0.05, ALTO_HOJA - 0.05]:
-			TunelVestuario._caja(hoja, Vector3(0, yy, 0), Vector3(HOJA, 0.1, 0.07), acero, false)
+			PiezasObra._caja(hoja, Vector3(0, yy, 0), Vector3(HOJA, 0.1, 0.07), acero, false)
 		for xx in [-HOJA / 2.0 + 0.04, HOJA / 2.0 - 0.04]:
-			TunelVestuario._caja(hoja, Vector3(xx, ALTO_HOJA / 2.0, 0), Vector3(0.08, ALTO_HOJA, 0.07), acero, false)
+			PiezasObra._caja(hoja, Vector3(xx, ALTO_HOJA / 2.0, 0), Vector3(0.08, ALTO_HOJA, 0.07), acero, false)
 		## Tirador vertical junto al canto de cierre y una franja del club.
-		TunelVestuario._caja(hoja, Vector3(-lado * (HOJA / 2.0 - 0.18), 1.1, 0.07), Vector3(0.04, 0.9, 0.04), acero, false)
-		TunelVestuario._caja(hoja, Vector3(0, 1.45, 0.02), Vector3(HOJA - 0.2, 0.08, 0.01), club, false)
+		PiezasObra._caja(hoja, Vector3(-lado * (HOJA / 2.0 - 0.18), 1.1, 0.07), Vector3(0.04, 0.9, 0.04), acero, false)
+		PiezasObra._caja(hoja, Vector3(0, 1.45, 0.02), Vector3(HOJA - 0.2, 0.08, 0.01), club, false)
 	## Dintel de acero sobre las hojas (el hueco del muro llega a 2,6 m).
-	TunelVestuario._caja(e, Vector3(px, ALTO_HOJA + 0.03, z_fin + 0.15), Vector3(HOJA * 2.0 + 0.1, 0.1, 0.12), acero, false)
+	PiezasObra._caja(e, Vector3(px, ALTO_HOJA + 0.03, z_fin + 0.15), Vector3(HOJA * 2.0 + 0.1, 0.1, 0.12), acero, false)
 
 	## EL PÓRTICO: pilastras del club, frontón con el nombre y el escudo.
 	for lado2 in [-1.0, 1.0]:
-		TunelVestuario._caja(e, Vector3(px + lado2 * (HOJA + 0.35), 1.75, zf + 0.15), Vector3(0.55, 3.5, 0.3), club, true)
-	TunelVestuario._caja(e, Vector3(px, 3.85, zf + 0.15), Vector3(HOJA * 2.0 + 1.3, 0.7, 0.3), club_osc, false)
+		PiezasObra._caja(e, Vector3(px + lado2 * (HOJA + 0.35), 1.75, zf + 0.15), Vector3(0.55, 3.5, 0.3), club, true)
+	PiezasObra._caja(e, Vector3(px, 3.85, zf + 0.15), Vector3(HOJA * 2.0 + 1.3, 0.7, 0.3), club_osc, false)
 	var letrero := Label3D.new()
 	letrero.text = nombre.to_upper()
 	letrero.font_size = 56
@@ -95,17 +95,17 @@ static func montar(nodo: Node3D, x0: float, z_fin: float, c1: Color, c2: Color,
 
 	## LA MARQUESINA: losa volada con dos tirantes y luz por debajo.
 	var fondo_m := 2.6
-	TunelVestuario._caja(e, Vector3(px, 3.08, zf + fondo_m / 2.0), Vector3(HOJA * 2.0 + 2.8, 0.16, fondo_m), acero, false)
-	TunelVestuario._caja(e, Vector3(px, 3.2, zf + fondo_m - 0.05), Vector3(HOJA * 2.0 + 2.9, 0.22, 0.12), club, false)
+	PiezasObra._caja(e, Vector3(px, 3.08, zf + fondo_m / 2.0), Vector3(HOJA * 2.0 + 2.8, 0.16, fondo_m), acero, false)
+	PiezasObra._caja(e, Vector3(px, 3.2, zf + fondo_m - 0.05), Vector3(HOJA * 2.0 + 2.9, 0.22, 0.12), club, false)
 	for lado3 in [-1.0, 1.0]:
-		var tir := TunelVestuario._caja(e, Vector3(px + lado3 * (HOJA + 1.2), 3.6, zf + fondo_m * 0.5), Vector3(0.06, 0.06, fondo_m * 1.15), acero, false)
+		var tir := PiezasObra._caja(e, Vector3(px + lado3 * (HOJA + 1.2), 3.6, zf + fondo_m * 0.5), Vector3(0.06, 0.06, fondo_m * 1.15), acero, false)
 		tir.rotation.x = -0.42
 	var luz := StandardMaterial3D.new()
 	luz.albedo_color = Color(1, 0.97, 0.88)
 	luz.emission_enabled = true
 	luz.emission = Color(1, 0.95, 0.82)
 	luz.emission_energy_multiplier = 1.8
-	TunelVestuario._caja(e, Vector3(px, 2.99, zf + fondo_m * 0.55), Vector3(HOJA * 2.0, 0.02, 0.25), luz, false)
+	PiezasObra._caja(e, Vector3(px, 2.99, zf + fondo_m * 0.55), Vector3(HOJA * 2.0, 0.02, 0.25), luz, false)
 	var o := OmniLight3D.new()
 	o.position = Vector3(px, 2.7, zf + 1.2)
 	o.omni_range = 6.0
@@ -114,15 +114,15 @@ static func montar(nodo: Node3D, x0: float, z_fin: float, c1: Color, c2: Color,
 	e.add_child(o)
 
 	## EL SUELO: escalón de granito y felpudo del club.
-	TunelVestuario._caja(e, Vector3(px, 0.07, zf + 1.1), Vector3(HOJA * 2.0 + 2.6, 0.14, 2.2), granito, false)
-	TunelVestuario._caja(e, Vector3(px, 0.15, zf + 0.75), Vector3(HOJA * 2.0 - 0.2, 0.02, 1.1), TunelVestuario._mat(c1.darkened(0.25), 0.95), false)
+	PiezasObra._caja(e, Vector3(px, 0.07, zf + 1.1), Vector3(HOJA * 2.0 + 2.6, 0.14, 2.2), granito, false)
+	PiezasObra._caja(e, Vector3(px, 0.15, zf + 0.75), Vector3(HOJA * 2.0 - 0.2, 0.02, 1.1), PiezasObra._mat(c1.darkened(0.25), 0.95), false)
 	## Placa y maceteros.
-	TunelVestuario._rotulo(e, Idiomas.t("ENTRADA DEL CLUB · SOLO PERSONAL"), Vector3(px - HOJA - 0.35, 2.2, zf + 0.32), 0.0, 22, Color(1, 1, 1))
-	var hoja_v := TunelVestuario._mat_unico(Color(0.2, 0.42, 0.2), 0.9)
-	var maceta := TunelVestuario._mat(Color(0.18, 0.18, 0.2), 0.6)
+	PiezasObra._rotulo(e, Idiomas.t("ENTRADA DEL CLUB · SOLO PERSONAL"), Vector3(px - HOJA - 0.35, 2.2, zf + 0.32), 0.0, 22, Color(1, 1, 1))
+	var hoja_v := PiezasObra._mat_unico(Color(0.2, 0.42, 0.2), 0.9)
+	var maceta := PiezasObra._mat(Color(0.18, 0.18, 0.2), 0.6)
 	for lado4 in [-1.0, 1.0]:
 		var mx: float = px + lado4 * (HOJA + 1.15)
-		TunelVestuario._caja(e, Vector3(mx, 0.45, zf + 0.6), Vector3(0.7, 0.9, 0.7), maceta, false)
+		PiezasObra._caja(e, Vector3(mx, 0.45, zf + 0.6), Vector3(0.7, 0.9, 0.7), maceta, false)
 		var arbusto := MeshInstance3D.new()
 		var esf := SphereMesh.new()
 		esf.radius = 0.5
@@ -134,22 +134,22 @@ static func montar(nodo: Node3D, x0: float, z_fin: float, c1: Color, c2: Color,
 	## Dos mástiles con las banderas del club.
 	for k in 2:
 		var bx := px - HOJA - 3.0 - float(k) * 1.6
-		TunelVestuario._caja(e, Vector3(bx, 3.6, zf + 2.4), Vector3(0.09, 7.2, 0.09), acero, false)
-		var tela := TunelVestuario._caja(e, Vector3(bx + 0.75, 6.4, zf + 2.4), Vector3(1.4, 0.9, 0.02),
-			TunelVestuario._mat(c1 if k == 0 else c2, 0.8), false)
+		PiezasObra._caja(e, Vector3(bx, 3.6, zf + 2.4), Vector3(0.09, 7.2, 0.09), acero, false)
+		var tela := PiezasObra._caja(e, Vector3(bx + 0.75, 6.4, zf + 2.4), Vector3(1.4, 0.9, 0.02),
+			PiezasObra._mat(c1 if k == 0 else c2, 0.8), false)
 		tela.rotation.y = 0.25
 
 	## LA GARITA del portero: cabina con ventanas, mostrador y su luz.
 	var g := rect_garita(x0, z_fin)
 	var gc := Vector3(g.get_center().x, 0, g.get_center().y)
-	var blanco := TunelVestuario._mat(Color(0.9, 0.9, 0.88), 0.7)
-	TunelVestuario._caja(e, gc + Vector3(0, 0.5, 0), Vector3(g.size.x, 1.0, g.size.y), blanco, true)
-	TunelVestuario._caja(e, gc + Vector3(0, 1.65, 0), Vector3(g.size.x - 0.05, 1.3, g.size.y - 0.05), vidrio, false)
+	var blanco := PiezasObra._mat(Color(0.9, 0.9, 0.88), 0.7)
+	PiezasObra._caja(e, gc + Vector3(0, 0.5, 0), Vector3(g.size.x, 1.0, g.size.y), blanco, true)
+	PiezasObra._caja(e, gc + Vector3(0, 1.65, 0), Vector3(g.size.x - 0.05, 1.3, g.size.y - 0.05), vidrio, false)
 	for cx in [-1.0, 1.0]:
 		for cz in [-1.0, 1.0]:
-			TunelVestuario._caja(e, gc + Vector3(cx * (g.size.x / 2.0 - 0.04), 1.65, cz * (g.size.y / 2.0 - 0.04)), Vector3(0.08, 1.3, 0.08), acero, false)
-	TunelVestuario._caja(e, gc + Vector3(0, 2.4, 0), Vector3(g.size.x + 0.4, 0.2, g.size.y + 0.4), club_osc, false)
-	TunelVestuario._rotulo(e, Idiomas.t("CONTROL DE ACCESO"), gc + Vector3(0, 2.4, g.size.y / 2.0 + 0.22), 0.0, 22, Color(1, 1, 1))
+			PiezasObra._caja(e, gc + Vector3(cx * (g.size.x / 2.0 - 0.04), 1.65, cz * (g.size.y / 2.0 - 0.04)), Vector3(0.08, 1.3, 0.08), acero, false)
+	PiezasObra._caja(e, gc + Vector3(0, 2.4, 0), Vector3(g.size.x + 0.4, 0.2, g.size.y + 0.4), club_osc, false)
+	PiezasObra._rotulo(e, Idiomas.t("CONTROL DE ACCESO"), gc + Vector3(0, 2.4, g.size.y / 2.0 + 0.22), 0.0, 22, Color(1, 1, 1))
 	var lg := OmniLight3D.new()
 	lg.position = gc + Vector3(0, 2.0, 0)
 	lg.omni_range = 3.5

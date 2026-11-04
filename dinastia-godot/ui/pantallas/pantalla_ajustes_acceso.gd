@@ -59,7 +59,7 @@ static func vibracion(p: Principal) -> void:
 	et.text = Idiomas.t("Vibración del mando")
 	et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila.add_child(et)
-	var nombres: Dictionary = (PanelControles.NOMBRES_AYUDA["vibracion"] as Array)[1]
+	var nombres: Dictionary = (load("res://ui/componentes/panel_controles.gd").NOMBRES_AYUDA["vibracion"] as Array)[1]
 	for modo: String in Mando.AYUDAS["vibracion"]:
 		var clave := modo
 		var b := Button.new()
@@ -122,41 +122,59 @@ static func contraste(p: Principal) -> void:
 		p._refrescar())
 	fila.add_child(b)
 
-## REASIGNAR LAS TECLAS DE LA INTERFAZ (s3): aceptar, volver y cambiar de pestaña.
-## Las del partido están en Controles (botón de abajo del todo de esta sección).
+## REASIGNAR LAS TECLAS DE LA INTERFAZ (s3): aceptar, volver, cambiar de pestaña y (3-11, etapa 5) el atajo de CADA menú y submenú del panel lateral.
+## Los atajos no se enseñan en ninguna otra parte: aquí se ven («sin tecla» si no tienen) y se cambian o se quitan. Las del partido están en Controles.
 static func teclas(p: Principal) -> void:
 	var t := p._texto(10, Principal.COL_SUAVE)
 	t.text = Idiomas.t("Teclas de la interfaz (pulsa «Cambiar» y luego la tecla o el botón; Esc cancela)")
-	## Los atajos del menú central (1-9, 0, N, F3, F5) van en la misma lista.
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ajustes.add_child(t)
-	for par: Array in TeclasInterfaz.acciones():
-		var accion := String(par[0])
-		var fila := HBoxContainer.new()
-		fila.add_theme_constant_override("separation", 8)
-		p._lista_ajustes.add_child(fila)
-		var et := p._texto(12, Principal.COL_TEXTO)
-		et.text = Idiomas.t(String(par[1]))
-		et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		fila.add_child(et)
-		var actual := p._texto(12, Principal.COL_SUAVE)
-		actual.text = TeclasInterfaz.texto_de(accion)
-		fila.add_child(actual)
-		var b := Button.new()
-		b.text = Idiomas.t("Cambiar")
-		b.pressed.connect(func() -> void:
-			b.text = Idiomas.t("Pulsa…")
-			var e := TeclasInterfaz.Escucha.new()
-			e.accion = accion
-			e.al_terminar = p._refrescar
-			p.add_child(e))
-		fila.add_child(b)
+	for par: Array in TeclasInterfaz.ACCIONES:
+		_fila_tecla(p, String(par[0]), Idiomas.t(String(par[1])), false)
+	var grupo_visto := ""
+	for par: Array in AtajosCentrales.lista():
+		var grupo := String(par[2])
+		if grupo != grupo_visto:
+			grupo_visto = grupo
+			var cab := p._texto(11, Principal.COL_SUAVE)
+			cab.text = Idiomas.t("Atajos del menú") + " · " + Idiomas.t(grupo) if grupo != "General" else Idiomas.t("Atajos generales")
+			p._lista_ajustes.add_child(cab)
+		_fila_tecla(p, String(par[0]), Idiomas.t(String(par[1])), true)
 	var r := Button.new()
 	r.text = Idiomas.t("Restaurar las teclas de fábrica")
 	r.pressed.connect(func() -> void:
 		TeclasInterfaz.restaurar()
 		p._refrescar())
 	p._lista_ajustes.add_child(r)
+
+## Una fila: nombre, la tecla de ahora, «Cambiar» y (en los atajos) «Quitar».
+static func _fila_tecla(p: Principal, accion: String, nombre: String, con_quitar: bool) -> void:
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	p._lista_ajustes.add_child(fila)
+	var et := p._texto(12, Principal.COL_TEXTO)
+	et.text = nombre
+	et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fila.add_child(et)
+	var actual := p._texto(12, Principal.COL_SUAVE)
+	actual.text = TeclasInterfaz.texto_de(accion)
+	fila.add_child(actual)
+	var b := Button.new()
+	b.text = Idiomas.t("Cambiar")
+	b.pressed.connect(func() -> void:
+		b.text = Idiomas.t("Pulsa…")
+		var e := TeclasInterfaz.Escucha.new()
+		e.accion = accion
+		e.al_terminar = p._refrescar
+		p.add_child(e))
+	fila.add_child(b)
+	if con_quitar:
+		var q := Button.new()
+		q.text = Idiomas.t("Quitar")
+		q.pressed.connect(func() -> void:
+			TeclasInterfaz.quitar(accion)
+			p._refrescar())
+		fila.add_child(q)
 
 ## Subtítulos: no hay voces (se dice), pero los sonidos con significado pueden salir escritos (M-283, `AvisosSonido`).
 static func nota_subtitulos(p: Principal) -> void:
@@ -175,6 +193,23 @@ static func nota_subtitulos(p: Principal) -> void:
 		Sonido.toca("silbato", Sonido.Bus.INTERFAZ)
 		p._refrescar())
 	fila.add_child(b)
+	## M-284 (2-11): lectura de pantalla con la voz del sistema.
+	var fila_l := HBoxContainer.new()
+	fila_l.add_theme_constant_override("separation", 8)
+	p._lista_ajustes.add_child(fila_l)
+	var et_l := p._texto(12, Principal.COL_TEXTO)
+	et_l.text = Idiomas.t("Lectura de pantalla")
+	et_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	et_l.tooltip_text = Idiomas.t("Lee en voz alta, con la voz del sistema, el botón o el campo que tiene el foco (mando, Tab o clic). Necesita voces instaladas en el equipo.")
+	fila_l.add_child(et_l)
+	var b_l := Button.new()
+	b_l.text = "SÍ" if LectorPantalla.activo() else "NO"
+	b_l.pressed.connect(func() -> void:
+		LectorPantalla.fijar(not LectorPantalla.activo())
+		if LectorPantalla.activo():
+			LectorPantalla.decir(Idiomas.t("Lectura de pantalla activada"))
+		p._refrescar())
+	fila_l.add_child(b_l)
 	var l := p._texto(10, Principal.COL_SUAVE)
 	l.text = Idiomas.t("Subtítulos: el juego no tiene voces. La narración del partido, la prensa y el vestuario ya salen siempre escritos.")
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

@@ -264,6 +264,7 @@ func _construir() -> void:
 	add_child(_fondo)
 	## Las luces desenfocadas de la portada, teñidas del color del modo.
 	_bokeh = FondoParticulas.new("bokeh")
+	_bokeh.add_to_group("fondo_particulas")   ## `AhorroMenu` las pausa en MÍNIMA (3-11)
 	_bokeh.ajustar_area(get_viewport_rect().size)
 	add_child(_bokeh)
 

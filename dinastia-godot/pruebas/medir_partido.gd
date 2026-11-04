@@ -62,6 +62,11 @@ func _process(_d: float) -> void:
 		FestejoGrada.lanzar(_vista.get("_raiz3d"), Color(0.8, 0.1, 0.1), Color(1, 1, 1), "salida", 600.0)
 	if _n < CALENTAR:
 		return
+	if _n == CALENTAR and OS.get_environment("OCULTAR_GRUPOS") != "":
+		## OCULTAR_GRUPOS=hinchas,butacas (4-11): apaga grupos enteros de `GRUPOS` y mide el resto (cuánto ganaría un nivel más ligero).
+		for gr in OS.get_environment("OCULTAR_GRUPOS").split(","):
+			for g in _de_grupo(gr):
+				(g as Node3D).visible = false
 	if _n == CALENTAR and OS.get_environment("OCULTAR") != "":
 		## OCULTAR=Cuero,Eyes (17-10-2026): esconde las piezas con ese nombre
 		## para medir lo que de verdad cuestan en pantalla (con LOD y recorte).
@@ -95,6 +100,8 @@ func _process(_d: float) -> void:
 		## SIN_SOMBRAS=1 (19-10-2026): cuánto de lo dibujado son las sombras.
 		for l in _vista.find_children("*", "Light3D", true, false):
 			(l as Light3D).shadow_enabled = false
+	if _n == CALENTAR and OS.get_environment("LISTA_MM") != "":
+		_lista_multimallas()
 	if _n == CALENTAR and OS.get_environment("LIVIANAS") != "":
 		## LIVIANAS=1 (19-10-2026): butacas cercanas con la malla de 60 triángulos.
 		Optimizar.butacas_livianas(_vista, true)
@@ -170,7 +177,7 @@ func _media(a: Array[float]) -> float:
 var _parte := -1
 var _ocultos: Array = []
 var _base := Vector2.ZERO
-const GRUPOS := ["butacas", "hinchas", "jugadores", "pelo", "sombras", "resto_multimesh"]
+const GRUPOS := ["butacas", "hinchas", "jugadores", "pelo", "resto_multimesh", "focos", "fundidos", "mm_sin_nombre", "ojos_cejas", "coches", "sombras"]
 
 func _de_grupo(nombre: String) -> Array:
 	var r := []
@@ -188,6 +195,11 @@ func _de_grupo(nombre: String) -> Array:
 			"jugadores": if g.get_parent() is Skeleton3D: r.append(g)
 			"pelo": if String(g.get_parent().name) == "PeloCapas" or String(g.name).begins_with("Pelo"): r.append(g)
 			"resto_multimesh": if es_mm: r.append(g)
+			"focos": if String(g.name).begins_with("stadium_light"): r.append(g)
+			"fundidos": if String(g.name).begins_with("Fundid"): r.append(g)
+			"mm_sin_nombre": if es_mm and String(g.name).begins_with("@MultiMesh"): r.append(g)
+			"ojos_cejas": if String(g.name).begins_with("Eyes") or String(g.name).begins_with("Eyebrow"): r.append(g)
+			"coches": if String(g.name) == "car" or String(g.name) == "whell": r.append(g)
 	return r
 
 func _partes() -> void:
@@ -351,3 +363,42 @@ func _por_hijos() -> void:
 			if h is Node3D and (h as Node3D).visible:
 				_ph_cola.append([h, nivel + 1])
 	_ph_actual = null
+
+## LISTA_MM=1 (3-11): todas las multimallas y mallas visibles agrupadas por nombre base, con instancias y triángulos potenciales (instancias × malla).
+func _lista_multimallas() -> void:
+	var grupos := {}
+	for n in _vista.find_children("*", "GeometryInstance3D", true, false):
+		var g := n as GeometryInstance3D
+		if not g.is_visible_in_tree():
+			continue
+		var t := 0
+		var inst := 1
+		if g is MultiMeshInstance3D:
+			var mm := (g as MultiMeshInstance3D).multimesh
+			if mm == null or mm.mesh == null:
+				continue
+			for i in mm.mesh.get_surface_count():
+				var a := mm.mesh.surface_get_arrays(i)
+				var idx = a[Mesh.ARRAY_INDEX]
+				t += (idx.size() if idx != null else (a[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()) / 3
+			inst = mm.visible_instance_count if mm.visible_instance_count >= 0 else mm.instance_count
+			t *= inst
+		elif g is MeshInstance3D and (g as MeshInstance3D).mesh != null:
+			var m := (g as MeshInstance3D).mesh
+			for i in m.get_surface_count():
+				var a2 := m.surface_get_arrays(i)
+				var idx2 = a2[Mesh.ARRAY_INDEX]
+				t += (idx2.size() if idx2 != null else (a2[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()) / 3
+		var base := String(g.name)
+		while base.length() > 0 and (base[base.length() - 1].is_valid_int() or base[base.length() - 1] == "_" or base[base.length() - 1] == "@"):
+			base = base.left(base.length() - 1)
+		var clave := "%s %s" % ["MM" if g is MultiMeshInstance3D else "malla", base]
+		if not grupos.has(clave):
+			grupos[clave] = [0, 0, 0]
+		grupos[clave][0] += 1
+		grupos[clave][1] += inst
+		grupos[clave][2] += t
+	var claves := grupos.keys()
+	claves.sort_custom(func(x, y): return grupos[x][2] > grupos[y][2])
+	for k in claves.slice(0, 30):
+		print("LISTA %-40s nodos=%4d instancias=%6d tris_pot=%9d" % [k, grupos[k][0], grupos[k][1], grupos[k][2]])

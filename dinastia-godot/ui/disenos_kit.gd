@@ -3,86 +3,37 @@ extends "res://ui/disenos_kit_p4.gd"
 ## [Capa 5/5 de `disenos_kit.gd`] _imagen_camiseta, textura_camiseta, _color_botin, textura_completa, textura_botin, uniforms
 
 static func _imagen_camiseta(clave: String, cols: Array[Color], trim: int, ancho_px: int, espalda: bool = false, sp: Dictionary = {}, cuello: int = 0) -> Image:
+	## (2-11, «se demora demasiado el diseñador»): lo que NO depende de los colores ni del diseño (silueta, luz del tejido, cuello, puños, escudo) se calcula una vez
+	## por tamaño (`DisenosKitEstructura`) y se guarda; cada camiseta solo calcula el color de la tela y lo multiplica por esa luz.
 	var ss := 2 if ancho_px <= 200 else 1
 	var escala := float(ancho_px * ss) / 64.0
-	var m := _mascara_camiseta(escala)
-	var w := m.get_width()
-	var h := m.get_height()
+	var est := DisenosKitEstructura.de(escala, espalda, cuello, ancho_px >= 96)
+	var w: int = est["w"]
+	var h: int = est["h"]
 	var out := Image.create(w, h, false, Image.FORMAT_RGBA8)
 	var d := diseno(clave)
 	var c_trim: Color = cols[clampi(trim, 0, 4)]
-	var detalle := ancho_px >= 96
-	for py in h:
-		for px in w:
-			var al := m.get_pixel(px, py).a
-			if al <= 0.01:
-				continue
-			var sx := float(px) / escala
-			var sy := float(py) / escala
-			var manga := sx < 18.0 or sx > 46.0
-			## La manga va con u = ±1,05 (fuera del torso), igual que en el 3D.
-			var u := clampf((sx - 32.0) / 14.0, -1.0, 1.0) if not manga else signf(sx - 32.0) * 1.05
-			var v := clampf(1.0 - (sy - 6.0) / 40.0, 0.0, 1.0)
-			var col := color_en(d, cols, u, v)
-			## Cuello en pico, acanalado.
-			## De espaldas el cuello es redondo y bajo.
-			## El corte: pico (0) delante; redondo, polo y mao, redondos.
-			var pico := cuello == 0 and not espalda
-			var borde_cuello := (7.5 - (sy - 4.0) * 0.9) if pico else (6.0 - pow(maxf(sy - 4.0, 0.0), 1.4) * 0.9)
-			var grosor := 2.4 if cuello == 3 else 1.2
-			var cuello_v := absf(sx - 32.0) < borde_cuello and sy < (12.0 if pico else 7.0) and not manga
-			var ribete_cuello := not manga and sy < (12.5 if pico else 8.0 + (1.2 if cuello == 3 else 0.0)) and absf(absf(sx - 32.0) - borde_cuello) < grosor and sy > 3.5
-			if ribete_cuello:
-				col = c_trim * (0.92 + 0.08 * float(int(sx * 2.0) % 2))
-			elif cuello_v and sy < (11.0 if not espalda else 6.5):
-				## Por dentro del pico se ve la tela de atrás, en sombra.
-				col = cols[0] * 0.55
-			## Polo: la tapeta con dos botones.
-			if cuello == 2 and not espalda and not manga and absf(sx - 32.0) < 1.1 and sy > 5.5 and sy < 13.5:
-				col = c_trim
-				if absf(sx - 32.0) < 0.45 and (absf(sy - 9.0) < 0.45 or absf(sy - 12.0) < 0.45):
-					col = cols[0].darkened(0.3)
-			## Puños acanalados.
-			var dist_puno := minf(absf(sx - 10.0 - (sy - 10.0) * 0.28), absf(sx - 54.0 + (sy - 10.0) * 0.28))
-			if manga and dist_puno < 1.6 and sy > 12.0:
-				col = c_trim * (0.9 + 0.1 * float(int(sy * 2.0) % 2))
-			var luz := 1.0
-			if not manga:
-				## Volumen del torso: cilindro con la luz arriba a la izquierda.
-				var cx := (sx - 32.0) / 14.0
-				luz = 0.78 + 0.28 * sqrt(maxf(0.0, 1.0 - cx * cx)) - 0.06 * cx
-				## Brillo del pecho y caída hacia el bajo.
-				luz += 0.07 * exp(-pow((sy - 16.0) / 6.0, 2.0)) - 0.05 * clampf((sy - 38.0) / 8.0, 0.0, 1.0)
-				## Arrugas suaves de tela (más en la cintura).
-				luz -= 0.045 * (_ruido(sx * 0.35, sy * 0.12) - 0.5) * (0.6 + clampf((sy - 30.0) / 16.0, 0.0, 1.0))
-				## Sombra bajo las mangas.
-				if absf(sx - 32.0) > 11.0 and sy > 12.0 and sy < 22.0:
-					luz -= 0.12 * (absf(sx - 32.0) - 11.0) / 3.0
-			else:
-				luz = 0.82 + 0.08 * (1.0 - clampf(absf(sy - 12.0) / 10.0, 0.0, 1.0))
-			## Costuras: hombros, laterales y doble pespunte del bajo.
-			if (absf(sx - 18.0) < 0.35 or absf(sx - 46.0) < 0.35) and sy > 9.0:
-				luz *= 0.8
-			if not manga and sy > 43.0 and (absf(sy - 43.8) < 0.25 or absf(sy - 44.8) < 0.25):
-				luz *= 0.82
-			if detalle and not manga and not espalda:
-				## Escudo: izquierda del pecho (derecha del dibujo).
-				var ex := (sx - 38.5) / 3.2
-				var ey := (sy - 15.5) / 3.8
-				var ancho_e := 1.0 if ey < 0.0 else sqrt(maxf(0.0, 1.0 - ey * ey))
-				if absf(ex) < ancho_e and ey > -1.0 and ey < 1.0:
-					col = cols[1] if absf(ex) < ancho_e - 0.25 and ey > -0.75 else c_trim
-					if absf(ex) < 0.3 and absf(ey) < 0.35:
-						col = c_trim
-				## Marca: un "ala" a la derecha del pecho (izquierda del dibujo).
-				var mx := (sx - 25.5) / 2.6
-				var my := (sy - 15.8) / 1.6
-				if absf(mx) < 1.0 and absf(my - (mx * mx * 0.6 - 0.25)) < 0.3 - mx * 0.1:
-					col = c_trim
-			## Trama del tejido.
-			var trama := 1.0 + 0.03 * (float((px + py) % 3 == 0) - 0.33)
-			luz *= trama
-			out.set_pixel(px, py, Color(clampf(col.r * luz, 0.0, 1.0), clampf(col.g * luz, 0.0, 1.0), clampf(col.b * luz, 0.0, 1.0), al))
+	var xs: PackedInt32Array = est["x"]
+	var ys: PackedInt32Array = est["y"]
+	var al: PackedFloat64Array = est["a"]
+	var uu: PackedFloat64Array = est["u"]
+	var vv: PackedFloat64Array = est["v"]
+	var luzs: PackedFloat64Array = est["luz"]
+	var tipos: PackedByteArray = est["tipo"]
+	var fac: PackedFloat64Array = est["fac"]
+	var oscuro := cols[0] * 0.55
+	var boton := cols[0].darkened(0.3)
+	for i in xs.size():
+		var col: Color
+		match tipos[i]:
+			0: col = color_en(d, cols, uu[i], vv[i])
+			1: col = c_trim * fac[i]
+			2: col = oscuro
+			3: col = c_trim
+			4: col = boton
+			_: col = cols[1]
+		var luz := luzs[i]
+		out.set_pixel(xs[i], ys[i], Color(clampf(col.r * luz, 0.0, 1.0), clampf(col.g * luz, 0.0, 1.0), clampf(col.b * luz, 0.0, 1.0), al[i]))
 	_estampar_sponsors(out, escala, cols[0], sp, espalda)
 	if ss > 1:
 		out.resize(w / ss, h / ss, Image.INTERPOLATE_LANCZOS)
@@ -121,9 +72,8 @@ static func _color_botin(dibujo: int, c1: Color, c2: Color, z: float, alto: floa
 
 ## La equipación entera en 2D (camiseta, pantalón, medias y botines), de
 ## frente o de espaldas con el número.
-static func textura_completa(kit: Dictionary, espalda: bool = false, ancho_px: int = 160) -> Texture2D:
+static func textura_completa(kit: Dictionary, espalda: bool = false, ancho_px: int = 160, ss: int = 2) -> Texture2D:
 	var cols := colores(kit)
-	var ss := 2
 	var camiseta := _imagen_camiseta(String(kit.get("dis", "liso")), cols, int(kit.get("trim", 1)), ancho_px * ss, espalda, kit.get("sp", {}), int(kit.get("cuello", 0)))
 	var w := camiseta.get_width()
 	var escala := float(w) / 64.0

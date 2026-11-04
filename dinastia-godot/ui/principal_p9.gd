@@ -21,8 +21,8 @@ func _pintar_dias() -> void: _avance._pintar_dias()
 ## (el contexto del edificio del club, la Carrera de Jugador, el último mundo)
 ## sobrevivían al cierre y el motor avisaba de objetos sin liberar.
 func _exit_tree() -> void:
-	EdificioClub.ctx = {}
-	EdificioClub.mundo_ref = null
+	load("res://visor/edificio_club.gd").ctx = {}
+	load("res://visor/edificio_club.gd").mundo_ref = null
 	CarreraJugadorUI.mundo = null
 	Trabajadores.actual = null
 	Partido.ctx_medico = null

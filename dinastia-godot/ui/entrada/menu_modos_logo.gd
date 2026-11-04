@@ -45,7 +45,7 @@ func _init() -> void:
 	size = custom_minimum_size
 	_logo = load(LOGO) as Texture2D
 	var mat := ShaderMaterial.new()
-	mat.shader = SHADER
+	mat.shader = AhorroMenu.shader(SHADER)
 	mat.set_shader_parameter("ancho", custom_minimum_size.x)
 	material = mat
 

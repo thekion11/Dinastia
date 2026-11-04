@@ -108,6 +108,9 @@ var _rotulos: Node3D
 ## cada fotograma -son decenas de farolas y todas las ventanas del complejo.
 var _farolas_luz: Array[OmniLight3D] = []
 var _ventanas_mat: Array[StandardMaterial3D] = []
+## (28-10) Ventanas del complejo: 12 materiales compartidos con el azar cuantizado, en vez de uno por tira (M3).
+var _ventanas_comp: Array[StandardMaterial3D] = []
+var _marco_ventana: StandardMaterial3D = null
 
 ## CRONÓMETRO DE LA CONSTRUCCIÓN (etapa 3): con TIEMPOS=1 imprime lo que tarda
 ## cada parte. Sirve para saber qué conviene aligerar o repartir.
@@ -119,6 +122,7 @@ static var _medir_tiempos := OS.get_environment("TIEMPOS") != ""
 ## ciudad se arma recortada a esa zona (`CiudadExpansion._recortar_a_zona`) y sin lo lejano (autopista, parque eólico,
 ## depósito de agua, teleférico): ~1/3 de lo que se construye, y la carga y la memoria bajan en proporción. Lo pone `PrologoDT`.
 static var modo_prologo := false
+static var diferir := false   ## construir lo no visible de entrada DESPUÉS de mostrar la ciudad (`_resto`); lo pone el prólogo
 
 ## ============================================================================
 ##  EL TERRENO (12-9-2026, tercera pasada)

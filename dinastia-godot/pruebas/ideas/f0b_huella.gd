@@ -20,6 +20,7 @@ const SEMILLA := 4242
 
 func _probar() -> void:
 	_titulo("F0B · HUELLA DEL ESTADIO (troceo de build_1 por zonas)")
+	Calidad.elegida = Calidad.ALTO   ## la estructura completa del recinto: en MÍNIMO (el nivel por defecto, 3-11) el túnel se funde y hay menos mallas
 	var club := Club.new("f0b_club", "Club Huella")
 	club.color1 = "#8a1c2b"
 	club.color2 = "#f2d16b"

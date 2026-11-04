@@ -91,8 +91,8 @@ func _process(delta: float) -> void:
 			## Un poco de juego (que la repetición tenga qué grabar) y un gol
 			## del jugador, cerca del área.
 			if _t > (8.0 if _con_fotos else 2.5):
-				var m := _pj.motor
-				var yo := m.usuario
+				var m = _pj.motor
+				var yo = m.usuario
 				_ok(not yo.is_empty(), "el jugador del usuario está en el campo")
 				var d := MotorJugable.dir_ataque(bool(yo["es_local"]))
 				(yo["node"] as Node3D).position = Vector3(4.0, 0, 40.0 * d)

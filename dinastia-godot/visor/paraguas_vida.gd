@@ -94,12 +94,9 @@ static func tick(vehiculos: Array, lluvia: bool, puertas: Array, cuenta: int) ->
 		if nodo == null or not is_instance_valid(nodo):
 			continue
 		## Velocidad: con lluvia, más prisa; al escampar, la de siempre.
-		if lluvia and not v.has("vel0"):
-			v["vel0"] = float(v["vel"])
-			v["vel"] = float(v["vel"]) * FACTOR_PRISA
-		elif not lluvia and v.has("vel0"):
-			v["vel"] = float(v["vel0"])
-			v.erase("vel0")
+		var f_lluvia := FACTOR_PRISA if lluvia else 1.0
+		if absf(f_lluvia - float(v.get("lluvia_f", 1.0))) > 0.001:
+			RutinaPeatones.poner_factor(v, "lluvia_f", f_lluvia)
 		var parado := bool(v.get("pausa", false))
 		if not parado:
 			v.erase("resguardo")
@@ -232,13 +229,13 @@ static func _animacion_paraguas(ap: AnimationPlayer, esq: Skeleton3D) -> Animati
 	var a: Animation = ap.get_animation("caminar").duplicate(true)
 	var pre := str(ap.get_path_to(esq))
 	for clave: String in ["brazo_d", "antebrazo_d"]:
-		var idx := a.find_track(NodePath("%s:%s" % [pre, String(AnimQuaternius.HUESOS[clave])]), Animation.TYPE_ROTATION_3D)
+		var idx = a.find_track(NodePath("%s:%s" % [pre, String(load("res://visor/anim_quaternius.gd").HUESOS[clave])]), Animation.TYPE_ROTATION_3D)
 		if idx >= 0:
 			a.remove_track(idx)
-	var v_brazo := AnimExtra._brazo("d", POSE_BRAZO.x, POSE_BRAZO.y)
-	var v_codo := AnimExtra._codo("d", POSE_BRAZO.z)
-	AnimQuaternius._pista(a, esq, "brazo_d", [[0.0, v_brazo], [a.length, v_brazo]], pre)
-	AnimQuaternius._pista(a, esq, "antebrazo_d", [[0.0, v_codo], [a.length, v_codo]], pre)
+	var v_brazo = load("res://visor/anim_extra.gd")._brazo("d", POSE_BRAZO.x, POSE_BRAZO.y)
+	var v_codo = load("res://visor/anim_extra.gd")._codo("d", POSE_BRAZO.z)
+	load("res://visor/anim_quaternius.gd")._pista(a, esq, "brazo_d", [[0.0, v_brazo], [a.length, v_brazo]], pre)
+	load("res://visor/anim_quaternius.gd")._pista(a, esq, "antebrazo_d", [[0.0, v_codo], [a.length, v_codo]], pre)
 	return a
 
 ## El mango vertical: sale de la mano y sube hacia un punto del eje del cuerpo (60 % del camino de la mano al eje): como mucho unos 12° de

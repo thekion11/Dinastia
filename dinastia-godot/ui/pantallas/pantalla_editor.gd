@@ -78,7 +78,7 @@ func _pintar_editor_csv(ed: Editor) -> void:
 
 func _pintar_editor() -> void:
 	p._limpiar(p._lista_editor)
-	var ed := p._ui_ciudad._editor_de()
+	var ed = p._ui_ciudad._editor_de()
 	var t := p._texto(11, Principal.COL_SUAVE)
 	t.text = Idiomas.t("🛠️ EDITOR")
 	p._lista_editor.add_child(t)

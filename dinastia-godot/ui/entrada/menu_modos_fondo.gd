@@ -125,7 +125,7 @@ func _nueva_capa(a: Dictionary) -> CanvasGroup:
 	var cols: Array = a["c"]
 	## Con el motor ligero (gama baja) va el color fijo, como en `PantallaMenu`:
 	## el shader usa TIME y obliga a redibujar la pantalla en cada fotograma.
-	if Calidad.motor_ligero:
+	if AhorroMenu.fondo_estatico():
 		r.color = Color(String(cols[1]))
 	else:
 		var mat := ShaderMaterial.new()

@@ -187,6 +187,7 @@ func _pintar_carrera(r: Roles) -> void:
 		e.text = escalon
 		e.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_club.add_child(e)
+	CarreraSalidas.pintar(p, p._lista_club)   ## (3-11, orden 22) tu puesto, quién te quiere y dimitir
 	if r.puede_ascender() != "":
 		p._boton("Ascender a %s" % Roles.PERMISOS[r.puede_ascender()]["cargo"], _ascender_rol, p._lista_club)
 
@@ -308,6 +309,7 @@ func _pintar_camarin(c: Club) -> void:
 	t.text = Idiomas.t("CLIMA DEL VESTUARIO")
 	p._lista_camarin.add_child(t)
 	var gr := GridContainer.new()
+	CebraRejilla.poner(gr)
 	gr.columns = 4
 	gr.add_theme_constant_override("h_separation", 14)
 	p._lista_camarin.add_child(gr)

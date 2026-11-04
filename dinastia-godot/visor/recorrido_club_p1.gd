@@ -128,7 +128,7 @@ static func respuesta_oficio(clave: String, m: Mundo) -> String:
 			_ultima_mala = true
 			return Idiomas.t("Están apagados. Ni el postre les levanta el ánimo.")
 		"jardinero":
-			var cesped := m.ciudad.cesped if m.ciudad != null else 100
+			var cesped = m.ciudad.cesped if m.ciudad != null else 100
 			if cesped >= 85:
 				return Idiomas.t("Como una alfombra. Que no me lo pisen en los rondos.")
 			if cesped >= 60:
@@ -164,7 +164,7 @@ static func respuesta_oficio(clave: String, m: Mundo) -> String:
 ## La conversación en persona con alguien del club. `g` es de
 ## `PersonalEstadio.gente`. Usa la partida si está a mano (`Gente.charlar`,
 ## la directiva y la junta); si no, solo saluda.
-static func dialogo(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary, desde: Vector3) -> PanelContainer:
+static func dialogo(capa: CanvasLayer, personal, g: Dictionary, desde: Vector3) -> PanelContainer:
 	personal.atender(g, desde, true)
 	if g.has("nodo") and is_instance_valid(g["nodo"]):
 		Expresion.de(g["nodo"]).poner("alegre", 2.5)
@@ -191,7 +191,7 @@ static func dialogo(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary,
 	## El saludo varía con la hora y la semana (`RecorridoCharla`).
 	var pasillo := RecorridoCharla.pasillo(m, g)   ## bloque 7: por tu nombre, según la afinidad
 	CuadroDialogo.escribir(dice, "«%s%s»" % [pasillo + " " if pasillo != "" else "", RecorridoCharla.saludo(String(g["clave"]),
-		String(SALUDOS.get(String(g["clave"]), "Buenas, míster.")), m.semana if m != null else -1, PersonalEstadio.hora)])
+		String(SALUDOS.get(String(g["clave"]), "Buenas, míster.")), m.semana if m != null else -1, load("res://visor/personal_estadio.gd").hora)])
 	var clave := String(g["clave"])
 	var cerrar := func() -> void:
 		personal.atender(g, desde, false)
@@ -246,7 +246,7 @@ static func dialogo(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary,
 ## EL PORTERO (8-10-2026): saluda según la hora, sabe si estás sancionado, te
 ## cuenta lo que ha visto y, si se lo pides, abre la puerta (gesto + puertas
 ## correderas) y te deja pasar: `al_pasar` se llama cuando ya está abierta.
-static func dialogo_portero(capa: CanvasLayer, personal: PersonalEstadio, g: Dictionary, desde: Vector3,
+static func dialogo_portero(capa: CanvasLayer, personal, g: Dictionary, desde: Vector3,
 		al_pasar: Callable) -> PanelContainer:
 	personal.atender(g, desde, true)
 	if g.has("nodo") and is_instance_valid(g["nodo"]):
@@ -266,7 +266,7 @@ static func dialogo_portero(capa: CanvasLayer, personal: PersonalEstadio, g: Dic
 	dice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dice.custom_minimum_size = Vector2(610, 0)
 	dice.add_theme_font_size_override("font_size", 19)
-	var h := PersonalEstadio.hora
+	var h = load("res://visor/personal_estadio.gd").hora
 	var saludo := "Buenas, míster."
 	if h >= 0.0:
 		saludo = "Buenos días, míster." if h < 13.0 else ("Buenas tardes, míster." if h < 20.5 else "Buenas noches, míster. Aquí sigo de guardia.")
@@ -343,13 +343,13 @@ static func _butaca_real(raiz: Node, cerca_de_local: Vector3, signo_x: float) ->
 ## `z`, en la fila `fila` (cada 0,8 m de fondo). Devuelve {pos, rumbo} con el
 ## rumbo mirando al campo.
 static func butaca(est: Dictionary, signo_x: float, z: float, fila: int = 3, raiz: Node = null) -> Dictionary:
-	var g := StadiumBuilder.geom_de_forma(String(est.get("forma", "cuenco")))
+	var g = load("res://visor/stadium_builder.gd").geom_de_forma(String(est.get("forma", "cuenco")))
 	var dx: float = g["dx"]
 	var dz: float = g["dz"]
 	var d := 0.6 + float(fila) * 0.8
-	var ang := deg_to_rad(StadiumBuilder.RAKE_GRADOS)
-	var x := signo_x * (dx - StadiumBuilder.FRENTE_TRIBUNA + d)
-	var y := StadiumBuilder.ALTURA_PIE + d * tan(ang) + 0.2
+	var ang = deg_to_rad(load("res://visor/stadium_builder.gd").RAKE_GRADOS)
+	var x = signo_x * (dx - load("res://visor/stadium_builder.gd").FRENTE_TRIBUNA + d)
+	var y = load("res://visor/stadium_builder.gd").ALTURA_PIE + d * tan(ang) + 0.2
 	var zz := clampf(z, -(dz - 12.0), dz - 12.0)
 	var aprox := Vector3(x, y, zz)
 	## 21-10-2026: con el estadio en la escena, la butaca DE VERDAD más cercana
@@ -396,8 +396,8 @@ static func camino_a_butaca(raiz: Node, butaca_local: Vector3) -> Array[Vector3]
 	## La escalera de acceso: desde el suelo, hacia el campo, sube peldaño a
 	## peldaño hasta el pie del pasillo (`StadiumBuilder._escaleras_de_acceso`).
 	var hacia_campo := Vector3(-signf(pie.x), 0, 0)
-	var n := int(ceil((pie.y - 0.05) / StadiumBuilder.PELDANO_ALTO))
-	var suelo := r3.to_local(pie + hacia_campo * (0.45 + float(n) * StadiumBuilder.PELDANO_FONDO + 0.4))
+	var n = int(ceil((pie.y - 0.05) / load("res://visor/stadium_builder.gd").PELDANO_ALTO))
+	var suelo = r3.to_local(pie + hacia_campo * (0.45 + float(n) * load("res://visor/stadium_builder.gd").PELDANO_FONDO + 0.4))
 	suelo.y = 0.0
 	camino.append(suelo)
 	camino.append(r3.to_local(pie + hacia_campo * 0.45) + Vector3(0, 0.25, 0))
