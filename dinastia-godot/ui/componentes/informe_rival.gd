@@ -189,7 +189,14 @@ func _construir() -> void:
 	var cuerpo := HBoxContainer.new()
 	cuerpo.add_theme_constant_override("separation", 18)
 	cuerpo.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	raiz.add_child(cuerpo)
+	cuerpo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	## Con scroll (A4-INT-020): en un móvil apaisado (~480 px de alto) las tres columnas pedían 588 px y el botón «Al partido ▶» quedaba FUERA de la pantalla; ahora lo que sobra se desliza y el pie siempre se ve.
+	var desliza := ScrollContainer.new()
+	desliza.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	desliza.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	desliza.follow_focus = true
+	raiz.add_child(desliza)
+	desliza.add_child(cuerpo)
 	var once := rival.once()
 	## 1) La formación.
 	var c1 := _columna(cuerpo, Idiomas.t("SU PIZARRA"), 0.9)
@@ -198,7 +205,7 @@ func _construir() -> void:
 	campo.formacion = rival.tactica.formacion if rival.tactica != null else "4-3-3"
 	campo.color = Color(rival.color1)
 	campo.color2 = Color(rival.color2)
-	campo.custom_minimum_size = Vector2(0, 330)
+	campo.custom_minimum_size = Vector2(0, 330 if get_viewport_rect().size.y >= 600.0 else 240)   ## en un móvil apaisado (~480 px de alto) la pizarra pedía más que la pantalla (A4-INT-020)
 	campo.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	c1.add_child(campo)
 	_linea(c1, texto_pizarra(rival.tactica), COL_TEXTO, 14)

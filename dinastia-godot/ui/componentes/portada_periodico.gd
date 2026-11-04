@@ -242,14 +242,14 @@ func _montar(mundo: Mundo, p: Dictionary) -> void:
 	b.grab_focus.call_deferred()
 	_hoja.pivot_offset = _hoja.size / 2.0
 	atras.pivot_offset = atras.size / 2.0
-	atras.scale = Vector2(ESCALA, ESCALA)
+	atras.scale = Vector2(_esc(), _esc())
 	_hoja.position.y -= 18.0
 	atras.position.y -= 18.0
-	_hoja.scale = Vector2(ESCALA * 0.96, ESCALA * 0.96)
+	_hoja.scale = Vector2(_esc() * 0.96, _esc() * 0.96)
 	_hoja.modulate.a = 0.0
 	var tw := create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.tween_property(_hoja, "modulate:a", 1.0, 0.25)
-	tw.tween_property(_hoja, "scale", Vector2(ESCALA, ESCALA), 0.35)
+	tw.tween_property(_hoja, "scale", Vector2(_esc(), _esc()), 0.35)
 	Sonido.toca("notificacion" if Sonido.NOMBRES.has("notificacion") else "cambio", Sonido.Bus.INTERFAZ)
 
 ## Antes era `_gui_input` con la tecla Esc: solo llegaba si el ratón estaba
@@ -267,9 +267,14 @@ func _input(e: InputEvent) -> void:
 
 ## Fija la fila por sus ANCLAS al centro y sus márgenes a media anchura a
 ## cada lado: así queda centrada se haya medido ya la ventana o no.
+## La escala de la hoja: 0,9 de siempre, y menos si la pantalla es baja (un móvil apaisado, ~480 px): hoja + botones tienen que caber (A4-INT-021).
+func _esc() -> float:
+	var alto := get_viewport_rect().size.y
+	return clampf(minf(ESCALA, (alto - 96.0) / ALTO), 0.4, ESCALA)
+
 func _centrar(fila: HBoxContainer) -> void:
 	var tam := fila.get_combined_minimum_size()
-	var y := ALTO * ESCALA / 2.0 - 10.0
+	var y := ALTO * _esc() / 2.0 - 10.0
 	fila.anchor_left = 0.5
 	fila.anchor_right = 0.5
 	fila.anchor_top = 0.5

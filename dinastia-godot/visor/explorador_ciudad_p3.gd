@@ -255,6 +255,8 @@ func _bajar_del_tren() -> void:
 		cuerpo.position = _anden_c + _anden_lon * lo
 
 func _entrar_en_edificio(k: String) -> void:
+	if estado == "interior" or is_instance_valid(_int_raiz):
+		return   ## A4: una segunda pulsación con el interior abierto dejaba un interior huérfano y la «calle» a la que volver quedaba DENTRO del primero (salía a 443 m)
 	_fundido()
 	_int_raiz = Node3D.new()
 	_int_raiz.name = "InteriorPaseo"
