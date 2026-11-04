@@ -409,6 +409,7 @@ func _expulsar(p: Dictionary) -> void:
 	if usuario == p:
 		usuario = {}
 	MotorCambioPortero.tras_expulsion(self as Object as MotorJugable, p)
+	MotorSiete.revisar(self as Object as MotorJugable)
 
 ## Para reabrir el partido a mitad (tras el descanso): el marcador y el reloj
 ## del `Partido`, y saque de centro.
