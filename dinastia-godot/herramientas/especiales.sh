@@ -174,6 +174,7 @@ pasa "p6_resolucion3d" "godot --headless --path . res://pruebas/ideas/p6_resoluc
 pasa "a4_recorrido_mapa" "godot --headless --path . res://pruebas/ideas/a4_recorrido_mapa.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_peatones_limite" "godot --headless --path . res://pruebas/ideas/a4_peatones_limite.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_interiores_limite" "godot --headless --path . res://pruebas/ideas/a4_interiores_limite.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_metro_museo (metro por dentro y museo ampliado, sin pantalla)" "godot --headless --path . res://pruebas/ideas/a4_metro_museo.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_cruzado" "godot --headless --path . res://pruebas/ideas/a4_gestion_cruzado.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_cesiones" "godot --headless --path . res://pruebas/ideas/a4_gestion_cesiones.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_mercado_fed" "godot --headless --path . res://pruebas/ideas/a4_gestion_mercado_fed.tscn" "(^|[^0-9])0 fallos"
@@ -187,6 +188,8 @@ pasa "a4_gestion_selecciones" "godot --headless --path . res://pruebas/ideas/a4_
 # a4_limite_mundo (partido en 3 de ~190, ~190 y ~150 s para caber holgado en los 600 s) necesita pantalla virtual (opengl3): el contenedor del CI no trae xvfb-run (A4, 4-11), como el bloque 6a
 if command -v xvfb-run >/dev/null; then
 pasa "a4_limite_mundo (1/3 calidad: fugas al reabrir)" "A4_PARTE=1 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_metro_museo 1/2 (metro por dentro, con pantalla: ~250 s)" "A4_PARTE=1 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_metro_museo.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_metro_museo 2/2 (museo ampliado, con pantalla: ~120 s)" "A4_PARTE=2 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_metro_museo.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_limite_mundo (2/3 calidad y horas)" "A4_PARTE=2 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_limite_mundo (3/3 estadios y tráfico)" "A4_PARTE=3 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
 fi
