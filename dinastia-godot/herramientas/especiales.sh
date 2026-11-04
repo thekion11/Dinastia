@@ -18,7 +18,9 @@ pasa() {  # nombre, comando, patrón de éxito
   CONT=$((CONT + 1))
   if [ -n "$PARTE_I" ] && [ $((CONT % PARTE_N)) -ne "$PARTE_I" ]; then return; fi
   local t0=$(date +%s)
-  timeout 600 bash -c "$2" > "$LOG" 2>&1
+  ## (4-11, A4) Cada prueba con SU carpeta user:// vacía, como en el CI: con el guardado de un jugador (idioma, ajustes, partidas)
+  ## las pruebas que ponen un idioma antes de abrir el juego medían otra cosa (el guardado manda) y pasaban sin probar lo que decían.
+  XDG_DATA_HOME=$(mktemp -d) timeout 600 bash -c "$2" > "$LOG" 2>&1
   local seg=$(( $(date +%s) - t0 ))
   if grep -q "SCRIPT ERROR" "$LOG" || ! grep -qE "$3" "$LOG"; then
     FALLOS=$((FALLOS + 1)); printf 'FALLO  %-34s %3d s\n' "$1" "$seg"; grep -E "FALLO|SCRIPT ERROR" "$LOG" | head -3
@@ -115,6 +117,7 @@ pasa "igualdad del motor con usuario" "godot --headless --path . res://pruebas/i
 pasa "motor jugable (unidad)" "godot --headless --path . res://pruebas/prueba_motor_jugable.tscn" "FIN MOTOR. 0 fallos"
 # 5c. Movimiento suave y vida de la ciudad (27-10, orden del líder: que el tirón de los vehículos no vuelva a romperse sin que se note; ~1 min)
 pasa "tráfico, metro y bus suaves" "godot --headless --path . res://pruebas/ideas/pmov_suavidad_trafico.tscn" "FIN. 0 fallos"
+pasa "fotogramas malos al límite (auditoría 4: pasos grandes, 5 FPS y tirones = mismo estado que a 60 FPS, repetición con cambio)" "godot --headless --path . res://pruebas/auditoria_fps_malos_limite.tscn" "FIN. 0 fallos"
 pasa "reglas del partido al límite (auditoría 4: 7 y 6 jugadores, lesionado sin cambios, portero lesionado, cambio en tanda y descanso, banco vacío)" "godot --headless --path . res://pruebas/auditoria_reglas_3d_limite.tscn" "FIN. 0 fallos"
 pasa "atrás en el tutorial y el prólogo, música en segundo plano (auditoría 4, menú táctil)" "godot --headless --path . res://pruebas/auditoria_atras_pantallas_limite.tscn" "FIN. 0 fallos"
 pasa "partido táctil al límite en el móvil (auditoría 4: 50 pausas con giro y calidad, segundo plano en descanso, tanda y repetición)" "godot --headless --path . res://pruebas/auditoria_partido_movil_limite.tscn" "FIN. 0 fallos"
