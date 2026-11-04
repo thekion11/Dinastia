@@ -37,6 +37,7 @@ static func _linea_partido(c: Club, mundo: Mundo, dias: int, ir: Callable) -> Co
 	var b := Button.new()
 	b.flat = true
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART   ## en francés («Prochain : … à domicile · dans 5 jours») ensanchaba el panel en el móvil (A4-INT-019)
 	b.add_theme_font_size_override("font_size", 13)
 	if par.size() != 2:
 		b.text = Idiomas.t("⚽ Semana sin partido: entrenamiento doble.")

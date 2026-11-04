@@ -24,6 +24,9 @@ var _nivel_gol := 0
 var _espera_gol := 0
 var _marcador_antes := 0
 var _susp := 0
+var _banq := 0
+var _entro := false
+var _banq_entro := 0
 var _firma_progreso := ""
 var _f_progreso := 0
 var _pj_viejo: PartidoJugable
@@ -120,6 +123,8 @@ func _process(_d: float) -> void:
 		_pj.motor.autopiloto = false
 		if OS.get_environment("SOLO_SUSP") != "":
 			_fase = 2   ## (depuración) solo la suspensión por menos de 7
+		if OS.get_environment("SOLO_BANQ") != "":
+			_fase = 3   ## (depuración) solo el banquillo
 		return
 	if _n < 30 or (_pj == null and _fase < 2):
 		return
@@ -127,7 +132,8 @@ func _process(_d: float) -> void:
 		0: _golazos()
 		1: _fuzz()
 		2: _suspension()
-		3: _fin()
+		3: _banquillo()
+		4: _fin()
 
 func _fuzz() -> void:
 	var m = _pj.motor
@@ -163,7 +169,7 @@ func _fuzz() -> void:
 		var e := _sano()
 		if e != "":
 			_comprobar(false, "fotograma %d: %s" % [f, e])
-			_fase = 2
+			_fase = 4
 			return
 	var firma := "%s|%d|%.1f|%s|%d" % [m.estado, m.mitad, m.t, str(m.goles), 1 if _pj.realizando_gol() else 0]
 	if firma != _firma_progreso:
@@ -229,6 +235,7 @@ func _suspension() -> void:
 	if m.estado == "fin" and mios.size() > 6:
 		_comprobar(false, "el partido terminó con %d míos en el campo sin llegar a la suspensión" % mios.size())
 		_fase = 3
+		_banq = 0
 		return
 	if mios.size() > 6:
 		var cand: Array = mios.filter(func(p: Dictionary) -> bool: return not p["por"] and p != m.usuario)
@@ -239,3 +246,46 @@ func _suspension() -> void:
 	var mi_lado := 0 if _pj._es_local_usuario else 1
 	_comprobar(int(m.goles[mi_lado]) < int(m.goles[1 - mi_lado]) and int(m.goles[1 - mi_lado]) >= 3, "se da por perdido: marcador %d-%d" % [m.goles[0], m.goles[1]])
 	_fase = 3
+	_banq = 0
+
+## Sustituciones REALES del usuario: parte del BANQUILLO (entra en el minuto 15). Antes de entrar se expulsa a dos de los suyos; al entrar se comprueba que
+## el usuario tiene jugador; después se expulsa a ESE jugador (el usuario se queda sin futbolista) y se sigue con toques al azar sin errores ni NaN.
+func _banquillo() -> void:
+	_banq += 1
+	if _banq == 1:
+		_pj.queue_free()
+		return
+	if _banq == 5:
+		var club := _ui.carrera.club(CarreraJugadorUI.mundo)
+		var par := _ui._partido_de_la_semana(club)
+		var yo := _ui.carrera.jugador(CarreraJugadorUI.mundo)
+		yo.suspension = 1   ## sancionado para el once (no es titular): empieza en el banquillo y entra en su minuto
+		_pj = PartidoJugable.abrir(_ui, CarreraJugadorUI.mundo, _ui.carrera, par[0], par[1], 12.0, 15)
+		_ct = _pj.get_node_or_null("ControlesTactiles") as ControlesTactiles
+		_pj.size = LIENZO
+		_ct.size = LIENZO
+		## (El partido corre solo y deprisa DENTRO de `abrir` hasta que el usuario entra.)
+		_comprobar(not _pj.motor.usuario.is_empty() and _pj.motor.minuto() >= 15 and not _pj.motor.usuario_sustituido, "parte del banquillo: al abrir ya ha entrado, en el minuto %d" % _pj.motor.minuto())
+		return
+	if _banq < 60:
+		return
+	var m = _pj.motor
+	for i in _rng.randi_range(0, 3):
+		_toque_al_azar()
+	var mios: Array = m.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) == _pj._es_local_usuario)
+	if not _entro and not m.usuario.is_empty():
+		_entro = true
+		_comprobar(true, "el usuario entra desde el banquillo (minuto %d, %d de los suyos en el campo)" % [m.minuto(), mios.size()])
+		_banq_entro = _banq
+	if _entro and _banq - _banq_entro == 120:
+		m._expulsar(m.usuario)
+		_comprobar(m.usuario.is_empty(), "al expulsar al futbolista del usuario, el usuario se queda sin jugador y el partido sigue (%s)" % m.estado)
+	if _banq % 10 == 0:
+		var e := _sano()
+		if e != "":
+			_comprobar(false, "banquillo: %s" % e)
+			_fase = 4
+			return
+	if (_entro and _banq - _banq_entro > 900) or m.estado == "fin" or _banq > 60 * 200:
+		_comprobar(_entro, "el usuario llegó a entrar desde el banquillo")
+		_fase = 4

@@ -103,6 +103,8 @@ func _probar() -> void:
 		oc.elegir("pase")
 		_comprobar(int(motor.pases[0]) == pases + 1, "el pase lo da el motor del césped")
 		_hasta_cerrar(motor, oc)
+	_titulo("OCASIONES: al límite (caza de fallos 4-11)")
+	await _extremos(motor, loc, vis, del, comp, partido)
 	_titulo("OCASIONES: el tiro de la escena, repetido")
 	var goles_m := 0
 	var tiros_m := 0
@@ -327,3 +329,49 @@ func _motor(semilla_mundo: int, semilla_motor: int, i_local: int, i_visita: int)
 	motor.autopiloto = true
 	motor.preparar(lista, ball, "", semilla_motor)
 	return [motor, raiz, partido]
+
+## Pulsación doble, clave que no existe, atributos a 1 y a 99, y cerrar a mitad con la cámara lenta puesta: el tiempo siempre vuelve a su ritmo.
+func _extremos(motor: MotorJugable, loc: Array, vis: Array, del: Dictionary, comp: Dictionary, partido: Partido) -> void:
+	var oc := _ocasion(motor, partido)
+	_escena(motor, loc, vis, del, comp)
+	oc._proxima = 0
+	oc.hechas = 0
+	_comprobar(oc.tras_paso(), "se abre la ocasión para las pruebas al límite")
+	oc.elegir("no_existe")
+	_comprobar(oc._fase == "eligiendo", "una clave que no existe se ignora y se sigue eligiendo")
+	var tiros := int(motor.tiros[0])
+	oc.elegir("tiro")
+	oc.elegir("tiro")   ## pulsación doble
+	oc.elegir("pase")
+	_hasta_cerrar(motor, oc)
+	_comprobar(int(motor.tiros[0]) == tiros + 1, "pulsar dos veces (y luego otra opción) solo ejecuta un tiro (%d → %d)" % [tiros, int(motor.tiros[0])])
+	for valor in [1, 99]:
+		for q: Dictionary in loc:
+			if not bool(q.get("por", false)):
+				for k: String in (q["attr"] as Dictionary):
+					q["attr"][k] = float(valor) / 100.0 if float((q["attr"] as Dictionary)[k]) <= 1.0 else float(valor)
+		_escena(motor, loc, vis, del, comp)
+		oc._proxima = 0
+		oc.hechas = 0
+		var abre := oc.tras_paso()
+		var fin_ok := true
+		if abre:
+			for clave in oc._lect:
+				if oc._lect[clave] is Dictionary and (oc._lect[clave] as Dictionary).has("prob"):
+					var pr := float(oc._lect[clave]["prob"])
+					fin_ok = fin_ok and pr >= 0.0 and pr <= 1.0 and not is_nan(pr)
+			oc.elegir(String(oc._lect["recomendada"]), true)
+			_hasta_cerrar(motor, oc)
+		_comprobar(fin_ok, "atributos al %d: las probabilidades de los botones son números entre 0 y 1 (se abrió: %s)" % [valor, str(abre)])
+	oc.camara_lenta = true
+	_escena(motor, loc, vis, del, comp)
+	oc._proxima = 0
+	oc.hechas = 0
+	oc.tras_paso()
+	if oc._lect.has("tiro"):
+		oc.elegir("tiro")
+		_comprobar(Engine.time_scale < 1.0, "con la cámara lenta, la ocasión baja el ritmo del tiempo")
+	oc.queue_free()
+	await get_tree().process_frame
+	_comprobar(Engine.time_scale == 1.0, "cerrar la ocasión a mitad devuelve el tiempo a su ritmo")
+	Engine.time_scale = 1.0
