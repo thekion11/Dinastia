@@ -15,7 +15,7 @@ var _m: Array = []
 var _res := {}
 
 func _ready() -> void:
-	Calidad.elegida = Calidad.MEDIO
+	Calidad.elegida = Calidad.MINIMO if OS.get_environment("CALIDAD") == "minimo" else Calidad.MEDIO
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 
