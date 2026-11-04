@@ -17,5 +17,7 @@ Sesión «Búsqueda de fallos». Repasos 1 (lectura de reglas) y 2 (ejecución) 
 
 - [A4-REGLAS-006] (repaso 4, gravedad: bajo) `pruebas/ideas/zz_alt.gd` (en `especiales.sh`) solo imprimía alturas y pendientes del monte, sin ninguna comprobación: siempre daba «0 fallos». Reproducir: romper `CityBuilder.altura_en` y correrla. Estado: **arreglado** (comprueba altura finita y `ny >= 0,6` en los 9 puntos; medido 0,80-0,99; no cambia el juego). Las otras 13 pruebas sin `_comprobar` visible que revisé sí marcan FALLO por otros medios.
 
-## Pendiente (repasos 3 y 4)
-Estrés y casos absurdos de las reglas (guardar/cargar, idiomas a mitad), CI (`actualizar.yml`, `compilar.yml`), pruebas vacías, documentos desactualizados, rutas `res://` y señales.
+## Repaso 3 (al límite) y 4 (coherencia), hecho en parte
+- Idiomas: 3 vueltas por los 9 idiomas más códigos inválidos («xx», vacío) con 276 frases (vacías, `%s`, 5.000 caracteres, saltos de línea, emoji): ninguna traducción vacía, sin errores.
+- Pruebas vacías: revisadas las 14 que no tienen `_comprobar` visible; solo `zz_alt` no comprobaba nada (A4-REGLAS-006, arreglado).
+- Pendiente: CI (`actualizar.yml`, `compilar.yml`: comprobar que las especiales del CI cubren las mismas pruebas que `especiales.sh todo`), señales sin desconectar, documentos desactualizados.
