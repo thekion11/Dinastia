@@ -71,6 +71,7 @@ const PLAN_POR_DEFECTO := ["tactico", "fisico", "tecnico", "balon", "tactico", "
 ## ellos se le pone plan especial al plantel entero y el sistema desaparece.
 const MAX_INDIVIDUALES := 4
 const MAX_PRIORITARIOS := 3
+const TOPE_TEMPORADA := 6   ## puntos de media por entrenamiento en una temporada (la curva anual `ProgresoJugador.anual` suma hasta +2 aparte; orden del dueño: no más de +8)
 
 ## Semanas que tarda en cuajar un plan individual (se sortea al terminar).
 const IND_MIN := 5
@@ -349,8 +350,9 @@ func _procesar_mentorias(c: Club) -> void:
 			continue
 		m["semanas"] = int(m["semanas"]) + 1
 		## El pupilo crece más rápido cuanto mejor es el maestro.
-		if pupilo.ovr < pupilo.pot and Azar.suerte(0.10 + float(maestro.ovr - 60) * 0.002):
+		if pupilo.ovr < pupilo.pot and int(_subidas.get(pupilo.id, 0)) < TOPE_TEMPORADA and Azar.suerte(0.10 + float(maestro.ovr - 60) * 0.002):
 			pupilo.ajustar_media(1)
+			_subidas[pupilo.id] = int(_subidas.get(pupilo.id, 0)) + 1
 			m["subidas"] = int(m["subidas"]) + 1
 			if not pupilo.atributos.is_empty():
 				var k: String = Azar.uno(pupilo.atributos.keys())
