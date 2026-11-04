@@ -52,6 +52,7 @@ static func _preparar_obra(root: Node3D, est: Dictionary, cap_efectiva: int, ocu
 	# Niveles: los que el club realmente construyo, pero nunca mas bandejas de
 	# las que el aforo justifica (un estadio de 8.000 con 3 bandejas seria falso).
 	obra.niveles = niveles_de(est, cap_efectiva)
+	llenado_aforo = clampf(float(cap_efectiva) / (22000.0 * float(obra.niveles)), 0.5, 1.0)   ## (4-11) el aforo manda en las filas con butaca
 	obra.alto = altura_de(est, cap_efectiva)
 	obra.techo = str(est.get("techo", "anillo"))
 
