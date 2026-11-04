@@ -54,15 +54,16 @@ const GIRO_RAPIDO := 12.0
 ## la presión y el error de sus tiros y pases (`error`, en `GestoTecnico.factor`).
 ## (La «pausa» NO es dificultad: pensar más con el balón hace que conduzca y tire MÁS; contra el nivel
 ## más bajo la CPU tiraba 7 veces. Queda en 1,0 para todos.)
+## (4-11) ESCALONES IGUALADOS tras medir 30 partidos por nivel (docs/04_auditorias/MEGA_AUDITORIA_4/partido.md): antes Cadete→Debutante valía ~2,5 goles y Debutante→Semiprofesional ~0,2.
 const DIFICULTADES := {   ## 8 categorías del dueño (27-10); «debutante» = el motor calibrado de siempre (antes «profesional»)
 	"practicante": {"nombre": "Practicante", "vista": 0.5, "attr": 0.72, "pausa": 1.0, "presion": -1, "error": 1.35},
-	"cadete": {"nombre": "Cadete", "vista": 0.3, "attr": 0.84, "pausa": 1.0, "presion": -1, "error": 1.18},
+	"cadete": {"nombre": "Cadete", "vista": 0.2, "attr": 0.90, "pausa": 1.0, "presion": -1, "error": 1.12},
 	"debutante": {"nombre": "Debutante", "attr": 1.0, "pausa": 1.0, "presion": 0, "error": 1.0},
-	"semiprofesional": {"nombre": "Semiprofesional", "attr": 1.03, "pausa": 1.0, "presion": 0, "error": 0.95},
-	"profesional": {"nombre": "Profesional", "vista": -0.08, "attr": 1.06, "pausa": 1.0, "presion": 1, "error": 0.9},
-	"experto": {"nombre": "Experto", "vista": -0.14, "attr": 1.09, "pausa": 1.0, "presion": 1, "error": 0.86},
+	"semiprofesional": {"nombre": "Semiprofesional", "vista": -0.04, "attr": 1.045, "pausa": 1.0, "presion": 0, "error": 0.93},
+	"profesional": {"nombre": "Profesional", "vista": -0.08, "attr": 1.07, "pausa": 1.0, "presion": 1, "error": 0.89},
+	"experto": {"nombre": "Experto", "vista": -0.14, "attr": 1.10, "pausa": 1.0, "presion": 1, "error": 0.85},
 	"maestro": {"nombre": "Maestro", "vista": -0.2, "attr": 1.13, "pausa": 1.0, "presion": 1, "error": 0.81},
-	"ultimate": {"nombre": "Ultimate", "vista": -0.3, "attr": 1.18, "pausa": 1.0, "presion": 1, "error": 0.75},
+	"ultimate": {"nombre": "Ultimate", "vista": -0.34, "attr": 1.20, "pausa": 1.0, "presion": 1, "error": 0.72},
 }
 
 const ORDEN_DIFICULTAD := ["practicante", "cadete", "debutante", "semiprofesional", "profesional", "experto", "maestro", "ultimate"]
