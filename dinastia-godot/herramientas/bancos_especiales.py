@@ -88,7 +88,7 @@ BANCOS = [
 ]
 
 
-CON_PANTALLA = {"estadio_3d", "personajes_3d"}   ## bancos que corren con xvfb + OpenGL (llvmpipe) en vez de --headless
+CON_PANTALLA = {"estadio_3d"}   ## bancos que corren con xvfb + OpenGL (llvmpipe) en vez de --headless
 
 def especiales():
     """[(nombre, comando, patrón)] de especiales.sh (todas, también las del bloque «todo»)."""
