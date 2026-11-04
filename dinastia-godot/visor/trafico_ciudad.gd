@@ -86,7 +86,7 @@ func _process(delta_real: float) -> void:
 		if es_peaton and not frena:
 			v.erase("pidio")
 		## SIRENAS (27-10-2026, pieza E): ante un vehículo de emergencia con la sirena puesta, coches y buses frenan (con su rampa de siempre).
-		if suave and not sirenas.is_empty() and sirena_cerca((v["nodo"] as Node3D).position):
+		if suave and not sirenas.is_empty() and sirena_cerca((v["nodo"] as Node3D).position, (_rutas[ruta] as Ruta).en(s0)[1], vact):
 			tope = 0.0
 			frena = true
 		if v.has("faros") and bool(v["frena"]) != frena:
@@ -239,14 +239,17 @@ func _lateral(v: Dictionary, delta: float, vel := VEL_LATERAL) -> void:
 ## MOBILIARIO DELANTE (27-10-2026, plan §4): cuatro veces por segundo el peatón mira 1,2 m por
 ## delante en su carril; si hay un banco, una papelera o una farola (`libre_fn`), se abre a un lado
 ## libre como al adelantar. Sin `libre_fn` (pruebas, mapa de lejos) no mira nada.
-## Los vehículos de emergencia con la sirena encendida (los registra `ServiciosVida`) y a qué distancia hacen parar al tráfico: a 55 m
-## frenando a FRENADA da tiempo de parar a 14 m/s, y vale también para el que cruza por una bocacalle.
+## Sirenas encendidas (las registra `ServiciosVida`) y a qué distancia hacen parar al tráfico: a 55 m, frenando a FRENADA, da tiempo de parar a 14 m/s.
 static var sirenas: Array[Node3D] = []
 const RADIO_SIRENA := 55.0
-
-static func sirena_cerca(p: Vector3) -> bool:
+## `dir` (la marcha de quien mira): una sirena que viene POR DETRÁS en su carril no le hace parar (A4: si no, el coche se quedaba plantado en el carril y la ambulancia lo atravesaba o se quedaba parada tras él para siempre).
+static func sirena_cerca(p: Vector3, dir := Vector3.ZERO, vel := 0.0) -> bool:
+	var radio := maxf(RADIO_SIRENA, vel * vel / 6.0 + 12.0)   ## a 22 m/s hacen falta ~93 m para parar a 3 m/s²
 	for s: Node3D in sirenas:
-		if is_instance_valid(s) and Vector2(s.position.x - p.x, s.position.z - p.z).length() < RADIO_SIRENA:
+		if is_instance_valid(s) and Vector2(s.position.x - p.x, s.position.z - p.z).length() < radio:
+			var rel := s.position - p
+			if dir != Vector3.ZERO and rel.dot(dir) < -1.0 and absf(rel.cross(dir).y) < 3.5:
+				continue
 			return true
 	return false
 
@@ -316,8 +319,7 @@ static func tapa_al_jugador(pos: Vector3, dir: Vector3, umbral: float, ancho: fl
 ## que cada uno mire solo a sus vecinos. Se rehace cada fotograma: son pocos.
 const CELDA_PASO := 8.0
 const RADIO_PASO := 70.0
-## Tras tanto rato cediendo, sigue: es la salida de emergencia para que un
-## cruce raro (tres que se miran en corro) nunca se quede atascado.
+## Tras tanto rato cediendo, sigue: salida de emergencia para que un cruce raro (tres que se miran en corro) no se atasque.
 const PACIENCIA_PASO := 4.0
 var _rejilla := {}
 
@@ -341,14 +343,12 @@ func _rejilla_paso(ojo: Vector3) -> void:
 			_rejilla[k] = []
 		(_rejilla[k] as Array).append([idx, Vector2(q.x, q.z), Vector2(dir.x, dir.z).normalized(), alto < 0.05, q.y])
 
-## Hueco que pide cada uno por delante (largo, medio ancho): un coche mira 7 m
-## y su carril; un peatón, un paso y su hombro.
+## Hueco que pide cada uno por delante (largo, medio ancho): un coche, 7 m y su carril; un peatón, un paso y su hombro.
 static func _hueco(coche: bool) -> Vector2:
 	return Vector2(7.0, 1.7) if coche else Vector2(1.3, 0.55)
 
 ## ¿`b` (posición) está en el hueco de delante de quien está en `pa` mirando `da`?
-## `ancho_extra`: lo que abulta el otro hacia el lado (un coche que cruza en
-## perpendicular ocupa medio LARGO, 2,3 m), para que no se rocen.
+## `ancho_extra`: lo que abulta el otro hacia el lado (un coche que cruza en perpendicular ocupa medio LARGO, 2,3 m).
 static func _en_hueco(pa: Vector2, da: Vector2, coche: bool, pb: Vector2, ancho_extra: float) -> bool:
 	var rel := pb - pa
 	var h := _hueco(coche)
