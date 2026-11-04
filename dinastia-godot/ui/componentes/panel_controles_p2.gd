@@ -183,14 +183,14 @@ func _ir_a(clave: String) -> void:
 
 func _montar_menu(cuerpo: HBoxContainer) -> void:
 	var caja := PanelContainer.new()
-	caja.custom_minimum_size = Vector2(214, 0)
+	caja.custom_minimum_size = Vector2(196, 0)   ## (4-11) el manual gana ancho: sus acciones largas ocupaban 3-4 líneas
 	caja.add_theme_stylebox_override("panel", _estilo(Color(Tema.PANEL, 0.82), Tema.RADIO_GRANDE))
 	cuerpo.add_child(caja)
 	var envoltura := Control.new()
 	caja.add_child(envoltura)
 	_pastilla_menu = Panel.new()
 	_pastilla_menu.add_theme_stylebox_override("panel", _estilo(Tema.ORO.darkened(0.55), Tema.RADIO, Tema.ORO))
-	_pastilla_menu.size = Vector2(190, 40)
+	_pastilla_menu.size = Vector2(172, 40)
 	envoltura.add_child(_pastilla_menu)
 	_menu = VBoxContainer.new()
 	_menu.add_theme_constant_override("separation", 4)
@@ -262,7 +262,7 @@ func _montar_centro(cuerpo: HBoxContainer) -> void:
 
 func _montar_mando(cuerpo: HBoxContainer) -> void:
 	var caja := PanelContainer.new()
-	caja.custom_minimum_size = Vector2(450, 0)
+	caja.custom_minimum_size = Vector2(390, 0)
 	caja.add_theme_stylebox_override("panel", _estilo(Color(Tema.PANEL, 0.7), Tema.RADIO_GRANDE))
 	cuerpo.add_child(caja)
 	var v := VBoxContainer.new()
@@ -271,7 +271,7 @@ func _montar_mando(cuerpo: HBoxContainer) -> void:
 	v.add_child(cab)
 	_mando = DibujoMando.new()
 	_mando.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_mando.custom_minimum_size = Vector2(400, 300)
+	_mando.custom_minimum_size = Vector2(340, 300)
 	v.add_child(_mando)
 	var leyenda := Tema.etiqueta(12, Tema.SUAVE, Idiomas.t("Gíralo con el ratón. En dorado, los botones de la combinación elegida."))
 	leyenda.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
