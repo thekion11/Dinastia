@@ -79,3 +79,10 @@ Sonda `pruebas/ideas/a4_gestion_estadio.tscn`: todas las obras con 5 reputacione
 - Lo demás, sin fallo: obras sin caja nunca arrancan, el estadio propio recorta las bandejas a 1-5, la caja no se desborda con precio 10⁶ ni socios 10⁶, ni baja de socios en 8 semanas con precio 0.
 
 - Nota (4-11, tope de entrenamiento): la especial «el entrenamiento se nota» (`j9_entrenamiento`) dio +9 (técnico) contra +10 (normal) con UNA semilla y ~10 jóvenes: ruido del azar tras mover la calibración. Ahora suma 8 semillas (técnico +59 contra +54 normal, al límite +24 contra suave −7).
+
+### Repaso 5, octava tanda (museo, trofeos, academia y ojeadores)
+Sonda `pruebas/ideas/a4_gestion_museo_cantera.tscn`: museo con 0 y 500 trofeos (orden por año, fichas −1/0/10⁶, planta 3 con 5 contextos absurdos, ida y vuelta por el guardado: 500 → 500 y mismos 502 hitos), 1000 vitrinas montadas; academia: captar con índices −1/99 999 y sin caja, cambiar con ids/campos/valores inválidos, entregar fuera de edad, camada de 0 y de 200 (12 semanas en 47 ms, guardar/cargar conserva a los 200, 5 fines de temporada), 20 temporadas del mundo; ojeadores: análisis y academias internacionales sin caja y en rojo, máximos, venta, presupuesto negativo, hallazgos ≤ 8.
+
+- [A4-GESTION-009] (repaso 5, gravedad: bajo) `MuseoVitrinas.cercana` devolvía la PRIMERA vitrina dentro de 1,5 m, no la más cercana: con vitrinas juntas (muchos trofeos) E abría la ficha de la vecina. `visor/museo_vitrinas.gd:9`. Estado: arreglado (commit de esta rama): se devuelve la más cercana; `s8_museo_vitrinas` sigue en 0.
+- Sin fallo: el resto del museo, la academia y los ojeadores (nada se desborda, todo rechazo deja la caja intacta).
+- Nota de proceso: tras fusionar la rama de la líder, `escala_movil.gd` daba «Identifier PantallaMovil not declared» hasta correr `godot --headless --import` (clase nueva sin importar; regla de CLAUDE.md).
