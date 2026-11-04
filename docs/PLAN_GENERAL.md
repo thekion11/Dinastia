@@ -61,8 +61,6 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 **Recorte AUTORIZADO por el dueño (3-11) SOLO en calidad MÍNIMA:** tráfico del anillo a la mitad, sin detalles de fachadas (EdificiosDet) y menos peatones lejanos (sesión de ciudad).
 
-**Banco EXTRA DE RENDIMIENTO** (además de los más de 30 especializados): FPS, tiempos de fotograma, llamadas de dibujo, triángulos, memoria y tiempos de carga por pantalla y por calidad, con topes que fallen si algo empeora.
-
 **Evaluación del menú nuevo: 90/100.** Para llegar a 100:
 - Tablas densas (Dinero → Finanzas, Competiciones → Ligas y clubes…): guías horizontales (línea de 1 px de baja opacidad o filas alternas «cebra») para no perder la fila al leer de izquierda a derecha.
 - Deslizadores (Ajustes → Dispositivo, Ciudad → Diseño…) demasiado finos: más gruesos y con más área de toque (pantallas táctiles y mando).
