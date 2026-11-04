@@ -4,6 +4,21 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## ESTADO AL CIERRE DEL 4-11 (pausa del dueño, ~04:30 UTC) — para retomar
+- `main` = todo hasta el PR #120 (b921e7fd) + el PR de cierre desde `claude/dazzling-rubin-v7rfyi` (lo de después: actualizador dentro del juego,
+  bancos de interfaz y arreglo del mando, controles táctiles combinados de PES 6, pasadas visuales 1-3, arreglo del banco guardado, registro de fallos).
+- Sesiones EN PAUSA (no retoman solas): PES 6 (siguiente: etiquetas táctiles por contexto y HUD legible a 1080×2400), ciudad (siguiente: rellenar
+  el centro de las parcelas industriales y posición propia de la toma a pie de la plaza), ejecutora (pulido de idiomas y texto al 160 %, ver su PR),
+  «Búsqueda de fallos» (rondas apagadas cuando el dueño lo confirme en esa sesión).
+- Revisiones automáticas del líder APAGADAS (cadena de 20 min y respaldo horario).
+- Lo que espera al DUEÑO: (1) probar en el teléfono el APK de `main` (Actions → «Compilar y probar Dinastia» → android) y pasar el informe de
+  Ajustes → «Prueba de rendimiento» (barrido del estadio al 35/50/70/100 %) para ajustar MÍNIMA a 60 FPS; (2) nota 1-100 a las pasadas visuales
+  de la ciudad 1-3 (`04_auditorias/pasada_ciudad_{1,2,3}_2026-11-04.md`); (3) matas de hierba del Drive en el césped de las casas: ¿más juntas o
+  así?; (4) recalibrar los remates del partido simulado y la «segunda amarilla» por temporada (§0); (5) publicar parches: Release llamada
+  `parche-<versión>-<escritorio|android>` con el `parche_<versión>.pck` que genera «Actualizar Dinastia (parche)».
+- Fallos abiertos: ver «FALLOS DETECTADOS» (F-004 rutas rotas en 3 pruebas viejas; F-007 269 frases solo en pl/tr; F-008 banco_inicio depende
+  de user:// limpio, mitigado al limpiar el banco guardado).
+
 
 - (2-11) SIGUIENTE PASO DE CARGA (meta del dueño: ≤5 s en móvil): hecha la carga diferida (hasta ver la ciudad 7,2→3,5 s; ciudad entera 5,7→1,5 s en servidor). Falta: STREAMING POR CERCANÍA en móvil (idea del dueño: no construir los bloques lejanos hasta acercarse; PRIMEROS menor y límite de vista), diferir túnel/sombra del estadio (~1,3 s) y que el .so de Android llegue a `bin_nativo/` (dueño/CI, M-353).
 
