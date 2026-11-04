@@ -1,5 +1,7 @@
 extends "res://nucleo/mundo_p5.gd"
+
 ## [Capa 8/10 de `mundo.gd`] temporada_en_curso, jugar_temporada, _rodar_era, _segunda_de, jugar_promocion, _mover_de_liga … (+9)
+const PENDIENTE_REPOSICION := 0.3   ## cuánto sigue el repuesto a la reputación (antes 1,0; A4-GESTION-010)
 
 func temporada_en_curso() -> bool:
 	for l in ligas:
@@ -160,9 +162,8 @@ func _cerrar_campeonato() -> Dictionary:
 		var es_mi_liga := mi_club() != null and l.pais == mi_club().pais and l.division() == 1
 		var campeon: Club = federacion.campeon_de_liga(t, anio, mi_club_id) if es_mi_liga else t[0]["club"]
 		campeon.mover_saldo(_premio_para(campeon, PREMIO_LIGA))
-		## Ganar la liga sube la reputación del club, y la reputación es la que
-		## mueve la caja, la taquilla y lo que puedes fichar el año siguiente.
-		campeon.rep = clampi(campeon.rep + 1, 40, 96)
+		## Ganar la liga sube la reputación (caja, taquilla, fichajes).
+		campeon.rep = clampi(campeon.rep + 1, 40, 90)   ## A4-GESTION-010: tope 90 (con 96 ganaba 25-28 ligas de 30)
 		resumen["campeones"].append({"liga": l, "club": campeon})
 		## Se apunta el campeon de TU liga para la Supercopa del ano que viene: al
 		## empezar la temporada nueva la tabla ya esta a cero y no habria a quien
@@ -403,7 +404,8 @@ func _subir_de_cantera(c: Club) -> void:
 		## cinco temporadas. Dos de cada cinco son un repuesto hecho, de 22-30.
 		if Azar.suerte(0.4):
 			edad = Azar.ent(22, 30)
-			ovr = c.rep - 12 + Azar.ent(-5, 3)
+			## A4-GESTION-010: el repuesto seguía a la reputación 1 a 1 (rep 90 → 78, rep 78 → 66); ahora con pendiente 0,3 alrededor de 74 (62 en el pivote).
+			ovr = int(round(62.0 + PENDIENTE_REPOSICION * float(c.rep - 74))) + Azar.ent(-5, 3)
 		var nuevo := crear_jugador(c, Datos.grupo(demarcacion), demarcacion, edad, ovr)
 		## EL CLUB QUE VIVE DE SU CANTERA (C3) la cuida más: sus chicos
 		## suben con más techo. Sin `Azar` extra: es un ajuste fijo.
