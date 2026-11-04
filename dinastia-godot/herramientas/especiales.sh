@@ -181,6 +181,7 @@ pasa "a4_gestion_prensa" "godot --headless --path . res://pruebas/ideas/a4_gesti
 pasa "a4_gestion_entrenamiento" "godot --headless --path . res://pruebas/ideas/a4_gestion_entrenamiento.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_estadio" "godot --headless --path . res://pruebas/ideas/a4_gestion_estadio.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_museo_cantera" "godot --headless --path . res://pruebas/ideas/a4_gestion_museo_cantera.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_gestion_selecciones" "godot --headless --path . res://pruebas/ideas/a4_gestion_selecciones.tscn" "(^|[^0-9])0 fallos"
 # a4_limite_mundo (partido en 3 de ~190, ~190 y ~150 s para caber holgado en los 600 s) necesita pantalla virtual (opengl3): el contenedor del CI no trae xvfb-run (A4, 4-11), como el bloque 6a
 if command -v xvfb-run >/dev/null; then
 pasa "a4_limite_mundo (1/3 calidad: fugas al reabrir)" "A4_PARTE=1 xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
