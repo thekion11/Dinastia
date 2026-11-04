@@ -114,6 +114,8 @@ pasa "igualdad del motor con usuario" "godot --headless --path . res://pruebas/i
 pasa "motor jugable (unidad)" "godot --headless --path . res://pruebas/prueba_motor_jugable.tscn" "FIN MOTOR. 0 fallos"
 # 5c. Movimiento suave y vida de la ciudad (27-10, orden del líder: que el tirón de los vehículos no vuelva a romperse sin que se note; ~1 min)
 pasa "tráfico, metro y bus suaves" "godot --headless --path . res://pruebas/ideas/pmov_suavidad_trafico.tscn" "FIN. 0 fallos"
+pasa "atrás en el tutorial y el prólogo, música en segundo plano (auditoría 4, menú táctil)" "godot --headless --path . res://pruebas/auditoria_atras_pantallas_limite.tscn" "FIN. 0 fallos"
+pasa "partido táctil al límite en el móvil (auditoría 4: 50 pausas con giro y calidad, segundo plano en descanso, tanda y repetición)" "godot --headless --path . res://pruebas/auditoria_partido_movil_limite.tscn" "FIN. 0 fallos"
 pasa "tráfico: derecha y adelantar" "godot --headless --path . res://pruebas/ideas/tra_adelantar_y_derecha.tscn" "FIN. 0 fallos"
 pasa "emergencias y sirenas" "godot --headless --path . res://pruebas/ideas/emerg_servicios.tscn" "FIN. 0 fallos"
 pasa "vida de la app fuera del partido, menú táctil (auditoría 4: segundo plano pausa el árbol, atrás cierra ventana/pantalla/pregunta, poca memoria)" "godot --headless --path . res://pruebas/auditoria_vida_global_limite.tscn" "FIN. 0 fallos"
