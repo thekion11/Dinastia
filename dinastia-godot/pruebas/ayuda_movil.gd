@@ -22,12 +22,14 @@ static func problemas(raiz: Node, alto_toque: float) -> Array[String]:
 		var c := n as Control
 		if not c.is_visible_in_tree() or c.get_window() != raiz.get_tree().root or c.size.x < 4.0:
 			continue
+		if c.get_viewport() != raiz.get_tree().root:   ## lo que se pinta dentro de un SubViewport (los carteles de las fachadas, retratos) no es de la pantalla
+			continue
 		var rect := c.get_global_rect()
 		if c is Button:
 			var b := c as Button
 			if b.size.y < alto_toque - 1.5 and not b.disabled:
 				r.append("toque bajo «%s» %.0f<%.0f" % [b.text.left(18), b.size.y, alto_toque])
-			if rect.end.x > vp.x + 2.0 and rect.position.x < vp.x:
+			if rect.end.x > vp.x + 2.0 and rect.position.x < vp.x and not _en_scroll(c):
 				r.append("botón fuera «%s» +%d px" % [b.text.left(18), int(rect.end.x - vp.x)])
 			elif rect.end.y > vp.y + 2.0 and rect.position.y + 4.0 < rect.end.y and not _en_scroll(c):   ## también si queda ENTERO por debajo (no se puede pulsar)
 				r.append("botón por debajo «%s» +%d px" % [b.text.left(18), int(rect.end.y - vp.y)])
