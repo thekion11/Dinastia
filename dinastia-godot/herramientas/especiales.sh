@@ -117,6 +117,7 @@ pasa "palmarés en la historia del club" "godot --headless --path . res://prueba
 pasa "Países Bajos real y ficticio" "godot --headless --path . res://pruebas/ideas/c1_paises_bajos.tscn" "FIN. 0 fallos"
 pasa "controles táctiles del partido" "godot --headless --path . res://pruebas/ideas/tac_controles.tscn" "FIN. 0 fallos"
 pasa "partido al límite (auditoría 4: pasos de tiempo absurdos, actas, tarjetas amarillas y notas)" "godot --headless --path . res://pruebas/auditoria_partido_limite.tscn" "FIN. 0 fallos"
+pasa "interfaz al límite (auditoría 4: 100 aperturas de menú, idioma a mitad, texto 160 %, 2400x1080 y 1280x720)" "godot --headless --path . res://pruebas/auditoria_interfaz_limite.tscn" "FIN. 0 fallos"
 pasa "HUD y cámara del partido en el móvil (mide mm de letra y distancia de cámara)" "godot --headless --path . res://pruebas/ideas/tac_hud.tscn" "FIN. 0 fallos"
 # 6. Todas las pantallas y botones de la interfaz (lento)
 # 5d. ESCENAS DE PRUEBA REUTILIZADAS (2-11-2026, orden 14 del dueño: «ver qué se puede reutilizar antes de borrar»). Eran escenas que nadie
@@ -241,9 +242,9 @@ fi
   # Balance del mundo a largo plazo (10 temporadas x 3 semillas, ~3,5 min) y rendimiento en 20 (~1,5 min)
   pasa "balance en 10 temporadas" "godot --headless --path . res://pruebas/ideas/eq_diez_temporadas.tscn" "FIN. 0 fallos"
   pasa "rendimiento en 20 temporadas" "EQ_MODO=rendimiento godot --headless --path . res://pruebas/ideas/eq_diez_temporadas.tscn" "FIN. 0 fallos"
-  # El motor del partido nota la calidad y la pizarra (sonda_motor_dt con umbrales, M-414; 6 partidos por escenario, ~7 min)
+  # El motor del partido nota la calidad y la pizarra (sonda_motor_dt con umbrales, M-414; 6 partidos por escenario (10 en la pizarra, A4-PARTIDO-005: con 6 el ruido de los tiros daba falsos fallos), ~10 min)
   pasa "motor: el mejor gana al peor" "ESCENARIO=calidad N=6 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
-  pasa "motor: la pizarra se nota" "ESCENARIO=tactica N=6 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
+  pasa "motor: la pizarra se nota" "ESCENARIO=tactica N=10 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
   # M-467: todas las pantallas en alemán; los textos se encogen (TextoQueCabe) y no quedan más de 4 cortados (~3 min)
   pasa "textos largos en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_LARGOS=/tmp/largos_de.json RECORRIDO_CORTADOS_MAX=4 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN LARGOS. 0 fallos"
   # M-463: en alemán no queda castellano sin traducir (las siglas POR/DEF/MED/DEL y el formato del editor ya no cuentan)
