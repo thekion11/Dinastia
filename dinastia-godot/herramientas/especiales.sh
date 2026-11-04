@@ -18,7 +18,9 @@ pasa() {  # nombre, comando, patrón de éxito
   CONT=$((CONT + 1))
   if [ -n "$PARTE_I" ] && [ $((CONT % PARTE_N)) -ne "$PARTE_I" ]; then return; fi
   local t0=$(date +%s)
-  timeout 600 bash -c "$2" > "$LOG" 2>&1
+  ## (4-11, A4) Cada prueba con SU carpeta user:// vacía, como en el CI: con el guardado de un jugador (idioma, ajustes, partidas)
+  ## las pruebas que ponen un idioma antes de abrir el juego medían otra cosa (el guardado manda) y pasaban sin probar lo que decían.
+  XDG_DATA_HOME=$(mktemp -d) timeout 600 bash -c "$2" > "$LOG" 2>&1
   local seg=$(( $(date +%s) - t0 ))
   if grep -q "SCRIPT ERROR" "$LOG" || ! grep -qE "$3" "$LOG"; then
     FALLOS=$((FALLOS + 1)); printf 'FALLO  %-34s %3d s\n' "$1" "$seg"; grep -E "FALLO|SCRIPT ERROR" "$LOG" | head -3
