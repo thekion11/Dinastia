@@ -7174,7 +7174,9 @@
   "Centro": "Cross",
   "Al hueco": "Through ball",
   "Entrada": "Tackle",
-  "Barrida": "Slide"
+  "Barrida": "Slide",
+  "Cámara cercana del partido": "Close match camera",
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Brings the camera closer to the player you control. Automatic: only with the touch controls."
  },
  "pt": {
   "Historia": "História",
@@ -14351,7 +14353,9 @@
   "Centro": "Cruzamento",
   "Al hueco": "Passe em profundidade",
   "Entrada": "Desarme",
-  "Barrida": "Carrinho"
+  "Barrida": "Carrinho",
+  "Cámara cercana del partido": "Câmera próxima da partida",
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Aproxima a câmera do jogador que você controla. Automático: só com os controles de toque."
  },
  "patrones": [
   [
@@ -27382,7 +27386,9 @@
   "Centro": "Centre",
   "Al hueco": "Passe en profondeur",
   "Entrada": "Tacle",
-  "Barrida": "Tacle glissé"
+  "Barrida": "Tacle glissé",
+  "Cámara cercana del partido": "Caméra rapprochée du match",
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Rapproche la caméra du joueur que vous contrôlez. Automatique : uniquement avec les commandes tactiles."
  },
  "it": {
   "Historia": "Storia",
@@ -34559,7 +34565,9 @@
   "Centro": "Cross",
   "Al hueco": "Filtrante",
   "Entrada": "Contrasto",
-  "Barrida": "Scivolata"
+  "Barrida": "Scivolata",
+  "Cámara cercana del partido": "Camera ravvicinata della partita",
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Avvicina la camera al giocatore che controlli. Automatico: solo con i comandi touch."
  },
  "de": {
   "Historia": "Geschichte",
@@ -41736,7 +41744,9 @@
   "Centro": "Flanke",
   "Al hueco": "Steilpass",
   "Entrada": "Tackling",
-  "Barrida": "Grätsche"
+  "Barrida": "Grätsche",
+  "Cámara cercana del partido": "Nahe Spielkamera",
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Bringt die Kamera näher an den gesteuerten Spieler. Automatisch: nur mit Touch-Steuerung."
  },
  "ca": {
   "Historia": "Història",
@@ -48913,7 +48923,9 @@
   "Centro": "Centre",
   "Al hueco": "Passada al buit",
   "Entrada": "Entrada",
-  "Barrida": "Rellisqada"
+  "Barrida": "Rellisqada",
+  "Cámara cercana del partido": "Càmera propera del partit",
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Apropa la càmera al jugador que portes. Automàtic: només amb els controls tàctils."
  },
  "pl": {
   "Club": "Klub",
@@ -56359,7 +56371,9 @@
   "Centro": "Dośrodkowanie",
   "Al hueco": "Prostopadłe",
   "Entrada": "Odbiór",
-  "Barrida": "Wślizg"
+  "Barrida": "Wślizg",
+  "Cámara cercana del partido": "Bliska kamera meczu",
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Przybliża kamerę do sterowanego zawodnika. Automatycznie: tylko ze sterowaniem dotykowym."
  },
  "tr": {
   "Club": "Kulüp",
@@ -63805,6 +63819,8 @@
   "Centro": "Orta",
   "Al hueco": "Ara pas",
   "Entrada": "Müdahale",
-  "Barrida": "Kayarak müdahale"
+  "Barrida": "Kayarak müdahale",
+  "Cámara cercana del partido": "Yakın maç kamerası",
+  "Acerca la cámara al jugador que llevas. Automático: solo con los controles táctiles.": "Kamerayı kontrol ettiğiniz oyuncuya yaklaştırır. Otomatik: yalnızca dokunmatik kontrollerle."
  }
 }
