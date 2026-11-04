@@ -7519,7 +7519,8 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "The shareholders only get part of it: the cash box can't stretch further.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "There is no cash for dividends: the shareholders settle for the promise.",
   "Opción %d de %d": "Option %d of %d",
-  "elegida": "selected"
+  "elegida": "selected",
+  "CERRADO · abre de 8:00 a 20:00": "CLOSED · open 8:00–20:00"
  },
  "pt": {
   "Historia": "História",
@@ -15041,7 +15042,8 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "Os acionistas recebem só uma parte: o cofre não dá para mais.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Não há caixa para dividendos: os acionistas contentam-se com a promessa.",
   "Opción %d de %d": "Opção %d de %d",
-  "elegida": "escolhida"
+  "elegida": "escolhida",
+  "CERRADO · abre de 8:00 a 20:00": "FECHADO · abre das 8:00 às 20:00"
  },
  "patrones": [
   [
@@ -28538,7 +28540,8 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "Les actionnaires n'en touchent qu'une partie : la caisse ne peut pas faire plus.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Il n'y a pas de quoi verser des dividendes : les actionnaires se contentent de la promesse.",
   "Opción %d de %d": "Option %d sur %d",
-  "elegida": "choisie"
+  "elegida": "choisie",
+  "CERRADO · abre de 8:00 a 20:00": "FERMÉ · ouvert de 8h00 à 20h00"
  },
  "it": {
   "Historia": "Storia",
@@ -36060,7 +36063,8 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "Gli azionisti incassano solo una parte: la cassa non basta per di più.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Non c'è cassa per i dividendi: gli azionisti si accontentano della promessa.",
   "Opción %d de %d": "Opzione %d di %d",
-  "elegida": "scelta"
+  "elegida": "scelta",
+  "CERRADO · abre de 8:00 a 20:00": "CHIUSO · aperto dalle 8:00 alle 20:00"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43582,7 +43586,8 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "Die Aktionäre bekommen nur einen Teil: Die Kasse gibt nicht mehr her.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Es ist kein Geld für Dividenden da: Die Aktionäre begnügen sich mit dem Versprechen.",
   "Opción %d de %d": "Option %d von %d",
-  "elegida": "gewählt"
+  "elegida": "gewählt",
+  "CERRADO · abre de 8:00 a 20:00": "GESCHLOSSEN · geöffnet 8:00–20:00"
  },
  "ca": {
   "Historia": "Història",
@@ -51104,7 +51109,8 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "Els accionistes cobren només una part: la caixa no dóna per més.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "No hi ha caixa per a dividends: els accionistes es conformen amb la promesa.",
   "Opción %d de %d": "Opció %d de %d",
-  "elegida": "triada"
+  "elegida": "triada",
+  "CERRADO · abre de 8:00 a 20:00": "TANCAT · obert de 8:00 a 20:00"
  },
  "pl": {
   "Club": "Klub",
@@ -58626,7 +58632,8 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "Akcjonariusze dostają tylko część: kasa nie pozwala na więcej.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Nie ma gotówki na dywidendy: akcjonariusze zadowalają się obietnicą.",
   "Opción %d de %d": "Opcja %d z %d",
-  "elegida": "wybrana"
+  "elegida": "wybrana",
+  "CERRADO · abre de 8:00 a 20:00": "ZAMKNIĘTE · czynne 8:00–20:00"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66148,6 +66155,7 @@
   "Los accionistas cobran solo una parte: la caja no da para más.": "Hissedarlar yalnızca bir kısmını alıyor: kasa daha fazlasına yetmiyor.",
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Temettü için nakit yok: hissedarlar söze razı oluyor.",
   "Opción %d de %d": "Seçenek %d / %d",
-  "elegida": "seçili"
+  "elegida": "seçili",
+  "CERRADO · abre de 8:00 a 20:00": "KAPALI · 8:00–20:00 arası açık"
  }
 }
