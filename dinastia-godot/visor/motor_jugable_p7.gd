@@ -66,10 +66,10 @@ func _ia_portador(p: Dictionary) -> void:
 		_tirar(p, Vector2(palo, alto), clampf(0.55 + _rng.randf() * 0.4, 0.0, 1.0))
 		return
 	## Centro desde la banda, cerca del fondo.
-	if absf(yo.x) > 17.0 and absf(arco.z - yo.z) < 20.0 and _rng.randf() < 0.55:
+	if MotorCorner.centrar(self as Object as MotorJugable, yo, arco):
 		var err_c := (1.0 - float(p["attr"]["pas"])) * 7.0
 		var destino := Vector3(_rng.randf_range(-4, 4) + _rng.randf_range(-err_c, err_c), 1.6, arco.z - d * _rng.randf_range(4, 10))
-		_ctx_golpeo = "centro"
+		_ctx_golpeo = "centro"; MotorTraza.centro(self as Object as MotorJugable, p)   ## ciclo 32: solo cuenta
 		## El efecto se da EN EL SENTIDO DEL ATAQUE (`* -d`): antes era el mismo
 		## giro absoluto para los dos y, con el Magnus, el local centraba
 		## abriéndose y el visitante cerrándose hacia el arco (sesgo de lado).
