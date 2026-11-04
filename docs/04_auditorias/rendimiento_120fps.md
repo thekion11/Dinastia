@@ -239,3 +239,23 @@ Lo que queda a propósito (el menú lo usa al arrancar): `nucleo/` (186 scripts,
 - Medido con el `.pck` precompilado a los 25 s del menú: **381 → 344 MB (−37 MB, −9,7 %)**; Sonido pasa de 42 MB (215 bancos) a 5 MB (40 bancos). Con los dos cortes de scripts, el menú estable baja de ≈ 396 a 344 MB (−13 %).
 - Pruebas: banco 0 fallos; `acc_avisos_sonido`, `r5_cache_audio`, `s7_sonidos_sistema`, `sui_grabados`, `mem_menu_estadio` 0; nueva especial `aud4_sonido_perezoso`.
 - No tocado: `Musica` (6 piezas, 5 MB: poco, y si se compusieran a demanda la música tardaría ~1 s en sonar la primera vez: eso sí se oiría).
+
+## GPU del partido 3D: inventario por variantes (4-11-2026, A4-PARTIDO-R01; pedido del líder tras el 5 FPS del dueño en su teléfono)
+Herramienta: `herramientas/hw_modesto.sh res://pruebas/inventario_partido_gpu.tscn -- medio|minimo` (con `HW_DRIVER=opengl3 HW_RES=1280x720`, 2 núcleos). Cámara de TV, partido corriendo; apaga UNA cosa respecto a la base y mide la mediana de 14 fotogramas de **reloj de pared** (llvmpipe está limitada por relleno de píxeles y vértices, como la GPU de un teléfono: sirve para comparar qué pesa, NO para sacar FPS). Cada variante restaura el estado original (lo que el juego ya tenía oculto sigue oculto); las llamadas y triángulos que salen en algunas filas varían por LOD/recortes dinámicos, el tiempo es lo comparable.
+| Variante | MEDIO (base 2.134 ms) | MÍNIMO (base 483 ms, 3D al 50 %) |
+|---|---|---|
+| **sin MSAA** | **−80 %** | **−70 %** |
+| 3D al 50 % / al 35 % | −54 % / −69 % | +1 % / −28 % (ya está al 50 %) |
+| sin el entorno exterior del estadio | **−33 %** (hoy se dibuja en MEDIO) | −21 % (ya se tapa solo en MÍNIMO: la variante lo deja visible vs el ocultado automático, medida de referencia) |
+| sin sombras de todas las luces | −19 % | −3 % |
+| sin ajuste de color (brillo/contraste/saturación) | −9 % | −18 % |
+| sin focos (26 OmniLight) | −9 % | −12 % |
+| sin butacas / sin hinchas | −8 % / −6 % | −11 % / −18 % |
+| sin niebla / cielo plano | −7 % / −6 % | −6 % / −7 % |
+| sin rótulos 3D (Label3D) | −7 % | −15 % |
+| sin jugadores | −2 % | −5 % |
+| tonemap lineal en vez de ACES | +3 % | +6 % (no ayuda) |
+Inventario: ≈ 2.100 geometrías visibles en MEDIO (1.000 en MÍNIMO), 853 materiales (602), 125 con transparencia (114), 13-14 shaders propios, 1 luz direccional + 26 OmniLight; MEDIO: MSAA x2, escala 100 %, niebla, ajuste de color, tonemap ACES y sombras del sol; MÍNIMO: sin sombras del sol, escala 50 %, MSAA x2 (hasta hoy).
+**Lectura**: lo que más pesa en relleno de píxeles NO son los triángulos sino el **MSAA x2** (en una GPU de móvil sin Tile-resolve en Compatibilidad es ancho de banda de memoria ×2 más una resolución), seguido de la resolución del 3D, el entorno exterior (solo en MEDIO) y las sombras. Ajuste de color, focos, rótulos y niebla pesan 6-18 % cada uno en MÍNIMO (en conjunto casi lo mismo que la mitad del fotograma).
+**Aplicado (decisión del dueño, R01)**: **MSAA apagado en MÍNIMO** (`Calidad.aplicar_viewport` y `Calidad.msaa_ui` para las vistas 3D secundarias: retratos, sorteo, casa…). MEDIO, ALTO y ULTRA igual que antes. Coste visual: bordes más dentados (líneas finas del campo lejanas, retratos 3D). La prueba `ideas_p2` (calidad mínima) lo refleja: MÍNIMO sin MSAA, MEDIO conserva x2, `msaa_ui` apagado en MÍNIMO.
+**Queda (no hecho, para decidir)**: (1) tapar el entorno exterior también en MEDIO con la cámara dentro del recinto (`EntornoOclusion`, hoy solo MÍNIMO; −33 % en MEDIO, sin cambio visible porque las tribunas lo tapan); (2) en MÍNIMO, ajuste de color y rótulos 3D y focos como escalón extra (−12-18 % cada uno, se vería un cambio de color/rótulos); (3) medir en el teléfono del dueño: nada de esto sustituye al aparato real (los porcentajes son de llvmpipe).

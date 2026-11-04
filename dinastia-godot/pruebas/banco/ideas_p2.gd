@@ -242,7 +242,16 @@ func _probar_calidad_minima() -> void:
 	var vp := SubViewport.new()
 	add_child(vp)
 	Calidad.aplicar_viewport(vp, Calidad.MINIMO)
-	_comprobar(vp.msaa_3d == Viewport.MSAA_2X and is_equal_approx(vp.scaling_3d_scale, Calidad.ESCALA_MINIMO), "suavizado mínimo (x2) y el 3D al 70 %")
+	_comprobar(vp.msaa_3d == Viewport.MSAA_DISABLED and is_equal_approx(vp.scaling_3d_scale, Calidad.ESCALA_MINIMO), "MÍNIMO: sin MSAA (decisión del dueño, A4-PARTIDO-R01) y el 3D a la escala elegida")
+	Calidad.aplicar_viewport(vp, Calidad.MEDIO)
+	_comprobar(vp.msaa_3d == Viewport.MSAA_2X, "MEDIO conserva el MSAA x2")
+	var elegida_antes_msaa := Calidad.elegida
+	Calidad.elegida = Calidad.MINIMO
+	_comprobar(Calidad.msaa_ui(Viewport.MSAA_4X) == Viewport.MSAA_DISABLED, "las vistas 3D secundarias también van sin MSAA en MÍNIMO")
+	Calidad.elegida = Calidad.MEDIO
+	_comprobar(Calidad.msaa_ui(Viewport.MSAA_4X) == Viewport.MSAA_4X, "y en MEDIO o más no cambian")
+	Calidad.elegida = elegida_antes_msaa
+	Calidad.aplicar_viewport(vp, Calidad.MINIMO)
 	Calidad.aplicar_viewport(vp, Calidad.ALTO)
 	_comprobar(is_equal_approx(vp.scaling_3d_scale, 1.0), "al subir de nivel vuelve al 100 %")
 	vp.queue_free()
