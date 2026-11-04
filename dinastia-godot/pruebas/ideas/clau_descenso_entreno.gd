@@ -84,7 +84,7 @@ func _clausula() -> void:
 
 func _crecimiento(buen_plan: bool) -> Dictionary:
 	var deltas: Array[int] = []
-	for s in [11, 22, 33]:
+	for s in [11, 22, 33, 44, 55, 66]:   ## A4 (4-11): 6 semillas (24 juveniles); con 3 el orden del azar movía la media ±0,8
 		var m := Mundo.new()
 		m.generar(["CHI"], s)
 		m.tomar_el_mando(m.ligas[0].clubes[3].id)

@@ -1,2 +1,38 @@
 # Mega auditoría 4 — partido
 
+Área: motor jugable (3D), partido simulado, físicas, IA, táctil, penales, árbitro. Sesión PES 6. Repasos 1-4 (el 5.º cruzado lo asigna la líder).
+
+## Cómo se hizo
+- **Repaso 1 (lectura):** lectura dirigida del partido simulado (`nucleo/partido*.gd`, `disciplina.gd`), de las tarjetas/cambios/tanda, del control del DT (`visor/control_partido.gd`), del pase del usuario (`motor_jugable_p9/p10`) y de TODO el código táctil nuevo (`controles_tactiles.gd`, `hud_tactil.gd`, `camara_tactil.gd`, `pase_tactil.gd`), más búsqueda por patrones en los 59 archivos del área (azar sin semilla, dicts de jugador como clave, rutas `res://` rotas, `connect` sin `disconnect`).
+- **Repaso 2 (ejecución):** bancos especializados `partido_reglas`, `partido_ia`, `partido_fisica`, `partido_porteros`, `partido_jugable`, `partido_presentacion` y `determinismo` (todos a 0 fallos salvo una sonda estadística, ver A4-PARTIDO-005), capturas del partido a 1280×720, 1920×1080 y 2400×1080 con la cámara real, y las pruebas `tac_controles` y `tac_hud`.
+- **Repaso 3 (al límite):** `pruebas/auditoria_partido_limite.gd` (nueva, en `especiales.sh`): pasos de tiempo de 0 a 10 s, balón a 1.000 m/s y a 800 m del campo, actas con llamadas fuera de orden, el visitante sin once, tarjetas y notas.
+- **Repaso 4 (reglas y coherencia):** determinismo (banco 0 fallos; `randf()` global solo en un sitio, ya corregido), norma de 450 líneas (0), rutas `res://` rotas (0 en 59 archivos), textos sin traducir (el banco lo comprueba: 0), `connect` sin `disconnect` en el motor (0 conexiones propias en `motor_jugable*`).
+
+## Hallazgos
+- [A4-PARTIDO-001] (repaso 1, gravedad: bajo) El tiro del control del DT en 3D usaba `randf()` global: dos partidos con la misma semilla podían tirar distinto. Se ve en `visor/control_partido.gd:302`. Estado: arreglado (usa `Azar.f()`; la semilla del juego).
+- [A4-PARTIDO-002] (repaso 1, gravedad: medio) `Partido.tarjeta_externa` sumaba una amarilla de temporada también a una ROJA DIRECTA (el motor emite `roja=true` sin amarilla previa), así que una roja directa contaba para el ciclo de 5 amarillas y para las estadísticas del jugador. Reproducción: `tarjeta_externa(id, true)` a un jugador con 0 amarillas → 1. `nucleo/partido.gd`. Estado: arreglado (solo suma la amarilla de verdad y la segunda amarilla, distinguiéndola con las amarillas vistas en ese partido); prueba en `auditoria_partido_limite`. Cambia cómo se juega solo en el conteo de amarillas tras una roja directa (menos suspensiones por acumulación indebidas).
+- [A4-PARTIDO-003] (repaso 1, gravedad: medio) `Partido._cerrar_notas` decidía el equipo de cada jugador con `once_local.has(j)`: quien salió cambiado o expulsado ya no está en el once y se contaba como visitante, con el bono de resultado al revés (+0,6 al que su equipo ganó se convertía en −0,6 y al revés), lo que también movía su forma. `nucleo/partido.gd` (`_cerrar_notas`). Estado: arreglado (`es_del_local` mira el club, no el once); prueba en `auditoria_partido_limite`.
+- [A4-PARTIDO-004] (repaso 3, gravedad: medio) Táctil: con el stick en uso, un SEGUNDO dedo que tocaba la mitad izquierda (la palma, un dedo que apoya) quedaba registrado como gesto de la zona libre y, al levantarse, daba un pase (o un tiro si arrastraba). `ui/componentes/controles_tactiles.gd` (`_toca`). Estado: arreglado (la zona del stick no crea gestos); prueba en `tac_controles`.
+- [A4-PARTIDO-005] (repaso 2, gravedad: bajo) La sonda `motor: la pizarra se nota` (`sonda_motor_dt`, ESCENARIO=tactica, N=6) falló una vez dentro del banco `partido_ia` y pasó sola enseguida («UMBRALES: 0 fallos»; ofensivo 23,7 tiros frente a defensivo 14,8). Es una prueba estadística con solo 6 partidos que coincidió con un `--import` mío. Estado: abierto (sin reproducir); sugerencia: N=10 o umbral con margen.
+- [A4-PARTIDO-006] (repaso 1, gravedad: bajo) `Partido.anular_gol_externo` revierte el marcador, los goles del autor, su nota y la crónica, pero no `remates`/`tiros_puerta`/`xg` ni `peor_diferencia_*` (el gol anulado sigue contando como remate a puerta y como minuto de «peor diferencia»). `nucleo/partido.gd:147`. Estado: pregunta al dueño (el remate sí ocurrió; la «peor diferencia» puede afectar a la remontada).
+- [A4-PARTIDO-007] (repaso 3, gravedad: informativo) El motor 3D aguanta pasos de tiempo de 0, 1e-6, 1/240, 1/30, 0,25, 2 y 10 s, el balón a 800 m del campo y a 1.000 m/s: todas las posiciones siguen finitas y dentro del mundo y el reloj sigue avanzando. Sin hallazgo.
+- [A4-PARTIDO-008] (repaso 1, gravedad: medio) Falta del táctil: «tocar a un compañero = pase a él». Estado: arreglado (`PaseTactil` + `MotorPaseDirigido`, commit 41e908fa), probado de punta a punta en `tac_hud` (toque real → petición → `pase_a` del motor = el tocado).
+
+## Pendiente del área
+- Repaso 4 más a fondo (señales sin desconectar en la vista del estadio, fugas de nodos al cerrar el partido varias veces seguidas).
+- Repaso 3 con guardar/cargar a mitad de partido y 20+ temporadas (compartido con gestión).
+
+## Repaso 5 cruzado (líder, desde gestión) — partido SIMULADO
+Prueba al límite: `dinastia-godot/pruebas/ideas/a4_partido_cruzado.tscn` (99 contra 20, mejor contra peor del mundo, 200 partidos de liga,
+equipos de 7 y sin portero; en `especiales.sh`).
+
+- [A4-PAR-L01] (repaso 5, gravedad: alto, cambia el juego) DISCIPLINA del simulado: (a) la tarjeta caía también en jugadores ya cambiados o
+  ya expulsados (uno vio DOS rojas en el mismo partido); (b) la «segunda amarilla» se decidía con las amarillas de TODA la temporada (cualquier
+  total par, con `P_ROJA_SEGUNDA`); (c) la roja no sacaba a nadie del once (se jugaba con 11). Arreglo: `Partido._amonestar` (partido.gd):
+  amarillas del PARTIDO, la 2.ª es roja y saca del once (con menos de 7 se suspende, `suspendido = true`, 3-0 de mesa); el amonestado se cuida
+  (evita la 2.ª el 60 %); tarjetas y lesiones solo a quien está en el campo; `P_AMARILLA` 0,040 → 0,045. Medido: 3,65 amarillas y 0,16 rojas
+  por partido (real ~3,5-4 y ~0,1-0,2). `igualdad_mundo` → 2563391786. ARREGLADO.
+- [A4-PAR-L02] (repaso 5, gravedad: medio, calibración) Goleadas: el mejor club (71) contra el peor (48) promedia 7,7 goles y llega a 15-0.
+  Va con la deuda de recalibración del simulado (`PLAN_GENERAL.md`); la prueba vigila que no empeore (tope 20).
+- Sin hallazgos: marcador = señales de gol, tiros a puerta ≥ goles, remates ≥ a puerta, cambios ≤ máximo, posesión y xG finitos en 150
+  partidos absurdos; el equipo de 7 y el sin portero terminan.
