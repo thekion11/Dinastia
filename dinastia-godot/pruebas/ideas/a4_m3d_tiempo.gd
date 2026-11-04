@@ -10,6 +10,9 @@ func _medir() -> Dictionary:
 
 func _probar() -> void:
 	_titulo("CIUDAD EN MARCHA MUCHO TIEMPO")
+	## El autoload Sonido sintetiza sus ~820 sonidos en un hilo durante los primeros segundos (en una máquina lenta,
+	## como el CI, tarda más que unos cuantos ciclos): sin esperar a que termine, esa carga parece una fuga.
+	get_node("/root/Sonido")._generar_todo()
 	var n := int(OS.get_environment("TRAMOS")) if OS.get_environment("TRAMOS") != "" else 4
 	var b := CityBuilder.new()
 	add_child(b)
