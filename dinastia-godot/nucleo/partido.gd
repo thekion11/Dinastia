@@ -185,14 +185,18 @@ func remate_externo(es_local: bool, autor_id: String, tipo: String) -> void:
 	_momentum_push(1, es_local)
 	remate.emit(c, _por_id(autor_id), tipo, minuto)
 
-## Tarjeta del árbitro del 3D: la roja saca al jugador del once (la fuerza se vuelve a medir).
+## Una tarjeta que sacó el árbitro del 3D. La roja deja al equipo con uno menos
+## también aquí (sale del once: la fuerza se vuelve a medir).
 func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 	var j := _por_id(jugador_id)
-	if j == null: return
-	## Roja directa no suma amarilla de temporada (A4): solo la amarilla real y la 2.ª que la motiva.
+	if j == null:
+		return
+	## Una ROJA DIRECTA no es una amarilla de temporada (mega auditoría 4): solo cuenta la amarilla de verdad y la segunda amarilla (la que la motiva: ya hubo una en este partido).
 	var previas := int(_amarillas_hoy.get(jugador_id, 0))
-	if not roja or previas > 0: j.amarillas += 1
-	if not roja: _amarillas_hoy[jugador_id] = previas + 1
+	if not roja or previas > 0:
+		j.amarillas += 1
+	if not roja:
+		_amarillas_hoy[jugador_id] = previas + 1
 	if roja:
 		Disciplina.sanciona(j)
 		once_local.erase(j)
@@ -252,13 +256,8 @@ func fijar_estadisticas(pos_local: float, corners: Array, faltas_: Array, fueras
 		fueras_local = int(fueras_[0])
 		fueras_visita = int(fueras_[1])
 
-## Mete a `entra` por `sale`. Devuelve por qué no se pudo, o cadena vacía si se
-## hizo: quien llama necesita poder decírselo al jugador, no adivinarlo.
-##
-## Después de tocar el once hay que volver a medirlo. La fuerza está cacheada
-## porque no cambia durante los noventa minutos, y un cambio es justo la
-## excepción: sin `invalidar_fuerza()` el equipo seguiría jugando con la fuerza
-## del once que ya no está en el campo, y el cambio no serviría para nada.
+## Mete a `entra` por `sale`. Devuelve por qué no se pudo ("" si se hizo). Después de tocar el once se vuelve a medir
+## (`invalidar_fuerza()`): sin eso el equipo seguiría jugando con la fuerza del once que ya no está en el campo.
 func cambiar(sale: Jugador, entra: Jugador) -> String:
 	var es_local := once_local.has(sale)
 	if not es_local and not once_visita.has(sale):
@@ -319,15 +318,13 @@ func penales() -> Array:
 	_penales = [l, v]
 	return _penales
 
-## Cierra las notas del partido y actualiza la forma.
-##
-## Portado del HTML: la nota base se mueve con el resultado del EQUIPO (+0,6 si
-## ganas, -0,6 si pierdes) mas un margen de azar, y despues la forma se arrastra
-## hacia esa nota con un 30% de peso. Eso es lo que hace que una racha se note en
-## la forma sin que un solo partido malo hunda a nadie.
-##
-## Se llama al terminar, no minuto a minuto: una nota a mitad de partido no
-## significa nada y ademas el resultado todavia no se sabe.
+## Cierra las notas del partido y actualiza la forma (al terminar). Del HTML: la nota base se mueve con el resultado del EQUIPO
+## (±0,6) más azar, y la forma se arrastra hacia esa nota con un 30 % de peso: la racha se nota sin que un mal partido hunda a nadie.
+
+## ¿Es del equipo local? Mira su club, no el once: el que salió cambiado o expulsado ya no está en `once_local` y las notas lo contaban como visitante (bono de resultado al revés).
+func es_del_local(j: Jugador) -> bool:
+	return once_local.has(j) or (not once_visita.has(j) and local.plantilla.has(j))
+
 func _cerrar_notas() -> void:
 	_notas_cerradas = true
 	var gano_local := goles_local > goles_visita
