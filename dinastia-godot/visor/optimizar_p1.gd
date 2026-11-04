@@ -412,6 +412,7 @@ static func agrupar(raiz: Node3D, con_proxies: bool = true) -> Dictionary:
 		Registro.depurar("AGRUPAR", "solos %s" % str(sol))
 	var piezas := 0
 	var hechos := 0
+	var vaciados := {}
 	var inv := raiz.global_transform.affine_inverse()
 	for k: String in grupos:
 		var g: Dictionary = grupos[k]
@@ -435,9 +436,12 @@ static func agrupar(raiz: Node3D, con_proxies: bool = true) -> Dictionary:
 		mmi.layers = modelo.layers
 		raiz.add_child(mmi)
 		for mi: MeshInstance3D in lista:
-			mi.get_parent().remove_child(mi)
+			var pa := mi.get_parent()
+			pa.remove_child(mi)
 			mi.free()
+			vaciados[pa] = true
 		piezas += lista.size()
 		hechos += 1
+	PodaVacios.de(raiz, vaciados.keys())   ## A4-REND: quita los Node3D que agrupar dejó vacíos
 	_montar_proxies(raiz, proxies)
 	return {"multimesh": hechos, "piezas": piezas, "proxies": proxies.size()}

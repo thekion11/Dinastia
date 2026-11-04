@@ -74,6 +74,7 @@ const MITAD_CALIBRADA := 240.0
 var t := 0.0
 var mitad := 1
 var goles := [0, 0]            ## [local, visita]
+var suspendido := false        ## con menos de 7 (`MotorSiete`): el marcador es de MESA
 var estado := "saque"          ## juego | saque | gol | descanso | tanda | fin
 ## Partido de eliminación directa: con empate al 90' hay prórroga (mitades 3 y
 ## 4, de 15', un tercio de `duracion_mitad`) y, si sigue, tanda de penales.

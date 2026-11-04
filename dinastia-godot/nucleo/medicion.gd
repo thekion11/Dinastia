@@ -107,12 +107,33 @@ func _cargar(nombre: String, f: Callable) -> void:
 	f.call()
 	_linea("Carga %-22s %7d ms" % [nombre, (Time.get_ticks_usec() - t) / 1000])
 
+## (4-11, A4-REND) La parte «ciudad» medía también la CARGA: `abrir` construye por etapas entre fotogramas y, hasta que
+## `completa` es verdadero, la ciudad se dibuja sin agrupar ni ocluir (9.273 llamadas y 13,5 M de triángulos en esos
+## fotogramas). Según lo lenta que fuera la máquina, esos fotogramas entraban más o menos en la media y el presupuesto
+## daba FALLO unas veces y 0 fallos otras. Ahora la parte no empieza a contar hasta que la ciudad está completa
+## (con tope de 180 s por si nunca lo estuviera) y la espera se anota.
+var _espera_ciudad := 0.0
+
+func _ciudad_lista() -> bool:
+	var c: Variant = _vista.get("_ciudad") if _vista != null else null
+	return c == null or bool(c.get("completa"))
+
 func _process(delta: float) -> void:
 	var ahora := Time.get_ticks_usec()
+	if _parte == "ciudad" and _espera_ciudad < 180.0 and not _ciudad_lista():
+		_espera_ciudad += delta
+		_t_parte = 0.0
+		_frames = PackedFloat32Array()
+		_muestras = []
+		_ult = ahora
+		return
+	if _parte == "ciudad" and _espera_ciudad > 0.0 and not _json.has("ciudad_espera_s"):
+		_json["ciudad_espera_s"] = snappedf(_espera_ciudad, 0.1)
+		_linea("La ciudad terminó de construirse a los %.1f s de abrirla: la medición empieza ahí" % _espera_ciudad)
 	_frames.append((ahora - _ult) / 1000.0)
 	_ult = ahora
 	_t_parte += delta
-	if _frames.size() % 30 == 0:
+	if _frames.size() % 10 == 0:   ## (4-11) antes cada 30: en software caían 2 muestras por parte y una sola mala decidía
 		_muestras.append([Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,
 			Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
 			Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),
@@ -143,14 +164,18 @@ func _process(delta: float) -> void:
 				if rig != null:
 					rig.switch_to(maxi(0, rig.camera_names.find("Principal (TV)"))))
 			_empezar_parte("estadio (cámara TV)")
-		2, 3, 4, 5:
+		2, 3, 4, 5, 6, 7, 8, 9:
 			## BARRIDO DE RESOLUCIÓN 3D (4-11, rendimiento móvil): el mismo estadio en MÍNIMA al 35/50/70/100 % para saber, con una
 			## sola prueba en el teléfono, qué ajuste llega a 60 FPS (la gráfica del móvil manda: 3-11, GPU al 100 % y CPU al 0 %).
-			var e: float = ESCALAS_BARRIDO[_paso - 2]
+			## Las cuatro primeras CON el MSAA x2 de MÍNIMA y las cuatro siguientes SIN él (R01): lo que cuesta el suavizado de bordes en ESTE teléfono.
+			var e: float = ESCALAS_BARRIDO[(_paso - 2) % 4]
+			Calidad.sin_msaa = _paso >= 6
 			Calidad.escala_minimo = e
 			Calidad.aplicar_viewport(get_viewport(), Calidad.MINIMO)
-			_empezar_parte("estadio MÍNIMA al %d %%" % int(round(e * 100.0)))
-		6:
+			_empezar_parte("estadio MÍNIMA al %d %%%s" % [int(round(e * 100.0)), " sin MSAA" if Calidad.sin_msaa else ""])
+		10:
+			Calidad.sin_msaa = false
+			_resumen_msaa()
 			Calidad.escala_minimo = _escala_antes
 			Calidad.aplicar_viewport(get_viewport(), Calidad.elegida)
 			_vista.queue_free()
@@ -161,6 +186,25 @@ func _process(delta: float) -> void:
 			_empezar_parte("ciudad")
 		_:
 			_terminar()
+
+## Resumen del MSAA: por cada escala del barrido, los FPS con y sin él y lo que se gana al apagarlo.
+func _resumen_msaa() -> void:
+	var con_m := {}
+	var sin_m := {}
+	for d: Dictionary in _json["partes"]:
+		var n := String(d["parte"])
+		if not n.begins_with("estadio MÍNIMA al "):
+			continue
+		var esc := n.get_slice("%", 0).trim_prefix("estadio MÍNIMA al ").strip_edges()
+		if n.ends_with("sin MSAA"):
+			sin_m[esc] = float(d["fps_medio"])
+		else:
+			con_m[esc] = float(d["fps_medio"])
+	for esc: String in con_m:
+		if sin_m.has(esc):
+			var gana := 100.0 * (float(sin_m[esc]) / maxf(float(con_m[esc]), 0.001) - 1.0)
+			_linea("MSAA a %s %%: con %.1f FPS · sin %.1f FPS · apagarlo %s %.0f %%" % [esc, con_m[esc], sin_m[esc], "gana" if gana >= 0.0 else "pierde", absf(gana)])
+			_json["msaa_" + esc] = {"con": con_m[esc], "sin": sin_m[esc], "gana_pct": snappedf(gana, 0.1)}
 
 func _duracion() -> float:
 	if _parte.contains("MÍNIMA al"):
@@ -174,6 +218,25 @@ func _media_col(c: int) -> float:
 	for m: Array in _muestras:
 		t += float(m[c])
 	return t / maxf(1.0, _muestras.size())
+
+## (4-11, A4-REND) MEDIANA de una columna de muestras. Las llamadas, triángulos y objetos de la parte se miden con ella y no
+## con la media: con ~5 muestras por parte (una cada 30 fotogramas, en una máquina lenta), UNA sola tomada mientras
+## se asientan el agrupado, la oclusión o las texturas (13,5 M de triángulos) desplazaba la media por encima del tope y el
+## presupuesto daba FALLO unas veces y 0 fallos otras sin cambiar el código.
+func _max_col(c: int) -> float:
+	var m0 := 0.0
+	for m: Array in _muestras:
+		m0 = maxf(m0, float(m[c]))
+	return m0
+
+func _mediana_col(c: int) -> float:
+	var v: Array = []
+	for m: Array in _muestras:
+		v.append(float(m[c]))
+	if v.is_empty():
+		return 0.0
+	v.sort()
+	return v[(v.size() - 1) / 2]   ## la mediana baja: con 2 muestras, la mejor (la otra puede ser de carga)
 
 func _fps_de(f: Array) -> float:
 	var t := 0.0
@@ -193,8 +256,8 @@ func _cerrar_parte() -> void:
 	var peor_1: float = f[int(f.size() * 0.99)]
 	var d := {"parte": _parte, "fps_medio": snappedf(1000.0 / media, 0.1), "fps_p1": snappedf(1000.0 / maxf(peor_1, 0.001), 0.1),
 		"fps_min": snappedf(1000.0 / maxf(f[-1], 0.001), 0.1), "peor_ms": snappedf(f[-1], 0.1), "fotogramas": f.size(),
-		"cpu_ms": snappedf(_media_col(0), 0.01), "llamadas": int(_media_col(1)), "triangulos": int(_media_col(2)),
-		"objetos": int(_media_col(3)), "memoria_mb": snappedf(_media_col(4), 0.1), "video_mb": snappedf(_media_col(5), 0.1)}
+		"cpu_ms": snappedf(_media_col(0), 0.01), "llamadas": int(_mediana_col(1)), "triangulos": int(_mediana_col(2)),
+		"objetos": int(_mediana_col(3)), "triangulos_max": int(_max_col(2)), "muestras": _muestras.size(), "memoria_mb": snappedf(_media_col(4), 0.1), "video_mb": snappedf(_media_col(5), 0.1)}
 	if largo and _frames.size() > 90:
 		## Calor: FPS del primer tercio de la parte frente al último (en orden de tiempo, no ordenado).
 		var orden := Array(_frames.slice(3))
@@ -313,7 +376,8 @@ func _cancelar() -> void:
 	Engine.max_fps = _max_fps_antes
 	forzada = false
 	largo = false
-	if not is_equal_approx(Calidad.escala_minimo, _escala_antes):   ## cancelada en mitad del barrido de resolución
+	if not is_equal_approx(Calidad.escala_minimo, _escala_antes) or Calidad.sin_msaa:   ## cancelada en mitad del barrido de resolución o de MSAA
+		Calidad.sin_msaa = false
 		Calidad.escala_minimo = _escala_antes
 		Calidad.aplicar_viewport(get_viewport(), Calidad.elegida)
 	if is_instance_valid(_vista):
@@ -328,5 +392,6 @@ func _input(e: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func _exit_tree() -> void:
+	Calidad.sin_msaa = false   ## por si se sale de golpe en mitad del barrido de MSAA
 	_quitar_bloqueo()
 

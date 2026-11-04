@@ -112,6 +112,10 @@ func _process(_d: float) -> void:
 			FileAccess.open(OS.get_environment("RECORRIDO_LARGOS"), FileAccess.WRITE).store_string(JSON.stringify(_largos, " "))
 			var cortados := _largos.values().filter(func(v: String) -> bool: return v.begins_with("cortado")).size()
 			print("LARGOS: %d textos que no caben (%d cortados)" % [_largos.size(), cortados])
+			## RECORRIDO_ANCHO_MAX=n: prueba. Falla si hay más de n paneles deslizables cuyo contenido sea más ancho que ellos (la tabla de Mi plantel, de 10-50 px de más, está aceptada: se desliza).
+			if OS.get_environment("RECORRIDO_ANCHO_MAX") != "":
+				var anchos := _largos.keys().filter(func(k: String) -> bool: return k.contains("| ancho") and not k.begins_with("tab Mi plantel")).size()
+				print("FIN ANCHO. %d fallos" % (1 if anchos > int(OS.get_environment("RECORRIDO_ANCHO_MAX")) else 0))
 			## Con RECORRIDO_CORTADOS_MAX=n (especiales.sh todo) es una prueba: falla si hay más de n cortados.
 			if OS.get_environment("RECORRIDO_CORTADOS_MAX") != "":
 				print("FIN LARGOS. %d fallos" % (1 if cortados > int(OS.get_environment("RECORRIDO_CORTADOS_MAX")) else 0))
@@ -175,6 +179,23 @@ func _informe_tiempos() -> void:
 ## (clip o «…») porque es más ancho que el propio control.
 func _medir() -> void:
 	var ancho := get_viewport().get_visible_rect().size.x
+	## Con RECORRIDO_ANCHO: un ScrollContainer visible cuyo contenido es más ANCHO que él (un texto sin salto de línea ensancha todo el panel: en alemán o en el lienzo del móvil).
+	if OS.get_environment("RECORRIDO_ANCHO") != "":
+		for sc2 in _p.find_children("*", "ScrollContainer", true, false):
+			var sk2 := sc2 as ScrollContainer
+			if sk2.is_visible_in_tree() and sk2.get_child_count() > 0 and sk2.get_window() == get_tree().root:
+				var h2 := sk2.get_child(0) as Control
+				if h2 != null and h2.get_combined_minimum_size().x > sk2.size.x + 2.0 and sk2.horizontal_scroll_mode != ScrollContainer.SCROLL_MODE_DISABLED:
+					_largos["%s | ancho %s" % [_donde, sk2.name]] = "se sale %d px: el contenido mide %d y cabe %d" % [int(h2.get_combined_minimum_size().x - sk2.size.x), int(h2.get_combined_minimum_size().x), int(sk2.size.x)]
+	## Con RECORRIDO_TOQUE: un ScrollContainer visible cuyo contenido no cabe y que no se puede deslizar (el final queda inalcanzable).
+	if OS.get_environment("RECORRIDO_TOQUE") != "":
+		for sc in _p.find_children("*", "ScrollContainer", true, false):
+			var sk := sc as ScrollContainer
+			if not sk.is_visible_in_tree() or sk.get_child_count() == 0 or sk.get_window() != get_tree().root:
+				continue
+			var hijo := sk.get_child(0) as Control
+			if hijo != null and hijo.get_combined_minimum_size().y > sk.size.y + 2.0 and sk.vertical_scroll_mode == ScrollContainer.SCROLL_MODE_DISABLED:
+				_largos["%s | scroll %s" % [_donde, sk.name]] = "no se desliza: contenido %d > %d" % [int(hijo.get_combined_minimum_size().y), int(sk.size.y)]
 	for n in _p.find_children("*", "Control", true, false):
 		var c := n as Control
 		if not (c is Button or c is Label) or not c.is_visible_in_tree() or c.get_window() != get_tree().root:
