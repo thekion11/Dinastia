@@ -79,7 +79,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 **Bancos de pruebas (confirmado: los del juego):** megarreforma en más de 30 bancos ESPECIALIZADOS, modulares (uno por área, corribles solos) y ultra detallados aunque tarden más.
 
-**Exportador de GitHub (CI de builds):** más eficiente, con los bancos nuevos; selección fácil del sistema operativo destino; y en un apartado APARTE, un exportador ACTUALIZADOR que genera solo los cambios de la versión nueva (parche) para quien ya tiene el juego, sin volver a bajarlo entero.
+**Exportador de GitHub (CI de builds):** más eficiente, con los bancos nuevos. (La selección del sistema ya está en «Compilar y probar» → `objetivo`; el ACTUALIZADOR aparte se hizo el 4-11: flujo «Actualizar Dinastia (parche)» + autoload `Parches`. Queda: que Android pueda bajar e instalar el parche desde el propio juego, porque en el teléfono no se puede copiar a la carpeta interna.)
 
 **Mega auditoría nueva:** comprobar que todo funciona, que todo está conectado y que todo es accesible.
 

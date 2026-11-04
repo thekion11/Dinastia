@@ -13,6 +13,8 @@ const SEGUNDOS_POR_PARTE := 8.0
 ## rendimiento cae por calor (primer tercio frente al último) y se apaga el vsync para medir de verdad.
 const SEG_LARGO_PARTIDO := 180.0
 const SEG_LARGO_OTRAS := 20.0
+const ESCALAS_BARRIDO := [0.35, 0.5, 0.7, 1.0]
+const SEG_BARRIDO := 10.0
 ## Se pone a true desde el botón de Ajustes (sin argumentos de línea de comandos; vale en Android).
 static var forzada := false
 ## R7 (3-11): la prueba está corriendo y la pantalla está BLOQUEADA (ver `_montar_bloqueo`): nada del menú de detrás responde.
@@ -35,6 +37,7 @@ var _paso := 0
 var _capa_bloqueo: CanvasLayer
 var _rotulo_bloqueo: Label
 var _salir_con_atras_antes := true
+var _escala_antes := 0.5
 
 static func pedida() -> bool:
 	var a := OS.get_cmdline_user_args()
@@ -58,6 +61,7 @@ func _ready() -> void:
 	Engine.max_fps = 0
 	_json["version"] = ProjectSettings.get_setting("application/config/version", "")
 	_json["godot"] = Engine.get_version_info()["string"]
+	_escala_antes = Calidad.escala_minimo
 	_json["fecha"] = Time.get_datetime_string_from_system()
 	_json["gpu"] = RenderingServer.get_video_adapter_name()
 	_json["gpu_vendor"] = RenderingServer.get_video_adapter_vendor()
@@ -139,7 +143,16 @@ func _process(delta: float) -> void:
 				if rig != null:
 					rig.switch_to(maxi(0, rig.camera_names.find("Principal (TV)"))))
 			_empezar_parte("estadio (cámara TV)")
-		2:
+		2, 3, 4, 5:
+			## BARRIDO DE RESOLUCIÓN 3D (4-11, rendimiento móvil): el mismo estadio en MÍNIMA al 35/50/70/100 % para saber, con una
+			## sola prueba en el teléfono, qué ajuste llega a 60 FPS (la gráfica del móvil manda: 3-11, GPU al 100 % y CPU al 0 %).
+			var e: float = ESCALAS_BARRIDO[_paso - 2]
+			Calidad.escala_minimo = e
+			Calidad.aplicar_viewport(get_viewport(), Calidad.MINIMO)
+			_empezar_parte("estadio MÍNIMA al %d %%" % int(round(e * 100.0)))
+		6:
+			Calidad.escala_minimo = _escala_antes
+			Calidad.aplicar_viewport(get_viewport(), Calidad.elegida)
 			_vista.queue_free()
 			_cargar("abrir la ciudad", func() -> void:
 				_vista = CargaCiudad.de("VistaCiudad").new()
@@ -150,6 +163,8 @@ func _process(delta: float) -> void:
 			_terminar()
 
 func _duracion() -> float:
+	if _parte.contains("MÍNIMA al"):
+		return SEG_BARRIDO
 	if not largo:
 		return SEGUNDOS_POR_PARTE
 	return SEG_LARGO_PARTIDO if _parte.begins_with("estadio") else SEG_LARGO_OTRAS
@@ -298,6 +313,9 @@ func _cancelar() -> void:
 	Engine.max_fps = _max_fps_antes
 	forzada = false
 	largo = false
+	if not is_equal_approx(Calidad.escala_minimo, _escala_antes):   ## cancelada en mitad del barrido de resolución
+		Calidad.escala_minimo = _escala_antes
+		Calidad.aplicar_viewport(get_viewport(), Calidad.elegida)
 	if is_instance_valid(_vista):
 		_vista.queue_free()
 	var arbol := get_tree()
