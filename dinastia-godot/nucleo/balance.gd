@@ -59,10 +59,10 @@ const DIFICULTADES := {   ## 8 categorías del dueño (27-10); «debutante» = e
 	"practicante": {"nombre": "Practicante", "vista": 0.5, "attr": 0.72, "pausa": 1.0, "presion": -1, "error": 1.35},
 	"cadete": {"nombre": "Cadete", "vista": 0.2, "attr": 0.90, "pausa": 1.0, "presion": -1, "error": 1.12},
 	"debutante": {"nombre": "Debutante", "attr": 1.0, "pausa": 1.0, "presion": 0, "error": 1.0},
-	"semiprofesional": {"nombre": "Semiprofesional", "vista": -0.04, "attr": 1.045, "pausa": 1.0, "presion": 0, "error": 0.93},
+	"semiprofesional": {"nombre": "Semiprofesional", "vista": -0.02, "attr": 1.035, "pausa": 1.0, "presion": 0, "error": 0.94},
 	"profesional": {"nombre": "Profesional", "vista": -0.08, "attr": 1.07, "pausa": 1.0, "presion": 1, "error": 0.89},
-	"experto": {"nombre": "Experto", "vista": -0.14, "attr": 1.10, "pausa": 1.0, "presion": 1, "error": 0.85},
-	"maestro": {"nombre": "Maestro", "vista": -0.2, "attr": 1.13, "pausa": 1.0, "presion": 1, "error": 0.81},
+	"experto": {"nombre": "Experto", "vista": -0.16, "attr": 1.115, "pausa": 1.0, "presion": 1, "error": 0.84},
+	"maestro": {"nombre": "Maestro", "vista": -0.24, "attr": 1.15, "pausa": 1.0, "presion": 1, "error": 0.78},
 	"ultimate": {"nombre": "Ultimate", "vista": -0.34, "attr": 1.20, "pausa": 1.0, "presion": 1, "error": 0.72},
 }
 
