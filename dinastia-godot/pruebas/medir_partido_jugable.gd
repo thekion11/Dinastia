@@ -108,14 +108,63 @@ func _quitar(que: String) -> void:
 		"hud": for h in _pj.get_children():
 			if h is Control and not (h is SubViewportContainer): (h as Control).visible = false
 		"controles": (_pj.get_node("ControlesTactiles") as Control).visible = false
+		"omni": for l in _pj.find_children("*", "OmniLight3D", true, false): (l as Light3D).visible = false
 		"luz": for l in _pj.find_children("*", "DirectionalLight3D", true, false): (l as Light3D).visible = false
 		"jugadores": for n in _pj.motor.jugadores: ((n as Dictionary)["node"] as Node3D).visible = false
 		"mundo3d": _pj._vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
 
 func _medir() -> void:
+	if OS.get_environment("CPU") == "":
+		## Escena CONGELADA (cámara, jugadores y balón quietos): los conteos entre dos ocultaciones se comparan sin deriva (en marcha, las llamadas bailan entre 400 y 700 según el momento).
+		_pj.set_process(false)
+		_pj.motor.set_process(false)
+		_pj.motor.set_physics_process(false)
+		for h in _pj.get_children():
+			h.set_process(false)
 	await _conteos("base")
+	if OS.get_environment("LUCES") != "":
+		var por := {}
+		for l in _pj.find_children("*", "Light3D", true, false):
+			var k := "%s sombra=%s visible=%s rango=%s" % [(l as Node).get_class(), str((l as Light3D).shadow_enabled), str((l as Light3D).is_visible_in_tree()), str(snappedf(float((l as Light3D).get("omni_range") if (l as Node).get_class() == "OmniLight3D" else ((l as Light3D).get("spot_range") if (l as Node).get_class() == "SpotLight3D" else 0.0)), 1))]
+			por[k] = int(por.get(k, 0)) + 1
+		for k in por:
+			print("LUZ x%-4d %s" % [por[k], k])
+		for l in _pj.find_children("*", "OmniLight3D", true, false):
+			var o := l as OmniLight3D
+			var c := _pj._cam
+			var dist := c.global_position.distance_to(o.global_position)
+			print("OMNI pos=%s energia=%.1f rango=%.0f dist_camara=%.0f en_frustum=%s padre=%s" % [str(o.global_position.snapped(Vector3.ONE)), o.light_energy, o.omni_range, dist, str(_esfera_en_frustum(c, o.global_position, o.omni_range)), String(o.get_parent().name)])
+		var vp: SubViewport = _pj._vp
+		print("VIEWPORT msaa_3d=%d scaling_mode=%d scale=%.2f taa=%s fxaa=%d debanding=%s hdr2d=%s" % [vp.msaa_3d, vp.scaling_3d_mode, vp.scaling_3d_scale, str(vp.use_taa), vp.screen_space_aa, str(vp.use_debanding), str(vp.use_hdr_2d)])
+		get_tree().quit()
+		return
+	if OS.get_environment("CENSO") != "":
+		_censo()
+		get_tree().quit()
+		return
+	if OS.get_environment("LISTAR") != "":
+		## LISTAR=Clase: cuántos nodos de esa clase hay y bajo qué padre (nombre) cuelgan.
+		var por_padre := {}
+		for n in _pj.find_children("*", OS.get_environment("LISTAR"), true, false):
+			var k := String(n.get_parent().name) + " > " + String((n as Node).name).rstrip("0123456789@")
+			por_padre[k] = int(por_padre.get(k, 0)) + 1
+		var claves := por_padre.keys()
+		claves.sort_custom(func(a, b) -> bool: return por_padre[a] > por_padre[b])
+		for k in claves.slice(0, 25):
+			print("LISTA %4d  %s" % [por_padre[k], k])
+		get_tree().quit()
+		return
+	if OS.get_environment("CONTEO") != "":
+		## CONTEO=controles,hud: tras ocultar cada cosa, vuelve a contar (acumulado). Lo que baja son llamadas de DIBUJO 2D (el HUD del partido y los botones).
+		for q in OS.get_environment("CONTEO").split(","):
+			_quitar(q)
+			await _conteos("sin " + q)
+		get_tree().quit()
+		return
 	if OS.get_environment("QUITAR") != "":
 		var base_ms := await _ms_pared()
+		var base2 := await _ms_pared()
+		print("PARED repetida (ruido): %.1f ms" % base2)
 		print("PARED base %.1f ms (viewport 3D %s, MSAA %d, escala %.2f)" % [base_ms, str(_pj._vp.size), _pj._vp.msaa_3d, _pj._vp.scaling_3d_scale])
 		for q in OS.get_environment("QUITAR").split(","):
 			_quitar(q)
@@ -158,3 +207,61 @@ func _medir() -> void:
 		print(f[1])
 	print("===== FIN. 0 fallos =====")
 	get_tree().quit()
+
+## CENSO de lo que de verdad se dibuja: cada GeometryInstance3D visible cuyo AABB cruza la pirámide de la cámara real, agrupado por «padre > nombre» con sus llamadas
+## (superficies; las multimallas cuentan una por superficie) y triángulos. Es una estimación (no ve la oclusión ni el LOD), pero ordena dónde está el gasto.
+func _censo() -> void:
+	var cam: Camera3D = _pj._cam
+	var planos := cam.get_frustum()
+	var grupos := {}
+	var total_ll := 0
+	var total_tr := 0
+	for n in _pj._raiz.find_children("*", "GeometryInstance3D", true, false):
+		var g := n as GeometryInstance3D
+		if not g.is_visible_in_tree():
+			continue
+		var caja := g.global_transform * g.get_aabb()
+		var dentro := true
+		for pl: Plane in planos:
+			var peor := Vector3(caja.position.x + (caja.size.x if pl.normal.x < 0.0 else 0.0), caja.position.y + (caja.size.y if pl.normal.y < 0.0 else 0.0), caja.position.z + (caja.size.z if pl.normal.z < 0.0 else 0.0))
+			if pl.distance_to(peor) > 0.0:
+				dentro = false
+				break
+		if not dentro:
+			continue
+		var ll := 0
+		var tr := 0
+		if g is MeshInstance3D and (g as MeshInstance3D).mesh != null:
+			var m := (g as MeshInstance3D).mesh
+			ll = m.get_surface_count()
+			for i in m.get_surface_count():
+				var arr := m.surface_get_arrays(i)
+				tr += (arr[Mesh.ARRAY_INDEX].size() if arr[Mesh.ARRAY_INDEX] != null else (arr[Mesh.ARRAY_VERTEX].size())) / 3
+		elif g is MultiMeshInstance3D and (g as MultiMeshInstance3D).multimesh != null and (g as MultiMeshInstance3D).multimesh.mesh != null:
+			var mm := (g as MultiMeshInstance3D).multimesh
+			ll = mm.mesh.get_surface_count()
+			for i in mm.mesh.get_surface_count():
+				var arr2 := mm.mesh.surface_get_arrays(i)
+				tr += (arr2[Mesh.ARRAY_INDEX].size() if arr2[Mesh.ARRAY_INDEX] != null else arr2[Mesh.ARRAY_VERTEX].size()) / 3 * mm.visible_instance_count if mm.visible_instance_count >= 0 else mm.instance_count
+		elif g is Label3D:
+			ll = 1
+			tr = 2
+		var k := String(n.get_parent().name).rstrip("0123456789@") + " > " + n.get_class() + ":" + String(n.name).rstrip("0123456789@")
+		var e: Array = grupos.get(k, [0, 0, 0])
+		e[0] += 1
+		e[1] += ll
+		e[2] += tr
+		grupos[k] = e
+		total_ll += ll
+		total_tr += tr
+	var claves := grupos.keys()
+	claves.sort_custom(func(a, b) -> bool: return grupos[a][1] > grupos[b][1])
+	print("CENSO total estimado: %d llamadas, %d triángulos" % [total_ll, total_tr])
+	for k in claves.slice(0, 30):
+		print("CENSO x%-4d llamadas %-4d tris %-8d  %s" % [grupos[k][0], grupos[k][1], grupos[k][2], k])
+
+func _esfera_en_frustum(cam: Camera3D, centro: Vector3, radio: float) -> bool:
+	for pl: Plane in cam.get_frustum():
+		if pl.distance_to(centro) > radio:
+			return false
+	return true
