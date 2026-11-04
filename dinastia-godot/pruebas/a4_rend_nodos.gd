@@ -49,7 +49,7 @@ func _process(_d: float) -> void:
 		for h in _p.get_children():
 			if h is VistaCiudad: v = h
 		var raiz: Node = null
-		for c in v.get_children():
+		for c in v.find_children("*", "Node3D", true, false):
 			if c.get_child_count() > 20000: raiz = c
 		var hs := raiz.get_children()
 		var vacios := []
