@@ -242,7 +242,7 @@ static var ultimo_mio: Dictionary = {}
 ## vez por partido.
 var _notas_cerradas := false
 var suspendido := false   ## con menos de 7 (`_revisar_siete`): el marcador es de MESA, no de goles jugados
-var _amarillas_hoy := {}   ## A4-PAR-L01: amarillas de ESTE partido (id -> n); la segunda es roja
+var _amarillas_hoy := {}   ## amarillas de ESTE partido (id -> n): la 2.ª es roja (A4-PAR-L01) y la roja directa no suma (tarjeta_externa)
 func _amonestar(_j: Jugador, _frase: String = "") -> void: pass   ## la de verdad, en partido.gd (necesita `_revisar_siete`)
 
 # ---------------------------------------------------------------------------

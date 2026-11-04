@@ -112,6 +112,7 @@ pasa "app Red del móvil" "godot --headless --path . res://pruebas/ideas/red_app
 pasa "palmarés en la historia del club" "godot --headless --path . res://pruebas/ideas/pal_clubes.tscn" "FIN. 0 fallos"
 pasa "Países Bajos real y ficticio" "godot --headless --path . res://pruebas/ideas/c1_paises_bajos.tscn" "FIN. 0 fallos"
 pasa "controles táctiles del partido" "godot --headless --path . res://pruebas/ideas/tac_controles.tscn" "FIN. 0 fallos"
+pasa "partido al límite (auditoría 4: pasos de tiempo absurdos, actas, tarjetas amarillas y notas)" "godot --headless --path . res://pruebas/auditoria_partido_limite.tscn" "FIN. 0 fallos"
 pasa "HUD y cámara del partido en el móvil (mide mm de letra y distancia de cámara)" "godot --headless --path . res://pruebas/ideas/tac_hud.tscn" "FIN. 0 fallos"
 # 6. Todas las pantallas y botones de la interfaz (lento)
 # 5d. ESCENAS DE PRUEBA REUTILIZADAS (2-11-2026, orden 14 del dueño: «ver qué se puede reutilizar antes de borrar»). Eran escenas que nadie
