@@ -177,6 +177,7 @@ func _rejilla(lista: VBoxContainer, columnas: int) -> GridContainer:
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 10)
 	g.add_theme_constant_override("v_separation", 3)
+	CebraRejilla.poner(g)
 	lista.add_child(g)
 	return g
 func _fila_jugador(g: GridContainer, j: Jugador, columnas: Array, colores: Array) -> void:
