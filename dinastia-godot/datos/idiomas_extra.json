@@ -7520,7 +7520,8 @@
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "There is no cash for dividends: the shareholders settle for the promise.",
   "Opción %d de %d": "Option %d of %d",
   "elegida": "selected",
-  "¿Salir del juego?": "Quit the game?"
+  "¿Salir del juego?": "Quit the game?",
+  "CERRADO · abre de 8:00 a 20:00": "CLOSED · open 8:00–20:00"
  },
  "pt": {
   "Historia": "História",
@@ -15043,7 +15044,8 @@
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Não há caixa para dividendos: os acionistas contentam-se com a promessa.",
   "Opción %d de %d": "Opção %d de %d",
   "elegida": "escolhida",
-  "¿Salir del juego?": "Sair do jogo?"
+  "¿Salir del juego?": "Sair do jogo?",
+  "CERRADO · abre de 8:00 a 20:00": "FECHADO · abre das 8:00 às 20:00"
  },
  "patrones": [
   [
@@ -28541,7 +28543,8 @@
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Il n'y a pas de quoi verser des dividendes : les actionnaires se contentent de la promesse.",
   "Opción %d de %d": "Option %d sur %d",
   "elegida": "choisie",
-  "¿Salir del juego?": "Quitter le jeu ?"
+  "¿Salir del juego?": "Quitter le jeu ?",
+  "CERRADO · abre de 8:00 a 20:00": "FERMÉ · ouvert de 8h00 à 20h00"
  },
  "it": {
   "Historia": "Storia",
@@ -36064,7 +36067,8 @@
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Non c'è cassa per i dividendi: gli azionisti si accontentano della promessa.",
   "Opción %d de %d": "Opzione %d di %d",
   "elegida": "scelta",
-  "¿Salir del juego?": "Uscire dal gioco?"
+  "¿Salir del juego?": "Uscire dal gioco?",
+  "CERRADO · abre de 8:00 a 20:00": "CHIUSO · aperto dalle 8:00 alle 20:00"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43587,7 +43591,8 @@
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Es ist kein Geld für Dividenden da: Die Aktionäre begnügen sich mit dem Versprechen.",
   "Opción %d de %d": "Option %d von %d",
   "elegida": "gewählt",
-  "¿Salir del juego?": "Spiel beenden?"
+  "¿Salir del juego?": "Spiel beenden?",
+  "CERRADO · abre de 8:00 a 20:00": "GESCHLOSSEN · geöffnet 8:00–20:00"
  },
  "ca": {
   "Historia": "Història",
@@ -51110,7 +51115,8 @@
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "No hi ha caixa per a dividends: els accionistes es conformen amb la promesa.",
   "Opción %d de %d": "Opció %d de %d",
   "elegida": "triada",
-  "¿Salir del juego?": "Sortir del joc?"
+  "¿Salir del juego?": "Sortir del joc?",
+  "CERRADO · abre de 8:00 a 20:00": "TANCAT · obert de 8:00 a 20:00"
  },
  "pl": {
   "Club": "Klub",
@@ -58633,7 +58639,8 @@
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Nie ma gotówki na dywidendy: akcjonariusze zadowalają się obietnicą.",
   "Opción %d de %d": "Opcja %d z %d",
   "elegida": "wybrana",
-  "¿Salir del juego?": "Wyjść z gry?"
+  "¿Salir del juego?": "Wyjść z gry?",
+  "CERRADO · abre de 8:00 a 20:00": "ZAMKNIĘTE · czynne 8:00–20:00"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66156,6 +66163,7 @@
   "No hay caja para dividendos: los accionistas se conforman con la promesa.": "Temettü için nakit yok: hissedarlar söze razı oluyor.",
   "Opción %d de %d": "Seçenek %d / %d",
   "elegida": "seçili",
-  "¿Salir del juego?": "Oyundan çıkılsın mı?"
+  "¿Salir del juego?": "Oyundan çıkılsın mı?",
+  "CERRADO · abre de 8:00 a 20:00": "KAPALI · 8:00–20:00 arası açık"
  }
 }
