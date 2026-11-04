@@ -62,6 +62,11 @@ func _process(_d: float) -> void:
 		FestejoGrada.lanzar(_vista.get("_raiz3d"), Color(0.8, 0.1, 0.1), Color(1, 1, 1), "salida", 600.0)
 	if _n < CALENTAR:
 		return
+	if _n == CALENTAR and OS.get_environment("OCULTAR_GRUPOS") != "":
+		## OCULTAR_GRUPOS=hinchas,butacas (4-11): apaga grupos enteros de `GRUPOS` y mide el resto (cuánto ganaría un nivel más ligero).
+		for gr in OS.get_environment("OCULTAR_GRUPOS").split(","):
+			for g in _de_grupo(gr):
+				(g as Node3D).visible = false
 	if _n == CALENTAR and OS.get_environment("OCULTAR") != "":
 		## OCULTAR=Cuero,Eyes (17-10-2026): esconde las piezas con ese nombre
 		## para medir lo que de verdad cuestan en pantalla (con LOD y recorte).
