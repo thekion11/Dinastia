@@ -73,8 +73,9 @@ func _butacas(r: Node3D, perfil: Dictionary, nombre: String) -> PackedVector3Arr
 		var mm := (g as MultiMeshInstance3D).multimesh
 		for i in mm.instance_count:
 			var col := mm.get_instance_color(i)
-			if col.a < 0.5:
-				continue   ## hueco: sin butaca
+			var tf := mm.get_instance_transform(i)
+			if col.a < 0.5 or tf.basis.get_scale().y < 0.01:
+				continue   ## hueco o fila sin butaca (aforo): sin butaca
 			posiciones.append((g as Node3D).global_transform * mm.get_instance_transform(i).origin)
 			colores.append(col)
 	var n := posiciones.size()

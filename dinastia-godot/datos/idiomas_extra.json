@@ -7479,7 +7479,11 @@
   "🧠 SALUD MENTAL": "🧠 MENTAL HEALTH",
   "🧢 TRABAJAS PARA ÉL": "🧢 YOU WORK FOR HIM",
   "🧳 PRETEMPORADA": "🧳 PRE-SEASON",
-  "🪑 LA SUCESIÓN": "🪑 THE SUCCESSION"
+  "🪑 LA SUCESIÓN": "🪑 THE SUCCESSION",
+  "SECTOR %d·%d\n%s": "SECTOR %d·%d\n%s",
+  "CON LUZ": "POWERED",
+  "SIN LUZ": "NO POWER",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 DRINKING WATER\nTank %d%%"
  },
  "pt": {
   "Historia": "História",
@@ -14961,7 +14965,11 @@
   "🧠 SALUD MENTAL": "🧠 SAÚDE MENTAL",
   "🧢 TRABAJAS PARA ÉL": "🧢 VOCÊ TRABALHA PARA ELE",
   "🧳 PRETEMPORADA": "🧳 PRÉ-TEMPORADA",
-  "🪑 LA SUCESIÓN": "🪑 A SUCESSÃO"
+  "🪑 LA SUCESIÓN": "🪑 A SUCESSÃO",
+  "SECTOR %d·%d\n%s": "SETOR %d·%d\n%s",
+  "CON LUZ": "COM LUZ",
+  "SIN LUZ": "SEM LUZ",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 ÁGUA POTÁVEL\nReservatório %d%%"
  },
  "patrones": [
   [
@@ -28396,7 +28404,11 @@
   "🧠 SALUD MENTAL": "🧠 SANTÉ MENTALE",
   "🧢 TRABAJAS PARA ÉL": "🧢 VOUS TRAVAILLEZ POUR LUI",
   "🧳 PRETEMPORADA": "🧳 PRÉSAISON",
-  "🪑 LA SUCESIÓN": "🪑 LA SUCCESSION"
+  "🪑 LA SUCESIÓN": "🪑 LA SUCCESSION",
+  "SECTOR %d·%d\n%s": "SECTEUR %d·%d\n%s",
+  "CON LUZ": "ALIMENTÉ",
+  "SIN LUZ": "SANS COURANT",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 EAU POTABLE\nRéservoir %d%%"
  },
  "it": {
   "Historia": "Storia",
@@ -35878,7 +35890,11 @@
   "🧠 SALUD MENTAL": "🧠 SALUTE MENTALE",
   "🧢 TRABAJAS PARA ÉL": "🧢 LAVORI PER LUI",
   "🧳 PRETEMPORADA": "🧳 PRECAMPIONATO",
-  "🪑 LA SUCESIÓN": "🪑 LA SUCCESSIONE"
+  "🪑 LA SUCESIÓN": "🪑 LA SUCCESSIONE",
+  "SECTOR %d·%d\n%s": "SETTORE %d·%d\n%s",
+  "CON LUZ": "CON LUCE",
+  "SIN LUZ": "SENZA LUCE",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 ACQUA POTABILE\nSerbatoio %d%%"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43360,7 +43376,11 @@
   "🧠 SALUD MENTAL": "🧠 PSYCHISCHE GESUNDHEIT",
   "🧢 TRABAJAS PARA ÉL": "🧢 DU ARBEITEST FÜR IHN",
   "🧳 PRETEMPORADA": "🧳 VORBEREITUNG",
-  "🪑 LA SUCESIÓN": "🪑 DIE NACHFOLGE"
+  "🪑 LA SUCESIÓN": "🪑 DIE NACHFOLGE",
+  "SECTOR %d·%d\n%s": "SEKTOR %d·%d\n%s",
+  "CON LUZ": "MIT STROM",
+  "SIN LUZ": "OHNE STROM",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 TRINKWASSER\nTank %d%%"
  },
  "ca": {
   "Historia": "Història",
@@ -50842,7 +50862,11 @@
   "🧠 SALUD MENTAL": "🧠 SALUT MENTAL",
   "🧢 TRABAJAS PARA ÉL": "🧢 TREBALLES PER A ELL",
   "🧳 PRETEMPORADA": "🧳 PRETEMPORADA",
-  "🪑 LA SUCESIÓN": "🪑 LA SUCCESSIÓ"
+  "🪑 LA SUCESIÓN": "🪑 LA SUCCESSIÓ",
+  "SECTOR %d·%d\n%s": "SECTOR %d·%d\n%s",
+  "CON LUZ": "AMB LLUM",
+  "SIN LUZ": "SENSE LLUM",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 AIGUA POTABLE\nDipòsit %d%%"
  },
  "pl": {
   "Club": "Klub",
@@ -58324,7 +58348,11 @@
   "Botones": "Przyciski",
   "Gestos": "Gesty",
   "Botones: todo en pantalla. Gestos: toca para pasar y desliza hacia arriba para tirar. Ambos: las dos cosas.": "Przyciski: wszystko na ekranie. Gesty: dotknij, by podać, przesuń w górę, by strzelić. Oba: jedno i drugie.",
-  "Separación entre los botones": "Odstęp między przyciskami"
+  "Separación entre los botones": "Odstęp między przyciskami",
+  "SECTOR %d·%d\n%s": "SEKTOR %d·%d\n%s",
+  "CON LUZ": "Z PRĄDEM",
+  "SIN LUZ": "BEZ PRĄDU",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 WODA PITNA\nZbiornik %d%%"
  },
  "tr": {
   "Club": "Kulüp",
@@ -65806,6 +65834,10 @@
   "Botones": "Düğmeler",
   "Gestos": "Hareketler",
   "Botones: todo en pantalla. Gestos: toca para pasar y desliza hacia arriba para tirar. Ambos: las dos cosas.": "Düğmeler: her şey ekranda. Hareketler: pas için dokun, şut için yukarı kaydır. İkisi de: ikisi birlikte.",
-  "Separación entre los botones": "Düğmeler arası boşluk"
+  "Separación entre los botones": "Düğmeler arası boşluk",
+  "SECTOR %d·%d\n%s": "BÖLGE %d·%d\n%s",
+  "CON LUZ": "ELEKTRİKLİ",
+  "SIN LUZ": "ELEKTRİKSİZ",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 İÇME SUYU\nDepo %d%%"
  }
 }

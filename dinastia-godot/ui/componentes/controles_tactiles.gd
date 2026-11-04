@@ -243,8 +243,8 @@ func _toca(dedo: int, pos: Vector2) -> void:
 		_dedo_stick = dedo
 		_centro_stick = pos
 		_mueve_stick(pos)
-	elif _gestos():
-		_gesto[dedo] = {"tipo": "libre", "ini": pos}   ## zona libre de la derecha: tocar = pase, deslizar hacia arriba = tiro
+	elif _gestos() and not _en_zona_stick(pos):
+		_gesto[dedo] = {"tipo": "libre", "ini": pos}   ## (un segundo dedo en la zona del stick, con el stick ya en uso, no cuenta: antes daba pases al levantarlo)   ## zona libre de la derecha: tocar = pase, deslizar hacia arriba = tiro
 	queue_redraw()
 
 ## Un dedo que empezó un gesto se mueve: desde Tiro, rosca (Mod); desde Pase, pase largo.
@@ -299,6 +299,9 @@ func _fin_gesto(dedo: int) -> void:
 		"libre":
 			var d: Vector2 = (g["fin"] as Vector2 if g.has("fin") else g["ini"] as Vector2) - (g["ini"] as Vector2)
 			if d.length() < PX_DESLIZA * 0.5:
+				var q := PaseTactil.receptor_en(get_parent(), g["ini"] as Vector2)   ## tocar a un compañero = pase a él
+				if not q.is_empty():
+					MotorPaseDirigido.pedir(get_parent().get("motor"), q)
 				_pulsar("jugar_pase", 0.08)
 			elif d.y < -PX_DESLIZA * 0.6 and absf(d.y) >= absf(d.x) * 0.5:
 				_pulsar("jugar_tiro", clampf(d.length() / 500.0, 0.2, 0.7))
