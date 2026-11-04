@@ -7198,7 +7198,11 @@
   "No se pudo dejar el parche en su sitio.": "The patch could not be put in place.",
   "La respuesta del servidor no se entiende.": "The server's response is not understood.",
   "DINASTÍA solo se conecta a internet cuando tú pulsas «Buscar actualización» (para ver si hay una versión nueva y, si lo aceptas, bajarla de GitHub); no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada tuyo. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA only goes online when you press “Check for updates” (to see if there is a new version and, if you accept, download it from GitHub); it has no accounts, ads or usage statistics, and sends nothing of yours. What it saves (matches, settings, the error log and the profile photo you choose) stays on this device, in the game folder, and only leaves it if you copy and send it.",
-  "Modo zurdo (stick a la derecha)": "Left-handed mode (stick on the right)"
+  "Modo zurdo (stick a la derecha)": "Left-handed mode (stick on the right)",
+  "SECTOR %d·%d\n%s": "SECTOR %d·%d\n%s",
+  "CON LUZ": "POWERED",
+  "SIN LUZ": "NO POWER",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 DRINKING WATER\nTank %d%%"
  },
  "pt": {
   "Historia": "História",
@@ -14399,7 +14403,11 @@
   "No se pudo dejar el parche en su sitio.": "Não foi possível colocar o patch no seu lugar.",
   "La respuesta del servidor no se entiende.": "A resposta do servidor não se entende.",
   "DINASTÍA solo se conecta a internet cuando tú pulsas «Buscar actualización» (para ver si hay una versión nueva y, si lo aceptas, bajarla de GitHub); no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada tuyo. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "A DINASTÍA só se liga à internet quando carregas em «Procurar atualização» (para ver se há uma versão nova e, se aceitares, descarregá-la do GitHub); não tem contas, anúncios nem estatísticas de uso, e não envia nada teu. O que guarda (partidas, definições, o registo de erros e a foto de perfil que escolheres) fica neste dispositivo, na pasta do jogo, e só sai daqui se o copiares e o enviares.",
-  "Modo zurdo (stick a la derecha)": "Modo canhoto (stick à direita)"
+  "Modo zurdo (stick a la derecha)": "Modo canhoto (stick à direita)",
+  "SECTOR %d·%d\n%s": "SETOR %d·%d\n%s",
+  "CON LUZ": "COM LUZ",
+  "SIN LUZ": "SEM LUZ",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 ÁGUA POTÁVEL\nReservatório %d%%"
  },
  "patrones": [
   [
@@ -27553,7 +27561,11 @@
   "No se pudo dejar el parche en su sitio.": "Impossible de placer le correctif.",
   "La respuesta del servidor no se entiende.": "La réponse du serveur est incompréhensible.",
   "DINASTÍA solo se conecta a internet cuando tú pulsas «Buscar actualización» (para ver si hay una versión nueva y, si lo aceptas, bajarla de GitHub); no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada tuyo. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA ne se connecte à internet que lorsque tu appuies sur « Chercher une mise à jour » (pour voir s'il y a une nouvelle version et, si tu acceptes, la télécharger depuis GitHub) ; il n'a ni comptes, ni publicités, ni statistiques d'usage, et n'envoie rien de toi. Ce qu'il enregistre (parties, réglages, journal d'erreurs et photo de profil choisie) reste sur cet appareil, dans le dossier du jeu, et n'en sort que si tu le copies et l'envoies.",
-  "Modo zurdo (stick a la derecha)": "Mode gaucher (stick à droite)"
+  "Modo zurdo (stick a la derecha)": "Mode gaucher (stick à droite)",
+  "SECTOR %d·%d\n%s": "SECTEUR %d·%d\n%s",
+  "CON LUZ": "ALIMENTÉ",
+  "SIN LUZ": "SANS COURANT",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 EAU POTABLE\nRéservoir %d%%"
  },
  "it": {
   "Historia": "Storia",
@@ -34754,7 +34766,11 @@
   "No se pudo dejar el parche en su sitio.": "Impossibile mettere la patch al suo posto.",
   "La respuesta del servidor no se entiende.": "La risposta del server non è comprensibile.",
   "DINASTÍA solo se conecta a internet cuando tú pulsas «Buscar actualización» (para ver si hay una versión nueva y, si lo aceptas, bajarla de GitHub); no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada tuyo. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA si collega a internet solo quando premi «Cerca aggiornamento» (per vedere se c'è una versione nuova e, se accetti, scaricarla da GitHub); non ha account, pubblicità né statistiche d'uso, e non invia nulla di tuo. Ciò che salva (partite, impostazioni, registro degli errori e foto profilo che scegli) resta su questo dispositivo, nella cartella del gioco, ed esce di qui solo se lo copi e lo invii.",
-  "Modo zurdo (stick a la derecha)": "Modalità mancino (stick a destra)"
+  "Modo zurdo (stick a la derecha)": "Modalità mancino (stick a destra)",
+  "SECTOR %d·%d\n%s": "SETTORE %d·%d\n%s",
+  "CON LUZ": "CON LUCE",
+  "SIN LUZ": "SENZA LUCE",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 ACQUA POTABILE\nSerbatoio %d%%"
  },
  "de": {
   "Historia": "Geschichte",
@@ -41955,7 +41971,11 @@
   "No se pudo dejar el parche en su sitio.": "Der Patch konnte nicht an seinen Platz gelegt werden.",
   "La respuesta del servidor no se entiende.": "Die Antwort des Servers ist nicht verständlich.",
   "DINASTÍA solo se conecta a internet cuando tú pulsas «Buscar actualización» (para ver si hay una versión nueva y, si lo aceptas, bajarla de GitHub); no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada tuyo. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA geht nur ins Internet, wenn du auf „Nach Update suchen“ drückst (um zu sehen, ob es eine neue Version gibt, und sie bei Zustimmung von GitHub zu laden); es hat keine Konten, keine Werbung und keine Nutzungsstatistiken und sendet nichts von dir. Was es speichert (Spiele, Einstellungen, das Fehlerprotokoll und das gewählte Profilfoto), bleibt auf diesem Gerät im Spielordner und verlässt es nur, wenn du es kopierst und sendest.",
-  "Modo zurdo (stick a la derecha)": "Linkshändermodus (Stick rechts)"
+  "Modo zurdo (stick a la derecha)": "Linkshändermodus (Stick rechts)",
+  "SECTOR %d·%d\n%s": "SEKTOR %d·%d\n%s",
+  "CON LUZ": "MIT STROM",
+  "SIN LUZ": "OHNE STROM",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 TRINKWASSER\nTank %d%%"
  },
  "ca": {
   "Historia": "Història",
@@ -49156,7 +49176,11 @@
   "No se pudo dejar el parche en su sitio.": "No s'ha pogut deixar el pedaç al seu lloc.",
   "La respuesta del servidor no se entiende.": "La resposta del servidor no s'entén.",
   "DINASTÍA solo se conecta a internet cuando tú pulsas «Buscar actualización» (para ver si hay una versión nueva y, si lo aceptas, bajarla de GitHub); no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada tuyo. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA només es connecta a internet quan prems «Cerca actualització» (per veure si hi ha una versió nova i, si ho acceptes, baixar-la de GitHub); no té comptes, anuncis ni estadístiques d'ús, i no envia res teu. El que desa (partides, ajustos, el registre d'errors i la foto de perfil que triïs) es queda en aquest dispositiu, a la carpeta del joc, i només en surt si ho copies i ho envies.",
-  "Modo zurdo (stick a la derecha)": "Mode esquerrà (stick a la dreta)"
+  "Modo zurdo (stick a la derecha)": "Mode esquerrà (stick a la dreta)",
+  "SECTOR %d·%d\n%s": "SECTOR %d·%d\n%s",
+  "CON LUZ": "AMB LLUM",
+  "SIN LUZ": "SENSE LLUM",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 AIGUA POTABLE\nDipòsit %d%%"
  },
  "pl": {
   "Club": "Klub",
@@ -56626,7 +56650,11 @@
   "No se pudo dejar el parche en su sitio.": "Nie udało się umieścić poprawki na miejscu.",
   "La respuesta del servidor no se entiende.": "Odpowiedź serwera jest niezrozumiała.",
   "DINASTÍA solo se conecta a internet cuando tú pulsas «Buscar actualización» (para ver si hay una versión nueva y, si lo aceptas, bajarla de GitHub); no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada tuyo. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA łączy się z internetem tylko po naciśnięciu „Szukaj aktualizacji” (aby sprawdzić, czy jest nowa wersja, i – jeśli się zgodzisz – pobrać ją z GitHuba); nie ma kont, reklam ani statystyk użycia i nie wysyła niczego od Ciebie. To, co zapisuje (rozgrywki, ustawienia, dziennik błędów i wybrane zdjęcie profilowe), zostaje na tym urządzeniu, w folderze gry, i opuszcza je tylko wtedy, gdy sam je skopiujesz i wyślesz.",
-  "Modo zurdo (stick a la derecha)": "Tryb dla leworęcznych (drążek po prawej)"
+  "Modo zurdo (stick a la derecha)": "Tryb dla leworęcznych (drążek po prawej)",
+  "SECTOR %d·%d\n%s": "SEKTOR %d·%d\n%s",
+  "CON LUZ": "Z PRĄDEM",
+  "SIN LUZ": "BEZ PRĄDU",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 WODA PITNA\nZbiornik %d%%"
  },
  "tr": {
   "Club": "Kulüp",
@@ -64096,6 +64124,10 @@
   "No se pudo dejar el parche en su sitio.": "Yama yerine konulamadı.",
   "La respuesta del servidor no se entiende.": "Sunucunun yanıtı anlaşılamıyor.",
   "DINASTÍA solo se conecta a internet cuando tú pulsas «Buscar actualización» (para ver si hay una versión nueva y, si lo aceptas, bajarla de GitHub); no tiene cuentas, anuncios ni estadísticas de uso, y no envía nada tuyo. Lo que guarda (partidas, ajustes, el registro de errores y la foto de perfil que elijas) se queda en este dispositivo, en la carpeta del juego, y solo sale de aquí si tú lo copias y lo mandas.": "DINASTÍA yalnızca «Güncelleme ara»ya bastığında internete bağlanır (yeni sürüm var mı diye bakmak ve kabul edersen GitHub'dan indirmek için); hesabı, reklamı ve kullanım istatistiği yoktur ve senden hiçbir şey göndermez. Kaydettikleri (maçlar, ayarlar, hata günlüğü ve seçtiğin profil fotoğrafı) bu cihazda, oyun klasöründe kalır ve yalnızca sen kopyalayıp gönderirsen buradan çıkar.",
-  "Modo zurdo (stick a la derecha)": "Solak modu (çubuk sağda)"
+  "Modo zurdo (stick a la derecha)": "Solak modu (çubuk sağda)",
+  "SECTOR %d·%d\n%s": "BÖLGE %d·%d\n%s",
+  "CON LUZ": "ELEKTRİKLİ",
+  "SIN LUZ": "ELEKTRİKSİZ",
+  "💧 AGUA POTABLE\nDepósito %d%%": "💧 İÇME SUYU\nDepo %d%%"
  }
 }
