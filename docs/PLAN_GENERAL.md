@@ -4,6 +4,13 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## PLAN DEL DUEÑO TRAS LA PAUSA (4-11, conversación) — se borra al completarse
+1. Dejar TODO en `main` y bien (lo único trabajando: la sesión del táctil del partido; el líder la ayuda si puede).
+2. MEGA AUDITORÍA profunda nueva, dirigida por el líder con ayuda de todas las sesiones, con ~5 REPASOS.
+3. Después, y SIN PARAR hasta nueva orden del dueño, todas las sesiones SOLO a detectar y ARREGLAR fallos: bugs, cuelgues (crasheos),
+   reglas del proyecto que se incumplan, cosas que no se repiten igual, fallos de todo tipo. Recorrer todo el juego, todo el mapa, todo el
+   código, llevándolo al límite (pruebas de estrés, entradas absurdas, partidas largas). El líder controla a todas y se activa cada 20 min.
+
 ## ESTADO AL CIERRE DEL 4-11 (pausa del dueño, ~04:30 UTC) — para retomar
 - `main` = todo hasta el PR #120 (b921e7fd) + el PR de cierre desde `claude/dazzling-rubin-v7rfyi` (lo de después: actualizador dentro del juego,
   bancos de interfaz y arreglo del mando, controles táctiles combinados de PES 6, pasadas visuales 1-3, arreglo del banco guardado, registro de fallos).
