@@ -82,9 +82,15 @@ func _probar() -> void:
 	var solo := OS.get_environment("MODAL")
 	var ventanas: Array = [Vector2i(2400, 1080), Vector2i(1280, 720)]
 	for ventana: Vector2i in ventanas:
-		for idi: String in ["es", "de"]:
+		for idi: String in (["es", "de", "en"] if OS.get_environment("IDIOMAS_EXTRA") != "" else ["es", "de"]):
 			AyudaMovil.poner(ventana, get_window())
 			Idiomas.idioma = idi
+			## Las preferencias guardadas mandan sobre el idioma al abrir: sin esto, con un
+			## `user://preferencias.cfg` en castellano la vuelta «de» se medía en castellano.
+			var cf := ConfigFile.new()
+			cf.load("user://preferencias.cfg")
+			cf.set_value("juego", "idioma", idi)
+			cf.save("user://preferencias.cfg")
 			_p = load("res://escenas/principal.tscn").instantiate()
 			add_child(_p)
 			await _frames(8)

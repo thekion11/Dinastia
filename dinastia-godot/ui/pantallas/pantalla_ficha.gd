@@ -130,6 +130,8 @@ func _ver_ficha(j: Jugador) -> void:
 	if j.rasgo != "":   ## (M-305) qué hace su rasgo
 		det.tooltip_text = Idiomas.t(String(((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, ["", ""]) as Array)[1]))
 		det.mouse_filter = Control.MOUSE_FILTER_PASS
+	## En alemán o inglés la línea pasa del ancho de la columna en el móvil: se parte.
+	det.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._ficha.add_child(det)
 	var credito := Cara.credito_foto(j)
 	if credito != "":
@@ -153,8 +155,10 @@ func _ver_ficha(j: Jugador) -> void:
 	if cegado_ficha:
 		FichaJugadorInfo.pintar_ciega(p._ficha, j, p.mundo, p._ui_ficha._paleta_ficha())
 	else:
-		var fila_attr := HBoxContainer.new()
-		fila_attr.add_theme_constant_override("separation", 8)
+		## Fila que salta de línea: en el móvil, con los nombres en alemán, rejilla y
+		## radar no cabían juntos en la columna (+23 px fuera); el radar baja debajo.
+		var fila_attr := HFlowContainer.new()
+		fila_attr.add_theme_constant_override("h_separation", 8)
 		p._ficha.add_child(fila_attr)
 		var g := GridContainer.new()
 		g.columns = 4
