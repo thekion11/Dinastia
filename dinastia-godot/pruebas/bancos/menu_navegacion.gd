@@ -56,6 +56,7 @@ func _en_central() -> bool:
 
 func _probar() -> void:
 	_titulo("BANCO MENU_NAVEGACION · 14 menús, todos los submenús, todas las vías")
+	_respaldar_user()
 	var m := Mundo.new()
 	m.generar(["CHI"], 20261104)
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
@@ -78,6 +79,7 @@ func _probar() -> void:
 	await _toque()
 	await _pestanas_a_menu()
 	CapasTutorial.poner_activas(ayudas)
+	_restaurar_user()
 
 ## Coherencia de los datos del panel.
 func _datos() -> void:
