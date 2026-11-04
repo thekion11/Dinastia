@@ -434,7 +434,7 @@ func _incidencias() -> void:
 				if h.rasgo == "fragil":
 					semanas += Azar.ent(1, 3)
 				h.lesionar(semanas)
-			lesion.emit(h, semanas, minuto)
+			lesion.emit(h, semanas, minuto); PartidoLesiones.nueva(self as Object as Partido, h)
 
 ## ¿Es del local? Mira su club, no el once (el cambiado/expulsado ya no está en él).
 func es_del_local(j: Jugador) -> bool:
