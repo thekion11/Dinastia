@@ -171,6 +171,13 @@ func pedir_saltar() -> void:
 	fila.add_child(si)
 	FocoSeguro.dar(no)
 
+## Escape / «atrás» de Android con «¿Saltar el prólogo?» abierta: «Seguir aquí» (antes `pedir_saltar` no hacía nada con la pregunta ya puesta y el «atrás» caía en «¿Salir del juego?»).
+func _input(ev: InputEvent) -> void:
+	if is_instance_valid(_confirmar) and ev is InputEventKey and (ev as InputEventKey).pressed and not (ev as InputEventKey).echo and (ev as InputEventKey).keycode == KEY_ESCAPE:
+		get_viewport().set_input_as_handled()
+		_confirmar.queue_free()
+		_confirmar = null
+
 func confirmando_salto() -> bool:
 	return is_instance_valid(_confirmar)
 
