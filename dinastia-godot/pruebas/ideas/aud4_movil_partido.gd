@@ -16,7 +16,7 @@ func _probar() -> void:
 	for ventana: Vector2i in [Vector2i(2400, 1080), Vector2i(1280, 720)]:
 		for idi: String in ["es", "de", "pl"]:
 			AyudaMovil.poner(ventana, get_window())
-			Idiomas.idioma = idi
+			_fijar_idioma(idi)
 			_p = load("res://escenas/principal.tscn").instantiate()
 			add_child(_p)
 			await _frames(8)
