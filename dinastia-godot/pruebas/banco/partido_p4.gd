@@ -361,6 +361,7 @@ func _probar_tanda_c_1() -> Array:
 	for _k in 30:
 		cj.energia = 100
 		cj.entrenar(mf)
+		mf.semana += 1   ## (4-11) el entreno se hace UNA vez por semana: cada intento, en su semana
 	_comprobar(yo.ovr > ov_antes, "entrenar sube la media (%d -> %d)" % [ov_antes, yo.ovr])
 	## FASE 3 DEL MEGAPLAN: eventos que salen de lo que te pasa.
 	cj.pj_carrera = 1
