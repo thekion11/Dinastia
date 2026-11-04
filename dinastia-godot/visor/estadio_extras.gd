@@ -284,7 +284,7 @@ static func _edificio(root: Node3D, base: Vector3, tam: Vector3, col: Color, rot
 	_caja(root, base + Vector3(tam.x * 0.5 + 0.02, 2.0, 0), Vector3(0.05, 3.0, tam.z * 0.8), _mat(Color(1.0, 0.9, 0.7), 0.2, 1.3))
 	_caja(root, base + Vector3(tam.x * 0.5 + 0.05, tam.y - 0.8, 0), Vector3(0.1, 1.2, tam.z), _mat(acento, 0.5, 0.6))
 	var r := Label3D.new()
-	r.text = rotulo
+	r.text = Idiomas.t(rotulo)
 	r.font_size = 72
 	r.pixel_size = 0.018
 	r.outline_size = 8

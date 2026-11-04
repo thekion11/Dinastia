@@ -439,3 +439,12 @@ func _incidencias() -> void:
 ## ¿Es del local? Mira su club, no el once (el cambiado/expulsado ya no está en él).
 func es_del_local(j: Jugador) -> bool:
 	return once_local.has(j) or (not once_visita.has(j) and local.plantilla.has(j))
+## A4-PARTIDO-006: el gol anulado por el VAR no es remate, ni a puerta, ni xG, ni deja al rival una «peor diferencia» que no vivió (se rehace de la crónica).
+func _deshacer_remate_gol(es_local: bool) -> void:
+	if es_local: remates_local -= 1; tiros_puerta_local -= 1; xg_local -= 0.3
+	else: remates_visita -= 1; tiros_puerta_visita -= 1; xg_visita -= 0.3
+	var d := 0; peor_diferencia_local = 0; peor_diferencia_visita = 0
+	for e in cronica:
+		if String(e.get("tipo", "")) == "gol":
+			d += 1 if String(e.get("club", "")) == local.id else -1
+			peor_diferencia_local = mini(peor_diferencia_local, d); peor_diferencia_visita = mini(peor_diferencia_visita, -d)
