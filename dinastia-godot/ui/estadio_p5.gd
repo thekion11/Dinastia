@@ -405,7 +405,7 @@ func abrir(c: Club, ocupacion: float = 0.8, rival: Club = null, p: Partido = nul
 		perfil_forzado: Dictionary = {}, colores_balon: Array = []) -> void:
 	club = c
 	visitante = rival
-	partido = p
+	partido = p; VidaApp.poner(self)
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	if por_partes:   ## en pausa mientras se arma entre fotogramas (`_respiro`)
 		process_mode = Node.PROCESS_MODE_DISABLED

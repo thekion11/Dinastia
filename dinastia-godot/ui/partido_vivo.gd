@@ -308,7 +308,7 @@ func _construir() -> void:
 ## el mismo índice fijo (2, "Normal"), sin que el jugador pudiera dejar
 ## puesta su preferencia-. Sigue el mismo índice que `VELOCIDADES`.
 func abrir(p: Partido, club: Club, vest: Vestuario = null, eliminatoria: bool = false, rol: Roles = null, velocidad_inicial: int = -1, perfil_est: Dictionary = {}, colores_bal: Array = []) -> void:
-	partido = p
+	partido = p; VidaApp.poner(self)
 	mi_club = club
 	vestuario = vest
 	es_eliminatoria = eliminatoria
@@ -367,7 +367,7 @@ func _process(delta: float) -> void:
 	var ms: float = VELOCIDADES[_velocidad]["ms"]
 	if ms <= 0.0:
 		return
-	_acumulado += delta * 1000.0
+	_acumulado += clampf(delta, 0.0, 0.25) * 1000.0   ## tras minutos en segundo plano el delta sería de minutos: no corre el reloj (4-11)
 	var simulado := false   ## `_refrescar()` rehace ~50 controles: solo cuando el reloj avanzó, no cada cuadro (28-10)
 	while _acumulado >= ms and not partido.terminado_ya:
 		## EL ENTRETIEMPO. El reloj se para solo al llegar al 45 y no sigue

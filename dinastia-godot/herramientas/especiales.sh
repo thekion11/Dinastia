@@ -116,6 +116,7 @@ pasa "tráfico: derecha y adelantar" "godot --headless --path . res://pruebas/id
 pasa "emergencias y sirenas" "godot --headless --path . res://pruebas/ideas/emerg_servicios.tscn" "FIN. 0 fallos"
 pasa "el tráfico cede a las sirenas" "godot --headless --path . res://pruebas/ideas/emerg_cede_paso.tscn" "FIN. 0 fallos"
 pasa "estación y trenes" "godot --headless --path . res://pruebas/ideas/tre_estacion.tscn" "FIN. 0 fallos"
+pasa "vida de la app en el móvil al límite, partido táctil (auditoría 4: segundo plano, atrás, foco, girar, poca memoria, delta de 10 minutos)" "godot --headless --path . res://pruebas/auditoria_vida_app_limite.tscn" "FIN. 0 fallos"
 pasa "teleférico" "godot --headless --path . res://pruebas/ideas/tre_teleferico.tscn" "FIN. 0 fallos"
 pasa "aspecto de los clubes" "godot --headless --path . res://pruebas/ideas/asp_clubes.tscn" "FIN. 0 fallos"
 pasa "partido en vivo al límite (auditoría 4: 9 idiomas sin marcas sueltas, velocidades con saltos absurdos, descanso, saltos al final)" "godot --headless --path . res://pruebas/auditoria_partido_vivo_limite.tscn" "FIN. 0 fallos"
