@@ -46,6 +46,8 @@ func _objetivos(mio: Club) -> Array[Jugador]: return _paneles_club._objetivos(mi
 func _process(_d: float) -> void:
 	if not _pendientes.is_empty():
 		_pintar_pendientes()
+	if Engine.get_process_frames() % 90 == 0 and not _pintados.is_empty() and soltar_ocultos_activo():
+		_soltar_ocultos()
 	## Las partículas del fondo del menú NO van encima de una vista 3D (ciudad,
 	## estadio, partido): salían como «humo» sobre la cabeza del personaje,
 	## donde estaba el cursor (13-10-2026).

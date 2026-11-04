@@ -61,6 +61,7 @@ var _panel_obj: PanelObjetivos
 ## pintan el cuadro en que aparecen (`_process`). `pintar_todo` lo desactiva.
 var pintar_todo := false
 var _pendientes := {}   ## Control -> Callable
+var _pintados := {}     ## Control -> Callable: lo ya pintado de forma perezosa (en MÍNIMA/móvil se suelta al ocultarse: A4-INT-R01)
 
 ## La columna de la izquierda SIGUE A LA COMPETICIÓN DEL PRÓXIMO PARTIDO.
 ##
