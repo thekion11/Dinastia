@@ -123,7 +123,7 @@ func coste(clave: String, rep_club: int) -> int:
 	if n >= maximo(clave):
 		return -1
 	var base: float = float(CATALOGO[clave][2])
-	var mult: float = pow(Eco.factor_club(float(rep_club)), 0.62)
+	var mult: float = pow(Eco.factor_club(float(clampi(rep_club, 0, 100))), 0.62)   ## (A4) la reputación se acota a 0-100: fuera de ahí la potencia daba NaN o infinito y un coste de −9·10¹⁸
 	return int(round(base * float(n + 1) * float(n + 1) * mult / 1000.0) * 1000.0)
 
 ## Empieza una obra. Devuelve "" si arrancó, o el motivo por el que no.
@@ -194,7 +194,7 @@ func _imprevisto(clave: String, c: Club) -> void:
 ## club, como el precio de la obra). Antes, una vez hecha, la obra no costaba
 ## nada más y la caja del club propio solo crecía.
 func mantenimiento_del_mes(rep_club: int) -> int:
-	var mult: float = pow(Eco.factor_club(float(rep_club)), 0.62)
+	var mult: float = pow(Eco.factor_club(float(clampi(rep_club, 0, 100))), 0.62)   ## (A4) reputación acotada, como en `coste`
 	var total := 0.0
 	for k: String in niveles:
 		if CATALOGO.has(k):

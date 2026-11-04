@@ -19,7 +19,7 @@ func _ready() -> void:
 	ControlesTactiles.forzar = true
 	## DPI_PRUEBA=400 simula un teléfono de 400 ppp (HUD y botones por dpi); CAMARA_PRUEBA=no deja la cámara de siempre (para la captura «antes»).
 	if OS.get_environment("DPI_PRUEBA") != "":
-		ControlesTactiles.dpi_forzado = float(OS.get_environment("DPI_PRUEBA"))
+		PantallaMovil.dpi_forzado = float(OS.get_environment("DPI_PRUEBA"))
 	ControlesTactiles.contexto_forzado = OS.get_environment("CONTEXTO_PRUEBA")   ## con / banda / sin: qué botones salen en la captura
 	if OS.get_environment("CAMARA_PRUEBA") != "":
 		AjustesTactil.poner_camara(OS.get_environment("CAMARA_PRUEBA"))
@@ -97,7 +97,7 @@ func _process(_d: float) -> void:
 		_foto("tactil_partido_pausa")
 		print("===== FIN. %d fallos =====" % _fallos)
 		ControlesTactiles.forzar = false
-		ControlesTactiles.dpi_forzado = 0.0
+		PantallaMovil.dpi_forzado = 0.0
 		ControlesTactiles.contexto_forzado = ""
 		AjustesTactil.restaurar()
 		get_tree().quit(0 if _fallos == 0 else 1)

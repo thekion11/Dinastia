@@ -275,7 +275,10 @@ func _pintar_ficha() -> void:
 	hb.add_theme_constant_override("separation", 14)
 	_ficha.add_child(hb)
 	if _elegida == "":
-		hb.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE, "Toca una habilidad para ver qué hace y aprenderla. Ganas un punto cada %d semanas; las licencias y cursos de tu vida dan más." % Entrenamiento.SEMANAS_POR_PUNTO_DT))
+		var guia := Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE, "Toca una habilidad para ver qué hace y aprenderla. Ganas un punto cada %d semanas; las licencias y cursos de tu vida dan más." % Entrenamiento.SEMANAS_POR_PUNTO_DT)
+		guia.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART   ## sin esto, en alemán la línea sola ensanchaba todo el panel (A4-INT-017)
+		guia.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		hb.add_child(guia)
 		return
 	var rama := String(_e._dt_tabla()[_elegida][0])
 	var col: Color = COLOR_RAMA.get(rama, Tema.ACENTO)

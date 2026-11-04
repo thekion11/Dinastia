@@ -74,6 +74,7 @@ const MITAD_CALIBRADA := 240.0
 var t := 0.0
 var mitad := 1
 var goles := [0, 0]            ## [local, visita]
+var suspendido := false        ## con menos de 7 (`MotorSiete`): el marcador es de MESA
 var estado := "saque"          ## juego | saque | gol | descanso | tanda | fin
 ## Partido de eliminación directa: con empate al 90' hay prórroga (mitades 3 y
 ## 4, de 15', un tercio de `duracion_mitad`) y, si sigue, tanda de penales.
@@ -83,6 +84,8 @@ var poseedor: Dictionary = {}
 var ultimo_toque: Dictionary = {}
 var penultimo_toque: Dictionary = {}
 var pase_a: Dictionary = {}    ## a quién va el último pase (para correr a recibirlo)
+var pase_dirigido: Dictionary = {}   ## el compañero al que el usuario TOCÓ en la pantalla (táctil): el siguiente pase va a él (MotorPaseDirigido)
+var pase_dirigido_hasta := 0.0
 var saque := {}
 var apuntando := false         ## el usuario está lanzando una jugada a balón parado
 var apunte := {"ang": 0.0, "loft": 0.3, "fuerza": 0.0, "fase": 0.0, "x": 0.0, "y": 0.8}

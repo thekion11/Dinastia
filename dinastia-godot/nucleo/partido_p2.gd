@@ -111,7 +111,7 @@ func preparar() -> void:
 	minutos_fin = MINUTOS
 	cambios_extra = 0
 	terminado_ya = false
-	cronica.clear()
+	cronica.clear(); _amarillas_hoy.clear(); suspendido = false
 	_todos = once_local + once_visita
 	_notas_cerradas = false
 	_notas.clear()
@@ -200,20 +200,12 @@ func _alguien(l: Array[Jugador]) -> Jugador:
 		return null
 	return l[Azar.ent(0, l.size() - 1)]
 
-## Reparte una amarilla arbitral igual que `_incidencias()` reparte las normales -segunda amarilla con
-## `Balance.P_ROJA_SEGUNDA` de ir a la roja-, y la narra con la frase que le toca a esta personalidad.
+## Reparte una amarilla arbitral igual que `_incidencias()` reparte las normales (`_amonestar`: la segunda del partido es roja)
+## y la narra con la frase que le toca a esta personalidad.
 func _tarjeta_arbitral(arr: Array[Jugador], plantilla: String, arbitro_nombre: String) -> void:
 	var j := _alguien(arr)
-	if j == null:
-		return
-	j.amarillas += 1
-	var roja := j.amarillas % 2 == 0 and Azar.suerte(Balance.P_ROJA_SEGUNDA)
-	if roja:
-		Disciplina.sanciona(j)
-	decision_arbitral.emit(Idiomas.t(plantilla) % [arbitro_nombre, j.nombre], minuto)
-	tarjeta.emit(j, roja, minuto)
-	if not roja and Disciplina.acumula(j):
-		decision_arbitral.emit(Disciplina.frase(j), minuto)
+	if j != null:
+		_amonestar(j, Idiomas.t(plantilla) % [arbitro_nombre, j.nombre])
 
 ## El goleador no se sortea plano: se pondera por lo cerca del area que juega y
 ## por su pegada. Si se sortea plano, los centrales marcan tanto como los nueves
@@ -418,19 +410,14 @@ func _incidencias() -> void:
 	## pesa en la tasa normal y el casero carga las tarjetas al que visita.
 	var casero := String(arbitro.get("perfil", "")) == "casero"
 	if Azar.suerte(Balance.P_AMARILLA * ctx_factor_tarjetas * float({"tarjetero": 1.4, "estricto": 1.15, "permisivo": 0.7}.get(String(arbitro.get("perfil", "")), 1.0))) and not motor_externo:
-		var l := _alguien(once_visita if casero and Azar.suerte(0.35) else _todos)
+		## A4-PAR-L01: solo a quien está EN EL CAMPO (antes `_todos`: también a los cambiados y a los ya expulsados).
+		var l := _alguien(once_visita if casero and Azar.suerte(0.35) else once_local + once_visita)
 		if l != null:
-			l.amarillas += 1
-			var roja := l.amarillas % 2 == 0 and Azar.suerte(Balance.P_ROJA_SEGUNDA)
-			if roja:
-				Disciplina.sanciona(l)   ## (4-11, banco partido_reglas) antes la roja se descontaba esa semana y la 5.ª amarilla no sancionaba
-			tarjeta.emit(l, roja, minuto)
-			if not roja and Disciplina.acumula(l):
-				decision_arbitral.emit(Disciplina.frase(l), minuto)
+			_amonestar(l)
 	## Una sola tirada siempre: la superficie cambia la probabilidad, no cuántas veces se consulta `Azar`.
 	var f_sup := (ctx_lesion_local if local != null and local.id == ctx_club_id else 1.0) * (ctx_lesion_mio if (local != null and local.id == ctx_club_id) or (visita != null and visita.id == ctx_club_id) else 1.0)
 	if Azar.suerte(0.0024 * f_sup):
-		var h := _alguien(_todos)
+		var h := _alguien(once_local + once_visita)   ## A4-PAR-L01: se lesiona alguien que está jugando
 		if h != null:
 			## LA LESION LA DIAGNOSTICA `Medico`, no un numero suelto.
 			##
@@ -448,3 +435,16 @@ func _incidencias() -> void:
 					semanas += Azar.ent(1, 3)
 				h.lesionar(semanas)
 			lesion.emit(h, semanas, minuto)
+
+## ¿Es del local? Mira su club, no el once (el cambiado/expulsado ya no está en él).
+func es_del_local(j: Jugador) -> bool:
+	return once_local.has(j) or (not once_visita.has(j) and local.plantilla.has(j))
+## A4-PARTIDO-006: el gol anulado por el VAR no es remate, ni a puerta, ni xG, ni deja al rival una «peor diferencia» que no vivió (se rehace de la crónica).
+func _deshacer_remate_gol(es_local: bool) -> void:
+	if es_local: remates_local -= 1; tiros_puerta_local -= 1; xg_local -= 0.3
+	else: remates_visita -= 1; tiros_puerta_visita -= 1; xg_visita -= 0.3
+	var d := 0; peor_diferencia_local = 0; peor_diferencia_visita = 0
+	for e in cronica:
+		if String(e.get("tipo", "")) == "gol":
+			d += 1 if String(e.get("club", "")) == local.id else -1
+			peor_diferencia_local = mini(peor_diferencia_local, d); peor_diferencia_visita = mini(peor_diferencia_visita, -d)

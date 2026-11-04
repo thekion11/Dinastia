@@ -14,7 +14,13 @@ extends Node
 ## 3-11 (ventaja de campo, a propósito): `Balance.BONO_LOCAL`/`BONO_VISITA` 1,08/0,94 → 1,18/0,86 (victoria local 39,8 % → 46,3 %; goles 2,72). Cambian marcadores, tablas y primas; era 1992993185. `igualdad_motor` no cambia.
 ## 4-11 (reglas, a propósito; banco `partido_reglas`): en el simulado la roja sanciona el partido SIGUIENTE (`Disciplina.sanciona`) y la 5.ª
 ## amarilla de la temporada sanciona (`Disciplina.acumula`). Cambian los onces y, con ellos, marcadores y tablas; era 4140416706. `igualdad_motor` no cambia.
-const ESPERADO := "324543228"
+## 4-11 (A4-GES-003): la ficha mental de cada jugador sale de un hash y no del azar → cambia la huella a propósito; era 324543228. `igualdad_motor` no cambia.
+## 4-11 (A4-PAR-L01, tarjetas del simulado, a propósito): la 2.ª amarilla cuenta en el PARTIDO (antes, total par de la temporada), la roja
+## saca del once y la tarjeta solo cae en quien juega; `P_AMARILLA` 0,040 → 0,045 (3,65 amarillas y 0,16 rojas). Era 31094042.
+## 4-11 (A4-PAR-003 de PES 6, a propósito): la nota y la forma del cambiado/expulsado ya no usan el bono del equipo contrario. Era 2563391786.
+## 4-11 (A4-GES-006, a propósito): el entrenamiento sube más (0,10→0,13 y 0,014→0,018, freno 4/6) para que el juvenil haga +4-6 con el plan normal. Era 450552767.
+## 4-11 (A4-GES-006, tope duro, a propósito): lo ganado por entrenamiento (semanal, mentorías, prob. semanal) no pasa de +6 en la temporada (+2 de la curva anual = «no más de +8» del dueño). Era 194965960.
+const ESPERADO := "689438746"
 
 func _ready() -> void:
 	var m := Mundo.new()

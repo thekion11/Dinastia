@@ -143,7 +143,7 @@ static var diferir := false   ## construir lo no visible de entrada DESPUÉS de 
 const TERRENO_LADO := 7600.0
 const TERRENO_CELDAS := 160          ## 121x121 vértices: suficiente para que las
                                      ## lomas se lean y barato de generar.
-const LLANO_RADIO := 1480.0          ## dentro de esto, altura 0 garantizada
+const LLANO_RADIO := 2150.0          ## dentro de esto, altura 0 garantizada (4-11, A4-M3D-011: antes 1480 y las calles de las esquinas del mapa, a 2090 m, quedaban bajo los cerros)
 const LLANO_TRANSICION := 520.0      ## y esto es lo que tarda en empezar a subir
 const TERRENO_ALTURA := 78.0
 ## EL CERRO (27-10-2026): una montaña en las afueras (sureste) para el teleférico; se suma al relieve de ruido.
