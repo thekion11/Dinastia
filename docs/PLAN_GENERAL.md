@@ -28,6 +28,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   (escalones en líneas lejanas del campo y en la grada). La «Prueba de rendimiento» de Ajustes ahora mide CADA escala (35/50/70/100 %) CON y SIN
   MSAA y cierra el informe con «MSAA a N %: con X FPS · sin Y FPS · apagarlo gana Z %»: el informe de TU teléfono dirá cuánto cuesta allí; con esos
   números se decide (MÍNIMA sin MSAA, o un ajuste «Suavizado de bordes»).
+  (7) **DECISIÓN — bonos del humano al simular** (A4-GESTION-010): el club del humano lleva bonos de staff, DT, maestría, vestuario, entrenamiento y obras que ningún club de la IA tiene y que valen aunque no toque nada (por eso, con el humano en el club más grande, gana 15-17 ligas de 30; con la IA sola, 13 de media): ¿deben valer también cuando el mundo se simula sin gestionar?
 - Fallos abiertos: ver `docs/04_auditorias/MEGA_AUDITORIA_4/reglas_y_codigo.md` (A4-REGLAS-001 y 005 esperan decisión del dueño).
 
 
