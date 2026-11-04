@@ -71,12 +71,12 @@ Medido con `sonda_motor_dt` `ESCENARIO=simetria` (el mismo club a los dos lados;
 |---|---|---|---|---|
 | Practicante | 10 | 4,90 – 1,70 | 34,4 – 17,5 | −3,2 |
 | Cadete | 10 | 4,30 – 1,50 | 30,6 – 18,1 | −2,8 |
-| Debutante (la normal) | 30 | 3,13 – 2,83 | 22,8 – 24,6 | −0,3 |
+| Debutante (la normal) | 30 | 3,27 – 2,83 | 22,8 – 24,6 | −0,4 |
 | Semiprofesional | 30 | 2,83 – 2,60 | 23,9 – 25,3 | −0,2 |
 | Profesional | 30 | 2,93 – 3,57 | 21,5 – 25,6 | +0,6 |
 | Experto | 30 | 2,83 – 3,93 | 23,2 – 25,6 | +1,1 |
 | Maestro | 10 | 2,10 – 4,40 | 20,7 – 27,7 | +2,3 |
 | Ultimate | 10 | 2,00 – 4,50 | 19,2 – 29,6 | +2,5 |
-- Escalan en ORDEN (con 10 partidos Semiprofesional y Experto salían fuera de sitio: era ruido; con 30 quedan −0,2 / +0,6 / +1,1). Practicante no es absurdo (la CPU tira 17 veces y marca 1,7; pierde por ~3 goles) y Ultimate es duro pero jugable (la CPU marca 4,5 y tira 30; tú 2,0 con 19 tiros). El local lleva una ventaja pequeña (+0,3 goles en Debutante). Los escalones son desiguales: Cadete→Debutante vale ~2,5 goles y Debutante→Semiprofesional ~0,1 (attr +3 %, error −5 %): propuesta de calibración (no tocada): Semiprofesional con attr 1,04–1,05 si el dueño quiere que se note más.
+- Escalan en ORDEN (con 10 partidos Semiprofesional y Experto salían fuera de sitio: era ruido; con 30 quedan −0,4 / −0,2 / +0,6 / +1,1). Practicante no es absurdo (la CPU tira 17 veces y marca 1,7; pierde por ~3 goles) y Ultimate es duro pero jugable (la CPU marca 4,5 y tira 30; tú 2,0 con 19 tiros). El local lleva una ventaja pequeña (+0,4 goles en Debutante). Los escalones son desiguales: Cadete→Debutante vale ~2,5 goles y Debutante→Semiprofesional ~0,1 (attr +3 %, error −5 %): propuesta de calibración (no tocada): Semiprofesional con attr 1,04–1,05 si el dueño quiere que se note más.
 - [A4-PARTIDO-011] (medio, arreglado, CAMBIA CÓMO SE JUEGA solo si el jugador subió/bajó el nivel) La dificultad solo valía en el partido en que manejas a todo un equipo (`VistaEstadio`: `equipo_cpu()` sale de `control_equipo`). En el partido jugable de la carrera / «jugar partido» (un solo jugador) `equipo_cpu()` era −1 y el nivel elegido no hacía NADA. Ahora `DificultadPartido.aplicar` fija el rival como CPU con el nivel guardado en los ajustes (el mismo que se cicla en el estadio; Debutante = sin cambios). Prueba: `dificultad_partido_jugable` (ultimate: la CPU pasa mejor y tu equipo no cambia; practicante al revés; debutante nada). Pendiente (idea): un botón de dificultad en el menú de pausa del partido jugable (hoy solo se cambia en el modo estadio).
 - Sin fallos: cambiar de nivel a mitad del partido (`fijar_dificultad`, probado en `_probar_dificultad_cpu`), guardar/cargar (`dificultad_cpu8`, con traducción de las claves viejas y valor desconocido → Debutante).
