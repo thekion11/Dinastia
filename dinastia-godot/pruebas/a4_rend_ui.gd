@@ -65,7 +65,7 @@ func _process(_d: float) -> void:
 			(_p._menu_lateral.pantalla_abierta as PantallaMenu).cerrar()
 		_p._menu_lateral.abrir_menu(mm[0], mm[1])
 		_paso += 1
-	if _paso > 0 and (_n - 30) % 12 == 8 and _paso <= _menus.size() and (_paso % 6 == 1 or _paso == _menus.size() or OS.get_environment("REPETIR") != ""):
+	if _paso > 0 and (_n - 30) % 12 == 8 and _paso <= _menus.size() and (OS.get_environment("TODAS") != "" or _paso % 6 == 1 or _paso == _menus.size() or OS.get_environment("REPETIR") != ""):
 		_medir("pantalla %s/%d" % [_menus[_paso - 1][0], _menus[_paso - 1][1]])
 	if _paso >= _menus.size() and _final == 0 and (_n - 30) % 12 == 10:
 		if is_instance_valid(_p._menu_lateral.pantalla_abierta):

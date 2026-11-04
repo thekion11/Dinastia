@@ -54,7 +54,52 @@ static func texto_de(c: Control) -> String:
 		partes.append(Idiomas.t("activado") if (c as BaseButton).button_pressed else Idiomas.t("desactivado"))
 	if c.tooltip_text.strip_edges() != "":
 		partes.append(_limpiar(c.tooltip_text))
+	## Sin rótulo ni ayuda (selector de color, casilla suelta): lo nombra la etiqueta que va justo antes en su fila («Color 1», «Color del bus del equipo»).
+	if partes.is_empty() or (partes.size() == 1 and c is ColorPickerButton):
+		var vecina := _etiqueta_previa(c)
+		if vecina != "":
+			partes.push_front(vecina)
+	## Un botón transparente encima de una tarjeta (el tablero del Inicio) lee lo que dice la tarjeta; una miniatura sin ayuda, «Opción 3 de 12».
+	if partes.is_empty() and c is Button:
+		var tarjeta := _texto_de_la_tarjeta(c)
+		if tarjeta != "":
+			partes.append(tarjeta)
+		elif ((c as Button).icon != null or (c as Button).text.strip_edges() != "") and c.get_parent() != null:   ## miniatura o solo un emoji (la voz no lo lee)
+			partes.append(Idiomas.t("Opción %d de %d") % [c.get_index() + 1, c.get_parent().get_child_count()])
+			if (c as Button).toggle_mode and (c as Button).button_pressed:
+				partes.append(Idiomas.t("elegida"))
 	return ". ".join(partes)
+
+## Los textos de las etiquetas del contenedor hermano (una tarjeta con un botón encima), hasta 4.
+static func _texto_de_la_tarjeta(c: Control) -> String:
+	var padre := c.get_parent()
+	if padre == null:
+		return ""
+	var trozos: Array[String] = []
+	var fuentes: Array = [c]   ## sus propias etiquetas (un botón-tarjeta con hijos) y las del contenedor hermano
+	for h in padre.get_children():
+		if h != c and h is Container:
+			fuentes.append(h)
+	for h in fuentes:
+		for l in (h as Node).find_children("*", "Label", true, false):
+			var t := _limpiar((l as Label).text)
+			if t != "" and trozos.size() < 4:
+				trozos.append(t)
+		if not trozos.is_empty():
+			break   ## lo suyo primero; los hermanos solo si no lleva nada dentro
+	return ". ".join(trozos)
+
+static func _etiqueta_previa(c: Control) -> String:
+	var padre := c.get_parent()
+	if padre == null:
+		return ""
+	var i := c.get_index() - 1
+	while i >= 0:
+		var h := padre.get_child(i)
+		if h is Label and (h as Label).text.strip_edges() != "":
+			return _limpiar((h as Label).text)
+		i -= 1
+	return ""
 
 ## Fuera iconos y marcas de formato: la voz no lee «⚽» ni «[b]».
 static func _limpiar(t: String) -> String:
