@@ -178,6 +178,7 @@ pasa "a4_gestion_directiva" "godot --headless --path . res://pruebas/ideas/a4_ge
 pasa "a4_gestion_prensa" "godot --headless --path . res://pruebas/ideas/a4_gestion_prensa.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_entrenamiento" "godot --headless --path . res://pruebas/ideas/a4_gestion_entrenamiento.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_gestion_estadio" "godot --headless --path . res://pruebas/ideas/a4_gestion_estadio.tscn" "(^|[^0-9])0 fallos"
+pasa "a4_gestion_museo_cantera" "godot --headless --path . res://pruebas/ideas/a4_gestion_museo_cantera.tscn" "(^|[^0-9])0 fallos"
 # a4_limite_mundo necesita pantalla virtual (opengl3): el contenedor del CI no trae xvfb-run (A4, 4-11), como el bloque 6a
 if command -v xvfb-run >/dev/null; then
 pasa "a4_limite_mundo" "xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_limite_mundo.tscn" "(^|[^0-9])0 fallos"
@@ -255,6 +256,7 @@ fi
   pasa "motor: la pizarra se nota" "ESCENARIO=tactica N=10 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
   # M-467: todas las pantallas en alemán; los textos se encogen (TextoQueCabe) y no quedan más de 4 cortados (~3 min)
   pasa "textos largos en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_LARGOS=/tmp/largos_de.json RECORRIDO_CORTADOS_MAX=4 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN LARGOS. 0 fallos"
+  pasa "paneles más anchos que su hueco (móvil, alemán)" "RECORRIDO_ANCHO=1 RECORRIDO_ANCHO_MAX=0 RECORRIDO_IDIOMA=de RECORRIDO_MOVIL=2400x1080 RECORRIDO_LARGOS=/tmp/ancho_de.json godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN ANCHO. 0 fallos"
   # M-463: en alemán no queda castellano sin traducir (las siglas POR/DEF/MED/DEL y el formato del editor ya no cuentan)
   pasa "sin castellano en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_CASTELLANO_MAX=0 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN CASTELLANO. 0 fallos"
   pasa "apertura de pantallas (M-287, tope 2 s sin GPU)" "RECORRIDO_MS_MAX=2000 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN TIEMPOS. 0 fallos"
