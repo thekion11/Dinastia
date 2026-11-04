@@ -28,21 +28,23 @@ func _probar() -> void:
 	var ms_guardado: Array[int] = []
 	var anio0 := m.anio
 	var limite_s := float(OS.get_environment("LIMITE_S")) if OS.get_environment("LIMITE_S") != "" else 420.0
-	while m.anio < anio0 + 20 and (Time.get_ticks_msec() - t0) / 1000.0 < limite_s:
-		_p._avanzar_semana()
-		semanas += 1
-		if semanas % 26 == 0:
-			await _frames(2)
-			nodos.append(int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)))
-			objetos.append(int(Performance.get_monitor(Performance.OBJECT_COUNT)))
-			var t1 := Time.get_ticks_msec()
-			Partida.guardar(m, "aud4_largo")
-			ms_guardado.append(Time.get_ticks_msec() - t1)
-			var f := FileAccess.open(Partida.ruta_de("aud4_largo"), FileAccess.READ)
-			tam_guardado.append(f.get_length() if f != null else 0)
+	var objetivo_temporadas := int(OS.get_environment("TEMPORADAS")) if OS.get_environment("TEMPORADAS") != "" else 20
+	while semanas / 52 < objetivo_temporadas and (Time.get_ticks_msec() - t0) / 1000.0 < limite_s:
+		_p._al_elegir_calendario(2)   ## «Jugar la temporada»
+		await _frames(2)
+		_p._al_elegir_calendario(3)   ## «Temporada siguiente»
+		await _frames(2)
+		semanas += 52
+		nodos.append(int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)))
+		objetos.append(int(Performance.get_monitor(Performance.OBJECT_COUNT)))
+		var t1 := Time.get_ticks_msec()
+		Partida.guardar(m, "aud4_largo")
+		ms_guardado.append(Time.get_ticks_msec() - t1)
+		var f := FileAccess.open(Partida.ruta_de("aud4_largo"), FileAccess.READ)
+		tam_guardado.append(f.get_length() if f != null else 0)
 	var temporadas := m.anio - anio0
 	_linea("  %d semanas (%d temporadas) en %d s; nodos %s; objetos %s; guardado KB %s; ms guardar %s" % [semanas, temporadas, (Time.get_ticks_msec() - t0) / 1000, str(nodos), str(objetos), str(tam_guardado.map(func(b: int) -> int: return b / 1024)), str(ms_guardado)])
-	_comprobar(temporadas >= 8, "se jugaron al menos 8 temporadas en el tiempo dado (%d)" % temporadas)
+	_comprobar(m.anio - anio0 >= 8, "se jugaron al menos 8 temporadas en el tiempo dado (%d)" % (m.anio - anio0))
 	if nodos.size() >= 4:
 		var medio := nodos.size() / 2
 		_comprobar(nodos[nodos.size() - 1] - nodos[medio] <= 120, "los nodos no crecen sin fin (de %d a %d en la segunda mitad)" % [nodos[medio], nodos[nodos.size() - 1]])
