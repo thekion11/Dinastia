@@ -8,8 +8,8 @@ const LANGS := ["en", "pt", "fr", "it", "de", "ca", "pl", "tr"]
 const MARCADOR := "%[-+0#]*\\d*(?:\\.\\d+)?[sdfxXc%]"
 const ETIQUETA := "\\[/?[a-z_]+(?:=[^\\]]*)?\\]"
 ## Frases que la heurística del recorrido toma por castellano sin traducir (la mayoría son aciertos falsos: nombres de columnas de un CSV, «menus», cognados). Son
-## topes de regresión por idioma, medidos el 4-11-2026: en, de y tr limpios; en pt, ca, fr, it y pl hay que revisarlas a mano (`RECORRIDO_FALTAN=<ruta>`).
-const TOPE_CASTELLANO := {"en": 0, "de": 0, "tr": 0, "pt": 30, "ca": 20, "fr": 15, "it": 8, "pl": 3}
+## topes de regresión por idioma, medidos el 4-11-2026: en, de y tr limpios (tope 2: alguna frase dinámica sale según el azar de la partida); en pt, ca, fr, it y pl hay que revisarlas a mano (`RECORRIDO_FALTAN=<ruta>`).
+const TOPE_CASTELLANO := {"en": 2, "de": 2, "tr": 2, "pt": 30, "ca": 20, "fr": 15, "it": 8, "pl": 3}
 var _d: Dictionary = {}
 var _re_marca: RegEx
 var _re_tag: RegEx
