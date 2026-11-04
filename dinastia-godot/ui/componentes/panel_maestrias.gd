@@ -49,7 +49,7 @@ static func _tarjeta(k: String, m: Maestria, mundo: Mundo, p: Control) -> PanelC
 	fila.add_child(Tema.etiqueta(24, Tema.TEXTO, String(d[1])))
 	var nom := Tema.etiqueta(Tema.TAM_CUERPO, col.lightened(0.15), String(d[0]))
 	nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	nom.clip_text = true
+	nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART   ## en polaco «Zarządzanie obciążeniami» salía cortado
 	fila.add_child(nom)
 	fila.add_child(Tema.etiqueta(Tema.TAM_DESTACADO, Tema.ORO if n >= Maestria.NIVEL_MAX else Tema.TEXTO, "%d/%d" % [n, Maestria.NIVEL_MAX]))
 	## Barra de 30 segmentos, con los hitos en dorado.

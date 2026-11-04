@@ -317,6 +317,20 @@ func a_dic() -> Dictionary:
 		"retiro_anunciado": retiro_anunciado, "retirado": retirado, "clubes_pasados": clubes_pasados,
 		"agenda": agenda, "racha_social": racha_social, "ovr_inicio": ovr_inicio, "vallas_invictas": vallas_invictas}
 
+## (4-11, caza de fallos) Un guardado dañado o a mano con el tipo equivocado (texto donde va un diccionario) reventaba al CARGAR la carrera: se usa el valor por omisión.
+static func _tipo(d: Dictionary, clave: String, defecto: Variant) -> Variant:
+	var v: Variant = d.get(clave, defecto)
+	return v if typeof(v) == typeof(defecto) else defecto
+
+## `stats_temp` con todas sus claves (un guardado antiguo o roto no las traía y la nota media fallaba).
+static func _stats_ok(v: Variant, defecto: Dictionary) -> Dictionary:
+	var r: Dictionary = defecto.duplicate(true)
+	if v is Dictionary:
+		for k: String in defecto:
+			if (v as Dictionary).has(k) and typeof((v as Dictionary)[k]) == typeof(defecto[k]):
+				r[k] = (v as Dictionary)[k]
+	return r
+
 static func desde_dic(d: Dictionary) -> CarreraJugador:
 	var c := CarreraJugador.new()
 	c.jugador_id = String(d.get("jugador_id", ""))
@@ -326,16 +340,16 @@ static func desde_dic(d: Dictionary) -> CarreraJugador:
 	c.seguidores = int(d.get("seguidores", 150))
 	c.agente = String(d.get("agente", ""))
 	c.foco = String(d.get("foco", "tiro"))
-	c.lanzador = d.get("lanzador", c.lanzador)
+	c.lanzador = _tipo(d, "lanzador", c.lanzador)
 	c.convocatorias = int(d.get("convocatorias", 0))
 	c.partidos_jugables = int(d.get("partidos_jugables", 0))
-	c.stats_temp = d.get("stats_temp", c.stats_temp)
-	c.temporadas = d.get("temporadas", [])
-	c.eventos = d.get("eventos", [])
-	c.historial = d.get("historial", [])
-	c.ofertas = d.get("ofertas", [])
-	c.hitos = d.get("hitos", {})
-	c.ultima_vez = d.get("ultima_vez", {})
+	c.stats_temp = _stats_ok(_tipo(d, "stats_temp", c.stats_temp), c.stats_temp)
+	c.temporadas = _tipo(d, "temporadas", [])
+	c.eventos = _tipo(d, "eventos", [])
+	c.historial = _tipo(d, "historial", [])
+	c.ofertas = _tipo(d, "ofertas", [])
+	c.hitos = _tipo(d, "hitos", {})
+	c.ultima_vez = _tipo(d, "ultima_vez", {})
 	c._rng.seed = int(d.get("semilla", 1))
 	if d.has("rng"):
 		c._rng.state = int(String(d["rng"]))   ## (4-11) el estado, no solo la semilla: cargar y seguir da lo mismo
@@ -343,12 +357,12 @@ static func desde_dic(d: Dictionary) -> CarreraJugador:
 	c.pj_carrera = int(d.get("pj_carrera", 0))
 	c.caps = int(d.get("caps", 0))
 	c.goles_sel = int(d.get("goles_sel", 0))
-	c.convocatoria = d.get("convocatoria", {})
+	c.convocatoria = _tipo(d, "convocatoria", {})
 	c.capitan = bool(d.get("capitan", false))
 	c.licencia = bool(d.get("licencia", false))
 	c.retiro_anunciado = bool(d.get("retiro_anunciado", false))
 	c.retirado = bool(d.get("retirado", false))
-	c.clubes_pasados = d.get("clubes_pasados", [])
+	c.clubes_pasados = _tipo(d, "clubes_pasados", [])
 	## Partidas de antes de la agenda: semana normal y progreso desde ahora.
 	c.agenda = String(d.get("agenda", "normal"))
 	if not CarreraAgenda.AGENDAS.has(c.agenda):

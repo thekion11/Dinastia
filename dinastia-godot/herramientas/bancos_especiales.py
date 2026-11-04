@@ -60,7 +60,7 @@ BANCOS = [
     ("idiomas", "9 idiomas, traducciones, glifos, textos largos y cortados",
      r"idioma|traduc|glifos|paridad|alemán|castellano|trad_|siglas|tema_y_ortografia|fnt_|m462|carteles_3d"),
     ("menu_navegacion", "menús, panel lateral, atajos, pantallas, recorrido",
-     r"menu|menú|atajos|pantallas|ampliada|funciones_escondidas|editor|compara_clubes|s2p_|bandeja|datos de las tarjetas|f0p_principal|recorrido|ayuda_en_menu|insignia|interfaz_limite|largo_plazo_ui|actualizador"),
+     r"menu|menú|atajos|pantallas|ampliada|funciones_escondidas|editor|compara_clubes|s2p_|bandeja|datos de las tarjetas|f0p_principal|recorrido|ayuda_en_menu|insignia|interfaz_limite|largo_plazo_ui|actualizador|aud4_movil_"),
     ("accesibilidad_tutorial", "accesibilidad, tutorial, guía, lector, avisos",
      r"accesibilidad|tutorial|lector|avisos visuales|lectura de pantalla|tut_|s7t_|modo_streamer|deshacer"),
     ("estadio_3d", "estadio en 3D: grada, vallas, túnel, edificio del club, obras",
