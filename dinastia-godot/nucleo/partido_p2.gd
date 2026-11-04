@@ -200,9 +200,8 @@ func _alguien(l: Array[Jugador]) -> Jugador:
 		return null
 	return l[Azar.ent(0, l.size() - 1)]
 
-## Reparte una amarilla arbitral igual que `_incidencias()` reparte las
-## normales -segunda amarilla con `Balance.P_ROJA_SEGUNDA` de ir a la roja-, y la narra con la frase
-## que le toca a esta personalidad.
+## Reparte una amarilla arbitral igual que `_incidencias()` reparte las normales -segunda amarilla con
+## `Balance.P_ROJA_SEGUNDA` de ir a la roja-, y la narra con la frase que le toca a esta personalidad.
 func _tarjeta_arbitral(arr: Array[Jugador], plantilla: String, arbitro_nombre: String) -> void:
 	var j := _alguien(arr)
 	if j == null:
@@ -424,10 +423,11 @@ func _incidencias() -> void:
 			l.amarillas += 1
 			var roja := l.amarillas % 2 == 0 and Azar.suerte(Balance.P_ROJA_SEGUNDA)
 			if roja:
-				l.suspension = max(l.suspension, 1)
+				Disciplina.sanciona(l)   ## (4-11, banco partido_reglas) antes la roja se descontaba esa semana y la 5.ª amarilla no sancionaba
 			tarjeta.emit(l, roja, minuto)
-	## Una sola tirada siempre: la superficie cambia la probabilidad, no cuántas
-	## veces se consulta `Azar`.
+			if not roja and Disciplina.acumula(l):
+				decision_arbitral.emit(Disciplina.frase(l), minuto)
+	## Una sola tirada siempre: la superficie cambia la probabilidad, no cuántas veces se consulta `Azar`.
 	var f_sup := (ctx_lesion_local if local != null and local.id == ctx_club_id else 1.0) * (ctx_lesion_mio if (local != null and local.id == ctx_club_id) or (visita != null and visita.id == ctx_club_id) else 1.0)
 	if Azar.suerte(0.0024 * f_sup):
 		var h := _alguien(_todos)

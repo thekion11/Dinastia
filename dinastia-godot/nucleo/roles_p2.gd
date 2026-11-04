@@ -313,7 +313,7 @@ func arrancar_cantera() -> void:
 	var meta := Azar.ent(3, 5)
 	cantera = {"meta": meta, "subidos": [], "anio_inicio": m.anio if m != null else 0, "total": 0}
 	if m != null and m.mi_club() != null:
-		m.mi_club().saldo = int(round(float(m.mi_club().saldo) * 0.35))
+		m.mi_club().mover_saldo(int(round(float(m.mi_club().saldo) * 0.35)) - m.mi_club().saldo)   ## (4-11) por mover_saldo, con aviso
 	_fijar_objetivo("CANTERA: subir %d juveniles al primer equipo esta temporada" % meta)
 	aviso.emit("Director de cantera",
 		"No diriges al primer equipo: eso es cosa de %s. Tu trabajo es captar chicos, elegir su plan de trabajo, cuidarles la cabeza y decidir cuándo están listos. El club te pide %d debutantes esta temporada." % [
@@ -335,7 +335,7 @@ func _arrancar_sandbox() -> void:
 	sandbox = true
 	var caja: Variant = Datos.tabla("CAJA_JEQUE")
 	var tope := int(caja) if caja != null else 999999999
-	m.mi_club().saldo = tope
+	m.mi_club().mover_saldo(tope - m.mi_club().saldo)
 	aviso.emit("Modo jeque",
 		"Un fondo soberano compra el club y te pone al frente sin límite de gasto. " +
 		"No hay excusas: con esta caja, lo que salga mal es cosa tuya.")
