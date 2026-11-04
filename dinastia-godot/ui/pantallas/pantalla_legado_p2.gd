@@ -140,7 +140,7 @@ func _pintar_legado() -> void:
 	var p_local: Dictionary = p.mundo.puntaje_carrera()
 
 	## C4: LA HISTORIA DEL CLUB, antes que la tuya.
-	var hi := p._ui_plantel._historia_de(p.mundo.mi_club())
+	var hi: Dictionary = p._ui_plantel._historia_de(p.mundo.mi_club())
 	var th := p._texto(11, Principal.COL_SUAVE)
 	th.text = Idiomas.t("HISTORIA DEL CLUB")
 	p._lista_legado.add_child(th)

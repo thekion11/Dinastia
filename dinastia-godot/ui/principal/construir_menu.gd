@@ -305,10 +305,10 @@ func _montar_columnas(raiz: VBoxContainer) -> void:
 	p._panel_mercado.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	p._panel_mercado.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_hoja_mercado.add_child(p._panel_mercado)
-	p._panel_mercado.fichar_pedido.connect(p._ui_plantel._abrir_negociacion)
+	p._panel_mercado.fichar_pedido.connect(func(j: Jugador) -> void: p._ui_plantel._abrir_negociacion(j))   ## (A4 memoria) el plantel se crea al usarlo
 	p._panel_mercado.oferta_respondida.connect(p._responder_oferta_mercado)
 	p._panel_mercado.oferta_enviada.connect(p._enviar_oferta_negociacion)
-	p._panel_mercado.negociacion_cancelada.connect(p._ui_plantel._cancelar_negociacion)
+	p._panel_mercado.negociacion_cancelada.connect(func() -> void: p._ui_plantel._cancelar_negociacion())
 	p._panel_mercado.rol_ajustado.connect(p._al_ajustar_rol_neg)
 	p._panel_mercado.campo_ajustado.connect(p._al_ajustar_campo_neg)
 	p._panel_mercado.intercambio_elegido.connect(func(j: Jugador) -> void:

@@ -10,6 +10,9 @@ const PANTALLAS_PEREZOSAS := {
 	"club_vida": "res://ui/pantallas/pantalla_club_vida.gd", "cantera": "res://ui/pantallas/pantalla_cantera.gd",
 	"gente": "res://ui/pantallas/pantalla_gente.gd", "finanzas": "res://ui/pantallas/pantalla_finanzas.gd",
 	"editor": "res://ui/pantallas/pantalla_editor.gd", "identidad": "res://ui/pantallas/pantalla_identidad.gd",
+	## (4-11, A4 memoria antes de la ciudad) también el plantel, la ficha, el despacho, el legado, las opciones y la elección de club.
+	"plantel": "res://ui/pantallas/pantalla_plantel.gd", "ficha": "res://ui/pantallas/pantalla_ficha.gd", "despacho": "res://ui/pantallas/pantalla_despacho.gd",
+	"legado": "res://ui/pantallas/pantalla_legado.gd", "opciones": "res://ui/pantallas/pantalla_opciones.gd", "elegir_club": "res://ui/pantallas/pantalla_elegir_club.gd",
 }
 var _perezosas: Dictionary = {}
 func _pantalla_perezosa(nombre: String) -> Object:
@@ -19,9 +22,12 @@ func _pantalla_perezosa(nombre: String) -> Object:
 ## Para `_perezoso(…)` y los botones: abre la sección SIN crear la pantalla hasta que de verdad se pinte.
 func _abrir_perezosa(nombre: String, seccion: String, contexto: Dictionary = {}) -> void:
 	_pantalla_perezosa(nombre).abrir(seccion, contexto)
-var _ui_plantel := PantallaPlantel.new(self)
-var _ui_ficha := PantallaFicha.new(self)
-var _ui_despacho := PantallaDespacho.new(self)
+var _ui_plantel:
+	get: return _pantalla_perezosa("plantel")
+var _ui_ficha:
+	get: return _pantalla_perezosa("ficha")
+var _ui_despacho:
+	get: return _pantalla_perezosa("despacho")
 var _ui_club_vida:
 	get: return _pantalla_perezosa("club_vida")
 ## (3-11, memoria del menú) Se crea al USARLA: nombrarla y construirla al abrir el menú cargaba el estadio y el partido 3D enteros
@@ -34,11 +40,13 @@ var _ui_club_estadio:
 		return _ui_club_estadio_o
 var _ui_cantera:
 	get: return _pantalla_perezosa("cantera")
-var _ui_legado := PantallaLegado.new(self)
+var _ui_legado:
+	get: return _pantalla_perezosa("legado")
 var _ui_ciudad = CargaCiudad.de("PantallaCiudad").new(self)
 var _ui_editor:
 	get: return _pantalla_perezosa("editor")
-var _ui_opciones := PantallaOpciones.new(self)
+var _ui_opciones:
+	get: return _pantalla_perezosa("opciones")
 var _ui_ajustes := PantallaAjustes.new(self)
 var _ui_identidad:
 	get: return _pantalla_perezosa("identidad")
@@ -344,7 +352,8 @@ var _estilos := EstilosMenu.new(self)
 ## Hubs contextuales y carril de chips: `Hubs` (`ui/menu/hubs.gd`, fase 6 paso 5).
 var _hubs := Hubs.new(self)
 ## Elegir club: `PantallaElegirClub` (fase 6, paso 4).
-var _ui_elegir_club := PantallaElegirClub.new(self)
+var _ui_elegir_club:
+	get: return _pantalla_perezosa("elegir_club")
 ## La jornada de partido (dirigir, cerrar, jugar temporada): `JornadaPartido` (fase 6, paso 7).
 var _jornada_o = null
 var _jornada:
