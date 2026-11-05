@@ -49,6 +49,7 @@ MUT = {
     "fun_formato_y_demarcaciones": ("los millones se escriben con K", sub("nucleo/economia.gd", 'cifra = "%.1fM" % (a / 1000000.0)', 'cifra = "%.1fK" % (a / 1000000.0)')),
     "fun_nativo_datos_aleatorios": ("la rampa en GDScript copia mal el canal verde", sub("visor/ruidos_fondo.gd", "dst[i * 4 + 1] = lut[o + 1]", "dst[i * 4 + 1] = lut[o]")),
     "ren_partido_presupuesto": ("(pendiente: el presupuesto se validó con valores medidos; una mutación cuesta ~3 min de pantalla)", None, "lenta"),
+    "est_propiedades_semillas": ("la victoria suma 2 puntos en la tabla (en 50 mundos distintos)", sub("nucleo/liga.gd", 'a["pts"] += puntos_victoria; a["g"] += 1', 'a["pts"] += 2; a["g"] += 1')),
     "ren_menu_y_mundo_memoria": ("cada mundo generado retiene 80 MB", sub("nucleo/mundo_p3.gd", "func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:\n", "func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:\n\tvar _gran := PackedByteArray()\n\t_gran.resize(80000000)\n\tEngine.set_meta(\"fuga%d\" % Engine.get_meta_list().size(), _gran)\n")),
     "ren_peso_archivos": ("un archivo de datos de 131 MB", ("gordo", "datos/_gordo.bin", 131 * 1048576)),
     "ren_sin_tiempo_en_headless": ("una prueba afirma sobre los FPS sin pantalla", ("crear", "pruebas/_mut_fps.gd", 'extends Node\nfunc _p() -> void:\n\t_comprobar(Engine.get_frames_per_second() > 60, "fps")\n')),

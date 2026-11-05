@@ -312,6 +312,7 @@ pasa "so: vis_referencias_integras" "godot --headless --path . res://pruebas/so/
 pasa "so: ren_menu_y_mundo_memoria" "godot --headless --path . res://pruebas/so/ren_menu_y_mundo_memoria.tscn" "^OK ren_menu_y_mundo_memoria "
 pasa "so: ren_peso_archivos" "godot --headless --path . res://pruebas/so/ren_peso_archivos.tscn" "^OK ren_peso_archivos "
 pasa "so: ren_sin_tiempo_en_headless" "godot --headless --path . res://pruebas/so/ren_sin_tiempo_en_headless.tscn" "^OK ren_sin_tiempo_en_headless "
+pasa "so: est_propiedades_semillas" "godot --headless --path . res://pruebas/so/est_propiedades_semillas.tscn" "^OK est_propiedades_semillas "
 BLOQUE=""
 if [[ "$1" = "todo" ]]; then
   # Reutilizadas lentas (> 45 s cada una)

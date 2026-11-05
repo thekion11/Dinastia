@@ -46,6 +46,15 @@ static func por_so(tabla: Dictionary) -> Variant:
 		return tabla["movil"]
 	return tabla.get("defecto", null)
 
+## Un presupuesto de `pruebas/so/presupuestos.json` para esta prueba y este sistema: `presupuesto("ren_x", "llamadas")`. Número directo o diccionario por sistema.
+static func presupuesto(prueba: String, clave: String) -> float:
+	var d: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://pruebas/so/presupuestos.json"))
+	var v: Variant = ((d as Dictionary).get(prueba, {}) as Dictionary).get(clave, 0)
+	if v is Dictionary:
+		var r: Variant = por_so(v)
+		return float(r if r != null else 0)
+	return float(v)
+
 ## ¿Hay extensión C++ para este sistema y esta arquitectura? Lo dice `bin_nativo/dinastia.gdextension`: Linux (x86_64 y arm64), Windows (x86_64) y
 ## Android (arm64). Web, macOS e iOS usan siempre la versión GDScript.
 static func se_espera_nativo() -> bool:

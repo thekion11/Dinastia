@@ -32,3 +32,4 @@ ren_partido_presupuesto|rendimiento|linux|res://pruebas/so/ren_partido_presupues
 ren_menu_y_mundo_memoria|rendimiento|todos|res://pruebas/so/ren_menu_y_mundo_memoria.tscn|headless
 ren_peso_archivos|rendimiento|todos|res://pruebas/so/ren_peso_archivos.tscn|headless
 ren_sin_tiempo_en_headless|rendimiento|todos|res://pruebas/so/ren_sin_tiempo_en_headless.tscn|headless
+est_propiedades_semillas|estandar|todos|res://pruebas/so/est_propiedades_semillas.tscn|headless
