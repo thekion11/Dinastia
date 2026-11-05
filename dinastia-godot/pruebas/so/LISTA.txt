@@ -1,0 +1,3 @@
+# nombre|familia|sistemas|escena|requiere  — ver herramientas/pruebas_so.py
+com_idiomas_nueve_sin_vacios|comunes|todos|res://pruebas/so/com_idiomas_nueve_sin_vacios.tscn|headless
+com_idiomas_cambio_en_vivo|comunes|todos|res://pruebas/so/com_idiomas_cambio_en_vivo.tscn|headless
