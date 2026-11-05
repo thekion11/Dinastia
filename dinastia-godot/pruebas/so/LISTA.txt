@@ -10,3 +10,8 @@ err_pck_y_pack_ausentes|errores|todos|res://pruebas/so/err_pck_y_pack_ausentes.t
 err_entradas_invalidas|errores|todos|res://pruebas/so/err_entradas_invalidas.tscn|headless
 err_rafaga_entrada|errores|todos|res://pruebas/so/err_rafaga_entrada.tscn|headless
 err_poca_memoria|errores|todos|res://pruebas/so/err_poca_memoria.tscn|headless
+est_calendario_liga|estandar|todos|res://pruebas/so/est_calendario_liga.tscn|headless
+est_economia_invariantes|estandar|todos|res://pruebas/so/est_economia_invariantes.tscn|headless
+est_datos_coherencia|estandar|todos|res://pruebas/so/est_datos_coherencia.tscn|headless
+est_datos_tablas_vs_codigo|estandar|todos|res://pruebas/so/est_datos_tablas_vs_codigo.tscn|headless
+est_partido_simulado_reglas|estandar|todos|res://pruebas/so/est_partido_simulado_reglas.tscn|headless
