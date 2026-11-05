@@ -191,3 +191,31 @@ func _to_string() -> String:
 	if campeon != null:
 		return "%s %s: campeón %s" % [nombre, clave, campeon.nombre]
 	return "%s %s: %s" % [nombre, clave, nombre_de_ronda()]
+
+## --- GUARDADO DE LA FASE DE GRUPOS (5-11, sonda «cargar y seguir») ---------------------------------------------------
+## Antes de esto el guardado solo llevaba vivos/inscritos/ronda/fecha: una partida cargada a mitad del continental perdía los grupos, la tabla y los
+## ocho clasificados (la fase de grupos "se evaporaba" y el azar de esas fechas no se gastaba, así que el futuro cambiaba). Los guardados viejos no
+## traen estas claves y siguen abriendo como antes (grupos vacíos).
+func grupos_a_dic() -> Dictionary:
+	var g: Array = []
+	for grupo: Array in grupos:
+		g.append(grupo.map(func(c: Club) -> String: return c.id))
+	return {"grupos": g, "marcador": marcador.duplicate(true), "de_grupos": _de_grupos.map(func(c: Club) -> String: return c.id)}
+
+func grupos_desde_dic(d: Dictionary, clubes: Dictionary) -> void:
+	grupos.clear()
+	for g: Array in d.get("grupos", []):
+		var fila: Array = []
+		for id: String in g:
+			if clubes.has(id):
+				fila.append(clubes[id])
+		grupos.append(fila)
+	marcador = (d.get("marcador", {}) as Dictionary).duplicate(true)
+	for k: String in marcador:
+		var f: Dictionary = marcador[k]
+		for campo: String in f:
+			f[campo] = int(f[campo])   ## el JSON devuelve decimales
+	_de_grupos.clear()
+	for id: String in d.get("de_grupos", []):
+		if clubes.has(id):
+			_de_grupos.append(clubes[id])

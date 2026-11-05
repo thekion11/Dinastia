@@ -37,7 +37,7 @@ MUT = {
     "est_partido_simulado_reglas": ("el visitante marca 20 goles de más", sub("nucleo/partido.gd", 'return {"local": goles_local, "visita": goles_visita}', 'return {"local": goles_local, "visita": goles_visita + 20}')),
     "int_nativo_por_sistema": ("la extensión C++ no carga aunque debería", sub("nucleo/nativo.gd", 'if OS.get_environment("DINASTIA_SIN_NATIVO") != "1" and ClassDB', "if false and ClassDB")),
     "int_paquetes_y_parches": ("Parches busca otro prefijo que el actualizador", sub("nucleo/parches.gd", 'const PREFIJO := "parche_"', 'const PREFIJO := "otro_"')),
-    "int_flujo_menu_a_guardado": ("cargar no restaura el estado del azar", sub("nucleo/partida.gd", 'Azar._rng.state = int(String(datos["azar"]))', "pass")),
+    "int_flujo_menu_a_guardado": ("cargar no restaura los grupos del continental (la causa real de la divergencia)", sub("nucleo/partida.gd", "t.grupos_desde_dic(fila, m.clubes)", "pass")),
     "int_actualizador_por_sistema": ("el actualizador cree que todo es Android", sub("nucleo/actualizador.gd", 'return "android" if OS.has_feature("android") else "escritorio"', 'return "android"')),
     "vis_partido_forward": ("la referencia del partido es otra pantalla", ("copiar", "pruebas/so/referencias/menu_00_gl_compatibility.jpg", "pruebas/so/referencias/partido_tv_forward_plus.jpg"), "lenta"),
     "vis_partido_compat": ("la referencia del partido es otra pantalla", ("copiar", "pruebas/so/referencias/menu_00_gl_compatibility.jpg", "pruebas/so/referencias/partido_tv_gl_compatibility.jpg"), "lenta"),

@@ -191,6 +191,7 @@ static func _continentales_a_dic(torneos: Dictionary) -> Dictionary:
 			"fecha": t.fecha, "por_grupos": t.por_grupos,
 			"campeon": t.campeon.id if t.campeon else "",
 		}
+		d[k].merge(t.grupos_a_dic())
 	return d
 
 static func _jugador_a_dic_base(j: Jugador) -> Dictionary:

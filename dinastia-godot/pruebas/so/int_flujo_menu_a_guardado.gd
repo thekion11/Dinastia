@@ -56,16 +56,21 @@ func _probar() -> void:
 			n.avanzar_semana()
 			h_carga.append(_huella(n))
 		_comprobar(h_sigue[0] != h0, "esas semanas cambian algo (la prueba no es vacía)")
-		_comprobar(h_carga[0] == h_sigue[0] and h_carga[1] == h_sigue[1], "las 2 semanas siguientes a cargar salen igual que sin guardar")
-		## HALLAZGO (5-11, registrado en PLAN_GENERAL): a partir de la 3.ª semana tras cargar el estado de algún jugador (forma/partidos) deja de
-		## coincidir con el de la partida que siguió sin guardar. Se informa sin fallar para no esconder lo que sí se vigila arriba.
-		var coinciden := 0
-		for i in 4:
-			if h_carga[i] == h_sigue[i]:
-				coinciden += 1
-			else:
-				break
-		print("  INFO  semanas seguidas que coinciden tras cargar: %d de 4" % coinciden)
+		_comprobar(h_carga == h_sigue, "las 4 semanas siguientes a cargar salen IGUAL que sin guardar (antes del 5-11 divergían desde la 2.ª: la fase de grupos del continental no se guardaba)")
+		## La fase de grupos del continental sobrevive al guardado (grupos, tabla y clasificados).
+		var con_grupos := 0
+		var iguales := 0
+		for k: String in m.continentales:
+			var t0: Continental = m.continentales[k]
+			var t1: Continental = n.continentales.get(k)
+			if t1 == null or not t0.por_grupos:
+				continue
+			con_grupos += 1
+			var a0 := t0.grupos_a_dic()
+			var a1 := t1.grupos_a_dic()
+			iguales += int(JSON.stringify(a0) == JSON.stringify(a1) or (t0.fecha > 0 and JSON.stringify(a0["grupos"]) == JSON.stringify(a1["grupos"])))
+		_comprobar(con_grupos >= 1, "el mundo tiene torneos continentales con fase de grupos (%d)" % con_grupos)
+		_comprobar(iguales == con_grupos, "los grupos de los continentales cargados son los mismos que los de la partida que siguió (%d de %d)" % [iguales, con_grupos])
 	Partida.borrar(RANURA)
 	p.queue_free()
 	await _frames(3)
