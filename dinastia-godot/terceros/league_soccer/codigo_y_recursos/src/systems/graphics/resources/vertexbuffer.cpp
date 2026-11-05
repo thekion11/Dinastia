@@ -17,8 +17,11 @@ VertexBuffer::~VertexBuffer() {
   if (vertexBufferID.bufferID != -1) {
     boost::intrusive_ptr<Renderer3DMessage_DeleteVertexBuffer> deleteVertexBuffer(
         new Renderer3DMessage_DeleteVertexBuffer(vertexBufferID));
-    renderer3D->messageQueue.PushMessage(deleteVertexBuffer);
-    deleteVertexBuffer->Wait();
+    try {
+      renderer3D->messageQueue.PushMessage(deleteVertexBuffer);
+      deleteVertexBuffer->Wait();
+    } catch (...) {  // un destructor no debe lanzar excepciones
+    }
 
     if (vertices)
       delete[] vertices;

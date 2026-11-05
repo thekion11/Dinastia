@@ -11,7 +11,7 @@
 # malla reducida al 2% la fila baja a unos cientos de vertices y se pueden poner
 # miles de butacas en un MultiMesh sin despeinar los fotogramas. De lejos, que es
 # donde se ven las gradas, la diferencia no se aprecia.
-import bpy, sys, os
+import bpy, sys, os, math
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 entrada = argv[0]
@@ -44,7 +44,7 @@ for o in list(bpy.data.objects):
     # facetados, y con sombreado suave la butaca sigue leyendose redonda.
     for p in o.data.polygons:
         p.use_smooth = True
-    if escala != 1.0:
+    if not math.isclose(escala, 1.0):
         # La escala hay que APLICARLA a la malla, no dejarla en el nodo: quien la
         # use puede quedarse solo con el Mesh (para un MultiMesh, por ejemplo) y
         # entonces la escala del nodo se pierde. Paso esto una vez: cada "fila de

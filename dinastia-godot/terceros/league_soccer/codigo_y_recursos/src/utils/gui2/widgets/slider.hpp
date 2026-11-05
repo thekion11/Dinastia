@@ -13,6 +13,11 @@ struct Gui2Slider_HelperValue {
   Vector3 color;
   float value;
   Gui2Caption* descriptionCaption;
+  Gui2Slider_HelperValue() = default;
+  Gui2Slider_HelperValue(const Gui2Slider_HelperValue&) = default;
+  Gui2Slider_HelperValue& operator=(const Gui2Slider_HelperValue&) = default;
+  Gui2Slider_HelperValue(Gui2Slider_HelperValue&&) noexcept = default;
+  Gui2Slider_HelperValue& operator=(Gui2Slider_HelperValue&&) noexcept = default;
 };
 
 class Gui2Slider : public Gui2View {

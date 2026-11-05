@@ -5,11 +5,11 @@ parche.json: {"exactas": {"frase en castellano": {"en":..,"pt":..,"fr":..,"it":.
               "patrones": [[regex_es, en, pt, fr, it, de, ca, pl, tr], ...]}
 Toma el candado /tmp/idiomas.lock (varios procesos a la vez), conserva el formato exacto del archivo y no
 sobrescribe claves que ya existen (setdefault). Rechaza entradas a las que les falte algún idioma."""
-import fcntl, json, sys
+import fcntl, json, os, sys, tempfile
 RUTA = "dinastia-godot/datos/idiomas_extra.json"
 LANGS = ["en", "pt", "fr", "it", "de", "ca", "pl", "tr"]
-parche = json.load(open(sys.argv[1], encoding="utf-8"))
-with open("/tmp/idiomas.lock", "w") as cand:
+parche = json.load(open(sys.argv[1], encoding="utf-8"))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+with open(os.path.join(tempfile.gettempdir(), "idiomas.lock"), "w") as cand:
     fcntl.flock(cand, fcntl.LOCK_EX)
     d = json.loads(open(RUTA, encoding="utf-8").read())
     nuevas, malas = 0, []

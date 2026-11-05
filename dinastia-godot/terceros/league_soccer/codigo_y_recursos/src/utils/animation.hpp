@@ -15,12 +15,22 @@ struct CompareCharacterStrings {
 struct KeyFrame {
   Quaternion orientation;
   Vector3 position;
+  KeyFrame() = default;
+  KeyFrame(const KeyFrame&) = default;
+  KeyFrame& operator=(const KeyFrame&) = default;
+  KeyFrame(KeyFrame&&) noexcept = default;
+  KeyFrame& operator=(KeyFrame&&) noexcept = default;
 };
 
 struct WeighedKey {
   KeyFrame keyFrame;
   float influence;  // [0..1]
   int frame;
+  WeighedKey() = default;
+  WeighedKey(const WeighedKey&) = default;
+  WeighedKey& operator=(const WeighedKey&) = default;
+  WeighedKey(WeighedKey&&) noexcept = default;
+  WeighedKey& operator=(WeighedKey&&) noexcept = default;
 };
 
 struct NodeAnimation {
@@ -47,6 +57,11 @@ struct MovementHistoryEntry {
   Vector3 position;
   Quaternion orientation;
   int timeDiff_ms;
+  MovementHistoryEntry() = default;
+  MovementHistoryEntry(const MovementHistoryEntry&) = default;
+  MovementHistoryEntry& operator=(const MovementHistoryEntry&) = default;
+  MovementHistoryEntry(MovementHistoryEntry&&) noexcept = default;
+  MovementHistoryEntry& operator=(MovementHistoryEntry&&) noexcept = default;
 };
 
 using MovementHistory = std::vector<MovementHistoryEntry>;

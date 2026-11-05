@@ -57,7 +57,7 @@ void Gui2Caption::SetTransparency(float transparency) {
 }
 
 void Gui2Caption::Redraw() {
-  std::lock_guard<std::recursive_mutex> textLock(TextRenderMutex());
+  std::lock_guard<std::mutex> textLock(TextRenderMutex());
   int x, y, w, h;
   windowManager->GetCoordinates(x_percent, y_percent, width_percent, height_percent, x, y, w, h);
   int x_margin = 0;
@@ -157,7 +157,7 @@ void Gui2Caption::SetCaption(const std::string& newCaption) {
 }
 
 float Gui2Caption::GetTextWidthPercent(int subStrLength) {
-  std::lock_guard<std::recursive_mutex> textLock(TextRenderMutex());
+  std::lock_guard<std::mutex> textLock(TextRenderMutex());
   int x, y, w, h;
   windowManager->GetCoordinates(x_percent, y_percent, width_percent, height_percent, x, y, w, h);
 

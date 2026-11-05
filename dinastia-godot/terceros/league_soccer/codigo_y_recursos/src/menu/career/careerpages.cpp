@@ -989,7 +989,7 @@ CareerTransferMarketPage::CareerTransferMarketPage(Gui2WindowManager* windowMana
   if (!targets.empty())
     table->SetFocus();
   else
-    btnBids->SetFocus();
+    btnBids->SetFocus(); // NOSONAR(S3584): la tabla pertenece al contenedor padre (AddView)
 
   this->Show();
 }
@@ -1514,7 +1514,7 @@ CareerFreeAgencyPage::CareerFreeAgencyPage(Gui2WindowManager* windowManager,
     int row = 0;
     if (activeSave->freeAgents.empty()) {
       Gui2Caption* empty =
-          new Gui2Caption(windowManager, "caption_fa_empty", 10, 20, 80, 4, TR("career_fa_empty"));
+          new Gui2Caption(windowManager, "caption_fa_empty", 10, 20, 80, 4, TR("career_fa_empty")); // NOSONAR(S3584): el propietario es el singleton/contenedor padre (AddView, Destroy)
       this->AddView(empty);
       empty->Show();
     } else {

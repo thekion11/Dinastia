@@ -117,7 +117,7 @@ struct Pcg32 {
 		state = oldstate * 6364136223846793005ULL + (inc | 1);
 		const uint32_t xorshifted = uint32_t(((oldstate >> 18u) ^ oldstate) >> 27u);
 		const uint32_t rot = uint32_t(oldstate >> 59u);
-		return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
+		return (xorshifted >> rot) | (xorshifted << ((32u - rot) & 31u));
 	}
 	void seed(uint64_t initstate, uint64_t initseq = 1442695040888963407ULL) {
 		state = 0U;

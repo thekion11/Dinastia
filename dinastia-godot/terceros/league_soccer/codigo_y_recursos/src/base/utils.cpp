@@ -42,7 +42,7 @@ s_tree* tree_readblock(std::ifstream& datafile) {
     std::vector<std::string> tokens;
 
     // delete CR character, if it's there
-    size_t ln = strlen(line.c_str()) - 1;
+    size_t ln = line.size() - 1;
     if (ln > 0) {
       if (line.c_str()[ln] == '\r')
         line = line.substr(0, line.length() - 1);

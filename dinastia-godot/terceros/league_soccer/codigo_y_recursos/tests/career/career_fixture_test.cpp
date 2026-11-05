@@ -23,7 +23,7 @@ namespace fs = std::filesystem;
 
 std::string UniqueTempDir(const std::string& label) {
   const char* testName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
-  return (fs::temp_directory_path() / ("league_soccer_" + std::string(testName) + "_" + label))
+  return ((fs::current_path() / "test_tmp") / ("league_soccer_" + std::string(testName) + "_" + label))
       .string();
 }
 

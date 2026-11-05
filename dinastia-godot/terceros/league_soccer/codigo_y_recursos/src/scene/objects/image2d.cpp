@@ -42,8 +42,8 @@ void Image2D::SetImage(boost::intrusive_ptr<Resource<Surface>> image) {
 
   image->resourceMutex.lock();
 
-  position[0] = 0;
-  position[1] = 0;
+  position2d[0] = 0;
+  position2d[1] = 0;
   size[0] = image->GetResource()->GetData()->w;
   size[1] = image->GetResource()->GetData()->h;
 
@@ -69,8 +69,8 @@ boost::intrusive_ptr<Resource<Surface>> Image2D::GetImage() {
 void Image2D::SetPosition(int x, int y) {
   subjectMutex.lock();
 
-  position[0] = x;
-  position[1] = y;
+  position2d[0] = x;
+  position2d[1] = y;
 
   int observersSize = observers.size();
   for (int i = 0; i < observersSize; i++) {
@@ -88,7 +88,7 @@ void Image2D::SetPosition(const Vector3& newPosition, bool updateSpatialData) {
 
 Vector3 Image2D::GetPosition() const {
   subjectMutex.lock();
-  Vector3 tmp(position[0], position[1], 0);
+  Vector3 tmp(position2d[0], position2d[1], 0);
   subjectMutex.unlock();
 
   return tmp;
@@ -297,7 +297,7 @@ void Image2D::DrawSimpleText(const std::string& caption, int x, int y, TTF_Font*
                         (unsigned char)(color.coords[2]), 0};
   SDL_Surface* sdlText = nullptr;
   {
-    std::lock_guard<std::recursive_mutex> textLock(TextRenderMutex());
+    std::lock_guard<std::mutex> textLock(TextRenderMutex());
     sdlText = TTF_RenderUTF8_Blended(font, caption.c_str(), sdlColor);
   }
   if (alpha != 255)

@@ -23,11 +23,11 @@ for a in "$@"; do
     *) ESCENA="$a" ;;
   esac
 done
-if [ -z "$ESCENA" ]; then
+if [[ -z "$ESCENA" ]]; then
   echo "uso: herramientas/captura.sh res://pruebas/captura_x.tscn [--compat] [--png]"
   exit 2
 fi
-if [ "$COMPAT" = "1" ]; then
+if [[ "$COMPAT" = "1" ]]; then
   MOTOR=(--rendering-driver opengl3)
   echo "Renderizador: COMPATIBILITY (móvil/web/motor ligero)"
 else
@@ -44,14 +44,14 @@ MARCA=$(mktemp)
 # RAM; dos a la vez en una máquina de 15 GB hacen que el sistema mate una (código
 # 137). El cerrojo es compartido por todas las sesiones de la máquina.
 CERROJO="${CAPTURA_CERROJO:-/tmp/claude-0/godot_captura.lock}"
-[ -d "$(dirname "$CERROJO")" ] || CERROJO=/tmp/dinastia_captura.lock
+[[ -d "$(dirname "$CERROJO")" ]] || CERROJO=/tmp/dinastia_captura.lock
 # Quien ya lo envuelve en `flock` pone CAPTURA_SIN_CERROJO=1 (si no, se bloquearía).
 CANDADO=(flock -w 3600 "$CERROJO")
-[ -n "$CAPTURA_SIN_CERROJO" ] && CANDADO=()
+[[ -n "$CAPTURA_SIN_CERROJO" ]] && CANDADO=()
 "${CANDADO[@]}" xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . "${MOTOR[@]}" \
   --resolution "${RESOLUCION:-1920x1080}" "$ESCENA"
 codigo=$?
-if [ "$PNG" = "0" ]; then
+if [[ "$PNG" = "0" ]]; then
   python3 -I herramientas/png_a_jpg.py "$MARCA" pruebas
 fi
 rm -f "$MARCA"

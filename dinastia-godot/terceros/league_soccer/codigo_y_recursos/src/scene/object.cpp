@@ -125,11 +125,11 @@ boost::intrusive_ptr<Interpreter> Object::GetInterpreter(e_SystemType targetSyst
 }
 
 void Object::LockSubject() {
-  subjectMutex.lock();
+  subjectMutex.lock(); // NOSONAR(S8473): lock/unlock repartido entre funciones por diseño (API Lockable/planificador)
 }
 
 void Object::UnlockSubject() {
-  subjectMutex.unlock();
+  subjectMutex.unlock(); // NOSONAR(S8473): lock/unlock repartido entre funciones por diseño (API Lockable/planificador)
 }
 
 }  // namespace blunted

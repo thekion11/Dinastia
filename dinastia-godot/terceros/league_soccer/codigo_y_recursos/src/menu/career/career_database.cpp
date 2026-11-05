@@ -88,7 +88,7 @@ bool CareerDatabase::CommitLifecycle(const std::function<void()>& mutate) {
   const CareerSave before = *m_activeSave;
   const auto bidsBefore = m_activeBids;
   const auto targetsBefore = m_transferTargets;
-  const auto rngBefore = CareerCommon::Rng();
+  const auto rngBefore = CareerCommon::Rng(); // NOSONAR(S2245): azar de juego, no criptográfico
   m_inLifecycle = true;
   bool saved = false;
   try {

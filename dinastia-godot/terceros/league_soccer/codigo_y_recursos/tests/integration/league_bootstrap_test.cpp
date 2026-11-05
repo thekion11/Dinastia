@@ -24,7 +24,7 @@ std::uint64_t g_workspaceCounter = 0;
 
 std::filesystem::path MakeUniqueWorkspaceRoot() {
   const auto now = std::chrono::steady_clock::now().time_since_epoch().count();
-  return std::filesystem::temp_directory_path() /
+  return (std::filesystem::current_path() / "test_tmp") /
          ("gf-test-" + std::to_string(now) + "-" + std::to_string(++g_workspaceCounter));
 }
 

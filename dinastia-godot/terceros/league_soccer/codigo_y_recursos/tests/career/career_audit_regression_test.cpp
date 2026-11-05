@@ -171,7 +171,7 @@ TEST(CareerAuditRegression, SeasonRolloverAgesEveryoneOnceAndRefundsExpiredWages
 // without a controlled identity trained every player whose ID was 0.
 TEST(CareerAuditRegression, IndividualTrainingRequiresControlledIdentity) {
   namespace fs = std::filesystem;
-  const fs::path dir = fs::temp_directory_path() / "league_soccer_individual_training_identity";
+  const fs::path dir = (fs::current_path() / "test_tmp") / "league_soccer_individual_training_identity";
   fs::remove_all(dir);
   fs::create_directories(dir);
 
@@ -207,7 +207,7 @@ public:
 
 std::filesystem::path FreshDir(const std::string& name) {
   namespace fs = std::filesystem;
-  const fs::path dir = fs::temp_directory_path() / ("league_soccer_" + name);
+  const fs::path dir = (fs::current_path() / "test_tmp") / ("league_soccer_" + name);
   fs::remove_all(dir);
   fs::create_directories(dir);
   return dir;

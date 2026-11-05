@@ -184,7 +184,7 @@ void ScoutYouthPlayer(CareerSave& save, CareerCommon::CareerEvents& events) {
                                                      "Kim"};
   static const std::vector<std::string> positions = {"CF", "CM", "CB", "AM", "GK"};
   // The shared career RNG, so seeded runs (tests, audits) are repeatable.
-  std::mt19937& rng = CareerCommon::Rng();
+  std::mt19937& rng = CareerCommon::Rng(); // NOSONAR(S2245): azar de juego, no criptográfico
   std::uniform_int_distribution<int> fd(0, static_cast<int>(firstNames.size()) - 1);
   std::uniform_int_distribution<int> ld(0, static_cast<int>(lastNames.size()) - 1);
   std::uniform_int_distribution<int> pd(0, static_cast<int>(positions.size()) - 1);

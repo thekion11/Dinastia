@@ -5,7 +5,7 @@ Sale con 1 si alguna parte pasa de sus topes (llamadas, triángulos, memoria, v�
 import json, sys, os
 aqui = os.path.dirname(os.path.abspath(__file__))
 tope = json.load(open(os.path.join(aqui, "presupuesto_benchmark.json"), encoding="utf-8"))
-inf = json.load(open(sys.argv[1], encoding="utf-8"))
+inf = json.load(open(sys.argv[1], encoding="utf-8"))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
 fallos = 0
 vistas = set()
 for p in inf["partes"]:

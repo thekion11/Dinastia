@@ -5,8 +5,8 @@
 # Toma el candado /tmp/godot.lock (otros procesos comparten la máquina). Código 0 = todas en «FIN. 0 fallos»
 # y sin «SCRIPT ERROR»/«SHADER ERROR».
 cd "$(dirname "$0")/.." || exit 1
-if [ -z "$1" ]; then echo "uso: ideas.sh <nombre>|todo"; ls pruebas/ideas/*.tscn | grep -v '/_' | xargs -n1 basename | sed 's/.tscn//'; exit 0; fi
-if [ "$1" = "todo" ]; then LISTA=$(ls pruebas/ideas/*.tscn | grep -v '/_' | xargs -n1 basename | sed 's/.tscn//'); else LISTA="$1"; fi
+if [[ -z "$1" ]]; then echo "uso: ideas.sh <nombre>|todo"; ls pruebas/ideas/*.tscn | grep -v '/_' | xargs -n1 basename | sed 's/.tscn//'; exit 0; fi
+if [[ "$1" = "todo" ]]; then LISTA=$(ls pruebas/ideas/*.tscn | grep -v '/_' | xargs -n1 basename | sed 's/.tscn//'); else LISTA="$1"; fi
 CODIGO=0
 for N in $LISTA; do
   LOG="/tmp/ideas_$N.txt"

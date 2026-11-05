@@ -30,7 +30,7 @@ public:
   boost::signals2::signal<void(Gui2Dialog*)> sig_OnCancel;
 
 protected:
-  Gui2Grid* grid;
+  Gui2Grid* grid = nullptr;
   bool hasNegativeAction = false;
   bool cancelUsesNegative = true;
 };

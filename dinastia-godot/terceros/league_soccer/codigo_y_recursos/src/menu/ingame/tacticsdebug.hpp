@@ -12,6 +12,11 @@ struct TacticsDebugEntry {
   std::string caption;
   float value[3][2];  // [type][teamid]
   Vector3 color[3][2];
+  TacticsDebugEntry() = default;
+  TacticsDebugEntry(const TacticsDebugEntry&) = default;
+  TacticsDebugEntry& operator=(const TacticsDebugEntry&) = default;
+  TacticsDebugEntry(TacticsDebugEntry&&) noexcept = default;
+  TacticsDebugEntry& operator=(TacticsDebugEntry&&) noexcept = default;
 };
 
 class Gui2TacticsDebug : public Gui2View {

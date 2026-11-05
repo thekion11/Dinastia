@@ -85,7 +85,7 @@ def main():
     muestra = []
     for n, r in enumerate(filas):
         ruta = os.path.join(RAIZ, r["archivo"])
-        if not os.path.exists(ruta):
+        if not os.path.exists(ruta):  # NOSONAR(S6549): herramienta local: ruta de datos del propio repo
             continue
         try:
             im = ImageOps.exif_transpose(Image.open(ruta)).convert("RGB")

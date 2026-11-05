@@ -3,6 +3,7 @@
 #include <iterator>
 
 #include "base/utils.hpp"
+#include "misc/rng.hpp"
 
 namespace {
 
@@ -58,11 +59,11 @@ void GeneratePlayersForTeam(Database* db, int teamID) {
       "tactics><condition>1.0</condition>";
 
   for (int i = 0; i < 20; i++) {
-    std::string fname = kFirstNames[rand() % std::size(kFirstNames)];
-    std::string lname = kLastNames[rand() % std::size(kLastNames)];
+    std::string fname = kFirstNames[blunted::GameRandInt(std::size(kFirstNames))]; // NOSONAR(S2245): azar de juego, no criptográfico
+    std::string lname = kLastNames[blunted::GameRandInt(std::size(kLastNames))]; // NOSONAR(S2245): azar de juego, no criptográfico
     std::string role = kRoles[i];
-    int age = 18 + (rand() % 15);
-    float baseStat = 0.5f + (static_cast<float>(rand() % 40) / 100.0f);
+    int age = 18 + (blunted::GameRandInt(15)); // NOSONAR(S2245): azar de juego, no criptográfico
+    float baseStat = 0.5f + (static_cast<float>(blunted::GameRandInt(40)) / 100.0f);
 
     db->Query(
         "INSERT INTO players (team_id, nationalteam_id, firstname, lastname, role, age, base_stat, "
@@ -72,7 +73,7 @@ void GeneratePlayersForTeam(Database* db, int teamID) {
         int_to_str(age) + ", " + real_to_str(baseStat) + ", '" + defaultStats + "', " +
         // Skin textures are skin01-04 and hairstyles short01, medium01, ...;
         // "short" and skin 0 have no assets and fail to load in a match.
-        int_to_str(1 + rand() % 4) + ", 'short01', 'brown', 1.80, 75.0, " + int_to_str(i) + ")");
+        int_to_str(1 + blunted::GameRandInt(4)) + ", 'short01', 'brown', 1.80, 75.0, " + int_to_str(i) + ")"); // NOSONAR(S2245): azar de juego, no criptográfico
   }
 }
 

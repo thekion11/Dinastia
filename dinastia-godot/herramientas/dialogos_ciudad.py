@@ -115,7 +115,7 @@ for k, o in OF.items():
         reg(o[g])
     for c in o["charla"]:
         reg(c)
-ruta.write_text(json.dumps(extra, ensure_ascii=False, indent="\t"), encoding="utf-8")
+ruta.write_text(json.dumps(extra, ensure_ascii=False, indent="\t"), encoding="utf-8")  # NOSONAR(S2083): herramienta local: ruta de datos del propio repo
 
 # --- GDScript con literales Idiomas.t("...")
 def q(s): return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'

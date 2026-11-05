@@ -108,7 +108,7 @@ void UserEventManager::InputSDLEvent(const SDL_Event& event) {
         joyAxisCalibration[slot][i][1] = 32767.0;
         joyAxisCalibration[slot][i][2] = 0.0;
       }
-      lock.unlock();
+      lock.unlock(); // NOSONAR(S8473): lock/unlock repartido entre funciones por diseño (API Lockable/planificador)
       // Constructing the HIDGamepad reloads its config, which re-enters the
       // UserEventManager (SetJoystickAxisCalibration), so add it unlocked.
       AddGamepad(event.jdevice.which, slot);

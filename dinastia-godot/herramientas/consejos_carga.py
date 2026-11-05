@@ -18,5 +18,5 @@ d = json.loads(ruta.read_text(encoding="utf-8"))
 for t in T:
     for i, lg in enumerate(L[1:], start=1):
         d.setdefault(lg, {})[t[0]] = t[i]
-ruta.write_text(json.dumps(d, ensure_ascii=False, indent="\t"), encoding="utf-8")
+ruta.write_text(json.dumps(d, ensure_ascii=False, indent="\t"), encoding="utf-8")  # NOSONAR(S2083): herramienta local: ruta de datos del propio repo
 print("consejos y mensajes:", len(T))

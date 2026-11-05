@@ -22,6 +22,11 @@ struct ScoutReport {
   std::map<std::string, int> attributeUncertainty;
   int potential = 0;  // 0–100, scout's estimate
   bool recommendBid = false;
+  ScoutReport() = default;
+  ScoutReport(const ScoutReport&) = default;
+  ScoutReport& operator=(const ScoutReport&) = default;
+  ScoutReport(ScoutReport&&) noexcept = default;
+  ScoutReport& operator=(ScoutReport&&) noexcept = default;
 };
 
 class ScoutingNetwork {

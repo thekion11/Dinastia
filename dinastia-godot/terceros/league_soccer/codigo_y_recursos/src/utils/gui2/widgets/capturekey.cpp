@@ -22,10 +22,11 @@ void Gui2CaptureKey::ProcessKeyboardEvent(KeyboardEvent* event) {
   if (event->GetKeyOnce(SDLK_ESCAPE) == true) {
     event->Ignore();
   } else {
-    for (auto ev : event->GetKeyOnce()) {
-      keyID = ev;
+    const auto& keys = event->GetKeyOnce();
+    auto first = keys.begin();
+    if (first != keys.end()) {
+      keyID = *first;
       sig_OnKey(this);
-      break;
     }
   }
 }

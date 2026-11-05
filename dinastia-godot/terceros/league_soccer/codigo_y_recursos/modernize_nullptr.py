@@ -9,7 +9,7 @@ def modernize_file(filepath):
     
     # Replace pointer initialization with nullptr
     # e.g., Player* player = 0;
-    content = re.sub(r'([\w:\*]+\s*\*\s*[\w_]+\s*=\s*)0\s*;', r'\1nullptr;', content)
+    content = re.sub(r'([\w:]+(?:\s*\*)+\s*\w+\s*=\s*)0\s*;', r'\1nullptr;', content)
     
     # Replace return 0; where the function returns a pointer
     # Too dangerous with regex unless I parse signatures, let's skip.

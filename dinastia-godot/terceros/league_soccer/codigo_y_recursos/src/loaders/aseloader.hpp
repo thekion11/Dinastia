@@ -14,6 +14,11 @@ struct s_Material {
   std::string shininess;
   std::string specular_amount;
   Vector3 self_illumination;
+  s_Material() = default;
+  s_Material(const s_Material&) = default;
+  s_Material& operator=(const s_Material&) = default;
+  s_Material(s_Material&&) noexcept = default;
+  s_Material& operator=(s_Material&&) noexcept = default;
 };
 
 class ASELoader : public Loader<GeometryData> {

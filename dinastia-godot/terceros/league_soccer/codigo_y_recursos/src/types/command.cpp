@@ -33,9 +33,7 @@ bool Command::Handle(void* caller) {
 
 void Command::Wait() {
   std::unique_lock<std::mutex> lock(mutex);
-  if (!handled) {
-    processed.wait(lock);
-  }
+  processed.wait(lock, [this] { return handled; });
 }
 
 }  // namespace blunted

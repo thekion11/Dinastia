@@ -115,6 +115,8 @@ jobs:
         working-directory: dinastia-godot
         env:
           VERSION: ${{ inputs.version }}
+          DESDE: ${{ inputs.desde }}
+          SISTEMA: ${{ inputs.sistema }}
           PRESET: ${{ inputs.sistema == 'android' && 'Android' || 'Windows' }}
         run: |
           mkdir -p ../salida
@@ -122,7 +124,7 @@ jobs:
           test -s "../salida/parche_${VERSION}.pck" || { tail -n 30 /tmp/parche.txt; echo "No se generó el parche."; exit 1; }
           grep -o "Storing File: res://[^[:cntrl:]]*" /tmp/parche.txt | sed 's/Storing File: //' | sort -u > ../salida/contenido.txt || true
           cat > ../salida/COMO_INSTALAR.txt <<EOF
-          Parche de Dinastía ${VERSION} (desde ${{ inputs.desde }}, sistema ${{ inputs.sistema }}).
+          Parche de Dinastía ${VERSION} (desde ${DESDE}, sistema ${SISTEMA}).
           Copia parche_${VERSION}.pck en la MISMA carpeta que el ejecutable del juego (o en la carpeta del usuario, subcarpeta «parches»)
           y abre el juego: se aplica solo. Para quitarlo, borra el archivo. Los parches se aplican en orden de nombre.
           EOF
@@ -131,10 +133,13 @@ jobs:
       - name: Resumen
         env:
           AVISOS: ${{ steps.revision.outputs.avisos }}
+          VERSION: ${{ inputs.version }}
+          DESDE: ${{ inputs.desde }}
+          SISTEMA: ${{ inputs.sistema }}
         run: |
           P=$(ls salida/parche_*.pck)
           {
-            echo "### 🩹 Parche ${{ inputs.version }} (desde ${{ inputs.desde }}, ${{ inputs.sistema }})"
+            echo "### 🩹 Parche ${VERSION} (desde ${DESDE}, ${SISTEMA})"
             echo "| | |"; echo "|---|---|"
             echo "| tamaño del parche | $(du -k "$P" | cut -f1) KB |"
             echo "| paquete entero (para comparar) | $(du -k /tmp/base.pck | cut -f1) KB |"
@@ -166,7 +171,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           ETIQUETA: parche-${{ inputs.version }}-${{ inputs.sistema }}
+          VERSION: ${{ inputs.version }}
+          DESDE: ${{ inputs.desde }}
+          SISTEMA: ${{ inputs.sistema }}
         run: |
           gh release create "$ETIQUETA" salida/parche_*.pck salida/COMO_INSTALAR.txt --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --draft \
-            --title "Dinastía ${{ inputs.version }} (parche desde ${{ inputs.desde }}, ${{ inputs.sistema }})" --notes-file salida/COMO_INSTALAR.txt
+            --title "Dinastía ${VERSION} (parche desde ${DESDE}, ${SISTEMA})" --notes-file salida/COMO_INSTALAR.txt
           echo "### 📦 Borrador de Release «$ETIQUETA» creado. Publícalo desde la pestaña Releases." >> "$GITHUB_STEP_SUMMARY"

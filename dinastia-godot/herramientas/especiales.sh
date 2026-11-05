@@ -9,14 +9,14 @@ LOG=$(mktemp)
 # REPARTO (2-11-2026, CI): ESPECIALES_PARTE="i/N" corre solo cada N-ésima prueba (las demás se saltan),
 # para repartir las especiales entre N máquinas a la vez. Sin la variable, corren todas.
 PARTE_I=""; PARTE_N=1
-if [ -n "$ESPECIALES_PARTE" ]; then PARTE_I=${ESPECIALES_PARTE%/*}; PARTE_N=${ESPECIALES_PARTE#*/}; fi
+if [[ -n "$ESPECIALES_PARTE" ]]; then PARTE_I=${ESPECIALES_PARTE%/*}; PARTE_N=${ESPECIALES_PARTE#*/}; fi
 CONT=0
 
 BLOQUE=""
 pasa() {  # nombre, comando, patrón de éxito
-  if [ -n "$ESPECIALES_SOLO" ] && [ "$ESPECIALES_SOLO" != "$BLOQUE" ]; then return; fi
+  if [[ -n "$ESPECIALES_SOLO" ]] && [[ "$ESPECIALES_SOLO" != "$BLOQUE" ]]; then return; fi
   CONT=$((CONT + 1))
-  if [ -n "$PARTE_I" ] && [ $((CONT % PARTE_N)) -ne "$PARTE_I" ]; then return; fi
+  if [[ -n "$PARTE_I" ]] && [[ $((CONT % PARTE_N)) -ne "$PARTE_I" ]]; then return; fi
   local t0=$(date +%s)
   ## (4-11, A4) Cada prueba con SU carpeta user:// vacía, como en el CI: con el guardado de un jugador (idioma, ajustes, partidas)
   ## las pruebas que ponen un idioma antes de abrir el juego medían otra cosa (el guardado manda) y pasaban sin probar lo que decían.
@@ -30,7 +30,7 @@ pasa() {  # nombre, comando, patrón de éxito
 }
 
 # 1. Tamaño del código (norma de 450 líneas)
-if [ -n "$PARTE_I" ] && [ "$PARTE_I" != "0" ]; then :  # (solo la parte 0 hace la norma de líneas)
+if [[ -n "$PARTE_I" ]] && [[ "$PARTE_I" != "0" ]]; then :  # (solo la parte 0 hace la norma de líneas)
 else
 python3 ../herramientas/revisar_lineas.py --todos > "$LOG" 2>&1
 if grep -q "pasan de 450 líneas: 0" "$LOG"; then echo "OK     norma de 450 líneas"; else FALLOS=$((FALLOS + 1)); echo "FALLO  norma de 450 líneas"; head -5 "$LOG"; fi
@@ -280,7 +280,7 @@ pasa "tre_coches" "godot --headless --path . res://pruebas/ideas/tre_coches.tscn
 pasa "zz_alt" "godot --headless --path . res://pruebas/ideas/zz_alt.tscn" "(^|[^0-9])0 fallos"
 pasa "timing_disparo_jugadas" "godot --headless --path . res://pruebas/timing_disparo_jugadas.tscn" "(^|[^0-9])0 fallos"
 BLOQUE=""
-if [ "$1" = "todo" ]; then
+if [[ "$1" = "todo" ]]; then
   # Reutilizadas lentas (> 45 s cada una)
   pasa "estres_tirolibre" "godot --headless --path . res://pruebas/estres_tirolibre.tscn" "(^|[^0-9])0 fallos"
   pasa "cop_prorroga_tanda" "godot --headless --path . res://pruebas/ideas/cop_prorroga_tanda.tscn" "(^|[^0-9])0 fallos"
@@ -337,5 +337,5 @@ fi
   fi
 fi
 rm -f "$LOG"
-[ "$FALLOS" -eq 0 ] && echo "ESPECIALES: todo en orden" || echo "ESPECIALES: $FALLOS con fallos"
-exit $([ "$FALLOS" -eq 0 ] && echo 0 || echo 1)
+[[ "$FALLOS" -eq 0 ]] && echo "ESPECIALES: todo en orden" || echo "ESPECIALES: $FALLOS con fallos"
+exit $([[ "$FALLOS" -eq 0 ]] && echo 0 || echo 1)

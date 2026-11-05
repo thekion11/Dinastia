@@ -32,9 +32,9 @@ public:
 
   inline T* operator->() { return &data; }
 
-  inline void Lock() { mutex.lock(); }
+  inline void Lock() { mutex.lock(); } // NOSONAR(S8473): lock/unlock repartido entre funciones por diseño (API Lockable/planificador)
 
-  inline void Unlock() { mutex.unlock(); }
+  inline void Unlock() { mutex.unlock(); } // NOSONAR(S8473): lock/unlock repartido entre funciones por diseño (API Lockable/planificador)
 
   T data;
 

@@ -65,20 +65,20 @@ void Initialize(Properties& config) {
 
   new EnvironmentManager();
 
-  new SystemManager();
+  new SystemManager(); // NOSONAR(S3584): el propietario es el singleton/contenedor padre (AddView, Destroy)
   systemManager = SystemManager::GetInstancePtr();
 
-  new TaskManager();
+  new TaskManager(); // NOSONAR(S3584): el propietario es el singleton/contenedor padre (AddView, Destroy)
   taskManager = TaskManager::GetInstancePtr();
   taskManager->Initialize();
 
-  new SceneManager();
+  new SceneManager(); // NOSONAR(S3584): el propietario es el singleton/contenedor padre (AddView, Destroy)
   sceneManager = SceneManager::GetInstancePtr();
 
-  new ObjectFactory();
+  new ObjectFactory(); // NOSONAR(S3584): el propietario es el singleton/contenedor padre (AddView, Destroy)
   objectFactory = ObjectFactory::GetInstancePtr();
 
-  new UserEventManager();
+  new UserEventManager(); // NOSONAR(S3584): el propietario es el singleton/contenedor padre (AddView, Destroy)
   userEventManager = UserEventManager::GetInstancePtr();
 
   new ResourceManagerPool();

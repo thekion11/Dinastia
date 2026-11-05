@@ -42,7 +42,7 @@ public:
   void OnChange();
 
 protected:
-  int position[2];
+  int position2d[2];
   int size[2];
   boost::intrusive_ptr<Resource<Surface>> image;
 };

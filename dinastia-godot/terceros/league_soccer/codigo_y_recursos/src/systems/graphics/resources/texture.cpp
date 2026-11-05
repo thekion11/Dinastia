@@ -26,7 +26,10 @@ Texture::Texture() : textureID(-1) {
 Texture::~Texture() {
   // printf("ERASING TEXTURE ID #%i\n", textureID);
 
-  DeleteTexture();
+  try {
+    DeleteTexture();
+  } catch (...) {  // un destructor no debe lanzar excepciones
+  }
   // printf(" [ok]\n");
 }
 

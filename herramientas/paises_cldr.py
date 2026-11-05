@@ -30,7 +30,7 @@ def main():
     iso = dict(re.findall(r'"([A-Z]{3})": "([a-z-]+)"', bloque))
     nombres = {}
     for l in IDIOMAS:
-        d = json.load(open(f"{cldr}/{l}.json", encoding="utf-8"))
+        d = json.load(open(f"{cldr}/{l}.json", encoding="utf-8"))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
         nombres[l] = d["main"][l]["localeDisplayNames"]["territories"]
     juego = json.load(open(RAIZ + "datos/tablas.json", encoding="utf-8")).get("PAIS_SELECCION", {})
     paises, exactas = {}, {}
@@ -49,7 +49,7 @@ def main():
               "Inglaterra, Escocia y Gales a mano). Lo genera herramientas/paises_cldr.py: no editar a mano.",
               "paises": paises}
     open(RAIZ + "datos/paises.json", "w", encoding="utf-8").write(json.dumps(salida, ensure_ascii=False, indent=1) + "\n")
-    json.dump({"exactas": exactas}, open(parche, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    json.dump({"exactas": exactas}, open(parche, "w", encoding="utf-8"), ensure_ascii=False, indent=1)  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
     print(len(paises), "países ·", len(exactas), "nombres al parche")
 
 if __name__ == "__main__":

@@ -52,8 +52,11 @@ inline int fopen_s(FILE** file, const char* filename, const char* mode) {
 inline int strcpy_s(char* dest, size_t destSize, const char* src) {
   if (!dest || !src || destSize == 0)
     return EINVAL;
-  std::strncpy(dest, src, destSize - 1);
-  dest[destSize - 1] = '\0';
+  size_t n = 0;
+  while (n < destSize - 1 && src[n] != '\0')
+    ++n;
+  std::memcpy(dest, src, n);
+  dest[n] = '\0';
   return 0;
 }
 #endif

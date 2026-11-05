@@ -145,6 +145,10 @@ struct TouchInfo {
   float desiredPower;
   Player* targetPlayer;        // null == do not use
   Player* forcedTargetPlayer;  // null == do not use
+  TouchInfo(const TouchInfo&) = default;
+  TouchInfo& operator=(const TouchInfo&) = default;
+  TouchInfo(TouchInfo&&) noexcept = default;
+  TouchInfo& operator=(TouchInfo&&) noexcept = default;
 };
 
 enum e_StrictMovement { e_StrictMovement_False, e_StrictMovement_True, e_StrictMovement_Dynamic };
@@ -202,6 +206,10 @@ struct PlayerCommand {
   int specialVar2;
 
   int modifier;
+  PlayerCommand(const PlayerCommand&) = default;
+  PlayerCommand& operator=(const PlayerCommand&) = default;
+  PlayerCommand(PlayerCommand&&) noexcept = default;
+  PlayerCommand& operator=(PlayerCommand&&) noexcept = default;
 };
 
 using PlayerCommandQueue = std::vector<PlayerCommand>;
@@ -227,6 +235,11 @@ struct FormationEntry {
   Vector3 databasePosition;
   Vector3 position;  // adapted to player role (combination of databasePosition and hardcoded role
                      // position)
+  FormationEntry() = default;
+  FormationEntry(const FormationEntry&) = default;
+  FormationEntry& operator=(const FormationEntry&) = default;
+  FormationEntry(FormationEntry&&) noexcept = default;
+  FormationEntry& operator=(FormationEntry&&) noexcept = default;
 };
 
 struct PlayerImage {
@@ -241,6 +254,11 @@ struct PlayerImage {
   Vector3 movement;
   FormationEntry formationEntry;
   FormationEntry dynamicFormationEntry;
+  PlayerImage() = default;
+  PlayerImage(const PlayerImage&) = default;
+  PlayerImage& operator=(const PlayerImage&) = default;
+  PlayerImage(PlayerImage&&) noexcept = default;
+  PlayerImage& operator=(PlayerImage&&) noexcept = default;
 };
 
 bool PlayerImageDepthSortFunc(const PlayerImage& a, const PlayerImage& b);
@@ -269,6 +287,10 @@ struct ForceSpot {
   float exp;
   float power;
   float scale;  // scaled #meters until effect is almost decimated
+  ForceSpot(const ForceSpot&) = default;
+  ForceSpot& operator=(const ForceSpot&) = default;
+  ForceSpot(ForceSpot&&) noexcept = default;
+  ForceSpot& operator=(ForceSpot&&) noexcept = default;
 };
 
 class PassRating {

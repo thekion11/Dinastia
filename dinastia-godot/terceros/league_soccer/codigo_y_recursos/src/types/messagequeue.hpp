@@ -15,9 +15,10 @@ public:
   virtual ~MessageQueue() {}
 
   inline void PushMessage(T message, bool notify = true) {
-    std::unique_lock<std::mutex> lock(queue.mutex);
-    queue.data.push_back(message);
-    lock.unlock();
+    {
+      std::lock_guard<std::mutex> lock(queue.mutex);
+      queue.data.push_back(message);
+    }
     if (notify)
       NotifyWaiting(e_NotificationSubject_One);
   }
@@ -62,7 +63,7 @@ public:
       // cannot use queue.WaitForNotification, because its scoped lock unlocks on return
       if (queue.data.size() == 0) {
         if (timeout_ms == -1) {
-          messageNotification.wait(lock);
+          messageNotification.wait(lock, [this] { return !queue.data.empty(); });
         } else {
           bool received =
               messageNotification.wait_for(lock, std::chrono::milliseconds(timeout_ms)) !=

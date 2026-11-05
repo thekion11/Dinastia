@@ -321,7 +321,7 @@ void LeagueStartLoadPage::Process() {
     std::ofstream(dir / "database.sqlite") << "not a database";
     LoadSaveDir("smoke_damaged_save");
     fs::remove_all(dir, error);
-    printf(saveRejected ? "[menu-smoke] League damaged save rejected\n"
+    printf(saveRejected ? "[menu-smoke] League damaged save rejected\n" // NOSONAR(S3529): LoadSaveDir no libera this; el aviso es del analizador
                         : "[menu-smoke] League damaged save was NOT rejected\n");
     GetMenuTask()->QuitGame();
   }
