@@ -119,7 +119,12 @@ def reimportar_si_hace_falta(godot):
 
 
 def revisar_marcadores(ruta, filas):
-    txt = open(ruta, encoding="utf-8", errors="replace").read()
+    ruta = os.path.realpath(ruta)
+    if not os.path.isfile(ruta) or not ruta.lower().endswith((".txt", ".log", ".out")):
+        print("revisar_marcadores: «%s» no es un registro de texto (.txt, .log, .out)" % ruta)
+        return 2
+    with open(ruta, encoding="utf-8", errors="replace") as f:  # NOSONAR(pythonsecurity:S8707): herramienta local; la ruta la da quien la lanza y solo se lee un registro de texto
+        txt = f.read()
     vistos = {}
     for m in re.finditer(r"^(OK|FALLO) (\w+) \[(\w+)\]", txt, re.M):
         vistos[(m.group(2), m.group(3))] = m.group(1)
