@@ -1,5 +1,8 @@
 """Base MakeHuman (CC0) -> malla re-posada al esqueleto Quaternius/UE del juego (65 huesos).
 Solo lee datos (obj, json, .target). Devuelve un dict con todo lo que necesitan recursos y escritor."""
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from ruta_segura import ruta_segura
 import json, os
 import numpy as np
 
@@ -9,7 +12,7 @@ DM = 0.1  # decímetros -> metros
 def leer_obj(ruta):
     V, VT, F = [], [], []
     grupo = None
-    for l in open(ruta):  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+    for l in open(ruta_segura(ruta)):
         if l.startswith('v '): V.append([float(x) for x in l.split()[1:4]])
         elif l.startswith('vt '): VT.append([float(x) for x in l.split()[1:3]])
         elif l.startswith('g '): grupo = l.split()[1]
@@ -26,7 +29,7 @@ def quat_m(qq):
 
 
 def esqueleto_q(ruta):
-    q = json.load(open(ruta))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+    q = json.load(open(ruta_segura(ruta)))
     qn = q['nodes']; padre = {}
     for i, n in enumerate(qn):
         for c in n.get('children', []): padre[c] = i
@@ -81,11 +84,11 @@ def construir(data, qgltf, morfos_rel, sexo='m'):
     base = base * DM; base[:, 1] -= base[:, 1].min()
     for k in morfos: morfos[k] = morfos[k] * DM
 
-    sk = json.load(open(os.path.join(data, 'rigs/default.mhskel')))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+    sk = json.load(open(ruta_segura(os.path.join(data, 'rigs/default.mhskel'))))
     def jpos(j): return base[sk['joints'][j]].mean(0)
     def head(b): return jpos(sk['bones'][b]['head'])
     def tail(b): return jpos(sk['bones'][b]['tail'])
-    wmh = json.load(open(os.path.join(data, 'rigs/default_weights.mhw')))['weights']  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+    wmh = json.load(open(ruta_segura(os.path.join(data, 'rigs/default_weights.mhw'))))['weights']
     qpadre, QROT, QPOS = esqueleto_q(qgltf)
 
     POS = {'root': np.zeros(3), 'pelvis': head('root'), 'spine_01': head('spine04'), 'spine_02': head('spine03'),

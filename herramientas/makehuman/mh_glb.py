@@ -1,4 +1,7 @@
 """Escritor glTF binario (.glb) para las piezas del modelo: skin común, morphs dispersos, texturas PNG."""
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from ruta_segura import ruta_segura
 import json, struct
 import numpy as np
 
@@ -97,7 +100,7 @@ class Glb:
         while len(self.blob) % 4: self.blob.append(0)
         g['buffers'][0]['byteLength'] = len(self.blob)
         js = json.dumps(g).encode(); js += b' ' * ((4 - len(js) % 4) % 4)
-        with open(ruta, 'wb') as fo:  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+        with open(ruta_segura(ruta), 'wb') as fo:
             fo.write(struct.pack('<III', 0x46546C67, 2, 12 + 8 + len(js) + 8 + len(self.blob)))
             fo.write(struct.pack('<II', len(js), 0x4E4F534A)); fo.write(js)
             fo.write(struct.pack('<II', len(self.blob), 0x004E4942)); fo.write(self.blob)

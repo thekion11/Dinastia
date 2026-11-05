@@ -6,6 +6,9 @@ Uso (venv con `pip install numpy fast-simplification`):
     python3 herramientas/pelo_drive_extraer.py pelo.obj SALIDA_DIR 73 74 77 79 ...
 No sube nada a LFS: la salida son OBJ de unos KB.
 """
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "herramientas"))
+from ruta_segura import ruta_segura
 import sys, os, collections
 import numpy as np
 import fast_simplification as fs
@@ -17,7 +20,7 @@ def leer(ruta):
     V = []
     grupos = collections.OrderedDict()
     cur = None
-    with open(ruta, "r", errors="ignore") as f:  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+    with open(ruta, "r", errors="ignore") as f:
         for linea in f:
             if linea.startswith("v "):
                 p = linea.split()
@@ -44,9 +47,9 @@ def main():
     if len(sys.argv) < 4:
         print(__doc__)
         sys.exit(1)
-    ruta, salida = sys.argv[1], sys.argv[2]
+    ruta, salida = ruta_segura(sys.argv[1]), ruta_segura(sys.argv[2])
     ids = [int(a) for a in sys.argv[3:]]
-    os.makedirs(salida, exist_ok=True)  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+    os.makedirs(salida, exist_ok=True)
     V, grupos = leer(ruta)
     for n in ids:
         nombre = "samor_1125_%d" % n if "samor_1125_%d" % n in grupos else "samor_1125_%02d" % n
@@ -64,7 +67,7 @@ def main():
         lo, hi = P.min(0), P.max(0)
         ancho = hi[0] - lo[0]
         P = (P - np.array([(lo[0] + hi[0]) / 2.0, hi[1], (lo[2] + hi[2]) / 2.0], dtype=np.float32)) / ancho
-        with open(os.path.join(salida, "pelo_%03d.obj" % n), "w") as f:  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+        with open(os.path.join(salida, "pelo_%03d.obj" % n), "w") as f:
             f.write("# pelo nv toufa grupo %d: ancho 1.0, y=0 arriba, centro x/z. %d -> %d triángulos\n" % (n, antes, len(T)))
             for p in P:
                 f.write("v %.5f %.5f %.5f\n" % tuple(p))

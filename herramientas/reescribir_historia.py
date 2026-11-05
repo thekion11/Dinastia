@@ -15,13 +15,14 @@ Uso (siempre en un clon ESPEJO aparte, nunca en el repo de trabajo):
   git ls-tree -r <rama> | diff ../antes.txt -        # debe salir vacío
 Subir a GitHub exige un «sí, empuja» del dueño (ver docs/PLAN_GENERAL.md).
 """
+from ruta_segura import ruta_segura
 import sys
 import git_filter_repo as fr
 
 MIN_BINARIO = 100_000     # binarios más pesados que esto, si no están en `keep`, se van
 MIN_DATOS = 5_000_000     # cualquier archivo más pesado que esto (mallas de caras…)
 
-keep = set(open(sys.argv[1]).read().split())  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+keep = set(open(ruta_segura(sys.argv[1])).read().split())
 quitados = {"n": 0, "bytes": 0}
 
 def blob_cb(blob, metadata):

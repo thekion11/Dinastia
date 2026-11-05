@@ -8,6 +8,7 @@
 Toma el polígono más grande del país (la parte continental), lo proyecta con cos(latitud),
 lo simplifica (Douglas-Peucker) a unos 18 vértices y lo normaliza a 0-1 en un recuadro cuadrado
 centrado, sin deformarlo, como las siluetas a mano. Imprime las líneas para pegar en SILUETAS."""
+from ruta_segura import ruta_segura
 import json, math, sys
 
 def area(p):
@@ -48,7 +49,7 @@ def silueta(geom, objetivo=18):
     return [((x - ox) / lado, (y - oy) / lado) for x, y in s]
 
 def main():
-    gj = json.load(open(sys.argv[1], encoding="utf-8"))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+    gj = json.load(open(ruta_segura(sys.argv[1]), encoding="utf-8"))
     por_iso = {f["properties"]["ADM0_A3"]: f["geometry"] for f in gj["features"]}
     for par in sys.argv[2:]:
         juego, iso = par.split(":")
