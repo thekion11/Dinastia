@@ -21,5 +21,6 @@ d = json.loads(ruta.read_text(encoding="utf-8"))
 for t in T:
     for i, lg in enumerate(L[1:], start=1):
         d.setdefault(lg, {})[t[0]] = t[i]
-pathlib.Path(ruta_segura(ruta)).write_text(json.dumps(d, ensure_ascii=False, indent="\t"), encoding="utf-8")
+with open(ruta_segura(ruta), "w", encoding="utf-8") as salida:
+    salida.write(json.dumps(d, ensure_ascii=False, indent="\t"))
 print("consejos y mensajes:", len(T))

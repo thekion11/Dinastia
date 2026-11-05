@@ -118,7 +118,8 @@ for k, o in OF.items():
         reg(o[g])
     for c in o["charla"]:
         reg(c)
-pathlib.Path(ruta_segura(ruta)).write_text(json.dumps(extra, ensure_ascii=False, indent="\t"), encoding="utf-8")
+with open(ruta_segura(ruta), "w", encoding="utf-8") as salida:
+    salida.write(json.dumps(extra, ensure_ascii=False, indent="\t"))
 
 # --- GDScript con literales Idiomas.t("...")
 def q(s): return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
