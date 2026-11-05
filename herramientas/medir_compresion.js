@@ -1,6 +1,7 @@
 setTimeout(function(){
   var out=[];
   function di(s){out.push(s);}
+  function fallo(e){di('fallo en el flujo: '+(e&&e.message||e));}
   function fin(){var p=document.createElement('pre');p.id='MEDIDA';p.textContent=out.join('\n');document.body.appendChild(p);}
   try{
     di('CompressionStream disponible: '+(typeof CompressionStream!=='undefined'));
@@ -12,7 +13,7 @@ setTimeout(function(){
     var t0=performance.now();
     var cs=new CompressionStream('deflate-raw');
     var w=cs.writable.getWriter();
-    w.write(new TextEncoder().encode(crudo)); w.close();
+    w.write(new TextEncoder().encode(crudo)).catch(fallo); w.close().catch(fallo);
     new Response(cs.readable).arrayBuffer().then(function(buf){
       var bytes=new Uint8Array(buf);
       di('comprimido       = '+bytes.length+' bytes  ('+(crudo.length/bytes.length).toFixed(1)+'x)');
@@ -30,13 +31,13 @@ setTimeout(function(){
       var w2=ds.writable.getWriter();
       var bin=atob(localStorage.getItem('dinastia_auto')||'');
       var u=new Uint8Array(bin.length); for(var k=0;k<bin.length;k++)u[k]=bin.charCodeAt(k);
-      w2.write(u); w2.close();
+      w2.write(u).catch(fallo); w2.close().catch(fallo);
       new Response(ds.readable).arrayBuffer().then(function(b2){
         var vuelta=new TextDecoder().decode(b2);
         di('ida y vuelta identica: '+(vuelta===crudo));
         di('VEREDICTO: '+(cabe&&vuelta===crudo?'LA COMPRESION RESUELVE EL PROBLEMA':'no basta'));
         fin();
-      });
+      }).catch(function(e){fallo(e);fin();});
     }).catch(function(e){di('fallo comprimiendo: '+e.message);fin();});
   }catch(e){di('EXCEPCION: '+e.message);fin();}
 },400);
