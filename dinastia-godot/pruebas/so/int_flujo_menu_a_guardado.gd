@@ -59,7 +59,13 @@ func _probar() -> void:
 		_comprobar(h_carga[0] == h_sigue[0] and h_carga[1] == h_sigue[1], "las 2 semanas siguientes a cargar salen igual que sin guardar")
 		## HALLAZGO (5-11, registrado en PLAN_GENERAL): a partir de la 3.ª semana tras cargar el estado de algún jugador (forma/partidos) deja de
 		## coincidir con el de la partida que siguió sin guardar. Se informa sin fallar para no esconder lo que sí se vigila arriba.
-		print("  INFO  semanas 3-4 tras cargar coinciden: %s" % str(h_carga[2] == h_sigue[2] and h_carga[3] == h_sigue[3]))
+		var coinciden := 0
+		for i in 4:
+			if h_carga[i] == h_sigue[i]:
+				coinciden += 1
+			else:
+				break
+		print("  INFO  semanas seguidas que coinciden tras cargar: %d de 4" % coinciden)
 	Partida.borrar(RANURA)
 	p.queue_free()
 	await _frames(3)
