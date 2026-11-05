@@ -13,11 +13,20 @@ if (!carpeta || !captura) { console.error("uso: humo_web.mjs <carpeta> <captura.
 const MIME = { ".html": "text/html", ".js": "text/javascript", ".wasm": "application/wasm", ".pck": "application/octet-stream",
   ".png": "image/png", ".json": "application/json", ".css": "text/css", ".svg": "image/svg+xml", ".ico": "image/x-icon" };
 const raiz = path.resolve(carpeta);
+// Solo se sirven los archivos que YA existen en la carpeta del export (lista cerrada al arrancar): la ruta pedida nunca
+// llega al sistema de archivos, así que no hay recorrido de directorios posible.
+const archivos = new Map();
+(function listar(dir, prefijo) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (e.isDirectory()) listar(path.join(dir, e.name), prefijo + e.name + "/");
+    else if (e.isFile()) archivos.set(prefijo + e.name, path.join(dir, e.name));
+  }
+})(raiz, "/");
 const servidor = http.createServer((req, res) => {
-  let ruta = decodeURIComponent(new URL(req.url, "http://x").pathname);
-  if (ruta.endsWith("/")) ruta += "index.html";
-  const archivo = path.join(raiz, ruta);
-  if (!archivo.startsWith(raiz + path.sep) || !fs.existsSync(archivo) || fs.statSync(archivo).isDirectory()) { res.writeHead(404); res.end(); return; }
+  let ruta = new URL(req.url, "http://localhost").pathname;   // NOSONAR(javascript:S5332): base ficticia solo para analizar la URL; el servidor es local (127.0.0.1)
+  if (ruta === "/") ruta = "/index.html";
+  const archivo = archivos.get(ruta);
+  if (archivo === undefined) { res.writeHead(404); res.end(); return; }
   res.writeHead(200, { "Content-Type": MIME[path.extname(archivo)] || "application/octet-stream",
     "Cross-Origin-Opener-Policy": "same-origin", "Cross-Origin-Embedder-Policy": "require-corp" });
   fs.createReadStream(archivo).pipe(res);
@@ -47,7 +56,7 @@ pagina.on("pageerror", (e) => errores.push(`[pageerror] ${e.message}`));
 pagina.on("requestfailed", (r) => { if (!tolerado.test(r.url())) errores.push(`[requestfailed] ${r.url()}`); });
 
 const limite = Date.now() + (Number(process.env.ESPERA_S) || 240) * 1000;
-await pagina.goto(`http://127.0.0.1:${puerto}/index.html`);
+await pagina.goto(`http://127.0.0.1:${puerto}/index.html`);   // NOSONAR(javascript:S5332): servidor local de la prueba
 while (!listo && Date.now() < limite) await pagina.waitForTimeout(1000);
 if (listo) await pagina.waitForTimeout(5000);   // unos segundos más: los errores del menú suelen salir justo después
 fs.mkdirSync(path.dirname(path.resolve(captura)), { recursive: true });

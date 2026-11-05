@@ -156,7 +156,7 @@ jobs:
           cp dinastia-godot/herramientas/humo_web.mjs "$RUNNER_TEMP/pw/"
           cd "$RUNNER_TEMP/pw"
           npm init -y > /dev/null
-          npm install --no-audit --no-fund playwright-core@1.49.1
+          npm install --ignore-scripts --no-audit --no-fund playwright-core@1.49.1
 
       - name: Abrir el juego y esperar el menú
         shell: bash
