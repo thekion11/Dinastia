@@ -22,7 +22,7 @@ Complementa `inventario_pruebas_2026-11-05.md`. Sistemas: **L**inux · **W**indo
 
 ## Mutaciones: cada prueba falla de verdad (5-11, `herramientas/mutaciones_so.py`)
 
-Se rompe a propósito lo que cada prueba vigila, se corre y se deshace. Resultado: **33 de 34 detectadas**; 1 sin mutar (`ren_partido_presupuesto`, 3 min por mutación). Tres pruebas SOBREVIVÍAN a su primera mutación y se reforzaron hasta detectarla. Para repetirlo: `python3 herramientas/mutaciones_so.py [--lentas]`.
+Se rompe a propósito lo que cada prueba vigila, se corre y se deshace. Resultado: **todas detectadas** (las 34 + `est_propiedades_semillas`). Tres pruebas SOBREVIVÍAN a su primera mutación y se reforzaron hasta detectarla. Para repetirlo: `python3 herramientas/mutaciones_so.py [--lentas]`.
 
 | prueba | mutación (lo que se rompe) | resultado |
 |---|---|---|
@@ -44,7 +44,7 @@ Se rompe a propósito lo que cada prueba vigila, se corre y se deshace. Resultad
 | `est_partido_simulado_reglas` | el visitante marca 20 goles de más | DETECTADA |
 | `int_nativo_por_sistema` | la extensión C++ no carga aunque debería | DETECTADA |
 | `int_paquetes_y_parches` | Parches busca otro prefijo que el actualizador | DETECTADA |
-| `int_flujo_menu_a_guardado` | cargar no restaura el estado del azar | DETECTADA (tras reforzarla: sobrevivía) |
+| `int_flujo_menu_a_guardado` | cargar no restaura los grupos del continental (la causa real de la divergencia) | DETECTADA |
 | `fun_azar_puro` | ent(a,b) se pasa del rango | DETECTADA |
 | `fun_calendario_fechas` | la Pascua se calcula con un día de error | DETECTADA |
 | `fun_formato_y_demarcaciones` | los millones se escriben con K | DETECTADA |
@@ -55,7 +55,7 @@ Se rompe a propósito lo que cada prueba vigila, se corre y se deshace. Resultad
 | `vis_menu_pantallas` | la referencia de una pantalla es otra | DETECTADA (tras afinar la tolerancia: sobrevivía) |
 | `vis_pantallas_sin_vacios` | cambiar de pestaña no hace nada | DETECTADA |
 | `vis_referencias_integras` | dos referencias son la misma imagen | DETECTADA |
-| `ren_partido_presupuesto` | (pendiente: el presupuesto se validó con valores medidos; una mutación cuesta ~3 min de pantalla) | no mutada (3 min por mutación; presupuesto validado con valores medidos) |
+| `ren_partido_presupuesto` | el partido dibuja una esfera de 2,9 M de triángulos de más | DETECTADA (mutación hecha el 5-11 en tanda aparte, ~3 min) |
 | `ren_menu_y_mundo_memoria` | cada mundo generado retiene 80 MB | DETECTADA |
 | `ren_peso_archivos` | un archivo de datos de 131 MB | DETECTADA |
 | `ren_sin_tiempo_en_headless` | una prueba afirma sobre los FPS sin pantalla | DETECTADA |
