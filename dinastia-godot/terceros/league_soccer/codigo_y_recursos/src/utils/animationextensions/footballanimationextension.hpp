@@ -9,6 +9,11 @@ struct FootballKeyFrame {
   Quaternion orientation;
   Vector3 position;
   float power;
+  FootballKeyFrame() = default;
+  FootballKeyFrame(const FootballKeyFrame&) = default;
+  FootballKeyFrame& operator=(const FootballKeyFrame&) = default;
+  FootballKeyFrame(FootballKeyFrame&&) noexcept = default;
+  FootballKeyFrame& operator=(FootballKeyFrame&&) noexcept = default;
 };
 
 class FootballAnimationExtension : public AnimationExtension {

@@ -13,6 +13,11 @@ struct Material {
   float shininess;
   float specular_amount;
   Vector3 self_illumination;
+  Material() = default;
+  Material(const Material&) = default;
+  Material& operator=(const Material&) = default;
+  Material(Material&&) noexcept = default;
+  Material& operator=(Material&&) noexcept = default;
 };
 
 }  // namespace blunted

@@ -33,6 +33,11 @@ public:
     Vector3 zoneColor;          // when hasZone
     bool hasTextColor = false;  // otherwise the style's bright colour
     Vector3 textColor;
+    Row() = default;
+    Row(const Row&) = default;
+    Row& operator=(const Row&) = default;
+    Row(Row&&) noexcept = default;
+    Row& operator=(Row&&) noexcept = default;
   };
 
   Gui2Table(Gui2WindowManager* windowManager, const std::string& name, float x_percent,

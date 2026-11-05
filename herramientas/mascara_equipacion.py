@@ -83,7 +83,7 @@ def zonas(x, y):
 
 def main():
     g = json.load(open(MODELO, encoding="utf-8"))
-    binario = open(os.path.join(DIR, g["buffers"][0]["uri"]), "rb").read()
+    binario = open(os.path.join(DIR, g["buffers"][0]["uri"]), "rb").read()  # NOSONAR(S2083): herramienta local: ruta de datos del propio repo
     prim = None
     for m in g["meshes"]:
         for p in m["primitives"]:

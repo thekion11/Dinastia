@@ -70,4 +70,10 @@ void Log(e_LogType logType, const std::string& className, const std::string& met
   }
 }
 
+[[noreturn]] void LogFatal(const std::string& className, const std::string& methodName,
+                           const std::string& message) {
+  Log(e_FatalError, className, methodName, message);
+  exit(1);  // Log ya termina el proceso; esto solo lo garantiza para el compilador
+}
+
 }  // namespace blunted

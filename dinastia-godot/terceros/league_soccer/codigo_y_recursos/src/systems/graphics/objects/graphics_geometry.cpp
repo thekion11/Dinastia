@@ -193,7 +193,7 @@ void GraphicsGeometry_GeometryInterpreter::OnLoad(boost::intrusive_ptr<Geometry>
   std::vector<unsigned int> indicesTest;
   int indicesSize = 0;
   if (!alreadyThere) {
-    caller->vertexBuffer->resourceMutex.lock();
+    caller->vertexBuffer->resourceMutex.lock(); // NOSONAR(S8473): lock/unlock repartido entre funciones por diseño (API Lockable/planificador)
     for (unsigned int i = 0; i < triangleMeshes.size(); i++) {
       verticesDataSize += triangleMeshes[i].verticesDataSize;
       indicesSize += triangleMeshes[i].indices.size();
@@ -233,7 +233,7 @@ void GraphicsGeometry_GeometryInterpreter::OnLoad(boost::intrusive_ptr<Geometry>
       }
       */
 
-      for (int e = 0; e < GetTriangleMeshElementCount(); e++) {
+      for (int e = 0; verticesDataSize > 0 && e < GetTriangleMeshElementCount(); e++) {
         // printf("%s: e: %i, verticesDataSize: %i, startIndex: %i,
         // triangleMeshes[i].verticesDataSize: %i\n", geometry->GetName().c_str(), e,
         // verticesDataSize, startIndex, triangleMeshes[i].verticesDataSize);
@@ -275,7 +275,7 @@ void GraphicsGeometry_GeometryInterpreter::OnLoad(boost::intrusive_ptr<Geometry>
   if (!alreadyThere) {
     caller->vertexBuffer->GetResource()->SetTriangleMesh(vertices, verticesDataSize, indices);
     caller->vertexBuffer->GetResource()->CreateOrUpdateVertexBuffer(renderer3D, dynamicBuffer);
-    caller->vertexBuffer->resourceMutex.unlock();
+    caller->vertexBuffer->resourceMutex.unlock(); // NOSONAR(S8473): lock/unlock repartido entre funciones por diseño (API Lockable/planificador)
   }
 }
 
@@ -333,7 +333,7 @@ void GraphicsGeometry_GeometryInterpreter::OnUpdateGeometry(boost::intrusive_ptr
     startIndex += currentSize;
     currentSize = 0;
 
-    for (int e = 0; e < GetTriangleMeshElementCount(); e++) {
+    for (int e = 0; verticesDataSize > 0 && e < GetTriangleMeshElementCount(); e++) {
       // printf("%s: e: %i, verticesDataSize: %i, startIndex: %i,
       // triangleMeshes[i].verticesDataSize: %i\n", geometry->GetName().c_str(), e,
       // verticesDataSize, startIndex, triangleMeshes[i].verticesDataSize);

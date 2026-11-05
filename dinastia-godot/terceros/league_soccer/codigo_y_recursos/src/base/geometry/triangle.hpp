@@ -14,7 +14,7 @@ public:
   Triangle(const Vector3& v1, const Vector3& v2, const Vector3& v3);
   virtual ~Triangle();
 
-  virtual bool operator==(const Triangle& triangle) const;
+  bool operator==(const Triangle& triangle) const;
 
   virtual void SetVertex(unsigned char pos, const real x, const real y, const real z);
   virtual void SetVertex(unsigned char pos, const Vector3& vec);

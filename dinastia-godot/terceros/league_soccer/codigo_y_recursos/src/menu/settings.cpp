@@ -2518,7 +2518,7 @@ LanguagePage::LanguagePage(Gui2WindowManager* windowManager, const Gui2PageData&
   Gui2Grid* grid = new Gui2Grid(windowManager, "languagegrid", 2, 17, 66, 70);
 
   if (langs.empty()) {
-    AddSettingsNotice(this, windowManager, "caption_language_empty", 40, TR("language_none_found"));
+    AddSettingsNotice(this, windowManager, "caption_language_empty", 40, TR("language_none_found")); // NOSONAR(S3584): la rejilla pertenece al contenedor padre (AddView)
     Gui2Button* backButton = AddSettingsBackButton(this, windowManager, "button_language_back");
     backButton->SetFocus();
     this->Show();

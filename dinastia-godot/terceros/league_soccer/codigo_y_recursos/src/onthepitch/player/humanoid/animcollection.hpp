@@ -118,6 +118,11 @@ struct Quadrant {
   Vector3 position;
   e_Velocity velocity;
   radian angle;
+  Quadrant() = default;
+  Quadrant(const Quadrant&) = default;
+  Quadrant& operator=(const Quadrant&) = default;
+  Quadrant(Quadrant&&) noexcept = default;
+  Quadrant& operator=(Quadrant&&) noexcept = default;
 };
 
 void FillNodeMap(boost::intrusive_ptr<Node> targetNode,

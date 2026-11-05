@@ -346,10 +346,7 @@ bool Triangle::IntersectsLine(const Line& u_ray, Vector3& intersectVec) const {
   a = -normals[0].GetDotProduct(w0);
   b = normals[0].GetDotProduct(dir);
   if (fabs(b) < 0.000001f) {  // ray is parallel to triangle plane
-    if (a == 0)               // ray lies in triangle plane
-      return false;           // 2
-    else
-      return false;  // ray disjoint from plane
+    return false;  // ray lies in the triangle plane (2) or is disjoint from it
   }
 
   // get intersect point of ray with triangle plane

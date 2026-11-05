@@ -21,7 +21,7 @@ import git_filter_repo as fr
 MIN_BINARIO = 100_000     # binarios más pesados que esto, si no están en `keep`, se van
 MIN_DATOS = 5_000_000     # cualquier archivo más pesado que esto (mallas de caras…)
 
-keep = set(open(sys.argv[1]).read().split())
+keep = set(open(sys.argv[1]).read().split())  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
 quitados = {"n": 0, "bytes": 0}
 
 def blob_cb(blob, metadata):

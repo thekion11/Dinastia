@@ -55,7 +55,7 @@ GIRO_ESPEJO = 18.0  # grados de giro a partir de los que se usa la mitad cercana
 
 def leer_obj(ruta):
     v, t = [], []
-    for linea in open(ruta, encoding="utf-8"):
+    for linea in open(ruta, encoding="utf-8"):  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
         p = linea.split()
         if not p:
             continue
@@ -329,7 +329,7 @@ def analizar(original, caja, cara, uv, forma, lazo, escala, seg, mp, cabeceo=0.0
         # Rizo: lo irregular que es el borde de arriba del pelo (un afro o un
         # rizado hacen bultos; el liso, una curva suave). La textura no servía:
         # un afro negro casi no tiene brillo.
-        cols = np.where(dentro.any(0))[0]
+        cols = np.nonzero(dentro.any(0))[0]
         if len(cols) > 20:
             techo = np.array([np.argmax(dentro[:, x]) for x in cols], dtype=float)
             suave = np.convolve(techo, np.ones(15) / 15, mode="same")

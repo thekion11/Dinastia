@@ -5,7 +5,7 @@ import sys, glob, os
 from PIL import Image, ImageDraw, ImageFont
 carpeta = sys.argv[1]
 por = int(sys.argv[2]) if len(sys.argv) > 2 else 6
-fotos = sorted(f for f in glob.glob(os.path.join(carpeta, "[0-9]*.jpg")))
+fotos = sorted(f for f in glob.glob(os.path.join(carpeta, "[0-9]*.jpg")))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
 cols, ancho = 2, 960
 try:
     fuente = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 22)

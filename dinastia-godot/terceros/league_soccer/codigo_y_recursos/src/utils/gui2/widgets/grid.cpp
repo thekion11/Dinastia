@@ -254,7 +254,8 @@ void Gui2Grid::ProcessWindowingEvent(WindowingEvent* event) {
     Gui2View* provisionalTarget = nullptr;
     bool selectableFound = false;
     int remainingCells = std::max(1, rows * cols);
-    while (!selectableFound && !movedOutOfGrid && remainingCells-- > 0) {
+    while (!selectableFound && !movedOutOfGrid && remainingCells > 0) {
+      --remainingCells;
       provisionalSelectedRow += yoffset;
 
       if (rowWrap) {

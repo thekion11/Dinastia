@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include "misc/rng.hpp"
 
 static const char* kFirstNames[] = {"James", "Lucas", "Marco",  "Ivan",
                                     "Pedro", "Luca",  "Carlos", "Sergio"};
@@ -26,11 +27,11 @@ void DraftSystem::GenerateProspects(int /*year*/, int count) {
   for (int i = 0; i < count; ++i) {
     DraftProspect p;
     p.prospectID = m_nextProspectID++;
-    p.firstName = kFirstNames[std::rand() % 8];
-    p.lastName = kLastNames[std::rand() % 8];
-    p.age = 17 + (std::rand() % 3);
-    p.position = kPositions[std::rand() % 9];
-    p.actualRating = 45 + (std::rand() % 40);
+    p.firstName = kFirstNames[blunted::GameRandInt(8)]; // NOSONAR(S2245): azar de juego, no criptográfico
+    p.lastName = kLastNames[blunted::GameRandInt(8)]; // NOSONAR(S2245): azar de juego, no criptográfico
+    p.age = 17 + (blunted::GameRandInt(3)); // NOSONAR(S2245): azar de juego, no criptográfico
+    p.position = kPositions[blunted::GameRandInt(9)]; // NOSONAR(S2245): azar de juego, no criptográfico
+    p.actualRating = 45 + (blunted::GameRandInt(40));
     p.scoutGrade = GradeFromRating(p.actualRating);
     p.projectedPick = i + 1;
     m_prospects.push_back(p);

@@ -11,8 +11,8 @@ class Renderer3D;
 struct VertexBufferID {
   VertexBufferID() { bufferID = -1; }
   int bufferID;  // -1 if uninitialized
-  unsigned int vertexArrayID;
-  unsigned int elementArrayID;
+  unsigned int vertexArrayID = 0;
+  unsigned int elementArrayID = 0;
 };
 
 class VertexBuffer {

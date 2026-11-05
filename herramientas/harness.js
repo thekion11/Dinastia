@@ -2,7 +2,7 @@
   /* Temporadas por carrera. El protocolo largo del usuario es 3x10, pero cada
      temporada cuesta ~365 pasos de reloj sobre 384 clubes: 30 temporadas no
      terminaban nunca en headless. Se puede subir con ?anios=10 en la URL. */
-  var ANIOS=(function(){var m=location.search.match(/anios=(\d+)/);return m?parseInt(m[1],10):3;})();
+  var ANIOS=(function(){var m=location.search.match(/anios=(\d+)/);return m?Number.parseInt(m[1],10):3;})();
   var out=[];
   window.onerror=function(m,s,l,c){out.push('ERR '+m+' @'+l+':'+c);};
   function log(x){out.push(x);}
@@ -43,7 +43,7 @@
     log('');
     log('===== CARRERA: '+nom+' =====');
     var r=seguro('arranque '+nom,function(){
-      difSel='normal';rolSel=rol;desafiosSel=[];
+      difSel='normal';rolSel=rol;desafiosSel=[]; // NOSONAR(S2703): asigna a la variable global de la página probada; var crearía una local
       nuevaPartida('c1','Tester');
       G.miClub='c1';G.rol=rol;
       if(rol!=='dt'&&!G.dtEmp)G.dtEmp={nombre:'DT Prueba',estilo:'motivador'};

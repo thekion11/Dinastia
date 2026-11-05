@@ -499,7 +499,8 @@ bool Referee::CheckFoul() {
       buffer.restartPos =
           Vector3((pitchHalfW - 11.0) * foul.foulPlayer->GetTeam()->GetSide(), 0, 0);
     }
-    buffer.teamID = foul.foulVictim->GetTeam()->GetID();
+    if (foul.foulVictim)
+      buffer.teamID = foul.foulVictim->GetTeam()->GetID();
     buffer.active = true;
     std::string spamMessage = Localization::GetInstance().Translate("ingame_foul") + "!";
     if (foul.foulType == 2) {

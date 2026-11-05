@@ -11,7 +11,7 @@
 set -e
 cd "$(dirname "$0")/../nativo"
 COMMIT_GODOT_CPP=e103d34
-if [ ! -d godot-cpp ]; then
+if [[ ! -d godot-cpp ]]; then
   git clone -q https://github.com/godotengine/godot-cpp godot-cpp
 fi
 git -C godot-cpp fetch -q --depth 1 origin "$COMMIT_GODOT_CPP" 2>/dev/null || true
@@ -19,7 +19,7 @@ git -C godot-cpp checkout -q "$COMMIT_GODOT_CPP"
 PLATAFORMAS="${1:-linux windows}"
 for p in $PLATAFORMAS; do
   for t in template_debug template_release; do
-    if [ "$p" = "android" ]; then
+    if [[ "$p" = "android" ]]; then
       ## Con ANDROID_HOME vacío godot-cpp usa ANDROID_NDK_ROOT (el NDK que haya, sin fijar versión).
       scons -j"$(nproc)" GODOT_CPP=godot-cpp platform=android arch=arm64 target="$t" api_version=4.7 ANDROID_HOME=
     else

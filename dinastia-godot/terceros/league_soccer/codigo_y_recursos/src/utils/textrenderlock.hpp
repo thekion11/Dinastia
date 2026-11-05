@@ -9,8 +9,8 @@
 
 namespace blunted {
 
-inline std::recursive_mutex& TextRenderMutex() {
-  static std::recursive_mutex mutex;
+inline std::mutex& TextRenderMutex() {
+  static std::mutex mutex;
   return mutex;
 }
 

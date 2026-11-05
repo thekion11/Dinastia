@@ -53,10 +53,13 @@ GamePage::~GamePage() {
     if (Verbose())
       printf("disconnecting signals\n");
 
-    conn_MatchPhaseChange.disconnect();
-    conn_ShortReplayMoment.disconnect();
-    conn_ExtendedReplayMoment.disconnect();
-    conn_GameOver.disconnect();
+    try {
+      conn_MatchPhaseChange.disconnect();
+      conn_ShortReplayMoment.disconnect();
+      conn_ExtendedReplayMoment.disconnect();
+      conn_GameOver.disconnect();
+    } catch (...) {  // un destructor no debe lanzar excepciones
+    }
 
     // Any page replacing this one is an overlay (pause, replay, half time,
     // full time): hide the radar and player panels under it. Look the match

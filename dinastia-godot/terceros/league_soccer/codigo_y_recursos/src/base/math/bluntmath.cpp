@@ -10,7 +10,7 @@ unsigned int max_uint;
 
 std::mutex randMutex;
 
-std::mt19937 rng_engine;
+std::mt19937 rng_engine; // NOSONAR(S2245): azar de juego, no criptográfico
 std::uniform_real_distribution<float> rng_dist(0.0f, 1.0f);
 
 real clamp(const real value, const real min, const real max) {

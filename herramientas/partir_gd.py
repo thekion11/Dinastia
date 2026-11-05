@@ -86,12 +86,12 @@ def profundidad(codigo):
 
 
 RE_FUNC = re.compile(r"^(static\s+)?func\s+(\w+)")
-RE_VAR = re.compile(r"^(?:@\w+(?:\(.*?\))?\s+)*(?:static\s+)?var\s+(\w+)")
+RE_VAR = re.compile(r"^(?:@\w+(?:\(.*?\))?\s+)*+(?:static\s+)?var\s+(\w+)")
 RE_CONST = re.compile(r"^const\s+(\w+)")
 RE_SIGNAL = re.compile(r"^signal\s+(\w+)")
 RE_ENUM = re.compile(r"^enum\b")
 RE_CLASE = re.compile(r"^class\s+(\w+)")
-RE_CLASSNAME = re.compile(r"^class_name\s+(\w+)(?:\s+extends\s+(.+?))?\s*$")
+RE_CLASSNAME = re.compile(r"^class_name\s+(\w+)(?:\s+extends\s+(\S.*?))?\s*$")
 RE_EXTENDS = re.compile(r"^extends\b")
 RE_ANOT_SOLA = re.compile(r"^@\w+(?:\(.*\))?\s*$")
 RE_HEADER_ANOT = re.compile(r"^@(tool|icon|static_unload)\b")
@@ -213,7 +213,7 @@ def locales_de(lineas):
     texto = "\n".join(enmascarar(l)[0] for l in lineas)
     nombres = set(re.findall(r"\bvar\s+(\w+)", texto))
     nombres |= set(re.findall(r"\bfor\s+(\w+)\s+in\b", texto))
-    for m in re.finditer(r"\bfunc\s*\w*\s*\((.*?)\)", texto, re.S):
+    for m in re.finditer(r"\bfunc(?:\s+\w*)?\s*\((.*?)\)", texto, re.S):
         for p in m.group(1).split(","):
             p = p.strip().split(":")[0].split("=")[0].strip()
             if p:
@@ -224,7 +224,7 @@ def locales_de(lineas):
 # ---------------------------------------------------------------- partir
 
 def partir(ruta, aplicar):
-    with open(ruta, encoding="utf-8") as f:
+    with open(ruta, encoding="utf-8") as f:  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
         lineas = f.read().split("\n")
     if lineas and lineas[-1] == "":
         lineas.pop()
@@ -350,7 +350,7 @@ def partir(ruta, aplicar):
             avisos.append(f"capa {k}: {len(cuerpo)} líneas")
     if aplicar:
         for destino, cuerpo in ficheros:
-            with open(destino, "w", encoding="utf-8", newline="\n") as f:
+            with open(destino, "w", encoding="utf-8", newline="\n") as f:  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
                 f.write("\n".join(cuerpo).rstrip("\n") + "\n")
     return {"capas": n, "avisos": avisos, "cambios": cambios,
             "mayor": max(len(c) for _, c in ficheros), "ficheros": [d for d, _ in ficheros]}

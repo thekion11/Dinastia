@@ -420,6 +420,11 @@ struct CareerSave {
 
   LeagueExpansionSettings leagueSettings;
   CustomLeagueConfig customLeague;
+  CareerSave() = default;
+  CareerSave(const CareerSave&) = default;
+  CareerSave& operator=(const CareerSave&) = default;
+  CareerSave(CareerSave&&) noexcept = default;
+  CareerSave& operator=(CareerSave&&) noexcept = default;
 };
 
 // Standalone multi-save registry (indexed by saveID) with promotion/relegation

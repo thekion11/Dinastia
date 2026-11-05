@@ -26,6 +26,11 @@ struct MaterializedTriangleMesh {
   */
 
   std::vector<unsigned int> indices;
+  MaterializedTriangleMesh() = default;
+  MaterializedTriangleMesh(const MaterializedTriangleMesh&) = default;
+  MaterializedTriangleMesh& operator=(const MaterializedTriangleMesh&) = default;
+  MaterializedTriangleMesh(MaterializedTriangleMesh&&) noexcept = default;
+  MaterializedTriangleMesh& operator=(MaterializedTriangleMesh&&) noexcept = default;
 };
 
 class GeometryData {

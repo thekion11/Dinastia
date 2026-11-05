@@ -31,7 +31,8 @@ void VerifyLoad(const std::string& name, size_t sampleBytes, bool metadata) {
     const unsigned char tail[] = {'J', 'U', 'N', 'K', 4, 0, 0, 0, 9, 8, 7, 6};
     bytes.insert(bytes.end(), std::begin(tail), std::end(tail));
   }
-  const auto path = std::filesystem::temp_directory_path() / name;
+  std::filesystem::create_directories(std::filesystem::current_path() / "test_tmp");
+  const auto path = (std::filesystem::current_path() / "test_tmp") / name;
   struct Cleanup {
     std::filesystem::path path;
     ~Cleanup() {

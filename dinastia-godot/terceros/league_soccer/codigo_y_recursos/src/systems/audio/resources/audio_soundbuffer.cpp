@@ -9,7 +9,10 @@ AudioSoundBuffer::AudioSoundBuffer() : audioSoundBufferID(-1) {
 }
 
 AudioSoundBuffer::~AudioSoundBuffer() {
-  DeleteAudioSoundBuffer();
+  try {
+    DeleteAudioSoundBuffer();
+  } catch (...) {  // un destructor no debe lanzar excepciones
+  }
 }
 
 void AudioSoundBuffer::SetAudioRenderer(AudioRenderer* renderer) {
