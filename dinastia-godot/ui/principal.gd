@@ -9,8 +9,6 @@ var _hijos_base: Dictionary = {}
 
 func _ready() -> void:
 	super()
-	if OS.has_feature("web") or OS.has_feature("android"):
-		print("DINASTIA_MENU_LISTO")   ## señal de las pruebas de humo (Web: consola del navegador; Android: logcat). Solo en esas dos plataformas.
 	add_child(SalidaGuardada.new(self))   ## cerrar la ventana / «atrás» / pausa en Android: ¿guardar antes de salir?
 	for h: Node in get_children():
 		_hijos_base[h.get_instance_id()] = true

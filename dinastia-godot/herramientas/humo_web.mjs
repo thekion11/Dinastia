@@ -1,5 +1,5 @@
 // Prueba de humo del export Web (5-11-2026): sirve la carpeta exportada, la abre en Chromium y espera la señal
-// «DINASTIA_MENU_LISTO» (ui/principal.gd, solo en Web y Android). Falla si hay errores de consola o de página.
+// «DINASTIA_MENU_LISTO» (ui/inicio.gd, solo en Web y Android). Falla si hay errores de consola o de página.
 //   node humo_web.mjs <carpeta_del_export> <captura.jpg>
 // Entorno: CHROME_PATH (ejecutable; si falta, usa el Chrome del sistema con channel «chrome»), ESPERA_S (por defecto 240),
 //          RUIDO_OK (regex de mensajes de error tolerados, además de favicon).
