@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Añade a datos/idiomas_extra.json las traducciones de los consejos de la
 pantalla de carga (ui/componentes/pantalla_carga.gd). Orden: es,en,pt,fr,it,de,ca,pl,tr."""
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "herramientas"))
+from ruta_segura import ruta_segura
 import json, pathlib
 L = ["es","en","pt","fr","it","de","ca","pl","tr"]
 T = [
@@ -18,5 +21,6 @@ d = json.loads(ruta.read_text(encoding="utf-8"))
 for t in T:
     for i, lg in enumerate(L[1:], start=1):
         d.setdefault(lg, {})[t[0]] = t[i]
-ruta.write_text(json.dumps(d, ensure_ascii=False, indent="\t"), encoding="utf-8")  # NOSONAR(S2083): herramienta local: ruta de datos del propio repo
+with open(ruta_segura(ruta), "w", encoding="utf-8") as salida:
+    salida.write(json.dumps(d, ensure_ascii=False, indent="\t"))
 print("consejos y mensajes:", len(T))

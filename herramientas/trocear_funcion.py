@@ -10,6 +10,7 @@ un Array. Un `return` dentro de un tramo se convierte en `[true, valor]` y el ll
 Si no puede deducir el tipo de una variable que cruza, la deja sin tipo (y avisa); `--tipos`
 la fija a mano. Sin `--aplicar` solo informa.
 """
+from ruta_segura import ruta_segura
 import re
 import sys
 
@@ -124,7 +125,7 @@ def main():
             pos.append(a)
         i += 1
     ruta, nombre = pos[0], pos[1]
-    lineas = open(ruta, encoding="utf-8").read().split("\n")  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+    lineas = open(ruta_segura(ruta), encoding="utf-8").read().split("\n")
     s = next(i for i, l in enumerate(lineas) if re.match(r"(static\s+)?func\s+" + re.escape(nombre) + r"\(", l))
     e = next((i for i in range(s + 1, len(lineas)) if re.match(r"(static\s+)?func\s", lineas[i])
               or (lineas[i] and lineas[i][0] not in " \t#" and not lineas[i].startswith(")"))), len(lineas))
@@ -272,7 +273,7 @@ def main():
         print("  variables SIN tipo deducido (viajan sin tipo; fíjalas con --tipos si hace falta):", ", ".join(todos_tipos_dudosos))
     if aplicar:
         nuevo = lineas[:s] + nuevas + llamador + lineas[e:]
-        open(ruta, "w", encoding="utf-8", newline="\n").write("\n".join(nuevo))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+        open(ruta_segura(ruta), "w", encoding="utf-8", newline="\n").write("\n".join(nuevo))
         print("  escrito")
 
 

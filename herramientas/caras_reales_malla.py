@@ -29,6 +29,7 @@ Salida:
 
     python3 herramientas/caras_reales_malla.py face_landmarker.task canonical_face_model.obj
 """
+from ruta_segura import ruta_segura
 import base64
 import colorsys
 import json
@@ -55,7 +56,7 @@ GIRO_ESPEJO = 18.0  # grados de giro a partir de los que se usa la mitad cercana
 
 def leer_obj(ruta):
     v, t = [], []
-    for linea in open(ruta, encoding="utf-8"):  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+    for linea in open(ruta_segura(ruta), encoding="utf-8"):
         p = linea.split()
         if not p:
             continue

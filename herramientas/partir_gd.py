@@ -16,6 +16,7 @@ la ve desde la base) se reescribe con su tipo completo:  `(self as Clase).f()`  
 Lo que NO puede hacer solo (lo avisa): funciones de más de LIMITE líneas, y scripts sin
 `class_name` con llamadas hacia capas altas.
 """
+from ruta_segura import ruta_segura
 import os
 import re
 import subprocess
@@ -91,7 +92,7 @@ RE_CONST = re.compile(r"^const\s+(\w+)")
 RE_SIGNAL = re.compile(r"^signal\s+(\w+)")
 RE_ENUM = re.compile(r"^enum\b")
 RE_CLASE = re.compile(r"^class\s+(\w+)")
-RE_CLASSNAME = re.compile(r"^class_name\s+(\w+)(?:\s+extends\s+(\S.*?))?\s*$")
+RE_CLASSNAME = re.compile(r"^class_name\s+(\w+)(?:\s+extends\s+(\S.*))?$")   # se aplica a la línea sin espacios finales
 RE_EXTENDS = re.compile(r"^extends\b")
 RE_ANOT_SOLA = re.compile(r"^@\w+(?:\(.*\))?\s*$")
 RE_HEADER_ANOT = re.compile(r"^@(tool|icon|static_unload)\b")
@@ -99,7 +100,7 @@ RE_HEADER_ANOT = re.compile(r"^@(tool|icon|static_unload)\b")
 
 def clasificar(linea):
     """(tipo, nombre, estática) de una línea de columna 0, o None si no abre unidad."""
-    if RE_CLASSNAME.match(linea):
+    if RE_CLASSNAME.match(linea.rstrip()):
         return ("cabecera", "class_name", False)
     if RE_EXTENDS.match(linea) or RE_HEADER_ANOT.match(linea):
         return ("cabecera", "extends", False)
@@ -213,7 +214,7 @@ def locales_de(lineas):
     texto = "\n".join(enmascarar(l)[0] for l in lineas)
     nombres = set(re.findall(r"\bvar\s+(\w+)", texto))
     nombres |= set(re.findall(r"\bfor\s+(\w+)\s+in\b", texto))
-    for m in re.finditer(r"\bfunc(?:\s+\w*)?\s*\((.*?)\)", texto, re.S):
+    for m in re.finditer(r"\bfunc(?:\s+\w+)?\s*\(([^)]*)\)", texto):
         for p in m.group(1).split(","):
             p = p.strip().split(":")[0].split("=")[0].strip()
             if p:
@@ -224,7 +225,7 @@ def locales_de(lineas):
 # ---------------------------------------------------------------- partir
 
 def partir(ruta, aplicar):
-    with open(ruta, encoding="utf-8") as f:  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+    with open(ruta_segura(ruta), encoding="utf-8") as f:
         lineas = f.read().split("\n")
     if lineas and lineas[-1] == "":
         lineas.pop()
@@ -244,7 +245,7 @@ def partir(ruta, aplicar):
     clase_externa = CLASE_EXTERNA
     for u in cab:
         for linea in u["lineas"]:
-            m = RE_CLASSNAME.match(linea)
+            m = RE_CLASSNAME.match(linea.rstrip())
             if m:
                 clase = m.group(1)
                 if m.group(2):
@@ -350,7 +351,7 @@ def partir(ruta, aplicar):
             avisos.append(f"capa {k}: {len(cuerpo)} líneas")
     if aplicar:
         for destino, cuerpo in ficheros:
-            with open(destino, "w", encoding="utf-8", newline="\n") as f:  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+            with open(ruta_segura(destino), "w", encoding="utf-8", newline="\n") as f:
                 f.write("\n".join(cuerpo).rstrip("\n") + "\n")
     return {"capas": n, "avisos": avisos, "cambios": cambios,
             "mayor": max(len(c) for _, c in ficheros), "ficheros": [d for d, _ in ficheros]}

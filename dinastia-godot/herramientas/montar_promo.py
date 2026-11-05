@@ -9,6 +9,9 @@ corto entre tramos, y sale un MP4 H.264 liviano para mandar por chat.
 
 Necesita ffmpeg; si no está en el PATH usa el de `imageio_ffmpeg`.
 """
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "herramientas"))
+from ruta_segura import ruta_segura
 import os
 import shutil
 import subprocess
@@ -39,7 +42,7 @@ def duracion(ff: str, archivo: str) -> float:
 def main() -> None:
     raiz = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     carpeta = os.path.join(raiz, "pruebas", "capturas", "promo")
-    destino = sys.argv[1] if len(sys.argv) > 1 else os.path.join(carpeta, "DINASTIA_promo.mp4")
+    destino = ruta_segura(sys.argv[1]) if len(sys.argv) > 1 else os.path.join(carpeta, "DINASTIA_promo.mp4")
     ff = ffmpeg()
     tramos: list[str] = []
     for n in ORDEN:
@@ -75,7 +78,7 @@ def main() -> None:
     cmd = [ff, "-y", *entradas, "-filter_complex", ";".join(filtros), "-map", "[salida]",
            "-c:v", "libx264", "-preset", "medium", "-crf", "24", "-pix_fmt", "yuv420p",
            "-movflags", "+faststart", destino]
-    subprocess.run(cmd, check=True)  # NOSONAR(S8705): herramienta local: argumentos propios, subprocess sin shell
+    subprocess.run(cmd, check=True)
     print(f"Listo: {destino}  ({len(tramos)} tramos)")
 
 

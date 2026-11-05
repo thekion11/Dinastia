@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Genera nucleo/dialogos_ciudad.gd y añade sus traducciones a datos/idiomas_extra.json.
 Orden de idiomas en cada tupla: es, en, pt, fr, it, de, ca, pl, tr."""
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "herramientas"))
+from ruta_segura import ruta_segura
 import json, pathlib
 L = ["es", "en", "pt", "fr", "it", "de", "ca", "pl", "tr"]
 OF = {
@@ -115,7 +118,8 @@ for k, o in OF.items():
         reg(o[g])
     for c in o["charla"]:
         reg(c)
-ruta.write_text(json.dumps(extra, ensure_ascii=False, indent="\t"), encoding="utf-8")  # NOSONAR(S2083): herramienta local: ruta de datos del propio repo
+with open(ruta_segura(ruta), "w", encoding="utf-8") as salida:
+    salida.write(json.dumps(extra, ensure_ascii=False, indent="\t"))
 
 # --- GDScript con literales Idiomas.t("...")
 def q(s): return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'

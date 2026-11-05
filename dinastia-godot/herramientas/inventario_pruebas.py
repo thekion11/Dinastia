@@ -79,7 +79,8 @@ def main():
     sin_registrar = [f for f in filas if f["escena"] and not f["registrada"] and not f["rel"].startswith(("captura", "_", "capturas")) and not f["fam"].startswith("captura")]
     esperas = [f for f in filas if re.search(r"create_timer\([0-9.]+\)|OS\.delay_msec|OS\.delay_usec|wait_time\s*=", f["txt"]) and f["aserciones"] > 0]
     sist = {k: [f for f in filas if re.search(p, f["txt"])] for k, p in SISTEMA.items()}
-    lentas = re.findall(r'pasa "([^"]+)" "[^"]*(?:LIMITE_S=|RECORRIDO)[^"]*"', especiales)
+    lentas = [m.group(1) for m in re.finditer(r'pasa "([^"]+)" "([^"]*)"', especiales)
+              if "LIMITE_S=" in m.group(2) or "RECORRIDO" in m.group(2)]
     todo = especiales.split('"todo"')[-1] if '"todo"' in especiales else ""
     duplicadas = collections.defaultdict(list)
     for f in filas:

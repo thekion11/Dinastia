@@ -22,6 +22,7 @@ Salida:
 
     python3 herramientas/biblioteca_caras.py canonical_face_model.obj [caras_por_tono]
 """
+from ruta_segura import ruta_segura
 import base64
 import json
 import os
@@ -53,7 +54,7 @@ def uv_canonico(obj, n_total, lazo):
     """UV por vértice de la malla canónica (el OBJ los da por esquina de
     triángulo) y, para el anillo, el UV del borde empujado hacia fuera."""
     vt, cara_vt = [], {}
-    for linea in open(obj, encoding="utf-8"):  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+    for linea in open(ruta_segura(obj), encoding="utf-8"):
         p = linea.split()
         if p and p[0] == "vt":
             vt.append((float(p[1]), 1.0 - float(p[2])))
