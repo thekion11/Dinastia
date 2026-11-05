@@ -32,6 +32,7 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
   que se nombra). Ciudad: `CargaCiudad.de("Clase")`; resto: `load("res://…")` o `_pantalla_perezosa`; nada de `var _x := Clase.new(self)` en `Principal`.
   Pruebas: `mem_menu_estadio`, `prueba_menu_ciudad_pie`; medir con el `.pck` precompilado (`docs/04_auditorias/compilacion_menu_2026-11-03.md`).
 - Extensión C++ (`nativo/src` → `bin_nativo/`, 30-10): cada función es copia exacta de su versión GDScript (que se queda como respaldo para Android/Web). Si se toca una de las dos, recompilar (`herramientas/compilar_nativo.sh`) y `pruebas/probar_nativo.tscn` debe dar «FIN. 0 fallos».
+- SonarCloud: `SONAR_TOKEN=… python3 dinastia-godot/herramientas/sonar_informe.py` baja el informe de `main` a `docs/04_auditorias/sonar_AAAA-MM-DD.{json,md}` (la sección «Gestión» a mano se conserva); falsos positivos con `NOSONAR(regla): motivo` en la línea; el token nunca va al repo.
 
 ## Órdenes vigentes del dueño (24-10)
 1. Fases 0-6 del guion y decisiones validadas (punto 4 = separar `Principal` en clases + cifras fase 4): en `docs/PLAN_GENERAL.md` §2.
