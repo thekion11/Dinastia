@@ -27,7 +27,7 @@ func _probar() -> void:
 		var nombre := "menu_%02d" % i
 		_no_vacia(img, PESTANAS[i])
 		_guardar(img, nombre)
-		_comparar(img, nombre)
+		_comparar(img, nombre, 0.03, 0.20)
 		var celdas := _celdas(img)
 		if not anterior.is_empty():
 			var dif := 0

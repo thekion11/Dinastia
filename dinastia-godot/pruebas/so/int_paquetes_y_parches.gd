@@ -22,7 +22,7 @@ func _pck(ruta: String, archivos: Dictionary) -> bool:
 func _probar() -> void:
 	_titulo("INTEGRACIÓN · paquetes y parches [%s]" % sistema())
 	var carpeta := _carpeta_user()
-	var ruta := carpeta.path_join("parche_9.9.9.pck")
+	var ruta := carpeta.path_join(Actualizador.nombre_archivo("9.9.9"))   ## el nombre que baja el actualizador, el que busca Parches
 	var ok := _pck(ruta, {"res://pruebas_so_paquete/hola.txt": "hola desde el paquete", "res://datos/novedades_prueba_so.txt": "novedad"})
 	_comprobar(ok and FileAccess.file_exists(ruta), "se construye un .pck (%d bytes)" % FileAccess.get_file_as_bytes(ruta).size())
 	_comprobar(not FileAccess.file_exists("res://pruebas_so_paquete/hola.txt"), "antes de montar, el archivo no existe")
@@ -37,6 +37,11 @@ func _probar() -> void:
 	_comprobar(ProjectSettings.load_resource_pack(ruta2, true), "el parche se monta con reemplazo")
 	_comprobar(FileAccess.get_file_as_string("res://datos/creditos_fotos.txt") == "REEMPLAZADO POR EL PARCHE", "el archivo ahora sale del parche")
 	_comprobar(original != "" and original != "REEMPLAZADO POR EL PARCHE", "y el original era distinto (%d bytes)" % original.length())
+	## Lo que escribió el actualizador es lo que Parches encuentra al arrancar.
+	OS.set_environment("DINASTIA_PARCHES_PRUEBA", ProjectSettings.globalize_path(carpeta))
+	var halladas := Parches.buscar()
+	OS.set_environment("DINASTIA_PARCHES_PRUEBA", "")
+	_comprobar(halladas.size() == 2 and String(halladas[0]).get_file() == Actualizador.nombre_archivo("9.9.9"), "Parches.buscar() encuentra los parches con el nombre del actualizador (%s)" % str(halladas.size()))
 	## PaqueteReal: en el editor no monta nada; fuera de él busca junto al ejecutable y en user://.
 	PaqueteReal.montar()
 	if OS.has_feature("editor"):

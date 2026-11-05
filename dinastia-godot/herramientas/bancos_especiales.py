@@ -21,6 +21,8 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BANCOS = [
     ("pruebas_por_sistema", "pruebas nuevas por sistema (pruebas/so/): comunes, estándar, errores, integración, visualización, funciones y rendimiento",
      r"^so: |pruebas/so/|pruebas_so\.py"),
+    ("reutilizadas_2", "escenas de prueba que nadie lanzaba y ya pasan (5-11; lotes de 10 en especiales.sh)",
+     r"^r2: "),
     ("arranque", "arranque, entrada, prólogo, modos y menú de inicio",
      r"carga_de_ui|globo|onb_arranque|f1e_|f1m_|f1p_|banco_inicio|entrada_comun|modos de juego|s7b_bloqueo|zz_alt|f0r_reloj|carga_diferida|pantalla_carga|partidas viejas"),
     ("determinismo", "huellas de igualdad, semillas y repetibilidad",

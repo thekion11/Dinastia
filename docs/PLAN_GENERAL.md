@@ -121,9 +121,16 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 ## FALLOS DETECTADOS
 - **Pruebas por sistema (5-11, rama `sonar/bancos`; detalle en `04_auditorias/cobertura_pruebas_2026-11-05.md`):**
-  - Cargar y seguir ≠ seguir sin cargar a partir de la 3.ª semana tras cargar (`int_flujo_menu_a_guardado`, línea `INFO`): algún estado por jugador (forma, partidos jugados) no vuelve igual. Investigar qué campo falta en `Partida.instantanea`/`desde_instantanea`.
+  - Cargar y seguir ≠ seguir sin cargar a partir de la 2.ª semana tras cargar (`int_flujo_menu_a_guardado`, línea `INFO`: coinciden 2 de 4 semanas). EVIDENCIA (5-11, sonda de diferencias de instantánea): la semana +1 es idéntica (azar incluido); en la +2 el estado del azar ya es otro y el primer jugador distinto está en el club propio (`clubes[0].jugadores[2]`: un partido más, otra forma y otras notas) → el once o la semana usan estado que NO se guarda. Descartado: campos de `Jugador` (todos se guardan), de `Tactica`, ints→decimales del JSON en los atributos, la memoria `_media_memo` (se invalida bien) y `Mundo._gano_la_ultima` (probado guardándolo: sigue igual; sin cambiar). SOSPECHOSOS sin guardar en `Mundo`: `_marcador_liga_semana`, `_nombres_usados`, `_campeon_liga_pasado`/`_campeon_copa_pasado`, `_resultado_semana`; y estado de subsistemas (`entrenamiento`, `vida`, `maestria`, `roles`) que `desde_instantanea` recrea con valores por defecto. Siguiente paso: ir volcando cada uno a la instantánea y repetir la sonda.
   - `Actualizador.sistema()` da «escritorio» también en Web y macOS: confirmar que el parche sirve ahí (sesión de plataformas).
-  - ~100 escenas de prueba con aserciones que nadie lanza (lista en el inventario): correrlas, y las que pasen, registrarlas en `especiales.sh`; las que fallen, arreglar o retirar.
+  - Escenas de prueba que nadie lanzaba (5-11, 100 con aserciones): 87 pasan y YA se lanzan (`especiales.sh`, bloque `reutilizadas2`, banco `reutilizadas_2`). Las 13 restantes son HALLAZGOS con su evidencia (headless, 120 s):
+    · `ideas/fnt_recursos`: nacionalidades de jugador sin bandera (SLE, AZE, LUX, COM, PLE, RWA, CGO, BOT, NAM, KEN, UGA, MWI, VAN, LBR, IDN…).
+    · `ideas/optA_persona`: «rodillas rectas (cadera a su altura)» falla en male y female. · `ideas/pers_ropa`: no hay mochilas en la muestra (0).
+    · `ideas/pgra_grada`: un canto por peldaño de pasillo (1014 / 936). · `ideas/s5_auditoria_partidos`: 5,8 % de frases repetidas en el mismo partido (tope 3 %).
+    · `ideas/trad_textos`: «el nombre se traga la oración siguiente». · `ideas/uiid_textos`: estadio con 1 texto en castellano colado (641 textos).
+    · `ideas/tut_capas`: SCRIPT ERROR «Nonexistent 'bool' constructor» y acceso a `name` sobre Nil.
+    · `ideas/pre_anim` (1528 ms) y `ideas/s3_coste_cruce` (4,19 ms por fotograma): AFIRMAN SOBRE TIEMPO en headless, contra la regla del proyecto; cambiar a recuentos o mover a la medición con pantalla.
+    · Sin terminar en 120 s (lentas o colgadas): `captura_informe_rival`, `ideas/s3_auditoria_interfaz`, `ideas/s5_ocasiones`; `ideas/sen_conexiones` terminó una vez y otra no (inestable).
   - Ejecutar `pruebas/so` de verdad en Windows, Android y Web (flujo `plataformas.yml`, otra sesión): `pruebas_so.py --lista --sistema web|android` dice qué toca; `--marcadores < log.txt` (por la entrada estándar) revisa el resultado.
   - Referencias visuales de `pruebas/so/referencias/` hechas con lavapipe/llvmpipe: regenerarlas en GPU real (`VISUAL=referencias`) y añadir las de móvil.
   - Funciones puras de `nucleo/` sin prueba directa (solo 4 pruebas `fun_*`): ampliar por áreas.
