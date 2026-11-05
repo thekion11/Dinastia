@@ -68,6 +68,7 @@ def correr(f, sis, godot):
         cmd = [godot, "--path", RAIZ] + motor + ["--resolution", res, f["escena"]]
         if f["requiere"] == "hw" and sis == "linux":
             cmd = ["bash", os.path.join(RAIZ, "herramientas", "hw_modesto.sh"), f["escena"]]
+            env["HW_DRIVER"] = "opengl3"   # el equipo modesto usa Compatibilidad; Forward+ pasa de los 4 GB del cgroup y lo mata el sistema
         elif sis == "linux" and shutil.which("xvfb-run"):
             cmd = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] + cmd
     tope = int(os.environ.get("PRUEBA_SO_TOPE", "300"))

@@ -19,9 +19,11 @@ func _medir(n: int) -> Dictionary:
 
 func _probar() -> void:
 	_titulo("RENDIMIENTO · presupuesto del partido, %s [%s]" % [_metodo(), sistema()])
+	_comprobar(_metodo() == "gl_compatibility", "se mide en Compatibilidad, el motor de los equipos modestos (es %s)" % _metodo())
 	_comprobar(DisplayServer.get_name() != "headless", "se mide con pantalla: --headless no dibuja y todo daría 0")
+	calentar = 20   ## en 2 núcleos y software cada fotograma tarda segundos: pocos bastan para contar llamadas y triángulos
 	await _montar_partido()
-	var med: Dictionary = await _medir(40)
+	var med: Dictionary = await _medir(15)
 	print("  MEDICION medio: llamadas %.0f · triángulos %.0f · objetos %.0f · vídeo %.0f MB" % [med["llamadas"], med["triangulos"], med["objetos"], med["video_mb"]])
 	var tope_ll := float(por_so({"movil": 1000, "web": 1100, "defecto": 1500}))
 	var tope_tr := float(por_so({"movil": 1.0e6, "web": 1.2e6, "defecto": 1.8e6}))
@@ -44,14 +46,14 @@ func _probar() -> void:
 	add_child(vista)
 	vista.abrir(par[0], 0.85, par[1], Partido.new(par[0], par[1]))
 	var n := 0
-	while n < CALENTAR:
+	while n < calentar:
 		await get_tree().process_frame
 		for k in ["_intro", "_ceremonia"]:
 			var x: Variant = vista.get(k)
 			if x != null and is_instance_valid(x) and x.activa:
 				x.terminar()
 		n += 1
-	var mini: Dictionary = await _medir(40)
+	var mini: Dictionary = await _medir(15)
 	print("  MEDICION mínimo: llamadas %.0f · triángulos %.0f" % [mini["llamadas"], mini["triangulos"]])
 	_comprobar(float(mini["llamadas"]) <= float(med["llamadas"]) * 1.05, "MÍNIMO no pide más llamadas que MEDIO (%.0f ≤ %.0f)" % [mini["llamadas"], med["llamadas"]])
 	_comprobar(float(mini["triangulos"]) <= float(med["triangulos"]) * 1.05, "MÍNIMO no pide más triángulos que MEDIO")

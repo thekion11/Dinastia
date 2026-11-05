@@ -82,6 +82,9 @@ func _comparar(img: Image, nombre: String) -> void:
 	var ruta := REFS + "%s_%s.jpg" % [nombre, _metodo()]
 	if OS.get_environment("VISUAL") == "referencias":
 		return
+	if not FileAccess.file_exists(ruta) and not OS.has_feature("editor"):
+		print("  (en %s las referencias no viajan en el paquete: .gdignore; solo se comprueba que no esté vacía)" % sistema())
+		return
 	if not FileAccess.file_exists(ruta):
 		_comprobar(false, "%s: falta la referencia %s (hazla con VISUAL=referencias herramientas/pruebas_so.py %s)" % [nombre, ruta.get_file(), _nombre()])
 		return

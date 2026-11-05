@@ -115,6 +115,13 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   y pasar la rama a `main` (PR #120, el dueño dijo SÍ el 4-11) cuando el CI esté verde.
 
 ## FALLOS DETECTADOS
+- **Pruebas por sistema (5-11, rama `sonar/bancos`; detalle en `04_auditorias/cobertura_pruebas_2026-11-05.md`):**
+  - Cargar y seguir ≠ seguir sin cargar a partir de la 3.ª semana tras cargar (`int_flujo_menu_a_guardado`, línea `INFO`): algún estado por jugador (forma, partidos jugados) no vuelve igual. Investigar qué campo falta en `Partida.instantanea`/`desde_instantanea`.
+  - `Actualizador.sistema()` da «escritorio» también en Web y macOS: confirmar que el parche sirve ahí (sesión de plataformas).
+  - ~100 escenas de prueba con aserciones que nadie lanza (lista en el inventario): correrlas, y las que pasen, registrarlas en `especiales.sh`; las que fallen, arreglar o retirar.
+  - Ejecutar `pruebas/so` de verdad en Windows, Android y Web (flujo `plataformas.yml`, otra sesión): `pruebas_so.py --lista --sistema web|android` dice qué toca; `--marcadores <log>` revisa el resultado.
+  - Referencias visuales de `pruebas/so/referencias/` hechas con lavapipe/llvmpipe: regenerarlas en GPU real (`VISUAL=referencias`) y añadir las de móvil.
+  - Funciones puras de `nucleo/` sin prueba directa (solo 4 pruebas `fun_*`): ampliar por áreas.
 Los hallazgos de la auditoría viven en `docs/04_auditorias/MEGA_AUDITORIA_4/*.md` (uno por área); aquí solo lo que espera al dueño.
 - **Propuesta (A4-INT-R03, 4-11): la tabla de «Mi plantel» en el móvil.** Cuesta ~537 llamadas de dibujo y ~36.000 primitivas al pintarse (25 jugadores × cara, nombre y cinco celdas, cada celda una etiqueta). Con el ahorro de MÍNIMA solo se paga al abrirla o cambiar algo, no en cada fotograma. Sin cambiar el aspecto no hay forma pequeña: dibujarla en un solo control con `_draw` o crear solo las ~15 filas visibles obliga a reescribir el orden por columnas, las marcas, los botones de la fila y la cebra. Se deja como está hasta que el dueño diga si le importa más la velocidad de abrirla en un móvil modesto que el riesgo de rehacer la tabla.
 

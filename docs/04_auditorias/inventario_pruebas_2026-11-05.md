@@ -4,7 +4,7 @@ Generado por `herramientas/inventario_pruebas.py --escribir` (análisis estátic
 
 ## 1. Resumen
 
-- **1021 scripts de prueba** (961 escenas `.tscn` en `pruebas/`), con ~8062 aserciones; el banco tiene **219 secciones** (`func _probar_*`) en `pruebas/banco/`; `especiales.sh` lanza 270 escenas.
+- **1021 scripts de prueba** (961 escenas `.tscn` en `pruebas/`), con ~8063 aserciones; el banco tiene **219 secciones** (`func _probar_*`) en `pruebas/banco/`; `especiales.sh` lanza 270 escenas.
 - Reparto por familia (clasificación por nombre y contenido; una prueba puede rozar varias, se cuenta en la primera que encaja):
 
 | familia | scripts | qué cubre |
@@ -33,7 +33,7 @@ Generado por `herramientas/inventario_pruebas.py --escribir` (análisis estátic
 |---|---|---|
 | ruta /tmp | 79 | Windows no tiene `/tmp`; usar `user://` o `OS.get_user_data_dir()` |
 | xvfb / pantalla | 111 | solo Linux con xvfb; Windows/Android tienen pantalla propia |
-| variable de entorno | 217 | Web y Android no tienen variables de entorno: los parámetros no llegan |
+| variable de entorno | 218 | Web y Android no tienen variables de entorno: los parámetros no llegan |
 | OS.get_name / has_feature | 7 | ya sabe de sistema; revisar que no se SALTE nada |
 | ruta absoluta del disco | 50 | Web no tiene disco real; Android sólo la carpeta privada |
 | renderizador / Vulkan | 274 | Web/móvil usan Compatibilidad; Forward+ no existe |
@@ -43,7 +43,7 @@ Generado por `herramientas/inventario_pruebas.py --escribir` (análisis estátic
 | mayúsculas en nombres de archivo | 26 | Windows/macOS no distinguen mayúsculas, Linux/Android/Web sí |
 
 - **ruta /tmp** (79): `arena/arena.gd`, `arena/arena_metricas.gd`, `captura_adelantar.gd`, `captura_apagon.gd`, `captura_aspecto_clubes.gd`, `captura_banderas_grada.gd`, `captura_bus_interior.gd`, `captura_bus_modelo.gd`, `captura_bus_puerta.gd`, `captura_butacas.gd`, `captura_cabeza_perfil.gd`, `captura_cabina.gd`, `captura_cabina_sola.gd`, `captura_cables.gd` …
-- **variable de entorno** (217): `a4_captura_rend.gd`, `a4_mem_recursos.gd`, `a4_rend_luces.gd`, `a4_rend_memoria.gd`, `a4_rend_nodos.gd`, `a4_rend_ui.gd`, `arena/arena.gd`, `arena/arena_metricas.gd`, `auditar_textos_movil.gd`, `auditar_textos_vistos.gd`, `auditoria_biomecanica.gd`, `auditoria_fugas_limite.gd`, `auditoria_partido3d_limite.gd`, `banco.gd` …
+- **variable de entorno** (218): `a4_captura_rend.gd`, `a4_mem_recursos.gd`, `a4_rend_luces.gd`, `a4_rend_memoria.gd`, `a4_rend_nodos.gd`, `a4_rend_ui.gd`, `arena/arena.gd`, `arena/arena_metricas.gd`, `auditar_textos_movil.gd`, `auditar_textos_vistos.gd`, `auditoria_biomecanica.gd`, `auditoria_fugas_limite.gd`, `auditoria_partido3d_limite.gd`, `banco.gd` …
 - **xvfb / pantalla** (111): `a4_captura_rend.gd`, `a4_rend_luces.gd`, `a4_rend_memoria.gd`, `a4_rend_nodos.gd`, `a4_rend_ui.gd`, `bancos/estadio_3d.gd`, `captura_adelantar.gd`, `captura_apagon.gd`, `captura_biblioteca.gd`, `captura_butacas.gd`, `captura_cabina_sola.gd`, `captura_cables.gd`, `captura_cara_3d.gd`, `captura_caras_reales.gd` …
 
 ## 4. Lo débil
@@ -59,5 +59,7 @@ Generado por `herramientas/inventario_pruebas.py --escribir` (análisis estátic
 Ver `docs/04_auditorias/cobertura_pruebas_2026-11-05.md` (tabla familia × sistema).
 
 ## Gestión
-
-(a mano)
+- Hecho en esta rama (`sonar/bancos`): 34 pruebas nuevas por sistema (`pruebas/so/`), marcador uniforme, lanzador `pruebas_so.py`, registro en `especiales.sh` (bloque 5d y final de «todo») y banco `pruebas_por_sistema` en `bancos_especiales.py`.
+- Pruebas existentes reforzadas: `probar_nativo` (expectativa por sistema, antes exigía la extensión siempre), `err_guardado_danado` cubre la huella MD5 (la mutación «quitar la comprobación de huella» sobrevivía).
+- Comprobación de que fallan de verdad (mutación y vuelta atrás): idiomas vacíos, puntos de victoria, Pascua, rango del azar, huella del guardado y `escalar()` — las 6 mutaciones se detectan.
+- Pendiente: las ~100 escenas huérfanas con aserciones (ver sección 4) y los «sin aserciones» que imprimen sin veredicto.

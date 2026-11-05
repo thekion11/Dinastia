@@ -1,7 +1,7 @@
 extends "res://pruebas/so/vis_base.gd"
 ## Monta el partido 3D real (VistaEstadio, como `medir_partido`), salta la intro y la ceremonia, deja correr unos fotogramas con la cámara de TV
 ## (la REAL del partido: lejos, no de cerca) y fotografía. Lo comparten las pruebas de Forward+ y de Compatibilidad.
-const CALENTAR := 45
+var calentar := 45
 var vista: VistaEstadio
 
 func _montar_partido() -> void:
@@ -14,7 +14,7 @@ func _montar_partido() -> void:
 	add_child(vista)
 	vista.abrir(par[0], 0.85, par[1], Partido.new(par[0], par[1]))
 	var n := 0
-	while n < CALENTAR:
+	while n < calentar:
 		await get_tree().process_frame
 		var intro: Variant = vista.get("_intro")
 		if intro != null and is_instance_valid(intro) and intro.activa:
