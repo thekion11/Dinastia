@@ -64,7 +64,11 @@ jobs:
           test -n "$esperado" && test "$esperado" = "$real" || { echo "Suma SHA-512 de Godot NO coincide"; exit 1; }
           7z x -y -o"$RUNNER_TEMP/godot" godot.zip > /dev/null
           ls -la "$RUNNER_TEMP/godot"
-          cp "$RUNNER_TEMP/godot/Godot_v${GODOT_VERSION}-stable_win64_console.exe" "$RUNNER_TEMP/godot/godot.exe"
+          ## (la versión «console» es un envoltorio que busca al ejecutable principal por su nombre: NO se puede renombrar a godot.exe
+          ## —«Invalid wrapper executable name»—; se deja tal cual y `godot` es un pequeño script que la llama.)
+          printf '#!/usr/bin/env bash\nexec "$(dirname "$0")/Godot_v%s-stable_win64_console.exe" "$@"\n' "$GODOT_VERSION" > "$RUNNER_TEMP/godot/godot"
+          chmod +x "$RUNNER_TEMP/godot/godot"
+          PATH="$RUNNER_TEMP/godot:$PATH" godot --version
           cygpath -w "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
 
       - name: Preparar (LFS, caché e importación)
