@@ -95,25 +95,13 @@ void HIDGamepad::LoadConfig() {
     else if (i == 3)
       defaultButton = -1;  // Left
     else if (i == 4) {     // Top Face (Y / Triangle / X on Switch)
-      if (controllerType == e_ControllerType_NintendoSwitch)
-        defaultButton = 3;  // X on Switch
-      else
-        defaultButton = 3;  // Y / Triangle
+      defaultButton = 3;  // X on Switch
     } else if (i == 5) {    // Right Face (B / Circle / A on Switch)
-      if (controllerType == e_ControllerType_NintendoSwitch)
-        defaultButton = 1;  // A on Switch (physically right)
-      else
-        defaultButton = 1;  // B / Circle
+      defaultButton = 1;  // A on Switch (physically right)
     } else if (i == 6) {    // Bottom Face (A / Cross / B on Switch)
-      if (controllerType == e_ControllerType_NintendoSwitch)
-        defaultButton = 0;  // B on Switch (physically bottom)
-      else
-        defaultButton = 0;  // A / Cross
+      defaultButton = 0;  // B on Switch (physically bottom)
     } else if (i == 7) {    // Left Face (X / Square / Y on Switch)
-      if (controllerType == e_ControllerType_NintendoSwitch)
-        defaultButton = 2;  // Y on Switch (physically left)
-      else
-        defaultButton = 2;  // X / Square
+      defaultButton = 2;  // Y on Switch (physically left)
     } else if (i == 8)
       defaultButton = 4;  // L1 / LB
     else if (i == 9) {    // L2 / LT

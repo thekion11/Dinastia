@@ -93,10 +93,7 @@ void GuiFileBrowser::GetDirectoryContents() {
   entry.type = e_DirEntryType_Directory;
   dirContents.push_back(entry);
 
-  char *cstr = new char[directory.length() + 1];
-  std::strcpy(cstr, directory.c_str());
-  fs::path path = fs::system_complete(fs::path(cstr));
-  delete[] cstr;
+  fs::path path = fs::system_complete(fs::path(directory));
   if (!fs::exists(path) || !fs::is_directory(path))
     Log(e_Error, "GuiFileBrowser", "GetDirectoryContents",
         "Could not open directory " + directory + " for reading");

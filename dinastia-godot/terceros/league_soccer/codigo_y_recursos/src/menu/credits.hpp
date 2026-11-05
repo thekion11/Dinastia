@@ -16,6 +16,11 @@ const int numballs = 12;
 struct CreditsContents {
   std::string text;
   Vector3 color;
+  CreditsContents() = default;
+  CreditsContents(const CreditsContents&) = default;
+  CreditsContents& operator=(const CreditsContents&) = default;
+  CreditsContents(CreditsContents&&) noexcept = default;
+  CreditsContents& operator=(CreditsContents&&) noexcept = default;
 };
 
 class CreditsPage : public Gui2Page {

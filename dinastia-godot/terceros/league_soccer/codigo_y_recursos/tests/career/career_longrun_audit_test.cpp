@@ -48,7 +48,7 @@ std::string PersonaTempDir(const PersonaTier& persona) {
   // parallel (e.g. ApplyMatchResultDrawIsReputationNeutral vs the 12-season
   // audit both use kPersonas[0]).
   const char* testName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
-  fs::path dir = fs::temp_directory_path() /
+  fs::path dir = (fs::current_path() / "test_tmp") /
                  ("league_soccer_" + std::string(testName) + "_" + std::string(persona.name));
   fs::remove_all(dir);
   fs::create_directories(dir);

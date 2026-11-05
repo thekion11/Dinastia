@@ -12,6 +12,11 @@ using map_XMLTree = std::multimap<std::string, XMLTree>;
 struct XMLTree {
   std::string value;
   map_XMLTree children;
+  XMLTree() = default;
+  XMLTree(const XMLTree&) = default;
+  XMLTree& operator=(const XMLTree&) = default;
+  XMLTree(XMLTree&&) noexcept = default;
+  XMLTree& operator=(XMLTree&&) noexcept = default;
 };
 
 class XMLLoader {

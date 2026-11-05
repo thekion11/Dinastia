@@ -29,12 +29,22 @@ struct Renderer3DMaterial {
   float shininess;
   float specular_amount;
   Vector3 self_illumination;
+  Renderer3DMaterial() = default;
+  Renderer3DMaterial(const Renderer3DMaterial&) = default;
+  Renderer3DMaterial& operator=(const Renderer3DMaterial&) = default;
+  Renderer3DMaterial(Renderer3DMaterial&&) noexcept = default;
+  Renderer3DMaterial& operator=(Renderer3DMaterial&&) noexcept = default;
 };
 
 struct VertexBufferIndex {
   int startIndex;
   int size;
   Renderer3DMaterial material;
+  VertexBufferIndex() = default;
+  VertexBufferIndex(const VertexBufferIndex&) = default;
+  VertexBufferIndex& operator=(const VertexBufferIndex&) = default;
+  VertexBufferIndex(VertexBufferIndex&&) noexcept = default;
+  VertexBufferIndex& operator=(VertexBufferIndex&&) noexcept = default;
 };
 
 struct VertexBufferQueueEntry {
@@ -54,6 +64,11 @@ struct ShadowMap {
   std::deque<VertexBufferQueueEntry> visibleGeometry;
   boost::intrusive_ptr<Resource<Texture>> texture;
   int frameBufferID;
+  ShadowMap() = default;
+  ShadowMap(const ShadowMap&) = default;
+  ShadowMap& operator=(const ShadowMap&) = default;
+  ShadowMap(ShadowMap&&) noexcept = default;
+  ShadowMap& operator=(ShadowMap&&) noexcept = default;
 };
 
 enum e_ViewRenderTarget { e_ViewRenderTarget_Texture, e_ViewRenderTarget_Context };

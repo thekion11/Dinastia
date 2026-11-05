@@ -13,7 +13,7 @@ namespace {
 class UserDataTest : public ::testing::Test {
 protected:
   void SetUp() override {
-    root = fs::temp_directory_path() /
+    root = (fs::current_path() / "test_tmp") /
            ("gf_userdata_" +
             std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
     resources = root / "App.app" / "Contents" / "Resources";

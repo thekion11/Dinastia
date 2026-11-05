@@ -20,6 +20,11 @@ struct Joint {
   Vector3 position;
   Quaternion orientation;
   Vector3 origPos;
+  Joint() = default;
+  Joint(const Joint&) = default;
+  Joint& operator=(const Joint&) = default;
+  Joint(Joint&&) noexcept = default;
+  Joint& operator=(Joint&&) noexcept = default;
 };
 
 struct WeightedBone {
@@ -161,6 +166,11 @@ struct TemporalHumanoidNode {
   Quaternion cachedOrientation;
   TemporalSmoother<Vector3> position;
   TemporalSmoother<Quaternion> orientation;
+  TemporalHumanoidNode() = default;
+  TemporalHumanoidNode(const TemporalHumanoidNode&) = default;
+  TemporalHumanoidNode& operator=(const TemporalHumanoidNode&) = default;
+  TemporalHumanoidNode(TemporalHumanoidNode&&) noexcept = default;
+  TemporalHumanoidNode& operator=(TemporalHumanoidNode&&) noexcept = default;
 };
 
 struct SpatialState {
