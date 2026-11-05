@@ -7,21 +7,43 @@ en el archivo (nueva) cae en el reparto por turnos de siempre.
   python3 herramientas/repartir_especiales.py registro0.txt registro1.txt ...     # tantas partes como se quiera con --partes N (por defecto 6)
 Los registros pueden ser el log completo del job (con marcas de tiempo al principio de cada línea) o el artefacto `especiales-registro-N`.
 """
-import os, re, sys
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "herramientas"))
+from ruta_segura import ruta_segura
+import os, sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SALIDA = os.path.join(RAIZ, "herramientas", "especiales_reparto.txt")
-LINEA = re.compile(r"^(?:\S+Z )?(?:OK|FALLO)\s+(.+?)\s+(\d+) s\s*$")
+
+
+def analizar(linea):
+    """«[marca de tiempo ]OK|FALLO nombre N s» → (nombre, N) o None. Sin expresiones regulares (no hay backtracking)."""
+    t = linea.rstrip()
+    if t[:1].isdigit() and "Z " in t[:40]:
+        t = t.split("Z ", 1)[1]
+    for marca in ("OK", "FALLO"):
+        if t.startswith(marca) and t[len(marca):len(marca) + 1].isspace():
+            t = t[len(marca):].strip()
+            break
+    else:
+        return None
+    if not t.endswith(" s"):
+        return None
+    cuerpo = t[:-2].rstrip()
+    corte = cuerpo.rfind(" ")
+    if corte < 0 or not cuerpo[corte + 1:].isdigit():
+        return None
+    return cuerpo[:corte].strip(), int(cuerpo[corte + 1:])
 
 
 def leer(rutas):
     t = {}
     for r in rutas:
-        with open(r, encoding="utf-8", errors="replace") as f:
+        with open(ruta_segura(r), encoding="utf-8", errors="replace") as f:
             for l in f:
-                m = LINEA.match(l.rstrip("\n"))
-                if m:
-                    t[m.group(1).strip()] = max(int(m.group(2)), t.get(m.group(1).strip(), 0))
+                par = analizar(l)
+                if par:
+                    t[par[0]] = max(par[1], t.get(par[0], 0))
     return t
 
 
