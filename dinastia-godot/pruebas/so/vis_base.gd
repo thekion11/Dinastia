@@ -78,7 +78,9 @@ func _celdas(img: Image) -> Array:
 			out.append(s / 64.0)
 	return out
 
-func _comparar(img: Image, nombre: String) -> void:
+## `tol` = cuánto debe cambiar el color medio de una celda para contarla (0..1) y `tope` = fracción de celdas que pueden cambiar. Las pantallas de interfaz son parecidas entre sí:
+## con la tolerancia del 3D no distinguirían una pantalla de otra (la mutación «referencia de otra pantalla» sobrevivía), así que usan una más fina.
+func _comparar(img: Image, nombre: String, tol: float = TOLERANCIA_CELDA, tope: float = MAX_CELDAS_CAMBIADAS) -> void:
 	var ruta := REFS + "%s_%s.jpg" % [nombre, _metodo()]
 	if OS.get_environment("VISUAL") == "referencias":
 		return
@@ -93,7 +95,7 @@ func _comparar(img: Image, nombre: String) -> void:
 	var b := _celdas(ref)
 	var cambiadas := 0
 	for i in a.size():
-		if (a[i] - b[i]).abs().length() / 1.7320508 > TOLERANCIA_CELDA:
+		if (a[i] - b[i]).abs().length() / 1.7320508 > tol:
 			cambiadas += 1
 	var fr := float(cambiadas) / a.size()
-	_comprobar(fr <= MAX_CELDAS_CAMBIADAS, "%s: igual que su referencia (%d de %d celdas cambiaron, %.0f %%; tope %.0f %%)" % [nombre, cambiadas, a.size(), fr * 100.0, MAX_CELDAS_CAMBIADAS * 100.0])
+	_comprobar(fr <= tope, "%s: igual que su referencia (%d de %d celdas cambiaron, %.0f %%; tope %.0f %%)" % [nombre, cambiadas, a.size(), fr * 100.0, tope * 100.0])
