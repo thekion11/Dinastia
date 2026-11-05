@@ -18,7 +18,7 @@ xvfb-run -a -s "-screen 0 1920x1080x24" stdbuf -oL -eL taskset -c "$NUC" godot -
 PID=$!; PICO=0; sleep 3
 while kill -0 $PID 2>/dev/null; do
   for q in $(pgrep -f "godot --path"); do
-    H=$(awk '/VmHWM/{print $2}' /proc/$q/status 2>/dev/null); [ -n "$H" ] && [ "$H" -gt "$PICO" ] && PICO=$H
+    H=$(awk '/VmHWM/{print $2}' /proc/$q/status 2>/dev/null); [[ -n "$H" ]] && [[ "$H" -gt "$PICO" ]] && PICO=$H
   done
   sleep 1
 done

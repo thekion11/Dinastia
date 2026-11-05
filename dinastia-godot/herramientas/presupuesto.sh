@@ -11,5 +11,5 @@ HW_DRIVER=opengl3 HW_NUCLEOS=${HW_NUCLEOS:-0,1,2,3} HW_RES=${HW_RES:-640x360} HW
 JSON=$(find "$DIR" -name 'medicion_*.json' -newer "$SALIDA.marca" 2>/dev/null | sort | tail -1)
 PICO=$(grep -o 'pico de RAM del proceso: [0-9]*' "$SALIDA" | grep -o '[0-9]*$')
 rm -f "$SALIDA" "$SALIDA.marca"
-[ -z "$JSON" ] && { echo "FALLO: el benchmark no dejó informe"; exit 1; }
+[[ -z "$JSON" ]] && { echo "FALLO: el benchmark no dejó informe"; exit 1; }
 python3 herramientas/presupuesto_benchmark.py "$JSON" "${PICO:-0}"

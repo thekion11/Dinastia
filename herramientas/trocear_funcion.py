@@ -30,7 +30,7 @@ def tipo_de(decl):
     m = re.match(r"var\s+\w+\s*:\s*([\w\[\]\.]+)\s*=", decl)
     if m:
         return m.group(1)
-    m = re.match(r"var\s+\w+\s*:=\s*(.+)$", decl)
+    m = re.match(r"var\s+\w+\s*:=\s*(\S.*)$", decl)
     if not m:
         return None
     rhs = m.group(1).strip()
@@ -134,7 +134,7 @@ def main():
     cab = lineas[s]
     cuerpo = lineas[s + 1:e]
     estatica = cab.startswith("static")
-    m = re.match(r"(?:static\s+)?func\s+\w+\((.*)\)\s*(?:->\s*([\w\[\]\.]+))?\s*:\s*$", cab)
+    m = re.match(r"(?:static\s+)?func\s+\w+\((.*)\)\s*(?:->\s*([\w\[\]\.]+)\s*)?:\s*$", cab)
     if not m:
         sys.exit("no entiendo la firma: " + cab)
     params_orig = []

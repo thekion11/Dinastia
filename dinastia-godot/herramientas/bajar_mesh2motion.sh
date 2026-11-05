@@ -10,7 +10,7 @@ COMMIT=653a9698f5f315523072f1c3ff3496100401317b
 BASE="https://raw.githubusercontent.com/scottpetrovic/mesh2motion-app/$COMMIT"
 mkdir -p "$DIR"
 for f in human-base-animations human-addon-animations human-mocap-animations; do
-  [ -s "$DIR/$f.glb" ] || curl --proto "=https" --tlsv1.2 -sSfL -o "$DIR/$f.glb" "$BASE/static/animations/$f.glb"
+  [[ -s "$DIR/$f.glb" ]] || curl --proto "=https" --tlsv1.2 -sSfL -o "$DIR/$f.glb" "$BASE/static/animations/$f.glb"
 done
 curl --proto "=https" --tlsv1.2 -sSfL -o "$DIR/LICENSE-CC0.MD" "$BASE/LICENSE-CC0.MD"
 ls -la "$DIR"

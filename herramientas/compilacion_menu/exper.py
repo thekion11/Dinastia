@@ -1,4 +1,5 @@
-import os,re,sys,json,shutil,subprocess
+import os,re,sys,json,shutil,subprocess,tempfile
+TMP=tempfile.gettempdir()
 sys.path.insert(0,os.path.dirname(__file__))
 from dom import *
 ORIG='/home/user/Dinastia/dinastia-godot'
@@ -61,12 +62,12 @@ def transformar(dest,fam_nodos):
         if t2!=t: open(p,'w',encoding='utf-8').write(t2)
     return cambios,len(prot)
 def medir(dest,etiqueta):
-    env=dict(os.environ); env['PATH']='/tmp/bin:'+env['PATH']
+    env=dict(os.environ); env['PATH']=os.path.join(TMP,'bin')+':'+env['PATH']
     r=subprocess.run(['godot','--headless','--path',dest,'--import'],capture_output=True,text=True,env=env,timeout=900)
     err=[l for l in (r.stdout+r.stderr).splitlines() if 'SCRIPT ERROR' in l or 'Parse Error' in l]
     pck=S+'/exp.pck'
     r=subprocess.run(['godot','--headless','--path',dest,'--export-pack','Windows',pck],capture_output=True,text=True,env=env,timeout=1200)
-    r2=subprocess.run(['godot','--headless','--main-pack',pck,'--script','/tmp/mem3.gd'],capture_output=True,text=True,env=env,timeout=300,cwd='/tmp')
+    r2=subprocess.run(['godot','--headless','--main-pack',pck,'--script',os.path.join(TMP,'mem3.gd')],capture_output=True,text=True,env=env,timeout=300,cwd=TMP)
     out=[l for l in r2.stdout.splitlines() if 'MEM3' in l]
     print(etiqueta,'| errores de compilación:',len(err)); [print('   ',e[:160]) for e in err[:4]]
     for l in out: print('   ',l)
@@ -74,8 +75,9 @@ def medir(dest,etiqueta):
 if __name__=='__main__':
     fam=json.load(open(S+'/fam.json'))['fam']
     nombre_exp=sys.argv[1]; fams=sys.argv[2].split('+')
+    if not re.fullmatch(r'\w+',nombre_exp) or not all(re.fullmatch(r'\w+',f) for f in fams): sys.exit('nombre o familias no válidos')
     nodos=[n for f in fams for n,_ in fam[f]] if fams!=['ninguna'] else []
-    dest='/tmp/exp_'+nombre_exp
+    dest=os.path.join(TMP,'exp_'+nombre_exp)
     preparar(dest)
     c,np_=transformar(dest,nodos)
     print('archivos tocados',c,'scripts en subárboles cortados',np_)

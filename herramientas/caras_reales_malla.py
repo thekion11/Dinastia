@@ -329,7 +329,7 @@ def analizar(original, caja, cara, uv, forma, lazo, escala, seg, mp, cabeceo=0.0
         # Rizo: lo irregular que es el borde de arriba del pelo (un afro o un
         # rizado hacen bultos; el liso, una curva suave). La textura no servía:
         # un afro negro casi no tiene brillo.
-        cols = np.where(dentro.any(0))[0]
+        cols = np.nonzero(dentro.any(0))[0]
         if len(cols) > 20:
             techo = np.array([np.argmax(dentro[:, x]) for x in cols], dtype=float)
             suave = np.convolve(techo, np.ones(15) / 15, mode="same")

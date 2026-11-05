@@ -21,7 +21,7 @@ cd "$(dirname "$0")/.." || exit 1
 # M-389 (20-10): un `class_name` nuevo no existe para Godot hasta reimportar.
 # Si hay algún .gd más nuevo que la caché de clases, se reimporta antes.
 CACHE=.godot/global_script_class_cache.cfg
-if [ ! -f "$CACHE" ] || [ -n "$(find nucleo ui visor pruebas -name '*.gd' -newer "$CACHE" -print -quit)" ]; then
+if [[ ! -f "$CACHE" ]] || [[ -n "$(find nucleo ui visor pruebas -name '*.gd' -newer "$CACHE" -print -quit)" ]]; then
   timeout 600 godot --headless --import --path . > /dev/null 2>&1
   touch "$CACHE"
 fi
@@ -39,7 +39,7 @@ LOG="${1:-/tmp/banco.txt}"
 SIN_AVANCE="${SIN_AVANCE:-240}"
 NUCLEOS=$(nproc 2>/dev/null || echo 1)
 N="${BANCO_PARTES:-$(( NUCLEOS < 6 ? NUCLEOS : 6 ))}"
-[ "$N" -lt 1 ] && N=1
+[[ "$N" -lt 1 ]] && N=1
 TMP=$(mktemp -d)
 INICIO=$(date +%s)
 
@@ -49,7 +49,7 @@ declare -a PID TAM QUIETO ARRANCO INTENTO
 lanzar() {
   local i=$1
   mkdir -p "$TMP/xdg$i"
-  if [ "$N" = "1" ]; then
+  if [[ "$N" = "1" ]]; then
     timeout 1200 godot --headless --path . res://pruebas/banco.tscn > "$TMP/parte$i.txt" 2>&1 &
   else
     BANCO_PARTE="$i/$N" XDG_DATA_HOME="$TMP/xdg$i" \
@@ -73,7 +73,7 @@ for i in $(seq 0 $((N - 1))); do lanzar "$i"; done
 while :; do
   vivos=0
   sleep 1
-  if [ -n "$COMP_PID" ] && ! kill -0 "$COMP_PID" 2>/dev/null; then
+  if [[ -n "$COMP_PID" ]] && ! kill -0 "$COMP_PID" 2>/dev/null; then
     COMP_PID=""
     if ! grep -q "FIN. 0 fallos" "$COMP_TXT"; then matar_todo; comp_mal; rm -rf "$TMP"; exit 2; fi
   fi
@@ -88,15 +88,15 @@ while :; do
     fi
     kill -0 "${PID[$i]}" 2>/dev/null || continue
     vivos=$((vivos + 1))
-    if [ "${ARRANCO[$i]}" = "0" ]; then
+    if [[ "${ARRANCO[$i]}" = "0" ]]; then
       if grep -q "BANCO DE PRUEBAS" "$f" 2>/dev/null; then
         ARRANCO[$i]=1
         QUIETO[$i]=0
       else
         QUIETO[$i]=$(( QUIETO[$i] + 1 ))
-        if [ "${QUIETO[$i]}" -ge 90 ]; then
+        if [[ "${QUIETO[$i]}" -ge 90 ]]; then
           kill -9 "${PID[$i]}" 2>/dev/null
-          if [ "${INTENTO[$i]}" -ge 3 ]; then
+          if [[ "${INTENTO[$i]}" -ge 3 ]]; then
             matar_todo
             echo "la parte $i no arrancó en 3 intentos; últimas líneas:"
             tail -5 "$f"
@@ -110,9 +110,9 @@ while :; do
       fi
     fi
     nuevo=$(stat -c %s "$f" 2>/dev/null || echo 0)
-    if [ "$nuevo" = "${TAM[$i]}" ]; then
+    if [[ "$nuevo" = "${TAM[$i]}" ]]; then
       QUIETO[$i]=$(( QUIETO[$i] + 1 ))
-      if [ "${QUIETO[$i]}" -ge "$SIN_AVANCE" ]; then
+      if [[ "${QUIETO[$i]}" -ge "$SIN_AVANCE" ]]; then
         matar_todo
         echo "COLGADO: la parte $i no avanzó en $SIN_AVANCE s; últimas líneas:"
         limpio "$f" | grep -v '^\s*$' | tail -8
@@ -124,24 +124,24 @@ while :; do
       QUIETO[$i]=0
     fi
   done
-  [ "$vivos" = "0" ] && break
+  [[ "$vivos" = "0" ]] && break
 done
 ## Si las partes acaban antes que la comprobación de scripts, se la espera.
-if [ -n "$COMP_PID" ]; then wait "$COMP_PID"; fi
+if [[ -n "$COMP_PID" ]]; then wait "$COMP_PID"; fi
 if ! grep -q "FIN. 0 fallos" "$COMP_TXT"; then comp_mal; rm -rf "$TMP"; exit 2; fi
 rm -f "$COMP_TXT"
 
 # Juntar: el registro completo, los fallos, los errores de script y los tiempos.
 : > "$LOG"
 for i in $(seq 0 $((N - 1))); do
-  [ "$N" = "1" ] || echo "######## PARTE $i/$N ########" >> "$LOG"
+  [[ "$N" = "1" ]] || echo "######## PARTE $i/$N ########" >> "$LOG"
   cat "$TMP/parte$i.txt" >> "$LOG"
 done
 fallos=0
 sin_fin=""
 for i in $(seq 0 $((N - 1))); do
   linea=$(limpio "$TMP/parte$i.txt" | grep -E "===== FIN" | tail -1)
-  if [ -z "$linea" ]; then
+  if [[ -z "$linea" ]]; then
     sin_fin="$sin_fin $i"
   elif ! echo "$linea" | grep -q "FIN. 0 fallos"; then
     fallos=$(( fallos + $(echo "$linea" | grep -oE '[0-9]+' | head -1) ))
@@ -155,24 +155,24 @@ segundos=$(( $(date +%s) - INICIO ))
   echo "Secciones más lentas:"
   limpio "$LOG" | awk '/^TIEMPOS:/{t=1;next} t && /^ +[0-9.]+ s  _probar/{print} t && /^$/{t=0}' | sort -rn | head -6
 } > "$TMP/resumen.txt"
-if [ -n "$sin_fin" ]; then
+if [[ -n "$sin_fin" ]]; then
   cat "$TMP/resumen.txt"
   echo "SIN FIN: las partes$sin_fin se cortaron antes de terminar; últimas líneas:"
   for i in $sin_fin; do limpio "$TMP/parte$i.txt" | grep -v '^\s*$' | tail -6; done
   rm -rf "$TMP"
   exit 3
 fi
-if [ "$fallos" = "0" ]; then
+if [[ "$fallos" = "0" ]]; then
   echo "===== FIN. 0 fallos =====" >> "$TMP/resumen.txt"
 else
   echo "===== FIN. $fallos FALLOS =====" >> "$TMP/resumen.txt"
 fi
 cp "$TMP/resumen.txt" pruebas/ultimo_resultado.txt
 cat "$TMP/resumen.txt"
-if [ "$errores" -gt 0 ]; then
+if [[ "$errores" -gt 0 ]]; then
   echo "AVISO: $errores «SCRIPT ERROR» o «SHADER ERROR» durante el banco:"
   limpio "$LOG" | grep -A1 "^SCRIPT ERROR\|^SHADER ERROR" | head -10
 fi
 rm -rf "$TMP"
-[ "$fallos" = "0" ] && [ "$errores" = "0" ] && exit 0
+[[ "$fallos" = "0" ]] && [[ "$errores" = "0" ]] && exit 0
 exit 1
