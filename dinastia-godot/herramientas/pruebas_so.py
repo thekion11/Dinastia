@@ -9,7 +9,7 @@ Web y Android las ejecuta el CI de plataformas con el mismo marcador). Cada prue
   python3 herramientas/pruebas_so.py --crear                  # crea las escenas .tscn que falten (dos líneas)
   python3 herramientas/pruebas_so.py --sistema web --lista    # qué correría en Web (para el CI de plataformas)
   python3 herramientas/pruebas_so.py --sincronia              # LISTA.txt y especiales.sh dicen lo mismo
-  python3 herramientas/pruebas_so.py --marcadores salida.txt  # revisa un registro y dice qué falló o falta por sistema
+  python3 herramientas/pruebas_so.py --marcadores < salida.txt  # revisa un registro y dice qué falló o falta por sistema
 
 LISTA.txt: nombre|familia|sistemas|escena|requiere     (sistemas: «todos» o lista con comas; requiere: headless | pantalla | vulkan (Forward+) | compat (OpenGL) | hw (hw_modesto.sh))
 Variables: GODOT (ejecutable; por defecto «godot»). Sin separadores de ruta propios: todo con os.path.
@@ -118,13 +118,9 @@ def reimportar_si_hace_falta(godot):
         os.utime(cache, None) if os.path.exists(cache) else None
 
 
-def revisar_marcadores(ruta, filas):
-    ruta = os.path.realpath(ruta)
-    if not os.path.isfile(ruta) or not ruta.lower().endswith((".txt", ".log", ".out")):
-        print("revisar_marcadores: «%s» no es un registro de texto (.txt, .log, .out)" % ruta)
-        return 2
-    with open(ruta, encoding="utf-8", errors="replace") as f:  # NOSONAR(pythonsecurity:S8707): herramienta local; la ruta la da quien la lanza y solo se lee un registro de texto
-        txt = f.read()
+def revisar_marcadores(filas):
+    """Lee el registro por la entrada estándar (`pruebas_so.py --marcadores < registro.txt`): así no se abre ninguna ruta dada por el usuario."""
+    txt = sys.stdin.read()
     vistos = {}
     for m in re.finditer(r"^(OK|FALLO) (\w+) \[(\w+)\]", txt, re.M):
         vistos[(m.group(2), m.group(3))] = m.group(1)
@@ -165,7 +161,7 @@ def main():
         print("sincronía LISTA.txt ↔ especiales.sh: faltan en especiales.sh %s · sobran %s · sin escena %s" % (mal, sobran, sin_escena))
         return 1 if (mal or sobran or sin_escena) else 0
     if "--marcadores" in a:
-        return revisar_marcadores(a[a.index("--marcadores") + 1], filas)
+        return revisar_marcadores(filas)
     nombres = [x for x in a if x in {f["nombre"] for f in filas}]
     sel = [f for f in filas if aplica(f, sis) and (not fam or f["familia"] == fam) and (not nombres or f["nombre"] in nombres)]
     if "--lista" in a:

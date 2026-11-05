@@ -124,7 +124,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   - Cargar y seguir ≠ seguir sin cargar a partir de la 3.ª semana tras cargar (`int_flujo_menu_a_guardado`, línea `INFO`): algún estado por jugador (forma, partidos jugados) no vuelve igual. Investigar qué campo falta en `Partida.instantanea`/`desde_instantanea`.
   - `Actualizador.sistema()` da «escritorio» también en Web y macOS: confirmar que el parche sirve ahí (sesión de plataformas).
   - ~100 escenas de prueba con aserciones que nadie lanza (lista en el inventario): correrlas, y las que pasen, registrarlas en `especiales.sh`; las que fallen, arreglar o retirar.
-  - Ejecutar `pruebas/so` de verdad en Windows, Android y Web (flujo `plataformas.yml`, otra sesión): `pruebas_so.py --lista --sistema web|android` dice qué toca; `--marcadores <log>` revisa el resultado.
+  - Ejecutar `pruebas/so` de verdad en Windows, Android y Web (flujo `plataformas.yml`, otra sesión): `pruebas_so.py --lista --sistema web|android` dice qué toca; `--marcadores < log.txt` (por la entrada estándar) revisa el resultado.
   - Referencias visuales de `pruebas/so/referencias/` hechas con lavapipe/llvmpipe: regenerarlas en GPU real (`VISUAL=referencias`) y añadir las de móvil.
   - Funciones puras de `nucleo/` sin prueba directa (solo 4 pruebas `fun_*`): ampliar por áreas.
 Los hallazgos de la auditoría viven en `docs/04_auditorias/MEGA_AUDITORIA_4/*.md` (uno por área); aquí solo lo que espera al dueño.
