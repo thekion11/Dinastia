@@ -15,3 +15,6 @@ est_economia_invariantes|estandar|todos|res://pruebas/so/est_economia_invariante
 est_datos_coherencia|estandar|todos|res://pruebas/so/est_datos_coherencia.tscn|headless
 est_datos_tablas_vs_codigo|estandar|todos|res://pruebas/so/est_datos_tablas_vs_codigo.tscn|headless
 est_partido_simulado_reglas|estandar|todos|res://pruebas/so/est_partido_simulado_reglas.tscn|headless
+int_nativo_por_sistema|integracion|todos|res://pruebas/so/int_nativo_por_sistema.tscn|headless
+int_paquetes_y_parches|integracion|todos|res://pruebas/so/int_paquetes_y_parches.tscn|headless
+int_flujo_menu_a_guardado|integracion|todos|res://pruebas/so/int_flujo_menu_a_guardado.tscn|headless

@@ -46,9 +46,17 @@ static func por_so(tabla: Dictionary) -> Variant:
 		return tabla["movil"]
 	return tabla.get("defecto", null)
 
-## ¿Hay extensión C++ para este sistema? (`bin_nativo/dinastia.gdextension`: hoy Linux y Windows; Web, Android y macOS usan GDScript.)
+## ¿Hay extensión C++ para este sistema y esta arquitectura? Lo dice `bin_nativo/dinastia.gdextension`: Linux (x86_64 y arm64), Windows (x86_64) y
+## Android (arm64). Web, macOS e iOS usan siempre la versión GDScript.
 static func se_espera_nativo() -> bool:
-	return OS.has_feature("linux") or OS.has_feature("windows")
+	var arq := Engine.get_architecture_name()
+	if OS.has_feature("linux") and not OS.has_feature("android"):
+		return arq == "x86_64" or arq == "arm64"
+	if OS.has_feature("windows"):
+		return arq == "x86_64"
+	if OS.has_feature("android"):
+		return arq == "arm64"
+	return false
 
 ## Carpeta propia de la prueba dentro de `user://` (se vacía al empezar y al acabar; nunca toca las partidas del jugador).
 func _carpeta_user() -> String:
