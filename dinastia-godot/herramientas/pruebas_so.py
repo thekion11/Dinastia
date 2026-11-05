@@ -8,12 +8,13 @@ Web y Android las ejecuta el CI de plataformas con el mismo marcador). Cada prue
   python3 herramientas/pruebas_so.py com_idiomas_nueve_sin_vacios   # una sola
   python3 herramientas/pruebas_so.py --crear                  # crea las escenas .tscn que falten (dos líneas)
   python3 herramientas/pruebas_so.py --sistema web --lista    # qué correría en Web (para el CI de plataformas)
+  python3 herramientas/pruebas_so.py --sincronia              # LISTA.txt y especiales.sh dicen lo mismo
   python3 herramientas/pruebas_so.py --marcadores salida.txt  # revisa un registro y dice qué falló o falta por sistema
 
-LISTA.txt: nombre|familia|sistemas|escena|requiere     (sistemas: «todos» o lista con comas; requiere: headless | pantalla | vulkan)
+LISTA.txt: nombre|familia|sistemas|escena|requiere     (sistemas: «todos» o lista con comas; requiere: headless | pantalla | vulkan (Forward+) | compat (OpenGL) | hw (hw_modesto.sh))
 Variables: GODOT (ejecutable; por defecto «godot»). Sin separadores de ruta propios: todo con os.path.
 """
-import concurrent.futures, os, re, shutil, subprocess, sys, tempfile, time
+import concurrent.futures, os, re, shutil, subprocess, sys, tempfile, threading, time
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LISTA = os.path.join(RAIZ, "pruebas", "so", "LISTA.txt")
@@ -58,17 +59,46 @@ def correr(f, sis, godot):
     env = dict(os.environ)
     env["XDG_DATA_HOME"] = tempfile.mkdtemp()   # user:// propio, como en el CI
     cmd = [godot, "--headless", "--path", RAIZ, f["escena"]]
-    if f["requiere"] in ("pantalla", "vulkan"):
-        if f["requiere"] == "vulkan" and sis == "linux" and not any(os.path.exists(p) for p in ("/usr/share/vulkan/icd.d",)):
-            return f, "FALLO", "requiere Vulkan (lavapipe) y no está", time.time() - t0
-        cmd = [godot, "--path", RAIZ, f["escena"]]
-        if sis == "linux" and shutil.which("xvfb-run"):
-            cmd = ["xvfb-run", "-a", "-s", "-screen 0 1280x720x24"] + cmd
-    try:
-        p = subprocess.run(cmd, cwd=RAIZ, capture_output=True, text=True, timeout=int(os.environ.get('PRUEBA_SO_TOPE', '300')), env=env, encoding="utf-8", errors="replace")
-        out = re.sub(r"\x1b\[[0-9;]*m", "", p.stdout + p.stderr)
-    except subprocess.TimeoutExpired:
-        return f, "FALLO", "tiempo agotado", time.time() - t0
+    if f["requiere"] in ("pantalla", "vulkan", "compat", "hw"):
+        if f["requiere"] in ("vulkan", "hw") and sis == "linux" and not os.path.isdir("/usr/share/vulkan/icd.d"):
+            return f, "FALLO", "requiere Vulkan (lavapipe: apt-get install mesa-vulkan-drivers) y no está", time.time() - t0
+        res = os.environ.get("RESOLUCION", "960x540")
+        motor = {"vulkan": ["--rendering-driver", "vulkan", "--rendering-method", "forward_plus"], "hw": ["--rendering-driver", "vulkan", "--rendering-method", "forward_plus"],
+                 "compat": ["--rendering-driver", "opengl3"]}.get(f["requiere"], [])
+        cmd = [godot, "--path", RAIZ] + motor + ["--resolution", res, f["escena"]]
+        if f["requiere"] == "hw" and sis == "linux":
+            cmd = ["bash", os.path.join(RAIZ, "herramientas", "hw_modesto.sh"), f["escena"]]
+        elif sis == "linux" and shutil.which("xvfb-run"):
+            cmd = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] + cmd
+    tope = int(os.environ.get("PRUEBA_SO_TOPE", "300"))
+    kw = {"start_new_session": True} if os.name != "nt" else {}
+    proc = subprocess.Popen(cmd, cwd=RAIZ, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, env=env, encoding="utf-8", errors="replace", **kw)
+    lineas = []
+
+    def leer():
+        for l in proc.stdout:
+            lineas.append(l)
+    hilo = threading.Thread(target=leer, daemon=True)
+    hilo.start()
+    motivo = ""
+    while proc.poll() is None:
+        time.sleep(0.5)
+        # Un script que no compila no llega a abrir la escena y nunca termina: se corta en cuanto aparece el error.
+        if any("Failed to load script" in l or "Parse Error" in l for l in lineas[-60:]):
+            motivo = "el script no compila"
+        elif time.time() - t0 > tope:
+            motivo = "tiempo agotado (%d s)" % tope
+        if motivo:
+            if os.name != "nt":
+                os.killpg(proc.pid, 9)   # también los hijos (xvfb-run → godot): si no, siguen vivos
+            else:
+                proc.kill()
+            break
+    hilo.join(5)
+    out = re.sub(r"\x1b\[[0-9;]*m", "", "".join(lineas))
+    if motivo:
+        det = [l for l in out.splitlines() if "SCRIPT ERROR" in l or "Parse Error" in l][:3]
+        return f, "FALLO", motivo + " " + " | ".join(det), time.time() - t0
     shutil.rmtree(env["XDG_DATA_HOME"], ignore_errors=True)
     m = re.search(r"^(OK|FALLO) %s \[(\w+)\]" % re.escape(f["nombre"]), out, re.M)
     malo = "SCRIPT ERROR" in out
@@ -121,6 +151,13 @@ def main():
     if "--crear" in a:
         crear_escenas(filas)
         return 0
+    if "--sincronia" in a:
+        sh = open(os.path.join(RAIZ, "herramientas", "especiales.sh"), encoding="utf-8").read()
+        mal = [f["nombre"] for f in filas if aplica(f, "linux") and ('"so: %s"' % f["nombre"]) not in sh]
+        sobran = [n for n in re.findall(r'pasa "so: (\w+)"', sh) if n not in {f["nombre"] for f in filas}]
+        sin_escena = [f["nombre"] for f in filas if not os.path.exists(os.path.join(RAIZ, f["escena"].replace("res://", "")))]
+        print("sincronía LISTA.txt ↔ especiales.sh: faltan en especiales.sh %s · sobran %s · sin escena %s" % (mal, sobran, sin_escena))
+        return 1 if (mal or sobran or sin_escena) else 0
     if "--marcadores" in a:
         return revisar_marcadores(a[a.index("--marcadores") + 1], filas)
     nombres = [x for x in a if x in {f["nombre"] for f in filas}]

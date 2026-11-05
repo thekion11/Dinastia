@@ -34,6 +34,9 @@ func _probar() -> void:
 	for i in basura.size():
 		basura[i] = (i * 73 + 11) % 256
 	casos["basura"] = basura
+	var huella := bueno.duplicate()
+	huella[10] = huella[10] ^ 0xff   ## solo la firma MD5: el contenido descomprime bien; únicamente la huella lo delata
+	casos["huella MD5 cambiada"] = huella
 	var gigante := bueno.duplicate()
 	gigante.encode_u32(4, 0x7fffffff)
 	casos["tamaño declarado absurdo"] = gigante
