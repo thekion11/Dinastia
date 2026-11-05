@@ -7,8 +7,8 @@ namespace blunted {
 
 // Generador pseudoaleatorio de juego (no criptografico) basado en <random>;
 // sustituye a std::rand()/srand() de C.
-inline std::mt19937& GameRng() {
-  static thread_local std::mt19937 gen{std::random_device{}()};
+inline std::mt19937& GameRng() {  // NOSONAR(S2245): azar de juego, no criptográfico
+  static thread_local std::mt19937 gen{std::random_device{}()};  // NOSONAR(S2245): azar de juego
   return gen;
 }
 

@@ -2,7 +2,7 @@
 """Descarga el informe de SonarCloud (rama main) y lo guarda en JSON + Markdown.
 
 Uso:
-    SONAR_TOKEN=... python3 herramientas/sonar_informe.py [--rama main] [--salida DIR]
+    SONAR_TOKEN=... python3 herramientas/sonar_informe.py [--rama main]
 
 El token SOLO se lee de la variable de entorno SONAR_TOKEN; nunca se escribe en disco.
 Salida (por defecto docs/04_auditorias/): sonar_YYYY-MM-DD.json y sonar_YYYY-MM-DD.md
@@ -13,12 +13,14 @@ import collections
 import datetime
 import json
 import os
+import re
 import sys
 import urllib.parse
 import urllib.request
 
 BASE = "https://sonarcloud.io/api"
 PROYECTO = "thekion11_Dinastia"
+SALIDA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "docs", "04_auditorias")  # fija: sin ruta por argumento
 MARCA = "<!-- GESTION: lo de abajo se escribe a mano y se conserva al regenerar -->"
 ORDEN_SEV = ["BLOCKER", "CRITICAL", "MAJOR", "MINOR", "INFO"]
 LENGUAJES = {
@@ -127,8 +129,9 @@ def duplicaciones(token, rama):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--rama", default="main")
-    ap.add_argument("--salida", default=os.path.join(os.path.dirname(__file__), "..", "..", "docs", "04_auditorias"))
     a = ap.parse_args()
+    if not re.fullmatch(r"[\w./-]+", a.rama):
+        sys.exit("Nombre de rama no válido.")
     token = os.environ.get("SONAR_TOKEN")
     if not token:
         sys.exit("Falta la variable de entorno SONAR_TOKEN.")
@@ -138,9 +141,9 @@ def main():
                        token, "hotspots")
     duplic = duplicaciones(token, a.rama)
     fecha = datetime.date.today().isoformat()
-    os.makedirs(a.salida, exist_ok=True)
-    pj = os.path.join(a.salida, f"sonar_{fecha}.json")
-    pm = os.path.join(a.salida, f"sonar_{fecha}.md")
+    os.makedirs(SALIDA, exist_ok=True)
+    pj = os.path.join(SALIDA, f"sonar_{fecha}.json")
+    pm = os.path.join(SALIDA, f"sonar_{fecha}.md")
     with open(pj, "w", encoding="utf-8") as f:
         json.dump({"fecha": fecha, "rama": a.rama, "issues": issues, "hotspots": hotspots,
                    "duplicaciones": duplic}, f, ensure_ascii=False, indent=1)

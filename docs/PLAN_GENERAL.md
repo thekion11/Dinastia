@@ -68,6 +68,11 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 1) fallos (los 8 de League-Soccer) → 2) clubes (recreación legal) → 3) IA → 4) jugabilidad → 5) optimización → 6) detectar fallos →
 7) sonidos de sistema → 8) minijuegos → 9) entrenamiento.
 
+## CALIDAD CONTINUA CON SONAR Y TRACY (orden del dueño, 5-11) — se borra solo si el dueño lo da por cerrado
+- **Ciclo repetible, varias veces**: bajar el informe (`herramientas/sonar_informe.py`) → corregir por bloques de mayor a menor severidad → banco + especiales + CI en verde → PR → que SonarCloud lo analice → repetir hasta que Sonar diga «perfecto o casi perfecto». Meta: las notas MÁS ALTAS posibles (Seguridad, Fiabilidad y Mantenibilidad en A; 0 hotspots sin revisar; duplicación mínima) y quitar incoherencias y desorden que cuestan rendimiento.
+- **Perfilar con Tracy Profiler** como práctica general (no solo con triángulos/llamadas/memoria de `hw_modesto.sh`): medir con Tracy los puntos calientes del partido, la ciudad y el menú, comparar antes/después y guardar la traza resumida en `docs/04_auditorias/`. Pendiente de estudiar: cómo integrar Tracy en Godot 4.7 (compilación del motor o extensión) y en qué sistemas es viable (Windows/Linux sí; Web/Android a revisar). Regla vigente: el tiempo de fotograma NUNCA se mide con `--headless`.
+- Las ideas nuevas siguen en pausa (orden 26); esto es calidad de lo que ya existe.
+
 ## IDEAS Y TAREAS DEL DUEÑO (3-11 noche, conversación casual) — se borran al completarse del todo
 **DECISIÓN DEL DUEÑO (3-11 noche): se mantienen los «4 juegos en 1» (gestor, partido jugable, ciudad abierta, vida del DT), pero las IDEAS NUEVAS quedan EN PAUSA. Foco: los puntos más débiles de la evaluación del líder (44/100) y pulir lo que ya existe. Cuando esté muy pulido, se abarca más.** Orden por debilidad:
 1. Rendimiento en el aparato real (15/100): FPS medidos en el teléfono del dueño en MÍNIMA; ciudad ≤900 llamadas; ideas de rendimiento de abajo, midiendo.

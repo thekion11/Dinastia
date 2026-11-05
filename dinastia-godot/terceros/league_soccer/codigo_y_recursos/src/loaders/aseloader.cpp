@@ -331,7 +331,8 @@ void ASELoader::BuildTriangleMesh(const s_tree* data,
         ..
     */
 
-    if (tree_mesh_tface_list->entries.size() != (unsigned int)numtfaces)
+    if (tree_mesh_tface_list == nullptr ||
+        tree_mesh_tface_list->entries.size() != (unsigned int)numtfaces)
       LogFatal("ASELoader", "BuildTriangleMesh",
           "numtfaces and tree_mesh_tface_list->entries.size() differ! Loader corrupt?");
 
