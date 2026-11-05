@@ -4,6 +4,10 @@
 #   herramientas/especiales.sh todo       → con el recorrido de todas las pantallas y el balance a largo plazo (+9 min)
 # Salida: una línea por prueba (OK / FALLO) y código 0 si todas pasan.
 cd "$(dirname "$0")/.." || exit 1
+# Portabilidad (5-11, CI de plataformas): PY = python3 o python (Git Bash en Windows no trae python3); TMPN = carpeta temporal en una ruta
+# que Godot entiende (en Windows, C:/…; los /tmp fijos no existen para un .exe). En Linux todo queda igual (python3, /tmp).
+PY=$(command -v python3 || command -v python || echo python3)
+TMPN=${TMPDIR:-/tmp}; if command -v cygpath >/dev/null; then TMPN=$(cygpath -m "$TMPN"); fi
 FALLOS=0
 LOG=$(mktemp)
 # REPARTO (2-11-2026, CI): ESPECIALES_PARTE="i/N" corre solo cada N-ésima prueba (las demás se saltan),
@@ -20,7 +24,8 @@ pasa() {  # nombre, comando, patrón de éxito
   local t0=$(date +%s)
   ## (4-11, A4) Cada prueba con SU carpeta user:// vacía, como en el CI: con el guardado de un jugador (idioma, ajustes, partidas)
   ## las pruebas que ponen un idioma antes de abrir el juego medían otra cosa (el guardado manda) y pasaban sin probar lo que decían.
-  XDG_DATA_HOME=$(mktemp -d) timeout 600 bash -c "$2" > "$LOG" 2>&1
+  local datos; datos=$(mktemp -d)   # (Windows: user:// sale de %APPDATA%, no de XDG_DATA_HOME: se cambian los dos)
+  XDG_DATA_HOME=$datos APPDATA=$(command -v cygpath >/dev/null && cygpath -w "$datos" || echo "$datos") timeout 600 bash -c "$2" > "$LOG" 2>&1
   local seg=$(( $(date +%s) - t0 ))
   if grep -q "SCRIPT ERROR" "$LOG" || ! grep -qE "$3" "$LOG"; then
     FALLOS=$((FALLOS + 1)); printf 'FALLO  %-34s %3d s\n' "$1" "$seg"; grep -E "FALLO|SCRIPT ERROR" "$LOG" | head -3
@@ -32,7 +37,7 @@ pasa() {  # nombre, comando, patrón de éxito
 # 1. Tamaño del código (norma de 450 líneas)
 if [[ -n "$PARTE_I" ]] && [[ "$PARTE_I" != "0" ]]; then :  # (solo la parte 0 hace la norma de líneas)
 else
-python3 ../herramientas/revisar_lineas.py --todos > "$LOG" 2>&1
+$PY ../herramientas/revisar_lineas.py --todos > "$LOG" 2>&1
 if grep -q "pasan de 450 líneas: 0" "$LOG"; then echo "OK     norma de 450 líneas"; else FALLOS=$((FALLOS + 1)); echo "FALLO  norma de 450 líneas"; head -5 "$LOG"; fi
 fi
 # 2. Todos los scripts compilan (el banco solo ve los que toca)
@@ -432,10 +437,10 @@ fi
   pasa "motor: el mejor gana al peor" "ESCENARIO=calidad N=6 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
   pasa "motor: la pizarra se nota" "ESCENARIO=tactica N=10 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
   # M-467: todas las pantallas en alemán; los textos se encogen (TextoQueCabe) y no quedan más de 4 cortados (~3 min)
-  pasa "textos largos en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_LARGOS=/tmp/largos_de.json RECORRIDO_CORTADOS_MAX=4 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN LARGOS. 0 fallos"
-  pasa "paneles más anchos que su hueco (móvil, alemán)" "RECORRIDO_ANCHO=1 RECORRIDO_ANCHO_MAX=0 RECORRIDO_IDIOMA=de RECORRIDO_MOVIL=2400x1080 RECORRIDO_LARGOS=/tmp/ancho_de.json godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN ANCHO. 0 fallos"
-  pasa "paneles más anchos que su hueco (móvil, francés)" "RECORRIDO_ANCHO=1 RECORRIDO_ANCHO_MAX=0 RECORRIDO_IDIOMA=fr RECORRIDO_MOVIL=2400x1080 RECORRIDO_LARGOS=/tmp/ancho_fr.json godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN ANCHO. 0 fallos"
-  pasa "controles sin foco o sin nombre para el lector (todas las pantallas)" "RECORRIDO_ACCESO=1 RECORRIDO_ACCESO_MAX=0 RECORRIDO_LARGOS=/tmp/acceso.json godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN ACCESO. 0 fallos"
+  pasa "textos largos en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_LARGOS=$TMPN/largos_de.json RECORRIDO_CORTADOS_MAX=4 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN LARGOS. 0 fallos"
+  pasa "paneles más anchos que su hueco (móvil, alemán)" "RECORRIDO_ANCHO=1 RECORRIDO_ANCHO_MAX=0 RECORRIDO_IDIOMA=de RECORRIDO_MOVIL=2400x1080 RECORRIDO_LARGOS=$TMPN/ancho_de.json godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN ANCHO. 0 fallos"
+  pasa "paneles más anchos que su hueco (móvil, francés)" "RECORRIDO_ANCHO=1 RECORRIDO_ANCHO_MAX=0 RECORRIDO_IDIOMA=fr RECORRIDO_MOVIL=2400x1080 RECORRIDO_LARGOS=$TMPN/ancho_fr.json godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN ANCHO. 0 fallos"
+  pasa "controles sin foco o sin nombre para el lector (todas las pantallas)" "RECORRIDO_ACCESO=1 RECORRIDO_ACCESO_MAX=0 RECORRIDO_LARGOS=$TMPN/acceso.json godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN ACCESO. 0 fallos"
   # M-463: en alemán no queda castellano sin traducir (las siglas POR/DEF/MED/DEL y el formato del editor ya no cuentan)
   pasa "sin castellano en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_CASTELLANO_MAX=0 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN CASTELLANO. 0 fallos"
   pasa "apertura de pantallas (M-287, tope 2 s sin GPU)" "RECORRIDO_MS_MAX=2000 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN TIEMPOS. 0 fallos"
@@ -457,7 +462,7 @@ fi
   pasa "seguir clubes" "godot --headless --path . res://pruebas/ideas/seg_clubes.tscn" "FIN. 0 fallos"
   pasa "sonido en pestañas y listas" "godot --headless --path . res://pruebas/ideas/fx_pestanas.tscn" "FIN. 0 fallos"
   # M-420: los presets públicos (paquete exportado) no llevan archivos ni nombres de lo real (~3 min)
-  pasa "builds públicos sin datos reales" "python3 herramientas/revisar_build_publico.py" "FIN BUILD PÚBLICO. 0 fallos"
+  pasa "builds públicos sin datos reales" "$PY herramientas/revisar_build_publico.py" "FIN BUILD PÚBLICO. 0 fallos"
   pasa "ceremonia de carrera" "godot --headless --path . res://pruebas/prueba_carrera_ceremonia.tscn" "FIN. 0 fallos"
   pasa "práctica" "godot --headless --path . res://pruebas/prueba_practica.tscn" "FIN PRÁCTICA. 0 fallos"
   pasa "recorrido de todas las pantallas" "godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "RECORRIDO: [0-9]+ pantallas"
@@ -469,10 +474,10 @@ fi
     echo "SALTADA pruebas visuales (sin Vulkan: apt-get install -y mesa-vulkan-drivers)"
   fi
   # pruebas por sistema que necesitan pantalla (5-11): partido con la cámara real en Compatibilidad y Forward+, pantallas del menú, presupuesto con hw_modesto
-  pasa "so: vis_partido_forward" "python3 herramientas/pruebas_so.py vis_partido_forward" "^OK +vis_partido_forward "
-  pasa "so: vis_partido_compat" "python3 herramientas/pruebas_so.py vis_partido_compat" "^OK +vis_partido_compat "
-  pasa "so: vis_menu_pantallas" "python3 herramientas/pruebas_so.py vis_menu_pantallas" "^OK +vis_menu_pantallas "
-  pasa "so: ren_partido_presupuesto" "python3 herramientas/pruebas_so.py ren_partido_presupuesto" "^OK +ren_partido_presupuesto "
+  pasa "so: vis_partido_forward" "$PY herramientas/pruebas_so.py vis_partido_forward" "^OK +vis_partido_forward "
+  pasa "so: vis_partido_compat" "$PY herramientas/pruebas_so.py vis_partido_compat" "^OK +vis_partido_compat "
+  pasa "so: vis_menu_pantallas" "$PY herramientas/pruebas_so.py vis_menu_pantallas" "^OK +vis_menu_pantallas "
+  pasa "so: ren_partido_presupuesto" "$PY herramientas/pruebas_so.py ren_partido_presupuesto" "^OK +ren_partido_presupuesto "
 fi
 rm -f "$LOG"
 [[ "$FALLOS" -eq 0 ]] && echo "ESPECIALES: todo en orden" || echo "ESPECIALES: $FALLOS con fallos"

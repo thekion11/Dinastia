@@ -59,6 +59,7 @@ def correr(f, sis, godot):
     t0 = time.time()
     env = dict(os.environ)
     env["XDG_DATA_HOME"] = tempfile.mkdtemp()   # user:// propio, como en el CI
+    env["APPDATA"] = env["XDG_DATA_HOME"]       # (Windows: user:// sale de %APPDATA%, no de XDG_DATA_HOME)
     cmd = [godot, "--headless", "--path", RAIZ, f["escena"]]
     if f["requiere"] in ("pantalla", "vulkan", "compat", "hw"):
         if f["requiere"] in ("vulkan", "hw") and sis == "linux" and not os.path.isdir("/usr/share/vulkan/icd.d"):
