@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Hojas de contacto de un directorio de JPG: `hoja_contacto.py carpeta [por_hoja=6]` -> carpeta/hoja_N.jpg
 (2 columnas, cada foto con su nombre debajo)."""
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "herramientas"))
+from ruta_segura import ruta_segura
 import sys, glob, os
 from PIL import Image, ImageDraw, ImageFont
-carpeta = sys.argv[1]
+carpeta = ruta_segura(sys.argv[1])
 por = int(sys.argv[2]) if len(sys.argv) > 2 else 6
-fotos = sorted(f for f in glob.glob(os.path.join(carpeta, "[0-9]*.jpg")))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+fotos = sorted(f for f in glob.glob(os.path.join(carpeta, "[0-9]*.jpg")))
 cols, ancho = 2, 960
 try:
     fuente = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 22)

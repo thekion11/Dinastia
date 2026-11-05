@@ -11,6 +11,7 @@
 Los códigos son los FIFA del juego (`visor/banderas.gd`, `ISO`). Inglaterra, Escocia y Gales no son territorios
 de CLDR: van a mano. El nombre en castellano que ya usa el juego (`PAIS_SELECCION` de tablas.json) manda sobre el
 de CLDR, para no cambiar textos que ya se ven."""
+from ruta_segura import ruta_segura
 import json, re, sys
 
 IDIOMAS = ["es", "en", "pt", "fr", "it", "de", "ca", "pl", "tr"]
@@ -30,7 +31,7 @@ def main():
     iso = dict(re.findall(r'"([A-Z]{3})": "([a-z-]+)"', bloque))
     nombres = {}
     for l in IDIOMAS:
-        d = json.load(open(f"{cldr}/{l}.json", encoding="utf-8"))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+        d = json.load(open(ruta_segura(f"{cldr}/{l}.json"), encoding="utf-8"))
         nombres[l] = d["main"][l]["localeDisplayNames"]["territories"]
     juego = json.load(open(RAIZ + "datos/tablas.json", encoding="utf-8")).get("PAIS_SELECCION", {})
     paises, exactas = {}, {}
@@ -49,7 +50,7 @@ def main():
               "Inglaterra, Escocia y Gales a mano). Lo genera herramientas/paises_cldr.py: no editar a mano.",
               "paises": paises}
     open(RAIZ + "datos/paises.json", "w", encoding="utf-8").write(json.dumps(salida, ensure_ascii=False, indent=1) + "\n")
-    json.dump({"exactas": exactas}, open(parche, "w", encoding="utf-8"), ensure_ascii=False, indent=1)  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+    json.dump({"exactas": exactas}, open(ruta_segura(parche), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(len(paises), "países ·", len(exactas), "nombres al parche")
 
 if __name__ == "__main__":

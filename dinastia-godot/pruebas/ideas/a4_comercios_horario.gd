@@ -38,8 +38,16 @@ func _probar() -> void:
 	_comprobar(not ComercioCiudad.cerrado(e, "tienda_0") and not ComercioCiudad.cerrado(e, "edificio_hotel"), "la gasolinera y el hotel siguen abiertos de noche")
 	reloj.minuto = 11 * 60
 	_comprobar(not ComercioCiudad.cerrado(e, "edificio_farmacia") and ComercioCiudad.aviso(e, "edificio_farmacia", "Farmacia") == "E: Farmacia", "a las 11:00 abierta y con el aviso de siempre")
+	## El explorador recalcula `_cerca` en cada `_process`: tras esperar fotogramas puede haberla borrado (con el ejecutor cargado,
+	## seguro). Se vuelve a fijar justo antes de pulsar la E.
+	e._cerca = {"tipo": "lugar", "k": "edificio_farmacia", "n": "Farmacia"}
 	e.call("_usar")
-	await _esperar(3)
+	## Se espera a que el estado cambie (hasta 120 fotogramas) en vez de un número fijo: en un ejecutor lento o cargado la
+	## entrada tarda más de 3 fotogramas y la prueba fallaba sin que el juego tuviera el menor fallo (5-11, CI y carga de CPU).
+	for _i in 120:
+		if String(e.estado) == "interior":
+			break
+		await _esperar(1)
 	_comprobar(String(e.estado) == "interior", "a las 11:00 la E entra en la farmacia (%s)" % e.estado)
 	e.call("_salir_del_edificio")
 	reloj.minuto = minuto_antes

@@ -30,6 +30,7 @@ hombro ~1,45, base del cuello ~1,53; los brazos salen en horizontal desde
 
     python3 herramientas/mascara_equipacion.py
 """
+from ruta_segura import ruta_segura
 import json
 import os
 
@@ -83,7 +84,7 @@ def zonas(x, y):
 
 def main():
     g = json.load(open(MODELO, encoding="utf-8"))
-    binario = open(os.path.join(DIR, g["buffers"][0]["uri"]), "rb").read()  # NOSONAR(S2083): herramienta local: ruta de datos del propio repo
+    binario = open(ruta_segura(os.path.join(DIR, g["buffers"][0]["uri"])), "rb").read()
     prim = None
     for m in g["meshes"]:
         for p in m["primitives"]:
