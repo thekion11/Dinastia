@@ -121,6 +121,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 ## FALLOS DETECTADOS
 - **Pruebas por sistema (5-11, rama `sonar/bancos`; detalle en `04_auditorias/cobertura_pruebas_2026-11-05.md`):**
+  - Reparto de `especiales` por tiempo medido (5-11): con los registros del CI (76 min de pruebas en total) `herramientas/repartir_especiales.py` deja las 6 partes en 12,7–12,8 min (antes 8,5–18,3). Con 6 partes no baja de ahí; para pasar de ~12 min a ~11 hace falta una 7.ª parte en el workflow (`ESPECIALES_PARTE` hasta `i/7`; regenerar con `--partes 7`): lo decide la sesión de plataformas. Regenerar el reparto tras añadir muchas pruebas.
   - `Actualizador.sistema()` da «escritorio» también en Web y macOS: confirmar que el parche sirve ahí (sesión de plataformas).
   - Escenas de prueba que nadie lanzaba (5-11, 100 con aserciones): 87 pasan y YA se lanzan (`especiales.sh`, bloque `reutilizadas2`, banco `reutilizadas_2`). Las 13 restantes son HALLAZGOS con su evidencia (headless, 120 s):
     · `ideas/fnt_recursos`: nacionalidades de jugador sin bandera (SLE, AZE, LUX, COM, PLE, RWA, CGO, BOT, NAM, KEN, UGA, MWI, VAN, LBR, IDN…).
