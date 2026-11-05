@@ -54,7 +54,13 @@ RUN useradd --create-home dev && chown dev:dev /workspace
 USER dev
 
 # Copy project source
-COPY --chown=dev:dev . .
+COPY --chown=dev:dev CMakeLists.txt sources.cmake vcpkg.json ./
+COPY --chown=dev:dev CMakeModules ./CMakeModules
+COPY --chown=dev:dev src ./src
+COPY --chown=dev:dev tests ./tests
+COPY --chown=dev:dev data ./data
+COPY --chown=dev:dev tools ./tools
+COPY --chown=dev:dev scripts ./scripts
 
 # Pre-configure a Debug build (useful for IDE attach / container-based dev loops)
 RUN cmake -S . -B build \
