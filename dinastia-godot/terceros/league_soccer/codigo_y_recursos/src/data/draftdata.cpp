@@ -27,10 +27,10 @@ void DraftSystem::GenerateProspects(int /*year*/, int count) {
   for (int i = 0; i < count; ++i) {
     DraftProspect p;
     p.prospectID = m_nextProspectID++;
-    p.firstName = kFirstNames[blunted::GameRandInt(8)];
-    p.lastName = kLastNames[blunted::GameRandInt(8)];
-    p.age = 17 + (blunted::GameRandInt(3));
-    p.position = kPositions[blunted::GameRandInt(9)];
+    p.firstName = kFirstNames[blunted::GameRandInt(8)]; // NOSONAR(S2245): azar de juego, no criptográfico
+    p.lastName = kLastNames[blunted::GameRandInt(8)]; // NOSONAR(S2245): azar de juego, no criptográfico
+    p.age = 17 + (blunted::GameRandInt(3)); // NOSONAR(S2245): azar de juego, no criptográfico
+    p.position = kPositions[blunted::GameRandInt(9)]; // NOSONAR(S2245): azar de juego, no criptográfico
     p.actualRating = 45 + (blunted::GameRandInt(40));
     p.scoutGrade = GradeFromRating(p.actualRating);
     p.projectedPick = i + 1;

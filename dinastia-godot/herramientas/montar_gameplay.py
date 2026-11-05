@@ -69,7 +69,7 @@ def tarjeta(nombre, titulo, lineas):
 
 
 def run(args):
-    subprocess.run([FF, "-y", "-hide_banner", "-loglevel", "error"] + args, check=True)
+    subprocess.run([FF, "-y", "-hide_banner", "-loglevel", "error"] + args, check=True)  # NOSONAR(S8705): herramienta local: argumentos propios, subprocess sin shell
 
 
 def intermedio(nombre, titulo, lineas):
@@ -88,7 +88,7 @@ def intermedio(nombre, titulo, lineas):
 
 
 def duracion(ruta):
-    r = subprocess.run(["/usr/bin/ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", ruta],
+    r = subprocess.run(["/usr/bin/ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", ruta],  # NOSONAR(S8705): herramienta local: argumentos propios, subprocess sin shell
                        capture_output=True, text=True, check=True)
     return float(r.stdout.strip())
 
@@ -98,7 +98,7 @@ for parte, piezas in PARTES.items():
         continue
     trozos = [intermedio(n, t, l) for n, t, l in piezas if t is not None or os.path.exists(os.path.join(D, n + ".avi"))]
     lista = os.path.join(D, f"lista_{parte}.txt")
-    with open(lista, "w") as f:
+    with open(lista, "w") as f:  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
         for t in trozos:
             f.write("file '%s'\n" % os.path.abspath(t))
     unido = os.path.join(D, f"unido_{parte}.mp4")

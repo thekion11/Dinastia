@@ -124,7 +124,7 @@ def main():
             pos.append(a)
         i += 1
     ruta, nombre = pos[0], pos[1]
-    lineas = open(ruta, encoding="utf-8").read().split("\n")
+    lineas = open(ruta, encoding="utf-8").read().split("\n")  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
     s = next(i for i, l in enumerate(lineas) if re.match(r"(static\s+)?func\s+" + re.escape(nombre) + r"\(", l))
     e = next((i for i in range(s + 1, len(lineas)) if re.match(r"(static\s+)?func\s", lineas[i])
               or (lineas[i] and lineas[i][0] not in " \t#" and not lineas[i].startswith(")"))), len(lineas))
@@ -272,7 +272,7 @@ def main():
         print("  variables SIN tipo deducido (viajan sin tipo; fíjalas con --tipos si hace falta):", ", ".join(todos_tipos_dudosos))
     if aplicar:
         nuevo = lineas[:s] + nuevas + llamador + lineas[e:]
-        open(ruta, "w", encoding="utf-8", newline="\n").write("\n".join(nuevo))
+        open(ruta, "w", encoding="utf-8", newline="\n").write("\n".join(nuevo))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
         print("  escrito")
 
 

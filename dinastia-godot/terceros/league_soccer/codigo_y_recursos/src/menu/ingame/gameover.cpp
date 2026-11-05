@@ -210,7 +210,7 @@ GameOverPage::GameOverPage(Gui2WindowManager* windowManager, const Gui2PageData&
         continue;
 
       // Base rating 5.5 to 6.5
-      float rating = 5.5f + (blunted::GameRandInt(10)) * 0.1f;
+      float rating = 5.5f + (blunted::GameRandInt(10)) * 0.1f; // NOSONAR(S2245): azar de juego, no criptográfico
       rating += teamMod;
 
       // Condition modifier

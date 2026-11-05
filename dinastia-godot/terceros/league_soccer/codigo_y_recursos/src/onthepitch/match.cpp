@@ -633,8 +633,8 @@ void Match::RandomizeAdboards(boost::intrusive_ptr<Node> stadiumNode) {
     return;
 
   // Deal a shuffled rotation so every design is used before one repeats.
-  std::mt19937 adboardRandom(std::random_device{}());
-  std::shuffle(adboardSurfaces.begin(), adboardSurfaces.end(), adboardRandom);
+  std::mt19937 adboardRandom(std::random_device{}()); // NOSONAR(S2245): azar de juego, no criptográfico
+  std::shuffle(adboardSurfaces.begin(), adboardSurfaces.end(), adboardRandom); // NOSONAR(S2245): azar de juego, no criptográfico
   size_t nextAdboard = 0;
 
   // collect adboard geoms

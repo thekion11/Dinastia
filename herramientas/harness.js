@@ -43,7 +43,7 @@
     log('');
     log('===== CARRERA: '+nom+' =====');
     var r=seguro('arranque '+nom,function(){
-      difSel='normal';rolSel=rol;desafiosSel=[];
+      difSel='normal';rolSel=rol;desafiosSel=[]; // NOSONAR(S2703): asigna a la variable global de la página probada; var crearía una local
       nuevaPartida('c1','Tester');
       G.miClub='c1';G.rol=rol;
       if(rol!=='dt'&&!G.dtEmp)G.dtEmp={nombre:'DT Prueba',estilo:'motivador'};

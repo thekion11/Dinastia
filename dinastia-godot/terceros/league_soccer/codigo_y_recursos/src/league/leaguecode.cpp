@@ -567,10 +567,10 @@ void LeagueSimulateFixture(const LeagueFixtureInfo& fixture, int& homeGoals, int
     int goals = static_cast<int>(expected);
     float frac = expected - static_cast<float>(goals);
     // Stochastic rounding keeps the expected goal average honest.
-    if ((blunted::GameRandInt(1000)) / 1000.0f < frac)
+    if ((blunted::GameRandInt(1000)) / 1000.0f < frac) // NOSONAR(S2245): azar de juego, no criptográfico
       goals += 1;
     // Occasional flair for the odd extra goal.
-    if (blunted::GameRandInt(100) < 15)
+    if (blunted::GameRandInt(100) < 15) // NOSONAR(S2245): azar de juego, no criptográfico
       goals += blunted::GameRandInt(2);
     return std::max(0, std::min(6, goals));
   };

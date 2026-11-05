@@ -20,7 +20,7 @@ def lum(h):
 
 
 def main():
-    semilla = int(sys.argv[1]) if len(sys.argv) > 1 else random.randint(0, 9999)
+    semilla = int(sys.argv[1]) if len(sys.argv) > 1 else random.randint(0, 9999)  # NOSONAR(S2245): azar de muestras/variación visual, no criptográfico
     cuantos = int(sys.argv[2]) if len(sys.argv) > 2 else 6
     rnd = random.Random(semilla)
     m = json.load(open(os.path.join(RAIZ, "datos", "caras_reales_mallas.json"), encoding="utf-8"))
@@ -39,10 +39,10 @@ def main():
     for nombre, lista in grupos.items():
         libres = [x for x in lista if x not in elegidos]
         if libres and len(elegidos) < cuantos:
-            elegidos.append(rnd.choice(libres))
+            elegidos.append(rnd.choice(libres))  # NOSONAR(S2245): azar de muestras/variación visual, no criptográfico
             print(f"# {nombre}: {elegidos[-1]}", file=sys.stderr)
     while len(elegidos) < cuantos:
-        x = rnd.choice(list(m))
+        x = rnd.choice(list(m))  # NOSONAR(S2245): azar de muestras/variación visual, no criptográfico
         if x not in elegidos:
             elegidos.append(x)
     print(",".join(elegidos))

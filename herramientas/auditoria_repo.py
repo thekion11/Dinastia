@@ -133,7 +133,7 @@ def main():
     if out == "-":
         print(s)
     else:
-        open(out, "w", encoding="utf-8").write(s + "\n")
+        open(out, "w", encoding="utf-8").write(s + "\n")  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
         print("escrito", out)
 
 

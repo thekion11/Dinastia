@@ -19,6 +19,7 @@ import urllib.request
 
 BASE = "https://sonarcloud.io/api"
 PROYECTO = "thekion11_Dinastia"
+MARCA = "<!-- GESTION: lo de abajo se escribe a mano y se conserva al regenerar -->"
 ORDEN_SEV = ["BLOCKER", "CRITICAL", "MAJOR", "MINOR", "INFO"]
 LENGUAJES = {
     ".cpp": "C++", ".h": "C++", ".hpp": "C++", ".cc": "C++", ".c": "C",
@@ -143,8 +144,13 @@ def main():
     with open(pj, "w", encoding="utf-8") as f:
         json.dump({"fecha": fecha, "rama": a.rama, "issues": issues, "hotspots": hotspots,
                    "duplicaciones": duplic}, f, ensure_ascii=False, indent=1)
+    gestion = ""  # sección manual (falsos positivos, excepciones) que sobrevive a regenerar el informe
+    if os.path.exists(pm):
+        previo = open(pm, encoding="utf-8").read()
+        if MARCA in previo:
+            gestion = previo[previo.index(MARCA):]
     with open(pm, "w", encoding="utf-8") as f:
-        f.write(resumen(issues, hotspots, duplic, a.rama, fecha))
+        f.write(resumen(issues, hotspots, duplic, a.rama, fecha) + (gestion or MARCA + "\n"))
     print(f"Issues: {len(issues)}  Hotspots: {len(hotspots)}  Duplicados: {len(duplic)}")
     print("Escrito:", os.path.normpath(pj), "y", os.path.normpath(pm))
 

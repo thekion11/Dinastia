@@ -2,7 +2,7 @@ setTimeout(async function(){
   var out=[];function di(s){out.push(s);}
   try{
     /* Se simula el camino real: elegir el modo Jeque en el menu y luego un club. */
-    modoSandboxJeque=true; rolSel='dt'; difSel='normal';
+    modoSandboxJeque=true; rolSel='dt'; difSel='normal'; // NOSONAR(S2703): asigna a la variable global de la página probada; var crearía una local
     nuevaPartida('c1','Tester');
     di('tras nuevaPartida()      saldo = '+G.saldo);
     /* Y ahora lo que hacian elegir()/elegirExt(): pisar el saldo con el del club. */
@@ -23,7 +23,7 @@ setTimeout(async function(){
     localStorage.clear();
     await guardarAhora();
     var antes=G.saldo;
-    G=null; modoSandboxJeque=false;          // como si se recargara la pagina
+    G=null; modoSandboxJeque=false;          // como si se recargara la pagina // NOSONAR(S2703): asigna a la variable global de la página probada; var crearía una local
     await continuarPartida();
     di('');
     di('tras recargar             G.jeque = '+G.jeque+'   esJeque() = '+esJeque());

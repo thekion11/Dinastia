@@ -649,11 +649,11 @@ int ClubRating(const std::string& name, int season) {
 
 // Uniform [0, 1) from the engine's raw output: std distributions are
 // implementation-defined, and standings should match on every platform.
-double Uniform(std::mt19937& rng) {
+double Uniform(std::mt19937& rng) { // NOSONAR(S2245): azar de juego, no criptográfico
   return static_cast<double>(rng() >> 8) / 16777216.0;
 }
 
-int PoissonGoals(std::mt19937& rng, double expected) {
+int PoissonGoals(std::mt19937& rng, double expected) { // NOSONAR(S2245): azar de juego, no criptográfico
   const double limit = std::exp(-expected);
   double product = Uniform(rng);
   int goals = 0;
@@ -683,7 +683,7 @@ void RecordResult(LeagueTableEntry& entry, int goalsFor, int goalsAgainst) {
     entry.form.erase(0, entry.form.size() - 5);
 }
 
-void PlayClubMatch(std::mt19937& rng, LeagueTableEntry& home, LeagueTableEntry& away, int season) {
+void PlayClubMatch(std::mt19937& rng, LeagueTableEntry& home, LeagueTableEntry& away, int season) { // NOSONAR(S2245): azar de juego, no criptográfico
   const int gap = ClubRating(home.name, season) - ClubRating(away.name, season);
   const double homeExpected = std::clamp(1.45 + 0.045 * gap, 0.25, 3.5);
   const double awayExpected = std::clamp(1.15 - 0.045 * gap, 0.25, 3.5);
@@ -697,7 +697,7 @@ void PlayClubMatch(std::mt19937& rng, LeagueTableEntry& home, LeagueTableEntry& 
 // when the user's score is known that club gets the mirrored result.
 void PlayRound(std::vector<LeagueTableEntry>& table, int season, int round, bool userResultKnown,
                int userGoals, int opponentGoals) {
-  std::mt19937 rng(static_cast<uint32_t>(season) * 7919u + static_cast<uint32_t>(round) * 104729u);
+  std::mt19937 rng(static_cast<uint32_t>(season) * 7919u + static_cast<uint32_t>(round) * 104729u); // NOSONAR(S2245): azar de juego, no criptográfico
   std::vector<size_t> order(table.size());
   std::iota(order.begin(), order.end(), size_t{0});
   for (size_t i = order.size(); i > 1; --i)

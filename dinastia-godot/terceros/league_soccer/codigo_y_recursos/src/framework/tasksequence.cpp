@@ -66,7 +66,7 @@ TaskSequenceEntryLockThread::TaskSequenceEntryLockThread(std::mutex& sequenceLoc
 }
 
 void TaskSequenceEntryLockThread::operator()() {
-  sequenceLock.lock();
+  sequenceLock.lock(); // NOSONAR(S8473): lock/unlock repartido entre funciones por diseño (API Lockable/planificador)
   isReady.SetData(true);
   std::unique_lock<std::mutex> lock(GetScheduler()->somethingIsDoneMutex);
   GetScheduler()->somethingIsDone.notify_one();
@@ -112,7 +112,7 @@ TaskSequenceEntry_Unlock::TaskSequenceEntry_Unlock(std::mutex& sequenceLock)
 TaskSequenceEntry_Unlock::~TaskSequenceEntry_Unlock() {}
 
 bool TaskSequenceEntry_Unlock::Execute() {
-  sequenceLock.unlock();
+  sequenceLock.unlock(); // NOSONAR(S8473): lock/unlock repartido entre funciones por diseño (API Lockable/planificador)
   return true;
 }
 

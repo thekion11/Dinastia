@@ -53,7 +53,7 @@ def uv_canonico(obj, n_total, lazo):
     """UV por vértice de la malla canónica (el OBJ los da por esquina de
     triángulo) y, para el anillo, el UV del borde empujado hacia fuera."""
     vt, cara_vt = [], {}
-    for linea in open(obj, encoding="utf-8"):
+    for linea in open(obj, encoding="utf-8"):  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
         p = linea.split()
         if p and p[0] == "vt":
             vt.append((float(p[1]), 1.0 - float(p[2])))
@@ -137,7 +137,7 @@ def caras(obj, por_tono):
         if len(grupo) < MEZCLA:
             continue
         for _ in range(por_tono):
-            elegidos = rnd.sample(grupo, MEZCLA)
+            elegidos = rnd.sample(grupo, MEZCLA)  # NOSONAR(S2245): azar de muestras/variación visual, no criptográfico
             formas, mapas, pesos, tonos, iris = [], [], [], [], []
             for k in elegidos:
                 e = m[k]

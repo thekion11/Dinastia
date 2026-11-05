@@ -48,7 +48,7 @@ def silueta(geom, objetivo=18):
     return [((x - ox) / lado, (y - oy) / lado) for x, y in s]
 
 def main():
-    gj = json.load(open(sys.argv[1], encoding="utf-8"))
+    gj = json.load(open(sys.argv[1], encoding="utf-8"))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
     por_iso = {f["properties"]["ADM0_A3"]: f["geometry"] for f in gj["features"]}
     for par in sys.argv[2:]:
         juego, iso = par.split(":")

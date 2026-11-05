@@ -9,7 +9,7 @@ DM = 0.1  # decímetros -> metros
 def leer_obj(ruta):
     V, VT, F = [], [], []
     grupo = None
-    for l in open(ruta):
+    for l in open(ruta):  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
         if l.startswith('v '): V.append([float(x) for x in l.split()[1:4]])
         elif l.startswith('vt '): VT.append([float(x) for x in l.split()[1:3]])
         elif l.startswith('g '): grupo = l.split()[1]
@@ -26,7 +26,7 @@ def quat_m(qq):
 
 
 def esqueleto_q(ruta):
-    q = json.load(open(ruta))
+    q = json.load(open(ruta))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
     qn = q['nodes']; padre = {}
     for i, n in enumerate(qn):
         for c in n.get('children', []): padre[c] = i
@@ -81,11 +81,11 @@ def construir(data, qgltf, morfos_rel, sexo='m'):
     base = base * DM; base[:, 1] -= base[:, 1].min()
     for k in morfos: morfos[k] = morfos[k] * DM
 
-    sk = json.load(open(os.path.join(data, 'rigs/default.mhskel')))
+    sk = json.load(open(os.path.join(data, 'rigs/default.mhskel')))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
     def jpos(j): return base[sk['joints'][j]].mean(0)
     def head(b): return jpos(sk['bones'][b]['head'])
     def tail(b): return jpos(sk['bones'][b]['tail'])
-    wmh = json.load(open(os.path.join(data, 'rigs/default_weights.mhw')))['weights']
+    wmh = json.load(open(os.path.join(data, 'rigs/default_weights.mhw')))['weights']  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
     qpadre, QROT, QPOS = esqueleto_q(qgltf)
 
     POS = {'root': np.zeros(3), 'pelvis': head('root'), 'spine_01': head('spine04'), 'spine_02': head('spine03'),

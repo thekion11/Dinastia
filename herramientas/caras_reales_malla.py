@@ -55,7 +55,7 @@ GIRO_ESPEJO = 18.0  # grados de giro a partir de los que se usa la mitad cercana
 
 def leer_obj(ruta):
     v, t = [], []
-    for linea in open(ruta, encoding="utf-8"):
+    for linea in open(ruta, encoding="utf-8"):  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
         p = linea.split()
         if not p:
             continue

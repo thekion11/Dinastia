@@ -72,7 +72,7 @@ void Gui2Image::Redraw() {
   windowManager->GetCoordinates(x_percent, y_percent, width_percent, height_percent, x, y, w, h);
 
   if (!hasRenderableSurface || w <= 0 || h <= 0) {
-    sourceSurfaceRes->resourceMutex.unlock();
+    sourceSurfaceRes->resourceMutex.unlock(); // NOSONAR(S8473): lock/unlock repartido entre funciones por diseño (API Lockable/planificador)
     return;
   }
 
@@ -137,7 +137,7 @@ void Gui2Image::SetZoom(float zoomx, float zoomy) {
   windowManager->GetCoordinates(x_percent, y_percent, width_percent, height_percent, x, y, w, h);
 
   if (!hasRenderableSurface || w <= 0 || h <= 0) {
-    sourceSurfaceRes->resourceMutex.unlock();
+    sourceSurfaceRes->resourceMutex.unlock(); // NOSONAR(S8473): lock/unlock repartido entre funciones por diseño (API Lockable/planificador)
     return;
   }
 

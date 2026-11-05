@@ -224,7 +224,7 @@ def locales_de(lineas):
 # ---------------------------------------------------------------- partir
 
 def partir(ruta, aplicar):
-    with open(ruta, encoding="utf-8") as f:
+    with open(ruta, encoding="utf-8") as f:  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
         lineas = f.read().split("\n")
     if lineas and lineas[-1] == "":
         lineas.pop()
@@ -350,7 +350,7 @@ def partir(ruta, aplicar):
             avisos.append(f"capa {k}: {len(cuerpo)} líneas")
     if aplicar:
         for destino, cuerpo in ficheros:
-            with open(destino, "w", encoding="utf-8", newline="\n") as f:
+            with open(destino, "w", encoding="utf-8", newline="\n") as f:  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
                 f.write("\n".join(cuerpo).rstrip("\n") + "\n")
     return {"capas": n, "avisos": avisos, "cambios": cambios,
             "mayor": max(len(c) for _, c in ficheros), "ficheros": [d for d, _ in ficheros]}

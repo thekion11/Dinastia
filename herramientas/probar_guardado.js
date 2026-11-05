@@ -21,7 +21,7 @@ setTimeout(async function(){
     di('leerAuto()     = '+(leerAuto()?'ofrece Continuar':'NULL'));
 
     /* Simulamos cerrar y reabrir: se tira el mundo y se recarga desde el guardado. */
-    G=null;
+    G=null; // NOSONAR(S2703): asigna a la variable global de la página probada; var crearía una local
     await continuarPartida();
     di('--- tras reabrir ---');
     di('jugadores  '+antesJug+' -> '+Object.keys(G.jug).length+'  '+(antesJug===Object.keys(G.jug).length?'OK':'MAL'));

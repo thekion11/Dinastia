@@ -12,7 +12,7 @@ namespace CareerCommon {
 
 // Seeded RNG used by deterministic career simulations. Seeding applies to the
 // process-wide career sequence and is harmless in normal play.
-std::mt19937& Rng();
+std::mt19937& Rng(); // NOSONAR(S2245): azar de juego, no criptográfico
 void SeedRng(unsigned int seed);
 int RandomInt(int minValue, int maxValue);
 int ClampInt(int value, int minValue, int maxValue);

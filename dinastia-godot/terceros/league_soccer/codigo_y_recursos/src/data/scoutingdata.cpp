@@ -43,11 +43,11 @@ ScoutReport ScoutingNetwork::GenerateReport(int scoutID, int playerID, int seaso
   for (int i = 0; attrs[i]; ++i) {
     // Placeholder attribute values; in a full implementation these would come
     // from the player database
-    report.knownAttributes[attrs[i]] = 50 + (blunted::GameRandInt(30) - 15);
+    report.knownAttributes[attrs[i]] = 50 + (blunted::GameRandInt(30) - 15); // NOSONAR(S2245): azar de juego, no criptográfico
     report.attributeUncertainty[attrs[i]] = baseUncertainty;
   }
 
-  report.potential = 40 + (blunted::GameRandInt(60));
+  report.potential = 40 + (blunted::GameRandInt(60)); // NOSONAR(S2245): azar de juego, no criptográfico
   report.recommendBid = report.potential >= 70;
 
   m_reports.push_back(report);

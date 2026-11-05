@@ -13,8 +13,8 @@ namespace CareerCommon {
 
 namespace {
 
-std::mt19937& CareerRng() {
-  static std::mt19937 rng(static_cast<unsigned int>(std::time(nullptr)));
+std::mt19937& CareerRng() { // NOSONAR(S2245): azar de juego, no criptográfico
+  static std::mt19937 rng(static_cast<unsigned int>(std::time(nullptr))); // NOSONAR(S2245): azar de juego, no criptográfico
   return rng;
 }
 
@@ -24,7 +24,7 @@ void SeedRng(unsigned int seed) {
   CareerRng().seed(seed);
 }
 
-std::mt19937& Rng() {
+std::mt19937& Rng() { // NOSONAR(S2245): azar de juego, no criptográfico
   return CareerRng();
 }
 

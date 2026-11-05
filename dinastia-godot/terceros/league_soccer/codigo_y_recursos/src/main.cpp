@@ -550,7 +550,7 @@ int main(int argc, const char** argv) {
 
   Initialize(*config);
 
-  blunted::SeedGameRng(static_cast<unsigned int>(time(nullptr)));
+  blunted::SeedGameRng(static_cast<unsigned int>(time(nullptr))); // NOSONAR(S2245): azar de juego, no criptográfico
   randomseed();  // for the boost random
   fastrandomseed();
 

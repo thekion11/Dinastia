@@ -75,7 +75,7 @@ def main() -> None:
     cmd = [ff, "-y", *entradas, "-filter_complex", ";".join(filtros), "-map", "[salida]",
            "-c:v", "libx264", "-preset", "medium", "-crf", "24", "-pix_fmt", "yuv420p",
            "-movflags", "+faststart", destino]
-    subprocess.run(cmd, check=True)
+    subprocess.run(cmd, check=True)  # NOSONAR(S8705): herramienta local: argumentos propios, subprocess sin shell
     print(f"Listo: {destino}  ({len(tramos)} tramos)")
 
 

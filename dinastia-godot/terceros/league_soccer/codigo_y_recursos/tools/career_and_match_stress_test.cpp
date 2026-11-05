@@ -355,7 +355,7 @@ void Run100MatchSimulationSuite() {
 
   std::vector<MatchSample> matchLogs;
   std::map<std::string, int> scorelineFrequency;
-  std::mt19937 rng(42);
+  std::mt19937 rng(42); // NOSONAR(S2245): azar de juego, no criptográfico
 
   int totalHomeWins = 0;
   int totalDraws = 0;
