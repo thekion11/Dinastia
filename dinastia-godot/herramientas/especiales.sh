@@ -279,6 +279,39 @@ pasa "tut_guia_visible" "godot --headless --path . res://pruebas/ideas/tut_guia_
 pasa "tre_coches" "godot --headless --path . res://pruebas/ideas/tre_coches.tscn" "(^|[^0-9])0 fallos"
 pasa "zz_alt" "godot --headless --path . res://pruebas/ideas/zz_alt.tscn" "(^|[^0-9])0 fallos"
 pasa "timing_disparo_jugadas" "godot --headless --path . res://pruebas/timing_disparo_jugadas.tscn" "(^|[^0-9])0 fallos"
+# 5d. PRUEBAS POR SISTEMA (5-11, rama sonar/bancos): `pruebas/so/LISTA.txt`; cada una imprime «OK|FALLO <nombre> [<sistema>]» y sabe qué espera de su sistema.
+#     Las que necesitan pantalla (xvfb, Vulkan o OpenGL) van en el bloque «todo». Todas a la vez: `python3 herramientas/pruebas_so.py` (Windows/macOS también).
+#     LISTA.txt y estas líneas deben coincidir: `python3 herramientas/pruebas_so.py --sincronia`.
+BLOQUE=so
+pasa "so: com_idiomas_nueve_sin_vacios" "godot --headless --path . res://pruebas/so/com_idiomas_nueve_sin_vacios.tscn" "^OK com_idiomas_nueve_sin_vacios "
+pasa "so: com_idiomas_cambio_en_vivo" "godot --headless --path . res://pruebas/so/com_idiomas_cambio_en_vivo.tscn" "^OK com_idiomas_cambio_en_vivo "
+pasa "so: com_guardado_ida_vuelta" "godot --headless --path . res://pruebas/so/com_guardado_ida_vuelta.tscn" "^OK com_guardado_ida_vuelta "
+pasa "so: com_arranque_autoloads" "godot --headless --path . res://pruebas/so/com_arranque_autoloads.tscn" "^OK com_arranque_autoloads "
+pasa "so: com_entrada_por_sistema" "godot --headless --path . res://pruebas/so/com_entrada_por_sistema.tscn" "^OK com_entrada_por_sistema "
+pasa "so: err_guardado_danado" "godot --headless --path . res://pruebas/so/err_guardado_danado.tscn" "^OK err_guardado_danado "
+pasa "so: err_instantanea_invalida" "godot --headless --path . res://pruebas/so/err_instantanea_invalida.tscn" "^OK err_instantanea_invalida "
+pasa "so: err_pck_y_pack_ausentes" "godot --headless --path . res://pruebas/so/err_pck_y_pack_ausentes.tscn" "^OK err_pck_y_pack_ausentes "
+pasa "so: err_entradas_invalidas" "godot --headless --path . res://pruebas/so/err_entradas_invalidas.tscn" "^OK err_entradas_invalidas "
+pasa "so: err_rafaga_entrada" "godot --headless --path . res://pruebas/so/err_rafaga_entrada.tscn" "^OK err_rafaga_entrada "
+pasa "so: err_poca_memoria" "godot --headless --path . res://pruebas/so/err_poca_memoria.tscn" "^OK err_poca_memoria "
+pasa "so: est_calendario_liga" "godot --headless --path . res://pruebas/so/est_calendario_liga.tscn" "^OK est_calendario_liga "
+pasa "so: est_economia_invariantes" "godot --headless --path . res://pruebas/so/est_economia_invariantes.tscn" "^OK est_economia_invariantes "
+pasa "so: est_datos_coherencia" "godot --headless --path . res://pruebas/so/est_datos_coherencia.tscn" "^OK est_datos_coherencia "
+pasa "so: est_datos_tablas_vs_codigo" "godot --headless --path . res://pruebas/so/est_datos_tablas_vs_codigo.tscn" "^OK est_datos_tablas_vs_codigo "
+pasa "so: est_partido_simulado_reglas" "godot --headless --path . res://pruebas/so/est_partido_simulado_reglas.tscn" "^OK est_partido_simulado_reglas "
+pasa "so: int_nativo_por_sistema" "godot --headless --path . res://pruebas/so/int_nativo_por_sistema.tscn" "^OK int_nativo_por_sistema "
+pasa "so: int_paquetes_y_parches" "godot --headless --path . res://pruebas/so/int_paquetes_y_parches.tscn" "^OK int_paquetes_y_parches "
+pasa "so: int_flujo_menu_a_guardado" "godot --headless --path . res://pruebas/so/int_flujo_menu_a_guardado.tscn" "^OK int_flujo_menu_a_guardado "
+pasa "so: fun_azar_puro" "godot --headless --path . res://pruebas/so/fun_azar_puro.tscn" "^OK fun_azar_puro "
+pasa "so: fun_calendario_fechas" "godot --headless --path . res://pruebas/so/fun_calendario_fechas.tscn" "^OK fun_calendario_fechas "
+pasa "so: fun_formato_y_demarcaciones" "godot --headless --path . res://pruebas/so/fun_formato_y_demarcaciones.tscn" "^OK fun_formato_y_demarcaciones "
+pasa "so: fun_nativo_datos_aleatorios" "godot --headless --path . res://pruebas/so/fun_nativo_datos_aleatorios.tscn" "^OK fun_nativo_datos_aleatorios "
+pasa "so: int_actualizador_por_sistema" "godot --headless --path . res://pruebas/so/int_actualizador_por_sistema.tscn" "^OK int_actualizador_por_sistema "
+pasa "so: vis_pantallas_sin_vacios" "godot --headless --path . res://pruebas/so/vis_pantallas_sin_vacios.tscn" "^OK vis_pantallas_sin_vacios "
+pasa "so: vis_referencias_integras" "godot --headless --path . res://pruebas/so/vis_referencias_integras.tscn" "^OK vis_referencias_integras "
+pasa "so: ren_menu_y_mundo_memoria" "godot --headless --path . res://pruebas/so/ren_menu_y_mundo_memoria.tscn" "^OK ren_menu_y_mundo_memoria "
+pasa "so: ren_peso_archivos" "godot --headless --path . res://pruebas/so/ren_peso_archivos.tscn" "^OK ren_peso_archivos "
+pasa "so: ren_sin_tiempo_en_headless" "godot --headless --path . res://pruebas/so/ren_sin_tiempo_en_headless.tscn" "^OK ren_sin_tiempo_en_headless "
 BLOQUE=""
 if [[ "$1" = "todo" ]]; then
   # Reutilizadas lentas (> 45 s cada una)
@@ -335,6 +368,11 @@ fi
   else
     echo "SALTADA pruebas visuales (sin Vulkan: apt-get install -y mesa-vulkan-drivers)"
   fi
+  # pruebas por sistema que necesitan pantalla (5-11): partido con la cámara real en Compatibilidad y Forward+, pantallas del menú, presupuesto con hw_modesto
+  pasa "so: vis_partido_forward" "python3 herramientas/pruebas_so.py vis_partido_forward" "^OK +vis_partido_forward "
+  pasa "so: vis_partido_compat" "python3 herramientas/pruebas_so.py vis_partido_compat" "^OK +vis_partido_compat "
+  pasa "so: vis_menu_pantallas" "python3 herramientas/pruebas_so.py vis_menu_pantallas" "^OK +vis_menu_pantallas "
+  pasa "so: ren_partido_presupuesto" "python3 herramientas/pruebas_so.py ren_partido_presupuesto" "^OK +ren_partido_presupuesto "
 fi
 rm -f "$LOG"
 [[ "$FALLOS" -eq 0 ]] && echo "ESPECIALES: todo en orden" || echo "ESPECIALES: $FALLOS con fallos"
