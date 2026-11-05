@@ -11,8 +11,20 @@ func _probar() -> void:
 	var m := _mundo(20261105)
 	var base: Dictionary = Partida.instantanea(m)
 	_comprobar(not base.is_empty(), "instantánea sana (%d claves)" % base.size())
+	## Un guardado antiguo SIN «azar» sigue cargando (regresión vigilada: la clave es opcional).
+	var sin_azar := base.duplicate(true)
+	sin_azar.erase("azar")
+	var viejo := Partida.desde_instantanea(sin_azar)
+	_comprobar(viejo is Mundo and viejo.mi_club() != null, "un guardado sin «azar» (como los viejos) sigue cargando y da un Mundo")
 	var sana := Partida.desde_instantanea(base)
 	_comprobar(sana != null and sana.mi_club() != null, "la sana se reconstruye")
+	## …y el guardado viejo REAL del repositorio (sin «azar») también.
+	var bruto := FileAccess.get_file_as_bytes("res://pruebas/partidas_viejas/v2_2026-10-27.json.gz")
+	if bruto.size() > 0:
+		var txt := bruto.decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP).get_string_from_utf8()
+		var d_real: Variant = JSON.parse_string(txt)
+		_comprobar(d_real is Dictionary and not (d_real as Dictionary).has("azar"), "la muestra v2 del repositorio no trae «azar»")
+		_comprobar(Partida.desde_instantanea(d_real) is Mundo, "…y se carga")
 	## Quitar de a una cada clave de primer nivel: nada debe reventar el intérprete (SCRIPT ERROR lo detecta el lanzador).
 	var sin_club := 0
 	var claves: Array = base.keys()

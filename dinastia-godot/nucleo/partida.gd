@@ -254,8 +254,8 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 
 ## Reconstruye un Mundo desde el retrato. Lo usan la carga de disco y el
 ## deshacer, que son la misma operacion con distinto origen.
-## Sin estas claves no se puede reconstruir un mundo (ver `desde_instantanea`).
-const CLAVES_IMPRESCINDIBLES := ["semilla", "anio", "semana", "clubes", "ligas", "mi_club", "azar"]
+## Sin estas claves no se puede reconstruir un mundo (ver `desde_instantanea`). «azar» NO está: es opcional (los guardados viejos, como `pruebas/partidas_viejas/v2_2026-10-27`, no lo traen).
+const CLAVES_IMPRESCINDIBLES := ["semilla", "anio", "semana", "clubes", "ligas", "mi_club"]
 
 static func desde_instantanea(datos: Dictionary) -> Mundo:
 	if datos.is_empty():

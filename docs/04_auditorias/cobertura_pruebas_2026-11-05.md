@@ -15,7 +15,7 @@ Complementa `inventario_pruebas_2026-11-05.md`. Sistemas: **L**inux · **W**indo
 
 ## Fallos reales que destapó
 
-1. **`Partida.desde_instantanea` reventaba con un guardado sin claves imprescindibles** (`semilla`, `anio`, `semana`, `clubes`, `ligas`, `mi_club`, `azar`) o con `clubes`/`ligas`/`mi_club` de otro tipo: errores de intérprete y mundo a medias. **Arreglado** (rechaza con `push_error` y devuelve null, como una versión futura).
+1. **`Partida.desde_instantanea` reventaba con un guardado sin claves imprescindibles** (`semilla`, `anio`, `semana`, `clubes`, `ligas`, `mi_club`; «azar» es opcional: los guardados viejos no lo traen) o con `clubes`/`ligas`/`mi_club` de otro tipo: errores de intérprete y mundo a medias. **Arreglado** (rechaza con `push_error` y devuelve null, como una versión futura).
 2. **Cargar y seguir ≠ seguir sin cargar a partir de la 3.ª semana** (`int_flujo_menu_a_guardado`): el azar y la liga coinciden 2 semanas; después algún estado por jugador (forma, partidos jugados) deja de coincidir. Las 2 primeras semanas se vigilan; el resto se informa (`INFO`). **Pendiente** (`PLAN_GENERAL.md`).
 3. `Actualizador.sistema()` devuelve «escritorio» también en Web/macOS: confirmar que el parche de escritorio sirve ahí. **Pendiente de confirmar** (sesión de plataformas).
 4. `probar_nativo` exige la extensión en todos los sistemas; donde no hay binario (Web, macOS, Android sin compilar) fallaría. `int_nativo_por_sistema` ya usa la expectativa propia.
