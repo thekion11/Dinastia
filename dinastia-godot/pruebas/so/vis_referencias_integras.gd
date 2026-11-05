@@ -6,6 +6,11 @@ func _nombre() -> String:
 
 func _probar() -> void:
 	_titulo("VISUALIZACIÓN · referencias sanas [%s]" % sistema())
+	## El detector de imágenes vacías detecta una vacía (si no, las demás pruebas visuales aprobarían una pantalla en blanco).
+	var blanca := Image.create_empty(320, 180, false, Image.FORMAT_RGB8)
+	blanca.fill(Color(0.2, 0.2, 0.2))
+	var e0 := _estadisticas(blanca)
+	_comprobar(float(e0["desv"]) < 0.001 and float(e0["dominante"]) > 0.99, "una imagen de un solo color sale como vacía (desv %.4f, dominante %.2f)" % [e0["desv"], e0["dominante"]])
 	var d := DirAccess.open("res://pruebas/visual/referencias")
 	_comprobar(d != null, "existe pruebas/visual/referencias")
 	var vistas := {}
