@@ -34,8 +34,13 @@ func _probar() -> void:
 	_comprobar(pj > 0, "tras 6 semanas la liga tiene partidos jugados (%d)" % pj)
 	var h0 := _huella(m)
 	Partida.borrar(RANURA)
+	var estado_azar := str(Azar._rng.state)
 	_comprobar(Partida.guardar(m, RANURA), "guardar")
+	for i in 7:
+		Azar.f()   ## se gasta azar: el estado guardado ya no es el de ahora
+	_comprobar(str(Azar._rng.state) != estado_azar, "gastar azar cambia el estado (la comprobación de abajo no es vacía)")
 	var n := Partida.cargar(RANURA)
+	_comprobar(str(Azar._rng.state) == estado_azar, "cargar devuelve el ESTADO del azar que había al guardar")
 	_comprobar(n != null, "cargar")
 	if n != null:
 		_comprobar(_huella(n) == h0, "lo cargado es idéntico a lo guardado (tabla, caja, fecha)")
