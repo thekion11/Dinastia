@@ -3,7 +3,7 @@
 # EXPORTABAN en compilar.yml. Este flujo, APARTE y sin bloquear ninguna compilación, ejecuta el juego en:
 #   🪟 Windows (windows-latest): extensión C++ (.dll) = GDScript + un subconjunto del mini banco con Git Bash.
 #   🌐 Web: exporta, sirve y abre en Chromium hasta ver el menú principal (señal DINASTIA_MENU_LISTO), sin errores de consola.
-# Android y macOS: ver docs/04_auditorias/cobertura_sistemas_2026-11-05.md (Android no viable en CI; macOS sin preset).
+# macOS (sin preset de exportación: solo se ejecuta) y Android: ver docs/04_auditorias/cobertura_sistemas_2026-11-05.md.
 # Sin secretos. Ninguna entrada del flujo se interpola dentro de `run:`.
 name: Plataformas (Windows y Web)
 
@@ -69,6 +69,8 @@ jobs:
           printf '#!/usr/bin/env bash\nexec "$(dirname "$0")/Godot_v%s-stable_win64_console.exe" "$@"\n' "$GODOT_VERSION" > "$RUNNER_TEMP/godot/godot"
           chmod +x "$RUNNER_TEMP/godot/godot"
           PATH="$RUNNER_TEMP/godot:$PATH" godot --version
+          ## pruebas_so.py lanza Godot sin shell: necesita el .exe real, no el script `godot`.
+          echo "GODOT=$(cygpath -w "$RUNNER_TEMP/godot/Godot_v${GODOT_VERSION}-stable_win64_console.exe")" >> "$GITHUB_ENV"
           cygpath -w "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
 
       - name: Preparar (LFS, caché e importación)
@@ -97,6 +99,17 @@ jobs:
           { echo "### 🪟 Windows"; for g in guardado textos competicion lanzamiento; do echo "- $g: $(sed 's/\x1b\[[0-9;]*m//g' "$(cygpath -u "$RUNNER_TEMP")/mini_$g.txt" | grep -a '===== FIN' | tail -1)"; done; } >> "$GITHUB_STEP_SUMMARY"
           exit $malo
 
+      - name: Pruebas por sistema (pruebas/so, las que no necesitan pantalla)
+        shell: bash
+        working-directory: dinastia-godot
+        run: |
+          set +e
+          log="$(cygpath -u "$RUNNER_TEMP")/so_windows.txt"
+          PYTHONIOENCODING=utf-8 python herramientas/pruebas_so.py --requiere headless -j 2 | tee "$log"
+          codigo=${PIPESTATUS[0]}
+          { echo "### 🪟 Windows · pruebas/so"; python herramientas/tabla_so.py windows="$log"; } >> "$GITHUB_STEP_SUMMARY"
+          exit $codigo
+
       - name: Subir los registros
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # v4.6.2
@@ -105,6 +118,85 @@ jobs:
           path: |
             ${{ runner.temp }}/nativo.txt
             ${{ runner.temp }}/mini_*.txt
+            ${{ runner.temp }}/so_windows.txt
+          if-no-files-found: ignore
+
+  macos:
+    name: 🍎 macOS (ejecutar)
+    runs-on: macos-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
+        with:
+          lfs: false
+          sparse-checkout: |
+            dinastia-godot
+            .github
+
+      ## macOS trae bash 3.2, `sed` BSD (sin \x1b) y no trae `timeout`: los scripts del banco usan las versiones GNU.
+      - name: Herramientas GNU (timeout, sed)
+        shell: bash
+        run: |
+          brew install coreutils gnu-sed
+          echo "$(brew --prefix coreutils)/libexec/gnubin" >> "$GITHUB_PATH"
+          echo "$(brew --prefix gnu-sed)/libexec/gnubin" >> "$GITHUB_PATH"
+
+      - name: Godot 4.7.2 para macOS (con suma de comprobación)
+        shell: bash
+        env:
+          BASE: https://github.com/godotengine/godot/releases/download/4.7.2-stable
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/dl" "$RUNNER_TEMP/godot"
+          cd "$RUNNER_TEMP/dl"
+          curl --proto "=https" --tlsv1.2 -sSLfo godot.zip "$BASE/Godot_v${GODOT_VERSION}-stable_macos.universal.zip"
+          curl --proto "=https" --tlsv1.2 -sSLfo SUMS.txt "$BASE/SHA512-SUMS.txt"
+          esperado=$(grep " Godot_v${GODOT_VERSION}-stable_macos.universal.zip\$" SUMS.txt | cut -d' ' -f1)
+          real=$(shasum -a 512 godot.zip | cut -d' ' -f1)
+          test -n "$esperado" && test "$esperado" = "$real" || { echo "Suma SHA-512 de Godot NO coincide"; exit 1; }
+          unzip -q godot.zip -d "$RUNNER_TEMP/godot"
+          ln -s "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" "$RUNNER_TEMP/godot/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+          echo "GODOT=$RUNNER_TEMP/godot/godot" >> "$GITHUB_ENV"
+          "$RUNNER_TEMP/godot/godot" --version
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - name: Mini banco en macOS (grupos guardado, textos, competición y lanzamiento)
+        shell: bash
+        working-directory: dinastia-godot
+        env:
+          TMPDIR: ${{ runner.temp }}
+        run: |
+          set +e
+          malo=0
+          for g in guardado textos competicion lanzamiento; do
+            bash herramientas/mini_banco.sh "$g" "$RUNNER_TEMP/mini_$g.txt" || malo=1
+          done
+          { echo "### 🍎 macOS · mini banco"; for g in guardado textos competicion lanzamiento; do echo "- $g: $(sed 's/\x1b\[[0-9;]*m//g' "$RUNNER_TEMP/mini_$g.txt" | grep -a '===== FIN' | tail -1)"; done; } >> "$GITHUB_STEP_SUMMARY"
+          exit $malo
+
+      ## No hay .dylib de la extensión C++ para macOS (bin_nativo/dinastia.gdextension): se usa el respaldo GDScript, y
+      ## `int_nativo_por_sistema` (en pruebas/so) comprueba justo eso: que NO se espera extensión y que todo funciona sin ella.
+      - name: Pruebas por sistema (pruebas/so, las que no necesitan pantalla)
+        shell: bash
+        working-directory: dinastia-godot
+        run: |
+          set +e
+          PYTHONIOENCODING=utf-8 python3 herramientas/pruebas_so.py --requiere headless -j 2 | tee "$RUNNER_TEMP/so_macos.txt"
+          codigo=${PIPESTATUS[0]}
+          { echo "### 🍎 macOS · pruebas/so"; python3 herramientas/tabla_so.py macos="$RUNNER_TEMP/so_macos.txt"; } >> "$GITHUB_STEP_SUMMARY"
+          exit $codigo
+
+      - name: Subir los registros
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # v4.6.2
+        with:
+          name: plataformas-macos-registro
+          path: |
+            ${{ runner.temp }}/mini_*.txt
+            ${{ runner.temp }}/so_macos.txt
           if-no-files-found: ignore
 
   exportar-web:

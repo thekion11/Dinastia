@@ -8,6 +8,7 @@ Web y Android las ejecuta el CI de plataformas con el mismo marcador). Cada prue
   python3 herramientas/pruebas_so.py com_idiomas_nueve_sin_vacios   # una sola
   python3 herramientas/pruebas_so.py --crear                  # crea las escenas .tscn que falten (dos líneas)
   python3 herramientas/pruebas_so.py --sistema web --lista    # qué correría en Web (para el CI de plataformas)
+  python3 herramientas/pruebas_so.py --requiere headless      # solo las que no necesitan pantalla (CI de plataformas: Windows sin GPU)
   python3 herramientas/pruebas_so.py --sincronia              # LISTA.txt y especiales.sh dicen lo mismo
   python3 herramientas/pruebas_so.py --marcadores < salida.txt  # revisa un registro y dice qué falló o falta por sistema
 
@@ -148,6 +149,7 @@ def main():
         sis = a[a.index("--sistema") + 1]
     if "--familia" in a:
         fam = a[a.index("--familia") + 1]
+    req = a[a.index("--requiere") + 1] if "--requiere" in a else None
     if "-j" in a:
         jobs = int(a[a.index("-j") + 1])
     if "--crear" in a:
@@ -163,7 +165,7 @@ def main():
     if "--marcadores" in a:
         return revisar_marcadores(filas)
     nombres = [x for x in a if x in {f["nombre"] for f in filas}]
-    sel = [f for f in filas if aplica(f, sis) and (not fam or f["familia"] == fam) and (not nombres or f["nombre"] in nombres)]
+    sel = [f for f in filas if aplica(f, sis) and (not fam or f["familia"] == fam) and (not nombres or f["nombre"] in nombres) and (not req or f["requiere"] == req)]
     if "--lista" in a:
         for f in sel:
             print("%-14s %-42s %-22s %s" % (f["familia"], f["nombre"], ",".join(sorted(f["sistemas"])), f["requiere"]))
