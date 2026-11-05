@@ -33,5 +33,19 @@ granja de dispositivos. Cuando exista un dispositivo, basta `adb logcat | grep D
 | `banco.sh` (kill, subprocesos en paralelo, `XDG_DATA_HOME` por parte) | sin probar; `user://` en Windows ignora `XDG_DATA_HOME`, así que las partes pisarían los guardados | solo se usa `mini_banco.sh` (un proceso) |
 | `especiales.sh` | usa muchos `/tmp/...` fijos y `xvfb-run` | pendiente (PLAN_GENERAL) |
 
-## Estado de la verificación
-Ver el final de este documento («Resultado de las ejecuciones»).
+## Resultado de las ejecuciones (run 6 de `plataformas.yml`, rama `sonar/plataformas`)
+| Trabajo | Resultado | Notas |
+|---|---|---|
+| 🪟 Windows | **VERDE** | `probar_nativo` con la `.dll` («FIN. 0 fallos») y mini banco: guardado 9 s, textos 9 s, competición 23 s, lanzamiento 6 s, todos «FIN. 0 fallos». ~30 min la primera vez (LFS + importación); con la caché de `.godot` y LFS, mucho menos |
+| 🌐 Web exportar | VERDE | ~1-3 min |
+| 🌐 Web abrir en Chromium | **VERDE** | el menú aparece en ~20 s (SwiftShader); captura `menu_web.jpg` en el artefacto `plataformas-web-captura` |
+
+## Lecciones y hallazgos de la puesta en marcha
+1. **Windows, nombres largos**: `material/` trae un archivo con nombre larguísimo → el checkout fallaba («Filename too long»). Solución: checkout parcial (`dinastia-godot`, `.github`) + `core.longpaths`. Hueco: ese archivo tampoco se puede clonar en Windows para los usuarios; conviene renombrarlo (decisión del dueño: `material/` está bajo su OK).
+2. **Windows, Godot «console»**: `Godot_…_console.exe` es un envoltorio y renombrarlo a `godot.exe` da «Invalid wrapper executable name». Se deja con su nombre y `godot` es un script bash que lo llama.
+3. **Web, la señal del menú** va en `ui/inicio.gd` (el menú real); en `Principal` (primer intento) nunca llega, porque esa es la escena de partida.
+4. **Web, ruido real de consola** (tolerado en `humo_web.mjs`, pero conviene resolverlo): «No GDExtension library found … (web.wasm32)» — `dinastia.gdextension` no tiene entrada Web, el juego usa el respaldo GDScript — y el aviso «Occlusion culling is disabled at build-time». Cualquier otro error de consola SÍ falla la prueba.
+5. Nota: con `cancel-in-progress`, un push nuevo cancela el run anterior (también el de Windows): no empujar mientras se espera un resultado.
+
+## Pins y seguridad del flujo
+Acciones fijadas por SHA (checkout 4.2.2, upload-artifact 4.6.2, download-artifact 4.3.0, setup-node 4.4.0; la acción local `preparar` usa `actions/cache@v4` por etiqueta, como el resto del repo), Godot 4.7.2 con SHA-512, `playwright-core@1.49.1`, Node 22.12.0, `curl --proto =https`, `shell: bash` explícito, sin entradas `inputs.*` ni secretos.

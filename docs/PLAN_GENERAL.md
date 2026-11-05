@@ -119,6 +119,9 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - Líder: rendimiento móvil (barrido de resolución en la prueba de rendimiento; MÍNIMA hasta 60 FPS con los datos del teléfono del dueño)
   y pasar la rama a `main` (PR #120, el dueño dijo SÍ el 4-11) cuando el CI esté verde.
 
+## COBERTURA DE PLATAFORMAS (5-11) — se borra al completarse
+- `plataformas.yml` ejecuta el juego en Windows (nativo + mini banco) y en Web (menú en Chromium): ver `04_auditorias/cobertura_sistemas_2026-11-05.md`. Pendiente: banco/especiales completos en Windows (`/tmp` fijos, `xvfb-run`), humo de Android (necesita APK x86_64 o dispositivo), preset de macOS (no existe), renombrar el archivo de `material/escudos_especiales_originales/` con nombre larguísimo (no clona en Windows), entrada Web en `dinastia.gdextension` (ruido de consola).
+
 ## FALLOS DETECTADOS
 Los hallazgos de la auditoría viven en `docs/04_auditorias/MEGA_AUDITORIA_4/*.md` (uno por área); aquí solo lo que espera al dueño.
 - **Propuesta (A4-INT-R03, 4-11): la tabla de «Mi plantel» en el móvil.** Cuesta ~537 llamadas de dibujo y ~36.000 primitivas al pintarse (25 jugadores × cara, nombre y cinco celdas, cada celda una etiqueta). Con el ahorro de MÍNIMA solo se paga al abrirla o cambiar algo, no en cada fotograma. Sin cambiar el aspecto no hay forma pequeña: dibujarla en un solo control con `_draw` o crear solo las ~15 filas visibles obliga a reescribir el orden por columnas, las marcas, los botones de la fila y la cebra. Se deja como está hasta que el dueño diga si le importa más la velocidad de abrirla en un móvil modesto que el riesgo de rehacer la tabla.
