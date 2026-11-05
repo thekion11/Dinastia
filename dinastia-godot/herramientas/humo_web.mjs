@@ -29,7 +29,10 @@ const opciones = { headless: true, args: ["--no-sandbox", "--use-gl=angle", "--u
 if (process.env.CHROME_PATH) opciones.executablePath = process.env.CHROME_PATH; else opciones.channel = "chrome";
 const navegador = await chromium.launch(opciones);
 const pagina = await navegador.newPage({ viewport: { width: 1280, height: 720 } });
-const tolerado = new RegExp("favicon" + (process.env.RUIDO_OK ? "|" + process.env.RUIDO_OK : ""), "i");
+// Ruido CONOCIDO del export Web (5-11): no hay extensión C++ para web.wasm32 (el juego usa el respaldo GDScript) y el motor avisa
+// del recorte de oclusión. Cualquier otro error SÍ falla.
+const CONOCIDO = "No GDExtension library found|GDExtension dynamic library not found|Error loading extension|Occlusion culling is disabled|at: (parse_gdextension_file|open_library|load_extensions|_print_warning)";
+const tolerado = new RegExp("favicon|" + CONOCIDO + (process.env.RUIDO_OK ? "|" + process.env.RUIDO_OK : ""), "i");
 const errores = [];
 let listo = false;
 pagina.on("console", (m) => {
@@ -42,7 +45,7 @@ pagina.on("requestfailed", (r) => { if (!tolerado.test(r.url())) errores.push(`[
 
 const limite = Date.now() + (Number(process.env.ESPERA_S) || 240) * 1000;
 await pagina.goto(`http://127.0.0.1:${puerto}/index.html`);
-while (!listo && Date.now() < limite && errores.length === 0) await pagina.waitForTimeout(1000);
+while (!listo && Date.now() < limite) await pagina.waitForTimeout(1000);
 if (listo) await pagina.waitForTimeout(5000);   // unos segundos más: los errores del menú suelen salir justo después
 fs.mkdirSync(path.dirname(path.resolve(captura)), { recursive: true });
 await pagina.screenshot({ path: captura, type: "jpeg", quality: 80 });

@@ -35,13 +35,19 @@ jobs:
         shell: bash
     steps:
       ## Antes de descargar: sin conversión CRLF (los .sh y .gd se leen igual que en Linux).
-      - name: Git sin conversión de fin de línea
+      - name: Git sin conversión de fin de línea y con rutas largas
         shell: bash
-        run: git config --global core.autocrlf false
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.longpaths true
 
+      ## Solo el juego: otras carpetas (p. ej. material/) tienen nombres de archivo que Windows no admite (primer intento: «Filename too long»).
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
         with:
           lfs: false
+          sparse-checkout: |
+            dinastia-godot
+            .github
 
       - name: Godot 4.7.2 para Windows (consola, con suma de comprobación)
         shell: bash
