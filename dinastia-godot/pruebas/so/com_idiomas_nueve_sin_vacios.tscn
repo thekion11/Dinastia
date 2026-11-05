@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://pruebas/so/com_idiomas_nueve_sin_vacios.gd" id="1"]
+
+[node name="T" type="Node"]
+script = ExtResource("1")
