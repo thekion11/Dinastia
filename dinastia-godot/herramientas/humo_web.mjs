@@ -35,8 +35,11 @@ const CONOCIDO = "No GDExtension library found|GDExtension dynamic library not f
 const tolerado = new RegExp("favicon|" + CONOCIDO + (process.env.RUIDO_OK ? "|" + process.env.RUIDO_OK : ""), "i");
 const errores = [];
 let listo = false;
+const diario = [];   // todo lo que sale por consola (para diagnosticar cuando no llega el menú)
+const t0 = Date.now();
 pagina.on("console", (m) => {
   const t = m.text();
+  diario.push(`${Math.round((Date.now() - t0) / 1000)} s [${m.type()}] ${t.slice(0, 200)}`);
   if (t.includes("DINASTIA_MENU_LISTO")) listo = true;
   if ((m.type() === "error" || /SCRIPT ERROR|SHADER ERROR/.test(t)) && !tolerado.test(t + (m.location().url || ""))) errores.push(`[${m.type()}] ${t}`);
 });
@@ -49,11 +52,17 @@ while (!listo && Date.now() < limite) await pagina.waitForTimeout(1000);
 if (listo) await pagina.waitForTimeout(5000);   // unos segundos más: los errores del menú suelen salir justo después
 fs.mkdirSync(path.dirname(path.resolve(captura)), { recursive: true });
 await pagina.screenshot({ path: captura, type: "jpeg", quality: 80 });
-await navegador.close();
-servidor.close();
 
+if (!listo) {
+  console.log(`--- consola (${diario.length} mensajes; primeros 25 y últimos 25) ---`);
+  for (const l of (diario.length > 50 ? [...diario.slice(0, 25), "…", ...diario.slice(-25)] : diario)) console.log("  " + l);
+  const estado = await pagina.evaluate(() => ({ canvas: !!document.querySelector("canvas"), texto: document.body.innerText.slice(0, 200) })).catch(() => null);
+  console.log("--- página: " + JSON.stringify(estado));
+}
 if (!listo) console.log("FALLO: no apareció «DINASTIA_MENU_LISTO» antes del límite.");
 for (const e of errores.slice(0, 20)) console.log("FALLO: " + e);
+await navegador.close();
+servidor.close();
 const fallos = (listo ? 0 : 1) + errores.length;
 console.log(`FIN. ${fallos} fallos`);
 process.exit(fallos === 0 ? 0 : 1);
