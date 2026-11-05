@@ -254,6 +254,9 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 
 ## Reconstruye un Mundo desde el retrato. Lo usan la carga de disco y el
 ## deshacer, que son la misma operacion con distinto origen.
+## Sin estas claves no se puede reconstruir un mundo (ver `desde_instantanea`).
+const CLAVES_IMPRESCINDIBLES := ["semilla", "anio", "semana", "clubes", "ligas", "mi_club", "azar"]
+
 static func desde_instantanea(datos: Dictionary) -> Mundo:
 	if datos.is_empty():
 		return null
@@ -264,6 +267,15 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	## Un guardado viejo se pone al día paso a paso antes de leerlo (M-399).
 	## Se migra una copia: el diccionario de entrada (p. ej. el de deshacer) no se toca.
 	datos = PartidaArchivo.migrar(datos.duplicate(), VERSION)
+	## (5-11, banco de errores) Un guardado sin lo imprescindible (mal importado, hecho a mano o de otra herramienta) no es una partida:
+	## antes reventaba el intérprete a medias y dejaba un mundo sin construir. Ahora se rechaza entero, como uno de versión nueva.
+	for clave: String in CLAVES_IMPRESCINDIBLES:
+		if not datos.has(clave):
+			push_error("Partida: al guardado le falta «%s»; no se carga" % clave)
+			return null
+	if not (datos["clubes"] is Array and datos["ligas"] is Array and datos["mi_club"] is String):
+		push_error("Partida: «clubes», «ligas» o «mi_club» del guardado no tienen la forma esperada; no se carga")
+		return null
 
 	## Un guardado anterior a la base ficticia (sin la clave) se jugó siempre
 	## con los datos reales. Si esta instalación no tiene el pack, se queda en

@@ -1,3 +1,12 @@
 # nombre|familia|sistemas|escena|requiere  — ver herramientas/pruebas_so.py
 com_idiomas_nueve_sin_vacios|comunes|todos|res://pruebas/so/com_idiomas_nueve_sin_vacios.tscn|headless
 com_idiomas_cambio_en_vivo|comunes|todos|res://pruebas/so/com_idiomas_cambio_en_vivo.tscn|headless
+com_guardado_ida_vuelta|comunes|todos|res://pruebas/so/com_guardado_ida_vuelta.tscn|headless
+com_arranque_autoloads|comunes|todos|res://pruebas/so/com_arranque_autoloads.tscn|headless
+com_entrada_por_sistema|comunes|todos|res://pruebas/so/com_entrada_por_sistema.tscn|headless
+err_guardado_danado|errores|todos|res://pruebas/so/err_guardado_danado.tscn|headless
+err_instantanea_invalida|errores|todos|res://pruebas/so/err_instantanea_invalida.tscn|headless
+err_pck_y_pack_ausentes|errores|todos|res://pruebas/so/err_pck_y_pack_ausentes.tscn|headless
+err_entradas_invalidas|errores|todos|res://pruebas/so/err_entradas_invalidas.tscn|headless
+err_rafaga_entrada|errores|todos|res://pruebas/so/err_rafaga_entrada.tscn|headless
+err_poca_memoria|errores|todos|res://pruebas/so/err_poca_memoria.tscn|headless
