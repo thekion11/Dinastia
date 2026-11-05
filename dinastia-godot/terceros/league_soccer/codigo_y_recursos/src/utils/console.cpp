@@ -21,7 +21,10 @@ Console::Console(std::shared_ptr<Scene2D> scene2D, int numlines)
 }
 
 Console::~Console() {
-  logConn.disconnect();
+  try {
+    logConn.disconnect();
+  } catch (...) {  // un destructor no debe lanzar excepciones
+  }
   input.reset();
   lines.clear();
   colors.clear();

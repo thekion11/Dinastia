@@ -24,8 +24,9 @@ struct WavData {
   }
   unsigned char* data;
   int size;
-  int channels, bits;
-  unsigned int frequency;
+  int channels = 0;
+  int bits = 0;
+  unsigned int frequency = 0;
 };
 
 class SoundBuffer {

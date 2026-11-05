@@ -49,8 +49,12 @@ FROM base AS dev
 
 WORKDIR /workspace
 
+# Usuario sin privilegios (el .dockerignore ya deja fuera datos sensibles)
+RUN useradd --create-home dev && chown dev:dev /workspace
+USER dev
+
 # Copy project source
-COPY . .
+COPY --chown=dev:dev . .
 
 # Pre-configure a Debug build (useful for IDE attach / container-based dev loops)
 RUN cmake -S . -B build \

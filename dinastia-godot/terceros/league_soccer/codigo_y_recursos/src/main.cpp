@@ -121,6 +121,7 @@ static LONG WINAPI CustomCrashHandler(EXCEPTION_POINTERS* pExceptionInfo) {
 #include "utils/orbitcamera.hpp"
 #include "utils/threadhud.hpp"
 #include "utils/userdata.hpp"
+#include "misc/rng.hpp"
 
 #if defined(WIN32) && defined(__MINGW32__)
 #undef main
@@ -549,8 +550,7 @@ int main(int argc, const char** argv) {
 
   Initialize(*config);
 
-  srand(time(nullptr));
-  rand();        // mingw32? buggy compiler? first value seems bogus
+  blunted::SeedGameRng(static_cast<unsigned int>(time(nullptr)));
   randomseed();  // for the boost random
   fastrandomseed();
 

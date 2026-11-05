@@ -18,6 +18,10 @@ boost::signals2::connection BindLog(const signal_LogCallback::slot_type& slot);
 void Log(e_LogType logType, const std::string& className, const std::string& methodName,
          const std::string& message);
 
+// Igual que Log(e_FatalError, ...), pero declara que no vuelve (Log termina el proceso).
+[[noreturn]] void LogFatal(const std::string& className, const std::string& methodName,
+                           const std::string& message);
+
 }  // namespace blunted
 
 #endif

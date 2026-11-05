@@ -30,6 +30,8 @@ Gui2Dialog::Gui2Dialog(Gui2WindowManager* windowManager, const std::string& name
 Gui2Dialog::~Gui2Dialog() {}
 
 void Gui2Dialog::AddContent(Gui2View* view) {
+  if (!grid)
+    return;
   if (auto* text = dynamic_cast<Gui2Text*>(view))
     text->SetSize(std::max(1.0f, width_percent - 2.0f), std::max(1.0f, height_percent - 11.0f));
   grid->AddView(view);

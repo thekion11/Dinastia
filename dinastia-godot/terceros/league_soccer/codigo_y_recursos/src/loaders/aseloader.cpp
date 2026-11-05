@@ -106,27 +106,27 @@ void ASELoader::BuildTriangleMesh(const s_tree* data,
 
   const s_tree* tree_node_tm = tree_find(data, "NODE_TM");
   if (!tree_node_tm)
-    Log(e_FatalError, "ASELoader", "BuildTriangleMesh", "subtree NODE_TM not found");
+    LogFatal("ASELoader", "BuildTriangleMesh", "subtree NODE_TM not found");
 
   const s_tree* tree_mesh = tree_find(data, "MESH");
   if (!tree_mesh)
-    Log(e_FatalError, "ASELoader", "BuildTriangleMesh", "subtree MESH not found");
+    LogFatal("ASELoader", "BuildTriangleMesh", "subtree MESH not found");
 
   // counts
 
   const s_treeentry* entry_mesh_numvertex = treeentry_find(tree_mesh, "MESH_NUMVERTEX");
   if (!entry_mesh_numvertex)
-    Log(e_FatalError, "ASELoader", "BuildTriangleMesh", "tree entry MESH_NUMVERTEX not found");
+    LogFatal("ASELoader", "BuildTriangleMesh", "tree entry MESH_NUMVERTEX not found");
   int numvertex = atoi(entry_mesh_numvertex->values.at(0).c_str());
 
   const s_treeentry* entry_mesh_numtvertex = treeentry_find(tree_mesh, "MESH_NUMTVERTEX");
   if (!entry_mesh_numtvertex)
-    Log(e_FatalError, "ASELoader", "BuildTriangleMesh", "tree entry MESH_NUMTVERTEX not found");
+    LogFatal("ASELoader", "BuildTriangleMesh", "tree entry MESH_NUMTVERTEX not found");
   int numtvertex = atoi(entry_mesh_numtvertex->values.at(0).c_str());
 
   const s_treeentry* entry_mesh_numfaces = treeentry_find(tree_mesh, "MESH_NUMFACES");
   if (!entry_mesh_numfaces)
-    Log(e_FatalError, "ASELoader", "BuildTriangleMesh", "tree entry MESH_NUMFACES not found");
+    LogFatal("ASELoader", "BuildTriangleMesh", "tree entry MESH_NUMFACES not found");
   int numfaces = atoi(entry_mesh_numfaces->values.at(0).c_str());
 
   const s_treeentry* entry_mesh_numtfaces = nullptr;
@@ -135,7 +135,7 @@ void ASELoader::BuildTriangleMesh(const s_tree* data,
     entry_mesh_numtfaces =
         treeentry_find(tree_mesh, "MESH_NUMTVFACES");  // notice the 3ds .ase export typo ('v')
     if (!entry_mesh_numtfaces)
-      Log(e_FatalError, "ASELoader", "BuildTriangleMesh", "tree entry MESH_NUMTFACES not found");
+      LogFatal("ASELoader", "BuildTriangleMesh", "tree entry MESH_NUMTFACES not found");
     numtfaces = atoi(entry_mesh_numtfaces->values.at(0).c_str());
   }
 
@@ -143,29 +143,29 @@ void ASELoader::BuildTriangleMesh(const s_tree* data,
 
   const s_tree* tree_mesh_vertex_list = tree_find(tree_mesh, "MESH_VERTEX_LIST");
   if (!tree_mesh_vertex_list)
-    Log(e_FatalError, "ASELoader", "BuildTriangleMesh", "subtree MESH_VERTEX_LIST not found");
+    LogFatal("ASELoader", "BuildTriangleMesh", "subtree MESH_VERTEX_LIST not found");
 
   const s_tree* tree_mesh_face_list = tree_find(tree_mesh, "MESH_FACE_LIST");
   if (!tree_mesh_face_list)
-    Log(e_FatalError, "ASELoader", "BuildTriangleMesh", "subtree MESH_FACE_LIST not found");
+    LogFatal("ASELoader", "BuildTriangleMesh", "subtree MESH_FACE_LIST not found");
 
   const s_tree* tree_mesh_tvertex_list = nullptr;
   if (numtvertex > 0) {
     tree_mesh_tvertex_list = tree_find(tree_mesh, "MESH_TVERTLIST");
     if (!tree_mesh_tvertex_list)
-      Log(e_FatalError, "ASELoader", "BuildTriangleMesh", "subtree MESH_TVERTLIST not found");
+      LogFatal("ASELoader", "BuildTriangleMesh", "subtree MESH_TVERTLIST not found");
   }
 
   const s_tree* tree_mesh_tface_list = nullptr;
   if (numtfaces > 0) {
     tree_mesh_tface_list = tree_find(tree_mesh, "MESH_TFACELIST");
     if (!tree_mesh_tface_list)
-      Log(e_FatalError, "ASELoader", "BuildTriangleMesh", "subtree MESH_TFACELIST not found");
+      LogFatal("ASELoader", "BuildTriangleMesh", "subtree MESH_TFACELIST not found");
   }
 
   const s_tree* tree_mesh_normals = tree_find(tree_mesh, "MESH_NORMALS");
   if (!tree_mesh_normals)
-    Log(e_FatalError, "ASELoader", "BuildTriangleMesh", "subtree MESH_NORMALS not found");
+    LogFatal("ASELoader", "BuildTriangleMesh", "subtree MESH_NORMALS not found");
 
   /* vertices
     MESH_VERTEX_LIST {
@@ -176,14 +176,14 @@ void ASELoader::BuildTriangleMesh(const s_tree* data,
   std::vector<Vector3> vertex_cache(numvertex);
 
   if (tree_mesh_vertex_list->entries.size() != (unsigned int)numvertex)
-    Log(e_FatalError, "ASELoader", "BuildTriangleMesh",
+    LogFatal("ASELoader", "BuildTriangleMesh",
         "numvertex and tree_mesh_vertex_list->entries.size() differ! Loader corrupt?");
 
   for (unsigned int i = 0; i < tree_mesh_vertex_list->entries.size(); i++) {
     const s_treeentry* entry = tree_mesh_vertex_list->entries.at(i);  // less typing
 
     if (atoi(entry->values.at(0).c_str()) >= numvertex)
-      Log(e_FatalError, "ASELoader", "BuildTriangleMesh",
+      LogFatal("ASELoader", "BuildTriangleMesh",
           "vertex index larger than numvertex! Loader corrupt?");
     vertex_cache[atoi(entry->values.at(0).c_str())].coords[0] = atof(entry->values.at(1).c_str());
     vertex_cache[atoi(entry->values.at(0).c_str())].coords[1] = atof(entry->values.at(2).c_str());
@@ -211,7 +211,7 @@ void ASELoader::BuildTriangleMesh(const s_tree* data,
   */
 
   if (tree_mesh_face_list->entries.size() != (unsigned int)numfaces)
-    Log(e_FatalError, "ASELoader", "BuildTriangleMesh",
+    LogFatal("ASELoader", "BuildTriangleMesh",
         "numfaces and tree_mesh_face_list->entries.size() differ! Loader corrupt?");
 
   std::vector<Triangle*> triangles;
@@ -221,7 +221,7 @@ void ASELoader::BuildTriangleMesh(const s_tree* data,
     s_treeentry* entry = tree_mesh_face_list->entries.at(i);  // less typing
 
     if (atoi(entry->values.at(0).c_str()) >= numfaces)
-      Log(e_FatalError, "ASELoader", "BuildTriangleMesh",
+      LogFatal("ASELoader", "BuildTriangleMesh",
           "Face index larger than numfaces! Loader corrupt?");
     triangle->SetVertex(0, vertex_cache[atoi(entry->values.at(2).c_str())]);
     triangle->SetVertex(1, vertex_cache[atoi(entry->values.at(4).c_str())]);
@@ -261,7 +261,7 @@ void ASELoader::BuildTriangleMesh(const s_tree* data,
   normalize(&rotation_matrix.elements[6]);
 
   if (tree_mesh_normals->entries.size() / 4 != (unsigned int)numfaces)
-    Log(e_FatalError, "ASELoader", "BuildTriangleMesh",
+    LogFatal("ASELoader", "BuildTriangleMesh",
         "numfaces and tree_mesh_normals->entries.size() * 4 differ! Loader corrupt?");
 
   // face normals
@@ -305,14 +305,14 @@ void ASELoader::BuildTriangleMesh(const s_tree* data,
     std::vector<Vector3> tvertex_cache(numtvertex);
 
     if (tree_mesh_tvertex_list->entries.size() != (unsigned int)numtvertex)
-      Log(e_FatalError, "ASELoader", "BuildTriangleMesh",
+      LogFatal("ASELoader", "BuildTriangleMesh",
           "numtvertex and tree_mesh_tvertex_list->entries.size() differ! Loader corrupt?");
 
     for (unsigned int i = 0; i < tree_mesh_tvertex_list->entries.size(); i++) {
       s_treeentry* entry = tree_mesh_tvertex_list->entries.at(i);  // less typing
 
       if (atoi(entry->values.at(0).c_str()) >= numtvertex)
-        Log(e_FatalError, "ASELoader", "BuildTriangleMesh",
+        LogFatal("ASELoader", "BuildTriangleMesh",
             "tvertex index larger than numtvertex! Loader corrupt?");
       tvertex_cache[atoi(entry->values.at(0).c_str())].coords[0] =
           atof(entry->values.at(1).c_str());
@@ -332,14 +332,14 @@ void ASELoader::BuildTriangleMesh(const s_tree* data,
     */
 
     if (tree_mesh_tface_list->entries.size() != (unsigned int)numtfaces)
-      Log(e_FatalError, "ASELoader", "BuildTriangleMesh",
+      LogFatal("ASELoader", "BuildTriangleMesh",
           "numtfaces and tree_mesh_tface_list->entries.size() differ! Loader corrupt?");
 
     for (unsigned int i = 0; i < tree_mesh_tface_list->entries.size(); i++) {
       s_treeentry* entry = tree_mesh_tface_list->entries.at(i);  // less typing
 
       if (atoi(entry->values.at(0).c_str()) >= numtfaces)
-        Log(e_FatalError, "ASELoader", "BuildTriangleMesh",
+        LogFatal("ASELoader", "BuildTriangleMesh",
             "tface index larger than numtfaces! Loader corrupt?");
       for (int x = 0; x < 3; x++) {
         // use texture units 0, 2 and 3 for texture, bump and specular map respectively

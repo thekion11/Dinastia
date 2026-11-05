@@ -8,6 +8,7 @@
 #include <stdlib.h>
 
 #include "base/math/bluntmath.hpp"
+#include "misc/rng.hpp"
 
 using namespace blunted;
 
@@ -35,7 +36,7 @@ float Perlin::noise1(float arg) {
   vec[0] = arg;
 
   if (mStart) {
-    srand(mSeed);
+    blunted::SeedGameRng(static_cast<unsigned int>(mSeed));
     mStart = false;
     init();
   }
@@ -56,7 +57,7 @@ float Perlin::noise2(float vec[2]) {
   int i, j;
 
   if (mStart) {
-    srand(mSeed);
+    blunted::SeedGameRng(static_cast<unsigned int>(mSeed));
     mStart = false;
     init();
   }
@@ -98,7 +99,7 @@ float Perlin::noise3(float vec[3]) {
   int i, j;
 
   if (mStart) {
-    srand(mSeed);
+    blunted::SeedGameRng(static_cast<unsigned int>(mSeed));
     mStart = false;
     init();
   }
@@ -177,18 +178,18 @@ void Perlin::init(void) {
 
   for (i = 0; i < B; i++) {
     p[i] = i;
-    g1[i] = (float)((rand() % (B + B)) - B) / B;
+    g1[i] = (float)((blunted::GameRandInt(B + B)) - B) / B;
     for (j = 0; j < 2; j++)
-      g2[i][j] = (float)((rand() % (B + B)) - B) / B;
+      g2[i][j] = (float)((blunted::GameRandInt(B + B)) - B) / B;
     normalize2(g2[i]);
     for (j = 0; j < 3; j++)
-      g3[i][j] = (float)((rand() % (B + B)) - B) / B;
+      g3[i][j] = (float)((blunted::GameRandInt(B + B)) - B) / B;
     normalize3(g3[i]);
   }
 
   while (--i) {
     k = p[i];
-    p[i] = p[j = rand() % B];
+    p[i] = p[j = blunted::GameRandInt(B)];
     p[j] = k;
   }
 

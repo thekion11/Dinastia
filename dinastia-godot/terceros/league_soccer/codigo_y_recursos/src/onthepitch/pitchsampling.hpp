@@ -10,6 +10,9 @@ namespace pitchsampling {
 // Callers supply a non-empty texture and finite coordinates in texel units.
 template <typename T>
 T BilinearSample(const T* tex, float x, float y, int w, int h, bool repeat = false) {
+  if (tex == nullptr || w <= 0 || h <= 0) {
+    return T{};
+  }
   if (repeat) {
     x = std::fmod(x, static_cast<float>(w));
     y = std::fmod(y, static_cast<float>(h));

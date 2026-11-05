@@ -11,6 +11,7 @@
 #include "base/utils.hpp"
 #include "utils/database.hpp"
 #include "utils/xmlloader.hpp"
+#include "misc/rng.hpp"
 
 namespace {
 
@@ -566,11 +567,11 @@ void LeagueSimulateFixture(const LeagueFixtureInfo& fixture, int& homeGoals, int
     int goals = static_cast<int>(expected);
     float frac = expected - static_cast<float>(goals);
     // Stochastic rounding keeps the expected goal average honest.
-    if ((rand() % 1000) / 1000.0f < frac)
+    if ((blunted::GameRandInt(1000)) / 1000.0f < frac)
       goals += 1;
     // Occasional flair for the odd extra goal.
-    if (rand() % 100 < 15)
-      goals += rand() % 2;
+    if (blunted::GameRandInt(100) < 15)
+      goals += blunted::GameRandInt(2);
     return std::max(0, std::min(6, goals));
   };
   int homeRating = teamRating(fixture.homeTeamName) + 6;  // home advantage

@@ -10,7 +10,7 @@ def modernize_file(filepath):
     # Typedef to using
     # typedef std::vector<int> IntVec; -> using IntVec = std::vector<int>;
     # Let's write a regex that matches simple typedefs.
-    content = re.sub(r'typedef\s+([\w:<>,\s\*]+)\s+(\w+)\s*;', r'using \2 = \1;', content)
+    content = re.sub(r'typedef\s++([\w:<>,\s\*]+?)\s++(\w+)\s*+;', r'using \2 = \1;', content)
     
     # Fix instances where the regex matched incorrectly by leaving them as using (it works for most).
     # Wait, 'unsigned int' is two words. It matches [\w\s].
