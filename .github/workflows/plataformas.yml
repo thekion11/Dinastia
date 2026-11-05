@@ -338,3 +338,104 @@ jobs:
             ${{ runner.temp }}/capturas/menu_web.jpg
             ${{ runner.temp }}/humo_web.txt
           if-no-files-found: ignore
+
+  ## Web con las pruebas por sistema DENTRO: mismo preset Web sin el filtro `pruebas/*` (solo en este export; el publicado sigue sin ellas).
+  exportar-web-pruebas:
+    name: 🌐 Web (exportar con pruebas)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
+        with:
+          lfs: false
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - name: El preset Web incluye pruebas/
+        shell: bash
+        working-directory: dinastia-godot
+        run: |
+          sed -i 's#exclude_filter="pruebas/\*, #exclude_filter="#' export_presets.cfg
+          ! grep -q 'exclude_filter="pruebas/' export_presets.cfg
+          grep -c 'exclude_filter="addons/cache_horneada' export_presets.cfg
+
+      - name: Exportar Web
+        uses: ./.github/actions/exportar
+        with:
+          variante: web
+          preset: Web
+          salida: web/index.html
+          artefacto: Dinastia-Web-pruebas
+
+  pruebas-web:
+    name: 🌐 Web (pruebas/so en Chromium)
+    needs: exportar-web-pruebas
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
+        with:
+          lfs: false
+          sparse-checkout: dinastia-godot/herramientas dinastia-godot/pruebas/so
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093   # v4.3.0
+        with:
+          name: Dinastia-Web-pruebas
+          path: salida
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020   # v4.4.0
+        with:
+          node-version: "22.12.0"
+
+      - name: Playwright (solo la biblioteca; se usa el Chrome del runner)
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/pw"
+          cp dinastia-godot/herramientas/pruebas_web.mjs "$RUNNER_TEMP/pw/"
+          cd "$RUNNER_TEMP/pw"
+          npm init -y > /dev/null
+          npm install --ignore-scripts --no-audit --no-fund playwright-core@1.49.1
+
+      - name: Pruebas por sistema en Web
+        shell: bash
+        run: |
+          set +e
+          node "$RUNNER_TEMP/pw/pruebas_web.mjs" salida dinastia-godot/pruebas/so/LISTA.txt "$RUNNER_TEMP/so_web.txt"
+          codigo=$?
+          { echo "### 🌐 Web · pruebas/so"; python3 dinastia-godot/herramientas/tabla_so.py web="$RUNNER_TEMP/so_web.txt"; } >> "$GITHUB_STEP_SUMMARY"
+          exit $codigo
+
+      - name: Subir el registro
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # v4.6.2
+        with:
+          name: plataformas-web-so
+          path: ${{ runner.temp }}/so_web.txt
+          if-no-files-found: ignore
+
+  ## Tabla prueba × sistema con lo que dejaron Windows, macOS y Web (Linux la cubren `especiales.sh` y el banco).
+  resumen-so:
+    name: 📊 Resumen prueba × sistema
+    needs: [windows, macos, pruebas-web]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
+        with:
+          lfs: false
+          sparse-checkout: dinastia-godot/herramientas dinastia-godot/pruebas/so
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093   # v4.3.0
+        with:
+          pattern: plataformas-*
+          path: registros
+
+      - name: Tabla
+        shell: bash
+        run: |
+          ls -R registros | head -40
+          { echo "### 📊 pruebas/so · prueba × sistema"; python3 dinastia-godot/herramientas/tabla_so.py windows=registros/plataformas-windows-registro/so_windows.txt macos=registros/plataformas-macos-registro/so_macos.txt web=registros/plataformas-web-so/so_web.txt; } >> "$GITHUB_STEP_SUMMARY"
