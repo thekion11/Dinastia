@@ -29,15 +29,15 @@ func _probar() -> void:
 		total += int(f[1])
 	var mayor_mb := float(datos[0][1]) / 1048576.0
 	print("  INFO  mayor: %s (%.1f MB) · total datos %.1f MB" % [datos[0][0], mayor_mb, total / 1048576.0])
-	var tope_archivo := float(por_so({"web": 60.0, "movil": 80.0, "defecto": 120.0}))
-	var tope_total := float(por_so({"web": 150.0, "movil": 200.0, "defecto": 400.0}))
+	var tope_archivo := presupuesto(_nombre(), "archivo_datos_mb")
+	var tope_total := presupuesto(_nombre(), "total_datos_mb")
 	_comprobar(mayor_mb < tope_archivo, "el archivo de datos más grande pesa %.1f MB < %.0f MB" % [mayor_mb, tope_archivo])
 	_comprobar(total / 1048576.0 < tope_total, "los datos pesan %.1f MB en total < %.0f MB (tope de %s)" % [total / 1048576.0, tope_total, sistema()])
 	var sonidos: Array = []
 	_recorrer("res://audio/ui", sonidos)
 	var gordos := 0
 	for s in sonidos:
-		gordos += int(int(s[1]) > 300 * 1024)
+		gordos += int(int(s[1]) > int(presupuesto(_nombre(), "sonido_ui_kb")) * 1024)
 	_comprobar(sonidos.size() >= 5 and gordos == 0, "%d sonidos de interfaz, ninguno de más de 300 KB (%d grandes)" % [sonidos.size(), gordos])
 	var codigo: Array = []
 	for c in ["res://nucleo", "res://ui", "res://visor"]:
@@ -49,6 +49,6 @@ func _probar() -> void:
 			gd += 1
 			mayor_gd = maxi(mayor_gd, int(f[1]))
 	if gd > 0:
-		_comprobar(mayor_gd < 90 * 1024, "el script más grande pesa %d KB (< 90 KB; la norma de 450 líneas lo mantiene pequeño)" % (mayor_gd / 1024))
+		_comprobar(mayor_gd < int(presupuesto(_nombre(), "script_kb")) * 1024, "el script más grande pesa %d KB (< 90 KB; la norma de 450 líneas lo mantiene pequeño)" % (mayor_gd / 1024))
 	else:
 		print("  (en %s el código va compilado: no hay .gd que medir)" % sistema())

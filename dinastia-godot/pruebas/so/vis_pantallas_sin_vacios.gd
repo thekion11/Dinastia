@@ -18,10 +18,12 @@ func _probar() -> void:
 		(t as Tutorial)._terminar(false)
 	CapasTutorial.poner_activas(false)
 	var feas: Array[String] = []
+	var firmas := {}
 	for tab in PESTANAS:
 		p._ir_a_pestana(tab)
 		await _frames(12)
 		var con_texto := 0
+		var firma := ""
 		var botones := 0
 		for n in p.find_children("*", "Control", true, false):
 			var c := n as Control
@@ -37,10 +39,16 @@ func _probar() -> void:
 				txt = (c as RichTextLabel).get_parsed_text()
 			if txt.strip_edges() != "":
 				con_texto += 1
+				firma += txt.left(24) + "|"
 				if txt == "null" or txt.contains("<null>") or txt.contains("???") or RegEx.create_from_string("%[sdf]").search(txt) != null or txt.contains("{x}"):
 					feas.append("%s: «%s»" % [tab, txt.left(30)])
 		_comprobar(con_texto >= 6, "«%s»: %d textos visibles" % [tab, con_texto])
+		firmas[tab] = firma.md5_text()
 		_comprobar(botones >= 1, "«%s»: %d botones visibles" % [tab, botones])
+	var distintas := {}
+	for t in firmas:
+		distintas[firmas[t]] = true
+	_comprobar(distintas.size() >= PESTANAS.size() - 3, "las pestañas son pantallas DISTINTAS: %d de %d (si cambiar de pestaña no hace nada, son todas iguales)" % [distintas.size(), PESTANAS.size()])
 	_comprobar(feas.is_empty(), "ningún texto roto (null, ???, %%s, {x}) %s" % str(feas.slice(0, 5)))
 	p.queue_free()
 	await _frames(2)

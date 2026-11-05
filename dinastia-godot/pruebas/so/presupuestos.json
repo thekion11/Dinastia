@@ -1,0 +1,21 @@
+{
+ "_leeme": "Presupuestos de las pruebas de rendimiento por RECUENTOS (llamadas de dibujo, triángulos, nodos, memoria, peso), no de tiempo de fotograma. Cada valor es un número o un diccionario por sistema {web, movil, windows, linux, macos, defecto}. Subir un tope = decir en el commit por qué; una regresión de rendimiento debe romper el CI, no el presupuesto. Medidos el 2-11 y el 5-11 (docs/04_auditorias/rendimiento_120fps.md).",
+ "ren_partido_presupuesto": {
+  "llamadas": {"movil": 1000, "web": 1100, "defecto": 1500},
+  "triangulos": {"movil": 1000000, "web": 1200000, "defecto": 1800000},
+  "video_mb": {"movil": 400, "web": 400, "defecto": 900},
+  "memoria_estatica_mb": {"movil": 1500, "web": 1500, "defecto": 3500}
+ },
+ "ren_menu_y_mundo_memoria": {
+  "arranque_mb": {"movil": 700, "web": 700, "defecto": 2500},
+  "fuga_tres_mundos_mb": 120,
+  "nodos_menu": {"movil": 12000, "web": 12000, "defecto": 25000},
+  "nodos_menu_minimo": 100
+ },
+ "ren_peso_archivos": {
+  "archivo_datos_mb": {"web": 60, "movil": 80, "defecto": 120},
+  "total_datos_mb": {"web": 150, "movil": 200, "defecto": 400},
+  "sonido_ui_kb": 300,
+  "script_kb": 90
+ }
+}

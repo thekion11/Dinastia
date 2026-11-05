@@ -9,6 +9,7 @@ var _pulsado := false
 
 func _probar() -> void:
 	_titulo("COMÚN · entrada [%s]" % sistema())
+	_comprobar(bool(ProjectSettings.get_setting("input_devices/pointing/emulate_mouse_from_touch", false)), "el toque emula el ratón (la interfaz son botones: sin esto el móvil no responde)")
 	var acciones := InputMap.get_actions().filter(func(a): return not String(a).begins_with("ui_"))
 	_comprobar(acciones.size() >= 5, "el mapa de entrada propio tiene %d acciones" % acciones.size())
 	var sin_evento: Array[String] = []
