@@ -1,0 +1,160 @@
+# BANCO AUTOMÁTICO DE RENDIMIENTO (5-11-2026). Corre el juego SOLO (sin que nadie toque nada) con Godot 4.7.2 oficial en la nube y deja los
+# CSV como artefactos descargables. No bloquea ninguna compilación: es una medición, no una puerta.
+#
+#  1) «perf_log»: el partido 3D de 60 s en modo --headless -> artefacto `perf_log` con `perf_log.csv` (fps, memoria estática, tiempo del
+#     motor de los 22 jugadores y de _physics_process en CADA fotograma).
+#  2) «matriz»: todo el juego (partido, ciudad, menú, gestión, museo, minijuego) × las 4 calidades (mínima, media, alta, ultra) × 5 perfiles de
+#     hardware imitado (headless, modesto, medio, móvil, vulkan) -> artefactos `benchmark-<perfil>` con un CSV por combinación + resumen.
+#  3) «resumen»: junta todo, escribe el diagnóstico en la página de la ejecución y lo sube como `benchmark-resumen`.
+# Sin GPU real: los FPS absolutos de llvmpipe NO valen; sí valen CPU, motor, física, memoria y lo que se le pide a la gráfica (CLAUDE.md, orden 19).
+# Cómo pedirle a Claude el diagnóstico: docs/04_auditorias/benchmark_automatico.md.
+name: Rendimiento (FPS, memoria, motor)
+
+run-name: ▶ rendimiento · ${{ github.ref_name }} · ${{ inputs.modo || (github.event_name == 'pull_request' && 'rapido' || 'completo') }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: "completo = 60 s de partido y 20 s del resto · rapido = 8 s y 5 s (comprobar que todo corre)"
+        type: choice
+        default: completo
+        options: [ completo, rapido ]
+      escenarios:
+        description: "Escenarios de la matriz (separados por espacio)"
+        type: string
+        default: "partido ciudad menu gestion museo minijuego"
+      calidades:
+        description: "Calidades de la matriz (separadas por espacio)"
+        type: string
+        default: "minima media alta ultra"
+      calidad_perf_log:
+        description: "Calidad del partido de perf_log.csv (minima, media, alta o ultra)"
+        type: string
+        default: media
+  schedule:
+    - cron: "43 4 * * 1"   # los lunes de madrugada
+  pull_request:            # al tocar el propio banco, una pasada RÁPIDA para comprobar que todo corre
+    paths:
+      - ".github/workflows/fps_benchmark.yml"
+      - "dinastia-godot/pruebas/benchmark/**"
+      - "dinastia-godot/herramientas/benchmark_*"
+
+permissions:
+  contents: read
+
+jobs:
+  perf-log:
+    name: 📈 perf_log.csv (partido 60 s, headless)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - name: Partido de 60 s sin intervención
+        working-directory: dinastia-godot
+        env:
+          DINASTIA_SIN_AUTO: "1"
+        run: |
+          godot --headless --path . res://pruebas/benchmark/benchmark.tscn -- \
+            --escenario=partido --duracion=60 --calidad=${{ inputs.calidad_perf_log || 'media' }} \
+            --salida="$GITHUB_WORKSPACE/perf_log.csv" 2>&1 | tee "$GITHUB_WORKSPACE/perf_log_registro.txt"
+          test -s "$GITHUB_WORKSPACE/perf_log.csv" || { echo "No se escribió perf_log.csv"; exit 1; }
+          wc -l "$GITHUB_WORKSPACE/perf_log.csv"
+
+      - name: Resumen
+        if: always()
+        run: |
+          command -v python3 >/dev/null || (apt-get update -qq && apt-get install -y -qq python3)
+          [ -s perf_log.csv ] && python3 dinastia-godot/herramientas/benchmark_resumen.py perf_log.csv | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Subir perf_log.csv
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf_log
+          path: |
+            perf_log.csv
+            perf_log_registro.txt
+          if-no-files-found: error
+
+  matriz:
+    name: 🧪 ${{ matrix.perfil }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 170
+    strategy:
+      fail-fast: false
+      matrix:
+        perfil: [ headless, modesto, medio, movil, vulkan ]
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - name: Pantalla virtual y gráficos por software (los perfiles con ventana)
+        if: matrix.perfil != 'headless'
+        run: |
+          apt-get update -qq
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq xvfb mesa-vulkan-drivers libgl1-mesa-dri libvulkan1 libegl1 python3 util-linux
+
+      - name: Python
+        run: command -v python3 >/dev/null || (apt-get update -qq && apt-get install -y -qq python3)
+
+      - name: Matriz de ${{ matrix.perfil }}
+        working-directory: dinastia-godot
+        env:
+          ESCENARIOS: ${{ inputs.escenarios || 'partido ciudad menu gestion museo minijuego' }}
+          CALIDADES: ${{ inputs.calidades || 'minima media alta ultra' }}
+          RAPIDO: ${{ (inputs.modo || (github.event_name == 'pull_request' && 'rapido' || 'completo')) == 'rapido' && '1' || '' }}
+          LIMITE: "420"
+        run: bash herramientas/benchmark_matriz.sh ${{ matrix.perfil }} "$GITHUB_WORKSPACE/salida_${{ matrix.perfil }}" 
+
+      - name: Resumen del perfil
+        if: always()
+        run: '[ -f "salida_${{ matrix.perfil }}/resumen_${{ matrix.perfil }}.md" ] && cat "salida_${{ matrix.perfil }}/resumen_${{ matrix.perfil }}.md" >> "$GITHUB_STEP_SUMMARY" || true'
+
+      - name: Subir CSV y registros
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-${{ matrix.perfil }}
+          path: salida_${{ matrix.perfil }}/
+          if-no-files-found: warn
+
+  resumen:
+    name: 🩺 resumen y diagnóstico
+    needs: [ perf-log, matriz ]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          sparse-checkout: dinastia-godot/herramientas
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: todo
+
+      - name: Diagnóstico conjunto
+        run: |
+          python3 dinastia-godot/herramientas/benchmark_resumen.py todo -o benchmark_resumen.md > /dev/null
+          cat benchmark_resumen.md | tee -a "$GITHUB_STEP_SUMMARY"   # también al registro: así Claude lo lee sin bajar artefactos
+
+      - name: Subir el resumen
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-resumen
+          path: benchmark_resumen.md

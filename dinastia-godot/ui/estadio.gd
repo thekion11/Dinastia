@@ -228,7 +228,10 @@ func _paso_motor(delta: float) -> void:
 	var mult := _juego.velocidad() if _juego != null else 1.0
 	_acum_motor = minf(_acum_motor + delta * mult, DT_MOTOR * 16.0)
 	while _acum_motor >= DT_MOTOR:
+		var t0_us := Time.get_ticks_usec()   ## banco de rendimiento (5-11): lo que cuesta el motor de los 22, leído por `BenchmarkManager` desde Engine
 		_motor.paso(DT_MOTOR)
+		Engine.set_meta(&"us_motor", int(Engine.get_meta(&"us_motor", 0)) + Time.get_ticks_usec() - t0_us)
+		Engine.set_meta(&"pasos_motor", int(Engine.get_meta(&"pasos_motor", 0)) + 1)
 		_acum_motor -= DT_MOTOR
 		## Cada paso: así no se pierde un remate que empieza y acaba en el mismo fotograma.
 		if _stats != null:
