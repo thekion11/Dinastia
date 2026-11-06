@@ -239,7 +239,7 @@ func _edificios_lejanos() -> void:
 	mat.set_shader_parameter("celda", Vector2(3.0, 3.6))
 	## Cristal tintado como el de las torres (sin esto, el azul por defecto
 	## del shader: la torre azul de la avenida, 13-10-2026).
-	mat.set_shader_parameter("vidrio", Color(0.14, 0.17, 0.2))
+	mat.set_shader_parameter("vidrio", Color(0.2, 0.32, 0.46))
 	_ventanas_lejanas = mat
 	_multimesh(BoxMesh.new(), mat, ts, Vector3.ONE, cs)
 	cuenta["edificios"] = int(cuenta.get("edificios", 0)) + ts.size()
