@@ -29,7 +29,7 @@ static func mostrar(padre: Control, clave: String) -> PanelContainer:
 	tarjeta.add_theme_stylebox_override("panel", Tema.caja(Tema.PANEL, Tema.RADIO_GRANDE, Tema.ORO))
 	## (3-11, rediseño) Con un menú del riel abierto la tarjeta sale PLEGADA (solo «💡 título ▾»): desplegada tapaba la ficha, los botones...
 	var menu: Variant = padre.get("_menu_lateral")
-	var plegada: bool = bool(padre.get("_redirigiendo")) or (menu != null and is_instance_valid(menu.get("pantalla_abierta")) and not menu.get("pantalla_abierta").cerrando())
+	var plegada: bool = padre.get("_redirigiendo") == true or (menu != null and is_instance_valid(menu.get("pantalla_abierta")) and not menu.get("pantalla_abierta").cerrando())
 	if plegada:
 		tarjeta.offset_top = tarjeta.offset_bottom - 1.0
 	var v := VBoxContainer.new()
