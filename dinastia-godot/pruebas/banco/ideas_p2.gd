@@ -233,7 +233,7 @@ func _probar_foco_mando() -> void:
 ## (2-11-2026) El nivel gráfico MÍNIMO, la versión ultra ligera dentro del juego.
 func _probar_calidad_minima() -> void:
 	_titulo("CALIDAD MÍNIMA (ultra ligera)")
-	_comprobar(Calidad.MINIMO < Calidad.MEDIO and Calidad.MEDIO == 0 and Calidad.ULTRA == 2, "MÍNIMO va por debajo sin mover los valores guardados (0, 1, 2)")
+	_comprobar(Calidad.MINIMO < Calidad.MEDIO and Calidad.MEDIO == 0 and Calidad.MEDIO < Calidad.ALTO and Calidad.ALTO < Calidad.ULTRA, "los 4 nombres viejos siguen en orden y MEDIA es 0 (los 7 niveles: ver ren_calidad_7_niveles; lo guardado se migra con version_calidad)")
 	var sol := Calidad.sol(Calidad.MINIMO)
 	var sol_m := Calidad.sol(Calidad.MEDIO)
 	_comprobar(not sol.shadow_enabled and sol_m.shadow_enabled, "sin sombras en MÍNIMO; MEDIO las conserva")

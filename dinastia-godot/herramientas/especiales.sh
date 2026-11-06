@@ -241,6 +241,7 @@ pasa "a4_limite_mundo (3/3 estadios y tráfico)" "A4_PARTE=3 xvfb-run -a godot -
 pasa "a4_estadio_reformas (estadio propio: 6 reformas, reabrir, nombres; con pantalla ~115 s)" "xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_estadio_reformas.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_grada_alta (la grada crece con el aforo >30 000 solo en calidad ALTA; con pantalla ~60 s)" "xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_grada_alta.tscn" "(^|[^0-9])0 fallos"
 fi
+pasa "7 niveles de calidad: migración y defecto en ULTRA BAJA (6-11)" "godot --headless --path . res://pruebas/ideas/ren_calidad_7_niveles.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_calidad_minima" "godot --headless --path . res://pruebas/ideas/p6_calidad_minima.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_idiomas_perezoso" "godot --headless --path . res://pruebas/ideas/p6_idiomas_perezoso.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_ropero" "godot --headless --path . res://pruebas/ideas/p6_ropero.tscn" "(^|[^0-9])0 fallos"
