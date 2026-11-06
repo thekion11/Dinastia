@@ -12,7 +12,16 @@ static var activo := true   ## las comprobaciones de «antes» (imágenes sin tr
 ## Parte los MultiMesh grandes de la grada colgados de `raiz`. Devuelve cuántos partió.
 ## 2-11-2026 (120 FPS): en calidad MEDIO (y en el perfil ligero automático) las butacas cercanas llevan desde el principio la malla
 ## liviana (84 triángulos en vez de 1 944): medido en el partido, −36 % de triángulos (1,34 M → 0,85 M). ALTO y ULTRA no cambian.
-static func trocear(raiz: Node, tramos := 8) -> int:
+## Trozos por tribuna según el nivel de calidad (6-11). Más trozos = menos triángulos fuera de pantalla pero más llamadas de dibujo;
+## `TRAMOS_GRADA=n` fuerza un valor (solo para medir con `medir_partido.tscn`).
+static func tramos_de(nivel: int) -> int:
+	if OS.get_environment("TRAMOS_GRADA") != "":
+		return maxi(1, int(OS.get_environment("TRAMOS_GRADA")))
+	return 8
+
+static func trocear(raiz: Node, tramos := -1) -> int:
+	if tramos < 0:
+		tramos = tramos_de(Calidad.elegida)
 	var hechos := _trocear(raiz, tramos)
 	if Calidad.elegida <= Calidad.MEDIO:
 		Optimizar.butacas_livianas(raiz, true)
