@@ -146,9 +146,12 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
         with:
           lfs: false
+          ## `especiales.sh` usa herramientas/ de la raíz (norma de 450 líneas) y lee docs/05_referencia/LICENCIAS.md (f0m_nucleo).
           sparse-checkout: |
             dinastia-godot
             .github
+            herramientas
+            docs/05_referencia
 
       - name: Godot 4.7.2 para Windows (consola, con suma de comprobación)
         shell: bash
@@ -379,7 +382,9 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
         with:
           lfs: false
-          sparse-checkout: dinastia-godot/herramientas dinastia-godot/pruebas/so
+          sparse-checkout: |
+            dinastia-godot/herramientas
+            dinastia-godot/pruebas/so
 
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093   # v4.3.0
         with:
@@ -427,7 +432,9 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
         with:
           lfs: false
-          sparse-checkout: dinastia-godot/herramientas dinastia-godot/pruebas/so
+          sparse-checkout: |
+            dinastia-godot/herramientas
+            dinastia-godot/pruebas/so
 
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093   # v4.3.0
         with:
@@ -437,5 +444,5 @@ jobs:
       - name: Tabla
         shell: bash
         run: |
-          ls -R registros | head -40
+          ls -R registros || true
           { echo "### 📊 pruebas/so · prueba × sistema"; python3 dinastia-godot/herramientas/tabla_so.py windows=registros/plataformas-windows-registro/so_windows.txt macos=registros/plataformas-macos-registro/so_macos.txt web=registros/plataformas-web-so/so_web.txt; } >> "$GITHUB_STEP_SUMMARY"
