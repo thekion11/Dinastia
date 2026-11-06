@@ -62,6 +62,14 @@ func _process(_d: float) -> void:
 		FestejoGrada.lanzar(_vista.get("_raiz3d"), Color(0.8, 0.1, 0.1), Color(1, 1, 1), "salida", 600.0)
 	if _n < CALENTAR:
 		return
+	if _n == CALENTAR and OS.get_environment("DIAG_OCLU") != "":
+		## DIAG_OCLU=1 (6-11): ¿está montada la oclusión del entorno y qué ve? (cámara, recinto, altura)
+		var oc: Node = _vista.find_child("EntornoOclusion", true, false)
+		var cam := get_viewport().get_camera_3d()
+		if oc == null:
+			print("DIAG_OCLU: NO montada (estadio abierto o calidad > MEDIO)")
+		else:
+			print("DIAG_OCLU: montada mx=%.1f mz=%.1f alto=%.1f cam=%s tapado=%s" % [oc.mx, oc.mz, oc.ALTO, str(cam.global_position), str(oc.tapado(cam.global_position))])
 	if _n == CALENTAR and OS.get_environment("OCULTAR_GRUPOS") != "":
 		## OCULTAR_GRUPOS=hinchas,butacas (4-11): apaga grupos enteros de `GRUPOS` y mide el resto (cuánto ganaría un nivel más ligero).
 		for gr in OS.get_environment("OCULTAR_GRUPOS").split(","):
