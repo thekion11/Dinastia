@@ -219,8 +219,6 @@ static func celdas_de(gt: Transform3D, buf: PackedFloat32Array, paso: int, celda
 			cuantas += int(t[q + 1]) - int(t[q])
 		salida[k] = [cuantas, datos]
 	return salida
-<<<<<<< HEAD
-=======
 
 ## Transformaciones `inv * ts[i]` en el formato del `buffer` de un MultiMesh 3D sin color (12 floats por instancia, filas de la matriz 3x4; origen en 3, 7 y 11).
 ## (7-11) Igual que `set_instance_transform` instancia a instancia, pero de una sola vez.
@@ -237,4 +235,3 @@ static func a_buffer(ts: Array, inv: Transform3D) -> PackedFloat32Array:
 		b[o + 8] = bs.x.z; b[o + 9] = bs.y.z; b[o + 10] = bs.z.z; b[o + 11] = org.z
 		o += 12
 	return b
->>>>>>> origin/main
