@@ -218,6 +218,8 @@ func _red(base: String) -> void:
 	_comprobar(String(d.get("fallo", "x")) == "" and String(d.get("ruta", "")) == "user://parches/parche_0.9.2.pck", "descarga: llega a user://parches/parche_0.9.2.pck (%s)" % str(d.get("fallo", "")))
 	var f := FileAccess.open("user://parches/parche_0.9.2.pck", FileAccess.READ)
 	_comprobar(f != null and f.get_length() == _cuerpo_pck.size() and f.get_buffer(f.get_length()) == _cuerpo_pck, "descarga: el archivo es idéntico (%d bytes)" % _cuerpo_pck.size())
+	if f != null:
+		f.close()   ## (6-11) en Windows un archivo abierto NO se puede borrar ni renombrar: sin esto `limpiar` y la descarga siguiente fallaban solo allí
 	_comprobar(not FileAccess.file_exists("user://parches/parche_0.9.2.pck.descarga"), "descarga: no queda el temporal")
 	_comprobar(int(d["progresos"]) >= 1 and int(d["max"]) == _cuerpo_pck.size(), "descarga: hubo %d avisos de progreso hasta los %d bytes" % [d["progresos"], d["max"]])
 	_comprobar(Parches.buscar().has(ProjectSettings.globalize_path("user://parches").path_join("parche_0.9.2.pck")) or Parches.buscar().has("user://parches/parche_0.9.2.pck"), "el autoload Parches encontrará el archivo en el próximo arranque")

@@ -54,6 +54,8 @@ func _probar() -> void:
 		ms_guardado.append(Time.get_ticks_msec() - t1)
 		var f := FileAccess.open(Partida.ruta_de("aud4_largo"), FileAccess.READ)
 		tam_guardado.append(f.get_length() if f != null else 0)
+		if f != null:
+			f.close()   ## (6-11) abierto, en Windows el guardado de la vuelta siguiente no puede renombrarlo y se quedaba el primero (año 2026 de 2029)
 	var temporadas := m.anio - anio0
 	_linea("  %d semanas (%d temporadas) en %d s; nodos %s; objetos %s; guardado KB %s; ms guardar %s" % [semanas, temporadas, (Time.get_ticks_msec() - t0) / 1000, str(nodos), str(objetos), str(tam_guardado.map(func(b: int) -> int: return b / 1024)), str(ms_guardado)])
 	## «Jugar la temporada» se detiene en las decisiones del jugador (ofertas, votos, entrevistas): 20 vueltas a «jugar + siguiente» avanzan unas pocas temporadas, y la interfaz aguanta todas.
