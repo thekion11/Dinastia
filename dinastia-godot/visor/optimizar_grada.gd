@@ -134,6 +134,7 @@ static func al_final(raiz: Node3D, prologo: bool) -> void:
 	ZonasVista.montar(raiz)
 	if not prologo and Calidad.elegida <= Calidad.BAJA and not (EscalaMovil.es_movil() or Calidad.motor_ligero or OS.get_environment("MOVIL_SIM") != ""):
 		limitar_vista(raiz, 450.0)
+		rotulos_cercanos(raiz)   ## y los rótulos 3D con alcance según su tamaño (galería del club, vestuario…)
 
 ## Un TROZO de agrupado (MultiMesh) con la caja grande pero solo piezas PEQUEÑAS dentro (ventanas, postes, troncos, hidrantes: menos de `PIEZA_PEQUENA` m) tampoco debe
 ## verse a 450 m (7-11; en ULTRA BAJA, ciudad a pie 411 → 312 llamadas). Los bloques de edificios (20-30 m por pieza) se quedan: en el mapa aéreo se ven desde lejos.

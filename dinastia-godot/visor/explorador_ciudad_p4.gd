@@ -345,7 +345,7 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 	cuerpo.position = buscar_libre(desde)
 	camara = Camera3D.new()
 	camara.fov = 65.0
-	camara.far = 650.0 if PrologoDT.activo else (700.0 if Calidad.elegida <= Calidad.BAJA else 5000.0)   ## el prólogo solo enseña el barrio (2-11); ULTRA BAJA y BAJA: 700 m + niebla (7-11)
+	camara.far = 500.0 if PrologoDT.activo else (700.0 if Calidad.elegida <= Calidad.BAJA else 5000.0)   ## el prólogo solo enseña el barrio (2-11; 500 m desde el 7-11); ULTRA BAJA y BAJA: 700 m + niebla (7-11)
 	add_child(camara)
 	camara.make_current()
 	if Calidad.elegida <= Calidad.BAJA and not PrologoDT.activo:

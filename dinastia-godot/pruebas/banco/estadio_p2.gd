@@ -56,6 +56,23 @@ func _probar_fundir_r2() -> void:
 ## (7-11) El paseo a pie en ULTRA BAJA y BAJA: la niebla de profundidad y la animación que se pausa detrás de la cámara.
 func _probar_paseo_optimizado() -> void:
 	_titulo("PASEO A PIE OPTIMIZADO: NIEBLA Y ANIMACIÓN DETRÁS DE LA CÁMARA")
+	## (7-11) En ULTRA BAJA la gente del club se dibuja solo a menos de 90 m (desde el mapa aéreo eran 163 piezas invisibles); en ALTA, sin tope.
+	var nivel0 := Calidad.elegida
+	var dd := TunelVestuario.datos({"forma": "cuenco"}, 2)
+	var con_tope: Array[int] = []
+	for nivel: int in [Calidad.ULTRA_BAJA, Calidad.ALTA]:
+		Calidad.elegida = nivel
+		var pe := PersonalEstadio.new()
+		pe.preparar(dd, Color.RED, Color.WHITE)
+		add_child(pe)
+		var n_tope := 0
+		for g: Node in pe.find_children("*", "GeometryInstance3D", true, false):
+			if is_equal_approx((g as GeometryInstance3D).visibility_range_end, 90.0):
+				n_tope += 1
+		con_tope.append(n_tope)
+		pe.free()
+	Calidad.elegida = nivel0
+	_comprobar(con_tope[0] > 20 and con_tope[1] == 0, "la gente del club tiene tope de 90 m en ULTRA BAJA (%d piezas) y no en ALTA (%d)" % [con_tope[0], con_tope[1]])
 	## (7-11) Niebla de profundidad del paseo a pie: se pone (300 a 700 m) y al salir deja el entorno como estaba.
 	var nn := Node3D.new()
 	add_child(nn)
