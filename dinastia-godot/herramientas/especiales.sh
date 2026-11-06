@@ -342,6 +342,7 @@ pasa "r2: uiid_textos" "godot --headless --path . res://pruebas/ideas/uiid_texto
 pasa "r2: tut_capas" "godot --headless --path . res://pruebas/ideas/tut_capas.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: pers_ropa" "godot --headless --path . res://pruebas/ideas/pers_ropa.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: optA_persona" "godot --headless --path . res://pruebas/ideas/optA_persona.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: s5_auditoria_partidos" "godot --headless --path . res://pruebas/ideas/s5_auditoria_partidos.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: cant_estabilidad" "godot --headless --path . res://pruebas/ideas/cant_estabilidad.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: car_precalentar" "godot --headless --path . res://pruebas/ideas/car_precalentar.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: e1_butacas" "godot --headless --path . res://pruebas/ideas/e1_butacas.tscn" "(^|[^0-9])0 fallos"

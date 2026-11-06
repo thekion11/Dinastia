@@ -333,13 +333,28 @@ var _ultima_frase := {}
 func _frase(frases: Array, quien: String, minuto: int) -> String:
 	var r := RandomNumberGenerator.new()
 	r.seed = hash("%s|%d" % [quien, minuto])
-	var i := r.randi_range(0, frases.size() - 1)
+	## (6-11, auditoría de partidos: 5,8 % de líneas repetidas en el mismo partido) Se reparten TODAS las variantes antes de repetir ninguna:
+	## antes solo se evitaba la repetición inmediata y el delantero que más remata decía lo mismo cada pocos minutos.
 	var clave := String(frases[0])
-	if int(_ultima_frase.get(clave, -1)) == i:
-		i = (i + 1) % frases.size()
+	var usadas: Array = _usadas_frase.get(clave, [])
+	var libres: Array[int] = []
+	for k in frases.size():
+		if not usadas.has(k):
+			libres.append(k)
+	if libres.is_empty():
+		var ultima: int = int(usadas.back()) if not usadas.is_empty() else -1
+		usadas = []
+		for k in frases.size():
+			if k != ultima or frases.size() == 1:
+				libres.append(k)
+	var i: int = libres[r.randi_range(0, libres.size() - 1)]
+	usadas.append(i)
+	_usadas_frase[clave] = usadas
 	_ultima_frase[clave] = i
 	var t := Idiomas.t(String(frases[i]))
 	return t % quien if t.contains("%s") else t
+
+var _usadas_frase := {}
 
 func _al_remate(club: Club, autor: Jugador, tipo: String, minuto: int) -> void:
 	var mio := club == mi_club

@@ -93,6 +93,7 @@ func _en_vivo(m: Mundo, idioma: String) -> void:
 	var narrables := 0
 	var incoherentes: Array = []
 	var frases := {}
+	var rep_frases := {}
 	var ejemplos_es: Array = []
 	for k in N:
 		var otro: Club = clubes[1 + k % (clubes.size() - 1)]
@@ -127,6 +128,7 @@ func _en_vivo(m: Mundo, idioma: String) -> void:
 				sin_min = s.substr(ap + 3)
 			if vistas.has(sin_min) and ap > 0 and ap < 4:
 				repetidas += 1
+				rep_frases[sin_min.substr(0, 60)] = int(rep_frases.get(sin_min.substr(0, 60), 0)) + 1
 			vistas[sin_min] = true
 			frases[sin_min] = int(frases.get(sin_min, 0)) + 1
 			if idioma != "es" and ap > 0 and ap < 4:
@@ -148,6 +150,10 @@ func _en_vivo(m: Mundo, idioma: String) -> void:
 		## Antes: 48 de 50 partidos con 20' o más sin una línea (máximo 38').
 		_comprobar(max_silencio <= 10 and silencios_largos == 0, "la crónica nunca se queda callada más de 10' (máximo %d')" % max_silencio)
 		_comprobar(float(repetidas) / maxf(lineas_total, 1) < 0.03, "menos de un 3 %% de frases repetidas en el mismo partido (%.1f %%)" % (100.0 * repetidas / maxf(lineas_total, 1)))
+		var top_rep: Array = rep_frases.keys()
+		top_rep.sort_custom(func(x: String, y: String) -> bool: return int(rep_frases[x]) > int(rep_frases[y]))
+		for f in top_rep.slice(0, 8):
+			_linea("  repetida %3d × %s" % [int(rep_frases[f]), f])
 		var top: Array = frases.keys()
 		top.sort_custom(func(x: String, y: String) -> bool: return int(frases[x]) > int(frases[y]))
 		for f: String in top.slice(0, 6):

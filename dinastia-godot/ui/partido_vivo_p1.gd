@@ -116,14 +116,8 @@ const _FRASES_BANDA := [
 ]
 var _expulsado_banda := false
 
-## Las tres frases y los dos sonidos de "casi gol" del HTML (juego.js:2141,
-## 2145, 2149): estaban en `sfx()` desde siempre pero nadie los llamaba en
-## Godot porque `Partido` solo contaba el remate y no decia como habia
-## terminado. El sonido, igual que en `_al_gol`, solo suena si el remate es
-## mio -asi lo hacia el HTML tambien-: los remates fallados del rival no
-## interrumpen el murmullo de fondo.
-## AUDITORÍA 26-10: con 3 y 4 frases, un 2 % de las líneas de cada partido repetía otra del mismo
-## partido. Ahora son plantillas (`%s` = quien remata) para poder traducirlas, y hay más.
+## Frases del «casi gol» (plantillas, `%s` = quien remata; así se traducen). El sonido solo suena si el remate es mío, como en el HTML (juego.js:2141-2149).
+## AUDITORÍA 26-10 y 6-11: con pocas frases se repetían líneas del mismo partido; `_frase` reparte todas las variantes antes de repetir (2,1 %, tope 3 %).
 const _FRASES_ATAJADA := [
 	"🧤 Atajada del arquero tras remate de %s",
 	"🧤 Manotazo salvador ante el remate de %s",
@@ -131,6 +125,9 @@ const _FRASES_ATAJADA := [
 	"🧤 El portero adivina la intención de %s y la atrapa",
 	"🧤 Mano a mano: gana el portero a %s",
 	"🧤 Abajo y seguro: el arquero bloca el tiro de %s",
+	"🧤 Gran intervención del portero ante el disparo de %s",
+	"🧤 %s prueba desde lejos y el arquero lo despeja",
+	"🧤 Reflejos del guardameta para frenar a %s",
 ]
 const _FRASES_FALLO := [
 	"❌ Ocasión clara fallada por %s",
@@ -139,6 +136,12 @@ const _FRASES_FALLO := [
 	"🥅 %s, solo frente al arquero, la tira afuera",
 	"💨 Disparo cruzado de %s que se marcha junto al palo",
 	"🤦 %s se enreda en el área y no llega a rematar",
+	"😬 %s no acierta a rematar con comodidad",
+	"🎯 %s la manda lejos del arco",
+	"🧱 Se le cierra el ángulo a %s y el tiro sale desviado",
+	"😮 %s cabecea fuera con todo a favor",
+	"🌬️ Remate de %s que roza el travesaño por arriba",
+	"🙄 %s duda un instante y pierde la ocasión",
 ]
 const _FRASES_PALO := [
 	"🪵 ¡Al palo! Increíble ocasión de %s",
