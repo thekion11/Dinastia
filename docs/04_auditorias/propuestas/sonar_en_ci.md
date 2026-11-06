@@ -16,8 +16,7 @@ con `SonarSource/sonarqube-scan-action` y `-Dsonar.qualitygate.wait=true`: anali
 **Ventajas.** Ramas sin PR analizadas; el CI en rojo cuando la puerta falla (antes: solo comentario del bot); cobertura/informes propios si se añaden.
 **Riesgos y costes.**
 - Un PR de una bifurcación no recibe el secreto: ese análisis falla (el repo hoy no tiene PR de forks, confirmar).
-- Cada push añade ~2-5 min de ejecutor (sin pruebas del juego; solo el escáner). Con `paths-ignore` (propuesta aparte) los pushes de solo documentos no lo lanzarían.
+- Cada push añade un trabajo de ejecutor (estimado, sin medir: pocos minutos; solo el escáner, sin pruebas del juego). Con `paths-ignore` (propuesta aparte) los pushes de solo documentos no lo lanzarían.
 - Si el token caduca o falta, todos los pushes quedan en rojo hasta renovarlo.
 - Mientras el análisis automático siga activo el escáner del CI falla («automatic analysis is enabled»): el orden de los pasos 1→3 importa.
-- Cambiar el modo reinicia el historial de "código nuevo" si se cambia la rama de referencia; no cambiarla.
 **Recomendación:** activarlo solo cuando el repositorio esté en 0 issues abiertos en `main` (hoy se persigue por PR), para que el primer análisis no deje todo en rojo.
