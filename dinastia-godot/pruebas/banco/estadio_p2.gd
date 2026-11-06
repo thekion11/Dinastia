@@ -320,3 +320,27 @@ func _probar_subsistemas_quietos() -> void:
 	SubsistemasQuietos.limpiar()
 	_comprobar(not sin_registro and quieto and not movil and SubsistemasQuietos.estaticos.is_empty(), "sin registro nada es quieto; registrado, el andén sí y la pieza del tren no; limpiar vacía el registro")
 	sub.free()
+
+## (7-11) El recorte a pie (64 % del alcance) solo rige mientras se pasea: al salir al mapa las piezas recuperan su alcance de antes (el mapa aéreo no debe quedarse sin lo pequeño).
+func _probar_recorte_a_pie() -> void:
+	_titulo("RECORTE A PIE: SOLO MIENTRAS SE PASEA")
+	var antes := Calidad.elegida
+	Calidad.elegida = Calidad.ULTRA_BAJA
+	var raiz := Node3D.new()
+	var pieza := MeshInstance3D.new()
+	pieza.mesh = BoxMesh.new()
+	raiz.add_child(pieza)
+	var sin_corte := MeshInstance3D.new()
+	sin_corte.mesh = BoxMesh.new()
+	sin_corte.visibility_range_end = 50.0   ## ya tenía un alcance menor: no se toca
+	raiz.add_child(sin_corte)
+	OptimizarGrada.limitar_vista(raiz, 450.0)
+	var base := pieza.visibility_range_end
+	OptimizarGrada.recorte_a_pie(raiz, true)
+	var a_pie := pieza.visibility_range_end
+	var intacta := sin_corte.visibility_range_end
+	OptimizarGrada.recorte_a_pie(raiz, false)
+	var fuera := pieza.visibility_range_end
+	Calidad.elegida = antes
+	_comprobar(is_equal_approx(base, 450.0) and is_equal_approx(a_pie, OptimizarGrada.alcance_a_pie() * 0.64) and is_equal_approx(fuera, 450.0) and is_equal_approx(intacta, 50.0), "450 m en el mapa → 64 % del alcance a pie al pasear (ULTRA BAJA) → 450 m al salir; el que ya tenía 50 m no cambia (%.0f, %.0f, %.0f, %.0f)" % [base, a_pie, fuera, intacta])
+	raiz.free()
