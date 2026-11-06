@@ -50,7 +50,10 @@ func _probar() -> void:
 		t._process(DT)
 	var us := float(Time.get_ticks_usec() - t0) / n
 	_linea("  %d peatones y 16 coches: %.0f µs por fotograma" % [t._vehiculos.size() - 16, us])
-	_comprobar(us < TOPE_US, "el cruce lleno cuesta menos de %.1f ms por fotograma (%.2f ms)" % [TOPE_US / 1000.0, us / 1000.0])
+	## (6-11) Regla del proyecto: ninguna afirmación sobre tiempos en --headless (suelo de 6,9 ms; en un runner lento fallaba sin que el código cambiara).
+	## El tiempo queda como información (TOPE_US de referencia) y se afirma el trabajo hecho: todos los móviles del cruce siguen en la simulación.
+	_linea("  referencia: %.1f ms por fotograma como máximo en un equipo normal (información, no se afirma)" % (TOPE_US / 1000.0))
+	_comprobar(t._vehiculos.size() >= 16 + 20, "el cruce lleno tiene sus móviles (%d, al menos 36)" % t._vehiculos.size())
 	var quietos := 0
 	for i in t._vehiculos.size():
 		if float(t._vehiculos[i]["s"]) - s0[i] < 3.0:
