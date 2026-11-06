@@ -17,7 +17,7 @@ if [[ -n "$ESPECIALES_PARTE" ]]; then PARTE_I=${ESPECIALES_PARTE%/*}; PARTE_N=${
 CONT=0
 
 BLOQUE=""
-pasa() {  # nombre, comando, patrón de éxito
+pasa() {  # nombre, comando, patrón de éxito, [tope en segundos; por defecto 600]
   if [[ -n "$ESPECIALES_SOLO" ]] && [[ "$ESPECIALES_SOLO" != "$BLOQUE" ]]; then return; fi
   CONT=$((CONT + 1))
   if [[ -n "$PARTE_I" ]] && [[ $((CONT % PARTE_N)) -ne "$PARTE_I" ]]; then return; fi
@@ -25,7 +25,7 @@ pasa() {  # nombre, comando, patrón de éxito
   ## (4-11, A4) Cada prueba con SU carpeta user:// vacía, como en el CI: con el guardado de un jugador (idioma, ajustes, partidas)
   ## las pruebas que ponen un idioma antes de abrir el juego medían otra cosa (el guardado manda) y pasaban sin probar lo que decían.
   local datos; datos=$(mktemp -d)   # (Windows: user:// sale de %APPDATA%, no de XDG_DATA_HOME: se cambian los dos)
-  XDG_DATA_HOME=$datos APPDATA=$(command -v cygpath >/dev/null && cygpath -w "$datos" || echo "$datos") timeout 600 bash -c "$2" > "$LOG" 2>&1
+  XDG_DATA_HOME=$datos APPDATA=$(command -v cygpath >/dev/null && cygpath -w "$datos" || echo "$datos") timeout "${4:-600}" bash -c "$2" > "$LOG" 2>&1
   local seg=$(( $(date +%s) - t0 ))
   if grep -q "SCRIPT ERROR" "$LOG" || ! grep -qE "$3" "$LOG"; then
     FALLOS=$((FALLOS + 1)); printf 'FALLO  %-34s %3d s\n' "$1" "$seg"; grep -E "FALLO|SCRIPT ERROR" "$LOG" | head -3
@@ -435,7 +435,7 @@ fi
   pasa "deriva a 30 temporadas (2 países; A4)" "DERIVA_TEMP=30 godot --headless --path . res://pruebas/ideas/a4_deriva_larga.tscn" "FIN. 0 fallos"
   # El motor del partido nota la calidad y la pizarra (sonda_motor_dt con umbrales, M-414; 6 partidos por escenario (10 en la pizarra, A4-PARTIDO-005: con 6 el ruido de los tiros daba falsos fallos), ~10 min)
   pasa "motor: el mejor gana al peor" "ESCENARIO=calidad N=6 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
-  pasa "motor: la pizarra se nota" "ESCENARIO=tactica N=10 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
+  pasa "motor: la pizarra se nota" "ESCENARIO=tactica N=10 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos" 1200   # (6-11) tope 1200 s: tarda ~10 min y con 600 s se agotaba en el CI de noche (2 noches seguidas, 6-11)
   # M-467: todas las pantallas en alemán; los textos se encogen (TextoQueCabe) y no quedan más de 4 cortados (~3 min)
   pasa "textos largos en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_LARGOS=$TMPN/largos_de.json RECORRIDO_CORTADOS_MAX=4 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN LARGOS. 0 fallos"
   pasa "paneles más anchos que su hueco (móvil, alemán)" "RECORRIDO_ANCHO=1 RECORRIDO_ANCHO_MAX=0 RECORRIDO_IDIOMA=de RECORRIDO_MOVIL=2400x1080 RECORRIDO_LARGOS=$TMPN/ancho_de.json godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN ANCHO. 0 fallos"
