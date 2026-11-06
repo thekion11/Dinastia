@@ -353,6 +353,7 @@ pasa "r2: pers_ropa" "godot --headless --path . res://pruebas/ideas/pers_ropa.ts
 pasa "r2: optA_persona" "godot --headless --path . res://pruebas/ideas/optA_persona.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: s5_auditoria_partidos" "godot --headless --path . res://pruebas/ideas/s5_auditoria_partidos.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: idi_marcas" "godot --headless --path . res://pruebas/ideas/idi_marcas.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: ent_arbol_dt" "godot --headless --path . res://pruebas/ideas/ent_arbol_dt.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: cant_estabilidad" "godot --headless --path . res://pruebas/ideas/cant_estabilidad.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: car_precalentar" "godot --headless --path . res://pruebas/ideas/car_precalentar.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: e1_butacas" "godot --headless --path . res://pruebas/ideas/e1_butacas.tscn" "(^|[^0-9])0 fallos"
@@ -454,6 +455,9 @@ if [[ "$1" = "todo" ]]; then
   pasa "estres_tirolibre" "godot --headless --path . res://pruebas/estres_tirolibre.tscn" "(^|[^0-9])0 fallos"
   pasa "cop_prorroga_tanda" "godot --headless --path . res://pruebas/ideas/cop_prorroga_tanda.tscn" "(^|[^0-9])0 fallos"
   pasa "p4_mobiliario_bajo" "godot --headless --path . res://pruebas/ideas/p4_mobiliario_bajo.tscn" "(^|[^0-9])0 fallos"
+  # (6-11) No estaban colgadas: pasan con 0 fallos pero tardan 2-4 min (partidos enteros / todas las pantallas); el aviso de "colgadas" venía de un límite de 120 s y de la caché de clases sin reimportar
+  pasa "r2: s5_ocasiones" "godot --headless --path . res://pruebas/ideas/s5_ocasiones.tscn" "(^|[^0-9])0 fallos"
+  pasa "r2: s3_auditoria_interfaz" "godot --headless --path . res://pruebas/ideas/s3_auditoria_interfaz.tscn" "(^|[^0-9])0 fallos"
 # 6a. Presupuesto de triángulos y llamadas de dibujo del partido (M-338): con pantalla virtual; ~5 min
 if command -v xvfb-run >/dev/null; then
 pasa "troceo de la grada sin butacas perdidas" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_troceo_grada.tscn" "FIN. 0 fallos"
