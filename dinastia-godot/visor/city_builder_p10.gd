@@ -193,6 +193,9 @@ func _trafico() -> void:
 		]:
 		var x: float = tramo["x"]
 		var z0: float = tramo["z0"]
+		## (6-11, detector) El vestuario del estadio sobresale hacia la avenida: los coches daban la vuelta en z = -85 atravesándolo. Ahora lo hacen 3,5 m antes.
+		if x == 0.0 and _rect_vestuario.size != Vector2.ZERO and _rect_vestuario.position.x < 4.5 and _rect_vestuario.end.x > -4.5:
+			z0 = maxf(z0, _rect_vestuario.end.y + 3.5)
 		var z1: float = tramo["z1"]
 		var circuito := PackedVector3Array([
 			Vector3(x - CARRIL, 0.25, z0), Vector3(x - CARRIL, 0.25, z1),
@@ -224,9 +227,12 @@ func _trafico() -> void:
 		var id_p := t.agregar_ruta(_redondear(esq_p, 20.0))
 		for i in range(_n_pro(int(round(lerpf(10.0, 22.0, _empuje_club()))))):
 			_un_peaton(t, rng_p, id_p, rng_p.randf() * 2400.0)
+	## (6-11, detector `detector_atraviesa`) Las aceras de la avenida giraban en z = -85, 15 m DENTRO de la huella del estadio (que empieza en
+	## z = -70): el 1,5 % de los peatones caminaba por dentro de la grada. Ahora dan la vuelta 4 m antes de la huella.
+	var z_norte_av := ESTADIO_EN.z + 80.0 + 4.0
 	var acera_av := PackedVector3Array([
-		Vector3(-(ANCHO_CALLE * 0.5 + BORDILLO + ACERA * 0.5), 0.3, -85.0), Vector3(-(ANCHO_CALLE * 0.5 + BORDILLO + ACERA * 0.5), 0.3, RING_Z_SUR - 10.0),
-		Vector3(ANCHO_CALLE * 0.5 + BORDILLO + ACERA * 0.5, 0.3, RING_Z_SUR - 10.0), Vector3(ANCHO_CALLE * 0.5 + BORDILLO + ACERA * 0.5, 0.3, -85.0),
+		Vector3(-(ANCHO_CALLE * 0.5 + BORDILLO + ACERA * 0.5), 0.3, z_norte_av), Vector3(-(ANCHO_CALLE * 0.5 + BORDILLO + ACERA * 0.5), 0.3, RING_Z_SUR - 10.0),
+		Vector3(ANCHO_CALLE * 0.5 + BORDILLO + ACERA * 0.5, 0.3, RING_Z_SUR - 10.0), Vector3(ANCHO_CALLE * 0.5 + BORDILLO + ACERA * 0.5, 0.3, z_norte_av),
 	])
 	var id_av := t.agregar_ruta(_redondear(acera_av, 5.0))
 	for i in range(_n_pro(int(round(lerpf(6.0, 14.0, _empuje_club()))))):
