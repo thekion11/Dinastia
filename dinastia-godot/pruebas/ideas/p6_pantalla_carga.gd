@@ -33,3 +33,12 @@ func _probar() -> void:
 	for k: String in PantallaCarga.ETAPAS:
 		todas = todas and Idiomas.t(String((PantallaCarga.ETAPAS[k] as Array)[1])) != ""
 	_comprobar(todas, "todas las etapas tienen texto")
+	## Los consejos avanzan aunque haya pocos fotogramas (la construcción bloquea el hilo): el texto cambia al instante.
+	var antes: String = n2._tarjeta_txt.text
+	var k0: int = n2._k
+	n2._process(5.0)
+	_comprobar(n2._k == k0 + 1 and n2._tarjeta_txt.text != antes, "con un solo fotograma largo el consejo cambia al instante («%s»)" % n2._tarjeta_txt.text.left(30))
+	n2._ultimo_cambio = 0
+	var k1: int = n2._k
+	PantallaCarga.paso("_estadio")
+	_comprobar(n2._k == k1 + 1, "y cada etapa que acaba también pasa al consejo siguiente")

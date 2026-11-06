@@ -65,6 +65,8 @@ func _ready() -> void:
 		if is_instance_valid(_bokeh_banner):
 			_bokeh_banner.ajustar_area(_banner.size))
 	Engine.set_meta("menu_ms", Time.get_ticks_msec())   ## menú montado: para `Medicion`
+	if OS.has_feature("web") or OS.has_feature("android"):
+		print("DINASTIA_MENU_LISTO")   ## señal de las pruebas de humo (Web: consola del navegador; Android: logcat). Solo en esas dos plataformas.
 
 ## El botón grande de «Nuevo juego», justo debajo de la partida en curso.
 func _construir_nuevo_juego() -> void:

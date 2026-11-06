@@ -71,7 +71,16 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 ## CALIDAD CONTINUA CON SONAR Y TRACY (orden del dueño, 5-11) — se borra solo si el dueño lo da por cerrado
 - **Ciclo repetible, varias veces**: bajar el informe (`herramientas/sonar_informe.py`) → corregir por bloques de mayor a menor severidad → banco + especiales + CI en verde → PR → que SonarCloud lo analice → repetir hasta que Sonar diga «perfecto o casi perfecto». Meta: las notas MÁS ALTAS posibles (Seguridad, Fiabilidad y Mantenibilidad en A; 0 hotspots sin revisar; duplicación mínima) y quitar incoherencias y desorden que cuestan rendimiento.
 - **Perfilar con Tracy Profiler** como práctica general (no solo con triángulos/llamadas/memoria de `hw_modesto.sh`): medir con Tracy los puntos calientes del partido, la ciudad y el menú, comparar antes/después y guardar la traza resumida en `docs/04_auditorias/`. Pendiente de estudiar: cómo integrar Tracy en Godot 4.7 (compilación del motor o extensión) y en qué sistemas es viable (Windows/Linux sí; Web/Android a revisar). Regla vigente: el tiempo de fotograma NUNCA se mide con `--headless`.
+- **Estado (5-11)**: `main` pasó de 492 a 4 issues de Sonar y la puerta de calidad está en OK. **Pendiente del dueño**: aceptar en la web de SonarCloud los 4 `python:S2245` (azar no criptográfico) de `herramientas/biblioteca_caras.py` y `caras_variadas.py` (Issues → Accept). Detalle y cómo repetir: `docs/04_auditorias/sonar_2026-11-05.md`.
 - Las ideas nuevas siguen en pausa (orden 26); esto es calidad de lo que ya existe.
+
+## TAREAS NUEVAS DEL DUEÑO (6-11) — se borran al completarse del todo
+- **META de rendimiento**: ULTRA BAJA con **menos de 130 llamadas de dibujo (draw calls) en promedio** (el dueño dijo 130 y luego «150»: se mantiene 130 como exigente; si confirma 150, solo cambia la cifra) (recorrido de `hw_modesto.sh`: ciudad + partido) sin gran impacto visual. Sesión de rendimiento; presupuesto en el banco extra.
+- **Calidad por defecto = la más baja (hoy «MÍNIMO», que pasa a llamarse ULTRA BAJA en los 7 niveles) en TODOS los sistemas operativos** (Windows, Linux, macOS, Android, iOS, Web), no solo en Android. El código ya parte de MÍNIMO (`Calidad.elegida`), pero falta una prueba por plataforma (`OS.has_feature`) que lo fije y comprobar que ninguna ruta (archivo de ajustes ausente/viejo, restablecer, migración) lo sube. Sesión de rendimiento.
+- Eliminar avatares poco realistas (inventario con capturas, retirar de los selectores de forma reversible, informar).
+- Evaluar precargar en segundo plano el menú inicial (respetando la regla de memoria del menú).
+- Personajes que atraviesan objetos; el personaje del jugador «no camina de verdad»; mejorar la distancia real avatar–objetos (después de terminar lo demás; primero un detector automático).
+- Al terminar: buscar consejos de rendimiento de Godot (con fuentes) y aplicar los seguros. Ante dudas, consultar a otras sesiones/IA.
 
 ## IDEAS Y TAREAS DEL DUEÑO (3-11 noche, conversación casual) — se borran al completarse del todo
 **DECISIÓN DEL DUEÑO (3-11 noche): se mantienen los «4 juegos en 1» (gestor, partido jugable, ciudad abierta, vida del DT), pero las IDEAS NUEVAS quedan EN PAUSA. Foco: los puntos más débiles de la evaluación del líder (44/100) y pulir lo que ya existe. Cuando esté muy pulido, se abarca más.** Orden por debilidad:
@@ -118,6 +127,9 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - «Búsqueda de fallos» (4.ª sesión, abierta por el dueño 4-11 03:16): ronda cada 20 min que solo REGISTRA fallos (sección «FALLOS DETECTADOS»).
 - Líder: rendimiento móvil (barrido de resolución en la prueba de rendimiento; MÍNIMA hasta 60 FPS con los datos del teléfono del dueño)
   y pasar la rama a `main` (PR #120, el dueño dijo SÍ el 4-11) cuando el CI esté verde.
+
+## COBERTURA DE PLATAFORMAS (5-11) — se borra al completarse
+- `plataformas.yml` ejecuta el juego en Windows (nativo + mini banco) y en Web (menú en Chromium): ver `04_auditorias/cobertura_sistemas_2026-11-05.md`. Pendiente: banco/especiales completos en Windows (`/tmp` fijos, `xvfb-run`), humo de Android (necesita APK x86_64 o dispositivo), preset de macOS (no existe), renombrar el archivo de `material/escudos_especiales_originales/` con nombre larguísimo (no clona en Windows), entrada Web en `dinastia.gdextension` (ruido de consola).
 
 ## FALLOS DETECTADOS
 - **Pruebas por sistema (5-11, rama `sonar/bancos`; detalle en `04_auditorias/cobertura_pruebas_2026-11-05.md`):**

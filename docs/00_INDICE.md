@@ -6,6 +6,7 @@ Regla: **un tema = un documento. Lo pendiente vive en UN solo sitio: [`PLAN_GENE
 |---|---|
 | `PLAN_GENERAL.md` | Todo lo que falta: dueño, fases 0–6, ruta de lanzamiento, mejoras de código, 356 mejoras, tus ideas sin cerrar |
 | `01_metodo/METODO.md` | Cascada + Modelo V, compuertas, trazabilidad |
+| `01_metodo/SONAR.md` | Cómo se interpretan los resultados de SonarCloud: qué cuenta como «bien», qué hacer con cada tipo de aviso, `NOSONAR`, CI rojo y cómo repetir el ciclo |
 | `02_vision/ideas_del_dueno/` | Instrucciones y notas originales del dueño (las listas de 300 y 750 ideas pasaron al plan) |
 | `04_auditorias/MEGA_AUDITORIA_3.md` | Auditoría del 24-10 con cifras (datos repetibles: `herramientas/auditoria_repo.py`) |
 | `04_auditorias/HIPER_AUDITORIA_2026-11-02.md` | Hiper auditoría del 2-11: errores H-01…H-11, optimización, visual, jugabilidad y físicas (datos: `datos_auditoria_2026-11-02.json`) |
