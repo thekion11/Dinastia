@@ -78,5 +78,6 @@ func _process(_d: float) -> void:
 			_actual = sig
 			return
 	## Con los archivos ya leídos, las animaciones del personaje se arman en un hilo (M-348): el estadio y la ciudad ya las encuentran hechas.
-	PrecalentarAnim.lanzar()
+	if PrecalentarAnim.permitido():
+		PrecalentarAnim.lanzar()
 	queue_free()

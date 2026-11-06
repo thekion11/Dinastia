@@ -5,6 +5,11 @@ extends RefCounted
 ## (sin colgarlo del árbol: solo se lee) y el hilo llena la misma caché (`_en_cache`, con candado). (30-10) El hilo solo LEE la biblioteca ya armada
 ## (caché en disco o la horneada en el build): fuera del árbol el mocap no se mueve y armarla allí daba 86 animaciones distintas; si no hay, se arma luego en el principal. Probado: el hilo principal sigue pintando fotogramas. NUNCA esperar a este hilo bloqueando el principal (se cuelga: el hilo hace `load`).
 
+## (7-11, meta de RAM, autorizado por la líder de rendimiento) En ULTRA BAJA y BAJA no se precalienta en el menú: medido en `medir_apertura` (ULTRA BAJA), el precalentado
+## cuesta ~200 MB de RAM estática en el menú (72 MB se quedan tras abrir el estadio) y ahorra ~1,4 s al abrirlo (5,5 s con él, 6,8 s sin él, por software). MEDIA o más: igual que antes.
+static func permitido() -> bool:
+	return Calidad.elegida > Calidad.BAJA
+
 static var _lanzado := false
 static var _tarea := -1
 static var _fin := false

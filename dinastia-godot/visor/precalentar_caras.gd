@@ -29,7 +29,7 @@ static func partido(local: Club, visita: Club) -> void:
 
 ## Al empezar la semana: los onces del partido que toca (en móvil, solo el del club propio).
 static func del_mundo(m: Mundo) -> void:
-	if m == null:
+	if m == null or not PrecalentarAnim.permitido():
 		return
 	if is_instance_valid(_activa) and (_activa._mundo == null or _activa._mundo.get_ref() != m or _activa._club_id != m.mi_club_id):
 		_activa._cola.clear()   ## otra partida u otro club: lo pendiente era de antes

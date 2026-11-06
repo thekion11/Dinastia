@@ -234,3 +234,14 @@ func _probar_fundir_pequenas() -> void:
 		cuenta += int(v[0])
 		coherente = coherente and (v[1] as PackedFloat32Array).size() == int(v[0]) * 12
 	_comprobar(cuenta == total and coherente and f.size() == 2 and f.has(Vector2i(40, 40)), "12 trozos pequeños → 1 junto, el grande intacto, mismas instancias (%d de %d, %d trozos)" % [cuenta, total, f.size()])
+
+## (7-11) El precalentado del menú (caras y animaciones) solo corre desde MEDIA BAJA hacia arriba; en ULTRA BAJA y BAJA se apaga (RAM).
+func _probar_precalentado_por_calidad() -> void:
+	_titulo("PRECALENTADO DEL MENÚ SEGÚN LA CALIDAD")
+	var antes := Calidad.elegida
+	var r := []
+	for q in [Calidad.ULTRA_BAJA, Calidad.BAJA, Calidad.MEDIA_BAJA, Calidad.MEDIA, Calidad.ALTA]:
+		Calidad.elegida = q
+		r.append(PrecalentarAnim.permitido())
+	Calidad.elegida = antes
+	_comprobar(str(r) == str([false, false, true, true, true]), "permitido: ULTRA BAJA no, BAJA no, MEDIA BAJA sí, MEDIA sí, ALTA sí (%s)" % str(r))
