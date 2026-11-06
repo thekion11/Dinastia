@@ -263,7 +263,7 @@ func _optimizar() -> void:
 		Optimizar.butacas_livianas(self, true)
 		Optimizar.distancias(self)
 		if modo_prologo:   ## (sigue puesto hasta que `completa`: el prólogo lo apaga al acabar `_resto`)
-			OptimizarGrada.limitar_vista(self, 380.0)
+			OptimizarGrada.limitar_vista(self, 220.0 if Calidad.elegida <= Calidad.BAJA else 380.0)   ## (7-11) ULTRA BAJA y BAJA: 220 m
 		elif EscalaMovil.es_movil() or Calidad.motor_ligero or OS.get_environment("MOVIL_SIM") != "":   ## móvil / motor ligero: no se dibuja lo pequeño a más de 450 m
 			OptimizarGrada.limitar_vista(self, 450.0)   ## prólogo (2-11): nada pequeño se dibuja a más de 380 m
 		await _marca("despejar")

@@ -74,3 +74,25 @@ func _probar_paseo_optimizado() -> void:
 	var mira_ := Vector3(0, 0, -1)
 	_comprobar(not TraficoCiudad.detras(Vector3.ZERO, mira_, Vector3(0, 0, -10)) and TraficoCiudad.detras(Vector3.ZERO, mira_, Vector3(0, 0, 10)) and not TraficoCiudad.detras(Vector3.ZERO, mira_, Vector3(0, 0, 2)),
 		"un peatón detrás de la cámara no anima; delante o pegado a ella, sí")
+
+## (7-11) Alcance de los rótulos 3D según su tamaño: el del personal (6 cm) a ~17 m, el letrero de la fachada (1,5 m) a 90 m, y no se toca el que ya trae un tope menor.
+func _probar_rotulos_cercanos() -> void:
+	_titulo("RÓTULOS 3D: ALCANCE SEGÚN EL TAMAÑO DEL TEXTO")
+	var raiz := Node3D.new()
+	var pequeno := Label3D.new()
+	pequeno.font_size = 26
+	pequeno.pixel_size = 0.0022
+	var grande := Label3D.new()
+	grande.font_size = 160
+	grande.pixel_size = 0.01
+	var corto := Label3D.new()
+	corto.font_size = 160
+	corto.pixel_size = 0.01
+	corto.visibility_range_end = 14.0
+	for l: Label3D in [pequeno, grande, corto]:
+		raiz.add_child(l)
+	var n := OptimizarGrada.rotulos_cercanos(raiz)
+	_comprobar(n == 2 and pequeno.visibility_range_end > 15.0 and pequeno.visibility_range_end < 20.0 and is_equal_approx(grande.visibility_range_end, 90.0) and is_equal_approx(corto.visibility_range_end, 14.0),
+		"el rótulo pequeño alcanza ~17 m, el grande 90 m y el que ya traía un tope menor se queda (%d tocados)" % n)
+	raiz.free()
+

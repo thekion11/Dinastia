@@ -175,3 +175,19 @@ static func niebla_a_pie(nodo: Node3D, si: bool) -> void:
 		env.fog_depth_end = g[4]
 		env.fog_depth_curve = g[5]
 		env.remove_meta("niebla_guardada")
+
+## Rótulos 3D con alcance según su tamaño (7-11): cada `Label3D` es una llamada de dibujo y un texto no se lee a más de ~300 veces su altura (el nombre del personal, de 6 cm, a unos
+## 17 m; el letrero de la fachada, de metro y medio, a 90 m). Solo a los que no traen tope o lo traen mayor. En ULTRA BAJA y BAJA, al acabar de montarse el prólogo. Devuelve cuántos.
+static func rotulos_cercanos(raiz: Node) -> int:
+	var n := 0
+	if raiz == null:
+		return 0
+	for l: Node in raiz.find_children("*", "Label3D", true, false):
+		var g := l as Label3D
+		var r := clampf(float(g.font_size) * g.pixel_size * 300.0, 15.0, 90.0)
+		if g.visibility_range_end <= 0.0 or g.visibility_range_end > r:
+			g.visibility_range_end = r
+			g.visibility_range_end_margin = r * 0.15
+			n += 1
+	return n
+
