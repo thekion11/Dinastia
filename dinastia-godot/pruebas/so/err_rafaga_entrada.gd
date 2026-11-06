@@ -54,6 +54,7 @@ func _probar() -> void:
 	_comprobar(nodos1 < nodos0 * 2 + 400, "el árbol no se dispara: %d → %d nodos" % [nodos0, nodos1])
 	if nodos1 >= nodos0 * 2 + 400:   ## (6-11) en macOS crece 899 → 4777: se imprime QUÉ crece para poder ubicar la pantalla que se abre
 		_linea("  FALLO (diagnóstico) crecimiento por clase, las 8 que más: " + _mas_crecidas(clases0, _clases(get_tree().root)))
+		_linea("  FALLO (diagnóstico) subárboles grandes (raíz y pantalla principal): " + _subarboles([get_tree().root, p]))
 	for a: StringName in InputMap.get_actions():
 		Input.action_release(a)
 	p.queue_free()
@@ -79,4 +80,15 @@ func _mas_crecidas(antes: Dictionary, despues: Dictionary) -> String:
 	var partes: PackedStringArray = []
 	for i in mini(8, dif.size()):
 		partes.append("%s +%d" % [dif[i][1], dif[i][0]])
+	return ", ".join(partes)
+
+## Los hijos directos de cada nodo con más de 100 nodos debajo: nombre, clase y tamaño (ubica la pantalla o escena que se cargó).
+func _subarboles(raices: Array) -> String:
+	var partes: PackedStringArray = []
+	for r: Node in raices:
+		for h in r.get_children():
+			var n := h.find_children("*", "", true, false).size() + 1
+			if n > 100:
+				var sc := h.get_script() as Script
+				partes.append("%s/%s (%s) %d" % [r.name, h.name, String(sc.get_global_name()) if sc != null and sc.get_global_name() != &"" else h.get_class(), n])
 	return ", ".join(partes)
