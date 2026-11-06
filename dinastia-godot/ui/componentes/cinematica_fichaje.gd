@@ -237,9 +237,12 @@ func plano(t: float) -> int:
 	return 1 if t < PLANO_2 else (2 if t < PLANO_3 else 3)
 
 var _sb_script: GDScript = null   ## (5-11) perezoso (regla de memoria del menú): una sola búsqueda, no un load() por fotograma
-func _process(delta: float) -> void:
+func _sb() -> GDScript:
 	if _sb_script == null: _sb_script = load("res://visor/stadium_builder.gd")
-	_sb_script.ocultar_techo_ante(get_viewport().get_camera_3d())
+	return _sb_script
+
+func _process(delta: float) -> void:
+	_sb().ocultar_techo_ante(get_viewport().get_camera_3d())
 	if _cerrando:
 		return
 	_t += delta
