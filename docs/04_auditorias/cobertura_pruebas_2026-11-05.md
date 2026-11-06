@@ -60,3 +60,12 @@ Se rompe a propósito lo que cada prueba vigila, se corre y se deshace. Resultad
 | `ren_peso_archivos` | un archivo de datos de 131 MB | DETECTADA |
 | `ren_sin_tiempo_en_headless` | una prueba afirma sobre los FPS sin pantalla | DETECTADA |
 | `est_propiedades_semillas` | la victoria suma 2 puntos en la tabla (en 50 mundos distintos) | DETECTADA |
+
+## Caza de pruebas frágiles (6-11, `herramientas/cazar_fragiles.py`)
+
+Corre cada especial varias veces en limpio, con carga de CPU (2×nproc bucles) y, con `--sucia`, compartiendo la carpeta `user://`. **Examinadas hasta hoy: 23 de ~340** (22 rápidas de la parte 4/6 del reparto, 2 ejecuciones por modo, y `partidas viejas abren`): **0 frágiles**. No es una garantía: las intermitentes del CI de estos días (`a4_comercios_horario`, `p1_movimiento_natural`, `a4_sirena_movimiento`, `auditoria_vida_global_limite`) no se reproducían con 2 ejecuciones; hacen falta muchas repeticiones (la de vida de la app: 38 en local sin un fallo y 2 en CI). Se examinó a fondo `auditoria_vida_global_limite`: falló en 2 CI sin cambios que la toquen; no se reproduce; la causa no está hallada. Se hizo robusta (espera a la condición en vez de N fotogramas) y, si vuelve a fallar, el log trae el estado (`ESTADO (…)`) y la semilla del mundo.
+
+Otros medios para encontrar dependencias de orden: `ESPECIALES_ORDEN=aleatorio` en `especiales.sh` (cola barajada, semilla impresa, `ESPECIALES_SEMILLA=n` para repetir). Para una ejecución nocturna del CI hace falta tocar el workflow (sesión de plataformas).
+
+## Cobertura por funciones de `nucleo/` (6-11)
+Godot 4.7.2 no ofrece cobertura de líneas para GDScript (`godot --help` no tiene opción de cobertura) y no se ha verificado ninguna herramienta de terceros. Alternativa: `herramientas/cobertura_funciones.py` mide qué funciones públicas tienen su nombre en alguna prueba: **83 % (1514 de 1834)**. Informe por archivo: `cobertura_funciones_2026-11-06.md`. Peores: `entrenamiento.gd` (37 %), `club_dentro.gd` y `cantera_p2.gd` (44 %).

@@ -36,11 +36,27 @@ func _notif(que: int) -> void:
 	get_tree().root.propagate_notification(que)
 	await get_tree().process_frame
 
+## (6-11) Espera a una condición (con tope de fotogramas) en vez de un número fijo de fotogramas: en un CI lento el diálogo o la pausa tardaban más que `_marco(4)`.
+## Si no llega, devuelve false; `_estado()` deja en el log lo que había para poder hallar la causa.
+func _esperar(cond: Callable, tope: int = 180) -> bool:
+	for i in tope:
+		if cond.call():
+			return true
+		await get_tree().process_frame
+	return cond.call()
+
+func _estado(que: String) -> void:
+	var salida: Variant = _p.get_node_or_null("SalidaGuardada")
+	var d: Variant = salida.get("_dialogo") if salida != null else null
+	print("  ESTADO (%s): pausado=%s · hay_partido=%s · mundo=%s · dialogo=%s · visible=%s · forzar_movil=%s · fps=%d" % [que, str(get_tree().paused), str(VidaGlobal.hay_partido()), str(_p.get("mundo") != null), str(d != null), str(d != null and (d as Window).visible), str(VidaGlobal.forzar_movil), Engine.get_frames_per_second()])
+
 func _marco(n: int) -> void:
 	for i in n:
 		await get_tree().process_frame
 
 func _todo() -> void:
+	## (5-11) El mundo de esta prueba lo genera `Principal` con semilla ALEATORIA: se imprime para poder repetir una ejecución que falle.
+	print("  SEMILLA del mundo: %d (hay club propio: %s)" % [int(_p.get("mundo").semilla) if _p.get("mundo") != null else -1, str(_p.get("mundo") != null and _p.get("mundo").mi_club() != null)])
 	_comprobar(get_tree().root.get_node_or_null("VidaGlobal") != null, "VidaGlobal está registrado como autoload")
 	_comprobar(not get_tree().quit_on_go_back, "«atrás» nunca cierra el juego por su cuenta")
 	## 1. Segundo plano: el árbol se pausa y el reloj de la ciudad/tráfico/temporizadores no corre.
@@ -87,13 +103,26 @@ func _todo() -> void:
 			pregunto_antes = true
 	_comprobar(not (is_instance_valid(ml.pantalla_abierta) and not ml.pantalla_abierta.is_queued_for_deletion()), "«atrás» en una pantalla de menú vuelve a su portada y luego la cierra (%d «atrás»)" % vueltas)
 	_comprobar(not pregunto_antes, "…sin preguntar de salir mientras la pantalla seguía abierta")
+	## (6-11) Antes del paso 4 la pantalla tiene que haber TERMINADO de cerrarse: su animación va en tiempo real y en un runner lento el último «atrás» del bucle de arriba
+	## puede dejar la pantalla "cerrándose" y colarse otro «atrás» que ya abrió la pregunta de salir; el paso 4 entonces la CERRABA en vez de abrirla y las tres
+	## comprobaciones siguientes quedaban en contrafase (así falló en 3 de 5 CI y nunca en local). Se espera a que acabe y se parte de la portada limpia, sin pregunta abierta.
+	await _esperar(func() -> bool: return not is_instance_valid(ml.pantalla_abierta) or ml.pantalla_abierta.is_queued_for_deletion())
+	await _marco(6)
+	var previa: Variant = salida.get("_dialogo")
+	if previa != null and (previa as Window).visible:
+		print("  INFO  la pregunta de salir ya estaba abierta antes del paso 4 (un «atrás» sobrante del bucle): se cierra y se sigue")
+		(previa as Window).hide()
+		await _marco(3)
 	## 4. «Atrás» sin nada abierto: pregunta antes de salir, y no sale.
 	await _notif(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
-	await _marco(4)
+	await _esperar(func() -> bool: return salida.get("_dialogo") != null and (salida.get("_dialogo") as Window).visible)
 	var dlg: Variant = salida.get("_dialogo")
-	_comprobar(dlg != null and (dlg as Window).visible, "«atrás» en la portada pregunta «¿Guardar antes de salir?» (y el juego sigue abierto)")
+	var pregunta := dlg != null and (dlg as Window).visible
+	if not pregunta:
+		_estado("tras el «atrás» de la portada")
+	_comprobar(pregunta, "«atrás» en la portada pregunta «¿Guardar antes de salir?» (y el juego sigue abierto)")
 	await _notif(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
-	await _marco(2)
+	await _esperar(func() -> bool: return dlg != null and not (dlg as Window).visible)
 	_comprobar(dlg != null and not (dlg as Window).visible, "otro «atrás» cierra la pregunta")
 	## 5. Poca memoria y giro de pantalla.
 	Calidad.elegida = Calidad.ALTO
@@ -111,6 +140,9 @@ func _todo() -> void:
 	pv.abrir(Partido.new(l.clubes[0], l.clubes[1]), l.clubes[0], m.vestuario)
 	await _marco(2)
 	await _notif(Node.NOTIFICATION_APPLICATION_PAUSED)
+	await _marco(3)   ## si fuera a pausarse, tendría que haberlo hecho ya: se deja pasar un poco más antes de afirmar que NO
+	if get_tree().paused:
+		_estado("con el partido abierto")
 	_comprobar(not get_tree().paused, "con un partido abierto el árbol NO se pausa (lo atiende el partido)")
 	_comprobar(int(pv.get("_velocidad")) == 0, "…y el partido se paró por su cuenta")
 	pv.queue_free()

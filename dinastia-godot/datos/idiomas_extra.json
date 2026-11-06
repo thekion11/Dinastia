@@ -7539,7 +7539,8 @@
   "🙄 %s duda un instante y pierde la ocasión": "🙄 %s hesitates for a moment and the chance is gone",
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Great save by the keeper from %s's shot",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s tries from distance and the keeper clears it",
-  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Sharp reflexes from the goalkeeper to stop %s"
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Sharp reflexes from the goalkeeper to stop %s",
+  "🏜️ Estadio del desierto": "🏜️ Desert stadium"
  },
  "pt": {
   "Historia": "História",
@@ -15081,7 +15082,8 @@
   "🙄 %s duda un instante y pierde la ocasión": "🙄 %s hesita um instante e perde a ocasião",
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Grande intervenção do guarda-redes ao remate de %s",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s tenta de longe e o guarda-redes afasta",
-  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexos do guarda-redes para travar %s"
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexos do guarda-redes para travar %s",
+  "🏜️ Estadio del desierto": "🏜️ Estádio do deserto"
  },
  "patrones": [
   [
@@ -28598,7 +28600,8 @@
   "🙄 %s duda un instante y pierde la ocasión": "🙄 %s hésite un instant et laisse passer l'occasion",
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Superbe intervention du gardien devant le tir de %s",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s essaie de loin et le gardien dégage",
-  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Réflexes du gardien pour arrêter %s"
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Réflexes du gardien pour arrêter %s",
+  "🏜️ Estadio del desierto": "🏜️ Stade du désert"
  },
  "it": {
   "Historia": "Storia",
@@ -36140,7 +36143,8 @@
   "🙄 %s duda un instante y pierde la ocasión": "🙄 %s esita un istante e perde l'occasione",
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Grande intervento del portiere sul tiro di %s",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s ci prova da lontano e il portiere respinge",
-  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Riflessi del portiere per fermare %s"
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Riflessi del portiere per fermare %s",
+  "🏜️ Estadio del desierto": "🏜️ Stadio del deserto"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43682,7 +43686,8 @@
   "🙄 %s duda un instante y pierde la ocasión": "🙄 %s zögert kurz und vergibt die Chance",
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Starke Parade des Torwarts gegen den Schuss von %s",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s probiert es aus der Distanz und der Torwart klärt",
-  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexe des Torhüters, um %s zu stoppen"
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexe des Torhüters, um %s zu stoppen",
+  "🏜️ Estadio del desierto": "🏜️ Wüstenstadion"
  },
  "ca": {
   "Historia": "Història",
@@ -51224,7 +51229,8 @@
   "🙄 %s duda un instante y pierde la ocasión": "🙄 %s dubta un instant i perd l'ocasió",
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Gran intervenció del porter davant el tir de %s",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s ho prova de lluny i el porter ho allunya",
-  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexos del porter per aturar %s"
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexos del porter per aturar %s",
+  "🏜️ Estadio del desierto": "🏜️ Estadi del desert"
  },
  "pl": {
   "Club": "Klub",
@@ -58766,7 +58772,8 @@
   "🙄 %s duda un instante y pierde la ocasión": "🙄 %s waha się chwilę i marnuje okazję",
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Świetna interwencja bramkarza po strzale %s",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s próbuje z dystansu, a bramkarz wybija piłkę",
-  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Refleks bramkarza zatrzymuje %s"
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Refleks bramkarza zatrzymuje %s",
+  "🏜️ Estadio del desierto": "🏜️ Stadion pustynny"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66308,6 +66315,7 @@
   "🙄 %s duda un instante y pierde la ocasión": "🙄 %s bir an tereddüt ediyor ve fırsatı kaçırıyor",
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Kaleci %s'in şutuna karşı harika bir kurtarış yapıyor",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s uzaktan deniyor ve kaleci uzaklaştırıyor",
-  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Kaleci %s'i durdurmak için müthiş bir refleks gösteriyor"
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Kaleci %s'i durdurmak için müthiş bir refleks gösteriyor",
+  "🏜️ Estadio del desierto": "🏜️ Çöl stadyumu"
  }
 }
