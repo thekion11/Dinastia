@@ -30,6 +30,10 @@ const ISO := {
 	"POR": "pt", "QAT": "qa", "ROU": "ro", "RSA": "za", "SCO": "gb-sct", "SEN": "sn", "SRB": "rs", "SUI": "ch",
 	"SUR": "sr", "SVK": "sk", "SVN": "si", "SWE": "se", "TOG": "tg", "TRI": "tt", "TUN": "tn", "TUR": "tr",
 	"UKR": "ua", "URU": "uy", "USA": "us", "UZB": "uz", "VEN": "ve", "WAL": "gb-wls", "ZAM": "zm",
+	## 6-11-2026: 18 nacionalidades de la base real que seguían sin bandera (prueba `ideas/fnt_recursos`), SVG de lipis/flag-icons (MIT) como el resto; «PLE» y «CUW» son
+	## otros códigos de Palestina (ya "PAL") y Curazao (ya "CUR") que usan los datos reales.
+	"SLE": "sl", "AZE": "az", "LUX": "lu", "COM": "km", "PLE": "ps", "RWA": "rw", "CGO": "cg", "BOT": "bw", "NAM": "na",
+	"KEN": "ke", "UGA": "ug", "MWI": "mw", "VAN": "vu", "LBR": "lr", "IDN": "id", "MDA": "md", "ISL": "is", "CUW": "cw",
 	## 27-10-2026: las 15 nacionalidades de jugadores que no tenían bandera, en PNG del paquete del dueño («Todas las banderas del mundo»).
 	"BDI": "bi", "CAF": "cf", "GNB": "gw", "GNQ": "gq", "HAI": "ht", "JOR": "jo", "KOS": "xk", "MAD": "mg", "MLT": "mt", "PAL": "ps", "PHI": "ph", "RUS": "ru", "SLV": "sv", "SYR": "sy", "ZIM": "zw",
 }
