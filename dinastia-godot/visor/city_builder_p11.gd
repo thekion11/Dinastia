@@ -280,7 +280,7 @@ func _optimizar() -> void:
 		await _marca("oclusores")
 		Optimizar.agrupar(self)
 		await _marca("opt_agrupar")
-		ZonasVista.montar(self)
+		OptimizarGrada.al_final(self, modo_prologo)   ## zonas de vista + tope de distancia de ULTRA BAJA/BAJA (7-11)
 
 ## `noche` va de 0 (pleno día) a 1 (noche cerrada). Lo llama el ciclo del sol
 ## de `VistaCiudad` en cada fotograma. Las farolas se encienden con la luz, y

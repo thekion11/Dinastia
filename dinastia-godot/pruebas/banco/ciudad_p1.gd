@@ -296,6 +296,12 @@ func _probar_ciudad_b7() -> void:
 	_comprobar(por_k.get("gim", "") == "hecho" and por_k.get("piscina", "") == "obra" and por_k.get("video", "") == "solar",
 		"hecho, en obra y solar se distinguen")
 	_comprobar(cb.find_children("Grua", "Node3D", false, false).size() >= 1, "la obra tiene su grúa")
+	## (7-11) ULTRA BAJA y BAJA en cualquier sistema: lo pequeño tiene tope de distancia de dibujo de 450 m (ciudad a pie 688 → 411 llamadas).
+	var con_tope := 0
+	for g in cb.find_children("*", "GeometryInstance3D", true, false):
+		if is_equal_approx((g as GeometryInstance3D).visibility_range_end, 450.0):
+			con_tope += 1
+	_comprobar(con_tope > 3000, "en ULTRA BAJA lo pequeño de la ciudad tiene tope de distancia de 450 m (%d piezas)" % con_tope)
 	_comprobar(cb.find_child("Hinchada", false, false) != null, "el día de partido hay gente")
 	var rot: Node = cb.find_child("Rotulos", false, false)
 	_comprobar(rot != null and rot.get_child_count() >= CityBuilder.EDIFICIOS.size(), "rótulos flotantes sobre cada parcela")
