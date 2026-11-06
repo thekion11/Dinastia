@@ -26,15 +26,11 @@ var _kit: Dictionary = {}
 var _frente: TextureRect
 var _espalda: TextureRect
 var _dorsal_2d: Label
-var _vp: SubViewport
-var _jugador: Dictionary = {}
-var _pivote: Node3D
 var _galeria: GridContainer
 var _botones_diseno: Array = []
 var _pendientes: Array = []      ## miniaturas por generar (pocas por frame)
 var _pestanas: TabContainer
 var _colores: Array = []         ## los 5 ColorPickerButton de la camiseta
-var _refresco_3d := 0.0
 var _refresco_2d := 0.0
 
 ## PANTALLA PROPIA (26-9-2026, pedido: "debe tener su propio menú, que tenga
@@ -118,7 +114,6 @@ func _actualizar(ya := false) -> void:
 		_refresco_2d = 0.12
 	if _incrustado:
 		_volcar_al_club()
-	_refresco_3d = 0.25
 
 var _ss_2d := 1
 var _mejora_2d := 0.0   ## cuenta atrás para repintar a doble resolución
