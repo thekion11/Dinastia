@@ -102,7 +102,7 @@ static func _partir(mmi: MultiMeshInstance3D, tramos: int) -> void:
 ## Devuelve cuántos objetos recibieron el tope.
 const ROTULO_MINIMO := 45.0
 
-static func limitar_vista(raiz: Node, hasta: float, grande := 90.0) -> int:
+static func limitar_vista(raiz: Node, hasta: float, grande := 90.0, guardar = null) -> int:
 	var fuera := {}
 	for r in raiz.find_children("*", "Node3D", true, false):
 		if r.has_meta("sin_corte"):
@@ -122,6 +122,8 @@ static func limitar_vista(raiz: Node, hasta: float, grande := 90.0) -> int:
 			continue
 		if g.get_aabb().size.length() > grande and _pieza_mayor(g) > PIEZA_PEQUENA:
 			continue
+		if guardar is Dictionary:
+			(guardar as Dictionary)[g] = [g.visibility_range_end, g.visibility_range_end_margin]   ## (para devolverlo al salir del paseo)
 		g.visibility_range_end = hasta
 		g.visibility_range_end_margin = hasta * 0.1
 		n += 1
@@ -135,7 +137,7 @@ static func al_final(raiz: Node3D, prologo: bool) -> void:
 	SubsistemasQuietos.limpiar()
 	ZonasVista.montar(raiz)
 	if not prologo and Calidad.elegida <= Calidad.BAJA and not (EscalaMovil.es_movil() or Calidad.motor_ligero or OS.get_environment("MOVIL_SIM") != ""):
-		limitar_vista(raiz, alcance_a_pie() * 0.64)
+		limitar_vista(raiz, 450.0)   ## (el recorte más cerrado, 64 % del alcance a pie, solo rige MIENTRAS SE PASEA: `recorte_a_pie`; el mapa aéreo conserva sus 450 m)
 		rotulos_cercanos(raiz)   ## y los rótulos 3D con alcance según su tamaño (galería del club, vestuario…)
 
 ## Un TROZO de agrupado (MultiMesh) con la caja grande pero solo piezas PEQUEÑAS dentro (ventanas, postes, troncos, hidrantes: menos de `PIEZA_PEQUENA` m) tampoco debe
@@ -158,11 +160,27 @@ static func _pieza_mayor(g: GeometryInstance3D) -> float:
 static func alcance_a_pie() -> float:
 	if OS.get_environment("ALCANCE_PIE") != "":
 		return float(OS.get_environment("ALCANCE_PIE"))
-	return 200.0 if Calidad.elegida <= Calidad.ULTRA_BAJA else 300.0   ## (7-11, aprobado por el dueño para llegar a < 120 llamadas: medido a pie 700 m → 275 llamadas, 300 m → 158, 200 m → 119)
+	return 180.0 if Calidad.elegida <= Calidad.ULTRA_BAJA else 300.0   ## (7-11, aprobado por el dueño para llegar a < 120 llamadas: medido a pie 700 m → 275 llamadas, 300 m → 158, 200 m → 117-125, 180 m → 117)
+
+static var _originales := {}   ## pieza → [alcance, margen] que tenía antes del recorte a pie
+
+## (7-11) Mientras se PASEA en ULTRA BAJA o BAJA, lo pequeño se corta al 64 % del alcance a pie (128 m en ULTRA BAJA); al salir al mapa se devuelve todo a como estaba: el recorte
+## estaba fijo desde que se construía la ciudad y dejaba el mapa aéreo sin árboles, bancos ni edificios pequeños (capturas antes/después con `ALCANCE_PIE`).
+static func recorte_a_pie(cb: Node, si: bool) -> void:
+	if si:
+		if cb != null and _originales.is_empty():
+			limitar_vista(cb, alcance_a_pie() * 0.64, 90.0, _originales)
+		return
+	for g: Variant in _originales:
+		if is_instance_valid(g):
+			(g as GeometryInstance3D).visibility_range_end = float(_originales[g][0])
+			(g as GeometryInstance3D).visibility_range_end_margin = float(_originales[g][1])
+	_originales.clear()
 
 ## Niebla de profundidad del paseo a pie en ULTRA BAJA y BAJA (7-11): con la cámara a 700 m de alcance (`explorador_ciudad_p4.gd`) la niebla va de 300 a 700 m y esconde el corte.
 ## Solo mientras se pasea: el mapa aéreo comparte entorno y quedaría tapado, así que se guarda lo anterior en un meta del entorno y se devuelve al salir (`_exit_tree`).
 static func niebla_a_pie(nodo: Node3D, si: bool) -> void:
+	recorte_a_pie(nodo.get("cb") as Node, si)   ## (el explorador ya lo llama al entrar y al salir del paseo)
 	var w := nodo.get_world_3d()
 	var env: Environment = w.environment if w != null else null
 	if env == null:
