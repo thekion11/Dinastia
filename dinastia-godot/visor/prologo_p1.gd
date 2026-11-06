@@ -113,6 +113,8 @@ func _esperar_resto() -> void:
 			await get_tree().process_frame
 		l.queue_free()
 	CityBuilder.modo_prologo = false
+	if Calidad.elegida <= Calidad.BAJA and vista != null:
+		OptimizarGrada.rotulos_cercanos(vista.get("_raiz3d"))   ## (7-11) alcance según el tamaño del texto
 	CityBuilder.diferir = false
 
 ## Las cajas de setos, jardineras y arbustos cerca de `centro` (a menos de 40 m): donde un personaje que

@@ -375,9 +375,12 @@ func faros(n: float) -> void:
 ## Pone una animación al peatón `v` (si su cuerpo la tiene).
 ## Pausa/reanuda los AnimationPlayer de un peatón (los de más de 260 m no se ven: 204 de ellos costaban 1,5 ms por fotograma).
 func _pausar_anim(v: Dictionary, pausar: bool) -> void:
+	if bool(v.get("apausa", false)) == pausar:
+		return   ## ya está así (se llama cada fotograma al cerca de la cámara)
 	var nodo: Node3D = v["nodo"]
 	if not is_instance_valid(nodo):
 		return
+	v["apausa"] = pausar
 	if not v.has("aps"):
 		v["aps"] = nodo.find_children("*", "AnimationPlayer", true, false)
 	for ap: AnimationPlayer in v["aps"]:
@@ -437,3 +440,7 @@ func asustar(centro: Vector3, radio: float) -> int:
 		v["espera"] = 0.0
 		n += 1
 	return n
+
+## ¿Está `p` detrás de la cámara (a más de 3 m por detrás de su plano)? No se ve: su animación no hace falta (7-11).
+static func detras(ojo: Vector3, mira: Vector3, p: Vector3) -> bool:
+	return mira.dot(p - ojo) < -3.0
