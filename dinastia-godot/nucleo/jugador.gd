@@ -164,12 +164,14 @@ var rechazos_libre: int = 0
 
 ## Media ponderada segun la demarcacion (un central con 90 de ritmo y 40 de marca no es un central
 ## de 90: deciden los pesos de POSD). RECORDADA (30-10; el once la pide ~300 veces por partido)
-## mientras los atributos sean idénticos: se comparan enteros, cualquier cambio la recalcula.
-var _media_de: Dictionary = {}; var _media_memo: Dictionary = {}
+## mientras los atributos sean idénticos: cualquier cambio la recalcula. (7-11, meta de RAM) Se compara una FIRMA (`Dictionary.hash()`) y no una copia entera de los atributos:
+## la copia pesaba ~0,7 KB por jugador (11.650 jugadores ≈ 8 MB).
+var _media_firma: int = 0; var _media_memo: Dictionary = {}
 
 func media_en(demarcacion: String) -> int:
-	if atributos != _media_de:
-		_media_de = atributos.duplicate()
+	var firma := atributos.hash()
+	if firma != _media_firma:
+		_media_firma = firma
 		_media_memo.clear()
 	if _media_memo.has(demarcacion):
 		return _media_memo[demarcacion]
