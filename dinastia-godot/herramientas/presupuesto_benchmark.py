@@ -2,10 +2,13 @@
 """Compara un informe JSON del benchmark (nucleo/medicion.gd) con herramientas/presupuesto_benchmark.json.
    python3 herramientas/presupuesto_benchmark.py informe.json [pico_ram_mb]
 Sale con 1 si alguna parte pasa de sus topes (llamadas, triángulos, memoria, vídeo). El pico de RAM del proceso solo avisa."""
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "herramientas"))
+from ruta_segura import ruta_segura
 import json, sys, os
 aqui = os.path.dirname(os.path.abspath(__file__))
 tope = json.load(open(os.path.join(aqui, "presupuesto_benchmark.json"), encoding="utf-8"))
-inf = json.load(open(sys.argv[1], encoding="utf-8"))  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+inf = json.load(open(ruta_segura(sys.argv[1]), encoding="utf-8"))
 fallos = 0
 vistas = set()
 for p in inf["partes"]:

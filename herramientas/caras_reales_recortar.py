@@ -19,6 +19,7 @@ El modelo sale de opencv_zoo (models/face_detection_yunet). Escribe:
     (y una hoja de contactos opcional con --hoja)
 Las fotos originales no se tocan.
 """
+from ruta_segura import ruta_segura
 import argparse
 import json
 import os
@@ -84,8 +85,8 @@ def main():
     sin_cara = 0
     muestra = []
     for n, r in enumerate(filas):
-        ruta = os.path.join(RAIZ, r["archivo"])
-        if not os.path.exists(ruta):  # NOSONAR(S6549): herramienta local: ruta de datos del propio repo
+        ruta = ruta_segura(os.path.join(RAIZ, r["archivo"]))
+        if not os.path.exists(ruta):
             continue
         try:
             im = ImageOps.exif_transpose(Image.open(ruta)).convert("RGB")

@@ -10,6 +10,9 @@ Sale en tres partes de menos de 29 MB (el chat admite 30 MB por archivo):
   dinastia_gameplay_3_cpu.mp4      · otro partido, CPU contra CPU (primera parte)
 Cada tramo lleva delante una tarjeta de título. Sonido AAC (el de la grabación:
 música, grada y efectos). Los .avi y .mp4 NUNCA van al repositorio."""
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "herramientas"))
+from ruta_segura import ruta_segura
 import os
 import subprocess
 import sys
@@ -20,7 +23,7 @@ FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 FONT2 = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 W, H = 960, 540
 LIMITE_MB = 28.5
-D = sys.argv[1] if len(sys.argv) > 1 else "."
+D = ruta_segura(sys.argv[1]) if len(sys.argv) > 1 else "."
 
 PARTES = {
     "1_partido": [
@@ -69,7 +72,7 @@ def tarjeta(nombre, titulo, lineas):
 
 
 def run(args):
-    subprocess.run([FF, "-y", "-hide_banner", "-loglevel", "error"] + args, check=True)  # NOSONAR(S8705): herramienta local: argumentos propios, subprocess sin shell
+    subprocess.run([FF, "-y", "-hide_banner", "-loglevel", "error"] + args, check=True)
 
 
 def intermedio(nombre, titulo, lineas):
@@ -88,7 +91,7 @@ def intermedio(nombre, titulo, lineas):
 
 
 def duracion(ruta):
-    r = subprocess.run(["/usr/bin/ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", ruta],  # NOSONAR(S8705): herramienta local: argumentos propios, subprocess sin shell
+    r = subprocess.run(["/usr/bin/ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", ruta],
                        capture_output=True, text=True, check=True)
     return float(r.stdout.strip())
 
@@ -98,7 +101,7 @@ for parte, piezas in PARTES.items():
         continue
     trozos = [intermedio(n, t, l) for n, t, l in piezas if t is not None or os.path.exists(os.path.join(D, n + ".avi"))]
     lista = os.path.join(D, f"lista_{parte}.txt")
-    with open(lista, "w") as f:  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+    with open(lista, "w") as f:
         for t in trozos:
             f.write("file '%s'\n" % os.path.abspath(t))
     unido = os.path.join(D, f"unido_{parte}.mp4")

@@ -6,6 +6,7 @@
 Solo LEE el repo. Todo lo que dice `docs/04_auditorias/MEGA_AUDITORIA_3.md` sale de aquí (o de otra
 medición citada en ese documento), para que se pueda repetir.
 """
+from ruta_segura import ruta_segura
 import collections
 import json
 import os
@@ -133,7 +134,7 @@ def main():
     if out == "-":
         print(s)
     else:
-        open(out, "w", encoding="utf-8").write(s + "\n")  # NOSONAR(S8707): herramienta local: la ruta la da el propio dueño por línea de comandos
+        open(ruta_segura(out), "w", encoding="utf-8").write(s + "\n")
         print("escrito", out)
 
 

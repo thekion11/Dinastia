@@ -23,7 +23,7 @@ setTimeout(async function(){
     localStorage.clear();
     await guardarAhora();
     var antes=G.saldo;
-    G=null; modoSandboxJeque=false;          // como si se recargara la pagina // NOSONAR(S2703): asigna a la variable global de la página probada; var crearía una local
+    G=null; modoSandboxJeque=false;   // NOSONAR(S2703): globales de la página probada (var crearía locales); como si se recargara la pagina
     await continuarPartida();
     di('');
     di('tras recargar             G.jeque = '+G.jeque+'   esJeque() = '+esJeque());

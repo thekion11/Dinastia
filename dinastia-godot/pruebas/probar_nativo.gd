@@ -10,7 +10,10 @@ func _ready() -> void:
 
 func _probar() -> void:
 	var nat := Nativo.obj()
-	_comprobar(nat != null, "la extensión nativa está cargada")
+	## (5-11) La expectativa es PROPIA del sistema: con binario (Linux, Windows x86_64, Android arm64) tiene que cargar; sin él (Web, macOS, iOS) tiene que
+	## estar ausente y el respaldo GDScript es el que manda (lo comprueba pruebas/so/int_nativo_por_sistema).
+	var esperada := BaseSO.se_espera_nativo() and OS.get_environment("DINASTIA_SIN_NATIVO") != "1"
+	_comprobar((nat != null) == esperada, "la extensión nativa %s (se espera %s en %s)" % ["está cargada" if nat != null else "no está", "sí" if esperada else "no", BaseSO.sistema()])
 	if nat == null:
 		_fin()
 		return
