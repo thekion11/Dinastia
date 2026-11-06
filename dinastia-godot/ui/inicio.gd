@@ -23,7 +23,22 @@ func _rotar_pagina() -> void:
 		_pagina.texture = _pagina2.texture
 		_pagina2.modulate.a = 0.0)
 
+## Pruebas por sistema en Web (6-11): el CI abre la página con `?t=<nombre>` y se va a `res://pruebas/so/<nombre>.tscn`. Solo ocurre si esa escena EXISTE:
+## el export público no lleva `pruebas/` (preset Web), así que allí no hace nada.
+static func _prueba_web() -> String:
+	if not OS.has_feature("web"):
+		return ""
+	var t: Variant = JavaScriptBridge.eval("new URLSearchParams(window.location.search).get('t')")
+	if t == null:
+		return ""
+	var ruta := "res://pruebas/so/%s.tscn" % str(t).validate_filename()
+	return ruta if ResourceLoader.exists(ruta) else ""
+
 func _ready() -> void:
+	var prueba := _prueba_web()
+	if prueba != "":
+		get_tree().change_scene_to_file.call_deferred(prueba)
+		return
 	## Lo gráfico va primero: si el jugador eligió el motor ligero, el juego
 	## se relanza con él antes de montar nada.
 	Calidad.cargar()
