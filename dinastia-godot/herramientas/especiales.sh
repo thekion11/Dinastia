@@ -22,6 +22,7 @@ if [[ -f herramientas/especiales_reparto.txt ]]; then
   done < herramientas/especiales_reparto.txt
 fi
 
+COLA=()
 BLOQUE=""
 pasa() {  # nombre, comando, patrón de éxito
   if [[ -n "$ESPECIALES_SOLO" ]] && [[ "$ESPECIALES_SOLO" != "$BLOQUE" ]]; then return; fi
@@ -32,6 +33,12 @@ pasa() {  # nombre, comando, patrón de éxito
     elif [[ $((CONT % PARTE_N)) -ne "$PARTE_I" ]]; then return; fi
   fi
   if [[ -n "$ESPECIALES_LISTAR" ]]; then echo "LISTA $1"; return; fi   # (5-11) sin ejecutar: solo qué pruebas tocan a esta parte
+  ## (5-11) ESPECIALES_ORDEN=aleatorio: no se ejecuta ya, se encola y al final se corren BARAJADAS (semilla impresa; ESPECIALES_SEMILLA=n la repite). Detecta pruebas que dependen del orden.
+  if [[ "$ESPECIALES_ORDEN" == "aleatorio" ]]; then COLA+=("$1"$'\x1f'"$2"$'\x1f'"$3"); return; fi
+  ejecutar "$1" "$2" "$3"
+}
+
+ejecutar() {  # nombre, comando, patrón de éxito
   local t0=$(date +%s)
   ## (4-11, A4) Cada prueba con SU carpeta user:// vacía, como en el CI: con el guardado de un jugador (idioma, ajustes, partidas)
   ## las pruebas que ponen un idioma antes de abrir el juego medían otra cosa (el guardado manda) y pasaban sin probar lo que decían.
@@ -331,6 +338,9 @@ pasa "so: est_propiedades_semillas" "godot --headless --path . res://pruebas/so/
 # 5e. ESCENAS SIN LANZAR que ya pasan (5-11, rama sonar/bancos2, prioridad 3 de la líder): 87 de las ~100 que tenían comprobaciones y nadie ejecutaba, en lotes de 10.
 #     Las que fallaban o no terminaban están anotadas en PLAN_GENERAL.md («FALLOS DETECTADOS») con su evidencia; no se han quitado ni tocado.
 BLOQUE=reutilizadas2
+# lote 10 (6-11: pasa tras añadir las banderas que faltaban)
+pasa "r2: fnt_recursos" "godot --headless --path . res://pruebas/ideas/fnt_recursos.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: detector_atraviesa" "godot --headless --path . res://pruebas/detector_atraviesa.tscn" "(^|[^0-9])0 fallos"
 # lote 1
 pasa "r2: cant_estabilidad" "godot --headless --path . res://pruebas/ideas/cant_estabilidad.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: car_precalentar" "godot --headless --path . res://pruebas/ideas/car_precalentar.tscn" "(^|[^0-9])0 fallos"
@@ -488,6 +498,14 @@ fi
   pasa "so: vis_partido_compat" "python3 herramientas/pruebas_so.py vis_partido_compat" "^OK +vis_partido_compat "
   pasa "so: vis_menu_pantallas" "python3 herramientas/pruebas_so.py vis_menu_pantallas" "^OK +vis_menu_pantallas "
   pasa "so: ren_partido_presupuesto" "python3 herramientas/pruebas_so.py ren_partido_presupuesto" "^OK +ren_partido_presupuesto "
+fi
+if [[ "${#COLA[@]}" -gt 0 ]]; then
+  SEMILLA_ORDEN=${ESPECIALES_SEMILLA:-$RANDOM$RANDOM}
+  echo "ORDEN ALEATORIO: semilla $SEMILLA_ORDEN (repetir con ESPECIALES_ORDEN=aleatorio ESPECIALES_SEMILLA=$SEMILLA_ORDEN)"
+  while IFS= read -r IDX; do
+    IFS=$'\x1f' read -r EN EC EP <<< "${COLA[$IDX]}"
+    ejecutar "$EN" "$EC" "$EP"
+  done < <(seq 0 $((${#COLA[@]} - 1)) | shuf --random-source=<(yes "$SEMILLA_ORDEN"))
 fi
 rm -f "$LOG"
 [[ "$FALLOS" -eq 0 ]] && echo "ESPECIALES: todo en orden" || echo "ESPECIALES: $FALLOS con fallos"
