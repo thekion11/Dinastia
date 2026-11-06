@@ -20,10 +20,10 @@ LISTA.txt↔especiales.sh), exportaciones y sus verificaciones, el borrador de R
    `docs/05_referencia/LICENCIAS.md` (comprueba que cada autor citado está en la lista). Por eso el parche lo EXCLUYE del filtro (`!docs/05_referencia/LICENCIAS.md`).
    Si se añade otra prueba que lea documentación, hay que añadir su ruta con `!`. (Las herramientas de `herramientas/*.py` que leen `docs/` no son pruebas del CI.)
 2. `paths-ignore` se evalúa por push entero: un push con docs + código SÍ lanza todo (correcto).
-3. Un cambio de `.md` dentro de `dinastia-godot/` que se empaqueta en el export (los presets excluyen `*.md`): no afecta a los builds.
+3. Un cambio de `.md` dentro de `dinastia-godot/` que se empaqueta en el export (el preset Web excluye `*.md`; los demás presets no los he revisado): confirmar que ninguno empaqueta un `.md` que cambie el juego.
 4. La rama debe tener su último push COMPLETO verde antes de unir; si el último push fue solo docs, el estado verde es el del push anterior (el PR muestra el último con CI). Para forzar CI completo: `workflow_dispatch`.
 5. Con `paths-ignore`, GitHub no crea checks para ese push: si hubiera protección de rama con checks obligatorios, un PR de solo docs quedaría esperando
-   (el repo no tiene checks obligatorios hoy; confirmar en Settings → Branches antes de activar).
+   (no he podido comprobar desde aquí si hay protección de rama con checks obligatorios: confirmarlo en Settings → Branches antes de activar).
 
 **Activación (decide el dueño):** aplicar el parche en una rama, comprobar que un push de solo docs NO crea ejecuciones y que uno de código SÍ.
 Ahorro real medido: de los últimos 60 commits de `main`, 5 tocan SOLO documentación (≈8 %). En ramas de trabajo con muchos commits de registro puede ser más; el beneficio
