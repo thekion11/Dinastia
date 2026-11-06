@@ -8,7 +8,8 @@ extends Node
 ##   godot --headless --path . res://pruebas/detector_atraviesa.tscn
 const PUNTOS: Array[Vector2] = [Vector2(1005, -500), Vector2(0, 0), Vector2(-600, 400), Vector2(500, 700), Vector2(-900, -300)]
 const FRAMES := 90
-const TOPE := 250   ## hoy 180 (6-11): son los casos conocidos de abajo; bajar al corregirlos
+const TOPE_V := 0
+const TOPE := 0   ## (6-11) corregida la avenida del estadio: ningún peatón dentro de un obstáculo
 var _p: Node
 var _fallos := 0
 
@@ -30,6 +31,10 @@ func _ready() -> void:
 	var total := 0
 	var dentro := 0
 	var peores: Dictionary = {}
+	var total_v := 0
+	var dentro_v := 0
+	var peores_v: Dictionary = {}
+	var rects_v: Dictionary = {}
 	var rects: Dictionary = {}
 	for pt in PUNTOS:
 		var c := Vector3(pt.x, e.altura_suelo(pt.x, pt.y), pt.y)
@@ -38,10 +43,20 @@ func _ready() -> void:
 		for f in FRAMES:
 			await get_tree().process_frame
 			for mv: Dictionary in e.trafico._vehiculos:
-				if not bool(mv.get("peaton", false)):
-					continue
 				var q: Vector3 = (mv["nodo"] as Node3D).position
 				if absf(q.x - c.x) > 150.0 or absf(q.z - c.z) > 150.0:
+					continue
+				if not bool(mv.get("peaton", false)):   ## coches, buses, motos… (el punto central de un vehículo dentro de una huella es choque seguro)
+					total_v += 1
+					if not ExploradorCiudad.libre(q, 0.0, e.obstaculos):
+						dentro_v += 1
+						var clave_v := "%d,%d" % [roundi(q.x / 4.0) * 4, roundi(q.z / 4.0) * 4]
+						peores_v[clave_v] = int(peores_v.get(clave_v, 0)) + 1
+						if not rects_v.has(clave_v):
+							for r2: Rect2 in e.obstaculos:
+								if q.x >= r2.position.x and q.x <= r2.end.x and q.z >= r2.position.y and q.z <= r2.end.y:
+									rects_v[clave_v] = "%s ruta %d" % [r2, int(mv.get("ruta", -1))]
+									break
 					continue
 				total += 1
 				if not ExploradorCiudad.libre(q, 0.0, e.obstaculos):
@@ -58,8 +73,17 @@ func _ready() -> void:
 	claves.sort_custom(func(a: Variant, b: Variant) -> bool: return int(peores[a]) > int(peores[b]))
 	for k in claves.slice(0, 10):
 		print("  DETECTOR peor sitio (x,z)=%s · %d muestras · obstáculo %s" % [k, peores[k], rects.get(k, "?")])
+	print("DETECTOR vehículos muestreados: %d · dentro de un obstáculo: %d (%.2f %%)" % [total_v, dentro_v, 100.0 * dentro_v / maxf(1.0, total_v)])
+	var claves_v := peores_v.keys()
+	claves_v.sort_custom(func(a: Variant, b: Variant) -> bool: return int(peores_v[a]) > int(peores_v[b]))
+	for k in claves_v.slice(0, 10):
+		print("  DETECTOR peor sitio de vehículos (x,z)=%s · %d muestras · %s" % [k, peores_v[k], rects_v.get(k, "?")])
+	if OS.get_environment("DETECTOR_RUTA") != "":
+		var rt = e.trafico._rutas[int(OS.get_environment("DETECTOR_RUTA"))]
+		print("  DETECTOR ruta %s: %s" % [OS.get_environment("DETECTOR_RUTA"), rt.puntos])
 	var tope := 0 if OS.get_environment("DETECTOR_ESTRICTO") == "1" else TOPE
 	_comprobar(total > 100, "hay peatones que muestrear (%d)" % total)
+	_comprobar(dentro_v <= TOPE_V, "vehículos dentro de obstáculos %d ≤ %d" % [dentro_v, TOPE_V])
 	_comprobar(dentro <= tope, "peatones dentro de obstáculos %d ≤ %d" % [dentro, tope])
 	print("===== FIN. %d fallos =====" % _fallos)
 	get_tree().quit(1 if _fallos > 0 else 0)

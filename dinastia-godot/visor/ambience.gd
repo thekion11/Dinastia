@@ -108,7 +108,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	key.rotation_degrees = Vector3(-58.0 + oscuro * 18.0, -35, 0)
 	key.light_energy = lerpf(1.35, 0.25, oscuro)
 	key.light_color = Color(1.0, 0.97, 0.90).lerp(Color(0.65, 0.72, 0.95), oscuro)
-	key.shadow_enabled = nivel > Calidad.MINIMO   ## MÍNIMO: sin la pasada de sombras (~1/4 de las llamadas del partido)
+	key.shadow_enabled = Calidad.sombra_solar(nivel)   ## MÍNIMO: sin la pasada de sombras (~1/4 de las llamadas del partido)
 	## Sombras suaves de verdad: el tamano aparente del sol hace que la sombra se
 	## abra con la distancia, como en la realidad. Sin esto salen recortadas.
 	key.light_angular_distance = 0.5

@@ -339,7 +339,7 @@ func _montar_luces() -> void:
 		f.spot_range = 14.0
 		f.spot_angle = 26.0
 		f.spot_attenuation = 1.4
-		f.shadow_enabled = i == 1 and Calidad.elegida > Calidad.MINIMO
+		f.shadow_enabled = i == 1 and Calidad.sombra_solar(Calidad.elegida)
 		var pos := Vector3(-2.6 + float(i) * 2.6, 4.2, 1.4)
 		add_child(f)
 		f.look_at_from_position(pos, Vector3(0, 1.4, -0.6), Vector3.UP)

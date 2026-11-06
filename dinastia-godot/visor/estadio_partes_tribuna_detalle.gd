@@ -137,7 +137,13 @@ static func vestir_escaleras(root: Node3D, mat_baranda: Material) -> void:
 		var lateral := plano or tam.x < tam.z
 		var rake: float = deg_to_rad(StadiumBuilder.RAKE_GRADOS) if plano else (deck.rotation.z if lateral else deck.rotation.x)
 		var escalones := escalones_de(deck, tam, lateral, rake)
-		multi(deck, "CantosPasillo", cantos_pasillo(escalones, StadiumBuilder.PASO_FILA + 0.02), mat_canto())
+		## (6-11) Los cantos van sobre los peldaños del MultiMesh «Pasillos» que ya levantó la grada, no sobre los de `escalones_de` recalculados: con otro
+		## redondeo salían cantos de peldaños que no existen (prueba pgra_grada: 1014 cantos frente a 936 pasillos).
+		var peldanos_reales: Array[Transform3D] = []
+		var mm_p := (n as MultiMeshInstance3D).multimesh
+		for i in mm_p.instance_count:
+			peldanos_reales.append(mm_p.get_instance_transform(i))
+		multi(deck, "CantosPasillo", cantos_pasillo(peldanos_reales, StadiumBuilder.PASO_FILA + 0.02), mat_canto())
 		if not plano:
 			multi(deck, "ZancasPasillo", zancas_pasillo(escalones, tam, lateral), mat_zanca())
 			if absf(deck.position.y - y_bandeja0) > 0.1:

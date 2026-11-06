@@ -21,7 +21,25 @@ extends RefCounted
 ## por debajo de MEDIO y con valor −1, para que lo guardado (0, 1, 2) siga valiendo y todo lo que decide con
 ## «>= ALTO» lo trate como ligero. Sin sombras, suavizado mínimo (MSAA x2), el 3D al 50 % de resolución (3-11; antes 70 %), sin reflejos del cielo
 ## en los materiales, y grada, gente y césped como en MEDIO o menos (ver `escala_3d` y quien mira `<= MEDIO`).
-enum { MINIMO = -1, MEDIO, ALTO, ULTRA }
+## 7 NIVELES (6-11-2026, orden del dueño; diseño en docs/04_auditorias/calidad_7_niveles_2026-11-06.md). Los 4 nombres viejos siguen
+## existiendo como alias (MINIMO = ULTRA_BAJA, MEDIO = MEDIA, ALTO = ALTA, ULTRA = ULTRA_ALTA): `<= MINIMO` es solo ULTRA BAJA, `> MINIMO` el resto,
+## `>= ALTO` ALTA y ULTRA ALTA. BAJA y MEDIA BAJA caen del lado «ligero» de MEDIA; MEDIA ALTA se comporta como MEDIA hasta que se refine.
+enum { ULTRA_BAJA = -3, BAJA = -2, MEDIA_BAJA = -1, MEDIA = 0, MEDIA_ALTA = 1, ALTA = 2, ULTRA_ALTA = 3 }
+const MINIMO := ULTRA_BAJA
+const MEDIO := MEDIA
+const ALTO := ALTA
+const ULTRA := ULTRA_ALTA
+const NIVEL_DEFECTO := ULTRA_BAJA   ## el nivel con que se parte en TODOS los sistemas (decisión del dueño, 6-11); una sola constante
+## Versión del esquema del número guardado: 1 = el viejo (−1 MÍNIMO, 0 MEDIO, 1 ALTO, 2 ULTRA); 2 = el de 7 niveles (−3…3).
+const VERSION := 2
+
+## Convierte un nivel guardado al esquema actual. Sin versión (o 1) se lee como el viejo; nunca devuelve algo fuera de −3…3.
+static func desde_guardado(valor: int, version: int = 1) -> int:
+	if version >= VERSION:
+		return clampi(valor, ULTRA_BAJA, ULTRA_ALTA)
+	if valor <= -1:
+		return ULTRA_BAJA
+	return MEDIA if valor == 0 else (ALTA if valor == 1 else ULTRA_ALTA)
 const ESCALA_MINIMO := 0.5   ## el valor por defecto; el jugador lo elige en Ajustes (35-100 %)
 const ESCALA_MIN_POSIBLE := 0.35
 const ESCALA_MEDIA_MIN := 0.5   ## (4-11) la resolución del 3D también se elige en MEDIA (50-100 %, por defecto 100 %)
@@ -31,7 +49,15 @@ static var escala_minimo := (float(OS.get_environment("ESCALA3D")) if OS.get_env
 ## La resolución base del 3D del nivel (1.0 salvo en MÍNIMO). La calidad adaptativa vuelve a esta, no a 1.0.
 static func escala_3d(nivel: int = -99) -> float:
 	var n := elegida if nivel == -99 else nivel
-	return escala_minimo if n <= MINIMO else (escala_media if n == MEDIO else 1.0)
+	if n <= MINIMO:
+		return escala_minimo
+	if n < MEDIO:   ## BAJA y MEDIA BAJA (6-11): a medio camino entre la de ULTRA BAJA y la de MEDIA, con lo que el jugador haya puesto en esas dos
+		return lerpf(escala_minimo, escala_media, 0.4 if n == BAJA else 0.7)
+	return escala_media if n == MEDIO else 1.0
+
+## ¿Este nivel proyecta la sombra del sol? ULTRA BAJA y BAJA no (la pasada de sombras es ~1/4 de las llamadas del partido).
+static func sombra_solar(nivel: int) -> bool:
+	return nivel >= MEDIA_BAJA
 
 ## EL NIVEL QUE HA ELEGIDO EL JUGADOR en Ajustes. Vive aqui y no en la pantalla
 ## de ajustes porque quien lo necesita es el visor 3D, que se monta desde otro
@@ -45,7 +71,7 @@ static func escala_3d(nivel: int = -99) -> float:
 ## x4 -> x2 -ver `sol()`/`aplicar_viewport()` mas abajo-) en vez de bajar de
 ## nivel. Medido con `pruebas/medir_rendimiento.gd` antes/despues, ver LEEME.md del historial de git.
 ## R1 (3-11, prueba del dueño: 5 FPS en MEDIA en su teléfono): el nivel por defecto es el MÁS BAJO en todas las plataformas; el jugador sube si quiere.
-static var elegida: int = MINIMO
+static var elegida: int = NIVEL_DEFECTO
 ## Bajar efectos durante el partido si los FPS caen de 40 (ver
 ## `RendimientoAdaptativo`). Encendido por defecto; se apaga en Ajustes.
 static var adaptativa: bool = true
@@ -63,7 +89,11 @@ static func nivel_de_argumentos(por_defecto: int = ALTO) -> int:
 			"ultra": return ULTRA
 			"alto": return ALTO
 			"medio": return MEDIO
-			"minimo", "mínimo": return MINIMO
+			"minimo", "mínimo", "ultrabaja": return ULTRA_BAJA
+			"baja": return BAJA
+			"mediabaja": return MEDIA_BAJA
+			"mediaalta": return MEDIA_ALTA
+			"ultraalta": return ULTRA_ALTA
 	return por_defecto
 
 # --------------------------------------------------------------------- cielo
@@ -233,7 +263,7 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 			luz.rotation_degrees = Vector3(-48, -38, 0)
 			luz.light_color = Color(1.0, 0.97, 0.92)
 			luz.light_energy = 1.25
-	luz.shadow_enabled = nivel > MINIMO   ## MÍNIMO: sin sombras (la pasada de sombras es ~1/4 de las llamadas del partido)
+	luz.shadow_enabled = sombra_solar(nivel)   ## ULTRA BAJA y BAJA: sin sombras (la pasada de sombras es ~1/4 de las llamadas del partido)
 	## Sombras suaves de verdad: `angular_distance` es el tamano aparente del sol,
 	## y es lo que hace que la sombra se vaya abriendo con la distancia al objeto,
 	## como en la realidad. Con 0 salen recortadas con tijera.
@@ -246,7 +276,7 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 	## encuadra entera-. Medido con `pruebas/medir_rendimiento.gd`, ver LEEME.md del historial de git.
 	luz.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS if nivel >= ALTO \
 		else DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
-	luz.directional_shadow_max_distance = 420.0 if nivel >= ALTO else 320.0
+	luz.directional_shadow_max_distance = 420.0 if nivel >= MEDIA_ALTA else 320.0   ## MEDIA ALTA: 2 cortes como MEDIA pero con el alcance de ALTA
 	luz.directional_shadow_split_1 = 0.06
 	luz.directional_shadow_split_2 = 0.16
 	luz.directional_shadow_split_3 = 0.42
@@ -331,7 +361,7 @@ static func cargar() -> void:
 			print("PREF_PISA_CALIDAD_AUTO ", antes, " -> ", elegida)
 		return
 	if cf.has_section_key("grafica", "calidad"):
-		var guardada := clampi(int(cf.get_value("grafica", "calidad")), MINIMO, ULTRA)
+		var guardada := desde_guardado(int(cf.get_value("grafica", "calidad")), int(cf.get_value("grafica", "version_calidad", 1)))
 		if guardada != elegida and OS.get_environment("PREF_IDIOMA_DIAG") != "":
 			print("PREF_PISA_CALIDAD ", elegida, " -> ", guardada)   ## diagnóstico de pruebas (A4): el guardado manda sobre la calidad puesta antes
 		elegida = guardada
@@ -348,6 +378,7 @@ static func cargar() -> void:
 static func guardar() -> void:
 	var cf := ConfigFile.new()
 	cf.set_value("grafica", "calidad", elegida)
+	cf.set_value("grafica", "version_calidad", VERSION)
 	cf.set_value("grafica", "adaptativa", adaptativa)
 	cf.set_value("grafica", "motor_ligero", motor_ligero)
 	cf.set_value("grafica", "partido_ligero", partido_ligero)

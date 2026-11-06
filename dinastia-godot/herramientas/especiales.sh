@@ -248,6 +248,7 @@ pasa "a4_limite_mundo (3/3 estadios y tráfico)" "A4_PARTE=3 xvfb-run -a godot -
 pasa "a4_estadio_reformas (estadio propio: 6 reformas, reabrir, nombres; con pantalla ~115 s)" "xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_estadio_reformas.tscn" "(^|[^0-9])0 fallos"
 pasa "a4_grada_alta (la grada crece con el aforo >30 000 solo en calidad ALTA; con pantalla ~60 s)" "xvfb-run -a godot --rendering-driver opengl3 --resolution 640x360 --path . res://pruebas/ideas/a4_grada_alta.tscn" "(^|[^0-9])0 fallos"
 fi
+pasa "7 niveles de calidad: migración y defecto en ULTRA BAJA (6-11)" "godot --headless --path . res://pruebas/ideas/ren_calidad_7_niveles.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_calidad_minima" "godot --headless --path . res://pruebas/ideas/p6_calidad_minima.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_idiomas_perezoso" "godot --headless --path . res://pruebas/ideas/p6_idiomas_perezoso.tscn" "(^|[^0-9])0 fallos"
 pasa "p6_ropero" "godot --headless --path . res://pruebas/ideas/p6_ropero.tscn" "(^|[^0-9])0 fallos"
@@ -342,6 +343,17 @@ BLOQUE=reutilizadas2
 pasa "r2: fnt_recursos" "godot --headless --path . res://pruebas/ideas/fnt_recursos.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: detector_atraviesa" "godot --headless --path . res://pruebas/detector_atraviesa.tscn" "(^|[^0-9])0 fallos"
 # lote 1
+pasa "r2: caminar_de_verdad" "godot --headless --path . res://pruebas/caminar_de_verdad.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: pre_anim" "godot --headless --path . res://pruebas/ideas/pre_anim.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: s3_coste_cruce" "godot --headless --path . res://pruebas/ideas/s3_coste_cruce.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: trad_textos" "godot --headless --path . res://pruebas/ideas/trad_textos.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: uiid_textos" "godot --headless --path . res://pruebas/ideas/uiid_textos.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: tut_capas" "godot --headless --path . res://pruebas/ideas/tut_capas.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: pers_ropa" "godot --headless --path . res://pruebas/ideas/pers_ropa.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: optA_persona" "godot --headless --path . res://pruebas/ideas/optA_persona.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: s5_auditoria_partidos" "godot --headless --path . res://pruebas/ideas/s5_auditoria_partidos.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: idi_marcas" "godot --headless --path . res://pruebas/ideas/idi_marcas.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: ent_arbol_dt" "godot --headless --path . res://pruebas/ideas/ent_arbol_dt.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: cant_estabilidad" "godot --headless --path . res://pruebas/ideas/cant_estabilidad.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: car_precalentar" "godot --headless --path . res://pruebas/ideas/car_precalentar.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: e1_butacas" "godot --headless --path . res://pruebas/ideas/e1_butacas.tscn" "(^|[^0-9])0 fallos"
@@ -443,6 +455,9 @@ if [[ "$1" = "todo" ]]; then
   pasa "estres_tirolibre" "godot --headless --path . res://pruebas/estres_tirolibre.tscn" "(^|[^0-9])0 fallos"
   pasa "cop_prorroga_tanda" "godot --headless --path . res://pruebas/ideas/cop_prorroga_tanda.tscn" "(^|[^0-9])0 fallos"
   pasa "p4_mobiliario_bajo" "godot --headless --path . res://pruebas/ideas/p4_mobiliario_bajo.tscn" "(^|[^0-9])0 fallos"
+  # (6-11) No estaban colgadas: pasan con 0 fallos pero tardan 2-4 min (partidos enteros / todas las pantallas); el aviso de "colgadas" venía de un límite de 120 s y de la caché de clases sin reimportar
+  pasa "r2: s5_ocasiones" "godot --headless --path . res://pruebas/ideas/s5_ocasiones.tscn" "(^|[^0-9])0 fallos"
+  pasa "r2: s3_auditoria_interfaz" "godot --headless --path . res://pruebas/ideas/s3_auditoria_interfaz.tscn" "(^|[^0-9])0 fallos"
 # 6a. Presupuesto de triángulos y llamadas de dibujo del partido (M-338): con pantalla virtual; ~5 min
 if command -v xvfb-run >/dev/null; then
 pasa "troceo de la grada sin butacas perdidas" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_troceo_grada.tscn" "FIN. 0 fallos"

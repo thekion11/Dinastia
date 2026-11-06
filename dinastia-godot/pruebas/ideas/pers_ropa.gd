@@ -18,6 +18,8 @@ func _probar() -> void:
 			continue
 		add_child(d["nodo"])
 		PeatonQ.terminar(d)
+		if i % 3 == 0:
+			PeatonVida.mochila({"nodo": d["nodo"]}, true)   ## (6-11) la mochila la pone la rutina (hora de ir al trabajo), no `crear`: sin esto la muestra salía con 0
 		var esq: Skeleton3D = d["esqueleto"]
 		var ap: AnimationPlayer = d["anim"]
 		if ap.has_animation("parado"):
@@ -57,11 +59,11 @@ func _probar() -> void:
 					var ancho_g := (malla as SphereMesh).radius * (mi as MeshInstance3D).scale.x
 					_comprobar(ancho_g < 0.1, "peatón %d: la copa ciñe la cabeza (radio %.3f m < 0,1; la cabeza mide 0,07)" % [i, ancho_g])
 					_comprobar(sobra > 0.0 and sobra < 0.06, "peatón %d: la gorra cubre la cabeza y sube %.3f m sobre ella (0-6 cm)" % [i, sobra])
-				elif malla is BoxMesh and is_equal_approx((malla as BoxMesh).size.y, 0.3) and hueso == "spine_03":
+				elif malla is ArrayMesh and absf((malla as ArrayMesh).get_aabb().size.y - 0.36) < 0.02 and hueso == "spine_03":   ## el cuerpo de la mochila (`MochilaQ`, caja redonda de 0,36 m de alto)
 					mochilas += 1
-					var arriba := (pose * (n.transform * ((mi as MeshInstance3D).position + Vector3(0, 0.15, 0)))).y
+					var arriba := (pose * (n.transform * ((mi as MeshInstance3D).position + Vector3(0, 0.18, 0)))).y
 					var hombro := (esq.global_transform * esq.get_bone_global_pose(esq.find_bone("neck_01"))).origin.y
-					_comprobar(arriba < hombro, "peatón %d: la mochila no asoma sobre los hombros (%.3f < %.3f)" % [i, arriba, hombro])
+					_comprobar(arriba < hombro + 0.02, "peatón %d: la mochila no asoma sobre los hombros (%.3f < %.3f + 2 cm de tolerancia)" % [i, arriba, hombro])
 		(d["nodo"] as Node).queue_free()
 	_comprobar(bolsas >= 2, "hay bolsas en la muestra (%d)" % bolsas)
 	_comprobar(gorras >= 2, "hay gorras en la muestra (%d)" % gorras)

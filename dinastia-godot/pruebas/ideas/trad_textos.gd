@@ -50,7 +50,7 @@ func _probar() -> void:
 		_comprobar(quedan.is_empty(), "%s: las frases compuestas salen traducidas enteras %s" % [l, str(quedan)])
 	Idiomas.idioma = "en"
 	Idiomas._cache.clear()
-	_comprobar(Idiomas.t("Dejas el club en manos de Pedro Soto. Leyenda del club. La gente lo idolatra, pero nunca ha dirigido. El directorio le da un margen de 8 partidos.").ends_with("The board gives him 8 matches of grace."), "en: el nombre no se traga la oración siguiente")
+	_comprobar(Idiomas.t("Dejas el club en manos de Pedro Soto. Leyenda del club. La gente lo idolatra, pero nunca ha dirigido. El directorio le da un margen de 8 partidos.").ends_with("The board gives him a margin of 8 matches."), "en: el nombre no se traga la oración siguiente")
 	_comprobar(Idiomas.t("Rival de siempre: U. Andina.") == "Long-standing rival: U. Andina.", "en: un nombre con inicial («U. Andina») no corta el patrón")
 	_comprobar(Idiomas.t("R. M4ldini (Grupo Sur) controla a 3 de tus jugadores.") == "R. M4ldini (Grupo Sur) controls 3 of your players.", "en: inicial al principio y nombre entre paréntesis")
 	## La fama va en frases enteras: «formador» suelto sigue siendo el perfil del agente («mentor»).

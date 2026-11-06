@@ -29,7 +29,7 @@ func _init() -> void:
 		var h := ""
 		for linea in str(salida[0]).split("\n"):
 			if linea.begins_with("HUELLA "):
-				h = linea
+				h = linea.strip_edges()   ## (6-11) en Windows la salida del hijo acaba en "\r\n": con el "\r" pegado `ends_with("construidas 0")` fallaba aunque fuera 0
 		print(modo, ": ", h)
 		huellas.append(h)
 	if huellas[0] == "" or huellas[0].get_slice(" ", 2) != huellas[1].get_slice(" ", 2):
@@ -37,7 +37,10 @@ func _init() -> void:
 		print("FALLO las bibliotecas no son iguales")
 	if not huellas[1].ends_with("construidas 0"):
 		fallos += 1
-		print("FALLO con la caché horneada se construyó alguna")
+		## (6-11) En Windows (CI de plataformas) falla aquí y la causa no se ve: el mensaje trae lo que hace falta (huella, archivos horneados, manifiesto, ruta real).
+		print("FALLO con la caché horneada se construyó alguna [huella: %s | archivos en %s: %d | manifiesto: %s | ruta real: %s | sistema: %s]" % [
+			huellas[1], CARPETA, DirAccess.get_files_at(CARPETA).size(), str(FileAccess.file_exists(CARPETA.path_join("manifiesto.json"))),
+			ProjectSettings.globalize_path(CARPETA), OS.get_name()])
 	print("FIN. %d fallos" % fallos)
 	quit()
 
