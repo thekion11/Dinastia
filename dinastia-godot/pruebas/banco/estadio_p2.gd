@@ -57,22 +57,6 @@ func _probar_fundir_r2() -> void:
 ## 3, 7 y 11; color y datos detrás) se comprobó con renderizador real: en modo sin pantalla un MultiMesh no guarda datos, por eso aquí se arma el buffer a mano.
 func _probar_celdas_agrupado() -> void:
 	_titulo("TROCEAR AGRUPADOS POR TRAMOS DEL BUFFER: IGUAL QUE INSTANCIA A INSTANCIA")
-<<<<<<< HEAD
-	## (7-11) `BufferMM`: armar y leer el buffer en bloque da lo mismo que transformación a transformación (el formato real se comprobó con renderizador: filas, origen en 3, 7, 11).
-	var rg0 := RandomNumberGenerator.new()
-	rg0.seed = 11
-	var ts: Array = []
-	for i in 40:
-		ts.append(Transform3D(Basis.from_euler(Vector3(rg0.randf(), rg0.randf(), rg0.randf())).scaled(Vector3(rg0.randf_range(0.5, 2.0), rg0.randf_range(0.5, 2.0), rg0.randf_range(0.5, 2.0))), Vector3(rg0.randf_range(-9, 9), rg0.randf(), rg0.randf_range(-9, 9))))
-	var previa := Transform3D(Basis.from_euler(Vector3(0, 0.4, 0)), Vector3(3, 1, -2))
-	var b0 := BufferMM.buffer_de(ts, previa)
-	var ok0 := b0.size() == 480
-	for i in 40:
-		var esp: Transform3D = previa * (ts[i] as Transform3D)
-		ok0 = ok0 and BufferMM.transform_de(b0, i * 12).is_equal_approx(esp) and absf(b0[i * 12 + 3] - esp.origin.x) < 0.00001 and absf(b0[i * 12 + 11] - esp.origin.z) < 0.00001
-	_comprobar(ok0, "BufferMM.buffer_de y transform_de son inversos y ponen el origen en 3, 7, 11")
-=======
->>>>>>> origin/main
 	for ordenado: bool in [false, true]:
 		var paso := 20
 		var n := 600
@@ -105,8 +89,6 @@ func _probar_celdas_agrupado() -> void:
 				esperado.append_array(buf.slice(i * paso, (i + 1) * paso))
 			iguales = iguales and (nuevo[kk] as Array)[1] == esperado and int((nuevo[kk] as Array)[0]) * paso == esperado.size()
 		_comprobar(iguales and ref.size() > 20, "partir un agrupado por tramos del buffer da lo mismo que instancia a instancia (%s, %d celdas)" % ["ordenado" if ordenado else "aleatorio", ref.size()])
-<<<<<<< HEAD
-=======
 
 ## (7-11) El paseo a pie en ULTRA BAJA y BAJA: la niebla de profundidad y la animación que se pausa detrás de la cámara.
 func _probar_paseo_optimizado() -> void:
@@ -180,6 +162,5 @@ func _probar_a_buffer() -> void:
 		var esperado: Transform3D = inv * (ts[i] as Transform3D)
 		var o := i * 12
 		var r := Transform3D(Basis(Vector3(b[o], b[o + 4], b[o + 8]), Vector3(b[o + 1], b[o + 5], b[o + 9]), Vector3(b[o + 2], b[o + 6], b[o + 10])), Vector3(b[o + 3], b[o + 7], b[o + 11]))
-		bien = bien and r.is_equal_approx(esperado)
+		bien = bien and r.is_equal_approx(esperado) and BufferMM.transform_de(b, o).is_equal_approx(esperado)
 	_comprobar(bien, "a_buffer reproduce `inv * t` de cada instancia (filas 3x4, origen en 3, 7 y 11)")
->>>>>>> origin/main

@@ -395,12 +395,7 @@ static func agrupar(raiz: Node3D, con_proxies: bool = true) -> Dictionary:
 			malla = pleg[0]
 			t = t * Transform3D(Basis.from_scale(pleg[1]), Vector3.ZERO)
 		var celda := Vector2i(floori(t.origin.x / CELDA), floori(t.origin.z / CELDA))
-<<<<<<< HEAD
-		var ovr := mi.material_override
-		var k := "%d|%d|%d|%s|%d|%d,%d" % [malla.get_instance_id(), ovr.get_instance_id() if ovr != null else 0, mi.cast_shadow, str(mi.visibility_range_end), mi.layers, celda.x, celda.y]
-=======
 		var k := "%d|%d|%d|%s|%d|%d,%d" % [malla.get_instance_id(), mi.material_override.get_instance_id() if mi.material_override != null else 0, mi.cast_shadow, mi.visibility_range_end, mi.layers, celda.x, celda.y]   ## (7-11) misma partición que la lista de ids, sin lambda ni str() por pieza
->>>>>>> origin/main
 		if not grupos.has(k):
 			grupos[k] = {"malla": malla, "mi": mi, "lista": [], "t": []}
 		(grupos[k]["lista"] as Array).append(mi)
@@ -431,11 +426,7 @@ static func agrupar(raiz: Node3D, con_proxies: bool = true) -> Dictionary:
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.mesh = g["malla"]
 		mm.instance_count = lista.size()
-<<<<<<< HEAD
-		BufferMM.llenar(mm, g["t"], inv)   ## (7-11) de una vez, no instancia a instancia
-=======
 		mm.buffer = Optimizar.a_buffer(g["t"], inv)
->>>>>>> origin/main
 		var mmi := MultiMeshInstance3D.new()
 		mmi.name = "Agrupado"
 		mmi.multimesh = mm
