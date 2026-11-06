@@ -251,3 +251,63 @@ static func _firma_material(m: Material) -> String:
 		sm.roughness_texture.get_instance_id() if sm.roughness_texture != null else 0, sm.metallic_texture.get_instance_id() if sm.metallic_texture != null else 0,
 		sm.emission_texture.get_instance_id() if sm.emission_texture != null else 0, sm.texture_filter, sm.depth_draw_mode, sm.alpha_scissor_threshold, sm.metallic_specular,
 		sm.rim_enabled, sm.clearcoat_enabled, sm.refraction_enabled, sm.billboard_mode, sm.no_depth_test, sm.disable_receive_shadows, sm.blend_mode])
+
+## (7-11, metas de RAM y de llamadas de dibujo) LA CIUDAD ENTERA: como `fundir_sueltas`, pero con todas las primitivas sin nombre elegido (`@MeshInstance3D@N`) de cualquier nodo de `raiz`
+## (la ciudad tenía ~1.400 cajas, cilindros y placas con material propio: una llamada y ~5 KB de RAM cada una). Se juntan por (material, sombra, alcance de dibujo, capa, GI) y por celda de
+## `celda` m, para que la cámara siga descartando lo lejano; la malla fundida lleva los vértices en el espacio de `raiz`. Solo piezas quietas (`Optimizar._sin_dinamica`: sin script ni grupo en
+## ella ni en sus padres), sin hijos ni meta, visibles, de pocos triángulos, con `StandardMaterial3D` opaco y sin escala desigual (las normales no se deforman). Devuelve cuántas fundió.
+static func fundir_ciudad(raiz: Node3D, celda := 80.0, nombre := "FundidoCiudad") -> int:
+	var inv := raiz.global_transform.affine_inverse()
+	var cubos := {}   ## clave → {"st": SurfaceTool, "mi": plantilla, "n": cuántas}
+	var elegidas: Array = []
+	for n in raiz.find_children("*", "MeshInstance3D", true, false):
+		var mi := n as MeshInstance3D
+		if mi.mesh == null or not String(mi.name).begins_with("@") or mi.get_child_count() > 0 or not mi.is_visible_in_tree() or mi.skin != null:
+			continue
+		if not (mi.mesh is BoxMesh or mi.mesh is CylinderMesh or mi.mesh is PlaneMesh or mi.mesh is QuadMesh or mi.mesh is SphereMesh):
+			continue
+		if mi.layers != 1 or not mi.get_meta_list().is_empty() or mi.mesh.get_surface_count() != 1 or mi.mesh.get_faces().size() / 3 > 200:
+			continue
+		if not Optimizar._sin_dinamica(mi, raiz):
+			continue
+		var mat := (mi.material_override if mi.material_override != null else mi.get_active_material(0)) as StandardMaterial3D
+		if mat == null or mat.transparency != BaseMaterial3D.TRANSPARENCY_DISABLED or mi.material_overlay != null:
+			continue
+		var b := mi.global_transform.basis
+		if absf(b.x.length() - b.y.length()) > 0.001 or absf(b.x.length() - b.z.length()) > 0.001 or absf(b.x.dot(b.y)) > 0.001:
+			continue   ## escala desigual o torcida: las normales no saldrían igual
+		var c := mi.global_transform.origin
+		var clave := [mat, mi.cast_shadow, mi.visibility_range_end, mi.visibility_range_end_margin, mi.gi_mode, Vector2i(floori(c.x / celda), floori(c.z / celda))]
+		if not cubos.has(clave):
+			var st := SurfaceTool.new()
+			st.begin(Mesh.PRIMITIVE_TRIANGLES)
+			cubos[clave] = {"st": st, "mi": mi, "n": 0}
+		(cubos[clave]["st"] as SurfaceTool).append_from(mi.mesh, 0, inv * mi.global_transform)
+		cubos[clave]["n"] = int(cubos[clave]["n"]) + 1
+		elegidas.append([mi, clave])
+	var vaciados := {}
+	var fundidas := 0
+	for par: Array in elegidas:
+		var mi: MeshInstance3D = par[0]
+		if int(cubos[par[1]]["n"]) < 2:
+			continue   ## sola en su celda: se queda como estaba
+		var pa := mi.get_parent()
+		pa.remove_child(mi)
+		mi.free()
+		vaciados[pa] = true
+		fundidas += 1
+	for clave: Array in cubos:
+		var cubo: Dictionary = cubos[clave]
+		if int(cubo["n"]) < 2:
+			continue
+		var m := MeshInstance3D.new()
+		m.name = nombre
+		m.mesh = (cubo["st"] as SurfaceTool).commit()
+		m.mesh.surface_set_material(0, clave[0])
+		m.cast_shadow = clave[1]
+		m.visibility_range_end = clave[2]
+		m.visibility_range_end_margin = clave[3]
+		m.gi_mode = clave[4]
+		raiz.add_child(m, true)   ## (sin transformación propia: los vértices ya están en el espacio de `raiz`)
+	PodaVacios.de(raiz, vaciados.keys())
+	return fundidas

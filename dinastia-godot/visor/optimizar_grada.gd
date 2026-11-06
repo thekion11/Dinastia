@@ -131,6 +131,7 @@ static func limitar_vista(raiz: Node, hasta: float, grande := 90.0) -> int:
 ## de 450 m para lo pequeño: ciudad a pie 688 → 411 llamadas de dibujo, mapa aéreo 2.761 → 1.321 (ULTRA BAJA, `medir_ciudad`). Va AL FINAL, tras `agrupar`:
 ## si el tope existe antes, `agrupar` trata distinto las piezas (la grúa de la obra desaparecía). Móvil y motor ligero ya lo ponen antes.
 static func al_final(raiz: Node3D, prologo: bool) -> void:
+	FundirPiezas.fundir_ciudad(raiz)   ## (7-11) primitivas sueltas por material y celda: menos nodos y llamadas, misma imagen
 	ZonasVista.montar(raiz)
 	if not prologo and Calidad.elegida <= Calidad.BAJA and not (EscalaMovil.es_movil() or Calidad.motor_ligero or OS.get_environment("MOVIL_SIM") != ""):
 		limitar_vista(raiz, 450.0)

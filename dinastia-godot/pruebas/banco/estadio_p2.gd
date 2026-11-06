@@ -245,3 +245,60 @@ func _probar_precalentado_por_calidad() -> void:
 		r.append(PrecalentarAnim.permitido())
 	Calidad.elegida = antes
 	_comprobar(str(r) == str([false, false, true, true, true]), "permitido: ULTRA BAJA no, BAJA no, MEDIA BAJA sí, MEDIA sí, ALTA sí (%s)" % str(r))
+
+## (7-11) `FundirPiezas.fundir_ciudad`: las primitivas sueltas con el mismo material y celda se funden en una malla, las solas, con escala desigual o con nombre propio se quedan, y la geometría no se mueve.
+func _probar_fundir_ciudad() -> void:
+	_titulo("FUNDIR LA CIUDAD: PRIMITIVAS POR MATERIAL Y CELDA")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var rojo := StandardMaterial3D.new()
+	rojo.albedo_color = Color.RED
+	var azul := StandardMaterial3D.new()
+	azul.albedo_color = Color.BLUE
+	var aabb_antes := AABB()
+	for i in 5:
+		var mi := MeshInstance3D.new()   ## (nombre automático «@MeshInstance3D@N»: nadie la busca)
+		mi.mesh = BoxMesh.new()
+		mi.material_override = rojo
+		raiz.add_child(mi)
+		mi.position = Vector3(i * 3.0, 0.5, 2.0)
+		aabb_antes = aabb_antes.merge(mi.global_transform * mi.get_aabb()) if i > 0 else mi.global_transform * mi.get_aabb()
+	var lejos := MeshInstance3D.new()
+	lejos.mesh = BoxMesh.new()
+	lejos.material_override = rojo
+	raiz.add_child(lejos)
+	lejos.position = Vector3(900.0, 0.5, 900.0)
+	var otra := MeshInstance3D.new()
+	otra.mesh = CylinderMesh.new()
+	(otra.mesh as CylinderMesh).radial_segments = 8   ## (las de la ciudad ya vienen rebajadas por `Optimizar.primitivas`)
+	(otra.mesh as CylinderMesh).rings = 1
+	otra.material_override = azul
+	raiz.add_child(otra)
+	var otra2 := MeshInstance3D.new()
+	otra2.mesh = CylinderMesh.new()
+	(otra2.mesh as CylinderMesh).radial_segments = 8
+	(otra2.mesh as CylinderMesh).rings = 1
+	otra2.material_override = azul
+	raiz.add_child(otra2)
+	otra2.position = Vector3(1.0, 0, 0)
+	var estirada := MeshInstance3D.new()
+	estirada.mesh = BoxMesh.new()
+	estirada.material_override = rojo
+	raiz.add_child(estirada)
+	estirada.scale = Vector3(1, 3, 1)
+	var elegida := MeshInstance3D.new()
+	elegida.name = "Banco"
+	elegida.mesh = BoxMesh.new()
+	elegida.material_override = rojo
+	raiz.add_child(elegida)
+	var n := FundirPiezas.fundir_ciudad(raiz, 80.0)
+	var fund: Array = raiz.find_children("FundidoCiudad*", "MeshInstance3D", true, false)
+	var union := AABB()
+	var primero := true
+	for f in fund:
+		var caja: AABB = (f as MeshInstance3D).mesh.get_aabb()
+		union = caja if primero else union.merge(caja)
+		primero = false
+	_comprobar(n == 7 and fund.size() == 2 and raiz.get_child_count() == 5, "7 piezas → 2 mallas (5 cajas rojas, 2 cilindros azules); quedan la lejana, la estirada y la «Banco» (%d fundidas, %d mallas, %d hijos)" % [n, fund.size(), raiz.get_child_count()])
+	_comprobar(union.encloses(aabb_antes.grow(-0.01)) or absf(union.size.x - aabb_antes.size.x) < 0.5, "la geometría fundida ocupa el mismo sitio que las cajas originales")
+	raiz.queue_free()
