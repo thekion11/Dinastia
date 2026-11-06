@@ -4,6 +4,14 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## OBJETIVOS DEL DUEÑO DE RENDIMIENTO (6-11, orden 33) — META FINAL, TODO EL JUEGO
+- **Pico de RAM menor de 1,5 GB** (DDR3, equipo modesto; hoy el partido llega a 2,4-3,1 GB en MEDIO y ciudad 4,4-5 GB).
+- **Menos de 120 llamadas de dibujo en ULTRA BAJA** (hoy la ciudad en ULTRA BAJA ronda 471 según la sesión Tracy; sin cifra tras #203-#205).
+- **Menos de 200 ms** (tiempo por fotograma o de carga; se confirma con el dueño cuál de los dos).
+- Sin cambiar más lo visual. Todo el juego (menú, ciudad, estadio, museo, gestión, partido, minijuegos) debe llegar a esas metas.
+- Medir con `herramientas/hw_modesto.sh` (RAM en cgroup, llamadas y triángulos; nunca el tiempo de fotograma `--headless`).
+- Fusión a `main`: autorizada por el dueño (6-11) para las ramas de rendimiento listas, en cargas grandes (un lote por vez, con el banco en FIN. 0 fallos).
+
 ## ESTADO AL CIERRE DEL 4-11 TARDE (orden 32 del dueño) — para retomar
 - Caza de fallos (orden 31) CERRADA por el dueño. Mega auditoría 4 hecha (5 repasos) y sus hallazgos en `docs/04_auditorias/MEGA_AUDITORIA_4/`
   (gestión, partido, interfaz, mundo 3D, móvil, rendimiento). Todo en `main` por los PR #169, #181 y #182.
