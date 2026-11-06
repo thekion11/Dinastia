@@ -10,6 +10,7 @@ func _process(delta_real: float) -> void:
 	_cuadro += 1
 	var cam := get_viewport().get_camera_3d() if is_inside_tree() else null
 	var ojo := cam.global_position if cam != null else Vector3.INF
+	var adelante := -cam.global_transform.basis.z if cam != null else Vector3.ZERO
 	var hay_jugador := jugador != null and is_instance_valid(jugador)
 	var pj := jugador.global_position if hay_jugador else Vector3.ZERO
 	_rejilla_paso(ojo)
@@ -34,8 +35,7 @@ func _process(delta_real: float) -> void:
 				var q := nv.position
 				var lejos := maxf(absf(q.x - ojo.x), absf(q.z - ojo.z))
 				var nl := 0 if lejos < 150.0 else (1 if lejos < 260.0 else 2)
-				if nl != int(v.get("lod", 0)) and (nl == 2 or int(v.get("lod", 0)) == 2):
-					_pausar_anim(v, nl == 2)   ## 2-11-2026: a más de 260 m (no se dibuja) su AnimationPlayer no corre
+				_pausar_anim(v, nl == 2 or detras(ojo, adelante, q))   ## a más de 260 m (2-11) o detrás de la cámara (7-11): no se ve, su AnimationPlayer no corre
 				v["lod"] = nl
 		if float(v.get("espera", 0.0)) > 0.0:
 			v["espera"] = float(v["espera"]) - delta
