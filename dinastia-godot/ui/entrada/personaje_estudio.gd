@@ -115,7 +115,7 @@ func _montar_escena() -> void:
 		luz.rotation_degrees = l[0]
 		luz.light_energy = float(l[1])
 		luz.light_color = l[2]
-		luz.shadow_enabled = bool(l[3]) and Calidad.elegida > Calidad.MINIMO
+		luz.shadow_enabled = bool(l[3]) and Calidad.sombra_solar(Calidad.elegida)
 		mundo3.add_child(luz)
 	var env := WorldEnvironment.new()
 	var e := Environment.new()

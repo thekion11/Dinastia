@@ -172,7 +172,7 @@ static func aplicar_preferencias(estado: Dictionary) -> void:
 	if vis is String and niveles.has(String(vis).to_lower()):
 		vis = niveles[String(vis).to_lower()]
 	if vis is int or vis is float:
-		Calidad.elegida = clampi(int(vis), Calidad.MINIMO, Calidad.ULTRA)
+		Calidad.elegida = Calidad.desde_guardado(int(vis), int(cfg.get("version_calidad", 1)))
 		if real:
 			Calidad.guardar()
 

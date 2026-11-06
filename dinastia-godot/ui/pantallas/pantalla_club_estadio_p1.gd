@@ -40,7 +40,7 @@ func _pintar_estilos_estadio(c: Club) -> void:
 		var clave := String(p_local["clave"])
 		var coste := e.coste_preset(c, clave, p.mundo.obras)
 		var b := Button.new()
-		b.text = "%s  ·  %s" % [Nombres.limpiar(String(p_local["nombre"])), p._dinero(coste)]
+		b.text = "%s  ·  %s" % [Idiomas.t(Nombres.limpiar(String(p_local["nombre"]))), p._dinero(coste)]   ## (6-11) el nombre se traduce SOLO: unido al precio, «Estadio %s» lo daba vuelta («del desierto · 56.2M EUR Stadium»)
 		b.tooltip_text = Nombres.limpiar(String(p_local["desc"]))
 		b.add_theme_font_size_override("font_size", 11)
 		b.disabled = coste > c.saldo

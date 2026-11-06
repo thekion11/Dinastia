@@ -59,10 +59,10 @@ func _probar_capas() -> void:
 	await get_tree().process_frame
 	p.call("_ir_a_pestana", "Camarín")
 	await get_tree().process_frame
-	p.call("_ir_a_pestana", "Entrenar")   ## ya vista: no saca otra; sigue la de Camarín (la nueva)
+	p.call("_ir_a_pestana", "Entrenar")   ## ya vista: no saca otra; y la de Camarín no pasa al menú siguiente (`MenuLateral`: «la tarjeta de ayuda del menú anterior no pasa al siguiente»)
 	await get_tree().process_frame
 	var otra := p.get_node_or_null("CapaTutorial")
-	_comprobar(otra != null and (otra.find_children("*", "Button", true, false)[0] as Button).text.contains("Camarín"), "y al volver a una que ya viste, no sale otra vez")
+	_comprobar(otra == null or otra.is_queued_for_deletion(), "y al volver a una que ya viste, no sale otra vez ni se queda la del menú anterior")
 	if otra != null:
 		otra.free()
 	p.set("_modo_experto", true)

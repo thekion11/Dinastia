@@ -15,7 +15,13 @@ extends BaseIdea
 ## estructura: no se guarda una referencia en el repo porque `sin()`/`exp()` pueden
 ## redondear distinto en otra CPU y la prueba daría falsos fallos.
 
-const DIR := "/tmp/aud"
+## (6-11) Carpeta de las huellas: la misma `/tmp/aud` de siempre salvo que haya TMPDIR/TEMP (Windows no tiene /tmp: allí la prueba fallaba al abrir el archivo).
+static func _carpeta() -> String:
+	for v: String in ["TMPDIR", "TEMP"]:
+		var t := OS.get_environment(v)
+		if t != "":
+			return t.path_join("aud")
+	return "/tmp/aud"
 const SALES := [0.0, 0.25, 0.5, 0.75, 1.0]
 
 ## Los sonidos que el pulido de audio (paso 4) cambió A PROPÓSITO: se espera que su huella
@@ -65,15 +71,16 @@ func _probar() -> void:
 	_despacho()
 	_tamanos()
 
-	DirAccess.make_dir_recursive_absolute(DIR)
-	var ruta := "%s/f0s_%s.json" % [DIR, etiqueta]
+	var carpeta := _carpeta()
+	DirAccess.make_dir_recursive_absolute(carpeta)
+	var ruta := "%s/f0s_%s.json" % [carpeta, etiqueta]
 	var f := FileAccess.open(ruta, FileAccess.WRITE)
 	_comprobar(f != null, "se escriben las huellas en %s" % ruta)
 	if f != null:
 		f.store_string(JSON.stringify(huellas, " ", true))
 		f.close()
 
-	var ref_ruta := "%s/f0s_antes.json" % DIR
+	var ref_ruta := "%s/f0s_antes.json" % carpeta
 	if etiqueta == "antes" or not FileAccess.file_exists(ref_ruta):
 		_linea("  (sin comparación: esta pasada ES la referencia o no hay referencia)")
 	else:

@@ -190,14 +190,18 @@ func _disp_calidad() -> void:
 	var tc := p._texto(10, Principal.COL_SUAVE)
 	tc.text = Idiomas.t("Calidad gráfica del estadio en 3D")
 	p._lista_ajustes.add_child(tc)
-	var fila_c := HBoxContainer.new()
-	fila_c.add_theme_constant_override("separation", 4)
+	var fila_c := HFlowContainer.new()   ## (6-11) 7 botones: se parten en dos filas si no caben (móvil)
+	fila_c.add_theme_constant_override("h_separation", 4)
+	fila_c.add_theme_constant_override("v_separation", 4)
 	p._lista_ajustes.add_child(fila_c)
 	for nivel: Array in [
-			[Calidad.ULTRA, "Ultra", "Todos los efectos, sombras y reflejos"],
-			[Calidad.ALTO, "Alta", "El equilibrio: sombras sí, lo más caro no"],
-			[Calidad.MEDIO, "Media", "Sin efectos pesados: máxima fluidez"],
-			[Calidad.MINIMO, "Mínima", "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución"],
+			[Calidad.ULTRA_ALTA, "Ultra alta", "Todos los efectos, sombras y reflejos"],
+			[Calidad.ALTA, "Alta", "El equilibrio: sombras sí, lo más caro no"],
+			[Calidad.MEDIA_ALTA, "Media alta", "Como Media, con la sombra del sol llegando más lejos"],
+			[Calidad.MEDIA, "Media", "Sin efectos pesados: máxima fluidez"],
+			[Calidad.MEDIA_BAJA, "Media baja", "Sombra del sol sí, con el 3D a una resolución algo menor que en Media"],
+			[Calidad.BAJA, "Baja", "Sin sombra del sol y con el 3D a menor resolución"],
+			[Calidad.ULTRA_BAJA, "Ultra baja", "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución"],
 		]:
 		var clave: int = nivel[0]
 		var b_c := Button.new()
