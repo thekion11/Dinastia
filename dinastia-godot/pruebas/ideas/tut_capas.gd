@@ -36,7 +36,7 @@ func _probar_capas() -> void:
 	var padre := Control.new()
 	add_child(padre)
 	var tarjeta := CapaTutorialUI.mostrar(padre, "Entrenar")
-	_comprobar(tarjeta.name == "CapaTutorial" and tarjeta.find_children("*", "Label", true, false).size() == 4, "la tarjeta lleva el título y las tres líneas")
+	_comprobar(tarjeta.name == "CapaTutorial" and tarjeta.find_children("*", "Label", true, false).size() == 3 and (tarjeta.find_children("*", "Button", true, false)[0] as Button).text.contains("Entrenar"), "la tarjeta lleva el título (en su cabecera desde el rediseño del 3-11) y las tres líneas")
 	(tarjeta.find_child("Entendido", true, false) as Button).pressed.emit()
 	await get_tree().process_frame
 	_comprobar(not is_instance_valid(tarjeta) and not CapasTutorial.debe_mostrar("Entrenar") and CapasTutorial.activas(), "«Entendido» la cierra y no vuelve esa capa, las demás sí")
@@ -58,10 +58,11 @@ func _probar_capas() -> void:
 	(tar.find_child("Entendido", true, false) as Button).pressed.emit()
 	await get_tree().process_frame
 	p.call("_ir_a_pestana", "Camarín")
+	await get_tree().process_frame
 	p.call("_ir_a_pestana", "Entrenar")   ## ya vista: no saca otra; sigue la de Camarín (la nueva)
 	await get_tree().process_frame
 	var otra := p.get_node_or_null("CapaTutorial")
-	_comprobar(otra != null and (otra.find_children("*", "Label", true, false)[0] as Label).text.contains("Camarín"), "y al volver a una que ya viste, no sale otra vez")
+	_comprobar(otra != null and (otra.find_children("*", "Button", true, false)[0] as Button).text.contains("Camarín"), "y al volver a una que ya viste, no sale otra vez")
 	if otra != null:
 		otra.free()
 	p.set("_modo_experto", true)
