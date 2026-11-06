@@ -42,3 +42,4 @@ func _probar() -> void:
 ## PARA GUARDAR UNA NUEVA (al subir `Partida.VERSION`): un mundo CHI+ARG con semilla fija, tres semanas jugadas,
 ##   var d := Partida.instantanea(m); FileAccess.open(CARPETA + "/v%d_<fecha>.json.gz" % Partida.VERSION, WRITE)
 ##   .store_buffer(JSON.stringify(d).to_utf8_buffer().compress(FileAccess.COMPRESSION_GZIP))
+## Más casos del presente (6-11): `FOSIL_SEMANAS=15 FOSIL_ETIQUETA=media_temporada godot --headless --path . res://pruebas/crear_fosil.tscn` guarda otra con el código de hoy (hay `media_temporada` y `tres_anios`).
