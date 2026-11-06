@@ -208,3 +208,29 @@ func _probar_banca_ligera() -> void:
 	for i in range(1, a.size()):
 		orden = orden and (a[i - 1] as Jugador).ovr >= (a[i] as Jugador).ovr
 	_comprobar(a.size() > 5 and a == b and orden and not a.has(c.plantilla[0]) and not once.any(func(j): return a.has(j)), "la banca sale igual (%d jugadores), ordenada y sin lesionados ni titulares" % a.size())
+
+## (7-11) `Optimizar.fundir_pequenas`: los trozos con pocas instancias se juntan por celdas más grandes sin perder ni duplicar instancias; los grandes se quedan igual.
+func _probar_fundir_pequenas() -> void:
+	_titulo("TROCEO: TROZOS PEQUEÑOS FUNDIDOS")
+	var por := {}
+	var total := 0
+	for i in 12:
+		var buf := PackedFloat32Array()
+		var n := 3 + i
+		buf.resize(n * 12)
+		for q in buf.size():
+			buf[q] = float(i * 1000 + q)
+		por[Vector2i(i % 4, i / 4)] = [n, buf]
+		total += n
+	var grande := PackedFloat32Array()
+	grande.resize(Optimizar.MIN_TROZO * 12)
+	por[Vector2i(40, 40)] = [Optimizar.MIN_TROZO, grande]
+	total += Optimizar.MIN_TROZO
+	var f := Optimizar.fundir_pequenas(por)
+	var cuenta := 0
+	var coherente := true
+	for k: Vector2i in f:
+		var v: Array = f[k]
+		cuenta += int(v[0])
+		coherente = coherente and (v[1] as PackedFloat32Array).size() == int(v[0]) * 12
+	_comprobar(cuenta == total and coherente and f.size() == 2 and f.has(Vector2i(40, 40)), "12 trozos pequeños → 1 junto, el grande intacto, mismas instancias (%d de %d, %d trozos)" % [cuenta, total, f.size()])

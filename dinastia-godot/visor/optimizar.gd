@@ -151,6 +151,7 @@ static func trocear(raiz: Node3D) -> int:
 		var por_celda := celdas_de(mmi.global_transform, mm.buffer, paso_buffer(mm), CELDA_TROCEO)
 		if por_celda.size() < 2 and corte <= 0.0:
 			continue
+		por_celda = fundir_pequenas(por_celda)
 		for k: Vector2i in por_celda:
 			var nuevo := MultiMesh.new()
 			nuevo.transform_format = MultiMesh.TRANSFORM_3D
@@ -176,6 +177,32 @@ static func trocear(raiz: Node3D) -> int:
 		mmi.free()
 		hechos += 1
 	return hechos
+
+## Trozos con menos de `MIN_TROZO` instancias se juntan por celdas de FACTOR_TROZO veces el lado (7-11, meta de RAM): la ciudad salía en 20.040 trozos de ~7 instancias y cada nodo
+## (MultiMeshInstance3D + MultiMesh + su buffer) cuesta ~5 KB: +104 MB. Las instancias y su dibujo no cambian; solo el tamaño de la caja que decide el recorte por cámara.
+const MIN_TROZO := 40
+const FACTOR_TROZO := 4
+
+static func fundir_pequenas(por: Dictionary) -> Dictionary:
+	var salida := {}
+	var juntos := {}   ## celda grande → [[cuantas, buffer]…] (un Array se modifica en sitio; un Packed dentro de un contenedor se copiaría)
+	for k: Vector2i in por:
+		var v: Array = por[k]
+		if int(v[0]) >= MIN_TROZO:
+			salida[k] = v
+			continue
+		var g := Vector2i(floori(float(k.x) / FACTOR_TROZO), floori(float(k.y) / FACTOR_TROZO))
+		if not juntos.has(g):
+			juntos[g] = []
+		(juntos[g] as Array).append(v)
+	for g: Vector2i in juntos:
+		var datos := PackedFloat32Array()
+		var cuantas := 0
+		for v: Array in juntos[g]:
+			datos.append_array(v[1])
+			cuantas += int(v[0])
+		salida[Vector2i(g.x + 1000000, g.y)] = [cuantas, datos]   ## (otro espacio de claves: no choca con las celdas finas)
+	return salida
 
 ## Floats por instancia en el `buffer` de un MultiMesh 3D: 12 de la transformación (origen en las posiciones 3, 7 y 11), 4 de color y 4 de datos si los usa (comprobado con renderizador real).
 static func paso_buffer(mm: MultiMesh) -> int:
