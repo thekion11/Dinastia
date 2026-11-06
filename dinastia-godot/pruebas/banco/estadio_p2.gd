@@ -52,3 +52,40 @@ func _probar_fundir_r2() -> void:
 	FundirPiezas.fundir_profundo(r3, "Fundido", [], true)
 	_comprobar((r3.get_node("Fundido") as MeshInstance3D).mesh.get_surface_count() == 2, "R2: 3 materiales (2 iguales) → 2 superficies con `por_firma`")
 	r3.queue_free()
+
+## (7-11) `Optimizar.celdas_de` (por tramos del buffer) da lo MISMO que repartir instancia a instancia: mismas celdas, mismo orden y los mismos datos. El formato del buffer (origen en
+## 3, 7 y 11; color y datos detrás) se comprobó con renderizador real: en modo sin pantalla un MultiMesh no guarda datos, por eso aquí se arma el buffer a mano.
+func _probar_celdas_agrupado() -> void:
+	_titulo("TROCEAR AGRUPADOS POR TRAMOS DEL BUFFER: IGUAL QUE INSTANCIA A INSTANCIA")
+	for ordenado: bool in [false, true]:
+		var paso := 20
+		var n := 600
+		var buf := PackedFloat32Array()
+		buf.resize(n * paso)
+		var rg := RandomNumberGenerator.new()
+		rg.seed = 7
+		for i in n:
+			for q in paso:
+				buf[i * paso + q] = rg.randf()   # datos distintos en todas las posiciones
+			buf[i * paso + 3] = (float(i) / float(n) * 800.0 - 400.0) if ordenado else rg.randf_range(-400.0, 400.0)
+			buf[i * paso + 7] = rg.randf_range(0.0, 5.0)
+			buf[i * paso + 11] = rg.randf_range(-400.0, 400.0)
+		var gt := Transform3D(Basis.from_euler(Vector3(0, 0.7, 0)), Vector3(30.0, 0.0, -20.0))
+		var nuevo := Optimizar.celdas_de(gt, buf, paso, 100.0)
+		var ref := {}
+		for i in n:
+			var o := gt * Vector3(buf[i * paso + 3], buf[i * paso + 7], buf[i * paso + 11])
+			var kk := Vector2i(floori(o.x / 100.0), floori(o.z / 100.0))
+			if not ref.has(kk):
+				ref[kk] = []
+			(ref[kk] as Array).append(i)
+		var iguales := nuevo.size() == ref.size()
+		for kk: Vector2i in ref:
+			if not nuevo.has(kk):
+				iguales = false
+				continue
+			var esperado := PackedFloat32Array()
+			for i: int in ref[kk]:
+				esperado.append_array(buf.slice(i * paso, (i + 1) * paso))
+			iguales = iguales and (nuevo[kk] as Array)[1] == esperado and int((nuevo[kk] as Array)[0]) * paso == esperado.size()
+		_comprobar(iguales and ref.size() > 20, "partir un agrupado por tramos del buffer da lo mismo que instancia a instancia (%s, %d celdas)" % ["ordenado" if ordenado else "aleatorio", ref.size()])
