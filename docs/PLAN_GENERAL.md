@@ -79,7 +79,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - **Calidad por defecto = la más baja (hoy «MÍNIMO», que pasa a llamarse ULTRA BAJA en los 7 niveles) en TODOS los sistemas operativos** (Windows, Linux, macOS, Android, iOS, Web), no solo en Android. El código ya parte de MÍNIMO (`Calidad.elegida`), pero falta una prueba por plataforma (`OS.has_feature`) que lo fije y comprobar que ninguna ruta (archivo de ajustes ausente/viejo, restablecer, migración) lo sube. Sesión de rendimiento.
 - Eliminar avatares poco realistas (inventario con capturas, retirar de los selectores de forma reversible, informar).
 - Evaluar precargar en segundo plano el menú inicial (respetando la regla de memoria del menú).
-- Personajes que atraviesan objetos; el personaje del jugador «no camina de verdad»; mejorar la distancia real avatar–objetos (después de terminar lo demás; primero un detector automático).
+- Personajes que atraviesan objetos; el personaje del jugador «no camina de verdad»; mejorar la distancia real avatar–objetos. DETECTOR HECHO (6-11, `pruebas/detector_atraviesa.tscn`, en `especiales.sh` como `r2: detector_atraviesa`): 12.000 muestras de peatones, 1,5 % dentro de un obstáculo, todas en (8..12, -72..-84) dentro de la huella del estadio (rect 124×160 en (-62,-230)): corregir esa huella o el recorrido y bajar `TOPE` a 0. Falta: extender el detector a vehículos aparcados y al jugador.
 - Al terminar: buscar consejos de rendimiento de Godot (con fuentes) y aplicar los seguros. Ante dudas, consultar a otras sesiones/IA.
 
 ## IDEAS Y TAREAS DEL DUEÑO (3-11 noche, conversación casual) — se borran al completarse del todo

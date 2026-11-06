@@ -340,6 +340,7 @@ pasa "so: est_propiedades_semillas" "godot --headless --path . res://pruebas/so/
 BLOQUE=reutilizadas2
 # lote 10 (6-11: pasa tras añadir las banderas que faltaban)
 pasa "r2: fnt_recursos" "godot --headless --path . res://pruebas/ideas/fnt_recursos.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: detector_atraviesa" "godot --headless --path . res://pruebas/detector_atraviesa.tscn" "(^|[^0-9])0 fallos"
 # lote 1
 pasa "r2: cant_estabilidad" "godot --headless --path . res://pruebas/ideas/cant_estabilidad.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: car_precalentar" "godot --headless --path . res://pruebas/ideas/car_precalentar.tscn" "(^|[^0-9])0 fallos"
