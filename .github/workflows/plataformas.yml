@@ -441,8 +441,9 @@ jobs:
           pattern: plataformas-*
           path: registros
 
+      ## Informativa: el veredicto lo dan los trabajos de cada sistema (por eso `|| true`).
       - name: Tabla
         shell: bash
         run: |
           ls -R registros || true
-          { echo "### 📊 pruebas/so · prueba × sistema"; python3 dinastia-godot/herramientas/tabla_so.py windows=registros/plataformas-windows-registro/so_windows.txt macos=registros/plataformas-macos-registro/so_macos.txt web=registros/plataformas-web-so/so_web.txt; } >> "$GITHUB_STEP_SUMMARY"
+          { echo "### 📊 pruebas/so · prueba × sistema"; python3 dinastia-godot/herramientas/tabla_so.py windows=registros/plataformas-windows-registro/so_windows.txt macos=registros/plataformas-macos-registro/so_macos.txt web=registros/plataformas-web-so/so_web.txt || true; } >> "$GITHUB_STEP_SUMMARY"

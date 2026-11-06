@@ -62,8 +62,11 @@ async function correr(p) {
   const marcador = new RegExp(`^(OK|FALLO) ${p.nombre} \\[(\\w+)\\]`);
   let veredicto = "";
   const detalle = [];
+  const ultimas = [];   // últimas líneas de consola: para saber qué pasó cuando no hay marcador
   pagina.on("console", (m) => {
     const t = m.text();
+    ultimas.push(t.slice(0, 120));
+    if (ultimas.length > 4) ultimas.shift();
     const k = marcador.exec(t);
     if (k) veredicto = k[1];
     else if (/^FALLO |SCRIPT ERROR|SHADER ERROR/.test(t)) detalle.push(t.slice(0, 160));
@@ -74,7 +77,7 @@ async function correr(p) {
   await pagina.close();
   const seg = Math.round((Date.now() - t0) / 1000);
   const malo = veredicto !== "OK" || detalle.some((d) => d.includes("SCRIPT ERROR"));
-  const motivo = veredicto === "" ? "sin marcador (tope de tiempo o no arrancó)" : detalle.slice(0, 3).join(" | ");
+  const motivo = veredicto === "" ? "sin marcador (tope de tiempo o no arrancó); consola: " + ultimas.join(" ¦ ") : detalle.slice(0, 3).join(" | ");
   return `${malo ? "FALLO" : "OK   "} ${p.nombre.padEnd(42)} ${String(seg).padStart(3)} s  ${malo ? motivo : ""}`;
 }
 
