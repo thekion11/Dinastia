@@ -46,7 +46,7 @@ static func _sin_dinamica(mi: Node, raiz: Node) -> bool:
 		return false
 	var p := mi.get_parent()
 	while p != null and p != raiz:
-		if p.get_script() != null or p is Skeleton3D or not p.get_groups().is_empty():
+		if (p.get_script() != null and not SubsistemasQuietos.permite(p, mi)) or p is Skeleton3D or not p.get_groups().is_empty():
 			return false
 		p = p.get_parent()
 	return true

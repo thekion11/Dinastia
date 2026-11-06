@@ -302,3 +302,21 @@ func _probar_fundir_ciudad() -> void:
 	_comprobar(n == 7 and fund.size() == 2 and raiz.get_child_count() == 5, "7 piezas → 2 mallas (5 cajas rojas, 2 cilindros azules); quedan la lejana, la estirada y la «Banco» (%d fundidas, %d mallas, %d hijos)" % [n, fund.size(), raiz.get_child_count()])
 	_comprobar(union.encloses(aabb_antes.grow(-0.01)) or absf(union.size.x - aabb_antes.size.x) < 0.5, "la geometría fundida ocupa el mismo sitio que las cajas originales")
 	raiz.queue_free()
+
+## (7-11) `SubsistemasQuietos`: bajo un subsistema registrado todo es quieto salvo lo que cuelga de sus nodos móviles; si no está registrado, nada lo es.
+func _probar_subsistemas_quietos() -> void:
+	_titulo("SUBSISTEMAS CON SCRIPT CUYA GEOMETRÍA ES QUIETA")
+	var sub := Node3D.new()
+	var tren := Node3D.new()
+	var parte_tren := MeshInstance3D.new()
+	var andén := MeshInstance3D.new()
+	sub.add_child(tren)
+	tren.add_child(parte_tren)
+	sub.add_child(andén)
+	var sin_registro := SubsistemasQuietos.permite(sub, andén)
+	SubsistemasQuietos.estaticos[sub] = {tren: true}
+	var quieto := SubsistemasQuietos.permite(sub, andén)
+	var movil := SubsistemasQuietos.permite(sub, parte_tren)
+	SubsistemasQuietos.limpiar()
+	_comprobar(not sin_registro and quieto and not movil and SubsistemasQuietos.estaticos.is_empty(), "sin registro nada es quieto; registrado, el andén sí y la pieza del tren no; limpiar vacía el registro")
+	sub.free()

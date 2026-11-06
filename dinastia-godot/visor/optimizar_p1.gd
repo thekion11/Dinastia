@@ -172,7 +172,7 @@ static func _quieto(mi: MeshInstance3D, raiz: Node) -> bool:
 		return _no("propio2")
 	var p := mi.get_parent()
 	while p != null and p != raiz:
-		if p.get_script() != null:
+		if p.get_script() != null and not SubsistemasQuietos.permite(p, mi):
 			return _no("script:" + String(p.get_script().resource_path.get_file()))
 		if not p.get_groups().is_empty():
 			return _no("grupo")
@@ -362,6 +362,7 @@ static func _montar_proxies(raiz: Node3D, proxies: Array) -> void:
 ## `con_proxies` = false: solo junta piezas iguales, sin la caja lejana (el entorno del estadio).
 static func agrupar(raiz: Node3D, con_proxies: bool = true) -> Dictionary:
 	_motivos.clear()
+	SubsistemasQuietos.registrar(raiz)   ## (7-11) metro: sus mallas quietas también se agrupan
 	## (4-11, A4-M3D-X01) Estas dos cachés tenían como CLAVE una malla / un material y no se vaciaban nunca: cada
 	## ciudad o estadio construido dejaba vivas sus mallas y unidades para siempre (+123 objetos y +5 MB por entrada).
 	_tris_cache.clear()
