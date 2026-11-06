@@ -182,7 +182,7 @@ func _aplicar_hora() -> void:
 		var energia_nominal: float = lerpf(0.34, 1.15, dia) + dorada * 0.3
 		_sol.light_energy = energia_nominal + bajo * 1.1
 		sol_nominal = energia_nominal / maxf(_sol.light_energy, 0.01)
-		_sol.shadow_enabled = dia > 0.05 and Calidad.elegida > Calidad.MINIMO   ## (4-11) MÍNIMO: sin sombras también en la ciudad (se las devolvía el ciclo del sol)
+		_sol.shadow_enabled = dia > 0.05 and Calidad.sombra_solar(Calidad.elegida)   ## (4-11) MÍNIMO: sin sombras también en la ciudad (se las devolvía el ciclo del sol)
 
 	if _cielo != null:
 		var top_dia := Color(0.20, 0.42, 0.78)

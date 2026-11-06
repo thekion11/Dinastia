@@ -77,7 +77,7 @@ func _montar_escena() -> void:
 	var luz := DirectionalLight3D.new()
 	luz.rotation_degrees = Vector3(-62, 28, 0)
 	luz.light_energy = 1.1
-	luz.shadow_enabled = Calidad.elegida > Calidad.MINIMO
+	luz.shadow_enabled = Calidad.sombra_solar(Calidad.elegida)
 	_raiz.add_child(luz)
 	var foco := OmniLight3D.new()                       ## la luz del techo de la máquina
 	foco.position = Vector3(0, 0.9, 0)

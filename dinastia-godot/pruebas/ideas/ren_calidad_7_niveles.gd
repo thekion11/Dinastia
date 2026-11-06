@@ -11,6 +11,17 @@ func _probar() -> void:
 	_comprobar(Calidad.MINIMO == Calidad.ULTRA_BAJA and Calidad.MEDIO == Calidad.MEDIA and Calidad.ALTO == Calidad.ALTA \
 			and Calidad.ULTRA == Calidad.ULTRA_ALTA, "los nombres viejos son alias de los nuevos")
 	_comprobar(Calidad.NIVEL_DEFECTO == Calidad.ULTRA_BAJA, "el nivel por defecto es ULTRA BAJA")
+	## Cada escalón es monótono en lo que decide el nivel: la escala del 3D no baja al subir y la sombra del sol, una vez encendida, sigue encendida
+	var antes_s := -1.0
+	var sombra_vista := false
+	for v in range(-3, 4):
+		var e := Calidad.escala_3d(v)
+		_comprobar(e >= antes_s - 0.0001 and e > 0.0 and e <= 1.0, "escala 3D del nivel %d (%.2f) no baja respecto al anterior" % [v, e])
+		antes_s = e
+		var s := Calidad.sombra_solar(v)
+		_comprobar(not (sombra_vista and not s), "sombra solar del nivel %d no se apaga tras haberse encendido" % v)
+		sombra_vista = sombra_vista or s
+	_comprobar(not Calidad.sombra_solar(Calidad.ULTRA_BAJA) and not Calidad.sombra_solar(Calidad.BAJA) and Calidad.sombra_solar(Calidad.MEDIA_BAJA), "sin sombra solar en ULTRA BAJA y BAJA; con ella desde MEDIA BAJA")
 	## Esquema viejo (sin versión o 1)
 	for par in [[-1, Calidad.ULTRA_BAJA], [0, Calidad.MEDIA], [1, Calidad.ALTA], [2, Calidad.ULTRA_ALTA], [-9, Calidad.ULTRA_BAJA], [9, Calidad.ULTRA_ALTA]]:
 		_comprobar(Calidad.desde_guardado(par[0]) == par[1] and Calidad.desde_guardado(par[0], 1) == par[1], "viejo %d → %d" % [par[0], par[1]])

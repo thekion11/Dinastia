@@ -7523,7 +7523,14 @@
   "¿Salir del juego?": "Quit the game?",
   "CERRADO · abre de 8:00 a 20:00": "CLOSED · open 8:00–20:00",
   "Partido ligero (extra, en cualquier calidad)": "Light match (extra, at any quality)",
-  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Removes the colour grading, 3D signs and stadium floodlights for smoother play. It changes the look; applied when the stadium opens."
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Removes the colour grading, 3D signs and stadium floodlights for smoother play. It changes the look; applied when the stadium opens.",
+  "Ultra alta": "Ultra high",
+  "Media alta": "Medium high",
+  "Media baja": "Medium low",
+  "Ultra baja": "Ultra low",
+  "Como Media, con la sombra del sol llegando más lejos": "Like Medium, with the sun's shadow reaching farther",
+  "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Sun shadow on, with the 3D at a somewhat lower resolution than Medium",
+  "Sin sombra del sol y con el 3D a menor resolución": "No sun shadow and the 3D at a lower resolution"
  },
  "pt": {
   "Historia": "História",
@@ -15049,7 +15056,14 @@
   "¿Salir del juego?": "Sair do jogo?",
   "CERRADO · abre de 8:00 a 20:00": "FECHADO · abre das 8:00 às 20:00",
   "Partido ligero (extra, en cualquier calidad)": "Partida leve (extra, em qualquer qualidade)",
-  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Remove o ajuste de cor, os letreiros 3D e os refletores do estádio para ganhar fluidez. Muda o visual; aplica-se ao abrir o estádio."
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Remove o ajuste de cor, os letreiros 3D e os refletores do estádio para ganhar fluidez. Muda o visual; aplica-se ao abrir o estádio.",
+  "Ultra alta": "Ultra alta",
+  "Media alta": "Média alta",
+  "Media baja": "Média baixa",
+  "Ultra baja": "Ultra baixa",
+  "Como Media, con la sombra del sol llegando más lejos": "Como Média, com a sombra do sol alcançando mais longe",
+  "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Sombra do sol ativa, com o 3D numa resolução um pouco menor que na Média",
+  "Sin sombra del sol y con el 3D a menor resolución": "Sem sombra do sol e com o 3D numa resolução menor"
  },
  "patrones": [
   [
@@ -28550,7 +28564,14 @@
   "¿Salir del juego?": "Quitter le jeu ?",
   "CERRADO · abre de 8:00 a 20:00": "FERMÉ · ouvert de 8h00 à 20h00",
   "Partido ligero (extra, en cualquier calidad)": "Match allégé (extra, à toute qualité)",
-  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Supprime l'étalonnage des couleurs, les panneaux 3D et les projecteurs du stade pour gagner en fluidité. Change l'aspect ; s'applique à l'ouverture du stade."
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Supprime l'étalonnage des couleurs, les panneaux 3D et les projecteurs du stade pour gagner en fluidité. Change l'aspect ; s'applique à l'ouverture du stade.",
+  "Ultra alta": "Ultra élevée",
+  "Media alta": "Moyenne haute",
+  "Media baja": "Moyenne basse",
+  "Ultra baja": "Ultra basse",
+  "Como Media, con la sombra del sol llegando más lejos": "Comme Moyenne, avec l'ombre du soleil portée plus loin",
+  "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Ombre du soleil activée, avec la 3D à une résolution un peu plus basse qu'en Moyenne",
+  "Sin sombra del sol y con el 3D a menor resolución": "Sans ombre du soleil et avec la 3D à une résolution plus basse"
  },
  "it": {
   "Historia": "Storia",
@@ -36076,7 +36097,14 @@
   "¿Salir del juego?": "Uscire dal gioco?",
   "CERRADO · abre de 8:00 a 20:00": "CHIUSO · aperto dalle 8:00 alle 20:00",
   "Partido ligero (extra, en cualquier calidad)": "Partita leggera (extra, a qualsiasi qualità)",
-  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Toglie la regolazione del colore, le scritte 3D e i riflettori dello stadio per guadagnare fluidità. Cambia l'aspetto; si applica all'apertura dello stadio."
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Toglie la regolazione del colore, le scritte 3D e i riflettori dello stadio per guadagnare fluidità. Cambia l'aspetto; si applica all'apertura dello stadio.",
+  "Ultra alta": "Ultra alta",
+  "Media alta": "Media alta",
+  "Media baja": "Media bassa",
+  "Ultra baja": "Ultra bassa",
+  "Como Media, con la sombra del sol llegando más lejos": "Come Media, con l'ombra del sole che arriva più lontano",
+  "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Ombra del sole attiva, con il 3D a una risoluzione un po' inferiore rispetto a Media",
+  "Sin sombra del sol y con el 3D a menor resolución": "Senza ombra del sole e con il 3D a una risoluzione inferiore"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43602,7 +43630,14 @@
   "¿Salir del juego?": "Spiel beenden?",
   "CERRADO · abre de 8:00 a 20:00": "GESCHLOSSEN · geöffnet 8:00–20:00",
   "Partido ligero (extra, en cualquier calidad)": "Leichtes Spiel (Extra, bei jeder Qualität)",
-  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Entfernt Farbanpassung, 3D-Schilder und Flutlichter des Stadions für mehr Flüssigkeit. Ändert das Aussehen; gilt beim Öffnen des Stadions."
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Entfernt Farbanpassung, 3D-Schilder und Flutlichter des Stadions für mehr Flüssigkeit. Ändert das Aussehen; gilt beim Öffnen des Stadions.",
+  "Ultra alta": "Ultra hoch",
+  "Media alta": "Mittel-hoch",
+  "Media baja": "Mittel-niedrig",
+  "Ultra baja": "Ultra niedrig",
+  "Como Media, con la sombra del sol llegando más lejos": "Wie Mittel, aber der Sonnenschatten reicht weiter",
+  "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Sonnenschatten an, das 3D mit etwas niedrigerer Auflösung als bei Mittel",
+  "Sin sombra del sol y con el 3D a menor resolución": "Ohne Sonnenschatten und mit niedrigerer 3D-Auflösung"
  },
  "ca": {
   "Historia": "Història",
@@ -51128,7 +51163,14 @@
   "¿Salir del juego?": "Sortir del joc?",
   "CERRADO · abre de 8:00 a 20:00": "TANCAT · obert de 8:00 a 20:00",
   "Partido ligero (extra, en cualquier calidad)": "Partit lleuger (extra, en qualsevol qualitat)",
-  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Treu l'ajust de color, els rètols 3D i els focus de l'estadi per guanyar fluïdesa. Canvia l'aspecte; s'aplica en obrir l'estadi."
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Treu l'ajust de color, els rètols 3D i els focus de l'estadi per guanyar fluïdesa. Canvia l'aspecte; s'aplica en obrir l'estadi.",
+  "Ultra alta": "Ultra alta",
+  "Media alta": "Mitjana alta",
+  "Media baja": "Mitjana baixa",
+  "Ultra baja": "Ultra baixa",
+  "Como Media, con la sombra del sol llegando más lejos": "Com Mitjana, amb l'ombra del sol arribant més lluny",
+  "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Ombra del sol activada, amb el 3D a una resolució una mica menor que en Mitjana",
+  "Sin sombra del sol y con el 3D a menor resolución": "Sense ombra del sol i amb el 3D a menor resolució"
  },
  "pl": {
   "Club": "Klub",
@@ -58654,7 +58696,14 @@
   "¿Salir del juego?": "Wyjść z gry?",
   "CERRADO · abre de 8:00 a 20:00": "ZAMKNIĘTE · czynne 8:00–20:00",
   "Partido ligero (extra, en cualquier calidad)": "Lekki mecz (dodatek, w każdej jakości)",
-  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Usuwa korekcję kolorów, napisy 3D i reflektory stadionu, by gra była płynniejsza. Zmienia wygląd; działa po otwarciu stadionu."
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Usuwa korekcję kolorów, napisy 3D i reflektory stadionu, by gra była płynniejsza. Zmienia wygląd; działa po otwarciu stadionu.",
+  "Ultra alta": "Ultra wysoka",
+  "Media alta": "Średnio wysoka",
+  "Media baja": "Średnio niska",
+  "Ultra baja": "Ultra niska",
+  "Como Media, con la sombra del sol llegando más lejos": "Jak Średnia, a cień słońca sięga dalej",
+  "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Cień słońca włączony, a 3D w nieco niższej rozdzielczości niż w Średniej",
+  "Sin sombra del sol y con el 3D a menor resolución": "Bez cienia słońca i z niższą rozdzielczością 3D"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66180,6 +66229,13 @@
   "¿Salir del juego?": "Oyundan çıkılsın mı?",
   "CERRADO · abre de 8:00 a 20:00": "KAPALI · 8:00–20:00 arası açık",
   "Partido ligero (extra, en cualquier calidad)": "Hafif maç (ek, her kalitede)",
-  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Daha akıcı oyun için renk ayarını, 3D yazıları ve stadyum projektörlerini kaldırır. Görünümü değiştirir; stadyum açılınca uygulanır."
+  "Quita el ajuste de color, los rótulos 3D y los focos del estadio para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Daha akıcı oyun için renk ayarını, 3D yazıları ve stadyum projektörlerini kaldırır. Görünümü değiştirir; stadyum açılınca uygulanır.",
+  "Ultra alta": "Ultra yüksek",
+  "Media alta": "Orta yüksek",
+  "Media baja": "Orta düşük",
+  "Ultra baja": "Ultra düşük",
+  "Como Media, con la sombra del sol llegando más lejos": "Orta gibi, ama güneş gölgesi daha uzağa ulaşır",
+  "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Güneş gölgesi açık, 3D Orta'dan biraz daha düşük çözünürlükte",
+  "Sin sombra del sol y con el 3D a menor resolución": "Güneş gölgesi yok ve 3D daha düşük çözünürlükte"
  }
 }

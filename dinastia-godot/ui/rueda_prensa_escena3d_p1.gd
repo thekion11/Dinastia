@@ -327,7 +327,7 @@ func _montar_luces() -> void:
 	clave.spot_range = 8.0
 	clave.spot_angle = 34.0
 	clave.spot_attenuation = 1.4
-	clave.shadow_enabled = Calidad.elegida > Calidad.MINIMO
+	clave.shadow_enabled = Calidad.sombra_solar(Calidad.elegida)
 	add_child(clave)
 	clave.look_at_from_position(Vector3(-1.0, 2.6, 1.6), Vector3(0, 1.55, -0.45), Vector3.UP)
 
