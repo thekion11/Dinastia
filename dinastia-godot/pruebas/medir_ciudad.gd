@@ -260,6 +260,7 @@ func _detalle_a_pie() -> void:
 		return
 	var grupos := {}
 	var ejemplos := {}
+	var nombres_a_pie := {}
 	for n in _v.find_children("*", "GeometryInstance3D", true, false):
 		var g := n as GeometryInstance3D
 		if not g.is_visible_in_tree():
@@ -277,6 +278,11 @@ func _detalle_a_pie() -> void:
 			clave = (a.get_class() if nom.begins_with("@") else nom.rstrip("0123456789_")) + "/" + clave
 			a = a.get_parent()
 		grupos[clave] = int(grupos.get(clave, 0)) + 1
+		## (7-11) Por QUÉ malla (o la del agrupado) y a qué distancia: para elegir qué agrupar o recortar.
+		var mm_ := g as MultiMeshInstance3D
+		var ml: Mesh = mm_.multimesh.mesh if mm_ != null and mm_.multimesh != null else (g.get("mesh") as Mesh)
+		var kn := "%s %s %s" % [g.get_class().replace("Instance3D", ""), ml.resource_name if ml != null and ml.resource_name != "" else (str(ml.get_class()) if ml != null else "-"), "cerca" if d < 60.0 else ("medio" if d < 200.0 else "lejos")]
+		nombres_a_pie[kn] = int(nombres_a_pie.get(kn, 0)) + 1
 		if not ejemplos.has(clave):
 			var sc := ""
 			var q2: Node = g.get_parent()
@@ -298,6 +304,10 @@ func _detalle_a_pie() -> void:
 	orden.sort_custom(func(x, y): return grupos[x] > grupos[y])
 	for k in orden.slice(0, 30):
 		print("A_PIE ", grupos[k], "  ", k, "  ej: ", ejemplos.get(k, ""))
+	var o2 := nombres_a_pie.keys()
+	o2.sort_custom(func(x, y): return nombres_a_pie[x] > nombres_a_pie[y])
+	for k in o2.slice(0, 30):
+		print("A_PIE_MALLA ", nombres_a_pie[k], "  ", k)
 	for m in Optimizar._motivos:
 		print("MOTIVO ", Optimizar._motivos[m], "  ", m)
 	## Todas las mallas (vean o no) que un grupo impide juntar, por nombre de grupo (M-476).
