@@ -17,10 +17,10 @@ func _probar() -> void:
 		if h is MultiMeshInstance3D:
 			celdas += 1
 			instancias += (h as MultiMeshInstance3D).multimesh.instance_count
-			if (h as MultiMeshInstance3D).visibility_range_end != PastoCiudad.DISTANCIA or (h as MultiMeshInstance3D).cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+			if (h as MultiMeshInstance3D).visibility_range_end != PastoCiudad.distancia() or (h as MultiMeshInstance3D).cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
 				ocultan = false
 	_comprobar(celdas >= 6, "van en varios MultiMesh por celdas (%d nodos), no en uno solo" % celdas)
-	_comprobar(ocultan, "cada celda se oculta a %.0f m y no proyecta sombra" % PastoCiudad.DISTANCIA)
+	_comprobar(ocultan, "cada celda se oculta a %.0f m y no proyecta sombra" % PastoCiudad.distancia())
 	_comprobar(instancias >= 200, "las instancias suman al menos las matas (%d)" % instancias)
 	## Un parque de 100 × 80 m: matas en el borde, ninguna sobre la cancha ni en los paseos en cruz.
 	var r := Rect2(0, 0, 100, 80)
