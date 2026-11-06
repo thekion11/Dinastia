@@ -79,6 +79,18 @@ func _process(_d: float) -> void:
 					if c.is_in_group("sin_agrupar"):
 						vis_sa += gi.size() + propio
 			print("DIAG_OCLU n=%d: hijos visibles del entorno: %d geometrías (%d del horizonte); hijos=%d, ocultables=%d" % [_n, vis_n, vis_sa, oc.entorno.get_child_count(), oc.ocultables.size()])
+			var otros: Array[String] = []
+			for c in oc.entorno.get_children():
+				if c is Node3D and (c as Node3D).visible and not c.is_in_group("sin_agrupar") or (c is Node3D and (c as Node3D).visible and c.is_in_group("sin_agrupar") and c.get_child_count() == 0):
+					otros.append("%s[%s] hijos=%d" % [c.name, c.get_class(), c.get_child_count()])
+			print("DIAG_OCLU visibles que no deberían: %d -> %s" % [otros.size(), ", ".join(otros.slice(0, 12))])
+			var no_h: Array[String] = []
+			for c in oc.entorno.get_children():
+				if c.is_in_group("sin_agrupar") and c.get_child_count() > 3:
+					no_h.append("%s hijos=%d" % [c.name, c.get_child_count()])
+			print("DIAG_OCLU sin_agrupar con >3 hijos: %s" % ", ".join(no_h.slice(0, 12)))
+			var cam_o: Camera3D = oc.get_viewport().get_camera_3d()
+			print("DIAG_OCLU: oclusión procesa=%s modo=%d t=%.3f cam_propia=%s dentro_arbol=%s" % [str(oc.is_processing()), oc.process_mode, oc._t, str(cam_o.global_position) if cam_o != null else "NULA", str(oc.is_inside_tree())])
 			print("DIAG_OCLU: montada mx=%.1f mz=%.1f alto=%.1f cam=%s tapado=%s" % [oc.mx, oc.mz, oc.ALTO, str(cam.global_position), str(oc.tapado(cam.global_position))])
 	if _n == CALENTAR and OS.get_environment("OCULTAR_GRUPOS") != "":
 		## OCULTAR_GRUPOS=hinchas,butacas (4-11): apaga grupos enteros de `GRUPOS` y mide el resto (cuánto ganaría un nivel más ligero).
