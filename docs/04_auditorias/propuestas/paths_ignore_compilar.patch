@@ -1,0 +1,13 @@
+--- a/.github/workflows/compilar.yml
++++ b/.github/workflows/compilar.yml	2026-11-06 00:35:19.402714252 +0000
+@@ -18,6 +18,10 @@
+ on:
+   push:
+     branches: [ "**" ]
++    ## Un push que SOLO toca documentación no lanza las ~25 tareas pesadas (propuesta 6-11; ver docs/04_auditorias/propuestas/paths_ignore_compilar.md).
++    paths-ignore:
++      - "docs/**"
++      - "**/*.md"
+   workflow_dispatch:
+     inputs:
+       objetivo:
