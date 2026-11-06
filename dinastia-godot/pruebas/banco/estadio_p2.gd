@@ -164,3 +164,16 @@ func _probar_a_buffer() -> void:
 		var r := Transform3D(Basis(Vector3(b[o], b[o + 4], b[o + 8]), Vector3(b[o + 1], b[o + 5], b[o + 9]), Vector3(b[o + 2], b[o + 6], b[o + 10])), Vector3(b[o + 3], b[o + 7], b[o + 11]))
 		bien = bien and r.is_equal_approx(esperado)
 	_comprobar(bien, "a_buffer reproduce `inv * t` de cada instancia (filas 3x4, origen en 3, 7 y 11)")
+
+## (7-11) El pasto del Drive se dibuja a 28 m en ULTRA BAJA/BAJA y a 42 m desde MEDIA BAJA.
+func _probar_pasto_distancia() -> void:
+	_titulo("PASTO DEL DRIVE: DISTANCIA SEGÚN CALIDAD")
+	var antes := Calidad.elegida
+	Calidad.elegida = Calidad.ULTRA_BAJA
+	var a := PastoCiudad.distancia()
+	Calidad.elegida = Calidad.BAJA
+	var b := PastoCiudad.distancia()
+	Calidad.elegida = Calidad.MEDIA_BAJA
+	var c := PastoCiudad.distancia()
+	Calidad.elegida = antes
+	_comprobar(is_equal_approx(a, 28.0) and is_equal_approx(b, 28.0) and is_equal_approx(c, 42.0), "distancia del pasto: ULTRA BAJA 28, BAJA 28, MEDIA BAJA 42 (%.0f, %.0f, %.0f)" % [a, b, c])

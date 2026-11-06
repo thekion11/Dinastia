@@ -7,6 +7,7 @@ extends RefCounted
 const RUTAS := ["res://assets/pasto/mata_1.glb", "res://assets/pasto/mata_2.glb"]
 const CELDA := 24.0
 const DISTANCIA := 42.0
+const DISTANCIA_BAJA := 28.0
 const ANCHO_MATA := 1.3   ## m que ocupa de ancho una mata sembrada (el glb mide ~0,9)
 const BORDE := 2.2        ## m de profundidad de la franja de matas junto al borde del parque
 const TINTE := Color(0.62, 0.86, 0.50)   ## se multiplica por la textura
@@ -15,6 +16,10 @@ const AZAR_INTERIOR := 0.012   ## manchones por m² en el interior (cada uno son
 
 static var _partes: Array = []   ## por variante: [[Mesh, Transform3D], ...]
 static var total_sembradas := 0
+
+## (7-11, «mejorar ese pasto», aprobado) ULTRA BAJA y BAJA: las matas se ven hasta 28 m en vez de 42 (a más distancia son un manchón de pocos píxeles).
+static func distancia() -> float:
+	return DISTANCIA_BAJA if Calidad.elegida <= Calidad.BAJA else DISTANCIA
 
 static func apagado() -> bool:
 	return OS.get_environment("PASTO_DRIVE") == "0"
@@ -90,7 +95,7 @@ static func sembrar(raiz: Node3D, puntos: Array, semilla: int) -> int:
 				mi.name = "PastoDrive"
 				mi.multimesh = mm
 				mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-				mi.visibility_range_end = DISTANCIA
+				mi.visibility_range_end = distancia()
 				raiz.add_child(mi)
 			n += mios.size()
 	total_sembradas += n
