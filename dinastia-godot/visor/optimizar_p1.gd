@@ -209,14 +209,18 @@ static func _mat_unico(m: Material, vistos: Dictionary) -> Material:
 ## superficie no existen en un MultiMesh: se hornean en una copia, cacheada).
 static func _malla_efectiva(mi: MeshInstance3D, cache: Dictionary) -> Mesh:
 	var m := mi.mesh
-	var ids := []
+	var n_sup := m.get_surface_count()   ## (7-11) camino rápido: sin lista de ids si no hay materiales por superficie
 	var cambia := false
-	for s in m.get_surface_count():
-		var o := mi.get_surface_override_material(s)
-		ids.append(o.get_instance_id() if o != null else 0)
-		cambia = cambia or o != null
+	for s in n_sup:
+		if mi.get_surface_override_material(s) != null:
+			cambia = true
+			break
 	if not cambia or not (m is ArrayMesh):
 		return m
+	var ids := []
+	for s in n_sup:
+		var o := mi.get_surface_override_material(s)
+		ids.append(o.get_instance_id() if o != null else 0)
 	var k := str(m.get_instance_id()) + ":" + str(ids)
 	if not cache.has(k):
 		var copia := m.duplicate() as ArrayMesh
@@ -391,8 +395,8 @@ static func agrupar(raiz: Node3D, con_proxies: bool = true) -> Dictionary:
 			malla = pleg[0]
 			t = t * Transform3D(Basis.from_scale(pleg[1]), Vector3.ZERO)
 		var celda := Vector2i(floori(t.origin.x / CELDA), floori(t.origin.z / CELDA))
-		var clave := [malla, mi.material_override, mi.cast_shadow, mi.visibility_range_end, mi.layers, celda]
-		var k := str(clave.map(func(x): return x.get_instance_id() if x is Object else x))
+		var ovr := mi.material_override
+		var k := "%d|%d|%d|%s|%d|%d,%d" % [malla.get_instance_id(), ovr.get_instance_id() if ovr != null else 0, mi.cast_shadow, str(mi.visibility_range_end), mi.layers, celda.x, celda.y]
 		if not grupos.has(k):
 			grupos[k] = {"malla": malla, "mi": mi, "lista": [], "t": []}
 		(grupos[k]["lista"] as Array).append(mi)
@@ -423,8 +427,7 @@ static func agrupar(raiz: Node3D, con_proxies: bool = true) -> Dictionary:
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.mesh = g["malla"]
 		mm.instance_count = lista.size()
-		for i in lista.size():
-			mm.set_instance_transform(i, inv * (g["t"][i] as Transform3D))
+		BufferMM.llenar(mm, g["t"], inv)   ## (7-11) de una vez, no instancia a instancia
 		var mmi := MultiMeshInstance3D.new()
 		mmi.name = "Agrupado"
 		mmi.multimesh = mm

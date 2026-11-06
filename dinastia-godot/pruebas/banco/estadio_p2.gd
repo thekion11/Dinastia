@@ -57,6 +57,19 @@ func _probar_fundir_r2() -> void:
 ## 3, 7 y 11; color y datos detrás) se comprobó con renderizador real: en modo sin pantalla un MultiMesh no guarda datos, por eso aquí se arma el buffer a mano.
 func _probar_celdas_agrupado() -> void:
 	_titulo("TROCEAR AGRUPADOS POR TRAMOS DEL BUFFER: IGUAL QUE INSTANCIA A INSTANCIA")
+	## (7-11) `BufferMM`: armar y leer el buffer en bloque da lo mismo que transformación a transformación (el formato real se comprobó con renderizador: filas, origen en 3, 7, 11).
+	var rg0 := RandomNumberGenerator.new()
+	rg0.seed = 11
+	var ts: Array = []
+	for i in 40:
+		ts.append(Transform3D(Basis.from_euler(Vector3(rg0.randf(), rg0.randf(), rg0.randf())).scaled(Vector3(rg0.randf_range(0.5, 2.0), rg0.randf_range(0.5, 2.0), rg0.randf_range(0.5, 2.0))), Vector3(rg0.randf_range(-9, 9), rg0.randf(), rg0.randf_range(-9, 9))))
+	var previa := Transform3D(Basis.from_euler(Vector3(0, 0.4, 0)), Vector3(3, 1, -2))
+	var b0 := BufferMM.buffer_de(ts, previa)
+	var ok0 := b0.size() == 480
+	for i in 40:
+		var esp: Transform3D = previa * (ts[i] as Transform3D)
+		ok0 = ok0 and BufferMM.transform_de(b0, i * 12).is_equal_approx(esp) and absf(b0[i * 12 + 3] - esp.origin.x) < 0.00001 and absf(b0[i * 12 + 11] - esp.origin.z) < 0.00001
+	_comprobar(ok0, "BufferMM.buffer_de y transform_de son inversos y ponen el origen en 3, 7, 11")
 	for ordenado: bool in [false, true]:
 		var paso := 20
 		var n := 600
