@@ -6,7 +6,7 @@ ARTEFACTO subido a GitHub (zip comprimido), no del paquete descomprimido.
 | Versión | Artefacto (zip) | Notas |
 |---|---|---|
 | Windows | 321,7 MB | `.exe` + `.pck` + `.dll` de la extensión C++ |
-| Windows ligero | 321,3 MB | casi igual que el normal: el «ligero» no ahorra peso, ahorra otra cosa |
+| Windows ligero | 321,3 MB | casi igual que el normal: en el tamaño no se nota diferencia (qué cambia exactamente el preset `WindowsLigero` respecto a `Windows` no se ha revisado aquí) |
 | Linux | 311,3 MB | |
 | Android (arm64) | 313,5 MB | APK de depuración |
 | Android armv7 | 316,8 MB | |
