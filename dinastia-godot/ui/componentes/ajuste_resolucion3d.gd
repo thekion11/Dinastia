@@ -4,7 +4,7 @@ extends RefCounted
 ## (FSR en Forward+/Mobile, bilineal en Compatibilidad). En Alta y Ultra siempre es 100 % y no se muestra el control.
 static func crear(p: Object) -> void:
 	var nivel := Calidad.elegida
-	if nivel > Calidad.MEDIO:
+	if nivel > Calidad.MEDIO or nivel == Calidad.BAJA or nivel == Calidad.MEDIA_BAJA:   ## BAJA y MEDIA BAJA derivan de las dos escalas que se eligen en ULTRA BAJA y MEDIA
 		return
 	var minimo := nivel <= Calidad.MINIMO
 	var plantilla := "Resolución del 3D en Mínima: %d %%" if minimo else "Resolución del 3D en Media: %d %%"

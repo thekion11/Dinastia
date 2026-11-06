@@ -49,7 +49,15 @@ static var escala_minimo := (float(OS.get_environment("ESCALA3D")) if OS.get_env
 ## La resolución base del 3D del nivel (1.0 salvo en MÍNIMO). La calidad adaptativa vuelve a esta, no a 1.0.
 static func escala_3d(nivel: int = -99) -> float:
 	var n := elegida if nivel == -99 else nivel
-	return escala_minimo if n <= MINIMO else (escala_media if n == MEDIO else 1.0)
+	if n <= MINIMO:
+		return escala_minimo
+	if n < MEDIO:   ## BAJA y MEDIA BAJA (6-11): a medio camino entre la de ULTRA BAJA y la de MEDIA, con lo que el jugador haya puesto en esas dos
+		return lerpf(escala_minimo, escala_media, 0.4 if n == BAJA else 0.7)
+	return escala_media if n == MEDIO else 1.0
+
+## ¿Este nivel proyecta la sombra del sol? ULTRA BAJA y BAJA no (la pasada de sombras es ~1/4 de las llamadas del partido).
+static func sombra_solar(nivel: int) -> bool:
+	return nivel >= MEDIA_BAJA
 
 ## EL NIVEL QUE HA ELEGIDO EL JUGADOR en Ajustes. Vive aqui y no en la pantalla
 ## de ajustes porque quien lo necesita es el visor 3D, que se monta desde otro
@@ -255,7 +263,7 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 			luz.rotation_degrees = Vector3(-48, -38, 0)
 			luz.light_color = Color(1.0, 0.97, 0.92)
 			luz.light_energy = 1.25
-	luz.shadow_enabled = nivel > MINIMO   ## MÍNIMO: sin sombras (la pasada de sombras es ~1/4 de las llamadas del partido)
+	luz.shadow_enabled = sombra_solar(nivel)   ## ULTRA BAJA y BAJA: sin sombras (la pasada de sombras es ~1/4 de las llamadas del partido)
 	## Sombras suaves de verdad: `angular_distance` es el tamano aparente del sol,
 	## y es lo que hace que la sombra se vaya abriendo con la distancia al objeto,
 	## como en la realidad. Con 0 salen recortadas con tijera.
@@ -268,7 +276,7 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 	## encuadra entera-. Medido con `pruebas/medir_rendimiento.gd`, ver LEEME.md del historial de git.
 	luz.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS if nivel >= ALTO \
 		else DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
-	luz.directional_shadow_max_distance = 420.0 if nivel >= ALTO else 320.0
+	luz.directional_shadow_max_distance = 420.0 if nivel >= MEDIA_ALTA else 320.0   ## MEDIA ALTA: 2 cortes como MEDIA pero con el alcance de ALTA
 	luz.directional_shadow_split_1 = 0.06
 	luz.directional_shadow_split_2 = 0.16
 	luz.directional_shadow_split_3 = 0.42

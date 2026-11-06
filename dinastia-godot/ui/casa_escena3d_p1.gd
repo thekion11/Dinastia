@@ -277,7 +277,7 @@ func _entorno() -> void:
 	sol.rotation_degrees = Vector3(-28.0, -55.0, 0.0)
 	sol.light_energy = 1.25
 	sol.light_color = Color(1.0, 0.9, 0.78)
-	sol.shadow_enabled = Calidad.elegida > Calidad.MINIMO
+	sol.shadow_enabled = Calidad.sombra_solar(Calidad.elegida)
 	sol.shadow_blur = 1.5
 	sol.directional_shadow_max_distance = 60.0
 	add_child(sol)
