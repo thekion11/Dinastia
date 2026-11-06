@@ -139,8 +139,6 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
     · `ideas/fnt_recursos`: nacionalidades de jugador sin bandera (SLE, AZE, LUX, COM, PLE, RWA, CGO, BOT, NAM, KEN, UGA, MWI, VAN, LBR, IDN…).
     · `ideas/optA_persona`: «rodillas rectas (cadera a su altura)» falla en male y female. · `ideas/pers_ropa`: no hay mochilas en la muestra (0).
     · `ideas/pgra_grada`: un canto por peldaño de pasillo (1014 / 936). · `ideas/s5_auditoria_partidos`: 5,8 % de frases repetidas en el mismo partido (tope 3 %).
-    · `ideas/trad_textos`: «el nombre se traga la oración siguiente». · `ideas/uiid_textos`: estadio con 1 texto en castellano colado (641 textos).
-    · `ideas/tut_capas`: SCRIPT ERROR «Nonexistent 'bool' constructor» y acceso a `name` sobre Nil.
     · Sin terminar en 120 s (lentas o colgadas): `captura_informe_rival`, `ideas/s3_auditoria_interfaz`, `ideas/s5_ocasiones`; `ideas/sen_conexiones` terminó una vez y otra no (inestable).
   - Ejecutar `pruebas/so` de verdad en Windows, Android y Web (flujo `plataformas.yml`, otra sesión): `pruebas_so.py --lista --sistema web|android` dice qué toca; `--marcadores < log.txt` (por la entrada estándar) revisa el resultado.
   - Referencias visuales de `pruebas/so/referencias/` hechas con lavapipe/llvmpipe: regenerarlas en GPU real (`VISUAL=referencias`) y añadir las de móvil.
