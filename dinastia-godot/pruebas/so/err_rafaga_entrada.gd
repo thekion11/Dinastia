@@ -50,7 +50,9 @@ func _probar() -> void:
 	var ms := Time.get_ticks_msec() - t0
 	_comprobar(ms < 60000, "3000 eventos se atienden en %d ms (sin colgarse)" % ms)
 	_comprobar(is_instance_valid(p) and p.is_inside_tree(), "la pantalla principal sigue viva")
-	var nodos1 := get_tree().get_node_count()
+	## Una tecla Intro/clic sobre un botón del menú puede abrir un partido en vivo (en macOS ocurre: PartidoVivo trae ~3.800 nodos): es
+	## navegación legítima, no una fuga. Se cuenta el árbol SIN esos subárboles para medir solo lo que crece sin motivo.
+	var nodos1 := get_tree().get_node_count() - _nodos_de("PartidoVivo", get_tree().root)
 	_comprobar(nodos1 < nodos0 * 2 + 400, "el árbol no se dispara: %d → %d nodos" % [nodos0, nodos1])
 	if nodos1 >= nodos0 * 2 + 400:   ## (6-11) en macOS crece 899 → 4777: se imprime QUÉ crece para poder ubicar la pantalla que se abre
 		_linea("  FALLO (diagnóstico) crecimiento por clase, las 8 que más: " + _mas_crecidas(clases0, _clases(get_tree().root)))
@@ -60,6 +62,15 @@ func _probar() -> void:
 	p.queue_free()
 	await _frames(3)
 	_restaurar_user()
+
+## Nodos (con sus descendientes) de las pantallas cuyo script se llama `clase` bajo `raiz`.
+func _nodos_de(clase: String, raiz: Node) -> int:
+	var total := 0
+	for n: Node in raiz.find_children("*", "", true, false):
+		var sc := n.get_script() as Script
+		if sc != null and String(sc.get_global_name()) == clase:
+			total += n.find_children("*", "", true, false).size() + 1
+	return total
 
 ## Cuántos nodos hay de cada clase (nombre de la clase del script o del tipo) bajo `raiz`.
 func _clases(raiz: Node) -> Dictionary:
