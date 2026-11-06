@@ -53,6 +53,13 @@ func _probar() -> void:
 	for k in 6:
 		var dk := PeatonVida.nuevo(t, 50 + k)
 		t.agregar_vehiculo(dk["nodo"], ruta, 5.0 + float(k) * 3.0, 1.4, 0.15)
+	## La regla de `MovimientoNatural.mirada` es «mira el que tiene `get_instance_id() % 3 != 0`» (2 de cada 3). Esos identificadores dependen de
+	## cuántos objetos se crearon antes, así que el recuento cambia de un entorno a otro: con 7 peatones, los 7 miran en ~6 % de los casos y la
+	## prueba (que pedía de 2 a 6) fallaba al azar en el CI. Se comprueba la REGLA: miran exactamente los que les toca.
+	var esperados := 0
+	for v3: Dictionary in t._vehiculos:
+		if int((v3["nodo"] as Node).get_instance_id()) % 3 != 0:
+			esperados += 1
 	var mirados := 0
 	var suelta := true
 	for v2: Dictionary in t._vehiculos:
@@ -62,7 +69,7 @@ func _probar() -> void:
 			mirados += 1
 			MovimientoNatural.mirada(v2, yo, 400.0, 1.0)
 			suelta = suelta and not (v2["mira_mod"] as LookAtModifier3D).active
-	_comprobar(mirados >= 2 and mirados <= 6, "de siete peatones cerca, giran la cabeza hacia ti entre 2 y 6 (%d)" % mirados)
+	_comprobar(mirados == esperados, "de %d peatones cerca, giran la cabeza hacia ti exactamente los que les toca por la regla (2 de cada 3): %d de %d" % [t._vehiculos.size(), mirados, esperados])
 	_comprobar(suelta, "y la sueltan al alejarte")
 	t.queue_free()
 
