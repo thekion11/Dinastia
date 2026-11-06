@@ -69,6 +69,16 @@ func _process(_d: float) -> void:
 		if oc == null:
 			print("DIAG_OCLU: NO montada (estadio abierto o calidad > MEDIO)")
 		else:
+			var vis_n := 0
+			var vis_sa := 0
+			for c in oc.entorno.get_children():
+				var gi := c.find_children("*", "GeometryInstance3D", true, false)
+				var propio := 1 if c is GeometryInstance3D else 0
+				if c is Node3D and (c as Node3D).visible:
+					vis_n += gi.size() + propio
+					if c.is_in_group("sin_agrupar"):
+						vis_sa += gi.size() + propio
+			print("DIAG_OCLU: hijos visibles del entorno: %d geometrías (%d del horizonte); hijos=%d, ocultables=%d" % [vis_n, vis_sa, oc.entorno.get_child_count(), oc.ocultables.size()])
 			print("DIAG_OCLU: montada mx=%.1f mz=%.1f alto=%.1f cam=%s tapado=%s" % [oc.mx, oc.mz, oc.ALTO, str(cam.global_position), str(oc.tapado(cam.global_position))])
 	if _n == CALENTAR and OS.get_environment("OCULTAR_GRUPOS") != "":
 		## OCULTAR_GRUPOS=hinchas,butacas (4-11): apaga grupos enteros de `GRUPOS` y mide el resto (cuánto ganaría un nivel más ligero).
