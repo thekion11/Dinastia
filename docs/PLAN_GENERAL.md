@@ -74,6 +74,14 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - **Estado (5-11)**: `main` pasó de 492 a 4 issues de Sonar y la puerta de calidad está en OK. **Pendiente del dueño**: aceptar en la web de SonarCloud los 4 `python:S2245` (azar no criptográfico) de `herramientas/biblioteca_caras.py` y `caras_variadas.py` (Issues → Accept). Detalle y cómo repetir: `docs/04_auditorias/sonar_2026-11-05.md`.
 - Las ideas nuevas siguen en pausa (orden 26); esto es calidad de lo que ya existe.
 
+## TAREAS NUEVAS DEL DUEÑO (6-11) — se borran al completarse del todo
+- **META de rendimiento**: ULTRA BAJA con **menos de 130 llamadas de dibujo (draw calls) en promedio** (el dueño dijo 130 y luego «150»: se mantiene 130 como exigente; si confirma 150, solo cambia la cifra) (recorrido de `hw_modesto.sh`: ciudad + partido) sin gran impacto visual. Sesión de rendimiento; presupuesto en el banco extra.
+- **Calidad por defecto = la más baja (hoy «MÍNIMO», que pasa a llamarse ULTRA BAJA en los 7 niveles) en TODOS los sistemas operativos** (Windows, Linux, macOS, Android, iOS, Web), no solo en Android. El código ya parte de MÍNIMO (`Calidad.elegida`), pero falta una prueba por plataforma (`OS.has_feature`) que lo fije y comprobar que ninguna ruta (archivo de ajustes ausente/viejo, restablecer, migración) lo sube. Sesión de rendimiento.
+- Eliminar avatares poco realistas (inventario con capturas, retirar de los selectores de forma reversible, informar).
+- Evaluar precargar en segundo plano el menú inicial (respetando la regla de memoria del menú).
+- Personajes que atraviesan objetos; el personaje del jugador «no camina de verdad»; mejorar la distancia real avatar–objetos (después de terminar lo demás; primero un detector automático).
+- Al terminar: buscar consejos de rendimiento de Godot (con fuentes) y aplicar los seguros. Ante dudas, consultar a otras sesiones/IA.
+
 ## IDEAS Y TAREAS DEL DUEÑO (3-11 noche, conversación casual) — se borran al completarse del todo
 **DECISIÓN DEL DUEÑO (3-11 noche): se mantienen los «4 juegos en 1» (gestor, partido jugable, ciudad abierta, vida del DT), pero las IDEAS NUEVAS quedan EN PAUSA. Foco: los puntos más débiles de la evaluación del líder (44/100) y pulir lo que ya existe. Cuando esté muy pulido, se abarca más.** Orden por debilidad:
 1. Rendimiento en el aparato real (15/100): FPS medidos en el teléfono del dueño en MÍNIMA; ciudad ≤900 llamadas; ideas de rendimiento de abajo, midiendo.
