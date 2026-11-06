@@ -474,10 +474,22 @@ fi
     echo "SALTADA pruebas visuales (sin Vulkan: apt-get install -y mesa-vulkan-drivers)"
   fi
   # pruebas por sistema que necesitan pantalla (5-11): partido con la cámara real en Compatibilidad y Forward+, pantallas del menú, presupuesto con hw_modesto
-  pasa "so: vis_partido_forward" "$PY herramientas/pruebas_so.py vis_partido_forward" "^OK +vis_partido_forward "
-  pasa "so: vis_partido_compat" "$PY herramientas/pruebas_so.py vis_partido_compat" "^OK +vis_partido_compat "
-  pasa "so: vis_menu_pantallas" "$PY herramientas/pruebas_so.py vis_menu_pantallas" "^OK +vis_menu_pantallas "
-  pasa "so: ren_partido_presupuesto" "$PY herramientas/pruebas_so.py ren_partido_presupuesto" "^OK +ren_partido_presupuesto "
+  # (6-11) Estas necesitan pantalla virtual (xvfb-run) y, las de Forward+, Vulkan: el contenedor nocturno no trae ni lo uno ni lo otro y fallaban
+  # ahí con «requiere Vulkan» / «sin marcador». Como las demás pruebas con pantalla, se saltan (con aviso) si faltan.
+  HAY_PANTALLA=0; command -v xvfb-run > /dev/null && HAY_PANTALLA=1
+  HAY_VULKAN=0; ls /usr/share/vulkan/icd.d/*.json > /dev/null 2>&1 && HAY_VULKAN=1
+  if [[ "$HAY_PANTALLA$HAY_VULKAN" = "11" ]]; then
+    pasa "so: vis_partido_forward" "$PY herramientas/pruebas_so.py vis_partido_forward" "^OK +vis_partido_forward "
+    pasa "so: ren_partido_presupuesto" "$PY herramientas/pruebas_so.py ren_partido_presupuesto" "^OK +ren_partido_presupuesto "
+  else
+    echo "SALTADA so: vis_partido_forward y ren_partido_presupuesto (necesitan xvfb-run y Vulkan)"
+  fi
+  if [[ "$HAY_PANTALLA" = "1" ]]; then
+    pasa "so: vis_partido_compat" "$PY herramientas/pruebas_so.py vis_partido_compat" "^OK +vis_partido_compat "
+    pasa "so: vis_menu_pantallas" "$PY herramientas/pruebas_so.py vis_menu_pantallas" "^OK +vis_menu_pantallas "
+  else
+    echo "SALTADA so: vis_partido_compat y vis_menu_pantallas (necesitan xvfb-run)"
+  fi
 fi
 rm -f "$LOG"
 [[ "$FALLOS" -eq 0 ]] && echo "ESPECIALES: todo en orden" || echo "ESPECIALES: $FALLOS con fallos"
