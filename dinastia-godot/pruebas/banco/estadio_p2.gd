@@ -110,7 +110,7 @@ func _probar_paseo_optimizado() -> void:
 		pe.free()
 	Calidad.elegida = nivel0
 	_comprobar(con_tope[0] > 20 and con_tope[1] == 0, "la gente del club tiene tope de 90 m en ULTRA BAJA (%d piezas) y no en ALTA (%d)" % [con_tope[0], con_tope[1]])
-	## (7-11) Niebla de profundidad del paseo a pie: se pone (300 a 700 m) y al salir deja el entorno como estaba.
+	## (7-11) Niebla de profundidad del paseo a pie: se pone (del 43 % al 100 % del alcance a pie) y al salir deja el entorno como estaba.
 	var nn := Node3D.new()
 	add_child(nn)
 	var ent := Environment.new()
@@ -119,9 +119,9 @@ func _probar_paseo_optimizado() -> void:
 	var ent0: Environment = mundo.environment
 	mundo.environment = ent
 	OptimizarGrada.niebla_a_pie(nn, true)
-	var puesta := ent.fog_enabled and ent.fog_mode == Environment.FOG_MODE_DEPTH and is_equal_approx(ent.fog_depth_end, 700.0)
+	var puesta := ent.fog_enabled and ent.fog_mode == Environment.FOG_MODE_DEPTH and is_equal_approx(ent.fog_depth_end, OptimizarGrada.alcance_a_pie())
 	OptimizarGrada.niebla_a_pie(nn, false)
-	_comprobar(puesta and not ent.fog_enabled and ent.fog_mode == Environment.FOG_MODE_EXPONENTIAL, "la niebla del paseo a pie se pone de 300 a 700 m y al salir el entorno queda como estaba")
+	_comprobar(puesta and not ent.fog_enabled and ent.fog_mode == Environment.FOG_MODE_EXPONENTIAL, "la niebla del paseo a pie se pone según el alcance a pie de la calidad y al salir el entorno queda como estaba")
 	mundo.environment = ent0
 	nn.free()
 	## (7-11) Un peatón detrás de la cámara (a más de 3 m) no anima; delante, o pegado, sí.
@@ -164,3 +164,159 @@ func _probar_a_buffer() -> void:
 		var r := Transform3D(Basis(Vector3(b[o], b[o + 4], b[o + 8]), Vector3(b[o + 1], b[o + 5], b[o + 9]), Vector3(b[o + 2], b[o + 6], b[o + 10])), Vector3(b[o + 3], b[o + 7], b[o + 11]))
 		bien = bien and r.is_equal_approx(esperado) and BufferMM.transform_de(b, o).is_equal_approx(esperado)
 	_comprobar(bien, "a_buffer reproduce `inv * t` de cada instancia (filas 3x4, origen en 3, 7 y 11)")
+
+## (7-11) El pasto del Drive se dibuja a 28 m en ULTRA BAJA/BAJA y a 42 m desde MEDIA BAJA.
+func _probar_pasto_distancia() -> void:
+	_titulo("PASTO DEL DRIVE: DISTANCIA SEGÚN CALIDAD")
+	var antes := Calidad.elegida
+	Calidad.elegida = Calidad.ULTRA_BAJA
+	var a := PastoCiudad.distancia()
+	Calidad.elegida = Calidad.BAJA
+	var b := PastoCiudad.distancia()
+	Calidad.elegida = Calidad.MEDIA_BAJA
+	var c := PastoCiudad.distancia()
+	Calidad.elegida = antes
+	_comprobar(is_equal_approx(a, 28.0) and is_equal_approx(b, 28.0) and is_equal_approx(c, 42.0), "distancia del pasto: ULTRA BAJA 28, BAJA 28, MEDIA BAJA 42 (%.0f, %.0f, %.0f)" % [a, b, c])
+
+## (7-11) Caras reales: la caché guarda los bytes ya decodificados (no el texto base64) y `_datos` los lee igual.
+func _probar_cara_bytes() -> void:
+	_titulo("CARAS REALES: CACHÉ EN BYTES")
+	CaraMalla._cargar()
+	var clave := ""
+	for k: String in CaraMalla._mallas:
+		var e: Variant = CaraMalla._mallas[k]
+		if e is Dictionary and (e as Dictionary).get("m") is PackedByteArray:
+			clave = k
+			break
+	if clave == "":
+		_comprobar(true, "sin caras reales en este contenedor (nada que comprobar)")
+		return
+	var d := CaraMalla._datos(clave)
+	_comprobar(d.size() >= 2 and (d[0] as PackedVector3Array).size() == CaraMalla._n, "la cara «%s» sale de la caché en bytes con %d vértices" % [clave, CaraMalla._n])
+
+## (7-11) `Banca` (script mínimo, lo usa el menú) da la misma lista que `VistaEstadio.disponibles_fuera_del_once`: sin lesionados ni sancionados, por media de mayor a menor.
+func _probar_banca_ligera() -> void:
+	_titulo("BANCA: SCRIPT MÍNIMO")
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	var c: Club = m.ligas[0].clubes[0]
+	c.plantilla[0].lesion = 3
+	var once: Array = c.once()
+	var a := Banca.disponibles_fuera_del_once(c, once)
+	var b := VistaEstadio.disponibles_fuera_del_once(c, once)
+	var orden := true
+	for i in range(1, a.size()):
+		orden = orden and (a[i - 1] as Jugador).ovr >= (a[i] as Jugador).ovr
+	_comprobar(a.size() > 5 and a == b and orden and not a.has(c.plantilla[0]) and not once.any(func(j): return a.has(j)), "la banca sale igual (%d jugadores), ordenada y sin lesionados ni titulares" % a.size())
+
+## (7-11) `Optimizar.fundir_pequenas`: los trozos con pocas instancias se juntan por celdas más grandes sin perder ni duplicar instancias; los grandes se quedan igual.
+func _probar_fundir_pequenas() -> void:
+	_titulo("TROCEO: TROZOS PEQUEÑOS FUNDIDOS")
+	var por := {}
+	var total := 0
+	for i in 12:
+		var buf := PackedFloat32Array()
+		var n := 3 + i
+		buf.resize(n * 12)
+		for q in buf.size():
+			buf[q] = float(i * 1000 + q)
+		por[Vector2i(i % 4, i / 4)] = [n, buf]
+		total += n
+	var grande := PackedFloat32Array()
+	grande.resize(Optimizar.MIN_TROZO * 12)
+	por[Vector2i(40, 40)] = [Optimizar.MIN_TROZO, grande]
+	total += Optimizar.MIN_TROZO
+	var f := Optimizar.fundir_pequenas(por)
+	var cuenta := 0
+	var coherente := true
+	for k: Vector2i in f:
+		var v: Array = f[k]
+		cuenta += int(v[0])
+		coherente = coherente and (v[1] as PackedFloat32Array).size() == int(v[0]) * 12
+	_comprobar(cuenta == total and coherente and f.size() == 2 and f.has(Vector2i(40, 40)), "12 trozos pequeños → 1 junto, el grande intacto, mismas instancias (%d de %d, %d trozos)" % [cuenta, total, f.size()])
+
+## (7-11) El precalentado del menú (caras y animaciones) solo corre desde MEDIA BAJA hacia arriba; en ULTRA BAJA y BAJA se apaga (RAM).
+func _probar_precalentado_por_calidad() -> void:
+	_titulo("PRECALENTADO DEL MENÚ SEGÚN LA CALIDAD")
+	var antes := Calidad.elegida
+	var r := []
+	for q in [Calidad.ULTRA_BAJA, Calidad.BAJA, Calidad.MEDIA_BAJA, Calidad.MEDIA, Calidad.ALTA]:
+		Calidad.elegida = q
+		r.append(PrecalentarAnim.permitido())
+	Calidad.elegida = antes
+	_comprobar(str(r) == str([false, false, true, true, true]), "permitido: ULTRA BAJA no, BAJA no, MEDIA BAJA sí, MEDIA sí, ALTA sí (%s)" % str(r))
+
+## (7-11) `FundirPiezas.fundir_ciudad`: las primitivas sueltas con el mismo material y celda se funden en una malla, las solas, con escala desigual o con nombre propio se quedan, y la geometría no se mueve.
+func _probar_fundir_ciudad() -> void:
+	_titulo("FUNDIR LA CIUDAD: PRIMITIVAS POR MATERIAL Y CELDA")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var rojo := StandardMaterial3D.new()
+	rojo.albedo_color = Color.RED
+	var azul := StandardMaterial3D.new()
+	azul.albedo_color = Color.BLUE
+	var aabb_antes := AABB()
+	for i in 5:
+		var mi := MeshInstance3D.new()   ## (nombre automático «@MeshInstance3D@N»: nadie la busca)
+		mi.mesh = BoxMesh.new()
+		mi.material_override = rojo
+		raiz.add_child(mi)
+		mi.position = Vector3(i * 3.0, 0.5, 2.0)
+		aabb_antes = aabb_antes.merge(mi.global_transform * mi.get_aabb()) if i > 0 else mi.global_transform * mi.get_aabb()
+	var lejos := MeshInstance3D.new()
+	lejos.mesh = BoxMesh.new()
+	lejos.material_override = rojo
+	raiz.add_child(lejos)
+	lejos.position = Vector3(900.0, 0.5, 900.0)
+	var otra := MeshInstance3D.new()
+	otra.mesh = CylinderMesh.new()
+	(otra.mesh as CylinderMesh).radial_segments = 8   ## (las de la ciudad ya vienen rebajadas por `Optimizar.primitivas`)
+	(otra.mesh as CylinderMesh).rings = 1
+	otra.material_override = azul
+	raiz.add_child(otra)
+	var otra2 := MeshInstance3D.new()
+	otra2.mesh = CylinderMesh.new()
+	(otra2.mesh as CylinderMesh).radial_segments = 8
+	(otra2.mesh as CylinderMesh).rings = 1
+	otra2.material_override = azul
+	raiz.add_child(otra2)
+	otra2.position = Vector3(1.0, 0, 0)
+	var estirada := MeshInstance3D.new()
+	estirada.mesh = BoxMesh.new()
+	estirada.material_override = rojo
+	raiz.add_child(estirada)
+	estirada.scale = Vector3(1, 3, 1)
+	var elegida := MeshInstance3D.new()
+	elegida.name = "Banco"
+	elegida.mesh = BoxMesh.new()
+	elegida.material_override = rojo
+	raiz.add_child(elegida)
+	var n := FundirPiezas.fundir_ciudad(raiz, 80.0)
+	var fund: Array = raiz.find_children("FundidoCiudad*", "MeshInstance3D", true, false)
+	var union := AABB()
+	var primero := true
+	for f in fund:
+		var caja: AABB = (f as MeshInstance3D).mesh.get_aabb()
+		union = caja if primero else union.merge(caja)
+		primero = false
+	_comprobar(n == 7 and fund.size() == 2 and raiz.get_child_count() == 5, "7 piezas → 2 mallas (5 cajas rojas, 2 cilindros azules); quedan la lejana, la estirada y la «Banco» (%d fundidas, %d mallas, %d hijos)" % [n, fund.size(), raiz.get_child_count()])
+	_comprobar(union.encloses(aabb_antes.grow(-0.01)) or absf(union.size.x - aabb_antes.size.x) < 0.5, "la geometría fundida ocupa el mismo sitio que las cajas originales")
+	raiz.queue_free()
+
+## (7-11) `SubsistemasQuietos`: bajo un subsistema registrado todo es quieto salvo lo que cuelga de sus nodos móviles; si no está registrado, nada lo es.
+func _probar_subsistemas_quietos() -> void:
+	_titulo("SUBSISTEMAS CON SCRIPT CUYA GEOMETRÍA ES QUIETA")
+	var sub := Node3D.new()
+	var tren := Node3D.new()
+	var parte_tren := MeshInstance3D.new()
+	var andén := MeshInstance3D.new()
+	sub.add_child(tren)
+	tren.add_child(parte_tren)
+	sub.add_child(andén)
+	var sin_registro := SubsistemasQuietos.permite(sub, andén)
+	SubsistemasQuietos.estaticos[sub] = {tren: true}
+	var quieto := SubsistemasQuietos.permite(sub, andén)
+	var movil := SubsistemasQuietos.permite(sub, parte_tren)
+	SubsistemasQuietos.limpiar()
+	_comprobar(not sin_registro and quieto and not movil and SubsistemasQuietos.estaticos.is_empty(), "sin registro nada es quieto; registrado, el andén sí y la pieza del tren no; limpiar vacía el registro")
+	sub.free()

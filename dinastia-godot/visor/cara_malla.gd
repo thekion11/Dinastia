@@ -47,6 +47,11 @@ static func _cargar() -> void:
 	var jm := JSON.new()
 	if FileAccess.file_exists(MALLAS) and jm.parse(FileAccess.get_file_as_string(MALLAS)) == OK and jm.data is Dictionary:
 		_mallas = jm.data
+		## (7-11, meta de RAM) El texto base64 de cada cara ocupaba 4 bytes por carácter (~40 MB para 10 MB de JSON): se guarda ya decodificado (bytes crudos, ~7,5 MB).
+		for k: String in _mallas:
+			var e: Variant = _mallas[k]
+			if e is Dictionary and (e as Dictionary).get("m") is String:
+				(e as Dictionary)["m"] = Marshalls.base64_to_raw(String((e as Dictionary)["m"]))
 	## Y las caras de la biblioteca modular (mezclas: `BibliotecaCaras`).
 	BibliotecaCaras._cargar()
 	for k: String in BibliotecaCaras._caras:
@@ -66,7 +71,8 @@ static func _datos(nombre: String) -> Array:
 	var e: Variant = _mallas.get(nombre)
 	if not (e is Dictionary):
 		return []
-	var bytes := Marshalls.base64_to_raw(String((e as Dictionary).get("m", "")))
+	var crudo: Variant = (e as Dictionary).get("m", "")
+	var bytes: PackedByteArray = crudo if crudo is PackedByteArray else Marshalls.base64_to_raw(String(crudo))
 	if bytes.size() != _n * 5 * 2:
 		return []
 	var canon := PackedVector3Array()
