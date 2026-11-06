@@ -120,7 +120,7 @@ static func limitar_vista(raiz: Node, hasta: float, grande := 90.0) -> int:
 			continue
 		if fuera.has(g) or (g.visibility_range_end > 0.0 and g.visibility_range_end <= hasta):
 			continue
-		if g.get_aabb().size.length() > grande:
+		if g.get_aabb().size.length() > grande and _pieza_mayor(g) > PIEZA_PEQUENA:
 			continue
 		g.visibility_range_end = hasta
 		g.visibility_range_end_margin = hasta * 0.1
@@ -134,3 +134,19 @@ static func al_final(raiz: Node3D, prologo: bool) -> void:
 	ZonasVista.montar(raiz)
 	if not prologo and Calidad.elegida <= Calidad.BAJA and not (EscalaMovil.es_movil() or Calidad.motor_ligero or OS.get_environment("MOVIL_SIM") != ""):
 		limitar_vista(raiz, 450.0)
+
+## Un TROZO de agrupado (MultiMesh) con la caja grande pero solo piezas PEQUEÑAS dentro (ventanas, postes, troncos, hidrantes: menos de `PIEZA_PEQUENA` m) tampoco debe
+## verse a 450 m (7-11; en ULTRA BAJA, ciudad a pie 411 → 312 llamadas). Los bloques de edificios (20-30 m por pieza) se quedan: en el mapa aéreo se ven desde lejos.
+const PIEZA_PEQUENA := 14.0
+
+## La pieza más grande de dentro de un trozo de agrupado; 9999 si no se sabe o es un agrupado enorme (> 4000 instancias: no se arriesga a esconder edificios).
+static func _pieza_mayor(g: GeometryInstance3D) -> float:
+	var mmi := g as MultiMeshInstance3D
+	if mmi == null or mmi.multimesh == null or mmi.multimesh.mesh == null or mmi.multimesh.transform_format != MultiMesh.TRANSFORM_3D or mmi.multimesh.instance_count > 4000:
+		return 9999.0
+	var mm := mmi.multimesh
+	var base := mm.mesh.get_aabb().size
+	var mx := 0.0
+	for i in mm.instance_count:
+		mx = maxf(mx, (mm.get_instance_transform(i).basis * base).length())
+	return mx
