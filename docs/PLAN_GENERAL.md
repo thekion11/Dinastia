@@ -73,6 +73,13 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - **Perfilar con Tracy Profiler** como práctica general (no solo con triángulos/llamadas/memoria de `hw_modesto.sh`): medir con Tracy los puntos calientes del partido, la ciudad y el menú, comparar antes/después y guardar la traza resumida en `docs/04_auditorias/`. Pendiente de estudiar: cómo integrar Tracy en Godot 4.7 (compilación del motor o extensión) y en qué sistemas es viable (Windows/Linux sí; Web/Android a revisar). Regla vigente: el tiempo de fotograma NUNCA se mide con `--headless`.
 - Las ideas nuevas siguen en pausa (orden 26); esto es calidad de lo que ya existe.
 
+## TAREAS NUEVAS DEL DUEÑO (6-11) — se borran al completarse del todo
+- **META de rendimiento**: ULTRA BAJA con **menos de 130 llamadas de dibujo en promedio** (recorrido de `hw_modesto.sh`: ciudad + partido) sin gran impacto visual. Sesión de rendimiento; presupuesto en el banco extra.
+- Eliminar avatares poco realistas (inventario con capturas, retirar de los selectores de forma reversible, informar).
+- Evaluar precargar en segundo plano el menú inicial (respetando la regla de memoria del menú).
+- Personajes que atraviesan objetos; el personaje del jugador «no camina de verdad»; mejorar la distancia real avatar–objetos (después de terminar lo demás; primero un detector automático).
+- Al terminar: buscar consejos de rendimiento de Godot (con fuentes) y aplicar los seguros. Ante dudas, consultar a otras sesiones/IA.
+
 ## IDEAS Y TAREAS DEL DUEÑO (3-11 noche, conversación casual) — se borran al completarse del todo
 **DECISIÓN DEL DUEÑO (3-11 noche): se mantienen los «4 juegos en 1» (gestor, partido jugable, ciudad abierta, vida del DT), pero las IDEAS NUEVAS quedan EN PAUSA. Foco: los puntos más débiles de la evaluación del líder (44/100) y pulir lo que ya existe. Cuando esté muy pulido, se abarca más.** Orden por debilidad:
 1. Rendimiento en el aparato real (15/100): FPS medidos en el teléfono del dueño en MÍNIMA; ciudad ≤900 llamadas; ideas de rendimiento de abajo, midiendo.
