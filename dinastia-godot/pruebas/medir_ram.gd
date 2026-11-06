@@ -47,7 +47,7 @@ func _process(_d: float) -> void:
 		_p.call("_ver_ciudad_propia")
 	var meta := 260 if _esc == "ciudad" else 160
 	if _n == meta:
-		print("RAM ", _esc, " ", Calidad.elegida, " rss=", _kb("VmRSS:") / 1024, " pico=", _kb("VmHWM:") / 1024,
+		print("RAM ", _esc, " ", Calidad.elegida, " rss=", _kb("VmRSS:") / 1024, " anon=", _kb("RssAnon:") / 1024, " archivos=", _kb("RssFile:") / 1024, " pico=", _kb("VmHWM:") / 1024,
 			" estatica=", int(Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0),
 			" textura=", int(Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED) / 1048576.0),
 			" video=", int(Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0),
