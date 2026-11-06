@@ -23,3 +23,11 @@ Método (orden 19 del dueño): SOLO recuentos, nunca tiempo de fotograma en `--h
 
 ## Meta ULTRA BAJA < 130 llamadas: NO alcanzada
 Partido en ULTRA BAJA: 338 → 236 llamadas (la meta es < 130 de media entre ciudad y partido; la ciudad no está medida). Lo que queda (jugadores y árbitros ~100 llamadas, ~60 MultiMesh de butacas y ~60 de hinchas por tribuna, estructura del estadio ~200 mallas) exige fusionar mallas de jugador o impostores de grada, con riesgo visual: pendiente, no tocado. Ciudad sin medir (la primera medición no devolvió cifras).
+
+## Ciudad en ULTRA BAJA (medida el 6-11, `CALIDAD=minimo HW_RAM_MB=12000 herramientas/hw_modesto.sh res://pruebas/medir_ciudad.tscn`)
+(Con el límite de 4 GB de `hw_modesto.sh` el proceso muere por memoria: pico de 3,9 GB; hace falta `HW_RAM_MB` mayor para medir la ciudad.)
+| Vista | Llamadas de dibujo | Primitivas | Objetos | Nodos |
+|---|---|---|---|---|
+| A pie | **706** | 953 633 | 839 | 43 717 |
+| Aérea (mapa) | **2 765** | 1 288 227 | 2 949 | 43 652 |
+Construir la ciudad: 5,9 s. Es la pieza que impide la meta (< 130 de media): el partido ya está en 236, la ciudad a pie en 706 (promedio ≈ 471) y el mapa aéreo en 2 765. Palancas sin hacer (con evidencia en este documento y en `rendimiento_120fps.md`): MultiMesh de farolas, árboles y banderas, nivel de detalle por distancia de ciudadanos, distancia de dibujo y oclusión en el mapa aéreo, fusión de mallas estáticas por manzana. Ninguna se aplicó en esta pasada.
