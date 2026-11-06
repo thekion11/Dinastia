@@ -4,7 +4,7 @@ shader_type spatial;
 // en coordenadas del MUNDO (da igual la escala del modelo): ventanas de 3 x 3,6 m
 // con reflejo distinto cada una, y de noche se encienden unas cuantas.
 uniform vec4 pared : source_color = vec4(0.80, 0.82, 0.86, 1.0);
-uniform vec4 vidrio : source_color = vec4(0.2, 0.32, 0.46, 1.0);
+uniform vec4 vidrio : source_color = vec4(0.14, 0.17, 0.2, 1.0);
 uniform vec2 celda = vec2(3.0, 3.6);
 uniform bool pared_de_instancia = false;   // el color de pared lo trae cada instancia del MultiMesh
 uniform float noche : hint_range(0.0, 1.0) = 0.0;
@@ -55,8 +55,8 @@ void fragment() {
 		g = mix(g, pared_de_instancia ? COLOR.rgb * 0.85 : vec3(0.78, 0.76, 0.72), persiana * 0.8);
 		col = mix(col, g, v);
 		ALBEDO = col;
-		ROUGHNESS = mix(0.85, 0.26, v);
-		METALLIC = v * 0.32;
+		ROUGHNESS = mix(0.85, 0.32, v);
+		METALLIC = v * 0.25;
 		float enc = step(0.6, h) * v * noche;
 		if (usa_sectores) {
 			ivec2 c = ivec2(round(wpos.xz / 110.0)) + ivec2(12);

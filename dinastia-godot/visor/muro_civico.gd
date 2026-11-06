@@ -13,7 +13,7 @@ static func vestir(b: CityBuilder, mi: MeshInstance3D, pared: Color) -> void:
 	var m := ShaderMaterial.new()
 	m.shader = load("res://visor/fachada_torre.gdshader") as Shader
 	m.set_shader_parameter("pared", pared)
-	m.set_shader_parameter("vidrio", Color(0.2, 0.32, 0.46))
+	m.set_shader_parameter("vidrio", Color(0.13, 0.16, 0.2))
 	m.set_shader_parameter("celda", Vector2(3.6, 3.6))
 	m.set_meta("muro", clave)
 	b._mats_torre.append(m)
