@@ -61,6 +61,8 @@ async function correr(p) {
   const pagina = await navegador.newPage({ viewport: { width: 960, height: 540 } });
   const marcador = new RegExp(`^(OK|FALLO) ${p.nombre} \\[(\\w+)\\]`);
   let veredicto = "";
+  let terminada = () => {};
+  const llegoMarcador = new Promise((resolver) => { terminada = resolver; });
   const detalle = [];
   const ultimas = [];   // últimas líneas de consola: para saber qué pasó cuando no hay marcador
   pagina.on("console", (m) => {
@@ -68,12 +70,12 @@ async function correr(p) {
     ultimas.push(t.slice(0, 120));
     if (ultimas.length > 4) ultimas.shift();
     const k = marcador.exec(t);
-    if (k) veredicto = k[1];
-    else if (/^FALLO |SCRIPT ERROR|SHADER ERROR/.test(t)) detalle.push(t.slice(0, 160));
+    if (k) { veredicto = k[1]; terminada(); }
+    else if (/(?:^FALLO )|(?:SCRIPT ERROR)|(?:SHADER ERROR)/.test(t)) detalle.push(t.slice(0, 160));
   });
   pagina.on("pageerror", (e) => detalle.push("pageerror: " + e.message.slice(0, 160)));
   await pagina.goto(`http://127.0.0.1:${puerto}/index.html?t=${encodeURIComponent(p.nombre)}`);
-  while (veredicto === "" && Date.now() - t0 < tope) await pagina.waitForTimeout(500);
+  await Promise.race([llegoMarcador, pagina.waitForTimeout(tope)]);   // el marcador resuelve la promesa; si no llega, el tope
   await pagina.close();
   const seg = Math.round((Date.now() - t0) / 1000);
   const malo = veredicto !== "OK" || detalle.some((d) => d.includes("SCRIPT ERROR"));
