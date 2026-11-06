@@ -150,3 +150,17 @@ func _probar_rotulos_cercanos() -> void:
 		"el rótulo pequeño alcanza ~17 m, el grande 90 m y el que ya traía un tope menor se queda (%d tocados)" % n)
 	raiz.free()
 
+
+## (7-11) `Optimizar.a_buffer` da el mismo `buffer` que `inv * t` instancia a instancia: se reconstruye la transformación desde las filas de 12 floats.
+func _probar_a_buffer() -> void:
+	_titulo("AGRUPAR: BUFFER DE TRANSFORMACIONES")
+	var ts: Array = [Transform3D(Basis(Vector3(0.3, 1.1, -0.4), 0.9).scaled(Vector3(1.5, 0.8, 2.0)), Vector3(10.0, -2.0, 33.5)), Transform3D(Basis.IDENTITY, Vector3(-4.0, 0.5, 7.0))]
+	var inv := Transform3D(Basis(Vector3.UP, 0.5), Vector3(100.0, 3.0, -50.0)).affine_inverse()
+	var b := Optimizar.a_buffer(ts, inv)
+	var bien := b.size() == 24
+	for i in ts.size():
+		var esperado: Transform3D = inv * (ts[i] as Transform3D)
+		var o := i * 12
+		var r := Transform3D(Basis(Vector3(b[o], b[o + 4], b[o + 8]), Vector3(b[o + 1], b[o + 5], b[o + 9]), Vector3(b[o + 2], b[o + 6], b[o + 10])), Vector3(b[o + 3], b[o + 7], b[o + 11]))
+		bien = bien and r.is_equal_approx(esperado)
+	_comprobar(bien, "a_buffer reproduce `inv * t` de cada instancia (filas 3x4, origen en 3, 7 y 11)")
