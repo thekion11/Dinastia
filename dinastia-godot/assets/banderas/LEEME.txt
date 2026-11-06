@@ -8,3 +8,6 @@ Si falta un archivo, visor/banderas.gd vuelve al dibujo hecho en código.
 PNG (27-10-2026): las 15 nacionalidades de jugadores que no tenían bandera (bi, cf, gw, gq, ht, jo, xk,
 mg, mt, ps, ph, ru, sv, sy, zw) salen del paquete del dueño «Todas las banderas del mundo» (el dueño
 tiene la licencia), reducidas a 192x128. visor/banderas.gd prueba primero el .svg y luego el .png.
+
+6-11-2026: 17 SVG más (sl, az, lu, km, rw, cg, bw, na, ke, ug, mw, vu, lr, id, md, is; 'ps' y 'cw' ya estaban) de lipis/flag-icons v7.2.1 (flags/4x3, MIT), para las nacionalidades de la base real
+que no tenían bandera (SLE, AZE, LUX, COM, PLE, RWA, CGO, BOT, NAM, KEN, UGA, MWI, VAN, LBR, IDN, MDA, ISL, CUW).
