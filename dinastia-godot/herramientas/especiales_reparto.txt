@@ -1,337 +1,337 @@
-# N=6  (generado por herramientas/repartir_especiales.py a partir de los registros del CI; parte<TAB>segundos<TAB>nombre)
+# N=7  (generado por herramientas/repartir_especiales.py a partir de los registros del CI; parte<TAB>segundos<TAB>nombre)
 0	202	aud4_movil_modales
-0	42	r2: p3_arbitros
-0	34	a4_gestion_museo_cantera
-0	30	a4_gestion_selecciones
-0	29	r2: uipl_textos
-0	25	p6_carga_diferida
-0	22	clau_descenso_entreno
-0	20	aud4_prologo_movil
+0	34	a4_sirena_movimiento (vehículo de emergencia con sirena en medio del tráfico: no atraviesa a nadie)
+0	30	s6_paises_lote1
+0	26	a4_lluvia_cambios (lluvia y paraguas con 172 peatones de noche, 20 cambios de clima: sin duplicados, sin restos, sin crecer)
+0	24	simular temporada con barra
+0	21	emergencias y sirenas
 0	19	motor jugable (unidad)
-0	16	partido en vivo al límite (auditoría 4: 9 idiomas sin marcas sueltas, velocidades con saltos absurdos, descanso, saltos al final)
+0	16	cpor_portero
 0	14	control del equipo
 0	13	aud4_tutorial_movil
 0	13	todos los scripts compilan
-0	11	a4_gestion_cruzado
-0	11	r2: cant_estabilidad
-0	10	arena de pruebas (cada modo monta lo que dice)
+0	11	aspecto de los clubes
+0	11	r2: uitm_lenguaje
 0	10	f0p_principal
-0	10	r2: uiaj_ajustes
-0	9	auditoría de datos
-0	9	exim_exportar_importar
-0	9	r2: e2_zancas_pasillos
-0	9	sonido al límite (auditoría 4: 400 efectos, volúmenes 0/NaN/1e9, nombres que no existen, música)
-0	8	mc_contratos
-0	8	r2: p3_clips_ual
-0	8	r6b_rueda_prensa
-0	8	so: ren_sin_tiempo_en_headless
-0	7	cifras del partido simulado contra el fútbol real (3-11)
-0	7	ent1_unico_camino
+0	10	r2: uico_competicion
+0	9	auditoría técnica
+0	9	m414_simetria
+0	9	r2: sav_guardado
+0	8	carrera del jugador al límite (auditoría 4: puestos, atributos 1 y 99, lesión grave, club sin plantel, retiro, guardado roto)
+0	8	p6_celebracion_trofeo
+0	8	r2: p5_paradero_red
+0	8	so: com_entrada_por_sistema
+0	7	a4_pasajeros_limite (gente de bus y teleférico: bus lleno, bus que se va, 60 paradas)
+0	7	el partido reacciona (clima, arenga, riesgo, plan)
 0	7	p6_metro_publicidad
-0	7	r2: s3_primera_hora
-0	7	r2: sui_grabados
-0	7	siglas y códigos cortos (3-11)
-0	7	so: int_nativo_por_sistema
-0	6	A4 cruzado: partido simulado con equipos absurdos y tarjetas reales
-0	6	aud4_arranque_movil
-0	6	f1e_pantalla_entrada
+0	7	r2: s3_textos_nucleo
+0	7	r2: uifi_asuntos
+0	7	so: est_calendario_liga
+0	7	trad_tutorial
+0	6	f1e_entrada_campeonato
 0	6	p6_habitantes_casa
-0	6	p6_semaforo_peatonal
-0	6	plan_costumbre
-0	6	r2: p4_contacto
-0	6	r2: s3_peatones_esquivan
-0	6	r2: s6_recursos
-0	6	s7d_doble_toque
+0	6	p6_tarjeta_transporte
+0	6	r2: f0m_visor_piezas
+0	6	r2: pmov_ceder
+0	6	r2: s6_paraguas
+0	6	s6r_retos_semana
 0	6	so: ren_peso_archivos
 0	5	atrás en el tutorial y el prólogo, música en segundo plano (auditoría 4, menú táctil)
-0	5	el tráfico cede a las sirenas
+0	5	el partido simulado tiene vida
 0	5	mer_precontratos
-0	5	p6_peaje
-0	5	pcar_avisos_idioma
-0	5	r2: p3_escaparates
-0	5	r2: s5_detalles
-0	5	red_apagon
-0	5	so: com_idiomas_nueve_sin_vacios
+0	5	p6_resolucion3d
+0	5	r2: car_precalentar
+0	5	r2: pmov_conduccion
+0	5	r2: uifi_gestion
+0	5	so: com_idiomas_cambio_en_vivo
 0	5	so: int_actualizador_por_sistema
 1	118	fotogramas malos al límite (auditoría 4: pasos grandes, 5 FPS y tirones = mismo estado que a 60 FPS, repetición con cambio)
-1	53	aud4_largo_plazo_ui
-1	43	partido con motor real
-1	38	ciudad: construir y soltar 5 veces sin fugas (A4-M3D-001)
-1	32	minijuegos 2D al límite (auditoría 4: teclas dobles, idioma y calidad a mitad, Escape, sin mundo)
-1	29	r2: pmov_sonda_colision
+1	47	guardado antes y después del partido de la carrera, partidos abandonados, carrera del jugador (auditoría 4)
+1	42	reglas del partido al límite (auditoría 4: 7 y 6 jugadores, lesionado sin cambios, portero lesionado, cambio en tanda y descanso, banco vacío)
+1	34	aud4_idiomas_cache
+1	29	A4 gestión al límite (8 temporadas, guardado exacto, absurdos)
 1	26	estadio y ciudad por partes
-1	24	simular temporada con barra
-1	22	r2: uiid_identidad
-1	19	menú ciudad a pie
+1	23	a4_peatones_limite
+1	21	estadio: construir y soltar 5 veces sin fugas (A4-M3D-002)
 1	19	tut_guia_visible
-1	15	r2: f0m_visor_personas
-1	15	salida de equipos y sorteo sin cuerpos cruzados (U6)
-1	13	carteles 3D perezosos: existen los cercanos y solo esos (A4-REND-004)
-1	13	vida de la app en el móvil al límite, partido táctil (auditoría 4: segundo plano, atrás, foco, girar, poca memoria, delta de 10 minutos)
-1	11	aspecto de los clubes
-1	11	r2: e3_torre_focos
-1	10	atajos de teclado por menú y submenú (3-11)
-1	10	igualdad del mundo simulado (balance)
-1	10	r2: uico_competicion
-1	9	auditoría técnica
-1	9	guardado: autoguardado en segundo plano y pregunta al salir (3-11)
-1	9	r2: s3_atajos_clics
-1	8	a4_gestion_mercado_fed
-1	8	dominadas
-1	8	p6_celebracion_trofeo
-1	8	r2: p3_ual2
-1	8	s2p_peticiones
-1	8	textura del balón
-1	7	f0m_visor_estadio
-1	7	p6_rutina_peatones
-1	7	r2: s3_textos_nucleo
-1	7	r2: uico_textos
+1	16	p6_calidad_minima
+1	14	dificultad_cpu en el partido jugable de la carrera (el rival es la CPU con el nivel guardado)
+1	13	r2: eco_medicion
+1	12	r2: s3_nombres_competicion
+1	11	p6_salas_comercio
+1	10	arena de pruebas (cada modo monta lo que dice)
+1	10	pmot_faltas
+1	10	vida de la app fuera del partido, menú táctil (auditoría 4: segundo plano pausa el árbol, atrás cierra ventana/pantalla/pregunta, poca memoria)
+1	9	contador de FPS
+1	9	pmot_control
+1	9	sonido al límite (auditoría 4: 400 efectos, volúmenes 0/NaN/1e9, nombres que no existen, música)
+1	8	f0d_tablas
+1	8	pmov_peatones_esquivan
+1	8	r2: s3_visual_metrica
+1	8	so: ren_sin_tiempo_en_headless
+1	7	controles táctiles del partido
+1	7	p6_cierre_ciudad
+1	7	r2: s3_defectos_visuales
+1	7	r2: sui_grabados
 1	7	so: err_entradas_invalidas
-1	7	so: int_paquetes_y_parches
-1	6	a4_partido_ligero (agregado aparte de la calidad, orden 32)
-1	6	coste del viaje y del día de partido desglosado (U6)
-1	6	fz0_globo_crear
+1	7	so: ren_menu_y_mundo_memoria
+1	6	aud4_arranque_movil
+1	6	f1e_pantalla_entrada
 1	6	p6_idiomas_perezoso
-1	6	p6_tarjeta_transporte
-1	6	r2: eq_crisis_caja
-1	6	r2: p4_pelo_mujer
-1	6	r2: s3g_gesto_tecnico
-1	6	r2: s7_pasajeros
-1	6	s7m_mentor_mes
+1	6	pcam_encuadre
+1	6	r2: f0r_necesidades
+1	6	r2: pmov_coche_forma
+1	6	r2: s6_porque
+1	6	s7d_doble_toque
 1	6	timing_disparo_jugadas
 1	5	aud4_carteles_3d
-1	5	f0m_nucleo
+1	5	el tráfico cede a las sirenas
 1	5	p6_banderas_grada
-1	5	p6_resolucion3d
-1	5	pcar_tiro
-1	5	r2: p3_puertas
-1	5	r2: s6_lluvia_ciudad
-1	5	reg_registro
-1	5	so: err_pck_y_pack_ausentes
+1	5	p6_senales_velocidad
+1	5	r2: e1_butacas
+1	5	r2: red_redes_3d
+1	5	r2: vat_hinchada
+1	5	so: com_idiomas_nueve_sin_vacios
 1	5	so: vis_referencias_integras
 2	100	interfaz al límite (auditoría 4: 100 aperturas de menú, idioma a mitad, texto 160 %, 2400x1080 y 1280x720)
-2	54	r2: s3_rotacion_menus
 2	47	aud4_sonido_perezoso
-2	42	minijuegos 3D (penales y tiro libre)
-2	35	aud4_teclado_solo
-2	30	a4_recorrido_mapa
-2	28	a4_museo_limite (museo con 220 hitos: vitrinas y rótulos sin pisarse, ampliar, 20 entradas y la animación cortada)
-2	25	a4_ciudad_noche (de noche, 6 sirenas, 6 min: sin atascos, gente ni buses parados)
-2	23	a4_peatones_limite
-2	20	r2: f0e_resolver
+2	43	partido con motor real
+2	40	igualdad del motor con usuario
+2	30	repetición del gol
+2	27	a4_interiores_limite
+2	25	onb_arranque
+2	22	clau_descenso_entreno
+2	19	colisiones del club
 2	18	a4_comercios_horario (comercios de 8:00 a 20:00 por el reloj del juego: cerrado no entra ni compra)
-2	17	barrida, saque de mano, caídas y bloqueos
-2	14	dificultad_cpu en el partido jugable de la carrera (el rival es la CPU con el nivel guardado)
-2	13	partido al límite (auditoría 4: pasos de tiempo absurdos, actas, tarjetas amarillas y notas)
-2	12	a4_gestion_cesiones
-2	12	r2: s3_nombres_competicion
-2	11	r2: foto_brazos
-2	10	aud4_movil_toque
-2	10	la pizarra se nota (simulado y 3D)
+2	15	salida de equipos y sorteo sin cuerpos cruzados (U6)
+2	13	carteles 3D perezosos: existen los cercanos y solo esos (A4-REND-004)
+2	13	vida de la app en el móvil al límite, partido táctil (auditoría 4: segundo plano, atrás, foco, girar, poca memoria, delta de 10 minutos)
+2	11	aud4_primer_contacto
+2	11	teleférico
+2	10	igualdad del mundo simulado (balance)
 2	10	so: int_flujo_menu_a_guardado
 2	9	banco_inicio
-2	9	m414_simetria
-2	9	r2: s4p_vida_imprevistos
-2	8	ahorro en los menús: fondos congelados en MÍNIMA (3-11)
-2	8	extensión C++ = GDScript
+2	9	minijuego retro 5v5
+2	9	r2: tre_transporte
+2	8	dominadas
 2	8	p6_zonas_vista
-2	8	r2: p5_paradero_red
-2	8	s7t_tutorial_capas
-2	8	textura del césped
-2	7	f0r_reloj
-2	7	pciu_luces_calle
+2	8	r2: pest_estadio
+2	8	so: err_rafaga_entrada
+2	7	app Red del móvil
+2	7	ent1_unico_camino
+2	7	p6_rutina_peatones
 2	7	r2: s5_causas
-2	7	r2: uifi_asuntos
-2	7	so: err_poca_memoria
-2	7	so: ren_menu_y_mundo_memoria
-2	6	ate_ayuda_en_menu
-2	6	desa_leyenda
-2	6	minijuegos nuevos
+2	7	r2: uite_movil_navegacion
+2	7	so: est_economia_invariantes
+2	7	zz_alt
+2	6	fz0_globo_crear
 2	6	p6_pasajeros_teleferico
-2	6	pcam_encuadre
-2	6	r2: f0m_visor_piezas
-2	6	r2: p5_futbolistas_acabado
-2	6	r2: s5_rueda
-2	6	r2: s8_museo_vitrinas
-2	6	s7x_desafios_dificultad
+2	6	pcam_repeticion
+2	6	r2: p2_inclinacion
+2	6	r2: r7_medicion_bloqueo
+2	6	r2: s6_recursos
+2	6	s7m_mentor_mes
 2	6	trad_prensa
 2	5	aviso de amarillas antes de la sanción (U6)
-2	5	f0m_visor_datos
+2	5	f0m_nucleo
 2	5	p6_boton_e_minimapa
-2	5	p6_senales_velocidad
-2	5	r2: car_precalentar
-2	5	r2: p4_pelo_drive
-2	5	r2: s6_tablon
-2	5	ruido de registros: arreglos (3-11)
-2	5	so: est_datos_coherencia
+2	5	palmarés en la historia del club
+2	5	r2: p2_postura
+2	5	r2: rend_plantel_fijas
+2	5	red_apagon
+2	5	so: err_pck_y_pack_ausentes
 2	5	tráfico, metro y bus suaves
 3	98	partido jugable 3D al límite con mando táctil (auditoría 4: toques al azar, pausas, calidad a mitad, expulsiones hasta 5, gol en cada calidad)
-3	64	aud4_movil_partido
-3	44	ciudad en marcha 600 fotogramas sin acumular nada (A4-M3D)
-3	41	so: est_propiedades_semillas
-3	34	aud4_idiomas_cache
-3	29	A4 gestión al límite (8 temporadas, guardado exacto, absurdos)
-3	27	a4_interiores_limite
-3	24	a4_metro_museo (metro por dentro y museo ampliado, sin pantalla)
-3	23	pago con tarjeta y PIN en tienda, gasolinera y expendedora (U6)
-3	19	colisiones del club
-3	19	modos de juego
-3	17	calidad adaptativa (escalones)
+3	53	aud4_largo_plazo_ui
+3	42	minijuegos 3D (penales y tiro libre)
+3	35	aud4_teclado_solo
+3	32	minijuegos 2D al límite (auditoría 4: teclas dobles, idioma y calidad a mitad, Escape, sin mundo)
+3	27	fugas en sesiones largas, partido táctil (auditoría 4: 24 partidos 3D jugados, abandonados, en pausa y cerrados con atrás: nodos, objetos, memoria, señales, voces)
+3	25	p6_carga_diferida
+3	22	r2: uiid_identidad
+3	19	menú ciudad a pie
+3	18	r2: p3_sentados
+3	14	a4_noticias_idiomas
 3	14	pc_primer_contrato
-3	13	r2: eco_medicion
-3	12	interpolación de la física del partido
+3	12	a4_gestion_cesiones
 3	12	s3f_fisica
-3	11	r2: uitm_lenguaje
-3	10	el menú no carga el estadio ni el partido 3D (3-11)
-3	10	pmot_faltas
+3	11	triángulo sobre el jugador controlado (P2)
+3	10	la pizarra se nota (simulado y 3D)
 3	10	sonidos de sistema (todos existen, buses, silencio)
 3	9	cierre_anio_deudas
-3	9	minijuego retro 5v5
-3	9	r2: sav_guardado
-3	8	caché en disco del audio sintetizado (R5)
-3	8	f0d_tablas
+3	9	p3_grada_colores
+3	9	so: err_instantanea_invalida
+3	8	extensión C++ = GDScript
 3	8	pasos y guardia del portero
-3	8	r2: pest_estadio
-3	8	so: com_entrada_por_sistema
-3	7	a4_gestion_prensa
-3	7	controles táctiles del partido
-3	7	f9_galeria_kit
-3	7	r2: f1g_pais
+3	8	r2: s3_accesibilidad
+3	8	so: fun_nativo_datos_aleatorios
+3	7	cifras del partido simulado contra el fútbol real (3-11)
+3	7	f0m_visor_estadio
+3	7	pciu_luces_calle
 3	7	r2: s6_mercado_dt
-3	7	r2: uite_movil_navegacion
-3	7	so: est_calendario_liga
-3	7	texturas en disco (asfalto)
-3	6	desa_sin_dinero
-3	6	p6_alcance_e
+3	7	r2: uite_movil_textos
+3	7	so: est_partido_simulado_reglas
+3	6	A4 cruzado: partido simulado con equipos absurdos y tarjetas reales
+3	6	coste del viaje y del día de partido desglosado (U6)
+3	6	minijuegos nuevos
 3	6	p6_pasto_drive
-3	6	pcam_repeticion
-3	6	r2: f0r_necesidades
-3	6	r2: pmov_ceder
-3	6	r2: s6_colision
-3	6	r2: uiaj_mando
-3	6	so: com_guardado_ida_vuelta
+3	6	pint_charla
+3	6	r2: p3_grupo
+3	6	r2: s3_peatones_esquivan
+3	6	r2: s7_pasajeros
+3	6	s7x_desafios_dificultad
 3	6	tre_coches
-3	5	desa_sin_red
-3	5	f1m_modos
+3	5	f0m_visor_datos
 3	5	p6_bus_dt
-3	5	palmarés en la historia del club
-3	5	r2: e1_butacas
-3	5	r2: pmov_conduccion
-3	5	r2: tac_presets
-3	5	s7b_bloqueo_modos
-3	5	so: est_datos_tablas_vs_codigo
+3	5	partidas viejas abren
+3	5	r2: p3_escaleras
+3	5	r2: s5_detalles
+3	5	reg_registro
+3	5	so: est_datos_coherencia
 3	4	bug_semilla
 3	4	r2: pmov_choque_coches
 4	92	r2: s5_tactica_roles
-4	66	partido táctil al límite en el móvil (auditoría 4: 50 pausas con giro y calidad, segundo plano en descanso, tanda y repetición)
-4	47	guardado antes y después del partido de la carrera, partidos abandonados, carrera del jugador (auditoría 4)
-4	42	reglas del partido al límite (auditoría 4: 7 y 6 jugadores, lesionado sin cambios, portero lesionado, cambio en tanda y descanso, banco vacío)
-4	33	caché horneada del build
-4	30	repetición del gol
-4	27	fugas en sesiones largas, partido táctil (auditoría 4: 24 partidos 3D jugados, abandonados, en pausa y cerrados con atrás: nodos, objetos, memoria, señales, voces)
-4	24	r2: f0s_huellas_sonido
-4	22	a4_gestion_entrenamiento
-4	21	emergencias y sirenas
-4	18	r2: p3_sentados
-4	16	cpor_portero
-4	14	a4_noticias_idiomas
+4	54	r2: s3_rotacion_menus
+4	44	ciudad en marcha 600 fotogramas sin acumular nada (A4-M3D)
+4	38	ciudad: construir y soltar 5 veces sin fugas (A4-M3D-001)
+4	30	a4_gestion_selecciones
+4	29	r2: pmov_sonda_colision
+4	24	a4_metro_museo (metro por dentro y museo ampliado, sin pantalla)
+4	23	pago con tarjeta y PIN en tienda, gasolinera y expendedora (U6)
+4	19	modos de juego
+4	18	s3p_salida_centros
+4	14	act_actualizador
 4	14	penales en partido: ~75 % marcados (sonda)
-4	12	portero de la Carrera
+4	12	interpolación de la física del partido
 4	11	HUD y cámara del partido en el móvil (mide mm de letra y distancia de cámara)
-4	11	aud4_primer_contacto
-4	11	teleférico
+4	11	r2: cant_estabilidad
+4	10	atajos de teclado por menú y submenú (3-11)
 4	10	r2: p3_banquillo_tour
-4	10	vida de la app fuera del partido, menú táctil (auditoría 4: segundo plano pausa el árbol, atrás cierra ventana/pantalla/pregunta, poca memoria)
-4	9	contador de FPS
-4	9	p3_grada_colores
-4	9	r2: tre_transporte
-4	8	carrera del jugador al límite (auditoría 4: puestos, atributos 1 y 99, lesión grave, club sin plantel, retiro, guardado roto)
+4	9	arbitros y VAR al límite (auditoría 4: márgenes absurdos, tarjetas repetidas, gol anulado tras el final, expulsión doble)
+4	9	estación y trenes
+4	9	r2: e2_zancas_pasillos
+4	8	a4_gestion_mercado_fed
 4	8	f1p_personaje
-4	8	pmov_peatones_esquivan
-4	8	r2: s3_accesibilidad
-4	8	so: err_rafaga_entrada
-4	7	a4_pasajeros_limite (gente de bus y teleférico: bus lleno, bus que se va, 60 paradas)
-4	7	el entrenamiento se nota
-4	7	p6_cierre_ciudad
-4	7	r2: p1_movimiento_natural
+4	8	r2: f0_cimientos
+4	8	r6b_rueda_prensa
+4	8	textura del balón
+4	7	f0r_reloj
+4	7	r2: f1g_pais
 4	7	r2: s6_panel_plan
-4	7	r2: uite_movil_textos
-4	7	so: est_economia_invariantes
-4	7	trad_tutorial
-4	6	f0m_visor_ciudad
-4	6	p6_entorno_oclusion
+4	7	ruidos en segundo plano
+4	7	so: int_nativo_por_sistema
+4	6	a4_partido_ligero (agregado aparte de la calidad, orden 32)
+4	6	desa_leyenda
+4	6	p6_alcance_e
 4	6	p6_peatones_cruce
-4	6	pint_charla
-4	6	r2: p2_inclinacion
-4	6	r2: pmov_coche_forma
-4	6	r2: s6_paraguas
-4	6	r2: uite_traducciones
-4	6	so: err_guardado_danado
+4	6	pint_vestuario
+4	6	r2: p4_contacto
+4	6	r2: s3g_gesto_tecnico
+4	6	r2: s8_museo_vitrinas
+4	6	so: com_guardado_ida_vuelta
 4	6	tráfico: derecha y adelantar
-4	5	disc_amarillas
-4	5	fallos de League-Soccer (posesión, menos de siete, libres)
+4	5	f1m_modos
 4	5	p6_camiseta_rapida
-4	5	partidas viejas abren
-4	5	r2: p2_postura
-4	5	r2: red_redes_3d
-4	5	r2: uifi_gestion
-4	5	so: com_arranque_autoloads
-4	5	so: fun_azar_puro
+4	5	pcar_agenda
+4	5	r2: p3_escaparates
+4	5	r2: s6_lluvia_ciudad
+4	5	ruido de registros: arreglos (3-11)
+4	5	so: est_datos_tablas_vs_codigo
 4	4	p6_rotulos_cartel
 4	4	trofeos por competición
 5	88	aud4_interfaz_limite
-5	72	r2: fcp_crear_partida
-5	46	aud4_movil_flujo
-5	40	igualdad del motor con usuario
-5	34	a4_sirena_movimiento (vehículo de emergencia con sirena en medio del tráfico: no atraviesa a nadie)
-5	30	s6_paises_lote1
-5	26	a4_lluvia_cambios (lluvia y paraguas con 172 peatones de noche, 20 cambios de clima: sin duplicados, sin restos, sin crecer)
-5	25	onb_arranque
-5	22	a4_gestion_estadio
-5	21	estadio: construir y soltar 5 veces sin fugas (A4-M3D-002)
-5	18	s3p_salida_centros
-5	16	p6_calidad_minima
-5	14	act_actualizador
-5	14	so: vis_pantallas_sin_vacios
-5	12	r2: f0b_huella
+5	64	aud4_movil_partido
+5	42	r2: p3_arbitros
+5	34	a4_gestion_museo_cantera
+5	30	a4_recorrido_mapa
+5	29	r2: uipl_textos
+5	24	r2: f0s_huellas_sonido
+5	22	a4_gestion_entrenamiento
+5	20	aud4_prologo_movil
+5	17	barrida, saque de mano, caídas y bloqueos
+5	16	partido en vivo al límite (auditoría 4: 9 idiomas sin marcas sueltas, velocidades con saltos absurdos, descanso, saltos al final)
+5	13	partido al límite (auditoría 4: pasos de tiempo absurdos, actas, tarjetas amarillas y notas)
+5	12	portero de la Carrera
 5	11	a4_camara_estadio (la cámara del partido ve el campo en 6 estadios reformados, rayos por triángulo)
-5	11	p6_salas_comercio
-5	11	triángulo sobre el jugador controlado (P2)
+5	11	r2: e3_torre_focos
+5	10	aud4_movil_toque
 5	10	r2: p4_hitbox
-5	9	arbitros y VAR al límite (auditoría 4: márgenes absurdos, tarjetas repetidas, gol anulado tras el final, expulsión doble)
 5	9	auditoría de clubes
-5	9	estación y trenes
-5	9	pmot_control
-5	9	so: err_instantanea_invalida
+5	9	exim_exportar_importar
+5	9	r2: s3_atajos_clics
+5	8	ahorro en los menús: fondos congelados en MÍNIMA (3-11)
 5	8	fnt_idioma_vivo
-5	8	r2: f0_cimientos
-5	8	r2: s3_visual_metrica
-5	8	so: fun_nativo_datos_aleatorios
-5	7	app Red del móvil
-5	7	el partido reacciona (clima, arenga, riesgo, plan)
-5	7	p6_mando_tactil
-5	7	r2: s3_defectos_visuales
+5	8	r2: p3_clips_ual
+5	8	s2p_peticiones
+5	8	textura del césped
+5	7	f9_galeria_kit
+5	7	r2: p1_movimiento_natural
 5	7	r2: s6_planificador
-5	7	ruidos en segundo plano
-5	7	so: est_partido_simulado_reglas
-5	7	zz_alt
-5	6	f1e_entrada_campeonato
-5	6	p6_escala_movil
+5	7	siglas y códigos cortos (3-11)
+5	7	so: int_paquetes_y_parches
+5	6	ate_ayuda_en_menu
+5	6	desa_sin_dinero
+5	6	p6_entorno_oclusion
 5	6	p6_ropero
-5	6	pint_vestuario
-5	6	r2: p3_grupo
-5	6	r2: r7_medicion_bloqueo
-5	6	r2: s6_porque
-5	6	s6r_retos_semana
-5	6	so: fun_calendario_fechas
+5	6	plan_costumbre
+5	6	r2: p4_pelo_mujer
+5	6	r2: s5_rueda
+5	6	r2: uiaj_mando
+5	6	so: err_guardado_danado
 5	5	Países Bajos real y ficticio
-5	5	a4_gestion_directiva
-5	5	el partido simulado tiene vida
-5	5	m462_glifos
+5	5	desa_sin_red
+5	5	fallos de League-Soccer (posesión, menos de siete, libres)
 5	5	p6_pantalla_carga
-5	5	pcar_agenda
-5	5	r2: p3_escaleras
-5	5	r2: rend_plantel_fijas
-5	5	r2: vat_hinchada
-5	5	so: com_idiomas_cambio_en_vivo
-5	5	so: fun_formato_y_demarcaciones
+5	5	pcar_avisos_idioma
+5	5	r2: p3_puertas
+5	5	r2: s6_tablon
+5	5	s7b_bloqueo_modos
+5	5	so: fun_azar_puro
+6	72	r2: fcp_crear_partida
+6	66	partido táctil al límite en el móvil (auditoría 4: 50 pausas con giro y calidad, segundo plano en descanso, tanda y repetición)
+6	46	aud4_movil_flujo
+6	41	so: est_propiedades_semillas
+6	33	caché horneada del build
+6	28	a4_museo_limite (museo con 220 hitos: vitrinas y rótulos sin pisarse, ampliar, 20 entradas y la animación cortada)
+6	25	a4_ciudad_noche (de noche, 6 sirenas, 6 min: sin atascos, gente ni buses parados)
+6	22	a4_gestion_estadio
+6	20	r2: f0e_resolver
+6	17	calidad adaptativa (escalones)
+6	15	r2: f0m_visor_personas
+6	14	so: vis_pantallas_sin_vacios
+6	12	r2: f0b_huella
+6	11	a4_gestion_cruzado
+6	11	r2: foto_brazos
+6	10	el menú no carga el estadio ni el partido 3D (3-11)
+6	10	r2: uiaj_ajustes
+6	9	auditoría de datos
+6	9	guardado: autoguardado en segundo plano y pregunta al salir (3-11)
+6	9	r2: s4p_vida_imprevistos
+6	8	caché en disco del audio sintetizado (R5)
+6	8	mc_contratos
+6	8	r2: p3_ual2
+6	8	s7t_tutorial_capas
+6	7	a4_gestion_prensa
+6	7	el entrenamiento se nota
+6	7	p6_mando_tactil
+6	7	r2: s3_primera_hora
+6	7	r2: uico_textos
+6	7	so: err_poca_memoria
+6	7	texturas en disco (asfalto)
+6	6	f0m_visor_ciudad
+6	6	p6_escala_movil
+6	6	p6_semaforo_peatonal
+6	6	r2: eq_crisis_caja
+6	6	r2: p5_futbolistas_acabado
+6	6	r2: s6_colision
+6	6	r2: uite_traducciones
+6	6	so: fun_calendario_fechas
+6	5	a4_gestion_directiva
+6	5	disc_amarillas
+6	5	m462_glifos
+6	5	p6_peaje
+6	5	pcar_tiro
+6	5	r2: p4_pelo_drive
+6	5	r2: tac_presets
+6	5	so: com_arranque_autoloads
+6	5	so: fun_formato_y_demarcaciones

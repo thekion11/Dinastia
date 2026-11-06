@@ -1,0 +1,36 @@
+# BORRADOR DESACTIVADO (6-11-2026, plan 8 h, pista C). NO está en .github/workflows/: no corre. Para activarlo lo decide el dueño (ver sonar_en_ci.md).
+# Análisis de SonarCloud DESDE el CI en todas las ramas, con la puerta de calidad como fallo del CI.
+name: SonarCloud (desde CI)
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  sonar:
+    name: 🔎 SonarCloud
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
+        with:
+          fetch-depth: 0   # SonarCloud necesita el historial para atribuir líneas nuevas
+          lfs: false
+
+      ## AL ACTIVAR: fijar esta acción por SHA de una versión con al menos 2 semanas (no verificado aquí; el borrador usa la etiqueta como marcador).
+      - name: Análisis
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=thekion11
+            -Dsonar.projectKey=thekion11_Dinastia
+            -Dsonar.qualitygate.wait=true
+            -Dsonar.qualitygate.timeout=300
