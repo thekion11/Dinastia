@@ -8,4 +8,5 @@ func _exit_tree() -> void:
 		trafico.jugador = null
 		trafico.libre_fn = Callable()
 	_bajo_tierra(false)
+	OptimizarGrada.niebla_a_pie(self, false)
 	_rotulos_de_paseo(false)

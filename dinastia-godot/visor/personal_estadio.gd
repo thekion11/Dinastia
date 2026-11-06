@@ -109,6 +109,9 @@ func _ready() -> void:
 		asp["gorra"] = clave == "portero"
 		asp["gafas"] = "" if clave != "ojeador" else String(asp.get("gafas", ""))
 		var d := PersonajeDT.crear(raiz, asp, c1, c2)
+		if Calidad.elegida <= Calidad.BAJA:   ## (7-11) ULTRA BAJA y BAJA: la gente del club se dibuja solo a menos de 90 m (desde el mapa aéreo eran 163 piezas invisibles)
+			for g: Node in raiz.find_children("*", "GeometryInstance3D", true, false):
+				(g as GeometryInstance3D).visibility_range_end = 90.0
 		## Los gestos de su oficio (los de la banda del DT: brazos en jarra,
 		## señalar, aplaudir…), para que en su puesto no sean estatuas.
 		if d.has("anim"):
