@@ -53,7 +53,7 @@ func _probar() -> void:
 	var nodos1 := get_tree().get_node_count()
 	_comprobar(nodos1 < nodos0 * 2 + 400, "el árbol no se dispara: %d → %d nodos" % [nodos0, nodos1])
 	if nodos1 >= nodos0 * 2 + 400:   ## (6-11) en macOS crece 899 → 4777: se imprime QUÉ crece para poder ubicar la pantalla que se abre
-		_linea("  crecimiento por clase (las 8 que más): " + _mas_crecidas(clases0, _clases(get_tree().root)))
+		_linea("  FALLO (diagnóstico) crecimiento por clase, las 8 que más: " + _mas_crecidas(clases0, _clases(get_tree().root)))
 	for a: StringName in InputMap.get_actions():
 		Input.action_release(a)
 	p.queue_free()
