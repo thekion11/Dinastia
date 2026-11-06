@@ -3,3 +3,4 @@ godot-cpp/
 src/*.os
 src/*.o
 .sconsign*.dblite
+tracy/

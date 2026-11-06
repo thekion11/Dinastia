@@ -43,3 +43,4 @@ caras_reales.pck
 __pycache__/
 *.pyc
 herramientas/compilacion_menu/*.json
+dinastia-godot/bin_nativo_tracy/

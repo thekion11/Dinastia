@@ -457,6 +457,7 @@ fi
   pasa "seguir clubes" "godot --headless --path . res://pruebas/ideas/seg_clubes.tscn" "FIN. 0 fallos"
   pasa "sonido en pestañas y listas" "godot --headless --path . res://pruebas/ideas/fx_pestanas.tscn" "FIN. 0 fallos"
   # M-420: los presets públicos (paquete exportado) no llevan archivos ni nombres de lo real (~3 min)
+  pasa "código de fotograma sin load/grupos" "python3 herramientas/auditoria_fotograma.py --verificar" "FIN AUDITORÍA DE FOTOGRAMA. 0 fallos"
   pasa "builds públicos sin datos reales" "python3 herramientas/revisar_build_publico.py" "FIN BUILD PÚBLICO. 0 fallos"
   pasa "ceremonia de carrera" "godot --headless --path . res://pruebas/prueba_carrera_ceremonia.tscn" "FIN. 0 fallos"
   pasa "práctica" "godot --headless --path . res://pruebas/prueba_practica.tscn" "FIN PRÁCTICA. 0 fallos"

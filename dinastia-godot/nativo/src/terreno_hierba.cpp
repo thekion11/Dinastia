@@ -2,6 +2,7 @@
 // `TerrenoArreglos.calcular_gd` y `CityBuilder._imagen_hierba_gd`. El ruido y el azar son los
 // del motor (FastNoiseLite, RandomNumberGenerator), así la secuencia es la misma.
 #include "dinastia_nativo.h"
+#include "din_tracy.h"
 
 #include <godot_cpp/classes/fast_noise_lite.hpp>
 #include <godot_cpp/classes/image.hpp>
@@ -35,6 +36,7 @@ static double altura_terreno(double x, double z, FastNoiseLite *ruido, FastNoise
 Array DinastiaNativo::terreno(const Ref<FastNoiseLite> &ruido, const Ref<FastNoiseLite> &detalle, double lado,
 		int celdas, int baldosas, double llano_radio, double llano_trans, double alto, const Vector2 &monte,
 		double monte_alto, double monte_radio) const {
+	DIN_ZONA("terreno");
 	Array salida;
 	if (ruido.is_null() || detalle.is_null() || celdas <= 0 || baldosas <= 0) {
 		return salida;
@@ -143,6 +145,7 @@ static inline uint8_t a_byte(float v) {
 }
 
 Ref<Image> DinastiaNativo::hierba(const Ref<Image> &manchas, int64_t semilla) const {
+	DIN_ZONA("hierba");
 	const int n = manchas.is_valid() ? manchas->get_width() : 0;
 	if (n == 0 || manchas->get_height() != n || manchas->get_format() != Image::FORMAT_L8) {
 		return Ref<Image>();   // el llamador usa entonces la versión GDScript
