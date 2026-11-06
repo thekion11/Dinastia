@@ -4,6 +4,17 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## DECISIONES DEL DUEÑO (6-11 noche) — se borran al completarse del todo
+- **Alcance a pie ULTRA BAJA 180 m** (BAJA 300 m): APROBADO. Lo lejano se disuelve en niebla; probar en su teléfono antes de darlo por bueno.
+- **Pasto a 28 m** en calidades bajas: APROBADO.
+- **Precalentado de personajes y animaciones del menú apagado** en ULTRA BAJA y BAJA: APROBADO (abrir el estadio tarda ~1,4 s más; MEDIA o más no cambia).
+- **Peatones con una malla**: NO por ahora (no hace falta para la meta a pie). Pendiente de su decisión si se quiere margen extra.
+- **Mapa aéreo de «Ver mi ciudad»**: APROBADO QUITARLO COMO CASO DEL JUGADOR. Queda como RECURSO DE PROGRAMACIÓN (la clase `VistaCiudad` y sus pruebas se conservan). Ahorro de RAM ≈ 0 (medido: mismo mundo a pie y en aérea); el beneficio es quitar ~1.030 llamadas de la vista aérea. Riesgo alto: obras, reloj y clima, prólogo. Orden: 1) mover la construcción de obras a la gestión o a pie; 2) entrar a pie sin pasar por el mapa; 3) quitar la entrada del menú; 4) comprobar prólogo, reloj, clima y bancos con capturas. Hacerlo con cuidado y paso a paso.
+- **Cristales azulados de los edificios singulares**: lo MENOS importante; se hacen cuando no haya nada más urgente.
+- **Tiempo de carga «menos de 200 ms»**: sin definir todavía (¿arranque, cambio de pantalla o cada carga?). Hoy la ciudad tarda ~8-10 s en construirse en simulación.
+- **RAM: qué cifra cuenta**: pendiente de decisión del dueño (motor + texturas + vídeo, o proceso completo con renderizador por software). En el teléfono real manda la medida de la prueba de rendimiento.
+- **Medición en teléfono del dueño**: pendiente; sin ella los FPS y ms son solo estimación.
+
 ## OBJETIVOS DEL DUEÑO DE RENDIMIENTO (6-11, orden 33) — META FINAL, TODO EL JUEGO
 - **Pico de RAM menor de 1,5 GB** (DDR3, equipo modesto; hoy el partido llega a 2,4-3,1 GB en MEDIO y ciudad 4,4-5 GB).
 - **Menos de 120 llamadas de dibujo en ULTRA BAJA** (hoy la ciudad en ULTRA BAJA ronda 471 según la sesión Tracy; sin cifra tras #203-#205).
