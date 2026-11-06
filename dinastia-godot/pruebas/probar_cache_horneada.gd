@@ -29,7 +29,7 @@ func _init() -> void:
 		var h := ""
 		for linea in str(salida[0]).split("\n"):
 			if linea.begins_with("HUELLA "):
-				h = linea
+				h = linea.strip_edges()   ## (6-11) en Windows la salida del hijo acaba en "\r\n": con el "\r" pegado `ends_with("construidas 0")` fallaba aunque fuera 0
 		print(modo, ": ", h)
 		huellas.append(h)
 	if huellas[0] == "" or huellas[0].get_slice(" ", 2) != huellas[1].get_slice(" ", 2):
