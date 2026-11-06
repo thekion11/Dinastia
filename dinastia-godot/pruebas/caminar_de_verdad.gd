@@ -28,6 +28,7 @@ func _ready() -> void:
 	_e.trafico.reciclar_peatones(_e.cuerpo.position, Vector3.ZERO, 70.0, 0, 0, true)   ## sin gente: se mide solo el avatar
 	await _avance_y_patinaje()
 	await _atasco()
+	await _pared_en_diagonal()
 	await _separacion()
 	print("===== FIN. %d fallos =====" % _fallos)
 	get_tree().quit(1 if _fallos > 0 else 0)
@@ -147,6 +148,42 @@ func _atasco() -> void:
 	print("  SEPARACIÓN de pie contra la pared: %.2f m (radio del cuerpo %.2f m)" % [limpia, ExploradorCiudad.RADIO_PIE])
 	_comprobar(limpia >= ExploradorCiudad.RADIO_PIE - 0.05 and limpia <= ExploradorCiudad.RADIO_PIE + 0.6, "al pegarse a una pared queda a %.2f m (entre el radio y el radio + 0,6 m)" % limpia)
 	_comprobar(pies <= 0.5, "contra la pared los pies no corren en el sitio: %.2f m/s ≤ 0.5" % pies)
+
+## Contra la misma pared pero en diagonal (45°): se desliza o se queda, pero nunca queda dentro y, si se queda, los pies no caminan en el sitio.
+func _pared_en_diagonal() -> void:
+	var pos := Vector3.INF
+	for ix in range(-1000, 1000, 29):
+		for iz in range(-1000, 1000, 31):
+			var q := Vector3(ix, 0, iz)
+			if not _e.libre_total(q, 1.2):
+				continue
+			var d := 0.0
+			while d < 8.0 and _e.libre_total(q + Vector3(0, 0, d), 1.2):
+				d += 0.5
+			if d >= 3.0 and d < 8.0:
+				pos = Vector3(ix, _e.altura_suelo(ix, iz), iz)
+				break
+		if pos != Vector3.INF:
+			break
+	if pos == Vector3.INF:
+		return
+	_poner(pos, PI / 4.0)
+	for i in 5:
+		await get_tree().physics_frame
+	_tecla(KEY_W, true)
+	for i in 60 * 6:
+		await get_tree().physics_frame
+	var antes := _e.cuerpo.position
+	for i in 30:
+		await get_tree().physics_frame
+	var movido := Vector2(_e.cuerpo.position.x - antes.x, _e.cuerpo.position.z - antes.z).length()
+	var pies := 0.0
+	if _e._anim != null:
+		pies = _e._anim.speed_scale * (1.4 if not _e._es_dt else float(ExploradorCiudad.VEL_NATURAL_CLIP.get(String(_e._anim.current_animation), 0.0)))
+	_tecla(KEY_W, false)
+	print("  DIAGONAL contra la pared: se movió %.3f m en 0,5 s · vel %.2f m/s · pies %.2f m/s" % [movido, _e.vel, pies])
+	_comprobar(_e.libre_total(_e.cuerpo.position, 0.0), "en diagonal el avatar no queda dentro de la pared")
+	_comprobar(movido > 0.1 or (absf(_e.vel) <= 0.2 and pies <= 0.5), "en diagonal o se desliza (%.2f m) o se queda con los pies quietos (vel %.2f, pies %.2f)" % [movido, _e.vel, pies])
 
 ## Distancia del punto a la huella sólida más cercana (0 = dentro).
 func _separacion_a(q: Vector3) -> float:
