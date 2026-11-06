@@ -162,7 +162,7 @@ func _probar_a_buffer() -> void:
 		var esperado: Transform3D = inv * (ts[i] as Transform3D)
 		var o := i * 12
 		var r := Transform3D(Basis(Vector3(b[o], b[o + 4], b[o + 8]), Vector3(b[o + 1], b[o + 5], b[o + 9]), Vector3(b[o + 2], b[o + 6], b[o + 10])), Vector3(b[o + 3], b[o + 7], b[o + 11]))
-		bien = bien and r.is_equal_approx(esperado)
+		bien = bien and r.is_equal_approx(esperado) and BufferMM.transform_de(b, o).is_equal_approx(esperado)
 	_comprobar(bien, "a_buffer reproduce `inv * t` de cada instancia (filas 3x4, origen en 3, 7 y 11)")
 
 ## (7-11) El pasto del Drive se dibuja a 28 m en ULTRA BAJA/BAJA y a 42 m desde MEDIA BAJA.

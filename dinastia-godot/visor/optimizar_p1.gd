@@ -209,14 +209,18 @@ static func _mat_unico(m: Material, vistos: Dictionary) -> Material:
 ## superficie no existen en un MultiMesh: se hornean en una copia, cacheada).
 static func _malla_efectiva(mi: MeshInstance3D, cache: Dictionary) -> Mesh:
 	var m := mi.mesh
-	var ids := []
+	var n_sup := m.get_surface_count()   ## (7-11) camino rápido: sin lista de ids si no hay materiales por superficie
 	var cambia := false
-	for s in m.get_surface_count():
-		var o := mi.get_surface_override_material(s)
-		ids.append(o.get_instance_id() if o != null else 0)
-		cambia = cambia or o != null
+	for s in n_sup:
+		if mi.get_surface_override_material(s) != null:
+			cambia = true
+			break
 	if not cambia or not (m is ArrayMesh):
 		return m
+	var ids := []
+	for s in n_sup:
+		var o := mi.get_surface_override_material(s)
+		ids.append(o.get_instance_id() if o != null else 0)
 	var k := str(m.get_instance_id()) + ":" + str(ids)
 	if not cache.has(k):
 		var copia := m.duplicate() as ArrayMesh

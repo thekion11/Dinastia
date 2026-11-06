@@ -95,8 +95,13 @@ static func obstaculos(raiz: Node3D, rects: Array[Rect2], min_alto := 0.9, max_b
 			continue
 		var base := mm.mesh.get_aabb()
 		var nodo_t := mmi.global_transform
+		## (7-11) Se lee el `buffer` entero de una vez (una llamada) en vez de `get_instance_transform` por instancia.
+		## Sin pantalla el MultiMesh no guarda datos: ahí se sigue por instancia.
+		var buf := mm.buffer
+		var paso := paso_buffer(mm)
+		var en_buffer := mm.transform_format == MultiMesh.TRANSFORM_3D and buf.size() >= mm.instance_count * paso
 		for i in mm.instance_count:
-			var caja := nodo_t * mm.get_instance_transform(i) * base
+			var caja := nodo_t * (BufferMM.transform_de(buf, i * paso) if en_buffer else mm.get_instance_transform(i)) * base
 			if caja.size.y < min_alto or caja.position.y - raiz.global_position.y > max_base or maxf(caja.size.x, caja.size.z) > 8.0 or minf(caja.size.x, caja.size.z) < 0.08:
 				continue
 			var c := caja.get_center()
