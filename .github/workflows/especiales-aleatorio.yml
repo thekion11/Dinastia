@@ -1,0 +1,62 @@
+# Especiales rápidas en ORDEN ALEATORIO (6-11-2026, plan 8 h, pista C). Una vez por noche y a mano.
+# Caza pruebas que solo pasan porque otra corrió antes (estado compartido, archivos, ajustes). La semilla del barajado sale en el registro
+# («ORDEN ALEATORIO: … semilla N»); para repetir un fallo: `ESPECIALES_ORDEN=aleatorio ESPECIALES_SEMILLA=N ESPECIALES_PARTE=i/7 bash herramientas/especiales.sh`.
+# No bloquea ninguna compilación. Mismo reparto por tiempo que compilar.yml (7 partes); dentro de cada parte el orden es aleatorio.
+name: Especiales en orden aleatorio
+
+on:
+  schedule:
+    - cron: "47 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: especiales-aleatorio-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  especiales-aleatorio:
+    name: 🎲 especiales (aleatorio) ${{ matrix.parte }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        parte: [ "0/7", "1/7", "2/7", "3/7", "4/7", "5/7", "6/7" ]
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
+        with:
+          lfs: false
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - name: Python (la norma de 450 líneas lo necesita; la imagen no lo trae)
+        run: command -v python3 >/dev/null || (apt-get update -qq && apt-get install -y -qq python3)
+
+      - name: Pruebas especiales en orden aleatorio (parte ${{ matrix.parte }})
+        working-directory: dinastia-godot
+        env:
+          ESPECIALES_PARTE: ${{ matrix.parte }}
+          ESPECIALES_ORDEN: aleatorio
+          ESPECIALES_SEMILLA: ${{ github.run_id }}
+        run: |
+          set +e
+          ## (la semilla es el número de la ejecución, reducido a 15 bits: RANDOM de bash)
+          export ESPECIALES_SEMILLA=$(( ESPECIALES_SEMILLA % 32768 ))
+          bash herramientas/especiales.sh | tee /tmp/especiales.txt
+          { echo "### 🎲 Especiales en orden aleatorio, parte ${ESPECIALES_PARTE}"; echo '```'; cat /tmp/especiales.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          grep -q "^FALLO" /tmp/especiales.txt && { echo "Hay pruebas especiales que fallan en este orden (semilla ${ESPECIALES_SEMILLA})."; exit 1; }
+          exit 0
+
+      - name: Subir el registro
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # v4.6.2
+        with:
+          name: especiales-aleatorio-registro-${{ strategy.job-index }}
+          path: /tmp/especiales.txt
+          if-no-files-found: ignore

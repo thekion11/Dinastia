@@ -128,6 +128,12 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - Líder: rendimiento móvil (barrido de resolución en la prueba de rendimiento; MÍNIMA hasta 60 FPS con los datos del teléfono del dueño)
   y pasar la rama a `main` (PR #120, el dueño dijo SÍ el 4-11) cuando el CI esté verde.
 
+## PLAN 8 H · PISTA C (6-11) — se borra al completarse
+- Hecho en `sonar/plataformas3`: 7.ª parte de especiales (`especiales_reparto.txt` N=7, ~10,9 min por parte), `ESPECIALES_ORDEN=aleatorio` (+ `ESPECIALES_SEMILLA`) y su flujo nocturno `especiales-aleatorio.yml`, borradores DESACTIVADOS de Sonar en CI y `paths-ignore` (`docs/04_auditorias/propuestas/`), exclusión de duplicados de la documentación HTML de Kenney.
+- Duplicación (M-391): SonarCloud mide 434 líneas duplicadas (2,2 %), 300 de ellas en dos `Overview.html` ajenos (excluidas); el resto son 5 `.ps1` y 2 `.py` de `herramientas/` (14-31 líneas cada uno) que solo se pueden probar en el equipo del dueño. El GDScript no entra en las métricas de Sonar.
+- Scripts cerca del tope: 133 `.gd` tienen ≥ 430 líneas (la mayoría exactamente 450, salida de `partir_gd.py`); partirlos exige Godot + banco (no hay Godot en la sesión de plataformas). Pendiente para una sesión con Godot.
+- Pendiente: CI más rápido (cachés), tamaños de build y recursos sin usar (informe), acciones de GitHub a Node 24, Android x86_64, memoria en Web.
+
 ## COBERTURA DE PLATAFORMAS (5-11) — se borra al completarse
 - `plataformas.yml` ejecuta el juego en Windows (nativo + mini banco) y en Web (menú en Chromium): ver `04_auditorias/cobertura_sistemas_2026-11-05.md`. Pendiente: banco/especiales completos en Windows (`/tmp` fijos, `xvfb-run`), humo de Android (necesita APK x86_64 o dispositivo), preset de macOS (no existe), renombrar el archivo de `material/escudos_especiales_originales/` con nombre larguísimo (no clona en Windows), entrada Web en `dinastia.gdextension` (ruido de consola).
 

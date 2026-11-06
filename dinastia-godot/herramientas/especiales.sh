@@ -27,6 +27,7 @@ if [[ -f herramientas/especiales_reparto.txt ]]; then
 fi
 
 BLOQUE=""
+declare -a COLA_N=() COLA_C=() COLA_P=() COLA_T=()
 pasa() {  # nombre, comando, patrón de éxito, [tope en segundos; por defecto 600]
   if [[ -n "$ESPECIALES_SOLO" ]] && [[ "$ESPECIALES_SOLO" != "$BLOQUE" ]]; then return; fi
   CONT=$((CONT + 1))
@@ -36,11 +37,18 @@ pasa() {  # nombre, comando, patrón de éxito, [tope en segundos; por defecto 6
     elif [[ $((CONT % PARTE_N)) -ne "$PARTE_I" ]]; then return; fi
   fi
   if [[ -n "$ESPECIALES_LISTAR" ]]; then echo "LISTA $1"; return; fi   # (5-11) sin ejecutar: solo qué pruebas tocan a esta parte
+  ## (6-11) ESPECIALES_ORDEN=aleatorio: no se ejecuta ahora; se guarda y al final corren TODAS en orden barajado (ESPECIALES_SEMILLA fija el orden).
+  ## Sirve para cazar pruebas que dependen de que otra haya corrido antes (estado compartido, archivos, ajustes).
+  if [[ "$ESPECIALES_ORDEN" == "aleatorio" ]]; then COLA_N+=("$1"); COLA_C+=("$2"); COLA_P+=("$3"); COLA_T+=("${4:-600}"); return; fi
+  _ejecutar "$1" "$2" "$3" "${4:-600}"
+}
+
+_ejecutar() {  # nombre, comando, patrón de éxito, tope en segundos
   local t0=$(date +%s)
   ## (4-11, A4) Cada prueba con SU carpeta user:// vacía, como en el CI: con el guardado de un jugador (idioma, ajustes, partidas)
   ## las pruebas que ponen un idioma antes de abrir el juego medían otra cosa (el guardado manda) y pasaban sin probar lo que decían.
   local datos; datos=$(mktemp -d)   # (Windows: user:// sale de %APPDATA%, no de XDG_DATA_HOME: se cambian los dos)
-  XDG_DATA_HOME=$datos APPDATA=$(command -v cygpath >/dev/null && cygpath -w "$datos" || echo "$datos") timeout "${4:-600}" bash -c "$2" > "$LOG" 2>&1
+  XDG_DATA_HOME=$datos APPDATA=$(command -v cygpath >/dev/null && cygpath -w "$datos" || echo "$datos") timeout "$4" bash -c "$2" > "$LOG" 2>&1
   local seg=$(( $(date +%s) - t0 ))
   if grep -q "SCRIPT ERROR" "$LOG" || ! grep -qE "$3" "$LOG"; then
     FALLOS=$((FALLOS + 1)); printf 'FALLO  %-34s %3d s\n' "$1" "$seg"; grep -E "FALLO|SCRIPT ERROR" "$LOG" | head -3
@@ -505,6 +513,13 @@ fi
   else
     echo "SALTADA so: vis_partido_compat y vis_menu_pantallas (necesitan xvfb-run)"
   fi
+fi
+if [[ "$ESPECIALES_ORDEN" == "aleatorio" ]]; then
+  SEMILLA=${ESPECIALES_SEMILLA:-$RANDOM}; RANDOM=$SEMILLA
+  N_COLA=${#COLA_N[@]}; IDX=(); for ((i = 0; i < N_COLA; i++)); do IDX[i]=$i; done
+  for ((i = N_COLA - 1; i > 0; i--)); do j=$((RANDOM % (i + 1))); t=${IDX[i]}; IDX[i]=${IDX[j]}; IDX[j]=$t; done
+  echo "ORDEN ALEATORIO: $N_COLA pruebas, semilla $SEMILLA (repetir con ESPECIALES_SEMILLA=$SEMILLA)"
+  for i in "${IDX[@]}"; do _ejecutar "${COLA_N[i]}" "${COLA_C[i]}" "${COLA_P[i]}" "${COLA_T[i]}"; done
 fi
 rm -f "$LOG"
 [[ "$FALLOS" -eq 0 ]] && echo "ESPECIALES: todo en orden" || echo "ESPECIALES: $FALLOS con fallos"
