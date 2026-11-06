@@ -110,7 +110,7 @@ func _probar_paseo_optimizado() -> void:
 		pe.free()
 	Calidad.elegida = nivel0
 	_comprobar(con_tope[0] > 20 and con_tope[1] == 0, "la gente del club tiene tope de 90 m en ULTRA BAJA (%d piezas) y no en ALTA (%d)" % [con_tope[0], con_tope[1]])
-	## (7-11) Niebla de profundidad del paseo a pie: se pone (300 a 700 m) y al salir deja el entorno como estaba.
+	## (7-11) Niebla de profundidad del paseo a pie: se pone (del 43 % al 100 % del alcance a pie) y al salir deja el entorno como estaba.
 	var nn := Node3D.new()
 	add_child(nn)
 	var ent := Environment.new()
@@ -119,9 +119,9 @@ func _probar_paseo_optimizado() -> void:
 	var ent0: Environment = mundo.environment
 	mundo.environment = ent
 	OptimizarGrada.niebla_a_pie(nn, true)
-	var puesta := ent.fog_enabled and ent.fog_mode == Environment.FOG_MODE_DEPTH and is_equal_approx(ent.fog_depth_end, 700.0)
+	var puesta := ent.fog_enabled and ent.fog_mode == Environment.FOG_MODE_DEPTH and is_equal_approx(ent.fog_depth_end, OptimizarGrada.alcance_a_pie())
 	OptimizarGrada.niebla_a_pie(nn, false)
-	_comprobar(puesta and not ent.fog_enabled and ent.fog_mode == Environment.FOG_MODE_EXPONENTIAL, "la niebla del paseo a pie se pone de 300 a 700 m y al salir el entorno queda como estaba")
+	_comprobar(puesta and not ent.fog_enabled and ent.fog_mode == Environment.FOG_MODE_EXPONENTIAL, "la niebla del paseo a pie se pone según el alcance a pie de la calidad y al salir el entorno queda como estaba")
 	mundo.environment = ent0
 	nn.free()
 	## (7-11) Un peatón detrás de la cámara (a más de 3 m) no anima; delante, o pegado, sí.
