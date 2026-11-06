@@ -1,5 +1,6 @@
 // Ver dinastia_nativo.h. Cada función sigue paso a paso a su original en GDScript.
 #include "dinastia_nativo.h"
+#include "din_tracy.h"
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/math.hpp>
@@ -17,10 +18,15 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("alisado", "pos", "nor", "idx"), &DinastiaNativo::alisado);
 	ClassDB::bind_method(D_METHOD("terreno", "ruido", "detalle", "lado", "celdas", "baldosas", "llano_radio", "llano_trans", "alto", "monte", "monte_alto", "monte_radio"), &DinastiaNativo::terreno);
 	ClassDB::bind_method(D_METHOD("hierba", "manchas", "semilla"), &DinastiaNativo::hierba);
+	ClassDB::bind_method(D_METHOD("tracy_activo"), &DinastiaNativo::tracy_activo);
+	ClassDB::bind_method(D_METHOD("tracy_zona_ini", "nombre"), &DinastiaNativo::tracy_zona_ini);
+	ClassDB::bind_method(D_METHOD("tracy_zona_fin"), &DinastiaNativo::tracy_zona_fin);
+	ClassDB::bind_method(D_METHOD("tracy_fotograma"), &DinastiaNativo::tracy_fotograma);
 	ClassDB::bind_method(D_METHOD("once_asignar_libres", "ranuras", "libres", "grupo_de", "orden"), &DinastiaNativo::once_asignar_libres);
 }
 
 PackedByteArray DinastiaNativo::rampa(const PackedByteArray &src, const PackedByteArray &lut) const {
+	DIN_ZONA("rampa");
 	PackedByteArray dst;
 	const int64_t n = src.size();
 	dst.resize(n * 4);
@@ -52,6 +58,7 @@ struct IgualV3i {
 } // namespace
 
 Array DinastiaNativo::alisado(const PackedVector3Array &pos, const PackedVector3Array &nor, const PackedInt32Array &idx) const {
+	DIN_ZONA("alisado");
 	const int64_t n = pos.size();
 	PackedFloat32Array c0;
 	PackedFloat32Array c1;
@@ -180,6 +187,7 @@ static int64_t media_en_cpp(const std::vector<double> &val, const std::vector<ui
 }
 
 PackedInt32Array DinastiaNativo::once_asignar_libres(const Dictionary &ranuras, const Array &libres, const Dictionary &grupo_de, const PackedInt32Array &orden) const {
+	DIN_ZONA("once_asignar_libres");
 	const PackedStringArray puestos = ranuras["puestos"];
 	const Array ks_r = ranuras["ks"];
 	const Array ws_r = ranuras["ws"];
@@ -277,3 +285,30 @@ PackedInt32Array DinastiaNativo::once_asignar_libres(const Dictionary &ranuras, 
 	}
 	return res;
 }
+
+// ---- Tracy opcional (ver din_tracy.h) ----
+#ifdef DIN_TRACY
+static std::vector<TracyCZoneCtx> g_zonas_gd;
+static std::vector<CharString> g_nombres_gd; // vivos mientras la zona esté abierta (Tracy copia el nombre al abrirla)
+bool DinastiaNativo::tracy_activo() const { return true; }
+void DinastiaNativo::tracy_zona_ini(const String &nombre) const {
+	g_nombres_gd.push_back(nombre.utf8());
+	const CharString &n = g_nombres_gd.back();
+	const uint64_t loc = ___tracy_alloc_srcloc_name(0, "gdscript", 8, "gdscript", 8, n.get_data(), (size_t)n.length(), 0);
+	g_zonas_gd.push_back(___tracy_emit_zone_begin_alloc(loc, 1));
+}
+void DinastiaNativo::tracy_zona_fin() const {
+	if (g_zonas_gd.empty()) {
+		return;
+	}
+	___tracy_emit_zone_end(g_zonas_gd.back());
+	g_zonas_gd.pop_back();
+	g_nombres_gd.pop_back();
+}
+void DinastiaNativo::tracy_fotograma() const { ___tracy_emit_frame_mark(nullptr); }
+#else
+bool DinastiaNativo::tracy_activo() const { return false; }
+void DinastiaNativo::tracy_zona_ini(const String &) const {}
+void DinastiaNativo::tracy_zona_fin() const {}
+void DinastiaNativo::tracy_fotograma() const {}
+#endif

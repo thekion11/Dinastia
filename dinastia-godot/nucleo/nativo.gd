@@ -15,3 +15,20 @@ static func obj() -> Object:
 		if OS.get_environment("DINASTIA_SIN_NATIVO") != "1" and ClassDB.class_exists("DinastiaNativo"):
 			_obj = ClassDB.instantiate("DinastiaNativo")
 	return _obj
+
+## TRACY (5-11, opcional; docs/04_auditorias/tracy_2026-11-05.md): zonas propias desde GDScript. Sin la compilación `tracy`
+## no hacen nada y cuestan una comprobación. Uso: `Nativo.zona("ia_22")` ... `Nativo.zona_fin()` (siempre en pareja, hilo principal).
+static func zona(nombre: String) -> void:
+	var o := obj()
+	if o != null:
+		o.tracy_zona_ini(nombre)
+
+static func zona_fin() -> void:
+	var o := obj()
+	if o != null:
+		o.tracy_zona_fin()
+
+static func fotograma() -> void:
+	var o := obj()
+	if o != null:
+		o.tracy_fotograma()

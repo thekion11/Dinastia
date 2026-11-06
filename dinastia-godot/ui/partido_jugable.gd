@@ -403,9 +403,9 @@ func _alternar_pausa() -> void:
 				_controles.cerrado.connect(func() -> void: _controles = null; _guia_cache.clear())],
 		["⏩  Simular lo que queda", _simular_resto]])
 	DificultadPartido.boton_en_pausa(self, _pausa)   ## 🤖 dificultad de la CPU (4-11)
-
+var _sb_script: GDScript = load("res://visor/stadium_builder.gd")   ## (5-11) se busca UNA vez, no en cada fotograma
 func _process(delta: float) -> void:
-	delta = minf(delta, 0.25); load("res://visor/stadium_builder.gd").ocultar_techo_ante(get_viewport().get_camera_3d())
+	delta = minf(delta, 0.25); _sb_script.ocultar_techo_ante(get_viewport().get_camera_3d())
 	## La grada sigue el balón con la cabeza (M-049), como en el modo DT.
 	if Engine.get_process_frames() % 4 == 0 and motor != null and motor.balon != null:
 		OlaGrada.mirar(_raiz, motor.balon.global_position)

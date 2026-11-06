@@ -13,5 +13,14 @@ env.Append(CPPPATH=["src/"])
 if env["arch"] in ("arm64", "arm32"):
     env.Append(CCFLAGS=["-ffp-contract=off"])
 fuentes = Glob("src/*.cpp")
-destino = "../bin_nativo/libdinastia{}{}".format(env["suffix"], env["SHLIBSUFFIX"])
+carpeta = "../bin_nativo"
+# TRACY OPCIONAL (5-11-2026): `tracy=yes TRACY_PATH=<clon de wolfpld/tracy v0.13.0>`. Compila el cliente Tracy DENTRO de la
+# extensión (zonas propias; las del motor no se ven) y deja el resultado en bin_nativo_tracy/, NUNCA en bin_nativo/ (las builds
+# públicas no lo llevan). Ver docs/04_auditorias/tracy_2026-11-05.md.
+if ARGUMENTS.get("tracy", "no") == "yes":
+    tracy_path = ARGUMENTS.get("TRACY_PATH", os.environ.get("TRACY_PATH", "tracy"))
+    env.Append(CPPDEFINES=["DIN_TRACY", "TRACY_ENABLE", "TRACY_ON_DEMAND"], CPPPATH=[os.path.join(tracy_path, "public")])
+    fuentes.append(os.path.join(tracy_path, "public", "TracyClient.cpp"))
+    carpeta = "../bin_nativo_tracy"
+destino = carpeta + "/libdinastia{}{}".format(env["suffix"], env["SHLIBSUFFIX"])
 Default(env.SharedLibrary(destino, source=fuentes))

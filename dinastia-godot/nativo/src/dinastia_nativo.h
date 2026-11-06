@@ -37,6 +37,13 @@ public:
 	// `ranuras` = {puestos, ks, ws, grupos, por}; `libres` = los `Jugador` (se leen aquí: pos_e, ovr, pos_sec, atributos, forma, moral); `grupo_de` = {pos_e: grupo}.
 	// Calcula `Jugador.media_en` con los mismos pasos (los atributos de cada jugador se leen una sola vez).
 	PackedInt32Array once_asignar_libres(const Dictionary &ranuras, const Array &libres, const Dictionary &grupo_de, const PackedInt32Array &orden) const;
+
+	// TRACY (5-11, opcional; sin `tracy=yes` no hacen nada): zonas propias desde GDScript y marca de fotograma.
+	// Solo hilo principal. `Nativo.zona("x")` ... `Nativo.zona_fin()` (nucleo/nativo.gd).
+	bool tracy_activo() const;
+	void tracy_zona_ini(const String &nombre) const;
+	void tracy_zona_fin() const;
+	void tracy_fotograma() const;
 };
 
 } // namespace godot
