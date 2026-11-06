@@ -103,6 +103,16 @@ func _todo() -> void:
 			pregunto_antes = true
 	_comprobar(not (is_instance_valid(ml.pantalla_abierta) and not ml.pantalla_abierta.is_queued_for_deletion()), "«atrás» en una pantalla de menú vuelve a su portada y luego la cierra (%d «atrás»)" % vueltas)
 	_comprobar(not pregunto_antes, "…sin preguntar de salir mientras la pantalla seguía abierta")
+	## (6-11) Antes del paso 4 la pantalla tiene que haber TERMINADO de cerrarse: su animación va en tiempo real y en un runner lento el último «atrás» del bucle de arriba
+	## puede dejar la pantalla "cerrándose" y colarse otro «atrás» que ya abrió la pregunta de salir; el paso 4 entonces la CERRABA en vez de abrirla y las tres
+	## comprobaciones siguientes quedaban en contrafase (así falló en 3 de 5 CI y nunca en local). Se espera a que acabe y se parte de la portada limpia, sin pregunta abierta.
+	await _esperar(func() -> bool: return not is_instance_valid(ml.pantalla_abierta) or ml.pantalla_abierta.is_queued_for_deletion())
+	await _marco(6)
+	var previa: Variant = salida.get("_dialogo")
+	if previa != null and (previa as Window).visible:
+		print("  INFO  la pregunta de salir ya estaba abierta antes del paso 4 (un «atrás» sobrante del bucle): se cierra y se sigue")
+		(previa as Window).hide()
+		await _marco(3)
 	## 4. «Atrás» sin nada abierto: pregunta antes de salir, y no sale.
 	await _notif(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
 	await _esperar(func() -> bool: return salida.get("_dialogo") != null and (salida.get("_dialogo") as Window).visible)
