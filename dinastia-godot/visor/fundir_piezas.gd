@@ -256,7 +256,7 @@ static func _firma_material(m: Material) -> String:
 ## (la ciudad tenía ~1.400 cajas, cilindros y placas con material propio: una llamada y ~5 KB de RAM cada una). Se juntan por (material, sombra, alcance de dibujo, capa, GI) y por celda de
 ## `celda` m, para que la cámara siga descartando lo lejano; la malla fundida lleva los vértices en el espacio de `raiz`. Solo piezas quietas (`Optimizar._sin_dinamica`: sin script ni grupo en
 ## ella ni en sus padres), sin hijos ni meta, visibles, de pocos triángulos, con `StandardMaterial3D` opaco y sin escala desigual (las normales no se deforman). Devuelve cuántas fundió.
-static func fundir_ciudad(raiz: Node3D, celda := 80.0, nombre := "FundidoCiudad") -> int:
+static func fundir_ciudad(raiz: Node3D, celda := 160.0, nombre := "FundidoCiudad") -> int:
 	var inv := raiz.global_transform.affine_inverse()
 	var cubos := {}   ## clave → {"st": SurfaceTool, "mi": plantilla, "n": cuántas}
 	var elegidas: Array = []
