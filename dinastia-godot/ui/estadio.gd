@@ -16,18 +16,9 @@ func _actualizar_barras() -> void:
 			else:
 				PlayerSpawner.actualizar_barra(bar, _minuto_barras)
 
-## Mejores disponibles (sin lesión/sanción, no en el once) por media, para que
-## la banca se vea como un banco de verdad y no como un sorteo cualquiera.
+## Mejores disponibles (sin lesión/sanción, no en el once) por media (la lista vive en `Banca`).
 static func disponibles_fuera_del_once(c: Club, once_c: Array) -> Array:
-	var fuera: Array = []
-	for j in c.plantilla:
-		if once_c.has(j):
-			continue
-		if j.lesion > 0 or j.suspension > 0:
-			continue
-		fuera.append(j)
-	fuera.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
-	return fuera
+	return Banca.disponibles_fuera_del_once(c, once_c)
 
 static func poner_dt(_raiz3d: Node3D, c: Club, es_local: bool, cuantos: int, perfil: Dictionary = {}) -> void:
 	var asp: Dictionary = PersonajeDT.del_usuario if c.id == PersonajeDT.club_usuario else PersonajeDT.de_rival(c.id)

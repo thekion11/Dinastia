@@ -193,3 +193,18 @@ func _probar_cara_bytes() -> void:
 		return
 	var d := CaraMalla._datos(clave)
 	_comprobar(d.size() >= 2 and (d[0] as PackedVector3Array).size() == CaraMalla._n, "la cara «%s» sale de la caché en bytes con %d vértices" % [clave, CaraMalla._n])
+
+## (7-11) `Banca` (script mínimo, lo usa el menú) da la misma lista que `VistaEstadio.disponibles_fuera_del_once`: sin lesionados ni sancionados, por media de mayor a menor.
+func _probar_banca_ligera() -> void:
+	_titulo("BANCA: SCRIPT MÍNIMO")
+	var m := Mundo.new()
+	m.generar(["CHI"], 4711)
+	var c: Club = m.ligas[0].clubes[0]
+	c.plantilla[0].lesion = 3
+	var once: Array = c.once()
+	var a := Banca.disponibles_fuera_del_once(c, once)
+	var b := VistaEstadio.disponibles_fuera_del_once(c, once)
+	var orden := true
+	for i in range(1, a.size()):
+		orden = orden and (a[i - 1] as Jugador).ovr >= (a[i] as Jugador).ovr
+	_comprobar(a.size() > 5 and a == b and orden and not a.has(c.plantilla[0]) and not once.any(func(j): return a.has(j)), "la banca sale igual (%d jugadores), ordenada y sin lesionados ni titulares" % a.size())

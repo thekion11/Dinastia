@@ -56,7 +56,7 @@ static func _items(clubes: Array) -> Array:
 				continue
 			items.append({"clave": clave, "jid": String(jid), "jug": (once["jugadores"] as Dictionary)[jid], "kit": k})
 		## Y los suplentes que salen en la banca (hasta 12).
-		for j: Jugador in load("res://ui/estadio.gd").disponibles_fuera_del_once(c, c.once()).slice(0, 12):
+		for j: Jugador in Banca.disponibles_fuera_del_once(c, c.once()).slice(0, 12):
 			var clave_b := "%s|%s" % [j.id, c.id]
 			if not _hechos.has(clave_b):
 				items.append({"clave": clave_b, "jid": j.id, "jug": Puente3D.jugador(j), "kit": k})

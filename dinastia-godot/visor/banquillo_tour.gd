@@ -16,7 +16,7 @@ static func montar(estadio: Node3D, club: Club) -> Array:
 	ordenados.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
 	for j: Jugador in ordenados.slice(0, 11):
 		titulares.append(j)
-	var disponibles: Array = load("res://ui/estadio.gd").disponibles_fuera_del_once(club, titulares)
+	var disponibles: Array = Banca.disponibles_fuera_del_once(club, titulares)
 	if disponibles.is_empty():
 		return []
 	var sp := PlayerSpawner.new()

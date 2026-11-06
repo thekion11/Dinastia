@@ -24,7 +24,7 @@ func _ready() -> void:
 		mundo.generar(["CHI"], 4711)
 		mundo.mi_club_id = mundo.ligas[0].clubes[0].id
 		var par := mundo.proximo_partido()
-		_v = VistaEstadio.new()
+		_v = load("res://ui/estadio.gd").new()   ## (dinámico: nombrar la clase compilaría el estadio en TODOS los escenarios y falsearía la RAM del menú)
 		add_child(_v)
 		_v.abrir(par[0], 0.85, par[1], Partido.new(par[0], par[1]))
 	else:
@@ -54,4 +54,9 @@ func _process(_d: float) -> void:
 			" objetos=", int(Performance.get_monitor(Performance.OBJECT_COUNT)),
 			" recursos=", int(Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT)),
 			" nodos=", int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)))
+		var cargados: Array = []
+		for r in ["res://ui/estadio.gd", "res://visor/stadium_builder.gd", "res://visor/motor_jugable.gd", "res://visor/player_spawner.gd", "res://visor/city_builder.gd", "res://ui/partido_jugable.gd", "res://visor/personaje_dt.gd"]:
+			if ResourceLoader.has_cached(r):
+				cargados.append(r.get_file())
+		print("RAM_CARGADOS ", cargados)
 		get_tree().quit()
