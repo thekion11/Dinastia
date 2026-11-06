@@ -177,3 +177,19 @@ func _probar_pasto_distancia() -> void:
 	var c := PastoCiudad.distancia()
 	Calidad.elegida = antes
 	_comprobar(is_equal_approx(a, 28.0) and is_equal_approx(b, 28.0) and is_equal_approx(c, 42.0), "distancia del pasto: ULTRA BAJA 28, BAJA 28, MEDIA BAJA 42 (%.0f, %.0f, %.0f)" % [a, b, c])
+
+## (7-11) Caras reales: la caché guarda los bytes ya decodificados (no el texto base64) y `_datos` los lee igual.
+func _probar_cara_bytes() -> void:
+	_titulo("CARAS REALES: CACHÉ EN BYTES")
+	CaraMalla._cargar()
+	var clave := ""
+	for k: String in CaraMalla._mallas:
+		var e: Variant = CaraMalla._mallas[k]
+		if e is Dictionary and (e as Dictionary).get("m") is PackedByteArray:
+			clave = k
+			break
+	if clave == "":
+		_comprobar(true, "sin caras reales en este contenedor (nada que comprobar)")
+		return
+	var d := CaraMalla._datos(clave)
+	_comprobar(d.size() >= 2 and (d[0] as PackedVector3Array).size() == CaraMalla._n, "la cara «%s» sale de la caché en bytes con %d vértices" % [clave, CaraMalla._n])
