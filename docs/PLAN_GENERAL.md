@@ -122,13 +122,15 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 ## FALLOS DETECTADOS
 - **Pruebas por sistema (5-11, rama `sonar/bancos`; detalle en `04_auditorias/cobertura_pruebas_2026-11-05.md`):**
   - Reparto de `especiales` por tiempo medido (5-11): con los registros del CI (76 min de pruebas en total) `herramientas/repartir_especiales.py` deja las 6 partes en 12,7–12,8 min (antes 8,5–18,3). Con 6 partes no baja de ahí; para pasar de ~12 min a ~11 hace falta una 7.ª parte en el workflow (`ESPECIALES_PARTE` hasta `i/7`; regenerar con `--partes 7`): lo decide la sesión de plataformas. Regenerar el reparto tras añadir muchas pruebas.
+  - Caza de frágiles (6-11): `cazar_fragiles.py` examinó 23 de ~340 especiales (0 frágiles). Seguir por partes (`--parte i/6 -n 5`, con carga y `--sucia`); para pruebas intermitentes basta mucha repetición. `auditoria_vida_global_limite` falló en 2 CI sin reproducirse: ya imprime el estado y la semilla si vuelve a fallar.
+  - Orden aleatorio en el CI nocturno: `ESPECIALES_ORDEN=aleatorio` existe en `especiales.sh`; falta pedirle a plataformas un job nocturno que lo use.
+  - Cobertura: sin cobertura de líneas de GDScript; hay la de funciones (83 %). Subir `entrenamiento`, `club_dentro`, `cantera_p2`.
   - `Actualizador.sistema()` da «escritorio» también en Web y macOS: confirmar que el parche sirve ahí (sesión de plataformas).
   - Escenas de prueba que nadie lanzaba (5-11, 100 con aserciones): 87 pasan y YA se lanzan (`especiales.sh`, bloque `reutilizadas2`, banco `reutilizadas_2`). Las 13 restantes son HALLAZGOS con su evidencia (headless, 120 s):
-    · `ideas/fnt_recursos`: nacionalidades de jugador sin bandera (SLE, AZE, LUX, COM, PLE, RWA, CGO, BOT, NAM, KEN, UGA, MWI, VAN, LBR, IDN…).
+    · (HECHO el 6-11: banderas de las 18 nacionalidades; `fnt_recursos` ya se lanza.)
     · `ideas/optA_persona`: «rodillas rectas (cadera a su altura)» falla en male y female. · `ideas/pers_ropa`: no hay mochilas en la muestra (0).
     · `ideas/pgra_grada`: un canto por peldaño de pasillo (1014 / 936). · `ideas/s5_auditoria_partidos`: 5,8 % de frases repetidas en el mismo partido (tope 3 %).
-    · `ideas/trad_textos`: «el nombre se traga la oración siguiente». · `ideas/uiid_textos`: estadio con 1 texto en castellano colado (641 textos).
-    · `ideas/tut_capas`: SCRIPT ERROR «Nonexistent 'bool' constructor» y acceso a `name` sobre Nil.
+    · `ideas/trad_textos`: «el nombre se traga la oración siguiente». · `ideas/uiid_textos`: en inglés la tarjeta de tipo de estadio sale «🏜️ del desierto  ·  56.2M EUR Stadium» (un patrón general mueve «Estadio» al final de la frase compuesta con el precio); hay que componer el rótulo en código (traducir el nombre y poner el precio aparte). Se añadió la traducción exacta de «🏜️ Estadio del desierto».
     · `ideas/pre_anim` (1528 ms) y `ideas/s3_coste_cruce` (4,19 ms por fotograma): AFIRMAN SOBRE TIEMPO en headless, contra la regla del proyecto; cambiar a recuentos o mover a la medición con pantalla.
     · Sin terminar en 120 s (lentas o colgadas): `captura_informe_rival`, `ideas/s3_auditoria_interfaz`, `ideas/s5_ocasiones`; `ideas/sen_conexiones` terminó una vez y otra no (inestable).
   - Ejecutar `pruebas/so` de verdad en Windows, Android y Web (flujo `plataformas.yml`, otra sesión): `pruebas_so.py --lista --sistema web|android` dice qué toca; `--marcadores < log.txt` (por la entrada estándar) revisa el resultado.
