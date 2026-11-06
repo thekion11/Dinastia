@@ -217,6 +217,11 @@ func _ruta(clave: String, planta: int, zona: String) -> Array:
 
 var _acum := 0.0   ## tiempo acumulado mientras se salta fotogramas (cámara lejos)
 
+## (7-11, idea del dueño) En ULTRA BAJA y BAJA el personal se queda QUIETO en su puesto (solo sus gestos) y no pasea por el pasillo: menos movimiento, menos
+## choques con el jugador y menos animación. La conversación ya se abre en un panel 2D (`RecorridoClub.dialogo()`).
+static func en_puesto() -> bool:
+	return Calidad.elegida <= Calidad.BAJA
+
 func _process(delta_real: float) -> void:
 	## 2-11-2026 (120 FPS): con la cámara a más de 260 m del personal (fuera de la vista) solo se actualiza 1 de cada 10 fotogramas, con el tiempo acumulado
 	## (0,97 ms por fotograma en la ciudad a pie).
@@ -227,6 +232,7 @@ func _process(delta_real: float) -> void:
 		_acum = delta
 		return
 	var de_turno := hora < 0.0 or (hora >= 8.0 and hora < 21.0)
+	var en_puesto := PersonalEstadio.en_puesto()
 	for g: Dictionary in gente:
 		var n: Node3D = g["nodo"]
 		if not is_instance_valid(n):
@@ -239,6 +245,8 @@ func _process(delta_real: float) -> void:
 		if bool(g["quieto"]):
 			_anim(g, "parado")
 			continue
+		if en_puesto and int(g["i"]) == 0:
+			g["espera"] = maxf(float(g["espera"]), 10.0)   ## siempre «esperando» en su puesto: solo hace sus gestos, no pasea
 		if float(g["espera"]) > 0.0:
 			g["espera"] = float(g["espera"]) - delta
 			## EN SU PUESTO, TRABAJANDO (26-10-2026): de vez en cuando, un gesto

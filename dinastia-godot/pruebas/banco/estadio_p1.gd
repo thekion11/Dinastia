@@ -411,6 +411,22 @@ func _probar_personal_estadio() -> void:
 					break
 	_comprobar(mal.is_empty(), "las %d personas tienen puesto y rutina en su sitio %s" % [PersonalEstadio.PUESTOS.size(), str(mal)])
 	_comprobar(PersonalEstadio.PUESTOS.has("portero"), "hay portero en la entrada del club")
+	## (7-11) ULTRA BAJA y BAJA: el personal se queda en su puesto (90 s simulados y nadie se mueve); en ALTA sí pasea.
+	var nivel0 := Calidad.elegida
+	for nivel: int in [Calidad.ULTRA_BAJA, Calidad.ALTA]:
+		Calidad.elegida = nivel
+		var pq := PersonalEstadio.new()
+		pq.preparar(d, Color.RED, Color.WHITE)
+		add_child(pq)
+		for _t in 90:
+			pq._process(1.0)
+		var movidos := 0
+		for g: Dictionary in pq.gente:
+			if int(g["i"]) != 0:
+				movidos += 1
+		_comprobar((movidos == 0) == (nivel == Calidad.ULTRA_BAJA), "con el nivel %d el personal %s (%d de %d fuera de su puesto)" % [nivel, "se queda en su puesto" if nivel == Calidad.ULTRA_BAJA else "pasea", movidos, pq.gente.size()])
+		pq.free()
+	Calidad.elegida = nivel0
 	_comprobar(String(PersonalEstadio.PUESTOS["utilero"][1]) == "Utilería" and String(PersonalEstadio.PUESTOS["presidente"][1]) == "Despacho del presidente",
 		"el utilero en la utilería y el presidente en su despacho")
 	pe.free()
