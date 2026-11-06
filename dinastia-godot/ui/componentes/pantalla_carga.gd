@@ -21,6 +21,7 @@ var _tarjeta: Control
 var _orden: Array = []
 var _k := 0
 var _cambia_en := 4.5
+var _ultimo_cambio := 0
 var _tono := Color(0.2, 0.45, 0.3)
 var _etapa: Label
 var _destino := 0.0   ## hasta dónde ha llegado la construcción (0-1), según las etapas que avisa `CityBuilder._marca`
@@ -41,6 +42,9 @@ static func paso(que: String) -> void:
 	var e: Array = ETAPAS[que]
 	_actual._destino = maxf(_actual._destino, float(e[0]))
 	_actual._etapa.text = Idiomas.t(String(e[1])) + "…"
+	## Cada etapa que acaba es un buen momento para otro consejo (si el anterior lleva más de 2,5 s a la vista).
+	if Time.get_ticks_msec() - _actual._ultimo_cambio > 2500:
+		_actual._siguiente_consejo()
 
 ## REHECHA (2-11-2026, queja del dueño: «una pantalla gris, debería notarse que es de carga»): fondo con
 ## el color del club y franjas en diagonal, escudo grande, un anillo con un balón que gira, una barra
@@ -207,13 +211,21 @@ func _process(delta: float) -> void:
 			var u := (sin(_t * 2.2) + 1.0) * 0.5
 			_barra.position.x = -_barra.size.x + u * (ancho + _barra.size.x)
 	_cambia_en -= delta
-	if _cambia_en <= 0.0 and _tarjeta != null:
-		_cambia_en = 4.5
-		_k += 1
-		var tw := create_tween()
-		tw.tween_property(_tarjeta, "modulate:a", 0.0, 0.2)
-		tw.tween_callback(_poner_consejo)
-		tw.tween_property(_tarjeta, "modulate:a", 1.0, 0.25)
+	if _cambia_en <= 0.0:
+		_siguiente_consejo()
+
+## Pasa al consejo siguiente. El texto cambia AL INSTANTE (antes lo hacía un tween a mitad de fundido: con la construcción
+## bloqueando el hilo, los fotogramas son escasos y el consejo parecía congelado); el fundido solo se suma si hay fotogramas.
+func _siguiente_consejo() -> void:
+	_cambia_en = 4.5
+	_ultimo_cambio = Time.get_ticks_msec()
+	_k += 1
+	if _tarjeta == null or _tarjeta_txt == null:
+		return
+	_poner_consejo()
+	_tarjeta.modulate.a = 0.35
+	var tw := create_tween()
+	tw.tween_property(_tarjeta, "modulate:a", 1.0, 0.3)
 
 ## Franjas diagonales suaves que se deslizan.
 class _Franjas extends Control:

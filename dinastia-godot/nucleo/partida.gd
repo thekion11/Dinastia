@@ -250,6 +250,7 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		t.fecha = int(fila.get("fecha", 0))
 		t.por_grupos = bool(fila.get("por_grupos", false))
 		t.campeon = m.clubes.get(String(fila.get("campeon", "")))
+		t.grupos_desde_dic(fila, m.clubes)
 		m.continentales[k] = t
 
 ## Reconstruye un Mundo desde el retrato. Lo usan la carga de disco y el
