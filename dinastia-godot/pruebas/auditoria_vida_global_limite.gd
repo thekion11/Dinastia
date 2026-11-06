@@ -41,6 +41,8 @@ func _marco(n: int) -> void:
 		await get_tree().process_frame
 
 func _todo() -> void:
+	## (5-11) El mundo de esta prueba lo genera `Principal` con semilla ALEATORIA: se imprime para poder repetir una ejecución que falle.
+	print("  SEMILLA del mundo: %d (hay club propio: %s)" % [int(_p.get("mundo").semilla) if _p.get("mundo") != null else -1, str(_p.get("mundo") != null and _p.get("mundo").mi_club() != null)])
 	_comprobar(get_tree().root.get_node_or_null("VidaGlobal") != null, "VidaGlobal está registrado como autoload")
 	_comprobar(not get_tree().quit_on_go_back, "«atrás» nunca cierra el juego por su cuenta")
 	## 1. Segundo plano: el árbol se pausa y el reloj de la ciudad/tráfico/temporizadores no corre.

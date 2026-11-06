@@ -22,6 +22,7 @@ if [[ -f herramientas/especiales_reparto.txt ]]; then
   done < herramientas/especiales_reparto.txt
 fi
 
+COLA=()
 BLOQUE=""
 pasa() {  # nombre, comando, patrón de éxito
   if [[ -n "$ESPECIALES_SOLO" ]] && [[ "$ESPECIALES_SOLO" != "$BLOQUE" ]]; then return; fi
@@ -32,6 +33,12 @@ pasa() {  # nombre, comando, patrón de éxito
     elif [[ $((CONT % PARTE_N)) -ne "$PARTE_I" ]]; then return; fi
   fi
   if [[ -n "$ESPECIALES_LISTAR" ]]; then echo "LISTA $1"; return; fi   # (5-11) sin ejecutar: solo qué pruebas tocan a esta parte
+  ## (5-11) ESPECIALES_ORDEN=aleatorio: no se ejecuta ya, se encola y al final se corren BARAJADAS (semilla impresa; ESPECIALES_SEMILLA=n la repite). Detecta pruebas que dependen del orden.
+  if [[ "$ESPECIALES_ORDEN" == "aleatorio" ]]; then COLA+=("$1"$'\x1f'"$2"$'\x1f'"$3"); return; fi
+  ejecutar "$1" "$2" "$3"
+}
+
+ejecutar() {  # nombre, comando, patrón de éxito
   local t0=$(date +%s)
   ## (4-11, A4) Cada prueba con SU carpeta user:// vacía, como en el CI: con el guardado de un jugador (idioma, ajustes, partidas)
   ## las pruebas que ponen un idioma antes de abrir el juego medían otra cosa (el guardado manda) y pasaban sin probar lo que decían.
@@ -488,6 +495,14 @@ fi
   pasa "so: vis_partido_compat" "python3 herramientas/pruebas_so.py vis_partido_compat" "^OK +vis_partido_compat "
   pasa "so: vis_menu_pantallas" "python3 herramientas/pruebas_so.py vis_menu_pantallas" "^OK +vis_menu_pantallas "
   pasa "so: ren_partido_presupuesto" "python3 herramientas/pruebas_so.py ren_partido_presupuesto" "^OK +ren_partido_presupuesto "
+fi
+if [[ "${#COLA[@]}" -gt 0 ]]; then
+  SEMILLA_ORDEN=${ESPECIALES_SEMILLA:-$RANDOM$RANDOM}
+  echo "ORDEN ALEATORIO: semilla $SEMILLA_ORDEN (repetir con ESPECIALES_ORDEN=aleatorio ESPECIALES_SEMILLA=$SEMILLA_ORDEN)"
+  while IFS= read -r IDX; do
+    IFS=$'\x1f' read -r EN EC EP <<< "${COLA[$IDX]}"
+    ejecutar "$EN" "$EC" "$EP"
+  done < <(seq 0 $((${#COLA[@]} - 1)) | shuf --random-source=<(yes "$SEMILLA_ORDEN"))
 fi
 rm -f "$LOG"
 [[ "$FALLOS" -eq 0 ]] && echo "ESPECIALES: todo en orden" || echo "ESPECIALES: $FALLOS con fallos"
