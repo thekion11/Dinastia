@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://pruebas/ideas/ent_arbol_dt.gd" id="1"]
+
+[node name="EntArbolDt" type="Node"]
+script = ExtResource("1")
