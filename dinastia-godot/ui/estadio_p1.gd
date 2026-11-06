@@ -404,6 +404,8 @@ func _sacar_los_22() -> void:
 	_poner_banca(once_local, once_visita)
 	_poner_personal()
 	_purgar_nodos_fantasma()
+	if GenteFuera.aplica(Calidad.elegida):
+		GenteFuera.ocultar(self, _en_campo)   ## ULTRA BAJA y BAJA: sin suplentes, cuerpo técnico ni camarógrafos (ver visor/gente_fuera.gd)
 
 func _rotar_camara() -> void:
 	if _rig != null:
