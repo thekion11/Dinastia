@@ -53,6 +53,43 @@ func _probar_fundir_r2() -> void:
 	_comprobar((r3.get_node("Fundido") as MeshInstance3D).mesh.get_surface_count() == 2, "R2: 3 materiales (2 iguales) → 2 superficies con `por_firma`")
 	r3.queue_free()
 
+## (7-11) `Optimizar.celdas_de` (por tramos del buffer) da lo MISMO que repartir instancia a instancia: mismas celdas, mismo orden y los mismos datos. El formato del buffer (origen en
+## 3, 7 y 11; color y datos detrás) se comprobó con renderizador real: en modo sin pantalla un MultiMesh no guarda datos, por eso aquí se arma el buffer a mano.
+func _probar_celdas_agrupado() -> void:
+	_titulo("TROCEAR AGRUPADOS POR TRAMOS DEL BUFFER: IGUAL QUE INSTANCIA A INSTANCIA")
+	for ordenado: bool in [false, true]:
+		var paso := 20
+		var n := 600
+		var buf := PackedFloat32Array()
+		buf.resize(n * paso)
+		var rg := RandomNumberGenerator.new()
+		rg.seed = 7
+		for i in n:
+			for q in paso:
+				buf[i * paso + q] = rg.randf()   # datos distintos en todas las posiciones
+			buf[i * paso + 3] = (float(i) / float(n) * 800.0 - 400.0) if ordenado else rg.randf_range(-400.0, 400.0)
+			buf[i * paso + 7] = rg.randf_range(0.0, 5.0)
+			buf[i * paso + 11] = rg.randf_range(-400.0, 400.0)
+		var gt := Transform3D(Basis.from_euler(Vector3(0, 0.7, 0)), Vector3(30.0, 0.0, -20.0))
+		var nuevo := Optimizar.celdas_de(gt, buf, paso, 100.0)
+		var ref := {}
+		for i in n:
+			var o := gt * Vector3(buf[i * paso + 3], buf[i * paso + 7], buf[i * paso + 11])
+			var kk := Vector2i(floori(o.x / 100.0), floori(o.z / 100.0))
+			if not ref.has(kk):
+				ref[kk] = []
+			(ref[kk] as Array).append(i)
+		var iguales := nuevo.size() == ref.size()
+		for kk: Vector2i in ref:
+			if not nuevo.has(kk):
+				iguales = false
+				continue
+			var esperado := PackedFloat32Array()
+			for i: int in ref[kk]:
+				esperado.append_array(buf.slice(i * paso, (i + 1) * paso))
+			iguales = iguales and (nuevo[kk] as Array)[1] == esperado and int((nuevo[kk] as Array)[0]) * paso == esperado.size()
+		_comprobar(iguales and ref.size() > 20, "partir un agrupado por tramos del buffer da lo mismo que instancia a instancia (%s, %d celdas)" % ["ordenado" if ordenado else "aleatorio", ref.size()])
+
 ## (7-11) El paseo a pie en ULTRA BAJA y BAJA: la niebla de profundidad y la animación que se pausa detrás de la cámara.
 func _probar_paseo_optimizado() -> void:
 	_titulo("PASEO A PIE OPTIMIZADO: NIEBLA Y ANIMACIÓN DETRÁS DE LA CÁMARA")
@@ -113,3 +150,17 @@ func _probar_rotulos_cercanos() -> void:
 		"el rótulo pequeño alcanza ~17 m, el grande 90 m y el que ya traía un tope menor se queda (%d tocados)" % n)
 	raiz.free()
 
+
+## (7-11) `Optimizar.a_buffer` da el mismo `buffer` que `inv * t` instancia a instancia: se reconstruye la transformación desde las filas de 12 floats.
+func _probar_a_buffer() -> void:
+	_titulo("AGRUPAR: BUFFER DE TRANSFORMACIONES")
+	var ts: Array = [Transform3D(Basis(Vector3(0.3, 1.1, -0.4), 0.9).scaled(Vector3(1.5, 0.8, 2.0)), Vector3(10.0, -2.0, 33.5)), Transform3D(Basis.IDENTITY, Vector3(-4.0, 0.5, 7.0))]
+	var inv := Transform3D(Basis(Vector3.UP, 0.5), Vector3(100.0, 3.0, -50.0)).affine_inverse()
+	var b := Optimizar.a_buffer(ts, inv)
+	var bien := b.size() == 24
+	for i in ts.size():
+		var esperado: Transform3D = inv * (ts[i] as Transform3D)
+		var o := i * 12
+		var r := Transform3D(Basis(Vector3(b[o], b[o + 4], b[o + 8]), Vector3(b[o + 1], b[o + 5], b[o + 9]), Vector3(b[o + 2], b[o + 6], b[o + 10])), Vector3(b[o + 3], b[o + 7], b[o + 11]))
+		bien = bien and r.is_equal_approx(esperado)
+	_comprobar(bien, "a_buffer reproduce `inv * t` de cada instancia (filas 3x4, origen en 3, 7 y 11)")
