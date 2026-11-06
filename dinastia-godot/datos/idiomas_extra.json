@@ -7530,7 +7530,17 @@
   "Ultra baja": "Ultra low",
   "Como Media, con la sombra del sol llegando más lejos": "Like Medium, with the sun's shadow reaching farther",
   "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Sun shadow on, with the 3D at a somewhat lower resolution than Medium",
-  "Sin sombra del sol y con el 3D a menor resolución": "No sun shadow and the 3D at a lower resolution"
+  "Sin sombra del sol y con el 3D a menor resolución": "No sun shadow and the 3D at a lower resolution",
+  "😬 %s no acierta a rematar con comodidad": "😬 %s can't get a comfortable shot away",
+  "🎯 %s la manda lejos del arco": "🎯 %s fires it well away from goal",
+  "🧱 Se le cierra el ángulo a %s y el tiro sale desviado": "🧱 The angle closes on %s and the shot drifts wide",
+  "😮 %s cabecea fuera con todo a favor": "😮 %s heads wide with everything in their favour",
+  "🌬️ Remate de %s que roza el travesaño por arriba": "🌬️ %s's effort skims just over the crossbar",
+  "🙄 %s duda un instante y pierde la ocasión": "🙄 %s hesitates for a moment and the chance is gone",
+  "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Great save by the keeper from %s's shot",
+  "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s tries from distance and the keeper clears it",
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Sharp reflexes from the goalkeeper to stop %s",
+  "🏜️ Estadio del desierto": "🏜️ Desert stadium"
  },
  "pt": {
   "Historia": "História",
@@ -15063,7 +15073,17 @@
   "Ultra baja": "Ultra baixa",
   "Como Media, con la sombra del sol llegando más lejos": "Como Média, com a sombra do sol alcançando mais longe",
   "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Sombra do sol ativa, com o 3D numa resolução um pouco menor que na Média",
-  "Sin sombra del sol y con el 3D a menor resolución": "Sem sombra do sol e com o 3D numa resolução menor"
+  "Sin sombra del sol y con el 3D a menor resolución": "Sem sombra do sol e com o 3D numa resolução menor",
+  "😬 %s no acierta a rematar con comodidad": "😬 %s não consegue rematar à vontade",
+  "🎯 %s la manda lejos del arco": "🎯 %s manda-a longe da baliza",
+  "🧱 Se le cierra el ángulo a %s y el tiro sale desviado": "🧱 Fecha-se o ângulo a %s e o remate sai desviado",
+  "😮 %s cabecea fuera con todo a favor": "😮 %s cabeceia ao lado com tudo a favor",
+  "🌬️ Remate de %s que roza el travesaño por arriba": "🌬️ Remate de %s passa a rasar o travessão",
+  "🙄 %s duda un instante y pierde la ocasión": "🙄 %s hesita um instante e perde a ocasião",
+  "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Grande intervenção do guarda-redes ao remate de %s",
+  "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s tenta de longe e o guarda-redes afasta",
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexos do guarda-redes para travar %s",
+  "🏜️ Estadio del desierto": "🏜️ Estádio do deserto"
  },
  "patrones": [
   [
@@ -28571,7 +28591,17 @@
   "Ultra baja": "Ultra basse",
   "Como Media, con la sombra del sol llegando más lejos": "Comme Moyenne, avec l'ombre du soleil portée plus loin",
   "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Ombre du soleil activée, avec la 3D à une résolution un peu plus basse qu'en Moyenne",
-  "Sin sombra del sol y con el 3D a menor resolución": "Sans ombre du soleil et avec la 3D à une résolution plus basse"
+  "Sin sombra del sol y con el 3D a menor resolución": "Sans ombre du soleil et avec la 3D à une résolution plus basse",
+  "😬 %s no acierta a rematar con comodidad": "😬 %s n'arrive pas à tirer tranquillement",
+  "🎯 %s la manda lejos del arco": "🎯 %s l'envoie loin du but",
+  "🧱 Se le cierra el ángulo a %s y el tiro sale desviado": "🧱 L'angle se ferme pour %s et le tir part à côté",
+  "😮 %s cabecea fuera con todo a favor": "😮 %s place sa tête à côté avec tout pour réussir",
+  "🌬️ Remate de %s que roza el travesaño por arriba": "🌬️ Le tir de %s frôle la barre transversale",
+  "🙄 %s duda un instante y pierde la ocasión": "🙄 %s hésite un instant et laisse passer l'occasion",
+  "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Superbe intervention du gardien devant le tir de %s",
+  "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s essaie de loin et le gardien dégage",
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Réflexes du gardien pour arrêter %s",
+  "🏜️ Estadio del desierto": "🏜️ Stade du désert"
  },
  "it": {
   "Historia": "Storia",
@@ -36104,7 +36134,17 @@
   "Ultra baja": "Ultra bassa",
   "Como Media, con la sombra del sol llegando más lejos": "Come Media, con l'ombra del sole che arriva più lontano",
   "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Ombra del sole attiva, con il 3D a una risoluzione un po' inferiore rispetto a Media",
-  "Sin sombra del sol y con el 3D a menor resolución": "Senza ombra del sole e con il 3D a una risoluzione inferiore"
+  "Sin sombra del sol y con el 3D a menor resolución": "Senza ombra del sole e con il 3D a una risoluzione inferiore",
+  "😬 %s no acierta a rematar con comodidad": "😬 %s non riesce a calciare con tranquillità",
+  "🎯 %s la manda lejos del arco": "🎯 %s la manda lontano dalla porta",
+  "🧱 Se le cierra el ángulo a %s y el tiro sale desviado": "🧱 Si chiude l'angolo a %s e il tiro esce di lato",
+  "😮 %s cabecea fuera con todo a favor": "😮 %s colpisce di testa fuori con tutto a favore",
+  "🌬️ Remate de %s que roza el travesaño por arriba": "🌬️ Il tiro di %s sfiora la traversa da sopra",
+  "🙄 %s duda un instante y pierde la ocasión": "🙄 %s esita un istante e perde l'occasione",
+  "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Grande intervento del portiere sul tiro di %s",
+  "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s ci prova da lontano e il portiere respinge",
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Riflessi del portiere per fermare %s",
+  "🏜️ Estadio del desierto": "🏜️ Stadio del deserto"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43637,7 +43677,17 @@
   "Ultra baja": "Ultra niedrig",
   "Como Media, con la sombra del sol llegando más lejos": "Wie Mittel, aber der Sonnenschatten reicht weiter",
   "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Sonnenschatten an, das 3D mit etwas niedrigerer Auflösung als bei Mittel",
-  "Sin sombra del sol y con el 3D a menor resolución": "Ohne Sonnenschatten und mit niedrigerer 3D-Auflösung"
+  "Sin sombra del sol y con el 3D a menor resolución": "Ohne Sonnenschatten und mit niedrigerer 3D-Auflösung",
+  "😬 %s no acierta a rematar con comodidad": "😬 %s kommt nicht in Ruhe zum Abschluss",
+  "🎯 %s la manda lejos del arco": "🎯 %s schießt weit am Tor vorbei",
+  "🧱 Se le cierra el ángulo a %s y el tiro sale desviado": "🧱 Der Winkel schließt sich für %s und der Schuss geht daneben",
+  "😮 %s cabecea fuera con todo a favor": "😮 %s köpft trotz bester Chance vorbei",
+  "🌬️ Remate de %s que roza el travesaño por arriba": "🌬️ Der Schuss von %s streift knapp über die Latte",
+  "🙄 %s duda un instante y pierde la ocasión": "🙄 %s zögert kurz und vergibt die Chance",
+  "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Starke Parade des Torwarts gegen den Schuss von %s",
+  "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s probiert es aus der Distanz und der Torwart klärt",
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexe des Torhüters, um %s zu stoppen",
+  "🏜️ Estadio del desierto": "🏜️ Wüstenstadion"
  },
  "ca": {
   "Historia": "Història",
@@ -51170,7 +51220,17 @@
   "Ultra baja": "Ultra baixa",
   "Como Media, con la sombra del sol llegando más lejos": "Com Mitjana, amb l'ombra del sol arribant més lluny",
   "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Ombra del sol activada, amb el 3D a una resolució una mica menor que en Mitjana",
-  "Sin sombra del sol y con el 3D a menor resolución": "Sense ombra del sol i amb el 3D a menor resolució"
+  "Sin sombra del sol y con el 3D a menor resolución": "Sense ombra del sol i amb el 3D a menor resolució",
+  "😬 %s no acierta a rematar con comodidad": "😬 %s no encerta a rematar amb comoditat",
+  "🎯 %s la manda lejos del arco": "🎯 %s la maneja lluny de la porteria",
+  "🧱 Se le cierra el ángulo a %s y el tiro sale desviado": "🧱 Se li tanca l'angle a %s i el tir surt desviat",
+  "😮 %s cabecea fuera con todo a favor": "😮 %s cabeceja fora amb tot a favor",
+  "🌬️ Remate de %s que roza el travesaño por arriba": "🌬️ Rematada de %s que ratlla el travesser per dalt",
+  "🙄 %s duda un instante y pierde la ocasión": "🙄 %s dubta un instant i perd l'ocasió",
+  "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Gran intervenció del porter davant el tir de %s",
+  "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s ho prova de lluny i el porter ho allunya",
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexos del porter per aturar %s",
+  "🏜️ Estadio del desierto": "🏜️ Estadi del desert"
  },
  "pl": {
   "Club": "Klub",
@@ -58703,7 +58763,17 @@
   "Ultra baja": "Ultra niska",
   "Como Media, con la sombra del sol llegando más lejos": "Jak Średnia, a cień słońca sięga dalej",
   "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Cień słońca włączony, a 3D w nieco niższej rozdzielczości niż w Średniej",
-  "Sin sombra del sol y con el 3D a menor resolución": "Bez cienia słońca i z niższą rozdzielczością 3D"
+  "Sin sombra del sol y con el 3D a menor resolución": "Bez cienia słońca i z niższą rozdzielczością 3D",
+  "😬 %s no acierta a rematar con comodidad": "😬 %s nie potrafi spokojnie oddać strzału",
+  "🎯 %s la manda lejos del arco": "🎯 %s posyła piłkę daleko od bramki",
+  "🧱 Se le cierra el ángulo a %s y el tiro sale desviado": "🧱 Kąt zamyka się przed %s i strzał leci obok",
+  "😮 %s cabecea fuera con todo a favor": "😮 %s główkuje obok mimo świetnej okazji",
+  "🌬️ Remate de %s que roza el travesaño por arriba": "🌬️ Strzał %s muska poprzeczkę z góry",
+  "🙄 %s duda un instante y pierde la ocasión": "🙄 %s waha się chwilę i marnuje okazję",
+  "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Świetna interwencja bramkarza po strzale %s",
+  "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s próbuje z dystansu, a bramkarz wybija piłkę",
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Refleks bramkarza zatrzymuje %s",
+  "🏜️ Estadio del desierto": "🏜️ Stadion pustynny"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66236,6 +66306,16 @@
   "Ultra baja": "Ultra düşük",
   "Como Media, con la sombra del sol llegando más lejos": "Orta gibi, ama güneş gölgesi daha uzağa ulaşır",
   "Sombra del sol sí, con el 3D a una resolución algo menor que en Media": "Güneş gölgesi açık, 3D Orta'dan biraz daha düşük çözünürlükte",
-  "Sin sombra del sol y con el 3D a menor resolución": "Güneş gölgesi yok ve 3D daha düşük çözünürlükte"
+  "Sin sombra del sol y con el 3D a menor resolución": "Güneş gölgesi yok ve 3D daha düşük çözünürlükte",
+  "😬 %s no acierta a rematar con comodidad": "😬 %s rahat bir şut çekemiyor",
+  "🎯 %s la manda lejos del arco": "🎯 %s topu kaleden çok uzağa gönderiyor",
+  "🧱 Se le cierra el ángulo a %s y el tiro sale desviado": "🧱 %s için açı kapanıyor ve şut yana gidiyor",
+  "😮 %s cabecea fuera con todo a favor": "😮 %s her şey lehine iken kafayı dışarı vuruyor",
+  "🌬️ Remate de %s que roza el travesaño por arriba": "🌬️ %s'in şutu üst direğin hemen üstünden geçiyor",
+  "🙄 %s duda un instante y pierde la ocasión": "🙄 %s bir an tereddüt ediyor ve fırsatı kaçırıyor",
+  "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Kaleci %s'in şutuna karşı harika bir kurtarış yapıyor",
+  "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s uzaktan deniyor ve kaleci uzaklaştırıyor",
+  "🧤 Reflejos del guardameta para frenar a %s": "🧤 Kaleci %s'i durdurmak için müthiş bir refleks gösteriyor",
+  "🏜️ Estadio del desierto": "🏜️ Çöl stadyumu"
  }
 }
