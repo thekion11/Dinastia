@@ -400,12 +400,14 @@ func _mover_un_trozo(paso: Vector3, r: float) -> bool:
 	if vale.call(pos + paso):
 		cuerpo.position = Vector3(pos.x + paso.x, altura_suelo(pos.x + paso.x, pos.z + paso.z), pos.z + paso.z)
 		return true
-	if vale.call(pos + Vector3(paso.x, 0, 0)):
+	## (6-11, «mi personaje no camina de verdad») El deslizamiento solo vale si hay avance real en ese eje: con `paso.x == 0` (de frente contra una pared)
+	## «deslizar por X» daba por bueno un paso de 0 m, la velocidad solo decaía un 8 % y los pies seguían caminando contra la pared.
+	if absf(paso.x) > 1e-4 and vale.call(pos + Vector3(paso.x, 0, 0)):
 		## Choque en diagonal: se desliza por la pared en vez de pararse en seco.
 		cuerpo.position = Vector3(pos.x + paso.x, altura_suelo(pos.x + paso.x, pos.z), pos.z)
 		vel *= 0.92
 		return true
-	if vale.call(pos + Vector3(0, 0, paso.z)):
+	if absf(paso.z) > 1e-4 and vale.call(pos + Vector3(0, 0, paso.z)):
 		cuerpo.position = Vector3(pos.x, altura_suelo(pos.x, pos.z + paso.z), pos.z + paso.z)
 		vel *= 0.92
 		return true
@@ -413,6 +415,18 @@ func _mover_un_trozo(paso: Vector3, r: float) -> bool:
 		_golpe_coche(absf(vel), not libre_fijo.call(pos + paso))
 	vel *= -0.25 if modo == "coche" else 0.0
 	return false
+
+## (6-11) A pie, si casi no se avanzó (pared, mueble, gente), los pies no caminan en el sitio: velocidad y animación a cero.
+func _pies_quietos_si_atascado(pos_antes: Vector3, paso_total: Vector3) -> void:
+	if modo == "coche" or paso_total.length() <= 1e-3:
+		return
+	if Vector2(cuerpo.position.x - pos_antes.x, cuerpo.position.z - pos_antes.z).length() >= paso_total.length() * 0.2:
+		return
+	vel = 0.0
+	if _es_dt:
+		_animar_dt(0.0)
+	elif _anim != null:
+		_anim.speed_scale = 0.0
 
 ## Cuántos círculos del cuerpo (en `q`, con el rumbo actual) pisan algo fijo.
 func _n_fijos(q: Vector3, r: float) -> int:

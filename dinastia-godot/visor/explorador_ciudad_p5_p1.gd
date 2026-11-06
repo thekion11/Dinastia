@@ -360,13 +360,14 @@ func _physics_process(delta: float) -> void:
 	var rm := _rumbo_mov if modo == "coche" else rumbo   ## mejora B: en coche, la trayectoria (derrape)
 	var adelante := Vector3(sin(rm), 0, cos(rm))
 	var r := RADIO_COCHE if modo == "coche" else RADIO_PIE
-	## En pasos de 30 cm como mucho (17-10, caza de bugs): con un tirón de
-	## fotogramas el coche avanzaba metros de golpe y se saltaba vallas finas.
+	## En pasos de 30 cm como mucho (17-10): con un tirón de fotogramas el coche se saltaba vallas finas.
 	var paso_total := adelante * vel * delta
 	var trozos := maxi(1, ceili(paso_total.length() / 0.3))
+	var pos_antes := cuerpo.position
 	for _k in trozos:
 		if not _mover_un_trozo(paso_total / float(trozos), r):
 			break
+	_pies_quietos_si_atascado(pos_antes, paso_total)
 	## Giro con inercia (26-10, §2.2e P2): el cuerpo persigue el rumbo en vez de saltar a él.
 	var giro_antes := cuerpo.rotation.y
 	cuerpo.rotation.y = lerp_angle(cuerpo.rotation.y, rumbo, 1.0 - exp(-9.0 * delta))
@@ -379,8 +380,7 @@ func _physics_process(delta: float) -> void:
 		cuerpo.rotation.x = MovimientoNatural.cabeceo(cuerpo.rotation.x, (vel - _vel_antes) / delta if vel >= 0.0 else 0.0, delta)
 		_vel_antes = vel
 	_colocar_camara(delta)
-	## Qué hay cerca (puertas, metro, vecinos, fachadas): ~370 µs por búsqueda;
-	## basta unas 8 veces por segundo o al dar medio metro (15-10-2026).
+	## Qué hay cerca (puertas, metro, vecinos, fachadas): ~370 µs por búsqueda; basta unas 8 veces por segundo o al dar medio metro.
 	_t_cerca -= delta
 	if _t_cerca <= 0.0 or cuerpo.position.distance_squared_to(_p_cerca) > 0.25:
 		_t_cerca = 0.12

@@ -332,6 +332,7 @@ pasa "so: est_propiedades_semillas" "godot --headless --path . res://pruebas/so/
 #     Las que fallaban o no terminaban están anotadas en PLAN_GENERAL.md («FALLOS DETECTADOS») con su evidencia; no se han quitado ni tocado.
 BLOQUE=reutilizadas2
 # lote 1
+pasa "r2: caminar_de_verdad" "godot --headless --path . res://pruebas/caminar_de_verdad.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: cant_estabilidad" "godot --headless --path . res://pruebas/ideas/cant_estabilidad.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: car_precalentar" "godot --headless --path . res://pruebas/ideas/car_precalentar.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: e1_butacas" "godot --headless --path . res://pruebas/ideas/e1_butacas.tscn" "(^|[^0-9])0 fallos"

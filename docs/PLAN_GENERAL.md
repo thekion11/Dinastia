@@ -79,7 +79,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - **Calidad por defecto = la más baja (hoy «MÍNIMO», que pasa a llamarse ULTRA BAJA en los 7 niveles) en TODOS los sistemas operativos** (Windows, Linux, macOS, Android, iOS, Web), no solo en Android. El código ya parte de MÍNIMO (`Calidad.elegida`), pero falta una prueba por plataforma (`OS.has_feature`) que lo fije y comprobar que ninguna ruta (archivo de ajustes ausente/viejo, restablecer, migración) lo sube. Sesión de rendimiento.
 - Eliminar avatares poco realistas (inventario con capturas, retirar de los selectores de forma reversible, informar).
 - Evaluar precargar en segundo plano el menú inicial (respetando la regla de memoria del menú).
-- Personajes que atraviesan objetos; el personaje del jugador «no camina de verdad»; mejorar la distancia real avatar–objetos (después de terminar lo demás; primero un detector automático).
+- Personajes que atraviesan objetos (detector de peatones/jugador/vehículos aparcados en `sonar/bancos4`; falta corregir la huella del estadio y bajar `TOPE` a 0). «No camina de verdad» HECHO (6-11, `pruebas/caminar_de_verdad.tscn`): arreglado que de frente contra una pared los pies siguieran caminando (1,46 m/s en el sitio). Distancia avatar–pared medida: 0,50 m (= radio del cuerpo); queda decidir si ese margen se quiere mayor.
 - Al terminar: buscar consejos de rendimiento de Godot (con fuentes) y aplicar los seguros. Ante dudas, consultar a otras sesiones/IA.
 
 ## IDEAS Y TAREAS DEL DUEÑO (3-11 noche, conversación casual) — se borran al completarse del todo
