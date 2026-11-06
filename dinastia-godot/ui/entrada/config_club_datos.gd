@@ -57,7 +57,7 @@ var asiento_nivel: String = "por_nivel"   ## cómo se reparte el color de las bu
 var vivienda: String = "depto"
 var fps: int = 60
 var contador_fps: bool = false
-var calidad: int = Calidad.MINIMO
+var calidad: int = Calidad.NIVEL_DEFECTO
 var adaptativa: bool = true
 var motor_ligero: bool = false
 var densidad: String = "media"
@@ -181,14 +181,14 @@ func _dic() -> Dictionary:
 			"mascota": mascota, "estilo_estadio": estilo_estadio, "asiento_nivel": asiento_nivel,
 		},
 		"vida": {"vivienda": vivienda},
-		"maquina": {"fps": fps, "contador_fps": contador_fps, "calidad": calidad, "adaptativa": adaptativa,
+		"maquina": {"fps": fps, "contador_fps": contador_fps, "calidad": calidad, "version_calidad": Calidad.VERSION, "adaptativa": adaptativa,
 			"motor_ligero": motor_ligero, "densidad": densidad},
 		## LAS CLAVES PLANAS que ya lee `OrquestadorMundo` (crear_club, aplicar_vida,
 		## aplicar_preferencias). «nombre_club» solo si se funda: con él, el orquestador
 		## entiende que hay que crear un club. «mascota» NO va plana: allí es el nombre
 		## de la mascota de la familia del DT, no el animal del club.
 		"color1": club.color1, "color2": club.color2, "estadio": club.estadio_nombre.strip_edges(),
-		"vivienda": vivienda, "fps": fps, "calidad": calidad,
+		"vivienda": vivienda, "fps": fps, "calidad": calidad, "version_calidad": Calidad.VERSION,
 	}
 
 ## Vuelve a cargar un diccionario de `a_dic()`. Lo que no cuadre con los
@@ -218,7 +218,7 @@ func desde_dic(d: Dictionary) -> void:
 	if int(m.get("fps", fps)) in FPS:
 		fps = int(m.get("fps", fps))
 	contador_fps = bool(m.get("contador_fps", contador_fps))
-	calidad = clampi(int(m.get("calidad", calidad)), Calidad.MINIMO, Calidad.ULTRA)
+	calidad = Calidad.desde_guardado(int(m.get("calidad", calidad)), int(m.get("version_calidad", 1)) if m.has("calidad") else Calidad.VERSION)
 	adaptativa = bool(m.get("adaptativa", adaptativa))
 	motor_ligero = bool(m.get("motor_ligero", motor_ligero))
 	if DENSIDADES.has(String(m.get("densidad", ""))):
@@ -383,7 +383,7 @@ static func aplicar_maquina(config: Dictionary, ruta_prefs: String = PREFS, arbo
 	if ruta_prefs != PREFS:
 		return
 	Engine.max_fps = f
-	Calidad.elegida = clampi(int(d.get("calidad", Calidad.MINIMO)), Calidad.MINIMO, Calidad.ULTRA)
+	Calidad.elegida = Calidad.desde_guardado(int(d.get("calidad", Calidad.NIVEL_DEFECTO)), int(d.get("version_calidad", 1)) if d.has("calidad") else Calidad.VERSION)
 	Calidad.adaptativa = bool(d.get("adaptativa", true))
 	Calidad.motor_ligero = bool(d.get("motor_ligero", false))
 	Calidad.guardar()

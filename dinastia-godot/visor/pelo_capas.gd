@@ -18,8 +18,8 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	anc.bone_name = "Head"
 	esq.add_child(anc)
 	var al_hueso := esq.get_bone_global_rest(hueso).affine_inverse()
-	if Calidad.elegida <= Calidad.MINIMO:
-		nivel = -1   ## (3-11, R2) MÍNIMO: pelo simple (pocas capas); MEDIO/ALTO/ULTRA no cambian
+	if Calidad.elegida < Calidad.MEDIO:
+		nivel = -1   ## (3-11, R2) ULTRA BAJA, BAJA y MEDIA BAJA: pelo simple (pocas capas); MEDIA y más no cambian
 	var reduce := 1.0 if nivel >= 1 else (0.6 if nivel == 0 else 0.3)
 	var capas_lejos := CAPAS_LEJOS if nivel >= 0 else 2
 	var normales := _normales(pos, tri)
