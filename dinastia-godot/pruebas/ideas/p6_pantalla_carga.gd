@@ -38,7 +38,7 @@ func _probar() -> void:
 	var k0: int = n2._k
 	n2._process(5.0)
 	_comprobar(n2._k == k0 + 1 and n2._tarjeta_txt.text != antes, "con un solo fotograma largo el consejo cambia al instante («%s»)" % n2._tarjeta_txt.text.left(30))
-	n2._ultimo_cambio = 0
+	n2._ultimo_cambio = -10000   ## hace mucho (no depende de cuánto lleva arrancado el proceso: en el CI arranca rápido)
 	var k1: int = n2._k
 	PantallaCarga.paso("_estadio")
 	_comprobar(n2._k == k1 + 1, "y cada etapa que acaba también pasa al consejo siguiente")

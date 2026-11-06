@@ -166,45 +166,7 @@ func _vista_previa() -> Control:
 			_dorsal_2d.position = Vector2(55, 48)
 			_dorsal_2d.size = Vector2(60, 50)
 			tr.add_child(_dorsal_2d)
-	## El jugador 3D, girando.
-	var cont3 := SubViewportContainer.new()
-	cont3.stretch = true
-	cont3.custom_minimum_size = Vector2(160, 300)
-	cont3.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	fila.add_child(cont3)
-	_vp = SubViewport.new()
-	_vp.size = Vector2i(200, 320)
-	_vp.transparent_bg = true
-	_vp.msaa_3d = Viewport.MSAA_2X
-	cont3.add_child(_vp)
-	var mundo3 := Node3D.new()
-	_vp.add_child(mundo3)
-	var cam := Camera3D.new()
-	cam.position = Vector3(0, 1.0, 3.1)
-	cam.fov = 40
-	mundo3.add_child(cam)
-	var luz := DirectionalLight3D.new()
-	luz.rotation_degrees = Vector3(-35, 25, 0)
-	luz.light_energy = 1.2
-	mundo3.add_child(luz)
-	var env := WorldEnvironment.new()
-	var e := Environment.new()
-	e.background_mode = Environment.BG_CLEAR_COLOR
-	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	e.ambient_light_color = Color(0.6, 0.62, 0.66)
-	e.ambient_light_energy = 0.9
-	env.environment = e
-	mundo3.add_child(env)
-	_pivote = Node3D.new()
-	mundo3.add_child(_pivote)
-	_jugador = FutbolistaQ.crear(1.80, "male")
-	if not _jugador.is_empty():
-		_pivote.add_child(_jugador["nodo"])
-		FutbolistaQ.terminar(_jugador, true)
-		var ap: AnimationPlayer = _jugador["anim"]
-		if ap.has_animation("parado"):
-			ap.play("parado")
-	var nota := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "Lo que ves aquí es lo que se ve en el partido: el 3D y el 2D usan la misma fórmula.")
+	var nota := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, "Lo que ves aquí es lo que se ve en el partido: la camiseta se pinta con la misma fórmula.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vb.add_child(nota)
 	return vb
@@ -261,20 +223,7 @@ func _montar() -> void:
 	_actualizar(true)
 	Animar.aparecer(marco)
 
-func _vestir_3d() -> void:
-	if _jugador.is_empty():
-		return
-	var cols := DisenosKit.colores(_kit)
-	## En el diseñador, siempre con la ropa aparte (se ve de cerca).
-	var antes := VestidorQ.ropa_aparte
-	VestidorQ.ropa_aparte = true
-	VestidorQ.vestir_equipacion(_jugador, cols[0], cols[1], "liso", Color("c68d68"), Color(0.15, 0.1, 0.07),
-		Color(0, 0, 0, 0), Color(0, 0, 0, 0), false, _kit, 10)
-	VestidorQ.ropa_aparte = antes
-
 func _process(delta: float) -> void:
-	if _pivote != null:
-		_pivote.rotation.y += delta * 0.8
 	## Miniaturas de la galería, unas pocas por frame: todas de golpe congelaban
 	## la pantalla un segundo.
 	## Con un PRESUPUESTO de 6 ms por fotograma (al menos una): en un móvil lento no se congela la pantalla, y en el PC salen igual de rápido.
@@ -295,10 +244,6 @@ func _process(delta: float) -> void:
 		_refresco_2d -= delta
 		if _refresco_2d <= 0.0:
 			_pintar_2d()
-	if _refresco_3d > 0.0:
-		_refresco_3d -= delta
-		if _refresco_3d <= 0.0:
-			_vestir_3d()
 
 ## Esc cierra sin guardar, como "Cancelar".
 func _unhandled_input(ev: InputEvent) -> void:
