@@ -31,3 +31,12 @@ Partido en ULTRA BAJA: 338 → 236 llamadas (la meta es < 130 de media entre ciu
 | A pie | **706** | 953 633 | 839 | 43 717 |
 | Aérea (mapa) | **2 765** | 1 288 227 | 2 949 | 43 652 |
 Construir la ciudad: 5,9 s. Es la pieza que impide la meta (< 130 de media): el partido ya está en 236, la ciudad a pie en 706 (promedio ≈ 471) y el mapa aéreo en 2 765. Palancas sin hacer (con evidencia en este documento y en `rendimiento_120fps.md`): MultiMesh de farolas, árboles y banderas, nivel de detalle por distancia de ciudadanos, distancia de dibujo y oclusión en el mapa aéreo, fusión de mallas estáticas por manzana. Ninguna se aplicó en esta pasada.
+
+### Lista priorizada de la ciudad en ULTRA BAJA (geometrías visibles en el árbol por grupo; `DETALLE=1 CALIDAD=minimo HW_RAM_MB=12000 … medir_ciudad.tscn`)
+Son piezas que existen y están visibles en el árbol (después el culling de cámara descarta parte): sirve para elegir dónde atacar, no para sumar llamadas. De mayor a menor:
+1. **Edificios sueltos** (`building-b` 139, `building-d` 107, `building-a` 68 mallas de 10 m de diagonal) y `@Node3D/MeshInstance3D` de 15–25 m (117 + 64 + 49): candidatos a fusionar por manzana o a `visibility_range` en lo lejano.
+2. **Estación Central** (161 mallas) y **Metro** (63 + 49 + 42 + 42): fusionar piezas por material (como `FundirPiezas.fundir_sueltas` en el estadio) y ocultar por distancia.
+3. **MultiMesh sueltos** (muchos grupos de 35–165 m de diagonal, 121 + 86 + 71 + 71 + 61 + 61 + 60 + 55 + 42 + 37…): son tramos ya partidos para el culling; en ULTRA BAJA, partir en menos trozos (como se hizo con la grada: 8 → 3) baja llamadas.
+4. **Rótulos 3D** (`Rotulos/Label3D`, 100): en ULTRA BAJA ocultarlos más allá de ~40 m (cada uno es una llamada) o dejarlos solo los cercanos (la prueba «carteles 3D perezosos» ya existe).
+5. **Maletines** (34) y otras piezas pequeñas: sin sombra ni LOD; ocultar por distancia.
+Ninguna se aplicó: no cabía medir antes/después y pasar el banco antes de las 11:25 UTC.
