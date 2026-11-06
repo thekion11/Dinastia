@@ -17,7 +17,8 @@ static var activo := true   ## las comprobaciones de «antes» (imágenes sin tr
 static func tramos_de(nivel: int) -> int:
 	if OS.get_environment("TRAMOS_GRADA") != "":
 		return maxi(1, int(OS.get_environment("TRAMOS_GRADA")))
-	return 8
+	## ULTRA BAJA y BAJA (6-11): 3 trozos en vez de 8 (medido en ULTRA BAJA: 338 → 325 llamadas, +28 k triángulos); se ve igual.
+	return 3 if nivel <= Calidad.BAJA else 8
 
 static func trocear(raiz: Node, tramos := -1) -> int:
 	if tramos < 0:
