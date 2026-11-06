@@ -120,6 +120,9 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - Líder: rendimiento móvil (barrido de resolución en la prueba de rendimiento; MÍNIMA hasta 60 FPS con los datos del teléfono del dueño)
   y pasar la rama a `main` (PR #120, el dueño dijo SÍ el 4-11) cuando el CI esté verde.
 
+## COBERTURA DE PLATAFORMAS (5-11) — se borra al completarse
+- `plataformas.yml` ejecuta el juego en Windows (nativo + mini banco) y en Web (menú en Chromium): ver `04_auditorias/cobertura_sistemas_2026-11-05.md`. Pendiente: banco/especiales completos en Windows (`/tmp` fijos, `xvfb-run`), humo de Android (necesita APK x86_64 o dispositivo), preset de macOS (no existe), renombrar el archivo de `material/escudos_especiales_originales/` con nombre larguísimo (no clona en Windows), entrada Web en `dinastia.gdextension` (ruido de consola).
+
 ## FALLOS DETECTADOS
 - **Pruebas por sistema (5-11, rama `sonar/bancos`; detalle en `04_auditorias/cobertura_pruebas_2026-11-05.md`):**
   - Reparto de `especiales` por tiempo medido (5-11): con los registros del CI (76 min de pruebas en total) `herramientas/repartir_especiales.py` deja las 6 partes en 12,7–12,8 min (antes 8,5–18,3). Con 6 partes no baja de ahí; para pasar de ~12 min a ~11 hace falta una 7.ª parte en el workflow (`ESPECIALES_PARTE` hasta `i/7`; regenerar con `--partes 7`): lo decide la sesión de plataformas. Regenerar el reparto tras añadir muchas pruebas.

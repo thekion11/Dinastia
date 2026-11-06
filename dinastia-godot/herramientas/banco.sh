@@ -35,7 +35,7 @@ comp_mal() {
   echo "Hay scripts que no compilan: el banco se corta."
   rm -f "$COMP_TXT"
 }
-LOG="${1:-/tmp/banco.txt}"
+LOG="${1:-${TMPDIR:-/tmp}/banco.txt}"
 SIN_AVANCE="${SIN_AVANCE:-240}"
 NUCLEOS=$(nproc 2>/dev/null || echo 1)
 N="${BANCO_PARTES:-$(( NUCLEOS < 6 ? NUCLEOS : 6 ))}"

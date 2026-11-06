@@ -20,7 +20,7 @@ if [[ -z "$1" ]]; then
   echo "  ideas, varios  (por archivo: todo lo de pruebas/banco/ideas*.gd o varios*.gd)"
   exit 0
 fi
-LOG="${2:-/tmp/mini_banco.txt}"
+LOG="${2:-${TMPDIR:-/tmp}/mini_banco.txt}"   # (TMPDIR: portable a Git Bash en Windows; en Linux sigue /tmp)
 if [[ "$1" == _probar_* ]]; then VAR=BANCO_SOLO; else VAR=BANCO_GRUPO; fi
 INICIO=$(date +%s)
 env $VAR="$1" timeout 900 godot --headless --path . res://pruebas/banco.tscn > "$LOG" 2>&1
