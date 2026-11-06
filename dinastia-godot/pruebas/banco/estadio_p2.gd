@@ -57,6 +57,40 @@ func _probar_fundir_r2() -> void:
 ## 3, 7 y 11; color y datos detrás) se comprobó con renderizador real: en modo sin pantalla un MultiMesh no guarda datos, por eso aquí se arma el buffer a mano.
 func _probar_celdas_agrupado() -> void:
 	_titulo("TROCEAR AGRUPADOS POR TRAMOS DEL BUFFER: IGUAL QUE INSTANCIA A INSTANCIA")
+	## (6-11) `FundirCiudad`: en ULTRA BAJA las mallas únicas por material y celda se funden en una; misma geometría (triángulos y caja), otras no se tocan.
+	var calidad0: int = Calidad.elegida
+	var mat_f := StandardMaterial3D.new()
+	var otro_f := StandardMaterial3D.new()
+	otro_f.albedo_color = Color(0.9, 0.2, 0.2)   ## (agrupar ya unifica materiales idénticos)
+	var raiz_f := Node3D.new()
+	var tris_f := 0
+	var caja_f := AABB()
+	for i in 4:
+		var esf := SphereMesh.new()
+		esf.radius = 0.5 + 0.1 * i
+		esf.radial_segments = 8
+		esf.rings = 4
+		var m_f := MeshInstance3D.new()
+		m_f.mesh = esf
+		m_f.material_override = mat_f if i < 3 else otro_f
+		raiz_f.add_child(m_f)
+		m_f.position = Vector3(2.0 * i, 0.5, 1.0)
+		if i < 3:
+			tris_f += esf.get_faces().size() / 3
+			caja_f = caja_f.merge(m_f.transform * esf.get_aabb()) if i > 0 else m_f.transform * esf.get_aabb()
+	add_child(raiz_f)
+	Calidad.elegida = Calidad.MINIMO
+	var inf_f := Optimizar.agrupar(raiz_f, false)
+	Calidad.elegida = calidad0
+	var fund_f: MeshInstance3D = null
+	var sueltas_f := 0
+	for h in raiz_f.get_children():
+		if String(h.name) == "Fundido":
+			fund_f = h
+		elif h is MeshInstance3D:
+			sueltas_f += 1
+	_comprobar(int(inf_f.get("fundidas", 0)) == 3 and fund_f != null and sueltas_f == 1 and fund_f.mesh.get_faces().size() / 3 == tris_f and fund_f.get_aabb().is_equal_approx(caja_f) and fund_f.mesh.surface_get_material(0) == mat_f, "FundirCiudad funde las 3 mallas con el mismo material (mismos triángulos y caja) y deja la de otro material")
+	raiz_f.queue_free()
 	for ordenado: bool in [false, true]:
 		var paso := 20
 		var n := 600

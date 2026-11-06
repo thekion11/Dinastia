@@ -406,13 +406,7 @@ static func agrupar(raiz: Node3D, con_proxies: bool = true) -> Dictionary:
 			var c: int = (grupos[k2]["lista"] as Array).size()
 			tam[mini(c, 10)] = int(tam.get(mini(c, 10), 0)) + c
 		Registro.depurar("AGRUPAR", "tamaños %s motivos %s" % [str(tam), str(_motivos)])
-		var sol := {}
-		for k2: String in grupos:
-			if (grupos[k2]["lista"] as Array).size() == 1:
-				var mi0: MeshInstance3D = grupos[k2]["mi"]
-				var c2 := mi0.mesh.get_class() + (" ovr" if mi0.material_override != null else "") + " " + mi0.mesh.resource_name.left(20)
-				sol[c2] = int(sol.get(c2, 0)) + 1
-		Registro.depurar("AGRUPAR", "solos %s" % str(sol))
+		FundirCiudad.informe_solos(grupos)
 	var piezas := 0
 	var hechos := 0
 	var vaciados := {}
@@ -444,6 +438,10 @@ static func agrupar(raiz: Node3D, con_proxies: bool = true) -> Dictionary:
 			vaciados[pa] = true
 		piezas += lista.size()
 		hechos += 1
+	var fundidas := {}
+	if Calidad.elegida <= Calidad.MINIMO:   ## (6-11) ULTRA BAJA: las piezas únicas por material y celda, en una malla
+		for pa in FundirCiudad.sueltos(raiz, grupos, inv, fundidas):
+			vaciados[pa] = true
 	PodaVacios.de(raiz, vaciados.keys())   ## A4-REND: quita los Node3D que agrupar dejó vacíos
 	_montar_proxies(raiz, proxies)
-	return {"multimesh": hechos, "piezas": piezas, "proxies": proxies.size()}
+	return {"multimesh": hechos, "piezas": piezas, "proxies": proxies.size(), "fundidas": int(fundidas.get("fundidas", 0))}
