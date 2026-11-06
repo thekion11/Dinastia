@@ -74,6 +74,9 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - **Estado (5-11)**: `main` pasó de 492 a 4 issues de Sonar y la puerta de calidad está en OK. **Pendiente del dueño**: aceptar en la web de SonarCloud los 4 `python:S2245` (azar no criptográfico) de `herramientas/biblioteca_caras.py` y `caras_variadas.py` (Issues → Accept). Detalle y cómo repetir: `docs/04_auditorias/sonar_2026-11-05.md`.
 - Las ideas nuevas siguen en pausa (orden 26); esto es calidad de lo que ya existe.
 
+## PLAN GIGANTE DE PULIDO (orden del dueño, 6-11): solo mejorar y pulir lo existente, ≈ 8 h por pista y 24/7
+Detalle en `docs/04_auditorias/PLAN_8H_PULIDO_2026-11-06.md` (pistas A rendimiento, B bancos, C plataformas, D líder). Sin contenido nuevo. Las sesiones sin trabajo se archivan. Se borra de aquí cuando se complete.
+
 ## TAREAS NUEVAS DEL DUEÑO (6-11) — se borran al completarse del todo
 - **META de rendimiento**: ULTRA BAJA con **menos de 130 llamadas de dibujo (draw calls) en promedio** (el dueño dijo 130 y luego «150»: se mantiene 130 como exigente; si confirma 150, solo cambia la cifra) (recorrido de `hw_modesto.sh`: ciudad + partido) sin gran impacto visual. Sesión de rendimiento; presupuesto en el banco extra.
 - **Calidad por defecto = la más baja (hoy «MÍNIMO», que pasa a llamarse ULTRA BAJA en los 7 niveles) en TODOS los sistemas operativos** (Windows, Linux, macOS, Android, iOS, Web), no solo en Android. El código ya parte de MÍNIMO (`Calidad.elegida`), pero falta una prueba por plataforma (`OS.has_feature`) que lo fije y comprobar que ninguna ruta (archivo de ajustes ausente/viejo, restablecer, migración) lo sube. Sesión de rendimiento.
@@ -141,7 +144,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   - Escenas de prueba que nadie lanzaba (5-11, 100 con aserciones): 87 pasan y YA se lanzan (`especiales.sh`, bloque `reutilizadas2`, banco `reutilizadas_2`). Las 13 restantes son HALLAZGOS con su evidencia (headless, 120 s):
     · `ideas/optA_persona`: la cadera del clip «persona/parado» queda 4 cm SOBRE el reposo (el test ahora lo admite hasta 6 cm; investigar por qué sube).
     · `ideas/pgra_grada`: un canto por peldaño de pasillo (1014 / 936).
-    · Sin terminar en 120 s (lentas o colgadas): `captura_informe_rival`, `ideas/s3_auditoria_interfaz`, `ideas/s5_ocasiones`; `ideas/sen_conexiones` terminó una vez y otra no (inestable).
+    · Sin revisar: `captura_informe_rival` (lenta) ; `ideas/sen_conexiones` terminó una vez y otra no (inestable). (`s3_auditoria_interfaz` y `s5_ocasiones` NO estaban colgadas: pasan en 2-4 min y ya se lanzan en el bloque lento de `especiales.sh todo`.)
   - Ejecutar `pruebas/so` de verdad en Windows, Android y Web (flujo `plataformas.yml`, otra sesión): `pruebas_so.py --lista --sistema web|android` dice qué toca; `--marcadores < log.txt` (por la entrada estándar) revisa el resultado.
   - Referencias visuales de `pruebas/so/referencias/` hechas con lavapipe/llvmpipe: regenerarlas en GPU real (`VISUAL=referencias`) y añadir las de móvil.
   - Funciones puras de `nucleo/` sin prueba directa (solo 4 pruebas `fun_*`): ampliar por áreas.
