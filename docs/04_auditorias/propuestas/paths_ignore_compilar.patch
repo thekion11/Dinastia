@@ -1,13 +1,15 @@
 --- a/.github/workflows/compilar.yml
-+++ b/.github/workflows/compilar.yml	2026-11-06 00:35:19.402714252 +0000
-@@ -18,6 +18,10 @@
++++ b/.github/workflows/compilar.yml	2026-11-06 00:35:44.753140575 +0000
+@@ -18,6 +18,12 @@
  on:
    push:
      branches: [ "**" ]
 +    ## Un push que SOLO toca documentación no lanza las ~25 tareas pesadas (propuesta 6-11; ver docs/04_auditorias/propuestas/paths_ignore_compilar.md).
++    ## La licencia de terceros SÍ cuenta: la lee la prueba f0m_nucleo.
 +    paths-ignore:
 +      - "docs/**"
 +      - "**/*.md"
++      - "!docs/05_referencia/LICENCIAS.md"
    workflow_dispatch:
      inputs:
        objetivo:
