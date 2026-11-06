@@ -16,6 +16,13 @@ func _probar() -> void:
 	sin_azar.erase("azar")
 	var viejo := Partida.desde_instantanea(sin_azar)
 	_comprobar(viejo is Mundo and viejo.mi_club() != null, "un guardado sin «azar» (como los viejos) sigue cargando y da un Mundo")
+	## Un guardado de antes de guardar los grupos del continental (sin «grupos», «marcador» ni «de_grupos») sigue abriendo.
+	var sin_grupos := base.duplicate(true)
+	for k: String in sin_grupos.get("continentales", {}):
+		for campo in ["grupos", "marcador", "de_grupos"]:
+			(sin_grupos["continentales"][k] as Dictionary).erase(campo)
+	var m_sg := Partida.desde_instantanea(sin_grupos)
+	_comprobar(m_sg is Mundo and m_sg.mi_club() != null, "un guardado sin los grupos del continental (anterior al 5-11) sigue cargando")
 	var sana := Partida.desde_instantanea(base)
 	_comprobar(sana != null and sana.mi_club() != null, "la sana se reconstruye")
 	## …y el guardado viejo REAL del repositorio (sin «azar») también.

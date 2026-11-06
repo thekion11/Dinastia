@@ -11,12 +11,27 @@ LOG=$(mktemp)
 PARTE_I=""; PARTE_N=1
 if [[ -n "$ESPECIALES_PARTE" ]]; then PARTE_I=${ESPECIALES_PARTE%/*}; PARTE_N=${ESPECIALES_PARTE#*/}; fi
 CONT=0
+# REPARTO POR TIEMPO MEDIDO (5-11-2026): `especiales_reparto.txt` (lo genera herramientas/repartir_especiales.py con los registros del CI) dice en qué parte cae cada
+# prueba para que todas tarden lo mismo. Vale solo si su «N» coincide con el de ESPECIALES_PARTE; una prueba que no esté en el archivo (nueva) sigue el reparto por turnos.
+declare -A REPARTO=()
+REPARTO_N=0
+if [[ -f herramientas/especiales_reparto.txt ]]; then
+  while IFS=$'\t' read -r RP RS RNOMBRE; do
+    if [[ "$RP" == "#"* ]]; then [[ "$RP" =~ N=([0-9]+) ]] && REPARTO_N=${BASH_REMATCH[1]}; continue; fi
+    REPARTO["$RNOMBRE"]=$RP
+  done < herramientas/especiales_reparto.txt
+fi
 
 BLOQUE=""
 pasa() {  # nombre, comando, patrón de éxito
   if [[ -n "$ESPECIALES_SOLO" ]] && [[ "$ESPECIALES_SOLO" != "$BLOQUE" ]]; then return; fi
   CONT=$((CONT + 1))
-  if [[ -n "$PARTE_I" ]] && [[ $((CONT % PARTE_N)) -ne "$PARTE_I" ]]; then return; fi
+  if [[ -n "$PARTE_I" ]]; then
+    if [[ "$PARTE_N" -eq "$REPARTO_N" ]] && [[ -n "${REPARTO[$1]+x}" ]]; then
+      [[ "${REPARTO[$1]}" -ne "$PARTE_I" ]] && return
+    elif [[ $((CONT % PARTE_N)) -ne "$PARTE_I" ]]; then return; fi
+  fi
+  if [[ -n "$ESPECIALES_LISTAR" ]]; then echo "LISTA $1"; return; fi   # (5-11) sin ejecutar: solo qué pruebas tocan a esta parte
   local t0=$(date +%s)
   ## (4-11, A4) Cada prueba con SU carpeta user:// vacía, como en el CI: con el guardado de un jugador (idioma, ajustes, partidas)
   ## las pruebas que ponen un idioma antes de abrir el juego medían otra cosa (el guardado manda) y pasaban sin probar lo que decían.

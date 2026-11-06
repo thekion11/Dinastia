@@ -16,13 +16,13 @@ Complementa `inventario_pruebas_2026-11-05.md`. Sistemas: **L**inux · **W**indo
 ## Fallos reales que destapó
 
 1. **`Partida.desde_instantanea` reventaba con un guardado sin claves imprescindibles** (`semilla`, `anio`, `semana`, `clubes`, `ligas`, `mi_club`; «azar» es opcional: los guardados viejos no lo traen) o con `clubes`/`ligas`/`mi_club` de otro tipo: errores de intérprete y mundo a medias. **Arreglado** (rechaza con `push_error` y devuelve null, como una versión futura).
-2. **Cargar y seguir ≠ seguir sin cargar a partir de la 3.ª semana** (`int_flujo_menu_a_guardado`): el azar y la liga coinciden 2 semanas; después algún estado por jugador (forma, partidos jugados) deja de coincidir. Las 2 primeras semanas se vigilan; el resto se informa (`INFO`). **Pendiente** (`PLAN_GENERAL.md`).
+2. **Cargar y seguir ≠ seguir sin cargar** (`int_flujo_menu_a_guardado`) — **ARREGLADO el 5-11**: el guardado no incluía la FASE DE GRUPOS de los torneos continentales (`Continental.grupos`, `marcador`, `_de_grupos`): una partida cargada a mitad de temporada perdía los grupos y la tabla, y el azar de esas fechas no se gastaba, así que el futuro cambiaba desde la 2.ª semana. Hallado con una traza del estado del azar por paso de la semana (primer paso distinto: `_semana_continental`). Ahora se guardan como claves opcionales (los guardados viejos abren como antes) y las 4 semanas coinciden.
 3. `Actualizador.sistema()` devuelve «escritorio» también en Web/macOS: confirmar que el parche de escritorio sirve ahí. **Pendiente de confirmar** (sesión de plataformas).
 4. `probar_nativo` exige la extensión en todos los sistemas; donde no hay binario (Web, macOS, Android sin compilar) fallaría. `int_nativo_por_sistema` ya usa la expectativa propia.
 
 ## Mutaciones: cada prueba falla de verdad (5-11, `herramientas/mutaciones_so.py`)
 
-Se rompe a propósito lo que cada prueba vigila, se corre y se deshace. Resultado: **33 de 34 detectadas**; 1 sin mutar (`ren_partido_presupuesto`, 3 min por mutación). Tres pruebas SOBREVIVÍAN a su primera mutación y se reforzaron hasta detectarla. Para repetirlo: `python3 herramientas/mutaciones_so.py [--lentas]`.
+Se rompe a propósito lo que cada prueba vigila, se corre y se deshace. Resultado: **todas detectadas** (las 34 + `est_propiedades_semillas`). Tres pruebas SOBREVIVÍAN a su primera mutación y se reforzaron hasta detectarla. Para repetirlo: `python3 herramientas/mutaciones_so.py [--lentas]`.
 
 | prueba | mutación (lo que se rompe) | resultado |
 |---|---|---|
@@ -44,7 +44,7 @@ Se rompe a propósito lo que cada prueba vigila, se corre y se deshace. Resultad
 | `est_partido_simulado_reglas` | el visitante marca 20 goles de más | DETECTADA |
 | `int_nativo_por_sistema` | la extensión C++ no carga aunque debería | DETECTADA |
 | `int_paquetes_y_parches` | Parches busca otro prefijo que el actualizador | DETECTADA |
-| `int_flujo_menu_a_guardado` | cargar no restaura el estado del azar | DETECTADA (tras reforzarla: sobrevivía) |
+| `int_flujo_menu_a_guardado` | cargar no restaura los grupos del continental (la causa real de la divergencia) | DETECTADA |
 | `fun_azar_puro` | ent(a,b) se pasa del rango | DETECTADA |
 | `fun_calendario_fechas` | la Pascua se calcula con un día de error | DETECTADA |
 | `fun_formato_y_demarcaciones` | los millones se escriben con K | DETECTADA |
@@ -55,7 +55,7 @@ Se rompe a propósito lo que cada prueba vigila, se corre y se deshace. Resultad
 | `vis_menu_pantallas` | la referencia de una pantalla es otra | DETECTADA (tras afinar la tolerancia: sobrevivía) |
 | `vis_pantallas_sin_vacios` | cambiar de pestaña no hace nada | DETECTADA |
 | `vis_referencias_integras` | dos referencias son la misma imagen | DETECTADA |
-| `ren_partido_presupuesto` | (pendiente: el presupuesto se validó con valores medidos; una mutación cuesta ~3 min de pantalla) | no mutada (3 min por mutación; presupuesto validado con valores medidos) |
+| `ren_partido_presupuesto` | el partido dibuja una esfera de 2,9 M de triángulos de más | DETECTADA (mutación hecha el 5-11 en tanda aparte, ~3 min) |
 | `ren_menu_y_mundo_memoria` | cada mundo generado retiene 80 MB | DETECTADA |
 | `ren_peso_archivos` | un archivo de datos de 131 MB | DETECTADA |
 | `ren_sin_tiempo_en_headless` | una prueba afirma sobre los FPS sin pantalla | DETECTADA |
