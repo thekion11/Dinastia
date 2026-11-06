@@ -110,6 +110,8 @@ pasa "ruido de registros: arreglos (3-11)" "godot --headless --path . res://prue
 pasa "siglas y códigos cortos (3-11)" "godot --headless --path . res://pruebas/ideas/codigos_siglas.tscn" "FIN. 0 fallos"
 pasa "cifras del partido simulado contra el fútbol real (3-11)" "godot --headless --path . res://pruebas/ideas/cifras_partido.tscn" "FIN. 0 fallos"
 pasa "el menú no carga el estadio ni el partido 3D (3-11)" "godot --headless --path . res://pruebas/ideas/mem_menu_estadio.tscn" "FIN. 0 fallos"
+pasa "mundo por trozos = mismo mundo que de una vez (7-11)" "godot --headless --path . res://pruebas/ideas/mundo_trozos.tscn" "FIN. 0 fallos"
+pasa "la entrada genera el mundo por trozos con fundido (7-11)" "godot --headless --path . res://pruebas/ideas/orquestador_trozos.tscn" "FIN. 0 fallos"
 pasa "guardado: autoguardado en segundo plano y pregunta al salir (3-11)" "godot --headless --path . res://pruebas/ideas/gua_autoguardado_salir.tscn" "FIN. 0 fallos"
 pasa "atajos de teclado por menú y submenú (3-11)" "godot --headless --path . res://pruebas/ideas/ate_atajos_menus.tscn" "FIN. 0 fallos"
 pasa "ate_ayuda_en_menu" "godot --headless --path . res://pruebas/ideas/ate_ayuda_en_menu.tscn" "(^|[^0-9])0 fallos"

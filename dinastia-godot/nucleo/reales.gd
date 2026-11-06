@@ -63,6 +63,24 @@ static func aplicar(mundo: Mundo) -> int:
 		total += _aplicar_en_club(club, lista as Array, posd as Dictionary)
 	return total
 
+## `aplicar` repartido entre fotogramas (7-11, meta «< 200 ms por carga»): mismo resultado, cede un fotograma tras cada trozo de `ms_trozo` ms. Se usa con `await`.
+static func aplicar_por_trozos(mundo: Mundo, ms_trozo := 25.0) -> int:
+	var idx := _indice_de()
+	var posd: Variant = Datos.tabla("POSD")
+	if idx.is_empty() or not (posd is Dictionary):
+		return 0
+	var arbol := Engine.get_main_loop() as SceneTree
+	var t0 := Time.get_ticks_usec()
+	var total := 0
+	for club: Club in mundo.clubes.values():
+		var lista: Variant = idx.get(Nombres.limpiar(club.nombre))
+		if lista is Array and not (lista as Array).is_empty():
+			total += _aplicar_en_club(club, lista as Array, posd as Dictionary)
+		if arbol != null and float(Time.get_ticks_usec() - t0) / 1000.0 >= ms_trozo:
+			await arbol.process_frame
+			t0 = Time.get_ticks_usec()
+	return total
+
 static func _aplicar_en_club(club: Club, lista: Array, posd: Dictionary) -> int:
 	var aplicados := 0
 	## M-349 (3-11): la demarcación y el grupo de cada puesto se miran UNA vez por club (antes, un `Callable` por jugador y por real: ~25 × 3 llamadas).

@@ -185,6 +185,14 @@ static func generar_mundo() -> Mundo:
 	m.generar([], 0)
 	return m
 
+## Lo mismo, repartido entre fotogramas (7-11, meta «< 200 ms por carga»): la pantalla sigue viva mientras se crean los ~10.000 jugadores. Se usa con `await`.
+static func generar_mundo_por_trozos() -> Mundo:
+	Escudo.limpiar_cache()
+	Cara.limpiar_cache()
+	var m := Mundo.new()
+	await m.generar_por_trozos([], 0)
+	return m
+
 ## Aplica todo lo elegido y deja Principal listo. Devuelve {"escena", "mundo"}.
 static func preparar(estado: Dictionary) -> Dictionary:
 	var modo := modo_id(estado)
