@@ -127,3 +127,10 @@ static func limitar_vista(raiz: Node, hasta: float, grande := 90.0) -> int:
 		n += 1
 	return n
 
+## Lo último que hace la ciudad al optimizarse (7-11): las zonas de vista y, en ULTRA BAJA y BAJA de CUALQUIER sistema (no solo en móvil), el mismo tope
+## de 450 m para lo pequeño: ciudad a pie 688 → 411 llamadas de dibujo, mapa aéreo 2.761 → 1.321 (ULTRA BAJA, `medir_ciudad`). Va AL FINAL, tras `agrupar`:
+## si el tope existe antes, `agrupar` trata distinto las piezas (la grúa de la obra desaparecía). Móvil y motor ligero ya lo ponen antes.
+static func al_final(raiz: Node3D, prologo: bool) -> void:
+	ZonasVista.montar(raiz)
+	if not prologo and Calidad.elegida <= Calidad.BAJA and not (EscalaMovil.es_movil() or Calidad.motor_ligero or OS.get_environment("MOVIL_SIM") != ""):
+		limitar_vista(raiz, 450.0)
