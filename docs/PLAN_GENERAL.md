@@ -11,9 +11,9 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - **Peatones con una malla**: NO por ahora (no hace falta para la meta a pie). Pendiente de su decisión si se quiere margen extra.
 - **Mapa aéreo de «Ver mi ciudad»**: APROBADO QUITARLO COMO CASO DEL JUGADOR. Queda como RECURSO DE PROGRAMACIÓN (la clase `VistaCiudad` y sus pruebas se conservan). Ahorro de RAM ≈ 0 (medido: mismo mundo a pie y en aérea); el beneficio es quitar ~1.030 llamadas de la vista aérea. Riesgo alto: obras, reloj y clima, prólogo. Orden: 1) mover la construcción de obras a la gestión o a pie; 2) entrar a pie sin pasar por el mapa; 3) quitar la entrada del menú; 4) comprobar prólogo, reloj, clima y bancos con capturas. Hacerlo con cuidado y paso a paso.
 - **Cristales azulados de los edificios singulares**: lo MENOS importante; se hacen cuando no haya nada más urgente.
-- **Tiempo de carga «menos de 200 ms»**: sin definir todavía (¿arranque, cambio de pantalla o cada carga?). Hoy la ciudad tarda ~8-10 s en construirse en simulación.
-- **RAM: qué cifra cuenta**: pendiente de decisión del dueño (motor + texturas + vídeo, o proceso completo con renderizador por software). En el teléfono real manda la medida de la prueba de rendimiento.
-- **Medición en teléfono del dueño**: pendiente; sin ella los FPS y ms son solo estimación.
+- **Tiempo de carga «menos de 200 ms» = CADA carga** (decisión del dueño, 6-11 noche). Hoy la ciudad tarda ~8-10 s en construirse en simulación: meta muy lejana; hay que cargar por partes con la pantalla viva.
+- **RAM = la del MOTOR** (estática + texturas + vídeo; decisión del dueño, 6-11 noche). Menú ~436 MB, partido ~941 MB, ciudad ~1.420 MB en ULTRA BAJA: meta < 1,5 GB CUMPLIDA. La medida en el teléfono se hace después (prueba de rendimiento de Ajustes).
+- **Medición en teléfono del dueño**: PARA DESPUÉS (decisión del dueño, 6-11 noche). Hasta entonces, los FPS y ms son solo estimación.
 
 ## OBJETIVOS DEL DUEÑO DE RENDIMIENTO (6-11, orden 33) — META FINAL, TODO EL JUEGO
 - **Pico de RAM menor de 1,5 GB** (DDR3, equipo modesto; hoy el partido llega a 2,4-3,1 GB en MEDIO y ciudad 4,4-5 GB).
