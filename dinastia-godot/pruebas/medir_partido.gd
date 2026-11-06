@@ -62,13 +62,23 @@ func _process(_d: float) -> void:
 		FestejoGrada.lanzar(_vista.get("_raiz3d"), Color(0.8, 0.1, 0.1), Color(1, 1, 1), "salida", 600.0)
 	if _n < CALENTAR:
 		return
-	if _n == CALENTAR and OS.get_environment("DIAG_OCLU") != "":
+	if (_n == CALENTAR or _n == CALENTAR + 50) and OS.get_environment("DIAG_OCLU") != "":
 		## DIAG_OCLU=1 (6-11): ¿está montada la oclusión del entorno y qué ve? (cámara, recinto, altura)
 		var oc: Node = _vista.find_child("EntornoOclusion", true, false)
 		var cam := get_viewport().get_camera_3d()
 		if oc == null:
 			print("DIAG_OCLU: NO montada (estadio abierto o calidad > MEDIO)")
 		else:
+			var vis_n := 0
+			var vis_sa := 0
+			for c in oc.entorno.get_children():
+				var gi: Array = c.find_children("*", "GeometryInstance3D", true, false)
+				var propio := 1 if c is GeometryInstance3D else 0
+				if c is Node3D and (c as Node3D).visible:
+					vis_n += gi.size() + propio
+					if c.is_in_group("sin_agrupar"):
+						vis_sa += gi.size() + propio
+			print("DIAG_OCLU n=%d: hijos visibles del entorno: %d geometrías (%d del horizonte); hijos=%d, ocultables=%d" % [_n, vis_n, vis_sa, oc.entorno.get_child_count(), oc.ocultables.size()])
 			print("DIAG_OCLU: montada mx=%.1f mz=%.1f alto=%.1f cam=%s tapado=%s" % [oc.mx, oc.mz, oc.ALTO, str(cam.global_position), str(oc.tapado(cam.global_position))])
 	if _n == CALENTAR and OS.get_environment("OCULTAR_GRUPOS") != "":
 		## OCULTAR_GRUPOS=hinchas,butacas (4-11): apaga grupos enteros de `GRUPOS` y mide el resto (cuánto ganaría un nivel más ligero).
