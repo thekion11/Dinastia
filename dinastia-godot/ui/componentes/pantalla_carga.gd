@@ -21,7 +21,7 @@ var _tarjeta: Control
 var _orden: Array = []
 var _k := 0
 var _cambia_en := 4.5
-var _ultimo_cambio := 0
+var _ultimo_cambio := Time.get_ticks_msec()   ## cuándo se puso el consejo actual
 var _tono := Color(0.2, 0.45, 0.3)
 var _etapa: Label
 var _destino := 0.0   ## hasta dónde ha llegado la construcción (0-1), según las etapas que avisa `CityBuilder._marca`
