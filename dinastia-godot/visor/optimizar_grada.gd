@@ -120,7 +120,7 @@ static func limitar_vista(raiz: Node, hasta: float, grande := 90.0) -> int:
 			continue
 		if fuera.has(g) or (g.visibility_range_end > 0.0 and g.visibility_range_end <= hasta):
 			continue
-		if g.get_aabb().size.length() > grande:
+		if g.get_aabb().size.length() > grande and _pieza_mayor(g) > PIEZA_PEQUENA:
 			continue
 		g.visibility_range_end = hasta
 		g.visibility_range_end_margin = hasta * 0.1
@@ -134,3 +134,61 @@ static func al_final(raiz: Node3D, prologo: bool) -> void:
 	ZonasVista.montar(raiz)
 	if not prologo and Calidad.elegida <= Calidad.BAJA and not (EscalaMovil.es_movil() or Calidad.motor_ligero or OS.get_environment("MOVIL_SIM") != ""):
 		limitar_vista(raiz, 450.0)
+		rotulos_cercanos(raiz)   ## y los rótulos 3D con alcance según su tamaño (galería del club, vestuario…)
+
+## Un TROZO de agrupado (MultiMesh) con la caja grande pero solo piezas PEQUEÑAS dentro (ventanas, postes, troncos, hidrantes: menos de `PIEZA_PEQUENA` m) tampoco debe
+## verse a 450 m (7-11; en ULTRA BAJA, ciudad a pie 411 → 312 llamadas). Los bloques de edificios (20-30 m por pieza) se quedan: en el mapa aéreo se ven desde lejos.
+const PIEZA_PEQUENA := 14.0
+
+## La pieza más grande de dentro de un trozo de agrupado; 9999 si no se sabe o es un agrupado enorme (> 4000 instancias: no se arriesga a esconder edificios).
+static func _pieza_mayor(g: GeometryInstance3D) -> float:
+	var mmi := g as MultiMeshInstance3D
+	if mmi == null or mmi.multimesh == null or mmi.multimesh.mesh == null or mmi.multimesh.transform_format != MultiMesh.TRANSFORM_3D or mmi.multimesh.instance_count > 4000:
+		return 9999.0
+	var mm := mmi.multimesh
+	var base := mm.mesh.get_aabb().size
+	var mx := 0.0
+	for i in mm.instance_count:
+		mx = maxf(mx, (mm.get_instance_transform(i).basis * base).length())
+	return mx
+
+## Niebla de profundidad del paseo a pie en ULTRA BAJA y BAJA (7-11): con la cámara a 700 m de alcance (`explorador_ciudad_p4.gd`) la niebla va de 300 a 700 m y esconde el corte.
+## Solo mientras se pasea: el mapa aéreo comparte entorno y quedaría tapado, así que se guarda lo anterior en un meta del entorno y se devuelve al salir (`_exit_tree`).
+static func niebla_a_pie(nodo: Node3D, si: bool) -> void:
+	var w := nodo.get_world_3d()
+	var env: Environment = w.environment if w != null else null
+	if env == null:
+		return
+	if si and not env.has_meta("niebla_guardada"):
+		env.set_meta("niebla_guardada", [env.fog_enabled, env.fog_mode, env.fog_density, env.fog_depth_begin, env.fog_depth_end, env.fog_depth_curve])
+		env.fog_enabled = true
+		env.fog_mode = Environment.FOG_MODE_DEPTH
+		env.fog_depth_begin = 300.0
+		env.fog_depth_end = 700.0
+		env.fog_depth_curve = 1.0
+		env.fog_density = 1.0
+	elif not si and env.has_meta("niebla_guardada"):
+		var g: Array = env.get_meta("niebla_guardada")
+		env.fog_enabled = g[0]
+		env.fog_mode = g[1]
+		env.fog_density = g[2]
+		env.fog_depth_begin = g[3]
+		env.fog_depth_end = g[4]
+		env.fog_depth_curve = g[5]
+		env.remove_meta("niebla_guardada")
+
+## Rótulos 3D con alcance según su tamaño (7-11): cada `Label3D` es una llamada de dibujo y un texto no se lee a más de ~300 veces su altura (el nombre del personal, de 6 cm, a unos
+## 17 m; el letrero de la fachada, de metro y medio, a 90 m). Solo a los que no traen tope o lo traen mayor. En ULTRA BAJA y BAJA, al acabar de montarse el prólogo. Devuelve cuántos.
+static func rotulos_cercanos(raiz: Node) -> int:
+	var n := 0
+	if raiz == null:
+		return 0
+	for l: Node in raiz.find_children("*", "Label3D", true, false):
+		var g := l as Label3D
+		var r := clampf(float(g.font_size) * g.pixel_size * 300.0, 15.0, 90.0)
+		if g.visibility_range_end <= 0.0 or g.visibility_range_end > r:
+			g.visibility_range_end = r
+			g.visibility_range_end_margin = r * 0.15
+			n += 1
+	return n
+

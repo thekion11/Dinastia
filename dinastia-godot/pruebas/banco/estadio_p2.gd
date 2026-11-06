@@ -89,3 +89,64 @@ func _probar_celdas_agrupado() -> void:
 				esperado.append_array(buf.slice(i * paso, (i + 1) * paso))
 			iguales = iguales and (nuevo[kk] as Array)[1] == esperado and int((nuevo[kk] as Array)[0]) * paso == esperado.size()
 		_comprobar(iguales and ref.size() > 20, "partir un agrupado por tramos del buffer da lo mismo que instancia a instancia (%s, %d celdas)" % ["ordenado" if ordenado else "aleatorio", ref.size()])
+
+## (7-11) El paseo a pie en ULTRA BAJA y BAJA: la niebla de profundidad y la animación que se pausa detrás de la cámara.
+func _probar_paseo_optimizado() -> void:
+	_titulo("PASEO A PIE OPTIMIZADO: NIEBLA Y ANIMACIÓN DETRÁS DE LA CÁMARA")
+	## (7-11) En ULTRA BAJA la gente del club se dibuja solo a menos de 90 m (desde el mapa aéreo eran 163 piezas invisibles); en ALTA, sin tope.
+	var nivel0 := Calidad.elegida
+	var dd := TunelVestuario.datos({"forma": "cuenco"}, 2)
+	var con_tope: Array[int] = []
+	for nivel: int in [Calidad.ULTRA_BAJA, Calidad.ALTA]:
+		Calidad.elegida = nivel
+		var pe := PersonalEstadio.new()
+		pe.preparar(dd, Color.RED, Color.WHITE)
+		add_child(pe)
+		var n_tope := 0
+		for g: Node in pe.find_children("*", "GeometryInstance3D", true, false):
+			if is_equal_approx((g as GeometryInstance3D).visibility_range_end, 90.0):
+				n_tope += 1
+		con_tope.append(n_tope)
+		pe.free()
+	Calidad.elegida = nivel0
+	_comprobar(con_tope[0] > 20 and con_tope[1] == 0, "la gente del club tiene tope de 90 m en ULTRA BAJA (%d piezas) y no en ALTA (%d)" % [con_tope[0], con_tope[1]])
+	## (7-11) Niebla de profundidad del paseo a pie: se pone (300 a 700 m) y al salir deja el entorno como estaba.
+	var nn := Node3D.new()
+	add_child(nn)
+	var ent := Environment.new()
+	ent.fog_enabled = false
+	var mundo := nn.get_world_3d()
+	var ent0: Environment = mundo.environment
+	mundo.environment = ent
+	OptimizarGrada.niebla_a_pie(nn, true)
+	var puesta := ent.fog_enabled and ent.fog_mode == Environment.FOG_MODE_DEPTH and is_equal_approx(ent.fog_depth_end, 700.0)
+	OptimizarGrada.niebla_a_pie(nn, false)
+	_comprobar(puesta and not ent.fog_enabled and ent.fog_mode == Environment.FOG_MODE_EXPONENTIAL, "la niebla del paseo a pie se pone de 300 a 700 m y al salir el entorno queda como estaba")
+	mundo.environment = ent0
+	nn.free()
+	## (7-11) Un peatón detrás de la cámara (a más de 3 m) no anima; delante, o pegado, sí.
+	var mira_ := Vector3(0, 0, -1)
+	_comprobar(not TraficoCiudad.detras(Vector3.ZERO, mira_, Vector3(0, 0, -10)) and TraficoCiudad.detras(Vector3.ZERO, mira_, Vector3(0, 0, 10)) and not TraficoCiudad.detras(Vector3.ZERO, mira_, Vector3(0, 0, 2)),
+		"un peatón detrás de la cámara no anima; delante o pegado a ella, sí")
+
+## (7-11) Alcance de los rótulos 3D según su tamaño: el del personal (6 cm) a ~17 m, el letrero de la fachada (1,5 m) a 90 m, y no se toca el que ya trae un tope menor.
+func _probar_rotulos_cercanos() -> void:
+	_titulo("RÓTULOS 3D: ALCANCE SEGÚN EL TAMAÑO DEL TEXTO")
+	var raiz := Node3D.new()
+	var pequeno := Label3D.new()
+	pequeno.font_size = 26
+	pequeno.pixel_size = 0.0022
+	var grande := Label3D.new()
+	grande.font_size = 160
+	grande.pixel_size = 0.01
+	var corto := Label3D.new()
+	corto.font_size = 160
+	corto.pixel_size = 0.01
+	corto.visibility_range_end = 14.0
+	for l: Label3D in [pequeno, grande, corto]:
+		raiz.add_child(l)
+	var n := OptimizarGrada.rotulos_cercanos(raiz)
+	_comprobar(n == 2 and pequeno.visibility_range_end > 15.0 and pequeno.visibility_range_end < 20.0 and is_equal_approx(grande.visibility_range_end, 90.0) and is_equal_approx(corto.visibility_range_end, 14.0),
+		"el rótulo pequeño alcanza ~17 m, el grande 90 m y el que ya traía un tope menor se queda (%d tocados)" % n)
+	raiz.free()
+

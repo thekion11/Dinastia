@@ -70,6 +70,7 @@ func _process(_d: float) -> void:
 	if _n == 71:
 		_res["aerea"] = _media(_m)
 		if OS.get_environment("DETALLE") != "":
+			_detalle_a_pie("AEREA")   ## (7-11) lo dibujado de verdad desde la vista aérea
 			_detalle()
 			var por_dueno := {}
 			for g in _v.find_children("*", "MeshInstance3D", true, false):
@@ -254,12 +255,13 @@ func _medir_prim() -> int:
 
 ## Con DETALLE=1, a pie (31-10, M-476): qué se DIBUJA de verdad desde la cámara de la calle (en el campo de visión y dentro
 ## de su distancia de corte), sumado por los dos nodos de arriba; y por qué `Optimizar.agrupar` dejó piezas sueltas.
-func _detalle_a_pie() -> void:
+func _detalle_a_pie(pref := "A_PIE") -> void:
 	var cam := get_viewport().get_camera_3d()
 	if cam == null:
 		return
 	var grupos := {}
 	var ejemplos := {}
+	var nombres_a_pie := {}
 	for n in _v.find_children("*", "GeometryInstance3D", true, false):
 		var g := n as GeometryInstance3D
 		if not g.is_visible_in_tree():
@@ -277,6 +279,11 @@ func _detalle_a_pie() -> void:
 			clave = (a.get_class() if nom.begins_with("@") else nom.rstrip("0123456789_")) + "/" + clave
 			a = a.get_parent()
 		grupos[clave] = int(grupos.get(clave, 0)) + 1
+		## (7-11) Por QUÉ malla (o la del agrupado) y a qué distancia: para elegir qué agrupar o recortar.
+		var mm_ := g as MultiMeshInstance3D
+		var ml: Mesh = mm_.multimesh.mesh if mm_ != null and mm_.multimesh != null else (g.get("mesh") as Mesh)
+		var kn := "%s %s %s" % [g.get_class().replace("Instance3D", ""), ml.resource_name if ml != null and ml.resource_name != "" else (str(ml.get_class()) if ml != null else "-"), "cerca" if d < 60.0 else ("medio" if d < 200.0 else "lejos")]
+		nombres_a_pie[kn] = int(nombres_a_pie.get(kn, 0)) + 1
 		if not ejemplos.has(clave):
 			var sc := ""
 			var q2: Node = g.get_parent()
@@ -297,7 +304,11 @@ func _detalle_a_pie() -> void:
 	var orden := grupos.keys()
 	orden.sort_custom(func(x, y): return grupos[x] > grupos[y])
 	for k in orden.slice(0, 30):
-		print("A_PIE ", grupos[k], "  ", k, "  ej: ", ejemplos.get(k, ""))
+		print(pref, " ", grupos[k], "  ", k, "  ej: ", ejemplos.get(k, ""))
+	var o2 := nombres_a_pie.keys()
+	o2.sort_custom(func(x, y): return nombres_a_pie[x] > nombres_a_pie[y])
+	for k in o2.slice(0, 30):
+		print(pref, "_MALLA ", nombres_a_pie[k], "  ", k)
 	for m in Optimizar._motivos:
 		print("MOTIVO ", Optimizar._motivos[m], "  ", m)
 	## Todas las mallas (vean o no) que un grupo impide juntar, por nombre de grupo (M-476).

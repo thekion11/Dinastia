@@ -14,6 +14,8 @@ func _ready() -> void:
 	get_tree().quit(0)
 
 func _foto(fase: String, extra := "") -> void:
+	var cam_ := get_viewport().get_camera_3d()
+	extra += " far=%s" % (str(snappedf(cam_.far, 1.0)) if cam_ != null else "sin cámara")
 	extra += " vram=%.0f MB (texturas %.0f, buffers %.0f) audio_ram=%.0f MB" % [Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0, Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED) / 1048576.0, Performance.get_monitor(Performance.RENDER_BUFFER_MEM_USED) / 1048576.0, 0.0]
 	print("MEDIDA %-22s nodos %6d  objetos %7d  mem_estatica %6.0f MB  dibujo %5d  prim %8d %s" % [fase,
 		int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)), int(Performance.get_monitor(Performance.OBJECT_COUNT)),
@@ -99,6 +101,8 @@ func _medir() -> void:
 		anterior = ahora3
 	_foto("dentro del estadio", "entrar: %d ms en el primer cuadro, peor cuadro %d ms, mem +%.0f MB, estado %s" % [primer, peor2, (Performance.get_monitor(Performance.MEMORY_STATIC) - mem1) / 1048576.0, String(e.estado)])
 	_desglose(_p.vista._raiz3d)
+	if OS.get_environment("DETALLE") != "":
+		_dibujado(_p.vista._raiz3d)
 
 ## Dónde están las llamadas de dibujo (estimadas: una por superficie de cada malla visible y una por MultiMesh), agrupadas
 ## por el nombre del hijo directo de la raíz 3D y, dentro de la ciudad, de su constructor. Para saber qué recortar.
@@ -370,3 +374,29 @@ func _texturas() -> void:
 					im.save_png(OS.get_environment("TEXTURA_PNG") if OS.get_environment("TEXTURA_PNG") != "" else "/tmp/textura_grande.png")
 	for e in l2.slice(0, 25):
 		print("TEXTURA %7.1f MB  %s" % [e[0], e[1]])
+
+## Con DETALLE=1 (7-11): lo que se DIBUJA de verdad desde la cámara (en el campo de visión y dentro de su distancia de corte) por tipo de malla y distancia.
+func _dibujado(raiz: Node) -> void:
+	var cam := get_viewport().get_camera_3d()
+	if cam == null:
+		return
+	var por := {}
+	for n: Node in raiz.find_children("*", "GeometryInstance3D", true, false):
+		var g := n as GeometryInstance3D
+		if not g.is_visible_in_tree():
+			continue
+		var c := g.global_transform * g.get_aabb().get_center()
+		var d := cam.global_position.distance_to(c)
+		if (g.visibility_range_end > 0.0 and d > g.visibility_range_end) or not cam.is_position_in_frustum(c):
+			continue
+		var mm := g as MultiMeshInstance3D
+		var ml: Mesh = mm.multimesh.mesh if mm != null and mm.multimesh != null else (g.get("mesh") as Mesh)
+		var k := "%s %s %s" % [g.get_class().replace("Instance3D", ""), (ml.resource_name if ml != null and ml.resource_name != "" else (ml.get_class() if ml != null else "-")), "cerca" if d < 60.0 else ("medio" if d < 200.0 else "lejos")]
+		por[k] = int(por.get(k, 0)) + 1
+		if g is Label3D:
+			var kl := "LABEL en " + String(g.get_parent().name).rstrip("0123456789") + " < " + String(g.get_parent().get_parent().name).rstrip("0123456789")
+			por[kl] = int(por.get(kl, 0)) + 1
+	var ks := por.keys()
+	ks.sort_custom(func(a, b): return por[a] > por[b])
+	for k in ks.slice(0, 24):
+		print("MEDIDA   DIBUJADO ", por[k], "  ", k)
