@@ -331,6 +331,7 @@ pasa "so: est_propiedades_semillas" "godot --headless --path . res://pruebas/so/
 # 5e. ESCENAS SIN LANZAR que ya pasan (5-11, rama sonar/bancos2, prioridad 3 de la líder): 87 de las ~100 que tenían comprobaciones y nadie ejecutaba, en lotes de 10.
 #     Las que fallaban o no terminaban están anotadas en PLAN_GENERAL.md («FALLOS DETECTADOS») con su evidencia; no se han quitado ni tocado.
 BLOQUE=reutilizadas2
+pasa "r2: detector_atraviesa" "godot --headless --path . res://pruebas/detector_atraviesa.tscn" "(^|[^0-9])0 fallos"
 # lote 1
 pasa "r2: caminar_de_verdad" "godot --headless --path . res://pruebas/caminar_de_verdad.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: cant_estabilidad" "godot --headless --path . res://pruebas/ideas/cant_estabilidad.tscn" "(^|[^0-9])0 fallos"
