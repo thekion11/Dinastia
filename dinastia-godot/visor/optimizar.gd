@@ -148,29 +148,17 @@ static func trocear(raiz: Node3D) -> int:
 			if diag <= float(f[0]):
 				corte = float(f[1])
 				break
-		var por_celda := {}
-		for i in mm.instance_count:
-			var o := mmi.global_transform * mm.get_instance_transform(i)
-			var k := Vector2i(floori(o.origin.x / CELDA_TROCEO), floori(o.origin.z / CELDA_TROCEO))
-			if not por_celda.has(k):
-				por_celda[k] = []
-			(por_celda[k] as Array).append(i)
+		var por_celda := celdas_de(mmi.global_transform, mm.buffer, paso_buffer(mm), CELDA_TROCEO)
 		if por_celda.size() < 2 and corte <= 0.0:
 			continue
 		for k: Vector2i in por_celda:
-			var idx: Array = por_celda[k]
 			var nuevo := MultiMesh.new()
 			nuevo.transform_format = MultiMesh.TRANSFORM_3D
 			nuevo.use_colors = mm.use_colors
 			nuevo.use_custom_data = mm.use_custom_data
 			nuevo.mesh = mm.mesh
-			nuevo.instance_count = idx.size()
-			for j in idx.size():
-				nuevo.set_instance_transform(j, mm.get_instance_transform(idx[j]))
-				if mm.use_colors:
-					nuevo.set_instance_color(j, mm.get_instance_color(idx[j]))
-				if mm.use_custom_data:
-					nuevo.set_instance_custom_data(j, mm.get_instance_custom_data(idx[j]))
+			nuevo.instance_count = int((por_celda[k] as Array)[0])
+			nuevo.buffer = (por_celda[k] as Array)[1]
 			var m2 := MultiMeshInstance3D.new()
 			m2.name = "Troceo"
 			m2.multimesh = nuevo
@@ -188,3 +176,57 @@ static func trocear(raiz: Node3D) -> int:
 		mmi.free()
 		hechos += 1
 	return hechos
+
+## Floats por instancia en el `buffer` de un MultiMesh 3D: 12 de la transformación (origen en las posiciones 3, 7 y 11), 4 de color y 4 de datos si los usa (comprobado con renderizador real).
+static func paso_buffer(mm: MultiMesh) -> int:
+	return 12 + (4 if mm.use_colors else 0) + (4 if mm.use_custom_data else 0)
+
+## Parte las instancias del `buffer` (`paso` floats cada una) por celdas de `celda` m, según el origen de cada una en el mundo (`gt` = el transform global del nodo): devuelve
+## celda → [cuántas, buffer]. (7-11) Antes se leía y escribía una instancia cada vez con `get_instance_transform`/`set_instance_*` (1.058 ms en la ciudad, la pasada más lenta
+## de `despejar`); ahora se copian tramos seguidos de la misma celda (las instancias de un agrupado suelen venir en orden de zona). Mismo resultado y mismo orden en cada celda.
+static func celdas_de(gt: Transform3D, buf: PackedFloat32Array, paso: int, celda: float) -> Dictionary:
+	var n := buf.size() / paso
+	var tramos := {}   ## celda → [inicio, fin, inicio, fin…] (un Array se modifica en sitio; un Packed guardado dentro de otro contenedor se copiaría)
+	var i := 0
+	while i < n:
+		var b := i * paso
+		var o := gt * Vector3(buf[b + 3], buf[b + 7], buf[b + 11])
+		var k := Vector2i(floori(o.x / celda), floori(o.z / celda))
+		var j := i + 1
+		while j < n:
+			var bj := j * paso
+			var oj := gt * Vector3(buf[bj + 3], buf[bj + 7], buf[bj + 11])
+			if floori(oj.x / celda) != k.x or floori(oj.z / celda) != k.y:
+				break
+			j += 1
+		if not tramos.has(k):
+			tramos[k] = []
+		(tramos[k] as Array).append(i)
+		(tramos[k] as Array).append(j)
+		i = j
+	var salida := {}
+	for k: Vector2i in tramos:
+		var t: Array = tramos[k]
+		var datos := PackedFloat32Array()
+		var cuantas := 0
+		for q in range(0, t.size(), 2):
+			datos.append_array(buf.slice(int(t[q]) * paso, int(t[q + 1]) * paso))
+			cuantas += int(t[q + 1]) - int(t[q])
+		salida[k] = [cuantas, datos]
+	return salida
+
+## Transformaciones `inv * ts[i]` en el formato del `buffer` de un MultiMesh 3D sin color (12 floats por instancia, filas de la matriz 3x4; origen en 3, 7 y 11).
+## (7-11) Igual que `set_instance_transform` instancia a instancia, pero de una sola vez.
+static func a_buffer(ts: Array, inv: Transform3D) -> PackedFloat32Array:
+	var b := PackedFloat32Array()
+	b.resize(ts.size() * 12)
+	var o := 0
+	for t: Transform3D in ts:
+		var m := inv * t
+		var bs := m.basis
+		var org := m.origin
+		b[o] = bs.x.x; b[o + 1] = bs.y.x; b[o + 2] = bs.z.x; b[o + 3] = org.x
+		b[o + 4] = bs.x.y; b[o + 5] = bs.y.y; b[o + 6] = bs.z.y; b[o + 7] = org.y
+		b[o + 8] = bs.x.z; b[o + 9] = bs.y.z; b[o + 10] = bs.z.z; b[o + 11] = org.z
+		o += 12
+	return b
