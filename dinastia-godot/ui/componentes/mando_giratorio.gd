@@ -73,7 +73,7 @@ func _ready() -> void:
 	_luz = DirectionalLight3D.new()
 	_luz.rotation_degrees = Vector3(-50, 25, 0)
 	_luz.light_energy = 1.25
-	_luz.shadow_enabled = Calidad.elegida > Calidad.MINIMO
+	_luz.shadow_enabled = Calidad.sombra_solar(Calidad.elegida)
 	_luz.shadow_bias = 0.03
 	_luz.directional_shadow_max_distance = 60.0
 	_vp.add_child(_luz)
