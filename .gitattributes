@@ -85,3 +85,6 @@ dinastia-godot/terceros/**/*.wav -filter -diff -merge binary
 # El minijuego retro 5v5 (soccer5v5, MIT; 01-11-2026): sus sonidos y música como archivos normales.
 dinastia-godot/minijuegos/**/*.mp3 -filter -diff -merge binary
 dinastia-godot/minijuegos/**/*.wav -filter -diff -merge binary
+
+# Scripts de shell siempre con fin de línea LF (en Windows, autocrlf los rompe: «\r: orden no encontrada»).
+*.sh text eol=lf
