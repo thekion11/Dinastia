@@ -141,7 +141,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   - Escenas de prueba que nadie lanzaba (5-11, 100 con aserciones): 87 pasan y YA se lanzan (`especiales.sh`, bloque `reutilizadas2`, banco `reutilizadas_2`). Las 13 restantes son HALLAZGOS con su evidencia (headless, 120 s):
     · `ideas/optA_persona`: la cadera del clip «persona/parado» queda 4 cm SOBRE el reposo (el test ahora lo admite hasta 6 cm; investigar por qué sube).
     · `ideas/pgra_grada`: un canto por peldaño de pasillo (1014 / 936).
-    · Sin terminar en 120 s (lentas o colgadas): `captura_informe_rival`, `ideas/s3_auditoria_interfaz`, `ideas/s5_ocasiones`; `ideas/sen_conexiones` terminó una vez y otra no (inestable).
+    · Sin revisar: `captura_informe_rival` (lenta) ; `ideas/sen_conexiones` terminó una vez y otra no (inestable). (`s3_auditoria_interfaz` y `s5_ocasiones` NO estaban colgadas: pasan en 2-4 min y ya se lanzan en el bloque lento de `especiales.sh todo`.)
   - Ejecutar `pruebas/so` de verdad en Windows, Android y Web (flujo `plataformas.yml`, otra sesión): `pruebas_so.py --lista --sistema web|android` dice qué toca; `--marcadores < log.txt` (por la entrada estándar) revisa el resultado.
   - Referencias visuales de `pruebas/so/referencias/` hechas con lavapipe/llvmpipe: regenerarlas en GPU real (`VISUAL=referencias`) y añadir las de móvil.
   - Funciones puras de `nucleo/` sin prueba directa (solo 4 pruebas `fun_*`): ampliar por áreas.
