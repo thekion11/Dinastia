@@ -151,7 +151,7 @@ func build(d: Dictionary) -> void:
 
 	_suelo()
 	await _marca("_suelo")
-	_calles()
+	await _calles()
 	await _marca("_calles")
 	await _estadio()
 	await _marca("_estadio")
@@ -193,7 +193,7 @@ func build(d: Dictionary) -> void:
 	_horizonte()
 	await _marca("_horizonte")
 	if not tardio:
-		_trafico()
+		await _trafico()
 		await _marca("_trafico")
 	## B7: el día de partido, el ánimo del barrio y los rótulos flotantes.
 	if bool(datos.get("dia_partido", false)):
@@ -239,12 +239,12 @@ func _resto() -> void:
 	await ExpansionTardia.precargar_vehiculos(self)
 	await _karting()
 	await _marca("_karting")
-	_trafico()
+	await _trafico()
 	await _marca("_trafico")
 	await ExpansionTardia.bloques_restantes(expansion)
 	await ExpansionTardia.mobiliario(expansion)
 	if not modo_prologo:
-		ExpansionTardia.afueras(expansion)
+		await ExpansionTardia.afueras(expansion)
 		await _marca("exp.afueras_tardio")
 	expansion._volcar_lotes()
 	vestir_todas_las_torres()   ## las torres de las manzanas tardías (las de antes ya llevan su material: no se repiten)
@@ -255,32 +255,9 @@ func _resto() -> void:
 		diferir = false
 	resto_listo.emit()
 
-## Las pasadas de optimización y las colisiones.
+## Las pasadas de optimización y las colisiones (6-11: en partes cortas, en `CargaPartes`).
 func _optimizar() -> void:
-	if OS.get_environment("SIN_OPTIMIZAR") == "":
-		Optimizar.primitivas(self)
-		Optimizar.trocear(self)
-		Optimizar.butacas_livianas(self, true)
-		Optimizar.distancias(self)
-		if modo_prologo:   ## (sigue puesto hasta que `completa`: el prólogo lo apaga al acabar `_resto`)
-			OptimizarGrada.limitar_vista(self, 220.0 if Calidad.elegida <= Calidad.BAJA else 380.0)   ## (7-11) ULTRA BAJA y BAJA: 220 m
-		elif EscalaMovil.es_movil() or Calidad.motor_ligero or OS.get_environment("MOVIL_SIM") != "":   ## móvil / motor ligero: no se dibuja lo pequeño a más de 450 m
-			OptimizarGrada.limitar_vista(self, 450.0)   ## prólogo (2-11): nada pequeño se dibuja a más de 380 m
-		await _marca("despejar")
-		## (30-10-2026: aquí se repetían primitivas, butacas livianas y distancias -una copia de
-		## una fusión vieja-; la segunda pasada no cambiaba nada de la escena y costaba ~150 ms.)
-		circulos = Optimizar.obstaculos(self, ExploradorCiudad.construir_obstaculos(self))
-		## Los bancos (asiento a 0,75 m y respaldo bajo) quedaban por debajo del umbral de 0,9 m y se
-		## atravesaban andando (27-10-2026, plan §4 colisiones): un círculo por asiento registrado.
-		for a: Dictionary in asientos:
-			var pa: Vector3 = a["p"]
-			circulos.append(Vector3(pa.x, pa.z, 0.42))
-		await _marca("obstaculos")
-		OclusoresCiudad.montar(self)
-		await _marca("oclusores")
-		Optimizar.agrupar(self)
-		await _marca("opt_agrupar")
-		OptimizarGrada.al_final(self, modo_prologo)   ## zonas de vista + tope de distancia de ULTRA BAJA/BAJA (7-11)
+	await load("res://visor/carga_partes.gd").optimizar(self)
 
 ## `noche` va de 0 (pleno día) a 1 (noche cerrada). Lo llama el ciclo del sol
 ## de `VistaCiudad` en cada fotograma. Las farolas se encienden con la luz, y

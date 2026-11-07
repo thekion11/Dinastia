@@ -220,6 +220,7 @@ func montar(exp: CiudadExpansion) -> void:
 		else:
 			_tunel_xray(a, b, col)
 			_tunel(a, b, est_pos, dir)
+		await exp.b.ceder()   ## (6-11) la carga de la ciudad cede un fotograma cada ~40 ms (viaducto, túnel y cada estación)
 		for i in est_pos.size():
 			var p: Vector3 = est_pos[i]
 			if bool(l["elevada"]):
@@ -233,6 +234,7 @@ func montar(exp: CiudadExpansion) -> void:
 					pa["linea"] = l
 					pa["s"] = est_s[i]
 			_panel(p, l, est_s[i])
+			await exp.b.ceder()
 		var trenes: Array = []
 		var nodos: Array = []
 		var nodos_x: Array = []

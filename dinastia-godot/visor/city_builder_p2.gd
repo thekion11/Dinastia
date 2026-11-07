@@ -154,7 +154,10 @@ static var _piezas_hincha: Array = []
 var por_partes := false
 var _t_respiro := 0
 
+var _punto := ""   ## la última marca pasada (`medir_hueco` rotula con ella qué tramo causó cada hueco)
+
 func _marca(que: String) -> void:
+	_punto = que
 	PantallaCarga.paso(que)   ## la barra de carga avanza con las etapas conocidas
 	if por_partes and Time.get_ticks_usec() - _t_respiro > 40000:
 		await get_tree().process_frame
@@ -163,6 +166,12 @@ func _marca(que: String) -> void:
 		var ahora := Time.get_ticks_usec()
 		Registro.depurar("TIEMPO", "%-24s %6.0f ms  mem %6.0f MB" % [que, (ahora - _t_marca) / 1000.0, Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0])
 		_t_marca = ahora
+
+## Cede un fotograma si hace más de 40 ms que no se cedió (lo llaman por dentro las pasadas largas de `Optimizar` y la construcción por partes).
+func ceder() -> void:
+	if por_partes and Time.get_ticks_usec() - _t_respiro > 40000:
+		await get_tree().process_frame
+		_t_respiro = Time.get_ticks_usec()
 
 func _color_luces() -> Color:
 	var s := str(datos.get("luces", ""))

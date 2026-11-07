@@ -69,6 +69,7 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	root.add_child(pitch)
 	## De cerca, hierba con volumen (`CespedCapas`).
 	CespedCapas.montar(root, sm, pm.size)
+	await StadiumBuilder._fase("pitch_cesped")
 
 	var line_mat := StandardMaterial3D.new()
 	line_mat.albedo_color = _c(est.get("lineaCol"), "#ffffff")
@@ -127,6 +128,7 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	center.position = Vector3(0, 0.02, 0)
 	center.material_override = line_mat
 	root.add_child(center)
+	await StadiumBuilder._fase("pitch_lineas")
 
 	var poste := StandardMaterial3D.new()
 	poste.albedo_color = _c(est.get("arcoCol"), "#ffffff")
@@ -147,12 +149,15 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	var red_tipo := str(est.get("redTipo", "cuadrada"))
 	_add_goal(root, 52.5, poste, red_col, red_tipo)
 	_add_goal(root, -52.5, poste, red_col, red_tipo)
+	await StadiumBuilder._fase("pitch_porterias")
 
 	## Lo que rodea al campo y antes faltaba: sin esto es "un cesped con rayas".
 	_zona_tecnica(root, line_mat)
 	_corners(root, str(est.get("corner", "clasico")), est)
 	_vallas_publicidad(root, est, mi)
+	await StadiumBuilder._fase("pitch_vallas")
 	_banquillos_detalle(root, str(est.get("banquillo", "cristal")), est)
+	await StadiumBuilder._fase("pitch_banquillos")
 	## El tunel tiene que saber donde empieza la tribuna del fondo: su boca va
 	## a ras de la cara interior, no en un numero fijo (ver `_tunel()`).
 	var g_f := geom_de_forma(String(est.get("forma", "cuenco")))
