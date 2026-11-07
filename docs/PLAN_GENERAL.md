@@ -16,8 +16,8 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - **RAM = la del MOTOR** (estática + texturas + vídeo; decisión del dueño, 6-11 noche). Menú ~436 MB, partido ~941 MB, ciudad ~1.420 MB en ULTRA BAJA: meta < 1,5 GB CUMPLIDA. La medida en el teléfono se hace después (prueba de rendimiento de Ajustes).
 - **Medición en teléfono del dueño**: PARA DESPUÉS (decisión del dueño, 6-11 noche). Hasta entonces, los FPS y ms son solo estimación.
 
-## EXPORTACIÓN AL TERMINAR (orden del dueño, 7-11) — se borra al completarse del todo
-- Cuando las sesiones terminen su trabajo y se fusione a `main`, la LÍDER lanza la compilación completa (workflow «Compilar y probar Dinastia», objetivo `todo`) y avisa al dueño cuando los artefactos (Windows, Windows ligero, Linux, Web, Android depuración, Android armv7) estén listos, con el enlace a la ejecución.
+## EXPORTACIÓN DIARIA (orden del dueño, 7-11, corregida) — se borra al completarse del todo
+- UNA VEZ AL DÍA, cerca de las 23:50 hora de Chile, y solo cuando ya no quede trabajo (PR en verde, sesiones terminadas, `main` estable): la LÍDER lanza la compilación completa (workflow «Compilar y probar Dinastia», objetivo `todo`) y avisa al dueño con el enlace a los artefactos (Windows, Windows ligero, Linux, Web, Android depuración, Android armv7). Si queda trabajo, no se lanza: se reprograma para la noche siguiente.
 - Lo que no sale automático: macOS/iOS, Android firmado para Play (keystore del dueño), y el Release publicado (el dueño decide la versión).
 - Los artefactos caducan: el dueño los sube a Drive con `herramientas/drive_subir.ps1` si quiere guardarlos.
 
