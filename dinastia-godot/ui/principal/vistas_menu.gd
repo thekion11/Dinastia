@@ -305,8 +305,15 @@ func _ver_ciudad_explorando(modo: String) -> void:
 	await p._ver_ciudad_con_carga()
 	for h in p.get_children():
 		if is_instance_of(h, CargaCiudad.de("VistaCiudad")):
-			(h).explorar(modo)
-			CargaCiudad.de("VidaCiudad").enganchar((h)._explorador, h, p.mundo)
+			await h.explorar(modo)   ## (6-11) se espera a que la ciudad esté entera: antes `_explorador` podía seguir vacío aquí
+			if h._explorador == null:
+				return
+			CargaCiudad.de("VidaCiudad").enganchar(h._explorador, h, p.mundo)
+			## (6-11, sin mapa para el jugador) Salir del paseo (Esc) devuelve al menú, no a la vista aérea.
+			if h._explorador.salir.is_connected(h._dejar_de_explorar):
+				h._explorador.salir.disconnect(h._dejar_de_explorar)
+			h._explorador.salir.connect(func() -> void: h.cerrado.emit())
+			return
 
 func _ver_estadio_propio(por_partes := false) -> void:
 	p._fundido_entrada()
