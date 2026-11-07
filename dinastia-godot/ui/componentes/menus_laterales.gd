@@ -113,7 +113,6 @@ const MENUS := [
 		"lema": "La ciudad que rodea tu estadio.",
 		"colores": ["#070a16", "#141a33", "#ffd27a"], "subs": [
 		{"tab": "Ciudad", "label": "Diseño de la ciudad", "icono": "🗺️", "desc": "Terrenos, negocios, conciertos y el municipio."},
-		{"accion": "ver_ciudad", "label": "Volar sobre ella", "icono": "🛰️", "desc": "La ciudad desde el aire, de día o de noche."},
 		{"accion": "ciudad_pie", "label": "Pasear a pie", "icono": "🚶", "desc": "Calles, parques, edificios por dentro y vecinos con quien charlar."},
 		{"accion": "ciudad_coche", "label": "Conducir", "icono": "🚗", "desc": "Tu coche, con cámara de capó e interior y freno de mano."},
 		{"accion": "ver_estadio", "label": "Entrar al estadio", "icono": "🏟️", "desc": "El mismo estadio que se juega, para recorrerlo."}]},

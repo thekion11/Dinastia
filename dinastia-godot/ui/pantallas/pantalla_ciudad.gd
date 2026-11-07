@@ -351,7 +351,7 @@ func _pintar_ciudad(c: Club) -> void:
 	var ver3d := Button.new()
 	ver3d.text = Idiomas.t("🚪 Levantarse del PC") if p._vistas.pc_oficina() != null else Idiomas.t("🏙️ Ver la ciudad en 3D")
 	ver3d.add_theme_font_size_override("font_size", 11)
-	ver3d.pressed.connect(p._ver_ciudad_con_carga)
+	ver3d.pressed.connect(func() -> void: p._ver_ciudad_explorando("pie"))   ## (6-11) sin vista aérea para el jugador: entra a pie
 	p._lista_ciudad.add_child(ver3d)
 	_pintar_luces_ciudad(ci)
 
