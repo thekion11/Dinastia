@@ -276,11 +276,14 @@ func _ir_a(i: int, avanza: bool) -> void:
 	tw.tween_callback(func() -> void:
 		var clave := String(ETAPAS[i]["clave"])
 		if not (estado.get("mundo") is Mundo) and clave in ["pais", "config", "entrada", "personaje"]:
-			## La generación del mundo (24 ligas) tarda: se avisa sobre el negro y se
-			## deja pintar ese aviso antes de bloquear.
+			## La generación del mundo (24 ligas) tarda: se avisa sobre el negro, se
+			## deja pintar ese aviso y se genera por trozos (sin bloquear).
 			_aviso_velo.text = Idiomas.t("Generando el mundo…")
 			await get_tree().process_frame
 			await get_tree().process_frame
+			estado["mundo"] = await CargaCiudad.de("OrquestadorMundo").generar_mundo_por_trozos()   ## (7-11) por trozos: la pantalla sigue viva
+			if not is_inside_tree():
+				return   ## se salió mientras se generaba
 		_montar(i)
 		_aviso_velo.text = ""
 		var tw2 := create_tween()

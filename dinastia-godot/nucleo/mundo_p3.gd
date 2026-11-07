@@ -185,6 +185,34 @@ func _capitan_si_falta(c: Club) -> void:
 ## 10.000 jugadores: util para una partida de verdad, un desperdicio para una
 ## prueba que solo mira si la tabla suma. Por eso se puede pedir un mundo chico.
 func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:
+	_generar_inicio(semilla_partida)
+	for f: Dictionary in _fuentes_de_liga(paises):
+		var liga := Liga.new(f["nombre"], f["pais"], int(f.get("division", 1)))
+		for fila: Array in f["clubes"]:
+			_generar_club(liga, f, fila)
+		liga.preparar()
+		ligas.append(liga)
+	_generar_final()
+
+## La MISMA generación, repartida entre fotogramas (7-11, meta «< 200 ms por carga»): cada club se crea igual y en el mismo orden (mismo mundo para la misma semilla), pero
+## tras cada trozo de `ms_trozo` ms se cede un fotograma para que la pantalla siga viva. Devuelve cuando termina (`await`).
+func generar_por_trozos(paises: Array[String] = [], semilla_partida: int = 0, ms_trozo := 25.0) -> void:
+	_generar_inicio(semilla_partida)
+	var arbol := Engine.get_main_loop() as SceneTree
+	var t0 := Time.get_ticks_usec()
+	for f: Dictionary in _fuentes_de_liga(paises):
+		var liga := Liga.new(f["nombre"], f["pais"], int(f.get("division", 1)))
+		for fila: Array in f["clubes"]:
+			_generar_club(liga, f, fila)
+			if arbol != null and float(Time.get_ticks_usec() - t0) / 1000.0 >= ms_trozo:
+				await arbol.process_frame
+				t0 = Time.get_ticks_usec()
+		liga.preparar()
+		ligas.append(liga)
+	await Reales.aplicar_por_trozos(self, ms_trozo)
+	_generar_cierre()
+
+func _generar_inicio(semilla_partida: int) -> void:
 	Partido.ex_de_mi_club.clear()   ## 28-10: un mundo nuevo no hereda los rencores del anterior (los ids j%d se repiten)
 	semilla = Azar.sembrar(semilla_partida)
 	mercado = Mercado.new(self)
@@ -203,27 +231,23 @@ func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:
 	_seq_jugador = 0
 	_seq_club = 0
 
-	var fuentes := _fuentes_de_liga(paises)
-	for f: Dictionary in fuentes:
-		var liga := Liga.new(f["nombre"], f["pais"], int(f.get("division", 1)))
-		for fila: Array in f["clubes"]:
-			var c := _crear_club(fila, f["pais"])
-			c.division = int(f.get("division", 1))
-			clubes[c.id] = c
-			liga.clubes.append(c)
-			_poblar(c)
-		liga.preparar()
-		ligas.append(liga)
-	## "PLANTILLAS REALES" del HTML: se aplica al final, con el mundo entero ya
-	## generado -Reales necesita ver TODOS los clubes creados para poder cruzar
-	## sus nombres contra la tabla, no uno a uno mientras se crean-.
+func _generar_club(liga: Liga, f: Dictionary, fila: Array) -> void:
+	var c := _crear_club(fila, f["pais"])
+	c.division = int(f.get("division", 1))
+	clubes[c.id] = c
+	liga.clubes.append(c)
+	_poblar(c)
+
+## Lo final de `generar`, con el mundo entero ya creado: las PLANTILLAS REALES (`Reales` necesita ver TODOS los clubes para cruzar sus nombres) y el cierre.
+func _generar_final() -> void:
 	Reales.aplicar(self)
-	## Con las plantillas reales nadie llevaba la cinta (21-10, M-073): el
-	## veterano de más media de cada club sin capitán.
+	_generar_cierre()
+
+func _generar_cierre() -> void:
+	## Con las plantillas reales nadie llevaba la cinta (21-10, M-073): el veterano de más media de cada club sin capitán.
 	for c: Club in clubes.values():
 		_capitan_si_falta(c)
-	## EL MUNDO HEREDADO (28-9-2026, `Meta`): si se pidió, los clubes arrancan
-	## con la reputación con la que quedaron en tu última partida.
+	## EL MUNDO HEREDADO (28-9-2026, `Meta`): si se pidió, los clubes arrancan con la reputación con la que quedaron en tu última partida.
 	if Meta.heredar_proximo:
 		Meta.heredar_proximo = false
 		Meta.aplicar_herencia(self)
