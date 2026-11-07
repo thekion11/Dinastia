@@ -344,3 +344,19 @@ func _probar_recorte_a_pie() -> void:
 	Calidad.elegida = antes
 	_comprobar(is_equal_approx(base, 450.0) and is_equal_approx(a_pie, OptimizarGrada.alcance_a_pie() * 0.64) and is_equal_approx(fuera, 450.0) and is_equal_approx(intacta, 50.0), "450 m en el mapa → 64 % del alcance a pie al pasear (ULTRA BAJA) → 450 m al salir; el que ya tenía 50 m no cambia (%.0f, %.0f, %.0f, %.0f)" % [base, a_pie, fuera, intacta])
 	raiz.free()
+
+## (7-11) `Jugador.media_en` recuerda la media con una firma de los atributos (no una copia): la misma media si no cambian, y se recalcula si cambia un atributo.
+func _probar_media_firma() -> void:
+	_titulo("JUGADOR: MEDIA RECORDADA POR FIRMA")
+	var j := Jugador.new()
+	var e := PesosPuesto.de("MC")
+	var ks: PackedStringArray = e[0]
+	for k in ks:
+		j.atributos[k] = 60
+	var a := j.media_en("MC")
+	var b := j.media_en("MC")
+	j.atributos[ks[0]] = 99
+	var c := j.media_en("MC")
+	j.atributos[ks[0]] = 60
+	var d := j.media_en("MC")
+	_comprobar(a == 60 and b == a and c > a and d == a, "media 60 → igual sin cambios → sube con un atributo a 99 (%d) → vuelve al restaurarlo (%d, %d, %d, %d)" % [c, a, b, c, d])
