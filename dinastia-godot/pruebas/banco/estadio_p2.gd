@@ -291,7 +291,7 @@ func _probar_fundir_ciudad() -> void:
 	elegida.mesh = BoxMesh.new()
 	elegida.material_override = rojo
 	raiz.add_child(elegida)
-	var n := FundirPiezas.fundir_ciudad(raiz, 80.0)
+	var n: int = await FundirPiezas.fundir_ciudad(raiz, 80.0)
 	var fund: Array = raiz.find_children("FundidoCiudad*", "MeshInstance3D", true, false)
 	var union := AABB()
 	var primero := true

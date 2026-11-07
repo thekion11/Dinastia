@@ -132,12 +132,18 @@ static func limitar_vista(raiz: Node, hasta: float, grande := 90.0, guardar = nu
 ## Lo último que hace la ciudad al optimizarse (7-11): las zonas de vista y, en ULTRA BAJA y BAJA de CUALQUIER sistema (no solo en móvil), el mismo tope
 ## de 450 m para lo pequeño: ciudad a pie 688 → 411 llamadas de dibujo, mapa aéreo 2.761 → 1.321 (ULTRA BAJA, `medir_ciudad`). Va AL FINAL, tras `agrupar`:
 ## si el tope existe antes, `agrupar` trata distinto las piezas (la grúa de la obra desaparecía). Móvil y motor ligero ya lo ponen antes.
-static func al_final(raiz: Node3D, prologo: bool) -> void:
-	FundirPiezas.fundir_ciudad(raiz)   ## (7-11) primitivas sueltas por material y celda: menos nodos y llamadas, misma imagen
+static func al_final(raiz: Node3D, prologo: bool, ceder: Object = null) -> void:
+	await FundirPiezas.fundir_ciudad(raiz, 160.0, "FundidoCiudad", ceder)   ## (7-11) primitivas sueltas por material y celda: menos nodos y llamadas, misma imagen
 	SubsistemasQuietos.limpiar()
+	if ceder != null:
+		await ceder._marca("fundir_ciudad")   ## (6-11) `ceder`: el CityBuilder que construye por partes; cada pasada cede por separado
 	ZonasVista.montar(raiz)
+	if ceder != null:
+		await ceder._marca("zonas_vista")
 	if not prologo and Calidad.elegida <= Calidad.BAJA and not (EscalaMovil.es_movil() or Calidad.motor_ligero or OS.get_environment("MOVIL_SIM") != ""):
 		limitar_vista(raiz, 450.0)   ## (el recorte más cerrado, 64 % del alcance a pie, solo rige MIENTRAS SE PASEA: `recorte_a_pie`; el mapa aéreo conserva sus 450 m)
+		if ceder != null:
+			await ceder._marca("limitar_vista")
 		rotulos_cercanos(raiz)   ## y los rótulos 3D con alcance según su tamaño (galería del club, vestuario…)
 
 ## Un TROZO de agrupado (MultiMesh) con la caja grande pero solo piezas PEQUEÑAS dentro (ventanas, postes, troncos, hidrantes: menos de `PIEZA_PEQUENA` m) tampoco debe
