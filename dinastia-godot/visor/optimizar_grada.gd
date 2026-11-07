@@ -103,31 +103,40 @@ static func _partir(mmi: MultiMeshInstance3D, tramos: int) -> void:
 const ROTULO_MINIMO := 45.0
 
 static func limitar_vista(raiz: Node, hasta: float, grande := 90.0, guardar = null) -> int:
+	var fuera := limitar_fuera(raiz)
+	var n := 0
+	for g_n in raiz.find_children("*", "GeometryInstance3D", true, false):
+		n += limitar_uno(g_n, fuera, hasta, grande, guardar)
+	return n
+
+## Lo que cuelga de un nodo `sin_corte` (el estadio) no recibe tope.
+static func limitar_fuera(raiz: Node) -> Dictionary:
 	var fuera := {}
 	for r in raiz.find_children("*", "Node3D", true, false):
 		if r.has_meta("sin_corte"):
 			for x in r.find_children("*", "GeometryInstance3D", true, false):
 				fuera[x] = true
-	var n := 0
-	for g_n in raiz.find_children("*", "GeometryInstance3D", true, false):
-		var g := g_n as GeometryInstance3D
-		if g is Label3D:
-			## (3-11, R2 en MÍNIMO) Un rótulo no se lee a más de ~45 m y cada uno cuesta una llamada de dibujo: a pie de calle eran 2.584 y quitaban −19 % de llamadas.
-			if not fuera.has(g) and Calidad.elegida <= Calidad.MINIMO and (g.visibility_range_end <= 0.0 or g.visibility_range_end > ROTULO_MINIMO):
-				g.visibility_range_end = ROTULO_MINIMO
-				g.visibility_range_end_margin = 8.0
-				n += 1
-			continue
-		if fuera.has(g) or (g.visibility_range_end > 0.0 and g.visibility_range_end <= hasta):
-			continue
-		if g.get_aabb().size.length() > grande and _pieza_mayor(g) > PIEZA_PEQUENA:
-			continue
-		if guardar is Dictionary:
-			(guardar as Dictionary)[g] = [g.visibility_range_end, g.visibility_range_end_margin]   ## (para devolverlo al salir del paseo)
-		g.visibility_range_end = hasta
-		g.visibility_range_end_margin = hasta * 0.1
-		n += 1
-	return n
+	return fuera
+
+## El tope de UNA pieza (6-11: el cuerpo del bucle de `limitar_vista`, aparte para recorrerlo cediendo fotogramas). Devuelve 1 si se lo puso.
+static func limitar_uno(g_n: Node, fuera: Dictionary, hasta: float, grande: float, guardar) -> int:
+	var g := g_n as GeometryInstance3D
+	if g is Label3D:
+		## (3-11, R2 en MÍNIMO) Un rótulo no se lee a más de ~45 m y cada uno cuesta una llamada de dibujo: a pie de calle eran 2.584 y quitaban −19 % de llamadas.
+		if not fuera.has(g) and Calidad.elegida <= Calidad.MINIMO and (g.visibility_range_end <= 0.0 or g.visibility_range_end > ROTULO_MINIMO):
+			g.visibility_range_end = ROTULO_MINIMO
+			g.visibility_range_end_margin = 8.0
+			return 1
+		return 0
+	if fuera.has(g) or (g.visibility_range_end > 0.0 and g.visibility_range_end <= hasta):
+		return 0
+	if g.get_aabb().size.length() > grande and _pieza_mayor(g) > PIEZA_PEQUENA:
+		return 0
+	if guardar is Dictionary:
+		(guardar as Dictionary)[g] = [g.visibility_range_end, g.visibility_range_end_margin]   ## (para devolverlo al salir del paseo)
+	g.visibility_range_end = hasta
+	g.visibility_range_end_margin = hasta * 0.1
+	return 1
 
 ## Lo último que hace la ciudad al optimizarse (7-11): las zonas de vista y, en ULTRA BAJA y BAJA de CUALQUIER sistema (no solo en móvil), el mismo tope
 ## de 450 m para lo pequeño: ciudad a pie 688 → 411 llamadas de dibujo, mapa aéreo 2.761 → 1.321 (ULTRA BAJA, `medir_ciudad`). Va AL FINAL, tras `agrupar`:
@@ -141,8 +150,16 @@ static func al_final(raiz: Node3D, prologo: bool, ceder: Object = null) -> void:
 	if ceder != null:
 		await ceder._marca("zonas_vista")
 	if not prologo and Calidad.elegida <= Calidad.BAJA and not (EscalaMovil.es_movil() or Calidad.motor_ligero or OS.get_environment("MOVIL_SIM") != ""):
-		limitar_vista(raiz, 450.0)   ## (el recorte más cerrado, 64 % del alcance a pie, solo rige MIENTRAS SE PASEA: `recorte_a_pie`; el mapa aéreo conserva sus 450 m)
-		if ceder != null:
+		if ceder == null:
+			limitar_vista(raiz, 450.0)   ## (el recorte más cerrado, 64 % del alcance a pie, solo rige MIENTRAS SE PASEA: `recorte_a_pie`; el mapa aéreo conserva sus 450 m)
+		else:
+			var fuera := limitar_fuera(raiz)
+			for g in raiz.find_children("*", "GeometryInstance3D", true, false):
+				await ceder.ceder()
+				if not is_instance_valid(raiz) or not raiz.is_inside_tree():
+					return
+				if is_instance_valid(g):
+					limitar_uno(g, fuera, 450.0, 90.0, null)
 			await ceder._marca("limitar_vista")
 		rotulos_cercanos(raiz)   ## y los rótulos 3D con alcance según su tamaño (galería del club, vestuario…)
 

@@ -303,6 +303,7 @@ func _calles() -> void:
 	## Sin metálico: con 0,1 y rugosidad 0,45 reflejaba el cielo negro de noche.
 	## 26-10-2026: rugosidad mate (`asfalto_mate`): sin el lavado blanco a contraluz.
 	var asfalto: StandardMaterial3D = CityBuilder.asfalto_mate(Texturas.asfalto(Color(0.39, 0.39, 0.405)).duplicate(), 0.8)
+	await ceder()   ## (6-11) la carga cede un fotograma cada ~40 ms (la textura del asfalto, el anillo y cada ramal)
 	var linea := StandardMaterial3D.new()
 	linea.albedo_color = Color(0.85, 0.82, 0.55)
 	linea.roughness = 0.8
@@ -314,6 +315,7 @@ func _calles() -> void:
 	_via(Vector3(RING_X, 0, centro_ns), Vector2(ANCHO_CALLE, largo_ns), asfalto, linea, false)
 	_via(Vector3(0, 0, RING_Z_NORTE), Vector2(RING_X * 2.0 + ANCHO_CALLE, ANCHO_CALLE), asfalto, linea, true)
 	_via(Vector3(0, 0, RING_Z_SUR), Vector2(RING_X * 2.0 + ANCHO_CALLE, ANCHO_CALLE), asfalto, linea, true)
+	await ceder()
 
 	## Ramales del anillo a cada parcela: un trozo corto que ata la parcela a
 	## la calle, para que se lea que da a ella y no que flota al lado.
@@ -325,6 +327,7 @@ func _calles() -> void:
 		var medio: float = (borde_x + desde) * 0.5
 		var largo: float = absf(borde_x - desde) + ANCHO_CALLE
 		_via(Vector3(medio, 0, pos.y), Vector2(largo, ANCHO_CALLE), asfalto, linea, true)
+		await ceder()
 
 	## Y el ramal al barrio residencial, que cuelga del tramo sur del anillo.
 	## Termina delante del portón de la finca (la acera del fondo de saco

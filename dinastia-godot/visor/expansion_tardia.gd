@@ -22,7 +22,7 @@ static func sembrar(ex, clave: Variant) -> void:
 ## Una manzana, con su propio azar.
 static func bloque(ex, bl: Dictionary) -> void:
 	sembrar(ex, ["bloque", bl["celda"]])
-	ex._dibujar_bloque(bl)
+	await ex._dibujar_bloque(bl)
 
 ## Lo que se agrupa tras dibujar todas las manzanas: edificios lejanos, casas y modulares.
 static func casas(ex) -> void:
@@ -38,7 +38,7 @@ static func casas(ex) -> void:
 ## Las manzanas que faltan, una a una (cada una cede el fotograma si toca).
 static func bloques_restantes(ex) -> void:
 	for bl: Dictionary in ex.bloques_diferidos:
-		bloque(ex, bl)
+		await bloque(ex, bl)
 		await ex.b._marca("exp.bloque")
 	ex.bloques_diferidos = []
 	await casas(ex)

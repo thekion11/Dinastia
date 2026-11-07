@@ -63,6 +63,6 @@ func _fin() -> void:
 		if float(h[0]) > 200.0:
 			largos += 1
 	print("HUECO max=%.0f ms  >200ms=%d de %d fotogramas  carga_total=%.0f ms" % [float(ordenados[0][0]), largos, _huecos.size(), float(_huecos[-1][2])])
-	for h: Array in ordenados.slice(0, 12):
+	for h: Array in ordenados.slice(0, 16):
 		print("HUECO_TOP %.0f ms en el fotograma %d (t=%.0f ms) tras «%s»" % [float(h[0]), int(h[1]), float(h[2]), String(h[3])])
 	get_tree().quit()

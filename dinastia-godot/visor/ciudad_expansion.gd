@@ -156,7 +156,7 @@ func construir() -> void:
 	cuenta["edificios"] = 0
 	await b._marca("exp_calles")   ## (28-10) marcas de tiempo por tramo, solo con TIEMPOS=1
 	for bl: Dictionary in ExpansionTardia.primeros_bloques(self):
-		ExpansionTardia.bloque(self, bl)
+		await ExpansionTardia.bloque(self, bl)
 		await b._marca("exp.bloque")
 	if not CityBuilder.diferir:   ## con carga diferida, esto va tras las manzanas que faltan (`ExpansionTardia.bloques_restantes`)
 		await ExpansionTardia.casas(self)
@@ -165,7 +165,7 @@ func construir() -> void:
 	metro.name = "Metro"
 	b.add_child(metro)
 	if not CityBuilder.modo_prologo:   ## prólogo: metro vacío, sin líneas ni bocas
-		metro.montar(self)
+		await metro.montar(self)
 		await b._marca("exp.metro_montar")   ## (6-11) cede por separado
 		_bocas_metro()
 	await b._marca("exp.metro")

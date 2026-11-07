@@ -151,7 +151,7 @@ func build(d: Dictionary) -> void:
 
 	_suelo()
 	await _marca("_suelo")
-	_calles()
+	await _calles()
 	await _marca("_calles")
 	await _estadio()
 	await _marca("_estadio")
