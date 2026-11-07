@@ -8,7 +8,10 @@
 #include <godot_cpp/classes/fast_noise_lite.hpp>
 #include <godot_cpp/classes/image.hpp>
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/variant/aabb.hpp>
 #include <godot_cpp/variant/array.hpp>
+#include <godot_cpp/variant/dictionary.hpp>
+#include <godot_cpp/variant/transform3d.hpp>
 #include <godot_cpp/variant/packed_byte_array.hpp>
 #include <godot_cpp/variant/packed_float32_array.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
@@ -37,6 +40,9 @@ public:
 	// `ranuras` = {puestos, ks, ws, grupos, por}; `libres` = los `Jugador` (se leen aquí: pos_e, ovr, pos_sec, atributos, forma, moral); `grupo_de` = {pos_e: grupo}.
 	// Calcula `Jugador.media_en` con los mismos pasos (los atributos de cada jugador se leen una sola vez).
 	PackedInt32Array once_asignar_libres(const Dictionary &ranuras, const Array &libres, const Dictionary &grupo_de, const PackedInt32Array &orden) const;
+	// `Optimizar.obstaculo_multimalla` (el bucle por instancia de un MultiMesh): los círculos de choque como PackedVector3Array [x, z, radio]. `buf` = el buffer del MultiMesh (`paso` floats por instancia).
+	PackedVector3Array obstaculos_multimalla(const Transform3D &nodo_t, const PackedFloat32Array &buf, int64_t paso, int64_t n, const AABB &base, double raiz_y, double min_alto, double max_base,
+			const Dictionary &rej, double celda_rej) const;
 };
 
 } // namespace godot
