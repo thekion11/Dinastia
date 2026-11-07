@@ -25,7 +25,7 @@ func _process(_d: float) -> void:
 		_t0 = ahora
 		_p.call("_ver_ciudad_con_carga")
 	if _n > 5:
-		_huecos.append([dt, _n, (ahora - _t0) / 1000.0, String(_vc.get("_ciudad").get("_punto")) if _vc != null and _vc.get("_ciudad") != null else ""])
+		_huecos.append([dt, _n, (ahora - _t0) / 1000.0, _sitio()])
 		if _vc == null:
 			for h in _p.get_children():
 				if h is VistaCiudad:
@@ -54,6 +54,15 @@ func _firma() -> String:
 	var circ: PackedVector3Array = ciudad.get("circulos")
 	return "%s inst=%d caja=(%.0f,%.0f,%.0f) circulos=%d" % [str(clases), inst, caja.x, caja.y, caja.z, circ.size()]
 
+var _sitio_ant := ""
+
+## Entre dónde cedió el fotograma anterior y dónde ha cedido este: el tramo de código que tardó.
+func _sitio() -> String:
+	var ahora := String(_vc.get("_ciudad").get("_cede_en")) if _vc != null and _vc.get("_ciudad") != null else ""
+	var r := "de «%s» a «%s»" % [_sitio_ant, ahora]
+	_sitio_ant = ahora
+	return r
+
 func _fin() -> void:
 	print("FIRMA ", _firma())
 	var ordenados := _huecos.duplicate()
@@ -64,5 +73,5 @@ func _fin() -> void:
 			largos += 1
 	print("HUECO max=%.0f ms  >200ms=%d de %d fotogramas  carga_total=%.0f ms" % [float(ordenados[0][0]), largos, _huecos.size(), float(_huecos[-1][2])])
 	for h: Array in ordenados.slice(0, 16):
-		print("HUECO_TOP %.0f ms en el fotograma %d (t=%.0f ms) tras «%s»" % [float(h[0]), int(h[1]), float(h[2]), String(h[3])])
+		print("HUECO_TOP %.0f ms en el fotograma %d (t=%.0f ms) %s" % [float(h[0]), int(h[1]), float(h[2]), String(h[3])])
 	get_tree().quit()

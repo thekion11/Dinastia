@@ -95,15 +95,15 @@ static func _explanada_de_fondo(root: Node3D) -> void:
 	## de fondo (el propio comentario de arriba ya lo dice: "para no pelear en
 	## z-fighting", nunca se pensó como superficie protagonista).
 	var mat_explanada: StandardMaterial3D = Texturas.hormigon(Color(0.30, 0.31, 0.33), 41).duplicate()
-	## 26-9-2026: sin rayas en ángulo rasante. Se repite en el mundo (un
-	## mosaico cada 2 m, el tamaño de una losa de hormigón) y con filtrado
-	## anisótropo, en vez de estirar una textura sobre 400 m.
+	## 26-9-2026: sin rayas en ángulo rasante. Se repite en el mundo (un mosaico cada 2 m, el tamaño de una losa) y con filtrado anisótropo, en vez de estirar una textura sobre 400 m.
 	mat_explanada.uv1_world_triplanar = true
 	mat_explanada.uv1_scale = Vector3(0.5, 0.5, 0.5)
 	mat_explanada.normal_enabled = false
 	mi.material_override = mat_explanada
 	root.add_child(mi)
+static var _ult_tm := ""   ## la última fase apuntada (`_ceder_paso` la usa para rotular dónde cede)
 static func _tm(que: String) -> void:
+	_ult_tm = que if que != "" else _ult_tm
 	if CargaCiudad.de("CityBuilder")._medir_tiempos:
 		var ahora := Time.get_ticks_usec()
 		if que != "":

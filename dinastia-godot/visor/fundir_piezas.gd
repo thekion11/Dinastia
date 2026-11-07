@@ -61,7 +61,11 @@ static func fundir_profundo(raiz: Node3D, nombre := "FundidoProfundo", excluir: 
 	var orden: Array = []
 	var rep := {}   ## firma -> el material que queda
 	var n := 0
+	var sb: GDScript = load("res://visor/stadium_builder.gd")   ## (6-11) por `load`: el estadio cede fotogramas entre mallas (sin la carga de la ciudad no hace nada)
 	for mi: MeshInstance3D in raiz.find_children("*", "MeshInstance3D", true, false):
+		await sb._ceder_paso()
+		if not is_instance_valid(mi) or not is_instance_valid(raiz):
+			continue
 		if mi.mesh == null or mi.get_child_count() > 0 or not mi.visible or excluir.has(mi) or mi.name == nombre or mi.skin != null or mi.layers != 1:
 			continue
 		var xf := mi.transform
