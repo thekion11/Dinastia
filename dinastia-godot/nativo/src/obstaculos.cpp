@@ -16,12 +16,12 @@ using namespace godot;
 
 // `Optimizar._en_rejilla`: ¿cae (x, z) dentro de algún rectángulo sólido de su celda de la rejilla?
 static bool en_rejilla(const Dictionary &rej, double celda_rej, double x, double z) {
-	const Vector2i k(int32_t(std::floor(x / celda_rej)), int32_t(std::floor(z / celda_rej)));
+	const Vector2i k = Vector2i(int32_t(std::floor(x / celda_rej)), int32_t(std::floor(z / celda_rej)));
 	if (!rej.has(k)) {
 		return false;
 	}
 	const Array lista = rej[k];
-	const Vector2 p(real_t(x), real_t(z));
+	const Vector2 p = Vector2(real_t(x), real_t(z));
 	for (int64_t i = 0; i < lista.size(); i++) {
 		const Rect2 r = lista[i];
 		if (r.has_point(p)) {
@@ -63,7 +63,7 @@ PackedVector3Array DinastiaNativo::obstaculos_multimalla(const Transform3D &nodo
 	for (int64_t i = 0; i < n; i++) {
 		const float *f = b + i * paso;
 		// `BufferMM.transform_de`: filas de la matriz 3×4; el origen en 3, 7 y 11.
-		const Transform3D t(Basis(Vector3(f[0], f[4], f[8]), Vector3(f[1], f[5], f[9]), Vector3(f[2], f[6], f[10])), Vector3(f[3], f[7], f[11]));
+		const Transform3D t = Transform3D(Basis(Vector3(f[0], f[4], f[8]), Vector3(f[1], f[5], f[9]), Vector3(f[2], f[6], f[10])), Vector3(f[3], f[7], f[11]));
 		const AABB caja = (nodo_t * t).xform(base);
 		const double sx = caja.size.x;
 		const double sz = caja.size.z;

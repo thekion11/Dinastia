@@ -139,13 +139,13 @@ func _probar() -> void:
 	var nodo_t := Transform3D(Basis.from_euler(Vector3(0.0, 0.4, 0.0)), Vector3(12.5, 0.25, -7.75))
 	var base_aabb := AABB(Vector3(-0.5, -0.5, -0.5), Vector3.ONE)
 	var ga := PackedVector3Array()
-	var u0 := Time.get_ticks_usec()
+	var q0 := Time.get_ticks_usec()
 	Optimizar.circulos_mm_gd(ga, nodo_t, mm_t, buf, 12, true, base_aabb, 0.25, 0.9, 0.9, rej)
-	var u1 := Time.get_ticks_usec()
+	var q1 := Time.get_ticks_usec()
 	var gb: PackedVector3Array = nat.obstaculos_multimalla(nodo_t, buf, 12, n_i, base_aabb, 0.25, 0.9, 0.9, rej, Optimizar.CELDA_REJ)
-	var u2 := Time.get_ticks_usec()
+	var q2 := Time.get_ticks_usec()
 	_comprobar(ga.size() > 200 and var_to_bytes(ga) == var_to_bytes(gb), "círculos de un MultiMesh iguales byte a byte (%d círculos de %d instancias)" % [ga.size(), n_i])
-	print("obstáculos de MultiMesh: GDScript %d ms, C++ %d ms" % [(u1 - u0) / 1000, (u2 - u1) / 1000])
+	print("obstáculos de MultiMesh: GDScript %d ms, C++ %d ms" % [(q1 - q0) / 1000, (q2 - q1) / 1000])
 	_fin()
 
 func _comprobar(ok: bool, que: String) -> void:
