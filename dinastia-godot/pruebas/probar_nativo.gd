@@ -117,6 +117,35 @@ func _probar() -> void:
 				_comprobar(igual, "alisado de %s/%s igual byte a byte" % [ruta.get_file(), mi.name])
 				print("alisado %s (%d vértices): GDScript %d ms, C++ %d ms" % [mi.name, pos.size(), (t1 - t0) / 1000, (t2 - t1) / 1000])
 		raiz.free()
+	## (7-11) Los círculos de choque de un MultiMesh: C++ y GDScript, byte a byte, con instancias de todos los tamaños, torcidas, alargadas y algunas dentro de rectángulos sólidos.
+	var rg := RandomNumberGenerator.new()
+	rg.seed = 5
+	var n_i := 6000
+	var buf := PackedFloat32Array()
+	buf.resize(n_i * 12)
+	for i in n_i:
+		var tr := Transform3D(Basis.from_euler(Vector3(0.0, rg.randf() * TAU, 0.0)).scaled(Vector3(rg.randf_range(0.05, 9.0), rg.randf_range(0.2, 6.0), rg.randf_range(0.05, 12.0))), Vector3(rg.randf_range(-300, 300), rg.randf_range(0.0, 1.5), rg.randf_range(-300, 300)))
+		var fila := [tr.basis.x.x, tr.basis.y.x, tr.basis.z.x, tr.origin.x, tr.basis.x.y, tr.basis.y.y, tr.basis.z.y, tr.origin.y, tr.basis.x.z, tr.basis.y.z, tr.basis.z.z, tr.origin.z]
+		for q in 12:
+			buf[i * 12 + q] = fila[q]
+	var rects: Array[Rect2] = []
+	for i in 40:
+		rects.append(Rect2(rg.randf_range(-300, 280), rg.randf_range(-300, 280), rg.randf_range(2, 25), rg.randf_range(2, 25)))
+	var rej := Optimizar._rejilla(rects)
+	var mm_t := MultiMesh.new()
+	mm_t.transform_format = MultiMesh.TRANSFORM_3D
+	mm_t.mesh = BoxMesh.new()
+	mm_t.instance_count = n_i
+	var nodo_t := Transform3D(Basis.from_euler(Vector3(0.0, 0.4, 0.0)), Vector3(12.5, 0.25, -7.75))
+	var base_aabb := AABB(Vector3(-0.5, -0.5, -0.5), Vector3.ONE)
+	var ga := PackedVector3Array()
+	var q0 := Time.get_ticks_usec()
+	Optimizar.circulos_mm_gd(ga, nodo_t, mm_t, buf, 12, true, base_aabb, 0.25, 0.9, 0.9, rej)
+	var q1 := Time.get_ticks_usec()
+	var gb: PackedVector3Array = nat.obstaculos_multimalla(nodo_t, buf, 12, n_i, base_aabb, 0.25, 0.9, 0.9, rej, Optimizar.CELDA_REJ)
+	var q2 := Time.get_ticks_usec()
+	_comprobar(ga.size() > 200 and var_to_bytes(ga) == var_to_bytes(gb), "círculos de un MultiMesh iguales byte a byte (%d círculos de %d instancias)" % [ga.size(), n_i])
+	print("obstáculos de MultiMesh: GDScript %d ms, C++ %d ms" % [(q1 - q0) / 1000, (q2 - q1) / 1000])
 	_fin()
 
 func _comprobar(ok: bool, que: String) -> void:

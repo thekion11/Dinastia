@@ -109,9 +109,17 @@ static func obstaculo_multimalla(n: Node, raiz: Node3D, rej: Dictionary, sal: Pa
 	var buf := mm.buffer
 	var paso := paso_buffer(mm)
 	var en_buffer := mm.transform_format == MultiMesh.TRANSFORM_3D and buf.size() >= mm.instance_count * paso
+	## (7-11) En C++ (misma cuenta, mismos bytes: `pruebas/probar_nativo.tscn`); sin la extensión, o sin datos de buffer, la versión GDScript de abajo.
+	if en_buffer and Nativo.obj() != null:
+		sal.append_array(Nativo.obj().obstaculos_multimalla(nodo_t, buf, paso, mm.instance_count, base, raiz.global_position.y, min_alto, max_base, rej, CELDA_REJ))
+		return
+	circulos_mm_gd(sal, nodo_t, mm, buf, paso, en_buffer, base, raiz.global_position.y, min_alto, max_base, rej)
+
+## El bucle por instancia en GDScript: el respaldo de `DinastiaNativo.obstaculos_multimalla` (Android, Web) y su referencia en las pruebas.
+static func circulos_mm_gd(sal: PackedVector3Array, nodo_t: Transform3D, mm: MultiMesh, buf: PackedFloat32Array, paso: int, en_buffer: bool, base: AABB, raiz_y: float, min_alto: float, max_base: float, rej: Dictionary) -> void:
 	for i in mm.instance_count:
 		var caja := nodo_t * (BufferMM.transform_de(buf, i * paso) if en_buffer else mm.get_instance_transform(i)) * base
-		if caja.size.y < min_alto or caja.position.y - raiz.global_position.y > max_base or maxf(caja.size.x, caja.size.z) > 8.0 or minf(caja.size.x, caja.size.z) < 0.08:
+		if caja.size.y < min_alto or caja.position.y - raiz_y > max_base or maxf(caja.size.x, caja.size.z) > 8.0 or minf(caja.size.x, caja.size.z) < 0.08:
 			continue
 		var c := caja.get_center()
 		if not _en_rejilla(rej, c.x, c.z):
