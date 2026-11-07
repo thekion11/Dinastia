@@ -16,6 +16,11 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - **RAM = la del MOTOR** (estática + texturas + vídeo; decisión del dueño, 6-11 noche). Menú ~436 MB, partido ~941 MB, ciudad ~1.420 MB en ULTRA BAJA: meta < 1,5 GB CUMPLIDA. La medida en el teléfono se hace después (prueba de rendimiento de Ajustes).
 - **Medición en teléfono del dueño**: PARA DESPUÉS (decisión del dueño, 6-11 noche). Hasta entonces, los FPS y ms son solo estimación.
 
+## EXPORTACIÓN AL TERMINAR (orden del dueño, 7-11) — se borra al completarse del todo
+- Cuando las sesiones terminen su trabajo y se fusione a `main`, la LÍDER lanza la compilación completa (workflow «Compilar y probar Dinastia», objetivo `todo`) y avisa al dueño cuando los artefactos (Windows, Windows ligero, Linux, Web, Android depuración, Android armv7) estén listos, con el enlace a la ejecución.
+- Lo que no sale automático: macOS/iOS, Android firmado para Play (keystore del dueño), y el Release publicado (el dueño decide la versión).
+- Los artefactos caducan: el dueño los sube a Drive con `herramientas/drive_subir.ps1` si quiere guardarlos.
+
 ## OBJETIVOS DEL DUEÑO DE RENDIMIENTO (6-11, orden 33) — META FINAL, TODO EL JUEGO
 - **Pico de RAM menor de 1,5 GB** (DDR3, equipo modesto; hoy el partido llega a 2,4-3,1 GB en MEDIO y ciudad 4,4-5 GB).
 - **Menos de 120 llamadas de dibujo en ULTRA BAJA** (hoy la ciudad en ULTRA BAJA ronda 471 según la sesión Tracy; sin cifra tras #203-#205).
