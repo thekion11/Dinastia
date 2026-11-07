@@ -268,6 +268,8 @@ static func fundir_ciudad(raiz: Node3D, celda := 160.0, nombre := "FundidoCiudad
 	for n in raiz.find_children("*", "MeshInstance3D", true, false):
 		if ceder != null:
 			await ceder.ceder()
+			if not is_instance_valid(raiz) or not raiz.is_inside_tree():
+				return 0   ## (cambio de escena mientras cedía: ya no hay nada que fundir)
 			if not is_instance_valid(n):
 				continue
 		var mi := n as MeshInstance3D
@@ -307,6 +309,8 @@ static func fundir_ciudad(raiz: Node3D, celda := 160.0, nombre := "FundidoCiudad
 	for par: Array in elegidas:
 		if ceder != null:
 			await ceder.ceder()
+			if not is_instance_valid(raiz) or not raiz.is_inside_tree():
+				return 0
 		var mi: MeshInstance3D = par[0]
 		if not is_instance_valid(mi):
 			continue
@@ -325,6 +329,8 @@ static func fundir_ciudad(raiz: Node3D, celda := 160.0, nombre := "FundidoCiudad
 	for clave: Array in cubos:
 		if ceder != null:
 			await ceder.ceder()
+			if not is_instance_valid(raiz) or not raiz.is_inside_tree():
+				return 0
 		var cubo: Dictionary = cubos[clave]
 		if not bool(cubo.get("usar", false)):
 			continue

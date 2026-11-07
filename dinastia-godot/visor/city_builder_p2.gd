@@ -154,7 +154,10 @@ static var _piezas_hincha: Array = []
 var por_partes := false
 var _t_respiro := 0
 
+var _punto := ""   ## la última marca pasada (`medir_hueco` rotula con ella qué tramo causó cada hueco)
+
 func _marca(que: String) -> void:
+	_punto = que
 	PantallaCarga.paso(que)   ## la barra de carga avanza con las etapas conocidas
 	if por_partes and Time.get_ticks_usec() - _t_respiro > 40000:
 		await get_tree().process_frame

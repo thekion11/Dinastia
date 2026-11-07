@@ -13,6 +13,8 @@ static func optimizar(cb) -> void:
 	Optimizar.primitivas(cb)
 	await cb._marca("opt_primitivas")
 	await _trocear(cb)
+	if not is_instance_valid(cb):
+		return
 	await cb._marca("opt_trocear")
 	Optimizar.butacas_livianas(cb, true)
 	await cb._marca("opt_butacas")
@@ -24,6 +26,8 @@ static func optimizar(cb) -> void:
 	await cb._marca("despejar")
 	## (30-10-2026: aquí se repetían primitivas, butacas livianas y distancias -una copia de una fusión vieja-; la segunda pasada no cambiaba nada y costaba ~150 ms.)
 	var circ := await _obstaculos(cb)
+	if not is_instance_valid(cb):
+		return
 	## Los bancos (asiento a 0,75 m y respaldo bajo) quedaban por debajo del umbral de 0,9 m y se atravesaban andando (27-10-2026, plan §4 colisiones): un círculo por asiento.
 	for a: Dictionary in cb.asientos:
 		var pa: Vector3 = a["p"]
@@ -33,6 +37,8 @@ static func optimizar(cb) -> void:
 	OclusoresCiudad.montar(cb)
 	await cb._marca("oclusores")
 	await _agrupar(cb)
+	if not is_instance_valid(cb):
+		return
 	await cb._marca("opt_agrupar")
 	await OptimizarGrada.al_final(cb, cb.modo_prologo, cb)   ## zonas de vista + tope de distancia de ULTRA BAJA/BAJA (7-11)
 
@@ -42,6 +48,8 @@ static func _trocear(cb) -> void:
 	var fuera := Optimizar.trocear_fuera(cb)
 	for n in cb.find_children("*", "MultiMeshInstance3D", true, false):
 		await cb.ceder()
+		if not is_instance_valid(cb):
+			return   ## (cambio de escena mientras cedía)
 		if is_instance_valid(n):
 			Optimizar.trocear_uno(n, fuera, cb)
 
@@ -50,10 +58,14 @@ static func _obstaculos(cb) -> PackedVector3Array:
 	var rej := Optimizar._rejilla(ExploradorCiudad.construir_obstaculos(cb))
 	for n in cb.find_children("*", "MeshInstance3D", true, false):
 		await cb.ceder()
+		if not is_instance_valid(cb):
+			return sal   ## (cambio de escena mientras cedía)
 		if is_instance_valid(n):
 			Optimizar.obstaculo_malla(n, cb, rej, sal, 0.9, 0.9)
 	for n in cb.find_children("*", "MultiMeshInstance3D", true, false):
 		await cb.ceder()
+		if not is_instance_valid(cb):
+			return sal   ## (cambio de escena mientras cedía)
 		if is_instance_valid(n):
 			Optimizar.obstaculo_multimalla(n, cb, rej, sal, 0.9, 0.9)
 	return sal
@@ -62,10 +74,14 @@ static func _agrupar(cb) -> void:
 	var ctx := Optimizar.agrupar_inicio(cb)
 	for n in cb.find_children("*", "MeshInstance3D", true, false):
 		await cb.ceder()
+		if not is_instance_valid(cb):
+			return   ## (cambio de escena mientras cedía)
 		if is_instance_valid(n):
 			Optimizar.agrupar_uno(n, cb, true, ctx)
 	Optimizar.agrupar_detalle(ctx)
 	for k: String in (ctx["grupos"] as Dictionary).keys():
 		await cb.ceder()
+		if not is_instance_valid(cb):
+			return
 		Optimizar.agrupar_fusion(k, cb, ctx)
 	Optimizar.agrupar_fin(cb, ctx)
