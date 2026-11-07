@@ -159,6 +159,7 @@ func _trafico() -> void:
 			t.agregar_vehiculo(nodo, id, rng.randf() * 1800.0,
 				rng.randf_range(13.0, 22.0), 0.0, 0.0)
 			t.marcar_cola_al_ultimo()   ## A4-M3D-012: sin cola, los coches de una misma ruta con distinta velocidad se atravesaban
+			await ceder()   ## (6-11) cada vehículo es una escena instanciada: la carga cede un fotograma cada ~40 ms
 
 	## 1b) EL EJE EXTERIOR, con su propio tráfico -si la circunvalación estuviera
 	## vacía se notaría más que si no existiera-.
@@ -180,6 +181,7 @@ func _trafico() -> void:
 			t.agregar_vehiculo(n_ex, id_ex, rng.randf() * 2200.0,
 				rng.randf_range(15.0, 24.0), 0.0, 0.0)
 			t.marcar_cola_al_ultimo()
+			await ceder()
 		## Los autobuses del anillo (la vieja línea 5 amarilla) ya no van aquí (28-10-2026): las cuatro marquesinas del anillo son
 		## paraderos de los recorridos «Red» 101c, 190, 122, C02, 150, 502c y 506c, que pasan por el anillo con sus buses (`BusesRed`).
 
@@ -209,6 +211,7 @@ func _trafico() -> void:
 			t.agregar_vehiculo(nodo2, id2, rng.randf() * 600.0,
 				rng.randf_range(9.0, 15.0), 0.0, 0.0)
 			t.marcar_cola_al_ultimo()
+			await ceder()
 
 	## 5) LOS PEATONES (26-9-2026, B7): por las aceras del anillo y de la
 	## avenida, en los dos sentidos, más cuanto más grande es el club.
@@ -227,6 +230,7 @@ func _trafico() -> void:
 		var id_p := t.agregar_ruta(_redondear(esq_p, 20.0))
 		for i in range(_n_pro(int(round(lerpf(10.0, 22.0, _empuje_club()))))):
 			_un_peaton(t, rng_p, id_p, rng_p.randf() * 2400.0)
+			await ceder()
 	## (6-11, detector `detector_atraviesa`) Las aceras de la avenida giraban en z = -85, 15 m DENTRO de la huella del estadio (que empieza en
 	## z = -70): el 1,5 % de los peatones caminaba por dentro de la grada. Ahora dan la vuelta 4 m antes de la huella.
 	var z_norte_av := ESTADIO_EN.z + 80.0 + 4.0
@@ -237,6 +241,7 @@ func _trafico() -> void:
 	var id_av := t.agregar_ruta(_redondear(acera_av, 5.0))
 	for i in range(_n_pro(int(round(lerpf(6.0, 14.0, _empuje_club()))))):
 		_un_peaton(t, rng_p, id_av, rng_p.randf() * 900.0)
+		await ceder()
 
 	## 4) LOS BOTES DEL RÍO (7-10-2026). El velero tiene el mástil más alto
 	## que los puentes de la ciudad grande: se queda amarrado en el puerto y
@@ -249,7 +254,7 @@ func _trafico() -> void:
 	for k in 3:
 		t.agregar_vehiculo(_hacer_bote(k), id3, 2700.0 * float(k), 4.0, 0.15, 0.0)
 	if expansion != null:
-		expansion.trafico(t, coches, rng)
+		await expansion.trafico(t, coches, rng)
 
 func _banderas_anillo(c1: Color, c2: Color) -> void:
 	if _anillo_con_banderas:

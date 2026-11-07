@@ -193,7 +193,7 @@ func build(d: Dictionary) -> void:
 	_horizonte()
 	await _marca("_horizonte")
 	if not tardio:
-		_trafico()
+		await _trafico()
 		await _marca("_trafico")
 	## B7: el día de partido, el ánimo del barrio y los rótulos flotantes.
 	if bool(datos.get("dia_partido", false)):
@@ -239,12 +239,12 @@ func _resto() -> void:
 	await ExpansionTardia.precargar_vehiculos(self)
 	await _karting()
 	await _marca("_karting")
-	_trafico()
+	await _trafico()
 	await _marca("_trafico")
 	await ExpansionTardia.bloques_restantes(expansion)
 	await ExpansionTardia.mobiliario(expansion)
 	if not modo_prologo:
-		ExpansionTardia.afueras(expansion)
+		await ExpansionTardia.afueras(expansion)
 		await _marca("exp.afueras_tardio")
 	expansion._volcar_lotes()
 	vestir_todas_las_torres()   ## las torres de las manzanas tardías (las de antes ya llevan su material: no se repiten)
