@@ -16,6 +16,7 @@ static var _t_ceder := 0
 static func _ceder_paso() -> void:
 	if ceder == null or not ceder.por_partes or Time.get_ticks_usec() - _t_ceder < 40000:
 		return
+	ceder._cede_en = "estadio tras " + _ult_tm
 	await ceder.get_tree().process_frame
 	_t_ceder = Time.get_ticks_usec()
 

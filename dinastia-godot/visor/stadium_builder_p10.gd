@@ -86,7 +86,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 		for arco in ["Arco_Norte", "Arco_Sur", "BanquilloLocal", "BanquilloVisita"]:
 			var a := root.get_node_or_null(arco) as Node3D
 			if a != null:
-				FundirPiezas.fundir_profundo(a, "Fundido")
+				await FundirPiezas.fundir_profundo(a, "Fundido")
 
 ## LAS ESQUINAS TAMBIÉN LLEVAN GENTE (22-9-2026). "Falta un tramo" -el
 ## usuario lo vio de inmediato justo después de la ronda de las butacas
