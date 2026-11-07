@@ -57,8 +57,6 @@ static func ejecutar(p: Principal, accion: String) -> void:
 			load("res://ui/componentes/telefono.gd").abrir(p, p.mundo)   ## (por load: el móvil no se compila al abrir el menú)
 		"ver_estadio":
 			p._ver_estadio_con_carga()
-		"ver_ciudad":
-			p._ver_ciudad_con_carga()
 		"ciudad_pie", "ciudad_coche":
 			p._ver_ciudad_explorando("coche" if accion == "ciudad_coche" else "pie")
 		"mi_personaje":
