@@ -156,16 +156,17 @@ func construir() -> void:
 	cuenta["edificios"] = 0
 	await b._marca("exp_calles")   ## (28-10) marcas de tiempo por tramo, solo con TIEMPOS=1
 	for bl: Dictionary in ExpansionTardia.primeros_bloques(self):
-		ExpansionTardia.bloque(self, bl)
+		await ExpansionTardia.bloque(self, bl)
 		await b._marca("exp.bloque")
 	if not CityBuilder.diferir:   ## con carga diferida, esto va tras las manzanas que faltan (`ExpansionTardia.bloques_restantes`)
-		ExpansionTardia.casas(self)
+		await ExpansionTardia.casas(self)
 	await b._marca("exp.casas")
 	metro = MetroCiudad.new()
 	metro.name = "Metro"
 	b.add_child(metro)
 	if not CityBuilder.modo_prologo:   ## prólogo: metro vacío, sin líneas ni bocas
-		metro.montar(self)
+		await metro.montar(self)
+		await b._marca("exp.metro_montar")   ## (6-11) cede por separado
 		_bocas_metro()
 	await b._marca("exp.metro")
 	if CityBuilder.diferir:
@@ -174,7 +175,7 @@ func construir() -> void:
 		await ExpansionTardia.mobiliario(self)
 	redes = RedesCiudadVista.crear(self, 20261027)
 	if not CityBuilder.modo_prologo and not CityBuilder.diferir:   ## lo lejano (autopista, eólico, depósito, teleférico), fuera del prólogo y, con carga diferida, después
-		ExpansionTardia.afueras(self)
+		await ExpansionTardia.afueras(self)
 	await b._marca("exp.afueras")
 	_volcar_lotes()
 	await b._marca("exp_lotes")
@@ -338,6 +339,7 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 				t.agregar_vehiculo(nodo, id, largo * (float(i) + rng.randf() * 0.5) / float(por_sentido), rng.randf_range(10.0, 15.0), 0.0, 0.0)
 				t.marcar_cola_al_ultimo()
 				n_coches += 1
+				await b.ceder()   ## (6-11) la carga cede un fotograma cada ~40 ms
 	n_coches += CiudadRotonda.trafico(self, t, coches, rng)   ## y los tres de la rotonda
 	cuenta["coches"] = n_coches
 	## La autopista: tráfico más rápido, sin semáforos.
@@ -350,6 +352,7 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 			var na: Node3D = CityBuilder.instanciar_trafico(coches[rng.randi() % coches.size()], rng)
 			t.agregar_vehiculo(na, ida, largo_a * float(i) / 12.0 + rng.randf() * 40.0, rng.randf_range(22.0, 30.0), 0.0, 0.0)
 			t.marcar_cola_al_ultimo()
+			await b.ceder()
 	## Los autobuses: los recorridos «Red» sobre el mapa, ida y vuelta, con su número, destino y patente (`BusesRed`).
 	cuenta["autobuses"] = BusesRed.montar(self, t)
 	## Peatones: la vuelta a varias manzanas por su acera.
@@ -369,6 +372,7 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 		for q in 2:
 			b._un_peaton(t, rng, id3, rng.randf() * 300.0)
 			n_p += 1
+			await b.ceder()
 		elegidos += 1
 		if elegidos >= 16:
 			break
@@ -393,6 +397,7 @@ func trafico(t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> voi
 			break
 		b._un_peaton(t, rng, int(rutas_g[rng.randi() % rutas_g.size()]), rng.randf() * 300.0)
 		n_p += 1
+		await b.ceder()
 	n_p += PeatonesCruce.montar(self, t, rng)   ## y los que CRUZAN las avenidas con su semáforo
 	cuenta["peatones"] = n_p
 

@@ -64,7 +64,8 @@ func _estadio() -> void:
 		## Antes la semilla era el aforo y sin club: butacas y detalles distintos.
 		var club_obj: Club = datos.get("club_obj") as Club
 		var semilla := club_obj._hash_id() if club_obj != null else aforo
-		load("res://visor/stadium_builder.gd").build_pitch(nodo, perfil, club_obj)
+		load("res://visor/stadium_builder.gd").ceder = self   ## (6-11) el estadio cede fotogramas desde el césped
+		await load("res://visor/stadium_builder.gd").build_pitch(nodo, perfil, club_obj)
 		await _marca("estadio.campo")   ## (3-11, el prólogo no cargaba en el móvil) el estadio ya no es UN solo fotograma de ~3 s
 		## Ocupación media-baja: fuera de partido el estadio no está lleno, pero
 		## con 0,06 la grada salía de un gris uniforme y desde el mapa el
@@ -75,7 +76,6 @@ func _estadio() -> void:
 		## El estadio es lo que se mira en el mapa: sin cortes por distancia
 		## (si no, los jugadores del campo desaparecían desde la vista aérea).
 		nodo.set_meta("sin_corte", true)
-		load("res://visor/stadium_builder.gd").ceder = self
 		await load("res://visor/stadium_builder.gd").build(nodo, perfil, aforo, 0.85 if bool(datos.get("dia_partido", false)) else 0.35, semilla, club_obj)
 		load("res://visor/stadium_builder.gd").ceder = null
 		GaleriaClub.en_ciudad = false

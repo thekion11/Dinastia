@@ -148,6 +148,7 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 			q.rotation.y = PI
 			nodo.add_child(q)
 
+	await StadiumBuilder._fase("tunel_pasillo")
 	## EL PÓRTICO DE SALIDA: dos pilares y un dintel con el nombre, a ras de la
 	## cara de la tribuna.
 	var portico := _mat(c1.lerp(Color(0.12, 0.12, 0.14), 0.35), 0.5)
@@ -190,8 +191,11 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 		## Sin tribuna en ese fondo («dos»): una pasarela cubierta, con tejado.
 		_caja(nodo, Vector3(x0, ALTO + 0.6, zc), Vector3(StadiumBuilder.TUNEL_HUECO * 2.0 + 0.6, 0.2, largo + 0.6), portico, false)
 
+	await StadiumBuilder._fase("tunel_portico")
 	_vestuario(nodo, x0, z_out, z_fin, c1, c2, pared, suelo, techo, luz, horm, nombre, mi)
+	await StadiumBuilder._fase("tunel_vestuario")
 	EdificioClub.montar(nodo, x0, z_out, z_fin, c1, c2, horm, luz, nombre)
+	await StadiumBuilder._fase("tunel_edificio_club")
 	## La gente del club, cada uno en su puesto (solo en el estadio propio).
 	if mi == null or mi.id == PersonajeDT.club_usuario:
 		var personal := PersonalEstadio.new()

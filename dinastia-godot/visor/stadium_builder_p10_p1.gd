@@ -19,6 +19,11 @@ static func _ceder_paso() -> void:
 	await ceder.get_tree().process_frame
 	_t_ceder = Time.get_ticks_usec()
 
+## Fin de una fase de la construcción: apunta el tiempo (TIEMPOS=1) y cede un fotograma si toca (6-11; fuera de la carga de la ciudad no hace nada de más).
+static func _fase(que: String) -> void:
+	_tm(que)
+	await _ceder_paso()
+
 ## Lo que se calcula una vez al empezar: la geometría de la forma, las bandejas, la altura y los
 ## materiales que comparten todas las tribunas.
 static func _preparar_obra(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: float, seed_val: int, mi: Club) -> EstadioObra:

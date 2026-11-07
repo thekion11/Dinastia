@@ -188,7 +188,7 @@ func _alturas(cb: Node) -> void:
 		vistos += 1
 		var es_copa := h is MeshInstance3D and (h as MeshInstance3D).mesh is SphereMesh   ## las copas de los árboles van sobre su tronco (otra malla)
 		var cuerpo_grande := caja.size.x >= 4.0 and caja.size.z >= 4.0 and caja.size.y >= 3.0   ## edificios, vehículos, casetas: los detalles (cornisas, banderas, grúas) cuelgan de otra pieza
-		if caja.position.y > suelo + 6.0 and cuerpo_grande and not String(h.name).begins_with("Cartel") and not es_copa and not String(h.name).begins_with("Grua"):
+		if caja.position.y > suelo + 6.0 and cuerpo_grande and not String(h.name).begins_with("Cartel") and not es_copa and not String(h.name).begins_with("Grua") and not String(h.name).begins_with("Fundido"):   ## (6-11) las mallas «Fundido…» juntan piezas de muchas azoteas por material y celda: su caja no es un cuerpo, no flota nada
 			flota += 1
 			if ejemplos.size() < 6:
 				ejemplos.append("FLOTA %s %s y=%.1f..%.1f suelo=%.1f en (%.0f,%.0f) tam=%s" % [h.name, _que_es(h), caja.position.y, caja.end.y, suelo, centro.x, centro.z, str(caja.size.snapped(Vector3.ONE * 0.1))])

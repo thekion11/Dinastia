@@ -22,43 +22,53 @@ static func sembrar(ex, clave: Variant) -> void:
 ## Una manzana, con su propio azar.
 static func bloque(ex, bl: Dictionary) -> void:
 	sembrar(ex, ["bloque", bl["celda"]])
-	ex._dibujar_bloque(bl)
+	await ex._dibujar_bloque(bl)
 
 ## Lo que se agrupa tras dibujar todas las manzanas: edificios lejanos, casas y modulares.
 static func casas(ex) -> void:
 	sembrar(ex, "edificios_lejanos")
 	ex._edificios_lejanos()
+	await ex.b._marca("exp.edificios_lejanos")   ## (6-11) cada paso cede por separado (la carga en partes cortas)
 	sembrar(ex, "casas")
 	ex._casas_multimesh()
+	await ex.b._marca("exp.casas_mm")
 	sembrar(ex, "modular")
 	ex._modular_multimesh()
 
 ## Las manzanas que faltan, una a una (cada una cede el fotograma si toca).
 static func bloques_restantes(ex) -> void:
 	for bl: Dictionary in ex.bloques_diferidos:
-		bloque(ex, bl)
+		await bloque(ex, bl)
 		await ex.b._marca("exp.bloque")
 	ex.bloques_diferidos = []
-	casas(ex)
+	await casas(ex)
 	await ex.b._marca("exp.casas")
 
 static func mobiliario(ex) -> void:
 	sembrar(ex, "marquesinas")
 	ex._marquesinas_bus()
+	await ex.b._marca("exp.mob.marquesinas_bus")
 	sembrar(ex, "guirnaldas")
 	ex._guirnaldas()
+	await ex.b._marca("exp.mob.guirnaldas")
 	sembrar(ex, "farolas")
 	ex._farolas()
+	await ex.b._marca("exp.mob.farolas")
 	sembrar(ex, "mobiliario")
 	ex._mobiliario_urbano()
+	await ex.b._marca("exp.mob.mobiliario_urbano")
 	sembrar(ex, "placas")
 	ex._placas_de_calle()
+	await ex.b._marca("exp.mob.placas_de_calle")
 	sembrar(ex, "orillas")
 	ex._orillas_nucleo()
+	await ex.b._marca("exp.mob.orillas_nucleo")
 	sembrar(ex, "obras")
 	ex._obras_en_calle()
+	await ex.b._marca("exp.mob.obras_en_calle")
 	sembrar(ex, "kenney")
 	ex._kenney_calles()
+	await ex.b._marca("exp.mob.kenney_calles")
 	ex.tardio_pendiente = false
 	await ex.b._marca("exp.mobiliario")
 
@@ -66,10 +76,12 @@ static func mobiliario(ex) -> void:
 static func afueras(ex) -> void:
 	sembrar(ex, "autopista")
 	ex.cuenta["autopista"] = CargaCiudad.de("Autopista").montar(ex.b)
+	await ex.b._marca("exp.autopista")   ## (6-11) cada paso cede por separado
 	sembrar(ex, "eolico")
 	ex._parque_eolico()
 	sembrar(ex, "deposito")
 	ex._deposito_agua()
+	await ex.b._marca("exp.eolico_deposito")
 	ex.tele_nodo = CargaCiudad.de("Teleferico").montar(ex.b)
 	ex.teleferico = ex.tele_nodo.datos()
 

@@ -39,7 +39,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	## El túnel de verdad: pasillo, cubierta del hueco y vestuario.
 	_tm("pista")
 	await _ceder_paso()
-	TunelVestuario.montar(root, est, niveles, mi)
+	await TunelVestuario.montar(root, est, niveles, mi)
 	_tm("tunel")
 	await _ceder_paso()
 	_banderas(root, est, dx, dz, alto, niveles, mi)

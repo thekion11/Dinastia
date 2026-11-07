@@ -176,12 +176,15 @@ func _dibujar_bloque(bl: Dictionary) -> void:
 			_parque(r, uso == "parque_lago")
 		"torres":
 			_acera_bloque(r)
+			await b.ceder()   ## (6-11) la carga cede un fotograma cada ~40 ms entre la acera y el edificio
 			_torres(r)
 		"comercial":
 			_acera_bloque(r)
+			await b.ceder()
 			_comercial_bloque(r)
 		"pisos":
 			_acera_bloque(r)
+			await b.ceder()
 			_pisos(r)
 		"industrial":
 			_industrial(r)
@@ -207,6 +210,7 @@ func _dibujar_bloque(bl: Dictionary) -> void:
 			_feria(r)
 		_:
 			_acera_bloque(r)
+			await b.ceder()
 			_instalacion(uso, r)
 	cuenta[uso] = int(cuenta.get(uso, 0)) + 1
 	## Para que el resto de la ciudad (árboles, ánimo) sepa que aquí hay algo.

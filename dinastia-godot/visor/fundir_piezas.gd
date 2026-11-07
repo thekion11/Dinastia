@@ -260,12 +260,18 @@ static func _firma_material(m: Material) -> String:
 ## Devuelve cuántas piezas fundió.
 const MAX_TRIS_CIUDAD := 6000
 
-static func fundir_ciudad(raiz: Node3D, celda := 160.0, nombre := "FundidoCiudad") -> int:
+static func fundir_ciudad(raiz: Node3D, celda := 160.0, nombre := "FundidoCiudad", ceder: Object = null) -> int:   ## (6-11) `ceder`: el CityBuilder que construye por partes; cede un fotograma cada ~40 ms
 	var inv := raiz.global_transform.affine_inverse()
 	var cubos := {}   ## clave → {"st": SurfaceTool, "n": cuántas superficies}
 	var elegidas: Array = []   ## [[nodo, [claves de sus superficies]]]
 	var firmas := {}
 	for n in raiz.find_children("*", "MeshInstance3D", true, false):
+		if ceder != null:
+			await ceder.ceder()
+			if not is_instance_valid(raiz) or not raiz.is_inside_tree():
+				return 0   ## (cambio de escena mientras cedía: ya no hay nada que fundir)
+			if not is_instance_valid(n):
+				continue
 		var mi := n as MeshInstance3D
 		if mi.mesh == null or not String(mi.name).begins_with("@") or mi.get_child_count() > 0 or not mi.is_visible_in_tree() or mi.skin != null:
 			continue
@@ -301,7 +307,13 @@ static func fundir_ciudad(raiz: Node3D, celda := 160.0, nombre := "FundidoCiudad
 	var vaciados := {}
 	var fundidas := 0
 	for par: Array in elegidas:
+		if ceder != null:
+			await ceder.ceder()
+			if not is_instance_valid(raiz) or not raiz.is_inside_tree():
+				return 0
 		var mi: MeshInstance3D = par[0]
+		if not is_instance_valid(mi):
+			continue
 		var sola := true
 		for clave: Array in par[1]:
 			sola = sola and int(cubos[clave]["n"]) < 2
@@ -315,6 +327,10 @@ static func fundir_ciudad(raiz: Node3D, celda := 160.0, nombre := "FundidoCiudad
 		vaciados[pa] = true
 		fundidas += 1
 	for clave: Array in cubos:
+		if ceder != null:
+			await ceder.ceder()
+			if not is_instance_valid(raiz) or not raiz.is_inside_tree():
+				return 0
 		var cubo: Dictionary = cubos[clave]
 		if not bool(cubo.get("usar", false)):
 			continue
