@@ -57,6 +57,8 @@ func _pintar_estadio(c: Club) -> void:
 	## tiempo -banderazos si el ánimo pasa de 82, lienzos si baja de 22- y no se
 	## veían en ninguna pantalla: el jugador notaba los efectos sin saber nunca
 	## el número. Van aquí, que es donde vive la gente que llena esto.
+	p._lista_estadio.add_child(_aire())
+	p._lista_estadio.add_child(HSeparator.new())
 	if p.mundo.prensa != null:
 		var animo := p.mundo.prensa.animo
 		var col_animo := p.COL_VERDE if animo >= 70 else (p.COL_ROJO if animo <= 35 else p.COL_ORO)
@@ -76,6 +78,7 @@ func _pintar_estadio(c: Club) -> void:
 		p._lista_estadio.add_child(lectura)
 	p._dato("Socios", p._miles(c.socios), p.COL_TEXTO, p._lista_estadio)
 	p._ui_club_vida._pintar_hinchada(c)
+	p._lista_estadio.add_child(_aire())   ## (9-11, estética) aire entre secciones
 	p._lista_estadio.add_child(HSeparator.new())
 	var sub := p._texto(12, p.COL_SUAVE)
 	sub.text = Idiomas.t("%s de %d bandeja%s  ·  techo %s  ·  %s butacas  ·  ambiente %d") % [
@@ -88,6 +91,7 @@ func _pintar_estadio(c: Club) -> void:
 	nota.text = Idiomas.t("Las bandejas y el aforo se amplían construyendo tribunas en Club → Obras. Aquí se decide cómo SE VE.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_estadio.add_child(nota)
+	p._lista_estadio.add_child(_aire())   ## (9-11, estética) aire entre secciones
 	p._lista_estadio.add_child(HSeparator.new())
 
 	## LOS DIECISIETE CAMPOS, no seis. `EstadioPropio.CATALOGO_DE` los tiene todos
@@ -116,6 +120,7 @@ func _pintar_estadio(c: Club) -> void:
 	## estadio por MÓDULOS" del ROADMAP). Con el interruptor apagado -el caso de
 	## siempre- esto no pinta nada más que el aviso: activar es el paso que dice
 	## "quiero decidir esto tribuna por tribuna" y por eso cuesta.
+	p._lista_estadio.add_child(_aire())   ## (9-11, estética) aire entre secciones
 	p._lista_estadio.add_child(HSeparator.new())
 	var tt := p._texto(11, p.COL_ACENTO)
 	tt.text = Idiomas.t("LAS TRIBUNAS")
@@ -193,6 +198,7 @@ func _pintar_estadio(c: Club) -> void:
 	## ambiente, y las vallas perimetrales son la diferencia entre un recinto de
 	## los ochenta y uno moderno. Ambos estaban implementados y sin manera de
 	## tocarlos.
+	p._lista_estadio.add_child(_aire())   ## (9-11, estética) aire entre secciones
 	p._lista_estadio.add_child(HSeparator.new())
 	var ti := p._texto(11, p.COL_ACENTO)
 	ti.text = Idiomas.t("EL RECINTO")
@@ -205,3 +211,9 @@ func _pintar_estadio(c: Club) -> void:
 ## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
 func secciones() -> Dictionary:
 	return {"estadio": _pintar_estadio}
+
+## Un hueco de 8 px para separar secciones de la columna del estadio.
+func _aire() -> Control:
+	var c := Control.new()
+	c.custom_minimum_size = Vector2(0, 8)
+	return c
