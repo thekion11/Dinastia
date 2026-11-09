@@ -7587,7 +7587,8 @@
   "Ahora no": "Not now",
   "Homenaje": "Tribute",
   "años": "years old",
-  "Camiseta retirada": "Retired shirt"
+  "Camiseta retirada": "Retired shirt",
+  "CAMISETAS RETIRADAS": "RETIRED SHIRTS"
  },
  "pt": {
   "Historia": "História",
@@ -15177,7 +15178,8 @@
   "Ahora no": "Agora não",
   "Homenaje": "Homenagem",
   "años": "anos",
-  "Camiseta retirada": "Camisola retirada"
+  "Camiseta retirada": "Camisola retirada",
+  "CAMISETAS RETIRADAS": "CAMISOLAS RETIRADAS"
  },
  "patrones": [
   [
@@ -28742,7 +28744,8 @@
   "Ahora no": "Pas maintenant",
   "Homenaje": "Hommage",
   "años": "ans",
-  "Camiseta retirada": "Maillot retiré"
+  "Camiseta retirada": "Maillot retiré",
+  "CAMISETAS RETIRADAS": "MAILLOTS RETIRÉS"
  },
  "it": {
   "Historia": "Storia",
@@ -36332,7 +36335,8 @@
   "Ahora no": "Non ora",
   "Homenaje": "Omaggio",
   "años": "anni",
-  "Camiseta retirada": "Maglia ritirata"
+  "Camiseta retirada": "Maglia ritirata",
+  "CAMISETAS RETIRADAS": "MAGLIE RITIRATE"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43922,7 +43926,8 @@
   "Ahora no": "Jetzt nicht",
   "Homenaje": "Ehrung",
   "años": "Jahre",
-  "Camiseta retirada": "Gesperrtes Trikot"
+  "Camiseta retirada": "Gesperrtes Trikot",
+  "CAMISETAS RETIRADAS": "GESPERRTE TRIKOTS"
  },
  "ca": {
   "Historia": "Història",
@@ -51512,7 +51517,8 @@
   "Ahora no": "Ara no",
   "Homenaje": "Homenatge",
   "años": "anys",
-  "Camiseta retirada": "Samarreta retirada"
+  "Camiseta retirada": "Samarreta retirada",
+  "CAMISETAS RETIRADAS": "SAMARRETES RETIRADES"
  },
  "pl": {
   "Club": "Klub",
@@ -59102,7 +59108,8 @@
   "Ahora no": "Nie teraz",
   "Homenaje": "Hołd",
   "años": "lat",
-  "Camiseta retirada": "Zastrzeżona koszulka"
+  "Camiseta retirada": "Zastrzeżona koszulka",
+  "CAMISETAS RETIRADAS": "ZASTRZEŻONE KOSZULKI"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66692,6 +66699,7 @@
   "Ahora no": "Şimdi değil",
   "Homenaje": "Onur töreni",
   "años": "yaşında",
-  "Camiseta retirada": "Emekli forma"
+  "Camiseta retirada": "Emekli forma",
+  "CAMISETAS RETIRADAS": "EMEKLİ FORMALAR"
  }
 }
