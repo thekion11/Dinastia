@@ -52,6 +52,7 @@ func nueva_temporada() -> Dictionary:
 			if j.edad >= 38 or (j.edad >= 35 and Azar.suerte(0.4)):
 				if cantera != null:
 					cantera.registrar_retiro(j, c)
+				PartidoDespedida.celebrar(self, j, c)   ## (9-11) si es una leyenda de tu club, su partido de despedida
 				continue   ## se retira
 			if _vence_contrato(j, c):
 				continue   ## se va libre

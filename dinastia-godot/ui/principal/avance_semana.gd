@@ -251,6 +251,10 @@ func _avanzar_dia() -> void:
 	if p.mundo == null or not p.mundo.temporada_en_curso():
 		p._escribir("[color=#e05555]La temporada está terminada. Pulsa «Temporada siguiente».[/color]")
 		return
+	## (9-11) El sábado de partido no se pasa de largo: se abre el menú del partido (como PES 2020).
+	if partido_obliga and p._dia_semana >= 5 and _tiene_partido_pendiente():
+		p._dirigir()
+		return
 	if p._dia_semana >= 6:
 		p._dia_semana = 0
 		_avanzar_semana()
@@ -265,12 +269,51 @@ func _avanzar_dia() -> void:
 	## Llega el sábado y juegas: el menú del partido se abre solo.
 	if partido_obliga and p._dia_semana == 5 and _tiene_partido_pendiente():
 		p._dirigir.call_deferred()
+## ¿Hoy es sábado y tu club tiene el partido sin jugar? (los avances de varios días paran aquí)
+func _hay_partido_hoy() -> bool:
+	return partido_obliga and p._dia_semana == 5 and _tiene_partido_pendiente()
+
+## EL PRÓXIMO HITO del calendario, para la pantalla de avance (idea del PES 2020: el avance se detiene en lo importante):
+## {"dia": 0-6, "icono", "texto"}. Primero tu partido; luego el cierre del mercado; si no, la semana de descanso.
+func proximo_hito() -> Dictionary:
+	if p.mundo == null or not p.mundo.temporada_en_curso():
+		return {"dia": 6, "icono": "🏁", "texto": Idiomas.t("Temporada terminada")}
+	var mio := p.mundo.mi_club()
+	if _tiene_partido_pendiente():
+		var par := p.mundo.proximo_partido()
+		var texto := Idiomas.t("Partido de copa o continental")
+		if not par.is_empty():
+			var casa: bool = par[0] == mio
+			var rival: Club = par[1] if casa else par[0]
+			texto = "%s %s" % [Idiomas.t("vs") if casa else Idiomas.t("en"), rival.nombre]
+		return {"dia": 5, "icono": "⚽", "texto": texto}
+	if p.mundo.mercado_abierto() and p.mundo.semanas_de_mercado() <= 2:
+		return {"dia": 6, "icono": "⏳", "texto": Idiomas.t("El mercado está por cerrar")}
+	return {"dia": 6, "icono": "🛌", "texto": Idiomas.t("Semana sin partido")}
+
+## «Hasta el próximo hito»: avanza día a día y se detiene al llegar al sábado de partido (abre su menú) o al cambiar de semana.
+func _avanzar_hasta_hito() -> void:
+	if p.mundo == null or not p.mundo.temporada_en_curso():
+		return
+	var objetivo := int(proximo_hito()["dia"])
+	var sem0 := p.mundo.semana
+	var tope := 8
+	while tope > 0 and p.mundo.semana == sem0 and p.mundo.temporada_en_curso():
+		tope -= 1
+		_avanzar_dia()
+		if _hay_partido_hoy() or p._dia_semana >= objetivo:
+			break
+
 ## Los siete días con el de hoy encendido. El sábado lleva el balón porque es
 ## cuando cae la jornada: sin esa marca, la tira sería un adorno.
 func _pintar_dias() -> void:
 	if p._fila_dias == null:
 		return
 	p._limpiar(p._fila_dias)
+	var boton_hito: Variant = p._guia.nodos.get("hito")
+	if is_instance_valid(boton_hito) and p.mundo != null:
+		var h := proximo_hito()
+		(boton_hito as Button).tooltip_text = "%s %s · %s" % [h["icono"], Idiomas.t("Avanzar hasta el próximo hito:"), h["texto"]]
 	var hay_partido := p.mundo != null and (not p.mundo.proximo_partido().is_empty()
 		or not p.mundo.partido_de_copa().is_empty())
 	for i in Principal.DIAS_CORTOS.size():
@@ -299,7 +342,7 @@ func _pintar_dias() -> void:
 		var destino := i
 		b.disabled = destino <= p._dia_semana
 		b.pressed.connect(func() -> void:
-			while p._dia_semana < destino:
+			while p._dia_semana < destino and not _hay_partido_hoy():
 				_avanzar_dia())
 		p._fila_dias.add_child(b)
 

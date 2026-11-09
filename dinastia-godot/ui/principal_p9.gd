@@ -11,6 +11,7 @@ func _traducir_pantalla(n: Node) -> void: _traduccion._traducir_pantalla(n)
 func _refrescar() -> void: _avance._refrescar()
 func _avanzar_semana() -> void: _avance._avanzar_semana()
 func _avanzar_dia() -> void: _avance._avanzar_dia()
+func _avanzar_hasta_hito() -> void: _avance._avanzar_hasta_hito()
 func _pintar_dias() -> void: _avance._pintar_dias()
 
 

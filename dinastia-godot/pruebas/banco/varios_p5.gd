@@ -425,3 +425,22 @@ func _probar_documental() -> void:
 		if String(cap0["titulo"]).contains("veredicto"):
 			ver0 = String(cap0["texto"])
 	_comprobar(ver0 != "" and not ver0.contains("CAMPEONES"), "sin jornadas jugadas el documental no proclama campeón («%s»)" % ver0)
+	## (9-11) EL PARTIDO DE DESPEDIDA: una leyenda de tu club se retira con homenaje (taquilla, ánimo y noticia); un jugador joven, no.
+	var mh := Mundo.new()
+	mh.generar(["CHI"], 77)
+	mh.tomar_el_mando(mh.ligas[0].clubes[1].id)
+	var club_h := mh.mi_club()
+	var leyenda: Jugador = club_h.plantilla[0]
+	leyenda.edad = 36
+	leyenda.capitan = true
+	var joven: Jugador = club_h.plantilla[1]
+	joven.edad = 22
+	_comprobar(PartidoDespedida.merece(leyenda, club_h) and not PartidoDespedida.merece(joven, club_h), "solo merece despedida el veterano capitán, no el joven")
+	var saldo0 := club_h.saldo
+	var animo0 := mh.prensa.animo if mh.prensa != null else 0
+	var res := PartidoDespedida.celebrar(mh, leyenda, club_h)
+	_comprobar(not res.is_empty() and int(res["ingreso"]) > 0 and club_h.saldo == saldo0 + int(res["ingreso"]), "el homenaje deja taquilla en la caja del club (%d)" % int(res.get("ingreso", 0)))
+	_comprobar(mh.prensa == null or mh.prensa.animo > animo0 or animo0 >= 96, "y sube el ánimo de la afición")
+	_comprobar(PartidoDespedida.celebrar(mh, joven, club_h).is_empty(), "al joven no se le hace partido de despedida")
+	## (9-11) La velocidad del juego en directo: cuatro niveles, el normal es más pausado que antes (<1) y solo cambia el directo.
+	_comprobar(RitmoJuego.NIVELES.size() == 4 and float(RitmoJuego.NIVELES[RitmoJuego.POR_DEFECTO][1]) < 1.0, "ritmo de juego: 4 niveles y el normal es más pausado que 1,0")
