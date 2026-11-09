@@ -32,6 +32,10 @@ func _aplicar_tema() -> void:
 	t.set_color("font_hover_color", "Button", texto)
 	t.set_color("font_pressed_color", "Button", texto)
 	t.set_color("font_disabled_color", "Button", p._mezcla(suave, panel, 0.5))
+	## (9-11, estética) Letra base de los botones = 13 (con la escala de texto de Ajustes): sin esto usaban los 16 de fábrica y
+	## desentonaban con las etiquetas (14) y los botones con tamaño propio (12-13) de la misma fila.
+	for clase_b: String in ["Button", "OptionButton", "MenuButton", "CheckBox", "CheckButton"]:
+		t.set_font_size("font_size", clase_b, Tema.letra(13))
 
 	## Los desplegables y las casillas heredan del botón: en Godot son clases
 	## distintas y si no se les dice nada se quedan con el tema oscuro de fábrica.
