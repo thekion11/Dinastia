@@ -87,3 +87,45 @@ func _probar_intercambio_once() -> void:
 	_comprobar(not PlantillaPes.intercambiar(club, t1, r2) and not PlantillaPes.intercambiar(club, t2, t2), "dos reservas, o el mismo jugador, no valen")
 	r2.lesion = 3
 	_comprobar(not PlantillaPes.intercambiar(club, t2, r2), "no se mete a un lesionado")
+
+## EL PARTIDO DE DESPEDIDA (9-11): al final de la temporada, tu equipo contra los que se retiran esa temporada; el cierre respeta quién se retira.
+func _probar_partido_despedida() -> void:
+	_titulo("PARTIDO DE DESPEDIDA (FINAL DE TEMPORADA, CONTRA LOS RETIRADOS)")
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"], 88)
+	m.tomar_el_mando(m.ligas[0].clubes[1].id)
+	var mio := m.mi_club()
+	var leyendas := PartidoDespedida.preparar(m)
+	_comprobar(leyendas != null and leyendas.plantilla.size() >= PartidoDespedida.MINIMO_JUGADORES, "hay equipo de leyendas con once o más retirados (%d)" % (leyendas.plantilla.size() if leyendas != null else 0))
+	if leyendas == null:
+		return
+	var ids_leyendas: Array[String] = []
+	var todos_retiran := true
+	var hay_portero := false
+	for j: Jugador in leyendas.plantilla:
+		ids_leyendas.append(j.id)
+		todos_retiran = todos_retiran and bool(PartidoDespedida.previstos.get(j.id, false))
+		hay_portero = hay_portero or j.pos == "POR"
+	_comprobar(todos_retiran and hay_portero, "todos los de las Leyendas son de los que se retiran, y hay portero")
+	## El partido de gala (simulado): no cambia lo que pasa a tus jugadores y deja taquilla.
+	var foto := PartidoDespedida.foto(mio)
+	var saldo0 := mio.saldo
+	var p := Partido.new(mio, leyendas)
+	p.simular()
+	for j: Jugador in mio.plantilla:
+		j.lesion = 4   ## una lesión en el partido de gala…
+	var res := PartidoDespedida.cerrar(m, p, leyendas, foto)
+	var intacto := true
+	for j: Jugador in mio.plantilla:
+		intacto = intacto and j.lesion == int(foto[j.id]["lesion"])
+	_comprobar(intacto, "…no cuenta: tus jugadores quedan como estaban antes del partido")
+	_comprobar(int(res["ingreso"]) > 0 and mio.saldo == saldo0 + int(res["ingreso"]), "la taquilla entra en la caja (%d)" % int(res["ingreso"]))
+	## El cierre de temporada respeta quién se retira: ninguno de los retirados sigue en ningún club.
+	m.nueva_temporada()
+	PartidoDespedida.limpiar()
+	var siguen := 0
+	for c: Club in m.clubes.values():
+		for j: Jugador in c.plantilla:
+			if ids_leyendas.has(j.id):
+				siguen += 1
+	_comprobar(siguen == 0, "tras el cierre ninguno de los %d retirados sigue en un club" % ids_leyendas.size())
