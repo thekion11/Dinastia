@@ -76,6 +76,7 @@ pasa "repetición del gol" "godot --headless --path . res://pruebas/prueba_repet
 # 5. Modos de juego y menú de la ciudad a pie
 pasa "modos de juego" "godot --headless --path . res://pruebas/prueba_modos.tscn" "0 fallos"
 pasa "menú ciudad a pie" "godot --headless --path . res://pruebas/prueba_menu_ciudad_pie.tscn" "0 fallos"
+pasa "menú entrar al estadio a pie" "godot --headless --path . res://pruebas/prueba_menu_estadio_a_pie.tscn" "0 fallos"
 # 5b. Las texturas de ruido en segundo plano son las de NoiseTexture2D, byte a byte (30-10)
 pasa "ruidos en segundo plano" "godot --headless --path . res://pruebas/probar_ruidos_fondo.tscn" "FIN. 0 fallos"
 pasa "textura del balón" "godot --headless --path . --script res://pruebas/probar_balon_textura.gd" "FIN. 0 fallos"
