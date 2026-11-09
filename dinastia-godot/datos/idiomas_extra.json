@@ -7592,7 +7592,12 @@
   "ESTILO DE JUEGO": "PLAYING STYLE",
   "Aptitud": "Aptitude",
   "FIN DE TEMPORADA": "END OF SEASON",
-  "PARTIDO DE DESPEDIDA": "FAREWELL MATCH"
+  "PARTIDO DE DESPEDIDA": "FAREWELL MATCH",
+  "⟲ Once automático": "⟲ Automatic XI",
+  "Cambio deshecho.": "Change undone.",
+  "El once vuelve a armarse solo.": "The XI is picked automatically again.",
+  "Elige con quién cambiar a": "Pick who to swap",
+  "El calendario: jugar el partido y avanzar semana; al terminar la liga, pasar a la temporada siguiente": "The calendar: play the match and advance a week; when the league ends, move on to the next season"
  },
  "pt": {
   "Historia": "História",
@@ -15187,7 +15192,12 @@
   "ESTILO DE JUEGO": "ESTILO DE JOGO",
   "Aptitud": "Aptidão",
   "FIN DE TEMPORADA": "FIM DE TEMPORADA",
-  "PARTIDO DE DESPEDIDA": "JOGO DE DESPEDIDA"
+  "PARTIDO DE DESPEDIDA": "JOGO DE DESPEDIDA",
+  "⟲ Once automático": "⟲ Onze automático",
+  "Cambio deshecho.": "Troca desfeita.",
+  "El once vuelve a armarse solo.": "O onze volta a ser escolhido automaticamente.",
+  "Elige con quién cambiar a": "Escolhe com quem trocar",
+  "El calendario: jugar el partido y avanzar semana; al terminar la liga, pasar a la temporada siguiente": "O calendário: jogar a partida e avançar uma semana; ao terminar a liga, passar à próxima temporada"
  },
  "patrones": [
   [
@@ -28757,7 +28767,12 @@
   "ESTILO DE JUEGO": "STYLE DE JEU",
   "Aptitud": "Aptitude",
   "FIN DE TEMPORADA": "FIN DE SAISON",
-  "PARTIDO DE DESPEDIDA": "MATCH D'ADIEU"
+  "PARTIDO DE DESPEDIDA": "MATCH D'ADIEU",
+  "⟲ Once automático": "⟲ Onze automatique",
+  "Cambio deshecho.": "Changement annulé.",
+  "El once vuelve a armarse solo.": "Le onze se recompose automatiquement.",
+  "Elige con quién cambiar a": "Choisis avec qui échanger",
+  "El calendario: jugar el partido y avanzar semana; al terminar la liga, pasar a la temporada siguiente": "Le calendrier : jouer le match et avancer d'une semaine ; à la fin du championnat, passer à la saison suivante"
  },
  "it": {
   "Historia": "Storia",
@@ -36352,7 +36367,12 @@
   "ESTILO DE JUEGO": "STILE DI GIOCO",
   "Aptitud": "Attitudine",
   "FIN DE TEMPORADA": "FINE STAGIONE",
-  "PARTIDO DE DESPEDIDA": "PARTITA D'ADDIO"
+  "PARTIDO DE DESPEDIDA": "PARTITA D'ADDIO",
+  "⟲ Once automático": "⟲ Undici automatico",
+  "Cambio deshecho.": "Cambio annullato.",
+  "El once vuelve a armarse solo.": "L'undici torna a essere scelto in automatico.",
+  "Elige con quién cambiar a": "Scegli con chi scambiare",
+  "El calendario: jugar el partido y avanzar semana; al terminar la liga, pasar a la temporada siguiente": "Il calendario: giocare la partita e avanzare di una settimana; a campionato finito, passare alla stagione successiva"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43947,7 +43967,12 @@
   "ESTILO DE JUEGO": "SPIELSTIL",
   "Aptitud": "Eignung",
   "FIN DE TEMPORADA": "SAISONENDE",
-  "PARTIDO DE DESPEDIDA": "ABSCHIEDSSPIEL"
+  "PARTIDO DE DESPEDIDA": "ABSCHIEDSSPIEL",
+  "⟲ Once automático": "⟲ Automatische Startelf",
+  "Cambio deshecho.": "Änderung rückgängig gemacht.",
+  "El once vuelve a armarse solo.": "Die Startelf wird wieder automatisch aufgestellt.",
+  "Elige con quién cambiar a": "Wähle, mit wem getauscht wird",
+  "El calendario: jugar el partido y avanzar semana; al terminar la liga, pasar a la temporada siguiente": "Der Kalender: das Spiel spielen und eine Woche vorspulen; nach Saisonende zur nächsten Saison wechseln"
  },
  "ca": {
   "Historia": "Història",
@@ -51542,7 +51567,12 @@
   "ESTILO DE JUEGO": "ESTIL DE JOC",
   "Aptitud": "Aptitud",
   "FIN DE TEMPORADA": "FI DE TEMPORADA",
-  "PARTIDO DE DESPEDIDA": "PARTIT DE COMIAT"
+  "PARTIDO DE DESPEDIDA": "PARTIT DE COMIAT",
+  "⟲ Once automático": "⟲ Onze automàtic",
+  "Cambio deshecho.": "Canvi desfet.",
+  "El once vuelve a armarse solo.": "L'onze torna a triar-se automàticament.",
+  "Elige con quién cambiar a": "Tria amb qui canviar",
+  "El calendario: jugar el partido y avanzar semana; al terminar la liga, pasar a la temporada siguiente": "El calendari: jugar el partit i avançar una setmana; en acabar la lliga, passar a la temporada següent"
  },
  "pl": {
   "Club": "Klub",
@@ -59137,7 +59167,12 @@
   "ESTILO DE JUEGO": "STYL GRY",
   "Aptitud": "Predyspozycje",
   "FIN DE TEMPORADA": "KONIEC SEZONU",
-  "PARTIDO DE DESPEDIDA": "MECZ POŻEGNALNY"
+  "PARTIDO DE DESPEDIDA": "MECZ POŻEGNALNY",
+  "⟲ Once automático": "⟲ Automatyczna jedenastka",
+  "Cambio deshecho.": "Zmiana cofnięta.",
+  "El once vuelve a armarse solo.": "Jedenastka znów układa się automatycznie.",
+  "Elige con quién cambiar a": "Wybierz, z kim zamienić",
+  "El calendario: jugar el partido y avanzar semana; al terminar la liga, pasar a la temporada siguiente": "Kalendarz: zagraj mecz i przewiń tydzień; po zakończeniu ligi przejdź do następnego sezonu"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66732,6 +66767,11 @@
   "ESTILO DE JUEGO": "OYUN TARZI",
   "Aptitud": "Yetenek",
   "FIN DE TEMPORADA": "SEZON SONU",
-  "PARTIDO DE DESPEDIDA": "VEDA MAÇI"
+  "PARTIDO DE DESPEDIDA": "VEDA MAÇI",
+  "⟲ Once automático": "⟲ Otomatik ilk 11",
+  "Cambio deshecho.": "Değişiklik geri alındı.",
+  "El once vuelve a armarse solo.": "İlk 11 yeniden otomatik seçilir.",
+  "Elige con quién cambiar a": "Kiminle değişeceğini seç",
+  "El calendario: jugar el partido y avanzar semana; al terminar la liga, pasar a la temporada siguiente": "Takvim: maçı oyna ve bir hafta ilerle; lig bitince sonraki sezona geç"
  }
 }

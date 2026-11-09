@@ -162,14 +162,13 @@ func _montar_cabecera() -> VBoxContainer:
 	menu_calendario.text = Idiomas.t("📅 Calendario")
 	menu_calendario.custom_minimum_size = Vector2(0, 32)
 	menu_calendario.clip_text = true
-	menu_calendario.tooltip_text = Idiomas.t("Jugar el partido, avanzar semana o pasar a la siguiente temporada")
+	menu_calendario.tooltip_text = Idiomas.t("El calendario: jugar el partido y avanzar semana; al terminar la liga, pasar a la temporada siguiente")
 	menu_calendario.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	menu_calendario.size_flags_stretch_ratio = 1.3
 	var pop_calendario := menu_calendario.get_popup()
-	pop_calendario.add_item("Jugar el partido", 0)
-	pop_calendario.add_item("Avanzar semana", 1)
-	## (9-11) Sin «Jugar la temporada»: ya no se simula la temporada entera de un tirón (orden del dueño, como PES 2020).
-	pop_calendario.add_item("Temporada siguiente", 3)
+	## (9-11) Las opciones las pone `AvanceSemana.actualizar_calendario` según la fecha: durante la liga, «Jugar el partido» y «Avanzar semana»; SOLO al
+	## terminarla, «Temporada siguiente» (antes no existe). Sin «Jugar la temporada» (orden del dueño, como PES 2020).
+	AvanceSemana.rellenar_calendario(pop_calendario, true)
 	pop_calendario.id_pressed.connect(p._al_elegir_calendario)
 	p._botones.add_child(menu_calendario)
 	## "Un día" tiene botón PROPIO y no una entrada más del desplegable: es la
