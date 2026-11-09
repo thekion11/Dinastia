@@ -7542,7 +7542,9 @@
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Sharp reflexes from the goalkeeper to stop %s",
   "🏜️ Estadio del desierto": "🏜️ Desert stadium",
   "La ciudad 3D está apagada": "The 3D city is switched off",
-  "Por ahora el juego es solo el club y sus instalaciones.": "For now the game is just the club and its facilities."
+  "Por ahora el juego es solo el club y sus instalaciones.": "For now the game is just the club and its facilities.",
+  "Hay partido: se abre el menú del partido.": "Match day: the match menu opens.",
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Play the match, advance a week or move on to the next season"
  },
  "pt": {
   "Historia": "História",
@@ -15087,7 +15089,9 @@
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexos do guarda-redes para travar %s",
   "🏜️ Estadio del desierto": "🏜️ Estádio do deserto",
   "La ciudad 3D está apagada": "A cidade 3D está desligada",
-  "Por ahora el juego es solo el club y sus instalaciones.": "Por enquanto o jogo é só o clube e as suas instalações."
+  "Por ahora el juego es solo el club y sus instalaciones.": "Por enquanto o jogo é só o clube e as suas instalações.",
+  "Hay partido: se abre el menú del partido.": "Dia de jogo: abre-se o menu da partida.",
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Jogar a partida, avançar uma semana ou passar à próxima temporada"
  },
  "patrones": [
   [
@@ -28607,7 +28611,9 @@
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Réflexes du gardien pour arrêter %s",
   "🏜️ Estadio del desierto": "🏜️ Stade du désert",
   "La ciudad 3D está apagada": "La ville 3D est désactivée",
-  "Por ahora el juego es solo el club y sus instalaciones.": "Pour l'instant, le jeu se limite au club et à ses installations."
+  "Por ahora el juego es solo el club y sus instalaciones.": "Pour l'instant, le jeu se limite au club et à ses installations.",
+  "Hay partido: se abre el menú del partido.": "Jour de match : le menu du match s'ouvre.",
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Jouer le match, avancer d'une semaine ou passer à la saison suivante"
  },
  "it": {
   "Historia": "Storia",
@@ -36152,7 +36158,9 @@
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Riflessi del portiere per fermare %s",
   "🏜️ Estadio del desierto": "🏜️ Stadio del deserto",
   "La ciudad 3D está apagada": "La città 3D è spenta",
-  "Por ahora el juego es solo el club y sus instalaciones.": "Per ora il gioco è solo il club e le sue strutture."
+  "Por ahora el juego es solo el club y sus instalaciones.": "Per ora il gioco è solo il club e le sue strutture.",
+  "Hay partido: se abre el menú del partido.": "Giorno di partita: si apre il menu della gara.",
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Giocare la partita, avanzare di una settimana o passare alla stagione successiva"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43697,7 +43705,9 @@
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexe des Torhüters, um %s zu stoppen",
   "🏜️ Estadio del desierto": "🏜️ Wüstenstadion",
   "La ciudad 3D está apagada": "Die 3D-Stadt ist abgeschaltet",
-  "Por ahora el juego es solo el club y sus instalaciones.": "Vorerst besteht das Spiel nur aus dem Verein und seinen Anlagen."
+  "Por ahora el juego es solo el club y sus instalaciones.": "Vorerst besteht das Spiel nur aus dem Verein und seinen Anlagen.",
+  "Hay partido: se abre el menú del partido.": "Spieltag: Das Spielmenü öffnet sich.",
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Das Spiel spielen, eine Woche vorspulen oder zur nächsten Saison wechseln"
  },
  "ca": {
   "Historia": "Història",
@@ -51242,7 +51252,9 @@
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexos del porter per aturar %s",
   "🏜️ Estadio del desierto": "🏜️ Estadi del desert",
   "La ciudad 3D está apagada": "La ciutat 3D està apagada",
-  "Por ahora el juego es solo el club y sus instalaciones.": "De moment el joc és només el club i les seves instal·lacions."
+  "Por ahora el juego es solo el club y sus instalaciones.": "De moment el joc és només el club i les seves instal·lacions.",
+  "Hay partido: se abre el menú del partido.": "Dia de partit: s'obre el menú del partit.",
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Jugar el partit, avançar una setmana o passar a la temporada següent"
  },
  "pl": {
   "Club": "Klub",
@@ -58787,7 +58799,9 @@
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Refleks bramkarza zatrzymuje %s",
   "🏜️ Estadio del desierto": "🏜️ Stadion pustynny",
   "La ciudad 3D está apagada": "Miasto 3D jest wyłączone",
-  "Por ahora el juego es solo el club y sus instalaciones.": "Na razie gra to tylko klub i jego obiekty."
+  "Por ahora el juego es solo el club y sus instalaciones.": "Na razie gra to tylko klub i jego obiekty.",
+  "Hay partido: se abre el menú del partido.": "Dzień meczowy: otwiera się menu meczu.",
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Zagraj mecz, przewiń tydzień lub przejdź do następnego sezonu"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66332,6 +66346,8 @@
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Kaleci %s'i durdurmak için müthiş bir refleks gösteriyor",
   "🏜️ Estadio del desierto": "🏜️ Çöl stadyumu",
   "La ciudad 3D está apagada": "3D şehir kapalı",
-  "Por ahora el juego es solo el club y sus instalaciones.": "Şimdilik oyun yalnızca kulüp ve tesislerinden oluşuyor."
+  "Por ahora el juego es solo el club y sus instalaciones.": "Şimdilik oyun yalnızca kulüp ve tesislerinden oluşuyor.",
+  "Hay partido: se abre el menú del partido.": "Maç günü: maç menüsü açılıyor.",
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Maçı oyna, bir hafta ilerle veya sonraki sezona geç"
  }
 }

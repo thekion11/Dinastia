@@ -220,7 +220,7 @@ static func _pasos_comunes(dirige: bool) -> Array[Dictionary]:
 	p.append(_paso("El club entero", "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.", "Abre cualquier menú del riel", "riel", "menu", "menu"))
 	p.append(_paso("Lo que va pasando", "Resultados, lesiones, ofertas, la prensa... todo llega aquí. Lo urgente, además, salta como aviso.", "", "registro"))
 	if dirige:
-		p.append(_paso("El tiempo", "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b] para que se juegue solo.", "", "calendario"))
+		p.append(_paso("El tiempo", "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.", "", "calendario"))
 	else:
 		p.append(_paso("El tiempo", "El calendario avanza desde aquí: [b]Avanzar semana[/b], o día a día con [b]Un día[/b].", "", "calendario"))
 	p.append(_paso("Guardar", "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).", "", "guardar"))
