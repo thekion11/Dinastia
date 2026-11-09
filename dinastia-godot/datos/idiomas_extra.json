@@ -7571,7 +7571,9 @@
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "List by lines, attribute bars and a two-player comparison.",
   "TITULARES": "STARTERS",
   "RESERVAS": "SUBSTITUTES",
-  "PRÓXIMOS": "NEXT"
+  "PRÓXIMOS": "NEXT",
+  "↔ Cambiar en el once": "↔ Change in the XI",
+  "No se puede: alguien no está disponible o los dos son reservas.": "Not possible: someone is unavailable or both are substitutes."
  },
  "pt": {
   "Historia": "História",
@@ -15145,7 +15147,9 @@
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "Lista por linhas, atributos em barras e comparação de dois jogadores.",
   "TITULARES": "TITULARES",
   "RESERVAS": "SUPLENTES",
-  "PRÓXIMOS": "PRÓXIMOS"
+  "PRÓXIMOS": "PRÓXIMOS",
+  "↔ Cambiar en el once": "↔ Trocar no onze",
+  "No se puede: alguien no está disponible o los dos son reservas.": "Não é possível: alguém não está disponível ou ambos são suplentes."
  },
  "patrones": [
   [
@@ -28694,7 +28698,9 @@
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "Liste par lignes, attributs en barres et comparaison de deux joueurs.",
   "TITULARES": "TITULAIRES",
   "RESERVAS": "REMPLAÇANTS",
-  "PRÓXIMOS": "PROCHAINS"
+  "PRÓXIMOS": "PROCHAINS",
+  "↔ Cambiar en el once": "↔ Changer dans le onze",
+  "No se puede: alguien no está disponible o los dos son reservas.": "Impossible : quelqu'un n'est pas disponible ou les deux sont remplaçants."
  },
  "it": {
   "Historia": "Storia",
@@ -36268,7 +36274,9 @@
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "Elenco per reparti, attributi a barre e confronto tra due giocatori.",
   "TITULARES": "TITOLARI",
   "RESERVAS": "RISERVE",
-  "PRÓXIMOS": "PROSSIMI"
+  "PRÓXIMOS": "PROSSIMI",
+  "↔ Cambiar en el once": "↔ Cambia nell'undici",
+  "No se puede: alguien no está disponible o los dos son reservas.": "Non è possibile: qualcuno non è disponibile o sono entrambi riserve."
  },
  "de": {
   "Historia": "Geschichte",
@@ -43842,7 +43850,9 @@
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "Liste nach Reihen, Attribute als Balken und Vergleich zweier Spieler.",
   "TITULARES": "STARTELF",
   "RESERVAS": "ERSATZBANK",
-  "PRÓXIMOS": "NÄCHSTE"
+  "PRÓXIMOS": "NÄCHSTE",
+  "↔ Cambiar en el once": "↔ In der Startelf tauschen",
+  "No se puede: alguien no está disponible o los dos son reservas.": "Nicht möglich: Jemand ist nicht verfügbar oder beide sind Ersatzspieler."
  },
  "ca": {
   "Historia": "Història",
@@ -51416,7 +51426,9 @@
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "Llista per línies, atributs en barres i comparació de dos jugadors.",
   "TITULARES": "TITULARS",
   "RESERVAS": "RESERVES",
-  "PRÓXIMOS": "PROPERS"
+  "PRÓXIMOS": "PROPERS",
+  "↔ Cambiar en el once": "↔ Canviar a l'onze",
+  "No se puede: alguien no está disponible o los dos son reservas.": "No es pot: algú no està disponible o tots dos són suplents."
  },
  "pl": {
   "Club": "Klub",
@@ -58990,7 +59002,9 @@
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "Lista według formacji, atrybuty w paskach i porównanie dwóch zawodników.",
   "TITULARES": "PODSTAWOWY SKŁAD",
   "RESERVAS": "REZERWOWI",
-  "PRÓXIMOS": "NASTĘPNE"
+  "PRÓXIMOS": "NASTĘPNE",
+  "↔ Cambiar en el once": "↔ Zmień w jedenastce",
+  "No se puede: alguien no está disponible o los dos son reservas.": "Niemożliwe: ktoś jest niedostępny lub obaj są rezerwowymi."
  },
  "tr": {
   "Club": "Kulüp",
@@ -66564,6 +66578,8 @@
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "Hatlara göre liste, çubuk nitelikler ve iki oyuncu karşılaştırması.",
   "TITULARES": "İLK 11",
   "RESERVAS": "YEDEKLER",
-  "PRÓXIMOS": "SIRADAKİLER"
+  "PRÓXIMOS": "SIRADAKİLER",
+  "↔ Cambiar en el once": "↔ İlk 11'de değiştir",
+  "No se puede: alguien no está disponible o los dos son reservas.": "Mümkün değil: biri müsait değil ya da ikisi de yedek."
  }
 }
