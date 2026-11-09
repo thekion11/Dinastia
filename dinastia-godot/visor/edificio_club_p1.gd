@@ -429,6 +429,7 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			## Vitrinas con una copa por título (hasta 12), camisetas históricas
 			## enmarcadas y la alfombra del recorrido (`SalasClub`).
 			SalasClub.museo(nodo, caja, y0, c1, c2, int(ctx.get("titulos", 0)), nivel("museo"), MuseoAmpliado.hitos(ctx), String(ctx.get("pais", "")))
+			CamisetasMuseo.poner(nodo, caja, y0, c1)   ## (9-11) las camisetas retiradas del partido de despedida
 
 ## Los datos de un objeto de decoración para `Modulos.de_datos`.
 static func datos_deco(clave: String) -> Array:

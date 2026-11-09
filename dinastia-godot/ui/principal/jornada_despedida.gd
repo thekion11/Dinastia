@@ -32,9 +32,18 @@ static func ofrecer(pr: Principal) -> void:
 	Aviso.mostrar(pr, "vida", "🎖️", Idiomas.t("Partido de despedida"),
 		"%s %d-%d · %s %d" % [Idiomas.t("Resultado:"), int(res["gf"]), int(res["gc"]), Idiomas.t("taquilla"), int(res["ingreso"])])
 
+## El modo de mirar un partido de liga elegido en Ajustes ("completo" por defecto = con el estadio en 3D).
+static func modo_elegido() -> String:
+	var cfg := ConfigFile.new()
+	if cfg.load(CajonAjustes.RUTA) != OK:
+		return "completo"
+	return String(cfg.get_value(Principal.SECCION_SIMULACION, "liga", "completo"))
+
 static func _jugar_en_directo(pr: Principal, p: Partido) -> void:
 	var vivo := PartidoVivo.new()
-	vivo.con_3d = true
+	var modo := modo_elegido()   ## como un partido de liga: el modo de mirar que tengas puesto (vivo en texto, destacados o 3D)
+	vivo.con_3d = modo != "vivo"
+	vivo.destacados = modo == "destacados"
 	vivo.set_anchors_preset(Control.PRESET_FULL_RECT)
 	pr.add_child(vivo)
 	vivo.datos_pantalla = pr._datos_pantalla_estadio(p.local, "liga")

@@ -122,6 +122,8 @@ static func transporte(m: Mundo) -> Dictionary:
 ## Dónde empieza una partida cargada en 3D (bloque 7): "" = en el menú de siempre
 ## (prólogo sin ver, pruebas, vida apagada → PC); "oficina" o "casa" (lunes 08:00).
 static func arranque_3d(m: Mundo) -> String:
+	if not InterruptorCiudad.activa:   ## (9-11, «solo club») sin ciudad 3D no hay prólogo caminando: se entra directo al menú
+		return ""
 	if m == null or m.ciudad == null or m.obras == null or m.reloj == null:
 		return ""
 	if OrquestadorMundo.sin_prologo or OS.get_environment("PROLOGO") == "0":
