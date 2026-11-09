@@ -65,3 +65,101 @@ func _probar_fila_proximos() -> void:
 	FilaProximos.pintar(m, caja)
 	_comprobar(caja.get_child_count() >= 1 + 2 * FilaProximos.CUANTOS, "la fila pinta rótulo y una celda con separador por partido (%d nodos)" % caja.get_child_count())
 	caja.queue_free()
+
+## INTERCAMBIAR EN EL ONCE DESDE LA PLANTILLA (9-11): titular↔titular cambia de puesto, titular↔reserva sustituye, y no vale con lesionados ni con dos reservas.
+func _probar_intercambio_once() -> void:
+	_titulo("PLANTILLA A LA PES: INTERCAMBIO EN EL ONCE")
+	var m := Mundo.new()
+	m.generar(["CHI"], 66)
+	m.tomar_el_mando(m.ligas[0].clubes[1].id)
+	var club := m.mi_club()
+	for j: Jugador in club.plantilla:
+		j.lesion = 0
+		j.suspension = 0
+	var once0: Array[Jugador] = club.once()
+	var t1: Jugador = once0[1]
+	var t2: Jugador = once0[2]
+	var reservas: Array = club.plantilla.filter(func(j: Jugador) -> bool: return not once0.has(j))
+	var r1: Jugador = reservas[0]
+	var r2: Jugador = reservas[1]
+	_comprobar(PlantillaPes.intercambiar(club, t1, t2) and club.once()[1] == t2 and club.once()[2] == t1, "dos titulares se cambian de puesto en el once")
+	_comprobar(PlantillaPes.intercambiar(club, t1, r1) and club.once().has(r1) and not club.once().has(t1), "un reserva sustituye a un titular")
+	_comprobar(not PlantillaPes.intercambiar(club, t1, r2) and not PlantillaPes.intercambiar(club, t2, t2), "dos reservas, o el mismo jugador, no valen")
+	r2.lesion = 3
+	_comprobar(not PlantillaPes.intercambiar(club, t2, r2), "no se mete a un lesionado")
+
+## EL PARTIDO DE DESPEDIDA (9-11): al final de la temporada, tu equipo contra los que se retiran esa temporada; el cierre respeta quién se retira.
+func _probar_partido_despedida() -> void:
+	_titulo("PARTIDO DE DESPEDIDA (FINAL DE TEMPORADA, CONTRA LOS RETIRADOS)")
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"], 88)
+	m.tomar_el_mando(m.ligas[0].clubes[1].id)
+	var mio := m.mi_club()
+	var leyendas := PartidoDespedida.preparar(m)
+	_comprobar(leyendas != null and leyendas.plantilla.size() >= PartidoDespedida.MINIMO_JUGADORES, "hay equipo de leyendas con once o más retirados (%d)" % (leyendas.plantilla.size() if leyendas != null else 0))
+	if leyendas == null:
+		return
+	var ids_leyendas: Array[String] = []
+	var todos_retiran := true
+	var hay_portero := false
+	for j: Jugador in leyendas.plantilla:
+		ids_leyendas.append(j.id)
+		todos_retiran = todos_retiran and bool(m.prensa.retiros_previstos.get(j.id, false))
+		hay_portero = hay_portero or j.pos == "POR"
+	_comprobar(todos_retiran and hay_portero, "todos los de las Leyendas son de los que se retiran, y hay portero")
+	## El partido de gala (simulado): no cambia lo que pasa a tus jugadores y deja taquilla.
+	var foto := PartidoDespedida.foto(mio)
+	var saldo0 := mio.saldo
+	var p := Partido.new(mio, leyendas)
+	p.simular()
+	for j: Jugador in mio.plantilla:
+		j.lesion = 4   ## una lesión en el partido de gala…
+	var res := PartidoDespedida.cerrar(m, p, leyendas, foto)
+	var intacto := true
+	for j: Jugador in mio.plantilla:
+		intacto = intacto and j.lesion == int(foto[j.id]["lesion"])
+	_comprobar(intacto, "…no cuenta: tus jugadores quedan como estaban antes del partido")
+	_comprobar(int(res["ingreso"]) > 0 and mio.saldo == saldo0 + int(res["ingreso"]), "la taquilla entra en la caja (%d)" % int(res["ingreso"]))
+	## El cierre de temporada respeta quién se retira: ninguno de los retirados sigue en ningún club.
+	m.nueva_temporada()
+	PartidoDespedida.limpiar(m)
+	var siguen := 0
+	for c: Club in m.clubes.values():
+		for j: Jugador in c.plantilla:
+			if ids_leyendas.has(j.id):
+				siguen += 1
+	_comprobar(siguen == 0, "tras el cierre ninguno de los %d retirados sigue en un club" % ids_leyendas.size())
+
+## HOMENAJE Y GUARDADO DEL PARTIDO DE DESPEDIDA (9-11): lo decidido sobrevive a guardar y cargar; el homenajeado de tu club deja la camiseta retirada, que no se reparte.
+func _probar_homenaje_despedida() -> void:
+	_titulo("PARTIDO DE DESPEDIDA: HOMENAJE, CAMISETA RETIRADA Y GUARDADO")
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"], 99)
+	m.tomar_el_mando(m.ligas[0].clubes[1].id)
+	var mio := m.mi_club()
+	PartidoDespedida.preparar(m)
+	var estrella: Jugador = mio.plantilla[3]
+	estrella.edad = 36
+	estrella.capitan = true
+	estrella.ovr = 95
+	estrella.dorsal = 7
+	m.prensa.retiros_previstos[estrella.id] = true
+	var leyendas := PartidoDespedida.preparar(m)   ## ya decidido: se reutiliza (no se vuelve a sortear)
+	_comprobar(leyendas != null and leyendas.plantilla.has(estrella), "lo ya decidido se reutiliza y el homenajeado juega con las Leyendas")
+	## Guardar y cargar antes del cierre: la decisión sigue ahí.
+	var m2 := Partida.desde_instantanea(JSON.parse_string(JSON.stringify(Partida.instantanea(m))))
+	_comprobar(m2.prensa.retiros_previstos.size() == m.prensa.retiros_previstos.size() and bool(m2.prensa.retiros_previstos.get(estrella.id, false)),
+		"lo decidido sobrevive a guardar y cargar (%d decisiones)" % m2.prensa.retiros_previstos.size())
+	var f := PartidoDespedida.foto(mio)
+	var p := Partido.new(mio, leyendas)
+	p.simular()
+	var res := PartidoDespedida.cerrar(m, p, leyendas, f)
+	_comprobar(res["homenajeados"].size() >= 1 and PartidoDespedida.dorsal_retirado(m, mio, 7), "el homenajeado de tu club deja el #7 como camiseta retirada")
+	var m3 := Partida.desde_instantanea(JSON.parse_string(JSON.stringify(Partida.instantanea(m))))
+	_comprobar(PartidoDespedida.dorsal_retirado(m3, m3.mi_club(), 7) and m3.prensa.despedida_anio == m.anio, "la camiseta retirada y el año del partido sobreviven a guardar y cargar")
+	m.nueva_temporada()
+	PartidoDespedida.limpiar(m)
+	var dorsales_ok := true
+	for j: Jugador in m.mi_club().plantilla:
+		dorsales_ok = dorsales_ok and j.dorsal != 7
+	_comprobar(dorsales_ok, "el #7 no se reparte a nadie de tu club tras el cierre")
