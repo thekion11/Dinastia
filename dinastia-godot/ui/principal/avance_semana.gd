@@ -30,6 +30,26 @@ func situacion_musical() -> String:
 		return "final"
 	return "menu"
 
+## Las opciones del desplegable «📅 Calendario» según la fecha (orden del dueño, 9-11): con la liga en curso, jugar el partido y avanzar semana; al
+## terminarla, SOLO «Temporada siguiente». Al construir el menú todavía no hay mundo: se supone en curso.
+static func rellenar_calendario(popup: PopupMenu, en_curso: bool) -> void:
+	popup.clear()
+	if en_curso:
+		popup.add_item("Jugar el partido", 0)
+		popup.add_item("Avanzar semana", 1)
+	else:
+		popup.add_item("Temporada siguiente", 3)
+
+func actualizar_calendario() -> void:
+	var mb: Variant = p._guia.nodos.get("calendario")
+	if not is_instance_valid(mb) or p.mundo == null:
+		return
+	var pop: PopupMenu = (mb as MenuButton).get_popup()
+	var en_curso := p.mundo.temporada_en_curso()
+	if (pop.get_item_index(3) < 0) == en_curso and pop.item_count > 0:
+		return   ## ya está como toca
+	rellenar_calendario(pop, en_curso)
+
 func _refrescar() -> void:
 	var c := p.mundo.mi_club()
 	## Los interruptores de accesibilidad llegan también a lo que se pinta con
@@ -189,6 +209,7 @@ func _refrescar() -> void:
 	p._traducir_pantalla(p)
 	## Y la música, que también depende de lo que esté pasando.
 	Musica.ambientar(situacion_musical())   ## (A4 memoria) sin crear `PantallaOpciones` en cada refresco
+	actualizar_calendario()   ## «Temporada siguiente» solo existe al terminar la liga
 	## (9-11) EVENTO DE FIN DE TEMPORADA: al terminar la liga, el partido de despedida a pantalla completa (solo en su fecha, una vez).
 	if p.mundo != null and p.mundo.temporada_en_curso():
 		_evento_fin_lanzado = false

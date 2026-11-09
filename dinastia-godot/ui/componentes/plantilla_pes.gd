@@ -19,6 +19,9 @@ var _a: Jugador = null
 var _b: Jugador = null
 var _comparando := false
 var _cambiando := false
+var _pila: Array = []   ## fotos del once antes de cada cambio, para «Deshacer»
+var _btn_deshacer: Button
+var _btn_auto: Button
 var _aviso_texto := ""
 var _titulares: Array[Jugador] = []
 
@@ -40,30 +43,9 @@ static func claves_de(j: Jugador) -> Array:
 static func diferencia(a: Jugador, b: Jugador, clave: String) -> int:
 	return int(a.atributos.get(clave, 0)) - int(b.atributos.get(clave, 0))
 
-## INTERCAMBIAR en el once (9-11): dos titulares se cambian de puesto; un titular y un reserva se sustituyen. Devuelve false si no se puede
-## (el de fuera lesionado o sancionado, o los dos reservas). Si el once era automático, primero se fija tal cual está.
+## INTERCAMBIAR en el once: ver `GestionOnce.intercambiar` (se deja aquí por compatibilidad con las pruebas y las llamadas de siempre).
 static func intercambiar(club: Club, a: Jugador, b: Jugador) -> bool:
-	if club == null or a == null or b == null or a == b or not a.disponible() or not b.disponible():
-		return false
-	var ids: Array[String] = []
-	if club.once_elegido.size() == 11:
-		ids = club.once_elegido.duplicate()
-	else:
-		for j: Jugador in club.once():
-			ids.append(j.id)
-	var ia := ids.find(a.id)
-	var ib := ids.find(b.id)
-	if ia < 0 and ib < 0:
-		return false
-	if ia >= 0 and ib >= 0:
-		ids[ia] = b.id
-		ids[ib] = a.id
-	elif ia >= 0:
-		ids[ia] = b.id
-	else:
-		ids[ib] = a.id
-	club.once_elegido = ids
-	return not club._once_manual().is_empty()
+	return GestionOnce.intercambiar(club, a, b)
 
 ## El color de una barra según el valor (como el PES: dorado arriba, verde, ámbar, rojo abajo).
 static func color_de_valor(v: int) -> Color:
@@ -175,6 +157,24 @@ func _montar() -> void:
 		_pintar())
 	pie.add_child(comp)
 	pie.add_child(camb)
+	_btn_deshacer = Button.new()
+	_btn_deshacer.text = Idiomas.t("↶ Deshacer")
+	_btn_deshacer.pressed.connect(func() -> void:
+		if not _pila.is_empty():
+			GestionOnce.restaurar(_club, _pila.pop_back())
+			_titulares = _club.once()
+			_aviso_texto = Idiomas.t("Cambio deshecho.")
+			_pintar())
+	pie.add_child(_btn_deshacer)
+	_btn_auto = Button.new()
+	_btn_auto.text = Idiomas.t("⟲ Once automático")
+	_btn_auto.pressed.connect(func() -> void:
+		_pila.append(GestionOnce.foto(_club))
+		GestionOnce.automatico(_club)
+		_titulares = _club.once()
+		_aviso_texto = Idiomas.t("El once vuelve a armarse solo.")
+		_pintar())
+	pie.add_child(_btn_auto)
 	var ayuda := _etiqueta(Idiomas.t("Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación"), 12, Tema.SUAVE)
 	ayuda.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	pie.add_child(ayuda)
@@ -230,12 +230,17 @@ func _pintar() -> void:
 	reservas.sort_custom(func(x: Jugador, y: Jugador) -> bool: return x.ovr > y.ovr)
 	for j: Jugador in reservas:
 		_lista.add_child(_fila(j))
+	if _btn_deshacer != null:
+		_btn_deshacer.disabled = _pila.is_empty()
+		_btn_auto.disabled = _club.once_elegido.is_empty()
 	_pintar_info()
 
 func _elegir(j: Jugador) -> void:
 	_aviso_texto = ""
 	if _cambiando and _a != null and j != _a:
-		if intercambiar(_club, _a, j):
+		var antes := GestionOnce.foto(_club)
+		if GestionOnce.intercambiar(_club, _a, j):
+			_pila.append(antes)
 			_titulares = _club.once()
 			_aviso_texto = "%s ↔ %s" % [_a.nombre, j.nombre]
 		else:
@@ -404,6 +409,8 @@ func _pintar_info() -> void:
 	PlantillaEstilos.pintar(_p.mundo, _club, _a, _info, _pintar)   ## estilo de juego con estrellas (idea del PES)
 	_info.add_child(_etiqueta("%s %d · %s %d%% · %s %d%% · %s %d%%" % [Idiomas.t("Edad"), _a.edad, Idiomas.t("Forma"), _a.forma,
 		Idiomas.t("Moral"), _a.moral, Idiomas.t("Físico"), _a.fisico], 12, Tema.SUAVE))
+	if _cambiando and _aviso_texto == "":
+		_info.add_child(_etiqueta("↔ %s %s" % [Idiomas.t("Elige con quién cambiar a"), _a.nombre], 13, Tema.ORO))
 	if _aviso_texto != "":
 		_info.add_child(_etiqueta(_aviso_texto, 13, Tema.ORO))
 	if _a.lesion > 0:
