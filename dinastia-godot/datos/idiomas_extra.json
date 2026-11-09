@@ -7588,7 +7588,9 @@
   "Homenaje": "Tribute",
   "años": "years old",
   "Camiseta retirada": "Retired shirt",
-  "CAMISETAS RETIRADAS": "RETIRED SHIRTS"
+  "CAMISETAS RETIRADAS": "RETIRED SHIRTS",
+  "ESTILO DE JUEGO": "PLAYING STYLE",
+  "Aptitud": "Aptitude"
  },
  "pt": {
   "Historia": "História",
@@ -15179,7 +15181,9 @@
   "Homenaje": "Homenagem",
   "años": "anos",
   "Camiseta retirada": "Camisola retirada",
-  "CAMISETAS RETIRADAS": "CAMISOLAS RETIRADAS"
+  "CAMISETAS RETIRADAS": "CAMISOLAS RETIRADAS",
+  "ESTILO DE JUEGO": "ESTILO DE JOGO",
+  "Aptitud": "Aptidão"
  },
  "patrones": [
   [
@@ -28745,7 +28749,9 @@
   "Homenaje": "Hommage",
   "años": "ans",
   "Camiseta retirada": "Maillot retiré",
-  "CAMISETAS RETIRADAS": "MAILLOTS RETIRÉS"
+  "CAMISETAS RETIRADAS": "MAILLOTS RETIRÉS",
+  "ESTILO DE JUEGO": "STYLE DE JEU",
+  "Aptitud": "Aptitude"
  },
  "it": {
   "Historia": "Storia",
@@ -36336,7 +36342,9 @@
   "Homenaje": "Omaggio",
   "años": "anni",
   "Camiseta retirada": "Maglia ritirata",
-  "CAMISETAS RETIRADAS": "MAGLIE RITIRATE"
+  "CAMISETAS RETIRADAS": "MAGLIE RITIRATE",
+  "ESTILO DE JUEGO": "STILE DI GIOCO",
+  "Aptitud": "Attitudine"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43927,7 +43935,9 @@
   "Homenaje": "Ehrung",
   "años": "Jahre",
   "Camiseta retirada": "Gesperrtes Trikot",
-  "CAMISETAS RETIRADAS": "GESPERRTE TRIKOTS"
+  "CAMISETAS RETIRADAS": "GESPERRTE TRIKOTS",
+  "ESTILO DE JUEGO": "SPIELSTIL",
+  "Aptitud": "Eignung"
  },
  "ca": {
   "Historia": "Història",
@@ -51518,7 +51528,9 @@
   "Homenaje": "Homenatge",
   "años": "anys",
   "Camiseta retirada": "Samarreta retirada",
-  "CAMISETAS RETIRADAS": "SAMARRETES RETIRADES"
+  "CAMISETAS RETIRADAS": "SAMARRETES RETIRADES",
+  "ESTILO DE JUEGO": "ESTIL DE JOC",
+  "Aptitud": "Aptitud"
  },
  "pl": {
   "Club": "Klub",
@@ -59109,7 +59121,9 @@
   "Homenaje": "Hołd",
   "años": "lat",
   "Camiseta retirada": "Zastrzeżona koszulka",
-  "CAMISETAS RETIRADAS": "ZASTRZEŻONE KOSZULKI"
+  "CAMISETAS RETIRADAS": "ZASTRZEŻONE KOSZULKI",
+  "ESTILO DE JUEGO": "STYL GRY",
+  "Aptitud": "Predyspozycje"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66700,6 +66714,8 @@
   "Homenaje": "Onur töreni",
   "años": "yaşında",
   "Camiseta retirada": "Emekli forma",
-  "CAMISETAS RETIRADAS": "EMEKLİ FORMALAR"
+  "CAMISETAS RETIRADAS": "EMEKLİ FORMALAR",
+  "ESTILO DE JUEGO": "OYUN TARZI",
+  "Aptitud": "Yetenek"
  }
 }
