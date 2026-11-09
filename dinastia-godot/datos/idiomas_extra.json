@@ -7590,7 +7590,9 @@
   "Camiseta retirada": "Retired shirt",
   "CAMISETAS RETIRADAS": "RETIRED SHIRTS",
   "ESTILO DE JUEGO": "PLAYING STYLE",
-  "Aptitud": "Aptitude"
+  "Aptitud": "Aptitude",
+  "FIN DE TEMPORADA": "END OF SEASON",
+  "PARTIDO DE DESPEDIDA": "FAREWELL MATCH"
  },
  "pt": {
   "Historia": "História",
@@ -15183,7 +15185,9 @@
   "Camiseta retirada": "Camisola retirada",
   "CAMISETAS RETIRADAS": "CAMISOLAS RETIRADAS",
   "ESTILO DE JUEGO": "ESTILO DE JOGO",
-  "Aptitud": "Aptidão"
+  "Aptitud": "Aptidão",
+  "FIN DE TEMPORADA": "FIM DE TEMPORADA",
+  "PARTIDO DE DESPEDIDA": "JOGO DE DESPEDIDA"
  },
  "patrones": [
   [
@@ -28751,7 +28755,9 @@
   "Camiseta retirada": "Maillot retiré",
   "CAMISETAS RETIRADAS": "MAILLOTS RETIRÉS",
   "ESTILO DE JUEGO": "STYLE DE JEU",
-  "Aptitud": "Aptitude"
+  "Aptitud": "Aptitude",
+  "FIN DE TEMPORADA": "FIN DE SAISON",
+  "PARTIDO DE DESPEDIDA": "MATCH D'ADIEU"
  },
  "it": {
   "Historia": "Storia",
@@ -36344,7 +36350,9 @@
   "Camiseta retirada": "Maglia ritirata",
   "CAMISETAS RETIRADAS": "MAGLIE RITIRATE",
   "ESTILO DE JUEGO": "STILE DI GIOCO",
-  "Aptitud": "Attitudine"
+  "Aptitud": "Attitudine",
+  "FIN DE TEMPORADA": "FINE STAGIONE",
+  "PARTIDO DE DESPEDIDA": "PARTITA D'ADDIO"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43937,7 +43945,9 @@
   "Camiseta retirada": "Gesperrtes Trikot",
   "CAMISETAS RETIRADAS": "GESPERRTE TRIKOTS",
   "ESTILO DE JUEGO": "SPIELSTIL",
-  "Aptitud": "Eignung"
+  "Aptitud": "Eignung",
+  "FIN DE TEMPORADA": "SAISONENDE",
+  "PARTIDO DE DESPEDIDA": "ABSCHIEDSSPIEL"
  },
  "ca": {
   "Historia": "Història",
@@ -51530,7 +51540,9 @@
   "Camiseta retirada": "Samarreta retirada",
   "CAMISETAS RETIRADAS": "SAMARRETES RETIRADES",
   "ESTILO DE JUEGO": "ESTIL DE JOC",
-  "Aptitud": "Aptitud"
+  "Aptitud": "Aptitud",
+  "FIN DE TEMPORADA": "FI DE TEMPORADA",
+  "PARTIDO DE DESPEDIDA": "PARTIT DE COMIAT"
  },
  "pl": {
   "Club": "Klub",
@@ -59123,7 +59135,9 @@
   "Camiseta retirada": "Zastrzeżona koszulka",
   "CAMISETAS RETIRADAS": "ZASTRZEŻONE KOSZULKI",
   "ESTILO DE JUEGO": "STYL GRY",
-  "Aptitud": "Predyspozycje"
+  "Aptitud": "Predyspozycje",
+  "FIN DE TEMPORADA": "KONIEC SEZONU",
+  "PARTIDO DE DESPEDIDA": "MECZ POŻEGNALNY"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66716,6 +66730,8 @@
   "Camiseta retirada": "Emekli forma",
   "CAMISETAS RETIRADAS": "EMEKLİ FORMALAR",
   "ESTILO DE JUEGO": "OYUN TARZI",
-  "Aptitud": "Yetenek"
+  "Aptitud": "Yetenek",
+  "FIN DE TEMPORADA": "SEZON SONU",
+  "PARTIDO DE DESPEDIDA": "VEDA MAÇI"
  }
 }
