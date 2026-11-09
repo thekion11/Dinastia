@@ -39,8 +39,8 @@ const ORO_DALT := Color("e69f00")
 const POS := {"POR": Color("d9a400"), "DEF": Color("2f7fd0"), "MED": Color("2f9a5e"), "DEL": Color("e07b2a")}
 
 # --- letra ---------------------------------------------------------------------
-const TAM_ROTULO := 11     ## "PRÓXIMO PARTIDO", encabezados de tabla
-const TAM_CUERPO := 13     ## texto corriente
+const TAM_ROTULO := 12     ## "PRÓXIMO PARTIDO", encabezados de tabla
+const TAM_CUERPO := 14     ## texto corriente
 const TAM_DESTACADO := 16  ## nombres en tarjetas
 const TAM_TITULO := 22     ## títulos de pantalla
 const TAM_MARCADOR := 36   ## marcadores y cifras héroe
