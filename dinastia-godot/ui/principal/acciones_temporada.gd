@@ -12,8 +12,6 @@ func _nueva_temporada() -> void:
 	if p.mundo.temporada_en_curso():
 		p._escribir("[color=#e05555]Todavía queda calendario por jugar.[/color]")
 		return
-	## (9-11) El partido de despedida: tu equipo contra los que se retiran esta temporada (jugarlo, simularlo o nada).
-	await JornadaDespedida.ofrecer(p)
 	## EL DOCUMENTAL (fase 5): se arma ANTES del cierre, que reinicia la tabla
 	## y las estadísticas; se proyecta al final del cierre.
 	var documental: GDScript = load("res://ui/componentes/documental_temporada.gd")   ## (A4 memoria) por ruta

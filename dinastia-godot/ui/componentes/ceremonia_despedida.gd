@@ -1,46 +1,20 @@
 class_name CeremoniaDespedida
-extends CanvasLayer
-## LA CEREMONIA DEL HOMENAJE (9-11): tras el partido de despedida, una tarjeta de gala con los HOMENAJEADOS de tu club (con su camiseta retirada) y, si no hay,
-## con las tres mayores Leyendas de la noche. Se cierra con «Continuar». Todo con retratos del juego (`Principal._retrato`, caras ficticias).
-signal terminado
+extends EventoPantallaCompleta
+## LA CEREMONIA DEL HOMENAJE, A PANTALLA COMPLETA (regla del dueño, 9-11): sale tras el partido de despedida (nunca antes ni por un menú). Una tarjeta grande por
+## HOMENAJEADO de tu club (retrato, nombre, edad y nota, y su CAMISETA RETIRADA con el número) y, si no hay, las tres mayores Leyendas de la noche.
+## Se cierra con «Continuar» (emite `terminado`). Retratos del juego (`Principal._retrato`, caras ficticias).
 
 ## `homenajeados`: [{jugador, dorsal}] de tu club; `leyendas`: el club de las Leyendas (para completar con sus mejores).
 static func mostrar(pr: Principal, homenajeados: Array, leyendas: Club) -> CeremoniaDespedida:
 	var c := CeremoniaDespedida.new()
-	c.layer = 59
-	pr.add_child(c)
-	c._montar(pr, homenajeados, leyendas)
+	c._montar_base(pr)
+	c._rellenar(pr, homenajeados, leyendas)
 	return c
 
-func _montar(pr: Principal, homenajeados: Array, leyendas: Club) -> void:
-	var velo := ColorRect.new()
-	velo.color = Color(0, 0, 0, 0.78)
-	velo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(velo)
-	var centro := CenterContainer.new()
-	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(centro)
-	var panel := PanelContainer.new()
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Tema.PANEL
-	sb.border_color = Tema.ORO
-	sb.set_border_width_all(2)
-	sb.set_corner_radius_all(10)
-	sb.set_content_margin_all(22)
-	sb.shadow_color = Color(0, 0, 0, 0.55)
-	sb.shadow_size = 16
-	panel.add_theme_stylebox_override("panel", sb)
-	centro.add_child(panel)
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 12)
-	col.custom_minimum_size = Vector2(520, 0)
-	panel.add_child(col)
-	var t := Label.new()
-	t.text = "🎖️ " + Idiomas.t("Homenaje")
-	t.add_theme_font_size_override("font_size", 26)
-	t.add_theme_color_override("font_color", Tema.ORO)
-	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	col.add_child(t)
+func _rellenar(pr: Principal, homenajeados: Array, leyendas: Club) -> void:
+	_centro.custom_minimum_size = Vector2(1000, 0)
+	_centro.add_child(etiqueta(Idiomas.t("PARTIDO DE DESPEDIDA"), 15, Tema.SUAVE))
+	_centro.add_child(etiqueta("🎖️ " + Idiomas.t("Homenaje"), 50, Tema.ORO, true, false))
 	var filas: Array = []
 	for h: Dictionary in homenajeados:
 		filas.append({"j": h["jugador"], "dorsal": int(h["dorsal"]), "propio": true})
@@ -49,36 +23,42 @@ func _montar(pr: Principal, homenajeados: Array, leyendas: Club) -> void:
 		top.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
 		for j: Jugador in top.slice(0, 3):
 			filas.append({"j": j, "dorsal": 0, "propio": false})
-	for f: Dictionary in filas:
-		col.add_child(_fila(pr, f))
-	var seguir := Button.new()
-	seguir.text = Idiomas.t("Continuar")
-	seguir.pressed.connect(func() -> void:
-		terminado.emit()
-		queue_free())
-	col.add_child(seguir)
+	var tarjetas := HBoxContainer.new()
+	tarjetas.alignment = BoxContainer.ALIGNMENT_CENTER
+	tarjetas.add_theme_constant_override("separation", 28)
+	_centro.add_child(tarjetas)
+	for f: Dictionary in filas.slice(0, 4):
+		tarjetas.add_child(_tarjeta(pr, f))
+	var seguir := boton(Idiomas.t("Continuar"), true)
+	seguir.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	seguir.custom_minimum_size = Vector2(320, 58)
+	seguir.pressed.connect(func() -> void: terminado.emit())
+	_centro.add_child(seguir)
 
-func _fila(pr: Principal, f: Dictionary) -> Control:
+func _tarjeta(pr: Principal, f: Dictionary) -> Control:
 	var j: Jugador = f["j"]
-	var fila := HBoxContainer.new()
-	fila.add_theme_constant_override("separation", 14)
-	var retrato := pr._retrato(j, 72)
-	retrato.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	fila.add_child(retrato)
-	var datos := VBoxContainer.new()
-	fila.add_child(datos)
-	var n := Label.new()
-	n.text = j.nombre
-	n.add_theme_font_size_override("font_size", 20)
-	n.add_theme_color_override("font_color", Tema.ORO)
-	datos.add_child(n)
-	var d := Label.new()
-	d.add_theme_color_override("font_color", Tema.SUAVE)
-	d.text = "%d %s · %s %d · %s" % [j.edad, Idiomas.t("años"), Idiomas.t("Nota"), j.ovr, Idiomas.t(String(j.pos_e))]
-	datos.add_child(d)
+	var pc := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0, 0, 0, 0.32)
+	sb.border_color = Color(Tema.ORO, 0.7)
+	sb.set_border_width_all(2)
+	sb.set_corner_radius_all(10)
+	sb.set_content_margin_all(18)
+	sb.shadow_color = Color(0, 0, 0, 0.5)
+	sb.shadow_size = 14
+	pc.add_theme_stylebox_override("panel", sb)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 8)
+	col.custom_minimum_size = Vector2(220, 0)
+	pc.add_child(col)
+	var r := pr._retrato(j, 170)
+	r.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	r.custom_minimum_size = Vector2(170, 170)
+	r.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	col.add_child(r)
+	col.add_child(etiqueta(j.nombre, 22, Tema.ORO))
+	col.add_child(etiqueta("%d %s · %s %d · %s" % [j.edad, Idiomas.t("años"), Idiomas.t("Nota"), j.ovr, Idiomas.t(String(j.pos_e))], 14, Tema.SUAVE))
 	if bool(f["propio"]) and int(f["dorsal"]) > 1:
-		var c := Label.new()
-		c.text = "👕 %s #%d" % [Idiomas.t("Camiseta retirada"), int(f["dorsal"])]
-		c.add_theme_color_override("font_color", Tema.TEXTO)
-		datos.add_child(c)
-	return fila
+		col.add_child(etiqueta("👕 #%d" % int(f["dorsal"]), 34, Tema.TEXTO))
+		col.add_child(etiqueta(Idiomas.t("Camiseta retirada"), 14, Tema.ORO))
+	return pc
