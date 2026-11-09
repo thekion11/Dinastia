@@ -394,9 +394,7 @@ func _pintar_calendario(c: Club) -> void:
 		p._lista_calendario.move_child(filab, p._lista_calendario.get_child_count() - 1)
 		p._boton("▶ Jugar el partido", p._dirigir, filab)
 
-	p._lista_calendario.add_child(HSeparator.new())
-	p._boton("⏭⏭ Simular toda la temporada", p._jugar_temporada, p._lista_calendario)
-	p._lista_calendario.add_child(HSeparator.new())
+	p._lista_calendario.add_child(HSeparator.new())   ## (9-11) sin «Simular toda la temporada»
 
 	## EL CALENDARIO DE LIGA COMPLETO. Se recorre `Liga.calendario` a mano -no
 	## `emparejamiento_de()`, que solo conoce la jornada ACTUAL- desde hoy

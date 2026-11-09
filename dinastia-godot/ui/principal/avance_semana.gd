@@ -4,6 +4,10 @@ extends RefCounted
 ## sus miembros se usan como `p.x` y `Principal` conserva puentes de una línea con los nombres de siempre.
 
 var p: Principal
+## (9-11, orden del dueño, como PES 2020) El DÍA DE PARTIDO no se salta: si tu club juega esta semana, avanzar el calendario abre el
+## MENÚ DEL PARTIDO (ahí eliges jugarlo o simularlo, a conciencia) en vez de simularlo por error. Las pruebas que recorren
+## semanas a mano lo apagan.
+static var partido_obliga := true
 ## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
 ## Para no repetir el aviso del cierre de mercado cada vez que se repinta.
 var _mercado_avisado: int = -1
@@ -184,9 +188,18 @@ func _refrescar() -> void:
 	p._traducir_pantalla(p)
 	## Y la música, que también depende de lo que esté pasando.
 	Musica.ambientar(situacion_musical())   ## (A4 memoria) sin crear `PantallaOpciones` en cada refresco
+## ¿Tu club tiene partido (liga, copa o continental) que aún no se ha jugado esta semana?
+func _tiene_partido_pendiente() -> bool:
+	return p.mundo != null and p.mundo.temporada_en_curso() and (not p.mundo.proximo_partido().is_empty()
+		or not p.mundo.partido_de_copa().is_empty() or not p.mundo.partido_continental().is_empty())
+
 func _avanzar_semana() -> void:
 	if not p.mundo.temporada_en_curso():
 		p._escribir("[color=#e05555]La temporada está terminada. Pulsa «Temporada siguiente».[/color]")
+		return
+	if partido_obliga and _tiene_partido_pendiente():
+		p._escribir("[color=#d9a43a]%s[/color]" % Idiomas.t("Hay partido: se abre el menú del partido."))
+		p._dirigir()
 		return
 	var mio := p.mundo.mi_club()
 	var liga := p._liga_de(mio)
@@ -249,6 +262,9 @@ func _avanzar_dia() -> void:
 		Aviso.mostrar(p, "prensa", "🗞️", "La portada de hoy", tit)
 	p._partida.autoguardar_si_toca()   ## (3-11) también al pasar cada día (la semana entera ya lo hace en `_avanzar_semana`)
 	_refrescar()
+	## Llega el sábado y juegas: el menú del partido se abre solo.
+	if partido_obliga and p._dia_semana == 5 and _tiene_partido_pendiente():
+		p._dirigir.call_deferred()
 ## Los siete días con el de hoy encendido. El sábado lleva el balón porque es
 ## cuando cae la jornada: sin esa marca, la tira sería un adorno.
 func _pintar_dias() -> void:

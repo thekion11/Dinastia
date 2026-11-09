@@ -15,6 +15,7 @@ func _ready() -> void:
 			otro = c
 			break
 	_comprobar(pr.mundo.ojeadores.alternar_club(otro) and pr.mundo.ojeadores.sigue_club(otro), "se puede seguir a %s" % otro.nombre)
+	AvanceSemana.partido_obliga = false
 	pr._bandeja.clear()
 	pr._avanzar_semana()
 	pr._avanzar_semana()

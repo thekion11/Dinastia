@@ -162,13 +162,13 @@ func _montar_cabecera() -> VBoxContainer:
 	menu_calendario.text = Idiomas.t("📅 Calendario")
 	menu_calendario.custom_minimum_size = Vector2(0, 32)
 	menu_calendario.clip_text = true
-	menu_calendario.tooltip_text = Idiomas.t("Jugar el partido, avanzar semana, jugar la temporada o pasar a la siguiente")
+	menu_calendario.tooltip_text = Idiomas.t("Jugar el partido, avanzar semana o pasar a la siguiente temporada")
 	menu_calendario.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	menu_calendario.size_flags_stretch_ratio = 1.3
 	var pop_calendario := menu_calendario.get_popup()
 	pop_calendario.add_item("Jugar el partido", 0)
 	pop_calendario.add_item("Avanzar semana", 1)
-	pop_calendario.add_item("Jugar la temporada", 2)
+	## (9-11) Sin «Jugar la temporada»: ya no se simula la temporada entera de un tirón (orden del dueño, como PES 2020).
 	pop_calendario.add_item("Temporada siguiente", 3)
 	pop_calendario.id_pressed.connect(p._al_elegir_calendario)
 	p._botones.add_child(menu_calendario)
