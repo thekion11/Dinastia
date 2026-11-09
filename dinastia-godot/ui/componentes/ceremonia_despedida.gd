@@ -13,34 +13,7 @@ static func mostrar(pr: Principal, homenajeados: Array, leyendas: Club) -> Cerem
 	return c
 
 func _montar(pr: Principal, homenajeados: Array, leyendas: Club) -> void:
-	var velo := ColorRect.new()
-	velo.color = Color(0, 0, 0, 0.78)
-	velo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(velo)
-	var centro := CenterContainer.new()
-	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(centro)
-	var panel := PanelContainer.new()
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Tema.PANEL
-	sb.border_color = Tema.ORO
-	sb.set_border_width_all(2)
-	sb.set_corner_radius_all(10)
-	sb.set_content_margin_all(22)
-	sb.shadow_color = Color(0, 0, 0, 0.55)
-	sb.shadow_size = 16
-	panel.add_theme_stylebox_override("panel", sb)
-	centro.add_child(panel)
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 12)
-	col.custom_minimum_size = Vector2(520, 0)
-	panel.add_child(col)
-	var t := Label.new()
-	t.text = "🎖️ " + Idiomas.t("Homenaje")
-	t.add_theme_font_size_override("font_size", 26)
-	t.add_theme_color_override("font_color", Tema.ORO)
-	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	col.add_child(t)
+	var m := PantallaEvento.montar(self, "🎖️", Idiomas.t("Homenaje"))
 	var filas: Array = []
 	for h: Dictionary in homenajeados:
 		filas.append({"j": h["jugador"], "dorsal": int(h["dorsal"]), "propio": true})
@@ -49,36 +22,47 @@ func _montar(pr: Principal, homenajeados: Array, leyendas: Club) -> void:
 		top.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
 		for j: Jugador in top.slice(0, 3):
 			filas.append({"j": j, "dorsal": 0, "propio": false})
+	var tarjetas := HFlowContainer.new()
+	tarjetas.alignment = FlowContainer.ALIGNMENT_CENTER
+	tarjetas.add_theme_constant_override("h_separation", 26)
+	tarjetas.add_theme_constant_override("v_separation", 26)
+	tarjetas.custom_minimum_size = Vector2(900, 0)
+	m["cuerpo"].add_child(tarjetas)
 	for f: Dictionary in filas:
-		col.add_child(_fila(pr, f))
-	var seguir := Button.new()
-	seguir.text = Idiomas.t("Continuar")
+		tarjetas.add_child(_fila(pr, f))
+	var seguir := PantallaEvento.boton(Idiomas.t("Continuar"), true)
 	seguir.pressed.connect(func() -> void:
 		terminado.emit()
 		queue_free())
-	col.add_child(seguir)
+	m["pie"].add_child(seguir)
+	seguir.call_deferred("grab_focus")
 
 func _fila(pr: Principal, f: Dictionary) -> Control:
 	var j: Jugador = f["j"]
-	var fila := HBoxContainer.new()
-	fila.add_theme_constant_override("separation", 14)
-	var retrato := pr._retrato(j, 72)
-	retrato.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	fila.add_child(retrato)
+	var tarjeta := PanelContainer.new()
+	var est := Tema.caja(Tema.PANEL, Tema.RADIO_GRANDE, Tema.oro())
+	est.set_border_width_all(2)
+	est.set_content_margin_all(20)
+	est.shadow_color = Color(0, 0, 0, 0.5)
+	est.shadow_size = 14
+	tarjeta.add_theme_stylebox_override("panel", est)
 	var datos := VBoxContainer.new()
-	fila.add_child(datos)
-	var n := Label.new()
-	n.text = j.nombre
-	n.add_theme_font_size_override("font_size", 20)
-	n.add_theme_color_override("font_color", Tema.ORO)
+	datos.add_theme_constant_override("separation", 6)
+	datos.custom_minimum_size = Vector2(240, 0)
+	tarjeta.add_child(datos)
+	var retrato := pr._retrato(j, 160)
+	retrato.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	retrato.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	datos.add_child(retrato)
+	var n := Tema.etiqueta(Tema.TAM_TITULO, Tema.oro(), j.nombre)
+	n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	n.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	datos.add_child(n)
-	var d := Label.new()
-	d.add_theme_color_override("font_color", Tema.SUAVE)
-	d.text = "%d %s · %s %d · %s" % [j.edad, Idiomas.t("años"), Idiomas.t("Nota"), j.ovr, Idiomas.t(String(j.pos_e))]
+	var d := Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE, "%d %s · %s %d · %s" % [j.edad, Idiomas.t("años"), Idiomas.t("Nota"), j.ovr, Idiomas.t(String(j.pos_e))])
+	d.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	datos.add_child(d)
 	if bool(f["propio"]) and int(f["dorsal"]) > 1:
-		var c := Label.new()
-		c.text = "👕 %s #%d" % [Idiomas.t("Camiseta retirada"), int(f["dorsal"])]
-		c.add_theme_color_override("font_color", Tema.TEXTO)
+		var c := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, "👕 %s #%d" % [Idiomas.t("Camiseta retirada"), int(f["dorsal"])])
+		c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		datos.add_child(c)
-	return fila
+	return tarjeta

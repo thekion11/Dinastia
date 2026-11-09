@@ -61,44 +61,47 @@ static func _preguntar(pr: Principal, leyendas: Club) -> String:
 	var capa := Eleccion.new()
 	capa.layer = 58
 	pr.add_child(capa)
-	var velo := ColorRect.new()
-	velo.color = Color(0, 0, 0, 0.7)
-	velo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	capa.add_child(velo)
-	var centro := CenterContainer.new()
-	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
-	capa.add_child(centro)
-	var panel := PanelContainer.new()
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Tema.PANEL
-	sb.border_color = Tema.ORO
-	sb.set_border_width_all(2)
-	sb.set_corner_radius_all(8)
-	sb.set_content_margin_all(18)
-	sb.shadow_color = Color(0, 0, 0, 0.5)
-	sb.shadow_size = 12
-	panel.add_theme_stylebox_override("panel", sb)
-	centro.add_child(panel)
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 10)
-	col.custom_minimum_size = Vector2(420, 0)
-	panel.add_child(col)
-	var t := Label.new()
-	t.text = "🎖️ " + Idiomas.t("Partido de despedida")
-	t.add_theme_font_size_override("font_size", 22)
-	t.add_theme_color_override("font_color", Tema.ORO)
-	col.add_child(t)
-	var d := Label.new()
-	d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	d.text = "%s %d %s" % [Idiomas.t("Tu equipo se enfrenta a las Leyendas: los"), leyendas.plantilla.size(),
-		Idiomas.t("mejores jugadores que se retiran esta temporada. Es un partido de gala: no cuenta para la liga y no deja lesiones.")]
-	col.add_child(d)
+	var m := PantallaEvento.montar(capa, "🎖️", Idiomas.t("Partido de despedida"),
+		"%s %d %s" % [Idiomas.t("Tu equipo se enfrenta a las Leyendas: los"), leyendas.plantilla.size(),
+		Idiomas.t("mejores jugadores que se retiran esta temporada. Es un partido de gala: no cuenta para la liga y no deja lesiones.")])
+	## Las Leyendas, a la vista: sus cinco mejores con retrato (caras ficticias del juego).
+	var top: Array = leyendas.plantilla.duplicate()
+	top.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 22)
+	fila.alignment = BoxContainer.ALIGNMENT_CENTER
+	m["cuerpo"].add_child(fila)
+	for j: Jugador in top.slice(0, 5):
+		var tarjeta := PanelContainer.new()
+		var est := Tema.caja(Tema.PANEL, Tema.RADIO_GRANDE, Color(Tema.oro(), 0.55))
+		est.shadow_color = Color(0, 0, 0, 0.45)
+		est.shadow_size = 10
+		tarjeta.add_theme_stylebox_override("panel", est)
+		fila.add_child(tarjeta)
+		var v := VBoxContainer.new()
+		v.add_theme_constant_override("separation", 4)
+		v.custom_minimum_size = Vector2(150, 0)
+		tarjeta.add_child(v)
+		var retrato := pr._retrato(j, 104)
+		retrato.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		retrato.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		v.add_child(retrato)
+		var n := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, j.nombre)
+		n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		n.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		v.add_child(n)
+		var d := Tema.etiqueta(Tema.TAM_ROTULO, Tema.oro(), "%s %d · %s" % [Idiomas.t("Nota"), j.ovr, Idiomas.t(String(j.pos_e))])
+		d.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		v.add_child(d)
+	var primero := true
 	for par: Array in [["jugar", "▶ " + Idiomas.t("Jugarlo")], ["simular", "⏭ " + Idiomas.t("Simularlo")], ["no", Idiomas.t("Ahora no")]]:
-		var b := Button.new()
-		b.text = String(par[1])
+		var b := PantallaEvento.boton(String(par[1]), primero)
 		var op := String(par[0])
 		b.pressed.connect(func() -> void: capa.elegido.emit(op))
-		col.add_child(b)
+		m["pie"].add_child(b)
+		if primero:
+			b.call_deferred("grab_focus")
+		primero = false
 	var elegida: String = await capa.elegido
 	capa.queue_free()
 	return elegida
