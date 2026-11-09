@@ -29,7 +29,19 @@ func _process(_d: float) -> void:
 	v._pintar()
 	await get_tree().process_frame
 	var ok4 := v._info.get_child_count() >= 8
-	print("claves ", ok1, " diferencia ", ok2, " columnas ", ok3, " comparación ", ok4)
-	fallos = int(not ok1) + int(not ok2) + int(not ok3) + int(not ok4)
+	## El modo «cambiar en el once» desde la interfaz: un titular y un reserva se intercambian y el campo se repinta.
+	for j: Jugador in club.plantilla:
+		j.lesion = 0
+		j.suspension = 0
+	var tit: Jugador = v._titulares[1]
+	var res: Jugador = club.plantilla.filter(func(j: Jugador) -> bool: return not v._titulares.has(j))[0]
+	v._cambiando = true
+	v._comparando = false
+	v._a = tit
+	v._elegir(res)
+	await get_tree().process_frame
+	var ok5 := v._titulares.has(res) and not v._titulares.has(tit) and v._campo.get_child_count() == 11
+	print("claves ", ok1, " diferencia ", ok2, " columnas ", ok3, " comparación ", ok4, " cambio en el once ", ok5)
+	fallos = int(not ok1) + int(not ok2) + int(not ok3) + int(not ok4) + int(not ok5)
 	print("FIN. ", fallos, " fallos")
 	get_tree().quit()

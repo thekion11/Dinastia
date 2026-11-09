@@ -65,3 +65,25 @@ func _probar_fila_proximos() -> void:
 	FilaProximos.pintar(m, caja)
 	_comprobar(caja.get_child_count() >= 1 + 2 * FilaProximos.CUANTOS, "la fila pinta rótulo y una celda con separador por partido (%d nodos)" % caja.get_child_count())
 	caja.queue_free()
+
+## INTERCAMBIAR EN EL ONCE DESDE LA PLANTILLA (9-11): titular↔titular cambia de puesto, titular↔reserva sustituye, y no vale con lesionados ni con dos reservas.
+func _probar_intercambio_once() -> void:
+	_titulo("PLANTILLA A LA PES: INTERCAMBIO EN EL ONCE")
+	var m := Mundo.new()
+	m.generar(["CHI"], 66)
+	m.tomar_el_mando(m.ligas[0].clubes[1].id)
+	var club := m.mi_club()
+	for j: Jugador in club.plantilla:
+		j.lesion = 0
+		j.suspension = 0
+	var once0: Array[Jugador] = club.once()
+	var t1: Jugador = once0[1]
+	var t2: Jugador = once0[2]
+	var reservas: Array = club.plantilla.filter(func(j: Jugador) -> bool: return not once0.has(j))
+	var r1: Jugador = reservas[0]
+	var r2: Jugador = reservas[1]
+	_comprobar(PlantillaPes.intercambiar(club, t1, t2) and club.once()[1] == t2 and club.once()[2] == t1, "dos titulares se cambian de puesto en el once")
+	_comprobar(PlantillaPes.intercambiar(club, t1, r1) and club.once().has(r1) and not club.once().has(t1), "un reserva sustituye a un titular")
+	_comprobar(not PlantillaPes.intercambiar(club, t1, r2) and not PlantillaPes.intercambiar(club, t2, t2), "dos reservas, o el mismo jugador, no valen")
+	r2.lesion = 3
+	_comprobar(not PlantillaPes.intercambiar(club, t2, r2), "no se mete a un lesionado")
