@@ -261,7 +261,7 @@ static var ranura_al_salir := "partida"
 ## ¿Este modo empieza con el prólogo 3D? Los que dirigen un club, salvo el tutorial
 ## (tiene su propia guía) y los retos (empiezan en una situación concreta).
 static func con_prologo(modo: String) -> bool:
-	if sin_prologo or OS.get_environment("PROLOGO") == "0":
+	if sin_prologo or OS.get_environment("PROLOGO") == "0" or not InterruptorCiudad.activa:   ## (9-11) el prólogo caminando vive en la ciudad 3D (apagada)
 		return false
 	return modo not in ["tutorial", "retos", "continuar", "carrera-m"]
 
