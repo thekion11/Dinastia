@@ -222,6 +222,7 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 			PiezasObra._caja(nodo, Vector3((t.x + t.y) / 2.0, y0 + ALTO_LIBRE / 2.0, z_tabique), Vector3(t.y - t.x, ALTO_LIBRE, 0.2), pared, true)
 		for h: Vector2 in huecos:
 			PiezasObra._caja(nodo, Vector3((h.x + h.y) / 2.0, y0 + (ALTO_LIBRE + 2.4) / 2.0, z_tabique), Vector3(h.y - h.x, ALTO_LIBRE - 2.4, 0.2), pared, false)
+		PuertasClub.poner(nodo, huecos, y0, z_tabique, c1)   ## (9-11) marcos y hojas de las puertas de las salas
 		## Tabiques entre salas.
 		var salas: Array = f[2]
 		for i in range(1, salas.size()):

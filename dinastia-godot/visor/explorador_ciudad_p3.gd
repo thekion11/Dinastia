@@ -169,13 +169,13 @@ func _salir_del_estadio() -> void:
 
 ## El ascensor del edificio del club: misma x y z, otra planta. Los sótanos
 ## van sin sol ni niebla (como el metro).
-func _ir_a_planta(p: int) -> void:
+func _ir_a_planta(p: int) -> void:   ## (9-11) el ascensor SUBE/BAJA suave (`AscensorViaje`), ya no teletransporta
+	if _en_viaje or p == _planta: return
+	_en_viaje = true
 	var antes := _planta
-	_planta = p
-	cuerpo.position.y = RecorridoClub.y_de(p)
-	_zona_est = "?"
-	if (antes < 0) != (p < 0):
-		_bajo_tierra(p < 0)
+	AscensorViaje.viajar(cuerpo, antes, p, func() -> void:
+		_planta = p; _en_viaje = false; _zona_est = "?"
+		if (antes < 0) != (p < 0): _bajo_tierra(p < 0))
 
 func _subir_al_tren(k: int) -> void:
 	estado = "tren"

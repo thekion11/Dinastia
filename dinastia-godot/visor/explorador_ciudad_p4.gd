@@ -3,7 +3,7 @@ extends "res://visor/explorador_ciudad_p3.gd"
 
 ## Dentro del estadio se camina por las zonas de `TunelVestuario` (vestuario, túnel, banda, campo y la puerta). Salir por la puerta devuelve a la calle.
 func _mover_en_estadio(delta: float) -> void:
-	var e := _entrada()
+	var e := Vector2.ZERO if _en_viaje else _entrada()   ## (9-11) en el ascensor no se camina
 	if _sentado:
 		_mirada = clampf(_mirada - e.x * delta * 1.4, -1.2, 1.2)
 		var dir := Vector3(sin(rumbo + _mirada), 0, cos(rumbo + _mirada))
@@ -46,7 +46,7 @@ func _mover_en_estadio(delta: float) -> void:
 			_vel_pie = 0.0
 		elif hecho < pedido * 0.9:
 			_vel_pie *= 0.92
-	cuerpo.position = Vector3(llega.x, RecorridoClub.y_de(_planta), llega.z)
+	cuerpo.position = Vector3(llega.x, cuerpo.position.y if _en_viaje else RecorridoClub.y_de(_planta), llega.z)
 	load("res://visor/personal_estadio.gd").avisar_jugador(cuerpo.position - CityBuilder.ESTADIO_EN, _planta)
 	cuerpo.rotation.y = rumbo
 	_animar_dt(vel)
@@ -89,7 +89,7 @@ func _mover_en_estadio(delta: float) -> void:
 		## puerta del vestuario); en una sala cerrada se queda dentro.
 		var holgura := 1.0 if nombre == "Túnel" else -0.15
 		deseo.z = clampf(deseo.z, o.z + r.position.y - holgura, o.z + r.end.y + holgura)
-		deseo.y = minf(deseo.y, RecorridoClub.y_de(_planta) + float(z["techo"]) - 0.25)
+		if not _en_viaje: deseo.y = minf(deseo.y, RecorridoClub.y_de(_planta) + float(z["techo"]) - 0.25)
 		if nombre == "Escalera de la galería":
 			## Mirando hacia abajo desde la escalera: la cámara va sobre los
 			## peldaños, dentro del pozo, y no se sale por arriba.
@@ -160,7 +160,7 @@ func _usar() -> void:
 			return
 		if _zona_est == "Acceso":
 			_salir_del_estadio()
-		elif _zona_est == "Ascensor" and not is_instance_valid(_menu_asc):
+		elif _zona_est == "Ascensor" and not is_instance_valid(_menu_asc) and not _en_viaje:
 			_menu_asc = RecorridoClub.menu_ascensor(_capa, _planta, _ir_a_planta)
 		elif RecorridoClub.sala_decorable(_zona_est):
 			_menu_asc = RecorridoClub.panel_decorar(_capa, get_tree(), _zona_est)
