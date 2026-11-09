@@ -288,12 +288,15 @@ func _montar_columnas(raiz: VBoxContainer) -> void:
 	caja.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	caja.size_flags_stretch_ratio = 2.6
 	columnas.add_child(caja)
+	var margen_v := MarginContainer.new()   ## (9-11, estética) margen real dentro del PanelContainer
+	margen_v.add_theme_constant_override("margin_left", 12)
+	margen_v.add_theme_constant_override("margin_right", 12)
+	margen_v.add_theme_constant_override("margin_top", 10)
+	margen_v.add_theme_constant_override("margin_bottom", 10)
+	caja.add_child(margen_v)
 	var caja_v := VBoxContainer.new()
-	caja_v.set_anchors_preset(Control.PRESET_FULL_RECT)
-	caja_v.offset_left = 6; caja_v.offset_top = 4
-	caja_v.offset_right = -6; caja_v.offset_bottom = -6
 	caja_v.add_theme_constant_override("separation", 4)
-	caja.add_child(caja_v)
+	margen_v.add_child(caja_v)
 
 	## EL MARCO DE PÁGINAS. `_pestanas` no se puede mover a mano -es hijo de un
 	## Container y este le reimpone la posición en cada `sort_children`-, así

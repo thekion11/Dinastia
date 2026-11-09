@@ -141,10 +141,16 @@ func _bloque(padre: VBoxContainer, titulo: String, ratio: float) -> VBoxContaine
 	caja.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	caja.size_flags_stretch_ratio = ratio
 	padre.add_child(caja)
+	## (9-11, estética) Margen real: los `offset_*` no valen dentro de un PanelContainer.
+	var margen := MarginContainer.new()
+	margen.add_theme_constant_override("margin_left", 14)
+	margen.add_theme_constant_override("margin_right", 14)
+	margen.add_theme_constant_override("margin_top", 12)
+	margen.add_theme_constant_override("margin_bottom", 12)
+	caja.add_child(margen)
 	var v := VBoxContainer.new()
-	v.set_anchors_preset(Control.PRESET_FULL_RECT)
-	v.offset_left = 12; v.offset_top = 10; v.offset_right = -12; v.offset_bottom = -10
-	caja.add_child(v)
+	v.add_theme_constant_override("separation", 6)
+	margen.add_child(v)
 	## (3-11, orden 22) Cabecera con «⤢»: el bloque entero a pantalla completa (`PantallaAmpliada`).
 	var cab := HBoxContainer.new()
 	cab.set_meta("titulo_bloque", true)

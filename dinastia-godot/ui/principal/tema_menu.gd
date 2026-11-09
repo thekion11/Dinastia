@@ -304,10 +304,16 @@ func _columna(padre: HBoxContainer, titulo: String, ratio: float) -> VBoxContain
 	caja.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	caja.size_flags_stretch_ratio = ratio
 	padre.add_child(caja)
+	## (9-11, estética) Los `offset_*` no valen dentro de un PanelContainer: el contenido iba pegado al borde y a las escuadras.
+	var margen := MarginContainer.new()
+	margen.add_theme_constant_override("margin_left", 14)
+	margen.add_theme_constant_override("margin_right", 14)
+	margen.add_theme_constant_override("margin_top", 12)
+	margen.add_theme_constant_override("margin_bottom", 12)
+	caja.add_child(margen)
 	var v := VBoxContainer.new()
-	v.set_anchors_preset(Control.PRESET_FULL_RECT)
-	v.offset_left = 12; v.offset_top = 10; v.offset_right = -12; v.offset_bottom = -10
-	caja.add_child(v)
+	v.add_theme_constant_override("separation", 6)
+	margen.add_child(v)
 	var cab := HBoxContainer.new()   ## (3-11, orden 22) título + «⤢» a pantalla completa
 	v.add_child(cab)
 	var t := p._texto(11, p.COL_SUAVE); t.text = titulo
