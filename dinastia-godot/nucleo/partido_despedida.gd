@@ -67,6 +67,19 @@ static func preparar(m: Mundo) -> Club:
 				retirados.append(j2)
 	return equipo_de(m, retirados)
 
+## Los 5 escudos de las Leyendas (orden del dueño, 9-11): cada temporada toca uno distinto (`anio % 5`), siempre dorados sobre un fondo oscuro que cambia.
+const ESCUDOS_LEYENDAS := [
+	{"forma": "corona", "patron": "estrella", "c1": "#c9a227", "c2": "#0c1510"},
+	{"forma": "hex", "patron": "estrella8", "c1": "#e0b84a", "c2": "#14301f"},
+	{"forma": "escudo", "patron": "cruz", "c1": "#c9a227", "c2": "#3a1018"},
+	{"forma": "ovalo", "patron": "estrella6", "c1": "#d9b13a", "c2": "#10213f"},
+	{"forma": "ojiva", "patron": "chevron", "c1": "#c9a227", "c2": "#1a1a1a"},
+]
+
+## El diseño de escudo que le toca a las Leyendas de esa temporada.
+static func escudo_del_anio(anio: int) -> Dictionary:
+	return ESCUDOS_LEYENDAS[posmod(anio, ESCUDOS_LEYENDAS.size())]
+
 ## El club «Leyendas» con los mejores retirados (portero incluido). null si no hay con qué formar un once.
 ## El dorsal que llevaban antes de ponerles el de las Leyendas (para la camiseta retirada).
 static var dorsales_originales: Dictionary = {}
@@ -91,6 +104,11 @@ static func equipo_de(m: Mundo, retirados: Array[Jugador]) -> Club:
 	club.rep = mio.rep
 	club.color1 = "#c9a227"
 	club.color2 = "#0c1510"
+	var esc := escudo_del_anio(m.anio)
+	club.esc_forma = String(esc["forma"])
+	club.esc_patron = String(esc["patron"])
+	club.esc_color1 = String(esc["c1"])
+	club.esc_color2 = String(esc["c2"])
 	club.plantilla.clear()
 	var n := 1
 	dorsales_originales.clear()

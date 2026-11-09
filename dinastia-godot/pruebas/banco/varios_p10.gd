@@ -95,6 +95,12 @@ func _probar_partido_despedida() -> void:
 	m.generar(["CHI", "ARG"], 88)
 	m.tomar_el_mando(m.ligas[0].clubes[1].id)
 	var mio := m.mi_club()
+	var vistos := {}
+	for k in 5:
+		var d := PartidoDespedida.escudo_del_anio(2030 + k)
+		vistos["%s/%s/%s" % [d["forma"], d["patron"], d["c2"]]] = true
+	_comprobar(vistos.size() == 5 and PartidoDespedida.escudo_del_anio(2030) == PartidoDespedida.escudo_del_anio(2035),
+		"el escudo de las Leyendas tiene 5 diseños distintos que rotan por temporada (%d)" % vistos.size())
 	var leyendas := PartidoDespedida.preparar(m)
 	_comprobar(leyendas != null and leyendas.plantilla.size() >= PartidoDespedida.MINIMO_JUGADORES, "hay equipo de leyendas con once o más retirados (%d)" % (leyendas.plantilla.size() if leyendas != null else 0))
 	if leyendas == null:
