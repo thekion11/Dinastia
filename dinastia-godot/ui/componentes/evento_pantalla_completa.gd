@@ -66,7 +66,7 @@ func _montar_base(pr: Node) -> void:
 static func etiqueta(texto: String, tam: int, color: Color, centrada := true, ajustar := true) -> Label:
 	var l := Label.new()
 	l.text = texto
-	l.add_theme_font_size_override("font_size", tam)
+	l.add_theme_font_size_override("font_size", Tema.letra(tam))   ## respeta la escala de texto de Ajustes
 	l.add_theme_color_override("font_color", color)
 	l.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.55))
 	l.add_theme_constant_override("outline_size", 4)
@@ -76,18 +76,26 @@ static func etiqueta(texto: String, tam: int, color: Color, centrada := true, aj
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	return l
 
-## Un botón grande; `principal` lo destaca con el borde dorado y el fondo dorado tenue.
+## Un botón grande; `principal` lo destaca con el borde dorado y el fondo dorado tenue. En foco (mando) y al pasar el cursor se ve más claro y con borde dorado grueso;
+## el botón principal toma el foco al aparecer, para poder confirmar con el mando sin tocar nada.
 static func boton(texto: String, principal := false) -> Button:
 	var b := Button.new()
 	b.text = texto
 	b.custom_minimum_size = Vector2(0, 58)
-	b.add_theme_font_size_override("font_size", 20)
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(Tema.ORO, 0.22) if principal else Color(1, 1, 1, 0.06)
-	sb.border_color = Tema.ORO if principal else Color(1, 1, 1, 0.25)
-	sb.set_border_width_all(2 if principal else 1)
-	sb.set_corner_radius_all(8)
-	sb.set_content_margin_all(12)
-	for estado in ["normal", "hover", "pressed", "focus"]:
-		b.add_theme_stylebox_override(estado, sb)
+	b.add_theme_font_size_override("font_size", Tema.letra(20))
+	var normal := StyleBoxFlat.new()
+	normal.bg_color = Color(Tema.ORO, 0.22) if principal else Color(1, 1, 1, 0.06)
+	normal.border_color = Tema.ORO if principal else Color(1, 1, 1, 0.25)
+	normal.set_border_width_all(2 if principal else 1)
+	normal.set_corner_radius_all(8)
+	normal.set_content_margin_all(12)
+	var resalte := normal.duplicate() as StyleBoxFlat
+	resalte.bg_color = Color(Tema.ORO, 0.38) if principal else Color(1, 1, 1, 0.14)
+	resalte.border_color = Tema.ORO
+	resalte.set_border_width_all(3)
+	b.add_theme_stylebox_override("normal", normal)
+	for estado in ["hover", "pressed", "focus"]:
+		b.add_theme_stylebox_override(estado, resalte)
+	if principal:
+		b.call_deferred("grab_focus")
 	return b
