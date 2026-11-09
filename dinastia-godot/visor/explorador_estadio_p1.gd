@@ -202,21 +202,29 @@ func _colocar_camara(delta: float) -> void:
 			deseo += Vector3(cos(rumbo), 0.0, -sin(rumbo)) * 0.5 * falta + Vector3(0.0, 1.3 * falta, 0.0)
 			deseo.x = clampf(deseo.x, r.position.x + 0.15, r.end.x - 0.15)
 			deseo.z = clampf(deseo.z, r.position.y - holgura, r.end.y + holgura)
-		deseo.y = minf(deseo.y, RecorridoClub.y_de(planta) + float(z["techo"]) - 0.25)
+		if not en_viaje:
+			deseo.y = minf(deseo.y, RecorridoClub.y_de(planta) + float(z["techo"]) - 0.25)
 	camara.position = camara.position.lerp(deseo, clampf(delta * 6.0, 0.0, 1.0)) if delta < 1.0 else deseo
 	## Acortada, mira más cerca y más abajo: el cuerpo sigue en el encuadre.
 	camara.look_at(cuerpo.position + Vector3(0, 1.4 - 0.6 * falta, 0) + adelante * (3.0 - 1.5 * falta), Vector3.UP)
 
 ## Cambia de planta por el ascensor (misma x y z: el hueco está apilado).
+var en_viaje := false   ## (9-11) mientras el ascensor sube o baja no se camina
+
 func ir_a_planta(p: int) -> void:
-	planta = p
-	cuerpo.position.y = RecorridoClub.y_de(p)
-	_zona_actual = "?"
-	_colocar_camara(1.0)
+	if en_viaje or p == planta:
+		return
+	en_viaje = true
+	var desde := planta
+	AscensorViaje.viajar(cuerpo, desde, p, func() -> void:
+		planta = p
+		en_viaje = false
+		_zona_actual = "?"
+		_colocar_camara(1.0))
 
 ## E: lo que haya a mano: alguien del club para hablar, o el ascensor.
 func usar() -> void:
-	if is_instance_valid(_menu):
+	if en_viaje or is_instance_valid(_menu):
 		return
 	if sentado:
 		levantarse()

@@ -39,6 +39,9 @@ func _rotulos() -> void:
 func _physics_process(delta: float) -> void:
 	if cuerpo == null:
 		return
+	if en_viaje:   ## (9-11) el ascensor sube o baja: solo se mueve la cámara con el cuerpo
+		_colocar_camara(delta)
+		return
 	if not _ruta.is_empty():
 		_caminar_ruta(delta)
 		_colocar_camara(delta)

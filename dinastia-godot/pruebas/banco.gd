@@ -205,7 +205,7 @@ const SECCIONES := [
 	"_probar_optimizacion",
 	"_probar_dinastias",
 	"_probar_documental",
-	"_probar_capitulos",
+	"_probar_capitulos", "_probar_ascensor_viaje",
 	"_probar_tribuna_real",
 	"_probar_narracion_traducida",
 	"_probar_rotulo_y_sala",

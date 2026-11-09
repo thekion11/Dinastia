@@ -82,7 +82,7 @@ var _luz_cam: OmniLight3D
 var _est: Dictionary = {}
 var _zona_est := ""
 var _aviso_hablar := false
-var _planta := 0
+var _planta := 0; var _en_viaje := false   ## (9-11) `_en_viaje`: el ascensor sube o baja y no se camina (`AscensorViaje`)
 var _menu_asc: PanelContainer
 var _sentado := false
 var _hinchas_quitados: Array = []
