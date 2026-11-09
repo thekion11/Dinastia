@@ -99,7 +99,7 @@ func paso(delta: float) -> void:
 # ---------------------------------------------------------------- bucle
 
 func _physics_process(delta: float) -> void:
-	paso(delta)
+	paso(delta * RitmoJuego.escala())   ## (9-11) ritmo de juego elegido en Ajustes (solo en directo; `paso` no lo aplica)
 
 ## El VAR anula un gol ya celebrado: solo el marcador del motor (el acta la
 ## corrige `Partido.anular_gol_externo`).

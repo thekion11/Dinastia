@@ -295,6 +295,7 @@ func _pintar_ajustes() -> void:
 			p._ui_opciones._pintar_idioma()
 			p._ui_opciones._pintar_moneda()
 			p._ui_opciones._pintar_velocidad_partido()
+			AjusteRitmoJuego.pintar(p)
 			p._ui_opciones._pintar_qol()
 			AjustesVida.pintar(p)
 		"acceso":

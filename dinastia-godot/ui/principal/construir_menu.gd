@@ -182,6 +182,13 @@ func _montar_cabecera() -> VBoxContainer:
 	b_dia.pressed.connect(p._avanzar_dia)
 	p._botones.add_child(b_dia)
 	p._guia.nodos["un_dia"] = b_dia
+	## (9-11, idea del PES 2020) «Hito»: avanza hasta lo siguiente que importa (tu partido, el cierre del mercado, la semana).
+	var b_hito := Button.new()
+	b_hito.text = Idiomas.t("⏩ Hito")
+	b_hito.custom_minimum_size = Vector2(84, 32)
+	b_hito.pressed.connect(p._avanzar_hasta_hito)
+	p._botones.add_child(b_hito)
+	p._guia.nodos["hito"] = b_hito
 	p._guia.nodos["calendario"] = menu_calendario
 	## (3-11, rediseño) El ⚽ y el 💰 tienen su menú en el panel lateral (Partido, Dinero); Guardar, Cargar y Otro mundo
 	## viven en Ajustes → Partida y guardado. La guía del tutorial señala sus botones del riel (abajo, al crear el panel).

@@ -7544,7 +7544,17 @@
   "La ciudad 3D está apagada": "The 3D city is switched off",
   "Por ahora el juego es solo el club y sus instalaciones.": "For now the game is just the club and its facilities.",
   "Hay partido: se abre el menú del partido.": "Match day: the match menu opens.",
-  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Play the match, advance a week or move on to the next season"
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Play the match, advance a week or move on to the next season",
+  "VELOCIDAD DEL JUEGO EN DIRECTO": "LIVE GAME SPEED",
+  "Cuánto corren los jugadores y el balón. Más lenta es más cómoda con mando.": "How fast players and the ball move. Slower is easier with a controller.",
+  "Lenta": "Slow",
+  "Rápida": "Fast",
+  "⏩ Hito": "⏩ Next event",
+  "Avanzar hasta el próximo hito:": "Advance to the next event:",
+  "Partido de copa o continental": "Cup or continental match",
+  "en": "at",
+  "El mercado está por cerrar": "The transfer window is about to close",
+  "Semana sin partido": "No-match week"
  },
  "pt": {
   "Historia": "História",
@@ -15091,7 +15101,17 @@
   "La ciudad 3D está apagada": "A cidade 3D está desligada",
   "Por ahora el juego es solo el club y sus instalaciones.": "Por enquanto o jogo é só o clube e as suas instalações.",
   "Hay partido: se abre el menú del partido.": "Dia de jogo: abre-se o menu da partida.",
-  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Jogar a partida, avançar uma semana ou passar à próxima temporada"
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Jogar a partida, avançar uma semana ou passar à próxima temporada",
+  "VELOCIDAD DEL JUEGO EN DIRECTO": "VELOCIDADE DO JOGO AO VIVO",
+  "Cuánto corren los jugadores y el balón. Más lenta es más cómoda con mando.": "Quão rápido correm os jogadores e a bola. Mais lenta é mais cómoda com comando.",
+  "Lenta": "Lenta",
+  "Rápida": "Rápida",
+  "⏩ Hito": "⏩ Marco",
+  "Avanzar hasta el próximo hito:": "Avançar até ao próximo marco:",
+  "Partido de copa o continental": "Jogo de taça ou continental",
+  "en": "fora",
+  "El mercado está por cerrar": "O mercado está quase a fechar",
+  "Semana sin partido": "Semana sem jogo"
  },
  "patrones": [
   [
@@ -28613,7 +28633,17 @@
   "La ciudad 3D está apagada": "La ville 3D est désactivée",
   "Por ahora el juego es solo el club y sus instalaciones.": "Pour l'instant, le jeu se limite au club et à ses installations.",
   "Hay partido: se abre el menú del partido.": "Jour de match : le menu du match s'ouvre.",
-  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Jouer le match, avancer d'une semaine ou passer à la saison suivante"
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Jouer le match, avancer d'une semaine ou passer à la saison suivante",
+  "VELOCIDAD DEL JUEGO EN DIRECTO": "VITESSE DU JEU EN DIRECT",
+  "Cuánto corren los jugadores y el balón. Más lenta es más cómoda con mando.": "La vitesse des joueurs et du ballon. Plus lent est plus confortable à la manette.",
+  "Lenta": "Lente",
+  "Rápida": "Rapide",
+  "⏩ Hito": "⏩ Étape",
+  "Avanzar hasta el próximo hito:": "Avancer jusqu'à la prochaine étape :",
+  "Partido de copa o continental": "Match de coupe ou continental",
+  "en": "à",
+  "El mercado está por cerrar": "Le mercato est sur le point de fermer",
+  "Semana sin partido": "Semaine sans match"
  },
  "it": {
   "Historia": "Storia",
@@ -36160,7 +36190,17 @@
   "La ciudad 3D está apagada": "La città 3D è spenta",
   "Por ahora el juego es solo el club y sus instalaciones.": "Per ora il gioco è solo il club e le sue strutture.",
   "Hay partido: se abre el menú del partido.": "Giorno di partita: si apre il menu della gara.",
-  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Giocare la partita, avanzare di una settimana o passare alla stagione successiva"
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Giocare la partita, avanzare di una settimana o passare alla stagione successiva",
+  "VELOCIDAD DEL JUEGO EN DIRECTO": "VELOCITÀ DEL GIOCO IN DIRETTA",
+  "Cuánto corren los jugadores y el balón. Más lenta es más cómoda con mando.": "Quanto corrono i giocatori e il pallone. Più lento è più comodo con il controller.",
+  "Lenta": "Lenta",
+  "Rápida": "Veloce",
+  "⏩ Hito": "⏩ Tappa",
+  "Avanzar hasta el próximo hito:": "Avanza fino alla prossima tappa:",
+  "Partido de copa o continental": "Partita di coppa o continentale",
+  "en": "a",
+  "El mercado está por cerrar": "Il mercato sta per chiudere",
+  "Semana sin partido": "Settimana senza partita"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43707,7 +43747,17 @@
   "La ciudad 3D está apagada": "Die 3D-Stadt ist abgeschaltet",
   "Por ahora el juego es solo el club y sus instalaciones.": "Vorerst besteht das Spiel nur aus dem Verein und seinen Anlagen.",
   "Hay partido: se abre el menú del partido.": "Spieltag: Das Spielmenü öffnet sich.",
-  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Das Spiel spielen, eine Woche vorspulen oder zur nächsten Saison wechseln"
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Das Spiel spielen, eine Woche vorspulen oder zur nächsten Saison wechseln",
+  "VELOCIDAD DEL JUEGO EN DIRECTO": "SPIELTEMPO LIVE",
+  "Cuánto corren los jugadores y el balón. Más lenta es más cómoda con mando.": "Wie schnell Spieler und Ball sind. Langsamer ist mit Controller angenehmer.",
+  "Lenta": "Langsam",
+  "Rápida": "Schnell",
+  "⏩ Hito": "⏩ Termin",
+  "Avanzar hasta el próximo hito:": "Bis zum nächsten Termin vorspulen:",
+  "Partido de copa o continental": "Pokal- oder Europapokalspiel",
+  "en": "bei",
+  "El mercado está por cerrar": "Der Transfermarkt schließt bald",
+  "Semana sin partido": "Spielfreie Woche"
  },
  "ca": {
   "Historia": "Història",
@@ -51254,7 +51304,17 @@
   "La ciudad 3D está apagada": "La ciutat 3D està apagada",
   "Por ahora el juego es solo el club y sus instalaciones.": "De moment el joc és només el club i les seves instal·lacions.",
   "Hay partido: se abre el menú del partido.": "Dia de partit: s'obre el menú del partit.",
-  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Jugar el partit, avançar una setmana o passar a la temporada següent"
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Jugar el partit, avançar una setmana o passar a la temporada següent",
+  "VELOCIDAD DEL JUEGO EN DIRECTO": "VELOCITAT DEL JOC EN DIRECTE",
+  "Cuánto corren los jugadores y el balón. Más lenta es más cómoda con mando.": "Com corren els jugadors i la pilota. Més lenta és més còmoda amb comandament.",
+  "Lenta": "Lenta",
+  "Rápida": "Ràpida",
+  "⏩ Hito": "⏩ Fita",
+  "Avanzar hasta el próximo hito:": "Avançar fins a la propera fita:",
+  "Partido de copa o continental": "Partit de copa o continental",
+  "en": "a",
+  "El mercado está por cerrar": "El mercat està a punt de tancar",
+  "Semana sin partido": "Setmana sense partit"
  },
  "pl": {
   "Club": "Klub",
@@ -58801,7 +58861,17 @@
   "La ciudad 3D está apagada": "Miasto 3D jest wyłączone",
   "Por ahora el juego es solo el club y sus instalaciones.": "Na razie gra to tylko klub i jego obiekty.",
   "Hay partido: se abre el menú del partido.": "Dzień meczowy: otwiera się menu meczu.",
-  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Zagraj mecz, przewiń tydzień lub przejdź do następnego sezonu"
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Zagraj mecz, przewiń tydzień lub przejdź do następnego sezonu",
+  "VELOCIDAD DEL JUEGO EN DIRECTO": "PRĘDKOŚĆ GRY NA ŻYWO",
+  "Cuánto corren los jugadores y el balón. Más lenta es más cómoda con mando.": "Jak szybko biegają zawodnicy i piłka. Wolniej jest wygodniej z padem.",
+  "Lenta": "Wolna",
+  "Rápida": "Szybka",
+  "⏩ Hito": "⏩ Wydarzenie",
+  "Avanzar hasta el próximo hito:": "Przewiń do następnego wydarzenia:",
+  "Partido de copa o continental": "Mecz pucharowy lub kontynentalny",
+  "en": "u",
+  "El mercado está por cerrar": "Okno transferowe zaraz się zamknie",
+  "Semana sin partido": "Tydzień bez meczu"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66348,6 +66418,16 @@
   "La ciudad 3D está apagada": "3D şehir kapalı",
   "Por ahora el juego es solo el club y sus instalaciones.": "Şimdilik oyun yalnızca kulüp ve tesislerinden oluşuyor.",
   "Hay partido: se abre el menú del partido.": "Maç günü: maç menüsü açılıyor.",
-  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Maçı oyna, bir hafta ilerle veya sonraki sezona geç"
+  "Jugar el partido, avanzar semana o pasar a la siguiente temporada": "Maçı oyna, bir hafta ilerle veya sonraki sezona geç",
+  "VELOCIDAD DEL JUEGO EN DIRECTO": "CANLI OYUN HIZI",
+  "Cuánto corren los jugadores y el balón. Más lenta es más cómoda con mando.": "Oyuncular ve top ne kadar hızlı hareket eder. Kolla yavaş olan daha rahattır.",
+  "Lenta": "Yavaş",
+  "Rápida": "Hızlı",
+  "⏩ Hito": "⏩ Olay",
+  "Avanzar hasta el próximo hito:": "Sonraki olaya kadar ilerle:",
+  "Partido de copa o continental": "Kupa veya kıtasal maç",
+  "en": "deplasmanda",
+  "El mercado está por cerrar": "Transfer dönemi kapanmak üzere",
+  "Semana sin partido": "Maçsız hafta"
  }
 }
