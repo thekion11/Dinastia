@@ -42,6 +42,7 @@ const MENUS := [
 		"colores": ["#140d07", "#2a1d10", "#e0a95a"], "subs": [
 		{"tab": "Legado", "label": "Historia del club", "icono": "🏛️", "desc": "Fundación, épocas doradas, clásicos y tu legado."},
 		{"accion": "documental", "label": "Documental de la temporada", "icono": "🎬", "desc": "Tu año contado como una película."},
+		{"accion": "capitulos", "label": "Capítulos de cada temporada", "icono": "📚", "desc": "Los documentales de todos tus años, guardados."},
 		{"tab": "Récords", "secc": "records", "label": "Récords", "icono": "📈", "desc": "Goleadores, rachas y marcas de todos los tiempos."},
 		{"tab": "Récords", "secc": "memoria", "label": "Memoria", "icono": "🕯️", "desc": "El salón de la fama y los que ya no están."},
 		{"tab": "Récords", "secc": "rivales", "label": "Rivales", "icono": "⚔️", "desc": "Clásicos, cara a cara y cuentas pendientes."},

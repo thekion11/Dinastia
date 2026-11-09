@@ -408,6 +408,7 @@ const REP_VENDE_SOLO := 80
 # titulares buenos o de titulares malos.
 
 const PORTADAS_MAX := 60
+var capitulos: Array = []              ## (9-11) los documentales de cada temporada: [{anio, caps: [{titulo, texto, tipo, ref_id}]}] (ver `CapitulosTemporadas`)
 var portadas: Array = []                ## {t, c, tipo, anio, semana}, la más nueva primero
 
 # ---------------------------------------------------------------------------
