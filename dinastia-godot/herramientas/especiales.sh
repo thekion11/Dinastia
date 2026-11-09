@@ -80,6 +80,7 @@ pasa "menú entrar al estadio a pie" "godot --headless --path . res://pruebas/pr
 pasa "plantilla a la PES" "godot --headless --path . res://pruebas/prueba_plantilla_pes.tscn" "0 fallos"
 pasa "partido de despedida (UI, con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_despedida_ui.tscn" "0 fallos"
 pasa "evento de despedida solo en su fecha y a pantalla completa (con pantalla)" "XDG_DATA_HOME=/tmp/xdg_despedida_fecha xvfb-run -a godot --path . --resolution 1920x1080 --rendering-driver opengl3 res://pruebas/prueba_despedida_fecha.tscn" "0 fallos"
+pasa "prólogo animado (con pantalla)" "XDG_DATA_HOME=/tmp/xdg_prologo_animado xvfb-run -a godot --path . --resolution 1920x1080 --rendering-driver opengl3 res://pruebas/prueba_prologo_animado.tscn" "0 fallos"
 pasa "partido de despedida jugado en vivo (modo vivo, con pantalla)" "XDG_DATA_HOME=/tmp/xdg_despedida_vivo xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_despedida_vivo.tscn" "0 fallos"
 # 5b. Las texturas de ruido en segundo plano son las de NoiseTexture2D, byte a byte (30-10)
 pasa "ruidos en segundo plano" "godot --headless --path . res://pruebas/probar_ruidos_fondo.tscn" "FIN. 0 fallos"

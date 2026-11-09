@@ -249,7 +249,7 @@ static func preparar(estado: Dictionary) -> Dictionary:
 	## antes hacía `Principal` al adoptar el mundo) y la partida queda guardada con el prólogo pendiente,
 	## así un cierre durante el prólogo no pierde lo elegido en la entrada.
 	PedidoPartida.aplicar(m)
-	if con_prologo(modo):
+	if modo_con_prologo(modo):   ## (9-11) pendiente en los dos casos: caminando (ciudad) o animación fija
 		m.prologo_pendiente = true
 		if ranura_al_salir != "":
 			Partida.guardar(m, ranura_al_salir)
@@ -261,7 +261,11 @@ static var ranura_al_salir := "partida"
 ## ¿Este modo empieza con el prólogo 3D? Los que dirigen un club, salvo el tutorial
 ## (tiene su propia guía) y los retos (empiezan en una situación concreta).
 static func con_prologo(modo: String) -> bool:
-	if sin_prologo or OS.get_environment("PROLOGO") == "0" or not InterruptorCiudad.activa:   ## (9-11) el prólogo caminando vive en la ciudad 3D (apagada)
+	return InterruptorCiudad.activa and modo_con_prologo(modo)   ## (9-11) el prólogo CAMINANDO vive en la ciudad 3D (apagada)
+
+## ¿Este modo tiene prólogo, sea caminando (ciudad encendida) o la animación fija (`PrologoAnimado`, ciudad apagada)?
+static func modo_con_prologo(modo: String) -> bool:
+	if sin_prologo or OS.get_environment("PROLOGO") == "0":
 		return false
 	return modo not in ["tutorial", "retos", "continuar", "carrera-m"]
 
