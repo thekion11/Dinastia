@@ -4,6 +4,24 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## PROMPT PARA LA NUEVA SESIÓN — PRIORIDAD ABSOLUTA (orden del dueño, 9-11 noche)
+> Trabaja en español, en la rama asignada, sin PR salvo orden. Lee `CLAUDE.md` y `docs/PLAN_GENERAL.md` (secciones PRIORITARIO, DECISIONES PENDIENTES y PULIDO). Antes de subir a main: banco en «FIN. 0 fallos» y líneas OK. Sin nombres de modelo en commits ni archivos. No subir .mp4 al repo.
+>
+> Pendiente, en este orden:
+> 1. **FINAL DE TEMPORADA COMPLETO:** pantalla única de resumen a pantalla completa (campeón y tu puesto, copa, continental, ascensos y descensos, premios, veredicto de la directiva); copa y continental pendientes que se cierren o anuncien antes; orden de eventos: fin de liga → despedida → gala → «Temporada siguiente» → nueva temporada.
+> 2. **EVENTOS A PANTALLA COMPLETA:** homenaje en 3D (el aviso y el homenaje ya están en main, solo al llegar a la fecha).
+> 3. **PRÓLOGO:** arte final de la animación fija (primer corte en main, sin sonido ni arte final). IDEA a medir: prólogo como vídeo ya hecho que el juego proyecta, para ver si suben los FPS (fuera del repo; medir antes y después).
+> 4. **CASA DEL PERSONAJE** sin ciudad.
+> 5. **AVANCE DE FECHA** con eventos y varias semanas (estilo PES).
+> 6. **PLANTILLA:** mapa de calor y habilidades individuales con estrellas.
+> 7. **REESTRUCTURACIÓN «SOLO CLUB»** (paso 2): reparar el club (muebles, colisiones, parpadeo del suelo del despacho). Paso 3: medir sin ciudad con `herramientas/hw_modesto.sh`. Paso 4: decidir C/C++ solo con medidas.
+> 8. Revisar en el edificio real que las camisetas retiradas se ven en las plantas altas.
+> 9. **ESTÉTICA** (rama `ccr-da27fb86-i59x88`, fusión pendiente de la orden del dueño): profundidad de cabeceras, portadas, Ajustes y botones.
+>
+> **DECISIONES DEL DUEÑO (no implementar sin respuesta):** (a) torneos de selecciones (Mundial, Eurocopa, Copa América): ¿se juegan o son solo calendario? (b) sacar los tres .mp4 de `marca/` del repo.
+>
+> Al completar cada punto: se BORRA de PRIORITARIO y se anota en PULIDO. Reporta al líder en cada bloque.
+
 ## REESTRUCTURACIÓN «SOLO CLUB» (orden 34, dueño, 9-11; en CLAUDE.md es el punto 33) — manda sobre todo lo anterior; el trabajo real EMPIEZA EL LUNES 16-11
 Fuente: PDF «Plan de Reestructuración – Dinastía» y vídeo del despacho (la habitación sin puertas ni marcos y el ascensor sin animación). Decisiones obligatorias.
 
