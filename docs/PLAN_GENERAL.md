@@ -4,6 +4,28 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## REESTRUCTURACIÓN «SOLO CLUB» (orden 34, dueño, 9-11) — manda sobre todo lo anterior; el trabajo real EMPIEZA EL LUNES 16-11
+Fuente: PDF «Plan de Reestructuración – Dinastía» y vídeo del despacho (la habitación sin puertas ni marcos y el ascensor sin animación). Decisiones obligatorias.
+
+**Aclaraciones del dueño (9-11)**
+- **Ciudad 3D** = parte APAGADA del proyecto (puede volver a futuro). Se apaga con un INTERRUPTOR DESDE EL CÓDIGO; el juego INSTALADO ya no la trae (se excluye de la exportación). No se borra nada: queda en el «repertorio». Se PUEDEN reutilizar piezas de la ciudad (muebles, carteles, vehículos, paradero Red, tiendas, peatones) dentro del club y sus instalaciones.
+- **Alcance del juego base**: solo el club, sus instalaciones y la casa del personaje. La conducción y el delito SIGUEN, pero solo en esos tramos (mucho más corto).
+- **Menú**: solo «Diseño de la ciudad» y «Entrar al estadio». «Diseño de la ciudad» pasa a ser una pantalla 2D de GESTIÓN (terrenos, negocios, instalaciones, estadio y municipio) y conserva TODA la política. Sin elección de «tipo de casa»: empieza con la más básica.
+- **Cámaras**: se quitan las vistas aéreas/lejanas de la ciudad (solo la pantalla de las fotos del PDF, Fig. 1-2). El ESTADIO sigue pudiéndose recorrer.
+- **Mando (corrección)**: R2 = confirmar, **Cuadrado = borrar** (el PDF lo tenía al revés), Triángulo / X = espacio, L2 = mayúsculas/minúsculas. Teclado de PC: escribir nombres de forma nativa.
+- **Rueda de prensa**: selección direccional (analógico / clic / táctil) con mini animación, en vez de lista. **Coleccionables**: no se abre su panel solo al iniciar.
+- **Entorno**: realista (fuera lo infantil y los avatares irreales); la lluvia no atraviesa instalaciones y se apaga en ultra bajo; menos ruido ambiente y pisadas; suelo interior liso y barato, distinto del asfalto. **Conducción**: sin «modo conducir» en menú; subir a un coche = acto ilegal; solo se anima el volante (sin manos, sin efecto «cortometraje»).
+- **2D**: el prólogo pasa a animación fija en el motor (NO .mp4 en el repo), saltable tocando arriba o con el joystick. Personal quieto en su puesto con diálogos 2D (novela visual); ciudadanos 3D muy simples, 3D pleno solo en «eventos».
+- **Motor**: C/C++ solo para lo que el perfilador señale (cada función nativa = copia exacta de su GDScript); cambiar de motor se decide DESPUÉS de medir sin ciudad. FPS medidos desde el menú inicial.
+- **Partido**: base de físicas = League-Soccer, aún NO integrada del todo ni en su última versión; referencias de sensación: PES 2020, FIFA Mobile, FM26. **Cualquier sesión** puede tomar los 4 fallos críticos.
+
+**Orden de trabajo (4 pasos, desde el lunes)**
+1. Los 4 fallos del partido: (a) el día de partido abre su menú solo y no se puede simular/saltar por error; (b) saques laterales atascados (no lanza, tiempo parado, árbitro sin reacción); (c) ritmo demasiado rápido para mando; (d) resumen de fin de temporada con datos falsos (campeón sin jornadas). + interruptor de la ciudad desde el código.
+2. Reparar el club: puertas y marcos, muebles (traídos de la ciudad), ascensor animado (subida/bajada), colisiones (nadie atraviesa cuerpos/objetos), suelo liso, y revisar el PARPADEO del suelo del despacho (azul oscuro ↔ naranja en el vídeo; z-fighting, luz o solo la cámara del móvil).
+3. Volver a medir (`hw_modesto.sh`, RAM, llamadas, triángulos) sin la ciudad.
+4. Solo entonces decidir qué pasa a C++ y si se cambia el motor.
+Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la cámara real, nada se quita sin decirlo.
+
 ## DECISIONES DEL DUEÑO (6-11 noche) — se borran al completarse del todo
 - **Alcance a pie ULTRA BAJA 180 m** (BAJA 300 m): APROBADO. Lo lejano se disuelve en niebla; probar en su teléfono antes de darlo por bueno.
 - **Pasto a 28 m** en calidades bajas: APROBADO.
