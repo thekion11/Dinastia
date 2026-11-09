@@ -16,6 +16,7 @@ func _nueva_temporada() -> void:
 	## y las estadísticas; se proyecta al final del cierre.
 	var documental: GDScript = load("res://ui/componentes/documental_temporada.gd")   ## (A4 memoria) por ruta
 	var guion_doc: Array = documental.guion(p.mundo)
+	CapitulosTemporadas.archivar(p.mundo, p.mundo.anio, guion_doc)   ## (9-11) queda guardado en la partida: menú «Capítulos»
 	if p.mundo.mercado != null:
 		p.mundo.mercado.fichajes_temporada.clear()
 	var resumen := p.mundo.nueva_temporada()

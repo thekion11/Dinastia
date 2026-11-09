@@ -398,3 +398,23 @@ func _probar_moneda() -> void:
 				todas_eco = false
 	_comprobar(todas_eco, "ninguna pantalla escribe \"EUR\" ni \"$\" a mano")
 	Eco.moneda = antes
+
+## LOS CAPÍTULOS DE CADA TEMPORADA (9-11): el documental de cada año se archiva en la partida y sobrevive a guardar y cargar.
+func _probar_capitulos() -> void:
+	_titulo("CAPÍTULOS DE CADA TEMPORADA (ARCHIVO EN LA PARTIDA)")
+	var m := Mundo.new()
+	m.generar(["CHI"], 404)
+	m.tomar_el_mando(m.ligas[0].clubes[1].id)
+	var rival: Club = m.ligas[0].clubes[2]
+	var guion: Array = [
+		{"titulo": "Portada", "texto": "Un año entero.", "tipo": "escudo", "ref": m.mi_club()},
+		{"titulo": "Capítulo 3 · La noche grande", "texto": "3-0 al rival.", "tipo": "rival", "ref": rival}]
+	CapitulosTemporadas.archivar(m, 2026, guion)
+	CapitulosTemporadas.archivar(m, 2027, guion)
+	CapitulosTemporadas.archivar(m, 2026, guion)   ## el mismo año se reescribe, no se duplica
+	_comprobar(CapitulosTemporadas.anios(m) == [2027, 2026], "dos temporadas archivadas, la más reciente primero (%s)" % str(CapitulosTemporadas.anios(m)))
+	var m2 := Partida.desde_instantanea(JSON.parse_string(JSON.stringify(Partida.instantanea(m))))
+	_comprobar(CapitulosTemporadas.anios(m2) == [2027, 2026], "los capítulos sobreviven a guardar y cargar (%s)" % str(CapitulosTemporadas.anios(m2)))
+	var caps := CapitulosTemporadas.reconstruir(m2, 2026)
+	_comprobar(caps.size() == 2 and String(caps[1]["texto"]) == "3-0 al rival." and caps[1]["ref"] is Club and (caps[1]["ref"] as Club).id == rival.id,
+		"el capítulo vuelve con su texto y su rival (escudo) tras cargar")

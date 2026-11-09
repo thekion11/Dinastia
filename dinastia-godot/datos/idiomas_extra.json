@@ -7554,7 +7554,13 @@
   "Partido de copa o continental": "Cup or continental match",
   "en": "at",
   "El mercado está por cerrar": "The transfer window is about to close",
-  "Semana sin partido": "No-match week"
+  "Semana sin partido": "No-match week",
+  "Aún no hay capítulos": "No chapters yet",
+  "El documental de cada temporada se guarda aquí al cerrarla.": "Each season's documentary is saved here when it ends.",
+  "📚 Capítulos de cada temporada": "📚 Chapters of every season",
+  "Temporada": "Season",
+  "Capítulos de cada temporada": "Chapters of every season",
+  "Los documentales de todos tus años, guardados.": "The documentaries of all your years, saved."
  },
  "pt": {
   "Historia": "História",
@@ -15111,7 +15117,13 @@
   "Partido de copa o continental": "Jogo de taça ou continental",
   "en": "fora",
   "El mercado está por cerrar": "O mercado está quase a fechar",
-  "Semana sin partido": "Semana sem jogo"
+  "Semana sin partido": "Semana sem jogo",
+  "Aún no hay capítulos": "Ainda não há capítulos",
+  "El documental de cada temporada se guarda aquí al cerrarla.": "O documentário de cada temporada fica guardado aqui ao terminá-la.",
+  "📚 Capítulos de cada temporada": "📚 Capítulos de cada temporada",
+  "Temporada": "Temporada",
+  "Capítulos de cada temporada": "Capítulos de cada temporada",
+  "Los documentales de todos tus años, guardados.": "Os documentários de todos os teus anos, guardados."
  },
  "patrones": [
   [
@@ -28643,7 +28655,13 @@
   "Partido de copa o continental": "Match de coupe ou continental",
   "en": "à",
   "El mercado está por cerrar": "Le mercato est sur le point de fermer",
-  "Semana sin partido": "Semaine sans match"
+  "Semana sin partido": "Semaine sans match",
+  "Aún no hay capítulos": "Pas encore de chapitres",
+  "El documental de cada temporada se guarda aquí al cerrarla.": "Le documentaire de chaque saison est enregistré ici à sa clôture.",
+  "📚 Capítulos de cada temporada": "📚 Chapitres de chaque saison",
+  "Temporada": "Saison",
+  "Capítulos de cada temporada": "Chapitres de chaque saison",
+  "Los documentales de todos tus años, guardados.": "Les documentaires de toutes tes années, sauvegardés."
  },
  "it": {
   "Historia": "Storia",
@@ -36200,7 +36218,13 @@
   "Partido de copa o continental": "Partita di coppa o continentale",
   "en": "a",
   "El mercado está por cerrar": "Il mercato sta per chiudere",
-  "Semana sin partido": "Settimana senza partita"
+  "Semana sin partido": "Settimana senza partita",
+  "Aún no hay capítulos": "Ancora nessun capitolo",
+  "El documental de cada temporada se guarda aquí al cerrarla.": "Il documentario di ogni stagione viene salvato qui alla chiusura.",
+  "📚 Capítulos de cada temporada": "📚 Capitoli di ogni stagione",
+  "Temporada": "Stagione",
+  "Capítulos de cada temporada": "Capitoli di ogni stagione",
+  "Los documentales de todos tus años, guardados.": "I documentari di tutti i tuoi anni, salvati."
  },
  "de": {
   "Historia": "Geschichte",
@@ -43757,7 +43781,13 @@
   "Partido de copa o continental": "Pokal- oder Europapokalspiel",
   "en": "bei",
   "El mercado está por cerrar": "Der Transfermarkt schließt bald",
-  "Semana sin partido": "Spielfreie Woche"
+  "Semana sin partido": "Spielfreie Woche",
+  "Aún no hay capítulos": "Noch keine Kapitel",
+  "El documental de cada temporada se guarda aquí al cerrarla.": "Die Doku jeder Saison wird hier nach dem Abschluss gespeichert.",
+  "📚 Capítulos de cada temporada": "📚 Kapitel jeder Saison",
+  "Temporada": "Saison",
+  "Capítulos de cada temporada": "Kapitel jeder Saison",
+  "Los documentales de todos tus años, guardados.": "Die Dokus all deiner Jahre, gespeichert."
  },
  "ca": {
   "Historia": "Història",
@@ -51314,7 +51344,13 @@
   "Partido de copa o continental": "Partit de copa o continental",
   "en": "a",
   "El mercado está por cerrar": "El mercat està a punt de tancar",
-  "Semana sin partido": "Setmana sense partit"
+  "Semana sin partido": "Setmana sense partit",
+  "Aún no hay capítulos": "Encara no hi ha capítols",
+  "El documental de cada temporada se guarda aquí al cerrarla.": "El documental de cada temporada es guarda aquí en tancar-la.",
+  "📚 Capítulos de cada temporada": "📚 Capítols de cada temporada",
+  "Temporada": "Temporada",
+  "Capítulos de cada temporada": "Capítols de cada temporada",
+  "Los documentales de todos tus años, guardados.": "Els documentals de tots els teus anys, guardats."
  },
  "pl": {
   "Club": "Klub",
@@ -58871,7 +58907,13 @@
   "Partido de copa o continental": "Mecz pucharowy lub kontynentalny",
   "en": "u",
   "El mercado está por cerrar": "Okno transferowe zaraz się zamknie",
-  "Semana sin partido": "Tydzień bez meczu"
+  "Semana sin partido": "Tydzień bez meczu",
+  "Aún no hay capítulos": "Na razie brak rozdziałów",
+  "El documental de cada temporada se guarda aquí al cerrarla.": "Film dokumentalny z każdego sezonu zapisuje się tutaj po jego zakończeniu.",
+  "📚 Capítulos de cada temporada": "📚 Rozdziały każdego sezonu",
+  "Temporada": "Sezon",
+  "Capítulos de cada temporada": "Rozdziały każdego sezonu",
+  "Los documentales de todos tus años, guardados.": "Filmy dokumentalne ze wszystkich twoich lat, zapisane."
  },
  "tr": {
   "Club": "Kulüp",
@@ -66428,6 +66470,12 @@
   "Partido de copa o continental": "Kupa veya kıtasal maç",
   "en": "deplasmanda",
   "El mercado está por cerrar": "Transfer dönemi kapanmak üzere",
-  "Semana sin partido": "Maçsız hafta"
+  "Semana sin partido": "Maçsız hafta",
+  "Aún no hay capítulos": "Henüz bölüm yok",
+  "El documental de cada temporada se guarda aquí al cerrarla.": "Her sezonun belgeseli sezon kapanınca burada saklanır.",
+  "📚 Capítulos de cada temporada": "📚 Her sezonun bölümleri",
+  "Temporada": "Sezon",
+  "Capítulos de cada temporada": "Her sezonun bölümleri",
+  "Los documentales de todos tus años, guardados.": "Tüm yıllarının belgeselleri, kayıtlı."
  }
 }

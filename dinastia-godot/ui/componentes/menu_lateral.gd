@@ -74,6 +74,8 @@ static func ejecutar(p: Principal, accion: String) -> void:
 			p._abrir_elegir_club()
 		"minijuegos":
 			load("res://ui/componentes/sala_minijuegos.gd").abrir(p, p.mundo)
+		"capitulos":
+			load("res://ui/componentes/capitulos_selector.gd").abrir(p)
 		"documental":
 			## El último cerrado; si todavía no hay, el avance de la que se juega.
 			var documental: GDScript = load("res://ui/componentes/documental_temporada.gd")   ## (A4 memoria) por ruta

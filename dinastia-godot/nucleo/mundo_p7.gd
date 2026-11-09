@@ -50,8 +50,7 @@ func nueva_temporada() -> Dictionary:
 						"Los médicos no le dan el alta competitiva. %d años y tres lesiones graves en poco tiempo: cuelga las botas antes de tiempo." % j.edad)
 				continue
 			if j.edad >= 38 or (j.edad >= 35 and Azar.suerte(0.4)):
-				if cantera != null:
-					cantera.registrar_retiro(j, c)
+				if cantera != null: cantera.registrar_retiro(j, c)
 				PartidoDespedida.celebrar(self, j, c)   ## (9-11) si es una leyenda de tu club, su partido de despedida
 				continue   ## se retira
 			if _vence_contrato(j, c):
