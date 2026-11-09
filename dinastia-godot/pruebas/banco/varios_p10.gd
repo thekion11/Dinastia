@@ -212,3 +212,26 @@ func _probar_estilo_plantilla() -> void:
 	var clave_rol := String(RolTactico.DE_VESTUARIO.get(otro, ""))
 	_comprobar(clave_rol == "" or String(club.tactica.roles.get(j.id, "")) == clave_rol, "y lo deja en la táctica del partido (%s)" % clave_rol)
 	caja.queue_free()
+
+## «DESHACER» Y «ONCE AUTOMÁTICO» DE LA PLANTILLA (9-11): la foto del once se restaura tal cual, y el automático vuelve a armar el once solo.
+func _probar_gestion_once() -> void:
+	_titulo("GESTIÓN DEL ONCE: DESHACER Y AUTOMÁTICO")
+	var m := Mundo.new()
+	m.generar(["CHI"], 41)
+	m.tomar_el_mando(m.ligas[0].clubes[1].id)
+	var club := m.mi_club()
+	for j: Jugador in club.plantilla:
+		j.lesion = 0
+		j.suspension = 0
+	var once0: Array[Jugador] = club.once()
+	var antes := GestionOnce.foto(club)
+	_comprobar(antes.is_empty(), "el once automático se fotografía como vacío (no hay once elegido)")
+	var reserva: Jugador = club.plantilla.filter(func(j: Jugador) -> bool: return not once0.has(j))[0]
+	_comprobar(GestionOnce.intercambiar(club, once0[2], reserva) and club.once_elegido.size() == 11, "el cambio fija el once elegido")
+	var medio := GestionOnce.foto(club)
+	GestionOnce.restaurar(club, antes)
+	_comprobar(club.once_elegido.is_empty() and club.once() == once0, "deshacer vuelve al once automático de antes")
+	GestionOnce.restaurar(club, medio)
+	_comprobar(club.once().has(reserva), "y se puede rehacer el cambio")
+	GestionOnce.automatico(club)
+	_comprobar(club.once_elegido.is_empty() and club.once() == once0, "«once automático» vuelve a armarlo solo")
