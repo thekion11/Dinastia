@@ -7568,7 +7568,10 @@
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Pick a player from the list · with “Compare” the second click is the one to compare against",
   "Lesionado, semanas:": "Injured, weeks:",
   "Plantilla (vista PES)": "Squad (PES view)",
-  "Lista por líneas, atributos en barras y comparar dos jugadores.": "List by lines, attribute bars and a two-player comparison."
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "List by lines, attribute bars and a two-player comparison.",
+  "TITULARES": "STARTERS",
+  "RESERVAS": "SUBSTITUTES",
+  "PRÓXIMOS": "NEXT"
  },
  "pt": {
   "Historia": "História",
@@ -15139,7 +15142,10 @@
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Escolhe um jogador da lista · com «Comparar» o segundo clique é o rival da comparação",
   "Lesionado, semanas:": "Lesionado, semanas:",
   "Plantilla (vista PES)": "Plantel (vista PES)",
-  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Lista por linhas, atributos em barras e comparação de dois jogadores."
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Lista por linhas, atributos em barras e comparação de dois jogadores.",
+  "TITULARES": "TITULARES",
+  "RESERVAS": "SUPLENTES",
+  "PRÓXIMOS": "PRÓXIMOS"
  },
  "patrones": [
   [
@@ -28685,7 +28691,10 @@
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Choisis un joueur dans la liste · avec « Comparer », le second clic est celui à comparer",
   "Lesionado, semanas:": "Blessé, semaines :",
   "Plantilla (vista PES)": "Effectif (vue PES)",
-  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Liste par lignes, attributs en barres et comparaison de deux joueurs."
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Liste par lignes, attributs en barres et comparaison de deux joueurs.",
+  "TITULARES": "TITULAIRES",
+  "RESERVAS": "REMPLAÇANTS",
+  "PRÓXIMOS": "PROCHAINS"
  },
  "it": {
   "Historia": "Storia",
@@ -36256,7 +36265,10 @@
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Scegli un giocatore dalla lista · con «Confronta» il secondo clic è l'avversario del confronto",
   "Lesionado, semanas:": "Infortunato, settimane:",
   "Plantilla (vista PES)": "Rosa (vista PES)",
-  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Elenco per reparti, attributi a barre e confronto tra due giocatori."
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Elenco per reparti, attributi a barre e confronto tra due giocatori.",
+  "TITULARES": "TITOLARI",
+  "RESERVAS": "RISERVE",
+  "PRÓXIMOS": "PROSSIMI"
  },
  "de": {
   "Historia": "Geschichte",
@@ -43827,7 +43839,10 @@
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Wähle einen Spieler aus der Liste · mit „Vergleichen“ ist der zweite Klick der Vergleichspartner",
   "Lesionado, semanas:": "Verletzt, Wochen:",
   "Plantilla (vista PES)": "Kader (PES-Ansicht)",
-  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Liste nach Reihen, Attribute als Balken und Vergleich zweier Spieler."
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Liste nach Reihen, Attribute als Balken und Vergleich zweier Spieler.",
+  "TITULARES": "STARTELF",
+  "RESERVAS": "ERSATZBANK",
+  "PRÓXIMOS": "NÄCHSTE"
  },
  "ca": {
   "Historia": "Història",
@@ -51398,7 +51413,10 @@
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Tria un jugador de la llista · amb «Comparar» el segon clic és el rival de la comparació",
   "Lesionado, semanas:": "Lesionat, setmanes:",
   "Plantilla (vista PES)": "Plantilla (vista PES)",
-  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Llista per línies, atributs en barres i comparació de dos jugadors."
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Llista per línies, atributs en barres i comparació de dos jugadors.",
+  "TITULARES": "TITULARS",
+  "RESERVAS": "RESERVES",
+  "PRÓXIMOS": "PROPERS"
  },
  "pl": {
   "Club": "Klub",
@@ -58969,7 +58987,10 @@
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Wybierz zawodnika z listy · przy „Porównaj” drugie kliknięcie to rywal porównania",
   "Lesionado, semanas:": "Kontuzjowany, tygodnie:",
   "Plantilla (vista PES)": "Kadra (widok PES)",
-  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Lista według formacji, atrybuty w paskach i porównanie dwóch zawodników."
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Lista według formacji, atrybuty w paskach i porównanie dwóch zawodników.",
+  "TITULARES": "PODSTAWOWY SKŁAD",
+  "RESERVAS": "REZERWOWI",
+  "PRÓXIMOS": "NASTĘPNE"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66540,6 +66561,9 @@
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Listeden bir oyuncu seç · «Karşılaştır» ile ikinci tıklama karşılaştırılacak oyuncudur",
   "Lesionado, semanas:": "Sakat, hafta:",
   "Plantilla (vista PES)": "Kadro (PES görünümü)",
-  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Hatlara göre liste, çubuk nitelikler ve iki oyuncu karşılaştırması."
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Hatlara göre liste, çubuk nitelikler ve iki oyuncu karşılaştırması.",
+  "TITULARES": "İLK 11",
+  "RESERVAS": "YEDEKLER",
+  "PRÓXIMOS": "SIRADAKİLER"
  }
 }

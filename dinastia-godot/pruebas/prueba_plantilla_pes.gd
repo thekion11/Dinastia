@@ -22,13 +22,13 @@ func _process(_d: float) -> void:
 	var b: Jugador = campo[1]
 	var ok1 := PlantillaPes.claves_de(a) == PlantillaPes.ATR_CAMPO and (por.is_empty() or PlantillaPes.claves_de(por[0]) == PlantillaPes.ATR_PORTERO)
 	var ok2 := PlantillaPes.diferencia(a, b, "tir") == int(a.atributos["tir"]) - int(b.atributos["tir"]) and PlantillaPes.diferencia(a, a, "pas") == 0
-	var ok3 := v._capa != null and v._centro.get_child_count() >= 7 and v._derecha.get_child_count() >= 2   ## título + 6 atributos; retrato + datos
+	var ok3 := v._capa != null and v._campo.get_child_count() == 11 and v._info.get_child_count() >= 8   ## once en el campo; cabecera, radar, 6 atributos y datos
 	v._comparando = true
 	v._a = a
 	v._b = b
 	v._pintar()
 	await get_tree().process_frame
-	var ok4 := v._centro.get_child_count() >= 7
+	var ok4 := v._info.get_child_count() >= 8
 	print("claves ", ok1, " diferencia ", ok2, " columnas ", ok3, " comparación ", ok4)
 	fallos = int(not ok1) + int(not ok2) + int(not ok3) + int(not ok4)
 	print("FIN. ", fallos, " fallos")

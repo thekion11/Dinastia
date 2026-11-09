@@ -310,6 +310,9 @@ func _pintar_dias() -> void:
 	if p._fila_dias == null:
 		return
 	p._limpiar(p._fila_dias)
+	var fila_prox: Variant = p._guia.nodos.get("fila_proximos")
+	if is_instance_valid(fila_prox) and p.mundo != null:
+		FilaProximos.pintar(p.mundo, fila_prox as HBoxContainer)
 	var boton_hito: Variant = p._guia.nodos.get("hito")
 	if is_instance_valid(boton_hito) and p.mundo != null:
 		var h := proximo_hito()

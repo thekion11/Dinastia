@@ -242,6 +242,11 @@ func _montar_carril(raiz: VBoxContainer) -> void:
 	p._fila_dias = HBoxContainer.new()
 	p._fila_dias.add_theme_constant_override("separation", 4)
 	raiz.add_child(p._fila_dias)
+	## (9-11, idea del PES 2020) La fila de los próximos partidos con el escudo del rival, justo debajo de la tira de días.
+	var fila_prox := HBoxContainer.new()
+	fila_prox.add_theme_constant_override("separation", 6)
+	raiz.add_child(fila_prox)
+	p._guia.nodos["fila_proximos"] = fila_prox
 
 
 ## Las tres columnas: clasificación, pestañas (plantel, mercado...) y ficha con el registro.
