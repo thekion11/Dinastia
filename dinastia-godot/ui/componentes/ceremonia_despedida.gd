@@ -1,19 +1,20 @@
 class_name CeremoniaDespedida
-extends CanvasLayer
-## LA CEREMONIA DEL HOMENAJE (9-11): tras el partido de despedida, una tarjeta de gala con los HOMENAJEADOS de tu club (con su camiseta retirada) y, si no hay,
-## con las tres mayores Leyendas de la noche. Se cierra con «Continuar». Todo con retratos del juego (`Principal._retrato`, caras ficticias).
-signal terminado
+extends EventoPantallaCompleta
+## LA CEREMONIA DEL HOMENAJE, A PANTALLA COMPLETA (regla del dueño, 9-11): sale tras el partido de despedida (nunca antes ni por un menú). Una tarjeta grande por
+## HOMENAJEADO de tu club (retrato, nombre, edad y nota, y su CAMISETA RETIRADA con el número) y, si no hay, las tres mayores Leyendas de la noche.
+## Se cierra con «Continuar» (emite `terminado`). Retratos del juego (`Principal._retrato`, caras ficticias).
 
 ## `homenajeados`: [{jugador, dorsal}] de tu club; `leyendas`: el club de las Leyendas (para completar con sus mejores).
 static func mostrar(pr: Principal, homenajeados: Array, leyendas: Club) -> CeremoniaDespedida:
 	var c := CeremoniaDespedida.new()
-	c.layer = 59
-	pr.add_child(c)
-	c._montar(pr, homenajeados, leyendas)
+	c._montar_base(pr)
+	c._rellenar(pr, homenajeados, leyendas)
 	return c
 
-func _montar(pr: Principal, homenajeados: Array, leyendas: Club) -> void:
-	var m := PantallaEvento.montar(self, "🎖️", Idiomas.t("Homenaje"))
+func _rellenar(pr: Principal, homenajeados: Array, leyendas: Club) -> void:
+	_centro.custom_minimum_size = Vector2(1000, 0)
+	_centro.add_child(etiqueta(Idiomas.t("PARTIDO DE DESPEDIDA"), 15, Tema.SUAVE))
+	_centro.add_child(etiqueta("🎖️ " + Idiomas.t("Homenaje"), 50, Tema.ORO, true, false))
 	var filas: Array = []
 	for h: Dictionary in homenajeados:
 		filas.append({"j": h["jugador"], "dorsal": int(h["dorsal"]), "propio": true})
@@ -22,47 +23,42 @@ func _montar(pr: Principal, homenajeados: Array, leyendas: Club) -> void:
 		top.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
 		for j: Jugador in top.slice(0, 3):
 			filas.append({"j": j, "dorsal": 0, "propio": false})
-	var tarjetas := HFlowContainer.new()
-	tarjetas.alignment = FlowContainer.ALIGNMENT_CENTER
-	tarjetas.add_theme_constant_override("h_separation", 26)
-	tarjetas.add_theme_constant_override("v_separation", 26)
-	tarjetas.custom_minimum_size = Vector2(900, 0)
-	m["cuerpo"].add_child(tarjetas)
-	for f: Dictionary in filas:
-		tarjetas.add_child(_fila(pr, f))
-	var seguir := PantallaEvento.boton(Idiomas.t("Continuar"), true)
-	seguir.pressed.connect(func() -> void:
-		terminado.emit()
-		queue_free())
-	m["pie"].add_child(seguir)
-	seguir.call_deferred("grab_focus")
+	var tarjetas := HBoxContainer.new()
+	tarjetas.alignment = BoxContainer.ALIGNMENT_CENTER
+	tarjetas.add_theme_constant_override("separation", 28)
+	_centro.add_child(tarjetas)
+	for f: Dictionary in filas.slice(0, 4):
+		tarjetas.add_child(_tarjeta(pr, f))
+	var seguir := boton(Idiomas.t("Continuar"), true)
+	seguir.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	seguir.custom_minimum_size = Vector2(320, 58)
+	seguir.pressed.connect(func() -> void: terminado.emit())
+	_centro.add_child(seguir)
 
-func _fila(pr: Principal, f: Dictionary) -> Control:
+func _tarjeta(pr: Principal, f: Dictionary) -> Control:
 	var j: Jugador = f["j"]
-	var tarjeta := PanelContainer.new()
-	var est := Tema.caja(Tema.PANEL, Tema.RADIO_GRANDE, Tema.oro())
-	est.set_border_width_all(2)
-	est.set_content_margin_all(20)
-	est.shadow_color = Color(0, 0, 0, 0.5)
-	est.shadow_size = 14
-	tarjeta.add_theme_stylebox_override("panel", est)
-	var datos := VBoxContainer.new()
-	datos.add_theme_constant_override("separation", 6)
-	datos.custom_minimum_size = Vector2(240, 0)
-	tarjeta.add_child(datos)
-	var retrato := pr._retrato(j, 160)
-	retrato.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	retrato.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	datos.add_child(retrato)
-	var n := Tema.etiqueta(Tema.TAM_TITULO, Tema.oro(), j.nombre)
-	n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	n.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	datos.add_child(n)
-	var d := Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE, "%d %s · %s %d · %s" % [j.edad, Idiomas.t("años"), Idiomas.t("Nota"), j.ovr, Idiomas.t(String(j.pos_e))])
-	d.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	datos.add_child(d)
+	var pc := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0, 0, 0, 0.32)
+	sb.border_color = Color(Tema.ORO, 0.7)
+	sb.set_border_width_all(2)
+	sb.set_corner_radius_all(10)
+	sb.set_content_margin_all(18)
+	sb.shadow_color = Color(0, 0, 0, 0.5)
+	sb.shadow_size = 14
+	pc.add_theme_stylebox_override("panel", sb)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 8)
+	col.custom_minimum_size = Vector2(220, 0)
+	pc.add_child(col)
+	var r := pr._retrato(j, 170)
+	r.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	r.custom_minimum_size = Vector2(170, 170)
+	r.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	col.add_child(r)
+	col.add_child(etiqueta(j.nombre, 22, Tema.ORO))
+	col.add_child(etiqueta("%d %s · %s %d · %s" % [j.edad, Idiomas.t("años"), Idiomas.t("Nota"), j.ovr, Idiomas.t(String(j.pos_e))], 14, Tema.SUAVE))
 	if bool(f["propio"]) and int(f["dorsal"]) > 1:
-		var c := Tema.etiqueta(Tema.TAM_DESTACADO, Tema.TEXTO, "👕 %s #%d" % [Idiomas.t("Camiseta retirada"), int(f["dorsal"])])
-		c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		datos.add_child(c)
-	return tarjeta
+		col.add_child(etiqueta("👕 #%d" % int(f["dorsal"]), 34, Tema.TEXTO))
+		col.add_child(etiqueta(Idiomas.t("Camiseta retirada"), 14, Tema.ORO))
+	return pc

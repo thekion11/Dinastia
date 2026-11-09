@@ -13,6 +13,7 @@ static var partido_obliga := true
 var _mercado_avisado: int = -1
 var _saldo_mostrado := -1
 var _dia_pintado: int = -1
+var _evento_fin_lanzado := false   ## el evento de fin de temporada ya salió en esta pantalla (se rearma al empezar otra temporada)
 
 func _init(principal: Principal) -> void:
 	p = principal
@@ -188,6 +189,12 @@ func _refrescar() -> void:
 	p._traducir_pantalla(p)
 	## Y la música, que también depende de lo que esté pasando.
 	Musica.ambientar(situacion_musical())   ## (A4 memoria) sin crear `PantallaOpciones` en cada refresco
+	## (9-11) EVENTO DE FIN DE TEMPORADA: al terminar la liga, el partido de despedida a pantalla completa (solo en su fecha, una vez).
+	if p.mundo != null and p.mundo.temporada_en_curso():
+		_evento_fin_lanzado = false
+	if p.mundo != null and not p.mundo.temporada_en_curso() and not _evento_fin_lanzado:
+		_evento_fin_lanzado = true
+		JornadaDespedida.ofrecer.call_deferred(p)
 ## ¿Tu club tiene partido (liga, copa o continental) que aún no se ha jugado esta semana?
 func _tiene_partido_pendiente() -> bool:
 	return p.mundo != null and p.mundo.temporada_en_curso() and (not p.mundo.proximo_partido().is_empty()
