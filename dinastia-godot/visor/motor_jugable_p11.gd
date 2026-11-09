@@ -1,6 +1,8 @@
 extends "res://visor/motor_jugable_p10.gd"
 ## [Capa 11/12 de `motor_jugable.gd`] _colocar_saque, _sitio_tanda, _siguiente_penal, _resultado_tanda, _vuelo_tanda, tanda_decidida … (+7)
 
+const TIEMPO_MAX_SAQUE_USUARIO := 25.0
+
 ## Coloca a todos para el saque y, cuando están, lo ejecuta (o espera al
 ## usuario si lanza él).
 func _colocar_saque(delta: float) -> void:
@@ -56,6 +58,12 @@ func _colocar_saque(delta: float) -> void:
 			cambio_estado.emit("apuntar_" + tipo)
 		if apuntando:
 			_apuntar_usuario(delta)
+		## (9-11) Red de seguridad: si el usuario no saca en 25 s (mando sin respuesta, sin receptor, etc.) saca la IA y el
+		## juego sigue; el reloj y el árbitro no se quedan esperando para siempre.
+		if tipo == "banda" and _t_estado > TIEMPO_MAX_SAQUE_USUARIO:
+			apuntando = false
+			cargando = false
+			_ejecutar_saque_ia(lanzador, tipo, lugar)
 		return
 	## Se saca cuando están colocados (o, como mucho, 3 s después). El saque de
 	## banda y el de puerta son rápidos, como en el fútbol de verdad: no esperan

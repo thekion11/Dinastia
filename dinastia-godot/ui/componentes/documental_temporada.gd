@@ -93,7 +93,14 @@ static func guion(m: Mundo) -> Array:
 				puesto = k + 1
 				pts = int(t2[k]["pts"])
 		var final := ""
-		if puesto == 1:
+		## (9-11, fallo del dueño) Con 0 jornadas jugadas todos tienen 0 puntos y el club salía 1.º: «¡CAMPEONES!».
+		## Solo se dicta veredicto con la liga COMPLETA; antes, el avance de lo que va.
+		var jugadas := liga.historial.size()
+		if jugadas == 0:
+			final = "La temporada aún no ha empezado: todavía no se ha jugado ni una jornada."
+		elif jugadas < liga.jornadas():
+			final = "Va %dº de %d con %d puntos tras %d de %d jornadas. La temporada sigue." % [puesto, t2.size(), pts, jugadas, liga.jornadas()]
+		elif puesto == 1:
 			final = "¡CAMPEONES! %d puntos y la liga en la vitrina. Esta temporada se contará durante años." % pts
 		elif puesto > t2.size() - liga.plazas_descenso:
 			final = "%dº y descenso. %d puntos no alcanzaron. Toca levantarse." % [puesto, pts]

@@ -416,3 +416,12 @@ func _probar_documental() -> void:
 			dice_veredicto = true
 	_comprobar(dice_goleador, "el capítulo del goleador nombra al de verdad (%s, %d)" % [gol.nombre, gol.goles])
 	_comprobar(dice_veredicto, "hay veredicto final con el puesto")
+	## (9-11) Sin jornadas jugadas no puede haber «CAMPEONES» (fallo del dueño: resumen con campeón sin jugar).
+	var m0 := Mundo.new()
+	m0.generar(["CHI"], 303)
+	m0.tomar_el_mando(m0.ligas[0].clubes[1].id)
+	var ver0 := ""
+	for cap0: Dictionary in DocumentalTemporada.guion(m0):
+		if String(cap0["titulo"]).contains("veredicto"):
+			ver0 = String(cap0["texto"])
+	_comprobar(ver0 != "" and not ver0.contains("CAMPEONES"), "sin jornadas jugadas el documental no proclama campeón («%s»)" % ver0)

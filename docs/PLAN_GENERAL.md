@@ -20,7 +20,12 @@ Fuente: PDF «Plan de Reestructuración – Dinastía» y vídeo del despacho (l
 - **Partido**: base de físicas = League-Soccer, aún NO integrada del todo ni en su última versión; referencias de sensación: PES 2020, FIFA Mobile, FM26. **Cualquier sesión** puede tomar los 4 fallos críticos.
 
 **Orden de trabajo (4 pasos, desde el lunes)**
-1. Los 4 fallos del partido: (a) el día de partido abre su menú solo y no se puede simular/saltar por error; (b) saques laterales atascados (no lanza, tiempo parado, árbitro sin reacción); (c) ritmo demasiado rápido para mando; (d) resumen de fin de temporada con datos falsos (campeón sin jornadas). + interruptor de la ciudad desde el código.
+1. Los 4 fallos del partido + interruptor de la ciudad (avance del 9-11):
+   - HECHO: interruptor `InterruptorCiudad.activa` (apagado; fuera del menú «Pasear a pie»/«Conducir» y del botón «Salir al mundo abierto»; se conservan en `MenusLaterales.SUBS_MUNDO_ABIERTO`). FALTA: excluir la ciudad de la exportación (`export_presets.cfg`) y dar un paseo «solo club» (sin él, hoy no hay forma de recorrer las salas del club ni el prólogo caminando).
+   - HECHO (d) resumen de temporada con datos falsos: el veredicto del documental ya no proclama campeón sin jornadas jugadas (`DocumentalTemporada.guion`), con prueba.
+   - HECHO (b) saque de banda atascado: causa = sin compañero a 30 m el saque del usuario no salía nunca; ahora amplía el radio, y a los 25 s saca la IA. Prueba en `partido`. Verificar con mando real.
+   - PENDIENTE (a) día de partido: abrir el menú solo y quitar «Avanzar semana»/«Simular» ese día. Toca varias entradas (calendario, plantel, temporada); decidir con el dueño qué se conserva.
+   - PENDIENTE (c) ritmo: hoy `ritmo_partido` (rápido 4 / normal 5,5 / largo 7,5 s por minuto) solo cambia el reloj. Si «demasiado rápido» es el movimiento de jugadores y balón con mando, es otro ajuste: preguntar al dueño y medir con el motor de League-Soccer.
 2. Reparar el club: puertas y marcos, muebles (traídos de la ciudad), ascensor animado (subida/bajada), colisiones (nadie atraviesa cuerpos/objetos), suelo liso, y revisar el PARPADEO del suelo del despacho (azul oscuro ↔ naranja en el vídeo; z-fighting, luz o solo la cámara del móvil).
 3. Volver a medir (`hw_modesto.sh`, RAM, llamadas, triángulos) sin la ciudad.
 4. Solo entonces decidir qué pasa a C++ y si se cambia el motor.
