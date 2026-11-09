@@ -200,6 +200,9 @@ func _pestana(sub: Dictionary, i: int) -> Button:
 # ---------------------------------------------------------------- portada
 
 ## La portada: el lema del menú y una tarjeta grande por submenú.
+var _ancho_tarjeta := 310.0   ## medidas de las tarjetas de la portada (las fija `portada()` según la ventana)
+var _alto_tarjeta := 168.0
+
 func portada() -> void:
 	if _cerrando:
 		return
@@ -214,19 +217,27 @@ func portada() -> void:
 	sc.set_anchors_preset(Control.PRESET_FULL_RECT)
 	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_cuerpo.add_child(sc)
-	var centro := CenterContainer.new()
-	centro.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	centro.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	sc.add_child(centro)
+	## (9-11, estética) Rejilla DINÁMICA: columnas y ancho de tarjeta salen de la ventana (hasta 4 columnas), alineada arriba
+	## con un margen proporcional, y centrada solo en horizontal (antes flotaba a media pantalla con un hueco enorme bajo el título).
+	var marco := MarginContainer.new()
+	marco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	marco.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	marco.add_theme_constant_override("margin_top", int(clampf(get_viewport_rect().size.y * 0.05, 12.0, 56.0)))
+	marco.add_theme_constant_override("margin_bottom", 16)
+	sc.add_child(marco)
 	var subs: Array = _menu["subs"]
 	var rej := GridContainer.new()
 	var ancho := get_viewport_rect().size.x - MenuLateral.ANCHO_RIEL - 60.0
-	rej.columns = clampi(int(ancho / 330.0), 1, 3)
+	rej.columns = clampi(int((ancho + 18.0) / 358.0), 1, 4)
 	if subs.size() <= 3:
-		rej.columns = subs.size()
+		rej.columns = maxi(1, mini(subs.size(), rej.columns))
 	rej.add_theme_constant_override("h_separation", 18)
 	rej.add_theme_constant_override("v_separation", 18)
-	centro.add_child(rej)
+	rej.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	rej.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	marco.add_child(rej)
+	_ancho_tarjeta = clampf((ancho - 18.0 * float(rej.columns - 1)) / float(rej.columns), 300.0, 440.0)
+	_alto_tarjeta = clampf(get_viewport_rect().size.y * 0.25, 176.0, 220.0)
 	for i in subs.size():
 		var tarjeta := _tarjeta(subs[i], i)
 		rej.add_child(tarjeta)
@@ -242,7 +253,7 @@ func portada() -> void:
 
 func _tarjeta(sub: Dictionary, i: int) -> Button:
 	var b := Button.new()
-	b.custom_minimum_size = Vector2(310, 168)
+	b.custom_minimum_size = Vector2(_ancho_tarjeta, _alto_tarjeta)
 	b.clip_contents = true
 	var st := StyleBoxFlat.new()
 	st.bg_color = Color(0, 0, 0, 0.5)
@@ -287,8 +298,8 @@ func _tarjeta(sub: Dictionary, i: int) -> Button:
 	var d := Label.new()
 	d.text = String(sub.get("desc", ""))
 	d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	d.add_theme_font_size_override("font_size", 12)
-	d.add_theme_color_override("font_color", Color(1, 1, 1, 0.68))
+	d.add_theme_font_size_override("font_size", 13)
+	d.add_theme_color_override("font_color", Color(1, 1, 1, 0.78))
 	d.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	v.add_child(d)
 	var dato := MenuLateral.dato(_p, sub)
@@ -301,8 +312,9 @@ func _tarjeta(sub: Dictionary, i: int) -> Button:
 	for n in v.find_children("*", "Control", true, false):
 		(n as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
 	## Crece un poco al pasar por encima.
-	b.pivot_offset = b.custom_minimum_size / 2.0
-	b.mouse_entered.connect(func() -> void: b.create_tween().tween_property(b, "scale", Vector2(1.03, 1.03), 0.12))
+	b.mouse_entered.connect(func() -> void:
+		b.pivot_offset = b.size / 2.0
+		b.create_tween().tween_property(b, "scale", Vector2(1.03, 1.03), 0.12))
 	b.mouse_exited.connect(func() -> void: b.create_tween().tween_property(b, "scale", Vector2.ONE, 0.12))
 	b.pressed.connect(elegir.bind(i))
 	return b
