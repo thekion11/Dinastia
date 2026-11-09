@@ -4,7 +4,7 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
-## REESTRUCTURACIÓN «SOLO CLUB» (orden 34, dueño, 9-11) — manda sobre todo lo anterior; el trabajo real EMPIEZA EL LUNES 16-11
+## REESTRUCTURACIÓN «SOLO CLUB» (orden 34, dueño, 9-11; en CLAUDE.md es el punto 33) — manda sobre todo lo anterior; el trabajo real EMPIEZA EL LUNES 16-11
 Fuente: PDF «Plan de Reestructuración – Dinastía» y vídeo del despacho (la habitación sin puertas ni marcos y el ascensor sin animación). Decisiones obligatorias.
 
 **Aclaraciones del dueño (9-11)**
