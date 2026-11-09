@@ -145,7 +145,14 @@ func _saque_banda_usuario() -> void:
 	var mv := Mando.movimiento()
 	var lista := _receptores(p, lugar, 30.0)
 	if lista.is_empty():
-		return
+		## (9-11, fallo del dueño: «saque lateral: el jugador se queda atascado, no puede lanzar y el tiempo se detiene»)
+		## Antes se volvía sin hacer nada cada fotograma: sin compañero a 30 m el saque no salía nunca. Ahora se amplía el
+		## radio y, si aun así no hay nadie, saca el árbitro-IA con el pase de siempre.
+		lista = _receptores(p, lugar, 140.0)
+		if lista.is_empty():
+			apuntando = false
+			_ejecutar_saque_ia(p, "banda", lugar)
+			return
 	if _receptor_i < 0 or _receptor_i >= lista.size():
 		_receptor_i = 0
 	if Input.is_action_just_pressed("jugar_cambiar"):

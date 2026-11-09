@@ -138,6 +138,17 @@ func _probar_saque_ofrece() -> void:
 	_comprobar(MotorSaque.oferta(motor, rival, lugar, true, base) == base, "el equipo que no saca no se coloca por este sistema")
 	_comprobar(MotorSaque.oferta(motor, lanzador, lugar, true, base) == base, "el lanzador no cambia")
 	MotorSaque._ofrece = antes
+	## (9-11, fallo del dueño) Saque de banda del USUARIO sin ningún compañero a 30 m: antes no salía nunca (juego parado).
+	for k in locales.size():
+		(locales[k]["node"] as Node3D).position = Vector3(-30.0, 0, -45.0 - 2.0 * k)
+	(lanzador["node"] as Node3D).position = lugar
+	motor.usuario = lanzador
+	motor.estado = "saque"
+	motor.apuntando = true
+	motor.saque = {"tipo": "banda", "local": true, "lugar": lugar, "lanzador": lanzador}
+	motor._receptor_marcado = {}
+	motor._saque_banda_usuario()
+	_comprobar(not motor._receptor_marcado.is_empty(), "saque de banda del usuario sin compañeros a 30 m: igual se marca un receptor lejano y se puede sacar")
 	(r[1] as Node3D).queue_free()
 
 ## ENTRAR EN EL MOMENTO BUENO (03-11-2026, ciclo 12, `MotorEntrada`, bandera ENTRADA_MOMENTO): el radio de la entrada crece con el portador de espaldas, con control largo o en la banda.
