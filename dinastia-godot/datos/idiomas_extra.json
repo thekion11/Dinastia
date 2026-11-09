@@ -7561,7 +7561,14 @@
   "Temporada": "Season",
   "Capítulos de cada temporada": "Chapters of every season",
   "Los documentales de todos tus años, guardados.": "The documentaries of all your years, saved.",
-  "Entrar al club": "Enter the club"
+  "Entrar al club": "Enter the club",
+  "PLANTILLA": "SQUAD",
+  "Mediocampistas": "Midfielders",
+  "⚖ Comparar": "⚖ Compare",
+  "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Pick a player from the list · with “Compare” the second click is the one to compare against",
+  "Lesionado, semanas:": "Injured, weeks:",
+  "Plantilla (vista PES)": "Squad (PES view)",
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "List by lines, attribute bars and a two-player comparison."
  },
  "pt": {
   "Historia": "História",
@@ -15125,7 +15132,14 @@
   "Temporada": "Temporada",
   "Capítulos de cada temporada": "Capítulos de cada temporada",
   "Los documentales de todos tus años, guardados.": "Os documentários de todos os teus anos, guardados.",
-  "Entrar al club": "Entrar no clube"
+  "Entrar al club": "Entrar no clube",
+  "PLANTILLA": "PLANTEL",
+  "Mediocampistas": "Médios",
+  "⚖ Comparar": "⚖ Comparar",
+  "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Escolhe um jogador da lista · com «Comparar» o segundo clique é o rival da comparação",
+  "Lesionado, semanas:": "Lesionado, semanas:",
+  "Plantilla (vista PES)": "Plantel (vista PES)",
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Lista por linhas, atributos em barras e comparação de dois jogadores."
  },
  "patrones": [
   [
@@ -28664,7 +28678,14 @@
   "Temporada": "Saison",
   "Capítulos de cada temporada": "Chapitres de chaque saison",
   "Los documentales de todos tus años, guardados.": "Les documentaires de toutes tes années, sauvegardés.",
-  "Entrar al club": "Entrer au club"
+  "Entrar al club": "Entrer au club",
+  "PLANTILLA": "EFFECTIF",
+  "Mediocampistas": "Milieux",
+  "⚖ Comparar": "⚖ Comparer",
+  "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Choisis un joueur dans la liste · avec « Comparer », le second clic est celui à comparer",
+  "Lesionado, semanas:": "Blessé, semaines :",
+  "Plantilla (vista PES)": "Effectif (vue PES)",
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Liste par lignes, attributs en barres et comparaison de deux joueurs."
  },
  "it": {
   "Historia": "Storia",
@@ -36228,7 +36249,14 @@
   "Temporada": "Stagione",
   "Capítulos de cada temporada": "Capitoli di ogni stagione",
   "Los documentales de todos tus años, guardados.": "I documentari di tutti i tuoi anni, salvati.",
-  "Entrar al club": "Entra nel club"
+  "Entrar al club": "Entra nel club",
+  "PLANTILLA": "ROSA",
+  "Mediocampistas": "Centrocampisti",
+  "⚖ Comparar": "⚖ Confronta",
+  "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Scegli un giocatore dalla lista · con «Confronta» il secondo clic è l'avversario del confronto",
+  "Lesionado, semanas:": "Infortunato, settimane:",
+  "Plantilla (vista PES)": "Rosa (vista PES)",
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Elenco per reparti, attributi a barre e confronto tra due giocatori."
  },
  "de": {
   "Historia": "Geschichte",
@@ -43792,7 +43820,14 @@
   "Temporada": "Saison",
   "Capítulos de cada temporada": "Kapitel jeder Saison",
   "Los documentales de todos tus años, guardados.": "Die Dokus all deiner Jahre, gespeichert.",
-  "Entrar al club": "Den Verein betreten"
+  "Entrar al club": "Den Verein betreten",
+  "PLANTILLA": "KADER",
+  "Mediocampistas": "Mittelfeldspieler",
+  "⚖ Comparar": "⚖ Vergleichen",
+  "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Wähle einen Spieler aus der Liste · mit „Vergleichen“ ist der zweite Klick der Vergleichspartner",
+  "Lesionado, semanas:": "Verletzt, Wochen:",
+  "Plantilla (vista PES)": "Kader (PES-Ansicht)",
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Liste nach Reihen, Attribute als Balken und Vergleich zweier Spieler."
  },
  "ca": {
   "Historia": "Història",
@@ -51356,7 +51391,14 @@
   "Temporada": "Temporada",
   "Capítulos de cada temporada": "Capítols de cada temporada",
   "Los documentales de todos tus años, guardados.": "Els documentals de tots els teus anys, guardats.",
-  "Entrar al club": "Entrar al club"
+  "Entrar al club": "Entrar al club",
+  "PLANTILLA": "PLANTILLA",
+  "Mediocampistas": "Migcampistes",
+  "⚖ Comparar": "⚖ Comparar",
+  "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Tria un jugador de la llista · amb «Comparar» el segon clic és el rival de la comparació",
+  "Lesionado, semanas:": "Lesionat, setmanes:",
+  "Plantilla (vista PES)": "Plantilla (vista PES)",
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Llista per línies, atributs en barres i comparació de dos jugadors."
  },
  "pl": {
   "Club": "Klub",
@@ -58920,7 +58962,14 @@
   "Temporada": "Sezon",
   "Capítulos de cada temporada": "Rozdziały każdego sezonu",
   "Los documentales de todos tus años, guardados.": "Filmy dokumentalne ze wszystkich twoich lat, zapisane.",
-  "Entrar al club": "Wejdź do klubu"
+  "Entrar al club": "Wejdź do klubu",
+  "PLANTILLA": "KADRA",
+  "Mediocampistas": "Pomocnicy",
+  "⚖ Comparar": "⚖ Porównaj",
+  "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Wybierz zawodnika z listy · przy „Porównaj” drugie kliknięcie to rywal porównania",
+  "Lesionado, semanas:": "Kontuzjowany, tygodnie:",
+  "Plantilla (vista PES)": "Kadra (widok PES)",
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Lista według formacji, atrybuty w paskach i porównanie dwóch zawodników."
  },
  "tr": {
   "Club": "Kulüp",
@@ -66484,6 +66533,13 @@
   "Temporada": "Sezon",
   "Capítulos de cada temporada": "Her sezonun bölümleri",
   "Los documentales de todos tus años, guardados.": "Tüm yıllarının belgeselleri, kayıtlı.",
-  "Entrar al club": "Kulübe gir"
+  "Entrar al club": "Kulübe gir",
+  "PLANTILLA": "KADRO",
+  "Mediocampistas": "Orta saha",
+  "⚖ Comparar": "⚖ Karşılaştır",
+  "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Listeden bir oyuncu seç · «Karşılaştır» ile ikinci tıklama karşılaştırılacak oyuncudur",
+  "Lesionado, semanas:": "Sakat, hafta:",
+  "Plantilla (vista PES)": "Kadro (PES görünümü)",
+  "Lista por líneas, atributos en barras y comparar dos jugadores.": "Hatlara göre liste, çubuk nitelikler ve iki oyuncu karşılaştırması."
  }
 }
