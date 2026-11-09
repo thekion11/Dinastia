@@ -56,10 +56,16 @@ func _tabla_de_modos() -> void:
 	var con: Array[String] = []
 	var sin: Array[String] = []
 	OrquestadorMundo.sin_prologo = false
+	InterruptorCiudad.activa = true   ## (9-11) con la ciudad apagada ningún modo trae el prólogo caminando
 	for m: Dictionary in t:
 		(con if OrquestadorMundo.con_prologo(String(m["id"])) else sin).append(String(m["id"]))
 	_comprobar(sin.size() == 3 and sin.has("tutorial") and sin.has("retos") and sin.has("carrera-m"), "sin prólogo: tutorial, retos y Carrera de Jugador (%s)" % str(sin))
 	_comprobar(con.size() == 9 and con.has("dt") and con.has("jeque") and con.has("creador") and con.has("fondo"), "con prólogo: los 9 modos de club (%s)" % str(con))
+	InterruptorCiudad.activa = false
+	var con_apagada := 0
+	for m2: Dictionary in t:
+		con_apagada += int(OrquestadorMundo.con_prologo(String(m2["id"])))
+	_comprobar(con_apagada == 0, "con la ciudad 3D apagada ningún modo empieza con el prólogo caminando (%d)" % con_apagada)
 	_comprobar(PrologoPasos.PASOS.size() >= 10, "el prólogo tiene %d pasos" % PrologoPasos.PASOS.size())
 	## Cada modo de club traduce su título y su subtítulo en los 8 idiomas.
 	Idiomas._asegurar_todos()

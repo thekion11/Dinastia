@@ -14,6 +14,7 @@ var _m: Mundo
 var _saludos: Array[String] = []   ## el personal que saludó al llegar a su sala
 
 func _ready() -> void:
+	InterruptorCiudad.activa = true   ## (9-11) esta prueba es de la ciudad 3D (apagada por defecto)
 	await get_tree().process_frame
 	await _probar_async()
 	print("")
