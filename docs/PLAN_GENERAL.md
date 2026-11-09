@@ -44,12 +44,18 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
    - Pantalla ÚNICA de resumen a pantalla completa (hereda de `EventoPantallaCompleta`): campeón y tu puesto, copa, continental, ascensos/descensos, premios, veredicto de la directiva.
    - Copa y continental pendientes: que se cierren o se anuncien antes del cierre.
    - Ordenar los eventos por fecha: fin de liga → despedida → gala (`Logros.cerrar_temporada`) → «Temporada siguiente» → nueva temporada.
-   - Torneos de selecciones (Mundial, Eurocopa, Copa América; hoy solo fechas en `nucleo/calendario.gd`): ¿se juegan o son solo calendario? **PREGUNTAR AL DUEÑO ANTES de implementarlo.**
+   - Torneos de selecciones (Mundial, Eurocopa, Copa América; hoy solo fechas en `nucleo/calendario.gd`): **PENDIENTE DE LA DECISIÓN DEL DUEÑO** (ver «DECISIONES PENDIENTES DEL DUEÑO», más abajo). NO se implementan hasta que responda.
 2. **EVENTOS A PANTALLA COMPLETA solo al llegar a su fecha.** Hecho: aviso del partido de despedida y homenaje (ya en main, `EventoPantallaCompleta`). FALTA: el homenaje en 3D (y que lo nuevo herede del marco base).
 3. **ANIMACIÓN FIJA DEL PRÓLOGO, saltable.** Primer corte en main (`PrologoAnimado`, 6 planos, sin vídeo, barra de fases arriba y salto con Esc/mando/stick). FALTA: arte final, sonido y más texto por plano.
 4. **CASA DEL PERSONAJE SIN CIUDAD.** Hoy la casa caminable vive en el mundo 3D de la ciudad (`CasaEscena3D`, `ui/casa_escena3d.gd`; menú Vida → «Ver tu casa»).
 5. **AVANCE DE FECHA con eventos y varias semanas** (estilo PES 2020). Hecho: botón «Hito» y fila «PRÓXIMOS» con los escudos de los 5 siguientes partidos. FALTA: eventos en esa fila (mercado, copa, continental, fin de temporada) y varias semanas.
 6. **MAPA DE CALOR y HABILIDADES con estrellas de la plantilla** (como la «Información del jugador» del PES). Hecho: estilo de juego con estrellas. FALTA: mapa de calor por jugador y habilidades individuales (regate en profundidad, etc.).
+
+7. **IDEA (por evaluar): el prólogo como VÍDEO ya hecho que el juego proyecta**, en lugar de la animación dibujada por el motor (`PrologoAnimado`), para ver si así mejoran los FPS. Antes de decidir hay que MEDIR los FPS (y llamadas de dibujo, RAM) con la animación actual y con el vídeo (`herramientas/hw_modesto.sh`). Reglas: la regla del proyecto NO permite `.mp4` (ni `.avi`) en el repositorio, así que el vídeo tendría que vivir FUERA del repo (junto al ejecutable o en `user://`, como `caras_reales.pck`; o descargarse aparte) y el juego caer a la animación del motor si no lo encuentra; además Godot reproduce `.ogv` (Theora) de forma nativa, no `.mp4` (el formato se decide con la medición). Hoy ningún código del juego reproduce vídeo y ya hay 3 `.mp4` rastreados en `marca/` (pendiente de decisión del dueño).
+
+## DECISIONES PENDIENTES DEL DUEÑO (no se implementa hasta que conteste)
+- **TORNEOS DE SELECCIONES** (Mundial, Eurocopa, Copa América; hoy solo fechas informativas en `nucleo/calendario.gd`, y `Selecciones.cierre_de_temporada`): **¿se JUEGAN (con tu plantel, convocados que se van con sus selecciones) o son SOLO CALENDARIO?** Anotado el 9-11 por orden del dueño; sin respuesta no se toca.
+- **Los 3 `.mp4` de `marca/`** (`marca/nexus-digital-intro.mp4`, `marca/referencia/ea_fc25_referencia.mp4`, `marca/referencia/ejemplo-partido.mp4`, en LFS): el juego no los carga y la regla del proyecto dice «.mp4 nunca al repo»; ¿se sacan del repo?
 
 ## PULIDO (lo ya completo que se pule después; nada se borra, se afina)
 - Plantilla a la PES (`PlantillaPes`, `PlantillaEstilos`, `GestionOnce`) y fila «PRÓXIMOS» (`FilaProximos`): aspecto (la lleva la sesión de estética).
