@@ -146,8 +146,12 @@ func _montar() -> void:
 	pi.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	pi.size_flags_stretch_ratio = 1.3
 	cols.add_child(pi)
+	var desl := ScrollContainer.new()   ## la columna de información puede ser larga (radar, atributos y estilos): se desliza
+	desl.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	pi.add_child(desl)
 	_info = VBoxContainer.new()
-	pi.add_child(_info)
+	_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	desl.add_child(_info)
 	var pie := HBoxContainer.new()
 	pie.add_theme_constant_override("separation", 10)
 	raiz.add_child(pie)
@@ -387,7 +391,7 @@ func _pintar_info() -> void:
 	datos.add_child(_etiqueta("#%d · %s" % [_a.dorsal, _a.pos_e], 13, Tema.SUAVE))
 	datos.add_child(_etiqueta(str(_a.ovr), 46, Tema.ORO))
 	var radar := RadarAtributos.new()
-	radar.custom_minimum_size = Vector2(300, 250)
+	radar.custom_minimum_size = Vector2(280, 200)
 	var etq := PackedStringArray()
 	var vals := PackedFloat32Array()
 	for k: String in claves_de(_a):
@@ -397,6 +401,7 @@ func _pintar_info() -> void:
 	_info.add_child(radar)
 	for k: String in claves_de(_a):
 		_info.add_child(_fila_atributo(k))
+	PlantillaEstilos.pintar(_p.mundo, _club, _a, _info, _pintar)   ## estilo de juego con estrellas (idea del PES)
 	_info.add_child(_etiqueta("%s %d · %s %d%% · %s %d%% · %s %d%%" % [Idiomas.t("Edad"), _a.edad, Idiomas.t("Forma"), _a.forma,
 		Idiomas.t("Moral"), _a.moral, Idiomas.t("Físico"), _a.fisico], 12, Tema.SUAVE))
 	if _aviso_texto != "":

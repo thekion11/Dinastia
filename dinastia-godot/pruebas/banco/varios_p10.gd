@@ -182,3 +182,27 @@ func _probar_camisetas_retiradas_vista() -> void:
 	CamisetasMuseo.poner(sala, Rect2(-2.0, -3.0, 4.0, 6.0), 0.0, Color(0.2, 0.5, 0.3), m.prensa.dorsales_retirados)
 	_comprobar(sala.get_child_count() - antes == 2 * 6, "el museo cuelga 6 piezas por camiseta (marco, fondo, cuerpo, mangas y 2 rótulos) = %d" % (sala.get_child_count() - antes))
 	sala.queue_free()
+
+## EL ESTILO DE JUEGO EN LA PLANTILLA (9-11): las estrellas salen de la aptitud y cambiar de rol lo deja en Táctica y en la pizarra del partido.
+func _probar_estilo_plantilla() -> void:
+	_titulo("PLANTILLA A LA PES: ESTILO DE JUEGO CON ESTRELLAS")
+	_comprobar(PlantillaEstilos.estrellas(0.80) == 0 and PlantillaEstilos.estrellas(0.97) == 1 and PlantillaEstilos.estrellas(1.05) == 2 and PlantillaEstilos.estrellas(1.20) == 3, "0, 1, 2 y 3 estrellas según la aptitud")
+	_comprobar(PlantillaEstilos.texto_estrellas(2) == "★★☆", "texto de estrellas")
+	var m := Mundo.new()
+	m.generar(["CHI"], 31)
+	m.tomar_el_mando(m.ligas[0].clubes[1].id)
+	var club := m.mi_club()
+	var j: Jugador = club.once().filter(func(x: Jugador) -> bool: return x.pos == "MED")[0]
+	var caja := VBoxContainer.new()
+	add_child(caja)
+	var cambios := [0]
+	PlantillaEstilos.pintar(m, club, j, caja, func() -> void: cambios[0] += 1)
+	var claves: Array = m.vestuario.roles_de_grupo(Datos.grupo(j.pos_e))
+	claves.sort()
+	_comprobar(caja.get_child_count() == 1 + claves.size() and claves.size() >= 2, "un título y un botón por rol de su línea (%d roles)" % claves.size())
+	var otro := String(claves[1] if m.vestuario.rol_tactico(j) == String(claves[0]) else claves[0])
+	(caja.get_child(1 + claves.find(otro)) as Button).pressed.emit()
+	_comprobar(m.vestuario.rol_tactico(j) == otro and cambios[0] == 1, "elegir un rol lo fija en el vestuario y avisa para repintar")
+	var clave_rol := String(RolTactico.DE_VESTUARIO.get(otro, ""))
+	_comprobar(clave_rol == "" or String(club.tactica.roles.get(j.id, "")) == clave_rol, "y lo deja en la táctica del partido (%s)" % clave_rol)
+	caja.queue_free()
