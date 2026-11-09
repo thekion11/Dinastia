@@ -122,6 +122,7 @@ const DT_MOTOR := 1.0 / 60.0
 const SEG_POR_MINUTO := {"rapido": 4.0, "normal": 5.5, "largo": 7.5}
 
 var _explorador: ExploradorEstadio
+var arrancar_a_pie := false   ## (9-11, «solo club») desde el menú se entra directo a caminar el club y, al salir (Esc), se vuelve al menú sin ver el estadio por fuera
 var _ocultos: Array = []
 
 ## `fixed_size` compensa la DISTANCIA, no el zoom: con "Tele Dinámica" (campo
@@ -420,6 +421,9 @@ func _dejar_de_recorrer() -> void:
 		return
 	_explorador.queue_free()
 	_explorador = null
+	if arrancar_a_pie:
+		cerrado.emit()
+		return
 	for c in _ocultos:
 		if is_instance_valid(c):
 			(c as CanvasItem).visible = true

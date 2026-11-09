@@ -343,6 +343,7 @@ func _ver_estadio_propio(por_partes := false) -> void:
 			ocultados.append(h)
 	var vista = load("res://ui/estadio.gd").new()
 	vista.por_partes = por_partes   ## con carga: se arma entre fotogramas y la carga sigue viva
+	vista.arrancar_a_pie = true   ## (9-11, «solo club») «Entrar al estadio» te deja caminando el club (sin vista exterior del estadio)
 	## Sin partido la pantalla gigante enseña bienvenida + tabla + goleadores,
 	## que es lo que hace un estadio de verdad un día entre semana. Va antes de
 	## `abrir()`, que es donde se monta.
@@ -350,6 +351,7 @@ func _ver_estadio_propio(por_partes := false) -> void:
 	p.add_child(vista)
 	await vista.abrir(c, clampf(gente, 0.05, 1.0), null, null, p.mundo.perfil_estadio_de(c),
 		Comercial.color_balon(p.mundo.comercial.balon, c))
+	vista.recorrer()
 	vista.cerrado.connect(func() -> void:
 		vista.queue_free()
 		for h in ocultados:

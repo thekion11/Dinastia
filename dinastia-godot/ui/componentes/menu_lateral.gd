@@ -120,11 +120,11 @@ func _montar() -> void:
 	hamb.pressed.connect(alternar)
 	_riel.add_child(hamb)
 	## (3-11, C7 del dueño: «¿dónde está lo de salir al mundo abierto?») Siempre a la vista, arriba del riel.
-	if InterruptorCiudad.activa:
-		var salir := _boton_riel("🚶", "Salir al mundo abierto")
-		salir.pressed.connect(func() -> void: ejecutar(_p, "ciudad_pie"))
-		_riel.add_child(salir)
-		_riel.add_child(HSeparator.new())
+	## (9-11, «solo club») Con la ciudad apagada, este botón entra al club (el estadio y sus plantas) en vez de al mundo abierto.
+	var salir := _boton_riel("🚶" if InterruptorCiudad.activa else "🏟️", "Salir al mundo abierto" if InterruptorCiudad.activa else "Entrar al club")
+	salir.pressed.connect(func() -> void: ejecutar(_p, "ciudad_pie" if InterruptorCiudad.activa else "ver_estadio"))
+	_riel.add_child(salir)
+	_riel.add_child(HSeparator.new())
 	for m: Dictionary in MENUS:
 		var b := _boton_riel(String(m["icono"]), String(m["nombre"]))
 		var id := String(m["id"])
@@ -158,18 +158,15 @@ func _montar() -> void:
 	_lista.add_theme_constant_override("separation", 2)
 	scroll.add_child(_lista)
 	var mundo := Button.new()   ## y el primero del cajón, con letra grande
-	mundo.set_meta("_es", ["cab", "🚶", "Salir al mundo abierto"])
+	mundo.set_meta("_es", ["cab", "🚶" if InterruptorCiudad.activa else "🏟️", "Salir al mundo abierto" if InterruptorCiudad.activa else "Entrar al club"])
 	mundo.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	mundo.add_theme_font_size_override("font_size", Tema.letra(16))
 	mundo.add_theme_color_override("font_color", Color(1.0, 0.85, 0.45))
 	mundo.pressed.connect(func() -> void:
 		plegar()
-		ejecutar(_p, "ciudad_pie"))
-	if InterruptorCiudad.activa:
-		_lista.add_child(mundo)
-		_lista.add_child(HSeparator.new())
-	else:
-		mundo.free()
+		ejecutar(_p, "ciudad_pie" if InterruptorCiudad.activa else "ver_estadio"))
+	_lista.add_child(mundo)
+	_lista.add_child(HSeparator.new())
 	for m: Dictionary in MENUS:
 		var id := String(m["id"])
 		var cab := Button.new()
