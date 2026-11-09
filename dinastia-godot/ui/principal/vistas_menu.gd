@@ -155,6 +155,12 @@ func _pintar_clubes() -> void:
 		p._lista_clubes.add_child(g)
 		for enc in ["#", "CLUB", "PJ", "G", "E", "P", "PTS"]:
 			var ce := p._celda(g, CompeticionFilas.sigla(enc), p.COL_SUAVE, enc != "CLUB" and enc != "#", 11)   ## la sigla de la tabla, no el código en crudo: «G E P» no se traducen solos (3-11)
+			## (9-11, estética) Columnas numéricas de ancho fijo; el club se lleva el resto (antes todas se repartían por igual).
+			if enc == "CLUB":
+				ce.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			elif enc != "#":
+				ce.size_flags_horizontal = Control.SIZE_FILL
+				ce.custom_minimum_size.x = 64
 			if CompeticionFilas._sigla_larga(enc) != enc:   ## M-305: la sigla, explicada al pasar el ratón
 				ce.tooltip_text = Idiomas.t(CompeticionFilas._sigla_larga(enc))
 				ce.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -168,6 +174,9 @@ func _pintar_clubes() -> void:
 			b.text = club.nombre
 			b.flat = true
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			b.icon = Escudo.textura(club, 20)
+			b.add_theme_constant_override("icon_max_width", 22)
 			b.add_theme_font_size_override("font_size", 12)
 			b.add_theme_color_override("font_color", p._color_de_paleta(p.COL_ACENTO if club == p.mundo.mi_club() else p.COL_TEXTO))
 			b.pressed.connect(func() -> void:
@@ -179,7 +188,9 @@ func _pintar_clubes() -> void:
 				## Los puntos quitados por sanción, a la vista (−3 en rojo).
 				if clave == "pts" and int(fila.get("sancion", 0)) > 0:
 					txt += " (−%d)" % int(fila["sancion"])
-				p._celda(g, txt, p.COL_TEXTO if clave == "pts" else p.COL_SUAVE, true, 11)
+				var cn := p._celda(g, txt, p.COL_TEXTO if clave == "pts" else p.COL_SUAVE, true, 11)
+				cn.size_flags_horizontal = Control.SIZE_FILL
+				cn.custom_minimum_size.x = 64
 			puesto += 1
 		p._lista_clubes.add_child(HSeparator.new())
 
