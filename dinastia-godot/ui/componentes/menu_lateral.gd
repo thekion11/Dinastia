@@ -58,6 +58,9 @@ static func ejecutar(p: Principal, accion: String) -> void:
 		"ver_estadio":
 			p._ver_estadio_con_carga()
 		"ciudad_pie", "ciudad_coche":
+			if not InterruptorCiudad.activa:
+				InterruptorCiudad.avisar_apagada(p)
+				return
 			p._ver_ciudad_explorando("coche" if accion == "ciudad_coche" else "pie")
 		"mi_personaje":
 			load("res://ui/componentes/creador_personaje.gd").abrir(p, p.mundo)
@@ -115,10 +118,11 @@ func _montar() -> void:
 	hamb.pressed.connect(alternar)
 	_riel.add_child(hamb)
 	## (3-11, C7 del dueño: «¿dónde está lo de salir al mundo abierto?») Siempre a la vista, arriba del riel.
-	var salir := _boton_riel("🚶", "Salir al mundo abierto")
-	salir.pressed.connect(func() -> void: ejecutar(_p, "ciudad_pie"))
-	_riel.add_child(salir)
-	_riel.add_child(HSeparator.new())
+	if InterruptorCiudad.activa:
+		var salir := _boton_riel("🚶", "Salir al mundo abierto")
+		salir.pressed.connect(func() -> void: ejecutar(_p, "ciudad_pie"))
+		_riel.add_child(salir)
+		_riel.add_child(HSeparator.new())
 	for m: Dictionary in MENUS:
 		var b := _boton_riel(String(m["icono"]), String(m["nombre"]))
 		var id := String(m["id"])
@@ -159,8 +163,11 @@ func _montar() -> void:
 	mundo.pressed.connect(func() -> void:
 		plegar()
 		ejecutar(_p, "ciudad_pie"))
-	_lista.add_child(mundo)
-	_lista.add_child(HSeparator.new())
+	if InterruptorCiudad.activa:
+		_lista.add_child(mundo)
+		_lista.add_child(HSeparator.new())
+	else:
+		mundo.free()
 	for m: Dictionary in MENUS:
 		var id := String(m["id"])
 		var cab := Button.new()

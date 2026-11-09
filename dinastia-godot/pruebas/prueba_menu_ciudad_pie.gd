@@ -10,6 +10,7 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 6:
+		InterruptorCiudad.activa = true   ## (9-11) la ciudad está apagada por defecto: esta prueba la necesita
 		MenuLateral.ejecutar(_p, "ciudad_pie")
 	## (2-11-2026, CI) La ciudad se arma por etapas entre fotogramas, así que en una máquina lenta tarda más de
 	## 60 fotogramas: se espera a que el paseo arranque (hasta ~3000 fotogramas) en vez de mirar en un número fijo.
