@@ -74,6 +74,8 @@ static func ejecutar(p: Principal, accion: String) -> void:
 			p._abrir_elegir_club()
 		"minijuegos":
 			load("res://ui/componentes/sala_minijuegos.gd").abrir(p, p.mundo)
+		"plantilla_pes":
+			load("res://ui/componentes/plantilla_pes.gd").abrir(p)
 		"capitulos":
 			load("res://ui/componentes/capitulos_selector.gd").abrir(p)
 		"documental":

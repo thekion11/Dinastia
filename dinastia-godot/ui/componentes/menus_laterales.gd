@@ -11,6 +11,7 @@ const MENUS := [
 		"lema": "Tus jugadores: el once, la pizarra y cómo llegan al partido.",
 		"colores": ["#07130c", "#113a22", "#9be7b4"], "subs": [
 		{"tab": "Mi plantel", "label": "Mi plantel", "icono": "👥", "desc": "Fichas, forma, moral y el once."},
+		{"accion": "plantilla_pes", "label": "Plantilla (vista PES)", "icono": "📊", "desc": "Lista por líneas, atributos en barras y comparar dos jugadores."},
 		{"tab": "Táctica", "label": "Táctica", "icono": "📋", "desc": "Dibujo, pizarra, roles y balón parado."},
 		{"tab": "Entrenar", "label": "Entrenamiento", "icono": "🏋️", "desc": "Sesiones, cargas y habilidades."},
 		{"tab": "Enfermería", "label": "Enfermería", "icono": "🩺", "desc": "Lesionados, plazos y riesgo."},
