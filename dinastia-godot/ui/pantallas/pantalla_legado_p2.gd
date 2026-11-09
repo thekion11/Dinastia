@@ -175,6 +175,9 @@ func _pintar_legado() -> void:
 	var vit3: Control = load("res://ui/competiciones/vitrina_trofeos.gd").crear(r.trofeos)
 	if vit3 != null:
 		p._lista_legado.add_child(vit3)
+	var camisetas := CamisetasRetiradas.crear(p.mundo)   ## (9-11) los dorsales retirados en el partido de despedida
+	if camisetas != null:
+		p._lista_legado.add_child(camisetas)
 	## El multiplicador solo se enseña si es distinto de 1: si no, es una línea
 	## que dice "×1.0" y no significa nada.
 	if absf(float(p_local["multiplicador"]) - 1.0) > 0.001:

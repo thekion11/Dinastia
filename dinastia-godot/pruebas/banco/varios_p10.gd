@@ -163,3 +163,22 @@ func _probar_homenaje_despedida() -> void:
 	for j: Jugador in m.mi_club().plantilla:
 		dorsales_ok = dorsales_ok and j.dorsal != 7
 	_comprobar(dorsales_ok, "el #7 no se reparte a nadie de tu club tras el cierre")
+
+## LAS CAMISETAS RETIRADAS SE VEN (9-11): la tarjeta de la Historia del club y las del museo del estadio (una por dorsal retirado).
+func _probar_camisetas_retiradas_vista() -> void:
+	_titulo("CAMISETAS RETIRADAS: HISTORIA Y MUSEO")
+	var m := Mundo.new()
+	m.generar(["CHI"], 12)
+	m.tomar_el_mando(m.ligas[0].clubes[1].id)
+	_comprobar(CamisetasRetiradas.crear(m) == null, "sin camisetas retiradas no se pinta nada en la Historia")
+	m.prensa.dorsales_retirados = [{"dorsal": 7, "nombre": "A B", "anio": 2027}, {"dorsal": 10, "nombre": "C D", "anio": 2028}]
+	var c := CamisetasRetiradas.crear(m)
+	_comprobar(c != null and (c.get_child(1) as Container).get_child_count() == 2, "la Historia pinta una tarjeta por dorsal retirado")
+	if c != null:
+		c.queue_free()
+	var sala := Node3D.new()
+	add_child(sala)
+	var antes := sala.get_child_count()
+	CamisetasMuseo.poner(sala, Rect2(-2.0, -3.0, 4.0, 6.0), 0.0, Color(0.2, 0.5, 0.3), m.prensa.dorsales_retirados)
+	_comprobar(sala.get_child_count() - antes == 2 * 6, "el museo cuelga 6 piezas por camiseta (marco, fondo, cuerpo, mangas y 2 rótulos) = %d" % (sala.get_child_count() - antes))
+	sala.queue_free()
