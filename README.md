@@ -23,3 +23,6 @@ Antes de abrir Godot: `git lfs pull --include="dinastia-godot/**"`. Clonar liger
 
 ## Normas
 Ningún script de más de 450 líneas. Sin archivos nuevos en LFS. Licencias de terceros: [`docs/05_referencia/LICENCIAS.md`](docs/05_referencia/LICENCIAS.md).
+
+## Rumbo (9-11)
+El juego base pasa a ser solo el club y sus instalaciones; la ciudad 3D queda apagada como parte del proyecto que quizá vuelva. Ver «REESTRUCTURACIÓN «SOLO CLUB»» arriba de `docs/PLAN_GENERAL.md`.
