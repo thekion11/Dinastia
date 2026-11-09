@@ -49,7 +49,7 @@ func nueva_temporada() -> Dictionary:
 					prensa.noticia.emit("Se retira por lesiones: %s" % j.nombre,
 						"Los médicos no le dan el alta competitiva. %d años y tres lesiones graves en poco tiempo: cuelga las botas antes de tiempo." % j.edad)
 				continue
-			if PartidoDespedida.se_retira(j):   ## (9-11) lo decidido antes del partido de despedida, o la regla de siempre (38+, o 35+ con 40 %)
+			if PartidoDespedida.se_retira(self, j):   ## (9-11) lo decidido antes del partido de despedida, o la regla de siempre (38+, o 35+ con 40 %)
 				if cantera != null: cantera.registrar_retiro(j, c)
 				continue   ## se retira
 			if _vence_contrato(j, c):

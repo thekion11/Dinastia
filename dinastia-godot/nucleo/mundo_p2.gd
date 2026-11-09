@@ -176,6 +176,7 @@ func _repartir_dorsales(c: Club) -> void:
 			break
 	for j: Jugador in orden:
 		if j.dorsal == 0:
+			while PartidoDespedida.dorsal_retirado(self, c, siguiente): siguiente += 1   ## (9-11) las camisetas retiradas no se reparten
 			j.dorsal = siguiente
 			siguiente += 1
 	var capitan: Jugador = null

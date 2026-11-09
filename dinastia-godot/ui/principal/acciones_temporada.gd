@@ -22,7 +22,7 @@ func _nueva_temporada() -> void:
 	if p.mundo.mercado != null:
 		p.mundo.mercado.fichajes_temporada.clear()
 	var resumen := p.mundo.nueva_temporada()
-	PartidoDespedida.limpiar()
+	PartidoDespedida.limpiar(p.mundo)
 	if not guion_doc.is_empty():
 		(func() -> void: documental.abrir(p, guion_doc, p._retrato)).call_deferred()
 	## `mundo.nueva_temporada()` resortea los continentales por dentro

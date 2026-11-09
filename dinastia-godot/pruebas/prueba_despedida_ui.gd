@@ -29,7 +29,13 @@ func _process(_d: float) -> void:
 		capa.emit_signal("elegido", "simular")
 		_fase = 2
 		_n = 30
-	if _fase == 2 and _n > 60:
+	if _fase == 2 and _n > 45:   ## la ceremonia espera «Continuar»: se pulsa
+		for h in _p.get_children():
+			if h is CeremoniaDespedida:
+				h.emit_signal("terminado")
+				h.queue_free()
+				_fase = 3
+	if _fase == 3 and _n > 60:
 		var sube: bool = _p.mundo.mi_club().saldo > _saldo0
 		var sin_pregunta := true
 		for h in _p.get_children():

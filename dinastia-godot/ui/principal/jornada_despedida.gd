@@ -8,9 +8,11 @@ extends RefCounted
 static func ofrecer(pr: Principal) -> void:
 	if DisplayServer.get_name() == "headless" or pr.mundo == null or pr.mundo.mi_club() == null:
 		return
+	if pr.mundo.prensa != null and pr.mundo.prensa.despedida_anio == pr.mundo.anio:
+		return   ## ya se jugó esta temporada (p. ej. se guardó y se cargó antes del cierre)
 	var leyendas := PartidoDespedida.preparar(pr.mundo)
 	if leyendas == null:
-		PartidoDespedida.limpiar()   ## sin once con portero: no hay partido y el cierre sortea los retiros como siempre
+		PartidoDespedida.limpiar(pr.mundo)   ## sin once con portero: no hay partido y el cierre sortea los retiros como siempre
 		return
 	var op := await _preguntar(pr, leyendas)
 	if op == "no":
@@ -24,6 +26,9 @@ static func ofrecer(pr: Principal) -> void:
 	else:
 		await _jugar_en_directo(pr, p)
 	var res := PartidoDespedida.cerrar(pr.mundo, p, leyendas, foto)
+	if DisplayServer.get_name() != "headless":
+		var cer := CeremoniaDespedida.mostrar(pr, res["homenajeados"], leyendas)
+		await cer.terminado
 	Aviso.mostrar(pr, "vida", "🎖️", Idiomas.t("Partido de despedida"),
 		"%s %d-%d · %s %d" % [Idiomas.t("Resultado:"), int(res["gf"]), int(res["gc"]), Idiomas.t("taquilla"), int(res["ingreso"])])
 

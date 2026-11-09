@@ -1,5 +1,5 @@
 extends Node
-## Captura del diálogo del partido de despedida (necesita pantalla: xvfb-run): se ofrece, «Simularlo» deja la taquilla y quita la pregunta.
+## Captura de la ceremonia del partido de despedida (necesita pantalla: xvfb-run): se ofrece, «Simularlo» deja la taquilla y quita la pregunta.
 ## xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_despedida_ui.tscn
 var _n := 0
 var _p: Node
@@ -26,12 +26,18 @@ func _process(_d: float) -> void:
 			print("FIN. 1 fallos")
 			get_tree().quit()
 			return
-		await get_tree().create_timer(1.0).timeout
-		get_viewport().get_texture().get_image().save_jpg("/tmp/despedida_dialogo.jpg", 0.85)
-		print("CAPTURA OK")
-		get_tree().quit()
-		return
-	if _fase == 2 and _n > 60:
+		capa.emit_signal("elegido", "simular")
+		_fase = 2
+		_n = 30
+	if _fase == 2 and _n > 45:
+		for h in _p.get_children():
+			if h is CeremoniaDespedida:
+				await get_tree().create_timer(2.0).timeout
+				get_viewport().get_texture().get_image().save_jpg("/tmp/despedida_ceremonia.jpg", 0.85)
+				print("CAPTURA OK")
+				get_tree().quit()
+				return
+	if _fase == 3 and _n > 60:
 		var sube: bool = _p.mundo.mi_club().saldo > _saldo0
 		var sin_pregunta := true
 		for h in _p.get_children():
