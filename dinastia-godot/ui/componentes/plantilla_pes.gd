@@ -1,22 +1,24 @@
 class_name PlantillaPes
 extends RefCounted
-## LA PLANTILLA A LA PES (9-11, idea del PES 2020 que le gusta al dueño; orden del líder: «menú de plantilla estilo PES»). Tres columnas sobre
-## un fondo con el color del club: a la IZQUIERDA la lista por líneas con una barra de nota (★ = en el once), en el CENTRO los atributos del
-## elegido en barras y, a la DERECHA, su retrato, número y estado. «Comparar» pone a otro jugador al lado y marca la diferencia de cada atributo.
-## Se abre desde Plantel → «Plantilla (vista PES)». Todo es de lectura: no cambia el once (eso sigue en «Mi plantel»).
-const LINEAS := [["POR", "Porteros"], ["DEF", "Defensas"], ["MED", "Mediocampistas"], ["DEL", "Delanteros"]]
+## LA PLANTILLA A LA PES (9-11; orden del líder y ejemplos del dueño: «Estrategia» y «Opción de entrenamiento»), con la paleta del juego (verde y dorado,
+## `Tema`), no la morada del PES. Tres columnas: el CAMPO con la formación y los once (cada uno con su nota y la etiqueta de su línea), la LISTA con
+## etiquetas de posición de colores y nota (titulares y reservas) y, a la derecha, la INFORMACIÓN del elegido: retrato, nota grande, radar y datos.
+## «⚖ Comparar» enseña a un segundo jugador al lado y la diferencia de cada atributo. Es de lectura: el once se cambia en «Mi plantel».
 const ATR_CAMPO := ["rit", "tir", "pas", "reg", "def", "fis"]
 const ATR_PORTERO := ["div", "par", "saq", "ref", "vel", "pos"]
+const ANCHO_CAMPO := 340.0
+const ALTO_CAMPO := 470.0
 
 var _p: Principal
 var _club: Club
 var _capa: CanvasLayer
-var _centro: VBoxContainer
-var _derecha: VBoxContainer
+var _campo: Control
+var _lista: VBoxContainer
+var _info: VBoxContainer
 var _a: Jugador = null
 var _b: Jugador = null
 var _comparando := false
-var _btn_comparar: Button
+var _titulares: Array[Jugador] = []
 
 static func abrir(p: Principal) -> PlantillaPes:
 	var club := p.mundo.mi_club() if p.mundo != null else null
@@ -28,10 +30,6 @@ static func abrir(p: Principal) -> PlantillaPes:
 	v._montar()
 	return v
 
-## La nota para pintar la barra (portero o de campo): la media del jugador.
-static func nota(j: Jugador) -> int:
-	return j.ovr
-
 ## Los atributos que se enseñan, según sea portero o de campo.
 static func claves_de(j: Jugador) -> Array:
 	return ATR_PORTERO if j.pos == "POR" else ATR_CAMPO
@@ -40,165 +38,225 @@ static func claves_de(j: Jugador) -> Array:
 static func diferencia(a: Jugador, b: Jugador, clave: String) -> int:
 	return int(a.atributos.get(clave, 0)) - int(b.atributos.get(clave, 0))
 
+static func color_de(j: Jugador) -> Color:
+	return Tema.POS.get(j.pos, Tema.SUAVE)
+
+func _panel(ancho: float) -> PanelContainer:
+	var pc := PanelContainer.new()
+	pc.custom_minimum_size = Vector2(ancho, 0)
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Tema.PANEL
+	sb.border_color = Color(Tema.ORO, 0.55)
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(6)
+	sb.set_content_margin_all(8)
+	pc.add_theme_stylebox_override("panel", sb)
+	return pc
+
+func _etiqueta(texto: String, tam: int, color: Color) -> Label:
+	var l := Label.new()
+	l.text = texto
+	l.add_theme_font_size_override("font_size", tam)
+	l.add_theme_color_override("font_color", color)
+	return l
+
 func _montar() -> void:
+	_titulares = _club.once()
 	_capa = CanvasLayer.new()
 	_capa.layer = 56
 	_p.add_child(_capa)
 	var fondo := ColorRect.new()
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	fondo.color = Color(_club.color1).lerp(Color(0.06, 0.07, 0.1), 0.85)
+	fondo.color = Tema.FONDO
 	_capa.add_child(fondo)
 	var raiz := VBoxContainer.new()
 	raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
-	raiz.offset_left = 24
-	raiz.offset_right = -24
-	raiz.offset_top = 16
+	raiz.offset_left = 20
+	raiz.offset_right = -20
+	raiz.offset_top = 14
 	raiz.offset_bottom = -12
 	_capa.add_child(raiz)
-	var titulo := Label.new()
-	titulo.text = "%s · %s" % [Idiomas.t("PLANTILLA"), _club.nombre]
-	titulo.add_theme_font_size_override("font_size", 22)
-	raiz.add_child(titulo)
+	raiz.add_child(_etiqueta("%s · %s · %s" % [Idiomas.t("PLANTILLA"), _club.nombre, _club.tactica.formacion], 22, Tema.ORO))
 	var cols := HBoxContainer.new()
 	cols.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	cols.add_theme_constant_override("separation", 14)
+	cols.add_theme_constant_override("separation", 12)
 	raiz.add_child(cols)
-	cols.add_child(_columna_lista())
-	_centro = VBoxContainer.new()
-	_centro.custom_minimum_size = Vector2(330, 0)
-	cols.add_child(_centro)
-	_derecha = VBoxContainer.new()
-	_derecha.custom_minimum_size = Vector2(260, 0)
-	_derecha.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	cols.add_child(_derecha)
+	var pc := _panel(ANCHO_CAMPO + 16)
+	cols.add_child(pc)
+	_campo = Control.new()
+	_campo.custom_minimum_size = Vector2(ANCHO_CAMPO, ALTO_CAMPO)
+	_campo.draw.connect(_dibujar_campo)
+	pc.add_child(_campo)
+	var pl := _panel(330)
+	cols.add_child(pl)
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	pl.add_child(scroll)
+	_lista = VBoxContainer.new()
+	_lista.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(_lista)
+	var pi := _panel(300)
+	pi.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cols.add_child(pi)
+	_info = VBoxContainer.new()
+	pi.add_child(_info)
 	var pie := HBoxContainer.new()
 	pie.add_theme_constant_override("separation", 10)
 	raiz.add_child(pie)
-	_btn_comparar = Button.new()
-	_btn_comparar.toggle_mode = true
-	_btn_comparar.text = Idiomas.t("⚖ Comparar")
-	_btn_comparar.toggled.connect(func(on: bool) -> void:
+	var comp := Button.new()
+	comp.toggle_mode = true
+	comp.text = Idiomas.t("⚖ Comparar")
+	comp.toggled.connect(func(on: bool) -> void:
 		_comparando = on
 		_b = null
 		_pintar())
-	pie.add_child(_btn_comparar)
-	var ayuda := Label.new()
-	ayuda.text = Idiomas.t("Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación")
+	pie.add_child(comp)
+	var ayuda := _etiqueta(Idiomas.t("Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación"), 12, Tema.SUAVE)
 	ayuda.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	ayuda.add_theme_font_size_override("font_size", 12)
 	pie.add_child(ayuda)
 	var cerrar := Button.new()
 	cerrar.text = Idiomas.t("Cerrar")
 	cerrar.pressed.connect(_capa.queue_free)
 	pie.add_child(cerrar)
-	_a = _club.plantilla[0]
+	_a = _titulares[0] if not _titulares.is_empty() else _club.plantilla[0]
 	_pintar()
 
-func _columna_lista() -> Control:
-	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(340, 0)
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	var lista := VBoxContainer.new()
-	lista.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(lista)
-	for linea: Array in LINEAS:
-		var cab := Label.new()
-		cab.text = Idiomas.t(String(linea[1])).to_upper()
-		cab.add_theme_font_size_override("font_size", 12)
-		cab.add_theme_color_override("font_color", Color(String(_club.color2)))
-		lista.add_child(cab)
-		var jugs: Array = _club.plantilla.filter(func(j: Jugador) -> bool: return j.pos == String(linea[0]))
-		jugs.sort_custom(func(x: Jugador, y: Jugador) -> bool: return x.ovr > y.ovr)
-		for j: Jugador in jugs:
-			lista.add_child(_fila(j))
-	return scroll
+## El césped con sus rayas, las líneas y el área, dibujados en el control del campo.
+func _dibujar_campo() -> void:
+	var w := ANCHO_CAMPO
+	var h := ALTO_CAMPO
+	for k in 8:
+		_campo.draw_rect(Rect2(0, h * k / 8.0, w, h / 8.0), Color(0.16, 0.40, 0.22) if k % 2 == 0 else Color(0.18, 0.45, 0.25))
+	var linea := Color(1, 1, 1, 0.55)
+	_campo.draw_rect(Rect2(6, 6, w - 12, h - 12), linea, false, 2.0)
+	_campo.draw_line(Vector2(6, h / 2.0), Vector2(w - 6, h / 2.0), linea, 2.0)
+	_campo.draw_arc(Vector2(w / 2.0, h / 2.0), 42.0, 0.0, TAU, 40, linea, 2.0)
+	_campo.draw_rect(Rect2(w * 0.22, 6, w * 0.56, h * 0.15), linea, false, 2.0)
+	_campo.draw_rect(Rect2(w * 0.22, h - 6 - h * 0.15, w * 0.56, h * 0.15), linea, false, 2.0)
 
+func _pintar() -> void:
+	for h in _campo.get_children():
+		h.queue_free()
+	for h in _lista.get_children():
+		h.queue_free()
+	for h in _info.get_children():
+		h.queue_free()
+	var forms: Dictionary = Datos.tabla("FORMS")
+	var ranuras: Array = (forms.get(_club.tactica.formacion, forms.get("4-3-3", {})) as Dictionary).get("s", [])
+	for i in mini(ranuras.size(), _titulares.size()):
+		_campo.add_child(_ficha_campo(_titulares[i], ranuras[i]))
+	_campo.queue_redraw()
+	_lista.add_child(_etiqueta(Idiomas.t("TITULARES"), 12, Tema.ORO))
+	for j: Jugador in _titulares:
+		_lista.add_child(_fila(j))
+	_lista.add_child(_etiqueta(Idiomas.t("RESERVAS"), 12, Tema.ORO))
+	var reservas: Array = _club.plantilla.filter(func(j: Jugador) -> bool: return not _titulares.has(j))
+	reservas.sort_custom(func(x: Jugador, y: Jugador) -> bool: return x.ovr > y.ovr)
+	for j: Jugador in reservas:
+		_lista.add_child(_fila(j))
+	_pintar_info()
+
+func _elegir(j: Jugador) -> void:
+	if _comparando and _a != null and j != _a:
+		_b = j
+	else:
+		_a = j
+		_b = null
+	_pintar()
+
+## Un titular sobre el campo: nota y apellido, con el color de su línea y borde dorado si es el elegido.
+func _ficha_campo(j: Jugador, ranura: Array) -> Button:
+	var b := Button.new()
+	var apellido := j.nombre.split(" ")[-1]
+	b.text = "%d\n%s" % [j.ovr, apellido.left(9)]
+	b.add_theme_font_size_override("font_size", 11)
+	b.custom_minimum_size = Vector2(66, 40)
+	b.size = Vector2(66, 40)
+	b.position = Vector2(float(ranura[1]) / 100.0 * ANCHO_CAMPO - 33.0, float(ranura[2]) / 100.0 * ALTO_CAMPO - 20.0)
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(color_de(j), 0.85)
+	sb.set_corner_radius_all(5)
+	sb.border_color = Tema.ORO if (j == _a or j == _b) else Color(0, 0, 0, 0.4)
+	sb.set_border_width_all(3 if (j == _a or j == _b) else 1)
+	for estado in ["normal", "hover", "pressed", "focus"]:
+		b.add_theme_stylebox_override(estado, sb)
+	b.pressed.connect(func() -> void: _elegir(j))
+	return b
+
+## Una fila de la lista: etiqueta de posición de color, nombre y nota (como la lista de «Estrategia» del PES).
 func _fila(j: Jugador) -> Button:
 	var b := Button.new()
 	b.flat = true
-	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	b.custom_minimum_size = Vector2(0, 30)
-	var estrella := "★ " if _club.once_elegido.has(j.id) else "   "
-	b.text = "%s%-4s %s   %d" % [estrella, j.pos_e, j.nombre, j.ovr]
-	var barra := ProgressBar.new()
-	barra.show_percentage = false
-	barra.max_value = 100.0
-	barra.value = float(nota(j))
-	barra.custom_minimum_size = Vector2(0, 4)
-	barra.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	barra.offset_top = -4
-	barra.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	b.add_child(barra)
-	b.pressed.connect(func() -> void:
-		if _comparando and _a != null and j != _a:
-			_b = j
-		else:
-			_a = j
-			_b = null
-		_pintar())
+	var fila := HBoxContainer.new()
+	fila.set_anchors_preset(Control.PRESET_FULL_RECT)
+	fila.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fila.add_theme_constant_override("separation", 8)
+	b.add_child(fila)
+	var tag := PanelContainer.new()
+	tag.custom_minimum_size = Vector2(44, 0)
+	tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = color_de(j)
+	sb.set_corner_radius_all(3)
+	tag.add_theme_stylebox_override("panel", sb)
+	var t := _etiqueta(j.pos_e, 11, Color.WHITE)
+	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	tag.add_child(t)
+	fila.add_child(tag)
+	var nombre := _etiqueta(j.nombre, 13, Tema.ORO if (j == _a or j == _b) else Tema.TEXTO)
+	nombre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	nombre.clip_text = true
+	fila.add_child(nombre)
+	fila.add_child(_etiqueta(str(j.ovr), 14, Tema.TEXTO))
+	b.pressed.connect(func() -> void: _elegir(j))
 	return b
 
-func _pintar() -> void:
-	for h in _centro.get_children():
-		h.queue_free()
-	for h in _derecha.get_children():
-		h.queue_free()
+func _pintar_info() -> void:
 	if _a == null:
 		return
-	var enc := Label.new()
-	enc.text = _a.nombre if _b == null else "%s  ⚖  %s" % [_a.nombre, _b.nombre]
-	enc.add_theme_font_size_override("font_size", 16)
-	_centro.add_child(enc)
-	for clave: String in claves_de(_a):
-		_centro.add_child(_fila_atributo(clave))
-	## La derecha: retrato, número y estado.
-	var retrato := _p._retrato(_a, 200)
-	retrato.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	_derecha.add_child(retrato)
-	var datos := Label.new()
-	datos.text = "#%d  %s · %s\n%s %d   %s %d\n%s %d%%   %s %d%%   %s %d%%" % [_a.dorsal, _a.nombre, _a.pos_e,
-		Idiomas.t("Edad"), _a.edad, Idiomas.t("Nota"), _a.ovr,
-		Idiomas.t("Forma"), _a.forma, Idiomas.t("Moral"), _a.moral, Idiomas.t("Físico"), _a.fisico]
-	datos.add_theme_font_size_override("font_size", 14)
-	_derecha.add_child(datos)
-	if _b != null:   ## el segundo jugador de la comparación, debajo
-		var rb := _p._retrato(_b, 110)
-		rb.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-		_derecha.add_child(rb)
-		var db := Label.new()
-		db.text = "#%d  %s · %s   %s %d" % [_b.dorsal, _b.nombre, _b.pos_e, Idiomas.t("Nota"), _b.ovr]
-		_derecha.add_child(db)
+	var cab := HBoxContainer.new()
+	cab.add_theme_constant_override("separation", 10)
+	_info.add_child(cab)
+	var retrato := _p._retrato(_a, 110)
+	cab.add_child(retrato)
+	var datos := VBoxContainer.new()
+	cab.add_child(datos)
+	datos.add_child(_etiqueta(_a.nombre, 16, Tema.ORO))
+	datos.add_child(_etiqueta("#%d · %s" % [_a.dorsal, _a.pos_e], 13, Tema.SUAVE))
+	datos.add_child(_etiqueta(str(_a.ovr), 36, Tema.ORO))
+	var radar := RadarAtributos.new()
+	radar.custom_minimum_size = Vector2(240, 190)
+	var etq := PackedStringArray()
+	var vals := PackedFloat32Array()
+	for k: String in claves_de(_a):
+		etq.append(Idiomas.t(String(Principal.NOMBRES_ATRIBUTOS.get(k, k))).left(5))
+		vals.append(float(_a.atributos.get(k, 0)))
+	radar.poner(etq, vals, Tema.ACENTO)
+	_info.add_child(radar)
+	for k: String in claves_de(_a):
+		_info.add_child(_fila_atributo(k))
+	_info.add_child(_etiqueta("%s %d · %s %d%% · %s %d%% · %s %d%%" % [Idiomas.t("Edad"), _a.edad, Idiomas.t("Forma"), _a.forma,
+		Idiomas.t("Moral"), _a.moral, Idiomas.t("Físico"), _a.fisico], 12, Tema.SUAVE))
 	if _a.lesion > 0:
-		var les := Label.new()
-		les.text = "🩹 %s %d" % [Idiomas.t("Lesionado, semanas:"), _a.lesion]
-		_derecha.add_child(les)
+		_info.add_child(_etiqueta("🩹 %s %d" % [Idiomas.t("Lesionado, semanas:"), _a.lesion], 12, Tema.MAL))
 
 func _fila_atributo(clave: String) -> Control:
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 8)
-	var nombre := Label.new()
-	nombre.custom_minimum_size = Vector2(96, 0)
-	nombre.text = Idiomas.t(String(Principal.NOMBRES_ATRIBUTOS.get(clave, clave)))
+	var nombre := _etiqueta(Idiomas.t(String(Principal.NOMBRES_ATRIBUTOS.get(clave, clave))), 12, Tema.TEXTO)
+	nombre.custom_minimum_size = Vector2(80, 0)
 	fila.add_child(nombre)
 	var barra := ProgressBar.new()
 	barra.show_percentage = false
 	barra.max_value = 100.0
 	barra.value = float(_a.atributos.get(clave, 0))
-	barra.custom_minimum_size = Vector2(130, 14)
+	barra.custom_minimum_size = Vector2(90, 10)
 	barra.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	fila.add_child(barra)
-	var valor := Label.new()
-	valor.custom_minimum_size = Vector2(30, 0)
-	valor.text = str(int(_a.atributos.get(clave, 0)))
-	fila.add_child(valor)
+	fila.add_child(_etiqueta(str(int(_a.atributos.get(clave, 0))), 12, Tema.TEXTO))
 	if _b != null:
 		var d := diferencia(_a, _b, clave)
-		var vb := Label.new()   ## el valor del segundo jugador, junto a la diferencia
-		vb.custom_minimum_size = Vector2(30, 0)
-		vb.text = str(int(_b.atributos.get(clave, 0)))
-		fila.add_child(vb)
-		var cmp := Label.new()
-		cmp.text = ("%+d" % d) if d != 0 else "="
-		cmp.add_theme_color_override("font_color", Color(0.45, 0.9, 0.55) if d > 0 else (Color(0.95, 0.45, 0.45) if d < 0 else Color(0.8, 0.8, 0.8)))
-		fila.add_child(cmp)
+		fila.add_child(_etiqueta(str(int(_b.atributos.get(clave, 0))), 12, Tema.SUAVE))
+		fila.add_child(_etiqueta(("%+d" % d) if d != 0 else "=", 12, Tema.BIEN if d > 0 else (Tema.MAL if d < 0 else Tema.NEUTRO)))
 	return fila
