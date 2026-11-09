@@ -274,6 +274,7 @@ func _pintar_palmares_ramas(h: Hinchada) -> void:
 ## que solo hace lo que da dinero no es un club, es una empresa— y sostener el
 ## femenino aunque no pague es de las decisiones que definen qué llevas.
 func _pintar_penas_y_ramas(c: Club, h: Hinchada) -> void:
+	p._lista_estadio.add_child(_aire())   ## (9-11, estética) aire entre secciones
 	p._lista_estadio.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
 	t.text = Idiomas.t("🧣 PEÑAS  ·  %d") % h.penas.size()
@@ -389,3 +390,9 @@ func _pintar_atajos() -> void:
 	nota.text = Idiomas.t("En pantalla táctil, un desliz horizontal largo también cambia de bloque maestro.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ajustes.add_child(nota)
+
+## Un hueco de 8 px para separar secciones de la columna del estadio.
+func _aire() -> Control:
+	var c := Control.new()
+	c.custom_minimum_size = Vector2(0, 8)
+	return c

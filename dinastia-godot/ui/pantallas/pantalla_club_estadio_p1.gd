@@ -28,6 +28,7 @@ func _pintar_estilos_estadio(c: Club) -> void:
 	var e := p.mundo.estadio
 	if e == null:
 		return
+	p._lista_estadio.add_child(_aire())   ## (9-11, estética) aire entre secciones
 	p._lista_estadio.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)
 	t.text = Idiomas.t("✨ ESTILOS COMPLETOS")
@@ -244,3 +245,9 @@ func _reformar_valor(campo: String, valor: Variant) -> void:
 	p._escribir("[color=#4caf6d]Reforma hecha:[/color] %s → %s. Coste %s." % [
 		String(Principal.ETIQUETAS_ESTADIO.get(campo, campo.capitalize())), visible, p._dinero(coste)])
 	p._refrescar()
+
+## Un hueco de 8 px para separar secciones de la columna del estadio.
+func _aire() -> Control:
+	var c := Control.new()
+	c.custom_minimum_size = Vector2(0, 8)
+	return c
