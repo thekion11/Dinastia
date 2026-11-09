@@ -113,8 +113,6 @@ const MENUS := [
 		"lema": "La ciudad que rodea tu estadio.",
 		"colores": ["#070a16", "#141a33", "#ffd27a"], "subs": [
 		{"tab": "Ciudad", "label": "Diseño de la ciudad", "icono": "🗺️", "desc": "Terrenos, negocios, conciertos y el municipio."},
-		{"accion": "ciudad_pie", "label": "Pasear a pie", "icono": "🚶", "desc": "Calles, parques, edificios por dentro y vecinos con quien charlar."},
-		{"accion": "ciudad_coche", "label": "Conducir", "icono": "🚗", "desc": "Tu coche, con cámara de capó e interior y freno de mano."},
 		{"accion": "ver_estadio", "label": "Entrar al estadio", "icono": "🏟️", "desc": "El mismo estadio que se juega, para recorrerlo."}]},
 	{"id": "estadio", "icono": "🏟️", "nombre": "Estadio 3D", "estilo": 8, "ficha": false,
 		"lema": "Tu casa: cada tribuna, cada foco, cada butaca.",
@@ -123,6 +121,12 @@ const MENUS := [
 		{"tab": "Club", "secc": "infra", "label": "Infraestructura", "icono": "🏗️", "desc": "Obras, ciudad deportiva y academia."},
 		{"accion": "ver_estadio", "label": "Verlo en 3D", "icono": "👁️", "desc": "Tu estadio tal y como se juega."}]},
 ]
+
+## (9-11, «solo club») Entradas al mundo abierto, fuera del menú mientras `InterruptorCiudad.activa` sea falso.
+## Se conservan aquí para volver a añadirlas al menú «Ciudad» el día que la ciudad regrese.
+const SUBS_MUNDO_ABIERTO := [
+	{"accion": "ciudad_pie", "label": "Pasear a pie", "icono": "🚶", "desc": "Calles, parques, edificios por dentro y vecinos con quien charlar."},
+	{"accion": "ciudad_coche", "label": "Conducir", "icono": "🚗", "desc": "Tu coche, con cámara de capó e interior y freno de mano."}]
 
 static func menu_por_id(id: String) -> Dictionary:
 	for m: Dictionary in MENUS:

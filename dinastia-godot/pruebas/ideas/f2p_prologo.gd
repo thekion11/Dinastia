@@ -139,6 +139,7 @@ func _probar_async() -> void:
 	_comprobar(_m.prologo_visto, "la primera vez que enciendes el PC el prólogo queda hecho")
 	_comprobar(_m.logros != null and _m.logros.largos.has("primer_dia"), "y cae el logro «Primer día»")
 	## §2.5-1: desde el PC, «Pasear» y «Ver la ciudad» te levantan (no abren otra ciudad dentro del menú).
+	InterruptorCiudad.activa = true
 	await (pr as Principal)._ver_ciudad_explorando("pie")
 	await _frames(2)
 	_comprobar(not _p.pc.abierto and pr.find_children("*", "VistaCiudad", true, false).is_empty() and _p.vista.visible,

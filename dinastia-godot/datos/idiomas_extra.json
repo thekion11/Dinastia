@@ -7540,7 +7540,9 @@
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Great save by the keeper from %s's shot",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s tries from distance and the keeper clears it",
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Sharp reflexes from the goalkeeper to stop %s",
-  "🏜️ Estadio del desierto": "🏜️ Desert stadium"
+  "🏜️ Estadio del desierto": "🏜️ Desert stadium",
+  "La ciudad 3D está apagada": "The 3D city is switched off",
+  "Por ahora el juego es solo el club y sus instalaciones.": "For now the game is just the club and its facilities."
  },
  "pt": {
   "Historia": "História",
@@ -15083,7 +15085,9 @@
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Grande intervenção do guarda-redes ao remate de %s",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s tenta de longe e o guarda-redes afasta",
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexos do guarda-redes para travar %s",
-  "🏜️ Estadio del desierto": "🏜️ Estádio do deserto"
+  "🏜️ Estadio del desierto": "🏜️ Estádio do deserto",
+  "La ciudad 3D está apagada": "A cidade 3D está desligada",
+  "Por ahora el juego es solo el club y sus instalaciones.": "Por enquanto o jogo é só o clube e as suas instalações."
  },
  "patrones": [
   [
@@ -28601,7 +28605,9 @@
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Superbe intervention du gardien devant le tir de %s",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s essaie de loin et le gardien dégage",
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Réflexes du gardien pour arrêter %s",
-  "🏜️ Estadio del desierto": "🏜️ Stade du désert"
+  "🏜️ Estadio del desierto": "🏜️ Stade du désert",
+  "La ciudad 3D está apagada": "La ville 3D est désactivée",
+  "Por ahora el juego es solo el club y sus instalaciones.": "Pour l'instant, le jeu se limite au club et à ses installations."
  },
  "it": {
   "Historia": "Storia",
@@ -36144,7 +36150,9 @@
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Grande intervento del portiere sul tiro di %s",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s ci prova da lontano e il portiere respinge",
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Riflessi del portiere per fermare %s",
-  "🏜️ Estadio del desierto": "🏜️ Stadio del deserto"
+  "🏜️ Estadio del desierto": "🏜️ Stadio del deserto",
+  "La ciudad 3D está apagada": "La città 3D è spenta",
+  "Por ahora el juego es solo el club y sus instalaciones.": "Per ora il gioco è solo il club e le sue strutture."
  },
  "de": {
   "Historia": "Geschichte",
@@ -43687,7 +43695,9 @@
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Starke Parade des Torwarts gegen den Schuss von %s",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s probiert es aus der Distanz und der Torwart klärt",
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexe des Torhüters, um %s zu stoppen",
-  "🏜️ Estadio del desierto": "🏜️ Wüstenstadion"
+  "🏜️ Estadio del desierto": "🏜️ Wüstenstadion",
+  "La ciudad 3D está apagada": "Die 3D-Stadt ist abgeschaltet",
+  "Por ahora el juego es solo el club y sus instalaciones.": "Vorerst besteht das Spiel nur aus dem Verein und seinen Anlagen."
  },
  "ca": {
   "Historia": "Història",
@@ -51230,7 +51240,9 @@
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Gran intervenció del porter davant el tir de %s",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s ho prova de lluny i el porter ho allunya",
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Reflexos del porter per aturar %s",
-  "🏜️ Estadio del desierto": "🏜️ Estadi del desert"
+  "🏜️ Estadio del desierto": "🏜️ Estadi del desert",
+  "La ciudad 3D está apagada": "La ciutat 3D està apagada",
+  "Por ahora el juego es solo el club y sus instalaciones.": "De moment el joc és només el club i les seves instal·lacions."
  },
  "pl": {
   "Club": "Klub",
@@ -58773,7 +58785,9 @@
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Świetna interwencja bramkarza po strzale %s",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s próbuje z dystansu, a bramkarz wybija piłkę",
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Refleks bramkarza zatrzymuje %s",
-  "🏜️ Estadio del desierto": "🏜️ Stadion pustynny"
+  "🏜️ Estadio del desierto": "🏜️ Stadion pustynny",
+  "La ciudad 3D está apagada": "Miasto 3D jest wyłączone",
+  "Por ahora el juego es solo el club y sus instalaciones.": "Na razie gra to tylko klub i jego obiekty."
  },
  "tr": {
   "Club": "Kulüp",
@@ -66316,6 +66330,8 @@
   "🧤 Gran intervención del portero ante el disparo de %s": "🧤 Kaleci %s'in şutuna karşı harika bir kurtarış yapıyor",
   "🧤 %s prueba desde lejos y el arquero lo despeja": "🧤 %s uzaktan deniyor ve kaleci uzaklaştırıyor",
   "🧤 Reflejos del guardameta para frenar a %s": "🧤 Kaleci %s'i durdurmak için müthiş bir refleks gösteriyor",
-  "🏜️ Estadio del desierto": "🏜️ Çöl stadyumu"
+  "🏜️ Estadio del desierto": "🏜️ Çöl stadyumu",
+  "La ciudad 3D está apagada": "3D şehir kapalı",
+  "Por ahora el juego es solo el club y sus instalaciones.": "Şimdilik oyun yalnızca kulüp ve tesislerinden oluşuyor."
  }
 }

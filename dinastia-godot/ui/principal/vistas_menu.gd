@@ -295,6 +295,9 @@ func _marca(nombre: String, color_hex: String, alto: int = 28) -> Control:
 	return caja
 ## Abre la ciudad y arranca directamente el paseo ("pie") o la conducción ("coche").
 func _ver_ciudad_explorando(modo: String) -> void:
+	if not InterruptorCiudad.activa:   ## (9-11, «solo club») la ciudad 3D está apagada
+		InterruptorCiudad.avisar_apagada(p)
+		return
 	if _levantarse_si_pc():
 		return
 	## Fase 3: sin coche propio (o en el taller) se sale a pie, y la vida se engancha al paseo.
