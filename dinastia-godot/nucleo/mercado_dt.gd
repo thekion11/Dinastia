@@ -60,6 +60,27 @@ static func presion(m: Mundo, c: Club) -> int:
 			return clampi(100 - nota, 0, 100)
 	return -1
 
+## (10-11, paso a C++ / rendimiento) La presión de TODOS los clubes de una liga a la vez: {club_id: presión}. Las mismas cuentas que `presion()` (el orden por reputación y la tabla se hacen UNA vez por liga
+## y no una por club: con 2.200 clubes eran ~300 ms por semana). `presion()` se queda como la versión de un solo club.
+static func presiones_de(l: Liga) -> Dictionary:
+	var salida := {}
+	var por_rep := l.clubes.duplicate()
+	por_rep.sort_custom(func(a: Club, b: Club) -> bool: return a.rep > b.rep)
+	var esperado := {}
+	for i in por_rep.size():
+		if not esperado.has((por_rep[i] as Club).id):   ## `find` devuelve la primera aparición
+			esperado[(por_rep[i] as Club).id] = i + 1
+	var puesto := 0
+	for f: Dictionary in l.tabla():
+		puesto += 1
+		var c: Club = f["club"]
+		if int(f["pj"]) < JORNADA_MINIMA:
+			salida[c.id] = -1
+			continue
+		var nota := clampi(60 + (int(esperado.get(c.id, 0)) - puesto) * 7 + int(round(float(int(f["pts"])) - float(int(f["pj"])) * 1.3) * 1.6), 10, 99)
+		salida[c.id] = clampi(100 - nota, 0, 100)
+	return salida
+
 ## El termómetro de tu país: {club, dt, presion}, el más caliente primero.
 func termometro(m: Mundo) -> Array[Dictionary]:
 	var salida: Array[Dictionary] = []
@@ -83,10 +104,11 @@ func semana(m: Mundo) -> Array[Club]:
 		return cambiaron
 	var ahora := m.anio * 60 + m.semana
 	for l: Liga in m.ligas:
+		var presiones := presiones_de(l)
 		for c: Club in l.clubes:
 			if c.id == m.mi_club_id:
 				continue
-			var p := presion(m, c)
+			var p: int = int(presiones.get(c.id, -1))
 			if p < PRESION_PELIGRO:
 				continue
 			var c_dt: Dictionary = cambios.get(c.id, {})
