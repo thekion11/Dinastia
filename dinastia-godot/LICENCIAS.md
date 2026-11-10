@@ -148,5 +148,6 @@ PabloFMM, CC0 (`numinia-digital-goods-data/data/avatars/numinia-avatars.json`): 
 | Fuente «Pixeled» de soccer5v5 | solo en `terceros/soccer5v5/` | soccer5v5 | 🔴 sin licencia: no se usa |
 | Rótulo «World Cup» de soccer5v5 | solo en `terceros/soccer5v5/` | soccer5v5 | 🔴 marca registrada de la FIFA: no se usa |
 | Máquina recreativa | `assets/kenney/mini_arcade/arcade-machine.glb` | Kenney Mini Arcade | 🟢 CC0 (ya listado arriba; ahora en uso) |
+| Núcleo del motor del partido portado a GDScript (decisión con balón, colocación del equipo, física del balón; 10-11-2026) | `visor/league_nucleo.gd`, `visor/league_reglas.gd`, `visor/league_equipo.gd`, `visor/motor_league.gd` | League-Soccer `src/onthepitch/` (Copyright 2019 Google LLC & Bastiaan Konings) | 🟢 Apache 2.0: obra derivada con aviso de cambios en cada archivo; atribución en `terceros/league_soccer/NOTICE_DINASTIA.md` y en los créditos del juego |
 | Respaldo completo de los dos repositorios | `terceros/` | — | No viaja en ningún build (Godot no lo importa: `.gdignore`). Sus datos REALES no se copiaron: solo su dirección (`terceros/league_soccer/DIRECCION_DATOS_REALES.md`). No usar sus marcas («LEAGUE SOCCER», «LS SPORTS»), sus carteles de publicidad con marcas reales ni sus fondos sin origen indicado |
 
