@@ -2523,5 +2523,229 @@
  "Tiburon Jarocho": [
   "4-2-3-1",
   "ofensivo"
+ ],
+ "Tejo Lisboa": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Douro FC": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Belém Atlético": [
+  "4-3-3",
+  "presion"
+ ],
+ "Minho SC": [
+  "3-5-2",
+  "directo"
+ ],
+ "Castelo SC": [
+  "4-4-2",
+  "garra"
+ ],
+ "Famalicao Norte": [
+  "5-3-2",
+  "contra"
+ ],
+ "Barcelos Galo": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Cascais Costa": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Moreira Verde": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Ave Vila Nova": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Azores Atlantico": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Lisboa Pia": [
+  "3-5-2",
+  "presion"
+ ],
+ "Serra da Estrela": [
+  "4-4-2",
+  "directo"
+ ],
+ "Funchal Ilhéu": [
+  "5-3-2",
+  "garra"
+ ],
+ "Amadora Estrela": [
+  "4-3-3",
+  "contra"
+ ],
+ "Aves Vila": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Alverca Tejo": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Tondela Beira": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Senne Bruselas": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Reie FC": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Kempen FC": [
+  "4-4-2",
+  "presion"
+ ],
+ "Mosa Lieja": [
+  "5-3-2",
+  "directo"
+ ],
+ "Leie Gante": [
+  "4-3-3",
+  "garra"
+ ],
+ "Schelde FC": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Sambre FC": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Dijle FC": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Costa Ostende": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Oud-Brabant": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Nete FC": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Leuven Dijle": [
+  "5-3-2",
+  "presion"
+ ],
+ "Haspengouw FC": [
+  "4-3-3",
+  "directo"
+ ],
+ "Flandes Oeste": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Dender Azul": [
+  "4-4-2",
+  "contra"
+ ],
+ "Louvain Minas": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Sava Zagreb": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Marjan Split": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Kvarner FC": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Drava Osijek": [
+  "5-3-2",
+  "equilibrado"
+ ],
+ "Trešnjevka FC": [
+  "4-3-3",
+  "presion"
+ ],
+ "Turopolje FC": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Pula Arena": [
+  "4-4-2",
+  "garra"
+ ],
+ "Varazdin Barok": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Podravina FC": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Vukovar Dunav": [
+  "3-5-2",
+  "vertical"
+ ],
+ "Østerbro FC": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Vestegn FC": [
+  "5-3-2",
+  "bloque"
+ ],
+ "Hede FC": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Marselis FC": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Limfjord FC": [
+  "4-4-2",
+  "directo"
+ ],
+ "Kattegat FC": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Gudenå FC": [
+  "4-3-3",
+  "contra"
+ ],
+ "Søhøjland FC": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Grænseland FC": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Lillebælt FC": [
+  "5-3-2",
+  "ofensivo"
+ ],
+ "Bygholm FC": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Fyn FC": [
+  "4-2-3-1",
+  "equilibrado"
  ]
 }
