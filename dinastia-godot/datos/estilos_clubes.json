@@ -5703,5 +5703,669 @@
  "Neftoil Fergana": [
   "5-3-2",
   "contra"
+ ],
+ "Dinamo Tiran": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Egnacia Rrogo": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Partisano Tirana": [
+  "4-3-3",
+  "presion"
+ ],
+ "Tiran Albo": [
+  "3-5-2",
+  "directo"
+ ],
+ "Vlaznia Shkoder": [
+  "4-4-2",
+  "garra"
+ ],
+ "Teuta Durres": [
+  "5-3-2",
+  "contra"
+ ],
+ "Flamurtar Vlora": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Elbasan Norte": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Vora Costa": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Bilis Balsh": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Araz Nakhchivan": [
+  "4-3-3",
+  "presion"
+ ],
+ "Gabala Qabala": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Imisli Mugan": [
+  "4-4-2",
+  "garra"
+ ],
+ "Kapaz Gandja": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Karvan Yevlah": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Neftoil Bakú": [
+  "3-5-2",
+  "vertical"
+ ],
+ "Karabaj Agdam": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Sabah Absheron": [
+  "5-3-2",
+  "bloque"
+ ],
+ "Shamahi Sirvan": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Sumqait Port": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Turan Tovuzlu": [
+  "4-4-2",
+  "directo"
+ ],
+ "Zirah Baku": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Sarayevo Capital": [
+  "4-3-3",
+  "contra"
+ ],
+ "Zrinski Mostar": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Borak Banjaluka": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Zeleznikar Sar": [
+  "5-3-2",
+  "ofensivo"
+ ],
+ "Veletz Mostar": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Shiroki Brieg": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Radnic Bijeljina": [
+  "4-4-2",
+  "presion"
+ ],
+ "Posuse Ciudad": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Rudor Prijedor": [
+  "4-3-3",
+  "garra"
+ ],
+ "Sloha Doboj": [
+  "3-5-2",
+  "contra"
+ ],
+ "Arsenal Dzerzin": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Baranovich Sur": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Batte Borisova": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Belshina Bobrui": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Dinamar Brest": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Dinamar Minska": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Dniepr Mogilov": [
+  "4-3-3",
+  "directo"
+ ],
+ "Gomel Central": [
+  "3-5-2",
+  "garra"
+ ],
+ "Isloch Minskia": [
+  "4-4-2",
+  "contra"
+ ],
+ "Maxlina Vitebsk": [
+  "5-3-2",
+  "posesion"
+ ],
+ "Minsk Tractor": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Naftan Novopolo": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Nemen Grodna": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Slavia Mozir": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Torpedo Zhodina": [
+  "4-3-3",
+  "presion"
+ ],
+ "Vitebsk Norte": [
+  "3-5-2",
+  "directo"
+ ],
+ "Levadya Tallin": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Floria Tallin": [
+  "5-3-2",
+  "bloque"
+ ],
+ "Kuresaare Isla": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Narva Transa": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Kaljus Nomme": [
+  "4-4-2",
+  "directo"
+ ],
+ "Nomme Unidos": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Paide Villa": [
+  "4-3-3",
+  "contra"
+ ],
+ "Tammeka Tamme": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Vapruse Parnu": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Laagri Harju": [
+  "5-3-2",
+  "ofensivo"
+ ],
+ "Tiflis Dinarro": [
+  "4-3-3",
+  "directo"
+ ],
+ "Batumi Marino": [
+  "3-5-2",
+  "garra"
+ ],
+ "Iberia Tiflisan": [
+  "4-4-2",
+  "contra"
+ ],
+ "Kutaisi Torpeda": [
+  "5-3-2",
+  "posesion"
+ ],
+ "Dila Goriani": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Gagra Tiflisa": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Rustavi Acero": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Samgurali Tsqal": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Meshakte Tkibu": [
+  "4-3-3",
+  "presion"
+ ],
+ "Spaeri Tiflisan": [
+  "3-5-2",
+  "directo"
+ ],
+ "Breidablik Kop": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "FH Hafnarfjord": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Fram Reikiavik": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "KA Akureyrar": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Keflavik Sur": [
+  "5-3-2",
+  "equilibrado"
+ ],
+ "KR Reikjavik": [
+  "4-3-3",
+  "presion"
+ ],
+ "Stjarnan Gardar": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Valur Hlidar": [
+  "4-4-2",
+  "garra"
+ ],
+ "Vikingur Reykja": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "IA Akranesi": [
+  "4-3-3",
+  "posesion"
+ ],
+ "IBV Eyjar": [
+  "3-5-2",
+  "vertical"
+ ],
+ "Thor Akureyrar": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Altai Ust-Kam": [
+  "3-5-2",
+  "presion"
+ ],
+ "Aktobe Ural": [
+  "4-4-2",
+  "directo"
+ ],
+ "Astana Capital": [
+  "5-3-2",
+  "garra"
+ ],
+ "Atyrau Munay": [
+  "4-3-3",
+  "contra"
+ ],
+ "Caspio Aktau": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Elimay Semey": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Irtish Pavlodar": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Kairat Almaty": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Kaysar Kyzyl": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Kyzylyar Petro": [
+  "4-4-2",
+  "presion"
+ ],
+ "Okzhetpes Kok": [
+  "5-3-2",
+  "directo"
+ ],
+ "Ordabasi Shym": [
+  "4-3-3",
+  "garra"
+ ],
+ "Tobol Kostanay": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Ulytau Jezka": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Zhenis Astana": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Zhetisu Taldy": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Kauno Zalgar": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Vilnius Verde": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Panevezys Norte": [
+  "5-3-2",
+  "presion"
+ ],
+ "Suduva Mariam": [
+  "4-3-3",
+  "directo"
+ ],
+ "Banga Gargzdas": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Hegelman Raudon": [
+  "4-4-2",
+  "contra"
+ ],
+ "Siauliai Sol": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Dziugas Telsiai": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Riteros Vilna": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Transinvest Gal": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Atert Bisen": [
+  "5-3-2",
+  "equilibrado"
+ ],
+ "Diferdange Mina": [
+  "4-3-3",
+  "presion"
+ ],
+ "Dudelanje Roja": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Hostert Valle": [
+  "4-4-2",
+  "garra"
+ ],
+ "Juventud Canach": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Juventud Esch": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Kaerjeng Oeste": [
+  "3-5-2",
+  "vertical"
+ ],
+ "Mamer Bosque": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Mondorf Termas": [
+  "5-3-2",
+  "bloque"
+ ],
+ "Progreso Nieder": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Racing Unión Lux": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Rodange Frontera": [
+  "4-4-2",
+  "directo"
+ ],
+ "Veloz Hesperange": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Strassen Unido": [
+  "4-3-3",
+  "contra"
+ ],
+ "Titus Petange": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Victoria Rosbor": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Audar Riga": [
+  "5-3-2",
+  "ofensivo"
+ ],
+ "Daugavpils Este": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Grobina Costa": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Jelgavia Verde": [
+  "4-4-2",
+  "presion"
+ ],
+ "Liepaia Puerto": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Rigas Sporta": [
+  "4-3-3",
+  "garra"
+ ],
+ "Ogre Unidos": [
+  "3-5-2",
+  "contra"
+ ],
+ "Riga Capital": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Super Estrella": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Tukums Alba": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Shkendia Tetovo": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Vardar Skopia": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Struga Lago": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Rabotnik Skopje": [
+  "4-3-3",
+  "directo"
+ ],
+ "Sileks Kratovo": [
+  "3-5-2",
+  "garra"
+ ],
+ "Pelistar Bitola": [
+  "4-4-2",
+  "contra"
+ ],
+ "Brera Estrumica": [
+  "5-3-2",
+  "posesion"
+ ],
+ "Tikves Kavadar": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Shkupi Cair": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Bashkimi Kuman": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Arsimi Gostivar": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Makedonia Gjorce": [
+  "4-3-3",
+  "presion"
+ ],
+ "Budunost Podgor": [
+  "5-3-2",
+  "directo"
+ ],
+ "Sutieska Niksic": [
+  "4-3-3",
+  "garra"
+ ],
+ "Mladost Gorica": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Marinar Bar": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Jedinstvo Bielo": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Arsenel Tivat": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Petrovak Mar": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Yezero Plava": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Dechich Tuzi": [
+  "5-3-2",
+  "presion"
+ ],
+ "Bokel Kotor": [
+  "4-3-3",
+  "directo"
+ ],
+ "Ballimena Unido": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Bangor Costa": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Carrik Costeros": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Clifton Solitud": [
+  "4-3-3",
+  "presion"
+ ],
+ "Colerain Bann": [
+  "3-5-2",
+  "directo"
+ ],
+ "Cruzados Belfast": [
+  "4-4-2",
+  "garra"
+ ],
+ "Dungannon Veloz": [
+  "5-3-2",
+  "contra"
+ ],
+ "Glenaven Lurgan": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Glentoran Este": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Larne Puerto": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Linfeld Belfast": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Portadun Bann": [
+  "4-3-3",
+  "equilibrado"
  ]
 }

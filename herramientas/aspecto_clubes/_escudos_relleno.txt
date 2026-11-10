@@ -1,4 +1,14 @@
 # Generado por herramientas/aspecto_relleno.py (no editar a mano): letras del escudo de los clubes que ningún lote de retoques cubrió.
+Dinamo City||||DIN|||
+Egnatia||||EGN|||
+Partizani||||PAR|||
+Tirana||||TIR|||
+Vllaznia||||VLL|||
+Teuta||||TEU|||
+Flamurtari||||FLA|||
+Elbasani||||ELB|||
+Vora||||VOR|||
+Bylis||||BYL|||
 MC Alger||||MC|||
 CR Belouizdad||||CR|||
 JS Kabylie||||JS|||
@@ -15,6 +25,44 @@ ASO Chlef||||ASO|||
 Olympique Akbou||||OLY|||
 ES Mostaganem||||ES|||
 USM El Harrach||||USM|||
+Araz Naxçıvan||||ARA|||
+Gabala||||GAB|||
+Imishli||||IMI|||
+Kapaz||||KAP|||
+Karvan Yevlakh||||KAR|||
+Neftchi||||NEF|||
+Qarabağ||||QAR|||
+Sabah||||SAB|||
+Shamakhi||||SHA|||
+Sumgayit||||SUM|||
+Turan Tovuz||||TUR|||
+Zira||||ZIR|||
+Sarajevo||||SAR|||
+Zrinjski Mostar||||ZRI|||
+Borac Banja Luka||||BOR|||
+Željezničar||||ZEL|||
+Velež Mostar||||VEL|||
+Široki Brijeg||||SIR|||
+Radnik Bijeljina||||RAD|||
+Posušje||||POS|||
+Rudar Prijedor||||RUD|||
+Sloga Doboj||||SLO|||
+Arsenal Dzerzhinsk||||ARS|||
+Baranovichi||||BAR|||
+BATE Borisov||||BAT|||
+Belshina Bobruisk||||BEL|||
+Dinamo Brest||||DIN|||
+Dinamo Minsk||||DIN|||
+Dnepr Mogilev||||DNE|||
+Gomel||||GOM|||
+Isloch||||ISL|||
+Maxline Vitebsk||||MAX|||
+Minsk||||MIN|||
+Naftan Novopolotsk||||NAF|||
+Neman Grodno||||NEM|||
+Slavia Mozyr||||SLA|||
+Torpedo-BelAZ Zhodino||||TOR|||
+Vitebsk||||VIT|||
 Forge FC||||FOR|||
 Cavalry FC||||CAV|||
 Pacific FC||||PAC|||
@@ -89,6 +137,16 @@ FK Teplice||||TEP|||
 Bohemians 1905||||BOH|||
 MFK Karviná||||KAR|||
 Slovan Liberec||||SLO|||
+FCI Levadia||||FCI|||
+Flora||||FLO|||
+Kuressaare||||KUR|||
+Narva Trans||||NAR|||
+Nõmme Kalju||||NOM|||
+Nõmme United||||NOM|||
+Paide Linnameeskond||||PAI|||
+Tammeka||||TAM|||
+Vaprus||||VAP|||
+Harju JK Laagri||||HAR|||
 HJK||||HJK|||
 KuPS||||KUP|||
 Ilves||||ILV|||
@@ -101,6 +159,16 @@ AC Oulu||||OUL|||
 IFK Mariehamn||||IFK|||
 FF Jaro||||FF|||
 IF Gnistan||||GNI|||
+Dinamo Tbilisi||||DIN|||
+Dinamo Batumi||||DIN|||
+Iberia||||IBE|||
+Torpedo Kutaisi||||TOR|||
+Dila Gori||||DIL|||
+Gagra||||GAG|||
+Rustavi||||RUS|||
+Samgurali Tsqaltubo||||SAM|||
+Meshakhte||||MES|||
+Spaeri||||SPA|||
 Asante Kotoko||||ASA|||
 Hearts of Oak||||HEA|||
 Medeama||||MED|||
@@ -160,6 +228,18 @@ Erbil||||ERB|||
 Naft Maysan||||NAF|||
 Newroz||||NEW|||
 Zakho||||ZAK|||
+Breiðablik||||BRE|||
+FH||||FH|||
+Fram||||FRA|||
+KA||||KA|||
+Keflavík||||KEF|||
+KR||||KR|||
+Stjarnan||||STJ|||
+Valur||||VAL|||
+Víkingur Reykjavík||||VIK|||
+ÍA||||IA|||
+ÍBV||||IBV|||
+Þór Akureyri||||OR|||
 Beitar Jerusalem||||BEI|||
 Harbour View||||HAR|||
 Portmore United||||POR|||
@@ -185,6 +265,70 @@ Shabab Al-Ordon||||SHA|||
 Al-Salt||||AL|||
 Al-Baqa'a||||AL|||
 Al-Sarhan||||AL|||
+Altai||||ALT|||
+Aktobe||||AKT|||
+Astana||||AST|||
+Atyrau||||ATY|||
+Caspiy||||CAS|||
+Elimai||||ELI|||
+Irtysh Pavlodar||||IRT|||
+Kairat||||KAI|||
+Kaisar||||KAI|||
+Kyzylzhar||||KYZ|||
+Okzhetpes||||OKZ|||
+Ordabasy||||ORD|||
+Tobol||||TOB|||
+Ulytau||||ULY|||
+Zhenis||||ZHE|||
+Zhetysu||||ZHE|||
+Kauno Žalgiris||||KAU|||
+Žalgiris||||ZAL|||
+Panevėžys||||PAN|||
+Sūduva||||SUD|||
+Banga||||BAN|||
+Hegelmann||||HEG|||
+Šiauliai||||SIA|||
+Džiugas||||DZI|||
+Riteriai||||RIT|||
+TransINVEST||||TRA|||
+Atert Bissen||||ATE|||
+Differdange||||DIF|||
+Dudelange||||DUD|||
+Hostert||||HOS|||
+Jeunesse Canach||||JEU|||
+Jeunesse Esch||||JEU|||
+Käerjéng||||KAE|||
+Mamer||||MAM|||
+Mondorf-les-Bains||||MON|||
+Progrès Niederkorn||||PRO|||
+Racing Union Luxembourg||||RAC|||
+Rodange||||ROD|||
+Swift Hesperange||||SWI|||
+UNA Strassen||||UNA|||
+Union Titus Pétange||||UNI|||
+Victoria Rosport||||VIC|||
+Auda||||AUD|||
+BFC Daugavpils||||BFC|||
+Grobiņa||||GRO|||
+Jelgava||||JEL|||
+Liepāja||||LIE|||
+RFS||||RFS|||
+Ogre United||||OGR|||
+Riga FC||||RIG|||
+Super Nova||||SUP|||
+Tukums 2000||||TUK|||
+Shkëndija||||SHK|||
+Vardar||||VAR|||
+Struga||||STR|||
+Rabotnički||||RAB|||
+Sileks||||SIL|||
+Pelister||||PEL|||
+AP Brera||||AP|||
+Tikvesh||||TIK|||
+Shkupi||||SHK|||
+Bashkimi||||BAS|||
+Arsimi||||ARS|||
+Makedonija G.P.||||MAK|||
 Afrique Élite||||AFR|||
 AS Bakaridjan||||BAK|||
 AS Black Stars||||BLA|||
@@ -203,6 +347,16 @@ US Bougouba||||BOU|||
 USC Kita||||USC|||
 USFAS Bamako||||USF|||
 Yeelen Olympique||||YEE|||
+Budućnost Podgorica||||BUD|||
+Sutjeska Nikšić||||SUT|||
+Mladost Donja Gorica||||MLA|||
+Mornar||||MOR|||
+Jedinstvo Bijelo Polje||||JED|||
+Arsenal Tivat||||ARS|||
+Petrovac||||PET|||
+Jezero||||JEZ|||
+Dečić||||DEC|||
+Bokelj||||BOK|||
 Enyimba||||ENY|||
 Rivers United||||RIV|||
 Remo Stars||||REM|||
@@ -223,6 +377,18 @@ El-Kanemi Warriors||||EL|||
 Wikki Tourists||||WIK|||
 Sunshine Stars||||SUN|||
 Barau FC||||BAR|||
+Ballymena United||||BAL|||
+Bangor||||BAN|||
+Carrick Rangers||||CAR|||
+Cliftonville||||CLI|||
+Coleraine||||COL|||
+Crusaders||||CRU|||
+Dungannon Swifts||||DUN|||
+Glenavon||||GLE|||
+Glentoran||||GLE|||
+Larne||||LAR|||
+Linfield||||LIN|||
+Portadown||||POR|||
 Brann||||BRA|||
 Viking||||VIK|||
 Molde||||MOL|||
