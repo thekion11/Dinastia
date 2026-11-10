@@ -264,42 +264,22 @@ func _chequeo_arbitral() -> void:
 	if arbitro.is_empty():
 		return
 	var f_var := ctx_factor_tarjetas / Balance.LLEGADAS_K   ## el chequeo es por llegada y ahora hay K veces más (recalibración 4-11)
-	var nombre := String(arbitro.get("nombre", ""))
 	match String(arbitro.get("perfil", "")):
 		"tarjetero":
 			if not Azar.suerte(0.010 * f_var):
 				return
-			var arr := once_local if Azar.suerte(0.5) else once_visita
-			_tarjeta_arbitral(arr, "🟨 %s saca otra amarilla: %s", nombre)
+			PartidoRapido.hit_tarjetero(self)   ## (10-11) el cuerpo vive en `PartidoRapido`: lo usa también la ruta nativa
 		"casero":
 			if not Azar.suerte(0.008 * f_var):
 				return
-			## Siempre contra el que visita: es lo que hace "casero" casero.
-			_tarjeta_arbitral(once_visita, "🟨 %s cobra para la casa: amarilla a %s", nombre)
+			PartidoRapido.hit_casero(self)
 		"estricto":
 			if not Azar.suerte(0.004 * f_var):
 				return
-			## 55%/45% a tu favor cuando el partido es tuyo -"_favMi" del HTML-;
-			## sin nadie a quien favorecer -un cruce entre dos clubes de la IA-
-			## se reparte parejo.
-			var prob_local := 0.5
-			if local.id == ctx_club_id:
-				prob_local = 0.55
-			elif visita.id == ctx_club_id:
-				prob_local = 0.45
-			if Azar.suerte(prob_local):
-				## (Antes «penal cobrado en contra» salía según el lado, no según tu club.)
-				decision_arbitral.emit(Idiomas.t("⚽ Penal para %s: %s no dudó en cobrarlo.") % [local.nombre, nombre], minuto)
-				_contar_penal(true)
-				_anotar(local, once_local, true)
-			else:
-				decision_arbitral.emit(Idiomas.t("⚽ Penal para %s: con %s no se toca a nadie.") % [visita.nombre, nombre], minuto)
-				_contar_penal(false)
-				_anotar(visita, once_visita, false)
+			PartidoRapido.hit_estricto(self)   ## 55 %/45 % a tu favor si el partido es tuyo; entre dos de la IA, parejo
 		"figura":
 			if Azar.suerte(0.003 * f_var):
-				decision_arbitral.emit(
-					Idiomas.t("⚖️ %s anula un gol por milímetros. Protestas en las dos bancas.") % nombre, minuto)
+				PartidoRapido.hit_figura(self)
 		_:
 			pass   ## "permisivo": no hace nada por su cuenta -deja jugar, es la gracia.
 
@@ -361,30 +341,11 @@ func _incidencias() -> void:
 	var casero := String(arbitro.get("perfil", "")) == "casero"
 	if Azar.suerte(Balance.P_AMARILLA * ctx_factor_tarjetas * float({"tarjetero": 1.4, "estricto": 1.15, "permisivo": 0.7}.get(String(arbitro.get("perfil", "")), 1.0))) and not motor_externo:
 		## A4-PAR-L01: solo a quien está EN EL CAMPO (antes `_todos`: también a los cambiados y a los ya expulsados).
-		var l := _alguien(once_visita if casero and Azar.suerte(0.35) else once_local + once_visita)
-		if l != null:
-			_amonestar(l)
+		PartidoRapido.hit_amarilla(self, casero)
 	## Una sola tirada siempre: la superficie cambia la probabilidad, no cuántas veces se consulta `Azar`.
 	var f_sup := (ctx_lesion_local if local != null and local.id == ctx_club_id else 1.0) * (ctx_lesion_mio if (local != null and local.id == ctx_club_id) or (visita != null and visita.id == ctx_club_id) else 1.0)
 	if Azar.suerte(0.0024 * f_sup):
-		var h := _alguien(once_local + once_visita)   ## A4-PAR-L01: se lesiona alguien que está jugando
-		if h != null:
-			## LA LESION LA DIAGNOSTICA `Medico`, no un numero suelto.
-			##
-			## Antes se sorteaban de una a ocho semanas aqui mismo y no se pasaba por
-			## el parte medico: la lesion no tenia nombre, no entraba en el historial
-			## y `severidad_en_partido()` -escrita para esto exactamente- no la
-			## llamaba nadie. Ahora la lesion del campo es la misma que la del parte.
-			var semanas := 0
-			if ctx_medico != null and h.club_id == ctx_club_id:
-				semanas = ctx_medico.lesionar(h, ctx_medico.severidad_en_partido(),
-					"lesión en partido", ctx_anio, ctx_semana)
-			else:
-				semanas = Azar.ent(1, 8)
-				if h.rasgo == "fragil":
-					semanas += Azar.ent(1, 3)
-				h.lesionar(semanas)
-			lesion.emit(h, semanas, minuto); PartidoLesiones.nueva(self as Object as Partido, h)
+		PartidoRapido.hit_lesion(self)   ## la lesión del campo la diagnostica `Medico` (ver ahí)
 
 ## ¿Es del local? Mira su club, no el once (el cambiado/expulsado ya no está en él).
 func es_del_local(j: Jugador) -> bool:
