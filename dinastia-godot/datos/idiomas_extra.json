@@ -7778,7 +7778,12 @@
   "FECHA FIFA": "INTERNATIONAL BREAK",
   "Fecha FIFA": "International break",
   "Amistoso": "Friendly",
-  "Eliminatoria": "Qualifier"
+  "Eliminatoria": "Qualifier",
+  "PALMARÉS DEL MUNDO": "WORLD ROLL OF HONOUR",
+  "Palmarés del mundo": "World roll of honour",
+  "Todos los países": "All countries",
+  "Los campeones de ligas, copas y supercopas de todos los países.": "League, cup and super cup winners of every country.",
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "No tournament has finished yet in this game: champions appear when each cup and league ends."
  },
  "pt": {
   "Historia": "História",
@@ -15559,7 +15564,12 @@
   "FECHA FIFA": "DATA FIFA",
   "Fecha FIFA": "Data FIFA",
   "Amistoso": "Amistoso",
-  "Eliminatoria": "Eliminatória"
+  "Eliminatoria": "Eliminatória",
+  "PALMARÉS DEL MUNDO": "PALMARÉS DO MUNDO",
+  "Palmarés del mundo": "Palmarés do mundo",
+  "Todos los países": "Todos os países",
+  "Los campeones de ligas, copas y supercopas de todos los países.": "Os campeões de ligas, copas e supercopas de todos os países.",
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Ainda não terminou nenhum torneio nesta partida: os campeões aparecem ao fim de cada copa e liga."
  },
  "patrones": [
   [
@@ -29403,7 +29413,12 @@
   "FECHA FIFA": "TRÊVE INTERNATIONALE",
   "Fecha FIFA": "Trêve internationale",
   "Amistoso": "Match amical",
-  "Eliminatoria": "Qualification"
+  "Eliminatoria": "Qualification",
+  "PALMARÉS DEL MUNDO": "PALMARÈS MONDIAL",
+  "Palmarés del mundo": "Palmarès mondial",
+  "Todos los países": "Tous les pays",
+  "Los campeones de ligas, copas y supercopas de todos los países.": "Les champions des championnats, coupes et supercoupes de tous les pays.",
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Aucun tournoi n'est encore terminé dans cette partie : les champions apparaissent à la fin de chaque coupe et championnat."
  },
  "it": {
   "Historia": "Storia",
@@ -37184,7 +37199,12 @@
   "FECHA FIFA": "SOSTA PER LE NAZIONALI",
   "Fecha FIFA": "Sosta per le nazionali",
   "Amistoso": "Amichevole",
-  "Eliminatoria": "Qualificazione"
+  "Eliminatoria": "Qualificazione",
+  "PALMARÉS DEL MUNDO": "ALBO D'ORO MONDIALE",
+  "Palmarés del mundo": "Albo d'oro mondiale",
+  "Todos los países": "Tutti i paesi",
+  "Los campeones de ligas, copas y supercopas de todos los países.": "I campioni di campionati, coppe e supercoppe di tutti i paesi.",
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Nessun torneo è ancora terminato in questa partita: i campioni compaiono alla fine di ogni coppa e campionato."
  },
  "de": {
   "Historia": "Geschichte",
@@ -44965,7 +44985,12 @@
   "FECHA FIFA": "LÄNDERSPIELPAUSE",
   "Fecha FIFA": "Länderspielpause",
   "Amistoso": "Freundschaftsspiel",
-  "Eliminatoria": "Qualifikation"
+  "Eliminatoria": "Qualifikation",
+  "PALMARÉS DEL MUNDO": "WELT-TITELLISTE",
+  "Palmarés del mundo": "Welt-Titelliste",
+  "Todos los países": "Alle Länder",
+  "Los campeones de ligas, copas y supercopas de todos los países.": "Die Meister und Pokalsieger aller Länder.",
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "In diesem Spielstand ist noch kein Wettbewerb beendet: Die Sieger erscheinen am Ende jedes Pokals und jeder Liga."
  },
  "ca": {
   "Historia": "Història",
@@ -52746,7 +52771,12 @@
   "FECHA FIFA": "DATA FIFA",
   "Fecha FIFA": "Data FIFA",
   "Amistoso": "Amistós",
-  "Eliminatoria": "Eliminatòria"
+  "Eliminatoria": "Eliminatòria",
+  "PALMARÉS DEL MUNDO": "PALMARÈS DEL MÓN",
+  "Palmarés del mundo": "Palmarès del món",
+  "Todos los países": "Tots els països",
+  "Los campeones de ligas, copas y supercopas de todos los países.": "Els campions de lligues, copes i supercopes de tots els països.",
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Encara no s'ha tancat cap torneig en aquesta partida: els campions apareixen en acabar cada copa i cada lliga."
  },
  "pl": {
   "Club": "Klub",
@@ -60527,7 +60557,12 @@
   "FECHA FIFA": "PRZERWA REPREZENTACYJNA",
   "Fecha FIFA": "Przerwa reprezentacyjna",
   "Amistoso": "Mecz towarzyski",
-  "Eliminatoria": "Eliminacje"
+  "Eliminatoria": "Eliminacje",
+  "PALMARÉS DEL MUNDO": "LISTA TRIUMFATORÓW ŚWIATA",
+  "Palmarés del mundo": "Lista triumfatorów świata",
+  "Todos los países": "Wszystkie kraje",
+  "Los campeones de ligas, copas y supercopas de todos los países.": "Mistrzowie lig, pucharów i superpucharów wszystkich krajów.",
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "W tej grze nie zakończył się jeszcze żaden turniej: mistrzowie pojawiają się po zakończeniu każdego pucharu i ligi."
  },
  "tr": {
   "Club": "Kulüp",
@@ -68308,6 +68343,11 @@
   "FECHA FIFA": "MİLLİ ARA",
   "Fecha FIFA": "Milli ara",
   "Amistoso": "Hazırlık maçı",
-  "Eliminatoria": "Eleme maçı"
+  "Eliminatoria": "Eleme maçı",
+  "PALMARÉS DEL MUNDO": "DÜNYA ŞAMPİYONLAR LİSTESİ",
+  "Palmarés del mundo": "Dünya şampiyonlar listesi",
+  "Todos los países": "Tüm ülkeler",
+  "Los campeones de ligas, copas y supercopas de todos los países.": "Tüm ülkelerin lig, kupa ve süper kupa şampiyonları.",
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Bu oyunda henüz hiçbir turnuva bitmedi: şampiyonlar her kupa ve lig bitince görünür."
  }
 }
