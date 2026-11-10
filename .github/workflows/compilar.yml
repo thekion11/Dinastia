@@ -501,18 +501,6 @@ jobs:
           artefacto: Dinastia-Web
           sufijo: ${{ github.event_name == 'workflow_dispatch' && inputs.sufijo || '' }}
 
-      ## (10-11-2026, orden 36) la web para el MÓVIL: texturas ETC2/ASTC (las de la web de PC, S3TC, el teléfono las
-      ## descomprime en la CPU). Preset aparte para que ninguna de las dos descargue las texturas de la otra.
-      - name: Exportar Web móvil
-        uses: ./.github/actions/exportar
-        with:
-          variante: web
-          preset: WebMovil
-          salida: web-movil/index.html
-          carpeta: web-movil
-          artefacto: Dinastia-Web-movil
-          sufijo: ${{ github.event_name == 'workflow_dispatch' && inputs.sufijo || '' }}
-
   ## Comprobación final de Web: existe, no está vacío y deja su tamaño en el resumen. Es también lo que da a
   ## cada versión su propia caja en el gráfico.
   verificar-web:
@@ -525,16 +513,10 @@ jobs:
         with:
           name: Dinastia-Web
           path: salida
-      - uses: actions/download-artifact@v4
-        with:
-          name: Dinastia-Web-movil
-          path: salida-movil
       - name: Revisar y resumir
         run: |
-          ls -la salida salida-movil
+          ls -la salida
           test -n "$(find salida -type f -size +100k | head -1)" || { echo "El build parece vacío"; exit 1; }
-          test -n "$(find salida-movil -type f -size +100k | head -1)" || { echo "El build de la web móvil parece vacío"; exit 1; }
-          { echo "### 📱 Web móvil"; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida-movil && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
           { echo "### 🌐 Web"; echo '<img src="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/.github/iconos/web.png" width="96" align="right" alt="icono web">'; echo; echo '| archivo | tamaño |'; echo '|---|---|'; (cd salida && find . -type f -printf '| %P | %k KB |\n'); } >> "$GITHUB_STEP_SUMMARY"
 
   ## RELEASE EN BORRADOR (2-11-2026, orden del dueño): junta lo construido en un Release PRIVADO hasta que el dueño

@@ -112,7 +112,7 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 - ESTADIOS en las celebraciones: SÍ a la versión simplificada de verdad de la grada lejana / público más barato.
 - MÓVIL, POR DEFECTO: «Modo rendimiento» ENCENDIDO; «Ahorro en los menús también en Media» ENCENDIDO; TOPE de 90 FPS.
 - ULTRA BAJA: NO se simplifican más hinchas, butacas ni jugadores lejanos.
-- WEB en el móvil: SÍ a las texturas comprimidas. HECHO (10-11, sesión 4): preset aparte `WebMovil` (ETC2/ASTC; la `Web` de PC sigue con S3TC). Medido con `--export-pack`: Web 374,5 MB (312,7 MB con gzip) → WebMovil 374,5 MB (310,0 MB con gzip), sin crecer; poner las dos compresiones en un solo preset la habría subido a 474,7 MB (+27 %). En el CI sale en el trabajo web (artefacto `Dinastia-Web-movil`), en `empaquetar.ps1 -Formato web` y en `revisar_build_publico`. Falta probarla en un teléfono real (dueño).
+- WEB en el móvil: SÍ a las texturas comprimidas. PENDIENTE (cierre del 10-11). Medido (sesión 4, `--export-pack`): Web hoy 374,5 MB (312,7 MB con gzip); las dos compresiones en un preset, 474,7 MB (+27 %); un preset aparte `WebMovil` solo con ETC2/ASTC, 374,5 MB (310,0 MB con gzip). Propuesta hecha y revertida por el cierre: commit 78b35e921 (preset, CI, `empaquetar.ps1`, `revisar_build_publico`), se recupera con `git cherry-pick`.
 - VERTICAL: DISEÑO PROPIO para el partido y los menús (no se quita).
 - CABECERA COMPACTA: le gusta, se queda.
 - ICONOS: los DIBUJADOS por defecto (los emojis quedan como opción).
