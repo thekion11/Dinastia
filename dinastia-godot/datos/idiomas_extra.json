@@ -7674,7 +7674,8 @@
   "OBJETIVO": "TARGET",
   "vas": "you're",
   "meta": "target",
-  "Cerca de cumplir": "Close to meeting it"
+  "Cerca de cumplir": "Close to meeting it",
+  "Jugador del mes": "Player of the month"
  },
  "pt": {
   "Historia": "História",
@@ -15351,7 +15352,8 @@
   "OBJETIVO": "OBJETIVO",
   "vas": "está em",
   "meta": "meta",
-  "Cerca de cumplir": "Perto de cumprir"
+  "Cerca de cumplir": "Perto de cumprir",
+  "Jugador del mes": "Jogador do mês"
  },
  "patrones": [
   [
@@ -29003,7 +29005,8 @@
   "OBJETIVO": "OBJECTIF",
   "vas": "tu es",
   "meta": "objectif",
-  "Cerca de cumplir": "Proche de l'objectif"
+  "Cerca de cumplir": "Proche de l'objectif",
+  "Jugador del mes": "Joueur du mois"
  },
  "it": {
   "Historia": "Storia",
@@ -36680,7 +36683,8 @@
   "OBJETIVO": "OBIETTIVO",
   "vas": "sei",
   "meta": "obiettivo",
-  "Cerca de cumplir": "Vicino all'obiettivo"
+  "Cerca de cumplir": "Vicino all'obiettivo",
+  "Jugador del mes": "Giocatore del mese"
  },
  "de": {
   "Historia": "Geschichte",
@@ -44357,7 +44361,8 @@
   "OBJETIVO": "ZIEL",
   "vas": "du bist",
   "meta": "Ziel",
-  "Cerca de cumplir": "Nah am Ziel"
+  "Cerca de cumplir": "Nah am Ziel",
+  "Jugador del mes": "Spieler des Monats"
  },
  "ca": {
   "Historia": "Història",
@@ -52034,7 +52039,8 @@
   "OBJETIVO": "OBJECTIU",
   "vas": "vas",
   "meta": "meta",
-  "Cerca de cumplir": "A prop de complir"
+  "Cerca de cumplir": "A prop de complir",
+  "Jugador del mes": "Jugador del mes"
  },
  "pl": {
   "Club": "Klub",
@@ -59711,7 +59717,8 @@
   "OBJETIVO": "CEL",
   "vas": "jesteś",
   "meta": "cel",
-  "Cerca de cumplir": "Blisko celu"
+  "Cerca de cumplir": "Blisko celu",
+  "Jugador del mes": "Zawodnik miesiąca"
  },
  "tr": {
   "Club": "Kulüp",
@@ -67388,6 +67395,7 @@
   "OBJETIVO": "HEDEF",
   "vas": "şu an",
   "meta": "hedef",
-  "Cerca de cumplir": "Hedefe yakınlık"
+  "Cerca de cumplir": "Hedefe yakınlık",
+  "Jugador del mes": "Ayın oyuncusu"
  }
 }

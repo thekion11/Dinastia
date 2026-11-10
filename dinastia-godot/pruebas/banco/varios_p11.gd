@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p10.gd"
-## [Capa 11 de `varios.gd`, 10-11] _probar_final_temporada, _probar_habilidades_y_calor, _probar_puerta_animada, _probar_flecha_forma, _probar_quimica_linea, _probar_objetivo_directiva (secciones del 10-11)
+## [Capa 11 de `varios.gd`, 10-11] _probar_final_temporada, _probar_habilidades_y_calor, _probar_puerta_animada, _probar_flecha_forma, _probar_quimica_linea, _probar_objetivo_directiva, _probar_jugador_del_mes (secciones del 10-11)
 
 ## EL FINAL DE TEMPORADA COMPLETO (10-11, orden del dueño): copa y continental a medias se juegan hasta el final antes del cierre, y la pantalla única
 ## de resumen tiene campeón, tu puesto, copa, continental, ascensos/descensos, premios y veredicto.
@@ -132,3 +132,23 @@ func _probar_objetivo_directiva() -> void:
 	_comprobar(f != null and f.find_children("*", "ProgressBar", true, false).size() == 1, "con un club en marcha sale la fila con su barra")
 	if f != null:
 		f.free()
+
+## EL JUGADOR DEL MES (10-11): cada 4 semanas, el mejor de tu liga por sus últimas notas; queda en su ficha.
+func _probar_jugador_del_mes() -> void:
+	_titulo("JUGADOR DEL MES")
+	var m := Mundo.new()
+	m.generar(["CHI"], 63)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var antes := 0
+	for c: Club in m.clubes.values():
+		for j: Jugador in c.plantilla:
+			antes += j.premios.filter(func(p: Dictionary) -> bool: return String(p.get("premio", "")) == "Jugador del mes").size()
+	for k in 8:
+		m.avanzar_semana()
+	var despues := 0
+	for c2: Club in m.clubes.values():
+		for j2: Jugador in c2.plantilla:
+			despues += j2.premios.filter(func(p: Dictionary) -> bool: return String(p.get("premio", "")) == "Jugador del mes").size()
+	_comprobar(despues - antes == 2, "en 8 semanas hay 2 jugadores del mes (%d)" % (despues - antes))
+	var g := PremioMensual.elegir(m)
+	_comprobar(g != null and g.notas.size() >= PremioMensual.MINIMO_NOTAS and m.liga_de(m.mi_club()).clubes.any(func(c3: Club) -> bool: return c3.id == g.club_id), "el elegido es de tu liga y tiene notas suficientes")
