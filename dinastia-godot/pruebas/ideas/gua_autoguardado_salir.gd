@@ -15,6 +15,7 @@ func _probar() -> void:
 	load("res://ui/principal/ciclo_partida.gd").ranura_prueba = RANURA
 	SalidaGuardada.salir_de_verdad = false
 	Partida.borrar(RANURA)
+	AvanceSemana.partido_obliga = false   ## (10-11) la prueba recorre días a mano: sin esto, el sábado con partido abre solo el menú del partido (`VidaApp`) y el «atrás» es suyo
 	var m := _mundo(3102)
 	PedidoPartida.mundo_pregenerado = m
 	var pr: Principal = (load("res://escenas/principal.tscn") as PackedScene).instantiate()
