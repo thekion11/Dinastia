@@ -109,7 +109,10 @@ func _uno(i: int, nombre: String) -> void:
 	await _esperar(1.0)
 
 ## DESGLOSE=1: apaga uno a uno los grupos grandes (≥ 15 mallas, hasta 4 niveles de hondo) y dice cuántas llamadas ahorra cada uno.
+var _base_tri := 0
 func _desglose(raiz: Node, base: int) -> void:
+	_base_tri = RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME)
+	print("   BASE: %d llamadas · %d triángulos" % [base, _base_tri])
 	var grupos: Array[Node3D] = []
 	_grupos(raiz, 0, grupos)
 	for g in grupos:
@@ -120,13 +123,14 @@ func _desglose(raiz: Node, base: int) -> void:
 		await get_tree().process_frame
 		await get_tree().process_frame
 		var d := base - RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+		var tri := _base_tri - RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME)
 		g.visible = true
-		if d >= 15:
-			print("   -%d  %s" % [d, raiz.get_path_to(g)])
+		if d >= 15 or tri >= 50000:
+			print("   -%d llamadas  -%d triángulos  %s (%s)" % [d, tri, raiz.get_path_to(g), g.name])
 
 func _grupos(n: Node, hondo: int, fuera: Array[Node3D]) -> void:
 	for h in n.get_children():
-		if h.find_children("*", "GeometryInstance3D", true, false).size() < 15:
+		if h.find_children("*", "GeometryInstance3D", true, false).size() < 15 and not (h is GeometryInstance3D):
 			continue
 		if h is Node3D:
 			fuera.append(h)
