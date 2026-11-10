@@ -11,6 +11,4 @@ Newell's|circulo|mitad|NO|mitad|#d50032|#000000|#000000|#000000
 Lanús|banderin|liso|LA|liso|#7a1f2b|#ffffff|#7a1f2b|#7a1f2b
 Talleres|circulo|franjas|TA|franjas|#00246b|#ffffff|#00246b|#00246b
 Banfield|escudo|franjas|BA|franjas|#00843d|#ffffff|#ffffff|#00843d
-Godoy Cruz|clasico|franjas|GC|franjas|#00246b|#ffffff|#00246b|#00246b
-Colón|rombo|franjas|CO|franjas|#d50032|#000000|#000000|#d50032
 Unión SF|clasico|franjas|US|franjas|#d50032|#ffffff|#000000|#d50032

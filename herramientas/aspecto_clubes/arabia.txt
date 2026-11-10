@@ -6,11 +6,9 @@ Al-Shabab|clasico|liso|SHA|liso|#ffffff|#000000|#ffffff|#ffffff
 Al-Ettifaq|escudo|liso|ETT|liso
 Al-Taawoun|rombo|liso|TAA|liso
 Al-Faiha|ovalo|liso|FAY|liso
-Al-Raed|clasico|liso|RAE|liso
 Al-Fateh|hex|liso|FAT|liso
 Dammac|escudo|liso|DAM|liso
 Al-Khaleej|circulo|liso|KHA|liso
-Al-Wehda|rombo|liso|WEH|liso
 Al-Okgdood|clasico|liso|OKH|liso
 Al-Riyadh|escudo|liso|RIY|liso
 Al-Hazem|hex|liso|HAZ|liso

@@ -10,7 +10,6 @@ ENPPi|circulo|liso|ENP|liso
 Pharco|hex|liso|PHA|liso
 Smouha|escudo|liso|SMO|liso
 El Gouna|rombo|liso|GOU|liso
-Baladiyat|clasico|liso|BAL|liso
 Talaea|circulo|liso|TAL|liso
 Al Mokawloon|ovalo|liso|MOK|liso
 ZED FC|escudo|liso|ZED|liso

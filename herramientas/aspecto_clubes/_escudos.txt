@@ -107,14 +107,10 @@ Newell's||||NO|||
 Lanús||||LA|||
 Talleres||||TA|||
 Banfield||||BA|||
-Godoy Cruz|||cruz||||
-Colón||||CO|||
 Unión SF||||US|||
 Atl. Mineiro||||AM|||
 Bahia|||ancla||||
-Fortaleza|||leon||||
 Athletico PR||||AP|||
-Goiás||||GO|||
 Peñarol||||PE|||
 Defensor||||DS|||
 Danubio||||DA|||
@@ -135,17 +131,11 @@ Cerro Porteño|||rayo||||
 Libertad||||LI|||
 Guarani||||GU|||
 Nacional (P)||||NA|||
-Sol de América|||sol||||
 Luqueño||||LU|||
-Doce de Octubre||||DO|||
-Tacuari||||TA|||
-Gral. Caballero||||GC|||
 Ameliano||||AM|||
 Trinidense||||TR|||
 2 de Mayo|||ave||||
 Rubio Ñu||||RÑ|||
-Fernando Mora||||FM|||
-Resistencia||||RS|||
 Atl. Nacional|||ave||||
 America de Cali||||AC|||
 Junior|||pez||||
@@ -156,8 +146,6 @@ DIM Medellin|||montana||||
 Once Caldas||||OC|||
 Bucaramanga|||leon||||
 Pereira||||PE|||
-La Equidad||||EQ|||
-Envigado||||EN|||
 Alianza FC||||AF|||
 Fortaleza C.|||torre||||
 Boyacá Chicó||||BC|||
@@ -165,15 +153,11 @@ Alianza Lima||||AL|||
 Melgar||||FM|||
 Cienciano||||CI|||
 Sport Boys||||SB|||
-Municipal||||MU|||
 Cusco FC||||CU|||
-C. Vallejo||||CV|||
 Atl. Grau||||AG|||
 Garcilaso||||CG|||
 AD Tarma||||AT|||
 UTC Cajamarca|||aguila||||
-Binacional||||BI|||
-Ayacucho||||AY|||
 Chankas||||CH|||
 Emelec||||EM|||
 I. del Valle||||IV|||
@@ -212,10 +196,8 @@ Atalanta||||ATA|||
 Torino|||cuernos||||
 Bologna||||BOL|||
 Udinese||||UDI|||
-Sampdoria||||SAM|||
 Genoa|||leon||||
 Sassuolo||||SAS|||
-Monza||||MON|||
 Lecce|||ave||||
 Bayern Múnich||||FCB|||
 Frankfurt|||aguila||||
@@ -228,7 +210,6 @@ Unión Berlín||||FCU|||
 Mainz|||ancla||||
 Colonia|||cuernos||||
 Bremen||||SVW|||
-Bochum||||BOC|||
 Augsburgo||||FCA|||
 Monaco||||AS|||
 Lille|||||||
@@ -238,9 +219,7 @@ Lens||||RCL|||
 Nantes|||ave||||
 Estrasburgo||||RCS|||
 Toulouse||||TFC|||
-Montpellier||||MHS|||
 Brest|||ancla||||
-Reims||||REI|||
 Lorient|||pez||||
 Auxerre||||AJA|||
 Bolivar||||BO|||
@@ -269,12 +248,8 @@ FC Tokio||||FT|||
 Sanfrecce H.|||flecha||||
 Cerezo Osaka|||cereza||||
 Nagoya G.||||NG|||
-Konsadole S.|||ave||||
 Avispa F.|||abeja||||
-Shimonoseki||||SH|||
 Kyoto S.||||KS|||
-Albirex N.|||ave||||
-Shonan B.||||SB|||
 Ulsan HD|circulo||leon||||
 Jeonbuk M.||||JM|||
 Pohang S.|||montana||||
@@ -282,24 +257,16 @@ FC Seoul||||FS|||
 Incheon Utd||||IU|||
 Daejeon H.||||DH|||
 Gangwon FC|||oso||||
-Suon FC|cruzado|||SF|||
 Gwangju FC||||GJ|||
 Jeju United||||JU|||
-Daegu FC||||DF|||
 Gimcheon||||GS|||
-Seongnam||||SN|||
-Busan IPark||||BI|||
-Ansan G.||||AG|||
-Ch. Citizen||||CC|||
 Al-Shabab|||leon||||
 Al-Ettifaq||||ETT|||
 Al-Taawoun||||TAA|||
 Al-Faiha||||FAY|||
-Al-Raed||||RAE|||
 Al-Fateh||||FAT|||
 Dammac||||DAM|||
 Al-Khaleej||||KHA|||
-Al-Wehda||||WEH|||
 Al-Okgdood||||OKH|||
 Al-Riyadh||||RIY|||
 Al-Hazem||||HAZ|||
@@ -313,7 +280,6 @@ ENPPi||||ENP|||
 Pharco||||PHA|||
 Smouha||||SMO|||
 El Gouna||||GOU|||
-Baladiyat||||BAL|||
 Talaea||||TAL|||
 Al Mokawloon||||MOK|||
 ZED FC||||ZED|||
@@ -355,11 +321,7 @@ Wellington P.|||ave||||
 Macarthur FC|||cuernos||||
 Newcastle J.||||NJ|||
 Perth Glory|||estrella||||
-W. United||||WU|||
 Auckland FC||||AUC|||
-Canberra Utd|cruzado|||CAN|||
-Geelong FC||||GEE|||
-Darwin City||||DAR|||
 Monterrey||||MTY|||
 Guadalajara||||CHI|||
 Pachuca||||PAC|||

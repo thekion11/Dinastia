@@ -71,19 +71,13 @@ FC Tokio|franjas|#0038a8|#d50032|#0038a8|#0038a8|||||
 Sanfrecce H.|liso|#5c2d91|#ffffff|#5c2d91|#5c2d91|||||
 Cerezo Osaka|liso|#e5368e|#0a2240|#0a2240|#e5368e|||||
 Nagoya G.|liso|#d50032|#ffd100|#d50032|#d50032|||||
-Konsadole S.|franjas|#d50032|#111111|#111111|#d50032|||||
 Avispa F.|liso|#0a2240|#ffd100|#0a2240|#0a2240|||||
 Kyoto S.|liso|#5c2d91|#ffffff|#5c2d91|#5c2d91|||||
-Albirex N.|liso|#f58220|#ffffff|#ffffff|#f58220|||||
-Shonan B.|liso|#7ac143|#ffffff|#7ac143|#7ac143|||||
 Ulsan HD|liso|#0067b1|#ffd100|#0067b1|#0067b1|||||
 Jeonbuk M.|liso|#00843d|#ffffff|#00843d|#00843d|||||
 Incheon Utd|franjas|#0038a8|#111111|#111111|#0038a8|||||
 Daejeon H.|liso|#5c2d91|#ffffff|#5c2d91|#5c2d91|||||
 Gangwon FC|liso|#f58220|#ffffff|#f58220|#f58220|||||
-Suon FC|franjas|#0057b8|#ffffff|#0057b8|#0057b8|||||
 Gwangju FC|liso|#ffd100|#111111|#ffd100|#ffd100|||||
 Jeju United|liso|#f58220|#111111|#f58220|#f58220|||||
 Gimcheon|liso|#d50032|#111111|#d50032|#d50032|||||
-Seongnam|liso|#111111|#ffffff|#111111|#111111|||||
-Busan IPark|franjas|#d50032|#ffffff|#ffffff|#d50032|||||
