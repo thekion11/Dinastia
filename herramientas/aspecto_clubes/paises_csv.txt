@@ -109,322 +109,454 @@ Sporting FC|estandarte|sol|SFC|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#fff
 Santos de Guápiles|doblepunta|escamas|SG|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
 Municipal Liberia|rombo|cruz|ML|franjas|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
 Municipal Grecia|octogono|chevron|MG|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Slavia Praha|corona|abanico|SP|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Sparta Praha|laurel|puntas|SP|franjas|#8b1538|#ffd100|#ffd100|#8b1538|#8b1538|#ffd100
-Viktoria Plzeň|frances|estrella|VP|liso|#1b458f|#c8102e|#c8102e|#1b458f|#1b458f|#c8102e
-Baník Ostrava|curvo|ondas|BO|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Sigma Olomouc|arco3|rombos|SO|franjas|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
-FK Mladá Boleslav|hexalgo|tablero|FKM|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-1. FC Slovácko|ojiva|sol|FCS|liso|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
-Hradec Králové|banderin|escamas|HK|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-FK Jablonec|estandarte|rayo|FKJ|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-FK Teplice|doblepunta|cruz|FKT|liso|#ffd100|#ffffff|#ffffff|#ffd100|#ffd100|#ffffff
-Bohemians 1905|rombo|abanico|BOH|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Dukla Praha|octogono|puntas|DP|liso|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
-FK Pardubice|corona|estrella|FKP|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-MFK Karviná|laurel|ondas|MFK|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-SK Dynamo České Budějovice|frances|rombos|SKD|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Slovan Liberec|curvo|tablero|SL|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Asante Kotoko|arco3|sol|AK|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Hearts of Oak|hexalgo|escamas|HO|liso|#f2c200|#c8102e|#c8102e|#f2c200|#f2c200|#c8102e
-Medeama|ojiva|rayo|MED|liso|#f2c200|#000000|#000000|#f2c200|#f2c200|#000000
-Aduana Stars|banderin|cruz|AS|franjas|#f2c200|#c8102e|#c8102e|#f2c200|#f2c200|#c8102e
-Bechem United|estandarte|chevron|BU|liso|#0b8f3c|#f2c200|#f2c200|#0b8f3c|#0b8f3c|#f2c200
-Dreams FC|doblepunta|abanico|DFC|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Berekum Chelsea|rombo|estrella|BC|franjas|#1e56b8|#ffffff|#ffffff|#1e56b8|#1e56b8|#ffffff
-Nsoatreman|octogono|ondas|NSO|liso|#0b8f3c|#ffffff|#ffffff|#0b8f3c|#0b8f3c|#ffffff
-Samartex|corona|rombos|SAM|liso|#0b8f3c|#f2c200|#f2c200|#0b8f3c|#0b8f3c|#f2c200
-Karela United|laurel|tablero|KU|franjas|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
-Legon Cities|frances|sol|LC|liso|#f2c200|#1d3f9e|#1d3f9e|#f2c200|#f2c200|#1d3f9e
-Heart of Lions|curvo|escamas|HL|liso|#c8102e|#f2c200|#f2c200|#c8102e|#c8102e|#f2c200
-Basake Holy Stars|arco3|rayo|BHS|franjas|#ffffff|#0a3d91|#0a3d91|#ffffff|#ffffff|#0a3d91
-Vision FC|hexalgo|cruz|VFC|liso|#1e56b8|#f2c200|#f2c200|#1e56b8|#1e56b8|#f2c200
-Bibiani Gold Stars|ojiva|chevron|BGS|liso|#f2c200|#000000|#000000|#f2c200|#f2c200|#000000
-Hohoe United|banderin|abanico|HU|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Racing Club Accra|estandarte|puntas|RCA|liso|#1e56b8|#ffffff|#ffffff|#1e56b8|#1e56b8|#ffffff
-Accra Lions|doblepunta|estrella|AL|liso|#f2c200|#0b8f3c|#0b8f3c|#f2c200|#f2c200|#0b8f3c
-Olympiacos|rombo|rombos|OLY|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Panathinaikos|octogono|sol|PAN|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-AEK Athens|corona|sol|AEK|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-PAOK|laurel|escamas|PAO|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
-Aris|frances|rayo|ARI|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-OFI Crete|curvo|cruz|OFI|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
-Atromitos|arco3|chevron|ATR|franjas|#0072ce|#ffffff|#ffffff|#0072ce|#0072ce|#ffffff
-Asteras Tripolis|hexalgo|abanico|AT|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Volos|ojiva|puntas|VOL|liso|#0072ce|#ffffff|#ffffff|#0072ce|#0072ce|#ffffff
-Levadiakos|banderin|estrella|LEV|franjas|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
-Panserraikos|estandarte|ondas|PAN|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
-Panetolikos|doblepunta|rombos|PAN|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-AEL|rombo|sol|AEL|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Kifisia|octogono|escamas|KIF|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Ferencváros|corona|rayo|FER|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Paks|laurel|cruz|PAK|franjas|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
-Győr|frances|chevron|GYR|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Debrecen|curvo|abanico|DEB|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Puskás Akadémia|arco3|puntas|PA|franjas|#1b458f|#c8102e|#c8102e|#1b458f|#1b458f|#c8102e
-Zalaegerszeg|hexalgo|estrella|ZAL|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Kisvárda|ojiva|ondas|KIS|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Nyíregyháza|banderin|rombos|NYR|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Újpest|estandarte|tablero|JPE|liso|#6a1b9a|#ffffff|#ffffff|#6a1b9a|#6a1b9a|#ffffff
-Diósgyőr|doblepunta|sol|DIS|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Kazincbarcika|rombo|rayo|KAZ|franjas|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
-MTK|octogono|cruz|MTK|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Shamrock Rovers|corona|chevron|SR|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Shelbourne|laurel|abanico|SHE|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Bohemians|frances|puntas|BOH|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
-St Patrick's Athletic|curvo|estrella|SPA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Derry City|arco3|rombos|DC|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Dundalk|hexalgo|rombos|DUN|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
-Sligo Rovers|ojiva|tablero|SR|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Drogheda United|banderin|sol|DU|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Galway United|estandarte|escamas|GU|liso|#7b1e3a|#ffffff|#ffffff|#7b1e3a|#7b1e3a|#ffffff
-Waterford|doblepunta|rayo|WAT|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Persepolis|rombo|chevron|PER|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Esteghlal|octogono|puntas|EST|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Sepahan|corona|puntas|SEP|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Tractor|laurel|estrella|TRA|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Foolad|frances|ondas|FOO|liso|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
-Gol Gohar|curvo|rombos|GG|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Zob Ahan|arco3|tablero|ZA|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Malavan|hexalgo|sol|MAL|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Aluminium Arak|ojiva|escamas|AA|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Mes Rafsanjan|banderin|rayo|MR|franjas|#f26522|#000000|#000000|#f26522|#f26522|#000000
-Chadormalou|estandarte|cruz|CHA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Paykan|doblepunta|chevron|PAY|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Shams Azar|rombo|puntas|SA|franjas|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
-Kheybar|octogono|ondas|KHE|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Fajr Sepasi|corona|ondas|FS|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Esteghlal Khuzestan|laurel|rombos|EK|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Hapoel Be'er Sheva|frances|tablero|HBS|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Maccabi Tel Aviv|curvo|sol|MTA|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
-Maccabi Haifa|arco3|rayo|MH|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Hapoel Tel Aviv|hexalgo|cruz|HTA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Beitar Jerusalem|ojiva|chevron|BJ|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Hapoel Haifa|banderin|chevron|HH|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Maccabi Netanya|estandarte|abanico|MN|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Hapoel Jerusalem|doblepunta|puntas|HJ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Ironi Kiryat Shmona|rombo|ondas|IKS|franjas|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
-Bnei Sakhnin|octogono|rombos|BS|liso|#c8102e|#00843d|#00843d|#c8102e|#c8102e|#00843d
-Hapoel Petah Tikva|corona|tablero|HPT|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Ironi Tiberias|laurel|sol|IT|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-F.C. Ashdod|frances|escamas|FCA|liso|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
-Maccabi Bnei Reineh|curvo|rayo|MBR|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-ADO Den Haag|arco3|cruz|ADO|franjas|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
-Willem II|hexalgo|chevron|WII|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
-Vitesse|ojiva|abanico|VIT|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Roda JC Kerkrade|banderin|puntas|RJC|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Cambuur|estandarte|estrella|CAM|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
-De Graafschap|doblepunta|ondas|DG|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Almere City|rombo|tablero|AC|franjas|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
-RKC Waalwijk|octogono|sol|RKC|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
-Emmen|corona|escamas|EMM|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-MVV Maastricht|laurel|rayo|MVV|franjas|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
-VVV-Venlo|frances|cruz|VVV|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Den Bosch|curvo|chevron|DB|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Dordrecht|arco3|abanico|DOR|franjas|#ffffff|#00843d|#00843d|#ffffff|#ffffff|#00843d
-Eindhoven|hexalgo|puntas|EIN|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Helmond Sport|ojiva|estrella|HS|liso|#000000|#ffd100|#ffd100|#000000|#000000|#ffd100
-TOP Oss|banderin|ondas|TOP|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Jong Ajax|estandarte|rombos|JA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Jong AZ|doblepunta|tablero|JAZ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Jong PSV|rombo|escamas|JPS|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Jong FC Utrecht|octogono|rayo|JFC|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Enyimba|corona|cruz|ENY|liso|#1d3f9e|#ffffff|#ffffff|#1d3f9e|#1d3f9e|#ffffff
-Rivers United|laurel|chevron|RU|franjas|#0b8f3c|#ffffff|#ffffff|#0b8f3c|#0b8f3c|#ffffff
-Remo Stars|frances|abanico|RS|liso|#0a3d91|#f2c200|#f2c200|#0a3d91|#0a3d91|#f2c200
-Shooting Stars|curvo|puntas|SS|liso|#1e56b8|#ffffff|#ffffff|#1e56b8|#1e56b8|#ffffff
-Kano Pillars|arco3|estrella|KP|franjas|#f2c200|#000000|#000000|#f2c200|#f2c200|#000000
-Plateau United|hexalgo|ondas|PU|liso|#0b8f3c|#ffffff|#ffffff|#0b8f3c|#0b8f3c|#ffffff
-Enugu Rangers|ojiva|rombos|ER|liso|#ffffff|#c8102e|#c8102e|#ffffff|#ffffff|#c8102e
-Bendel Insurance|banderin|tablero|BI|franjas|#1d3f9e|#f2c200|#f2c200|#1d3f9e|#1d3f9e|#f2c200
-Heartland|estandarte|sol|HEA|liso|#1e56b8|#ffffff|#ffffff|#1e56b8|#1e56b8|#ffffff
-Lobi Stars|doblepunta|escamas|LS|liso|#0a3d91|#ffffff|#ffffff|#0a3d91|#0a3d91|#ffffff
-Nasarawa United|rombo|cruz|NU|franjas|#f2c200|#0b8f3c|#0b8f3c|#f2c200|#f2c200|#0b8f3c
-Bayelsa United|octogono|abanico|BU|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Abia Warriors|corona|abanico|AW|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
-Katsina United|laurel|puntas|KU|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Kwara United|frances|estrella|KU|liso|#c8102e|#1e56b8|#1e56b8|#c8102e|#c8102e|#1e56b8
-Niger Tornadoes|curvo|ondas|NT|liso|#000000|#f2c200|#f2c200|#000000|#000000|#f2c200
-El-Kanemi Warriors|arco3|rombos|EKW|franjas|#0b8f3c|#ffffff|#ffffff|#0b8f3c|#0b8f3c|#ffffff
-Wikki Tourists|hexalgo|tablero|WT|liso|#1e56b8|#f2c200|#f2c200|#1e56b8|#1e56b8|#f2c200
-Sunshine Stars|ojiva|sol|SS|liso|#f2c200|#1e56b8|#1e56b8|#f2c200|#f2c200|#1e56b8
-Barau FC|banderin|escamas|BFC|franjas|#1d3f9e|#ffffff|#ffffff|#1d3f9e|#1d3f9e|#ffffff
-Bodø/Glimt|estandarte|rayo|BG|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Brann|doblepunta|cruz|BRA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Viking|rombo|abanico|VIK|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Rosenborg|octogono|puntas|ROS|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
-Molde|corona|estrella|MOL|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Lillestrøm|laurel|ondas|LIL|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Tromsø|frances|rombos|TRO|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Sarpsborg 08|curvo|tablero|SAR|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Fredrikstad|arco3|sol|FRE|franjas|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
-KFUM Oslo|hexalgo|escamas|KFU|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Sandefjord|ojiva|rayo|SAN|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Aalesund|banderin|cruz|AAL|franjas|#f26522|#1b458f|#1b458f|#f26522|#f26522|#1b458f
-Kristiansund|estandarte|chevron|KRI|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-HamKam|doblepunta|abanico|HK|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Vålerenga|rombo|estrella|VLE|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Start|octogono|ondas|STA|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Lech Poznań|corona|rombos|LP|liso|#003876|#ffffff|#ffffff|#003876|#003876|#ffffff
-Legia Warszawa|laurel|tablero|LW|franjas|#006633|#ffffff|#ffffff|#006633|#006633|#ffffff
-Jagiellonia Białystok|frances|sol|JB|liso|#ffd100|#c8102e|#c8102e|#ffd100|#ffd100|#c8102e
-Raków Częstochowa|curvo|escamas|RC|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
-Pogoń Szczecin|arco3|rayo|PS|franjas|#1b458f|#8b1538|#8b1538|#1b458f|#1b458f|#8b1538
-Górnik Zabrze|hexalgo|cruz|GZ|liso|#ffffff|#1b458f|#1b458f|#ffffff|#ffffff|#1b458f
-Cracovia|ojiva|chevron|CRA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Piast Gliwice|banderin|abanico|PG|franjas|#1b458f|#c8102e|#c8102e|#1b458f|#1b458f|#c8102e
-Zagłębie Lubin|estandarte|puntas|ZL|liso|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
-Korona Kielce|doblepunta|estrella|KK|liso|#ffd100|#c8102e|#c8102e|#ffd100|#ffd100|#c8102e
-Radomiak Radom|rombo|tablero|RR|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Widzew Łódź|octogono|tablero|WID|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Motor Lublin|corona|sol|ML|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
-Lechia Gdańsk|laurel|escamas|LG|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Arka Gdynia|frances|rayo|AG|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
-Bruk-Bet Termalica|curvo|cruz|BBT|liso|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
-GKS Katowice|arco3|chevron|GKS|franjas|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
-Wisła Płock|hexalgo|abanico|WP|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Marítimo|ojiva|puntas|MAR|liso|#00843d|#c8102e|#c8102e|#00843d|#00843d|#c8102e
-Farense|banderin|ondas|FAR|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
-Portimonense|estandarte|ondas|POR|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
-Paços de Ferreira|doblepunta|tablero|PF|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Vizela|rombo|sol|VIZ|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Chaves|octogono|escamas|CHA|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-União de Leiria|corona|rayo|UL|liso|#1b458f|#c8102e|#c8102e|#1b458f|#1b458f|#c8102e
-Académico de Viseu|laurel|cruz|AV|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
-Leixões|frances|chevron|LEI|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Penafiel|curvo|abanico|PEN|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Feirense|arco3|puntas|FEI|franjas|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
-Felgueiras|hexalgo|ondas|FEL|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Oliveirense|ojiva|rombos|OLI|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Lusitânia Lourosa|banderin|rombos|LL|franjas|#00843d|#c8102e|#c8102e|#00843d|#00843d|#c8102e
-Torreense|estandarte|tablero|TOR|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Benfica B|doblepunta|sol|BB|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
-Porto B|rombo|rayo|PB|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
-Sporting CP B|octogono|chevron|SCP|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Al Sadd|corona|chevron|AS|liso|#ffffff|#003876|#003876|#ffffff|#ffffff|#003876
-Al Duhail|laurel|tablero|AD|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Al Rayyan|frances|estrella|AR|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
-Al Gharafa|curvo|estrella|AG|liso|#0072ce|#ffffff|#ffffff|#0072ce|#0072ce|#ffffff
-Al Arabi|arco3|escamas|AA|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Al Wakrah|hexalgo|rombos|AW|liso|#ffd100|#0072ce|#0072ce|#ffd100|#ffd100|#0072ce
-Qatar SC|ojiva|tablero|QSC|liso|#7b1c3a|#ffffff|#ffffff|#7b1c3a|#7b1c3a|#ffffff
-Al Ahli|banderin|sol|AA|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Al Shamal|estandarte|escamas|AS|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Umm Salal|doblepunta|rayo|US|liso|#00843d|#000000|#000000|#00843d|#00843d|#000000
-Al Khor|rombo|chevron|AK|franjas|#ffd100|#c8102e|#c8102e|#ffd100|#ffd100|#c8102e
-Al Shahaniya|octogono|puntas|AS|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-FCSB|corona|puntas|FCS|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
-CFR Cluj|laurel|estrella|CFR|franjas|#8b1538|#ffffff|#ffffff|#8b1538|#8b1538|#ffffff
-Universitatea Craiova|frances|ondas|UC|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Rapid București|curvo|rombos|RB|liso|#8b1538|#ffffff|#ffffff|#8b1538|#8b1538|#ffffff
-Dinamo București|arco3|rayo|DB|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Universitatea Cluj|hexalgo|sol|UC|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
-FC Argeș|ojiva|escamas|FCA|liso|#8b1538|#ffffff|#ffffff|#8b1538|#8b1538|#ffffff
-Petrolul Ploiești|banderin|rayo|PP|franjas|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
-Oțelul Galați|estandarte|abanico|OG|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Farul Constanța|doblepunta|chevron|FC|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Hermannstadt|rombo|puntas|HER|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-UTA Arad|octogono|rombos|UTA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Csikszereda|corona|ondas|CSI|liso|#8b1538|#ffffff|#ffffff|#8b1538|#8b1538|#ffffff
-Botoșani|laurel|sol|BOT|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Unirea Slobozia|frances|tablero|US|liso|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
-Metaloglobus București|curvo|sol|MB|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Zenit Saint Petersburg|arco3|escamas|ZSP|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
-Krasnodar|hexalgo|rayo|KRA|liso|#00843d|#000000|#000000|#00843d|#00843d|#000000
-Spartak Moscow|ojiva|cruz|SM|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-CSKA Moscow|banderin|chevron|CSK|franjas|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
-Lokomotiv Moscow|estandarte|abanico|LM|liso|#00843d|#c8102e|#c8102e|#00843d|#00843d|#c8102e
-Dynamo Moscow|doblepunta|puntas|DM|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Rubin Kazan|rombo|ondas|RK|franjas|#8b1538|#ffffff|#ffffff|#8b1538|#8b1538|#ffffff
-Akhmat Grozny|octogono|rombos|AG|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Rostov|corona|tablero|ROS|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
-Baltika Kaliningrad|laurel|escamas|BK|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Krylia Sovetov Samara|frances|escamas|KSS|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Orenburg|curvo|rayo|ORE|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Pari Nizhny Novgorod|arco3|cruz|PNN|franjas|#00a0e3|#ffffff|#ffffff|#00a0e3|#00a0e3|#ffffff
-Dynamo Makhachkala|hexalgo|chevron|DM|liso|#00a0e3|#ffffff|#ffffff|#00a0e3|#00a0e3|#ffffff
-Sochi|ojiva|abanico|SOC|liso|#00a0e3|#c8102e|#c8102e|#00a0e3|#00a0e3|#c8102e
-Akron Tolyatti|banderin|puntas|AT|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Celtic|estandarte|estrella|CEL|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Glasgow Rangers|doblepunta|rombos|GR|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Heart of Midlothian|rombo|tablero|HM|franjas|#800000|#ffffff|#ffffff|#800000|#800000|#ffffff
-Aberdeen|octogono|sol|ABE|liso|#e21a22|#ffffff|#ffffff|#e21a22|#e21a22|#ffffff
-Hibernian|corona|escamas|HIB|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Dundee United|laurel|rayo|DU|franjas|#f26522|#000000|#000000|#f26522|#f26522|#000000
-Motherwell|frances|cruz|MOT|liso|#ffb81c|#8b1538|#8b1538|#ffb81c|#ffb81c|#8b1538
-Kilmarnock|curvo|estrella|KIL|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Falkirk|arco3|abanico|FAL|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Livingston|hexalgo|puntas|LIV|liso|#ffb81c|#000000|#000000|#ffb81c|#ffb81c|#000000
-St Mirren|ojiva|estrella|SM|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
-Dundee|banderin|rombos|DUN|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Jaraaf|estandarte|rombos|JAR|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
-Casa Sports|doblepunta|tablero|CS|liso|#1b8a3a|#ffffff|#ffffff|#1b8a3a|#1b8a3a|#ffffff
-Génération Foot|rombo|escamas|GF|franjas|#ffffff|#1b3a8a|#1b3a8a|#ffffff|#ffffff|#1b3a8a
-Teungueth FC|octogono|cruz|TFC|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-AS Pikine|corona|cruz|ASP|liso|#1b3a8a|#ffffff|#ffffff|#1b3a8a|#1b3a8a|#ffffff
-Guédiawaye FC|laurel|chevron|GFC|franjas|#ffd100|#1b8a3a|#1b8a3a|#ffd100|#ffd100|#1b8a3a
-AS Dakar Sacré-Coeur|frances|abanico|ASD|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
-Linguère|curvo|puntas|LIN|liso|#7a1f8a|#ffffff|#ffffff|#7a1f8a|#7a1f8a|#ffffff
-US Gorée|arco3|estrella|USG|franjas|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
-Stade de Mbour|hexalgo|ondas|SM|liso|#1b8a3a|#ffd100|#ffd100|#1b8a3a|#1b8a3a|#ffd100
-Wallidaan|ojiva|rombos|WAL|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-US Ouakam|banderin|tablero|USO|franjas|#1b3a8a|#ffd100|#ffd100|#1b3a8a|#1b3a8a|#ffd100
-AS Douanes|estandarte|sol|ASD|liso|#1b3a8a|#1b8a3a|#1b8a3a|#1b3a8a|#1b3a8a|#1b8a3a
-Diambars|doblepunta|escamas|DIA|liso|#ffffff|#1b8a3a|#1b8a3a|#ffffff|#ffffff|#1b8a3a
-Mbour Petite-Côte|rombo|cruz|MPC|franjas|#c8102e|#1b3a8a|#1b3a8a|#c8102e|#c8102e|#1b3a8a
-Sonacos|octogono|chevron|SON|liso|#1b8a3a|#ffffff|#ffffff|#1b8a3a|#1b8a3a|#ffffff
-Crvena Zvezda|corona|puntas|CZ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Partizan|laurel|puntas|PAR|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
-TSC Bačka Topola|frances|estrella|TSC|liso|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
-Vojvodina|curvo|ondas|VOJ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Čukarički|arco3|rombos|UKA|franjas|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
-Radnički Niš|hexalgo|tablero|RN|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Novi Pazar|ojiva|sol|NP|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Mladost Lučani|banderin|escamas|ML|franjas|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
-Spartak Subotica|estandarte|rayo|SS|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Radnik Surdulica|doblepunta|estrella|RS|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Napredak Kruševac|rombo|abanico|NK|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Javor-Matis|octogono|sol|JM|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-OFK Beograd|corona|rombos|OFK|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-FAP|laurel|ondas|FAP|franjas|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
-Železničar Pančevo|frances|sol|ELE|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-IMT Novi Beograd|curvo|escamas|IMT|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Basel|arco3|sol|BAS|franjas|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
-Young Boys|hexalgo|escamas|YB|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Lugano|ojiva|rayo|LUG|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
-Servette|banderin|cruz|SER|franjas|#7b1c3a|#ffffff|#ffffff|#7b1c3a|#7b1c3a|#ffffff
-Zürich|estandarte|puntas|ZRI|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Luzern|doblepunta|abanico|LUZ|liso|#0072ce|#ffffff|#ffffff|#0072ce|#0072ce|#ffffff
-Lausanne-Sport|rombo|estrella|LS|franjas|#0072ce|#ffffff|#ffffff|#0072ce|#0072ce|#ffffff
-St. Gallen|octogono|ondas|SG|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Sion|corona|rombos|SIO|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Grasshoppers|laurel|tablero|GRA|franjas|#0072ce|#ffffff|#ffffff|#0072ce|#0072ce|#ffffff
-Thun|frances|cruz|THU|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Winterthur|curvo|escamas|WIN|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Slovan Bratislava|arco3|rayo|SB|franjas|#00a0e3|#ffffff|#ffffff|#00a0e3|#00a0e3|#ffffff
-Spartak Trnava|hexalgo|cruz|ST|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
-DAC Dunajská Streda|ojiva|chevron|DAC|liso|#ffd100|#c8102e|#c8102e|#ffd100|#ffd100|#c8102e
-Žilina|banderin|estrella|ILI|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Ružomberok|estandarte|puntas|RUO|liso|#ffffff|#c8102e|#c8102e|#ffffff|#ffffff|#c8102e
-Podbrezová|doblepunta|estrella|POD|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
-Trenčín|rombo|rombos|TRE|franjas|#ffffff|#c8102e|#c8102e|#ffffff|#ffffff|#c8102e
-Košice|octogono|tablero|KOI|liso|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
-Tatran Prešov|corona|sol|TP|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
-Skalica|laurel|escamas|SKA|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Zemplín Michalovce|frances|rayo|ZM|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
-Komárno|curvo|cruz|KOM|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+APOEL|corona|abanico|APO|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Omonia Nicosia|laurel|puntas|ON|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Anorthosis Famagusta|frances|estrella|AF|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+AEK Larnaca|curvo|ondas|AEK|liso|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
+Apollon Limassol|arco3|rombos|AL|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+AEL Limassol|hexalgo|tablero|AEL|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Pafos|ojiva|sol|PAF|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Aris Limassol|banderin|escamas|AL|franjas|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
+Olympiakos Nicosia|estandarte|rayo|ON|liso|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
+Omonia Aradippou|doblepunta|cruz|OA|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Enosis Neon Paralimni|rombo|abanico|ENP|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Ethnikos Achna|octogono|puntas|EA|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
+Akritas Chlorakas|corona|estrella|AC|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Krasava ENY Ypsonas|laurel|ondas|KEN|franjas|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
+Slavia Praha|frances|rombos|SP|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Sparta Praha|curvo|tablero|SP|liso|#8b1538|#ffd100|#ffd100|#8b1538|#8b1538|#ffd100
+Viktoria Plzeň|arco3|sol|VP|franjas|#1b458f|#c8102e|#c8102e|#1b458f|#1b458f|#c8102e
+Baník Ostrava|hexalgo|escamas|BO|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Sigma Olomouc|ojiva|rayo|SO|liso|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
+FK Mladá Boleslav|banderin|cruz|FKM|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+1. FC Slovácko|estandarte|chevron|FCS|liso|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
+Hradec Králové|doblepunta|abanico|HK|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+FK Jablonec|rombo|estrella|FKJ|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+FK Teplice|octogono|ondas|FKT|liso|#ffd100|#ffffff|#ffffff|#ffd100|#ffd100|#ffffff
+Bohemians 1905|corona|tablero|BOH|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Dukla Praha|laurel|tablero|DP|franjas|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
+FK Pardubice|frances|sol|FKP|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+MFK Karviná|curvo|escamas|MFK|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+SK Dynamo České Budějovice|arco3|rayo|SKD|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Slovan Liberec|hexalgo|cruz|SL|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+HJK|ojiva|chevron|HJK|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+KuPS|banderin|abanico|KPS|franjas|#f2c200|#000000|#000000|#f2c200|#f2c200|#000000
+Ilves|estandarte|puntas|ILV|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+SJK|doblepunta|estrella|SJK|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+FC Inter Turku|rombo|rombos|FCI|franjas|#0057b8|#000000|#000000|#0057b8|#0057b8|#000000
+VPS|octogono|tablero|VPS|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+FC Lahti|corona|sol|FCL|liso|#ffffff|#c8102e|#c8102e|#ffffff|#ffffff|#c8102e
+TPS|laurel|escamas|TPS|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+AC Oulu|frances|rayo|ACO|liso|#f2c200|#0057b8|#0057b8|#f2c200|#f2c200|#0057b8
+IFK Mariehamn|curvo|cruz|IFK|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+FF Jaro|arco3|chevron|FFJ|franjas|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+IF Gnistan|hexalgo|abanico|IFG|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Asante Kotoko|ojiva|puntas|AK|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Hearts of Oak|banderin|estrella|HO|franjas|#f2c200|#c8102e|#c8102e|#f2c200|#f2c200|#c8102e
+Medeama|estandarte|ondas|MED|liso|#f2c200|#000000|#000000|#f2c200|#f2c200|#000000
+Aduana Stars|doblepunta|rombos|AS|liso|#f2c200|#c8102e|#c8102e|#f2c200|#f2c200|#c8102e
+Bechem United|rombo|sol|BU|franjas|#0b8f3c|#f2c200|#f2c200|#0b8f3c|#0b8f3c|#f2c200
+Dreams FC|octogono|rayo|DFC|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Berekum Chelsea|corona|rayo|BC|liso|#1e56b8|#ffffff|#ffffff|#1e56b8|#1e56b8|#ffffff
+Nsoatreman|laurel|cruz|NSO|franjas|#0b8f3c|#ffffff|#ffffff|#0b8f3c|#0b8f3c|#ffffff
+Samartex|frances|chevron|SAM|liso|#0b8f3c|#f2c200|#f2c200|#0b8f3c|#0b8f3c|#f2c200
+Karela United|curvo|abanico|KU|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+Legon Cities|arco3|puntas|LC|franjas|#f2c200|#1d3f9e|#1d3f9e|#f2c200|#f2c200|#1d3f9e
+Heart of Lions|hexalgo|estrella|HL|liso|#c8102e|#f2c200|#f2c200|#c8102e|#c8102e|#f2c200
+Basake Holy Stars|ojiva|ondas|BHS|liso|#ffffff|#0a3d91|#0a3d91|#ffffff|#ffffff|#0a3d91
+Vision FC|banderin|rombos|VFC|franjas|#1e56b8|#f2c200|#f2c200|#1e56b8|#1e56b8|#f2c200
+Bibiani Gold Stars|estandarte|tablero|BGS|liso|#f2c200|#000000|#000000|#f2c200|#f2c200|#000000
+Hohoe United|doblepunta|sol|HU|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Racing Club Accra|rombo|rayo|RCA|franjas|#1e56b8|#ffffff|#ffffff|#1e56b8|#1e56b8|#ffffff
+Accra Lions|octogono|cruz|AL|liso|#f2c200|#0b8f3c|#0b8f3c|#f2c200|#f2c200|#0b8f3c
+Olympiacos|corona|abanico|OLY|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Panathinaikos|laurel|abanico|PAN|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+AEK Athens|frances|puntas|AEK|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+PAOK|curvo|ondas|PAO|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Aris|arco3|ondas|ARI|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+OFI Crete|hexalgo|rombos|OFI|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Atromitos|ojiva|tablero|ATR|liso|#0072ce|#ffffff|#ffffff|#0072ce|#0072ce|#ffffff
+Asteras Tripolis|banderin|sol|AT|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Volos|estandarte|escamas|VOL|liso|#0072ce|#ffffff|#ffffff|#0072ce|#0072ce|#ffffff
+Levadiakos|doblepunta|rayo|LEV|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+Panserraikos|rombo|abanico|PAN|franjas|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+Panetolikos|octogono|abanico|PAN|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+AEL|corona|puntas|AEL|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Kifisia|laurel|estrella|KIF|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+CD Olimpia|frances|ondas|CDO|liso|#ffffff|#003087|#003087|#ffffff|#ffffff|#003087
+Motagua|curvo|rombos|MOT|liso|#003087|#ffffff|#ffffff|#003087|#003087|#ffffff
+Marathón|arco3|tablero|MAR|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Real España|hexalgo|sol|RE|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Victoria|ojiva|rayo|VIC|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Olancho|banderin|rayo|OLA|franjas|#8b1a1a|#ffffff|#ffffff|#8b1a1a|#8b1a1a|#ffffff
+Juticalpa|estandarte|cruz|JUT|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Génesis|doblepunta|chevron|GNE|liso|#0a3d91|#ffd100|#ffd100|#0a3d91|#0a3d91|#ffd100
+Platense FC|rombo|puntas|PFC|franjas|#7a0019|#ffffff|#ffffff|#7a0019|#7a0019|#ffffff
+Lobos UPNFM|octogono|estrella|LUP|liso|#003087|#ffffff|#ffffff|#003087|#003087|#ffffff
+Atlético Choloma|corona|ondas|AC|liso|#ffd100|#003087|#003087|#ffd100|#ffd100|#003087
+Ferencváros|laurel|rombos|FER|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Paks|frances|tablero|PAK|liso|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
+Győr|curvo|sol|GYR|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Debrecen|arco3|escamas|DEB|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Puskás Akadémia|hexalgo|rayo|PA|liso|#1b458f|#c8102e|#c8102e|#1b458f|#1b458f|#c8102e
+Zalaegerszeg|ojiva|cruz|ZAL|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Kisvárda|banderin|chevron|KIS|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Nyíregyháza|estandarte|puntas|NYR|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Újpest|doblepunta|puntas|JPE|liso|#6a1b9a|#ffffff|#ffffff|#6a1b9a|#6a1b9a|#ffffff
+Diósgyőr|rombo|ondas|DIS|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Kazincbarcika|octogono|rombos|KAZ|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
+MTK|corona|tablero|MTK|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Shamrock Rovers|laurel|sol|SR|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Shelbourne|frances|escamas|SHE|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Bohemians|curvo|rayo|BOH|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+St Patrick's Athletic|arco3|cruz|SPA|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Derry City|hexalgo|chevron|DC|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Dundalk|ojiva|abanico|DUN|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Sligo Rovers|banderin|puntas|SR|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Drogheda United|estandarte|estrella|DU|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Galway United|doblepunta|ondas|GU|liso|#7b1e3a|#ffffff|#ffffff|#7b1e3a|#7b1e3a|#ffffff
+Waterford|rombo|tablero|WAT|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Persepolis|octogono|sol|PER|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Esteghlal|corona|escamas|EST|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Sepahan|laurel|rayo|SEP|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Tractor|frances|cruz|TRA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Foolad|curvo|chevron|FOO|liso|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
+Gol Gohar|arco3|abanico|GG|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Zob Ahan|hexalgo|puntas|ZA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Malavan|ojiva|estrella|MAL|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Aluminium Arak|banderin|rombos|AA|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Mes Rafsanjan|estandarte|rombos|MR|liso|#f26522|#000000|#000000|#f26522|#f26522|#000000
+Chadormalou|doblepunta|tablero|CHA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Paykan|rombo|escamas|PAY|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Shams Azar|octogono|rayo|SA|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Kheybar|corona|cruz|KHE|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Fajr Sepasi|laurel|chevron|FS|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Esteghlal Khuzestan|frances|abanico|EK|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Al-Gharraf|curvo|puntas|AG|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Al-Kahrabaa|arco3|estrella|AK|franjas|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Al-Karkh|hexalgo|ondas|AK|liso|#ffffff|#c8102e|#c8102e|#ffffff|#ffffff|#c8102e
+Al-Karma|ojiva|rombos|AK|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Al-Minaa|banderin|tablero|AM|franjas|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
+Al-Mosul|estandarte|sol|AM|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Al-Naft|doblepunta|escamas|AN|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Al-Najaf|rombo|chevron|AN|franjas|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Al-Qasim|octogono|abanico|AQ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Al-Quwa Al-Jawiya|corona|abanico|AQA|liso|#ffffff|#1b458f|#1b458f|#ffffff|#ffffff|#1b458f
+Al-Shorta|laurel|puntas|AS|franjas|#ffffff|#1b458f|#1b458f|#ffffff|#ffffff|#1b458f
+Al-Talaba|frances|estrella|AT|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Al-Zawraa|curvo|ondas|AZ|liso|#ffffff|#00843d|#00843d|#ffffff|#ffffff|#00843d
+Amanat Baghdad|arco3|tablero|AB|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Diyala|hexalgo|tablero|DIY|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Duhok|ojiva|sol|DUH|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Erbil|banderin|escamas|ERB|franjas|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Naft Maysan|estandarte|rayo|NM|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Newroz|doblepunta|cruz|NEW|liso|#ffd100|#c8102e|#c8102e|#ffd100|#ffd100|#c8102e
+Zakho|rombo|puntas|ZAK|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Hapoel Be'er Sheva|octogono|puntas|HBS|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Maccabi Tel Aviv|corona|estrella|MTA|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Maccabi Haifa|laurel|tablero|MH|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Hapoel Tel Aviv|frances|tablero|HTA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Beitar Jerusalem|curvo|tablero|BJ|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Hapoel Haifa|arco3|sol|HH|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Maccabi Netanya|hexalgo|escamas|MN|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Hapoel Jerusalem|ojiva|cruz|HJ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Ironi Kiryat Shmona|banderin|cruz|IKS|franjas|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
+Bnei Sakhnin|estandarte|chevron|BS|liso|#c8102e|#00843d|#00843d|#c8102e|#c8102e|#00843d
+Hapoel Petah Tikva|doblepunta|puntas|HPT|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Ironi Tiberias|rombo|estrella|IT|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+F.C. Ashdod|octogono|ondas|FCA|liso|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
+Maccabi Bnei Reineh|corona|rombos|MBR|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Harbour View|laurel|tablero|HV|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Portmore United|frances|sol|PU|liso|#f2c200|#0b8f3c|#0b8f3c|#f2c200|#f2c200|#0b8f3c
+Waterhouse|curvo|escamas|WAT|liso|#000000|#f2c200|#f2c200|#000000|#000000|#f2c200
+Cavalier|arco3|rayo|CAV|franjas|#0a3d91|#ffffff|#ffffff|#0a3d91|#0a3d91|#ffffff
+Arnett Gardens|hexalgo|cruz|AG|liso|#0b8f3c|#f2c200|#f2c200|#0b8f3c|#0b8f3c|#f2c200
+Tivoli Gardens|ojiva|chevron|TG|liso|#0b8f3c|#ffffff|#ffffff|#0b8f3c|#0b8f3c|#ffffff
+Montego Bay United|banderin|abanico|MBU|franjas|#0a3d91|#f2c200|#f2c200|#0a3d91|#0a3d91|#f2c200
+Mount Pleasant|estandarte|puntas|MP|liso|#0b8f3c|#000000|#000000|#0b8f3c|#0b8f3c|#000000
+Spanish Town Police|doblepunta|estrella|STP|liso|#0a3d91|#c8102e|#c8102e|#0a3d91|#0a3d91|#c8102e
+Racing United|rombo|rombos|RU|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Chapelton Maroons|octogono|tablero|CM|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+Dunbeholden|corona|sol|DUN|liso|#c8102e|#f2c200|#f2c200|#c8102e|#c8102e|#f2c200
+Molynes United|laurel|escamas|MU|franjas|#0a3d91|#000000|#000000|#0a3d91|#0a3d91|#000000
+Treasure Beach|frances|rayo|TB|liso|#f2c200|#0a3d91|#0a3d91|#f2c200|#f2c200|#0a3d91
+Al-Faisaly|curvo|cruz|AF|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Al-Wehdat|arco3|chevron|AW|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Al-Hussein|hexalgo|abanico|AH|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Al-Ramtha|ojiva|estrella|AR|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Al-Jazeera|banderin|estrella|AJ|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Al-Ahli|estandarte|ondas|AA|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Shabab Al-Ordon|doblepunta|rombos|SAO|liso|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
+Al-Salt|rombo|sol|AS|franjas|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+Al-Baqa'a|octogono|escamas|AB|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Al-Sarhan|corona|rayo|AS|liso|#1b458f|#c8102e|#c8102e|#1b458f|#1b458f|#c8102e
+Afrique Élite|laurel|cruz|AFR|franjas|#0b8f3c|#f2c200|#f2c200|#0b8f3c|#0b8f3c|#f2c200
+AS Bakaridjan|frances|chevron|ASB|liso|#1e56b8|#ffffff|#ffffff|#1e56b8|#1e56b8|#ffffff
+AS Black Stars|curvo|abanico|ASB|liso|#111111|#f2c200|#f2c200|#111111|#111111|#f2c200
+AS Douanes Sikasso|arco3|puntas|ASD|franjas|#0a3d91|#d62828|#d62828|#0a3d91|#0a3d91|#d62828
+AS Korofina|hexalgo|estrella|ASK|liso|#d62828|#ffffff|#ffffff|#d62828|#d62828|#ffffff
+AS Olympique de Messira|ojiva|ondas|ASO|liso|#1e56b8|#d62828|#d62828|#1e56b8|#1e56b8|#d62828
+AS Police|banderin|rombos|ASP|franjas|#0a2a6b|#ffffff|#ffffff|#0a2a6b|#0a2a6b|#ffffff
+AS Real Bamako|estandarte|tablero|ASR|liso|#d62828|#ffffff|#ffffff|#d62828|#d62828|#ffffff
+CO Bamako|doblepunta|sol|COB|liso|#0b8f3c|#ffffff|#ffffff|#0b8f3c|#0b8f3c|#ffffff
+CS Duguwolofila|rombo|rayo|CSD|franjas|#f2c200|#0b8f3c|#0b8f3c|#f2c200|#f2c200|#0b8f3c
+Djoliba AC|octogono|cruz|DAC|liso|#d62828|#ffffff|#ffffff|#d62828|#d62828|#ffffff
+LC Bamako|corona|chevron|LCB|liso|#1e56b8|#f2c200|#f2c200|#1e56b8|#1e56b8|#f2c200
+Stade Malien|laurel|abanico|SM|franjas|#ffffff|#1e56b8|#1e56b8|#ffffff|#ffffff|#1e56b8
+AS Onze Créateurs|frances|puntas|ASO|liso|#f2c200|#d62828|#d62828|#f2c200|#f2c200|#d62828
+US Bougouba|curvo|estrella|USB|liso|#0b8f3c|#111111|#111111|#0b8f3c|#0b8f3c|#111111
+USC Kita|arco3|ondas|USC|franjas|#f2c200|#0a2a6b|#0a2a6b|#f2c200|#f2c200|#0a2a6b
+USFAS Bamako|hexalgo|rombos|USF|liso|#0b5e2e|#d62828|#d62828|#0b5e2e|#0b5e2e|#d62828
+Yeelen Olympique|ojiva|tablero|YO|liso|#f2c200|#111111|#111111|#f2c200|#f2c200|#111111
+ADO Den Haag|banderin|sol|ADO|franjas|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
+Willem II|estandarte|escamas|WII|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
+Vitesse|doblepunta|rayo|VIT|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Roda JC Kerkrade|rombo|chevron|RJC|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Cambuur|octogono|abanico|CAM|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+De Graafschap|corona|puntas|DG|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Almere City|laurel|estrella|AC|franjas|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+RKC Waalwijk|frances|ondas|RKC|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Emmen|curvo|rombos|EMM|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+MVV Maastricht|arco3|tablero|MVV|franjas|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
+VVV-Venlo|hexalgo|rayo|VVV|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Den Bosch|ojiva|escamas|DB|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Dordrecht|banderin|rayo|DOR|franjas|#ffffff|#00843d|#00843d|#ffffff|#ffffff|#00843d
+Eindhoven|estandarte|chevron|EIN|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Helmond Sport|doblepunta|chevron|HS|liso|#000000|#ffd100|#ffd100|#000000|#000000|#ffd100
+TOP Oss|rombo|estrella|TOP|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Jong Ajax|octogono|ondas|JA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Jong AZ|corona|ondas|JAZ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Jong PSV|laurel|tablero|JPS|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Jong FC Utrecht|frances|chevron|JFC|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Enyimba|curvo|sol|ENY|liso|#1d3f9e|#ffffff|#ffffff|#1d3f9e|#1d3f9e|#ffffff
+Rivers United|arco3|escamas|RU|franjas|#0b8f3c|#ffffff|#ffffff|#0b8f3c|#0b8f3c|#ffffff
+Remo Stars|hexalgo|rayo|RS|liso|#0a3d91|#f2c200|#f2c200|#0a3d91|#0a3d91|#f2c200
+Shooting Stars|ojiva|cruz|SS|liso|#1e56b8|#ffffff|#ffffff|#1e56b8|#1e56b8|#ffffff
+Kano Pillars|banderin|chevron|KP|franjas|#f2c200|#000000|#000000|#f2c200|#f2c200|#000000
+Plateau United|estandarte|abanico|PU|liso|#0b8f3c|#ffffff|#ffffff|#0b8f3c|#0b8f3c|#ffffff
+Enugu Rangers|doblepunta|puntas|ER|liso|#ffffff|#c8102e|#c8102e|#ffffff|#ffffff|#c8102e
+Bendel Insurance|rombo|ondas|BI|franjas|#1d3f9e|#f2c200|#f2c200|#1d3f9e|#1d3f9e|#f2c200
+Heartland|octogono|rombos|HEA|liso|#1e56b8|#ffffff|#ffffff|#1e56b8|#1e56b8|#ffffff
+Lobi Stars|corona|tablero|LS|liso|#0a3d91|#ffffff|#ffffff|#0a3d91|#0a3d91|#ffffff
+Nasarawa United|laurel|sol|NU|franjas|#f2c200|#0b8f3c|#0b8f3c|#f2c200|#f2c200|#0b8f3c
+Bayelsa United|frances|abanico|BU|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Abia Warriors|curvo|cruz|AW|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+Katsina United|arco3|chevron|KU|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Kwara United|hexalgo|chevron|KU|liso|#c8102e|#1e56b8|#1e56b8|#c8102e|#c8102e|#1e56b8
+Niger Tornadoes|ojiva|abanico|NT|liso|#000000|#f2c200|#f2c200|#000000|#000000|#f2c200
+El-Kanemi Warriors|banderin|puntas|EKW|franjas|#0b8f3c|#ffffff|#ffffff|#0b8f3c|#0b8f3c|#ffffff
+Wikki Tourists|estandarte|estrella|WT|liso|#1e56b8|#f2c200|#f2c200|#1e56b8|#1e56b8|#f2c200
+Sunshine Stars|doblepunta|ondas|SS|liso|#f2c200|#1e56b8|#1e56b8|#f2c200|#f2c200|#1e56b8
+Barau FC|rombo|tablero|BFC|franjas|#1d3f9e|#ffffff|#ffffff|#1d3f9e|#1d3f9e|#ffffff
+Bodø/Glimt|octogono|sol|BG|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Brann|corona|escamas|BRA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Viking|laurel|rayo|VIK|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Rosenborg|frances|cruz|ROS|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Molde|curvo|chevron|MOL|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Lillestrøm|arco3|abanico|LIL|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Tromsø|hexalgo|ondas|TRO|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Sarpsborg 08|ojiva|ondas|SAR|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Fredrikstad|banderin|ondas|FRE|franjas|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+KFUM Oslo|estandarte|rombos|KFU|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Sandefjord|doblepunta|tablero|SAN|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Aalesund|rombo|escamas|AAL|franjas|#f26522|#1b458f|#1b458f|#f26522|#f26522|#1b458f
+Kristiansund|octogono|rayo|KRI|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+HamKam|corona|cruz|HK|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Vålerenga|laurel|chevron|VLE|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Start|frances|abanico|STA|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Auckland City|curvo|puntas|AC|liso|#1b3c8c|#ffffff|#ffffff|#1b3c8c|#1b3c8c|#ffffff
+Auckland FC Reserves|arco3|estrella|AFC|franjas|#4fa3e0|#0b1f3a|#0b1f3a|#4fa3e0|#4fa3e0|#0b1f3a
+Auckland United|hexalgo|rombos|AU|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Birkenhead United|ojiva|rombos|BU|liso|#e63946|#111111|#111111|#e63946|#e63946|#111111
+Cashmere Technical|banderin|tablero|CT|franjas|#0a2a6b|#f2c200|#f2c200|#0a2a6b|#0a2a6b|#f2c200
+Eastern Suburbs|estandarte|sol|ES|liso|#0d6b3a|#ffffff|#ffffff|#0d6b3a|#0d6b3a|#ffffff
+Ferrymead Bays|doblepunta|escamas|FB|liso|#c8102e|#1b1b1b|#1b1b1b|#c8102e|#c8102e|#1b1b1b
+Miramar Rangers|rombo|cruz|MR|franjas|#1e56b8|#ffffff|#ffffff|#1e56b8|#1e56b8|#ffffff
+Napier City Rovers|octogono|chevron|NCR|liso|#0a2a6b|#d62828|#d62828|#0a2a6b|#0a2a6b|#d62828
+Wellington Olympic|corona|abanico|WO|liso|#d62828|#ffffff|#ffffff|#d62828|#d62828|#ffffff
+Wellington Phoenix Reserves|laurel|puntas|WPR|franjas|#f2c200|#111111|#111111|#f2c200|#f2c200|#111111
+Tauro|frances|estrella|TAU|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Alianza|curvo|ondas|ALI|liso|#003087|#ffffff|#ffffff|#003087|#003087|#ffffff
+Plaza Amador|arco3|rombos|PA|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Árabe Unido|hexalgo|sol|RAB|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Club Deportivo del Este|ojiva|sol|CDE|liso|#c8102e|#003087|#003087|#c8102e|#c8102e|#003087
+Sporting San Miguelito|banderin|escamas|SSM|franjas|#003087|#c8102e|#c8102e|#003087|#003087|#c8102e
+Herrera|estandarte|cruz|HER|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+CA Independiente|doblepunta|cruz|CAI|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Veraguas|rombo|abanico|VER|franjas|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
+CD Universitario|octogono|puntas|CDU|liso|#003087|#ffd100|#ffd100|#003087|#003087|#ffd100
+Chiriquí|corona|estrella|CHI|liso|#ffffff|#c8102e|#c8102e|#ffffff|#ffffff|#c8102e
+San Francisco|laurel|ondas|SF|franjas|#003087|#ffffff|#ffffff|#003087|#003087|#ffffff
+Lech Poznań|frances|rombos|LP|liso|#003876|#ffffff|#ffffff|#003876|#003876|#ffffff
+Legia Warszawa|curvo|tablero|LW|liso|#006633|#ffffff|#ffffff|#006633|#006633|#ffffff
+Jagiellonia Białystok|arco3|sol|JB|franjas|#ffd100|#c8102e|#c8102e|#ffd100|#ffd100|#c8102e
+Raków Częstochowa|hexalgo|escamas|RC|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
+Pogoń Szczecin|ojiva|rayo|PS|liso|#1b458f|#8b1538|#8b1538|#1b458f|#1b458f|#8b1538
+Górnik Zabrze|banderin|cruz|GZ|franjas|#ffffff|#1b458f|#1b458f|#ffffff|#ffffff|#1b458f
+Cracovia|estandarte|chevron|CRA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Piast Gliwice|doblepunta|abanico|PG|liso|#1b458f|#c8102e|#c8102e|#1b458f|#1b458f|#c8102e
+Zagłębie Lubin|rombo|estrella|ZL|franjas|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
+Korona Kielce|octogono|ondas|KK|liso|#ffd100|#c8102e|#c8102e|#ffd100|#ffd100|#c8102e
+Radomiak Radom|corona|sol|RR|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Widzew Łódź|laurel|sol|WID|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Motor Lublin|frances|sol|ML|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Lechia Gdańsk|curvo|escamas|LG|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Arka Gdynia|arco3|rayo|AG|franjas|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Bruk-Bet Termalica|hexalgo|cruz|BBT|liso|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
+GKS Katowice|ojiva|chevron|GKS|liso|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
+Wisła Płock|banderin|abanico|WP|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Marítimo|estandarte|puntas|MAR|liso|#00843d|#c8102e|#c8102e|#00843d|#00843d|#c8102e
+Farense|doblepunta|estrella|FAR|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Portimonense|rombo|rombos|POR|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Paços de Ferreira|octogono|tablero|PF|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Vizela|corona|sol|VIZ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Chaves|laurel|escamas|CHA|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+União de Leiria|frances|rayo|UL|liso|#1b458f|#c8102e|#c8102e|#1b458f|#1b458f|#c8102e
+Académico de Viseu|curvo|chevron|AV|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Leixões|arco3|estrella|LEI|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Penafiel|hexalgo|abanico|PEN|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Feirense|ojiva|puntas|FEI|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Felgueiras|banderin|ondas|FEL|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Oliveirense|estandarte|tablero|OLI|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Lusitânia Lourosa|doblepunta|rombos|LL|liso|#00843d|#c8102e|#c8102e|#00843d|#00843d|#c8102e
+Torreense|rombo|sol|TOR|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Benfica B|octogono|escamas|BB|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Porto B|corona|rayo|PB|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Sporting CP B|laurel|escamas|SCP|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Al Sadd|frances|chevron|AS|liso|#ffffff|#003876|#003876|#ffffff|#ffffff|#003876
+Al Duhail|curvo|abanico|AD|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Al Rayyan|arco3|puntas|AR|franjas|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+Al Gharafa|hexalgo|estrella|AG|liso|#0072ce|#ffffff|#ffffff|#0072ce|#0072ce|#ffffff
+Al Arabi|ojiva|tablero|AA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Al Wakrah|banderin|rombos|AW|franjas|#ffd100|#0072ce|#0072ce|#ffd100|#ffd100|#0072ce
+Qatar SC|estandarte|tablero|QSC|liso|#7b1c3a|#ffffff|#ffffff|#7b1c3a|#7b1c3a|#ffffff
+Al Ahli|doblepunta|sol|AA|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Al Shamal|rombo|rayo|AS|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Umm Salal|octogono|cruz|US|liso|#00843d|#000000|#000000|#00843d|#00843d|#000000
+Al Khor|corona|chevron|AK|liso|#ffd100|#c8102e|#c8102e|#ffd100|#ffd100|#c8102e
+Al Shahaniya|laurel|abanico|AS|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+FCSB|frances|puntas|FCS|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
+CFR Cluj|curvo|estrella|CFR|liso|#8b1538|#ffffff|#ffffff|#8b1538|#8b1538|#ffffff
+Universitatea Craiova|arco3|ondas|UC|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Rapid București|hexalgo|rombos|RB|liso|#8b1538|#ffffff|#ffffff|#8b1538|#8b1538|#ffffff
+Dinamo București|ojiva|chevron|DB|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Universitatea Cluj|banderin|sol|UC|franjas|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+FC Argeș|estandarte|escamas|FCA|liso|#8b1538|#ffffff|#ffffff|#8b1538|#8b1538|#ffffff
+Petrolul Ploiești|doblepunta|rayo|PP|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Oțelul Galați|rombo|chevron|OG|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Farul Constanța|octogono|puntas|FC|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Hermannstadt|corona|puntas|HER|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+UTA Arad|laurel|estrella|UTA|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Csikszereda|frances|ondas|CSI|liso|#8b1538|#ffffff|#ffffff|#8b1538|#8b1538|#ffffff
+Botoșani|curvo|tablero|BOT|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Unirea Slobozia|arco3|sol|US|franjas|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
+Metaloglobus București|hexalgo|sol|MB|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Zenit Saint Petersburg|ojiva|escamas|ZSP|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Krasnodar|banderin|rayo|KRA|franjas|#00843d|#000000|#000000|#00843d|#00843d|#000000
+Spartak Moscow|estandarte|estrella|SM|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+CSKA Moscow|doblepunta|chevron|CSK|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
+Lokomotiv Moscow|rombo|puntas|LM|franjas|#00843d|#c8102e|#c8102e|#00843d|#00843d|#c8102e
+Dynamo Moscow|octogono|estrella|DM|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Rubin Kazan|corona|ondas|RK|liso|#8b1538|#ffffff|#ffffff|#8b1538|#8b1538|#ffffff
+Akhmat Grozny|laurel|rayo|AG|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Rostov|frances|tablero|ROS|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Baltika Kaliningrad|curvo|sol|BK|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Krylia Sovetov Samara|arco3|rayo|KSS|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Orenburg|hexalgo|rayo|ORE|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Pari Nizhny Novgorod|ojiva|cruz|PNN|liso|#00a0e3|#ffffff|#ffffff|#00a0e3|#00a0e3|#ffffff
+Dynamo Makhachkala|banderin|chevron|DM|franjas|#00a0e3|#ffffff|#ffffff|#00a0e3|#00a0e3|#ffffff
+Sochi|estandarte|abanico|SOC|liso|#00a0e3|#c8102e|#c8102e|#00a0e3|#00a0e3|#c8102e
+Akron Tolyatti|doblepunta|estrella|AT|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Celtic|rombo|ondas|CEL|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Glasgow Rangers|octogono|rombos|GR|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Heart of Midlothian|corona|tablero|HM|liso|#800000|#ffffff|#ffffff|#800000|#800000|#ffffff
+Aberdeen|laurel|sol|ABE|franjas|#e21a22|#ffffff|#ffffff|#e21a22|#e21a22|#ffffff
+Hibernian|frances|escamas|HIB|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Dundee United|curvo|rayo|DU|liso|#f26522|#000000|#000000|#f26522|#f26522|#000000
+Motherwell|arco3|cruz|MOT|franjas|#ffb81c|#8b1538|#8b1538|#ffb81c|#ffb81c|#8b1538
+Kilmarnock|hexalgo|chevron|KIL|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Falkirk|ojiva|abanico|FAL|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Livingston|banderin|puntas|LIV|franjas|#ffb81c|#000000|#000000|#ffb81c|#ffb81c|#000000
+St Mirren|estandarte|estrella|SM|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Dundee|doblepunta|ondas|DUN|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Jaraaf|rombo|tablero|JAR|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Casa Sports|octogono|sol|CS|liso|#1b8a3a|#ffffff|#ffffff|#1b8a3a|#1b8a3a|#ffffff
+Génération Foot|corona|escamas|GF|liso|#ffffff|#1b3a8a|#1b3a8a|#ffffff|#ffffff|#1b3a8a
+Teungueth FC|laurel|rayo|TFC|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+AS Pikine|frances|cruz|ASP|liso|#1b3a8a|#ffffff|#ffffff|#1b3a8a|#1b3a8a|#ffffff
+Guédiawaye FC|curvo|chevron|GFC|liso|#ffd100|#1b8a3a|#1b8a3a|#ffd100|#ffd100|#1b8a3a
+AS Dakar Sacré-Coeur|arco3|abanico|ASD|franjas|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+Linguère|hexalgo|puntas|LIN|liso|#7a1f8a|#ffffff|#ffffff|#7a1f8a|#7a1f8a|#ffffff
+US Gorée|ojiva|estrella|USG|liso|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
+Stade de Mbour|banderin|ondas|SM|franjas|#1b8a3a|#ffd100|#ffd100|#1b8a3a|#1b8a3a|#ffd100
+Wallidaan|estandarte|rombos|WAL|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+US Ouakam|doblepunta|tablero|USO|liso|#1b3a8a|#ffd100|#ffd100|#1b3a8a|#1b3a8a|#ffd100
+AS Douanes|rombo|escamas|ASD|franjas|#1b3a8a|#1b8a3a|#1b8a3a|#1b3a8a|#1b3a8a|#1b8a3a
+Diambars|octogono|rayo|DIA|liso|#ffffff|#1b8a3a|#1b8a3a|#ffffff|#ffffff|#1b8a3a
+Mbour Petite-Côte|corona|cruz|MPC|liso|#c8102e|#1b3a8a|#1b3a8a|#c8102e|#c8102e|#1b3a8a
+Sonacos|laurel|chevron|SON|franjas|#1b8a3a|#ffffff|#ffffff|#1b8a3a|#1b8a3a|#ffffff
+Crvena Zvezda|curvo|puntas|CZ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Partizan|curvo|puntas|PAR|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+TSC Bačka Topola|arco3|estrella|TSC|franjas|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
+Vojvodina|hexalgo|escamas|VOJ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Čukarički|ojiva|rombos|UKA|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Radnički Niš|banderin|tablero|RN|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Novi Pazar|estandarte|escamas|NP|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Mladost Lučani|doblepunta|escamas|ML|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
+Spartak Subotica|rombo|cruz|SS|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Radnik Surdulica|octogono|rombos|RS|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Napredak Kruševac|corona|tablero|NK|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Javor-Matis|laurel|puntas|JM|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+OFK Beograd|frances|ondas|OFK|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+FAP|curvo|ondas|FAP|liso|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
+Železničar Pančevo|arco3|tablero|ELE|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+IMT Novi Beograd|hexalgo|tablero|IMT|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Basel|ojiva|sol|BAS|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
+Young Boys|banderin|escamas|YB|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Lugano|estandarte|rayo|LUG|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Servette|doblepunta|cruz|SER|liso|#7b1c3a|#ffffff|#ffffff|#7b1c3a|#7b1c3a|#ffffff
+Zürich|rombo|abanico|ZRI|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Luzern|octogono|puntas|LUZ|liso|#0072ce|#ffffff|#ffffff|#0072ce|#0072ce|#ffffff
+Lausanne-Sport|corona|estrella|LS|liso|#0072ce|#ffffff|#ffffff|#0072ce|#0072ce|#ffffff
+St. Gallen|frances|ondas|SG|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Sion|curvo|sol|SIO|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Grasshoppers|curvo|tablero|GRA|liso|#0072ce|#ffffff|#ffffff|#0072ce|#0072ce|#ffffff
+Thun|hexalgo|cruz|THU|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Winterthur|ojiva|abanico|WIN|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Slovan Bratislava|ojiva|rayo|SB|liso|#00a0e3|#ffffff|#ffffff|#00a0e3|#00a0e3|#ffffff
+Spartak Trnava|banderin|cruz|ST|franjas|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+DAC Dunajská Streda|estandarte|chevron|DAC|liso|#ffd100|#c8102e|#c8102e|#ffd100|#ffd100|#c8102e
+Žilina|doblepunta|ondas|ILI|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Ružomberok|rombo|estrella|RUO|franjas|#ffffff|#c8102e|#c8102e|#ffffff|#ffffff|#c8102e
+Podbrezová|octogono|ondas|POD|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+Trenčín|corona|rombos|TRE|liso|#ffffff|#c8102e|#c8102e|#ffffff|#ffffff|#c8102e
+Košice|laurel|tablero|KOI|franjas|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
+Tatran Prešov|frances|sol|TP|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+Skalica|curvo|rayo|SKA|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Zemplín Michalovce|arco3|rayo|ZM|franjas|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
+Komárno|hexalgo|puntas|KOM|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Olimpija Ljubljana|ojiva|chevron|OL|liso|#2e8b3e|#ffffff|#ffffff|#2e8b3e|#2e8b3e|#ffffff
+Maribor|banderin|abanico|MAR|franjas|#6a2c91|#ffffff|#ffffff|#6a2c91|#6a2c91|#ffffff
+Celje|estandarte|puntas|CEL|liso|#1d4fa8|#f5c400|#f5c400|#1d4fa8|#1d4fa8|#f5c400
+Koper|doblepunta|estrella|KOP|liso|#f5c400|#1d4fa8|#1d4fa8|#f5c400|#f5c400|#1d4fa8
+Mura|rombo|rombos|MUR|franjas|#111111|#ffffff|#ffffff|#111111|#111111|#ffffff
+Bravo|octogono|tablero|BRA|liso|#f5c400|#111111|#111111|#f5c400|#f5c400|#111111
+Domžale|corona|sol|DOM|liso|#f5c400|#1d4fa8|#1d4fa8|#f5c400|#f5c400|#1d4fa8
+Primorje|laurel|escamas|PRI|franjas|#1d4fa8|#ffffff|#ffffff|#1d4fa8|#1d4fa8|#ffffff
+Radomlje|frances|rayo|RAD|liso|#f5c400|#111111|#111111|#f5c400|#f5c400|#111111
+Aluminij|curvo|cruz|ALU|liso|#6a2c91|#ffffff|#ffffff|#6a2c91|#6a2c91|#ffffff
 Malmö FF|arco3|chevron|MFF|franjas|#7ec8f2|#ffffff|#ffffff|#7ec8f2|#7ec8f2|#ffffff
 AIK|hexalgo|abanico|AIK|liso|#000000|#ffd100|#ffd100|#000000|#000000|#ffd100
 Djurgårdens IF|ojiva|puntas|DIF|liso|#00a0e3|#1b458f|#1b458f|#00a0e3|#00a0e3|#1b458f
 Hammarby IF|banderin|estrella|HIF|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
 IFK Göteborg|estandarte|ondas|IFK|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-IF Elfsborg|doblepunta|sol|IFE|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-BK Häcken|rombo|escamas|BKH|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+IF Elfsborg|doblepunta|tablero|IFE|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+BK Häcken|rombo|sol|BKH|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
 Mjällby AIF|octogono|escamas|MAI|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
 Örgryte IS|corona|rayo|IS|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
 Kalmar FF|laurel|cruz|KFF|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-IK Sirius|frances|abanico|IKS|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Degerfors IF|curvo|puntas|DIF|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+IK Sirius|frances|puntas|IKS|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Degerfors IF|curvo|estrella|DIF|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 GAIS|arco3|puntas|GAI|franjas|#00843d|#000000|#000000|#00843d|#00843d|#000000
 IF Brommapojkarna|hexalgo|estrella|IFB|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
 Halmstads BK|ojiva|ondas|HBK|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
@@ -440,7 +572,7 @@ AS Marsa|curvo|estrella|ASM|liso|#ffffff|#e31b23|#e31b23|#ffffff|#ffffff|#e31b23
 ES Zarzis|arco3|ondas|ESZ|franjas|#e31b23|#ffffff|#ffffff|#e31b23|#e31b23|#ffffff
 CA Bizertin|hexalgo|rombos|CAB|liso|#e31b23|#000000|#000000|#e31b23|#e31b23|#000000
 JS Kairouan|ojiva|tablero|JSK|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-ES Métlaoui|banderin|sol|ESM|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+ES Métlaoui|banderin|rayo|ESM|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
 AS Gabès|estandarte|escamas|ASG|liso|#e31b23|#ffffff|#ffffff|#e31b23|#e31b23|#ffffff
 US Tataouine|doblepunta|rayo|UST|liso|#0057b8|#ffd100|#ffd100|#0057b8|#0057b8|#ffd100
 Olympique Béja|rombo|chevron|OB|franjas|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
@@ -450,10 +582,10 @@ Fenerbahçe|laurel|estrella|FEN|franjas|#002d62|#ffed00|#ffed00|#002d62|#002d62|
 Beşiktaş|frances|ondas|BEI|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
 Trabzonspor|curvo|rombos|TRA|liso|#7b1c3a|#69b3e7|#69b3e7|#7b1c3a|#7b1c3a|#69b3e7
 İstanbul Başakşehir|arco3|tablero|STA|franjas|#f26522|#1c2c5b|#1c2c5b|#f26522|#f26522|#1c2c5b
-Samsunspor|hexalgo|sol|SAM|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Samsunspor|banderin|sol|SAM|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Göztepe|ojiva|escamas|GZT|liso|#ffd100|#c8102e|#c8102e|#ffd100|#ffd100|#c8102e
 Alanyaspor|banderin|rayo|ALA|franjas|#00a651|#f7941d|#f7941d|#00a651|#00a651|#f7941d
-Konyaspor|estandarte|cruz|KON|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Konyaspor|estandarte|chevron|KON|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
 Kasımpaşa|doblepunta|chevron|KAS|liso|#00338d|#ffffff|#ffffff|#00338d|#00338d|#ffffff
 Antalyaspor|rombo|puntas|ANT|franjas|#e30613|#ffffff|#ffffff|#e30613|#e30613|#ffffff
 Çaykur Rizespor|octogono|estrella|AYK|liso|#007a33|#0072ce|#0072ce|#007a33|#007a33|#0072ce
@@ -463,38 +595,38 @@ Eyüpspor|frances|tablero|EYP|liso|#6a1b9a|#ffd100|#ffd100|#6a1b9a|#6a1b9a|#ffd1
 Kocaelispor|curvo|sol|KOC|liso|#00843d|#000000|#000000|#00843d|#00843d|#000000
 Gençlerbirliği|arco3|escamas|GEN|franjas|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
 Fatih Karagümrük|hexalgo|rayo|FK|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
-Erzurumspor|ojiva|cruz|ERZ|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Esenler Erokspor|banderin|tablero|EE|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Adana Demirspor|estandarte|estrella|AD|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Sivasspor|doblepunta|ondas|SIV|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Hatayspor|rombo|rombos|HAT|franjas|#8b1538|#ffffff|#ffffff|#8b1538|#8b1538|#ffffff
-Bodrum|octogono|rayo|BOD|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Erzurumspor|ojiva|chevron|ERZ|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Esenler Erokspor|banderin|abanico|EE|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Adana Demirspor|estandarte|abanico|AD|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Sivasspor|doblepunta|rombos|SIV|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Hatayspor|rombo|ondas|HAT|franjas|#8b1538|#ffffff|#ffffff|#8b1538|#8b1538|#ffffff
+Bodrum|octogono|rombos|BOD|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
 Amedspor|corona|tablero|AME|liso|#c8102e|#00843d|#00843d|#c8102e|#c8102e|#00843d
 Sakaryaspor|laurel|sol|SAK|franjas|#00843d|#000000|#000000|#00843d|#00843d|#000000
 Manisa|frances|escamas|MAN|liso|#000000|#c8102e|#c8102e|#000000|#000000|#c8102e
-Bandırmaspor|curvo|cruz|BAN|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Bandırmaspor|curvo|ondas|BAN|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Çorum|arco3|cruz|ORU|franjas|#000000|#c8102e|#c8102e|#000000|#000000|#c8102e
-Pendikspor|hexalgo|chevron|PEN|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Pendikspor|banderin|rombos|PEN|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 İstanbulspor|ojiva|abanico|STA|liso|#ffd100|#c8102e|#c8102e|#ffd100|#ffd100|#c8102e
-Boluspor|banderin|sol|BOL|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Boluspor|banderin|escamas|BOL|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Keçiörengücü|estandarte|estrella|KEI|liso|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
-Sarıyer|doblepunta|tablero|SAR|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Sarıyer|doblepunta|rombos|SAR|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
 Serikspor|rombo|tablero|SER|franjas|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
 Ümraniyespor|octogono|sol|MRA|liso|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
 Vanspor|corona|rayo|VAN|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Iğdır|laurel|rayo|IDR|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Iğdır|laurel|chevron|IDR|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Al Ain|frances|cruz|AA|liso|#6a1b9a|#ffffff|#ffffff|#6a1b9a|#6a1b9a|#ffffff
 Shabab Al Ahli|curvo|chevron|SAA|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
 Al Wasl|arco3|abanico|AW|franjas|#ffd100|#ffffff|#ffffff|#ffd100|#ffd100|#ffffff
 Al Jazira|hexalgo|ondas|AJ|liso|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
 Sharjah|ojiva|estrella|SHA|liso|#ffffff|#1b458f|#1b458f|#ffffff|#ffffff|#1b458f
 Al Wahda|banderin|rayo|AW|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Baniyas|estandarte|rombos|BAN|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Baniyas|estandarte|tablero|BAN|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
 Al-Nasr|doblepunta|tablero|AN|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
 Khor Fakkan|rombo|rayo|KF|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Ajman|octogono|rayo|AJM|liso|#f26522|#000000|#000000|#f26522|#f26522|#000000
-Al Dhafra|corona|cruz|AD|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Dibba|laurel|chevron|DIB|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Al Dhafra|corona|chevron|AD|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Dibba|laurel|ondas|DIB|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Al Bataeh|frances|abanico|AB|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
 Kalba|curvo|puntas|KAL|liso|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
 Shakhtar Donetsk|arco3|estrella|SD|franjas|#f26522|#000000|#000000|#f26522|#f26522|#000000
@@ -503,27 +635,55 @@ Metalist 1925 Kharkiv|ojiva|rombos|MK|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd1
 Zorya Luhansk|banderin|tablero|ZL|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
 SC Poltava|estandarte|escamas|SCP|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Oleksandriya|doblepunta|escamas|OLE|liso|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
-Kryvbas Kryvyi Rih|rombo|cruz|KKR|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Polissya Zhytomyr|octogono|abanico|PZ|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Obolon Kyiv|corona|abanico|OK|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
-Veres Rivne|laurel|puntas|VR|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Kryvbas Kryvyi Rih|rombo|chevron|KKR|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Polissya Zhytomyr|octogono|chevron|PZ|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Obolon Kyiv|corona|puntas|OK|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Veres Rivne|frances|puntas|VR|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
 Kolos Kovalivka|frances|estrella|KK|liso|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
-LNZ Cherkasy|curvo|sol|LNZ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+LNZ Cherkasy|banderin|cruz|LNZ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Rukh Lviv|arco3|rombos|RL|franjas|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
 Karpaty Lviv|hexalgo|tablero|KL|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
 Epicentr Kamianets-Podilskyi|ojiva|sol|EKP|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
 FC Kudrivka|banderin|escamas|FCK|franjas|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
-Carabobo|estandarte|chevron|CAR|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Deportivo Táchira|doblepunta|cruz|DT|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Caracas|rombo|estrella|CAR|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Universidad Central|octogono|puntas|UC|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
-Deportivo La Guaira|corona|tablero|DLG|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Metropolitanos|laurel|rombos|MET|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
-Monagas|frances|rombos|MON|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-Estudiantes de Mérida|arco3|cruz|EM|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Zamora|arco3|sol|ZAM|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Rayo Zuliano|hexalgo|abanico|RZ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
-Academia Puerto Cabello|ojiva|rayo|APC|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
-Portuguesa|banderin|cruz|POR|franjas|#c8102e|#00843d|#00843d|#c8102e|#c8102e|#00843d
-Trujillanos|estandarte|chevron|TRU|liso|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
-Anzoátegui|doblepunta|rombos|ANZ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Andijon|estandarte|rayo|AND|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Bunyodkor|doblepunta|cruz|BUN|liso|#00a0e3|#ffffff|#ffffff|#00a0e3|#00a0e3|#ffffff
+Bukhara|rombo|abanico|BUK|franjas|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
+Dinamo Samarqand|octogono|ondas|DS|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Mash'al|corona|ondas|MAS|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Nasaf|laurel|ondas|NAS|franjas|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
+Navbahor Namangan|frances|rombos|NN|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Neftchi Fergana|curvo|tablero|NF|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+OKMK (AGMK)|arco3|sol|OKM|franjas|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
+Pakhtakor|hexalgo|escamas|PAK|liso|#ffffff|#1b458f|#1b458f|#ffffff|#ffffff|#1b458f
+Qizilqum|ojiva|rayo|QIZ|liso|#ffd100|#c8102e|#c8102e|#ffd100|#ffd100|#c8102e
+Kokand 1912|estandarte|rayo|KOK|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Sogdiana|estandarte|puntas|SOG|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Surkhon|doblepunta|escamas|SUR|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Lokomotiv Tashkent|rombo|estrella|LT|franjas|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
+Khorazm|octogono|ondas|KHO|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Carabobo|laurel|escamas|CAR|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Deportivo Táchira|laurel|tablero|DT|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Caracas|doblepunta|rayo|CAR|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Universidad Central|curvo|escamas|UC|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Deportivo La Guaira|arco3|cruz|DLG|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Metropolitanos|hexalgo|cruz|MET|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Monagas|ojiva|chevron|MON|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Estudiantes de Mérida|doblepunta|chevron|EM|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Zamora|estandarte|rombos|ZAM|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Rayo Zuliano|rombo|tablero|RZ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Academia Puerto Cabello|rombo|rombos|APC|franjas|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Portuguesa|octogono|tablero|POR|liso|#c8102e|#00843d|#00843d|#c8102e|#c8102e|#00843d
+Trujillanos|corona|sol|TRU|liso|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
+Anzoátegui|octogono|cruz|ANZ|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+The New Saints|frances|rayo|TNS|liso|#00a651|#ffffff|#ffffff|#00a651|#00a651|#ffffff
+Connah's Quay Nomads|curvo|cruz|CQN|liso|#ffffff|#1d2f6f|#1d2f6f|#ffffff|#ffffff|#1d2f6f
+Bala Town|arco3|chevron|BT|franjas|#00a651|#ffffff|#ffffff|#00a651|#00a651|#ffffff
+Caernarfon Town|hexalgo|abanico|CT|liso|#f5c400|#00843d|#00843d|#f5c400|#f5c400|#00843d
+Penybont|ojiva|puntas|PEN|liso|#d62828|#ffffff|#ffffff|#d62828|#d62828|#ffffff
+Haverfordwest County|banderin|estrella|HC|franjas|#1d4fa8|#ffffff|#ffffff|#1d4fa8|#1d4fa8|#ffffff
+Cardiff Metropolitan University|estandarte|ondas|CMU|liso|#f5c400|#111111|#111111|#f5c400|#f5c400|#111111
+Colwyn Bay|doblepunta|rombos|CB|liso|#4aa3df|#ffffff|#ffffff|#4aa3df|#4aa3df|#ffffff
+Flint Town United|rombo|sol|FTU|franjas|#111111|#ffffff|#ffffff|#111111|#111111|#ffffff
+Llanelli Town|octogono|escamas|LT|liso|#d62828|#ffffff|#ffffff|#d62828|#d62828|#ffffff
+Barry Town United|corona|rayo|BTU|liso|#f5c400|#1d4fa8|#1d4fa8|#f5c400|#f5c400|#1d4fa8
+Briton Ferry Llansawel|laurel|cruz|BFL|franjas|#d62828|#111111|#111111|#d62828|#d62828|#111111

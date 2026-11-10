@@ -116,12 +116,22 @@ func _probar_selecciones_nuevas() -> void:
 ## su confederación y sus selecciones con jugadores del mundo de verdad (antes: plantilla inventada).
 func _probar_pais_sin_liga_tanda1() -> void:
 	_titulo("PAÍSES SIN LIGA, TANDA 1: LIGA, COPA, CONFEDERACIÓN Y SELECCIÓN")
-	var casos := {"NGA": [20, "Nigeria", "afr"], "GHA": [18, "Ghana", "afr"], "SEN": [16, "Senegal", "afr"], "CIV": [14, "Costa de Marfil", "afr"], "ALG": [16, "Argelia", "afr"],
-		"TUN": [16, "Túnez", "afr"], "CMR": [16, "Camerún", "afr"], "CAN": [8, "Canadá", "conc"], "CRC": [12, "Costa Rica", "conc"], "IRL": [10, "Irlanda", "ucl"]}
+	_comprobar_tanda({"NGA": [20, "Nigeria", "afr"], "GHA": [18, "Ghana", "afr"], "SEN": [16, "Senegal", "afr"], "CIV": [14, "Costa de Marfil", "afr"], "ALG": [16, "Argelia", "afr"],
+		"TUN": [16, "Túnez", "afr"], "CMR": [16, "Camerún", "afr"], "CAN": [8, "Canadá", "conc"], "CRC": [12, "Costa Rica", "conc"], "IRL": [10, "Irlanda", "ucl"]}, 1103)
+
+## (10-11) TANDA 2: las 9 selecciones que seguían con 0 convocables (Gales, Honduras, Irak, Jamaica, Jordania, Malí, N. Zelanda, Panamá, Uzbekistán) más Finlandia, Eslovenia y Chipre.
+## Listas de clubes de Wikipedia 2025-26 (Malí: la de 2021-22, sin verificar).
+func _probar_pais_sin_liga_tanda2() -> void:
+	_titulo("PAÍSES SIN LIGA, TANDA 2: LIGA, COPA, CONFEDERACIÓN Y SELECCIÓN")
+	_comprobar_tanda({"WAL": [12, "Gales", "ucl"], "SVN": [10, "Eslovenia", "ucl"], "JOR": [10, "Jordania", "asia"], "CYP": [14, "Chipre", "ucl"], "IRQ": [20, "Irak", "asia"], "UZB": [16, "Uzbekistán", "asia"],
+		"FIN": [12, "Finlandia", "ucl"], "JAM": [14, "Jamaica", "conc"], "HON": [11, "Honduras", "conc"], "PAN": [12, "Panamá", "conc"], "NZL": [11, "N. Zelanda", "oce"], "MLI": [18, "Malí", "afr"]}, 1104)
+
+## Cada país del caso [clubes, selección, copa continental]: su liga con la cantidad real de clubes, su copa continental, su copa nacional, su selección y jugadores del mundo para convocar.
+func _comprobar_tanda(casos: Dictionary, semilla: int) -> void:
 	var m := Mundo.new()
 	var paises: Array[String] = []
 	paises.assign(casos.keys())
-	m.generar(paises, 1103)
+	m.generar(paises, semilla)
 	var confed: Dictionary = Datos.tabla("CONFED") as Dictionary
 	for cod: String in casos:
 		var datos: Array = casos[cod]

@@ -90,6 +90,19 @@ const JORNADA := {
 	"CAN": [40, "Código del Trabajo de Canadá", "40 horas semanales de jornada estándar; el exceso se paga como extra.", true],
 	"CRC": [48, "Código de Trabajo", "48 horas semanales de jornada diurna.", true],
 	"IRL": [48, "Ley de organización del tiempo de trabajo", "48 horas semanales de media como máximo.", true],
+## Tanda 2 de «países sin liga» (10-11-2026): WAL, SVN, JOR, CYP, IRQ, UZB, FIN, JAM, HON, PAN, NZL, MLI.
+	"WAL": [48, "Reglamento del tiempo de trabajo", "48 horas semanales de media como máximo.", true],
+	"SVN": [40, "Ley de relaciones laborales", "40 horas semanales.", true],
+	"JOR": [48, "Código del Trabajo", "48 horas semanales como máximo.", true],
+	"CYP": [40, "Ley de organización del tiempo de trabajo", "De 38 a 40 horas semanales según el sector.", true],
+	"IRQ": [48, "Código del Trabajo", "8 horas diarias y 48 semanales.", true],
+	"UZB": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"FIN": [40, "Ley de horas de trabajo", "8 horas diarias y 40 semanales.", true],
+	"JAM": [40, "Ley de salario mínimo y horas de trabajo", "40 horas semanales como referencia.", true],
+	"HON": [44, "Código del Trabajo", "44 horas semanales en jornada diurna.", true],
+	"PAN": [48, "Código de Trabajo", "48 horas semanales de jornada diurna.", true],
+	"NZL": [40, "Ley de relaciones laborales", "40 horas semanales como referencia.", true],
+	"MLI": [40, "Código del Trabajo", "40 horas semanales.", true],
 	"IRN": [44, "Código del Trabajo", "44 horas semanales.", true],
 }
 

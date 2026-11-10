@@ -1,0 +1,22 @@
+#seleccion=Gales
+#tier=0.4
+#globo=-3.18,51.48
+#bandera=🏴󠁧󠁢󠁷󠁬󠁳󠁿
+#confed=ucl,uel
+#liga=Cymru Premier|Liga Galesa
+#copa=Welsh Cup|Copa Galesa
+#nombres=Rhys,Owain,Gareth,Dafydd,Huw,Iwan,Gethin,Aled,Emyr,Llyr,Osian,Ieuan,Tomos,Elis
+#apellidos=Jones,Williams,Davies,Evans,Thomas,Roberts,Hughes,Lewis,Morgan,Griffiths,Edwards,Owen,Rees,Pritchard
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+The New Saints;Los Santos Park;#00a651;#ffffff;66;2034;1959;los Santos;el estadio de una ciudad fronteriza con Inglaterra;Dominador de la liga durante la última década, con presencia habitual en Europa.
+Connah's Quay Nomads;Conna Quay Nomad;#ffffff;#1d2f6f;58;3000;1946;los Nómadas;el campo de una ciudad costera del norte;Un club del norte que ha ganado liga y copa pese a su pequeño presupuesto.
+Bala Town;Bala Ciudad;#00a651;#ffffff;55;3000;1880;los Lacustres;el campo de un pueblo junto al mayor lago natural del país;Famoso por su gesta europea frente a un gigante del continente.
+Caernarfon Town;Caernarvon Town;#f5c400;#00843d;54;3000;1876;los Canarios;el campo de una ciudad con castillo medieval;Un histórico del norte con una afición muy fiel.
+Penybont;Penibont Bridge;#d62828;#ffffff;53;3000;2013;los Puenteros;el campo de una ciudad industrial del sur;Joven club de la unión de dos equipos locales, con cantera ambiciosa.
+Haverfordwest County;Haverfod County;#1d4fa8;#ffffff;51;2100;1899;los Azulones;el estadio de una ciudad del oeste;Un club del extremo occidental que persigue las plazas europeas.
+Cardiff Metropolitan University;Cardiff Metro U;#f5c400;#111111;49;1620;1996;los Universitarios;el campus deportivo de una universidad de la capital;El equipo universitario de la capital, cantera de futbolistas jóvenes.
+Colwyn Bay;Colwin Bay;#4aa3df;#ffffff;47;3000;1885;los Marineros;el campo de una localidad costera del norte;Un club de la costa norte que regresó a la máxima categoría.
+Flint Town United;Flynt Town Union;#111111;#ffffff;46;3000;1886;los Hombres de Hierro;el campo de una ciudad fronteriza del norte;Un club de la frontera que sube y baja entre divisiones.
+Llanelli Town;Llanelly Town;#d62828;#ffffff;45;3700;1896;los Rojillos;el estadio de una ciudad del suroeste;Un club con solera del suroeste en plena reconstrucción.
+Barry Town United;Barry Union;#f5c400;#1d4fa8;43;2650;1888;los Gaviotas;el campo de una ciudad portuaria del sur;Antiguo campeón con pasado europeo que busca recuperar su sitio.
+Briton Ferry Llansawel;Briton Ferry Sur;#d62828;#111111;38;2300;1901;los Marineros del Puerto;el campo de un barrio portuario del sur;El recién llegado de la liga, con presupuesto modesto.

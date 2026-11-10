@@ -235,6 +235,18 @@ const COPAS_POR_PAIS := {
 	"CAN": [["Campeonato Canadiense", 1.0]],
 	"CRC": [["Copa Costarricense", 1.0]],
 	"IRL": [["Copa Irlandesa", 1.0]],
+	"WAL": [["Copa Galesa", 1.0]],
+	"SVN": [["Copa Eslovena", 1.0]],
+	"JOR": [["Copa Jordana", 1.0]],
+	"CYP": [["Copa Chipriota", 1.0]],
+	"IRQ": [["Copa Iraquí", 1.0]],
+	"UZB": [["Copa Uzbeka", 1.0]],
+	"FIN": [["Copa Finlandesa", 1.0]],
+	"JAM": [["Copa Jamaiquina", 1.0]],
+	"HON": [["Copa Hondureña", 1.0]],
+	"PAN": [["Copa Panameña", 1.0]],
+	"NZL": [["Copa Chatham", 1.0]],
+	"MLI": [["Copa Maliense", 1.0]],
 	"VEN": [["Copa Venezuela", 1.0]],
 }
 

@@ -1,0 +1,21 @@
+#seleccion=N. Zelanda
+#tier=0.4
+#globo=174.78,-41.29
+#bandera=🇳🇿
+#confed=oce
+#liga=National League de Nueva Zelanda|Liga Neozelandesa
+#copa=Chatham Cup|Copa Chatham
+#nombres=Liam,Jack,Tane,Hemi,Oliver,Wiremu,Callum,Noah,Rawiri,Finn,Matiu,Ethan,Kauri,Mason
+#apellidos=Smith,Walker,Te Rangi,Wilson,Tamihana,Brown,Parata,Taylor,Hohepa,Mitchell,Ngata,Stewart,Kereama,Collins
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Auckland City;Auckland Ciudad;#1b3c8c;#ffffff;60;3000;2004;los Navy Blues;el estadio del barrio de Sandringham;Dominador del fútbol oceánico, con muchos títulos de la liga y de la Champions de Oceanía.
+Auckland FC Reserves;Reserva Auckland;#4fa3e0;#0b1f3a;50;2000;2024;los Reservistas Celestes;el campo de entrenamiento de la gran ciudad del norte;Filial del club profesional de Auckland, pensado para dar minutos a los jóvenes.
+Auckland United;Auckland Unido;#c8102e;#ffffff;48;2500;1927;los Rojos del Roskill;el parque deportivo de un barrio del sur de la ciudad;Club histórico del barrio, con raíces de comunidad inmigrante.
+Birkenhead United;Birkenhead Norte;#e63946;#111111;47;2000;1930;los Cardenales de la Costa;el parque junto a la bahía norte;Club de barrio de la costa norte, con una cantera muy activa.
+Cashmere Technical;Cashmere Tecnico;#0a2a6b;#f2c200;54;3000;1973;los Técnicos de Canterbury;el parque conmemorativo de la ciudad del sur;Uno de los equipos más ganadores de la isla del sur.
+Eastern Suburbs;Suburbios Este;#0d6b3a;#ffffff;53;4000;1904;los Suburbanos;el gran campo del este de la ciudad;Club con más de un siglo de historia y un palmarés de copas.
+Ferrymead Bays;Ferrymead Bahia;#c8102e;#1b1b1b;44;1500;1989;los Bahianos del Estuario;el parque de la ribera del sur;Club modesto de la isla del sur que lucha por mantenerse en la élite.
+Miramar Rangers;Miramar Guardas;#1e56b8;#ffffff;55;2500;1904;los Guardabosques de la Capital;el campo de la península de la capital;Uno de los clubes clásicos de la capital, con mucha tradición.
+Napier City Rovers;Napier Viajeros;#0a2a6b;#d62828;52;3000;1968;los Viajeros de la Bahía;el estadio de la costa de la bahía este;El gran representante de la costa este de la isla norte.
+Wellington Olympic;Olimpico Capital;#d62828;#ffffff;51;3500;1949;los Olímpicos de la Capital;el parque de un barrio de la capital;Club de la capital con fuerte identidad de comunidad.
+Wellington Phoenix Reserves;Reserva Fenix;#f2c200;#111111;50;2000;2007;los Fénix Jóvenes;el parque de la ciudad vecina de la capital;Filial del club profesional de la capital, cantera de futuros profesionales.

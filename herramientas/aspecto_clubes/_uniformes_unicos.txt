@@ -1,12 +1,19 @@
 # Generado por herramientas/aspecto_unicos_kit.sh (no editar a mano): diseño, pantalón y medias distintos para que ningún uniforme se repita dentro de una liga.
 AD Tarma|franja_pecho|||#ffffff|#ffffff||||
+APOeL|franja_pecho|||#1b458f|#1b458f||||
+AS Real Bamako|franja_pecho|||#ffffff|#d62828||||
 Al Mokawloon|cuello_v|||#00843d|#ffffff||||
 Al Shahaniya|franja_pecho|||#c8102e|#c8102e||||
 Al-Ettifaq|cuello_v|||#111111|#00843d||||
 Al-Faiha|franja_pecho|||#0038a8|#0038a8||||
+Al-Faisaly|cuello_v|||#ffffff|#ffffff||||
 Al-Hazem|raglan|||#00843d|#00843d||||
+Al-Najaf|franjas_finas|||#1b458f|#1b458f||||
+Al-Qasim|cuello_v|||#ffffff|#ffffff||||
+Al-Ramtha|raglan|||#ffffff|#ffffff||||
 Al-Riyadh|franja_pecho|||#ffffff|#0038a8||||
 Al-Taawoun|franja_pecho|||#0038a8|#ffd100||||
+Al-Talaba|franja_central|||#ffffff|#c8102e||||
 Asociación Deportiva San Carlos|franjas_finas|||#ffffff|#1b458f||||
 Asteras Tripolis|franja_pecho|||#000000|#ffd100||||
 Athletico PR|franjas_finas|||#000000|#d50032||||
@@ -28,10 +35,16 @@ Defensa y J.|franja_pecho|||#00843d|#ffd100||||
 Den Bosch|franja_pecho|||#ffffff|#0057b8||||
 Dep. Cali|franjas_finas|||#ffffff|#00843d||||
 Deportivo Maipú|franjas|||#ffffff|#ffffff||||
+Dinamo Samarqand|raglan|||#ffffff|#ffffff||||
+Diyala|franja_central|||#ffffff|#ffffff||||
+Djoliba AC|franja_pecho|||#ffffff|#ffffff||||
 Dorados|franja_pecho|||#111111|#ffd100||||
+Dreams FC|franja_central|||#111111|#c8102e||||
+Duhok|hombros|||#ffffff|#c8102e||||
 Dynamo Moscow|franja_pecho|||#1b458f|#1b458f||||
 EGS Gafsa|franja_pecho|||#ffffff|#ffffff||||
 Eindhoven|franja_pecho|||#ffffff|#ffffff||||
+Erbil|franjas_finas|||#ffffff|#ffd100||||
 Erzurumspor|franja_pecho|||#111111|#0057b8||||
 Esteghlal Khuzestan|cuello_v|||#ffffff|#0057b8||||
 Estudiantes Buenos Aires|franjas|||#111111|#d50032||||
@@ -51,6 +64,7 @@ Hermannstadt|franja_pecho|||#c8102e|#ffffff||||
 Hohoe United|franjas_finas|||#111111|#c8102e||||
 Holstein Kiel|franjas_finas|||#ffffff|#ffffff||||
 IF Elfsborg|franja_pecho|||#000000|#000000||||
+IF Gnistan|franja_central|||#ffffff|#ffffff||||
 IFK Göteborg|franja_pecho|||#ffffff|#1b458f||||
 IK Sirius|franja_pecho|||#1b458f|#ffffff||||
 Instituto|franjas_finas|||#111111|#d50032||||
@@ -64,6 +78,7 @@ Juventude|franja_pecho|||#ffffff|#00843d||||
 Kaiserslautern|raglan|||#ffffff|#ffffff||||
 Karlsruhe|cuello_v|||#ffffff|#ffffff||||
 Kisvárda|franja_pecho|||#111111|#c8102e||||
+Koper|franja_pecho|||#1d4fa8|#f5c400||||
 Korona Kielce|franjas_finas|||#c8102e|#ffd100||||
 LNZ Cherkasy|cuello_v|||#c8102e|#c8102e||||
 Las Palmas|franja_pecho|||#ffffff|#ffd100||||
@@ -83,10 +98,14 @@ Mineros de Zacatecas|raglan|||#111111|#d50032||||
 Mjällby AIF|franja_pecho|||#ffffff|#ffd100||||
 Mladost Lučani|franjas_finas|||#ffffff|#c8102e||||
 Modena|franja_pecho|||#111111|#ffd100||||
+Motagua|franja_pecho|||#ffffff|#003087||||
 Motor Lublin|franja_pecho|||#1b458f|#ffd100||||
 Nac. Potosí|bastones|||#111111|#d50032||||
+Naft Maysan|cuello_v|||#ffffff|#ffffff||||
 Nancy|franja_pecho|||#d50032|#ffffff||||
+Navbahor Namangan|raglan|||#ffffff|#ffffff||||
 Necaxa|franjas_anchas|||#ffffff|#ffffff||||
+Neftchi Fergana|franja_central|||#ffffff|#1b458f||||
 Novorizontino|franja_pecho|||#111111|#111111||||
 Nueva Chicago|franjas_finas|||#111111|#00843d||||
 O'Higgins|franja_pecho|||#ffffff|#6caddf||||
@@ -98,11 +117,13 @@ Oțelul Galați|cuello_v|||#1b458f|#1b458f||||
 PEC Zwolle|franjas_finas|||#111111|#0057b8||||
 PWD Bamenda|franja_pecho|||#ffd100|#1b458f||||
 Padova|franja_pecho|||#d50032|#d50032||||
+Pafos|franja_central|||#ffffff|#ffffff||||
 Panetolikos|franja_pecho|||#ffffff|#ffffff||||
 Paradou AC|franjas_anchas|||#ffffff|#ffffff||||
 Patronato|franjas_finas|||#111111|#111111||||
 Penafiel|raglan|||#ffffff|#ffffff||||
 Pendikspor|franja_central|||#ffffff|#ffffff||||
+Penybont|franja_pecho|||#111111|#d62828||||
 Pereira|franja_pecho|||#d50032|#d50032||||
 Petrojet|vertical3|||#ffffff|#d50032||||
 Pohang S.|franjas_finas|||#ffffff|#d50032||||
@@ -114,6 +135,7 @@ Portsmouth|cuello_v|||#0057b8|#0057b8||||
 Qingdao West Coast|cuello_v|||#111111|#c8102e||||
 RKC Waalwijk|cuello_v|||#0057b8|#ffd100||||
 Racing de Córdoba|franjas_finas|||#ffffff|#5ab4e5||||
+Radomlje|franja_pecho|||#111111|#f5c400||||
 Reims|franja_central|||#111111|#d50032||||
 Renaissance Z.|franja_pecho|||#111111|#0038a8||||
 Rennes|franjas_finas|||#000000|#000000||||
@@ -143,6 +165,7 @@ Sigma Olomouc|franja_pecho|||#1b458f|#1b458f||||
 Sivasspor|franjas_anchas|||#111111|#d50032||||
 Slovan Liberec|cuello_v|||#111111|#1b458f||||
 Smouha|cuello_v|||#0038a8|#0038a8||||
+Sogdiana|franja_central|||#111111|#1b458f||||
 Sonacos|franja_pecho|||#ffffff|#1b8a3a||||
 Spartak Varna|franja_pecho|||#ffffff|#ffffff||||
 Spezia|franja_pecho|||#ffffff|#ffffff||||
@@ -171,9 +194,11 @@ UTA Arad|franja_pecho|||#ffffff|#ffffff||||
 Universitatea Craiova|raglan|||#ffffff|#1b458f||||
 Unión SF|franjas_finas|||#000000|#d50032||||
 Utrecht|mitad|||#111111|#d50032||||
+VPS|franja_central|||#111111|#0057b8||||
 VVV-Venlo|franja_pecho|||#ffffff|#ffd100||||
 Venados|banda_baja|||#111111|#d50032||||
 Veres Rivne|cuello_v|||#00843d|#00843d||||
+Victoria|hombros|||#ffffff|#ffffff||||
 Viking|franja_pecho|||#ffffff|#ffffff||||
 Vila Nova|canesu|||#ffffff|#d50032||||
 Vitesse|cuello_v|||#111111|#ffd100||||
@@ -189,6 +214,7 @@ Wrexham|canesu|||#111111|#d50032||||
 Wuhan Three Towns|franja_pecho|||#c8102e|#c8102e||||
 Zagłębie Lubin|franja_pecho|||#00843d|#00843d||||
 Zalaegerszeg|raglan|||#111111|#1b458f||||
+Árabe Unido|hombros|||#111111|#c8102e||||
 Çorum|franjas_finas|||#111111|#111111||||
 Étoile du Sahel|franjas_finas|||#ffffff|#e31b23||||
 Ñublense|v_ancha|||#ffffff|#d50032||||

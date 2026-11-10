@@ -152,6 +152,10 @@ def uniformes(nuevo: dict, kits: set, fallos: list) -> None:
             v += [""] * (11 - len(v))
             real = v[0]
             malo = None
+            if real not in nuevo:   # (10-11) «APOeL»: el nombre limpio del juego puede variar en mayúsculas respecto de la clave («APOEL»)
+                ci = [k for k in nuevo if k.lower() == real.lower()]
+                if len(ci) == 1:
+                    real = ci[0]
             if real not in nuevo:
                 malo = "club sin fila"
             elif v[1] and v[1] not in kits:

@@ -1,0 +1,22 @@
+#seleccion=Finlandia
+#tier=0.6
+#globo=24.94,60.17
+#bandera=🇫🇮
+#confed=ucl,uel
+#liga=Veikkausliiga|Liga Finlandesa
+#copa=Copa de Finlandia|Copa Finlandesa
+#nombres=Mikko,Juha,Antti,Jari,Teemu,Ville,Petri,Matti,Lauri,Eero,Tuomas,Jussi,Olli,Aleksi
+#apellidos=Virtanen,Korhonen,Nieminen,Makinen,Hamalainen,Laine,Heikkinen,Koskinen,Jarvinen,Lehtonen,Saarinen,Salminen,Heinonen,Niemi
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+HJK;HJK Helsinkino;#0057b8;#ffffff;66;10770;1907;los Clubbi;el estadio de la capital junto al centro;El gigante del país, con una vitrina llena de títulos de liga.
+KuPS;KuPS Kuopion;#f2c200;#000000;62;5000;1923;los Leones Amarillos;el estadio moderno de la ciudad de los lagos;Campeón reciente que ha crecido con una cantera muy sólida.
+Ilves;Ilves Tammela;#c8102e;#000000;60;8017;1931;los Linces;el histórico estadio de la ciudad industrial;Un club con gran tradición y una afición muy fiel.
+SJK;SJK Seinajoen;#ffffff;#000000;58;6075;1927;los Cazadores;el estadio de la ciudad del interior oeste;Un equipo ordenado que ya ha conseguido el título de liga.
+FC Inter Turku;Inter Turun;#0057b8;#000000;58;9072;1990;los Interistas;el estadio del puerto del suroeste;Un club joven y ambicioso que presume de cantera.
+VPS;VPS Vaasan;#0057b8;#ffffff;54;6009;1924;los Azules de la Costa;el estadio de la ciudad costera del oeste;Un veterano que ha ganado ligas y copas en el pasado.
+FC Lahti;Lahden Lahti;#ffffff;#c8102e;52;7465;1996;los Lahtelaiset;el estadio de la ciudad de los trampolines;Un club nacido de una fusión que pelea por mantener su sitio.
+TPS;TPS Turun;#000000;#ffffff;50;9072;1922;los Pájaros de Turku;el estadio del puerto del suroeste;Histórico campeón que vive una nueva etapa en la élite.
+AC Oulu;AC Oulun;#f2c200;#0057b8;48;4392;2002;los Amarillos del Norte;el estadio de la gran ciudad del norte;Representa a la región más septentrional de la liga.
+IFK Mariehamn;IFK Mariehamnin;#c8102e;#ffffff;46;1635;1919;los Marineros de Åland;el diminuto estadio de la isla;El único club de las islas, con un campo muy pequeño.
+FF Jaro;Jaro Pietarsaari;#c8102e;#000000;42;3600;1965;los Rojinegros de la Costa;el estadio de la ciudad bilingüe de la costa oeste;Un club de la minoría sueca que lucha por mantenerse.
+IF Gnistan;Gnistan Vantaa;#0057b8;#ffffff;40;2700;1924;los Chispas;el pequeño estadio de un barrio de la capital;Un club de barrio que ha vuelto a la máxima categoría.
