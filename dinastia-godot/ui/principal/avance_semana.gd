@@ -13,7 +13,7 @@ static var partido_obliga := true
 var _mercado_avisado: int = -1
 var _saldo_mostrado := -1
 var _dia_pintado: int = -1
-var _prologo_lanzado := false; var _evento_fin_lanzado := false   ## el evento de fin de temporada ya salió en esta pantalla (se rearma al empezar otra temporada)
+var _evento_fin_lanzado := false   ## el evento de fin de temporada ya salió en esta pantalla (se rearma al empezar otra temporada)
 
 func _init(principal: Principal) -> void:
 	p = principal
@@ -210,9 +210,6 @@ func _refrescar() -> void:
 	## Y la música, que también depende de lo que esté pasando.
 	Musica.ambientar(situacion_musical())   ## (A4 memoria) sin crear `PantallaOpciones` en cada refresco
 	actualizar_calendario()   ## «Temporada siguiente» solo existe al terminar la liga
-	if not _prologo_lanzado and p.mundo != null and p.mundo.prologo_pendiente and not p.mundo.prologo_visto:   ## (9-11) el prólogo animado, al empezar
-		_prologo_lanzado = true
-		PrologoInicio.ofrecer.call_deferred(p)
 	## (9-11) EVENTO DE FIN DE TEMPORADA: al terminar la liga, el partido de despedida a pantalla completa (solo en su fecha, una vez).
 	if p.mundo != null and p.mundo.temporada_en_curso():
 		_evento_fin_lanzado = false
