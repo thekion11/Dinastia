@@ -387,6 +387,7 @@ func _sacar_los_22() -> void:
 	## que acaba de salir.
 	var once_local := partido.once_local if partido != null else club.once()
 	var once_visita := partido.once_visita if partido != null else visitante.once()
+	_once_l = once_local; _once_v = once_visita   ## para `_sacar_banca`: los MISMOS onces, sin calcularlos otra vez
 	var l := Puente3D.once(once_local)
 	var v := Puente3D.once(once_visita)
 	## El local ataca hacia un lado y el visitante hacia el otro: `spawn_team` lo
@@ -402,7 +403,16 @@ func _sacar_los_22() -> void:
 	## El trío de la camiseta que mejor se distingue de los dos (M-072).
 	_kit_arbitro = Puente3D.kit_arbitro(kit_l, kit_v, hash(club.id + "|" + visitante.id), [por_l, por_v])
 	_en_campo.append_array(_spawner.spawn_arbitros(_raiz3d, _kit_arbitro))
-	_poner_banca(once_local, once_visita)
+
+## (10-11, tiempo hasta jugar) `_sacar_los_22` era UN bloque de ~1,5 s de CPU (3-5 s en un móvil: la carga sin moverse y riesgo de «la aplicación no responde» en Android). Se parte en tres tiempos
+## que el montaje por partes separa con un fotograma (`_sacar_los_22`, `_sacar_banca`, `_sacar_personal`); el resultado es el mismo y nadie ve el estadio hasta que acaba.
+var _once_l: Array[Jugador] = []
+var _once_v: Array[Jugador] = []
+
+func _sacar_banca() -> void:
+	_poner_banca(_once_l, _once_v)
+
+func _sacar_personal() -> void:
 	_poner_personal()
 	_purgar_nodos_fantasma()
 	if GenteFuera.aplica(Calidad.elegida):

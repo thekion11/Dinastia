@@ -320,18 +320,21 @@ func asegurar_mundo() -> Mundo:
 
 func _finalizar() -> void:
 	_terminado = true
-	var res = CargaCiudad.de("OrquestadorMundo").preparar(estado)
-	partida_lista.emit(res)
 	if not cambiar_escena or not is_inside_tree():
+		partida_lista.emit(CargaCiudad.de("OrquestadorMundo").preparar(estado))
 		return
-	var escena := String(res.get("escena", MENU_VIEJO))
+	## (10-11, «Continuar») `preparar` (cargar la partida guardada, o crear la nueva) va DENTRO de la pantalla de carga, ya dibujada: antes la entrada se quedaba congelada 0,3-2 s en PC (varios s en móvil).
+	var preparar := func() -> String:
+		var res = CargaCiudad.de("OrquestadorMundo").preparar(estado)
+		partida_lista.emit(res)
+		return String(res.get("escena", MENU_VIEJO))
 	if duracion_fundido <= 0.0:
-		CargaMenu.cambiar(get_tree(), escena)   ## (10-11) con pantalla de carga: montar el menú bloquea 2-4 s en un equipo modesto
+		CargaMenu.cambiar(get_tree(), MENU_VIEJO, preparar)   ## (10-11) con pantalla de carga: montar el menú bloquea 2-4 s en un equipo modesto
 		return
 	_velo.mouse_filter = Control.MOUSE_FILTER_STOP
 	var tw := create_tween()
 	tw.tween_property(_velo, "modulate:a", 1.0, duracion_fundido)
-	tw.tween_callback(func() -> void: CargaMenu.cambiar(get_tree(), escena))
+	tw.tween_callback(func() -> void: CargaMenu.cambiar(get_tree(), MENU_VIEJO, preparar))
 
 # --- la intro, solo la primera vez --------------------------------------------------
 
