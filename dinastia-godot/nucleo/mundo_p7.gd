@@ -1,9 +1,8 @@
 extends "res://nucleo/mundo_p6.gd"
 ## [Capa 9/10 de `mundo.gd`] cerrar_temporada, nueva_temporada, perfil_estadio_de, estacion, clima, campana_lanzada_este_anio … (+13)
 
-## Cerrar la temporada ES pasar a la siguiente: premios, ascensos y `anio + 1`
-## en el núcleo. Antes `cerrar_temporada()` dejaba el año quieto (diez cierres
-## y la partida seguía en 2026). La UI llama a `nueva_temporada()`: una vez.
+## Cerrar la temporada ES pasar a la siguiente: premios, ascensos y `anio + 1` en el núcleo. Antes `cerrar_temporada()` dejaba el año quieto
+## (diez cierres y la partida seguía en 2026). La UI llama a `nueva_temporada()`: una vez.
 func cerrar_temporada() -> Dictionary:
 	return nueva_temporada()
 
@@ -11,10 +10,11 @@ func nueva_temporada() -> Dictionary:
 	## Primero se cierra la que acaba -premios, ascensos y descensos- y DESPUÉS
 	## envejece la gente. Al revés, los clubes se repartirían las divisiones con
 	## las plantillas del año siguiente y el descendido ya habría perdido a sus
-	## veteranos antes de saber que bajaba.
+	## veteranos antes de saber que bajaba. (10-11) Antes, la copa y el continental que sigan a medias se juegan hasta el final (`CierreTorneos`).
+	var pendientes := CierreTorneos.cerrar_pendientes(self)
 	var resumen := _cerrar_campeonato()
-	## Lo que queda entre partidas: un sobre de cromos y la foto del mundo.
-	Meta.fin_de_temporada(self)
+	resumen["torneos_cerrados"] = pendientes
+	Meta.fin_de_temporada(self)   ## lo que queda entre partidas: un sobre de cromos y la foto del mundo
 	## La selección y el Mundial de Clubes leen los campeones continentales de
 	## ESTA temporada que se acaba, así que van antes de volver a sortear los
 	## continentales de la siguiente -si no, mirarían el cuadro vacío del año

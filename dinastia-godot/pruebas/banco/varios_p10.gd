@@ -235,3 +235,33 @@ func _probar_gestion_once() -> void:
 	_comprobar(club.once().has(reserva), "y se puede rehacer el cambio")
 	GestionOnce.automatico(club)
 	_comprobar(club.once_elegido.is_empty() and club.once() == once0, "«once automático» vuelve a armarlo solo")
+
+## EL FINAL DE TEMPORADA COMPLETO (10-11, orden del dueño): copa y continental a medias se juegan hasta el final antes del cierre, y la pantalla única
+## de resumen tiene campeón, tu puesto, copa, continental, ascensos/descensos, premios y veredicto.
+func _probar_final_temporada() -> void:
+	_titulo("FINAL DE TEMPORADA: TORNEOS PENDIENTES Y PANTALLA ÚNICA DE RESUMEN")
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"], 52)
+	m.tomar_el_mando(m.ligas[0].clubes[2].id)
+	var guard := 0
+	while m.temporada_en_curso() and guard < 80:
+		m.avanzar_semana()
+		guard += 1
+	_comprobar(not m.temporada_en_curso(), "la liga termina (%d semanas)" % guard)
+	m._montar_copa()   ## una copa recién sorteada = a medias al terminar la liga
+	_comprobar(m.copa != null and m.copa.en_curso() and CierreTorneos.hay_pendientes(m), "con la liga terminada queda una copa a medias")
+	var cerrados := CierreTorneos.cerrar_pendientes(m)
+	_comprobar(m.copa.campeon != null and not CierreTorneos.hay_pendientes(m) and not cerrados.is_empty(), "se juega hasta el final y tiene campeón (%s)" % (m.copa.campeon.nombre if m.copa.campeon else "—"))
+	_comprobar(CierreTorneos.cerrar_pendientes(m).is_empty(), "cerrar dos veces no juega nada la segunda")
+	var foto := CierreTorneos.foto(m)
+	_comprobar(int(foto.get("puesto", 0)) >= 1 and foto.get("copa_campeon") == m.copa.campeon, "la foto guarda tu puesto (%d.º) y el campeón de copa" % int(foto.get("puesto", 0)))
+	var resumen := m.nueva_temporada()
+	var d := ResumenTemporada.datos(foto, resumen)
+	_comprobar(d["campeon"] is Club and int(d["puesto"]) >= 1 and int(d["equipos"]) > 2, "el resumen tiene campeón de liga y tu puesto de %d" % int(d["equipos"]))
+	_comprobar(d["copa_campeon"] is Club and String(d["copa"]) != "", "y la copa con su campeón (%s)" % String(d["copa"]))
+	var pais := m.mi_club().pais
+	var solo_mi_pais := true
+	for c: Club in (d["suben"] as Array) + (d["bajan"] as Array):
+		solo_mi_pais = solo_mi_pais and c.pais == pais
+	_comprobar(solo_mi_pais and not (d["suben"] as Array).is_empty(), "ascensos y descensos de tu país (%d suben)" % (d["suben"] as Array).size())
+	_comprobar(not (d["directiva"] as Dictionary).is_empty() and d.has("premios"), "con el veredicto de la directiva y los premios de la gala")
