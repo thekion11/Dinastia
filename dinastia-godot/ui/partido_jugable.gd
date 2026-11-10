@@ -20,7 +20,7 @@ func _montar_hud() -> void:
 	caja2.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	caja2.offset_left = -24.0 - HudTactil.margen(self).y - 306.0 * HudTactil.f(self)
 	caja2.offset_right = -24.0 - HudTactil.margen(self).y
-	caja2.offset_top = 18
+	caja2.offset_top = HudTactil.alto_fila2(self)   ## (en vertical, bajo el marcador)
 	add_child(caja2)
 	_hud.append(caja2)
 	_mis_stats = _etiqueta(HudTactil.tam(15, self), Color.WHITE)
@@ -33,18 +33,18 @@ func _montar_hud() -> void:
 	caja3.offset_top = -20.0 - 72.0 * HudTactil.f(self)
 	caja3.offset_bottom = -20
 	caja3.offset_right = 24.0 + HudTactil.margen(self).x + 336.0 * HudTactil.f(self)
-	add_child(caja3)
+	add_child(caja3); HudTactil.compactar_ficha(caja3, self)   ## móvil: la ficha mide lo que necesita (10-11)
 	_hud.append(caja3)
 	_hud_abajo.append(caja3)
 	var v := VBoxContainer.new()
 	caja3.add_child(v)
 	var yo := carrera.jugador(mundo) if carrera != null else null
-	var nom := _etiqueta(HudTactil.tam(18, self), LIMA)
+	var nom := _etiqueta(HudTactil.tam(16 if HudTactil.activo(self) else 18, self), LIMA)   ## (móvil: ficha compacta, ≥ 2,5 mm)
 	nom.text = ("%d  %s" % [yo.dorsal, yo.nombre.to_upper()]) if yo != null else "—"
 	v.add_child(nom)
 	_aguante = ProgressBar.new()
 	_aguante.show_percentage = false
-	_aguante.custom_minimum_size = Vector2(300, 10) * HudTactil.f(self)
+	_aguante.custom_minimum_size = HudTactil.ancho_aguante(self)
 	_aguante.max_value = 1.0
 	var fondo_b := StyleBoxFlat.new()
 	fondo_b.bg_color = Color(1, 1, 1, 0.12)
@@ -69,9 +69,9 @@ func _montar_hud() -> void:
 	_barra.visible = false
 	add_child(_barra)
 	## El gran rótulo de sucesos (¡GOL!, falta, córner...).
-	_banner = _etiqueta(46, LIMA)
+	_banner = _etiqueta(HudTactil.tam_minimo(46, 4.0, self), LIMA)   ## (móvil: ≥ 4 mm de letra)
 	_banner.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	_banner.offset_top = 110
+	_banner.offset_top = HudTactil.alto_aviso(self)   ## (en vertical, bajo la fila de estadísticas)
 	_banner.offset_left = -500
 	_banner.offset_right = 500
 	_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
