@@ -7852,7 +7852,12 @@
   "Asia (AFC)": "Asia (AFC)",
   "Oceanía (OFC)": "Oceania (OFC)",
   "Elige al menos un país.": "Choose at least one country.",
-  "%d países · %d clubes · unos %d jugadores": "%d countries · %d clubs · about %d players"
+  "%d países · %d clubes · unos %d jugadores": "%d countries · %d clubs · about %d players",
+  "FIN DE TEMPORADA · LIGAS": "SEASON END · LEAGUES",
+  "AÑADIR LIGAS": "ADD LEAGUES",
+  "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Add countries to your game: their leagues and clubs join the season that is starting. Once added, they cannot be removed.",
+  "Añadir": "Add",
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Leagues added: %d countries, %d new clubs."
  },
  "pt": {
   "Historia": "História",
@@ -15707,7 +15712,12 @@
   "Asia (AFC)": "Ásia (AFC)",
   "Oceanía (OFC)": "Oceânia (OFC)",
   "Elige al menos un país.": "Escolhe pelo menos um país.",
-  "%d países · %d clubes · unos %d jugadores": "%d países · %d clubes · cerca de %d jogadores"
+  "%d países · %d clubes · unos %d jugadores": "%d países · %d clubes · cerca de %d jogadores",
+  "FIN DE TEMPORADA · LIGAS": "FIM DE ÉPOCA · LIGAS",
+  "AÑADIR LIGAS": "JUNTAR LIGAS",
+  "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Junta países ao teu jogo: as suas ligas e clubes entram na época que começa. Depois de juntos, não se podem retirar.",
+  "Añadir": "Juntar",
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Ligas juntas: %d países, %d clubes novos."
  },
  "patrones": [
   [
@@ -29680,7 +29690,12 @@
   "Asia (AFC)": "Asie (AFC)",
   "Oceanía (OFC)": "Océanie (OFC)",
   "Elige al menos un país.": "Choisis au moins un pays.",
-  "%d países · %d clubes · unos %d jugadores": "%d pays · %d clubs · environ %d joueurs"
+  "%d países · %d clubes · unos %d jugadores": "%d pays · %d clubs · environ %d joueurs",
+  "FIN DE TEMPORADA · LIGAS": "FIN DE SAISON · CHAMPIONNATS",
+  "AÑADIR LIGAS": "AJOUTER DES CHAMPIONNATS",
+  "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Ajoute des pays à ta partie : leurs championnats et clubs entrent dans la saison qui commence. Une fois ajoutés, on ne peut plus les retirer.",
+  "Añadir": "Ajouter",
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Championnats ajoutés : %d pays, %d nouveaux clubs."
  },
  "it": {
   "Historia": "Storia",
@@ -37535,7 +37550,12 @@
   "Asia (AFC)": "Asia (AFC)",
   "Oceanía (OFC)": "Oceania (OFC)",
   "Elige al menos un país.": "Scegli almeno un paese.",
-  "%d países · %d clubes · unos %d jugadores": "%d paesi · %d club · circa %d giocatori"
+  "%d países · %d clubes · unos %d jugadores": "%d paesi · %d club · circa %d giocatori",
+  "FIN DE TEMPORADA · LIGAS": "FINE STAGIONE · CAMPIONATI",
+  "AÑADIR LIGAS": "AGGIUNGI CAMPIONATI",
+  "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Aggiungi paesi alla tua partita: i loro campionati e club entrano nella stagione che inizia. Una volta aggiunti non si possono togliere.",
+  "Añadir": "Aggiungi",
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Campionati aggiunti: %d paesi, %d nuovi club."
  },
  "de": {
   "Historia": "Geschichte",
@@ -45390,7 +45410,12 @@
   "Asia (AFC)": "Asien (AFC)",
   "Oceanía (OFC)": "Ozeanien (OFC)",
   "Elige al menos un país.": "Wähle mindestens ein Land.",
-  "%d países · %d clubes · unos %d jugadores": "%d Länder · %d Vereine · etwa %d Spieler"
+  "%d países · %d clubes · unos %d jugadores": "%d Länder · %d Vereine · etwa %d Spieler",
+  "FIN DE TEMPORADA · LIGAS": "SAISONENDE · LIGEN",
+  "AÑADIR LIGAS": "LIGEN HINZUFÜGEN",
+  "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Füge deinem Spiel Länder hinzu: ihre Ligen und Vereine nehmen an der beginnenden Saison teil. Einmal hinzugefügt, lassen sie sich nicht mehr entfernen.",
+  "Añadir": "Hinzufügen",
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Ligen hinzugefügt: %d Länder, %d neue Vereine."
  },
  "ca": {
   "Historia": "Història",
@@ -53245,7 +53270,12 @@
   "Asia (AFC)": "Àsia (AFC)",
   "Oceanía (OFC)": "Oceania (OFC)",
   "Elige al menos un país.": "Tria almenys un país.",
-  "%d países · %d clubes · unos %d jugadores": "%d països · %d clubs · uns %d jugadors"
+  "%d países · %d clubes · unos %d jugadores": "%d països · %d clubs · uns %d jugadors",
+  "FIN DE TEMPORADA · LIGAS": "FINAL DE TEMPORADA · LLIGUES",
+  "AÑADIR LIGAS": "AFEGIR LLIGUES",
+  "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Afegeix països a la teva partida: les seves lligues i clubs entren a la temporada que comença. Un cop afegits no es poden treure.",
+  "Añadir": "Afegir",
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Lligues afegides: %d països, %d clubs nous."
  },
  "pl": {
   "Club": "Klub",
@@ -61100,7 +61130,12 @@
   "Asia (AFC)": "Azja (AFC)",
   "Oceanía (OFC)": "Oceania (OFC)",
   "Elige al menos un país.": "Wybierz co najmniej jeden kraj.",
-  "%d países · %d clubes · unos %d jugadores": "%d krajów · %d klubów · około %d zawodników"
+  "%d países · %d clubes · unos %d jugadores": "%d krajów · %d klubów · około %d zawodników",
+  "FIN DE TEMPORADA · LIGAS": "KONIEC SEZONU · LIGI",
+  "AÑADIR LIGAS": "DODAJ LIGI",
+  "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Dodaj kraje do swojej gry: ich ligi i kluby dołączą do rozpoczynającego się sezonu. Po dodaniu nie można ich usunąć.",
+  "Añadir": "Dodaj",
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Dodano ligi: %d krajów, %d nowych klubów."
  },
  "tr": {
   "Club": "Kulüp",
@@ -68955,6 +68990,11 @@
   "Asia (AFC)": "Asya (AFC)",
   "Oceanía (OFC)": "Okyanusya (OFC)",
   "Elige al menos un país.": "En az bir ülke seç.",
-  "%d países · %d clubes · unos %d jugadores": "%d ülke · %d kulüp · yaklaşık %d oyuncu"
+  "%d países · %d clubes · unos %d jugadores": "%d ülke · %d kulüp · yaklaşık %d oyuncu",
+  "FIN DE TEMPORADA · LIGAS": "SEZON SONU · LİGLER",
+  "AÑADIR LIGAS": "LİG EKLE",
+  "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Oyununa ülkeler ekle: ligleri ve kulüpleri başlayan sezona katılır. Eklendikten sonra kaldırılamazlar.",
+  "Añadir": "Ekle",
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Eklenen ligler: %d ülke, %d yeni kulüp."
  }
 }

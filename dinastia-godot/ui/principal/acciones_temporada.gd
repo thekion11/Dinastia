@@ -8,6 +8,24 @@ var p: Principal
 func _init(principal: Principal) -> void:
 	p = principal
 
+## Con países sin cargar, ofrece añadirlos (la pantalla «Ligas activas» en modo añadir). Lo elegido entra en la temporada que acaba de empezar y se vuelven a conectar los sorteos.
+func _ofrecer_ligas() -> void:
+	if LigasActivas.faltan(p.mundo).is_empty():
+		return
+	var pa := LigasActivasPantalla.new()
+	pa.mundo_agregar = p.mundo
+	p.add_child(pa)
+	var d: Dictionary = await pa.terminado
+	pa.queue_free()
+	var elegidos: Array = (d.get("ligas", {}) as Dictionary).get("paises", [])
+	if elegidos.is_empty():
+		return
+	var r := LigasActivas.agregar(p.mundo, elegidos)
+	p._conectar_sorteos()
+	p._escribir("[color=#4caf6d]%s[/color]" % (Idiomas.t("Ligas añadidas: %d países, %d clubes nuevos.") % [(r["paises"] as Array).size(), int(r["clubes"])]))
+	p._partida.autoguardar_si_toca()
+	p._refrescar()
+
 func _nueva_temporada() -> void:
 	if p.mundo.temporada_en_curso():
 		p._escribir("[color=#e05555]Todavía queda calendario por jugar.[/color]")
@@ -30,6 +48,7 @@ func _nueva_temporada() -> void:
 			var rs := ResumenTemporada.mostrar(p, foto, resumen)
 			await rs.terminado
 			rs.queue_free()
+			await _ofrecer_ligas()   ## (10-11) «Ligas activas»: se pueden AÑADIR países al cerrar la temporada
 			if not guion_doc.is_empty():
 				documental.abrir(p, guion_doc, p._retrato)).call_deferred()
 	elif not guion_doc.is_empty():

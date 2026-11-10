@@ -8,6 +8,8 @@ signal volver()
 
 const NOMBRES_CONFED := {"ucl": "Europa (UEFA)", "lib": "Sudamérica (CONMEBOL)", "conc": "Norte y Centroamérica (CONCACAF)", "afr": "África (CAF)", "asia": "Asia (AFC)", "oce": "Oceanía (OFC)", "otros": "Otros"}
 
+## Modo «añadir» (al cerrar una temporada): se enseñan solo los países que faltan y se devuelve {"ligas": {"paises": [...]}} (vacío = «ahora no»); se aplica con `LigasActivas.agregar`.
+var mundo_agregar: Mundo = null
 var _estado: Dictionary = {}
 var _casillas: Dictionary = {}   ## código de país → CheckBox
 var _resumen: Label
@@ -33,15 +35,16 @@ func _ready() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 10)
 	caja.add_child(v)
-	v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, Idiomas.t("NUEVO JUEGO · LIGAS")))
-	v.add_child(Tema.etiqueta(Tema.TAM_TITULO + 6, Tema.ORO, Idiomas.t("LIGAS ACTIVAS")))
-	var nota := Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, Idiomas.t("Elige qué ligas se cargan en la partida. Con menos ligas arranca antes y pesa menos (útil en el móvil). Podrás añadir más al cerrar cada temporada, pero no quitarlas."))
+	var agregando := mundo_agregar != null
+	v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, Idiomas.t("FIN DE TEMPORADA · LIGAS") if agregando else Idiomas.t("NUEVO JUEGO · LIGAS")))
+	v.add_child(Tema.etiqueta(Tema.TAM_TITULO + 6, Tema.ORO, Idiomas.t("AÑADIR LIGAS") if agregando else Idiomas.t("LIGAS ACTIVAS")))
+	var nota := Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, Idiomas.t("Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.") if agregando else Idiomas.t("Elige qué ligas se cargan en la partida. Con menos ligas arranca antes y pesa menos (útil en el móvil). Podrás añadir más al cerrar cada temporada, pero no quitarlas."))
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(nota)
 	var atajos := HBoxContainer.new()
 	atajos.add_theme_constant_override("separation", 8)
 	v.add_child(atajos)
-	for a: Array in [["Todas", "todas"], ["Mi país y los 5 grandes", "grandes"], ["Ninguna", "ninguna"]]:
+	for a: Array in [["Todas", "todas"], ["Mi país y los 5 grandes", "grandes"], ["Ninguna", "ninguna"]] if not agregando else [["Todas", "todas"], ["Ninguna", "ninguna"]]:
 		var b := Button.new()
 		b.text = Idiomas.t(String(a[0]))
 		b.custom_minimum_size = Vector2(0, 44)
@@ -56,13 +59,23 @@ func _ready() -> void:
 	lista.add_theme_constant_override("separation", 8)
 	scroll.add_child(lista)
 	var nombres: Dictionary = Datos.tabla("PAIS_SELECCION") as Dictionary
-	var marcados := LigasActivas.cargar_eleccion()
+	var marcados: Array[String] = []
+	var faltan: Array[String] = []
+	if agregando:
+		faltan = LigasActivas.faltan(mundo_agregar)
+	else:
+		marcados = LigasActivas.cargar_eleccion()
+		faltan = LigasActivas.todos()
 	for g: Array in LigasActivas.por_confederacion():
+		if agregando and not (g[1] as Array).any(func(x: String) -> bool: return faltan.has(x)):
+			continue
 		lista.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.ORO, Idiomas.t(String(NOMBRES_CONFED[g[0]]))))
 		var flujo := HFlowContainer.new()
 		flujo.add_theme_constant_override("h_separation", 12)
 		lista.add_child(flujo)
 		for p: String in g[1]:
+			if not faltan.has(p):
+				continue
 			var c := CheckBox.new()
 			c.text = "%s (%d)" % [Idiomas.t(String(nombres.get(p, p))), LigasActivas.clubes_de(p)]
 			c.custom_minimum_size = Vector2(0, 40)
@@ -77,12 +90,12 @@ func _ready() -> void:
 	fila.alignment = BoxContainer.ALIGNMENT_END
 	v.add_child(fila)
 	var bv := Button.new()
-	bv.text = Idiomas.t("Volver")
+	bv.text = Idiomas.t("Ahora no") if agregando else Idiomas.t("Volver")
 	bv.custom_minimum_size = Vector2(130, 44)
-	bv.pressed.connect(func() -> void: volver.emit())
+	bv.pressed.connect(func() -> void: terminado.emit({"ligas": {"paises": []}}) if mundo_agregar != null else volver.emit())
 	fila.add_child(bv)
 	_continuar = Button.new()
-	_continuar.text = Idiomas.t("Continuar ▶")
+	_continuar.text = Idiomas.t("Añadir") if agregando else Idiomas.t("Continuar ▶")
 	_continuar.custom_minimum_size = Vector2(160, 44)
 	_continuar.pressed.connect(confirmar)
 	fila.add_child(_continuar)
@@ -100,7 +113,7 @@ func _atajo(que: String) -> void:
 	var lista: Array[String] = []
 	match que:
 		"todas":
-			lista = LigasActivas.todos()
+			lista.assign(_casillas.keys())
 		"grandes":
 			lista = LigasActivas.por_defecto(true)
 	for p: String in _casillas:
@@ -113,11 +126,14 @@ func _actualizar() -> void:
 	for p: String in m:
 		clubes += LigasActivas.clubes_de(p)
 	_resumen.text = Idiomas.t("%d países · %d clubes · unos %d jugadores") % [m.size(), clubes, clubes * 25] if not m.is_empty() else Idiomas.t("Elige al menos un país.")
-	_continuar.disabled = m.is_empty()
+	_continuar.disabled = m.is_empty() and mundo_agregar == null   ## al añadir, sin nada marcado «Añadir» equivale a «Ahora no»
 
 ## Lo que haría «Continuar» (las pruebas lo llaman directo). Sin nada marcado, no sigue.
 func confirmar() -> void:
 	var m := marcados()
+	if mundo_agregar != null:   ## añadir: no se guarda como elección de la máquina; se aplica quien la abrió
+		terminado.emit({"ligas": {"paises": m}})
+		return
 	if m.is_empty():
 		return
 	LigasActivas.guardar_eleccion(m)
@@ -126,4 +142,7 @@ func confirmar() -> void:
 func _unhandled_input(ev: InputEvent) -> void:
 	if ev.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
-		volver.emit()
+		if mundo_agregar != null:
+			terminado.emit({"ligas": {"paises": []}})   ## «ahora no»
+		else:
+			volver.emit()

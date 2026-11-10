@@ -249,3 +249,26 @@ func _probar_ligas_activas_pantalla() -> void:
 		f.close()
 	else:
 		DirAccess.remove_absolute(LigasActivas.RUTA_ELECCION)
+
+## La pantalla en modo AÑADIR (al cerrar la temporada): solo los países que faltan, sin tocar la elección guardada de la máquina.
+func _probar_ligas_activas_agregar_pantalla() -> void:
+	_titulo("LIGAS ACTIVAS: AÑADIR AL CERRAR LA TEMPORADA")
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"] as Array[String], 4245)
+	var antes := FileAccess.file_exists(LigasActivas.RUTA_ELECCION)
+	var p := LigasActivasPantalla.new()
+	p.mundo_agregar = m
+	add_child(p)
+	var faltan := LigasActivas.faltan(m)
+	_comprobar(p._casillas.size() == faltan.size() and not p._casillas.has("CHI") and not p._casillas.has("ARG"), "solo se enseñan los países que faltan (%d)" % faltan.size())
+	var recibido: Array = []
+	p.terminado.connect(func(d: Dictionary) -> void: recibido.append(d))
+	p.confirmar()
+	_comprobar(recibido.size() == 1 and ((recibido[0] as Dictionary)["ligas"] as Dictionary)["paises"] == [], "sin marcar nada, «Añadir» equivale a «Ahora no»")
+	p._atajo("todas")
+	p.confirmar()
+	_comprobar(recibido.size() == 2 and (((recibido[1] as Dictionary)["ligas"] as Dictionary)["paises"] as Array).size() == faltan.size(), "«Todas» devuelve los %d que faltan" % faltan.size())
+	_comprobar(FileAccess.file_exists(LigasActivas.RUTA_ELECCION) == antes, "añadir no cambia la elección guardada de la máquina")
+	p.free()
+	var r := LigasActivas.agregar(m, ["ESP", "ENG"])
+	_comprobar((r["paises"] as Array).size() == 2 and LigasActivas.de(m).has("ESP") and not LigasActivas.faltan(m).has("ENG"), "lo añadido deja de faltar")
