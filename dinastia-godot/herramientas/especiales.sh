@@ -80,6 +80,7 @@ pasa "menú entrar al estadio a pie" "godot --headless --path . res://pruebas/pr
 pasa "casa del personaje a pie" "godot --headless --path . res://pruebas/prueba_casa_a_pie.tscn" "0 fallos"
 pasa "plantilla a la PES" "godot --headless --path . res://pruebas/prueba_plantilla_pes.tscn" "0 fallos"
 pasa "partido de despedida (UI, con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_despedida_ui.tscn" "0 fallos"
+pasa "rueda de prensa en cruz y eventos con diálogo (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_rueda_eventos.tscn" "FIN. 0 fallos"
 pasa "evento de despedida solo en su fecha y a pantalla completa (con pantalla)" "XDG_DATA_HOME=/tmp/xdg_despedida_fecha xvfb-run -a godot --path . --resolution 1920x1080 --rendering-driver opengl3 res://pruebas/prueba_despedida_fecha.tscn" "0 fallos"
 pasa "final de temporada: pantalla única de resumen a pantalla completa (con pantalla)" "XDG_DATA_HOME=/tmp/xdg_resumen_temporada xvfb-run -a godot --path . --resolution 1920x1080 --rendering-driver opengl3 res://pruebas/prueba_resumen_temporada.tscn" "0 fallos"
 pasa "homenaje en 3D en el campo (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_homenaje3d.tscn" "0 fallos"
