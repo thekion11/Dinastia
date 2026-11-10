@@ -12,6 +12,8 @@ func _ready() -> void:
 	_dir = OS.get_environment("OUT") if OS.get_environment("OUT") != "" else "/tmp/fotos_rueda_semanas"
 	DirAccess.make_dir_recursive_absolute(_dir)
 	var nombres: Array = OS.get_environment("CLUBES").split(",") if OS.get_environment("CLUBES") != "" else POR_DEFECTO
+	if OS.get_environment("MESA") == "0":   ## antes/después de la mesa larga (R7/R8): MESA=0 vuelve al atril
+		RuedaPrensaMesa.activa = false
 	var p: Principal = load("res://escenas/principal.tscn").instantiate()
 	add_child(p)
 	await _esperar(3.0)
@@ -46,6 +48,12 @@ func _ready() -> void:
 				h.queue_free()
 		await _esperar(1.0)
 		get_viewport().get_texture().get_image().save_jpg("%s/%d_%s.jpg" % [_dir, i, c.pais], 0.88)
+		var ll: Array[int] = []
+		for _f in 30:
+			await get_tree().process_frame
+			ll.append(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
+		ll.sort()
+		print("LLAMADAS %s mesa=%s: min %d · mediana %d · máx %d" % [c.pais, RuedaPrensaMesa.activa, ll[0], ll[15], ll[29]])
 		## FOTOS=n: n fotos más, cada 2,5 s (pasan por los planos de la rotación: frontal, medio, general, tres cuartos).
 		for k in int(OS.get_environment("FOTOS")) if OS.get_environment("FOTOS") != "" else 0:
 			await _esperar(2.5)
