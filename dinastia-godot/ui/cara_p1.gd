@@ -197,6 +197,7 @@ static func _rasgos_reales_de() -> Dictionary:
 
 static func look_de(j: Jugador) -> Dictionary:
 	var base := _look_base(j.id)
+	var medido := false   ## true: el color de pelo viene de su foto/malla real (no se encanece encima)
 	## LA RECREACIÓN (29-9-2026): un jugador real (con la base real) toma la
 	## piel, el color de pelo y la barba de su foto
 	## (`herramientas/caras_reales_rasgos.py`), así su cara procedural se le
@@ -215,6 +216,7 @@ static func look_de(j: Jugador) -> Dictionary:
 		if not (r is Dictionary):
 			CaraPrior.aplicar(base, j)   ## (10-11) sin foto ni malla: la cara típica de su país, no un azar de ocho tonos
 		if r is Dictionary:
+			medido = true
 			for k: String in (r as Dictionary):
 				base[k] = r[k]
 			if not (r as Dictionary).has("barba"):
@@ -233,13 +235,9 @@ static func look_de(j: Jugador) -> Dictionary:
 				base["pelo"] = CORTES_SOBRIOS[_hash(j.id + "corte") % CORTES_SOBRIOS.size()]
 	elif not (j.real and CaraPrior.aplicar(base, j)):   ## (10-11) los de nombre fijo de la base pública (`j.real`) toman la cara típica de su país; los inventados, el modelo de siempre
 		_piel_y_pelo_del_pais(base, j)
-	## CANAS CON LA EDAD (M-085, 20-10): a los inventados (no a los reales, que
-	## llevan el color de su foto) les salen canas desde los 32, más con los años
-	## y no a todos igual (a uno de cada cuatro casi nada).
-	if not (j.real and Datos.base_real) and j.edad >= 32 and base.has("peloC"):
-		var vel := 0.25 if _hash(j.id + "canas") % 4 == 0 else 1.0
-		var k := clampf(float(j.edad - 31) / 9.0 * vel, 0.0, 0.65)
-		base["peloC"] = "#" + Color(String(base["peloC"])).lerp(Color("#a3a19c"), k).to_html(false)
+	## LA EDAD SE VE (M-085, 20-10; 10-11 ampliado): canas, entradas, calvicie y arrugas (`CaraEdad`). No a quien lleva el color de su foto real.
+	if not medido:
+		CaraEdad.aplicar(base, j)
 	## Y encima, lo que el editor haya cambiado a mano. Solo las claves tocadas:
 	## cambiar el corte de pelo no debe reescribir la nariz.
 	for k: String in j.look:
