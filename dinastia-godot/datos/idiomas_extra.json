@@ -7815,7 +7815,9 @@
   "Pasa al cuadro": "Through to the bracket",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "No sun shadow, no anti-aliasing and 3D at a lower resolution",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sun shadow on, no anti-aliasing and 3D at a slightly lower resolution than Medium",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "No heavy effects and no anti-aliasing on phones and web: maximum smoothness"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "No heavy effects and no anti-aliasing on phones and web: maximum smoothness",
+  "Cargando…": "Loading…",
+  "Preparando tu club…": "Getting your club ready…"
  },
  "pt": {
   "Historia": "História",
@@ -15633,7 +15635,9 @@
   "Pasa al cuadro": "Passa ao quadro",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Sem sombra do sol, sem suavização e com o 3D em menor resolução",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sombra do sol sim, sem suavização e com o 3D em resolução um pouco menor que em Média",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sem efeitos pesados e sem suavização em celular e web: máxima fluidez"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sem efeitos pesados e sem suavização em celular e web: máxima fluidez",
+  "Cargando…": "Carregando…",
+  "Preparando tu club…": "Preparando o seu clube…"
  },
  "patrones": [
   [
@@ -29558,7 +29562,9 @@
   "Pasa al cuadro": "Qualifié pour le tableau",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Sans ombre du soleil, sans anticrénelage et avec la 3D en plus basse résolution",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombre du soleil oui, sans anticrénelage et avec la 3D à une résolution un peu plus basse qu'en Moyenne",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sans effets lourds et sans anticrénelage sur téléphone et web : fluidité maximale"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sans effets lourds et sans anticrénelage sur téléphone et web : fluidité maximale",
+  "Cargando…": "Chargement…",
+  "Preparando tu club…": "Préparation de votre club…"
  },
  "it": {
   "Historia": "Storia",
@@ -37376,7 +37382,9 @@
   "Pasa al cuadro": "Passa al tabellone",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Senza ombra del sole, senza antialiasing e con il 3D a risoluzione più bassa",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombra del sole sì, senza antialiasing e con il 3D a una risoluzione un po' più bassa che in Media",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Senza effetti pesanti e senza antialiasing su telefono e web: massima fluidità"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Senza effetti pesanti e senza antialiasing su telefono e web: massima fluidità",
+  "Cargando…": "Caricamento…",
+  "Preparando tu club…": "Preparazione del tuo club…"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45194,7 +45202,9 @@
   "Pasa al cuadro": "Weiter in die K.-o.-Runde",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Ohne Sonnenschatten, ohne Kantenglättung und mit 3D in geringerer Auflösung",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sonnenschatten ja, ohne Kantenglättung und mit 3D in etwas geringerer Auflösung als bei Mittel",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ohne aufwendige Effekte und ohne Kantenglättung auf Handy und Web: maximale Flüssigkeit"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ohne aufwendige Effekte und ohne Kantenglättung auf Handy und Web: maximale Flüssigkeit",
+  "Cargando…": "Laden …",
+  "Preparando tu club…": "Dein Verein wird vorbereitet …"
  },
  "ca": {
   "Historia": "Història",
@@ -53012,7 +53022,9 @@
   "Pasa al cuadro": "Passa al quadre",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Sense ombra del sol, sense suavitzat i amb el 3D a menys resolució",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombra del sol sí, sense suavitzat i amb el 3D a una resolució una mica menor que a Mitjana",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sense efectes pesats i sense suavitzat en mòbil i web: màxima fluïdesa"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sense efectes pesats i sense suavitzat en mòbil i web: màxima fluïdesa",
+  "Cargando…": "Carregant…",
+  "Preparando tu club…": "Preparant el teu club…"
  },
  "pl": {
   "Club": "Klub",
@@ -60830,7 +60842,9 @@
   "Pasa al cuadro": "Awans do drabinki",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Bez cienia słońca, bez wygładzania i z 3D w niższej rozdzielczości",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Cień słońca tak, bez wygładzania i z 3D w nieco niższej rozdzielczości niż w Średnim",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Bez ciężkich efektów i bez wygładzania na telefonie i w przeglądarce: maksymalna płynność"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Bez ciężkich efektów i bez wygładzania na telefonie i w przeglądarce: maksymalna płynność",
+  "Cargando…": "Ładowanie…",
+  "Preparando tu club…": "Przygotowywanie twojego klubu…"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68648,6 +68662,8 @@
   "Pasa al cuadro": "Tabloya kalır",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Güneş gölgesi yok, kenar yumuşatma yok ve 3D daha düşük çözünürlükte",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Güneş gölgesi var, kenar yumuşatma yok ve 3D, Orta'dan biraz daha düşük çözünürlükte",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ağır efekt yok, telefon ve web'de kenar yumuşatma yok: azami akıcılık"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ağır efekt yok, telefon ve web'de kenar yumuşatma yok: azami akıcılık",
+  "Cargando…": "Yükleniyor…",
+  "Preparando tu club…": "Kulübün hazırlanıyor…"
  }
 }
