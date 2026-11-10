@@ -163,3 +163,17 @@ Petición del líder: precompilar los shaders del menú mientras el jugador est�
 - Luces omni, post-proceso y gente fuera del campo no pesan en este banco: no se tocan.
 - Falta medir en el teléfono del dueño (Compatibilidad real, GPU móvil): llvmpipe no es una GPU de móvil; sobre todo MSAA en GPUs de teselas (resolución en memoria de tesela) podría pesar menos que aquí. La «Prueba de rendimiento» de Ajustes mide cada escala con y sin MSAA en el propio teléfono: con su informe se confirma o se revierte para MEDIA.
 - Texto de Ajustes: la frase de ULTRA BAJA dice «sin sombras ni suavizado»; BAJA y MEDIA BAJA (y MEDIA en móvil) ahora tampoco suavizan: ajustar la frase de cada nivel (`Idiomas.t` + `sumar_traducciones.py`) cuando el selector de 7 niveles se termine (paso 3 de `calidad_7_niveles_2026-11-06.md`, sesión que lo lleva).
+
+## LODs de malla para pelo/cara construidos en ejecución (10-11, sesión 5)
+Experimento `LODS_RUNTIME=1` (`dinastia-godot/pruebas/medir_partido_exp.gd`, apagado por defecto): a `Cuero*`, `Hair*`, `PeloDrive*`, `CaraReal*` se les generan LODs con `ImporterMesh.generate_lods(25, 60)`. El cuerpo ya trae 8 LODs del importador. Medido con `hw_modesto.sh` (opengl3, llvmpipe), 3 clubes de 3 países:
+
+| Nivel / país | Triángulos antes → después | Llamadas | Fotograma (relativo) |
+|---|---|---|---|
+| BAJA CHI | 612 k → 563 k (−8 %) | 316 → 303 | 252 → 274 ms |
+| MEDIA CHI | 762 k → 685 k (−10 %) | 433 → 419 | 405 → 388 ms |
+| BAJA ESP | 416 k → 388 k (−7 %) | 305 → 299 | 211 → 214 ms |
+| MEDIA ESP | 540 k → 505 k (−6 %) | 497 → 491 | 344 → 346 ms |
+| BAJA ENG | 367 k → 324 k (−12 %) | 249 → 241 | 221 → 225 ms |
+| MEDIA ENG | 534 k → 473 k (−11 %) | 350 → 341 | 358 → 358 ms |
+
+Conclusión: −6…−12 % de triángulos, −2 % de llamadas, tiempo de fotograma sin cambio medible (llvmpipe no está limitada por vértices). Generarlos en ejecución es caro (picos de 400–975 ms al montar), así que NO se activa. Si se quiere, hay que hornearlos fuera de línea (como `herramientas/hornear_publico*.gd`) y confirmar en el teléfono; queda como pendiente del dueño. No se cambió nada por defecto.
