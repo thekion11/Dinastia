@@ -26,6 +26,11 @@ Medido en este contenedor (4 núcleos, Linux, sin pantalla). Herramientas de med
 5. Pendiente — motor 3D: solo piezas geométricas estables (`_rival_mas_cercano` ~5 µs por llamada y sus 22 llamadas por paso, `_linea_tapada`). La IA (`_ia_equipos`, F1-F8, MotorLeague) es de las sesiones 4 y «PES 6»: NO se toca; portarla ahora chocaría con sus cambios diarios.
 6. Descartado por cifras — `_semana_del_plantel` (7 ms de 570 ms, y escribir `forma`/`pide_salir` desde C++ cuesta una llamada por propiedad); generación del mundo (única vez).
 
+## 2.1 Motor 3D en directo y generación del mundo (10-11, medido y descartado por ahora)
+Paso del motor jugable (`zz_perfil_motor`, µs por paso, sin gráfica): `_ia_equipos` ~640 (IA: sesiones 4 y «PES 6», NO se toca), `_mover_jugadores` ~215, `_duelos` ~140, `_presion` x22 ~117, `_rival_mas_cercano` x22 ~86, `_disputas` ~31, `_cuerpos` ~28 (ya en C++), el resto <25 cada uno. Lo no-IA que queda (`_mover_jugadores` + `_duelos` ≈ 355 µs de ~1300) son bloques largos de diccionarios (`p["vel"]`, `p.get("freno", 1.0)`...) y nodos, que cambian a diario por las sesiones de jugabilidad: un gemelo C++ se quedaría obsoleto (regla de la extensión: tocar una de las dos obliga a recompilar y repasar la igualdad) y el cruce GDScript↔C++ por cada propiedad se come la ganancia. Estimación honesta: −0,15 ms por fotograma (2 % del presupuesto de 8,3 ms a 120 FPS) a cambio de mucho coste de mantenimiento. En el móvil el límite es la GPU (CPU al 0 % en la prueba del dueño): no ayuda. `perfil_cpu` (por script, en el partido 3D) sale dominado por ruido en este contenedor (valores negativos): el cuello del directo es el dibujo, no los scripts.
+Generación del mundo al empezar partida: 610 ms para 466 clubes (una sola vez), ya troceada por fotogramas (`generar_por_trozos`): no es caliente.
+Si el dueño quiere más CPU en el directo, lo rentable no es C++ sino cachear en el motor (p. ej. posiciones de los 22 en un array plano por paso que lean `_presion`, `_rival_mas_cercano` e `_ia_defensa`), que es un cambio de datos de la IA (sesión 4).
+
 ## 3. Resultados (antes/después, misma semilla)
 `zz_medir_simular` (200 partidos de un mundo entero; `DINASTIA_SIN_NATIVO=1` = todo GDScript), **huella idéntica 3660479828** en las dos:
 | | Sin extensión | Con extensión |
