@@ -57,7 +57,15 @@ func _pares(m: Mundo, n: int) -> Array:
 	for i in n:
 		var pa: Array = por_pais[paises[i % paises.size()]]
 		var pb: Array = por_pais[paises[(i + 1) % paises.size()]]
-		var par := [pa[(i * 3) % pa.size()], pb[(i * 5 + 1) % pb.size()]]
+		## Estilos DISTINTOS en cada cruce (posesión contra bloque bajo, presión contra contra…: `EstiloClub`).
+		var ca: Club = pa[(i * 3) % pa.size()]
+		var cb: Club = pb[(i * 5 + 1) % pb.size()]
+		for k in pb.size():
+			var otro: Club = pb[(i * 5 + 1 + k) % pb.size()]
+			if EstiloClub.estilo_de(otro) != EstiloClub.estilo_de(ca):
+				cb = otro
+				break
+		var par := [ca, cb]
 		if OS.get_environment("INVERTIR") == "1":   ## los mismos cruces con local y visita cambiados (asimetrías)
 			par.reverse()
 		r.append(par)
@@ -78,6 +86,7 @@ func _jugar(a: Club, b: Club, semilla: int, league: bool, mitad: float) -> Dicti
 	motor.set_physics_process(false)
 	motor.autopiloto = true
 	motor.duracion_mitad = mitad
+	motor.tacticas = [MotorJugable.tactica_desde(a.tactica), MotorJugable.tactica_desde(b.tactica)]   ## la pizarra y el estilo de cada club
 	motor.preparar(lista, ball, "", semilla)
 	var us := 0
 	var us_max := 0
@@ -94,7 +103,7 @@ func _jugar(a: Club, b: Club, semilla: int, league: bool, mitad: float) -> Dicti
 		fallos += 1
 		print("FALLO: el partido no terminó (", a.nombre, " - ", b.nombre, ")")
 	var pt := float(motor.posesion[0]) + float(motor.posesion[1])
-	var r := {"partido": "%s (%s) - %s (%s)" % [a.nombre, a.pais, b.nombre, b.pais], "marcador": "%d-%d" % [motor.goles[0], motor.goles[1]],
+	var r := {"partido": "%s (%s, %s %s) - %s (%s, %s %s)" % [a.nombre, a.pais, a.tactica.formacion, EstiloClub.estilo_de(a), b.nombre, b.pais, b.tactica.formacion, EstiloClub.estilo_de(b)], "marcador": "%d-%d" % [motor.goles[0], motor.goles[1]],
 		"pasos": pasos, "us_paso": snappedf(float(us) / maxf(float(pasos), 1.0), 0.1), "us_max": us_max,
 		"tiros": int(motor.tiros[0]) + int(motor.tiros[1]), "pases": int(motor.pases[0]) + int(motor.pases[1]),
 		"pases_ok": int(motor.pases_ok[0]) + int(motor.pases_ok[1]), "despejes": int(motor.despejes[0]) + int(motor.despejes[1]),
