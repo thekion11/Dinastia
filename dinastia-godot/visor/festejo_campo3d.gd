@@ -11,7 +11,7 @@ extends HomenajeCampo3D
 ##   foto      → dos filas frente a la cámara con la copa delante y el flash.
 ## La cámara se mueve sola (órbita lenta, distinta por modo). Coste: ≤ 9 jugadores, la grada en una llamada; `CON_3D` decide si se usa
 ## (calidad mínima → la escena 2D, `EscenaFestejo`). Sin pantalla no se monta (`crear` devuelve null).
-const MODOS := ["escenario", "palco", "fuegos", "sobrio", "manteo", "foto"]
+const MODOS := ["escenario", "palco", "fuegos", "sobrio", "manteo", "foto", "champan", "desfile", "pasillo"]   ## los 3 últimos: `FestejoExtra3D`
 const MAX_JUG := 9
 
 var modo := "escenario"
@@ -21,13 +21,16 @@ var _dt: Node3D
 var _medallas: Array[Node3D] = []
 var _flash: OmniLight3D
 var _sin_copa := false   ## ascenso y salvación: sin trofeo
+var _bus: Node3D   ## desfile (FestejoExtra3D)
+var _caminan: Array[Node3D] = []   ## pasillo: el campeón que cruza
+var _rival: Club
 var jugadores := 0   ## cuántos modelos 3D se montaron (lo lee la prueba)
 
 ## ¿Se usa el 3D? No en calidad mínima (ahí la escena 2D es el respaldo).
 static func con_3d() -> bool:
 	return DisplayServer.get_name() != "headless" and Calidad.elegida > Calidad.MINIMO
 
-static func crear(m: String, club: Club, titulo: String, sin_copa := false) -> FestejoCampo3D:
+static func crear(m: String, club: Club, titulo: String, sin_copa := false, rival: Club = null) -> FestejoCampo3D:
 	if DisplayServer.get_name() == "headless" or club == null:
 		return null
 	var h := FestejoCampo3D.new()
@@ -39,6 +42,7 @@ static func crear(m: String, club: Club, titulo: String, sin_copa := false) -> F
 	h._vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_2X)
 	h.add_child(h._vp)
 	h._sin_copa = sin_copa
+	h._rival = rival
 	h._montar(club, titulo)
 	return h
 
@@ -59,10 +63,15 @@ func _montar(club: Club, titulo: String) -> void:
 	_vp.add_child(we)
 	var raiz := Node3D.new()
 	_vp.add_child(raiz)
-	_cesped(raiz)
-	_grada(raiz, c1, c2)
-	_focos(raiz)
-	if modo != "sobrio":
+	var fuera := modo in ["champan", "desfile"]   ## vestuario y calle: sin césped ni grada
+	if fuera:
+		env.background_color = Color(0.55, 0.42, 0.36) if modo == "desfile" else Color(0.1, 0.1, 0.12)
+		env.ambient_light_energy = 0.9
+	else:
+		_cesped(raiz)
+		_grada(raiz, c1, c2)
+		_focos(raiz)
+	if modo not in ["sobrio", "champan", "desfile"]:
 		_papelitos(raiz)
 	_copa = Trofeo3D.de_competicion(titulo, 0.9)
 	_copa.visible = not _sin_copa
@@ -77,6 +86,16 @@ func _montar(club: Club, titulo: String) -> void:
 		"sobrio": _sobrio(raiz, spawner, once, c1, c2)
 		"manteo": _manteo(raiz, spawner, once, c1, c2)
 		"foto": _foto(raiz, spawner, once, c1, c2)
+		"champan":
+			_copa.visible = false
+			FestejoExtra3D.champan(self, raiz, spawner, once, c1, c2)
+		"desfile":
+			_bus = FestejoExtra3D.desfile(self, raiz, spawner, once, c1, c2)
+			raiz.remove_child(_copa)
+			_bus.add_child(_copa)   ## la copa viaja en el bus, sobre el capitán
+		"pasillo":
+			_copa.visible = false
+			_caminan = FestejoExtra3D.pasillo(self, raiz, spawner, once, _rival, c1, c2)
 	if spawner is Node:
 		(spawner as Node).queue_free()
 	if modo == "fuegos":
@@ -101,7 +120,11 @@ func _jugador(raiz: Node3D, spawner, j: Jugador, pos: Vector3, mira: float, anim
 	jugadores += 1
 	var ap: AnimationPlayer = d.get("anim")
 	if ap != null:
-		var nombre := anim if ap.has_animation(anim) else ("celebrar" if ap.has_animation("celebrar") else "idle")
+		var nombre := "celebrar" if ap.has_animation("celebrar") else "idle"
+		for a: String in anim.split("|"):   ## «caminar|trotar|run»: la primera que tenga el modelo
+			if ap.has_animation(a):
+				nombre = a
+				break
 		if ap.has_animation(nombre):
 			ap.play(nombre)
 			ap.seek(fmod(desfase, maxf(ap.current_animation_length, 0.1)), true)
@@ -156,9 +179,15 @@ func _manteo(raiz: Node3D, sp, once: Array, c1: Color, c2: Color) -> void:
 		var a := TAU * k / n
 		var pos := Vector3(cos(a) * 1.15, 0, sin(a) * 1.15)
 		_jugador(raiz, sp, once[k], pos, atan2(-pos.x, -pos.z) + PI, "celebrar", c1, c2, k * 0.1)
-	## El DT: el mismo modelo con traje oscuro y camisa blanca, sin dorsal; lo lanzan en `_process`.
-	if not once.is_empty():
+	## El DT con SU modelo (`PersonajeDT`: el que creó el jugador o el de por defecto); si no se puede, un jugador de traje oscuro.
+	_dt = Node3D.new()
+	raiz.add_child(_dt)
+	var dd := PersonajeDT.crear(_dt, PersonajeDT.del_usuario, c1, c2)
+	if dd.is_empty() and not once.is_empty():
+		_dt.queue_free()
 		_dt = _jugador(raiz, sp, once[0], Vector3(0, 2.0, 0), 0.0, "saltar", Color(0.12, 0.13, 0.16), Color(0.92, 0.92, 0.95))
+	elif not dd.is_empty():
+		jugadores += 1
 
 func _foto(raiz: Node3D, sp, once: Array, c1: Color, c2: Color) -> void:
 	var n := mini(once.size(), MAX_JUG)
@@ -208,6 +237,16 @@ func _colocar_camara() -> void:
 		"palco":
 			mira = Vector3(0, 2.9, 0)
 			pos = Vector3(sin(_t * 0.15) * 2.5, 2.4, 8.0)
+		"champan":
+			mira = Vector3(0, 1.4, -0.6)
+			pos = Vector3(sin(_t * 0.2) * 2.0, 1.9, 4.6)
+		"desfile":
+			var bx := _bus.position.x if _bus != null else 0.0
+			mira = Vector3(bx, 2.8, 0)
+			pos = Vector3(bx + 11.0, 4.6, 3.4)   ## en la calzada, delante del bus (no dentro de los edificios)
+		"pasillo":
+			mira = Vector3(0, 1.1, 0)
+			pos = Vector3(-9.0 + sin(_t * 0.15) * 1.0, 2.2, 3.2)
 		"foto":
 			mira = Vector3(0, 1.0, 0)
 			pos = Vector3(0, 1.6, 6.5 + sin(_t * 0.4) * 0.15)
@@ -226,6 +265,7 @@ func _process(d: float) -> void:
 		return
 	_t += d
 	_colocar_camara()
+	FestejoExtra3D.tick(self, _t)
 	if _copa != null and _copa.visible and modo != "foto":   ## la copa en alto, sobre el capitán, que sube y baja
 		var base := _capitan.position if _capitan != null else Vector3(0, 0.5, 0)
 		_copa.position = base + Vector3(0, 2.15 + absf(sin(_t * 1.8)) * 0.35, 0.1)
@@ -233,7 +273,7 @@ func _process(d: float) -> void:
 	if _dt != null:   ## el manteo: el DT sube y baja, girando un poco en el aire
 		var fase := fmod(_t * 0.9, 1.0)
 		_dt.position.y = 1.5 + 4.0 * fase * (1.0 - fase) * 1.4   ## de las manos (1,5 m) a ~2,9 m y vuelta
-		_dt.rotation.x = -PI * 0.45   ## tumbado boca arriba, como en un manteo
+		_dt.rotation.x = -PI * 0.3   ## echado hacia atrás en el aire (de lado a la cámara se ve entero)
 		_dt.rotation.z = sin(_t * 5.6) * 0.2
 	for k in _medallas.size():   ## las medallas se cuelgan de una en una
 		_medallas[k].visible = _t > 0.8 + k * 0.6

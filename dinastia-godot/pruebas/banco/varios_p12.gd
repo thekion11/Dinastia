@@ -207,6 +207,17 @@ func _probar_cargo_seleccionador() -> void:
 		_comprobar(res.has("seleccionador"), "el cierre devuelve los torneos del seleccionador")
 		cargo.dimitir(m)
 		_comprobar(not cargo.activo() and cargo.sueldo == 0, "dimitir deja el cargo")
+	## (10-11) Título de TU SELECCIÓN: el festejo es de la selección (sus colores y jugadores), no del club; y los 3 extras 3D existen.
+	var ms := Mundo.new()
+	ms.generar(["ARG"], 5)
+	ms.tomar_el_mando(ms.ligas[0].clubes[3].id)
+	if ms.selecciones != null:
+		var equipo: Club = ms.ligas[0].clubes[6]
+		ms.selecciones.cargo.ultimo_titulo = {"torneo": "Copa de Naciones", "equipo": equipo}
+		_comprobar(TipoTitulo.de(ms, "Copa de Naciones") == "seleccion" and TipoTitulo.equipo_seleccion(ms, "Copa de Naciones") == equipo, "el título de la selección se festeja con la selección")
+		_comprobar(TipoTitulo.de(ms, ms.liga_de(ms.mi_club()).nombre) == "liga", "un título del club sigue siendo del club")
+	for extra: String in ["champan", "desfile", "pasillo"]:
+		_comprobar(extra in FestejoCampo3D.MODOS, "«%s» tiene versión 3D" % extra)
 
 func _probar_convocatoria_seleccion() -> void:
 	_titulo("LA CONVOCATORIA DEL SELECCIONADOR (hasta 26 del país en todo el mundo)")

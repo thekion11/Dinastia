@@ -11,14 +11,15 @@ var vista3d: Control = null   ## (10-11) el festejo con modelos reales (`Festejo
 var _marco: PanelContainer
 var _club: Club
 var _titulo := ""
+var _rival: Club   ## el del pasillo
 
-static func mostrar(pr: Principal, titulo: String, tipo_titulo: String, rival: Club = null) -> EventoCelebracion:
+static func mostrar(pr: Principal, titulo: String, tipo_titulo: String, rival: Club = null, equipo: Club = null) -> EventoCelebracion:
 	var e := EventoCelebracion.new()
 	e.tipo = tipo_titulo
 	e.paleta_noche = true
 	e.acento = SelectorDireccional.acento_legible(pr.COL_ACENTO)
 	e._montar_base(pr)
-	e._rellenar(pr, titulo, rival)
+	e._rellenar(pr, titulo, rival, equipo)
 	return e
 
 ## Todas las escenas que se pueden ver: la principal y los extras.
@@ -27,10 +28,11 @@ func escenas() -> Array[String]:
 	r.append_array(TipoTitulo.extras(tipo))
 	return r
 
-func _rellenar(pr: Principal, titulo: String, rival: Club) -> void:
-	var club := pr.mundo.mi_club()
+func _rellenar(pr: Principal, titulo: String, rival: Club, equipo: Club = null) -> void:
+	var club := equipo if equipo != null else pr.mundo.mi_club()   ## la selección, si el título es suyo
 	_club = club
 	_titulo = titulo
+	_rival = rival
 	_centro.custom_minimum_size = Vector2(800, 0)
 	var cab := HBoxContainer.new()
 	cab.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -92,7 +94,7 @@ func ver(e: String) -> void:
 		vista3d = null
 	var visible_ahora: Control = escena
 	if e in FestejoCampo3D.MODOS and FestejoCampo3D.con_3d():
-		vista3d = FestejoCampo3D.crear(e, _club, _titulo, tipo in ["ascenso", "salvacion"])
+		vista3d = FestejoCampo3D.crear(e, _club, _titulo, tipo in ["ascenso", "salvacion"], _rival)
 	if vista3d != null:
 		escena.visible = false
 		escena.set_process(false)

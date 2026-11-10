@@ -18,6 +18,7 @@ var oferta: Dictionary = {}    ## {nombre, fuerza, sueldo}
 var historial: Array = []      ## [{anio, torneo, puesto}] de tus torneos como seleccionador
 var convocados: Array[String] = []   ## tu convocatoria (ids de jugadores del mundo, hasta 26); vacía = los mejores por puesto
 var _ultima := -999            ## semana absoluta (año·60 + semana) de la última oferta
+var ultimo_titulo := {}        ## (10-11) {torneo, equipo: Club} del último título ganado (no se guarda): el festejo usa a la SELECCIÓN, no al club
 var _listos := {}              ## «torneo/año» -> TorneoSelecciones preparados este año (no se guardan: se juegan antes del cierre)
 
 func activo() -> bool:
@@ -172,6 +173,7 @@ func anotar(m: Mundo, t: TorneoSelecciones) -> int:
 	historial.append({"anio": t.anio, "torneo": t.nombre, "puesto": puesto})
 	if puesto == 0 and m != null and m.roles != null:
 		m.roles.prestigio = clampi(m.roles.prestigio + PRESTIGIO_POR_TITULO, Roles.PRESTIGIO_MIN, Roles.PRESTIGIO_MAX)
+		ultimo_titulo = {"torneo": t.nombre, "equipo": mia}
 		if m.logros != null:
 			m.logros.celebrar_titulo(t.nombre)
 	return puesto
