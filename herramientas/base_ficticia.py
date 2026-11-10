@@ -43,6 +43,7 @@ import palmares_clubes
 import liga_paises_bajos
 import ligas_completas
 import segundas_divisiones
+import ligas_europa_real
 import json
 import os
 import sys
@@ -548,6 +549,12 @@ estadios_reales.ESTADIOS.update(ligas_completas.estadios())
 CLUBES.update(segundas_divisiones.CLUBES)
 estadios_reales.ESTADIOS.update(segundas_divisiones.estadios())
 historia_clubes.H.update(segundas_divisiones.HISTORIA)
+# POR, BEL, CRO y DEN con clubes reales (10-11-2026), en `ligas_europa_real.py`: sus nombres ficticios conservan los de los clubes inventados que ya existían.
+CLUBES.update(ligas_europa_real.CLUBES)
+LIGAS.update(ligas_europa_real.LIGAS_FICTICIAS)
+COPAS.update(ligas_europa_real.COPAS_FICTICIAS)
+estadios_reales.ESTADIOS.update(ligas_europa_real.estadios())
+historia_clubes.H.update(ligas_europa_real.HISTORIA)
 historia_clubes.H.update(liga_paises_bajos.HISTORIA)
 historia_clubes.CLASICOS.extend(liga_paises_bajos.CLASICOS)
 
@@ -597,6 +604,7 @@ def main():
     liga_paises_bajos.asegurar(real)
     ligas_completas.asegurar(real)
     segundas_divisiones.asegurar(real)
+    ligas_europa_real.asegurar(real)
 
     errores = []
 

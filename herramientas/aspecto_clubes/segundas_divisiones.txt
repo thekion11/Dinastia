@@ -101,3 +101,75 @@ Reims|circulo|cruz|REI|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
 Rodez|ojiva|chevron|ROD|franjas|#d50032|#ffd100|#ffd100|#d50032|#d50032|#ffd100
 Saint-Étienne|penta|liso|SAI|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
 Troyes|hex|banda|TRO|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Agropecuario|cruzado|franjas|AGR|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+All Boys|banderin|mitad|AB|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Almagro|escudo|cruz|ALM|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Almirante Brown|clasico|chevron|AB|franjas|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
+Alvarado|circulo|liso|ALV|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Atlanta|ojiva|banda|ATL|liso|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Atlético Rafaela|penta|franjas|AR|franjas|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#5ab4e5|#ffffff
+Brown de Adrogué|hex|mitad|BA|liso|#ffffff|#d50032|#d50032|#ffffff|#ffffff|#d50032
+Chacarita|cruzado|aro|CHA|liso|#d50032|#000000|#000000|#d50032|#d50032|#000000
+Chaco For Ever|banderin|cruz|CFE|franjas|#d50032|#000000|#000000|#d50032|#d50032|#000000
+Colegiales|escudo|liso|COL|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Colón|clasico|banda|COL|liso|#d50032|#000000|#000000|#d50032|#d50032|#000000
+Defensores de Belgrano|circulo|franjas|DB|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Deportivo Madryn|ojiva|mitad|DM|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Deportivo Maipú|penta|aro|DM|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Estudiantes Buenos Aires|hex|cruz|EBA|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Ferro|cruzado|chevron|FER|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Gimnasia de Jujuy|banderin|liso|GJ|liso|#ffffff|#0057b8|#0057b8|#ffffff|#ffffff|#0057b8
+Godoy Cruz|escudo|mitad|GC|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Güemes|clasico|aro|GEM|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Mitre|circulo|aro|MIT|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Nueva Chicago|ojiva|cruz|NC|franjas|#00843d|#000000|#000000|#00843d|#00843d|#000000
+Patronato|penta|chevron|PAT|liso|#d50032|#000000|#000000|#d50032|#d50032|#000000
+Quilmes|hex|liso|QUI|liso|#ffffff|#0057b8|#0057b8|#ffffff|#ffffff|#0057b8
+Racing de Córdoba|cruzado|banda|RC|franjas|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#5ab4e5|#ffffff
+San Martín de San Juan|banderin|franjas|SMS|liso|#00843d|#000000|#000000|#00843d|#00843d|#000000
+San Martín de Tucumán|escudo|aro|SMT|liso|#d50032|#000000|#000000|#d50032|#d50032|#000000
+San Miguel|clasico|chevron|SM|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Temperley|circulo|chevron|TEM|liso|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#5ab4e5|#ffffff
+Tristán Suárez|ojiva|liso|TS|liso|#0057b8|#ffd100|#ffd100|#0057b8|#0057b8|#ffd100
+Villa Dálmine|penta|banda|VD|franjas|#f58220|#000000|#000000|#f58220|#f58220|#000000
+Gimnasia de Concepción del Uruguay|hex|franjas|GCU|liso|#ffffff|#0057b8|#0057b8|#ffffff|#ffffff|#0057b8
+Ciudad de Bolívar|cruzado|mitad|CB|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Deportivo Morón|banderin|aro|DM|franjas|#ffffff|#d50032|#d50032|#ffffff|#ffffff|#d50032
+Los Andes|escudo|chevron|LA|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Arsenal de Sarandí|clasico|liso|AS|liso|#5ab4e5|#d50032|#d50032|#5ab4e5|#5ab4e5|#d50032
+América-MG|circulo|banda|AMG|franjas|#00843d|#000000|#000000|#00843d|#00843d|#000000
+Athletic-MG|ojiva|franjas|AMG|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Atlético-GO|penta|mitad|AGO|liso|#d50032|#000000|#000000|#d50032|#d50032|#000000
+Avaí|hex|aro|AVA|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Botafogo-SP|cruzado|cruz|BSP|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Ceará|banderin|chevron|CEA|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+CRB|escudo|banda|CRB|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Criciúma|clasico|franjas|CRI|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Cuiabá|circulo|mitad|CUI|liso|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
+Fortaleza|ojiva|aro|FOR|franjas|#0057b8|#d50032|#d50032|#0057b8|#0057b8|#d50032
+Goiás|penta|cruz|GOI|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Juventude|hex|chevron|JUV|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Novorizontino|cruzado|liso|NOV|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Operário-PR|banderin|banda|OPR|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Paysandu|escudo|mitad|PAY|liso|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#5ab4e5|#ffffff
+Ponte Preta|clasico|aro|PP|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Sport|circulo|cruz|SPO|liso|#d50032|#000000|#000000|#d50032|#d50032|#000000
+Vila Nova|ojiva|banda|VN|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Volta Redonda|penta|liso|VR|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Amazonas|hex|banda|AMA|liso|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
+Atlante|cruzado|franjas|ATL|liso|#d50032|#0057b8|#0057b8|#d50032|#d50032|#0057b8
+Atlético La Paz|banderin|mitad|ALP|franjas|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Cancún|escudo|cruz|CAN|liso|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#5ab4e5|#ffffff
+Celaya|clasico|chevron|CEL|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Dorados|circulo|liso|DOR|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Irapuato|ojiva|franjas|IRA|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Leones Negros|penta|franjas|LN|liso|#000000|#ffd100|#ffd100|#000000|#000000|#ffd100
+Mineros de Zacatecas|hex|mitad|MZ|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Morelia|cruzado|aro|MOR|liso|#ffd100|#d50032|#d50032|#ffd100|#ffd100|#d50032
+Tapatío|banderin|cruz|TAP|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Tepatitlán|escudo|banda|TEP|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Tampico Madero|clasico|banda|TM|liso|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#5ab4e5|#ffffff
+Venados|circulo|mitad|VEN|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Alebrijes de Oaxaca|ojiva|mitad|AO|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Pumas Tabasco|penta|aro|PT|liso|#0057b8|#ffd100|#ffd100|#0057b8|#0057b8|#ffd100
+Racing Veracruz|hex|chevron|RV|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff

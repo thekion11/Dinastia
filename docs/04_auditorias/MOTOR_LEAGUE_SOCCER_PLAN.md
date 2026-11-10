@@ -372,5 +372,48 @@ biblioteca del jugador en el partido (no van en la biblioteca horneada: la cach�
 | CPU por paso (sin gráficos) | ~1.110 µs | ~1.200-1.290 µs (+~9 %) |
 Revisado de cerca con `pruebas/_sonda/captura_giro_league.tscn` (cámara de costado que sigue al jugador, Forward+, clubes de BRA e
 ITA): un giro de ~180° encadena trote lateral → frenada inclinada → pivote → arranque, como el original, sin poses rotas.
-Sin portar todavía: el pie de apoyo, las variantes «angled» (correr de lado mirando a otro punto, `desiredLookAt`) y las
-animaciones intermedias que genera `AnimCollection` entre cuadrantes. Banco: `_probar_league_movimiento`.
+Banco: `_probar_league_movimiento`.
+
+### Fase 4c, parte 5: el cuerpo girado respecto a la marcha («angled») (10-11; `LS_ANGLED=0` las apaga)
+Ahora entran las 49 animaciones de `movement/` (también `angled/` y `newangles/`) y las 10 plantillas de `templates/`.
+- **Mirada** (L `PlayerController::_MovementCommand`, `defaultLookDirection`): el jugador sin balón gira la vista hacia el balón,
+  entera parado y ~78 % a toda carrera (`LeagueMovimiento.mirada`).
+- **Cuerpo** respecto a la marcha: 0, ±45 o ±135 grados (`allowedBodyDirAngles`), con los límites del original por velocidad
+  (L `CalculateFactualSpatialState`: a toda carrera < 22,5°, al trote rápido < 90°, parado de frente).
+- **Elección** (L `SelectAnim`): consulta estricta por velocidad Y cuerpo de entrada, mejor cuadrante de movimiento y dentro el
+  que deja el cuerpo mirando más cerca de la mirada (`_KeepBestBodyDirectionAnims`, `CompareBodyDirectionSimilarity`, con el
+  «contrabando» de ±18° y el castigo de 0,05 a los cuerpos girados). El cuerpo de salida es el del original
+  (`GetOutgoingBodyAngle` = cuerpo final − ángulo de salida).
+- **Ciclo estable** con el cuerpo girado: las plantillas (`dribbleD045`, `dribbleD135`, `walkD045` y sus `_left`); el otro pie es
+  el espejo de la plantilla girada al otro lado. En el original, el paso estable es la «autogenerada» de una plantilla consigo
+  misma en dirección 0, que es la propia plantilla. Si el motor pide otro paso (de espaldas, marcar, cansado) o la velocidad no
+  admite el giro, el cuerpo se endereza sin salto.
+- **Al acabar un clip**, como nuestra marcha no gira exactamente lo que suponía el clip, el cuerpo pasa al ángulo permitido más
+  cercano a como mira de verdad y la compensación del modelo solo cubre el resto (≤ 22,5°), en ~0,25 s. Corrige también un salto
+  de la parte 4 (la compensación volvía al ángulo del principio del clip).
+| 2 partidos (2 × 120 s) | `LS_ANGLED=0` | `LS_ANGLED=1` |
+|---|---|---|
+| huellas | 0-1 · 1-2 | **iguales** (el juego no cambia) |
+| clips por partido | ~250 arranques, ~950 giros, ~400 frenadas | + ~1.250 cambios de cuerpo |
+| coste propio de la locomoción (cronometrado dentro del paso) | ~75-100 µs/paso | ~100-130 µs/paso (~8-10 % del paso) |
+Para no pasar del +9 %: los clips se preparan por tandas (8 por paso; de una vez eran un tirón de ~0,2 s), cada jugador se
+revisa cada 0,1 s escalonado (el original solo elige al acabar un clip, ~0,24 s), las consultas estrictas están precalculadas,
+el cuerpo permitido se calcula con umbrales y el modelo solo se gira si cambia. Lo que queda es coste de GDScript por jugador:
+candidato a la extensión C++ (fase 5). La cifra total por paso varía ±150 µs entre ejecuciones en este contenedor: por eso se
+cronometra la locomoción aparte.
+Revisado con `LADO=1 pruebas/_sonda/captura_giro_league.tscn` (cámara fija de costado, Forward+, BRA e ITA): carrera lateral
+mirando al balón, frenada con el cuerpo a 135° y vuelta a encarar el juego, sin poses rotas.
+
+### Fase 4c, parte 6: el pie de apoyo (10-11)
+Copia de `CompareFootSimilarity` / `GetOutgoingFoot`. Cada clip empieza moviendo el pie derecho (el espejo, el izquierdo) y deja
+para el siguiente el mismo pie si tiene un número par de pasos (`steps`, ahora en `datos/league_movimiento.json`) o el otro si es
+impar. En el original, tras quedarse con el mejor cuadrante de movimiento y de cuerpo, las ordenaciones estables posteriores hacen
+del pie el criterio que decide entre los que quedan (parado no cuenta): `LeagueMovimiento.elegir(…, pie)` toma, entre los del
+mismo cuadrante que miran igual (±0,06π), el que empieza con el pie que toca. El pie que toca (`LeagueLocomocion.pie_que_toca`):
+tras un clip, su pie de salida; en un ciclo, el que va en el aire (por `AnimPasos.fases`, la fase medida en que apoya el izquierdo;
+en los de League y las plantillas, el derecho en la primera mitad). Efecto: al acelerar o girar ya no se repite siempre el mismo
+pie (antes ganaba el primero de cada par espejado); la pierna que estaba en el aire sigue en el aire. Huellas iguales con
+`LS_LOCO=0/1` (tras fusionar `main` las huellas de referencia cambiaron: 0-0 y 0-1, por cambios de `main`). Coste propio de la
+locomoción: ~110-140 µs/paso.
+Sin portar todavía: las animaciones intermedias que genera `AnimCollection` (`GenerateAutoAnims`: mezcla de dos plantillas en 9
+direcciones, con sus reglas de qué es legal).

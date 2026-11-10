@@ -414,3 +414,13 @@ func _probar_ocultar_estadio_dentro() -> void:
 	_comprobar(grada.visible, "pegado a la boca siempre se ve")
 	OcultarEstadioDentro.devolver(explorador)
 	raiz.queue_free()
+
+## (10-11, arranque del menú) Los scripts que la precarga del menú compila en su hilo existen (si un script se borra o se renombra, la lista se queda coja sin que nada falle: aquí sí).
+func _probar_precarga_menu() -> void:
+	_titulo("PRECARGA: LOS SCRIPTS DEL MENÚ EXISTEN")
+	_comprobar(Precarga.SCRIPTS_MENU.size() > 20, "hay lista de scripts del menú (%d)" % Precarga.SCRIPTS_MENU.size())
+	var faltan: Array[String] = []
+	for r: String in Precarga.SCRIPTS_MENU:
+		if not ResourceLoader.exists(r):
+			faltan.append(r)
+	_comprobar(faltan.is_empty(), "todos existen (faltan: %s)" % str(faltan))
