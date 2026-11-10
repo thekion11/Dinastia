@@ -264,7 +264,30 @@ suben los cambios solo de ~21 a ~25. El siguiente paso es la **fase 4b: la cola 
 animaciones** (pánico → pase → tiro, se ejecuta la primera cuya animación toca el balón) y su consecuencia en los tiros; y, con
 la decisión del dueño, calibrar en la fase 6.
 
-### Fase 4b (siguiente): la cola con el filtro y la locomoción
-Pendiente: decidir la cola cada 0,25 s y ejecutar cada paso la primera orden aplicable (`LeagueToques.alcanza` con «pass»,
-«highpass», «shot»); el primer toque al recibir (L `GetDifficultyFactors`: el balón rebota lejos del pie según velocidad,
-distancia, rival cerca y control); y la locomoción con las animaciones de `league.res` elegidas por dirección y velocidad.
+## 9. Fase 4b (empezada, 10-11 noche): la cola del original y POR QUÉ NO HAY REMATES
+
+`LeagueNucleo.decidir` devuelve ya la COLA completa del original (pánico, pase y tiro se calculan siempre y en ese orden; antes
+volvía en cuanto encontraba un pase), más la marca «en zona de tiro». La acción sigue siendo la primera de la cola. Diagnóstico
+en `MotorLeague.cuenta` (lo imprime `comparar_motor_league`): a qué distancia del arco rival decide el portador y cuántos tiros
+quedaron detrás de un pase en la cola.
+
+| 2 partidos completos (CHI-ARG, ARG-BRA, estilos reales) | decisiones del portador |
+|---|---|
+| a más de 55 m del arco rival | 105 · 75 |
+| entre 35 y 55 m | 48 · 145 |
+| entre 20 y 35 m | **103 · 167** |
+| a menos de 20 m | **11 · 17** |
+| en la zona de tiro del original (radio 16 m alrededor del punto a 7 m de la línea, ≈ 23 m) | **9 · 7** |
+| tiros que quedaron detrás de un pase en la cola | 2 · 0 |
+
+**Conclusión**: la cola con el filtro de animaciones NO traerá los remates (solo 2 por partido quedaban detrás de un pase). El
+cuello de botella es que el portador casi nunca llega a la zona de tiro: se queda a 20-35 m, delante del bloque defensivo de
+League (la trampa del fuera de juego se sitúa a 30-50 m del arco según la ofensividad) y su conducción por campo de fuerzas lo
+aparta de los 5 rivales más cercanos (repulsión 2 a 10 m frente a una atracción del arco de 0,6-1). En el original la
+penetración sale del muñeco (regates con animaciones, toques largos, primer toque orientado) y de las carreras. Opciones:
+(a) seguir fiel y portar la locomoción por animaciones (lo más grande que queda, ~7.600 líneas de origen); (b) calibrar ya
+(zona de tiro algo mayor, más atracción del arco al conducir, línea defensiva algo más alta). Es la decisión pendiente del dueño.
+
+### Pendiente de la 4b
+La cola con el filtro (`LeagueToques.alcanza` con pass/highpass/shot, cada paso), el primer toque al recibir (L
+`GetDifficultyFactors`) y la locomoción con las animaciones de `league.res`.
