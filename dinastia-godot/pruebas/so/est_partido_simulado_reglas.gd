@@ -17,7 +17,8 @@ func _jugar(a: Club, b: Club, semilla: int) -> Dictionary:
 func _probar() -> void:
 	_titulo("ESTÁNDAR · reglas del partido simulado [%s]" % sistema())
 	var m := _mundo(20261105)
-	var todos: Array = m.clubes.values()
+	## (10-11) Solo clubes de PRIMERA: el mundo trae ahora segundas divisiones y el más débil del mundo (~41 de media) contra el mejor (~71) es un cruce que en liga no existe.
+	var todos: Array = m.clubes.values().filter(func(c: Club) -> bool: return m.liga_de(c) != null and m.liga_de(c).division() == 1)
 	todos.sort_custom(func(x: Club, y: Club) -> bool: return _media(x) > _media(y))
 	var fuerte: Club = todos[0]
 	var debil: Club = todos[todos.size() - 1]

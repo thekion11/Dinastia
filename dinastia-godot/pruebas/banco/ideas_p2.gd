@@ -388,3 +388,32 @@ func _probar_funciones_escondidas() -> void:
 	if por != null:
 		_comprobar(mio.tactica.poner_rol(por, String(RolTactico.DE_VESTUARIO["porLibero"])) == "" and mio.tactica.roles.has(por.id), "elegir «Portero-líbero» llega a Tactica.roles (lo que lee el partido)")
 	_comprobar(m.roles.subir_al_primer_equipo(joven) != "", "subir al primer equipo solo vale siendo director de cantera (si no, dice por qué)")
+
+## (10-11) LODs del cuero lejano: la malla con datos «custom» (como la de `PeloCapasP1._cuero`) debe salir con su superficie, sus vértices y su custom intactos. Un fallo antes dejaba el pelo de lejos VACÍO
+## y la consola llena de «Invalid array format for surface».
+func _probar_lods_cuero() -> void:
+	_titulo("LODs DEL CUERO LEJANO (10-11): la malla con datos custom conserva superficie, vértices y custom")
+	var n := 40
+	var v := PackedVector3Array(); var nn := PackedVector3Array(); var cus := PackedFloat32Array(); var col := PackedColorArray()
+	var u := PackedVector2Array(); var idx := PackedInt32Array()
+	for j in n + 1:
+		for i in n + 1:
+			v.append(Vector3(i * 0.01, sin(i * 0.3) * 0.02 + j * 0.01, cos(j * 0.2) * 0.02))
+			nn.append(Vector3.UP); col.append(Color.WHITE); u.append(Vector2(i, j) / n)
+			cus.append_array(PackedFloat32Array([0.1, 0.2, 0.3, 0.4]))
+	for j in n:
+		for i in n:
+			var a := j * (n + 1) + i
+			idx.append_array(PackedInt32Array([a, a + 1, a + n + 1, a + 1, a + n + 2, a + n + 1]))
+	var arr := []
+	arr.resize(Mesh.ARRAY_MAX)
+	arr[Mesh.ARRAY_VERTEX] = v; arr[Mesh.ARRAY_NORMAL] = nn; arr[Mesh.ARRAY_TEX_UV] = u; arr[Mesh.ARRAY_TEX_UV2] = u
+	arr[Mesh.ARRAY_COLOR] = col; arr[Mesh.ARRAY_CUSTOM0] = cus; arr[Mesh.ARRAY_INDEX] = idx
+	var m := ArrayMesh.new()
+	m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr, [], {}, Mesh.ARRAY_CUSTOM_RGBA_FLOAT << Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT)
+	_comprobar(m.get_surface_count() == 1, "la malla de prueba (con CUSTOM0 float) se crea")
+	var r := PeloCapas.generar_lods(m)
+	_comprobar(r != m and r.get_surface_count() == 1, "con LODs la malla conserva su superficie (antes quedaba vacía)")
+	var a2 := r.surface_get_arrays(0)
+	_comprobar((a2[Mesh.ARRAY_VERTEX] as PackedVector3Array).size() == v.size() and (a2[Mesh.ARRAY_INDEX] as PackedInt32Array).size() == idx.size(), "el LOD 0 es la malla entera (mismos vértices e índices)")
+	_comprobar(a2[Mesh.ARRAY_CUSTOM0] != null and (a2[Mesh.ARRAY_CUSTOM0] as PackedFloat32Array).size() == cus.size(), "y conserva sus datos custom (altura de capa)")

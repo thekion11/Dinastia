@@ -171,7 +171,7 @@ func _disputas(delta: float) -> void:
 		var mejor: Dictionary = {}
 		var md := 99.0
 		for p: Dictionary in jugadores:
-			if float(p["enfriar"]) > 0.0:
+			if float(p["enfriar"]) > 0.0 or float(p.get("levanta_hasta", 0.0)) > t:   ## (10-11) en el suelo no se toca el balón (p4_saque_barrida)
 				continue
 			var d := Vector2(pos(p).x - b.x, pos(p).z - b.z).length()
 			var alcance := 1.6 if bool(p["por"]) and _en_su_area(p, b) else 0.9
@@ -231,7 +231,7 @@ func _disputas(delta: float) -> void:
 	var lejos_dueno := Vector2(b.x - pos(poseedor).x, b.z - pos(poseedor).z).length()
 	if lejos_dueno > 1.4:
 		for q: Dictionary in jugadores:
-			if bool(q["es_local"]) == bool(poseedor["es_local"]) or float(q["enfriar"]) > 0.0 or (q == usuario and not autopiloto):
+			if bool(q["es_local"]) == bool(poseedor["es_local"]) or float(q["enfriar"]) > 0.0 or (q == usuario and not autopiloto) or float(q.get("levanta_hasta", 0.0)) > t:
 				continue
 			var dq := Vector2(b.x - pos(q).x, b.z - pos(q).z).length()
 			if dq < 0.6 and dq < lejos_dueno * 0.6:

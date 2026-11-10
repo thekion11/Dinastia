@@ -84,8 +84,10 @@ func _ir(k: int) -> void:
 	_ex.planta = int(p[2])
 	_ex.cuerpo.position = p[1]
 	_ex.vel = 0.0
+	if OS.get_environment("RUMBO") != "":
+		_ex.rumbo = float(OS.get_environment("RUMBO"))   ## RUMBO=0: mirando a +Z (de espaldas a la boca del túnel); sin él, el de siempre (hacia la boca)
 	_desde = _n
-	if OS.get_environment("TOP") != "" and _i == 9:
+	if OS.get_environment("TOP") != "" and _i == (int(OS.get_environment("TOP_I")) if OS.get_environment("TOP_I") != "" else 9):
 		## TOP=1: en el punto 9 (sala de prensa), triángulos y piezas visibles agrupados por el hijo de primer nivel del estadio del que cuelgan.
 		var raiz: Node = _vista.get("_raiz3d")
 		var acum := {}

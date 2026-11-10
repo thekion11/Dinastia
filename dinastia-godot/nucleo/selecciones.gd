@@ -97,6 +97,8 @@ func cierre_de_temporada(anio: int) -> Dictionary:
 	anotar_campeones_continentales(anio)
 	resumen["clubes"] = mundial_clubes.duplicate()
 	resumen["mundial"] = copa_del_mundo(anio) if toca_copa_del_mundo(anio) else {}
+	resumen["finalissima"] = Finalissima.jugar(self, _mundo(), anio)
+	resumen["olimpicos"] = Olimpicos.jugar(self, _mundo(), anio)   ## (10-11) antes de cerrar los listos: usa sus campeones
 	resumen["seleccionador"] = cargo.cerrar_listos(_mundo())   ## (10-11) los torneos de la selección que diriges
 	return resumen
 
@@ -122,6 +124,8 @@ func a_dic() -> Dictionary:
 		"mundial_clubes": mundial_clubes,
 		"continentales": campeones_continentales,
 		"cargo": cargo.a_dic(),
+		"finalissimas": finalissimas,
+		"olimpicos": olimpicos,
 	}
 
 ## El JSON devuelve arrays sin tipo y estos campos son `Array[String]`: asignar
@@ -150,6 +154,8 @@ func desde_dic(d: Dictionary) -> void:
 	for f in d.get("continentales", []):
 		campeones_continentales.append((f as Dictionary).duplicate())
 	cargo.desde_dic(d.get("cargo", {}))
+	finalissimas = (d.get("finalissimas", []) as Array).duplicate(true)
+	olimpicos = (d.get("olimpicos", []) as Array).duplicate(true)
 
 func _to_string() -> String:
 	return "Selección de %s (fuerza %d)" % [nombre_seleccion(), fuerza(nombre_seleccion())]

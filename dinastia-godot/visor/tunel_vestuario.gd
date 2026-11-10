@@ -195,7 +195,7 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 	_vestuario(nodo, x0, z_out, z_fin, c1, c2, pared, suelo, techo, luz, horm, nombre, mi)
 	await StadiumBuilder._fase("tunel_vestuario")
 	EdificioClub.montar(nodo, x0, z_out, z_fin, c1, c2, horm, luz, nombre)
-	InteriorOculto.vigilar(nodo, z_boca)
+	InteriorOculto.vigilar(nodo, z_boca, z_out)
 	await StadiumBuilder._fase("tunel_edificio_club")
 	## La gente del club, cada uno en su puesto (solo en el estadio propio).
 	if mi == null or mi.id == PersonajeDT.club_usuario:
@@ -213,7 +213,16 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 			for lb in nodo.find_children("*", "Label3D", true, false):
 				(lb as Label3D).visibility_range_end = 30.0   ## los rótulos del túnel (taquillas, puertas) solo se leen de cerca: una llamada de dibujo cada uno
 				(lb as Label3D).visibility_range_end_margin = 4.0
+		## (10-11, sesión 7) Cada planta del edificio del club («Planta_p») se funde POR SEPARADO y el resto (túnel, vestuario) aparte: así `OcultarEstadioDentro` puede apagar las plantas que no se ven.
+		for pl in nodo.find_children("Planta_*", "Node3D", true, false):
+			await FundirPiezas.fundir_profundo(pl as Node3D, "Fundido", [], FundirPiezas.activo_r2)
 		await FundirPiezas.fundir_profundo(nodo, "Fundido", [], FundirPiezas.activo_r2)
+	elif Calidad.elegida <= Calidad.BAJA and FundirPiezas.activo_r2 and OS.get_environment("SIN_FUNDIR_BAJA") == "":
+		## (10-11, sesión 7) BAJA también funde las mallas del edificio (por planta) y del túnel por material: el vestuario pedía 1.380 llamadas y el túnel 951 con ~540 mallas sueltas.
+		## No toca las luces ni los rótulos (eso sigue siendo solo de ULTRA BAJA). Con SIN_FUNDIR_BAJA=1 se mide el «antes».
+		for pl in nodo.find_children("Planta_*", "Node3D", true, false):
+			await FundirPiezas.fundir_profundo(pl as Node3D, "Fundido", [], true)
+		await FundirPiezas.fundir_profundo(nodo, "Fundido", [], true)
 
 static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: Color, c2: Color,
 		pared: StandardMaterial3D, suelo: StandardMaterial3D, techo: StandardMaterial3D,

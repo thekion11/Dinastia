@@ -27,6 +27,7 @@ uniform vec4 color_botines : source_color = vec4(0.07, 0.07, 0.08, 1.0);
 // Índice en la tabla KITS: 0 liso, 1 franjas, 2 banda, 3 mitad, 4 hombros,
 // 5 aros, 6 diagonal, 7 cuadros, 8 vertical3, 9 degrade, 10 sash, 11 arlequin.
 uniform int estilo = 0;
+uniform float legible = 0.7;   // separación extra del dibujo de la camiseta cuando el jugador se ve pequeño (0 = apagado)
 // EL DISEÑADOR DE EQUIPACIONES (26-9-2026): la familia del diseño, sus
 // parámetros y hasta 5 colores; la misma fórmula que `DisenosKit.color_en()`
 // en 2D. familia >= 100 = los 12 estilos de siempre (fórmula `patron()`).
@@ -631,6 +632,14 @@ void fragment() {
 		float p = manga ? ((estilo == 4 || (estilo == 3 && x > 0.0)) ? 1.0 : 0.0) : patron(x, y);
 		camiseta = mix(color1.rgb, color2.rgb, p);
 		trim_col = color2.rgb;
+	}
+	// LEGIBILIDAD A LA CÁMARA REAL (10-11): a ~25 px por jugador las franjas, diagonales y mitades se funden en un color medio. Cuanto más pequeño es el
+	// jugador en pantalla (la altura `v` cambia mucho por píxel), más se separa el dibujo del color base. De cerca (fotogramas grandes) no cambia nada.
+	// Solo unas operaciones por píxel: sin llamadas de dibujo ni triángulos extra. `legible` = 0 lo apaga.
+	if (!manga && !civil && legible > 0.0) {
+		float lej = smoothstep(0.012, 0.06, max(abs(dFdx(v)), abs(dFdy(v))));
+		vec3 base_c = familia >= 0 ? C(0) : color1.rgb;
+		camiseta = clamp(base_c + (camiseta - base_c) * (1.0 + legible * lej), 0.0, 1.0);
 	}
 	// Cuello y puños del color de ribete.
 	// En ropa de calle (civil) no hay cuello acanalado de fútbol: la franja

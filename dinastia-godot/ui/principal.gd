@@ -8,7 +8,7 @@ extends "res://ui/principal_p17.gd"
 var _hijos_base: Dictionary = {}
 
 func _ready() -> void:
-	super()
+	await super()   ## (10-11) `_ready` puede montar en trozos (detrás de la pantalla de carga); si no, `await` sigue al instante
 	add_child(SalidaGuardada.new(self))   ## cerrar la ventana / «atrás» / pausa en Android: ¿guardar antes de salir?
 	for h: Node in get_children():
 		_hijos_base[h.get_instance_id()] = true

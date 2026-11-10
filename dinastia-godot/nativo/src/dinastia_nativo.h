@@ -5,6 +5,7 @@
 // el juego usa la versión GDScript (`Nativo` en nucleo/nativo.gd).
 #pragma once
 
+#include <godot_cpp/classes/animation.hpp>
 #include <godot_cpp/classes/fast_noise_lite.hpp>
 #include <godot_cpp/classes/image.hpp>
 #include <godot_cpp/classes/random_number_generator.hpp>
@@ -14,6 +15,8 @@
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/transform3d.hpp>
 #include <godot_cpp/variant/packed_byte_array.hpp>
+#include <godot_cpp/variant/packed_float64_array.hpp>
+#include <godot_cpp/variant/quaternion.hpp>
 #include <godot_cpp/variant/packed_float32_array.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
 #include <godot_cpp/variant/packed_vector3_array.hpp>
@@ -56,6 +59,14 @@ public:
 	// `Partido._media_linea` x 4 líneas ([POR, DEF, MED, DEL]) de un once (nucleo/partido_p1.gd, `fuerza`).
 	PackedFloat64Array medias_linea(const Array &once, const Dictionary &grupo_de, const Dictionary &lateral_de, const Dictionary &banda_de, const Dictionary &impulsos, int64_t minuto, double arenga_mult,
 			double ley_ex, const Dictionary &ex_de_mi_club, const String &ex_id) const;
+	// LOCOMOCIÓN DE LEAGUE-SOCCER (10-11, league_nativo.cpp): `LeagueMovimiento.elegir` desde la consulta estricta (`grupos` = los cuadrantes de salida
+	// {sale, pref, reposo1, clips}; `deseada` ya escalonada; `parado` = velocidad de entrada parado); devuelve el clip elegido (el mismo diccionario) o {}.
+	Dictionary league_elegir(const Array &grupos, double sp, double rel, double deseada, bool parado, double mirar, const String &pie) const;
+	// `LeagueAuto.legal_gd`: ¿es legal la intermedia (velocidades de entrada y salida como número 0-3, cuerpo de salida y de entrada, dirección)?
+	bool league_legal(int64_t vi, int64_t vo, double cuerpo_sale, double cuerpo_ini, double a) const;
+	// El bucle de huesos de `LeagueAuto.construir`: rellena `sal` mezclando `a1` y `a2` en `cuadros` (centésimas) con `mezclas` ([bias, orig] por cuadro) y gira la pelvis.
+	void league_mezclar(const Ref<Animation> &sal, const Ref<Animation> &a1, const Ref<Animation> &a2, const PackedInt32Array &cuadros, const PackedFloat64Array &mezclas,
+			double ang, const Quaternion &giro_padre) const;
 	int64_t elegir_ponderado(const Array &once, const Dictionary &grupo_de, const Dictionary &bases, double base_def, const String &atr, const PackedFloat64Array &pesos_rol, double r_unit, Object *excluir) const;
 };
 

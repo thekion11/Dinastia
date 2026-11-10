@@ -27,21 +27,45 @@ static func conducir(lib: AnimationLibrary, prefijo: String) -> void:
 ## ARRANQUES, FRENADAS Y GIROS DEL ORIGINAL (10-11, fase 4c): los clips de `LeagueMovimiento` (y sus espejos), con su nombre
 ## real, sin bucle. NO van en la biblioteca horneada (el motor de siempre no los usa): `LeagueLocomocion.preparar` los añade en
 ## el partido, una vez por biblioteca, cuando juega `MotorLeague`.
-static func movimiento(lib: AnimationLibrary, prefijo: String) -> void:
-	for c: Dictionary in LeagueMovimiento.clips():
-		var nombre := String(c["nombre"])
-		if lib.has_animation(nombre):
+## Por TANDAS (`desde`, `cuantos`; devuelve por dónde seguir, o -1 al acabar): son ~100 clips y de una vez eran un tirón de
+## ~0,2 s en mitad del partido. Al final, los ciclos con el cuerpo girado (las plantillas del original: trote a ±45/±135 grados,
+## carrera suave a ±45).
+static func movimiento(lib: AnimationLibrary, prefijo: String, desde := 0, cuantos := 100000) -> int:
+	var tareas := tareas_movimiento()
+	var hasta := mini(desde + cuantos, tareas.size())
+	for k in range(desde, hasta):
+		var tarea: Array = tareas[k]
+		if lib.has_animation(String(tarea[0])):
 			continue
-		var a: Animation = load("res://visor/anim_quaternius.gd").cargar_real(nombre, prefijo)
+		var a: Animation = load("res://visor/anim_quaternius.gd").cargar_real(String(tarea[1]), prefijo) if tarea.size() == 2 \
+			else ciclo_de(String(tarea[1]), prefijo, String(tarea[2]))
 		if a != null:
-			a = a.duplicate(true) as Animation
-			a.loop_mode = Animation.LOOP_NONE
-			lib.add_animation(nombre, a)
+			if tarea.size() == 2:
+				a.loop_mode = Animation.LOOP_NONE   ## (`cargar_real` ya devuelve una copia)
+			lib.add_animation(String(tarea[0]), a)
+	return hasta if hasta < tareas.size() else -1
+
+static var _tareas: Array = []
+
+## [nombre en la biblioteca, clip] o [nombre, paso derecho, paso izquierdo] (ciclo con el cuerpo girado).
+static func tareas_movimiento() -> Array:
+	if _tareas.is_empty():
+		for c: Dictionary in LeagueMovimiento.clips():
+			if not c.has("auto"):   ## (las intermedias se construyen al elegirlas: `LeagueAuto.construir`)
+				_tareas.append([String(c["nombre"]), String(c["nombre"])])
+		for vel: float in [LeagueMovimiento.DRIBBLE, LeagueMovimiento.WALK]:
+			for g: float in [0.25, -0.25, 0.75, -0.75]:
+				var par := LeagueMovimiento.plantilla(vel, g * PI)
+				if not par.is_empty():
+					_tareas.append(["ls_ciclo__" + String(par[0]), String(par[0]), String(par[1])])
+	return _tareas
 
 ## Un ciclo en bucle: el paso de League y su espejo seguidos.
-static func ciclo_de(nombre_real: String, prefijo: String) -> Animation:
+## `segundo`: el otro paso, si no es el espejo del primero (las plantillas con el cuerpo girado: el pie izquierdo es el espejo de
+## la plantilla girada al otro lado).
+static func ciclo_de(nombre_real: String, prefijo: String, segundo := "") -> Animation:
 	var a: Animation = load("res://visor/anim_quaternius.gd").cargar_real(nombre_real, prefijo)
-	var b: Animation = load("res://visor/anim_quaternius.gd").cargar_real(nombre_real + "_espejo", prefijo)
+	var b: Animation = load("res://visor/anim_quaternius.gd").cargar_real(segundo if segundo != "" else nombre_real + "_espejo", prefijo)
 	if a == null or b == null:
 		return null
 	var sal := a.duplicate(true) as Animation

@@ -44,7 +44,7 @@ func _probar_formacion_propia() -> void:
 ## (`HumanoidBase::SelectAnim` + `GetMovementSimilarity`) sobre los datos de `datos/league_movimiento.json`.
 func _probar_league_movimiento() -> void:
 	_titulo("MOTOR LEAGUE: ARRANQUES, FRENADAS Y GIROS DEL ORIGINAL")
-	_comprobar(LeagueMovimiento.clips().size() == 38, "19 clips de movimiento del original con su espejo (%d)" % LeagueMovimiento.clips().size())
+	_comprobar(LeagueMovimiento.clips().filter(func(c): return not c.has("auto")).size() == 98 and LeagueMovimiento.clips().size() - 98 == (874 if LeagueAuto.activas else 0), "49 clips de movimiento del original con su espejo y 437 intermedias legales con el suyo (%d)" % LeagueMovimiento.clips().size())
 	_comprobar(LeagueMovimiento.rango(1.0) == 0.0 and LeagueMovimiento.rango(3.0) == 3.5 and LeagueMovimiento.rango(5.0) == 5.0 and LeagueMovimiento.rango(7.0) == 8.0, "velocidades escalonadas del original (RangeVelocity)")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, 0.0, 5.0).get("nombre", "")) == "ls_movement__idle__000_accel", "parado y quiere ir de frente: arranque recto")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, -PI / 2.0, 5.0).get("nombre", "")) == "ls_movement__idle__090_accel", "parado y quiere ir a la derecha: arranque girando 90° a la derecha")
@@ -55,3 +55,77 @@ func _probar_league_movimiento() -> void:
 	_comprobar(absf(float(vuelta.get("ang", 0.0))) > 2.0, "al trote y quiere volver atrás: un giro de 135-180° (%s)" % vuelta.get("nombre", ""))
 	_comprobar(LeagueMovimiento.estable(LeagueMovimiento.elegir(7.5, 0.0, 8.0)), "a toda carrera y de frente: el paso estable (no hay transición)")
 	_comprobar(absf(LeagueMovimiento.sesgo_giro(Vector2(0, -7.5), Vector2(0, 7.5)) - 0.9) < 0.001 and LeagueMovimiento.sesgo_giro(Vector2(0, -7.5), Vector2(0, -7.5)) < 0.001, "sesgo de giro rápido: máximo al dar la vuelta, nulo de frente")
+	var iguales := true
+	for k in 72:
+		var a := -PI + k * TAU / 72.0 + 0.013
+		var dir := Vector2(0, -1).rotated(a)
+		var mejor := 0.0
+		var md := -2.0
+		for f: float in LeagueMovimiento.CUERPOS:
+			if Vector2(0, -1).rotated(f * PI).dot(dir) > md:
+				md = Vector2(0, -1).rotated(f * PI).dot(dir)
+				mejor = f * PI
+		iguales = iguales and absf(LeagueMovimiento.cuerpo_permitido(a) - mejor) < 0.001
+	_comprobar(iguales, "el cuerpo permitido por umbrales da lo mismo que el del original (mayor producto escalar)")
+	## Las «angled» (cuerpo girado respecto a la marcha).
+	_comprobar(LeagueMovimiento.plantilla(LeagueMovimiento.DRIBBLE, -0.25 * PI) == ["ls_templates__dribbleD045", "ls_templates__dribbleD045_left_espejo"], "trote con el cuerpo a -45°: la plantilla y, para el otro pie, el espejo de la girada al otro lado")
+	_comprobar(LeagueMovimiento.plantilla(LeagueMovimiento.WALK, 0.75 * PI).is_empty() and LeagueMovimiento.plantilla(LeagueMovimiento.SPRINT, 0.25 * PI).is_empty(), "sin plantilla a 135° al trote rápido ni girado a toda carrera (como el original)")
+	_comprobar(LeagueMovimiento.cuerpo_posible(LeagueMovimiento.SPRINT, 0.25 * PI) == 0.0 and LeagueMovimiento.cuerpo_posible(LeagueMovimiento.WALK, -0.75 * PI) == -0.25 * PI and LeagueMovimiento.cuerpo_posible(LeagueMovimiento.IDLE, 0.75 * PI) == 0.0, "el cuerpo que admite cada velocidad (sprint de frente, trote rápido < 90°, parado de frente)")
+	_comprobar(absf(LeagueMovimiento.mirada(1.0, 0.0, 0.0) - 1.0) < 0.001 and LeagueMovimiento.mirada(1.0, 8.0, 8.0) < 0.85, "la mirada va al balón entera parado y menos a toda carrera")
+	var de_lado := LeagueMovimiento.elegir(3.5, 0.0, 3.5, 0.0, -0.25 * PI)
+	_comprobar(absf(float(de_lado.get("cuerpo_sale", 0.0)) + 0.25 * PI) < 0.2, "al trote, de frente y queriendo mirar 45° a la derecha: un clip que deja el cuerpo a -45° (%s)" % de_lado.get("nombre", ""))
+	## El pie (L `CompareFootSimilarity`, `GetOutgoingFoot`).
+	var der := String(LeagueMovimiento.elegir(5.0, 0.0, 8.0, 0.0, NAN, "D").get("nombre", ""))
+	var izq := String(LeagueMovimiento.elegir(5.0, 0.0, 8.0, 0.0, NAN, "I").get("nombre", ""))
+	_comprobar(der == "ls_movement__walk__000_accel" and izq == "ls_movement__walk__000_accel_espejo", "acelerando de frente: el clip que empieza con el pie que toca (%s / %s)" % [der, izq])
+	var dos_pasos: Dictionary = {}
+	for c: Dictionary in LeagueMovimiento.clips():
+		if String(c["nombre"]) == "ls_movement__dribble__135":
+			dos_pasos = c
+	_comprobar(String(dos_pasos.get("pie_sale", "")) == "D", "un clip de 2 pasos que empieza con el derecho deja el derecho para el siguiente")
+	_comprobar(String(LeagueMovimiento.elegir(0.0, 0.0, 5.0, 0.0, NAN, "I").get("nombre", "")) == "ls_movement__idle__000_accel", "parado, el pie no cuenta (como el original)")
+
+func _probar_visita_generada() -> void:
+	_titulo("SEGUNDO UNIFORME PROPIO GENERADO (sin visita archivada)")
+	var m := Mundo.new()
+	m.generar(["ESP", "ARG", "JPN", "GER", "BRA", "MEX"], 5821)
+	var n := 0
+	var iguales := 0
+	var distintos_disenos := {}
+	var mala := ""
+	for c: Club in m.clubes.values():
+		if not VisitaGenerada.es_basica(AspectoClub.visita(c)):
+			continue
+		n += 1
+		var v := VisitaGenerada.para(c)
+		if str(v) != str(VisitaGenerada.para(c)):
+			mala = "no es determinista: " + c.nombre
+		if str(v["c1"]) == c.color_kit1() and str(v["c2"]) == c.color_kit2() and v["camiseta"] == DisenosKit._diseno_de(c):
+			iguales += 1
+		distintos_disenos[v["camiseta"]] = true
+		if not (String(v["c1"]).begins_with("#") and String(v["pant"]).begins_with("#") and String(v["med"]).begins_with("#")):
+			mala = "colores sin # en " + c.nombre
+	_comprobar(n > 50, "hay clubes sin visita archivada que medir (%d)" % n)
+	_comprobar(mala == "", "la visita generada es determinista y bien formada (%s)" % mala)
+	_comprobar(iguales == 0, "ninguna visita es idéntica a la primera camiseta (%d de %d)" % [iguales, n])
+	_comprobar(distintos_disenos.size() >= 4, "salen varios diseños distintos (%d)" % distintos_disenos.size())
+	## La lógica de choque sigue mandando: con rival de su mismo color, la visita no se le parece.
+	var cs: Array = m.clubes.values()
+	var choques := 0
+	for i in mini(cs.size(), 60):
+		var a: Club = cs[i]
+		var b: Club = cs[(i * 7 + 3) % cs.size()]
+		if a == b:
+			continue
+		if Puente3D.chocan(Puente3D.kit(a), Puente3D.kit_visita(a, b)):
+			choques += 1
+	_comprobar(choques == 0, "la visita nunca choca con el local (%d choques)" % choques)
+	## Legibilidad a la cámara real: cada diseño fino pasa a uno que existe, y no se toca el original.
+	var validos: Array = DisenosKit.claves()
+	var rotos := []
+	for k: String in KitLegible.ANCHOS:
+		if not validos.has(KitLegible.ANCHOS[k]) or not validos.has(k):
+			rotos.append(k)
+	_comprobar(rotos.is_empty(), "los diseños anchos existen (%s)" % str(rotos))
+	var orig := {"dis": "diagonal", "cols": ["#ff0000", "#ffffff"]}
+	_comprobar(KitLegible.para_partido(orig)["dis"] == "sash" and orig["dis"] == "diagonal" and KitLegible.para_partido({"dis": "liso"})["dis"] == "liso", "el diseño fino se ensancha sin tocar el original")

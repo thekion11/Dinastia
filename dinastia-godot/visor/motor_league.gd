@@ -424,10 +424,8 @@ func _mover_jugadores(delta: float) -> void:
 	if fase3:
 		LeagueLocomocion.paso(self, delta)
 
-## Mientras dura un arranque, frenada o giro del original, los ciclos normales no lo pisan; un gesto de verdad sí.
+## Mientras dura un clip del original o el cuerpo va girado, los ciclos normales no lo pisan; un gesto de verdad sí.
 func _anim(p: Dictionary, nombre: String, gesto: bool, dur_max := 1.4) -> void:
-	if float(p.get("ls_trans_hasta", 0.0)) > t:
-		if not gesto:
-			return
-		LeagueLocomocion.cortar(p)
+	if LeagueLocomocion.bloquea(p, t, nombre, gesto):
+		return
 	super(p, nombre, gesto, dur_max)

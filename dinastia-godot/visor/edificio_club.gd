@@ -188,31 +188,36 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 	for f: Array in todas():
 		var p := int(f[0])
 		var y0 := float(p) * ALTO_PLANTA
+		## (10-11, sesión 7) cada planta cuelga de su propio nodo «Planta_p»: así se puede ocultar (y fundir) por planta (`OcultarEstadioDentro`).
+		var np := Node3D.new()
+		np.name = "Planta_%d" % p
+		np.set_meta("planta", p)
+		nodo.add_child(np)
 		var bajo_tierra := p < 0
 		## El cascarón de la planta.
-		PiezasObra._caja(nodo, Vector3(x0, y0 - 0.1, zc), Vector3(ancho + 0.6, 0.2, fondo + 0.6), horm, true)
+		PiezasObra._caja(np, Vector3(x0, y0 - 0.1, zc), Vector3(ancho + 0.6, 0.2, fondo + 0.6), horm, true)
 		## (10-11, parpadeo del suelo) UNA sola superficie de suelo por zona: la losa clara cubre solo el pasillo (desde donde acaba el suelo de las salas)
 		## y cada sala lleva el suyo, macizo hasta el cascarón. Antes la losa cubría TODO el edificio y el suelo de cada sala iba 1 cm encima: dos
 		## superficies a 1 cm que, con profundidad de 16 bits (móviles) o MSAA apagado, se peleaban por el z-buffer y el suelo parpadeaba.
 		var z_losa := z_tabique - 0.05
-		PiezasObra._caja(nodo, Vector3(x0, y0 + 0.01, (z_losa + z_fin) / 2.0), Vector3(ancho, 0.02, z_fin - z_losa), suelo, false)
-		PiezasObra._caja(nodo, Vector3(x0, y0 + 0.036, z_fin - PASILLO / 2.0), Vector3(ancho - 0.8, 0.02, 1.0), alfombra, false)   ## camino del pasillo (a 2,6 cm de la losa)
-		PiezasObra._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE + 0.25, zc), Vector3(ancho + 0.6, 0.5, fondo + 0.6), horm, true)
+		PiezasObra._caja(np, Vector3(x0, y0 + 0.01, (z_losa + z_fin) / 2.0), Vector3(ancho, 0.02, z_fin - z_losa), suelo, false)
+		PiezasObra._caja(np, Vector3(x0, y0 + 0.036, z_fin - PASILLO / 2.0), Vector3(ancho - 0.8, 0.02, 1.0), alfombra, false)   ## camino del pasillo (a 2,6 cm de la losa)
+		PiezasObra._caja(np, Vector3(x0, y0 + ALTO_LIBRE + 0.25, zc), Vector3(ancho + 0.6, 0.5, fondo + 0.6), horm, true)
 		for lado in [-1.0, 1.0]:
-			PiezasObra._caja(nodo, Vector3(x0 + lado * (TunelMedidas.VEST_MEDIO + 0.15), y0 + ALTO_LIBRE / 2.0, zc),
+			PiezasObra._caja(np, Vector3(x0 + lado * (TunelMedidas.VEST_MEDIO + 0.15), y0 + ALTO_LIBRE / 2.0, zc),
 				Vector3(0.3, ALTO_LIBRE, fondo + 0.6), horm, true)
-			PiezasObra._caja(nodo, Vector3(x0 + lado * (TunelMedidas.VEST_MEDIO - 0.02), y0 + ALTO_LIBRE / 2.0, zc),
+			PiezasObra._caja(np, Vector3(x0 + lado * (TunelMedidas.VEST_MEDIO - 0.02), y0 + ALTO_LIBRE / 2.0, zc),
 				Vector3(0.04, ALTO_LIBRE, fondo), pared, false)
-		PiezasObra._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_out - 0.15), Vector3(ancho + 0.6, ALTO_LIBRE, 0.3), horm, true)
+		PiezasObra._caja(np, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_out - 0.15), Vector3(ancho + 0.6, ALTO_LIBRE, 0.3), horm, true)
 		if p == GaleriaClub.PLANTA:
-			_pared_galeria(nodo, x0, z_fin, y0, ancho, horm, pared, c1)
+			_pared_galeria(np, x0, z_fin, y0, ancho, horm, pared, c1)
 		else:
-			PiezasObra._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_fin + 0.15), Vector3(ancho + 0.6, ALTO_LIBRE, 0.3), horm, true)
-			PiezasObra._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_fin - 0.02), Vector3(ancho, ALTO_LIBRE, 0.04), pared, false)
-		PiezasObra._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_out + 0.02), Vector3(ancho, ALTO_LIBRE, 0.04), pared, false)
+			PiezasObra._caja(np, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_fin + 0.15), Vector3(ancho + 0.6, ALTO_LIBRE, 0.3), horm, true)
+			PiezasObra._caja(np, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_fin - 0.02), Vector3(ancho, ALTO_LIBRE, 0.04), pared, false)
+		PiezasObra._caja(np, Vector3(x0, y0 + ALTO_LIBRE / 2.0, z_out + 0.02), Vector3(ancho, ALTO_LIBRE, 0.04), pared, false)
 		## Ventanas corridas en las plantas de arriba (a la calle y a los lados).
 		if not bajo_tierra:
-			PiezasObra._caja(nodo, Vector3(x0, y0 + 1.9, z_fin + 0.31), Vector3(ancho - 1.0, 1.4, 0.04), vidrio, false)
+			PiezasObra._caja(np, Vector3(x0, y0 + 1.9, z_fin + 0.31), Vector3(ancho - 1.0, 1.4, 0.04), vidrio, false)
 		## El tabique del pasillo, con una puerta por sala.
 		var huecos: Array = []
 		for sala: Array in f[2]:
@@ -226,52 +231,52 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 					nuevos.append(Vector2(tr.x - tr.y / 2.0, tr.x + tr.y / 2.0))
 			tramos = nuevos
 		for t: Vector2 in tramos:
-			PiezasObra._caja(nodo, Vector3((t.x + t.y) / 2.0, y0 + ALTO_LIBRE / 2.0, z_tabique), Vector3(t.y - t.x, ALTO_LIBRE, 0.2), pared, true)
+			PiezasObra._caja(np, Vector3((t.x + t.y) / 2.0, y0 + ALTO_LIBRE / 2.0, z_tabique), Vector3(t.y - t.x, ALTO_LIBRE, 0.2), pared, true)
 		for h: Vector2 in huecos:
-			PiezasObra._caja(nodo, Vector3((h.x + h.y) / 2.0, y0 + (ALTO_LIBRE + 2.4) / 2.0, z_tabique), Vector3(h.y - h.x, ALTO_LIBRE - 2.4, 0.2), pared, false)
-		PuertasClub.poner(nodo, huecos, y0, z_tabique, c1)   ## (9-11) marcos y hojas de las puertas de las salas
+			PiezasObra._caja(np, Vector3((h.x + h.y) / 2.0, y0 + (ALTO_LIBRE + 2.4) / 2.0, z_tabique), Vector3(h.y - h.x, ALTO_LIBRE - 2.4, 0.2), pared, false)
+		PuertasClub.poner(np, huecos, y0, z_tabique, c1)   ## (9-11) marcos y hojas de las puertas de las salas
 		## Tabiques entre salas.
 		var salas: Array = f[2]
 		for i in range(1, salas.size()):
 			var xs := x0 + float(salas[i][1])
-			PiezasObra._caja(nodo, Vector3(xs, y0 + ALTO_LIBRE / 2.0, (z_out + z_tabique) / 2.0),
+			PiezasObra._caja(np, Vector3(xs, y0 + ALTO_LIBRE / 2.0, (z_out + z_tabique) / 2.0),
 				Vector3(0.2, ALTO_LIBRE, z_tabique - z_out), pared, true)
-		PiezasObra._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE - 0.01, z_fin - PASILLO / 2.0), Vector3(ancho - 0.1, 0.02, PASILLO - 0.1),
+		PiezasObra._caja(np, Vector3(x0, y0 + ALTO_LIBRE - 0.01, z_fin - PASILLO / 2.0), Vector3(ancho - 0.1, 0.02, PASILLO - 0.1),
 			PiezasObra._mat(Color(0.8, 0.8, 0.78), 0.9), false)
 		## Luz del pasillo y rótulo de la planta junto al ascensor.
 		var lp := OmniLight3D.new()
 		lp.position = Vector3(x0, y0 + ALTO_LIBRE - 0.4, z_fin - PASILLO / 2.0)
 		lp.omni_range = 10.0
 		lp.light_energy = 0.75
-		nodo.add_child(lp)
-		PiezasObra._rotulo(nodo, Idiomas.t("PLANTA %d · %s") % [p, Idiomas.t(String(f[1])).to_upper()],
+		np.add_child(lp)
+		PiezasObra._rotulo(np, Idiomas.t("PLANTA %d · %s") % [p, Idiomas.t(String(f[1])).to_upper()],
 			Vector3(x0 + (ASC_X0 + ASC_X1) / 2.0, y0 + ALTO_LIBRE - 0.45, z_fin - 0.06), PI, 34, c1.lerp(Color(0.1, 0.1, 0.12), 0.2))
-		_ascensor(nodo, x0, z_fin, y0)
-		RellenoClub.pasillo(nodo, x0, z_fin, y0)
+		_ascensor(np, x0, z_fin, y0)
+		RellenoClub.pasillo(np, x0, z_fin, y0)
 		## Cada sala: su rótulo sobre la puerta (del lado del pasillo), su luz y
 		## su contenido.
 		for sala: Array in salas:
 			var a: float = x0 + float(sala[1])
 			var b: float = x0 + float(sala[2])
 			var c := (a + b) / 2.0
-			PiezasObra._rotulo(nodo, Idiomas.t(String(sala[0])).to_upper(), Vector3(c, y0 + 2.75, z_tabique + 0.12), 0.0, 34, Color(0.15, 0.16, 0.2))
+			PiezasObra._rotulo(np, Idiomas.t(String(sala[0])).to_upper(), Vector3(c, y0 + 2.75, z_tabique + 0.12), 0.0, 34, Color(0.15, 0.16, 0.2))
 			var o := OmniLight3D.new()
 			o.position = Vector3(c, y0 + ALTO_LIBRE - 0.4, (z_out + z_tabique) / 2.0)
 			o.omni_range = maxf(6.0, (b - a) * 0.9)
 			o.light_energy = 0.9
-			nodo.add_child(o)
-			PiezasObra._caja(nodo, Vector3(c, y0 + ALTO_LIBRE - 0.03, (z_out + z_tabique) / 2.0), Vector3(1.8, 0.05, 0.6), luz, false)
+			np.add_child(o)
+			PiezasObra._caja(np, Vector3(c, y0 + ALTO_LIBRE - 0.03, (z_out + z_tabique) / 2.0), Vector3(1.8, 0.05, 0.6), luz, false)
 			## Suelo y techo propios de la sala.
 			var gusto := _gusto(String(sala[0]))
 			var col_suelo := Color(String(gusto["suelo"])) if String(gusto.get("suelo", "")) != "" else _suelo_de(String(sala[0]))
-			PiezasObra._caja(nodo, Vector3(c, y0 + 0.015, (z_out + z_tabique) / 2.0 - 0.005), Vector3(b - a - 0.2, 0.03, z_tabique - z_out - 0.09),
+			PiezasObra._caja(np, Vector3(c, y0 + 0.015, (z_out + z_tabique) / 2.0 - 0.005), Vector3(b - a - 0.2, 0.03, z_tabique - z_out - 0.09),
 				PiezasObra._mat(col_suelo, 0.75), false)   ## del cascarón (y0) a y0+0,03, de pared a pared (la losa del pasillo empieza donde acaba)
-			PiezasObra._caja(nodo, Vector3(c, y0 + ALTO_LIBRE - 0.01, (z_out + z_tabique) / 2.0), Vector3(b - a - 0.2, 0.02, z_tabique - z_out - 0.1),
+			PiezasObra._caja(np, Vector3(c, y0 + ALTO_LIBRE - 0.01, (z_out + z_tabique) / 2.0), Vector3(b - a - 0.2, 0.02, z_tabique - z_out - 0.1),
 				PiezasObra._mat(Color(0.8, 0.8, 0.78), 0.9), false)
 			var caja := Rect2(a + 0.2, z_out + 0.2, b - a - 0.4, z_tabique - z_out - 0.4)
-			_amueblar(nodo, String(sala[0]), caja, y0, c1, c2, nombre_club)
-			RellenoClub.sala(nodo, String(sala[0]), caja, y0, c1)
-			_decorar(nodo, String(sala[0]), a, b, z_out, z_tabique, y0, c1, c2, gusto)
+			_amueblar(np, String(sala[0]), caja, y0, c1, c2, nombre_club)
+			RellenoClub.sala(np, String(sala[0]), caja, y0, c1)
+			_decorar(np, String(sala[0]), a, b, z_out, z_tabique, y0, c1, c2, gusto)
 
 ## Rehace el edificio con la decoración nueva (se llama al decorar).
 static func reconstruir(viejo: Node3D) -> void:

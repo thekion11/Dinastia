@@ -23,7 +23,7 @@ static func entrar_en(arbol: SceneTree, m: Mundo) -> void:
 		CargaCiudad.de("PrologoDT").directo = "" if d == "prologo" else d   ## "prologo": el guion entero
 		arbol.change_scene_to_file(CargaCiudad.de("OrquestadorMundo").PROLOGO)
 		return
-	arbol.change_scene_to_file("res://escenas/principal.tscn")
+	CargaMenu.cambiar(arbol, "res://escenas/principal.tscn")   ## (10-11) con pantalla de carga
 
 static func archivo_ui() -> Node:
 	return PartidaArchivoUI.new()

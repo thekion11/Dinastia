@@ -87,7 +87,7 @@ func _elegir_lanzador(tipo: String, saca_local: bool, lugar: Vector3) -> Diction
 			if bool(p["por"]):
 				return p
 			continue
-		if bool(p["por"]):
+		if bool(p["por"]) or float(p.get("levanta_hasta", 0.0)) > t:   ## (10-11) el que está en el suelo no saca
 			continue
 		var d := pos(p).distance_to(lugar)
 		if tipo in ["penal", "falta"]:
