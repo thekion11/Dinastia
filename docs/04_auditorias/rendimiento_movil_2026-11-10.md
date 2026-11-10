@@ -175,3 +175,14 @@ Cifras buenas (BAJA, `hw_modesto.sh` opengl3 llvmpipe, 0 errores en consola; `LO
 | ENG | 365,9 k → 350,3 k (−4,3 %) | 250 → 250 | 228 → 217 | 387 → 282 |
 
 Conclusión: −2…−4 % de triángulos, llamadas iguales, fotograma dentro del ruido, sin picos nuevos. Es una mejora pequeña pero sin coste visible (LOD 0 intacto; solo cambia al alejarse), por eso se queda encendida en BAJA/MEDIA BAJA (`PeloCapas._con_lods`, solo fuera de `--headless`, interruptor `LODS_CUERO=0`). Los demás grupos (cara real, `Hair*`, `PeloDrive`) NO se hornean: las mediciones por grupo anteriores a la corrección no valen y, por la forma de sus mallas (cara ~950 triángulos por pieza, `Hair*`/`PeloDrive` compartidas y pocas), se espera menos de un 2 %. Pendiente del dueño: confirmar en el teléfono si baja el tiempo de fotograma.
+
+## Precompilación de shaders del partido (10-11, sesión 5): ya existe y funciona
+Herramienta nueva `pruebas/medir_picos_partido.tscn` (tiempo real de cada fotograma desde que se abre `VistaEstadio`; `ESTAB=1` repite lo que hace el juego: `PantallaCarga.estabilizar`, 10 fotogramas dibujados DEBAJO de la carga, orden R4 del dueño del 3-11; `DOBLE=1` abre dos veces en el mismo proceso). BAJA, llvmpipe (la compilación de GLSL es real; el tiempo absoluto no vale para el teléfono):
+
+| Club | Sin estabilizar: 1.er fotograma visible | Con estabilizar (flujo real) | Mediana |
+|---|---|---|---|
+| CHI | 6.725 ms | 676 ms | 245 ms |
+| ESP | 4.487 ms | 554–639 ms | 207 ms |
+| ENG | 5.245 ms | 720 ms | 205 ms |
+
+Los tirones del primer dibujado ya se pagan debajo de la pantalla de carga (−89…−90 %); lo que queda son 1-3 fotogramas de ~2,5-3,5× la mediana y un salto de ~1,5× al lanzar el festejo. Segunda apertura en el mismo proceso (`DOBLE=1`): ~2 s en vez de ~11 s, pero eso mezcla shaders con scripts compilados y cachés estáticas (`_cache_cuero`…), no es solo compilación. Con esto, un calentador de materiales aparte no aporta: no se añade. El menú: ya medido (arranque, mismo hueco con montaje en caliente). Pendiente del dueño: repetir `medir_picos_partido` en el teléfono (el primer dibujado real depende del driver).
