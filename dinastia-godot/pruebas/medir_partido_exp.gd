@@ -27,6 +27,9 @@ static func aplicar(vista: Node) -> void:
 		for g in vista.find_children("*", "MeshInstance3D", true, false):
 			var mi := g as MeshInstance3D
 			var nom := String(mi.name).rstrip("0123456789@_")
+			var solo := OS.get_environment("LODS_SOLO")
+			if solo != "" and not nom.begins_with(solo):
+				continue
 			if not (nom.begins_with("Cuero") or nom.begins_with("Hair") or nom.begins_with("PeloDrive") or nom.begins_with("CaraReal") or nom.begins_with("Pelo")):
 				continue
 			var m := mi.mesh as ArrayMesh
