@@ -1,0 +1,22 @@
+#seleccion=Suiza
+#tier=0.8
+#globo=7.45,46.95
+#bandera=🇨🇭
+#confed=ucl,uel
+#liga=Sup3r League|Liga Suiza
+#copa=Copa de Suiza|Copa de Suiza
+#nombres=Luca,Noah,Leon,Elias,Nico,Fabian,Dario,Marco,Reto,Lukas,Silvan,Tobias,Jonas,Yannick
+#apellidos=Müller,Meier,Schmid,Keller,Weber,Huber,Schneider,Meyer,Steiner,Fischer,Gerber,Brunner,Baumann,Frei
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Basel;Rin Basilea;#c8102e;#1b458f;72;38000;1893;los Rojiazules;el estadio de la ciudad del Rin;El club rojiazul de la ciudad de la frontera, el más laureado del país.
+Young Boys;Chicos Berna;#ffd100;#000000;72;32000;1898;los Amarillos;el estadio de la capital federal;El campeón que domina la liga desde la capital.
+Lugano;Lago Sur;#000000;#ffffff;64;7000;1908;los Bianconeri;el estadio del lago de la montaña;El club italófono, del cantón del sur.
+Servette;Ginebra Roja;#7b1c3a;#ffffff;65;30000;1890;los Granates;el estadio de la ciudad del lago;El club más antiguo de la liga, de la ciudad del lago.
+Zürich;Limmat FC;#1b458f;#ffffff;66;26000;1896;los Zurichs;el estadio compartido de la ciudad grande;Campeón repetido de la ciudad financiera.
+Luzern;Lucerna Lago;#0072ce;#ffffff;61;16000;1901;los Lucernenses;el estadio del lago de las cuatro cuencas;El club del lago de las cuatro cuencas.
+Lausanne-Sport;Olímpico Léman;#0072ce;#ffffff;62;15000;1896;los Olímpicos;el estadio de la ciudad olímpica;El club de la capital olímpica.
+St. Gallen;Galo Oriental;#00843d;#ffffff;63;19000;1879;los Verdes;el estadio de la abadía;El club más antiguo del país, en la ciudad de la abadía.
+Sion;Sión Alpino;#c8102e;#ffffff;61;14000;1909;los Valesanos;el estadio de la montaña del vino;El club de los Alpes, con muchas copas y otros tantos entrenadores.
+Grasshoppers;Saltamontes ZH;#0072ce;#ffffff;62;26000;1886;los Saltamontes;el estadio compartido de la ciudad grande;El club más laureado de la historia suiza, hoy de regreso.
+Thun;Tuna Alpina;#c8102e;#ffffff;58;10000;1898;los Lagos;el estadio de los Alpes del lago;El club de los Alpes que sorprendió en Europa.
+Winterthur;Invierno ZH;#c8102e;#ffffff;56;9000;1896;los Invernales;el estadio de la ciudad obrera;Un club obrero que da trabajo a media liga.

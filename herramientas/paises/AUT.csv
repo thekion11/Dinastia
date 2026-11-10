@@ -1,0 +1,22 @@
+#seleccion=Austria
+#tier=0.75
+#globo=16.37,48.21
+#bandera=🇦🇹
+#confed=ucl,uel
+#liga=Bundesl1ga|Liga Austriaca
+#copa=Copa de Austria|Copa de Austria
+#nombres=Lukas,Jakob,Maximilian,Florian,Felix,Stefan,Michael,Markus,Daniel,Patrick,Dominik,Manuel,Philipp,Matthias
+#apellidos=Gruber,Huber,Bauer,Wagner,Müller,Pichler,Steiner,Moser,Mayer,Hofer,Leitner,Berger,Fuchs,Eder
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Red Bull Salzburg;Toro Salzburgo;#c8102e;#ffffff;71;30000;1933;los Toros;el estadio de la ciudad de Mozart;El campeón de siempre, con una escuela de talentos de nivel europeo.
+Sturm Graz;Tormenta Estiria;#000000;#ffffff;69;16000;1909;los Negros;el estadio del sur;El club negro de la ciudad del sur, campeón y heredero de una copa.
+LASK;Linz Rápido;#000000;#ffffff;65;19000;1908;los Atletas;el estadio nuevo de la ciudad del Danubio;El club de la ciudad del Danubio, que regresó a primera con ruido.
+Rapid Wien;Rapid Danubio;#00843d;#ffffff;67;28000;1899;los Verdiblancos;el estadio de la capital;El club más popular de la capital, con la hinchada más ruidosa.
+Austria Wien;Violeta Danubio;#6a1b9a;#ffffff;65;17000;1911;los Violetas;el estadio de la capital;El club violeta de la capital.
+Wolfsberger AC;Lobo Carintia;#000000;#ffffff;60;7000;1931;los Lobos;el estadio de la montaña del sur;Un club de montaña que juega en Europa.
+Hartberg;Colina Verde;#c8102e;#ffffff;55;6000;1946;los Colinas;el estadio de la ciudad pequeña;Un club de pueblo que se cuela en la parte alta.
+Altach;Rin Alto;#ffd100;#000000;54;8000;1929;los Rheintaler;el estadio del Rin alpino;El club del valle del Rin junto a la frontera.
+Blau-Weiß Linz;Linz Azulblanco;#0072ce;#ffffff;53;6000;1997;los Azulblancos;el estadio de la ciudad del Danubio;Un club de barrio que subió a primera.
+GAK;Grazer Rojo;#c8102e;#ffffff;56;16000;1902;los Rojos;el estadio de la ciudad del sur;El club histórico de la ciudad que volvió a primera.
+WSG Tirol;Tirol Alpino;#000000;#ffffff;53;5000;1930;los Tiroleses;el estadio de la montaña de Wattens;Un club de pueblo de montaña que subió a primera.
+Ried;Ried Verde;#00843d;#ffffff;53;7000;1912;los Wikinger;el estadio de la ciudad pequeña;El club del Innviertel, de la liga regional.

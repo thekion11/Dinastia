@@ -58,6 +58,13 @@ const JORNADA := {
 	"BEL": [38, "Ley del trabajo de 1971", "38 horas semanales de media.", true],
 	"CRO": [40, "Ley del Trabajo", "40 horas semanales.", true],
 	"DEN": [37, "Convenios colectivos", "37 horas semanales por convenio.", true],
+## Países importados desde una tabla (10-11-2026, `herramientas/importar_pais.py`).
+	"TUR": [45, "Ley del Trabajo n.º 4857", "45 horas semanales como máximo; las extras se pagan con recargo.", true],
+	"SCO": [48, "Working Time Regulations 1998 (Reino Unido)", "Tope medio de 48 horas; se puede renunciar por escrito.", true],
+	"SUI": [45, "Ley federal del trabajo", "45 horas semanales en industria y oficinas; 50 en otros sectores.", true],
+	"AUT": [40, "Arbeitszeitgesetz y convenios", "8 horas diarias y 40 semanales, por convenio colectivo.", true],
+	"GRE": [40, "Convenio colectivo nacional", "40 horas semanales y 8 diarias.", true],
+	"QAT": [48, "Ley del Trabajo n.º 14 de 2004", "48 horas semanales; en Ramadán se reducen 2 horas diarias.", true],
 }
 
 ## Cambios de ley con fecha: [pais, anio, mes, dia, horas nuevas, texto].
