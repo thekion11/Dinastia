@@ -128,7 +128,7 @@ func cargar() -> void:
 	if veto != "":
 		p._escribir("[color=#c9a227]%s[/color]" % veto)
 		return
-	var m := Partida.cargar(_ranura())
+	var m := Partida.cargar(_ranura(), func() -> void: p.mundo = null)   ## (10-11) el mundo de antes se suelta ANTES de construir el nuevo (pico de RAM)
 	if m == null:
 		p._escribir("[color=#c9a227]No hay ninguna partida guardada todavía.[/color]")
 		return
@@ -148,7 +148,7 @@ func cargar_de(nombre: String) -> void:
 	if veto != "":
 		p._escribir("[color=#c9a227]%s[/color]" % veto)
 		return
-	var m := Partida.cargar(nombre)
+	var m := Partida.cargar(nombre, func() -> void: p.mundo = null)   ## (10-11) ídem
 	if m == null:
 		p._escribir("[color=#c9a227]Esa ranura está vacía.[/color]")
 		return

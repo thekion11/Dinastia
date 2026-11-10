@@ -8,9 +8,12 @@ func _ready() -> void:
 	var modo := OS.get_environment("MODO")
 	print("FUGA base: %.0f MB" % _est())
 	var m := Mundo.new()
-	m.generar([], 4711)
+	m.generar(["CHI", "ARG", "ESP"] as Array[String], 4711)
 	var ref: WeakRef = weakref(m)
-	print("FUGA generado: %.0f MB" % _est())
+	var r_club: WeakRef = weakref(m.ligas[0].clubes[0])
+	var r_jug: WeakRef = weakref(m.ligas[0].clubes[0].plantilla[0])
+	var r_liga: WeakRef = weakref(m.ligas[0])
+	print("FUGA generado (3 países): %.0f MB" % _est())
 	if modo == "mando" or modo == "guardar":
 		m.tomar_el_mando(m.ligas[0].clubes[0].id)
 	if modo == "guardar":
@@ -20,5 +23,5 @@ func _ready() -> void:
 	m = null
 	await get_tree().process_frame
 	await get_tree().process_frame
-	print("FUGA mundo soltado: %.0f MB  (weakref vivo: %s)" % [_est(), str(ref.get_ref() != null)])
+	print("FUGA mundo soltado: %.0f MB  (vivos: mundo=%s liga=%s club=%s jugador=%s)" % [_est(), str(ref.get_ref() != null), str(r_liga.get_ref() != null), str(r_club.get_ref() != null), str(r_jug.get_ref() != null)])
 	get_tree().quit()
