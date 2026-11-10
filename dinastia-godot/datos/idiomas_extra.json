@@ -7610,7 +7610,9 @@
   "El despacho del presidente": "The president's office",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Here deals are signed and people are dismissed. The board is watching you.",
   "Tu oficina": "Your office",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "You manage everything from your PC. Time to begin."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "You manage everything from your PC. Time to begin.",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D or gamepad · Shift: run · V: first person · E: use · Esc: back",
+  "E: salir de casa": "E: leave the house"
  },
  "pt": {
   "Historia": "História",
@@ -15223,7 +15225,9 @@
   "El despacho del presidente": "O gabinete do presidente",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Aqui assina-se e aqui despede-se. A direção está a olhar para ti.",
   "Tu oficina": "O teu escritório",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Do teu PC geres tudo. É hora de começar."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Do teu PC geres tudo. É hora de começar.",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D ou controle · Shift: correr · V: primeira pessoa · E: usar · Esc: voltar",
+  "E: salir de casa": "E: sair de casa"
  },
  "patrones": [
   [
@@ -28811,7 +28815,9 @@
   "El despacho del presidente": "Le bureau du président",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Ici on signe et ici on licencie. Le conseil t'observe.",
   "Tu oficina": "Ton bureau",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "De ton PC, tu gères tout. Il est temps de commencer."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "De ton PC, tu gères tout. Il est temps de commencer.",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D ou manette · Maj : courir · V : première personne · E : utiliser · Échap : retour",
+  "E: salir de casa": "E : sortir de la maison"
  },
  "it": {
   "Historia": "Storia",
@@ -36424,7 +36430,9 @@
   "El despacho del presidente": "L'ufficio del presidente",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Qui si firma e qui si licenzia. Il consiglio ti guarda.",
   "Tu oficina": "Il tuo ufficio",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Dal tuo PC gestisci tutto. È ora di iniziare."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Dal tuo PC gestisci tutto. È ora di iniziare.",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D o gamepad · Maiusc: correre · V: prima persona · E: usa · Esc: indietro",
+  "E: salir de casa": "E: esci di casa"
  },
  "de": {
   "Historia": "Geschichte",
@@ -44037,7 +44045,9 @@
   "El despacho del presidente": "Das Büro des Präsidenten",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Hier wird unterschrieben und hier wird entlassen. Der Vorstand beobachtet dich.",
   "Tu oficina": "Dein Büro",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Von deinem PC aus verwaltest du alles. Zeit anzufangen."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Von deinem PC aus verwaltest du alles. Zeit anzufangen.",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D oder Gamepad · Umschalt: rennen · V: Ego-Perspektive · E: benutzen · Esc: zurück",
+  "E: salir de casa": "E: das Haus verlassen"
  },
  "ca": {
   "Historia": "Història",
@@ -51650,7 +51660,9 @@
   "El despacho del presidente": "El despatx del president",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Aquí se signa i aquí s'acomiada. La directiva et mira.",
   "Tu oficina": "El teu despatx",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Des del teu PC ho gestiones tot. És hora de començar."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Des del teu PC ho gestiones tot. És hora de començar.",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D o comandament · Majúscules: córrer · V: primera persona · E: usar · Esc: tornar",
+  "E: salir de casa": "E: sortir de casa"
  },
  "pl": {
   "Club": "Klub",
@@ -59263,7 +59275,9 @@
   "El despacho del presidente": "Gabinet prezesa",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Tu się podpisuje i tu się zwalnia. Zarząd cię obserwuje.",
   "Tu oficina": "Twoje biuro",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Z komputera zarządzasz wszystkim. Czas zaczynać."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Z komputera zarządzasz wszystkim. Czas zaczynać.",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D lub pad · Shift: bieg · V: widok z pierwszej osoby · E: użyj · Esc: wróć",
+  "E: salir de casa": "E: wyjdź z domu"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66876,6 +66890,8 @@
   "El despacho del presidente": "Başkanın ofisi",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Burada imza atılır, burada işten çıkarılır. Yönetim seni izliyor.",
   "Tu oficina": "Ofisin",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Her şeyi bilgisayarından yönetirsin. Başlama zamanı."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Her şeyi bilgisayarından yönetirsin. Başlama zamanı.",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D veya kumanda · Shift: koş · V: birinci şahıs · E: kullan · Esc: geri",
+  "E: salir de casa": "E: evden çık"
  }
 }

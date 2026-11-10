@@ -52,7 +52,7 @@ static func menu_por_id(id: String) -> Dictionary:
 static func ejecutar(p: Principal, accion: String) -> void:
 	match accion:
 		"casa":
-			CargaCiudad.de("CasaEscena3D").abrir(p, p.mundo, p.get("_bandeja"))
+			CasaAcceso.abrir(p, p.mundo, p.get("_bandeja") if p.get("_bandeja") != null else [])
 		"movil":
 			load("res://ui/componentes/telefono.gd").abrir(p, p.mundo)   ## (por load: el móvil no se compila al abrir el menú)
 		"ver_estadio":
