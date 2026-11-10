@@ -22,7 +22,9 @@ extends Node
 ## 4-11 (A4-GES-006, tope duro, a propósito): lo ganado por entrenamiento (semanal, mentorías, prob. semanal) no pasa de +6 en la temporada (+2 de la curva anual = «no más de +8» del dueño). Era 194965960.
 ## 4-11 (PES 6, reglas al límite, a propósito): un lesionado SALE del campo (cambio de la CPU en el acto, el ayudante del DT a los 3 minutos; sin cambios, el equipo sigue con uno menos) y sin portero la defensa supone un «portero» de 35 (`PartidoLesiones`). Era 689438746. `igualdad_motor` no cambia.
 ## 4-11 (RECALIBRACIÓN DEL SIMULADO, decisión del dueño, a propósito): ~25 remates por partido (antes ~10; `Balance.LLEGADAS_K`), ~8,5 a puerta, ~11 % de conversión, el portero para el ~68 % de lo que va a puerta, y el cociente ataque/defensa se satura (`SATURA_LN`, A4-PAR-L02: 71 contra 48 da ~3,8 goles y como mucho ~8 en vez de 7,7 y hasta 15-0). Los goles siguen en ~2,7. Era 2200717894. `igualdad_motor` no cambia.
-const ESPERADO := "3463485184"
+## 10-11 (a propósito, ajeno al balance y al motor: lo cambiaron `Torneos` —se juegan las copas y supercopas de todos los países— y `Selecciones`; comprobado que con los objetivos por club
+## apagados da la misma cifra): era 3463485184.
+const ESPERADO := "4231162687"
 
 func _ready() -> void:
 	var m := Mundo.new()
