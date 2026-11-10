@@ -32,7 +32,7 @@ func _ready() -> void:
 	var cfg := ConfigFile.new()
 	cfg.load(CajonAjustes.RUTA)
 	cfg.set_value(CajonAjustes.SECCION, "ceremonia", OS.get_environment("RECORRIDO") != "")   ## RECORRIDO: con la presentación
-	cfg.set_value(CajonAjustes.SECCION, "intro", false)
+	cfg.set_value(CajonAjustes.SECCION, "intro", OS.get_environment("RECORRIDO") != "")
 	cfg.save(CajonAjustes.RUTA)
 	print("pack real: ", Datos.usar_base_real(true))
 	var tanda := OS.get_environment("TANDA")
@@ -282,11 +282,15 @@ func _es_persona(n: Node) -> bool:
 ## descanso. Por cada cámara activa: fotogramas, mediana y máximo de llamadas; y el minuto del partido en que apareció.
 func _recorrido(vista: Node) -> void:
 	var rs := RenderingServer
-	Engine.time_scale = float(OS.get_environment("RECORRIDO_ESCALA")) if OS.get_environment("RECORRIDO_ESCALA") != "" else 6.0
+	var escala := float(OS.get_environment("RECORRIDO_ESCALA")) if OS.get_environment("RECORRIDO_ESCALA") != "" else 6.0
 	var por_cam := {}
 	var orden: Array[String] = []
 	for f in int(OS.get_environment("RECORRIDO")):
+		## La presentación a velocidad normal (los primeros 400 fotogramas); después, acelerado hasta pasar el descanso.
+		Engine.time_scale = 1.0 if f < 400 else escala
 		await get_tree().process_frame
+		if f % 100 == 0 and vista.get("partido") != null:
+			print("   f%d minuto %d" % [f, int(vista.partido.minuto)])
 		var cam := get_viewport().get_camera_3d()
 		var nombre := String(cam.get_parent().name) + "/" + String(cam.name) if cam != null else "-"
 		var ll := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
