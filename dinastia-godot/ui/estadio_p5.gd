@@ -3,7 +3,7 @@ extends "res://ui/estadio_p4.gd"
 
 func _montar_motor() -> void:
 	partido.motor_externo = true
-	_motor = MotorJugable.new()
+	_motor = MotorLeague.crear()   ## (10-11) con MOTOR_LEAGUE=1, el núcleo de League-Soccer (prototipo, `visor/motor_league.gd`)
 	add_child(_motor)
 	_motor.set_physics_process(false)
 	_motor.duracion_mitad = 45.0 * float(SEG_POR_MINUTO.get(ritmo_partido(), 5.5))

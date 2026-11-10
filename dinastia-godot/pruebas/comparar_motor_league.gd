@@ -82,7 +82,7 @@ func _jugar(a: Club, b: Club, semilla: int, league: bool, mitad: float) -> Dicti
 	var us := 0
 	var us_max := 0
 	var pasos := 0
-	var tope := int((mitad * 2.0 + 120.0) / DT)
+	var tope := int((mitad * 2.0 * 1.6 + 300.0) / DT)   ## saques, goles, descanso y añadido alargan el partido
 	while motor.estado != "fin" and pasos < tope:
 		var t0 := Time.get_ticks_usec()
 		motor.paso(DT)
