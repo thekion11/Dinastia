@@ -266,6 +266,8 @@ func aplicar_bonificadores() -> void:
 		c.bonus_defensa *= vestuario.factor_defensa(c)
 
 func _montar_copa() -> void:
+	CopasMundo.supercopas(self)   ## (10-11) las supercopas de los demás países (con los campeones de la temporada que se cerró)…
+	CopasMundo.montar(self)       ## …y las copas de todos los demás países para la que empieza
 	var mio := club_de_la_copa()
 	var pais := mio.pais if mio != null else "CHI"
 	var aspirantes: Array[Club] = []

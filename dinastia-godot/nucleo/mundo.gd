@@ -10,6 +10,11 @@ extends "res://nucleo/mundo_p7.gd"
 const TOPE_VALOR_IA := {"facil": 1.35, "normal": 1.50, "leyenda": 1.65}
 ## El estado de las redes de la ciudad (luz, agua, drenaje, gas; se guarda). Null: aún no se ha pisado la ciudad en 3D o partida vieja.
 var redes_ciudad = null
+## (10-11) Las copas de los DEMÁS países y las secundarias del tuyo (`CopasMundo`), los campeones de todo el mundo en la partida y los
+## campeones de liga de los demás países pendientes de su supercopa.
+var copas_otras: Array = []
+var palmares_mundo: Array = []
+var campeones_liga_otros: Dictionary = {}
 ## La dificultad de la partida (la pone `CicloPartida.arrancar_con`; se guarda) y el valor medio de la IA de
 ## referencia (al tomar el mando; 0 = todavía no).
 ## (`dificultad` vive en mundo_p6, que la usa para los premios.)
