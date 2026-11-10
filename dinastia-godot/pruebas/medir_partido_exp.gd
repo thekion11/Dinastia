@@ -17,8 +17,6 @@ static func aplicar(vista: Node) -> void:
 				en.fog_enabled = false
 				en.adjustment_enabled = false
 				en.ssao_enabled = false
-	if OS.get_environment("EFECTO") != "" or OS.get_environment("DIAG_ENTORNO") != "":
-		_efecto(vista)
 	if OS.get_environment("LODS_RUNTIME") != "":
 		## LODS_RUNTIME=1: a las mallas que se construyen en tiempo de ejecución y NO tienen LODs (pelo por capas `Cuero*`, peinados del pack, cara real) se les generan LODs con `ImporterMesh.generate_lods`
 		## (el mismo simplificador que el importador) y se sustituyen; el motor elige el LOD por distancia (`mesh_lod_threshold` del viewport).
@@ -131,7 +129,7 @@ static func aplicar(vista: Node) -> void:
 
 ## EFECTO=glow|niebla|ajuste|ssao|ssr|tonemap|debanding|fxaa|brillo|cielo (uno solo; varios separados por coma): apaga ESE efecto de la cadena de MEDIA y nada más, para la tabla por efecto de `rendimiento_movil_2026-11-10.md`.
 ## DIAG_ENTORNO=1 escribe qué trae el Environment y el viewport.
-static func _efecto(vista: Node) -> void:
+static func efecto(vista: Node) -> void:
 	var lista := OS.get_environment("EFECTO").split(",", false)
 	var vp: Viewport = vista.get_viewport()
 	for we in vista.find_children("*", "WorldEnvironment", true, false):
