@@ -107,6 +107,11 @@ pasa "capturas UI: fase final de la liga (ARG, USA, EGY)" "godot --headless --pa
 pasa "capturas UI: formatos de los torneos continentales" "godot --headless --path . res://pruebas/captura_conti_formatos.tscn" "FOTO conti_asia"
 pasa "capturas UI: selección nacional" "godot --headless --path . res://pruebas/captura_seleccion.tscn" "captura sin pantalla"
 BLOQUE=
+# 5a2. Lo mismo, en tanda aparte porque tarda (ESPECIALES_SOLO=capturas_ui_lento): cierra las copas de todos los países y abre el menú principal entero.
+BLOQUE=capturas_ui_lento
+pasa "capturas UI: palmarés del mundo" "godot --headless --path . res://pruebas/captura_palmares_mundo.tscn" "CAPTURA OK"
+pasa "capturas UI: partido continental en vivo" "godot --headless --path . res://pruebas/captura_continental_vivo.tscn" "COINCIDE \(no se volvio a simular\) = true|no se encontro una semana"
+BLOQUE=
 # 5b. Pruebas viejas que nadie lanzaba y siguen pasando (reutilizadas el 27-10, orden 14 del dueño)
 pasa "calidad adaptativa (escalones)" "godot --headless --path . res://pruebas/probar_rendimiento_adaptativo.tscn" "probar_rendimiento_adaptativo: 0 fallos"
 pasa "contador de FPS" "godot --headless --path . res://pruebas/prueba_contador_fps.tscn" "FIN CONTADOR FPS. 0 fallos"
