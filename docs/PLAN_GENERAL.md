@@ -4,6 +4,14 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## ESTADO AL CIERRE DEL 10-11 NOCHE (orden 37 del dueño) — para retomar
+- TODO en `main`: las sesiones 2 a 8 terminaron su bloque, se unieron (banco «FIN. 0 fallos», 0 scripts > 450, `cifras_partido` 2,75 goles, `igualdad_mundo` 2180788566, `igualdad_motor` 2244399493, `probar_nativo` y `mem_menu_estadio` en 0) y se ARCHIVARON. Revisiones automáticas apagadas.
+- MUNDO: 135 países, 147 ligas, 2.206 clubes, 55.150 jugadores y 135 selecciones (nombres en 9 idiomas). Datos revisados con Wikipedia y RSSSF (`docs/04_auditorias/datos_dudosos_2026-11-10.md`); colores de las 7 ligas grandes con Wikipedia.
+- HECHO HOY (resumen): ligas activas; Finalissima y Juegos Olímpicos; rueda de prensa con mesa; vestuario y oficinas realistas CC0 por país; fuga de memoria del mundo arreglada; móvil: resolución 3D automática y, POR DEFECTO, Modo rendimiento, Ahorro de menús y tope de 90 FPS; iconos dibujados por defecto; versión 0.9.2 con novedades traducidas; biblioteca de caras pública; `.so` de Android (arm64) de la extensión C++; semana del mundo 1,5 → 1,3 s.
+- SIGUIENTE (orden 36, por hacer): guardado de jugadores con campos fijos; grada simplificada en celebraciones (diagnóstico hecho, sesión 3); museo por títulos con mini evento; web en el móvil con texturas comprimidas; diseño propio en vertical (plan de la sesión 8); recompilar la `.dll` de Windows (`PASO_CPP_PLAN.md` §2g) y probar el `.so` en un teléfono; datos: Marruecos y Sudáfrica con su lista actual; muebles CC0 de prensa, enfermería y pasillos.
+- PENDIENTE DEL DUEÑO: borrar las ramas viejas de las listas A y B de `docs/04_auditorias/ramas_viejas_2026-11-10.md` (desde el contenedor GitHub rechaza el borrado) y la etiqueta `latest`; probar Nervión y medir FPS en su teléfono; descargas opcionales (la semana del 16-11).
+- FALLOS ABIERTOS a mirar: sonda «el mejor gana al peor» (tira igual que el peor, N=6), cuelgue de las capturas del club con España y Argentina (club 3), `presupuesto_partido` con solo 2 llamadas de margen.
+
 ## PROMPT PARA LA NUEVA SESIÓN — PRIORIDAD ABSOLUTA (orden del dueño, 9-11 noche)
 > Trabaja en español, en la rama asignada, sin PR salvo orden. Lee `CLAUDE.md` y `docs/PLAN_GENERAL.md` (secciones PRIORITARIO, DECISIONES PENDIENTES y PULIDO). Antes de subir a main: banco en «FIN. 0 fallos» y líneas OK. Sin nombres de modelo en commits ni archivos. No subir .mp4 al repo.
 >
