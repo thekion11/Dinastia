@@ -153,6 +153,8 @@ var mundial: Dictionary = {}
 var ultimo_torneo: TorneoSelecciones = null
 ## (10-11) Finalissimas jugadas (campeón de Europa contra campeón de América), la más reciente primero (`Finalissima`).
 var finalissimas: Array = []
+## (10-11) Torneos olímpicos (sub-23) jugados, el más reciente primero (`Olimpicos`).
+var olimpicos: Array = []
 var cargo := CargoSeleccion.new()   ## (10-11) el cargo de seleccionador (ofertas, tu selección, sus torneos)
 ## El último Mundial de Clubes: {anio, campeon, club_id, mio, relato}.
 var mundial_clubes: Dictionary = {}
