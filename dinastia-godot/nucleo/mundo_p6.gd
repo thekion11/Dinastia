@@ -267,6 +267,14 @@ func _cerrar_campeonato() -> Dictionary:
 	if directiva != null and not directiva.despedido_ya and mi_puesto > 0:
 		resumen["directiva"] = directiva.tras_temporada(mi_puesto, mi_puesto == 1,
 			copa != null and copa.campeon == mi_club())
+		## (10-11) Objetivos secundarios y proyecto a 3 temporadas (`ObjetivosCierre`): suman o restan confianza con su peso, y se fija el paquete de la próxima.
+		var cierre := ObjetivosCierre.cerrar(self, directiva, mi_puesto, mi_puesto == 1)
+		(resumen["directiva"] as Dictionary)["secundarios"] = cierre["secundarios"]
+		(resumen["directiva"] as Dictionary)["proyecto"] = cierre["proyecto"]
+		(resumen["directiva"] as Dictionary)["delta_objetivos"] = cierre["delta"]
+		(resumen["directiva"] as Dictionary)["confianza"] = directiva.confianza
+		if not directiva.despedido_ya:
+			directiva.generar_objetivos(self, true)
 		## Las primas por objetivos del reglamento interno: se pagan al cumplir,
 		## no antes. Es lo que las hace una apuesta y no un gasto fijo.
 		if bool(normas.get("primas", false)) and bool(resumen["directiva"].get("cumplido", false)):

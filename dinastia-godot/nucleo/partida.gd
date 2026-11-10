@@ -107,6 +107,15 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.directiva.temporadas = int(dd.get("temporadas", 0))
 		m.directiva.despedido_ya = bool(dd.get("despedido", false))
 		m.directiva.desde_dic(dd.get("consejeros", {}))
+		## (10-11) Objetivos por club: una partida vieja no los trae y se queda con los que generó `tomar_el_mando` para su club.
+		m.directiva._objetivo_generado = m.directiva.objetivo   ## (guardado viejo o nuevo: el de liga que cargó es el «generado», así se renueva al cerrar la temporada)
+		if dd.has("objetivos"):
+			m.directiva.objetivos.clear()
+			for o: Variant in dd["objetivos"]:
+				if o is Dictionary:
+					m.directiva.objetivos.append((o as Dictionary).duplicate())
+			m.directiva.proyecto = (dd.get("proyecto", {}) as Dictionary).duplicate(true)
+			m.directiva.bases = (dd.get("bases", {}) as Dictionary).duplicate(true)
 		DesafiosDificultad.aplicar(m)
 		m.directiva.trofeos.clear()
 		for t: String in dd.get("trofeos", []):
