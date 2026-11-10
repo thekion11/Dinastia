@@ -422,7 +422,10 @@ func _probar_coherencia_c1() -> void:
 	var rival: Club = m.ligas[0].clubes[2]
 	pr.entrevista = {}
 	var intentos := 0
-	while not pr.hay_rueda() and intentos < 20:
+	## (10-11) El dado decide entre la rueda de la copa y la previa del siguiente partido (que pisa la competición): se repite
+	## con la entrevista vacía hasta que sale la de la copa, en vez de depender de que la primera tirada acierte.
+	while not (pr.hay_rueda() and pr.competicion_rueda == "copa") and intentos < 20:
+		pr.entrevista = {}
 		m._rueda_de_eliminatoria([{"local": mio, "visita": rival, "gl": 2, "gv": 1, "pasa": mio}], "copa", [mio, rival])
 		intentos += 1
 	_comprobar(pr.hay_rueda() and pr.competicion_rueda == "copa", "después de la copa también hay rueda de prensa")

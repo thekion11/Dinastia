@@ -26,7 +26,7 @@ static func juzgar(m: Mundo, c: Club, liga: Liga, o: Dictionary, bases: Dictiona
 		"continental":
 			for k: Variant in m.continentales:
 				var cont: Continental = m.continentales[k]
-				if cont == null or not cont.participa(c):
+				if cont == null or cont.es_fifa() or not cont.participa(c):
 					continue
 				var g := ObjetivosClub.rondas_ganadas(cont, c)
 				var pasa := cont.campeon == c or cont.clasificados().has(c) or g > 0

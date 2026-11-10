@@ -109,11 +109,11 @@ func _dirigir() -> void:
 		return
 	## La eliminatoria -penales, sin revancha- es la copa siempre, y el
 	## continental solo cuando ya salió de la fase de grupos.
-	var es_eliminatoria := es_copa or (conti != null and not conti.en_fase_de_grupos())
+	var es_eliminatoria := es_copa or (conti != null and conti.necesita_ganador())
 	if es_copa:
 		pr._escribir("[color=#c9a227]%s — %s.[/color]" % [pr.mundo.copa.nombre, pr.mundo.copa.nombre_de_ronda()])
 	elif conti != null:
-		pr._escribir("[color=#c9a227]%s — %s.[/color]" % [Continental.nombre_conti(conti.clave), conti.nombre_de_ronda()])
+		pr._escribir("[color=#c9a227]%s — %s.[/color]" % [Continental.nombre_conti(conti.clave), Idiomas.t(conti.nombre_de_ronda())])
 	if pr.mundo.necesidades.preparacion_cambio():   ## §2.5: tu cansancio y tu hambre, en ESTE partido
 		pr.mundo.aplicar_bonificadores()
 	var p := Partido.new(par[0], par[1])

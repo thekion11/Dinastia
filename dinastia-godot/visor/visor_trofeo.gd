@@ -7,6 +7,10 @@ extends PanelContainer
 var _pivote: Node3D
 var _arrastrando := false
 var _auto := true
+var _cam: Camera3D
+var _dist := 3.0   ## distancia de la cámara a la copa (acercar/alejar)
+const DIST_MIN := 1.8
+const DIST_MAX := 4.5
 
 static func abrir(capa: CanvasLayer, ficha: Dictionary) -> VisorTrofeo:
 	var v := VisorTrofeo.new()
@@ -55,7 +59,28 @@ func construir(ficha: Dictionary) -> void:
 		col.add_child(_dato(Idiomas.t("Final"), fin if fin != "" else Idiomas.t("Sin datos")))
 		var gol: Array = ficha.get("goleadores", []) as Array
 		col.add_child(_dato(Idiomas.t("Goleadores"), ", ".join(gol) if not gol.is_empty() else Idiomas.t("Sin datos")))
-	var ayuda := _etiqueta(Idiomas.t("Arrastra el ratón o A/D para girar la copa"), 12, Color(0.6, 0.68, 0.64))
+	## Botones para el toque y el mando: girar y acercar/alejar sin teclado.
+	var mandos := HBoxContainer.new()
+	mandos.add_theme_constant_override("separation", 6)
+	col.add_child(mandos)
+	for par: Array in [["◀", -0.6], ["▶", 0.6]]:
+		var b := Button.new()
+		b.text = String(par[0])
+		b.custom_minimum_size = Vector2(52, 44)
+		var ang := float(par[1])
+		b.pressed.connect(func() -> void:
+			_auto = false
+			if _pivote != null:
+				_pivote.rotation.y += ang)
+		mandos.add_child(b)
+	for par: Array in [["＋", -0.4], ["－", 0.4]]:
+		var b := Button.new()
+		b.text = String(par[0])
+		b.custom_minimum_size = Vector2(52, 44)
+		var paso := float(par[1])
+		b.pressed.connect(func() -> void: _acercar(paso))
+		mandos.add_child(b)
+	var ayuda := _etiqueta(Idiomas.t("Arrastra (ratón o dedo), A/D, la cruceta o el stick para girar la copa; rueda, W/S o stick derecho para acercar; Esc o B para cerrar"), 12, Color(0.6, 0.68, 0.64))
 	ayuda.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	ayuda.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
 	col.add_child(ayuda)
@@ -63,6 +88,7 @@ func construir(ficha: Dictionary) -> void:
 	cerrar.text = Idiomas.t("Cerrar")
 	cerrar.pressed.connect(queue_free)
 	col.add_child(cerrar)
+	cerrar.grab_focus.call_deferred()   ## con el mando, A cierra
 
 func _etiqueta(t: String, tam: int, c: Color) -> Label:
 	var l := Label.new()
@@ -126,7 +152,8 @@ func _escena(sv: SubViewport, vacia: bool, receta: Dictionary = {}) -> void:
 
 func _camara(sv: SubViewport) -> void:
 	var cam := Camera3D.new()
-	cam.position = Vector3(0, 0.15, 3.0)
+	_cam = cam
+	cam.position = Vector3(0, 0.15, _dist)
 	cam.fov = 40.0
 	sv.add_child(cam)
 	cam.current = true
@@ -135,6 +162,20 @@ func _process(delta: float) -> void:
 	if _pivote == null:
 		return
 	var giro := 0.0
+	var eje := Input.get_joy_axis(0, JOY_AXIS_LEFT_X)
+	if absf(eje) > 0.25:
+		giro += eje
+	if Input.is_joy_button_pressed(0, JOY_BUTTON_DPAD_LEFT):
+		giro -= 1.0
+	if Input.is_joy_button_pressed(0, JOY_BUTTON_DPAD_RIGHT):
+		giro += 1.0
+	var zoom := Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
+	if Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP):
+		zoom = -1.0
+	elif Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN):
+		zoom = 1.0
+	if absf(zoom) > 0.25:
+		_acercar(zoom * delta * 1.6)
 	if Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT):
 		giro -= 1.0
 	if Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT):
@@ -145,12 +186,33 @@ func _process(delta: float) -> void:
 	elif _auto and not _arrastrando:
 		_pivote.rotation.y += delta * 0.5
 
+## Acerca (negativo) o aleja (positivo) la cámara.
+func _acercar(paso: float) -> void:
+	_dist = clampf(_dist + paso, DIST_MIN, DIST_MAX)
+	if _cam != null:
+		_cam.position.z = _dist
+
 func _arrastre(ev: InputEvent) -> void:
+	if ev is InputEventScreenDrag and _pivote != null:   ## el dedo (aunque el sistema no emule el ratón)
+		_auto = false
+		_pivote.rotation.y += (ev as InputEventScreenDrag).relative.x * 0.012
+		return
+	if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed:
+		var bi := (ev as InputEventMouseButton).button_index
+		if bi == MOUSE_BUTTON_WHEEL_UP:
+			_acercar(-0.2)
+		elif bi == MOUSE_BUTTON_WHEEL_DOWN:
+			_acercar(0.2)
 	if ev is InputEventMouseButton and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
 		_arrastrando = (ev as InputEventMouseButton).pressed
 		_auto = false
 	elif ev is InputEventMouseMotion and _arrastrando and _pivote != null:
 		_pivote.rotation.y += (ev as InputEventMouseMotion).relative.x * 0.012
+
+func _unhandled_input(ev: InputEvent) -> void:   ## B del mando cierra
+	if ev is InputEventJoypadButton and (ev as InputEventJoypadButton).pressed and (ev as InputEventJoypadButton).button_index == JOY_BUTTON_B:
+		get_viewport().set_input_as_handled()
+		queue_free()
 
 func _unhandled_key_input(ev: InputEvent) -> void:
 	if ev is InputEventKey and (ev as InputEventKey).pressed and (ev as InputEventKey).keycode == KEY_ESCAPE:

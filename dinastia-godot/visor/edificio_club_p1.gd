@@ -20,6 +20,7 @@ extends RefCounted
 
 const ALTO_PLANTA := 4.0
 const ALTO_LIBRE := 3.4
+const SUELO_SALA := 0.03    ## la cara de arriba del suelo de cada sala sobre el de la planta (las alfombras de muebles se apoyan ahí)
 ## Fondo del pasillo (al lado de la fachada de atrás) y ancho de las puertas.
 const PASILLO := 2.8
 const PUERTA := 1.6
@@ -106,7 +107,7 @@ const PLANTAS := [
 	[-2, "Estacionamiento", [["Estacionamiento", -8.0, 3.0], ["Cuarto de máquinas", 3.0, 8.0]]],
 	[-1, "Utilería y enfermería", [["Utilería", -8.0, -3.0], ["Enfermería", -3.0, 2.5], ["Vestuario visitante", 2.5, 8.0]]],
 	[1, "Oficinas", [["Oficina del DT", -8.0, -2.0], ["Despacho del presidente", -2.0, 3.0], ["Sala de vídeo", 3.0, 8.0]]],
-	[2, "Prensa, comedor y museo", [["Sala de prensa", -8.0, -0.5], ["Comedor del plantel", -0.5, 3.5], ["Museo del club", 3.5, 8.0]]],
+	[2, "Prensa, comedor y museo", [["Sala de prensa", -8.0, -1.2], ["Comedor del plantel", -1.2, 3.5], ["Museo del club", 3.5, 8.0]]],
 ]
 
 ## LOS OBJETOS DE DECORACIÓN COMO CONJUNTOS DE PIEZAS (21-10-2026): antes eran
@@ -243,7 +244,7 @@ static func _mod(nodo: Node3D, nombre: String, p: Vector3, giro: float, solida :
 	if not Modulos.existe(nombre):
 		return null
 	var n := Modulos.tomar(nombre, esc, tonos)
-	n.position = p
+	n.position = p + (Vector3(0.0, SUELO_SALA, 0.0) if nombre.begins_with("rug") else Vector3.ZERO)   ## las alfombras (2 cm) iban a ras de planta, ENTERRADAS bajo el suelo de la sala
 	n.rotation.y = giro
 	nodo.add_child(n)
 	if solida:
@@ -294,6 +295,7 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 					coche.position = Vector3(px, y0 + 0.02, pz)
 					coche.rotation.y = 0.0 if fila == 0 else PI
 					nodo.add_child(coche)
+					ChoqueClub.de_modelo(nodo, coche)   ## (10-11) los coches se atravesaban: caja de choque a su medida
 			for k in 3:
 				PiezasObra._caja(nodo, Vector3(caja.position.x + caja.size.x * (0.25 + 0.25 * k), y0 + ALTO_LIBRE / 2.0, cz),
 					Vector3(0.5, ALTO_LIBRE, 0.5), PiezasObra._mat(Color(0.6, 0.6, 0.62), 0.9), true)
@@ -318,11 +320,11 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			var camas := clampi(1 + nivel("med") / 3, 1, 4)
 			var blanco := PiezasObra._mat(Color(0.95, 0.96, 0.97), 0.6)
 			for k in camas:
-				var px := caja.position.x + 1.0 + k * (caja.size.x - 2.0) / maxf(1.0, float(camas - 1)) if camas > 1 else cx
+				var px := caja.position.x + 1.0 + k * (caja.size.x - 2.8) / maxf(1.0, float(camas - 1))   ## deja sitio a la mesita del último (antes atravesaba la pared) if camas > 1 else cx
 				## Camillas de verdad con su mesita (21-10-2026).
 				if _mod(nodo, "bedSingle", Vector3(px, y0, caja.position.y + 1.3), PI, true, null, {"carpet": Color(0.92, 0.94, 0.96)}) == null:
 					PiezasObra._caja(nodo, Vector3(px, y0 + 0.55, caja.position.y + 1.3), Vector3(0.9, 0.15, 2.0), blanco, true)
-				_mod(nodo, "sideTableDrawers", Vector3(px + 0.75, y0, caja.position.y + 0.55), 0.0)
+				_mod(nodo, "sideTableDrawers", Vector3(px + 0.75, y0, caja.position.y + 0.55), 0.0, true)
 			PiezasObra._caja(nodo, Vector3(caja.end.x - 0.4, y0 + 1.0, caja.end.y - 0.8), Vector3(0.6, 2.0, 1.2), blanco, true)
 			PiezasObra._rotulo(nodo, "✚", Vector3(cx, y0 + 2.4, caja.position.y + 0.05), 0.0, 120, Color(0.85, 0.15, 0.15))
 		"Vestuario visitante":
@@ -342,8 +344,8 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			_mod(nodo, "bookcaseOpen", Vector3(caja.position.x + 0.3, y0, cz - 0.4), PI * 0.5, true)
 			_mod(nodo, "books", Vector3(caja.position.x + 0.3, y0 + 0.9, cz - 0.4), PI * 0.5)
 			_mod(nodo, "loungeSofa", Vector3(caja.end.x - 0.55, y0, cz + 0.6), -PI * 0.5, true, null, {"carpet": c1.lerp(Color(0.15, 0.15, 0.17), 0.35)})
-			_mod(nodo, "pottedPlant", Vector3(caja.end.x - 0.45, y0, caja.position.y + 0.5), 0.0, false, 2.2)
-			_mod(nodo, "coatRackStanding", Vector3(caja.position.x + 0.45, y0, caja.end.y - 0.6), 0.0)
+			_mod(nodo, "pottedPlant", Vector3(caja.end.x - 0.45, y0, caja.position.y + 0.5), 0.0, true, 2.2)
+			_mod(nodo, "coatRackStanding", Vector3(caja.position.x + 0.45, y0, caja.end.y - 0.6), 0.0, true)
 			PiezasObra._caja(nodo, Vector3(cx, y0 + 1.7, caja.position.y + 0.05), Vector3(2.4, 1.2, 0.05), PiezasObra._mat(Color(0.95, 0.96, 0.97), 0.3), false)
 			PiezasObra._rotulo(nodo, nombre_club.to_upper(), Vector3(cx, y0 + 2.55, caja.position.y + 0.1), 0.0, 40, c1)
 		"Despacho del presidente":
@@ -355,12 +357,12 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 				var mastil := PiezasObra._caja(nodo, Vector3(caja.position.x + 0.6 + k * 0.6, y0 + 1.2, caja.position.y + 0.5), Vector3(0.05, 2.4, 0.05), Texturas.metal(Color(0.8, 0.7, 0.3), 0.3), false)
 				mastil.name = "Mastil"
 				PiezasObra._caja(nodo, Vector3(caja.position.x + 0.85 + k * 0.6, y0 + 2.0, caja.position.y + 0.5), Vector3(0.5, 0.35, 0.02), club if k == 0 else PiezasObra._mat(c2, 0.6), false)
-			_mod(nodo, "chairModernFrameCushion", Vector3(cx - 0.6, y0, cz + 0.5), PI)
-			_mod(nodo, "chairModernFrameCushion", Vector3(cx + 0.6, y0, cz + 0.5), PI)
+			_mod(nodo, "chairModernFrameCushion", Vector3(cx - 0.6, y0, cz + 0.5), PI, true)
+			_mod(nodo, "chairModernFrameCushion", Vector3(cx + 0.6, y0, cz + 0.5), PI, true)
 			_mod(nodo, "loungeDesignSofa", Vector3(caja.end.x - 0.6, y0, cz + 0.4), -PI * 0.5, true, null, {"carpet": c1.lerp(Color(0.15, 0.15, 0.17), 0.35)})
-			_mod(nodo, "tableCoffeeGlass", Vector3(caja.end.x - 1.6, y0, cz + 0.4), PI * 0.5)
-			_mod(nodo, "lampRoundFloor", Vector3(caja.end.x - 0.45, y0, caja.position.y + 0.5), 0.0)
-			_mod(nodo, "pottedPlant", Vector3(caja.position.x + 0.45, y0, caja.end.y - 0.5), 0.0, false, 2.2)
+			_mod(nodo, "tableCoffeeGlass", Vector3(caja.end.x - 1.6, y0, cz + 0.4), PI * 0.5, true)
+			_mod(nodo, "lampRoundFloor", Vector3(caja.end.x - 0.45, y0, caja.position.y + 0.5), 0.0, true)
+			_mod(nodo, "pottedPlant", Vector3(caja.position.x + 0.45, y0, caja.end.y - 0.5), 0.0, true, 2.2)
 			var pres := String(ctx.get("presidente", ""))
 			if pres != "":
 				PiezasObra._rotulo(nodo, pres, Vector3(cx, y0 + 0.95, cz + 0.27), 0.0, 22, Color(0.95, 0.85, 0.5))
@@ -387,7 +389,9 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			PiezasObra._caja(nodo, Vector3(cx, y0 + 0.37, caja.position.y + 1.35), Vector3(3.0, 0.74, 0.05), oscuro, false)
 			for f2 in filas2:
 				for k in int((caja.size.x - 1.6) / 0.75):
-					if _mod(nodo, "chairCushion", Vector3(caja.position.x + 1.0 + k * 0.75, y0, caja.position.y + 3.0 + f2 * 1.0), PI) == null:
+					if absf(caja.position.x + 1.0 + k * 0.75 - cx) < 0.7:
+						continue   ## pasillo central entre las filas: la silla ya frena al jugador y tiene que poder llegar a la tarima
+					if _mod(nodo, "chairCushion", Vector3(caja.position.x + 1.0 + k * 0.75, y0, caja.position.y + 3.0 + f2 * 1.0), PI, true) == null:
 						PiezasObra._caja(nodo, Vector3(caja.position.x + 1.0 + k * 0.75, y0 + 0.45, caja.position.y + 3.0 + f2 * 1.0), Vector3(0.5, 0.9, 0.5), oscuro, false)
 			if tipo == "television":
 				for k in 3:
@@ -410,7 +414,7 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 				var arriba := y0 + _alto_mod("table")
 				for lado: float in [-1.0, 1.0]:
 					for f: float in [-0.35, 0.35]:
-						_mod(nodo, "chair", Vector3(cx + lado * 0.85, y0, zm + f), -lado * PI * 0.5, false, null, {"carpet": c1.lerp(Color(0.2, 0.2, 0.2), 0.3)})
+						_mod(nodo, "chair", Vector3(cx + lado * 0.6, y0, zm + f), -lado * PI * 0.5, true, null, {"carpet": c1.lerp(Color(0.2, 0.2, 0.2), 0.3)})
 						_mod(nodo, "comida/plate", Vector3(cx + lado * 0.3, arriba, zm + f), 0.0)
 				_mod(nodo, "comida/glass", Vector3(cx, arriba, zm), 0.0)
 			PiezasObra._caja(nodo, Vector3(cx, y0 + 0.5, caja.position.y + 0.4), Vector3(caja.size.x - 0.4, 1.0, 0.6), Texturas.metal(Color(0.75, 0.77, 0.8), 0.35), true)

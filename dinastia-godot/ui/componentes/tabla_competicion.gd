@@ -41,7 +41,7 @@ static func titulo_de(mundo: Mundo, liga: Liga, mio: Club) -> String:
 		## formado no está en ningún diccionario.
 		return Idiomas.mayusculas(CompeticionInfo.nombre_visible(mundo.copa.nombre)) + "  ·  " + Idiomas.mayusculas(Idiomas.t(mundo.copa.nombre_de_ronda()))
 	var mi_conti := mundo.mi_continental()
-	if Continental.toca_ronda(mundo.semana) >= 0 and mi_conti != null and mi_conti.en_curso():
+	if mi_conti != null and mi_conti.toca(mundo.semana):
 		var nombre_c := Idiomas.mayusculas(CompeticionInfo.nombre_visible(Continental.nombre_conti(mi_conti.clave)))
 		if mi_conti.en_fase_de_grupos():
 			return "%s  ·  %s" % [nombre_c, _mi_grupo_nombre(mi_conti, mio)]
@@ -58,7 +58,7 @@ static func pintar(lista: VBoxContainer, mundo: Mundo, liga: Liga, mio: Club,
 		_pintar_cuadro(lista, mundo.copa.vivos, mundo.copa.emparejamiento_de(mio), mio, paleta)
 		return
 	var mi_conti := mundo.mi_continental()
-	if Continental.toca_ronda(mundo.semana) >= 0 and mi_conti != null and mi_conti.en_curso():
+	if mi_conti != null and mi_conti.toca(mundo.semana):
 		if mi_conti.en_fase_de_grupos():
 			_pintar_grupo(lista, mi_conti, mio, paleta)
 		else:
@@ -86,14 +86,15 @@ static func _pintar_grupo(lista: VBoxContainer, t: Continental, mio: Club,
 	var g := _rejilla(lista, 6, paleta)
 	for t2 in ["#", "CLUB", "PJ", "GF", "GC", "PTS"]:
 		_celda(g, CompeticionFilas.sigla(t2), paleta["suave"], t2 != "CLUB" and t2 != "#", 11, paleta)
-	var puesto := 0
-	for f: Dictionary in t.tabla_de_grupo(indice):
-		puesto += 1
+	## En la fase de liga (36 clubes) solo las filas de alrededor de tu club: el resto no cabe en la columna.
+	for f: Dictionary in t.filas_con_puesto(indice, mio, 9):
+		var puesto := int(f["puesto"])
 		var c: Club = f["club"]
 		var propio := c == mio
 		var color: Color = paleta["acento"] if propio else paleta["texto"]
-		## Los dos primeros pasan: verlo en el color ahorra explicarlo.
-		_celda(g, str(puesto), paleta["verde"] if puesto <= 2 else paleta["suave"], false, 12, paleta)
+		## Los que pasan al cuadro van en verde, los del playoff en oro: verlo en el color ahorra explicarlo.
+		var destino := t.destino_en_primera_fase(puesto)
+		_celda(g, str(puesto), paleta["verde"] if destino == "directo" else (paleta["oro"] if destino == "playoff" else paleta["suave"]), false, 12, paleta)
 		var fila := HBoxContainer.new()
 		fila.add_theme_constant_override("separation", 6)
 		fila.add_child(_escudo(c, 20))

@@ -378,7 +378,7 @@ func _pintar_calendario(c: Club) -> void:
 		## `_dirigir()`, nunca el continental, así que mostrarlo como "el
 		## próximo partido" habría sido mentir.
 		var mi_conti := p.mundo.mi_continental()
-		if Continental.toca_ronda(p.mundo.semana) >= 0 and mi_conti != null and mi_conti.en_curso():
+		if mi_conti != null and mi_conti.toca(p.mundo.semana):
 			var av := p._texto(10, Principal.COL_ORO)
 			av.text = Idiomas.t("También hay ronda de %s esta semana.") % CompeticionInfo.nombre_visible(Continental.nombre_conti(mi_conti.clave))
 			av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

@@ -30,6 +30,10 @@ const COLORES := {
 	"uel": {"fondo": "#2b1a08", "acento": "#ff8f00", "nombre": "COPA CONTINENTAL"},
 	"lib": {"fondo": "#0d2818", "acento": "#f5c518", "nombre": "COPA CONTINENTAL"},
 	"sud": {"fondo": "#1a1006", "acento": "#ff7043", "nombre": "COPA CONTINENTAL"},
+	"uecl": {"fondo": "#06231f", "acento": "#26c6a2", "nombre": "COPA CONTINENTAL"},
+	"afr2": {"fondo": "#241508", "acento": "#ffb74d", "nombre": "COPA CONTINENTAL"},
+	"mundial": {"fondo": "#101a3a", "acento": "#e0e0ff", "nombre": "MUNDIAL DE CLUBES"},
+	"interc": {"fondo": "#2a0f2f", "acento": "#f48fb1", "nombre": "COPA INTERCONTINENTAL"},
 	"copa": {"fondo": "#14202b", "acento": "#4caf6d", "nombre": "COPA NACIONAL"},
 }
 
@@ -65,7 +69,7 @@ static var _cache: Dictionary = {}
 ## ficticia (ver `Datos`).
 func _paleta() -> Dictionary:
 	var p: Dictionary = (COLORES.get(_clave, COLORES["copa"]) as Dictionary).duplicate()
-	var confed: Variant = Datos.tabla("CONFED")
+	var confed: Variant = FormatosConti.tabla_confed()
 	if confed is Dictionary and (confed as Dictionary).has(_clave):
 		p["nombre"] = Idiomas.mayusculas(CompeticionInfo.nombre_visible(Continental.nombre_conti(_clave)))
 	else:

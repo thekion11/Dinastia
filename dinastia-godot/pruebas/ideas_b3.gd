@@ -128,7 +128,7 @@ func _ideas_b_copas(m: Mundo) -> void:
 	_comprobar(Copa.copas_de("ENG", "Inglaterra").size() == 2 and Copa.copas_de("ENG", "Inglaterra")[1][0] == "Copa de la Liga" and Copa.copas_de("ESP", "España")[0][0] == "Copa del Rey", "hay copa de la liga secundaria y copas propias de cada país (894)")
 	## Copa continental con grupos (896, 903, 904, 907, 908).
 	var lib := Continental.crear("lib")
-	lib.preparar(l16)
+	lib.preparar_con(l16, FormatosConti.CLASICO)   ## (10-11) el formato de antes; los nuevos se prueban en `banco/continentales.gd`
 	_comprobar(lib.por_grupos and lib.grupos.size() == 4 and lib.grupos[0].size() == 4, "la copa internacional arranca con 4 grupos de 4 (896, 903)")
 	for i in 3:
 		lib.jugar_ronda()
@@ -150,12 +150,12 @@ func _ideas_b_copas(m: Mundo) -> void:
 	liga1.tabla_puntos[lider.id]["pj"] = 1
 	var plazas := Continental.plazas(m.clubes.values(), m.ligas, null)
 	var pl: Array = plazas["lib"]
-	_comprobar(pl.size() == 16 and pl[0] == lider, "el líder de la liga ocupa la primera plaza continental de su país (908)")
+	_comprobar(pl.size() == FormatosConti.plazas("lib") and pl[0] == lider, "el líder de la liga ocupa la primera plaza continental de su país (908)")
 	var campcopa: Club = null
 	for cl in todos:
 		if cl.pais == "ARG" and not pl.has(cl):
 			campcopa = cl
 			break
 	var pl2: Array = Continental.plazas(m.clubes.values(), m.ligas, campcopa)["lib"]
-	_comprobar(campcopa != null and pl2.has(campcopa) and pl2.size() == 16, "el campeón de copa se lleva una plaza directa (908)")
+	_comprobar(campcopa != null and pl2.has(campcopa) and pl2.size() == FormatosConti.plazas("lib"), "el campeón de copa se lleva una plaza directa (908)")
 

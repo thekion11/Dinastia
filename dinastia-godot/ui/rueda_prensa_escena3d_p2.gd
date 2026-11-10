@@ -373,7 +373,7 @@ func montar(club: Club, acento: Color, nivel: int = Calidad.ALTO, look_dt: Dicti
 	env.background_color = Color(0.09, 0.09, 0.11)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.7, 0.72, 0.78)
-	env.ambient_light_energy = 0.85
+	env.ambient_light_energy = 1.05   ## (10-11) un poco más de ambiente: la sala vista desde los periodistas quedaba casi negra
 	## Bloom suave: los focos de sala tienen que quemar un poco, o el plató se
 	## ve plano y de oficina en vez de televisado.
 	env.glow_enabled = Calidad.elegida > Calidad.MINIMO

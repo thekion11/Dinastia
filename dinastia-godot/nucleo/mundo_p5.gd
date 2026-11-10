@@ -212,11 +212,8 @@ func _semana_federacion_y_plantel() -> void:
 
 ## FASE 20 · LA RONDA CONTINENTAL, si esta semana toca.
 func _semana_continental(ya_jugado: Partido) -> void:
-	var fecha_conti := Continental.toca_ronda(semana)
-	if fecha_conti < 0:
-		return
 	for t: Continental in continentales.values():
-		if not t.en_curso():
+		if not t.toca(semana):   ## cada torneo tiene su calendario (`FormatosConti`)
 			continue
 		_fatiga_de_viaje(t)
 		## `ya_jugado` -el partido que acabas de dirigir en vivo, si
@@ -232,7 +229,9 @@ func _semana_continental(ya_jugado: Partido) -> void:
 		## como la de liga y copa. `en_curso()` pasa a false en cuanto hay
 		## campeón, así que esto solo entra la semana exacta en que se
 		## decide -no cada semana que quede del año.
-		if t.campeon == mi_club() and logros != null:
+		if t.es_fifa() and t.campeon != null:
+			FifaClubes.coronar(self, t)   ## el Mundial de Clubes y la Intercontinental: palmarés, vitrina y prestigio
+		elif t.campeon == mi_club() and logros != null:
 			logros.celebrar_titulo(Continental.nombre_conti(t.clave))
 
 ## FASE 21 · LA COPA: una ronda cada cuatro jornadas, en paralelo a la liga. Se monta

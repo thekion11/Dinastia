@@ -76,9 +76,20 @@ func _probar_copas_mundo() -> void:
 	_comprobar(Partida.guardar(m, "_prueba_copas_mundo"), "se guarda")
 	var m2 := Partida.cargar("_prueba_copas_mundo")
 	_comprobar(m2 != null and m2.copas_otras.size() == m.copas_otras.size() and m2.palmares_mundo.size() == m.palmares_mundo.size(), "y se carga con sus copas y su palmarés")
+	## Cuántas supercopas toca jugar: los países (menos el tuyo) cuyo campeón de liga no ganó también la copa principal. Con
+	## unos campeones u otros, esa cuenta cambia: la prueba no puede exigir «al menos una» a ciegas.
+	var esperadas := 0
+	for pais: String in m.campeones_liga_otros:
+		if pais == mio.pais:
+			continue
+		for cp: Copa in m.copas_otras:
+			if String(cp.get_meta("pais", "")) == pais:
+				if cp.campeon != null and cp.campeon != m.campeones_liga_otros[pais]:
+					esperadas += 1
+				break
 	m.nueva_temporada()
 	var supers := m.palmares_mundo.filter(func(t: Dictionary) -> bool: return String(t["torneo"]) == "Supercopa" and int(t["anio"]) == m.anio).size()
-	_comprobar(supers >= 1, "al empezar la temporada se juegan las supercopas de los demás países (%d)" % supers)
+	_comprobar(supers == esperadas, "al empezar la temporada se juegan las supercopas de los demás países (%d de %d)" % [supers, esperadas])
 	_comprobar(m.copas_otras.all(func(cp: Copa) -> bool: return cp.campeon == null and cp.en_curso()), "y se sortean copas nuevas")
 	Partida.borrar("_prueba_copas_mundo")
 
@@ -372,6 +383,24 @@ func _probar_piezas_estadio_real() -> void:
 	var r2 := Node3D.new()
 	_comprobar(PiezasRealesEstadio.montar(r2, {"costillas": 40}, 60.0, 80.0, 30.0, 25.0) == 0, "en calidad mínima, sin costillas")
 	Calidad.elegida = nivel
+	var r3 := Node3D.new()
+	_comprobar(PiezasRealesEstadio.montar(r3, {"fachada_curva": {"color": "#cccccc"}, "colchon": {"color": "#dc052d", "filas": 3}}, 60.0, 80.0, 30.0, 25.0) == 2
+		and (r3.get_node("Colchon") as MultiMeshInstance3D).multimesh.instance_count == 3 * 56, "fachada curva y colchón (3 filas de 56 paneles en UNA malla)")
+	r3.free()
+	## Niveles por lado y esquinas una a una (constructor).
+	var obra := EstadioObra.new()
+	obra.est = {"niveles_lado": {"este": 4}, "esquinas_abiertas": ["suroeste"]}
+	obra.dx = 45.0
+	obra.dz = 62.0
+	obra.niveles = 1
+	obra.alto = StadiumBuilder.ALTURA_PIE + StadiumBuilder.subida_bandeja()
+	obra.fondo_trib = StadiumBuilder.fondo_tribuna(1)
+	obra.principal = -1
+	var ts := StadiumBuilder._tribunas(obra)
+	var este := StadiumBuilder._tribuna_de(obra, ts[2])
+	var oeste := StadiumBuilder._tribuna_de(obra, ts[3])
+	_comprobar(este.niv_s == 4 and oeste.niv_s == 1 and este.alto_s > oeste.alto_s * 2.0 and este.pos.x > 0.0, "niveles por lado: la tribuna este sube a 4 bandejas, la oeste sigue con 1")
+	_comprobar(StadiumBuilder.esquina_abierta(obra.est, -1.0, 1.0) and not StadiumBuilder.esquina_abierta(obra.est, 1.0, 1.0) and not StadiumBuilder.esquina_abierta({}, -1.0, 1.0), "esquinas una a una: solo la suroeste queda abierta")
 	var c := Club.new()
 	c.nombre = "Club de prueba sin fila real"
 	_comprobar(not c.perfil_estadio().has("bandejas"), "sin fila real no hay techo por lados")

@@ -11,8 +11,23 @@ const CICLOS := {"correr": "ls_movement__sprint__000_idlelevel1"}
 static func ciclo(clave: String, prefijo: String) -> Animation:
 	if not CICLOS.has(clave) or OS.get_environment("SIN_LEAGUE") != "":
 		return null
-	var a: Animation = load("res://visor/anim_quaternius.gd").cargar_real(String(CICLOS[clave]), prefijo)
-	var b: Animation = load("res://visor/anim_quaternius.gd").cargar_real(String(CICLOS[clave]) + "_espejo", prefijo)
+	return ciclo_de(String(CICLOS[clave]), prefijo)
+
+## CONDUCIR COMO EN EL ORIGINAL (10-11, fase 4c de `docs/04_auditorias/MOTOR_LEAGUE_SOCCER_PLAN.md`): los dos ciclos estables
+## con balón de League-Soccer (un paso con su toque + el espejo). Ref. de velocidad: 1,26 m en 0,25 s = 5,0 m/s («walk») y
+## 1,68 m en 0,24 s = 7,0 m/s («sprint»). Solo los usa `MotorLeague` (el motor de siempre sigue con su «conducir»).
+const CICLOS_CONDUCIR := {"conducir_ls": ["ls_ballcontrol__walk__000", 5.04], "conducir_ls_rapido": ["ls_ballcontrol__sprint__000", 7.0]}
+
+static func conducir(lib: AnimationLibrary, prefijo: String) -> void:
+	for clave: String in CICLOS_CONDUCIR:
+		var a := ciclo_de(String(CICLOS_CONDUCIR[clave][0]), prefijo)
+		if a != null and not lib.has_animation(clave):
+			lib.add_animation(clave, a)
+
+## Un ciclo en bucle: el paso de League y su espejo seguidos.
+static func ciclo_de(nombre_real: String, prefijo: String) -> Animation:
+	var a: Animation = load("res://visor/anim_quaternius.gd").cargar_real(nombre_real, prefijo)
+	var b: Animation = load("res://visor/anim_quaternius.gd").cargar_real(nombre_real + "_espejo", prefijo)
 	if a == null or b == null:
 		return null
 	var sal := a.duplicate(true) as Animation
@@ -54,6 +69,7 @@ const ANTES_CONTACTO := 0.04
 static func golpeos(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) -> void:
 	if OS.get_environment("SIN_LEAGUE") != "":
 		return
+	conducir(lib, prefijo)
 	var rp := esq.get_bone_rest(esq.find_bone("pelvis")).origin
 	for clave: String in GOLPEOS:
 		var g: Array = GOLPEOS[clave]

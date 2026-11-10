@@ -264,7 +264,94 @@ suben los cambios solo de ~21 a ~25. El siguiente paso es la **fase 4b: la cola 
 animaciones** (pánico → pase → tiro, se ejecuta la primera cuya animación toca el balón) y su consecuencia en los tiros; y, con
 la decisión del dueño, calibrar en la fase 6.
 
-### Fase 4b (siguiente): la cola con el filtro y la locomoción
-Pendiente: decidir la cola cada 0,25 s y ejecutar cada paso la primera orden aplicable (`LeagueToques.alcanza` con «pass»,
-«highpass», «shot»); el primer toque al recibir (L `GetDifficultyFactors`: el balón rebota lejos del pie según velocidad,
-distancia, rival cerca y control); y la locomoción con las animaciones de `league.res` elegidas por dirección y velocidad.
+## 9. Fase 4b (empezada, 10-11 noche): la cola del original y POR QUÉ NO HAY REMATES
+
+`LeagueNucleo.decidir` devuelve ya la COLA completa del original (pánico, pase y tiro se calculan siempre y en ese orden; antes
+volvía en cuanto encontraba un pase), más la marca «en zona de tiro». La acción sigue siendo la primera de la cola. Diagnóstico
+en `MotorLeague.cuenta` (lo imprime `comparar_motor_league`): a qué distancia del arco rival decide el portador y cuántos tiros
+quedaron detrás de un pase en la cola.
+
+| 2 partidos completos (CHI-ARG, ARG-BRA, estilos reales) | decisiones del portador |
+|---|---|
+| a más de 55 m del arco rival | 105 · 75 |
+| entre 35 y 55 m | 48 · 145 |
+| entre 20 y 35 m | **103 · 167** |
+| a menos de 20 m | **11 · 17** |
+| en la zona de tiro del original (radio 16 m alrededor del punto a 7 m de la línea, ≈ 23 m) | **9 · 7** |
+| tiros que quedaron detrás de un pase en la cola | 2 · 0 |
+
+**Conclusión**: la cola con el filtro de animaciones NO traerá los remates (solo 2 por partido quedaban detrás de un pase). El
+cuello de botella es que el portador casi nunca llega a la zona de tiro: se queda a 20-35 m, delante del bloque defensivo de
+League (la trampa del fuera de juego se sitúa a 30-50 m del arco según la ofensividad) y su conducción por campo de fuerzas lo
+aparta de los 5 rivales más cercanos (repulsión 2 a 10 m frente a una atracción del arco de 0,6-1). En el original la
+penetración sale del muñeco (regates con animaciones, toques largos, primer toque orientado) y de las carreras. Opciones:
+(a) seguir fiel y portar la locomoción por animaciones (lo más grande que queda, ~7.600 líneas de origen); (b) calibrar ya
+(zona de tiro algo mayor, más atracción del arco al conducir, línea defensiva algo más alta). Es la decisión pendiente del dueño.
+
+### Pendiente de la 4b
+La cola con el filtro (`LeagueToques.alcanza` con pass/highpass/shot, cada paso), el primer toque al recibir (L
+`GetDifficultyFactors`) y la locomoción con las animaciones de `league.res`.
+
+## 10. Fase 4c (locomoción fiel; empezada 10-11 noche, tras fusionar `main` f79abf5d)
+
+1. **Pase largo al espacio** (fallo de fidelidad corregido): en el original el pase LARGO va por delante del receptor
+   (`AI_GetPass`: +0,2 × la distancia hacia el arco rival) para el que corre al hueco; `_ejecutar` lo mandaba con nuestro
+   `_pasar_a(largo)` sin ese adelanto. Ahora usa nuestro «al hueco». Efecto medido: ninguno apreciable (son pocos pases largos).
+2. **Primer toque**: el del original (`GetFirstTouchContextPenalty`) YA está en nuestro motor desde el 01-11 (`MotorControl`, U5):
+   no hay nada que sumar ahí.
+3. **Dónde se atasca el ataque** (sonda `pruebas/_sonda/sonda_league_ataque.tscn`, con balón, cada 0,5 s; dos cruces):
+
+| Distancia al arco rival (media) | League | Motor de siempre |
+|---|---|---|
+| Portador | 25,3 · 31,8 m | 56,0 · 55,3 m |
+| Compañero más adelantado | 20,8 · 23,7 m | 37,1 · 35,9 m |
+| Línea rival (penúltimo) | 21,5 · 36,4 m | 36,8 · 33,3 m |
+
+Con League el equipo llega MUCHO más cerca que con el de siempre (portador a 25-32 m frente a 55 m), pero la defensa de League
+espera muy hundida (su línea a 21-36 m del arco), el fuera de juego impide a los delanteros pasarla y la zona de tiro del original
+empieza a ~20 m. El ataque se queda justo fuera. En el original lo que rompe ese bloque es el muñeco (regates por animación,
+toques largos al espacio, giros): portarlo es lo grande que queda (~7.600 líneas de `humanoid*.cpp` + `animcollection.cpp`).
+
+| 6 partidos completos con estilos reales (tras fusionar `main`) | Motor de siempre | MotorLeague |
+|---|---|---|
+| CPU por paso (µs) | 1.441 | 1.196 (−17 %) |
+| Goles / remates | 6,83 / 44,7 | 2,0 / 7,8 |
+| Pases / acierto | 125,8 / 77,0 % | 72,8 / 78,0 % |
+| Cambios de posesión por partido | 70,5 | 28,8 |
+| Posesión del local por partido | 52,6 de media | 12 · 69 · 17 · 12 · 86 · 59 |
+
+Determinismo IGUAL; banco «FIN. 0 fallos».
+
+### Fase 4c, parte 2: el toque de conducción del original (10-11, `main` fusionado)
+`MotorLeague._mover_balon`: cada toque deja el balón donde llegará el jugador tras el retardo del original (L
+`GetBallControlVector`: desiredDelayTime = (v/8)²·0,6 + 0,25 s) más el frente del pie (0,45 m) y el fastidio del rival (×3 m), en
+la dirección de su conducción; la rapidez sale de la distancia con el roce portado (x = ln(1 + k·v0²/c)/2k). A toda velocidad son
+toques largos de ~7 m (≈ 1.300-1.700 por partido). Bandera `LS_TOQUE=0` = sin él (solo el fastidio de la 4a).
+
+| 6 partidos con estilos reales | Motor de siempre | League (4c-1) | League (4c-2, toque largo) |
+|---|---|---|---|
+| CPU por paso (µs) | 1.391 | 1.196 | 1.196 |
+| Goles / remates | 6,83 / 44,7 | 2,0 / 7,8 | 2,17 / 8,3 |
+| Cambios de posesión | 70,5 | 28,8 | 24,3 |
+| Decisiones en la zona de tiro (2 partidos) | — | 9 · 7 | 5 · 4 |
+
+Sin efecto en la llegada a la zona de tiro. Nota: el motor de siempre remata DE MÁS (44,7 por partido en 2 × 240 s; en el fútbol
+real ≈ 24) y League DE MENOS (≈ 8). No hay cifras públicas de remates del bot de GameplayFootball / Google Research Football para
+comparar (habría que medirlo con su paquete `gfootball`).
+
+### Experimento para la decisión del dueño (no es el original): zona de tiro de 24 m
+`LS_ZONA_TIRO=24` (por defecto 16, el del original) agranda el radio de la zona de tiro. 6 partidos: remates 8,3 → **10,3**,
+goles 2,17 → 2,33, cambios de posesión 24,3 → 23,5. Calibrar SOLO la zona no basta: desde 24-30 m las probabilidades de tiro son
+bajas y el pase sigue delante en la cola. Si el dueño elige calibrar, habría que mover a la vez la zona, la prioridad del tiro y
+la profundidad del bloque defensivo.
+
+### Fase 4c, parte 3: locomoción visual del portador (10-11, detrás de `MOTOR_LEAGUE`)
+Como en el original, el portador que conduce usa los ciclos de **control de balón** de `league.res` en vez de nuestro «conducir»:
+`ls_ballcontrol__walk__000` → clip `conducir_ls` (paso de referencia 5,04 m/s) y `ls_ballcontrol__sprint__000` → `conducir_ls_rapido`
+(7,0 m/s). El cambio entre los dos es el umbral trote/sprint del original (`CAMBIO_TROTE_SPRINT`, 6,2 m/s) y la velocidad del clip
+se ajusta a la del jugador (velocidad / referencia, entre 0,7 y 1,4) para que los pies no patinen. Código: `LeagueAnim.CICLOS_CONDUCIR`,
+`conducir()` y `ciclo_de()` (paso + espejo en bucle) en `visor/league_anim.gd`; `MotorLeague._mover_jugadores` (solo con la fase 3 y
+cuando no hay un gesto en curso). Revisado: `pruebas/_sonda/captura_conducir_league.tscn` (los 3 ciclos lado a lado, dos clubes de
+ARG y ESP) y `pruebas/_sonda/captura_partido_league.tscn` (cámara real del partido, Forward+, Boedo AC – Madrigal CF): paso
+completo, balón pegado al pie, sin poses rotas. Banco «FIN. 0 fallos»; sin cambios en el motor de siempre.
+Siguiente (misma fase): arranques, frenadas y giros del original (`ls_turn__*`, `ls_stop__*`) para los jugadores sin balón.

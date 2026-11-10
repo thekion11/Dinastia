@@ -27,6 +27,8 @@ const CORTO := 0
 const LARGO := 1
 const ALTO := 2
 const TIRO := 3
+## Radio de la zona de tiro alrededor del punto a 7 m de la línea (L: 16 m). EXPERIMENTO (no es el original): LS_ZONA_TIRO=24.
+static var ZONA_TIRO := float(OS.get_environment("LS_ZONA_TIRO")) if OS.get_environment("LS_ZONA_TIRO") != "" else 16.0
 
 static func normalizado(v: float, a: float, b: float) -> float:   ## bluntmath NormalizedClamp
 	return clampf((v - a) / (b - a), 0.0, 1.0) if b != a else 0.0
@@ -214,20 +216,22 @@ static func decidir(yo: Dictionary, companeros: Array, rivales: Array, mov_balon
 		if total > mejor_total and total > umbral_pase and odds > pase_min:
 			mejor_total = total
 			mejor = {"accion": "pase", "i": c["i"], "tipo": tipo, "odds": odds}
+	## LA COLA (L: el original encola pánico, pase y tiro en ese orden y el muñeco ejecuta la primera que puede).
+	var cola: Array = []
 	## Pánico (solo los de mentalidad defensiva): despeje lejos del arco propio.
 	if mente < 0.25:
 		var propension := 1.0 - mente * 2.0
 		var cerca_arco := 1.0 - normalizado((pos - Vector2(MEDIO_LARGO * lado, 0.0)).length(), 2.0, 16.0)
 		if String(yo["puesto"]) != "POR":
 			if (mejor.is_empty() or float(mejor["odds"]) < propension * cerca_arco) and posesion < 0.9 + propension * cerca_arco * 0.8:
-				return {"accion": "panico"}
+				cola.append({"accion": "panico"})
 		elif posesion < 3.0:
-			return {"accion": "panico"}
+			cola.append({"accion": "panico"})
 	if not mejor.is_empty():
-		return mejor
+		cola.append(mejor)
 	## ¿Tiro? (L: tres puntos del arco, el mejor; ganas = sqrt(odds) + azar).
 	var dist_arco := normalizado((Vector2(MEDIO_LARGO * -lado, 0.0) - pos).length(), 0.0, 32.0)
-	var ideal := curva(1.0 - normalizado((Vector2((MEDIO_LARGO - 7.0) * -lado, 0.0) - pos).length(), 0.0, 16.0), 1.0)
+	var ideal := curva(1.0 - normalizado((Vector2((MEDIO_LARGO - 7.0) * -lado, 0.0) - pos).length(), 0.0, ZONA_TIRO), 1.0)
 	if ideal > 0.1:
 		var mejor_y := 0.0
 		var odds_t := odds_pase(pos + mov * 0.12, Vector2((MEDIO_LARGO + 1.0) * -lado, 0.0), TIRO, rivales, 3.0)
@@ -239,9 +243,12 @@ static func decidir(yo: Dictionary, companeros: Array, rivales: Array, mov_balon
 		odds_t = sqrt(odds_t)
 		if odds_t + pow(azar.randf(), 1.0 / float(maxi(muestras, 1))) * 0.28 > 0.55:
 			var tec := float(yo["tec_tiro"])
-			return {"accion": "tiro", "y": mejor_y + azar.randf_range(-1.0 + tec, 1.0 - tec),
-				"potencia": azar.randf_range(0.7 * (0.6 + dist_arco * 0.4), 1.0 * (0.6 + dist_arco * 0.4))}
-	return {"accion": "conducir"}
+			cola.append({"accion": "tiro", "y": mejor_y + azar.randf_range(-1.0 + tec, 1.0 - tec),
+				"potencia": azar.randf_range(0.7 * (0.6 + dist_arco * 0.4), 1.0 * (0.6 + dist_arco * 0.4))})
+	var r: Dictionary = (cola[0] as Dictionary).duplicate() if not cola.is_empty() else {"accion": "conducir"}
+	r["cola"] = cola
+	r["zona"] = ideal > 0.1
+	return r
 
 ## L aitactics.hpp ShouldConsiderSupportPass / GetSupportPassBonus.
 static func apoyo_pase(nota_yo: float, esp_yo: float, nota_c: float, esp_c: float, largo_posesion: float) -> bool:

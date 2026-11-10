@@ -16,12 +16,12 @@ const TEMPORADAS_PROYECTO := 3
 
 ## ¿Qué copa grande le toca a ese país? "ucl" (Champions), "lib" (Libertadores) o "" (genérica).
 static func copa_grande(pais: String) -> String:
-	for f: Array in Continental.CUPOS_UCL:
+	for f: Array in FormatosConti.cupos("ucl"):
 		if String(f[0]) == pais:
 			return "ucl"
 	if pais == Continental.PAIS_ANFITRION:
 		return "lib"
-	for f2: Array in Continental.CUPOS_SUDAMERICA:
+	for f2: Array in FormatosConti.cupos("lib"):
 		if String(f2[0]) == pais:
 			return "lib"
 	return ""
@@ -30,10 +30,10 @@ static func copa_grande(pais: String) -> String:
 static func plazas_continentales(pais: String, n: int) -> Dictionary:
 	var elite := 0
 	var segunda := 0
-	for f: Array in Continental.CUPOS_UCL:
+	for f: Array in FormatosConti.cupos("ucl"):
 		if String(f[0]) == pais:
 			elite = int(f[1])
-	for f2: Array in Continental.CUPOS_UEL:
+	for f2: Array in FormatosConti.cupos("uel"):
 		if String(f2[0]) == pais:
 			segunda = int(f2[1])
 	if elite == 0:
@@ -41,7 +41,7 @@ static func plazas_continentales(pais: String, n: int) -> Dictionary:
 			elite = 3
 			segunda = 3
 		else:
-			for f3: Array in Continental.CUPOS_SUDAMERICA:
+			for f3: Array in FormatosConti.cupos("lib"):
 				if String(f3[0]) == pais:
 					elite = int(f3[1])
 					segunda = int(f3[1])

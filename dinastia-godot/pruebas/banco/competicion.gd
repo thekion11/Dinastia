@@ -283,8 +283,10 @@ func _probar_selecciones() -> void:
 		"nueva_temporada() devuelve el resumen de selecciones")
 	## 2026 -> 2027 -> 2028: la Copa del Mundo cae al cerrar 2026 (los años reales, como el calendario; 10-11).
 	_comprobar(not m.selecciones.mundial.is_empty(), "la Copa del Mundo se jugó en 2026 (%s)" % m.selecciones.mundial.get("campeon", "?"))
-	_comprobar(m.continentales.size() == antes_conti,
-		"los continentales se re-sortean cada temporada con el mismo número de torneos (%d)" % m.continentales.size())
+	## (10-11) Desde la segunda temporada se suman los torneos de la FIFA (Mundial de Clubes e Intercontinental): no cuentan.
+	var de_confederacion := m.continentales.values().filter(func(t: Continental) -> bool: return not t.es_fifa()).size()
+	_comprobar(de_confederacion == antes_conti,
+		"los continentales se re-sortean cada temporada con el mismo número de torneos (%d)" % de_confederacion)
 
 	## Guardado y carga: la cabeza de la selección (caps, nacionalizados, mundial)
 	## tiene que sobrevivir igual que el resto de sistemas de TU club.

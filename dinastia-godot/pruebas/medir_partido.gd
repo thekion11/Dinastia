@@ -28,11 +28,9 @@ var _proceso: Array[float] = []
 
 func _ready() -> void:
 	Calidad.elegida = Calidad.nivel_de_argumentos(Calidad.ALTO)
-	## (10-11) SIN_MSAA=1: apaga el MSAA del viewport (como la «Prueba de rendimiento» de Ajustes) para medir cuánto cuesta en cada nivel.
-	Calidad.sin_msaa = OS.get_environment("SIN_MSAA") != ""
+	Calidad.sin_msaa = OS.get_environment("SIN_MSAA") != ""   ## (10-11) SIN_MSAA=1: apaga el MSAA del viewport (como la «Prueba de rendimiento» de Ajustes) para medir cuánto cuesta en cada nivel.
 	var mundo := Mundo.new()
-	## (10-11) PAIS=ESP CLUB=5: otro país y otro club (regla del dueño: nunca medir con un solo equipo).
-	var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"
+	var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"   ## (10-11) PAIS=ESP CLUB=5: otro país y otro club (regla del dueño: nunca medir con un solo equipo).
 	mundo.generar([pais], 4711)
 	mundo.mi_club_id = mundo.ligas[0].clubes[int(OS.get_environment("CLUB")) % mundo.ligas[0].clubes.size()].id
 	var par := mundo.proximo_partido()
@@ -333,7 +331,6 @@ func _arbol() -> void:
 	_base_a = m
 	_prev = _cola_arbol.pop_front()
 	_prev.visible = false
-
 
 ## POR_HIJOS=1 (19-10/20-10-2026): con el partido CONGELADO (pausa total: el
 ## mismo fotograma siempre) esconde por turnos cada parte del escenario y mide

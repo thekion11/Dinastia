@@ -24,10 +24,11 @@ const FICTICIOS := {
 	"Copa Oro": "Copa de Naciones del Norte",
 	"Copa de Oceanía": "Copa de Naciones del Pacífico",
 	"Mundial de Clubes": "Copa Intercontinental de Campeones",
+	"Copa Intercontinental": "Copa de los Cinco Continentes",
 }
 const SELECCIONES := ["Copa del Mundo", "Eurocopa", "Copa América", "Copa de Asia", "Copa África", "Copa Oro", "Copa de Oceanía"]
 ## Las claves de confederación de la segunda copa continental de clubes.
-const SEGUNDAS := ["sud", "uel"]
+const SEGUNDAS := ["sud", "uel", "uecl", "afr2"]
 
 ## El tipo de la competición a partir de su nombre del núcleo (o el visible).
 static func tipo_de(nombre: String) -> String:
@@ -38,9 +39,9 @@ static func tipo_de(nombre: String) -> String:
 		return "mundial_sel"
 	if n in SELECCIONES or n in FICTICIOS.values():
 		return "selecciones"
-	if n.begins_with("Supercopa"):
+	if n.begins_with("Supercopa") or n.begins_with("Recopa"):
 		return "supercopa"
-	var confed: Variant = Datos.tabla("CONFED")
+	var confed: Variant = FormatosConti.tabla_confed()
 	if confed is Dictionary:
 		for k: String in confed:
 			var cn := String((confed[k] as Dictionary).get("n", ""))

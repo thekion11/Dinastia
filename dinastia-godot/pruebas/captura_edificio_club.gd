@@ -11,7 +11,7 @@ var _paso := 0
 ## [planta, sala] en el orden de las fotos.
 const TODAS := [[0, "Vestuario"], [-2, "Estacionamiento"], [-1, "Utilería"], [-1, "Enfermería"],
 	[-1, "Vestuario visitante"], [1, "Oficina del DT"], [1, "Despacho del presidente"], [1, "Sala de vídeo"],
-	[2, "Sala de prensa"], [2, "Museo del club"], [1, "Pasillo"], [0, "Ascensor"]]
+	[2, "Sala de prensa"], [2, "Museo del club"], [1, "Pasillo"], [0, "Ascensor"], [3, "Museo ampliado"]]
 ## PUERTAS=1 con SOLO=11,11: la segunda foto del ascensor con las puertas abiertas. RETIRADAS=1 pone camisetas retiradas en la partida (museo). SOLO=5,6 deja solo esas salas (índices de TODAS) y SIN_AVATAR=1 esconde al jugador (para ver el mobiliario).
 var SALAS: Array = TODAS
 
@@ -35,14 +35,28 @@ func _ready() -> void:
 		pl.append([pl.size() + 1, Nombres.visible(j.nombre)])
 	EdificioClub.ctx = {"inst": {"park": 5, "med": 7, "video": 6, "museo": 6}, "dentro": {"sala_prensa": "television"},
 		"plantilla": pl, "titulos": 4, "presidente": "Presidente Ficticio"}
+	if OS.get_environment("TITULOS") != "":   ## TITULOS=14: palmarés grande (hitos ficticios; 0 = recién ascendido)
+		var n_t := int(OS.get_environment("TITULOS"))
+		var hs: Array = []
+		for i in n_t:
+			hs.append({"anio": 2005 + i * 2, "titulo": ["Liga", "Copa nacional", "Supercopa", "Copa continental"][i % 4], "cantidad": 1})
+		EdificioClub.ctx["hitos"] = hs
+		EdificioClub.ctx["titulos"] = n_t
 	var perfil := EstadioPropio.new().perfil(club)
 	perfil["niveles"] = 2
+	if OS.get_environment("CALIDAD") != "":   ## nivel de calidad (-3 ULTRA BAJA … 3 ULTRA ALTA); sin esto, el de defecto
+		Calidad.elegida = int(OS.get_environment("CALIDAD"))
+		Calidad.aplicar_viewport(get_viewport(), Calidad.elegida)
 	_vista = VistaEstadio.new()
 	add_child(_vista)
 	_vista.abrir(club, 0.85, null, null, perfil)
 
 func _foto() -> void:
+	print("LLAMADAS ", _imgs.size(), " ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME), " tris ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))   ## medida de dibujo por sala
 	var img := get_viewport().get_texture().get_image()
+	img.convert(Image.FORMAT_RGBA8)
+	if OS.get_environment("COMPLETA") == "1":   ## cada sala a tamaño completo (para ver el parpadeo del suelo, texturas…)
+		img.save_png(OS.get_environment("SALIDA").replace(".png", "_%d.png" % _imgs.size()))
 	img.resize(480, 270)
 	_imgs.append(img)
 
@@ -77,7 +91,7 @@ func _process(_d: float) -> void:
 			_foto()
 		if _paso >= SALAS.size():
 			var hoja := Image.create(480 * 4, 270 * 3, false, Image.FORMAT_RGBA8)
-			var nombre := "res://pruebas/capturas/edificio_club.png" 
+			var nombre := OS.get_environment("SALIDA") if OS.get_environment("SALIDA") != "" else "res://pruebas/capturas/edificio_club.png"
 			for k in _imgs.size():
 				hoja.blit_rect(_imgs[k], Rect2i(0, 0, 480, 270), Vector2i((k % 4) * 480, (k / 4) * 270))
 			hoja.save_png(nombre)
