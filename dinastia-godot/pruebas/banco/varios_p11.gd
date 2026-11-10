@@ -387,7 +387,7 @@ func _probar_cara_por_pais() -> void:
 	_titulo("CARA POR PAÍS PARA LOS JUGADORES SIN FOTO")
 	_comprobar(not CaraPrior.tabla().is_empty() and CaraPrior.tabla().has("*") and CaraPrior.tabla().has("JPN"), "la tabla por país está y trae JPN y la media mundial")
 	var m := Mundo.new()
-	m.generar(["JPN", "BRA", "ENG", "ESP", "KOR", "ARG"], 71)
+	m.generar(["JPN", "COL", "GER", "ESP", "KOR", "ARG"], 71)
 	var por_pais := {}
 	for c: Club in m.clubes.values():
 		for j: Jugador in c.plantilla:
@@ -400,17 +400,18 @@ func _probar_cara_por_pais() -> void:
 			var d: Dictionary = por_pais.get(j.pais, {"n": 0, "sin_barba": 0, "piel": 0.0, "rubios": 0})
 			d["n"] += 1
 			d["sin_barba"] += 1 if int(lk["barba"]) == 0 else 0
-			d["piel"] += float(maxi(Cara.PIELES.find(String(lk["piel"])), 0))
+			d["piel"] += float(CaraPrior.tono_de_foto(String(lk["piel"])) if not Cara.PIELES.has(String(lk["piel"])) else Cara.PIELES.find(String(lk["piel"])))   ## con la base real cargada, los que tienen foto traen su piel MEDIDA (un hex libre, más oscuro que la paleta): se calibra por luminancia
 			d["rubios"] += 1 if String(lk["peloC"]) == CaraPrior.PELO_HEX["rubio"] else 0
 			por_pais[j.pais] = d
-	var ok_pais := por_pais.has("JPN") and por_pais.has("BRA") and por_pais.has("ENG")
+	var ok_pais := por_pais.has("JPN") and por_pais.has("COL") and por_pais.has("GER")
 	_comprobar(ok_pais, "hay jugadores de nombre fijo de varios países (%s)" % str(por_pais.keys()))
 	if not ok_pais:
 		return
 	var jp: Dictionary = por_pais["JPN"]
-	var br: Dictionary = por_pais["BRA"]
-	var en: Dictionary = por_pais["ENG"]
-	_comprobar(float(br["piel"]) / maxf(float(br["n"]), 1.0) > float(en["piel"]) / maxf(float(en["n"]), 1.0) + 0.3, "la piel de Brasil sale más oscura que la de Inglaterra (%.1f frente a %.1f)" % [float(br["piel"]) / float(br["n"]), float(en["piel"]) / float(en["n"])])
+	var co: Dictionary = por_pais["COL"]
+	var al: Dictionary = por_pais["GER"]
+	## Las diferencias entre países salen de lo MEDIDO en las caras reales: Colombia (media 3,2 en la paleta) frente a Alemania (1,8) es un contraste claro; Brasil frente a Inglaterra, no (2,5 y 2,3: ambas plantillas son mixtas), por eso no se usa.
+	_comprobar(float(co["piel"]) / maxf(float(co["n"]), 1.0) > float(al["piel"]) / maxf(float(al["n"]), 1.0) + 0.5, "la piel de Colombia sale más oscura que la de Alemania (%.1f frente a %.1f)" % [float(co["piel"]) / float(co["n"]), float(al["piel"]) / float(al["n"])])
 	_comprobar(int(jp["rubios"]) * 20 <= int(jp["n"]), "casi ningún japonés sale rubio (%d de %d)" % [int(jp["rubios"]), int(jp["n"])])
 	var sin := 0
 	var tot := 0

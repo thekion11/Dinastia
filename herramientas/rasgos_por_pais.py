@@ -36,9 +36,22 @@ def rgb(h: str):
     return tuple(int(h[i:i + 2], 16) / 255.0 for i in (1, 3, 5))
 
 
+def luminancia(h: str) -> float:
+    r, g, b = rgb(h)
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+# La piel MEDIDA en una foto o en la malla 3D sale más oscura y apagada que el tono de dibujo de `Cara.PIELES` (un inglés claro mide ~0,60 de luminancia; el
+# tono 0 de la paleta tiene 0,83): comparar colores a ojo la manda al medio y todos los países salen casi iguales (ENG 3,5, BRA 3,6, JPN 3,5). Se calibra por
+# LUMINANCIA: [FOTO_OSCURA, FOTO_CLARA] medidas (extremos de las 1.340 caras) ↔ [PIEL_OSCURA, PIEL_CLARA] de la paleta. Misma constante en `CaraPrior.tono_de_foto`.
+FOTO_OSCURA = 0.20
+FOTO_CLARA = 0.68
+
+
 def piel_idx(h: str) -> int:
-    c = rgb(h)
-    return min(range(len(PIELES)), key=lambda i: sum((a - b) ** 2 for a, b in zip(c, rgb(PIELES[i]))))
+    pal = [luminancia(p) for p in PIELES]
+    l = pal[-1] + (luminancia(h) - FOTO_OSCURA) * (pal[0] - pal[-1]) / (FOTO_CLARA - FOTO_OSCURA)
+    return min(range(len(PIELES)), key=lambda i: abs(pal[i] - l))
 
 
 def clase_pelo(h: str) -> str:
