@@ -98,7 +98,7 @@ static func ventana_visible(camara: Camera3D, datos: Dictionary, planta: int) ->
 static func _cono(explorador: Node3D, planta: int, zona: String, camara: Camera3D, datos: Dictionary) -> void:
 	var raiz := explorador.get_parent()
 	var antes: Dictionary = explorador.get_meta(META_CONO, {})
-	var activo := planta == 0 and zona == "Túnel" and camara != null and raiz != null and datos.has("z_boca") and datos.has("x0") \
+	var activo := OS.get_environment("SIN_CONO") == "" and planta == 0 and zona == "Túnel" and camara != null and raiz != null and datos.has("z_boca") and datos.has("x0") \
 		and absf(camara.position.z - float(datos["z_boca"])) > 1.5 and int(explorador.get_meta(META_CLAVE, 0)) == 0
 	if not activo:
 		if not antes.is_empty():

@@ -95,6 +95,33 @@ func _probar_ocultar_estadio_dentro() -> void:
 	pls[2].visible = true
 	OcultarEstadioDentro.devolver(explorador)
 	_comprobar(pls[1].visible and pls[2].visible and pls[-1].visible, "al cerrar el recorrido se devuelven todas")
+	## CONO POR LA BOCA DEL TÚNEL (sesión 7): con la boca a la vista solo se dibuja lo que cae dentro de la pirámide cámara→boca y más allá de ella.
+	var cajas: Dictionary = {}
+	for par in [["detras", Vector3(0, 1, 70)], ["enfrente", Vector3(0, 1, -30)], ["lateral", Vector3(60, 1, -5)]]:
+		var mi := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = Vector3(10, 10, 10)
+		mi.mesh = bm
+		mi.position = par[1]
+		mi.name = "Caja_" + String(par[0])
+		raiz.add_child(mi)
+		cajas[par[0]] = mi
+	cam.position = Vector3(0.0, 1.6, 30.0)
+	cam.look_at_from_position(cam.position, Vector3(0.0, 1.6, 10.0), Vector3.UP)   ## en el túnel, hacia el campo
+	OcultarEstadioDentro.actualizar(explorador, 0, "Túnel", cam, datos)
+	_comprobar(cajas["enfrente"].visible and not cajas["detras"].visible and not cajas["lateral"].visible, "cono: se dibuja lo de enfrente; lo de detrás y lo de un lado, no")
+	OcultarEstadioDentro.actualizar(explorador, 0, "Túnel", cam, datos)
+	_comprobar(cajas["enfrente"].visible and not cajas["detras"].visible, "cono: repetir no cambia nada")
+	OcultarEstadioDentro.actualizar(explorador, 0, "Campo", cam, datos)
+	_comprobar(cajas["enfrente"].visible and cajas["detras"].visible and cajas["lateral"].visible, "al salir al campo el cono devuelve todo")
+	OcultarEstadioDentro.actualizar(explorador, 0, "Túnel", cam, datos)
+	cam.look_at_from_position(cam.position, Vector3(0.0, 1.6, 50.0), Vector3.UP)   ## de espaldas: la boca sale de la vista
+	OcultarEstadioDentro.actualizar(explorador, 0, "Túnel", cam, datos)
+	OcultarEstadioDentro.actualizar(explorador, 0, "Campo", cam, datos)
+	OcultarEstadioDentro.devolver(explorador)
+	_comprobar(cajas["enfrente"].visible and cajas["detras"].visible and cajas["lateral"].visible, "tras el cono y la ocultación total, devolver deja todo visible")
+	for c in cajas.values():
+		c.queue_free()
 	edif.queue_free()
 	OcultarEstadioDentro.devolver(explorador)
 	raiz.queue_free()
