@@ -392,3 +392,12 @@ func _probar_escudos_realistas() -> void:
 	_comprobar(clubes >= 100 and con_figura >= clubes - clubes / 20, "%d de %d clubes de 8 países tienen escudo con forma, figura o letras propias" % [con_figura, clubes])
 	_comprobar(firmas.size() >= clubes * 9 / 10, "los escudos casi no se repiten (%d distintos de %d)" % [firmas.size(), clubes])
 	_comprobar(svg_ok, "los escudos se dibujan (SVG con contenido)")
+	## Las figuras nuevas (torre de París, murciélago, gallo, carabela, toro, dragón, castillo, delfín) existen y se dibujan.
+	var nuevas := ["eiffel", "murcielago", "gallo", "carabela", "toro", "dragon", "castillo", "delfin"]
+	var dibujan := true
+	for k: String in nuevas:
+		var im := Image.new()
+		var svg := '<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">%s</svg>' % String(EscudoEmblemas.FIGURAS.get(k, "")).replace("{F}", "#ffffff").replace("{D}", "#000000")
+		if not EscudoEmblemas.FIGURAS.has(k) or im.load_svg_from_string(svg) != OK:
+			dibujan = false
+	_comprobar(dibujan, "las 8 figuras nuevas están en el vocabulario y su SVG se carga")
