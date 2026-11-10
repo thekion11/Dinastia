@@ -12,11 +12,24 @@ extends RefCounted
 ## El calendario de la fase final nace con huecos vacíos (para que `jornadas()` ya cuente todo) y se rellena al terminar cada fecha. Lo que no se
 ## puede deducir del orden de los clubes (grupos, cruces, resultados) va en `estado`, que la partida guarda y devuelve con `cargar`.
 
-const PAISES := {"EGY": ["grupos", 12], "ARG": ["zonas", 20], "USA": ["conferencias", 20]}
+## Por país: tipo, mínimo de clubes y, en los grupos, `vueltas` de la fase regular, `na` clubes en el grupo de arriba, `va`/`vb` vueltas de cada
+## grupo (0 = no juega) y `mitad` (los puntos se parten por la mitad, redondeando hacia arriba, como en Bélgica). Cantidades reales salvo las
+## indicadas: Bélgica juega 10 fechas en los play-offs (aquí 5, para no pasar de 38 semanas) y no se juegan sus play-offs de Europa.
+const PAISES := {
+	"EGY": {"tipo": "grupos", "min": 12, "vueltas": 1, "na": 7, "va": 2, "vb": 1},
+	"BEL": {"tipo": "grupos", "min": 12, "vueltas": 2, "na": 6, "va": 1, "vb": 0, "mitad": true},
+	"SCO": {"tipo": "grupos", "min": 10, "vueltas": 3, "na": 6, "va": 1, "vb": 1},
+	"DEN": {"tipo": "grupos", "min": 10, "vueltas": 2, "na": 6, "va": 2, "vb": 2},
+	"SUI": {"tipo": "grupos", "min": 10, "vueltas": 3, "na": 6, "va": 1, "vb": 1},
+	"AUT": {"tipo": "grupos", "min": 10, "vueltas": 2, "na": 6, "va": 2, "vb": 2},
+	"ARG": {"tipo": "zonas", "min": 20},
+	"USA": {"tipo": "conferencias", "min": 20},
+}
 ## Huecos de la fase final de las eliminatorias: [ronda, juego] por fecha.
 const SLOTS_ZONAS := [[0, 0], [1, 0], [2, 0], [3, 0]]
 const SLOTS_CONF := [[0, 0], [1, 0], [1, 1], [1, 2], [2, 0], [3, 0], [4, 0]]
 
+var cfg: Dictionary = {}
 var tipo := ""
 var f1 := 0                 ## fechas de la fase regular
 var extra := 0              ## fechas de la fase final
@@ -25,10 +38,11 @@ var estado: Dictionary = {}
 
 ## El formato de esta liga, o null si se juega de la forma de siempre.
 static func para(l: Liga) -> FaseFinalLiga:
-	if l.div != 1 or not PAISES.has(l.pais) or l.clubes.size() < int(PAISES[l.pais][1]):
+	if l.div != 1 or not PAISES.has(l.pais) or l.clubes.size() < int(PAISES[l.pais]["min"]):
 		return null
 	var f := FaseFinalLiga.new()
-	f.tipo = String(PAISES[l.pais][0])
+	f.cfg = PAISES[l.pais]
+	f.tipo = String(f.cfg["tipo"])
 	return f
 
 func eliminatoria(j: int) -> bool:
@@ -81,9 +95,10 @@ static func _vuelta(r: Array) -> Array:
 func armar(l: Liga) -> Array:
 	var cal: Array = []
 	if tipo == "grupos":
-		cal = Liga.rondas(l.clubes)
+		var r1 := Liga.rondas(l.clubes)
+		cal = _repetir(r1, int(cfg["vueltas"]))
 		var na := _tam_grupo(l.clubes.size())
-		extra = maxi(2 * _rr(na), _rr(l.clubes.size() - na))
+		extra = maxi(int(cfg["va"]) * _rr(na), int(cfg["vb"]) * _rr(l.clubes.size() - na))
 	else:
 		var m := _mitades(l)
 		var ra := Liga.rondas(m[0])
@@ -103,8 +118,15 @@ func armar(l: Liga) -> Array:
 		cal.append([])
 	return cal
 
-static func _tam_grupo(n: int) -> int:
-	return maxi(2, roundi(n / 3.0))
+func _tam_grupo(n: int) -> int:
+	return clampi(int(cfg["na"]), 2, n - 1)
+
+## `veces` vueltas de las mismas rondas, alternando el campo (ida, vuelta, ida…).
+static func _repetir(r: Array, veces: int) -> Array:
+	var sal: Array = []
+	for v in veces:
+		sal += r if v % 2 == 0 else _vuelta(r)
+	return sal
 
 static func _rr(n: int) -> int:
 	return n if n % 2 == 1 else n - 1
@@ -136,6 +158,9 @@ func _iniciar(l: Liga) -> void:
 	if tipo == "grupos":
 		var na := _tam_grupo(reg.size())
 		estado["grupos"] = [reg.slice(0, na), reg.slice(na)]
+		if cfg.get("mitad", false):
+			for id: String in reg.slice(0, na):
+				l.tabla_puntos[id]["pts"] = (int(l.tabla_puntos[id]["pts"]) + 1) / 2
 		_llenar_grupos(l)
 		return
 	estado["rondas"] = []
@@ -162,9 +187,7 @@ func _llenar_grupos(l: Liga) -> void:
 		a.append(_club(l, id))
 	for id: String in g[1]:
 		b.append(_club(l, id))
-	var ra := Liga.rondas(a)
-	ra += _vuelta(ra)
-	var fusion := _unir(ra, Liga.rondas(b))
+	var fusion := _unir(_repetir(Liga.rondas(a), int(cfg["va"])), _repetir(Liga.rondas(b), int(cfg["vb"])) if b.size() > 1 else [])
 	for i in extra:
 		l.calendario[f1 + i] = fusion[i] if i < fusion.size() else []
 
