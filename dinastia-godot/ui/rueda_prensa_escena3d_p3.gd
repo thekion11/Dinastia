@@ -253,4 +253,6 @@ func _plano_foco() -> Dictionary:
 		return {}
 	var r := _sala[_quien_pregunta]["raiz"] as Node3D
 	var cara := r.position + Vector3(0, 1.0, 0)
-	return {"pos": Vector3(r.position.x * 0.25, 2.1, -1.2), "mira": cara, "fov": 44.0}
+	## Con la mesa larga (R7) el DT y su silla ocupan z≈-1: desde -1,2 la cámara quedaba detrás de ellos. Se pone sobre el borde de la mesa.
+	var z := 0.15 if has_meta("mesa") else -1.2
+	return {"pos": Vector3(r.position.x * 0.25, 2.1, z), "mira": cara, "fov": 44.0}
