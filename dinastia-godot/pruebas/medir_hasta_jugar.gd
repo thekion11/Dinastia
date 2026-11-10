@@ -73,6 +73,7 @@ func _club() -> void:
 	vista.datos_pantalla = {}
 	add_child(vista)
 	await vista.abrir(c, 0.5, null, null, _m.perfil_estadio_de(c), Comercial.color_balon(_m.comercial.balon, c))
+	vista.recorrer()   ## como `vistas_menu._ver_estadio_propio`: después de `abrir`
 	var t_montado := _ms()
 	await PantallaCarga.estabilizar(get_tree())
 	var t_estab := _ms()
