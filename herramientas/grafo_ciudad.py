@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """(9-11) Grafo estático de referencias desde principal.tscn: qué archivos solo alcanza la ciudad abierta. python3 -I herramientas/grafo_ciudad.py <carpeta dinastia-godot> <salida.txt>"""
 import os,re,sys,collections
-R=sys.argv[1]
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # se corre con -I: el directorio del script no está en sys.path
+from ruta_segura import ruta_segura
+R=ruta_segura(sys.argv[1])
 exts=('.gd','.tscn','.tres','.gdshader')
 files={}
 for d,_,fs in os.walk(R):
@@ -55,4 +57,4 @@ print('solo-ciudad',len(quita),round(sum(files[p] for p in quita if p in files)/
 by=collections.Counter()
 for p in quita: by[os.path.dirname(os.path.relpath(p,R))]+=files.get(p,0)
 for d,s in by.most_common(15): print(round(s/1e6,2),'MB',d)
-open(sys.argv[2],'w').write('\n'.join(sorted(rel(p) for p in quita)))
+open(ruta_segura(sys.argv[2]),'w').write('\n'.join(sorted(rel(p) for p in quita)))

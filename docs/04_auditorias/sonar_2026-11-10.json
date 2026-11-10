@@ -1,0 +1,240 @@
+{
+ "fecha": "2026-11-10",
+ "rama": "main",
+ "issues": [
+  {
+   "key": "AaG-WhlMMKpzwvig-b41",
+   "rule": "pythonsecurity:S8707",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+   "project": "thekion11_Dinastia",
+   "line": 18,
+   "hash": "58e429d43a0a1f1c7610f1cc12d79a2c",
+   "textRange": {
+    "startLine": 18,
+    "endLine": 18,
+    "startOffset": 52,
+    "endOffset": 91
+   },
+   "flows": [
+    {
+     "locations": [
+      {
+       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+       "textRange": {
+        "startLine": 18,
+        "endLine": 18,
+        "startOffset": 52,
+        "endOffset": 91
+       },
+       "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+       "textRange": {
+        "startLine": 18,
+        "endLine": 18,
+        "startOffset": 57,
+        "endOffset": 90
+       },
+       "msg": "This concatenation can propagate malicious content to the newly created string"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+       "textRange": {
+        "startLine": 18,
+        "endLine": 18,
+        "startOffset": 57,
+        "endOffset": 58
+       },
+       "msg": "The malicious content is concatenated into the string"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+       "textRange": {
+        "startLine": 4,
+        "endLine": 4,
+        "startOffset": 0,
+        "endOffset": 13
+       },
+       "msg": "A malicious value can be assigned to variable ‘R’"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+       "textRange": {
+        "startLine": 4,
+        "endLine": 4,
+        "startOffset": 2,
+        "endOffset": 13
+       },
+       "msg": "A malicious value was previously assigned to this data structure"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+       "textRange": {
+        "startLine": 4,
+        "endLine": 4,
+        "startOffset": 2,
+        "endOffset": 10
+       },
+       "msg": "Source: a user can craft an HTTP request with malicious content"
+      }
+     ]
+    }
+   ],
+   "status": "OPEN",
+   "message": "Path Traversal via command-line argument",
+   "effort": "30min",
+   "debt": "30min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "cwe"
+   ],
+   "creationDate": "2026-11-09T03:20:15+0000",
+   "updateDate": "2026-11-09T03:26:48+0000",
+   "type": "VULNERABILITY",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "COMPLETE",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "SECURITY",
+     "severity": "HIGH"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [
+    "taint"
+   ],
+   "lastChangeAnalysisUuid": "1840ec8c-e982-4ed6-a820-ee39c58adc0f",
+   "lastChangeSource": "ANALYSIS"
+  },
+  {
+   "key": "AaG-WhlMMKpzwvig-b40",
+   "rule": "pythonsecurity:S8707",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+   "project": "thekion11_Dinastia",
+   "line": 58,
+   "hash": "2e6aa297d1721285b6869569d7579374",
+   "textRange": {
+    "startLine": 58,
+    "endLine": 58,
+    "startOffset": 0,
+    "endOffset": 21
+   },
+   "flows": [
+    {
+     "locations": [
+      {
+       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+       "textRange": {
+        "startLine": 58,
+        "endLine": 58,
+        "startOffset": 0,
+        "endOffset": 21
+       },
+       "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+       "textRange": {
+        "startLine": 58,
+        "endLine": 58,
+        "startOffset": 5,
+        "endOffset": 16
+       },
+       "msg": "A malicious value was previously assigned to this data structure"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+       "textRange": {
+        "startLine": 58,
+        "endLine": 58,
+        "startOffset": 5,
+        "endOffset": 13
+       },
+       "msg": "Source: a user can craft an HTTP request with malicious content"
+      }
+     ]
+    }
+   ],
+   "status": "OPEN",
+   "message": "Path Traversal via command-line argument",
+   "effort": "30min",
+   "debt": "30min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "cwe"
+   ],
+   "creationDate": "2026-11-09T03:20:15+0000",
+   "updateDate": "2026-11-09T03:26:48+0000",
+   "type": "VULNERABILITY",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "COMPLETE",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "SECURITY",
+     "severity": "HIGH"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [
+    "taint"
+   ],
+   "lastChangeAnalysisUuid": "1840ec8c-e982-4ed6-a820-ee39c58adc0f",
+   "lastChangeSource": "ANALYSIS"
+  }
+ ],
+ "hotspots": [],
+ "duplicaciones": [
+  {
+   "path": "recursos/modelos3d/cc0_web/kenney_city-kit-commercial/Overview.html",
+   "lineas": 150,
+   "pct": "64.1"
+  },
+  {
+   "path": "recursos/modelos3d/cc0_web/kenney_car-kit/Overview.html",
+   "lineas": 150,
+   "pct": "61.7"
+  },
+  {
+   "path": "herramientas/caras_reales_rescate.ps1",
+   "lineas": 31,
+   "pct": "18.3"
+  },
+  {
+   "path": "herramientas/empaquetar.ps1",
+   "lineas": 28,
+   "pct": "10.4"
+  },
+  {
+   "path": "herramientas/caras_reales_buscar.ps1",
+   "lineas": 27,
+   "pct": "15.1"
+  },
+  {
+   "path": "herramientas/generar_2d_ia.ps1",
+   "lineas": 14,
+   "pct": "16.7"
+  },
+  {
+   "path": "herramientas/generar_3d_ia.ps1",
+   "lineas": 14,
+   "pct": "13.9"
+  },
+  {
+   "path": "herramientas/compilacion_menu/aplicar.py",
+   "lineas": 10,
+   "pct": "19.2"
+  },
+  {
+   "path": "herramientas/compilacion_menu/exper.py",
+   "lineas": 10,
+   "pct": "11.8"
+  }
+ ]
+}
