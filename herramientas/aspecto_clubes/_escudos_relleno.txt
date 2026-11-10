@@ -58,30 +58,6 @@ GAIS||||GAI|||
 IF Brommapojkarna||||BRO|||
 Halmstads BK||||HAL|||
 Västerås SK||||VAS|||
-Esenler Erokspor||||ESE|||
-Keçiörengücü||||KEC|||
-Serikspor||||SER|||
-Ümraniyespor||||UMR|||
-Vanspor||||VAN|||
-Iğdır||||IGD|||
 Al Jazira||||AL|||
 Shakhtar Donetsk||||SHA|||
 Charlton||||CHA|||
-Alvarado||||ALV|||
-Chaco For Ever||||CHA|||
-Colegiales||||COL|||
-Deportivo Maipú||||DEP|||
-Estudiantes Buenos Aires||||EST|||
-Güemes||||GUE|||
-Patronato||||PAT|||
-Racing de Córdoba||||RAC|||
-San Miguel||||SAN|||
-Tristán Suárez||||TRI|||
-Villa Dálmine||||VIL|||
-Gimnasia de Concepción del Uruguay||||GIM|||
-Ciudad de Bolívar||||CIU|||
-Deportivo Morón||||DEP|||
-Los Andes||||LOS|||
-Tepatitlán||||TEP|||
-Pumas Tabasco||||PUM|||
-Racing Veracruz||||RAC|||

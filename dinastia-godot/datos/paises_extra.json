@@ -559,7 +559,7 @@
    "BANDERA": "🇨🇳"
   },
   "CZE": {
-   "PAIS_SELECCION": "República Checa",
+   "PAIS_SELECCION": "Rep. Checa",
    "TIER_PAIS": 0.7,
    "GLOBO_PAIS": [
     14.42,
@@ -1169,7 +1169,7 @@
    "BANDERA": "🇸🇰"
   },
   "UAE": {
-   "PAIS_SELECCION": "Emiratos Árabes Unidos",
+   "PAIS_SELECCION": "Emiratos",
    "TIER_PAIS": 1.1,
    "GLOBO_PAIS": [
     54.37,
@@ -1217,5 +1217,15 @@
  },
  "tablas": {
   "HISTORIA_CLUBES": {}
+ },
+ "listas": {
+  "SELECCIONES": [
+   "Bulgaria",
+   "China",
+   "Israel",
+   "Rumanía",
+   "Rusia",
+   "Eslovaquia"
+  ]
  }
 }

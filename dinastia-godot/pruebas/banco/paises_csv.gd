@@ -78,3 +78,36 @@ func _probar_paises_csv() -> void:
 	var media := float(goles) / maxf(1.0, float(partidos) / 2.0)
 	var media_otros := float(otros_goles) / maxf(1.0, float(otros_partidos) / 2.0)
 	_comprobar(partidos > 0 and absf(media - media_otros) < 0.8, "las ligas nuevas no suben los goles: %.2f frente a %.2f de las primeras de CHI, ESP, POR y DEN" % [media, media_otros])
+
+## Las selecciones de los países nuevos (sesión 6, 10-11): existen en el escalafón, se convocan y entran en los torneos que les tocan (Rusia, suspendida, en ninguno).
+func _probar_selecciones_nuevas() -> void:
+	_titulo("SELECCIONES DE LOS PAÍSES NUEVOS: ESCALAFÓN, CONVOCATORIA Y TORNEOS")
+	var nombres := {"ISR": "Israel", "ROU": "Rumanía", "SVK": "Eslovaquia", "BUL": "Bulgaria", "CHN": "China", "RUS": "Rusia", "CZE": "Rep. Checa", "UAE": "Emiratos", "SWE": "Suecia", "TUR": "Turquía", "IRN": "Irán"}
+	var lista: Array = Datos.tabla("SELECCIONES")
+	var en_lista := true
+	var cod_ok := true
+	for cod: String in nombres:
+		en_lista = en_lista and lista.has(nombres[cod])
+		cod_ok = cod_ok and SeleccionEquipo.codigo_de(String(nombres[cod])) == cod
+	_comprobar(en_lista, "las 11 están en la lista de selecciones (%d en total)" % lista.size())
+	_comprobar(cod_ok, "y cada nombre devuelve su país")
+	var m := Mundo.new()
+	var paises: Array[String] = ["ISR", "ROU", "SVK", "BUL", "CHN", "RUS", "CZE", "UAE", "SWE", "TUR", "IRN", "CHI", "ESP"]
+	m.generar(paises, 901)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var sel := Selecciones.new(m)
+	var fuerzas := nombres.values().all(func(n: String) -> bool: return sel.fuerza(n) >= 70 and sel.fuerza(n) <= 99)
+	_comprobar(fuerzas, "todas tienen fuerza en el escalafón")
+	var ranking := sel.ranking(0)
+	var en_rank := nombres.values().all(func(n: String) -> bool: return ranking.any(func(f: Dictionary) -> bool: return String(f["nombre"]) == n))
+	_comprobar(en_rank and ranking.size() >= 69, "el escalafón las incluye (%d selecciones)" % ranking.size())
+	for n: String in ["Rumanía", "China", "Rusia", "Rep. Checa"]:
+		var club := SeleccionEquipo.club_de(m, n, sel.fuerza(n), 2026)
+		_comprobar(club.plantilla.size() >= 20 and club.pais == SeleccionEquipo.codigo_de(n), "%s: convocatoria de %d jugadores (%d de su país en el juego)" % [n, club.plantilla.size(), SeleccionEquipo.candidatos(m, n).size()])
+	var mundial := SeleccionesTorneos.mundial(sel, m, 2026)
+	var mundial_nombres: Array = mundial.equipos.map(func(c: Club) -> String: return c.nombre)
+	_comprobar(mundial.equipos.size() == 48 and not mundial_nombres.has("Rusia"), "Mundial de 48 sin Rusia (%d equipos)" % mundial.equipos.size())
+	var euro := SeleccionesTorneos.continental(sel, m, "ucl", "Eurocopa", 2028).equipos.map(func(c: Club) -> String: return c.nombre)
+	_comprobar(["Rumanía", "Eslovaquia", "Bulgaria", "Israel", "Rep. Checa", "Turquía"].all(func(n: String) -> bool: return euro.has(n)) and not euro.has("Rusia"), "la Eurocopa lleva a Rumanía, Eslovaquia, Bulgaria, Israel, Rep. Checa y Turquía, y no a Rusia (%d)" % euro.size())
+	var asia := SeleccionesTorneos.continental(sel, m, "asia", "Copa de Asia", 2027).equipos.map(func(c: Club) -> String: return c.nombre)
+	_comprobar(["China", "Emiratos", "Irán"].all(func(n: String) -> bool: return asia.has(n)), "la Copa de Asia lleva a China, Emiratos e Irán (%d)" % asia.size())
