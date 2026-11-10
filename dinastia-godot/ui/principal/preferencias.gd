@@ -81,7 +81,7 @@ func cargar() -> void:
 	p._modo_tv = bool(cf.get_value("pantalla", "modo_tv", p._modo_tv))
 	PantallaMenu.compacta_pref = bool(cf.get_value("pantalla", "cabecera_compacta", true))
 	PantallaMenu.compacta_pc = bool(cf.get_value("pantalla", "cabecera_compacta_pc", false))
-	IconosUI.dibujados = bool(cf.get_value("pantalla", "iconos_dibujados", false))
+	IconosUI.dibujados = bool(cf.get_value("pantalla", "iconos_dibujados", true))   ## (orden 36) dibujados por defecto
 	load("res://visor/vestidor_q.gd").ropa_aparte = bool(cf.get_value("pantalla", "ropa_aparte", load("res://visor/vestidor_q.gd").ropa_aparte))
 	Cara.usar_fotos = bool(cf.get_value("pantalla", "caras_foto", Cara.usar_fotos))
 	Cara.modo_streamer = bool(cf.get_value("pantalla", "streamer", false))

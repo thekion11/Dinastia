@@ -110,3 +110,50 @@ static func probar_medias(n_cruces: int) -> Dictionary:
 				distintos += 1
 	Partido.ex_de_mi_club = {}
 	return {"comparados": comparados, "distintos": distintos, "t_gd_us": t_gd, "t_cpp_us": t_cpp}
+
+## (10-11, paso a C++) `Partido._cerrar_notas`: la versión C++ y su gemela GDScript sobre el mismo cruce (marcadores y notas al azar), misma semilla: mismas notas, forma, partidos, lista de notas y azar al final.
+## Devuelve {comparados, distintos, t_gd_us, t_cpp_us}.
+static func probar_notas(cruces: int) -> Dictionary:
+	var comparados := 0
+	var distintos := 0
+	var t := [0, 0]
+	var m := Mundo.new()
+	m.generar(["ESP", "ENG", "CHI"], 91)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5
+	for i in cruces:
+		var l: Liga = m.ligas[rng.randi_range(0, m.ligas.size() - 1)]
+		var a: Club = l.clubes[rng.randi_range(0, l.clubes.size() - 1)]
+		var b: Club = l.clubes[rng.randi_range(0, l.clubes.size() - 1)]
+		if a == b:
+			continue
+		var p := Partido.new(a, b)
+		p.preparar()
+		p.goles_local = rng.randi_range(0, 4)
+		p.goles_visita = rng.randi_range(0, 4) if i % 3 != 0 else p.goles_local
+		for j in p._todos:
+			p._notas[j.id] = rng.randf_range(3.0, 10.0)
+		var antes: Array = []
+		for j in p._todos:
+			antes.append([j.forma, j.partidos, j.notas.duplicate()])
+		var res: Array = [null, null]
+		for modo in 2:
+			for k in p._todos.size():
+				var j: Jugador = p._todos[k]
+				j.forma = antes[k][0]; j.partidos = antes[k][1]; j.notas = (antes[k][2] as Array).duplicate()
+			p._notas_cerradas = false
+			Azar.sembrar(1000 + i)
+			var t0 := Time.get_ticks_usec()
+			if modo == 0:
+				p._cerrar_notas_gd()
+			else:
+				Nativo.obj().cerrar_notas(p, Azar._rng)
+			t[modo] += Time.get_ticks_usec() - t0
+			var est: Array = [p._notas_cerradas, Azar._rng.state]
+			for j in p._todos:
+				est.append([j.forma, j.partidos, j.notas])
+			res[modo] = var_to_bytes(est)
+		comparados += 1
+		if res[0] != res[1]:
+			distintos += 1
+	return {"comparados": comparados, "distintos": distintos, "t_gd_us": t[0], "t_cpp_us": t[1]}

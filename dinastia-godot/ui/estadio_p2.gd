@@ -131,11 +131,11 @@ func _alternar_modo_control() -> void:
 		return
 	_control.alternar_modo()
 	if _control.activo:
-		_btn_modo.text = Idiomas.t("🎮 Modo: Jugador (FC)")
+		if _btn_modo != null: _btn_modo.text = Idiomas.t("🎮 Modo: Jugador (FC)")
 		if _control.jugador_activo.has("node") and is_instance_valid(_control.jugador_activo["node"]):
 			_rig.objetivo_seguimiento = _control.jugador_activo["node"]
 	else:
-		_btn_modo.text = Idiomas.t("🎮 Modo: Manager")
+		if _btn_modo != null: _btn_modo.text = Idiomas.t("🎮 Modo: Manager")
 		_rig.objetivo_seguimiento = null
 
 ## ESTADÍSTICAS A PEDIDO: su botón (`jugar_estadisticas`) o desde la pausa. El
@@ -312,7 +312,8 @@ func _ciclar_velocidad() -> void:
 		_juego.pausar_o_seguir()
 	else:
 		_juego.mas_rapido()
-	_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
+	if _btn_velocidad != null:
+		_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
 
 func _cambio_ia(c: Club, es_local: bool) -> void:
 	var peor: Dictionary = {}

@@ -26,7 +26,10 @@ extends RefCounted
 
 ## Las mismas opciones que `PantallaAjustes.FPS_OPCIONES` (la prueba lo comprueba):
 ## no se lee de ahí para no cargar el menú central entero en esta etapa.
-const FPS := [30, 60, 120, 0]
+const FPS := [30, 60, 90, 120, 0]
+## (10-11, orden 36 del dueño) tope por defecto: 90 FPS en el móvil, 60 en PC.
+static func fps_defecto() -> int:
+	return 90 if CalidadRes3D.es_movil_tactil() else 60
 ## La gente por la calle. Ningún sistema la leía hasta hoy: el factor queda en
 ## `user://ajustes.cfg` [ciudad] densidad / densidad_factor para que el paseo lo use.
 const DENSIDADES := {
@@ -55,7 +58,7 @@ var mascota: String = "oso"
 var estilo_estadio: String = ""
 var asiento_nivel: String = "por_nivel"   ## cómo se reparte el color de las butacas entre los niveles (`EST_NIVELES`)
 var vivienda: String = "depto"
-var fps: int = 60
+var fps: int = fps_defecto()
 var contador_fps: bool = false
 var calidad: int = Calidad.NIVEL_DEFECTO
 var adaptativa: bool = true
@@ -139,7 +142,7 @@ func _leer_maquina() -> void:
 	var cf := ConfigFile.new()
 	if cf.load(PREFS) == OK:
 		var f := int(cf.get_value("pantalla", "fps", fps))
-		fps = f if f in FPS else 60
+		fps = f if f in FPS else fps_defecto()
 		contador_fps = bool(cf.get_value("pantalla", "contador_fps", contador_fps))
 	var d = String(CargaCiudad.de("AjustesCiudad").valor("densidad", densidad))
 	densidad = d if DENSIDADES.has(d) else "media"
@@ -372,9 +375,9 @@ static func _estrenar_estilo(m: Mundo, c: Club, clave: String) -> void:
 ## `ruta_prefs` (las pruebas) solo se escribe ahí: ni la gráfica ni la ciudad.
 static func aplicar_maquina(config: Dictionary, ruta_prefs: String = PREFS, arbol: SceneTree = null) -> void:
 	var d: Dictionary = config.get("maquina", {})
-	var f := int(d.get("fps", 60))
+	var f := int(d.get("fps", fps_defecto()))
 	if not (f in FPS):
-		f = 60
+		f = fps_defecto()
 	var cf := ConfigFile.new()
 	cf.load(ruta_prefs)
 	cf.set_value("pantalla", "fps", f)

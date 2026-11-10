@@ -3,9 +3,9 @@ extends RefCounted
 ## LOS ICONOS DIBUJADOS DEL MENÚ (10-11-2026, prototipo para que el dueño elija; estética de los menús, referencia eFootball). El riel y las cabeceras
 ## usaban emojis, y cada sistema los pinta con un estilo distinto (Android, Windows, la fuente del juego). Aquí, un juego propio de 16 iconos del
 ## MISMO estilo: trazo de 1,8 sobre una rejilla de 24, puntas redondeadas, sin relleno; dibujados para Dinastía (sin licencias de terceros).
-## Detrás del interruptor de Ajustes → Pantalla «Iconos dibujados» (`dibujados`, apagado: emoji por defecto). El SVG va en el código (no en archivos
+## Detrás del interruptor de Ajustes → Pantalla «Iconos dibujados» (`dibujados`, ENCENDIDO por defecto desde la orden 36; apagado = emoji). El SVG va en el código (no en archivos
 ## sueltos: no hay que acordarse de exportarlos) y se rasteriza al tamaño pedido (`Image.load_svg_from_string`), con caché.
-static var dibujados := false
+static var dibujados := true   ## (10-11, orden 36 del dueño) dibujados POR DEFECTO; los emojis quedan como opción en Ajustes → Pantalla
 const COLOR := "#e8eef0"
 const GRUPO := "icono_ui"
 static var _cache := {}

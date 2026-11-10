@@ -323,6 +323,14 @@ func penales() -> Array:
 ## Cierra las notas del partido y actualiza la forma (al terminar). Del HTML: la nota base se mueve con el resultado del EQUIPO
 ## (±0,6) más azar, y la forma se arrastra hacia esa nota con un 30 % de peso: la racha se nota sin que un mal partido hunda a nadie.
 func _cerrar_notas() -> void:
+	## (10-11, paso a C++) Con la extensión, las mismas cuentas y las mismas tiradas de `Azar._rng` en C++ (`cerrar_notas`); sin ella, el bucle de siempre. `probar_nativo` compara las dos.
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("cerrar_notas"):
+		nat.cerrar_notas(self, Azar._rng)
+		return
+	_cerrar_notas_gd()
+
+func _cerrar_notas_gd() -> void:
 	_notas_cerradas = true
 	var gano_local := goles_local > goles_visita
 	var empate := goles_local == goles_visita

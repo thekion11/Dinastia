@@ -31,7 +31,7 @@ func _abrir() -> void:
 	_pausa = true
 	await _vista.abrir(_par[0], 0.85, _par[1], Partido.new(_par[0], _par[1]))
 	if OS.get_environment("ESTAB") != "":
-		await PantallaCarga.estabilizar(get_tree())   ## como el juego de verdad: 10 fotogramas dibujados debajo de la carga antes de enseñar el partido
+		await PantallaCarga.estabilizar(get_tree(), int(OS.get_environment("ESTAB_N")) if OS.get_environment("ESTAB_N") != "" else 10)   ## como el juego de verdad: 10 fotogramas dibujados debajo de la carga antes de enseñar el partido (ESTAB_N=5: probar menos)
 	_t_ant = Time.get_ticks_usec()
 	_pausa = false
 
