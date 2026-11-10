@@ -46,7 +46,7 @@ func _input(evento: InputEvent) -> void:
 		_arrastre_y = 0.0
 		return
 	## Un desliz que empieza sobre el riel es del panel (abrirlo), no del menú.
-	if evento is InputEventScreenDrag and (evento as InputEventScreenDrag).position.x < MenuLateral.ANCHO_RIEL + 30.0:
+	if evento is InputEventScreenDrag and not MenuLateral.abajo() and (evento as InputEventScreenDrag).position.x < MenuLateral.ANCHO_RIEL + 30.0:
 		return
 	## Los gatillos cambian de pestaña. Se mira aquí y no en `_unhandled_input`
 	## porque los contenedores de la interfaz se comen los eventos de navegación

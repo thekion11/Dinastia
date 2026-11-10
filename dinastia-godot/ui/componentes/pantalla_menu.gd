@@ -78,11 +78,11 @@ func _montar() -> void:
 
 	_raiz = VBoxContainer.new()
 	_raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_raiz.offset_left = 22.0 + MenuLateral.ANCHO_RIEL
-	_raiz.offset_right = -22
+	_raiz.offset_left = (8.0 if MenuLateral.abajo() else 22.0) + MenuLateral.reserva().x
+	_raiz.offset_right = -8.0 if MenuLateral.abajo() else -22.0
 	var cmp := compacta()
 	_raiz.offset_top = 6 if cmp else 16
-	_raiz.offset_bottom = -6 if cmp else -16
+	_raiz.offset_bottom = (-6 if cmp else -16) - MenuLateral.reserva().y
 	_raiz.add_theme_constant_override("separation", 6 if cmp else 12)
 	add_child(_raiz)
 
@@ -247,7 +247,7 @@ func portada() -> void:
 	sc.add_child(marco)
 	var subs: Array = _menu["subs"]
 	var rej := GridContainer.new()
-	var ancho := get_viewport_rect().size.x - MenuLateral.ANCHO_RIEL - 60.0
+	var ancho := get_viewport_rect().size.x - MenuLateral.reserva().x - (24.0 if MenuLateral.abajo() else 60.0)
 	rej.columns = clampi(int((ancho + 18.0) / 358.0), 1, 4)
 	if subs.size() <= 3:
 		rej.columns = maxi(1, mini(subs.size(), rej.columns))
