@@ -141,7 +141,7 @@ static func _esquinas(obra: EstadioObra) -> void:
 			for sz in [1.0, -1.0]:
 				## `stands` numera 0 = fondo en +dz, 1 = fondo en -dz. Una
 				## esquina solo se quita si da al fondo que no existe.
-				if (0 in obra.abiertas and sz > 0.0) or (1 in obra.abiertas and sz < 0.0):
+				if (0 in obra.abiertas and sz > 0.0) or (1 in obra.abiertas and sz < 0.0) or esquina_abierta(est, sx, sz):
 					continue
 				_esquina_grada(root, sx, sz, dx, dz, alto, niveles,
 					esquina_mat, obra.stand_mat, obra.ang, est, obra.ocupacion, obra.seed_val, con_techo)
@@ -153,6 +153,8 @@ static func _esquinas(obra: EstadioObra) -> void:
 		## cada esquina la cierra un edificio bajo de servicios con su fachada.
 		for sx in [1.0, -1.0]:
 			for sz in [1.0, -1.0]:
+				if esquina_abierta(est, sx, sz):
+					continue
 				var p0 := Vector3(sx * (dx - FRENTE_TRIBUNA), 0.0, sz * (dz - FRENTE_TRIBUNA))
 				var lado_e := obra.fondo_trib + 2.0
 				var alto_e := maxf(alto * 0.55, 7.0)
@@ -160,6 +162,14 @@ static func _esquinas(obra: EstadioObra) -> void:
 				_box(root, Vector3(c_e.x, alto_e / 2.0, c_e.z), Vector3(lado_e, alto_e, lado_e), obra.stand_mat)
 				for n: Vector3 in [Vector3(sx, 0, 0), Vector3(0, 0, sz)]:
 					obra.caras_fachada.append(FachadaEstadio.cara(c_e + n * (lado_e * 0.5), n, lado_e, alto_e, "esquina", false, lado_e, niveles))
+
+## ESQUINAS UNA A UNA (10-11): `est["esquinas_abiertas"]` = ["sureste", "noroeste"...] deja esa esquina sin grada ni edificio.
+## Sur = +Z (tribuna 0), este = +X (tribuna 2), como `NOMBRE_BANDEJA`.
+static func esquina_abierta(est: Dictionary, sx: float, sz: float) -> bool:
+	var ab = est.get("esquinas_abiertas")
+	if not ab is Array:
+		return false
+	return (("sur" if sz > 0.0 else "norte") + ("este" if sx > 0.0 else "oeste")) in (ab as Array)
 
 ## Vallas perimetrales, siempre por dentro de la cara interior de la tribuna.
 static func _vallas(obra: EstadioObra) -> void:

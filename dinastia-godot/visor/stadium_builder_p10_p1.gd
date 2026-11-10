@@ -147,6 +147,20 @@ static func _tribuna_de(obra: EstadioObra, s: Dictionary) -> EstadioObra.Tribuna
 		t.size = Vector3(t.fondo_s, t.alto_s, obra.dz * 2.0 - 4.0)
 	t.cara = s["cara"]
 	t.lateral = absf(t.cara.x) > 0.5
+	## NIVELES POR LADO (10-11, estadios reales: el lado vertical de palcos de la Bombonera): `est["niveles_lado"]` = {"este": 4, ...}.
+	## Sin la clave, nada cambia.
+	var nl: Dictionary = est.get("niveles_lado", {}) if est.get("niveles_lado") is Dictionary else {}
+	var lado_n := String(NOMBRE_BANDEJA.get(t.i, ""))
+	if nl.has(lado_n):
+		t.niv_s = clampi(int(nl[lado_n]), 1, NIVELES_MAX)
+		t.alto_s = ALTURA_PIE + float(t.niv_s) * subida_bandeja() + float(t.niv_s - 1) * FRENTE_BANDEJA
+		t.fondo_s = fondo_tribuna(t.niv_s)
+		if t.lateral:
+			t.pos = Vector3(signf(t.pos.x) * centro_tribuna(obra.dx, t.niv_s), t.alto_s / 2.0, 0)
+			t.size = Vector3(t.fondo_s, t.alto_s, obra.dz * 2.0 - 4.0)
+		else:
+			t.pos = Vector3(0, t.alto_s / 2.0, signf(t.pos.z) * centro_tribuna(obra.dz, t.niv_s))
+			t.size = Vector3(obra.dx * 2.0 - 4.0, t.alto_s, t.fondo_s)
 	## BANDEJA (16-9-2026): si esta tribuna tiene un estilo propio en
 	## `est["bandejas"]`, se usa en vez del global -asientoP y techo, los dos
 	## únicos campos que esta primera fase deja variar por tribuna (altura y

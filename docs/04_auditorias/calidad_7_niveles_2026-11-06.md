@@ -19,7 +19,7 @@ Propuesta: `enum { ULTRA_BAJA = -3, BAJA = -2, MEDIA_BAJA = -1, MEDIA = 0, MEDIA
 |---|---|---|---|---|---|---|---|
 | Escala 3D | 50 % (hoy) | ? | ? | 100 % (hoy) | 100 % | 100 % | 100 % |
 | Sombra solar | no (hoy) | ? | ? | sí, 2 cortes (hoy) | ? | 4 cortes, 420 m | ? |
-| MSAA | x2→apagado (R01) | ? | ? | hoy | ? | x2 | ? |
+| MSAA | apagado (R01) | **apagado** (10-11, medido −57…−65 %) | **apagado** (10-11) | x2 en escritorio, apagado en Compatibilidad (10-11) | x2 | x2 | x2/x8 |
 | Público / peatones / tráfico | hoy | ? | ? | hoy | ? | hoy | ? |
 | `mesh_lod_threshold`, distancia de dibujo, reflejos, debanding, texturas | por medir | | | | | | |
 Medido hoy (partido): ULTRA BAJA 338 llamadas / 387 062 tri / 137 MB; MEDIA 709 / 845 501 / 208 MB; ALTA 925 / 1 787 095 / 215 MB. Cada escalón debe ser monótono en llamadas, triángulos y memoria: prueba `ren_calidad_monotona` (por escribir) que mide los 7 y falla si uno inferior cuesta más.
