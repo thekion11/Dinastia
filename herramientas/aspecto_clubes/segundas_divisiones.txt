@@ -1,0 +1,25 @@
+# Generado por herramientas/segundas_divisiones.py (no editar a mano): aspecto base de los clubes de las segundas divisiones.
+Birmingham City|escudo|franjas|BC|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Blackbourn|clasico|liso|BLA|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Bristol City|circulo|liso|BC|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Charlton|ojiva|franjas|CHA|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Coventry|escudo|liso|COV|liso|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#5ab4e5|#ffffff
+Derby County|clasico|liso|DC|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Huil City|circulo|franjas|HC|franjas|#f5a81c|#000000|#000000|#f5a81c|#f5a81c|#000000
+ipswich|ojiva|liso|IPS|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Leicester|escudo|liso|LEI|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Middlesbrough|clasico|franjas|MID|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Millwall|circulo|liso|MIL|liso|#0b2a5b|#ffffff|#ffffff|#0b2a5b|#0b2a5b|#ffffff
+Norwich|ojiva|liso|NOR|liso|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
+oxford United|escudo|franjas|OXF|franjas|#ffd100|#0b2a5b|#0b2a5b|#ffd100|#ffd100|#0b2a5b
+Portsmouth|clasico|liso|POR|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Preston|circulo|liso|PRE|liso|#ffffff|#0b2a5b|#0b2a5b|#ffffff|#ffffff|#0b2a5b
+Q.P.R.|ojiva|franjas|QPR|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Sheffield Utd|escudo|liso|SU|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Sheffield Wed|clasico|liso|SW|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Southampton|circulo|franjas|SOU|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Stoke|ojiva|liso|STO|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Swansea|escudo|liso|SWA|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Watford|clasico|franjas|WAT|franjas|#ffd100|#d50032|#d50032|#ffd100|#ffd100|#d50032
+W. Brom|circulo|liso|WB|liso|#0b2a5b|#ffffff|#ffffff|#0b2a5b|#0b2a5b|#ffffff
+Wrexham|ojiva|liso|WRE|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
