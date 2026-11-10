@@ -45,6 +45,9 @@ public:
 			const Dictionary &rej, double celda_rej) const;
 	// `Partido._elegir_goleador` / `_elegir_asistente` (el sorteo ponderado de un once): índice en `once` del elegido, o -1 si no hay a quién. `r_unit` = la tirada ya hecha ([0,1)); `excluir` = el autor del gol
 	// (null en el goleador); `pesos_rol` = el multiplicador de `RolTactico.peso` de cada candidato (vacío = sin roles).
+	// `MotorJugable._cuerpos` (visor/motor_jugable_p11.gd, M-391): separa de dos en dos a los jugadores que se pisan (reparto por masa) y frena la velocidad con que se acercan. `jugadores` = los
+	// diccionarios del motor ({node, vel, fuerza, aguante, ...}); mueve `node.position` y reescribe `vel`, igual que el GDScript. `minimo` = 2 × radio del cuerpo.
+	void cuerpos_motor(const Array &jugadores, double minimo) const;
 	int64_t elegir_ponderado(const Array &once, const Dictionary &grupo_de, const Dictionary &bases, double base_def, const String &atr, const PackedFloat64Array &pesos_rol, double r_unit, Object *excluir) const;
 };
 

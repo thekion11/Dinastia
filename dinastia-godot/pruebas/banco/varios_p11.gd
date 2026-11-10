@@ -313,6 +313,16 @@ func _probar_league_nucleo() -> void:
 	_comprobar(mc.get("a", "") == "x" and not mc.has("g"), "marca al hombre el más cercano y bien colocado, nunca el portero")
 	_comprobar(LeagueSinBalon.velocidad_perezosa(8.0, 1.0, 5.0, 0.5, 0.5, 0.0, 0.5) == 8.0 and LeagueSinBalon.velocidad_perezosa(8.0, 1.0, 60.0, 0.5, 0.5, 0.0, 0.5) < 8.0, "pereza: cerca de la acción corre a tope; lejos, afloja")
 	_comprobar(LeagueReglas.empezar_presion_zona(1.0, 0.2, 8.0) and not LeagueReglas.empezar_presion_zona(0.0, 1.0, 1.0), "presión de zona al perder el balón según la palanca")
+	## Fase 4a: el catálogo de toques (de las animaciones originales) y el filtro de alcance.
+	var cat := LeagueToques.catalogo()
+	_comprobar(cat.has("interfere") and cat.has("shot") and (cat["shot"]["sprint"] as Array).size() > 0, "catálogo de toques cargado (%d tipos)" % cat.size())
+	var cerca := PackedVector3Array()
+	var lejos := PackedVector3Array()
+	for k in 71:
+		cerca.append(Vector3(1.0, 0.0, 0.11))
+		lejos.append(Vector3(9.0, 0.0, 0.11))
+	_comprobar(not LeagueToques.alcanza("interfere", Vector2.ZERO, Vector2(1, 0), 0.0, cerca).is_empty() and LeagueToques.alcanza("interfere", Vector2.ZERO, Vector2(1, 0), 0.0, lejos).is_empty(), "interferir alcanza un balón a 1 m delante y no uno a 9 m")
+	_comprobar(LeagueToques.radio("interfere", 24, 0.0) > LeagueToques.radio("sliding", 24, 0.0) and LeagueToques.clase(7.0) == 3, "radio por tipo (interferir > barrida) y clases de velocidad")
 	## La variante juega 20 s de partido con dos clubes de países distintos y la bandera no cambia el motor de siempre.
 	var m := Mundo.new()
 	m.generar(["ARG", "ESP"], 99)
