@@ -1,4 +1,4 @@
-extends "res://pruebas/banco/estadio_p2.gd"
+extends "res://pruebas/banco/estadio_p3.gd"
 ## [Capa 2/2 de `estadio.gd`] _probar_interiores_club, _probar_galeria_club, _probar_reforma_con_obra
 
 func _probar_interiores_club() -> void:
