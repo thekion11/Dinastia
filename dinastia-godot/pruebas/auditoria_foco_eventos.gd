@@ -178,8 +178,42 @@ func _editor(mio: Club) -> void:
 		await _pulsar(JOY_BUTTON_DPAD_UP)
 		visto[_foco()] = true
 	_comprobar(visto.has(lienzo), "[editor de formación] y subiendo vuelve al campo")
+	await _tarjeta_tutorial(ed)
 	lienzo.grab_focus()   ## la auditoría general empieza donde empieza el editor
 	await _auditar("editor de formación", ed, false)
 	ed.call("_cancelar")
 	for i in 6:
+		await get_tree().process_frame
+
+## La tarjeta del tutorial PLEGADA (sale así con un menú del riel abierto, como aquí) no tapa ningún control del editor (antes tapaba
+## «Cancelar»): se lleva la lista al final, que es donde queda la fila de botones, y se comparan los rectángulos.
+func _tarjeta_tutorial(ed: EditorFormacion) -> void:
+	var antes := get_window().size
+	for tam: Vector2i in [Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		get_window().size = tam
+		var t := CapaTutorialUI.mostrar(_p, "Táctica")
+		for i in 4:
+			await get_tree().process_frame
+		var sc := GuardianFoco._zona(ed)
+		var ult: Control = _enfocables(ed).back()   ## «Cancelar», el último de la fila de abajo
+		if sc != null:   ## la fila de botones del editor justo en el borde de abajo de la zona visible (como en la captura)
+			for k in 3:
+				sc.scroll_vertical += int(ult.get_global_rect().end.y - sc.get_global_rect().end.y + 2.0)
+				await get_tree().process_frame
+		for i in 4:
+			await get_tree().process_frame
+		var r := t.get_global_rect()
+		var plegada := r.size.y < 100.0
+		var tapados: Array = []
+		for c: Control in _enfocables(ed):
+			var rc := c.get_global_rect()
+			if OS.get_environment("DEPURA") == "1":
+				print("    %s %s · tarjeta %s · zona %s · ventana %s" % [_desc(c), rc, r, sc.get_global_rect() if sc else Rect2(), get_viewport().get_visible_rect()])
+			if rc.intersects(r) and (sc == null or sc.get_global_rect().encloses(rc)):
+				tapados.append(_desc(c))
+		_comprobar(plegada and tapados.is_empty(), "[editor de formación %d×%d] la tarjeta plegada del tutorial (%.0f×%.0f px) no tapa ningún control (%s)" % [tam.x, tam.y, r.size.x, r.size.y, ", ".join(tapados)])
+		t.queue_free()
+		await get_tree().process_frame
+	get_window().size = antes
+	for i in 4:
 		await get_tree().process_frame

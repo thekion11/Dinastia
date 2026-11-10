@@ -3,6 +3,8 @@ extends RefCounted
 ## La tarjeta del tutorial por capas (`CapasTutorial`, fila 1040): sale abajo a la derecha la primera vez que se abre una pantalla, con las líneas de
 ## su «?», «Entendido» y «No mostrar más ayudas». No bloquea nada: se puede seguir jugando con ella abierta.
 
+const ANCHO_IZQ := -486.0   ## borde izquierdo de la tarjeta abierta, desde el derecho de la pantalla
+
 ## Lo llama `Principal._al_cambiar_pestana` con el título de la pestaña recién abierta.
 static func al_cambiar_pestana(p: Principal, titulo: String) -> void:
 	if p.get("mundo") == null or not CapasTutorial.debe_mostrar(titulo, bool(p.get("_modo_experto"))):
@@ -20,18 +22,24 @@ static func mostrar(padre: Control, clave: String) -> PanelContainer:
 	var tarjeta := PanelContainer.new()
 	tarjeta.name = "CapaTutorial"
 	tarjeta.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	tarjeta.offset_left = -486.0
+	tarjeta.offset_left = ANCHO_IZQ
 	tarjeta.offset_right = -72.0   ## deja libre el cajón de objetivos del borde derecho
 	tarjeta.offset_top = -260.0
 	tarjeta.offset_bottom = -16.0
 	tarjeta.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	tarjeta.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	tarjeta.z_index = 40
 	tarjeta.add_theme_stylebox_override("panel", Tema.caja(Tema.PANEL, Tema.RADIO_GRANDE, Tema.ORO))
 	## (3-11, rediseño) Con un menú del riel abierto la tarjeta sale PLEGADA (solo «💡 título ▾»): desplegada tapaba la ficha, los botones...
 	var menu: Variant = padre.get("_menu_lateral")
 	var plegada: bool = padre.get("_redirigiendo") == true or (menu != null and is_instance_valid(menu.get("pantalla_abierta")) and not menu.get("pantalla_abierta").cerrando())
+	## (10-11) PLEGADA mide solo su cabecera, pegada a la esquina: con el ancho de la tarjeta abierta tapaba lo último de la lista
+	## (el «Cancelar» del editor de formación); crece hacia la izquierda y hacia arriba hasta lo que pide su contenido.
+	var ajustar := func(abierta: bool) -> void:
+		tarjeta.offset_top = -260.0 if abierta else tarjeta.offset_bottom - 1.0
+		tarjeta.offset_left = ANCHO_IZQ if abierta else tarjeta.offset_right - 1.0
 	if plegada:
-		tarjeta.offset_top = tarjeta.offset_bottom - 1.0
+		ajustar.call(false)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 6)
 	tarjeta.add_child(v)
@@ -47,7 +55,8 @@ static func mostrar(padre: Control, clave: String) -> PanelContainer:
 	v.add_child(cuerpo)
 	cabeza.pressed.connect(func() -> void:
 		cuerpo.visible = not cuerpo.visible
-		tarjeta.offset_top = tarjeta.offset_bottom - 1.0 if plegada else -260.0
+		if plegada:
+			ajustar.call(cuerpo.visible)
 		cabeza.text = "💡 " + Idiomas.t(clave) + (("  ▴" if cuerpo.visible else "  ▾") if plegada else ""))
 	for l: String in AyudaPestana.lineas(clave):
 		var e := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "• " + l)
