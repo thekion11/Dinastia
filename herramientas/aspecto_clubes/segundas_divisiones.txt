@@ -1,0 +1,25 @@
+# Generado por herramientas/segundas_divisiones.py (no editar a mano): aspecto base de los clubes de las segundas divisiones.
+Birmingham City|escudo|liso|BC|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Blackburn|clasico|banda|BLA|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Bristol City|circulo|franjas|BC|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Charlton|ojiva|mitad|CHA|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Coventry|penta|aro|COV|liso|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#5ab4e5|#ffffff
+Derby County|hex|cruz|DC|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Hull City|cruzado|chevron|HC|franjas|#f5a81c|#000000|#000000|#f5a81c|#f5a81c|#000000
+Ipswich|banderin|liso|IPS|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Leicester|escudo|franjas|LEI|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Middlesbrough|clasico|mitad|MID|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Millwall|circulo|aro|MIL|liso|#0b2a5b|#ffffff|#ffffff|#0b2a5b|#0b2a5b|#ffffff
+Norwich|ojiva|cruz|NOR|liso|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
+Oxford United|penta|chevron|OU|franjas|#ffd100|#0b2a5b|#0b2a5b|#ffd100|#ffd100|#0b2a5b
+Portsmouth|hex|liso|POR|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Preston|cruzado|banda|PRE|liso|#ffffff|#0b2a5b|#0b2a5b|#ffffff|#ffffff|#0b2a5b
+Q.P.R.|banderin|franjas|QPR|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Sheffield Utd|escudo|aro|SU|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Sheffield Wed|clasico|cruz|SW|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Southampton|circulo|chevron|SOU|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Stoke|ojiva|liso|STO|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Swansea|penta|banda|SWA|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Watford|hex|franjas|WAT|franjas|#ffd100|#d50032|#d50032|#ffd100|#ffd100|#d50032
+W. Brom|cruzado|mitad|WB|liso|#0b2a5b|#ffffff|#ffffff|#0b2a5b|#0b2a5b|#ffffff
+Wrexham|banderin|aro|WRE|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff

@@ -42,6 +42,7 @@ import aspecto_clubes
 import palmares_clubes
 import liga_paises_bajos
 import ligas_completas
+import segundas_divisiones
 import json
 import os
 import sys
@@ -543,6 +544,10 @@ COPAS[liga_paises_bajos.PAIS] = liga_paises_bajos.COPA_FICTICIA
 # Ligas completas (10-11-2026): los clubes reales que faltaban hasta la cantidad real, en `ligas_completas.py`.
 CLUBES.update(ligas_completas.CLUBES)
 estadios_reales.ESTADIOS.update(ligas_completas.estadios())
+# Segundas divisiones (10-11-2026, orden 35): sus clubes reales con su cantidad real, en `segundas_divisiones.py`.
+CLUBES.update(segundas_divisiones.CLUBES)
+estadios_reales.ESTADIOS.update(segundas_divisiones.estadios())
+historia_clubes.H.update(segundas_divisiones.HISTORIA)
 historia_clubes.H.update(liga_paises_bajos.HISTORIA)
 historia_clubes.CLASICOS.extend(liga_paises_bajos.CLASICOS)
 
@@ -591,6 +596,7 @@ def main():
         real = {k: base[k] for k in TABLAS_DEL_PACK if k in base}
     liga_paises_bajos.asegurar(real)
     ligas_completas.asegurar(real)
+    segundas_divisiones.asegurar(real)
 
     errores = []
 
@@ -599,7 +605,7 @@ def main():
     for fila in real["DATA_P1"] + real["DATA_P2"]:
         reales.append(limpiar(fila[0]))
     for pais, d in real["PAISES_LIGAS"].items():
-        for fila in d["clubes"]:
+        for fila in d["clubes"] + d.get("segunda", {}).get("clubes", []):
             reales.append(limpiar(fila[0]))
     faltan = [n for n in reales if n not in CLUBES]
     sobran = [n for n in CLUBES if n not in reales]
@@ -656,6 +662,9 @@ def main():
         nd["clubes"] = renombrar(d["clubes"])
         if pais in LIGAS:
             nd["liga"] = LIGAS[pais]
+        if "segunda" in d:   ## (10-11) la segunda división: mismos clubes ficticios, su propio nombre de liga
+            nd["segunda"] = {"liga": segundas_divisiones.LIGAS_FICTICIAS.get(pais, d["segunda"]["liga"]),
+                             "clubes": renombrar(d["segunda"]["clubes"])}
         fic["PAISES_LIGAS"][pais] = nd
     fic["CONFED"] = {}
     for clave, d in real["CONFED"].items():
@@ -682,7 +691,7 @@ def main():
     fic["EQUIP_REAL"] = {}
     fic["ESTADIO_CLUB"] = {CLUBES[k]: v for k, v in estadios_reales.ESTADIOS.items() if k in CLUBES}
     todos = [f[0] for f in real["DATA_P1"] + real["DATA_P2"]] + \
-        [f[0] for d in real["PAISES_LIGAS"].values() for f in d["clubes"]]
+        [f[0] for d in real["PAISES_LIGAS"].values() for f in d["clubes"] + d.get("segunda", {}).get("clubes", [])]
     real["ESTADIO_CLUB"] = {n: estadios_reales.ESTADIOS[limpiar(n)] for n in todos if limpiar(n) in estadios_reales.ESTADIOS}
     fic["ASPECTO_CLUB"], real["ASPECTO_CLUB"] = aspecto_clubes.tablas(CLUBES, limpiar, todos)
 
