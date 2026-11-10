@@ -16,11 +16,18 @@ static func viajar(cuerpo: Node3D, desde: int, hasta: int, al_llegar: Callable) 
 			al_llegar.call()
 		return null
 	Sonido.toca("clic", Sonido.Bus.EFECTOS)
+	var arbol := cuerpo.get_tree()
+	PuertasAscensor.mover(arbol, RecorridoClub.y_de(desde), false)   ## (10-11) se cierran las puertas de la planta de salida
 	var tw := cuerpo.create_tween()
 	tw.tween_property(cuerpo, "position:y", RecorridoClub.y_de(hasta), duracion(desde, hasta)) \
 		.from(RecorridoClub.y_de(desde)).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tw.tween_callback(func() -> void:
 		Sonido.toca("clic", Sonido.Bus.EFECTOS)
+		var y_fin := RecorridoClub.y_de(hasta)
+		PuertasAscensor.mover(arbol, y_fin, true)   ## se abren las de llegada y se cierran solas pasados unos segundos
+		if arbol != null:
+			arbol.create_timer(PuertasAscensor.SEG_ABIERTO + PuertasAscensor.SEG_ABRIR).timeout.connect(
+				func() -> void: PuertasAscensor.mover(arbol, y_fin, false))
 		if al_llegar.is_valid():
 			al_llegar.call())
 	return tw

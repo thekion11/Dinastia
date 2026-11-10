@@ -182,10 +182,8 @@ static func zonas(x0: float, z_out: float, z_fin: float) -> Array:
 
 ## El ascensor: puertas de acero con su botonera, en la fachada de atrás.
 static func _ascensor(nodo: Node3D, x0: float, z_fin: float, y0: float) -> void:
-	var acero: StandardMaterial3D = Texturas.metal(Color(0.72, 0.74, 0.76), 0.35)
 	var cx := x0 + (ASC_X0 + ASC_X1) / 2.0
-	PiezasObra._caja(nodo, Vector3(cx, y0 + 1.15, z_fin - 0.08), Vector3(ASC_X1 - ASC_X0 - 0.3, 2.3, 0.08), acero, false)
-	PiezasObra._caja(nodo, Vector3(cx, y0 + 1.15, z_fin - 0.13), Vector3(0.02, 2.2, 0.02), PiezasObra._mat(Color(0.2, 0.2, 0.22), 0.5), false)
+	PuertasAscensor.poner(nodo, cx, z_fin, y0, ASC_X1 - ASC_X0 - 0.3)   ## (10-11) marco, fondo de cabina y dos hojas que se abren
 	var boton := PiezasObra._mat_unico(Color(1, 0.8, 0.3), 0.3)
 	boton.emission_enabled = true
 	boton.emission = Color(1, 0.75, 0.25)
