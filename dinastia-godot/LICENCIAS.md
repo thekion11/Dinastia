@@ -105,6 +105,7 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 | Banderas | `assets/banderas/` | 🟢 flag-icons, MIT (`LICENSE_flag-icons_MIT.txt`: hay que conservar el aviso, viaja en el build) |
 | Complementos Antialiased Line2D y Debug Menu | `addons/` | 🟢 MIT (`addons/LICENCIAS_TERCEROS.txt`) |
 | Caras de jugadores y DT | dibujadas por código (`ui/cara.gd`, `ui/cara_dt.gd`) | 🟢 propio |
+| 16 iconos dibujados del menú (riel y cabeceras, prototipo del 10-11) | trazos SVG en el código (`ui/componentes/iconos_ui.gd`) | 🟢 propio: dibujados para Dinastía, sin copiar ningún juego de iconos de terceros |
 
 ## 5. Otros nombres propios
 

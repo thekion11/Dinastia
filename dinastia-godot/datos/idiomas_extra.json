@@ -7846,7 +7846,10 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "Cannot loan out: already on loan: he has to come back first..",
   "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Drag each marker wherever you want: the position changes on its own depending on the zone. With a controller or keyboard: the D-pad picks the marker, Accept grabs it, the D-pad moves it and Accept drops it.",
   "Cabecera compacta en el móvil": "Compact header on mobile",
-  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Menus put the title and buttons on a single line, leaving more room for what you are working on."
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Menus put the title and buttons on a single line, leaving more room for what you are working on.",
+  "Cabecera compacta de los menús": "Compact menu header",
+  "Iconos dibujados": "Drawn icons",
+  "El riel y las cabeceras de los menús con iconos dibujados del mismo estilo en vez de emojis.": "The side rail and menu headers use drawn icons in a single style instead of emojis."
  },
  "pt": {
   "Historia": "História",
@@ -15695,7 +15698,10 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "Não pode ser cedido: já está cedido: primeiro tem de voltar..",
   "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Arraste cada ficha para onde quiser: a posição muda sozinha conforme a zona. Com comando ou teclado: o direcional escolhe a ficha, Aceitar agarra-a, o direcional move-a e Aceitar solta-a.",
   "Cabecera compacta en el móvil": "Cabeçalho compacto no telemóvel",
-  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Os menus põem o título e os botões numa só linha, para deixar mais espaço para o que se trabalha."
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Os menus põem o título e os botões numa só linha, para deixar mais espaço para o que se trabalha.",
+  "Cabecera compacta de los menús": "Cabeçalho compacto dos menus",
+  "Iconos dibujados": "Ícones desenhados",
+  "El riel y las cabeceras de los menús con iconos dibujados del mismo estilo en vez de emojis.": "A barra lateral e os cabeçalhos dos menus com ícones desenhados do mesmo estilo em vez de emojis."
  },
  "patrones": [
   [
@@ -29651,7 +29657,10 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "Impossible de le prêter : il est déjà prêté : il doit d'abord revenir..",
   "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Fais glisser chaque pion où tu veux : le poste change tout seul selon la zone. À la manette ou au clavier : la croix choisit le pion, Valider le saisit, la croix le déplace et Valider le lâche.",
   "Cabecera compacta en el móvil": "En-tête compact sur mobile",
-  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Les menus mettent le titre et les boutons sur une seule ligne, pour laisser plus de place à ce sur quoi tu travailles."
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Les menus mettent le titre et les boutons sur une seule ligne, pour laisser plus de place à ce sur quoi tu travailles.",
+  "Cabecera compacta de los menús": "En-tête compact des menus",
+  "Iconos dibujados": "Icônes dessinées",
+  "El riel y las cabeceras de los menús con iconos dibujados del mismo estilo en vez de emojis.": "La barre latérale et les en-têtes des menus avec des icônes dessinées du même style au lieu d'émojis."
  },
  "it": {
   "Historia": "Storia",
@@ -37500,7 +37509,10 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "Non si può cedere: è già in prestito: prima deve tornare..",
   "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Trascina ogni pedina dove vuoi: il ruolo cambia da solo in base alla zona. Con controller o tastiera: la croce sceglie la pedina, Conferma la prende, la croce la sposta e Conferma la rilascia.",
   "Cabecera compacta en el móvil": "Intestazione compatta su mobile",
-  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "I menu mettono il titolo e i pulsanti su una sola riga, per lasciare più spazio a ciò su cui lavori."
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "I menu mettono il titolo e i pulsanti su una sola riga, per lasciare più spazio a ciò su cui lavori.",
+  "Cabecera compacta de los menús": "Intestazione compatta dei menu",
+  "Iconos dibujados": "Icone disegnate",
+  "El riel y las cabeceras de los menús con iconos dibujados del mismo estilo en vez de emojis.": "La barra laterale e le intestazioni dei menu con icone disegnate dello stesso stile invece delle emoji."
  },
  "de": {
   "Historia": "Geschichte",
@@ -45349,7 +45361,10 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "Verleih nicht möglich: Er ist bereits verliehen: Er muss zuerst zurückkehren..",
   "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Zieh jede Marke, wohin du willst: Die Position ändert sich je nach Zone von selbst. Mit Controller oder Tastatur: Das Steuerkreuz wählt die Marke, Bestätigen greift sie, das Steuerkreuz bewegt sie und Bestätigen lässt sie los.",
   "Cabecera compacta en el móvil": "Kompakte Kopfzeile auf dem Handy",
-  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Die Menüs zeigen Titel und Schaltflächen in einer einzigen Zeile, damit mehr Platz für die Arbeit bleibt."
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Die Menüs zeigen Titel und Schaltflächen in einer einzigen Zeile, damit mehr Platz für die Arbeit bleibt.",
+  "Cabecera compacta de los menús": "Kompakte Kopfzeile der Menüs",
+  "Iconos dibujados": "Gezeichnete Symbole",
+  "El riel y las cabeceras de los menús con iconos dibujados del mismo estilo en vez de emojis.": "Seitenleiste und Menüköpfe mit gezeichneten Symbolen im selben Stil statt Emojis."
  },
  "ca": {
   "Historia": "Història",
@@ -53198,7 +53213,10 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "No es pot cedir: ja està cedit: primer ha de tornar..",
   "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Arrossega cada fitxa on vulguis: la posició canvia sola segons la zona. Amb comandament o teclat: la creueta tria la fitxa, Acceptar l'agafa, la creueta la mou i Acceptar la deixa anar.",
   "Cabecera compacta en el móvil": "Capçalera compacta al mòbil",
-  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Els menús posen el títol i els botons en una sola línia, per deixar més lloc al que es treballa."
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Els menús posen el títol i els botons en una sola línia, per deixar més lloc al que es treballa.",
+  "Cabecera compacta de los menús": "Capçalera compacta dels menús",
+  "Iconos dibujados": "Icones dibuixades",
+  "El riel y las cabeceras de los menús con iconos dibujados del mismo estilo en vez de emojis.": "La barra lateral i les capçaleres dels menús amb icones dibuixades del mateix estil en lloc d'emojis."
  },
  "pl": {
   "Club": "Klub",
@@ -61047,7 +61065,10 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "Nie można wypożyczyć: jest już wypożyczony: najpierw musi wrócić..",
   "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Przeciągnij każdy pionek, gdzie chcesz: pozycja zmienia się sama zależnie od strefy. Padem lub klawiaturą: krzyżak wybiera pionek, Akceptuj go chwyta, krzyżak go przesuwa, a Akceptuj puszcza.",
   "Cabecera compacta en el móvil": "Kompaktowy nagłówek na telefonie",
-  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Menu pokazują tytuł i przyciski w jednej linii, by zostawić więcej miejsca na to, nad czym pracujesz."
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Menu pokazują tytuł i przyciski w jednej linii, by zostawić więcej miejsca na to, nad czym pracujesz.",
+  "Cabecera compacta de los menús": "Kompaktowy nagłówek menu",
+  "Iconos dibujados": "Rysowane ikony",
+  "El riel y las cabeceras de los menús con iconos dibujados del mismo estilo en vez de emojis.": "Pasek boczny i nagłówki menu z rysowanymi ikonami w jednym stylu zamiast emoji."
  },
  "tr": {
   "Club": "Kulüp",
@@ -68896,6 +68917,9 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "Kiralanamaz: zaten kiralık: önce geri dönmesi gerekir..",
   "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Her pulu istediğin yere sürükle: mevki bölgeye göre kendiliğinden değişir. Kumanda veya klavyeyle: yön tuşları pulu seçer, Onayla onu tutar, yön tuşları taşır ve Onayla bırakır.",
   "Cabecera compacta en el móvil": "Mobilde kompakt başlık",
-  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Menüler başlığı ve düğmeleri tek satıra koyar; böylece üzerinde çalıştığın şeye daha çok yer kalır."
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Menüler başlığı ve düğmeleri tek satıra koyar; böylece üzerinde çalıştığın şeye daha çok yer kalır.",
+  "Cabecera compacta de los menús": "Menülerde kompakt başlık",
+  "Iconos dibujados": "Çizilmiş simgeler",
+  "El riel y las cabeceras de los menús con iconos dibujados del mismo estilo en vez de emojis.": "Kenar çubuğu ve menü başlıkları emoji yerine aynı tarzda çizilmiş simgelerle."
  }
 }

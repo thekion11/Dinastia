@@ -33,6 +33,16 @@ func _ready() -> void:
 	add_child(_p)
 	for i in 60:
 		await get_tree().process_frame
+	## el prototipo de los iconos dibujados y la cabecera compacta en PC (las preferencias guardadas los pisan al cargar: se ponen después)
+	IconosUI.dibujados = OS.get_environment("ICONOS") == "1"
+	IconosUI.aplicar_todos(get_tree())
+	PantallaMenu.compacta_pc = OS.get_environment("COMPACTA_PC") == "1"
+	if IconosUI.dibujados:
+		var sin: Array = []
+		for e: String in IconosUI.DE_EMOJI:
+			if IconosUI.textura(e, 26) == null:
+				sin.append(e)
+		_comprobar(sin.is_empty(), "los %d iconos dibujados se rasterizan (%s sin dibujo)" % [IconosUI.DE_EMOJI.size(), str(sin)])
 	var m: Mundo = _p.mundo
 	var clubes: Array = [m.mi_club()]
 	for l: Liga in m.ligas:
@@ -65,6 +75,8 @@ func _ready() -> void:
 		if f != null:
 			f.store_buffer(_prefs_antes)
 			f.close()
+	IconosUI.dibujados = false
+	PantallaMenu.compacta_pc = false
 	get_tree().quit(0 if _fallos == 0 else 1)
 
 func _cerrar() -> void:
@@ -130,7 +142,7 @@ func _medir(et: String, raiz: Control) -> void:
 				sin_foco.append("%s «%s»" % [c.get_class(), txt.left(14)])
 		## escudos y caras: imágenes casi cuadradas (la fila puede estirarlas un poco en alto); cuenta el lado menor, que es lo que se ve
 		var lado := minf(c.size.x, c.size.y)
-		if c is TextureRect and (c as TextureRect).texture != null and lado >= 12.0 and lado <= 140.0 and maxf(c.size.x, c.size.y) <= lado * 1.4:
+		if c is TextureRect and not c.has_meta("icono_ui") and (c as TextureRect).texture != null and lado >= 12.0 and lado <= 140.0 and maxf(c.size.x, c.size.y) <= lado * 1.4:
 			imagenes.append(lado)
 	var lista := tamanos.keys()
 	lista.sort()

@@ -29,8 +29,9 @@ var _cerrando := false
 ## botón «Portada» se comían ~40 % del alto y lo que se trabaja quedaba en ~200 px. En una sola línea: volver, icono, título y sección, «Portada»
 ## y el club. Solo en lo táctil (`EscalaMovil.es_tactil`) y si no se apaga en Ajustes («Cabecera compacta en el móvil»); en PC, como siempre.
 static var compacta_pref := true
+static var compacta_pc := false   ## (10-11) también en PC, como opción de Ajustes (apagada por defecto)
 static func compacta() -> bool:
-	return compacta_pref and EscalaMovil.es_tactil()
+	return compacta_pref if EscalaMovil.es_tactil() else compacta_pc
 
 static func abrir(p: Principal, menu: Dictionary, sub: int = -1) -> PantallaMenu:
 	var n := PantallaMenu.new()
@@ -94,10 +95,9 @@ func _montar() -> void:
 	volver.custom_minimum_size = Vector2(0, 0) if cmp else Vector2(118, 44)
 	volver.pressed.connect(cerrar)
 	cab.add_child(volver)
-	var icono := Label.new()
-	icono.text = String(_menu["icono"])
-	icono.add_theme_font_size_override("font_size", 22 if cmp else 42)
-	icono.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	var icono := IconosUI.control(String(_menu["icono"]), 22 if cmp else 42)   ## (10-11) emoji o icono dibujado (Ajustes)
+	if icono is Label:
+		(icono as Label).vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	cab.add_child(icono)
 	var titulos := VBoxContainer.new()
 	titulos.add_theme_constant_override("separation", -4)
