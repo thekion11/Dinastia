@@ -16,7 +16,9 @@ func _estado(etapa: String) -> void:
 
 func _md5_de(nombre: String) -> String:
 	var crudo := PartidaArchivo.desempaquetar(FileAccess.get_file_as_bytes(Partida.ruta_de(nombre)))
-	return crudo.get_string_from_utf8().md5_text()
+	var d: Dictionary = JSON.parse_string(crudo.get_string_from_utf8())
+	d.erase("guardado")   ## la hora del guardado es lo único que cambia entre dos guardados del mismo mundo
+	return JSON.stringify(d, "", false, true).md5_text()
 
 func _ready() -> void:
 	var cfg := OS.get_environment("CONFIG") if OS.get_environment("CONFIG") != "" else "TODOS"
