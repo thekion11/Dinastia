@@ -305,7 +305,11 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 	## La pizarra táctica al fondo, con el dibujo de la jugada.
 	var pizarra := _mat(Color(0.95, 0.96, 0.97), 0.3)
 	_caja(nodo, Vector3(x0, 1.7, z_fin - 0.1), Vector3(3.2, 1.6, 0.06), pizarra, false)
-	_rotulo(nodo, "4-3-3\n○ → ✕", Vector3(x0, 1.75, z_fin - 0.15), PI, 46, Color(0.15, 0.2, 0.5))
+	if VestuarioRealista.activo():   ## (sesión 7) MEDIA y ALTA: la formación REAL del club dibujada, y el escudo grande en la pared
+		VestuarioRealista.pizarra(nodo, x0, z_fin, c1, c2, mi)
+		VestuarioRealista.escudo(nodo, x0, z_fin, mi)
+	else:
+		_rotulo(nodo, "4-3-3\n○ → ✕", Vector3(x0, 1.75, z_fin - 0.15), PI, 46, Color(0.15, 0.2, 0.5))
 	## La camilla del fisio y las duchas (alicatado y alcachofas) en una esquina.
 	_caja(nodo, Vector3(x0 + 3.0, 0.75, z_fin - 4.6), Vector3(0.8, 0.12, 2.0), _mat(Color(0.2, 0.35, 0.55), 0.6), true)
 	_caja(nodo, Vector3(x0 + 3.0, 0.35, z_fin - 4.6), Vector3(0.6, 0.7, 1.6), Texturas.metal(Color(0.6, 0.62, 0.64), 0.5), false)
