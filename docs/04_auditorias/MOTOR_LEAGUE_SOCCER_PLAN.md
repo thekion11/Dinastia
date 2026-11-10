@@ -321,3 +321,20 @@ toques largos al espacio, giros): portarlo es lo grande que queda (~7.600 línea
 | Posesión del local por partido | 52,6 de media | 12 · 69 · 17 · 12 · 86 · 59 |
 
 Determinismo IGUAL; banco «FIN. 0 fallos».
+
+### Fase 4c, parte 2: el toque de conducción del original (10-11, `main` fusionado)
+`MotorLeague._mover_balon`: cada toque deja el balón donde llegará el jugador tras el retardo del original (L
+`GetBallControlVector`: desiredDelayTime = (v/8)²·0,6 + 0,25 s) más el frente del pie (0,45 m) y el fastidio del rival (×3 m), en
+la dirección de su conducción; la rapidez sale de la distancia con el roce portado (x = ln(1 + k·v0²/c)/2k). A toda velocidad son
+toques largos de ~7 m (≈ 1.300-1.700 por partido). Bandera `LS_TOQUE=0` = sin él (solo el fastidio de la 4a).
+
+| 6 partidos con estilos reales | Motor de siempre | League (4c-1) | League (4c-2, toque largo) |
+|---|---|---|---|
+| CPU por paso (µs) | 1.391 | 1.196 | 1.196 |
+| Goles / remates | 6,83 / 44,7 | 2,0 / 7,8 | 2,17 / 8,3 |
+| Cambios de posesión | 70,5 | 28,8 | 24,3 |
+| Decisiones en la zona de tiro (2 partidos) | — | 9 · 7 | 5 · 4 |
+
+Sin efecto en la llegada a la zona de tiro. Nota: el motor de siempre remata DE MÁS (44,7 por partido en 2 × 240 s; en el fútbol
+real ≈ 24) y League DE MENOS (≈ 8). No hay cifras públicas de remates del bot de GameplayFootball / Google Research Football para
+comparar (habría que medirlo con su paquete `gfootball`).

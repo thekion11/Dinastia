@@ -31,6 +31,7 @@ static func crear() -> MotorJugable:
 ## Se recalcula cada `CADENCIA` s por jugador (escalonado); entre medias sigue el último destino.
 
 const CADENCIA := 0.1
+static var toque_original := OS.get_environment("LS_TOQUE") != "0"   ## LS_TOQUE=0: sin el toque de conducción del original (fase 4c)
 static var fase3 := OS.get_environment("LS_FASE3") != "0"   ## LS_FASE3=0: sin la IA sin balón de League (solo la fase 2)
 const DIFICULTAD := 0.8            ## L `_default_Difficulty` (la de la CPU se traducirá en la fase 6)
 const PRED_MS := [200, 250, 350, 500, 650, 700]
@@ -391,11 +392,28 @@ func _mover_balon(delta: float) -> void:
 	var fastidio := (1.0 - LeagueNucleo.normalizado(cerca, 0.5, 1.5)) \
 		* (1.0 - (float(c["attr"]["reg"]) * 0.5 + float(c.get("equilibrio", 0.6)) * 0.3)) \
 		* LeagueNucleo.curva(LeagueNucleo.normalizado(vel, LeagueNucleo.V_PARADO, LeagueNucleo.V_SPRINT), 0.7)
-	if fastidio <= 0.0:
-		return
 	var plano := Vector3(vel_balon.x, 0.0, vel_balon.z)
 	if plano.length() < 0.01:
 		return
-	## +3 m de toque como mucho; el balón tarda ~0,5 s en volver a estar a tiro (L desiredDelayTime 0,25-0,85 s).
-	vel_balon += plano.normalized() * fastidio * 3.0 / 0.5
-	cuenta_toques["fastidio"] = int(cuenta_toques.get("fastidio", 0)) + 1
+	if fastidio > 0.0:
+		cuenta_toques["fastidio"] = int(cuenta_toques.get("fastidio", 0)) + 1
+	if not toque_original:
+		## (Fase 4a) solo el fastidio: +3 m de toque como mucho en ~0,5 s.
+		if fastidio > 0.0:
+			vel_balon += plano.normalized() * fastidio * 3.0 / 0.5
+		return
+	## FASE 4c (10-11): EL TOQUE DE CONDUCCIÓN DEL ORIGINAL (L humanoid_utils.cpp GetBallControlVector). El balón se deja donde
+	## llegará el jugador tras un retardo que crece con la velocidad (L desiredDelayTime = (v/8)²·0,6 + 0,25 s), más el frente del
+	## pie y el fastidio del rival (L FFO + opponentAnnoyanceFactor·3). A toda velocidad son toques LARGOS al espacio (~7 m).
+	## La dirección es la de su conducción (L desiredMovement: el campo de fuerzas, `objetivo`). La rapidez sale de la distancia
+	## con el roce del césped portado (dv/dt = −(k·v² + c), k 0,06, c 1,55 → x = ln(1 + k·v0²/c) / 2k).
+	var hacia: Vector3 = (c.get("objetivo", pos(c) + plano) as Vector3) - pos(c)
+	hacia.y = 0.0
+	var dir := hacia.normalized() if hacia.length() > 0.1 else plano.normalized()
+	var retardo := pow(LeagueNucleo.normalizado(vel, 0.0, LeagueNucleo.V_SPRINT), 2.0) * 0.6 + 0.25
+	var distancia := vel * retardo + 0.45 + fastidio * 3.0
+	var k := float(cfg_balon["roce"])
+	var cc := float(cfg_balon["roce_lineal"])
+	var v0 := sqrt((exp(2.0 * k * distancia) - 1.0) * cc / k)
+	vel_balon = dir * v0
+	cuenta_toques["toque_largo"] = int(cuenta_toques.get("toque_largo", 0)) + (1 if distancia > 3.0 else 0)
