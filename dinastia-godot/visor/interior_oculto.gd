@@ -47,8 +47,9 @@ func _juntar_vestuario() -> void:
 		var z := n.position.z
 		if n is GeometryInstance3D:
 			var caja := n.transform * (n as GeometryInstance3D).get_aabb()
-			if caja.size.length() > 6.0:
-				continue   ## paredes, suelo y techo se quedan: por la boca del túnel se ve el fondo del vestuario, no un hueco
+			var mat := (n as GeometryInstance3D).material_override as BaseMaterial3D
+			if caja.size.length() > 6.0 or (mat != null and mat.emission_enabled):
+				continue   ## paredes, suelo, techo y las luces (paneles emisivos) se quedan: por la boca del túnel se ve el fondo del vestuario, no un hueco
 			z = caja.get_center().z
 		if z > _z_out + 0.5:
 			_vestuario.append(n)
