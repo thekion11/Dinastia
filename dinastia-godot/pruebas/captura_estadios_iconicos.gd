@@ -182,6 +182,31 @@ func _congelar() -> void:
 		print("   SIN SUBVIEWPORT %s: -%d" % [get_tree().root.get_path_to(sv), b0 - rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)])
 		sv.render_target_update_mode = m0
 		await get_tree().process_frame
+	if OS.get_environment("LOD_PRUEBA") != "":
+		## Ensayo: apagar las piezas PEQUEÑAS (< T m) que estén a más de R m de la cámara. ¿Cuánto ahorra?
+		var rt := OS.get_environment("LOD_PRUEBA").split(",")
+		var r := float(rt[0])
+		var t := float(rt[1]) if rt.size() > 1 else 8.0
+		var apagadas: Array[GeometryInstance3D] = []
+		for g: Node in get_tree().root.find_children("*", "GeometryInstance3D", true, false):
+			var gi := g as GeometryInstance3D
+			if not gi.is_visible_in_tree():
+				continue
+			var caja := gi.global_transform * gi.get_aabb()
+			if caja.size.length() < t and caja.get_center().distance_to(_fija.global_position) > r:
+				gi.visible = false
+				apagadas.append(gi)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		print("   LOD r=%s t=%s: %d piezas apagadas, -%d llamadas" % [r, t, apagadas.size(), b0 - rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)])
+		get_viewport().get_texture().get_image().save_jpg("%s/lod_despues.jpg" % _dir, 0.9)
+		for gi in apagadas:
+			gi.visible = true
+		await get_tree().process_frame
+		await get_tree().process_frame
+		get_viewport().get_texture().get_image().save_jpg("%s/lod_antes.jpg" % _dir, 0.9)
+		get_tree().quit()
+		return
 	var foto0 := _visibles(get_tree().root)
 	var serie: Array[int] = []
 	for _k in (int(OS.get_environment("PICOS_SERIE")) if OS.get_environment("PICOS_SERIE") != "" else 12):   ## ¿el pico sigue con el plano quieto (es lo que se ve) o se va solo (es el corte de cámara)?
