@@ -92,6 +92,8 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		mat.set_shader_parameter("color_pantalon", pantalon)
 		mat.set_shader_parameter("color_medias", medias)
 		mat.set_shader_parameter("estilo", i_estilo)
+		## Legibilidad del dibujo de la camiseta a la cámara real (10-11): 0,7 por defecto; apagada en MÍNIMA (nivel más bajo) y con «Partido ligero» (la GPU manda).
+		mat.set_shader_parameter("legible", 0.0 if Calidad.elegida <= Calidad.ULTRA_BAJA or Calidad.partido_ligero else 0.7)
 		mat.set_shader_parameter("tinte_piel", _tinte(piel))
 		## La muñeca (fin de la manga larga) del cuerpo de mujer está más adentro.
 		mat.set_shader_parameter("muneca", 0.69 if es_mujer else 0.755)
