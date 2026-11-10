@@ -138,7 +138,7 @@ func _picos(mediana: int) -> void:
 			await get_tree().process_frame
 			await get_tree().process_frame
 			var serie: Array[int] = []
-			for _k in 12:   ## ¿el pico sigue con el plano quieto (es lo que se ve) o se va solo (es el corte de cámara)?
+			for _k in (int(OS.get_environment("PICOS_SERIE")) if OS.get_environment("PICOS_SERIE") != "" else 12):   ## ¿el pico sigue con el plano quieto (es lo que se ve) o se va solo (es el corte de cámara)?
 				serie.append(rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
 				await get_tree().process_frame
 			var base := serie[-1]
