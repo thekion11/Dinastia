@@ -250,3 +250,15 @@ Pendiente (no medido): coste del césped aislado (campo plano) y de las transpar
 | ESP | 380 → 288 ms (**−24 %**) | 497 → 334 | 540 k → 414 k |
 | ENG | 400 → 287 ms (**−28 %**) | 350 → 283 | 534 k → 400 k |
 Capturas con la cámara real, arriba SIN el modo y abajo CON él: `docs/04_auditorias/capturas_modo_rendimiento/cmp_{CHI,ESP,ENG}.jpg`. Lo que se ve: desaparecen las sombras de los jugadores y de los objetos sobre el césped y la imagen queda algo más plana; los jugadores y el campo se leen igual.
+
+### Césped aislado (10-11, sesión 5; `EFECTO=cesped`: el campo con un material plano sin sombreado del mismo verde, MEDIA 1280×720)
+CHI 413 → 390 ms (**−5 %**), ESP 370 → 312 ms (**−15 %**), ENG 378 → 327 ms (**−13 %**); llamadas y triángulos iguales. El shader de la hierba (franjas, dibujo, ruido; en MEDIA no se monta `CespedCapas`, que solo existe en ALTA y ULTRA) cuesta entre 5 y 15 % del fotograma. **Propuesta E4** (cambia el aspecto; decide el dueño): una variante más barata del shader del campo en BAJA y MEDIA (sin el ruido de detalle, solo franjas) recortaría hasta ese 5-15 %.
+
+### Menú en MEDIA: ahorro tras interruptor (10-11, sesión 5; pregunta 7 del dueño)
+`AhorroMenu.nivel_ahorra(nivel, media_pedida)`: de MEDIA BAJA hacia abajo siempre; MEDIA solo si el jugador enciende «Ahorro en los menús también en Media» (`Calidad.ahorro_menu_media`, `grafica/ahorro_menu_media`, APAGADO por defecto; 8 idiomas); ALTA y ULTRA nunca. Con el ahorro: modo de bajo consumo del motor (repinta solo cuando algo cambia) y fondos/partículas quietos. `zz_medir_menu_gpu` (`AHORRO_MEDIA=0/1`, MEDIA, menú central quieto, fotogramas dibujados en 3 s):
+| Club | Sin ahorro | Con ahorro | Llamadas |
+|---|---|---|---|
+| CHI | 43 | **1** | 411 → 388 |
+| ESP | 45 | **1** | 408 → 407 |
+| ENG | 45 | **1** | 420 → 419 |
+Es decir, el menú deja de dibujar ~15 fotogramas por segundo de ~400 llamadas cada uno cuando no pasa nada (la GPU del móvil, al 100 % en el menú, queda casi libre). Coste: los fondos animados y las motas quedan quietos. Probado en `p6_resolucion3d`.
