@@ -192,6 +192,14 @@ func _semana_carrera_del_dt() -> void:
 	if not of.is_empty() and prensa != null:
 		prensa.noticia.emit("Te quiere %s" % String(of["nombre"]),
 			"Han llamado desde %s: te ofrecen su banquillo. Puedes contestar en Club › Legado." % String(of["nombre"]))
+	## (10-11) QUE TE QUIERA UNA SELECCIÓN (`CargoSeleccion`): el cargo es doble, no te vas del club. Su sueldo va a tu patrimonio.
+	if selecciones != null:
+		var os := selecciones.cargo.sortear(self, selecciones)
+		if not os.is_empty() and prensa != null:
+			prensa.noticia.emit("🌍 Te quiere la selección de %s" % String(os["nombre"]),
+				"La federación de %s te ofrece ser su seleccionador sin dejar tu club. Puedes contestar en Club › Legado." % String(os["nombre"]))
+		if selecciones.cargo.activo():
+			roles.patrimonio += selecciones.cargo.sueldo
 	roles.semana_leyenda_viva()
 	roles.semana_filiales()
 

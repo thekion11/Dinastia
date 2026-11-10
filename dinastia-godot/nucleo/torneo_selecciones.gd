@@ -105,12 +105,14 @@ func jugar_fecha(ya_jugado: Partido = null) -> Array:
 				pen = ya_jugado.penales()
 		else:
 			var p := Partido.new(a, b, true)   ## sede neutral
+			var sale := {}   ## la lambda no puede reasignar variables de fuera: lo devuelve en un diccionario
 			CopasMundo._aislado("%s%d/%s-%s" % [nombre, anio, a.id, b.id], func() -> void:
-				var r := p.simular()
-				gl = int(r["local"])
-				gv = int(r["visita"])
-				if gl == gv and not en_grupos:
-					pen = p.penales())
+				p.simular()
+				if p.goles_local == p.goles_visita and not en_grupos:
+					sale["pen"] = p.penales())
+			gl = p.goles_local
+			gv = p.goles_visita
+			pen = sale.get("pen", [])
 		var pasa: Club = null
 		if not en_grupos:
 			pasa = a if gl > gv or (gl == gv and (pen.is_empty() or int(pen[0]) >= int(pen[1]))) else b

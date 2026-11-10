@@ -13,6 +13,7 @@ static func ofrecer(pr: Principal) -> void:
 		Aviso.mostrar(pr, "titulo", "🏆", String(c["torneo"]), "%s %s%s" % [Idiomas.t("Campeón:"), (c["campeon"] as Club).nombre,
 			" · " + Idiomas.t("¡Es tu club!") if bool(c["mio"]) else ""])
 	await Callable(load("res://ui/principal/jornada_celebracion.gd"), "fin_de_liga").call(pr)   ## (10-11) ascenso o salvación: su festejo, antes de la despedida
+	await JornadaSeleccion.jugar_torneos(pr)   ## (10-11) si diriges una selección: su Mundial o su torneo continental, partido a partido
 	if pr.mundo.prensa != null and (pr.mundo.prensa.despedida_anio == pr.mundo.anio or pr.mundo.prensa.despedida_ofrecida_anio == pr.mundo.anio):
 		return   ## ya se jugó o ya se ofreció esta temporada (el evento sale una sola vez, también tras guardar y cargar)
 	var leyendas := PartidoDespedida.preparar(pr.mundo)
