@@ -2,8 +2,8 @@
 # esc1 = campo, esc2 = figura o motivo, esc3 = tercer paño de los tricolores. Lo vacío se queda como en la fila del club.
 Colo-Colo|circulo|liso|cacique||#ffffff|#14171c|
 U. de Chile|circulo|liso||U|#0038a8|#d50032|
-U. Católica|escudo|cruz|||#0b2f66|#ffffff|
-Palestino|clasico|tercios_v|||#d50032|#007a33|#ffffff
+U. Católica|escudo|liso||UC|#0038a8|#ffffff|
+Palestino|escudo|franjas||CDP|#00843d|#d50032|
 Boca Juniors|clasico|banda_h||CABJ/#0b3d91|#0b3d91|#ffd100|
 River Plate|escudo|banda||CARP/#111111|#ffffff|#d50032|
 Independiente|circulo|liso||CAI/#ffffff|#d50032|#0b2f66|
@@ -19,17 +19,17 @@ Vasco|escudo|banda||CRVG/#ffffff|#111111|#ffffff|
 Cruzeiro|circulo|liso|estrellas3||#0038a8|#ffffff|
 Internacional|circulo|liso||SCI/#ffffff|#d50032|#ffffff|
 Nacional|escudo|tercios_h||CN/#14171c|#ffffff|#0038a8|#d50032
-Millonarios|escudo|liso||MFC|#0038a8|#ffffff|
-Universitario|circulo|aro||U|#7a1f2b|#f5ecd0|
+Millonarios|circulo|liso||MFC|#0038a8|#ffffff|
+Universitario|circulo|liso||CUD|#f5ecd0|#d50032|
 Sporting Cristal|circulo|liso||SC|#75aadb|#ffffff|
-LDU Quito|circulo|liso||LDU|#ffffff|#0b2f66|
-Barcelona SC|escudo|liso||BSC|#ffd100|#14171c|
+LDU Quito|circulo|liso||LDU|#ffffff|#0038a8|
+Barcelona SC|circulo|liso||BSC|#ffd100|#111111|
 America|ovalo|liso|aguila||#ffd100|#00246b|
-Tigres UANL|circulo|liso|||#ffd100|#0038a8|
+Tigres UANL|circulo|liso|leon||#ffd100|#0038a8|
 Cruz Azul|circulo|liso|cruz||#0038a8|#ffffff|
 Pumas UNAM|escudo|liso||UNAM/#ffd100|#00246b|#ffd100|
 Inter Miami|escudo|liso||IM|#f7b5cd|#14171c|
-LAFC|escudo|franjas|||#111111|#c39e6d|
+LAFC|escudo|franjas|aguila||#111111|#c39e6d|
 LA Galaxy|circulo|liso|estrella||#ffffff|#00245d|#ffd100
 Real Madrid|circulo|aro|corona||#ffffff|#0b3d91|#febe10
 Barcelona|escudo|franjas||FCB/#f5c400|#a50044|#004d98|
@@ -43,8 +43,8 @@ Liverpool|escudo|liso|ave||#c8102e|#ffffff|
 Chelsea|circulo|aro|leon||#034694|#ffffff|
 Manchester Utd|circulo|aro|tridente||#d50032|#14171c|#ffd100
 City de Manch.|circulo|aro|aguila||#6caddf|#ffffff|#0a2240
-Tottenham|escudo|liso|ave||#ffffff|#132257|
-West Ham|escudo|liso|torre||#7a263a|#1bb1e7|
+Tottenham|escudo|liso|gallo||#ffffff|#132257|
+West Ham|escudo|liso|castillo||#7a263a|#1bb1e7|
 Everton FC|ovalo|liso|torre||#003399|#ffffff|
 Inter|circulo|aro||IM|#14171c|#0067b1|
 Napoli|circulo|liso||N/#ffffff|#199fda|#ffffff|
@@ -52,22 +52,22 @@ Roma|escudo|liso|lobo||#8e1f2f|#f0bc42|
 Lazio|circulo|liso|aguila||#75aadb|#ffffff|
 Fiorentina|escudo|liso|flor_lis||#5c2d91|#ffffff|
 Dortmund|circulo|liso||BVB/#14171c|#fde100|#14171c|
-Leipzig|circulo|liso|cuernos||#ffffff|#dd0741|
+Leipzig|circulo|liso|toro||#ffffff|#dd0741|
 Leverkusen|circulo|liso||B04/#ffffff|#d50032|#111111|
-Paris SG|circulo|liso|torre||#004170|#ffffff|
+Paris SG|circulo|liso|eiffel||#004170|#ffffff|
 Marsella|circulo|liso||OM/#2faee0|#ffffff|#2faee0|
 Lyon|escudo|liso|leon||#ffffff|#d50032|#0a2240
 Al-Hilal|circulo|liso|media_luna||#0038a8|#ffffff|
-Al-Nassr|circulo|liso|estrella||#ffd100|#0038a8|
-Al-ittihad|circulo|liso|leon||#14171c|#ffd100|
-Al-ahli SA|escudo|liso|aguila||#00843d|#ffffff|
+Al-Nassr|circulo|liso||NSR|#ffd100|#0038a8|
+Al-ittihad|circulo|liso||ITH|#ffd100|#111111|
+Al-ahli SA|circulo|liso||AHL|#00843d|#ffffff|
 Al Ahly|circulo|liso|aguila||#d50032|#ffffff|
-Zamalek|escudo|liso||ZSC|#ffffff|#d50032|
+Zamalek|circulo|liso||ZSC|#ffffff|#d50032|
 W. Casablanca|circulo|liso||WAC|#d50032|#ffffff|
 Raja C.|circulo|liso|aguila||#00843d|#ffffff|
-Kaizer Chiefs|escudo|liso|cacique||#ffd100|#14171c|
-Orlando Pirates|circulo|liso|ancla||#14171c|#ffffff|
-Mamelodi S.|circulo|liso|sol||#ffd100|#0b3d91|
+Kaizer Chiefs|escudo|liso|cacique||#ffd100|#111111|
+Orlando Pirates|circulo|liso||OP|#111111|#ffffff|
+Mamelodi S.|circulo|liso||MSFC|#ffd100|#0038a8|
 # --- Resto de los clubes (escudos v3, 28-10): figura según el apodo o el nombre (reglas por palabra clave) y, si no hay, las siglas ---
 Coquimbo Unido|||ancla||||
 Cobresal|||montana||||
@@ -79,7 +79,7 @@ O'Higgins||||OH|||
 Everton||||EV|||
 D. Iquique|||lobo||||
 U. La Calera|||montana||||
-La Serena|||||||
+La Serena|circulo|liso||CDLS|||
 D. Limache||||DL|||
 Cobreloa|||lobo||||
 S. Wanderers||||SW|||
@@ -110,13 +110,13 @@ Banfield|escudo|liso||CAB/#ffffff|#00843d|#ffffff|
 Unión SF|escudo|franjas||CAU/#ffffff|#d50032|#ffffff|
 Atl. Mineiro|escudo|franjas||CAM/#ffffff|#111111|#ffffff|
 Bahia|circulo|franjas|estrella||#0038a8|#ffffff|#d50032
-Athletico PR|escudo|liso|||#d50032|#111111|
-Peñarol||||PE|||
-Defensor||||DS|||
-Danubio||||DA|||
-Wanderers||||MW|||
-Liverpool M.||||LI|||
-River (U)||||RP|||
+Athletico PR|escudo|liso||CAP|||
+Peñarol|escudo|franjas||CAP|#ffd100|#111111|
+Defensor|circulo|liso||DS|#5c2d91|#ffffff|
+Danubio|escudo|banda||DFC|#ffffff|#111111|
+Wanderers|escudo|franjas||MWFC|#111111|#ffffff|
+Liverpool M.|escudo|liso|ave||#0038a8|#ffffff|
+River (U)|escudo|banda||CAR|#ffffff|#d50032|
 Cerro (U)|||montana||||
 Boston River||||BR|||
 Racing (U)||||RA|||
@@ -126,21 +126,21 @@ Plaza Colonia||||PC|||
 Montevideo C.||||MC|||
 Juventud||||JU|||
 Rentistas||||RE|||
-Olimpia||||OL|||
-Cerro Porteño|||rayo||||
-Libertad||||LI|||
-Guarani||||GU|||
-Nacional (P)||||NA|||
+Olimpia|circulo|liso||OLI|#ffffff|#111111|
+Cerro Porteño|escudo|franjas||CCP|#00246b|#d50032|
+Libertad|escudo|liso||CL|#111111|#ffffff|
+Guarani|circulo|liso||CG|#ffd100|#111111|
+Nacional (P)|escudo|liso||CN|#ffffff|#0038a8|#d50032
 Luqueño||||LU|||
 Ameliano||||AM|||
 Trinidense||||TR|||
 2 de Mayo|||ave||||
 Rubio Ñu||||RÑ|||
-Atl. Nacional|||ave||||
-America de Cali||||AC|||
-Junior|||pez||||
-Santa Fe||||SF|||
-Dep. Cali||||DC|||
+Atl. Nacional|circulo|liso||AN|#00843d|#ffffff|
+America de Cali|circulo|liso|tridente||#d50032|#ffffff|
+Junior|escudo|franjas||CJ|#d50032|#ffffff|
+Santa Fe|escudo|liso|leon||#d50032|#ffffff|
+Dep. Cali|escudo|franjas||DC|#00843d|#ffffff|
 Tolima|||cacique||||
 DIM Medellin|||montana||||
 Once Caldas||||OC|||
@@ -149,18 +149,18 @@ Pereira||||PE|||
 Alianza FC||||AF|||
 Fortaleza C.|||torre||||
 Boyacá Chicó||||BC|||
-Alianza Lima||||AL|||
-Melgar||||FM|||
+Alianza Lima|escudo|franjas||CAL|#00246b|#ffffff|
+Melgar|escudo|franjas||FBC|#d50032|#111111|
 Cienciano||||CI|||
 Sport Boys||||SB|||
-Cusco FC||||CU|||
+Cusco FC|escudo|franjas||CFC|#ffd100|#d50032|
 Atl. Grau||||AG|||
 Garcilaso||||CG|||
 AD Tarma||||AT|||
 UTC Cajamarca|||aguila||||
 Chankas||||CH|||
-Emelec||||EM|||
-I. del Valle||||IV|||
+Emelec|escudo|liso||CSE|#0038a8|#ffffff|
+I. del Valle|escudo|mitad||IDV|#111111|#0038a8|
 Aucas||||AU|||
 El Nacional||||EN|||
 Delfin|||pez||||
@@ -173,25 +173,25 @@ Guayaquil C.||||GC|||
 Cumbaya||||CU|||
 Imbabura|||leon||||
 9 de Octubre||||NO|||
-Valencia|redondeado|liso|ave||#ffffff|#111111|#ff7a00
+Valencia|redondeado|liso|murcielago||#ffffff|#111111|
 Ath. Bilbao|clasico|franjas|leon||#d50032|#ffffff|
 Real Sociedad|clasico|franjas|corona||#0067b1|#ffffff|
 Betis|escudo|franjas||RBB/#ffffff|#00954c|#ffffff|
 Celta Vigo|circulo|aro||RC/#ffffff|#75aadb|#ffffff|
 Getafe|escudo|liso|balon||#005999|#ffffff|
-Osasuna|clasico|cruz|||#d50032|#0a2240|
+Osasuna|clasico|cruz||CAO|#d50032|#0a2240|
 Girona|rombo|franjas||GFC/#ffffff|#d50032|#ffffff|
-Mallorca|corona|liso|||#d50032|#111111|#ffd100
+Mallorca|corona|liso||RCDM|#d50032|#111111|
 Espanyol|ovalo|franjas|corona||#0067b1|#ffffff|
 Rayo Vallecano|escudo|banda|rayo||#ffffff|#d50032|
-Newcastle|circulo|franjas|||#111111|#ffffff|
+Newcastle|circulo|franjas||NUFC|#111111|#ffffff|
 Aston Villa|escudo|liso|leon||#7a1f2b|#95bfe5|
 Brighton|circulo|aro|ave||#0057b8|#ffffff|
 Wolves|hex|liso|lobo||#fdb913|#111111|
 Cristal Palace|circulo|franjas|aguila||#1b458f|#d50032|
 Fulham|circulo|liso||FFC/#111111|#ffffff|#111111|
 Brentford|circulo|franjas|abeja||#d50032|#ffffff|
-Nottingham F.|ovalo|liso|||#d50032|#ffffff|
+Nottingham F.|ovalo|liso||NFFC|#d50032|#ffffff|
 Atalanta|escudo|liso||ABC/#ffffff|#1e71b8|#111111|
 Torino|escudo|liso|cuernos||#7a1f2b|#ffffff|
 Bologna|circulo|franjas||BFC/#ffffff|#d50032|#0a2240|
@@ -211,7 +211,7 @@ Mainz|circulo|liso|ancla||#d50032|#ffffff|
 Colonia|circulo|liso||1FC/#ffffff|#d50032|#ffffff|
 Bremen|rombo|liso||SVW/#ffffff|#00954c|#ffffff|
 Augsburgo|clasico|franjas||FCA/#ffffff|#d50032|#00954c|
-Monaco|escudo|mitad|||#d50032|#ffffff|
+Monaco|escudo|mitad||ASM|#d50032|#ffffff|
 Lille|escudo|liso|flor_lis||#d50032|#ffffff|
 Niza|escudo|franjas|aguila||#d50032|#111111|
 Rennes|escudo|franjas||SRFC/#ffffff|#d50032|#111111|
@@ -222,12 +222,12 @@ Toulouse|escudo|liso||TFC/#ffffff|#5c2d91|#ffffff|
 Brest|circulo|franjas|ancla||#d50032|#ffffff|
 Lorient|escudo|liso|pez||#ff7a00|#111111|
 Auxerre|circulo|franjas||AJA/#ffffff|#0067b1|#ffffff|
-Bolivar||||BO|||
-The Strongest|||leon||||
+Bolivar|escudo|liso||CB|#75aadb|#ffffff|
+The Strongest|escudo|franjas|leon||#ffd100|#111111|
 Always Ready||||AR|||
 Blooming||||BL|||
 Oriente P.||||OP|||
-Wilstermann||||JW|||
+Wilstermann|escudo|liso||JW|#d50032|#ffffff|
 San José||||SJ|||
 Guabira||||GU|||
 Tomayapo||||TO|||
@@ -250,17 +250,17 @@ Cerezo Osaka|||cereza||||
 Nagoya G.||||NG|||
 Avispa F.|||abeja||||
 Kyoto S.||||KS|||
-Ulsan HD|circulo||leon||||
-Jeonbuk M.||||JM|||
-Pohang S.|||montana||||
-FC Seoul||||FS|||
+Ulsan HD|circulo|liso||UHD|#0067b1|#ffd100|
+Jeonbuk M.|circulo|liso||JBM|#00843d|#ffffff|
+Pohang S.|circulo|franjas||PS|#d50032|#111111|
+FC Seoul|circulo|franjas||SEO|#d50032|#111111|
 Incheon Utd||||IU|||
 Daejeon H.||||DH|||
 Gangwon FC|||oso||||
 Gwangju FC||||GJ|||
 Jeju United||||JU|||
 Gimcheon||||GS|||
-Al-Shabab|||leon||||
+Al-Shabab|circulo|liso||SHB|#ffffff|#d50032|
 Al-Ettifaq||||ETT|||
 Al-Taawoun||||TAA|||
 Al-Faiha||||FAY|||
@@ -310,11 +310,11 @@ Ts. Galaxie||||TS|||
 Maritzburg||||MU|||
 Casric Stars|||estrella||||
 Magesi FC||||MA|||
-Melbourne City||||MCY|||
-Sidney FC||||SFC|||
-Melbourne V.||||MVC|||
+Melbourne City|circulo|liso||MCFC|#75aadb|#ffffff|
+Sidney FC|circulo|liso||SFC|#75aadb|#ffffff|
+Melbourne V.|escudo|liso||MV|#00246b|#ffffff|
 C. Coast M.|||ancla||||
-W. Sidney W.||||WSW|||
+W. Sidney W.|escudo|franjas||WSW|#d50032|#111111|
 Adelaide Utd||||AUD|||
 Brisbane R.|||leon||||
 Wellington P.|||ave||||
@@ -323,18 +323,18 @@ Newcastle J.||||NJ|||
 Perth Glory|||estrella||||
 Auckland FC||||AUC|||
 Monterrey|escudo|franjas||CFM/#ffffff|#0038a8|#ffffff|
-Guadalajara|circulo|liso|||#d50032|#ffffff|#0038a8
+Guadalajara|circulo|liso||CD|#d50032|#ffffff|#0038a8
 Pachuca|escudo|franjas||CF/#0038a8|#ffffff|#0038a8|
-Toluca|escudo|liso|||#d50032|#ffffff|
+Toluca|escudo|liso||TOL|#d50032|#ffffff|
 Santos Laguna|escudo|franjas||CSL/#ffffff|#00843d|#ffffff|
-Leon|circulo|liso|||#00843d|#ffffff|
-Atlas|circulo|franjas|||#d50032|#111111|
+Leon|circulo|liso|leon||#00843d|#ffffff|
+Atlas|circulo|franjas||ATL|#d50032|#111111|
 Necaxa|escudo|liso|rayo||#d50032|#ffffff|
-Puebla|escudo|franjas|||#ffffff|#0057b8|
-Tijuana|escudo|liso|||#d50032|#111111|
-Queretaro|escudo|liso|||#ffffff|#00246b|
-Mazatlán|circulo|liso|||#5c2d91|#ffffff|
-Seattle S.|circulo|liso|||#5d9741|#005695|
+Puebla|escudo|franjas||CFP|#ffffff|#0057b8|
+Tijuana|escudo|liso||XOL|#d50032|#111111|
+Queretaro|escudo|liso||QRO|#ffffff|#00246b|
+Mazatlán|circulo|liso||MAZ|#5c2d91|#ffffff|
+Seattle S.|circulo|liso||SSFC|#5d9741|#005695|
 Columbus Crew|hex|||CLB|||
 Philadelphia U.||||PHI|||
 Atlanta Utd||||ATL|||
@@ -347,7 +347,114 @@ FC Cincinnati||||CIN|||
 Nashville SC|circulo||lobo||||
 St. Louis City|cruzado|||STL|||
 Charlotte FC|||corona||||
-Ajax|circulo|liso|||#d2122e|#ffffff|
+Ajax|circulo|liso||AFC|#d2122e|#ffffff|
 PSV|circulo|liso||PSV/#ffffff|#ed1c24|#ffffff|
 Go Ahead Eagles|clasico|liso|aguila||#e30613|#ffd100|
 Feyenoord|circulo|liso||FEY/#ffffff|#e30613|#111111|
+Bournemouth|circulo|liso||AFC|||
+Burnley|escudo|liso||BFC|||
+Leeds|circulo|liso||LUFC|||
+Sunderland|circulo|franjas|torre||||
+Alavés|escudo|franjas||DA|||
+Elche|circulo|liso||ECF|||
+Levante|escudo|franjas||UDL|||
+Real Oviedo|escudo|liso|cruz||||
+Como|circulo|liso||COM|||
+Parma|escudo|cruz||PC|#ffd100|#0057b8|
+Cagliari|escudo|franjas||CAG|||
+Hellas Verona|escudo|banda||HV|||
+Hamburgo|circulo|liso||HSV|||
+St. Pauli|escudo|liso||FCSP|||
+Paris FC|circulo|liso||PFC|||
+Angers|escudo|franjas||SCO|||
+Bragantino|circulo|liso|toro||||
+Mirassol|circulo|liso||MFC|||
+Vitória|escudo|franjas|leon||||
+Coritiba|escudo|liso||CFC|||
+Argentinos Jrs|circulo|liso||AAAJ|||
+Belgrano|circulo|liso||CAB|||
+Gimnasia LP|circulo|liso|lobo||||
+Atl. Tucuman|escudo|franjas||CAT|||
+Ind. Rivadavia|escudo|liso||CSIR|||
+Defensa y J.|circulo|liso|ave||||
+Platense|escudo|franjas|pez||||
+Central Córdoba|escudo|franjas||CCSE|||
+Instituto|escudo|franjas||IAC|||
+Tigre|escudo|mitad||CAT|||
+Sarmiento|circulo|liso||CAS|||
+Aldosivi|circulo|liso|pez||||
+Barracas Central|escudo|franjas||BC|||
+Riestra|escudo|franjas||CR|||
+Cúcuta Dep.|escudo|franjas||CDC|||
+Dep. Pasto|circulo|liso|montana||||
+Águilas Doradas|circulo|liso|aguila||||
+Inter Bogotá|escudo|liso||IB|||
+Sport Huancayo|escudo|liso||SH|||
+Comerciantes Unidos|escudo|liso||CU|||
+Atl. San Luis|escudo|franjas||ASL|||
+Juárez|circulo|liso||FCJ|||
+Vancouver W.|escudo|liso||VWFC|||
+Minnesota Utd|escudo|liso||MNU|||
+NY Red Bulls|circulo|liso|toro||||
+San Diego FC|escudo|liso||SDFC|||
+Real Salt Lake|escudo|liso||RSL|||
+Houston Dynamo|circulo|liso||HD|||
+FC Dallas|circulo|aro||FCD|||
+Chicago Fire|escudo|liso||CF|||
+D.C. United|circulo|liso|aguila||||
+Sporting KC|circulo|liso||SKC|||
+Toronto FC|escudo|liso||TFC|||
+Colorado Rapids|circulo|liso|montana||||
+CF Montréal|escudo|liso||CFM|||
+San Jose|escudo|liso||SJE|||
+Machida Z.|circulo|liso||FCM|||
+Kashiwa R.|circulo|liso|sol||||
+Shimizu S.|circulo|liso||SSP|||
+T. Verdy|circulo|liso||TV|||
+Al-Qadsiah|circulo|liso||QAD|||
+Neom SC|escudo|liso||NEOM|||
+Al Ittihad Alex.|escudo|franjas||ITH|||
+Petrojet|circulo|liso||PET|||
+Haras El Hodoud|escudo|liso||HRS|||
+Wadi Degla|circulo|liso||WD|||
+Ghazl El Mahalla|escudo|franjas||GM|||
+Cremonese|circulo|franjas||US|||
+Pisa|escudo|franjas||PIS|||
+Heidenheim|escudo|liso||FCH|||
+Le Havre|circulo|liso|ancla||||
+Metz|escudo|liso||FCM|||
+Chapecoense|circulo|liso||ACF|||
+Remo|escudo|liso|leon||||
+Gimnasia Mza|circulo|franjas||GEM|||
+Estudiantes RC|escudo|franjas||ERC|||
+Jaguares|circulo|liso|leon||||
+Llaneros|escudo|liso|caballo||||
+Alianza Atl. Sullana|circulo|liso||AAS|||
+FC Cajamarca|escudo|franjas||FCC|||
+Dep. Moquegua|escudo|liso||DM|||
+Juan Pablo II|circulo|liso|cruz||||
+Fagiano Okayama|circulo|liso|ave||||
+JEF United|escudo|liso||JEF|||
+Mito Hollyhock|escudo|liso||MH|||
+V-Varen Nagasaki|circulo|liso||VVN|||
+Al-Najma|circulo|liso|estrella||||
+Al-Kholood|escudo|liso||KHL|||
+Kahraba Ismailia|circulo|liso|rayo||||
+Recoleta (P)|circulo|liso||REC|||
+San Lorenzo (P)|escudo|mitad||SL|||
+FC Anyang|escudo|liso||FCA|||
+Bucheon FC|circulo|liso||BFC|||
+AZ Alkmaar|circulo|liso||AZ|#d50032|#ffffff|
+Twente|circulo|liso||FCT|#e3001b|#ffffff|
+Utrecht|escudo|liso||FCU|#d50032|#ffffff|
+Heerenveen|circulo|franjas||SCH|#0057b8|#ffffff|
+Groningen|escudo|liso||FCG|#00843d|#ffffff|
+NEC|circulo|franjas||NEC|#d50032|#00843d|
+PEC Zwolle|escudo|franjas||PEC|#0057b8|#ffffff|
+NAC Breda|escudo|liso||NAC|#ffd100|#111111|
+Fortuna Sittard|circulo|liso||FS|#ffd100|#00843d|
+Sparta Rotterdam|escudo|franjas||SR|#d50032|#ffffff|
+Heracles|circulo|franjas||HAC|#111111|#ffffff|
+Volendam|circulo|liso||FCV|#f58220|#ffffff|
+Excelsior|escudo|franjas||SBV|#d50032|#111111|
+Telstar|circulo|liso||SC|#ffffff|#0057b8|

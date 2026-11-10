@@ -137,6 +137,8 @@ static func pintar_legado(p: Principal, lista: Control) -> void:
 		t.text = "%s %s" % [Idiomas.t("🌍 SELECCIONADOR DE"), cargo.seleccion.to_upper()]
 		p._dato("Desde", str(cargo.desde), Principal.COL_SUAVE, lista)
 		p._dato("Títulos", str(cargo.titulos()), Principal.COL_ORO, lista)
+		for f: Dictionary in cargo.fechas.slice(0, 3):   ## (10-11) las últimas fechas FIFA
+			p._dato(Idiomas.t("Fecha FIFA"), String(f["linea"]), Principal.COL_SUAVE, lista)
 		for h: Dictionary in cargo.historial.slice(maxi(0, cargo.historial.size() - 4)):
 			p._dato("%s %d" % [String(h["torneo"]), int(h["anio"])], Idiomas.t(String(Selecciones.PUESTOS_TORNEO[int(h["puesto"])])), Principal.COL_SUAVE, lista)
 		opciones = [["📋 %s (%d/%d)" % [Idiomas.t("Convocatoria"), cargo.convocados.size(), SeleccionEquipo.MAX_CONVOCADOS],

@@ -177,6 +177,11 @@ static func poner(d: Dictionary, corte: String, color: Color, barba: bool, drive
 			if rf is Transform3D:
 				t = (rf as Transform3D).affine_inverse()
 		var k: float = p[1]
+		## (10-11, el pelo «roto» de los periodistas sentados) El pelo es rígido sobre el hueso de la cabeza y la cabeza es piel que se
+		## deforma con el cuello: en poses como «sentado» la nuca y la coronilla asomaban por el pelo (manchas de piel). Un 3 % más de
+		## volumen en el pelo del cuero cabelludo (no cejas ni barba) la cubre sin que se note de cerca.
+		if not String(p[0]).begins_with("Eyebrows") and String(p[0]) != "Hair_Beard":
+			k *= 1.03
 		if k != 1.0:
 			## Un poco más de volumen alrededor del centro de la cabeza. La
 			## escala va en el espacio del MODELO (donde vive la malla), antes

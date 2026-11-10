@@ -79,3 +79,19 @@ Causa: el campo de la plantilla pedía la cara a 68 px y la pizarra a 42, y el e
 - Listas de clubes por división en la UEFA (Wikipedia): https://en.wikipedia.org/wiki/List_of_top-division_football_clubs_in_UEFA_countries
 
 Notas: `dinastia-godot/AUDITORIA_CLUBES.csv` está desfasado (384 clubes, sin NED, POR, BEL, CRO ni DEN): no usarlo; su generador es `pruebas/auditoria_clubes.gd`. Datos reales solo en `pack_real.json` (regla del proyecto): lo nuevo, con nombres modificados.
+
+## 9. Avance del 10-11 (noche), tras la auditoría
+
+| Magnitud | Antes | Ahora |
+|---|---|---|
+| Clubes con datos propios | 402 (todas las ligas a 16) | **457** con su cantidad REAL por liga (+64 genéricos de POR, BEL, CRO y DEN en `paises_extra.json`): ENG, ESP, ITA, BRA, COL y JPN 20; GER, FRA, MEX, KSA y NED 18; EGY 21; PER 18; ARG y USA 30 (a una vuelta); PAR, KOR y AUS 12; URU, ECU, BOL, MAR, RSA y CHI 16 (+16 en la B) |
+| Clubes reales de primera | descendidos dentro y ascendidos fuera | 93 añadidos y 38 descendidos fuera (`herramientas/ligas_completas.py`), con historia, estadio, aspecto y estilo; 22 clásicos nuevos |
+| Formación y estilo | los 466 iguales (4-3-3, todo «medio») | cada club el suyo de la vida real (`EstiloClub`, 11 formaciones y 10 estilos) |
+| Escudos | 402 genéricos «parecidos» por colores | 134 reescritos a mano parecidos al real + 8 figuras nuevas (sesión 2); el resto, genéricos |
+| Uniformes | 147 con diseño propio | uniforme base retocado en las ligas grandes y 2.º uniforme en 330 clubes (sesión 2) |
+| Caras | piel/pelo/barba al azar en 2.971 jugadores fijos sin medir | rasgos por país medidos en las caras reales (`CaraPrior`): cara coherente 5 % → 11 % (sin fotos en lo público) |
+| Copas | solo la de tu país | las de todos los países, con supercopas y palmarés del mundo (pantalla en Competiciones) |
+| Selecciones | 37, fuerza sin partidos | 63, equipos de verdad, Mundial de 48, continentales jugados, cargo de seleccionador con convocatoria, fechas FIFA y torneos jugables |
+| Jugadores reales con nombre | 4.311 | 3.911 (los de los 38 descendidos salen con su club) |
+
+Pendiente de esta auditoría: formatos reales de los continentales, supercopas continentales, Mundial de Clubes de 32 jugable e Intercontinental (sesión 6); estadios icónicos (sesión 3); escudos de los 268 restantes y de los 93 nuevos (sesión 2); países sin liga (107), segundas divisiones y más jugadores (siguiente bloque, con `importar_pais.py`).

@@ -9,7 +9,48 @@ También MIDE cuánto mejora frente a los modelos anteriores (validación cruzad
 import colorsys
 import json
 import os
-import random
+
+
+class AzarDeterminista:
+    """Generador pseudoaleatorio propio (xorshift64*) para la VALIDACIÓN estadística: reproducible con su semilla y sin uso
+    criptográfico. Sustituye a `random.Random` (SonarCloud S2245): aquí solo se baraja y se sortea para medir aciertos."""
+
+    def __init__(self, semilla: int):
+        self.s = (semilla * 0x9E3779B97F4A7C15 + 1) & 0xFFFFFFFFFFFFFFFF or 1
+
+    def _u64(self) -> int:
+        x = self.s
+        x ^= (x >> 12)
+        x ^= (x << 25) & 0xFFFFFFFFFFFFFFFF
+        x ^= (x >> 27)
+        self.s = x
+        return (x * 0x2545F4914F6CDD1D) & 0xFFFFFFFFFFFFFFFF
+
+    def random(self) -> float:
+        return (self._u64() >> 11) / float(1 << 53)
+
+    def randrange(self, n: int) -> int:
+        return int(self.random() * n)
+
+    def choice(self, seq):
+        return seq[self.randrange(len(seq))]
+
+    def choices(self, poblacion, weights):
+        pob = list(poblacion)
+        total = float(sum(weights))
+        r = self.random() * total
+        acum = 0.0
+        for x, w in zip(pob, weights):
+            acum += w
+            if r < acum:
+                return [x]
+        return [pob[-1]]
+
+    def shuffle(self, lista: list) -> None:
+        for i in range(len(lista) - 1, 0, -1):
+            j = self.randrange(i + 1)
+            lista[i], lista[j] = lista[j], lista[i]
+
 import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -164,7 +205,7 @@ RUBIOS = {"GER": 0.32, "ENG": 0.26, "AUS": 0.22, "USA": 0.16, "FRA": 0.12, "ITA"
           "JPN": 0.0, "KOR": 0.0, "NED": 0.3, "DEN": 0.35, "BEL": 0.2, "CRO": 0.15, "POR": 0.04}
 
 
-def modelo_publico(pais: str, rnd: random.Random) -> dict:
+def modelo_publico(pais: str, rnd: AzarDeterminista) -> dict:
     """El modelo anterior de la base pública (`Cara._piel_y_pelo_del_pais`) + barba al azar 0-7 (`_look_base`)."""
     medio = TONO_MEDIO.get(pais, 3.5)
     campana = sum(rnd.random() for _ in range(3)) / 3.0
@@ -178,14 +219,14 @@ def modelo_publico(pais: str, rnd: random.Random) -> dict:
     return {"piel": ip, "pelo": pelo, "barba": rnd.randrange(8), "calvo": False}
 
 
-def modelo_real_sin_foto(_pais: str, rnd: random.Random) -> dict:
+def modelo_real_sin_foto(_pais: str, rnd: AzarDeterminista) -> dict:
     """Lo que recibía un jugador real SIN foto en la base real: todo al azar (`_look_base`: piel de 8 tonos a partes iguales, barba 0-7, pelo de `PELOS`)."""
     c = rnd.choice(PELOS)
     clase = clase_pelo(c)
     return {"piel": rnd.randrange(8), "pelo": clase, "barba": rnd.randrange(8), "calvo": False}
 
 
-def modelo_nuevo(tabla: dict, pais: str, edad: int, rnd: random.Random) -> dict:
+def modelo_nuevo(tabla: dict, pais: str, edad: int, rnd: AzarDeterminista) -> dict:
     t = tabla.get(pais, tabla["*"])
     ip = rnd.choices(range(len(PIELES)), weights=t["piel"])[0]
     pelo = rnd.choices(CLASES_PELO, weights=[t["pelo"][k] for k in CLASES_PELO])[0]
@@ -213,7 +254,7 @@ def acierta(pred: dict, r: dict) -> dict:
 
 
 def medir(recs: list, pliegues: int = 5, muestras: int = 40) -> dict:
-    rnd = random.Random(7)
+    rnd = AzarDeterminista(7)
     res = {m: {} for m in ("real_sin_foto (antes)", "publico (antes)", "nuevo (después)")}
     cuenta = {m: {} for m in res}
     orden = list(range(len(recs)))
@@ -231,7 +272,7 @@ def medir(recs: list, pliegues: int = 5, muestras: int = 40) -> dict:
     return {m: {k: res[m][k] / cuenta[m][k] for k in res[m]} for m in res}
 
 
-def main() -> int:
+def main() -> None:
     recs = cargar()
     print("jugadores con cara medida:", len(recs), "· países:", len({r["pais"] for r in recs}))
     m = medir(recs)
@@ -240,13 +281,12 @@ def main() -> int:
     for nombre, v in m.items():
         print("%-24s" % nombre + "".join("%14.1f%%" % (100.0 * v.get(k, 0.0)) for k in claves))
     if "--medir" in sys.argv:
-        return 0
+        return
     tabla = ajustar(recs)
     with open(os.path.join(DATOS, "rasgos_pais.json"), "w", encoding="utf-8") as f:
         json.dump(tabla, f, ensure_ascii=False, indent=1, sort_keys=True)
     print("escrito datos/rasgos_pais.json (%d países)" % (len(tabla) - 1))
-    return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

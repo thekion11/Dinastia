@@ -146,6 +146,98 @@ func _probar() -> void:
 	var q2 := Time.get_ticks_usec()
 	_comprobar(ga.size() > 200 and var_to_bytes(ga) == var_to_bytes(gb), "círculos de un MultiMesh iguales byte a byte (%d círculos de %d instancias)" % [ga.size(), n_i])
 	print("obstáculos de MultiMesh: GDScript %d ms, C++ %d ms" % [(q1 - q0) / 1000, (q2 - q1) / 1000])
+	## (10-11, paso a C++) El sorteo ponderado del goleador y del asistente: C++ y GDScript eligen a los MISMOS con la misma semilla de `Azar`, sin roles y con roles asignados.
+	var jc := 0
+	var jd := 0
+	var tg0 := 0
+	var tc0 := 0
+	var roles_por_grupo := {}
+	for rk: String in RolTactico.CATALOGO:
+		roles_por_grupo[String(RolTactico.CATALOGO[rk]["grupo"])] = rk
+	for conroles in [false, true]:
+		for c: Club in mundo.clubes.values():
+			var rv: Club = mundo.clubes.values()[(jc * 7 + 3) % mundo.clubes.size()]
+			var p := Partido.new(c, rv)
+			p.preparar()
+			if conroles:
+				for j: Jugador in p.once_local:
+					p.local.tactica.roles[j.id] = roles_por_grupo.get(Datos.grupo(j.pos_e), "")
+			for q in 3:
+				for lado in 2:
+					var once: Array[Jugador] = p.once_local if lado == 0 else p.once_visita
+					if once.is_empty():
+						continue
+					Azar.sembrar(1000 + jc)
+					var w0 := Time.get_ticks_usec()
+					var a1 := PartidoPonderado.goleador(p, once)
+					var w1 := Time.get_ticks_usec()
+					var a2 := PartidoPonderado.asistente(p, once, a1, 10 + q)
+					var s1 := Azar.f()
+					var w2 := Time.get_ticks_usec()
+					Azar.sembrar(1000 + jc)
+					var w2b := Time.get_ticks_usec()
+					var b1 := PartidoPonderado.goleador_gd(p, once)
+					var w3 := Time.get_ticks_usec()
+					var b2 := PartidoPonderado.asistente_gd(p, once, b1, 10 + q)
+					var s2 := Azar.f()
+					var w4 := Time.get_ticks_usec()
+					tc0 += (w1 - w0)
+					tg0 += (w3 - w2b)
+					jc += 1
+					if a1 != b1 or a2 != b2 or s1 != s2:
+						jd += 1
+	_comprobar(jc > 500 and jd == 0, "goleador/asistente: C++ = GDScript en %d sorteos, con y sin roles (distintos: %d)" % [jc, jd])
+	print("goleador: GDScript %.1f µs, C++ %.1f µs por sorteo" % [tg0 / float(jc), tc0 / float(jc)])
+	## (10-11, paso a C++) Los choques entre cuerpos del motor jugable: posiciones y velocidades iguales byte a byte tras muchas rondas, con jugadores amontonados (incluidos dos en el mismo punto).
+	var motor := MotorJugable.new()
+	var rr := RandomNumberGenerator.new()
+	rr.seed = 11
+	var raiz_c := Node3D.new()
+	add_child(raiz_c)
+	var grupos_c: Array = [[], []]
+	for g in 2:
+		for q in 22:
+			var nd := Node3D.new()
+			raiz_c.add_child(nd)
+			grupos_c[g].append({"node": nd, "vel": Vector3.ZERO, "fuerza": 0.4 + 0.5 * float(q % 5) / 4.0, "aguante": 0.5 + float(q % 3) / 4.0})
+	var cuerpos_dis := 0
+	var tc1 := 0
+	var tg1 := 0
+	for ronda in 40:
+		for q in 22:
+			var px := rr.randf_range(-3.0, 3.0)
+			var pz := rr.randf_range(-3.0, 3.0)
+			var vel := Vector3(rr.randf_range(-6, 6), 0, rr.randf_range(-6, 6))
+			if q == 5 or q == 6:   ## dos en el mismo punto: la normal sale del giro fijo
+				px = 1.0
+				pz = 1.0
+			for g in 2:
+				(grupos_c[g][q]["node"] as Node3D).position = Vector3(px, 0, pz)
+				grupos_c[g][q]["vel"] = vel
+		motor.jugadores = grupos_c[0]
+		var k0 := Time.get_ticks_usec()
+		motor._cuerpos_gd()
+		var k1 := Time.get_ticks_usec()
+		nat.cuerpos_motor(grupos_c[1], Balance.RADIO_CUERPO * 2.0)
+		var k2 := Time.get_ticks_usec()
+		tg1 += k1 - k0
+		tc1 += k2 - k1
+		for q in 22:
+			if (grupos_c[0][q]["node"] as Node3D).position != (grupos_c[1][q]["node"] as Node3D).position or var_to_bytes(grupos_c[0][q]["vel"]) != var_to_bytes(grupos_c[1][q]["vel"]):
+				cuerpos_dis += 1
+	_comprobar(cuerpos_dis == 0, "choques de cuerpos del motor: C++ = GDScript (40 rondas de 44 jugadores; distintos: %d)" % cuerpos_dis)
+	print("cuerpos: GDScript %.1f µs, C++ %.1f µs por ronda" % [tg1 / 40.0, tc1 / 40.0])
+	motor.free()
+	raiz_c.queue_free()
+	## (10-11, paso a C++) El partido simulado de la IA entero (90 minutos) en C++: mismo marcador, estadísticas, jugadores y azar que `Partido.simular()`, en cuatro mundos.
+	var np := NativoPartido.probar(6)
+	for f: String in np["fallos"]:
+		_comprobar(false, "partido simulado en C++: " + f)
+	_comprobar(np["fallos"].is_empty() and int(np["rapidos"]) > 300, "partido simulado en C++ = GDScript en %d cruces (por la ruta nativa: %d)" % [np["cruces"], np["rapidos"]])
+	print("partido simulado completo (%d cruces, %d por la ruta nativa): GDScript %.0f µs, C++ %.0f µs por cruce" % [np["cruces"], np["rapidos"], np["t_gd_us"] / float(np["cruces"]), np["t_cpp_us"] / float(np["cruces"])])
+	var med := NativoPartido.probar_medias(400)
+	_comprobar(int(med["comparados"]) > 500 and int(med["distintos"]) == 0, "medias por línea de la fuerza: C++ = GDScript en %d onces (distintos: %d)" % [med["comparados"], med["distintos"]])
+	print("medias por línea: GDScript %.0f µs, C++ %.0f µs por once" % [med["t_gd_us"] / float(med["comparados"]), med["t_cpp_us"] / float(med["comparados"])])
 	_fin()
 
 func _comprobar(ok: bool, que: String) -> void:

@@ -434,11 +434,5 @@ func fuerza(once: Array[Jugador], c: Club) -> Dictionary:
 func _penal_en_area(c: Club, once: Array[Jugador], es_local: bool) -> bool:
 	if not Azar.suerte(Balance.P_PENAL * float(Balance.PENAL_PERFIL.get(String(arbitro.get("perfil", "")), 1.0))):
 		return false
-	var nombre := String(arbitro.get("nombre", Idiomas.t("El árbitro")))
-	decision_arbitral.emit(Idiomas.t("⚽ Penal para %s: %s no dudó en cobrarlo.") % [c.nombre, nombre], minuto)
-	_contar_penal(es_local)
-	if Azar.suerte(Balance.CONVERSION_PENAL):
-		_anotar(c, once, es_local)
-	else:
-		remate.emit(c, _elegir_goleador(once), "atajada", minuto)
+	PartidoRapido.hit_penal(self, c, once, es_local)
 	return true

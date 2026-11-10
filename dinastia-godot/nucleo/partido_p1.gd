@@ -242,6 +242,7 @@ static var ultimo_mio: Dictionary = {}
 ## resumen) y no tira del `Azar`, así no mueve el resto de la partida. Una sola
 ## vez por partido.
 var _notas_cerradas := false
+var sin_rastro := false   ## (10-11) cruce de la IA que se tira al acabar (`PartidoRapido`): no se calcula el rastro
 var suspendido := false   ## con menos de 7 (`_revisar_siete`): el marcador es de MESA, no de goles jugados
 var _amarillas_hoy := {}   ## amarillas de ESTE partido (id -> n): la 2.ª es roja (A4-PAR-L01) y la roja directa no suma (tarjeta_externa)
 var _expulsados_hoy := {}   ## ids con roja en ESTE partido: una tarjeta repetida o posterior a quien ya salió no cuenta (caza de fallos 4-11)
@@ -369,11 +370,12 @@ func _media_linea(once: Array[Jugador], grupo: String) -> float:
 ## Fuerza de ataque y defensa de un once. Los pesos por linea (0.55/0.38/0.07 en
 ## ataque, 0.5/0.3/0.2 en defensa) son los del HTML.
 func fuerza(once: Array[Jugador], c: Club) -> Dictionary:
-	var por := _media_linea(once, "POR")
+	var medias := PartidoMedias.de(self as Object as Partido, once)   ## (10-11) las cuatro medias de una vez (C++ si la extensión está; ver `PartidoMedias`)
+	var por := medias[0]
 	if por <= 0.0: por = 35.0   ## sin portero en el once (lesionado sin cambios): un jugador de campo bajo los palos
-	var defe := _media_linea(once, "DEF")
-	var med := _media_linea(once, "MED")
-	var del := _media_linea(once, "DEL")
+	var defe := medias[1]
+	var med := medias[2]
+	var del := medias[3]
 	var ata := del * 0.55 + med * 0.38 + defe * 0.07
 	var dfa := defe * 0.5 + por * 0.3 + med * 0.2
 	ata *= c.tactica.multiplicador_ataque() * c.bonus_ataque

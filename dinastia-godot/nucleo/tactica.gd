@@ -28,6 +28,8 @@ var verticalidad: int = Nivel.MEDIO
 var tras_perdida: int = Nivel.MEDIO
 ## El rol de cada jugador: id → clave de `RolTactico.CATALOGO`. Sin entrada, juega como siempre.
 var roles: Dictionary = {}
+## Formaciones propias del club (nombre «★ …» → casillas como en `FORMS`; ver `FormacionPropia`).
+var propias: Dictionary = {}
 
 const _MENT_ATA := [0.88, 1.0, 1.12]
 const _MENT_DEF := [1.10, 1.0, 0.90]
@@ -61,6 +63,7 @@ func multiplicador_defensa() -> float:
 func duplicar() -> Tactica:
 	var t := Tactica.new()
 	t.formacion = formacion
+	t.propias = propias.duplicate(true)
 	t.mentalidad = mentalidad
 	t.presion = presion
 	t.ritmo = ritmo

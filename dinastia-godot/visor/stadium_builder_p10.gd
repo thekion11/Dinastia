@@ -47,6 +47,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	_tm("banderas")
 	await _ceder_paso()
 	GuinosEstadio.montar(root, est, dx, dz, fondo_tribuna(niveles), alto)
+	PiezasRealesEstadio.montar(root, est, dx, dz, fondo_tribuna(niveles), alto)   ## (10-11) arco, torres de rampas, costillas (solo si el perfil las trae)
 	_tm("guinos")
 	await _ceder_paso()
 	_focos(root, str(est.get("focos", "torres")), dx, dz, alto, color_luz(est), str(est.get("focosCol", "")))

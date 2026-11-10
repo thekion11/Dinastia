@@ -348,7 +348,7 @@ func iniciar(est: Dictionary, niveles: int, club: Club) -> void:
 	rumbo = float(_datos["rumbo_inicio"])
 	camara = Camera3D.new()
 	camara.fov = 68.0
-	camara.near = 0.05
+	camara.near = 0.12   ## (10-11, parpadeo del suelo) con 0,05 la precisión de profundidad de 16 bits (móviles) no separa superficies a 1-2 cm a partir de ~6 m
 	add_child(camara)
 	camara.make_current()
 	_montar_hud()

@@ -51,6 +51,7 @@ static func svg_de(j: Jugador, k1: String = "#2b6b45", k2: String = "#ffffff") -
 		extras += '<path d="M%.1f 27l2.4 5.4" stroke="#a8756a" stroke-width="1" opacity=".7"/>' % (32.0 + rx * 0.5)
 	if bool(lk["lunar"]):
 		extras += '<circle cx="%.1f" cy="41.6" r=".85" fill="#5a3a2a" opacity=".72"/>' % (32.0 - rx * 0.62)
+	extras += CaraEdad.arrugas_svg(float(lk.get("arrugas", 0.0)))
 
 	var alto_ojo := 1.5 if int(lk["ojos"]) == 3 else 2.3
 	return """<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
@@ -316,6 +317,7 @@ static func svg_rasgos(lk: Dictionary) -> String:
 		s += '<path d="M%.1f 27l2.4 5.4" stroke="#a8756a" stroke-width=".9" opacity=".7"/>' % (32.0 + rx * 0.5)
 	if bool(lk.get("lunar", false)):
 		s += '<circle cx="%.1f" cy="41.6" r=".7" fill="#5a3a2a" opacity=".75"/>' % (32.0 - rx * 0.62)
+	s += CaraEdad.arrugas_svg(float(lk.get("arrugas", 0.0)))
 	return s + "</svg>"
 
 ## Los rasgos rasterizados a 256x256, cacheados por aspecto.

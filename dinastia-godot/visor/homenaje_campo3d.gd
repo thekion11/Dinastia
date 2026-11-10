@@ -36,7 +36,7 @@ func _escena(filas: Array, c1: Color, c2: Color) -> void:
 	env.ambient_light_color = Color(0.55, 0.6, 0.7)
 	env.ambient_light_energy = 0.55
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	env.glow_enabled = true
+	env.glow_enabled = Calidad.elegida > Calidad.MINIMO   ## (10-11) el brillo y la sombra de los focos solo con calidad por encima de la mínima
 	env.glow_intensity = 0.6
 	var we := WorldEnvironment.new()
 	we.environment = env
@@ -135,7 +135,7 @@ func _focos(raiz: Node3D) -> void:
 		foco.spot_angle = 22.0
 		foco.light_energy = 6.0
 		foco.light_color = Color(1, 0.96, 0.88)
-		foco.shadow_enabled = true
+		foco.shadow_enabled = Calidad.elegida > Calidad.MINIMO
 		raiz.add_child(foco)
 		foco.transform = Transform3D(Basis(), torre).looking_at(Vector3(0, 0.8, 0), Vector3.UP)
 

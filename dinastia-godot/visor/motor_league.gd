@@ -34,6 +34,8 @@ const CADENCIA := 0.1
 static var fase3 := OS.get_environment("LS_FASE3") != "0"   ## LS_FASE3=0: sin la IA sin balón de League (solo la fase 2)
 const DIFICULTAD := 0.8            ## L `_default_Difficulty` (la de la CPU se traducirá en la fase 6)
 const PRED_MS := [200, 250, 350, 500, 650, 700]
+const PRED_TOTAL := 70             ## balón previsto cada 10 ms durante 700 ms (L Ball::Predict)
+static var designado_disputa := OS.get_environment("LS_DESIG") == "1"   ## el desvío de la fase 3 (sustituido por la 4a)
 
 var _ls_marca: Array = [{}, {}]       ## por equipo: id propio → id rival marcado al hombre
 var _ls_t_marca: Array = [0.0, 0.2]
@@ -48,6 +50,8 @@ var _ls_t_carrera: Array = [0.0, 0.0]
 var _ls_adelantado: Array = [{}, {}]  ## L forwardSupportPlayer
 var _ls_t_adelantado: Array = [0.0, 0.0]
 var _ls_linea_rival: Array = [0.0, 0.0]   ## línea del fuera de juego del rival (240 ms) que no hay que pasar
+var _ls_pred3: PackedVector3Array = PackedVector3Array()   ## balón previsto cada 10 ms (marco League, z arriba)
+var cuenta_toques := {"interferir": 0, "barrida": 0}
 var _ls_pred: Dictionary = {}         ## ms → posición prevista del balón (marco League)
 var _ls_designado: Dictionary = {}    ## L GetDesignatedPossessionPlayer
 var _ls_por_id: Dictionary = {}
@@ -56,6 +60,50 @@ var _ls_desig_eq: Array = [{}, {}]  ## L Team::GetDesignatedTeamPossessionPlayer
 func _estado_league(delta: float) -> void:
 	super(delta)
 	_estado_sin_balon(delta)
+	if fase3:
+		_interferir()
+
+static func _ls3(v: Vector3) -> Vector3:
+	return Vector3(v.z, v.x, v.y)
+
+## FASE 4a (10-11): ROBOS POR ALCANCE (L PlayerController::_InterfereCommand y _SlidingCommand + el filtro de animaciones).
+## Un defensor que puede ganar el duelo (L CouldWinABallDuelLikeliness: no tener al rival entre él y el balón) entra si una
+## animación de interferir (o de barrida, más exigente) toca el balón previsto en su cuadro; el duelo lo resuelve `_entrada`.
+func _interferir() -> void:
+	if estado != "juego":
+		return
+	if poseedor.is_empty():
+		_cortar_pase()
+		return
+	var rival: Dictionary = poseedor
+	var i := 1 if bool(rival["es_local"]) else 0
+	var e: LeagueEquipo = equipos[i]
+	var bola: Vector2 = _ls_pred[200]
+	var rp := ls(pos(rival)) + ls(rival["vel"]) * 0.1
+	for p: Dictionary in jugadores:
+		if bool(p["es_local"]) == bool(rival["es_local"]) or bool(p["por"]) or (p == usuario and not autopiloto):
+			continue
+		if float(p["enfriar"]) > 0.0 or float(p.get("gesto_hasta", 0.0)) > t:
+			continue
+		var yo := ls(pos(p))
+		if yo.distance_to(bola) > 10.0:
+			continue
+		var mov := ls(p["vel"])
+		var a_rival := (rp - (yo + mov * 0.1)).normalized()
+		var r_bola := (bola - rp).normalized()
+		var gana := 1.0 - (a_rival.dot(r_bola) * 0.5 + 0.5)
+		## Se mira HACIA EL BALÓN (simplificado): el original elige la animación girada a la dirección deseada, con giros incluidos.
+		var mirada := (bola - yo).normalized()
+		var dist_b := (yo + mov * 0.2).distance_to(bola)
+		if gana >= 0.7 and e.posesion < 0.6 and dist_b > 0.7 and dist_b < 1.6 \
+				and not LeagueToques.alcanza("sliding", yo, mirada, mov.length(), _ls_pred3).is_empty():
+			cuenta_toques["barrida"] = int(cuenta_toques["barrida"]) + 1
+			_entrada(p, true)
+			return
+		if gana >= 0.2 and not LeagueToques.alcanza("interfere", yo, mirada, mov.length(), _ls_pred3).is_empty():
+			cuenta_toques["interferir"] = int(cuenta_toques["interferir"]) + 1
+			_entrada(p, false)
+			return
 
 func _equipo_con_balon() -> int:
 	if not poseedor.is_empty():
@@ -80,17 +128,19 @@ func _estado_sin_balon(_delta: float) -> void:
 	var bp := balon.position
 	var bv := vel_balon
 	var cfg := cfg_balon
-	var ms := 0
+	_ls_pred3.resize(PRED_TOTAL + 1)
+	_ls_pred3[0] = _ls3(bp)
+	for k in range(1, PRED_TOTAL + 1):
+		if poseedor.is_empty():
+			var r := LeagueNucleo.fuerzas_balon(bp, bv, cfg, 0.01, R)
+			bp = r[0]; bv = r[1]
+			bp += bv * 0.01
+		else:
+			bp += (poseedor["vel"] as Vector3) * 0.01
+		_ls_pred3[k] = _ls3(bp)
 	for objetivo_ms: int in PRED_MS:
-		while ms < objetivo_ms:
-			if poseedor.is_empty():
-				var r := LeagueNucleo.fuerzas_balon(bp, bv, cfg, 0.01, R)
-				bp = r[0]; bv = r[1]
-				bp += bv * 0.01
-			else:
-				bp += (poseedor["vel"] as Vector3) * 0.01
-			ms += 10
-		_ls_pred[objetivo_ms] = ls(bp)
+		var v3 := _ls_pred3[objetivo_ms / 10]
+		_ls_pred[objetivo_ms] = Vector2(v3.x, v3.y)
 	var b0 := ls(balon.position)
 	var mejor := INF
 	_ls_designado = poseedor
@@ -217,6 +267,9 @@ func _con_league(p: Dictionary) -> bool:
 	return fase3 and not equipos.is_empty() and estado == "juego" and p.has("ls_forma") and not _ls_pred.is_empty()
 
 func _sin_balon(p: Dictionary) -> Vector3:
+	if float(p.get("ls_cortar_hasta", 0.0)) > t and p.has("ls_cortar"):   ## va a cortar el pase (fase 4a)
+		p["correr"] = true
+		return p["ls_cortar"]
 	if float(p.get("ls_t", -1.0)) > t and p.has("ls_obj"):
 		p["correr"] = bool(p["ls_corre"])
 		return p["ls_obj"]
@@ -286,7 +339,7 @@ func _calcular_sin_balon(p: Dictionary) -> Array:
 		## DESVÍO DOCUMENTADO (10-11): el que antes llega al balón de su equipo SIEMPRE disputa (L forceMagnet + extraHaste). En el
 		## original solo si no marca a nadie, pero allí además «interfiere» en cuanto el balón entra en el alcance de una animación
 		## de entrada (`_InterfereCommand`); nuestras entradas piden estar a ~1,25 m y, sin esto, nadie llegaba a entrar.
-		if cerca_caza and _ls_desig_eq[i] == p:
+		if designado_disputa and cerca_caza and _ls_desig_eq[i] == p:
 			return [op, LeagueNucleo.V_SPRINT]
 		if marca.is_empty() and cerca_caza:
 			if _mas_cercano_al(op - ls(rival_con["vel"]) * 0.02, local, [], 3).has(p):
@@ -294,3 +347,55 @@ func _calcular_sin_balon(p: Dictionary) -> Array:
 				if LeagueSinBalon.necesita_defender(lado, yo, dp):
 					return [dp, clampf((dp - yo).length() * LeagueNucleo.DIST_A_VEL, 0.0, LeagueNucleo.V_SPRINT)]
 	return [deseada, LeagueNucleo.rango_velocidad(clampf(v, 0.0, LeagueNucleo.V_SPRINT))]
+
+## FASE 4a (10-11): CORTAR EL PASE (L: interferir y controlar sobre el balón en vuelo). Con un pase en camino, el rival que tiene
+## una animación de interferir o de control que alcanza el balón previsto va a ese punto (lo marca `ls_cortar`); quién se queda
+## el balón lo decide lo nuestro (`_disputas`/`_tomar`) al llegar.
+func _cortar_pase() -> void:
+	if pase_a.is_empty() or ultimo_toque.is_empty() or Vector2(vel_balon.x, vel_balon.z).length() < 2.0:
+		return
+	var local_pasa := bool(ultimo_toque["es_local"])
+	var bola: Vector2 = _ls_pred[200]
+	for p: Dictionary in jugadores:
+		if bool(p["es_local"]) == local_pasa or bool(p["por"]) or (p == usuario and not autopiloto) or float(p.get("ls_cortar_hasta", 0.0)) > t:
+			continue
+		var yo := ls(pos(p))
+		if yo.distance_to(bola) > 10.0:
+			continue
+		var mov := ls(p["vel"])
+		var mirada := (bola - yo).normalized()
+		for tipo: String in ["interfere", "trap"]:
+			var a := LeagueToques.alcanza(tipo, yo, mirada, mov.length(), _ls_pred3)
+			if not a.is_empty():
+				p["ls_cortar"] = mundo(a["punto"])
+				p["ls_cortar_hasta"] = t + float(a["ms"]) / 1000.0 + 0.2
+				cuenta_toques["cortar"] = int(cuenta_toques.get("cortar", 0)) + 1
+				break
+
+## FASE 4a (10-11): EL RIVAL FASTIDIA LA CONDUCCIÓN (L humanoid_utils.cpp GetBallControlVector, `opponentAnnoyanceFactor`). Con un
+## rival a 0,5-1,5 m, a más velocidad y con menos serenidad y equilibrio, el toque se alarga hasta 3 m: el balón se escapa del pie
+## y se puede robar o interferir (en el original es la fuente principal de pérdidas al conducir). Serenidad = regate (`reg`, no
+## tenemos «calmness»), equilibrio = el nuestro. Solo con el balón en los pies; el balón suelto sigue en la capa 1.
+func _mover_balon(delta: float) -> void:
+	var c: Dictionary = poseedor
+	var toques := int(c.get("toques", 0)) if not c.is_empty() else -1
+	super(delta)
+	if not fase3 or c.is_empty() or poseedor != c or int(c.get("toques", 0)) == toques or estado != "juego":
+		return
+	var yo := ls(pos(c))
+	var cerca := INF
+	for q: Dictionary in jugadores:
+		if bool(q["es_local"]) != bool(c["es_local"]):
+			cerca = minf(cerca, (ls(pos(q)) - yo).length())
+	var vel := (c["vel"] as Vector3).length()
+	var fastidio := (1.0 - LeagueNucleo.normalizado(cerca, 0.5, 1.5)) \
+		* (1.0 - (float(c["attr"]["reg"]) * 0.5 + float(c.get("equilibrio", 0.6)) * 0.3)) \
+		* LeagueNucleo.curva(LeagueNucleo.normalizado(vel, LeagueNucleo.V_PARADO, LeagueNucleo.V_SPRINT), 0.7)
+	if fastidio <= 0.0:
+		return
+	var plano := Vector3(vel_balon.x, 0.0, vel_balon.z)
+	if plano.length() < 0.01:
+		return
+	## +3 m de toque como mucho; el balón tarda ~0,5 s en volver a estar a tiro (L desiredDelayTime 0,25-0,85 s).
+	vel_balon += plano.normalized() * fastidio * 3.0 / 0.5
+	cuenta_toques["fastidio"] = int(cuenta_toques.get("fastidio", 0)) + 1

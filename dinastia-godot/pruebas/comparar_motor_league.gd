@@ -35,7 +35,8 @@ func _ready() -> void:
 			"partidos": s.get("partidos", 0), "us_paso": snappedf(float(s["us_paso"]) / c, 0.1), "us_paso_max": s.get("us_max", 0),
 			"goles_pp": snappedf(float(s["goles"]) / c, 0.01), "tiros_pp": snappedf(float(s["tiros"]) / c, 0.1),
 			"pases_pp": snappedf(float(s["pases"]) / c, 0.1), "acierto_pase_pct": snappedf(100.0 * float(s["pases_ok"]) / maxf(float(s["pases"]), 1.0), 0.1),
-			"despejes_pp": snappedf(float(s["despejes"]) / c, 0.1), "posesion_local_pct": snappedf(float(s["poses_local"]) / c, 0.1)})
+			"despejes_pp": snappedf(float(s["despejes"]) / c, 0.1), "posesion_local_pct": snappedf(float(s["poses_local"]) / c, 0.1),
+			"cambios_posesion_pp": snappedf(float(s["cambios_posesion"]) / c, 0.1)})
 	## Determinismo: el mismo partido, con la misma semilla, tiene que dar EXACTAMENTE lo mismo.
 	var par0: Array = pares[0]
 	var otra := String(_jugar(par0[0], par0[1], 100, true, mitad)["huella"])
@@ -92,9 +93,16 @@ func _jugar(a: Club, b: Club, semilla: int, league: bool, mitad: float) -> Dicti
 	var us_max := 0
 	var pasos := 0
 	var tope := int((mitad * 2.0 * 1.6 + 300.0) / DT)   ## saques, goles, descanso y añadido alargan el partido
+	var cambios := 0
+	var ult := -1
 	while motor.estado != "fin" and pasos < tope:
 		var t0 := Time.get_ticks_usec()
 		motor.paso(DT)
+		if not motor.poseedor.is_empty():
+			var eqp := 0 if bool(motor.poseedor["es_local"]) else 1
+			if ult != -1 and eqp != ult:
+				cambios += 1
+			ult = eqp
 		var d := Time.get_ticks_usec() - t0
 		us += d
 		us_max = maxi(us_max, d)
@@ -107,16 +115,17 @@ func _jugar(a: Club, b: Club, semilla: int, league: bool, mitad: float) -> Dicti
 		"pasos": pasos, "us_paso": snappedf(float(us) / maxf(float(pasos), 1.0), 0.1), "us_max": us_max,
 		"tiros": int(motor.tiros[0]) + int(motor.tiros[1]), "pases": int(motor.pases[0]) + int(motor.pases[1]),
 		"pases_ok": int(motor.pases_ok[0]) + int(motor.pases_ok[1]), "despejes": int(motor.despejes[0]) + int(motor.despejes[1]),
-		"poses_local": snappedf(100.0 * float(motor.posesion[0]) / pt, 0.1) if pt > 0.0 else 50.0}
+		"poses_local": snappedf(100.0 * float(motor.posesion[0]) / pt, 0.1) if pt > 0.0 else 50.0, "cambios_posesion": cambios}
 	if league:
 		r["decisiones"] = (motor as MotorLeague).cuenta.duplicate()
+		r["toques"] = (motor as MotorLeague).cuenta_toques.duplicate()
 	r["huella"] = "%s|%d|%d|%d|%.3f,%.3f" % [r["marcador"], r["tiros"], r["pases"], r["pases_ok"], ball.position.x, ball.position.z]
 	raiz.queue_free()
 	return r
 
 func _sumar(s: Dictionary, r: Dictionary) -> void:
 	s["partidos"] = int(s.get("partidos", 0)) + 1
-	for k: String in ["us_paso", "tiros", "pases", "pases_ok", "despejes", "poses_local"]:
+	for k: String in ["us_paso", "tiros", "pases", "pases_ok", "despejes", "poses_local", "cambios_posesion"]:
 		s[k] = float(s.get(k, 0.0)) + float(r[k])
 	var g: PackedStringArray = String(r["marcador"]).split("-")
 	s["goles"] = int(s.get("goles", 0)) + int(g[0]) + int(g[1])
