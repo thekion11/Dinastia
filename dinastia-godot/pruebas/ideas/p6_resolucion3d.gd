@@ -54,3 +54,13 @@ func _probar() -> void:
 	Calidad.res3d_auto = auto_antes
 	Calidad.escala_media = guardada
 	Calidad.escala_minimo = guardada_min
+
+	## (10-11) MODO RENDIMIENTO (E1+E2): apagado por defecto; encendido quita glow y sombra del sol de MEDIA hacia abajo y deja ALTA/ULTRA como estaban.
+	var modo_antes := Calidad.modo_rendimiento
+	Calidad.modo_rendimiento = false
+	_comprobar(Calidad.sombra_solar(Calidad.MEDIO) and ModoRendimiento.glow(Calidad.MEDIO) and Calidad.sombra_solar(Calidad.MEDIA_BAJA), "modo rendimiento apagado: MEDIA con sombra del sol y glow como siempre")
+	_comprobar(not Calidad.sombra_solar(Calidad.BAJA) and not ModoRendimiento.glow(Calidad.MINIMO) and ModoRendimiento.glow(Calidad.BAJA), "apagado: BAJA sin sol pero con glow; ULTRA BAJA sin glow (como antes)")
+	Calidad.modo_rendimiento = true
+	_comprobar(not Calidad.sombra_solar(Calidad.MEDIO) and not ModoRendimiento.glow(Calidad.MEDIO) and not ModoRendimiento.glow(Calidad.BAJA) and not Calidad.sombra_solar(Calidad.MEDIA_BAJA), "modo rendimiento: MEDIA y menores sin sombra del sol ni glow")
+	_comprobar(Calidad.sombra_solar(Calidad.ALTO) and ModoRendimiento.glow(Calidad.ALTO) and Calidad.sombra_solar(Calidad.ULTRA) and ModoRendimiento.glow(Calidad.ULTRA), "modo rendimiento: ALTA y ULTRA no se tocan")
+	Calidad.modo_rendimiento = modo_antes

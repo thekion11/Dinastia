@@ -65,7 +65,7 @@ static func escala_3d(nivel: int = -99) -> float:
 
 ## ¿Este nivel proyecta la sombra del sol? ULTRA BAJA y BAJA no (la pasada de sombras es ~1/4 de las llamadas del partido).
 static func sombra_solar(nivel: int) -> bool:
-	return nivel >= MEDIA_BAJA
+	return nivel >= MEDIA_BAJA and not ModoRendimiento.sin_sol(nivel)
 
 ## EL NIVEL QUE HA ELEGIDO EL JUGADOR en Ajustes. Vive aqui y no en la pantalla
 ## de ajustes porque quien lo necesita es el visor 3D, que se monta desde otro
@@ -92,6 +92,7 @@ static func lod_cabeza() -> float:
 static var adaptativa: bool = true
 ## PARTIDO LIGERO (4-11, orden 32): agregado aparte de la calidad, apagado por defecto en todas (ver `PartidoLigero`).
 static var partido_ligero: bool = false
+static var modo_rendimiento: bool = false   ## (10-11) Ajustes: sin glow ni sombra del sol de MEDIA hacia abajo (`ModoRendimiento`); apagado por defecto
 
 ## Hora del dia. El atardecer es el que mejor sienta a un complejo deportivo:
 ## luz rasante, sombras largas y contraste, que es lo que hace que un render
@@ -391,6 +392,7 @@ static func cargar() -> void:
 	if cf.has_section_key("grafica", "adaptativa"):
 		adaptativa = bool(cf.get_value("grafica", "adaptativa"))
 	partido_ligero = bool(cf.get_value("grafica", "partido_ligero", false))
+	modo_rendimiento = bool(cf.get_value("grafica", "modo_rendimiento", false))
 	if cf.has_section_key("grafica", "motor_ligero"):
 		motor_ligero = bool(cf.get_value("grafica", "motor_ligero"))
 	if cf.has_section_key("grafica", "escala_media"):
@@ -407,6 +409,7 @@ static func guardar() -> void:
 	cf.set_value("grafica", "adaptativa", adaptativa)
 	cf.set_value("grafica", "motor_ligero", motor_ligero)
 	cf.set_value("grafica", "partido_ligero", partido_ligero)
+	cf.set_value("grafica", "modo_rendimiento", modo_rendimiento)
 	cf.set_value("grafica", "escala_minimo", escala_minimo)
 	cf.set_value("grafica", "escala_media", escala_media)
 	cf.set_value("grafica", "res3d_auto", res3d_auto)

@@ -238,3 +238,15 @@ Propuestas (NADA aplicado; las dos que cambian el aspecto las decide el dueño):
 - **E3. Los demás (ajuste, tonemap, debanding) NO compensan apagarlos**: dentro del ruido; se quedan.
 - E1+E2 juntos: ≈ −24 % medido en ENG. Sumado a P1 (resolución, −26…−31 %) el partido en MEDIA en móvil bajaría ≈ −45…−50 % de fotograma relativo; en una GPU limitada por relleno de píxel (la del dueño al 100 %) probablemente más, porque glow y sombras son pasadas a pantalla/atlas completos. Confirmar en el teléfono.
 Pendiente (no medido): coste del césped aislado (campo plano) y de las transparencias de la grada por separado.
+
+### Club a pie con P1 (10-11, sesión 5): −30…−34 %
+`medir_club.tscn` (15 puntos del recorrido a pie), MEDIA, 1920×1080, fotograma relativo, `RES3D_AUTO=0` → `1`: CHI 685 → 460 ms (−33 %), ESP 622 → 410 ms (−34 %), ENG 645 → 451 ms (−30 %); llamadas y triángulos iguales, vídeo −10 MB. El tope también vale en el club a pie y el estadio a pie (pasan por `VistaEstadio`).
+
+### MODO RENDIMIENTO (Ajustes; APAGADO por defecto en todas las plataformas; 10-11, orden del líder)
+`ModoRendimiento` (`visor/modo_rendimiento.gd`): interruptor «Modo rendimiento (sin brillo ni sombra del sol)», guardado en `grafica/modo_rendimiento`; de MEDIA hacia abajo quita el glow y la sombra del sol (E1+E2); ALTA y ULTRA no se tocan; 8 idiomas; prueba en `p6_resolucion3d`; banco 0 fallos. Medido en MEDIA 1280×720 (`MODO_RENDIMIENTO=0/1`):
+| Club | Fotograma sin → con | Llamadas | Triángulos |
+|---|---|---|---|
+| CHI | 450 → 354 ms (**−21 %**) | 433 → 359 | 762 k → 617 k |
+| ESP | 380 → 288 ms (**−24 %**) | 497 → 334 | 540 k → 414 k |
+| ENG | 400 → 287 ms (**−28 %**) | 350 → 283 | 534 k → 400 k |
+Capturas con la cámara real, arriba SIN el modo y abajo CON él: `docs/04_auditorias/capturas_modo_rendimiento/cmp_{CHI,ESP,ENG}.jpg`. Lo que se ve: desaparecen las sombras de los jugadores y de los objetos sobre el césped y la imagen queda algo más plana; los jugadores y el campo se leen igual.
