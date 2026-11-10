@@ -255,6 +255,7 @@ func _pintar_partido(c: Club) -> void:
 		tv.text = Idiomas.t("👁️ INFORME DEL RIVAL  (sala de vídeo)")
 		p._lista_partido.add_child(tv)
 		p._dato("Sistema previsto", rival.tactica.formacion, Principal.COL_TEXTO, p._lista_partido)
+		p._dato("Estilo", Idiomas.t(String(EstiloClub.NOMBRES.get(EstiloClub.estilo_de(rival), "Equilibrado"))), Principal.COL_TEXTO, p._lista_partido)   ## (10-11) el de la vida real
 		p._dato("Mentalidad", [Idiomas.t("Defensiva"), Idiomas.t("Equilibrada"), Idiomas.t("Ofensiva")][rival.tactica.mentalidad], Principal.COL_TEXTO, p._lista_partido)
 		p._dato("Punto débil", "la última línea" if f_suya["def"] < f_suya["ata"] else "la generación de juego", Principal.COL_TEXTO, p._lista_partido)
 

@@ -251,7 +251,7 @@ static func _club_a_dic(c: Club) -> Dictionary:
 		## multiplicadores- y al cargar la partida volvían todos a `false` sin
 		## una sola queja. Cuatro decisiones tácticas perdidas en cada carga.
 		"corta": c.tactica.salida_corta, "hombre": c.tactica.marca_al_hombre,
-		"fjuego": c.tactica.fuera_de_juego, "lejano": c.tactica.tiro_lejano,
+		"fjuego": c.tactica.fuera_de_juego, "lejano": c.tactica.tiro_lejano, "estilo": EstiloClub.estilo_de(c),
 		"corner": c.tactica.corner, "libre": c.tactica.libre,
 		"plan_p": c.tactica.plan_perdiendo, "plan_g": c.tactica.plan_ganando,
 		## La racha del plan (25-10): cuántas veces seguidas saltó el mismo cambio.

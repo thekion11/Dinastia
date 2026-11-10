@@ -161,6 +161,7 @@ func _crear_club(fila: Array, pais: String) -> Club:
 	c.color2 = String(fila[2]) if fila.size() > 2 else "#ffffff"
 	c.rep = int(fila[3]) if fila.size() > 3 else 70
 	c.estadio_aforo = int(fila[4]) if fila.size() > 4 else 20000
+	EstiloClub.aplicar(c, String(fila[0]))   ## (10-11) su formación y su estilo de la vida real
 	c.saldo = int(Eco.ref_caja(float(c.rep)))
 	## Los socios salen del aforo: un club con estadio grande tiene masa social
 	## grande. Es lo que hace que un club historico venido a menos siga llenando.

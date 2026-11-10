@@ -40,6 +40,10 @@ static func _dic_a_club(d: Dictionary) -> Club:
 	c.tactica.marca_al_hombre = bool(d.get("hombre", false))
 	c.tactica.fuera_de_juego = bool(d.get("fjuego", false))
 	c.tactica.tiro_lejano = bool(d.get("lejano", false))
+	if d.has("estilo"):
+		c.set_meta("estilo", String(d["estilo"]))
+	else:   ## (10-11) partida de antes de los estilos: los clubes que seguían con la táctica de fábrica recuperan la suya (la que tocaste, se respeta)
+		EstiloClub.aplicar_si_de_fabrica(c)
 	c.mascota = String(d.get("masc", ""))
 	c.once_elegido.clear()
 	for id_j in d.get("once", []):
