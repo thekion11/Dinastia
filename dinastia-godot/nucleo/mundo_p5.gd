@@ -241,6 +241,7 @@ func _semana_continental(ya_jugado: Partido) -> void:
 func _semana_copa(ya_jugado: Partido) -> void:
 	if copa == null:
 		_montar_copa()
+	CopasMundo.semana(self)   ## (10-11) las copas de los demás países, en las mismas semanas
 	if copa != null and copa.en_curso() and semana % 4 == 0:
 		var res_copa: Array = copa.jugar_ronda(ya_jugado if _copa_es_de(ya_jugado) else null)
 		_rueda_de_eliminatoria(res_copa, "copa", copa.participantes)

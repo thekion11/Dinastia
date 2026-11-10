@@ -311,6 +311,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"clubes": [],
 		"ligas": [],
 		"copa": _copa_a_dic(m.copa),
+		"copas_mundo": CopasMundo.a_dic(m),   ## (10-11) las copas y el palmarés de todos los países
 		## Los sistemas que solo existen para TU club. Sin esto, guardar y cargar
 		## te devolvia con la confianza a 55, sin cuerpo tecnico, sin parte medico,
 		## sin logros y sin torneos continentales — y sin una sola queja.
