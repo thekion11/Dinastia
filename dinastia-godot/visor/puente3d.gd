@@ -107,6 +107,13 @@ static func kit_visita(local: Club, visita: Club) -> Dictionary:
 	var kv := kit(visita)
 	if not chocan(kl, kv):
 		return kv
+	## (10-11) El segundo uniforme REAL del club (colores, diseño, pantalón y medias), si lo tiene y no choca.
+	var v2 := AspectoClub.visita(visita)
+	if not v2.is_empty() and visita.kit_color1 == "" and visita.kit_x.is_empty():   ## el uniforme que se diseñó el jugador manda
+		var propio := {"c1": String(v2["c1"]), "c2": String(v2["c2"]), "estilo": String(v2.get("camiseta", "liso")), "img": "",
+			"x": load("res://ui/disenos_kit.gd").kit_de_club_visita(visita)}
+		if not chocan(kl, propio):
+			return propio
 	var invertido := {"c1": kv["c2"], "c2": kv["c1"], "estilo": String(kv.get("estilo", "liso")), "img": "", "x": {}}
 	if not chocan(kl, invertido):
 		return invertido

@@ -328,3 +328,44 @@ func _probar_league_nucleo() -> void:
 	_comprobar(ml.estado != "fin" and decisiones > 0 and (ml.equipos[0] as LeagueEquipo).balon_hist.size() == LeagueEquipo.HISTORIA, "MotorLeague juega (%s - %s): %d decisiones de League en 20 s" % [a.pais, b.pais, decisiones])
 	_comprobar(MotorLeague.crear() is MotorLeague == MotorLeague.activo, "la bandera elige el motor (apagada = el de siempre)")
 	raiz.queue_free()
+
+
+## UNIFORMES (10-11, encargo del dueño «uniformes y caras»): todo club con aspecto tiene su uniforme base y un SEGUNDO uniforme que contrasta; cuando el primero
+## choca con el del rival, sale el segundo REAL del club (colores, diseño, pantalón y medias) en vez del deducido. Revisado con varios países.
+func _probar_uniformes_segundo() -> void:
+	_titulo("UNIFORMES: BASE Y SEGUNDO UNIFORME POR CLUB")
+	var m := Mundo.new()
+	m.generar(["ESP", "ENG", "BRA", "JPN", "MEX", "USA", "CHI", "ARG"], 61)
+	var clubes := 0
+	var con_visita := 0
+	var con_diseno := 0
+	var choca := 0
+	var mal: Array[String] = []
+	for l: Liga in m.ligas:
+		for c: Club in l.clubes:
+			clubes += 1
+			var v := AspectoClub.visita(c)
+			if v.is_empty():
+				continue
+			con_visita += 1
+			if String(AspectoClub.fila(c).get("camiseta", "liso")) != "liso":
+				con_diseno += 1
+			var k := Puente3D.kit(c)
+			var kv := {"c1": String(v["c1"])}
+			if Puente3D.chocan(k, kv):
+				choca += 1
+				mal.append(c.nombre)
+			## Con un rival que viste IGUAL que ella, la visita sale con su segundo uniforme real.
+			var gemelo := Club.new()
+			gemelo.id = c.id + "_g"
+			gemelo.nombre = c.nombre + " G"
+			gemelo.color1 = c.color1
+			gemelo.color2 = c.color2
+			gemelo.kit_color1 = c.color_kit1()
+			gemelo.kit_color2 = c.color_kit2()
+			var usado := Puente3D.kit_visita(gemelo, c)
+			if String(usado["c1"]) != String(v["c1"]) and not mal.has(c.nombre):
+				mal.append(c.nombre + " (no usó su segundo uniforme)")
+	_comprobar(clubes > 100 and con_visita >= clubes - clubes / 10, "%d de %d clubes de 8 países tienen segundo uniforme" % [con_visita, clubes])
+	_comprobar(mal.is_empty(), "el segundo uniforme no choca con el primero y se usa cuando el rival viste igual (%d fallos%s)" % [mal.size(), "" if mal.is_empty() else ": " + str(mal.slice(0, 4))])
+	_comprobar(con_diseno >= 20, "hay clubes con diseño propio (no liso) entre ellos (%d)" % con_diseno)
