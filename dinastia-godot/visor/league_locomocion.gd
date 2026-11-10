@@ -77,6 +77,8 @@ static func _al_acabar(p: Dictionary, n: Node3D) -> void:
 
 ## Con el cuerpo girado y sin clip: el ciclo estable del original (plantilla) o, si su velocidad no lo admite o el motor pide
 ## otro paso (de espaldas, marcar, cansado…), vuelta a de frente sin salto.
+static var _nombre_ciclo := {}   ## plantilla → nombre de su ciclo (sin rehacer la cadena en cada fotograma)
+
 static func _seguir_con_cuerpo(m: MotorLeague, p: Dictionary, ap: AnimationPlayer) -> void:
 	var cuerpo := float(p.get("ls_cuerpo", 0.0))
 	if cuerpo == 0.0:
@@ -94,8 +96,11 @@ static func _seguir_con_cuerpo(m: MotorLeague, p: Dictionary, ap: AnimationPlaye
 	_quizas_empezar(m, p)
 	if float(p.get("ls_trans_hasta", 0.0)) > m.t:
 		return
-	var nombre := CICLO_CUERPO + String(par[0])
-	if ap.has_animation(nombre) and String(p.get("anim_actual", "")) != nombre:
+	var nombre: String = _nombre_ciclo.get(par[0], "")
+	if nombre == "":
+		nombre = CICLO_CUERPO + String(par[0])
+		_nombre_ciclo[par[0]] = nombre
+	if p.get("anim_actual") != nombre and ap.has_animation(nombre):
 		ap.play(nombre, 0.15)
 		p["anim_actual"] = nombre
 	ap.speed_scale = clampf(sp / LeagueMovimiento.rango(sp), 0.7, 1.4)
