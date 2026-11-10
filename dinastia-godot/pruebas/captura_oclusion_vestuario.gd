@@ -35,9 +35,19 @@ func _process(_d: float) -> void:
 	if _n == 8:
 		_vista.recorrer()
 		_ex = _vista._explorador
-		_ex.planta = 0
 		var d: Dictionary = _ex._datos
-		_ex.cuerpo.position = Vector3(d["x0"], 0.02, (float(d["z_out"]) + float(d["z_fin"])) / 2.0)
+		## ZONA=Túnel / Pasillo (con PLANTA=1 o 2, junto a las ventanas del fondo) / Vestuario (por defecto): desde dónde se gira.
+		var zona := OS.get_environment("ZONA") if OS.get_environment("ZONA") != "" else "Vestuario"
+		var planta := int(OS.get_environment("PLANTA")) if OS.get_environment("PLANTA") != "" else 0
+		_ex.planta = planta
+		var pos := Vector3(d["x0"], RecorridoClub.y_de(planta), (float(d["z_out"]) + float(d["z_fin"])) / 2.0)
+		var mejor := 0.0
+		for z: Dictionary in _ex.zonas:
+			var r: Rect2 = z["r"]
+			if String(z["nombre"]) == zona and int(z.get("planta", 0)) == planta and r.get_area() > mejor:
+				mejor = r.get_area()
+				pos = Vector3(r.get_center().x, RecorridoClub.y_de(planta), r.get_center().y)
+		_ex.cuerpo.position = pos
 		_ex.vel = 0.0
 		_k = 0
 		_fase = 0
@@ -77,7 +87,7 @@ func _process(_d: float) -> void:
 	print("RUMBO %2d (%.2f rad)  cambian al devolver el estadio: %6d   ruido propio: %6d   neto: %6d   estadio oculto: %s" % [_k, _ex.rumbo, cambian, ruido, neto, "SÍ" if _oculto else "no"])
 	_k += 1
 	if _k >= 12:
-		print("OCLUSION_VESTUARIO peor=%d píxeles; rumbos con el estadio oculto: %d de 12" % [_peor, _ocultos_n])
+		print("OCLUSION_", OS.get_environment("ZONA"), " planta ", OS.get_environment("PLANTA"), " peor=%d píxeles; rumbos con el estadio oculto: %d de 12" % [_peor, _ocultos_n])
 		get_tree().quit()
 		return
 	_ex.set_physics_process(true)
