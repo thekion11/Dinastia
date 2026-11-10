@@ -85,7 +85,10 @@ func _uno(i: int, nombre: String) -> void:
 	aerea.global_position = Vector3(-125, 72, 140)
 	aerea.look_at(Vector3(0, 8, 0), Vector3.UP)
 	aerea.make_current()
-	await _esperar(1.5)
+	for _f in 40:   ## una repetición puede quitarle la cámara: se la devuelve en cada fotograma
+		await get_tree().process_frame
+		if not aerea.current:
+			aerea.make_current()
 	get_viewport().get_texture().get_image().save_jpg("%s/%02d_%s_aerea.jpg" % [_dir, i, c.pais], 0.88)
 	vista.queue_free()
 	await _esperar(1.0)
