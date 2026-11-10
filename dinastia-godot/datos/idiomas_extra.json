@@ -7870,7 +7870,11 @@
   "AÑADIR LIGAS": "ADD LEAGUES",
   "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Add countries to your game: their leagues and clubs join the season that is starting. Once added, they cannot be removed.",
   "Añadir": "Add",
-  "Ligas añadidas: %d países, %d clubes nuevos.": "Leagues added: %d countries, %d new clubs."
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Leagues added: %d countries, %d new clubs.",
+  "Por defecto": "Default",
+  "Mundo entero": "Whole world",
+  "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d countries · %d clubs · ≈ %.1f s per week · ≈ %.1f GB of memory",
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Too much content for this device: the game will run slower and may close for lack of memory."
  },
  "pt": {
   "Historia": "História",
@@ -15743,7 +15747,11 @@
   "AÑADIR LIGAS": "JUNTAR LIGAS",
   "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Junta países ao teu jogo: as suas ligas e clubes entram na época que começa. Depois de juntos, não se podem retirar.",
   "Añadir": "Juntar",
-  "Ligas añadidas: %d países, %d clubes nuevos.": "Ligas juntas: %d países, %d clubes novos."
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Ligas juntas: %d países, %d clubes novos.",
+  "Por defecto": "Predefinição",
+  "Mundo entero": "Mundo inteiro",
+  "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memória",
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Conteúdo a mais para este dispositivo: o jogo ficará mais lento e pode fechar por falta de memória."
  },
  "patrones": [
   [
@@ -29734,7 +29742,11 @@
   "AÑADIR LIGAS": "AJOUTER DES CHAMPIONNATS",
   "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Ajoute des pays à ta partie : leurs championnats et clubs entrent dans la saison qui commence. Une fois ajoutés, on ne peut plus les retirer.",
   "Añadir": "Ajouter",
-  "Ligas añadidas: %d países, %d clubes nuevos.": "Championnats ajoutés : %d pays, %d nouveaux clubs."
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Championnats ajoutés : %d pays, %d nouveaux clubs.",
+  "Por defecto": "Par défaut",
+  "Mundo entero": "Monde entier",
+  "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d pays · %d clubs · ≈ %.1f s par semaine · ≈ %.1f Go de mémoire",
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Trop de contenu pour cet appareil : la partie sera plus lente et peut se fermer faute de mémoire."
  },
  "it": {
   "Historia": "Storia",
@@ -37607,7 +37619,11 @@
   "AÑADIR LIGAS": "AGGIUNGI CAMPIONATI",
   "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Aggiungi paesi alla tua partita: i loro campionati e club entrano nella stagione che inizia. Una volta aggiunti non si possono togliere.",
   "Añadir": "Aggiungi",
-  "Ligas añadidas: %d países, %d clubes nuevos.": "Campionati aggiunti: %d paesi, %d nuovi club."
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Campionati aggiunti: %d paesi, %d nuovi club.",
+  "Por defecto": "Predefinito",
+  "Mundo entero": "Mondo intero",
+  "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d paesi · %d club · ≈ %.1f s a settimana · ≈ %.1f GB di memoria",
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Troppi contenuti per questo dispositivo: la partita sarà più lenta e potrebbe chiudersi per mancanza di memoria."
  },
  "de": {
   "Historia": "Geschichte",
@@ -45480,7 +45496,11 @@
   "AÑADIR LIGAS": "LIGEN HINZUFÜGEN",
   "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Füge deinem Spiel Länder hinzu: ihre Ligen und Vereine nehmen an der beginnenden Saison teil. Einmal hinzugefügt, lassen sie sich nicht mehr entfernen.",
   "Añadir": "Hinzufügen",
-  "Ligas añadidas: %d países, %d clubes nuevos.": "Ligen hinzugefügt: %d Länder, %d neue Vereine."
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Ligen hinzugefügt: %d Länder, %d neue Vereine.",
+  "Por defecto": "Standard",
+  "Mundo entero": "Ganze Welt",
+  "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d Länder · %d Vereine · ≈ %.1f s pro Woche · ≈ %.1f GB Speicher",
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Zu viel Inhalt für dieses Gerät: Das Spiel läuft langsamer und kann wegen Speichermangels beendet werden."
  },
  "ca": {
   "Historia": "Història",
@@ -53353,7 +53373,11 @@
   "AÑADIR LIGAS": "AFEGIR LLIGUES",
   "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Afegeix països a la teva partida: les seves lligues i clubs entren a la temporada que comença. Un cop afegits no es poden treure.",
   "Añadir": "Afegir",
-  "Ligas añadidas: %d países, %d clubes nuevos.": "Lligues afegides: %d països, %d clubs nous."
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Lligues afegides: %d països, %d clubs nous.",
+  "Por defecto": "Per defecte",
+  "Mundo entero": "Món sencer",
+  "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d països · %d clubs · ≈ %.1f s per setmana · ≈ %.1f GB de memòria",
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Massa contingut per a aquest dispositiu: la partida anirà més lenta i pot tancar-se per manca de memòria."
  },
  "pl": {
   "Club": "Klub",
@@ -61226,7 +61250,11 @@
   "AÑADIR LIGAS": "DODAJ LIGI",
   "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Dodaj kraje do swojej gry: ich ligi i kluby dołączą do rozpoczynającego się sezonu. Po dodaniu nie można ich usunąć.",
   "Añadir": "Dodaj",
-  "Ligas añadidas: %d países, %d clubes nuevos.": "Dodano ligi: %d krajów, %d nowych klubów."
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Dodano ligi: %d krajów, %d nowych klubów.",
+  "Por defecto": "Domyślnie",
+  "Mundo entero": "Cały świat",
+  "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d krajów · %d klubów · ≈ %.1f s na tydzień · ≈ %.1f GB pamięci",
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Za dużo zawartości jak na to urządzenie: gra będzie wolniejsza i może się zamknąć z braku pamięci."
  },
  "tr": {
   "Club": "Kulüp",
@@ -69099,6 +69127,10 @@
   "AÑADIR LIGAS": "LİG EKLE",
   "Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.": "Oyununa ülkeler ekle: ligleri ve kulüpleri başlayan sezona katılır. Eklendikten sonra kaldırılamazlar.",
   "Añadir": "Ekle",
-  "Ligas añadidas: %d países, %d clubes nuevos.": "Eklenen ligler: %d ülke, %d yeni kulüp."
+  "Ligas añadidas: %d países, %d clubes nuevos.": "Eklenen ligler: %d ülke, %d yeni kulüp.",
+  "Por defecto": "Varsayılan",
+  "Mundo entero": "Tüm dünya",
+  "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d ülke · %d kulüp · ≈ %.1f sn/hafta · ≈ %.1f GB bellek",
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Bu cihaz için fazla içerik: oyun yavaşlar ve bellek yetersizliğinden kapanabilir."
  }
 }

@@ -10,7 +10,7 @@ func _ready() -> void:
 		var p := LigasActivasPantalla.new()
 		add_child(p)
 		if caso == "movil":
-			p._atajo("grandes")
+			p._atajo("defecto" if caso == "movil" else "todas")
 		for _i in 8:
 			await get_tree().process_frame
 		get_viewport().get_texture().get_image().save_jpg("%s/ligas_activas_%s.jpg" % [dir, caso], 0.9)

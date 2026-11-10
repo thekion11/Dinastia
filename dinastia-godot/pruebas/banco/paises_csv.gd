@@ -158,8 +158,15 @@ func _comprobar_tanda(casos: Dictionary, semilla: int) -> void:
 ## (10-11) LIGAS ACTIVAS: el juego solo carga los países elegidos. Mundos de 1, 2 y 5 países (y todos): tres temporadas sin errores, continentales con equipos, guardado/carga con la lista y AÑADIR países a mitad de partida.
 func _probar_ligas_activas() -> void:
 	_titulo("LIGAS ACTIVAS: MUNDOS PARCIALES, GUARDADO Y AÑADIR PAÍSES")
-	_comprobar(",".join(LigasActivas.por_defecto(false)) == ",".join(LigasActivas.todos()) and LigasActivas.todos().size() >= 80, "en PC se marcan todas (%d países)" % LigasActivas.todos().size())
-	_comprobar(",".join(LigasActivas.por_defecto(true)) == "CHI,ENG,ESP,ITA,GER,FRA", "en móvil: el país del juego y los cinco grandes")
+	var mio := LigasActivas.pais_del_dispositivo()
+	var pc := LigasActivas.por_defecto(false)
+	var movil := LigasActivas.por_defecto(true)
+	_comprobar(LigasActivas.todos().size() >= 80 and pc.size() == 15 and pc[0] == mio and pc.has("CHI") and pc.has("ENG") and pc.has("BRA") and pc.has("USA"), "PC: los 15 principales con el país del dispositivo (%s) y Chile (%s)" % [mio, ",".join(pc)])
+	_comprobar(movil[0] == mio and movil.size() <= 5 and ["ENG", "ESP", "ITA", "GER"].all(func(x: String) -> bool: return movil.has(x)), "móvil: el país del dispositivo y ENG, ESP, ITA, GER (%s)" % ",".join(movil))
+	_comprobar(LigasActivas.es_entero(LigasActivas.todos()) and not LigasActivas.es_entero(pc), "«mundo entero» solo si están todos")
+	var c_pc := LigasActivas.coste(LigasActivas.todos(), false)
+	var c_mov := LigasActivas.coste(LigasActivas.todos(), true)
+	_comprobar(int(c_pc["clubes"]) > 1500 and absf(float(c_mov["s_semana"]) - 3.0 * float(c_pc["s_semana"])) < 0.001 and float(c_pc["gb"]) > 1.5, "la estimación de coste del mundo entero: %d clubes, %.1f s/semana en PC, %.1f en móvil, %.1f GB" % [int(c_pc["clubes"]), float(c_pc["s_semana"]), float(c_mov["s_semana"]), float(c_pc["gb"])])
 	for caso: Array in [["CHI"], ["BRA", "NGA"], ["ENG", "ESP", "ITA", "GER", "FRA"]]:
 		var paises: Array[String] = []
 		paises.assign(caso)
@@ -224,20 +231,22 @@ func _probar_ligas_activas_pantalla() -> void:
 	var p := LigasActivasPantalla.new()
 	add_child(p)
 	var n_paises := LigasActivas.todos().size()
-	_comprobar(p._casillas.size() == n_paises and p.marcados().size() == (6 if OS.has_feature("mobile") else n_paises), "una casilla por país (%d) y las de la plataforma marcadas (%d)" % [p._casillas.size(), p.marcados().size()])
-	p._atajo("grandes")
-	var grandes: Array = ["CHI", "ENG", "ESP", "ITA", "GER", "FRA"]
-	_comprobar(p.marcados().size() == 6 and grandes.all(func(x: String) -> bool: return p.marcados().has(x)), "«Mi país y los 5 grandes» marca CHI, ENG, ESP, ITA, GER y FRA (%s)" % ",".join(p.marcados()))
+	var defecto := LigasActivas.por_defecto(OS.has_feature("mobile"))
+	_comprobar(p._casillas.size() == n_paises and p.marcados().size() == defecto.size(), "una casilla por país (%d) y las de la plataforma marcadas (%d)" % [p._casillas.size(), p.marcados().size()])
+	p._atajo("todas")
+	_comprobar(p.marcados().size() == n_paises and "⚠" in p._resumen.text or OS.has_feature("mobile"), "«Mundo entero» marca todos y avisa del coste")
+	p._atajo("defecto")
+	_comprobar(p.marcados().size() == defecto.size() and defecto.all(func(x: String) -> bool: return p.marcados().has(x)), "«Por defecto» marca los de la plataforma (%s)" % ",".join(p.marcados()))
 	p._atajo("ninguna")
 	_comprobar(p.marcados().is_empty() and p._continuar.disabled, "sin ninguna marcada no se puede continuar")
 	var recibido: Array = []
 	p.terminado.connect(func(d: Dictionary) -> void: recibido.append(d))
 	p.confirmar()
 	_comprobar(recibido.is_empty(), "confirmar sin países no avanza")
-	p._atajo("grandes")
+	p._atajo("defecto")
 	p.confirmar()
 	var paises: Array = ((recibido[0] as Dictionary)["ligas"] as Dictionary)["paises"] if recibido.size() == 1 else []
-	_comprobar(paises.size() == 6 and ",".join(LigasActivas.elegidas) == ",".join(PackedStringArray(paises)), "confirmar devuelve {ligas: {paises}} y deja la elección en LigasActivas (%s)" % str(paises))
+	_comprobar(paises.size() == defecto.size() and ",".join(LigasActivas.elegidas) == ",".join(PackedStringArray(paises)), "confirmar devuelve {ligas: {paises}} y deja la elección en LigasActivas (%s)" % str(paises))
 	_comprobar(",".join(LigasActivas.para_generar()) == ",".join(PackedStringArray(paises)), "el generador recibe la lista elegida")
 	_comprobar(",".join(LigasActivas.cargar_eleccion()) == ",".join(PackedStringArray(paises)), "la elección se recuerda para la próxima partida")
 	p.free()

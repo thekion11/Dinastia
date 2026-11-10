@@ -4,7 +4,19 @@ extends RefCounted
 ## `Mundo.generar(paises)` ya acepta la lista; esto añade: la lista por defecto (PC: todos; móvil: tu país y los cinco grandes), cuáles están activas (`de`, guardada con la partida) y
 ## AÑADIR países a mitad de partida (`agregar`, al cerrar la temporada; no se quitan). Los cupos continentales de los países no activos los reparte `PlazasConti` entre los que sí lo están.
 const GRANDES: Array[String] = ["ENG", "ESP", "ITA", "GER", "FRA"]
-const PAIS_MOVIL := "CHI"   ## el país del juego por defecto (hasta que el dueño decida otro criterio para «mi país» en móvil)
+const PAIS_MOVIL := "CHI"   ## el país por defecto cuando el dispositivo no dice uno con liga
+const MOVIL_FIJOS: Array[String] = ["ENG", "ESP", "ITA", "GER"]   ## móvil: el país del dispositivo y estos cuatro grandes
+const PC_PRINCIPALES: Array[String] = ["ENG", "ESP", "ITA", "GER", "FRA", "POR", "NED", "BRA", "ARG", "MEX", "USA", "TUR", "BEL"]   ## PC: estos 13 + el país del dispositivo + Chile, hasta 15
+const PC_RELLENO: Array[String] = ["JPN", "COL", "SCO", "URU", "KSA", "SUI", "AUT"]   ## si el país del dispositivo ya estaba entre los 13, se completa hasta 15
+const MS_POR_CLUB_SEMANA := 1.1   ## coste medido por la sesión 5 (coste_mundo_2026-11-10.md): ms por club y semana en PC; en móvil ×3
+const MB_POR_CLUB := 1.25   ## ≈1,8-2 GB de pico con los 1.541 clubes
+## País del dispositivo (ISO 3166 → código del juego), solo los que tienen liga.
+const ISO_A_JUEGO := {"CL": "CHI", "AR": "ARG", "BR": "BRA", "UY": "URU", "PY": "PAR", "CO": "COL", "PE": "PER", "EC": "ECU", "BO": "BOL", "VE": "VEN", "MX": "MEX", "US": "USA", "ES": "ESP", "GB": "ENG",
+	"IT": "ITA", "DE": "GER", "FR": "FRA", "PT": "POR", "NL": "NED", "BE": "BEL", "HR": "CRO", "DK": "DEN", "CH": "SUI", "AT": "AUT", "GR": "GRE", "SE": "SWE", "NO": "NOR", "PL": "POL", "CZ": "CZE",
+	"RO": "ROU", "RS": "SRB", "UA": "UKR", "BG": "BUL", "HU": "HUN", "IL": "ISR", "RU": "RUS", "SK": "SVK", "TR": "TUR", "SA": "KSA", "JP": "JPN", "KR": "KOR", "CN": "CHN", "AU": "AUS", "EG": "EGY",
+	"MA": "MAR", "ZA": "RSA", "QA": "QAT", "AE": "UAE", "IR": "IRN", "NG": "NGA", "GH": "GHA", "SN": "SEN", "CI": "CIV", "DZ": "ALG", "TN": "TUN", "CM": "CMR", "CA": "CAN", "CR": "CRC", "IE": "IRL",
+	"JO": "JOR", "CY": "CYP", "IQ": "IRQ", "UZ": "UZB", "FI": "FIN", "SI": "SVN", "JM": "JAM", "HN": "HON", "PA": "PAN", "NZ": "NZL", "ML": "MLI", "BA": "BIH", "ME": "MNE", "IS": "ISL", "EE": "EST",
+	"KZ": "KAZ", "AZ": "AZE", "BY": "BLR", "LV": "LVA", "AL": "ALB", "MK": "MKD", "GE": "GEO", "LT": "LTU", "LU": "LUX"}
 const META := "paises_activos"
 const RUTA_ELECCION := "user://ligas_activas.cfg"
 ## Lo que eligió el jugador en la pantalla «Ligas activas» (vacío = no eligió: PC todas, móvil la selección por defecto).
@@ -74,15 +86,39 @@ static func todos() -> Array[String]:
 				l.append(pais)
 	return l
 
-## La selección por defecto: PC todas; móvil el país del juego y los cinco grandes.
+## El país del dispositivo (`OS.get_locale()`, p. ej. «es_CL») si tiene liga; si no, el país del juego (Chile).
+static func pais_del_dispositivo() -> String:
+	var iso := OS.get_locale().get_slice("_", 1).get_slice(".", 0).to_upper()
+	var cod := String(ISO_A_JUEGO.get(iso, ""))
+	return cod if cod != "" and todos().has(cod) else PAIS_MOVIL
+
+## La selección por defecto. Móvil: el país del dispositivo y ENG, ESP, ITA, GER. PC: los 13 principales + el país del dispositivo + Chile, hasta 15 sin repetir.
 static func por_defecto(movil: bool) -> Array[String]:
-	if not movil:
-		return todos()
-	var l: Array[String] = [PAIS_MOVIL]
-	for g: String in GRANDES:
+	var mio := pais_del_dispositivo()
+	var l: Array[String] = [mio]
+	if movil:
+		for g: String in MOVIL_FIJOS:
+			if not l.has(g) and todos().has(g):
+				l.append(g)
+		return l
+	for g: String in PC_PRINCIPALES + [PAIS_MOVIL] + PC_RELLENO:
+		if l.size() >= 15:
+			break
 		if not l.has(g) and todos().has(g):
 			l.append(g)
 	return l
+
+## ¿Esta lista es el mundo entero (todos los países con liga)?
+static func es_entero(lista: Array) -> bool:
+	return lista.size() >= todos().size()
+
+## Estimación de coste de una lista de países: {"clubes", "s_semana", "gb"} (PC; en móvil ×3 el tiempo).
+static func coste(lista: Array, movil: bool) -> Dictionary:
+	var clubes := 0
+	for p: Variant in lista:
+		clubes += clubes_de(String(p))
+	var ms := float(clubes) * MS_POR_CLUB_SEMANA * (3.0 if movil else 1.0)
+	return {"clubes": clubes, "s_semana": ms / 1000.0, "gb": float(clubes) * MB_POR_CLUB / 1000.0}
 
 ## Los países cargados en este mundo (guardado en la partida). Sin lista guardada (partidas viejas), los que tienen liga.
 static func de(m: Mundo) -> Array[String]:

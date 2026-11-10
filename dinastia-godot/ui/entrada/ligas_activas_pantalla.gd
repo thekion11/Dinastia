@@ -11,7 +11,7 @@ const NOMBRES_CONFED := {"ucl": "Europa (UEFA)", "lib": "Sudamérica (CONMEBOL)"
 ## Modo «añadir» (al cerrar una temporada): se enseñan solo los países que faltan y se devuelve {"ligas": {"paises": [...]}} (vacío = «ahora no»); se aplica con `LigasActivas.agregar`.
 var mundo_agregar: Mundo = null
 var _estado: Dictionary = {}
-var _casillas: Dictionary = {}   ## código de país → CheckBox
+var _casillas: Dictionary = {}   ## código de país → botón de dos estados
 var _resumen: Label
 var _continuar: Button
 
@@ -44,7 +44,7 @@ func _ready() -> void:
 	var atajos := HBoxContainer.new()
 	atajos.add_theme_constant_override("separation", 8)
 	v.add_child(atajos)
-	for a: Array in [["Todas", "todas"], ["Mi país y los 5 grandes", "grandes"], ["Ninguna", "ninguna"]] if not agregando else [["Todas", "todas"], ["Ninguna", "ninguna"]]:
+	for a: Array in [["Por defecto", "defecto"], ["Mundo entero", "todas"], ["Ninguna", "ninguna"]] if not agregando else [["Todas", "todas"], ["Ninguna", "ninguna"]]:
 		var b := Button.new()
 		b.text = Idiomas.t(String(a[0]))
 		b.custom_minimum_size = Vector2(0, 44)
@@ -76,11 +76,15 @@ func _ready() -> void:
 		for p: String in g[1]:
 			if not faltan.has(p):
 				continue
-			var c := CheckBox.new()
-			c.text = "%s (%d)" % [Idiomas.t(String(nombres.get(p, p))), LigasActivas.clubes_de(p)]
-			c.custom_minimum_size = Vector2(0, 40)
-			c.button_pressed = marcados.has(p)
-			c.toggled.connect(func(_on: bool) -> void: _actualizar())
+			var c := Button.new()   ## botón de dos estados: la casilla vacía del tema no se ve sobre el fondo oscuro
+			c.toggle_mode = true
+			c.custom_minimum_size = Vector2(0, 44)
+			c.set_meta("etiqueta", "%s (%d)" % [Idiomas.t(String(nombres.get(p, p))), LigasActivas.clubes_de(p)])
+			c.set_pressed_no_signal(marcados.has(p))
+			_rotular(c)
+			c.toggled.connect(func(_on: bool) -> void:
+				_rotular(c)
+				_actualizar())
 			flujo.add_child(c)
 			_casillas[p] = c
 	_resumen = Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, "")
@@ -105,7 +109,7 @@ func _ready() -> void:
 func marcados() -> Array[String]:
 	var l: Array[String] = []
 	for p: String in LigasActivas.todos():
-		if _casillas.has(p) and (_casillas[p] as CheckBox).button_pressed:
+		if _casillas.has(p) and (_casillas[p] as BaseButton).button_pressed:
 			l.append(p)
 	return l
 
@@ -114,18 +118,26 @@ func _atajo(que: String) -> void:
 	match que:
 		"todas":
 			lista.assign(_casillas.keys())
-		"grandes":
-			lista = LigasActivas.por_defecto(true)
+		"defecto":
+			lista = LigasActivas.por_defecto(OS.has_feature("mobile"))
 	for p: String in _casillas:
-		(_casillas[p] as CheckBox).set_pressed_no_signal(lista.has(p))
+		(_casillas[p] as BaseButton).set_pressed_no_signal(lista.has(p))
+		_rotular(_casillas[p] as Button)
 	_actualizar()
+
+func _rotular(b: Button) -> void:
+	b.text = "%s %s" % ["☑" if b.button_pressed else "☐", String(b.get_meta("etiqueta", ""))]
 
 func _actualizar() -> void:
 	var m := marcados()
 	var clubes := 0
 	for p: String in m:
 		clubes += LigasActivas.clubes_de(p)
-	_resumen.text = Idiomas.t("%d países · %d clubes · unos %d jugadores") % [m.size(), clubes, clubes * 25] if not m.is_empty() else Idiomas.t("Elige al menos un país.")
+	var movil := OS.has_feature("mobile")
+	var c := LigasActivas.coste(m, movil)
+	_resumen.text = Idiomas.t("%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria") % [m.size(), clubes, float(c["s_semana"]), float(c["gb"])] if not m.is_empty() else Idiomas.t("Elige al menos un país.")
+	if not m.is_empty() and ((movil and clubes > 400) or (not movil and clubes > 1200)):
+		_resumen.text += "\n" + Idiomas.t("⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.")
 	_continuar.disabled = m.is_empty() and mundo_agregar == null   ## al añadir, sin nada marcado «Añadir» equivale a «Ahora no»
 
 ## Lo que haría «Continuar» (las pruebas lo llaman directo). Sin nada marcado, no sigue.
