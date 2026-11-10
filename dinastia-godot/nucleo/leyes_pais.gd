@@ -81,6 +81,18 @@ const REGLAS := {
 	"CMR": {"plantel": 5, "cancha": 3, "criterio": "extranjero", "norma": "Liga camerunesa (ficticia): 5 extranjeros inscritos, 3 en cancha.", "seguro": false},
 	"CAN": {"plantel": 7, "cancha": 0, "criterio": "extranjero", "norma": "Liga canadiense (ficticia): 7 extranjeros inscritos.", "seguro": false},
 	"CRC": {"plantel": 5, "cancha": 4, "criterio": "extranjero", "norma": "Liga costarricense (ficticia): 5 extranjeros inscritos, 4 en cancha.", "seguro": false},
+	"WAL": {"plantel": 6, "cancha": 0, "criterio": "extranjero", "norma": "Liga galesa (ficticia): 6 extranjeros inscritos.", "seguro": false},
+	"SVN": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga eslovena (ficticia): sin cupo de extracomunitarios.", "seguro": false},
+	"JOR": {"plantel": 5, "cancha": 3, "criterio": "extranjero", "norma": "Liga jordana (ficticia): 5 extranjeros inscritos, 3 en cancha.", "seguro": false},
+	"CYP": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga chipriota (ficticia): sin cupo de extracomunitarios.", "seguro": false},
+	"IRQ": {"plantel": 6, "cancha": 4, "criterio": "extranjero", "norma": "Liga iraquí (ficticia): 6 extranjeros inscritos, 4 en cancha.", "seguro": false},
+	"UZB": {"plantel": 6, "cancha": 4, "criterio": "extranjero", "norma": "Liga uzbeka (ficticia): 6 extranjeros inscritos, 4 en cancha.", "seguro": false},
+	"FIN": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga finlandesa (ficticia): sin cupo de extracomunitarios.", "seguro": false},
+	"JAM": {"plantel": 5, "cancha": 3, "criterio": "extranjero", "norma": "Liga jamaiquina (ficticia): 5 extranjeros inscritos, 3 en cancha.", "seguro": false},
+	"HON": {"plantel": 5, "cancha": 3, "criterio": "extranjero", "norma": "Liga hondureña (ficticia): 5 extranjeros inscritos, 3 en cancha.", "seguro": false},
+	"PAN": {"plantel": 5, "cancha": 3, "criterio": "extranjero", "norma": "Liga panameña (ficticia): 5 extranjeros inscritos, 3 en cancha.", "seguro": false},
+	"NZL": {"plantel": 5, "cancha": 0, "criterio": "extranjero", "norma": "Liga neozelandesa (ficticia): 5 extranjeros inscritos.", "seguro": false},
+	"MLI": {"plantel": 5, "cancha": 3, "criterio": "extranjero", "norma": "Liga maliense (ficticia): 5 extranjeros inscritos, 3 en cancha.", "seguro": false},
 	"IRN": {"plantel": 4, "cancha": 3, "criterio": "extranjero", "norma": "Liga iraní (ficticia): 4 extranjeros inscritos, 3 por convocatoria.", "seguro": false},
 }
 

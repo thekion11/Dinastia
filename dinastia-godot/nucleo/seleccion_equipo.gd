@@ -25,7 +25,7 @@ const COLORES := {
 	"Hungría": ["#ce2939", "#ffffff"], "Grecia": ["#0d5eaf", "#ffffff"], "Irlanda": ["#169b62", "#ffffff"], "Ghana": ["#ffffff", "#006b3f"],
 	"Costa de Marfil": ["#f77f00", "#009e60"], "Argelia": ["#ffffff", "#006233"], "Túnez": ["#e70013", "#ffffff"], "Malí": ["#fcd116", "#14b53a"],
 	"Uzbekistán": ["#ffffff", "#0099b5"], "Jordania": ["#ffffff", "#ce1126"], "Irak": ["#ffffff", "#007a3d"], "Emiratos": ["#ffffff", "#00732f"],
-	"Israel": ["#ffffff", "#0038b8"], "Rumanía": ["#fcd116", "#002b7f"], "Eslovaquia": ["#ffffff", "#0b4ea2"], "Bulgaria": ["#ffffff", "#00966e"],
+	"Israel": ["#ffffff", "#0038b8"], "Finlandia": ["#ffffff", "#003580"], "Eslovenia": ["#ffffff", "#005da4"], "Chipre": ["#ffffff", "#d57800"], "Rumanía": ["#fcd116", "#002b7f"], "Eslovaquia": ["#ffffff", "#0b4ea2"], "Bulgaria": ["#ffffff", "#00966e"],
 	"China": ["#de2910", "#ffde00"], "Rusia": ["#ffffff", "#d52b1e"], "Panamá": ["#d21034", "#ffffff"], "Jamaica": ["#fed100", "#009b3a"], "Honduras": ["#ffffff", "#0073cf"],
 }
 

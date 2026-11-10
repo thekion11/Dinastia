@@ -41,7 +41,8 @@ func _probar_fases_finales_egipto() -> void:
 		var bajan: Array = t.slice(t.size() - l.plazas_descenso)
 		_comprobar(bajan.all(func(f: Dictionary) -> bool: return (g[1] as Array).has((f["club"] as Club).id)), "los %d que bajan salen del grupo del descenso" % l.plazas_descenso)
 		var tabla_recargada := l2.tabla()
-		_comprobar((tabla_recargada[0]["club"] as Club).id == campeon.id, "la liga recargada llega al mismo campeón")
+		## (10-11) Las dos ligas comparten los mismos clubes (se juegan una tras otra y el estado de los clubes cambia), así que NO tienen por qué dar el mismo campeón: lo que debe conservar la recarga es la FASE (el campeón sale del grupo del campeonato).
+		_comprobar((g[0] as Array).has((tabla_recargada[0]["club"] as Club).id), "la liga recargada también corona a un club del grupo del campeonato")
 		var pj_a := int(l.tabla_puntos[g[0][0]]["pj"])
 		var pj_b := int(l.tabla_puntos[g[1][0]]["pj"])
 		_comprobar(pj_a == 21 - 1 + 12 and pj_b == 21 - 1 + 13, "partidos: %d en el campeonato (20+12) y %d en el descenso (20+13)" % [pj_a, pj_b])

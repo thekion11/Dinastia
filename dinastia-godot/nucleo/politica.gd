@@ -88,6 +88,18 @@ const ESTRUCTURA := {
 	"CAN": ["monarquia_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el rey, con un papel simbólico"],
 	"CRC": ["presidencial", 4, "presidente de la República", "el presidente"],
 	"IRL": ["republica_parlamentaria", 5, "Parlamento (y con él, el primer ministro)", "el presidente, con un papel más simbólico"],
+	"WAL": ["monarquia_parlamentaria", 5, "Parlamento (y con él, el primer ministro)", "el rey, con un papel simbólico"],
+	"SVN": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente, con un papel más simbólico"],
+	"JOR": ["monarquia_constitucional", 4, "Parlamento (y con él, el primer ministro)", "el rey, que conserva mucho poder"],
+	"CYP": ["presidencial", 5, "presidente de la República", "el presidente"],
+	"IRQ": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente, con un papel más simbólico"],
+	"UZB": ["presidencial", 7, "presidente de la República", "el presidente"],
+	"FIN": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente, con un papel más simbólico"],
+	"JAM": ["monarquia_parlamentaria", 5, "Parlamento (y con él, el primer ministro)", "el rey, con un papel simbólico"],
+	"HON": ["presidencial", 4, "presidente de la República", "el presidente"],
+	"PAN": ["presidencial", 5, "presidente de la República", "el presidente"],
+	"NZL": ["monarquia_parlamentaria", 3, "Parlamento (y con él, el primer ministro)", "el rey, con un papel simbólico"],
+	"MLI": ["presidencial", 5, "presidente de la República", "el presidente"],
 	"IRN": ["presidencial", 4, "presidente de la República", "el presidente"],
 }
 

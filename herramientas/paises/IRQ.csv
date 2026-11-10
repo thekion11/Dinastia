@@ -1,0 +1,30 @@
+#seleccion=Irak
+#tier=0.3
+#globo=44.37,33.31
+#bandera=🇮🇶
+#confed=asia
+#liga=Liga de Estrellas de Irak|Liga Iraquí
+#copa=Copa de Irak|Copa Iraquí
+#nombres=Mohammed,Ali,Hussein,Ahmed,Hassan,Mustafa,Omar,Yousif,Karim,Ibrahim,Jassim,Saad,Ammar,Hamza
+#apellidos=Al-Jabouri,Al-Tamimi,Al-Obeidi,Al-Hashimi,Al-Zubaidi,Al-Dulaimi,Al-Rubaie,Al-Saadi,Al-Khafaji,Al-Shammari,Al-Azzawi,Al-Maliki,Hamid,Kadhim
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Al-Gharraf;Garraf Nasiriya;#ffd100;#1b458f;40;20000;1971;los Amarillos;el estadio internacional de la ciudad del sur;El club de la ciudad de Nasiriya.
+Al-Kahrabaa;Kahraba Bagdad;#ffd100;#1b458f;42;15443;1975;los Eléctricos;el estadio compartido de la capital;El club de la compañía eléctrica.
+Al-Karkh;Karj Bagdad;#ffffff;#c8102e;40;5150;1976;los Blancos;el pequeño estadio de la capital;Un club de la orilla occidental de la capital.
+Al-Karma;Karma Falluya;#c8102e;#ffffff;40;6000;1967;los Rojos;el estadio de la ciudad del oeste;El club de la provincia occidental.
+Al-Minaa;Mina Basora;#ffd100;#00843d;47;30000;1930;los del Puerto;el estadio olímpico del puerto del sur;El club del puerto de Basora.
+Al-Mosul;Mosul Ninive;#1b458f;#ffffff;40;22800;1928;los Ninivitas;el estadio de la ciudad del norte;El club histórico de la ciudad de Mosul.
+Al-Naft;Naft Bagdad;#00843d;#ffffff;49;5150;1952;los Petroleros;el pequeño estadio de la capital;El club del Ministerio del Petróleo.
+Al-Najaf;Nayaf Sagrado;#ffd100;#1b458f;46;30000;1961;los Amarillos;el estadio internacional de la ciudad santa;El club de la ciudad del centro-sur.
+Al-Qasim;Qasim Babilonia;#c8102e;#ffffff;39;30000;1965;los Rojos;el estadio de la ciudad del Éufrates;Un club humilde de la región de Babilonia.
+Al-Quwa Al-Jawiya;Aviacion Iraq;#ffffff;#1b458f;62;35700;1931;los Pilotos;el estadio popular de la capital;El club de la fuerza aérea, de los más laureados.
+Al-Shorta;Shorta Bagdad;#ffffff;#1b458f;60;10089;1932;los Policías;el estadio del club policial;El club de la policía, campeón reciente.
+Al-Talaba;Talaba Bagdad;#c8102e;#ffffff;58;32000;1969;los Estudiantes;el gran estadio de la capital;El club de los estudiantes, multicampeón.
+Al-Zawraa;Zawra Bagdad;#ffffff;#00843d;66;15443;1969;los Cisnes;el estadio compartido de la capital;El club más laureado del país.
+Amanat Baghdad;Alcaldia Bagdad;#1b458f;#ffffff;49;32000;1957;los de la Alcaldía;el gran estadio de la capital;El club de la alcaldía de la capital.
+Diyala;Diyala Naranjas;#c8102e;#ffffff;40;10000;1976;los Naranjeros;el estadio de la ciudad de los naranjos;El club de la provincia de los naranjales.
+Duhok;Duhok Montaña;#c8102e;#ffffff;52;22800;1972;los Rojos del Norte;el estadio de la ciudad kurda;El club de la ciudad kurda de las montañas.
+Erbil;Erbil Ciudadela;#ffd100;#1b458f;56;25000;1968;los de la Ciudadela;el estadio de la capital kurda;El club de la capital kurda, multicampeón.
+Naft Maysan;Naft Amara;#00843d;#ffffff;46;25000;1972;los Petroleros del Sur;el estadio olímpico de la ciudad de los pantanos;El club petrolero del sur del país.
+Newroz;Nowruz Suleimani;#ffd100;#c8102e;48;14500;1971;los del Año Nuevo;el estadio de la ciudad kurda;El club kurdo que toma su nombre de una fiesta.
+Zakho;Zajo Frontera;#c8102e;#ffffff;49;20000;1946;los Rojos;el estadio internacional de la ciudad fronteriza;El club de la ciudad de la frontera norte.
