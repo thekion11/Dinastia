@@ -218,7 +218,7 @@ func _refrescar() -> void:
 		_evento_fin_lanzado = false
 	if p.mundo != null and not p.mundo.temporada_en_curso() and not _evento_fin_lanzado:
 		_evento_fin_lanzado = true
-		JornadaDespedida.ofrecer.call_deferred(p)
+		Callable(load("res://ui/principal/jornada_despedida.gd"), "ofrecer").call_deferred(p)   ## por ruta: nombrar la clase compilaba el partido 3D al abrir el menú (`PartidoVivo`)
 ## ¿Tu club tiene partido (liga, copa o continental) que aún no se ha jugado esta semana?
 func _tiene_partido_pendiente() -> bool:
 	return p.mundo != null and p.mundo.temporada_en_curso() and (not p.mundo.proximo_partido().is_empty()

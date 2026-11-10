@@ -27,7 +27,7 @@ func _rellenar(pr: Principal, homenajeados: Array, leyendas: Club) -> void:
 	var mio := pr.mundo.mi_club() if pr.mundo != null else null
 	if homenajeados.is_empty():
 		mio = leyendas   ## sin homenajeados de tu club, las Leyendas con sus colores
-	var campo := HomenajeCampo3D.montar(filas, Color(mio.color1) if mio else Tema.ACENTO, Color(mio.color2) if mio else Color.WHITE)
+	var campo: Control = load("res://visor/homenaje_campo3d.gd").montar(filas, Color(mio.color1) if mio else Tema.ACENTO, Color(mio.color2) if mio else Color.WHITE)
 	if campo != null:
 		campo.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		_centro.add_child(campo)
