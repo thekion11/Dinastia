@@ -1,0 +1,32 @@
+# Lote M3: nombre|butaca1|butaca2
+Kalba|#c8102e|#ffd100
+SC Poltava|#c8102e|#ffffff
+LNZ Cherkasy|#c8102e|#ffffff
+Epicentr Kamianets-Podilskyi|#ffd100|#1b458f
+FC Kudrivka|#1b458f|#ffd100
+Metropolitanos|#00843d|#ffffff
+Academia Puerto Cabello|#ffd100|#1b458f
+Portuguesa|#00843d|#c8102e
+Trujillanos|#ffd100|#00843d
+Anzoátegui|#c8102e|#ffffff
+Moreirense|#00843d|#ffffff
+Arouca|#ffd100|#0057b8
+Estrela Amadora|#d50032|#00843d
+AVS|#d50032|#ffffff
+Alverca|#d50032|#ffd100
+Tondela|#00843d|#ffd100
+Westerlo|#ffd100|#0057b8
+OH Lovaina|#ffffff|#0057b8
+Sint-Truiden|#ffd100|#0057b8
+Zulte Waregem|#d50032|#00843d
+Dender|#d50032|#ffffff
+La Louvière|#d50032|#000000
+Gorica|#d50032|#ffffff
+Istra 1961|#00843d|#ffd100
+Varaždin|#ffffff|#d50032
+Slaven Belupo|#d50032|#ffffff
+Vukovar 1991|#0057b8|#ffffff
+Viborg|#00843d|#ffffff
+Sønderjyske|#0057b8|#ffffff
+Vejle|#d50032|#ffffff
+Fredericia|#d50032|#ffffff

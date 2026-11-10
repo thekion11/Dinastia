@@ -8,19 +8,19 @@
 #nombres=Magnus,Henrik,Andreas,Jonas,Sander,Martin,Mathias,Kristian,Sindre,Håkon,Markus,Eirik,Tobias,Ola
 #apellidos=Hansen,Johansen,Olsen,Larsen,Andersen,Nilsen,Pedersen,Kristiansen,Jensen,Karlsen,Johnsen,Pettersen,Eriksen,Berg
 real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
-Bodø/Glimt;Glimt Polar;#ffd100;#000000;68;8000;1916;los Amarillos;el estadio del círculo polar;El club del círculo polar que llegó a semifinales europeas.
-Brann;Brann Rojo;#c8102e;#ffffff;65;17000;1908;los Rojos;el estadio de la ciudad de los fiordos;El club de la ciudad de los fiordos con la hinchada más grande.
-Viking;Vikingo Sur;#1b458f;#ffffff;62;16000;1899;los Vikingos;el estadio de la ciudad del petróleo;El club de la ciudad del petróleo.
-Rosenborg;Rosa Trondheim;#ffffff;#000000;63;21000;1917;los Blancos;el estadio de la ciudad del norte;El club que ganó trece ligas seguidas.
-Molde;Molde Azul;#1b458f;#ffffff;62;11000;1911;los Azules;el estadio de la ciudad de las rosas;El club de la ciudad de las rosas.
-Lillestrøm;Lillestrom Sol;#ffd100;#000000;58;12000;1917;los Amarillos;el estadio del este de la capital;El club del este de la capital.
-Tromsø;Tromso Artico;#c8102e;#ffffff;57;6700;1920;los Árticos;el estadio más al norte de la liga;El club de la ciudad más al norte.
-Sarpsborg 08;Sarpsborg Cobre;#c8102e;#ffffff;56;4500;2008;los Rojos;el estadio de la ciudad industrial;Un club joven, fundado a base de fusiones.
-Fredrikstad;Fredrikstad Gris;#ffffff;#000000;57;12000;1903;los Grises;el estadio del puerto del sur;El club de la ciudad fortaleza que volvió a primera.
-KFUM Oslo;Kfum Capital;#c8102e;#ffffff;54;3500;1894;los Rojos;el estadio del oeste de la capital;Un club de barrio que subió a primera.
-Sandefjord;Sandefjord Mar;#1b458f;#ffffff;54;6000;1998;los Balleneros;el estadio de la ciudad ballenera;El club de la ciudad de los balleneros.
-Strømsgodset;Stroms Azul;#1b458f;#000000;56;8000;1907;los Azules;el estadio de la ciudad del río;El club de la ciudad del río.
-Kristiansund;Kristian Costa;#1b458f;#ffffff;53;4400;2003;los Costeros;el estadio de la costa de las islas;Un club joven de una ciudad de islas.
-HamKam;Hamkam Lago;#00843d;#ffffff;53;7000;1918;los Verdes;el estadio del lago más grande;El club del lago más grande del país.
-Vålerenga;Valerenga Azul;#1b458f;#ffffff;58;17000;1913;los Azules;el estadio de la capital;El club con más hinchada de la capital.
-Haugesund;Haugesund Marino;#1b458f;#ffffff;54;5500;1993;los Marinos;el estadio de la costa del oeste;El club de la costa del oeste.
+Bodø/Glimt;Glimt Polar;#ffd100;#000000;68;8200;1916;los Amarillos;el estadio del círculo polar;El club del círculo polar que llegó a semifinales europeas.
+Brann;Brann Rojo;#c8102e;#ffffff;65;17500;1908;los Rojos;el estadio de la ciudad de los fiordos;El club de la ciudad de los fiordos con la hinchada más grande.
+Viking;Vikingo Sur;#1b458f;#ffffff;62;15900;1899;los Vikingos;el estadio de la ciudad del petróleo;El club de la ciudad del petróleo.
+Rosenborg;Rosa Trondheim;#ffffff;#000000;63;21423;1917;los Blancos;el estadio de la ciudad del norte;El club que ganó trece ligas seguidas.
+Molde;Molde Azul;#1b458f;#ffffff;62;11249;1911;los Azules;el estadio de la ciudad de las rosas;El club de la ciudad de las rosas.
+Lillestrøm;Lillestrom Sol;#ffd100;#000000;58;10540;1917;los Amarillos;el estadio del este de la capital;El club del este de la capital.
+Tromsø;Tromso Artico;#c8102e;#ffffff;57;6691;1920;los Árticos;el estadio más al norte de la liga;El club de la ciudad más al norte.
+Sarpsborg 08;Sarpsborg Cobre;#c8102e;#ffffff;56;8022;2008;los Rojos;el estadio de la ciudad industrial;Un club joven, fundado a base de fusiones.
+Fredrikstad;Fredrikstad Gris;#ffffff;#000000;57;12560;1903;los Grises;el estadio del puerto del sur;El club de la ciudad fortaleza que volvió a primera.
+KFUM Oslo;Kfum Capital;#c8102e;#ffffff;54;3300;1894;los Rojos;el estadio del oeste de la capital;Un club de barrio que subió a primera.
+Sandefjord;Sandefjord Mar;#1b458f;#ffffff;54;6582;1998;los Balleneros;el estadio de la ciudad ballenera;El club de la ciudad de los balleneros.
+Aalesund;Alesund Marino;#f26522;#1b458f;55;10778;1914;los Marinos;el estadio de la ciudad de los fiordos;El club de la ciudad de los fiordos, de vuelta en primera.
+Kristiansund;Kristian Costa;#1b458f;#ffffff;53;4364;2003;los Costeros;el estadio de la costa de las islas;Un club joven de una ciudad de islas.
+HamKam;Hamkam Lago;#00843d;#ffffff;53;8068;1918;los Verdes;el estadio del lago más grande;El club del lago más grande del país.
+Vålerenga;Valerenga Azul;#1b458f;#ffffff;58;16556;1913;los Azules;el estadio de la capital;El club con más hinchada de la capital.
+Start;Start Sur;#ffd100;#000000;55;14448;1905;los del Sur;el estadio del extremo sur;El club del extremo sur del país, de vuelta en primera.

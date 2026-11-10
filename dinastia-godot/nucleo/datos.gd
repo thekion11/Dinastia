@@ -185,6 +185,15 @@ func _sumar_paises_extra() -> void:
 				copiadas[nombre] = true
 			if not (_tablas[nombre] as Dictionary).has(cod):
 				_tablas[nombre][cod] = fila[nombre]
+	## «listas»: nombres que se suman al final de las tablas que son LISTAS (SELECCIONES: las selecciones de los países nuevos), sin repetir.
+	var listas: Dictionary = (extra as Dictionary).get("listas", {})
+	for nombre_l: String in listas:
+		if _tablas.get(nombre_l) is Array:
+			var lista: Array = (_tablas[nombre_l] as Array).duplicate()
+			for x: Variant in listas[nombre_l]:
+				if not lista.has(x):
+					lista.append(x)
+			_tablas[nombre_l] = lista
 	## «tablas»: filas por su propia clave (HISTORIA_CLUBES va por nombre de club).
 	var tablas: Dictionary = (extra as Dictionary).get("tablas", {})
 	for nombre: String in tablas:

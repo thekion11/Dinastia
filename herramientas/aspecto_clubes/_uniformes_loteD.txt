@@ -1,0 +1,239 @@
+# Lote D: nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed
+Al Ain|liso|#5b2d8e|#ffffff|#5b2d8e|#5b2d8e|#ffffff|#5b2d8e|liso|#ffffff|#ffffff
+Shabab Al Ahli|liso|#d50032|#111111|#111111|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Al Wasl|liso|#ffd100|#ffffff|#ffffff|#ffd100|#ffffff|#ffd100|liso|#ffffff|#ffffff
+Al Jazira|franjas|#d50032|#111111|#111111|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Sharjah|liso|#ffffff|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|liso|#0057b8|#0057b8
+Al Wahda|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Baniyas|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Al-Nasr|liso|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8
+Khor Fakkan|franjas|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Ajman|liso|#f58220|#111111|#111111|#f58220|#111111|#f58220|liso|#111111|#111111
+Al Dhafra|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Persepolis|liso|#d50032|#ffffff|#d50032|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Esteghlal|liso|#0057b8|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Sepahan|liso|#ffd100|#111111|#111111|#ffd100|#ffffff|#ffd100|liso|#ffffff|#ffffff
+Tractor|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Foolad|liso|#d50032|#ffd100|#ffd100|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Gol Gohar|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Zob Ahan|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Malavan|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Aluminium Arak|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Esteghlal Khuzestan|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Carabobo|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Deportivo Táchira|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Caracas|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Universidad Central|liso|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8
+Deportivo La Guaira|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Monagas|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Estudiantes de Mérida|franjas|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Zamora|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Rayo Zuliano|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Marítimo|liso|#00843d|#d50032|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Farense|franjas|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Portimonense|franjas|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Paços de Ferreira|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Vizela|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Chaves|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+União de Leiria|liso|#0057b8|#d50032|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Académico de Viseu|liso|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Leixões|franjas|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Penafiel|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Feirense|liso|#ffffff|#111111|#111111|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Felgueiras|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Oliveirense|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Lusitânia Lourosa|liso|#00843d|#d50032|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Torreense|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Benfica B|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Porto B|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Sporting CP B|aros|#00843d|#ffffff|#111111|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+ADO Den Haag|liso|#00843d|#ffd100|#00843d|#00843d|#ffd100|#00843d|liso|#ffd100|#ffd100
+Willem II|franjas|#d50032|#0057b8|#0057b8|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Vitesse|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Roda JC Kerkrade|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Cambuur|liso|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8
+De Graafschap|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Almere City|liso|#d50032|#111111|#111111|#d50032|#111111|#d50032|liso|#111111|#111111
+RKC Waalwijk|liso|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8
+Emmen|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+MVV Maastricht|liso|#d50032|#ffd100|#ffd100|#d50032|#ffd100|#d50032|liso|#ffd100|#ffd100
+VVV-Venlo|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Den Bosch|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Dordrecht|liso|#ffffff|#00843d|#00843d|#ffffff|#00843d|#ffffff|liso|#00843d|#00843d
+Eindhoven|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Helmond Sport|liso|#111111|#ffd100|#111111|#111111|#ffd100|#111111|liso|#ffd100|#ffd100
+TOP Oss|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Jong Ajax|franjas_anchas|#ffffff|#d50032|#ffffff|#ffffff|#d50032|#ffffff|liso|#d50032|#d50032
+Jong AZ|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Jong PSV|franjas|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Jong FC Utrecht|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Erzurumspor|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Adana Demirspor|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Sivasspor|franjas|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Hatayspor|liso|#8b1538|#ffffff|#ffffff|#8b1538|#ffffff|#8b1538|liso|#ffffff|#ffffff
+Bodrum|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Amedspor|franjas|#d50032|#00843d|#00843d|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Sakaryaspor|franjas|#00843d|#111111|#111111|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Manisa|franjas|#111111|#d50032|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Bandırmaspor|franjas|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Çorum|franjas|#111111|#d50032|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Pendikspor|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+İstanbulspor|franjas|#ffd100|#d50032|#d50032|#ffd100|#d50032|#ffd100|liso|#d50032|#d50032
+Boluspor|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Sarıyer|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Birmingham City|liso|#0057b8|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Blackburn|mitad|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Bristol City|liso|#d50032|#ffffff|#d50032|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Charlton|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Coventry|liso|#5ab4e5|#ffffff|#5ab4e5|#5ab4e5|#0b2a5b|#5ab4e5|liso|#0b2a5b|#0b2a5b
+Derby County|liso|#ffffff|#111111|#111111|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Hull City|franjas|#f58220|#111111|#111111|#f58220|#ffffff|#f58220|liso|#ffffff|#ffffff
+Ipswich|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Leicester|liso|#0057b8|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Middlesbrough|banda|#d50032|#ffffff|#d50032|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Millwall|liso|#0b2a5b|#ffffff|#ffffff|#0b2a5b|#ffffff|#0b2a5b|liso|#ffffff|#ffffff
+Norwich|liso|#ffd100|#00843d|#00843d|#ffd100|#ffffff|#ffd100|liso|#ffffff|#ffffff
+Oxford United|liso|#ffd100|#0b2a5b|#0b2a5b|#ffd100|#0b2a5b|#ffd100|liso|#0b2a5b|#0b2a5b
+Portsmouth|liso|#0057b8|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Preston|liso|#ffffff|#0b2a5b|#0b2a5b|#ffffff|#0b2a5b|#ffffff|liso|#0b2a5b|#0b2a5b
+Q.P.R.|aros|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Sheffield Utd|franjas|#d50032|#ffffff|#111111|#111111|#ffffff|#d50032|liso|#ffffff|#ffffff
+Sheffield Wed|franjas|#0057b8|#ffffff|#111111|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Southampton|franjas|#d50032|#ffffff|#111111|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Stoke|franjas|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Swansea|liso|#ffffff|#111111|#ffffff|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Watford|liso|#ffd100|#d50032|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+W. Brom|franjas|#0b2a5b|#ffffff|#ffffff|#0b2a5b|#ffffff|#0b2a5b|liso|#ffffff|#ffffff
+Wrexham|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Albacete|liso|#ffffff|#111111|#ffffff|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Almería|franjas|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Andorra|liso|#0057b8|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|liso|#ffd100|#ffd100
+Burgos|liso|#ffffff|#111111|#111111|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Cádiz|liso|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8
+Castellón|franjas|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Ceuta|liso|#ffffff|#111111|#111111|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Córdoba|franjas|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Cultural Leonesa|liso|#ffffff|#d50032|#d50032|#ffffff|#d50032|#ffffff|liso|#d50032|#d50032
+Deportivo|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Eibar|franjas|#d50032|#0057b8|#0057b8|#d50032|#0057b8|#d50032|liso|#0057b8|#0057b8
+Granada|mitad|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Las Palmas|liso|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8
+Leganés|franjas|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|#ffffff|liso|#0057b8|#0057b8
+Málaga|liso|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#ffffff|#5ab4e5|liso|#ffffff|#ffffff
+Mirandés|liso|#d50032|#111111|#111111|#d50032|#111111|#d50032|liso|#111111|#111111
+Racing Santander|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Real Sociedad B|franjas|#ffffff|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|liso|#0057b8|#0057b8
+Valladolid|liso|#ffffff|#5b2d8e|#5b2d8e|#ffffff|#5b2d8e|#ffffff|liso|#5b2d8e|#5b2d8e
+Sporting Gijón|franjas|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Zaragoza|liso|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|#ffffff|liso|#0057b8|#0057b8
+Huesca|franjas|#0057b8|#d50032|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Avellino|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Bari|liso|#ffffff|#d50032|#ffffff|#ffffff|#d50032|#ffffff|liso|#d50032|#d50032
+Carrarese|liso|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8
+Catanzaro|franjas|#ffd100|#d50032|#d50032|#ffd100|#d50032|#ffd100|liso|#d50032|#d50032
+Cesena|liso|#ffffff|#111111|#111111|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Empoli|liso|#0057b8|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Virtus Entella|liso|#ffffff|#5ab4e5|#5ab4e5|#ffffff|#5ab4e5|#ffffff|liso|#5ab4e5|#5ab4e5
+Frosinone|liso|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8
+Juve Stabia|liso|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8
+Mantova|liso|#ffffff|#d50032|#d50032|#ffffff|#d50032|#ffffff|liso|#d50032|#d50032
+Modena|liso|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8
+Monza|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Padova|liso|#ffffff|#d50032|#d50032|#ffffff|#d50032|#ffffff|liso|#d50032|#d50032
+Palermo|liso|#f4a7c1|#111111|#111111|#f4a7c1|#111111|#f4a7c1|liso|#111111|#111111
+Pescara|liso|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#ffffff|#5ab4e5|liso|#ffffff|#ffffff
+Reggiana|liso|#8b1538|#ffffff|#ffffff|#8b1538|#ffffff|#8b1538|liso|#ffffff|#ffffff
+Sampdoria|banda|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Spezia|liso|#ffffff|#111111|#111111|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Südtirol|liso|#ffffff|#d50032|#d50032|#ffffff|#d50032|#ffffff|liso|#d50032|#d50032
+Venezia|liso|#00843d|#f58220|#111111|#00843d|#111111|#00843d|liso|#111111|#111111
+Arminia Bielefeld|liso|#0057b8|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Braunschweig|liso|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8
+Darmstadt|liso|#0057b8|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Dynamo Dresden|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Düsseldorf|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Elversberg|liso|#ffffff|#111111|#111111|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Fürth|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Hannover|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Hertha|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Holstein Kiel|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Kaiserslautern|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Karlsruhe|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Magdeburg|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Nürnberg|liso|#d50032|#111111|#111111|#d50032|#111111|#d50032|liso|#111111|#111111
+Paderborn|franjas|#0057b8|#111111|#111111|#0057b8|#111111|#0057b8|liso|#111111|#111111
+Preußen Münster|liso|#00843d|#111111|#111111|#00843d|#111111|#00843d|liso|#111111|#111111
+Schalke|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Bochum|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Amiens|liso|#ffffff|#111111|#111111|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Annecy|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Bastia|liso|#0057b8|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Boulogne|liso|#ffffff|#d50032|#d50032|#ffffff|#d50032|#ffffff|liso|#d50032|#d50032
+Clermont|liso|#d50032|#0057b8|#0057b8|#d50032|#0057b8|#d50032|liso|#0057b8|#0057b8
+Dunkerque|liso|#0057b8|#d50032|#d50032|#0057b8|#d50032|#0057b8|liso|#d50032|#d50032
+Grenoble|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Guingamp|liso|#d50032|#111111|#111111|#d50032|#111111|#d50032|liso|#111111|#111111
+Laval|liso|#f58220|#111111|#111111|#f58220|#111111|#f58220|liso|#111111|#111111
+Le Mans|liso|#ffd100|#d50032|#d50032|#ffd100|#d50032|#ffd100|liso|#d50032|#d50032
+Montpellier|liso|#0057b8|#f58220|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Nancy|liso|#ffffff|#d50032|#d50032|#ffffff|#d50032|#ffffff|liso|#d50032|#d50032
+Pau|liso|#ffd100|#00843d|#00843d|#ffd100|#00843d|#ffd100|liso|#00843d|#00843d
+Red Star|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Reims|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Rodez|liso|#d50032|#ffd100|#ffd100|#d50032|#ffd100|#d50032|liso|#ffd100|#ffd100
+Saint-Étienne|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Troyes|liso|#0057b8|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Agropecuario|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+All Boys|franjas|#ffffff|#111111|#111111|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Almagro|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Almirante Brown|liso|#ffd100|#00843d|#00843d|#ffd100|#00843d|#ffd100|liso|#00843d|#00843d
+Atlanta|franjas|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8
+Atlético Rafaela|franjas|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#ffffff|#5ab4e5|liso|#ffffff|#ffffff
+Brown de Adrogué|liso|#ffffff|#d50032|#d50032|#ffffff|#d50032|#ffffff|liso|#d50032|#d50032
+Chacarita|franjas|#d50032|#111111|#111111|#d50032|#111111|#d50032|liso|#111111|#111111
+Colón|franjas|#d50032|#111111|#111111|#d50032|#111111|#d50032|liso|#111111|#111111
+Defensores de Belgrano|franjas|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Deportivo Madryn|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Ferro|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Gimnasia de Jujuy|liso|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|#ffffff|liso|#0057b8|#0057b8
+Godoy Cruz|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Mitre|franjas|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Nueva Chicago|franjas|#00843d|#111111|#111111|#00843d|#111111|#00843d|liso|#111111|#111111
+Quilmes|franjas|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|#ffffff|liso|#0057b8|#0057b8
+San Martín de San Juan|franjas|#00843d|#111111|#111111|#00843d|#111111|#00843d|liso|#111111|#111111
+San Martín de Tucumán|franjas|#d50032|#111111|#111111|#d50032|#111111|#d50032|liso|#111111|#111111
+Temperley|franjas|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#ffffff|#5ab4e5|liso|#ffffff|#ffffff
+Arsenal de Sarandí|liso|#5ab4e5|#d50032|#d50032|#5ab4e5|#d50032|#5ab4e5|liso|#d50032|#d50032
+América-MG|liso|#00843d|#111111|#111111|#00843d|#111111|#00843d|liso|#111111|#111111
+Athletic-MG|franjas|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Atlético-GO|liso|#d50032|#111111|#111111|#d50032|#111111|#d50032|liso|#111111|#111111
+Avaí|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Botafogo-SP|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Ceará|franjas|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+CRB|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Criciúma|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Cuiabá|liso|#00843d|#ffd100|#00843d|#00843d|#ffd100|#00843d|liso|#ffd100|#ffd100
+Fortaleza|franjas|#0057b8|#d50032|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Goiás|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Juventude|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Novorizontino|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Operário-PR|franjas|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Paysandu|liso|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#ffffff|#5ab4e5|liso|#ffffff|#ffffff
+Ponte Preta|franjas|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Sport|franjas|#d50032|#111111|#111111|#d50032|#111111|#d50032|liso|#111111|#111111
+Vila Nova|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Volta Redonda|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Amazonas|liso|#ffd100|#00843d|#00843d|#ffd100|#00843d|#ffd100|liso|#00843d|#00843d
+Atlante|franjas|#d50032|#0057b8|#0057b8|#d50032|#0057b8|#d50032|liso|#0057b8|#0057b8
+Atlético La Paz|liso|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8
+Cancún|liso|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#ffffff|#5ab4e5|liso|#ffffff|#ffffff
+Celaya|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Dorados|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Irapuato|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Leones Negros|liso|#111111|#ffd100|#111111|#111111|#ffd100|#111111|liso|#ffd100|#ffd100
+Mineros de Zacatecas|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Morelia|liso|#ffd100|#d50032|#d50032|#ffd100|#d50032|#ffd100|liso|#d50032|#d50032
+Tapatío|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Tampico Madero|liso|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#ffffff|#5ab4e5|liso|#ffffff|#ffffff
+Venados|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Alebrijes de Oaxaca|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111

@@ -29,7 +29,7 @@ const GLOBO_PAIS := {
 	"AUS": Vector2(149.1, -35.3), "MEX": Vector2(-99.1, 19.4), "USA": Vector2(-77.0, 38.9),
 	"POR": Vector2(-9.1, 38.7), "NED": Vector2(4.9, 52.4), "BEL": Vector2(4.4, 50.9),
 	"CRO": Vector2(16.0, 45.8), "DEN": Vector2(12.6, 55.7),
-	"TUR": Vector2(32.9, 39.9), "SCO": Vector2(-3.2, 55.9), "SUI": Vector2(7.4, 46.9), "AUT": Vector2(16.4, 48.2), "GRE": Vector2(23.7, 38.0), "QAT": Vector2(51.5, 25.3), "SWE": Vector2(18.1, 59.3), "NOR": Vector2(10.7, 59.9), "POL": Vector2(21.0, 52.2), "CZE": Vector2(14.4, 50.1), "ROU": Vector2(26.1, 44.4), "SRB": Vector2(20.5, 44.8), "UKR": Vector2(30.5, 50.5), "CHN": Vector2(116.4, 39.9),
+	"TUR": Vector2(32.9, 39.9), "SCO": Vector2(-3.2, 55.9), "SUI": Vector2(7.4, 46.9), "AUT": Vector2(16.4, 48.2), "GRE": Vector2(23.7, 38.0), "QAT": Vector2(51.5, 25.3), "SWE": Vector2(18.1, 59.3), "NOR": Vector2(10.7, 59.9), "POL": Vector2(21.0, 52.2), "CZE": Vector2(14.4, 50.1), "ROU": Vector2(26.1, 44.4), "SRB": Vector2(20.5, 44.8), "UKR": Vector2(30.5, 50.5), "CHN": Vector2(116.4, 39.9), "ISR": Vector2(35.2, 31.8), "RUS": Vector2(37.6, 55.8), "HUN": Vector2(19.0, 47.5), "SVK": Vector2(17.1, 48.1), "BUL": Vector2(23.3, 42.7), "UAE": Vector2(54.4, 24.5), "IRN": Vector2(51.4, 35.7),
 }
 
 ## C14: la capital de cada país con liga (el pin se pone en sus coordenadas).
@@ -42,7 +42,7 @@ const CAPITAL := {
 	"FRA": "París", "JPN": "Tokio", "KOR": "Seúl", "KSA": "Riad", "EGY": "El Cairo",
 	"MAR": "Rabat", "RSA": "Pretoria", "AUS": "Canberra", "MEX": "Ciudad de México", "USA": "Washington",
 	"POR": "Lisboa", "NED": "Ámsterdam", "BEL": "Bruselas", "CRO": "Zagreb", "DEN": "Copenhague",
-	"TUR": "Ankara", "SCO": "Edimburgo", "SUI": "Berna", "AUT": "Viena", "GRE": "Atenas", "QAT": "Doha", "SWE": "Estocolmo", "NOR": "Oslo", "POL": "Varsovia", "CZE": "Praga", "ROU": "Bucarest", "SRB": "Belgrado", "UKR": "Kiev", "CHN": "Pekín",
+	"TUR": "Ankara", "SCO": "Edimburgo", "SUI": "Berna", "AUT": "Viena", "GRE": "Atenas", "QAT": "Doha", "SWE": "Estocolmo", "NOR": "Oslo", "POL": "Varsovia", "CZE": "Praga", "ROU": "Bucarest", "SRB": "Belgrado", "UKR": "Kiev", "CHN": "Pekín", "ISR": "Jerusalén", "RUS": "Moscú", "HUN": "Budapest", "SVK": "Bratislava", "BUL": "Sofía", "UAE": "Abu Dabi", "IRN": "Teherán",
 }
 
 ## Se tocó un país en el globo (clic sin arrastrar sobre su pin).

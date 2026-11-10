@@ -1,0 +1,32 @@
+# Lote M1: nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed
+Hartberg|aros|#c8102e|#ffffff|#ffffff|#c8102e|#111111|#c8102e|liso|#111111|#111111
+Altach|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Blau-Weiß Linz|franjas_finas|#0072ce|#ffffff|#ffffff|#0072ce|#ffffff|#0072ce|liso|#ffffff|#ffffff
+GAK|liso|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|banda|#ffffff|#ffffff
+WSG Tirol|aros|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Ried|franjas|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Septemvri Sofia|franjas_anchas|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Lokomotiv Sofia|mitad|#111111|#c8102e|#111111|#111111|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Spartak Varna|liso|#ffffff|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|liso|#c8102e|#c8102e
+Dobrudzha|hombros|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Montana|sash|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Botev Vratsa|aros_anchos|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Qingdao Hainiu|diagonal|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Chongqing Tonglianglong|vertical3|#c8102e|#1b458f|#1b458f|#c8102e|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Shenzhen Peng City|banda|#c8102e|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|liso|#ffd100|#ffd100
+Yunnan Yukun|doble_banda|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Liaoning Tieren|liso|#c8102e|#ffffff|#c8102e|#c8102e|#111111|#ffffff|franjas|#111111|#111111
+Levadiakos|franjas|#c8102e|#111111|#111111|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Panserraikos|mitad|#c8102e|#111111|#111111|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Panetolikos|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|banda|#ffffff|#ffffff
+AEL|franjas|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Kifisia|hombros|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Kisvárda|liso|#c8102e|#ffffff|#c8102e|#c8102e|#1b458f|#ffffff|liso|#1b458f|#1b458f
+Nyíregyháza|aros|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Kazincbarcika|mitad|#c8102e|#1b458f|#1b458f|#c8102e|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Mes Rafsanjan|liso|#f26522|#111111|#111111|#f26522|#111111|#f26522|liso|#111111|#111111
+Chadormalou|banda_cruzada|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Paykan|liso|#ffffff|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|liso|#c8102e|#c8102e
+Shams Azar|franjas_finas|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|#ffd100|liso|#1b458f|#1b458f
+Kheybar|sash|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Fajr Sepasi|cuadros|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff

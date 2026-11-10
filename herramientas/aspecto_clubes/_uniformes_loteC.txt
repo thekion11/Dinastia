@@ -1,0 +1,83 @@
+# Lote C: nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed
+Crvena Zvezda|franjas|#c8102e|#ffffff|#c8102e|#c8102e|#1b1f4b|#c8102e|liso|#1b1f4b|#1b1f4b
+Partizan|franjas|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+TSC Bačka Topola|liso|#1b458f|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|liso|#ffd100|#ffd100
+Vojvodina|franjas|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Čukarički|liso|#ffffff|#111111|#111111|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Radnički Niš|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Novi Pazar|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Spartak Subotica|liso|#c8102e|#1b458f|#1b458f|#c8102e|#1b458f|#ffffff|liso|#1b458f|#1b458f
+OFK Beograd|franjas|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Shakhtar Donetsk|liso|#f26522|#111111|#111111|#f26522|#111111|#f26522|liso|#111111|#111111
+Dynamo Kyiv|liso|#ffffff|#1b458f|#ffffff|#ffffff|#1b458f|#ffffff|liso|#1b458f|#1b458f
+Metalist 1925 Kharkiv|liso|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|#ffd100|liso|#1b458f|#1b458f
+Zorya Luhansk|liso|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Oleksandriya|liso|#00843d|#ffd100|#00843d|#00843d|#ffd100|#00843d|liso|#ffd100|#ffd100
+Kryvbas Kryvyi Rih|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Polissya Zhytomyr|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Obolon Kyiv|liso|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|#ffd100|liso|#1b458f|#1b458f
+Veres Rivne|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Kolos Kovalivka|liso|#ffd100|#00843d|#00843d|#ffd100|#00843d|#ffd100|liso|#00843d|#00843d
+Rukh Lviv|liso|#c8102e|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|liso|#ffd100|#ffd100
+Karpaty Lviv|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Shanghai Port|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Shanghai Shenhua|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Beijing Guoan|liso|#00843d|#ffd100|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Shandong Taishan|liso|#f26522|#ffffff|#f26522|#f26522|#1b1f4b|#f26522|liso|#1b1f4b|#1b1f4b
+Chengdu Rongcheng|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Zhejiang FC|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Tianjin Jinmen Tiger|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Henan FC|liso|#c8102e|#ffd100|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Wuhan Three Towns|liso|#c8102e|#ffd100|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Dalian Yingbo|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Qingdao West Coast|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Hapoel Be'er Sheva|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Maccabi Tel Aviv|liso|#ffd100|#1b458f|#ffd100|#ffd100|#1b458f|#ffd100|liso|#1b458f|#1b458f
+Maccabi Haifa|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Hapoel Tel Aviv|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Beitar Jerusalem|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Hapoel Haifa|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Maccabi Netanya|liso|#ffd100|#111111|#ffd100|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Hapoel Jerusalem|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Bnei Sakhnin|liso|#c8102e|#00843d|#00843d|#c8102e|#00843d|#c8102e|liso|#00843d|#00843d
+Zenit Saint Petersburg|liso|#0057b8|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Krasnodar|liso|#00843d|#111111|#111111|#00843d|#111111|#00843d|liso|#111111|#111111
+Spartak Moscow|liso|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+CSKA Moscow|liso|#c8102e|#1b458f|#1b458f|#c8102e|#1b458f|#c8102e|liso|#1b458f|#1b458f
+Lokomotiv Moscow|liso|#00843d|#c8102e|#c8102e|#00843d|#c8102e|#00843d|liso|#c8102e|#c8102e
+Dynamo Moscow|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Rubin Kazan|liso|#8b1538|#ffffff|#8b1538|#8b1538|#ffffff|#8b1538|liso|#ffffff|#ffffff
+Akhmat Grozny|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Rostov|liso|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|#ffd100|liso|#1b458f|#1b458f
+Baltika Kaliningrad|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Krylia Sovetov Samara|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Pari Nizhny Novgorod|liso|#00a0e3|#ffffff|#00a0e3|#00a0e3|#ffffff|#00a0e3|liso|#ffffff|#ffffff
+Dynamo Makhachkala|liso|#00a0e3|#ffffff|#ffffff|#00a0e3|#ffffff|#00a0e3|liso|#ffffff|#ffffff
+Sochi|liso|#00a0e3|#c8102e|#00a0e3|#00a0e3|#c8102e|#00a0e3|liso|#c8102e|#c8102e
+Ferencváros|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Paks|liso|#1b458f|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|liso|#ffd100|#ffd100
+Győr|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Debrecen|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Puskás Akadémia|liso|#1b458f|#c8102e|#1b458f|#1b458f|#c8102e|#1b458f|liso|#c8102e|#c8102e
+Zalaegerszeg|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Újpest|liso|#6a1b9a|#ffffff|#6a1b9a|#6a1b9a|#ffffff|#6a1b9a|liso|#ffffff|#ffffff
+Diósgyőr|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+MTK|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Slovan Bratislava|liso|#00a0e3|#ffffff|#00a0e3|#00a0e3|#ffffff|#00a0e3|liso|#ffffff|#ffffff
+Spartak Trnava|liso|#c8102e|#111111|#111111|#c8102e|#111111|#c8102e|liso|#111111|#111111
+DAC Dunajská Streda|liso|#ffd100|#c8102e|#ffd100|#ffd100|#c8102e|#ffd100|liso|#c8102e|#c8102e
+Žilina|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Ružomberok|liso|#ffffff|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|liso|#c8102e|#c8102e
+Trenčín|liso|#ffffff|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|liso|#c8102e|#c8102e
+Košice|liso|#1b458f|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|liso|#ffd100|#ffd100
+Tatran Prešov|liso|#c8102e|#111111|#111111|#c8102e|#111111|#c8102e|liso|#111111|#111111
+Levski Sofia|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Ludogorets|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+CSKA 1948|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+CSKA Sofia|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Cherno More|liso|#00843d|#111111|#111111|#00843d|#111111|#00843d|liso|#111111|#111111
+Lokomotiv Plovdiv|liso|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Botev Plovdiv|franjas|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Slavia Sofia|liso|#ffffff|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|liso|#c8102e|#c8102e
+Arda|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Beroe|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff

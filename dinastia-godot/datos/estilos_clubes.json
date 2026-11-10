@@ -3903,5 +3903,561 @@
  "Igdir Monte": [
   "3-5-2",
   "ofensivo"
+ ],
+ "Hainiu Mar": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Tongliang Dragon": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Alesund Marino": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Start Sur": [
+  "5-3-2",
+  "directo"
+ ],
+ "Orgryte Rojo": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Poltava Trigo": [
+  "4-4-2",
+  "garra"
+ ],
+ "Kudrivka Azul": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Levski Capital": [
+  "4-4-2",
+  "directo"
+ ],
+ "Ludogorets Verde": [
+  "5-3-2",
+  "garra"
+ ],
+ "Ejercito 1948": [
+  "4-3-3",
+  "contra"
+ ],
+ "Ejercito Sofia": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Mar Negro Varna": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Locomotora Plov.": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Botev Plovdiv": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Slavia Capital": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Arda Rodopes": [
+  "4-4-2",
+  "presion"
+ ],
+ "Beroe Rosas": [
+  "5-3-2",
+  "directo"
+ ],
+ "Septiembre Sofia": [
+  "4-3-3",
+  "garra"
+ ],
+ "Locomotora Sofia": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Espartaco Varna": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Dobrudzha Trigo": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Montana Verde": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Botev Vratsa": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Ferencia Verde": [
+  "4-3-3",
+  "presion"
+ ],
+ "Paks Atomico": [
+  "3-5-2",
+  "directo"
+ ],
+ "Gyor Aguila": [
+  "4-4-2",
+  "garra"
+ ],
+ "Debrecen Rojo": [
+  "5-3-2",
+  "contra"
+ ],
+ "Academia Puskas": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Zala Verde": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Kisvarda Norte": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Nyiregyhaza Este": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Ujpest Violeta": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Diosgyor Acero": [
+  "3-5-2",
+  "presion"
+ ],
+ "Kazincbarcika": [
+  "4-4-2",
+  "directo"
+ ],
+ "Mtk Budapest": [
+  "5-3-2",
+  "garra"
+ ],
+ "Persepolis Rojo": [
+  "4-3-3",
+  "contra"
+ ],
+ "Esteghlal Azul": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Sepahan Dorado": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Tractor Tabriz": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Foolad Ahvaz": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Gol Gohar": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Zob Ahan": [
+  "4-4-2",
+  "presion"
+ ],
+ "Malavan Puerto": [
+  "5-3-2",
+  "directo"
+ ],
+ "Aluminio Arak": [
+  "4-3-3",
+  "garra"
+ ],
+ "Mes Rafsanjan": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Chadormalou": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Paykan Tehran": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Shams Qazvin": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Kheybar Montana": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Fajr Shiraz": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Esteghlal Sur": [
+  "5-3-2",
+  "presion"
+ ],
+ "Negev Rojo": [
+  "4-3-3",
+  "directo"
+ ],
+ "Tel Aviv Amarillo": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Haifa Verde": [
+  "4-4-2",
+  "contra"
+ ],
+ "Tel Aviv Rojo": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Colina Dorada": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Haifa Rojo": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Netanya Costa": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Jerusalen Rojo": [
+  "5-3-2",
+  "equilibrado"
+ ],
+ "Galilea Norte": [
+  "4-3-3",
+  "presion"
+ ],
+ "Sakhnin Verde": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Petah Tikva Rojo": [
+  "4-4-2",
+  "garra"
+ ],
+ "Tiberiades Lago": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Ashdod Puerto": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Reineh Colinas": [
+  "3-5-2",
+  "vertical"
+ ],
+ "Zenit Neva": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Krasnodar Verde": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Espartaco Moscu": [
+  "4-3-3",
+  "presion"
+ ],
+ "Armada Moscu": [
+  "3-5-2",
+  "directo"
+ ],
+ "Locomotora Moscu": [
+  "4-4-2",
+  "garra"
+ ],
+ "Dinamo Moscu": [
+  "5-3-2",
+  "contra"
+ ],
+ "Rubin Kazan": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Ahmat Grozni": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Rostov Don": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Baltika Mar": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Alas Samara": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Orenburg Estepa": [
+  "3-5-2",
+  "presion"
+ ],
+ "Nizhni Rojo": [
+  "4-4-2",
+  "directo"
+ ],
+ "Dinamo Mar Caspio": [
+  "5-3-2",
+  "garra"
+ ],
+ "Sochi Olimpico": [
+  "4-3-3",
+  "contra"
+ ],
+ "Akron Tolyatti": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Eslovan Capital": [
+  "4-4-2",
+  "presion"
+ ],
+ "Espartaco Trnava": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Dac Danubio": [
+  "4-3-3",
+  "garra"
+ ],
+ "Zilina Norte": [
+  "3-5-2",
+  "contra"
+ ],
+ "Ruzomberok Monte": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Podbrezova Acero": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Trencin Castillo": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Kosice Este": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Tatran Presov": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Skalica Frontera": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Zemplin Este": [
+  "4-3-3",
+  "directo"
+ ],
+ "Komarno Danubio": [
+  "3-5-2",
+  "garra"
+ ],
+ "Oasis Verde": [
+  "4-3-3",
+  "contra"
+ ],
+ "Ahli Dubai": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Wasl Dubai": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Jazira Abu Dabi": [
+  "5-3-2",
+  "ofensivo"
+ ],
+ "Sharjah Dorado": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Wahda Abu Dabi": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Baniyas Dorado": [
+  "4-4-2",
+  "presion"
+ ],
+ "Nasr Dubai": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Khor Fakkan": [
+  "4-3-3",
+  "garra"
+ ],
+ "Ajman Naranja": [
+  "3-5-2",
+  "contra"
+ ],
+ "Dhafra Oeste": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Dibba Fujaira": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Bataeh Sharjah": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Kalba Costa": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Carabobo Valencia": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Tachira Andino": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Caracas Rojo": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Universidad Central": [
+  "3-5-2",
+  "presion"
+ ],
+ "La Guaira Costa": [
+  "4-4-2",
+  "directo"
+ ],
+ "Metropolitanos": [
+  "5-3-2",
+  "garra"
+ ],
+ "Monagas Oriente": [
+  "4-3-3",
+  "contra"
+ ],
+ "Merida Andino": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Zamora Llanos": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Rayo Maracaibo": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Puerto Cabello": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Portuguesa Llanos": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Trujillanos Andes": [
+  "4-4-2",
+  "presion"
+ ],
+ "Anzoategui Mar": [
+  "5-3-2",
+  "directo"
+ ],
+ "Ejercito Nuevo": [
+  "4-3-3",
+  "contra"
+ ],
+ "Botev Colinas": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Botev Montes": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Kazinc Quimica": [
+  "4-4-2",
+  "directo"
+ ],
+ "Gol Mina": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Zob Fundicion": [
+  "4-4-2",
+  "presion"
+ ],
+ "Mes Cobre": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Chador Mina": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Tel Aviv Sol": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Rubi Kazan": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Dinamo Caspio": [
+  "5-3-2",
+  "garra"
+ ],
+ "Akron Toliatti": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Khor Bahia": [
+  "4-3-3",
+  "garra"
+ ],
+ "Carabobo Norte": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Univ. Capital": [
+  "3-5-2",
+  "presion"
+ ],
+ "Metropolis FC": [
+  "5-3-2",
+  "garra"
+ ],
+ "Portuguesa Sur": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Trujillo Andes": [
+  "4-4-2",
+  "presion"
  ]
 }

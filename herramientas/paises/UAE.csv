@@ -1,0 +1,24 @@
+#seleccion=Emiratos
+#tier=1.1
+#globo=54.37,24.47
+#bandera=🇦🇪
+#confed=asia
+#liga=Pr0 League de los Emiratos|Liga Emiratí
+#copa=Copa del Presidente|Copa del Presidente
+#nombres=Khalid,Mohammed,Ahmed,Sultan,Saeed,Rashid,Hamdan,Zayed,Khalifa,Majid,Omar,Salem,Abdullah,Hazza
+#apellidos=Al-Mansoori,Al-Shamsi,Al-Zaabi,Al-Nuaimi,Al-Ketbi,Al-Dhaheri,Al-Mazrouei,Al-Hammadi,Al-Falasi,Al-Suwaidi,Al-Ali,Al-Marri,Al-Qubaisi,Al-Hosani
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Al Ain;Oasis Verde;#6a1b9a;#ffffff;64;25000;1968;los Zaeem;el estadio de la ciudad del oasis;El club más laureado del país, con campeonatos de Asia.
+Shabab Al Ahli;Ahli Dubai;#c8102e;#000000;63;12000;1958;los Caballeros;el estadio de la ciudad del rascacielos;El club de los caballeros de Dubái.
+Al Wasl;Wasl Dubai;#ffd100;#ffffff;60;12000;1960;los Imperiales;el estadio del centro de Dubái;El club imperial de Dubái.
+Al Jazira;Jazira Abu Dabi;#c8102e;#000000;62;42056;1974;los Mamba;el estadio de la capital;El club de la capital, campeón varias veces.
+Sharjah;Sharjah Dorado;#ffffff;#1b458f;62;12000;1966;los Reyes;el estadio de la ciudad cultural;El club de la ciudad cultural.
+Al Wahda;Wahda Abu Dabi;#c8102e;#ffffff;58;12000;1974;los Rojos;el estadio de la capital;El club de la unidad.
+Baniyas;Baniyas Dorado;#ffd100;#000000;55;10000;1957;los Dorados;el estadio de la capital;El club de la tribu del mismo nombre.
+Al-Nasr;Nasr Dubai;#ffd100;#1b458f;56;8000;1945;los Amarillos;el estadio de Dubái;El club más antiguo de Dubái.
+Khor Fakkan;Khor Bahia;#c8102e;#ffffff;54;12000;1969;los de la Bahía;el estadio de la costa del este;El club de la costa del Índico.
+Ajman;Ajman Naranja;#f26522;#000000;52;5000;1974;los Naranjas;el estadio del emirato pequeño;El club del emirato más pequeño.
+Al Dhafra;Dhafra Oeste;#00843d;#ffffff;53;15000;1946;los del Desierto;el estadio del oeste del país;El club de la región del oeste.
+Dibba;Dibba Fujaira;#c8102e;#ffffff;50;5000;1974;los Rojos;el estadio de la costa del este;Un club de la costa del Índico.
+Al Bataeh;Bataeh Sharjah;#c8102e;#1b458f;50;3000;1990;los Rojos;el estadio de un pueblo del interior;Un club pequeño del interior.
+Kalba;Kalba Costa;#c8102e;#ffd100;50;4000;1985;los Costeros;el estadio de la costa del este;Un club de la costa del Índico.

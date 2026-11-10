@@ -59,14 +59,14 @@ const FORMATOS := {
 		"fase": "liga", "plazas": 36, "fechas": 8, "directos": 8, "playoff": 16,
 		"ida_vuelta": ["po", 16, 8, 4],
 		"semanas": [3, 6, 9, 11, 14, 17, 18, 19, 21, 23, 25, 26, 27, 29, 30, 31, 34],
-		"cupos": [["ESP", 3], ["ENG", 3], ["ITA", 3], ["GER", 3], ["FRA", 3], ["POR", 3], ["NED", 2], ["BEL", 1], ["CRO", 1], ["DEN", 2], ["TUR", 1], ["SCO", 1], ["SUI", 1], ["AUT", 1], ["GRE", 1], ["SWE", 1], ["NOR", 1], ["POL", 1], ["CZE", 1], ["ROU", 1], ["SRB", 1], ["UKR", 1]],
+		"cupos": [["ESP", 3], ["ENG", 3], ["ITA", 3], ["GER", 2], ["FRA", 2], ["POR", 2], ["NED", 1], ["BEL", 1], ["CRO", 1], ["DEN", 2], ["TUR", 1], ["SCO", 1], ["SUI", 1], ["AUT", 1], ["GRE", 1], ["SWE", 1], ["NOR", 1], ["POL", 1], ["CZE", 1], ["ROU", 1], ["SRB", 1], ["UKR", 1], ["ISR", 1], ["HUN", 1], ["SVK", 1], ["BUL", 1]],
 	},
 	## La Conference tiene fase de liga de 36 pero 6 partidos por club, como la real (la versión corta de la liga).
 	"uecl": {
 		"fase": "liga", "plazas": 36, "fechas": 6, "directos": 8, "playoff": 16,
 		"ida_vuelta": ["po", 16, 8, 4],
 		"semanas": [3, 6, 9, 13, 14, 17, 21, 22, 25, 26, 27, 29, 30, 31, 34],
-		"cupos": [["ESP", 2], ["ENG", 2], ["ITA", 2], ["GER", 2], ["FRA", 2], ["POR", 2], ["NED", 3], ["BEL", 3], ["CRO", 3], ["DEN", 3], ["TUR", 1], ["SCO", 1], ["SUI", 1], ["AUT", 1], ["GRE", 1], ["SWE", 1], ["NOR", 1], ["POL", 1], ["CZE", 1], ["ROU", 1], ["SRB", 1], ["UKR", 1]],
+		"cupos": [["ESP", 2], ["ENG", 2], ["ITA", 2], ["GER", 2], ["FRA", 2], ["POR", 2], ["NED", 2], ["BEL", 2], ["CRO", 2], ["DEN", 2], ["TUR", 1], ["SCO", 1], ["SUI", 1], ["AUT", 1], ["GRE", 1], ["SWE", 1], ["NOR", 1], ["POL", 1], ["CZE", 1], ["ROU", 1], ["SRB", 1], ["UKR", 1], ["ISR", 1], ["HUN", 1], ["SVK", 1], ["BUL", 1]],
 	},
 	## Libertadores: 32 en 8 grupos de 4 (seis fechas), octavos a ida y vuelta, y la final a partido único.
 	"lib": {

@@ -124,7 +124,7 @@ func _probar_fases_finales_mls() -> void:
 func _probar_fases_finales_europa() -> void:
 	_titulo("FASES FINALES · BÉLGICA, ESCOCIA, DINAMARCA, SUIZA Y AUSTRIA: GRUPOS FINALES")
 	## país, clubes, fechas de la fase regular, fechas de la fase final, partidos del grupo de arriba, ¿puntos a la mitad?
-	for caso: Array in [["BEL", 16, 30, 6, 35, true], ["SCO", 12, 33, 5, 38, false], ["DEN", 12, 22, 10, 32, false], ["SUI", 12, 33, 5, 38, false], ["AUT", 12, 22, 10, 32, false], ["CZE", 16, 30, 5, 35, false], ["ROU", 16, 30, 9, 35, true], ["SRB", 16, 30, 7, 37, false]]:
+	for caso: Array in [["BEL", 16, 30, 6, 35, true], ["SCO", 12, 33, 5, 38, false], ["DEN", 12, 22, 10, 32, false], ["SUI", 12, 33, 5, 38, false], ["AUT", 12, 22, 10, 32, false], ["CZE", 16, 30, 5, 35, false], ["ROU", 16, 30, 9, 35, true], ["SRB", 16, 30, 7, 37, false], ["ISR", 14, 26, 10, 36, false], ["SVK", 12, 22, 10, 32, false], ["BUL", 16, 30, 7, 36, false]]:
 		var pais := String(caso[0])
 		Azar.sembrar(830 + pais.length() + int(caso[1]))
 		var m := Mundo.new()

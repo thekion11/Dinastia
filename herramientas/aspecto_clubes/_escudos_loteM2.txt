@@ -1,0 +1,32 @@
+# Lote M2 (clubes menores): nombre|forma|patrón|emblema|letras[/color]|esc1|esc2|esc3
+Ironi Kiryat Shmona|escudo|liso|leon|IKS/#111111|#f6d000|#1c3f94|#ffffff
+Hapoel Petah Tikva|ojiva|franjas|estrella|HPT/#ffffff|#1c4aa6|#ffffff|#ffd100
+Ironi Tiberias|redondeado|ondas|pez|IT/#ffffff|#d4202b|#ffffff|#111111
+F.C. Ashdod|corona|banda|ancla|FCA/#111111|#ffd400|#c8102e|#111111
+Maccabi Bnei Reineh|trianguloesc|chevron|aguila|MBR/#ffffff|#c8102e|#ffffff|#111111
+Orenburg|estandarte|rombos|estrella|ORE/#ffffff|#1555b5|#ffffff|#e30613
+Akron Tolyatti|geometrico|sol|carabela|AKR/#ffffff|#0a2a6e|#f58220|#ffffff
+Falkirk|cruzado|cruz|castillo|FFC/#ffffff|#0b2a5b|#ffffff|#c8a24a
+Livingston|octogono|puntas|leon|LFC/#111111|#f6a800|#111111|#ffffff
+Mladost Lučani|hex|escalera|corona|MLČ/#ffffff|#c8102e|#ffffff|#111111
+Radnik Surdulica|penta|aro|hacha|RS/#ffffff|#d4202b|#111111|#ffffff
+Napredak Kruševac|banderin|barras|caballo|NK/#ffffff|#c8102e|#ffffff|#111111
+Javor-Matis|laurel|cuartos|trebol|JM/#ffffff|#c8102e|#ffffff|#2e8b3a
+FAP|curvo|borde|rayo|FAP/#ffffff|#16348a|#ffd100|#ffffff
+Železničar Pančevo|arco3|tercios_h|torre|ŽP/#ffffff|#6a1b3a|#ffffff|#ffd100
+IMT Novi Beograd|rombolgo|banda_h|balon|IMT/#ffffff|#0d6e3a|#ffffff|#111111
+Thun|frances|franjas|oso|FCT/#ffffff|#c8102e|#ffffff|#ffd100
+Winterthur|hexalgo|mitad|corona|FCW/#ffffff|#c8102e|#ffffff|#111111
+Podbrezová|coronadoble|chevron|hacha|FKP/#ffffff|#1c6b2a|#ffffff|#ffd100
+Skalica|clasico|estrella|castillo|MFK/#ffffff|#c8102e|#ffd100|#ffffff
+Zemplín Michalovce|ovalo|anillos|estrella|ZM/#ffffff|#c8102e|#1c3f94|#ffffff
+Komárno|doblepunta|abanico|ancla|KOM/#ffffff|#1c4aa6|#ffd100|#ffffff
+Alanyaspor|hex|ondas|delfin|ALA/#ffffff|#f58220|#009e49|#ffffff
+Kasımpaşa|banda_cinta|sol|ancla|KSP/#ffffff|#12327a|#ffffff|#c8102e
+Gaziantep FK|rombo|estrella8|aguila|GFK/#ffffff|#d4202b|#111111|#ffffff
+Eyüpspor|penta|banda|media_luna|EYÜ/#ffffff|#6a1b7a|#ffd100|#ffffff
+Kocaelispor|circulo|franjas|balon|KOC/#ffffff|#0a7a3a|#111111|#ffffff
+Gençlerbirliği|clasico|florlis|media_luna|GEN/#ffffff|#d4202b|#111111|#ffffff
+Fatih Karagümrük|cruzesc|tablero|torre|FKK/#ffffff|#c8102e|#111111|#ffffff
+Dibba|laurel|franjas|delfin|DIB/#ffffff|#0e7a4a|#ffffff|#c8102e
+Al Bataeh|octogono|chevron|aguila|BAT/#ffffff|#7a1f2b|#ffffff|#ffd100

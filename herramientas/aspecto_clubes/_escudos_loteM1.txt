@@ -1,0 +1,32 @@
+# Lote M1 (AUT, BUL, CHN, GRE, HUN, IRN): nombre|forma|patrón|emblema|letras[/color]|esc1|esc2|esc3
+Hartberg|escudo|chevron|montana|TSVH/#ffffff|#c8102e|#ffffff|#111111
+Altach|ovalo|banda|leon|SCRA/#111111|#ffd100|#111111|#ffffff
+Blau-Weiß Linz|ojiva|franjas|ancla|BW/#ffffff|#0072ce|#ffffff|#c8102e
+GAK|hex|mitad|torre|GAK/#ffffff|#c8102e|#ffffff|#111111
+WSG Tirol|cruzado|rombos|aguila|WSG/#ffffff|#111111|#ffffff|#c8102e
+Ried|laurel|aro|trebol|SVR/#ffffff|#00843d|#ffffff|#ffd100
+Septemvri Sofia|penta|barras|estrella|SSF/#ffffff|#c8102e|#ffffff|#111111
+Lokomotiv Sofia|banderin|escalera|flecha|LS/#ffffff|#c8102e|#111111|#ffffff
+Spartak Varna|doblepunta|estrella|ancla|SV/#c8102e|#ffffff|#c8102e|#111111
+Dobrudzha|octogono|borde|sol|DOB/#ffffff|#00843d|#ffffff|#ffd100
+Montana|corona|rayo|montana|MON/#ffffff|#c8102e|#ffffff|#1b458f
+Botev Vratsa|curvo|rombos|flecha|BV/#ffffff|#00843d|#ffffff|#c8102e
+Qingdao Hainiu|frances|ondas|toro|QD/#ffffff|#c8102e|#ffffff|#1b458f
+Chongqing Tonglianglong|arco3|chevron|dragon|CQ/#ffffff|#1b458f|#c8102e|#ffffff
+Shenzhen Peng City|hexalgo|sol|ave|SZ/#c8102e|#ffd100|#c8102e|#111111
+Yunnan Yukun|trianguloesc|manchas|flor_lis|YN/#ffffff|#00843d|#ffffff|#ffd100
+Liaoning Tieren|rombolgo|barras|hacha|LN/#ffffff|#c8102e|#ffffff|#111111
+Levadiakos|banda_cinta|franjas|castillo|LEV/#ffffff|#c8102e|#111111|#ffffff
+Panserraikos|geometrico|corona2|torre|PSK/#ffffff|#c8102e|#111111|#ffffff
+Panetolikos|coronadoble|escamas|flecha|PAN/#ffffff|#00843d|#ffffff|#111111
+AEL|redondeado|tercios_v|caballo|AEL/#111111|#ffd100|#111111|#ffffff
+Kifisia|cruzesc|pila|cruz|KIF/#ffffff|#00843d|#ffffff|#111111
+Kisvárda|clasico|interior|castillo|KMF/#ffffff|#c8102e|#ffffff|#1b458f
+Nyíregyháza|circulo|anillos|cuernos|NYS/#ffffff|#c8102e|#ffffff|#111111
+Kazincbarcika|rombo|tablero|torre|KBSC/#ffffff|#c8102e|#1b458f|#ffffff
+Mes Rafsanjan|penta|estrella6|cereza|MR/#ffffff|#f26522|#111111|#ffffff
+Chadormalou|hex|tercios_h|toro|CHM/#ffffff|#c8102e|#ffffff|#111111
+Paykan|estandarte|trebol|balon|PAY/#c8102e|#ffffff|#c8102e|#1b458f
+Shams Azar|curvo|puntas|sol|SA/#1b458f|#ffd100|#1b458f|#ffffff
+Kheybar|laurel|estrella8|leon|KHE/#ffffff|#c8102e|#ffffff|#111111
+Fajr Sepasi|ovalo|medialuna|estrella|FS/#ffffff|#00843d|#ffffff|#c8102e

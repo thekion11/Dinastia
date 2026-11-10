@@ -73,6 +73,13 @@ const JORNADA := {
 	"SRB": [40, "Ley del Trabajo", "40 horas semanales.", true],
 	"UKR": [40, "Código del Trabajo", "40 horas semanales.", true],
 	"CHN": [40, "Ley del Trabajo", "8 horas diarias y 40 semanales por reglamento del Estado.", true],
+	"ISR": [42, "Ley de horas de trabajo y descanso", "42 horas semanales como máximo.", true],
+	"RUS": [40, "Código del Trabajo", "40 horas semanales como máximo.", true],
+	"HUN": [40, "Código del Trabajo", "8 horas diarias y 40 semanales.", true],
+	"SVK": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"BUL": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"UAE": [48, "Ley laboral federal", "8 horas diarias y 48 semanales; en Ramadán se reducen 2 horas diarias.", true],
+	"IRN": [44, "Código del Trabajo", "44 horas semanales.", true],
 }
 
 ## Cambios de ley con fecha: [pais, anio, mes, dia, horas nuevas, texto].

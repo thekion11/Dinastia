@@ -1,0 +1,27 @@
+# Lote W3: nombre|butaca1|butaca2
+Celtic|#00843d|#ffffff
+Glasgow Rangers|#1b458f|#d50032
+Heart of Midlothian|#800000|#ffffff
+Aberdeen|#e21a22|#ffffff
+Crvena Zvezda|#c8102e|#ffffff
+Partizan|#111111|#ffffff
+Vojvodina|#c8102e|#ffffff
+Čukarički|#111111|#ffffff
+Young Boys|#ffd100|#111111
+Basel|#c8102e|#1b458f
+Zürich|#1b458f|#ffffff
+Servette|#7b1c3a|#ffffff
+Slovan Bratislava|#00a0e3|#ffffff
+DAC Dunajská Streda|#ffd100|#0057b8
+Spartak Trnava|#c8102e|#111111
+Žilina|#c8102e|#ffffff
+Malmö FF|#7ec8f2|#ffffff
+Hammarby IF|#00843d|#ffffff
+Djurgårdens IF|#00a0e3|#1b458f
+AIK|#ffd100|#111111
+Galatasaray|#a90432|#f9a01b
+Fenerbahçe|#002d62|#ffd100
+Beşiktaş|#111111|#ffffff
+Trabzonspor|#7b1c3a|#69b3e7
+Al Ain|#5b2d8e|#ffffff
+Shabab Al Ahli|#d50032|#111111

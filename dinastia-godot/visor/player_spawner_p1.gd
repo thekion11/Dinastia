@@ -156,7 +156,9 @@ static func poner_rotulo(n: Node3D, jug: Dictionary, es_local: bool = true) -> v
 	r.fixed_size = true
 	r.pixel_size = TAM_ROTULO
 	r.font_size = 30
-	r.outline_size = 10
+	## (10-11) El contorno negro duplica las llamadas de dibujo de cada rótulo (medido con `presupuesto_partido`: los 22 rótulos son ~56 de las ~89 llamadas de los
+	## jugadores). En calidad BAJA y ULTRA_BAJA el rótulo va sin contorno (texto blanco, sin contorno), una sola pasada.
+	r.outline_size = 0 if Calidad.elegida <= Calidad.BAJA else 10
 	r.modulate = Color(1, 1, 1, 0.95)
 	r.outline_modulate = Color(0, 0, 0, 0.85)
 	## Por encima de todo: si la cabeza de otro lo tapara, se perdería el
@@ -205,6 +207,7 @@ static func despejar_rotulos(filas: Array, cam: Camera3D, balon_pos: Vector3, al
 	lista.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
 	var k := alto_pantalla / (2.0 * tan(deg_to_rad(cam.fov) * 0.5))
 	var puestos: Array[Rect2] = []
+	var vistos := 0
 	for e: Array in lista:
 		var rot: Label3D = e[1]
 		var c := cam.unproject_position(rot.global_position)
@@ -217,6 +220,11 @@ static func despejar_rotulos(filas: Array, cam: Camera3D, balon_pos: Vector3, al
 				choca = true
 				break
 		rot.visible = not choca
+		if not choca and Calidad.elegida <= Calidad.BAJA:   ## contorno solo en los 5 rótulos más cercanos al balón (cada contorno es otra llamada de dibujo; ver `poner_rotulo`)
+			var o := 10 if vistos < 5 else 0
+			if rot.outline_size != o:
+				rot.outline_size = o
+			vistos += 1
 		if not choca:
 			puestos.append(caja)
 

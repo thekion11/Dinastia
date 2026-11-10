@@ -8,21 +8,21 @@
 #nombres=Piotr,Krzysztof,Tomasz,Marcin,Michał,Paweł,Jakub,Kamil,Łukasz,Adam,Bartosz,Mateusz,Dawid,Szymon
 #apellidos=Nowak,Kowalski,Wiśniewski,Wójcik,Kowalczyk,Kamiński,Lewandowski,Zieliński,Szymański,Woźniak,Dąbrowski,Kozłowski,Jankowski,Mazur
 real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
-Lech Poznań;Lech Posen;#003876;#ffffff;66;42000;1922;los Kolejorz;el estadio de la ciudad del oeste;El club del oeste con la hinchada más fiel del país.
-Legia Warszawa;Legion Varsovia;#006633;#ffffff;66;31000;1916;los Legionistas;el estadio de la capital;El club de la capital, con la grada más ruidosa.
-Jagiellonia Białystok;Jagiello Este;#ffd100;#c8102e;62;22000;1920;los Amarillos;el estadio del este;El campeón del este que sorprendió en Europa.
+Lech Poznań;Lech Posen;#003876;#ffffff;66;42837;1922;los Kolejorz;el estadio de la ciudad del oeste;El club del oeste con la hinchada más fiel del país.
+Legia Warszawa;Legion Varsovia;#006633;#ffffff;66;31006;1916;los Legionistas;el estadio de la capital;El club de la capital, con la grada más ruidosa.
+Jagiellonia Białystok;Jagiello Este;#ffd100;#c8102e;62;22372;1920;los Amarillos;el estadio del este;El campeón del este que sorprendió en Europa.
 Raków Częstochowa;Rakow Santuario;#c8102e;#1b458f;62;5500;1921;los Rojiazules;el estadio de la ciudad del santuario;El club de la ciudad del santuario, campeón de copa.
-Pogoń Szczecin;Pogon Baltico;#1b458f;#8b1538;60;21000;1948;los Granates;el estadio del puerto del norte;El club del puerto báltico.
-Górnik Zabrze;Zabrze Minero;#ffffff;#1b458f;60;31000;1948;los Mineros;el estadio de la cuenca minera;El club con más ligas de la historia, en la cuenca minera.
-Cracovia;Cracovia Antigua;#c8102e;#ffffff;58;15000;1906;los Pasy;el estadio del club más antiguo;El club más antiguo del país.
-Piast Gliwice;Piast Silesia;#1b458f;#c8102e;58;10000;1945;los Piastas;el estadio de la ciudad de Silesia;El campeón de 2019 de la ciudad industrial.
-Zagłębie Lubin;Zaglebie Cobre;#00843d;#ffd100;57;16000;1946;los del Cobre;el estadio de la ciudad del cobre;El club de la ciudad del cobre.
-Korona Kielce;Korona Colinas;#ffd100;#c8102e;55;15000;1973;los Coronados;el estadio de las colinas;El club de las colinas del centro.
-Radomiak Radom;Radomiak Gris;#00843d;#ffffff;54;15000;1910;los Verdes;el estadio de la ciudad del sur;El club de la ciudad del sur que subió a primera.
-Widzew Łódź;Widzew Textil;#c8102e;#ffffff;56;18000;1910;los Rojos;el estadio de la ciudad textil;El club de la ciudad textil que jugó semifinales europeas.
-Motor Lublin;Motor Este;#ffd100;#1b458f;54;15000;1950;los Amarillos;el estadio del este;El club del este que subió a primera.
-Lechia Gdańsk;Lechia Puerto;#00843d;#ffffff;57;41000;1945;los Verdiblancos;el estadio del puerto báltico;El club del puerto del Báltico, con un estadio enorme.
-Arka Gdynia;Arka Marina;#ffd100;#1b458f;54;15000;1929;los Marinos;el estadio del puerto de Gdynia;El club del puerto vecino.
-Bruk-Bet Termalica;Termalica Aguas;#c8102e;#ffd100;53;4500;1922;los Elefantes;el estadio de la ciudad pequeña;Un club de una ciudad pequeña con elefantes en el escudo.
-GKS Katowice;Katowice Hierro;#00843d;#ffd100;54;15000;1964;los Verdiamarillos;el estadio de la capital de Silesia;El club de la capital de Silesia que volvió a primera.
-Wisła Płock;Wisla Petroleo;#1b458f;#ffffff;54;15000;1947;los Petroleros;el estadio de la ciudad del petróleo;El club de la ciudad del petróleo.
+Pogoń Szczecin;Pogon Baltico;#1b458f;#8b1538;60;21163;1948;los Granates;el estadio del puerto del norte;El club del puerto báltico.
+Górnik Zabrze;Zabrze Minero;#ffffff;#1b458f;60;28236;1948;los Mineros;el estadio de la cuenca minera;El club con más ligas de la historia, en la cuenca minera.
+Cracovia;Cracovia Antigua;#c8102e;#ffffff;58;15016;1906;los Pasy;el estadio del club más antiguo;El club más antiguo del país.
+Piast Gliwice;Piast Silesia;#1b458f;#c8102e;58;9913;1945;los Piastas;el estadio de la ciudad de Silesia;El campeón de 2019 de la ciudad industrial.
+Zagłębie Lubin;Zaglebie Cobre;#00843d;#ffd100;57;16086;1946;los del Cobre;el estadio de la ciudad del cobre;El club de la ciudad del cobre.
+Korona Kielce;Korona Colinas;#ffd100;#c8102e;55;15700;1973;los Coronados;el estadio de las colinas;El club de las colinas del centro.
+Radomiak Radom;Radomiak Gris;#00843d;#ffffff;54;14440;1910;los Verdes;el estadio de la ciudad del sur;El club de la ciudad del sur que subió a primera.
+Widzew Łódź;Widzew Textil;#c8102e;#ffffff;56;18018;1910;los Rojos;el estadio de la ciudad textil;El club de la ciudad textil que jugó semifinales europeas.
+Motor Lublin;Motor Este;#ffd100;#1b458f;54;15247;1950;los Amarillos;el estadio del este;El club del este que subió a primera.
+Lechia Gdańsk;Lechia Puerto;#00843d;#ffffff;57;41620;1945;los Verdiblancos;el estadio del puerto báltico;El club del puerto del Báltico, con un estadio enorme.
+Arka Gdynia;Arka Marina;#ffd100;#1b458f;54;15139;1929;los Marinos;el estadio del puerto de Gdynia;El club del puerto vecino.
+Bruk-Bet Termalica;Termalica Aguas;#c8102e;#ffd100;53;4666;1922;los Elefantes;el estadio de la ciudad pequeña;Un club de una ciudad pequeña con elefantes en el escudo.
+GKS Katowice;Katowice Hierro;#00843d;#ffd100;54;15048;1964;los Verdiamarillos;el estadio de la capital de Silesia;El club de la capital de Silesia que volvió a primera.
+Wisła Płock;Wisla Petroleo;#1b458f;#ffffff;54;15004;1947;los Petroleros;el estadio de la ciudad del petróleo;El club de la ciudad del petróleo.

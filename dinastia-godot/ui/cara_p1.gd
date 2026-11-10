@@ -63,7 +63,8 @@ const RUBIOS := {"GER": 0.32, "ENG": 0.26, "AUS": 0.22, "USA": 0.16, "FRA": 0.12
 	"ARG": 0.09, "URU": 0.09, "CHI": 0.06, "BRA": 0.05, "JPN": 0.0, "KOR": 0.0,
 	"NED": 0.3, "DEN": 0.35, "BEL": 0.2, "CRO": 0.15, "POR": 0.04,
 	"TUR": 0.03, "SCO": 0.28, "SUI": 0.2, "AUT": 0.22, "GRE": 0.04, "QAT": 0.0,
-	"SWE": 0.45, "NOR": 0.4, "POL": 0.25, "CZE": 0.25, "ROU": 0.08, "SRB": 0.08, "UKR": 0.15, "CHN": 0.0}
+	"SWE": 0.45, "NOR": 0.4, "POL": 0.25, "CZE": 0.25, "ROU": 0.08, "SRB": 0.08, "UKR": 0.15, "CHN": 0.0,
+	"ISR": 0.05, "RUS": 0.3, "HUN": 0.2, "SVK": 0.2, "BUL": 0.1, "UAE": 0.0, "IRN": 0.02}
 ## El tono medio de los futbolistas de cada país (índice en PIELES, de 0 claro a
 ## 7 oscuro). La grada usa su propio sesgo (`OlaGrada.PIEL_SESGO`); con él los
 ## chilenos salían casi blancos, y la mayoría son mestizos de tono medio.
@@ -72,7 +73,8 @@ const TONO_MEDIO := {"CHI": 2.8, "ARG": 1.8, "URU": 1.9, "PAR": 2.9, "BOL": 3.6,
 	"ENG": 2.0, "FRA": 3.0, "JPN": 1.7, "KOR": 1.5, "AUS": 1.7, "KSA": 3.4, "EGY": 3.8, "MAR": 3.6, "RSA": 5.2,
 	"POR": 2.4, "NED": 2.0, "BEL": 2.3, "CRO": 1.6, "DEN": 1.6,
 	"TUR": 2.4, "SCO": 1.5, "SUI": 1.7, "AUT": 1.6, "GRE": 2.4, "QAT": 3.4,
-	"SWE": 1.3, "NOR": 1.3, "POL": 1.5, "CZE": 1.5, "ROU": 2.0, "SRB": 1.9, "UKR": 1.8, "CHN": 1.7}
+	"SWE": 1.3, "NOR": 1.3, "POL": 1.5, "CZE": 1.5, "ROU": 2.0, "SRB": 1.9, "UKR": 1.8, "CHN": 1.7,
+	"ISR": 2.4, "RUS": 1.4, "HUN": 1.6, "SVK": 1.6, "BUL": 1.9, "UAE": 3.4, "IRN": 3.0}
 const PELOS_OSCUROS := ["#231a14", "#3d2a19", "#1a1a1a", "#4a3a2a", "#6b4a2a", "#231a14"]
 
 ## "CARA REAL": las fotos con licencia libre que ya bajó

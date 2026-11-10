@@ -1,40 +1,47 @@
-# Auditoría de contenido: Dinastía frente al fútbol profesional del mundo (10-11-2026)
+# Auditoría de contenido: Dinastía frente al fútbol profesional del mundo (actualizada el 10-11-2026, cifras MEDIDAS)
 
-Pedido del dueño (10-11): qué clubes faltan considerando todas las ligas profesionales del mundo; cuántos estadios reales faltan y cómo simplificar; cuántos jugadores, caras, escudos y uniformes faltan; qué torneos y copas faltan; celebraciones; objetivos por club; selecciones (aceptar una selección y jugar sus torneos).
-Fuentes: lectura de los datos y el código del juego (solo lectura) e investigación web (FIFA Professional Football Report 2023, Wikipedia, confederaciones). [V] = verificado, [C] = conocido sin verificar ahora, [E] = estimación.
+Pedido del dueño (10-11): qué clubes faltan considerando todas las ligas profesionales del mundo; cuántos estadios reales faltan y cómo simplificar; cuántos jugadores, caras, escudos y uniformes faltan; qué torneos y copas faltan; celebraciones; objetivos por club; selecciones.
+**Cómo se midió**: `herramientas/medir_contenido.tscn` genera el mundo completo (`Mundo.generar`, semilla 7) y lee las tablas; cifras en bruto en `docs/04_auditorias/cifras_contenido_2026-11-10.json`. Se repite con
+`godot --headless --path dinastia-godot res://herramientas/medir_contenido.tscn -- --salida=ruta.json`. Con el pack real (`pack_real.json`) presente mide el mundo real; los nombres que salen aquí son los del pack.
+Cifras del «mundo real»: FIFA Professional Football Report 2023 [V]; el resto [C] = conocido sin verificar ahora, [E] = estimación. Lo que no se pudo remedir hoy lo dice.
 
-## 1. Resumen: lo que hay y lo que falta
+## 1. Resumen: lo que hay (medido) y lo que falta
 
-| Magnitud | Dinastía hoy | Mundo real | Falta |
+| Magnitud | Dinastía hoy (medido) | Mundo real | Falta |
 |---|---|---|---|
-| Países con liga | 28 | 135 con fútbol profesional (FIFA) [V]; ~160 con semiprofesional [E] | **107** (o ~130 con semiprofesional) |
-| Ligas | 29 (solo Chile con 2.ª división) | ~150 primeras divisiones; ~300 contando 2.ª y 3.ª profesionales [E] | **~120 primeras + ~150 inferiores** |
-| Clubes | 466 (402 con datos propios + 64 genéricos de POR, BEL, CRO y DEN) | 3.986 profesionales (FIFA) [V]; 5.500-6.500 con 2.ª división [E] | **~3.500** (estricto) a **~6.000** (con 2.ªs) |
-| Clubes que faltan DENTRO de las ligas que ya hay (todas recortadas a 16) | — | ENG 20, ESP 20, ITA 20, GER 18, FRA 18, ARG 30, BRA 20, MEX 18, USA 30, JPN 20, COL 20, PER 18, KSA 18, EGY ~21 [C] | **~67 clubes** (y 4 ligas sobran: KOR 12, AUS 13, PAR 12 reales) |
-| Jugadores | 11.650 (466 × 25); 4.311 con nombre fijo (37 %) | ~128.700 profesionales [V] | **~117.000** (o ~7.300 sin nombre fijo en lo que ya hay) |
-| Caras | 72 de biblioteca (mezclas, no son nadie) + cara procedural; 1.219 fotos reales solo en `caras_reales.pck` (33 % de los fijos) | una por jugador | 3.092 jugadores fijos sin foto; **el build público no lleva ni la biblioteca de 72** (excluida en `export_presets.cfg`) y cae al dibujo procedural |
-| Estadios | 402 con perfil propio ESQUEMÁTICO (forma, niveles, techo, focos…), 142 con nombre real, 64 genéricos; **0 modelos individuales** | ~3.500-5.500 distintos [E]; ~150 icónicos para una 1.ª tanda [E] | **150 icónicos** como objetivo y el resto por perfil |
-| Escudos | 402 con forma y patrón propios (378 con figura o letras), 64 por sorteo | uno por club | 64 + todos los clubes nuevos; los 402 son genéricos «parecidos» |
-| Uniformes | 147 con diseño propio, 305 con pantalón y medias propios; 142 con fotos reales (solo base real) | uno o tres por club | ~319 diseños en lo que ya hay + todos los nuevos |
+| Países con liga | **50** (los 28 de antes + 22 nuevos) | 135 con fútbol profesional [V]; ~160 con semiprofesional [E] | **85** (o ~110) |
+| Ligas | **62**: 50 primeras + 12 segundas (ARG, BRA, CHI, ENG, ESP, FRA, GER, ITA, MEX, NED, POR, TUR) | ~150 primeras; ~300 con 2.ª y 3.ª profesionales [E] | **~100 primeras + ~190 inferiores** |
+| Clubes | **1.069**: 821 en primera y 248 en segunda | 3.986 profesionales [V]; 5.500-6.500 con 2.ª [E] | **~2.900** (estricto) a **~5.000** (con 2.ªs) |
+| Clubes DENTRO de las ligas hechas | cantidades reales: ENG 20, ESP 20, ITA 20, GER 18, FRA 18, ARG 30, BRA 20, MEX 18, USA 30, JPN 20, COL 20, PER 18, KSA 18, EGY 21, TUR 18, POR 18, NED 18, POL 18… | las mismas [C] | ~0 (antes ~67). Residuo: Australia 12 de 13 reales, ligas con formato especial (play-offs) simplificado |
+| Jugadores | **26.725** en clubes (DEF 8.552, MED 8.328, DEL 6.638, POR 3.207); 114 nacionalidades; OVR medio 55,3; **3.911 con nombre y datos fijos (14,6 %)** en 339 clubes del pack real | ~128.700 profesionales [V] | **~102.000** (o ~22.800 sin datos fijos dentro de lo que ya hay) |
+| Caras | biblioteca de **300** mezclas (antes 72) + cara procedural; las fotos reales (1.219 en el informe anterior, no remedido: el `.pck` no está en este contenedor) solo en `caras_reales.pck` | una por jugador | la biblioteca debe incluirse en el build público (revisar `export_presets.cfg`); fotos solo en el `.pck` por política |
+| Estadios | **1.069 perfiles** (uno por club) pero solo **99 combinaciones distintas** de forma, niveles, techo, focos y fachada; 0 modelos individuales; aforo medio 22.794, máximo 95.000 (Comtal FC) | ~3.500-5.500 distintos [E]; ~150 icónicos [E] | los 150 icónicos con pieza propia; subir de 99 a ≥300 combinaciones por perfil |
+| Escudos | **1.069** filas; **917 diseños distintos** (forma + patrón + colores + letras); 842 con patrón o letras propias | uno por club | variedad suficiente; falta que se parezcan a su club real (colores de varios clubes salen de memoria, sin verificar) |
+| Uniformes | **1.012** con kit propio y **1.007** con visitante; **434 combinaciones distintas** de camiseta + colores + pantalón + medias (muchos clubes comparten diseño: la firma no incluye `kit_x`); 952 con butacas de color propio | uno o tres por club | diversificar el uniforme (mitad de los clubes repite combinación) |
+| Historia de club | 1.069 filas de `HISTORIA_CLUBES` (fundación, apodo, estadio, palmarés) | — | — |
+| Idiomas | 9 | — | no se suman más (orden 5) |
 
 ## 2. Torneos
 
 | Torneo | Hoy | Falta |
 |---|---|---|
-| Copas nacionales | 28 copas en 25 países; PAR, ECU y BOL con nombre genérico; **solo se juega la copa de tu país** | las de los 107 países nuevos; que se jueguen las de todos los países (simuladas) |
-| Supercopas nacionales | solo la de tu país (un partido) | las del resto (España, Italia, Alemania, Francia, Portugal, Brasil, Argentina…) |
-| Segunda copa (copa de liga) | ENG, ARG y JPN alternan una por año | jugar las dos el mismo año; Taça da Liga, Scottish League Cup, J.League Cup… |
-| Mundial de selecciones | se «simula» por fuerza, sin partidos; 32 de 37 selecciones | 48 selecciones (2026), partidos de verdad |
-| Continentales de clubes (HECHO 10-11, sesión 6: formatos reales, supercopas, Mundial de Clubes de 32 y Copa Intercontinental) | — | solo Leagues Cup y las previas de la Libertadores |
-| Eurocopa, Copa América, Copa Oro, Copa Africana, Copa de Asia, Oceanía | solo se sortea el puesto de tu país; en el calendario, solo fechas | torneos jugados |
-| Nations League (UEFA y CONCACAF), eliminatorias, Finalissima, Juegos Olímpicos | no existen | todos |
-| Incoherencia | el calendario muestra el Mundial en 2026 y 2030, pero el cierre de temporada lo juega en 2028 y 2032 | unificar |
+| Copas nacionales | 50 nombres de copa (`COPA_NOM`); se simulan las de **todos** los países, con supercopas y palmarés del mundo (pantalla Competiciones); la de tu país se juega | las de los 85 países sin liga |
+| Fases finales de liga | **15 países** (EGY, ARG, USA, BEL, SCO, DEN, SUI, AUT, GRE, CZE, ROU, SRB, ISR, SVK, BUL) con grupos/zonas/conferencias/play-offs reales | NED/POR/TUR…: play-offs menores; MLS (1 fecha interconferencias) |
+| Supercopas nacionales | en todos los países con copa (resultado simulado) | jugarlas |
+| Continentales de clubes | **6 principales** (Libertadores, Champions, Asia, África, Oceanía, Concacaf) más Sudamericana y Europa League, con formato real, supercopas continentales | previas de la Libertadores y Leagues Cup |
+| Torneos FIFA de clubes | **Mundial de Clubes de 32** (8 grupos + eliminatorias) y **Copa Intercontinental** (5 campeones; Challenger Cup, Derbi de las Américas y final) | — |
+| Selecciones | **69 selecciones** (11 África, 11 Asia, 7 Concacaf, 14 Sudamérica, 2 Oceanía, 28 Europa; Rusia suspendida: solo amistosos). **Mundial de 48** jugado de verdad (grupos y eliminatorias), 6 continentales de selecciones con partidos, **Finalissima** y **Olímpicos** | Nations League (UEFA y Concacaf) y eliminatorias: no existen |
+| Cargo de seleccionador | **existe** (`CargoSeleccion`): llaman selecciones por prestigio; cargo doble con el club; con él se juegan los torneos de esa selección | convocatoria de 26 con el mundo entero y amistosos jugables |
+| Incoherencia | calendario muestra el Mundial en 2026/2030 y el cierre lo juega en 2028/2032 (según informe del 10-11; no remedido hoy) | unificar |
 
-## 3. Selecciones
+## 3. Qué FALTA, en números (lista corta)
 
-- **No existe el cargo de seleccionador**: las ofertas de trabajo son solo de clubes (`Roles.sortear_oferta_de_club`).
-- Solo hay 37 selecciones. Los convocados de tu plantilla se van 4 veces por temporada (desgaste, lesiones, moral). Los amistosos son un marcador al azar.
-- **Falta todo**: ofertas de selecciones (por prestigio), doble cargo club + selección o solo selección, convocatoria (elegir 26 de los jugadores de su país en todo el mundo), partidos jugables (amistosos, eliminatorias, Nations League, torneos) y las 211 selecciones FIFA (o al menos las de los países con liga).
+1. **85 países** con liga profesional (de 135) y **~100 primeras divisiones**.
+2. **~2.900 clubes** profesionales (~5.000 con segundas y terceras) y **~102.000 jugadores**.
+3. Las **211 selecciones** FIFA: hay 69 (cubren los 50 países con liga y 19 más); faltan 142.
+4. **Nations League y eliminatorias** (no existen); las copas y supercopas de los otros países se simulan por resultado, no se juegan.
+5. **99 combinaciones de estadio** para 1.069 clubes (≈ 11 clubes por perfil de media) y **0 modelos individuales**; **434 combinaciones de uniforme** para 1.012 kits.
+6. Caras: 300 mezclas frente a 26.725 jugadores; el build público debe llevarlas.
 
 ## 4. Celebraciones
 
@@ -91,7 +98,8 @@ Notas: `dinastia-godot/AUDITORIA_CLUBES.csv` está desfasado (384 clubes, sin NE
 | Uniformes | 147 con diseño propio | uniforme base retocado en las ligas grandes y 2.º uniforme en 330 clubes (sesión 2) |
 | Caras | piel/pelo/barba al azar en 2.971 jugadores fijos sin medir | rasgos por país medidos en las caras reales (`CaraPrior`): cara coherente 5 % → 11 % (sin fotos en lo público) |
 | Copas | solo la de tu país | las de todos los países, con supercopas y palmarés del mundo (pantalla en Competiciones) |
-| Selecciones | 37, fuerza sin partidos | 63, equipos de verdad, Mundial de 48, continentales jugados, cargo de seleccionador con convocatoria, fechas FIFA y torneos jugables |
+| Selecciones | 37, fuerza sin partidos | 63 (hoy 69), equipos de verdad, Mundial de 48, continentales jugados, cargo de seleccionador con convocatoria, fechas FIFA y torneos jugables |
 | Jugadores reales con nombre | 4.311 | 3.911 (los de los 38 descendidos salen con su club) |
 
-Pendiente de esta auditoría: formatos reales de los continentales, supercopas continentales, Mundial de Clubes de 32 jugable e Intercontinental (sesión 6); estadios icónicos (sesión 3); escudos de los 268 restantes y de los 93 nuevos (sesión 2); países sin liga (107), segundas divisiones y más jugadores (siguiente bloque, con `importar_pais.py`).
+Hecho después (10-11, sesiones 6 y 7): 50 países y 62 ligas (22 países nuevos con `importar_pais.py`), 1.069 clubes con aspecto propio, 24 segundas con escudo/uniforme/butacas, formatos reales de los continentales, supercopas continentales, Mundial de Clubes de 32, Copa Intercontinental, fases finales de liga en 15 países y 69 selecciones. Las cifras de la sección 1 sustituyen a las de esta tabla.
+Pendiente: 85 países sin liga, estadios icónicos con pieza propia, diversidad de uniformes (434 combinaciones para 1.012 kits), Nations League y eliminatorias, y los colores de memoria sin verificar (Persepolis visitante, Al Gharafa, Al Sadd, Al Rayyan, Craiova, Viking, Krasnodar y CSKA visitante, Sharjah, Al Jazira, Zorya, Metalist, venezolanos; segundas: Alvarado, Colegiales, Dep. Maipú, Est. Buenos Aires, Güemes, Tepatitlán).

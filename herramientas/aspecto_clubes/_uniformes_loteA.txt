@@ -1,0 +1,82 @@
+# Lote A: nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed
+Benfica|liso|#d50032|#ffffff|#ffffff|#d50032|#111111|#d50032|liso|#111111|#111111
+Porto|franjas|#ffffff|#0b3d91|#ffffff|#ffffff|#111111|#0b3d91|liso|#111111|#111111
+Sporting CP|aros|#00793c|#ffffff|#111111|#00793c|#ffffff|#00793c|liso|#ffffff|#ffffff
+Braga|liso|#d50032|#ffffff|#d50032|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Vitória Guimarães|liso|#ffffff|#111111|#111111|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Famalicão|liso|#0b3d91|#ffffff|#0b3d91|#0b3d91|#ffffff|#0b3d91|liso|#ffffff|#ffffff
+Gil Vicente|liso|#d50032|#0b3d91|#0b3d91|#d50032|#ffffff|#0b3d91|liso|#ffffff|#ffffff
+Estoril|liso|#ffd100|#0b3d91|#0b3d91|#ffd100|#0b3d91|#ffd100|liso|#0b3d91|#0b3d91
+Rio Ave|liso|#ffffff|#00793c|#00793c|#ffffff|#00793c|#ffffff|liso|#00793c|#00793c
+Casa Pia|liso|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Nacional Madeira|franjas|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Santa Clara|liso|#d50032|#ffffff|#d50032|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Anderlecht|liso|#5b2d8e|#ffffff|#5b2d8e|#5b2d8e|#ffffff|#5b2d8e|liso|#ffffff|#ffffff
+Club Brugge|franjas|#0b3d91|#111111|#111111|#0b3d91|#ffffff|#0b3d91|liso|#ffffff|#ffffff
+Genk|liso|#0b3d91|#ffffff|#0b3d91|#0b3d91|#ffffff|#0b3d91|liso|#ffffff|#ffffff
+Standard Lieja|liso|#d50032|#ffffff|#d50032|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Gent|liso|#0b3d91|#ffffff|#0b3d91|#0b3d91|#ffffff|#0b3d91|liso|#ffffff|#ffffff
+Union SG|liso|#ffd100|#0b3d91|#0b3d91|#ffd100|#0b3d91|#ffd100|liso|#0b3d91|#0b3d91
+Antwerp|liso|#d50032|#ffffff|#d50032|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Mechelen|liso|#ffd100|#d50032|#d50032|#ffd100|#d50032|#ffd100|liso|#d50032|#d50032
+Charleroi|liso|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Cercle Brugge|liso|#00793c|#111111|#111111|#00793c|#ffffff|#00793c|liso|#ffffff|#ffffff
+Dinamo Zagreb|liso|#0b3d91|#ffffff|#0b3d91|#0b3d91|#ffffff|#0b3d91|liso|#ffffff|#ffffff
+Hajduk Split|liso|#ffffff|#0b3d91|#0b3d91|#ffffff|#0b3d91|#ffffff|liso|#0b3d91|#0b3d91
+Rijeka|liso|#ffffff|#0b3d91|#ffffff|#ffffff|#0b3d91|#ffffff|liso|#0b3d91|#0b3d91
+Osijek|liso|#0b3d91|#ffffff|#0b3d91|#0b3d91|#ffffff|#0b3d91|liso|#ffffff|#ffffff
+Lokomotiva|liso|#0b3d91|#ffffff|#0b3d91|#0b3d91|#ffffff|#0b3d91|liso|#ffffff|#ffffff
+FC Copenhague|liso|#ffffff|#0b3d91|#ffffff|#ffffff|#0b3d91|#ffffff|liso|#0b3d91|#0b3d91
+Midtjylland|liso|#d50032|#111111|#111111|#d50032|#111111|#d50032|liso|#111111|#111111
+Brøndby|liso|#ffd100|#0b3d91|#0b3d91|#ffd100|#0b3d91|#ffd100|liso|#0b3d91|#0b3d91
+AGF|liso|#ffffff|#0b3d91|#ffffff|#ffffff|#0b3d91|#ffffff|liso|#0b3d91|#0b3d91
+Nordsjælland|liso|#ffd100|#d50032|#d50032|#ffd100|#111111|#ffd100|liso|#111111|#111111
+Randers|liso|#0b3d91|#ffffff|#0b3d91|#0b3d91|#ffffff|#0b3d91|liso|#ffffff|#ffffff
+Silkeborg|liso|#d50032|#ffffff|#d50032|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Odense|liso|#ffffff|#0b3d91|#0b3d91|#ffffff|#0b3d91|#ffffff|liso|#0b3d91|#0b3d91
+Galatasaray|franjas|#a90432|#ffd100|#a90432|#a90432|#ffffff|#a90432|liso|#ffffff|#ffffff
+Fenerbahçe|franjas|#ffd100|#002d62|#002d62|#ffd100|#002d62|#ffd100|liso|#002d62|#002d62
+Beşiktaş|franjas|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Trabzonspor|mitad|#7b1c3a|#69b3e7|#7b1c3a|#7b1c3a|#ffffff|#7b1c3a|liso|#ffffff|#ffffff
+İstanbul Başakşehir|liso|#f26522|#1c2c5b|#1c2c5b|#f26522|#1c2c5b|#f26522|liso|#1c2c5b|#1c2c5b
+Samsunspor|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Konyaspor|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Kayserispor|liso|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|#ffd100|liso|#c8102e|#c8102e
+Antalyaspor|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Göztepe|franjas|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|#ffd100|liso|#c8102e|#c8102e
+Çaykur Rizespor|franjas|#007a33|#0072ce|#007a33|#007a33|#ffffff|#007a33|liso|#ffffff|#ffffff
+Celtic|aros|#00843d|#ffffff|#ffffff|#00843d|#111111|#ffd100|liso|#111111|#111111
+Glasgow Rangers|liso|#1b458f|#ffffff|#ffffff|#1b458f|#ffffff|#d50032|liso|#ffffff|#ffffff
+Heart of Midlothian|liso|#800000|#ffffff|#ffffff|#800000|#ffffff|#800000|liso|#ffffff|#ffffff
+Aberdeen|liso|#e21a22|#ffffff|#e21a22|#e21a22|#111111|#ffd100|liso|#111111|#111111
+Hibernian|mangas_contraste|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Dundee United|liso|#f26522|#000000|#f26522|#f26522|#000000|#f26522|liso|#000000|#000000
+Motherwell|liso|#ffb81c|#8b1538|#ffb81c|#ffb81c|#8b1538|#ffb81c|liso|#8b1538|#8b1538
+Kilmarnock|franjas|#1b458f|#ffffff|#ffffff|#ffffff|#ffffff|#1b458f|liso|#1b458f|#1b458f
+St Mirren|franjas|#000000|#ffffff|#000000|#000000|#ffffff|#000000|liso|#ffffff|#ffffff
+Dundee|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Basel|mitad|#c8102e|#1b458f|#1b458f|#c8102e|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Young Boys|liso|#ffd100|#000000|#000000|#ffd100|#000000|#ffd100|liso|#000000|#000000
+Zürich|liso|#ffffff|#1b458f|#ffffff|#ffffff|#1b458f|#ffffff|liso|#1b458f|#1b458f
+Servette|liso|#7b1c3a|#ffffff|#7b1c3a|#7b1c3a|#ffffff|#7b1c3a|liso|#ffffff|#ffffff
+Lugano|liso|#ffffff|#000000|#000000|#ffffff|#000000|#ffffff|liso|#000000|#000000
+Luzern|liso|#0072ce|#ffffff|#0072ce|#0072ce|#ffffff|#0072ce|liso|#ffffff|#ffffff
+Lausanne-Sport|liso|#0072ce|#ffffff|#ffffff|#0072ce|#ffffff|#0072ce|liso|#ffffff|#ffffff
+St. Gallen|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Sion|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Grasshoppers|liso|#ffffff|#0072ce|#ffffff|#ffffff|#0072ce|#ffffff|liso|#0072ce|#0072ce
+Red Bull Salzburg|liso|#ffffff|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|liso|#c8102e|#c8102e
+Sturm Graz|liso|#000000|#ffffff|#000000|#000000|#ffffff|#000000|liso|#ffffff|#ffffff
+LASK|liso|#000000|#ffffff|#ffffff|#000000|#ffffff|#000000|liso|#ffffff|#ffffff
+Rapid Wien|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Austria Wien|liso|#6a1b9a|#ffffff|#6a1b9a|#6a1b9a|#ffffff|#6a1b9a|liso|#ffffff|#ffffff
+Wolfsberger AC|liso|#000000|#ffffff|#000000|#000000|#ffffff|#000000|liso|#ffffff|#ffffff
+Olympiacos|franjas|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Panathinaikos|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+AEK Athens|liso|#ffd100|#000000|#000000|#ffd100|#000000|#ffd100|liso|#000000|#000000
+PAOK|liso|#ffffff|#000000|#000000|#ffffff|#000000|#ffffff|liso|#000000|#000000
+Aris|liso|#ffd100|#000000|#000000|#ffd100|#000000|#ffd100|liso|#000000|#000000
+OFI Crete|liso|#ffffff|#000000|#000000|#ffffff|#000000|#ffffff|liso|#000000|#000000
+Atromitos|liso|#0072ce|#ffffff|#0072ce|#0072ce|#ffffff|#0072ce|liso|#ffffff|#ffffff
+Asteras Tripolis|liso|#ffd100|#000000|#000000|#ffd100|#000000|#ffd100|liso|#000000|#000000
+Volos|liso|#0072ce|#ffffff|#0072ce|#0072ce|#ffffff|#0072ce|liso|#ffffff|#ffffff

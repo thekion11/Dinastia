@@ -1,0 +1,32 @@
+# Lote M1: nombre|butaca1|butaca2
+Hartberg|#c8102e|#ffffff
+Altach|#ffd100|#111111
+Blau-Weiß Linz|#0072ce|#ffffff
+GAK|#c8102e|#ffffff
+WSG Tirol|#111111|#ffffff
+Ried|#00843d|#ffffff
+Septemvri Sofia|#c8102e|#ffffff
+Lokomotiv Sofia|#111111|#c8102e
+Spartak Varna|#ffffff|#c8102e
+Dobrudzha|#00843d|#ffffff
+Montana|#c8102e|#ffffff
+Botev Vratsa|#00843d|#ffffff
+Qingdao Hainiu|#c8102e|#ffffff
+Chongqing Tonglianglong|#1b458f|#c8102e
+Shenzhen Peng City|#c8102e|#ffd100
+Yunnan Yukun|#00843d|#ffffff
+Liaoning Tieren|#c8102e|#ffffff
+Levadiakos|#c8102e|#111111
+Panserraikos|#c8102e|#111111
+Panetolikos|#00843d|#ffffff
+AEL|#ffd100|#111111
+Kifisia|#00843d|#ffffff
+Kisvárda|#c8102e|#1b458f
+Nyíregyháza|#c8102e|#ffffff
+Kazincbarcika|#c8102e|#1b458f
+Mes Rafsanjan|#f26522|#111111
+Chadormalou|#c8102e|#ffffff
+Paykan|#c8102e|#ffffff
+Shams Azar|#ffd100|#1b458f
+Kheybar|#c8102e|#ffffff
+Fajr Sepasi|#00843d|#ffffff

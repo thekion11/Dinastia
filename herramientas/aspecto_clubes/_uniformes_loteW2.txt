@@ -1,0 +1,27 @@
+# Lote W2: nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed
+Sepahan|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffffff|liso|#111111|#111111
+Tractor|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Maccabi Tel Aviv|liso|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|#ffd100|liso|#1b458f|#1b458f
+Maccabi Haifa|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Hapoel Be'er Sheva|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Hapoel Tel Aviv|liso|#d50032|#ffffff|#d50032|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Bodø/Glimt|liso|#ffd100|#111111|#111111|#111111|#111111|#ffd100|liso|#111111|#111111
+Brann|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Rosenborg|liso|#ffffff|#111111|#111111|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Viking|liso|#1b458f|#ffffff|#ffffff|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Legia Warszawa|liso|#ffffff|#006633|#006633|#ffffff|#006633|#ffffff|liso|#006633|#006633
+Lech Poznań|liso|#003876|#ffffff|#003876|#003876|#ffffff|#003876|liso|#ffffff|#ffffff
+Raków Częstochowa|franjas|#c8102e|#1b458f|#1b458f|#c8102e|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Jagiellonia Białystok|franjas|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|#ffffff|liso|#c8102e|#c8102e
+Al Sadd|liso|#ffffff|#003876|#ffffff|#ffffff|#003876|#ffffff|liso|#003876|#003876
+Al Duhail|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Al Rayyan|liso|#c8102e|#111111|#111111|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Al Gharafa|liso|#0072ce|#ffffff|#0072ce|#0072ce|#ffffff|#0072ce|liso|#ffffff|#ffffff
+FCSB|liso|#c8102e|#1b458f|#1b458f|#c8102e|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Universitatea Craiova|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+CFR Cluj|liso|#8b1538|#ffffff|#8b1538|#8b1538|#ffffff|#8b1538|liso|#ffffff|#ffffff
+Rapid București|liso|#8b1538|#ffffff|#ffffff|#8b1538|#ffffff|#8b1538|liso|#ffffff|#ffffff
+Zenit Saint Petersburg|liso|#00a0e0|#ffffff|#0057b8|#0057b8|#ffffff|#00a0e0|liso|#ffffff|#ffffff
+Spartak Moscow|liso|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Krasnodar|liso|#00843d|#111111|#111111|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+CSKA Moscow|liso|#c8102e|#1b458f|#1b458f|#c8102e|#ffffff|#c8102e|liso|#1b458f|#1b458f

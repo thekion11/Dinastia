@@ -1,0 +1,82 @@
+# Lote A: nombre|butaca1|butaca2
+Benfica|#d50032|#ffffff
+Porto|#0b3d91|#ffffff
+Sporting CP|#00793c|#ffffff
+Braga|#d50032|#ffffff
+Vitória Guimarães|#ffffff|#111111
+Famalicão|#0b3d91|#ffffff
+Gil Vicente|#d50032|#0b3d91
+Estoril|#ffd100|#0b3d91
+Rio Ave|#00793c|#ffffff
+Casa Pia|#111111|#ffffff
+Nacional Madeira|#111111|#ffffff
+Santa Clara|#d50032|#ffffff
+Anderlecht|#5b2d8e|#ffffff
+Club Brugge|#0b3d91|#111111
+Genk|#0b3d91|#ffffff
+Standard Lieja|#d50032|#ffffff
+Gent|#0b3d91|#ffffff
+Union SG|#ffd100|#0b3d91
+Antwerp|#d50032|#ffffff
+Mechelen|#ffd100|#d50032
+Charleroi|#111111|#ffffff
+Cercle Brugge|#00793c|#111111
+Dinamo Zagreb|#0b3d91|#ffffff
+Hajduk Split|#ffffff|#0b3d91
+Rijeka|#ffffff|#0b3d91
+Osijek|#0b3d91|#ffffff
+Lokomotiva|#0b3d91|#ffffff
+FC Copenhague|#ffffff|#0b3d91
+Midtjylland|#d50032|#111111
+Brøndby|#ffd100|#0b3d91
+AGF|#ffffff|#0b3d91
+Nordsjælland|#ffd100|#d50032
+Randers|#0b3d91|#ffffff
+Silkeborg|#d50032|#ffffff
+Odense|#0b3d91|#ffffff
+Galatasaray|#a90432|#ffd100
+Fenerbahçe|#ffd100|#002d62
+Beşiktaş|#111111|#ffffff
+Trabzonspor|#7b1c3a|#69b3e7
+İstanbul Başakşehir|#f26522|#1c2c5b
+Samsunspor|#c8102e|#ffffff
+Konyaspor|#00843d|#ffffff
+Kayserispor|#ffd100|#c8102e
+Antalyaspor|#c8102e|#ffffff
+Göztepe|#ffd100|#c8102e
+Çaykur Rizespor|#007a33|#0072ce
+Celtic|#00843d|#ffffff
+Glasgow Rangers|#1b458f|#ffffff
+Heart of Midlothian|#800000|#ffffff
+Aberdeen|#e21a22|#ffffff
+Hibernian|#00843d|#ffffff
+Dundee United|#f26522|#000000
+Motherwell|#ffb81c|#8b1538
+Kilmarnock|#1b458f|#ffffff
+St Mirren|#000000|#ffffff
+Dundee|#1b458f|#ffffff
+Basel|#c8102e|#1b458f
+Young Boys|#ffd100|#000000
+Zürich|#ffffff|#1b458f
+Servette|#7b1c3a|#ffffff
+Lugano|#000000|#ffffff
+Luzern|#0072ce|#ffffff
+Lausanne-Sport|#0072ce|#ffffff
+St. Gallen|#00843d|#ffffff
+Sion|#c8102e|#ffffff
+Grasshoppers|#ffffff|#0072ce
+Red Bull Salzburg|#c8102e|#ffffff
+Sturm Graz|#000000|#ffffff
+LASK|#000000|#ffffff
+Rapid Wien|#00843d|#ffffff
+Austria Wien|#6a1b9a|#ffffff
+Wolfsberger AC|#000000|#ffffff
+Olympiacos|#c8102e|#ffffff
+Panathinaikos|#00843d|#ffffff
+AEK Athens|#ffd100|#000000
+PAOK|#ffffff|#000000
+Aris|#ffd100|#000000
+OFI Crete|#ffffff|#000000
+Atromitos|#0072ce|#ffffff
+Asteras Tripolis|#ffd100|#000000
+Volos|#0072ce|#ffffff

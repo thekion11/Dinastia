@@ -1,0 +1,128 @@
+# Generado por herramientas/aspecto_unicos.sh (no editar a mano): patrón distinto para que ningún escudo se repita (M-062).
+Al Shahaniya||banda||||||
+Asteras Tripolis||banda||||||
+Atromitos||banda||||||
+Bandırmaspor||franjas||||||
+Baník Ostrava||banda||||||
+Bastia||banda||||||
+Boluspor||mitad||||||
+Braunschweig||banda||||||
+Bristol City||banda||||||
+CRB||franjas||||||
+CSKA Sofia||banda||||||
+Carrarese||franjas||||||
+Ceuta||banda||||||
+Chaves||banda||||||
+Chengdu Rongcheng||banda||||||
+Darmstadt||franjas||||||
+Deportivo||banda||||||
+Dundee||franjas||||||
+Dynamo Dresden||banda||||||
+Düsseldorf||banda||||||
+Elversberg||banda||||||
+Empoli||mitad||||||
+Erzurumspor||mitad||||||
+FC Copenhague||banda||||||
+Farense||banda||||||
+Felgueiras||cuartos||||||
+Ferro||banda||||||
+Fiorentina||banda||||||
+Frosinone||mitad||||||
+Fürth||banda||||||
+Gent||banda||||||
+Goiás||banda||||||
+Granada||mitad||||||
+Grasshoppers||franjas||||||
+Grenoble||cuartos||||||
+Haras El Hodoud||banda||||||
+Hibernian||banda||||||
+Holstein Kiel||banda||||||
+Huesca||banda||||||
+Jong Ajax||banda||||||
+Juve Stabia||cuartos||||||
+Juventude||franjas||||||
+Kaiserslautern||banda||||||
+Karlsruhe||aro||||||
+Kilmarnock||cuartos||||||
+Konyaspor||banda||||||
+Lausanne-Sport||mitad||||||
+Leganés||banda||||||
+Leicester||franjas||||||
+Leixões||aro||||||
+Lokomotiva||banda||||||
+Ludogorets||banda||||||
+Lugano||banda||||||
+Luzern||cuartos||||||
+Macarthur FC||banda||||||
+Magdeburg||banda||||||
+Mantova||banda||||||
+Marítimo||banda||||||
+Melgar||liso||||||
+Middlesbrough||banda||||||
+Modena||aro||||||
+Monza||franjas||||||
+Nancy||franjas||||||
+Niza||liso||||||
+Nordsjælland||banda||||||
+Novorizontino||banda||||||
+Nürnberg||banda||||||
+Odense||franjas||||||
+Oliveirense||chevron||||||
+Operário-PR||banda||||||
+Osijek||banda||||||
+PAOK||banda||||||
+Padova||mitad||||||
+Paysandu||banda||||||
+Paços de Ferreira||franjas||||||
+Penafiel||aro||||||
+Pendikspor||cruz||||||
+Pescara||banda||||||
+Ponte Preta||franjas||||||
+Portimonense||franjas||||||
+Portsmouth||mitad||||||
+Q.P.R.||franjas||||||
+Racing Santander||mitad||||||
+Randers||franjas||||||
+Real Sociedad B||mitad||||||
+Reims||franjas||||||
+Saint-Étienne||franjas||||||
+Sampdoria||chevron||||||
+Samsunspor||rombos||||||
+Sarpsborg 08||banda||||||
+Sarıyer||chevron||||||
+Schalke||cruz||||||
+Servette||banda||||||
+Shanghai Port||franjas||||||
+Shanghai Shenhua||banda||||||
+Sheffield Utd||mitad||||||
+Sheffield Wed||rombos||||||
+Silkeborg||mitad||||||
+Sion||tablero||||||
+Sivasspor||banda_h||||||
+Southampton||mitad||||||
+Spezia||franjas||||||
+Sport||banda||||||
+Sporting CP B||franjas||||||
+Sporting Gijón||cuartos||||||
+St Mirren||mitad||||||
+St. Gallen||mitad||||||
+Stoke||cuartos||||||
+Swansea||banda||||||
+Südtirol||cuartos||||||
+Tianjin Jinmen Tiger||cruz||||||
+Torreense||borde||||||
+Tromsø||franjas||||||
+Troyes||franjas||||||
+Umm Salal||banda||||||
+Vila Nova||aro||||||
+Vizela||interior||||||
+Volos||aro||||||
+Volta Redonda||franjas||||||
+Watford||banda||||||
+Wolfsberger AC||banda||||||
+Wrexham||cuartos||||||
+Young Boys||mitad||||||
+Zhejiang FC||franjas||||||
+Zürich||rombos||||||
+Çorum||banda||||||
+İstanbulspor||banda||||||

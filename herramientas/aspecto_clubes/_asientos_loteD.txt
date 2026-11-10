@@ -1,0 +1,239 @@
+# Lote D: nombre|butaca1|butaca2
+Al Ain|#5b2d8e|#ffffff
+Shabab Al Ahli|#d50032|#111111
+Al Wasl|#ffd100|#ffffff
+Al Jazira|#d50032|#111111
+Sharjah|#ffffff|#0057b8
+Al Wahda|#d50032|#ffffff
+Baniyas|#ffd100|#111111
+Al-Nasr|#ffd100|#0057b8
+Khor Fakkan|#d50032|#ffffff
+Ajman|#f58220|#111111
+Al Dhafra|#00843d|#ffffff
+Persepolis|#d50032|#ffffff
+Esteghlal|#0057b8|#ffffff
+Sepahan|#ffd100|#111111
+Tractor|#d50032|#ffffff
+Foolad|#d50032|#ffd100
+Gol Gohar|#d50032|#ffffff
+Zob Ahan|#00843d|#ffffff
+Malavan|#0057b8|#ffffff
+Aluminium Arak|#0057b8|#ffffff
+Esteghlal Khuzestan|#0057b8|#ffffff
+Carabobo|#d50032|#ffffff
+Deportivo Táchira|#ffd100|#111111
+Caracas|#d50032|#ffffff
+Universidad Central|#ffd100|#0057b8
+Deportivo La Guaira|#0057b8|#ffffff
+Monagas|#ffd100|#111111
+Estudiantes de Mérida|#d50032|#ffffff
+Zamora|#0057b8|#ffffff
+Rayo Zuliano|#d50032|#ffffff
+Marítimo|#00843d|#d50032
+Farense|#111111|#ffffff
+Portimonense|#111111|#ffffff
+Paços de Ferreira|#ffd100|#111111
+Vizela|#d50032|#ffffff
+Chaves|#0057b8|#ffffff
+União de Leiria|#0057b8|#d50032
+Académico de Viseu|#111111|#ffffff
+Leixões|#d50032|#ffffff
+Penafiel|#0057b8|#ffffff
+Feirense|#ffffff|#111111
+Felgueiras|#d50032|#ffffff
+Oliveirense|#d50032|#ffffff
+Lusitânia Lourosa|#00843d|#d50032
+Torreense|#d50032|#ffffff
+Benfica B|#d50032|#ffffff
+Porto B|#0057b8|#ffffff
+Sporting CP B|#00843d|#ffffff
+ADO Den Haag|#00843d|#ffd100
+Willem II|#d50032|#0057b8
+Vitesse|#ffd100|#111111
+Roda JC Kerkrade|#ffd100|#111111
+Cambuur|#ffd100|#0057b8
+De Graafschap|#0057b8|#ffffff
+Almere City|#d50032|#111111
+RKC Waalwijk|#ffd100|#0057b8
+Emmen|#d50032|#ffffff
+MVV Maastricht|#d50032|#ffd100
+VVV-Venlo|#ffd100|#111111
+Den Bosch|#0057b8|#ffffff
+Dordrecht|#ffffff|#00843d
+Eindhoven|#0057b8|#ffffff
+Helmond Sport|#111111|#ffd100
+TOP Oss|#d50032|#ffffff
+Jong Ajax|#d50032|#ffffff
+Jong AZ|#d50032|#ffffff
+Jong PSV|#d50032|#ffffff
+Jong FC Utrecht|#d50032|#ffffff
+Erzurumspor|#0057b8|#ffffff
+Adana Demirspor|#0057b8|#ffffff
+Sivasspor|#d50032|#ffffff
+Hatayspor|#8b1538|#ffffff
+Bodrum|#00843d|#ffffff
+Amedspor|#d50032|#00843d
+Sakaryaspor|#00843d|#111111
+Manisa|#111111|#d50032
+Bandırmaspor|#d50032|#ffffff
+Çorum|#111111|#d50032
+Pendikspor|#d50032|#ffffff
+İstanbulspor|#ffd100|#d50032
+Boluspor|#d50032|#ffffff
+Sarıyer|#0057b8|#ffffff
+Birmingham City|#0057b8|#ffffff
+Blackburn|#0057b8|#ffffff
+Bristol City|#d50032|#ffffff
+Charlton|#d50032|#ffffff
+Coventry|#5ab4e5|#0b2a5b
+Derby County|#ffffff|#111111
+Hull City|#f58220|#111111
+Ipswich|#0057b8|#ffffff
+Leicester|#0057b8|#ffffff
+Middlesbrough|#d50032|#ffffff
+Millwall|#0b2a5b|#ffffff
+Norwich|#ffd100|#00843d
+Oxford United|#ffd100|#0b2a5b
+Portsmouth|#0057b8|#ffffff
+Preston|#ffffff|#0b2a5b
+Q.P.R.|#0057b8|#ffffff
+Sheffield Utd|#d50032|#111111
+Sheffield Wed|#0057b8|#ffffff
+Southampton|#d50032|#ffffff
+Stoke|#d50032|#ffffff
+Swansea|#ffffff|#111111
+Watford|#ffd100|#d50032
+W. Brom|#0b2a5b|#ffffff
+Wrexham|#d50032|#ffffff
+Albacete|#ffffff|#111111
+Almería|#d50032|#ffffff
+Andorra|#0057b8|#ffd100
+Burgos|#ffffff|#111111
+Cádiz|#ffd100|#0057b8
+Castellón|#111111|#ffffff
+Ceuta|#ffffff|#111111
+Córdoba|#00843d|#ffffff
+Cultural Leonesa|#ffffff|#d50032
+Deportivo|#0057b8|#ffffff
+Eibar|#d50032|#0057b8
+Granada|#d50032|#ffffff
+Las Palmas|#ffd100|#0057b8
+Leganés|#ffffff|#0057b8
+Málaga|#5ab4e5|#ffffff
+Mirandés|#d50032|#111111
+Racing Santander|#00843d|#ffffff
+Real Sociedad B|#ffffff|#0057b8
+Valladolid|#ffffff|#5b2d8e
+Sporting Gijón|#d50032|#ffffff
+Zaragoza|#ffffff|#0057b8
+Huesca|#0057b8|#d50032
+Avellino|#00843d|#ffffff
+Bari|#ffffff|#d50032
+Carrarese|#ffd100|#0057b8
+Catanzaro|#ffd100|#d50032
+Cesena|#ffffff|#111111
+Empoli|#0057b8|#ffffff
+Virtus Entella|#ffffff|#5ab4e5
+Frosinone|#ffd100|#0057b8
+Juve Stabia|#ffd100|#0057b8
+Mantova|#ffffff|#d50032
+Modena|#ffd100|#0057b8
+Monza|#d50032|#ffffff
+Padova|#ffffff|#d50032
+Palermo|#f4a7c1|#111111
+Pescara|#5ab4e5|#ffffff
+Reggiana|#8b1538|#ffffff
+Sampdoria|#0057b8|#ffffff
+Spezia|#ffffff|#111111
+Südtirol|#ffffff|#d50032
+Venezia|#00843d|#f58220
+Arminia Bielefeld|#0057b8|#ffffff
+Braunschweig|#ffd100|#0057b8
+Darmstadt|#0057b8|#ffffff
+Dynamo Dresden|#ffd100|#111111
+Düsseldorf|#d50032|#ffffff
+Elversberg|#ffffff|#111111
+Fürth|#00843d|#ffffff
+Hannover|#d50032|#ffffff
+Hertha|#0057b8|#ffffff
+Holstein Kiel|#0057b8|#ffffff
+Kaiserslautern|#d50032|#ffffff
+Karlsruhe|#0057b8|#ffffff
+Magdeburg|#0057b8|#ffffff
+Nürnberg|#d50032|#111111
+Paderborn|#0057b8|#111111
+Preußen Münster|#00843d|#111111
+Schalke|#0057b8|#ffffff
+Bochum|#0057b8|#ffffff
+Amiens|#ffffff|#111111
+Annecy|#d50032|#ffffff
+Bastia|#0057b8|#ffffff
+Boulogne|#ffffff|#d50032
+Clermont|#d50032|#0057b8
+Dunkerque|#0057b8|#d50032
+Grenoble|#0057b8|#ffffff
+Guingamp|#d50032|#111111
+Laval|#f58220|#111111
+Le Mans|#ffd100|#d50032
+Montpellier|#0057b8|#f58220
+Nancy|#ffffff|#d50032
+Pau|#ffd100|#00843d
+Red Star|#00843d|#ffffff
+Reims|#d50032|#ffffff
+Rodez|#d50032|#ffd100
+Saint-Étienne|#00843d|#ffffff
+Troyes|#0057b8|#ffffff
+Agropecuario|#d50032|#ffffff
+All Boys|#ffffff|#111111
+Almagro|#0057b8|#ffffff
+Almirante Brown|#ffd100|#00843d
+Atlanta|#ffd100|#0057b8
+Atlético Rafaela|#5ab4e5|#ffffff
+Brown de Adrogué|#ffffff|#d50032
+Chacarita|#d50032|#111111
+Colón|#d50032|#111111
+Defensores de Belgrano|#111111|#ffffff
+Deportivo Madryn|#0057b8|#ffffff
+Ferro|#00843d|#ffffff
+Gimnasia de Jujuy|#ffffff|#0057b8
+Godoy Cruz|#0057b8|#ffffff
+Mitre|#ffd100|#111111
+Nueva Chicago|#00843d|#111111
+Quilmes|#ffffff|#0057b8
+San Martín de San Juan|#00843d|#111111
+San Martín de Tucumán|#d50032|#111111
+Temperley|#5ab4e5|#ffffff
+Arsenal de Sarandí|#5ab4e5|#d50032
+América-MG|#00843d|#111111
+Athletic-MG|#111111|#ffffff
+Atlético-GO|#d50032|#111111
+Avaí|#0057b8|#ffffff
+Botafogo-SP|#d50032|#ffffff
+Ceará|#111111|#ffffff
+CRB|#d50032|#ffffff
+Criciúma|#ffd100|#111111
+Cuiabá|#00843d|#ffd100
+Fortaleza|#0057b8|#d50032
+Goiás|#00843d|#ffffff
+Juventude|#00843d|#ffffff
+Novorizontino|#ffd100|#111111
+Operário-PR|#111111|#ffffff
+Paysandu|#5ab4e5|#ffffff
+Ponte Preta|#111111|#ffffff
+Sport|#d50032|#111111
+Vila Nova|#d50032|#ffffff
+Volta Redonda|#ffd100|#111111
+Amazonas|#ffd100|#00843d
+Atlante|#d50032|#0057b8
+Atlético La Paz|#ffd100|#0057b8
+Cancún|#5ab4e5|#ffffff
+Celaya|#d50032|#ffffff
+Dorados|#ffd100|#111111
+Irapuato|#d50032|#ffffff
+Leones Negros|#111111|#ffd100
+Mineros de Zacatecas|#d50032|#ffffff
+Morelia|#ffd100|#d50032
+Tapatío|#d50032|#ffffff
+Tampico Madero|#5ab4e5|#ffffff
+Venados|#d50032|#ffffff
+Alebrijes de Oaxaca|#ffd100|#111111

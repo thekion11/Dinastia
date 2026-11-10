@@ -1,0 +1,26 @@
+#seleccion=Rusia
+#tier=0.9
+#globo=37.62,55.75
+#bandera=🇷🇺
+#confed=ucl,uel
+#liga=Prem1er Liga de Rusia|Liga Rusa
+#copa=Copa de Rusia|Copa Rusa
+#nombres=Aleksandr,Dmitri,Sergei,Andrei,Aleksei,Maksim,Ivan,Nikolai,Pavel,Artem,Denis,Roman,Kirill,Vladimir
+#apellidos=Ivanov,Smirnov,Kuznetsov,Popov,Sokolov,Lebedev,Kozlov,Novikov,Morozov,Petrov,Volkov,Solovyov,Vasilyev,Zaitsev
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Zenit Saint Petersburg;Zenit Neva;#0057b8;#ffffff;66;60177;1925;los Azules;el estadio con forma de nave;El campeón de la ciudad del norte, con el estadio más caro del mundo.
+Krasnodar;Krasnodar Verde;#00843d;#000000;62;33395;2008;los Toros;el estadio del club de un mecenas;El club joven del sur con la mejor cantera.
+Spartak Moscow;Espartaco Moscu;#c8102e;#ffffff;62;44897;1922;los Carne;el estadio de la capital;El club con más hinchada del país.
+CSKA Moscow;Armada Moscu;#c8102e;#1b458f;62;30457;1911;los del Ejército;el estadio del ejército;El club del ejército, campeón de la copa de la UEFA en 2005.
+Lokomotiv Moscow;Locomotora Moscu;#00843d;#c8102e;60;27320;1923;los Ferroviarios;el estadio de los ferrocarriles;El club de los ferrocarriles.
+Dynamo Moscow;Dinamo Moscu;#1b458f;#ffffff;60;26319;1923;los Blancoazules;el estadio del centro de la capital;El club de la policía, con un estadio nuevo en el centro.
+Rubin Kazan;Rubi Kazan;#8b1538;#ffffff;58;43284;1958;los Rubíes;el estadio del río Volga;El club del Volga, campeón de la liga dos veces.
+Akhmat Grozny;Ahmat Grozni;#00843d;#ffffff;56;30000;1946;los Verdes;el estadio de la ciudad del Cáucaso;El club del Cáucaso.
+Rostov;Rostov Don;#ffd100;#1b458f;57;45415;1930;los Amarillos;el estadio del río Don;El club del río Don, finalista de copa.
+Baltika Kaliningrad;Baltika Mar;#1b458f;#ffffff;56;33399;1954;los del Báltico;el estadio del enclave báltico;El club del enclave báltico.
+Krylia Sovetov Samara;Alas Samara;#c8102e;#ffffff;56;42389;1942;las Alas;el estadio del Volga;El club de las alas del Volga.
+Orenburg;Orenburg Estepa;#1b458f;#ffffff;53;10046;1976;los de la Estepa;el estadio de la ciudad de la frontera;Un club de la frontera con Kazajistán.
+Pari Nizhny Novgorod;Nizhni Rojo;#00a0e3;#ffffff;55;42532;2015;los Celestes;el estadio de la ciudad del Volga;Un club joven de la ciudad del Volga.
+Dynamo Makhachkala;Dinamo Caspio;#00a0e3;#ffffff;54;26364;1927;los Celestes;el estadio del mar Caspio;El club del mar Caspio.
+Sochi;Sochi Olimpico;#00a0e3;#c8102e;53;45994;2018;los Olímpicos;el estadio olímpico del mar Negro;El club de la ciudad olímpica del mar Negro.
+Akron Tolyatti;Akron Toliatti;#c8102e;#ffffff;52;10000;1998;los Rojos;el estadio de la ciudad de los coches;El club de la ciudad de los coches, antes llamado Lada.
