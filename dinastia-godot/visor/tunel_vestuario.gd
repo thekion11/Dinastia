@@ -217,6 +217,12 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 		for pl in nodo.find_children("Planta_*", "Node3D", true, false):
 			await FundirPiezas.fundir_profundo(pl as Node3D, "Fundido", [], FundirPiezas.activo_r2)
 		await FundirPiezas.fundir_profundo(nodo, "Fundido", [], FundirPiezas.activo_r2)
+	elif Calidad.elegida <= Calidad.BAJA and FundirPiezas.activo_r2 and OS.get_environment("SIN_FUNDIR_BAJA") == "":
+		## (10-11, sesión 7) BAJA también funde las mallas del edificio (por planta) y del túnel por material: el vestuario pedía 1.380 llamadas y el túnel 951 con ~540 mallas sueltas.
+		## No toca las luces ni los rótulos (eso sigue siendo solo de ULTRA BAJA). Con SIN_FUNDIR_BAJA=1 se mide el «antes».
+		for pl in nodo.find_children("Planta_*", "Node3D", true, false):
+			await FundirPiezas.fundir_profundo(pl as Node3D, "Fundido", [], true)
+		await FundirPiezas.fundir_profundo(nodo, "Fundido", [], true)
 
 static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: Color, c2: Color,
 		pared: StandardMaterial3D, suelo: StandardMaterial3D, techo: StandardMaterial3D,
