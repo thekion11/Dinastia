@@ -41,6 +41,7 @@ import estadios_reales
 import aspecto_clubes
 import palmares_clubes
 import liga_paises_bajos
+import ligas_completas
 import json
 import os
 import sys
@@ -577,6 +578,9 @@ POOLS_CAMBIOS = {
 CLUBES.update(liga_paises_bajos.CLUBES)
 LIGAS[liga_paises_bajos.PAIS] = liga_paises_bajos.LIGA_FICTICIA
 COPAS[liga_paises_bajos.PAIS] = liga_paises_bajos.COPA_FICTICIA
+# Ligas completas (10-11-2026): los clubes reales que faltaban hasta la cantidad real, en `ligas_completas.py`.
+CLUBES.update(ligas_completas.CLUBES)
+estadios_reales.ESTADIOS.update(ligas_completas.estadios())
 historia_clubes.H.update(liga_paises_bajos.HISTORIA)
 historia_clubes.CLASICOS.extend(liga_paises_bajos.CLASICOS)
 
@@ -624,6 +628,7 @@ def main():
     else:
         real = {k: base[k] for k in TABLAS_DEL_PACK if k in base}
     liga_paises_bajos.asegurar(real)
+    ligas_completas.asegurar(real)
 
     errores = []
 

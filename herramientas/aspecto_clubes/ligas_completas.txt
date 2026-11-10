@@ -1,0 +1,68 @@
+# Generado por herramientas/ligas_completas.py (no editar a mano): aspecto base de los clubes añadidos el 10-11-2026.
+Bournemouth|escudo|franjas|BOU|franjas|#da291c|#000000|#000000|#da291c|#da291c|#000000
+Burnley|clasico|liso|BUR|liso|#6c1d45|#99d6ea|#99d6ea|#6c1d45|#6c1d45|#99d6ea
+Leeds|circulo|liso|LEE|liso|#ffffff|#1d428a|#1d428a|#ffffff|#ffffff|#1d428a
+Sunderland|ojiva|franjas|SUN|franjas|#eb172b|#ffffff|#ffffff|#eb172b|#eb172b|#ffffff
+Alavés|escudo|liso|ALA|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Elche|clasico|liso|ELC|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Levante|circulo|franjas|LEV|franjas|#d50032|#0057b8|#0057b8|#d50032|#d50032|#0057b8
+Real Oviedo|ojiva|liso|RO|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Como|escudo|liso|COM|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Parma|clasico|franjas|PAR|franjas|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Cagliari|circulo|liso|CAG|liso|#d50032|#0b2a5b|#0b2a5b|#d50032|#d50032|#0b2a5b
+Hellas Verona|ojiva|liso|HV|liso|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Hamburgo|escudo|franjas|HAM|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+St. Pauli|clasico|liso|SP|liso|#5c3a21|#ffffff|#ffffff|#5c3a21|#5c3a21|#ffffff
+Paris FC|circulo|liso|PFC|liso|#1f4e9c|#ffffff|#ffffff|#1f4e9c|#1f4e9c|#ffffff
+Angers|ojiva|franjas|ANG|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Bragantino|escudo|liso|BRA|liso|#ffffff|#d50032|#d50032|#ffffff|#ffffff|#d50032
+Mirassol|clasico|liso|MIR|liso|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
+Vitória|circulo|franjas|VIT|franjas|#d50032|#000000|#000000|#d50032|#d50032|#000000
+Coritiba|ojiva|liso|COR|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Argentinos Jrs|escudo|liso|AJ|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Belgrano|clasico|franjas|BEL|franjas|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#5ab4e5|#ffffff
+Gimnasia LP|circulo|liso|GLP|liso|#ffffff|#0057b8|#0057b8|#ffffff|#ffffff|#0057b8
+Atl. Tucuman|ojiva|liso|AT|liso|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#5ab4e5|#ffffff
+Ind. Rivadavia|escudo|franjas|IR|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Defensa y J.|clasico|liso|DJ|liso|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
+Platense|circulo|liso|PLA|liso|#5c3a21|#ffffff|#ffffff|#5c3a21|#5c3a21|#ffffff
+Central Córdoba|ojiva|franjas|CC|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Instituto|escudo|liso|INS|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Tigre|clasico|liso|TIG|liso|#0057b8|#d50032|#d50032|#0057b8|#0057b8|#d50032
+Sarmiento|circulo|franjas|SAR|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Aldosivi|ojiva|liso|ALD|liso|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
+Barracas Central|escudo|liso|BC|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Riestra|clasico|franjas|RIE|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Cúcuta Dep.|circulo|liso|CD|liso|#d50032|#000000|#000000|#d50032|#d50032|#000000
+Dep. Pasto|ojiva|liso|DP|liso|#ffd100|#d50032|#d50032|#ffd100|#ffd100|#d50032
+Águilas Doradas|escudo|franjas|GUI|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Inter Bogotá|clasico|liso|IB|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Sport Huancayo|circulo|liso|SH|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Comerciantes Unidos|ojiva|franjas|CU|franjas|#d50032|#ffd100|#ffd100|#d50032|#d50032|#ffd100
+Atl. San Luis|escudo|liso|ASL|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Juárez|clasico|liso|JUR|liso|#00843d|#000000|#000000|#00843d|#00843d|#000000
+Vancouver W.|circulo|franjas|VW|franjas|#0b2a5b|#5ab4e5|#5ab4e5|#0b2a5b|#0b2a5b|#5ab4e5
+Minnesota Utd|ojiva|liso|MU|liso|#000000|#8bc7e8|#8bc7e8|#000000|#000000|#8bc7e8
+NY Red Bulls|escudo|liso|NYR|liso|#d50032|#ffd100|#ffd100|#d50032|#d50032|#ffd100
+San Diego FC|clasico|franjas|SDF|franjas|#0b2a5b|#f58220|#f58220|#0b2a5b|#0b2a5b|#f58220
+Real Salt Lake|circulo|liso|RSL|liso|#8b1a3a|#0057b8|#0057b8|#8b1a3a|#8b1a3a|#0057b8
+Houston Dynamo|ojiva|liso|HD|liso|#f58220|#5ab4e5|#5ab4e5|#f58220|#f58220|#5ab4e5
+FC Dallas|escudo|franjas|FCD|franjas|#d50032|#0057b8|#0057b8|#d50032|#d50032|#0057b8
+Chicago Fire|clasico|liso|CF|liso|#d50032|#0a2240|#0a2240|#d50032|#d50032|#0a2240
+D.C. United|circulo|liso|DCU|liso|#d50032|#000000|#000000|#d50032|#d50032|#000000
+Sporting KC|ojiva|franjas|SKC|franjas|#8bc7e8|#0b2a5b|#0b2a5b|#8bc7e8|#8bc7e8|#0b2a5b
+Toronto FC|escudo|liso|TFC|liso|#d50032|#7a8b99|#7a8b99|#d50032|#d50032|#7a8b99
+Colorado Rapids|clasico|liso|CR|liso|#8b1a3a|#5ab4e5|#5ab4e5|#8b1a3a|#8b1a3a|#5ab4e5
+CF Montréal|circulo|franjas|CFM|franjas|#0057b8|#000000|#000000|#0057b8|#0057b8|#000000
+San Jose|ojiva|liso|SJ|liso|#0057b8|#000000|#000000|#0057b8|#0057b8|#000000
+Machida Z.|escudo|liso|MZ|liso|#0057b8|#ffd100|#ffd100|#0057b8|#0057b8|#ffd100
+Kashiwa R.|clasico|franjas|KR|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Shimizu S.|circulo|liso|SS|liso|#f58220|#ffffff|#ffffff|#f58220|#f58220|#ffffff
+T. Verdy|ojiva|liso|TV|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Al-Qadsiah|escudo|franjas|AQ|franjas|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Neom SC|clasico|liso|NSC|liso|#0b2a5b|#00b2a9|#00b2a9|#0b2a5b|#0b2a5b|#00b2a9
+Al Itiihad Alex.|circulo|liso|AIA|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Petrojet|ojiva|franjas|PET|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Haras El Hodoud|escudo|liso|HEH|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Wadi Degla|clasico|liso|WD|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Ghazl El Mahalla|circulo|franjas|GEM|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
