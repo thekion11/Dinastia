@@ -186,3 +186,23 @@ Herramienta nueva `pruebas/medir_picos_partido.tscn` (tiempo real de cada fotogr
 | ENG | 5.245 ms | 720 ms | 205 ms |
 
 Los tirones del primer dibujado ya se pagan debajo de la pantalla de carga (−89…−90 %); lo que queda son 1-3 fotogramas de ~2,5-3,5× la mediana y un salto de ~1,5× al lanzar el festejo. Segunda apertura en el mismo proceso (`DOBLE=1`): ~2 s en vez de ~11 s, pero eso mezcla shaders con scripts compilados y cachés estáticas (`_cache_cuero`…), no es solo compilación. Con esto, un calentador de materiales aparte no aporta: no se añade. El menú: ya medido (arranque, mismo hueco con montaje en caliente). Pendiente del dueño: repetir `medir_picos_partido` en el teléfono (el primer dibujado real depende del driver).
+
+## Perfil por fases del partido en MEDIA: píxeles contra geometría (10-11, sesión 5; 3 clubes, llvmpipe, fotograma relativo)
+Mismo partido y misma cámara, MEDIA, solo cambia lo indicado (`medir_partido.tscn`, `HW_RES`, `OCULTAR`, `OCULTAR_GRUPOS`):
+
+| Club | Base 1280×720 | A 640×360 (¼ de píxeles) | Sin césped | Sin butacas ni hinchas (triángulos) |
+|---|---|---|---|---|
+| CHI | 391 ms | 236 ms (**−40 %**) | 508 ms (+30 %) | 377 ms (−4 %; 762 k → 553 k, −27 %) |
+| ESP | 334 ms | 192 ms (**−43 %**) | 434 ms (+30 %) | 337 ms (+1 %; 540 k → 388 k, −28 %) |
+| ENG | 369 ms | 214 ms (**−42 %**) | 488 ms (+32 %) | 350 ms (−5 %; 532 k → 416 k, −22 %) |
+
+Lectura:
+1. **El coste va con los píxeles.** Con ¼ de píxeles el fotograma baja 40-43 %: modelo `fotograma ≈ 0,47·F + 0,53·F·escala²` (F = fotograma a 720p). Quitar un cuarto de los triángulos (grada) casi no mueve el tiempo (−5…+1 %): el partido está limitado por relleno de píxel, no por vértices. Por eso las rebajas de geometría (LODs, butacas) valen poco; lo que de verdad baja el tiempo es dibujar menos píxeles o hacerlos más baratos (MSAA, ya quitado: −60 %).
+2. **Sin césped el fotograma SUBE un 30 %.** No es que la hierba sea barata: al esconder el campo se ve el suelo de detrás con un material más pesado. No se puede aislar el coste del césped así; hace falta una prueba con un campo de color plano (pendiente).
+3. Sombras (−13…−17 % en MEDIA, ya medido arriba), post (nada), omni (nada), hinchas (−1 %), gente de fuera (−6 %), jugadores (−11 %) siguen como en el cuadro anterior.
+
+**Propuestas con números (nada se aplica sin OK del dueño):**
+- **P1. Resolución 3D objetivo en móvil.** Hoy MEDIA dibuja al 100 % de la pantalla del móvil: un teléfono de 2400×1080 son 2,6 Mpíx = 2,8 × 1280×720, y eso explica los 5 FPS del dueño mejor que ningún otro dato. Escala por defecto en móvil (Android/Web, `es_compatibilidad()`): 0,75 → fotograma −23 %; 0,67 → −29 %; 0,5 → −40 % (medido). Mejor que una escala fija: limitar la altura del 3D a 720 px (`escala = min(1, 720 / altura_pantalla)`), que da ~0,67 en un 1080p y 0,5 en un 1440p. Las UI y los textos siguen a resolución nativa (solo cambia el 3D). Ya existe `Calidad.escala_media` (50-100 %, elegible en Ajustes) y FSR 1.0 solo en Forward+; en compatibilidad es bilineal.
+- **P2. Sombra solar en MEDIA en móvil** apagada o a 1 corte: −13 a −17 % (ya medido; el dueño decide por la pérdida visual).
+- **P3. Césped**: medir con campo plano para ver cuánto cuesta el shader de hierba (`cesped_capas.gd`), y si cuesta, una versión más barata en BAJA/MEDIA BAJA.
+Todo esto se confirma en el teléfono: llvmpipe es solo una referencia relativa.
