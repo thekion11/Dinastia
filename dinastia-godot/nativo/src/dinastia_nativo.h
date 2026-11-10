@@ -51,6 +51,9 @@ public:
 	void cuerpos_motor(const Array &jugadores, double minimo) const;
 	// `Partido.simular_minuto()` x 90 de un cruce de la IA que nadie mira (nucleo/partido_rapido.gd): mismo orden de llamadas al azar; los sucesos raros vuelven a GDScript (`ayuda`).
 	void simular_90(Object *p, Object *ayuda, const Dictionary &cfg, const Ref<RandomNumberGenerator> &rng) const;
+	// `Partido._media_linea` x 4 líneas ([POR, DEF, MED, DEL]) de un once (nucleo/partido_p1.gd, `fuerza`).
+	PackedFloat64Array medias_linea(const Array &once, const Dictionary &grupo_de, const Dictionary &lateral_de, const Dictionary &banda_de, const Dictionary &impulsos, int64_t minuto, double arenga_mult,
+			double ley_ex, const Dictionary &ex_de_mi_club, const String &ex_id) const;
 	int64_t elegir_ponderado(const Array &once, const Dictionary &grupo_de, const Dictionary &bases, double base_def, const String &atr, const PackedFloat64Array &pesos_rol, double r_unit, Object *excluir) const;
 };
 

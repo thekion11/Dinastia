@@ -121,7 +121,8 @@ func preparar() -> void:
 		_notas[j.id] = 6.0
 		_titulares[j.id] = true
 	invalidar_fuerza()
-	rastro.al_preparar(self)
+	if not sin_rastro:
+		rastro.al_preparar(self)
 
 ## Devuelve true si la grada acaba de invadir el campo. Lo mira el partido en
 ## vivo para parar el reloj y abrir el vestuario.

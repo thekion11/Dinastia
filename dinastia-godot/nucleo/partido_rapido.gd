@@ -10,9 +10,11 @@ extends RefCounted
 
 ## Como `Partido.simular()`, pero por la ruta rápida si se puede. Devuelve {local, visita}.
 static func simular(p: Partido) -> Dictionary:
-	p.preparar()
 	var nat := Nativo.obj()
-	if nat != null and nat.has_method("simular_90") and _puede(p):
+	var rapido := nat != null and nat.has_method("simular_90") and _puede(p)
+	p.sin_rastro = rapido   ## el rastro (`CausasPartido`) solo se lee en el partido del jugador; un cruce de la IA que se tira no lo necesita
+	p.preparar()
+	if rapido:
 		_nativo(p, nat)
 	else:
 		while not p.terminado_ya:
