@@ -31,6 +31,9 @@ static func id_de(titulo: String, pais: String) -> String:
 	if limpio == "Liga" and pais != "":
 		return "liga:" + pais
 	var ligas: Dictionary = Datos.tabla("PAISES_LIGAS")
+	## (10-11) Nombres iguales en países distintos («Bundesliga» de Alemania y de Austria, «Super League», «Superliga»): manda la liga del PAÍS del club.
+	if pais != "" and ligas.has(pais) and Nombres.limpiar(String((ligas[pais] as Dictionary).get("liga", ""))) == limpio:
+		return "liga:" + pais
 	for p: String in ligas:
 		if Nombres.limpiar(String((ligas[p] as Dictionary).get("liga", ""))) == limpio:
 			return "liga:" + p
