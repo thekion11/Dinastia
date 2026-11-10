@@ -7772,7 +7772,8 @@
   "Convocados": "Called up",
   "Listo": "Done",
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "If you pick nobody, the best per position are called up. If a position is short, it is filled with young players from the country.",
-  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "This country has no league in the game: the squad comes from generated players."
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "This country has no league in the game: the squad comes from generated players.",
+  "¡CAMPEONES CON LA SELECCIÓN!": "CHAMPIONS WITH THE NATIONAL TEAM!"
  },
  "pt": {
   "Historia": "História",
@@ -15547,7 +15548,8 @@
   "Convocados": "Convocados",
   "Listo": "Pronto",
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Sem marcar ninguém, vão os melhores por posição. Se faltar jogador numa posição, completa-se com jovens do país.",
-  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Este país não tem liga no jogo: a lista sai de jogadores gerados."
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Este país não tem liga no jogo: a lista sai de jogadores gerados.",
+  "¡CAMPEONES CON LA SELECCIÓN!": "CAMPEÕES COM A SELEÇÃO!"
  },
  "patrones": [
   [
@@ -29385,7 +29387,8 @@
   "Convocados": "Convoqués",
   "Listo": "Terminé",
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Sans cocher personne, les meilleurs par poste sont convoqués. S'il manque des joueurs à un poste, on complète avec des jeunes du pays.",
-  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Ce pays n'a pas de championnat dans le jeu : la liste vient de joueurs générés."
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Ce pays n'a pas de championnat dans le jeu : la liste vient de joueurs générés.",
+  "¡CAMPEONES CON LA SELECCIÓN!": "CHAMPIONS AVEC LA SÉLECTION !"
  },
  "it": {
   "Historia": "Storia",
@@ -37160,7 +37163,8 @@
   "Convocados": "Convocati",
   "Listo": "Fatto",
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Senza segnare nessuno vanno i migliori per ruolo. Se in un ruolo mancano giocatori, si completa con giovani del paese.",
-  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Questo paese non ha un campionato nel gioco: la lista viene da giocatori generati."
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Questo paese non ha un campionato nel gioco: la lista viene da giocatori generati.",
+  "¡CAMPEONES CON LA SELECCIÓN!": "CAMPIONI CON LA NAZIONALE!"
  },
  "de": {
   "Historia": "Geschichte",
@@ -44935,7 +44939,8 @@
   "Convocados": "Nominiert",
   "Listo": "Fertig",
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Ohne Auswahl fahren die Besten je Position. Fehlen auf einer Position Spieler, wird mit jungen Spielern des Landes aufgefüllt.",
-  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Dieses Land hat keine Liga im Spiel: Der Kader besteht aus generierten Spielern."
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Dieses Land hat keine Liga im Spiel: Der Kader besteht aus generierten Spielern.",
+  "¡CAMPEONES CON LA SELECCIÓN!": "MEISTER MIT DER NATIONALMANNSCHAFT!"
  },
  "ca": {
   "Historia": "Història",
@@ -52710,7 +52715,8 @@
   "Convocados": "Convocats",
   "Listo": "Fet",
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Sense marcar ningú hi van els millors per posició. Si a una posició hi falten jugadors, es completa amb joves del país.",
-  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Aquest país no té lliga al joc: la llista surt de jugadors generats."
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Aquest país no té lliga al joc: la llista surt de jugadors generats.",
+  "¡CAMPEONES CON LA SELECCIÓN!": "CAMPIONS AMB LA SELECCIÓ!"
  },
  "pl": {
   "Club": "Klub",
@@ -60485,7 +60491,8 @@
   "Convocados": "Powołani",
   "Listo": "Gotowe",
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Bez zaznaczenia nikogo jadą najlepsi na każdej pozycji. Jeśli na pozycji brakuje graczy, uzupełnia się ją młodymi zawodnikami z kraju.",
-  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Ten kraj nie ma ligi w grze: kadra pochodzi z wygenerowanych zawodników."
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Ten kraj nie ma ligi w grze: kadra pochodzi z wygenerowanych zawodników.",
+  "¡CAMPEONES CON LA SELECCIÓN!": "MISTRZOWIE Z REPREZENTACJĄ!"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68260,6 +68267,7 @@
   "Convocados": "Çağrılanlar",
   "Listo": "Tamam",
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Kimseyi seçmezsen her mevkinin en iyileri çağrılır. Bir mevkide eksik varsa ülkenin genç oyuncularıyla tamamlanır.",
-  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Bu ülkenin oyunda ligi yok: kadro üretilmiş oyunculardan oluşur."
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Bu ülkenin oyunda ligi yok: kadro üretilmiş oyunculardan oluşur.",
+  "¡CAMPEONES CON LA SELECCIÓN!": "MİLLİ TAKIMLA ŞAMPİYON!"
  }
 }

@@ -9,10 +9,12 @@ extends RefCounted
 ##   ascenso / salvacion → festejo SOBRIO (abrazo en el círculo central y la grada)
 ## Extras comunes a los títulos: foto de plantilla con el trofeo, mantear al DT, champán en el vestuario y desfile en autobús descapotable.
 
-const ESCENA := {"liga": "escenario", "copa": "palco", "continental": "fuegos", "supercopa": "palco", "ascenso": "sobrio", "salvacion": "sobrio"}
+const ESCENA := {"liga": "escenario", "copa": "palco", "continental": "fuegos", "supercopa": "palco", "ascenso": "sobrio", "salvacion": "sobrio", "seleccion": "fuegos"}
 
 ## El tipo de un título por su nombre, mirando las competiciones del mundo.
 static func de(m: Mundo, nombre: String) -> String:
+	if equipo_seleccion(m, nombre) != null:
+		return "seleccion"
 	var n := nombre.to_lower()
 	if n.contains("ascenso"):
 		return "ascenso"
@@ -31,12 +33,20 @@ static func de(m: Mundo, nombre: String) -> String:
 				return "continental"
 	return "copa"
 
+## La selección que acaba de ganar `nombre` (si lo ganó tu selección como seleccionador), o null.
+static func equipo_seleccion(m: Mundo, nombre: String) -> Club:
+	if m == null or m.selecciones == null or m.selecciones.cargo == null:
+		return null
+	var u: Dictionary = m.selecciones.cargo.ultimo_titulo
+	return u.get("equipo", null) if String(u.get("torneo", "")) == nombre else null
+
 ## Los festejos que se ofrecen además de la escena principal, en orden.
 static func extras(tipo: String) -> Array[String]:
 	match tipo:
 		"liga": return ["foto", "manteo", "champan", "desfile", "pasillo"]
 		"copa", "continental": return ["foto", "manteo", "champan", "desfile"]
 		"supercopa": return ["foto", "champan"]
+		"seleccion": return ["foto", "manteo", "champan", "desfile"]
 		_: return ["foto", "champan"]   ## ascenso y salvación: sin desfile ni manteo, más sobrio
 
 ## Rótulo grande de la escena principal.
@@ -48,6 +58,7 @@ static func rotulo(tipo: String) -> String:
 		"supercopa": return "¡SUPERCAMPEONES!"
 		"ascenso": return "¡ASCENSO!"
 		"salvacion": return "¡SALVADOS!"
+		"seleccion": return "¡CAMPEONES CON LA SELECCIÓN!"
 	return "¡CAMPEONES!"
 
 ## El nombre de cada escena en los botones.
