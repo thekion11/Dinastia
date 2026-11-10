@@ -44,6 +44,9 @@ func _aplicar_tema() -> void:
 		t.set_stylebox("normal", clase, ProfundidadUI.relieve(p._caja(reposo, borde, radio, 1)))
 		t.set_stylebox("hover", clase, ProfundidadUI.relieve(p._caja(p._mezcla(panel, texto, 0.24), borde, radio, 1), true))
 		t.set_stylebox("pressed", clase, ProfundidadUI.hundido(p._caja(p._mezcla(panel, p.COL_ACENTO, 0.45), p.COL_ACENTO, radio, 1)))
+		## (10-11, estética) el mismo FOCO y DESACTIVADO que el botón: los desplegables y casillas usaban los de fábrica (otro color y grosor)
+		t.set_stylebox("focus", clase, p._caja(Color(0, 0, 0, 0), p.COL_ACENTO, radio, 2))
+		t.set_stylebox("disabled", clase, p._caja(p._mezcla(panel, texto, 0.05), borde, radio, 1))
 		t.set_color("font_color", clase, texto)
 		t.set_color("font_hover_color", clase, texto)
 

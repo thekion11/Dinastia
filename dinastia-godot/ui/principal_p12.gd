@@ -31,6 +31,8 @@ func _jugar_temporada() -> void: _jornada._jugar_temporada()
 ## enfermería, como si fuera otra persona. `Cara.textura()` ya resuelve foto real
 ## primero y dibujo procedural después; lo único que faltaba era llamarla desde
 ## todas partes.
+## (10-11, estética de los menús; como PES 2020/eFootball, donde la cara es lo que se reconoce en una lista) La cara en las filas del plantel y la táctica.
+const RETRATO_FILA := 30
 func _retrato(j: Jugador, tam: int = 26) -> TextureRect:
 	var equipo: Club = mundo.clubes.get(j.club_id)
 	var r := TextureRect.new()
