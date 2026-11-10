@@ -15,6 +15,13 @@ const POR_PAIS := {
 	"ITA": {"bajan": 3, "directos": 2, "playoff": 4},
 	"GER": {"bajan": 2, "directos": 2, "relegacion": true},
 	"FRA": {"bajan": 2, "directos": 2, "relegacion": true},
+	## Argentina: el campeón de la Primera Nacional sube directo y el segundo ascenso sale del reducido (aquí, el playoff de 2.º a 5.º); bajan 2.
+	"ARG": {"bajan": 2, "directos": 1, "playoff": 4},
+	## Brasil: bajan 4 de la Série A y suben los 4 primeros de la Série B.
+	"BRA": {"bajan": 4, "directos": 4},
+	## México: la Liga de Expansión es un circuito CERRADO (desde 2020 no hay ascenso ni descenso): bajan 0. Con 0 no se mueve nadie y la segunda
+	## división juega su liga aparte; si algún día vuelve el descenso, basta cambiar este número.
+	"MEX": {"bajan": 0, "directos": 0},
 }
 
 static func de(pais: String) -> Dictionary:

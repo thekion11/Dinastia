@@ -56,6 +56,8 @@ static func _generales(m: Mundo, primera: Liga, t1: Array, t2: Array, bajan: Arr
 ## promoción contra el antepenúltimo (según el país).
 static func _reales(m: Mundo, t1: Array, t2: Array, r: Dictionary, bajan: Array[Club], suben: Array[Club], resumen: Dictionary) -> void:
 	var n := mini(int(r["bajan"]), mini(t1.size(), t2.size()) - 5)
+	if n <= 0:
+		return   ## circuito cerrado (México): nadie sube ni baja
 	var directos := mini(int(r.get("directos", n)), n)
 	for i in n:
 		bajan.append(t1[t1.size() - 1 - i]["club"])
