@@ -1,0 +1,27 @@
+# Lote W1: nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed
+Red Bull Salzburg|liso|#ffffff|#c8102e|#ffffff|#ffffff|#1b2a4e|#c8102e|liso|#1b2a4e|#1b2a4e
+Sturm Graz|liso|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
+Rapid Wien|mitad|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+LASK|mitad|#ffffff|#111111|#111111|#ffffff|#c8102e|#111111|liso|#c8102e|#c8102e
+Ludogorets|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Levski Sofia|liso|#0057b8|#f9e100|#0057b8|#0057b8|#f9e100|#0057b8|liso|#f9e100|#f9e100
+CSKA Sofia|liso|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Botev Plovdiv|franjas|#111111|#f9e100|#111111|#111111|#f9e100|#111111|liso|#f9e100|#f9e100
+Shanghai Port|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Beijing Guoan|liso|#00843d|#f9e100|#00843d|#00843d|#f9e100|#00843d|liso|#f9e100|#f9e100
+Shanghai Shenhua|liso|#0057b8|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Shandong Taishan|liso|#f26522|#ffffff|#f26522|#f26522|#ffffff|#f26522|liso|#ffffff|#ffffff
+Sparta Praha|liso|#8b0000|#f9e100|#8b0000|#8b0000|#ffffff|#8b0000|liso|#ffffff|#ffffff
+Slavia Praha|mitad|#c8102e|#ffffff|#ffffff|#ffffff|#ffffff|#c8102e|mitad|#ffffff|#ffffff
+Viktoria Plzeň|franjas|#c8102e|#0057b8|#0057b8|#c8102e|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Baník Ostrava|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Olympiacos|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Panathinaikos|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+AEK Athens|liso|#f9e100|#111111|#111111|#f9e100|#111111|#f9e100|liso|#111111|#111111
+PAOK|franjas|#ffffff|#111111|#111111|#ffffff|#111111|#ffffff|liso|#111111|#111111
+Ferencváros|franjas|#00843d|#ffffff|#ffffff|#00843d|#111111|#00843d|liso|#111111|#111111
+Paks|liso|#0057b8|#f9e100|#0057b8|#0057b8|#f9e100|#0057b8|liso|#f9e100|#f9e100
+Debrecen|liso|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Újpest|liso|#6a1b9a|#ffffff|#6a1b9a|#6a1b9a|#ffffff|#6a1b9a|liso|#ffffff|#ffffff
+Persepolis|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Esteghlal|liso|#0057b8|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff

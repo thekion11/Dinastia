@@ -1,0 +1,15 @@
+# Lote W1: nombre|forma|patrón|emblema|letras[/color]|esc1|esc2|esc3
+Red Bull Salzburg|escudo|liso|toro||#ffffff|#c8102e|
+Rapid Wien|escudo|liso||SCR/#ffffff|#00843d|#ffffff|
+LASK|circulo|mitad||LASK/#ffffff|#111111|#ffffff|
+Levski Sofia|escudo|liso||PFC/#ffffff|#0057b8|#f9e100|
+CSKA Sofia|escudo|liso|estrella||#c8102e|#ffffff|
+Slavia Praha|circulo|liso|estrella||#ffffff|#c8102e|
+Sparta Praha|escudo|liso||AC/#f9e100|#8b0000|#f9e100|
+Olympiacos|circulo|liso||OSFP/#ffffff|#c8102e|#ffffff|
+Panathinaikos|circulo|liso|trebol||#00843d|#ffffff|
+AEK Athens|escudo|liso|aguila||#f9e100|#111111|
+PAOK|circulo|liso|aguila||#111111|#ffffff|
+Ferencváros|escudo|liso||FTC/#ffffff|#00843d|#ffffff|
+Persepolis|circulo|liso||PRS/#ffffff|#c8102e|#ffffff|
+Esteghlal|circulo|liso||EST/#ffffff|#0057b8|#ffffff|

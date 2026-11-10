@@ -1,0 +1,27 @@
+# Lote W4: nombre|butaca1|butaca2
+Sharjah|#ffffff|#111111
+Al Jazira|#c8102e|#111111
+Shakhtar Donetsk|#f58220|#111111
+Dynamo Kyiv|#0057b8|#ffffff
+Zorya Luhansk|#111111|#e30613
+Metalist 1925 Kharkiv|#ffd100|#0057b8
+Deportivo Táchira|#ffd100|#111111
+Carabobo|#ffd100|#c8102e
+Caracas|#c8102e|#ffffff
+Universidad Central|#c8102e|#ffffff
+Porto|#0b3d91|#ffffff
+Benfica|#d50032|#ffffff
+Sporting CP|#00793c|#ffffff
+Braga|#d50032|#ffffff
+Club Brugge|#0072bc|#111111
+Anderlecht|#5a2a82|#ffffff
+Genk|#0057b8|#ffffff
+Standard Lieja|#e30613|#ffffff
+Dinamo Zagreb|#1d4ea1|#ffffff
+Hajduk Split|#ffffff|#0b3d91
+Rijeka|#8ec5ee|#ffffff
+Osijek|#1d4ea1|#ffffff
+FC Copenhague|#0b3d91|#ffffff
+Midtjylland|#c8102e|#111111
+Brøndby|#ffd100|#0b3d91
+AGF|#0b3d91|#ffffff
