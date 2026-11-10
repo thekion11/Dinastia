@@ -371,6 +371,24 @@ PIEZAS.update({
     "Barcelona SC": {"fachada_curva": {"color": "#e0d9c5"}, "asientos": ["#ffd100", "#111111"]},
     "Zamalek": {"asientos": ["#f2f2f2", "#c8102e"]},
 })
+# 10-11, TERCERA TANDA (los grandes de cada liga) con las piezas nuevas del constructor: `niveles_lado` (altura por lado) y
+# `esquinas_abiertas` (esquinas una a una: "sureste", "suroeste", "noreste", "noroeste"; sur = +Z, este = +X).
+PIEZAS.update({
+    "Boca Juniors": {"niveles_lado": {"este": 1}, "esquinas_abiertas": ["sureste", "noreste"], "asientoP": "franjas", "pantalla": "una"},
+    "Real Madrid": {"costillas": 64, "costillas_col": "#c3c8ce", "techoCol": "#e6e8ea"},
+    "Inter": {"torres_rampa": 11, "torres_col": "#a7a7a7", "techoCol": "#c8102e", "asientoP": "sectores", "asiento3": "#1d3f8a"},
+    "Liverpool": {"niveles_lado": {"este": 3}, "techoCol": "#d9d9d9", "fachadaCol": "#8a2d22"},
+    "Dortmund": {"niveles_lado": {"sur": 4}, "torres_rampa": 8, "torres_col": "#fde100", "techoCol": "#e6e6e6"},
+    "Tottenham": {"niveles_lado": {"sur": 4}, "techoCol": "#f2f2f2"},
+    "Roma": {"pista_col": "#2f6fb5", "fachada_curva": {"color": "#e3e3e3"}},
+    "Lazio": {"pista_col": "#2f6fb5", "fachada_curva": {"color": "#e3e3e3"}},
+    "Napoli": {"pista_col": "#2f6fb5", "fachada_curva": {"color": "#cfd6dc"}},
+    "River Plate": {"fachada_curva": {"color": "#efefef"}, "asientoP": "franjas"},
+    "Sao Paulo": {"fachada_curva": {"color": "#bdb8ad"}},
+    "Arsenal": {"fachada_curva": {"color": "#9fb4c4"}},
+    "Guadalajara": {"fachada_curva": {"color": "#4f7d3a"}},
+    "Colo-Colo": {"esquinas_abiertas": ["noreste", "noroeste"], "fachada_curva": {"color": "#c9c4b8"}},
+})
 PIEZAS["Bayern Múnich"]["colchon"] = {"color": "#dc052d", "filas": 5}   # el colchón iluminado
 PIEZAS["Barcelona"]["fachada_curva"] = {"color": "#d9d9d9"}   # el óvalo se ve curvo por fuera
 for _k, _v in PIEZAS.items():

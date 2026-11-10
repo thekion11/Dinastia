@@ -9,6 +9,10 @@ const PAISES: Array[String] = ["ENG", "ESP", "BRA", "ARG", "GER", "ITA", "MEX", 
 const CLUBES_2 := ["Aj4x", "Univers1tario", "Kash1ma A.", "Al-H1lal", "Al Ahly", "R4ja C.", "Atl4nta Utd", "M3lbourne V.", "Barcel0na SC",
 	"B4yern Múnich", "B4rcelona"]
 const PAISES_2: Array[String] = ["NED", "PER", "JPN", "KSA", "EGY", "MAR", "USA", "AUS", "ECU", "GER", "ESP"]
+## TANDA=3: la tercera (10-11): los grandes de cada liga, niveles por lado, esquinas una a una y la fachada curva que ya no tapan las esquinas.
+const CLUBES_3 := ["B0ca Juni0rs", "R3al Madrid", "Int3r", "L1verpool", "D0rtmund", "T0ttenham", "R0ma", "R1ver Plate", "Sa0 Paulo",
+	"Guadalaj4ra", "C0lo-C0lo", "B4rcelona"]
+const PAISES_3: Array[String] = ["ARG", "ESP", "ITA", "ENG", "GER", "BRA", "MEX", "CHI"]
 var _m: Mundo
 var _dir := ""
 
@@ -26,10 +30,10 @@ func _ready() -> void:
 	cfg.set_value(CajonAjustes.SECCION, "intro", false)
 	cfg.save(CajonAjustes.RUTA)
 	print("pack real: ", Datos.usar_base_real(true))
-	var dos := OS.get_environment("TANDA") == "2"
-	var clubes: Array = CLUBES_2 if dos else CLUBES
+	var tanda := OS.get_environment("TANDA")
+	var clubes: Array = CLUBES_2 if tanda == "2" else (CLUBES_3 if tanda == "3" else CLUBES)
 	_m = Mundo.new()
-	_m.generar(PAISES_2 if dos else PAISES, 2026)
+	_m.generar(PAISES_2 if tanda == "2" else (PAISES_3 if tanda == "3" else PAISES), 2026)
 	var solo := OS.get_environment("SOLO")
 	for i in clubes.size():
 		if solo != "" and not str(i) in solo.split(","):
