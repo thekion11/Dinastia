@@ -363,9 +363,7 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			_mod(nodo, "tableCoffeeGlass", Vector3(caja.end.x - 1.6, y0, cz + 0.4), PI * 0.5, true)
 			_mod(nodo, "lampRoundFloor", Vector3(caja.end.x - 0.45, y0, caja.position.y + 0.5), 0.0, true)
 			_mod(nodo, "pottedPlant", Vector3(caja.position.x + 0.45, y0, caja.end.y - 0.5), 0.0, true, 2.2)
-			var pres := String(ctx.get("presidente", ""))
-			if pres != "":
-				PiezasObra._rotulo(nodo, pres, Vector3(cx, y0 + 0.95, cz + 0.27), 0.0, 22, Color(0.95, 0.85, 0.5))
+			## (10-11, orden del dueño) sin nombres flotantes: la placa del escritorio con el nombre del presidente se quitó.
 		"Sala de vídeo":
 			var filas := clampi(1 + nivel("video") / 3, 1, 4)
 			PiezasObra._caja(nodo, Vector3(cx, y0 + 1.7, caja.position.y + 0.08), Vector3(caja.size.x - 1.0, 1.6, 0.06), oscuro, false)

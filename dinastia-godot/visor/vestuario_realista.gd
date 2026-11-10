@@ -144,6 +144,38 @@ static func azulejo() -> StandardMaterial3D:
 	return m
 
 ## Madera de los bancos.
+## (10-11) Materiales compartidos del edificio del club por país y tipo («madera», «baldosa», «resina», «pared»): una sola instancia por clave, así
+## el `Lote`/fusión sigue agrupando por material y la memoria no crece con cada sala.
+static var _cache_sala := {}
+static func sala(tipo: String, pais := "") -> StandardMaterial3D:
+	var clave := "%s|%s" % [tipo, estilo_de(pais)]
+	if _cache_sala.has(clave):
+		return _cache_sala[clave]
+	var e: Dictionary = ESTILOS[estilo_de(pais)]
+	var m: StandardMaterial3D = null
+	match tipo:
+		"madera":
+			m = _pbr(String(e["madera"]), 2.0)
+		"baldosa":
+			m = _pbr("floor_tiles_06", 1.5)
+		"resina":
+			m = _pbr(String(e["suelo"]), float(e["m_suelo"]))
+		"pared":
+			m = _pbr(String(e["pared"]), float(e["m_pared"]))
+	_cache_sala[clave] = m
+	return m
+
+## Tipo de suelo real (`sala`) por sala; «» = se queda el color liso.
+static func tipo_suelo(sala: String) -> String:
+	match sala:
+		"Oficina del DT", "Despacho del presidente", "Comedor del plantel", "Museo del club", "Museo ampliado":
+			return "madera"
+		"Enfermería":
+			return "baldosa"
+		"Sala de vídeo", "Sala de prensa", "Utilería":
+			return "resina"
+	return ""
+
 static func madera(pais := "") -> StandardMaterial3D:
 	var e: Dictionary = ESTILOS[estilo_de(pais)]
 	var real := _pbr(String(e["madera"]), 1.0)
