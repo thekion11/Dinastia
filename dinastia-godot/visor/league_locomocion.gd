@@ -168,6 +168,8 @@ static func _quizas_empezar(m: MotorLeague, p: Dictionary) -> void:
 	if not preparar(ap, m.t):
 		return
 	var c := LeagueMovimiento.elegir(sp, rel, sp_des, cuerpo, mirar, pie_que_toca(p, ap))
+	if not c.is_empty() and c.has("auto") and not ap.has_animation(String(c["nombre"])) and not LeagueMovimiento.estable(c):
+		_construir_auto(c, ap, m.t)
 	if c.is_empty() or LeagueMovimiento.estable(c) or not ap.has_animation(String(c["nombre"])):
 		p["ls_espera"] = m.t + ESPERA   ## sin clip que aporte: no se vuelve a buscar en cada fotograma
 		return
@@ -206,6 +208,15 @@ static func pie_que_toca(p: Dictionary, ap: AnimationPlayer) -> String:
 	if actual.begins_with(CICLO_CUERPO) or actual == "correr":
 		return "D" if fase < 0.5 else "I"
 	return ""
+
+static var _auto_t := -1.0
+
+## Una intermedia del original se construye la primera vez que se elige (como mucho una por paso del motor).
+static func _construir_auto(c: Dictionary, ap: AnimationPlayer, t: float) -> void:
+	if t == _auto_t or not ap.has_animation("correr") or ap.get_animation("correr").get_track_count() == 0:
+		return
+	_auto_t = t
+	LeagueAuto.construir(c, ap, String(ap.get_animation("correr").track_get_path(0)).get_slice(":", 0))
 
 static var _preparadas := {}
 const TANDA := 8

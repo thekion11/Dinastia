@@ -7,7 +7,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 0.0
+  "sale": 0.0,
+  "v_entra": 3.417,
+  "v_sale": 0.861
  },
  "ls_movement__dribble__090_decel": {
   "ang": 1.5708,
@@ -17,7 +19,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 0.0
+  "sale": 0.0,
+  "v_entra": 3.417,
+  "v_sale": 0.861
  },
  "ls_movement__dribble__135": {
   "ang": 2.3562,
@@ -27,7 +31,9 @@
   "largo": 0.43,
   "pasos": 2,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.433,
+  "v_sale": 2.828
  },
  "ls_movement__dribble__135_decel": {
   "ang": 2.3837,
@@ -37,7 +43,9 @@
   "largo": 0.37,
   "pasos": 2,
   "reposo": 1,
-  "sale": 0.0
+  "sale": 0.0,
+  "v_entra": 3.433,
+  "v_sale": 0.4
  },
  "ls_movement__dribble__180_decel": {
   "ang": 3.119,
@@ -47,7 +55,9 @@
   "largo": 0.45,
   "pasos": 2,
   "reposo": 1,
-  "sale": 0.0
+  "sale": 0.0,
+  "v_entra": 3.538,
+  "v_sale": 0.333
  },
  "ls_movement__dribble__angled__D045": {
   "ang": 0.0,
@@ -57,7 +67,9 @@
   "largo": 0.32,
   "pasos": 2,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.25,
+  "v_sale": 3.5
  },
  "ls_movement__dribble__angled__D045_decel": {
   "ang": -0.7898,
@@ -67,7 +79,9 @@
   "largo": 0.18,
   "pasos": 1,
   "reposo": 1,
-  "sale": 0.0
+  "sale": 0.0,
+  "v_entra": 3.0,
+  "v_sale": 1.0
  },
  "ls_movement__dribble__angled__D135_045_decel": {
   "ang": -1.5708,
@@ -77,7 +91,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 0.0
+  "sale": 0.0,
+  "v_entra": 3.333,
+  "v_sale": 0.667
  },
  "ls_movement__dribble__angled__D135_decel": {
   "ang": -2.4249,
@@ -87,7 +103,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 0.0
+  "sale": 0.0,
+  "v_entra": 3.333,
+  "v_sale": 0.333
  },
  "ls_movement__dribble__angled__D135_to_D045_045": {
   "ang": -0.7854,
@@ -97,7 +115,9 @@
   "largo": 0.4,
   "pasos": 2,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.541,
+  "v_sale": 3.536
  },
  "ls_movement__dribble__angled__newangles__D000_to_D045": {
   "ang": 0.0,
@@ -107,7 +127,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.75,
+  "v_sale": 3.75
  },
  "ls_movement__dribble__angled__newangles__D000_to_D045_045": {
   "ang": -0.765,
@@ -117,7 +139,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.809,
+  "v_sale": 2.888
  },
  "ls_movement__dribble__angled__newangles__D000_to_D045_090_left": {
   "ang": 1.5708,
@@ -127,7 +151,9 @@
   "largo": 0.36,
   "pasos": 2,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.0,
+  "v_sale": 3.333
  },
  "ls_movement__dribble__angled__newangles__D000_to_D135_090": {
   "ang": 1.5708,
@@ -137,7 +163,9 @@
   "largo": 0.3,
   "pasos": 2,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.417,
+  "v_sale": 3.333
  },
  "ls_movement__dribble__angled__newangles__D000_to_D135_135": {
   "ang": 2.3562,
@@ -147,7 +175,9 @@
   "largo": 0.41,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.181,
+  "v_sale": 2.357
  },
  "ls_movement__dribble__angled__newangles__D045_to_D135": {
   "ang": 0.0,
@@ -157,7 +187,9 @@
   "largo": 0.24,
   "pasos": 2,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 4.0,
+  "v_sale": 4.0
  },
  "ls_movement__dribble__angled__newangles__D135_045": {
   "ang": 0.7854,
@@ -167,7 +199,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.727,
+  "v_sale": 3.771
  },
  "ls_movement__dribble__angled__newangles__D135_to_D-135_left": {
   "ang": 0.0,
@@ -177,7 +211,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 4.0,
+  "v_sale": 4.0
  },
  "ls_movement__dribble__angled__newangles__D135_to_D045_000": {
   "ang": 0.0,
@@ -187,7 +223,9 @@
   "largo": 0.36,
   "pasos": 2,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.538,
+  "v_sale": 3.5
  },
  "ls_movement__dribble__angled__newangles__D135_to_D045_000_accel": {
   "ang": 0.0,
@@ -197,7 +235,9 @@
   "largo": 0.36,
   "pasos": 2,
   "reposo": 1,
-  "sale": 5.0
+  "sale": 5.0,
+  "v_entra": 3.538,
+  "v_sale": 4.75
  },
  "ls_movement__dribble__angled__newangles__D135_to_D045_045_accel": {
   "ang": -0.7854,
@@ -207,7 +247,9 @@
   "largo": 0.4,
   "pasos": 2,
   "reposo": 1,
-  "sale": 5.0
+  "sale": 5.0,
+  "v_entra": 3.541,
+  "v_sale": 4.95
  },
  "ls_movement__dribble__angled__newangles__D135_to_D045_045_left": {
   "ang": 0.7854,
@@ -217,7 +259,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.48,
+  "v_sale": 3.3
  },
  "ls_movement__idle__000_accel": {
   "ang": 0.0,
@@ -227,7 +271,9 @@
   "largo": 0.26,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 1.5,
+  "v_sale": 3.638
  },
  "ls_movement__idle__000_idlelevel1": {
   "ang": 0.0,
@@ -237,7 +283,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 0.0
+  "sale": 0.0,
+  "v_entra": 0.0,
+  "v_sale": 0.0
  },
  "ls_movement__idle__045_accel": {
   "ang": -0.7909,
@@ -247,7 +295,9 @@
   "largo": 0.26,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 1.118,
+  "v_sale": 3.751
  },
  "ls_movement__idle__090_accel": {
   "ang": -1.5795,
@@ -257,7 +307,9 @@
   "largo": 0.26,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 0.8,
+  "v_sale": 3.333
  },
  "ls_movement__idle__135_accel": {
   "ang": -2.3542,
@@ -267,7 +319,9 @@
   "largo": 0.37,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 1.175,
+  "v_sale": 3.764
  },
  "ls_movement__idle__180_accel": {
   "ang": -3.1102,
@@ -277,7 +331,9 @@
   "largo": 0.45,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 1.094,
+  "v_sale": 3.277
  },
  "ls_movement__idle__angled__D045_090_accel": {
   "ang": -1.5708,
@@ -287,7 +343,9 @@
   "largo": 0.26,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 0.167,
+  "v_sale": 3.746
  },
  "ls_movement__idle__angled__D045_135_accel": {
   "ang": -2.3562,
@@ -297,7 +355,9 @@
   "largo": 0.32,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 1.051,
+  "v_sale": 3.488
  },
  "ls_movement__idle__angled__D045_180_accel": {
   "ang": -3.1102,
@@ -307,7 +367,9 @@
   "largo": 0.32,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 0.955,
+  "v_sale": 3.412
  },
  "ls_movement__sprint__000_decel_decel_decel_todo": {
   "ang": 0.0,
@@ -317,7 +379,9 @@
   "largo": 0.42,
   "pasos": 1,
   "reposo": 1,
-  "sale": 0.0
+  "sale": 0.0,
+  "v_entra": 7.005,
+  "v_sale": 1.0
  },
  "ls_movement__sprint__000_idlelevel1": {
   "ang": 0.0,
@@ -327,7 +391,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 7.0
+  "sale": 7.0,
+  "v_entra": 7.0,
+  "v_sale": 7.0
  },
  "ls_movement__sprint__135_decel_decel_decel": {
   "ang": -2.3542,
@@ -337,7 +403,9 @@
   "largo": 0.61,
   "pasos": 2,
   "reposo": 1,
-  "sale": 0.0
+  "sale": 0.0,
+  "v_entra": 6.875,
+  "v_sale": 0.75
  },
  "ls_movement__sprint__newangles__D000_to_D045_045_left_decel_decel": {
   "ang": 0.7854,
@@ -347,7 +415,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 6.519,
+  "v_sale": 4.007
  },
  "ls_movement__sprint__newangles__D000_to_D045_decel": {
   "ang": 0.0,
@@ -357,7 +427,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 5.0
+  "sale": 5.0,
+  "v_entra": 6.333,
+  "v_sale": 5.0
  },
  "ls_movement__sprint__newangles__D045_decel_left": {
   "ang": 0.0,
@@ -367,7 +439,9 @@
   "largo": 0.22,
   "pasos": 1,
   "reposo": 1,
-  "sale": 5.0
+  "sale": 5.0,
+  "v_entra": 6.697,
+  "v_sale": 5.03
  },
  "ls_movement__walk__000_accel": {
   "ang": 0.0,
@@ -377,7 +451,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 7.0
+  "sale": 7.0,
+  "v_entra": 5.059,
+  "v_sale": 7.085
  },
  "ls_movement__walk__045": {
   "ang": -0.7846,
@@ -387,7 +463,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 5.0
+  "sale": 5.0,
+  "v_entra": 4.589,
+  "v_sale": 4.683
  },
  "ls_movement__walk__045_accel": {
   "ang": -0.7849,
@@ -397,7 +475,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 7.0
+  "sale": 7.0,
+  "v_entra": 4.682,
+  "v_sale": 6.946
  },
  "ls_movement__walk__090_left_decel": {
   "ang": 1.5708,
@@ -407,7 +487,9 @@
   "largo": 0.36,
   "pasos": 2,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 4.5,
+  "v_sale": 3.333
  },
  "ls_movement__walk__135_decel": {
   "ang": 2.3562,
@@ -417,7 +499,9 @@
   "largo": 0.41,
   "pasos": 2,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 4.429,
+  "v_sale": 2.828
  },
  "ls_movement__walk__angled__D045_to_D000_accel": {
   "ang": 0.0,
@@ -427,7 +511,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 7.0
+  "sale": 7.0,
+  "v_entra": 5.0,
+  "v_sale": 6.667
  },
  "ls_movement__walk__angled__newangles__D000_to_D045": {
   "ang": 0.0,
@@ -437,7 +523,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 5.0
+  "sale": 5.0,
+  "v_entra": 5.417,
+  "v_sale": 5.417
  },
  "ls_movement__walk__angled__newangles__D045_045": {
   "ang": 0.8039,
@@ -447,7 +535,9 @@
   "largo": 0.27,
   "pasos": 1,
   "reposo": 1,
-  "sale": 5.0
+  "sale": 5.0,
+  "v_entra": 5.389,
+  "v_sale": 4.629
  },
  "ls_movement__walk__angled__newangles__D045_to_D000": {
   "ang": 0.0,
@@ -457,7 +547,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 5.0
+  "sale": 5.0,
+  "v_entra": 5.0,
+  "v_sale": 5.0
  },
  "ls_movement__walk__angled__newangles__D045_to_D000_045_accel": {
   "ang": -0.7854,
@@ -467,7 +559,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 7.0
+  "sale": 7.0,
+  "v_entra": 5.011,
+  "v_sale": 7.542
  },
  "ls_movement__walk__angled__newangles__D045_to_D000_accel": {
   "ang": 0.0,
@@ -477,7 +571,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 7.0
+  "sale": 7.0,
+  "v_entra": 5.0,
+  "v_sale": 6.667
  },
  "ls_movement__walk__angled__newangles__D045_to_D135_decel": {
   "ang": 0.0,
@@ -487,7 +583,9 @@
   "largo": 0.24,
   "pasos": 1,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 4.879,
+  "v_sale": 3.545
  },
  "ls_templates__dribbleD000": {
   "ang": 0.0,
@@ -498,7 +596,9 @@
   "pasos": 1,
   "plantilla": true,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.5,
+  "v_sale": 3.5
  },
  "ls_templates__dribbleD045": {
   "ang": 0.0,
@@ -509,7 +609,9 @@
   "pasos": 1,
   "plantilla": true,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.545,
+  "v_sale": 3.545
  },
  "ls_templates__dribbleD045_left": {
   "ang": 0.0,
@@ -520,7 +622,9 @@
   "pasos": 1,
   "plantilla": true,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.545,
+  "v_sale": 3.545
  },
  "ls_templates__dribbleD135": {
   "ang": 0.0,
@@ -531,7 +635,9 @@
   "pasos": 1,
   "plantilla": true,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.5,
+  "v_sale": 3.5
  },
  "ls_templates__dribbleD135_left": {
   "ang": 0.0,
@@ -542,7 +648,9 @@
   "pasos": 1,
   "plantilla": true,
   "reposo": 1,
-  "sale": 3.5
+  "sale": 3.5,
+  "v_entra": 3.5,
+  "v_sale": 3.5
  },
  "ls_templates__idleD000": {
   "ang": 0.0,
@@ -553,7 +661,9 @@
   "pasos": 1,
   "plantilla": true,
   "reposo": 1,
-  "sale": 0.0
+  "sale": 0.0,
+  "v_entra": 0.0,
+  "v_sale": 0.0
  },
  "ls_templates__sprintD000": {
   "ang": 0.0,
@@ -564,7 +674,9 @@
   "pasos": 1,
   "plantilla": true,
   "reposo": 1,
-  "sale": 7.0
+  "sale": 7.0,
+  "v_entra": 7.0,
+  "v_sale": 7.0
  },
  "ls_templates__walkD000": {
   "ang": 0.0,
@@ -575,7 +687,9 @@
   "pasos": 1,
   "plantilla": true,
   "reposo": 1,
-  "sale": 5.0
+  "sale": 5.0,
+  "v_entra": 5.083,
+  "v_sale": 5.083
  },
  "ls_templates__walkD045": {
   "ang": 0.0,
@@ -586,7 +700,9 @@
   "pasos": 1,
   "plantilla": true,
   "reposo": 1,
-  "sale": 5.0
+  "sale": 5.0,
+  "v_entra": 5.045,
+  "v_sale": 5.045
  },
  "ls_templates__walkD045_left": {
   "ang": 0.0,
@@ -597,6 +713,8 @@
   "pasos": 1,
   "plantilla": true,
   "reposo": 1,
-  "sale": 5.0
+  "sale": 5.0,
+  "v_entra": 5.045,
+  "v_sale": 5.045
  }
 }

@@ -44,7 +44,7 @@ func _probar_formacion_propia() -> void:
 ## (`HumanoidBase::SelectAnim` + `GetMovementSimilarity`) sobre los datos de `datos/league_movimiento.json`.
 func _probar_league_movimiento() -> void:
 	_titulo("MOTOR LEAGUE: ARRANQUES, FRENADAS Y GIROS DEL ORIGINAL")
-	_comprobar(LeagueMovimiento.clips().size() == 98, "49 clips de movimiento del original con su espejo (%d)" % LeagueMovimiento.clips().size())
+	_comprobar(LeagueMovimiento.clips().filter(func(c): return not c.has("auto")).size() == 98 and LeagueMovimiento.clips().size() - 98 == (874 if LeagueAuto.activas else 0), "49 clips de movimiento del original con su espejo y 437 intermedias legales con el suyo (%d)" % LeagueMovimiento.clips().size())
 	_comprobar(LeagueMovimiento.rango(1.0) == 0.0 and LeagueMovimiento.rango(3.0) == 3.5 and LeagueMovimiento.rango(5.0) == 5.0 and LeagueMovimiento.rango(7.0) == 8.0, "velocidades escalonadas del original (RangeVelocity)")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, 0.0, 5.0).get("nombre", "")) == "ls_movement__idle__000_accel", "parado y quiere ir de frente: arranque recto")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, -PI / 2.0, 5.0).get("nombre", "")) == "ls_movement__idle__090_accel", "parado y quiere ir a la derecha: arranque girando 90° a la derecha")

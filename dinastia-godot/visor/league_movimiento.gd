@@ -25,6 +25,7 @@ const CONTRABANDO := 0.1 * PI   ## `maxAngleSmuggle`
 static var _clips: Array = []
 static var _plantillas: Dictionary = {}
 static var _por_entrada: Dictionary = {}   ## "velocidad|cuerpo" de entrada → clips (la consulta estricta, precalculada)
+static var _cuadrantes: Dictionary = {}   ## "velocidad|cuerpo" de entrada → {cuadrante de salida → {sale, pref, reposo1, clips}}
 
 ## `RangeVelocity`: la velocidad escalonada (0 / 3,5 / 5 / 8).
 static func rango(v: float) -> float:
@@ -51,17 +52,37 @@ static func clips() -> Array:
 					c["pie"] = "I" if espejo else "D"   ## el que mueve primero (los clips empiezan con el derecho; el espejo, con el izquierdo)
 					c["pie_sale"] = c["pie"] if int(f.get("pasos", 1)) % 2 == 0 else ("D" if espejo else "I")   ## `GetOutgoingFoot`
 					c["cuerpo_sale"] = wrapf(float(c["cuerpo"]) - float(c["ang"]), -PI, PI) if float(c["sale"]) >= IDLE_DRIBBLE else 0.0
+					c["v_entra"] = float(f.get("v_entra", 0.0))
+					c["v_sale"] = float(f.get("v_sale", 0.0))
 					c["pref"] = preferida(float(c["ang"]))
 					c["cuerpo_ini_q"] = cuerpo_permitido(float(c["cuerpo_ini"]))
 					if bool(f.get("plantilla", false)):
 						_plantillas[c["nombre"]] = c
 					else:
-						_clips.append(c)
-						var k := _clave(float(c["entra"]), float(c["cuerpo_ini_q"]))
-						if not _por_entrada.has(k):
-							_por_entrada[k] = []
-						(_por_entrada[k] as Array).append(c)
+						_indexar(c)
+			if LeagueAuto.activas:   ## las intermedias del original (`GenerateAutoAnims`), con los datos de las plantillas
+				for c: Dictionary in LeagueAuto.generar(_plantillas):
+					_indexar(c)
 	return _clips
+
+static func _indexar(c: Dictionary) -> void:
+	if not c.has("pref"):
+		c["pref"] = preferida(float(c["ang"]))
+		c["cuerpo_ini_q"] = cuerpo_permitido(float(c["cuerpo_ini"]))
+	_clips.append(c)
+	var k := _clave(float(c["entra"]), float(c["cuerpo_ini_q"]))
+	if not _por_entrada.has(k):
+		_por_entrada[k] = []
+	(_por_entrada[k] as Array).append(c)
+	if not _cuadrantes.has(k):
+		_cuadrantes[k] = {}
+	var pref: Vector2 = c["pref"]
+	var kq := "%d|%d" % [roundi(float(c["sale"]) * 10.0), roundi(rad_to_deg(Vector2(0, -1).angle_to(pref)))]
+	var grupos: Dictionary = _cuadrantes[k]
+	if not grupos.has(kq):
+		grupos[kq] = {"sale": c["sale"], "pref": pref, "reposo1": false, "clips": []}
+	(grupos[kq]["clips"] as Array).append(c)
+	grupos[kq]["reposo1"] = bool(grupos[kq]["reposo1"]) or int(c["reposo"]) == 1
 
 static func _clave(vel: float, cuerpo: float) -> String:
 	return "%d|%d" % [roundi(vel * 10.0), roundi(cuerpo / PI * 180.0)]
@@ -163,33 +184,31 @@ static func elegir(sp: float, rel: float, vel_deseada: float, cuerpo := 0.0, mir
 	var cuerpo_q := cuerpo_permitido(cuerpo) if entra != IDLE else 0.0
 	var dir := Vector2(0, -1).rotated(rel)
 	var sesgo := sesgo_giro(Vector2(0, -sp), dir * deseada)
-	var candidatos: Array = []   ## (los de la consulta estricta: misma velocidad y mismo cuerpo de entrada)
-	var mejor := {}
-	var mv := INF
+	## La similitud de movimiento solo depende del cuadrante de salida (velocidad y dirección preferida): se calcula una vez por
+	## cuadrante de los que deja la consulta estricta (misma velocidad y mismo cuerpo de entrada), no por clip.
 	clips()
-	for c: Dictionary in _por_entrada.get(_clave(entra, cuerpo_q), []):
-		var v := similitud(c, dir, deseada, sesgo) + (0.0 if int(c["reposo"]) == 1 else 0.001)
-		candidatos.append(c)
+	var cuadrante: Array = []
+	var mv := INF
+	for q: Dictionary in _cuadrantes.get(_clave(entra, cuerpo_q), {}).values():
+		var v := similitud(q, dir, deseada, sesgo) + (0.0 if bool(q["reposo1"]) else 0.001)
 		if v < mv:
 			mv = v
-			mejor = c
-	if mejor.is_empty():
-		return mejor
-	## El mismo cuadrante de movimiento (velocidad de salida y dirección preferida) y, dentro, el mejor cuerpo.
-	var q_ang: Vector2 = mejor["pref"]
-	var cuadrante: Array = []
-	var mc := INF
-	var elegido := mejor
-	for c: Dictionary in candidatos:
-		if float(c["sale"]) != float(mejor["sale"]) or (c["pref"] as Vector2).dot(q_ang) < 0.999:
-			continue
-		cuadrante.append(c)
-		if is_nan(mirar):
-			continue
-		var r := similitud_cuerpo(c, dir, mirar)
-		if r < mc:
-			mc = r
+			cuadrante = q["clips"]
+	if cuadrante.is_empty():
+		return {}
+	## Dentro del cuadrante, el mejor cuerpo (y si no importa, el primero con reposo 1, como el original).
+	var elegido: Dictionary = cuadrante[0]
+	for c: Dictionary in cuadrante:
+		if int(c["reposo"]) == 1:
 			elegido = c
+			break
+	var mc := INF
+	if not is_nan(mirar):
+		for c: Dictionary in cuadrante:
+			var r := similitud_cuerpo(c, dir, mirar)
+			if r < mc:
+				mc = r
+				elegido = c
 	if pie == "" or entra == IDLE or String(elegido["pie"]) == pie:
 		return elegido
 	## Los que miran igual que el elegido (±0,06π, `_KeepBestBodyDirectionAnims`) y empiezan con el pie que toca.
