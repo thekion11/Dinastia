@@ -265,3 +265,42 @@ func _probar_final_temporada() -> void:
 		solo_mi_pais = solo_mi_pais and c.pais == pais
 	_comprobar(solo_mi_pais and not (d["suben"] as Array).is_empty(), "ascensos y descensos de tu país (%d suben)" % (d["suben"] as Array).size())
 	_comprobar(not (d["directiva"] as Dictionary).is_empty() and d.has("premios"), "con el veredicto de la directiva y los premios de la gala")
+
+## MAPA DE CALOR Y HABILIDADES CON ESTRELLAS DE LA PLANTILLA (10-11, como la «Información del jugador» del PES).
+func _probar_habilidades_y_calor() -> void:
+	_titulo("PLANTILLA: HABILIDADES CON ESTRELLAS Y MAPA DE CALOR")
+	var j := Jugador.new()
+	j.id = "prueba_ext"; j.pos = "DEL"; j.pos_e = "ED"; j.ovr = 84; j.edad = 26
+	j.atributos = {"rit": 95, "tir": 80, "pas": 78, "reg": 94, "def": 35, "fis": 66}
+	var h := HabilidadesJugador.de(j)
+	var ids: Array = h.map(func(x: Dictionary) -> String: return String(x["id"]))
+	_comprobar(not h.is_empty() and h.size() <= HabilidadesJugador.MAXIMO and ids.has("regate_prof"), "un extremo regateador tiene «Regate en profundidad» (%s)" % ", ".join(ids))
+	_comprobar(int(h[0]["estrellas"]) == 3 and not ids.has("marcaje") and not ids.has("reflejos"), "con 3 estrellas en lo mejor, y sin habilidades de defensa ni de portero")
+	_comprobar(HabilidadesJugador.de(j) == h, "es determinista: el mismo jugador da las mismas estrellas")
+	var por := Jugador.new()
+	por.id = "prueba_por"; por.pos = "POR"; por.pos_e = "POR"; por.ovr = 82; por.edad = 33; por.capitan = true
+	por.atributos = {"div": 85, "par": 84, "saq": 70, "ref": 88, "vel": 60, "pos": 80}
+	var hp: Array = HabilidadesJugador.de(por).map(func(x: Dictionary) -> String: return String(x["id"]))
+	var solo_por := true
+	for id: String in hp:
+		solo_por = solo_por and id in ["saque_largo", "parada_penal", "salida", "reflejos", "liderazgo"]
+	_comprobar(solo_por and hp.has("reflejos") and hp.has("liderazgo"), "el portero solo tiene las suyas, y el capitán veterano «Liderazgo» (%s)" % ", ".join(hp))
+	var flojo := Jugador.new()
+	flojo.id = "prueba_flojo"; flojo.pos = "MED"; flojo.pos_e = "MC"; flojo.ovr = 48
+	flojo.atributos = {"rit": 50, "tir": 45, "pas": 50, "reg": 48, "def": 47, "fis": 50}
+	_comprobar(HabilidadesJugador.de(flojo).is_empty(), "un jugador flojo no tiene habilidades destacadas")
+	## El mapa de calor: lo más caliente cae en su zona (extremo derecho arriba a la derecha; portero abajo al centro).
+	for par: Array in [[j, "ED"], [por, "POR"]]:
+		var a := MapaCalorJugador.intensidades(par[0])
+		var mejor := 0
+		for i in a.size():
+			if a[i] > a[mejor]:
+				mejor = i
+		var x := (float(mejor % MapaCalorJugador.COLS) + 0.5) / MapaCalorJugador.COLS
+		var y := (float(mejor / MapaCalorJugador.COLS) + 0.5) / MapaCalorJugador.FILAS
+		var z: Array = MapaCalorJugador.ZONAS[par[1]]
+		_comprobar(absf(x - float(z[0])) < 0.15 and absf(y - float(z[1])) < 0.12 and is_equal_approx(a[mejor], 1.0), "el mapa de calor del %s se concentra en su zona (%.2f, %.2f)" % [par[1], x, y])
+	j.pos_sec = ["MD"]
+	var a2 := MapaCalorJugador.intensidades(j)
+	var celda_md := int(0.46 * MapaCalorJugador.FILAS) * MapaCalorJugador.COLS + int(0.85 * MapaCalorJugador.COLS)
+	_comprobar(a2[celda_md] > MapaCalorJugador.intensidades(Jugador.new())[celda_md] and a2[celda_md] >= 0.4, "la posición secundaria también se calienta (%.2f)" % a2[celda_md])
