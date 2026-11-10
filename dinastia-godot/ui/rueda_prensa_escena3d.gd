@@ -30,7 +30,9 @@ func _process(delta: float) -> void:
 		var hacia: Vector3 = d["mira"]
 		var fov_dest: float = d["fov"]
 		## El periodista que pregunta manda sobre el ciclo: corte seco a él.
-		var foco := _plano_foco()
+		var foco := _plano_foco() if not RuedaPrensaMesa.entrando(self) else {}
+		if RuedaPrensaMesa.entrando(self):   ## R8: la entrada del DT se ve entera en el plano frontal
+			d = planos[0]; desde = d["pos"]; hacia = d["mira"]; fov_dest = d["fov"]
 		if not foco.is_empty():
 			desde = foco["pos"]; hacia = foco["mira"]; fov_dest = foco["fov"]
 		## Saltos grandes (al periodista y de vuelta) son cortes, como en TV.

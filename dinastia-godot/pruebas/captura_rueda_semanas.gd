@@ -32,6 +32,14 @@ func _ready() -> void:
 		await _esperar(1.0)
 		if p._rueda_pop == null:
 			p._abrir_rueda_pantalla_completa(p.mundo.prensa.entrevista)
+		if OS.get_environment("PRONTO") != "":   ## la entrada del DT (R8): tres fotos en los primeros ~3 s
+			for k in 3:
+				await _esperar(0.6)
+				for h in p.get_children():
+					if h is EventoPantallaCompleta:
+						h.queue_free()
+				await _esperar(0.15)
+				get_viewport().get_texture().get_image().save_jpg("%s/%d_%s_entra%d.jpg" % [_dir, i, c.pais, k], 0.88)
 		await _esperar(5.0)
 		for h in p.get_children():   ## un evento (inicio de temporada…) puede taparla: fuera antes de la foto
 			if h is EventoPantallaCompleta:

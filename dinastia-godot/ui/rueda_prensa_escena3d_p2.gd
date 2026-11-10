@@ -439,7 +439,7 @@ func _gesticular_dt(delta: float) -> void:
 	var cara: String = ["concentrado", "alegre", "neutral", "enfado"][_rng_dt.randi() % 4]
 	if load("res://visor/anim_extra.gd").asegurar_gesto_tono(ap, _dt_3d.get("esqueleto"), tono_dt) != "":   ## §2.5: el gesto de su tono
 		gesto = load("res://visor/anim_extra.gd").GESTO_TONO[tono_dt]; cara = load("res://visor/anim_extra.gd").CARA_TONO[tono_dt]; tono_dt = ""
-	if ap != null and not has_meta("mesa"):   ## sentado (R7): solo la cara; los gestos de cuerpo entero lo levantarían
+	if ap != null and not RuedaPrensaMesa.gesto_sentado(self, _dt_3d):   ## sentado (R7/R8): «hablar sentado»; los gestos de pie lo levantarían
 		var lib := ap.get_animation_library("")
 		if lib != null:
 			load("res://visor/anim_extra.gd").asegurar(ap, _dt_3d.get("esqueleto"), gesto)
