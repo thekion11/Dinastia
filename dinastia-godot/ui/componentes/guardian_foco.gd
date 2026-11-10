@@ -42,6 +42,8 @@ func _input(ev: InputEvent) -> void:
 	var f := _p.get_viewport().gui_get_focus_owner()
 	if f == null or not _p.is_ancestor_of(f) or f is TextEdit:
 		return
+	if f.has_meta("cruceta_propia") and bool((f.get_meta("cruceta_propia") as Callable).call(dir)):
+		return   ## el control usa la cruceta (el campo del editor de formación con una ficha agarrada o por elegir)
 	var sc := _zona(f)
 	if sc == null:
 		return
@@ -105,25 +107,24 @@ func _process(delta: float) -> void:
 	if raiz != null:
 		FocoMando.enfocar(raiz, 0)
 
-## La capa de encima de la principal: el último hijo a pantalla completa que para el ratón y no es de la base (como
-## `AtajosMenu._capa_modal_encima`); null si no hay.
+## La capa de encima de la principal: las capas de lienzo (`EventoPantallaCompleta`) se dibujan SIEMPRE encima de los hijos `Control`, así
+## que van primero (la última que tape); si no hay, el último hijo `Control` a pantalla completa que para el ratón y no es de la base (como
+## `AtajosMenu._capa_modal_encima`). null si no hay.
 static func capa_arriba(p: Control) -> Control:
 	var base: Variant = p.get("_hijos_base")
 	var hijos := p.get_children()
 	for i in range(hijos.size() - 1, -1, -1):
 		var h: Node = hijos[i]
-		if base is Dictionary and (base as Dictionary).has(h.get_instance_id()):
-			continue
-		if h is CanvasLayer and (h as CanvasLayer).visible:   ## los eventos a pantalla completa (`EventoPantallaCompleta`) son capas de lienzo
+		if h is CanvasLayer and (h as CanvasLayer).visible:
 			for k: Node in h.get_children():
 				if k is Control and _tapa(k as Control):
 					return k as Control
+	for i in range(hijos.size() - 1, -1, -1):
+		var h: Node = hijos[i]
+		if not (h is Control) or (base is Dictionary and (base as Dictionary).has(h.get_instance_id())):
 			continue
-		if not (h is Control):
-			continue
-		var c := h as Control
-		if _tapa(c):
-			return c
+		if _tapa(h as Control):
+			return h as Control
 	return null
 
 static func _tapa(c: Control) -> bool:

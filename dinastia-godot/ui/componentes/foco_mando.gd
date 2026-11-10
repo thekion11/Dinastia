@@ -72,28 +72,50 @@ static func _desplazar(ev: InputEvent, sc: ScrollContainer) -> void:
 	sc.accept_event()
 
 ## Una capa a pantalla completa (un menú) se queda con el foco: sus hermanos (lo de detrás) dejan de ser enfocables mientras está
-## abierta, para que la cruceta no lleve el foco a botones tapados. `liberar` lo deja como estaba.
-static func aislar(capa: Control) -> void:
-	var padre := capa.get_parent()
+## abierta, para que la cruceta no lleve el foco a botones tapados. `liberar` lo deja como estaba. `padre`: de quién son los hermanos
+## (por defecto, el padre de la capa); los hijos `Control` de las capas de lienzo hermanas (otros eventos) también cuentan.
+## Cada control tapado lleva la CUENTA de capas que lo tapan («foco_tapado»): con dos capas apiladas que se cierran en cualquier orden,
+## vuelve a ser enfocable solo cuando se cierra la última (antes, la segunda devolvía el «desactivado» que había puesto la primera).
+static func aislar(capa: Control, padre: Node = null) -> void:
+	padre = padre if padre != null else capa.get_parent()
 	if padre == null or capa.has_meta("foco_aislado"):
 		return
-	var previos: Array = []
+	var tapados: Array = []
 	for h: Node in padre.get_children():
-		if h != capa and h is Control:
-			previos.append([h, (h as Control).focus_behavior_recursive])
-			(h as Control).focus_behavior_recursive = Control.FOCUS_BEHAVIOR_DISABLED
-	capa.set_meta("foco_aislado", previos)
+		if h == capa or h.is_ancestor_of(capa):
+			continue
+		if h is Control:
+			tapados.append(h)
+		elif h is CanvasLayer:
+			for k: Node in h.get_children():
+				if k is Control and k != capa:
+					tapados.append(k)
+	for c: Control in tapados:
+		var n := int(c.get_meta("foco_tapado", 0))
+		if n == 0:
+			c.set_meta("foco_previo", c.focus_behavior_recursive)
+			c.focus_behavior_recursive = Control.FOCUS_BEHAVIOR_DISABLED
+		c.set_meta("foco_tapado", n + 1)
+	capa.set_meta("foco_aislado", tapados)
 
 static func liberar(capa: Control) -> void:
 	if not capa.has_meta("foco_aislado"):
 		return
-	for par: Array in capa.get_meta("foco_aislado"):
-		if is_instance_valid(par[0]):
-			(par[0] as Control).focus_behavior_recursive = par[1]
+	for c: Variant in capa.get_meta("foco_aislado"):
+		if not is_instance_valid(c):
+			continue
+		var k := c as Control
+		var n := int(k.get_meta("foco_tapado", 1)) - 1
+		if n <= 0:
+			k.focus_behavior_recursive = k.get_meta("foco_previo", Control.FOCUS_BEHAVIOR_INHERITED)
+			k.remove_meta("foco_tapado")
+			k.remove_meta("foco_previo")
+		else:
+			k.set_meta("foco_tapado", n)
 	capa.remove_meta("foco_aislado")
 
 ## `aislar` mientras la capa exista (se libera sola al salir del árbol): para capas que no son `PantallaMenu` (la rueda de prensa).
-static func aislar_mientras(capa: Control) -> void:
-	aislar(capa)
+static func aislar_mientras(capa: Control, padre: Node = null) -> void:
+	aislar(capa, padre)
 	if not capa.tree_exiting.is_connected(liberar.bind(capa)):
 		capa.tree_exiting.connect(liberar.bind(capa))

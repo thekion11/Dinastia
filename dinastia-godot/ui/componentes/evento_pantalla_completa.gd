@@ -23,6 +23,7 @@ func _montar_base(pr: Node) -> void:
 	_raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_raiz.mouse_filter = Control.MOUSE_FILTER_STOP   ## nada de lo de debajo recibe clics
 	add_child(_raiz)
+	FocoMando.aislar_mientras(_raiz, pr)   ## ni el foco: con mando, lo de debajo (un sorteo abierto, la principal) no es enfocable
 	var fondo := ColorRect.new()
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
 	fondo.color = SelectorDireccional.NOCHE if paleta_noche else Tema.FONDO
