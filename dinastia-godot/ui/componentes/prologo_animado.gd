@@ -5,14 +5,14 @@ extends EventoPantallaCompleta
 ## los colores de tu club, un lento acercamiento, un título y una frase que se escribe sola. Se ve al empezar una partida nueva (y al continuar si no llegó a verse).
 ## Controles: tocar un tramo de la barra de arriba salta a ese plano; Esc, Enter, Espacio, cualquier botón del mando o mover el stick lo salta entero.
 ## Emite `terminado` al acabar o saltarse (el que lo lanza marca el prólogo como visto).
-const SEG_POR_PLANO := 5.5
+const SEG_POR_PLANO := 7.0   ## (10-11) más texto por plano: un segundo de lectura más
 const PLANOS := [
-	{"escena": "estadio", "titulo": "Hoy empieza tu dinastía", "texto": "Un club, una ciudad y todo por construir."},
-	{"escena": "vestuario", "titulo": "El vestuario", "texto": "Donde se ganan los partidos antes de jugarlos."},
-	{"escena": "tunel", "titulo": "El túnel", "texto": "Por aquí sale el equipo cada partido. Ya se oye la grada."},
-	{"escena": "banquillo", "titulo": "El banquillo", "texto": "Desde aquí dirigirás: cambios, órdenes y la charla del descanso."},
-	{"escena": "despacho", "titulo": "El despacho del presidente", "texto": "Aquí se firma y aquí se despide. La directiva te mira."},
-	{"escena": "oficina", "titulo": "Tu oficina", "texto": "Desde tu PC lo gestionas todo. Es hora de empezar."},
+	{"escena": "estadio", "titulo": "Hoy empieza tu dinastía", "texto": "Un club, una ciudad y todo por construir.", "mas": "La grada ya canta tu nombre. Ahora hay que darle motivos.", "sonido": "ovacion"},
+	{"escena": "vestuario", "titulo": "El vestuario", "texto": "Donde se ganan los partidos antes de jugarlos.", "mas": "Cada camiseta es un jugador que confía en ti. Cuida el ánimo y la charla.", "sonido": "menu_seccion"},
+	{"escena": "tunel", "titulo": "El túnel", "texto": "Por aquí sale el equipo cada partido. Ya se oye la grada.", "mas": "Al final del pasillo está el césped. Y el marcador.", "sonido": "murmullo"},
+	{"escena": "banquillo", "titulo": "El banquillo", "texto": "Desde aquí dirigirás: cambios, órdenes y la charla del descanso.", "mas": "Noventa minutos que deciden una semana entera.", "sonido": "silbato"},
+	{"escena": "despacho", "titulo": "El despacho del presidente", "texto": "Aquí se firma y aquí se despide. La directiva te mira.", "mas": "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.", "sonido": "menu_seccion"},
+	{"escena": "oficina", "titulo": "Tu oficina", "texto": "Desde tu PC lo gestionas todo. Es hora de empezar.", "mas": "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.", "sonido": "menu_aceptar"},
 ]
 
 var _club: Club
@@ -77,6 +77,8 @@ func _armar(pr: Principal) -> void:
 	pie.add_child(_titulo)
 	_texto = etiqueta("", 20, Tema.TEXTO, false)
 	pie.add_child(_texto)
+	if DisplayServer.get_name() != "headless":
+		Musica.poner("gloria")   ## (10-11) la música del prólogo; al volver al menú, `AvanceSemana` la vuelve a ambientar
 	_ir(0)
 
 func _ir(k: int) -> void:
@@ -84,7 +86,9 @@ func _ir(k: int) -> void:
 	_t = 0.0
 	var p: Dictionary = PLANOS[_i]
 	_titulo.text = Idiomas.t(String(p["titulo"]))
-	_texto.text = Idiomas.t(String(p["texto"]))
+	_texto.text = Idiomas.t(String(p["texto"])) + "\n" + Idiomas.t(String(p["mas"]))
+	if Engine.get_main_loop() is SceneTree and DisplayServer.get_name() != "headless":
+		Sonido.toca(String(p["sonido"]))   ## (10-11) el sonido de cada plano
 	_texto.visible_ratio = 0.0
 	for n in _segmentos.size():
 		var sb := StyleBoxFlat.new()
@@ -100,7 +104,7 @@ func _process(delta: float) -> void:
 		return
 	_vivo += delta
 	_t += delta
-	_texto.visible_ratio = clampf(_t / 2.2, 0.0, 1.0)
+	_texto.visible_ratio = clampf(_t / 3.4, 0.0, 1.0)
 	## El lento acercamiento de la escena (desde el centro de la pantalla).
 	_escena.pivot_offset = _escena.size * 0.5
 	_escena.queue_redraw()   ## el haz de luz y el polvo se mueven
@@ -142,10 +146,7 @@ func _dibujar() -> void:
 	var arriba := c1.lerp(oscuro, 0.9)
 	var abajo := c1.lerp(Tema.ORO, 0.16).lerp(oscuro, 0.72)
 	_escena.draw_polygon(PackedVector2Array([Vector2(0, 0), Vector2(w, 0), Vector2(w, h), Vector2(0, h)]), PackedColorArray([arriba, arriba, abajo, abajo]))
-	_escena.draw_rect(Rect2(0, h * 0.64, w, h * 0.36), Color(0, 0, 0, 0.22))   ## el suelo, más oscuro
-	var luz := Color(1, 0.92, 0.7, 0.10)
-	_escena.draw_circle(Vector2(w * 0.5, h * 0.4), h * 0.42, luz)
-	_escena.draw_circle(Vector2(w * 0.5, h * 0.4), h * 0.26, Color(luz, 0.10))
+	PrologoArte.dibujar(_escena, String(PLANOS[_i]["escena"]), w, h, c1, c2, _vivo, _club)   ## (10-11) el arte final de cada plano
 	## Un haz de luz que cruza despacio y motas de polvo en el aire: la escena respira aunque sea fija.
 	var bx := fmod(_vivo * 70.0, w * 1.4) - w * 0.2
 	_escena.draw_polygon(PackedVector2Array([Vector2(bx, 0), Vector2(bx + 150, 0), Vector2(bx + 150 - h * 0.3, h * 0.7), Vector2(bx - h * 0.3, h * 0.7)]),
@@ -154,52 +155,6 @@ func _dibujar() -> void:
 		var px := fmod(float(k) * 173.0 + _vivo * (8.0 + float(k % 5) * 3.0), w)
 		var py := fmod(float(k) * 97.0 - _vivo * (5.0 + float(k % 4) * 2.0) + h, h * 0.66)
 		_escena.draw_circle(Vector2(px, py), 1.5 + float(k % 3), Color(1, 0.95, 0.8, 0.10 + 0.04 * float(k % 4)))
-	match String(PLANOS[_i]["escena"]):
-		"estadio":
-			## La grada en arco con sus focos y el escudo del club encima.
-			for k in 4:
-				var r := h * (0.62 - 0.07 * k)
-				_escena.draw_arc(Vector2(w * 0.5, h * 0.78), r * 1.6, PI * 1.07, PI * 1.93, 60, c2.lerp(c1, 0.5 + 0.1 * k), 6.0)
-			for fx: float in [0.18, 0.82]:
-				_escena.draw_rect(Rect2(w * fx - 4, h * 0.26, 8, h * 0.4), Color(0.7, 0.72, 0.7, 0.9))
-				_escena.draw_rect(Rect2(w * fx - 34, h * 0.2, 68, 34), Color(1, 0.95, 0.75, 0.95))
-			if _club != null:
-				var tex := Escudo.textura(_club, 220)
-				_escena.draw_texture_rect(tex, Rect2(w * 0.5 - 110, h * 0.2, 220, 220), false)
-		"vestuario":
-			for k in 8:
-				var x := w * 0.08 + k * (w * 0.84 / 8.0)
-				_escena.draw_rect(Rect2(x, h * 0.18, w * 0.84 / 8.0 - 14, h * 0.5), c1.lerp(Color(0.5, 0.35, 0.2), 0.45))
-				_escena.draw_rect(Rect2(x + 8, h * 0.22, w * 0.84 / 8.0 - 30, 26), Color(c2, 0.9))
-			_escena.draw_rect(Rect2(w * 0.08, h * 0.7, w * 0.84, 22), Color(0.55, 0.38, 0.22))
-		"tunel":
-			for k in 7:
-				var f := 1.0 - 0.13 * k
-				var anc := w * 0.62 * f
-				var alt := h * 0.8 * f
-				_escena.draw_rect(Rect2(w * 0.5 - anc * 0.5, h * 0.62 - alt * 0.95, anc, alt), c1.lerp(oscuro, 0.5 + 0.07 * k), false, 6.0)
-			_escena.draw_rect(Rect2(w * 0.5 - 70, h * 0.62 - 150, 140, 150), Color(0.55, 0.85, 0.5, 0.95))   ## la luz del campo al fondo
-		"banquillo":
-			_escena.draw_rect(Rect2(w * 0.2, h * 0.5, w * 0.6, 26), Color(c2, 0.9))
-			for k in 6:
-				_escena.draw_circle(Vector2(w * 0.24 + k * (w * 0.52 / 5.0), h * 0.44), 22, Color(0.75, 0.6, 0.45))
-				_escena.draw_rect(Rect2(w * 0.24 + k * (w * 0.52 / 5.0) - 22, h * 0.46, 44, 46), c1.lerp(c2, 0.35))
-			_escena.draw_rect(Rect2(0, h * 0.7, w, 5), Color(1, 1, 1, 0.5))
-		"despacho":
-			_escena.draw_rect(Rect2(w * 0.18, h * 0.5, w * 0.64, 28), Color(0.5, 0.33, 0.2))
-			_escena.draw_rect(Rect2(w * 0.2, h * 0.52, 16, h * 0.18), Color(0.4, 0.26, 0.16))
-			_escena.draw_rect(Rect2(w * 0.78, h * 0.52, 16, h * 0.18), Color(0.4, 0.26, 0.16))
-			_escena.draw_rect(Rect2(w * 0.38, h * 0.14, w * 0.24, h * 0.26), Color(0.5, 0.75, 0.9, 0.55))   ## la ventana
-			_escena.draw_rect(Rect2(w * 0.36, h * 0.38, w * 0.28, 12), Color(c2, 0.9))
-			for k in 3:
-				_escena.draw_circle(Vector2(w * (0.3 + 0.2 * k), h * 0.46), 26, Color(0.2, 0.2, 0.25))
-		"oficina":
-			_escena.draw_rect(Rect2(w * 0.3, h * 0.26, w * 0.4, h * 0.3), Color(0.05, 0.06, 0.08))
-			_escena.draw_rect(Rect2(w * 0.3, h * 0.26, w * 0.4, h * 0.3), Color(c2, 0.9), false, 5.0)
-			_escena.draw_rect(Rect2(w * 0.32, h * 0.29, w * 0.36, h * 0.24), Color(c1.lerp(Tema.ACENTO, 0.5), 0.55))
-			_escena.draw_rect(Rect2(w * 0.46, h * 0.56, w * 0.08, h * 0.08), Color(0.3, 0.3, 0.33))
-			_escena.draw_rect(Rect2(w * 0.4, h * 0.64, w * 0.2, 14), Color(0.3, 0.3, 0.33))
-			_escena.draw_rect(Rect2(w * 0.18, h * 0.7, w * 0.64, 20), Color(0.5, 0.33, 0.2))
 	## La banda oscura de abajo (detrás del título y del texto), con un degradado hacia arriba.
 	var y0 := h * 0.74
 	_escena.draw_polygon(PackedVector2Array([Vector2(0, y0), Vector2(w, y0), Vector2(w, h), Vector2(0, h)]),
