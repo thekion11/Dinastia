@@ -168,11 +168,7 @@ func once(f: String = "") -> Array[Jugador]:
 	var usados := {}
 	## Los porteros primero: si se reparten al final, el mejor arquero ya se fue
 	## de central y la ranura de porteria se llena con quien sobre.
-	var orden: Array = []
-	for i in ranuras.size():
-		orden.append(i)
-	orden.sort_custom(func(a: int, b: int) -> bool:
-		return _es_puesto_portero(ranuras[a]) and not _es_puesto_portero(ranuras[b]))
+	var orden: Array = OnceAuto.orden_de(ranuras)   ## (10-11) el orden depende solo de la formación: se calcula una vez
 
 	## La primera vuelta (el mejor libre para cada ranura, porteros primero) vive en `OnceAuto`: en C++ si la extensión está, y si no, el mismo bucle en GDScript.
 	var asignado := OnceAuto.asignar(libres, ranuras, orden)
