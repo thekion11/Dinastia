@@ -36,13 +36,23 @@ static func cambiar(arbol: SceneTree, ruta: String) -> void:
 	if is_instance_valid(carga):
 		carga._destino = maxf(carga._destino, 0.85)
 		carga._etapa.text = Idiomas.t("Preparando tu club…")
-	await PantallaCarga.dejar_pintar(arbol)   ## la barra y el texto nuevos, dibujados ANTES de que el montaje bloquee el hilo
+	await PantallaCarga.dejar_pintar(arbol)   ## la barra y el texto nuevos, dibujados ANTES del montaje
+	PedidoPartida.montaje_en_trozos = OS.get_environment("SIN_TROZOS") == ""   ## (SIN_TROZOS=1: diagnóstico, el montaje de golpe de antes) `Principal._ready` monta la interfaz en trozos (un paso por fotograma) y marca `montaje_listo` al acabar
+	PedidoPartida.montaje_avance = 0.0
 	if escena != null:
 		arbol.change_scene_to_packed(escena)
 	else:
 		arbol.change_scene_to_file(ruta)
 	while arbol.current_scene == vieja or arbol.current_scene == null:
 		await arbol.process_frame
+	## Con la carga encima, el montaje por trozos se sigue; la carga NO se quita hasta que acaba (la primera vista del menú no sale a medias). Tope de 30 s por si una escena no avisa (no es `Principal`).
+	var t0 := Time.get_ticks_msec()
+	while not PedidoPartida.montaje_listo and Time.get_ticks_msec() - t0 < 30000:
+		if is_instance_valid(carga):
+			carga._destino = maxf(carga._destino, 0.85 + 0.14 * PedidoPartida.montaje_avance)
+		await arbol.process_frame
+	PedidoPartida.montaje_en_trozos = false
+	PedidoPartida.montaje_listo = true
 	await PantallaCarga.estabilizar(arbol, 4)
 	if is_instance_valid(carga):
 		carga._destino = 1.0

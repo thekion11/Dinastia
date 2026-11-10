@@ -403,5 +403,17 @@ candidato a la extensión C++ (fase 5). La cifra total por paso varía ±150 µs
 cronometra la locomoción aparte.
 Revisado con `LADO=1 pruebas/_sonda/captura_giro_league.tscn` (cámara fija de costado, Forward+, BRA e ITA): carrera lateral
 mirando al balón, frenada con el cuerpo a 135° y vuelta a encarar el juego, sin poses rotas.
-Sin portar todavía: el pie de apoyo y las animaciones intermedias que genera `AnimCollection` (`GenerateAutoAnims`: mezcla de dos
-plantillas en 9 direcciones, con sus reglas de qué es legal).
+
+### Fase 4c, parte 6: el pie de apoyo (10-11)
+Copia de `CompareFootSimilarity` / `GetOutgoingFoot`. Cada clip empieza moviendo el pie derecho (el espejo, el izquierdo) y deja
+para el siguiente el mismo pie si tiene un número par de pasos (`steps`, ahora en `datos/league_movimiento.json`) o el otro si es
+impar. En el original, tras quedarse con el mejor cuadrante de movimiento y de cuerpo, las ordenaciones estables posteriores hacen
+del pie el criterio que decide entre los que quedan (parado no cuenta): `LeagueMovimiento.elegir(…, pie)` toma, entre los del
+mismo cuadrante que miran igual (±0,06π), el que empieza con el pie que toca. El pie que toca (`LeagueLocomocion.pie_que_toca`):
+tras un clip, su pie de salida; en un ciclo, el que va en el aire (por `AnimPasos.fases`, la fase medida en que apoya el izquierdo;
+en los de League y las plantillas, el derecho en la primera mitad). Efecto: al acelerar o girar ya no se repite siempre el mismo
+pie (antes ganaba el primero de cada par espejado); la pierna que estaba en el aire sigue en el aire. Huellas iguales con
+`LS_LOCO=0/1` (tras fusionar `main` las huellas de referencia cambiaron: 0-0 y 0-1, por cambios de `main`). Coste propio de la
+locomoción: ~110-140 µs/paso.
+Sin portar todavía: las animaciones intermedias que genera `AnimCollection` (`GenerateAutoAnims`: mezcla de dos plantillas en 9
+direcciones, con sus reglas de qué es legal).

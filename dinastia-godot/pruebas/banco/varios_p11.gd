@@ -74,3 +74,13 @@ func _probar_league_movimiento() -> void:
 	_comprobar(absf(LeagueMovimiento.mirada(1.0, 0.0, 0.0) - 1.0) < 0.001 and LeagueMovimiento.mirada(1.0, 8.0, 8.0) < 0.85, "la mirada va al balón entera parado y menos a toda carrera")
 	var de_lado := LeagueMovimiento.elegir(3.5, 0.0, 3.5, 0.0, -0.25 * PI)
 	_comprobar(absf(float(de_lado.get("cuerpo_sale", 0.0)) + 0.25 * PI) < 0.2, "al trote, de frente y queriendo mirar 45° a la derecha: un clip que deja el cuerpo a -45° (%s)" % de_lado.get("nombre", ""))
+	## El pie (L `CompareFootSimilarity`, `GetOutgoingFoot`).
+	var der := String(LeagueMovimiento.elegir(5.0, 0.0, 8.0, 0.0, NAN, "D").get("nombre", ""))
+	var izq := String(LeagueMovimiento.elegir(5.0, 0.0, 8.0, 0.0, NAN, "I").get("nombre", ""))
+	_comprobar(der == "ls_movement__walk__000_accel" and izq == "ls_movement__walk__000_accel_espejo", "acelerando de frente: el clip que empieza con el pie que toca (%s / %s)" % [der, izq])
+	var dos_pasos: Dictionary = {}
+	for c: Dictionary in LeagueMovimiento.clips():
+		if String(c["nombre"]) == "ls_movement__dribble__135":
+			dos_pasos = c
+	_comprobar(String(dos_pasos.get("pie_sale", "")) == "D", "un clip de 2 pasos que empieza con el derecho deja el derecho para el siguiente")
+	_comprobar(String(LeagueMovimiento.elegir(0.0, 0.0, 5.0, 0.0, NAN, "I").get("nombre", "")) == "ls_movement__idle__000_accel", "parado, el pie no cuenta (como el original)")

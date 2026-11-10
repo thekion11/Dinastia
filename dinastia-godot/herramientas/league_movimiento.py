@@ -5,7 +5,8 @@ Lee las animaciones de locomoción originales (terceros/league_soccer/animacione
 guarda en datos/league_movimiento.json, por cada una, lo que el original calcula de su pista de raíz «player» y de «body»
 (L utils/animation.cpp): velocidad de entrada y de salida ya escalonadas (0 / 3,5 / 5 / 7 m/s, GetIncomingVelocity y
 GetOutgoingVelocity), el ángulo de salida (GetOutgoingAngle: el del último tramo de la raíz o, parado, el giro del cuerpo), el
-giro del cuerpo al terminar (GetOutgoingBodyAngle), el nivel de reposo («idlelevel») y la duración. Marco de League: el jugador
+giro del cuerpo al terminar (GetOutgoingBodyAngle), el nivel de reposo («idlelevel»), los pasos («steps»: con un número impar
+el pie que toca cambia, GetOutgoingFoot) y la duración. Marco de League: el jugador
 mira a -Y, su izquierda es +X; ángulo positivo = hacia la izquierda (igual que nuestro giro en Y). El espejo se obtiene
 cambiando el signo de los ángulos. Lo usa `visor/league_movimiento.gd`.
 Uso: python3 herramientas/league_movimiento.py   (rutas fijas dentro del proyecto)
@@ -90,6 +91,7 @@ def _ficha(ruta):
         "entra": _escalon(v_in), "sale": _escalon(v_out), "ang": round(ang, 4), "cuerpo": round(giro_fin, 4),
         "cuerpo_ini": round(_modular(_giro_z(cuerpo[0][1])), 4),
         "reposo": int(variables.get("idlelevel", "1") or 1), "largo": round(pl[-1][0] / 100.0, 3),
+        "pasos": int(variables.get("steps", "1") or 1),
     }
 
 

@@ -62,3 +62,10 @@ static func aplicar(m: Mundo) -> void:
 			m.fondo = FondoInversion.new()
 			m.fondo.caja = int(round(Eco.ref_caja(70.0) * 2.5))
 		modo_elegido = ""
+
+## (10-11-2026, arranque) MONTAJE DEL MENÚ EN TROZOS detrás de la pantalla de carga (`CargaMenu`): `Principal._ready` construye la interfaz en varios pasos, uno por fotograma, para que la carga se siga animando
+## (el montaje de golpe bloqueaba el hilo 1-2 s). Solo lo pide `CargaMenu` (con pantalla, no en headless/banco): en cualquier otro camino el montaje es de un solo paso, como siempre.
+## `montaje_avance` (0-1) lo escribe `Principal` en cada paso (la barra de la carga lo lee); `montaje_listo` sube al terminar (la carga se quita solo entonces).
+static var montaje_en_trozos := false
+static var montaje_avance := 0.0
+static var montaje_listo := true

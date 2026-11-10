@@ -48,6 +48,8 @@ static func clips() -> Array:
 						"sale": rango(float(f["sale"])), "ang": float(f["ang"]) * s, "cuerpo": float(f["cuerpo"]) * s,
 						"cuerpo_ini": float(f["cuerpo_ini"]) * s, "reposo": int(f["reposo"]), "largo": float(f["largo"])}
 					## `GetOutgoingBodyAngle`: el cuerpo al salir, respecto a la marcha de salida (parado, 0).
+					c["pie"] = "I" if espejo else "D"   ## el que mueve primero (los clips empiezan con el derecho; el espejo, con el izquierdo)
+					c["pie_sale"] = c["pie"] if int(f.get("pasos", 1)) % 2 == 0 else ("D" if espejo else "I")   ## `GetOutgoingFoot`
 					c["cuerpo_sale"] = wrapf(float(c["cuerpo"]) - float(c["ang"]), -PI, PI) if float(c["sale"]) >= IDLE_DRIBBLE else 0.0
 					c["pref"] = preferida(float(c["ang"]))
 					c["cuerpo_ini_q"] = cuerpo_permitido(float(c["cuerpo_ini"]))
@@ -152,7 +154,10 @@ static func similitud_cuerpo(c: Dictionary, dir: Vector2, mirar: float) -> float
 
 ## El clip del original para ir de la velocidad `sp` (con el cuerpo a `cuerpo` de la marcha) a `vel_deseada` hacia `rel`
 ## (radianes respecto a la marcha, + izquierda), queriendo mirar a `mirar` (NAN: sin preferencia). Devuelve {} si no hay ninguno.
-static func elegir(sp: float, rel: float, vel_deseada: float, cuerpo := 0.0, mirar := NAN) -> Dictionary:
+## `pie`: el que toca mover («D»/«I»; "" sin preferencia). En el original, tras quedarse con el mejor cuadrante de movimiento y de
+## cuerpo, las ordenaciones estables que vienen después (pie, cuerpo y velocidad de entrada; las dos últimas ya iguales por la
+## consulta estricta) hacen del PIE el criterio que decide entre los que quedan (`CompareFootSimilarity`; parado, da igual).
+static func elegir(sp: float, rel: float, vel_deseada: float, cuerpo := 0.0, mirar := NAN, pie := "") -> Dictionary:
 	var entra := rango(sp)
 	var deseada := rango(vel_deseada)
 	var cuerpo_q := cuerpo_permitido(cuerpo) if entra != IDLE else 0.0
@@ -168,20 +173,35 @@ static func elegir(sp: float, rel: float, vel_deseada: float, cuerpo := 0.0, mir
 		if v < mv:
 			mv = v
 			mejor = c
-	if mejor.is_empty() or is_nan(mirar):
+	if mejor.is_empty():
 		return mejor
 	## El mismo cuadrante de movimiento (velocidad de salida y dirección preferida) y, dentro, el mejor cuerpo.
 	var q_ang: Vector2 = mejor["pref"]
+	var cuadrante: Array = []
 	var mc := INF
 	var elegido := mejor
 	for c: Dictionary in candidatos:
 		if float(c["sale"]) != float(mejor["sale"]) or (c["pref"] as Vector2).dot(q_ang) < 0.999:
 			continue
+		cuadrante.append(c)
+		if is_nan(mirar):
+			continue
 		var r := similitud_cuerpo(c, dir, mirar)
 		if r < mc:
 			mc = r
 			elegido = c
+	if pie == "" or entra == IDLE or String(elegido["pie"]) == pie:
+		return elegido
+	## Los que miran igual que el elegido (±0,06π, `_KeepBestBodyDirectionAnims`) y empiezan con el pie que toca.
+	var mira := _mira(elegido)
+	for c: Dictionary in cuadrante:
+		if String(c["pie"]) == pie and (is_nan(mirar) or absf(angle_difference(_mira(c), mira)) <= 0.06 * PI):
+			return c
 	return elegido
+
+## Hacia dónde queda mirando un clip (cuerpo permitido + dirección preferida de salida).
+static func _mira(c: Dictionary) -> float:
+	return cuerpo_permitido(float(c["cuerpo_sale"])) + Vector2(0, -1).angle_to(c["pref"] as Vector2)
 
 ## ¿Es un clip de paso estable (misma velocidad, de frente, el cuerpo igual)? Esos ya los cubren los ciclos.
 static func estable(c: Dictionary) -> bool:

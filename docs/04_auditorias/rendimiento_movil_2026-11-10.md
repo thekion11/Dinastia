@@ -123,6 +123,17 @@ Memoria: portada 219 MB estática (248 desde fuentes), vídeo 54 MB; menú real 
 **Lo que queda del montaje (~1,2 s):** construir la interfaz de verdad (~0,9 s: menú lateral ~0,17 s, cabecera ~0,2 s, fondo ~0,14 s, columnas) y la sección de inicio y el panel de objetivos. Ya no es compilación: son nodos, estilos y fuentes. Siguiente palanca: partir esa construcción en trozos entre fotogramas detrás de la pantalla de carga (hay que reordenar `_montar_*`: los controles que el primer fotograma no enseña, como las listas de las otras pestañas, ya van con `_perezoso`).
 **Bonus (impostores):** ocultar ojos, cejas y pestañas ahorra solo 1-4 llamadas en BAJA (CHI 316→315, ESP 307→303, ENG 250→247): ya se descartan por distancia, así que esos impostores no aportan nada; lo que pesa de los jugadores es el cuerpo, la ropa y el pelo (−11 % con jugadores y pelo fuera en MEDIA).
 
+## Arranque, cuarta parte: montaje del menú en trozos detrás de la pantalla de carga (10-11, noche)
+**Qué:** con la pantalla de carga encima (`CargaMenu`), `Principal._ready` monta la interfaz en pasos, uno por fotograma (`ConstruirMenu._construir_en_trozos`: fondo → cabecera → carril → columnas), y `Principal` no procesa nada (`process_mode` desactivado) hasta acabar; la carga se quita SOLO cuando `PedidoPartida.montaje_listo` sube (la primera vista del menú no sale a medias; tope de seguridad de 30 s) y su barra sigue `PedidoPartida.montaje_avance`. **Headless/banco y cualquier camino sin `CargaMenu`: montaje de un solo paso, igual que antes** (la bandera `montaje_en_trozos` solo la pone `CargaMenu` y se comprueba que haya pantalla). `SIN_TROZOS=1` apaga el troceado (diagnóstico).
+**Medido** (`medir_carga_menu`, ESP club 5, 2 núcleos, llvmpipe, con la precarga hecha como en el juego; 2 repeticiones cada uno):
+| | Sin trocear | Troceado |
+|---|---|---|
+| Mayor congelación (hueco entre fotogramas con la carga puesta) | **3,7 s** | **2,8-2,95 s** (+ un hueco de 0,5-0,7 s tras las columnas) |
+| Fotogramas dibujados con la carga puesta | 15-16 | 19-20 |
+| Tiempo desde que se pulsa hasta que se quita la carga | 5,7 s | 5,8-6,4 s |
+**Lectura honesta:** trocear reparte la construcción (el anillo y la barra de la carga se siguen moviendo entre pasos) pero NO acorta el total (en llvmpipe cada fotograma extra cuesta; en un teléfono un fotograma con la carga es barato). Lo que queda como mayor congelación (~2,8 s) es el PRIMER DIBUJADO de la interfaz recién montada (compilación de shaders: en llvmpipe es LLVM; en un teléfono, el controlador de la GPU): no depende de cómo se construya, solo se puede medir en el teléfono. Si allí tampoco ayuda, `SIN_TROZOS` queda como interruptor y el cambio se revierte quitando una línea de `CargaMenu`.
+Pruebas: banco FIN. 0 fallos, `mem_menu_estadio` y `prueba_menu_ciudad_pie` 0 fallos, «pasan de 450: 0».
+
 ## Lo que NO se hizo (y por qué) / siguiente
 - **La meta de ULTRA BAJA (< 130 llamadas) NO se cumple**: 198-260. No se ha recortado nada más porque lo que quita llamadas es visual y hay que decidirlo: ojos y cejas de los jugadores lejanos (81 llamadas), pelo (136), hinchas (157 llamadas / 135 k triángulos) y butacas lejanas (230 k triángulos, −12 % de fotograma). Propuesta para el dueño: en ULTRA BAJA, sin ojos/cejas/pestañas a más de 12 m de la cámara; hinchas y butacas lejanas como una sola malla por grada con menos detalle. Se aplica cuando lo apruebe el dueño (regla: no quitar nada sin decirlo).
 - Luces omni, post-proceso y gente fuera del campo no pesan en este banco: no se tocan.
