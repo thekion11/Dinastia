@@ -232,6 +232,8 @@ func _probar_presets_exportacion() -> void:
 			if not excl.contains(p):
 				faltan.append(p)
 		_comprobar(faltan.is_empty(), "%s excluye el pack real y las fotos reales %s" % [nombre, str(faltan) if not faltan.is_empty() else ""])
+		## (10-11-2026, orden 36 del dueño) la biblioteca de caras es pública: mezclas de 4 jugadores, no personas reales
+		_comprobar(not excl.contains("caras_biblioteca") and not excl.contains("biblioteca_caras"), "%s lleva la biblioteca de caras (pública)" % nombre)
 
 ## LOS NUEVE EVENTOS NUEVOS (25-9-2026, plan maestro B4). Cada uno aparece en la
 ## baraja cuando se dan sus condiciones y sus DOS salidas mueven algo medible

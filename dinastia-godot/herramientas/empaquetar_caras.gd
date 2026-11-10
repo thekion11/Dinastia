@@ -6,11 +6,12 @@ extends SceneTree
 ##   godot --headless --path . --script res://herramientas/empaquetar_caras.gd -- <destino.pck>
 
 const CARPETAS := ["res://recursos/caras_reales_256", "res://recursos/caras_reales_cara",
-	"res://recursos/caras_reales_albedo", "res://recursos/caras_biblioteca"]
+	"res://recursos/caras_reales_albedo"]
 const ARCHIVOS := ["res://datos/pack_real.json", "res://datos/caras_reales_reporte.json",
 	"res://datos/caras_reales_recortes.json", "res://datos/caras_reales_puntos.json",
 	"res://datos/caras_reales_rasgos.json", "res://datos/caras_reales_mallas.json",
-	"res://datos/biblioteca_caras.json", "res://datos/creditos_fotos.txt"]
+	"res://datos/creditos_fotos.txt"]
+## La biblioteca de caras (mezclas, no personas) ya no va aquí: es pública desde el 10-11-2026 (orden 36 del dueño).
 
 func _init() -> void:
 	var args := OS.get_cmdline_user_args()
