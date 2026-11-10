@@ -205,7 +205,7 @@ const SECCIONES := [
 	"_probar_optimizacion",
 	"_probar_dinastias",
 	"_probar_documental",
-	"_probar_capitulos", "_probar_ascensor_viaje", "_probar_fila_proximos", "_probar_eventos_fecha", "_probar_casa_plano", "_probar_intercambio_once", "_probar_partido_despedida", "_probar_homenaje_despedida", "_probar_camisetas_retiradas_vista", "_probar_estilo_plantilla", "_probar_gestion_once", "_probar_final_temporada", "_probar_habilidades_y_calor", "_probar_puerta_animada", "_probar_flecha_forma", "_probar_quimica_linea", "_probar_objetivo_directiva", "_probar_jugador_del_mes", "_probar_estrategia_rapida", "_probar_copas_mundo", "_probar_selector_direccional", "_probar_eventos_club", "_probar_festejos_titulo", "_probar_torneos_selecciones", "_probar_cargo_seleccionador", "_probar_convocatoria_seleccion", "_probar_puertas_ascensor", "_probar_objetivos_por_club",
+	"_probar_capitulos", "_probar_ascensor_viaje", "_probar_fila_proximos", "_probar_eventos_fecha", "_probar_casa_plano", "_probar_intercambio_once", "_probar_partido_despedida", "_probar_homenaje_despedida", "_probar_camisetas_retiradas_vista", "_probar_estilo_plantilla", "_probar_gestion_once", "_probar_final_temporada", "_probar_habilidades_y_calor", "_probar_puerta_animada", "_probar_flecha_forma", "_probar_quimica_linea", "_probar_objetivo_directiva", "_probar_jugador_del_mes", "_probar_estrategia_rapida", "_probar_copas_mundo", "_probar_selector_direccional", "_probar_eventos_club", "_probar_festejos_titulo", "_probar_torneos_selecciones", "_probar_cargo_seleccionador", "_probar_convocatoria_seleccion", "_probar_puertas_ascensor", "_probar_objetivos_por_club", "_probar_league_nucleo",
 	"_probar_tribuna_real",
 	"_probar_narracion_traducida",
 	"_probar_rotulo_y_sala",
