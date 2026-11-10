@@ -128,3 +128,6 @@ MLI a 14 clubes, BFA con Rahimo FC, CPV/LBY/CGO corregidas con RSSSF. Cifras: 13
 
 ## Pasada RSSSF (10-11)
 104 países comparados con la tabla final de RSSSF (curdom.html): ~40 corregidos, ~60 verificados iguales, ~13 ambiguos. Cifras: 135 países, 147 ligas, 2.198 clubes, 54.950 jugadores en clubes. Detalle: `datos_dudosos_2026-11-10.md` (sección «PASADA RSSSF»).
+
+## Ambiguos y países base (10-11)
+ARM 12 y ZAM 20 (2026/27, provisional), MDA con Real Sireți, COD 20; FIN, NOR, CHN, KEN, MAD verificados con Wikipedia local; PLE, NZL, HAI sin cambios. Los 28 países base comparados con RSSSF solo en cantidad y nombre (sin tocar): cantidades iguales; diferencias reales en BRA, URU, ECU, BOL, KOR, JPN, MAR y RSA (ver `datos_dudosos_2026-11-10.md`). Cifras: 135 países, 147 ligas, 2.206 clubes, 55.150 jugadores en clubes.
