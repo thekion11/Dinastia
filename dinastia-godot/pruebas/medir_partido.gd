@@ -28,9 +28,13 @@ var _proceso: Array[float] = []
 
 func _ready() -> void:
 	Calidad.elegida = Calidad.nivel_de_argumentos(Calidad.ALTO)
+	## (10-11) SIN_MSAA=1: apaga el MSAA del viewport (como la «Prueba de rendimiento» de Ajustes) para medir cuánto cuesta en cada nivel.
+	Calidad.sin_msaa = OS.get_environment("SIN_MSAA") != ""
 	var mundo := Mundo.new()
-	mundo.generar(["CHI"], 4711)
-	mundo.mi_club_id = mundo.ligas[0].clubes[0].id
+	## (10-11) PAIS=ESP CLUB=5: otro país y otro club (regla del dueño: nunca medir con un solo equipo).
+	var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"
+	mundo.generar([pais], 4711)
+	mundo.mi_club_id = mundo.ligas[0].clubes[int(OS.get_environment("CLUB")) % mundo.ligas[0].clubes.size()].id
 	var par := mundo.proximo_partido()
 	_vista = VistaEstadio.new()
 	add_child(_vista)
@@ -126,6 +130,19 @@ func _process(_d: float) -> void:
 				(esq as Node3D).visible = false
 				ocultos += 1
 		print("SIN_GENTE_FUERA: %d esqueletos ocultos" % ocultos)
+	if _n == CALENTAR and OS.get_environment("SIN_OMNI") != "":
+		## SIN_OMNI=1 (10-11): apaga todas las luces omni (túneles y edificio del club): en Compatibilidad cada luz cuesta en el sombreado de los objetos que toca.
+		for l in _vista.find_children("*", "OmniLight3D", true, false):
+			(l as Light3D).visible = false
+	if _n == CALENTAR and OS.get_environment("SIN_ENTORNO_FX") != "":
+		## SIN_ENTORNO_FX=1 (10-11): apaga glow, niebla y ajuste de color del WorldEnvironment (post-proceso a pantalla completa).
+		for we in _vista.find_children("*", "WorldEnvironment", true, false):
+			var en: Environment = (we as WorldEnvironment).environment
+			if en != null:
+				en.glow_enabled = false
+				en.fog_enabled = false
+				en.adjustment_enabled = false
+				en.ssao_enabled = false
 	if _n == CALENTAR and OS.get_environment("SIN_SOMBRAS") != "":
 		## SIN_SOMBRAS=1 (19-10-2026): cuánto de lo dibujado son las sombras.
 		for l in _vista.find_children("*", "Light3D", true, false):
@@ -158,7 +175,9 @@ func _process(_d: float) -> void:
 			Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0])
 		for l in _vista.find_children("*", "Light3D", true, false):
 			var dl := l as DirectionalLight3D
-			print("LUZ %s sombra=%s%s" % [l.name, (l as Light3D).shadow_enabled, "" if dl == null else " cortes=%d dist=%.0f" % [dl.directional_shadow_mode, dl.directional_shadow_max_distance]])
+			var ol := l as OmniLight3D
+			print("LUZ %s sombra=%s%s%s" % [l.name, (l as Light3D).shadow_enabled, "" if dl == null else " cortes=%d dist=%.0f" % [dl.directional_shadow_mode, dl.directional_shadow_max_distance],
+				"" if ol == null else " omni rango=%.1f energia=%.2f visible=%s padre=%s/%s" % [ol.omni_range, ol.light_energy, str(ol.is_visible_in_tree()), l.get_parent().name if l.get_parent() != null else "", l.get_parent().get_parent().name if l.get_parent() != null and l.get_parent().get_parent() != null else ""]])
 		if OS.get_environment("DETALLE") != "":
 			for f: Dictionary in Optimizar.informe(_vista, 25):
 				print("DETALLE tris=%d piezas=%d corte=%.0f  %s" % [f["tris"], f["piezas"], f["corte"], f["clave"]])
