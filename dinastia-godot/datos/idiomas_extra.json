@@ -7818,7 +7818,8 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "No heavy effects and no anti-aliasing on phones and web: maximum smoothness",
   "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "When you're ready: [b]Manage the match[/b] to play it live -substitutions, instructions, the half-time talk-, or [b]Advance week[/b]: on match day the match menu opens and there you choose to play it or simulate it.",
   "Cargando…": "Loading…",
-  "Preparando tu club…": "Getting your club ready…"
+  "Preparando tu club…": "Getting your club ready…",
+  "contra": "vs"
  },
  "pt": {
   "Historia": "História",
@@ -15639,7 +15640,8 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sem efeitos pesados e sem suavização em celular e web: máxima fluidez",
   "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "Quando estiver pronto: [b]Dirigir a partida[/b] para jogá-la ao vivo -substituições, ordens, conversa no intervalo-, ou [b]Avançar semana[/b]: no dia do jogo abre-se o menu da partida e ali você escolhe jogá-la ou simulá-la.",
   "Cargando…": "Carregando…",
-  "Preparando tu club…": "Preparando o seu clube…"
+  "Preparando tu club…": "Preparando o seu clube…",
+  "contra": "contra"
  },
  "patrones": [
   [
@@ -29567,7 +29569,8 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sans effets lourds et sans anticrénelage sur téléphone et web : fluidité maximale",
   "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "Quand vous serez prêt : [b]Diriger le match[/b] pour le jouer en direct -changements, consignes, causerie à la mi-temps-, ou [b]Avancer la semaine[/b] : le jour du match, le menu du match s'ouvre et vous choisissez de le jouer ou de le simuler.",
   "Cargando…": "Chargement…",
-  "Preparando tu club…": "Préparation de votre club…"
+  "Preparando tu club…": "Préparation de votre club…",
+  "contra": "contre"
  },
  "it": {
   "Historia": "Storia",
@@ -37388,7 +37391,8 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Senza effetti pesanti e senza antialiasing su telefono e web: massima fluidità",
   "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "Quando è pronto: [b]Dirigi la partita[/b] per giocarla in diretta -cambi, ordini, discorso all'intervallo-, oppure [b]Avanza settimana[/b]: il giorno della partita si apre il menu della partita e lì scegli se giocarla o simularla.",
   "Cargando…": "Caricamento…",
-  "Preparando tu club…": "Preparazione del tuo club…"
+  "Preparando tu club…": "Preparazione del tuo club…",
+  "contra": "contro"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45209,7 +45213,8 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ohne aufwendige Effekte und ohne Kantenglättung auf Handy und Web: maximale Flüssigkeit",
   "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "Wenn Sie so weit sind: [b]Spiel leiten[/b], um es live zu spielen -Wechsel, Anweisungen, Halbzeitansprache-, oder [b]Woche vorrücken[/b]: Am Spieltag öffnet sich das Spielmenü, und dort wählen Sie, ob Sie es spielen oder simulieren.",
   "Cargando…": "Laden …",
-  "Preparando tu club…": "Dein Verein wird vorbereitet …"
+  "Preparando tu club…": "Dein Verein wird vorbereitet …",
+  "contra": "gegen"
  },
  "ca": {
   "Historia": "Història",
@@ -53030,7 +53035,8 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sense efectes pesats i sense suavitzat en mòbil i web: màxima fluïdesa",
   "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "Quan estigui a punt: [b]Dirigir el partit[/b] per jugar-lo en directe -canvis, ordres, xerrada al descans-, o [b]Avançar setmana[/b]: el dia de partit s'obre el menú del partit i allà tries jugar-lo o simular-lo.",
   "Cargando…": "Carregant…",
-  "Preparando tu club…": "Preparant el teu club…"
+  "Preparando tu club…": "Preparant el teu club…",
+  "contra": "contra"
  },
  "pl": {
   "Club": "Klub",
@@ -60851,7 +60857,8 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Bez ciężkich efektów i bez wygładzania na telefonie i w przeglądarce: maksymalna płynność",
   "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "Kiedy będzie pan gotów: [b]Poprowadź mecz[/b], żeby rozegrać go na żywo -zmiany, polecenia, odprawa w przerwie-, albo [b]Następny tydzień[/b]: w dniu meczu otwiera się menu meczu i tam wybiera pan, czy go rozegrać, czy zasymulować.",
   "Cargando…": "Ładowanie…",
-  "Preparando tu club…": "Przygotowywanie twojego klubu…"
+  "Preparando tu club…": "Przygotowywanie twojego klubu…",
+  "contra": "przeciw"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68672,6 +68679,7 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ağır efekt yok, telefon ve web'de kenar yumuşatma yok: azami akıcılık",
   "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "Hazır olduğunuzda: maçı canlı oynamak için [b]Maçı yönet[/b] -oyuncu değişiklikleri, talimatlar, devre arası konuşması- ya da [b]Haftayı ilerlet[/b]: maç günü maç menüsü açılır ve oradan oynamayı ya da simüle etmeyi seçersiniz.",
   "Cargando…": "Yükleniyor…",
-  "Preparando tu club…": "Kulübün hazırlanıyor…"
+  "Preparando tu club…": "Kulübün hazırlanıyor…",
+  "contra": "karşı"
  }
 }
