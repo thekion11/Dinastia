@@ -24,6 +24,20 @@ static func conducir(lib: AnimationLibrary, prefijo: String) -> void:
 		if a != null and not lib.has_animation(clave):
 			lib.add_animation(clave, a)
 
+## ARRANQUES, FRENADAS Y GIROS DEL ORIGINAL (10-11, fase 4c): los clips de `LeagueMovimiento` (y sus espejos), con su nombre
+## real, sin bucle. NO van en la biblioteca horneada (el motor de siempre no los usa): `LeagueLocomocion.preparar` los añade en
+## el partido, una vez por biblioteca, cuando juega `MotorLeague`.
+static func movimiento(lib: AnimationLibrary, prefijo: String) -> void:
+	for c: Dictionary in LeagueMovimiento.clips():
+		var nombre := String(c["nombre"])
+		if lib.has_animation(nombre):
+			continue
+		var a: Animation = load("res://visor/anim_quaternius.gd").cargar_real(nombre, prefijo)
+		if a != null:
+			a = a.duplicate(true) as Animation
+			a.loop_mode = Animation.LOOP_NONE
+			lib.add_animation(nombre, a)
+
 ## Un ciclo en bucle: el paso de League y su espejo seguidos.
 static func ciclo_de(nombre_real: String, prefijo: String) -> Animation:
 	var a: Animation = load("res://visor/anim_quaternius.gd").cargar_real(nombre_real, prefijo)

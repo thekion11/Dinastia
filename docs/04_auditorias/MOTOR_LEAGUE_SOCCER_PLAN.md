@@ -354,4 +354,23 @@ se ajusta a la del jugador (velocidad / referencia, entre 0,7 y 1,4) para que lo
 cuando no hay un gesto en curso). Revisado: `pruebas/_sonda/captura_conducir_league.tscn` (los 3 ciclos lado a lado, dos clubes de
 ARG y ESP) y `pruebas/_sonda/captura_partido_league.tscn` (cámara real del partido, Forward+, Boedo AC – Madrigal CF): paso
 completo, balón pegado al pie, sin poses rotas. Banco «FIN. 0 fallos»; sin cambios en el motor de siempre.
-Siguiente (misma fase): arranques, frenadas y giros del original (`ls_turn__*`, `ls_stop__*`) para los jugadores sin balón.
+
+### Fase 4c, parte 4: arranques, frenadas y giros del original (10-11, detrás de `MOTOR_LEAGUE`; `LS_LOCO=0` los apaga)
+Las 19 animaciones de locomoción del original (`movement/<velocidad>/*.anim`) y sus espejos. `herramientas/league_movimiento.py`
+saca de su pista de raíz lo que calcula `utils/animation.cpp` (velocidad de entrada y salida escalonadas, ángulo de salida, giro
+final del cuerpo) a `datos/league_movimiento.json`; `visor/league_movimiento.gd` copia la elección de `HumanoidBase::SelectAnim`
+para el movimiento (entrada estricta por clase de velocidad, `GetMovementSimilarity` con `CalculateBiasForFastCornering` y las
+11 direcciones preferidas). `visor/league_locomocion.gd` la aplica en el partido a los jugadores sin balón (no al portero) cuando
+ARRANCAN, FRENAN o GIRAN más de ~35°: el clip se reproduce entero y los ciclos normales no lo pisan (un gesto de verdad sí).
+**Solo cambia lo que se ve**: el giro del cuerpo que trae el clip se compensa en el MODELO (hijo raíz del AnimationPlayer) y
+no en el nodo, cuyo giro usan alcances y entradas; posiciones, velocidades y `gesto_hasta` no se tocan. Los clips se añaden a la
+biblioteca del jugador en el partido (no van en la biblioteca horneada: la caché de disco no depende de la bandera).
+| 2 partidos (2 × 120 s) | `LS_LOCO=0` | `LS_LOCO=1` |
+|---|---|---|
+| huellas (marcador, tiros, pases) | 0-1 · 1-2 | **iguales** (determinismo IGUAL) |
+| transiciones por partido | — | ~160 arranques, ~630 giros, ~450 frenadas |
+| CPU por paso (sin gráficos) | ~1.110 µs | ~1.200-1.290 µs (+~9 %) |
+Revisado de cerca con `pruebas/_sonda/captura_giro_league.tscn` (cámara de costado que sigue al jugador, Forward+, clubes de BRA e
+ITA): un giro de ~180° encadena trote lateral → frenada inclinada → pivote → arranque, como el original, sin poses rotas.
+Sin portar todavía: el pie de apoyo, las variantes «angled» (correr de lado mirando a otro punto, `desiredLookAt`) y las
+animaciones intermedias que genera `AnimCollection` entre cuadrantes. Banco: `_probar_league_movimiento`.
