@@ -72,6 +72,15 @@ const REGLAS := {
 	"SVK": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga eslovaca (ficticia): sin cupo de extracomunitarios.", "seguro": false},
 	"BUL": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga búlgara (ficticia): sin cupo de extracomunitarios.", "seguro": false},
 	"UAE": {"plantel": 5, "cancha": 4, "criterio": "extranjero", "norma": "Liga emiratí (ficticia): 5 extranjeros inscritos, 4 por convocatoria.", "seguro": false},
+	"NGA": {"plantel": 5, "cancha": 3, "criterio": "extranjero", "norma": "Liga nigeriana (ficticia): 5 extranjeros inscritos, 3 en cancha.", "seguro": false},
+	"GHA": {"plantel": 5, "cancha": 3, "criterio": "extranjero", "norma": "Liga ghanesa (ficticia): 5 extranjeros inscritos, 3 en cancha.", "seguro": false},
+	"SEN": {"plantel": 5, "cancha": 3, "criterio": "extranjero", "norma": "Liga senegalesa (ficticia): 5 extranjeros inscritos, 3 en cancha.", "seguro": false},
+	"CIV": {"plantel": 5, "cancha": 3, "criterio": "extranjero", "norma": "Liga marfileña (ficticia): 5 extranjeros inscritos, 3 en cancha.", "seguro": false},
+	"ALG": {"plantel": 4, "cancha": 3, "criterio": "extranjero", "norma": "Liga argelina (ficticia): 4 extranjeros inscritos, 3 en cancha.", "seguro": false},
+	"TUN": {"plantel": 4, "cancha": 3, "criterio": "extranjero", "norma": "Liga tunecina (ficticia): 4 extranjeros inscritos, 3 en cancha.", "seguro": false},
+	"CMR": {"plantel": 5, "cancha": 3, "criterio": "extranjero", "norma": "Liga camerunesa (ficticia): 5 extranjeros inscritos, 3 en cancha.", "seguro": false},
+	"CAN": {"plantel": 7, "cancha": 0, "criterio": "extranjero", "norma": "Liga canadiense (ficticia): 7 extranjeros inscritos.", "seguro": false},
+	"CRC": {"plantel": 5, "cancha": 4, "criterio": "extranjero", "norma": "Liga costarricense (ficticia): 5 extranjeros inscritos, 4 en cancha.", "seguro": false},
 	"IRN": {"plantel": 4, "cancha": 3, "criterio": "extranjero", "norma": "Liga iraní (ficticia): 4 extranjeros inscritos, 3 por convocatoria.", "seguro": false},
 }
 

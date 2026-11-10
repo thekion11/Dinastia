@@ -111,3 +111,26 @@ func _probar_selecciones_nuevas() -> void:
 	_comprobar(["Rumanía", "Eslovaquia", "Bulgaria", "Israel", "Rep. Checa", "Turquía"].all(func(n: String) -> bool: return euro.has(n)) and not euro.has("Rusia"), "la Eurocopa lleva a Rumanía, Eslovaquia, Bulgaria, Israel, Rep. Checa y Turquía, y no a Rusia (%d)" % euro.size())
 	var asia := SeleccionesTorneos.continental(sel, m, "asia", "Copa de Asia", 2027).equipos.map(func(c: Club) -> String: return c.nombre)
 	_comprobar(["China", "Emiratos", "Irán"].all(func(n: String) -> bool: return asia.has(n)), "la Copa de Asia lleva a China, Emiratos e Irán (%d)" % asia.size())
+
+## (10-11) TANDA 1 DE «PAÍSES SIN LIGA»: NGA, GHA, SEN, CIV, ALG, TUN, CMR, CAN, CRC, IRL (las selecciones que tenían 0 convocables). Su liga con la cantidad real de clubes, su copa,
+## su confederación y sus selecciones con jugadores del mundo de verdad (antes: plantilla inventada).
+func _probar_pais_sin_liga_tanda1() -> void:
+	_titulo("PAÍSES SIN LIGA, TANDA 1: LIGA, COPA, CONFEDERACIÓN Y SELECCIÓN")
+	var casos := {"NGA": [20, "Nigeria", "afr"], "GHA": [18, "Ghana", "afr"], "SEN": [16, "Senegal", "afr"], "CIV": [14, "Costa de Marfil", "afr"], "ALG": [16, "Argelia", "afr"],
+		"TUN": [16, "Túnez", "afr"], "CMR": [16, "Camerún", "afr"], "CAN": [8, "Canadá", "conc"], "CRC": [12, "Costa Rica", "conc"], "IRL": [10, "Irlanda", "ucl"]}
+	var m := Mundo.new()
+	var paises: Array[String] = []
+	paises.assign(casos.keys())
+	m.generar(paises, 1103)
+	var confed: Dictionary = Datos.tabla("CONFED") as Dictionary
+	for cod: String in casos:
+		var datos: Array = casos[cod]
+		var clubes := 0
+		for l: Liga in m.ligas:
+			if l.pais == cod and l.division() == 1:
+				clubes = l.clubes.size()
+		_comprobar(clubes == int(datos[0]), "%s: la liga tiene su cantidad real de clubes (%d de %d)" % [cod, clubes, int(datos[0])])
+		_comprobar((confed[String(datos[2])]["paises"] as Array).has(cod), "%s: juega la copa continental «%s»" % [cod, String(datos[2])])
+		_comprobar(String((Datos.tabla("COPA_NOM") as Dictionary).get(cod, "")) != "" and SeleccionEquipo.codigo_de(String(datos[1])) == cod, "%s: tiene copa y su selección (%s) devuelve el país" % [cod, String(datos[1])])
+		var cands := SeleccionEquipo.candidatos(m, String(datos[1])).size()
+		_comprobar(cands >= 20, "%s: la selección de %s convoca con jugadores del mundo (%d candidatos, antes 0)" % [cod, String(datos[1]), cands])

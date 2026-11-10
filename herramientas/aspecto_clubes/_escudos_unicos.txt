@@ -1,5 +1,7 @@
 # Generado por herramientas/aspecto_unicos.sh (no editar a mano): patrón distinto para que ningún escudo se repita (M-062).
 Al Shahaniya||banda||||||
+Aluminium Arak||banda||||||
+Amiens||banda||||||
 Asteras Tripolis||banda||||||
 Atromitos||banda||||||
 Bandırmaspor||franjas||||||
@@ -14,8 +16,10 @@ Carrarese||franjas||||||
 Ceuta||banda||||||
 Chaves||banda||||||
 Chengdu Rongcheng||banda||||||
+Colón||banda||||||
 Darmstadt||franjas||||||
 Deportivo||banda||||||
+Deportivo Madryn||banda||||||
 Dundee||franjas||||||
 Dynamo Dresden||banda||||||
 Düsseldorf||banda||||||
@@ -64,11 +68,11 @@ Monza||franjas||||||
 Nancy||franjas||||||
 Niza||liso||||||
 Nordsjælland||banda||||||
-Novorizontino||banda||||||
+Novorizontino||franjas||||||
 Nürnberg||banda||||||
 Odense||franjas||||||
 Oliveirense||chevron||||||
-Operário-PR||banda||||||
+Operário-PR||franjas||||||
 Osijek||banda||||||
 PAOK||banda||||||
 Padova||mitad||||||
@@ -77,20 +81,23 @@ Paços de Ferreira||franjas||||||
 Penafiel||aro||||||
 Pendikspor||cruz||||||
 Pescara||banda||||||
-Ponte Preta||franjas||||||
+Ponte Preta||mitad||||||
 Portimonense||franjas||||||
 Portsmouth||mitad||||||
 Q.P.R.||franjas||||||
 Racing Santander||mitad||||||
 Randers||franjas||||||
 Real Sociedad B||mitad||||||
+Reggiana||banda||||||
 Reims||franjas||||||
 Saint-Étienne||franjas||||||
 Sampdoria||chevron||||||
 Samsunspor||rombos||||||
+San Martín de San Juan||banda||||||
 Sarpsborg 08||banda||||||
 Sarıyer||chevron||||||
 Schalke||cruz||||||
+Sepahan||banda||||||
 Servette||banda||||||
 Shanghai Port||franjas||||||
 Shanghai Shenhua||banda||||||
@@ -104,8 +111,8 @@ Spezia||franjas||||||
 Sport||banda||||||
 Sporting CP B||franjas||||||
 Sporting Gijón||cuartos||||||
-St Mirren||mitad||||||
-St. Gallen||mitad||||||
+St Mirren||cuartos||||||
+St. Gallen||franjas||||||
 Stoke||cuartos||||||
 Swansea||banda||||||
 Südtirol||cuartos||||||
@@ -117,11 +124,11 @@ Umm Salal||banda||||||
 Vila Nova||aro||||||
 Vizela||interior||||||
 Volos||aro||||||
-Volta Redonda||franjas||||||
+Volta Redonda||mitad||||||
 Watford||banda||||||
 Wolfsberger AC||banda||||||
 Wrexham||cuartos||||||
-Young Boys||mitad||||||
+Young Boys||cuartos||||||
 Zhejiang FC||franjas||||||
 Zürich||rombos||||||
 Çorum||banda||||||

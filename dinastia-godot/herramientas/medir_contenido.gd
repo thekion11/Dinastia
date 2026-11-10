@@ -140,6 +140,10 @@ func _ready() -> void:
 		for s: String in SeleccionesTorneos.POR_CONFED[k]:
 			en_alguna[s] = true
 	r["selecciones_por_confederacion"] = por_conf
+	var cands := {}   ## cuántos jugadores del mundo pueden convocar sus selecciones (`SeleccionEquipo.candidatos`)
+	for sn: String in sel:
+		cands[sn] = SeleccionEquipo.candidatos(m, sn).size()
+	r["convocables_por_seleccion"] = cands
 	var sin_torneo: Array = []
 	for s: String in sel:
 		if not en_alguna.has(s):

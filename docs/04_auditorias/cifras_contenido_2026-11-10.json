@@ -3,16 +3,19 @@
     "Comtal FC",
     95000
   ],
-  "aforo_medio": 22794,
-  "aforo_total": 24367406,
+  "aforo_medio": 21471,
+  "aforo_total": 26087562,
   "caras_en_biblioteca": 300,
   "caras_reales_pck_presente": false,
-  "clubes": 1069,
+  "clubes": 1215,
   "clubes_por_division": {
-    "1": 821,
+    "1": 967,
     "2": 248
   },
   "clubes_por_pais": {
+    "ALG": {
+      "1": 16
+    },
     "ARG": {
       "1": 30,
       "2": 36
@@ -36,6 +39,9 @@
     "BUL": {
       "1": 16
     },
+    "CAN": {
+      "1": 8
+    },
     "CHI": {
       "1": 16,
       "2": 16
@@ -43,8 +49,17 @@
     "CHN": {
       "1": 16
     },
+    "CIV": {
+      "1": 14
+    },
+    "CMR": {
+      "1": 16
+    },
     "COL": {
       "1": 20
+    },
+    "CRC": {
+      "1": 12
     },
     "CRO": {
       "1": 10
@@ -77,11 +92,17 @@
       "1": 18,
       "2": 18
     },
+    "GHA": {
+      "1": 18
+    },
     "GRE": {
       "1": 14
     },
     "HUN": {
       "1": 12
+    },
+    "IRL": {
+      "1": 10
     },
     "IRN": {
       "1": 16
@@ -112,6 +133,9 @@
     "NED": {
       "1": 18,
       "2": 20
+    },
+    "NGA": {
+      "1": 20
     },
     "NOR": {
       "1": 16
@@ -144,6 +168,9 @@
     "SCO": {
       "1": 12
     },
+    "SEN": {
+      "1": 16
+    },
     "SRB": {
       "1": 16
     },
@@ -154,6 +181,9 @@
       "1": 12
     },
     "SWE": {
+      "1": 16
+    },
+    "TUN": {
       "1": 16
     },
     "TUR": {
@@ -186,39 +216,110 @@
     "oce",
     "conc"
   ],
-  "copas_nacionales_nombres": 50,
-  "escudos_con_patron_o_letras": 842,
-  "escudos_firmas_distintas_en_aspecto": 917,
-  "estadio_efectivo_firmas_distintas": 1067,
-  "estadio_efectivo_nucleo_distinto": 536,
+  "convocables_por_seleccion": {
+    "Alemania": 843,
+    "Arabia": 341,
+    "Argelia": 418,
+    "Argentina": 1799,
+    "Australia": 252,
+    "Austria": 314,
+    "Bolivia": 381,
+    "Brasil": 1071,
+    "Bulgaria": 402,
+    "Bélgica": 428,
+    "Camerún": 422,
+    "Canadá": 212,
+    "Catar": 300,
+    "Chile": 774,
+    "China": 400,
+    "Colombia": 535,
+    "Corea": 292,
+    "Costa Rica": 302,
+    "Costa de Marfil": 371,
+    "Croacia": 269,
+    "Dinamarca": 324,
+    "EE.UU.": 620,
+    "Ecuador": 395,
+    "Egipto": 491,
+    "Emiratos": 350,
+    "Escocia": 308,
+    "Eslovaquia": 309,
+    "España": 1024,
+    "Francia": 883,
+    "Gales": 0,
+    "Ghana": 465,
+    "Grecia": 358,
+    "Holanda": 880,
+    "Honduras": 0,
+    "Hungría": 306,
+    "Inglaterra": 997,
+    "Irak": 0,
+    "Irlanda": 254,
+    "Irán": 401,
+    "Israel": 357,
+    "Italia": 900,
+    "Jamaica": 0,
+    "Japón": 477,
+    "Jordania": 0,
+    "Malí": 0,
+    "Marruecos": 395,
+    "México": 769,
+    "N. Zelanda": 0,
+    "Nigeria": 520,
+    "Noruega": 422,
+    "Panamá": 0,
+    "Paraguay": 313,
+    "Perú": 423,
+    "Polonia": 461,
+    "Portugal": 938,
+    "Rep. Checa": 409,
+    "Rumanía": 405,
+    "Rusia": 401,
+    "Senegal": 421,
+    "Serbia": 414,
+    "Sudáfrica": 366,
+    "Suecia": 422,
+    "Suiza": 315,
+    "Turquía": 957,
+    "Túnez": 406,
+    "Ucrania": 405,
+    "Uruguay": 457,
+    "Uzbekistán": 0,
+    "Venezuela": 368
+  },
+  "copas_nacionales_nombres": 60,
+  "escudos_con_patron_o_letras": 988,
+  "escudos_firmas_distintas_en_aspecto": 1066,
+  "estadio_efectivo_firmas_distintas": 1213,
+  "estadio_efectivo_nucleo_distinto": 582,
   "estadio_efectivo_por_forma": {
-    "asimetrico": 59,
+    "asimetrico": 65,
     "caldera": 6,
-    "cuenco": 122,
-    "dos": 24,
-    "estrecho": 76,
-    "herradura": 65,
-    "ingles": 160,
-    "oval": 161,
-    "principal": 66,
-    "rect": 330
+    "cuenco": 127,
+    "dos": 35,
+    "estrecho": 92,
+    "herradura": 70,
+    "ingles": 198,
+    "oval": 174,
+    "principal": 80,
+    "rect": 368
   },
   "estadio_efectivo_repetidos_en_liga": 0,
-  "filas_ASPECTO_CLUB": 1069,
-  "filas_ESTADIO_CLUB": 1069,
-  "filas_HISTORIA_CLUBES": 1069,
-  "filas_con_asientos": 952,
-  "filas_con_uniforme_visitante": 1007,
+  "filas_ASPECTO_CLUB": 1215,
+  "filas_ESTADIO_CLUB": 1215,
+  "filas_HISTORIA_CLUBES": 1215,
+  "filas_con_asientos": 1098,
+  "filas_con_uniforme_visitante": 1153,
   "idiomas": -1,
-  "jugadores_en_clubes": 26725,
+  "jugadores_en_clubes": 30375,
   "jugadores_por_posicion": {
-    "DEF": 8552,
-    "DEL": 6638,
-    "MED": 8328,
-    "POR": 3207
+    "DEF": 9720,
+    "DEL": 7514,
+    "MED": 9496,
+    "POR": 3645
   },
   "libres_en_mercado": -1,
-  "ligas": 62,
+  "ligas": 72,
   "ligas_detalle": [
     [
       "CHI",
@@ -476,6 +577,56 @@
       14
     ],
     [
+      "ALG",
+      1,
+      16
+    ],
+    [
+      "CAN",
+      1,
+      8
+    ],
+    [
+      "CIV",
+      1,
+      14
+    ],
+    [
+      "CMR",
+      1,
+      16
+    ],
+    [
+      "CRC",
+      1,
+      12
+    ],
+    [
+      "GHA",
+      1,
+      18
+    ],
+    [
+      "IRL",
+      1,
+      10
+    ],
+    [
+      "NGA",
+      1,
+      20
+    ],
+    [
+      "SEN",
+      1,
+      16
+    ],
+    [
+      "TUN",
+      1,
+      16
+    ],
+    [
       "ARG",
       2,
       36
@@ -532,11 +683,11 @@
     ]
   ],
   "ligas_por_division": {
-    "1": 50,
+    "1": 60,
     "2": 12
   },
   "nacionalidades_de_jugadores": 114,
-  "ovr_medio": 55.3,
+  "ovr_medio": 54.0,
   "paises": [
     "CHI",
     "ARG",
@@ -587,7 +738,17 @@
     "RUS",
     "SVK",
     "UAE",
-    "VEN"
+    "VEN",
+    "ALG",
+    "CAN",
+    "CIV",
+    "CMR",
+    "CRC",
+    "GHA",
+    "IRL",
+    "NGA",
+    "SEN",
+    "TUN"
   ],
   "paises_con_fase_final_de_liga": [
     "EGY",
@@ -606,9 +767,9 @@
     "ARG",
     "USA"
   ],
-  "paises_con_liga": 50,
+  "paises_con_liga": 60,
   "paises_con_reglas_de_ascenso": false,
-  "perfiles_de_estadio_distintos": 518,
+  "perfiles_de_estadio_distintos": 562,
   "plazas_mundial_48": 48,
   "selecciones": 69,
   "selecciones_por_confederacion": {
@@ -637,6 +798,6 @@
     "mundial",
     "interc"
   ],
-  "uniformes_con_kit_propio": 1029,
-  "uniformes_firmas_distintas_en_aspecto": 606
+  "uniformes_con_kit_propio": 1175,
+  "uniformes_firmas_distintas_en_aspecto": 693
 }
