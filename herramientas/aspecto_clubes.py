@@ -254,7 +254,7 @@ def tablas(CLUBES: dict, limpiar_fn, nombres_pack: list):
 def main() -> int:
     pack = json.load(open(os.path.join(GODOT, "datos/pack_real.json"), encoding="utf-8"))["tablas"]
     nombres = [c[0] for c in pack["DATA_P1"] + pack["DATA_P2"]]
-    nombres += [c[0] for l in pack["PAISES_LIGAS"].values() for c in l["clubes"]]
+    nombres += [c[0] for l in pack["PAISES_LIGAS"].values() for c in l["clubes"] + l.get("segunda", {}).get("clubes", [])]
     nuevo, fallos = filas({limpiar(n) for n in nombres})
     for e in fallos:
         print("FALLO", e)

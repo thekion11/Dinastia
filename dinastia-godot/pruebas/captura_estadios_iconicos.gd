@@ -60,10 +60,21 @@ func _uno(i: int, nombre: String) -> void:
 	vista.abrir(c, 0.85, rival, partido)
 	await _esperar(12.0)
 	var est := c.perfil_estadio()
-	var llamadas := RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+	## Mediana de 30 fotogramas: un fotograma suelto puede pillar un pico (sombras que se rehacen, carga) y dar el triple.
+	var muestras: Array[int] = []
+	for _f in 30:
+		await get_tree().process_frame
+		muestras.append(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
+	muestras.sort()
+	var llamadas := muestras[15]
+	print("   llamadas min/mediana/max: %d / %d / %d" % [muestras[0], llamadas, muestras[29]])
 	print("ESTADIO %d %s (%s) %s %d %s · %d llamadas · piezas: arco=%s torres=%s costillas=%s techo_lados=%s" % [i, nombre, c.pais,
 		est.get("forma"), int(est.get("niveles", 0)), est.get("techo"), llamadas, est.has("arco"), est.get("torres_rampa", 0), est.get("costillas", 0), est.has("bandejas")] + ("  curva=%s colchon=%s" % [est.has("fachada_curva"), est.has("colchon")]))
 	get_viewport().get_texture().get_image().save_jpg("%s/%02d_%s_partido.jpg" % [_dir, i, c.pais], 0.88)
+	if OS.get_environment("PICOS") != "":
+		await _picos(llamadas)
+	if OS.get_environment("DESGLOSE") != "":
+		await _desglose(vista, llamadas)
 	var aerea := Camera3D.new()
 	aerea.far = 1500.0
 	vista.add_child(aerea)
@@ -74,3 +85,60 @@ func _uno(i: int, nombre: String) -> void:
 	get_viewport().get_texture().get_image().save_jpg("%s/%02d_%s_aerea.jpg" % [_dir, i, c.pais], 0.88)
 	vista.queue_free()
 	await _esperar(1.0)
+
+## DESGLOSE=1: apaga uno a uno los grupos grandes (≥ 15 mallas, hasta 4 niveles de hondo) y dice cuántas llamadas ahorra cada uno.
+func _desglose(raiz: Node, base: int) -> void:
+	var grupos: Array[Node3D] = []
+	_grupos(raiz, 0, grupos)
+	for g in grupos:
+		g.visible = false
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var d := base - RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+		g.visible = true
+		if d >= 15:
+			print("   -%d  %s" % [d, raiz.get_path_to(g)])
+
+func _grupos(n: Node, hondo: int, fuera: Array[Node3D]) -> void:
+	for h in n.get_children():
+		if h.find_children("*", "GeometryInstance3D", true, false).size() < 15:
+			continue
+		if h is Node3D:
+			fuera.append(h)
+		if hondo < 4:
+			_grupos(h, hondo + (1 if h is Node3D else 0), fuera)
+
+## PICOS=1: 400 fotogramas; los que pasan de 1,6× la mediana se cuentan con su cámara y lo que creció (objetos, primitivas).
+func _picos(mediana: int) -> void:
+	var rs := RenderingServer
+	## PICOS_F = fotogramas a recorrer; PICOS_ESCALA acelera el partido para pasar por más planos (saque, córner, gol, repetición…).
+	Engine.time_scale = float(OS.get_environment("PICOS_ESCALA")) if OS.get_environment("PICOS_ESCALA") != "" else 1.0
+	var n_f := int(OS.get_environment("PICOS_F")) if OS.get_environment("PICOS_F") != "" else 400
+	for f in n_f:
+		await get_tree().process_frame
+		var ll := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+		if ll > mediana * (float(OS.get_environment("PICOS_UMBRAL")) if OS.get_environment("PICOS_UMBRAL") != "" else 3.0) and OS.get_environment("PICOS") == "desglose":
+			## Congela ESE plano en una cámara quieta y mira qué grupos lo inflan.
+			var cam0 := get_viewport().get_camera_3d()
+			var fija := Camera3D.new()
+			fija.fov = cam0.fov
+			fija.far = cam0.far
+			add_child(fija)
+			fija.global_transform = cam0.global_transform
+			fija.make_current()
+			get_tree().paused = true
+			process_mode = Node.PROCESS_MODE_ALWAYS
+			await get_tree().process_frame
+			await get_tree().process_frame
+			var base := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+			print("   PLANO CONGELADO %s: %d llamadas" % [cam0.global_position.round(), base])
+			await _desglose(get_tree().root, base)
+			get_tree().quit()
+			return
+		if ll > mediana * 1.6:
+			var cam := get_viewport().get_camera_3d()
+			print("   PICO f%d: %d llamadas · %d objetos · %d prims · cam=%s pos=%s" % [f, ll, rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
+				rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME), cam.get_path() if cam else "-", cam.global_position.round() if cam else Vector3.ZERO])
+		elif f % 500 == 0:
+			var cam := get_viewport().get_camera_3d()
+			print("   normal f%d: %d llamadas · %d objetos · cam=%s" % [f, ll, rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME), cam.get_path() if cam else "-"])

@@ -128,19 +128,8 @@ func _process(_d: float) -> void:
 				(esq as Node3D).visible = false
 				ocultos += 1
 		print("SIN_GENTE_FUERA: %d esqueletos ocultos" % ocultos)
-	if _n == CALENTAR and OS.get_environment("SIN_OMNI") != "":
-		## SIN_OMNI=1 (10-11): apaga todas las luces omni (túneles y edificio del club): en Compatibilidad cada luz cuesta en el sombreado de los objetos que toca.
-		for l in _vista.find_children("*", "OmniLight3D", true, false):
-			(l as Light3D).visible = false
-	if _n == CALENTAR and OS.get_environment("SIN_ENTORNO_FX") != "":
-		## SIN_ENTORNO_FX=1 (10-11): apaga glow, niebla y ajuste de color del WorldEnvironment (post-proceso a pantalla completa).
-		for we in _vista.find_children("*", "WorldEnvironment", true, false):
-			var en: Environment = (we as WorldEnvironment).environment
-			if en != null:
-				en.glow_enabled = false
-				en.fog_enabled = false
-				en.adjustment_enabled = false
-				en.ssao_enabled = false
+	if _n == CALENTAR:
+		MedirPartidoExp.aplicar(_vista)   ## (10-11) SIN_OMNI, SIN_ENTORNO_FX, SIN_SOMBRA_FINOS: experimentos de rendimiento en `medir_partido_exp.gd`
 	if _n == CALENTAR and OS.get_environment("SIN_SOMBRAS") != "":
 		## SIN_SOMBRAS=1 (19-10-2026): cuánto de lo dibujado son las sombras.
 		for l in _vista.find_children("*", "Light3D", true, false):

@@ -31,12 +31,12 @@ func _probar_fundar_club() -> void:
 		_comprobar(m.mi_club_id == club.id, "tomar_el_mando() ya se hizo solo: no hace falta un paso más")
 		_comprobar(segunda.clubes.has(club), "el club fundado sigue en el calendario de su liga -mismo objeto, no uno nuevo")
 
-	## Fuera de Chile no hay Ascenso: toma el más flojo de la única división.
+	## Se funda en la división más baja del país: el más flojo de ella.
 	var esp: Liga = null
 	for l: Liga in m.ligas:
 		if l.pais == "ESP":
-			esp = l
-			break
+			esp = l   ## (10-11) la última que salga: si el país tiene Segunda, la división más baja
+	
 	if esp != null:
 		var peor_esp: Club = esp.clubes[0]
 		for c: Club in esp.clubes:
@@ -44,7 +44,7 @@ func _probar_fundar_club() -> void:
 				peor_esp = c
 		var club2 := m.fundar_club("Fundado FC", "ESP")
 		_comprobar(club2 != null and club2.id == peor_esp.id,
-			"fuera de Chile toma el más flojo de su única división")
+			"fuera de Chile toma el más flojo de su división más baja")
 
 	## Guardado: nombre, colores, reputación y plantel nuevo sobreviven.
 	Partida.borrar("_prueba_fundar")

@@ -158,7 +158,7 @@ func _paso_juego() -> void:
 	_seccion(Idiomas.t("Calidad gráfica del estadio en 3D"), Idiomas.t("Recomendada para este equipo: %s.") % Idiomas.t(_nombre_calidad(reco)))
 	var f := _flujo()
 	var bc: Array = []
-	for n: Array in [[Calidad.MINIMO, "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución"], [Calidad.MEDIO, "Sin efectos pesados: máxima fluidez"], [Calidad.ALTO, "El equilibrio: sombras sí, lo más caro no"],
+	for n: Array in [[Calidad.MINIMO, "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución"], [Calidad.MEDIO, "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez" if Calidad.es_compatibilidad() else "Sin efectos pesados: máxima fluidez"], [Calidad.ALTO, "El equilibrio: sombras sí, lo más caro no"],
 			[Calidad.ULTRA, "Todos los efectos, sombras y reflejos"]]:
 		var nivel := int(n[0])
 		var b := _opcion(Idiomas.t(_nombre_calidad(nivel)) + ("  ★" if nivel == reco else ""), datos.calidad == nivel, func() -> void:

@@ -311,12 +311,12 @@ func _finalizar() -> void:
 		return
 	var escena := String(res.get("escena", MENU_VIEJO))
 	if duracion_fundido <= 0.0:
-		get_tree().change_scene_to_file(escena)
+		CargaMenu.cambiar(get_tree(), escena)   ## (10-11) con pantalla de carga: montar el menú bloquea 2-4 s en un equipo modesto
 		return
 	_velo.mouse_filter = Control.MOUSE_FILTER_STOP
 	var tw := create_tween()
 	tw.tween_property(_velo, "modulate:a", 1.0, duracion_fundido)
-	tw.tween_callback(func() -> void: get_tree().change_scene_to_file(escena))
+	tw.tween_callback(func() -> void: CargaMenu.cambiar(get_tree(), escena))
 
 # --- la intro, solo la primera vez --------------------------------------------------
 

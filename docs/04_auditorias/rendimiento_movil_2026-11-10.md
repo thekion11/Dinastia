@@ -49,6 +49,67 @@ Desglose por grupos en ULTRA BAJA (CHI, llamadas que quitaría cada grupo): hinc
 | ENG | MEDIA | 349 | 534 k | 200 MB | 396 ms | **−67 %** |
 Memoria de vídeo: −7 a −14 MB en BAJA/MEDIA (el búfer multimuestra). Los escalones siguen siendo monótonos en llamadas, triángulos y fotograma (ULTRA BAJA < BAJA < MEDIA en los tres clubes).
 
+## El club a pie (`pruebas/medir_club.tscn`, nuevo; 10-11)
+Abre el estadio propio, entra en el recorrido a pie (`ExploradorEstadio`) y mide en 15 puntos: la salida, el centro de 3 salas por planta (plantas -2, -1, 1 y 2), el vestuario, el túnel y el campo. ULTRA BAJA, Compatibilidad, 1280x720.
+**Hallazgo:** el club a pie pedía ~860-960 llamadas y 0,86-1,26 M de triángulos desde CUALQUIER sala (el partido: 200-260 y 234-378 k), porque no hay oclusión: la cámara dibujaba también las gradas, la hinchada, las torres de focos y el entorno que quedan DETRÁS de las paredes. Ocultar plantas del edificio no ahorraba nada (el coste no era el edificio); ocultar el estadio de fuera sí.
+**Cambio hecho:** `OcultarEstadioDentro` (`visor/ocultar_estadio_dentro.gd`, llamado desde `ExploradorEstadio._rotulos`): en las plantas distintas de la 0 se ocultan los hijos de primer nivel del estadio que no son luces, cámara, el edificio (`TunelVestuario`), la calle (`Exterior`) ni la fachada; se devuelve tal cual al volver a la planta 0 o cerrar el recorrido (lo que ya estaba oculto sigue oculto). Prueba en el banco (`_probar_ocultar_estadio_dentro`). Capturas con la cámara real del recorrido (sala de prensa, oficina del DT): idénticas antes y después. Lo único que deja de verse es el entorno lejano por la ventana trasera (se ve la calle y la fachada).
+| Club | Antes (media de 15 puntos) | Después (media de 15 puntos) | Cambio |
+|---|---|---|---|
+| CHI | 957 llamadas · 1,20 M tri · 269 ms | 455 · 358 k · 142 ms | −52 % llamadas · −70 % tri · −47 % fotograma |
+| ESP | 870 · 858 k · 232 ms | 405 · 277 k · 133 ms | −53 % · −68 % · −43 % |
+| ENG | 963 · 1,26 M · 282 ms | 454 · 361 k · 134 ms | −53 % · −71 % · −52 % |
+Solo en las plantas ≠ 0 (CHI): ~850 → 335-405 llamadas, 1,1 M → 125-150 k triángulos, ~285 → ~105-120 ms (−60 %). Las puntos de la planta 0 (salida, vestuario, túnel, campo) no cambian: 350-960 llamadas.
+**Pendiente (club):** (1) la planta 0 es lo que queda caro: el «Vestuario» (886 llamadas) es una sala cerrada como las demás y se podría tratar igual (hace falta que el dueño/sesión 7 confirme que no se ve el estadio por el túnel con la puerta abierta); (2) `TunelVestuario` (176 piezas) y `Exterior` (152) siguen siendo ~330 llamadas dentro de una sala: agruparlas por sala (oclusión por sala) es un cambio de la escena del club (sesión 7); (3) el club solo se midió en ULTRA BAJA: BAJA/MEDIA añaden MSAA (ya cubierto por el cambio de `Calidad`) y las sombras.
+
+## El menú (`pruebas/zz_medir_menu_gpu.tscn`, ahora con `PAIS`, `CLUB` y nivel por argumento)
+Pantalla central del menú con la partida de un club, Compatibilidad, 1280x720, pantalla quieta durante 3 s:
+| Club | Nivel | Llamadas | Primitivas | Vídeo | Fotogramas dibujados en 3 s |
+|---|---|---|---|---|---|
+| CHI | ULTRA BAJA | 410 | 17,2 k | 36 MB | **1** (bajo consumo) |
+| CHI | BAJA / MEDIA | 389 | 17,0 k | 36 / 54 MB | **51** |
+| ESP | ULTRA BAJA | 407 | 16,9 k | 37 MB | **1** |
+| ESP | BAJA / MEDIA | 408 | 17,0 k | 37 / 55 MB | **48 / 50** |
+| ENG | ULTRA BAJA | 419 | 16,9 k | 38 MB | **1** |
+| ENG | BAJA / MEDIA | 420 | 17,0 k | 38 / 57 MB | **48 / 46** |
+**Hallazgo:** solo ULTRA BAJA activaba el modo de bajo consumo del menú (`AhorroMenu.toca()`): en BAJA, MEDIA BAJA y MEDIA el menú se repintaba entero (~400 llamadas) 46-51 veces cada 3 s con la pantalla quieta, en vez de 1.
+**Cambio hecho:** `AhorroMenu.toca()` vale ahora hasta MEDIA BAJA (bajo consumo, motas y fondos con shader de `TIME` quietos, mientras no haya 3D a la vista). Después: BAJA y MEDIA BAJA, los 3 clubes: **1 fotograma en 3 s** (−98 %). Coste visual, dicho: en BAJA y MEDIA BAJA los fondos animados del menú y las motas van quietos. MEDIA y superiores no se tocan (decisión de diseño original); en móvil MEDIA se repinta igual: el dueño decide si MEDIA en móvil también (es lo que midió con 28 FPS en el menú).
+
+## El partido en directo ya sin MSAA: lo siguiente que pesa (MEDIA, CHI, 1280x720; fotograma relativo, base 395-411 ms, 433 llamadas, 762 k triángulos)
+| Experimento | Llamadas | Fotograma | Efecto |
+|---|---|---|---|
+| sin sombra solar (2 cortes) | 360 (−73) | 345 ms | **−13 a −17 %** |
+| sin jugadores ni pelo | 375 | 366 ms | −11 % |
+| sin gente fuera del campo (suplentes, cuerpo técnico, camarógrafos…) | 386 | 386 ms | −6 % |
+| sin butacas | 417 | 396 ms | −4 % (−185 k tri) |
+| sin focos / sin fundidos / sin coches | 432 / 402 / 432 | 396 / 393 / 401 ms | −3 a −4 % cada uno |
+| sin hinchas (MultiMesh) | 429 | 407 ms | −1 % |
+| piezas finas (ojos, cejas, pestañas, pelo) sin sombra proyectada | 431 | 410 ms | **nada** (ya no se descarta por menor) |
+Lectura: tras quitar el MSAA el coste está repartido; lo único que destaca es la sombra solar (13-17 %), y es un efecto visible: se queda como propuesta para el dueño («MEDIA sin sombra en móvil» sería BAJA, que ya no la tiene; el escalón existe). Nada de lo medido se puede apagar sin que se note (hinchas, butacas, focos y coches son 1-4 % cada uno). Sin MSAA, la sombra y los personajes (22 + árbitros: ~150 llamadas) son el grueso; reducir personajes lejanos (impostores, menos huesos) es trabajo de la sesión de personajes. BAJA (sin sombra) ya está en 250-315 llamadas.
+Recordatorio: llamadas, triángulos y vídeo son comparables entre máquinas; el fotograma de llvmpipe solo vale a igual resolución en esta máquina (una repetición de «sin efectos de entorno» dio 678 ms con un parón aislado de 31 s: se descartó).
+
+## El arranque hasta el menú (2 núcleos, 4 GB, llvmpipe 1280x720; `.pck` exportado con scripts precompilados como el juego real)
+Herramientas nuevas: `pruebas/medir_arranque.tscn` (portada) y `pruebas/medir_arranque_menu.tscn` (menú real «Continuar»: `principal.tscn` con un club). Con el `.pck`: `godot --export-pack "Windows" x.pck` (quitando `pruebas/*` del filtro de exclusión solo para medir) y `godot --main-pack x.pck res://pruebas/medir_arranque.tscn`.
+| Qué | Desde fuentes (editor) | Con `.pck` precompilado |
+|---|---|---|
+| Motor + autoloads | 0,55-0,66 s | 0,53-0,56 s |
+| Montar la portada (`inicio.tscn`) | 2,9-5,2 s | **1,75-1,90 s** |
+| 1.er fotograma de la portada | 3,8-6,1 s | **2,5-2,8 s** |
+| 30.º fotograma de la portada | 6,0-7,5 s | 4,6-4,7 s |
+| Menú real: motor+autoloads (compila `Principal`) | — | ~2,0 s |
+| Menú real: instanciar y montar `Principal` | — | 2,6-3,4 s |
+| Menú real: generar mundo + tomar el mando + refrescar | — | 0,06-0,13 s |
+| Menú real: 1.er fotograma | — | **6,9-8,8 s** |
+Memoria: portada 219 MB estática (248 desde fuentes), vídeo 54 MB; menú real 372-374 MB.
+**Dónde se va:** de `Inicio._ready` solo ~340 ms (`_construir` 307 ms); el resto es cargar y COMPILAR scripts (el análisis de `compilacion_menu_2026-11-03.md`: `Principal` arrastra 830 de 886 scripts) y, en el menú real, instanciar las 17 capas de `Principal`. Generar el mundo y refrescar es despreciable (0,1 s). Quedan 2-4 s entre «refrescar» y el 1.er fotograma que NO se pueden atribuir aquí (compilación de shaders de llvmpipe, hilos de `Precarga`/`RuidosFondo`/`CompilarFondo`): en un teléfono la compilación de shaders de la GPU es otra y solo se mide allí (la «Prueba de rendimiento» de Ajustes no mide el arranque: pendiente añadirlo).
+**Propuesta (sin tocar nada aún):** (1) seguir con los cortes de familias del análisis del 3-11 (pantallas de gestión −38 MB y arranque más corto; ciudad 3D −105 MB: ahora que está apagada se corta con poco riesgo); (2) una pantalla de carga con barra mientras se instancia `Principal` (hoy el jugador ve la portada quieta 2-3 s); (3) medir el arranque en el teléfono del dueño (cronómetro en el log del primer fotograma: `Time.get_ticks_msec()` al `Inicio._ready` y al primer `frame_post_draw`).
+
+## Arranque, segunda parte: ciudad ya cortada, desglose del montaje y pantalla de carga (10-11, tarde)
+- **Corte de la familia de la ciudad: YA ESTABA HECHO** (3-11, `compilacion_menu_2026-11-03.md`: «menú 657 → 444 MB»; `fam.json` solo ve `CargaCiudad` desde `Principal`). Comprobado hoy tras instanciar `Principal`: **1 de 94** scripts candidatos de la ciudad en caché (`casa_acceso.gd`, pequeño); `mem_menu_estadio` y `prueba_menu_ciudad_pie`: 0 fallos. No hay nada que cortar ahí; la memoria estática del menú real queda en ~293 MB (con partida pregenerada) / 373 MB (con la carga de una partida).
+- **Dónde se va el montaje del menú** (`medir_arranque_menu.tscn`, ahora por el camino real: mundo generado antes y entregado en `PedidoPartida.mundo_pregenerado`; `.pck` precompilado, 2 núcleos): cargar la escena 0 ms (ya compilada por las autocargas), **instanciar 20-30 ms, `_ready` de `Principal` 1,9-2,0 s** = construir la interfaz ~0,85 s + `arrancar_con`/`_refrescar` ~0,96 s; generar el mundo de 1 país 0,06 s. El primer fotograma sale 2-3,5 s después de montar (compilación de shaders de llvmpipe e hilos de precarga; en un teléfono es la GPU real, solo medible allí).
+- **Pantalla de carga con barra real (hecho):** `CargaMenu.cambiar(arbol, ruta)` (`ui/componentes/carga_menu.gd`) reutiliza la `PantallaCarga` de siempre (colores y escudo del club, consejos, barra) en una capa de la raíz que sobrevive al cambio de escena: se dibuja, la escena se pide en hilo (barra = progreso REAL de `ResourceLoader.load_threaded_request`), se dice «Preparando tu club…» y se dibujan dos fotogramas ANTES del montaje que bloquea, se deja dibujar la escena nueva debajo 4 fotogramas (shaders y texturas listos) y se funde. Usada en la entrada («Nuevo juego» → menú, `OrquestadorEntrada._finalizar`) y en «Continuar» (`InicioPesado.entrar_en`); sin pantalla (banco, `--headless`) o con otra carga en curso, el cambio de escena es el de siempre. Frases nuevas «Cargando…» y «Preparando tu club…» en los 8 idiomas.
+- **Antes/después con `medir_carga_menu.tscn`** (llama a `CargaMenu.cambiar` como la entrada y mide desde la llamada; ESP, club 5, 2 núcleos, llvmpipe): antes, el jugador veía el cierre de la pantalla anterior (negro o congelada) hasta que aparecía el menú, ~**6,5 s** sin ningún cambio en pantalla; ahora la pantalla de carga está **dibujada a los 0,36 s** y se quita a los 6,5 s con el menú ya montado y dibujado. (El tiempo TOTAL hasta el menú no baja: la carga no acelera el montaje; lo que cambia es que se ve que está cargando.) Capturas: carga en pantalla (escudo, barra, consejo) y menú montado.
+- **No se ha hecho:** reducir el montaje de verdad (`_construir` 0,85 s + `_refrescar` 0,96 s). Habría que partir la construcción del menú central en trozos entre fotogramas (la pantalla de carga ya cubre el bloqueo) o dejar de reconstruir al arrancar lo que el primer fotograma no enseña; es trabajo de la sesión del menú.
+
 ## Lo que NO se hizo (y por qué) / siguiente
 - **La meta de ULTRA BAJA (< 130 llamadas) NO se cumple**: 198-260. No se ha recortado nada más porque lo que quita llamadas es visual y hay que decidirlo: ojos y cejas de los jugadores lejanos (81 llamadas), pelo (136), hinchas (157 llamadas / 135 k triángulos) y butacas lejanas (230 k triángulos, −12 % de fotograma). Propuesta para el dueño: en ULTRA BAJA, sin ojos/cejas/pestañas a más de 12 m de la cámara; hinchas y butacas lejanas como una sola malla por grada con menos detalle. Se aplica cuando lo apruebe el dueño (regla: no quitar nada sin decirlo).
 - Luces omni, post-proceso y gente fuera del campo no pesan en este banco: no se tocan.

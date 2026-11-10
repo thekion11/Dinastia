@@ -360,3 +360,57 @@ func _probar_media_firma() -> void:
 	j.atributos[ks[0]] = 60
 	var d := j.media_en("MC")
 	_comprobar(a == 60 and b == a and c > a and d == a, "media 60 → igual sin cambios → sube con un atributo a 99 (%d) → vuelve al restaurarlo (%d, %d, %d, %d)" % [c, a, b, c, d])
+
+## (10-11, rendimiento en móvil) Dentro del edificio del club (plantas distintas de la 0) no se dibuja el estadio de fuera; al volver a la 0 queda como estaba (lo que ya estaba oculto, oculto).
+func _probar_ocultar_estadio_dentro() -> void:
+	_titulo("CLUB A PIE: SIN ESTADIO DE FUERA DENTRO DEL EDIFICIO")
+	var raiz := Node3D.new()
+	var grada := Node3D.new()
+	grada.name = "Grada"
+	var apagado := Node3D.new()
+	apagado.name = "YaOculto"
+	apagado.visible = false
+	var tunel := Node3D.new()
+	tunel.name = "TunelVestuario"
+	var calle := Node3D.new()
+	calle.name = "Exterior"
+	var luz := OmniLight3D.new()
+	var explorador := Node3D.new()
+	for n: Node in [grada, apagado, tunel, calle, luz, explorador]:
+		raiz.add_child(n)
+	add_child(raiz)
+	OcultarEstadioDentro.actualizar(explorador, 0)
+	_comprobar(grada.visible and tunel.visible, "en la planta 0 no se oculta nada")
+	OcultarEstadioDentro.actualizar(explorador, -1)
+	_comprobar(not grada.visible, "en un sótano la grada no se dibuja")
+	_comprobar(tunel.visible and calle.visible and luz.visible and explorador.visible, "el edificio, la calle, las luces y el explorador siguen")
+	OcultarEstadioDentro.actualizar(explorador, 2)
+	_comprobar(not grada.visible, "subir de planta no la devuelve")
+	OcultarEstadioDentro.actualizar(explorador, 0)
+	_comprobar(grada.visible and not apagado.visible, "al volver a la planta 0 vuelve la grada y lo que ya estaba oculto sigue oculto")
+	OcultarEstadioDentro.actualizar(explorador, 1)
+	OcultarEstadioDentro.devolver(explorador)
+	_comprobar(grada.visible, "al cerrar el recorrido se devuelve el estadio")
+	## OCLUSIÓN POR SALA (10-11, sesión 7): en el vestuario el estadio solo se dibuja si la boca del túnel (plano z = 40) está en el campo de visión.
+	var cam := Camera3D.new()
+	explorador.add_child(cam)
+	cam.position = Vector3(0.0, 1.6, 46.0)
+	var datos := {"x0": 0.0, "z_out": 40.0}
+	cam.look_at_from_position(cam.position, Vector3(0.0, 1.6, 30.0), Vector3.UP)   ## hacia la boca
+	OcultarEstadioDentro.actualizar(explorador, 0, "Vestuario", cam, datos)
+	_comprobar(grada.visible, "vestuario mirando a la boca del túnel: el estadio se dibuja")
+	cam.look_at_from_position(cam.position, Vector3(0.0, 1.6, 60.0), Vector3.UP)   ## de espaldas
+	OcultarEstadioDentro.actualizar(explorador, 0, "Vestuario", cam, datos)
+	_comprobar(not grada.visible and tunel.visible and not apagado.visible, "vestuario de espaldas a la boca: el estadio se oculta (y el edificio sigue)")
+	cam.look_at_from_position(cam.position, Vector3(0.0, 1.6, 30.0), Vector3.UP)
+	OcultarEstadioDentro.actualizar(explorador, 0, "Vestuario", cam, datos)
+	_comprobar(grada.visible and not apagado.visible, "al volver a mirar a la boca vuelve el estadio")
+	cam.look_at_from_position(cam.position, Vector3(0.0, 1.6, 60.0), Vector3.UP)
+	OcultarEstadioDentro.actualizar(explorador, 0, "Túnel", cam, datos)
+	_comprobar(grada.visible, "en el túnel (no es sala cerrada) nunca se oculta")
+	cam.look_at_from_position(Vector3(0.0, 1.6, 40.8), Vector3(0.0, 1.6, 60.0), Vector3.UP)
+	cam.position = Vector3(0.0, 1.6, 40.8)
+	OcultarEstadioDentro.actualizar(explorador, 0, "Vestuario", cam, datos)
+	_comprobar(grada.visible, "pegado a la boca siempre se ve")
+	OcultarEstadioDentro.devolver(explorador)
+	raiz.queue_free()

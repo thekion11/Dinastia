@@ -7812,7 +7812,13 @@
   "Global %d-%d": "Aggregate %d-%d",
   "Cuadro principal": "Main bracket",
   "Pasa a semifinales": "Through to the semi-finals",
-  "Pasa al cuadro": "Through to the bracket"
+  "Pasa al cuadro": "Through to the bracket",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "No sun shadow, no anti-aliasing and 3D at a lower resolution",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sun shadow on, no anti-aliasing and 3D at a slightly lower resolution than Medium",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "No heavy effects and no anti-aliasing on phones and web: maximum smoothness",
+  "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "When you're ready: [b]Manage the match[/b] to play it live -substitutions, instructions, the half-time talk-, or [b]Advance week[/b]: on match day the match menu opens and there you choose to play it or simulate it.",
+  "Cargando…": "Loading…",
+  "Preparando tu club…": "Getting your club ready…"
  },
  "pt": {
   "Historia": "História",
@@ -15627,7 +15633,13 @@
   "Global %d-%d": "Global %d-%d",
   "Cuadro principal": "Quadro principal",
   "Pasa a semifinales": "Passa às meias-finais",
-  "Pasa al cuadro": "Passa ao quadro"
+  "Pasa al cuadro": "Passa ao quadro",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Sem sombra do sol, sem suavização e com o 3D em menor resolução",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sombra do sol sim, sem suavização e com o 3D em resolução um pouco menor que em Média",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sem efeitos pesados e sem suavização em celular e web: máxima fluidez",
+  "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "Quando estiver pronto: [b]Dirigir a partida[/b] para jogá-la ao vivo -substituições, ordens, conversa no intervalo-, ou [b]Avançar semana[/b]: no dia do jogo abre-se o menu da partida e ali você escolhe jogá-la ou simulá-la.",
+  "Cargando…": "Carregando…",
+  "Preparando tu club…": "Preparando o seu clube…"
  },
  "patrones": [
   [
@@ -29549,7 +29561,13 @@
   "Global %d-%d": "Cumulé %d-%d",
   "Cuadro principal": "Tableau principal",
   "Pasa a semifinales": "Qualifié pour les demi-finales",
-  "Pasa al cuadro": "Qualifié pour le tableau"
+  "Pasa al cuadro": "Qualifié pour le tableau",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Sans ombre du soleil, sans anticrénelage et avec la 3D en plus basse résolution",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombre du soleil oui, sans anticrénelage et avec la 3D à une résolution un peu plus basse qu'en Moyenne",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sans effets lourds et sans anticrénelage sur téléphone et web : fluidité maximale",
+  "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "Quand vous serez prêt : [b]Diriger le match[/b] pour le jouer en direct -changements, consignes, causerie à la mi-temps-, ou [b]Avancer la semaine[/b] : le jour du match, le menu du match s'ouvre et vous choisissez de le jouer ou de le simuler.",
+  "Cargando…": "Chargement…",
+  "Preparando tu club…": "Préparation de votre club…"
  },
  "it": {
   "Historia": "Storia",
@@ -37364,7 +37382,13 @@
   "Global %d-%d": "Complessivo %d-%d",
   "Cuadro principal": "Tabellone principale",
   "Pasa a semifinales": "Passa alle semifinali",
-  "Pasa al cuadro": "Passa al tabellone"
+  "Pasa al cuadro": "Passa al tabellone",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Senza ombra del sole, senza antialiasing e con il 3D a risoluzione più bassa",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombra del sole sì, senza antialiasing e con il 3D a una risoluzione un po' più bassa che in Media",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Senza effetti pesanti e senza antialiasing su telefono e web: massima fluidità",
+  "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "Quando è pronto: [b]Dirigi la partita[/b] per giocarla in diretta -cambi, ordini, discorso all'intervallo-, oppure [b]Avanza settimana[/b]: il giorno della partita si apre il menu della partita e lì scegli se giocarla o simularla.",
+  "Cargando…": "Caricamento…",
+  "Preparando tu club…": "Preparazione del tuo club…"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45179,7 +45203,13 @@
   "Global %d-%d": "Gesamt %d-%d",
   "Cuadro principal": "Hauptrunde",
   "Pasa a semifinales": "Weiter ins Halbfinale",
-  "Pasa al cuadro": "Weiter in die K.-o.-Runde"
+  "Pasa al cuadro": "Weiter in die K.-o.-Runde",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Ohne Sonnenschatten, ohne Kantenglättung und mit 3D in geringerer Auflösung",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sonnenschatten ja, ohne Kantenglättung und mit 3D in etwas geringerer Auflösung als bei Mittel",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ohne aufwendige Effekte und ohne Kantenglättung auf Handy und Web: maximale Flüssigkeit",
+  "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "Wenn Sie so weit sind: [b]Spiel leiten[/b], um es live zu spielen -Wechsel, Anweisungen, Halbzeitansprache-, oder [b]Woche vorrücken[/b]: Am Spieltag öffnet sich das Spielmenü, und dort wählen Sie, ob Sie es spielen oder simulieren.",
+  "Cargando…": "Laden …",
+  "Preparando tu club…": "Dein Verein wird vorbereitet …"
  },
  "ca": {
   "Historia": "Història",
@@ -52994,7 +53024,13 @@
   "Global %d-%d": "Global %d-%d",
   "Cuadro principal": "Quadre principal",
   "Pasa a semifinales": "Passa a semifinals",
-  "Pasa al cuadro": "Passa al quadre"
+  "Pasa al cuadro": "Passa al quadre",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Sense ombra del sol, sense suavitzat i amb el 3D a menys resolució",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombra del sol sí, sense suavitzat i amb el 3D a una resolució una mica menor que a Mitjana",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sense efectes pesats i sense suavitzat en mòbil i web: màxima fluïdesa",
+  "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "Quan estigui a punt: [b]Dirigir el partit[/b] per jugar-lo en directe -canvis, ordres, xerrada al descans-, o [b]Avançar setmana[/b]: el dia de partit s'obre el menú del partit i allà tries jugar-lo o simular-lo.",
+  "Cargando…": "Carregant…",
+  "Preparando tu club…": "Preparant el teu club…"
  },
  "pl": {
   "Club": "Klub",
@@ -60809,7 +60845,13 @@
   "Global %d-%d": "Łącznie %d-%d",
   "Cuadro principal": "Drabinka główna",
   "Pasa a semifinales": "Awans do półfinału",
-  "Pasa al cuadro": "Awans do drabinki"
+  "Pasa al cuadro": "Awans do drabinki",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Bez cienia słońca, bez wygładzania i z 3D w niższej rozdzielczości",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Cień słońca tak, bez wygładzania i z 3D w nieco niższej rozdzielczości niż w Średnim",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Bez ciężkich efektów i bez wygładzania na telefonie i w przeglądarce: maksymalna płynność",
+  "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "Kiedy będzie pan gotów: [b]Poprowadź mecz[/b], żeby rozegrać go na żywo -zmiany, polecenia, odprawa w przerwie-, albo [b]Następny tydzień[/b]: w dniu meczu otwiera się menu meczu i tam wybiera pan, czy go rozegrać, czy zasymulować.",
+  "Cargando…": "Ładowanie…",
+  "Preparando tu club…": "Przygotowywanie twojego klubu…"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68624,6 +68666,12 @@
   "Global %d-%d": "Toplam %d-%d",
   "Cuadro principal": "Ana tablo",
   "Pasa a semifinales": "Yarı finale kalır",
-  "Pasa al cuadro": "Tabloya kalır"
+  "Pasa al cuadro": "Tabloya kalır",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Güneş gölgesi yok, kenar yumuşatma yok ve 3D daha düşük çözünürlükte",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Güneş gölgesi var, kenar yumuşatma yok ve 3D, Orta'dan biraz daha düşük çözünürlükte",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ağır efekt yok, telefon ve web'de kenar yumuşatma yok: azami akıcılık",
+  "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.": "Hazır olduğunuzda: maçı canlı oynamak için [b]Maçı yönet[/b] -oyuncu değişiklikleri, talimatlar, devre arası konuşması- ya da [b]Haftayı ilerlet[/b]: maç günü maç menüsü açılır ve oradan oynamayı ya da simüle etmeyi seçersiniz.",
+  "Cargando…": "Yükleniyor…",
+  "Preparando tu club…": "Kulübün hazırlanıyor…"
  }
 }

@@ -9,17 +9,19 @@ const RUTA := "res://datos/estilos_clubes.json"
 
 ## Perillas de cada estilo: [mentalidad, presion, ritmo, linea, amplitud, verticalidad, tras_perdida, salida_corta, tiro_lejano]
 ## (mentalidad 0 defensiva, 1 equilibrada, 2 ofensiva; el resto 0 bajo, 1 medio, 2 alto).
+## EQUILIBRIO (10-11): cada estilo CAMBIA ataque por defensa (`Tactica.multiplicador_ataque` × `multiplicador_defensa` ≈ 1); cada uno se aleja como mucho ~7 % de lo neutro
+## (el motor eleva el cociente a 3,2: dos estilos extremos se disparaban) y la media de la liga queda en ln(ataque/defensa) ≈ 0; si no, el simulado subía de 2,7 a 3,7 goles por partido (pruebas/ideas/cifras_partido). Retocar un estilo = volver a medir esa prueba.
 const ESTILOS := {
-	"posesion": [1, 2, 1, 2, 1, 0, 2, true, false],
-	"presion": [2, 2, 2, 2, 1, 2, 2, false, false],
-	"vertical": [1, 1, 2, 1, 1, 2, 1, false, false],
-	"contra": [0, 0, 2, 0, 1, 2, 0, false, false],
-	"bloque": [0, 1, 1, 1, 0, 1, 1, false, false],
+	"posesion": [1, 1, 0, 1, 1, 0, 2, true, false],
+	"presion": [1, 2, 0, 2, 0, 1, 2, false, false],
+	"vertical": [1, 1, 2, 0, 1, 2, 0, false, false],
+	"contra": [0, 1, 2, 0, 1, 2, 1, false, false],
+	"bloque": [1, 1, 1, 0, 0, 1, 1, false, false],
 	"bandas": [1, 1, 1, 1, 2, 1, 1, false, false],
 	"directo": [1, 1, 1, 1, 1, 2, 0, false, true],
 	"equilibrado": [1, 1, 1, 1, 1, 1, 1, false, false],
-	"ofensivo": [2, 1, 2, 2, 2, 1, 1, true, false],
-	"garra": [1, 2, 2, 1, 0, 2, 2, false, false],
+	"ofensivo": [2, 1, 0, 0, 2, 1, 1, false, false],
+	"garra": [1, 2, 1, 1, 0, 1, 1, false, false],
 }
 ## Cómo se llama cada estilo en la interfaz.
 const NOMBRES := {

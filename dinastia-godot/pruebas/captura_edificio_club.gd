@@ -42,14 +42,23 @@ func _ready() -> void:
 			hs.append({"anio": 2005 + i * 2, "titulo": ["Liga", "Copa nacional", "Supercopa", "Copa continental"][i % 4], "cantidad": 1})
 		EdificioClub.ctx["hitos"] = hs
 		EdificioClub.ctx["titulos"] = n_t
-	var perfil := EstadioPropio.new().perfil(club)
+	var perfil := EstadioPropio.new().perfil(m.ligas[0].clubes[int(OS.get_environment("PERFIL_DE"))] if OS.get_environment("PERFIL_DE") != "" else club)   ## PERFIL_DE=0: el estadio de OTRO club (para aislar qué cuelga)
 	perfil["niveles"] = 2
+	for kv in OS.get_environment("PERFIL_SET").split(",", false):   ## PERFIL_SET=aforo=85800,asiento2=#febe10: cambia campos del estadio (bisecar)
+		var par := kv.split("=")
+		perfil[par[0]] = int(par[1]) if par[1].is_valid_int() else par[1]
+	if OS.get_environment("TRAZA") != "":
+		var resumen := {}
+		for c in perfil:
+			if not (perfil[c] is Array) or (perfil[c] as Array).size() < 8:
+				resumen[c] = perfil[c]
+		print("PERFIL ", club.nombre, " ", resumen)
 	if OS.get_environment("CALIDAD") != "":   ## nivel de calidad (-3 ULTRA BAJA … 3 ULTRA ALTA); sin esto, el de defecto
 		Calidad.elegida = int(OS.get_environment("CALIDAD"))
 		Calidad.aplicar_viewport(get_viewport(), Calidad.elegida)
 	_vista = VistaEstadio.new()
 	add_child(_vista)
-	_vista.abrir(club, 0.85, null, null, perfil)
+	_vista.abrir(club, float(OS.get_environment("OCUPACION")) if OS.get_environment("OCUPACION") != "" else 0.85, null, null, perfil)
 
 func _foto() -> void:
 	print("LLAMADAS ", _imgs.size(), " ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME), " tris ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))   ## medida de dibujo por sala
@@ -82,9 +91,24 @@ func _colocar(planta: int, sala: String) -> void:
 
 func _process(_d: float) -> void:
 	_n += 1
+	if OS.get_environment("TRAZA") != "":
+		print("FRAME ", _n, " t=", Time.get_ticks_msec() / 1000)
 	if _n == 8:
 		_vista.recorrer()
 		_ex = _vista._explorador
+		if OS.get_environment("TRAZA") != "":
+			var inst := 0
+			var tris := 0
+			var mayor := ""
+			var mx := 0
+			for mm: MultiMeshInstance3D in _vista.find_children("*", "MultiMeshInstance3D", true, false):
+				inst += mm.multimesh.instance_count
+				var tm := mm.multimesh.instance_count * (mm.multimesh.mesh.get_faces().size() / 3 if mm.multimesh.mesh != null else 0)
+				tris += tm
+				if tm > mx:
+					mx = tm
+					mayor = "%s (%d × %d)" % [mm.name, mm.multimesh.instance_count, mm.multimesh.mesh.get_faces().size() / 3]
+			print("MULTIMALLAS instancias ", inst, " triángulos ", tris, " mayor ", mayor)
 		_ex.set_physics_process(false)
 	if _n >= 10 and (_n - 10) % (14 if OS.get_environment("PUERTAS") == "1" else 6) == 0:
 		if _paso > 0:
