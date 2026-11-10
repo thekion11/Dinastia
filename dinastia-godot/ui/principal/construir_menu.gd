@@ -15,6 +15,21 @@ func _construir() -> void:
 	_montar_carril(raiz)
 	_montar_columnas(raiz)
 
+## (10-11-2026, arranque) Lo mismo en trozos: un paso por fotograma para que la pantalla de carga que hay encima se siga animando (`CargaMenu`; solo con pantalla). El resultado es idéntico al de `_construir()`.
+func _construir_en_trozos() -> void:
+	var arbol := p.get_tree()
+	_montar_fondo()
+	PedidoPartida.montaje_avance = 0.2
+	await arbol.process_frame
+	var raiz := _montar_cabecera()
+	PedidoPartida.montaje_avance = 0.4
+	await arbol.process_frame
+	_montar_carril(raiz)
+	PedidoPartida.montaje_avance = 0.5
+	await arbol.process_frame
+	_montar_columnas(raiz)
+	PedidoPartida.montaje_avance = 0.8
+
 ## El fondo, el tema de la paleta, el clima y el velo de lectura de la cabecera.
 func _montar_fondo() -> void:
 	## El fondo. Debajo va el color plano de siempre -si la textura fallara al

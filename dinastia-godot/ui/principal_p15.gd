@@ -5,6 +5,7 @@ extends "res://ui/principal_p14.gd"
 
 ## Puentes (fase 6, paso 7): viven en `ConstruirMenu`.
 func _construir() -> void: _construccion._construir()
+func _construir_en_trozos() -> void: await _construccion._construir_en_trozos()   ## (10-11) un paso por fotograma, detrás de la pantalla de carga
 
 
 ## EL TUTORIAL vive en `ui/principal/guia_tutorial.gd` (fase 0). Estos cuatro
