@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p11.gd"
-## [Capa 12 de `varios.gd`, 10-11] _probar_selector_direccional, _probar_eventos_club, _probar_copas_mundo, _probar_festejos_titulo (rueda de prensa en cruz y eventos con diálogo)
+## [Capa 12 de `varios.gd`, 10-11] _probar_selector_direccional, _probar_eventos_club, _probar_copas_mundo, _probar_festejos_titulo, _probar_torneos_selecciones (rueda de prensa en cruz y eventos con diálogo)
 
 ## LA CRUZ DE RESPUESTAS (10-11): un botón por opción, delegar al centro, el analógico apunta por direcciones y elegir emite el índice.
 func _probar_selector_direccional() -> void:
@@ -111,3 +111,33 @@ func _probar_festejos_titulo() -> void:
 			e._mover_confeti(0.1)
 	_comprobar(e._confeti.is_empty(), "el pasillo no lleva confeti (se limpia al cambiar de escena)")
 	e.free()
+
+## LAS SELECCIONES COMO EQUIPOS Y SUS TORNEOS CON PARTIDOS DE VERDAD (10-11, encargo del dueño, punto 2). Regla 34: varias selecciones.
+func _probar_torneos_selecciones() -> void:
+	_titulo("SELECCIONES: EQUIPOS DE VERDAD Y TORNEOS CON PARTIDOS")
+	var m := Mundo.new()
+	m.generar(["ARG", "BRA", "ESP", "FRA"], 2026)
+	m.tomar_el_mando(m.ligas[0].clubes[3].id)
+	var sel := m.selecciones
+	var arg := SeleccionEquipo.club_de(m, "Argentina", sel.fuerza("Argentina"), m.anio)
+	var sen := SeleccionEquipo.club_de(m, "Senegal", sel.fuerza("Senegal"), m.anio)
+	_comprobar(arg.plantilla.size() == 23 and sen.plantilla.size() == 23, "cada selección lleva 23 convocados (Argentina %d, Senegal %d)" % [arg.plantilla.size(), sen.plantilla.size()])
+	_comprobar(arg.plantilla.all(func(j: Jugador) -> bool: return j.pais == "ARG"), "Argentina convoca a jugadores argentinos del mundo del juego")
+	var reales_arg := 0
+	for c: Club in m.clubes.values():
+		for j: Jugador in c.plantilla:
+			if j.pais == "ARG" and arg.plantilla.any(func(x: Jugador) -> bool: return x.id == j.id and x != j):
+				reales_arg += 1
+	_comprobar(reales_arg >= 20, "son COPIAS de los reales (sus goles no cuentan en la liga) (%d)" % reales_arg)
+	_comprobar(SeleccionEquipo.club_de(m, "Senegal", sel.fuerza("Senegal"), m.anio).plantilla[5].nombre == sen.plantilla[5].nombre, "una selección sin liga se completa siempre igual (misma temporada)")
+	var t := SeleccionesTorneos.mundial(sel, m, 2026)
+	_comprobar(t.equipos.size() == 32 and t.grupos.size() == 8, "el Mundial: 32 selecciones en 8 grupos")
+	t.jugar_entero()
+	var de_grupos := t.resultados.filter(func(r: Dictionary) -> bool: return String(r["fase"]).begins_with("Fase de grupos")).size()
+	_comprobar(de_grupos == 48 and t.resultados.size() == 48 + 15, "48 partidos de grupos y 15 de eliminatorias (%d en total)" % t.resultados.size())
+	_comprobar(t.campeon != null and t.puesto_de(t.campeon) == 0, "tiene campeón (%s)" % (t.campeon.nombre if t.campeon else "—"))
+	var otro := TorneoSelecciones.crear("Copa Africana", 2027, SeleccionesTorneos._equipos(sel, m, SeleccionesTorneos.POR_CONFED["afr"], 2027))
+	otro.jugar_entero()
+	_comprobar(otro.grupos.size() == 2 and otro.campeon != null, "un torneo de 6 selecciones: 2 grupos de 3 y campeón (%s)" % (otro.campeon.nombre if otro.campeon else "—"))
+	var r := sel.cierre_de_temporada(2026)
+	_comprobar(not (r.get("mundial", {}) as Dictionary).is_empty() and sel.ultimo_torneo != null, "el cierre de 2026 juega el Mundial de verdad (%s)" % String(r.get("mundial", {}).get("campeon", "")))

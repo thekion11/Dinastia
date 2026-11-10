@@ -149,6 +149,8 @@ var resultados: Array[String] = []
 
 ## El último campeón del mundo: {anio, campeon}.
 var mundial: Dictionary = {}
+## (10-11) El último torneo de selecciones jugado (Mundial o continental), con sus grupos y resultados, para la interfaz. No se guarda.
+var ultimo_torneo: TorneoSelecciones = null
 ## El último Mundial de Clubes: {anio, campeon, club_id, mio, relato}.
 var mundial_clubes: Dictionary = {}
 ## Los campeones continentales de clubes, el más reciente primero:

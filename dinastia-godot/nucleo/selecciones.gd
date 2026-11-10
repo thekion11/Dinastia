@@ -50,28 +50,13 @@ func _vitrina_mundialista(j: Jugador, anio: int) -> void:
 ## vuelven con más media y más caros, o rotos.
 func copa_del_mundo(anio: int) -> Dictionary:
 	var m := _mundo()
-	if m == null:
+	if m == null or _tabla_selecciones().size() < 2:
 		return {}
-	var vivos: Array = []
-	for n: String in _tabla_selecciones():
-		vivos.append(_txt(n))
-	if vivos.size() < 2:
-		return {}
-	Azar.barajar(vivos)
-	if vivos.size() > PLAZAS_COPA_DEL_MUNDO:
-		vivos.resize(PLAZAS_COPA_DEL_MUNDO)
-	while vivos.size() > 1:
-		var siguiente: Array = []
-		for i in range(0, vivos.size(), 2):
-			var a := String(vivos[i])
-			if i + 1 >= vivos.size():
-				siguiente.append(a)      ## impar: el último pasa sin jugar
-				continue
-			var b := String(vivos[i + 1])
-			var fa := fuerza(a) + Azar.ent(-RUIDO_DUELO, RUIDO_DUELO)
-			var fb := fuerza(b) + Azar.ent(-RUIDO_DUELO, RUIDO_DUELO)
-			siguiente.append(a if fa >= fb else b)
-		vivos = siguiente
+	## (10-11) Un Mundial DE VERDAD: las 32 mejores, en grupos y eliminatorias con partidos (`SeleccionesTorneos.mundial`), en vez de duelos de fuerza.
+	var t := SeleccionesTorneos.mundial(self, m, anio)
+	t.jugar_entero()
+	ultimo_torneo = t
+	var vivos: Array = [t.campeon.nombre if t.campeon != null else ""]
 	var campeon := String(vivos[0])
 	mundial = {"anio": anio, "campeon": campeon}
 
