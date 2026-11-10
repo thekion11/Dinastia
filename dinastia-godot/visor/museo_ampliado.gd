@@ -118,6 +118,11 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 		PiezasObra._rotulo_ajustado(nodo, "%s · %d" % [Idiomas.t(String(h.get("titulo", ""))), int(h.get("anio", 0))],
 			Vector3(px - lado * 0.38, y0 + 1.2, pz), -lado * PI / 2.0, 14, Color(0.12, 0.12, 0.14), paso_z * 0.92)
 	MuseoPresentacion.zocalo(lote, m, caja, y0)
+	var zs_amp: Array = []
+	for v: Dictionary in vitrinas:
+		if not zs_amp.has((v["p"] as Vector3).z):
+			zs_amp.append((v["p"] as Vector3).z)
+	MuseoPresentacion.gallardetes(lote, m, caja, y0, zs_amp)
 	## Camisetas por década en la pared del fondo (la del ascensor queda a un lado).
 	var decadas: Array = []
 	for h: Dictionary in hs:
