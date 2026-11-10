@@ -238,6 +238,33 @@ static func escudo(nodo: Node3D, x0: float, z_fin: float, mi: Club) -> void:
 	q.name = "EscudoVestuario"
 	nodo.add_child(q)
 
+## (10-11) Escudo del club en la pared de una sala del edificio (MEDIA/ALTA): `pos` = centro, mira a +Z (la pared del fondo a z menor). Un material por club.
+static var _mat_escudo := {}
+static func escudo_sala(nodo: Node3D, pos: Vector3, club: Variant, tam := 1.1) -> void:
+	if not activo() or not (club is Club):
+		return
+	var mi: Club = club
+	var m: StandardMaterial3D = _mat_escudo.get(mi.id)
+	if m == null:
+		var tex := Escudo.textura(mi, 256 if Calidad.elegida >= Calidad.ALTO else 128)
+		if tex == null:
+			return
+		m = StandardMaterial3D.new()
+		m.albedo_texture = tex
+		m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		m.roughness = 0.55
+		m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+		_mat_escudo[mi.id] = m
+	var q := MeshInstance3D.new()
+	var qm := QuadMesh.new()
+	qm.size = Vector2(tam, tam)
+	q.mesh = qm
+	q.material_override = m
+	q.position = pos
+	q.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	q.name = "EscudoSala"
+	nodo.add_child(q)
+
 ## PIZARRA TÁCTICA con la formación del club: el campo en azul sobre el blanco y once fichas del color del club (portero del segundo) repartidas como dice `tactica.formacion`
 ## («4-2-3-1»: portero, línea de 4, de 2, de 3 y de 1). Reemplaza al «4-3-3» escrito a mano. Solo MEDIA y ALTA.
 static func pizarra(nodo: Node3D, x0: float, z_fin: float, c1: Color, c2: Color, mi: Club) -> void:

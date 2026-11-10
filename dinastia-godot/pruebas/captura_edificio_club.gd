@@ -36,7 +36,7 @@ func _ready() -> void:
 	for j: Jugador in club.plantilla:
 		pl.append([pl.size() + 1, Nombres.visible(j.nombre)])
 	EdificioClub.ctx = {"inst": {"park": 5, "med": 7, "video": 6, "museo": 6}, "dentro": {"sala_prensa": "television"},
-		"plantilla": pl, "titulos": 4, "presidente": "Presidente Ficticio"}
+		"plantilla": pl, "titulos": 4, "presidente": "Presidente Ficticio", "club": club, "pais": club.pais}
 	if OS.get_environment("TITULOS") != "":   ## TITULOS=14: palmarés grande (hitos ficticios; 0 = recién ascendido)
 		var n_t := int(OS.get_environment("TITULOS"))
 		var hs: Array = []
