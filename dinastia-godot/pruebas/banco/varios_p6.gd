@@ -187,7 +187,6 @@ func _probar_plantillas_fijas() -> void:
 	var j2 := b.crear_jugador(a.ligas[0].clubes[0], "DEL", "DC")
 	_comprobar(j1.nombre != j2.nombre or j1.ovr != j2.ovr, "lo que nace después varía con la semilla (%s / %s)" % [j1.nombre, j2.nombre])
 
-
 ## LO QUE SE AÑADIÓ EN LA TANDA DE ASPECTO Y AUDIO. Comprueba lo que de verdad
 ## puede quedarse callado sin dar ningún error: una receta de sonido que sale en
 ## silencio, una pieza de música que no hace bucle, un idioma con la columna
