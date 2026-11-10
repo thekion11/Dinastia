@@ -43,6 +43,23 @@ func _ready() -> void:
 		if not Nombres.es_pais(c.nombre):
 			_clubes.append(Nombres.limpiar(c.nombre))
 	_clubes.sort_custom(func(a: String, b: String) -> bool: return a.length() > b.length())
+	## completitud: todos los países y selecciones tienen traducción en los 8 idiomas (los que se sumen después saltan aquí)
+	var todos := {}
+	for k: String in t:
+		todos[String(t[k])] = true
+	var sels: Variant = Datos.tabla("SELECCIONES")
+	if sels is Array:
+		for n: Variant in sels:
+			if n is String:
+				todos[n] = true
+	var sin: Array = []
+	for n: String in todos:
+		for l: String in ["en", "pt", "fr", "it", "de", "ca", "pl", "tr"]:
+			Idiomas._asegurar(l)
+			if not (Idiomas._extra.get(l, {}) as Dictionary).has(n):
+				sin.append("%s (%s)" % [n, l])
+				break
+	_comprobar(sin.is_empty(), "los %d países y selecciones tienen traducción en los 8 idiomas (%d sin: %s)" % [todos.size(), sin.size(), ", ".join(sin.slice(0, 6))])
 	_comprobar(_paises.size() >= 40, "en «%s» cambian de nombre %d países de %d" % [idi, _paises.size(), t.size()])
 	for nombre: String in PESTANAS:
 		if nombre != "Inicio":
