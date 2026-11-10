@@ -130,8 +130,12 @@ func _picos(mediana: int) -> void:
 			process_mode = Node.PROCESS_MODE_ALWAYS
 			await get_tree().process_frame
 			await get_tree().process_frame
-			var base := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
-			print("   PLANO CONGELADO %s: %d llamadas" % [cam0.global_position.round(), base])
+			var serie: Array[int] = []
+			for _k in 12:   ## ¿el pico sigue con el plano quieto (es lo que se ve) o se va solo (es el corte de cámara)?
+				serie.append(rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
+				await get_tree().process_frame
+			var base := serie[-1]
+			print("   PLANO CONGELADO %s: %s llamadas" % [cam0.global_position.round(), serie])
 			await _desglose(get_tree().root, base)
 			get_tree().quit()
 			return

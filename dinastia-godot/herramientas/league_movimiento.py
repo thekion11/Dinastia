@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """CATÁLOGO DE MOVIMIENTO DE LEAGUE-SOCCER (10-11-2026, fase 4c de docs/04_auditorias/MOTOR_LEAGUE_SOCCER_PLAN.md).
 
-Lee las animaciones de locomoción originales (terceros/league_soccer/animaciones/movement/<velocidad>/*.anim, Apache 2.0) y
+Lee las animaciones de locomoción originales (terceros/league_soccer/animaciones/movement/**.anim y templates/, Apache 2.0) y
 guarda en datos/league_movimiento.json, por cada una, lo que el original calcula de su pista de raíz «player» y de «body»
 (L utils/animation.cpp): velocidad de entrada y de salida ya escalonadas (0 / 3,5 / 5 / 7 m/s, GetIncomingVelocity y
 GetOutgoingVelocity), el ángulo de salida (GetOutgoingAngle: el del último tramo de la raíz o, parado, el giro del cuerpo), el
@@ -15,7 +15,7 @@ import math
 import os
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ORIGEN = os.path.join(RAIZ, "terceros", "league_soccer", "animaciones", "movement")
+ANIMS = os.path.join(RAIZ, "terceros", "league_soccer", "animaciones")
 DESTINO = os.path.join(RAIZ, "datos", "league_movimiento.json")
 
 
@@ -94,15 +94,23 @@ def _ficha(ruta):
 
 
 def main():
+    """Toda `movement/` (también las «angled»: el cuerpo girado respecto a la marcha) y las 10 plantillas (`templates/`, pasos
+    estables con el cuerpo a 0, ±45 o ±135 grados; en el original, de ellas salen las animaciones autogeneradas)."""
     sal = {}
-    for vel in sorted(os.listdir(ORIGEN)):
-        carpeta = os.path.join(ORIGEN, vel)
-        for nombre in sorted(os.listdir(carpeta)):
-            if not nombre.endswith(".anim"):
-                continue
-            f = _ficha(os.path.join(carpeta, nombre))
-            if f is not None:
-                sal["ls_movement__%s__%s" % (vel, nombre[:-5])] = f
+    for carpeta in ("movement", "templates"):
+        base = os.path.join(ANIMS, carpeta)
+        for raiz, _dirs, archivos in sorted(os.walk(base)):
+            for nombre in sorted(archivos):
+                if not nombre.endswith(".anim"):
+                    continue
+                ruta = os.path.join(raiz, nombre)
+                f = _ficha(ruta)
+                if f is None:
+                    continue
+                if carpeta == "templates":
+                    f["plantilla"] = True
+                rel = os.path.relpath(ruta, ANIMS)[:-5].replace(os.sep, "__")
+                sal["ls_" + rel] = f
     with open(DESTINO, "w", encoding="utf-8") as h:
         json.dump(sal, h, ensure_ascii=False, indent=1, sort_keys=True)
     print("animaciones de movimiento:", len(sal))
