@@ -9,11 +9,59 @@ extends RefCounted
 ##   · en ALTA, SOMBRAS en las luces del techo (el resto de la iluminación y el SSAO los pone `Calidad`/`Ambience`).
 ## SIN_VESTUARIO_REAL=1 lo apaga para medir el «antes». Con calidad menor que MEDIA no hace nada.
 
+## ESTILO POR PAÍS (sesión 7): cada país lleva sus materiales reales (texturas CC0 de Poly Haven en `assets/cc0/`, ver `herramientas/bajar_cc0.py`), para que un vestuario inglés, uno
+## japonés y uno argentino no se vean iguales. «ing»: suelo de tablón oscuro y ladrillo visto (Reino Unido); «jap»: tablón claro de hinoki y paredes lisas (Japón y Asia oriental);
+## «lat»: baldosa de barro cocido y yeso de arcilla (España, Italia, Portugal y toda América Latina); el resto, goma deportiva y yeso beige. El azulejo del tercio bajo es el mismo en todos.
+const ESTILOS := {
+	"ing": {"suelo": "dark_wooden_planks", "pared": "brick_wall_005", "madera": "dark_wooden_planks", "m_suelo": 1.2, "m_pared": 1.6},
+	"jap": {"suelo": "hinoki_planks", "pared": "beige_wall_001", "madera": "hinoki_planks", "m_suelo": 1.2, "m_pared": 2.0},
+	"lat": {"suelo": "patterned_terracotta_tiling", "pared": "clay_plaster", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0},
+	"def": {"suelo": "rubber_tiles", "pared": "beige_wall_001", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0},
+}
+const GRUPOS := {
+	"ing": ["ENG", "SCO", "WAL", "NIR", "IRL"],
+	"jap": ["JPN", "KOR", "CHN", "TWN", "HKG"],
+	"lat": ["ESP", "ITA", "POR", "ARG", "CHI", "URU", "PAR", "BOL", "PER", "COL", "VEN", "ECU", "MEX", "BRA", "CRC", "PAN", "HON", "GUA", "SLV", "CUB", "DOM", "MAR"],
+}
+
+static func estilo_de(pais: String) -> String:
+	for k: String in GRUPOS:
+		if (GRUPOS[k] as Array).has(pais):
+			return k
+	return "def"
+
+## Material PBR con las tres texturas de `assets/cc0/<id>/` (null si faltan: se usa el procedural de antes). `metros`: lo que mide un lado de la textura.
+static func _pbr(ident: String, metros: float, tinte := Color.WHITE) -> StandardMaterial3D:
+	var base := "res://assets/cc0/%s/" % ident
+	if not ResourceLoader.exists(base + "diff.jpg"):
+		return null
+	var m := StandardMaterial3D.new()
+	m.albedo_texture = load(base + "diff.jpg") as Texture2D
+	m.albedo_color = tinte
+	if ResourceLoader.exists(base + "nor.jpg"):
+		m.normal_enabled = true
+		m.normal_texture = load(base + "nor.jpg") as Texture2D
+		m.normal_scale = 0.8
+	if ResourceLoader.exists(base + "rough.jpg"):
+		m.roughness_texture = load(base + "rough.jpg") as Texture2D
+		m.roughness = 1.0
+	m.uv1_triplanar = true
+	m.uv1_world_triplanar = true
+	m.uv1_scale = Vector3.ONE / metros
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	return m
+
 static func activo() -> bool:
 	return Calidad.elegida >= Calidad.MEDIA and OS.get_environment("SIN_VESTUARIO_REAL") == ""
 
 ## Suelo de resina: gris azulado con un toque del club, semibrillante, con grano fino.
-static func suelo(c1: Color) -> StandardMaterial3D:
+static func suelo(c1: Color, pais := "") -> StandardMaterial3D:
+	var e: Dictionary = ESTILOS[estilo_de(pais)]
+	var real := _pbr(String(e["suelo"]), float(e["m_suelo"]))
+	if real != null:
+		real.clearcoat_enabled = true
+		real.clearcoat = 0.25
+		return real
 	var m := (Texturas.hormigon(Color(0.27, 0.28, 0.3).lerp(c1, 0.05), 41).duplicate() as StandardMaterial3D)
 	m.roughness = 0.42
 	m.roughness_texture = null
@@ -25,7 +73,11 @@ static func suelo(c1: Color) -> StandardMaterial3D:
 	return m
 
 ## Yeso pintado.
-static func pared() -> StandardMaterial3D:
+static func pared(pais := "") -> StandardMaterial3D:
+	var e: Dictionary = ESTILOS[estilo_de(pais)]
+	var real := _pbr(String(e["pared"]), float(e["m_pared"]))
+	if real != null:
+		return real
 	var m := (Texturas.hormigon(Color(0.9, 0.89, 0.86), 29).duplicate() as StandardMaterial3D)
 	m.albedo_texture = null   ## el ruido del hormigón en una pared pintada parecía granito
 	m.detail_enabled = false
@@ -84,8 +136,10 @@ static func azulejo() -> StandardMaterial3D:
 	return m
 
 ## Madera de los bancos.
-static func madera() -> StandardMaterial3D:
-	return Texturas.madera(Color(0.55, 0.38, 0.22), 0.5)
+static func madera(pais := "") -> StandardMaterial3D:
+	var e: Dictionary = ESTILOS[estilo_de(pais)]
+	var real := _pbr(String(e["madera"]), 1.0)
+	return real if real != null else Texturas.madera(Color(0.55, 0.38, 0.22), 0.5)
 
 ## El tercio bajo de las paredes con azulejo y cenefa del club. Las pieles de pintura van a x ± (VEST_MEDIO − 0.02) (0,04 de grueso): el azulejo, de 2 cm, se pega por dentro.
 ## `caja` es `TunelVestuario._caja(nodo, centro, tamaño, material, sólido)`.
@@ -120,3 +174,97 @@ static func sombras(nodo: Node3D, x0: float, z_centro: float) -> void:
 		mejor.shadow_enabled = true
 		mejor.shadow_bias = 0.05
 		mejor.shadow_blur = 1.5
+
+## ESCUDO GRANDE del club en la pared del fondo (entre la pizarra y la puerta de la calle: x0 + 2,9), pintado: `Escudo.textura` (el mismo del menú) en un plano de 2 m. Solo MEDIA y ALTA.
+static func escudo(nodo: Node3D, x0: float, z_fin: float, mi: Club) -> void:
+	if not activo() or mi == null:
+		return
+	var tex := Escudo.textura(mi, 256 if Calidad.elegida >= Calidad.ALTO else 128)
+	if tex == null:
+		return
+	var m := StandardMaterial3D.new()
+	m.albedo_texture = tex
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	m.roughness = 0.55
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	var q := MeshInstance3D.new()
+	var qm := QuadMesh.new()
+	qm.size = Vector2(1.9, 1.9)
+	q.mesh = qm
+	q.material_override = m
+	q.position = Vector3(x0 + 2.9, 1.8, z_fin - 0.055)
+	q.rotation.y = PI   ## mira a −Z, hacia dentro de la sala
+	q.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	q.name = "EscudoVestuario"
+	nodo.add_child(q)
+
+## PIZARRA TÁCTICA con la formación del club: el campo en azul sobre el blanco y once fichas del color del club (portero del segundo) repartidas como dice `tactica.formacion`
+## («4-2-3-1»: portero, línea de 4, de 2, de 3 y de 1). Reemplaza al «4-3-3» escrito a mano. Solo MEDIA y ALTA.
+static func pizarra(nodo: Node3D, x0: float, z_fin: float, c1: Color, c2: Color, mi: Club) -> void:
+	var formacion := String(mi.tactica.formacion) if mi != null else "4-3-3"
+	var lineas: Array[int] = []
+	for p in formacion.split("-"):
+		if p.is_valid_int():
+			lineas.append(int(p))
+	if lineas.is_empty() or lineas.reduce(func(a: int, b: int) -> int: return a + b) != 10:
+		lineas = [4, 3, 3]
+	var an := 512
+	var al := 320
+	var img := Image.create(an, al, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0.97, 0.98, 0.98))
+	var azul := Color(0.15, 0.22, 0.5)
+	## Campo: borde, línea de medio campo, círculo central y las dos áreas.
+	for x in range(18, an - 18):
+		for t in 3:
+			img.set_pixel(x, 18 + t, azul)
+			img.set_pixel(x, al - 21 + t, azul)
+	for y in range(18, al - 18):
+		for t in 3:
+			img.set_pixel(18 + t, y, azul)
+			img.set_pixel(an - 21 + t, y, azul)
+			img.set_pixel(an / 2 + t, y, azul)
+	for a in 360:
+		var ang := deg_to_rad(float(a))
+		for t in 3:
+			var r := 44.0 + float(t)
+			img.set_pixel(clampi(an / 2 + int(cos(ang) * r), 0, an - 1), clampi(al / 2 + int(sin(ang) * r), 0, al - 1), azul)
+	## Las dos áreas (rectángulos de 66 × 120 px a cada lado).
+	for lado_der in [false, true]:
+		var x_borde := an - 18 if lado_der else 18
+		var x_fondo := x_borde + (-66 if lado_der else 66)
+		for t in 3:
+			for x in range(mini(x_borde, x_fondo), maxi(x_borde, x_fondo)):
+				img.set_pixel(x, 100 + t, azul)
+				img.set_pixel(x, 217 + t, azul)
+			for y in range(100, 220):
+				img.set_pixel(x_fondo + t, y, azul)
+	## Fichas: portero a la izquierda y las líneas hacia la derecha (el equipo ataca a la derecha).
+	var fichas: Array[Vector2] = [Vector2(48, al / 2)]
+	var n_l := lineas.size()
+	for i in n_l:
+		var x := lerpf(120.0, 440.0, float(i + 1) / float(n_l + 1)) - 20.0 + 20.0 * float(i) / float(maxi(n_l - 1, 1))
+		for j in lineas[i]:
+			fichas.append(Vector2(x, lerpf(48.0, al - 48.0, (float(j) + 0.5) / float(lineas[i]))))
+	for k in fichas.size():
+		var c := fichas[k]
+		var col := c2 if k == 0 else c1
+		for dy in range(-15, 16):
+			for dx in range(-15, 16):
+				var d := sqrt(float(dx * dx + dy * dy))
+				if d <= 15.0:
+					img.set_pixel(clampi(int(c.x) + dx, 0, an - 1), clampi(int(c.y) + dy, 0, al - 1), Color.WHITE if d > 12.0 else col)
+	var m := StandardMaterial3D.new()
+	m.albedo_texture = ImageTexture.create_from_image(img)
+	m.roughness = 0.3
+	m.metallic_specular = 0.6
+	var q := MeshInstance3D.new()
+	var qm := QuadMesh.new()
+	qm.size = Vector2(3.1, 1.94)
+	q.mesh = qm
+	q.material_override = m
+	q.position = Vector3(x0, 1.7, z_fin - 0.135)
+	q.rotation.y = PI
+	q.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	q.name = "PizarraFormacion"
+	nodo.add_child(q)
+	PiezasObra._rotulo(nodo, formacion, Vector3(x0, 2.82, z_fin - 0.14), PI, 36, azul)
