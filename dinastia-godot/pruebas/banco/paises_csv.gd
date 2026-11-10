@@ -153,3 +153,131 @@ func _comprobar_tanda(casos: Dictionary, semilla: int) -> void:
 		_comprobar(String((Datos.tabla("COPA_NOM") as Dictionary).get(cod, "")) != "" and SeleccionEquipo.codigo_de(String(datos[1])) == cod, "%s: tiene copa y su selección (%s) devuelve el país" % [cod, String(datos[1])])
 		var cands := SeleccionEquipo.candidatos(m, String(datos[1])).size()
 		_comprobar(cands >= 20, "%s: la selección de %s convoca con jugadores del mundo (%d candidatos, antes 0)" % [cod, String(datos[1]), cands])
+
+
+## (10-11) LIGAS ACTIVAS: el juego solo carga los países elegidos. Mundos de 1, 2 y 5 países (y todos): tres temporadas sin errores, continentales con equipos, guardado/carga con la lista y AÑADIR países a mitad de partida.
+func _probar_ligas_activas() -> void:
+	_titulo("LIGAS ACTIVAS: MUNDOS PARCIALES, GUARDADO Y AÑADIR PAÍSES")
+	var mio := LigasActivas.pais_del_dispositivo()
+	var pc := LigasActivas.por_defecto(false)
+	var movil := LigasActivas.por_defecto(true)
+	_comprobar(LigasActivas.todos().size() >= 80 and pc.size() == 15 and pc[0] == mio and pc.has("CHI") and pc.has("ENG") and pc.has("BRA") and pc.has("USA"), "PC: los 15 principales con el país del dispositivo (%s) y Chile (%s)" % [mio, ",".join(pc)])
+	_comprobar(movil[0] == mio and movil.size() <= 5 and ["ENG", "ESP", "ITA", "GER"].all(func(x: String) -> bool: return movil.has(x)), "móvil: el país del dispositivo y ENG, ESP, ITA, GER (%s)" % ",".join(movil))
+	_comprobar(LigasActivas.es_entero(LigasActivas.todos()) and not LigasActivas.es_entero(pc), "«mundo entero» solo si están todos")
+	var c_pc := LigasActivas.coste(LigasActivas.todos(), false)
+	var c_mov := LigasActivas.coste(LigasActivas.todos(), true)
+	_comprobar(int(c_pc["clubes"]) > 1500 and absf(float(c_mov["s_semana"]) - 3.0 * float(c_pc["s_semana"])) < 0.001 and float(c_pc["gb"]) > 1.5, "la estimación de coste del mundo entero: %d clubes, %.1f s/semana en PC, %.1f en móvil, %.1f GB" % [int(c_pc["clubes"]), float(c_pc["s_semana"]), float(c_mov["s_semana"]), float(c_pc["gb"])])
+	for caso: Array in [["CHI"], ["BRA", "NGA"], ["ENG", "ESP", "ITA", "GER", "FRA"]]:
+		var paises: Array[String] = []
+		paises.assign(caso)
+		var m := Mundo.new()
+		m.generar(paises, 4242)
+		var activos := LigasActivas.de(m)
+		activos.sort()
+		var esperados := paises.duplicate()
+		esperados.sort()
+		_comprobar(activos == esperados, "%s: el mundo solo carga esos países (%d clubes)" % [str(caso), m.clubes.size()])
+		m.tomar_el_mando(m.ligas[0].clubes[3].id)
+		var anio0 := m.anio
+		for _t in 3:
+			m.jugar_temporada()
+			m.cerrar_temporada()
+		_comprobar(m.anio == anio0 + 3 and not m.continentales.is_empty(), "%s: tres temporadas completas y con torneos continentales (%s)" % [str(caso), str(m.continentales.keys())])
+		var m2 := Partida.desde_instantanea(JSON.parse_string(JSON.stringify(Partida.instantanea(m))))
+		var act2 := LigasActivas.de(m2)
+		act2.sort()
+		_comprobar(act2 == esperados and m2.clubes.size() == m.clubes.size(), "%s: guardar y cargar conserva la lista de países" % str(caso))
+	## AÑADIR países a mitad de partida (al cerrar la temporada): lo que ya existe no se mueve.
+	var base: Array[String] = ["CHI"]
+	var mb := Mundo.new()
+	mb.generar(base, 4243)
+	mb.tomar_el_mando(mb.ligas[0].clubes[2].id)
+	mb.jugar_temporada()
+	mb.cerrar_temporada()
+	var ids_antes := mb.clubes.keys()
+	var jugador_antes: String = (mb.clubes[ids_antes[0]] as Club).plantilla[0].id
+	var antes := mb.clubes.size()
+	var r := LigasActivas.agregar(mb, ["ENG", "NGA", "CHI", "XXX"])
+	_comprobar((r["paises"] as Array).size() == 2 and mb.clubes.size() > antes, "añadir ENG y NGA (CHI ya estaba y XXX no existe): +%d clubes" % int(r["clubes"]))
+	_comprobar(ids_antes.all(func(id: Variant) -> bool: return mb.clubes.has(id)) and (mb.clubes[ids_antes[0]] as Club).plantilla[0].id == jugador_antes, "los clubes y jugadores que ya existían conservan sus ids")
+	var act := LigasActivas.de(mb)
+	_comprobar(act.has("ENG") and act.has("NGA") and act.has("CHI") and LigasActivas.agregar(mb, ["ENG"])["clubes"] == 0, "la lista crece y añadir lo que ya está no hace nada")
+	_comprobar(mb.continentales.has("afr") or mb.continentales.has("ucl"), "los continentales de los países nuevos entran en la temporada (%s)" % str(mb.continentales.keys()))
+	mb.jugar_temporada()
+	mb.cerrar_temporada()
+	_comprobar(mb.anio >= 2028, "la temporada con los países añadidos se juega y se cierra sin errores")
+	_comprobar(LigasActivas.faltan(mb).size() == LigasActivas.todos().size() - LigasActivas.de(mb).size(), "faltan (%d) = todos − activos" % LigasActivas.faltan(mb).size())
+
+## Todos los países (86): generar (≈2 s), una temporada entera (≈40 s) y cerrarla, con todos los torneos continentales y los de la FIFA armados.
+func _probar_ligas_activas_todos() -> void:
+	_titulo("LIGAS ACTIVAS: TODOS LOS PAÍSES, UNA TEMPORADA COMPLETA")
+	var m := Mundo.new()
+	m.generar([] as Array[String], 4244)
+	_comprobar(LigasActivas.de(m).size() == LigasActivas.todos().size() and LigasActivas.faltan(m).is_empty(), "todos los países cargados (%d, %d clubes)" % [LigasActivas.de(m).size(), m.clubes.size()])
+	m.tomar_el_mando(m.ligas[0].clubes[3].id)
+	var anio0 := m.anio
+	m.jugar_temporada()
+	m.cerrar_temporada()
+	_comprobar(m.anio == anio0 + 1 and m.continentales.size() >= 8, "una temporada completa con los torneos continentales (%s)" % str(m.continentales.keys()))
+
+## La pantalla «Ligas activas» (etapa de la entrada): casillas por país, atajos, resumen y confirmación. No toca el guardado real de la máquina (se restaura al terminar).
+func _probar_ligas_activas_pantalla() -> void:
+	_titulo("LIGAS ACTIVAS: LA PANTALLA")
+	var cfg_previo := FileAccess.file_exists(LigasActivas.RUTA_ELECCION)
+	var bytes_previos: PackedByteArray = FileAccess.get_file_as_bytes(LigasActivas.RUTA_ELECCION) if cfg_previo else PackedByteArray()
+	var elegidas_previas := LigasActivas.elegidas.duplicate()
+	DirAccess.remove_absolute(LigasActivas.RUTA_ELECCION)
+	LigasActivas.elegidas.clear()
+	var p := LigasActivasPantalla.new()
+	add_child(p)
+	var n_paises := LigasActivas.todos().size()
+	var defecto := LigasActivas.por_defecto(OS.has_feature("mobile"))
+	_comprobar(p._casillas.size() == n_paises and p.marcados().size() == defecto.size(), "una casilla por país (%d) y las de la plataforma marcadas (%d)" % [p._casillas.size(), p.marcados().size()])
+	p._atajo("todas")
+	_comprobar(p.marcados().size() == n_paises and "⚠" in p._resumen.text or OS.has_feature("mobile"), "«Mundo entero» marca todos y avisa del coste")
+	p._atajo("defecto")
+	_comprobar(p.marcados().size() == defecto.size() and defecto.all(func(x: String) -> bool: return p.marcados().has(x)), "«Por defecto» marca los de la plataforma (%s)" % ",".join(p.marcados()))
+	p._atajo("ninguna")
+	_comprobar(p.marcados().is_empty() and p._continuar.disabled, "sin ninguna marcada no se puede continuar")
+	var recibido: Array = []
+	p.terminado.connect(func(d: Dictionary) -> void: recibido.append(d))
+	p.confirmar()
+	_comprobar(recibido.is_empty(), "confirmar sin países no avanza")
+	p._atajo("defecto")
+	p.confirmar()
+	var paises: Array = ((recibido[0] as Dictionary)["ligas"] as Dictionary)["paises"] if recibido.size() == 1 else []
+	_comprobar(paises.size() == defecto.size() and ",".join(LigasActivas.elegidas) == ",".join(PackedStringArray(paises)), "confirmar devuelve {ligas: {paises}} y deja la elección en LigasActivas (%s)" % str(paises))
+	_comprobar(",".join(LigasActivas.para_generar()) == ",".join(PackedStringArray(paises)), "el generador recibe la lista elegida")
+	_comprobar(",".join(LigasActivas.cargar_eleccion()) == ",".join(PackedStringArray(paises)), "la elección se recuerda para la próxima partida")
+	p.free()
+	## Se deja la máquina como estaba.
+	LigasActivas.elegidas.assign(elegidas_previas)
+	if cfg_previo:
+		var f := FileAccess.open(LigasActivas.RUTA_ELECCION, FileAccess.WRITE)
+		f.store_buffer(bytes_previos)
+		f.close()
+	else:
+		DirAccess.remove_absolute(LigasActivas.RUTA_ELECCION)
+
+## La pantalla en modo AÑADIR (al cerrar la temporada): solo los países que faltan, sin tocar la elección guardada de la máquina.
+func _probar_ligas_activas_agregar_pantalla() -> void:
+	_titulo("LIGAS ACTIVAS: AÑADIR AL CERRAR LA TEMPORADA")
+	var m := Mundo.new()
+	m.generar(["CHI", "ARG"] as Array[String], 4245)
+	var antes := FileAccess.file_exists(LigasActivas.RUTA_ELECCION)
+	var p := LigasActivasPantalla.new()
+	p.mundo_agregar = m
+	add_child(p)
+	var faltan := LigasActivas.faltan(m)
+	_comprobar(p._casillas.size() == faltan.size() and not p._casillas.has("CHI") and not p._casillas.has("ARG"), "solo se enseñan los países que faltan (%d)" % faltan.size())
+	var recibido: Array = []
+	p.terminado.connect(func(d: Dictionary) -> void: recibido.append(d))
+	p.confirmar()
+	_comprobar(recibido.size() == 1 and ((recibido[0] as Dictionary)["ligas"] as Dictionary)["paises"] == [], "sin marcar nada, «Añadir» equivale a «Ahora no»")
+	p._atajo("todas")
+	p.confirmar()
+	_comprobar(recibido.size() == 2 and (((recibido[1] as Dictionary)["ligas"] as Dictionary)["paises"] as Array).size() == faltan.size(), "«Todas» devuelve los %d que faltan" % faltan.size())
+	_comprobar(FileAccess.file_exists(LigasActivas.RUTA_ELECCION) == antes, "añadir no cambia la elección guardada de la máquina")
+	p.free()
+	var r := LigasActivas.agregar(m, ["ESP", "ENG"])
+	_comprobar((r["paises"] as Array).size() == 2 and LigasActivas.de(m).has("ESP") and not LigasActivas.faltan(m).has("ENG"), "lo añadido deja de faltar")

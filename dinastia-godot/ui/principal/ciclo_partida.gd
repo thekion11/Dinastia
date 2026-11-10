@@ -68,7 +68,7 @@ func nueva() -> void:
 	p.mundo = m
 	Escudo.limpiar_cache()
 	Cara.limpiar_cache()
-	m.generar([], 0)
+	m.generar(LigasActivas.para_generar(), 0)
 	## Tomar el mando no es solo elegir club: es que la directiva te ponga un
 	## objetivo y empiece a mirarte. Sin eso puedes acabar decimosexto veinte anos
 	## seguidos y no pasa nada. Se abre esta escena directo -bancos, capturas- sin
