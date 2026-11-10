@@ -14,6 +14,9 @@ static func cerrar_pendientes(m: Mundo) -> Array:
 	if m == null:
 		return cerrados
 	var mio := m.mi_club()
+	CopasMundo.cerrar(m)   ## (10-11) también las copas de los demás países
+	if m.campeones_liga_otros.is_empty():
+		CopasMundo.anotar_campeones_liga(m)   ## una vez por temporada: los campeones de liga de los demás (para sus supercopas)
 	if m.copa != null and m.copa.en_curso():
 		var guard := 0
 		while m.copa.en_curso() and guard < 20:

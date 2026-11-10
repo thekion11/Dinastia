@@ -347,6 +347,7 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	for d: Dictionary in datos["ligas"]:
 		m.ligas.append(_dic_a_liga(d, m))
 	m.copa = _dic_a_copa(datos.get("copa", {}), m)
+	CopasMundo.desde_dic(m, datos.get("copas_mundo", {}))
 	m.mercado.desde_dic(datos.get("mercado", {}))
 	for d: Dictionary in datos.get("libres", []):
 		m.libres.append(_dic_a_jugador(d))

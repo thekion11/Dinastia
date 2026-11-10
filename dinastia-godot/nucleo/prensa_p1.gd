@@ -408,6 +408,7 @@ const REP_VENDE_SOLO := 80
 # titulares buenos o de titulares malos.
 
 const PORTADAS_MAX := 60
+var eventos_vistos: Array = []   ## (10-11) eventos del club con diálogo ya vistos (`EventosClub`: claves «id:año[:semana]»)
 var retiros_previstos: Dictionary = {}; var despedida_anio: int = 0; var despedida_ofrecida_anio: int = 0; var dorsales_retirados: Array = []   ## (9-11) partido de despedida: quién se retira este cierre (id→bool), el año del último partido de gala y las camisetas retiradas [{dorsal, nombre, anio}] (ver `PartidoDespedida`)
 var capitulos: Array = []              ## (9-11) los documentales de cada temporada: [{anio, caps: [{titulo, texto, tipo, ref_id}]}] (ver `CapitulosTemporadas`)
 var portadas: Array = []                ## {t, c, tipo, anio, semana}, la más nueva primero
