@@ -11,7 +11,6 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 > 1. **FINAL DE TEMPORADA COMPLETO:** pantalla única de resumen a pantalla completa (campeón y tu puesto, copa, continental, ascensos y descensos, premios, veredicto de la directiva); copa y continental pendientes que se cierren o anuncien antes; orden de eventos: fin de liga → despedida → gala → «Temporada siguiente» → nueva temporada.
 > 2. **EVENTOS A PANTALLA COMPLETA:** homenaje en 3D (el aviso y el homenaje ya están en main, solo al llegar a la fecha).
 > 3. **PRÓLOGO:** arte final de la animación fija (primer corte en main, sin sonido ni arte final). IDEA a medir: prólogo como vídeo ya hecho que el juego proyecta, para ver si suben los FPS (fuera del repo; medir antes y después).
-> 4. **CASA DEL PERSONAJE** sin ciudad.
 > 5. **AVANCE DE FECHA** con eventos y varias semanas (estilo PES).
 > 6. **PLANTILLA:** mapa de calor y habilidades individuales con estrellas.
 > 7. **REESTRUCTURACIÓN «SOLO CLUB»** (paso 2): reparar el club (muebles, colisiones, parpadeo del suelo del despacho). Paso 3: medir sin ciudad con `herramientas/hw_modesto.sh`. Paso 4: decidir C/C++ solo con medidas.
@@ -65,7 +64,6 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
    - Torneos de selecciones (Mundial, Eurocopa, Copa América; hoy solo fechas en `nucleo/calendario.gd`): **PENDIENTE DE LA DECISIÓN DEL DUEÑO** (ver «DECISIONES PENDIENTES DEL DUEÑO», más abajo). NO se implementan hasta que responda.
 2. **EVENTOS A PANTALLA COMPLETA solo al llegar a su fecha.** Hecho: aviso del partido de despedida y homenaje (ya en main, `EventoPantallaCompleta`). FALTA: el homenaje en 3D (y que lo nuevo herede del marco base).
 3. **ANIMACIÓN FIJA DEL PRÓLOGO, saltable.** Primer corte en main (`PrologoAnimado`, 6 planos, sin vídeo, barra de fases arriba y salto con Esc/mando/stick). FALTA: arte final, sonido y más texto por plano.
-4. **CASA DEL PERSONAJE SIN CIUDAD.** Hoy la casa caminable vive en el mundo 3D de la ciudad (`CasaEscena3D`, `ui/casa_escena3d.gd`; menú Vida → «Ver tu casa»).
 5. **AVANCE DE FECHA con eventos y varias semanas** (estilo PES 2020). Hecho: botón «Hito» y fila «PRÓXIMOS» con los escudos de los 5 siguientes partidos. FALTA: eventos en esa fila (mercado, copa, continental, fin de temporada) y varias semanas.
 6. **MAPA DE CALOR y HABILIDADES con estrellas de la plantilla** (como la «Información del jugador» del PES). Hecho: estilo de juego con estrellas. FALTA: mapa de calor por jugador y habilidades individuales (regate en profundidad, etc.).
 
@@ -80,6 +78,7 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 - Plantilla a la PES (`PlantillaPes`, `PlantillaEstilos`, `GestionOnce`) y fila «PRÓXIMOS» (`FilaProximos`): aspecto (la lleva la sesión de estética).
 - Camisetas retiradas (Historia del club y museo del estadio, `CamisetasRetiradas`, `CamisetasMuseo`): más variedad de camiseta y foco en el museo.
 - Capítulos de cada temporada (`CapitulosTemporadas`): comparar ritmo y planos con el PES.
+- Casa del personaje a pie sin ciudad (`CasaAcceso` → `CasaRecorrido`, `CasaPlano`, `CasaConstruccion`; prueba `prueba_casa_a_pie` en `especiales.sh`): casa básica de 6 habitaciones, sin entrar a la ciudad. Pulir: más muebles/decoración, interacciones (cama, tele, ordenador), variedad de casas según nivel de vida, cámara en habitaciones pequeñas y la terraza/jardín.
 - Ascensor con viaje gradual (`AscensorViaje`) y puertas con marco (`PuertasClub`): animación de apertura de puertas y ascensor, muebles de las salas vacías, colisiones persona-objeto, suelo liso.
 - Partido de despedida (`PartidoDespedida`, `JornadaDespedida`): ceremonia con más fuerza, camiseta retirada visible en el estadio.
 - «Temporada siguiente» solo al terminar la liga (`AvanceSemana.rellenar_calendario`).
