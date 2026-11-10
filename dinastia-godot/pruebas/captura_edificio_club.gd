@@ -82,6 +82,8 @@ func _colocar(planta: int, sala: String) -> void:
 
 func _process(_d: float) -> void:
 	_n += 1
+	if OS.get_environment("TRAZA") != "":
+		print("FRAME ", _n, " t=", Time.get_ticks_msec() / 1000)
 	if _n == 8:
 		_vista.recorrer()
 		_ex = _vista._explorador
