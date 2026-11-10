@@ -124,7 +124,7 @@ func _probar_pais_sin_liga_tanda1() -> void:
 func _probar_pais_sin_liga_tanda2() -> void:
 	_titulo("PAÍSES SIN LIGA, TANDA 2: LIGA, COPA, CONFEDERACIÓN Y SELECCIÓN")
 	_comprobar_tanda({"WAL": [12, "Gales", "ucl"], "SVN": [10, "Eslovenia", "ucl"], "JOR": [10, "Jordania", "asia"], "CYP": [14, "Chipre", "ucl"], "IRQ": [20, "Irak", "asia"], "UZB": [16, "Uzbekistán", "asia"],
-		"FIN": [12, "Finlandia", "ucl"], "JAM": [14, "Jamaica", "conc"], "HON": [11, "Honduras", "conc"], "PAN": [12, "Panamá", "conc"], "NZL": [11, "N. Zelanda", "oce"], "MLI": [18, "Malí", "afr"]}, 1104)
+		"FIN": [12, "Finlandia", "ucl"], "JAM": [14, "Jamaica", "conc"], "HON": [11, "Honduras", "conc"], "PAN": [12, "Panamá", "conc"], "NZL": [11, "N. Zelanda", "oce"], "MLI": [14, "Malí", "afr"]}, 1104)
 
 ## (10-11) TANDA 3: 14 países de la UEFA (Bosnia, Montenegro, Islandia, Estonia, Kazajistán, Azerbaiyán, Bielorrusia, Letonia, Albania, Macedonia del Norte, Georgia, Lituania, Irlanda del Norte, Luxemburgo).
 ## Listas de clubes de Wikipedia 2025-26 / 2026. Bielorrusia NO está suspendida (solo vetada como local) y entra en los torneos como cualquier otra.
@@ -140,7 +140,7 @@ func _probar_pais_sin_liga_tanda3() -> void:
 func _probar_pais_sin_liga_tanda4() -> void:
 	_titulo("PAÍSES SIN LIGA, TANDA 4: LIGA, COPA, CONFEDERACIÓN Y SELECCIÓN")
 	_comprobar_tanda({"THA": [16, "Tailandia", "asia"], "IDN": [18, "Indonesia", "asia"], "VIE": [14, "Vietnam", "asia"], "IND": [14, "India", "asia"], "MAS": [13, "Malasia", "asia"], "BHR": [12, "Baréin", "asia"],
-		"OMA": [12, "Omán", "asia"], "COD": [16, "RD Congo", "afr"], "BFA": [14, "Burkina Faso", "afr"], "ZAM": [18, "Zambia", "afr"], "GUI": [14, "Guinea", "afr"], "KEN": [18, "Kenia", "afr"],
+		"OMA": [12, "Omán", "asia"], "COD": [16, "RD Congo", "afr"], "BFA": [15, "Burkina Faso", "afr"], "ZAM": [18, "Zambia", "afr"], "GUI": [14, "Guinea", "afr"], "KEN": [18, "Kenia", "afr"],
 		"ARM": [10, "Armenia", "ucl"], "MDA": [8, "Moldavia", "ucl"], "ESA": [12, "El Salvador", "conc"], "GUA": [12, "Guatemala", "conc"]}, 1106)
 
 ## (10-11) TANDA 5: 33 países (UEFA pequeños, África, Asia y CARIBE/CENTROAMÉRICA). Muchas listas NO verificadas: ver docs/04_auditorias/datos_dudosos_2026-11-10.md.
