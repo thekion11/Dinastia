@@ -182,9 +182,17 @@ func _ia_portador(p: Dictionary) -> void:
 func _ejecutar(p: Dictionary, dec: Dictionary, mirada: Vector2, lado: float) -> void:
 	var accion := String(dec["accion"])
 	cuenta[accion] = int(cuenta[accion]) + 1
+	var d_arco := Vector2(pos(p).x, pos(p).z - _arco_rival(p).z).length()   ## diagnóstico: a qué distancia del arco rival se decide
+	var tramo := "d<20" if d_arco < 20.0 else ("d20_35" if d_arco < 35.0 else ("d35_55" if d_arco < 55.0 else "d55+"))
+	cuenta[tramo] = int(cuenta.get(tramo, 0)) + 1
+	if bool(dec.get("zona", false)):   ## diagnóstico de la fase 4b: decisiones en zona de tiro y tiros que la cola dejó detrás
+		cuenta["en_zona"] = int(cuenta.get("en_zona", 0)) + 1
+		if accion != "tiro" and (dec.get("cola", []) as Array).any(func(x: Dictionary) -> bool: return String(x["accion"]) == "tiro"):
+			cuenta["tiro_detras"] = int(cuenta.get("tiro_detras", 0)) + 1
 	match accion:
 		"pase":
-			_pasar_a(p, dec["i"], int(dec["tipo"]) != LeagueNucleo.CORTO)
+			## L AI_GetPass: el pase LARGO va al espacio (+0,2 × la distancia hacia el arco rival); aquí, nuestro «al hueco».
+			_pasar_a(p, dec["i"], int(dec["tipo"]) != LeagueNucleo.CORTO, int(dec["tipo"]) == LeagueNucleo.LARGO)
 		"tiro":
 			_tirar(p, Vector2(clampf(float(dec["y"]) / (PALO - 0.35), -1.0, 1.0), -0.45 if _rng.randf() < 0.6 else 0.55), clampf(float(dec["potencia"]), 0.0, 1.0))
 		"panico":
