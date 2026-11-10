@@ -304,23 +304,10 @@ func _avanzar_dia() -> void:
 func _hay_partido_hoy() -> bool:
 	return partido_obliga and p._dia_semana == 5 and _tiene_partido_pendiente()
 
-## EL PRÓXIMO HITO del calendario, para la pantalla de avance (idea del PES 2020: el avance se detiene en lo importante):
-## {"dia": 0-6, "icono", "texto"}. Primero tu partido; luego el cierre del mercado; si no, la semana de descanso.
+## EL PRÓXIMO HITO del calendario (idea del PES 2020: el avance se detiene en lo importante): {"dia": 0-6, "icono", "texto", "tipo"}.
+## Lo calcula `EventosFecha.hito`: tu partido de liga, de copa o continental, el cierre y la apertura del mercado, el fin de temporada.
 func proximo_hito() -> Dictionary:
-	if p.mundo == null or not p.mundo.temporada_en_curso():
-		return {"dia": 6, "icono": "🏁", "texto": Idiomas.t("Temporada terminada")}
-	var mio := p.mundo.mi_club()
-	if _tiene_partido_pendiente():
-		var par := p.mundo.proximo_partido()
-		var texto := Idiomas.t("Partido de copa o continental")
-		if not par.is_empty():
-			var casa: bool = par[0] == mio
-			var rival: Club = par[1] if casa else par[0]
-			texto = "%s %s" % [Idiomas.t("vs") if casa else Idiomas.t("en"), rival.nombre]
-		return {"dia": 5, "icono": "⚽", "texto": texto}
-	if p.mundo.mercado_abierto() and p.mundo.semanas_de_mercado() <= 2:
-		return {"dia": 6, "icono": "⏳", "texto": Idiomas.t("El mercado está por cerrar")}
-	return {"dia": 6, "icono": "🛌", "texto": Idiomas.t("Semana sin partido")}
+	return EventosFecha.hito(p.mundo, p._dia_semana)
 
 ## «Hasta el próximo hito»: avanza día a día y se detiene al llegar al sábado de partido (abre su menú) o al cambiar de semana.
 func _avanzar_hasta_hito() -> void:
@@ -343,7 +330,7 @@ func _pintar_dias() -> void:
 	p._limpiar(p._fila_dias)
 	var fila_prox: Variant = p._guia.nodos.get("fila_proximos")
 	if is_instance_valid(fila_prox) and p.mundo != null:
-		FilaProximos.pintar(p.mundo, fila_prox as HBoxContainer)
+		FilaProximos.pintar(p.mundo, fila_prox as HBoxContainer, p._dia_semana)
 	var boton_hito: Variant = p._guia.nodos.get("hito")
 	if is_instance_valid(boton_hito) and p.mundo != null:
 		var h := proximo_hito()

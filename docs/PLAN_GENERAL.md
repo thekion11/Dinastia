@@ -9,10 +9,9 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 >
 > Pendiente, en este orden:
 > 1. **CASA DEL PERSONAJE** sin ciudad.
-> 2. **AVANCE DE FECHA** con eventos y varias semanas (estilo PES).
-> 3. **REESTRUCTURACIÓN «SOLO CLUB»** (paso 2): reparar el club (muebles, colisiones, parpadeo del suelo del despacho). Paso 3: medir sin ciudad con `herramientas/hw_modesto.sh`. Paso 4: decidir C/C++ solo con medidas.
-> 4. Revisar en el edificio real que las camisetas retiradas se ven en las plantas altas.
-> 5. **ESTÉTICA** (rama `ccr-da27fb86-i59x88`, fusión pendiente de la orden del dueño): profundidad de cabeceras, portadas, Ajustes y botones.
+> 2. **REESTRUCTURACIÓN «SOLO CLUB»** (paso 2): reparar el club (muebles, colisiones, parpadeo del suelo del despacho). Paso 3: medir sin ciudad con `herramientas/hw_modesto.sh`. Paso 4: decidir C/C++ solo con medidas.
+> 3. Revisar en el edificio real que las camisetas retiradas se ven en las plantas altas.
+> 4. **ESTÉTICA** (rama `ccr-da27fb86-i59x88`, fusión pendiente de la orden del dueño): profundidad de cabeceras, portadas, Ajustes y botones.
 >
 > **DECISIONES DEL DUEÑO (no implementar sin respuesta):** (a) torneos de selecciones (Mundial, Eurocopa, Copa América): ¿se juegan o son solo calendario? (b) sacar los tres .mp4 de `marca/` del repo.
 >
@@ -55,9 +54,8 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 
 ## PRIORITARIO (orden del dueño, 9-11) — en este orden; al completar una, se BORRA de aquí y se anota en «PULIDO» (más abajo) para pulirla después
 1. **CASA DEL PERSONAJE SIN CIUDAD.** Hoy la casa caminable vive en el mundo 3D de la ciudad (`CasaEscena3D`, `ui/casa_escena3d.gd`; menú Vida → «Ver tu casa»).
-2. **AVANCE DE FECHA con eventos y varias semanas** (estilo PES 2020). Hecho: botón «Hito» y fila «PRÓXIMOS» con los escudos de los 5 siguientes partidos. FALTA: eventos en esa fila (mercado, copa, continental, fin de temporada) y varias semanas.
 
-3. **ESTÉTICA Y DISEÑO DE MENÚS Y DISTRIBUCIÓN — FALTA PULIR.** **FALTA PULIR EN TODOS LOS BLOQUES hechos** (cada uno se afina después). Hecho y en main (9-11): márgenes de las columnas del menú central, fila «PRÓXIMOS» en tarjetas, portadas del riel con rejilla dinámica, letra base del Tema y de los botones, diálogo «Capítulos», Ligas y clubes con escudos, aire en Estadio, aviso del partido de despedida (escudo de las Leyendas con 5 diseños y once titular con busto 3D) y foco visible en los botones de evento.
+2. **ESTÉTICA Y DISEÑO DE MENÚS Y DISTRIBUCIÓN — FALTA PULIR.** **FALTA PULIR EN TODOS LOS BLOQUES hechos** (cada uno se afina después). Hecho y en main (9-11): márgenes de las columnas del menú central, fila «PRÓXIMOS» en tarjetas, portadas del riel con rejilla dinámica, letra base del Tema y de los botones, diálogo «Capítulos», Ligas y clubes con escudos, aire en Estadio, aviso del partido de despedida (escudo de las Leyendas con 5 diseños y once titular con busto 3D) y foco visible en los botones de evento.
 
 ## DECISIONES PENDIENTES DEL DUEÑO (no se implementa hasta que conteste)
 - **PRÓLOGO: ¿VÍDEO O ANIMACIÓN DEL MOTOR?** MEDIDO el 10-11 (`pruebas/medir_prologo_video.tscn`, 1280x720, llvmpipe; el vídeo de prueba .ogv —Theora, lo que Godot reproduce; el .mp4 no— se hizo con ffmpeg desde las capturas y NO está en el repo). Animación del motor tras optimizarla (la ilustración fija se pinta una vez por plano en una textura; antes ~1.377 llamadas de dibujo y ~88.000 primitivas por cuadro): **~43 llamadas, ~3.000 primitivas, 438 MB**. Vídeo: 1 llamada, 2 primitivas, 451 MB (+9-13 MB) y **16 MB de archivo** fuera del repo, más el coste de decodificar en la CPU (en software no se pudo separar del resto). **Recomendación de la sesión: quedarse con la animación** (ya es barata, pesa 0 bytes, se adapta a la pantalla y a los colores del club; el vídeo no se ve con el club propio). Medir en el teléfono para cerrar.
@@ -70,6 +68,7 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 - HOMENAJE EN 3D EN EL CAMPO (10-11): la ceremonia del partido de despedida proyecta `HomenajeCampo3D` (césped de noche, focos, grada llena con los colores del club en un MultiMesh, los homenajeados —modelo que juega— celebrando junto a su camiseta retirada enmarcada, papelitos dorados, cámara que gira). Prueba especial `prueba_homenaje3d`. Pulir: la grada real del estadio del club en vez de la genérica, pasillo de honor de los compañeros, sonido de ovación.
 - FINAL DE TEMPORADA (10-11): pantalla ÚNICA de resumen a pantalla completa (`ResumenTemporada`, hereda de `EventoPantallaCompleta`: tu puesto y el campeón de liga, copa, continental, ascensos/descensos de tu país, gala de premios y veredicto de la directiva; luego el documental). Copa y continental a medias se juegan hasta el final y se ANUNCIAN al terminar la liga, antes de la despedida (`CierreTorneos`, también dentro de `Mundo.nueva_temporada`). Orden: fin de liga → torneos pendientes → despedida → «Temporada siguiente» (gala dentro del cierre) → resumen → nueva temporada. Pruebas: banco `_probar_final_temporada` y especial `prueba_resumen_temporada`. Pulir: animación de entrada por tarjetas, sonido de gala, trofeo 3D del campeón; torneos de selecciones según la decisión del dueño.
 - Plantilla a la PES (`PlantillaPes`, `PlantillaEstilos`, `GestionOnce`) y fila «PRÓXIMOS» (`FilaProximos`): aspecto (la lleva la sesión de estética).
+- Avance de fecha con eventos (`EventosFecha`: liga, copa, continental, mercado, fin de temporada; `TarjetaEvento`, `CalendarioSemanas` de 6 semanas con botón 📅, «Hito» que para en cada evento): pulir aspecto (tarjetas de rondas futuras «probables», más detalle por día, mando) y comparar con el calendario del PES.
 - Camisetas retiradas (Historia del club y museo del estadio, `CamisetasRetiradas`, `CamisetasMuseo`): más variedad de camiseta y foco en el museo.
 - Capítulos de cada temporada (`CapitulosTemporadas`): comparar ritmo y planos con el PES.
 - Ascensor con viaje gradual (`AscensorViaje`) y puertas con marco (`PuertasClub`): animación de apertura de puertas y ascensor, muebles de las salas vacías, colisiones persona-objeto, suelo liso.

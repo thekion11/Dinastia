@@ -7661,7 +7661,14 @@
   "Al final del pasillo está el césped. Y el marcador.": "At the end of the corridor lies the pitch. And the scoreboard.",
   "Noventa minutos que deciden una semana entera.": "Ninety minutes that decide a whole week.",
   "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "They will set you a target. Meet it and you get time; miss it and you won't.",
-  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Signings, squad, stadium and finances: it all goes through here."
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Signings, squad, stadium and finances: it all goes through here.",
+  "Abre el mercado de fichajes": "Transfer market opens",
+  "Cierra el mercado de fichajes": "Transfer market closes",
+  "Fin de temporada": "End of season",
+  "Próximas semanas": "Coming weeks",
+  "Si sigues en el torneo": "If you are still in the tournament",
+  "Ver las próximas semanas": "See the coming weeks",
+  "Ronda": "Round"
  },
  "pt": {
   "Historia": "História",
@@ -15325,7 +15332,14 @@
   "Al final del pasillo está el césped. Y el marcador.": "No fim do corredor está o gramado. E o placar.",
   "Noventa minutos que deciden una semana entera.": "Noventa minutos que decidem uma semana inteira.",
   "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "Vão te dar um objetivo. Cumpra e terá tempo; falhe e não terá.",
-  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Contratações, elenco, estádio e finanças: tudo passa por aqui."
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Contratações, elenco, estádio e finanças: tudo passa por aqui.",
+  "Abre el mercado de fichajes": "Abre o mercado de transferências",
+  "Cierra el mercado de fichajes": "Fecha o mercado de transferências",
+  "Fin de temporada": "Fim da temporada",
+  "Próximas semanas": "Próximas semanas",
+  "Si sigues en el torneo": "Se continuares no torneio",
+  "Ver las próximas semanas": "Ver as próximas semanas",
+  "Ronda": "Ronda"
  },
  "patrones": [
   [
@@ -28964,7 +28978,14 @@
   "Al final del pasillo está el césped. Y el marcador.": "Au bout du couloir, il y a la pelouse. Et le tableau d'affichage.",
   "Noventa minutos que deciden una semana entera.": "Quatre-vingt-dix minutes qui décident d'une semaine entière.",
   "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "On te fixera un objectif. Atteins-le et tu auras du temps ; rate-le et non.",
-  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Transferts, effectif, stade et finances : tout passe par ici."
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Transferts, effectif, stade et finances : tout passe par ici.",
+  "Abre el mercado de fichajes": "Ouverture du marché des transferts",
+  "Cierra el mercado de fichajes": "Fermeture du marché des transferts",
+  "Fin de temporada": "Fin de saison",
+  "Próximas semanas": "Semaines à venir",
+  "Si sigues en el torneo": "Si tu es toujours dans le tournoi",
+  "Ver las próximas semanas": "Voir les semaines à venir",
+  "Ronda": "Tour"
  },
  "it": {
   "Historia": "Storia",
@@ -36628,7 +36649,14 @@
   "Al final del pasillo está el césped. Y el marcador.": "In fondo al corridoio c'è il prato. E il tabellone.",
   "Noventa minutos que deciden una semana entera.": "Novanta minuti che decidono un'intera settimana.",
   "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "Ti fisseranno un obiettivo. Raggiungilo e avrai tempo; fallisci e no.",
-  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Mercato, rosa, stadio e finanze: passa tutto da qui."
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Mercato, rosa, stadio e finanze: passa tutto da qui.",
+  "Abre el mercado de fichajes": "Apre il calciomercato",
+  "Cierra el mercado de fichajes": "Chiude il calciomercato",
+  "Fin de temporada": "Fine stagione",
+  "Próximas semanas": "Prossime settimane",
+  "Si sigues en el torneo": "Se sei ancora nel torneo",
+  "Ver las próximas semanas": "Vedi le prossime settimane",
+  "Ronda": "Turno"
  },
  "de": {
   "Historia": "Geschichte",
@@ -44292,7 +44320,14 @@
   "Al final del pasillo está el césped. Y el marcador.": "Am Ende des Gangs wartet der Rasen. Und die Anzeigetafel.",
   "Noventa minutos que deciden una semana entera.": "Neunzig Minuten, die eine ganze Woche entscheiden.",
   "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "Sie geben dir ein Ziel vor. Erreichst du es, bekommst du Zeit; sonst nicht.",
-  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Transfers, Kader, Stadion und Finanzen: alles läuft hier zusammen."
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Transfers, Kader, Stadion und Finanzen: alles läuft hier zusammen.",
+  "Abre el mercado de fichajes": "Der Transfermarkt öffnet",
+  "Cierra el mercado de fichajes": "Der Transfermarkt schließt",
+  "Fin de temporada": "Saisonende",
+  "Próximas semanas": "Kommende Wochen",
+  "Si sigues en el torneo": "Falls du noch im Turnier bist",
+  "Ver las próximas semanas": "Kommende Wochen ansehen",
+  "Ronda": "Runde"
  },
  "ca": {
   "Historia": "Història",
@@ -51956,7 +51991,14 @@
   "Al final del pasillo está el césped. Y el marcador.": "Al final del passadís hi ha la gespa. I el marcador.",
   "Noventa minutos que deciden una semana entera.": "Noranta minuts que decideixen una setmana sencera.",
   "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "Et fixarà un objectiu. Compleix-lo i tindràs temps; falla'l i no.",
-  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Fitxatges, plantilla, estadi i finances: tot passa per aquí."
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Fitxatges, plantilla, estadi i finances: tot passa per aquí.",
+  "Abre el mercado de fichajes": "Obre el mercat de fitxatges",
+  "Cierra el mercado de fichajes": "Tanca el mercat de fitxatges",
+  "Fin de temporada": "Final de temporada",
+  "Próximas semanas": "Properes setmanes",
+  "Si sigues en el torneo": "Si continues al torneig",
+  "Ver las próximas semanas": "Veure les properes setmanes",
+  "Ronda": "Ronda"
  },
  "pl": {
   "Club": "Klub",
@@ -59620,7 +59662,14 @@
   "Al final del pasillo está el césped. Y el marcador.": "Na końcu korytarza jest murawa. I tablica wyników.",
   "Noventa minutos que deciden una semana entera.": "Dziewięćdziesiąt minut, które decydują o całym tygodniu.",
   "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "Wyznaczą ci cel. Osiągnij go, a dostaniesz czas; jeśli nie — nie.",
-  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Transfery, kadra, stadion i finanse: wszystko przechodzi tędy."
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Transfery, kadra, stadion i finanse: wszystko przechodzi tędy.",
+  "Abre el mercado de fichajes": "Otwarcie okna transferowego",
+  "Cierra el mercado de fichajes": "Zamknięcie okna transferowego",
+  "Fin de temporada": "Koniec sezonu",
+  "Próximas semanas": "Najbliższe tygodnie",
+  "Si sigues en el torneo": "Jeśli nadal grasz w turnieju",
+  "Ver las próximas semanas": "Zobacz najbliższe tygodnie",
+  "Ronda": "Runda"
  },
  "tr": {
   "Club": "Kulüp",
@@ -67284,6 +67333,13 @@
   "Al final del pasillo está el césped. Y el marcador.": "Koridorun sonunda çim var. Ve skor tabelası.",
   "Noventa minutos que deciden una semana entera.": "Bütün bir haftayı belirleyen doksan dakika.",
   "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "Sana bir hedef koyacaklar. Tutturursan zamanın olur; tutturamazsan olmaz.",
-  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Transferler, kadro, stadyum ve finans: her şey buradan geçer."
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Transferler, kadro, stadyum ve finans: her şey buradan geçer.",
+  "Abre el mercado de fichajes": "Transfer dönemi açılıyor",
+  "Cierra el mercado de fichajes": "Transfer dönemi kapanıyor",
+  "Fin de temporada": "Sezon sonu",
+  "Próximas semanas": "Önümüzdeki haftalar",
+  "Si sigues en el torneo": "Turnuvada kalırsan",
+  "Ver las próximas semanas": "Önümüzdeki haftaları gör",
+  "Ronda": "Tur"
  }
 }
