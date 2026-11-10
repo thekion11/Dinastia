@@ -189,10 +189,11 @@ func _museo(e: Object, vc: Node, _m: Mundo) -> void:
 			## cada planta: subir por el ascensor, en cada vitrina interactuar con su trofeo
 			for p: int in plantas:
 				e.call("_ir_a_planta", p)
-				## (10-11) el ascensor sube y baja GRADUAL (`AscensorViaje`, 1 s por planta): se espera a que llegue (hasta ~10 s) en vez de 2 fotogramas.
-				for _i in 900:
+				## (10-11) el ascensor sube y baja GRADUAL (`AscensorViaje`, 1 s por planta): se espera a que llegue (hasta 15 s de reloj) en vez de 2 fotogramas.
+				var t_ini := Time.get_ticks_msec()
+				while Time.get_ticks_msec() - t_ini < 15000:   ## (10-11) por TIEMPO real, no por fotogramas: sin pantalla los fotogramas van a miles por segundo y 900 no llegaban a 1 s de viaje
 					await get_tree().process_frame
-					if absf(e.cuerpo.position.y - RecorridoClub.y_de(p)) <= 0.05:
+					if absf(e.cuerpo.position.y - RecorridoClub.y_de(p)) <= 0.05 and not bool(e.get("_en_viaje")):   ## llegó Y el viaje terminó (el último centímetro del tween cae dentro de 5 cm antes de su callback, que fija la planta)
 						break
 				await _esperar(2)
 				if absf(e.cuerpo.position.y - RecorridoClub.y_de(p)) > 0.05:

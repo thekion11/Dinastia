@@ -20,6 +20,8 @@ func _ready() -> void:
 		SALAS = []
 		for i in OS.get_environment("SOLO").split(","):
 			SALAS.append(TODAS[int(i)])
+	if OS.get_environment("ANIM") == "1":   ## la expansión del museo (planta 3) como la ve el jugador la primera vez: se olvida que ya se vio
+		CargaCiudad.de("AjustesCiudad").guardar("museo_ampliado_visto", 0)
 	var m := Mundo.new()
 	## PAIS=ESP CLUB=5: otro país y otro club (regla 34: nunca revisar con un solo equipo).
 	var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"
@@ -61,7 +63,7 @@ func _ready() -> void:
 	_vista.abrir(club, float(OS.get_environment("OCUPACION")) if OS.get_environment("OCUPACION") != "" else 0.85, null, null, perfil)
 
 func _foto() -> void:
-	print("LLAMADAS ", _imgs.size(), " ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME), " tris ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))   ## medida de dibujo por sala
+	print("LLAMADAS ", _imgs.size(), " ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME), " tris ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME), " tex_MB ", snappedf(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TEXTURE_MEM_USED) / 1048576.0, 0.1), " vram_MB ", snappedf(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_VIDEO_MEM_USED) / 1048576.0, 0.1))   ## medida de dibujo por sala
 	var img := get_viewport().get_texture().get_image()
 	img.convert(Image.FORMAT_RGBA8)
 	if OS.get_environment("COMPLETA") == "1":   ## cada sala a tamaño completo (para ver el parpadeo del suelo, texturas…)

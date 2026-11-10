@@ -41,7 +41,7 @@ func _ready() -> void:
 				_h("colores_iguales", "%s %s" % [base, c.nombre])
 			if c.rep < 1 or c.rep > 100:
 				_h("rep_fuera_de_rango", "%s %s %d" % [base, c.nombre, c.rep])
-			if c.estadio_aforo < 1000:
+			if c.estadio_aforo < 400:   ## (10-11) antes 1000: el filial real Jong Utrecht juega con ~450; por debajo de 400 sigue siendo un error de tecleo
 				_h("aforo_minusculo", "%s %s %d" % [base, c.nombre, c.estadio_aforo])
 			var porteros := 0
 			var dorsales := {}
@@ -67,7 +67,7 @@ func _ready() -> void:
 			if porteros < 2:
 				_h("menos_de_2_porteros", "%s %s (%d)" % [base, c.nombre, porteros])
 		for l: Liga in m.ligas:
-			if l.clubes.size() % 2 != 0:
+			if l.clubes.size() % 2 != 0 and not (l.clubes.size() == 21 and l.pais == "EGY"):   ## (10-11) la liga egipcia REAL tiene 21 clubes (el calendario admite impares con descanso: `Liga`); cualquier otra impar sigue siendo un aviso
 				_h("liga_impar", "%s %s %d" % [base, l.nombre, l.clubes.size()])
 		print("[%s] clubes %d, jugadores %d" % [base, m.clubes.size(), n_jug])
 	Datos.usar_base_real(false)

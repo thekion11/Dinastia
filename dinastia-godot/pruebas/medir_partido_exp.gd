@@ -126,3 +126,74 @@ static func aplicar(vista: Node) -> void:
 				(g as GeometryInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 				nf += 1
 		print("SIN_SOMBRA_FINOS: %d piezas sin sombra" % nf)
+
+## EFECTO=glow|niebla|ajuste|ssao|ssr|tonemap|debanding|fxaa|brillo|cielo (uno solo; varios separados por coma): apaga ESE efecto de la cadena de MEDIA y nada más, para la tabla por efecto de `rendimiento_movil_2026-11-10.md`.
+## DIAG_ENTORNO=1 escribe qué trae el Environment y el viewport.
+static func efecto(vista: Node) -> void:
+	var lista := OS.get_environment("EFECTO").split(",", false)
+	var vp: Viewport = vista.get_viewport()
+	if OS.get_environment("DIAG_LUCES") != "":
+		## DIAG_LUCES=1: inventario de luces (tipo, visibles, con sombra) para el desglose de la noche.
+		var inv := {}
+		for l in vista.find_children("*", "Light3D", true, false):
+			var li := l as Light3D
+			var k := "%s%s" % [li.get_class(), " (sombra)" if li.shadow_enabled else ""]
+			var e: Array = inv.get(k, [0, 0])
+			e[0] += 1
+			e[1] += 1 if li.is_visible_in_tree() else 0
+			inv[k] = e
+		print("LUCES (total, visibles): ", inv)
+		for l in vista.find_children("*", "DirectionalLight3D", true, false):
+			var dl := l as DirectionalLight3D
+			print("LUZ_DIR %s energia=%.2f sombra=%s cortes=%d dist=%.0f padre=%s" % [dl.name, dl.light_energy, dl.shadow_enabled, dl.directional_shadow_mode, dl.directional_shadow_max_distance, dl.get_parent().name])
+	for we in vista.find_children("*", "WorldEnvironment", true, false):
+		var en: Environment = (we as WorldEnvironment).environment
+		if en == null:
+			continue
+		if OS.get_environment("DIAG_ENTORNO") != "":
+			print("ENTORNO %s: glow=%s niebla=%s ajuste=%s ssao=%s ssr=%s tonemap=%d fondo=%d ambiente=%d | vp msaa=%d fxaa=%d debanding=%s escala=%.2f" % [
+				we.name, en.glow_enabled, en.fog_enabled, en.adjustment_enabled, en.ssao_enabled, en.ssr_enabled, en.tonemap_mode, en.background_mode, en.ambient_light_source,
+				vp.msaa_3d, vp.screen_space_aa, vp.use_debanding, vp.scaling_3d_scale])
+		for e in lista:
+			match e:
+				"glow": en.glow_enabled = false
+				"niebla": en.fog_enabled = false
+				"ajuste": en.adjustment_enabled = false
+				"ssao": en.ssao_enabled = false
+				"ssr": en.ssr_enabled = false
+				"tonemap": en.tonemap_mode = Environment.TONE_MAPPER_LINEAR
+				"cielo": en.background_mode = Environment.BG_COLOR
+	for e in lista:
+		match e:
+			"omni":
+				for l in vista.find_children("*", "OmniLight3D", true, false):
+					(l as Light3D).visible = false
+			"spot":
+				for l in vista.find_children("*", "SpotLight3D", true, false):
+					(l as Light3D).visible = false
+			"sombras_luces":
+				for l in vista.find_children("*", "Light3D", true, false):
+					(l as Light3D).shadow_enabled = false
+			"sombra_sol_extra":
+				## la segunda luz direccional con sombra (de noche hay dos: la del estadio y la de `Ambience`): se apaga la sombra de la que NO se llama «Key»
+				var k := 0
+				for l in vista.find_children("*", "DirectionalLight3D", true, false):
+					if (l as Light3D).shadow_enabled:
+						k += 1
+						if k == 2:
+							(l as Light3D).shadow_enabled = false
+			"sombras_no_sol":
+				for l in vista.find_children("*", "Light3D", true, false):
+					if not l is DirectionalLight3D:
+						(l as Light3D).shadow_enabled = false
+			"cesped":
+				## EFECTO=cesped: el campo con un material plano sin sombreado (mismo verde): ¿cuánto cuesta el shader de la hierba (franjas, dibujo, ruido)?
+				var campo := vista.find_child("Cesped", true, false) as MeshInstance3D
+				if campo != null:
+					var pl := StandardMaterial3D.new()
+					pl.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+					pl.albedo_color = Color(0.20, 0.55, 0.18)
+					campo.material_override = pl
+					print("EFECTO cesped: material plano en %s" % campo.name)
+			"debanding": vp.use_debanding = false
+			"fxaa": vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED

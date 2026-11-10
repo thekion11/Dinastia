@@ -30,6 +30,7 @@ func _ready() -> void:
 	Calidad.elegida = Calidad.nivel_de_argumentos(Calidad.ALTO)
 	if OS.get_environment("RES3D_AUTO") != "":
 		Calidad.res3d_auto = OS.get_environment("RES3D_AUTO") == "1"   ## (10-11, P1) RES3D_AUTO=1/0: fuerza la resolución 3D automática (en escritorio viene apagada)
+	Calidad.modo_rendimiento = OS.get_environment("MODO_RENDIMIENTO") == "1"   ## (10-11) MODO_RENDIMIENTO=1: sin glow ni sombra del sol
 	Calidad.sin_msaa = OS.get_environment("SIN_MSAA") != ""   ## (10-11) SIN_MSAA=1: apaga el MSAA del viewport (como la «Prueba de rendimiento» de Ajustes) para medir cuánto cuesta en cada nivel.
 	var mundo := Mundo.new()
 	var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"   ## (10-11) PAIS=ESP CLUB=5: otro país y otro club (regla del dueño: nunca medir con un solo equipo).
@@ -38,9 +39,12 @@ func _ready() -> void:
 	var par := mundo.proximo_partido()
 	_vista = VistaEstadio.new()
 	add_child(_vista)
-	_vista.abrir(par[0], 0.85, par[1], Partido.new(par[0], par[1]))
+	## NOCHE=1 (10-11): el estadio se abre CON el perfil de noche, como en el juego (antes se aplicaba `Ambience` otra vez encima del de día y quedaban DOS luces direccionales con sombra: medía de más).
+	var perfil_n := {}
 	if OS.get_environment("NOCHE") != "":
-		Ambience.apply(_vista.get("_raiz3d"), {"clima": "noche"}, null, Calidad.nivel_de_argumentos(Calidad.ALTO))
+		perfil_n = EstadioPropio.new().perfil(par[0])   ## el perfil completo del estadio del club, con el clima puesto a noche
+		perfil_n["clima"] = "noche"
+	_vista.abrir(par[0], 0.85, par[1], Partido.new(par[0], par[1]), perfil_n)
 
 var _fin := false
 
@@ -64,6 +68,8 @@ func _process(_d: float) -> void:
 	## encendidos durante toda la muestra (lo peor de un gol del local).
 	if _n == CALENTAR - 4 and OS.get_environment("FESTEJO") != "":
 		FestejoGrada.lanzar(_vista.get("_raiz3d"), Color(0.8, 0.1, 0.1), Color(1, 1, 1), "salida", 600.0)
+	if _n == CALENTAR - 15 and (OS.get_environment("EFECTO") != "" or OS.get_environment("DIAG_ENTORNO") != ""):
+		MedirPartidoExp.efecto(_vista)   ## 15 fotogramas ANTES de medir: apagar un efecto recompila shaders y ese tirón no debe entrar en la muestra
 	if _n < CALENTAR:
 		return
 	if (_n == CALENTAR or _n == CALENTAR + 50) and OS.get_environment("DIAG_OCLU") != "":

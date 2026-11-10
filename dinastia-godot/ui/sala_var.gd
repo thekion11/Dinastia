@@ -123,7 +123,7 @@ func _sala() -> void:
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	e.ambient_light_color = Color(0.25, 0.32, 0.45)
 	e.ambient_light_energy = 0.6
-	e.glow_enabled = Calidad.elegida > Calidad.MINIMO
+	e.glow_enabled = ModoRendimiento.glow(Calidad.elegida)
 	e.glow_intensity = 0.7
 	env.environment = e
 	raiz.add_child(env)

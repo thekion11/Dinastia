@@ -21,6 +21,8 @@ var _todas: Array[Vector4] = []
 func _ready() -> void:
 	Calidad.elegida = Calidad.nivel_de_argumentos(Calidad.ULTRA_BAJA)
 	Calidad.sin_msaa = OS.get_environment("SIN_MSAA") != ""
+	if OS.get_environment("RES3D_AUTO") != "":
+		Calidad.res3d_auto = OS.get_environment("RES3D_AUTO") == "1"   ## (10-11, P1) RES3D_AUTO=1/0: fuerza la resolución 3D automática (en escritorio viene apagada)
 	var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"
 	var m := Mundo.new()
 	m.generar([pais], 77)

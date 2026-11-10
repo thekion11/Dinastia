@@ -30,6 +30,7 @@ func _pintar_dispositivo() -> void:
 	fila.add_child(b)
 	_disp_zoom()
 	_disp_tv()
+	_disp_cabecera()
 	_disp_ropa()
 	_disp_caras()
 	_disp_controles()
@@ -217,6 +218,8 @@ func _disp_calidad() -> void:
 			Calidad.guardar()
 			p._refrescar())
 		fila_c.add_child(b_c)
+	ModoRendimiento.crear(p)
+	ModoRendimiento.crear_menu(p)   ## (10-11) ahorro del menú también en MEDIA   ## (10-11) sin brillo ni sombra del sol de MEDIA hacia abajo; apagado por defecto
 	PartidoLigero.crear(p)   ## (4-11, orden 32) agregado aparte de la calidad: se ve en todas
 	AjusteResolucion3D.crear(p)   ## (3-11 / 4-11, pedido del dueño) resolución del 3D en Mínima (35-100 %) y en Media (50-100 %)
 	var ad := CheckButton.new()

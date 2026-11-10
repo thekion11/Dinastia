@@ -32,6 +32,10 @@ const SEG := 5.0
 ## golpe -que es lo que se ve en los dos videos-.
 const DESFASE := 0.42
 
+## (10-11) El texto de las vallas en el atlas (UNA llamada) en TODAS las calidades, no solo en MÍNIMA: los ~54 `Label3D` sueltos eran
+## ~166 llamadas en el vuelo de la presentación. Mismo aspecto (misma fuente, tamaño, contorno y color). Bandera para comparar.
+static var atlas_siempre := true
+
 ## {"texto": String, "fondo": Color, "tinta": Color}
 var _anuncios: Array = []
 ## Un material por anuncio, creados una sola vez: 54 paneles comparten los 6.
@@ -194,7 +198,7 @@ func _montar_multimesh() -> void:
 		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(mmi)
 		_multis[k] = mm
-	if Calidad.elegida <= Calidad.MINIMO and FundirPiezas.activo_r2 and _atlas_mm == null:
+	if (Calidad.elegida <= Calidad.MINIMO or atlas_siempre) and FundirPiezas.activo_r2 and _atlas_mm == null:
 		_montar_atlas()
 
 ## El color de un material de panel: albedo, y en alfa el brillo (emisión).
@@ -255,7 +259,7 @@ func _pintar(p: Dictionary, ciclo: int) -> void:
 ## EL TEXTO DE LAS VALLAS EN UNA SOLA LLAMADA (R2, 3-11, solo MÍNIMO). Cada valla llevaba su `Label3D` (~50 llamadas de dibujo). Aquí los textos
 ## que se muestran (los anuncios y, en un gol, las palabras del evento con sus dos tintas) se pintan UNA vez en una textura-atlas (con la misma
 ## fuente, tamaño, contorno negro y color que el rótulo) y los paneles son instancias de un `MultiMesh` de quads que leen su celda (datos por
-## instancia). Los rótulos sueltos se quitan cuando el atlas está listo; mientras tanto se ven los de siempre. MEDIA y superiores no cambian.
+## instancia). Los rótulos sueltos se quitan cuando el atlas está listo; mientras tanto se ven los de siempre. (10-11) En todas las calidades: `atlas_siempre`.
 const CELDA := Vector2i(720, 160)   ## px: el ancho del rótulo (720) y alto para dos líneas
 const COLUMNAS := 2
 const SHADER_TEXTO := """

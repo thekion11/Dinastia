@@ -92,6 +92,8 @@ pasa "partido de despedida jugado en vivo (modo vivo, con pantalla)" "XDG_DATA_H
 pasa "calendario de varias semanas y fila de próximos (con pantalla)" "XDG_DATA_HOME=/tmp/xdg_calendario_semanas xvfb-run -a godot --path . --resolution 1920x1080 --rendering-driver opengl3 res://pruebas/prueba_calendario_semanas.tscn" "0 fallos"
 pasa "controles táctiles del partido en un teléfono horizontal (tamaños, separación, solapes, toques; con pantalla)" "PARTIDO=1 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 2400x1080 res://pruebas/captura_tactil_movil.tscn" "FIN. 0 fallos"
 pasa "controles táctiles del partido en un teléfono vertical (con pantalla)" "PARTIDO=2 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1080x2400 res://pruebas/captura_tactil_movil.tscn" "FIN. 0 fallos"
+pasa "gestión en un teléfono horizontal en alemán (letra en mm, toques ≥ 7 mm, solapes, textos cortados, fuera de pantalla; con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 2400x1080 res://pruebas/auditoria_gestion_movil.tscn" "FIN. 0 fallos"
+pasa "estética de los menús en PC (3 tamaños de letra, rejilla, foco y pulsado, caras de 30 px; 2 clubes; con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1600x900 res://pruebas/auditoria_estetica_menus.tscn" "FIN. 0 fallos"
 # 5b. Las texturas de ruido en segundo plano son las de NoiseTexture2D, byte a byte (30-10)
 pasa "ruidos en segundo plano" "godot --headless --path . res://pruebas/probar_ruidos_fondo.tscn" "FIN. 0 fallos"
 pasa "textura del balón" "godot --headless --path . --script res://pruebas/probar_balon_textura.gd" "FIN. 0 fallos"
@@ -489,6 +491,9 @@ if [[ "$1" = "todo" ]]; then
   # (6-11) No estaban colgadas: pasan con 0 fallos pero tardan 2-4 min (partidos enteros / todas las pantallas); el aviso de "colgadas" venía de un límite de 120 s y de la caché de clases sin reimportar
   pasa "r2: s5_ocasiones" "godot --headless --path . res://pruebas/ideas/s5_ocasiones.tscn" "(^|[^0-9])0 fallos"
   pasa "r2: s3_auditoria_interfaz" "godot --headless --path . res://pruebas/ideas/s3_auditoria_interfaz.tscn" "(^|[^0-9])0 fallos"
+  # (10-11) Navegación con mando por todas las pestañas, los 9 menús, dos eventos y el teclado (orden 33): ~10 min
+  pasa "navegación con mando (foco, trampas, alcance, Cuadrado/R2)" "godot --headless --path . res://pruebas/auditoria_foco_mando.tscn" "FIN. 0 fallos"
+  pasa "navegación con mando: eventos, temporada y editor de formación" "godot --headless --path . res://pruebas/auditoria_foco_eventos.tscn" "FIN. 0 fallos"
 # 6a. Presupuesto de triángulos y llamadas de dibujo del partido (M-338): con pantalla virtual; ~5 min
 if command -v xvfb-run >/dev/null; then
 pasa "troceo de la grada sin butacas perdidas" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_troceo_grada.tscn" "FIN. 0 fallos"

@@ -65,7 +65,7 @@ static func escala_3d(nivel: int = -99) -> float:
 
 ## ¿Este nivel proyecta la sombra del sol? ULTRA BAJA y BAJA no (la pasada de sombras es ~1/4 de las llamadas del partido).
 static func sombra_solar(nivel: int) -> bool:
-	return nivel >= MEDIA_BAJA
+	return nivel >= MEDIA_BAJA and not ModoRendimiento.sin_sol(nivel)
 
 ## EL NIVEL QUE HA ELEGIDO EL JUGADOR en Ajustes. Vive aqui y no en la pantalla
 ## de ajustes porque quien lo necesita es el visor 3D, que se monta desde otro
@@ -80,11 +80,20 @@ static func sombra_solar(nivel: int) -> bool:
 ## nivel. Medido con `pruebas/medir_rendimiento.gd` antes/despues, ver LEEME.md del historial de git.
 ## R1 (3-11, prueba del dueño: 5 FPS en MEDIA en su teléfono): el nivel por defecto es el MÁS BAJO en todas las plataformas; el jugador sube si quiere.
 static var elegida: int = NIVEL_DEFECTO
+
+## (10-11) Capas pequeñas de la cabeza (ojos, cejas, pestañas, cara real): en BAJA (×0,6) y ULTRA_BAJA (×0,35) solo se dibujan de MÁS cerca.
+## A la cámara de TV miden menos de un píxel; son ~4 llamadas de dibujo por jugador (22 jugadores). En MEDIA o más, sin cambios.
+static func lod_cabeza() -> float:
+	if elegida <= ULTRA_BAJA:
+		return 0.35
+	return 0.6 if elegida <= BAJA else 1.0
 ## Bajar efectos durante el partido si los FPS caen de 40 (ver
 ## `RendimientoAdaptativo`). Encendido por defecto; se apaga en Ajustes.
 static var adaptativa: bool = true
 ## PARTIDO LIGERO (4-11, orden 32): agregado aparte de la calidad, apagado por defecto en todas (ver `PartidoLigero`).
 static var partido_ligero: bool = false
+static var ahorro_menu_media: bool = false   ## (10-11) Ajustes: el menú también ahorra (repinta solo al cambiar, fondos quietos) en MEDIA; apagado por defecto (`AhorroMenu`)
+static var modo_rendimiento: bool = false   ## (10-11) Ajustes: sin glow ni sombra del sol de MEDIA hacia abajo (`ModoRendimiento`); apagado por defecto
 
 ## Hora del dia. El atardecer es el que mejor sienta a un complejo deportivo:
 ## luz rasante, sombras largas y contraste, que es lo que hace que un render
@@ -384,6 +393,8 @@ static func cargar() -> void:
 	if cf.has_section_key("grafica", "adaptativa"):
 		adaptativa = bool(cf.get_value("grafica", "adaptativa"))
 	partido_ligero = bool(cf.get_value("grafica", "partido_ligero", false))
+	modo_rendimiento = bool(cf.get_value("grafica", "modo_rendimiento", false))
+	ahorro_menu_media = bool(cf.get_value("grafica", "ahorro_menu_media", false))
 	if cf.has_section_key("grafica", "motor_ligero"):
 		motor_ligero = bool(cf.get_value("grafica", "motor_ligero"))
 	if cf.has_section_key("grafica", "escala_media"):
@@ -400,6 +411,8 @@ static func guardar() -> void:
 	cf.set_value("grafica", "adaptativa", adaptativa)
 	cf.set_value("grafica", "motor_ligero", motor_ligero)
 	cf.set_value("grafica", "partido_ligero", partido_ligero)
+	cf.set_value("grafica", "modo_rendimiento", modo_rendimiento)
+	cf.set_value("grafica", "ahorro_menu_media", ahorro_menu_media)
 	cf.set_value("grafica", "escala_minimo", escala_minimo)
 	cf.set_value("grafica", "escala_media", escala_media)
 	cf.set_value("grafica", "res3d_auto", res3d_auto)

@@ -350,6 +350,9 @@ static func _vestir_cara(d: Dictionary, esq: Skeleton3D, hueso: int, nombre: Str
 	mat.set_shader_parameter("lum_media", 0.2126 * pl.r + 0.7152 * pl.g + 0.0722 * pl.b)
 	var mi := MeshInstance3D.new()
 	mi.name = "CaraReal"
+	if Calidad.lod_cabeza() < 1.0:   ## (10-11) en calidad baja la cara real solo de cerca; más lejos se ve la cabeza del cuerpo (sin rasgos: menos de un píxel)
+		mi.visibility_range_end = 33.0 * Calidad.lod_cabeza()
+		mi.visibility_range_end_margin = 3.0
 	mi.mesh = malla
 	mi.material_override = mat
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF

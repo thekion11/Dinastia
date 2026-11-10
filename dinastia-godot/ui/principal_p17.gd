@@ -15,6 +15,7 @@ var _rueda_desde: int:
 func _abrir_rueda_pantalla_completa(e: Dictionary) -> void:
 	var r: Control = load("res://ui/principal/rueda_prensa.gd").new(self)   ## (por load: la rueda de prensa no se compila al abrir el menú)
 	add_child(r)
+	FocoMando.aislar_mientras(r)   ## (10-11) la cruceta no saca el foco de la rueda a los botones de detrás
 	_rueda_pop = r
 	r.call("abrir", e)
 

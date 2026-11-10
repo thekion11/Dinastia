@@ -16,6 +16,8 @@ const CONSERVAR := ["TunelVestuario"]
 const CALLE := ["Exterior", "Fachada"]
 const META := "estadio_oculto_dentro"
 const META_CLAVE := "estadio_oculto_dentro_clave"
+const META_CONO := "estadio_oculto_dentro_cono"   ## {nodo: visible antes} de lo que el cono de visión por la boca deja fuera
+const META_AABB := "estadio_aabb_cono"
 const META_PLANTAS := "estadio_oculto_dentro_plantas"   ## {nodo «Planta_p»: visible antes}
 const META_PLANTAS_CLAVE := "estadio_oculto_dentro_plantas_clave"
 
@@ -23,6 +25,10 @@ const META_PLANTAS_CLAVE := "estadio_oculto_dentro_plantas_clave"
 ## (planta ≠ 0 oculta todo salvo la calle y la fachada).
 static func actualizar(explorador: Node3D, planta: int, zona := "", camara: Camera3D = null, datos: Dictionary = {}, viaje := false) -> void:
 	_plantas(explorador, planta, zona, viaje)
+	_estadio_y_calle(explorador, planta, zona, camara, datos)
+	_cono(explorador, planta, zona, camara, datos)
+
+static func _estadio_y_calle(explorador: Node3D, planta: int, zona: String, camara: Camera3D, datos: Dictionary) -> void:
 	var ver := camara != null and not datos.is_empty()
 	var estadio := false
 	var calle := false
@@ -38,6 +44,7 @@ static func actualizar(explorador: Node3D, planta: int, zona := "", camara: Came
 	var clave := (1 if estadio else 0) + (2 if calle else 0)
 	if int(explorador.get_meta(META_CLAVE, 0)) == clave:
 		return
+	_restaurar_cono(explorador)   ## lo que el cono dejó fuera vuelve antes de anotar «lo que estaba visible»
 	_devolver_estadio(explorador)
 	if clave == 0:
 		return
@@ -85,6 +92,88 @@ static func ventana_visible(camara: Camera3D, datos: Dictionary, planta: int) ->
 	var y0 := float(planta) * EdificioClub.ALTO_PLANTA
 	return _abertura_visible(camara, float(datos["x0"]), TunelMedidas.VEST_MEDIO - 0.5, y0 + 1.2, y0 + 2.6, float(datos["z_fin"]) + 0.31)
 
+## EL CONO POR LA BOCA DEL TÚNEL (sesión 7): con la boca a la vista, lo único del estadio que se ve es lo que cae dentro de la pirámide que va de la cámara a la boca (con 0,5 m de margen).
+## Cada hijo de primer nivel del estadio (tribunas, entorno…) cuya caja queda entera fuera de esa pirámide, o detrás de la boca, no se dibuja. Se recalcula cada fotograma (unas decenas de cajas)
+## y se devuelve al salir del túnel. Solo planta 0 y zona «Túnel» con la cámara a más de 1,5 m del plano de la boca.
+static func _cono(explorador: Node3D, planta: int, zona: String, camara: Camera3D, datos: Dictionary) -> void:
+	var raiz := explorador.get_parent()
+	var antes: Dictionary = explorador.get_meta(META_CONO, {})
+	var activo := OS.get_environment("SIN_CONO") == "" and planta == 0 and zona == "Túnel" and camara != null and raiz != null and datos.has("z_boca") and datos.has("x0") \
+		and absf(camara.position.z - float(datos["z_boca"])) > 1.5 and int(explorador.get_meta(META_CLAVE, 0)) == 0
+	if not activo:
+		if not antes.is_empty():
+			for n: Variant in antes:
+				if is_instance_valid(n):
+					(n as Node3D).visible = bool(antes[n])
+			explorador.set_meta(META_CONO, {})
+		return
+	var c := camara.position
+	var z := float(datos["z_boca"])
+	var x0 := float(datos["x0"])
+	var m := TunelMedidas.MEDIO + 0.5
+	var esq: Array[Vector3] = [Vector3(x0 - m, -0.5, z), Vector3(x0 + m, -0.5, z), Vector3(x0 + m, TunelMedidas.ALTO + 0.5, z), Vector3(x0 - m, TunelMedidas.ALTO + 0.5, z)]
+	var centro := Vector3(x0, TunelMedidas.ALTO / 2.0, z)
+	var planos: Array[Plane] = []
+	for i in 4:
+		var pl := Plane(c, esq[i], esq[(i + 1) % 4])
+		if pl.distance_to(centro) < 0.0:
+			pl = Plane(-pl.normal, -pl.d)
+		planos.append(pl)
+	planos.append(Plane(Vector3(0, 0, -1), Vector3(0, 0, z)))   ## solo lo que está más allá de la boca (z menor)
+	for h in raiz.get_children():
+		if not (h is Node3D) or h is Light3D or h is Camera3D or h == explorador or String(h.name) in CONSERVAR or String(h.name) in CALLE:
+			continue
+		var n := h as Node3D
+		if not n.has_meta(META_AABB):
+			n.set_meta(META_AABB, _caja_de(n))
+		var caja: AABB = n.get_meta(META_AABB)
+		if caja.size == Vector3.ZERO:
+			continue
+		var fuera := false
+		for pl: Plane in planos:
+			var todo_fuera := true
+			for k in 8:
+				if pl.distance_to(caja.get_endpoint(k)) >= 0.0:
+					todo_fuera = false
+					break
+			if todo_fuera:
+				fuera = true
+				break
+		if fuera and n.visible:
+			if not antes.has(n):
+				antes[n] = true
+			n.visible = false
+		elif not fuera and antes.has(n):
+			n.visible = bool(antes[n])
+			antes.erase(n)
+	explorador.set_meta(META_CONO, antes)
+
+static func _restaurar_cono(explorador: Node3D) -> void:
+	var cono: Dictionary = explorador.get_meta(META_CONO, {})
+	for n: Variant in cono:
+		if is_instance_valid(n):
+			(n as Node3D).visible = bool(cono[n])
+	explorador.set_meta(META_CONO, {})
+
+## La caja (en coordenadas de la raíz del estadio) de todo lo que dibuja un hijo del estadio.
+static func _caja_de(n: Node3D) -> AABB:
+	var caja := AABB()
+	var primera := true
+	var lista: Array = [n] if n is GeometryInstance3D else []
+	lista.append_array(n.find_children("*", "GeometryInstance3D", true, false))
+	for g: Variant in lista:
+		var gi := g as GeometryInstance3D
+		var t := Transform3D.IDENTITY
+		var x: Node = gi
+		while x != null and x != n.get_parent():
+			if x is Node3D:
+				t = (x as Node3D).transform * t
+			x = x.get_parent()
+		var a := t * gi.get_aabb()
+		caja = a if primera else caja.merge(a)
+		primera = false
+	return caja
+
 ## LAS PLANTAS DEL EDIFICIO QUE NO SE VEN (sesión 7): cada planta cuelga de su nodo «Planta_p» (`EdificioClub.montar`). Dentro de la planta p solo se dibuja ella; en el vestuario y el
 ## túnel (cerrados) no se dibuja ninguna (el vestuario y su ascensor cuelgan del edificio, no de una planta); en el campo, la banda y el acceso (se ve la fachada) y mientras el ascensor viaja
 ## se dibujan todas. Se vuelve a calcular si el edificio se rehace (`EdificioClub.reconstruir`).
@@ -121,6 +210,7 @@ static func _plantas(explorador: Node3D, planta: int, zona: String, viaje: bool)
 
 ## Deja el estadio como estaba (también al cerrar el recorrido).
 static func devolver(explorador: Node3D) -> void:
+	_restaurar_cono(explorador)
 	_devolver_estadio(explorador)
 	_devolver_plantas(explorador)
 

@@ -25,6 +25,12 @@ var _hueco_ficha: Control
 var _devolver: Array = []   ## [nodo, padre, índice, flags h, ratio]
 var _activo := -1
 var _cerrando := false
+## (10-11, auditoría de gestión en el móvil) LA CABECERA COMPACTA: en el teléfono en horizontal (480 px lógicos de alto) la cabecera grande y el
+## botón «Portada» se comían ~40 % del alto y lo que se trabaja quedaba en ~200 px. En una sola línea: volver, icono, título y sección, «Portada»
+## y el club. Solo en lo táctil (`EscalaMovil.es_tactil`) y si no se apaga en Ajustes («Cabecera compacta en el móvil»); en PC, como siempre.
+static var compacta_pref := true
+static func compacta() -> bool:
+	return compacta_pref and EscalaMovil.es_tactil()
 
 static func abrir(p: Principal, menu: Dictionary, sub: int = -1) -> PantallaMenu:
 	var n := PantallaMenu.new()
@@ -35,12 +41,17 @@ static func abrir(p: Principal, menu: Dictionary, sub: int = -1) -> PantallaMenu
 	n.set_anchors_preset(Control.PRESET_FULL_RECT)
 	n.mouse_filter = Control.MOUSE_FILTER_STOP
 	p.add_child(n)
+	FocoMando.aislar(n)   ## (10-11) con el menú encima, la cruceta no se va a lo de detrás
 	n._montar()
 	if sub >= 0:
 		n.elegir(sub)
 	else:
 		n.portada()
+	FocoMando.enfocar.call_deferred(n)
 	return n
+
+func _exit_tree() -> void:
+	FocoMando.liberar(self)
 
 func _color(i: int) -> Color:
 	return Color(String((_menu["colores"] as Array)[i]))
@@ -68,23 +79,25 @@ func _montar() -> void:
 	_raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_raiz.offset_left = 22.0 + MenuLateral.ANCHO_RIEL
 	_raiz.offset_right = -22
-	_raiz.offset_top = 16
-	_raiz.offset_bottom = -16
-	_raiz.add_theme_constant_override("separation", 12)
+	var cmp := compacta()
+	_raiz.offset_top = 6 if cmp else 16
+	_raiz.offset_bottom = -6 if cmp else -16
+	_raiz.add_theme_constant_override("separation", 6 if cmp else 12)
 	add_child(_raiz)
 
 	## LA CABECERA: volver, icono grande, el nombre del menú y dónde estás.
 	var cab := HBoxContainer.new()
-	cab.add_theme_constant_override("separation", 16)
-	_raiz.add_child(ProfundidadUI.banda(cab, _color(2)))   ## (10-11, estética) la cabecera en una banda con sombra y filo de color
-	var volver := _boton_plano("◂  Volver", 16)
+	cab.add_theme_constant_override("separation", 10 if cmp else 16)
+	_raiz.add_child(cab if cmp else ProfundidadUI.banda(cab, _color(2)))   ## (10-11, estética) la cabecera en una banda con sombra y filo de color
+	var volver := _boton_plano("◂  Volver", 14 if cmp else 16)
 	volver.tooltip_text = Idiomas.t("Volver al menú central (Esc)")
-	volver.custom_minimum_size = Vector2(118, 44)
+	volver.custom_minimum_size = Vector2(0, 0) if cmp else Vector2(118, 44)
 	volver.pressed.connect(cerrar)
 	cab.add_child(volver)
 	var icono := Label.new()
 	icono.text = String(_menu["icono"])
-	icono.add_theme_font_size_override("font_size", 42)
+	icono.add_theme_font_size_override("font_size", 22 if cmp else 42)
+	icono.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	cab.add_child(icono)
 	var titulos := VBoxContainer.new()
 	titulos.add_theme_constant_override("separation", -4)
@@ -92,19 +105,21 @@ func _montar() -> void:
 	cab.add_child(titulos)
 	var t := Label.new()
 	t.text = String(_menu["nombre"]).to_upper()
-	t.add_theme_font_size_override("font_size", 36)
+	t.add_theme_font_size_override("font_size", 18 if cmp else 36)
 	t.add_theme_color_override("font_color", _color(2).lightened(0.35))
 	t.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
 	t.add_theme_constant_override("shadow_offset_y", 3)
 	t.add_theme_constant_override("shadow_outline_size", 6)   ## (10-11) sombra difusa: el título se despega del fondo
 	titulos.add_child(t)
 	_titulo_sub = Label.new()
-	_titulo_sub.add_theme_font_size_override("font_size", 14)
+	_titulo_sub.add_theme_font_size_override("font_size", 13 if cmp else 14)
+	titulos.alignment = BoxContainer.ALIGNMENT_CENTER
 	_titulo_sub.add_theme_color_override("font_color", Color(1, 1, 1, 0.72))
 	titulos.add_child(_titulo_sub)
 	if _p.mundo != null and _p.mundo.mi_club() != null:
 		var club := Label.new()
-		club.text = "%s  ·  %s" % [Nombres.visible(_p.mundo.mi_club().nombre), _p.fecha_larga()]
+		club.text = Nombres.visible(_p.mundo.mi_club().nombre) if cmp else "%s  ·  %s" % [Nombres.visible(_p.mundo.mi_club().nombre), _p.fecha_larga()]
+		club.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		club.add_theme_font_size_override("font_size", 13)
 		club.add_theme_color_override("font_color", Color(1, 1, 1, 0.65))
 		cab.add_child(club)
@@ -112,9 +127,13 @@ func _montar() -> void:
 	## LAS PESTAÑAS DE SUBMENÚ (solo en detalle).
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 6)
-	_raiz.add_child(fila)
-	_btn_portada = _boton_plano("◂  Portada: todos los apartados", 14)
-	_btn_portada.custom_minimum_size = Vector2(0, 36)
+	if cmp:   ## en la misma línea que el título, antes del club
+		cab.add_child(fila)
+		cab.move_child(fila, titulos.get_index() + 1)
+	else:
+		_raiz.add_child(fila)
+	_btn_portada = _boton_plano("◂  Portada: todos los apartados", 13 if cmp else 14)
+	_btn_portada.custom_minimum_size = Vector2(0, 0 if cmp else 36)
 	_btn_portada.pressed.connect(portada)
 	fila.add_child(_btn_portada)
 	## Sin carril de pestañas hacia la derecha (pedido del usuario al ver la
@@ -146,8 +165,9 @@ func _montar() -> void:
 	var base := _raiz.offset_left
 	_raiz.offset_left = base - 40.0
 	var tw := create_tween().set_parallel(true)
-	tw.tween_property(self, "modulate:a", 1.0, 0.25)
-	tw.tween_property(_raiz, "offset_left", base, 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	## (10-11, estética; PES 2020/eFootball pasan de pantalla en ~0,2 s) 0,25/0,3 → 0,18/0,22 s: la entrada se siente ágil, no lenta
+	tw.tween_property(self, "modulate:a", 1.0, 0.18)
+	tw.tween_property(_raiz, "offset_left", base, 0.22).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	Sonido.toca("abrir" if Sonido.NOMBRES.has("abrir") else "clic", Sonido.Bus.INTERFAZ)
 	_al_redimensionar()
 
@@ -384,6 +404,7 @@ func cerrar() -> void:
 	if _cerrando:
 		return
 	_cerrando = true
+	FocoMando.liberar(self)
 	_devolver_contenido()
 	cerrada.emit()
 	if is_inside_tree():
