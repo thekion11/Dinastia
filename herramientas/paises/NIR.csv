@@ -1,0 +1,22 @@
+#seleccion=Irlanda del Norte
+#tier=0.5
+#globo=-5.93,54.60
+#bandera=🇬🇧
+#confed=ucl,uel
+#liga=NIFL Premiership|Liga Norirlandesa
+#copa=Copa de Irlanda del Norte|Copa Norirlandesa
+#nombres=Conor,Ciaran,Declan,Niall,Padraig,Connor,Jamie,Shane,Callum,Ryan,Oisin,Cathal,Rory,Aaron
+#apellidos=Murphy,McCann,Doherty,Quinn,Hughes,McAleer,Gallagher,Boyle,Kelly,Mulholland,Ferguson,Campbell,McKeown,Patterson
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Ballymena United;Ballimena Unido;#6cb4e4;#ffffff;46;3824;1928;los Celestes;un campo con tribunas bajas en una ciudad del condado de Antrim, que comparte nombre con otro club;Un club de la región de Antrim que alterna buenas temporadas con otras de lucha por no descender.
+Bangor;Bangor Costa;#1d4fa8;#f5c400;38;1895;1918;los Costeros;un pequeño estadio en una ciudad costera junto al mar;Un modesto club costero que lucha cada año por mantenerse en la élite.
+Carrick Rangers;Carrik Costeros;#f5a800;#111111;42;2100;1939;los Ámbar;un campo junto a la bahía de una localidad costera cerca de Belfast;Un club humilde de la costa norte de la bahía, pequeño pero tenaz.
+Cliftonville;Clifton Solitud;#c8102e;#ffffff;52;3054;1879;los Rojos;un estadio antiguo y coqueto al norte de la capital norirlandesa;El club más antiguo del país, con una afición muy fiel y un campo histórico.
+Coleraine;Colerain Bann;#1d4fa8;#ffffff;50;4843;1927;los del Bann;un estadio en una ciudad junto al río Bann, en la costa norte;Un club de la costa norte con tradición copera y una buena cantera.
+Crusaders;Cruzados Belfast;#c8102e;#111111;52;3208;1898;los Cruzados;un estadio con vistas a la bahía en el norte de la capital;Un club de Belfast que ha ganado ligas y copas en los últimos años.
+Dungannon Swifts;Dungannon Veloz;#c8102e;#111111;40;2000;1949;los Vencejos;un campo de hierba en una ciudad del condado de Tyrone;Un club pequeño del interior que se mantiene con pocos medios.
+Glenavon;Glenaven Lurgan;#1d4fa8;#ffffff;48;3302;1889;los Azules de Lurgan;un campo tradicional en una ciudad del condado de Armagh;Un club histórico del interior con muchos títulos de copa.
+Glentoran;Glentoran Este;#2e8b3e;#c8102e;52;6054;1882;los Verdes;un estadio centenario en el este de la capital;Uno de los clubes más laureados del país, con una afición apasionada.
+Larne;Larne Puerto;#c8102e;#ffffff;54;2732;1889;los del Puerto;un pequeño estadio en una ciudad portuaria de la costa de Antrim;Un club en alza que ha ganado la liga y jugado en Europa en los últimos años.
+Linfield;Linfeld Belfast;#1d4fa8;#ffffff;58;18434;1886;los Azules;el estadio nacional del país, con aforo grande para la liga;El club con más títulos del país y base de la selección en su estadio.
+Portadown;Portadun Bann;#c8102e;#ffffff;44;3940;1924;los Rojiblancos;un campo clásico en una ciudad del condado de Armagh;Un club tradicional del interior con una larga historia de títulos.

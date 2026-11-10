@@ -1,0 +1,26 @@
+#seleccion=Bielorrusia
+#tier=0.3
+#globo=27.56,53.90
+#bandera=🇧🇾
+#confed=ucl,uel
+#liga=Liga Superior de Bielorrusia|Liga Bielorrusa
+#copa=Copa de Bielorrusia|Copa Bielorrusa
+#nombres=Aleksandr,Dmitri,Maksim,Andrei,Sergei,Artem,Vladislav,Ilya,Nikita,Pavel,Egor,Kirill,Vitali,Yan
+#apellidos=Ivanov,Kovalev,Petrov,Sidorov,Kuznetsov,Volkov,Melnik,Shevchenko,Grigoriev,Lukashevich,Kozlov,Romanov,Baranov,Zhuk
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Arsenal Dzerzhinsk;Arsenal Dzerzin;#c8102e;#ffffff;40;1000;1992;los Artilleros;el pequeño campo municipal de una ciudad cercana a la capital;Un modesto club de provincias que pelea cada año por mantenerse arriba.
+Baranovichi;Baranovich Sur;#d71920;#111111;41;3749;1964;los Ferroviarios;el estadio de una ciudad ferroviaria del oeste;El club de un nudo ferroviario, de presupuesto reducido y mucho orgullo local.
+BATE Borisov;Batte Borisova;#f5c400;#1d4fa8;60;13126;1973;los Fabricantes;el moderno estadio de una ciudad industrial cercana a Minsk;El gran dominador del país durante más de una década, con presencia habitual en Europa.
+Belshina Bobruisk;Belshina Bobrui;#1d4fa8;#ffffff;42;3700;1976;los Neumáticos;el estadio de una ciudad fabril del este;Un club con una Copa en su historial que busca recuperar su mejor época.
+Dinamo Brest;Dinamar Brest;#1d4fa8;#ffffff;55;10037;1960;los Fronterizos;el estadio de una ciudad fronteriza del suroeste;El club de la frontera con Polonia, campeón en tiempos recientes.
+Dinamo Minsk;Dinamar Minska;#1d4fa8;#ffffff;54;22246;1927;los Blanquiazules;el estadio histórico de la capital, el mayor del país;El club más antiguo de la capital, con un largo historial de títulos.
+Dnepr Mogilev;Dniepr Mogilov;#1d4fa8;#ffffff;43;7350;1960;los Ribereños;el estadio de una ciudad del este junto a un gran río;Un club histórico de la ciudad de Mogilev con tradición copera.
+Gomel;Gomel Central;#c8102e;#1d4fa8;53;14307;1959;los Gallos Rojos;el estadio central de la segunda ciudad del país;El club de la ciudad del sureste, habitual de la zona alta de la tabla.
+Isloch;Isloch Minskia;#c8102e;#111111;47;3050;2007;los Rojinegros;el campo de un distrito de la capital;Un club joven del área de Minsk que ha crecido con una buena cantera.
+Maxline Vitebsk;Maxlina Vitebsk;#111111;#f5c400;48;8144;1960;los Aurinegros;el estadio central de una ciudad del norte, que comparte con otro club;El club norteño de la ciudad de Vitebsk, de patrocinio comercial.
+Minsk;Minsk Tractor;#c8102e;#ffffff;52;5600;1983;los Tractoristas;el estadio de un barrio industrial de la capital;Un club de la capital con arraigo obrero y buenas temporadas en la élite.
+Naftan Novopolotsk;Naftan Novopolo;#1d4fa8;#ffffff;44;4522;1967;los Petroleros;el estadio de una ciudad petroquímica del norte;El club de una ciudad de refinerías, constante en la mitad de la tabla.
+Neman Grodno;Nemen Grodna;#1d4fa8;#ffffff;51;8479;1964;los Azules del Neman;el estadio de una ciudad occidental junto al río;El club de la ciudad de Grodno, con Copa y recorrido europeo.
+Slavia Mozyr;Slavia Mozir;#1d4fa8;#ffffff;49;5300;1950;los Mozireños;el estadio de una ciudad del sur de la región de Gomel;Campeón de liga en los años noventa, hoy lucha por recuperar su prestigio.
+Torpedo-BelAZ Zhodino;Torpedo Zhodina;#1d4fa8;#ffffff;50;6524;1960;los Camioneros;el estadio de una ciudad famosa por sus camiones gigantes;El club de la ciudad de los camiones mineros, campeón de Copa.
+Vitebsk;Vitebsk Norte;#1d4fa8;#ffffff;38;8144;1960;los Vitebskos;el estadio central de la ciudad norteña, que comparte con otro club;El club histórico de Vitebsk, de presupuesto modesto y mucha afición.
