@@ -136,7 +136,7 @@ func jugar_jornada(ya_jugado: Partido = null) -> Array:
 			ya_jugado.guardar_si_es_mio()
 		else:
 			var p := Partido.new(par[0], par[1])
-			var r := p.simular()
+			var r := PartidoRapido.simular(p)   ## (10-11, paso a C++) igual que `p.simular()`; los 90 minutos en C++ si la extensión está y el cruce lo permite
 			gl = r["local"]
 			gv = r["visita"]
 		_anotar_resultado(par[0], par[1], gl, gv)

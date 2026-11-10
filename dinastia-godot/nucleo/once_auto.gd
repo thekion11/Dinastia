@@ -13,10 +13,18 @@ static func asignar(libres: Array, ranuras: Array, orden: Array) -> Dictionary:
 ## demarcación → grupo (POR/DEF/MED/DEL), una vez: el nativo la pide para el encaje por línea.
 static var _grupo_de: Dictionary = {}
 
-static func _nativo(nat: Object, libres: Array, ranuras: Array, orden: Array) -> Dictionary:
-	if _grupo_de.is_empty():
-		for k: String in Datos.posd().keys():
-			_grupo_de[k] = PesosPuesto.grupo(k)
+## (10-11, paso a C++) Lo que solo depende de la formación se hace UNA vez: el orden de las ranuras (porteros primero) y las ranuras empaquetadas para la extensión. Misma salida que antes
+## (se calcula con el mismo código, solo que se guarda); la clave es la propia lista de ranuras de `FORMS` (la misma instancia siempre).
+static var _cache: Array = []   ## [ranuras, orden, paquete]
+
+static func _entrada(ranuras: Array) -> Array:
+	for e: Array in _cache:
+		if is_same(e[0], ranuras):
+			return e
+	var orden: Array = []
+	for i in ranuras.size():
+		orden.append(i)
+	orden.sort_custom(func(a: int, b: int) -> bool: return PesosPuesto.es_portero(String(ranuras[a][0])) and not PesosPuesto.es_portero(String(ranuras[b][0])))
 	var puestos := PackedStringArray(); var ks: Array = []; var ws: Array = []
 	var grupos := PackedStringArray(); var por_r := PackedByteArray()
 	for r: Array in ranuras:
@@ -27,10 +35,24 @@ static func _nativo(nat: Object, libres: Array, ranuras: Array, orden: Array) ->
 		ws.append(e[1] if not e.is_empty() else PackedFloat64Array())
 		grupos.append(PesosPuesto.grupo(puesto))
 		por_r.append(1 if PesosPuesto.es_portero(puesto) else 0)
+	var entrada := [ranuras, orden, {"puestos": puestos, "ks": ks, "ws": ws, "grupos": grupos, "por": por_r}]
+	if _cache.size() >= 32:
+		_cache.clear()
+	_cache.append(entrada)
+	return entrada
+
+## El orden de las ranuras de una formación (porteros primero), ya calculado. Devuelve la lista compartida: no modificarla.
+static func orden_de(ranuras: Array) -> Array:
+	return _entrada(ranuras)[1]
+
+static func _nativo(nat: Object, libres: Array, ranuras: Array, orden: Array) -> Dictionary:
+	if _grupo_de.is_empty():
+		for k: String in Datos.posd().keys():
+			_grupo_de[k] = PesosPuesto.grupo(k)
 	var o := PackedInt32Array()
 	for i: int in orden:
 		o.append(i)
-	var res: PackedInt32Array = nat.once_asignar_libres({"puestos": puestos, "ks": ks, "ws": ws, "grupos": grupos, "por": por_r}, libres, _grupo_de, o)
+	var res: PackedInt32Array = nat.once_asignar_libres(_entrada(ranuras)[2], libres, _grupo_de, o)
 	var asignado := {}
 	for i: int in orden:
 		if res[i] >= 0:

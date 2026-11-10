@@ -66,6 +66,7 @@ func _pintar_seleccion(c: Club) -> void:
 	var s := p.mundo.selecciones
 	if s == null:
 		return
+	JornadaSeleccion.pintar_legado(p, p._lista_seleccion)   ## (10-11) la selección que diriges (o la que te llama), también aquí
 	_pintar_palmares_mundial(s)
 	var t := p._texto(13, Principal.COL_ORO)
 	t.text = Idiomas.t("%s  ·  fuerza %d") % [s.nombre_seleccion(), s.fuerza(s.nombre_seleccion())]

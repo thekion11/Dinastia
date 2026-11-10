@@ -264,7 +264,7 @@ static func _pista_atletismo(root: Node3D, est: Dictionary, dx: float, dz: float
 	if not bool(est.get("pista", false)):
 		return
 	var tartan := StandardMaterial3D.new()
-	tartan.albedo_color = Color(0.62, 0.24, 0.17)
+	tartan.albedo_color = Color(String(est.get("pista_col", "#9e3d2b")))   ## (10-11) color de pista por estadio (azul, roja…); el de siempre por defecto
 	tartan.roughness = 0.95
 	var cal := StandardMaterial3D.new()
 	cal.albedo_color = Color(0.92, 0.93, 0.92)

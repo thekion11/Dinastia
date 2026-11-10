@@ -108,3 +108,49 @@ Gimnasia Mza|franjas|||||||||
 Estudiantes RC|franjas|||||||||
 FC Cajamarca|franjas|||||||||
 San Lorenzo (P)|mitad|||||||||
+U. Católica|franja_pecho|#ffffff|#0038a8|#ffffff|#ffffff|||||
+Peñarol|franjas|#ffd100|#111111|#111111|#111111|||||
+Wanderers|franjas|#111111|#ffffff|#111111|#111111|||||
+Liverpool M.||#0038a8|#111111|#0038a8|#0038a8|||||
+River (U)|sash|#ffffff|#d50032|#ffffff|#ffffff|||||
+Danubio|sash|#ffffff|#111111|#111111|#ffffff|||||
+Olimpia|franja_pecho|#ffffff|#111111|#111111|#111111|||||
+Cerro Porteño|franjas|#00246b|#d50032|#00246b|#00246b|||||
+Libertad|franjas|#111111|#ffffff|#111111|#111111|||||
+Guarani|franjas|#ffd100|#111111|#111111|#ffd100|||||
+Nacional (P)|tercios_h|#ffffff|#0038a8|#0038a8|#0038a8|||||
+Universitario||#f5ecd0|#d50032|#f5ecd0|#f5ecd0|||||
+Alianza Lima|franjas|#00246b|#ffffff|#00246b|#00246b|||||
+Sporting Cristal||#75aadb|#ffffff|#ffffff|#75aadb|||||
+Melgar|franjas|#d50032|#111111|#111111|#d50032|||||
+LDU Quito||#ffffff|#0038a8|#ffffff|#ffffff|||||
+Barcelona SC||#ffd100|#111111|#111111|#ffd100|||||
+Emelec||#0038a8|#ffffff|#0038a8|#0038a8|||||
+I. del Valle|mitad|#111111|#0038a8|#111111|#111111|||||
+Bolivar||#75aadb|#ffffff|#ffffff|#75aadb|||||
+The Strongest|franjas|#ffd100|#111111|#111111|#ffd100|||||
+Wilstermann||#d50032|#ffffff|#ffffff|#d50032|||||
+Atl. Nacional|franjas|#00843d|#ffffff|#ffffff|#00843d|||||
+Millonarios||#0038a8|#ffffff|#0038a8|#0038a8|||||
+America de Cali||#d50032|#ffffff|#ffffff|#d50032|||||
+Junior|franjas|#d50032|#ffffff|#0038a8|#d50032|||||
+Santa Fe||#d50032|#ffffff|#ffffff|#d50032|||||
+Dep. Cali|franjas|#00843d|#ffffff|#ffffff|#00843d|||||
+Al-Hilal||#0038a8|#ffffff|#0038a8|#0038a8|||||
+Al-Nassr||#ffd100|#0038a8|#0038a8|#ffd100|||||
+Al-ittihad|franjas|#ffd100|#111111|#111111|#ffd100|||||
+Al-ahli SA||#00843d|#ffffff|#00843d|#00843d|||||
+Al-Shabab||#ffffff|#d50032|#ffffff|#ffffff|||||
+Al Ahly||#d50032|#ffffff|#ffffff|#d50032|||||
+Zamalek||#ffffff|#d50032|#ffffff|#ffffff|||||
+W. Casablanca||#d50032|#ffffff|#ffffff|#d50032|||||
+Raja C.|franjas|#00843d|#ffffff|#00843d|#00843d|||||
+Mamelodi S.||#ffd100|#0038a8|#0038a8|#ffd100|||||
+Orlando Pirates||#111111|#ffffff|#111111|#111111|||||
+Kaizer Chiefs||#ffd100|#111111|#111111|#ffd100|||||
+Pohang S.|franjas|#d50032|#111111|#111111|#d50032|||||
+FC Seoul|franjas|#d50032|#111111|#111111|#d50032|||||
+Melbourne City||#75aadb|#ffffff|#ffffff|#75aadb|||||
+Sidney FC||#75aadb|#ffffff|#ffffff|#75aadb|||||
+Melbourne V.|v_ancha|#ffffff|#00246b|#00246b|#00246b|||||
+W. Sidney W.|franjas|#d50032|#111111|#111111|#d50032|||||
