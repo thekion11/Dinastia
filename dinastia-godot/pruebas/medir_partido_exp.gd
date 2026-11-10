@@ -17,6 +17,35 @@ static func aplicar(vista: Node) -> void:
 				en.fog_enabled = false
 				en.adjustment_enabled = false
 				en.ssao_enabled = false
+	if OS.get_environment("LODS_RUNTIME") != "":
+		## LODS_RUNTIME=1: a las mallas que se construyen en tiempo de ejecución y NO tienen LODs (pelo por capas `Cuero*`, peinados del pack, cara real) se les generan LODs con `ImporterMesh.generate_lods`
+		## (el mismo simplificador que el importador) y se sustituyen; el motor elige el LOD por distancia (`mesh_lod_threshold` del viewport).
+		var n_l := 0
+		var antes_t := 0
+		var despues_t := 0
+		var hechas := {}
+		for g in vista.find_children("*", "MeshInstance3D", true, false):
+			var mi := g as MeshInstance3D
+			var nom := String(mi.name).rstrip("0123456789@_")
+			if not (nom.begins_with("Cuero") or nom.begins_with("Hair") or nom.begins_with("PeloDrive") or nom.begins_with("CaraReal") or nom.begins_with("Pelo")):
+				continue
+			var m := mi.mesh as ArrayMesh
+			if m == null or m.get_surface_count() == 0:
+				continue
+			if hechas.has(m):
+				mi.mesh = hechas[m]
+				continue
+			var im := ImporterMesh.new()
+			for sf in m.get_surface_count():
+				var arr := m.surface_get_arrays(sf)
+				antes_t += (arr[Mesh.ARRAY_INDEX] as PackedInt32Array).size() / 3 if arr[Mesh.ARRAY_INDEX] != null else 0
+				im.add_surface(Mesh.PRIMITIVE_TRIANGLES, arr, [], {}, m.surface_get_material(sf), "s%d" % sf)
+			im.generate_lods(25.0, 60.0, [])
+			var nuevo := im.get_mesh()
+			hechas[m] = nuevo
+			mi.mesh = nuevo
+			n_l += 1
+		print("LODS_RUNTIME: %d mallas con LODs nuevos (%d triángulos base)" % [n_l, antes_t])
 	if OS.get_environment("IMPOSTOR") != "":
 		## IMPOSTOR=<metros> (p. ej. 30): TECHO de lo que ahorraría un impostor de cuerpo: los jugadores del campo a más de esa distancia de la cámara pierden todas sus mallas (cuerpo, cara, pelo) y se dibujan como una
 		## cápsula de ~60 triángulos del color de la camiseta (sin animación). No es el impostor final (no conserva la animación ni los detalles): solo mide el máximo ahorro posible de llamadas y triángulos.
