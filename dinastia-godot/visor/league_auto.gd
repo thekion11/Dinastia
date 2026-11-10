@@ -21,18 +21,23 @@ static func id_vel(v: float) -> int:
 static func legal(t1: Dictionary, t2: Dictionary, a: float) -> bool:
 	var vi := id_vel(float(t1["v_entra"]))
 	var vo := id_vel(float(t2["v_sale"]))
+	var nat := LeagueMovimiento.nativo()   ## (C++: `league_legal`, misma cuenta)
+	if nat != null:
+		return nat.league_legal(vi, vo, float(t2["cuerpo_sale"]), float(t1["cuerpo_ini"]), a)
+	return legal_gd(vi, vo, float(t2["cuerpo_sale"]), float(t1["cuerpo_ini"]), a)
+
+static func legal_gd(vi: int, vo: int, cuerpo_sale: float, cuerpo_ini: float, a: float) -> bool:
 	if vo - vi > 1:
 		return false   ## aceleración máxima
 	if roundi(vo * cos(a) - vi) < -3:
 		return false   ## frenada máxima (dar la vuelta no es «mantener la velocidad»)
-	var cuerpo_sale := float(t2["cuerpo_sale"])
 	if vi == 3 and vo == 1 and (absf(cuerpo_sale) > 0.25 * PI + MARGEN or absf(a) > 0.25 * PI + MARGEN):
 		return false   ## de carrera a trote, ni de espaldas ni girando mucho
 	if vi > 0 and vo > 0 and absf(a) > 0.5 * PI + MARGEN:
 		return false
 	if vi + vo > 4 and absf(a) > 0.25 * PI + MARGEN:
 		return false   ## carrera con carrera o con trote rápido: giros pequeños
-	var delta_cuerpo := wrapf(cuerpo_sale - float(t1["cuerpo_ini"]), -PI, PI)
+	var delta_cuerpo := wrapf(cuerpo_sale - cuerpo_ini, -PI, PI)
 	if absf(a + delta_cuerpo) > PI + MARGEN:
 		return false   ## no girar más de media vuelta (para eso está el camino corto)
 	return true
@@ -111,9 +116,25 @@ static func construir(c: Dictionary, ap: AnimationPlayer, prefijo: String) -> bo
 		cuadros.append(f)
 	cuadros.append_array([CUADROS - 2, CUADROS - 1])
 	var ang := float(datos[2])
-	var mezclas := {}
+	var mezclas := PackedFloat64Array()
 	for f: int in cuadros:
-		mezclas[f] = mezcla(f, c)
+		var m := mezcla(f, c)
+		mezclas.append(float(m[0]))
+		mezclas.append(float(m[1]))
+	var nat := LeagueMovimiento.nativo()   ## (C++: `league_mezclar`, mismo bucle)
+	if nat != null:
+		nat.league_mezclar(sal, a1, a2, PackedInt32Array(cuadros), mezclas, ang, giro_padre)
+	else:
+		mezclar_gd(sal, a1, a2, PackedInt32Array(cuadros), mezclas, ang, giro_padre)
+	var lib := ap.get_animation_library("")
+	if not lib.has_animation(String(c["nombre"])):
+		lib.add_animation(String(c["nombre"]), sal)
+	return true
+
+## El bucle de huesos (la referencia del C++): cada hueso mezclado entre las dos plantillas con la mezcla del cuadro; la pelvis,
+## además, gira hacia la nueva dirección sobre la vertical del esqueleto. `mezclas` = [bias, orig] por cuadro.
+static func mezclar_gd(sal: Animation, a1: Animation, a2: Animation, cuadros: PackedInt32Array, mezclas: PackedFloat64Array, ang: float,
+		giro_padre: Quaternion) -> void:
 	for i in a1.get_track_count():
 		var tipo := a1.track_get_type(i)
 		var ruta := a1.track_get_path(i)
@@ -123,20 +144,17 @@ static func construir(c: Dictionary, ap: AnimationPlayer, prefijo: String) -> bo
 		var k := sal.add_track(tipo)
 		sal.track_set_path(k, ruta)
 		var pelvis := String(ruta).ends_with(":pelvis")
-		for f: int in cuadros:
-			var t := f / 100.0
-			var m: Array = mezclas[f]
+		for x in cuadros.size():
+			var t := cuadros[x] / 100.0
+			var m0 := mezclas[x * 2]
+			var m1 := mezclas[x * 2 + 1]
 			if tipo == Animation.TYPE_ROTATION_3D:
 				var r: Quaternion = a1.rotation_track_interpolate(i, minf(t, a1.length)).slerp(
-					a2.rotation_track_interpolate(j, minf(t, a2.length)), float(m[0]))
+					a2.rotation_track_interpolate(j, minf(t, a2.length)), m0)
 				if pelvis:
-					var arriba := Quaternion(Vector3.UP, ang * (float(m[0]) * 0.7 + float(m[1]) * 0.3))
+					var arriba := Quaternion(Vector3.UP, ang * (m0 * 0.7 + m1 * 0.3))
 					r = (giro_padre.inverse() * arriba * giro_padre) * r
 				sal.rotation_track_insert_key(k, t, r)
 			else:
 				sal.position_track_insert_key(k, t, a1.position_track_interpolate(i, minf(t, a1.length)).lerp(
-					a2.position_track_interpolate(j, minf(t, a2.length)), float(m[0])))
-	var lib := ap.get_animation_library("")
-	if not lib.has_animation(String(c["nombre"])):
-		lib.add_animation(String(c["nombre"]), sal)
-	return true
+					a2.position_track_interpolate(j, minf(t, a2.length)), m0))

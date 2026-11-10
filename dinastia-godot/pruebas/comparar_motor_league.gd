@@ -89,6 +89,15 @@ func _jugar(a: Club, b: Club, semilla: int, league: bool, mitad: float) -> Dicti
 	motor.duracion_mitad = mitad
 	motor.tacticas = [MotorJugable.tactica_desde(a.tactica), MotorJugable.tactica_desde(b.tactica)]   ## la pizarra y el estilo de cada club
 	motor.preparar(lista, ball, "", semilla)
+	## LS_CAM=1: una cámara de televisión (de lado, alta, siguiendo al balón) para que cuente el recorte fuera de cámara de la locomoción.
+	var cam: Camera3D = null
+	if OS.get_environment("LS_CAM") == "1":
+		cam = Camera3D.new()
+		cam.fov = 40.0
+		raiz.add_child(cam)
+		cam.make_current()
+	var loco_us0 := LeagueLocomocion.us_total
+	var loco_p0 := LeagueLocomocion.pasos
 	var us := 0
 	var us_max := 0
 	var pasos := 0
@@ -96,6 +105,9 @@ func _jugar(a: Club, b: Club, semilla: int, league: bool, mitad: float) -> Dicti
 	var cambios := 0
 	var ult := -1
 	while motor.estado != "fin" and pasos < tope:
+		if cam != null:
+			cam.position = Vector3(ball.position.x * 0.8 + 62.0, 24.0, ball.position.z * 0.8)
+			cam.look_at(Vector3(ball.position.x * 0.8, 0.0, ball.position.z * 0.8))
 		var t0 := Time.get_ticks_usec()
 		motor.paso(DT)
 		if not motor.poseedor.is_empty():
@@ -119,6 +131,7 @@ func _jugar(a: Club, b: Club, semilla: int, league: bool, mitad: float) -> Dicti
 	if league:
 		r["decisiones"] = (motor as MotorLeague).cuenta.duplicate()
 		r["toques"] = (motor as MotorLeague).cuenta_toques.duplicate()
+		r["us_loco"] = snappedf(float(LeagueLocomocion.us_total - loco_us0) / maxf(1.0, float(LeagueLocomocion.pasos - loco_p0)), 0.1)
 	r["huella"] = "%s|%d|%d|%d|%.3f,%.3f" % [r["marcador"], r["tiros"], r["pases"], r["pases_ok"], ball.position.x, ball.position.z]
 	raiz.queue_free()
 	return r

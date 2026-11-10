@@ -24,9 +24,33 @@ const CICLO_CUERPO := "ls_ciclo__"
 const RECOLOCAR := 12.0   ## 1/s: la compensación que sobra al acabar un clip se apaga en ~0,25 s
 
 static func paso(m: MotorLeague, delta: float) -> void:
+	var t0 := Time.get_ticks_usec()
+	_paso(m, delta)
+	us_total += Time.get_ticks_usec() - t0
+	pasos += 1
+
+## Cronómetro propio (barato: dos lecturas por paso), para medir la capa sin parches: µs acumulados y pasos.
+static var us_total := 0
+static var pasos := 0
+
+## RECORTE FUERA DE CÁMARA (10-11, aprobado por la líder; `LS_FUERA_CAMARA=0` lo apaga): quien está fuera del encuadre de la cámara
+## activa o a más de `LEJOS` m de ella no empieza clips nuevos (los que lleva acaban normal, sin salto). Solo cambia lo que se ve
+## de quien no se ve; sin cámara (pruebas sin gráficos) no recorta nada.
+static var fuera_camara := OS.get_environment("LS_FUERA_CAMARA") != "0"
+const LEJOS := 70.0
+static var _cam: Camera3D = null
+
+static func a_la_vista(n: Node3D) -> bool:
+	if _cam == null:
+		return true
+	var pos := n.global_position + Vector3(0, 1.0, 0)
+	return pos.distance_to(_cam.global_position) <= LEJOS and _cam.is_position_in_frustum(pos)
+
+static func _paso(m: MotorLeague, delta: float) -> void:
 	portador(m)
 	if not transiciones_activas:
 		return
+	_cam = m.get_viewport().get_camera_3d() if fuera_camara and m.is_inside_tree() else null
 	for p: Dictionary in m.jugadores:
 		var en_curso := float(p.get("ls_trans_hasta", 0.0)) > m.t
 		var off := float(p.get("ls_off", 0.0))
@@ -36,6 +60,8 @@ static func paso(m: MotorLeague, delta: float) -> void:
 			if p.get("anim_actual") in CICLOS:
 				_quizas_empezar(m, p)
 			continue
+		if not en_curso and cuerpo != 0.0 and not bool(p.get("ls_visto", true)):
+			enderezar(p)   ## fuera de cámara no hace falta el cuerpo girado: al camino barato (la compensación se apaga sola)
 		var n: Node3D = p.get("node")
 		var modelo: Node3D = p.get("ls_modelo")
 		if not is_instance_valid(n) or not is_instance_valid(modelo):
@@ -50,7 +76,7 @@ static func paso(m: MotorLeague, delta: float) -> void:
 			if p.has("ls_fin_yaw"):
 				_al_acabar(p, n)
 				off = float(p["ls_off"])
-			off = off * exp(-RECOLOCAR * delta) if absf(off) > 0.002 else 0.0
+			off = off * exp(-RECOLOCAR * delta) if absf(off) > 0.01 else 0.0   ## (por debajo de ~0,6°, ya está)
 			p["ls_off"] = off
 			_seguir_con_cuerpo(m, p, ap)
 			if float(p.get("ls_trans_hasta", 0.0)) <= m.t and float(p.get("ls_cuerpo", 0.0)) == 0.0 \
@@ -77,10 +103,16 @@ static func _al_acabar(p: Dictionary, n: Node3D) -> void:
 
 ## Con el cuerpo girado y sin clip: el ciclo estable del original (plantilla) o, si su velocidad no lo admite o el motor pide
 ## otro paso (de espaldas, marcar, cansado…), vuelta a de frente sin salto.
+static var _nombre_ciclo := {}   ## plantilla → nombre de su ciclo (sin rehacer la cadena en cada fotograma)
+
 static func _seguir_con_cuerpo(m: MotorLeague, p: Dictionary, ap: AnimationPlayer) -> void:
 	var cuerpo := float(p.get("ls_cuerpo", 0.0))
 	if cuerpo == 0.0:
 		return
+	if float(p.get("ls_seguir_t", -1.0)) > m.t and p.get("anim_actual") == p.get("ls_ciclo_actual"):
+		ap.speed_scale = float(p.get("ls_escala", 1.0))   ## (el motor la pisa en cada fotograma con la de su ciclo)
+		return
+	p["ls_seguir_t"] = m.t + CADENCIA
 	var v: Vector3 = p["vel"]
 	var sp := Vector2(v.x, v.z).length()
 	var pedido := String(p.get("ls_pedido", ""))
@@ -94,11 +126,16 @@ static func _seguir_con_cuerpo(m: MotorLeague, p: Dictionary, ap: AnimationPlaye
 	_quizas_empezar(m, p)
 	if float(p.get("ls_trans_hasta", 0.0)) > m.t:
 		return
-	var nombre := CICLO_CUERPO + String(par[0])
-	if ap.has_animation(nombre) and String(p.get("anim_actual", "")) != nombre:
+	var nombre: String = _nombre_ciclo.get(par[0], "")
+	if nombre == "":
+		nombre = CICLO_CUERPO + String(par[0])
+		_nombre_ciclo[par[0]] = nombre
+	if p.get("anim_actual") != nombre and ap.has_animation(nombre):
 		ap.play(nombre, 0.15)
 		p["anim_actual"] = nombre
-	ap.speed_scale = clampf(sp / LeagueMovimiento.rango(sp), 0.7, 1.4)
+	p["ls_escala"] = clampf(sp / LeagueMovimiento.rango(sp), 0.7, 1.4)
+	p["ls_ciclo_actual"] = nombre
+	ap.speed_scale = float(p["ls_escala"])
 
 ## Vuelve el cuerpo a de frente sin salto: lo que giraba la plantilla pasa a la compensación del modelo, que se apaga sola.
 static func enderezar(p: Dictionary) -> void:
@@ -143,6 +180,9 @@ static func _quizas_empezar(m: MotorLeague, p: Dictionary) -> void:
 	var n: Node3D = p.get("node")
 	var ap: AnimationPlayer = p.get("anim")
 	if not is_instance_valid(n) or not is_instance_valid(ap):
+		return
+	p["ls_visto"] = a_la_vista(n)
+	if not bool(p["ls_visto"]):
 		return
 	var v: Vector3 = p["vel"]
 	var sp := Vector2(v.x, v.z).length()
