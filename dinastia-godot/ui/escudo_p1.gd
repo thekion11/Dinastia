@@ -34,7 +34,7 @@ const PATRONES := ["liso", "banda", "franjas", "mitad", "cuartos", "aro", "estre
 	"cruz", "rombos", "escamas", "estrella6",
 	"tablero", "corona2", "rayo", "anillos", "abanico", "interior", "puntas", "barras", "borde",
 	"escalera", "pila", "estrella8", "manchas", "florlis", "trebol", "medialuna",
-	"tercios_v", "tercios_h", "banda_h"]
+	"tercios_v", "tercios_h", "banda_h", "rombos_bav"]
 
 ## Las siluetas, en el sistema de coordenadas 64x70 del HTML.
 const SILUETAS := {
@@ -286,6 +286,14 @@ static func _patron_svg(p: String, c2: String, c3: String = "") -> String:
 		"cruz":
 			return '<rect x="27" y="-4" width="10" height="78" fill="%s" opacity=".9"/>' % c2 \
 				+ '<rect x="-4" y="30" width="72" height="10" fill="%s" opacity=".9"/>' % c2
+		"rombos_bav":   ## (10-11) rombos «bávaros»: damero girado 45° (Bayern, Hoffenheim…): rombos de media diagonal 12 que se tocan por las puntas
+			var lz := ""
+			for gi in range(-1, 4):
+				for gj in range(-1, 4):
+					var cx := gi * 24 + 8
+					var cy := gj * 24 + 11
+					lz += '<path d="M%d %d L%d %d L%d %d L%d %d Z" fill="%s" opacity=".95"/>' % [cx, cy - 12, cx + 12, cy, cx, cy + 12, cx - 12, cy, c2]
+			return lz
 		"rombos":
 			var d := ""
 			for centro in [Vector2(16, 18), Vector2(48, 18), Vector2(16, 50), Vector2(48, 50)]:
