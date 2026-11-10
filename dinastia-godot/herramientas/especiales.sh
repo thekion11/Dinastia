@@ -105,6 +105,7 @@ pasa "estadio y ciudad por partes" "godot --headless --path . res://pruebas/prob
 BLOQUE=capturas_ui
 pasa "capturas UI: fase final de la liga (ARG, USA, EGY)" "godot --headless --path . res://pruebas/captura_fase_final.tscn" "FOTO fase_final_EGY"
 pasa "capturas UI: formatos de los torneos continentales" "godot --headless --path . res://pruebas/captura_conti_formatos.tscn" "FOTO conti_asia"
+pasa "capturas UI: hoja de escudos y camisetas por país" "PAISES=TUR,SWE,CHN godot --headless --path . res://pruebas/captura_hoja_paises.tscn" "FOTO hoja_CHN"
 pasa "capturas UI: selección nacional" "godot --headless --path . res://pruebas/captura_seleccion.tscn" "captura sin pantalla"
 BLOQUE=
 # 5a2. Lo mismo, en tanda aparte porque tarda (ESPECIALES_SOLO=capturas_ui_lento): cierra las copas de todos los países y abre el menú principal entero.
