@@ -71,6 +71,8 @@ func _uno(i: int, nombre: String) -> void:
 	print("ESTADIO %d %s (%s) %s %d %s · %d llamadas · piezas: arco=%s torres=%s costillas=%s techo_lados=%s" % [i, nombre, c.pais,
 		est.get("forma"), int(est.get("niveles", 0)), est.get("techo"), llamadas, est.has("arco"), est.get("torres_rampa", 0), est.get("costillas", 0), est.has("bandejas")] + ("  curva=%s colchon=%s" % [est.has("fachada_curva"), est.has("colchon")]))
 	get_viewport().get_texture().get_image().save_jpg("%s/%02d_%s_partido.jpg" % [_dir, i, c.pais], 0.88)
+	if OS.get_environment("PICOS") != "":
+		await _picos(llamadas)
 	if OS.get_environment("DESGLOSE") != "":
 		await _desglose(vista, llamadas)
 	var aerea := Camera3D.new()
@@ -103,3 +105,17 @@ func _grupos(n: Node, hondo: int, fuera: Array[Node3D]) -> void:
 			fuera.append(h)
 			if hondo < 3:
 				_grupos(h, hondo + 1, fuera)
+
+## PICOS=1: 400 fotogramas; los que pasan de 1,6× la mediana se cuentan con su cámara y lo que creció (objetos, primitivas).
+func _picos(mediana: int) -> void:
+	var rs := RenderingServer
+	for f in 400:
+		await get_tree().process_frame
+		var ll := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+		if ll > mediana * 1.6:
+			var cam := get_viewport().get_camera_3d()
+			print("   PICO f%d: %d llamadas · %d objetos · %d prims · cam=%s pos=%s" % [f, ll, rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
+				rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME), cam.get_path() if cam else "-", cam.global_position.round() if cam else Vector3.ZERO])
+		elif f % 50 == 0:
+			var cam := get_viewport().get_camera_3d()
+			print("   normal f%d: %d llamadas · %d objetos · cam=%s" % [f, ll, rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME), cam.get_path() if cam else "-"])
