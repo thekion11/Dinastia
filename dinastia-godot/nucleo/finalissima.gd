@@ -59,12 +59,14 @@ static func registrar(sel: Selecciones, m: Mundo, t: TorneoSelecciones) -> Dicti
 	var fila := {"anio": t.anio, "campeon": t.campeon.nombre, "rival": rival.nombre, "gl": int(r["gl"]), "gv": int(r["gv"]),
 		"local": (r["local"] as Club).nombre, "penales": pen.duplicate()}
 	sel.finalissimas.push_front(fila)
-	sel.cargo.anotar(m, t)
+	## El título del seleccionador (prestigio, logros) y la noticia pueden sortear cosas (cuando la ganó TU selección): con el azar aislado no mueven ningún sorteo del resto del juego.
+	CopasMundo._aislado("finalissima_registro%d" % t.anio, func() -> void: sel.cargo.anotar(m, t))
 	var marcador := "%s %d-%d %s" % [fila["local"], fila["gl"], fila["gv"], (r["visita"] as Club).nombre]
 	if not pen.is_empty():
 		marcador += " (penaltis %d-%d)" % [int(pen[0]), int(pen[1])]
-	sel.noticia.emit("🏆 %s %d: campeón %s" % [NOMBRE, t.anio, fila["campeon"]],
-		"El campeón de Europa y el de América, frente a frente en sede neutral: %s." % marcador)
+	CopasMundo._aislado("finalissima_noticia%d" % t.anio, func() -> void:
+		sel.noticia.emit("🏆 %s %d: campeón %s" % [NOMBRE, t.anio, fila["campeon"]],
+			"El campeón de Europa y el de América, frente a frente en sede neutral: %s." % marcador))
 	return fila
 
 ## Juega (simulada) la Finalissima de `anio` si toca y no se jugó ya. Devuelve la fila de `registrar` o {}.
