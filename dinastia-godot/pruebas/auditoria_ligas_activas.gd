@@ -42,6 +42,7 @@ func _ready() -> void:
 	Idiomas.idioma = OS.get_environment("IDIOMA") if OS.get_environment("IDIOMA") != "" else "de"
 	Idiomas._asegurar(Idiomas.idioma)
 	FocoMando.forzar = true
+	PantallaIdioma.preparar_mando()   ## como en la entrada real: la pantalla de idioma asigna la cruceta antes de llegar aquí
 	await _caso("nueva", null)
 	var m := Mundo.new()
 	m.generar(["CHI", "ARG"], 20261110)   ## una partida con solo dos ligas: el modo añadir ofrece el resto
@@ -154,17 +155,35 @@ func _mando(et: String, p: Control) -> void:
 	if casillas.is_empty():
 		return
 	(casillas[0] as Button).grab_focus()
+	if OS.get_environment("DEPURA") != "":
+		await get_tree().process_frame
+		var c1 := casillas[7] as Button
+		c1.grab_focus()
+		await get_tree().process_frame
+		for lado: Side in [SIDE_RIGHT, SIDE_BOTTOM, SIDE_LEFT, SIDE_TOP]:
+			var n := c1.find_valid_focus_neighbor(lado)
+			print("    DEPURA vecino %d de «%s» %s: «%s» %s" % [lado, c1.text, c1.get_global_rect(), String(n.get("text")) if n else "-", n.get_global_rect() if n else ""])
+		(casillas[0] as Button).grab_focus()
 	var vistos := {}
-	for i in casillas.size() * 3:
-		await _pulsar(JOY_BUTTON_DPAD_DOWN if i % 2 == 0 else JOY_BUTTON_DPAD_RIGHT)
+	for i in casillas.size() + 4:   ## derecha, una y otra vez: casilla a casilla en el orden en que se ven, saltando de fila
+		await _pulsar(JOY_BUTTON_DPAD_RIGHT)
 		var g := get_viewport().gui_get_focus_owner()
+		if OS.get_environment("DEPURA") != "" and i < 12:
+			print("    DEPURA %d %s → %s «%s» %s" % [i, "abajo" if i % 2 == 0 else "derecha", g.get_class() if g else "-", String(g.get("text")).left(22) if g else "", g.get_global_rect() if g else ""])
 		if g in casillas:
 			vistos[g] = true
+		elif OS.get_environment("DEPURA") != "" and g != null:
+			print("    DEPURA el foco salió de la lista a %s «%s» tras %d pulsaciones" % [g.get_class(), String(g.get("text")).left(20), i])
+			break
 	var ultimo: Button = casillas.back()
-	_comprobar(vistos.has(ultimo) or float(vistos.size()) >= casillas.size() * 0.6, "[%s] con la cruceta se recorre la lista de países (%d de %d, la última %s)" % [et, vistos.size(), casillas.size(), "sí" if vistos.has(ultimo) else "no"])
+	_comprobar(vistos.size() >= casillas.size() - 1 and vistos.has(ultimo), "[%s] con la cruceta se recorre la lista de países (%d de %d, la última %s)" % [et, vistos.size(), casillas.size(), "sí" if vistos.has(ultimo) else "no"])
 
 ## Ajustes → Partida: el botón «Añadir ligas» está, activo con la temporada sin empezar; abre la pantalla en modo añadir y lo elegido se carga.
 func _ajustes() -> void:
+	var mp := Mundo.new()   ## una partida con dos ligas (CHI y ESP): rápida y con países por añadir
+	mp.generar(["CHI", "ESP"], 20261111)
+	mp.mi_club_id = (mp.ligas[0] as Liga).clubes[1].id
+	PedidoPartida.mundo_pregenerado = mp
 	var p: Principal = load("res://escenas/principal.tscn").instantiate()
 	add_child(p)
 	for i in 60:

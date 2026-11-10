@@ -89,6 +89,15 @@ func _ready() -> void:
 				_actualizar())
 			flujo.add_child(c)
 			_casillas[p] = c
+	## (10-11) Con la cruceta, izquierda/derecha van a la casilla anterior/siguiente en el orden en que se ven: la búsqueda de vecinos de Godot, en
+	## filas de anchos distintos, mandaba «derecha» desde Belgien a Spanien (la de encima, 5 px más ancha) y la lista no se podía recorrer.
+	var orden: Array = _casillas.values()
+	for i in orden.size():
+		var b := orden[i] as Button
+		if i > 0:
+			b.focus_neighbor_left = b.get_path_to(orden[i - 1])
+		if i < orden.size() - 1:
+			b.focus_neighbor_right = b.get_path_to(orden[i + 1])
 	_resumen = Tema.etiqueta(EscalaTipografica.CUERPO, Tema.TEXTO, "")
 	_resumen.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(_resumen)
