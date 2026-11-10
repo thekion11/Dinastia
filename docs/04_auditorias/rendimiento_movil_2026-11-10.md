@@ -206,3 +206,14 @@ Lectura:
 - **P2. Sombra solar en MEDIA en móvil** apagada o a 1 corte: −13 a −17 % (ya medido; el dueño decide por la pérdida visual).
 - **P3. Césped**: medir con campo plano para ver cuánto cuesta el shader de hierba (`cesped_capas.gd`), y si cuesta, una versión más barata en BAJA/MEDIA BAJA.
 Todo esto se confirma en el teléfono: llvmpipe es solo una referencia relativa.
+
+### P1 APLICADA: resolución 3D automática (10-11, sesión 5; orden del líder)
+`CalidadRes3D` (`visor/calidad_res3d.gd`): con `Calidad.res3d_auto` activo, de ULTRA BAJA a MEDIA el 3D no pasa de 720 px de alto (`escala = min(la del nivel, 720 / alto de la ventana)`, nunca bajo 35 %); la UI sigue nativa; ALTA y ULTRA no se tocan. **Encendida por defecto solo en móvil** (`OS.has_feature("mobile")` o Web táctil); en escritorio, apagada. Interruptor en Ajustes («Resolución 3D automática (máx. 720 px de alto)», 8 idiomas; se guarda en `grafica/res3d_auto`). Pruebas: `p6_resolucion3d` (especiales) y banco 0 fallos; `RES3D_AUTO=1/0` y `RES3D_ALTO` simulan el móvil en las mediciones.
+
+MEDIA a 1920×1080 (como un móvil en horizontal), cámara real, fotograma relativo (llvmpipe):
+| Club | Apagada | Encendida (escala 0,667) | Cambio |
+|---|---|---|---|
+| CHI | 660 ms | 457 ms | **−31 %** |
+| ESP | 583 ms | 424 ms | **−27 %** |
+| ENG | 597 ms | 441 ms | **−26 %** |
+Coincide con el modelo (−29 %). Triángulos y llamadas iguales; vídeo −10 MB. Visual (captura 1080p al 100 %, jugadores y líneas): algo más suave, los jugadores y el balón se distinguen igual; en una pantalla de móvil, más pequeña, se nota menos. Alternativa si el dueño la ve borrosa: subir el tope (p. ej. 0,8 = 864 px) o FSR 1 (solo Forward+/Mobile; en compatibilidad no existe).
