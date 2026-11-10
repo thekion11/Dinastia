@@ -86,6 +86,14 @@ func _grandes_pasos() -> void:
 
 ## B) el juego real con fotogramas malos: misma física fija, mismo resultado.
 func _fps_malos() -> void:
+	## (10-11) `_physics_process` del motor escala el tiempo por `RitmoJuego` (0,85 por defecto desde el 9-11) y la referencia de 60 FPS usa `paso(1/60)` sin escalar:
+	## con el ritmo normal el motor se pasa del reloj por un paso escalado (20,003 s) y el estado difiere. Aquí se fija 1,0 (Rápida) y se restaura al salir.
+	var ritmo_previo := RitmoJuego._i
+	RitmoJuego._i = 2
+	await _fps_malos_a_1()
+	RitmoJuego._i = ritmo_previo
+
+func _fps_malos_a_1() -> void:
 	var T := 20.0
 	var base := _motor(13)
 	var mb: MotorJugable = base[0]

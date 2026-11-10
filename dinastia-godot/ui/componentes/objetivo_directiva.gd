@@ -54,4 +54,14 @@ static func fila(m: Mundo, c: Club, liga: Liga) -> Control:
 	barra.add_theme_stylebox_override("fill", lleno)
 	barra.tooltip_text = "%s: %d%%" % [Idiomas.t("Cerca de cumplir"), p]
 	h.add_child(barra)
+	h.tooltip_text = detalle(m.directiva)
 	return h
+
+## Los objetivos secundarios y el proyecto, como texto de ayuda de la fila (varios a la vez, cada uno con su peso en la confianza).
+static func detalle(d: Directiva) -> String:
+	var l: Array[String] = []
+	for o: Dictionary in d.objetivos:
+		l.append("• %s (±%d)" % [Idiomas.t(String(o.get("texto", ""))), int(o.get("peso", 0))])
+	if not d.proyecto.is_empty():
+		l.append("🏁 %s: %s · %d/%d" % [Idiomas.t("Proyecto"), Idiomas.t(String(d.proyecto.get("texto", ""))), int(d.proyecto.get("cierres", 0)), int(d.proyecto.get("temporadas", 3))])
+	return "\n".join(l)

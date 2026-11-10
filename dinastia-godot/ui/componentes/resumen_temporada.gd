@@ -190,6 +190,15 @@ func _veredicto(v: Dictionary) -> Control:
 	col.add_child(etiqueta("🏛️ %s: %s" % [titulo, String(v.get("objetivo", ""))], 20, color))
 	col.add_child(etiqueta("%s %d.º · %s %d.º · %s %d" % [Idiomas.t("Acabaste"), int(v.get("puesto", 0)), Idiomas.t("te pedían"),
 		int(v.get("meta", 0)), Idiomas.t("confianza"), int(v.get("confianza", 0))], 16, Tema.TEXTO))
+	## (10-11) Objetivos por club: los secundarios que se juzgaron (con su peso en la confianza) y el proyecto a 3 temporadas si terminó.
+	for o: Dictionary in v.get("secundarios", []):
+		if bool(o.get("aplica", false)):
+			var ok := bool(o.get("cumplido", false))
+			col.add_child(etiqueta("%s %s (%+d)" % ["✔" if ok else "✘", Idiomas.t(String(o.get("texto", ""))), int(o.get("peso", 0)) * (1 if ok else -1)], 15, Tema.BIEN if ok else Tema.MAL))
+	var pr: Dictionary = v.get("proyecto", {})
+	if not pr.is_empty():
+		var ok2 := bool(pr.get("cumplido", false))
+		col.add_child(etiqueta("%s %s: %s (%+d)" % ["🏁", Idiomas.t("Proyecto"), Idiomas.t(String(pr.get("texto", ""))), int(pr.get("delta", 0))], 16, Tema.BIEN if ok2 else Tema.MAL))
 	if bool(v.get("despedido", false)):
 		col.add_child(etiqueta(Idiomas.t("ESTÁS DESPEDIDO.") + " " + Idiomas.t("Elige otro club para empezar de nuevo."), 18, Tema.MAL))
 	return panel

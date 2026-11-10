@@ -398,3 +398,22 @@ func _probar_moneda() -> void:
 				todas_eco = false
 	_comprobar(todas_eco, "ninguna pantalla escribe \"EUR\" ni \"$\" a mano")
 	Eco.moneda = antes
+
+## LAS PUERTAS DEL ASCENSOR DEL CLUB (10-11): dos hojas por planta que se recogen al abrir y vuelven a cerrar.
+func _probar_puertas_ascensor() -> void:
+	_titulo("PUERTAS DEL ASCENSOR (HOJAS QUE SE ABREN)")
+	var asc := Node3D.new()
+	add_child(asc)
+	PuertasAscensor.poner(asc, 0.0, 0.0, 0.0, 1.9)
+	PuertasAscensor.poner(asc, 0.0, 0.0, 4.0, 1.9)
+	var hojas := asc.find_children("*", "HojaAscensor", true, false)
+	_comprobar(hojas.size() == 4 and hojas[0].get_script() != null, "dos plantas, dos hojas cada una, con script (%d)" % hojas.size())
+	var tws := PuertasAscensor.mover(get_tree(), 4.0, true)
+	_comprobar(tws.size() == 2 and not PuertasAscensor.abiertas(get_tree(), 4.0), "abrir la planta 1 mueve solo sus 2 hojas, y arrancan cerradas")
+	for tw in tws:
+		tw.custom_step(PuertasAscensor.SEG_ABRIR + 0.1)
+	_comprobar(PuertasAscensor.abiertas(get_tree(), 4.0) and not PuertasAscensor.abiertas(get_tree(), 0.0), "tras abrir, la planta 1 está abierta y la 0 sigue cerrada")
+	for tw in PuertasAscensor.mover(get_tree(), 4.0, false):
+		tw.custom_step(PuertasAscensor.SEG_CERRAR + 0.1)
+	_comprobar(not PuertasAscensor.abiertas(get_tree(), 4.0), "y vuelve a cerrarse")
+	asc.queue_free()

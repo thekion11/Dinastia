@@ -265,8 +265,8 @@ func _cerrar_campeonato() -> Dictionary:
 	if copa != null and copa.campeon == mi_club() and roles != null:
 		roles.sumar_trofeo(copa.nombre, {"final": _final_de_copa(copa)})
 	if directiva != null and not directiva.despedido_ya and mi_puesto > 0:
-		resumen["directiva"] = directiva.tras_temporada(mi_puesto, mi_puesto == 1,
-			copa != null and copa.campeon == mi_club())
+		resumen["directiva"] = directiva.tras_temporada(mi_puesto, mi_puesto == 1, copa != null and copa.campeon == mi_club())
+		ObjetivosCierre.al_cerrar_temporada(self, directiva, mi_puesto, resumen["directiva"])   ## (10-11) objetivos secundarios y proyecto a 3 temporadas
 		## Las primas por objetivos del reglamento interno: se pagan al cumplir,
 		## no antes. Es lo que las hace una apuesta y no un gasto fijo.
 		if bool(normas.get("primas", false)) and bool(resumen["directiva"].get("cumplido", false)):

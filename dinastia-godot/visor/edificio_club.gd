@@ -179,7 +179,9 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 	var z_tabique := z_fin - PASILLO - 0.1
 	## Etapa 2: 0,94 se quemaba a blanco puro con las luces de sala.
 	var pared := PiezasObra._mat(Color(0.82, 0.81, 0.78), 0.85)
-	var suelo := PiezasObra._mat(Color(0.5, 0.5, 0.52), 0.9)
+	## (10-11) Suelo interior liso y barato (una losa por planta), claro y satinado: ya no se confunde con el asfalto gris de la calle.
+	var suelo := PiezasObra._mat(Color(0.74, 0.72, 0.68), 0.5)
+	var alfombra := PiezasObra._mat(c1.lerp(Color(0.1, 0.1, 0.12), 0.55), 0.85)
 	var vidrio: StandardMaterial3D = Texturas.cristal(true, true)
 	## El ascensor de la planta 0 (dentro del vestuario, junto a la pizarra).
 	_ascensor(nodo, x0, z_fin, 0.0)
@@ -190,6 +192,7 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 		## El cascarón de la planta.
 		PiezasObra._caja(nodo, Vector3(x0, y0 - 0.1, zc), Vector3(ancho + 0.6, 0.2, fondo + 0.6), horm, true)
 		PiezasObra._caja(nodo, Vector3(x0, y0 + 0.01, zc), Vector3(ancho, 0.02, fondo), suelo, false)
+		PiezasObra._caja(nodo, Vector3(x0, y0 + 0.026, z_fin - PASILLO / 2.0), Vector3(ancho - 0.8, 0.012, 1.0), alfombra, false)   ## camino del pasillo
 		PiezasObra._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE + 0.25, zc), Vector3(ancho + 0.6, 0.5, fondo + 0.6), horm, true)
 		for lado in [-1.0, 1.0]:
 			PiezasObra._caja(nodo, Vector3(x0 + lado * (TunelMedidas.VEST_MEDIO + 0.15), y0 + ALTO_LIBRE / 2.0, zc),
