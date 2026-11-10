@@ -1,0 +1,57 @@
+# Generado por herramientas/ligas_europa_real.py (no editar a mano): aspecto base de los clubes reales de POR, BEL, CRO y DEN.
+Benfica|rombo|estrella|BEN|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Porto|octogono|ondas|POR|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Sporting CP|corona|rombos|SCP|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Braga|laurel|tablero|BRA|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Vitória Guimarães|frances|sol|VG|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Famalicão|curvo|escamas|FAM|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Gil Vicente|arco3|rayo|GV|franjas|#d50032|#0057b8|#0057b8|#d50032|#d50032|#0057b8
+Estoril|hexalgo|estrella|EST|liso|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Moreirense|rombo|rombos|MOR|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Rio Ave|octogono|tablero|RA|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Santa Clara|corona|sol|SC|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Casa Pia|laurel|escamas|CP|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Arouca|frances|rayo|ARO|franjas|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Nacional Madeira|curvo|estrella|NM|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Estrela Amadora|arco3|ondas|EA|liso|#d50032|#00843d|#00843d|#d50032|#d50032|#00843d
+AVS|hexalgo|rombos|AVS|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Alverca|rombo|sol|ALV|liso|#d50032|#ffd100|#ffd100|#d50032|#d50032|#ffd100
+Tondela|octogono|escamas|TON|liso|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
+Anderlecht|corona|rayo|AND|franjas|#5b2d8e|#ffffff|#ffffff|#5b2d8e|#5b2d8e|#ffffff
+Club Brugge|laurel|estrella|CB|liso|#0057b8|#000000|#000000|#0057b8|#0057b8|#000000
+Genk|frances|ondas|GEN|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Standard Lieja|curvo|rombos|SL|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Gent|arco3|tablero|GEN|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Union SG|hexalgo|sol|USG|liso|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Charleroi|rombo|rayo|CHA|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Mechelen|octogono|estrella|MEC|liso|#d50032|#ffd100|#ffd100|#d50032|#d50032|#ffd100
+Cercle Brugge|corona|ondas|CB|liso|#00843d|#000000|#000000|#00843d|#00843d|#000000
+Antwerp|laurel|rombos|ANT|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Westerlo|frances|tablero|WES|liso|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+OH Lovaina|curvo|sol|OHL|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Sint-Truiden|arco3|escamas|ST|franjas|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Zulte Waregem|hexalgo|rayo|ZW|liso|#d50032|#00843d|#00843d|#d50032|#d50032|#00843d
+Dender|rombo|ondas|DEN|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+La Louvière|octogono|rombos|LL|franjas|#d50032|#000000|#000000|#d50032|#d50032|#000000
+Dinamo Zagreb|corona|tablero|DZ|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Hajduk Split|laurel|sol|HS|liso|#ffffff|#0057b8|#0057b8|#ffffff|#ffffff|#0057b8
+Rijeka|frances|escamas|RIJ|franjas|#ffffff|#0057b8|#0057b8|#ffffff|#ffffff|#0057b8
+Osijek|curvo|rayo|OSI|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Lokomotiva|arco3|estrella|LOK|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Gorica|hexalgo|ondas|GOR|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Istra 1961|rombo|tablero|IST|liso|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
+Varaždin|octogono|sol|VAR|liso|#ffffff|#d50032|#d50032|#ffffff|#ffffff|#d50032
+Slaven Belupo|corona|escamas|SB|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Vukovar 1991|laurel|rayo|VUK|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+FC Copenhague|frances|estrella|FCC|liso|#ffffff|#0057b8|#0057b8|#ffffff|#ffffff|#0057b8
+Midtjylland|curvo|ondas|MID|franjas|#d50032|#000000|#000000|#d50032|#d50032|#000000
+Brøndby|arco3|rombos|BRN|liso|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+AGF|hexalgo|tablero|AGF|liso|#ffffff|#0057b8|#0057b8|#ffffff|#ffffff|#0057b8
+Nordsjælland|rombo|escamas|NOR|franjas|#d50032|#ffd100|#ffd100|#d50032|#d50032|#ffd100
+Randers|octogono|rayo|RAN|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Silkeborg|corona|estrella|SIL|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Viborg|laurel|ondas|VIB|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Sønderjyske|frances|rombos|SND|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Vejle|curvo|tablero|VEJ|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Fredericia|arco3|sol|FRE|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Odense|hexalgo|escamas|ODE|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
