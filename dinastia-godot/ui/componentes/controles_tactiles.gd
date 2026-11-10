@@ -15,19 +15,23 @@ const DIRS := {"jugar_izquierda": Vector2.LEFT, "jugar_derecha": Vector2.RIGHT, 
 ## nombre → [etiqueta, acción, desplazamiento del centro desde la esquina inferior (derecha), radio, color del aro]
 const BOTONES := {
 	"A": ["Pase\nPresión", "jugar_pase", Vector2(220, 135), 66.0, Color(0.35, 0.65, 1.0)],
-	"B": ["Tiro\nEntrada", "jugar_tiro", Vector2(105, 215), 66.0, Color(1.0, 0.45, 0.35)],
-	"X": ["Centro\nBarrida", "jugar_centro", Vector2(185, 320), 50.0, Color(1.0, 0.85, 0.3)],
-	"Y": ["Al hueco", "jugar_filtrado", Vector2(305, 285), 50.0, Color(0.45, 0.9, 0.5)],
-	"Cambiar": ["Cambiar", "jugar_cambiar", Vector2(425, 230), 44.0, Color(0.8, 0.8, 0.85)],
-	"Sprint": ["Sprint", "jugar_sprint", Vector2(360, 130), 56.0, Color(1, 1, 1)],
-	"Mod": ["Mod", "jugar_mod", Vector2(75, 330), 44.0, Color(0.75, 0.6, 1.0)],
+	"B": ["Tiro\nEntrada", "jugar_tiro", Vector2(90, 230), 66.0, Color(1.0, 0.45, 0.35)],
+	"X": ["Centro\nBarrida", "jugar_centro", Vector2(200, 335), 50.0, Color(1.0, 0.85, 0.3)],
+	"Y": ["Al hueco", "jugar_filtrado", Vector2(320, 280), 50.0, Color(0.45, 0.9, 0.5)],
+	"Cambiar": ["Cambiar", "jugar_cambiar", Vector2(455, 245), 44.0, Color(0.8, 0.8, 0.85)],
+	"Sprint": ["Sprint", "jugar_sprint", Vector2(380, 130), 56.0, Color(1, 1, 1)],
+	"Mod": ["Mod", "jugar_mod", Vector2(50, 372), 44.0, Color(0.75, 0.6, 1.0)],
 	"Pausa": ["II", "jugar_pausa", Vector2.ZERO, 44.0, Color(0.8, 0.8, 0.85)],   ## arriba a la derecha (ver `centro_de`)
 }
 ## Etiqueta de cada botón según tengas o no el balón (4-11-2026; mismas acciones que `Mando.CON_BALON` / `Mando.SIN_BALON`): [con balón, sin balón]. «Al hueco» sin balón no hace nada y se ve apagado.
 const CONTEXTO := {"A": ["Pase", "Presión"], "B": ["Tiro", "Entrada"], "X": ["Centro", "Barrida"], "Y": ["Al hueco", ""]}
 const ZONA_STICK_X := 0.45              ## el stick solo nace en este tramo del ancho (el lado del pulgar izquierdo)
 const ZONA_STICK_Y := 0.2               ## y por debajo de este tramo de arriba (no tapa el marcador)
-const ALTO_ARCO := 370.0                ## lo que sube el arco de botones desde la esquina (px del lienzo con escala 1): tope del tamaño
+const ALTO_ARCO := 416.0                ## lo que sube el arco de botones desde la esquina (px del lienzo con escala 1): tope del tamaño
+const ANCHO_ARCO := 499.0               ## y lo que entra hacia el centro (Cambiar)
+## (10-11-2026, auditoría en teléfono a 2400×1080 y 1080×2400: `pruebas/captura_tactil_movil`) Colocación rehecha para que entre dos botones
+## que se ven a la vez quede SIEMPRE ≥ 2 mm de borde a borde (antes Pase y Tiro quedaban a 0,9 mm y en vertical Cambiar y Sprint a 1,5):
+## ≥ 26 px del lienzo a escala 1, lo que pide el peor caso (vertical, 18,7 px/mm con escala 1,5).
 
 static var forzar := false             ## las pruebas lo encienden; en el teléfono sale solo
 static var zurdo := false              ## espejo forzado por las pruebas; el de verdad sale de Ajustes (`AjustesTactil.zurdo`)
@@ -47,6 +51,7 @@ var _en_banda := false                 ## y está en la banda cerca del área (s
 var _modo_mando := "ambos"             ## botones / gestos / ambos (Ajustes)
 var _sep := 1.0                        ## separación entre botones (Ajustes, 1-1,3)
 var _gesto := {}                       ## índice de dedo → estado del gesto que empezó (sprint/tiro/pase/zona libre)
+var _elev := 0.0                       ## lo que sube el arco para no tapar la ficha del jugador (ver `_calcular_elev`)
 static var mando_forzado := ""         ## las pruebas fuerzan el modo de control
 static var contexto_forzado := ""      ## y el contexto de las capturas: «con» (balón), «banda» (balón en la banda cerca del área) o «sin» (defensa); vacío = el del juego
 const MS_TOQUE := 200                  ## un toque en Sprint más corto que esto = regate; más largo = correr
@@ -78,12 +83,35 @@ func _process(_d: float) -> void:
 	var ayuda: Variant = get_parent().get("_ayuda") if get_parent() != null else null
 	if ayuda is CanvasItem and (ayuda as CanvasItem).visible:
 		(ayuda as CanvasItem).visible = false
+	var e := _calcular_elev()
+	if absf(e - _elev) > 0.5:
+		_elev = e
+		queue_redraw()
 	var cb := _tengo_balon() if contexto_forzado == "" else contexto_forzado != "sin"
 	var eb := _estoy_en_banda() if contexto_forzado == "" else contexto_forzado == "banda"
 	if cb != _con_balon or eb != _en_banda:
 		_con_balon = cb
 		_en_banda = eb
 		queue_redraw()
+
+## (10-11) Si el arco de botones se cruza en horizontal con la ficha del jugador de abajo (`_hud_abajo` del partido: en vertical, o
+## con el modo zurdo, que lo pone a la izquierda), el arco sube por encima de ella en vez de taparla.
+func _calcular_elev() -> float:
+	var abajo: Variant = get_parent().get("_hud_abajo") if get_parent() != null else null
+	if not (abajo is Array):
+		return 0.0
+	var s := escala()
+	var m := margenes()
+	var x0 := (m.x) if _espejo() else (size.x - m.y - ANCHO_ARCO * s * _sep)
+	var x1 := (m.x + ANCHO_ARCO * s * _sep) if _espejo() else (size.x - m.y)
+	var e := 0.0
+	for c: Variant in abajo:
+		if not (c is Control) or not is_instance_valid(c) or not (c as Control).is_visible_in_tree():
+			continue
+		var r := (c as Control).get_global_rect()
+		if r.position.x < x1 and r.end.x > x0 and r.position.y < size.y:
+			e = maxf(e, size.y - r.position.y + 8.0 * s)
+	return e
 
 ## ¿Está el jugador que llevas en la banda, cerca de la línea de fondo rival (donde se centra)? Sin motor, no.
 func _estoy_en_banda() -> bool:
@@ -178,7 +206,7 @@ func centro_de(nombre: String) -> Vector2:
 		return Vector2(size.x - m.y - 24.0 * s - radio_de(nombre), 96.0 * s + radio_de(nombre))   ## bajo la ficha de estadísticas de arriba a la derecha
 	var off: Vector2 = (BOTONES[nombre] as Array)[2]
 	var x := (m.x + off.x * s * _sep) if _espejo() else (size.x - m.y - off.x * s * _sep)
-	return Vector2(x, size.y - off.y * s * _sep)
+	return Vector2(x, size.y - _elev - off.y * s * _sep)
 
 ## Dónde se dibuja el stick en reposo (el pulgar izquierdo; por encima de la ficha del jugador, abajo a la izquierda).
 func centro_reposo() -> Vector2:
@@ -341,10 +369,11 @@ func _draw() -> void:
 		var etiqueta := etiqueta_de(n, _con_balon)
 		var apagado := etiqueta == ""
 		var op_b := opac * (0.45 if apagado else 1.0)
-		draw_circle(c, r, Color(col.r * 0.6, col.g * 0.6, col.b * 0.6, 0.62 * op_b) if activo else Color(0.04, 0.05, 0.08, 0.42 * op_b))
+		var fondo := 0.6 if n == "Pausa" else 0.42   ## (10-11) el II se perdía sobre el cielo y las gradas
+		draw_circle(c, r, Color(col.r * 0.6, col.g * 0.6, col.b * 0.6, 0.62 * op_b) if activo else Color(0.04, 0.05, 0.08, fondo * op_b))
 		draw_arc(c, r, 0.0, TAU, 40, Color(col.r, col.g, col.b, (0.95 if activo else 0.75) * op_b), 4.0 * s)
 		var lineas := Idiomas.t(etiqueta if not apagado else String(BOTONES[n][0])).split("\n")
-		var tam := int(roundf(clampf(r * 0.30, 11.0, 24.0)))
+		var tam := int(roundf(clampf(r * (0.55 if n == "Pausa" else 0.30), 11.0, 40.0 if n == "Pausa" else 24.0)))
 		for k in lineas.size():
 			var y := c.y + float(tam) * 0.35 + (float(k) - float(lineas.size() - 1) * 0.5) * float(tam) * 1.15
 			var tk := tam if k == 0 else int(tam * 0.85)
