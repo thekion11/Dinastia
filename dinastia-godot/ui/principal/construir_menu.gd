@@ -97,7 +97,7 @@ func _montar_cabecera() -> VBoxContainer:
 	raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
 	raiz.add_theme_constant_override("separation", 10)
 	raiz.offset_left = 18; raiz.offset_top = 14
-	raiz.offset_right = -76 if EscalaMovil.es_tactil() else -18; raiz.offset_bottom = -14   ## (10-11) táctil: hueco para el cajón 🎯, que tapaba «⤢»
+	raiz.offset_right = -76 if EscalaMovil.es_tactil() and not DisenoVertical.activo() else -18; raiz.offset_bottom = -14   ## (10-11) táctil: hueco para el cajón 🎯, que tapaba «⤢»
 	p.add_child(raiz)
 
 	## La cabecera con el escudo del club al lado del nombre. Es lo primero que se
@@ -135,6 +135,8 @@ func _montar_cabecera() -> VBoxContainer:
 	## Un gris más claro que COL_SUAVE: es la línea que dice cómo vas -objetivo
 	## y confianza-, y sobre los fondos con focos no se leía.
 	p._sub = p._texto(13, p.COL_SUAVE.lightened(0.35))
+	if DisenoVertical.activo():   ## de pie la línea de estado (liga, jornada, sueldos…) baja de renglón en vez de salirse
+		p._sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	raiz.add_child(p._sub)
 	p._despacho = VBoxContainer.new()
 	p._despacho.add_theme_constant_override("separation", 4)
@@ -142,7 +144,7 @@ func _montar_cabecera() -> VBoxContainer:
 
 	p._botones = HBoxContainer.new()
 	p._botones.add_theme_constant_override("separation", 8)
-	raiz.add_child(p._botones)
+	DisenoVertical.fila_deslizable(raiz, p._botones)
 	p._selector = OptionButton.new()
 	## 250 y no más: el selector, los siete botones de acción y sus separaciones
 	## sumaban más que la ventana, y como esta fila vive en la RAÍZ, ese exceso
@@ -154,9 +156,7 @@ func _montar_cabecera() -> VBoxContainer:
 	## la mitad-. Se descuentan exactamente esos 42 pixeles.
 	p._selector.custom_minimum_size = Vector2(208, 34)
 	p._selector.clip_text = true
-	## Y `fit_to_longest_item = false`, que es lo que de verdad lo arregla.
-	##
-	## `clip_text` deja que el TEXTO se recorte, pero un OptionButton sigue
+	## Y `fit_to_longest_item = false`, que es lo que de verdad lo arregla: `clip_text` recorta el TEXTO, pero un OptionButton sigue
 	## PIDIENDO de ancho minimo lo que mide su item mas largo -aqui «Colo-Colo ·
 	## Primera Division» y compañia-: pedia 386 px con un minimo declarado de 208,
 	## la fila entera sumaba 1.286 sobre un viewport logico de 1.280 y todo lo de
@@ -175,7 +175,7 @@ func _montar_cabecera() -> VBoxContainer:
 	## pedía: "un menú que sea el de calendario".
 	var menu_calendario := MenuButton.new()
 	menu_calendario.text = Idiomas.t("📅 Calendario")
-	menu_calendario.custom_minimum_size = Vector2(0, 32)
+	menu_calendario.custom_minimum_size = Vector2(150 if DisenoVertical.activo() else 0, 32)
 	menu_calendario.clip_text = true
 	menu_calendario.tooltip_text = Idiomas.t("El calendario: jugar el partido y avanzar semana; al terminar la liga, pasar a la temporada siguiente")
 	menu_calendario.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -209,12 +209,10 @@ func _montar_cabecera() -> VBoxContainer:
 	## El buscador va en la fila de acciones, no en la cabecera: ahí arriba lo
 	## tapaba el aviso de mercado, que flota en la esquina derecha.
 	p._buscador = LineEdit.new()
-	## "Buscar jugador o club…" no entraba en 150 px y se leía "Buscar jugador
-	## o clu" (lo notó el análisis externo). El texto largo va al tooltip.
+	## El texto largo va al tooltip ("Buscar jugador o club…" no entraba en 150 px).
 	p._buscador.placeholder_text = Idiomas.t("🔎 Buscar…")
 	p._buscador.tooltip_text = Idiomas.t("Buscar un jugador o un club por nombre (Enter para abrir su ficha)")
-	## 150 y no 210: cada píxel de esta fila sale del ancho de las tres columnas
-	## de abajo, y a 210 volvía a cortarse la ficha del jugador por el borde.
+	## 150 px y no más: cada píxel de esta fila sale del ancho de las columnas de abajo.
 	p._buscador.custom_minimum_size = Vector2(150, 32)
 	p._buscador.add_theme_font_size_override("font_size", 12)
 	p._buscador.text_submitted.connect(p._buscar_global)
@@ -255,11 +253,11 @@ func _montar_carril(raiz: VBoxContainer) -> void:
 	## "semana 12" en una fecha que uno entiende sin pensar.
 	p._fila_dias = HBoxContainer.new()
 	p._fila_dias.add_theme_constant_override("separation", 4)
-	raiz.add_child(p._fila_dias)
+	DisenoVertical.fila_deslizable(raiz, p._fila_dias)
 	## (9-11, idea del PES 2020) La fila de los próximos partidos con el escudo del rival, justo debajo de la tira de días.
 	var fila_prox := HBoxContainer.new()
 	fila_prox.add_theme_constant_override("separation", 6)
-	raiz.add_child(fila_prox)
+	DisenoVertical.fila_deslizable(raiz, fila_prox)
 	p._guia.nodos["fila_proximos"] = fila_prox
 
 
@@ -438,9 +436,11 @@ func _montar_columnas(raiz: VBoxContainer) -> void:
 	p._registro.add_theme_font_size_override("normal_font_size", 12)
 	caja_reg.add_child(p._registro)
 
+	DisenoVertical.apilar(columnas, [720.0, 560.0, 380.0])   ## (vertical) de pie, las tres columnas van una debajo de otra
 	## EL PANEL LATERAL (mapa de metas 23): a la izquierda y por encima del menú
 	## central; el contenido se corre lo que mide el riel para no quedar tapado.
-	raiz.offset_left = 18.0 + MenuLateral.ANCHO_RIEL
+	raiz.offset_left = 18.0 + MenuLateral.reserva().x
+	raiz.offset_bottom = -14.0 - MenuLateral.reserva().y
 	p._menu_lateral = MenuLateral.crear(p)
 	p.add_child(p._menu_lateral)
 	p._guia.nodos["partido"] = p._menu_lateral.boton_de("partido")

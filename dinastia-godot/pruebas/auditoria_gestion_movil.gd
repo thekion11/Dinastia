@@ -10,7 +10,7 @@ extends Node
 ##  · nada se sale de la pantalla por los lados.
 ## Cada pantalla con un club de otro país (orden 34). FOTOS=1 guarda `gm_<pantalla>.jpg` en CAPTURA_DIR.
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 2400x1080 res://pruebas/auditoria_gestion_movil.tscn
-const DPI := 400.0
+var DPI := 400.0 if OS.get_environment("DPI") == "" else float(OS.get_environment("DPI"))   ## DPI=267 con 720x1600: el mismo teléfono de 6,5"
 const MIN_MM_LETRA := 1.8    ## 11 pt de Apple (≈ 1,8 mm) o 12 sp de Material (≈ 1,9 mm): lo más pequeño que recomiendan para leer
 const MIN_MM_TOQUE := 7.0    ## Apple 44 pt ≈ 7 mm; Material 48 dp ≈ 7,6 mm (el mismo `EscalaMovil.MIN_MM_TOQUE`)
 const PANTALLAS := ["Inicio", "Mi plantel", "Táctica", "Mercado", "Finanzas", "Clubes", "competición", "Selección", "Ajustes"]
@@ -44,7 +44,7 @@ func _ready() -> void:
 		PantallaMenu.compacta_pref = false
 	Idiomas.idioma = OS.get_environment("IDIOMA") if OS.get_environment("IDIOMA") != "" else "de"
 	Idiomas._asegurar(Idiomas.idioma)
-	get_tree().root.content_scale_factor = EscalaMovil.ZOOM_MOVIL
+	EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	EscalaMovil.vigilar(get_tree())
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
@@ -55,7 +55,7 @@ func _ready() -> void:
 	_p.call("_refrescar")
 	PantallaMenu.compacta_pref = OS.get_environment("CABECERA") != "grande"   ## las preferencias guardadas también lo pisan
 	_p.set("_zoom_interfaz", EscalaMovil.ZOOM_MOVIL)
-	get_tree().root.content_scale_factor = EscalaMovil.ZOOM_MOVIL
+	EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	_elegir_clubes()
 	var solo := OS.get_environment("SOLO")
 	for i in PANTALLAS.size():

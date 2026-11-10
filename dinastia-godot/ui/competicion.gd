@@ -61,6 +61,9 @@ func _construir() -> void:
 	raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
 	raiz.offset_left = 40; raiz.offset_top = 24
 	raiz.offset_right = -40; raiz.offset_bottom = -24
+	if MenuLateral.abajo():   ## (vertical) márgenes cortos y sitio para la barra de abajo
+		raiz.offset_left = 8; raiz.offset_top = 8; raiz.offset_right = -8
+		raiz.offset_bottom = -8.0 - MenuLateral.reserva().y
 	raiz.add_theme_constant_override("separation", 10)
 	add_child(raiz)
 
@@ -70,7 +73,8 @@ func _construir() -> void:
 	## El selector de liga es lo que convierte esto en "el mundo" y no "mi liga":
 	## desde aquí se mira cualquier campeonato sin salir de la pantalla.
 	_selector = OptionButton.new()
-	_selector.custom_minimum_size = Vector2(360, 34)
+	_selector.custom_minimum_size = Vector2(0 if MenuLateral.abajo() else 360, 34)
+	_selector.size_flags_horizontal = Control.SIZE_EXPAND_FILL if MenuLateral.abajo() else Control.SIZE_FILL
 	_selector.clip_text = true
 	_llenar_selector()
 	_selector.item_selected.connect(_elegir)
@@ -83,10 +87,11 @@ func _construir() -> void:
 	pista.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	pista.clip_text = true
 	pista.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	pista.visible = not MenuLateral.abajo()   ## (vertical) los atajos de L1/R1 no sirven en un móvil de pie
 	cab.add_child(pista)
 	var cerrar := Button.new()
 	cerrar.text = Idiomas.t("Cerrar")
-	cerrar.custom_minimum_size = Vector2(110, 34)
+	cerrar.custom_minimum_size = Vector2(80 if MenuLateral.abajo() else 110, 34)
 	cerrar.pressed.connect(func() -> void: cerrado.emit())
 	cab.add_child(cerrar)
 

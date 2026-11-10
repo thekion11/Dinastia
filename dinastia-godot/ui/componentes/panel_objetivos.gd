@@ -188,6 +188,8 @@ func _al_arrastrar(e: InputEvent) -> void:
 func _aplicar_plegado() -> void:
 	_cuerpo.visible = not _plegado
 	_pestana.text = ("🎯\n%d\n◂" % _pendientes) if (_plegado and _pendientes > 0) else ("🎯\n◂" if _plegado else "▸")
+	if DisenoVertical.activo() and _plegado:   ## de pie: una chapa pequeña de una línea, no una pestaña alta
+		_pestana.text = "🎯%d" % _pendientes if _pendientes > 0 else "🎯"
 	reset_size()
 	## Sin posición elegida por el usuario: plegado va abajo a la derecha (en
 	## el medio tapaba los números de la ficha del jugador); desplegado, al
@@ -199,8 +201,8 @@ func _aplicar_plegado() -> void:
 		grow_horizontal = Control.GROW_DIRECTION_BEGIN
 		grow_vertical = Control.GROW_DIRECTION_BEGIN if _plegado else Control.GROW_DIRECTION_BOTH
 		if _plegado:
-			offset_top -= 48.0
-			offset_bottom -= 48.0
+			offset_top -= 48.0 + MenuLateral.reserva().y   ## (vertical) por encima de la barra de abajo
+			offset_bottom -= 48.0 + MenuLateral.reserva().y
 
 func refrescar() -> void:
 	if _lista == null or _principal == null:

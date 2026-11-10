@@ -13,6 +13,15 @@ extends Control
 
 const ANCHO_RIEL := 62.0
 const ANCHO_ABIERTO := 310.0
+const ALTO_BARRA := 60.0   ## (vertical) la barra de abajo: iconos de 7 mm de toque (a ≈8 px/mm del lienzo de 540 px)
+
+## VERTICAL (sesión 8): en un teléfono de pie el riel pasa a una barra de abajo, y el contenido pierde el margen de la izquierda y gana el de abajo.
+static func abajo() -> bool:
+	return EscalaMovil.es_vertical()
+
+## Lo que el riel o la barra le quita al contenido: (izquierda, abajo).
+static func reserva() -> Vector2:
+	return Vector2(0.0, ALTO_BARRA) if abajo() else Vector2(ANCHO_RIEL, 0.0)
 
 ## Cada menú y sus submenús viven en `MenusLaterales` (3-11: el archivo pasaba de 450 líneas al sumar Partido y Reglas).
 const MENUS := MenusLaterales.MENUS
@@ -26,7 +35,7 @@ static func dato(p: Principal, sub: Dictionary) -> String:
 const EN_PANEL := ["gente", "historia", "operaciones", "vida", "ajustes"]
 
 var _p: Principal
-var _riel: VBoxContainer
+var _riel: BoxContainer
 var _cajon: PanelContainer
 var _lista: VBoxContainer
 var _velo: ColorRect
@@ -86,9 +95,16 @@ static func ejecutar(p: Principal, accion: String) -> void:
 			var caps: Array = documental.ultimo if not documental.ultimo.is_empty() else documental.guion(p.mundo)
 			documental.abrir(p, caps, p._retrato)
 
+func _plegado() -> void:
+	if abajo():
+		set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+		offset_top = -ALTO_BARRA
+	else:
+		set_anchors_and_offsets_preset(Control.PRESET_LEFT_WIDE)
+		offset_right = ANCHO_RIEL
+
 func _montar() -> void:
-	set_anchors_preset(Control.PRESET_LEFT_WIDE)
-	offset_right = ANCHO_RIEL
+	_plegado()
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	## El velo oscurece el resto al abrir el cajón, y tocarlo lo cierra.
 	_velo = ColorRect.new()
@@ -100,25 +116,37 @@ func _montar() -> void:
 			plegar())
 	add_child(_velo)
 	var fondo_riel := PanelContainer.new()
-	fondo_riel.set_anchors_preset(Control.PRESET_LEFT_WIDE)
-	fondo_riel.offset_right = ANCHO_RIEL
 	var st := StyleBoxFlat.new()
 	st.bg_color = Color(0.02, 0.03, 0.04, 0.9)
 	st.border_color = Color(1, 1, 1, 0.08)
-	st.border_width_right = 1
+	if abajo():
+		fondo_riel.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+		fondo_riel.offset_top = -ALTO_BARRA
+		st.border_width_top = 1
+	else:
+		fondo_riel.set_anchors_preset(Control.PRESET_LEFT_WIDE)
+		fondo_riel.offset_right = ANCHO_RIEL
+		st.border_width_right = 1
 	fondo_riel.add_theme_stylebox_override("panel", st)
 	fondo_riel.mouse_filter = Control.MOUSE_FILTER_STOP
 	fondo_riel.gui_input.connect(_al_arrastrar)
 	add_child(fondo_riel)
-	_riel = VBoxContainer.new()
+	_riel = HBoxContainer.new() if abajo() else VBoxContainer.new()
 	_riel.add_theme_constant_override("separation", 3)
 	_riel.alignment = BoxContainer.ALIGNMENT_BEGIN
 	## (3-11) Con Partido y Reglas son 16 botones: en pantallas bajas (el teléfono apaisado) el riel se desliza en vez de salirse por abajo.
 	var desliza := ScrollContainer.new()
-	desliza.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	desliza.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
+	if abajo():   ## la barra de abajo se desliza de lado (16 botones de 56 px no caben en 540)
+		desliza.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
+		desliza.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	else:
+		desliza.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		desliza.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	desliza.add_child(_riel)
-	_riel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	if abajo():
+		_riel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	else:
+		_riel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fondo_riel.add_child(desliza)
 	var hamb := _boton_riel("☰", "Abrir el panel (o deslizar hacia la derecha)")
 	hamb.pressed.connect(alternar)
@@ -128,7 +156,7 @@ func _montar() -> void:
 	var salir := _boton_riel("🚶" if InterruptorCiudad.activa else "🏟️", "Salir al mundo abierto" if InterruptorCiudad.activa else "Entrar al club")
 	salir.pressed.connect(func() -> void: ejecutar(_p, "ciudad_pie" if InterruptorCiudad.activa else "ver_estadio"))
 	_riel.add_child(salir)
-	_riel.add_child(HSeparator.new())
+	_riel.add_child(VSeparator.new() if abajo() else HSeparator.new())
 	for m: Dictionary in MENUS:
 		var b := _boton_riel(String(m["icono"]), String(m["nombre"]))
 		var id := String(m["id"])
@@ -140,8 +168,10 @@ func _montar() -> void:
 	## EL CAJÓN: cada menú con sus submenús.
 	_cajon = PanelContainer.new()
 	_cajon.set_anchors_preset(Control.PRESET_LEFT_WIDE)
-	_cajon.offset_left = ANCHO_RIEL
-	_cajon.offset_right = ANCHO_RIEL + ANCHO_ABIERTO
+	_cajon.offset_left = _x_cajon()
+	_cajon.offset_right = _x_cajon() + ANCHO_ABIERTO
+	if abajo():
+		_cajon.offset_bottom = -ALTO_BARRA
 	var sc := StyleBoxFlat.new()
 	sc.bg_color = Color(0.03, 0.045, 0.06, 0.97)
 	sc.border_color = Color(1, 1, 1, 0.1)
@@ -200,6 +230,9 @@ func _montar() -> void:
 ## ya estaban traducidos -los usa `PantallaMenu`- pero aquí no se pedían. Cada
 ## botón guarda su texto original y se vuelve a traducir al desplegar, por si
 ## se cambió de idioma con el panel ya montado.
+func _x_cajon() -> float:
+	return 0.0 if abajo() else ANCHO_RIEL
+
 func _traducir() -> void:
 	for b: Node in _lista.get_children():
 		if b is Button and b.has_meta("_es"):
@@ -228,10 +261,13 @@ func _boton_riel(texto: String, tip: String) -> Button:
 	var marcado := StyleBoxFlat.new()
 	marcado.bg_color = Color(1, 1, 1, 0.1)
 	marcado.border_color = Color(1, 1, 1, 0.85)
-	marcado.border_width_left = 4
+	if abajo():
+		marcado.border_width_top = 4
+	else:
+		marcado.border_width_left = 4
 	b.add_theme_stylebox_override("pressed", marcado)
 	b.add_theme_stylebox_override("hover_pressed", marcado)
-	b.custom_minimum_size = Vector2(ANCHO_RIEL, 40)
+	b.custom_minimum_size = Vector2(ALTO_BARRA, ALTO_BARRA - 6.0) if abajo() else Vector2(ANCHO_RIEL, 40)
 	b.add_theme_font_size_override("font_size", 24)
 	return b
 
@@ -276,14 +312,14 @@ func desplegar() -> void:
 	_cajon.visible = true
 	if Animar.reducidas():   ## M-304: con animaciones reducidas, el cajón aparece sin deslizarse
 		_cajon.modulate.a = 1.0
-		_cajon.position.x = ANCHO_RIEL
+		_cajon.position.x = _x_cajon()
 		_velo.color.a = 0.45
 		return
 	_cajon.modulate.a = 0.0
-	_cajon.position.x = ANCHO_RIEL - 40.0
+	_cajon.position.x = _x_cajon() - 40.0
 	var tw := create_tween().set_parallel(true)
 	tw.tween_property(_cajon, "modulate:a", 1.0, 0.18)
-	tw.tween_property(_cajon, "position:x", ANCHO_RIEL, 0.22).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(_cajon, "position:x", _x_cajon(), 0.22).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tw.tween_property(_velo, "color:a", 0.45, 0.2)
 
 func plegar() -> void:
@@ -296,8 +332,7 @@ func plegar() -> void:
 	tw.chain().tween_callback(func() -> void:
 		_cajon.visible = false
 		_velo.visible = false
-		set_anchors_and_offsets_preset(Control.PRESET_LEFT_WIDE)
-		offset_right = ANCHO_RIEL)
+		_plegado())
 
 func abierto() -> bool:
 	return _abierto

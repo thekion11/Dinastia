@@ -78,11 +78,11 @@ func _montar() -> void:
 
 	_raiz = VBoxContainer.new()
 	_raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_raiz.offset_left = 22.0 + MenuLateral.ANCHO_RIEL
-	_raiz.offset_right = -22
+	_raiz.offset_left = (8.0 if MenuLateral.abajo() else 22.0) + MenuLateral.reserva().x
+	_raiz.offset_right = -8.0 if MenuLateral.abajo() else -22.0
 	var cmp := compacta()
 	_raiz.offset_top = 6 if cmp else 16
-	_raiz.offset_bottom = -6 if cmp else -16
+	_raiz.offset_bottom = (-6 if cmp else -16) - MenuLateral.reserva().y
 	_raiz.add_theme_constant_override("separation", 6 if cmp else 12)
 	add_child(_raiz)
 
@@ -116,7 +116,7 @@ func _montar() -> void:
 	titulos.alignment = BoxContainer.ALIGNMENT_CENTER
 	_titulo_sub.add_theme_color_override("font_color", Color(1, 1, 1, 0.72))
 	titulos.add_child(_titulo_sub)
-	if _p.mundo != null and _p.mundo.mi_club() != null:
+	if _p.mundo != null and _p.mundo.mi_club() != null and not MenuLateral.abajo():   ## (vertical) sin el nombre del club: no cabe en 540 px
 		var club := Label.new()
 		club.text = Nombres.visible(_p.mundo.mi_club().nombre) if cmp else "%s  ·  %s" % [Nombres.visible(_p.mundo.mi_club().nombre), _p.fecha_larga()]
 		club.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -132,7 +132,8 @@ func _montar() -> void:
 		cab.move_child(fila, titulos.get_index() + 1)
 	else:
 		_raiz.add_child(fila)
-	_btn_portada = _boton_plano("◂  Portada: todos los apartados", 13 if cmp else 14)
+	_btn_portada = _boton_plano("◂  ▦" if MenuLateral.abajo() else "◂  Portada: todos los apartados", 13 if cmp else 14)   ## (vertical) solo el icono de la rejilla
+	_btn_portada.tooltip_text = Idiomas.t("◂  Portada: todos los apartados")
 	_btn_portada.custom_minimum_size = Vector2(0, 0 if cmp else 36)
 	_btn_portada.pressed.connect(portada)
 	fila.add_child(_btn_portada)
@@ -247,7 +248,7 @@ func portada() -> void:
 	sc.add_child(marco)
 	var subs: Array = _menu["subs"]
 	var rej := GridContainer.new()
-	var ancho := get_viewport_rect().size.x - MenuLateral.ANCHO_RIEL - 60.0
+	var ancho := get_viewport_rect().size.x - MenuLateral.reserva().x - (24.0 if MenuLateral.abajo() else 60.0)
 	rej.columns = clampi(int((ancho + 18.0) / 358.0), 1, 4)
 	if subs.size() <= 3:
 		rej.columns = maxi(1, mini(subs.size(), rej.columns))
@@ -309,10 +310,20 @@ func _montar_detalle() -> void:
 	for n in _cuerpo.get_children():
 		_cuerpo.remove_child(n)
 		n.queue_free()
-	var h := HBoxContainer.new()
+	var h: BoxContainer = HBoxContainer.new()
 	h.set_anchors_preset(Control.PRESET_FULL_RECT)
 	h.add_theme_constant_override("separation", 14)
-	_cuerpo.add_child(h)
+	if MenuLateral.abajo():   ## (vertical) el contenido y la ficha, uno debajo del otro, con desplazamiento vertical
+		h = VBoxContainer.new()
+		h.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h.add_theme_constant_override("separation", 14)
+		var desliza := ScrollContainer.new()
+		desliza.set_anchors_preset(Control.PRESET_FULL_RECT)
+		desliza.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		desliza.add_child(h)
+		_cuerpo.add_child(desliza)
+	else:
+		_cuerpo.add_child(h)
 	_hueco_contenido = PanelContainer.new()
 	_hueco_contenido.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_hueco_contenido.size_flags_stretch_ratio = 2.6
@@ -326,12 +337,16 @@ func _montar_detalle() -> void:
 	caja.content_margin_top = 10; caja.content_margin_bottom = 10
 	_hueco_contenido.add_theme_stylebox_override("panel", caja)
 	h.add_child(_hueco_contenido)
+	if MenuLateral.abajo():
+		_hueco_contenido.custom_minimum_size.y = get_viewport_rect().size.y - 160.0 - MenuLateral.reserva().y
 	_hueco_ficha = null
 	## Sin ficha del jugador en estos menús (pedido del usuario): el contenido ocupa todo el ancho.
 	if bool(_menu.get("ficha", false)):
 		_hueco_ficha = MarginContainer.new()
 		_hueco_ficha.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		_hueco_ficha.size_flags_stretch_ratio = 1.3
+		if MenuLateral.abajo():
+			_hueco_ficha.custom_minimum_size.y = 420.0
 		h.add_child(_hueco_ficha)
 	_mudar(_p._marco_paginas, _hueco_contenido)
 	if _hueco_ficha != null and _p._col_derecha != null:

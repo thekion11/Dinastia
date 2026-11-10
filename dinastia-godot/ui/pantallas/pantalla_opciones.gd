@@ -62,13 +62,13 @@ func _disp_zoom() -> void:
 		## `content_scale_factor` escala la interfaz ENTERA de golpe. Tocar el
 		## tamaño de fuente de cada etiqueta a mano sería repintar todo y dejaría
 		## los anchos mínimos descuadrados.
-		p.get_tree().root.content_scale_factor = v
+		EscalaMovil.poner(p.get_tree(), v)
 		## Al 140 % o al 80 % la pantalla puede quedar incómoda: se pregunta, y
 		## mientras se sigue arrastrando la pregunta es la misma (y su cuenta vuelve a empezar).
 		ConfirmarVideo.pedir(p, Idiomas.t("Tamaño de la interfaz: %d %%.") % int(round(v * 100.0)),
 			func() -> void:
 				p._zoom_interfaz = zoom_antes
-				p.get_tree().root.content_scale_factor = zoom_antes
+				EscalaMovil.poner(p.get_tree(), zoom_antes)
 				p._refrescar(),
 			p._refrescar))
 	fila2.add_child(sl)
@@ -98,12 +98,12 @@ func _disp_tv() -> void:
 		var zoom_tv_antes := p._zoom_interfaz
 		p._modo_tv = not p._modo_tv
 		p._zoom_interfaz = Principal.ZOOM_TV if p._modo_tv else 1.0
-		p.get_tree().root.content_scale_factor = p._zoom_interfaz
+		EscalaMovil.poner(p.get_tree(), p._zoom_interfaz)
 		ConfirmarVideo.pedir(p, Idiomas.t("Modo televisión encendido.") if p._modo_tv else Idiomas.t("Modo televisión apagado."),
 			func() -> void:
 				p._modo_tv = tv_antes
 				p._zoom_interfaz = zoom_tv_antes
-				p.get_tree().root.content_scale_factor = zoom_tv_antes
+				EscalaMovil.poner(p.get_tree(), zoom_tv_antes)
 				p._refrescar())
 		p._refrescar())
 	fila_tv.add_child(b_tv)

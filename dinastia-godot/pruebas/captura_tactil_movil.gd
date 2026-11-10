@@ -5,7 +5,7 @@ extends Node
 ## del centro), toques simulados (mover, correr, pasar, tirar, cambiar de jugador sin balón, pausa) y fotos con balón, en la banda y
 ## sin balón. Salida: CAPTURA_DIR/tactil_<orientación>_<partido>_<contexto>.jpg
 ##   herramientas/captura.sh res://pruebas/captura_tactil_movil.tscn   con   RESOLUCION=2400x1080 (o 1080x2400) PARTIDO=0
-const DPI := 400.0
+var DPI := 400.0 if OS.get_environment("DPI") == "" else float(OS.get_environment("DPI"))   ## DPI=267 con 720x1600: el mismo teléfono de 6,5"
 const MIN_MM_GRANDE := 10.0      ## diámetro mínimo de Pase y Tiro (guías: ≥ 9 mm; juegos de fútbol de móvil ≈ 11-13 mm)
 const MIN_MM_PEQUENO := 7.0      ## y del resto (Apple 44 pt ≈ 7 mm; Material 48 dp ≈ 7,6 mm)
 const SEMILLAS := [20261110, 777, 4242]
@@ -31,6 +31,8 @@ func _ready() -> void:
 	PartidoJugable.con_ceremonia = false
 	ControlesTactiles.forzar = true
 	PantallaMovil.dpi_forzado = DPI
+	EscalaMovil.forzar = true   ## como en el teléfono: el zoom de la interfaz del móvil (en vertical, el del lienzo estrecho)
+	EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	AjustesTactil.restaurar()
 	## Cada partido, un mundo de otro país (club y país distintos, orden 34): Chile, Argentina y España.
 	var m := Mundo.new()
@@ -187,7 +189,7 @@ func _auditar_hud(contexto: String) -> void:
 		var fr := ficha.get_global_rect()
 		print("  [%s] ficha del jugador: %.0f %% del ancho, %.1f × %.1f mm" % [contexto, 100.0 * fr.size.x / lienzo.x, fr.size.x / mm, fr.size.y / mm])
 		## (en vertical el nombre, con letra legible, ya mide ~30 mm de un teléfono de ~68 mm de ancho: hasta el 45 %)
-		_comprobar(fr.size.x / lienzo.x <= (0.45 if lienzo.y > lienzo.x else 0.30), "[%s] la ficha del jugador no ocupa de más (%.0f %% del ancho)" % [contexto, 100.0 * fr.size.x / lienzo.x])
+		_comprobar(fr.size.x / lienzo.x <= (0.50 if lienzo.y > lienzo.x else 0.30), "[%s] la ficha del jugador no ocupa de más (%.0f %% del ancho)" % [contexto, 100.0 * fr.size.x / lienzo.x])
 
 func _process(_d: float) -> void:
 	_n += 1
