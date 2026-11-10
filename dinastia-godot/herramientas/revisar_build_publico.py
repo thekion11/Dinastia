@@ -5,6 +5,7 @@ temporal y comprueba dos cosas:
   1. que no viaja ningún archivo de lo real (caras, pack real, créditos de fotos, listas de futbolistas);
   2. que en ningún archivo aparece, escrito tal cual, el nombre de un futbolista real (los de
      `datos/reales_lista.json` y `datos/creditos_fotos.txt`, que no viajan).
+Y (10-11-2026, orden 36 del dueño) que SÍ viaja la biblioteca de caras: son mezclas de 4 jugadores, no personas reales.
    cd dinastia-godot && python3 herramientas/revisar_build_publico.py [preset ...]
 Termina con «FIN BUILD PÚBLICO. N fallos». Lo corre `herramientas/especiales.sh todo`."""
 import json
@@ -16,8 +17,9 @@ import tempfile
 import zipfile
 
 PRESETS = sys.argv[1:] or ["WindowsLigero", "Web", "Android"]
-PROHIBIDOS = re.compile(r"(caras_reales|pack_real|creditos_fotos|reales_lista|caras_biblioteca|biblioteca_caras\.json"
+PROHIBIDOS = re.compile(r"(caras_reales|pack_real|creditos_fotos|reales_lista"
                         r"|tablas\.json\.bak|^pruebas/|\.md$)")
+OBLIGATORIOS = ["datos/biblioteca_caras.json", "recursos/caras_biblioteca/cara_000.jpg.import"]
 TEXTO = (".json", ".txt", ".cfg", ".gdc", ".gd", ".tres", ".tscn", ".remap", ".csv", ".import")
 
 
@@ -46,6 +48,10 @@ def revisar(preset: str, reales: re.Pattern, tmp: str) -> int:
         for x in malos[:10]:
             print("  FALLO %s: viaja %s" % (preset, x))
         fallos += len(malos)
+        for x in OBLIGATORIOS:
+            if x not in nombres:
+                print("  FALLO %s: no viaja %s (la biblioteca de caras es pública)" % (preset, x))
+                fallos += 1
         vistos = {}
         for x in nombres:
             if not x.endswith(TEXTO):
