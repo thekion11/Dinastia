@@ -121,7 +121,21 @@ static func de_tabla(nombre: String) -> String:
 ## real, y los inventados nunca llevaron números-; sin ella, se limpia como
 ## siempre por si una partida vieja trajera restos de leetspeak.
 static func visible(nombre: String) -> String:
-	return nombre if cubierta_activa() else limpiar(nombre)
+	var v := nombre if cubierta_activa() else limpiar(nombre)
+	## (10-11) Las SELECCIONES son equipos cuyo nombre es el del país («Alemania»): se ven en el idioma del juego. Los clubes no se traducen.
+	if Idiomas.idioma != "es" and es_pais(v):
+		return Idiomas.t(v)
+	return v
+
+## ¿Es el nombre (en castellano) de un país o selección de `PAIS_SELECCION`?
+static var _paises: Dictionary = {}
+static func es_pais(nombre: String) -> bool:
+	if _paises.is_empty():
+		var t: Variant = Datos.tabla("PAIS_SELECCION")
+		if t is Dictionary:
+			for k: String in t:
+				_paises[String(t[k])] = true
+	return _paises.has(nombre)
 
 ## NOMBRES VETADOS (25-9-2026). Un nombre generado al azar no puede ser el de
 ## un futbolista real: con las bolsas chilenas sale "Claudio Bravo" o "Vicente

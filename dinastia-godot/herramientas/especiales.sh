@@ -96,6 +96,8 @@ pasa "gestión en un teléfono horizontal en alemán (letra en mm, toques ≥ 7 
 pasa "estética de los menús en PC (3 tamaños de letra, rejilla, foco y pulsado, caras de 30 px; 2 clubes; con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1600x900 res://pruebas/auditoria_estetica_menus.tscn" "FIN. 0 fallos"
 pasa "Ligas activas en el teléfono (horizontal, alemán) y con mando, y «Añadir ligas» desde Ajustes (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 2400x1080 res://pruebas/auditoria_ligas_activas.tscn" "FIN. 0 fallos"
 pasa "Ligas activas en vertical con mando (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1080x2400 res://pruebas/auditoria_ligas_activas.tscn" "FIN. 0 fallos"
+pasa "nombres de países y selecciones en alemán (inicio, selección, continental, competiciones, correo, redes, palmarés, elegir club, ligas activas)" "godot --headless --path . res://pruebas/auditoria_paises_idioma.tscn" "FIN. 0 fallos"
+pasa "nombres de países y selecciones en francés" "IDIOMA=fr godot --headless --path . res://pruebas/auditoria_paises_idioma.tscn" "FIN. 0 fallos"
 # 5b. Las texturas de ruido en segundo plano son las de NoiseTexture2D, byte a byte (30-10)
 pasa "ruidos en segundo plano" "godot --headless --path . res://pruebas/probar_ruidos_fondo.tscn" "FIN. 0 fallos"
 pasa "textura del balón" "godot --headless --path . --script res://pruebas/probar_balon_textura.gd" "FIN. 0 fallos"

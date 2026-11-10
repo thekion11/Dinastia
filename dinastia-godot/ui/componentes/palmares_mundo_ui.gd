@@ -29,7 +29,7 @@ func _pintar(pr: Principal, pais: String) -> void:
 	var orden := paises.keys()
 	orden.sort()
 	for p: String in orden:
-		sel.add_item(String(nombres.get(p, p)))
+		sel.add_item(Idiomas.t(String(nombres.get(p, p))))   ## (10-11) el país en el idioma del juego
 		sel.set_item_metadata(sel.item_count - 1, p)
 		if p == pais:
 			sel.select(sel.item_count - 1)
