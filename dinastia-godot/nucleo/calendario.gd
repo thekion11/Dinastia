@@ -225,7 +225,21 @@ static func torneos(anio: int) -> Array:
 			"sedes": [], "texto": "La Eurocopa de selecciones europeas."})
 		r.append({"nombre": "Copa América", "desde": [6, 15], "hasta": [7, 12],
 			"sedes": [], "texto": "La Copa América, el torneo de selecciones más antiguo del mundo."})
+	if anio % 2 != 0:   ## (10-11) los de años impares, con su ciclo real
+		r.append({"nombre": "Copa Oro", "desde": [6, 14], "hasta": [7, 6], "sedes": [], "texto": "La Copa Oro de la CONCACAF, cada dos años."})
+		r.append({"nombre": "Copa Africana de Naciones", "desde": [1, 13], "hasta": [2, 11], "sedes": [], "texto": "La Copa Africana de Naciones, cada dos años."})
+		if (anio - 2027) % 4 == 0:
+			r.append({"nombre": "Copa de Asia", "desde": [1, 12], "hasta": [2, 10], "sedes": [], "texto": "La Copa de Asia, cada cuatro años."})
 	return r
+
+## (10-11) ¿Toca este año el torneo continental de selecciones de la confederación `clave`? (los mismos años que enseña `torneos`):
+## Eurocopa y Copa América cada 4 desde 2028; Copa Oro y Copa Africana en los impares; Copa de Asia cada 4 desde 2027; Oceanía cada 4 desde 2028.
+static func toca_continental_selecciones(clave: String, anio: int) -> bool:
+	match clave:
+		"ucl", "lib", "oce": return (anio - 2028) % 4 == 0
+		"conc", "afr": return anio % 2 != 0
+		"asia": return (anio - 2027) % 4 == 0
+	return false
 
 ## Lo que cae en un día concreto (para la tira de días).
 static func del_dia(pais: String, anio: int, semana: int, dia: int) -> Array:

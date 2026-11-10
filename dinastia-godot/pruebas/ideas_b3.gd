@@ -65,7 +65,7 @@ func ejecutar() -> void:
 	var s_nac := c.saldo
 	_comprobar(sel.nacionalizar(extr) == "" and sel.elegible(extr) and sel.nacionalidad_deportiva(extr) == "CHI" and c.saldo < s_nac, "a los 4 años se nacionaliza pagando el trámite y ya es elegible (863)")
 	## Mundial cada cuatro años y vitrina (867, 874).
-	_comprobar(sel.toca_copa_del_mundo(2028) and sel.toca_copa_del_mundo(2032) and not sel.toca_copa_del_mundo(2030), "el Mundial toca cada cuatro años (867)")
+	_comprobar(sel.toca_copa_del_mundo(2026) and sel.toca_copa_del_mundo(2030) and not sel.toca_copa_del_mundo(2028), "el Mundial toca cada cuatro años, en los años reales (867; 10-11)")
 	var camp := sel.copa_del_mundo(2028)
 	_comprobar(String(camp["campeon"]) != "" and String(sel.mundial["campeon"]) == String(camp["campeon"]) and (camp["convocados"] as Array).size() == 6, "se juega la Copa del Mundo con campeón y seis convocados tuyos (867): %s" % camp["campeon"])
 	var estrella: Jugador = c.plantilla[4]

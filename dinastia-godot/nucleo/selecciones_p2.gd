@@ -331,10 +331,10 @@ func residencias() -> void:
 ## es la consecuencia: si sale campeón, tus internacionales vuelven en una nube y
 ## se les nota en la moral.
 func torneo_continental(anio: int) -> Dictionary:
-	if anio % 2 != 0:
+	var clave := Continental.confed_de(pais_seleccion())
+	if not Calendario.toca_continental_selecciones(clave, anio):   ## (10-11) el ciclo real de cada torneo, igual que el calendario
 		return {}
 	var puesto := int(Azar.uno(BOLSA_PUESTOS))
-	var clave := Continental.confed_de(pais_seleccion())
 	var torneo := String(TORNEO_POR_CONFED.get(clave, "Copa América"))
 	var sel := nombre_seleccion()
 	_anotar_resultado("%s %d: %s %s" % [torneo, anio, sel, PUESTOS_TORNEO[puesto]])

@@ -263,7 +263,7 @@ static var ranura_al_salir := "partida"
 static func con_prologo(modo: String) -> bool:
 	return InterruptorCiudad.activa and modo_con_prologo(modo)   ## (9-11) el prólogo CAMINANDO vive en la ciudad 3D (apagada)
 
-## ¿Este modo tiene prólogo, sea caminando (ciudad encendida) o la animación fija (`PrologoAnimado`, ciudad apagada)?
+## ¿Este modo tiene prólogo? (10-11: la animación fija se ELIMINÓ por orden del dueño; con la ciudad apagada no hay prólogo hasta el nuevo, idea del dueño.)
 static func modo_con_prologo(modo: String) -> bool:
 	if sin_prologo or OS.get_environment("PROLOGO") == "0":
 		return false

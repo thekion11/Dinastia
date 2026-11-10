@@ -12,6 +12,9 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 20:
+		if OS.get_environment("CLUB") != "":   ## (10-11, regla del dueño: nunca un solo equipo) CLUB=<n> elige otro club del mundo
+			var todos: Array = _p.mundo.clubes.values()
+			_p.mundo.mi_club_id = (todos[int(OS.get_environment("CLUB")) % todos.size()] as Club).id
 		_v = PlantillaPes.abrir(_p)
 		var campo: Array = _p.mundo.mi_club().plantilla.filter(func(j: Jugador) -> bool: return j.pos != "POR")
 		_v._comparando = true
@@ -22,6 +25,6 @@ func _process(_d: float) -> void:
 		_hecho = true
 		await get_tree().create_timer(2.5).timeout
 		var img := get_viewport().get_texture().get_image()
-		img.save_jpg("/tmp/plantilla_pes.jpg", 0.85)
+		img.save_jpg("/tmp/plantilla_pes_%s.jpg" % OS.get_environment("CLUB"), 0.85)
 		print("CAPTURA OK")
 		get_tree().quit()
