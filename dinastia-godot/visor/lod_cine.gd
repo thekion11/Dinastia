@@ -70,11 +70,13 @@ func _exit_tree() -> void:
 
 static func _es_persona(n: Node) -> bool:
 	var p := n
-	for _k in 8:
+	for _k in 10:
 		if p == null:
 			return false
 		var nombre := String(p.name).to_lower()
-		if p is Skeleton3D or nombre.contains("balon") or nombre.contains("ball") or nombre.contains("jugador"):
+		## Personas y balón; y lo que se ve como hueco o falta si se apaga: el túnel (su boca da a la cámara) y las banderas del techo.
+		if p is Skeleton3D or nombre.contains("balon") or nombre.contains("ball") or nombre.contains("jugador") \
+				or nombre == "tunelvestuario" or nombre.begins_with("bandera"):
 			return true
 		p = p.get_parent()
 	return false
