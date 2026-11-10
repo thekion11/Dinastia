@@ -41,11 +41,11 @@ func _probar_banderas() -> void:
 	var paises: Dictionary = Datos.tabla("PAIS_SELECCION")
 	var sin_dibujo: Array[String] = []
 	for k: String in paises:
-		if not dibujadas.has(k):
+		if not _tiene_bandera(k, dibujadas):
 			sin_dibujo.append(k)
 	for nombre: String in CarreraJugador.CODIGO_SELECCION:
 		var cod := String(CarreraJugador.CODIGO_SELECCION[nombre])
-		if not dibujadas.has(cod):
+		if not _tiene_bandera(cod, dibujadas):
 			sin_dibujo.append(cod)
 	_comprobar(paises.size() >= 20 and sin_dibujo.is_empty(), "las %d selecciones con liga y las rivales de la Carrera tienen bandera propia %s" % [paises.size(), str(sin_dibujo)])
 	var ida_vuelta: Array[String] = []
@@ -60,6 +60,15 @@ func _probar_banderas() -> void:
 	var tc := Banderas.de_club(c)
 	_comprobar(tc != null and Banderas.de_club(c) == tc, "bandera de club, en caché por colores")
 
+## (10-11) Bandera propia = dibujada en `banderas.gd` O su SVG/PNG de flag-icons existe (`Banderas.ISO`): los países nuevos llegan con el SVG, no con un dibujo a mano.
+func _tiene_bandera(cod: String, dibujadas: Dictionary) -> bool:
+	if dibujadas.has(cod):
+		return true
+	if not Banderas.ISO.has(cod):
+		return false
+	var ruta := "res://assets/banderas/%s.svg" % Banderas.ISO[cod]
+	return ResourceLoader.exists(ruta) or ResourceLoader.exists(ruta.get_basename() + ".png")
+
 # ----------------------------------------------------------- BibliotecaCaras
 
 func _probar_biblioteca() -> void:
@@ -69,7 +78,8 @@ func _probar_biblioteca() -> void:
 	var pelos := BibliotecaCaras.pelos()
 	var ordenadas := caras.duplicate()
 	ordenadas.sort()
-	_comprobar(caras.size() == 72 and caras == ordenadas, "72 caras, en orden (%d)" % caras.size())
+	var n_tono := caras.size() / 6   ## (10-11) la biblioteca pasó de 72 a 300 mezclas (6 tonos x 50)
+	_comprobar(caras.size() == 300 and caras == ordenadas, "300 caras, en orden (%d)" % caras.size())
 	_comprobar(pelos.size() >= 30, "y %d cortes de pelo" % pelos.size())
 	var por_tono := {}
 	var sin_foto: Array[String] = []
@@ -79,14 +89,14 @@ func _probar_biblioteca() -> void:
 		por_tono[tono] = int(por_tono.get(tono, 0)) + 1
 		if not FileAccess.file_exists("res://" + String(e.get("a", ""))):
 			sin_foto.append(k)
-	_comprobar(por_tono.size() == 6 and por_tono.values().all(func(n: int) -> bool: return n == 12), "12 caras por cada uno de los 6 tonos %s" % str(por_tono))
+	_comprobar(por_tono.size() == 6 and por_tono.values().all(func(n: int) -> bool: return n == n_tono), "%d caras por cada uno de los 6 tonos %s" % [n_tono, str(por_tono)])
 	_comprobar(sin_foto.is_empty(), "cada cara tiene su textura en disco %s" % str(sin_foto.slice(0, 5)))
 	var claras := BibliotecaCaras.del_tono(Color(0.95, 0.82, 0.72))
 	var oscuras := BibliotecaCaras.del_tono(Color(0.22, 0.14, 0.1))
-	_comprobar(claras.size() == 12 and int(BibliotecaCaras.entrada_cara(claras[0])["tono"]) == 0, "piel clara → caras del tono 0")
-	_comprobar(oscuras.size() == 12 and int(BibliotecaCaras.entrada_cara(oscuras[0])["tono"]) == 5, "piel muy oscura → caras del tono 5")
+	_comprobar(claras.size() == n_tono and int(BibliotecaCaras.entrada_cara(claras[0])["tono"]) == 0, "piel clara → caras del tono 0")
+	_comprobar(oscuras.size() == n_tono and int(BibliotecaCaras.entrada_cara(oscuras[0])["tono"]) == 5, "piel muy oscura → caras del tono 5")
 	var piel := Color(0.78, 0.6, 0.45)
-	_comprobar(BibliotecaCaras.cara_de_tono(piel, 3) == BibliotecaCaras.cara_de_tono(piel, 3 + 12) and BibliotecaCaras.cara_de_tono(piel, -1) == "",
+	_comprobar(BibliotecaCaras.cara_de_tono(piel, 3) == BibliotecaCaras.cara_de_tono(piel, 3 + n_tono) and BibliotecaCaras.cara_de_tono(piel, -1) == "",
 		"cara_de_tono da la vuelta a la lista y no acepta índices negativos")
 	var a := BibliotecaCaras.para("jug_123", piel, Color(0.2, 0.1, 0.05))
 	var b := BibliotecaCaras.para("jug_123", piel, Color(0.2, 0.1, 0.05))
@@ -94,7 +104,7 @@ func _probar_biblioteca() -> void:
 	var distintas := {}
 	for i in 40:
 		distintas[BibliotecaCaras.para("p%d" % i, piel, Color.BLACK)["cara"]] = true
-	_comprobar(distintas.size() >= 6, "y semillas distintas reparten caras (%d de 12)" % distintas.size())
+	_comprobar(distintas.size() >= 6, "y semillas distintas reparten caras (%d de %d)" % [distintas.size(), n_tono])
 	var p := BibliotecaCaras.pelo(String(pelos[0]), Color(0.5, 0.3, 0.1))
 	_comprobar(String(p.get("c", "")) == "#" + Color(0.5, 0.3, 0.1).to_html(false) and String(p.get("r", "")) != String(p.get("c", "")), "pelo(): el corte con su color y la raíz más oscura")
 	_comprobar(BibliotecaCaras.pelo("no_existe", Color.RED).is_empty() and BibliotecaCaras.nombre_pelo("no_existe") == "?", "un corte que no existe: vacío y «?»")

@@ -7,6 +7,23 @@ extends BaseIdea
 
 const LOTE := ["POR", "NED", "BEL", "CRO", "DEN"]
 
+## (10-11) Desde las segundas divisiones (Portugal 18, Países Bajos 20…) un mundo trae más ligas y clubes que la primera división: se mide solo la primera.
+func _primeras(m: Mundo) -> Array:
+	var n := 0
+	var clubes := 0
+	for l: Liga in m.ligas:
+		if l.div == 1:
+			n += 1
+			clubes += l.clubes.size()
+	return [n, clubes]
+
+func _esperadas() -> Array:
+	var pl: Dictionary = Datos.tabla("PAISES_LIGAS")
+	var clubes := 0
+	for p: String in LOTE:
+		clubes += (pl[p]["clubes"] as Array).size()
+	return [LOTE.size(), clubes]
+
 func _probar() -> void:
 	_titulo("S6: PAÍSES JUGABLES, LOTE 1 (POR, NED, BEL, CRO, DEN)")
 	var pl: Dictionary = Datos.tabla("PAISES_LIGAS")
@@ -16,11 +33,11 @@ func _probar() -> void:
 	var datos_ok := true
 	var codigo_ok := true
 	for p: String in LOTE:
-		datos_ok = datos_ok and pl.has(p) and ps.has(p) and pools.has(p) and ucl.has(p) and (pl[p]["clubes"] as Array).size() == (18 if p == "NED" else 16)
+		datos_ok = datos_ok and pl.has(p) and ps.has(p) and pools.has(p) and ucl.has(p) and (pl[p]["clubes"] as Array).size() >= 10 and (pl[p]["clubes"] as Array).size() % 2 == 0
 		codigo_ok = codigo_ok and not LeyesPais.reglas(p).is_empty() and Copa.COPAS_POR_PAIS.has(p) and Politica.ESTRUCTURA.has(p) \
 			and Contratos.JORNADA.has(p) and Calendario.FIJAS.has(p) and MapaPais.SILUETAS.has(p) and PaisDatos.MONUMENTOS.has(p) \
 			and PaisDatos.OFICIAL.has(p) and Globo3D.CAPITAL.has(p) and Paises.conocido(p)
-	_comprobar(datos_ok, "las tablas (liga de 16, selección, nombres, Champions) traen a los 5 (Países Bajos: 18 clubes, Eredivisie real desde el 1-11)")
+	_comprobar(datos_ok, "las tablas (liga de 16, selección, nombres, Champions) traen a los 5 (cada liga con su tamaño real, par: Croacia 10, Dinamarca 12, Bélgica 16, Países Bajos y Portugal 18)")
 	_comprobar(codigo_ok, "y los datos de cada sistema: plantel, copa, política, jornada, fiestas, mapa, monumentos, globo")
 	var europa: Array = []
 	for fila: Array in PaisDatos.CONTINENTES:
@@ -36,7 +53,7 @@ func _probar() -> void:
 		var m := Mundo.new()
 		m.generar(["POR", "NED", "BEL", "CRO", "DEN"], semilla)
 		m.tomar_el_mando(m.ligas[0].clubes[0].id)
-		ligas_ok = ligas_ok and m.ligas.size() == 5 and m.clubes.size() == 82
+		ligas_ok = ligas_ok and _primeras(m) == _esperadas()
 		var vistos := {}
 		for c: Club in m.clubes.values():
 			if vistos.has(c.nombre):
@@ -62,8 +79,8 @@ func _probar() -> void:
 		for t in 3:
 			m.jugar_temporada()
 			m.nueva_temporada()
-		sin_errores = sin_errores and m.ligas.size() == 5 and m.anio == anio0 + 3 and m.clubes.size() == 82
-	_comprobar(ligas_ok, "cada mundo trae 5 ligas y 82 clubes (NED trae 18)")
+		sin_errores = sin_errores and _primeras(m) == _esperadas() and m.anio == anio0 + 3
+	_comprobar(ligas_ok, "cada mundo trae las 5 primeras divisiones con sus clubes de la tabla (%s)" % str(_esperadas()))
 	_comprobar(duplicados == 0, "ningún club repetido")
 	_comprobar(nombres_de_casa, "los portugueses llevan apellidos portugueses")
 	_comprobar(sin_errores, "3 semillas × 3 temporadas sin romperse")

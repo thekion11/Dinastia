@@ -45,8 +45,13 @@ func _datos() -> void:
 	_comprobar(malos.is_empty(), "cada país: nombre completo, oficial, continente, pin y 5 monumentos distintos %s" % [malos])
 	_comprobar(PaisDatos.nombre("KOR") == "Corea del Sur" and PaisDatos.nombre("USA") == "Estados Unidos",
 		"nombre completo, no la abreviatura de las selecciones")
+	## (10-11) Ya TODOS los países del selector tienen liga: para ejercer la rama «sin liga» se quita Venezuela de la tabla un momento y se devuelve.
+	var tabla_ligas: Dictionary = Datos.tabla("PAISES_LIGAS")
+	var liga_ven: Variant = tabla_ligas.get("VEN")
+	tabla_ligas.erase("VEN")
 	_comprobar(not PaisDatos.tiene_liga("VEN") and PaisDatos.tiene_liga("CHI") and PaisDatos.tiene_liga("JPN"),
-		"Venezuela sin liga; Chile y Japón con liga")
+		"sin la liga de Venezuela en la tabla, Venezuela no tiene liga; Chile y Japón sí")
+	tabla_ligas["VEN"] = liga_ven
 	_comprobar(PaisDatos.estrellas("ENG") == 5 and PaisDatos.estrellas("BOL") == 1 and PaisDatos.estrellas("CHI") == 2,
 		"nivel de liga: Inglaterra 5, Chile 2, Bolivia 1")
 	_comprobar(Globo3D.CAPITAL["AUS"] == "Canberra", "la capital de Australia es Canberra")
@@ -139,9 +144,13 @@ func _pantalla_normal() -> void:
 	s._unhandled_input(ev)
 	_comprobar(s.pais == "KOR", "flecha abajo: el siguiente país de la lista (%s)" % s.pais)
 	## Venezuela no tiene liga: no se puede confirmar.
+	var tabla_ligas2: Dictionary = Datos.tabla("PAISES_LIGAS")
+	var liga_ven2: Variant = tabla_ligas2.get("VEN")
+	tabla_ligas2.erase("VEN")   ## (10-11) Venezuela ya tiene liga: se quita un momento para ejercer la rama «sin liga»
 	s.call("_elegir", "VEN")
 	s.pedir_confirmacion()
 	_comprobar(s.get("_btn_confirmar").disabled and not s.confirmacion().visible, "sin liga no se confirma")
+	tabla_ligas2["VEN"] = liga_ven2
 	## Confirmar Francia: primero la tarjeta de confirmación, luego la señal.
 	s.call("_elegir", "FRA")
 	var recibido: Array = []
