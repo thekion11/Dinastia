@@ -271,3 +271,12 @@ Es decir, el menú deja de dibujar ~15 fotogramas por segundo de ~400 llamadas c
 | ESP | 366 → 266 ms (**−27 %**) | −24 % |
 | ENG | 398 → 293 ms (**−26 %**) | −28 % |
 E4 añade poco medible (entre −2 y +6 puntos, dentro del ruido de ±4 %); el grueso sigue siendo la sombra solar y el glow. Capturas nuevas con/sin (arriba sin el modo, abajo con él): `docs/04_auditorias/capturas_modo_rendimiento/cmp_{CHI,ESP,ENG}.jpg`: sin sombras de los jugadores, sin resplandor y con el césped liso (franjas sin mechones); es un cambio de aspecto claro, por eso el modo sigue apagado por defecto.
+
+## La noche en MEDIA en móvil (10-11, sesión 5; orden del líder; 3 clubes, 1280×720 llvmpipe, ruido ≈ ±4 %)
+**Fe de erratas:** el «+45 % de noche» que se anotó antes era un artefacto (`medir_partido` con `NOCHE=1` aplicaba `Ambience` de noche ENCIMA del estadio de día: 2 luces direccionales con sombra y 2 `WorldEnvironment`). Ahora el estadio se abre con el perfil de noche (`EstadioPropio.perfil` + clima «noche»), como en el juego: 1 luz direccional con sombra (la luna, 0,25), 1 de relleno SIN sombra (0,75), 26-27 omni y un solo `WorldEnvironment`.
+| Club | Día | Noche | Noche sin luces omni | Noche sin sombra de la luz principal | Noche sin glow |
+|---|---|---|---|---|---|
+| CHI | 406 ms | 386 (−5 %) | 388 (0 %) | **337 (−13 %)** (−66 llamadas) | 364 (−6 %) |
+| ESP | (base del día invalidada por un tirón de 10 s) | 420 | 413 (−2 %) | **337 (−20 %)** (−72 llamadas) | 393 (−6 %) |
+| ENG | 372 ms | 354 (−5 %) | 357 (+1 %) | **287 (−19 %)** (−74 llamadas) | 343 (−3 %) |
+Conclusión: **de noche cuesta lo mismo que de día (−5 %)**. Las 26 luces omni de túneles y edificio del club NO cuestan nada medible (ni de noche); lo que pesa es lo de siempre: la sombra de la luz principal (−13…−20 %, igual que la del sol de día) y el glow (−3…−6 %). Es decir, **el «Modo rendimiento» ya cubre la noche** (quita sombra y glow); no hace falta nada específico para la noche. (ESP de día: la primera medición del lote tuvo un tirón de 10 s al compilar shaders y no sirve como base.)
