@@ -89,7 +89,7 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 	for cod: String in por_pais:
 		var pais := cod
 		var b := Button.new()
-		b.text = "%s  (%d)" % [String(nombres.get(pais, pais)) if nombres != null else pais, int(por_pais[pais])]
+		b.text = "%s  (%d)" % [Idiomas.t(String(nombres.get(pais, pais))) if nombres != null else pais, int(por_pais[pais])]   ## (10-11) el país en el idioma del juego
 		b.add_theme_font_size_override("font_size", 11)
 		b.toggle_mode = true
 		b.button_pressed = _pais_elegido == pais
@@ -127,7 +127,7 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 	colm.add_theme_constant_override("separation", 6)
 	marco.add_child(colm)
 	var tn := p._texto(13, p.COL_TEXTO)
-	tn.text = String(nombres.get(_pais_elegido, _pais_elegido)) if nombres != null else _pais_elegido
+	tn.text = Idiomas.t(String(nombres.get(_pais_elegido, _pais_elegido))) if nombres != null else _pais_elegido   ## (10-11) en el idioma del juego
 	tn.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	colm.add_child(tn)
 	var lienzo := Control.new()
