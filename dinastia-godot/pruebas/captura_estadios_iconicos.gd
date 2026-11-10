@@ -45,6 +45,7 @@ func _ready() -> void:
 		await _uno(i, clubes[i])
 	print("FIN")
 	get_tree().quit()
+	await get_tree().create_timer(3600.0).timeout   ## no sigue con nada más mientras sale
 
 func _uno(i: int, nombre: String) -> void:
 	var c: Club = null
@@ -69,6 +70,8 @@ func _uno(i: int, nombre: String) -> void:
 	for _f in 30:
 		await get_tree().process_frame
 		muestras.append(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
+		if OS.get_environment("PICOS") == "desglose" and muestras[-1] > _umbral(99999):
+			await _congelar()
 	muestras.sort()
 	var llamadas := muestras[15]
 	print("   llamadas min/mediana/max: %d / %d / %d" % [muestras[0], llamadas, muestras[29]])
@@ -125,37 +128,7 @@ func _picos(mediana: int) -> void:
 		await get_tree().process_frame
 		var ll := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
 		if ll > _umbral(mediana) and OS.get_environment("PICOS") == "desglose":
-			## Congela ESE plano en una cámara quieta y mira qué grupos lo inflan.
-			var cam0 := get_viewport().get_camera_3d()
-			var fija := Camera3D.new()
-			fija.fov = cam0.fov
-			fija.far = cam0.far
-			add_child(fija)
-			fija.global_transform = cam0.global_transform
-			fija.make_current()
-			get_tree().paused = true
-			process_mode = Node.PROCESS_MODE_ALWAYS
-			await get_tree().process_frame
-			await get_tree().process_frame
-			var serie: Array[int] = []
-			for _k in (int(OS.get_environment("PICOS_SERIE")) if OS.get_environment("PICOS_SERIE") != "" else 12):   ## ¿el pico sigue con el plano quieto (es lo que se ve) o se va solo (es el corte de cámara)?
-				serie.append(rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
-				await get_tree().process_frame
-			var base := serie[-1]
-			print("   PLANO CONGELADO %s: %s llamadas" % [cam0.global_position.round(), serie])
-			## Los SubViewport (cartas, retratos, pantallas) dibujan su propio mundo: ¿cuánto pesan?
-			for vp: Node in get_tree().root.find_children("*", "SubViewport", true, false):
-				var sv := vp as SubViewport
-				var antes := sv.render_target_update_mode
-				sv.render_target_update_mode = SubViewport.UPDATE_DISABLED
-				await get_tree().process_frame
-				await get_tree().process_frame
-				var d := base - rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
-				sv.render_target_update_mode = antes
-				await get_tree().process_frame
-				print("   SUBVIEWPORT -%d  %s (modo %d, propio=%s)" % [d, get_tree().root.get_path_to(sv), antes, sv.own_world_3d])
-			await _desglose(get_tree().root, base)
-			get_tree().quit()
+			await _congelar()
 			return
 		if ll > mediana * 1.6:
 			var cam := get_viewport().get_camera_3d()
@@ -169,3 +142,39 @@ func _picos(mediana: int) -> void:
 func _umbral(mediana: int) -> float:
 	var u := float(OS.get_environment("PICOS_UMBRAL")) if OS.get_environment("PICOS_UMBRAL") != "" else 3.0
 	return u if u > 10.0 else mediana * u
+
+## Congela ESE plano en una cámara quieta, pausa el juego y mira qué lo infla.
+func _congelar() -> void:
+	var rs := RenderingServer
+	## Congela ESE plano en una cámara quieta y mira qué grupos lo inflan.
+	var cam0 := get_viewport().get_camera_3d()
+	var fija := Camera3D.new()
+	fija.fov = cam0.fov
+	fija.far = cam0.far
+	add_child(fija)
+	fija.global_transform = cam0.global_transform
+	fija.make_current()
+	get_tree().paused = true
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var serie: Array[int] = []
+	for _k in (int(OS.get_environment("PICOS_SERIE")) if OS.get_environment("PICOS_SERIE") != "" else 12):   ## ¿el pico sigue con el plano quieto (es lo que se ve) o se va solo (es el corte de cámara)?
+		serie.append(rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
+		await get_tree().process_frame
+	var base := serie[-1]
+	print("   PLANO CONGELADO %s: %s llamadas" % [cam0.global_position.round(), serie])
+	## Los SubViewport (cartas, retratos, pantallas) dibujan su propio mundo: ¿cuánto pesan?
+	for vp: Node in get_tree().root.find_children("*", "SubViewport", true, false):
+		var sv := vp as SubViewport
+		var antes := sv.render_target_update_mode
+		sv.render_target_update_mode = SubViewport.UPDATE_DISABLED
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var d := base - rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+		sv.render_target_update_mode = antes
+		await get_tree().process_frame
+		print("   SUBVIEWPORT -%d  %s (modo %d, propio=%s)" % [d, get_tree().root.get_path_to(sv), antes, sv.own_world_3d])
+	await _desglose(get_tree().root, base)
+	get_tree().quit()
+	await get_tree().create_timer(3600.0).timeout   ## no sigue con nada más mientras sale
