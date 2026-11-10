@@ -7675,7 +7675,8 @@
   "vas": "you're",
   "meta": "target",
   "Cerca de cumplir": "Close to meeting it",
-  "Jugador del mes": "Player of the month"
+  "Jugador del mes": "Player of the month",
+  "Patrocinador oficial": "Official sponsor"
  },
  "pt": {
   "Historia": "História",
@@ -15353,7 +15354,8 @@
   "vas": "está em",
   "meta": "meta",
   "Cerca de cumplir": "Perto de cumprir",
-  "Jugador del mes": "Jogador do mês"
+  "Jugador del mes": "Jogador do mês",
+  "Patrocinador oficial": "Patrocinador oficial"
  },
  "patrones": [
   [
@@ -29006,7 +29008,8 @@
   "vas": "tu es",
   "meta": "objectif",
   "Cerca de cumplir": "Proche de l'objectif",
-  "Jugador del mes": "Joueur du mois"
+  "Jugador del mes": "Joueur du mois",
+  "Patrocinador oficial": "Sponsor officiel"
  },
  "it": {
   "Historia": "Storia",
@@ -36684,7 +36687,8 @@
   "vas": "sei",
   "meta": "obiettivo",
   "Cerca de cumplir": "Vicino all'obiettivo",
-  "Jugador del mes": "Giocatore del mese"
+  "Jugador del mes": "Giocatore del mese",
+  "Patrocinador oficial": "Sponsor ufficiale"
  },
  "de": {
   "Historia": "Geschichte",
@@ -44362,7 +44366,8 @@
   "vas": "du bist",
   "meta": "Ziel",
   "Cerca de cumplir": "Nah am Ziel",
-  "Jugador del mes": "Spieler des Monats"
+  "Jugador del mes": "Spieler des Monats",
+  "Patrocinador oficial": "Offizieller Sponsor"
  },
  "ca": {
   "Historia": "Història",
@@ -52040,7 +52045,8 @@
   "vas": "vas",
   "meta": "meta",
   "Cerca de cumplir": "A prop de complir",
-  "Jugador del mes": "Jugador del mes"
+  "Jugador del mes": "Jugador del mes",
+  "Patrocinador oficial": "Patrocinador oficial"
  },
  "pl": {
   "Club": "Klub",
@@ -59718,7 +59724,8 @@
   "vas": "jesteś",
   "meta": "cel",
   "Cerca de cumplir": "Blisko celu",
-  "Jugador del mes": "Zawodnik miesiąca"
+  "Jugador del mes": "Zawodnik miesiąca",
+  "Patrocinador oficial": "Oficjalny sponsor"
  },
  "tr": {
   "Club": "Kulüp",
@@ -67396,6 +67403,7 @@
   "vas": "şu an",
   "meta": "hedef",
   "Cerca de cumplir": "Hedefe yakınlık",
-  "Jugador del mes": "Ayın oyuncusu"
+  "Jugador del mes": "Ayın oyuncusu",
+  "Patrocinador oficial": "Resmî sponsor"
  }
 }

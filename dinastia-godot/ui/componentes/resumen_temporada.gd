@@ -49,8 +49,16 @@ static func datos(foto: Dictionary, resumen: Dictionary) -> Dictionary:
 func _rellenar(foto: Dictionary, resumen: Dictionary) -> void:
 	var d := datos(foto, resumen)
 	_centro.custom_minimum_size = Vector2(ANCHO_TARJETA * 2 + 24, 0)
-	_centro.add_child(etiqueta("%s · %d" % [Idiomas.t("FIN DE TEMPORADA"), int(d["anio"])], 15, Tema.SUAVE))
-	_centro.add_child(etiqueta("🏆 " + Idiomas.t("Resumen de la temporada"), 34, Tema.ORO, true, false))
+	_centro.add_theme_constant_override("separation", 8)   ## compacto: que el botón quepa a 1080 px con la franja del patrocinador
+	var arriba := HBoxContainer.new()
+	arriba.alignment = BoxContainer.ALIGNMENT_CENTER
+	arriba.add_theme_constant_override("separation", 18)
+	arriba.add_child(etiqueta("%s · %d" % [Idiomas.t("FIN DE TEMPORADA"), int(d["anio"])], 15, Tema.SUAVE, false, false))
+	var pat: Dictionary = foto.get("patrocinador", {})
+	if String(pat.get("marca", "")) != "":   ## (10-11, idea del PES) el patrocinador oficial, como en sus pantallas de temporada
+		arriba.add_child(_patrocinador(String(pat["marca"]), String(pat.get("color", "#ffffff"))))
+	_centro.add_child(arriba)
+	_centro.add_child(etiqueta("🏆 " + Idiomas.t("Resumen de la temporada"), 30, Tema.ORO, true, false))
 	_centro.add_child(_cabecera(d))
 	var rejilla := GridContainer.new()
 	rejilla.columns = 2
@@ -171,7 +179,7 @@ func _veredicto(v: Dictionary) -> Control:
 	var color := Tema.BIEN if bien else Tema.MAL
 	var est := Tema.caja(Color(color, 0.16), Tema.RADIO_GRANDE, color)
 	est.set_border_width_all(2)
-	est.set_content_margin_all(14)
+	est.set_content_margin_all(8)
 	panel.add_theme_stylebox_override("panel", est)
 	var col := VBoxContainer.new()
 	panel.add_child(col)
@@ -185,3 +193,18 @@ func _veredicto(v: Dictionary) -> Control:
 	if bool(v.get("despedido", false)):
 		col.add_child(etiqueta(Idiomas.t("ESTÁS DESPEDIDO.") + " " + Idiomas.t("Elige otro club para empezar de nuevo."), 18, Tema.MAL))
 	return panel
+
+## La franja del patrocinador oficial: el rótulo y el logo de la marca del pecho (`SponsorKit`).
+func _patrocinador(marca: String, hex: String) -> Control:
+	var fila := HBoxContainer.new()
+	fila.alignment = BoxContainer.ALIGNMENT_CENTER
+	fila.add_theme_constant_override("separation", 12)
+	fila.add_child(etiqueta(Idiomas.t("Patrocinador oficial"), 13, Tema.SUAVE, false, false))
+	var fondo := Color(0.1, 0.12, 0.11)
+	var tr := TextureRect.new()
+	tr.texture = SponsorKit.textura(marca, hex, SponsorKit.color_letras(hex, fondo))
+	tr.custom_minimum_size = Vector2(120, 26)
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	fila.add_child(tr)
+	return fila

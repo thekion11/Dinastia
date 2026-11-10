@@ -81,4 +81,6 @@ static func foto(m: Mundo) -> Dictionary:
 		f["conti"] = Continental.nombre_conti(conti.clave)
 		f["conti_campeon"] = conti.campeon
 		f["conti_jugada"] = conti.participa(mio)
+	if m.auspicio != null and not m.auspicio.contrato.is_empty():   ## el patrocinador del pecho (lo enseña el pie del resumen)
+		f["patrocinador"] = {"marca": String(m.auspicio.contrato.get("marca", "")), "color": String(m.auspicio.contrato.get("color", "#ffffff"))}
 	return f
