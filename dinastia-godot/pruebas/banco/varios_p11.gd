@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p10.gd"
-## [Capa 11 de `varios.gd`, 10-11] _probar_final_temporada, _probar_habilidades_y_calor, _probar_puerta_animada, _probar_flecha_forma, _probar_quimica_linea, _probar_objetivo_directiva, _probar_jugador_del_mes (secciones del 10-11)
+## [Capa 11 de `varios.gd`, 10-11] _probar_final_temporada, _probar_habilidades_y_calor, _probar_puerta_animada, _probar_flecha_forma, _probar_quimica_linea, _probar_objetivo_directiva, _probar_jugador_del_mes, _probar_estrategia_rapida (secciones del 10-11)
 
 ## EL FINAL DE TEMPORADA COMPLETO (10-11, orden del dueño): copa y continental a medias se juegan hasta el final antes del cierre, y la pantalla única
 ## de resumen tiene campeón, tu puesto, copa, continental, ascensos/descensos, premios y veredicto.
@@ -152,3 +152,15 @@ func _probar_jugador_del_mes() -> void:
 	_comprobar(despues - antes == 2, "en 8 semanas hay 2 jugadores del mes (%d)" % (despues - antes))
 	var g := PremioMensual.elegir(m)
 	_comprobar(g != null and g.notas.size() >= PremioMensual.MINIMO_NOTAS and m.liga_de(m.mi_club()).clubes.any(func(c3: Club) -> bool: return c3.id == g.club_id), "el elegido es de tu liga y tiene notas suficientes")
+
+## LAS ESTRATEGIAS RÁPIDAS DEL PARTIDO (10-11): preajustes de las 4 palancas de la pizarra; volver a pulsar recupera el plan; hay espera entre cambios.
+func _probar_estrategia_rapida() -> void:
+	_titulo("PARTIDO: ESTRATEGIAS RÁPIDAS")
+	var club := Club.new()
+	club.tactica = Tactica.new()
+	EstrategiaRapida.poner(club.tactica, [1, 1, 1, 1])
+	var e := EstrategiaRapida.new()
+	_comprobar(e.aplicar(club, "ataque", 10) == "" and EstrategiaRapida.foto(club.tactica) == [2, 2, 2, 2] and e.activa == "ataque", "«Ataque total» sube las cuatro palancas")
+	_comprobar(e.aplicar(club, "cerrojo", 11) == "espera" and e.activa == "ataque", "hay que esperar %d minutos para otro cambio" % EstrategiaRapida.ESPERA)
+	_comprobar(e.aplicar(club, "cerrojo", 13) == "" and EstrategiaRapida.foto(club.tactica) == [0, 0, 0, 0], "«Cerrojo» las baja todas")
+	_comprobar(e.aplicar(club, "cerrojo", 16) == "" and EstrategiaRapida.foto(club.tactica) == [1, 1, 1, 1] and e.activa == "", "pulsar la activa devuelve el plan de antes")
