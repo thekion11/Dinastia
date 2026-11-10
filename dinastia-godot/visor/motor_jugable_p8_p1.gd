@@ -121,7 +121,7 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 func _gatillo_presion(dueno: Dictionary) -> bool:
 	var q := pos(dueno)
 	## Tras perder el balón (fila 18): con contrapresión se muerde más rato; replegando, menos.
-	if t - float(dueno.get("tomo_en", -9.0)) < [0.3, 0.6, 1.5][clampi(_tac(not bool(dueno["es_local"]), "tras_perdida"), 0, 2)]:
+	if t - float(_eq_tomo_en[0 if bool(dueno["es_local"]) else 1]) < [0.3, 0.6, 1.5][clampi(_tac(not bool(dueno["es_local"]), "tras_perdida"), 0, 2)]:
 		return true
 	if absf(q.x) > 28.0:
 		return true
@@ -204,6 +204,12 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 			p["correr"] = true
 			return b + (arco - b).normalized() * 2.5
 		return b + (arco - b).normalized() * 7.0
+	## CONTRAPRESIÓN (10-11, «tras la pérdida» ALTO): en la ventana en que el equipo acaba de perder el balón, los que están cerca de él lo aprietan todos
+	## (hasta entonces solo cambiaba al segundo presionador y no se notaba en el juego). Sin la línea defensiva ni el portero, a menos de 9 m.
+	if gatillo and _tac(bool(p["es_local"]), "tras_perdida") >= 2 and not bool(p["por"]) and not (_rol(p) in ["DFC", "LD", "LI"]) and pos(p).distance_to(b) < 9.0 \
+			and t - float(_eq_tomo_en[0 if bool(poseedor["es_local"]) else 1]) < 1.5:
+		p["correr"] = true
+		return b + (arco - b).normalized() * 3.0
 	## MARCAJE A LOS PELIGROSOS (F4, 03-11): un marcador por cada uno de los 3 más peligrosos, con ancla a su puesto.
 	var om := MotorMarcaje.objetivo(self as Object as MotorJugable, p, arco)
 	if om != Vector3.INF:

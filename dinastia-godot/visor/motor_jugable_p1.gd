@@ -82,6 +82,7 @@ var eliminatoria := false
 var prorroga := false
 var poseedor: Dictionary = {}
 var ultimo_toque: Dictionary = {}
+var _eq_tomo_en: Array = [-9.0, -9.0]   ## cuándo recuperó el balón cada equipo (por equipo: 0 local, 1 visita)
 var penultimo_toque: Dictionary = {}
 var pase_a: Dictionary = {}    ## a quién va el último pase (para correr a recibirlo)
 var pase_dirigido: Dictionary = {}   ## el compañero al que el usuario TOCÓ en la pantalla (táctil): el siguiente pase va a él (MotorPaseDirigido)
