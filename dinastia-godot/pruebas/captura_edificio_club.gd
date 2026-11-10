@@ -11,7 +11,7 @@ var _paso := 0
 ## [planta, sala] en el orden de las fotos.
 const TODAS := [[0, "Vestuario"], [-2, "Estacionamiento"], [-1, "Utilería"], [-1, "Enfermería"],
 	[-1, "Vestuario visitante"], [1, "Oficina del DT"], [1, "Despacho del presidente"], [1, "Sala de vídeo"],
-	[2, "Sala de prensa"], [2, "Museo del club"], [1, "Pasillo"], [0, "Ascensor"]]
+	[2, "Sala de prensa"], [2, "Museo del club"], [1, "Pasillo"], [0, "Ascensor"], [3, "Museo ampliado"]]
 ## PUERTAS=1 con SOLO=11,11: la segunda foto del ascensor con las puertas abiertas. RETIRADAS=1 pone camisetas retiradas en la partida (museo). SOLO=5,6 deja solo esas salas (índices de TODAS) y SIN_AVATAR=1 esconde al jugador (para ver el mobiliario).
 var SALAS: Array = TODAS
 
@@ -35,6 +35,13 @@ func _ready() -> void:
 		pl.append([pl.size() + 1, Nombres.visible(j.nombre)])
 	EdificioClub.ctx = {"inst": {"park": 5, "med": 7, "video": 6, "museo": 6}, "dentro": {"sala_prensa": "television"},
 		"plantilla": pl, "titulos": 4, "presidente": "Presidente Ficticio"}
+	if OS.get_environment("TITULOS") != "":   ## TITULOS=14: palmarés grande (hitos ficticios; 0 = recién ascendido)
+		var n_t := int(OS.get_environment("TITULOS"))
+		var hs: Array = []
+		for i in n_t:
+			hs.append({"anio": 2005 + i * 2, "titulo": ["Liga", "Copa nacional", "Supercopa", "Copa continental"][i % 4], "cantidad": 1})
+		EdificioClub.ctx["hitos"] = hs
+		EdificioClub.ctx["titulos"] = n_t
 	var perfil := EstadioPropio.new().perfil(club)
 	perfil["niveles"] = 2
 	if OS.get_environment("CALIDAD") != "":   ## nivel de calidad (-3 ULTRA BAJA … 3 ULTRA ALTA); sin esto, el de defecto
