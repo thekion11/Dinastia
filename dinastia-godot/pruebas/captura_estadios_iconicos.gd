@@ -172,7 +172,8 @@ func _congelar() -> void:
 			LodCine.activo = act
 			for _f in 4:
 				await get_tree().process_frame
-			print("   LODCINE %s (cám. %s): %d llamadas" % ["SÍ" if act else "NO", get_viewport().get_camera_3d().name, rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)])
+			var lcs := get_tree().root.find_children("LodCine", "", true, false)
+			print("   LODCINE %s (cám. %s, %d vigías, apagadas %s): %d llamadas" % ["SÍ" if act else "NO", get_viewport().get_camera_3d().name, lcs.size(), lcs.map(func(x): return x._apagadas.size()), rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)])
 			get_viewport().get_texture().get_image().save_jpg("%s/%s_lodcine_%s.jpg" % [_dir, OS.get_environment("SOLO"), "si" if act else "no"], 0.9)
 		get_tree().quit()
 		await get_tree().create_timer(3600.0).timeout
