@@ -336,3 +336,26 @@ CAMISETAS = {
 for _k, _v in CAMISETAS.items():
     if _k in ESTADIOS:
         ESTADIOS[_k]["camiseta"] = _v
+
+
+# ---------------------------------------------------------------------------
+# PIEZAS DE ESTADIOS ICÓNICOS (10-11, `docs/04_auditorias/ESTADIOS_REALISTAS_PLAN.md`): lo que el constructor dibuja con
+# `PiezasRealesEstadio` (arco, torres de rampas, costillas) y los ajustes de techo, colores y forma para parecerse al real.
+# Van a la base ficticia (con el nombre inventado) y al pack real (con el real), como el resto de la arquitectura.
+PIEZAS = {
+    "Manchester Utd": {"techoCol": "#d9d9d9", "fachadaCol": "#8a2d22", "pantalla": "dos"},
+    "Barcelona": {"forma": "oval", "techo": "parcial", "techo_lados": ["oeste"], "asientoP": "sectores", "pantalla": "dos"},
+    "Fluminense": {"techoCol": "#f4f4f4", "asiento3": "#f5c400", "asientoP": "sectores"},
+    "Flamengo": {"techoCol": "#f4f4f4", "asiento3": "#f5c400", "asientoP": "sectores"},
+    "Boca Juniors": {"asientoP": "franjas", "pantalla": "una"},
+    "Bayern Múnich": {"fachadaCol": "#dc052d", "techoCol": "#ececec"},
+    "Milan": {"torres_rampa": 11, "torres_col": "#a7a7a7", "techoCol": "#c8102e", "asiento3": "#2e8b57", "asientoP": "sectores"},
+    "America": {"techo": "anillo", "techoCol": "#9fa4a8", "asientos": ["#1f3f8a", "#f2f2f2"], "asiento3": "#c8102e", "asientoP": "sectores"},
+    "U. de Chile": {"pantalla": "dos"},
+    "Paris SG": {"costillas": 56, "costillas_col": "#d9d6cf"},
+    "Atl. Nacional": {"techo_lados": ["oeste"], "asientos": ["#00813c", "#f2f2f2"]},
+    "AmaZalu": {"arco": {"alto": 104, "lado": "centro", "color": "#f2f2f2"}},
+}
+for _k, _v in PIEZAS.items():
+    if _k in ESTADIOS:
+        ESTADIOS[_k].update(_v)
