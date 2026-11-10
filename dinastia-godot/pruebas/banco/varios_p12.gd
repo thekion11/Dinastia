@@ -292,6 +292,7 @@ func _probar_estilos_club() -> void:
 	viejo.tactica.mentalidad = 2
 	EstiloClub.aplicar_si_de_fabrica(viejo)
 	_comprobar(viejo.tactica.formacion == "4-4-2", "si la táctica se tocó, se respeta")
+
 ## FIN DE TEMPORADA CON GUARDADO Y CARGA A MITAD (10-11, caza de fallos, orden 31): 3 clubes de 3 países. Liga terminada con la copa a medias,
 ## se guarda y se carga; tras cargar, el cierre de torneos, la foto, los festejos de fin de liga y la nueva temporada siguen funcionando.
 func _probar_fin_temporada_guardado() -> void:
