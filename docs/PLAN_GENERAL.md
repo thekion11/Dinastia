@@ -8,7 +8,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 > Trabaja en español, en la rama asignada, sin PR salvo orden. Lee `CLAUDE.md` y `docs/PLAN_GENERAL.md` (secciones PRIORITARIO, DECISIONES PENDIENTES y PULIDO). Antes de subir a main: banco en «FIN. 0 fallos» y líneas OK. Sin nombres de modelo en commits ni archivos. No subir .mp4 al repo.
 >
 > Pendiente, en este orden:
-> 1. **REESTRUCTURACIÓN «SOLO CLUB»** (paso 2): reparar el club (muebles, colisiones, parpadeo del suelo del despacho). Paso 3: medir sin ciudad con `herramientas/hw_modesto.sh`. Paso 4: decidir C/C++ solo con medidas.
+> 1. **REESTRUCTURACIÓN «SOLO CLUB»** (paso 2, sesión 7, 10-11: HECHO muebles/colisiones/suelo/ascensor, ver «HECHO sesión 7» en la sección «SOLO CLUB»; FALTA la revisión del dueño y comprobar el parpadeo en un móvil real). Paso 3: medir sin ciudad con `herramientas/hw_modesto.sh`. Paso 4: decidir C/C++ solo con medidas.
 > 2. **ESTÉTICA** — FALTA PULIR. La rama `ccr-da27fb86-i59x88` ya está en `main` (comprobado el 10-11: 0 commits de diferencia). Profundidad hecha (10-11, ver PULIDO); seguir afinando.
 >
 > **DECISIONES DEL DUEÑO (no implementar sin respuesta):** (a) torneos de selecciones (Mundial, Eurocopa, Copa América): ¿se juegan o son solo calendario? (b) sacar los tres .mp4 de `marca/` del repo.
@@ -16,6 +16,13 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 > Al completar cada punto: se BORRA de PRIORITARIO y se anota en PULIDO. Reporta al líder en cada bloque.
 
 ## REESTRUCTURACIÓN «SOLO CLUB» (orden 34, dueño, 9-11; en CLAUDE.md es el punto 33) — manda sobre todo lo anterior; el trabajo real EMPIEZA EL LUNES 16-11
+- **HECHO sesión 7 (10-11), paso 2 «reparar el club»** (rama `sesion7-club`; capturas en `docs/04_auditorias/capturas_club_2026-11-10/`):
+  1. **Parpadeo del suelo**: en Forward+ y Compatibility de escritorio NO se reproduce (fotos con la cámara movida 2 mm: `pruebas/captura_parpadeo_suelo.tscn`, 0 % de cambio en el suelo). Causa más probable, arreglada por causa: capas de suelo apiladas a 1 cm (losa a todo el edificio + suelo de sala encima + cascarón) con `near` 0,05 y profundidad de 16 bits en móviles. Ahora la losa solo cubre el pasillo, el suelo de cada sala es macizo hasta el cascarón y la cámara a pie usa `near` 0,12. Cruce coplanar REAL encontrado y corregido: el fondo de la cabina del ascensor (1,9×2,3 m, emisivo) estaba DENTRO de la pared con su cara en el mismo plano (se veía al abrir las puertas): ahora va 1 cm delante. Prueba `pruebas/prueba_coplanares_club.tscn` (caras coplanares visibles con distinto material: 4 antes, 0 ahora). FALTA confirmar en un móvil real.
+  2. **Muebles**: auditoría `pruebas/auditoria_muebles_club.tscn` (3 países: CHI 0, ESP 3, ARG 5; apoyo en el suelo, huella dentro de la sala, colisión de lo que tiene cuerpo). Arreglado: alfombras de muebles ENTERRADAS bajo el suelo (ahora visibles), mesita de la enfermería que atravesaba la pared con 3 camas, sillas/mesitas/plantas/lámparas/perchero sin colisión, coches del estacionamiento sin colisión (`ChoqueClub`), pasillo central en la sala de prensa. Sala de prensa y comedor reajustados (prensa 6,8 m, comedor 4,7 m) para que el comedor siga transitable con sillas sólidas.
+  3. **Colisiones**: `prueba_colisiones_club` ahora recorre CADA sala (11) empujando en 8 direcciones y comprueba que el cuerpo no sale del edificio ni entra en un mueble/tabique; admite `PAIS=` y `CLUB=`.
+  4. **Relleno** (piezas sin usar de `kenney/muebles`, `RellenoClub`): enfermería (lavabo, botiquín, caja), sala de vídeo (planta y lámpara), cuarto de máquinas y utilería (cajas), banco en cada pasillo. En ULTRA BAJA NO se pone (para no subir el dibujo); el resto de niveles sí.
+  5. **Dibujo** (CHI, 12 puntos de vista, llamadas/triángulos): MÍNIMA igual o menos en todos (853→853 … 193→187; −2 400 triángulos por vista); ALTA ±15, +45 en el pasillo (el banco). Las plantas grandes del pasillo se probaron y se quitaron (+38 llamadas cada una en ALTA).
+
 Fuente: PDF «Plan de Reestructuración – Dinastía» y vídeo del despacho (la habitación sin puertas ni marcos y el ascensor sin animación). Decisiones obligatorias.
 
 **Aclaraciones del dueño (9-11)**

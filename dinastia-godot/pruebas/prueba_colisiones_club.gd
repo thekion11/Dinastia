@@ -25,8 +25,8 @@ func _ok(cond: bool, texto: String) -> void:
 
 func _ready() -> void:
 	var m := Mundo.new()
-	m.generar(["CHI"], 77)
-	var club: Club = m.ligas[0].clubes[0]
+	m.generar([OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"], 77)   ## PAIS=ESP CLUB=3: otro país y club (regla 34)
+	var club: Club = m.ligas[0].clubes[int(OS.get_environment("CLUB")) % m.ligas[0].clubes.size()]
 	## El personal solo existe en el estadio del club propio.
 	PersonajeDT.club_usuario = club.id
 	var ep := EstadioPropio.new()
@@ -133,6 +133,9 @@ func _correr() -> void:
 	_ok(probadas > 0, "hay personas con las que probar (%d)" % probadas)
 	_ok(atravesadas == 0, "ninguna persona se atraviesa (%d de %d)" % [atravesadas, probadas])
 
+	print("[5] cada sala: empujar contra las paredes en 8 direcciones sin salir del edificio ni entrar en un mueble")
+	_por_salas(zonas)
+
 	print("[4] barreras invisibles: alcanzar cada sala con el cuerpo entero")
 	for pl in plantas:
 		var salida := Vector3.ZERO
@@ -191,3 +194,55 @@ func _inundar(zonas: Array, ini: Vector3, planta: int) -> Array:
 			if ColisionClub.cabe(zonas, pq, planta) and not ColisionClub.toca_mueble(_ex.cuerpo, pq):
 				cola.append(q)
 	return lista
+
+## (10-11, sesión 7) Recorre CADA sala de cada planta: desde el centro de su zona empuja a la carrera en 8 direcciones durante 6 s. En cada paso el cuerpo
+## tiene que seguir dentro de la envolvente del edificio (paredes interiores a ±7,98 m de x0, de z_out a z_fin) y fuera de todo mueble/tabique.
+func _por_salas(zonas: Array) -> void:
+	var d: Dictionary = _ex._datos
+	var x0: float = d["x0"]
+	var z_out: float = d["z_out"]
+	var z_fin: float = d["z_fin"]
+	var salas := 0
+	var fuera := 0
+	var dentro := 0
+	var peor := ""
+	for f: Array in EdificioClub.todas():
+		var pl := int(f[0])
+		for s: Array in f[2]:
+			var mejor: Dictionary = {}
+			for z: Dictionary in zonas:
+				if int(z.get("planta", 0)) == pl and String(z["nombre"]) == String(s[0]) and (mejor.is_empty() or (z["r"] as Rect2).get_area() > (mejor["r"] as Rect2).get_area()):
+					mejor = z
+			if mejor.is_empty():
+				continue
+			var c: Vector2 = (mejor["r"] as Rect2).get_center()
+			salas += 1
+			for dir in 8:
+				var a := TAU * float(dir) / 8.0
+				## Si el centro cae en un mueble (la mesa del comedor), se busca el punto libre más cercano en pasos de 0,25 m.
+				var ini := Vector3(c.x, _y(pl), c.y)
+				var hallado := false
+				for radio in range(0, 13):
+					for k in 8:
+						var q := ini + Vector3(cos(TAU * float(k) / 8.0), 0.0, sin(TAU * float(k) / 8.0)) * 0.25 * float(radio)
+						if ColisionClub.cabe(zonas, q, pl) and not ColisionClub.toca_mueble(_ex.cuerpo, q):
+							ini = q
+							hallado = true
+							break
+					if hallado:
+						break
+				if not hallado:
+					continue
+				_poner(ini.x, ini.z, pl, a)
+				for i in 180:
+					_ex.paso(Vector2(0, 1), true, 1.0 / 30.0)
+					var p := _ex.cuerpo.position
+					if p.x < x0 - 7.98 + 0.25 or p.x > x0 + 7.98 - 0.25 or p.z < z_out + 0.04 + 0.25 or p.z > z_fin - 0.04 - 0.25:
+						fuera += 1
+						peor = "planta %d «%s» dirección %d: (%.2f, %.2f)" % [pl, String(s[0]), dir, p.x, p.z]
+					if ColisionClub.toca_mueble(_ex.cuerpo, p, ColisionClub.RADIO - 0.05):
+						dentro += 1
+						peor = "planta %d «%s» dirección %d dentro de un mueble: (%.2f, %.2f)" % [pl, String(s[0]), dir, p.x, p.z]
+	_ok(salas >= 10, "se recorrieron las salas (%d)" % salas)
+	_ok(fuera == 0, "el cuerpo nunca sale del edificio (%d pasos fuera) %s" % [fuera, peor if fuera > 0 else ""])
+	_ok(dentro == 0, "el cuerpo nunca entra en un mueble o tabique (%d pasos dentro) %s" % [dentro, peor if dentro > 0 else ""])

@@ -13,7 +13,7 @@ static func _objeto(nodo: Node3D, clave: String, p: Vector3, giro: float, c1: Co
 				d["tonos"] = {"carpet": c1.lerp(Color(0.15, 0.15, 0.17), 0.3).to_html(false)}
 		var conjunto := Modulos.de_datos(datos, "Deco_" + clave)
 		if conjunto.get_child_count() > 0:
-			conjunto.position = p
+			conjunto.position = p + (Vector3(0.0, SUELO_SALA, 0.0) if clave == "alfombra" else Vector3.ZERO)   ## sobre el suelo de la sala, no enterrada
 			conjunto.rotation.y = giro
 			nodo.add_child(conjunto)
 			return
@@ -191,8 +191,12 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 		var bajo_tierra := p < 0
 		## El cascarón de la planta.
 		PiezasObra._caja(nodo, Vector3(x0, y0 - 0.1, zc), Vector3(ancho + 0.6, 0.2, fondo + 0.6), horm, true)
-		PiezasObra._caja(nodo, Vector3(x0, y0 + 0.01, zc), Vector3(ancho, 0.02, fondo), suelo, false)
-		PiezasObra._caja(nodo, Vector3(x0, y0 + 0.026, z_fin - PASILLO / 2.0), Vector3(ancho - 0.8, 0.012, 1.0), alfombra, false)   ## camino del pasillo
+		## (10-11, parpadeo del suelo) UNA sola superficie de suelo por zona: la losa clara cubre solo el pasillo (desde donde acaba el suelo de las salas)
+		## y cada sala lleva el suyo, macizo hasta el cascarón. Antes la losa cubría TODO el edificio y el suelo de cada sala iba 1 cm encima: dos
+		## superficies a 1 cm que, con profundidad de 16 bits (móviles) o MSAA apagado, se peleaban por el z-buffer y el suelo parpadeaba.
+		var z_losa := z_tabique - 0.05
+		PiezasObra._caja(nodo, Vector3(x0, y0 + 0.01, (z_losa + z_fin) / 2.0), Vector3(ancho, 0.02, z_fin - z_losa), suelo, false)
+		PiezasObra._caja(nodo, Vector3(x0, y0 + 0.036, z_fin - PASILLO / 2.0), Vector3(ancho - 0.8, 0.02, 1.0), alfombra, false)   ## camino del pasillo (a 2,6 cm de la losa)
 		PiezasObra._caja(nodo, Vector3(x0, y0 + ALTO_LIBRE + 0.25, zc), Vector3(ancho + 0.6, 0.5, fondo + 0.6), horm, true)
 		for lado in [-1.0, 1.0]:
 			PiezasObra._caja(nodo, Vector3(x0 + lado * (TunelMedidas.VEST_MEDIO + 0.15), y0 + ALTO_LIBRE / 2.0, zc),
@@ -243,6 +247,7 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 		PiezasObra._rotulo(nodo, Idiomas.t("PLANTA %d · %s") % [p, Idiomas.t(String(f[1])).to_upper()],
 			Vector3(x0 + (ASC_X0 + ASC_X1) / 2.0, y0 + ALTO_LIBRE - 0.45, z_fin - 0.06), PI, 34, c1.lerp(Color(0.1, 0.1, 0.12), 0.2))
 		_ascensor(nodo, x0, z_fin, y0)
+		RellenoClub.pasillo(nodo, x0, z_fin, y0)
 		## Cada sala: su rótulo sobre la puerta (del lado del pasillo), su luz y
 		## su contenido.
 		for sala: Array in salas:
@@ -259,12 +264,13 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 			## Suelo y techo propios de la sala.
 			var gusto := _gusto(String(sala[0]))
 			var col_suelo := Color(String(gusto["suelo"])) if String(gusto.get("suelo", "")) != "" else _suelo_de(String(sala[0]))
-			PiezasObra._caja(nodo, Vector3(c, y0 + 0.025, (z_out + z_tabique) / 2.0), Vector3(b - a - 0.2, 0.01, z_tabique - z_out - 0.1),
-				PiezasObra._mat(col_suelo, 0.75), false)
+			PiezasObra._caja(nodo, Vector3(c, y0 + 0.015, (z_out + z_tabique) / 2.0 - 0.005), Vector3(b - a - 0.2, 0.03, z_tabique - z_out - 0.09),
+				PiezasObra._mat(col_suelo, 0.75), false)   ## del cascarón (y0) a y0+0,03, de pared a pared (la losa del pasillo empieza donde acaba)
 			PiezasObra._caja(nodo, Vector3(c, y0 + ALTO_LIBRE - 0.01, (z_out + z_tabique) / 2.0), Vector3(b - a - 0.2, 0.02, z_tabique - z_out - 0.1),
 				PiezasObra._mat(Color(0.8, 0.8, 0.78), 0.9), false)
 			var caja := Rect2(a + 0.2, z_out + 0.2, b - a - 0.4, z_tabique - z_out - 0.4)
 			_amueblar(nodo, String(sala[0]), caja, y0, c1, c2, nombre_club)
+			RellenoClub.sala(nodo, String(sala[0]), caja, y0, c1)
 			_decorar(nodo, String(sala[0]), a, b, z_out, z_tabique, y0, c1, c2, gusto)
 
 ## Rehace el edificio con la decoración nueva (se llama al decorar).
