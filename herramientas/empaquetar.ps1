@@ -185,6 +185,10 @@ if ($Formato -eq "web" -or $Formato -eq "todos") {
   $web = Join-Path $entregas "web"
   Exportar "Web" (Join-Path $web "index.html")
   $hechos += ("{0}   ({1} MB)  -  probar con: .\empaquetar.ps1 -Servir" -f $web, (Peso $web))
+  # La web para el MOVIL (10-11-2026): texturas ETC2/ASTC en vez de las de PC.
+  $webMovil = Join-Path $entregas "web_movil"
+  Exportar "WebMovil" (Join-Path $webMovil "index.html")
+  $hechos += ("{0}   ({1} MB)" -f $webMovil, (Peso $webMovil))
 }
 
 if ($Formato -eq "apk" -or $Formato -eq "todos") {
