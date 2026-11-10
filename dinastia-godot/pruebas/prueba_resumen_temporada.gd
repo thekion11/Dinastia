@@ -27,6 +27,11 @@ func _process(_d: float) -> void:
 			guard += 1
 		if _p.mundo.prensa != null:
 			_p.mundo.prensa.despedida_ofrecida_anio = _p.mundo.anio   ## esta prueba mira el resumen, no la despedida
+		var au = _p.mundo.auspicio
+		if au != null and au.contrato.is_empty():   ## un patrocinador en el pecho, para ver su franja en el resumen
+			au.generar_ofertas(_p.mundo.mi_club())
+			if not au.ofertas.is_empty():
+				au.firmar(0)
 		_p._nueva_temporada()
 		_fase = 1
 		_n = 20
