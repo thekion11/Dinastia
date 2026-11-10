@@ -95,11 +95,14 @@ Arreglos:
 - `GuardianFoco` respeta los controles que usan la cruceta (meta `cruceta_propia`). La prueba exige que un `Control` a secas
   dibuje su propio foco (meta `foco_visible`).
 
+- **La tarjeta del tutorial PLEGADA** («💡 Táctica ▾», sale así con un menú del riel abierto) medía lo mismo que abierta (414 px de
+  ancho) y tapaba lo último de la lista: el «Cancelar» del editor de formación. Ahora mide solo su cabecera (113 px), pegada a la
+  esquina, y al desplegarla recupera el tamaño. La prueba coloca la fila del editor en el borde de abajo y comprueba, a 1600×900,
+  1920×1080 y 1280×720, que no tape ningún control (con el código anterior falla en los tres).
+
 Resultado: **0 fallos** en las 13 pantallas, sin pantalla y con ella. La 1.ª parte y el banco siguen en verde.
 
 ## Pendiente
-- La tarjeta del tutorial plegada («💡 Táctica», abajo a la derecha) tapa en parte lo último de la lista: en el editor de formación,
-  el botón «Cancelar». La lista se puede desplazar y la tarjeta es de otro rediseño (3-11), así que no la toqué.
 - La orden dice «Triángulo / X = espacio». Con un mando de PlayStation la X es el botón que pulsa la tecla enfocada, así que solo se
   puso Triángulo. ¿Para «X» el dueño se refiere al botón X de Xbox (el Cuadrado de PlayStation, que ya borra)? Es decisión del dueño.
 - La reunión con la directiva marca la respuesta con la aguja del selector en cruz más que con el aro del foco: es su diseño
