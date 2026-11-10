@@ -5,7 +5,7 @@ extends Node
 ## Mientras la cámara activa es una de esas (`CineGol`, `Repeticion_*`), se apagan las piezas PEQUEÑAS del estadio (< 6 m) que quedan a
 ## más de 60 m: rótulos, barandas, focos, detalles de la grada. Nunca personas ni el balón (tienen esqueleto o se llaman así). Ensayo:
 ## −235 llamadas sin diferencia visible en la captura. Bandera: `activo` (apagarla devuelve el comportamiento de antes).
-static var activo := true   ## la bandera (las pruebas la apagan para comparar)
+static var activo := false   ## la bandera: APAGADA (10-11). Sin el túnel solo ahorra ~17 llamadas (4 %) y con él se nota la boca del túnel
 const LEJOS := 60.0
 const CHICA := 6.0
 const MUEVE := 12.0   ## si la cámara del plano se mueve más que esto, se recalcula qué queda lejos

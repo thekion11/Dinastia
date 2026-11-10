@@ -45,6 +45,6 @@ func _ready() -> void:
 			get_viewport().get_texture().get_image().save_jpg("%s/%s_%s.jpg" % [dir, nombre.validate_filename(), "si" if act else "no"], 0.9)
 		raiz.queue_free()
 		await get_tree().process_frame
-	LodCine.activo = true
+	LodCine.activo = false
 	print("FIN")
 	get_tree().quit()
