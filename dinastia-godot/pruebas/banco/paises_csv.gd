@@ -15,6 +15,21 @@ func _probar_paises_csv() -> void:
 				liga = l
 		_comprobar(liga != null and liga.clubes.size() == int(ESPERADOS[p]), "%s: liga con sus %d clubes reales (%d)" % [p, int(ESPERADOS[p]), liga.clubes.size() if liga else 0])
 		_comprobar(Datos.tabla("PAIS_SELECCION").has(p) and Datos.tabla("TIER_PAIS").has(p) and Datos.tabla("GLOBO_PAIS").has(p), "%s: selección, nivel y lugar en el globo" % p)
+	var completos := true
+	for p: String in ESPERADOS:
+		completos = completos and not LeyesPais.reglas(p).is_empty() and Copa.COPAS_POR_PAIS.has(p) and Politica.ESTRUCTURA.has(p) \
+			and Contratos.JORNADA.has(p) and Calendario.FIJAS.has(p) and MapaPais.SILUETAS.has(p) and PaisDatos.MONUMENTOS.has(p) \
+			and PaisDatos.OFICIAL.has(p) and Globo3D.CAPITAL.has(p) and Globo3D.GLOBO_PAIS.has(p) and Banderas.ISO.has(p) and Paises.conocido(p)
+		completos = completos and ResourceLoader.exists("res://assets/banderas/%s.svg" % Banderas.ISO.get(p, "xx")) and Banderas.textura(p) != null
+	_comprobar(completos, "los 6: reglas de extranjeros, copa, política, jornada, fiestas, silueta, monumentos, nombre oficial, globo y bandera")
+	var europa: Array = []
+	var asia: Array = []
+	for fila: Array in PaisDatos.CONTINENTES:
+		if String(fila[0]) == "Europa":
+			europa = fila[1]
+		if String(fila[0]) == "Asia":
+			asia = fila[1]
+	_comprobar(["TUR", "SCO", "SUI", "AUT", "GRE"].all(func(p: String) -> bool: return europa.has(p)) and asia.has("QAT"), "se pueden elegir en la entrada (Europa y Asia)")
 	var nombres := {}
 	var repetidos := 0
 	for c: Club in m.clubes.values():
