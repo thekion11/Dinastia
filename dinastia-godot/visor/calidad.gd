@@ -46,14 +46,22 @@ const ESCALA_MEDIA_MIN := 0.5   ## (4-11) la resolución del 3D también se elig
 static var escala_media := 1.0
 static var escala_minimo := (float(OS.get_environment("ESCALA3D")) if OS.get_environment("ESCALA3D") != "" else ESCALA_MINIMO)
 
+## (10-11, P1; `CalidadRes3D`) Resolución 3D automática: de ULTRA BAJA a MEDIA el 3D no pasa de 720 px de alto. Encendida por defecto solo en móvil; en escritorio se enciende en Ajustes.
+static var res3d_auto: bool = CalidadRes3D.es_movil_tactil()
+
 ## La resolución base del 3D del nivel (1.0 salvo en MÍNIMO). La calidad adaptativa vuelve a esta, no a 1.0.
 static func escala_3d(nivel: int = -99) -> float:
 	var n := elegida if nivel == -99 else nivel
+	var base := 1.0
 	if n <= MINIMO:
-		return escala_minimo
-	if n < MEDIO:   ## BAJA y MEDIA BAJA (6-11): a medio camino entre la de ULTRA BAJA y la de MEDIA, con lo que el jugador haya puesto en esas dos
-		return lerpf(escala_minimo, escala_media, 0.4 if n == BAJA else 0.7)
-	return escala_media if n == MEDIO else 1.0
+		base = escala_minimo
+	elif n < MEDIO:   ## BAJA y MEDIA BAJA (6-11): a medio camino entre la de ULTRA BAJA y la de MEDIA, con lo que el jugador haya puesto en esas dos
+		base = lerpf(escala_minimo, escala_media, 0.4 if n == BAJA else 0.7)
+	elif n == MEDIO:
+		base = escala_media
+	if res3d_auto and n <= MEDIO:
+		return minf(base, CalidadRes3D.tope_escala(CalidadRes3D.alto_pantalla()))
+	return base
 
 ## ¿Este nivel proyecta la sombra del sol? ULTRA BAJA y BAJA no (la pasada de sombras es ~1/4 de las llamadas del partido).
 static func sombra_solar(nivel: int) -> bool:
@@ -380,6 +388,8 @@ static func cargar() -> void:
 		motor_ligero = bool(cf.get_value("grafica", "motor_ligero"))
 	if cf.has_section_key("grafica", "escala_media"):
 		escala_media = clampf(float(cf.get_value("grafica", "escala_media")), ESCALA_MEDIA_MIN, 1.0)
+	if cf.has_section_key("grafica", "res3d_auto"):
+		res3d_auto = bool(cf.get_value("grafica", "res3d_auto"))
 	if cf.has_section_key("grafica", "escala_minimo"):
 		escala_minimo = clampf(float(cf.get_value("grafica", "escala_minimo")), ESCALA_MIN_POSIBLE, 1.0)
 
@@ -392,6 +402,7 @@ static func guardar() -> void:
 	cf.set_value("grafica", "partido_ligero", partido_ligero)
 	cf.set_value("grafica", "escala_minimo", escala_minimo)
 	cf.set_value("grafica", "escala_media", escala_media)
+	cf.set_value("grafica", "res3d_auto", res3d_auto)
 	cf.save(ARCHIVO)
 
 ## ¿Se puede relanzar el juego? Solo en un ejecutable de escritorio (en el

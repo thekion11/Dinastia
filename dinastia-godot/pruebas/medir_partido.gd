@@ -28,6 +28,8 @@ var _proceso: Array[float] = []
 
 func _ready() -> void:
 	Calidad.elegida = Calidad.nivel_de_argumentos(Calidad.ALTO)
+	if OS.get_environment("RES3D_AUTO") != "":
+		Calidad.res3d_auto = OS.get_environment("RES3D_AUTO") == "1"   ## (10-11, P1) RES3D_AUTO=1/0: fuerza la resolución 3D automática (en escritorio viene apagada)
 	Calidad.sin_msaa = OS.get_environment("SIN_MSAA") != ""   ## (10-11) SIN_MSAA=1: apaga el MSAA del viewport (como la «Prueba de rendimiento» de Ajustes) para medir cuánto cuesta en cada nivel.
 	var mundo := Mundo.new()
 	var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"   ## (10-11) PAIS=ESP CLUB=5: otro país y otro club (regla del dueño: nunca medir con un solo equipo).
