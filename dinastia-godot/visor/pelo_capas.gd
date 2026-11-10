@@ -135,6 +135,7 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 		if lejos == null:
 			lejos = _cuero(cuerpo, pos, datos, hd, capas_lejos)
 			if lejos != null:
+				lejos = _con_lods(lejos)
 				_cache_cuero[clave_l] = lejos
 		if lejos != null:
 			cerca.visibility_range_end = DIST_CUERO
@@ -145,6 +146,19 @@ static func poner(d: Dictionary, datos: Dictionary, foto: Texture2D, pos: Packed
 	## Melena (llega a la mandíbula o más): quien llama pone además el peinado
 	## largo del pack encima (el pelo por capas no cuelga).
 	return float(hd.get("largo", 0.0)) < LARGO_MELENA or corte == "melena_rizada"
+
+## (10-11, móvil) LODs de la malla de lejos: con el simplificador del importador (`ImporterMesh.generate_lods`, el mismo de las mallas del cuerpo). Medido (`rendimiento_movil_2026-11-10.md`): −8 % de triángulos
+## del partido, casi todo del cuero (la cara −2 %, `Hair*`/`PeloDrive` ~0). Solo en BAJA y MEDIA BAJA y fuera de `--headless` (el banco y las capturas de calidad alta quedan igual); se hace una vez por forma (caché).
+static var lods_activos := true   ## interruptor (la medición lo apaga con LODS_CUERO=0)
+
+static func _con_lods(m: ArrayMesh) -> ArrayMesh:
+	if not lods_activos or OS.get_environment("LODS_CUERO") == "0" or Calidad.elegida > Calidad.MEDIA_BAJA or Calidad.elegida < Calidad.BAJA or DisplayServer.get_name() == "headless":
+		return m
+	var im := ImporterMesh.new()
+	for sf in m.get_surface_count():
+		im.add_surface(Mesh.PRIMITIVE_TRIANGLES, m.surface_get_arrays(sf), [], {}, m.surface_get_material(sf), "s%d" % sf)
+	im.generate_lods(25.0, 60.0, [])
+	return im.get_mesh()
 
 ## La clave del cuero en la caché (30-10-2026): solo lo que da forma a la malla (`_cuero` y
 ## `corte_de`), NO el color del pelo, que va en el material. Antes la clave llevaba el peinado
