@@ -135,9 +135,71 @@ func _probar_torneos_selecciones() -> void:
 	t.jugar_entero()
 	var de_grupos := t.resultados.filter(func(r: Dictionary) -> bool: return String(r["fase"]).begins_with("Fase de grupos")).size()
 	_comprobar(de_grupos == 48 and t.resultados.size() == 48 + 15, "48 partidos de grupos y 15 de eliminatorias (%d en total)" % t.resultados.size())
+	var goles := 0
+	for rr: Dictionary in t.resultados:
+		goles += int(rr["gl"]) + int(rr["gv"])
+	_comprobar(goles > 63, "los partidos simulados tienen goles de verdad (%d en 63 partidos; antes todos 0-0)" % goles)
 	_comprobar(t.campeon != null and t.puesto_de(t.campeon) == 0, "tiene campeón (%s)" % (t.campeon.nombre if t.campeon else "—"))
 	var otro := TorneoSelecciones.crear("Copa Africana", 2027, SeleccionesTorneos._equipos(sel, m, SeleccionesTorneos.POR_CONFED["afr"], 2027))
 	otro.jugar_entero()
 	_comprobar(otro.grupos.size() == 2 and otro.campeon != null, "un torneo de 6 selecciones: 2 grupos de 3 y campeón (%s)" % (otro.campeon.nombre if otro.campeon else "—"))
 	var r := sel.cierre_de_temporada(2026)
 	_comprobar(not (r.get("mundial", {}) as Dictionary).is_empty() and sel.ultimo_torneo != null, "el cierre de 2026 juega el Mundial de verdad (%s)" % String(r.get("mundial", {}).get("campeon", "")))
+
+func _probar_cargo_seleccionador() -> void:
+	_titulo("EL CARGO DE SELECCIONADOR (ofertas por prestigio, doble cargo y torneos jugables)")
+	## (regla 34) dos mundos distintos: un club de Brasil y uno de España
+	for caso: Array in [[["BRA", "ARG", "ESP"], 1, "Uruguay", 2028], [["ESP", "FRA", "ITA"], 0, "Portugal", 2026]]:
+		var m := Mundo.new()
+		var paises: Array[String] = []
+		paises.assign(caso[0])
+		m.generar(paises, 2026)
+		m.anio = int(caso[3])
+		var l: Liga = m.ligas[int(caso[1])]
+		m.tomar_el_mando(l.clubes[5].id)
+		var club_id := m.mi_club_id
+		var cargo := m.selecciones.cargo
+		m.roles.prestigio = 40
+		var hubo := false
+		for k in 60:
+			m.semana = k + 1
+			hubo = hubo or not cargo.sortear(m, m.selecciones).is_empty()
+		_comprobar(not hubo, "con poco prestigio no llama ninguna selección (%s)" % m.mi_club().nombre)
+		m.roles.prestigio = 75
+		var estado: int = Azar._rng.state
+		var of := {}
+		for a in 4:
+			for k in 60:
+				m.semana = k + 1
+				m.anio = int(caso[3]) + a
+				of = cargo.sortear(m, m.selecciones)
+				if not of.is_empty():
+					break
+			if not of.is_empty():
+				break
+		m.anio = int(caso[3])
+		_comprobar(Azar._rng.state == estado, "sortear la oferta no toca el azar del resto del juego")
+		_comprobar(not of.is_empty() and int(of["fuerza"]) <= CargoSeleccion._alcanza(75), "con prestigio llama una selección a su alcance (%s, fuerza %d)" % [String(of.get("nombre", "—")), int(of.get("fuerza", 0))])
+		cargo.ofrecer(String(caso[2]), m.selecciones.fuerza(String(caso[2])), 2000)
+		cargo.responder(m, true)
+		_comprobar(cargo.activo() and cargo.seleccion == String(caso[2]) and m.mi_club_id == club_id, "aceptar: diriges %s SIN dejar tu club" % cargo.seleccion)
+		var guardado := m.selecciones.a_dic()
+		var otro := Selecciones.new(m)
+		otro.desde_dic(JSON.parse_string(JSON.stringify(guardado)))
+		_comprobar(otro.cargo.seleccion == cargo.seleccion and otro.cargo.sueldo == 2000, "el cargo se guarda y se carga")
+		var ts := cargo.torneos_del_anio(m, m.selecciones, m.anio)
+		_comprobar(not ts.is_empty(), "%d: tu selección juega %s" % [m.anio, ", ".join(ts.map(func(x: TorneoSelecciones) -> String: return x.nombre))])
+		var t: TorneoSelecciones = ts[0]
+		var mia := cargo.mi_equipo(t)
+		var par := t.partido_de(mia)
+		var p := Partido.new(par[0], par[1], true)
+		p.simular()
+		var antes := t.resultados.size()
+		t.jugar_fecha(p)
+		var r: Dictionary = t.resultados.filter(func(x: Dictionary) -> bool: return x["local"] == mia or x["visita"] == mia)[0]
+		_comprobar(t.resultados.size() > antes and int(r["gl"]) == p.goles_local and int(r["gv"]) == p.goles_visita, "tu partido jugado (%s %d-%d %s) cuenta en el torneo" % [(r["local"] as Club).nombre, p.goles_local, p.goles_visita, (r["visita"] as Club).nombre])
+		var res := m.selecciones.cierre_de_temporada(m.anio)
+		_comprobar(not t.en_curso() and cargo.historial.size() == ts.size(), "el cierre termina los torneos de tu selección y los apunta (%s)" % str(cargo.historial))
+		_comprobar(res.has("seleccionador"), "el cierre devuelve los torneos del seleccionador")
+		cargo.dimitir(m)
+		_comprobar(not cargo.activo() and cargo.sueldo == 0, "dimitir deja el cargo")

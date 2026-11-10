@@ -337,8 +337,11 @@ func torneo_continental(anio: int) -> Dictionary:
 	var torneo := String(TORNEO_POR_CONFED.get(clave, "Copa América"))
 	var sel := nombre_seleccion()
 	## (10-11) Un torneo DE VERDAD, con grupos, eliminatorias y partidos (`SeleccionesTorneos`), en vez de sortear el puesto.
-	var t := SeleccionesTorneos.continental(self, _mundo(), clave, torneo, anio)
+	var t := cargo.listo(torneo, anio)   ## (10-11) el mismo torneo que jugó tu selección como seleccionador, si es el mismo
+	if t == null:
+		t = SeleccionesTorneos.continental(self, _mundo(), clave, torneo, anio)
 	t.jugar_entero()
+	cargo.anotar(_mundo(), t)
 	ultimo_torneo = t
 	var mia := SeleccionesTorneos.equipo_en(t, sel)
 	if mia == null:

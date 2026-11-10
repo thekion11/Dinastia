@@ -53,8 +53,11 @@ func copa_del_mundo(anio: int) -> Dictionary:
 	if m == null or _tabla_selecciones().size() < 2:
 		return {}
 	## (10-11) Un Mundial DE VERDAD: las 32 mejores, en grupos y eliminatorias con partidos (`SeleccionesTorneos.mundial`), en vez de duelos de fuerza.
-	var t := SeleccionesTorneos.mundial(self, m, anio)
+	var t := cargo.listo("Copa del Mundo", anio)   ## (10-11) si diriges una selección, el mismo Mundial que jugaste (o a medias)
+	if t == null:
+		t = SeleccionesTorneos.mundial(self, m, anio)
 	t.jugar_entero()
+	cargo.anotar(m, t)
 	ultimo_torneo = t
 	var vivos: Array = [t.campeon.nombre if t.campeon != null else ""]
 	var campeon := String(vivos[0])
@@ -91,6 +94,7 @@ func cierre_de_temporada(anio: int) -> Dictionary:
 	resumen["torneo"] = torneo_continental(anio)
 	resumen["clubes"] = mundial_de_clubes(anio)
 	resumen["mundial"] = copa_del_mundo(anio) if toca_copa_del_mundo(anio) else {}
+	resumen["seleccionador"] = cargo.cerrar_listos(_mundo())   ## (10-11) los torneos de la selección que diriges
 	return resumen
 
 # ---------------------------------------------------------------------------
@@ -114,6 +118,7 @@ func a_dic() -> Dictionary:
 		"mundial": mundial,
 		"mundial_clubes": mundial_clubes,
 		"continentales": campeones_continentales,
+		"cargo": cargo.a_dic(),
 	}
 
 ## El JSON devuelve arrays sin tipo y estos campos son `Array[String]`: asignar
@@ -141,6 +146,7 @@ func desde_dic(d: Dictionary) -> void:
 	campeones_continentales.clear()
 	for f in d.get("continentales", []):
 		campeones_continentales.append((f as Dictionary).duplicate())
+	cargo.desde_dic(d.get("cargo", {}))
 
 func _to_string() -> String:
 	return "Selección de %s (fuerza %d)" % [nombre_seleccion(), fuerza(nombre_seleccion())]

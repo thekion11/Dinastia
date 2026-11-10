@@ -8,6 +8,8 @@ static var _abierto := false
 static func ofrecer(pr: Principal) -> void:
 	if _abierto or DisplayServer.get_name() == "headless" or pr.mundo == null or pr._rueda_pop != null:
 		return
+	if await JornadaSeleccion.ofrecer_cargo(pr):   ## (10-11) primero, si te llama una selección
+		return
 	var ev := EventosClub.pendiente(pr.mundo)
 	if ev.is_empty():
 		return

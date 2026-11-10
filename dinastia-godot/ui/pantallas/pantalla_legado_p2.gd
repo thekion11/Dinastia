@@ -276,6 +276,7 @@ func _pintar_legado() -> void:
 				p._refrescar())
 			fila_o.add_child(bo)
 
+	JornadaSeleccion.pintar_legado(p, p._lista_legado)   ## (10-11) la selección que te quiere o que diriges
 	_pintar_desgaste(r)
 	_pintar_rival_dt(r)
 	_pintar_leyenda_viva(r)
