@@ -7,33 +7,31 @@ clubes que faltan (idempotente) y `base_ficticia.py` hace el resto (nombre ficti
 [nombre del pack, color 1, color 2, media, aforo]. `ESTILOS` = {nombre FICTICIO: [formación, estilo]} para `estilos_clubes.json`.
 Chile (DATA_P1/DATA_P2), NED, URU, ECU, BOL, MAR y RSA no se tocan (ya tienen la cantidad real).
 
-REGLA DE TAMAÑO: no se quita ningún club del pack (orden del dueño). Donde la liga actual conserva clubes DESCENDIDOS, solo se añaden
-los que caben hasta el tamaño real, por orden de reputación; el resto va en `RESERVA` (faltan en el pack, no se añaden). Si el dueño
-autoriza quitar a los descendidos, hay que borrar sus filas (y sus entradas en `CLUBES`, `aspecto_clubes/*.txt`, historia,
-palmarés, estadios) y pasar los de `RESERVA` a `NUEVOS`.
-
-DESCENDIDOS (clubes ACTUALES del pack que NO están en primera división 2025-26; se conservan):
-  ENG: ninguno · ESP: ninguno · MEX: ninguno · USA: ninguno
-  ITA: Sampdoria, Monza · GER: Bochum · FRA: Montpellier, Reims
-  BRA (2026): Goiás, Fortaleza · ARG (2026): Godoy Cruz, Colón
-  COL (2026): La Equidad, Envigado · PER (2026): Municipal, C. Vallejo, Binacional, Ayacucho
-  JPN (2026): Consadole S., «Shimonoseki» (no es de J1), Albirex N., Shonan B.
-  KSA: Al-Raed, Al-Wehda · EGY: Baladiyat (Fut. R1se pasó a llamarse Modern Sport: es el mismo club)
-  PAR (12 reales; NO se quita nada ahora): Sol de América, Doce de Octubre, Tacuary, Gral. Caballero, Fernando Mora, Resistencia
-    (los 12 de 2026: 2 de Mayo, Cerro Porteño, Guaraní, Libertad, Nacional, Olimpia, Recoleta, Rubio Ñu, San Lorenzo, Sp. Ameliano,
-    Sp. Luqueño, Sp. Trinidense; faltan en el pack: Recoleta y San Lorenzo)
-  KOR (12 reales; NO se quita nada ahora): Suwon FC, Daegu, Seongnam, Busan IPark, Ansan G., Chungbuk Cheongju
-    (faltan en el pack: FC Anyang y Bucheon FC)
-  AUS (12 reales; NO se quita nada ahora): Western United, Canberra United, Geelong FC, Darwin City
-
-RESERVA (reales de primera que faltan y NO se añaden por culpa de los descendidos):
-  ITA: Cremonese, Pisa · GER: Heidenheim · FRA: Le Havre, Metz · BRA: Chapecoense, Remo · ARG: Gimnasia (Mendoza), Estudiantes (Río Cuarto)
-  COL: Jaguares, Llaneros · PER: Alianza Atlético, Cajamarca, Moquegua, Juan Pablo II · JPN: Fagiano Okayama, JEF United, Mito HollyHock,
-  V-Varen Nagasaki · KSA: Al-Najma, Al-Kholood · EGY: Kahraba Ismailia
-DUDAS: PER 2026 tiene 18 clubes (no 19). Los colores de varios clubes modestos (PER, EGY, COL, KSA, USA) son aproximados.
+SEGUNDA PARTE (10-11-2026, el dueño pidió los clubes REALES con su cantidad real): `QUITAR` borra del pack a los clubes que no están en
+primera división 2025-26 (2026 en las ligas de año natural) y `NUEVOS` incluye ya TODOS los que faltaban. Al quitar un club se borraron
+también sus filas en `CLUBES` (`base_ficticia.py`), `aspecto_clubes/*.txt`, `estadios_reales*.py`, `historia_clubes.py` (H y clásicos),
+`palmares/*.txt` y `estilos_clubes.json`; sus plantillas reales (`REALES` del pack) se descartan aquí y los jugadores con nombre que sigan
+en primera NO se reubican en otro club.
+QUITADOS (38): ITA Sampdoria, Monza · GER Bochum · FRA Montpellier, Reims · BRA Goiás, Fortaleza · ARG Godoy Cruz, Colón ·
+  COL La Equidad, Envigado · PER Municipal, C. Vallejo, Binacional, Ayacucho · JPN Consadole S., «Shimonoseki», Albirex N., Shonan B. ·
+  KSA Al-Raed, Al-Wehda · EGY Baladiyat (Fut. R1se es Modern Sport, se queda) · PAR Sol de América, Doce de Octubre, Tacuary,
+  Gral. Caballero, Fernando Mora, Resistencia · KOR Suwon FC, Daegu, Seongnam, Busan IPark, Ansan G., Chungbuk Cheongju ·
+  AUS Western United, Canberra United, Geelong FC, Darwin City.
+DUDAS: PER 2026 tiene 18 clubes (no 19). Los colores/aforos de varios clubes modestos son aproximados.
 """
 PAIS_TAM = {"ENG": 20, "ESP": 20, "ITA": 20, "GER": 18, "FRA": 18, "BRA": 20, "ARG": 30, "COL": 20, "PER": 18,
-            "MEX": 18, "USA": 30, "JPN": 20, "KSA": 18, "EGY": 21}
+            "MEX": 18, "USA": 30, "JPN": 20, "KSA": 18, "EGY": 21, "PAR": 12, "KOR": 12, "AUS": 12}
+
+# Clubes que salen del pack (nombre limpio), por país.
+QUITAR = {
+    "ITA": ["Sampdoria", "Monza"], "GER": ["Bochum"], "FRA": ["Montpellier", "Reims"], "BRA": ["Goiás", "Fortaleza"],
+    "ARG": ["Godoy Cruz", "Colón"], "COL": ["La Equidad", "Envigado"],
+    "PER": ["Municipal", "C. Vallejo", "Binacional", "Ayacucho"],
+    "JPN": ["Konsadole S.", "Shimonoseki", "Albirex N.", "Shonan B."], "KSA": ["Al-Raed", "Al-Wehda"], "EGY": ["Baladiyat"],
+    "PAR": ["Sol de América", "Doce de Octubre", "Tacuari", "Gral. Caballero", "Fernando Mora", "Resistencia"],
+    "KOR": ["Suon FC", "Daegu FC", "Seongnam", "Busan IPark", "Ansan G.", "Ch. Citizen"],
+    "AUS": ["W. United", "Canberra Utd", "Geelong FC", "Darwin City"],
+}
 
 # (país, nombre del pack, nombre ficticio, color 1, color 2, media, aforo, formación, estilo)
 NUEVOS = [
@@ -118,6 +116,33 @@ NUEVOS = [
     ("EGY", "Har4s El Hodoud", "Guardia Frontera", "#00843d", "#ffffff", 65, 22000, "5-3-2", "bloque"),
     ("EGY", "Wadi D3gla", "Valle Palmeras", "#0057b8", "#ffffff", 65, 16000, "4-4-2", "equilibrado"),
     ("EGY", "Ghazl El M4halla", "Textil Mahalla", "#d50032", "#ffffff", 64, 14600, "4-4-2", "garra"),
+    # ---- Segunda parte: los que habían quedado en RESERVA y los de PAR/KOR
+    ("ITA", "Cr3monese", "Torrazzo FC", "#d50032", "#7a8b99", 70, 16000, "3-5-2", "contra"),
+    ("ITA", "P1sa", "Torre Inclinada", "#000000", "#0057b8", 71, 10000, "4-4-2", "bloque"),
+    ("GER", "H3idenheim", "Brenz FC", "#d50032", "#0057b8", 72, 15000, "5-3-2", "directo"),
+    ("FRA", "Le H4vre", "Puerto Atlante", "#1c3f7a", "#7ec8e3", 71, 25100, "4-4-2", "bloque"),
+    ("FRA", "M3tz", "Mosela Grana", "#8b1a3a", "#ffffff", 71, 29800, "4-3-3", "vertical"),
+    ("BRA", "Chap3coense", "Conda Verde", "#00843d", "#ffffff", 68, 20000, "4-4-2", "garra"),
+    ("BRA", "R3mo", "Belem Azul", "#0b2a5b", "#ffffff", 67, 53000, "4-4-2", "garra"),
+    ("ARG", "Gimnas1a Mza", "Mendocino Negro", "#000000", "#ffffff", 64, 11000, "4-4-2", "bloque"),
+    ("ARG", "Estud1antes RC", "Rio Cuarto FC", "#d50032", "#ffffff", 64, 12000, "4-4-2", "bloque"),
+    ("COL", "J4guares", "Cordobes Felino", "#ffd100", "#000000", 62, 12000, "4-4-2", "contra"),
+    ("COL", "Llan3ros", "Villavo FC", "#ffd100", "#d50032", 60, 15000, "4-4-2", "bloque"),
+    ("PER", "Alianza At1ético", "Sullana Celeste", "#5ab4e5", "#ffffff", 63, 12000, "4-4-2", "equilibrado"),
+    ("PER", "FC Caj4marca", "Cumbemayo FC", "#000000", "#d50032", 62, 10500, "4-4-2", "bloque"),
+    ("PER", "Dep. M0quegua", "Pisco Valle", "#ffd100", "#0057b8", 60, 21000, "4-4-2", "contra"),
+    ("PER", "Juan Pabl0 II", "Chongoyape FC", "#ffffff", "#0057b8", 58, 3000, "5-4-1", "bloque"),
+    ("JPN", "Fagiano Ok4yama", "Faisan Momo", "#8b1a3a", "#ffffff", 70, 15500, "4-4-2", "equilibrado"),
+    ("JPN", "JEF Un1ted", "Chiba Amarillo", "#ffd100", "#00843d", 69, 19500, "4-4-2", "presion"),
+    ("JPN", "Mit0 Hollyhock", "Malva Ibaraki", "#0057b8", "#ffffff", 66, 10200, "4-4-2", "bloque"),
+    ("JPN", "V-V4ren Nagasaki", "Puerto Nagasaki", "#0057b8", "#f58220", 68, 20300, "4-4-2", "vertical"),
+    ("KSA", "Al-N4jma", "Unaiza Estrella", "#0b2a5b", "#ffd100", 64, 30000, "4-3-3", "equilibrado"),
+    ("KSA", "Al-Kh0lood", "Rass Dorado", "#d50032", "#ffffff", 64, 5100, "4-4-2", "bloque"),
+    ("EGY", "Kahr4ba Ismailia", "Electrico Canal", "#0057b8", "#ffffff", 62, 6000, "4-4-2", "garra"),
+    ("PAR", "Recolet4", "Asuncion Norte", "#0057b8", "#ffffff", 62, 6000, "4-4-2", "bloque"),
+    ("PAR", "San L0renzo (P)", "Capiata FC", "#d50032", "#0057b8", 62, 6000, "4-4-2", "contra"),
+    ("KOR", "FC Any4ng", "Violeta Gyeonggi", "#5b2d8e", "#ffffff", 68, 17100, "3-4-3", "vertical"),
+    ("KOR", "Buche0n FC", "Gyeonggi Rojo", "#d50032", "#000000", 66, 34500, "4-4-2", "contra"),
 ]
 
 # Nombre real limpio (sin dígitos) -> ficticio; `base_ficticia.py` lo suma a `CLUBES`.
@@ -144,7 +169,13 @@ PAISES = sorted({f[0] for f in NUEVOS})
 
 
 def asegurar(real: dict) -> None:
-    """Añade al final de cada liga del pack los clubes que faltan (idempotente)."""
+    """Quita de cada liga los clubes de `QUITAR` y añade al final los que faltan (idempotente)."""
+    fuera = {_limpio(n) for l in QUITAR.values() for n in l}
+    for pais, d in real["PAISES_LIGAS"].items():
+        d["clubes"] = [f for f in d["clubes"] if _limpio(f[0]) not in fuera]
+    for tabla in ("REALES", "EQUIP_REAL"):
+        for k in [k for k in real.get(tabla, {}) if _limpio(k) in fuera]:
+            del real[tabla][k]
     for pais, nombre, _fic, c1, c2, media, aforo, _f, _e in NUEVOS:
         clubes = real["PAISES_LIGAS"][pais]["clubes"]
         if all(_limpio(f[0]) != _limpio(nombre) for f in clubes):

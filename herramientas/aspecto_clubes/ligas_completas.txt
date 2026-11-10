@@ -66,3 +66,29 @@ Petrojet|ojiva|franjas|PET|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffff
 Haras El Hodoud|escudo|liso|HEH|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
 Wadi Degla|clasico|liso|WD|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
 Ghazl El Mahalla|circulo|franjas|GEM|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Cremonese|ojiva|liso|CRE|liso|#d50032|#7a8b99|#7a8b99|#d50032|#d50032|#7a8b99
+Pisa|escudo|liso|PIS|liso|#000000|#0057b8|#0057b8|#000000|#000000|#0057b8
+Heidenheim|clasico|franjas|HEI|franjas|#d50032|#0057b8|#0057b8|#d50032|#d50032|#0057b8
+Le Havre|circulo|liso|LH|liso|#1c3f7a|#7ec8e3|#7ec8e3|#1c3f7a|#1c3f7a|#7ec8e3
+Metz|ojiva|liso|MET|liso|#8b1a3a|#ffffff|#ffffff|#8b1a3a|#8b1a3a|#ffffff
+Chapecoense|escudo|franjas|CHA|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Remo|clasico|liso|REM|liso|#0b2a5b|#ffffff|#ffffff|#0b2a5b|#0b2a5b|#ffffff
+Gimnasia Mza|circulo|liso|GM|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Estudiantes RC|ojiva|franjas|ERC|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Jaguares|escudo|liso|JAG|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Llaneros|clasico|liso|LLA|liso|#ffd100|#d50032|#d50032|#ffd100|#ffd100|#d50032
+Alianza Atiético|circulo|franjas|AA|franjas|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#5ab4e5|#ffffff
+FC Cajamarca|ojiva|liso|FCC|liso|#000000|#d50032|#d50032|#000000|#000000|#d50032
+Dep. Moquegua|escudo|liso|DM|liso|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Juan Pablo II|clasico|franjas|JPI|franjas|#ffffff|#0057b8|#0057b8|#ffffff|#ffffff|#0057b8
+Fagiano Okayama|circulo|liso|FO|liso|#8b1a3a|#ffffff|#ffffff|#8b1a3a|#8b1a3a|#ffffff
+JEF United|ojiva|liso|JEF|liso|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
+Mito Hollyhock|escudo|franjas|MH|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+V-Varen Nagasaki|clasico|liso|VVN|liso|#0057b8|#f58220|#f58220|#0057b8|#0057b8|#f58220
+Al-Najma|circulo|liso|AN|liso|#0b2a5b|#ffd100|#ffd100|#0b2a5b|#0b2a5b|#ffd100
+Al-Kholood|ojiva|franjas|AK|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Kahraba Ismailia|escudo|liso|KI|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Recoleta|clasico|liso|REC|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+San Lorenzo (P)|circulo|franjas|SLP|franjas|#d50032|#0057b8|#0057b8|#d50032|#d50032|#0057b8
+FC Anyang|ojiva|liso|FCA|liso|#5b2d8e|#ffffff|#ffffff|#5b2d8e|#5b2d8e|#ffffff
+Bucheon FC|escudo|liso|BFC|liso|#d50032|#000000|#000000|#d50032|#d50032|#000000
