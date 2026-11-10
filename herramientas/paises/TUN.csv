@@ -1,0 +1,26 @@
+#seleccion=Túnez
+#tier=0.3
+#globo=10.18,36.81
+#bandera=🇹🇳
+#confed=afr
+#liga=Ligue 1 Professionnelle|Liga Tunecina
+#copa=Copa de Túnez|Copa Tunecina
+#nombres=Mohamed,Ali,Youssef,Wahbi,Ellyes,Hannibal,Aymen,Anis,Naïm,Hamza,Seifeddine,Mortadha,Ferjani,Montassar
+#apellidos=Ben Romdhane,Khazri,Msakni,Skhiri,Sliti,Talbi,Laïdouni,Drager,Bronn,Ben Said,Chaalali,Haddadi,Trabelsi,Jaziri
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Espérance de Tunis;Esperanza Tunecina;#e31b23;#ffd100;68;60000;1919;los Sangre y Oro;el estadio de la capital;El club más laureado del país, con títulos continentales.
+Club Africain;Club Africano;#e31b23;#ffffff;62;60000;1920;los Rojiblancos;el estadio de la capital;El gran rival de la capital, el club del pueblo.
+Étoile du Sahel;Estrella del Sahel;#e31b23;#ffffff;62;28000;1925;los Estrellas;el estadio de la ciudad de la costa;El club de la costa, con grandes éxitos africanos.
+CS Sfaxien;Club Sfaxiano;#000000;#ffffff;60;18000;1928;los Zebras;el estadio de la ciudad del sur;El club de la segunda ciudad del país.
+US Monastir;Union Monastir;#0057b8;#ffffff;53;20000;1923;los Azules;el estadio de la ciudad costera;Un club de la costa, campeón de copa.
+US Ben Guerdane;Union Ben Guerdane;#e31b23;#0057b8;49;10000;1936;los de la Frontera;el estadio de la ciudad de la frontera;El club de la frontera con Libia.
+Stade Tunisien;Estadio Tunecino;#e31b23;#00843d;52;8000;1948;los Rojiverdes;el estadio de los arrabales de la capital;Un histórico club de la capital.
+AS Marsa;Asociacion Marsa;#ffffff;#e31b23;48;6000;1939;los Blancos;el estadio de la ciudad costera de la capital;Un club de la costa norte de la capital.
+ES Zarzis;Entente Zarzis;#e31b23;#ffffff;46;7000;1934;los Rojos;el estadio de la ciudad del sur;Un club del sur de la isla.
+CA Bizertin;Club Bizertino;#e31b23;#000000;50;20000;1928;los Rojinegros;el estadio de la ciudad del norte;El club de la ciudad más septentrional.
+JS Kairouan;Juventud Kairouan;#00843d;#ffffff;44;15000;1920;los Verdes;el estadio de la ciudad santa;El club de la ciudad histórica del interior.
+ES Métlaoui;Entente Metlaoui;#ffd100;#000000;42;8000;1936;los Mineros;el estadio de la ciudad minera;El club de la cuenca minera de fosfatos.
+AS Gabès;Asociacion Gabes;#e31b23;#ffffff;41;7000;1949;los del Golfo;el estadio de la ciudad del golfo;Un club del golfo del sur.
+US Tataouine;Union Tataouine;#0057b8;#ffd100;40;5000;1933;los del Desierto;el estadio de la ciudad del desierto;El club del lejano sur desértico.
+Olympique Béja;Olimpico Beja;#ffd100;#00843d;39;10000;1923;los Amarillos;el estadio de la ciudad del trigo;Un club de la región cerealera del noroeste.
+EGS Gafsa;Gafsa Minera;#e31b23;#ffffff;38;7000;1948;los Rojos;el estadio de la ciudad del interior;Un club de las minas del interior.

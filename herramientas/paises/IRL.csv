@@ -1,0 +1,20 @@
+#seleccion=Irlanda
+#tier=0.55
+#globo=-6.26,53.35
+#bandera=🇮🇪
+#confed=ucl,uel
+#liga=League of Ireland Premier Division|Liga Irlandesa
+#copa=FAI Cup|Copa Irlandesa
+#nombres=Seán,Conor,Jack,Darragh,Cian,Liam,Patrick,Brian,Kevin,Aidan,Michael,Eoin,Declan,Niall
+#apellidos=Murphy,Kelly,O'Brien,Byrne,Ryan,Walsh,O'Connor,McCarthy,Doyle,Gallagher,Brennan,Quinn,Fitzgerald,Daly
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Shamrock Rovers;Trebol Dublin;#00843d;#ffffff;62;8000;1901;los Hoops;el estadio del sur de la capital;El club más laureado del país.
+Shelbourne;Shelburn Rojo;#c8102e;#ffffff;60;5400;1895;los Reds;el estadio del norte de la capital;El club en activo más antiguo de la capital.
+Bohemians;Bohemios Dublin;#c8102e;#000000;58;3900;1890;los Gypsies;el estadio de la vieja ciudad norteña;El club de tradición bohemia de la capital.
+St Patrick's Athletic;Patricio Dublin;#c8102e;#ffffff;57;5000;1929;los Saints;el estadio del oeste de la capital;Un club popular de la zona oeste de la capital.
+Derry City;Derry Murallas;#c8102e;#ffffff;56;3100;1928;los Candystripes;el estadio de la ciudad amurallada;El club de la ciudad amurallada del noroeste.
+Dundalk;Dundalk Frontera;#ffffff;#000000;54;4500;1903;los Lilywhites;el estadio de la ciudad fronteriza;Campeón de varios títulos y presente en Europa.
+Sligo Rovers;Sligo Bahia;#c8102e;#ffffff;50;5500;1928;los Bit o' Red;el estadio de la ciudad de la bahía del oeste;El club de la costa del noroeste.
+Drogheda United;Drogheda Boyne;#1b458f;#ffffff;48;3200;1919;los Drogs;el estadio de la ciudad del río Boyne;El club de la ciudad del río Boyne.
+Galway United;Galway Tribus;#7b1e3a;#ffffff;46;8000;1937;los Tribesmen;el estadio de la ciudad de la bahía del oeste;El club de la ciudad de las tribus, de regreso en primera.
+Waterford;Waterford Cristal;#1b458f;#ffffff;40;5100;1930;los Blues;el estadio de la ciudad más antigua del país;El club de la ciudad más antigua del país.

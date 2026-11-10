@@ -1,0 +1,26 @@
+#seleccion=Senegal
+#tier=0.32
+#globo=-17.47,14.69
+#bandera=🇸🇳
+#confed=afr
+#liga=Ligue 1 de Senegal|Liga Senegalesa
+#copa=Copa de Senegal|Copa Teranga
+#nombres=Mamadou,Moussa,Ousmane,Cheikh,Ibrahima,Abdoulaye,Papa,Modou,Idrissa,Boubacar,Samba,Pape,Lamine,Saliou
+#apellidos=Diop,Ndiaye,Fall,Sow,Diallo,Sarr,Faye,Gueye,Ba,Cissé,Mbaye,Thiam,Sy,Seck
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Jaraaf;Jaraaf Dakar;#000000;#ffffff;62;15000;1969;los Verdinegros;el estadio de la capital;El club más laureado de Dakar, con una afición enorme.
+Casa Sports;Casamance Sport;#1b8a3a;#ffffff;56;5000;1960;los Verdes del Sur;el estadio de Ziguinchor;El gran club de la región de Casamance.
+Génération Foot;Generacion Thies;#ffffff;#1b3a8a;58;3000;2000;los Jóvenes;el campo de la academia de Dakar;Una academia que forma estrellas para Europa.
+Teungueth FC;Teungueth Rufisque;#c8102e;#ffffff;57;8000;2003;los Rojos de Rufisque;el estadio de Rufisque;Campeón sorpresa nacido en la costa de Rufisque.
+AS Pikine;Pikine Atlantico;#1b3a8a;#ffffff;50;5000;1968;los Azules;el estadio de los suburbios;El club de los suburbios de Dakar.
+Guédiawaye FC;Guediawaye Norte;#ffd100;#1b8a3a;52;5000;1961;los Amarillos;el estadio de Guédiawaye;Vecino popular del norte de Dakar.
+AS Dakar Sacré-Coeur;Sacre Dakar;#c8102e;#000000;48;5000;1965;los Sagrados;el campo del barrio de Sacré-Coeur;El club del barrio de Sacré-Coeur.
+Linguère;Linguere Louga;#7a1f8a;#ffffff;49;5000;1977;los Reyes del Norte;el estadio de Louga;El orgullo de Louga, en el norte del país.
+US Gorée;Isla de Goree;#c8102e;#ffd100;47;3000;1946;los Isleños;el estadio de la isla;El club histórico de la isla de Gorée.
+Stade de Mbour;Estadio Mbour;#1b8a3a;#ffd100;48;6000;1951;los Mbourois;el estadio de la costa de Mbour;El club de la ciudad costera de Mbour.
+Wallidaan;Wallydan Dakar;#ffd100;#000000;44;3000;1970;los Abejas;el campo del centro de Dakar;Un club modesto que pelea por mantenerse.
+US Ouakam;Ouakam Atlantico;#1b3a8a;#ffd100;45;3000;1961;los Pescadores;el campo del cabo Verde;Un club del barrio costero de Ouakam.
+AS Douanes;Aduanas Dakar;#1b3a8a;#1b8a3a;55;5000;1960;los Aduaneros;el estadio de la capital;El equipo de las aduanas, siempre competitivo.
+Diambars;Diambars Saly;#ffffff;#1b8a3a;53;3000;2003;los Guerreros;el campo de la academia de Saly;Academia fundada por leyendas del fútbol senegalés.
+Mbour Petite-Côte;Pequena Costa;#c8102e;#1b3a8a;42;3000;2008;los Costeros;el estadio de la Petite-Côte;Un recién llegado de la costa turística.
+Sonacos;Sonacos Diourbel;#1b8a3a;#ffffff;40;5000;1969;los Cacahuetes;el estadio de Diourbel;El club de la industria del cacahuete.
