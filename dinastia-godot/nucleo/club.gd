@@ -285,10 +285,16 @@ func perfil_estadio() -> Dictionary:
 	## el techo retráctil... Los demás siguen con los estilos genéricos.
 	var r: Dictionary = fila_estadio_real()
 	if not r.is_empty():
-		for k in ["forma", "niveles", "techo", "pista", "focos", "fachada", "rasgo"]:
-			if r.has(k):
+		for k in ["forma", "niveles", "techo", "pista", "focos", "fachada", "rasgo",
+				"arco", "torres_rampa", "torres_col", "costillas", "costillas_col", "pista_col", "techoCol", "fachadaCol", "asientoP", "asiento3", "pantalla"]:
+			if r.has(k):   ## (10-11) las piezas de los estadios reales (`PiezasRealesEstadio`) y sus colores
 				p[k] = r[k]
 		p["real"] = true
+		if r.get("techo_lados") is Array:   ## (10-11) techo solo en esos lados (p. ej. ["oeste"]); el resto, al aire
+			var bandejas := {}   ## el formato que lee el constructor (`est["bandejas"][lado]["techo"]`)
+			for lado: String in ["sur", "norte", "este", "oeste"]:
+				bandejas[lado] = {"techo": String(r.get("techo", "parcial")) if lado in (r["techo_lados"] as Array) else "sin"}
+			p["bandejas"] = bandejas
 		## LOS COLORES DE SU ESTADIO (14-10-2026): las butacas del real, que no
 		## siempre son las del uniforme (Bombonera azul y oro, Maracanã azul...).
 		if r.has("asientos") and (r["asientos"] as Array).size() >= 2:
