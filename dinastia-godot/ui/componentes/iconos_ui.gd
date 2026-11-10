@@ -38,13 +38,14 @@ const TRAZOS := {
 static func textura(emoji: String, px: int, solo_activos := true) -> Texture2D:
 	if solo_activos and not dibujados:
 		return null
-	var nombre := String(DE_EMOJI.get(emoji, ""))
-	if nombre == "" or not TRAZOS.has(nombre):
+	var nombre := String(DE_EMOJI.get(emoji, IconosUITrazos.DE_EMOJI.get(emoji, "")))   ## los del riel y los de los submenús
+	var trazo := String(TRAZOS.get(nombre, IconosUITrazos.TRAZOS.get(nombre, "")))
+	if nombre == "" or trazo == "":
 		return null
 	var clave := "%s@%d" % [nombre, px]
 	if _cache.has(clave):
 		return _cache[clave]
-	var svg := "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'><path d='%s' fill='none' stroke='%s' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>" % [TRAZOS[nombre], COLOR]
+	var svg := "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'><path d='%s' fill='none' stroke='%s' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>" % [trazo, COLOR]
 	var img := Image.new()
 	if img.load_svg_from_string(svg, float(px) / 24.0) != OK:
 		return null

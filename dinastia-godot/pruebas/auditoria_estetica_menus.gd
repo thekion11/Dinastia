@@ -38,11 +38,16 @@ func _ready() -> void:
 	IconosUI.aplicar_todos(get_tree())
 	PantallaMenu.compacta_pc = OS.get_environment("COMPACTA_PC") == "1"
 	if IconosUI.dibujados:
-		var sin: Array = []
+		var todos := {}   ## los del riel y los de todos los submenús (tarjetas de portada y cajón)
 		for e: String in IconosUI.DE_EMOJI:
-			if IconosUI.textura(e, 26) == null:
-				sin.append(e)
-		_comprobar(sin.is_empty(), "los %d iconos dibujados se rasterizan (%s sin dibujo)" % [IconosUI.DE_EMOJI.size(), str(sin)])
+			todos[e] = true
+		for mn: Dictionary in MenusLaterales.MENUS:
+			todos[String(mn["icono"])] = true
+			for sb: Dictionary in mn["subs"]:
+				if sb.has("icono"):
+					todos[String(sb["icono"])] = true
+		var sin: Array = todos.keys().filter(func(e: String) -> bool: return IconosUI.textura(e, 26) == null)
+		_comprobar(sin.is_empty(), "los %d iconos de menús y submenús tienen dibujo y se rasterizan (%s sin dibujo)" % [todos.size(), str(sin)])
 	var m: Mundo = _p.mundo
 	var clubes: Array = [m.mi_club()]
 	for l: Liga in m.ligas:
@@ -58,7 +63,7 @@ func _ready() -> void:
 		for i in 20:
 			await get_tree().process_frame
 		await _cerrar()
-		for nombre: String in PANTALLAS:
+		for nombre: String in (PANTALLAS if solo == "" else Array(solo.split(","))):
 			if solo != "" and not nombre in solo.split(","):
 				continue
 			await _pantalla(nombre, c)
@@ -80,6 +85,8 @@ func _ready() -> void:
 	get_tree().quit(0 if _fallos == 0 else 1)
 
 func _cerrar() -> void:
+	if _p._menu_lateral.abierto():
+		_p._menu_lateral.plegar()
 	for h: Node in _p.get_children():   ## la reunión de la directiva se CONTESTA (cerrada sin elegir se vuelve a ofrecer y taparía la pantalla)
 		if h is EventoDialogo and not h.is_queued_for_deletion():
 			(h as EventoDialogo).selector.elegir(0)
@@ -94,7 +101,11 @@ func _cerrar() -> void:
 		await get_tree().process_frame
 
 func _pantalla(nombre: String, c: Club) -> void:
-	if nombre != "Inicio":
+	if nombre.begins_with("portada:"):   ## para las capturas: la portada (tarjetas) de un menú del riel
+		_p._menu_lateral.abrir_menu(nombre.trim_prefix("portada:"), -1)
+	elif nombre == "cajon":   ## y el cajón del riel desplegado
+		_p._menu_lateral.desplegar()
+	elif nombre != "Inicio":
 		_p.call("_ir_a_pestana", nombre)
 	for i in 30:
 		await get_tree().process_frame
