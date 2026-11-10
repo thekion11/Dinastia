@@ -1,0 +1,25 @@
+# Lote S: nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed
+Alvarado|franjas_finas|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#d50032|#ffffff
+Chaco For Ever|franjas|#00843d|#111111|#111111|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Colegiales|franjas_anchas|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Deportivo Maipú|mitad|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Estudiantes Buenos Aires|franjas_finas|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Güemes|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|franja_pecho|#ffffff|#ffffff
+Patronato|franjas|#d50032|#111111|#111111|#d50032|#111111|#d50032|liso|#111111|#111111
+Racing de Córdoba|franjas|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#ffffff|#5ab4e5|liso|#ffffff|#ffffff
+San Miguel|franjas_anchas|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Tristán Suárez|liso|#0057b8|#ffd100|#ffd100|#0057b8|#ffd100|#0057b8|liso|#ffd100|#ffd100
+Villa Dálmine|franjas|#f58220|#111111|#111111|#f58220|#111111|#f58220|liso|#111111|#111111
+Gimnasia de Concepción del Uruguay|franjas_finas|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|#ffffff|liso|#0057b8|#0057b8
+Ciudad de Bolívar|mitad|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Deportivo Morón|franjas|#ffffff|#d50032|#d50032|#ffffff|#d50032|#ffffff|liso|#d50032|#d50032
+Los Andes|franjas_finas|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Tepatitlán|banda|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#ffffff|#ffffff
+Pumas Tabasco|hombros|#0057b8|#ffd100|#ffd100|#0057b8|#ffd100|#0057b8|liso|#ffd100|#ffd100
+Racing Veracruz|franjas|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#ffffff|#ffffff
+Esenler Erokspor|franjas|#c8102e|#111111|#111111|#c8102e|#111111|#c8102e|liso|#111111|#111111
+Keçiörengücü|liso|#1b458f|#ffd100|#ffd100|#1b458f|#ffd100|#1b458f|liso|#ffd100|#ffd100
+Serikspor|mitad|#c8102e|#1b458f|#1b458f|#c8102e|#1b458f|#c8102e|liso|#1b458f|#1b458f
+Ümraniyespor|franjas_anchas|#c8102e|#ffd100|#ffd100|#c8102e|#ffd100|#c8102e|liso|#ffd100|#ffd100
+Vanspor|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Iğdır|liso|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff

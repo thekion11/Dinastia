@@ -1,0 +1,25 @@
+# Lote S: nombre|butaca1|butaca2
+Alvarado|#d50032|#ffffff
+Chaco For Ever|#00843d|#111111
+Colegiales|#00843d|#ffffff
+Deportivo Maipú|#d50032|#ffffff
+Estudiantes Buenos Aires|#d50032|#ffffff
+Güemes|#d50032|#ffffff
+Patronato|#d50032|#111111
+Racing de Córdoba|#5ab4e5|#ffffff
+San Miguel|#0057b8|#ffffff
+Tristán Suárez|#0057b8|#ffd100
+Villa Dálmine|#f58220|#111111
+Gimnasia de Concepción del Uruguay|#0057b8|#ffffff
+Ciudad de Bolívar|#d50032|#ffffff
+Deportivo Morón|#d50032|#ffffff
+Los Andes|#d50032|#ffffff
+Tepatitlán|#0057b8|#ffffff
+Pumas Tabasco|#0057b8|#ffd100
+Racing Veracruz|#d50032|#ffffff
+Esenler Erokspor|#c8102e|#111111
+Keçiörengücü|#1b458f|#ffd100
+Serikspor|#c8102e|#1b458f
+Ümraniyespor|#c8102e|#ffd100
+Vanspor|#c8102e|#ffffff
+Iğdır|#c8102e|#ffffff
