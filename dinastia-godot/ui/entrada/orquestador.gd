@@ -34,6 +34,7 @@ const ETAPAS := [
 	{"clave": "intro", "ruta": "res://ui/entrada/intro.gd", "titulo": "Intro"},
 	{"clave": "idioma", "ruta": "res://ui/entrada/idioma.gd", "titulo": "Idioma"},
 	{"clave": "modo", "ruta": "res://ui/entrada/menu_modos.gd", "titulo": "Modo de juego"},
+	{"clave": "ligas", "ruta": "res://ui/entrada/ligas_activas_pantalla.gd", "titulo": "Ligas activas"},   ## (10-11) qué países se cargan
 	{"clave": "pais", "ruta": "res://ui/entrada/pais.gd", "titulo": "País"},
 	{"clave": "config", "ruta": "res://ui/entrada/config_club.gd", "titulo": "Configuración del club"},
 	{"clave": "entrada", "ruta": "res://ui/entrada/entrada_campeonato.gd", "titulo": "Entrada al campeonato"},
@@ -130,6 +131,8 @@ func etapa_aplica(i: int) -> bool:
 			return forzar_intro or not intro_vista()
 		"pais":
 			return CargaCiudad.de("OrquestadorMundo").modo_id(estado) != "retos"
+		"ligas":
+			return CargaCiudad.de("OrquestadorMundo").modo_id(estado) != "retos"   ## un reto pone su club: el mundo va entero
 		"entrada":
 			return CargaCiudad.de("OrquestadorMundo").crea_club(estado) and CargaCiudad.de("OrquestadorMundo").modo_id(estado) != "retos"
 	return true
@@ -153,6 +156,16 @@ func _al_terminar(datos: Dictionary, quien: Control) -> void:
 	var clave := etapa_actual()
 	guardar_datos(clave, datos)
 	match clave:
+		"ligas":
+			## Si se volvió atrás y se cambió la lista, el mundo ya generado no vale: se hace de nuevo con los países elegidos.
+			var elegidos: Array = (estado.get("ligas", {}) as Dictionary).get("paises", []) if estado.get("ligas") is Dictionary else []
+			if estado.get("mundo") is Mundo and not elegidos.is_empty():
+				var actuales: Array = LigasActivas.de(estado["mundo"] as Mundo)
+				actuales.sort()
+				elegidos = elegidos.duplicate()
+				elegidos.sort()
+				if actuales != elegidos:
+					estado.erase("mundo")
 		"intro":
 			marcar_intro_vista()
 		"idioma":
@@ -276,6 +289,8 @@ func _ir_a(i: int, avanza: bool) -> void:
 	tw.tween_callback(func() -> void:
 		var clave := String(ETAPAS[i]["clave"])
 		if not (estado.get("mundo") is Mundo) and clave in ["pais", "config", "entrada", "personaje"]:
+			if CargaCiudad.de("OrquestadorMundo").modo_id(estado) == "retos":
+				LigasActivas.elegidas = LigasActivas.todos()   ## un reto trae su propio club, de cualquier país
 			## La generación del mundo (24 ligas) tarda: se avisa sobre el negro, se
 			## deja pintar ese aviso y se genera por trozos (sin bloquear).
 			_aviso_velo.text = Idiomas.t("Generando el mundo…")

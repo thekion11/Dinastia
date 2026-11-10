@@ -212,3 +212,40 @@ func _probar_ligas_activas_todos() -> void:
 	m.jugar_temporada()
 	m.cerrar_temporada()
 	_comprobar(m.anio == anio0 + 1 and m.continentales.size() >= 8, "una temporada completa con los torneos continentales (%s)" % str(m.continentales.keys()))
+
+## La pantalla «Ligas activas» (etapa de la entrada): casillas por país, atajos, resumen y confirmación. No toca el guardado real de la máquina (se restaura al terminar).
+func _probar_ligas_activas_pantalla() -> void:
+	_titulo("LIGAS ACTIVAS: LA PANTALLA")
+	var cfg_previo := FileAccess.file_exists(LigasActivas.RUTA_ELECCION)
+	var bytes_previos: PackedByteArray = FileAccess.get_file_as_bytes(LigasActivas.RUTA_ELECCION) if cfg_previo else PackedByteArray()
+	var elegidas_previas := LigasActivas.elegidas.duplicate()
+	DirAccess.remove_absolute(LigasActivas.RUTA_ELECCION)
+	LigasActivas.elegidas.clear()
+	var p := LigasActivasPantalla.new()
+	add_child(p)
+	var n_paises := LigasActivas.todos().size()
+	_comprobar(p._casillas.size() == n_paises and p.marcados().size() == (6 if OS.has_feature("mobile") else n_paises), "una casilla por país (%d) y las de la plataforma marcadas (%d)" % [p._casillas.size(), p.marcados().size()])
+	p._atajo("grandes")
+	var grandes: Array = ["CHI", "ENG", "ESP", "ITA", "GER", "FRA"]
+	_comprobar(p.marcados().size() == 6 and grandes.all(func(x: String) -> bool: return p.marcados().has(x)), "«Mi país y los 5 grandes» marca CHI, ENG, ESP, ITA, GER y FRA (%s)" % ",".join(p.marcados()))
+	p._atajo("ninguna")
+	_comprobar(p.marcados().is_empty() and p._continuar.disabled, "sin ninguna marcada no se puede continuar")
+	var recibido: Array = []
+	p.terminado.connect(func(d: Dictionary) -> void: recibido.append(d))
+	p.confirmar()
+	_comprobar(recibido.is_empty(), "confirmar sin países no avanza")
+	p._atajo("grandes")
+	p.confirmar()
+	var paises: Array = ((recibido[0] as Dictionary)["ligas"] as Dictionary)["paises"] if recibido.size() == 1 else []
+	_comprobar(paises.size() == 6 and ",".join(LigasActivas.elegidas) == ",".join(PackedStringArray(paises)), "confirmar devuelve {ligas: {paises}} y deja la elección en LigasActivas (%s)" % str(paises))
+	_comprobar(",".join(LigasActivas.para_generar()) == ",".join(PackedStringArray(paises)), "el generador recibe la lista elegida")
+	_comprobar(",".join(LigasActivas.cargar_eleccion()) == ",".join(PackedStringArray(paises)), "la elección se recuerda para la próxima partida")
+	p.free()
+	## Se deja la máquina como estaba.
+	LigasActivas.elegidas.assign(elegidas_previas)
+	if cfg_previo:
+		var f := FileAccess.open(LigasActivas.RUTA_ELECCION, FileAccess.WRITE)
+		f.store_buffer(bytes_previos)
+		f.close()
+	else:
+		DirAccess.remove_absolute(LigasActivas.RUTA_ELECCION)

@@ -36,7 +36,7 @@ func _ready() -> void:
 	Escudo.limpiar_cache()
 	Cara.limpiar_cache()
 	_mundo = Mundo.new()
-	_mundo.generar([], 0)
+	_mundo.generar(LigasActivas.para_generar(), 0)
 	## UN RETO (26-9-2026): el club lo elige el propio reto, y a jugar.
 	if PedidoPartida.reto_pedido != "":
 		var id := PedidoPartida.reto_pedido
