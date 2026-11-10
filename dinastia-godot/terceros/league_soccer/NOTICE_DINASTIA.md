@@ -16,6 +16,7 @@ nombres en español y conectadas a nuestro motor; cada archivo lo indica en su c
 | `visor/league_equipo.gd` | `src/onthepitch/team.cpp`, `teamAIcontroller.cpp`, `AIsupport/AIfunctions.cpp` (AI_GetOffsideLine) |
 | `visor/league_sin_balon.gd` | `src/onthepitch/player/controller/strategies/offtheball/default_{def,mid,off}.cpp`, `elizacontroller.cpp`, `playercontroller.cpp`, `teamAIcontroller.cpp`, `player/humanoid/humanoid_utils.cpp` |
 | `visor/motor_league.gd`, `visor/motor_league_p1.gd` | integración de lo anterior en `MotorJugable` |
+| `datos/league_toques.json`, `visor/league_toques.gd`, `herramientas/league_toques.py` | datos de toque de `data/media/animations/` y el filtro de alcance de `src/onthepitch/player/humanoid/humanoid.cpp` |
 | `assets/characters/quaternius/anims_league/league.res` | `data/media/animations/` (293 animaciones convertidas) |
 | `audio/ui/` (golpeo y palo) | `data/media/sounds/` |
 
