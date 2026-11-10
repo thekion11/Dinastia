@@ -255,3 +255,36 @@ func _probar_convocatoria_seleccion() -> void:
 	var club_t: Club = mt.ligas[0].clubes[2]
 	_comprobar(FestejoExtra3D.tifos(rt, club_t, Color(club_t.color1), Color(club_t.color2)) == 2 and rt.get_child_count() == 2, "los tifos de una final: dos lonas (%s)" % club_t.nombre)
 	rt.free()
+
+## FIN DE TEMPORADA CON GUARDADO Y CARGA A MITAD (10-11, caza de fallos, orden 31): 3 clubes de 3 países. Liga terminada con la copa a medias,
+## se guarda y se carga; tras cargar, el cierre de torneos, la foto, los festejos de fin de liga y la nueva temporada siguen funcionando.
+func _probar_fin_temporada_guardado() -> void:
+	_titulo("FIN DE TEMPORADA: GUARDAR Y CARGAR A MITAD (3 PAÍSES)")
+	for par: Array in [["CHI", 61], ["ARG", 62], ["COL", 63]]:
+		var m := Mundo.new()
+		m.generar([String(par[0])], int(par[1]))
+		m.tomar_el_mando(m.ligas[0].clubes[int(par[1]) % m.ligas[0].clubes.size()].id)
+		var nombre := m.mi_club().nombre
+		var guard := 0
+		while m.temporada_en_curso() and guard < 80:
+			m.avanzar_semana()
+			guard += 1
+		m._montar_copa()   ## copa a medias al terminar la liga
+		m.prensa.eventos_vistos.append("festejo_prueba:%d" % m.anio)
+		m.prensa.despedida_ofrecida_anio = m.anio
+		var tipo_antes := TipoTitulo.de_fin_de_liga(m)
+		_comprobar(Partida.guardar(m, "_prueba_fin_temporada"), "%s: se guarda con la liga terminada y la copa a medias" % nombre)
+		var c := Partida.cargar("_prueba_fin_temporada")
+		_comprobar(c != null and not c.temporada_en_curso(), "%s: al cargar, la liga sigue terminada" % nombre)
+		if c == null:
+			continue
+		_comprobar(c.prensa.eventos_vistos.has("festejo_prueba:%d" % m.anio) and c.prensa.despedida_ofrecida_anio == m.anio, "%s: los eventos vistos y la despedida ofrecida se guardan (no se repiten)" % nombre)
+		_comprobar(TipoTitulo.de_fin_de_liga(c) == tipo_antes, "%s: el festejo de fin de liga es el mismo tras cargar («%s»)" % [nombre, tipo_antes])
+		var cerrados := CierreTorneos.cerrar_pendientes(c)
+		_comprobar(not CierreTorneos.hay_pendientes(c) and CierreTorneos.cerrar_pendientes(c).is_empty(), "%s: tras cargar, la copa se cierra una sola vez (%d torneos)" % [nombre, cerrados.size()])
+		var foto := CierreTorneos.foto(c)
+		var resumen := c.nueva_temporada()
+		_comprobar(c.temporada_en_curso() and ResumenTemporada.datos(foto, resumen)["campeon"] is Club, "%s: la temporada nueva empieza y el resumen tiene campeón" % nombre)
+		_comprobar(not EventosClub.pendiente(c).is_empty() and String(EventosClub.pendiente(c)["id"]) == "directiva", "%s: en la temporada nueva vuelve la reunión con la directiva" % nombre)
+	Partida.borrar("_prueba_fin_temporada")
+

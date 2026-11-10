@@ -109,6 +109,7 @@ func entrar_cargada(m: Mundo) -> void:
 ## seguían enseñando el mundo de antes hasta el siguiente cambio de club.
 func _adoptar(m: Mundo) -> void:
 	p.mundo = m
+	p._avance._evento_fin_lanzado = false   ## (10-11, caza de fallos) otra partida: su fin de temporada (cierre de torneos, festejos, selección, despedida) vuelve a salir
 	p._conectar_noticias()
 	p._seleccionado = null
 	p._llenar_selector()

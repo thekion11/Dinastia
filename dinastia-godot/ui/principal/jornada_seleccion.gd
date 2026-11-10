@@ -18,6 +18,8 @@ static func ofrecer_cargo(pr: Principal) -> bool:
 	var n := String(cargo.oferta["nombre"])
 	var sel := SeleccionEquipo.club_de(pr.mundo, n, int(cargo.oferta["fuerza"]), pr.mundo.anio)
 	var ev := EventoSeleccion.oferta(pr, sel, int(cargo.oferta["fuerza"]), int(cargo.oferta.get("sueldo", 0)))
+	ev.tree_exiting.connect(func() -> void:   ## (10-11, caza de fallos) liberada sin contestar: no bloquear las ofertas para siempre
+		_abierto = false)
 	var op: String = await ev.elegido
 	ev.queue_free()
 	_abierto = false
