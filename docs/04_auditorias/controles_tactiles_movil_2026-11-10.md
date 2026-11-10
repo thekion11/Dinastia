@@ -49,8 +49,6 @@ Siguen pasando `tac_controles`, `tac_hud`, `p6_mando_tactil` y `captura_tactil_p
 - En VERTICAL todo es más pequeño (10,6 mm) porque la escala tiene tope 1,5 y el arco tiene que caber en ~68 mm de ancho. El
   proyecto fija el móvil en horizontal (`window/handheld/orientation=0`), así que el vertical solo sale en navegador o tableta.
   ¿Quitamos el vertical del todo o hacemos un diseño propio para él? Es decisión del dueño.
-- La ficha del jugador (abajo a la izquierda) ocupa ~43 % del ancho en horizontal y deja la mitad de abajo vacía. Encogerla daría
-  más sitio al stick; es HUD, no controles.
 - En vertical la cámara del partido queda muy cerca y el triángulo amarillo del jugador es enorme: es cámara, no controles.
 
 ## 2.ª parte (10-11): la FICHA del jugador y el resto del HUD en el teléfono
