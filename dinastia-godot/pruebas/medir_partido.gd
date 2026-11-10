@@ -39,9 +39,12 @@ func _ready() -> void:
 	var par := mundo.proximo_partido()
 	_vista = VistaEstadio.new()
 	add_child(_vista)
-	_vista.abrir(par[0], 0.85, par[1], Partido.new(par[0], par[1]))
+	## NOCHE=1 (10-11): el estadio se abre CON el perfil de noche, como en el juego (antes se aplicaba `Ambience` otra vez encima del de día y quedaban DOS luces direccionales con sombra: medía de más).
+	var perfil_n := {}
 	if OS.get_environment("NOCHE") != "":
-		Ambience.apply(_vista.get("_raiz3d"), {"clima": "noche"}, null, Calidad.nivel_de_argumentos(Calidad.ALTO))
+		perfil_n = EstadioPropio.new().perfil(par[0])   ## el perfil completo del estadio del club, con el clima puesto a noche
+		perfil_n["clima"] = "noche"
+	_vista.abrir(par[0], 0.85, par[1], Partido.new(par[0], par[1]), perfil_n)
 
 var _fin := false
 
