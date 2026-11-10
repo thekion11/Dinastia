@@ -23,9 +23,10 @@ func _aplicar_tema() -> void:
 	## El botón: un panel un pelo desplazado hacia el texto, para que se despegue
 	## del fondo sin ser otro color. Encima aclara, pulsado se va al acento.
 	var reposo := p._mezcla(panel, texto, 0.14)
-	t.set_stylebox("normal", "Button", p._caja(reposo, borde, radio, 1))
-	t.set_stylebox("hover", "Button", p._caja(p._mezcla(panel, texto, 0.24), borde, radio, 1))
-	t.set_stylebox("pressed", "Button", p._caja(p._mezcla(panel, p.COL_ACENTO, 0.45), p.COL_ACENTO, radio, 1))
+	## (10-11, estética) Con RELIEVE (`ProfundidadUI`): sombra en reposo, más al pasar por encima, y pulsado se hunde.
+	t.set_stylebox("normal", "Button", ProfundidadUI.relieve(p._caja(reposo, borde, radio, 1)))
+	t.set_stylebox("hover", "Button", ProfundidadUI.relieve(p._caja(p._mezcla(panel, texto, 0.24), borde, radio, 1), true))
+	t.set_stylebox("pressed", "Button", ProfundidadUI.hundido(p._caja(p._mezcla(panel, p.COL_ACENTO, 0.45), p.COL_ACENTO, radio, 1)))
 	t.set_stylebox("focus", "Button", p._caja(Color(0, 0, 0, 0), p.COL_ACENTO, radio, 2))
 	t.set_stylebox("disabled", "Button", p._caja(p._mezcla(panel, texto, 0.05), borde, radio, 1))
 	t.set_color("font_color", "Button", texto)
@@ -40,9 +41,9 @@ func _aplicar_tema() -> void:
 	## Los desplegables y las casillas heredan del botón: en Godot son clases
 	## distintas y si no se les dice nada se quedan con el tema oscuro de fábrica.
 	for clase: String in ["OptionButton", "MenuButton", "CheckBox", "CheckButton"]:
-		t.set_stylebox("normal", clase, p._caja(reposo, borde, radio, 1))
-		t.set_stylebox("hover", clase, p._caja(p._mezcla(panel, texto, 0.24), borde, radio, 1))
-		t.set_stylebox("pressed", clase, p._caja(p._mezcla(panel, p.COL_ACENTO, 0.45), p.COL_ACENTO, radio, 1))
+		t.set_stylebox("normal", clase, ProfundidadUI.relieve(p._caja(reposo, borde, radio, 1)))
+		t.set_stylebox("hover", clase, ProfundidadUI.relieve(p._caja(p._mezcla(panel, texto, 0.24), borde, radio, 1), true))
+		t.set_stylebox("pressed", clase, ProfundidadUI.hundido(p._caja(p._mezcla(panel, p.COL_ACENTO, 0.45), p.COL_ACENTO, radio, 1)))
 		t.set_color("font_color", clase, texto)
 		t.set_color("font_hover_color", clase, texto)
 

@@ -137,7 +137,7 @@ func _focos(raiz: Node3D) -> void:
 		foco.light_color = Color(1, 0.96, 0.88)
 		foco.shadow_enabled = true
 		raiz.add_child(foco)
-		foco.look_at_from_position(torre, Vector3(0, 0.8, 0), Vector3.UP)
+		foco.transform = Transform3D(Basis(), torre).looking_at(Vector3(0, 0.8, 0), Vector3.UP)
 
 ## Los homenajeados en el círculo central, celebrando, y a su espalda la camiseta retirada enmarcada.
 func _figuras(raiz: Node3D, filas: Array, c1: Color, c2: Color) -> void:
@@ -209,8 +209,8 @@ func _papelitos(raiz: Node3D) -> void:
 
 func _colocar_camara() -> void:
 	var ang := sin(_t * 0.18) * 0.55
-	_cam.position = Vector3(sin(ang) * RADIO_CAMARA, 2.6 + sin(_t * 0.3) * 0.25, cos(ang) * RADIO_CAMARA)
-	_cam.look_at(Vector3(0, 1.45, -0.2), Vector3.UP)
+	var pos := Vector3(sin(ang) * RADIO_CAMARA, 2.6 + sin(_t * 0.3) * 0.25, cos(ang) * RADIO_CAMARA)
+	_cam.transform = Transform3D(Basis(), pos).looking_at(Vector3(0, 1.45, -0.2), Vector3.UP)   ## sin `look_at`: vale también antes de entrar en la escena
 
 func _process(d: float) -> void:
 	if _cam == null:
