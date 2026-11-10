@@ -17,10 +17,13 @@ func _process(_d: float) -> void:
 		JornadaDespedida.ofrecer(_p)   ## sin await: queda esperando la elección
 		_fase = 1
 	if _fase == 1 and _n > 20:
+		## (10-11) Antes de la pregunta salen otras cosas (festejo de fin de liga, sorteos de copa): se busca SOLO la pregunta de la despedida y se espera a que salga.
 		var capa: Node = null
 		for h in _p.get_children():
-			if h is CanvasLayer and h.has_signal("elegido"):
+			if h is EventoDespedida:
 				capa = h
+		if capa == null and _n < 600:
+			return
 		if capa == null:
 			print("NO SE OFRECIÓ (¿no hay once de leyendas?)")
 			print("FIN. 1 fallos")
@@ -35,11 +38,11 @@ func _process(_d: float) -> void:
 				h.emit_signal("terminado")
 				h.queue_free()
 				_fase = 3
-	if _fase == 3 and _n > 60:
+	if _fase == 3 and _n > 70:
 		var sube: bool = _p.mundo.mi_club().saldo > _saldo0
 		var sin_pregunta := true
 		for h in _p.get_children():
-			if h is CanvasLayer and h.has_signal("elegido"):
+			if h is EventoDespedida:
 				sin_pregunta = false
 		print("taquilla ", sube, " pregunta cerrada ", sin_pregunta)
 		print("FIN. ", 0 if (sube and sin_pregunta) else 1, " fallos")
