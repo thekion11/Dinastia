@@ -313,6 +313,16 @@ func _probar_league_nucleo() -> void:
 	_comprobar(mc.get("a", "") == "x" and not mc.has("g"), "marca al hombre el más cercano y bien colocado, nunca el portero")
 	_comprobar(LeagueSinBalon.velocidad_perezosa(8.0, 1.0, 5.0, 0.5, 0.5, 0.0, 0.5) == 8.0 and LeagueSinBalon.velocidad_perezosa(8.0, 1.0, 60.0, 0.5, 0.5, 0.0, 0.5) < 8.0, "pereza: cerca de la acción corre a tope; lejos, afloja")
 	_comprobar(LeagueReglas.empezar_presion_zona(1.0, 0.2, 8.0) and not LeagueReglas.empezar_presion_zona(0.0, 1.0, 1.0), "presión de zona al perder el balón según la palanca")
+	## Fase 4a: el catálogo de toques (de las animaciones originales) y el filtro de alcance.
+	var cat := LeagueToques.catalogo()
+	_comprobar(cat.has("interfere") and cat.has("shot") and (cat["shot"]["sprint"] as Array).size() > 0, "catálogo de toques cargado (%d tipos)" % cat.size())
+	var cerca := PackedVector3Array()
+	var lejos := PackedVector3Array()
+	for k in 71:
+		cerca.append(Vector3(1.0, 0.0, 0.11))
+		lejos.append(Vector3(9.0, 0.0, 0.11))
+	_comprobar(not LeagueToques.alcanza("interfere", Vector2.ZERO, Vector2(1, 0), 0.0, cerca).is_empty() and LeagueToques.alcanza("interfere", Vector2.ZERO, Vector2(1, 0), 0.0, lejos).is_empty(), "interferir alcanza un balón a 1 m delante y no uno a 9 m")
+	_comprobar(LeagueToques.radio("interfere", 24, 0.0) > LeagueToques.radio("sliding", 24, 0.0) and LeagueToques.clase(7.0) == 3, "radio por tipo (interferir > barrida) y clases de velocidad")
 	## La variante juega 20 s de partido con dos clubes de países distintos y la bandera no cambia el motor de siempre.
 	var m := Mundo.new()
 	m.generar(["ARG", "ESP"], 99)
@@ -387,7 +397,7 @@ func _probar_cara_por_pais() -> void:
 	_titulo("CARA POR PAÍS PARA LOS JUGADORES SIN FOTO")
 	_comprobar(not CaraPrior.tabla().is_empty() and CaraPrior.tabla().has("*") and CaraPrior.tabla().has("JPN"), "la tabla por país está y trae JPN y la media mundial")
 	var m := Mundo.new()
-	m.generar(["JPN", "BRA", "ENG", "ESP", "KOR", "ARG"], 71)
+	m.generar(["JPN", "COL", "GER", "ESP", "KOR", "ARG"], 71)
 	var por_pais := {}
 	for c: Club in m.clubes.values():
 		for j: Jugador in c.plantilla:
@@ -400,17 +410,18 @@ func _probar_cara_por_pais() -> void:
 			var d: Dictionary = por_pais.get(j.pais, {"n": 0, "sin_barba": 0, "piel": 0.0, "rubios": 0})
 			d["n"] += 1
 			d["sin_barba"] += 1 if int(lk["barba"]) == 0 else 0
-			d["piel"] += float(maxi(Cara.PIELES.find(String(lk["piel"])), 0))
+			d["piel"] += float(CaraPrior.tono_de_foto(String(lk["piel"])) if not Cara.PIELES.has(String(lk["piel"])) else Cara.PIELES.find(String(lk["piel"])))   ## con la base real cargada, los que tienen foto traen su piel MEDIDA (un hex libre, más oscuro que la paleta): se calibra por luminancia
 			d["rubios"] += 1 if String(lk["peloC"]) == CaraPrior.PELO_HEX["rubio"] else 0
 			por_pais[j.pais] = d
-	var ok_pais := por_pais.has("JPN") and por_pais.has("BRA") and por_pais.has("ENG")
+	var ok_pais := por_pais.has("JPN") and por_pais.has("COL") and por_pais.has("GER")
 	_comprobar(ok_pais, "hay jugadores de nombre fijo de varios países (%s)" % str(por_pais.keys()))
 	if not ok_pais:
 		return
 	var jp: Dictionary = por_pais["JPN"]
-	var br: Dictionary = por_pais["BRA"]
-	var en: Dictionary = por_pais["ENG"]
-	_comprobar(float(br["piel"]) / maxf(float(br["n"]), 1.0) > float(en["piel"]) / maxf(float(en["n"]), 1.0) + 0.3, "la piel de Brasil sale más oscura que la de Inglaterra (%.1f frente a %.1f)" % [float(br["piel"]) / float(br["n"]), float(en["piel"]) / float(en["n"])])
+	var co: Dictionary = por_pais["COL"]
+	var al: Dictionary = por_pais["GER"]
+	## Las diferencias entre países salen de lo MEDIDO en las caras reales: Colombia (media 3,2 en la paleta) frente a Alemania (1,8) es un contraste claro; Brasil frente a Inglaterra, no (2,5 y 2,3: ambas plantillas son mixtas), por eso no se usa.
+	_comprobar(float(co["piel"]) / maxf(float(co["n"]), 1.0) > float(al["piel"]) / maxf(float(al["n"]), 1.0) + 0.5, "la piel de Colombia sale más oscura que la de Alemania (%.1f frente a %.1f)" % [float(co["piel"]) / float(co["n"]), float(al["piel"]) / float(al["n"])])
 	_comprobar(int(jp["rubios"]) * 20 <= int(jp["n"]), "casi ningún japonés sale rubio (%d de %d)" % [int(jp["rubios"]), int(jp["n"])])
 	var sin := 0
 	var tot := 0

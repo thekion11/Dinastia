@@ -10,6 +10,8 @@ static func ofrecer(pr: Principal) -> void:
 		return
 	if await JornadaSeleccion.ofrecer_cargo(pr):   ## (10-11) primero, si te llama una selección
 		return
+	if await JornadaSeleccion.ofrecer_fecha(pr):   ## (10-11) el partido de la fecha FIFA de la selección que diriges
+		return
 	var ev := EventosClub.pendiente(pr.mundo)
 	if ev.is_empty():
 		return

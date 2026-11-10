@@ -361,3 +361,43 @@ func _probar_casa_plano() -> void:
 	_comprobar(CasaPlano.distancia_camara(Vector2(3.0, 1.0), Vector2(1, 0), 1.0, obst) >= 0.9, "con sitio detrás, la cámara llega a su distancia")
 	## El acceso no nombra la ciudad: con ella apagada (lo normal) lleva a la casa a pie.
 	_comprobar(not InterruptorCiudad.activa, "la ciudad está apagada")
+
+## ESCUDOS MÁS REALISTAS (10-11, encargo del dueño): los clubes de las 10 ligas grandes llevan su contorno, figura, letras y colores parecidos al real (datos en
+## `_escudos.txt`, el real en el pack y el ficticio en lo público); hay un patrón nuevo, los rombos bávaros. Se prueba con varios países y sin repetir escudos.
+func _probar_escudos_realistas() -> void:
+	_titulo("ESCUDOS PARECIDOS AL REAL: LIGAS GRANDES")
+	_comprobar(Escudo.PATRONES.has("rombos_bav"), "el patrón de rombos bávaros existe")
+	var tabla: Dictionary = Datos.tabla("ASPECTO_CLUB")
+	var con_rombos := 0
+	for k: String in tabla:
+		var e: Variant = (tabla[k] as Dictionary).get("escudo", [])
+		if e is Array and (e as Array).size() > 1 and String(e[1]) == "rombos_bav":
+			con_rombos += 1
+	_comprobar(con_rombos >= 1, "hay al menos un club con ese patrón en la tabla (%d)" % con_rombos)
+	var m := Mundo.new()
+	m.generar(["ESP", "ENG", "ITA", "GER", "FRA", "ARG", "BRA", "MEX"], 62)
+	var clubes := 0
+	var con_figura := 0
+	var firmas := {}
+	var svg_ok := true
+	for l: Liga in m.ligas:
+		for c: Club in l.clubes:
+			clubes += 1
+			var f := AspectoClub.fila(c)
+			if AspectoClub.emblema(c) != "" or AspectoClub.letras(c) != "" or not (f.get("escudo", []) as Array).is_empty():
+				con_figura += 1
+			firmas["%s|%s|%s|%s|%s|%s" % [Escudo.forma_de(c), Escudo.patron_de(c), AspectoClub.emblema(c), AspectoClub.letras(c), c.color_escudo1(), c.color_escudo2()]] = true
+			if clubes % 9 == 0 and Escudo.svg_de(c).length() < 200:
+				svg_ok = false
+	_comprobar(clubes >= 100 and con_figura >= clubes - clubes / 20, "%d de %d clubes de 8 países tienen escudo con forma, figura o letras propias" % [con_figura, clubes])
+	_comprobar(firmas.size() >= clubes * 9 / 10, "los escudos casi no se repiten (%d distintos de %d)" % [firmas.size(), clubes])
+	_comprobar(svg_ok, "los escudos se dibujan (SVG con contenido)")
+	## Las figuras nuevas (torre de París, murciélago, gallo, carabela, toro, dragón, castillo, delfín) existen y se dibujan.
+	var nuevas := ["eiffel", "murcielago", "gallo", "carabela", "toro", "dragon", "castillo", "delfin"]
+	var dibujan := true
+	for k: String in nuevas:
+		var im := Image.new()
+		var svg := '<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">%s</svg>' % String(EscudoEmblemas.FIGURAS.get(k, "")).replace("{F}", "#ffffff").replace("{D}", "#000000")
+		if not EscudoEmblemas.FIGURAS.has(k) or im.load_svg_from_string(svg) != OK:
+			dibujan = false
+	_comprobar(dibujan, "las 8 figuras nuevas están en el vocabulario y su SVG se carga")

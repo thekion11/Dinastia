@@ -92,13 +92,20 @@ func _estado_league(delta: float) -> void:
 		var b0 := ls(balon.position)
 		e.calcular_trampa(b0, b0 + ls(vel_balon) * 0.7, rival, LeagueEquipo.linea_penultimo(xs, e.lado, b0.x))
 
-## La pizarra (0..2, 1 = neutro) traducida a las palancas de League (0..1, 0,5 = neutro).
+## La pizarra del club (`Tactica`, 0..2 con 1 = neutro; ver `EstiloClub`) traducida a las palancas de League (0..1, 0,5 = neutro):
+## amplitud → anchura del bloque; presión → foco defensivo del bloque y del medio; mentalidad → foco del medio en ataque;
+## verticalidad → contraataque (carreras y apoyo adelantado); ritmo → regate ofensivo; amplitud (al revés) → imán al centro al
+## conducir. (La presión de zona usa presión + «tras la pérdida»; la línea mueve el bloque ±4 m; ver `_destino_forma`.)
 func _palancas(local: bool) -> Dictionary:
 	var amp := float(_tac(local, "amplitud") - 1)
 	var pre := float(_tac(local, "presion") - 1)
 	var men := float(_tac(local, "mentalidad") - 1)
 	return {"ow": 0.5 + amp * 0.5, "dw": 0.5 + amp * 0.5, "dmi": 0.5 + pre * 0.5, "dm": 0.5 + pre * 0.5,
-		"om": 0.5 + men * 0.5, "omi": 0.5 + men * 0.25, "contra": 0.5 + float(_tac(local, "ritmo") - 1) * 0.25}
+		"om": 0.5 + men * 0.5, "omi": 0.5 + men * 0.25, "contra": 0.5 + float(_tac(local, "verticalidad") - 1) * 0.4}
+
+## L dribble_offensiveness y dribble_centermagnet.
+func _regate_palancas(local: bool) -> Vector2:
+	return Vector2(clampf(0.5 + float(_tac(local, "ritmo") - 1) * 0.4, 0.0, 1.0), clampf(0.5 - float(_tac(local, "amplitud") - 1) * 0.4, 0.0, 1.0))
 
 # ------------------------------------------------------------------ colocación
 
@@ -151,7 +158,8 @@ func _ia_portador(p: Dictionary) -> void:
 	## Conducción por el campo de fuerzas, siempre (el original la recalcula cada ciclo).
 	var cercanos := rivales.duplicate()
 	cercanos.sort_custom(func(a: Array, b: Array) -> bool: return ((a[0] as Vector2) - yo).length_squared() < ((b[0] as Vector2) - yo).length_squared())
-	var rg := LeagueNucleo.regate(yo, mov, mirada, e.lado, cercanos.slice(0, 5), LeagueNucleo.mentalidad(_rol(p)))
+	var rp := _regate_palancas(local)
+	var rg := LeagueNucleo.regate(yo, mov, mirada, e.lado, cercanos.slice(0, 5), LeagueNucleo.mentalidad(_rol(p)), rp.x, rp.y)
 	p["objetivo"] = mundo(yo + (rg[0] as Vector2) * 6.0)
 	p["correr"] = float(rg[1]) >= LeagueNucleo.V_SPRINT
 	var rival := _rival_mas_cercano(p)

@@ -43,6 +43,8 @@ func _init(_nombre: String = "", _pais: String = "CHI", _div: int = 1) -> void:
 func division() -> int:
 	return div
 
+const UNA_VUELTA_DESDE := 20
+
 func preparar() -> void:
 	_armar_tabla()
 	_armar_calendario()
@@ -85,6 +87,10 @@ func _armar_calendario() -> void:
 		lista.insert(1, ultimo)
 	for j in ida:
 		calendario.append(j)
+	## (10-11) Con MÁS DE 20 equipos (Argentina y la MLS, 30 clubes reales) se juega a UNA vuelta: a doble serían 58 fechas y la
+	## temporada de todos esperaría a esa liga. Así son 29, cerca de lo real (Argentina juega por zonas; la MLS, 34 partidos).
+	if clubes.size() > UNA_VUELTA_DESDE:
+		return
 	## Vuelta: los mismos cruces con los campos cambiados.
 	for j in ida:
 		var vuelta: Array = []

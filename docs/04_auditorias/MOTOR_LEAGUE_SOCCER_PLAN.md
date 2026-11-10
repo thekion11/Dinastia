@@ -199,3 +199,72 @@ entrada, `_InterfereCommand`, que llega con la fase 4). Sin este desvío los def
    desvanece refuerza al que ya ataca. A revisar en la fase 4 o calibrar en la 6 (decisión del dueño pendiente).
 3. Remata más que en la fase 2 (11,7) porque los atacantes se ofrecen y llegan, pero sigue lejos del de siempre (39,7) por la
    prioridad del pase sobre el tiro (§6, hallazgo 2).
+
+### Con la formación y el estilo REAL de cada club (`EstiloClub`, 10-11 tarde)
+Hasta aquí la comparación no pasaba las tácticas al motor (los dos motores jugaban con la pizarra neutra). Ahora
+`comparar_motor_league` pasa `MotorJugable.tactica_desde(club.tactica)` y empareja en cada cruce estilos DISTINTOS. MotorLeague
+traduce además: verticalidad → contraataque (carreras y apoyo adelantado), ritmo → regate ofensivo, amplitud → imán al centro
+al conducir (al revés) y anchura del bloque, presión + «tras la pérdida» → presión de zona. La formación ya la respetaba (las
+casillas de League salen de la posición base de cada club).
+
+| 6 partidos completos | Motor de siempre | MotorLeague (fases 2 + 3) |
+|---|---|---|
+| CPU por paso (µs) | 1.581 | 1.256 (−21 %) |
+| Goles / remates | 6,0 / 49,3 | 2,83 / 11,8 |
+| Pases / acierto | 121 / 74,0 % | 79,7 / 81,2 % |
+| Posesión del local | 52,1 % | 20,8 % |
+
+Cruces: Lautaro (CHI, 4-2-3-1 ofensivo) - Núñez (ARG, 4-2-3-1 presión); Boedo (ARG, 4-4-2 garra) - Laranjeiras (BRA, 4-2-3-1
+posesión); Laranjeiras - Iruña (ESP, 4-4-2 garra); Olívico (ESP, 4-2-3-1 posesión) - Trafford (ENG, 3-4-3 vertical); Selhurst
+(ENG, 3-4-3 vertical) - Tevere (ITA, 4-3-3 equilibrado); Salento (ITA, 4-2-3-1 contra) - Rancagua (CHI, 4-3-3 equilibrado).
+
+**Hallazgo 4 (el estilo pesa demasiado)**: el 20,8 % del local NO es el campo: con local y visita invertidos (`INVERTIR=1`) domina
+el MISMO club (Núñez «presión» 79 % de local; Iruña «garra» 76 %). Los estilos de presión alta y «tras la pérdida» alto se quedan
+el balón: la presión de zona al máximo más el designado que siempre disputa roban casi todo, y la «posesión» de Laranjeiras
+pierde contra la «garra». Que el estilo se note está bien; la magnitud no. Se revisa en la fase 4 (robos por alcance de
+animación, sustituyen al desvío del designado) y se calibra en la 6.
+
+## 8. Fase 4a (robos por alcance, conducción y cortes con el catálogo de toques; 10-11 noche)
+
+Archivos: `herramientas/league_toques.py` → `datos/league_toques.json` (133 animaciones con toque de las 296 originales: cuadro y
+posición del balón, desplazamiento del cuerpo, dirección del balón que entra y sale, dificultad, «última oportunidad»; 32 KB,
+viaja en las exportaciones como los demás `datos/*.json`), `visor/league_toques.gd` (el FILTRO DE ALCANCE), y en
+`visor/motor_league.gd`: el balón previsto cada 10 ms durante 700 ms (L Ball::Predict) y tres piezas del muñeco del original:
+1. **Robos por alcance** (L `_InterfereCommand` y `_SlidingCommand`): un defensor que puede ganar el duelo (no tiene al rival
+   entre él y el balón, L `CouldWinABallDuelLikeliness`) entra si una animación de interferir (≥ 0,2) o de barrida (≥ 0,7, a
+   0,7-1,6 m, con poca posesión) toca el balón previsto en su cuadro; el duelo lo resuelve nuestro `_entrada` (atributos, faltas,
+   animaciones). Sustituye al desvío del designado de la fase 3, que queda detrás de `LS_DESIG=1`.
+2. **El rival fastidia la conducción** (L `GetBallControlVector`, `opponentAnnoyanceFactor`): con un rival a 0,5-1,5 m, a más
+   velocidad y con menos serenidad y equilibrio, el toque se alarga hasta 3 m y el balón se escapa del pie.
+3. **Cortar el pase**: con un pase en vuelo, el rival que tiene una animación de interferir o de control que alcanza el balón
+   previsto va a ese punto; quién se lo queda lo decide lo nuestro (`_disputas`/`_tomar`).
+
+**Simplificado** (anotado en `league_toques.gd`): el radio de toque usa el factor por tipo, el del cuadro y la bonificación por
+velocidad del original, pero las bonificaciones por cercanía cuerpo-balón van fijas (+1,6, su valor típico), no se deforma el
+área según el balón que entra, y la animación se mira girada HACIA EL BALÓN (el original la elige girada a la dirección
+deseada, con giros). Serenidad = nuestro `reg` (no tenemos «calmness»).
+
+| 6 partidos completos con estilos reales | Motor de siempre | League fase 3 | League fase 4a |
+|---|---|---|---|
+| CPU por paso (µs, misma máquina en la misma tanda) | 1.651 | — | 1.417 (−14 %) |
+| Goles / remates | 6,0 / 49,3 | 2,83 / 11,8 | 2,5 / 9,3 |
+| Pases / acierto | 121 / 74,0 % | 79,7 / 81,2 % | 74,8 / 78,0 % |
+| Cambios de posesión por partido | **76,7** | ~21 | **24,7** |
+| Posesión del local por partido | 52 de media | 20,8 de media | 83 · 57 · 44 · 17 · 71 · 74 |
+| Por partido: interferir / cortar / fastidio | — | — | ~20 / ~70 / ~120 |
+
+Determinismo IGUAL; banco «FIN. 0 fallos».
+
+**HALLAZGO DE FONDO (lo que falta para proponerlo por defecto)**: con League el balón cambia de dueño 3 veces menos (25 frente a
+77). La mayor parte de la diferencia son los REMATES: en el motor de siempre casi cada remate (≈ 49 por partido) termina la
+posesión (parada, saque de puerta, córner); con League hay ≈ 9. Así, quien tiene el balón se lo queda, y cualquier ventaja (el club,
+quién saca, un robo temprano) se convierte en dominio de 70-85 %: por eso las posesiones extremas cambian de signo según el cruce
+(no es un fallo de ejes: comprobado invirtiendo local y visita). Los robos por alcance, la conducción fastidiada y los cortes
+suben los cambios solo de ~21 a ~25. El siguiente paso es la **fase 4b: la cola de órdenes del original con el filtro de
+animaciones** (pánico → pase → tiro, se ejecuta la primera cuya animación toca el balón) y su consecuencia en los tiros; y, con
+la decisión del dueño, calibrar en la fase 6.
+
+### Fase 4b (siguiente): la cola con el filtro y la locomoción
+Pendiente: decidir la cola cada 0,25 s y ejecutar cada paso la primera orden aplicable (`LeagueToques.alcanza` con «pass»,
+«highpass», «shot»); el primer toque al recibir (L `GetDifficultyFactors`: el balón rebota lejos del pie según velocidad,
+distancia, rival cerca y control); y la locomoción con las animaciones de `league.res` elegidas por dirección y velocidad.

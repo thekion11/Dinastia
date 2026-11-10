@@ -204,6 +204,7 @@ func semana(anio: int, semana_n: int) -> void:
 		_prenomina()
 	if hay_fecha_fifa(semana_n):
 		_fecha_fifa(anio, semana_n)
+	FechaSeleccion.semana(_mundo(), self, cargo, hay_fecha_fifa(semana_n))   ## (10-11) el partido de la selección que diriges
 
 func temporadas_en_el_pais(j: Jugador) -> int:
 	return int(_residencia.get(j.id, 0)) if j != null else 0

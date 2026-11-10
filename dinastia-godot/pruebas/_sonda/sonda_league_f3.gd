@@ -38,5 +38,5 @@ func _ready() -> void:
 				cambios += 1
 			ult = eqp
 	print("CAMBIOS de posesión: ", cambios, " pasos con balón ", pos_t, " estados ", motivos, " duelos ", motor.duelos)
-	print("FIN sonda ", motor.goles, " tiros ", motor.tiros)
+	print("FIN sonda ", motor.goles, " tiros ", motor.tiros, " toques ", motor.get("cuenta_toques"))
 	get_tree().quit()

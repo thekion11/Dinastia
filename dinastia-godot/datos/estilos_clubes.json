@@ -4,10 +4,6 @@
   "4-2-3-1",
   "bandas"
  ],
- "Aburrá FC": [
-  "4-2-3-1",
-  "posesion"
- ],
  "Academia SC": [
   "4-3-3",
   "bloque"
@@ -23,6 +19,10 @@
  "Aguada FC": [
   "4-3-3",
   "equilibrado"
+ ],
+ "Aire Blanco FC": [
+  "4-3-3",
+  "presion"
  ],
  "Al-Ahsa": [
   "4-1-4-1",
@@ -92,10 +92,6 @@
   "3-5-2",
   "directo"
  ],
- "Alto Paraná FC": [
-  "4-2-3-1",
-  "vertical"
- ],
  "Ambato Celeste": [
   "4-4-2",
   "directo"
@@ -118,6 +114,10 @@
  ],
  "Angelópolis": [
   "4-2-3-1",
+  "bloque"
+ ],
+ "Anjou Noir": [
+  "4-4-2",
   "bloque"
  ],
  "Anoeta CF": [
@@ -151,6 +151,10 @@
  "Asir FC": [
   "4-4-2",
   "garra"
+ ],
+ "Asuncion Norte": [
+  "4-4-2",
+  "bloque"
  ],
  "Atacama León": [
   "4-1-4-1",
@@ -188,6 +192,10 @@
   "4-3-3",
   "ofensivo"
  ],
+ "Bahia Cerezas": [
+  "4-2-3-1",
+  "presion"
+ ],
  "Baixada FC": [
   "4-2-3-1",
   "presion"
@@ -200,6 +208,10 @@
   "5-3-2",
   "contra"
  ],
+ "Barracas Oeste": [
+  "4-4-2",
+  "bloque"
+ ],
  "Barrio Obrero": [
   "4-3-3",
   "vertical"
@@ -211,6 +223,14 @@
  "Bay State FC": [
   "4-2-3-1",
   "bloque"
+ ],
+ "Bayou Naranja": [
+  "4-4-2",
+  "contra"
+ ],
+ "Belem Azul": [
+  "4-4-2",
+  "garra"
  ],
  "Belo Horizonte": [
   "3-5-2",
@@ -244,10 +264,6 @@
   "4-3-3",
   "posesion"
  ],
- "Bogotá Verde": [
-  "4-3-3",
-  "bloque"
- ],
  "Borg Arab SC": [
   "3-5-2",
   "directo"
@@ -260,20 +276,20 @@
   "4-3-3",
   "vertical"
  ],
+ "Bravos Frontera": [
+  "4-4-2",
+  "contra"
+ ],
  "Breisgau FC": [
   "4-3-3",
   "equilibrado"
  ],
- "Brianza FC": [
-  "4-3-3",
-  "equilibrado"
+ "Brenz FC": [
+  "5-3-2",
+  "directo"
  ],
  "Builders SC": [
   "3-5-2",
-  "directo"
- ],
- "Buraidah FC": [
-  "4-3-1-2",
   "directo"
  ],
  "Cajamarca FC": [
@@ -283,6 +299,10 @@
  "Calama Naranja": [
   "4-1-4-1",
   "bloque"
+ ],
+ "Calamar Norte": [
+  "4-4-2",
+  "contra"
  ],
  "Cali Escarlata": [
   "4-4-2",
@@ -296,6 +316,10 @@
   "4-4-2",
   "bloque"
  ],
+ "Capiata FC": [
+  "4-4-2",
+  "contra"
+ ],
  "Capitolina": [
   "3-5-2",
   "bloque"
@@ -304,6 +328,10 @@
   "5-3-2",
   "contra"
  ],
+ "Carbayon FC": [
+  "4-4-2",
+  "bloque"
+ ],
  "Cardenal Bogotá": [
   "4-4-2",
   "equilibrado"
@@ -311,6 +339,10 @@
  "Carson FC": [
   "4-4-2",
   "ofensivo"
+ ],
+ "Casteddu FC": [
+  "3-5-2",
+  "contra"
  ],
  "Castellana CF": [
   "4-3-3",
@@ -326,10 +358,6 @@
  ],
  "Cemento Calera": [
   "4-4-2",
-  "bloque"
- ],
- "Cercado FC": [
-  "4-3-3",
   "bloque"
  ],
  "Cerrito FC": [
@@ -348,13 +376,13 @@
   "5-4-1",
   "contra"
  ],
- "Champagne FC": [
-  "4-3-3",
-  "equilibrado"
- ],
  "Chellah FC": [
   "4-2-3-1",
   "bloque"
+ ],
+ "Chiba Amarillo": [
+  "4-4-2",
+  "presion"
  ],
  "Chillogallo FC": [
   "4-4-2",
@@ -372,9 +400,9 @@
   "4-4-2",
   "garra"
  ],
- "Chungnam FC": [
-  "4-3-1-2",
-  "directo"
+ "Chongoyape FC": [
+  "5-4-1",
+  "bloque"
  ],
  "Chuquisaca FC": [
   "4-2-3-1",
@@ -416,29 +444,53 @@
   "4-3-3",
   "equilibrado"
  ],
- "Corio FC": [
+ "Conda Verde": [
+  "4-4-2",
+  "garra"
+ ],
+ "Cordobes Felino": [
   "4-4-2",
   "contra"
  ],
- "Costanera SF": [
-  "4-4-2 R",
-  "garra"
+ "Costa Dorada": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Costa Futura": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Coxa Verde": [
+  "4-2-3-1",
+  "bloque"
  ],
  "Criollos UIO": [
   "4-3-3",
   "equilibrado"
  ],
+ "Cumbemayo FC": [
+  "4-4-2",
+  "bloque"
+ ],
  "Cumberland FC": [
   "4-4-2",
   "bloque"
+ ],
+ "Cumbres Blancas": [
+  "4-2-3-1",
+  "vertical"
  ],
  "Curramba FC": [
   "4-2-3-1",
   "vertical"
  ],
- "Delta SC": [
+ "Cutervo Unidos": [
   "4-4-2",
   "bloque"
+ ],
+ "Decano Tucuman": [
+  "4-4-2",
+  "garra"
  ],
  "Derb FC": [
   "4-3-3",
@@ -456,6 +508,10 @@
   "4-2-3-1",
   "garra"
  ],
+ "Dorados Rionegro": [
+  "4-3-3",
+  "vertical"
+ ],
  "Dos Bocas FC": [
   "4-4-2 R",
   "garra"
@@ -463,6 +519,10 @@
  "Doukkala FC": [
   "4-1-4-1",
   "equilibrado"
+ ],
+ "Ducato Cruzado": [
+  "3-4-3",
+  "posesion"
  ],
  "Duomo FC": [
   "4-3-3",
@@ -476,6 +536,14 @@
   "4-3-3",
   "posesion"
  ],
+ "Elba Rauten": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Electrico Canal": [
+  "4-4-2",
+  "garra"
+ ],
  "Elqui FC": [
   "4-2-3-1",
   "equilibrado"
@@ -487,6 +555,14 @@
  "Estrela Rio": [
   "4-3-3",
   "vertical"
+ ],
+ "Faisan Momo": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Faro Alejandria": [
+  "4-4-2",
+  "bloque"
  ],
  "Fedala FC": [
   "4-4-2",
@@ -536,9 +612,21 @@
   "4-2-3-1",
   "equilibrado"
  ],
+ "Gasteiz Azul": [
+  "4-4-2",
+  "bloque"
+ ],
  "Gateway FC": [
   "4-4-2",
   "presion"
+ ],
+ "Girasol Chiba": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Gloria Cordobesa": [
+  "4-3-3",
+  "equilibrado"
  ],
  "Gosford FC": [
   "4-4-2",
@@ -568,20 +656,28 @@
   "4-1-4-1",
   "contra"
  ],
+ "Guardia Frontera": [
+  "5-3-2",
+  "bloque"
+ ],
  "Guaíba FC": [
   "4-2-3-1",
   "equilibrado"
+ ],
+ "Gyeonggi Rojo": [
+  "4-4-2",
+  "contra"
  ],
  "Gávea RJ": [
   "4-2-3-1",
   "ofensivo"
  ],
- "Haeundae FC": [
-  "4-3-3",
-  "equilibrado"
- ],
  "Hakata FC": [
   "5-3-2",
+  "contra"
+ ],
+ "Halcon Varela": [
+  "4-4-2",
   "contra"
  ],
  "Halla FC": [
@@ -624,8 +720,8 @@
   "4-2-3-1",
   "ofensivo"
  ],
- "Huamanga FC": [
-  "4-3-1-2",
+ "Huanca Rojo": [
+  "4-4-2",
   "directo"
  ],
  "Hudson FC": [
@@ -643,10 +739,6 @@
  "Hyeongsan FC": [
   "4-4-2",
   "presion"
- ],
- "Hérault FC": [
-  "4-2-3-1",
-  "bloque"
  ],
  "IJmond FC": [
   "4-4-2",
@@ -668,6 +760,10 @@
   "4-4-2",
   "vertical"
  ],
+ "Inter Capital": [
+  "4-4-2",
+  "equilibrado"
+ ],
  "Iquique Celeste": [
   "5-3-2",
   "contra"
@@ -684,10 +780,6 @@
   "4-2-3-1",
   "ofensivo"
  ],
- "Ishikari FC": [
-  "3-4-3",
-  "presion"
- ],
  "Islington FC": [
   "4-3-3",
   "posesion"
@@ -695,10 +787,6 @@
  "Itapuã FC": [
   "4-2-3-1",
   "posesion"
- ],
- "Itauguá FC": [
-  "5-4-1",
-  "contra"
  ],
  "Itálica FC": [
   "4-3-3",
@@ -724,10 +812,6 @@
   "4-3-3",
   "bloque"
  ],
- "Kanmon FC": [
-  "4-4-2",
-  "equilibrado"
- ],
  "Kensington FC": [
   "4-2-3-1",
   "posesion"
@@ -735,6 +819,10 @@
  "Keystone FC": [
   "4-4-2 R",
   "presion"
+ ],
+ "Khobar Amarillo": [
+  "4-2-3-1",
+  "ofensivo"
  ],
  "Kraichgau FC": [
   "3-4-3",
@@ -760,11 +848,31 @@
   "4-2-3-1",
   "posesion"
  ],
+ "Lago Ontario FC": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Lago Salado FC": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Lago Ventoso": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Lagos Norte": [
+  "4-2-3-1",
+  "presion"
+ ],
  "Lamontville FC": [
   "4-2-3-1",
   "bandas"
  ],
  "Laranjeiras FC": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Lario FC": [
   "4-2-3-1",
   "posesion"
  ],
@@ -775,6 +883,10 @@
  "Lautaro FC": [
   "4-2-3-1",
   "ofensivo"
+ ],
+ "Leao da Barra": [
+  "4-4-2",
+  "directo"
  ],
  "Lech FC": [
   "4-3-1-2",
@@ -788,10 +900,6 @@
   "4-3-3",
   "ofensivo"
  ],
- "Ligure Blu": [
-  "4-3-1-2",
-  "equilibrado"
- ],
  "Lilywhite FC": [
   "4-2-3-1",
   "vertical"
@@ -803,6 +911,10 @@
  "Litoral SF": [
   "4-3-3",
   "equilibrado"
+ ],
+ "Lobo del Bosque": [
+  "4-4-2",
+  "garra"
  ],
  "Loire FC": [
   "4-4-2",
@@ -820,6 +932,10 @@
   "4-3-3",
   "equilibrado"
  ],
+ "Lutecia FC": [
+  "4-3-3",
+  "posesion"
+ ],
  "Lutèce FC": [
   "4-3-3",
   "posesion"
@@ -832,12 +948,20 @@
   "4-4-2",
   "vertical"
  ],
+ "Maiao Dorado": [
+  "4-3-3",
+  "equilibrado"
+ ],
  "Main FC": [
   "3-4-3",
   "vertical"
  ],
  "Malecón GYE": [
   "5-3-2",
+  "bloque"
+ ],
+ "Malva Ibaraki": [
+  "4-4-2",
   "bloque"
  ],
  "Malvín FC": [
@@ -864,9 +988,17 @@
   "4-3-3",
   "bloque"
  ],
+ "Massa Bruta FC": [
+  "4-2-3-1",
+  "presion"
+ ],
  "Massilia FC": [
   "4-2-3-1",
   "presion"
+ ],
+ "Matador Norte": [
+  "4-4-2",
+  "directo"
  ],
  "Mataquito FC": [
   "4-3-3",
@@ -874,10 +1006,6 @@
  ],
  "Matecaña FC": [
   "4-4-2",
-  "contra"
- ],
- "Mburicaó FC": [
-  "5-4-1",
   "contra"
  ],
  "Mechouar FC": [
@@ -888,9 +1016,13 @@
   "4-3-3",
   "equilibrado"
  ],
- "Mendoza Andes": [
-  "4-3-3",
+ "Mendocino Negro": [
+  "4-4-2",
   "bloque"
+ ],
+ "Mendoza Azul": [
+  "4-3-3",
+  "presion"
  ],
  "Mersey Blues": [
   "4-2-3-1",
@@ -912,12 +1044,8 @@
   "4-3-3",
   "vertical"
  ],
- "Moche FC": [
+ "Montana Rocosa": [
   "4-4-2",
-  "garra"
- ],
- "Molonglo FC": [
-  "5-3-2",
   "bloque"
  ],
  "Montaza SC": [
@@ -939,6 +1067,14 @@
  "Morumbi FC": [
   "4-2-3-1",
   "vertical"
+ ],
+ "Mosela Grana": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Motilon FC": [
+  "4-4-2",
+  "garra"
  ],
  "Moulouya FC": [
   "4-3-3",
@@ -967,10 +1103,6 @@
  "Najran FC": [
   "4-2-3-1",
   "contra"
- ],
- "Namhan FC": [
-  "4-4-2",
-  "equilibrado"
  ],
  "Naniwa FC": [
   "4-4-2",
@@ -1040,6 +1172,10 @@
   "4-1-4-1",
   "contra"
  ],
+ "Oro Negro Suez": [
+  "4-4-2",
+  "contra"
+ ],
  "Orobica FC": [
   "3-4-3",
   "presion"
@@ -1060,17 +1196,13 @@
   "3-5-2",
   "bloque"
  ],
- "Paldal FC": [
-  "4-3-3",
-  "vertical"
- ],
- "Palgong FC": [
-  "3-5-2",
-  "garra"
- ],
  "Palingdorp FC": [
   "4-4-2 R",
   "garra"
+ ],
+ "Palmeral FC": [
+  "4-4-2",
+  "equilibrado"
  ],
  "Parque Patricios": [
   "4-1-4-1",
@@ -1088,6 +1220,10 @@
   "4-3-3",
   "bloque"
  ],
+ "Paternal Bichos": [
+  "4-3-3",
+  "posesion"
+ ],
  "Patronato SC": [
   "4-4-2",
   "directo"
@@ -1104,13 +1240,13 @@
   "4-3-3",
   "posesion"
  ],
+ "Pennine Claret": [
+  "4-4-2",
+  "directo"
+ ],
  "Petrol Cairo": [
   "4-4-2",
   "bloque"
- ],
- "Pici FC": [
-  "4-3-3",
-  "garra"
  ],
  "Piedmont FC": [
   "4-2-3-1",
@@ -1128,9 +1264,17 @@
   "4-4-2",
   "vertical"
  ],
+ "Pirata Cordobes": [
+  "4-4-2",
+  "equilibrado"
+ ],
  "Piraí FC": [
   "3-4-3",
   "vertical"
+ ],
+ "Pisco Valle": [
+  "4-4-2",
+  "contra"
  ],
  "Pleiße FC": [
   "4-2-3-1",
@@ -1156,6 +1300,18 @@
   "4-3-3",
   "equilibrado"
  ],
+ "Potomac United": [
+  "4-4-2",
+  "directo"
+ ],
+ "Potosino FC": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Pradera Celeste": [
+  "4-3-3",
+  "presion"
+ ],
  "Prado FC": [
   "4-3-3",
   "equilibrado"
@@ -1164,13 +1320,29 @@
   "4-3-3",
   "posesion"
  ],
+ "Puerto Atlante": [
+  "4-4-2",
+  "bloque"
+ ],
  "Puerto Coquimbo": [
   "4-4-2",
   "vertical"
  ],
+ "Puerto Nagasaki": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Puerto Tiburon": [
+  "5-3-2",
+  "bloque"
+ ],
  "Puget FC": [
   "4-2-3-1",
   "presion"
+ ],
+ "Pulso Naranja": [
+  "4-4-2",
+  "equilibrado"
  ],
  "Punta Carretas": [
   "4-3-3",
@@ -1200,6 +1372,14 @@
   "4-3-3",
   "equilibrado"
  ],
+ "Rass Dorado": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Reeperbahn FC": [
+  "4-2-3-1",
+  "presion"
+ ],
  "Reloncaví FC": [
   "4-3-1-2",
   "garra"
@@ -1212,6 +1392,14 @@
   "4-4-2",
   "garra"
  ],
+ "Riestra Sur": [
+  "5-4-1",
+  "bloque"
+ ],
+ "Rio Cuarto FC": [
+  "4-4-2",
+  "bloque"
+ ],
  "Riverfront FC": [
   "4-2-3-1",
   "presion"
@@ -1223,10 +1411,6 @@
  "Rokko FC": [
   "4-4-2",
   "contra"
- ],
- "Ruhrpott FC": [
-  "4-3-1-2",
-  "garra"
  ],
  "Runa Andina": [
   "4-3-3",
@@ -1244,13 +1428,13 @@
   "4-4-2",
   "contra"
  ],
- "Sagami FC": [
-  "3-5-2",
-  "garra"
- ],
  "Saihat FC": [
   "4-2-3-1",
   "bloque"
+ ],
+ "Saint Laurent FC": [
+  "4-2-3-1",
+  "posesion"
  ],
  "Saitama Red": [
   "4-3-3",
@@ -1276,6 +1460,10 @@
   "3-4-3",
   "vertical"
  ],
+ "Santiago Ferro": [
+  "4-4-2",
+  "bloque"
+ ],
  "Santísima FC": [
   "4-4-2",
   "bloque"
@@ -1287,6 +1475,10 @@
  "Sayago FC": [
   "4-4-2",
   "bloque"
+ ],
+ "Scala Mastini": [
+  "3-4-3",
+  "vertical"
  ],
  "Scioto FC": [
   "4-2-3-1",
@@ -1304,25 +1496,17 @@
   "4-3-3",
   "presion"
  ],
- "Serrinha FC": [
-  "4-4-2",
-  "contra"
- ],
  "Setouchi FC": [
   "3-4-3",
   "presion"
  ],
- "Shinano FC": [
-  "5-4-1",
-  "contra"
- ],
- "Sihwa FC": [
-  "5-3-2",
-  "contra"
- ],
  "Sinaloa FC": [
   "5-4-1",
   "contra"
+ ],
+ "Sismos Silicon": [
+  "4-4-2",
+  "vertical"
  ],
  "Souss FC": [
   "4-1-4-1",
@@ -1348,6 +1532,10 @@
   "4-3-3",
   "equilibrado"
  ],
+ "Sullana Celeste": [
+  "4-4-2",
+  "equilibrado"
+ ],
  "Superga FC": [
   "3-5-2",
   "contra"
@@ -1367,10 +1555,6 @@
  "Table Bay FC": [
   "4-3-3",
   "posesion"
- ],
- "Tacumbú FC": [
-  "4-1-4-1",
-  "bloque"
  ],
  "Taehwa FC": [
   "4-2-3-1",
@@ -1400,21 +1584,37 @@
   "4-3-3",
   "equilibrado"
  ],
+ "Texas Norte FC": [
+  "4-3-3",
+  "bandas"
+ ],
+ "Textil Mahalla": [
+  "4-4-2",
+  "garra"
+ ],
  "Timsah FC": [
   "4-4-2 R",
   "garra"
  ],
- "Titicaca FC": [
-  "5-4-1",
-  "contra"
- ],
- "Top End FC": [
-  "5-4-1",
-  "contra"
+ "Tokio Oeste FC": [
+  "4-4-2",
+  "presion"
  ],
  "Torero GYE": [
   "4-3-3",
   "equilibrado"
+ ],
+ "Toro Rojo Hudson": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Torrazzo FC": [
+  "3-5-2",
+  "contra"
+ ],
+ "Torre Inclinada": [
+  "4-4-2",
+  "bloque"
  ],
  "Torrens FC": [
   "4-2-3-1",
@@ -1464,6 +1664,10 @@
   "4-4-2",
   "contra"
  ],
+ "Turia Granota": [
+  "4-4-2",
+  "contra"
+ ],
  "Tuyucuá FC": [
   "4-2-3-1",
   "equilibrado"
@@ -1484,7 +1688,7 @@
   "4-3-3",
   "equilibrado"
  ],
- "Umm Al-Qura": [
+ "Unaiza Estrella": [
   "4-3-3",
   "equilibrado"
  ],
@@ -1495,6 +1699,10 @@
  "Valle Alto FC": [
   "3-5-2",
   "directo"
+ ],
+ "Valle Palmeras": [
+  "4-4-2",
+  "equilibrado"
  ],
  "Vallecas Franja": [
   "4-2-3-1",
@@ -1508,13 +1716,17 @@
   "5-4-1",
   "contra"
  ],
+ "Verde Junin": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Verde Tokio": [
+  "4-4-2",
+  "posesion"
+ ],
  "Vilaine FC": [
   "4-3-3",
   "ofensivo"
- ],
- "Villa Elisa FC": [
-  "4-1-4-1",
-  "contra"
  ],
  "Villa Luro FC": [
   "4-3-3",
@@ -1524,6 +1736,14 @@
   "4-4-2 R",
   "garra"
  ],
+ "Villavo FC": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Violeta Gyeonggi": [
+  "3-4-3",
+  "vertical"
+ ],
  "Violeta MVD": [
   "4-2-3-1",
   "bloque"
@@ -1531,6 +1751,10 @@
  "Viña Marina": [
   "4-3-3",
   "vertical"
+ ],
+ "Volcan Galeras": [
+  "4-4-2",
+  "contra"
  ],
  "Volubilis FC": [
   "5-4-1",
@@ -1543,6 +1767,10 @@
  "Waitematā FC": [
   "4-2-3-1",
   "vertical"
+ ],
+ "Wear Gatos": [
+  "4-2-3-1",
+  "equilibrado"
  ],
  "Weser FC": [
   "4-2-3-1",
@@ -1568,10 +1796,6 @@
   "3-4-3",
   "posesion"
  ],
- "Wyndham FC": [
-  "4-3-3",
-  "posesion"
- ],
  "Yarra FC": [
   "4-4-2",
   "vertical"
@@ -1583,10 +1807,6 @@
  "Yonne FC": [
   "4-2-3-1",
   "bloque"
- ],
- "Ypacaraí FC": [
-  "4-4-2 R",
-  "garra"
  ],
  "Zayed SC": [
   "4-3-3",
