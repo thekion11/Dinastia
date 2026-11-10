@@ -74,7 +74,7 @@ Sumgayit||||SUM|||
 Turan Tovuz||||TUR|||
 Zira||||ZIR|||
 Sobemap FC||||SOB|||
-Dadje FC||||DAD|||
+US Seme Kraké||||SEM|||
 Coton FC||||COT|||
 ASPAC FC||||ASP|||
 Buffles du Borgou||||BUF|||
@@ -386,14 +386,14 @@ Hafia FC||||HAF|||
 AS Kaloum||||KAL|||
 Milo FC||||MIL|||
 Académie SOAR||||ACA|||
-Fello Star||||FEL|||
-Satellite FC||||SAT|||
+Renaissance FC||||REN|||
+ASM Sangarédi||||ASM|||
 CI Kamsar||||CI|||
 AS Ashanti Golden Boys||||ASH|||
 Wakriya AC||||WAK|||
-FC Séquence||||SEQ|||
+Guinée Foot Elite||||GUI|||
 Flamme Olympique||||FLA|||
-Éléphant de Coleah||||ELE|||
+RCC Kamsar||||RCC|||
 Loubha Télimélé||||LOU|||
 Violette AC||||VIO|||
 Racing Club Haïtien||||RAC|||
@@ -675,18 +675,18 @@ CFFA||||CFF|||
 Fosa Juniors||||FOS|||
 Elgeco Plus||||ELG|||
 Disciples FC||||DIS|||
-Zanakala FC||||ZAN|||
 Mama FCA||||MAM|||
-AJESAIA||||AJE|||
 COSFA||||COS|||
 USCA Foot||||USC|||
 AS Fanalamanga||||FAN|||
-Tia Kitra FC||||TIA|||
-ASJFC Capricorne||||ASJ|||
-JET Kintana||||JET|||
-Trois F B Toliara||||TRO|||
 TFFC Tsaramandroso||||TFF|||
-ASSM Elgeco Reserva||||ASS|||
+AJSA||||AJS|||
+Inate FC Rouge||||INA|||
+Avenir Sainte-Anne||||AVE|||
+Antimo Record FC||||ANT|||
+FC Clinique Zanatany||||CLI|||
+CO Police Nationale||||CO|||
+TGBC Academie Football||||TGB|||
 Johor Darul Ta'zim||||JOH|||
 Selangor||||SEL|||
 Terengganu||||TER|||
@@ -768,12 +768,12 @@ Ferroviário de Maputo||||FER|||
 Ferroviário de Nampula||||FER|||
 Ferroviário de Nacala||||FER|||
 Ferroviário de Lichinga||||FER|||
-Ferroviário de Quelimane||||FER|||
 Baía de Pemba||||BAI|||
-CD Matchedje||||MAT|||
 Vilankulo FC||||VIL|||
-Textáfrica do Chimoio||||TEX|||
-Desportivo de Maputo||||DES|||
+AD Pemba||||AD|||
+Maxaquene||||MAX|||
+CD Chingale||||CHI|||
+Liga Desportiva de Sofala||||LIG|||
 African Stars||||AFR|||
 United Africa Tigers||||UNI|||
 Blue Waters||||BLU|||
@@ -795,7 +795,7 @@ Diriangén||||DIR|||
 Managua F.C.||||MAN|||
 Walter Ferretti||||WAL|||
 UNAN Managua||||UNA|||
-Deportivo Ocotal||||DEP|||
+Real Madriz||||REA|||
 Matagalpa FC||||MAT|||
 Sport Sébaco||||SPO|||
 ART Jalapa||||ART|||
@@ -876,7 +876,7 @@ Herrera||||HER|||
 CA Independiente||||IND|||
 Veraguas||||VER|||
 CD Universitario||||UNI|||
-Chiriquí||||CHI|||
+Umecit FC||||UME|||
 San Francisco||||SAN|||
 Kaya Iloilo||||KAY|||
 Stallion Laguna||||STA|||
@@ -1065,16 +1065,14 @@ AS Togo-Port||||TOG|||
 Dynamic Togolais||||DYN|||
 AS OTR||||OTR|||
 Gomido FC||||GOM|||
-Anges FC||||ANG|||
 AS Gbohloé-Su des Lacs||||GBO|||
-Kotoko FC||||KOT|||
 AC Semassi||||SEM|||
 Unisport FC||||UNI|||
 Binah FC||||BIN|||
-Ifodje Atakpamé||||IFO|||
-Kakadlé FC||||KAK|||
-Sara Sport FC||||SAR|||
-US Koroki||||KOR|||
+EF Lomé||||EF|||
+Entente II Lomé||||ENT|||
+Tambo FC||||TAM|||
+Espoir FC Lomé||||ESP|||
 Central FC||||CEN|||
 Club Sando||||CLU|||
 Cunupia FC||||CUN|||

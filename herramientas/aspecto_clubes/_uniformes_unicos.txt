@@ -2,6 +2,7 @@
 AD Tarma|franja_pecho|||#ffffff|#ffffff||||
 APOeL|franja_pecho|||#1b458f|#1b458f||||
 AS Real Bamako|franja_pecho|||#ffffff|#d62828||||
+ASM Sangarédi|franja_pecho|||#ffffff|#1d4fa8||||
 Al Mokawloon|cuello_v|||#00843d|#ffffff||||
 Al Shahaniya|franja_pecho|||#c8102e|#c8102e||||
 Al-Ahly Benghazi|franja_pecho|||#ffffff|#0b8f3c||||
@@ -82,6 +83,7 @@ FC Argeș|franja_pecho|||#ffffff|#8b1538||||
 FC Copenhague|franja_pecho|||#ffffff|#ffffff||||
 FC Santa Coloma|franja_pecho|||#111111|#e30613||||
 Felgueiras|franja_pecho|||#ffffff|#ffffff||||
+Ferroviário de Nampula|franja_pecho|||#111111|#0b8f3c||||
 Fovu Club|franja_pecho|||#1b458f|#ffffff||||
 Frosinone|franja_pecho|||#0057b8|#ffd100||||
 Gimnasia Mza|franjas_finas|||#ffffff|#000000||||
@@ -147,6 +149,7 @@ Magdeburg|cuello_v|||#111111|#0057b8||||
 Malacateco|banda_baja|||#111111|#c8102e||||
 Malavan|raglan|||#ffffff|#0057b8||||
 Mamer|banda_baja|||#ffffff|#ffffff||||
+Manica Diamonds|franja_pecho|||#e30613|#ffffff||||
 Marítimo|franja_pecho|||#00843d|#00843d||||
 Mathare United|franja_pecho|||#1d4fa8|#1d4fa8||||
 Medeama|franja_pecho|||#000000|#f2c200||||
@@ -224,6 +227,7 @@ Racing Club Accra|franja_pecho|||#ffffff|#1e56b8||||
 Racing Union Luxembourg|cuello_v|||#ffffff|#ffffff||||
 Racing de Córdoba|franjas_finas|||#ffffff|#5ab4e5||||
 Radomlje|franja_pecho|||#111111|#f5c400||||
+Real Madriz|cuello_v|||#ffffff|#ffffff||||
 Reims|franja_central|||#111111|#d50032||||
 Renaissance Z.|franja_pecho|||#111111|#0038a8||||
 Rennes|franjas_finas|||#000000|#000000||||
@@ -307,7 +311,10 @@ Tukums 2000|v_ancha|||#ffffff|#c8102e||||
 U. Católica (E)|cuello_v|||#ffffff|#75aadb||||
 UD Songo|cuello_v|||#111111|#1d3f9e||||
 US Biskra|cuello_v|||#ffffff|#ffffff||||
+US Seme Kraké|franjas_finas|||#e30613|#ffffff||||
+USCA Foot|franjas_finas|||#000000|#f58220||||
 UTA Arad|franja_pecho|||#ffffff|#ffffff||||
+Unisport FC|raglan|||#ffffff|#1d3f9e||||
 Universitatea Craiova|raglan|||#ffffff|#1b458f||||
 Unión SF|franjas_finas|||#000000|#d50032||||
 Utrecht|mitad|||#111111|#d50032||||

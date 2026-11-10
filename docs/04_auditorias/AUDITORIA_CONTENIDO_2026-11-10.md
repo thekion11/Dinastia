@@ -119,3 +119,6 @@ Verificado en Wikipedia (2025-26): THA, IDN, VIE, IND, MAS, BHR (sin estadios po
 
 ## Tanda 5 de países (10-11) — cifras finales medidas
 +33 países (KOS, MLT, FRO, AND, GIB, SMR, CPV, GAB, ANG, MOZ, UGA, TAN, LBY, BEN, TOG, CGO, ZIM, NAM, MAD, SYR, LBN, PLE, KGZ, TJK, PHI, SGP, HKG, KUW, HAI, CUW, TRI, SUR, NCA). Medido con `medir_contenido`: **135 países, 147 ligas, 2.208 clubes, 55.200 jugadores en clubes, 135 selecciones** (confederaciones: UEFA 53, África 29, Asia 27, CONCACAF 14, CONMEBOL 14, Oceanía 2), 150 nacionalidades de jugadores, 2.206 firmas visuales de estadio distintas, 0 estadios repetidos en una misma liga, mínimo 200 convocables por selección. Lo no verificado: `datos_dudosos_2026-11-10.md`.
+
+## Segunda pasada web (10-11)
+Corregidas las listas de MOZ, GUI, MAD, TOG, BEN, NCA y PAN y varios aforos (KUW, ZIM, ISL, AND). Cifras tras ello: 135 países, 147 ligas, 2.206 clubes, 55.150 jugadores en clubes. Qué quedó verificado y con qué fuente: `datos_dudosos_2026-11-10.md`.
