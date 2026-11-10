@@ -262,3 +262,12 @@ CHI 413 → 390 ms (**−5 %**), ESP 370 → 312 ms (**−15 %**), ENG 378 → 3
 | ESP | 45 | **1** | 408 → 407 |
 | ENG | 45 | **1** | 420 → 419 |
 Es decir, el menú deja de dibujar ~15 fotogramas por segundo de ~400 llamadas cada uno cuando no pasa nada (la GPU del móvil, al 100 % en el menú, queda casi libre). Coste: los fondos animados y las motas quedan quietos. Probado en `p6_resolucion3d`.
+
+### Modo rendimiento + E4 (césped barato) (10-11, sesión 5; orden del líder)
+`cesped_barato.gdshader`: el mismo campo (dibujo del club, franjas con brillo según el ángulo, manchas, desgaste: `cesped_comun.gdshaderinc`) SIN la brizna fina, los mechones ni el relieve (~10 llamadas a ruido por píxel y 4 `fbm` más para las normales). Va DENTRO del «Modo rendimiento» (`ModoRendimiento.cesped_barato`; apagado por defecto; de MEDIA hacia abajo). Medido, MEDIA 1280×720, sin → con el modo completo (glow + sombra solar + césped barato):
+| Club | Fotograma | Antes de E4 (solo glow + sombra) |
+|---|---|---|
+| CHI | 432 → 315 ms (**−27 %**) | −21 % |
+| ESP | 366 → 266 ms (**−27 %**) | −24 % |
+| ENG | 398 → 293 ms (**−26 %**) | −28 % |
+E4 añade poco medible (entre −2 y +6 puntos, dentro del ruido de ±4 %); el grueso sigue siendo la sombra solar y el glow. Capturas nuevas con/sin (arriba sin el modo, abajo con él): `docs/04_auditorias/capturas_modo_rendimiento/cmp_{CHI,ESP,ENG}.jpg`: sin sombras de los jugadores, sin resplandor y con el césped liso (franjas sin mechones); es un cambio de aspecto claro, por eso el modo sigue apagado por defecto.
