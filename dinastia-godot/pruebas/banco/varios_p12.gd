@@ -135,16 +135,16 @@ func _probar_torneos_selecciones() -> void:
 	_comprobar(reales_arg >= 20, "son COPIAS de los reales (sus goles no cuentan en la liga) (%d)" % reales_arg)
 	_comprobar(SeleccionEquipo.club_de(m, "Senegal", sel.fuerza("Senegal"), m.anio).plantilla[5].nombre == sen.plantilla[5].nombre, "una selección sin liga se completa siempre igual (misma temporada)")
 	var t := SeleccionesTorneos.mundial(sel, m, 2026)
-	_comprobar(t.equipos.size() == 32 and t.grupos.size() == 8, "el Mundial: 32 selecciones en 8 grupos")
+	_comprobar(t.equipos.size() == 48 and t.grupos.size() == 12, "el Mundial de 2026: 48 selecciones en 12 grupos (%d en %d)" % [t.equipos.size(), t.grupos.size()])
 	t.jugar_entero()
 	var de_grupos := t.resultados.filter(func(r: Dictionary) -> bool: return String(r["fase"]).begins_with("Fase de grupos")).size()
-	_comprobar(de_grupos == 48 and t.resultados.size() == 48 + 15, "48 partidos de grupos y 15 de eliminatorias (%d en total)" % t.resultados.size())
+	_comprobar(de_grupos == 72 and t.resultados.size() == 72 + 31, "72 partidos de grupos y 31 de eliminatorias, desde dieciseisavos (%d en total)" % t.resultados.size())
 	var goles := 0
 	for rr: Dictionary in t.resultados:
 		goles += int(rr["gl"]) + int(rr["gv"])
-	_comprobar(goles > 63, "los partidos simulados tienen goles de verdad (%d en 63 partidos; antes todos 0-0)" % goles)
+	_comprobar(goles > 103, "los partidos simulados tienen goles de verdad (%d en 103 partidos; antes todos 0-0)" % goles)
 	_comprobar(t.campeon != null and t.puesto_de(t.campeon) == 0, "tiene campeón (%s)" % (t.campeon.nombre if t.campeon else "—"))
-	var otro := TorneoSelecciones.crear("Copa Africana", 2027, SeleccionesTorneos._equipos(sel, m, SeleccionesTorneos.POR_CONFED["afr"], 2027))
+	var otro := TorneoSelecciones.crear("Copa Africana", 2027, SeleccionesTorneos._equipos(sel, m, (SeleccionesTorneos.POR_CONFED["afr"] as Array).slice(0, 6), 2027))
 	otro.jugar_entero()
 	_comprobar(otro.grupos.size() == 2 and otro.campeon != null, "un torneo de 6 selecciones: 2 grupos de 3 y campeón (%s)" % (otro.campeon.nombre if otro.campeon else "—"))
 	var r := sel.cierre_de_temporada(2026)
@@ -292,3 +292,63 @@ func _probar_estilos_club() -> void:
 	viejo.tactica.mentalidad = 2
 	EstiloClub.aplicar_si_de_fabrica(viejo)
 	_comprobar(viejo.tactica.formacion == "4-4-2", "si la táctica se tocó, se respeta")
+
+## FIN DE TEMPORADA CON GUARDADO Y CARGA A MITAD (10-11, caza de fallos, orden 31): 3 clubes de 3 países. Liga terminada con la copa a medias,
+## se guarda y se carga; tras cargar, el cierre de torneos, la foto, los festejos de fin de liga y la nueva temporada siguen funcionando.
+func _probar_fin_temporada_guardado() -> void:
+	_titulo("FIN DE TEMPORADA: GUARDAR Y CARGAR A MITAD (3 PAÍSES)")
+	for par: Array in [["CHI", 61], ["ARG", 62], ["COL", 63]]:
+		var m := Mundo.new()
+		m.generar([String(par[0])], int(par[1]))
+		m.tomar_el_mando(m.ligas[0].clubes[int(par[1]) % m.ligas[0].clubes.size()].id)
+		var nombre := m.mi_club().nombre
+		var guard := 0
+		while m.temporada_en_curso() and guard < 80:
+			m.avanzar_semana()
+			guard += 1
+		m._montar_copa()   ## copa a medias al terminar la liga
+		m.prensa.eventos_vistos.append("festejo_prueba:%d" % m.anio)
+		m.prensa.despedida_ofrecida_anio = m.anio
+		var tipo_antes := TipoTitulo.de_fin_de_liga(m)
+		_comprobar(Partida.guardar(m, "_prueba_fin_temporada"), "%s: se guarda con la liga terminada y la copa a medias" % nombre)
+		var c := Partida.cargar("_prueba_fin_temporada")
+		_comprobar(c != null and not c.temporada_en_curso(), "%s: al cargar, la liga sigue terminada" % nombre)
+		if c == null:
+			continue
+		_comprobar(c.prensa.eventos_vistos.has("festejo_prueba:%d" % m.anio) and c.prensa.despedida_ofrecida_anio == m.anio, "%s: los eventos vistos y la despedida ofrecida se guardan (no se repiten)" % nombre)
+		_comprobar(TipoTitulo.de_fin_de_liga(c) == tipo_antes, "%s: el festejo de fin de liga es el mismo tras cargar («%s»)" % [nombre, tipo_antes])
+		var cerrados := CierreTorneos.cerrar_pendientes(c)
+		_comprobar(not CierreTorneos.hay_pendientes(c) and CierreTorneos.cerrar_pendientes(c).is_empty(), "%s: tras cargar, la copa se cierra una sola vez (%d torneos)" % [nombre, cerrados.size()])
+		var foto := CierreTorneos.foto(c)
+		var resumen := c.nueva_temporada()
+		_comprobar(c.temporada_en_curso() and ResumenTemporada.datos(foto, resumen)["campeon"] is Club, "%s: la temporada nueva empieza y el resumen tiene campeón" % nombre)
+		_comprobar(not EventosClub.pendiente(c).is_empty() and String(EventosClub.pendiente(c)["id"]) == "directiva", "%s: en la temporada nueva vuelve la reunión con la directiva" % nombre)
+	Partida.borrar("_prueba_fin_temporada")
+
+
+## (10-11) La fecha FIFA de la selección que diriges: un partido de verdad (eliminatoria o amistoso), jugable o simulado; regla 34: 2 casos.
+func _probar_fecha_seleccion() -> void:
+	_titulo("FECHA FIFA DE TU SELECCIÓN: PARTIDO DE VERDAD")
+	for caso: Array in [[["PER", "ESP"], "Perú"], [["MAR", "FRA"], "Marruecos"]]:
+		var m := Mundo.new()
+		var paises: Array[String] = []
+		paises.assign(caso[0])
+		m.generar(paises, 41)
+		m.tomar_el_mando(m.ligas[0].clubes[6].id)
+		var s := m.selecciones
+		var cargo := s.cargo
+		cargo.ofrecer(String(caso[1]), s.fuerza(String(caso[1])), 900)
+		cargo.responder(m, true)
+		var estado: int = Azar._rng.state
+		var pend := FechaSeleccion.preparar(m, s, cargo)
+		_comprobar(Azar._rng.state == estado and not pend.is_empty(), "%s: la fecha FIFA prepara un partido (%s contra %s) sin tocar el azar del juego" % [cargo.seleccion, String(pend.get("tipo", "")), String(pend.get("rival", ""))])
+		_comprobar(absi(s.fuerza(String(pend["rival"])) - s.fuerza(cargo.seleccion)) <= FechaSeleccion.MARGEN_RIVAL, "el rival es de fuerza parecida")
+		var linea := FechaSeleccion.simular(m, s, cargo)
+		_comprobar(linea != "" and cargo.fecha_pendiente.is_empty() and cargo.fechas.size() == 1, "simulado: resultado apuntado (%s)" % linea)
+		FechaSeleccion.preparar(m, s, cargo)
+		m.semana += 1
+		FechaSeleccion.semana(m, s, cargo, false)
+		_comprobar(cargo.fecha_pendiente.is_empty() and cargo.fechas.size() == 2, "si nadie lo juega, se simula solo la semana siguiente")
+		var otro := Selecciones.new(m)
+		otro.desde_dic(JSON.parse_string(JSON.stringify(s.a_dic())))
+		_comprobar(otro.cargo.fechas.size() == 2, "las fechas se guardan")

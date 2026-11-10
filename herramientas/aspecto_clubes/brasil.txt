@@ -11,6 +11,4 @@ Atl. Mineiro|escudo|franjas|AM|franjas|#000000|#ffffff|#000000|#000000
 Internacional|ovalo|liso|IN|liso|#d50032|#ffffff|#ffffff|#d50032
 Vasco|clasico|banda|VA|sash|#000000|#ffffff|#000000|#000000
 Bahia|banderin|franjas|BAH|franjas_tricolor|#0038a8|#d50032|#ffffff|#0038a8
-Fortaleza|hex|franjas|FO|franjas_tricolor|#0038a8|#d50032|#0038a8|#0038a8
 Athletico PR|penta|franjas|AP|franjas|#d50032|#000000|#000000|#d50032
-Goiás|rombo|liso|GO|liso|#00843d|#ffffff|#ffffff|#00843d

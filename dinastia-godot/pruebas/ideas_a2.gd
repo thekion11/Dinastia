@@ -25,6 +25,10 @@ func _ideas_a_entrenamiento() -> void:
 	_comprobar(lat.aptitud_en("DFC") < 1.0 and media_antes <= lat.ovr_en_puesto("DFC") + 30, "y el puesto anterior pasa a ser secundario o menos natural (420)")
 	## Habilidades (421).
 	var j1: Jugador = c.plantilla[3]
+	for jc: Jugador in c.plantilla:   ## (10-11) uno que aún no lo tenga (con las ligas reales, el 4.º puede traerlo de serie)
+		if not en.tiene_habilidad(jc, "cabezazo"):
+			j1 = jc
+			break
 	var ef0 := Tactica.efectividad([j1], ["cabezazo"], en)
 	_comprobar(not en.tiene_habilidad(j1, "cabezazo") and en.dar_habilidad(j1, "cabezazo") and en.tiene_habilidad(j1, "cabezazo"), "se entrena el cabeceo y el jugador lo tiene (421)")
 	_comprobar(not en.dar_habilidad(j1, "cabezazo") and not en.dar_habilidad(j1, "inventada"), "ni se repite ni existe una inventada (421)")

@@ -19,7 +19,13 @@ const COLORES := {
 	"Camerún": ["#007a5e", "#ce1126"], "Japón": ["#1c2a6b", "#ffffff"], "Corea": ["#c60c30", "#ffffff"], "Irán": ["#ffffff", "#239f40"],
 	"Australia": ["#ffcd00", "#00843d"], "Arabia": ["#ffffff", "#006c35"], "México": ["#006847", "#ffffff"], "EE.UU.": ["#ffffff", "#0a3161"],
 	"Costa Rica": ["#ce1126", "#002b7f"], "Canadá": ["#d80621", "#ffffff"], "N. Zelanda": ["#ffffff", "#000000"], "Catar": ["#8a1538", "#ffffff"],
-	"Sudáfrica": ["#ffb81c", "#007749"],
+	"Sudáfrica": ["#ffb81c", "#007749"], "Suiza": ["#d52b1e", "#ffffff"], "Austria": ["#ed2939", "#ffffff"], "Escocia": ["#1c2a6b", "#ffffff"],
+	"Suecia": ["#fecc02", "#006aa7"], "Noruega": ["#ba0c2f", "#ffffff"], "Polonia": ["#ffffff", "#dc143c"], "Serbia": ["#c6363c", "#ffffff"],
+	"Turquía": ["#e30a17", "#ffffff"], "Ucrania": ["#ffd500", "#005bbb"], "Gales": ["#c8102e", "#ffffff"], "Rep. Checa": ["#d7141a", "#ffffff"],
+	"Hungría": ["#ce2939", "#ffffff"], "Grecia": ["#0d5eaf", "#ffffff"], "Irlanda": ["#169b62", "#ffffff"], "Ghana": ["#ffffff", "#006b3f"],
+	"Costa de Marfil": ["#f77f00", "#009e60"], "Argelia": ["#ffffff", "#006233"], "Túnez": ["#e70013", "#ffffff"], "Malí": ["#fcd116", "#14b53a"],
+	"Uzbekistán": ["#ffffff", "#0099b5"], "Jordania": ["#ffffff", "#ce1126"], "Irak": ["#ffffff", "#007a3d"], "Emiratos": ["#ffffff", "#00732f"],
+	"Panamá": ["#d21034", "#ffffff"], "Jamaica": ["#fed100", "#009b3a"], "Honduras": ["#ffffff", "#0073cf"],
 }
 
 ## El código de país de una selección por su nombre («España» → «ESP»), o "" si no tiene liga en el juego.

@@ -41,6 +41,23 @@ static func partido(pr: Principal, t: TorneoSelecciones, mia: Club, rival: Club)
 		["resto", Idiomas.t("Simular el resto del torneo"), false]])
 	return e
 
+## (10-11) El partido de la FECHA FIFA de tu selección (amistoso o eliminatoria): «jugar» / «simular».
+static func fecha(pr: Principal, tipo: String, local: Club, visita: Club, mia: Club) -> EventoSeleccion:
+	var e := EventoSeleccion.new()
+	e.paleta_noche = true
+	e.acento = Color(mia.color1)
+	e._montar_base(pr)
+	e._centro.add_child(etiqueta("%s · %s" % [Idiomas.t("FECHA FIFA"), Idiomas.t(tipo).to_upper()], 16, Tema.SUAVE))
+	var duelo := HBoxContainer.new()
+	duelo.alignment = BoxContainer.ALIGNMENT_CENTER
+	duelo.add_theme_constant_override("separation", 40)
+	e._centro.add_child(duelo)
+	duelo.add_child(_escudo(local, 130))
+	duelo.add_child(etiqueta("VS", 40, Color.WHITE, true, false))
+	duelo.add_child(_escudo(visita, 130))
+	e._botones([["jugar", "▶ " + Idiomas.t("Jugarlo"), true], ["simular", "⏭ " + Idiomas.t("Simularlo"), false]])
+	return e
+
 func _botones(lista: Array) -> void:
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 14)

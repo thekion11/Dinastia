@@ -56,7 +56,6 @@ ESTADIOS = {
     "Newell's": e("rect", 2, "sin", False, "torres", "hormigon", ""),
     "Lanús": e("rect", 2, "sin", False, "torres", "hormigon", ""),
     "Talleres": e("oval", 2, "parcial", True, "corona", "hormigon", "Estadio mundialista con pista"),
-    "Godoy Cruz": e("oval", 2, "parcial", True, "corona", "hormigon", "Estadio mundialista con pista, al pie de la montaña"),
     # ------------------------------------------------------------ BRASIL
     "Flamengo": e("oval", 2, "anillo", False, "corona", "hormigon", "El templo: óvalo con anillo de techo"),
     "Fluminense": e("oval", 2, "anillo", False, "corona", "hormigon", "El templo: óvalo con anillo de techo"),
@@ -71,7 +70,6 @@ ESTADIOS = {
     "Internacional": e("cuenco", 2, "membrana", False, "halo", "membrana", "Cuenco junto al río con cubierta de membrana"),
     "Vasco": e("herradura", 1, "sin", False, "torres", "hormigon", "Estadio histórico en herradura"),
     "Bahia": e("herradura", 2, "anillo", False, "halo", "metal", "Herradura abierta a un lago"),
-    "Fortaleza": e("cuenco", 2, "anillo", False, "corona", "metal", "Cuenco mundialista"),
     "Athletico PR": e("rect", 2, "retractil", False, "halo", "vidrio", "Arena con techo retráctil y césped artificial"),
     # ------------------------------------------------------------ URUGUAY
     "Peñarol": e("rect", 2, "sin", False, "torres", "hormigon", "Estadio propio de cuatro tribunas"),
@@ -142,7 +140,6 @@ ESTADIOS = {
     "Torino": e("oval", 1, "parcial", False, "torres", "hormigon", ""),
     "Bologna": e("oval", 2, "sin", False, "torres", "ladrillo", "Ladrillo rojo y torre de maratón"),
     "Udinese": e("rect", 1, "anillo", False, "halo", "metal", ""),
-    "Sampdoria": e("ingles", 2, "anillo", False, "corona", "ladrillo", "Cuatro torres rojas en las esquinas"),
     "Genoa": e("ingles", 2, "anillo", False, "corona", "ladrillo", "Cuatro torres rojas en las esquinas"),
     "Lecce": e("oval", 1, "sin", False, "torres", "hormigon", ""),
     # ------------------------------------------------------------ ALEMANIA
@@ -325,7 +322,7 @@ CAMISETAS = {
     "Guadalajara": "franjas", "Monterrey": "franjas", "Tigres UANL": "liso", "Al-Hilal": "liso",
     "Al-Nassr": "liso", "Al Ahly": "liso",
     # 25-10-2026 (M-068): uniformes reconocibles por su estampado.
-    "Talleres": "franjas", "Bahia": "vertical3", "Fortaleza": "vertical3",
+    "Talleres": "franjas", "Bahia": "vertical3",
     "Athletico PR": "franjas", "Libertad": "franjas", "Atl. Nacional": "franjas",
     "Junior": "franjas", "Melgar": "franjas", "Emelec": "franjas", "Espanyol": "franjas",
     "Rayo Vallecano": "sash", "Brighton": "franjas", "Cristal Palace": "franjas",

@@ -12,5 +12,4 @@ Unión Berlín|circulo|liso|FCU|liso|#d50032|#ffd100|#ffffff|#d50032
 Mainz|circulo|liso|M05|liso|#d50032|#ffffff|#ffffff|#d50032
 Colonia|escudo|liso|FC|liso|#ffffff|#d50032|#ffffff|#ffffff
 Bremen|rombo|liso|SVW|liso|#00954c|#ffffff|#ffffff|#00954c
-Bochum|ovalo|liso|BOC|liso|#0067b1|#ffffff|#ffffff|#0067b1
 Augsburgo|clasico|franjas|FCA|franjas|#d50032|#00954c|#ffffff|#d50032

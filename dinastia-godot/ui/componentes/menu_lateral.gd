@@ -78,6 +78,8 @@ static func ejecutar(p: Principal, accion: String) -> void:
 			load("res://ui/componentes/plantilla_pes.gd").abrir(p)
 		"capitulos":
 			load("res://ui/componentes/capitulos_selector.gd").abrir(p)
+		"palmares_mundo":   ## (10-11) los campeones de todos los países
+			load("res://ui/componentes/palmares_mundo_ui.gd").abrir(p)
 		"documental":
 			## El último cerrado; si todavía no hay, el avance de la que se juega.
 			var documental: GDScript = load("res://ui/componentes/documental_temporada.gd")   ## (A4 memoria) por ruta

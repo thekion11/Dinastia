@@ -41,6 +41,7 @@ import estadios_reales
 import aspecto_clubes
 import palmares_clubes
 import liga_paises_bajos
+import ligas_completas
 import json
 import os
 import sys
@@ -117,8 +118,6 @@ CLUBES = {
     "Lanús": "Granate Sur",
     "Talleres": "Jardín Córdoba",
     "Banfield": "Lomas Verdes",
-    "Godoy Cruz": "Mendoza Andes",
-    "Colón": "Costanera SF",
     "Unión SF": "Litoral SF",
     # -- Brasil ----------------------------------------------------------
     "Flamengo": "Gávea RJ",
@@ -134,9 +133,7 @@ CLUBES = {
     "Internacional": "Guaíba FC",
     "Vasco": "Almirante RJ",
     "Bahia": "Itapuã FC",
-    "Fortaleza": "Pici FC",
     "Athletico PR": "Araucária PR",
-    "Goiás": "Serrinha FC",
     # -- Uruguay ---------------------------------------------------------
     "Peñarol": "Ferroviario UY",
     "Nacional": "Tricolor MVD",
@@ -160,17 +157,11 @@ CLUBES = {
     "Libertad": "Tuyucuá FC",
     "Guarani": "Dos Bocas FC",
     "Nacional (P)": "Tricolor ASU",
-    "Sol de América": "Villa Elisa FC",
     "Luqueño": "Luque FC",
-    "Doce de Octubre": "Itauguá FC",
-    "Tacuari": "Tacumbú FC",
-    "Gral. Caballero": "Alto Paraná FC",
     "Ameliano": "Tembetary FC",
     "Trinidense": "Santísima FC",
     "2 de Mayo": "Pedro Juan FC",
     "Rubio Ñu": "Ñu Guasu FC",
-    "Fernando Mora": "Ypacaraí FC",
-    "Resistencia": "Mburicaó FC",
     # -- Colombia --------------------------------------------------------
     "Atl. Nacional": "Antioquia Verde",
     "Millonarios": "Bogotá Azul",
@@ -183,8 +174,6 @@ CLUBES = {
     "Once Caldas": "Manizales FC",
     "Bucaramanga": "Santander FC",
     "Pereira": "Matecaña FC",
-    "La Equidad": "Bogotá Verde",
-    "Envigado": "Aburrá FC",
     "Alianza FC": "Cesar FC",
     "Fortaleza C.": "Sabana FC",
     "Boyacá Chicó": "Tunja FC",
@@ -195,15 +184,11 @@ CLUBES = {
     "Melgar": "Misti FC",
     "Cienciano": "Imperial CUS",
     "Sport Boys": "Callao Rosado",
-    "Municipal": "Cercado FC",
     "Cusco FC": "Qosqo FC",
-    "C. Vallejo": "Moche FC",
     "Atl. Grau": "Tallán FC",
     "Garcilaso": "Wiracocha FC",
     "AD Tarma": "Andino Tarma",
     "UTC Cajamarca": "Cajamarca FC",
-    "Binacional": "Titicaca FC",
-    "Ayacucho": "Huamanga FC",
     "Chankas": "Andahuaylas FC",
     # -- Ecuador ---------------------------------------------------------
     "LDU Quito": "Ponceano FC",
@@ -268,10 +253,8 @@ CLUBES = {
     "Torino": "Superga FC",
     "Bologna": "Felsinea FC",
     "Udinese": "Friuli FC",
-    "Sampdoria": "Ligure Blu",
     "Genoa": "Zena FC",
     "Sassuolo": "Secchia FC",
-    "Monza": "Brianza FC",
     "Lecce": "Salento FC",
     # -- Alemania --------------------------------------------------------
     "Bayern Múnich": "Isar FC",
@@ -288,7 +271,6 @@ CLUBES = {
     "Mainz": "Rheinhessen",
     "Colonia": "Domstadt FC",
     "Bremen": "Weser FC",
-    "Bochum": "Ruhrpott FC",
     "Augsburgo": "Lech FC",
     # -- Francia ---------------------------------------------------------
     "Paris SG": "Lutèce FC",
@@ -302,9 +284,7 @@ CLUBES = {
     "Nantes": "Loire FC",
     "Estrasburgo": "Alsace FC",
     "Toulouse": "Garonne FC",
-    "Montpellier": "Hérault FC",
     "Brest": "Finistère FC",
-    "Reims": "Champagne FC",
     "Lorient": "Morbihan FC",
     "Auxerre": "Yonne FC",
     # -- Bolivia ---------------------------------------------------------
@@ -335,12 +315,8 @@ CLUBES = {
     "Sanfrecce H.": "Setouchi FC",
     "Cerezo Osaka": "Naniwa FC",
     "Nagoya G.": "Owari FC",
-    "Konsadole S.": "Ishikari FC",
     "Avispa F.": "Hakata FC",
-    "Shimonoseki": "Kanmon FC",
     "Kyoto S.": "Kamo FC",
-    "Albirex N.": "Shinano FC",
-    "Shonan B.": "Sagami FC",
     # -- Corea -----------------------------------------------------------
     "Ulsan HD": "Taehwa FC",
     "Jeonbuk M.": "Honam FC",
@@ -349,15 +325,9 @@ CLUBES = {
     "Incheon Utd": "Wolmi FC",
     "Daejeon H.": "Gapcheon FC",
     "Gangwon FC": "Seorak FC",
-    "Suon FC": "Paldal FC",
     "Gwangju FC": "Mudeung FC",
     "Jeju United": "Halla FC",
-    "Daegu FC": "Palgong FC",
     "Gimcheon": "Jikji FC",
-    "Seongnam": "Namhan FC",
-    "Busan IPark": "Haeundae FC",
-    "Ansan G.": "Sihwa FC",
-    "Ch. Citizen": "Chungnam FC",
     # -- Arabia Saudi ----------------------------------------------------
     "Al-Hilal": "Al-Qamar",
     "Al-Nassr": "Al-Fawz",
@@ -367,11 +337,9 @@ CLUBES = {
     "Al-Ettifaq": "Al-Khobar",
     "Al-Taawoun": "Al-Qassim",
     "Al-Faiha": "Al-Majmaah",
-    "Al-Raed": "Buraidah FC",
     "Al-Fateh": "Al-Ahsa",
     "Dammac": "Asir FC",
     "Al-Khaleej": "Saihat FC",
-    "Al-Wehda": "Umm Al-Qura",
     "Al-Okgdood": "Najran FC",
     "Al-Riyadh": "Al-Diriyah",
     "Al-Hazem": "Al-Rass",
@@ -388,7 +356,6 @@ CLUBES = {
     "Pharco": "Borg Arab SC",
     "Smouha": "Montaza SC",
     "El Gouna": "Hurghada SC",
-    "Baladiyat": "Delta SC",
     "Talaea": "Vanguard SC",
     "Al Mokawloon": "Builders SC",
     "ZED FC": "Zayed SC",
@@ -438,11 +405,7 @@ CLUBES = {
     "Macarthur FC": "Campbelltown FC",
     "Newcastle J.": "Hunter FC",
     "Perth Glory": "Swan FC",
-    "W. United": "Wyndham FC",
     "Auckland FC": "Waitematā FC",
-    "Canberra Utd": "Molonglo FC",
-    "Geelong FC": "Corio FC",
-    "Darwin City": "Top End FC",
     # -- Mexico ----------------------------------------------------------
     "America": "Coapa FC",
     "Tigres UANL": "San Nicolás FC",
@@ -577,6 +540,9 @@ POOLS_CAMBIOS = {
 CLUBES.update(liga_paises_bajos.CLUBES)
 LIGAS[liga_paises_bajos.PAIS] = liga_paises_bajos.LIGA_FICTICIA
 COPAS[liga_paises_bajos.PAIS] = liga_paises_bajos.COPA_FICTICIA
+# Ligas completas (10-11-2026): los clubes reales que faltaban hasta la cantidad real, en `ligas_completas.py`.
+CLUBES.update(ligas_completas.CLUBES)
+estadios_reales.ESTADIOS.update(ligas_completas.estadios())
 historia_clubes.H.update(liga_paises_bajos.HISTORIA)
 historia_clubes.CLASICOS.extend(liga_paises_bajos.CLASICOS)
 
@@ -624,6 +590,7 @@ def main():
     else:
         real = {k: base[k] for k in TABLAS_DEL_PACK if k in base}
     liga_paises_bajos.asegurar(real)
+    ligas_completas.asegurar(real)
 
     errores = []
 

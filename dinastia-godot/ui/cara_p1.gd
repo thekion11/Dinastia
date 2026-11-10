@@ -212,9 +212,13 @@ static func look_de(j: Jugador) -> Dictionary:
 					r["peloC"] = String(e["h"].get("c", "#2e2118"))
 					if bool(e["h"].get("calvo", false)):
 						r["pelo"] = "calvo"
+		if not (r is Dictionary):
+			CaraPrior.aplicar(base, j)   ## (10-11) sin foto ni malla: la cara típica de su país, no un azar de ocho tonos
 		if r is Dictionary:
 			for k: String in (r as Dictionary):
 				base[k] = r[k]
+			if not (r as Dictionary).has("barba"):
+				CaraPrior.barba(base, j)
 			## A una persona real no se le inventan marcas ni adornos, y el
 			## corte (que la foto no dice) sale de los habituales.
 			base["acc"] = ""
@@ -227,7 +231,7 @@ static func look_de(j: Jugador) -> Dictionary:
 			base["cicatriz"] = false
 			if String((r as Dictionary).get("pelo", "")) == "":
 				base["pelo"] = CORTES_SOBRIOS[_hash(j.id + "corte") % CORTES_SOBRIOS.size()]
-	else:
+	elif not (j.real and CaraPrior.aplicar(base, j)):   ## (10-11) los de nombre fijo de la base pública (`j.real`) toman la cara típica de su país; los inventados, el modelo de siempre
 		_piel_y_pelo_del_pais(base, j)
 	## CANAS CON LA EDAD (M-085, 20-10): a los inventados (no a los reales, que
 	## llevan el color de su foto) les salen canas desde los 32, más con los años

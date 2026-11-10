@@ -1,0 +1,110 @@
+# UNIFORMES BASE Y SEGUNDO UNIFORME (10-11, encargo del dueño «uniformes y caras»): retoques por encima de las filas de cada país.
+# nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed
+#   camiseta/k1/k2/pant/med: lo que traiga pisa la fila del club (vacío = se queda como está); si hay k1 y k2 y faltan pant/med, salen de ellos.
+#   v1/v2/vcam/vpant/vmed: el SEGUNDO uniforme (colores, diseño y pantalón/medias). Vacío = lo deduce `aspecto_clubes.py` (contraste con el primero).
+# Es un diseño PARECIDO al real, no una copia; los datos van a la tabla del pack real y, con el nombre ficticio, a la base pública.
+Real Madrid||||||#1d2c5e|#e0b84c|liso||
+Barcelona||||||#f6c915|#a50044|liso||
+Atlético Madrid||||||#0b2f66|#d50032|liso||
+Sevilla||||||#d50032|#111111|liso||
+Valencia|mangas_contraste|#ffffff|#000000|#000000|#000000|#111111|#ff7a00|liso||
+Villarreal||||||#0b2f66|#ffd100|liso||
+Osasuna|mangas_contraste|#d50032|#0a2240|#0a2240|#d50032|#0a2240|#d50032|liso||
+Mallorca|mangas_contraste|#d50032|#000000|#000000|#d50032|#ffffff|#d50032|liso||
+Getafe||||||#ff8c00|#005999|liso||
+Manchester Utd||||||#f4f4f4|#d50032|liso||
+City de Manch.||||||#1b1f26|#6caddf|liso||
+Arsenal||||||#f4d03f|#0b2f66|liso||
+Brentford||||||#ffd100|#111111|liso||
+Juventus||||||#f2c200|#111111|liso||
+Leverkusen|mangas_contraste|#d50032|#000000|#000000|#d50032|#111111|#d50032|liso||
+Frankfurt|franja_pecho|#000000|#d50032|#000000|#000000|#ffffff|#d50032|liso||
+Lens|franjas|#d50032|#ffd100|#d50032|#d50032|#ffd100|#d50032|liso||
+Nantes||||||#00954c|#ffd100|liso||
+Marsella||||||#2faee0|#ffffff|liso||
+Lyon||||||#0a2240|#d50032|liso||
+Boca Juniors||||||#ffd100|#003f8a|liso||
+Rosario Central||||||#ffd100|#003f8a|liso||
+Leon|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso||
+Necaxa|franjas|#d50032|#ffffff|#ffffff|#d50032|#111111|#d50032|liso||
+Puebla|franjas|#ffffff|#0057b8|#0057b8|#ffffff|#0057b8|#ffffff|liso||
+Tijuana|franjas|#d50032|#111111|#111111|#d50032|#ffffff|#d50032|liso||
+Queretaro|franjas|#ffffff|#00246b|#00246b|#ffffff|#00246b|#ffffff|liso||
+Mazatlán|liso|#5c2d91|#ffffff|#5c2d91|#5c2d91|#ffffff|#5c2d91|liso||
+Seattle S.|liso|#5d9741|#005695|#005695|#5d9741|#0a2240|#5d9741|liso||
+Columbus Crew|liso|#fedd00|#111111|#111111|#fedd00|#111111|#fedd00|liso||
+Atlanta Utd|franjas|#d50032|#111111|#111111|#d50032|#f4f4f4|#111111|liso||
+NY City FC|liso|#6cace4|#0c2340|#0c2340|#6cace4|#0c2340|#6cace4|liso||
+N. England R.|liso|#0a2240|#c8102e|#0a2240|#0a2240|#ffffff|#0a2240|liso||
+Austin FC|liso|#00b140|#111111|#111111|#00b140|#111111|#00b140|liso||
+Portland T.|liso|#00482b|#ecc200|#00482b|#00482b|#ecc200|#00482b|liso||
+Orlando City|liso|#5c2d91|#ffffff|#5c2d91|#5c2d91|#ffffff|#5c2d91|liso||
+FC Cincinnati|liso|#f05323|#003087|#003087|#f05323|#003087|#f05323|liso||
+Nashville SC|liso|#ece83a|#1f1646|#1f1646|#ece83a|#1f1646|#ece83a|liso||
+St. Louis City|liso|#d50032|#0a2240|#0a2240|#d50032|#0a2240|#d50032|liso||
+Charlotte FC|liso|#1a85c8|#111111|#111111|#1a85c8|#111111|#1a85c8|liso||
+Coquimbo Unido|franjas|#ffd100|#111111|#111111|#ffd100|||||
+Cobresal|liso|#f58220|#ffffff|#ffffff|#f58220|||||
+Unión Española|liso|#d50032|#ffffff|#0a2240|#d50032|||||
+Audax Italiano|liso|#00843d|#ffffff|#ffffff|#00843d|||||
+Huachipato|franjas|#0038a8|#111111|#111111|#0038a8|||||
+Ñublense|liso|#d50032|#ffffff|#ffffff|#d50032|||||
+O'Higgins|liso|#6caddf|#ffffff|#ffffff|#6caddf|||||
+D. Iquique|liso|#6caddf|#ffffff|#ffffff|#6caddf|||||
+U. La Calera|liso|#d50032|#ffffff|#ffffff|#d50032|||||
+D. Limache|franjas|#ffd100|#111111|#111111|#ffd100|||||
+Cobreloa|liso|#f58220|#ffffff|#ffffff|#f58220|||||
+S. Wanderers|franjas|#00843d|#ffffff|#ffffff|#00843d|||||
+U. de Concepción|liso|#ffd100|#0a2240|#0a2240|#ffd100|||||
+Rangers|franjas|#d50032|#111111|#111111|#d50032|||||
+Magallanes|liso|#6caddf|#0a2240|#0a2240|#6caddf|||||
+Curicó Unido|liso|#d50032|#ffd100|#d50032|#d50032|||||
+Antofagasta|liso|#6caddf|#ffffff|#ffffff|#6caddf|||||
+Stgo. Morning|franjas|#111111|#ffffff|#111111|#111111|||||
+San Luis|liso|#ffd100|#00843d|#00843d|#ffd100|||||
+D. Temuco|liso|#00843d|#ffffff|#ffffff|#00843d|||||
+Kashima A.|liso|#d50032|#0a2240|#0a2240|#d50032|||||
+Urawa Reds|liso|#d50032|#111111|#111111|#d50032|||||
+Vissel Kobe|liso|#9b1c31|#ffffff|#9b1c31|#9b1c31|||||
+Gamba Osaka|franjas|#0038a8|#111111|#111111|#0038a8|||||
+FC Tokio|franjas|#0038a8|#d50032|#0038a8|#0038a8|||||
+Sanfrecce H.|liso|#5c2d91|#ffffff|#5c2d91|#5c2d91|||||
+Cerezo Osaka|liso|#e5368e|#0a2240|#0a2240|#e5368e|||||
+Nagoya G.|liso|#d50032|#ffd100|#d50032|#d50032|||||
+Avispa F.|liso|#0a2240|#ffd100|#0a2240|#0a2240|||||
+Kyoto S.|liso|#5c2d91|#ffffff|#5c2d91|#5c2d91|||||
+Ulsan HD|liso|#0067b1|#ffd100|#0067b1|#0067b1|||||
+Jeonbuk M.|liso|#00843d|#ffffff|#00843d|#00843d|||||
+Incheon Utd|franjas|#0038a8|#111111|#111111|#0038a8|||||
+Daejeon H.|liso|#5c2d91|#ffffff|#5c2d91|#5c2d91|||||
+Gangwon FC|liso|#f58220|#ffffff|#f58220|#f58220|||||
+Gwangju FC|liso|#ffd100|#111111|#ffd100|#ffd100|||||
+Jeju United|liso|#f58220|#111111|#f58220|#f58220|||||
+Gimcheon|liso|#d50032|#111111|#d50032|#d50032|||||
+Bournemouth|franjas|||||||||
+Burnley|mangas_contraste|||||||||
+Sunderland|franjas|||||||||
+Alavés|franjas|||||||||
+Elche|sash|||||||||
+Levante|franjas|||||||||
+Cagliari|franjas|||||||||
+Angers|franjas|||||||||
+Vitória|franjas|||||||||
+Atl. Tucuman|franjas|||||||||
+Platense|franjas|||||||||
+Central Córdoba|franjas|||||||||
+Instituto|franjas|||||||||
+Tigre|mitad|||||||||
+Barracas Central|franjas|||||||||
+Riestra|franjas|||||||||
+Cúcuta Dep.|franjas|||||||||
+Atl. San Luis|franjas|||||||||
+FC Dallas|aros|||||||||
+Al Ittihad Alex.|franjas|||||||||
+Ghazl El Mahalla|franjas|||||||||
+Cremonese|franjas|||||||||
+Pisa|franjas|||||||||
+Gimnasia Mza|franjas|||||||||
+Estudiantes RC|franjas|||||||||
+FC Cajamarca|franjas|||||||||
+San Lorenzo (P)|mitad|||||||||

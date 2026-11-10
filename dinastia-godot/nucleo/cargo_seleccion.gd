@@ -16,6 +16,8 @@ var desde := 0                 ## año en que la tomaste
 var sueldo := 0                ## lo que cobras por semana (va a tu patrimonio)
 var oferta: Dictionary = {}    ## {nombre, fuerza, sueldo}
 var historial: Array = []      ## [{anio, torneo, puesto}] de tus torneos como seleccionador
+var fecha_pendiente: Dictionary = {}   ## el partido de la fecha FIFA por jugar (`FechaSeleccion`)
+var fechas: Array = []                 ## [{linea, anio}] resultados de tus fechas FIFA, lo más nuevo primero
 var convocados: Array[String] = []   ## tu convocatoria (ids de jugadores del mundo, hasta 26); vacía = los mejores por puesto
 var _ultima := -999            ## semana absoluta (año·60 + semana) de la última oferta
 var ultimo_titulo := {}        ## (10-11) {torneo, equipo: Club} del último título ganado (no se guarda): el festejo usa a la SELECCIÓN, no al club
@@ -102,6 +104,7 @@ func dimitir(m: Mundo) -> String:
 	var n := seleccion
 	seleccion = ""
 	sueldo = 0
+	fecha_pendiente = {}
 	convocados.clear()
 	_listos.clear()
 	if m != null and m.prensa != null:
@@ -195,7 +198,7 @@ func titulos() -> int:
 	return historial.filter(func(h: Dictionary) -> bool: return int(h["puesto"]) == 0).size()
 
 func a_dic() -> Dictionary:
-	return {"sel": seleccion, "desde": desde, "oferta": oferta, "sueldo": sueldo, "hist": historial, "ultima": _ultima, "conv": convocados}
+	return {"sel": seleccion, "desde": desde, "oferta": oferta, "sueldo": sueldo, "hist": historial, "ultima": _ultima, "conv": convocados, "fpend": fecha_pendiente, "fechas": fechas}
 
 func desde_dic(d: Dictionary) -> void:
 	seleccion = String(d.get("sel", ""))
@@ -204,6 +207,8 @@ func desde_dic(d: Dictionary) -> void:
 	oferta = (d.get("oferta", {}) as Dictionary).duplicate()
 	historial = (d.get("hist", []) as Array).duplicate(true)
 	_ultima = int(d.get("ultima", -999))
+	fecha_pendiente = (d.get("fpend", {}) as Dictionary).duplicate()
+	fechas = (d.get("fechas", []) as Array).duplicate(true)
 	convocados.clear()
 	for id in d.get("conv", []):
 		convocados.append(String(id))

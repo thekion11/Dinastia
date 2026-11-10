@@ -37,7 +37,8 @@ const MENUS := [
 		{"tab": "Copa", "label": "Copa", "icono": "🏆", "desc": "El cuadro de la copa nacional."},
 		{"tab": "Continental", "label": "Continental", "icono": "🌎", "desc": "El torneo de clubes del continente."},
 		{"tab": "Selección", "label": "Selección", "icono": "🎌", "desc": "Convocatorias y torneos de selecciones."},
-		{"accion": "elegir_club", "label": "Ver otro club", "icono": "🌎", "desc": "El mapa de países con sus clubes: elige cuál mirar."}]},
+		{"accion": "elegir_club", "label": "Ver otro club", "icono": "🌎", "desc": "El mapa de países con sus clubes: elige cuál mirar."},
+		{"accion": "palmares_mundo", "label": "Palmarés del mundo", "icono": "🌍", "desc": "Los campeones de ligas, copas y supercopas de todos los países."}]},
 	{"id": "historia", "icono": "📜", "nombre": "Historia", "estilo": 0,
 		"lema": "Lo que el club fue y lo que tú estás escribiendo.",
 		"colores": ["#140d07", "#2a1d10", "#e0a95a"], "subs": [

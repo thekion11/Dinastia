@@ -301,6 +301,21 @@ static func kit_de_club(c: Club) -> Dictionary:
 	base["marca"] = marca_de(c)
 	return base
 
+## (10-11) La equipación del SEGUNDO uniforme del club (`AspectoClub.visita`): colores, diseño, pantalón y medias propios. Vacía si el club no lo trae.
+static func kit_de_club_visita(c: Club) -> Dictionary:
+	var v := AspectoClub.visita(c)
+	if v.is_empty():
+		return {}
+	var base := kit_de_club(c)
+	var c1 := String(v["c1"])
+	var c2 := String(v["c2"])
+	base["dis"] = String(v.get("camiseta", "liso"))
+	base["cols"] = [c1, c2, Color(c2).darkened(0.35).to_html(false), "ffffff", "111111"]
+	base["num"] = Jersey._lum_tx(c1).trim_prefix("#")
+	base["pant"] = {"dis": "liso", "c1": String(v.get("pant", c1)), "c2": c1}
+	base["med"] = {"dis": "lisas", "c1": String(v.get("med", c1)), "c2": c2}
+	return base
+
 static func _col(hexa: Variant) -> Color:
 	var s := String(hexa)
 	if s == "":
