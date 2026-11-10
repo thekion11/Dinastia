@@ -7820,7 +7820,17 @@
   "Cargando…": "Loading…",
   "Preparando tu club…": "Getting your club ready…",
   "contra": "vs",
-  "plata:": "silver:"
+  "plata:": "silver:",
+  "Semifinales (final de zona)": "Semi-finals (zone final)",
+  "Wild Card": "Wild Card",
+  "Ronda 1 (al mejor de 3)": "Round One (best of 3)",
+  "Semifinales de Conferencia": "Conference Semi-finals",
+  "Final de Conferencia": "Conference Final",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "FINAL STAGE",
+  "Grupo del campeonato": "Championship group",
+  "Grupo del descenso": "Relegation group",
+  "Se define al terminar la fase regular.": "It is decided when the regular phase ends."
  },
  "pt": {
   "Historia": "História",
@@ -15643,7 +15653,17 @@
   "Cargando…": "Carregando…",
   "Preparando tu club…": "Preparando o seu clube…",
   "contra": "contra",
-  "plata:": "prata:"
+  "plata:": "prata:",
+  "Semifinales (final de zona)": "Semifinais (final da zona)",
+  "Wild Card": "Wild Card",
+  "Ronda 1 (al mejor de 3)": "Primeira ronda (melhor de 3)",
+  "Semifinales de Conferencia": "Semifinais de Conferência",
+  "Final de Conferencia": "Final de Conferência",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "FASE FINAL",
+  "Grupo del campeonato": "Grupo do campeonato",
+  "Grupo del descenso": "Grupo do descenso",
+  "Se define al terminar la fase regular.": "Define-se quando a fase regular termina."
  },
  "patrones": [
   [
@@ -29573,7 +29593,17 @@
   "Cargando…": "Chargement…",
   "Preparando tu club…": "Préparation de votre club…",
   "contra": "contre",
-  "plata:": "argent :"
+  "plata:": "argent :",
+  "Semifinales (final de zona)": "Demi-finales (finale de zone)",
+  "Wild Card": "Wild Card",
+  "Ronda 1 (al mejor de 3)": "Premier tour (au meilleur des 3)",
+  "Semifinales de Conferencia": "Demi-finales de conférence",
+  "Final de Conferencia": "Finale de conférence",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "PHASE FINALE",
+  "Grupo del campeonato": "Groupe du championnat",
+  "Grupo del descenso": "Groupe de la relégation",
+  "Se define al terminar la fase regular.": "Elle se décide à la fin de la phase régulière."
  },
  "it": {
   "Historia": "Storia",
@@ -37396,7 +37426,17 @@
   "Cargando…": "Caricamento…",
   "Preparando tu club…": "Preparazione del tuo club…",
   "contra": "contro",
-  "plata:": "argento:"
+  "plata:": "argento:",
+  "Semifinales (final de zona)": "Semifinali (finale di zona)",
+  "Wild Card": "Wild Card",
+  "Ronda 1 (al mejor de 3)": "Primo turno (al meglio delle 3)",
+  "Semifinales de Conferencia": "Semifinali di Conference",
+  "Final de Conferencia": "Finale di Conference",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "FASE FINALE",
+  "Grupo del campeonato": "Gruppo del campionato",
+  "Grupo del descenso": "Gruppo della retrocessione",
+  "Se define al terminar la fase regular.": "Si definisce al termine della fase regolare."
  },
  "de": {
   "Historia": "Geschichte",
@@ -45219,7 +45259,17 @@
   "Cargando…": "Laden …",
   "Preparando tu club…": "Dein Verein wird vorbereitet …",
   "contra": "gegen",
-  "plata:": "Silber:"
+  "plata:": "Silber:",
+  "Semifinales (final de zona)": "Halbfinale (Zonenfinale)",
+  "Wild Card": "Wildcard",
+  "Ronda 1 (al mejor de 3)": "Erste Runde (Best of 3)",
+  "Semifinales de Conferencia": "Conference-Halbfinale",
+  "Final de Conferencia": "Conference-Finale",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "FINALPHASE",
+  "Grupo del campeonato": "Meistergruppe",
+  "Grupo del descenso": "Abstiegsgruppe",
+  "Se define al terminar la fase regular.": "Wird nach der regulären Phase festgelegt."
  },
  "ca": {
   "Historia": "Història",
@@ -53042,7 +53092,17 @@
   "Cargando…": "Carregant…",
   "Preparando tu club…": "Preparant el teu club…",
   "contra": "contra",
-  "plata:": "plata:"
+  "plata:": "plata:",
+  "Semifinales (final de zona)": "Semifinals (final de zona)",
+  "Wild Card": "Wild Card",
+  "Ronda 1 (al mejor de 3)": "Primera ronda (al millor de 3)",
+  "Semifinales de Conferencia": "Semifinals de Conferència",
+  "Final de Conferencia": "Final de Conferència",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "FASE FINAL",
+  "Grupo del campeonato": "Grup del campionat",
+  "Grupo del descenso": "Grup del descens",
+  "Se define al terminar la fase regular.": "Es defineix quan acaba la fase regular."
  },
  "pl": {
   "Club": "Klub",
@@ -60865,7 +60925,17 @@
   "Cargando…": "Ładowanie…",
   "Preparando tu club…": "Przygotowywanie twojego klubu…",
   "contra": "przeciw",
-  "plata:": "srebro:"
+  "plata:": "srebro:",
+  "Semifinales (final de zona)": "Półfinały (finał strefy)",
+  "Wild Card": "Wild Card",
+  "Ronda 1 (al mejor de 3)": "Pierwsza runda (do dwóch wygranych)",
+  "Semifinales de Conferencia": "Półfinały konferencji",
+  "Final de Conferencia": "Finał konferencji",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "FAZA FINAŁOWA",
+  "Grupo del campeonato": "Grupa mistrzowska",
+  "Grupo del descenso": "Grupa spadkowa",
+  "Se define al terminar la fase regular.": "Zostanie ustalona po zakończeniu fazy zasadniczej."
  },
  "tr": {
   "Club": "Kulüp",
@@ -68688,6 +68758,16 @@
   "Cargando…": "Yükleniyor…",
   "Preparando tu club…": "Kulübün hazırlanıyor…",
   "contra": "karşı",
-  "plata:": "gümüş:"
+  "plata:": "gümüş:",
+  "Semifinales (final de zona)": "Yarı finaller (bölge finali)",
+  "Wild Card": "Wild Card",
+  "Ronda 1 (al mejor de 3)": "Birinci tur (üç maçın en iyisi)",
+  "Semifinales de Conferencia": "Konferans yarı finalleri",
+  "Final de Conferencia": "Konferans finali",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "FİNAL AŞAMASI",
+  "Grupo del campeonato": "Şampiyonluk grubu",
+  "Grupo del descenso": "Küme düşme grubu",
+  "Se define al terminar la fase regular.": "Normal etap bittiğinde belli olur."
  }
 }
