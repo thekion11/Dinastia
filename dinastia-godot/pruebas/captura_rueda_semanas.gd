@@ -44,8 +44,8 @@ func _ready() -> void:
 				get_viewport().get_texture().get_image().save_jpg("%s/%d_%s_entra%d.jpg" % [_dir, i, c.pais, k], 0.88)
 		await _esperar(5.0)
 		for h in p.get_children():   ## un evento (inicio de temporada…) puede taparla: fuera antes de la foto
-			if h is EventoPantallaCompleta:
-				h.queue_free()
+			if h is EventoPantallaCompleta or ((h.get_script() as Script) != null and (h.get_script() as Script).get_global_name() == &"PortadaPeriodico"):
+				h.queue_free()   ## (y la portada del periódico de la semana: sin cerrarla se apilaban y sumaban llamadas de un club a otro)
 		await _esperar(1.0)
 		get_viewport().get_texture().get_image().save_jpg("%s/%d_%s.jpg" % [_dir, i, c.pais], 0.88)
 		var ll: Array[int] = []
@@ -67,7 +67,7 @@ func _ready() -> void:
 			p._responder(0)
 			await _esperar(0.4)
 		for h in p.get_children():
-			if h is EventoPantallaCompleta:
-				h.queue_free()
+			if h is EventoPantallaCompleta or ((h.get_script() as Script) != null and (h.get_script() as Script).get_global_name() == &"PortadaPeriodico"):
+				h.queue_free()   ## (y la portada del periódico de la semana: sin cerrarla se apilaban y sumaban llamadas de un club a otro)
 	print("FIN")
 	get_tree().quit()
