@@ -164,27 +164,14 @@ Petición del líder: precompilar los shaders del menú mientras el jugador est�
 - Falta medir en el teléfono del dueño (Compatibilidad real, GPU móvil): llvmpipe no es una GPU de móvil; sobre todo MSAA en GPUs de teselas (resolución en memoria de tesela) podría pesar menos que aquí. La «Prueba de rendimiento» de Ajustes mide cada escala con y sin MSAA en el propio teléfono: con su informe se confirma o se revierte para MEDIA.
 - Texto de Ajustes: la frase de ULTRA BAJA dice «sin sombras ni suavizado»; BAJA y MEDIA BAJA (y MEDIA en móvil) ahora tampoco suavizan: ajustar la frase de cada nivel (`Idiomas.t` + `sumar_traducciones.py`) cuando el selector de 7 niveles se termine (paso 3 de `calidad_7_niveles_2026-11-06.md`, sesión que lo lleva).
 
-## LODs de malla para pelo/cara construidos en ejecución (10-11, sesión 5)
-Experimento `LODS_RUNTIME=1` (`dinastia-godot/pruebas/medir_partido_exp.gd`, apagado por defecto): a `Cuero*`, `Hair*`, `PeloDrive*`, `CaraReal*` se les generan LODs con `ImporterMesh.generate_lods(25, 60)`. El cuerpo ya trae 8 LODs del importador. Medido con `hw_modesto.sh` (opengl3, llvmpipe), 3 clubes de 3 países:
+## LODs del cuero lejano en BAJA y MEDIA BAJA (10-11, sesión 5; cifras CORREGIDAS)
+**Fe de erratas.** Las primeras cifras de esta sección (−6…−12 % de triángulos con LODs en ejecución, y luego −3…−7 % con `_con_lods`) eran falsas: `ImporterMesh.add_surface` sin las banderas del formato «custom» fallaba (38 errores «Invalid array format for surface» al abrir el partido) y la malla de lejos del cuero quedaba VACÍA, es decir, parte de la bajada era pelo que dejaba de dibujarse (por eso también bajaban las llamadas). Corregido en `PeloCapas.generar_lods` (banderas de formato + red de seguridad: si falla, se queda la malla de antes) y vigilado por `_probar_lods_cuero` (banco, grupo `estadio`: falla si la superficie desaparece).
 
-| Nivel / país | Triángulos antes → después | Llamadas | Fotograma (relativo) |
-|---|---|---|---|
-| BAJA CHI | 612 k → 563 k (−8 %) | 316 → 303 | 252 → 274 ms |
-| MEDIA CHI | 762 k → 685 k (−10 %) | 433 → 419 | 405 → 388 ms |
-| BAJA ESP | 416 k → 388 k (−7 %) | 305 → 299 | 211 → 214 ms |
-| MEDIA ESP | 540 k → 505 k (−6 %) | 497 → 491 | 344 → 346 ms |
-| BAJA ENG | 367 k → 324 k (−12 %) | 249 → 241 | 221 → 225 ms |
-| MEDIA ENG | 534 k → 473 k (−11 %) | 350 → 341 | 358 → 358 ms |
-
-Conclusión: −6…−12 % de triángulos, −2 % de llamadas, tiempo de fotograma sin cambio medible (llvmpipe no está limitada por vértices). Generarlos en ejecución es caro (picos de 400–975 ms al montar), así que NO se activa. Si se quiere, hay que hornearlos fuera de línea (como `herramientas/hornear_publico*.gd`) y confirmar en el teléfono; queda como pendiente del dueño. No se cambió nada por defecto.
-
-### Resultado: LODs del cuero lejano, ENCENDIDOS en BAJA y MEDIA BAJA (10-11, sesión 5)
-Por grupo (MEDIA, CHI/ENG): cuero −8 % de triángulos del partido; cara real −2 %; `Hair*` ~0 (ya traen LODs); `PeloDrive` ~0…−1,4 %. Hornear lo compartido (pelo del Drive, `Hair*`, cara) no compensa; el cuero depende de cada jugador y no se puede hornear en el repo (miles de formas). Por eso `PeloCapas._con_lods` genera los LODs UNA vez por forma (caché de `_cache_cuero`), con `ImporterMesh.generate_lods(25, 60)`, solo en BAJA/MEDIA BAJA y fuera de `--headless`; interruptor `LODS_CUERO=0`. Sin archivos nuevos (0 MB).
-
-| BAJA | Triángulos | Llamadas | Fotograma | Peor fotograma |
+Cifras buenas (BAJA, `hw_modesto.sh` opengl3 llvmpipe, 0 errores en consola; `LODS_CUERO=0` → `1`):
+| Club | Triángulos | Llamadas | Fotograma (relativo) | Peor fotograma |
 |---|---|---|---|---|
-| CHI | 613 k → 579 k (−5,6 %) | 316 → 303 | 264 → 265 | 309 → 318 |
-| ESP | 413 k → 400 k (−3,2 %) | 305 → 301 | 215 → 213 | 257 → 262 |
-| ENG | 367 k → 342 k (−6,7 %) | 250 → 241 | 222 → 220 | 283 → 337 |
+| CHI | 614,8 k → 588,3 k (−4,3 %) | 316 → 316 | 252 → 257 | 312 → 322 |
+| ESP | 414,0 k → 405,5 k (−2,1 %) | 305 → 306 | 224 → 220 | 302 → 292 |
+| ENG | 365,9 k → 350,3 k (−4,3 %) | 250 → 250 | 228 → 217 | 387 → 282 |
 
-Capturas con la cámara real (1280×720, `FOTO`) de CHI/ESP/ENG con y sin LODs: sin diferencia visible en los jugadores (las diferencias de píxel son el ruido de la grada y el césped). Banco: FIN. 0 fallos; `prueba_menu_ciudad_pie` y `mem_menu_estadio` en 0 fallos; ningún script > 450 líneas. Pendiente del dueño: confirmar en el teléfono que baja el tiempo de fotograma (en llvmpipe no se ve).
+Conclusión: −2…−4 % de triángulos, llamadas iguales, fotograma dentro del ruido, sin picos nuevos. Es una mejora pequeña pero sin coste visible (LOD 0 intacto; solo cambia al alejarse), por eso se queda encendida en BAJA/MEDIA BAJA (`PeloCapas._con_lods`, solo fuera de `--headless`, interruptor `LODS_CUERO=0`). Los demás grupos (cara real, `Hair*`, `PeloDrive`) NO se hornean: las mediciones por grupo anteriores a la corrección no valen y, por la forma de sus mallas (cara ~950 triángulos por pieza, `Hair*`/`PeloDrive` compartidas y pocas), se espera menos de un 2 %. Pendiente del dueño: confirmar en el teléfono si baja el tiempo de fotograma.

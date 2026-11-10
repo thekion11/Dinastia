@@ -154,9 +154,13 @@ static var lods_activos := true   ## interruptor (la medición lo apaga con LODS
 static func _con_lods(m: ArrayMesh) -> ArrayMesh:
 	if not lods_activos or OS.get_environment("LODS_CUERO") == "0" or Calidad.elegida > Calidad.MEDIA_BAJA or Calidad.elegida < Calidad.BAJA or DisplayServer.get_name() == "headless":
 		return m
+	return generar_lods(m)
+
+## La mitad que no depende del entorno (el banco la prueba con la malla real del cuero: `_probar_lods_cuero`): la misma malla con LODs, o la de antes si algo falla.
+static func generar_lods(m: ArrayMesh) -> ArrayMesh:
 	var im := ImporterMesh.new()
 	for sf in m.get_surface_count():
-		## Los datos «custom» de la malla (el cuero los usa) van empaquetados en bytes: sin sus banderas de formato `add_surface` falla y la superficie desaparece.
+		## Los datos «custom» de la malla (el cuero los usa) van empaquetados con su formato: sin sus banderas `add_surface` falla y la superficie desaparece.
 		var banderas := m.surface_get_format(sf) & (((1 << 12) - 1) << Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT)
 		im.add_surface(Mesh.PRIMITIVE_TRIANGLES, m.surface_get_arrays(sf), [], {}, m.surface_get_material(sf), "s%d" % sf, banderas)
 	im.generate_lods(25.0, 60.0, [])
