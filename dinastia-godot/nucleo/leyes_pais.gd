@@ -52,6 +52,12 @@ const REGLAS := {
 	"BEL": {"plantel": 19, "cancha": 0, "criterio": "no_formado", "norma": "Liga belga (ficticia): al menos 6 formados en el país en una lista de 25.", "seguro": false},
 	"CRO": {"plantel": 6, "cancha": 0, "criterio": "no_ue", "norma": "Liga croata (ficticia): 6 extracomunitarios por plantel.", "seguro": false},
 	"DEN": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga danesa (ficticia): sin cupo de extracomunitarios.", "seguro": false},
+	"TUR": {"plantel": 14, "cancha": 0, "criterio": "extranjero", "norma": "Liga turca (ficticia): 14 extranjeros por plantel.", "seguro": false},
+	"SCO": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga escocesa (ficticia): sin cupo de extracomunitarios.", "seguro": false},
+	"SUI": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga suiza (ficticia): sin cupo de extracomunitarios.", "seguro": false},
+	"AUT": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga austriaca (ficticia): sin cupo de extracomunitarios.", "seguro": false},
+	"GRE": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga griega (ficticia): sin cupo de extracomunitarios.", "seguro": false},
+	"QAT": {"plantel": 6, "cancha": 4, "criterio": "extranjero", "norma": "Liga catarí (ficticia): 6 extranjeros inscritos, 4 por convocatoria.", "seguro": false},
 }
 
 ## Países de la Unión Europea (para los cupos «extracomunitarios»).
