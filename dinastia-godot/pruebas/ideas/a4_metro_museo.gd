@@ -189,6 +189,11 @@ func _museo(e: Object, vc: Node, _m: Mundo) -> void:
 			## cada planta: subir por el ascensor, en cada vitrina interactuar con su trofeo
 			for p: int in plantas:
 				e.call("_ir_a_planta", p)
+				## (10-11) el ascensor sube y baja GRADUAL (`AscensorViaje`, 1 s por planta): se espera a que llegue (hasta ~10 s) en vez de 2 fotogramas.
+				for _i in 900:
+					await get_tree().process_frame
+					if absf(e.cuerpo.position.y - RecorridoClub.y_de(p)) <= 0.05:
+						break
 				await _esperar(2)
 				if absf(e.cuerpo.position.y - RecorridoClub.y_de(p)) > 0.05:
 					malas.append("planta %d: el jugador queda a y=%.2f (esperado %.2f)" % [p, e.cuerpo.position.y, RecorridoClub.y_de(p)])
