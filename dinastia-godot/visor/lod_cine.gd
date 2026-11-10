@@ -17,6 +17,7 @@ var _cam_id := 0
 static func vigilar(estadio: Node3D) -> LodCine:
 	var v := LodCine.new()
 	v.name = "LodCine"
+	v.process_mode = Node.PROCESS_MODE_ALWAYS   ## también con el juego en pausa (una repetición pausada sigue en su plano)
 	estadio.add_child(v)
 	return v
 
