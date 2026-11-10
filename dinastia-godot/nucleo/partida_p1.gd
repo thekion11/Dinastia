@@ -165,6 +165,7 @@ static func _directiva_a_dic(d: Directiva) -> Dictionary:
 		"confianza": d.confianza, "meta": d.meta_puesto, "objetivo": d.objetivo,
 		"temporadas": d.temporadas, "trofeos": d.trofeos, "despedido": d.despedido_ya,
 		"consejeros": d.a_dic(),
+		"objetivos": d.objetivos, "proyecto": d.proyecto, "bases": d.bases,   ## (10-11) objetivos por club
 	}
 
 static func _prensa_a_dic(p: Prensa) -> Dictionary:
