@@ -86,8 +86,8 @@ static func desfile(f: FestejoCampo3D, raiz: Node3D, sp, once: Array, c1: Color,
 	_multimesh(raiz, gente)
 	var sol := DirectionalLight3D.new()   ## luz de tarde
 	sol.rotation_degrees = Vector3(-35, -40, 0)
-	sol.light_energy = 1.1
-	sol.light_color = Color(1, 0.86, 0.68)
+	sol.light_energy = 0.9
+	sol.light_color = Color(1, 0.9, 0.78)
 	raiz.add_child(sol)
 	## El autobús: piso de abajo cerrado (color del club), piso de arriba descubierto con baranda, ruedas.
 	var bus := Node3D.new()
@@ -152,3 +152,31 @@ static func tick(f: FestejoCampo3D, t: float) -> void:
 		var n := f._caminan[k]
 		if is_instance_valid(n):
 			n.position.x = fmod(t * 1.3 + 7.0 - k * 1.6 + 30.0, 16.0) - 8.0
+
+## ---- TIFOS EN LA GRADA (finales) ----
+## Dos lonas gigantes sobre el público: el ESCUDO del club y una de franjas con sus dos colores. Baratas: dos cuadros, una textura de 128 px
+## (la del escudo, que ya existe) y otra de 8×1 px; no se montan en ULTRA BAJA (ahí no hay 3D).
+static func tifos(raiz: Node3D, club: Club, c1: Color, c2: Color) -> int:
+	var franjas := Image.create(8, 1, false, Image.FORMAT_RGB8)
+	for x in 8:
+		franjas.set_pixel(x, 0, c1 if x % 2 == 0 else c2)
+	var texs: Array[Texture2D] = [Escudo.textura(club, 128), ImageTexture.create_from_image(franjas)]
+	var puestas := 0
+	for k in 2:
+		if texs[k] == null:
+			continue
+		var mi := MeshInstance3D.new()
+		var q := QuadMesh.new()
+		q.size = Vector2(12.0, 8.0) if k == 0 else Vector2(22.0, 7.0)
+		mi.mesh = q
+		var mat := StandardMaterial3D.new()
+		mat.albedo_texture = texs[k]
+		mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST if k == 1 else BaseMaterial3D.TEXTURE_FILTER_LINEAR
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR if k == 0 else BaseMaterial3D.TRANSPARENCY_DISABLED
+		mat.roughness = 0.95
+		mi.material_override = mat
+		mi.position = Vector3(-14.0, 6.0, -19.6) if k == 0 else Vector3(9.0, 5.6, -19.8)
+		mi.rotation_degrees = Vector3(-18, 0, 0)   ## inclinada como la grada
+		raiz.add_child(mi)
+		puestas += 1
+	return puestas
