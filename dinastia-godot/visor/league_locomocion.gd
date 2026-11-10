@@ -167,7 +167,7 @@ static func _quizas_empezar(m: MotorLeague, p: Dictionary) -> void:
 		return
 	if not preparar(ap, m.t):
 		return
-	var c := LeagueMovimiento.elegir(sp, rel, sp_des, cuerpo, mirar)
+	var c := LeagueMovimiento.elegir(sp, rel, sp_des, cuerpo, mirar, pie_que_toca(p, ap))
 	if c.is_empty() or LeagueMovimiento.estable(c) or not ap.has_animation(String(c["nombre"])):
 		p["ls_espera"] = m.t + ESPERA   ## sin clip que aporte: no se vuelve a buscar en cada fotograma
 		return
@@ -187,8 +187,25 @@ static func _quizas_empezar(m: MotorLeague, p: Dictionary) -> void:
 	p["ls_yaw0"] = r0
 	p["ls_fin_yaw"] = r0 + float(c["ang"])
 	p["ls_cuerpo"] = float(c["cuerpo_sale"])
+	p["ls_pie"] = String(c["pie_sale"])
 	var clave := "loco_arranque" if arranca else ("loco_frenada" if frena else ("loco_giro" if gira else "loco_cuerpo"))
 	m.cuenta_toques[clave] = int(m.cuenta_toques.get(clave, 0)) + 1
+
+## El pie que toca mover (L `spatialState.foot`): tras un clip del original, su pie de salida; en un ciclo, el que va en el aire
+## (los de League y las plantillas mueven el derecho en la primera mitad; los nuestros, según `AnimPasos.fases`, la fase en la
+## que apoya el izquierdo). "" si no se sabe.
+static func pie_que_toca(p: Dictionary, ap: AnimationPlayer) -> String:
+	var actual := String(p.get("anim_actual", ""))
+	if actual.begins_with("ls_movement"):
+		return String(p.get("ls_pie", ""))
+	if not ap.has_animation(actual) or ap.current_animation != actual:
+		return ""
+	var fase := fposmod(ap.current_animation_position / maxf(ap.current_animation_length, 0.001), 1.0)
+	if AnimPasos.fases.has(actual):   ## (medida: manda sobre la regla de la mitad)
+		return "D" if fposmod(fase - float(AnimPasos.fases[actual]), 1.0) < 0.5 else "I"
+	if actual.begins_with(CICLO_CUERPO) or actual == "correr":
+		return "D" if fase < 0.5 else "I"
+	return ""
 
 static var _preparadas := {}
 const TANDA := 8
