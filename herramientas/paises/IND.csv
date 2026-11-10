@@ -1,0 +1,24 @@
+#seleccion=India
+#tier=0.5
+#globo=77.20,28.61
+#bandera=🇮🇳
+#confed=asia
+#liga=Indian Super League|Liga India
+#copa=Super Copa de India|Copa India
+#nombres=Aarav,Rohan,Arjun,Vikram,Rahul,Sandeep,Amit,Karan,Sunil,Ravi,Nikhil,Imran,Gurpreet,Deepak
+#apellidos=Sharma,Singh,Kumar,Patel,Das,Reddy,Nair,Ghosh,Khan,Gupta,Mondal,Rao,Chhetri,Bose
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Bengaluru FC;Bengalur Azules;#1d3f9e;#ffffff;58;25810;2013;los Azules de la Ciudad Jardín;el estadio de la capital tecnológica del sur;Campeón de liga con una afición muy fiel en el sur del país.
+Chennaiyin FC;Chenaiyin Marina;#1d3f9e;#f2c200;52;40000;2014;los Guerreros de la Costa;el estadio de la gran ciudad de la costa sureste;Doble campeón de liga con base en la costa de Coromandel.
+SC Delhi;Delhi Capital;#f58220;#1a1a1a;40;60254;2024;los Naranjas de la Capital;el gran estadio olímpico de la capital;Un club joven que juega en el mayor estadio del país.
+East Bengal;Bengala Oriental;#c8102e;#f2c200;57;85000;1920;los Tigres Rojos y Dorados;el gigantesco estadio de la ciudad del este;Uno de los clubes más antiguos y populares de Asia, con derbis legendarios.
+FC Goa;Goa Fatorda;#f58220;#1d3f9e;55;19000;2014;los Gaurs de la Costa;el estadio de la costa del oeste;Un equipo de juego vistoso y fútbol ofensivo.
+Inter Kashi;Kashi Calcuta;#1a1a1a;#f2c200;42;12000;2018;los Peregrinos Negros;el pequeño estadio del este de la ciudad;Un club joven que ha sorprendido en el ascenso reciente.
+Jamshedpur FC;Jamshedpur Acero;#c8102e;#1d3f9e;50;24424;2017;los Hombres de Acero;el estadio de la ciudad del acero;Un equipo ligado a la gran empresa siderúrgica de la ciudad.
+Kerala Blasters;Kerala Tuskers;#f2c200;#1d3f9e;54;40000;2014;los Elefantes Amarillos;el estadio de la costa del suroeste;Tiene una de las aficiones más ruidosas y numerosas del país.
+Mohammedan SC;Mohamedan Calc;#ffffff;#1a1a1a;44;12000;1891;los Blanquinegros;el pequeño estadio del este de la ciudad;Club histórico recién regresado a la máxima categoría.
+Mohun Bagan Super Giant;Mohun Gigantes;#0b6b3a;#8b1a2b;62;85000;1889;los Marineros Verdes y Granates;el gigantesco estadio de la ciudad del este;Uno de los clubes más antiguos de Asia y campeón de liga.
+Mumbai City;Bombay Ciudad;#6cb4e4;#ffffff;53;7000;2014;los Isleños Celestes;el estadio de la gran ciudad de la costa oeste;Campeón de liga con juego combinativo.
+NorthEast United;Noreste Unido;#c8102e;#1a1a1a;43;21600;2014;los Highlanders;el estadio de la ciudad del extremo noreste;Representa a las montañas y a los siete estados del noreste.
+Odisha FC;Odisha Kalinga;#7a1f5c;#ffffff;49;15000;2014;los Guerreros de Kalinga;el estadio de la ciudad del templo;Un club que se mudó a la costa oriental y la ha conquistado.
+Punjab FC;Punyab Mohali;#c8102e;#1d3f9e;38;60254;2017;los Leones del Punyab;el estadio olímpico de la capital;Un club del norte que lucha por hacerse un sitio en la élite.

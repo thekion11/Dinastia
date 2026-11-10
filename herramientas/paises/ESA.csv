@@ -1,0 +1,22 @@
+#seleccion=El Salvador
+#tier=0.25
+#globo=-89.19,13.69
+#bandera=🇸🇻
+#confed=conc
+#liga=Primera División de El Salvador|Liga Salvadoreña
+#copa=Copa de El Salvador|Copa Salvadoreña
+#nombres=José,Carlos,Luis,Mario,Walter,Jorge,Óscar,Rafael,Roberto,Edwin,Wilfredo,Rodolfo,Miguel,Nelson
+#apellidos=Hernández,Martínez,López,García,Rodríguez,Ramírez,Flores,Portillo,Menjívar,Alvarado,Guardado,Funes,Rivas,Cruz
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Alianza San Salvador;Alianza Pipil;#ffffff;#000000;60;53400;1958;los Albos;el gran estadio nacional de la capital;El club más laureado del país, con una hinchada multitudinaria.
+Águila;Águila Migueleña;#c8102e;#ffffff;58;10000;1926;los Emplumados;el estadio de la ciudad oriental de San Miguel;Un clásico del oriente con una gran tradición de títulos.
+FAS;FAS Santaneco;#0057b8;#ffffff;54;17500;1947;los Tigres;el estadio de la segunda ciudad del país;Un histórico de Santa Ana con muchas copas en su vitrina.
+Fuerte San Francisco;Fuerte Gotera;#c8102e;#000000;48;12000;1928;los Fuertes;el estadio del norte de la provincia de Morazán;Un equipo del oriente que ha subido con paso firme.
+Firpo;Firpo Usuluteco;#f2c200;#0057b8;50;5000;1964;los Pericos;el estadio de la ciudad de Usulután;Un club tradicional con muchos años en la máxima categoría.
+Inter Santa Tecla;Inter Tecleño;#ffffff;#000000;50;10000;1928;los Santanecos del Volcán;el estadio de la ciudad junto al volcán de San Salvador;Un club de la ciudad de Santa Tecla con un proyecto ordenado.
+Isidro Metapán;Isidro Metapeño;#ffffff;#0057b8;52;10000;1960;los Caleros;el estadio de la ciudad minera del noroeste;El equipo de las caleras, ya campeón varias veces.
+Platense Zacatecoluca;Platense Zacate;#ffffff;#c8102e;42;10000;1923;los Selenitas;el estadio de la ciudad de Zacatecoluca;Un club histórico de La Paz que lucha por mantenerse arriba.
+Municipal Limeño;Limeño Municipal;#f2c200;#c8102e;46;5000;1940;los Limeños;el estadio de la ciudad oriental de Santa Rosa de Lima;Un equipo modesto con una afición muy pegada al pueblo.
+Atlético Balboa;Balboa Salvador;#ffffff;#c8102e;45;53400;1957;los Balboanos;el estadio de la capital compartido con otro club;Un club capitalino con aire de equipo de barrio.
+Cacahuatique;Cacahuateño;#0057b8;#f2c200;40;5000;1999;los Cacahuateros;el pequeño estadio de un pueblo de Morazán;Un recién llegado que sueña con quedarse en la élite.
+INCA-Aruba;Inca Sonsonate;#c8102e;#ffffff;38;10000;1996;los Incas;el estadio de la ciudad de Sonsonate;Un club joven del occidente con ganas de crecer.

@@ -1,0 +1,24 @@
+#seleccion=Burkina Faso
+#tier=0.2
+#globo=-1.52,12.37
+#bandera=🇧🇫
+#confed=afr
+#liga=Primera División de Burkina Faso|Liga Burkinesa
+#copa=Copa de Burkina Faso|Copa Burkinesa
+#nombres=Ibrahim,Issouf,Abdoul,Boureima,Salif,Moussa,Adama,Alassane,Seydou,Souleymane,Hamidou,Ousmane,Idrissa,Lassina
+#apellidos=Ouédraogo,Traoré,Sawadogo,Kaboré,Compaoré,Zongo,Sanou,Coulibaly,Ouattara,Bambara,Nikièma,Sankara,Tapsoba,Konaté
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Étoile Filante;Estrella Fugaz;#e30613;#ffffff;54;15000;1955;las Estrellas Fugaces;el estadio de la capital junto al palacio de deportes;Uno de los clubes más laureados del país, con gran historia continental.
+AS Douanes Ouaga;Aduana Uagadugu;#1d3f9e;#e30613;50;35000;1962;los Aduaneros;el gran estadio nacional de la capital;Un club de la capital con varios títulos de liga y copa.
+ASFA Yennenga;Yenega Uaga;#0b8f3c;#ffffff;48;15000;1963;las Amazonas;el estadio de la capital que comparte con otros clubes;Un histórico de la capital que lleva el nombre de una princesa legendaria.
+US des Forces Armées;Ejercito Uaga;#0b8f3c;#f7d117;47;8000;1962;los Militares;el estadio de las fuerzas armadas de la capital;El club del ejército, siempre competitivo en la capital.
+AS SONABEL;Sonabel Uaga;#f7d117;#1d3f9e;45;8000;1969;los Eléctricos;el campo de la compañía eléctrica en la capital;El club de la empresa eléctrica nacional, fijo en la élite.
+RC Kadiogo;Racing Kadiogo;#1d3f9e;#ffffff;44;5000;1993;los Racing;el estadio municipal de la capital;Un equipo capitalino que ha dado el salto a la élite.
+Salitas FC;Salitas Uaga;#e30613;#000000;43;4000;1997;los Salitas;el campo de barrio de la capital;Un club modesto de la capital con buena cantera.
+RC Bobo;Racing Bobo;#e30613;#ffffff;49;20000;1951;los Racing del Oeste;el estadio de la segunda ciudad del país;Un histórico de la capital económica del oeste.
+ASF Bobo;Bobo Futbol;#ffffff;#0b8f3c;46;20000;1957;los del Oeste;el estadio de la segunda ciudad, compartido;Un club de la ciudad del oeste con tradición.
+Kiko FC;Kiku Bobo;#f7d117;#0b8f3c;41;5000;2009;los Kiku;el campo municipal de la ciudad del oeste;Un equipo joven de la segunda ciudad del país.
+Royal FC;Royal Bobo;#7a1fa2;#ffffff;40;5000;2008;los Reales;el campo de la ciudad del oeste;Un club modesto del oeste con aspiraciones.
+Vitesse FC;Vitesa Bobo;#1d3f9e;#f7d117;40;4000;2007;los Veloces;el estadio pequeño de la ciudad del oeste;Un recién llegado que busca asentarse.
+AS Koupéla;Koupela Union;#e30613;#f7d117;42;4000;1989;los de Koupéla;el estadio de la ciudad del este;Un club de provincias del este del país.
+ASEC Koudougou;Asec Kudugu;#f7d117;#e30613;45;10000;1962;los Amarillos de Koudougou;el estadio de la ciudad del centro-oeste;Un club histórico de la tercera ciudad del país.

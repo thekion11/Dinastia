@@ -118,6 +118,23 @@ const JORNADA := {
 	"LTU": [40, "Código del Trabajo", "40 horas semanales.", true],
 	"NIR": [48, "Reglamento del tiempo de trabajo", "48 horas semanales de media como máximo.", true],
 	"LUX": [40, "Código del Trabajo", "40 horas semanales.", true],
+## Tanda 4 de «países sin liga» (10-11-2026): 16 países de Asia, África, UEFA y CONCACAF.
+	"THA": [48, "Ley de Protección Laboral", "48 horas semanales como referencia.", true],
+	"IDN": [40, "Ley de Empleo", "40 horas semanales como referencia.", true],
+	"VIE": [48, "Código Laboral", "48 horas semanales como referencia.", true],
+	"IND": [48, "Ley de Fábricas", "48 horas semanales como referencia.", true],
+	"MAS": [45, "Ley de Empleo", "45 horas semanales como referencia.", true],
+	"BHR": [48, "Ley del Trabajo", "48 horas semanales como referencia.", true],
+	"OMA": [40, "Ley del Trabajo", "40 horas semanales como referencia.", true],
+	"COD": [45, "Código del Trabajo", "45 horas semanales como referencia.", true],
+	"BFA": [40, "Código del Trabajo", "40 horas semanales como referencia.", true],
+	"ZAM": [48, "Ley de Empleo", "48 horas semanales como referencia.", true],
+	"GUI": [40, "Código del Trabajo", "40 horas semanales como referencia.", true],
+	"KEN": [45, "Ley de Empleo", "45 horas semanales como referencia.", true],
+	"ARM": [40, "Código del Trabajo", "40 horas semanales como referencia.", true],
+	"MDA": [40, "Código del Trabajo", "40 horas semanales como referencia.", true],
+	"ESA": [44, "Código de Trabajo", "44 horas semanales como referencia.", true],
+	"GUA": [44, "Código de Trabajo", "44 horas semanales como referencia.", true],
 	"IRN": [44, "Código del Trabajo", "44 horas semanales.", true],
 }
 

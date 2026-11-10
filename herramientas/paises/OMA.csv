@@ -1,0 +1,22 @@
+#seleccion=Omán
+#tier=0.5
+#globo=58.41,23.59
+#bandera=🇴🇲
+#confed=asia
+#liga=Liga Profesional de Omán|Liga Omaní
+#copa=Copa del Sultán Qaboos|Copa Omaní
+#nombres=Said,Khalid,Salim,Hamad,Ahmed,Nasser,Mohamed,Ali,Sultan,Hilal,Rashid,Abdullah,Yousuf,Faisal
+#apellidos=Al-Balushi,Al-Habsi,Al-Harthi,Al-Mukhaini,Al-Busaidi,Al-Hinai,Al-Rawahi,Al-Siyabi,Al-Kindi,Al-Farsi,Al-Maqbali,Al-Shukaili,Al-Mamari,Al-Ghafri
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Al-Seeb;Seeb Mascate;#c8102e;#ffffff;58;14000;1972;los Rojos de la Costa;el estadio de la ciudad costera junto al aeropuerto;Un club capitalino que ha ganado liga y copa en la última década.
+Dhofar;Dofar Salala;#c8102e;#ffffff;62;12000;1953;los Rojos del Sur;el estadio de la ciudad del monzón;El club más laureado del país, con una afición enorme en el sur.
+Al-Nasr Salalah;Nasr Salala;#f2c200;#1d3f9e;57;12000;1970;los Amarillos del Monzón;el estadio de la ciudad del incienso;El gran rival local del sur, con aficionados muy ruidosos.
+Oman Club;Club de Mascate;#c8102e;#000000;56;10000;1942;los Veteranos de la Capital;el estadio de la capital del país;El club más antiguo del país, con mucha historia en su vitrina.
+Al-Nahda;Nahda Buraimi;#1e56b8;#ffffff;54;8000;1944;los Azules del Oasis;el estadio de la ciudad fronteriza del oasis;Un histórico del norte que vive en la frontera con los vecinos.
+Sur;Sur Marinero;#f2c200;#1d3f9e;53;10000;1964;los Marineros;el estadio de la ciudad de los astilleros;Equipo de la ciudad de los barcos tradicionales.
+Sohar;Sohar Puerto;#0b8f3c;#ffffff;52;12000;1964;los Verdes del Puerto;el estadio de la ciudad portuaria del norte;Un club del puerto que pelea siempre en la zona alta.
+Al-Shabab Barka;Shabab Barka;#1d3f9e;#c8102e;49;6000;1972;los Jóvenes de Barka;el estadio de la ciudad de la costa norte;Un equipo costero con una cantera trabajadora.
+Al-Rustaq;Rustaq Unido;#c8102e;#f2c200;47;5000;1968;los Fortalezas;el estadio de la ciudad de la fortaleza;Representa a la ciudad del fuerte y los manantiales calientes.
+Ibri;Ibri Oasis;#0b8f3c;#f2c200;44;4000;1968;los del Interior;el estadio de la ciudad del interior;Un club del interior que lucha por mantenerse entre los grandes.
+Saham;Saham Costa;#1e56b8;#f2c200;43;3500;1976;los Costeros;el estadio de la pequeña ciudad costera;Un equipo modesto con una afición muy local.
+Al-Khaburah;Jaburah Costa;#c8102e;#1d3f9e;41;3000;1976;los Rojiazules;el estadio de la ciudad de las palmeras;El club más humilde de la liga, que pelea cada año por no descender.

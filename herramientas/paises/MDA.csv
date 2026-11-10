@@ -1,0 +1,18 @@
+#seleccion=Moldavia
+#tier=0.25
+#globo=28.86,47.01
+#bandera=🇲🇩
+#confed=ucl,uel
+#liga=Super Liga de Moldavia|Liga Moldava
+#copa=Copa de Moldavia|Copa Moldava
+#nombres=Andrei,Vasile,Ion,Alexandru,Nicolae,Sergiu,Victor,Dumitru,Radu,Mihai,Oleg,Eugen,Igor,Vladimir
+#apellidos=Popescu,Rusu,Ceban,Munteanu,Cojocaru,Lungu,Cebotari,Moraru,Sandu,Botnaru,Ciobanu,Gutu,Railean,Bivol
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Sheriff Tiraspol;Sherif Tiraspolo;#f2c200;#000000;60;9181;1997;los Avispas;el moderno complejo deportivo de la región separatista;Dominador absoluto del país, con más de veinte ligas y presencia europea.
+Zimbru Chișinău;Zimbro Chisinau;#0b7a3b;#f2c200;54;10104;1947;los Verdes;el mayor estadio de la capital;El histórico campeón de la capital, con una gran afición.
+Petrocub Hîncești;Petrocup Hinces;#0057b8;#ffffff;52;1633;1999;los Petroleros;el pequeño estadio de la ciudad del sur de la capital;Un club de provincia que ha llegado a rondas europeas.
+Milsami Orhei;Milsamo Orhei;#c8102e;#0057b8;50;3000;2007;los Vinateros;el complejo deportivo de la ciudad vinícola;Campeón y copero que ha dado la sorpresa en Europa.
+Bălți;Balti Nordico;#0057b8;#ffffff;46;5200;2019;los Norteños;el estadio municipal de la capital del norte;Representa a la segunda ciudad del país y su gran afición.
+Dacia Buiucani;Dacio Buiucani;#0057b8;#f2c200;44;5200;2000;los Dacios;el estadio de un pueblo cercano a la capital;Un club de barrio de la capital que juega de prestado en la provincia.
+Politehnica UTM;Politecnica Chis;#0057b8;#f2c200;40;350;2019;los Ingenieros;el pequeño campo del complejo universitario de las afueras;El equipo de la universidad técnica, con jugadores muy jóvenes.
+Spartanii Sportul;Espartanos Sport;#c8102e;#ffffff;38;350;2018;los Espartanos;el pequeño campo del complejo deportivo de las afueras de la capital;Un club modesto que comparte instalaciones y busca crecer.
