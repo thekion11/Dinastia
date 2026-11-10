@@ -7815,7 +7815,17 @@
   "Pasa al cuadro": "Through to the bracket",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "No sun shadow, no anti-aliasing and 3D at a lower resolution",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sun shadow on, no anti-aliasing and 3D at a slightly lower resolution than Medium",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "No heavy effects and no anti-aliasing on phones and web: maximum smoothness"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "No heavy effects and no anti-aliasing on phones and web: maximum smoothness",
+  "Semifinales (final de zona)": "Semi-finals (zone final)",
+  "Wild Card": "Wild Card",
+  "Ronda 1 (al mejor de 3)": "Round One (best of 3)",
+  "Semifinales de Conferencia": "Conference Semi-finals",
+  "Final de Conferencia": "Conference Final",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "FINAL STAGE",
+  "Grupo del campeonato": "Championship group",
+  "Grupo del descenso": "Relegation group",
+  "Se define al terminar la fase regular.": "It is decided when the regular phase ends."
  },
  "pt": {
   "Historia": "História",
@@ -15633,7 +15643,17 @@
   "Pasa al cuadro": "Passa ao quadro",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Sem sombra do sol, sem suavização e com o 3D em menor resolução",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sombra do sol sim, sem suavização e com o 3D em resolução um pouco menor que em Média",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sem efeitos pesados e sem suavização em celular e web: máxima fluidez"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sem efeitos pesados e sem suavização em celular e web: máxima fluidez",
+  "Semifinales (final de zona)": "Semifinais (final da zona)",
+  "Wild Card": "Wild Card",
+  "Ronda 1 (al mejor de 3)": "Primeira ronda (melhor de 3)",
+  "Semifinales de Conferencia": "Semifinais de Conferência",
+  "Final de Conferencia": "Final de Conferência",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "FASE FINAL",
+  "Grupo del campeonato": "Grupo do campeonato",
+  "Grupo del descenso": "Grupo do descenso",
+  "Se define al terminar la fase regular.": "Define-se quando a fase regular termina."
  },
  "patrones": [
   [
@@ -29558,7 +29578,17 @@
   "Pasa al cuadro": "Qualifié pour le tableau",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Sans ombre du soleil, sans anticrénelage et avec la 3D en plus basse résolution",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombre du soleil oui, sans anticrénelage et avec la 3D à une résolution un peu plus basse qu'en Moyenne",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sans effets lourds et sans anticrénelage sur téléphone et web : fluidité maximale"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sans effets lourds et sans anticrénelage sur téléphone et web : fluidité maximale",
+  "Semifinales (final de zona)": "Demi-finales (finale de zone)",
+  "Wild Card": "Wild Card",
+  "Ronda 1 (al mejor de 3)": "Premier tour (au meilleur des 3)",
+  "Semifinales de Conferencia": "Demi-finales de conférence",
+  "Final de Conferencia": "Finale de conférence",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "PHASE FINALE",
+  "Grupo del campeonato": "Groupe du championnat",
+  "Grupo del descenso": "Groupe de la relégation",
+  "Se define al terminar la fase regular.": "Elle se décide à la fin de la phase régulière."
  },
  "it": {
   "Historia": "Storia",
@@ -37376,7 +37406,17 @@
   "Pasa al cuadro": "Passa al tabellone",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Senza ombra del sole, senza antialiasing e con il 3D a risoluzione più bassa",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombra del sole sì, senza antialiasing e con il 3D a una risoluzione un po' più bassa che in Media",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Senza effetti pesanti e senza antialiasing su telefono e web: massima fluidità"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Senza effetti pesanti e senza antialiasing su telefono e web: massima fluidità",
+  "Semifinales (final de zona)": "Semifinali (finale di zona)",
+  "Wild Card": "Wild Card",
+  "Ronda 1 (al mejor de 3)": "Primo turno (al meglio delle 3)",
+  "Semifinales de Conferencia": "Semifinali di Conference",
+  "Final de Conferencia": "Finale di Conference",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "FASE FINALE",
+  "Grupo del campeonato": "Gruppo del campionato",
+  "Grupo del descenso": "Gruppo della retrocessione",
+  "Se define al terminar la fase regular.": "Si definisce al termine della fase regolare."
  },
  "de": {
   "Historia": "Geschichte",
@@ -45194,7 +45234,17 @@
   "Pasa al cuadro": "Weiter in die K.-o.-Runde",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Ohne Sonnenschatten, ohne Kantenglättung und mit 3D in geringerer Auflösung",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sonnenschatten ja, ohne Kantenglättung und mit 3D in etwas geringerer Auflösung als bei Mittel",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ohne aufwendige Effekte und ohne Kantenglättung auf Handy und Web: maximale Flüssigkeit"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ohne aufwendige Effekte und ohne Kantenglättung auf Handy und Web: maximale Flüssigkeit",
+  "Semifinales (final de zona)": "Halbfinale (Zonenfinale)",
+  "Wild Card": "Wildcard",
+  "Ronda 1 (al mejor de 3)": "Erste Runde (Best of 3)",
+  "Semifinales de Conferencia": "Conference-Halbfinale",
+  "Final de Conferencia": "Conference-Finale",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "FINALPHASE",
+  "Grupo del campeonato": "Meistergruppe",
+  "Grupo del descenso": "Abstiegsgruppe",
+  "Se define al terminar la fase regular.": "Wird nach der regulären Phase festgelegt."
  },
  "ca": {
   "Historia": "Història",
@@ -53012,7 +53062,17 @@
   "Pasa al cuadro": "Passa al quadre",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Sense ombra del sol, sense suavitzat i amb el 3D a menys resolució",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombra del sol sí, sense suavitzat i amb el 3D a una resolució una mica menor que a Mitjana",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sense efectes pesats i sense suavitzat en mòbil i web: màxima fluïdesa"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sense efectes pesats i sense suavitzat en mòbil i web: màxima fluïdesa",
+  "Semifinales (final de zona)": "Semifinals (final de zona)",
+  "Wild Card": "Wild Card",
+  "Ronda 1 (al mejor de 3)": "Primera ronda (al millor de 3)",
+  "Semifinales de Conferencia": "Semifinals de Conferència",
+  "Final de Conferencia": "Final de Conferència",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "FASE FINAL",
+  "Grupo del campeonato": "Grup del campionat",
+  "Grupo del descenso": "Grup del descens",
+  "Se define al terminar la fase regular.": "Es defineix quan acaba la fase regular."
  },
  "pl": {
   "Club": "Klub",
@@ -60830,7 +60890,17 @@
   "Pasa al cuadro": "Awans do drabinki",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Bez cienia słońca, bez wygładzania i z 3D w niższej rozdzielczości",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Cień słońca tak, bez wygładzania i z 3D w nieco niższej rozdzielczości niż w Średnim",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Bez ciężkich efektów i bez wygładzania na telefonie i w przeglądarce: maksymalna płynność"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Bez ciężkich efektów i bez wygładzania na telefonie i w przeglądarce: maksymalna płynność",
+  "Semifinales (final de zona)": "Półfinały (finał strefy)",
+  "Wild Card": "Wild Card",
+  "Ronda 1 (al mejor de 3)": "Pierwsza runda (do dwóch wygranych)",
+  "Semifinales de Conferencia": "Półfinały konferencji",
+  "Final de Conferencia": "Finał konferencji",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "FAZA FINAŁOWA",
+  "Grupo del campeonato": "Grupa mistrzowska",
+  "Grupo del descenso": "Grupa spadkowa",
+  "Se define al terminar la fase regular.": "Zostanie ustalona po zakończeniu fazy zasadniczej."
  },
  "tr": {
   "Club": "Kulüp",
@@ -68648,6 +68718,16 @@
   "Pasa al cuadro": "Tabloya kalır",
   "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Güneş gölgesi yok, kenar yumuşatma yok ve 3D daha düşük çözünürlükte",
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Güneş gölgesi var, kenar yumuşatma yok ve 3D, Orta'dan biraz daha düşük çözünürlükte",
-  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ağır efekt yok, telefon ve web'de kenar yumuşatma yok: azami akıcılık"
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ağır efekt yok, telefon ve web'de kenar yumuşatma yok: azami akıcılık",
+  "Semifinales (final de zona)": "Yarı finaller (bölge finali)",
+  "Wild Card": "Wild Card",
+  "Ronda 1 (al mejor de 3)": "Birinci tur (üç maçın en iyisi)",
+  "Semifinales de Conferencia": "Konferans yarı finalleri",
+  "Final de Conferencia": "Konferans finali",
+  "MLS Cup": "MLS Cup",
+  "FASE FINAL": "FİNAL AŞAMASI",
+  "Grupo del campeonato": "Şampiyonluk grubu",
+  "Grupo del descenso": "Küme düşme grubu",
+  "Se define al terminar la fase regular.": "Normal etap bittiğinde belli olur."
  }
 }

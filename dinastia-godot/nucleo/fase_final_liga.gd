@@ -294,3 +294,27 @@ func cargar(l: Liga, d: Dictionary) -> void:
 		l.calendario[j] = _pares(l, j)
 	if estado.has("orden"):
 		l.orden_final = Array(estado["orden"])
+
+
+## Lo que la pantalla de competición enseña de la fase final: [{titulo, clubes}] en los grupos de Egipto, [{titulo, cruces}] en los cuadros
+## (cada cruce: {a, b, r: [[ga, gb]…], g: ganador o null}). Vacío mientras la fase regular no ha terminado.
+func secciones(l: Liga) -> Array:
+	var sal: Array = []
+	if tipo == "grupos":
+		if not estado.has("grupos"):
+			return sal
+		var nombres := ["Grupo del campeonato", "Grupo del descenso"]
+		for i in 2:
+			var filas: Array = []
+			for fila: Dictionary in l.tabla():
+				if (estado["grupos"][i] as Array).has((fila["club"] as Club).id):
+					filas.append(fila)
+			sal.append({"titulo": nombres[i], "filas": filas})
+		return sal
+	for r: Dictionary in estado.get("rondas", []):
+		var cruces: Array = []
+		for c: Dictionary in r["c"]:
+			cruces.append({"a": _club(l, String(c["a"])), "b": _club(l, String(c["b"])), "r": c["r"],
+				"g": _club(l, String(c["g"])) if String(c["g"]) != "" else null})
+		sal.append({"titulo": String(r["n"]), "cruces": cruces})
+	return sal
