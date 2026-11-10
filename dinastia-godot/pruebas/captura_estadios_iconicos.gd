@@ -160,12 +160,20 @@ func _congelar() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	await get_tree().process_frame
 	await get_tree().process_frame
+	var foto0 := _visibles(get_tree().root)
 	var serie: Array[int] = []
 	for _k in (int(OS.get_environment("PICOS_SERIE")) if OS.get_environment("PICOS_SERIE") != "" else 12):   ## ¿el pico sigue con el plano quieto (es lo que se ve) o se va solo (es el corte de cámara)?
 		serie.append(rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
 		await get_tree().process_frame
 	var base := serie[-1]
 	print("   PLANO CONGELADO %s %s: %s llamadas" % [nombre0, pos0, serie])
+	var foto1 := _visibles(get_tree().root)
+	for k: String in foto0:
+		if not foto1.has(k):
+			print("   SE FUE: ", k)
+	for k: String in foto1:
+		if not foto0.has(k):
+			print("   LLEGO: ", k)
 	## Los SubViewport (cartas, retratos, pantallas) dibujan su propio mundo: ¿cuánto pesan?
 	for vp: Node in get_tree().root.find_children("*", "SubViewport", true, false):
 		var sv := vp as SubViewport
@@ -180,3 +188,16 @@ func _congelar() -> void:
 	await _desglose(get_tree().root, base)
 	get_tree().quit()
 	await get_tree().create_timer(3600.0).timeout   ## no sigue con nada más mientras sale
+
+## Rutas de los nodos visibles con algo que dibujar (3D y 2D), hasta 6 niveles.
+func _visibles(n: Node, hondo: int = 0) -> Dictionary:
+	var fuera := {}
+	for h in n.get_children():
+		var vis: bool = h.visible if (h is Node3D or h is CanvasItem) else true
+		if not vis:
+			continue
+		if hondo < 6:
+			fuera.merge(_visibles(h, hondo + 1))
+		if hondo <= 4 and (h is Node3D or h is CanvasItem):
+			fuera[String(get_tree().root.get_path_to(h))] = true
+	return fuera
