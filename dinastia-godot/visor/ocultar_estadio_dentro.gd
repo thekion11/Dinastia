@@ -1,58 +1,86 @@
 class_name OcultarEstadioDentro
 extends RefCounted
-## DENTRO DEL EDIFICIO DEL CLUB, EL ESTADIO DE FUERA NO SE DIBUJA (10-11-2026, rendimiento en móvil). Medido con `pruebas/medir_club.tscn` (ULTRA BAJA, Compatibilidad, CHI): a pie por las plantas
-## -2, -1, 1 y 2 el club pedía ~850 llamadas y 1,1 M de triángulos porque la cámara (sin oclusión) dibujaba también las gradas, la hinchada, las torres de focos y el entorno que quedan DETRÁS de las
-## paredes de la sala. Sin ellos: ~340-370 llamadas y ~130 k triángulos (fotograma relativo −60 %), con la sala idéntica (capturas antes/después en el informe).
-## Se ocultan los hijos de primer nivel del estadio (`_raiz3d`) que no son luces, cámara, el edificio (`TunelVestuario`), la calle (`Exterior`) ni la fachada (`Fachada`): lo único que se ve por la
-## ventana trasera. Solo en las plantas distintas de la 0 (la 0 tiene el túnel y el campo a la vista). Se guarda lo que estaba visible antes y se devuelve tal cual al salir al campo o del recorrido.
+## DENTRO DEL EDIFICIO DEL CLUB, LO DE FUERA NO SE DIBUJA (10-11-2026, rendimiento en móvil; la sesión 5 midió con `pruebas/medir_club.tscn` ~850 llamadas y 1,1 M de triángulos
+## porque la cámara (Godot no oculta lo tapado) dibujaba también las gradas, la hinchada, los focos y el entorno detrás de las paredes; sin ellos ~340-370 llamadas).
+## Se ocultan los hijos de primer nivel del estadio (`_raiz3d`) que no son luces, cámara, el edificio (`TunelVestuario`) ni el explorador. `Exterior` (la calle) y `Fachada` solo se
+## conservan mientras pueden verse por una ABERTURA: la boca del túnel al campo (plano z = `z_boca`), la boca del túnel al vestuario (z = `z_out`) o las ventanas del fondo del edificio
+## (plantas 1 y 2, plano z = `z_fin`+0,31). La decisión sale del campo de visión de la cámara (`boca_visible`): una rejilla de 0,6 m sobre la abertura con `is_position_in_frustum`; a
+## menos de 1,5 m de ella siempre se ve. No desaparece nada que se viera: en cuanto la abertura entra en el campo de visión, vuelve (sesión 7).
+##   · planta ≠ 0: estadio fuera siempre; calle y fachada solo con una ventana a la vista (los sótanos no tienen);
+##   · planta 0, «Vestuario» (sala cerrada): estadio fuera si no se ve la boca del túnel (z_out);
+##   · planta 0, «Túnel»: estadio, calle y fachada fuera si no se ve la boca al campo (z_boca);
+##   · el campo, la banda y el acceso: todo se dibuja.
+## Se guarda lo que estaba visible antes y se devuelve tal cual al salir al campo o del recorrido.
 
-const CONSERVAR := ["TunelVestuario", "Exterior", "Fachada"]
+const CONSERVAR := ["TunelVestuario"]
+const CALLE := ["Exterior", "Fachada"]
 const META := "estadio_oculto_dentro"
+const META_CLAVE := "estadio_oculto_dentro_clave"
 
-## Llamar cada vez que se refresca la zona del recorrido (barato: solo actúa al entrar o salir).
-## OCLUSIÓN POR SALA EN LA PLANTA 0 (10-11, sesión 7): el vestuario es una sala cerrada; el estadio solo se ve por la boca del túnel. Con `zona` = «Vestuario» y la
-## cámara mirando a otra parte (la boca del túnel, el plano z = `datos.z_out`, fuera del cuerpo de visión), el estadio también se oculta, y vuelve en cuanto la boca
-## entra en el campo de visión: no desaparece nada que se viera. `camara` y `datos` (los del explorador) son opcionales; sin ellos, como antes.
+## Llamar cada vez que se refresca la zona (barato: solo actúa al cambiar lo que hay que ocultar). `camara` y `datos` (los del explorador) son opcionales; sin ellos, como antes
+## (planta ≠ 0 oculta todo salvo la calle y la fachada).
 static func actualizar(explorador: Node3D, planta: int, zona := "", camara: Camera3D = null, datos: Dictionary = {}) -> void:
-	var dentro := planta != 0 or (zona == "Vestuario" and camara != null and not datos.is_empty() and not boca_visible(camara, datos))
-	var ocultos: Dictionary = explorador.get_meta(META, {})
-	if dentro == not ocultos.is_empty():
+	var ver := camara != null and not datos.is_empty()
+	var estadio := false
+	var calle := false
+	if planta != 0:
+		estadio = true
+		if ver:
+			calle = planta < 0 or not ventana_visible(camara, datos, planta)
+	elif ver and zona == "Vestuario":
+		estadio = not boca_visible(camara, datos, float(datos["z_out"]))
+	elif ver and zona == "Túnel":
+		estadio = not boca_visible(camara, datos, float(datos["z_boca"]))
+		calle = estadio
+	var clave := (1 if estadio else 0) + (2 if calle else 0)
+	if int(explorador.get_meta(META_CLAVE, 0)) == clave:
 		return
-	if dentro:
-		var raiz := explorador.get_parent()
-		if raiz == null:
-			return
-		for h in raiz.get_children():
-			if not (h is Node3D) or h is Light3D or h is Camera3D or h == explorador or String(h.name) in CONSERVAR:
+	devolver(explorador)
+	if clave == 0:
+		return
+	var raiz := explorador.get_parent()
+	if raiz == null:
+		return
+	var ocultos: Dictionary = {}
+	for h in raiz.get_children():
+		if not (h is Node3D) or h is Light3D or h is Camera3D or h == explorador or String(h.name) in CONSERVAR:
+			continue
+		if String(h.name) in CALLE:
+			if not calle:
 				continue
-			ocultos[h] = (h as Node3D).visible
-			(h as Node3D).visible = false
-		explorador.set_meta(META, ocultos)
-	else:
-		devolver(explorador)
+		elif not estadio:
+			continue
+		ocultos[h] = (h as Node3D).visible
+		(h as Node3D).visible = false
+	explorador.set_meta(META, ocultos)
+	explorador.set_meta(META_CLAVE, clave)
 
-## ¿Alguna parte de la boca del túnel (la abertura del vestuario hacia el campo) cae dentro del campo de visión de `camara`? Rejilla de 0,6 m sobre la abertura
-## y, si la cámara está a menos de 1,5 m del plano de la boca, siempre sí (la rejilla podría quedar entre dos puntos).
-static func boca_visible(camara: Camera3D, datos: Dictionary) -> bool:
+## ¿Cae alguna parte de la abertura rectangular (a lo ancho `x0` ± `medio`, de y = `y_min` a `y_max`, en el plano z) dentro del campo de visión de `camara`?
+static func _abertura_visible(camara: Camera3D, x0: float, medio: float, y_min: float, y_max: float, z: float) -> bool:
 	if not camara.is_inside_tree():
 		return true
-	var x0: float = datos["x0"]
-	var z := float(datos["z_out"])
-	var pos: Vector3 = camara.position
-	if absf(pos.z - z) < 1.5:
+	if absf(camara.position.z - z) < 1.5:
 		return true
-	var medio := TunelMedidas.MEDIO + 0.5   ## con margen para los marcos
 	var padre := camara.get_parent() as Node3D
 	var x := -medio
 	while x <= medio + 0.01:
-		var y := 0.0
-		while y <= TunelMedidas.ALTO + 0.5:
+		var y := y_min
+		while y <= y_max + 0.01:
 			var q := Vector3(x0 + x, y, z)
 			if camara.is_position_in_frustum(padre.to_global(q) if padre != null else q):
 				return true
 			y += 0.6
 		x += 0.6
 	return false
+
+## La boca del túnel (el plano z, con margen para los marcos).
+static func boca_visible(camara: Camera3D, datos: Dictionary, z: float) -> bool:
+	return _abertura_visible(camara, float(datos["x0"]), TunelMedidas.MEDIO + 0.5, 0.0, TunelMedidas.ALTO + 0.5, z)
+
+## Las ventanas corridas del fondo del edificio de una planta ≥ 1 (a z_fin + 0,31, de y0 + 1,2 a y0 + 2,6, casi todo el ancho).
+static func ventana_visible(camara: Camera3D, datos: Dictionary, planta: int) -> bool:
+	var y0 := float(planta) * EdificioClub.ALTO_PLANTA
+	return _abertura_visible(camara, float(datos["x0"]), TunelMedidas.VEST_MEDIO - 0.5, y0 + 1.2, y0 + 2.6, float(datos["z_fin"]) + 0.31)
 
 ## Deja el estadio como estaba (también al cerrar el recorrido).
 static func devolver(explorador: Node3D) -> void:
@@ -61,3 +89,4 @@ static func devolver(explorador: Node3D) -> void:
 		if is_instance_valid(h):
 			(h as Node3D).visible = bool(ocultos[h])
 	explorador.set_meta(META, {})
+	explorador.set_meta(META_CLAVE, 0)
