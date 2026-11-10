@@ -65,3 +65,42 @@ static func detalle(d: Directiva) -> String:
 	if not d.proyecto.is_empty():
 		l.append("🏁 %s: %s · %d/%d" % [Idiomas.t("Proyecto"), Idiomas.t(String(d.proyecto.get("texto", ""))), int(d.proyecto.get("cierres", 0)), int(d.proyecto.get("temporadas", 3))])
 	return "\n".join(l)
+
+## (10-11) Una fila compacta por objetivo secundario y por el proyecto, con su barra de progreso en vivo (`ObjetivosEnVivo`): verde = cumplido o bien,
+## naranja = en riesgo, rojo = perdido. Vacía si el club no tiene paquete.
+static func secundarios(m: Mundo) -> Control:
+	if m == null or m.directiva == null:
+		return null
+	var filas := ObjetivosEnVivo.lista(m, m.directiva)
+	if filas.is_empty():
+		return null
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 3)
+	for f: Dictionary in filas:
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 8)
+		var t := Label.new()
+		t.text = "%s %s" % [("🏁" if String(f["tipo"]) == "proyecto" else "•"), Idiomas.t(String(f["texto"]))]
+		t.add_theme_font_size_override("font_size", Tema.letra(11))
+		t.add_theme_color_override("font_color", Tema.SUAVE)
+		t.clip_text = true
+		t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h.add_child(t)
+		var barra := ProgressBar.new()
+		barra.custom_minimum_size = Vector2(90, 8)
+		barra.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		barra.show_percentage = false
+		barra.value = int(f["progreso"])
+		var fondo := StyleBoxFlat.new()
+		fondo.bg_color = Color(1, 1, 1, 0.1)
+		fondo.set_corner_radius_all(4)
+		var lleno := StyleBoxFlat.new()
+		var est := String(f["estado"])
+		lleno.bg_color = Tema.BIEN if (est == "cumplido" or est == "bien") else (Tema.ORO if est == "riesgo" else Tema.MAL)
+		lleno.set_corner_radius_all(4)
+		barra.add_theme_stylebox_override("background", fondo)
+		barra.add_theme_stylebox_override("fill", lleno)
+		barra.tooltip_text = "%s · ±%d" % [Idiomas.t(est), int(f["peso"])]
+		h.add_child(barra)
+		col.add_child(h)
+	return col

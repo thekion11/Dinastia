@@ -139,7 +139,7 @@ static func generar(m: Mundo, c: Club) -> Dictionary:
 				sec.append({"id": "cantera", "tipo": "cantera", "texto": "Tener %d jugadores sub-21 en la plantilla", "meta": nj, "peso": 5})
 			"social":
 				if c.socios > 0:
-					sec.append({"id": "social", "tipo": "social", "texto": "Aumentar la masa social un 5 %", "meta": 5, "peso": 4})
+					sec.append({"id": "social", "tipo": "social", "texto": "Aumentar la masa social un 8 %", "meta": 8, "peso": 3})
 			"estilo":
 				if tope:
 					sec.append({"id": "estilo", "tipo": "estilo", "texto": "Ser de los tres equipos más goleadores", "meta": 3, "peso": 5})
