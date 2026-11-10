@@ -238,6 +238,9 @@ func _probar() -> void:
 	var med := NativoPartido.probar_medias(400)
 	_comprobar(int(med["comparados"]) > 500 and int(med["distintos"]) == 0, "medias por línea de la fuerza: C++ = GDScript en %d onces (distintos: %d)" % [med["comparados"], med["distintos"]])
 	print("medias por línea: GDScript %.0f µs, C++ %.0f µs por once" % [med["t_gd_us"] / float(med["comparados"]), med["t_cpp_us"] / float(med["comparados"])])
+	var nn := NativoPartido.probar_notas(300)
+	_comprobar(int(nn["comparados"]) > 200 and int(nn["distintos"]) == 0, "notas finales del partido (_cerrar_notas): C++ = GDScript en %d cruces (distintos: %d)" % [nn["comparados"], nn["distintos"]])
+	print("cerrar notas: GDScript %.0f µs, C++ %.0f µs por cruce" % [nn["t_gd_us"] / float(nn["comparados"]), nn["t_cpp_us"] / float(nn["comparados"])])
 	## (10-11, paso a C++) La locomoción de League-Soccer: elección de clip, legalidad y bucle de huesos de las intermedias.
 	var lg := ProbarNativoLeague.probar(nat)
 	for f: String in lg["fallos"]:

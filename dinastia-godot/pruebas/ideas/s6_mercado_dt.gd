@@ -11,6 +11,12 @@ func _probar() -> void:
 	_comprobar(MercadoDT.presion(m, m.mi_club()) == -1, "antes de la jornada 8 no se juzga a nadie")
 	for i in 10:
 		m.avanzar_semana()
+	var igual_liga := true
+	for l: Liga in m.ligas:
+		var todas := MercadoDT.presiones_de(l)
+		for cl: Club in l.clubes:
+			igual_liga = igual_liga and int(todas.get(cl.id, -2)) == MercadoDT.presion(m, cl)
+	_comprobar(igual_liga, "presiones_de(liga) da lo mismo que presion() club a club (todas las ligas)")
 	var termo := mdt.termometro(m)
 	var orden := true
 	for i in range(1, termo.size()):
