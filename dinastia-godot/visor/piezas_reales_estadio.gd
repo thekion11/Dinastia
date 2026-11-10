@@ -7,6 +7,8 @@ extends RefCounted
 ##   torres_rampa  n (4, 8, 11…) + "torres_col"                                       → cilindros de rampas alrededor (tipo San Siro)
 ##   costillas     n + "costillas_col"                                                → costillas exteriores verticales (tipo Parc des Princes);
 ##                                                                                      no en calidad MÍNIMA
+##   fachada_curva {"color": hex}  → un anillo elíptico que envuelve el estadio: el óvalo se ve curvo por fuera
+##   colchon       {"color": hex, "filas": n} → paneles que se iluminan del color del club (tipo Allianz Arena)
 ## El color de la pista (`pista_col`) lo lee `_pista_atletismo`; los techos por lado (`techo_lados`) y las alturas por lado
 ## (`niveles_lado`) se traducen al perfil en `Club.perfil_estadio()`.
 const SEG_ARCO := 18
@@ -21,6 +23,12 @@ static func montar(root: Node3D, est: Dictionary, dx: float, dz: float, fondo: f
 		n += 1
 	if int(est.get("costillas", 0)) > 0 and Calidad.elegida > Calidad.MINIMO:
 		_costillas(root, int(est["costillas"]), Color(String(est.get("costillas_col", "#d8d8d8"))), dx, dz, fondo, alto)
+		n += 1
+	if est.get("fachada_curva") is Dictionary:
+		_fachada_curva(root, est["fachada_curva"] as Dictionary, dx, dz, fondo, alto)
+		n += 1
+	if est.get("colchon") is Dictionary:
+		_colchon(root, est["colchon"] as Dictionary, dx, dz, fondo, alto)
 		n += 1
 	return n
 
@@ -111,3 +119,46 @@ static func _costillas(root: Node3D, n: int, col: Color, dx: float, dz: float, f
 	m.albedo_color = col
 	m.roughness = 0.7
 	_mm(root, "CostillasFachada", caja, m, trans)
+
+## La fachada curva: un cilindro abierto, escalado a la elipse del estadio, que tapa los paños rectos de las tribunas.
+static func _fachada_curva(root: Node3D, f: Dictionary, dx: float, dz: float, fondo: float, alto: float) -> void:
+	var cil := CylinderMesh.new()
+	cil.top_radius = 1.0
+	cil.bottom_radius = 1.0
+	cil.height = alto * 1.02
+	cil.radial_segments = 40 if Calidad.elegida > Calidad.MINIMO else 24
+	cil.rings = 1
+	cil.cap_top = false
+	cil.cap_bottom = false
+	var m := StandardMaterial3D.new()
+	m.albedo_color = Color(String(f.get("color", "#c9ccd1")))
+	m.roughness = 0.8
+	m.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var b := Basis().scaled(Vector3(dx + fondo + 3.0, 1.0, dz + fondo + 3.0))
+	_mm(root, "FachadaCurva", cil, m, [Transform3D(b, Vector3(0, alto * 0.51, 0))])
+
+## El «colchón»: filas de paneles alrededor del estadio, al tresbolillo, con luz propia del color dado. Un MultiMesh.
+static func _colchon(root: Node3D, f: Dictionary, dx: float, dz: float, fondo: float, alto: float) -> void:
+	var filas := int(f.get("filas", 4))
+	var por_fila := 56
+	var panel := BoxMesh.new()
+	panel.size = Vector3(1.0, 1.0, 0.6)
+	var paso_y := alto * 1.02 / filas
+	var rx := dx + fondo + 3.4
+	var rz := dz + fondo + 3.4
+	var ancho := TAU * sqrt((rx * rx + rz * rz) * 0.5) / por_fila
+	var trans: Array = []
+	for fila in filas:
+		for i in por_fila:
+			var a := TAU * (float(i) + (0.5 if fila % 2 == 1 else 0.0)) / por_fila
+			var pos := Vector3(cos(a) * rx, paso_y * (fila + 0.5), sin(a) * rz)
+			var b := Basis(Vector3.UP, -a + PI * 0.5)
+			trans.append(Transform3D(Basis(b.x * ancho * 0.96, b.y * paso_y * 0.94, b.z), pos))
+	var m := StandardMaterial3D.new()
+	var col := Color(String(f.get("color", "#dc052d")))
+	m.albedo_color = col.lightened(0.3)
+	m.emission_enabled = true
+	m.emission = col
+	m.emission_energy_multiplier = 1.6
+	m.roughness = 0.4
+	_mm(root, "Colchon", panel, m, trans)
