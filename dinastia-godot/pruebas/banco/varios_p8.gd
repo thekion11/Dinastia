@@ -360,7 +360,8 @@ func _probar_marcas_y_escudos() -> void:
 	for fila: Variant in (Datos.tabla("ESTADIO_CLUB") as Dictionary).values():
 		con_esc += 1 if (fila as Dictionary).has("escudo") else 0
 		con_cam += 1 if (fila as Dictionary).has("camiseta") else 0
-	_comprobar(con_esc >= 46 and con_cam >= 99, "M-063/M-068: %d escudos y %d camisetas con rasgo del club real" % [con_esc, con_cam])
+	_comprobar(con_esc >= 46 and con_cam >= 98,   ## (10-11) 98: Fortaleza (BRA) descendió y salió de la liga con su camiseta
+		 "M-063/M-068: %d escudos y %d camisetas con rasgo del club real" % [con_esc, con_cam])
 	## Los fabricantes en la camiseta 3D (21-10-2026, M-057).
 	var mf := Mundo.new()
 	mf.generar(["CHI"], 4711)
