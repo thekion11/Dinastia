@@ -135,3 +135,29 @@ func _probar_precarga_menu() -> void:
 		if not ResourceLoader.exists(r):
 			faltan.append(r)
 	_comprobar(faltan.is_empty(), "todos existen (faltan: %s)" % str(faltan))
+
+## (10-11) El cajón de ajustes se llena al abrirlo por primera vez (`CajonAjustes.contenido`): antes del primer `abrir` está vacío, después trae lo mismo, y abrirlo otra vez no lo duplica. Sin `contenido`, como siempre.
+func _probar_cajon_perezoso() -> void:
+	_titulo("CAJÓN DE AJUSTES PEREZOSO (10-11): se llena al abrirlo")
+	var padre := Control.new()
+	add_child(padre)
+	var llamadas := [0]
+	var c := CajonAjustes.crear(padre, "banco_perezoso", func(_cj: CajonAjustes) -> void: llamadas[0] += 1)
+	_comprobar(llamadas[0] == 0, "antes del primer abrir el cajón no ha ejecutado su contenido (llamadas=%d)" % llamadas[0])
+	c.abrir(false)
+	_comprobar(llamadas[0] == 1, "al abrir ejecuta el contenido (llamadas=%d)" % llamadas[0])
+	c.cerrar(false)
+	c.abrir(false)
+	_comprobar(llamadas[0] == 1, "abrirlo otra vez no lo vuelve a llenar (llamadas=%d)" % llamadas[0])
+	c.cerrar(false)   ## el cajón recuerda si quedó abierto (`ajustes.cfg`): se deja cerrado para que la prueba se pueda repetir
+	## Recordado como abierto (`ajustes.cfg`): abre DENTRO de `crear` y el contenido ya recibe su cajón (antes reventaba: «seccion en Nil»).
+	c.abrir(false)   ## (se guarda abierto)
+	var recibido := [null]
+	var e := CajonAjustes.crear(padre, "banco_perezoso", func(cj: CajonAjustes) -> void: recibido[0] = cj)
+	_comprobar(e != null and recibido[0] == e, "con el cajón recordado abierto, el contenido recibe el propio cajón")
+	e.cerrar(false)
+	var d := CajonAjustes.crear(padre, "banco_clasico")
+	d.seccion("A")
+	d.boton("b", func() -> void: pass)
+	_comprobar(d._lista.get_child_count() == 2, "sin `contenido` se llena desde fuera, como siempre")
+	padre.queue_free()
