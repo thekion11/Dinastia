@@ -23,10 +23,21 @@ func _ready() -> void:
 	_m.generar([pais], 4711)
 	_m.tomar_el_mando(_m.ligas[0].clubes[int(OS.get_environment("CLUB")) % _m.ligas[0].clubes.size()].id)
 	## Como el menú: el calentado de caras y animaciones ya está en marcha desde que se entró.
-	PrecalentarCaras.presupuesto_ms = 0.0
-	PrecalentarCaras.por_fotograma = 80
-	await get_tree().process_frame
-	await get_tree().process_frame
+	## DWELL=1: el jugador estuvo un rato en el menú y el calentado ya terminó (lo normal); sin DWELL se pulsa nada más entrar (el peor caso: el calentado pendiente se hace DENTRO de la apertura).
+	if OS.get_environment("DWELL") != "":
+		var tope := Time.get_ticks_msec() + 90000
+		while Time.get_ticks_msec() < tope:
+			await get_tree().process_frame
+			var act: Variant = PrecalentarCaras.get("_activa")
+			var cola_vacia: bool = act == null or not is_instance_valid(act) or (act._cola as Array).is_empty()
+			if cola_vacia and PrecalentarAnim.terminado():
+				break
+		print("HASTA_JUGAR calentado del menú terminado tras %d ms de espera" % (Time.get_ticks_msec() - (tope - 90000)))
+	else:
+		PrecalentarCaras.presupuesto_ms = 0.0
+		PrecalentarCaras.por_fotograma = 80
+		await get_tree().process_frame
+		await get_tree().process_frame
 	RenderingServer.frame_post_draw.connect(_dibujado)
 	if OS.get_environment("MODO") == "club":
 		await _club()
