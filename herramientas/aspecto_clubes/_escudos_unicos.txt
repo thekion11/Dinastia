@@ -1,33 +1,49 @@
 # Generado por herramientas/aspecto_unicos.sh (no editar a mano): patrón distinto para que ningún escudo se repita (M-062).
 Al Shahaniya||banda||||||
 Aluminium Arak||banda||||||
+Amazonas||banda||||||
 Amiens||banda||||||
 Asteras Tripolis||banda||||||
 Atromitos||banda||||||
+Avaí||banda||||||
 Bandırmaspor||franjas||||||
 Baník Ostrava||banda||||||
 Bastia||banda||||||
+Bochum||banda||||||
 Boluspor||mitad||||||
+Botafogo-SP||banda||||||
 Braunschweig||banda||||||
-Bristol City||banda||||||
-CRB||franjas||||||
+Bristol City||liso||||||
+Brown de Adrogué||banda||||||
+CRB||mitad||||||
 CSKA Sofia||banda||||||
 Carrarese||franjas||||||
-Ceuta||banda||||||
+Castellón||banda||||||
+Ceará||franjas||||||
+Celaya||banda||||||
+Cesena||banda||||||
+Ceuta||franjas||||||
+Chacarita||banda||||||
+Charlton||banda||||||
 Chaves||banda||||||
 Chengdu Rongcheng||banda||||||
-Colón||banda||||||
+Colón||franjas||||||
+Coventry||banda||||||
+Cultural Leonesa||franjas||||||
 Córdoba||banda||||||
 Darmstadt||franjas||||||
-De Graafschap||banda||||||
+De Graafschap||liso||||||
+Defensores de Belgrano||mitad||||||
 Den Bosch||franjas||||||
-Deportivo||banda||||||
-Deportivo Madryn||banda||||||
+Deportivo||franjas||||||
+Deportivo Madryn||franjas||||||
+Dorados||banda||||||
 Dundee||franjas||||||
-Dynamo Dresden||banda||||||
-Düsseldorf||banda||||||
+Dynamo Dresden||franjas||||||
+Düsseldorf||franjas||||||
+Eibar||banda||||||
 Eindhoven||mitad||||||
-Elversberg||banda||||||
+Elversberg||liso||||||
 Empoli||mitad||||||
 Erzurumspor||cuartos||||||
 FC Copenhague||banda||||||
@@ -36,107 +52,122 @@ Felgueiras||cuartos||||||
 Ferro||franjas||||||
 Fiorentina||banda||||||
 Frosinone||mitad||||||
-Fürth||banda||||||
+Fürth||franjas||||||
 Gent||banda||||||
-Goiás||banda||||||
-Granada||mitad||||||
+Godoy Cruz||cuartos||||||
+Goiás||mitad||||||
+Granada||cuartos||||||
 Grasshoppers||franjas||||||
 Grenoble||cuartos||||||
 Haras El Hodoud||banda||||||
 Hibernian||banda||||||
 Holstein Kiel||banda||||||
-Huesca||banda||||||
-Jong Ajax||banda||||||
+Huesca||franjas||||||
+Ipswich||aro||||||
+Irapuato||mitad||||||
+Jong AZ||banda||||||
+Jong Ajax||franjas||||||
 Juve Stabia||cuartos||||||
-Juventude||franjas||||||
-Kaiserslautern||banda||||||
-Karlsruhe||aro||||||
+Juventude||cuartos||||||
+Kaiserslautern||franjas||||||
+Karlsruhe||chevron||||||
 Kilmarnock||cuartos||||||
 Konyaspor||banda||||||
+Las Palmas||aro||||||
 Lausanne-Sport||mitad||||||
-Leganés||liso||||||
-Leicester||franjas||||||
+Leganés||cruz||||||
+Leicester||mitad||||||
 Leixões||aro||||||
 Lokomotiva||banda||||||
 Ludogorets||banda||||||
 Lugano||banda||||||
 Luzern||cuartos||||||
 Macarthur FC||banda||||||
-Magdeburg||banda||||||
-Mantova||banda||||||
+Magdeburg||cuartos||||||
+Mantova||mitad||||||
 Marítimo||banda||||||
 Melgar||liso||||||
-Middlesbrough||banda||||||
-Modena||aro||||||
-Monza||franjas||||||
-Nancy||franjas||||||
+Middlesbrough||mitad||||||
+Mineros de Zacatecas||aro||||||
+Mirandés||mitad||||||
+Mitre||banda||||||
+Modena||chevron||||||
+Monza||chevron||||||
+Morelia||banda||||||
+Nancy||liso||||||
 Niza||liso||||||
 Nordsjælland||banda||||||
 Novorizontino||franjas||||||
+Nueva Chicago||banda||||||
 Nürnberg||banda||||||
 Odense||franjas||||||
 Oliveirense||chevron||||||
-Operário-PR||franjas||||||
+Operário-PR||cuartos||||||
 Osijek||banda||||||
 PAOK||banda||||||
-Padova||mitad||||||
-Paysandu||banda||||||
+Padova||cuartos||||||
+Paysandu||franjas||||||
 Paços de Ferreira||franjas||||||
 Penafiel||aro||||||
 Pendikspor||cruz||||||
-Pescara||banda||||||
-Ponte Preta||mitad||||||
+Pescara||mitad||||||
+Ponte Preta||aro||||||
 Portimonense||franjas||||||
-Portsmouth||mitad||||||
-Q.P.R.||franjas||||||
+Portsmouth||aro||||||
+Q.P.R.||rombos||||||
 RKC Waalwijk||banda||||||
-Racing Santander||mitad||||||
+Racing Santander||aro||||||
 Randers||franjas||||||
-Real Sociedad B||mitad||||||
+Real Sociedad B||tablero||||||
 Reggiana||banda||||||
 Reims||franjas||||||
-Roda JC Kerkrade||banda||||||
-Saint-Étienne||franjas||||||
-Sampdoria||chevron||||||
+Roda JC Kerkrade||mitad||||||
+Saint-Étienne||mitad||||||
+Sampdoria||banda_h||||||
 Samsunspor||rombos||||||
 San Martín de San Juan||banda||||||
 Sarpsborg 08||banda||||||
 Sarıyer||chevron||||||
-Schalke||cruz||||||
+Schalke||borde||||||
 Sepahan||banda||||||
 Servette||banda||||||
 Shanghai Port||franjas||||||
 Shanghai Shenhua||banda||||||
-Sheffield Utd||mitad||||||
-Sheffield Wed||rombos||||||
+Sheffield Utd||cruz||||||
+Sheffield Wed||interior||||||
 Silkeborg||mitad||||||
 Sion||tablero||||||
 Sivasspor||banda_h||||||
-Southampton||mitad||||||
-Spezia||franjas||||||
-Sport||banda||||||
+Southampton||cuartos||||||
+Spezia||mitad||||||
+Sport||cuartos||||||
 Sporting CP B||franjas||||||
-Sporting Gijón||cuartos||||||
+Sporting Gijón||rombos||||||
 St Mirren||cuartos||||||
 St. Gallen||franjas||||||
-Stoke||cuartos||||||
-Swansea||banda||||||
-Südtirol||cuartos||||||
+Stoke||aro||||||
+Swansea||liso||||||
+Südtirol||aro||||||
+TOP Oss||mitad||||||
+Tampico Madero||franjas||||||
+Tapatío||tablero||||||
 Tianjin Jinmen Tiger||cruz||||||
 Torreense||borde||||||
 Tromsø||franjas||||||
-Troyes||franjas||||||
+Troyes||chevron||||||
 Umm Salal||banda||||||
-VVV-Venlo||franjas||||||
-Vila Nova||aro||||||
-Vitesse||mitad||||||
+VVV-Venlo||liso||||||
+Venados||banda_h||||||
+Vila Nova||rombos||||||
+Vitesse||cuartos||||||
 Vizela||interior||||||
 Volos||aro||||||
 Volta Redonda||mitad||||||
 Watford||banda||||||
 Wolfsberger AC||banda||||||
-Wrexham||cuartos||||||
+Wrexham||borde||||||
 Young Boys||cuartos||||||
+Zaragoza||banda||||||
 Zhejiang FC||franjas||||||
 Zürich||rombos||||||
 Çorum||banda||||||

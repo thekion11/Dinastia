@@ -1,0 +1,20 @@
+#seleccion=Andorra
+#tier=0.12
+#globo=1.52,42.51
+#bandera=🇦🇩
+#confed=ucl,uel
+#liga=Primera Divisió|Liga Andorrana
+#copa=Copa Constitució|Copa Andorrana
+#nombres=Marc,Joan,Xavier,Jordi,Ivan,Oscar,Albert,Sergi,Josep,Carles,Pau,Adria,Eric,Ruben
+#apellidos=Garcia,Martinez,Fernandez,Pires,Moreno,Rodriguez,Sanchez,Gomes,Lopez,Alves,Ribeiro,Cortes,Casals,Font
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+FC Santa Coloma;Santa Colomina;#e30613;#ffffff;58;1000;1986;los Colomencs;el campo municipal de la parroquia del norte;El club más laureado del país, con una vitrina llena de ligas.
+Inter Club d'Escaldes;Inter Escaldino;#1d3f9e;#e30613;56;1000;1991;los Interistas;el campo de la zona termal;Un club con proyecto ambicioso y buena cantera.
+Atlètic Club d'Escaldes;Atletic Termal;#e30613;#ffffff;52;1000;2011;los Atléticos;el campo compartido de la zona termal;Un equipo joven que ha subido rápido a la élite.
+Penya Encarnada d'Andorra;Penya Granate;#a4123f;#ffffff;50;1300;1951;los Granates;el campo de la capital junto al río;Un histórico de la capital con afición fiel.
+CE Carroi;Carroi Capital;#f7d117;#000000;44;1300;1996;los Carroi;el campo de la capital, compartido;Un club de barrio que alterna ascensos y sustos.
+CF Esperança d'Andorra;Esperanza Andor;#0b8f3c;#ffffff;47;1300;2013;los Esperanzas;el campo de la capital, junto a la montaña;Un equipo modesto con ambición de consolidarse.
+FC Ordino;Ordinense;#1d3f9e;#ffffff;46;200;1986;los Ordinenses;el campo de la parroquia de montaña;Un club de valle que pelea cada año por mantenerse.
+FC Pas de la Casa;Paso Fronterizo;#f58220;#1d3f9e;42;700;2003;los Fronterizos;el campo de la estación de esquí fronteriza;El equipo de la localidad de esquí en la frontera.
+FC Rànger's;Rangers Montaña;#000000;#e30613;41;1300;1999;los Rangers;el campo de la capital, con césped sintético;Un club trabajador con jugadores de la cantera local.
+UE Santa Coloma;Union Colomina;#ffffff;#1d3f9e;40;1000;1932;los Unionistas;el campo municipal de la parroquia, compartido;El veterano de la parroquia, de larga tradición.

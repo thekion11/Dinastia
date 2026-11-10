@@ -311,8 +311,8 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"anios_en_club": m.anios_en_club, "rotacion_activa": m.rotacion_activa,
 		"bono_analisis": m.bono_analisis, "fin_partida": m.fin_partida,
 		"fondo": m.fondo.a_dic() if m.fondo != null else {},
-		"clubes": [],
-		"ligas": [],
+		"clubes": [], "ligas": [],
+		"paises_activos": LigasActivas.de(m),   ## (10-11) qué países se cargaron al empezar (y los añadidos después)
 		"copa": _copa_a_dic(m.copa),
 		"copas_mundo": CopasMundo.a_dic(m),   ## (10-11) las copas y el palmarés de todos los países
 		## Los sistemas que solo existen para TU club. Sin esto, guardar y cargar

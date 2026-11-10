@@ -1,0 +1,26 @@
+#seleccion=Madagascar
+#tier=0.15
+#globo=47.52,-18.91
+#bandera=🇲🇬
+#confed=afr
+#liga=Malagasy Pro League|Liga Malgache
+#copa=Copa de Madagascar|Copa Malgache
+#nombres=Rakoto,Andry,Hery,Tiana,Fanja,Mamy,Njaka,Toky,Faly,Lalaina,Tsiory,Rado,Haja,Mino
+#apellidos=Rakotoarisoa,Randrianasolo,Rasolofo,Razafindrakoto,Rabemananjara,Andriamanana,Ravelo,Rakotondrabe,Rajaonarison,Ratsimbazafy,Raharison,Razanakoto,Rasoanaivo,Andrianirina
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+CFFA;Cefefa Tana;#e30613;#ffffff;56;8000;1996;los Rojos de Andoharanofotsy;el estadio de la capital en las tierras altas;El club de las afueras de la capital, campeón reciente y referente del país.
+Fosa Juniors;Fosas Jóvenes;#0b8f3c;#f7d117;55;7000;2002;los Fosas;el estadio costero de la ciudad del noroeste;Un club de la costa noroeste con buena cantera y varios títulos.
+Elgeco Plus;Elgeco Tana;#1d3f9e;#ffffff;53;6000;2000;los Azules de la Capital;el campo municipal de la capital;Un equipo de la meseta central, habitual en lo alto de la tabla.
+Disciples FC;Discípulos;#000000;#ffffff;50;5000;2008;los Discípulos;el estadio de la ciudad de la meseta central;Un club de las tierras altas que ha crecido en poco tiempo.
+Mama FCA;Mama Ilakaka;#e30613;#000000;44;3000;2012;los Gemas;el campo de la ciudad de los zafiros;El club de una ciudad minera de piedras preciosas.
+COSFA;Cosfa Tana;#0b8f3c;#ffffff;51;7000;1981;los Militares;el estadio militar de la capital;El equipo de las fuerzas armadas, con larga historia en la liga.
+USCA Foot;Usca Tana;#f58220;#000000;48;5000;1990;los Naranjas;el campo universitario de la capital;Un club de la capital con identidad de barrio estudiantil.
+AS Fanalamanga;Fanalamanga;#e30613;#f7d117;47;4000;1992;los Lémures;el estadio de la región del lago del este;El representante de la región del lago Alaotra.
+TFFC Tsaramandroso;Tefefece Tsara;#0b8f3c;#000000;40;3000;2013;los Verdes del Norte;el campo de las afueras de la ciudad del noroeste;Un club emergente del noroeste que busca asentarse.
+AJSA;Interbarrios;#1d3f9e;#ffffff;46;6000;2000;los Interbarrios;el gran estadio nacional de la capital;Un club de la capital ligado a los distritos de la ciudad.
+Inate FC Rouge;Rojo Antsirabe;#e30613;#ffffff;42;4000;2010;los Rojos de la Meseta;el estadio de la ciudad termal de las montañas;Un club de la meseta central que compite en la élite.
+Avenir Sainte-Anne;Porvenir Santana;#f7d117;#0b8f3c;40;3000;2015;los Porvenir;el campo de un barrio de la capital;Un club de barrio recién ascendido desde la segunda categoría.
+Antimo Record FC;Antimo Toliara;#1d3f9e;#f7d117;41;4000;2012;los Antimo;el estadio de la ciudad del suroeste junto al mar;Un club de la costa suroeste que ocupa el sitio de los equipos locales.
+FC Clinique Zanatany;Clinica Zanatany;#0b8f3c;#ffffff;39;2000;2014;los Zanatany;el campo anexo de la capital;Un modesto club capitalino ligado a una clínica.
+CO Police Nationale;Policia Tana;#1d3f9e;#000000;40;3000;1990;los Policías;el campo de un cuartel de la capital;El equipo de la policía nacional.
+TGBC Academie Football;Academia Tigres;#f58220;#000000;38;2000;2016;los Tigres;el campo de una academia de la capital;Una academia juvenil que da el salto a la élite.

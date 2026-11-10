@@ -1,0 +1,20 @@
+#seleccion=Hong Kong
+#tier=0.12
+#globo=114.17,22.32
+#bandera=🇭🇰
+#confed=asia
+#liga=Hong Kong Premier League|Liga de Hong Kong
+#copa=Copa de Hong Kong|Copa Hongkonesa
+#nombres=Wai,Kit,Ming,Chun,Tsz,Ho,Jason,Matthew,Michael,Jordi,Vincent,Sandro,Andy,Kenneth
+#apellidos=Chan,Wong,Lee,Cheung,Lau,Leung,Ho,Yeung,Ng,Fung,Law,Tsang,Lam,Poon
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Kitchee;Kitchi;#4fa7e8;#ffffff;62;6664;1931;los Celestes;el estadio del barrio de Kowloon;El gran dominador reciente del país, con numerosos títulos.
+Eastern;Oriente HK;#e30613;#ffffff;57;11981;1932;los Rojos del Este;el gran estadio del este de la isla;Un club histórico con la afición más numerosa de la ciudad.
+Lee Man;Lee Hombre;#0b8f3c;#ffffff;56;3500;2014;los Verdes;el estadio deportivo del distrito de Tseung Kwan O;Un equipo de proyecto fuerte con varios títulos recientes.
+Tai Po;Tai Po Verde;#0b8f3c;#f7d117;53;3200;2002;los del Norte;el estadio deportivo del distrito norte;Un club sorprendente que ganó la liga en años recientes.
+Southern;Distrito Sur;#1d3f9e;#ffffff;49;2750;1963;los del Sur;el campo de la costa sur de la isla;Un equipo del sur de la isla que juega en un campo modesto.
+Kowloon City;Ciudad Kowloon;#e30613;#000000;44;2194;2023;los Dragones;el campo del barrio popular de Kowloon;Recién llegado al fútbol de élite.
+Rangers HK;Guardabosques HK;#1d3f9e;#e30613;46;2500;1958;los Rangers;el campo deportivo de un barrio de la isla de Tsing Yi;Un club clásico con equipo humilde y cantera.
+North District;Distrito Norte;#f58220;#000000;45;2500;2014;los Naranjas del Norte;el campo deportivo del distrito norte;Un club que juega en las afueras de la ciudad.
+HKFC;Club Futbol HK;#000000;#ffffff;40;2750;1886;los Veteranos;el estadio del histórico club del barrio de Happy Valley;El club más antiguo de la ciudad, de ambiente tradicional.
+Eastern District;Este Distrito;#f7d117;#e30613;38;11981;2022;los Amarillos del Este;el campo comunitario del distrito de la isla;Un club modesto de nueva creación en el este.

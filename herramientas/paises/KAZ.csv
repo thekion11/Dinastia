@@ -1,0 +1,26 @@
+#seleccion=Kazajistán
+#tier=0.5
+#globo=71.43,51.17
+#bandera=🇰🇿
+#confed=ucl,uel
+#liga=Liga Premier de Kazajistán|Liga Kazaja
+#copa=Copa de Kazajistán|Copa Kazaja
+#nombres=Aibek,Nurlan,Askar,Timur,Daniyar,Yerlan,Marat,Bauyrzhan,Serik,Arman,Ruslan,Zhandos,Nursultan,Dauren
+#apellidos=Nurgaliyev,Seitkali,Abdrakhmanov,Kasymov,Zhumabayev,Omarov,Sadykov,Tleubayev,Bekov,Utegenov,Kenzhebayev,Amirov,Zhaksylykov,Dosmukhamedov
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Altai;Altai Ust-Kam;#0057b8;#ffffff;42;8500;1964;los Montañeses;el estadio de la ciudad minera del este;Un club de las montañas del Altái que lucha por sostenerse.
+Aktobe;Aktobe Ural;#c8102e;#0057b8;52;12729;1967;los Rojiazules;el estadio central de la ciudad del oeste;Un veterano campeón que ha vuelto a pelear arriba.
+Astana;Astana Capital;#f2c200;#0057b8;58;30200;2009;los Amarillos de la Capital;el moderno estadio cubierto de la capital;Un club joven y rico que domina el campeonato.
+Atyrau;Atyrau Munay;#000000;#c8102e;48;8900;1980;los Petroleros;el estadio de la ciudad petrolera junto al río Ural;Un equipo de la zona del petróleo que busca asentarse.
+Caspiy;Caspio Aktau;#0057b8;#f2c200;40;5000;1997;los Marinos del Caspio;el pequeño estadio juvenil de la costa del mar Caspio;Un modesto club costero que pelea por la permanencia.
+Elimai;Elimay Semey;#0057b8;#ffffff;44;8000;2007;los Celestes del Irtish;el estadio de la ciudad histórica del este;Un club ambicioso que ha crecido en pocos años.
+Irtysh Pavlodar;Irtish Pavlodar;#f2c200;#000000;50;12000;1965;los Abejas del Irtish;el estadio central de la ciudad industrial del norte;Un histórico que ya fue campeón y mantiene su afición.
+Kairat;Kairat Almaty;#f2c200;#000000;60;23804;1954;los Amarillos de Almaty;el estadio central de la antigua capital;Uno de los clubes más laureados y con más afición del país.
+Kaisar;Kaysar Kyzyl;#f2c200;#000000;46;7500;1992;los Emperadores;el estadio de la ciudad del sur junto al río;Un club con tradición de copas y de sorpresas.
+Kyzylzhar;Kyzylyar Petro;#f2c200;#c8102e;47;11000;1968;los Rojos del Norte;el estadio de la ciudad fronteriza del norte;Un equipo del norte con una afición muy fiel.
+Okzhetpes;Okzhetpes Kok;#0057b8;#ffffff;41;4100;1968;los Flechas;el estadio de la ciudad de los lagos del norte;Un club pequeño de la región de los lagos que lucha por quedarse.
+Ordabasy;Ordabasi Shym;#000000;#ffffff;53;20000;1968;los Gladiadores del Sur;el gran estadio de la ciudad más poblada del sur;Un campeón histórico con una de las mejores hinchadas.
+Tobol;Tobol Kostanay;#0057b8;#f2c200;56;9500;1967;los Azules de la Estepa;el estadio central de la ciudad de la estepa;Un equipo que ha sido campeón y juega competiciones europeas.
+Ulytau;Ulytau Jezka;#c8102e;#ffffff;38;2500;1965;los Mineros;el pequeño estadio de la ciudad del cobre;Un humilde club minero recién llegado a la élite.
+Zhenis;Zhenis Astana;#f2c200;#c8102e;45;30200;2018;los Triunfadores;el mismo gran estadio cubierto, pero con otro club de la capital;Un club joven de la capital que busca hacerse un hueco.
+Zhetysu;Zhetisu Taldy;#f2c200;#0057b8;43;4000;1981;los Siete Ríos;el estadio de la ciudad al pie de las montañas del sureste;Un club histórico del sureste que cuesta mantener en la élite.

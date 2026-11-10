@@ -10,7 +10,6 @@ Hapoel Tel Aviv||cruz||||||
 CSKA Moscow||rombos||||||
 Akhmat Grozny||tablero||||||
 FC Seoul||banda||||||
-Córdoba||mitad||||||
 KFUM Oslo||cuartos||||||
 Persepolis||aro||||||
 Al Duhail||chevron||||||
@@ -18,4 +17,3 @@ Guingamp||cruz||||||
 Heidenheim||franjas||||||
 Indep. Petrolero||mitad||||||
 Lokomotiv Plovdiv||banda||||||
-Racing Santander||cuartos||||||

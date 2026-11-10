@@ -1,0 +1,24 @@
+#seleccion=Guinea
+#tier=0.2
+#globo=-13.68,9.64
+#bandera=🇬🇳
+#confed=afr
+#liga=Ligue 1 Pro de Guinea|Liga Guineana
+#copa=Copa de Guinea|Copa Guineana
+#nombres=Mamadou,Ibrahima,Mohamed,Sekou,Alpha,Abdoulaye,Aboubacar,Ousmane,Amadou,Naby,Fodé,Lansana,Boubacar,Thierno
+#apellidos=Camara,Diallo,Bah,Sylla,Keita,Touré,Soumah,Condé,Barry,Sow,Traoré,Bangoura,Konaté,Cissé
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Horoya AC;Horoya Conakri;#ffffff;#d71f27;60;25000;1975;los Blancos;el gran estadio nacional de la capital;El club más laureado del país, habitual en las copas africanas.
+Hafia FC;Hafía Conakri;#d71f27;#ffffff;56;8000;1951;los Leones Rojos;un estadio de barrio de la capital;Un histórico con grandes campeonatos continentales en su pasado.
+AS Kaloum;Kaloum Capital;#1d4fa8;#ffffff;50;10000;1970;los Azules;el campo del distrito central de la capital;El club del corazón administrativo de la capital.
+Milo FC;Milo Kankan;#d71f27;#f5c400;50;10000;1961;los Mineros;el estadio de la gran ciudad del este;El club de la segunda ciudad del país, con mucha afición.
+Académie SOAR;Academia Soar;#1f8a3b;#ffffff;48;5000;2007;los Alumnos;el campo de entrenamiento de un distrito de la capital;Una academia formadora que compite en la primera división.
+Renaissance FC;Renacer Conakri;#d71f27;#ffffff;42;4000;2010;los Renacidos;un campo de barrio de la capital;Un club capitalino joven que ha ascendido en la última década.
+ASM Sangarédi;Sangaredi Mina;#1d4fa8;#ffffff;41;3000;1990;los Mineros del Norte;el campo de una ciudad minera del noroeste;El club de una localidad bauxitera, con apoyo de la industria local.
+CI Kamsar;Kamsar Bauxita;#1d4fa8;#d71f27;46;5000;1989;los Bauxiteros;el campo de una ciudad portuaria minera de la costa;El club de la industria de la bauxita, campeón en años pasados.
+AS Ashanti Golden Boys;Ashanti Dorados;#f5c400;#111111;44;4000;1987;los Dorados;el campo de una ciudad minera del noreste;Un club de una zona de minas de oro.
+Wakriya AC;Wakria Boké;#1f8a3b;#111111;43;4000;1975;los Verdes del Oeste;el estadio de una ciudad minera del noroeste;El club de la región bauxitera, con campeonatos en su historia.
+Guinée Foot Elite;Elite Guineana;#f5c400;#1d4fa8;37;3000;2012;los Elitistas;un campo de barrio de la capital;Un club formativo recién ascendido desde la segunda división.
+Flamme Olympique;Llama Olímpica;#f5c400;#d71f27;40;3000;1990;las Llamas;un pequeño campo de la capital;Un modesto club capitalino que busca asentarse.
+RCC Kamsar;Kamsar Rapido;#1f8a3b;#ffffff;38;3000;2000;los Rápidos;el campo de una ciudad portuaria minera de la costa;Un recién ascendido que comparte ciudad con el club bauxitero.
+Loubha Télimélé;Lubha Télimélé;#1f8a3b;#f5c400;38;3000;1985;los Pastores;el campo de una ciudad del interior de las montañas;El club de una pequeña ciudad, el más humilde del grupo.

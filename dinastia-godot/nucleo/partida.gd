@@ -364,6 +364,10 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 		m.clubes[c.id] = c
 	for d: Dictionary in datos["ligas"]:
 		m.ligas.append(_dic_a_liga(d, m))
+	if datos.get("paises_activos") is Array:   ## (10-11) partidas viejas no la traen: se deduce de las ligas
+		LigasActivas.fijar(m, datos["paises_activos"] as Array)
+	else:
+		LigasActivas.registrar(m)
 	m.copa = _dic_a_copa(datos.get("copa", {}), m)
 	CopasMundo.desde_dic(m, datos.get("copas_mundo", {}))
 	m.mercado.desde_dic(datos.get("mercado", {}))

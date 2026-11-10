@@ -88,7 +88,7 @@ func _crear() -> void:
 	var m := Mundo.new()
 	Escudo.limpiar_cache()
 	Cara.limpiar_cache()
-	m.generar([], 0)
+	m.generar(LigasActivas.para_generar(), 0)
 	m.mi_club_id = ""
 	m.carrera_jugador = CarreraJugador.crear(m, nombre, _puesto, _zurdo, int(Time.get_unix_time_from_system()))
 	mundo = m

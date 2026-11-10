@@ -1,0 +1,20 @@
+#seleccion=Armenia
+#tier=0.3
+#globo=44.50,40.18
+#bandera=🇦🇲
+#confed=ucl,uel
+#liga=Premier League de Armenia|Liga Armenia
+#copa=Copa de Armenia|Copa Armenia
+#nombres=Armen,Aram,Arman,Garik,Davit,Hovhannes,Narek,Tigran,Artur,Karen,Levon,Gevorg,Vahe,Samvel
+#apellidos=Hakobyan,Sargsyan,Grigoryan,Harutyunyan,Petrosyan,Avetisyan,Mkrtchyan,Karapetyan,Manukyan,Ghazaryan,Melkonyan,Hovhannisyan,Vardanyan,Baghdasaryan
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Pyunik;Piunik Erevan;#0057b8;#c8102e;60;1000;1992;los Fénix;el pequeño estadio juvenil de la capital;El club más laureado del país, con una vitrina llena de ligas.
+Ararat-Armenia;Ararat Armenio;#f2c200;#000000;58;1428;2017;los Amarillos de la Academia;el campo de la academia de fútbol de la capital;Un club joven que ha ganado varias ligas en poco tiempo.
+Noah;Noé Abovyan;#0057b8;#ffffff;56;3100;2016;los Marineros;el estadio municipal de la ciudad satélite al norte de la capital;Un proyecto ambicioso que ha crecido muy rápido en la élite.
+Shirak;Shirac Gyumri;#0057b8;#ffffff;54;4000;1958;los Azules del Norte;el estadio de la segunda ciudad del país;Histórico campeón con una afición apasionada en el noroeste.
+Urartu;Urartou Erevan;#f2c200;#0057b8;50;4860;1992;los Urartianos;el estadio propio del club en la capital;Un club capitalino que toma su nombre de un antiguo reino.
+Alashkert;Alashkerd Abov;#c8102e;#ffffff;50;3100;1990;los Rojos de Alashkert;el estadio municipal de la ciudad satélite al norte de la capital;Un equipo con historia que alterna ligas y copas.
+Ararat Yerevan;Araratino Erevan;#c8102e;#ffffff;46;14403;1935;los Montañeses;el gran estadio nacional de la capital;Un clásico histórico que juega en el mayor estadio del país.
+Van;Vahn Charentsav;#f2c200;#0057b8;42;5000;2019;los Vanenses;el estadio de una pequeña ciudad cercana a la capital;Un club joven de provincia que busca asentarse en la élite.
+Gandzasar Kapan;Gandsasar Kapan;#f2c200;#000000;40;1000;1996;los Mineros del Sur;el pequeño estadio de la ciudad minera del sur;El representante de la región más meridional del país.
+BKMA Yerevan;Bkmah Erevan;#0057b8;#ffffff;38;1500;2021;los Cadetes;el campo de entrenamiento de un barrio de la capital;Un club nacido de una academia deportiva que sube con fuerza.

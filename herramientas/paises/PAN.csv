@@ -8,15 +8,15 @@
 #nombres=Carlos,José,Luis,Aníbal,Adolfo,Édgar,Michael,Fidel,Armando,Eric,César,Alberto,Abdiel,Ismael
 #apellidos=González,Rodríguez,Pérez,Gómez,Barría,Murillo,Cooper,Godoy,Escobar,Blackburn,Davis,Quintero,Torres,Ávila
 real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
-Tauro;Toro Capital;#ffffff;#000000;60;32000;1984;los Toros del Pacífico;el gran estadio nacional de la capital;El club más laureado del país en los últimos años.
-Alianza;Alianza Canal;#003087;#ffffff;57;32000;1996;los Azules;el gran estadio nacional de la capital;Un equipo capitalino que ha ganado títulos recientes.
-Plaza Amador;Plaza Amadeo;#c8102e;#ffffff;55;1450;1955;los Rojiblancos;el pequeño estadio del barrio histórico;Un club de barrio con mucha historia en la capital.
-Árabe Unido;Arabes Colon;#c8102e;#ffffff;56;4000;1994;los Árabes;el estadio de la ciudad portuaria del Caribe;El club de la ciudad atlántica, ganador de varios títulos.
-Club Deportivo del Este;Depor Oriental;#c8102e;#003087;48;5000;2012;los del Este;el estadio de la zona este de la capital;Un club emergente de la zona oriental capitalina.
-Sporting San Miguelito;Sportivo Miguel;#003087;#c8102e;50;5500;1988;los Sportivos;el estadio del populoso distrito vecino;El equipo de uno de los distritos más poblados del país.
-Herrera;Herrera Azuero;#00843d;#ffffff;46;4000;1999;los Herreranos;el estadio de la ciudad de la península;El club de la península de Azuero, de ambiente familiar.
-CA Independiente;Indep Chorrera;#c8102e;#ffffff;52;4500;1975;los Rojos de La Chorrera;el estadio de la ciudad del oeste;Un histórico del oeste que forma muchos canteranos.
-Veraguas;Veragua United;#00843d;#ffd100;42;3500;2017;los Veragüenses;el estadio de la ciudad del interior;Un club joven del interior que ha dado la sorpresa.
-CD Universitario;Estudiantes Pan;#003087;#ffd100;43;3000;2002;los Universitarios;el campo universitario de la capital;El equipo de los estudiantes, cantera de la liga.
-Chiriquí;Chiricano Alto;#ffffff;#c8102e;44;5000;2008;los Chiricanos;el estadio de la ciudad del oeste fronterizo;El club de la provincia fronteriza del oeste.
-San Francisco;San Franco FC;#003087;#ffffff;47;4000;1999;los Sanfranciscanos;el estadio de la ciudad del oeste;Un equipo del oeste con buena cantera y baño de títulos.
+Tauro;Toro Capital;#ffffff;#000000;60;23000;1984;los Toros del Pacífico;el gran estadio nacional de la capital, como local principal;El club más laureado del país en los últimos años.
+Alianza;Alianza Canal;#003087;#ffffff;57;23000;1996;los Azules;el gran estadio nacional de la capital, compartido;Un equipo capitalino que ha ganado títulos recientes.
+Plaza Amador;Plaza Amadeo;#c8102e;#ffffff;55;1100;1955;los Rojiblancos;el pequeño complejo deportivo de la capital, como local principal;Un club de barrio con mucha historia en la capital.
+Árabe Unido;Arabes Colon;#c8102e;#ffffff;56;1100;1994;los Árabes;el pequeño complejo deportivo de la capital, que usa de local;El club de la ciudad atlántica, ganador de varios títulos.
+Club Deportivo del Este;Depor Oriental;#c8102e;#003087;48;1100;2012;los del Este;el pequeño complejo deportivo capitalino, compartido con la zona este;Un club emergente de la zona oriental capitalina.
+Sporting San Miguelito;Sportivo Miguel;#003087;#c8102e;50;1450;1988;los Sportivos;el estadio del populoso distrito vecino;El equipo de uno de los distritos más poblados del país.
+Herrera;Herrera Azuero;#00843d;#ffffff;46;300;1999;los Herreranos;el pequeño estadio de la ciudad de la península;El club de la península de Azuero, de ambiente familiar.
+CA Independiente;Indep Chorrera;#c8102e;#ffffff;52;2250;1975;los Rojos de La Chorrera;el estadio del oeste, como local principal;Un histórico del oeste que forma muchos canteranos.
+Veraguas;Veragua United;#00843d;#ffd100;42;3000;2017;los Veragüenses;el estadio de la ciudad del interior;Un club joven del interior que ha dado la sorpresa.
+CD Universitario;Estudiantes Pan;#003087;#ffd100;43;4700;2002;los Universitarios;el estadio universitario de la ciudad del interior;El equipo de los estudiantes, cantera de la liga.
+Umecit FC;Umbral Este;#1d3f9e;#ffffff;44;1100;2008;los Universitarios del Este;el pequeño complejo deportivo capitalino, que usa de sede;Un club universitario que ha subido con fuerza en los últimos años.
+San Francisco;San Franco FC;#003087;#ffffff;47;2250;1999;los Sanfranciscanos;el estadio del oeste, compartido;Un equipo del oeste con buena cantera y baño de títulos.

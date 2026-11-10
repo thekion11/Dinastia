@@ -1,0 +1,20 @@
+#seleccion=Albania
+#tier=0.3
+#globo=19.82,41.33
+#bandera=🇦🇱
+#confed=ucl,uel
+#liga=Kategoria Superiore|Liga Albanesa
+#copa=Copa de Albania|Copa Albanesa
+#nombres=Arben,Besnik,Ervin,Gentian,Klajdi,Ardit,Fatjon,Endrit,Altin,Redon,Dritan,Erion,Kristi,Alban
+#apellidos=Hoxha,Shehu,Prifti,Dervishi,Kola,Gjoka,Brahimi,Leka,Cela,Zeqiri,Marku,Rama,Basha,Doka
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Dinamo City;Dinamo Tiran;#1d4fa8;#ffffff;58;22500;2014;los Azules de la Capital;el gran estadio nacional de la capital, compartido con la selección;Un club joven y ambicioso que ha crecido muy rápido y juega en el estadio nacional.
+Egnatia;Egnacia Rrogo;#f5c400;#1d4fa8;60;4267;2014;los Amarillos;un estadio moderno en una pequeña localidad entre Tirana y Durrës;Un club de una localidad pequeña que ha ganado varias ligas gracias a un proyecto muy ambicioso.
+Partizani;Partisano Tirana;#c8102e;#ffffff;56;3959;1946;los Rojos;un estadio de barrio de la capital, el club del ejército;Un histórico de la capital, con muchos títulos y fundado como equipo del ejército.
+Tirana;Tiran Albo;#1d4fa8;#ffffff;55;7308;1920;los Blanquiazules;un estadio de barrio de la capital que lleva el nombre de un ídolo local;El club más antiguo y laureado del país, de los más grandes de la capital.
+Vllaznia;Vlaznia Shkoder;#c8102e;#1d4fa8;52;16022;1919;los Hermanos del Norte;el estadio histórico de la gran ciudad del norte;El gran club del norte del país, con varias ligas y una afición muy fiel.
+Teuta;Teuta Durres;#1d4fa8;#c8102e;50;12040;1920;los Reyes del Puerto;el estadio de la ciudad portuaria del Adriático;Un clásico del litoral, que lleva el nombre de una reina ilíria y ha sido campeón varias veces.
+Flamurtari;Flamurtar Vlora;#c8102e;#111111;47;5600;1923;los de la Bandera;el estadio de una ciudad costera del sur;Un histórico del sur que llegó a jugar eliminatorias europeas con éxito en los años ochenta.
+Elbasani;Elbasan Norte;#1d4fa8;#ffffff;44;12800;1923;los Azules del Centro;un gran estadio moderno de una ciudad del centro del país;Un club con tradición del centro del país, campeón en los años ochenta.
+Vora;Vora Costa;#f5c400;#111111;40;3200;2008;los Canarios;un pequeño estadio de una localidad cercana a la capital;Un club modesto de una localidad junto a la capital que ha llegado muy arriba.
+Bylis;Bilis Balsh;#1d4fa8;#ffffff;38;2464;1972;los Petroleros;el pequeño estadio de una ciudad del sur ligada al petróleo;Un club del interior sur, de una ciudad petrolera, el más modesto de la liga.

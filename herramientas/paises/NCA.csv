@@ -1,0 +1,20 @@
+#seleccion=Nicaragua
+#tier=0.15
+#globo=-86.25,12.13
+#bandera=🇳🇮
+#confed=conc
+#liga=Liga Primera de Nicaragua|Liga Nicaraguense
+#copa=Copa de Nicaragua|Copa Nicaraguense
+#nombres=Carlos,Luis,Juan,Jose,Marlon,Oscar,Byron,Jaime,Henry,Elmer,Cristhian,Ariel,Manuel,Darwin
+#apellidos=Gutierrez,Lopez,Martinez,Rodriguez,Hernandez,Flores,Castillo,Ramirez,Sanchez,Mendoza,Rivas,Talavera,Obando,Zeledon
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Real Estelí;Real Estelino;#ffffff;#1d3f9e;62;11000;1961;los Reales;el estadio de la ciudad del norte;El gran dominador del campeonato nacional en los últimos años.
+Diriangén;Diriangen Cacic;#e30613;#ffffff;56;8000;1917;los Caciques;el estadio de la ciudad cercana a la costa del Pacífico;El club más antiguo y laureado, con una gran afición.
+Managua F.C.;Managua Capital;#1d3f9e;#ffffff;54;15000;2009;los Capitalinos;el estadio nacional de la capital, como local principal;Un club de la capital con proyecto ambicioso.
+Walter Ferretti;Walter Ferrero;#e30613;#000000;50;15000;1950;los Ferrettistas;el estadio nacional de la capital, compartido con otros clubes;Un histórico de la capital que alterna épocas buenas y malas.
+UNAN Managua;Unan Capital;#1d3f9e;#f7d117;46;15000;1998;los Universitarios;el gran estadio nacional de la capital, que usa a ratos;El equipo de la universidad, cantera de jóvenes.
+Real Madriz;Madriz Somoto;#1d3f9e;#ffffff;43;3000;1965;los Madrizanos;el estadio de la ciudad de la frontera norte;Un club del norte que ha vuelto a la máxima categoría tras unos años fuera.
+Matagalpa FC;Matagalpa Cafeto;#0b8f3c;#f7d117;45;15000;2007;los Cafeteros;el estadio nacional de la capital, que usa de local prestado;Representante de la zona del café.
+Sport Sébaco;Sport Sebaquense;#e30613;#f7d117;42;1000;1992;los Sebaqueños;el estadio de la ciudad agrícola del centro;Un club del valle agrícola que pelea por quedarse.
+ART Jalapa;Art Jalapeño;#f7d117;#000000;41;2000;1990;los Jalapeños;el pequeño campo de la ciudad de la frontera norte;El más modesto de la liga, de la zona fronteriza.
+Rancho Santana;Rancho Santanero;#ff7a00;#ffffff;38;15000;2018;los Rancheros;el estadio nacional de la capital, que usa como sede alterna;Un recién llegado respaldado por un complejo turístico.

@@ -49,6 +49,10 @@ static func _indice_de() -> Dictionary:
 ## jugadores reales se aplicaron en total, para poder comprobarlo desde el
 ## banco de pruebas sin contar a mano.
 static func aplicar(mundo: Mundo) -> int:
+	return aplicar_a(mundo, mundo.clubes.values())
+
+## Las plantillas reales solo en estos clubes (ligas añadidas a mitad de partida: los demás ya las tienen).
+static func aplicar_a(_mundo: Mundo, clubes: Array) -> int:
 	var idx := _indice_de()
 	if idx.is_empty():
 		return 0
@@ -56,7 +60,7 @@ static func aplicar(mundo: Mundo) -> int:
 	if not (posd is Dictionary):
 		return 0
 	var total := 0
-	for club: Club in mundo.clubes.values():
+	for club: Club in clubes:
 		var lista: Variant = idx.get(Nombres.limpiar(club.nombre))
 		if not (lista is Array) or (lista as Array).is_empty():
 			continue

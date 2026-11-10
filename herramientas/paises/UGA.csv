@@ -1,0 +1,26 @@
+#seleccion=Uganda
+#tier=0.2
+#globo=32.58,0.35
+#bandera=🇺🇬
+#confed=afr
+#liga=Uganda Premier League|Liga Ugandesa
+#copa=Copa de Uganda|Copa Ugandesa
+#nombres=Moses,Denis,Emmanuel,Allan,Joseph,Farouk,Isaac,Brian,Steven,Ibrahim,Hassan,Patrick,Godfrey,Ronald
+#apellidos=Okello,Mugisha,Kasozi,Ssemakula,Opio,Kato,Namanya,Mukasa,Wasswa,Byaruhanga,Lutaaya,Otim,Ochieng,Tumusiime
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Vipers SC;Viboras Kitende;#1d3f9e;#ffffff;57;15000;1950;las Víboras;el estadio moderno de las afueras de la capital;Un gigante del país con varios títulos y presencia continental.
+SC Villa;Villa Kampala;#1d3f9e;#ffffff;56;20000;1975;los Jogoo;el gran estadio del club en la capital;El club más laureado del país, con una enorme afición.
+KCCA FC;KCCA Capital;#f7d117;#000000;58;3000;1963;los Kasasiro;el estadio de la ciudad capital junto al hipódromo;El club del ayuntamiento de la capital, campeón habitual de la liga.
+Express FC;Expreso Kampala;#e30613;#ffffff;53;15000;1957;los Rojos;el viejo estadio del barrio de la capital;Un histórico de la capital con cantera tradicional.
+URA FC;URA Recaudadores;#f7d117;#1d3f9e;54;2000;1998;los Taxmen;el estadio de la ciudad industrial cercana;El club de la agencia tributaria, regular en las copas.
+Police FC Jinja;Policia Jinja;#1d3f9e;#e30613;48;1000;1999;los Agentes;el centro recreativo de la ciudad del Nilo;El equipo de la policía, con un proyecto de cantera.
+Maroons FC;Cimarron Luzira;#7a1f2b;#ffffff;47;1000;1970;los Cimarrones;el estadio de la prisión de la capital;El equipo de los servicios penitenciarios, aguerrido y físico.
+Mbarara City FC;Mbarara Ciudad;#0b8f3c;#ffffff;49;2000;2002;los Mbarara;el estadio de la ciudad del suroeste;El club de la ciudad del oeste que sueña con los primeros puestos.
+Kitara FC;Kitara Hoima;#f58220;#000000;49;20000;2018;los Jóvenes del Lago;el gran estadio de la ciudad petrolera del oeste;Un club joven con un estadio de gran aforo.
+Bul FC;Bul Jinja;#e30613;#f7d117;45;1000;1978;los Búfalos;el pequeño estadio municipal de la ciudad del Nilo;El equipo de la empresa de aceites, modesto y luchador.
+NEC FC;NEC Bugolobi;#1d3f9e;#f7d117;45;1000;2008;los Empresarios;el campo patrocinado del barrio de Bugolobi;El club de una corporación nacional, de proyecto estable.
+UPDF FC;Ejercito Bombo;#0b8f3c;#000000;46;1000;1994;los Soldados;el estadio de la ciudad militar al norte de la capital;El club de las fuerzas armadas, disciplinado y duro.
+Lugazi FC;Lugazi Azucar;#0b8f3c;#ffffff;43;1000;2004;los Cañeros;el estadio de la ciudad azucarera;Un modesto club de la zona de la caña de azúcar.
+Calvary FC;Calvario Yumbe;#7a1f2b;#f7d117;40;1000;2015;los Calvarios;el campo escolar de la ciudad del norte;Un recién llegado del norte, muy humilde.
+Buhimba Saints FC;Santos Buhimba;#ffffff;#1d3f9e;40;3000;2012;los Santos;el estadio del parque de la ciudad del oeste;Un club emergente del oeste, con aforo estimado.
+Entebbe UPPC;Entebbe Prensa;#f58220;#1d3f9e;42;2000;2001;los Impresores;el campo de la pesquería junto al lago;El club de la imprenta pública, ligado a la ciudad del aeropuerto.

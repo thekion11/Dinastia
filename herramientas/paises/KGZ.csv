@@ -1,0 +1,24 @@
+#seleccion=Kirguistán
+#tier=0.12
+#globo=74.59,42.87
+#bandera=🇰🇬
+#confed=asia
+#liga=Kyrgyz Premier League|Liga Kirguisa
+#copa=Copa de Kirguistán|Copa Kirguisa
+#nombres=Aibek,Azamat,Bakyt,Nursultan,Ruslan,Eldar,Tilek,Kanat,Ernis,Mirlan,Adilet,Bektur,Timur,Emil
+#apellidos=Akmatov,Toktogulov,Asanov,Abdyraimov,Kasymov,Sultanov,Mamatov,Usenov,Ismailov,Zhumabaev,Orozov,Tashiev,Ibraimov,Satybaldiev
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Dordoi Bishkek;Dordoy Bishkeko;#0057b8;#ffffff;62;23000;1997;los Mercaderes;el gran estadio nacional de la capital;El gigante del país, con una larga lista de títulos de liga y copa.
+Alga Bishkek;Alga Capital;#e30613;#ffffff;52;23000;1992;los Pioneros;el gran estadio nacional, compartido con otros clubes;Un veterano de la capital con una gran historia.
+Abdysh-Ata Kant;Abdish Kantino;#0b8f3c;#ffffff;56;3000;1992;los Verdes de Kant;el estadio de la ciudad industrial cercana a la capital;Un campeón recurrente de liga con base en una ciudad pequeña.
+Bishkek City;Ciudad Bishkeko;#1d3f9e;#f7d117;50;23000;2018;los Ciudadanos;el gran estadio de la capital, compartido;Un club joven de la capital con aspiraciones.
+Alay Osh;Alai Oshino;#e30613;#000000;52;11200;1964;los Montañeses;el estadio de la ciudad del sur, junto a la montaña sagrada;Un histórico del sur con afición muy fiel.
+OshSU Aldier;Aldier Univers;#1d3f9e;#e30613;46;4000;2002;los Universitarios;el estadio de la ciudad del sur, de uso compartido;El equipo de la universidad de la gran ciudad del sur.
+Bars Issyk-Kul;Barsi Karakol;#f7d117;#000000;50;8000;2004;los Leopardos del Lago;el estadio central de la ciudad del lago;El club de la orilla del gran lago de montaña.
+Muras United;Muras Jalalino;#0b8f3c;#f7d117;46;4500;2016;los Unidos del Sur;el estadio de la ciudad del valle del sur;Un club joven del valle que ha ido escalando categorías.
+Neftchi Kochkor-Ata;Petrolero Koch;#000000;#f7d117;45;5000;1980;los Petroleros;el estadio de la ciudad petrolera del sur;El club de una ciudad petrolera, con afición local fiel.
+Kyrgyzaltyn;Oro Karabalta;#f7d117;#0057b8;48;5000;1992;los Mineros del Oro;el estadio de la ciudad minera del oeste de la capital;El club de la compañía del oro, con varios campeonatos.
+Talant;Talant Kanto;#e30613;#1d3f9e;42;1500;2013;los Talentos;el complejo deportivo de la ciudad industrial;Un equipo joven que apuesta por la cantera.
+Ilbirs Bishkek;Ilbirs Capital;#ffffff;#000000;40;1000;2012;los Leopardos de las Nieves;el campo de la federación en la capital;Un club de la cantera de la capital, pequeño pero ambicioso.
+Asiagoal Bishkek;Asiagol Bishkeko;#1d3f9e;#ffffff;38;1500;2019;los Goleadores;el campo pequeño de la capital;Un recién llegado de la capital que busca asentarse.
+Uzgen;Uzgén Antiguo;#f58220;#000000;38;4000;2014;los Antiguos;el estadio de la ciudad histórica del valle;Un club de una ciudad histórica del valle del sur.

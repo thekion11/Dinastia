@@ -1,4 +1,14 @@
 # Generado por herramientas/aspecto_relleno.py (no editar a mano): letras del escudo de los clubes que ningún lote de retoques cubrió.
+Dinamo City||||DIN|||
+Egnatia||||EGN|||
+Partizani||||PAR|||
+Tirana||||TIR|||
+Vllaznia||||VLL|||
+Teuta||||TEU|||
+Flamurtari||||FLA|||
+Elbasani||||ELB|||
+Vora||||VOR|||
+Bylis||||BYL|||
 MC Alger||||MC|||
 CR Belouizdad||||CR|||
 JS Kabylie||||JS|||
@@ -15,6 +25,124 @@ ASO Chlef||||ASO|||
 Olympique Akbou||||OLY|||
 ES Mostaganem||||ES|||
 USM El Harrach||||USM|||
+FC Santa Coloma||||SAN|||
+Inter Club d'Escaldes||||INT|||
+Atlètic Club d'Escaldes||||ATL|||
+Penya Encarnada d'Andorra||||PEN|||
+CE Carroi||||CE|||
+CF Esperança d'Andorra||||ESP|||
+FC Ordino||||ORD|||
+FC Pas de la Casa||||PAS|||
+FC Rànger's||||RAN|||
+UE Santa Coloma||||UE|||
+Petróleos de Luanda||||PET|||
+Primeiro de Agosto||||PRI|||
+Sagrada Esperança||||SAG|||
+Interclube||||INT|||
+Bravos do Maquis||||BRA|||
+Desportivo da Huíla||||DES|||
+Luanda City||||LUA|||
+Académica do Lobito||||ACA|||
+Recreativo do Libolo||||REC|||
+Guelson||||GUE|||
+Wiliete||||WIL|||
+Primeiro de Maio||||PRI|||
+Lunda Sul||||LUN|||
+Kabuscorp||||KAB|||
+Redonda||||RED|||
+São Salvador do Kongo||||SAO|||
+Pyunik||||PYU|||
+Ararat-Armenia||||ARA|||
+Noah||||NOA|||
+Shirak||||SHI|||
+Urartu||||URA|||
+Alashkert||||ALA|||
+Ararat Yerevan||||ARA|||
+Van||||VAN|||
+Gandzasar Kapan||||GAN|||
+BKMA Yerevan||||BKM|||
+Araz Naxçıvan||||ARA|||
+Gabala||||GAB|||
+Imishli||||IMI|||
+Kapaz||||KAP|||
+Karvan Yevlakh||||KAR|||
+Neftchi||||NEF|||
+Qarabağ||||QAR|||
+Sabah||||SAB|||
+Shamakhi||||SHA|||
+Sumgayit||||SUM|||
+Turan Tovuz||||TUR|||
+Zira||||ZIR|||
+Sobemap FC||||SOB|||
+US Seme Kraké||||SEM|||
+Coton FC||||COT|||
+ASPAC FC||||ASP|||
+Buffles du Borgou||||BUF|||
+Dragons de l'Ouémé||||DRA|||
+AS Cotonou||||COT|||
+Loto-Popo FC||||LOT|||
+Panthères FC||||PAN|||
+Damissa FC||||DAM|||
+Dynamo Abomey||||DYN|||
+Espoir FC||||ESP|||
+Ayema FC||||AYE|||
+Djeffa FC||||DJE|||
+Hodio FC||||HOD|||
+Bani Gansé FC||||BAN|||
+US Cavaliers||||CAV|||
+AS Vallé Omnisports||||VAL|||
+Étoile Filante||||ETO|||
+AS Douanes Ouaga||||DOU|||
+ASFA Yennenga||||ASF|||
+US des Forces Armées||||DES|||
+AS SONABEL||||SON|||
+RC Kadiogo||||KAD|||
+Salitas FC||||SAL|||
+RC Bobo||||BOB|||
+ASF Bobo||||ASF|||
+Kiko FC||||KIK|||
+Royal FC||||ROY|||
+Vitesse FC||||VIT|||
+AS Koupéla||||KOU|||
+ASEC Koudougou||||ASE|||
+Al-Muharraq||||AL|||
+Al-Riffa||||AL|||
+Al-Khaldiya||||AL|||
+Al-Ahli Manama||||AL|||
+Al-Najma Manama||||AL|||
+Al-Hidd||||AL|||
+Bahrain SC||||BAH|||
+Sitra||||SIT|||
+A'Ali||||AAL|||
+Budaiya||||BUD|||
+Malkiya||||MAL|||
+Al-Shabab Manama||||AL|||
+Sarajevo||||SAR|||
+Zrinjski Mostar||||ZRI|||
+Borac Banja Luka||||BOR|||
+Željezničar||||ZEL|||
+Velež Mostar||||VEL|||
+Široki Brijeg||||SIR|||
+Radnik Bijeljina||||RAD|||
+Posušje||||POS|||
+Rudar Prijedor||||RUD|||
+Sloga Doboj||||SLO|||
+Arsenal Dzerzhinsk||||ARS|||
+Baranovichi||||BAR|||
+BATE Borisov||||BAT|||
+Belshina Bobruisk||||BEL|||
+Dinamo Brest||||DIN|||
+Dinamo Minsk||||DIN|||
+Dnepr Mogilev||||DNE|||
+Gomel||||GOM|||
+Isloch||||ISL|||
+Maxline Vitebsk||||MAX|||
+Minsk||||MIN|||
+Naftan Novopolotsk||||NAF|||
+Neman Grodno||||NEM|||
+Slavia Mozyr||||SLA|||
+Torpedo-BelAZ Zhodino||||TOR|||
+Vitebsk||||VIT|||
 Forge FC||||FOR|||
 Cavalry FC||||CAV|||
 Pacific FC||||PAC|||
@@ -23,6 +151,22 @@ Atlético Ottawa||||ATL|||
 York United FC||||YOR|||
 Vancouver FC||||VAN|||
 Valour FC||||VAL|||
+AC Léopards||||LEO|||
+Diables Noirs||||DIA|||
+Étoile du Congo||||ETO|||
+Inter Club||||INT|||
+CARA Brazzaville||||CAR|||
+JS Talangaï||||JS|||
+V Club Mokanda||||VCL|||
+AS Cheminots||||CHE|||
+AS Ponténégrine||||PON|||
+Nico-Nicoyé||||NIC|||
+Munisport||||MUN|||
+Patronage Sainte-Anne||||PAT|||
+AS Kondzo||||KON|||
+Saint Michel d'Ouenzé||||SAI|||
+AS Otohô||||OTO|||
+Étoile Mbochi||||ETO|||
 Tianjin Jinmen Tiger||||TIA|||
 ASEC Mimosas||||ASE|||
 Africa Sports||||AFR|||
@@ -54,6 +198,34 @@ Panthère du Ndé||||PAN|||
 Gazelle FC||||GAZ|||
 UMS de Loum||||UMS|||
 Aigle Royal de la Menoua||||AIG|||
+TP Mazembe||||TP|||
+AS Vita Club||||VIT|||
+Saint-Éloi Lupopo||||SAI|||
+Les Aigles du Congo||||LES|||
+Renaissance du Congo||||REN|||
+Céleste FC||||CEL|||
+Motema Pembe||||MOT|||
+Maniema Union||||MAN|||
+Dauphin Noir||||DAU|||
+Anges Verts||||ANG|||
+AC Rangers||||RAN|||
+CS Don Bosco||||CS|||
+AS Simba||||SIM|||
+CS Manika||||CS|||
+Blessing FC||||BLE|||
+New JAK||||NEW|||
+Sporting Clube da Praia||||SPO|||
+CS Mindelense||||CS|||
+GD Palmeira||||GD|||
+Boavista da Praia||||BOA|||
+Académico do Aeroporto||||ACA|||
+Académica do Porto Novo||||ACA|||
+CD Travadores||||TRA|||
+Derby||||DER|||
+Batuque||||BAT|||
+Onze Unidos||||ONZ|||
+Sporting Clube do Sal Rei||||SPO|||
+Académica da Brava||||ACA|||
 Deportivo Saprissa||||DEP|||
 Liga Deportiva Alajuelense||||LIG|||
 Club Sport Herediano||||CLU|||
@@ -66,6 +238,17 @@ Sporting FC||||SPO|||
 Santos de Guápiles||||SAN|||
 Municipal Liberia||||MUN|||
 Municipal Grecia||||MUN|||
+CRKSV Jong Holland||||CRK|||
+SV Centro Dominguito||||CEN|||
+CVV Inter Willemstad||||CVV|||
+RKSV Scherpenheuvel||||RKS|||
+SUBT||||SUB|||
+SV Hubentut Fortuna||||HUB|||
+CRKSV Jong Colombia||||CRK|||
+RKVFC Sithoc||||RKV|||
+SV Victory Boys||||VIC|||
+CSD Barber||||CSD|||
+UNDEBA||||UND|||
 APOEL||||APO|||
 Omonia Nicosia||||OMO|||
 Anorthosis Famagusta||||ANO|||
@@ -89,6 +272,28 @@ FK Teplice||||TEP|||
 Bohemians 1905||||BOH|||
 MFK Karviná||||KAR|||
 Slovan Liberec||||SLO|||
+Alianza San Salvador||||ALI|||
+Águila||||AGU|||
+FAS||||FAS|||
+Fuerte San Francisco||||FUE|||
+Firpo||||FIR|||
+Inter Santa Tecla||||INT|||
+Isidro Metapán||||ISI|||
+Platense Zacatecoluca||||PLA|||
+Municipal Limeño||||MUN|||
+Atlético Balboa||||ATL|||
+Cacahuatique||||CAC|||
+INCA-Aruba||||INC|||
+FCI Levadia||||FCI|||
+Flora||||FLO|||
+Kuressaare||||KUR|||
+Narva Trans||||NAR|||
+Nõmme Kalju||||NOM|||
+Nõmme United||||NOM|||
+Paide Linnameeskond||||PAI|||
+Tammeka||||TAM|||
+Vaprus||||VAP|||
+Harju JK Laagri||||HAR|||
 HJK||||HJK|||
 KuPS||||KUP|||
 Ilves||||ILV|||
@@ -101,6 +306,40 @@ AC Oulu||||OUL|||
 IFK Mariehamn||||IFK|||
 FF Jaro||||FF|||
 IF Gnistan||||GNI|||
+KI Klaksvik||||KI|||
+HB Torshavn||||HB|||
+B Trettisex Torshavn||||BTR|||
+Vikingur Gota||||VIK|||
+NSI Runavik||||NSI|||
+B Sextioocho Toftir||||BSE|||
+Streymur||||STR|||
+Sjey Vestur||||SJE|||
+FC Suduroy||||SUD|||
+TB Tvoroyri||||TB|||
+AS Mangasport||||MAN|||
+AS Stade Mandji||||STA|||
+Ogooué FC||||OGO|||
+Oyem AC||||OYE|||
+AO Centre Mbérie Sportif||||AO|||
+FC Cento e Cinco||||CEN|||
+Vautour Club||||VAU|||
+US Oyem||||OYE|||
+Lambaréné AC||||LAM|||
+AS Lozo-Sport||||LOZ|||
+US Bitam||||BIT|||
+AO Bouenguidi Sports||||AO|||
+AS Dikaki||||DIK|||
+CF Mounana||||MOU|||
+Dinamo Tbilisi||||DIN|||
+Dinamo Batumi||||DIN|||
+Iberia||||IBE|||
+Torpedo Kutaisi||||TOR|||
+Dila Gori||||DIL|||
+Gagra||||GAG|||
+Rustavi||||RUS|||
+Samgurali Tsqaltubo||||SAM|||
+Meshakhte||||MES|||
+Spaeri||||SPA|||
 Asante Kotoko||||ASA|||
 Hearts of Oak||||HEA|||
 Medeama||||MED|||
@@ -119,6 +358,71 @@ Bibiani Gold Stars||||BIB|||
 Hohoe United||||HOH|||
 Racing Club Accra||||RAC|||
 Accra Lions||||ACC|||
+Lincoln Red Imps||||LIN|||
+St Joseph's||||ST|||
+Europa||||EUR|||
+Mons Calpe||||MON|||
+Lions Gibraltar||||LIO|||
+Lynx||||LYN|||
+FC Magpies||||MAG|||
+Europa Point||||EUR|||
+College Mil Novecientos||||COL|||
+Glacis United||||GLA|||
+Hound Dogs||||HOU|||
+Achuapa||||ACH|||
+Antigua GFC||||ANT|||
+Aurora FC||||AUR|||
+Cobán Imperial||||COB|||
+Comunicaciones||||COM|||
+Guastatoya||||GUA|||
+Malacateco||||MAL|||
+Marquense||||MAR|||
+Atlético Mictlán||||ATL|||
+Mixco||||MIX|||
+Municipal Guatemala||||MUN|||
+Xelajú||||XEL|||
+Horoya AC||||HOR|||
+Hafia FC||||HAF|||
+AS Kaloum||||KAL|||
+Milo FC||||MIL|||
+Académie SOAR||||ACA|||
+Renaissance FC||||REN|||
+ASM Sangarédi||||ASM|||
+CI Kamsar||||CI|||
+AS Ashanti Golden Boys||||ASH|||
+Wakriya AC||||WAK|||
+Guinée Foot Elite||||GUI|||
+Flamme Olympique||||FLA|||
+RCC Kamsar||||RCC|||
+Loubha Télimélé||||LOU|||
+Violette AC||||VIO|||
+Racing Club Haïtien||||RAC|||
+Don Bosco FC||||DON|||
+Cavaly AS||||CAV|||
+Tempête FC||||TEM|||
+Real Hope FA||||REA|||
+Arcahaie FC||||ARC|||
+Baltimore SC||||BAL|||
+AS Capoise||||CAP|||
+Cosmopolites AC||||COS|||
+FICA FC||||FIC|||
+Juventus des Cayes||||JUV|||
+América des Cayes||||AME|||
+Mirebalais FC||||MIR|||
+Ouanaminthe FC||||OUA|||
+Rivartibonitienne FC||||RIV|||
+Triomphe de Liancourt||||TRI|||
+Racing des Gonaïves||||RAC|||
+Kitchee||||KIT|||
+Eastern||||EAS|||
+Lee Man||||LEE|||
+Tai Po||||TAI|||
+Southern||||SOU|||
+Kowloon City||||KOW|||
+Rangers HK||||RAN|||
+North District||||NOR|||
+HKFC||||HKF|||
+Eastern District||||EAS|||
 CD Olimpia||||OLI|||
 Motagua||||MOT|||
 Marathón||||MAR|||
@@ -130,6 +434,38 @@ Génesis||||GEN|||
 Platense FC||||PLA|||
 Lobos UPNFM||||LOB|||
 Atlético Choloma||||ATL|||
+Persija||||PER|||
+Persib||||PER|||
+Persebaya||||PER|||
+Arema||||ARE|||
+Bali United||||BAL|||
+PSM||||PSM|||
+Persis||||PER|||
+Borneo Samarinda||||BOR|||
+Dewa United Banten||||DEW|||
+Bhayangkara Presisi||||BHA|||
+Madura United||||MAD|||
+Persita||||PER|||
+PSIM||||PSI|||
+Persik||||PER|||
+Malut United||||MAL|||
+PSBS||||PSB|||
+Persijap||||PER|||
+Semen Padang||||SEM|||
+Bengaluru FC||||BEN|||
+Chennaiyin FC||||CHE|||
+SC Delhi||||DEL|||
+East Bengal||||EAS|||
+FC Goa||||GOA|||
+Inter Kashi||||INT|||
+Jamshedpur FC||||JAM|||
+Kerala Blasters||||KER|||
+Mohammedan SC||||MOH|||
+Mohun Bagan Super Giant||||MOH|||
+Mumbai City||||MUM|||
+NorthEast United||||NOR|||
+Odisha FC||||ODI|||
+Punjab FC||||PUN|||
 Shamrock Rovers||||SHA|||
 Shelbourne||||SHE|||
 Bohemians||||BOH|||
@@ -160,6 +496,18 @@ Erbil||||ERB|||
 Naft Maysan||||NAF|||
 Newroz||||NEW|||
 Zakho||||ZAK|||
+Breiðablik||||BRE|||
+FH||||FH|||
+Fram||||FRA|||
+KA||||KA|||
+Keflavík||||KEF|||
+KR||||KR|||
+Stjarnan||||STJ|||
+Valur||||VAL|||
+Víkingur Reykjavík||||VIK|||
+ÍA||||IA|||
+ÍBV||||IBV|||
+Þór Akureyri||||OR|||
 Beitar Jerusalem||||BEI|||
 Harbour View||||HAR|||
 Portmore United||||POR|||
@@ -185,6 +533,193 @@ Shabab Al-Ordon||||SHA|||
 Al-Salt||||AL|||
 Al-Baqa'a||||AL|||
 Al-Sarhan||||AL|||
+Altai||||ALT|||
+Aktobe||||AKT|||
+Astana||||AST|||
+Atyrau||||ATY|||
+Caspiy||||CAS|||
+Elimai||||ELI|||
+Irtysh Pavlodar||||IRT|||
+Kairat||||KAI|||
+Kaisar||||KAI|||
+Kyzylzhar||||KYZ|||
+Okzhetpes||||OKZ|||
+Ordabasy||||ORD|||
+Tobol||||TOB|||
+Ulytau||||ULY|||
+Zhenis||||ZHE|||
+Zhetysu||||ZHE|||
+Gor Mahia||||GOR|||
+AFC Leopards||||LEO|||
+Tusker||||TUS|||
+Kenya Police||||KEN|||
+Bandari||||BAN|||
+Kakamega Homeboyz||||KAK|||
+Shabana||||SHA|||
+Ulinzi Stars||||ULI|||
+Kariobangi Sharks||||KAR|||
+Mathare United||||MAT|||
+Sofapaka||||SOF|||
+Posta Rangers||||POS|||
+Bidco United||||BID|||
+Kenya Commercial Bank||||KEN|||
+Mara Sugar||||MAR|||
+Murang'a Seal||||MUR|||
+Nairobi United||||NAI|||
+APS Bomet||||APS|||
+Dordoi Bishkek||||DOR|||
+Alga Bishkek||||ALG|||
+Abdysh-Ata Kant||||ABD|||
+Bishkek City||||BIS|||
+Alay Osh||||ALA|||
+OshSU Aldier||||OSH|||
+Bars Issyk-Kul||||BAR|||
+Muras United||||MUR|||
+Neftchi Kochkor-Ata||||NEF|||
+Kyrgyzaltyn||||KYR|||
+Talant||||TAL|||
+Ilbirs Bishkek||||ILB|||
+Asiagoal Bishkek||||ASI|||
+Uzgen||||UZG|||
+Ballkani||||BAL|||
+Drita||||DRI|||
+Gjilani||||GJI|||
+Prishtina||||PRI|||
+Prishtina e Re||||PRI|||
+Drenica||||DRE|||
+Dukagjini||||DUK|||
+Ferizaj||||FER|||
+Llapi||||LLA|||
+Malisheva||||MAL|||
+Kuwait SC||||KUW|||
+Al-Qadsia||||AL|||
+Al-Arabi Kuwait||||AL|||
+Al-Salmiya||||AL|||
+Kazma||||KAZ|||
+Al-Jahra||||AL|||
+Al-Nasr Kuwait||||AL|||
+Al-Sahel||||AL|||
+Al-Shabab Kuwait||||AL|||
+Fahaheel||||FAH|||
+Sulaibikhat||||SUL|||
+Al-Tadhamon||||AL|||
+Nejmeh||||NEJ|||
+Ansar||||ANS|||
+Ahed||||AHE|||
+Safa||||SAF|||
+Racing Beirut||||RAC|||
+Sagesse||||SAG|||
+Tadamon Sour||||TAD|||
+Bourj||||BOU|||
+Shabab Sahel||||SHA|||
+Riyadi Abbasiyah||||RIY|||
+Mabarra||||MAB|||
+Jwaya||||JWA|||
+Al-Ahli Tripoli||||AL|||
+Al-Ittihad Tripoli||||AL|||
+Al-Nasr Benghazi||||AL|||
+Al-Ahly Benghazi||||AL|||
+Al-Hilal Benghazi||||AL|||
+Al-Tahaddy||||AL|||
+Asswehly SC||||ASS|||
+Al-Ittihad Misrata||||AL|||
+Al-Bashayr||||AL|||
+Al-Madina Tripoli||||AL|||
+Abu Salem SC||||ABU|||
+Libyan Stadium SC||||LIB|||
+Al-Akhdar||||AL|||
+Al-Suqoor||||AL|||
+Al-Morouj SC||||AL|||
+Al-Ta'awon||||AL|||
+Al-Sadaqa||||AL|||
+Al-Khums SC||||AL|||
+Olympic Azzaweya||||OLY|||
+Asaria SC||||ASA|||
+Kauno Žalgiris||||KAU|||
+Žalgiris||||ZAL|||
+Panevėžys||||PAN|||
+Sūduva||||SUD|||
+Banga||||BAN|||
+Hegelmann||||HEG|||
+Šiauliai||||SIA|||
+Džiugas||||DZI|||
+Riteriai||||RIT|||
+TransINVEST||||TRA|||
+Atert Bissen||||ATE|||
+Differdange||||DIF|||
+Dudelange||||DUD|||
+Hostert||||HOS|||
+Jeunesse Canach||||JEU|||
+Jeunesse Esch||||JEU|||
+Käerjéng||||KAE|||
+Mamer||||MAM|||
+Mondorf-les-Bains||||MON|||
+Progrès Niederkorn||||PRO|||
+Racing Union Luxembourg||||RAC|||
+Rodange||||ROD|||
+Swift Hesperange||||SWI|||
+UNA Strassen||||UNA|||
+Union Titus Pétange||||UNI|||
+Victoria Rosport||||VIC|||
+Auda||||AUD|||
+BFC Daugavpils||||BFC|||
+Grobiņa||||GRO|||
+Jelgava||||JEL|||
+Liepāja||||LIE|||
+RFS||||RFS|||
+Ogre United||||OGR|||
+Riga FC||||RIG|||
+Super Nova||||SUP|||
+Tukums 2000||||TUK|||
+CFFA||||CFF|||
+Fosa Juniors||||FOS|||
+Elgeco Plus||||ELG|||
+Disciples FC||||DIS|||
+Mama FCA||||MAM|||
+COSFA||||COS|||
+USCA Foot||||USC|||
+AS Fanalamanga||||FAN|||
+TFFC Tsaramandroso||||TFF|||
+AJSA||||AJS|||
+Inate FC Rouge||||INA|||
+Avenir Sainte-Anne||||AVE|||
+Antimo Record FC||||ANT|||
+FC Clinique Zanatany||||CLI|||
+CO Police Nationale||||CO|||
+TGBC Academie Football||||TGB|||
+Johor Darul Ta'zim||||JOH|||
+Selangor||||SEL|||
+Terengganu||||TER|||
+Sabah FC||||SAB|||
+Kuala Lumpur City||||KUA|||
+Kuching City||||KUC|||
+Penang||||PEN|||
+Negeri Sembilan||||NEG|||
+Kelantan The Real Warriors||||KEL|||
+Melaka||||MEL|||
+PDRM||||PDR|||
+Immigration||||IMM|||
+DPMM||||DPM|||
+Sheriff Tiraspol||||SHE|||
+Zimbru Chișinău||||ZIM|||
+Petrocub Hîncești||||PET|||
+Milsami Orhei||||MIL|||
+Bălți||||BAL|||
+Dacia Buiucani||||DAC|||
+Politehnica UTM||||POL|||
+Spartanii Sportul||||SPA|||
+Shkëndija||||SHK|||
+Vardar||||VAR|||
+Struga||||STR|||
+Rabotnički||||RAB|||
+Sileks||||SIL|||
+Pelister||||PEL|||
+AP Brera||||AP|||
+Tikvesh||||TIK|||
+Shkupi||||SHK|||
+Bashkimi||||BAS|||
+Arsimi||||ARS|||
+Makedonija G.P.||||MAK|||
 Afrique Élite||||AFR|||
 AS Bakaridjan||||BAK|||
 AS Black Stars||||BLA|||
@@ -203,6 +738,68 @@ US Bougouba||||BOU|||
 USC Kita||||USC|||
 USFAS Bamako||||USF|||
 Yeelen Olympique||||YEE|||
+Hamrun Spartans||||HAM|||
+Valletta||||VAL|||
+Floriana||||FLO|||
+Hibernians||||HIB|||
+Birkirkara||||BIR|||
+Sliema Wanderers||||SLI|||
+Marsaxlokk||||MAR|||
+Mosta||||MOS|||
+Gzira United||||GZI|||
+Naxxar Lions||||NAX|||
+Tarxien Rainbows||||TAR|||
+Zabbar St. Patrick||||ZAB|||
+Budućnost Podgorica||||BUD|||
+Sutjeska Nikšić||||SUT|||
+Mladost Donja Gorica||||MLA|||
+Mornar||||MOR|||
+Jedinstvo Bijelo Polje||||JED|||
+Arsenal Tivat||||ARS|||
+Petrovac||||PET|||
+Jezero||||JEZ|||
+Dečić||||DEC|||
+Bokelj||||BOK|||
+UD Songo||||SON|||
+Black Bulls||||BLA|||
+Costa do Sol||||COS|||
+Ferroviário da Beira||||FER|||
+Ferroviário de Maputo||||FER|||
+Ferroviário de Nampula||||FER|||
+Ferroviário de Nacala||||FER|||
+Ferroviário de Lichinga||||FER|||
+Baía de Pemba||||BAI|||
+Vilankulo FC||||VIL|||
+AD Pemba||||AD|||
+Maxaquene||||MAX|||
+CD Chingale||||CHI|||
+Liga Desportiva de Sofala||||LIG|||
+African Stars||||AFR|||
+United Africa Tigers||||UNI|||
+Blue Waters||||BLU|||
+Blue Boys||||BLU|||
+Young Africans||||YOU|||
+Mighty Gunners||||MIG|||
+UNAM||||UNA|||
+Khomas NAMPOL||||KHO|||
+Bucks Buccaneers||||BUC|||
+Eeshoke Chula Chula||||EES|||
+KK Palace||||KK|||
+Cuca Tops||||CUC|||
+Julinho Sporting||||JUL|||
+Okahandja United||||OKA|||
+Ongos SC||||ONG|||
+Young Brazilians||||YOU|||
+Real Estelí||||REA|||
+Diriangén||||DIR|||
+Managua F.C.||||MAN|||
+Walter Ferretti||||WAL|||
+UNAN Managua||||UNA|||
+Real Madriz||||REA|||
+Matagalpa FC||||MAT|||
+Sport Sébaco||||SPO|||
+ART Jalapa||||ART|||
+Rancho Santana||||RAN|||
 Enyimba||||ENY|||
 Rivers United||||RIV|||
 Remo Stars||||REM|||
@@ -223,6 +820,18 @@ El-Kanemi Warriors||||EL|||
 Wikki Tourists||||WIK|||
 Sunshine Stars||||SUN|||
 Barau FC||||BAR|||
+Ballymena United||||BAL|||
+Bangor||||BAN|||
+Carrick Rangers||||CAR|||
+Cliftonville||||CLI|||
+Coleraine||||COL|||
+Crusaders||||CRU|||
+Dungannon Swifts||||DUN|||
+Glenavon||||GLE|||
+Glentoran||||GLE|||
+Larne||||LAR|||
+Linfield||||LIN|||
+Portadown||||POR|||
 Brann||||BRA|||
 Viking||||VIK|||
 Molde||||MOL|||
@@ -245,6 +854,18 @@ Miramar Rangers||||MIR|||
 Napier City Rovers||||NAP|||
 Wellington Olympic||||WEL|||
 Wellington Phoenix Reserves||||WEL|||
+Al-Seeb||||AL|||
+Dhofar||||DHO|||
+Al-Nasr Salalah||||AL|||
+Oman Club||||OMA|||
+Al-Nahda||||AL|||
+Sur||||SUR|||
+Sohar||||SOH|||
+Al-Shabab Barka||||AL|||
+Al-Rustaq||||AL|||
+Ibri||||IBR|||
+Saham||||SAH|||
+Al-Khaburah||||AL|||
 Tauro||||TAU|||
 Alianza||||ALI|||
 Plaza Amador||||PLA|||
@@ -255,8 +876,31 @@ Herrera||||HER|||
 CA Independiente||||IND|||
 Veraguas||||VER|||
 CD Universitario||||UNI|||
-Chiriquí||||CHI|||
+Umecit FC||||UME|||
 San Francisco||||SAN|||
+Kaya Iloilo||||KAY|||
+Stallion Laguna||||STA|||
+Dynamic Herb Cebu||||DYN|||
+Manila Digger||||MAN|||
+Philippine Army||||PHI|||
+One Taguig||||ONE|||
+Maharlika||||MAH|||
+Aguilas UMak||||AGU|||
+Don Bosco Garelli||||DON|||
+Tuloy||||TUL|||
+Valenzuela PB Mendiola||||VAL|||
+Ahli Al-Khaleel||||AHL|||
+Shabab Al-Khalil||||SHA|||
+Hilal Al-Quds||||HIL|||
+Jabal Al-Mukaber||||JAB|||
+Markaz Balata||||MAR|||
+Shabab Al-Am'ari||||SHA|||
+Taraji Wadi Al-Nes||||TAR|||
+Thaqafi Tulkarm||||THA|||
+Islami Qalqilya||||ISL|||
+Mosaset Al-Bireh||||MOS|||
+Shabab Al-Dhahiriya||||SHA|||
+Shabab Alsamu||||SHA|||
 Jagiellonia Białystok||||JAG|||
 Raków Częstochowa||||RAK|||
 Piast Gliwice||||PIA|||
@@ -302,6 +946,41 @@ AS Douanes||||DOU|||
 Diambars||||DIA|||
 Mbour Petite-Côte||||MBO|||
 Sonacos||||SON|||
+Lion City Sailors||||LIO|||
+BG Tampines Rovers||||BG|||
+Albirex Niigata Singapore||||ALB|||
+Hougang United||||HOU|||
+Balestier Khalsa||||BAL|||
+Geylang International||||GEY|||
+Tanjong Pagar United||||TAN|||
+Young Lions||||YOU|||
+Virtus||||VIR|||
+Tre Fiori||||TRE|||
+La Fiorita||||LA|||
+Folgore||||FOL|||
+Tre Penne||||TRE|||
+Cosmos||||COS|||
+Libertas||||LIB|||
+Murata||||MUR|||
+Domagnano||||DOM|||
+Faetano||||FAE|||
+Fiorentino||||FIO|||
+Cailungo||||CAI|||
+Juvenes/Dogana||||JUV|||
+Pennarossa||||PEN|||
+San Giovanni||||SAN|||
+Robinhood||||ROB|||
+Transvaal||||TRA|||
+Inter Moengotapoe||||INT|||
+Leo Victor||||LEO|||
+Voorwaarts||||VOO|||
+Inter Wanica||||INT|||
+Santos Nieuw Nickerie||||SAN|||
+Flora Paramaribo||||FLO|||
+PVV||||PVV|||
+SNL||||SNL|||
+Notch||||NOT|||
+Broki||||BRO|||
 Olimpija Ljubljana||||OLI|||
 Maribor||||MAR|||
 Celje||||CEL|||
@@ -320,6 +999,92 @@ GAIS||||GAI|||
 IF Brommapojkarna||||BRO|||
 Halmstads BK||||HAL|||
 Västerås SK||||VAS|||
+Al-Jaish||||AL|||
+Al-Karamah||||AL|||
+Tishreen||||TIS|||
+Al-Wahda Damascus||||AL|||
+Al-Shorta Damascus||||AL|||
+Damascus Al-Ahli||||DAM|||
+Al-Ittihad Ahli||||AL|||
+Al-Hurriya||||AL|||
+Al-Taliya||||AL|||
+Hutteen||||HUT|||
+Jableh||||JAB|||
+Al-Fotuwa||||AL|||
+Al-Shouleh||||AL|||
+Homs Al Fidaa||||HOM|||
+Omaya||||OMA|||
+Khan Shaykhun||||KHA|||
+Young Africans Dar||||YOU|||
+Simba SC||||SIM|||
+Azam FC||||AZA|||
+Singida Black Stars||||SIN|||
+Coastal Union||||COA|||
+Dodoma Jiji||||DOD|||
+Fountain Gate||||FOU|||
+JKT Tanzania||||JKT|||
+KMC||||KMC|||
+Mashujaa||||MAS|||
+Mbeya City||||MBE|||
+Mtibwa Sugar||||MTI|||
+Namungo||||NAM|||
+Pamba Jiji||||PAM|||
+Tanzania Prisons||||TAN|||
+TRA United||||TRA|||
+Buriram United||||BUR|||
+Bangkok United||||BAN|||
+BG Pathum United||||BG|||
+Muangthong United||||MUA|||
+Port||||POR|||
+Chiangrai United||||CHI|||
+Nakhon Ratchasima||||NAK|||
+Chonburi||||CHO|||
+Ratchaburi||||RAT|||
+Kanchanaburi Power||||KAN|||
+Rayong||||RAY|||
+Sukhothai||||SUK|||
+Lamphun Warriors||||LAM|||
+Ayutthaya United||||AYU|||
+PT Prachuap||||PT|||
+Uthai Thani||||UTH|||
+Istiklol||||IST|||
+CSKA Pamir||||CSK|||
+Khujand||||KHU|||
+Eskhata||||ESK|||
+Regar-TadAZ||||REG|||
+Ravshan Kulob||||RAV|||
+Vakhsh Bokhtar||||VAK|||
+Istaravshan||||IST|||
+Hulbuk||||HUL|||
+Barkchi Hisor||||BAR|||
+Hosilot Farkhor||||HOS|||
+Panjsher||||PAN|||
+ASC Kara||||ASC|||
+ASKO Kara||||ASK|||
+AS Togo-Port||||TOG|||
+Dynamic Togolais||||DYN|||
+AS OTR||||OTR|||
+Gomido FC||||GOM|||
+AS Gbohloé-Su des Lacs||||GBO|||
+AC Semassi||||SEM|||
+Unisport FC||||UNI|||
+Binah FC||||BIN|||
+EF Lomé||||EF|||
+Entente II Lomé||||ENT|||
+Tambo FC||||TAM|||
+Espoir FC Lomé||||ESP|||
+Central FC||||CEN|||
+Club Sando||||CLU|||
+Cunupia FC||||CUN|||
+Defence Force||||DEF|||
+La Horquetta Rangers||||LA|||
+Morvant Caledonia United||||MOR|||
+FC Phoenix||||PHO|||
+Point Fortin Civic||||POI|||
+Police FC||||POL|||
+Prison Service||||PRI|||
+San Juan Jabloteh||||SAN|||
+W Connection||||WCO|||
 Espérance de Tunis||||ESP|||
 Club Africain||||CLU|||
 Étoile du Sahel||||ETO|||
@@ -337,6 +1102,22 @@ US Tataouine||||TAT|||
 Olympique Béja||||OLY|||
 EGS Gafsa||||EGS|||
 Al Jazira||||AL|||
+Vipers SC||||VIP|||
+SC Villa||||VIL|||
+KCCA FC||||KCC|||
+Express FC||||EXP|||
+URA FC||||URA|||
+Police FC Jinja||||POL|||
+Maroons FC||||MAR|||
+Mbarara City FC||||MBA|||
+Kitara FC||||KIT|||
+Bul FC||||BUL|||
+NEC FC||||NEC|||
+UPDF FC||||UPD|||
+Lugazi FC||||LUG|||
+Calvary FC||||CAL|||
+Buhimba Saints FC||||BUH|||
+Entebbe UPPC||||ENT|||
 Shakhtar Donetsk||||SHA|||
 Andijon||||AND|||
 Bunyodkor||||BUN|||
@@ -354,6 +1135,20 @@ Sogdiana||||SOG|||
 Surkhon||||SUR|||
 Lokomotiv Tashkent||||LOK|||
 Khorazm||||KHO|||
+Becamex Ho Chi Minh City||||BEC|||
+Cong An Ho Chi Minh City||||CON|||
+Dong A Thanh Hoa||||DON|||
+Haiphong FC||||HAI|||
+Cong An Hanoi||||CON|||
+Hanoi FC||||HAN|||
+The Cong-Viettel||||THE|||
+Hoang Anh Gia Lai||||HOA|||
+Hong Linh Ha Tinh||||HON|||
+Ninh Binh FC||||NIN|||
+Thep Xanh Nam Dinh||||THE|||
+PVF-CAND||||PVF|||
+SHB Da Nang||||SHB|||
+Song Lam Nghe An||||SON|||
 The New Saints||||THE|||
 Connah's Quay Nomads||||CON|||
 Bala Town||||BAL|||
@@ -366,4 +1161,40 @@ Flint Town United||||FLI|||
 Llanelli Town||||LLA|||
 Barry Town United||||BAR|||
 Briton Ferry Llansawel||||BRI|||
+Power Dynamos||||POW|||
+ZESCO United||||ZES|||
+Nkana||||NKA|||
+Red Arrows||||RED|||
+Zanaco||||ZAN|||
+Green Buffaloes||||GRE|||
+Green Eagles||||GRE|||
+Kabwe Warriors||||KAB|||
+Kansanshi Dynamos||||KAN|||
+Konkola Blades||||KON|||
+Maestro United||||MAE|||
+Mines United||||MIN|||
+Mufulira Wanderers||||MUF|||
+Mutondo Stars||||MUT|||
+NAPSA Stars||||NAP|||
+Nchanga Rangers||||NCH|||
+Nkwazi||||NKW|||
+Prison Leopards||||PRI|||
+Dynamos||||DYN|||
+CAPS United||||CAP|||
+Highlanders||||HIG|||
+FC Platinum||||PLA|||
+Ngezi Platinum Stars||||NGE|||
+Chicken Inn||||CHI|||
+Herentals||||HER|||
+Scottland||||SCO|||
+TelOne||||TEL|||
+Triangle United||||TRI|||
+Simba Bhora||||SIM|||
+ZPC Kariba||||ZPC|||
+Manica Diamonds||||MAN|||
+Hardrock||||HAR|||
+Hunters||||HUN|||
+Agama||||AGA|||
+Bulawayo Chiefs||||BUL|||
+MWOS||||MWO|||
 Charlton||||CHA|||

@@ -310,6 +310,7 @@ func _pintar_ajustes() -> void:
 			p._boton("🌍 Otro mundo", p._partida.nueva, acciones)
 			_pintar_ranuras()
 			_pintar_traspaso_partida()
+			AjustesLigas.pintar(p)   ## (10-11) añadir ligas con la temporada sin empezar
 			AjustesRegistro.pintar(p)
 			var t2 := p._texto(11, Principal.COL_SUAVE)
 			t2.text = Idiomas.t("GUARDADO")

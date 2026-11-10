@@ -1,0 +1,28 @@
+#seleccion=Zimbabue
+#tier=0.16
+#globo=31.05,-17.83
+#bandera=🇿🇼
+#confed=afr
+#liga=Zimbabwe Premier Soccer League|Liga Zimbabuense
+#copa=Copa de Zimbabue|Copa Zimbabuense
+#nombres=Tendai,Tafadzwa,Farai,Kudakwashe,Tinashe,Blessing,Takudzwa,Prince,Knowledge,Brian,Admire,Nyasha,Method,Walter
+#apellidos=Moyo,Ncube,Dube,Sibanda,Ndlovu,Moyo,Chigumba,Mukamba,Mudimu,Makaza,Nyoni,Chimuka,Banda,Mhlanga
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Dynamos;Dinamos Harare;#1d3f9e;#ffffff;62;60000;1963;los Glamour Boys;el estadio histórico de un barrio de la capital;El club más laureado del país, con una enorme afición.
+CAPS United;Caps Unido;#0b8f3c;#ffffff;59;60000;1973;los Makepekepe;el gran estadio nacional de la capital;El otro gigante de la capital, rival eterno de los azules.
+Highlanders;Montañeses;#ffffff;#000000;58;40000;1926;los Bosso;el estadio de la segunda ciudad del país;El club más antiguo y querido del suroeste.
+FC Platinum;Platino Zvisha;#ffffff;#1d3f9e;55;15000;1995;los Muleros del Platino;el estadio de la ciudad minera del centro;El club de la mina de platino, campeón en varias ocasiones.
+Ngezi Platinum Stars;Estrellas Ngezi;#f7d117;#1d3f9e;52;2000;2000;los Estrellas del Platino;el estadio de la ciudad minera del oeste;Un club minero que ha ganado liga y copa.
+Chicken Inn;Pollos Bulawayo;#f7d117;#e30613;50;8000;1935;los Gamecocks;el estadio de un barrio de la segunda ciudad;El club del pollo frito, muy ligado a su ciudad.
+Herentals;Herentales;#1d3f9e;#f7d117;46;10000;1991;los Herentales;el campo de un colegio de la capital;Un club de cantera nacido de un colegio.
+Scottland;Escocia Harare;#e30613;#ffffff;44;6000;2013;los Escoceses;el estadio de un barrio de la capital;Un equipo joven que pelea por consolidarse.
+TelOne;Telefonica Gweru;#1d3f9e;#ffffff;46;8000;1998;los Telefónicos;el estadio de la ciudad del centro;El club de la compañía de telecomunicaciones.
+Triangle United;Triangulo Unido;#0b8f3c;#f7d117;45;10000;1996;los Azucareros;el estadio de la región azucarera del sureste;Un club de la zona del azúcar con historia.
+Simba Bhora;Simba Bora;#f58220;#000000;49;10000;2004;los Leones del Centro;el estadio de la ciudad del centro;Un club ascendido rápido que ya ganó una liga.
+ZPC Kariba;Kariba Presa;#1d3f9e;#e30613;42;6000;1996;los Pescadores del Lago;el estadio de la ciudad junto al gran lago;El club de la compañía eléctrica del lago.
+Manica Diamonds;Diamantes Manica;#ffffff;#e30613;44;20000;1990;los Diamantes;el estadio de la ciudad de los diamantes del este;Un club del este fronterizo con arraigo local.
+Hardrock;Roca Dura;#000000;#f7d117;41;6000;2015;los Roqueros;el campo de la ciudad minera del centro;Un club minero reciente que sube desde las divisiones bajas.
+Hunters;Cazadores Zim;#0b8f3c;#000000;40;5000;2010;los Cazadores;el campo de una pequeña ciudad del interior;Un recién llegado que busca hacerse un nombre.
+Agama;Agama Lagartija;#f58220;#0b8f3c;39;5000;2012;las Lagartijas;el campo de un pueblo del interior;Un modesto club que aspira a mantener la categoría.
+Bulawayo Chiefs;Jefes Bulawayo;#ffffff;#e30613;41;10000;1965;los Jefes;el campo de la segunda ciudad del país;Un club de la ciudad del suroeste que alterna categorías.
+MWOS;Mwos Unido;#1d3f9e;#000000;38;7000;2016;los Mwos;el estadio de una ciudad cercana a la capital;El club más joven de la liga.

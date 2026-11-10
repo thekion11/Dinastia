@@ -1,0 +1,28 @@
+#seleccion=Haití
+#tier=0.18
+#globo=-72.34,18.54
+#bandera=🇭🇹
+#confed=conc
+#liga=Ligue Haïtienne|Liga Haitiana
+#copa=Copa de Haití|Copa Haitiana
+#nombres=Jean,Wilfried,Frantz,Wilson,Jonel,Duckens,Johnny,Derrick,Ricardo,Steeven,Kervens,Peterson,Mackenson,Carlens
+#apellidos=Pierre,Jean-Baptiste,Louis,Joseph,Charles,Saint-Fleur,Etienne,Michel,Dorsainvil,Francois,Pierrot,Duverseau,Exantus,Casimir
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Violette AC;Violeta Puerto;#7b2d8e;#ffffff;62;10000;1918;los Violetas;el estadio nacional de la capital;El club más laureado del país, con vitrina llena de títulos.
+Racing Club Haïtien;Racing Haitiano;#0057b8;#ffffff;58;10000;1930;los Racinguistas;el estadio de la capital que comparten los grandes;Un clásico del fútbol haitiano con grandes jugadores en su historia.
+Don Bosco FC;Don Bosco Pétion;#0057b8;#f7d117;55;5000;1990;los Salesianos;el campo de la zona alta de la capital;Un club de la capital con cantera fuerte y títulos recientes.
+Cavaly AS;Cavali Leogane;#e30613;#ffffff;54;5000;1950;los Caballeros;el estadio de la ciudad del oeste;Equipo de la costa oeste con un título histórico en su palmarés.
+Tempête FC;Tempestad Haití;#000000;#e30613;50;3000;1960;los Temporales;el campo de la ciudad del sur;Un club del sur del país con afición fiel.
+Real Hope FA;Esperanza Real;#0b8f3c;#ffffff;50;4000;1995;los Esperanzas;el estadio de la ciudad del sur;Un equipo joven que ya ha ganado una liga.
+Arcahaie FC;Arcahaye Club;#f7d117;#0b8f3c;48;3000;1960;los Amarillos del Oeste;el estadio de la ciudad costera del oeste;Un club de la costa con historia modesta.
+Baltimore SC;Baltimora Club;#e30613;#ffffff;51;4000;1980;los Rojos;el estadio de la ciudad del centro;Un equipo con tradición en las categorías altas.
+AS Capoise;Capoise Cabo;#0057b8;#e30613;46;5000;1950;los Capois;el estadio de la gran ciudad del norte;El club de la gran ciudad del norte con afición numerosa.
+Cosmopolites AC;Cosmopolita Club;#ffffff;#0057b8;44;3000;1975;los Cosmopolitas;el campo de la ciudad del norte;Un club histórico que alterna ascensos y sustos.
+FICA FC;Fica Cabo;#e30613;#000000;45;3000;1985;los Pioneros;el campo de la ciudad del norte;Un club con cantera de barrio y proyecto estable.
+Juventus des Cayes;Juventud Cayes;#000000;#ffffff;47;5000;1970;los Zebras del Sur;el estadio de la ciudad del sur;Un histórico del sur con afición muy fiel.
+América des Cayes;America Sureña;#e30613;#f7d117;49;6000;1948;los Americanistas;el estadio de la ciudad del sur, compartido;Un clásico del sur con varios títulos nacionales.
+Mirebalais FC;Mirebalé Club;#0b8f3c;#f7d117;42;3000;1990;los Verdes del Centro;el campo de la ciudad del centro;Un modesto club del centro que sueña con crecer.
+Ouanaminthe FC;Juana Mintha;#0057b8;#000000;40;3000;1992;los Fronterizos;el estadio de la ciudad fronteriza;Un equipo de la frontera con el vecino del este.
+Rivartibonitienne FC;Rivartibó Club;#f7d117;#e30613;41;3000;1980;los Artibonitas;el campo de la comarca agrícola del valle;Un club del valle con presupuesto reducido.
+Triomphe de Liancourt;Triunfo Liancur;#e30613;#0057b8;43;3000;1965;los Triunfadores;el estadio de la ciudad del valle;Un equipo del valle que lucha por mantenerse arriba.
+Racing des Gonaïves;Racing Gonaives;#ffffff;#0b8f3c;43;5000;1935;los Racers del Norte;el estadio de la ciudad histórica del noroeste;Un club con raíces históricas en la ciudad de la independencia.

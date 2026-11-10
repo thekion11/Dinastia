@@ -1,0 +1,22 @@
+#seleccion=Guatemala
+#tier=0.25
+#globo=-90.51,14.63
+#bandera=🇬🇹
+#confed=conc
+#liga=Liga Nacional de Guatemala|Liga Guatemalteca
+#copa=Copa de Guatemala|Copa Guatemalteca
+#nombres=José,Carlos,Luis,Marco,Mario,Jorge,Óscar,Rafael,Wilfred,Edwin,Gustavo,Rodolfo,Miguel,Selvin
+#apellidos=López,Pérez,García,Hernández,Morales,González,Ramírez,Méndez,Castillo,Cifuentes,Ortiz,Rivera,Juárez,Barrios
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Achuapa;Achuapa Progreso;#0057b8;#ffffff;40;7300;1999;los Achuapanecos;el estadio de un pueblo del departamento de El Progreso;Un equipo humilde de El Progreso que pelea cada año por mantenerse.
+Antigua GFC;Antigua Colonial;#000000;#ffffff;52;10000;1964;los Panzas Verdes;el estadio de la ciudad colonial de los volcanes;Un club de la ciudad colonial con varios títulos de liga.
+Aurora FC;Aurora Amatitlán;#0057b8;#ffffff;42;12000;1945;los Aurorenses;el estadio de la ciudad junto al lago de Amatitlán;Un club con tradición en la capital y su zona sur.
+Cobán Imperial;Imperial Verapaz;#c8102e;#ffffff;48;15000;1964;los Aguiluchos;el estadio de la ciudad norteña de Alta Verapaz;El orgullo de las montañas del norte del país.
+Comunicaciones;Comunicados Gua;#ffffff;#006b3c;60;17000;1949;los Cremas;el gran estadio de la capital;El club más ganador de Guatemala, con una afición enorme.
+Guastatoya;Guastatoyano;#c8102e;#ffffff;46;3100;1928;los Rojos del Oriente;el pequeño estadio de la ciudad de Guastatoya;Un campeón reciente que sorprendió con un equipo muy compacto.
+Malacateco;Malacatense;#c8102e;#ffffff;42;8000;1928;los Tiburones;el estadio de la ciudad fronteriza de Malacatán;El equipo de la frontera con México, duro de visitar.
+Marquense;Marquesano;#006b3c;#ffffff;42;11000;1949;los Leones del Occidente;el estadio de la ciudad de San Marcos;Un club de tradición en el occidente del país.
+Atlético Mictlán;Mictlán Mitense;#f2c200;#c8102e;38;4000;2010;los Atléticos;el estadio de un pueblo del oriente de Jutiapa;Un equipo joven del oriente que se abre paso en la liga.
+Mixco;Mixqueño;#c8102e;#000000;44;5200;1939;los Pumas;el estadio de la ciudad vecina de la capital;Un club de la periferia capitalina en crecimiento.
+Municipal Guatemala;Municipal Trébol;#c8102e;#ffffff;58;10000;1936;los Rojos;el estadio del barrio histórico de la capital;El gran rival de la capital, con una enorme vitrina de títulos.
+Xelajú;Xelajú Altense;#c8102e;#ffffff;54;11220;1928;los Chivos;el estadio de la ciudad de las montañas de Quetzaltenango;El orgullo del altiplano, con una afición muy ruidosa.

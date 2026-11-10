@@ -1,0 +1,23 @@
+#seleccion=Malasia
+#tier=0.5
+#globo=101.69,3.14
+#bandera=🇲🇾
+#confed=asia
+#liga=Liga Super de Malasia|Liga Malasia
+#copa=Copa de Malasia|Copa Malasia
+#nombres=Ahmad,Muhammad,Aiman,Hafiz,Faisal,Syafiq,Amirul,Zulkifli,Razak,Wei Jie,Kumar,Arif,Khairul,Danial
+#apellidos=Abdullah,Rahman,Ismail,Hassan,Ibrahim,Yusof,Lim,Tan,Wong,Singh,Ahmad,Mohamed,Salleh,Othman
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Johor Darul Ta'zim;Johor Sultanes;#1d4fa8;#ffffff;60;40000;1972;los Tigres del Sur;el moderno estadio de la ciudad del extremo sur del país;El gigante del país, campeón de liga de forma ininterrumpida durante más de una década.
+Selangor;Selangor Rojos;#c8102e;#f5c400;56;10661;1936;los Gigantes Rojos;el estadio municipal de una ciudad vecina de la capital;Uno de los clubes más históricos del país, con grandes títulos de liga y copa.
+Terengganu;Trengganu Costa;#f5c400;#111111;55;50000;2005;las Tortugas;el estadio más grande del país, junto a la costa este;El club de la costa este, campeón de copa y habitual de las competiciones continentales.
+Sabah FC;Sabah Kinabalu;#f5c400;#1d4fa8;53;35000;1963;los Montañeses;el estadio de la capital del estado de Borneo;El club de Borneo oriental, con una afición muy fiel y títulos de copa.
+Kuala Lumpur City;K. Lumpur Ciudad;#5bb5e8;#ffffff;52;18000;1974;los Celestes;el estadio de la capital, en pleno complejo deportivo;El club de la capital, con una larga historia en la liga y las copas nacionales.
+Kuching City;Kuching Ciudad;#e8631a;#111111;48;26000;2015;los Gatos de Borneo;el estadio de la ciudad principal del estado de Sarawak;Un club joven de Borneo que ha subido rápido hasta la máxima categoría.
+Penang;Penang Panteras;#1d4fa8;#f5c400;47;20000;1921;las Panteras;el estadio de la ciudad histórica de la isla del estrecho;Un histórico del noroeste del país, campeón de copa en otros tiempos.
+Negeri Sembilan;Negri Seremban;#c8102e;#f5c400;46;25550;1946;los Búfalos;el estadio de la capital del estado interior del oeste;Un club tradicional del interior, con varios títulos en su historia.
+Kelantan The Real Warriors;Kelantan Reales;#c8102e;#ffffff;45;30000;1946;los Guerreros Reales;el gran estadio de la ciudad del noreste, muy cerca de la frontera;Club del noreste con una de las aficiones más apasionadas, campeón de liga hace años.
+Melaka;Malaca Jebat;#c8102e;#ffffff;43;40000;1957;los Guerreros de Malaca;el estadio de la antigua ciudad portuaria histórica;El club de la ciudad histórica del estrecho, con tradición de cantera.
+PDRM;Polis Selayang;#1d3f9e;#f5c400;41;30000;1960;los Azules de la Ley;el estadio de un barrio al norte de la capital;El equipo de la policía del país, de los más veteranos de la liga.
+Immigration;Inmigra Kangar;#e8631a;#1d4fa8;39;20000;2011;los Naranjas del Norte;el estadio de la capital del estado más pequeño, junto a Tailandia;Un club modesto del extremo norte, ligado a los servicios de inmigración.
+DPMM;Brunei Sultan;#f5c400;#111111;38;28000;2000;los Soles de Brunéi;el estadio nacional de otro país, el sultanato vecino de Borneo;El único club de Brunéi en la liga malasia: juega fuera de su país y es el más peculiar.

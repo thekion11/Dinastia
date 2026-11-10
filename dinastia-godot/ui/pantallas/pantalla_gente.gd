@@ -154,7 +154,7 @@ func _pintar_correo() -> void:
 		b.flat = true
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.clip_text = false
-		b.text = "%s%s   ·   S%d/%d" % ["" if leida else "🔵 ", String(it3["titulo"]), int(it3["semana"]), int(it3["anio"])]
+		b.text = "%s%s   ·   S%d/%d" % ["" if leida else "🔵 ", Idiomas.t(String(it3["titulo"])), int(it3["semana"]), int(it3["anio"])]   ## (10-11) el título traducido antes de componer
 		b.add_theme_font_size_override("font_size", 13)
 		b.add_theme_color_override("font_color", p._color_de_paleta(Principal.COL_SUAVE if leida else Principal.COL_TEXTO))
 		b.pressed.connect(func() -> void: it3["leida"] = true; _pintar_correo())

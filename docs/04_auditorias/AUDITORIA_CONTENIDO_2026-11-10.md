@@ -9,11 +9,11 @@ Cifras del «mundo real»: FIFA Professional Football Report 2023 [V]; el resto 
 
 | Magnitud | Dinastía hoy (medido) | Mundo real | Falta |
 |---|---|---|---|
-| Países con liga | **72** (los 28 de antes + 22 nuevos + 10 de la tanda 1 + 12 de la tanda 2: WAL, SVN, JOR, CYP, IRQ, UZB, FIN, JAM, HON, PAN, NZL, MLI) | 135 con fútbol profesional [V]; ~160 con semiprofesional [E] | **63** (o ~90) |
-| Ligas | **84**: 72 primeras + 12 segundas (ARG, BRA, CHI, ENG, ESP, FRA, GER, ITA, MEX, NED, POR, TUR) | ~150 primeras; ~300 con 2.ª y 3.ª profesionales [E] | **~100 primeras + ~190 inferiores** |
-| Clubes | **1.375**: 1.127 en primera y 248 en segunda | 3.986 profesionales [V]; 5.500-6.500 con 2.ª [E] | **~2.600** (estricto) a **~5.000** (con 2.ªs) |
+| Países con liga | **86** (los 28 de antes + 22 nuevos + 10 de la tanda 1 + 12 de la tanda 2 + 14 de la tanda 3: BIH, MNE, ISL, EST, KAZ, AZE, BLR, LVA, ALB, MKD, GEO, LTU, NIR, LUX) | 135 con fútbol profesional [V]; ~160 con semiprofesional [E] | **49** (o ~75) |
+| Ligas | **98**: 86 primeras + 12 segundas (ARG, BRA, CHI, ENG, ESP, FRA, GER, ITA, MEX, NED, POR, TUR) | ~150 primeras; ~300 con 2.ª y 3.ª profesionales [E] | **~100 primeras + ~190 inferiores** |
+| Clubes | **1.541**: 1.293 en primera y 248 en segunda | 3.986 profesionales [V]; 5.500-6.500 con 2.ª [E] | **~2.400** (estricto) a **~5.000** (con 2.ªs) |
 | Clubes DENTRO de las ligas hechas | cantidades reales: ENG 20, ESP 20, ITA 20, GER 18, FRA 18, ARG 30, BRA 20, MEX 18, USA 30, JPN 20, COL 20, PER 18, KSA 18, EGY 21, TUR 18, POR 18, NED 18, POL 18… | las mismas [C] | ~0 (antes ~67). Residuo: Australia 12 de 13 reales, ligas con formato especial (play-offs) simplificado |
-| Jugadores | **34.375** en clubes (DEF 8.552, MED 8.328, DEL 6.638, POR 3.207); 114 nacionalidades; OVR medio 55,3; **3.911 con nombre y datos fijos (14,6 %)** en 339 clubes del pack real | ~128.700 profesionales [V] | **~102.000** (o ~22.800 sin datos fijos dentro de lo que ya hay) |
+| Jugadores | **38.525** en clubes (DEF 8.552, MED 8.328, DEL 6.638, POR 3.207); 114 nacionalidades; OVR medio 55,3; **3.911 con nombre y datos fijos (14,6 %)** en 339 clubes del pack real | ~128.700 profesionales [V] | **~102.000** (o ~22.800 sin datos fijos dentro de lo que ya hay) |
 | Caras | biblioteca de **300** mezclas (antes 72) + cara procedural; las fotos reales solo en `caras_reales.pck`: **no medible en las sesiones** (el `.pck` no está en ningún contenedor ni va al repo); último dato conocido 1.219, sin verificar; pregunta para el dueño | una por jugador | la biblioteca debe incluirse en el build público (revisar `export_presets.cfg`); fotos solo en el `.pck` por política |
 | Estadios | **1.069 perfiles**; tras la variedad generada (10-11, `herramientas/estadios_variedad.py`) hay **536 arquitecturas distintas** (forma, niveles, techo, focos, fachada, pista; antes 99), 10 formas (la más repetida, «rect», baja de 688 a 330 = 31 %) y **1.067 firmas visuales distintas** con butacas y colores (0 repetidas dentro de una liga); piezas de estadio real hechas a mano: arco 1, torres de rampa 4, costillas 5, fachada curva 21, colchón 2 (~30 perfiles; 33 icónicos + 21 en las tandas de la sesión 3); aforo medio 22.794, máximo 95.000 (Comtal FC) | ~3.500-5.500 distintos [E]; ~150 icónicos [E] | los ~150 icónicos con pieza propia (hay ~30); los 725 estadios generados son variados pero no son el real |
 | Escudos | **1.069** filas; **917 diseños distintos** (forma + patrón + colores + letras); 842 con patrón o letras propias | uno por club | variedad suficiente; falta que se parezcan a su club real (colores de varios clubes salen de memoria, sin verificar) |
@@ -36,9 +36,9 @@ Cifras del «mundo real»: FIFA Professional Football Report 2023 [V]; el resto 
 
 ## 3. Qué FALTA, en números (lista corta)
 
-1. **63 países** con liga profesional (de 135) y **~100 primeras divisiones**.
+1. **49 países** con liga profesional (de 135) y **~100 primeras divisiones**.
 2. **~2.900 clubes** profesionales (~5.000 con segundas y terceras) y **~102.000 jugadores**.
-3. Las **211 selecciones** FIFA: hay 72, **todas con jugadores propios del mundo** (0 sin convocables); faltan 139.
+3. Las **211 selecciones** FIFA: hay 86, **todas con jugadores propios del mundo** (0 sin convocables); faltan 125.
 4. **Nations League y eliminatorias** (no existen); las copas y supercopas de los otros países se simulan por resultado, no se juegan.
 5. **Estadios**: 536 arquitecturas para 1.069 clubes (≈ 2 por arquitectura; antes 99) y solo ~30 con pieza propia de estadio real; **uniformes**: 606 combinaciones para 1.029 kits, sin repeticiones dentro de una liga.
 6. Caras: 300 mezclas frente a 26.725 jugadores; el build público debe llevarlas.
@@ -110,3 +110,15 @@ Pregunta para el dueño: cuántas fotos reales de caras hay hoy en `caras_reales
 Tanda 1 de «países sin liga» (10-11, noche): elegidos con datos (las 19 selecciones sin liga tenían 0 jugadores convocables; se tomaron 10 por ranking FIFA [C] y por cobertura: África tenía 3 ligas y la CONCACAF 2). Hoy el mundo tiene 60 países, 72 ligas, 1.215 clubes y 30.375 jugadores; 582 arquitecturas de estadio distintas, 0 uniformes repetidos por liga, 1.066 escudos distintos. Datos de clubes de memoria (sin verificar en la web): colores, aforos y composición exacta de la temporada.
 
 Tanda 2 de «países sin liga» (10-11, noche): Gales, Honduras, Irak, Jamaica, Jordania, Malí, N. Zelanda, Panamá, Uzbekistán (las 9 que seguían con 0 convocables) más Finlandia, Eslovenia y Chipre. Hoy: 72 países, 84 ligas, 1.375 clubes, 34.375 jugadores, 72 selecciones sin ninguna a 0 convocables, 641 arquitecturas de estadio, 1.226 escudos distintos, 0 uniformes repetidos por liga. VERIFICADO en Wikipedia (clubes, estadio y aforo 2025-26): WAL, SVN, JOR, CYP, IRQ, UZB, FIN, JAM, HON. NO verificado: MLI (lista de 2021-22), PAN (estadios y aforos de memoria), NZL (sin aforos), Aris Limassol, Génesis y Platense (estadio); y de todos los países los colores, fundaciones y apodos.
+
+Tanda 3 (10-11, noche): 14 países de la UEFA (BIH, MNE, ISL, EST, KAZ, AZE, BLR, LVA, ALB, MKD, GEO, LTU, NIR, LUX). Hoy: 86 países, 98 ligas, 1.541 clubes, 38.525 jugadores, 86 selecciones (0 a 0 convocables), 673 arquitecturas de estadio, 1.391 escudos distintos, 0 uniformes repetidos por liga. Verificado en Wikipedia: los 14 (clubes, estadio y aforo; Flora y los estadios de MKD inferidos; ISL sin aforos). Bielorrusia no está suspendida: solo vetada como local (según Wikipedia).
+
+## Tanda 4 de países (10-11)
++16 países (THA, IDN, VIE, IND, MAS, BHR, OMA, COD, BFA, ZAM, GUI, KEN, ARM, MDA, ESA, GUA): ahora **102 países, 114 ligas, 1.762 clubes, 44.050 jugadores, 102 selecciones**; estadios repetidos en una misma liga: 0. Elegidos por peso (selecciones y ranking), empezando por Asia y África.
+Verificado en Wikipedia (2025-26): THA, IDN, VIE, IND, MAS, BHR (sin estadios por club), ZAM, KEN, ARM, ESA, GUA. NO verificado: OMA (lista 2024-25), BFA y GUI (2021-22), MDA (parejas club-estadio inferidas), COD (16 de 31 clubes, aforos estimados). Colores, fundaciones y apodos: de memoria.
+
+## Tanda 5 de países (10-11) — cifras finales medidas
++33 países (KOS, MLT, FRO, AND, GIB, SMR, CPV, GAB, ANG, MOZ, UGA, TAN, LBY, BEN, TOG, CGO, ZIM, NAM, MAD, SYR, LBN, PLE, KGZ, TJK, PHI, SGP, HKG, KUW, HAI, CUW, TRI, SUR, NCA). Medido con `medir_contenido`: **135 países, 147 ligas, 2.208 clubes, 55.200 jugadores en clubes, 135 selecciones** (confederaciones: UEFA 53, África 29, Asia 27, CONCACAF 14, CONMEBOL 14, Oceanía 2), 150 nacionalidades de jugadores, 2.206 firmas visuales de estadio distintas, 0 estadios repetidos en una misma liga, mínimo 200 convocables por selección. Lo no verificado: `datos_dudosos_2026-11-10.md`.
+
+## Segunda pasada web (10-11)
+Corregidas las listas de MOZ, GUI, MAD, TOG, BEN, NCA y PAN y varios aforos (KUW, ZIM, ISL, AND). Cifras tras ello: 135 países, 147 ligas, 2.206 clubes, 55.150 jugadores en clubes. Qué quedó verificado y con qué fuente: `datos_dudosos_2026-11-10.md`.

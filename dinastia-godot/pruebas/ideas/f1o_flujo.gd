@@ -111,8 +111,8 @@ func _flujo_reemplazar() -> void:
 	var prev := EntradaCampeonato.previsualizar(m0, "reemplazar", "ARG", victima.id) if victima else {}
 	var plantel_victima := victima.plantilla.duplicate() if victima else []
 	pasos.append_array(_recorrer(o, respuestas))
-	_comprobar(pasos == ["intro", "idioma", "modo", "pais", "config", "entrada", "personaje"],
-		"recorre las 7 etapas en orden (%s)" % ", ".join(pasos))
+	_comprobar(pasos == ["intro", "idioma", "modo", "ligas", "pais", "config", "entrada", "personaje"],
+		"recorre las 8 etapas en orden (%s)" % ", ".join(pasos))
 	_comprobar(_vistas == pasos, "cada etapa avisa al terminar")
 	_comprobar(OrquestadorEntrada.intro_vista(), "la intro queda marcada como vista")
 	var cf := ConfigFile.new()
@@ -159,6 +159,8 @@ func _volver_y_saltar_intro() -> void:
 	_comprobar(o.etapa_actual() == "idioma", "con la intro ya vista se empieza por el idioma")
 	o.pantalla_actual().emit_signal("terminado", {"idioma": "es"})
 	o.pantalla_actual().emit_signal("terminado", {"modo": "creador"})
+	_comprobar(o.etapa_actual() == "ligas", "tras el modo, las ligas activas")
+	o.pantalla_actual().emit_signal("terminado", {"ligas": {"paises": ["CHI", "ARG"]}})
 	o.pantalla_actual().emit_signal("terminado", {"pais": "CHI"})
 	_comprobar(o.etapa_actual() == "config", "llega a la configuración")
 	_comprobar(o.pantalla_actual().size == o.size, "la etapa de configuración ocupa la pantalla entera")
@@ -170,6 +172,8 @@ func _volver_y_saltar_intro() -> void:
 		"nunca hay dos pantallas a la vez")
 	antes.emit_signal("terminado", {"config": {}})
 	_comprobar(o.etapa_actual() == "pais", "una pantalla ya cerrada no puede hacer avanzar el flujo")
+	o.pantalla_actual().emit_signal("volver")
+	_comprobar(o.etapa_actual() == "ligas", "volviendo desde el país se llega a las ligas activas")
 	o.pantalla_actual().emit_signal("volver")
 	o.pantalla_actual().emit_signal("volver")
 	_comprobar(o.etapa_actual() == "idioma", "volviendo dos veces más se llega al idioma, sin pasar por la intro")

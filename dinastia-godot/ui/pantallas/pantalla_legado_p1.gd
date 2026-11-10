@@ -85,7 +85,7 @@ func _pintar_inicio(c: Club) -> void:
 		for i in mini(3, p._bandeja.size()):
 			var m: Dictionary = p._bandeja[i]
 			var b := Button.new()
-			b.text = ("●  " if not bool(m.get("leida", false)) else "     ") + String(m.get("titulo", ""))
+			b.text = ("●  " if not bool(m.get("leida", false)) else "     ") + Idiomas.t(String(m.get("titulo", "")))   ## (10-11) traducido antes de componer
 			b.flat = true
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			b.clip_text = true

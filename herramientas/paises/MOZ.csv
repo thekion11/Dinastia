@@ -1,0 +1,24 @@
+#seleccion=Mozambique
+#tier=0.15
+#globo=32.57,-25.97
+#bandera=🇲🇿
+#confed=afr
+#liga=Moçambola|Liga Mozambiqueña
+#copa=Taça de Moçambique|Copa Mozambiqueña
+#nombres=Carlos,Armando,Telmo,Manuel,Fernando,Domingos,Eugénio,Simão,Geraldo,Hélio,Luís,Zainadine,Faizal,Abdul
+#apellidos=Macamo,Sitoe,Chissano,Machava,Tembe,Cossa,Nhantumbo,Mondlane,Muianga,Langa,Bila,Mabunda,Chongo,Nhaca
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+UD Songo;Songo Unido;#1d3f9e;#ffffff;56;10000;1982;los Hidroeléctricos;el pequeño estadio de la ciudad de la presa;Campeón reciente del país, con base en una ciudad junto a una gran presa.
+Black Bulls;Toros Negros;#000000;#e30613;55;5000;2002;los Toros;el campo de la capital junto a la costa;Un club joven que ha ganado títulos y juega las copas continentales.
+Costa do Sol;Costa Sol Maputo;#f7d117;#1d3f9e;53;42000;1936;los Canarios;el gran estadio nacional de la capital;Histórico de la capital, campeón varias veces desde los años cuarenta.
+Ferroviário da Beira;Ferro Beira;#1d3f9e;#ffffff;54;12000;1924;los Ferroviarios del Sofala;el estadio del puerto del centro del país;El club del ferrocarril de la ciudad portuaria, campeón en 2023.
+Ferroviário de Maputo;Ferro Maputo;#e30613;#ffffff;51;15000;1924;los Locomotivas;el estadio ferroviario de la capital;Clásico de la capital con gran tradición y cantera.
+Ferroviário de Nampula;Ferro Nampula;#0b8f3c;#ffffff;48;15000;1955;los Verdes del Norte;el estadio de la ciudad del norte;El club ferroviario de la gran ciudad del norte.
+Ferroviário de Nacala;Ferro Nacala;#1d3f9e;#f7d117;46;8000;1966;los Ferroviarios de la Bahía;el campo de la ciudad del puerto profundo;Equipo portuario del norte con afición fiel.
+Ferroviário de Lichinga;Ferro Lichinga;#e30613;#000000;47;10000;1970;los Lobos del Lago;el estadio de la ciudad del noroeste;El club con más asistencia del campeonato, en una ciudad de altura.
+Baía de Pemba;Bahia Pemba;#00a3e0;#ffffff;44;5000;2006;los Delfines;el campo de la ciudad costera del norte;Un club de la bahía de Cabo Delgado, joven y ambicioso.
+Vilankulo FC;Vilanculo Costa;#f58220;#000000;42;4000;2008;los Pescadores;el campo del pueblo turístico del sur;Un equipo del litoral del sur con aspiración de mantenerse.
+AD Pemba;Atletico Pemba;#1d3f9e;#ffffff;43;5000;2000;los Pembenses;el estadio municipal de la ciudad costera del norte, compartido;Un club de la ciudad de la bahía, comparte recinto con su vecino.
+Maxaquene;Maxacane Maputo;#e30613;#ffffff;48;5000;1920;los Rojos del Barrio;el campo del barrio de la capital;Histórico de la capital con varios títulos y gran cantera.
+CD Chingale;Chingali Tete;#0b8f3c;#ffffff;42;5000;2000;los Chingali;el estadio municipal de la zona minera del noroeste;Un club de la provincia de Tete, joven y en ascenso.
+Liga Desportiva de Sofala;Liga Sofalense;#1d3f9e;#f7d117;44;8000;2010;los Sofalenses;el estadio municipal del puerto del centro del país;Un club de la ciudad portuaria del centro, rival del ferroviario local.

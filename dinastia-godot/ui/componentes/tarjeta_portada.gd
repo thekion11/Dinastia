@@ -32,11 +32,12 @@ static func crear(pm: PantallaMenu, sub: Dictionary, i: int) -> Button:
 	var fila := HBoxContainer.new()
 	fila.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(fila)
-	var ic := Label.new()
-	ic.text = String(sub.get("icono", "•"))
-	ic.add_theme_font_size_override("font_size", 38)
-	ic.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var ic := IconosUI.control(String(sub.get("icono", "•")), 38)   ## (10-11) emoji o icono dibujado (Ajustes → Pantalla)
 	fila.add_child(ic)
+	var hueco := Control.new()
+	hueco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hueco.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fila.add_child(hueco)
 	if sub.has("accion"):
 		var tag := Label.new()
 		tag.text = Idiomas.t("▶ ABRIR")

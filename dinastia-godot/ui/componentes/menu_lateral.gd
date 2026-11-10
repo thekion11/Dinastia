@@ -204,8 +204,10 @@ func _traducir() -> void:
 	for b: Node in _lista.get_children():
 		if b is Button and b.has_meta("_es"):
 			var d: Array = b.get_meta("_es")
-			if String(d[0]) == "cab":
-				(b as Button).text = "%s  %s" % [String(d[1]), Idiomas.mayusculas(Idiomas.t(String(d[2])))]
+			if String(d[0]) == "cab":   ## (10-11) con los iconos dibujados, el icono va aparte y el texto sin emoji
+				var t := IconosUI.textura(String(d[1]), 20)
+				(b as Button).icon = t
+				(b as Button).text = ("  " if t != null else String(d[1]) + "  ") + Idiomas.mayusculas(Idiomas.t(String(d[2])))
 			else:
 				(b as Button).text = "      %s%s" % [String(d[1]), Idiomas.t(String(d[2]))]
 	for b: Node in _riel.get_children():
@@ -218,7 +220,7 @@ func boton_de(id: String) -> Button:
 
 func _boton_riel(texto: String, tip: String) -> Button:
 	var b := Button.new()
-	b.text = texto
+	IconosUI.en_boton(b, texto)   ## (10-11) el emoji, o el icono dibujado si está encendido en Ajustes
 	b.set_meta("_es_tip", tip)
 	b.tooltip_text = Idiomas.t(tip)
 	b.flat = true

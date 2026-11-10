@@ -1,0 +1,24 @@
+#seleccion=Togo
+#tier=0.12
+#globo=1.22,6.13
+#bandera=🇹🇬
+#confed=afr
+#liga=Championnat National de Togo|Liga Togolesa
+#copa=Copa de Togo|Copa Togolesa
+#nombres=Kodjo,Komla,Kossi,Yao,Kofi,Mensah,Emmanuel,Serge,Floyd,Alaixys,Jonathan,Ken,Djene,Kwami
+#apellidos=Adebayor,Agbeko,Amewou,Dosseh,Kpodo,Lawson,Mensah,Nyaku,Tchakala,Amouzou,Akakpo,Gbadamassi,Ketou,Assogba
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+ASC Kara;Kara Atletico;#0b8f3c;#f7d117;60;10000;1974;los Verdes del Norte;el estadio de la capital del norte;Campeón reciente, con una larga historia de títulos.
+ASKO Kara;Asco Karano;#e30613;#ffffff;62;10000;1967;los Rojos del Norte;el estadio de la capital del norte, compartido;Dominó el campeonato durante varios años seguidos.
+AS Togo-Port;Puerto Togo;#1d3f9e;#ffffff;54;20000;1960;los Portuarios;el estadio olímpico de la capital;El club del puerto, con varios títulos.
+Dynamic Togolais;Dinamico Togo;#e30613;#f7d117;50;20000;1957;los Dinámicos;el estadio olímpico de la capital, compartido;Un grande histórico de la capital con muchos trofeos.
+AS OTR;Atletico Aduanas;#1d3f9e;#f7d117;48;8500;1998;los Aduaneros;el campo de la capital;El club de la oficina tributaria, de proyecto estable.
+Gomido FC;Gomido Kpalime;#f7d117;#0b8f3c;48;8000;1955;los Gomidos;el estadio de la ciudad de las montañas;Un clásico de las colinas del oeste.
+AS Gbohloé-Su des Lacs;Lagos Aneho;#1d3f9e;#e30613;42;5000;1980;los Lacustres;el estadio de la ciudad costera histórica;Un club de la costa con afición tradicional.
+AC Semassi;Semasi Sokode;#e30613;#000000;54;10000;1963;los Rojinegros;el estadio de la segunda ciudad del país;Un histórico de la región central con muchos títulos.
+Unisport FC;Unisport Sokode;#1d3f9e;#ffffff;46;10000;1986;los Universitarios;el estadio de la segunda ciudad, compartido;Un club de Sokodé con cantera propia.
+Binah FC;Bina Pagouda;#f7d117;#000000;42;3000;1995;los Binas;el campo del pueblo del norte;Un equipo de la zona rural del norte.
+EF Lomé;Escuela Lomena;#1d3f9e;#ffffff;48;8500;1990;los Escolares;el estadio de las afueras de la capital;Un club de la capital que acabó tercero la última liga.
+Entente II Lomé;Concordia Lome;#e30613;#ffffff;44;8500;1990;los Concordes;el estadio de las afueras de la capital, compartido por varios;Un club de la capital que pelea por la mitad de la tabla.
+Tambo FC;Tambor Lome;#f7d117;#e30613;40;8500;2000;los Tamboreros;el estadio de las afueras de la capital, compartido;Un modesto club de la capital que se mantiene en la élite.
+Espoir FC Lomé;Esperanza Lome;#0b8f3c;#ffffff;40;8500;1995;los Esperanzados de la Capital;el estadio de las afueras de la capital, compartido por varios;Un club de la capital que acaba de descender.

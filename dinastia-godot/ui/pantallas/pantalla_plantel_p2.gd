@@ -189,7 +189,7 @@ func _pintar_tactica(c: Club) -> void:
 				c.once_elegido.append(j.id)
 			p._refrescar())
 		g.add_child(b)
-		g.add_child(p._retrato(j, 22))
+		g.add_child(p._retrato(j, Principal.RETRATO_FILA))
 		var col := p.COL_ACENTO if dentro else (Principal.COL_ROJO if not j.disponible() else Principal.COL_TEXTO)
 		p._celda(g, j.nombre, col, false, 12)
 		p._celda(g, j.pos_e, Principal.COL_SUAVE, false, 11)
@@ -426,7 +426,7 @@ func _pintar_goleadores(pais: String) -> void:
 		var j: Jugador = todos[i]
 		var suyo: Club = p.mundo.clubes.get(j.club_id)
 		p._celda(g, str(i + 1), Principal.COL_SUAVE, false, 11)
-		g.add_child(p._retrato(j, 22))
+		g.add_child(p._retrato(j, Principal.RETRATO_FILA))
 		var b := Button.new()
 		b.text = j.nombre
 		b.flat = true
