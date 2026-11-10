@@ -1,0 +1,28 @@
+#seleccion=Benín
+#tier=0.12
+#globo=2.42,6.37
+#bandera=🇧🇯
+#confed=afr
+#liga=Ligue 1 de Benín|Liga Beninesa
+#copa=Copa de Benín|Copa Beninesa
+#nombres=Jean,Romaric,Cédric,Moussa,Fiacre,Steve,Olivier,Charbel,Adrien,Dodji,Sessi,Koffi,Rodrigue,Désiré
+#apellidos=Adjovi,Agbodjan,Dossou,Houngbedji,Zinsou,Sossou,Gbaguidi,Koukpaki,Aguemon,Tchibozo,Akpovi,Dohou,Hounkpatin,Ahouansou
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Sobemap FC;Sobemap Portonovo;#e30613;#ffffff;56;15000;1983;los Rojos del Puerto;el estadio de la capital administrativa;Campeón reciente, con apoyo de una empresa local.
+Dadje FC;Dadye Rojo;#0b8f3c;#f7d117;58;5000;2002;los Mazorqueros;el campo de la ciudad del norte;Campeón de la última liga completa.
+Coton FC;Algodon Parakou;#ffffff;#1d3f9e;62;5000;2005;los Algodoneros;el estadio de la ciudad del norte;Tricampeón del país, dominó los últimos años.
+ASPAC FC;Aspac Cotonou;#1d3f9e;#f7d117;52;15000;1990;los Azules de la Costa;el gran estadio de la capital económica;Un club de Cotonou con presencia habitual en las alturas.
+Buffles du Borgou;Bufalos Borgu;#e30613;#000000;52;15000;1990;los Búfalos;el estadio principal del norte del país;El equipo de la región norteña, con gran hinchada.
+Dragons de l'Ouémé;Dragones Oueme;#0b8f3c;#e30613;48;7000;1960;los Dragones;el estadio de la capital administrativa, compartido;Un histórico del sureste del país.
+AS Cotonou;Cotonou Atletico;#f7d117;#0b8f3c;46;15000;1965;los Pescadores;el gran estadio de la capital económica, compartido;Un veterano de la costa que busca volver a lo más alto.
+Loto-Popo FC;Loto Popo;#e30613;#1d3f9e;50;4000;2012;los Lotos;el campo de la ciudad del sur costero;Campeón hace pocos años, un proyecto joven.
+Panthères FC;Panteras Djougou;#000000;#f7d117;46;5000;2010;las Panteras;el estadio de la ciudad del oeste;Un club del noroeste con afición creciente.
+Damissa FC;Damisa Nikki;#1d3f9e;#ffffff;42;3000;2010;los Cazadores;el campo de la ciudad norteña de los reyes;Un recién llegado del norte con ganas de crecer.
+Dynamo Abomey;Dinamo Abomey;#e30613;#ffffff;42;5000;1985;los Dinamos del Reino;el estadio de la ciudad de los reyes antiguos;Un club de la antigua capital real.
+Espoir FC;Espoir Savalou;#0b8f3c;#ffffff;42;3000;1995;los Esperanzados;el campo de la ciudad de las colinas;Un modesto club del centro del país.
+Ayema FC;Ayema Seme;#f7d117;#1d3f9e;40;3000;2008;los Doradados;el campo de la ciudad costera cerca de la frontera;Un club costero que lucha por mantenerse.
+Djeffa FC;Yefa Seme;#1d3f9e;#e30613;40;3000;2010;los Azulgrana del Sur;el campo del puerto del este;Un club joven de la costa oriental.
+Hodio FC;Hodio Come;#e30613;#f7d117;38;3000;2012;los Hodios;el campo de la ciudad del lago;Un club humilde del suroeste.
+Bani Gansé FC;Bani Ganse;#0b8f3c;#000000;38;3000;2011;los Gansés;el campo de la ciudad del centro;Un modesto equipo del interior.
+US Cavaliers;Jinetes Nikki;#ffffff;#e30613;40;3000;2009;los Jinetes;el campo de la ciudad del norte, compartido;Un club norteño que apuesta por la cantera.
+AS Vallé Omnisports;Valle Omnisport;#1d3f9e;#f7d117;38;3000;2013;los Valleros;el campo del valle del río;Un recién llegado con aspiraciones de consolidarse.

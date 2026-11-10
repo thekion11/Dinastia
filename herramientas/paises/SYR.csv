@@ -1,0 +1,26 @@
+#seleccion=Siria
+#tier=0.2
+#globo=36.29,33.51
+#bandera=🇸🇾
+#confed=asia
+#liga=Syrian Premier League|Liga Siria
+#copa=Copa de Siria|Copa Siria
+#nombres=Ahmad,Mohammad,Khaled,Omar,Samer,Fadi,Maher,Hassan,Bassel,Firas,Rami,Wael,Mahmoud,Tarek
+#apellidos=Haddad,Khoury,Darwish,Hamwi,Masri,Sabbagh,Nasser,Khatib,Shami,Halabi,Aswad,Daoud,Hakim,Mansour
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Al-Jaish;Jaish Damasco;#7a1020;#ffffff;62;15000;1947;los Militares;el estadio de la capital junto a la ciudad deportiva;El club del ejército, uno de los más laureados del país.
+Al-Karamah;Karama Homs;#e30613;#ffffff;61;32000;1928;los Guerreros de Homs;el gran estadio de la ciudad central;El club más premiado de Homs, con presencia continental.
+Tishreen;Tishrin Latakia;#e30613;#ffffff;57;28000;1947;los Costeros;el estadio municipal de la ciudad costera;El principal club de la costa, con títulos de liga y copa.
+Al-Wahda Damascus;Unidad Damasco;#f7d117;#000000;58;10000;1928;los Amarillos de la Capital;el campo de la capital que comparten varios clubes;Un histórico de la capital con muchos títulos a sus espaldas.
+Al-Shorta Damascus;Policía Damasco;#0b8f3c;#ffffff;54;10000;1991;los Policías;el campo de la capital que comparten varios clubes;El club de los cuerpos de seguridad, ascendido a la primera línea.
+Damascus Al-Ahli;Ahli Damasco;#0b8f3c;#e30613;47;10000;1936;los Verdirrojos;un campo de la capital de uso compartido;Un club histórico de la capital que ha vivido altibajos.
+Al-Ittihad Ahli;Ittihad Alepo;#000000;#f7d117;55;15000;1953;los Amarillos de Alepo;el estadio de la gran ciudad del norte;El club más popular del norte del país, con afición enorme.
+Al-Hurriya;Hurriya Alepo;#0b8f3c;#ffffff;50;15000;1946;los Libres;el estadio de la gran ciudad del norte, compartido;Un club veterano de Alepo con tradición ascendente.
+Al-Taliya;Taliya Hama;#e30613;#ffffff;51;22000;1932;los Vanguardistas;el estadio municipal de la ciudad de las norias;El club de la ciudad de las norias, a menudo en lo alto.
+Hutteen;Hutin Latakia;#f7d117;#e30613;52;28000;1945;los Hutinos;el estadio municipal de la ciudad costera, compartido;El otro gran club de la costa, rival de su vecino.
+Jableh;Yableh;#1d3f9e;#ffffff;48;10000;1957;los Marinos;el estadio de la pequeña ciudad costera;El equipo de una ciudad portuaria pequeña con mucho orgullo.
+Al-Fotuwa;Futuwa Deir;#0b8f3c;#f7d117;45;13000;1936;los Jóvenes del Éufrates;el estadio de la ciudad oriental junto al río;El club del este del país, con afición muy apasionada.
+Al-Shouleh;Shuleh Daraa;#e30613;#000000;42;18000;1960;los Llameantes;el estadio deportivo de la ciudad del sur;Un modesto club del sur que lucha por mantenerse en primera.
+Homs Al Fidaa;Fidaa Homs;#1d3f9e;#ffffff;44;32000;1936;los Sacrificados;el gran estadio de la ciudad central, compartido;El segundo club de Homs, de plantilla humilde.
+Omaya;Omaya Idlib;#7a1020;#f7d117;40;7500;1960;los Omeyas;el estadio municipal de la ciudad del noroeste;Un club del noroeste que vuelve a competir tras años difíciles.
+Khan Shaykhun;Jan Sheikhun;#0b8f3c;#ffffff;38;7500;1971;los Olivareros;el estadio municipal de la ciudad del noroeste, compartido;Un pequeño club de provincias con presupuesto mínimo.

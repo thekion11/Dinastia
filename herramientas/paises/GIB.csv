@@ -1,0 +1,21 @@
+#seleccion=Gibraltar
+#tier=0.10
+#globo=-5.35,36.14
+#bandera=🇬🇮
+#confed=ucl,uel
+#liga=Gibraltar National League|Liga del Peñon
+#copa=Rock Cup|Copa del Peñon
+#nombres=Joseph,Daniel,Adam,Liam,Jay,Kyle,Dylan,Ethan,Reece,Lee,Tyler,Jack,Anthony,Joel
+#apellidos=Garcia,Perez,Gonzalez,Bautista,Olivero,Sanchez,Cardona,Ramirez,Torres,Casciaro,Chipolina,Victory,Moreno,Ferrary
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Lincoln Red Imps;Lincoln Diablos;#e30613;#ffffff;62;2000;1976;los Diablillos Rojos;el estadio nacional bajo la gran roca;El gran dominador del país, con la mayor racha de títulos.
+St Joseph's;San Josefino;#1d3f9e;#ffffff;52;2000;1912;los Josefinos;el estadio nacional, compartido;El club más antiguo, subcampeón habitual.
+Europa;Europa Peñon;#1d3f9e;#ffffff;54;2000;1925;los Europeos;el estadio nacional, compartido;Un histórico del país con buena cantera.
+Mons Calpe;Mons Calpino;#000000;#f7d117;48;2000;2013;los Calpinos;el estadio nacional, compartido;Un club joven que ha subido rápido.
+Lions Gibraltar;Leones Peñon;#f7d117;#1d3f9e;47;2000;1966;los Leones;el estadio nacional, compartido;Un equipo veterano de la zona sur.
+Lynx;Linces Peñon;#e30613;#000000;45;2000;2007;los Linces;el estadio nacional, compartido;Un club joven y luchador.
+FC Magpies;Urracas Peñon;#000000;#ffffff;43;2000;2013;las Urracas;el estadio nacional, compartido;Un modesto equipo de blanco y negro.
+Europa Point;Punta Europa;#0b8f3c;#ffffff;42;2000;2014;los Faros;el estadio nacional, compartido;Un club del extremo sur con aspiraciones.
+College Mil Novecientos;College Peñon;#a4123f;#ffffff;40;2000;1975;los Colegiales;el estadio nacional, compartido;Un club de origen escolar que lucha por mantenerse.
+Glacis United;Glacis Unidos;#1d3f9e;#f7d117;39;2000;1965;los Glacis;el estadio nacional, compartido;Un veterano de la zona norte de la ciudad.
+Hound Dogs;Perros Sabuesos;#f58220;#000000;38;2000;2012;los Sabuesos;el estadio nacional, compartido;Un recién llegado que busca hacerse un hueco.

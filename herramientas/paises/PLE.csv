@@ -1,0 +1,22 @@
+#seleccion=Palestina
+#tier=0.12
+#globo=35.22,31.90
+#bandera=🇵🇸
+#confed=asia
+#liga=West Bank Premier League|Liga Cisjordana
+#copa=Copa de Palestina|Copa Palestina
+#nombres=Mohammed,Ahmad,Mahmoud,Khaled,Omar,Yousef,Ibrahim,Samer,Tamer,Hasan,Ali,Majd,Nader,Rami
+#apellidos=Hamdan,Khalil,Nasser,Salameh,Odeh,Barghouti,Shalabi,Qasem,Jaber,Hijazi,Dawood,Zaid,Mansour,Abed
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Ahli Al-Khaleel;Ahli Hebrón;#e30613;#ffffff;52;9000;1945;los Rojos del Sur;el estadio principal de la ciudad del sur de Cisjordania;Un grande histórico de la liga, con muchos títulos y una afición fiel.
+Shabab Al-Khalil;Juventud Hebrón;#1d3f9e;#ffffff;48;9000;1943;los Azules de la Colina;el estadio de la ciudad del sur, compartido;El otro club de la ciudad grande del sur, rival de siempre.
+Hilal Al-Quds;Creciente Quds;#1d3f9e;#f7d117;50;12500;1972;los Lunares;el estadio de la ciudad santa del centro;Un club con gran tradición y pocos medios.
+Jabal Al-Mukaber;Monte Mukaber;#0b8f3c;#ffffff;49;3000;1976;los Verdes del Monte;el campo del barrio de la ciudad santa;Un campeón de liga y de copa de la zona de la capital.
+Markaz Balata;Centro Balata;#e30613;#000000;47;7000;1946;los Centrales;el estadio de la ciudad del norte;Un club de arraigo popular en el campo de refugiados de su barrio.
+Shabab Al-Am'ari;Juventud Amari;#0b8f3c;#ffffff;46;4000;1953;los Jóvenes del Campo;el campo del barrio de Ramala;Un club humilde con varios títulos en su palmarés.
+Taraji Wadi Al-Nes;Taraji Belén;#f58220;#1d3f9e;45;5000;1946;los Progresistas;el estadio de la ciudad de la natividad;Un equipo de Belén con años de ascensos y sustos.
+Thaqafi Tulkarm;Cultural Tulkar;#f7d117;#0b8f3c;43;7000;1962;los Culturales;el estadio de la ciudad del noroeste;Un club cultural de la llanura del oeste.
+Islami Qalqilya;Islamico Qalqil;#0b8f3c;#000000;43;4500;1970;los Verdes de la Muralla;el estadio de la ciudad del oeste;Un equipo modesto de una ciudad rodeada de huertos.
+Mosaset Al-Bireh;Hospital Bireh;#e30613;#ffffff;42;3000;1951;los Sanitarios;el campo de la ciudad gemela de Ramala;Un club veterano de la capital administrativa.
+Shabab Al-Dhahiriya;Juv. Dahiriya;#1d3f9e;#e30613;40;3000;1958;los Rebeldes del Sur;el campo de la localidad del sur;Un club pequeño de la montaña del sur.
+Shabab Alsamu;Juventud Samu;#f7d117;#000000;38;2500;1966;los Amarillos;el campo del pueblo del sur de Hebrón;El más humilde de la liga, siempre luchando por la permanencia.
