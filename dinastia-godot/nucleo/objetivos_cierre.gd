@@ -4,6 +4,11 @@ extends RefCounted
 ## `ObjetivosClub` y mueve la confianza de la directiva con el peso de cada uno (cumplir suma, fallar resta). El de liga lo sigue juzgando
 ## `Directiva.tras_temporada`. Solo lee el mundo; no toca el motor del partido.
 
+## Lo que mueve la confianza un objetivo de `peso`: cumplirlo suma el peso y fallarlo resta un 25 % más (calibrado el 10-11 con 3 ligas: sin esto, un club de arriba
+## cumplía casi todo y la confianza no bajaba nunca).
+static func delta_de(peso: int, cumplido: bool) -> int:
+	return peso if cumplido else -int(ceil(float(peso) * 1.25))
+
 ## Juzga un secundario. Devuelve {cumplido, aplica}. `aplica` = falso si no hubo ocasión de cumplirlo (p. ej. no jugó la copa continental).
 static func juzgar(m: Mundo, c: Club, liga: Liga, o: Dictionary, bases: Dictionary) -> Dictionary:
 	var meta := int(o.get("meta", 0))
@@ -47,7 +52,7 @@ static func juzgar(m: Mundo, c: Club, liga: Liga, o: Dictionary, bases: Dictiona
 			return {"cumplido": jovenes >= meta, "aplica": true}
 		"social":
 			var b := int(bases.get("socios", 0))
-			return {"cumplido": b > 0 and float(c.socios) >= float(b) * 1.05, "aplica": b > 0}
+			return {"cumplido": b > 0 and float(c.socios) >= float(b) * (1.0 + float(meta) / 100.0), "aplica": b > 0}
 		"estilo":
 			return {"cumplido": _estilo(liga, c, meta), "aplica": liga != null and liga.jornada_actual > 0}
 	return {"cumplido": false, "aplica": false}
@@ -117,7 +122,7 @@ static func cerrar(m: Mundo, d: Directiva, puesto: int, campeon_liga: bool) -> D
 		var item := {"texto": String(o.get("texto", "")), "meta": int(o.get("meta", 0)), "peso": peso,
 			"cumplido": bool(r["cumplido"]), "aplica": bool(r["aplica"])}
 		if bool(r["aplica"]):
-			delta += peso if bool(r["cumplido"]) else -peso
+			delta += delta_de(peso, bool(r["cumplido"]))
 		(salida["secundarios"] as Array).append(item)
 	var pr := avanzar_proyecto(m, d, c, puesto, campeon_liga)
 	if not pr.is_empty():

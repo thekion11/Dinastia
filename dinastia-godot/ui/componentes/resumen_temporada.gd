@@ -194,7 +194,7 @@ func _veredicto(v: Dictionary) -> Control:
 	for o: Dictionary in v.get("secundarios", []):
 		if bool(o.get("aplica", false)):
 			var ok := bool(o.get("cumplido", false))
-			col.add_child(etiqueta("%s %s (%+d)" % ["✔" if ok else "✘", Idiomas.t(String(o.get("texto", ""))), int(o.get("peso", 0)) * (1 if ok else -1)], 15, Tema.BIEN if ok else Tema.MAL))
+			col.add_child(etiqueta("%s %s (%+d)" % ["✔" if ok else "✘", Idiomas.t(String(o.get("texto", ""))), ObjetivosCierre.delta_de(int(o.get("peso", 0)), ok)], 15, Tema.BIEN if ok else Tema.MAL))
 	var pr: Dictionary = v.get("proyecto", {})
 	if not pr.is_empty():
 		var ok2 := bool(pr.get("cumplido", false))

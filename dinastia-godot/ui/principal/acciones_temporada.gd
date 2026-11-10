@@ -75,7 +75,7 @@ func _nueva_temporada() -> void:
 		for o: Dictionary in v.get("secundarios", []):
 			if bool(o.get("aplica", false)):
 				var ok := bool(o["cumplido"])
-				p._escribir("[color=%s]%s[/color] %s (%+d)" % ["#4caf6d" if ok else "#e05555", "✔" if ok else "✘", o["texto"], int(o["peso"]) * (1 if ok else -1)])
+				p._escribir("[color=%s]%s[/color] %s (%+d)" % ["#4caf6d" if ok else "#e05555", "✔" if ok else "✘", o["texto"], ObjetivosCierre.delta_de(int(o["peso"]), ok)])
 		if not (v.get("proyecto", {}) as Dictionary).is_empty():
 			var pr: Dictionary = v["proyecto"]
 			p._escribir("[color=%s]🏁 Proyecto:[/color] %s (%+d)" % ["#4caf6d" if bool(pr["cumplido"]) else "#e05555", pr["texto"], int(pr["delta"])])
