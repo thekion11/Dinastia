@@ -1,0 +1,21 @@
+# (10-11) Choques de escudo que dejó el aumento de clubes (`asp_clubes`: «cada escudo con motivo sale distinto»): mismo escudo, figura/letras y colores que otro club.
+# Va DESPUÉS de `_escudos_unicos.txt` (orden alfabético). Solo cambia el patrón del segundo club de cada pareja; el resto de campos se deja como está.
+Norwich||banda||||||
+Shabab Al Ahli||franjas||||||
+Benfica B||mitad||||||
+Karpaty Lviv||cuartos||||||
+Rayo Zuliano||aro||||||
+Jong FC Utrecht||chevron||||||
+Hapoel Tel Aviv||cruz||||||
+CSKA Moscow||rombos||||||
+Akhmat Grozny||tablero||||||
+FC Seoul||banda||||||
+Córdoba||mitad||||||
+KFUM Oslo||cuartos||||||
+Persepolis||aro||||||
+Al Duhail||chevron||||||
+Guingamp||cruz||||||
+Heidenheim||franjas||||||
+Indep. Petrolero||mitad||||||
+Lokomotiv Plovdiv||banda||||||
+Racing Santander||cuartos||||||

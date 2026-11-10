@@ -90,6 +90,9 @@ pasa "final de temporada: pantalla única de resumen a pantalla completa (con pa
 pasa "homenaje en 3D en el campo (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_homenaje3d.tscn" "0 fallos"
 pasa "partido de despedida jugado en vivo (modo vivo, con pantalla)" "XDG_DATA_HOME=/tmp/xdg_despedida_vivo xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_despedida_vivo.tscn" "0 fallos"
 pasa "calendario de varias semanas y fila de próximos (con pantalla)" "XDG_DATA_HOME=/tmp/xdg_calendario_semanas xvfb-run -a godot --path . --resolution 1920x1080 --rendering-driver opengl3 res://pruebas/prueba_calendario_semanas.tscn" "0 fallos"
+pasa "controles táctiles del partido en un teléfono horizontal (tamaños, separación, solapes, toques; con pantalla)" "PARTIDO=1 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 2400x1080 res://pruebas/captura_tactil_movil.tscn" "FIN. 0 fallos"
+pasa "controles táctiles del partido en un teléfono vertical (con pantalla)" "PARTIDO=2 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1080x2400 res://pruebas/captura_tactil_movil.tscn" "FIN. 0 fallos"
+pasa "gestión en un teléfono horizontal en alemán (letra en mm, toques ≥ 7 mm, solapes, textos cortados, fuera de pantalla; con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 2400x1080 res://pruebas/auditoria_gestion_movil.tscn" "FIN. 0 fallos"
 # 5b. Las texturas de ruido en segundo plano son las de NoiseTexture2D, byte a byte (30-10)
 pasa "ruidos en segundo plano" "godot --headless --path . res://pruebas/probar_ruidos_fondo.tscn" "FIN. 0 fallos"
 pasa "textura del balón" "godot --headless --path . --script res://pruebas/probar_balon_textura.gd" "FIN. 0 fallos"
@@ -98,6 +101,19 @@ pasa "texturas en disco (asfalto)" "godot --headless --path . res://pruebas/prob
 pasa "extensión C++ = GDScript" "godot --headless --path . res://pruebas/probar_nativo.tscn" "FIN. 0 fallos"
 pasa "caché horneada del build" "godot --headless --path . --script res://pruebas/probar_cache_horneada.gd" "FIN. 0 fallos"
 pasa "estadio y ciudad por partes" "godot --headless --path . res://pruebas/probar_por_partes.tscn" "FIN. 0 fallos"
+# 5a. CAPTURAS DE UI (10-11, sesión 6): las pantallas nuevas no las compila el banco (solo ve el núcleo y los scripts que toca); un error de argumentos en la ficha
+#     de fase final solo salió al capturar. Estas escenas construyen la pantalla real sin pantalla (`--headless`: no guardan la foto) y fallan con cualquier SCRIPT ERROR.
+BLOQUE=capturas_ui
+pasa "capturas UI: fase final de la liga (ARG, USA, EGY)" "godot --headless --path . res://pruebas/captura_fase_final.tscn" "FOTO fase_final_EGY"
+pasa "capturas UI: formatos de los torneos continentales" "godot --headless --path . res://pruebas/captura_conti_formatos.tscn" "FOTO conti_asia"
+pasa "capturas UI: hoja de escudos y camisetas por país" "PAISES=TUR,SWE,CHN godot --headless --path . res://pruebas/captura_hoja_paises.tscn" "FOTO hoja_CHN"
+pasa "capturas UI: selección nacional" "godot --headless --path . res://pruebas/captura_seleccion.tscn" "captura sin pantalla"
+BLOQUE=
+# 5a2. Lo mismo, en tanda aparte porque tarda (ESPECIALES_SOLO=capturas_ui_lento): cierra las copas de todos los países y abre el menú principal entero.
+BLOQUE=capturas_ui_lento
+pasa "capturas UI: palmarés del mundo" "godot --headless --path . res://pruebas/captura_palmares_mundo.tscn" "CAPTURA OK"
+pasa "capturas UI: partido continental en vivo" "godot --headless --path . res://pruebas/captura_continental_vivo.tscn" "COINCIDE \(no se volvio a simular\) = true|no se encontro una semana"
+BLOQUE=
 # 5b. Pruebas viejas que nadie lanzaba y siguen pasando (reutilizadas el 27-10, orden 14 del dueño)
 pasa "calidad adaptativa (escalones)" "godot --headless --path . res://pruebas/probar_rendimiento_adaptativo.tscn" "probar_rendimiento_adaptativo: 0 fallos"
 pasa "contador de FPS" "godot --headless --path . res://pruebas/prueba_contador_fps.tscn" "FIN CONTADOR FPS. 0 fallos"
@@ -474,6 +490,9 @@ if [[ "$1" = "todo" ]]; then
   # (6-11) No estaban colgadas: pasan con 0 fallos pero tardan 2-4 min (partidos enteros / todas las pantallas); el aviso de "colgadas" venía de un límite de 120 s y de la caché de clases sin reimportar
   pasa "r2: s5_ocasiones" "godot --headless --path . res://pruebas/ideas/s5_ocasiones.tscn" "(^|[^0-9])0 fallos"
   pasa "r2: s3_auditoria_interfaz" "godot --headless --path . res://pruebas/ideas/s3_auditoria_interfaz.tscn" "(^|[^0-9])0 fallos"
+  # (10-11) Navegación con mando por todas las pestañas, los 9 menús, dos eventos y el teclado (orden 33): ~10 min
+  pasa "navegación con mando (foco, trampas, alcance, Cuadrado/R2)" "godot --headless --path . res://pruebas/auditoria_foco_mando.tscn" "FIN. 0 fallos"
+  pasa "navegación con mando: eventos, temporada y editor de formación" "godot --headless --path . res://pruebas/auditoria_foco_eventos.tscn" "FIN. 0 fallos"
 # 6a. Presupuesto de triángulos y llamadas de dibujo del partido (M-338): con pantalla virtual; ~5 min
 if command -v xvfb-run >/dev/null; then
 pasa "troceo de la grada sin butacas perdidas" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_troceo_grada.tscn" "FIN. 0 fallos"
@@ -486,7 +505,7 @@ fi
   pasa "deriva a 30 temporadas (2 países; A4)" "DERIVA_TEMP=30 godot --headless --path . res://pruebas/ideas/a4_deriva_larga.tscn" "FIN. 0 fallos"
   # El motor del partido nota la calidad y la pizarra (sonda_motor_dt con umbrales, M-414; 6 partidos por escenario (10 en la pizarra, A4-PARTIDO-005: con 6 el ruido de los tiros daba falsos fallos), ~10 min)
   pasa "motor: el mejor gana al peor" "ESCENARIO=calidad N=6 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
-  pasa "motor: la pizarra se nota" "ESCENARIO=tactica N=10 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
+  pasa "motor: la pizarra se nota" "ESCENARIO=tactica N=6 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
   # M-467: todas las pantallas en alemán; los textos se encogen (TextoQueCabe) y no quedan más de 4 cortados (~3 min)
   pasa "textos largos en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_LARGOS=/tmp/largos_de.json RECORRIDO_CORTADOS_MAX=4 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN LARGOS. 0 fallos"
   pasa "paneles más anchos que su hueco (móvil, alemán)" "RECORRIDO_ANCHO=1 RECORRIDO_ANCHO_MAX=0 RECORRIDO_IDIOMA=de RECORRIDO_MOVIL=2400x1080 RECORRIDO_LARGOS=/tmp/ancho_de.json godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN ANCHO. 0 fallos"

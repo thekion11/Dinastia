@@ -1,0 +1,28 @@
+#seleccion=Malí
+#tier=0.25
+#globo=-8.0,12.64
+#bandera=🇲🇱
+#confed=afr
+#liga=Première Division de Malí|Liga Malí
+#copa=Copa de Malí|Copa Maliense
+#nombres=Moussa,Mamadou,Seydou,Oumar,Amadou,Ibrahima,Souleymane,Bakary,Cheick,Modibo,Adama,Boubacar,Lassana,Sekou
+#apellidos=Traoré,Keïta,Diarra,Coulibaly,Sidibé,Konaté,Diakité,Doumbia,Sangaré,Camara,Touré,Dembélé,Cissé,Samaké
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Afrique Élite;Africa Elite;#0b8f3c;#f2c200;42;35000;2002;los Elegidos;el gran estadio nacional de la capital;Club joven de la capital que busca hacerse un hueco entre los grandes.
+AS Bakaridjan;Bakaridjan Segu;#1e56b8;#ffffff;48;30000;1960;los Azules del Níger;el estadio de la ciudad a orillas del gran río;El club más representativo de la ciudad de Ségou.
+AS Black Stars;Estrellas Negras;#111111;#f2c200;44;35000;1990;los Astros Negros;el gran estadio nacional de la capital;Club de la capital con una afición fiel y barrio detrás.
+AS Douanes Sikasso;Aduanas Sikaso;#0a3d91;#d62828;50;30000;1970;los Aduaneros;el estadio de la ciudad del sur;Equipo institucional con buena cantera, cuna de varios internacionales.
+AS Korofina;Korofina Bamako;#d62828;#ffffff;46;35000;1960;los Rojos del Barrio;el gran estadio nacional de la capital;Club histórico de uno de los barrios populares de la capital.
+AS Olympique de Messira;Olimpico Mesira;#1e56b8;#d62828;44;50000;1962;los Olímpicos de Mesira;el estadio principal de la capital;Club de barrio con tradición en las divisiones inferiores.
+AS Police;Policia Bamako;#0a2a6b;#ffffff;45;50000;1960;los Azules de la Ley;el estadio principal de la capital;Equipo institucional de las fuerzas de seguridad.
+AS Real Bamako;Real Bamaco;#d62828;#ffffff;54;35000;1960;los Reales;el gran estadio nacional de la capital;Campeón de liga en los años dos mil, con aficionados en toda la capital.
+CO Bamako;Olimpico Bamaco;#0b8f3c;#ffffff;43;35000;1960;los Olímpicos Verdes;el gran estadio nacional de la capital;Club histórico de la capital en busca de su antiguo nivel.
+CS Duguwolofila;Duguwolofila;#f2c200;#0b8f3c;40;8000;1990;los Amarillos del Río;el estadio de la ciudad cercana a la capital;Club de provincias que compite con pocos medios.
+Djoliba AC;Yoliba Club;#d62828;#ffffff;60;50000;1960;los Rojos de la Capital;el estadio principal de la capital;El club más laureado del país, con muchos títulos de liga y copa.
+LC Bamako;Liceo Bamaco;#1e56b8;#f2c200;41;35000;1960;los del Liceo;el gran estadio nacional de la capital;Club veterano de la capital con una cantera estudiantil.
+Stade Malien;Estadio Maliense;#ffffff;#1e56b8;60;50000;1960;los Blancos;el estadio principal de la capital;Gran rival de la capital y uno de los clubes más fuertes de África occidental.
+AS Onze Créateurs;Once Creadores;#f2c200;#d62828;42;50000;1991;los Creadores;el estadio principal de la capital;Club de la capital conocido por su cantera.
+US Bougouba;Bugouba Union;#0b8f3c;#111111;39;50000;1970;los Verdinegros;el estadio principal de la capital;Club de barrio de la capital, en los últimos puestos.
+USC Kita;Union Kita;#f2c200;#0a2a6b;45;50000;1960;los Gigantes de Kita;el estadio principal de la capital;Representante de la región occidental, con una afición apasionada.
+USFAS Bamako;Fuerzas Bamaco;#0b5e2e;#d62828;38;5000;1960;los Militares;el pequeño estadio de las fuerzas armadas;Equipo institucional de las fuerzas armadas.
+Yeelen Olympique;Yelen Olimpico;#f2c200;#111111;47;50000;2003;los Luminosos;el estadio principal de la capital;Club joven cuyo nombre significa luz en la lengua local.

@@ -1,0 +1,5 @@
+# Lote W2: nombre|forma|patrón|emblema|letras[/color]|esc1|esc2|esc3
+Legia Warszawa|escudo|liso||LW/#ffffff|#006633|#ffffff|#c8102e
+Zenit Saint Petersburg|circulo|liso||Z/#ffffff|#00a0e0|#ffffff|#0057b8
+Al Sadd|escudo|liso||AS/#ffffff|#003876|#ffffff|
+Rosenborg|circulo|liso||RBK/#ffffff|#111111|#ffffff|

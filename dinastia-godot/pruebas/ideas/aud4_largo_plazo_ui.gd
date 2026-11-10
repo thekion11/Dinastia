@@ -12,6 +12,8 @@ func _cerrar_pantallas_de_temporada() -> void:
 	for c in _p.get_children():
 		if c is Control and not c is Tutorial and c.get_script() != null and (c as Control).mouse_filter == Control.MOUSE_FILTER_STOP and (c as Control).anchor_right == 1.0 and (c as Control).anchor_bottom == 1.0 and (c as Control).visible:
 			c.queue_free()
+		elif c is EventoPantallaCompleta:   ## (10-11) los eventos a pantalla completa son capas de lienzo (regla del 9-11): sin esto, el que quedaba
+			c.queue_free()                  ## abierto al medir hacía de pico (≈ +600 nodos) y parecía que los nodos crecían sin fin
 	for w in _p.find_children("*", "Window", true, false):
 		if (w as Window).visible:
 			(w as Window).hide()
@@ -44,6 +46,10 @@ func _probar() -> void:
 		await _frames(2)
 		_p._al_elegir_calendario(3)   ## «Temporada siguiente»
 		await _frames(2)
+		_cerrar_pantallas_de_temporada()
+		await _frames(2)
+		## (10-11) Y otra vez: al cerrar una se abre la siguiente de la cola (la cinemática de un sorteo, ~820 nodos; la rueda de prensa, ~680).
+		## Medidas con una de ellas abierta, los nodos parecían crecer sin fin (884, 1692, 923…, 1619) sin que nada se quedara colgado.
 		_cerrar_pantallas_de_temporada()
 		await _frames(2)
 		semanas += 52

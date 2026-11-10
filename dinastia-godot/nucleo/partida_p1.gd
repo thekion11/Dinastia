@@ -277,6 +277,7 @@ static func _liga_a_dic(l: Liga) -> Dictionary:
 		"nombre": l.nombre, "pais": l.pais, "div": l.div, "clubes": ids,
 		"jornada": l.jornada_actual, "tabla": l.tabla_puntos, "h2h": l.h2h,
 		"desc": l.plazas_descenso, "pv": l.puntos_victoria,
+		"ff": l.formato.estado if l.formato != null else {},
 	}
 
 # ---------------------------------------------------------------------------

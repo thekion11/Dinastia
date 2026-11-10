@@ -1,0 +1,6 @@
+# Lote W3: nombre|forma|patrón|emblema|letras[/color]|esc1|esc2|esc3
+DAC Dunajská Streda|escudo|liso||DAC/#ffffff|#ffd100|#0057b8|
+Basel|circulo|mitad||FCB/#ffffff|#c8102e|#1b458f|
+Galatasaray|escudo|franjas|leon|GS/#ffffff|#a90432|#fdb913|
+Partizan|circulo|franjas||P/#ffffff|#111111|#ffffff|
+Zürich|escudo|liso||FCZ/#ffffff|#1b458f|#ffffff|

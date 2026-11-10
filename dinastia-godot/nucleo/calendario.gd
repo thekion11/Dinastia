@@ -97,6 +97,49 @@ const FIJAS := {
 	"BEL": [[7, 21, "Fiesta Nacional de Bélgica", "fiesta", "El juramento del primer rey de los belgas, 1831."]],
 	"CRO": [[5, 30, "Día del Estado", "fiesta", "La fiesta nacional croata."]],
 	"DEN": [[6, 5, "Día de la Constitución", "fiesta", "La Constitución danesa de 1849."]],
+	"TUR": [[10, 29, "Día de la República", "fiesta", "Recuerda la proclamación de la República, en 1923."]],
+	"SCO": [[11, 30, "Día de San Andrés", "fiesta", "El patrón de Escocia: banderas azules con la cruz blanca."]],
+	"SUI": [[8, 1, "Día Nacional", "fiesta", "Recuerda el pacto de los primeros cantones, en 1291."]],
+	"AUT": [[10, 26, "Día Nacional", "fiesta", "Recuerda la neutralidad declarada en 1955."]],
+	"GRE": [[3, 25, "Día de la Independencia", "fiesta", "Recuerda el levantamiento contra el Imperio otomano, en 1821."]],
+	"SWE": [[6, 6, "Día Nacional", "fiesta", "Recuerda la elección del primer rey y la Constitución de 1809."]],
+	"NOR": [[5, 17, "Día de la Constitución", "fiesta", "Recuerda la Constitución de 1814: desfiles de niños por todo el país."]],
+	"POL": [[11, 11, "Día de la Independencia", "fiesta", "Recuerda la recuperación de la independencia, en 1918."]],
+	"CZE": [[10, 28, "Día de la Independencia", "fiesta", "Recuerda la creación del Estado en 1918."]],
+	"ROU": [[12, 1, "Día Nacional", "fiesta", "Recuerda la unión de las provincias, en 1918."]],
+	"SRB": [[2, 15, "Día del Estado", "fiesta", "Recuerda el levantamiento de 1804 y la primera Constitución."]],
+	"UKR": [[8, 24, "Día de la Independencia", "fiesta", "Recuerda la declaración de independencia, en 1991."]],
+	"CHN": [[10, 1, "Día Nacional", "fiesta", "Recuerda la proclamación de la República Popular, en 1949."]],
+	"ISR": [[5, 14, "Día de la Independencia", "fiesta", "Recuerda la declaración de independencia, en 1948."]],
+	"RUS": [[6, 12, "Día de Rusia", "fiesta", "Recuerda la declaración de soberanía de 1990."]],
+	"HUN": [[8, 20, "Día de San Esteban", "fiesta", "La fiesta del fundador del Estado, con fuegos artificiales sobre el Danubio."]],
+	"SVK": [[9, 1, "Día de la Constitución", "fiesta", "Recuerda la Constitución de 1992."]],
+	"BUL": [[3, 3, "Día de la Liberación", "fiesta", "Recuerda la liberación del dominio otomano, en 1878."]],
+	"UAE": [[12, 2, "Día Nacional", "fiesta", "Recuerda la unión de los emiratos, en 1971."]],
+	"NGA": [[10, 1, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1960."]],
+	"GHA": [[3, 6, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1957."]],
+	"SEN": [[4, 4, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1960."]],
+	"CIV": [[8, 7, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1960."]],
+	"ALG": [[11, 1, "Día de la Revolución", "fiesta", "Recuerda el inicio de la guerra de independencia, en 1954."]],
+	"TUN": [[3, 20, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1956."]],
+	"CMR": [[5, 20, "Fiesta Nacional", "fiesta", "Recuerda la unificación del país, en 1972."]],
+	"CAN": [[7, 1, "Día de Canadá", "fiesta", "Recuerda la Confederación de 1867."]],
+	"CRC": [[9, 15, "Día de la Independencia", "fiesta", "Recuerda la independencia de Centroamérica, en 1821."]],
+	"IRL": [[3, 17, "Día de San Patricio", "fiesta", "Fiesta nacional del país."]],
+	"WAL": [[3, 1, "Día de San David", "fiesta", "Fiesta del patrón de Gales."]],
+	"SVN": [[6, 25, "Día del Estado", "fiesta", "Recuerda la independencia de 1991."]],
+	"JOR": [[5, 25, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1946."]],
+	"CYP": [[10, 1, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1960."]],
+	"IRQ": [[10, 3, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1932."]],
+	"UZB": [[9, 1, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1991."]],
+	"FIN": [[12, 6, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1917."]],
+	"JAM": [[8, 6, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1962."]],
+	"HON": [[9, 15, "Día de la Independencia", "fiesta", "Recuerda la independencia de Centroamérica, en 1821."]],
+	"PAN": [[11, 3, "Separación de Colombia", "fiesta", "Recuerda la separación de 1903."]],
+	"NZL": [[2, 6, "Día de Waitangi", "fiesta", "Recuerda el tratado de 1840."]],
+	"MLI": [[9, 22, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1960."]],
+	"IRN": [[2, 11, "Aniversario de la Revolución", "fiesta", "Recuerda los actos de 1979."]],
+	"QAT": [[12, 18, "Día Nacional", "fiesta", "Recuerda la unificación del país, en 1878."]],
 }
 
 ## El 1 de mayo es festivo en casi todos; donde no, su equivalente.
@@ -105,7 +148,7 @@ const SIN_PRIMERO_DE_MAYO := ["USA", "AUS", "JPN", "ENG"]
 const SEMANA_SANTA := ["ARG", "AUS", "BOL", "BRA", "CHI", "COL", "ECU", "ENG", "ESP", "GER",
 	"ITA", "MEX", "PAR", "PER", "RSA", "URU", "VEN"]
 ## Ramadán y el fin del ayuno en el calendario del país.
-const RAMADAN := ["KSA", "EGY", "MAR"]
+const RAMADAN := ["KSA", "EGY", "MAR", "ALG", "TUN", "SEN"]
 
 var explicadas: Dictionary = {}   ## nombre -> true: el mentor ya la explicó
 var ultima_semana: int = -1

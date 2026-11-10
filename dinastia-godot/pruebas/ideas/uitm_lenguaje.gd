@@ -47,9 +47,9 @@ func _tema() -> void:
 	_comprobar(Color(medio, 1.0) == Tema.MAL_DALT and is_equal_approx(medio.a, 0.5), "conserva el alfa (Color(Tema.MAL, 0.5) → bermellón al 50 %%)")
 	_comprobar(Tema.accesible(Tema.TEXTO) == Tema.TEXTO and Tema.accesible(Tema.ACENTO) == Tema.ACENTO, "los colores sin significado no se tocan")
 	var l2 := Tema.etiqueta(Tema.TAM_CUERPO, Tema.ORO, "x")
-	_comprobar(l2.get_theme_font_size("font_size") == 17 and l2.get_theme_color("font_color") == Tema.ORO_DALT, "etiqueta: 13 px → 17 px y oro → ámbar (es %d)" % l2.get_theme_font_size("font_size"))
+	_comprobar(l2.get_theme_font_size("font_size") == roundi(Tema.TAM_CUERPO * 1.3) and l2.get_theme_color("font_color") == Tema.ORO_DALT, "etiqueta: cuerpo ×1,3 y oro → ámbar (es %d)" % l2.get_theme_font_size("font_size"))
 	var r := Tema.rotulo("rótulo")
-	_comprobar(r.get_theme_font_size("font_size") == 14, "el rótulo (11 px) también escala: 14 px")
+	_comprobar(r.get_theme_font_size("font_size") == roundi(Tema.TAM_ROTULO * 1.3), "el rótulo también escala ×1,3 (es %d)" % r.get_theme_font_size("font_size"))
 	_comprobar(Tema.de_resultado(3, 0) == Tema.BIEN_DALT, "de_resultado respeta el modo daltónico")
 	Tema.escala_texto = 0.5
 	_comprobar(Tema.letra(13) == 9, "la escala se acota a 0,7 como en Ajustes (13 px → 9 px)")

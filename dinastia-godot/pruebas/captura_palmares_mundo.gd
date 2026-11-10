@@ -17,6 +17,7 @@ func _process(_d: float) -> void:
 	CopasMundo.anotar_campeones_liga(m)
 	PalmaresMundoUI.abrir(_p)
 	await get_tree().create_timer(1.2).timeout
-	get_viewport().get_texture().get_image().save_jpg("/tmp/palmares_mundo.jpg", 0.9)
+	if DisplayServer.get_name() != "headless":   ## sin pantalla (`especiales.sh`) solo se comprueba que el palmarés se construye sin errores
+		get_viewport().get_texture().get_image().save_jpg("/tmp/palmares_mundo.jpg", 0.9)
 	print("CAPTURA OK ", m.palmares_mundo.size())
 	get_tree().quit()

@@ -25,7 +25,8 @@ const COLORES := {
 	"Hungría": ["#ce2939", "#ffffff"], "Grecia": ["#0d5eaf", "#ffffff"], "Irlanda": ["#169b62", "#ffffff"], "Ghana": ["#ffffff", "#006b3f"],
 	"Costa de Marfil": ["#f77f00", "#009e60"], "Argelia": ["#ffffff", "#006233"], "Túnez": ["#e70013", "#ffffff"], "Malí": ["#fcd116", "#14b53a"],
 	"Uzbekistán": ["#ffffff", "#0099b5"], "Jordania": ["#ffffff", "#ce1126"], "Irak": ["#ffffff", "#007a3d"], "Emiratos": ["#ffffff", "#00732f"],
-	"Panamá": ["#d21034", "#ffffff"], "Jamaica": ["#fed100", "#009b3a"], "Honduras": ["#ffffff", "#0073cf"],
+	"Israel": ["#ffffff", "#0038b8"], "Finlandia": ["#ffffff", "#003580"], "Eslovenia": ["#ffffff", "#005da4"], "Chipre": ["#ffffff", "#d57800"], "Rumanía": ["#fcd116", "#002b7f"], "Eslovaquia": ["#ffffff", "#0b4ea2"], "Bulgaria": ["#ffffff", "#00966e"],
+	"China": ["#de2910", "#ffde00"], "Rusia": ["#ffffff", "#d52b1e"], "Panamá": ["#d21034", "#ffffff"], "Jamaica": ["#fed100", "#009b3a"], "Honduras": ["#ffffff", "#0073cf"],
 }
 
 ## El código de país de una selección por su nombre («España» → «ESP»), o "" si no tiene liga en el juego.
@@ -71,9 +72,12 @@ const MAX_CONVOCADOS := 26
 
 ## La selección `nombre` como club. Sin `elegidos`: 23 convocados, los mejores por puesto. Con `elegidos` (ids, la convocatoria del seleccionador):
 ## esos (hasta 26) y, si algún puesto queda por debajo de `MINIMOS`, generados. `fuerza` (la de `Selecciones.fuerza`) fija la reputación y el nivel.
-static func club_de(m: Mundo, nombre: String, fuerza: int, anio: int, elegidos: Array = []) -> Club:
+## (10-11) `max_edad` > 0: equipo olímpico (solo jugadores de hasta esa edad y `mayores` de más, los mejores).
+static func club_de(m: Mundo, nombre: String, fuerza: int, anio: int, elegidos: Array = [], max_edad: int = 0, mayores: int = 0) -> Club:
 	var sel := Club.new()
 	sel.id = "sel_" + Nombres.limpiar(nombre).to_lower().replace(" ", "_").replace(".", "")
+	if max_edad > 0:
+		sel.id += "_sub%d" % max_edad   ## el olímpico no comparte generados ni id con la absoluta
 	sel.nombre = nombre
 	sel.pais = codigo_de(nombre)
 	sel.rep = clampi(fuerza, 40, 95)
@@ -83,8 +87,13 @@ static func club_de(m: Mundo, nombre: String, fuerza: int, anio: int, elegidos: 
 	sel.estadio_aforo = 60000
 	var por_grupo := {}
 	var cupos: Dictionary = CUPOS if elegidos.is_empty() else MINIMOS
+	var mayores_usados := 0
 	for j3: Jugador in candidatos(m, nombre):
 		var g := j3.pos
+		if max_edad > 0 and j3.edad > max_edad:
+			if mayores_usados >= mayores or (por_grupo.get(g, []) as Array).size() >= int(CUPOS.get(g, 0)):
+				continue
+			mayores_usados += 1
 		if not por_grupo.has(g):
 			por_grupo[g] = []
 		if elegidos.is_empty():

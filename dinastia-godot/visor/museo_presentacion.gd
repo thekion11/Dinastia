@@ -29,3 +29,14 @@ static func zocalo(lote, m: Dictionary, caja: Rect2, y0: float) -> void:
 		return
 	for x: float in [caja.position.x - 0.05, caja.end.x + 0.05]:
 		lote.caja(m["cam1"], SalasClub._en(Vector3(x, y0 + 0.2, caja.get_center().y)), Vector3(0.03, 0.22, caja.size.y))
+
+## Gallardetes del club colgados de las dos paredes laterales, sobre las vitrinas (a y0 + 2,55): uno por vitrina, alternando los dos colores. Mismos materiales del lote.
+static func gallardetes(lote, m: Dictionary, caja: Rect2, y0: float, zs: Array) -> void:
+	if OS.get_environment("SIN_PRESENTACION_MUSEO") != "":
+		return
+	var k := 0
+	for z: float in zs:
+		for x: float in [caja.position.x - 0.07, caja.end.x + 0.07]:
+			lote.caja(m["cam1"] if k % 2 == 0 else m["cam2"], SalasClub._en(Vector3(x, y0 + 2.7, z)), Vector3(0.03, 0.7, 0.45))
+			lote.caja(m["metal"], SalasClub._en(Vector3(x, y0 + 3.08, z)), Vector3(0.05, 0.04, 0.55))
+		k += 1

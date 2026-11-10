@@ -1,0 +1,95 @@
+# Lote B: nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed
+Al Sadd|liso|#ffffff|#6b1f3a|#ffffff|#ffffff|#6b1f3a|#ffffff|liso|#6b1f3a|#6b1f3a
+Al Duhail|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Al Rayyan|liso|#c8102e|#000000|#000000|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Al Gharafa|liso|#0072ce|#ffffff|#0072ce|#0072ce|#ffffff|#0072ce|liso|#ffffff|#ffffff
+Al Arabi|liso|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Al Wakrah|liso|#ffd100|#0072ce|#0072ce|#ffd100|#0072ce|#ffd100|liso|#0072ce|#0072ce
+Qatar SC|liso|#7b1c3a|#ffffff|#7b1c3a|#7b1c3a|#ffffff|#7b1c3a|liso|#ffffff|#ffffff
+Al Ahli|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Al Shamal|liso|#ffd100|#000000|#000000|#ffd100|#000000|#ffd100|liso|#000000|#000000
+Umm Salal|liso|#00843d|#000000|#000000|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Al Khor|liso|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|#ffd100|liso|#c8102e|#c8102e
+Al Shahaniya|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Malmö FF|liso|#7ec8f2|#ffffff|#ffffff|#7ec8f2|#ffffff|#7ec8f2|liso|#ffffff|#ffffff
+AIK|franjas|#ffd100|#000000|#000000|#000000|#000000|#ffd100|liso|#000000|#000000
+Djurgårdens IF|franjas|#00a0e3|#1b458f|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Hammarby IF|franjas|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+IFK Göteborg|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+IF Elfsborg|liso|#ffd100|#000000|#000000|#ffd100|#000000|#ffd100|liso|#000000|#000000
+BK Häcken|liso|#ffd100|#000000|#000000|#ffd100|#000000|#ffd100|liso|#000000|#000000
+Mjällby AIF|liso|#ffd100|#000000|#000000|#ffd100|#000000|#ffd100|liso|#000000|#000000
+Örgryte IS|liso|#c8102e|#1b458f|#1b458f|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Kalmar FF|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+IK Sirius|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Degerfors IF|liso|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#c8102e|#ffffff
+GAIS|franjas|#00843d|#000000|#000000|#00843d|#000000|#00843d|liso|#000000|#000000
+IF Brommapojkarna|liso|#c8102e|#000000|#000000|#c8102e|#000000|#c8102e|liso|#000000|#000000
+Halmstads BK|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Västerås SK|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Bodø/Glimt|liso|#ffd100|#000000|#000000|#ffd100|#000000|#ffd100|liso|#000000|#000000
+Brann|liso|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Viking|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Rosenborg|liso|#ffffff|#000000|#000000|#ffffff|#000000|#ffffff|liso|#000000|#000000
+Molde|liso|#1b458f|#ffffff|#ffffff|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Lillestrøm|liso|#ffd100|#000000|#000000|#ffd100|#000000|#ffd100|liso|#000000|#000000
+Tromsø|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Sarpsborg 08|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Fredrikstad|franjas|#ffffff|#000000|#000000|#ffffff|#000000|#ffffff|liso|#000000|#000000
+KFUM Oslo|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Sandefjord|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Aalesund|liso|#f26522|#1b458f|#1b458f|#f26522|#1b458f|#f26522|liso|#1b458f|#1b458f
+Kristiansund|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+HamKam|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Vålerenga|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Start|liso|#ffd100|#000000|#000000|#ffd100|#000000|#ffd100|liso|#000000|#000000
+Lech Poznań|liso|#003876|#ffffff|#003876|#003876|#ffffff|#003876|liso|#ffffff|#ffffff
+Legia Warszawa|liso|#ffffff|#006633|#006633|#ffffff|#006633|#ffffff|liso|#006633|#006633
+Jagiellonia Białystok|franjas|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|#ffffff|liso|#c8102e|#c8102e
+Raków Częstochowa|franjas|#c8102e|#1b458f|#1b458f|#c8102e|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Pogoń Szczecin|franjas|#1b458f|#8b1538|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Górnik Zabrze|liso|#ffffff|#1b458f|#ffffff|#ffffff|#1b458f|#ffffff|liso|#1b458f|#1b458f
+Cracovia|franjas|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Piast Gliwice|liso|#1b458f|#c8102e|#1b458f|#1b458f|#c8102e|#1b458f|liso|#c8102e|#c8102e
+Zagłębie Lubin|liso|#00843d|#ffd100|#00843d|#00843d|#ffd100|#00843d|liso|#ffd100|#ffd100
+Korona Kielce|franjas|#ffd100|#c8102e|#c8102e|#ffd100|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Radomiak Radom|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Widzew Łódź|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Motor Lublin|liso|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|#ffd100|liso|#1b458f|#1b458f
+Lechia Gdańsk|franjas|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Arka Gdynia|liso|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|#ffd100|liso|#1b458f|#1b458f
+Bruk-Bet Termalica|liso|#c8102e|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|liso|#ffd100|#ffd100
+GKS Katowice|liso|#00843d|#ffd100|#00843d|#00843d|#ffd100|#00843d|liso|#ffd100|#ffd100
+Wisła Płock|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Slavia Praha|mitad|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Sparta Praha|liso|#8b1538|#ffd100|#1b458f|#8b1538|#1b458f|#ffd100|liso|#1b458f|#1b458f
+Viktoria Plzeň|franjas|#1b458f|#c8102e|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Baník Ostrava|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Sigma Olomouc|liso|#1b458f|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|liso|#ffd100|#ffd100
+FK Mladá Boleslav|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+1. FC Slovácko|liso|#1b458f|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|liso|#ffd100|#ffd100
+Hradec Králové|franjas|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+FK Jablonec|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+FK Teplice|liso|#ffd100|#ffffff|#ffd100|#ffd100|#ffffff|#ffd100|liso|#ffffff|#ffffff
+Bohemians 1905|franjas|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
+Dukla Praha|liso|#c8102e|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|liso|#ffd100|#ffd100
+FK Pardubice|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+MFK Karviná|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+SK Dynamo České Budějovice|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Slovan Liberec|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+FCSB|liso|#c8102e|#1b458f|#1b458f|#c8102e|#1b458f|#c8102e|liso|#1b458f|#1b458f
+CFR Cluj|liso|#8b1538|#ffffff|#8b1538|#8b1538|#ffffff|#8b1538|liso|#ffffff|#ffffff
+Universitatea Craiova|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Rapid București|liso|#8b1538|#ffffff|#ffffff|#8b1538|#ffffff|#8b1538|liso|#ffffff|#ffffff
+Dinamo București|liso|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Universitatea Cluj|liso|#ffffff|#000000|#000000|#ffffff|#000000|#ffffff|liso|#000000|#000000
+FC Argeș|liso|#8b1538|#ffffff|#8b1538|#8b1538|#ffffff|#8b1538|liso|#ffffff|#ffffff
+Petrolul Ploiești|liso|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|#ffd100|liso|#1b458f|#1b458f
+Oțelul Galați|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Farul Constanța|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
+Hermannstadt|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+UTA Arad|liso|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Csikszereda|liso|#8b1538|#ffffff|#8b1538|#8b1538|#ffffff|#8b1538|liso|#ffffff|#ffffff
+Botoșani|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Unirea Slobozia|liso|#c8102e|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|liso|#ffd100|#ffd100
+Metaloglobus București|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff

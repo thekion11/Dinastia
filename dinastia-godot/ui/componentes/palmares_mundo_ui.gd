@@ -60,6 +60,10 @@ func _pintar(pr: Principal, pais: String) -> void:
 	if s != null and pais == "":
 		if not s.mundial.is_empty():
 			_centro.add_child(etiqueta("🌐 %s %d — %s" % [Idiomas.t("Copa del Mundo"), int(s.mundial.get("anio", 0)), String(s.mundial.get("campeon", ""))], 18, Tema.ORO, false))
+		for f: Dictionary in s.finalissimas:   ## (10-11) campeón de Europa contra campeón de América
+			_centro.add_child(etiqueta("🏆 %s %d — %s (%s %s)" % [Finalissima.NOMBRE, int(f.get("anio", 0)), String(f.get("campeon", "")), Idiomas.t("contra"), String(f.get("rival", ""))], 17, Tema.ORO, false))
+		for o: Dictionary in s.olimpicos:   ## (10-11) el fútbol de los Juegos Olímpicos (sub-23)
+			_centro.add_child(etiqueta("🥇 %s %d — %s (%s %s)" % [Idiomas.t(Olimpicos.NOMBRE), int(o.get("anio", 0)), String(o.get("oro", "")), Idiomas.t("plata:"), String(o.get("plata", ""))], 17, Tema.ORO, false))
 		for h: Dictionary in s.cargo.historial:
 			_centro.add_child(etiqueta("🎌 %s %d — %s %s" % [Idiomas.t(String(h["torneo"])), int(h["anio"]), s.cargo.seleccion, Idiomas.t(String(Selecciones.PUESTOS_TORNEO[int(h["puesto"])]))], 16, Tema.TEXTO, false))
 	if n == 0:

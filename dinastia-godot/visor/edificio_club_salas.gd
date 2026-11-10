@@ -175,6 +175,11 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 			lote.malla(m["metal"], _en(Vector3(px, y0 + 1.05, pz)), _cilindro(0.06, 0.08, 0.06))
 			lote.malla(cuero, _en(Vector3(px, y0 + 1.19, pz)), _esfera(0.11))
 	MuseoPresentacion.zocalo(lote, m, caja, y0)
+	var zs_vitrinas: Array = []
+	for v: Dictionary in vitrinas:
+		if not zs_vitrinas.has((v["p"] as Vector3).z):
+			zs_vitrinas.append((v["p"] as Vector3).z)
+	MuseoPresentacion.gallardetes(lote, m, caja, y0, zs_vitrinas)
 	## Al fondo, las camisetas históricas enmarcadas con su año.
 	var n_marcos := 3 if caja.size.x > 3.2 else 2
 	var anios := [1931, 1968, 1994]

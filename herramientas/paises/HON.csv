@@ -1,0 +1,21 @@
+#seleccion=Honduras
+#tier=0.25
+#globo=-87.19,14.07
+#bandera=🇭🇳
+#confed=conc
+#liga=Liga Nacional de Honduras|Liga Hondureña
+#copa=Copa de Honduras|Copa Hondureña
+#nombres=José,Carlos,Luis,Wilmer,Kevin,Marlon,Jorge,Edwin,Alexander,Brayan,Denil,Darwin,Roger,Samuel
+#apellidos=Hernández,Martínez,Rodríguez,López,Flores,Mejía,Cruz,Reyes,Ordóñez,Espinoza,Banegas,Zelaya,Pineda,Aguilar
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+CD Olimpia;Olimpo Capital;#ffffff;#003087;60;35000;1912;los Leones;el gran estadio nacional de la capital;El club más laureado del país, eterno candidato al título.
+Motagua;Moragua Azul;#003087;#ffffff;59;35000;1928;las Águilas Azules;el gran estadio nacional de la capital;El gran rival capitalino, de larga tradición ganadora.
+Marathón;Maraton Sula;#00843d;#ffffff;56;15000;1925;los Monstruos Verdes;el estadio de la ciudad industrial del norte;Un histórico del norte con hinchada muy fiel.
+Real España;Real Iberia Sula;#ffd100;#000000;56;26781;1929;la Máquina;el estadio grande de la ciudad industrial del norte;El club del norte que más peso tiene en el campeonato.
+Victoria;Vencedor Ceiba;#c8102e;#ffffff;50;18000;1935;los Jaiba Brava;el estadio de la ciudad costera del Caribe;El orgullo futbolístico de la costa caribeña.
+Olancho;Olancheros Club;#8b1a1a;#ffffff;46;20000;2015;los Ganaderos;el estadio de la ciudad ganadera del este;Un club joven que compite fuerte en la zona oriental.
+Juticalpa;Juticalpeno;#c8102e;#ffffff;45;20000;1946;los Canecheros;el estadio de la ciudad ganadera del este;Un histórico de provincia que comparte estadio con su vecino.
+Génesis;Genesis Valle;#0a3d91;#ffd100;42;10000;2016;los Cafetaleros;el estadio de la ciudad del valle central;Un club joven del valle central que busca asentarse.
+Platense FC;Plateño Cortes;#7a0019;#ffffff;42;6000;1960;los Tiburones;el estadio de la ciudad portuaria del norte;El club del puerto, con ambiente de barrio marinero.
+Lobos UPNFM;Lobos Pedagogia;#003087;#ffffff;40;8000;2018;los Lobos;el estadio de la ciudad del sur;El equipo universitario que forma jugadores propios.
+Atlético Choloma;Choloma Atletico;#ffd100;#003087;38;5500;2020;los Cholomeños;el pequeño estadio de la ciudad del norte;El recién llegado con el campo más pequeño de la liga.

@@ -15,9 +15,10 @@ extends RefCounted
 ## detrás del DT. Las iniciales de los escudos van en un `Label` encima: el SVG
 ## del escudo no dibuja texto y sin ellas salían aros vacíos.
 
-const FILAS := 4
-const COLS := 8
-const CELDA := Vector2(190, 120)
+## (10-11) Damero FINO, como la pared de referencia del dueño (muchas piezas pequeñas, aspecto de lona impresa): 6 × 12.
+const FILAS := 6
+const COLS := 12
+const CELDA := Vector2(125, 80)
 
 static func montar(escena: Node3D, club: Club, acento: Color, contexto: Dictionary = {}) -> void:
 	var vp := SubViewport.new()
@@ -47,8 +48,8 @@ static func montar(escena: Node3D, club: Club, acento: Color, contexto: Dictiona
 	var grid := GridContainer.new()
 	grid.columns = COLS
 	grid.set_anchors_preset(Control.PRESET_FULL_RECT)
-	grid.add_theme_constant_override("h_separation", 30)
-	grid.add_theme_constant_override("v_separation", 40)
+	grid.add_theme_constant_override("h_separation", 36)
+	grid.add_theme_constant_override("v_separation", 26)
 	grid.offset_left = 40.0; grid.offset_top = 40.0
 	vp.add_child(grid)
 	var tipo := String(contexto.get("tipo", "general"))
@@ -86,13 +87,13 @@ static func _escudo(c: Club) -> Control:
 	celda.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	if c == null:
 		return celda
-	celda.texture = Escudo.textura(c, 110)
+	celda.texture = Escudo.textura(c, 96)
 	var ini := Label.new()
 	ini.text = Escudo.iniciales(c)
 	ini.set_anchors_preset(Control.PRESET_FULL_RECT)
 	ini.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	ini.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	ini.add_theme_font_size_override("font_size", 40)
+	ini.add_theme_font_size_override("font_size", 26)
 	ini.add_theme_color_override("font_color", Color.from_string(c.color_escudo2(), Color.WHITE))
 	celda.add_child(ini)
 	return celda
@@ -100,7 +101,7 @@ static func _escudo(c: Club) -> Control:
 static func _logo(comp: String) -> Control:
 	var caja := CenterContainer.new()
 	caja.custom_minimum_size = CELDA
-	caja.add_child(LogoCompeticion.control(comp, 112))
+	caja.add_child(LogoCompeticion.control(comp, 76))
 	return caja
 
 static func _nombre(c: Club, col: Color) -> Control:
@@ -110,6 +111,6 @@ static func _nombre(c: Club, col: Color) -> Control:
 	nom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	nom.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	nom.add_theme_font_size_override("font_size", 30)
+	nom.add_theme_font_size_override("font_size", 19)
 	nom.add_theme_color_override("font_color", Color(col, 0.95))
 	return nom

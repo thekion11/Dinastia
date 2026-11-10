@@ -224,6 +224,12 @@ func _columna_respuestas(e: Dictionary) -> PanelContainer:
 		v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		desliza.add_child(v)
 	else:
+		## R9 (10-11, vídeo de referencia del dueño): la columna ABAJO, apoyada sobre la franja de la pregunta y creciendo hacia arriba;
+		## arriba queda libre la mesa con el DT y el jefe de prensa (en el plano medio la columna arriba les tapaba la cara).
+		caja.anchor_top = 1.0; caja.anchor_bottom = 1.0
+		caja.offset_top = 0.0
+		caja.offset_bottom = -float(ALTO_FRANJA + MARGEN)
+		caja.grow_vertical = Control.GROW_DIRECTION_BEGIN
 		caja.add_child(v)
 	var tit := p._texto(11, Principal.COL_SUAVE)
 	tit.text = Idiomas.t("Tu respuesta")

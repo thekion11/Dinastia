@@ -1,0 +1,392 @@
+class_name FaseFinalLiga
+extends RefCounted
+## LAS LIGAS CON FASE FINAL (10-11-2026, sesión 6): Egipto, Argentina y la MLS no se juegan «todos contra todos».
+##   · EGY («grupos»): 21 clubes a UNA vuelta (20 fechas); los 7 mejores forman el grupo del campeonato (ida y vuelta) y los 14 restantes el del
+##     descenso (una vuelta, bajan 4). Los puntos se arrastran. El campeón sale del primer grupo y los que bajan, del segundo.
+##   · ARG («zonas»): dos zonas de 15 (14 partidos de zona + 1 interzonal) y los 8 mejores de cada una juegan octavos, cuartos, semifinales
+##     (final de zona) y la final en cancha neutral, todo a partido único (penales si empatan). Baja quien termina último de la tabla.
+##   · USA («conferencias»): Este y Oeste de 15 a ida y vuelta (30 fechas; el interconferencia real se omite para no pasar de 38 semanas), los 7
+##     mejores de cada una entran directos, 8.º y 9.º juegan el Wild Card; la Ronda 1 es al mejor de 3, luego semifinal y final de conferencia
+##     y la MLS Cup, a partido único.
+## La liga sigue siendo una `Liga`: `tabla()` devuelve el ORDEN FINAL (campeón primero), así que quien lee el campeón o el descenso no cambia.
+## El calendario de la fase final nace con huecos vacíos (para que `jornadas()` ya cuente todo) y se rellena al terminar cada fecha. Lo que no se
+## puede deducir del orden de los clubes (grupos, cruces, resultados) va en `estado`, que la partida guarda y devuelve con `cargar`.
+
+## Por país: tipo, mínimo de clubes y, en los grupos, `vueltas` de la fase regular, `na` clubes en el grupo de arriba, `va`/`vb` vueltas de cada
+## grupo (0 = no juega) y `mitad` (los puntos se parten por la mitad, redondeando hacia arriba, como en Bélgica). Cantidades reales salvo las
+## indicadas: Bélgica juega 10 fechas en los play-offs (aquí 5, para no pasar de 38 semanas) y no se juegan sus play-offs de Europa.
+const PAISES := {
+	"EGY": {"tipo": "grupos", "min": 12, "vueltas": 1, "na": 7, "va": 2, "vb": 1},
+	## Bélgica (16 clubes, 30 fechas): play-offs de campeonato (6, una vuelta en vez de las 10 fechas reales) y de Europa (4, ida y vuelta); el resto no juega más.
+	"BEL": {"tipo": "grupos", "min": 12, "vueltas": 2, "mitad": true, "g": [[6, 1], [4, 2], [6, 0]],
+		"nombres": ["Play-offs de campeonato", "Play-offs de Europa", "Resto de la liga"]},
+	## Grecia (14 clubes, 26 fechas): play-offs de campeonato (4) y de Europa (4) y play-outs del descenso (6), todos a ida y vuelta y con la mitad de los puntos.
+	"GRE": {"tipo": "grupos", "min": 12, "vueltas": 2, "mitad": true, "g": [[4, 2], [4, 2], [6, 2]],
+		"nombres": ["Play-offs de campeonato", "Play-offs de Europa", "Play-outs del descenso"]},
+	## República Checa (16 clubes, 30 fechas): grupos de campeonato (6), de Europa (4) y de descenso (6), una vuelta y puntos enteros.
+	"CZE": {"tipo": "grupos", "min": 12, "vueltas": 2, "g": [[6, 1], [4, 1], [6, 1]], "nombres": ["Grupo del campeonato", "Play-offs de Europa", "Grupo del descenso"]},
+	## Rumanía (16 clubes, 30 fechas): play-off de campeonato (6) y play-out (10), una vuelta (en la real, 10 fechas el primero) y la mitad de los puntos.
+	"ROU": {"tipo": "grupos", "min": 12, "vueltas": 2, "mitad": true, "g": [[6, 1], [10, 1]], "nombres": ["Play-offs de campeonato", "Play-outs del descenso"]},
+	## Serbia (16 clubes, 30 fechas): grupo del campeonato (8) y del descenso (8), una vuelta (7 fechas) y puntos enteros.
+	"SRB": {"tipo": "grupos", "min": 12, "vueltas": 2, "g": [[8, 1], [8, 1]]},
+	## Israel (14 clubes, 26 fechas): grupo del campeonato (6, ida y vuelta: 10 fechas) y del descenso (8, una vuelta: 7), puntos enteros.
+	"ISR": {"tipo": "grupos", "min": 12, "vueltas": 2, "g": [[6, 2], [8, 1]]},
+	## Eslovaquia (12 clubes, 22 fechas): grupos de campeonato y de permanencia de 6, a ida y vuelta (10 fechas).
+	"SVK": {"tipo": "grupos", "min": 10, "vueltas": 2, "g": [[6, 2], [6, 2]]},
+	## Bulgaria (16 clubes, 30 fechas): campeonato (4, 6 fechas), Conference (4, 6 fechas) y descenso (8, 7 fechas), puntos enteros.
+	"BUL": {"tipo": "grupos", "min": 12, "vueltas": 2, "g": [[4, 2], [4, 2], [8, 1]], "nombres": ["Grupo del campeonato", "Play-offs de Europa", "Grupo del descenso"]},
+	"SCO": {"tipo": "grupos", "min": 10, "vueltas": 3, "na": 6, "va": 1, "vb": 1},
+	"DEN": {"tipo": "grupos", "min": 10, "vueltas": 2, "na": 6, "va": 2, "vb": 2},
+	"SUI": {"tipo": "grupos", "min": 10, "vueltas": 3, "na": 6, "va": 1, "vb": 1},
+	"AUT": {"tipo": "grupos", "min": 10, "vueltas": 2, "na": 6, "va": 2, "vb": 2},
+	"ARG": {"tipo": "zonas", "min": 20},
+	"USA": {"tipo": "conferencias", "min": 20},
+}
+## Huecos de la fase final de las eliminatorias: [ronda, juego] por fecha.
+const SLOTS_ZONAS := [[0, 0], [1, 0], [2, 0], [3, 0]]
+const SLOTS_CONF := [[0, 0], [1, 0], [1, 1], [1, 2], [2, 0], [3, 0], [4, 0]]
+
+var cfg: Dictionary = {}
+var tipo := ""
+var f1 := 0                 ## fechas de la fase regular
+var extra := 0              ## fechas de la fase final
+var estado: Dictionary = {}
+
+
+## El formato de esta liga, o null si se juega de la forma de siempre.
+static func para(l: Liga) -> FaseFinalLiga:
+	if l.div != 1 or not PAISES.has(l.pais) or l.clubes.size() < int(PAISES[l.pais]["min"]):
+		return null
+	var f := FaseFinalLiga.new()
+	f.cfg = PAISES[l.pais]
+	f.tipo = String(f.cfg["tipo"])
+	return f
+
+func eliminatoria(j: int) -> bool:
+	return tipo != "grupos" and j >= f1
+
+func _slots() -> Array:
+	return SLOTS_ZONAS if tipo == "zonas" else SLOTS_CONF
+
+
+## --- FASE REGULAR ---------------------------------------------------------
+
+func _mitades(l: Liga) -> Array:
+	var a: Array[Club] = []
+	var b: Array[Club] = []
+	var real := ZonasLiga.de(l)   ## zonas/conferencias reales por posición del club; si no hay, por id (par/impar)
+	if not real.is_empty():
+		for c: Club in l.clubes:
+			(a if int(real[c.id]) == 0 else b).append(c)
+		return [a, b]
+	var ids: Array = []
+	for c: Club in l.clubes:
+		ids.append(c.id)
+	ids.sort()
+	for i in ids.size():
+		(a if i % 2 == 0 else b).append(_club(l, String(ids[i])))
+	return [a, b]
+
+static func _club(l: Liga, id: String) -> Club:
+	for c: Club in l.clubes:
+		if c.id == id:
+			return c
+	return null
+
+static func _unir(x: Array, y: Array) -> Array:
+	var sal: Array = []
+	for i in maxi(x.size(), y.size()):
+		sal.append((x[i] if i < x.size() else []) + (y[i] if i < y.size() else []))
+	return sal
+
+static func _vuelta(r: Array) -> Array:
+	var sal: Array = []
+	for j: Array in r:
+		var v: Array = []
+		for par: Array in j:
+			v.append([par[1], par[0]])
+		sal.append(v)
+	return sal
+
+## El calendario de la fase regular + los huecos de la final.
+func armar(l: Liga) -> Array:
+	var cal: Array = []
+	if tipo == "grupos":
+		var r1 := Liga.rondas(l.clubes)
+		cal = _repetir(r1, int(cfg["vueltas"]))
+		extra = 0
+		var tams := _tamanos(l.clubes.size())
+		for i in tams.size():
+			extra = maxi(extra, int(_grupos_cfg()[i][1]) * _rr(int(tams[i])))
+	else:
+		var m := _mitades(l)
+		var ra := Liga.rondas(m[0])
+		var rb := Liga.rondas(m[1])
+		cal = _unir(ra, rb)
+		if tipo == "zonas":
+			cal.append(_interzonal(m))
+			extra = SLOTS_ZONAS.size()
+		else:
+			cal += _unir(_vuelta(ra), _vuelta(rb))
+			cal.append(_interzonal(m))   ## una fecha interconferencia (en la MLS real son 6 por club; más no cabe en 38 semanas)
+			extra = SLOTS_CONF.size()
+	f1 = cal.size()
+	for i in extra:
+		cal.append([])
+	return cal
+
+## Los grupos de la fase final: [[tamaño, vueltas]…]; el último se lleva el resto de los clubes (el tamaño que se escribe en él no cuenta).
+func _interzonal(m: Array) -> Array:
+	var inter: Array = []
+	for i in mini((m[0] as Array).size(), (m[1] as Array).size()):
+		inter.append([m[0][i], m[1][i]] if i % 2 == 0 else [m[1][i], m[0][i]])
+	return inter
+
+func _grupos_cfg() -> Array:
+	return cfg["g"] if cfg.has("g") else [[int(cfg["na"]), int(cfg["va"])], [0, int(cfg["vb"])]]
+
+func _tamanos(n: int) -> Array:
+	var g := _grupos_cfg()
+	var sal: Array = []
+	var resto := n
+	for i in g.size() - 1:
+		var t := clampi(int(g[i][0]), 2, resto - 2)
+		sal.append(t)
+		resto -= t
+	sal.append(resto)
+	return sal
+
+func _nombres_grupos() -> Array:
+	return cfg.get("nombres", ["Grupo del campeonato", "Grupo del descenso"])
+
+## `veces` vueltas de las mismas rondas, alternando el campo (ida, vuelta, ida…).
+static func _repetir(r: Array, veces: int) -> Array:
+	var sal: Array = []
+	for v in veces:
+		sal += r if v % 2 == 0 else _vuelta(r)
+	return sal
+
+static func _rr(n: int) -> int:
+	return n if n % 2 == 1 else n - 1
+
+
+## --- FASE FINAL -----------------------------------------------------------
+
+## Se llama al terminar la fecha `j` (ya anotada en la tabla). Prepara la siguiente y, al final, deja el orden.
+func tras_jornada(l: Liga, j: int, resultados: Array) -> void:
+	if j == f1 - 1:
+		_iniciar(l)
+	elif eliminatoria(j):
+		_registrar(resultados)
+		_avanzar_ronda()
+	if j + 1 < l.calendario.size() and eliminatoria(j + 1):
+		l.calendario[j + 1] = _pares(l, j + 1)
+	if j == l.calendario.size() - 1:
+		_cerrar(l)
+
+func _ids(l: Liga) -> Array:
+	var ids: Array = []
+	for fila: Dictionary in l.tabla():
+		ids.append((fila["club"] as Club).id)
+	return ids
+
+func _iniciar(l: Liga) -> void:
+	var reg := _ids(l)
+	estado["reg"] = reg
+	if tipo == "grupos":
+		var grupos: Array = []
+		var desde := 0
+		for t: int in _tamanos(reg.size()):
+			grupos.append(reg.slice(desde, desde + t))
+			desde += t
+		estado["grupos"] = grupos
+		if cfg.get("mitad", false):
+			for k in grupos.size():
+				if int(_grupos_cfg()[k][1]) > 0:
+					for id: String in grupos[k]:
+						l.tabla_puntos[id]["pts"] = (int(l.tabla_puntos[id]["pts"]) + 1) / 2
+		_llenar_grupos(l)
+		return
+	estado["rondas"] = []
+	var cruces: Array = []
+	var confs: Array = []
+	for z: Array in _mitades(l):
+		var orden: Array = []
+		for id: String in reg:
+			if z.has(_club(l, id)):
+				orden.append(id)
+		confs.append(orden)
+		if tipo == "zonas":
+			cruces += _bracket(orden.slice(0, 8), 8)
+		else:
+			cruces += [_cruce(orden[7], orden[8])]
+	(estado["rondas"] as Array).append({"n": "Octavos de final" if tipo == "zonas" else "Wild Card", "c": cruces, "j": 1, "neutral": false})
+	estado["confs"] = confs
+
+func _llenar_grupos(l: Liga) -> void:
+	var g: Array = estado["grupos"]
+	var fusion: Array = []
+	for k in g.size():
+		var club_g: Array[Club] = []
+		for id: String in g[k]:
+			club_g.append(_club(l, id))
+		var vueltas := int(_grupos_cfg()[k][1])
+		fusion = _unir(fusion, _repetir(Liga.rondas(club_g), vueltas) if vueltas > 0 and club_g.size() > 1 else [])
+	for i in extra:
+		l.calendario[f1 + i] = fusion[i] if i < fusion.size() else []
+
+static func _cruce(a: String, b: String) -> Dictionary:
+	return {"a": a, "b": b, "r": [], "g": ""}
+
+## Cruces 1-8, 4-5, 2-7, 3-6 (así los ganadores contiguos se cruzan después).
+static func _bracket(top: Array, n: int) -> Array:
+	var sal: Array = []
+	for par: Array in [[0, n - 1], [3, n - 4], [1, n - 2], [2, n - 3]]:
+		sal.append(_cruce(String(top[par[0]]), String(top[par[1]])))
+	return sal
+
+func _ronda_de(j: int) -> Array:
+	return _slots()[j - f1]
+
+## Los partidos de la fecha `j` de la fase final (local primero).
+func _pares(l: Liga, j: int) -> Array:
+	var slot: Array = _ronda_de(j)
+	var rondas: Array = estado.get("rondas", [])
+	if int(slot[0]) >= rondas.size():
+		return []
+	var r: Dictionary = rondas[int(slot[0])]
+	var sal: Array = []
+	for c: Dictionary in r["c"]:
+		if String(c["g"]) != "" or (c["r"] as Array).size() != int(slot[1]):
+			continue
+		var a := _club(l, String(c["a"]))
+		var b := _club(l, String(c["b"]))
+		## Al mejor de 3: el mejor sembrado recibe el 1.º y el 3.º.
+		sal.append([b, a] if int(slot[1]) == 1 else [a, b])
+	return sal
+
+func _registrar(resultados: Array) -> void:
+	var rondas: Array = estado["rondas"]
+	for res: Dictionary in resultados:
+		var l_id := (res["local"] as Club).id
+		var v_id := (res["visita"] as Club).id
+		for r: Dictionary in rondas:
+			for c: Dictionary in r["c"]:
+				if String(c["g"]) != "" or not ([c["a"], c["b"]].has(l_id) and [c["a"], c["b"]].has(v_id)):
+					continue
+				var ga := int(res["gl"]) if c["a"] == l_id else int(res["gv"])
+				var gb := int(res["gv"]) if c["a"] == l_id else int(res["gl"])
+				if ga == gb:   ## tanda de penales: 50-50
+					if Azar.suerte(0.5):
+						ga += 1
+					else:
+						gb += 1
+				(c["r"] as Array).append([ga, gb])
+				var ja := 0
+				var jb := 0
+				for x: Array in c["r"]:
+					if int(x[0]) > int(x[1]):
+						ja += 1
+					else:
+						jb += 1
+				var falta := (int(r["j"]) + 1) / 2
+				if ja >= falta:
+					c["g"] = c["a"]
+				elif jb >= falta:
+					c["g"] = c["b"]
+
+## Si la ronda en curso terminó, crea la siguiente con los ganadores contiguos.
+func _avanzar_ronda() -> void:
+	var rondas: Array = estado["rondas"]
+	var r: Dictionary = rondas[rondas.size() - 1]
+	for c: Dictionary in r["c"]:
+		if String(c["g"]) == "":
+			return
+	var gan: Array = []
+	for c: Dictionary in r["c"]:
+		gan.append(String(c["g"]))
+	if tipo == "zonas":
+		if gan.size() == 1:
+			return
+		var nombres := {4: "Cuartos de final", 2: "Semifinales (final de zona)", 1: "Final"}
+		var cr: Array = []
+		for i in gan.size() / 2:
+			cr.append(_cruce(String(gan[2 * i]), String(gan[2 * i + 1])))
+		rondas.append({"n": nombres[cr.size()], "c": cr, "j": 1, "neutral": cr.size() == 1})
+		return
+	if rondas.size() == 1:   ## tras el Wild Card: 7 directos + 1 ganador por conferencia, al mejor de 3
+		var cr2: Array = []
+		for z in gan.size():
+			var top: Array = (estado["confs"][z] as Array).slice(0, 7) + [gan[z]]
+			cr2 += _bracket(top, 8)
+		rondas.append({"n": "Ronda 1 (al mejor de 3)", "c": cr2, "j": 3, "neutral": false})
+		return
+	if gan.size() == 1:
+		return
+	var nom := {4: "Semifinales de Conferencia", 2: "Final de Conferencia", 1: "MLS Cup"}
+	var cr3: Array = []
+	for i in gan.size() / 2:
+		cr3.append(_cruce(String(gan[2 * i]), String(gan[2 * i + 1])))
+	rondas.append({"n": nom[cr3.size()], "c": cr3, "j": 1, "neutral": cr3.size() == 1})
+
+func _cerrar(l: Liga) -> void:
+	var orden: Array = []
+	if tipo == "grupos":
+		var g: Array = estado["grupos"]
+		for grupo: Array in g:
+			for fila: Dictionary in l.tabla():
+				if grupo.has((fila["club"] as Club).id):
+					orden.append((fila["club"] as Club).id)
+	else:
+		var reg: Array = estado["reg"]
+		var rondas: Array = estado["rondas"]
+		var ult: Dictionary = rondas[rondas.size() - 1]
+		orden.append(String(ult["c"][0]["g"]))
+		for k in range(rondas.size() - 1, -1, -1):
+			var perd: Array = []
+			for c: Dictionary in (rondas[k] as Dictionary)["c"]:
+				var p := String(c["b"]) if c["g"] == c["a"] else String(c["a"])
+				if not orden.has(p):
+					perd.append(p)
+			perd.sort_custom(func(x: String, y: String) -> bool: return reg.find(x) < reg.find(y))
+			orden += perd
+		for id: String in reg:
+			if not orden.has(id):
+				orden.append(id)
+	estado["orden"] = orden
+	l.orden_final = orden
+
+## Al abrir una partida: devuelve el estado guardado y rellena la fecha en curso.
+func cargar(l: Liga, d: Dictionary) -> void:
+	estado = d.duplicate(true)
+	var j := l.jornada_actual
+	if tipo == "grupos" and estado.has("grupos"):
+		_llenar_grupos(l)
+	elif eliminatoria(j) and j < l.calendario.size():
+		l.calendario[j] = _pares(l, j)
+	if estado.has("orden"):
+		l.orden_final = Array(estado["orden"])
+
+
+## Lo que la pantalla de competición enseña de la fase final: [{titulo, clubes}] en los grupos de Egipto, [{titulo, cruces}] en los cuadros
+## (cada cruce: {a, b, r: [[ga, gb]…], g: ganador o null}). Vacío mientras la fase regular no ha terminado.
+func secciones(l: Liga) -> Array:
+	var sal: Array = []
+	if tipo == "grupos":
+		if not estado.has("grupos"):
+			return sal
+		var nombres := _nombres_grupos()
+		for i in (estado["grupos"] as Array).size():
+			var filas: Array = []
+			for fila: Dictionary in l.tabla():
+				if (estado["grupos"][i] as Array).has((fila["club"] as Club).id):
+					filas.append(fila)
+			sal.append({"titulo": nombres[i], "filas": filas})
+		return sal
+	for r: Dictionary in estado.get("rondas", []):
+		var cruces: Array = []
+		for c: Dictionary in r["c"]:
+			cruces.append({"a": _club(l, String(c["a"])), "b": _club(l, String(c["b"])), "r": c["r"],
+				"g": _club(l, String(c["g"])) if String(c["g"]) != "" else null})
+		sal.append({"titulo": String(r["n"]), "cruces": cruces})
+	return sal

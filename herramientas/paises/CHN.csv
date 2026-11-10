@@ -1,0 +1,26 @@
+#seleccion=China
+#tier=1.0
+#globo=116.40,39.90
+#bandera=🇨🇳
+#confed=asia
+#liga=Sup3r League China|Liga China
+#copa=Copa de China|Copa de China
+#nombres=Wei,Lei,Jun,Hao,Peng,Tao,Bin,Yang,Chen,Long,Kai,Ming,Qiang,Feng
+#apellidos=Wang,Li,Zhang,Liu,Chen,Yang,Huang,Zhao,Wu,Zhou,Xu,Sun,Ma,Zhu
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Shanghai Port;Puerto Oriental;#c8102e;#ffffff;62;37000;2005;los Rojos del Puerto;el estadio del distrito oriental de la megaciudad;El campeón de los últimos años, con una plantilla de lujo.
+Shanghai Shenhua;Flor del Este;#1b458f;#ffffff;60;72436;1993;los Azules;el estadio de la ciudad del río Huangpu;El club más popular de la megaciudad del este.
+Beijing Guoan;Guardia Capital;#00843d;#ffd100;62;68000;1992;los Verdes;el estadio de los trabajadores de la capital;El club de la capital con la hinchada más fiel.
+Shandong Taishan;Taishan Dorado;#f26522;#ffffff;60;56808;1993;los Naranjas;el estadio de la ciudad de la montaña sagrada;El club de la provincia de la montaña sagrada.
+Chengdu Rongcheng;Chengdu Pandas;#c8102e;#ffffff;58;50695;2018;los Rojos;el estadio de la ciudad del panda;El club de la ciudad del panda, con grada enorme.
+Zhejiang FC;Zhejiang Verde;#00843d;#ffffff;56;51971;1998;los Verdes;el estadio de la provincia del té;El club de la provincia de la seda.
+Tianjin Jinmen Tiger;Tigre Tianjin;#1b458f;#ffffff;55;36390;2002;los Tigres;el estadio del puerto del norte;El club del puerto del norte.
+Henan FC;Henan Llanura;#c8102e;#ffd100;53;29860;1993;los Rojos;el estadio de la llanura central;El club de la llanura central, cuna de la civilización.
+Wuhan Three Towns;Wuhan Torres;#c8102e;#ffd100;54;56000;2013;los Rojos;el estadio junto al río Yangtsé;El club de la ciudad del Yangtsé.
+Qingdao West Coast;Costa Oeste;#c8102e;#ffffff;53;27000;2013;los Rojos;el estadio de la costa de la cerveza;El club de la ciudad de la cerveza.
+Dalian Yingbo;Dalian Mar;#1b458f;#ffffff;54;63671;2022;los Azules;el estadio del puerto del norte;El club del puerto del norte.
+Qingdao Hainiu;Hainiu Mar;#c8102e;#ffffff;53;50000;2013;los Rojos;el estadio juvenil de la costa;El otro club de la ciudad de la cerveza.
+Chongqing Tonglianglong;Tongliang Dragon;#c8102e;#1b458f;52;60295;2018;los Dragones;el estadio de la ciudad de las montañas;El club de la ciudad de las montañas, recién ascendido.
+Shenzhen Peng City;Shenzhen Ciudad;#c8102e;#ffd100;53;45000;2015;los Rojos;el estadio de la ciudad tecnológica;El club de la ciudad tecnológica del sur.
+Yunnan Yukun;Yunnan Montana;#00843d;#ffffff;51;30300;2009;los Verdes;el estadio de la provincia del sur;El club de la provincia de las montañas.
+Liaoning Tieren;Liaoning Hierro;#c8102e;#ffffff;51;40000;1953;los Rojos;el estadio de la provincia del norte;El club de la provincia industrial del norte.

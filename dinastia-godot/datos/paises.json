@@ -193,6 +193,18 @@
    "tr": "Şili",
    "iso": "cl"
   },
+  "CHN": {
+   "es": "China",
+   "en": "China",
+   "pt": "China",
+   "fr": "Chine",
+   "it": "Cina",
+   "de": "China",
+   "ca": "Xina",
+   "pl": "Chiny",
+   "tr": "Çin",
+   "iso": "cn"
+  },
   "CIV": {
    "es": "Costa de Marfil",
    "en": "Côte d’Ivoire",
@@ -817,6 +829,18 @@
    "tr": "Güney Afrika",
    "iso": "za"
   },
+  "RUS": {
+   "es": "Rusia",
+   "en": "Russia",
+   "pt": "Rússia",
+   "fr": "Russie",
+   "it": "Russia",
+   "de": "Russland",
+   "ca": "Rússia",
+   "pl": "Rosja",
+   "tr": "Rusya",
+   "iso": "ru"
+  },
   "SCO": {
    "es": "Escocia",
    "en": "Scotland",
@@ -960,6 +984,18 @@
    "pl": "Turcja",
    "tr": "Türkiye",
    "iso": "tr"
+  },
+  "UAE": {
+   "es": "Emiratos Árabes Unidos",
+   "en": "United Arab Emirates",
+   "pt": "Emirados Árabes Unidos",
+   "fr": "Émirats arabes unis",
+   "it": "Emirati Arabi Uniti",
+   "de": "Vereinigte Arabische Emirate",
+   "ca": "Emirats Àrabs Units",
+   "pl": "Zjednoczone Emiraty Arabskie",
+   "tr": "Birleşik Arap Emirlikleri",
+   "iso": "ae"
   },
   "UKR": {
    "es": "Ucrania",

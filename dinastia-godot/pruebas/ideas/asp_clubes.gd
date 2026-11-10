@@ -31,9 +31,9 @@ func _probar_aspecto() -> void:
 		_titulo("ASPECTO DE CLUB · BASE %s" % ("REAL" if real else "FICTICIA"))
 		var tabla: Dictionary = Datos.tabla("ASPECTO_CLUB")
 		var nombres := _clubes()
-		_comprobar(tabla.size() == 402, "402 filas de aspecto (%d)" % tabla.size())
+		_comprobar(tabla.size() >= nombres.size(), "hay una fila de aspecto por club (%d filas, %d clubes en las listas)" % [tabla.size(), nombres.size()])
 		var propios := nombres.filter(func(n: String) -> bool: return tabla.has(n) or tabla.has(Nombres.limpiar(n)))
-		_comprobar(propios.size() == 402, "los 402 clubes de las 23 ligas (22 + Países Bajos, 01-11) tienen su fila (%d)" % propios.size())
+		_comprobar(propios.size() == nombres.size(), "todos los clubes de las ligas tienen su fila (%d de %d)" % [propios.size(), nombres.size()])
 		nombres = propios
 		var mal := 0
 		var sin_siglas := 0
@@ -61,7 +61,7 @@ func _probar_aspecto() -> void:
 			repetidos[c.color1 + c.color2 + str(f["escudo"]) + str(f.get("esc", [])) + String(f["camiseta"]) + str(f.get("kit", {}))] = true
 		_comprobar(mal == 0, "todos tienen escudo, camiseta y butacas y se dibujan (%d con fallo)" % mal)
 		_comprobar(sin_siglas == 0, "siglas: las del club real en el pack y ninguna en la base ficticia (%d mal)" % sin_siglas)
-		_comprobar(repetidos.size() >= 300, "el aspecto no se repite de un club a otro (%d distintos de 402)" % repetidos.size())
+		_comprobar(repetidos.size() >= 300, "el aspecto no se repite de un club a otro (%d distintos)" % repetidos.size())
 		## Las figuras y letras de los escudos más conocidos (escudos v2).
 		var con_motivo := 0
 		var distintos := {}
@@ -69,8 +69,9 @@ func _probar_aspecto() -> void:
 			var cc := Club.new()
 			cc.id = "z_" + n
 			cc.nombre = n
-			cc.color1 = "#336699"
-			cc.color2 = "#ffffff"
+			## (10-11) con los colores de cada club (antes todos «#336699»: con ~1.000 clubes dos con la misma forma, patrón y figura coincidían solo por esa neutralización).
+			cc.color1 = String((colores.get(n, ["#336699", "#ffffff"]) as Array)[0])
+			cc.color2 = String((colores.get(n, ["#336699", "#ffffff"]) as Array)[1])
 			if AspectoClub.emblema(cc) != "" or AspectoClub.letras(cc) != "":
 				con_motivo += 1
 				var capa := EscudoEmblemas.capa_de(cc, cc.color_escudo1())

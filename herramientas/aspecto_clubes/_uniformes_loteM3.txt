@@ -1,0 +1,32 @@
+# Lote M3: nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed
+Kalba|franjas|#c8102e|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|liso|#ffd100|#ffd100
+SC Poltava|mitad|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#c8102e|#ffffff
+LNZ Cherkasy|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|franjas|#ffffff|#ffffff
+Epicentr Kamianets-Podilskyi|banda|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|#ffd100|liso|#1b458f|#1b458f
+FC Kudrivka|aros|#1b458f|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|liso|#ffd100|#ffd100
+Metropolitanos|cuello_v|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#00843d|#ffffff
+Academia Puerto Cabello|franjas|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|#ffd100|liso|#ffd100|#1b458f
+Portuguesa|franjas|#00843d|#c8102e|#ffffff|#00843d|#ffffff|#00843d|liso|#00843d|#ffffff
+Trujillanos|raglan|#ffd100|#00843d|#00843d|#ffd100|#00843d|#ffd100|liso|#00843d|#00843d
+Anzoátegui|sash|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#c8102e|#ffffff
+Moreirense|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|hombros|#00843d|#ffffff
+Arouca|franjas|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8
+Estrela Amadora|franjas|#d50032|#00843d|#00843d|#d50032|#ffffff|#00843d|liso|#00843d|#ffffff
+AVS|mangas_contraste|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#d50032|#ffffff
+Alverca|liso|#d50032|#ffd100|#d50032|#d50032|#ffd100|#d50032|banda|#ffd100|#ffd100
+Tondela|liso|#00843d|#ffd100|#00843d|#00843d|#ffd100|#00843d|hombros|#ffd100|#ffd100
+Westerlo|liso|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|cuello_v|#0057b8|#0057b8
+OH Lovaina|liso|#ffffff|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|liso|#0057b8|#0057b8
+Sint-Truiden|liso|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|franjas|#ffd100|#0057b8
+Zulte Waregem|mitad|#d50032|#00843d|#d50032|#00843d|#ffffff|#d50032|liso|#ffffff|#ffffff
+Dender|liso|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|banda|#d50032|#ffffff
+La Louvière|franjas|#d50032|#000000|#000000|#d50032|#000000|#d50032|liso|#000000|#000000
+Gorica|diagonal|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#d50032|#ffffff
+Istra 1961|liso|#00843d|#ffd100|#00843d|#00843d|#ffd100|#00843d|raglan|#ffd100|#ffd100
+Varaždin|franjas|#ffffff|#d50032|#d50032|#ffffff|#d50032|#ffffff|liso|#ffffff|#d50032
+Slaven Belupo|cuartos_v|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#d50032|#ffffff
+Vukovar 1991|cruz|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|liso|#0057b8|#ffffff
+Viborg|franjas|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#00843d|#ffffff
+Sønderjyske|liso|#0057b8|#ffffff|#ffffff|#0057b8|#ffffff|#0057b8|hombros|#0057b8|#ffffff
+Vejle|franjas|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#d50032|#ffffff
+Fredericia|aros|#d50032|#ffffff|#ffffff|#d50032|#ffffff|#d50032|liso|#d50032|#ffffff

@@ -306,6 +306,9 @@ func _probar_marcas_y_escudos() -> void:
 	var zonas := 0
 	var firmas := {}
 	var repetidos: Array = []
+	var kits_liga := {}   ## liga|diseño|colores|pantalón|medias
+	var kits_repetidos: Array = []
+	var kits_mundo := {}
 	for c: Club in m.clubes.values():
 		var sp := SponsorKit.de_club(c)
 		for z: String in sp:
@@ -317,6 +320,13 @@ func _probar_marcas_y_escudos() -> void:
 		if firmas.has(firma):
 			repetidos.append("%s = %s" % [c.nombre, firmas[firma]])
 		firmas[firma] = c.nombre
+		var kd: Dictionary = DisenosKit.kit_de_club(c)
+		var kf := "%s|%s|%s|%s|%s|%s" % [c.pais + str(c.division), kd["dis"], String((kd["cols"] as Array)[0]).to_lower(), String((kd["cols"] as Array)[1]).to_lower(),
+			String(kd["pant"]["c1"]).to_lower(), String(kd["med"]["c1"]).to_lower()]
+		if kits_liga.has(kf):
+			kits_repetidos.append("%s = %s" % [c.nombre, kits_liga[kf]])
+		kits_liga[kf] = c.nombre
+		kits_mundo[kf.substr(kf.find("|") + 1)] = true
 	var media := float(zonas) / float(maxi(1, Auspicio.marcas().size()))
 	var peor := ""
 	for k: String in cuenta:
@@ -344,6 +354,9 @@ func _probar_marcas_y_escudos() -> void:
 	jv.edad = edad0
 	_comprobar(viejo.s < joven.s, "M-085: a los 39 el pelo tiene canas (%s → %s)" % [joven.to_html(false), viejo.to_html(false)])
 	_comprobar(repetidos.is_empty(), "M-062: ningún escudo repetido entre clubes (%d: %s)" % [repetidos.size(), str(repetidos.slice(0, 5))])
+	_linea("  uniformes: %d combinaciones distintas en %d clubes (misma combinación en dos ligas distintas es válida)" % [kits_mundo.size(), m.clubes.size()])
+	_comprobar(kits_repetidos.is_empty(), "M-062b: ningún uniforme repetido dentro de una misma liga (%d: %s)" % [kits_repetidos.size(), str(kits_repetidos.slice(0, 5))])
+	_comprobar(kits_mundo.size() >= 550, "M-062b: variedad global de uniformes (%d combinaciones distintas, mínimo 550)" % kits_mundo.size())
 	## M-066 (25-10): el escudo monocromo solo tiene la tinta, blanco y transparencia.
 	var tm := Escudo.textura_mono(m.clubes.values()[0] as Club, 26)
 	var im: Image = tm.get_image() if tm != null else null

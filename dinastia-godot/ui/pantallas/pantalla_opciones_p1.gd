@@ -396,3 +396,24 @@ func _aire() -> Control:
 	var c := Control.new()
 	c.custom_minimum_size = Vector2(0, 8)
 	return c
+
+## (10-11) «Cabecera compacta en el móvil» (`PantallaMenu.compacta`): solo aparece en lo táctil; encendida por defecto.
+func _disp_cabecera() -> void:
+	if not EscalaMovil.es_tactil():
+		return
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	p._lista_ajustes.add_child(fila)
+	var et := p._texto(12, Principal.COL_TEXTO)
+	et.text = Idiomas.t("Cabecera compacta en el móvil")
+	et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	et.tooltip_text = Idiomas.t("Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.")
+	fila.add_child(et)
+	var b := Button.new()
+	b.name = "CabeceraCompacta"
+	b.text = "SÍ" if PantallaMenu.compacta_pref else "NO"
+	b.pressed.connect(func() -> void:
+		PantallaMenu.compacta_pref = not PantallaMenu.compacta_pref
+		p._guardar_preferencias()
+		p._refrescar())
+	fila.add_child(b)

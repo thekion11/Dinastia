@@ -1,0 +1,27 @@
+# Lote W2: nombre|butaca1|butaca2
+Sepahan|#ffd100|#111111
+Tractor|#d50032|#ffffff
+Maccabi Tel Aviv|#ffd100|#1b458f
+Maccabi Haifa|#00843d|#ffffff
+Hapoel Be'er Sheva|#d50032|#ffffff
+Hapoel Tel Aviv|#d50032|#ffffff
+Bodø/Glimt|#ffd100|#111111
+Brann|#d50032|#ffffff
+Rosenborg|#ffffff|#111111
+Viking|#1b458f|#ffffff
+Legia Warszawa|#006633|#ffffff
+Lech Poznań|#003876|#ffffff
+Raków Częstochowa|#c8102e|#1b458f
+Jagiellonia Białystok|#ffd100|#c8102e
+Al Sadd|#ffffff|#003876
+Al Duhail|#c8102e|#ffffff
+Al Rayyan|#c8102e|#111111
+Al Gharafa|#0072ce|#ffffff
+FCSB|#c8102e|#1b458f
+Universitatea Craiova|#1b458f|#ffffff
+CFR Cluj|#8b1538|#ffffff
+Rapid București|#8b1538|#ffffff
+Zenit Saint Petersburg|#00a0e0|#0057b8
+Spartak Moscow|#c8102e|#ffffff
+Krasnodar|#00843d|#111111
+CSKA Moscow|#c8102e|#1b458f

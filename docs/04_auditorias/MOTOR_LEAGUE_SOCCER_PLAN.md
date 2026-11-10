@@ -354,4 +354,136 @@ se ajusta a la del jugador (velocidad / referencia, entre 0,7 y 1,4) para que lo
 cuando no hay un gesto en curso). Revisado: `pruebas/_sonda/captura_conducir_league.tscn` (los 3 ciclos lado a lado, dos clubes de
 ARG y ESP) y `pruebas/_sonda/captura_partido_league.tscn` (cámara real del partido, Forward+, Boedo AC – Madrigal CF): paso
 completo, balón pegado al pie, sin poses rotas. Banco «FIN. 0 fallos»; sin cambios en el motor de siempre.
-Siguiente (misma fase): arranques, frenadas y giros del original (`ls_turn__*`, `ls_stop__*`) para los jugadores sin balón.
+
+### Fase 4c, parte 4: arranques, frenadas y giros del original (10-11, detrás de `MOTOR_LEAGUE`; `LS_LOCO=0` los apaga)
+Las 19 animaciones de locomoción del original (`movement/<velocidad>/*.anim`) y sus espejos. `herramientas/league_movimiento.py`
+saca de su pista de raíz lo que calcula `utils/animation.cpp` (velocidad de entrada y salida escalonadas, ángulo de salida, giro
+final del cuerpo) a `datos/league_movimiento.json`; `visor/league_movimiento.gd` copia la elección de `HumanoidBase::SelectAnim`
+para el movimiento (entrada estricta por clase de velocidad, `GetMovementSimilarity` con `CalculateBiasForFastCornering` y las
+11 direcciones preferidas). `visor/league_locomocion.gd` la aplica en el partido a los jugadores sin balón (no al portero) cuando
+ARRANCAN, FRENAN o GIRAN más de ~35°: el clip se reproduce entero y los ciclos normales no lo pisan (un gesto de verdad sí).
+**Solo cambia lo que se ve**: el giro del cuerpo que trae el clip se compensa en el MODELO (hijo raíz del AnimationPlayer) y
+no en el nodo, cuyo giro usan alcances y entradas; posiciones, velocidades y `gesto_hasta` no se tocan. Los clips se añaden a la
+biblioteca del jugador en el partido (no van en la biblioteca horneada: la caché de disco no depende de la bandera).
+| 2 partidos (2 × 120 s) | `LS_LOCO=0` | `LS_LOCO=1` |
+|---|---|---|
+| huellas (marcador, tiros, pases) | 0-1 · 1-2 | **iguales** (determinismo IGUAL) |
+| transiciones por partido | — | ~160 arranques, ~630 giros, ~450 frenadas |
+| CPU por paso (sin gráficos) | ~1.110 µs | ~1.200-1.290 µs (+~9 %) |
+Revisado de cerca con `pruebas/_sonda/captura_giro_league.tscn` (cámara de costado que sigue al jugador, Forward+, clubes de BRA e
+ITA): un giro de ~180° encadena trote lateral → frenada inclinada → pivote → arranque, como el original, sin poses rotas.
+Banco: `_probar_league_movimiento`.
+
+### Fase 4c, parte 5: el cuerpo girado respecto a la marcha («angled») (10-11; `LS_ANGLED=0` las apaga)
+Ahora entran las 49 animaciones de `movement/` (también `angled/` y `newangles/`) y las 10 plantillas de `templates/`.
+- **Mirada** (L `PlayerController::_MovementCommand`, `defaultLookDirection`): el jugador sin balón gira la vista hacia el balón,
+  entera parado y ~78 % a toda carrera (`LeagueMovimiento.mirada`).
+- **Cuerpo** respecto a la marcha: 0, ±45 o ±135 grados (`allowedBodyDirAngles`), con los límites del original por velocidad
+  (L `CalculateFactualSpatialState`: a toda carrera < 22,5°, al trote rápido < 90°, parado de frente).
+- **Elección** (L `SelectAnim`): consulta estricta por velocidad Y cuerpo de entrada, mejor cuadrante de movimiento y dentro el
+  que deja el cuerpo mirando más cerca de la mirada (`_KeepBestBodyDirectionAnims`, `CompareBodyDirectionSimilarity`, con el
+  «contrabando» de ±18° y el castigo de 0,05 a los cuerpos girados). El cuerpo de salida es el del original
+  (`GetOutgoingBodyAngle` = cuerpo final − ángulo de salida).
+- **Ciclo estable** con el cuerpo girado: las plantillas (`dribbleD045`, `dribbleD135`, `walkD045` y sus `_left`); el otro pie es
+  el espejo de la plantilla girada al otro lado. En el original, el paso estable es la «autogenerada» de una plantilla consigo
+  misma en dirección 0, que es la propia plantilla. Si el motor pide otro paso (de espaldas, marcar, cansado) o la velocidad no
+  admite el giro, el cuerpo se endereza sin salto.
+- **Al acabar un clip**, como nuestra marcha no gira exactamente lo que suponía el clip, el cuerpo pasa al ángulo permitido más
+  cercano a como mira de verdad y la compensación del modelo solo cubre el resto (≤ 22,5°), en ~0,25 s. Corrige también un salto
+  de la parte 4 (la compensación volvía al ángulo del principio del clip).
+| 2 partidos (2 × 120 s) | `LS_ANGLED=0` | `LS_ANGLED=1` |
+|---|---|---|
+| huellas | 0-1 · 1-2 | **iguales** (el juego no cambia) |
+| clips por partido | ~250 arranques, ~950 giros, ~400 frenadas | + ~1.250 cambios de cuerpo |
+| coste propio de la locomoción (cronometrado dentro del paso) | ~75-100 µs/paso | ~100-130 µs/paso (~8-10 % del paso) |
+Para no pasar del +9 %: los clips se preparan por tandas (8 por paso; de una vez eran un tirón de ~0,2 s), cada jugador se
+revisa cada 0,1 s escalonado (el original solo elige al acabar un clip, ~0,24 s), las consultas estrictas están precalculadas,
+el cuerpo permitido se calcula con umbrales y el modelo solo se gira si cambia. Lo que queda es coste de GDScript por jugador:
+candidato a la extensión C++ (fase 5). La cifra total por paso varía ±150 µs entre ejecuciones en este contenedor: por eso se
+cronometra la locomoción aparte.
+Revisado con `LADO=1 pruebas/_sonda/captura_giro_league.tscn` (cámara fija de costado, Forward+, BRA e ITA): carrera lateral
+mirando al balón, frenada con el cuerpo a 135° y vuelta a encarar el juego, sin poses rotas.
+
+### Fase 4c, parte 6: el pie de apoyo (10-11)
+Copia de `CompareFootSimilarity` / `GetOutgoingFoot`. Cada clip empieza moviendo el pie derecho (el espejo, el izquierdo) y deja
+para el siguiente el mismo pie si tiene un número par de pasos (`steps`, ahora en `datos/league_movimiento.json`) o el otro si es
+impar. En el original, tras quedarse con el mejor cuadrante de movimiento y de cuerpo, las ordenaciones estables posteriores hacen
+del pie el criterio que decide entre los que quedan (parado no cuenta): `LeagueMovimiento.elegir(…, pie)` toma, entre los del
+mismo cuadrante que miran igual (±0,06π), el que empieza con el pie que toca. El pie que toca (`LeagueLocomocion.pie_que_toca`):
+tras un clip, su pie de salida; en un ciclo, el que va en el aire (por `AnimPasos.fases`, la fase medida en que apoya el izquierdo;
+en los de League y las plantillas, el derecho en la primera mitad). Efecto: al acelerar o girar ya no se repite siempre el mismo
+pie (antes ganaba el primero de cada par espejado); la pierna que estaba en el aire sigue en el aire. Huellas iguales con
+`LS_LOCO=0/1` (tras fusionar `main` las huellas de referencia cambiaron: 0-0 y 0-1, por cambios de `main`). Coste propio de la
+locomoción: ~110-140 µs/paso.
+
+### Fase 4c, parte 7: las intermedias del original (`GenerateAutoAnims`) (10-11; `LS_AUTO=0` las quita)
+`visor/league_auto.gd` copia `GenerateAutoAnims` (L animcollection.cpp). Para cada par de plantillas (de entrada y de salida) y 9
+direcciones (0, ±45, ±90, ±135, ±178°) aplica sus reglas de legalidad:
+- aceleración máxima de un escalón;
+- frenada máxima con el coseno del giro;
+- de carrera a trote, ni de espaldas ni girando mucho;
+- moviéndose, giros ≤ 90°; con carrera o trote rápido, ≤ 45°;
+- no más de media vuelta.
+Salen **437 legales + sus espejos = 874**. Sus datos (velocidades, ángulo, cuerpo de entrada y salida, pie) entran en la elección
+como los demás clips. La animación se construye solo la primera vez que se elige (como mucho una por paso, ~1-3 ms cada una):
+- cada hueso se mezcla con la curva del original (`bias` según cuadro, velocidades y cambio de movimiento, `curve(…, 0,7)`);
+- la pelvis gira hacia la nueva dirección (`angle · (bias·0,7 + orig·0,3)`, sobre la vertical del esqueleto);
+- la altura se interpola;
+- sin la inclinación hacia la curva (≤ 2°).
+Para que la elección siga siendo barata con 972 clips, la similitud de movimiento se calcula una vez por cuadrante de salida (solo
+depende de él) y no por clip.
+Medido (2 partidos de 2 × 120 s): huellas IGUALES con `LS_AUTO=0/1`; las intermedias ganan ~80 % de las elecciones; `elegir`
+~55 µs por llamada; construcción ~0,5 s repartida en el primer partido de la sesión (luego quedan en la biblioteca). Coste propio
+de la locomoción: ~110-125 µs/paso sin intermedias, ~160-190 con ellas mientras se construyen (en régimen, ~140).
+Revisado:
+- `pruebas/_sonda/captura_auto_league.tscn` (de cerca, ARG y BRA): de parado a trote girando 90° a la izquierda y su espejo a la
+  derecha; de trote a trote con el cuerpo pasando a 135°. El sentido del giro y las poses son correctos.
+- La sonda de giros en el partido: un giro de ~180° encadenado con intermedias, natural.
+Con esto la LOCOMOCIÓN del original queda portada entera para los jugadores sin balón; el portador usa los ciclos con balón
+(parte 3). Pendiente: la inclinación hacia la curva de las intermedias y llevar esta capa a C++ si el coste molesta.
+
+### ¿Gemelo C++ de la locomoción? Medición y propuesta (10-11, pendiente de OK de la líder)
+3 partidos seguidos (2 × 120 s, cronometrado dentro del paso; el 3.º ya con casi todas las intermedias construidas):
+| por paso (µs) | partido 1 | partido 2 | partido 3 |
+|---|---|---|---|
+| locomoción entera | 213 | 179 | **152** |
+| · evaluar a quién toca (cada 0,1 s) | 133 | 94 | 67 |
+| · · de eso, `elegir` (cálculo puro) | 19 | 21 | 18 |
+| · · de eso, construir intermedias (cálculo puro, una vez por sesión) | 63 | 39 | 17 |
+| · bucle por fotograma (diccionarios del jugador, AnimationPlayer, giro del modelo) | 80 | 85 | 86 |
+| paso del motor entero | ~1.610 | ~1.660 | ~1.535 |
+Lo que se puede llevar a C++ como función pura con su gemelo exacto (`elegir`, la mezcla de `LeagueAuto.construir`) es ~35 µs/paso
+en régimen (~2 % del paso) y ~0,5 s de construcción por sesión. El resto (~120 µs) es acceso a los diccionarios del jugador y
+llamadas al motor de Godot, que desde C++ siguen pasando por Variant: ganaría poco y obligaría a duplicar ~600 líneas.
+Además la extensión solo existe para Linux y Windows: en Android y Web (donde la prueba del dueño dio 5 FPS con la GPU al 100 % y
+la CPU al 0 %) correría igual el GDScript, así que el C++ no ayuda al móvil.
+**Propuesta: NO hacer el gemelo C++ ahora.** En su lugar, una mejora en GDScript que sí sirve en todas las plataformas: no revisar
+ni animar transiciones de los jugadores fuera de cámara o lejos de ella (solo visual; se puede medir con las mismas huellas). Si
+aun así hiciera falta, pasar solo `elegir` y la mezcla de las intermedias (funciones puras, copia exacta y `probar_nativo`).
+
+### Hecho tras la propuesta (10-11, aprobado por la líder): recorte fuera de cámara + gemelo C++ de lo puro
+**1. Recorte fuera de cámara** (`LS_FUERA_CAMARA=0` lo apaga; encendido por defecto):
+- quien está fuera del encuadre de la cámara activa o a más de 70 m no empieza clips nuevos (los que lleva acaban normal) y, si iba
+  con el cuerpo girado, se endereza;
+- con el cuerpo girado, la lógica del ciclo va a la cadencia de 0,1 s (en cada fotograma solo la velocidad del clip);
+- la recolocación acaba a 0,01 rad;
+- cronómetro propio barato: `LeagueLocomocion.us_total` / `pasos`.
+Medido con `LS_CAM=1` en `comparar_motor_league` (cámara de televisión que sigue al balón), 3 partidos, µs/paso de la capa:
+| | partido 1 | partido 2 | partido 3 | huellas |
+|---|---|---|---|---|
+| sin recorte | 189 | 147 | 127 | iguales |
+| con recorte | 154 | 123 | 120 | iguales |
+Transiciones: ~2.800 → ~1.500 por partido (las que no se ven).
+**2. Gemelo C++ de lo puro** (`nativo/src/league_nativo.cpp`):
+- `league_elegir` = `LeagueMovimiento.elegir_gd`;
+- `league_legal` = `LeagueAuto.legal_gd`;
+- `league_mezclar` = `LeagueAuto.mezclar_gd`.
+Son copia literal; el GDScript se queda de respaldo para Android sin binario, Web y `DINASTIA_SIN_NATIVO=1`.
+`pruebas/probar_nativo.tscn` (`ProbarNativoLeague`): iguales en 4.000 elecciones al azar, en toda la tabla de legalidad y en 40
+intermedias clave a clave. Velocidad: elegir 11-21 → 4-6 µs; intermedia 173-193 → 105-109 µs.
+Binarios recompilados para Linux y Windows. Huellas IGUALES con y sin la extensión. µs/paso de la capa (con recorte): sin
+extensión 170 / 124 / 128, con ella 146 / 120 / 123.
+**Conclusión:** en régimen la capa queda en ~120 µs/paso (antes ~150). No llega a ≤ 110: lo que queda (~110 µs) es acceso a los
+diccionarios de cada jugador (Variant) y llamadas a AnimationPlayer y Node por fotograma, y eso no se gana con C++ (seguiría
+pasando por Variant). Bajarlo más pediría cambiar la estructura de datos del motor (jugadores como objetos con campos tipados en
+vez de diccionarios), que es una decisión de todo el motor, no de esta capa.

@@ -117,6 +117,7 @@ def filas(clubes_limpios: set):
             nuevo[real] = fila
     retoques(nuevo, clubes_limpios, formas, patrones, figs, abc, fallos)
     uniformes(nuevo, kits, fallos)
+    asientos(nuevo, fallos)
     return nuevo, fallos
 
 
@@ -143,8 +144,7 @@ def visita_automatica(k1: str, k2: str) -> list:
 def uniformes(nuevo: dict, kits: set, fallos: list) -> None:
     """`_uniformes.txt`: nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed. Lo que traiga pisa la fila (uniforme base) y fija el SEGUNDO uniforme
     (`visita`: c1, c2, camiseta, pant, med). A todo club con colores y sin segundo uniforme escrito se le deduce uno (`visita_automatica`)."""
-    ruta = os.path.join(DATOS, "_uniformes.txt")
-    if os.path.exists(ruta):
+    for ruta in sorted(glob.glob(os.path.join(DATOS, "_uniformes*.txt"))):   ## (10-11) varios archivos: `_uniformes.txt` y `_uniformes_<lote>.txt`
         for n, linea in enumerate(open(ruta, encoding="utf-8").read().splitlines(), 1):
             if not linea.strip() or linea.startswith("#"):
                 continue
@@ -152,6 +152,10 @@ def uniformes(nuevo: dict, kits: set, fallos: list) -> None:
             v += [""] * (11 - len(v))
             real = v[0]
             malo = None
+            if real not in nuevo:   # (10-11) «APOeL»: el nombre limpio del juego puede variar en mayúsculas respecto de la clave («APOEL»)
+                ci = [k for k in nuevo if k.lower() == real.lower()]
+                if len(ci) == 1:
+                    real = ci[0]
             if real not in nuevo:
                 malo = "club sin fila"
             elif v[1] and v[1] not in kits:
@@ -161,7 +165,7 @@ def uniformes(nuevo: dict, kits: set, fallos: list) -> None:
             elif any(x and not HEX.match(x) for x in v[2:8] + v[9:11]):
                 malo = "color mal escrito"
             if malo:
-                fallos.append("_uniformes.txt:%d %s: %s" % (n, real, malo))
+                fallos.append("%s:%d %s: %s" % (os.path.basename(ruta), n, real, malo))
                 continue
             fila = nuevo[real]
             if v[1]:
@@ -190,10 +194,9 @@ def uniformes(nuevo: dict, kits: set, fallos: list) -> None:
 
 def retoques(nuevo: dict, clubes_limpios: set, formas: set, patrones: set, figs: set, abc: set, fallos: list) -> None:
     """`_escudos.txt`: nombre|forma|patrón|emblema|letras[/color]|esc1|esc2|esc3. Lo que traiga pisa lo del escudo de la fila del club."""
-    ruta = os.path.join(DATOS, "_escudos.txt")
-    if not os.path.exists(ruta):
-        return
-    for n, linea in enumerate(open(ruta, encoding="utf-8").read().splitlines(), 1):
+    rutas = sorted(glob.glob(os.path.join(DATOS, "_escudos*.txt")))   ## (10-11) `_escudos.txt` y `_escudos_<lote>.txt`
+    lineas = [(r, n, l) for r in rutas for n, l in enumerate(open(r, encoding="utf-8").read().splitlines(), 1)]
+    for ruta, n, linea in lineas:
         if not linea.strip() or linea.startswith("#"):
             continue
         v = [x.strip() for x in linea.split("|")]
@@ -215,7 +218,7 @@ def retoques(nuevo: dict, clubes_limpios: set, formas: set, patrones: set, figs:
         elif any(x and not HEX.match(x) for x in v[5:8] + [color]):
             malo = "color mal escrito"
         if malo:
-            fallos.append("_escudos.txt:%d %s: %s" % (n, real, malo))
+            fallos.append("%s:%d %s: %s" % (os.path.basename(ruta), n, real, malo))
             continue
         fila = nuevo[real]
         esc0 = fila.get("escudo", ["", ""])
@@ -226,6 +229,21 @@ def retoques(nuevo: dict, clubes_limpios: set, formas: set, patrones: set, figs:
             fila["letras"] = texto + ("/" + color if color else "")
         if v[5] and v[6]:
             fila["esc"] = [v[5], v[6]] + ([v[7]] if v[7] else [])
+
+
+def asientos(nuevo: dict, fallos: list) -> None:
+    """`_asientos*.txt` (10-11): nombre|butaca1|butaca2 = los colores del estadio (de los dos niveles de butacas). Si no hay, salen del escudo."""
+    for ruta in sorted(glob.glob(os.path.join(DATOS, "_asientos*.txt"))):
+        for n, linea in enumerate(open(ruta, encoding="utf-8").read().splitlines(), 1):
+            if not linea.strip() or linea.startswith("#"):
+                continue
+            v = [x.strip() for x in linea.split("|")] + ["", "", ""]
+            if v[0] not in nuevo:
+                fallos.append("%s:%d %s: club sin fila" % (os.path.basename(ruta), n, v[0]))
+            elif not (HEX.match(v[1]) and HEX.match(v[2])):
+                fallos.append("%s:%d %s: color mal escrito" % (os.path.basename(ruta), n, v[0]))
+            else:
+                nuevo[v[0]]["asientos"] = [v[1], v[2]]
 
 
 def tablas(CLUBES: dict, limpiar_fn, nombres_pack: list):
@@ -254,7 +272,7 @@ def tablas(CLUBES: dict, limpiar_fn, nombres_pack: list):
 def main() -> int:
     pack = json.load(open(os.path.join(GODOT, "datos/pack_real.json"), encoding="utf-8"))["tablas"]
     nombres = [c[0] for c in pack["DATA_P1"] + pack["DATA_P2"]]
-    nombres += [c[0] for l in pack["PAISES_LIGAS"].values() for c in l["clubes"]]
+    nombres += [c[0] for l in pack["PAISES_LIGAS"].values() for c in l["clubes"] + l.get("segunda", {}).get("clubes", [])]
     nuevo, fallos = filas({limpiar(n) for n in nombres})
     for e in fallos:
         print("FALLO", e)

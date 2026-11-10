@@ -54,19 +54,23 @@ func _probar_trofeos() -> void:
 		Datos.usar_base_real(real)
 		var etiqueta := "REAL" if real else "FICTICIA"
 		var fallos := 0
+		var cuales: Array = []
 		var ligas: Dictionary = Datos.tabla("PAISES_LIGAS")
 		for p: String in ligas:
-			if TrofeosReales.id_de(String(ligas[p]["liga"]), "") != "liga:" + p:
+			if TrofeosReales.id_de(String(ligas[p]["liga"]), p) != "liga:" + p:
 				fallos += 1
+				cuales.append("liga %s «%s» → %s" % [p, ligas[p]["liga"], TrofeosReales.id_de(String(ligas[p]["liga"]), p)])
 		var copas: Dictionary = Datos.tabla("COPA_NOM")
 		for p: String in copas:
 			if TrofeosReales.id_de(String(copas[p]), "") != "copa:" + p:
 				fallos += 1
+				cuales.append("copa %s «%s» → %s" % [p, copas[p], TrofeosReales.id_de(String(copas[p]), "")])
 		var conf: Dictionary = Datos.tabla("CONFED")
 		for k: String in conf:
 			if TrofeosReales.id_de(String(conf[k]["n"]), "") != "conf:" + k:
 				fallos += 1
-		_comprobar(fallos == 0, "base %s: cada liga, copa y torneo encuentra su receta (%d sin encontrar)" % [etiqueta, fallos])
+				cuales.append("conf %s «%s» → %s" % [k, conf[k]["n"], TrofeosReales.id_de(String(conf[k]["n"]), "")])
+		_comprobar(fallos == 0, "base %s: cada liga, copa y torneo encuentra su receta (%d sin encontrar: %s)" % [etiqueta, fallos, str(cuales)])
 	Datos.usar_base_real(false)
 	_comprobar(TrofeosReales.id_de("Liga", "ENG") == "liga:ENG", "«Liga» a secas sale por el país del club")
 	_comprobar(TrofeosReales.id_de("Primera División", "CHI") == "liga:CHI" and TrofeosReales.receta("liga:CHI") != TrofeosReales.receta("generico"), "la liga de Chile tiene la suya")

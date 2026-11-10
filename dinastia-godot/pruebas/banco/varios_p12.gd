@@ -214,7 +214,8 @@ func _probar_cargo_seleccionador() -> void:
 		var r: Dictionary = t.resultados.filter(func(x: Dictionary) -> bool: return x["local"] == mia or x["visita"] == mia)[0]
 		_comprobar(t.resultados.size() > antes and int(r["gl"]) == p.goles_local and int(r["gv"]) == p.goles_visita, "tu partido jugado (%s %d-%d %s) cuenta en el torneo" % [(r["local"] as Club).nombre, p.goles_local, p.goles_visita, (r["visita"] as Club).nombre])
 		var res := m.selecciones.cierre_de_temporada(m.anio)
-		_comprobar(not t.en_curso() and cargo.historial.size() == ts.size(), "el cierre termina los torneos de tu selección y los apunta (%s)" % str(cargo.historial))
+		var sin_fin := cargo.historial.filter(func(h: Dictionary) -> bool: return String(h["torneo"]) != Finalissima.NOMBRE)   ## (10-11) la Finalissima se apunta aparte si tu selección la juega
+		_comprobar(not t.en_curso() and sin_fin.size() == ts.size(), "el cierre termina los torneos de tu selección y los apunta (%s)" % str(cargo.historial))
 		_comprobar(res.has("seleccionador"), "el cierre devuelve los torneos del seleccionador")
 		cargo.dimitir(m)
 		_comprobar(not cargo.activo() and cargo.sueldo == 0, "dimitir deja el cargo")
@@ -406,3 +407,24 @@ func _probar_piezas_estadio_real() -> void:
 	_comprobar(not c.perfil_estadio().has("bandejas"), "sin fila real no hay techo por lados")
 	for x: Node in [r0, r1, r2]:
 		x.free()
+
+## (10-11) El edificio del club solo se dibuja con la cámara en el túnel o detrás de la tribuna (picos de llamadas en planos a ras de césped).
+func _probar_interior_oculto() -> void:
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var tunel := Node3D.new()
+	raiz.add_child(tunel)
+	var ed := Node3D.new()
+	ed.name = "EdificioClub"
+	tunel.add_child(ed)
+	var v := InteriorOculto.vigilar(tunel, 50.0, 70.0)
+	var cam := Camera3D.new()
+	raiz.add_child(cam)
+	cam.make_current()
+	var casos := [[Vector3(-30, 2, 25), false, "a ras de césped junto al túnel"], [Vector3(0, 4, 61), false, "repetición tras el arco, sobre la grada"],
+		[Vector3(0, 1.7, 55), true, "en el pasillo del túnel"], [Vector3(3, 9, 74), true, "en una planta del edificio"]]
+	for c: Array in casos:
+		cam.global_position = c[0]
+		v._process(0.0)
+		_comprobar(ed.visible == c[1], "edificio del club %s: %s" % ["visible" if c[1] else "apagado", c[2]])
+	raiz.free()

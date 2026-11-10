@@ -47,7 +47,8 @@ static func ajustar(c: Control) -> void:
 		return
 	if not c.has_meta("tam_base"):
 		c.set_meta("tam_base", c.get_theme_font_size("font_size"))
-	var base := int(c.get_meta("tam_base"))
+	var piso := EscalaMovil.letra_minima(c)   ## en el móvil, nunca por debajo de la letra mínima legible (0 en PC)
+	var base := maxi(int(c.get_meta("tam_base")), piso)
 	var hueco := c.size.x
 	if c is Button:
 		var b := c as Button
@@ -60,11 +61,11 @@ static func ajustar(c: Control) -> void:
 	var ancho := f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, base).x
 	var tam := base
 	if ancho > hueco and ancho > 0.0:
-		tam = maxi(int(ceil(base * MINIMO)), int(floor(base * hueco / ancho)))
+		tam = maxi(maxi(int(ceil(base * MINIMO)), int(floor(base * hueco / ancho))), piso)
 		## Si ni al mínimo cabe, el botón parte el rótulo en dos líneas: más alto, pero se lee entero.
 		if c is Button and ancho * float(tam) / float(base) > hueco and t.contains(" "):
 			(c as Button).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	## Solo se toca la letra de los que no caben; al que ya se encogió se le devuelve su tamaño si vuelve a caber.
-	if tam != base or c.has_meta("tam_tocado"):
+	if tam != base or c.has_meta("tam_tocado") or tam > c.get_theme_font_size("font_size"):
 		c.set_meta("tam_tocado", true)
 		c.add_theme_font_size_override("font_size", tam)

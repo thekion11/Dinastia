@@ -1,0 +1,239 @@
+# Lote D (UAE, IRN, VEN y segundas divisiones): nombre|forma|patrón|emblema|letras|esc1|esc2|esc3
+Al Ain|circulo|liso||AIN|#5b2d8e|#ffffff|
+Shabab Al Ahli|escudo|liso|aguila||#d50032|#111111|
+Al Wasl|circulo|liso|ave||#ffd100|#ffffff|
+Al Jazira|escudo|mitad|||#d50032|#111111|
+Sharjah|circulo|liso|estrella||#ffffff|#0057b8|
+Al Wahda|clasico|liso||WAH|#d50032|#ffffff|
+Baniyas|escudo|liso||BAN|#ffd100|#111111|
+Al-Nasr|circulo|liso||NSR|#ffd100|#0057b8|
+Khor Fakkan|escudo|liso||KF|#d50032|#ffffff|
+Ajman|clasico|liso||AJM|#f58220|#111111|
+Al Dhafra|escudo|liso||DHA|#00843d|#ffffff|
+Persepolis|circulo|liso||PRS|#d50032|#ffffff|
+Esteghlal|circulo|liso||EST|#0057b8|#ffffff|
+Sepahan|escudo|liso||SEP|#ffd100|#111111|
+Tractor|circulo|liso||TRC|#d50032|#ffffff|
+Foolad|escudo|liso||FLD|#d50032|#ffd100|
+Gol Gohar|escudo|liso||GG|#d50032|#ffffff|
+Zob Ahan|escudo|liso||ZOB|#00843d|#ffffff|
+Malavan|circulo|liso||MLV|#0057b8|#ffffff|
+Aluminium Arak|escudo|liso||ALU|#0057b8|#ffffff|
+Esteghlal Khuzestan|circulo|liso||EKH|#0057b8|#ffffff|
+Carabobo|escudo|liso||CAR|#d50032|#ffffff|
+Deportivo Táchira|escudo|liso||TAC|#ffd100|#111111|
+Caracas|circulo|liso||CCS|#d50032|#ffffff|
+Universidad Central|escudo|liso||UCV|#ffd100|#0057b8|
+Deportivo La Guaira|escudo|liso||DLG|#0057b8|#ffffff|
+Monagas|escudo|liso||MON|#ffd100|#111111|
+Estudiantes de Mérida|escudo|liso||EDM|#d50032|#ffffff|
+Zamora|circulo|liso||ZAM|#0057b8|#ffffff|
+Rayo Zuliano|escudo|liso|rayo||#d50032|#ffffff|
+Marítimo|escudo|liso||CSM|#00843d|#d50032|
+Farense|circulo|liso||SCF|#111111|#ffffff|
+Portimonense|escudo|liso||PTM|#111111|#ffffff|
+Paços de Ferreira|escudo|liso||PF|#ffd100|#111111|
+Vizela|escudo|liso||VIZ|#d50032|#ffffff|
+Chaves|escudo|liso||GDC|#0057b8|#ffffff|
+União de Leiria|escudo|liso||UL|#0057b8|#d50032|
+Académico de Viseu|escudo|liso||AV|#111111|#ffffff|
+Leixões|escudo|liso||LEI|#d50032|#ffffff|
+Penafiel|escudo|liso||FCP|#0057b8|#ffffff|
+Feirense|escudo|liso||FEI|#ffffff|#111111|
+Felgueiras|escudo|liso||FEL|#d50032|#ffffff|
+Oliveirense|escudo|liso||UDO|#d50032|#ffffff|
+Lusitânia Lourosa|escudo|liso||LUS|#00843d|#d50032|
+Torreense|escudo|liso||TOR|#d50032|#ffffff|
+Benfica B|circulo|liso|aguila||#d50032|#ffffff|
+Porto B|escudo|liso||FCP|#0057b8|#ffffff|
+Sporting CP B|escudo|liso|leon||#00843d|#ffffff|
+ADO Den Haag|circulo|liso||ADO|#00843d|#ffd100|
+Willem II|escudo|liso||WII|#d50032|#0057b8|
+Vitesse|escudo|liso||VIT|#ffd100|#111111|
+Roda JC Kerkrade|escudo|liso||RJC|#ffd100|#111111|
+Cambuur|escudo|liso||CAM|#ffd100|#0057b8|
+De Graafschap|escudo|liso||DGS|#0057b8|#ffffff|
+Almere City|escudo|liso||ALC|#d50032|#111111|
+RKC Waalwijk|escudo|liso||RKC|#ffd100|#0057b8|
+Emmen|escudo|liso||EMM|#d50032|#ffffff|
+MVV Maastricht|escudo|liso||MVV|#d50032|#ffd100|
+VVV-Venlo|escudo|liso||VVV|#ffd100|#111111|
+Den Bosch|escudo|liso||FCD|#0057b8|#ffffff|
+Dordrecht|escudo|liso||FCD|#ffffff|#00843d|
+Eindhoven|escudo|liso||FCE|#0057b8|#ffffff|
+Helmond Sport|escudo|liso||HEL|#111111|#ffd100|
+TOP Oss|escudo|liso||TOP|#d50032|#ffffff|
+Jong Ajax|escudo|liso||AJX|#d50032|#ffffff|
+Jong AZ|escudo|liso||AZ|#d50032|#ffffff|
+Jong PSV|circulo|liso||PSV|#d50032|#ffffff|
+Jong FC Utrecht|escudo|liso||FCU|#d50032|#ffffff|
+Erzurumspor|escudo|liso||ERZ|#0057b8|#ffffff|
+Adana Demirspor|escudo|liso||ADS|#0057b8|#ffffff|
+Sivasspor|escudo|liso||SIV|#d50032|#ffffff|
+Hatayspor|escudo|liso||HAT|#8b1538|#ffffff|
+Bodrum|escudo|liso||BOD|#00843d|#ffffff|
+Amedspor|escudo|liso||AMD|#d50032|#00843d|
+Sakaryaspor|escudo|liso||SKR|#00843d|#111111|
+Manisa|escudo|liso||MAN|#111111|#d50032|
+Bandırmaspor|escudo|liso||BAN|#d50032|#ffffff|
+Çorum|escudo|liso||COR|#111111|#d50032|
+Pendikspor|escudo|liso||PEN|#d50032|#ffffff|
+İstanbulspor|escudo|liso||IST|#ffd100|#d50032|
+Boluspor|escudo|liso||BOL|#d50032|#ffffff|
+Sarıyer|escudo|liso||SAR|#0057b8|#ffffff|
+Birmingham City|circulo|liso||BCFC|#0057b8|#ffffff|
+Blackburn|clasico|mitad||BRFC|#0057b8|#ffffff|
+Bristol City|escudo|liso||BCFC|#d50032|#ffffff|
+Charlton|circulo|liso|||#d50032|#ffffff|
+Coventry|escudo|liso||CCFC|#5ab4e5|#ffffff|
+Derby County|ovalo|liso||DCFC|#ffffff|#111111|
+Hull City|circulo|liso||HCFC|#f58220|#111111|
+Ipswich|escudo|liso||ITFC|#0057b8|#ffffff|
+Leicester|circulo|liso||LCFC|#0057b8|#ffffff|
+Middlesbrough|circulo|liso|leon||#d50032|#ffffff|
+Millwall|circulo|liso|leon||#0b2a5b|#ffffff|
+Norwich|circulo|liso|ave||#ffd100|#00843d|
+Oxford United|escudo|liso|toro||#ffd100|#0b2a5b|
+Portsmouth|circulo|liso|estrella||#0057b8|#ffffff|
+Preston|escudo|liso||PNE|#ffffff|#0b2a5b|
+Q.P.R.|escudo|liso||QPR|#0057b8|#ffffff|
+Sheffield Utd|escudo|liso||SUFC|#d50032|#ffffff|
+Sheffield Wed|escudo|liso||SWFC|#0057b8|#ffffff|
+Southampton|circulo|liso||SFC|#d50032|#ffffff|
+Stoke|circulo|liso||SCFC|#d50032|#ffffff|
+Swansea|circulo|liso||SCA|#ffffff|#111111|
+Watford|circulo|liso||WFC|#ffd100|#d50032|
+W. Brom|escudo|liso||WBA|#0b2a5b|#ffffff|
+Wrexham|escudo|liso||AFC|#d50032|#ffffff|
+Albacete|circulo|liso||ABA|#ffffff|#111111|
+Almería|escudo|liso||UDA|#d50032|#ffffff|
+Andorra|escudo|liso||FCA|#0057b8|#ffd100|
+Burgos|escudo|liso||BCF|#ffffff|#111111|
+Cádiz|circulo|liso||CCF|#ffd100|#0057b8|
+Castellón|escudo|liso||CDC|#111111|#ffffff|
+Ceuta|escudo|liso||CEU|#ffffff|#111111|
+Córdoba|escudo|liso||CCF|#00843d|#ffffff|
+Cultural Leonesa|escudo|liso|leon||#ffffff|#d50032|
+Deportivo|circulo|liso|torre||#0057b8|#ffffff|
+Eibar|escudo|liso||SDE|#d50032|#0057b8|
+Granada|escudo|liso||GCF|#d50032|#ffffff|
+Las Palmas|escudo|liso||UDLP|#ffd100|#0057b8|
+Leganés|escudo|liso||CDL|#ffffff|#0057b8|
+Málaga|circulo|liso||MCF|#5ab4e5|#ffffff|
+Mirandés|escudo|liso||CDM|#d50032|#111111|
+Racing Santander|escudo|liso||RRS|#00843d|#ffffff|
+Real Sociedad B|escudo|liso||RSB|#0057b8|#ffffff|
+Valladolid|escudo|liso||RVC|#5b2d8e|#ffffff|
+Sporting Gijón|escudo|liso||RSG|#d50032|#ffffff|
+Zaragoza|escudo|liso|leon||#ffffff|#0057b8|
+Huesca|escudo|liso||SDH|#0057b8|#d50032|
+Avellino|escudo|liso||AVE|#00843d|#ffffff|
+Bari|escudo|liso||SSC|#ffffff|#d50032|
+Carrarese|escudo|liso||CAR|#ffd100|#0057b8|
+Catanzaro|escudo|liso||USC|#ffd100|#d50032|
+Cesena|escudo|liso||CES|#ffffff|#111111|
+Empoli|escudo|liso||EMP|#0057b8|#ffffff|
+Virtus Entella|escudo|liso||VEN|#ffffff|#5ab4e5|
+Frosinone|escudo|liso||FRO|#ffd100|#0057b8|
+Juve Stabia|escudo|liso||JS|#ffd100|#0057b8|
+Mantova|escudo|liso||MAN|#ffffff|#d50032|
+Modena|escudo|liso||MOD|#ffd100|#0057b8|
+Monza|escudo|liso||ACM|#d50032|#ffffff|
+Padova|escudo|liso||PAD|#ffffff|#d50032|
+Palermo|escudo|liso|aguila||#f4a7c1|#111111|
+Pescara|escudo|liso|delfin||#5ab4e5|#ffffff|
+Reggiana|escudo|liso||REG|#8b1538|#ffffff|
+Sampdoria|escudo|liso||UCS|#0057b8|#ffffff|
+Spezia|escudo|liso|aguila||#ffffff|#111111|
+Südtirol|escudo|liso||FCS|#ffffff|#d50032|
+Venezia|circulo|liso||VEN|#00843d|#f58220|
+Arminia Bielefeld|escudo|liso||DSC|#0057b8|#ffffff|
+Braunschweig|escudo|liso|leon||#ffd100|#0057b8|
+Darmstadt|escudo|liso||SV|#0057b8|#ffffff|
+Dynamo Dresden|escudo|liso||SGD|#ffd100|#111111|
+Düsseldorf|escudo|liso||F95|#d50032|#ffffff|
+Elversberg|escudo|liso||SVE|#ffffff|#111111|
+Fürth|escudo|liso||SGF|#00843d|#ffffff|
+Hannover|circulo|liso||H96|#d50032|#ffffff|
+Hertha|ovalo|liso||BSC|#0057b8|#ffffff|
+Holstein Kiel|escudo|liso||KSV|#0057b8|#ffffff|
+Kaiserslautern|circulo|liso||FCK|#d50032|#ffffff|
+Karlsruhe|escudo|liso||KSC|#0057b8|#ffffff|
+Magdeburg|circulo|liso||FCM|#0057b8|#ffffff|
+Nürnberg|escudo|liso||FCN|#d50032|#111111|
+Paderborn|escudo|liso||SCP|#0057b8|#111111|
+Preußen Münster|circulo|liso||SCP|#00843d|#111111|
+Schalke|escudo|liso||S04|#0057b8|#ffffff|
+Bochum|circulo|liso||VFL|#0057b8|#ffffff|
+Amiens|circulo|liso||ASC|#ffffff|#111111|
+Annecy|circulo|liso||FCA|#d50032|#ffffff|
+Bastia|escudo|liso||SCB|#0057b8|#ffffff|
+Boulogne|circulo|liso||USB|#ffffff|#d50032|
+Clermont|circulo|liso||CF|#d50032|#0057b8|
+Dunkerque|escudo|liso||USLD|#0057b8|#d50032|
+Grenoble|escudo|liso||GF|#0057b8|#ffffff|
+Guingamp|escudo|liso||EAG|#d50032|#111111|
+Laval|escudo|liso||SM|#f58220|#111111|
+Le Mans|circulo|liso||MFC|#ffd100|#d50032|
+Montpellier|escudo|liso||MHSC|#0057b8|#f58220|
+Nancy|escudo|liso|flor_lis||#ffffff|#d50032|
+Pau|escudo|liso||PFC|#ffd100|#00843d|
+Red Star|circulo|liso|estrella||#00843d|#ffffff|
+Reims|circulo|liso||SDR|#d50032|#ffffff|
+Rodez|escudo|liso||RAF|#d50032|#ffd100|
+Saint-Étienne|escudo|liso||ASSE|#00843d|#ffffff|
+Troyes|circulo|liso||EST|#0057b8|#ffffff|
+Agropecuario|escudo|liso||AGR|#d50032|#ffffff|
+All Boys|escudo|liso||CAAB|#ffffff|#111111|
+Almagro|escudo|liso||CSDA|#0057b8|#ffffff|
+Almirante Brown|escudo|liso||CAAB|#ffd100|#00843d|
+Atlanta|escudo|liso||CAA|#ffd100|#0057b8|
+Atlético Rafaela|escudo|liso||ARA|#5ab4e5|#ffffff|
+Brown de Adrogué|escudo|liso||CAB|#ffffff|#d50032|
+Chacarita|escudo|liso||CAC|#d50032|#111111|
+Colón|escudo|liso||CAC|#d50032|#111111|
+Defensores de Belgrano|escudo|liso||DEF|#111111|#ffffff|
+Deportivo Madryn|escudo|liso||DEM|#0057b8|#ffffff|
+Ferro|escudo|liso||FCO|#00843d|#ffffff|
+Gimnasia de Jujuy|escudo|liso||GYJ|#ffffff|#0057b8|
+Godoy Cruz|escudo|liso||GC|#0057b8|#ffffff|
+Mitre|escudo|liso||MIT|#ffd100|#111111|
+Nueva Chicago|escudo|liso||NCH|#00843d|#111111|
+Quilmes|circulo|liso||QAC|#ffffff|#0057b8|
+San Martín de San Juan|escudo|liso||SMSJ|#00843d|#111111|
+San Martín de Tucumán|escudo|liso||SMT|#d50032|#111111|
+Temperley|escudo|liso||CAT|#5ab4e5|#ffffff|
+Arsenal de Sarandí|escudo|liso||ARS|#5ab4e5|#d50032|
+América-MG|escudo|liso||AME|#00843d|#111111|
+Athletic-MG|escudo|liso||ATH|#111111|#ffffff|
+Atlético-GO|escudo|liso||ACG|#d50032|#111111|
+Avaí|escudo|liso||AVA|#0057b8|#ffffff|
+Botafogo-SP|escudo|liso||BSP|#d50032|#ffffff|
+Ceará|escudo|liso||CSC|#111111|#ffffff|
+CRB|escudo|liso||CRB|#d50032|#ffffff|
+Criciúma|escudo|liso||CEC|#ffd100|#111111|
+Cuiabá|escudo|liso||CEC|#00843d|#ffd100|
+Fortaleza|escudo|liso|leon||#0057b8|#d50032|
+Goiás|escudo|liso||GEC|#00843d|#ffffff|
+Juventude|escudo|liso||ECJ|#00843d|#ffffff|
+Novorizontino|escudo|liso||GAN|#ffd100|#111111|
+Operário-PR|escudo|liso||OPE|#111111|#ffffff|
+Paysandu|escudo|liso||PAY|#5ab4e5|#ffffff|
+Ponte Preta|escudo|liso||AAPP|#111111|#ffffff|
+Sport|escudo|liso|leon||#d50032|#111111|
+Vila Nova|escudo|liso||VNFC|#d50032|#ffffff|
+Volta Redonda|escudo|liso||VRFC|#ffd100|#111111|
+Amazonas|escudo|liso||AMZ|#ffd100|#00843d|
+Atlante|escudo|liso||ATL|#d50032|#0057b8|
+Atlético La Paz|escudo|liso||ALP|#ffd100|#0057b8|
+Cancún|escudo|liso||CFC|#5ab4e5|#ffffff|
+Celaya|escudo|liso||CEL|#d50032|#ffffff|
+Dorados|escudo|liso||DOR|#ffd100|#111111|
+Irapuato|escudo|liso||IRA|#d50032|#ffffff|
+Leones Negros|escudo|liso|leon||#111111|#ffd100|
+Mineros de Zacatecas|escudo|liso||MIN|#d50032|#ffffff|
+Morelia|escudo|liso||MOR|#ffd100|#d50032|
+Tapatío|escudo|liso||TAP|#d50032|#ffffff|
+Tampico Madero|escudo|liso||TAM|#5ab4e5|#ffffff|
+Venados|escudo|liso||VEN|#d50032|#ffffff|
+Alebrijes de Oaxaca|escudo|liso||ALE|#ffd100|#111111|

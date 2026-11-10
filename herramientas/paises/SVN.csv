@@ -1,0 +1,20 @@
+#seleccion=Eslovenia
+#tier=0.5
+#globo=14.51,46.06
+#bandera=🇸🇮
+#confed=ucl,uel
+#liga=PrvaLiga|Liga Eslovena
+#copa=Copa de Eslovenia|Copa Eslovena
+#nombres=Luka,Matej,Jan,Nejc,Žiga,Tilen,Blaž,Rok,Gašper,Andraž,Miha,Domen,Aljaž,Klemen
+#apellidos=Novak,Horvat,Kovačič,Krajnc,Zupančič,Potočnik,Kos,Vidmar,Golob,Mlakar,Kovač,Korošec,Bizjak,Zupan
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Olimpija Ljubljana;Olimpia Lubiana;#2e8b3e;#ffffff;64;16038;2005;los Dragones;el gran estadio nacional de la capital, compartido con su vecino;El club de la capital que recogió la herencia de un histórico desaparecido.
+Maribor;Marebor;#6a2c91;#ffffff;63;11709;1960;los Violetas;el estadio histórico de la segunda ciudad del país;El club más laureado del país, con muchas ligas y copas.
+Celje;Celie Ciudad;#1d4fa8;#f5c400;60;13059;1919;los Condes;el estadio de una ciudad con castillo medieval;El club con más ambición de los últimos años y presencia en competiciones europeas.
+Koper;Kopar Costa;#f5c400;#1d4fa8;55;4047;1955;los Canarios;el estadio de una ciudad costera del Adriático;El club de la costa adriática, con campeonatos en su historial.
+Mura;Mura Sobota;#111111;#ffffff;54;4506;1919;los Guerreros del Norte;el campo de una ciudad del extremo noreste;Un club de la región oriental que fue campeón hace pocos años.
+Bravo;Bravo Lubiana;#f5c400;#111111;52;16038;2012;los Ardillas;el estadio de la capital que comparte con otro club;Un club joven de la capital con una cantera muy trabajada.
+Domžale;Domzal Norte;#f5c400;#1d4fa8;50;3100;1921;los Alondras;el estadio de una ciudad a las afueras de la capital;Cinco veces campeón en la década de 2010, hoy en horas más bajas.
+Primorje;Primorie Ajdov;#1d4fa8;#ffffff;44;1630;1920;los Valleros;el campo de una localidad del valle de Vipava;Un modesto del valle de Vipava que sueña con asentarse en la élite.
+Radomlje;Radomle Verde;#f5c400;#111111;42;3100;1946;los Amarillos;el estadio de una ciudad cercana que comparte con otro club;Un club pequeño que ha crecido hasta ser fijo en la primera división.
+Aluminij;Aluminio Kidri;#6a2c91;#ffffff;39;789;1946;los Obreros;el pequeño campo de una localidad industrial del este;El club de una fábrica, el más modesto de la liga.

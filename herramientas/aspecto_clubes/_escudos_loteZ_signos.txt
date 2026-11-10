@@ -1,0 +1,13 @@
+# Retoques que necesitan el vocabulario nuevo (10-11): emblemas trébol y arpa y letras con signo (Ç Ö İ Š Ž Ł…). Va después de los lotes A-D.
+Celtic|||trebol|||||
+Panathinaikos|||trebol|||||
+Hibernian|||arpa|||||
+Çaykur Rizespor||||ÇR/#ffffff|||
+Göztepe||||GÖZ/#ffffff|||
+İstanbul Başakşehir||||İBFK/#ffffff|||
+İstanbulspor||||İST|||
+Örgryte IS||||ÖIS|||
+Žilina||||MŠK|||
+Zagłębie Lubin||||ZŁ|||
+Brøndby||||BIF/#0b3d91|||
+Tromsø||||TIL|||

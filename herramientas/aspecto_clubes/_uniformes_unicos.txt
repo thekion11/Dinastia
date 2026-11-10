@@ -1,0 +1,221 @@
+# Generado por herramientas/aspecto_unicos_kit.sh (no editar a mano): diseño, pantalón y medias distintos para que ningún uniforme se repita dentro de una liga.
+AD Tarma|franja_pecho|||#ffffff|#ffffff||||
+APOeL|franja_pecho|||#1b458f|#1b458f||||
+AS Real Bamako|franja_pecho|||#ffffff|#d62828||||
+Al Mokawloon|cuello_v|||#00843d|#ffffff||||
+Al Shahaniya|franja_pecho|||#c8102e|#c8102e||||
+Al-Ettifaq|cuello_v|||#111111|#00843d||||
+Al-Faiha|franja_pecho|||#0038a8|#0038a8||||
+Al-Faisaly|cuello_v|||#ffffff|#ffffff||||
+Al-Hazem|raglan|||#00843d|#00843d||||
+Al-Najaf|franjas_finas|||#1b458f|#1b458f||||
+Al-Qasim|cuello_v|||#ffffff|#ffffff||||
+Al-Ramtha|raglan|||#ffffff|#ffffff||||
+Al-Riyadh|franja_pecho|||#ffffff|#0038a8||||
+Al-Taawoun|franja_pecho|||#0038a8|#ffd100||||
+Al-Talaba|franja_central|||#ffffff|#c8102e||||
+Asociación Deportiva San Carlos|franjas_finas|||#ffffff|#1b458f||||
+Asteras Tripolis|franja_pecho|||#000000|#ffd100||||
+Athletico PR|franjas_finas|||#000000|#d50032||||
+Aurora|franja_pecho|||#111111|#75aadb||||
+Belgrano|franjas_finas|||#111111|#5ab4e5||||
+Beroe|franja_pecho|||#00843d|#00843d||||
+Botafogo|franjas_finas|||#000000|#000000||||
+CRB|franja_pecho|||#ffffff|#d50032||||
+Ceará|franjas_finas|||#111111|#111111||||
+Ceuta|franja_pecho|||#111111|#ffffff||||
+Chicago Fire|franja_pecho|||#0a2240|#d50032||||
+Chippa Utd|raglan|||#ffffff|#00843d||||
+Club Africain|franja_pecho|||#ffffff|#e31b23||||
+Colón|franjas_finas|||#111111|#d50032||||
+Csikszereda|franja_pecho|||#8b1538|#8b1538||||
+D. Limache|franjas_finas|||#111111|#ffd100||||
+Darmstadt|franja_pecho|||#0057b8|#0057b8||||
+Defensa y J.|franja_pecho|||#00843d|#ffd100||||
+Den Bosch|franja_pecho|||#ffffff|#0057b8||||
+Dep. Cali|franjas_finas|||#ffffff|#00843d||||
+Deportivo Maipú|franjas|||#ffffff|#ffffff||||
+Dinamo Samarqand|raglan|||#ffffff|#ffffff||||
+Diyala|franja_central|||#ffffff|#ffffff||||
+Djoliba AC|franja_pecho|||#ffffff|#ffffff||||
+Dorados|franja_pecho|||#111111|#ffd100||||
+Dreams FC|franja_central|||#111111|#c8102e||||
+Duhok|hombros|||#ffffff|#c8102e||||
+Dynamo Moscow|franja_pecho|||#1b458f|#1b458f||||
+EGS Gafsa|franja_pecho|||#ffffff|#ffffff||||
+Eindhoven|franja_pecho|||#ffffff|#ffffff||||
+Erbil|franjas_finas|||#ffffff|#ffd100||||
+Erzurumspor|franja_pecho|||#111111|#0057b8||||
+Esteghlal Khuzestan|cuello_v|||#ffffff|#0057b8||||
+Estudiantes Buenos Aires|franjas|||#111111|#d50032||||
+Estudiantes RC|franjas_finas|||#ffffff|#ffffff||||
+FC Argeș|franja_pecho|||#ffffff|#8b1538||||
+FC Copenhague|franja_pecho|||#ffffff|#ffffff||||
+Felgueiras|franja_pecho|||#ffffff|#ffffff||||
+Fovu Club|franja_pecho|||#1b458f|#ffffff||||
+Frosinone|franja_pecho|||#0057b8|#ffd100||||
+Gimnasia Mza|franjas_finas|||#ffffff|#000000||||
+Godoy Cruz|franjas_finas|||#ffffff|#0057b8||||
+Guabira|v_ancha|||#ffffff|#ffffff||||
+Güemes|franja_pecho|||#111111|#d50032||||
+Hannover|cuello_v|||#ffffff|#d50032||||
+Hapoel Jerusalem|franja_pecho|||#ffffff|#c8102e||||
+Hermannstadt|franja_pecho|||#c8102e|#ffffff||||
+Hohoe United|franjas_finas|||#111111|#c8102e||||
+Holstein Kiel|franjas_finas|||#ffffff|#ffffff||||
+IF Elfsborg|franja_pecho|||#000000|#000000||||
+IF Gnistan|franja_central|||#ffffff|#ffffff||||
+IFK Göteborg|franja_pecho|||#ffffff|#1b458f||||
+IK Sirius|franja_pecho|||#1b458f|#ffffff||||
+Instituto|franjas_finas|||#111111|#d50032||||
+Inter Bogotá|v_ancha|||#111111|#d50032||||
+Irapuato|cuello_v|||#ffffff|#ffffff||||
+Ittihad Tanger|bastones|||#ffffff|#ffffff||||
+Jong AZ|cuello_v|||#111111|#d50032||||
+Jong FC Utrecht|raglan|||#ffffff|#d50032||||
+Juve Stabia|franja_pecho|||#0057b8|#0057b8||||
+Juventude|franja_pecho|||#ffffff|#00843d||||
+Kaiserslautern|raglan|||#ffffff|#ffffff||||
+Karlsruhe|cuello_v|||#ffffff|#ffffff||||
+Kisvárda|franja_pecho|||#111111|#c8102e||||
+Koper|franja_pecho|||#1d4fa8|#f5c400||||
+Korona Kielce|franjas_finas|||#c8102e|#ffd100||||
+LNZ Cherkasy|cuello_v|||#c8102e|#c8102e||||
+Las Palmas|franja_pecho|||#ffffff|#ffd100||||
+Leicester|franja_pecho|||#0057b8|#ffffff||||
+Liaoning Tieren|cuello_v|||#ffffff|#c8102e||||
+Llaneros|franja_pecho|||#d50032|#ffd100||||
+Los Andes|franjas_anchas|||#ffffff|#d50032||||
+MC Oran|franja_pecho|||#111111|#e31b23||||
+MFK Karviná|cuello_v|||#c8102e|#ffffff||||
+Macarthur FC|franja_pecho|||#0038a8|#ffffff||||
+Magdeburg|cuello_v|||#111111|#0057b8||||
+Malavan|raglan|||#ffffff|#0057b8||||
+Marítimo|franja_pecho|||#00843d|#00843d||||
+Medeama|franja_pecho|||#000000|#f2c200||||
+Metaloglobus București|franja_pecho|||#111111|#1b458f||||
+Mineros de Zacatecas|raglan|||#111111|#d50032||||
+Mjällby AIF|franja_pecho|||#ffffff|#ffd100||||
+Mladost Lučani|franjas_finas|||#ffffff|#c8102e||||
+Modena|franja_pecho|||#111111|#ffd100||||
+Motagua|franja_pecho|||#ffffff|#003087||||
+Motor Lublin|franja_pecho|||#1b458f|#ffd100||||
+Nac. Potosí|bastones|||#111111|#d50032||||
+Naft Maysan|cuello_v|||#ffffff|#ffffff||||
+Nancy|franja_pecho|||#d50032|#ffffff||||
+Navbahor Namangan|raglan|||#ffffff|#ffffff||||
+Necaxa|franjas_anchas|||#ffffff|#ffffff||||
+Neftchi Fergana|franja_central|||#ffffff|#1b458f||||
+Novorizontino|franja_pecho|||#111111|#111111||||
+Nueva Chicago|franjas_finas|||#111111|#00843d||||
+O'Higgins|franja_pecho|||#ffffff|#6caddf||||
+Oliveirense|franja_central|||#ffffff|#d50032||||
+Olympique Akbou|cuello_v|||#ffffff|#e31b23||||
+Once Caldas|franjas_finas|||#00843d|#ffffff||||
+Operário-PR|franjas_finas|||#ffffff|#111111||||
+Oțelul Galați|cuello_v|||#1b458f|#1b458f||||
+PEC Zwolle|franjas_finas|||#111111|#0057b8||||
+PWD Bamenda|franja_pecho|||#ffd100|#1b458f||||
+Padova|franja_pecho|||#d50032|#d50032||||
+Pafos|franja_central|||#ffffff|#ffffff||||
+Panetolikos|franja_pecho|||#ffffff|#ffffff||||
+Paradou AC|franjas_anchas|||#ffffff|#ffffff||||
+Patronato|franjas_finas|||#111111|#111111||||
+Penafiel|raglan|||#ffffff|#ffffff||||
+Pendikspor|franja_central|||#ffffff|#ffffff||||
+Penybont|franja_pecho|||#111111|#d62828||||
+Pereira|franja_pecho|||#d50032|#d50032||||
+Petrojet|vertical3|||#ffffff|#d50032||||
+Pohang S.|franjas_finas|||#ffffff|#d50032||||
+Polissya Zhytomyr|franja_pecho|||#00843d|#ffffff||||
+Polokwane|raglan|||#00843d|#ffffff||||
+Ponte Preta|franjas_finas|||#111111|#ffffff||||
+Portimonense|franjas_anchas|||#111111|#111111||||
+Portsmouth|cuello_v|||#0057b8|#0057b8||||
+Qingdao West Coast|cuello_v|||#111111|#c8102e||||
+RKC Waalwijk|cuello_v|||#0057b8|#ffd100||||
+Racing de Córdoba|franjas_finas|||#ffffff|#5ab4e5||||
+Radomlje|franja_pecho|||#111111|#f5c400||||
+Reims|franja_central|||#111111|#d50032||||
+Renaissance Z.|franja_pecho|||#111111|#0038a8||||
+Rennes|franjas_finas|||#000000|#000000||||
+Riestra|franjas_finas|||#ffffff|#ffffff||||
+Rivers United|franjas_finas|||#ffffff|#0b8f3c||||
+SCC Mohammédia|raglan|||#111111|#00843d||||
+SK Dynamo České Budějovice|cuello_v|||#ffffff|#1b458f||||
+Saint-Étienne|franja_pecho|||#111111|#00843d||||
+Samartex|franja_pecho|||#f2c200|#0b8f3c||||
+Samsunspor|raglan|||#c8102e|#c8102e||||
+San Martín de San Juan|franjas_finas|||#111111|#111111||||
+San Martín de Tucumán|franjas_anchas|||#111111|#d50032||||
+Sandefjord|cuello_v|||#1b458f|#ffffff||||
+Sanfrecce H.|franja_pecho|||#5c2d91|#5c2d91||||
+Santa Clara|franja_pecho|||#d50032|#d50032||||
+Santa Fe|hombros|||#ffffff|#d50032||||
+Sarmiento|franjas_finas|||#ffffff|#ffffff||||
+Sarpsborg 08|raglan|||#ffffff|#c8102e||||
+Sarıyer|raglan|||#111111|#0057b8||||
+Schalke|franja_central|||#ffffff|#0057b8||||
+Sekhukhune|franja_pecho|||#0038a8|#0038a8||||
+Shanghai Port|raglan|||#c8102e|#ffffff||||
+Shelbourne|franjas_anchas|||#ffffff|#ffffff||||
+Shooting Stars|franja_pecho|||#ffffff|#1e56b8||||
+Sidney FC|franja_pecho|||#ffffff|#75aadb||||
+Sigma Olomouc|franja_pecho|||#1b458f|#1b458f||||
+Sivasspor|franjas_anchas|||#111111|#d50032||||
+Slovan Liberec|cuello_v|||#111111|#1b458f||||
+Smouha|cuello_v|||#0038a8|#0038a8||||
+Sogdiana|franja_central|||#111111|#1b458f||||
+Sonacos|franja_pecho|||#ffffff|#1b8a3a||||
+Spartak Varna|franja_pecho|||#ffffff|#ffffff||||
+Spezia|franja_pecho|||#ffffff|#ffffff||||
+Sport Huancayo|mitad|||#ffffff|#ffffff||||
+Sporting FC|cuello_v|||#ffffff|#ffffff||||
+Sporting Gijón|bastones|||#ffffff|#d50032||||
+St Patrick's Athletic|raglan|||#ffffff|#ffffff||||
+Start|franja_pecho|||#111111|#ffd100||||
+Stelleribosch|franja_pecho|||#7a1f2b|#7a1f2b||||
+Supersport Utd|cuello_v|||#ffffff|#0038a8||||
+Südtirol|franja_pecho|||#ffffff|#ffffff||||
+TOP Oss|hombros|||#ffffff|#ffffff||||
+Tampico Madero|franja_pecho|||#ffffff|#5ab4e5||||
+Tapatío|hombros|||#111111|#d50032||||
+Tatran Prešov|franja_pecho|||#111111|#c8102e||||
+Temperley|franjas_finas|||#ffffff|#ffffff||||
+Tianjin Jinmen Tiger|raglan|||#1b458f|#1b458f||||
+Torreense|banda_baja|||#ffffff|#d50032||||
+Tractor|banda_baja|||#ffffff|#ffffff||||
+Trenčín|franja_pecho|||#c8102e|#ffffff||||
+Tromsø|raglan|||#111111|#c8102e||||
+Troyes|cuello_v|||#0057b8|#ffffff||||
+U. Católica (E)|cuello_v|||#ffffff|#75aadb||||
+US Biskra|cuello_v|||#ffffff|#ffffff||||
+UTA Arad|franja_pecho|||#ffffff|#ffffff||||
+Universitatea Craiova|raglan|||#ffffff|#1b458f||||
+Unión SF|franjas_finas|||#000000|#d50032||||
+Utrecht|mitad|||#111111|#d50032||||
+VPS|franja_central|||#111111|#0057b8||||
+VVV-Venlo|franja_pecho|||#ffffff|#ffd100||||
+Venados|banda_baja|||#111111|#d50032||||
+Veres Rivne|cuello_v|||#00843d|#00843d||||
+Victoria|hombros|||#ffffff|#ffffff||||
+Viking|franja_pecho|||#ffffff|#ffffff||||
+Vila Nova|canesu|||#ffffff|#d50032||||
+Vitesse|cuello_v|||#111111|#ffd100||||
+Vizela|canesu|||#ffffff|#ffffff||||
+Vojvodina|franjas_finas|||#ffffff|#ffffff||||
+Volos|franja_pecho|||#0072ce|#0072ce||||
+Volta Redonda|cuello_v|||#111111|#111111||||
+Vålerenga|raglan|||#1b458f|#ffffff||||
+Wadi Degla|franja_central|||#ffffff|#ffffff||||
+Wellington P.|franja_pecho|||#ffd100|#ffd100||||
+Westerlo|cuello_v|||#0057b8|#0057b8||||
+Wrexham|canesu|||#111111|#d50032||||
+Wuhan Three Towns|franja_pecho|||#c8102e|#c8102e||||
+Zagłębie Lubin|franja_pecho|||#00843d|#00843d||||
+Zalaegerszeg|raglan|||#111111|#1b458f||||
+Árabe Unido|hombros|||#111111|#c8102e||||
+Çorum|franjas_finas|||#111111|#111111||||
+Étoile du Sahel|franjas_finas|||#ffffff|#e31b23||||
+Ñublense|v_ancha|||#ffffff|#d50032||||
+Čukarički|franjas_anchas|||#ffffff|#111111||||

@@ -6,12 +6,15 @@ extends RefCounted
 const POR_CONFED := {
 	"lib": ["Argentina", "Brasil", "Uruguay", "Colombia", "Chile", "Perú", "Ecuador", "Paraguay", "Bolivia", "Venezuela", "México", "EE.UU.", "Costa Rica", "Canadá"],
 	"ucl": ["España", "Inglaterra", "Italia", "Alemania", "Francia", "Portugal", "Holanda", "Bélgica", "Croacia", "Dinamarca",
-		"Suiza", "Austria", "Escocia", "Suecia", "Noruega", "Polonia", "Serbia", "Turquía", "Ucrania", "Gales", "Rep. Checa", "Hungría", "Grecia", "Irlanda"],
+		"Suiza", "Austria", "Escocia", "Suecia", "Noruega", "Polonia", "Serbia", "Turquía", "Ucrania", "Gales", "Rep. Checa", "Hungría", "Grecia", "Irlanda",
+		"Rumanía", "Eslovaquia", "Bulgaria", "Israel", "Finlandia", "Eslovenia", "Chipre"],   ## (Rusia no: suspendida por la UEFA y la FIFA, solo juega amistosos; ver `SUSPENDIDAS`)
 	"afr": ["Marruecos", "Senegal", "Nigeria", "Egipto", "Camerún", "Sudáfrica", "Ghana", "Costa de Marfil", "Argelia", "Túnez", "Malí"],
-	"asia": ["Japón", "Corea", "Irán", "Australia", "Arabia", "Catar", "Uzbekistán", "Jordania", "Irak", "Emiratos"],
+	"asia": ["Japón", "Corea", "Irán", "Australia", "Arabia", "Catar", "Uzbekistán", "Jordania", "Irak", "Emiratos", "China"],
 	"conc": ["México", "EE.UU.", "Costa Rica", "Canadá", "Panamá", "Jamaica", "Honduras"],
 	"oce": ["N. Zelanda", "Australia"],
 }
+## Selecciones fuera de TODOS los torneos oficiales (Rusia, suspendida): existen en el escalafón, se convocan y juegan amistosos, pero no entran al Mundial ni a la Eurocopa.
+const SUSPENDIDAS := ["Rusia"]
 const PLAZAS_MUNDIAL := 32
 const PLAZAS_MUNDIAL_48 := 48   ## (10-11) desde 2026 el Mundial es de 48 (12 grupos de 4; pasan 2 por grupo y los 8 mejores terceros)
 const ANIO_MUNDIAL_48 := 2026
@@ -30,8 +33,10 @@ static func _equipos(sel: Selecciones, m: Mundo, nombres: Array, anio: int) -> A
 
 static func mundial(sel: Selecciones, m: Mundo, anio: int) -> TorneoSelecciones:
 	var nombres: Array = []
-	for f: Dictionary in sel.ranking(plazas_mundial(sel, anio)):
-		nombres.append(String(f["nombre"]))
+	var plazas := plazas_mundial(sel, anio)
+	for f: Dictionary in sel.ranking(plazas + SUSPENDIDAS.size()):
+		if not SUSPENDIDAS.has(String(f["nombre"])) and nombres.size() < plazas:
+			nombres.append(String(f["nombre"]))
 	return TorneoSelecciones.crear("Copa del Mundo", anio, _equipos(sel, m, nombres, anio))
 
 static func continental(sel: Selecciones, m: Mundo, clave: String, nombre_torneo: String, anio: int) -> TorneoSelecciones:

@@ -4,6 +4,8 @@ extends CanvasLayer
 ## sale el del sistema; aquí, cuando un campo de texto recibe el foco y hay un mando conectado, aparece una rejilla
 ## de teclas que se recorre con la cruceta: ✔ escribe y cierra, ✖ cierra sin tocar nada. Se engancha una vez para
 ## todo el juego (`vigilar`, desde `Idiomas`), sin tocar los campos uno a uno.
+## (10-11, orden 33 del dueño, «Mando (corrección)» de `PLAN_GENERAL.md`) Botones del mando: CUADRADO borra, R2 confirma
+## (✔ Aceptar), TRIÁNGULO pone un espacio y L2 cambia mayúsculas/minúsculas; las teclas en pantalla lo dicen.
 
 const FILAS := ["1234567890", "qwertyuiop", "asdfghjklñ", "zxcvbnm-'."]
 static var forzar := false          ## las pruebas lo encienden sin mando
@@ -70,10 +72,10 @@ func _ready() -> void:
 	var abajo := HBoxContainer.new()
 	abajo.alignment = BoxContainer.ALIGNMENT_CENTER
 	col.add_child(abajo)
-	_tecla(abajo, Idiomas.t("⇧ Mayús"), 110).pressed.connect(func() -> void: _mayus = not _mayus; _rotular())
-	_tecla(abajo, Idiomas.t("Espacio"), 200).pressed.connect(_escribir.bind(" "))
-	_tecla(abajo, "⌫", 80).pressed.connect(_borrar)
-	_tecla(abajo, Idiomas.t("✔ Aceptar"), 130).pressed.connect(aceptar)
+	_tecla(abajo, Idiomas.t("⇧ Mayús") + " (L2)", 140).pressed.connect(_cambiar_mayus)
+	_tecla(abajo, Idiomas.t("Espacio") + " (△)", 200).pressed.connect(_escribir.bind(" "))
+	_tecla(abajo, "⌫ (□)", 100).pressed.connect(_borrar)
+	_tecla(abajo, Idiomas.t("✔ Aceptar") + " (R2)", 170).pressed.connect(aceptar)
 	_tecla(abajo, Idiomas.t("✖ Cerrar"), 110).pressed.connect(cerrar)
 	_rotular()
 	if not _teclas.is_empty():
@@ -132,7 +134,39 @@ func cerrar() -> void:
 	_abierto = null
 	queue_free()
 
+func _cambiar_mayus() -> void:
+	_mayus = not _mayus
+	_rotular()
+
 func _unhandled_input(ev: InputEvent) -> void:
 	if ev.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		cerrar()
+
+const UMBRAL_GATILLO := 0.6
+var _gatillos := {}   ## eje → apretado (para que R2/L2 cuenten una vez por pulsación)
+
+## Los botones del mando de la orden 33. En `_input` (antes que la principal, que usa R2/L2 para cambiar de bloque).
+func _input(ev: InputEvent) -> void:
+	if ev is InputEventJoypadButton and (ev as InputEventJoypadButton).pressed:
+		match (ev as InputEventJoypadButton).button_index:
+			JOY_BUTTON_X:
+				_borrar()
+			JOY_BUTTON_Y:
+				_escribir(" ")
+			_:
+				return
+		get_viewport().set_input_as_handled()
+	elif ev is InputEventJoypadMotion:
+		var m := ev as InputEventJoypadMotion
+		if m.axis != JOY_AXIS_TRIGGER_RIGHT and m.axis != JOY_AXIS_TRIGGER_LEFT:
+			return
+		var antes := bool(_gatillos.get(m.axis, false))
+		var ahora := m.axis_value >= UMBRAL_GATILLO
+		_gatillos[m.axis] = ahora
+		get_viewport().set_input_as_handled()
+		if ahora and not antes:
+			if m.axis == JOY_AXIS_TRIGGER_RIGHT:
+				aceptar()
+			else:
+				_cambiar_mayus()

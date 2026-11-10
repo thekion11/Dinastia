@@ -10,6 +10,9 @@ func _colocar_saque(delta: float) -> void:
 	var lugar: Vector3 = saque["lugar"]
 	var lanzador: Dictionary = saque.get("lanzador", {})
 	var saca_local := bool(saque["local"])
+	if not lanzador.is_empty() and float(lanzador.get("levanta_hasta", 0.0)) > t and tipo != "puerta":   ## (10-11) se cayó ya elegido: saca otro (p4_saque_barrida)
+		lanzador = _elegir_lanzador(tipo, saca_local, lugar)
+		saque["lanzador"] = lanzador
 	for p: Dictionary in jugadores:
 		var obj: Vector3
 		if p == lanzador:

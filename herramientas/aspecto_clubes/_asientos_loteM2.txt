@@ -1,0 +1,32 @@
+# Lote M2: nombre|butaca1|butaca2
+Ironi Kiryat Shmona|#f6d000|#1c3f94
+Hapoel Petah Tikva|#1c4aa6|#ffffff
+Ironi Tiberias|#d4202b|#ffffff
+F.C. Ashdod|#ffd400|#c8102e
+Maccabi Bnei Reineh|#c8102e|#ffffff
+Orenburg|#1555b5|#ffffff
+Akron Tolyatti|#0a2a6e|#f58220
+Falkirk|#0b2a5b|#ffffff
+Livingston|#f6a800|#111111
+Mladost Lučani|#c8102e|#ffffff
+Radnik Surdulica|#d4202b|#111111
+Napredak Kruševac|#c8102e|#ffffff
+Javor-Matis|#c8102e|#ffffff
+FAP|#16348a|#ffd100
+Železničar Pančevo|#6a1b3a|#ffffff
+IMT Novi Beograd|#0d6e3a|#ffffff
+Thun|#c8102e|#ffffff
+Winterthur|#c8102e|#ffffff
+Podbrezová|#1c6b2a|#ffffff
+Skalica|#c8102e|#ffd100
+Zemplín Michalovce|#c8102e|#1c3f94
+Komárno|#1c4aa6|#ffd100
+Alanyaspor|#f58220|#009e49
+Kasımpaşa|#12327a|#ffffff
+Gaziantep FK|#d4202b|#111111
+Eyüpspor|#6a1b7a|#ffd100
+Kocaelispor|#0a7a3a|#111111
+Gençlerbirliği|#d4202b|#111111
+Fatih Karagümrük|#c8102e|#111111
+Dibba|#0e7a4a|#ffffff
+Al Bataeh|#7a1f2b|#ffffff

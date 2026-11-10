@@ -1,0 +1,24 @@
+#seleccion=Chipre
+#tier=0.55
+#globo=33.38,35.17
+#bandera=🇨🇾
+#confed=ucl,uel
+#liga=Primera División de Chipre|Liga Chipriota
+#copa=Copa de Chipre|Copa Chipriota
+#nombres=Andreas,Giorgos,Nikos,Michalis,Christos,Costas,Dimitris,Panayiotis,Marios,Stelios,Savvas,Loizos,Petros,Yiannis
+#apellidos=Georgiou,Charalambous,Constantinou,Christou,Ioannou,Michael,Savva,Demetriou,Loizou,Antoniou,Hadjipavlou,Papadopoulos,Kyriacou,Neophytou
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+APOEL;Apolo Nicosia;#ffd100;#1b458f;66;22859;1926;los Amarillos;el estadio nacional de la capital;El club más laureado del país.
+Omonia Nicosia;Concordia Nico;#00843d;#ffffff;65;22859;1948;los Verdes;el estadio nacional de la capital;El club de masas de la capital.
+Anorthosis Famagusta;Anortosis Chipre;#1b458f;#ffffff;60;10230;1911;los Anorthosistas;el estadio de la ciudad de la costa;El club de la ciudad ocupada, exiliado en Larnaca.
+AEK Larnaca;Aek Larnaca Sal;#ffd100;#00843d;58;7400;1994;los Amarillos de Larnaca;el estadio moderno de la ciudad de la sal;El club de la ciudad de la sal.
+Apollon Limassol;Apolo Limasol;#1b458f;#ffffff;57;10700;1954;los Celestes;el estadio de la ciudad del vino;El club de la ciudad del vino.
+AEL Limassol;Ael Limasol Sur;#ffd100;#1b458f;56;10700;1930;los Amarillos de Limasol;el estadio de la ciudad del vino;El club histórico de Limasol.
+Pafos;Pafos Mito;#1b458f;#ffffff;55;9394;2014;los Azules de Pafos;el estadio de la ciudad del mito;El club de la ciudad de la diosa del amor.
+Aris Limassol;Aris Limasol Mar;#00843d;#ffd100;50;10700;1930;los Verdes de Limasol;el estadio de la ciudad del vino;Un club de Limasol que sube con fuerza.
+Olympiakos Nicosia;Olimpico Nicosia;#1b458f;#ffd100;49;22859;1931;los Azules de la Capital;el estadio nacional de la capital;Un club histórico de la capital.
+Omonia Aradippou;Concordia Arad;#00843d;#ffffff;46;10230;1993;los Verdes del Pueblo;el estadio de la ciudad de la costa;El club de un pueblo cerca de Larnaca.
+Enosis Neon Paralimni;Enosis Paralimni;#c8102e;#ffffff;45;5800;1936;los Rojos del Este;el estadio del pueblo del este;El club del pueblo del extremo este.
+Ethnikos Achna;Etnikos Acna;#c8102e;#1b458f;43;7000;1968;los del Pueblo;el estadio del pueblo del este;Un club pequeño del este de la isla.
+Akritas Chlorakas;Acritas Cloraka;#c8102e;#ffffff;41;9394;1946;los Rojos de la Costa;el estadio de la ciudad del mito;Un club pequeño del pueblo vecino de Pafos.
+Krasava ENY Ypsonas;Krasava Ipsonas;#c8102e;#1b458f;38;5500;1950;los del Pueblo Alto;el estadio del pueblo cercano a Limasol;Un club modesto de un pueblo de Limasol.

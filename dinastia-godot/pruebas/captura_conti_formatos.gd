@@ -40,7 +40,8 @@ func _siguiente_caso() -> void:
 
 func _foto(momento: String) -> void:
 	var nombre := "conti_%s_%s" % [CASOS[_caso]["clave"], momento]
-	get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % nombre)
+	if DisplayServer.get_name() != "headless":   ## sin pantalla (`especiales.sh`) solo se comprueba que la ficha se construye sin errores
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % nombre)
 	print("FOTO ", nombre, "  (", _torneo.nombre_de_ronda(), ")")
 
 func _abrir_ficha() -> void:

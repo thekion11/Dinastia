@@ -1,0 +1,22 @@
+#seleccion=Eslovaquia
+#tier=0.55
+#globo=17.11,48.15
+#bandera=🇸🇰
+#confed=ucl,uel
+#liga=N1ké liga|Liga Eslovaca
+#copa=Copa de Eslovaquia|Copa Eslovaca
+#nombres=Peter,Martin,Marek,Jozef,Ján,Michal,Tomáš,Lukáš,Marián,Miroslav,Ivan,Róbert,Dušan,Patrik
+#apellidos=Horváth,Kováč,Varga,Tóth,Nagy,Baláž,Molnár,Szabó,Lukáč,Kováčik,Novák,Marek,Kráľ,Bartoš
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Slovan Bratislava;Eslovan Capital;#00a0e3;#ffffff;62;22500;1919;los Celestes;el estadio de la capital;El club más laureado del país.
+Spartak Trnava;Espartaco Trnava;#c8102e;#000000;55;18200;1923;los Rojinegros;el estadio de la ciudad de las iglesias;El club de la ciudad de las iglesias.
+DAC Dunajská Streda;Dac Danubio;#ffd100;#c8102e;56;12700;1904;los Amarillos;el estadio de la ciudad húngara del Danubio;El club de la minoría húngara.
+Žilina;Zilina Norte;#c8102e;#ffffff;54;10897;1908;los Rojos;el estadio de la ciudad del norte;El club del norte, campeón varias veces.
+Ružomberok;Ruzomberok Monte;#ffffff;#c8102e;51;4876;1906;los Blancos;el estadio de la ciudad de montaña;El club de la ciudad de montaña.
+Podbrezová;Podbrezova Acero;#c8102e;#000000;51;4000;1920;los del Acero;el estadio del pueblo del acero;Un club del pueblo del acero.
+Trenčín;Trencin Castillo;#ffffff;#c8102e;52;10000;1992;los Blancos;el estadio de la ciudad del castillo;El club de la ciudad del castillo.
+Košice;Kosice Este;#1b458f;#ffd100;52;12555;1952;los Azules;el estadio de la ciudad del este;El club de la ciudad más grande del este.
+Tatran Prešov;Tatran Presov;#c8102e;#000000;51;6500;1898;los Rojinegros;el estadio de la ciudad del este;El club de Prešov, de vuelta en primera.
+Skalica;Skalica Frontera;#c8102e;#ffffff;49;2600;1920;los Rojos;el estadio de la ciudad de la frontera;Un club pequeño de la frontera.
+Zemplín Michalovce;Zemplin Este;#c8102e;#1b458f;49;4400;1912;los Rojiazules;el estadio de la ciudad del este;Un club pequeño del este.
+Komárno;Komarno Danubio;#1b458f;#ffffff;48;4000;1904;los Azules;el estadio de la ciudad del Danubio;Un club pequeño del Danubio.

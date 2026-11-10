@@ -1,0 +1,82 @@
+# Lote A (POR, BEL, CRO, DEN, TUR, SCO, SUI, AUT, GRE): nombre|forma|patrón|emblema|letras[/color]|esc1|esc2|esc3
+Benfica|escudo|liso|aguila|SLB/#ffffff|#d50032|#ffffff|
+Porto|escudo|franjas|dragon|FCP/#ffffff|#0b3d91|#ffffff|
+Sporting CP|escudo|liso|leon|SCP/#ffffff|#00793c|#ffffff|
+Braga|escudo|liso||SCB/#ffffff|#d50032|#ffffff|
+Vitória Guimarães|escudo|liso||VSC/#111111|#ffffff|#111111|
+Famalicão|escudo|liso||FCF/#ffffff|#0b3d91|#ffffff|
+Gil Vicente|escudo|liso|gallo||#d50032|#0b3d91|
+Estoril|circulo|liso||GDE/#ffffff|#ffd100|#0b3d91|
+Rio Ave|escudo|liso||RAFC/#ffffff|#00793c|#ffffff|
+Casa Pia|escudo|liso||CPAC/#ffffff|#111111|#ffffff|
+Nacional Madeira|escudo|franjas||CDN/#ffffff|#111111|#ffffff|
+Santa Clara|escudo|liso||CDSC/#ffffff|#d50032|#ffffff|
+Anderlecht|circulo|liso||RSCA/#ffffff|#5b2d8e|#ffffff|
+Club Brugge|escudo|liso||CB/#ffffff|#0b3d91|#111111|
+Genk|escudo|liso||KRC/#ffffff|#0b3d91|#ffffff|
+Standard Lieja|circulo|liso||SL/#ffffff|#d50032|#ffffff|
+Gent|escudo|liso||KAA/#ffffff|#0b3d91|#ffffff|
+Union SG|escudo|liso||USG/#ffd100|#ffd100|#0b3d91|
+Antwerp|escudo|liso||RAFC/#ffffff|#d50032|#ffffff|
+Mechelen|escudo|liso||KVM/#ffd100|#d50032|#ffd100|
+Charleroi|circulo|liso||RCSC/#ffffff|#111111|#ffffff|
+Cercle Brugge|escudo|liso||CBK/#111111|#00793c|#111111|
+Dinamo Zagreb|escudo|liso||GNK/#ffffff|#0b3d91|#ffffff|
+Hajduk Split|escudo|tablero||HNK/#ffffff|#ffffff|#0b3d91|
+Rijeka|circulo|liso||HNK/#ffffff|#ffffff|#0b3d91|
+Osijek|escudo|liso||NK/#ffffff|#0b3d91|#ffffff|
+Lokomotiva|escudo|liso||NKL/#ffffff|#0b3d91|#ffffff|
+FC Copenhague|escudo|liso||FCK/#ffffff|#ffffff|#0b3d91|
+Midtjylland|escudo|liso|lobo||#d50032|#111111|
+Brøndby|escudo|liso||BIF/#0b3d91|#ffd100|#0b3d91|
+AGF|escudo|liso||AGF/#ffffff|#ffffff|#0b3d91|
+Nordsjælland|escudo|liso||FCN/#111111|#ffd100|#d50032|
+Randers|escudo|liso||RFC/#ffffff|#0b3d91|#ffffff|
+Silkeborg|escudo|liso||SIF/#ffffff|#d50032|#ffffff|
+Odense|escudo|liso||OB/#0b3d91|#ffffff|#0b3d91|
+Galatasaray|escudo|franjas|leon|GS/#ffd100|#a90432|#ffd100|
+Fenerbahçe|escudo|liso||FB/#ffd100|#002d62|#ffd100|
+Beşiktaş|circulo|liso|aguila|BJK/#ffffff|#111111|#ffffff|
+Trabzonspor|escudo|franjas||TS/#ffffff|#7b1c3a|#69b3e7|
+İstanbul Başakşehir|circulo|liso||IBFK/#ffffff|#f26522|#1c2c5b|
+Samsunspor|escudo|liso||SS/#ffffff|#c8102e|#ffffff|
+Konyaspor|escudo|liso||KS/#ffffff|#00843d|#ffffff|
+Kayserispor|escudo|liso||KYS/#c8102e|#ffd100|#c8102e|
+Antalyaspor|escudo|liso||AS/#ffffff|#c8102e|#ffffff|
+Göztepe|escudo|franjas||GOZ/#ffffff|#ffd100|#c8102e|
+Çaykur Rizespor|escudo|franjas||CR/#ffffff|#007a33|#0072ce|
+Celtic|circulo|trebol|||#00843d|#ffffff|
+Glasgow Rangers|circulo|liso|leon|FC/#ffffff|#1b458f|#ffffff|
+Heart of Midlothian|escudo|liso|||#800000|#ffffff|
+Aberdeen|escudo|liso||AFC/#ffffff|#e21a22|#ffffff|
+Hibernian|circulo|liso||HFC/#ffffff|#00843d|#ffffff|
+Dundee United|escudo|liso||DUFC/#000000|#f26522|#000000|
+Motherwell|escudo|liso||MFC/#8b1538|#ffb81c|#8b1538|
+Kilmarnock|escudo|franjas||KFC/#ffffff|#1b458f|#ffffff|
+St Mirren|escudo|franjas||SMFC/#ffffff|#000000|#ffffff|
+Dundee|escudo|liso||DFC/#ffffff|#1b458f|#ffffff|
+Basel|circulo|mitad||FCB/#ffffff|#c8102e|#1b458f|
+Young Boys|escudo|liso||BSC/#000000|#ffd100|#000000|
+Zürich|escudo|liso||FCZ/#ffffff|#ffffff|#1b458f|
+Servette|escudo|liso||SFC/#ffffff|#7b1c3a|#ffffff|
+Lugano|escudo|liso||FCL/#ffffff|#000000|#ffffff|
+Luzern|escudo|liso||FCL/#ffffff|#0072ce|#ffffff|
+Lausanne-Sport|escudo|liso||LS/#ffffff|#0072ce|#ffffff|
+St. Gallen|escudo|liso||FCSG/#ffffff|#00843d|#ffffff|
+Sion|escudo|liso||FCS/#ffffff|#c8102e|#ffffff|
+Grasshoppers|escudo|liso||GCZ/#ffffff|#ffffff|#0072ce|
+Red Bull Salzburg|escudo|liso|toro||#ffffff|#c8102e|
+Sturm Graz|escudo|liso||SK/#ffffff|#000000|#ffffff|
+LASK|escudo|liso||LASK/#ffffff|#000000|#ffffff|
+Rapid Wien|escudo|liso||SKR/#ffffff|#00843d|#ffffff|
+Austria Wien|escudo|liso||FAK/#ffffff|#6a1b9a|#ffffff|
+Wolfsberger AC|escudo|liso|lobo||#000000|#ffffff|
+Olympiacos|circulo|liso||OSFP/#ffffff|#c8102e|#ffffff|
+Panathinaikos|escudo|trebol|||#00843d|#ffffff|
+AEK Athens|escudo|liso|aguila||#ffd100|#000000|
+PAOK|escudo|liso|aguila|PAOK/#ffffff|#000000|#ffffff|
+Aris|circulo|liso||ARIS/#000000|#ffd100|#000000|
+OFI Crete|escudo|liso||OFI/#000000|#ffffff|#000000|
+Atromitos|escudo|liso||ATR/#ffffff|#0072ce|#ffffff|
+Asteras Tripolis|escudo|liso|estrella||#ffd100|#000000|
+Volos|escudo|liso||NFC/#ffffff|#0072ce|#ffffff|

@@ -32,6 +32,9 @@ static var desempate_directo := false
 var h2h: Dictionary = {}
 ## EDITABLES DESDE EL EDITOR DE COMPETICIONES (28-9-2026): cuántos bajan (y
 ## suben de la división de abajo) y cuánto vale una victoria.
+## Fase final (Egipto, Argentina, MLS): `FaseFinalLiga`, o null si se juega como siempre. `orden_final` manda sobre `tabla()` cuando está.
+var formato: FaseFinalLiga = null
+var orden_final: Array = []
 var plazas_descenso := 2
 var puntos_victoria := 3
 
@@ -47,7 +50,12 @@ const UNA_VUELTA_DESDE := 20
 
 func preparar() -> void:
 	_armar_tabla()
-	_armar_calendario()
+	orden_final = []
+	formato = FaseFinalLiga.para(self)
+	if formato != null:
+		calendario = formato.armar(self)
+	else:
+		_armar_calendario()
 	jornada_actual = 0
 
 func _armar_tabla() -> void:
@@ -60,11 +68,26 @@ func _armar_calendario() -> void:
 	calendario.clear()
 	if clubes.size() < 2:
 		return
-	var lista: Array[Club] = clubes.duplicate()
+	var ida := rondas(clubes)
+	for j in ida:
+		calendario.append(j)
+	## (10-11) Con MÁS DE 20 equipos (Argentina y la MLS, 30 clubes reales) se juega a UNA vuelta: a doble serían 58 fechas y la
+	## temporada de todos esperaría a esa liga. Así son 29, cerca de lo real (Argentina juega por zonas; la MLS, 34 partidos).
+	if clubes.size() > UNA_VUELTA_DESDE:
+		return
+	## Vuelta: los mismos cruces con los campos cambiados.
+	for j in ida:
+		var vuelta: Array = []
+		for par in j:
+			vuelta.append([par[1], par[0]])
+		calendario.append(vuelta)
+
+## Una vuelta del método del círculo: una lista de jornadas, cada una con sus pares [local, visita].
+static func rondas(equipos: Array) -> Array:
+	var lista: Array = equipos.duplicate()
 	## Con un numero impar de equipos se anade un hueco: quien le toque ese
 	## hueco descansa esa jornada. Sin esto, el metodo del circulo no cierra.
-	var descansa := lista.size() % 2 == 1
-	if descansa:
+	if lista.size() % 2 == 1:
 		lista.append(null)
 	var n := lista.size()
 	var ida: Array = []
@@ -85,18 +108,7 @@ func _armar_calendario() -> void:
 		## Rotacion: el primero se queda fijo, el resto gira una posicion.
 		var ultimo: Club = lista.pop_back()
 		lista.insert(1, ultimo)
-	for j in ida:
-		calendario.append(j)
-	## (10-11) Con MÁS DE 20 equipos (Argentina y la MLS, 30 clubes reales) se juega a UNA vuelta: a doble serían 58 fechas y la
-	## temporada de todos esperaría a esa liga. Así son 29, cerca de lo real (Argentina juega por zonas; la MLS, 34 partidos).
-	if clubes.size() > UNA_VUELTA_DESDE:
-		return
-	## Vuelta: los mismos cruces con los campos cambiados.
-	for j in ida:
-		var vuelta: Array = []
-		for par in j:
-			vuelta.append([par[1], par[0]])
-		calendario.append(vuelta)
+	return ida
 
 func jornadas() -> int:
 	return calendario.size()
@@ -127,6 +139,7 @@ func jugar_jornada(ya_jugado: Partido = null) -> Array:
 	if not quedan_jornadas():
 		return []
 	var resultados: Array = []
+	var directa := formato != null and formato.eliminatoria(jornada_actual)   ## eliminatoria: no toca la tabla
 	for par in calendario[jornada_actual]:
 		var gl := 0
 		var gv := 0
@@ -139,13 +152,16 @@ func jugar_jornada(ya_jugado: Partido = null) -> Array:
 			var r := PartidoRapido.simular(p)   ## (10-11, paso a C++) igual que `p.simular()`; los 90 minutos en C++ si la extensión está y el cruce lo permite
 			gl = r["local"]
 			gv = r["visita"]
-		_anotar_resultado(par[0], par[1], gl, gv)
+		if not directa:
+			_anotar_resultado(par[0], par[1], gl, gv)
 		resultados.append({"local": par[0], "visita": par[1], "gl": gl, "gv": gv})
 	## Se guarda la jornada entera, no solo se emite. Hasta ahora el resultado
 	## viajaba en la señal y se perdía: la tabla sabía los puntos pero nadie
 	## podía volver a mirar CÓMO se llegó a ellos. La pantalla de competición
 	## -"últimos resultados"- necesita justo eso.
 	historial.append(resultados.duplicate())
+	if formato != null:
+		formato.tras_jornada(self, jornada_actual, resultados)
 	jornada_actual += 1
 	jornada_terminada.emit(jornada_actual, resultados)
 	if not quedan_jornadas():
@@ -183,6 +199,8 @@ func tabla() -> Array:
 			"sancion": int(d.get("sancion", 0)),
 		})
 	filas.sort_custom(func(x: Dictionary, y: Dictionary) -> bool:
+		if not orden_final.is_empty():
+			return orden_final.find((x["club"] as Club).id) < orden_final.find((y["club"] as Club).id)
 		if x["pts"] != y["pts"]: return x["pts"] > y["pts"]
 		if desempate_directo:
 			var hx := int(h2h.get("%s|%s" % [(x["club"] as Club).id, (y["club"] as Club).id], 0))

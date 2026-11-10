@@ -30,6 +30,7 @@ func _pintar_dispositivo() -> void:
 	fila.add_child(b)
 	_disp_zoom()
 	_disp_tv()
+	_disp_cabecera()
 	_disp_ropa()
 	_disp_caras()
 	_disp_controles()
