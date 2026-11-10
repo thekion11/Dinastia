@@ -44,7 +44,7 @@ func _ready() -> void:
 		PantallaMenu.compacta_pref = false
 	Idiomas.idioma = OS.get_environment("IDIOMA") if OS.get_environment("IDIOMA") != "" else "de"
 	Idiomas._asegurar(Idiomas.idioma)
-	get_tree().root.content_scale_factor = EscalaMovil.ZOOM_MOVIL
+	EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	EscalaMovil.vigilar(get_tree())
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
@@ -55,7 +55,7 @@ func _ready() -> void:
 	_p.call("_refrescar")
 	PantallaMenu.compacta_pref = OS.get_environment("CABECERA") != "grande"   ## las preferencias guardadas también lo pisan
 	_p.set("_zoom_interfaz", EscalaMovil.ZOOM_MOVIL)
-	get_tree().root.content_scale_factor = EscalaMovil.ZOOM_MOVIL
+	EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	_elegir_clubes()
 	var solo := OS.get_environment("SOLO")
 	for i in PANTALLAS.size():

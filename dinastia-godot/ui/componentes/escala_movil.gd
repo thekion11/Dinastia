@@ -7,6 +7,14 @@ extends RefCounted
 const ZOOM_MOVIL := 1.5
 const ALTO_CAMPO_MOVIL := 56
 
+## VERTICAL (10-11, orden 36, sesión 8): en un teléfono de pie el lienzo es de 1280/zoom de ANCHO, o sea 853 px con el zoom 1,5 del
+## horizontal, y la letra de 11-14 px medía 1,1 mm. El diseño propio del vertical parte de un lienzo de `ANCHO_VERTICAL` px de ancho (el
+## alto corto del horizontal, 480, con algo de aire): ahí la letra normal (14 px) mide ≈1,8 mm y un toque de 7 mm son ≈55 px. El «Tamaño de
+## la interfaz» de Ajustes sigue siendo relativo al del horizontal (se multiplica por `RAZON_VERTICAL`).
+const ANCHO_VERTICAL := 540.0
+const RAZON_VERTICAL := (1280.0 / ANCHO_VERTICAL) / ZOOM_MOVIL
+const ALTO_TOQUE_VERTICAL := 56.0   ## tope de un toque de 7 mm en vertical (a 8 px/mm del lienzo)
+
 static var forzar := false   ## las pruebas simulan un móvil en PC (`auditoria_gestion_movil`)
 
 ## Táctil: un móvil, o una pantalla de la que se conocen los puntos por pulgada (las pruebas que simulan un teléfono). Lo usan los
@@ -16,6 +24,26 @@ static func es_tactil() -> bool:
 
 static func es_movil() -> bool:
 	return forzar or OS.has_feature("android") or OS.has_feature("ios") or (OS.has_feature("web") and DisplayServer.is_touchscreen_available())
+
+## ¿Un teléfono de pie? (la ventana, o la que simula una prueba, es más alta que ancha)
+static func es_vertical() -> bool:
+	var v := PantallaMovil.ventana()
+	return es_tactil() and v.y > v.x
+
+## El factor de escala que de verdad se pone en la raíz: el zoom de Ajustes (relativo al del horizontal) y, de pie, el de lienzo estrecho.
+static func efectivo(zoom_ajustes: float) -> float:
+	return zoom_ajustes * (RAZON_VERTICAL if es_vertical() and es_movil() else 1.0)
+
+## Pone el factor en la raíz y, si el teléfono se gira, lo vuelve a poner.
+static func poner(arbol: SceneTree, zoom_ajustes: float) -> void:
+	arbol.root.content_scale_factor = efectivo(zoom_ajustes)
+	arbol.root.set_meta("zoom_ajustes", zoom_ajustes)
+	if not arbol.root.has_meta("giro_vigilado"):
+		arbol.root.set_meta("giro_vigilado", true)
+		arbol.root.size_changed.connect(func() -> void:
+			var z := float(arbol.root.get_meta("zoom_ajustes", 1.0))
+			if not is_equal_approx(arbol.root.content_scale_factor, efectivo(z)):
+				arbol.root.content_scale_factor = efectivo(z))
 
 ## El zoom que toca: el guardado en las preferencias, o el del móvil si no hay y es un móvil, o 1.
 static func zoom(guardado: Variant) -> float:
@@ -29,7 +57,7 @@ static func aplicar(arbol: SceneTree, prefs_ruta: String) -> void:
 	var guardado: Variant = null
 	if cf.load(prefs_ruta) == OK and cf.has_section_key("pantalla", "zoom"):
 		guardado = cf.get_value("pantalla", "zoom")
-	arbol.root.content_scale_factor = zoom(guardado)
+	poner(arbol, zoom(guardado))
 	vigilar(arbol)   ## desde el arranque: también las pantallas de entrada (idioma, país, club, personaje) con botones de 7 mm
 
 ## Alto mínimo de un cuadro de texto: el normal en escritorio, mayor en el móvil.
@@ -44,7 +72,7 @@ const MAX_TOQUE := 52.0
 ## Alto mínimo de un toque en píxeles del lienzo (0 si no es un móvil o no se sabe).
 static func alto_toque(nodo: Node) -> float:
 	var ppm := PantallaMovil.px_por_mm(nodo)
-	return 0.0 if ppm <= 0.0 else minf(MIN_MM_TOQUE * ppm, MAX_TOQUE)
+	return 0.0 if ppm <= 0.0 else minf(MIN_MM_TOQUE * ppm, ALTO_TOQUE_VERTICAL if es_vertical() else MAX_TOQUE)
 
 ## Estira los márgenes de arriba y abajo de los botones del tema hasta que midan `alto` con la letra por defecto.
 static func ampliar_toque(t: Theme, alto: float) -> void:
@@ -103,7 +131,8 @@ static func letra_minima(c: Control) -> int:
 		return 0
 	## Nunca por encima de la letra normal (`Tema.TAM_CUERPO`): si el jugador bajó el «Tamaño de la interfaz», manda su elección y solo se
 	## igualan las letras pequeñas a la normal (sin tope, a 1280×720 y 400 ppp todo pasaba a 28 px y se salía de las ventanas).
-	return mini(ceili(MIN_MM_LETRA * ppm / maxf(c.get_global_transform().get_scale().y, 0.01) - 0.05), Tema.TAM_CUERPO)
+	var cap := Tema.TAM_CUERPO + (2 if es_vertical() else 0)   ## de pie la letra normal ya mide 1,8 mm: el tope deja subir un par de px
+	return mini(ceili(MIN_MM_LETRA * ppm / maxf(c.get_global_transform().get_scale().y, 0.01) - 0.05), cap)
 
 static func _letra(c: Control) -> void:
 	if not is_instance_valid(c) or not c.is_inside_tree():
