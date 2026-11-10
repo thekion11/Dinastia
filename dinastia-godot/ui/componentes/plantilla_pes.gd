@@ -403,10 +403,11 @@ func _pintar_info() -> void:
 		etq.append(Idiomas.t(String(Principal.NOMBRES_ATRIBUTOS.get(k, k))).left(5))
 		vals.append(float(_a.atributos.get(k, 0)))
 	radar.poner(etq, vals, Tema.ACENTO)
-	_info.add_child(radar)
+	_info.add_child(PlantillaHabilidades.junto_al_mapa(radar, _a))   ## (10-11) radar + mapa de calor, como el PES
 	for k: String in claves_de(_a):
 		_info.add_child(_fila_atributo(k))
 	PlantillaEstilos.pintar(_p.mundo, _club, _a, _info, _pintar)   ## estilo de juego con estrellas (idea del PES)
+	PlantillaHabilidades.pintar(_a, _info)   ## (10-11) habilidades individuales con estrellas
 	_info.add_child(_etiqueta("%s %d · %s %d%% · %s %d%% · %s %d%%" % [Idiomas.t("Edad"), _a.edad, Idiomas.t("Forma"), _a.forma,
 		Idiomas.t("Moral"), _a.moral, Idiomas.t("Físico"), _a.fisico], 12, Tema.SUAVE))
 	if _cambiando and _aviso_texto == "":
