@@ -1213,52 +1213,6 @@
     "asia"
    ],
    "BANDERA": "🇦🇪"
-  },
-  "VEN": {
-   "PAIS_SELECCION": "Venezuela",
-   "TIER_PAIS": 0.2,
-   "GLOBO_PAIS": [
-    -66.9,
-    10.48
-   ],
-   "POOLS_EU": [
-    [
-     "Carlos",
-     "José",
-     "Luis",
-     "Miguel",
-     "Juan",
-     "Pedro",
-     "Andrés",
-     "Jesús",
-     "Ricardo",
-     "Gabriel",
-     "Daniel",
-     "Alejandro",
-     "Freddy",
-     "Rafael"
-    ],
-    [
-     "González",
-     "Rodríguez",
-     "Pérez",
-     "Hernández",
-     "García",
-     "Martínez",
-     "Ramírez",
-     "Torres",
-     "Díaz",
-     "Rojas",
-     "Mendoza",
-     "Silva",
-     "Castillo",
-     "Sánchez"
-    ]
-   ],
-   "CONFED": [
-    "lib"
-   ],
-   "BANDERA": "🇻🇪"
   }
  },
  "tablas": {
