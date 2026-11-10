@@ -338,3 +338,9 @@ toques largos de ~7 m (≈ 1.300-1.700 por partido). Bandera `LS_TOQUE=0` = sin 
 Sin efecto en la llegada a la zona de tiro. Nota: el motor de siempre remata DE MÁS (44,7 por partido en 2 × 240 s; en el fútbol
 real ≈ 24) y League DE MENOS (≈ 8). No hay cifras públicas de remates del bot de GameplayFootball / Google Research Football para
 comparar (habría que medirlo con su paquete `gfootball`).
+
+### Experimento para la decisión del dueño (no es el original): zona de tiro de 24 m
+`LS_ZONA_TIRO=24` (por defecto 16, el del original) agranda el radio de la zona de tiro. 6 partidos: remates 8,3 → **10,3**,
+goles 2,17 → 2,33, cambios de posesión 24,3 → 23,5. Calibrar SOLO la zona no basta: desde 24-30 m las probabilidades de tiro son
+bajas y el pase sigue delante en la cola. Si el dueño elige calibrar, habría que mover a la vez la zona, la prioridad del tiro y
+la profundidad del bloque defensivo.
