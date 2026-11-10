@@ -93,7 +93,7 @@ MotorLeague (D motor_league.gd)  ── hereda de ──>  MotorJugable (reglas,
 |---|---|---|---|
 | 1 | Estudio y plan (este documento) | — | HECHO (10-11) |
 | 2 | **Prototipo** detrás de la bandera: decisión con balón (Eliza), colocación (TeamAI), balón suelto (ballphysics a 10 ms), estado de equipo (posesión que se desvanece, trampa del fuera de juego, tácticas vivas) | `pruebas/comparar_motor_league.tscn` (partidos completos, varios países, los dos motores, CPU y determinismo); banco `_probar_league_nucleo` (fórmulas contra valores del original) | HECHO (10-11), cifras abajo |
-| 3 | IA SIN balón de League: estrategias por puesto (`strategies/offtheball/default_*.cpp`, `goalie_default.cpp`), presión de equipo y de zona (`ApplyTeamPressure`, `ApplyZonePressure`), marcaje al hombre (`CalculateManMarking`), carreras al espacio (`ApplyAttackingRun`); ventaja del árbitro y tarjetas pendientes (R1, ya parcial en `MotorVentaja`) | La misma comparación + `auditoria_arbitro_limite` | pendiente |
+| 3 | IA SIN balón de League: estrategias por puesto (`strategies/offtheball/default_*.cpp`), apoyo por campo de fuerzas, componente defensiva, presión de equipo y de zona (`ApplyTeamPressure`, `ApplyZonePressure`), marcaje al hombre (`CalculateManMarking`), carreras al espacio (`ApplyAttackingRun`), apoyo adelantado, caza del portador | La misma comparación + banco | HECHO (10-11), cifras en §7. Quedan para la 3b: el portero de League (`goalie_default.cpp`; hoy el nuestro), la ventaja del árbitro y las tarjetas pendientes (R1, ya parcial en `MotorVentaja`) |
 | 4 | **Locomoción guiada por animaciones** (L humanoid + animcollection): elegir la animación de `league.res` que encaja con la orden y tocar el balón en su cuadro de contacto; velocidades cuantizadas (parado 0, conducción 3,5, trote 5, sprint 8 m/s) y giros con inercia | Capturas con la CÁMARA REAL (`herramientas/captura.sh`), vídeo del partido, `mem_*` | pendiente (lo más grande: ~7.600 líneas de origen) |
 | 5 | Rendimiento: medir en `hw_modesto.sh` y en el teléfono del dueño; si la CPU de la IA pesa, pasar a C++ (`nativo/src`) las 3 funciones calientes con su gemelo GDScript | `probar_nativo.tscn` «FIN. 0 fallos», `medir_motor_cpu` | pendiente |
 | 6 | Calibrar contra el fútbol real y el motor de hoy (remates 20-26, goles 2,5-2,9, acierto de pase 80-85 %, posesión 50 ± 8) y proponer al dueño el cambio por defecto | `comparar_motor_league` con 16+ partidos | pendiente |
@@ -152,3 +152,50 @@ el MISMO motor varían de 385 a 624 entre dos tomas). En CPU por fotograma la di
    queda: la situación táctica de los 11 y las probabilidades de 30 pases cada 0,25 s. Candidato a C++ en la fase 5.
 5. **Ya teníamos ideas sueltas de League** (F1-F8 de la sesión PES 6: imagen mental, roles húngaros, colocación con retardo…,
    `terceros_ia_motor_2026-11-01.md`). La variante NO las usa en lo que sustituye: allí manda el original, traducido línea a línea.
+
+---
+
+## 7. Fase 3 (IA sin balón): cifras (10-11-2026)
+
+Archivos: `visor/league_sin_balon.gd` (funciones puras: apoyo, componente defensiva, posición de defensa, marcaje, pereza),
+`visor/league_reglas.gd` (+ presión de zona, carreras, red de apoyo), `visor/motor_league.gd` (capa 2/2: estado sin balón y
+estrategias; la capa 1/2 es `motor_league_p1.gd`). Bandera propia: `LS_FASE3=0` apaga solo la fase 3 (queda la fase 2).
+Banco `_probar_league_nucleo` ampliado (8 comprobaciones más). Banco completo: «FIN. 0 fallos».
+
+Cómo funciona (igual que el original): cada jugador sin balón usa la estrategia de su puesto (defensa: DFC/LD/LI; ataque: DC;
+medio: el resto) y mezcla su posición de formación estática y la dinámica (roles intercambiados; el reparto lo hace nuestro
+`MotorRoles`, que ya era el húngaro de League) según lo lejos que está la acción; con la posesión suma el APOYO por campo de
+fuerzas (su base adelantada por carril, la carrera al espacio, repulsión detrás de los 3 rivales cercanos y de los compañeros,
+huir de la trayectoria del balón previsto, red alrededor del portador, sin pasar la línea del fuera de juego rival a 240 ms);
+sin ella, la COMPONENTE DEFENSIVA hacia el punto de tiro del rival que marca al hombre (los 3 más peligrosos, cada 0,4 s) y la
+TRAMPA del fuera de juego; la velocidad sale de la distancia × 2,6 con la PEREZA de su rol, su cansancio y lo que ya corrió.
+Encima: presión de ZONA al perder el balón (un segundo presionador 0,7-2,3 s según la palanca), CARRERAS al espacio cada 0,5 s y el
+APOYO ADELANTADO cada 1,5 s; la CAZA del portador por los 3 más cercanos que no marcan (posición de defensa en la línea del rival
+hacia el arco, solo si hace falta moverse). Se recalcula cada 0,1 s por jugador (el original, cada 10 ms).
+
+**Desvío documentado**: el jugador del equipo que defiende que antes llega al balón SIEMPRE lo disputa dentro del radio de caza
+(en el original, solo si no marca a nadie; allí además «interfiere» en cuanto el balón entra en el alcance de una animación de
+entrada, `_InterfereCommand`, que llega con la fase 4). Sin este desvío los defensores rodeaban al portador a 3-6 m y nadie entraba
+(sonda `pruebas/_sonda/sonda_league_f3.tscn`).
+
+### Partidos completos (los mismos 6 cruces de §6; «FIN. 0 fallos»; determinismo IGUAL)
+| Media por partido | Motor de siempre | League fase 2 | League fase 2 + 3 |
+|---|---|---|---|
+| CPU por paso (µs, sin pantalla) | 1.569 | 1.920 | **1.279 (−18 % frente al de siempre)** |
+| Goles | 4,67 | 1,33 | 1,67 |
+| Remates | 39,7 | 7,3 | 11,7 |
+| Pases / acierto | 129,7 / 80,7 % | 106,5 / 76,1 % | 69,8 / 82,3 % |
+| Posesión del local (media) | 50,5 % | 50,4 % | 60,1 % |
+| Posesión del local por partido | 51 · 53 · 54 · 36 · 52 · 57 | 50 · 45 · 62 · 48 · 41 · 57 | **81 · 78 · 82 · 16 · 26 · 76** |
+
+### Hallazgos de la fase 3
+1. **La CPU baja** por debajo del motor de siempre: la IA sin balón de League sustituye a la nuestra (más cara: jugadas prehechas,
+   regiones, anclas, imagen mental por jugador y fotograma) y se recalcula cada 0,1 s.
+2. **Un equipo se queda el balón** (~80 % en 5 de 6 partidos; no depende de jugar de local: Olívico-Trafford y Selhurst-Tevere lo
+   dominan los visitantes). Con 2 × 120 s el de siempre también daba 73/27 en un partido suelto, pero con 6 partidos completos la
+   diferencia es clara. Causa probable: la defensa de League es POSICIONAL (bloque, marcaje, trampa; un solo presionador fuera de la
+   presión de zona) y en el original los robos salen sobre todo de su «interferir» por alcance de animación y de los errores del
+   primer toque del muñeco (fase 4); con nuestras entradas a 1,25 m el que lleva el balón casi no lo pierde y la posesión que se
+   desvanece refuerza al que ya ataca. A revisar en la fase 4 o calibrar en la 6 (decisión del dueño pendiente).
+3. Remata más que en la fase 2 (11,7) porque los atacantes se ofrecen y llegan, pero sigue lejos del de siempre (39,7) por la
+   prioridad del pase sobre el tiro (§6, hallazgo 2).
