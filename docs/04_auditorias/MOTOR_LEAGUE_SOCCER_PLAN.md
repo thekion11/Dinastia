@@ -460,3 +460,30 @@ la CPU al 0 %) correría igual el GDScript, así que el C++ no ayuda al móvil.
 **Propuesta: NO hacer el gemelo C++ ahora.** En su lugar, una mejora en GDScript que sí sirve en todas las plataformas: no revisar
 ni animar transiciones de los jugadores fuera de cámara o lejos de ella (solo visual; se puede medir con las mismas huellas). Si
 aun así hiciera falta, pasar solo `elegir` y la mezcla de las intermedias (funciones puras, copia exacta y `probar_nativo`).
+
+### Hecho tras la propuesta (10-11, aprobado por la líder): recorte fuera de cámara + gemelo C++ de lo puro
+**1. Recorte fuera de cámara** (`LS_FUERA_CAMARA=0` lo apaga; encendido por defecto):
+- quien está fuera del encuadre de la cámara activa o a más de 70 m no empieza clips nuevos (los que lleva acaban normal) y, si iba
+  con el cuerpo girado, se endereza;
+- con el cuerpo girado, la lógica del ciclo va a la cadencia de 0,1 s (en cada fotograma solo la velocidad del clip);
+- la recolocación acaba a 0,01 rad;
+- cronómetro propio barato: `LeagueLocomocion.us_total` / `pasos`.
+Medido con `LS_CAM=1` en `comparar_motor_league` (cámara de televisión que sigue al balón), 3 partidos, µs/paso de la capa:
+| | partido 1 | partido 2 | partido 3 | huellas |
+|---|---|---|---|---|
+| sin recorte | 189 | 147 | 127 | iguales |
+| con recorte | 154 | 123 | 120 | iguales |
+Transiciones: ~2.800 → ~1.500 por partido (las que no se ven).
+**2. Gemelo C++ de lo puro** (`nativo/src/league_nativo.cpp`):
+- `league_elegir` = `LeagueMovimiento.elegir_gd`;
+- `league_legal` = `LeagueAuto.legal_gd`;
+- `league_mezclar` = `LeagueAuto.mezclar_gd`.
+Son copia literal; el GDScript se queda de respaldo para Android sin binario, Web y `DINASTIA_SIN_NATIVO=1`.
+`pruebas/probar_nativo.tscn` (`ProbarNativoLeague`): iguales en 4.000 elecciones al azar, en toda la tabla de legalidad y en 40
+intermedias clave a clave. Velocidad: elegir 11-21 → 4-6 µs; intermedia 173-193 → 105-109 µs.
+Binarios recompilados para Linux y Windows. Huellas IGUALES con y sin la extensión. µs/paso de la capa (con recorte): sin
+extensión 170 / 124 / 128, con ella 146 / 120 / 123.
+**Conclusión:** en régimen la capa queda en ~120 µs/paso (antes ~150). No llega a ≤ 110: lo que queda (~110 µs) es acceso a los
+diccionarios de cada jugador (Variant) y llamadas a AnimationPlayer y Node por fotograma, y eso no se gana con C++ (seguiría
+pasando por Variant). Bajarlo más pediría cambiar la estructura de datos del motor (jugadores como objetos con campos tipados en
+vez de diccionarios), que es una decisión de todo el motor, no de esta capa.
