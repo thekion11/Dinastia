@@ -302,6 +302,17 @@ func _probar_league_nucleo() -> void:
 		"sit": LeagueNucleo.situacion(Vector2(-40, 0), Vector2.ZERO, 1.0, [])}, [], [], Vector2.ZERO, 1.0, RandomNumberGenerator.new())
 	_comprobar(String(dec["accion"]) == "tiro", "solo y a 12 m del arco rival, el delantero tira (%s)" % dec["accion"])
 	_comprobar(is_equal_approx(LeagueNucleo.trampa_offside(-49.0, -1.0, -40.0), -40.0) and absf(LeagueNucleo.trampa_offside(-39.0, -1.0, -40.0) - -38.5) < 0.01 and LeagueNucleo.trampa_offside(-20.0, -1.0, -40.0) == -20.0, "la trampa del fuera de juego sube a los de atrás hasta la línea y comprime los 2 m de delante")
+	## Fase 3 (IA sin balón): fórmulas de las estrategias por puesto contra el original.
+	_comprobar(LeagueSinBalon.grupo("DFC") == "def" and LeagueSinBalon.grupo("MC") == "med" and LeagueSinBalon.grupo("DC") == "ata", "estrategia por puesto (defensa, medio, ataque)")
+	_comprobar(LeagueSinBalon.sesgo_estatico("def", 5.0) == 0.0 and LeagueSinBalon.sesgo_estatico("def", 40.0) > 0.95, "con la acción cerca se intercambian puestos; lejos, cada uno a su casilla")
+	_comprobar(LeagueSinBalon.sesgo_ataque("ata", 0.5, 1.0) == 0.0 and LeagueSinBalon.sesgo_ataque("ata", 1.5, 1.0) == 1.0, "el apoyo ofensivo crece con la posesión que se desvanece")
+	var dp := LeagueSinBalon.posicion_defensa(Vector2(-20, 0), Vector2.ZERO, Vector2(-30, 0), -1.0)
+	_comprobar(dp.x < -20.0 and dp.x > -30.0 and absf(dp.y) < 0.01, "el defensor intercepta al rival en su línea hacia el arco (%.1f, %.1f)" % [dp.x, dp.y])
+	_comprobar(LeagueSinBalon.necesita_defender(-1.0, Vector2(-30, 0), Vector2(-30, 5)) and not LeagueSinBalon.necesita_defender(-1.0, Vector2(-30, 0), Vector2(-20, 1)), "solo se mueve si el rival le gana el lado (NeedDefendingMovement)")
+	var mc := LeagueSinBalon.marcajes([["a", Vector2(-40, 0), Vector2.ZERO, false], ["b", Vector2(-10, 20), Vector2.ZERO, false], ["g", Vector2(-50, 0), Vector2.ZERO, true]], [["x", Vector2(-38, 1), Vector2.ZERO, false, false]], -1.0, Vector2.ZERO)
+	_comprobar(mc.get("a", "") == "x" and not mc.has("g"), "marca al hombre el más cercano y bien colocado, nunca el portero")
+	_comprobar(LeagueSinBalon.velocidad_perezosa(8.0, 1.0, 5.0, 0.5, 0.5, 0.0, 0.5) == 8.0 and LeagueSinBalon.velocidad_perezosa(8.0, 1.0, 60.0, 0.5, 0.5, 0.0, 0.5) < 8.0, "pereza: cerca de la acción corre a tope; lejos, afloja")
+	_comprobar(LeagueReglas.empezar_presion_zona(1.0, 0.2, 8.0) and not LeagueReglas.empezar_presion_zona(0.0, 1.0, 1.0), "presión de zona al perder el balón según la palanca")
 	## La variante juega 20 s de partido con dos clubes de países distintos y la bandera no cambia el motor de siempre.
 	var m := Mundo.new()
 	m.generar(["ARG", "ESP"], 99)

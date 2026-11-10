@@ -1,5 +1,5 @@
 class_name MotorLeague
-extends MotorJugable
+extends "res://visor/motor_league_p1.gd"
 ## EL MOTOR DE LEAGUE-SOCCER COMO BASE DEL PARTIDO (10-11-2026, orden del dueño; plan, fases y cifras en
 ## `docs/04_auditorias/MOTOR_LEAGUE_SOCCER_PLAN.md`). PROTOTIPO detrás de una bandera: `MOTOR_LEAGUE=1` (o
 ## `MotorLeague.activo = true`); apagada, el partido es exactamente el de siempre (`MotorJugable`).
@@ -21,210 +21,276 @@ static var activo := OS.get_environment("MOTOR_LEAGUE") == "1"
 static func crear() -> MotorJugable:
 	return MotorLeague.new() if activo else MotorJugable.new()
 
-const REACCION := 0.25        ## s entre decisiones del portador (L reacción del controlador, 100-300 ms)
-const CONTROL := 0.3          ## s de control antes de poder soltarla (L: el muñeco necesita el toque de control)
-const PASO_BALON := 0.01      ## L Ball: 10 ms
 
-var equipos: Array = []       ## [LeagueEquipo local, LeagueEquipo visita]
-var cfg_balon: Dictionary = LeagueNucleo.config_balon()
-var cuenta := {"pase": 0, "panico": 0, "tiro": 0, "conducir": 0}
-var _posee_id := ""
-var _posee_desde := 0.0
-var _resto_balon := 0.0
-var _decision_league := 0.0
-var _lado_medio := 0.0
+# ================================================================== FASE 3: IA SIN BALÓN (10-11)
+## Cada jugador sin balón sigue la estrategia de su puesto (L default_def / default_mid / default_off): mezcla de su posición
+## de formación estática y la dinámica (roles intercambiados, `MotorRoles`) según lo lejos que está la acción; apoyo por campo
+## de fuerzas cuando su equipo tiene la posesión; componente defensiva sobre el rival que marca al hombre; trampa del fuera
+## de juego; velocidad «perezosa». Encima, la CAZA del portador (los 3 más cercanos que no marcan a nadie), la PRESIÓN DE ZONA
+## al perder el balón (un segundo presionador 0,7-2,3 s), las CARRERAS al espacio y el APOYO ADELANTADO del original.
+## Se recalcula cada `CADENCIA` s por jugador (escalonado); entre medias sigue el último destino.
 
-static func ls(v: Vector3) -> Vector2:
-	return Vector2(v.z, v.x)
+const CADENCIA := 0.1
+static var fase3 := OS.get_environment("LS_FASE3") != "0"   ## LS_FASE3=0: sin la IA sin balón de League (solo la fase 2)
+const DIFICULTAD := 0.8            ## L `_default_Difficulty` (la de la CPU se traducirá en la fase 6)
+const PRED_MS := [200, 250, 350, 500, 650, 700]
 
-static func mundo(v: Vector2, y := 0.0) -> Vector3:
-	return Vector3(v.y, y, v.x)
-
-static func lado_de(local: bool) -> float:
-	return -dir_ataque(local)
-
-func preparar(lista: Array, ball: Node3D, jugador_usuario_id: String, semilla: int = 1) -> void:
-	super(lista, ball, jugador_usuario_id, semilla)
-	equipos = [LeagueEquipo.new(lado_de(true)), LeagueEquipo.new(lado_de(false))]
-	_formas()
-
-## La formación en el marco de League (x −1 atrás .. 1 delante, y −1..1 a lo ancho), sacada de la posición base de cada uno.
-func _formas() -> void:
-	for local: bool in [true, false]:
-		var d := dir_ataque(local)
-		var zmin := INF
-		var zmax := -INF
-		for p: Dictionary in jugadores:
-			if bool(p["es_local"]) == local and not bool(p["por"]):
-				var z := (p["base_pos"] as Vector3).z * d
-				zmin = minf(zmin, z)
-				zmax = maxf(zmax, z)
-		for p: Dictionary in jugadores:
-			if bool(p["es_local"]) != local:
-				continue
-			var b: Vector3 = p["base_pos"]
-			var fx := -1.0 if bool(p["por"]) else lerpf(-0.75, 0.9, (b.z * d - zmin) / maxf(zmax - zmin, 1.0))
-			p["ls_forma"] = Vector2(fx, clampf(b.x / 28.0, -1.0, 1.0) * -lado_de(local))
-
-func paso(delta: float) -> void:
-	if delta <= 0.1 and estado == "juego" and not equipos.is_empty():
-		_estado_league(delta)
-	super(delta)
-
-func _ms_al_balon(local: bool) -> float:
-	var mejor := INF
-	var b := ls(balon.position)
-	for p: Dictionary in jugadores:
-		if bool(p["es_local"]) == local:
-			mejor = minf(mejor, (ls(pos(p)) - b).length() / 7.0 * 1000.0)
-	return mejor if mejor < INF else 5000.0
+var _ls_marca: Array = [{}, {}]       ## por equipo: id propio → id rival marcado al hombre
+var _ls_t_marca: Array = [0.0, 0.2]
+var _ls_presiona: Array = [{}, {}]    ## L teamPressurePlayer
+var _ls_presion_hasta: Array = [0.0, 0.0]
+var _ls_zona_hasta: Array = [0.0, 0.0]
+var _ls_zona_refresco: Array = [0.0, 0.0]
+var _ls_tenia: Array = [false, false]
+var _ls_corredor: Array = [{}, {}]    ## L attackingRunPlayer
+var _ls_corre_hasta: Array = [0.0, 0.0]
+var _ls_t_carrera: Array = [0.0, 0.0]
+var _ls_adelantado: Array = [{}, {}]  ## L forwardSupportPlayer
+var _ls_t_adelantado: Array = [0.0, 0.0]
+var _ls_linea_rival: Array = [0.0, 0.0]   ## línea del fuera de juego del rival (240 ms) que no hay que pasar
+var _ls_pred: Dictionary = {}         ## ms → posición prevista del balón (marco League)
+var _ls_designado: Dictionary = {}    ## L GetDesignatedPossessionPlayer
+var _ls_por_id: Dictionary = {}
+var _ls_desig_eq: Array = [{}, {}]  ## L Team::GetDesignatedTeamPossessionPlayer: el de cada equipo que antes llega al balón
 
 func _estado_league(delta: float) -> void:
+	super(delta)
+	_estado_sin_balon(delta)
+
+func _equipo_con_balon() -> int:
 	if not poseedor.is_empty():
-		if String(poseedor["id"]) != _posee_id:
-			_posee_id = String(poseedor["id"])
-			_posee_desde = t
-	else:
-		_posee_id = ""
-	var ml := _ms_al_balon(true)
-	var mv := _ms_al_balon(false)
-	var e0: LeagueEquipo = equipos[0]
-	var e1: LeagueEquipo = equipos[1]
-	e0.actualizar_posesion(ml, mv, delta)
-	e1.actualizar_posesion(mv, ml, delta)
-	## L Match::Process: el «lado de la posesión» es la suma de (posesión desvanecida − 0,5) · lado de cada equipo.
-	var lado_pos := (e0.posesion_desvanecida - 0.5) * e0.lado + (e1.posesion_desvanecida - 0.5) * e1.lado
-	LeagueEquipo.registrar(e0, ls(balon.position), lado_pos, delta)
-	e0.acumular()
-	_lado_medio = LeagueEquipo.media_f(e0.lado_hist, 6000.0)
-	var tot: float = float(posesion[0]) + float(posesion[1])
+		return 0 if bool(poseedor["es_local"]) else 1
+	if not ultimo_toque.is_empty():
+		return 0 if bool(ultimo_toque["es_local"]) else 1
+	return -1
+
+func _mas_cercano_al(punto: Vector2, local: bool, excluir: Array, cuantos: int) -> Array:
+	var c: Array = []
+	for q: Dictionary in jugadores:
+		if bool(q["es_local"]) == local and not excluir.has(q):
+			c.append([(ls(pos(q)) - punto).length_squared(), q])
+	c.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
+	return c.slice(0, cuantos).map(func(x: Array) -> Dictionary: return x[1])
+
+func _estado_sin_balon(_delta: float) -> void:
+	_ls_por_id.clear()
+	for q: Dictionary in jugadores:
+		_ls_por_id[String(q["id"])] = q
+	## Balón previsto (L Ball::Predict): con la física portada, o con el portador.
+	var bp := balon.position
+	var bv := vel_balon
+	var cfg := cfg_balon
+	var ms := 0
+	for objetivo_ms: int in PRED_MS:
+		while ms < objetivo_ms:
+			if poseedor.is_empty():
+				var r := LeagueNucleo.fuerzas_balon(bp, bv, cfg, 0.01, R)
+				bp = r[0]; bv = r[1]
+				bp += bv * 0.01
+			else:
+				bp += (poseedor["vel"] as Vector3) * 0.01
+			ms += 10
+		_ls_pred[objetivo_ms] = ls(bp)
+	var b0 := ls(balon.position)
+	var mejor := INF
+	_ls_designado = poseedor
+	if poseedor.is_empty():
+		for q: Dictionary in jugadores:
+			var d := (ls(pos(q)) - b0).length()
+			if d < mejor:
+				mejor = d; _ls_designado = q
+	var con_balon := _equipo_con_balon()
 	for i in 2:
+		var local := i == 0
+		var d_eq := _mas_cercano_al(_ls_pred[200], local, [], 1)
+		_ls_desig_eq[i] = d_eq[0] if not d_eq.is_empty() else {}
 		var e: LeagueEquipo = equipos[i]
-		var p60: float = (float(posesion[i]) / tot) if tot > 0.0 else 0.5
-		e.actualizar_tactica(goles[i], goles[1 - i], (minuto() * 60000.0), p60, _palancas(i == 0), delta)
+		var tiene := con_balon == i
+		## Línea del fuera de juego del RIVAL a 240 ms (L AI_GetOffsideLine(opp, 240)): no pasarla al apoyar.
 		var xs := PackedFloat32Array()
 		for q: Dictionary in jugadores:
-			if bool(q["es_local"]) == (i == 0):
-				xs.append(ls(pos(q)).x)
-		var rival: Array = []
-		if not poseedor.is_empty() and bool(poseedor["es_local"]) != (i == 0):
-			rival = [ls(pos(poseedor)), ls(poseedor["vel"])]
-		var b0 := ls(balon.position)
-		e.calcular_trampa(b0, b0 + ls(vel_balon) * 0.7, rival, LeagueEquipo.linea_penultimo(xs, e.lado, b0.x))
+			if bool(q["es_local"]) != local:
+				xs.append(ls(pos(q)).x + ls(q["vel"]).x * 0.24)
+		_ls_linea_rival[i] = LeagueEquipo.linea_penultimo(xs, -e.lado, b0.x)
+		if t >= float(_ls_t_marca[i]):   ## L CalculateManMarking cada 0,4 s, escalonado por equipo
+			_ls_t_marca[i] = t + 0.4
+			_ls_marca[i] = _calcular_marcajes(local, e.lado, b0)
+		_presion_zona(i, local, e, tiene, b0)
+		if tiene:
+			_carreras(i, local, e)
+		_ls_tenia[i] = tiene
 
-## La pizarra (0..2, 1 = neutro) traducida a las palancas de League (0..1, 0,5 = neutro).
-func _palancas(local: bool) -> Dictionary:
-	var amp := float(_tac(local, "amplitud") - 1)
-	var pre := float(_tac(local, "presion") - 1)
-	var men := float(_tac(local, "mentalidad") - 1)
-	return {"ow": 0.5 + amp * 0.5, "dw": 0.5 + amp * 0.5, "dmi": 0.5 + pre * 0.5, "dm": 0.5 + pre * 0.5,
-		"om": 0.5 + men * 0.5, "omi": 0.5 + men * 0.25, "contra": 0.5 + float(_tac(local, "ritmo") - 1) * 0.25}
-
-# ------------------------------------------------------------------ colocación
-
-func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
-	if equipos.is_empty() or not p.has("ls_forma") or estado != "juego":
-		return super(p, en_posesion)
-	var local := bool(p["es_local"])
-	var e: LeagueEquipo = equipos[0 if local else 1]
-	var e0: LeagueEquipo = equipos[0]
-	var foco_p: Dictionary = poseedor if not poseedor.is_empty() else ultimo_toque
-	var foco := ls(pos(foco_p)) if not foco_p.is_empty() else ls(balon.position)
-	var yo := ls(pos(p))
-	var urg := 1.0 - LeagueNucleo.normalizado((foco - yo).length(), 2.0, 30.0)
-	var entrada := {"forma": p["ls_forma"], "puesto": _rol(p), "lado": e.lado, "pos": yo, "foco": foco,
-		"balon_x_lento": e0.media_rapida(3500.0 * (1.0 - urg * 0.7)).x,
-		"balon_y_lento": e0.media_rapida(4000.0 * (1.0 - urg * 0.5)).y,
-		"balon_3s": e0.media_rapida(3000.0), "balon_2s": e0.media_rapida(2000.0),
-		"posesion_desvanecida": e.posesion_desvanecida,
-		"lado_posesion_medio": _lado_medio,
-		"ofensividad": clampf(e.ofensividad + float(_tac(local, "mentalidad") - 1) * 0.15, 0.0, 1.0),
-		"viva": e.viva, "contra": e.contra, "mezcla": e.mezcla_de(_rol(p)), "trampa_x": e.trampa_x}
-	var r := LeagueNucleo.posicion_formacion(entrada)
-	r.x += -e.lado * float(_tac(local, "linea") - 1) * 4.0   ## la línea de la pizarra adelanta o retrasa el bloque
-	return mundo(r)
-
-# ------------------------------------------------------------------ con balón
-
-func _imagenes_rivales(local: bool) -> Array:
-	var r: Array = []
+func _calcular_marcajes(local: bool, lado: float, b0: Vector2) -> Dictionary:
+	var mios: Array = []
+	var rivales: Array = []
 	for q: Dictionary in jugadores:
-		if bool(q["es_local"]) != local:
-			r.append([ls(pos(q)), ls(q["vel"]), bool(q["por"])])
-	return r
+		var fila := [String(q["id"]), ls(pos(q)), ls(q["vel"]), bool(q["por"]), q == poseedor]
+		if bool(q["es_local"]) == local:
+			mios.append(fila)
+		else:
+			rivales.append(fila)
+	return LeagueSinBalon.marcajes(mios, rivales, lado, b0)
 
-func _ia_portador(p: Dictionary) -> void:
-	if equipos.is_empty() or bool(p["por"]) or estado != "juego":
-		super(p)
+## L TeamAIController: presión de zona al perder el balón y presión de equipo (un segundo presionador).
+func _presion_zona(i: int, local: bool, e: LeagueEquipo, tiene: bool, b0: Vector2) -> void:
+	var pres := clampf(0.5 + float(_tac(local, "presion") - 1) * 0.5, 0.0, 1.0)
+	if bool(_ls_tenia[i]) and not tiene:
+		var prim := _mas_cercano_al(b0, local, [], 1)
+		var d_prim := (ls(pos(prim[0])) - b0).length() if not prim.is_empty() else 1000.0
+		var terr := clampf(b0.x * -e.lado / LeagueNucleo.MEDIO_LARGO, -1.0, 1.0)
+		if LeagueReglas.empezar_presion_zona(pres, terr, d_prim):
+			_ls_zona_hasta[i] = t + LeagueReglas.duracion_presion_zona(pres)
+			_aplicar_presion(i, local, e)
+			_ls_zona_refresco[i] = t + 0.25
+	if float(_ls_zona_hasta[i]) > 0.0:
+		if tiene or t > float(_ls_zona_hasta[i]):
+			_ls_zona_hasta[i] = 0.0
+			_ls_presion_hasta[i] = t
+			_ls_presiona[i] = {}
+		elif t >= float(_ls_zona_refresco[i]):
+			_aplicar_presion(i, local, e)
+			_ls_zona_refresco[i] = t + 0.25
+
+## L ApplyTeamPressure: el más cercano (distancia + castigo por rol) al rival con el balón, sin contar al primer defensor ni al portero.
+func _aplicar_presion(i: int, local: bool, e: LeagueEquipo) -> void:
+	var previo: Dictionary = _ls_presiona[i] if float(_ls_presion_hasta[i]) > t else {}
+	_ls_presion_hasta[i] = t + 0.5
+	if poseedor.is_empty() or bool(poseedor["es_local"]) == local:
+		_ls_presiona[i] = {}
 		return
+	var objetivo := ls(pos(poseedor)) + ls(poseedor["vel"]) * 0.24 + Vector2(e.lado * 1.0, 0.0)
+	var prim := _mas_cercano_al(ls(balon.position), local, [], 1)
+	var mejor := 1000.0
+	var nota_previo := 10000.0
+	var elegido := {}
+	for q: Dictionary in jugadores:
+		if bool(q["es_local"]) != local or bool(q["por"]) or (not prim.is_empty() and q == prim[0]):
+			continue
+		var nota := (ls(pos(q)) - objetivo).length() + (1.0 - LeagueNucleo.mentalidad(_rol(q)))
+		if q == previo:
+			nota_previo = nota
+		if nota < mejor:
+			mejor = nota; elegido = q
+	if not previo.is_empty() and nota_previo <= mejor + 1.5:
+		elegido = previo
+	_ls_presiona[i] = elegido
+
+## L TeamAIController::Process: carreras al espacio (cada 0,5 s) y el apoyo adelantado (cada 1,5 s).
+func _carreras(i: int, local: bool, e: LeagueEquipo) -> void:
+	var portador: Dictionary = poseedor if not poseedor.is_empty() and bool(poseedor["es_local"]) == local else {}
+	if portador.is_empty():
+		return
+	var pp := ls(pos(portador))
+	if t >= float(_ls_t_carrera[i]) and t >= float(_ls_corre_hasta[i]):
+		_ls_t_carrera[i] = t + 0.5
+		var foco := Vector2(pp.x - e.lado * 26.0, pp.y)
+		var corredor := {}
+		var md := INF
+		for q: Dictionary in jugadores:
+			if bool(q["es_local"]) == local and not bool(q["por"]) and q != portador and q != usuario:
+				var d := (ls(pos(q)) - foco).length()
+				if d < md:
+					md = d; corredor = q
+		if not corredor.is_empty():
+			var dist := (ls(pos(corredor)) - pp).length()
+			var nota := pow(1.0 - LeagueNucleo.normalizado(dist, 0.0, 40.0), 0.5)
+			var sitio := ls(pos(corredor)) * Vector2(1.0, 0.8) + Vector2(-e.lado * 10.0, 0.0)
+			var densidad := 1.0
+			for r: Dictionary in _mas_cercano_al(sitio, not local, [], 4):
+				densidad -= pow(LeagueNucleo.curva(1.0 - LeagueNucleo.normalizado((ls(pos(r)) - sitio).length(), 0.0, 15.0), 1.0), 0.5) * 0.3
+			if nota * densidad >= LeagueReglas.umbral_carrera(e.contra):
+				_ls_corredor[i] = corredor
+				_ls_corre_hasta[i] = t + LeagueReglas.duracion_carrera_ms(e.contra) / 1000.0
+	if t >= float(_ls_t_adelantado[i]):
+		_ls_t_adelantado[i] = t + 1.5
+		var lead := 0.5 + e.contra * 2.0
+		var c := _mas_cercano_al(pp + Vector2(-e.lado * lead, 0.0), local, [portador], 1)
+		_ls_adelantado[i] = c[0] if not c.is_empty() else {}
+
+func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
+	return _sin_balon(p) if _con_league(p) else super(p)
+
+func _ia_defensa(p: Dictionary) -> Vector3:
+	return _sin_balon(p) if _con_league(p) else super(p)
+
+func _con_league(p: Dictionary) -> bool:
+	return fase3 and not equipos.is_empty() and estado == "juego" and p.has("ls_forma") and not _ls_pred.is_empty()
+
+func _sin_balon(p: Dictionary) -> Vector3:
+	if float(p.get("ls_t", -1.0)) > t and p.has("ls_obj"):
+		p["correr"] = bool(p["ls_corre"])
+		return p["ls_obj"]
+	p["ls_t"] = t + CADENCIA
+	var r := _calcular_sin_balon(p)
+	p["ls_obj"] = mundo(r[0])
+	p["ls_corre"] = float(r[1]) >= LeagueNucleo.CAMBIO_TROTE_SPRINT
+	p["correr"] = bool(p["ls_corre"])
+	return p["ls_obj"]
+
+## La estrategia del puesto (L RequestInput de default_def/mid/off) más la caza del portador (L ElizaController). → [destino, velocidad].
+func _calcular_sin_balon(p: Dictionary) -> Array:
 	var local := bool(p["es_local"])
-	var e: LeagueEquipo = equipos[0 if local else 1]
+	var i := 0 if local else 1
+	var e: LeagueEquipo = equipos[i]
+	var lado := e.lado
 	var yo := ls(pos(p))
 	var mov := ls(p["vel"])
-	var rivales := _imagenes_rivales(local)
-	var n: Node3D = p["node"]
-	var mirada := Vector2(cos(n.rotation.y), sin(n.rotation.y))   ## (z, x) del frente del modelo
-	## Conducción por el campo de fuerzas, siempre (el original la recalcula cada ciclo).
-	var cercanos := rivales.duplicate()
-	cercanos.sort_custom(func(a: Array, b: Array) -> bool: return ((a[0] as Vector2) - yo).length_squared() < ((b[0] as Vector2) - yo).length_squared())
-	var rg := LeagueNucleo.regate(yo, mov, mirada, e.lado, cercanos.slice(0, 5), LeagueNucleo.mentalidad(_rol(p)))
-	p["objetivo"] = mundo(yo + (rg[0] as Vector2) * 6.0)
-	p["correr"] = float(rg[1]) >= LeagueNucleo.V_SPRINT
-	var rival := _rival_mas_cercano(p)
-	var arco := _arco_rival(p)
-	if _intentar_regate(p, rival, Vector2(pos(p).x - arco.x, pos(p).z - arco.z).length()):   ## las fintas son nuestras
-		return
-	if t - _posee_desde < CONTROL or t < _decision_league:
-		return
-	_decision_league = t + REACCION
-	var yo_d := {"pos": yo, "mov": mov, "lado": e.lado, "puesto": _rol(p), "tec_pase": float(p["attr"]["pas"]),
-		"tec_tiro": float(p["attr"]["tir"]), "posee_ms": (t - _posee_desde) * 1000.0, "sit": LeagueNucleo.situacion(yo, mov, e.lado, rivales)}
-	var mates: Array = []
-	for q: Dictionary in jugadores:
-		if q != p and bool(q["es_local"]) == local:
-			var qp := ls(pos(q))
-			mates.append({"i": q, "pos": qp, "mov": ls(q["vel"]), "puesto": _rol(q), "sit": LeagueNucleo.situacion(qp, ls(q["vel"]), e.lado, rivales)})
-	var dec := LeagueNucleo.decidir(yo_d, mates, rivales, ls(vel_balon), e.posesion, _rng, int(REACCION / 0.01))
-	_ejecutar(p, dec, mirada, e.lado)
-
-func _ejecutar(p: Dictionary, dec: Dictionary, mirada: Vector2, lado: float) -> void:
-	var accion := String(dec["accion"])
-	cuenta[accion] = int(cuenta[accion]) + 1
-	match accion:
-		"pase":
-			_pasar_a(p, dec["i"], int(dec["tipo"]) != LeagueNucleo.CORTO)
-		"tiro":
-			_tirar(p, Vector2(clampf(float(dec["y"]) / (PALO - 0.35), -1.0, 1.0), -0.45 if _rng.randf() < 0.6 else 0.55), clampf(float(dec["potencia"]), 0.0, 1.0))
-		"panico":
-			var dir := LeagueNucleo.dir_panico(mirada, lado)
-			_ctx_golpeo = "despeje"
-			_patear(p, pos(p) + mundo(dir * 30.0), LeagueNucleo.vel_pase(0.7) * 0.6, 4.0, 0.0, "patear")
-			despejes[0 if bool(p["es_local"]) else 1] += 1
-
-# ------------------------------------------------------------------ balón suelto
-
-func _mover_balon(delta: float) -> void:
-	if not poseedor.is_empty() or equipos.is_empty():
-		super(delta)
-		return
-	var antes := balon.position
-	var p := antes
-	_resto_balon += delta
-	while _resto_balon >= PASO_BALON:
-		_resto_balon -= PASO_BALON
-		var en_aire := p.y > R + 0.02 or absf(vel_balon.y) > 0.2
-		if en_aire:   ## el efecto (Magnus) de nuestros golpeos se mantiene encima
-			vel_balon += giro_balon.cross(vel_balon) * 0.012 * PASO_BALON
-			giro_balon *= exp(-Balance.GIRO_AIRE * PASO_BALON)
-		else:
-			giro_balon *= pow(Balance.GIRO_SUELO, PASO_BALON * 60.0)
-		var r := LeagueNucleo.fuerzas_balon(p, vel_balon, cfg_balon, PASO_BALON, R)
-		p = r[0]
-		vel_balon = r[1]
-		p += vel_balon * PASO_BALON
-		if absf(p.z) > LARGO and absf(p.x) < PALO and p.y < LARGUERO:   ## dentro de la red, el balón se muere
-			vel_balon *= 0.85
-			p.z = clampf(p.z, -LARGO - 1.8, LARGO + 1.8)
-	balon.position = p
-	if estado == "juego":
-		_palos_y_lineas(antes)
+	var puesto := _rol(p)
+	var g := LeagueSinBalon.grupo(puesto)
+	var mente := LeagueNucleo.mentalidad(puesto)
+	var desig: Dictionary = _ls_designado if not _ls_designado.is_empty() else p
+	var dist_accion := (yo - ls(pos(desig))).length()
+	## Estática (su casilla) y dinámica (la del dueño de su rol, roles intercambiados con el húngaro de `MotorRoles`).
+	var estatica := _destino_forma(p, p["ls_forma"])
+	var dueno: Dictionary = _ls_por_id.get(String(MotorRoles.reparto(self as Object as MotorJugable, local).get(String(p["id"]), p["id"])), p)
+	var dinamica := estatica if dueno == p or not dueno.has("ls_forma") else _destino_forma(p, dueno["ls_forma"])
+	var sb := LeagueSinBalon.sesgo_estatico(g, dist_accion)
+	var deseada := estatica * sb + dinamica * (1.0 - sb)
+	## Apoyo ofensivo.
+	var ab := LeagueSinBalon.sesgo_ataque(g, e.posesion_desvanecida, mente)
+	var mio_con: Dictionary = poseedor if not poseedor.is_empty() and bool(poseedor["es_local"]) == local else {}
+	if ab > 0.0 and not mio_con.is_empty():
+		var corre: bool = ab > float(LeagueSinBalon.ESTRATEGIA[g][5]) and _ls_corredor[i] == p and t < float(_ls_corre_hasta[i])
+		var principal := ls(pos(mio_con)) + ls(mio_con["vel"]) * 0.1
+		var rivales: Array = []
+		for r: Dictionary in _mas_cercano_al(principal * 0.3 + (yo + mov * 0.1) * 0.7, not local, [], 3):
+			rivales.append([ls(pos(r)), ls(r["vel"])])
+		var mates: Array = []
+		for c: Dictionary in _mas_cercano_al(yo + mov * 0.1, local, [p], 5):
+			mates.append([ls(pos(c)), ls(c["vel"])])
+		var apoyo := LeagueSinBalon.apoyo({"base": deseada, "pos": yo, "mov": mov, "lado": lado, "mente": mente, "puesto": puesto,
+			"correr": corre, "adelantado": _ls_adelantado[i] == p, "principal": principal, "es_principal": mio_con == p,
+			"rivales": rivales, "companeros": mates, "posesion_desv": e.posesion_desvanecida,
+			"balon_pred": [_ls_pred[200], _ls_pred[350], _ls_pred[500], _ls_pred[650]], "linea_offside": _ls_linea_rival[i],
+			"red": LeagueReglas.red_apoyo(0.5 + float(_tac(local, "amplitud") - 1) * 0.25)})
+		deseada = deseada * (1.0 - ab) + apoyo * ab
+	## Componente defensiva sobre su marca y trampa del fuera de juego.
+	var marca: Dictionary = _ls_por_id.get(String((_ls_marca[i] as Dictionary).get(String(p["id"]), "")), {})
+	if not marca.is_empty():
+		var rp := ls(pos(marca)) + ls(marca["vel"]) * 0.5
+		deseada = LeagueSinBalon.componente_defensiva(deseada, LeagueSinBalon.sesgo_defensa(g, mente, e.posesion_desvanecida), rp, marca == poseedor, lado, e.trampa_x, yo + mov * 0.14)
+	if bool(LeagueSinBalon.ESTRATEGIA[g][7]):
+		deseada.x = LeagueNucleo.trampa_offside(deseada.x, lado, e.trampa_x)
+	var fresco := clampf(float(p.get("aguante", 1.0)), 0.0, 1.0)
+	var vmed := mov.length()
+	var trabajo := clampf(float((p["attr"] as Dictionary).get("fis", 0.5)), 0.0, 1.0)
+	var rival_con: Dictionary = poseedor if not poseedor.is_empty() and bool(poseedor["es_local"]) != local else {}
+	var accion_r := ls(pos(rival_con)) if not rival_con.is_empty() else _ls_pred[200] as Vector2
+	var v := LeagueSinBalon.velocidad_perezosa((deseada - yo).length() * LeagueNucleo.DIST_A_VEL, fresco, (yo - accion_r).length(), e.posesion_desvanecida, mente, vmed, trabajo)
+	## Caza (solo sin la mejor posesión): el presionador de equipo va al balón; si no marca a nadie y es de los 3 más cercanos, intercepta.
+	if _equipo_con_balon() != i and not rival_con.is_empty():
+		var op := ls(pos(rival_con)) + ls(rival_con["vel"]) * 0.12
+		if _ls_presiona[i] == p and float(_ls_presion_hasta[i]) > t:
+			return [op, LeagueNucleo.V_SPRINT]
+		var cerca_caza := (op - (yo + mov * 0.04)).length() < LeagueSinBalon.umbral_caza(mente, fresco, vmed, DIFICULTAD)
+		## DESVÍO DOCUMENTADO (10-11): el que antes llega al balón de su equipo SIEMPRE disputa (L forceMagnet + extraHaste). En el
+		## original solo si no marca a nadie, pero allí además «interfiere» en cuanto el balón entra en el alcance de una animación
+		## de entrada (`_InterfereCommand`); nuestras entradas piden estar a ~1,25 m y, sin esto, nadie llegaba a entrar.
+		if cerca_caza and _ls_desig_eq[i] == p:
+			return [op, LeagueNucleo.V_SPRINT]
+		if marca.is_empty() and cerca_caza:
+			if _mas_cercano_al(op - ls(rival_con["vel"]) * 0.02, local, [], 3).has(p):
+				var dp := LeagueSinBalon.posicion_defensa(ls(pos(rival_con)), ls(rival_con["vel"]), yo, lado)
+				if LeagueSinBalon.necesita_defender(lado, yo, dp):
+					return [dp, clampf((dp - yo).length() * LeagueNucleo.DIST_A_VEL, 0.0, LeagueNucleo.V_SPRINT)]
+	return [deseada, LeagueNucleo.rango_velocidad(clampf(v, 0.0, LeagueNucleo.V_SPRINT))]
