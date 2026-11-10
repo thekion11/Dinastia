@@ -172,6 +172,10 @@ def escribir():
             ex["paises"].pop(p, None)
         else:
             ex["paises"][p] = fila_extra(m)
+    ## Las selecciones de los países nuevos entran en la lista SELECCIONES (escalafón, convocatorias y torneos) si la base no las trae.
+    base = json.load(open(os.path.join(DATOS, "tablas.json"), encoding="utf-8"))
+    base = base.get("tablas", base).get("SELECCIONES", [])
+    ex["listas"] = {"SELECCIONES": [m["seleccion"] for p, m in PAISES.items() if m.get("extra") != "no" and m["seleccion"] not in base]}
     json.dump(ex, open(r, "w", encoding="utf-8", newline="\n"), ensure_ascii=False, indent=1)
     print("importar_pais:", len(PAISES), "países,", len(FILAS), "clubes", comprobar() or "sin errores")
 
