@@ -117,7 +117,7 @@ func _picos(mediana: int) -> void:
 	for f in n_f:
 		await get_tree().process_frame
 		var ll := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
-		if ll > mediana * 3 and OS.get_environment("PICOS") == "desglose":
+		if ll > mediana * (float(OS.get_environment("PICOS_UMBRAL")) if OS.get_environment("PICOS_UMBRAL") != "" else 3.0) and OS.get_environment("PICOS") == "desglose":
 			## Congela ESE plano en una cámara quieta y mira qué grupos lo inflan.
 			var cam0 := get_viewport().get_camera_3d()
 			var fija := Camera3D.new()
