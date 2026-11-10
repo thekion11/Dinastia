@@ -64,6 +64,8 @@ func _uno(i: int, nombre: String) -> void:
 	print("ESTADIO %d %s (%s) %s %d %s · %d llamadas · piezas: arco=%s torres=%s costillas=%s techo_lados=%s" % [i, nombre, c.pais,
 		est.get("forma"), int(est.get("niveles", 0)), est.get("techo"), llamadas, est.has("arco"), est.get("torres_rampa", 0), est.get("costillas", 0), est.has("bandejas")] + ("  curva=%s colchon=%s" % [est.has("fachada_curva"), est.has("colchon")]))
 	get_viewport().get_texture().get_image().save_jpg("%s/%02d_%s_partido.jpg" % [_dir, i, c.pais], 0.88)
+	if OS.get_environment("DESGLOSE") != "":
+		await _desglose(vista, llamadas)
 	var aerea := Camera3D.new()
 	aerea.far = 1500.0
 	vista.add_child(aerea)
@@ -74,3 +76,23 @@ func _uno(i: int, nombre: String) -> void:
 	get_viewport().get_texture().get_image().save_jpg("%s/%02d_%s_aerea.jpg" % [_dir, i, c.pais], 0.88)
 	vista.queue_free()
 	await _esperar(1.0)
+
+## DESGLOSE=1: apaga uno a uno los grupos grandes (≥ 15 mallas, hasta 4 niveles de hondo) y dice cuántas llamadas ahorra cada uno.
+func _desglose(raiz: Node, base: int) -> void:
+	var grupos: Array[Node3D] = []
+	_grupos(raiz, 0, grupos)
+	for g in grupos:
+		g.visible = false
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var d := base - RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+		g.visible = true
+		if d >= 15:
+			print("   -%d  %s" % [d, raiz.get_path_to(g)])
+
+func _grupos(n: Node, hondo: int, fuera: Array[Node3D]) -> void:
+	for h in n.get_children():
+		if h is Node3D and h.find_children("*", "GeometryInstance3D", true, false).size() >= 15:
+			fuera.append(h)
+			if hondo < 3:
+				_grupos(h, hondo + 1, fuera)
