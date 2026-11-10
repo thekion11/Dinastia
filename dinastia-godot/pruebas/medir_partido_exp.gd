@@ -42,7 +42,7 @@ static func aplicar(vista: Node) -> void:
 			for sf in m.get_surface_count():
 				var arr := m.surface_get_arrays(sf)
 				antes_t += (arr[Mesh.ARRAY_INDEX] as PackedInt32Array).size() / 3 if arr[Mesh.ARRAY_INDEX] != null else 0
-				im.add_surface(Mesh.PRIMITIVE_TRIANGLES, arr, [], {}, m.surface_get_material(sf), "s%d" % sf)
+				im.add_surface(Mesh.PRIMITIVE_TRIANGLES, arr, [], {}, m.surface_get_material(sf), "s%d" % sf, m.surface_get_format(sf) & (((1 << 12) - 1) << Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT))
 			im.generate_lods(25.0, 60.0, [])
 			var nuevo := im.get_mesh()
 			hechas[m] = nuevo

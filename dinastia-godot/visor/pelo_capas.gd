@@ -156,9 +156,15 @@ static func _con_lods(m: ArrayMesh) -> ArrayMesh:
 		return m
 	var im := ImporterMesh.new()
 	for sf in m.get_surface_count():
-		im.add_surface(Mesh.PRIMITIVE_TRIANGLES, m.surface_get_arrays(sf), [], {}, m.surface_get_material(sf), "s%d" % sf)
+		## Los datos «custom» de la malla (el cuero los usa) van empaquetados en bytes: sin sus banderas de formato `add_surface` falla y la superficie desaparece.
+		var banderas := m.surface_get_format(sf) & (((1 << 12) - 1) << Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT)
+		im.add_surface(Mesh.PRIMITIVE_TRIANGLES, m.surface_get_arrays(sf), [], {}, m.surface_get_material(sf), "s%d" % sf, banderas)
 	im.generate_lods(25.0, 60.0, [])
-	return im.get_mesh()
+	var nuevo := im.get_mesh()
+	## Red de seguridad: si algo falla, se queda la malla de antes (nunca una vacía).
+	if nuevo == null or nuevo.get_surface_count() != m.get_surface_count():
+		return m
+	return nuevo
 
 ## La clave del cuero en la caché (30-10-2026): solo lo que da forma a la malla (`_cuero` y
 ## `corte_de`), NO el color del pelo, que va en el material. Antes la clave llevaba el peinado
