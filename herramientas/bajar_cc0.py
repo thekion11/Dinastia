@@ -4,7 +4,8 @@
 Sesión 7 (10-11): para que el vestuario del club se vea con materiales reales y distintos por país (`VestuarioRealista`). Quedan fuera de LFS (JPG pequeños)."""
 import json, os, sys, urllib.request
 LISTA = ["rubber_tiles", "hinoki_planks", "patterned_terracotta_tiling", "dark_wooden_planks",
-         "beige_wall_001", "brick_wall_005", "clay_plaster", "floor_tiles_06"]
+         "beige_wall_001", "brick_wall_005", "clay_plaster", "floor_tiles_06",
+         "herringbone_parquet", "beige_wall_002", "laminate_floor_02", "brushed_concrete_03", "granite_tile", "patterned_clay_plaster", "clay_floor_001", "patterned_clay_wall"]
 DESTINO = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "dinastia-godot", "assets", "cc0")
 MAPAS = {"diff": "Diffuse", "nor": "nor_gl", "rough": "Rough"}
 def pedir(url):

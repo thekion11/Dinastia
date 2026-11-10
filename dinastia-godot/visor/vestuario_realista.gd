@@ -11,16 +11,24 @@ extends RefCounted
 
 ## ESTILO POR PAÍS (sesión 7): cada país lleva sus materiales reales (texturas CC0 de Poly Haven en `assets/cc0/`, ver `herramientas/bajar_cc0.py`), para que un vestuario inglés, uno
 ## japonés y uno argentino no se vean iguales. «ing»: suelo de tablón oscuro y ladrillo visto (Reino Unido); «jap»: tablón claro de hinoki y paredes lisas (Japón y Asia oriental);
-## «lat»: baldosa de barro cocido y yeso de arcilla (España, Italia, Portugal y toda América Latina); el resto, goma deportiva y yeso beige. El azulejo del tercio bajo es el mismo en todos.
+## «lat»: baldosa de barro cocido y yeso de arcilla (España, Italia, Portugal y toda América Latina); «ale»: parqué en espiga y pared beige (centroeuropa); «nor»: laminado claro y hormigón visto (nórdico); «ara»: granito y yeso con relieve geométrico (golfo y Oriente Próximo); «afr»: suelo de arcilla y pared de arcilla con motivos (África); el resto, goma deportiva y yeso beige. El azulejo del tercio bajo es el mismo en todos.
 const ESTILOS := {
 	"ing": {"suelo": "dark_wooden_planks", "pared": "brick_wall_005", "madera": "dark_wooden_planks", "m_suelo": 1.2, "m_pared": 1.6},
 	"jap": {"suelo": "hinoki_planks", "pared": "beige_wall_001", "madera": "hinoki_planks", "m_suelo": 1.2, "m_pared": 2.0},
 	"lat": {"suelo": "patterned_terracotta_tiling", "pared": "clay_plaster", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0},
+	"ale": {"suelo": "herringbone_parquet", "pared": "beige_wall_002", "madera": "dark_wooden_planks", "m_suelo": 1.0, "m_pared": 2.0},
+	"nor": {"suelo": "laminate_floor_02", "pared": "brushed_concrete_03", "madera": "laminate_floor_02", "m_suelo": 1.2, "m_pared": 2.0},
+	"ara": {"suelo": "granite_tile", "pared": "patterned_clay_plaster", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 1.6},
+	"afr": {"suelo": "clay_floor_001", "pared": "patterned_clay_wall", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 1.6},
 	"def": {"suelo": "rubber_tiles", "pared": "beige_wall_001", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0},
 }
 const GRUPOS := {
 	"ing": ["ENG", "SCO", "WAL", "NIR", "IRL"],
 	"jap": ["JPN", "KOR", "CHN", "TWN", "HKG"],
+	"ale": ["GER", "AUT", "SUI", "NED", "BEL", "LUX", "CZE", "POL", "SVK", "HUN", "SLO", "CRO", "SRB"],
+	"nor": ["SWE", "NOR", "DEN", "FIN", "ISL"],
+	"ara": ["KSA", "UAE", "QAT", "KUW", "BHR", "OMA", "IRN", "IRQ", "JOR", "LIB", "SYR", "TUR", "EGY"],
+	"afr": ["NGA", "GHA", "SEN", "CIV", "CMR", "RSA", "ALG", "TUN", "MLI", "COD", "KEN", "TAN", "ZIM", "ZAM", "ANG"],
 	"lat": ["ESP", "ITA", "POR", "ARG", "CHI", "URU", "PAR", "BOL", "PER", "COL", "VEN", "ECU", "MEX", "BRA", "CRC", "PAN", "HON", "GUA", "SLV", "CUB", "DOM", "MAR"],
 }
 
@@ -136,6 +144,38 @@ static func azulejo() -> StandardMaterial3D:
 	return m
 
 ## Madera de los bancos.
+## (10-11) Materiales compartidos del edificio del club por país y tipo («madera», «baldosa», «resina», «pared»): una sola instancia por clave, así
+## el `Lote`/fusión sigue agrupando por material y la memoria no crece con cada sala.
+static var _cache_sala := {}
+static func sala(tipo: String, pais := "") -> StandardMaterial3D:
+	var clave := "%s|%s" % [tipo, estilo_de(pais)]
+	if _cache_sala.has(clave):
+		return _cache_sala[clave]
+	var e: Dictionary = ESTILOS[estilo_de(pais)]
+	var m: StandardMaterial3D = null
+	match tipo:
+		"madera":
+			m = _pbr(String(e["madera"]), 2.0)
+		"baldosa":
+			m = _pbr("floor_tiles_06", 1.5)
+		"resina":
+			m = _pbr(String(e["suelo"]), float(e["m_suelo"]))
+		"pared":
+			m = _pbr(String(e["pared"]), float(e["m_pared"]))
+	_cache_sala[clave] = m
+	return m
+
+## Tipo de suelo real (`sala`) por sala; «» = se queda el color liso.
+static func tipo_suelo(sala: String) -> String:
+	match sala:
+		"Oficina del DT", "Despacho del presidente", "Comedor del plantel", "Museo del club", "Museo ampliado":
+			return "madera"
+		"Enfermería":
+			return "baldosa"
+		"Sala de vídeo", "Sala de prensa", "Utilería":
+			return "resina"
+	return ""
+
 static func madera(pais := "") -> StandardMaterial3D:
 	var e: Dictionary = ESTILOS[estilo_de(pais)]
 	var real := _pbr(String(e["madera"]), 1.0)

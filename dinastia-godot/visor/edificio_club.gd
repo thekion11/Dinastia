@@ -181,6 +181,13 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 	var pared := PiezasObra._mat(Color(0.82, 0.81, 0.78), 0.85)
 	## (10-11) Suelo interior liso y barato (una losa por planta), claro y satinado: ya no se confunde con el asfalto gris de la calle.
 	var suelo := PiezasObra._mat(Color(0.74, 0.72, 0.68), 0.5)
+	## (10-11, sesión 7) MEDIA/ALTA: paredes y suelos de las salas con texturas CC0 según el país del club (`VestuarioRealista.sala`).
+	var pais_club := String(ctx.get("pais", ""))
+	var real := VestuarioRealista.activo()
+	if real:
+		var pr := VestuarioRealista.sala("pared", pais_club)
+		if pr != null:
+			pared = pr
 	var alfombra := PiezasObra._mat(c1.lerp(Color(0.1, 0.1, 0.12), 0.55), 0.85)
 	var vidrio: StandardMaterial3D = Texturas.cristal(true, true)
 	## El ascensor de la planta 0 (dentro del vestuario, junto a la pizarra).
@@ -269,8 +276,14 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 			## Suelo y techo propios de la sala.
 			var gusto := _gusto(String(sala[0]))
 			var col_suelo := Color(String(gusto["suelo"])) if String(gusto.get("suelo", "")) != "" else _suelo_de(String(sala[0]))
+			var mat_suelo := PiezasObra._mat(col_suelo, 0.75)
+			if real and String(gusto.get("suelo", "")) == "":
+				var tipo := VestuarioRealista.tipo_suelo(String(sala[0]))
+				var ms := VestuarioRealista.sala(tipo, pais_club) if tipo != "" else null
+				if ms != null:
+					mat_suelo = ms
 			PiezasObra._caja(np, Vector3(c, y0 + 0.015, (z_out + z_tabique) / 2.0 - 0.005), Vector3(b - a - 0.2, 0.03, z_tabique - z_out - 0.09),
-				PiezasObra._mat(col_suelo, 0.75), false)   ## del cascarón (y0) a y0+0,03, de pared a pared (la losa del pasillo empieza donde acaba)
+				mat_suelo, false)   ## del cascarón (y0) a y0+0,03, de pared a pared (la losa del pasillo empieza donde acaba)
 			PiezasObra._caja(np, Vector3(c, y0 + ALTO_LIBRE - 0.01, (z_out + z_tabique) / 2.0), Vector3(b - a - 0.2, 0.02, z_tabique - z_out - 0.1),
 				PiezasObra._mat(Color(0.8, 0.8, 0.78), 0.9), false)
 			var caja := Rect2(a + 0.2, z_out + 0.2, b - a - 0.4, z_tabique - z_out - 0.4)
