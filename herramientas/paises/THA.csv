@@ -1,0 +1,26 @@
+#seleccion=Tailandia
+#tier=0.5
+#globo=100.50,13.75
+#bandera=🇹🇭
+#confed=asia
+#liga=Thai League 1|Liga Tailandesa
+#copa=Thai FA Cup|Copa Tailandesa
+#nombres=Somchai,Anan,Kittisak,Supachai,Chanathip,Teerasil,Narongchai,Sarawut,Pichit,Weerachai,Surasak,Apichart,Nattapong,Prasert
+#apellidos=Srisai,Chaiyasit,Wongsa,Boonmee,Suksawat,Thongchai,Sangthong,Rattanakul,Phromsri,Jaidee,Kaewmanee,Saetang,Intharat,Wannasuk
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Buriram United;Buriram Volcan;#1d3f8f;#c8102e;62;32600;1970;los Truenos Azules;un gran estadio moderno en una ciudad del noreste;El club dominante del país, con una larga racha de títulos y mucho dinero detrás.
+Bangkok United;Bangkok Unidos;#d8232a;#ffffff;57;15114;1989;los Escorpiones;el estadio de una ciudad al norte de la capital, compartido con otro club;Un club capitalino ambicioso que ha crecido con fichajes llamativos.
+BG Pathum United;Pathum Azul;#00a5e0;#ffffff;57;15114;1989;los Cielos;el estadio compartido de una ciudad al norte de la capital;Un club de empresa que llegó a campeón hace pocos años.
+Muangthong United;Muangtong Rayo;#d71920;#ffffff;56;13000;2009;los Castillos de Fuego;el estadio de una ciudad dormitorio al norte de la capital;Un club muy popular que fue campeón varias veces en la década pasada.
+Port;Puerto Bangkok;#1e50a2;#f5c400;53;6250;1967;los Estibadores;el pequeño estadio del club del puerto de la capital;El club del puerto de Bangkok, con raíces obreras y una afición fiel.
+Chiangrai United;Chiang Rai Sur;#c8102e;#111111;53;12000;2009;los Escarabajos;el estadio de la ciudad más importante del norte;Campeón de copa y de liga en su mejor época, la gran referencia del norte.
+Nakhon Ratchasima;Nakhon Rachima;#f47920;#111111;50;25000;2009;los Gatos Naranja;un amplio estadio en la ciudad grande del noreste;Un club de la gran ciudad del noreste con una afición muy ruidosa.
+Chonburi;Chonbury Marino;#1d5fb3;#ffffff;49;8680;1997;los Tiburones;el estadio de una ciudad industrial de la costa;El club de la costa del este, campeón de liga a finales de los años 2000.
+Ratchaburi;Rachaburi Draco;#f58220;#1d3f8f;48;10000;2005;los Dragones;un estadio con paneles solares en una ciudad del oeste;Un club del oeste del país con un estadio famoso por su energía solar.
+Kanchanaburi Power;Kanchana Fuerza;#c8102e;#1d3f8f;46;13000;2022;los Poderosos;el estadio de una ciudad famosa por su puente sobre el río;Un club joven y rico que subió muy rápido desde categorías inferiores.
+Rayong;Rayong Costa;#f47b20;#111111;45;7500;2009;los Naranjas del Mar;el estadio de una ciudad costera de frutales;Un club de la costa oriental que ha ido y venido entre divisiones.
+Sukhothai;Sukotai Antiguo;#c8102e;#ffffff;44;8020;2009;los Reyes Antiguos;el estadio de la antigua capital histórica;El club de la cuna de la historia del país, con ambiciones modestas.
+Lamphun Warriors;Lamphun Guerra;#c8102e;#1d3f8f;43;5179;2009;los Guerreros;un pequeño estadio en una ciudad antigua del norte;Un club del norte que luchó por llegar a la élite y se quedó.
+Ayutthaya United;Ayutaya Reales;#c8102e;#1d4fa8;41;5000;2016;los Reales;el estadio de una ciudad con ruinas de una antigua capital;Un club joven de la antigua ciudad real, recién llegado a la élite.
+PT Prachuap;Prachuap Bahia;#1d4fa8;#ffffff;40;5000;2009;los Pescadores de la Bahía;un campo pequeño junto a una bahía del golfo;Un modesto club costero que pelea cada año por mantenerse.
+Uthai Thani;Utai Tani Verde;#1d4fa8;#f5c400;38;5500;2015;los Elefantes;un estadio pequeño en una ciudad del centro del país;El club más humilde de la liga, que sueña con quedarse en la élite.

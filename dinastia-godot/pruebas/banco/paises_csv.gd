@@ -135,6 +135,14 @@ func _probar_pais_sin_liga_tanda3() -> void:
 		"NIR": [12, "Irlanda del Norte", "ucl"], "LUX": [16, "Luxemburgo", "ucl"]}, 1105)
 	_comprobar(not SeleccionesTorneos.SUSPENDIDAS.has("Bielorrusia"), "Bielorrusia no está suspendida (solo vetada como local)")
 
+## (10-11) TANDA 4: 16 países de Asia, África, UEFA y CONCACAF (Tailandia, Indonesia, Vietnam, India, Malasia, Baréin, Omán, RD Congo, Burkina Faso, Zambia, Guinea, Kenia, Armenia, Moldavia, El Salvador, Guatemala).
+## Listas de Wikipedia 2025-26 (Omán, Guinea y Burkina Faso: listas viejas sin verificar; RD Congo: 16 de los 31 del Linafoot).
+func _probar_pais_sin_liga_tanda4() -> void:
+	_titulo("PAÍSES SIN LIGA, TANDA 4: LIGA, COPA, CONFEDERACIÓN Y SELECCIÓN")
+	_comprobar_tanda({"THA": [16, "Tailandia", "asia"], "IDN": [18, "Indonesia", "asia"], "VIE": [14, "Vietnam", "asia"], "IND": [14, "India", "asia"], "MAS": [13, "Malasia", "asia"], "BHR": [12, "Baréin", "asia"],
+		"OMA": [12, "Omán", "asia"], "COD": [16, "RD Congo", "afr"], "BFA": [14, "Burkina Faso", "afr"], "ZAM": [18, "Zambia", "afr"], "GUI": [14, "Guinea", "afr"], "KEN": [18, "Kenia", "afr"],
+		"ARM": [10, "Armenia", "ucl"], "MDA": [8, "Moldavia", "ucl"], "ESA": [12, "El Salvador", "conc"], "GUA": [12, "Guatemala", "conc"]}, 1106)
+
 ## Cada país del caso [clubes, selección, copa continental]: su liga con la cantidad real de clubes, su copa continental, su copa nacional, su selección y jugadores del mundo para convocar.
 func _comprobar_tanda(casos: Dictionary, semilla: int) -> void:
 	var m := Mundo.new()

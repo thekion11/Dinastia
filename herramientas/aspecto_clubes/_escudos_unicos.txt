@@ -12,7 +12,7 @@ Bastia||banda||||||
 Boluspor||mitad||||||
 Botafogo-SP||banda||||||
 Braunschweig||banda||||||
-Bristol City||franjas||||||
+Bristol City||liso||||||
 Brown de Adrogué||banda||||||
 CRB||mitad||||||
 CSKA Sofia||banda||||||
@@ -29,7 +29,7 @@ Coventry||banda||||||
 Cultural Leonesa||franjas||||||
 Córdoba||banda||||||
 Darmstadt||franjas||||||
-De Graafschap||banda||||||
+De Graafschap||liso||||||
 Defensores de Belgrano||mitad||||||
 Den Bosch||franjas||||||
 Deportivo||banda||||||
@@ -59,7 +59,8 @@ Hibernian||banda||||||
 Holstein Kiel||banda||||||
 Huesca||banda||||||
 Ipswich||aro||||||
-Jong Ajax||banda||||||
+Jong AZ||banda||||||
+Jong Ajax||franjas||||||
 Juve Stabia||cuartos||||||
 Juventude||cuartos||||||
 Kaiserslautern||banda||||||
@@ -85,7 +86,7 @@ Mirandés||mitad||||||
 Mitre||banda||||||
 Modena||aro||||||
 Monza||aro||||||
-Nancy||franjas||||||
+Nancy||liso||||||
 Niza||liso||||||
 Nordsjælland||banda||||||
 Novorizontino||franjas||||||
@@ -139,12 +140,13 @@ St. Gallen||franjas||||||
 Stoke||cuartos||||||
 Swansea||banda||||||
 Südtirol||aro||||||
+TOP Oss||mitad||||||
 Tianjin Jinmen Tiger||cruz||||||
 Torreense||borde||||||
 Tromsø||franjas||||||
 Troyes||franjas||||||
 Umm Salal||banda||||||
-VVV-Venlo||franjas||||||
+VVV-Venlo||liso||||||
 Vila Nova||rombos||||||
 Vitesse||mitad||||||
 Vizela||interior||||||

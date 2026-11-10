@@ -6367,5 +6367,889 @@
  "Portadun Bann": [
   "4-3-3",
   "equilibrado"
+ ],
+ "Piunik Erevan": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Ararat Armenio": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Noé Abovyan": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Shirac Gyumri": [
+  "5-3-2",
+  "presion"
+ ],
+ "Urartou Erevan": [
+  "4-3-3",
+  "directo"
+ ],
+ "Alashkerd Abov": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Araratino Erevan": [
+  "4-4-2",
+  "contra"
+ ],
+ "Vahn Charentsav": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Gandsasar Kapan": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Bkmah Erevan": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Estrella Fugaz": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Aduana Uagadugu": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Yenega Uaga": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Ejercito Uaga": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Sonabel Uaga": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Racing Kadiogo": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Salitas Uaga": [
+  "4-3-3",
+  "directo"
+ ],
+ "Racing Bobo": [
+  "3-5-2",
+  "garra"
+ ],
+ "Bobo Futbol": [
+  "4-4-2",
+  "contra"
+ ],
+ "Kiku Bobo": [
+  "5-3-2",
+  "posesion"
+ ],
+ "Royal Bobo": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Vitesa Bobo": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Koupela Union": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Asec Kudugu": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Muharraq Isla": [
+  "4-3-3",
+  "presion"
+ ],
+ "Riffa Castillo": [
+  "3-5-2",
+  "directo"
+ ],
+ "Khaldiya Ciudad": [
+  "4-4-2",
+  "garra"
+ ],
+ "Ahli Manama": [
+  "5-3-2",
+  "contra"
+ ],
+ "Najma Manama": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Hidd Puerto": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Baréin Club": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Sitra Palmeral": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Aali Alfareros": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Budaiya Oasis": [
+  "3-5-2",
+  "presion"
+ ],
+ "Malkiya Costa": [
+  "4-4-2",
+  "directo"
+ ],
+ "Shabab Manama": [
+  "5-3-2",
+  "garra"
+ ],
+ "Mazembe Cobre": [
+  "4-3-3",
+  "presion"
+ ],
+ "Vita Kinsasa": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "San Eloi Lupopo": [
+  "4-4-2",
+  "garra"
+ ],
+ "Aguilas Congo": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Renacer Congo": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Celeste Kinsasa": [
+  "3-5-2",
+  "vertical"
+ ],
+ "Pembe Kinsasa": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Maniema Unidos": [
+  "5-3-2",
+  "bloque"
+ ],
+ "Delfin Negro": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Angeles Verdes": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Rangers Kinsasa": [
+  "4-4-2",
+  "directo"
+ ],
+ "Don Bosco Lubum": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Simba Kolwezi": [
+  "4-3-3",
+  "contra"
+ ],
+ "Manika Kolwezi": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Bendicion FC": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Nuevo Jak": [
+  "5-3-2",
+  "ofensivo"
+ ],
+ "Alianza Pipil": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Águila Migueleña": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "FAS Santaneco": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Fuerte Gotera": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Firpo Usuluteco": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Inter Tecleño": [
+  "5-3-2",
+  "presion"
+ ],
+ "Isidro Metapeño": [
+  "4-3-3",
+  "directo"
+ ],
+ "Platense Zacate": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Limeño Municipal": [
+  "4-4-2",
+  "contra"
+ ],
+ "Balboa Salvador": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Cacahuateño": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Inca Sonsonate": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Achuapa Progreso": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Antigua Colonial": [
+  "5-3-2",
+  "presion"
+ ],
+ "Aurora Amatitlán": [
+  "4-3-3",
+  "directo"
+ ],
+ "Imperial Verapaz": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Comunicados Gua": [
+  "4-4-2",
+  "contra"
+ ],
+ "Guastatoyano": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Malacatense": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Marquesano": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Mictlán Mitense": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Mixqueño": [
+  "5-3-2",
+  "equilibrado"
+ ],
+ "Municipal Trébol": [
+  "4-3-3",
+  "presion"
+ ],
+ "Xelajú Altense": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Horoya Conakri": [
+  "4-4-2",
+  "garra"
+ ],
+ "Hafía Conakri": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Kaloum Capital": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Milo Kankan": [
+  "3-5-2",
+  "vertical"
+ ],
+ "Academia Soar": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Fello Labé": [
+  "5-3-2",
+  "bloque"
+ ],
+ "Satélite Conakri": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Kamsar Bauxita": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Ashanti Dorados": [
+  "4-4-2",
+  "directo"
+ ],
+ "Wakria Boké": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Secuencia Dixin": [
+  "4-3-3",
+  "contra"
+ ],
+ "Llama Olímpica": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Elefante Coleah": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Lubha Télimélé": [
+  "5-3-2",
+  "ofensivo"
+ ],
+ "Persiya Yakarta": [
+  "5-3-2",
+  "contra"
+ ],
+ "Persi Bandung": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Persebaya Verde": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Arema Malanga": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Bali Unido": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Pesem Makassar": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Persiss Solo": [
+  "3-5-2",
+  "presion"
+ ],
+ "Borneo Samarind": [
+  "4-4-2",
+  "directo"
+ ],
+ "Dewa Banten": [
+  "5-3-2",
+  "garra"
+ ],
+ "Bayangkara Pres": [
+  "4-3-3",
+  "contra"
+ ],
+ "Madura Unido": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Persito Tangera": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Pesim Yogya": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Persic Kediri": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Malut Unido": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Pesebes Biak": [
+  "4-4-2",
+  "presion"
+ ],
+ "Persijab Jepara": [
+  "5-3-2",
+  "directo"
+ ],
+ "Cemento Padang": [
+  "4-3-3",
+  "garra"
+ ],
+ "Bengalur Azules": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Chenaiyin Marina": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Delhi Capital": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Bengala Oriental": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Goa Fatorda": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Kashi Calcuta": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Jamshedpur Acero": [
+  "5-3-2",
+  "presion"
+ ],
+ "Kerala Tuskers": [
+  "4-3-3",
+  "directo"
+ ],
+ "Mohamedan Calc": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Mohun Gigantes": [
+  "4-4-2",
+  "contra"
+ ],
+ "Bombay Ciudad": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Noreste Unido": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Odisha Kalinga": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Punyab Mohali": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Gor Mahía Verde": [
+  "5-3-2",
+  "contra"
+ ],
+ "Leopardo Nairobi": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Tusker Elefante": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Policía Keniata": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Bandari Puerto": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Kakamega Hogar": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Shabana Kisii": [
+  "3-5-2",
+  "presion"
+ ],
+ "Ulinzi Estrellas": [
+  "4-4-2",
+  "directo"
+ ],
+ "Kariobangi Tibu": [
+  "5-3-2",
+  "garra"
+ ],
+ "Mathare Unidos": [
+  "4-3-3",
+  "contra"
+ ],
+ "Sofapaca": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Correos Rangers": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Bidco Thika": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Banca Kenia": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Mara Azúcar": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Muranga Foca": [
+  "4-4-2",
+  "presion"
+ ],
+ "Nairobi Unido": [
+  "5-3-2",
+  "directo"
+ ],
+ "Bomet Guardia": [
+  "4-3-3",
+  "garra"
+ ],
+ "Johor Sultanes": [
+  "3-5-2",
+  "contra"
+ ],
+ "Selangor Rojos": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Trengganu Costa": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Sabah Kinabalu": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "K. Lumpur Ciudad": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Kuching Ciudad": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Penang Panteras": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Negri Seremban": [
+  "4-3-3",
+  "directo"
+ ],
+ "Kelantan Reales": [
+  "3-5-2",
+  "garra"
+ ],
+ "Malaca Jebat": [
+  "4-4-2",
+  "contra"
+ ],
+ "Polis Selayang": [
+  "5-3-2",
+  "posesion"
+ ],
+ "Inmigra Kangar": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Brunei Sultan": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Sherif Tiraspolo": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Zimbro Chisinau": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Petrocup Hinces": [
+  "4-3-3",
+  "presion"
+ ],
+ "Milsamo Orhei": [
+  "3-5-2",
+  "directo"
+ ],
+ "Balti Nordico": [
+  "4-4-2",
+  "garra"
+ ],
+ "Dacio Buiucani": [
+  "5-3-2",
+  "contra"
+ ],
+ "Politecnica Chis": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Espartanos Sport": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Seeb Mascate": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Dofar Salala": [
+  "4-4-2",
+  "presion"
+ ],
+ "Nasr Salala": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Club de Mascate": [
+  "4-3-3",
+  "garra"
+ ],
+ "Nahda Buraimi": [
+  "3-5-2",
+  "contra"
+ ],
+ "Sur Marinero": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Sohar Puerto": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Shabab Barka": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Rustaq Unido": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Ibri Oasis": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Saham Costa": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Jaburah Costa": [
+  "4-3-3",
+  "directo"
+ ],
+ "Buriram Volcan": [
+  "5-3-2",
+  "equilibrado"
+ ],
+ "Bangkok Unidos": [
+  "4-3-3",
+  "presion"
+ ],
+ "Pathum Azul": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Muangtong Rayo": [
+  "4-4-2",
+  "garra"
+ ],
+ "Puerto Bangkok": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Chiang Rai Sur": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Nakhon Rachima": [
+  "3-5-2",
+  "vertical"
+ ],
+ "Chonbury Marino": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Rachaburi Draco": [
+  "5-3-2",
+  "bloque"
+ ],
+ "Kanchana Fuerza": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Rayong Costa": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Sukotai Antiguo": [
+  "4-4-2",
+  "directo"
+ ],
+ "Lamphun Guerra": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Ayutaya Reales": [
+  "4-3-3",
+  "contra"
+ ],
+ "Prachuap Bahia": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Utai Tani Verde": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Bekamex Thu Dau": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Policia Saigon": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Dong Ah Thanh": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Haifong Puerto": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Policia Hanoi": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Hanoy Capital": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Tekong Militar": [
+  "5-3-2",
+  "presion"
+ ],
+ "Hoang Anh Pleiku": [
+  "4-3-3",
+  "directo"
+ ],
+ "Hong Linh Hatin": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Ninbin Montanas": [
+  "4-4-2",
+  "contra"
+ ],
+ "Acero Nam Dinh": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Cantera Hung Yen": [
+  "4-3-3",
+  "vertical"
+ ],
+ "SHB Danang Mar": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Song Lam Vinh": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Dinamos Poder": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Zesco Ndola": [
+  "4-3-3",
+  "contra"
+ ],
+ "Nkana Kitwe Rojo": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Flechas Rojas": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Zanako Lusaka": [
+  "5-3-2",
+  "ofensivo"
+ ],
+ "Bufalos Verdes": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Aguilas Verdes": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Guerreros Kabwe": [
+  "4-4-2",
+  "presion"
+ ],
+ "Dinamo Kansanshi": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Hojas Konkola": [
+  "4-3-3",
+  "garra"
+ ],
+ "Maestro Mazabuka": [
+  "3-5-2",
+  "contra"
+ ],
+ "Mineros Kabwe": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Mufulira Errante": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Mutondo Estrella": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Napsa Estrellas": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Guardas Nchanga": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Nkwasi Lusaka": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Leopardos Carcel": [
+  "4-3-3",
+  "directo"
  ]
 }
