@@ -395,3 +395,24 @@ func _probar_piezas_estadio_real() -> void:
 	_comprobar(not c.perfil_estadio().has("bandejas"), "sin fila real no hay techo por lados")
 	for x: Node in [r0, r1, r2]:
 		x.free()
+
+## (10-11) El edificio del club solo se dibuja con la cámara en el túnel o detrás de la tribuna (picos de llamadas en planos a ras de césped).
+func _probar_interior_oculto() -> void:
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var tunel := Node3D.new()
+	raiz.add_child(tunel)
+	var ed := Node3D.new()
+	ed.name = "EdificioClub"
+	tunel.add_child(ed)
+	var v := InteriorOculto.vigilar(tunel, 50.0, 70.0)
+	var cam := Camera3D.new()
+	raiz.add_child(cam)
+	cam.make_current()
+	var casos := [[Vector3(-30, 2, 25), false, "a ras de césped junto al túnel"], [Vector3(0, 4, 61), false, "repetición tras el arco, sobre la grada"],
+		[Vector3(0, 1.7, 55), true, "en el pasillo del túnel"], [Vector3(3, 9, 74), true, "en una planta del edificio"]]
+	for c: Array in casos:
+		cam.global_position = c[0]
+		v._process(0.0)
+		_comprobar(ed.visible == c[1], "edificio del club %s: %s" % ["visible" if c[1] else "apagado", c[2]])
+	raiz.free()
