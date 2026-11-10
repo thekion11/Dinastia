@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p10.gd"
-## [Capa 11 de `varios.gd`, 10-11] _probar_final_temporada, _probar_habilidades_y_calor, _probar_puerta_animada, _probar_flecha_forma, _probar_quimica_linea (secciones del 10-11)
+## [Capa 11 de `varios.gd`, 10-11] _probar_final_temporada, _probar_habilidades_y_calor, _probar_puerta_animada, _probar_flecha_forma, _probar_quimica_linea, _probar_objetivo_directiva (secciones del 10-11)
 
 ## EL FINAL DE TEMPORADA COMPLETO (10-11, orden del dueño): copa y continental a medias se juegan hasta el final antes del cierre, y la pantalla única
 ## de resumen tiene campeón, tu puesto, copa, continental, ascensos/descensos, premios y veredicto.
@@ -117,3 +117,18 @@ func _probar_quimica_linea() -> void:
 	_comprobar(mismo_pais > base and veteranos > mismo_pais and veteranos <= 100, "el mismo país y las temporadas juntos suben la química (%d → %d → %d)" % [base, mismo_pais, veteranos])
 	var lin := QuimicaLinea.lineas(m, club.once())
 	_comprobar(lin.has("DEF") and lin.has("MED") and lin.has("DEL") and not lin.has("POR"), "una cifra por línea del once, sin el portero (%s)" % str(lin))
+
+## EL OBJETIVO DE LA DIRECTIVA A LA VISTA (10-11): la barra se llena dentro de la meta y se acorta lejos de ella.
+func _probar_objetivo_directiva() -> void:
+	_titulo("MENÚ CENTRAL: OBJETIVO DE LA DIRECTIVA CON BARRA")
+	_comprobar(ObjetivoDirectiva.progreso(3, 4, 16) == 100 and ObjetivoDirectiva.progreso(0, 4, 16) == 50, "dentro de la meta: llena; sin jugar: a la mitad")
+	var cerca := ObjetivoDirectiva.progreso(6, 4, 16)
+	var lejos := ObjetivoDirectiva.progreso(15, 4, 16)
+	_comprobar(cerca > lejos and lejos >= 5 and cerca < 100, "fuera de la meta, cuanto más lejos, más corta (6.º: %d, 15.º: %d)" % [cerca, lejos])
+	var m := Mundo.new()
+	m.generar(["CHI"], 62)
+	m.tomar_el_mando(m.ligas[0].clubes[3].id)
+	var f := ObjetivoDirectiva.fila(m, m.mi_club(), m.liga_de(m.mi_club()))
+	_comprobar(f != null and f.find_children("*", "ProgressBar", true, false).size() == 1, "con un club en marcha sale la fila con su barra")
+	if f != null:
+		f.free()
