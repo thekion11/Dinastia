@@ -334,9 +334,16 @@ func torneo_continental(anio: int) -> Dictionary:
 	var clave := Continental.confed_de(pais_seleccion())
 	if not Calendario.toca_continental_selecciones(clave, anio):   ## (10-11) el ciclo real de cada torneo, igual que el calendario
 		return {}
-	var puesto := int(Azar.uno(BOLSA_PUESTOS))
 	var torneo := String(TORNEO_POR_CONFED.get(clave, "Copa América"))
 	var sel := nombre_seleccion()
+	## (10-11) Un torneo DE VERDAD, con grupos, eliminatorias y partidos (`SeleccionesTorneos`), en vez de sortear el puesto.
+	var t := SeleccionesTorneos.continental(self, _mundo(), clave, torneo, anio)
+	t.jugar_entero()
+	ultimo_torneo = t
+	var mia := SeleccionesTorneos.equipo_en(t, sel)
+	if mia == null:
+		return {}
+	var puesto := t.puesto_de(mia)
 	_anotar_resultado("%s %d: %s %s" % [torneo, anio, sel, PUESTOS_TORNEO[puesto]])
 	noticia.emit("%s: %s %s" % [torneo, sel, PUESTOS_TORNEO[puesto]],
 		"¡Título continental! Tus seleccionados vuelven en una nube." if puesto == 0
@@ -345,7 +352,7 @@ func torneo_continental(anio: int) -> Dictionary:
 		for j in convocados():
 			j.cambiar_moral(MORAL_TITULO_CONTINENTAL, "Selección nacional")
 	torneo_de_selecciones.emit(torneo, puesto)
-	return {"torneo": torneo, "puesto": puesto, "seleccion": sel, "anio": anio}
+	return {"torneo": torneo, "puesto": puesto, "seleccion": sel, "anio": anio, "campeon": t.campeon.nombre if t.campeon != null else ""}
 
 # ---------------------------------------------------------------------------
 #  EL MUNDIAL DE CLUBES
