@@ -22,7 +22,7 @@ static func pintar(lista: VBoxContainer, liga: Liga, mio: Club) -> void:
 				var c: Club = f["club"]
 				var dg := int(f["gf"]) - int(f["gc"])
 				CompeticionFilas.fila_tabla(lista, puesto, c, [str(f["pj"]), str(f["g"]), str(f["e"]), str(f["p"]),
-					("+%d" % dg) if dg > 0 else str(dg), str(f["pts"])], c == mio, puesto % 2 == 0)
+					("+%d" % dg) if dg > 0 else str(dg), str(f["pts"])], c == mio, puesto % 2 == 0, {})
 			continue
 		for c: Dictionary in s["cruces"]:
 			CompeticionFilas.fila_partido(lista, c["a"], c["b"], _goles(c, 0), _goles(c, 1), mio, _resumen(c))
