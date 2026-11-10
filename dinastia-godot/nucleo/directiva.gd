@@ -28,6 +28,13 @@ var objetivo: String = ""
 var temporadas: int = 0
 var trofeos: Array[String] = []
 var despedido_ya: bool = false
+## (10-11) OBJETIVOS POR CLUB (`ObjetivosClub`): además del de liga (`objetivo`/`meta_puesto`, que sigue siendo lo que lee el resto del juego), el club
+## tiene varios objetivos secundarios con su peso en la confianza y un proyecto a 3 temporadas. Valores por defecto vacíos: una partida vieja los
+## estrena al cargar. `bases` = la caja y los socios al fijarlos (para juzgar «aumentar»).
+var objetivos: Array[Dictionary] = []
+var proyecto: Dictionary = {}
+var bases: Dictionary = {}
+var _objetivo_generado := ""   ## el texto de liga que puso `generar_objetivos`: si otro sistema (roles) lo cambia, no se pisa
 
 ## Si tu ROL actual admite que te echen -"lo_echan" de `Roles.PERMISOS`-.
 ## `Directiva` no conoce a `Roles` -son decisiones que se apoyan una en otra
@@ -179,6 +186,29 @@ func _fijar_objetivo(rank: int) -> void:
 	else:
 		objetivo = "Evitar el descenso"
 		meta_puesto = 14
+
+## Fija el paquete de objetivos propio de este club (liga, secundarios y proyecto). Con `mantener_proyecto`, un proyecto a medias sigue en marcha.
+## No pisa el objetivo de liga si otro sistema lo cambió a mano (el interino, el incendio…).
+func generar_objetivos(m: Mundo, mantener_proyecto := false) -> void:
+	var paquete := ObjetivosClub.generar(m, club)
+	if paquete.is_empty():
+		return
+	var pr: Dictionary = paquete["principal"]
+	var texto := String(pr["texto"])
+	if objetivo == "" or objetivo == _objetivo_generado or not mantener_proyecto:
+		objetivo = (texto % int(pr["meta"])) if texto.contains("%d") else texto   ## en castellano con su número: la pantalla lo traduce con `Idiomas.t` (patrones)
+		meta_puesto = int(pr["meta"])
+		_objetivo_generado = objetivo
+	var sec: Array[Dictionary] = []
+	for o: Dictionary in paquete["secundarios"]:
+		var oo := (o as Dictionary).duplicate()
+		if String(oo["texto"]).contains("%d"):
+			oo["texto"] = String(oo["texto"]) % int(oo["meta"])
+		sec.append(oo)
+	objetivos = sec
+	bases = (paquete["bases"] as Dictionary).duplicate()
+	if not (mantener_proyecto and not proyecto.is_empty()):
+		proyecto = (paquete["proyecto"] as Dictionary).duplicate()
 
 func mover_confianza(delta: int, motivo: String) -> void:
 	if despedido_ya:

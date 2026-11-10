@@ -12,7 +12,7 @@ var _paso := 0
 const TODAS := [[0, "Vestuario"], [-2, "Estacionamiento"], [-1, "Utilería"], [-1, "Enfermería"],
 	[-1, "Vestuario visitante"], [1, "Oficina del DT"], [1, "Despacho del presidente"], [1, "Sala de vídeo"],
 	[2, "Sala de prensa"], [2, "Museo del club"], [1, "Pasillo"], [0, "Ascensor"]]
-## RETIRADAS=1 pone camisetas retiradas en la partida (museo). SOLO=5,6 deja solo esas salas (índices de TODAS) y SIN_AVATAR=1 esconde al jugador (para ver el mobiliario).
+## PUERTAS=1 con SOLO=11,11: la segunda foto del ascensor con las puertas abiertas. RETIRADAS=1 pone camisetas retiradas en la partida (museo). SOLO=5,6 deja solo esas salas (índices de TODAS) y SIN_AVATAR=1 esconde al jugador (para ver el mobiliario).
 var SALAS: Array = TODAS
 
 func _ready() -> void:
@@ -53,6 +53,9 @@ func _colocar(planta: int, sala: String) -> void:
 			## Desde el fondo de la sala mirando hacia el escaparate (−Z).
 			_ex.cuerpo.position = Vector3(r.get_center().x, RecorridoClub.y_de(planta), minf(r.end.y - 0.3, r.get_center().y + 1.6))
 			_ex.rumbo = PI
+			if sala == "Ascensor":   ## (10-11) de frente a las puertas; con PUERTAS=1 la 2.ª foto de la lista (SOLO=11,11) las lleva abiertas
+				_ex.rumbo = 0.0
+				PuertasAscensor.mover(get_tree(), float(planta) * EdificioClub.ALTO_PLANTA, OS.get_environment("PUERTAS") == "1" and (_paso >= 1 or SALAS.size() == 1), 0.0)
 			_ex.paso(Vector2.ZERO, false, 0.0)
 			_ex._colocar_camara(1.0)
 			if OS.get_environment("SIN_AVATAR") == "1":
@@ -67,7 +70,7 @@ func _process(_d: float) -> void:
 		_vista.recorrer()
 		_ex = _vista._explorador
 		_ex.set_physics_process(false)
-	if _n >= 10 and (_n - 10) % 6 == 0:
+	if _n >= 10 and (_n - 10) % (14 if OS.get_environment("PUERTAS") == "1" else 6) == 0:
 		if _paso > 0:
 			_foto()
 		if _paso >= SALAS.size():

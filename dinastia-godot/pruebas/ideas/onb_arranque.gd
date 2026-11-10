@@ -84,6 +84,7 @@ func _probar() -> void:
 			if r["local"] == mio or r["visita"] == mio:
 				jugados["n"] += 1
 	liga.jornada_terminada.connect(oyente)
+	AvanceSemana.partido_obliga = false   ## (10-11) la prueba recorre semanas a mano: sin esto el sábado con partido abre el menú del partido
 	var semanas := 0
 	while int(jugados["n"]) == 0 and semanas < 8:
 		p._avanzar_semana()
