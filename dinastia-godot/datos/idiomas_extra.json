@@ -7820,7 +7820,9 @@
   "Preparando tu club…": "Getting your club ready…",
   "Resolución 3D automática (máx. 720 px de alto)": "Automatic 3D resolution (max. 720 px high)",
   "Modo rendimiento (sin brillo ni sombra del sol)": "Performance mode (no glow, no sun shadow)",
-  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Removes the glow and the sun shadow at Medium quality and below to gain smoothness. Changes the look; applied when the stadium opens."
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Removes the glow and the sun shadow at Medium quality and below to gain smoothness. Changes the look; applied when the stadium opens.",
+  "Ahorro en los menús también en Media": "Menu power saving also at Medium",
+  "Los menús solo se repintan cuando algo cambia y los fondos animados quedan quietos. Cambia el aspecto del menú; se aplica al volver al menú.": "Menus only redraw when something changes and animated backgrounds stay still. Changes the menu's look; applied when you return to the menu."
  },
  "pt": {
   "Historia": "História",
@@ -15643,7 +15645,9 @@
   "Preparando tu club…": "Preparando o seu clube…",
   "Resolución 3D automática (máx. 720 px de alto)": "Resolução 3D automática (máx. 720 px de altura)",
   "Modo rendimiento (sin brillo ni sombra del sol)": "Modo desempenho (sem brilho nem sombra do sol)",
-  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Remove o brilho e a sombra do sol na qualidade Média e inferiores para ganhar fluidez. Muda o aspeto; aplica-se ao abrir o estádio."
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Remove o brilho e a sombra do sol na qualidade Média e inferiores para ganhar fluidez. Muda o aspeto; aplica-se ao abrir o estádio.",
+  "Ahorro en los menús también en Media": "Poupança nos menus também em Média",
+  "Los menús solo se repintan cuando algo cambia y los fondos animados quedan quietos. Cambia el aspecto del menú; se aplica al volver al menú.": "Os menus só são redesenhados quando algo muda e os fundos animados ficam parados. Muda o aspeto do menu; aplica-se ao voltar ao menu."
  },
  "patrones": [
   [
@@ -29573,7 +29577,9 @@
   "Preparando tu club…": "Préparation de votre club…",
   "Resolución 3D automática (máx. 720 px de alto)": "Résolution 3D automatique (720 px de haut max.)",
   "Modo rendimiento (sin brillo ni sombra del sol)": "Mode performance (sans halo ni ombre du soleil)",
-  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Retire le halo et l'ombre du soleil en qualité Moyenne et inférieure pour gagner en fluidité. Change l'aspect ; appliqué à l'ouverture du stade."
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Retire le halo et l'ombre du soleil en qualité Moyenne et inférieure pour gagner en fluidité. Change l'aspect ; appliqué à l'ouverture du stade.",
+  "Ahorro en los menús también en Media": "Économie dans les menus aussi en Moyenne",
+  "Los menús solo se repintan cuando algo cambia y los fondos animados quedan quietos. Cambia el aspecto del menú; se aplica al volver al menú.": "Les menus ne se redessinent que lorsqu'il y a un changement et les fonds animés restent fixes. Change l'aspect du menu ; appliqué au retour au menu."
  },
  "it": {
   "Historia": "Storia",
@@ -37396,7 +37402,9 @@
   "Preparando tu club…": "Preparazione del tuo club…",
   "Resolución 3D automática (máx. 720 px de alto)": "Risoluzione 3D automatica (max 720 px di altezza)",
   "Modo rendimiento (sin brillo ni sombra del sol)": "Modalità prestazioni (senza bagliore né ombra del sole)",
-  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Toglie il bagliore e l'ombra del sole in qualità Media e inferiori per guadagnare fluidità. Cambia l'aspetto; si applica all'apertura dello stadio."
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Toglie il bagliore e l'ombra del sole in qualità Media e inferiori per guadagnare fluidità. Cambia l'aspetto; si applica all'apertura dello stadio.",
+  "Ahorro en los menús también en Media": "Risparmio nei menu anche in Media",
+  "Los menús solo se repintan cuando algo cambia y los fondos animados quedan quietos. Cambia el aspecto del menú; se aplica al volver al menú.": "I menu si ridisegnano solo quando qualcosa cambia e gli sfondi animati restano fermi. Cambia l'aspetto del menu; si applica al ritorno al menu."
  },
  "de": {
   "Historia": "Geschichte",
@@ -45219,7 +45227,9 @@
   "Preparando tu club…": "Dein Verein wird vorbereitet …",
   "Resolución 3D automática (máx. 720 px de alto)": "Automatische 3D-Auflösung (max. 720 px Höhe)",
   "Modo rendimiento (sin brillo ni sombra del sol)": "Leistungsmodus (ohne Leuchten und Sonnenschatten)",
-  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Entfernt Leuchten und Sonnenschatten bei Mittel und darunter für mehr Flüssigkeit. Ändert das Aussehen; gilt beim Öffnen des Stadions."
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Entfernt Leuchten und Sonnenschatten bei Mittel und darunter für mehr Flüssigkeit. Ändert das Aussehen; gilt beim Öffnen des Stadions.",
+  "Ahorro en los menús también en Media": "Menü-Sparmodus auch bei Mittel",
+  "Los menús solo se repintan cuando algo cambia y los fondos animados quedan quietos. Cambia el aspecto del menú; se aplica al volver al menú.": "Menüs werden nur neu gezeichnet, wenn sich etwas ändert, und animierte Hintergründe stehen still. Ändert das Aussehen des Menüs; gilt bei der Rückkehr ins Menü."
  },
  "ca": {
   "Historia": "Història",
@@ -53042,7 +53052,9 @@
   "Preparando tu club…": "Preparant el teu club…",
   "Resolución 3D automática (máx. 720 px de alto)": "Resolució 3D automàtica (màx. 720 px d'alçada)",
   "Modo rendimiento (sin brillo ni sombra del sol)": "Mode rendiment (sense resplendor ni ombra del sol)",
-  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Treu el resplendor i l'ombra del sol en qualitat Mitjana i inferiors per guanyar fluïdesa. Canvia l'aspecte; s'aplica en obrir l'estadi."
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Treu el resplendor i l'ombra del sol en qualitat Mitjana i inferiors per guanyar fluïdesa. Canvia l'aspecte; s'aplica en obrir l'estadi.",
+  "Ahorro en los menús también en Media": "Estalvi als menús també en Mitjana",
+  "Los menús solo se repintan cuando algo cambia y los fondos animados quedan quietos. Cambia el aspecto del menú; se aplica al volver al menú.": "Els menús només es repinten quan alguna cosa canvia i els fons animats queden quiets. Canvia l'aspecte del menú; s'aplica en tornar al menú."
  },
  "pl": {
   "Club": "Klub",
@@ -60865,7 +60877,9 @@
   "Preparando tu club…": "Przygotowywanie twojego klubu…",
   "Resolución 3D automática (máx. 720 px de alto)": "Automatyczna rozdzielczość 3D (maks. 720 px wysokości)",
   "Modo rendimiento (sin brillo ni sombra del sol)": "Tryb wydajności (bez poświaty i cienia słońca)",
-  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Usuwa poświatę i cień słońca w jakości Średniej i niższych, by zyskać płynność. Zmienia wygląd; stosowane po otwarciu stadionu."
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Usuwa poświatę i cień słońca w jakości Średniej i niższych, by zyskać płynność. Zmienia wygląd; stosowane po otwarciu stadionu.",
+  "Ahorro en los menús también en Media": "Oszczędzanie w menu także w jakości Średniej",
+  "Los menús solo se repintan cuando algo cambia y los fondos animados quedan quietos. Cambia el aspecto del menú; se aplica al volver al menú.": "Menu odświeża się tylko przy zmianie, a animowane tła stoją w miejscu. Zmienia wygląd menu; stosowane po powrocie do menu."
  },
  "tr": {
   "Club": "Kulüp",
@@ -68688,6 +68702,8 @@
   "Preparando tu club…": "Kulübün hazırlanıyor…",
   "Resolución 3D automática (máx. 720 px de alto)": "Otomatik 3D çözünürlük (en fazla 720 px yükseklik)",
   "Modo rendimiento (sin brillo ni sombra del sol)": "Performans modu (parlama ve güneş gölgesi yok)",
-  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Akıcılık için Orta ve altı kalitede parlamayı ve güneş gölgesini kaldırır. Görünümü değiştirir; stadyum açılırken uygulanır."
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Akıcılık için Orta ve altı kalitede parlamayı ve güneş gölgesini kaldırır. Görünümü değiştirir; stadyum açılırken uygulanır.",
+  "Ahorro en los menús también en Media": "Menülerde tasarruf Orta kalitede de",
+  "Los menús solo se repintan cuando algo cambia y los fondos animados quedan quietos. Cambia el aspecto del menú; se aplica al volver al menú.": "Menüler yalnızca bir şey değiştiğinde yeniden çizilir ve animasyonlu arka planlar durur. Menünün görünümünü değiştirir; menüye dönünce uygulanır."
  }
 }

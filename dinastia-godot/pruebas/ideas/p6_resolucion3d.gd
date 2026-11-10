@@ -64,3 +64,9 @@ func _probar() -> void:
 	_comprobar(not Calidad.sombra_solar(Calidad.MEDIO) and not ModoRendimiento.glow(Calidad.MEDIO) and not ModoRendimiento.glow(Calidad.BAJA) and not Calidad.sombra_solar(Calidad.MEDIA_BAJA), "modo rendimiento: MEDIA y menores sin sombra del sol ni glow")
 	_comprobar(Calidad.sombra_solar(Calidad.ALTO) and ModoRendimiento.glow(Calidad.ALTO) and Calidad.sombra_solar(Calidad.ULTRA) and ModoRendimiento.glow(Calidad.ULTRA), "modo rendimiento: ALTA y ULTRA no se tocan")
 	Calidad.modo_rendimiento = modo_antes
+
+	## (10-11) Ahorro del menú también en MEDIA (pregunta 7 del dueño): apagado por defecto; ALTA y superiores nunca.
+	_comprobar(not Calidad.ahorro_menu_media, "el ahorro del menú en MEDIA viene apagado")
+	_comprobar(AhorroMenu.nivel_ahorra(Calidad.BAJA, false) and AhorroMenu.nivel_ahorra(Calidad.MEDIA_BAJA, false) and AhorroMenu.nivel_ahorra(Calidad.MINIMO, false), "BAJA, MEDIA BAJA y ULTRA BAJA ahorran siempre")
+	_comprobar(not AhorroMenu.nivel_ahorra(Calidad.MEDIO, false) and AhorroMenu.nivel_ahorra(Calidad.MEDIO, true), "MEDIA solo ahorra si se pide")
+	_comprobar(not AhorroMenu.nivel_ahorra(Calidad.ALTO, true) and not AhorroMenu.nivel_ahorra(Calidad.ULTRA, true), "ALTA y ULTRA nunca ahorran")
