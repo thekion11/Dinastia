@@ -44,12 +44,19 @@ func _ready() -> void:
 		EdificioClub.ctx["titulos"] = n_t
 	var perfil := EstadioPropio.new().perfil(club)
 	perfil["niveles"] = 2
+	if OS.get_environment("CALIDAD") != "":
+		Calidad.elegida = int(OS.get_environment("CALIDAD"))
+		Calidad.aplicar_viewport(get_viewport(), Calidad.elegida)
 	_vista = VistaEstadio.new()
 	add_child(_vista)
 	_vista.abrir(club, 0.85, null, null, perfil)
 
 func _foto() -> void:
+	print("LLAMADAS ", _imgs.size(), " ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME), " tris ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))
 	var img := get_viewport().get_texture().get_image()
+	img.convert(Image.FORMAT_RGBA8)
+	if OS.get_environment("COMPLETA") == "1":
+		img.save_png(OS.get_environment("SALIDA").replace(".png", "_%d.png" % _imgs.size()))
 	img.resize(480, 270)
 	_imgs.append(img)
 

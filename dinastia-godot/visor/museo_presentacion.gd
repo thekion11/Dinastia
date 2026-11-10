@@ -8,11 +8,11 @@ extends RefCounted
 ## Y a lo largo de las dos paredes laterales un zócalo con el color del club.
 
 ## `lado`: −1 si la vitrina está pegada a la pared izquierda (el pasillo queda a +x), +1 a la derecha. `p`: suelo bajo la vitrina.
-static func vitrina(lote, nodo: Node3D, m: Dictionary, oro: Material, p: Vector3, lado: float, hito: Dictionary) -> void:
+static func vitrina(lote, nodo: Node3D, m: Dictionary, p: Vector3, lado: float, hito: Dictionary) -> void:
 	if OS.get_environment("SIN_PRESENTACION_MUSEO") != "":   ## para medir antes/después
 		return
 	var hacia := -lado   ## el lado del pasillo
-	lote.caja(oro, SalasClub._en(Vector3(p.x + hacia * 0.355, p.y + 0.55, p.z)), Vector3(0.02, 0.16, 0.38))
+	lote.caja(m["placa"], SalasClub._en(Vector3(p.x + hacia * 0.355, p.y + 0.55, p.z)), Vector3(0.02, 0.16, 0.38))
 	lote.caja(m["tira"], SalasClub._en(Vector3(p.x + hacia * 0.62, p.y + 0.045, p.z)), Vector3(0.5, 0.004, 0.6))
 	if Calidad.elegida <= Calidad.MINIMO or hito.is_empty():
 		return

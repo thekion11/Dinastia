@@ -17,6 +17,8 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 ## REESTRUCTURACIÓN «SOLO CLUB» (orden 34, dueño, 9-11; en CLAUDE.md es el punto 33) — manda sobre todo lo anterior; el trabajo real EMPIEZA EL LUNES 16-11
 - **HECHO sesión 7 (10-11), museo (1/3)**: el visor del trofeo (`VisorTrofeo`, ya abría con E) ahora se maneja también con TOQUE (arrastre con el dedo, botones ◀ ▶ ＋ －), MANDO (stick/cruceta giran, stick derecho acerca, A cierra con el foco, B cierra) y rueda/W/S para acercar; prueba `prueba_visor_trofeo_mandos` con 3 clubes (ENG con 3 títulos, ESP y CHI sin ninguno). FALTA: (2) presentación del museo (vitrinas, luz, carteles) y (3) que la planta 3 se abra también por número de títulos: hoy la amplía la obra «Museo del club» (nivel 5, `MuseoAmpliado`) con su animación de encendido; hace falta decisión del dueño si debe depender de los títulos.
+- **HECHO sesión 7 (10-11), museo (2/3, presentación)**: `MuseoPresentacion`: placa en la peana, charco de luz en el suelo y zócalo del color del club (todo en el `Lote` con materiales que ya existían) y cartel con título y año (Label3D, solo desde BAJA). MÍNIMA: llamadas idénticas con 0 y con 14 títulos (770/770 y 788/788, CHI). Capturas en `docs/04_auditorias/capturas_museo_2026-11-10/`. Medir con `SIN_PRESENTACION_MUSEO=1`. FALTA: la planta 3 (`MuseoAmpliado`) sin la misma presentación; carteles algo pequeños.
+
 
 Fuente: PDF «Plan de Reestructuración – Dinastía» y vídeo del despacho (la habitación sin puertas ni marcos y el ascensor sin animación). Decisiones obligatorias.
 
