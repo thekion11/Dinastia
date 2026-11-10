@@ -344,3 +344,14 @@ comparar (habría que medirlo con su paquete `gfootball`).
 goles 2,17 → 2,33, cambios de posesión 24,3 → 23,5. Calibrar SOLO la zona no basta: desde 24-30 m las probabilidades de tiro son
 bajas y el pase sigue delante en la cola. Si el dueño elige calibrar, habría que mover a la vez la zona, la prioridad del tiro y
 la profundidad del bloque defensivo.
+
+### Fase 4c, parte 3: locomoción visual del portador (10-11, detrás de `MOTOR_LEAGUE`)
+Como en el original, el portador que conduce usa los ciclos de **control de balón** de `league.res` en vez de nuestro «conducir»:
+`ls_ballcontrol__walk__000` → clip `conducir_ls` (paso de referencia 5,04 m/s) y `ls_ballcontrol__sprint__000` → `conducir_ls_rapido`
+(7,0 m/s). El cambio entre los dos es el umbral trote/sprint del original (`CAMBIO_TROTE_SPRINT`, 6,2 m/s) y la velocidad del clip
+se ajusta a la del jugador (velocidad / referencia, entre 0,7 y 1,4) para que los pies no patinen. Código: `LeagueAnim.CICLOS_CONDUCIR`,
+`conducir()` y `ciclo_de()` (paso + espejo en bucle) en `visor/league_anim.gd`; `MotorLeague._mover_jugadores` (solo con la fase 3 y
+cuando no hay un gesto en curso). Revisado: `pruebas/_sonda/captura_conducir_league.tscn` (los 3 ciclos lado a lado, dos clubes de
+ARG y ESP) y `pruebas/_sonda/captura_partido_league.tscn` (cámara real del partido, Forward+, Boedo AC – Madrigal CF): paso
+completo, balón pegado al pie, sin poses rotas. Banco «FIN. 0 fallos»; sin cambios en el motor de siempre.
+Siguiente (misma fase): arranques, frenadas y giros del original (`ls_turn__*`, `ls_stop__*`) para los jugadores sin balón.
