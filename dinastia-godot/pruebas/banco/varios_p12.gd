@@ -372,6 +372,10 @@ func _probar_piezas_estadio_real() -> void:
 	var r2 := Node3D.new()
 	_comprobar(PiezasRealesEstadio.montar(r2, {"costillas": 40}, 60.0, 80.0, 30.0, 25.0) == 0, "en calidad mínima, sin costillas")
 	Calidad.elegida = nivel
+	var r3 := Node3D.new()
+	_comprobar(PiezasRealesEstadio.montar(r3, {"fachada_curva": {"color": "#cccccc"}, "colchon": {"color": "#dc052d", "filas": 3}}, 60.0, 80.0, 30.0, 25.0) == 2
+		and (r3.get_node("Colchon") as MultiMeshInstance3D).multimesh.instance_count == 3 * 56, "fachada curva y colchón (3 filas de 56 paneles en UNA malla)")
+	r3.free()
 	var c := Club.new()
 	c.nombre = "Club de prueba sin fila real"
 	_comprobar(not c.perfil_estadio().has("bandejas"), "sin fila real no hay techo por lados")

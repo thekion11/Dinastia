@@ -356,6 +356,23 @@ PIEZAS = {
     "Atl. Nacional": {"techo_lados": ["oeste"], "asientos": ["#00813c", "#f2f2f2"]},
     "AmaZalu": {"arco": {"alto": 104, "lado": "centro", "color": "#f2f2f2"}},
 }
+# 10-11, SEGUNDA TANDA (11 países nuevos; Portugal no está en el juego) y lo pendiente del plan: fachada curva y «colchón».
+PIEZAS.update({
+    "Ajax": {"techo": "retractil", "fachada_curva": {"color": "#9aa3ad"}, "asientos": ["#d2122e", "#f2f2f2"]},
+    "Peñarol": {"niveles": 2, "techo": "parcial", "asientos": ["#f5c400", "#111111"], "asientoP": "franjas"},
+    "Universitario": {"fachada_curva": {"color": "#d8cfb8"}, "asientos": ["#f2e6c9", "#8b0000"]},
+    "Kashima A.": {"techoCol": "#cfd4d8", "asientos": ["#a41e34", "#1a1a1a"]},
+    "Al-Hilal": {"techo": "membrana", "techoCol": "#f7f7f7", "fachada_curva": {"color": "#e6e1d6"}, "asientos": ["#0055a5", "#f2f2f2"]},
+    "Al Ahly": {"techo": "parcial", "techo_lados": ["oeste"], "asientos": ["#c8102e", "#f2f2f2"]},
+    "Raja C.": {"pista": True, "techo_lados": ["oeste"], "asientos": ["#00843d", "#f2f2f2"]},
+    "Atlanta Utd": {"costillas": 24, "costillas_col": "#c0c6cc", "fachada_curva": {"color": "#8f979f"}},
+    "FC Seoul": {"forma": "cuenco", "techo": "membrana", "techoCol": "#f4f4f4", "asientos": ["#c8102e", "#1a1a1a"]},
+    "Melbourne V.": {"colchon": {"color": "#1c4f9c", "filas": 3}},
+    "Barcelona SC": {"fachada_curva": {"color": "#e0d9c5"}, "asientos": ["#ffd100", "#111111"]},
+    "Zamalek": {"asientos": ["#f2f2f2", "#c8102e"]},
+})
+PIEZAS["Bayern Múnich"]["colchon"] = {"color": "#dc052d", "filas": 5}   # el colchón iluminado
+PIEZAS["Barcelona"]["fachada_curva"] = {"color": "#d9d9d9"}   # el óvalo se ve curvo por fuera
 for _k, _v in PIEZAS.items():
     if _k in ESTADIOS:
         ESTADIOS[_k].update(_v)
