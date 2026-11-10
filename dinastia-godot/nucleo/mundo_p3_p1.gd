@@ -212,14 +212,19 @@ func _capitan_si_falta(c: Club) -> void:
 func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:
 	_generar_inicio(semilla_partida)
 	for f: Dictionary in _fuentes_de_liga(paises):
-		var liga := Liga.new(f["nombre"], f["pais"], int(f.get("division", 1)))
-		if liga.division() == 1 and ReglasAscenso.tiene(liga.pais):
-			liga.plazas_descenso = int(ReglasAscenso.de(liga.pais)["bajan"])   ## (10-11) los descensos reales del país
-		for fila: Array in f["clubes"]:
-			_generar_club(liga, f, fila)
-		liga.preparar()
-		ligas.append(liga)
+		_crear_liga_completa(f)
 	_generar_final()
+
+## Una liga entera desde su fuente (`_fuentes_de_liga`): sus clubes con plantilla, su tabla y su calendario, añadida a `ligas`. La usan `generar` y `LigasActivas.agregar` (ligas añadidas a mitad de partida).
+func _crear_liga_completa(f: Dictionary) -> Liga:
+	var liga := Liga.new(f["nombre"], f["pais"], int(f.get("division", 1)))
+	if liga.division() == 1 and ReglasAscenso.tiene(liga.pais):
+		liga.plazas_descenso = int(ReglasAscenso.de(liga.pais)["bajan"])   ## (10-11) los descensos reales del país
+	for fila: Array in f["clubes"]:
+		_generar_club(liga, f, fila)
+	liga.preparar()
+	ligas.append(liga)
+	return liga
 
 ## La MISMA generación, repartida entre fotogramas (7-11, meta «< 200 ms por carga»): cada club se crea igual y en el mismo orden (mismo mundo para la misma semilla), pero
 ## tras cada trozo de `ms_trozo` ms se cede un fotograma para que la pantalla siga viva. Devuelve cuando termina (`await`).
@@ -282,6 +287,7 @@ func _generar_cierre() -> void:
 		Meta.aplicar_herencia(self)
 	LeyesPais.clubes_mundo = clubes
 	LeyesPais.anio_actual = anio
+	LigasActivas.registrar(self)   ## (10-11) los países que quedaron cargados (también al generar solo algunos)
 
 func jugadores() -> Array[Jugador]:
 	var l: Array[Jugador] = []

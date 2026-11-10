@@ -153,3 +153,50 @@ func _comprobar_tanda(casos: Dictionary, semilla: int) -> void:
 		_comprobar(String((Datos.tabla("COPA_NOM") as Dictionary).get(cod, "")) != "" and SeleccionEquipo.codigo_de(String(datos[1])) == cod, "%s: tiene copa y su selección (%s) devuelve el país" % [cod, String(datos[1])])
 		var cands := SeleccionEquipo.candidatos(m, String(datos[1])).size()
 		_comprobar(cands >= 20, "%s: la selección de %s convoca con jugadores del mundo (%d candidatos, antes 0)" % [cod, String(datos[1]), cands])
+
+
+## (10-11) LIGAS ACTIVAS: el juego solo carga los países elegidos. Mundos de 1, 2 y 5 países (y todos): tres temporadas sin errores, continentales con equipos, guardado/carga con la lista y AÑADIR países a mitad de partida.
+func _probar_ligas_activas() -> void:
+	_titulo("LIGAS ACTIVAS: MUNDOS PARCIALES, GUARDADO Y AÑADIR PAÍSES")
+	_comprobar(",".join(LigasActivas.por_defecto(false)) == ",".join(LigasActivas.todos()) and LigasActivas.todos().size() >= 80, "en PC se marcan todas (%d países)" % LigasActivas.todos().size())
+	_comprobar(",".join(LigasActivas.por_defecto(true)) == "CHI,ENG,ESP,ITA,GER,FRA", "en móvil: el país del juego y los cinco grandes")
+	for caso: Array in [["CHI"], ["BRA", "NGA"], ["ENG", "ESP", "ITA", "GER", "FRA"]]:
+		var paises: Array[String] = []
+		paises.assign(caso)
+		var m := Mundo.new()
+		m.generar(paises, 4242)
+		var activos := LigasActivas.de(m)
+		activos.sort()
+		var esperados := paises.duplicate()
+		esperados.sort()
+		_comprobar(activos == esperados, "%s: el mundo solo carga esos países (%d clubes)" % [str(caso), m.clubes.size()])
+		m.tomar_el_mando(m.ligas[0].clubes[3].id)
+		var anio0 := m.anio
+		for _t in 3:
+			m.jugar_temporada()
+			m.cerrar_temporada()
+		_comprobar(m.anio == anio0 + 3 and not m.continentales.is_empty(), "%s: tres temporadas completas y con torneos continentales (%s)" % [str(caso), str(m.continentales.keys())])
+		var m2 := Partida.desde_instantanea(JSON.parse_string(JSON.stringify(Partida.instantanea(m))))
+		var act2 := LigasActivas.de(m2)
+		act2.sort()
+		_comprobar(act2 == esperados and m2.clubes.size() == m.clubes.size(), "%s: guardar y cargar conserva la lista de países" % str(caso))
+	## AÑADIR países a mitad de partida (al cerrar la temporada): lo que ya existe no se mueve.
+	var base: Array[String] = ["CHI"]
+	var mb := Mundo.new()
+	mb.generar(base, 4243)
+	mb.tomar_el_mando(mb.ligas[0].clubes[2].id)
+	mb.jugar_temporada()
+	mb.cerrar_temporada()
+	var ids_antes := mb.clubes.keys()
+	var jugador_antes: String = (mb.clubes[ids_antes[0]] as Club).plantilla[0].id
+	var antes := mb.clubes.size()
+	var r := LigasActivas.agregar(mb, ["ENG", "NGA", "CHI", "XXX"])
+	_comprobar((r["paises"] as Array).size() == 2 and mb.clubes.size() > antes, "añadir ENG y NGA (CHI ya estaba y XXX no existe): +%d clubes" % int(r["clubes"]))
+	_comprobar(ids_antes.all(func(id: Variant) -> bool: return mb.clubes.has(id)) and (mb.clubes[ids_antes[0]] as Club).plantilla[0].id == jugador_antes, "los clubes y jugadores que ya existían conservan sus ids")
+	var act := LigasActivas.de(mb)
+	_comprobar(act.has("ENG") and act.has("NGA") and act.has("CHI") and LigasActivas.agregar(mb, ["ENG"])["clubes"] == 0, "la lista crece y añadir lo que ya está no hace nada")
+	_comprobar(mb.continentales.has("afr") or mb.continentales.has("ucl"), "los continentales de los países nuevos entran en la temporada (%s)" % str(mb.continentales.keys()))
+	mb.jugar_temporada()
+	mb.cerrar_temporada()
+	_comprobar(mb.anio >= 2028, "la temporada con los países añadidos se juega y se cierra sin errores")
+	_comprobar(LigasActivas.faltan(mb).size() == LigasActivas.todos().size() - LigasActivas.de(mb).size(), "faltan (%d) = todos − activos" % LigasActivas.faltan(mb).size())
