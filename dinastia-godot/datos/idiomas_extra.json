@@ -7830,7 +7830,12 @@
   "FASE FINAL": "FINAL STAGE",
   "Grupo del campeonato": "Championship group",
   "Grupo del descenso": "Relegation group",
-  "Se define al terminar la fase regular.": "It is decided when the regular phase ends."
+  "Se define al terminar la fase regular.": "It is decided when the regular phase ends.",
+  "Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.": "In this heat: a hydration break and a low tempo at the start; the match is won in the second half.",
+  "«Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.»": "«In this heat: a hydration break and a low tempo at the start; the match is won in the second half.»",
+  "No se puede ceder: Ya está cedido: primero tiene que volver.": "Cannot loan out: already on loan: he has to come back first.",
+  "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (football animations, ball striking and the match engine core ported to GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 and contributors · Apache License 2.0",
+  "No se puede ceder: Ya está cedido: primero tiene que volver..": "Cannot loan out: already on loan: he has to come back first.."
  },
  "pt": {
   "Historia": "História",
@@ -15663,7 +15668,12 @@
   "FASE FINAL": "FASE FINAL",
   "Grupo del campeonato": "Grupo do campeonato",
   "Grupo del descenso": "Grupo do descenso",
-  "Se define al terminar la fase regular.": "Define-se quando a fase regular termina."
+  "Se define al terminar la fase regular.": "Define-se quando a fase regular termina.",
+  "Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.": "Com este calor, pausa para hidratação e ritmo baixo no início: o jogo se ganha no segundo tempo.",
+  "«Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.»": "«Com este calor, pausa para hidratação e ritmo baixo no início: o jogo se ganha no segundo tempo.»",
+  "No se puede ceder: Ya está cedido: primero tiene que volver.": "Não pode ser cedido: já está cedido: primeiro tem de voltar.",
+  "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (animações de futebol, chute na bola e o núcleo do motor da partida portado para GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 e colaboradores · Apache License 2.0",
+  "No se puede ceder: Ya está cedido: primero tiene que volver..": "Não pode ser cedido: já está cedido: primeiro tem de voltar.."
  },
  "patrones": [
   [
@@ -29603,7 +29613,12 @@
   "FASE FINAL": "PHASE FINALE",
   "Grupo del campeonato": "Groupe du championnat",
   "Grupo del descenso": "Groupe de la relégation",
-  "Se define al terminar la fase regular.": "Elle se décide à la fin de la phase régulière."
+  "Se define al terminar la fase regular.": "Elle se décide à la fin de la phase régulière.",
+  "Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.": "Avec cette chaleur : pause d'hydratation et rythme bas au début ; le match se gagne en seconde période.",
+  "«Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.»": "« Avec cette chaleur : pause d'hydratation et rythme bas au début ; le match se gagne en seconde période. »",
+  "No se puede ceder: Ya está cedido: primero tiene que volver.": "Impossible de le prêter : il est déjà prêté : il doit d'abord revenir.",
+  "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (animations de football, frappe du ballon et noyau du moteur de match porté en GDScript) — Copyright 2019 Google LLC & Bastiaan Konings ; League-Soccer : awest813 et contributeurs · Apache License 2.0",
+  "No se puede ceder: Ya está cedido: primero tiene que volver..": "Impossible de le prêter : il est déjà prêté : il doit d'abord revenir.."
  },
  "it": {
   "Historia": "Storia",
@@ -37436,7 +37451,12 @@
   "FASE FINAL": "FASE FINALE",
   "Grupo del campeonato": "Gruppo del campionato",
   "Grupo del descenso": "Gruppo della retrocessione",
-  "Se define al terminar la fase regular.": "Si definisce al termine della fase regolare."
+  "Se define al terminar la fase regular.": "Si definisce al termine della fase regolare.",
+  "Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.": "Con questo caldo: pausa per l'idratazione e ritmo basso all'inizio; la partita si vince nel secondo tempo.",
+  "«Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.»": "«Con questo caldo: pausa per l'idratazione e ritmo basso all'inizio; la partita si vince nel secondo tempo.»",
+  "No se puede ceder: Ya está cedido: primero tiene que volver.": "Non si può cedere: è già in prestito: prima deve tornare.",
+  "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (animazioni di calcio, tiro del pallone e nucleo del motore della partita portato in GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 e collaboratori · Apache License 2.0",
+  "No se puede ceder: Ya está cedido: primero tiene que volver..": "Non si può cedere: è già in prestito: prima deve tornare.."
  },
  "de": {
   "Historia": "Geschichte",
@@ -45269,7 +45289,12 @@
   "FASE FINAL": "FINALPHASE",
   "Grupo del campeonato": "Meistergruppe",
   "Grupo del descenso": "Abstiegsgruppe",
-  "Se define al terminar la fase regular.": "Wird nach der regulären Phase festgelegt."
+  "Se define al terminar la fase regular.": "Wird nach der regulären Phase festgelegt.",
+  "Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.": "Bei dieser Hitze: Trinkpause und zu Beginn ein niedriges Tempo; das Spiel wird in der zweiten Halbzeit entschieden.",
+  "«Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.»": "„Bei dieser Hitze: Trinkpause und zu Beginn ein niedriges Tempo; das Spiel wird in der zweiten Halbzeit entschieden.“",
+  "No se puede ceder: Ya está cedido: primero tiene que volver.": "Verleih nicht möglich: Er ist bereits verliehen: Er muss zuerst zurückkehren.",
+  "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (Fußballanimationen, Ballschuss und der nach GDScript portierte Kern der Spiel-Engine) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 und Mitwirkende · Apache License 2.0",
+  "No se puede ceder: Ya está cedido: primero tiene que volver..": "Verleih nicht möglich: Er ist bereits verliehen: Er muss zuerst zurückkehren.."
  },
  "ca": {
   "Historia": "Història",
@@ -53102,7 +53127,12 @@
   "FASE FINAL": "FASE FINAL",
   "Grupo del campeonato": "Grup del campionat",
   "Grupo del descenso": "Grup del descens",
-  "Se define al terminar la fase regular.": "Es defineix quan acaba la fase regular."
+  "Se define al terminar la fase regular.": "Es defineix quan acaba la fase regular.",
+  "Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.": "Amb aquesta calor, pausa d'hidratació i ritme baix al principi: el partit es guanya a la segona part.",
+  "«Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.»": "«Amb aquesta calor, pausa d'hidratació i ritme baix al principi: el partit es guanya a la segona part.»",
+  "No se puede ceder: Ya está cedido: primero tiene que volver.": "No es pot cedir: ja està cedit: primer ha de tornar.",
+  "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (animacions de futbol, cop de baló i el nucli del motor del partit portat a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 i col·laboradors · Apache License 2.0",
+  "No se puede ceder: Ya está cedido: primero tiene que volver..": "No es pot cedir: ja està cedit: primer ha de tornar.."
  },
  "pl": {
   "Club": "Klub",
@@ -60935,7 +60965,12 @@
   "FASE FINAL": "FAZA FINAŁOWA",
   "Grupo del campeonato": "Grupa mistrzowska",
   "Grupo del descenso": "Grupa spadkowa",
-  "Se define al terminar la fase regular.": "Zostanie ustalona po zakończeniu fazy zasadniczej."
+  "Se define al terminar la fase regular.": "Zostanie ustalona po zakończeniu fazy zasadniczej.",
+  "Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.": "Przy tym upale: przerwa na nawodnienie i niskie tempo na początku; mecz rozstrzyga się w drugiej połowie.",
+  "«Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.»": "„Przy tym upale: przerwa na nawodnienie i niskie tempo na początku; mecz rozstrzyga się w drugiej połowie.”",
+  "No se puede ceder: Ya está cedido: primero tiene que volver.": "Nie można wypożyczyć: jest już wypożyczony: najpierw musi wrócić.",
+  "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (animacje piłkarskie, uderzenie piłki i rdzeń silnika meczu przeniesiony do GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 i współtwórcy · Apache License 2.0",
+  "No se puede ceder: Ya está cedido: primero tiene que volver..": "Nie można wypożyczyć: jest już wypożyczony: najpierw musi wrócić.."
  },
  "tr": {
   "Club": "Kulüp",
@@ -68768,6 +68803,11 @@
   "FASE FINAL": "FİNAL AŞAMASI",
   "Grupo del campeonato": "Şampiyonluk grubu",
   "Grupo del descenso": "Küme düşme grubu",
-  "Se define al terminar la fase regular.": "Normal etap bittiğinde belli olur."
+  "Se define al terminar la fase regular.": "Normal etap bittiğinde belli olur.",
+  "Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.": "Bu sıcakta: su molası ve başlangıçta düşük tempo; maç ikinci yarıda kazanılır.",
+  "«Con este calor, pausa de hidratación y ritmo bajo al principio: el partido se gana en el segundo tiempo.»": "«Bu sıcakta: su molası ve başlangıçta düşük tempo; maç ikinci yarıda kazanılır.»",
+  "No se puede ceder: Ya está cedido: primero tiene que volver.": "Kiralanamaz: zaten kiralık: önce geri dönmesi gerekir.",
+  "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (futbol animasyonları, topa vuruş ve GDScript'e taşınan maç motorunun çekirdeği) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 ve katkıda bulunanlar · Apache License 2.0",
+  "No se puede ceder: Ya está cedido: primero tiene que volver..": "Kiralanamaz: zaten kiralık: önce geri dönmesi gerekir.."
  }
 }

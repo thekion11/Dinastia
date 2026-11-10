@@ -72,6 +72,13 @@ static func sombra_solar(nivel: int) -> bool:
 ## nivel. Medido con `pruebas/medir_rendimiento.gd` antes/despues, ver LEEME.md del historial de git.
 ## R1 (3-11, prueba del dueño: 5 FPS en MEDIA en su teléfono): el nivel por defecto es el MÁS BAJO en todas las plataformas; el jugador sube si quiere.
 static var elegida: int = NIVEL_DEFECTO
+
+## (10-11) Capas pequeñas de la cabeza (ojos, cejas, pestañas, cara real): en BAJA (×0,6) y ULTRA_BAJA (×0,35) solo se dibujan de MÁS cerca.
+## A la cámara de TV miden menos de un píxel; son ~4 llamadas de dibujo por jugador (22 jugadores). En MEDIA o más, sin cambios.
+static func lod_cabeza() -> float:
+	if elegida <= ULTRA_BAJA:
+		return 0.35
+	return 0.6 if elegida <= BAJA else 1.0
 ## Bajar efectos durante el partido si los FPS caen de 40 (ver
 ## `RendimientoAdaptativo`). Encendido por defecto; se apaga en Ajustes.
 static var adaptativa: bool = true
