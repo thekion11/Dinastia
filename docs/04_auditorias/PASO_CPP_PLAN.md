@@ -61,3 +61,11 @@ Huella de `zz_medir_simular` igual en las dos (3383400550). Banco: FIN. 0 fallos
 ## 5. Pendientes
 - Windows: los `.dll` NO están recompilados (no hay mingw en este contenedor): el método `elegir_ponderado` falta allí y el GDScript usa su respaldo (misma salida). Lo recompila el CI (`compilar.yml`) o `herramientas/compilar_nativo.sh windows` donde haya mingw.
 - Fallo que ya traía la rama base (no es de este trabajo): el banco da 1 fallo, «la piel de Brasil sale más oscura que la de Inglaterra (3.8 frente a 3.7)»; sale igual con `DINASTIA_SIN_NATIVO=1`.
+
+## 2f. Semana del mundo entero (10-11, orden 35, sesión 5)
+Perfil (2206 clubes, `PAISES=TODOS SEMANAS=12 zz_perfil_semana`, mismo equipo): **1532 ms/semana** → `_semana_jugar_ligas` 1109, `_semana_modulos_del_club` 305, `_semana_caja_y_plantillas` 114. Por sentencias, lo que quedaba en GDScript:
+- `MercadoDT.semana` → `presion()` por club reordenaba la liga y su tabla CADA vez (O(n²·log n)): 297 ms. **Arreglado sin C++** (`MercadoDT.presiones_de(liga)`, una vez por liga, mismas cuentas; prueba en `s6_mercado_dt`): modulos_del_club 305 → 16 ms. Semana **1532 → ~1280 ms**, huella 2180788566 igual con y sin nativo.
+- `Partido._cerrar_notas` (64 ms/semana): **a C++** (`cerrar_notas`, `nativo/src/cerrar_notas.cpp`; la gemela `_cerrar_notas_gd` se queda de respaldo; misma tirada `randf` por jugador sobre `Azar._rng`). Comparada en `probar_nativo` (300 cruces: notas, forma, partidos y estado del azar iguales): 47 → 37 µs por cruce; en la semana, dentro del ruido (~10 ms): el coste es leer y escribir propiedades de objetos GDScript, no la aritmética.
+- Ya estaban en C++: `simular_90`, `once_asignar_libres` (aun así 273 ms/semana, por las lecturas de `Jugador` y `media_en`), `elegir_ponderado`, `medias_linea`.
+- Lo que queda de `_semana_jugar_ligas` (~1130 ms): `Club.once()` ~440 ms (273 en la extensión, `disponibles()` 69), `_cerrar_notas` + notas iniciales ~130, `simular_90` y envoltorios. Siguiente paso real (no hecho; cambia la estructura, no es copia exacta): guardar el once automático del club mientras plantilla, lesiones y sanciones no cambien, o pasar a la extensión los atributos de los jugadores en arrays planos.
+- Windows .dll y Android .so NO recompilados aquí (CI/dueño); sin ellos `has_method("cerrar_notas")` es falso y corre la gemela GDScript.
