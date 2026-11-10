@@ -33,6 +33,10 @@ func _ready() -> void:
 		if p._rueda_pop == null:
 			p._abrir_rueda_pantalla_completa(p.mundo.prensa.entrevista)
 		await _esperar(5.0)
+		for h in p.get_children():   ## un evento (inicio de temporada…) puede taparla: fuera antes de la foto
+			if h is EventoPantallaCompleta:
+				h.queue_free()
+		await _esperar(1.0)
 		get_viewport().get_texture().get_image().save_jpg("%s/%d_%s.jpg" % [_dir, i, c.pais], 0.88)
 		var esc: Node = p._rueda_pop._escena if p._rueda_pop != null else null
 		if esc != null:

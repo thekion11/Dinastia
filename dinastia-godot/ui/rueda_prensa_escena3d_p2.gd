@@ -390,6 +390,7 @@ func montar(club: Club, acento: Color, nivel: int = Calidad.ALTO, look_dt: Dicti
 	_montar_banderas(club)
 	_montar_luces()
 	_montar_podio()
+	RuedaPrensaExtras.montar(self, _col_club1, _col_club2)   ## (10-11) ramo de micrófonos, balón y barra de focos (vídeo de referencia)
 	if String(contexto.get("titulo", "")) != "":
 		var tro := Trofeo3D.de_competicion(String(contexto["titulo"]), 0.28)
 		tro.name = "TrofeoAtril"

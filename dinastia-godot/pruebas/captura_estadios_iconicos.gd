@@ -39,6 +39,8 @@ func _ready() -> void:
 	cfg.set_value(CajonAjustes.SECCION, "intro", OS.get_environment("RECORRIDO") != "")
 	cfg.save(CajonAjustes.RUTA)
 	print("pack real: ", Datos.usar_base_real(true))
+	if OS.get_environment("ATLAS") != "":
+		VallasLed.atlas_siempre = OS.get_environment("ATLAS") != "0"
 	var tanda := OS.get_environment("TANDA")
 	var clubes: Array = CLUBES_5 if tanda == "5" else (CLUBES_2 if tanda == "2" else (CLUBES_3 if tanda == "3" else (CLUBES_4 if tanda == "4" else CLUBES)))
 	_m = Mundo.new()
