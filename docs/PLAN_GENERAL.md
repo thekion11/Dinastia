@@ -8,15 +8,14 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 > Trabaja en español, en la rama asignada, sin PR salvo orden. Lee `CLAUDE.md` y `docs/PLAN_GENERAL.md` (secciones PRIORITARIO, DECISIONES PENDIENTES y PULIDO). Antes de subir a main: banco en «FIN. 0 fallos» y líneas OK. Sin nombres de modelo en commits ni archivos. No subir .mp4 al repo.
 >
 > Pendiente, en este orden:
-> 1. **FINAL DE TEMPORADA COMPLETO:** pantalla única de resumen a pantalla completa (campeón y tu puesto, copa, continental, ascensos y descensos, premios, veredicto de la directiva); copa y continental pendientes que se cierren o anuncien antes; orden de eventos: fin de liga → despedida → gala → «Temporada siguiente» → nueva temporada.
-> 2. **EVENTOS A PANTALLA COMPLETA:** homenaje en 3D (el aviso y el homenaje ya están en main, solo al llegar a la fecha).
-> 3. **PRÓLOGO:** arte final de la animación fija (primer corte en main, sin sonido ni arte final). IDEA a medir: prólogo como vídeo ya hecho que el juego proyecta, para ver si suben los FPS (fuera del repo; medir antes y después).
-> 4. **CASA DEL PERSONAJE** sin ciudad.
-> 5. **AVANCE DE FECHA** con eventos y varias semanas (estilo PES).
-> 6. **PLANTILLA:** mapa de calor y habilidades individuales con estrellas.
-> 7. **REESTRUCTURACIÓN «SOLO CLUB»** (paso 2): reparar el club (muebles, colisiones, parpadeo del suelo del despacho). Paso 3: medir sin ciudad con `herramientas/hw_modesto.sh`. Paso 4: decidir C/C++ solo con medidas.
-> 8. Revisar en el edificio real que las camisetas retiradas se ven en las plantas altas.
-> 9. **ESTÉTICA** (rama `ccr-da27fb86-i59x88`, fusión pendiente de la orden del dueño): profundidad de cabeceras, portadas, Ajustes y botones.
+> 1. **EVENTOS A PANTALLA COMPLETA:** homenaje en 3D (el aviso y el homenaje ya están en main, solo al llegar a la fecha).
+> 2. **PRÓLOGO:** arte final de la animación fija (primer corte en main, sin sonido ni arte final). IDEA a medir: prólogo como vídeo ya hecho que el juego proyecta, para ver si suben los FPS (fuera del repo; medir antes y después).
+> 3. **CASA DEL PERSONAJE** sin ciudad.
+> 4. **AVANCE DE FECHA** con eventos y varias semanas (estilo PES).
+> 5. **PLANTILLA:** mapa de calor y habilidades individuales con estrellas.
+> 6. **REESTRUCTURACIÓN «SOLO CLUB»** (paso 2): reparar el club (muebles, colisiones, parpadeo del suelo del despacho). Paso 3: medir sin ciudad con `herramientas/hw_modesto.sh`. Paso 4: decidir C/C++ solo con medidas.
+> 7. Revisar en el edificio real que las camisetas retiradas se ven en las plantas altas.
+> 8. **ESTÉTICA** (rama `ccr-da27fb86-i59x88`, fusión pendiente de la orden del dueño): profundidad de cabeceras, portadas, Ajustes y botones.
 >
 > **DECISIONES DEL DUEÑO (no implementar sin respuesta):** (a) torneos de selecciones (Mundial, Eurocopa, Copa América): ¿se juegan o son solo calendario? (b) sacar los tres .mp4 de `marca/` del repo.
 >
@@ -58,25 +57,21 @@ Fuente: PDF «Plan de Reestructuración – Dinastía» y vídeo del despacho (l
 Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la cámara real, nada se quita sin decirlo.
 
 ## PRIORITARIO (orden del dueño, 9-11) — en este orden; al completar una, se BORRA de aquí y se anota en «PULIDO» (más abajo) para pulirla después
-1. **FINAL DE TEMPORADA COMPLETO.** Hoy (nota del 9-11): solo las ligas definen el fin (`Mundo.temporada_en_curso`, `nucleo/mundo_p6.gd`); copa y continentales se resuelven durante las semanas sin cierre propio; el resumen sale como líneas sueltas del registro (`AccionesTemporada._nueva_temporada`) más avisos de ascenso/descenso.
-   - Pantalla ÚNICA de resumen a pantalla completa (hereda de `EventoPantallaCompleta`): campeón y tu puesto, copa, continental, ascensos/descensos, premios, veredicto de la directiva.
-   - Copa y continental pendientes: que se cierren o se anuncien antes del cierre.
-   - Ordenar los eventos por fecha: fin de liga → despedida → gala (`Logros.cerrar_temporada`) → «Temporada siguiente» → nueva temporada.
-   - Torneos de selecciones (Mundial, Eurocopa, Copa América; hoy solo fechas en `nucleo/calendario.gd`): **PENDIENTE DE LA DECISIÓN DEL DUEÑO** (ver «DECISIONES PENDIENTES DEL DUEÑO», más abajo). NO se implementan hasta que responda.
-2. **EVENTOS A PANTALLA COMPLETA solo al llegar a su fecha.** Hecho: aviso del partido de despedida y homenaje (ya en main, `EventoPantallaCompleta`). FALTA: el homenaje en 3D (y que lo nuevo herede del marco base).
-3. **ANIMACIÓN FIJA DEL PRÓLOGO, saltable.** Primer corte en main (`PrologoAnimado`, 6 planos, sin vídeo, barra de fases arriba y salto con Esc/mando/stick). FALTA: arte final, sonido y más texto por plano.
-4. **CASA DEL PERSONAJE SIN CIUDAD.** Hoy la casa caminable vive en el mundo 3D de la ciudad (`CasaEscena3D`, `ui/casa_escena3d.gd`; menú Vida → «Ver tu casa»).
-5. **AVANCE DE FECHA con eventos y varias semanas** (estilo PES 2020). Hecho: botón «Hito» y fila «PRÓXIMOS» con los escudos de los 5 siguientes partidos. FALTA: eventos en esa fila (mercado, copa, continental, fin de temporada) y varias semanas.
-6. **MAPA DE CALOR y HABILIDADES con estrellas de la plantilla** (como la «Información del jugador» del PES). Hecho: estilo de juego con estrellas. FALTA: mapa de calor por jugador y habilidades individuales (regate en profundidad, etc.).
+1. **EVENTOS A PANTALLA COMPLETA solo al llegar a su fecha.** Hecho: aviso del partido de despedida y homenaje (ya en main, `EventoPantallaCompleta`). FALTA: el homenaje en 3D (y que lo nuevo herede del marco base).
+2. **ANIMACIÓN FIJA DEL PRÓLOGO, saltable.** Primer corte en main (`PrologoAnimado`, 6 planos, sin vídeo, barra de fases arriba y salto con Esc/mando/stick). FALTA: arte final, sonido y más texto por plano.
+3. **CASA DEL PERSONAJE SIN CIUDAD.** Hoy la casa caminable vive en el mundo 3D de la ciudad (`CasaEscena3D`, `ui/casa_escena3d.gd`; menú Vida → «Ver tu casa»).
+4. **AVANCE DE FECHA con eventos y varias semanas** (estilo PES 2020). Hecho: botón «Hito» y fila «PRÓXIMOS» con los escudos de los 5 siguientes partidos. FALTA: eventos en esa fila (mercado, copa, continental, fin de temporada) y varias semanas.
+5. **MAPA DE CALOR y HABILIDADES con estrellas de la plantilla** (como la «Información del jugador» del PES). Hecho: estilo de juego con estrellas. FALTA: mapa de calor por jugador y habilidades individuales (regate en profundidad, etc.).
 
-7. **IDEA (por evaluar): el prólogo como VÍDEO ya hecho que el juego proyecta**, en lugar de la animación dibujada por el motor (`PrologoAnimado`), para ver si así mejoran los FPS. Antes de decidir hay que MEDIR los FPS (y llamadas de dibujo, RAM) con la animación actual y con el vídeo (`herramientas/hw_modesto.sh`). Reglas: la regla del proyecto NO permite `.mp4` (ni `.avi`) en el repositorio, así que el vídeo tendría que vivir FUERA del repo (junto al ejecutable o en `user://`, como `caras_reales.pck`; o descargarse aparte) y el juego caer a la animación del motor si no lo encuentra; además Godot reproduce `.ogv` (Theora) de forma nativa, no `.mp4` (el formato se decide con la medición). Hoy ningún código del juego reproduce vídeo y ya hay 3 `.mp4` rastreados en `marca/` (pendiente de decisión del dueño).
-8. **ESTÉTICA Y DISEÑO DE MENÚS Y DISTRIBUCIÓN — FALTA PULIR.** **FALTA PULIR EN TODOS LOS BLOQUES hechos** (cada uno se afina después). Hecho y en main (9-11): márgenes de las columnas del menú central, fila «PRÓXIMOS» en tarjetas, portadas del riel con rejilla dinámica, letra base del Tema y de los botones, diálogo «Capítulos», Ligas y clubes con escudos, aire en Estadio, aviso del partido de despedida (escudo de las Leyendas con 5 diseños y once titular con busto 3D) y foco visible en los botones de evento.
+6. **IDEA (por evaluar): el prólogo como VÍDEO ya hecho que el juego proyecta**, en lugar de la animación dibujada por el motor (`PrologoAnimado`), para ver si así mejoran los FPS. Antes de decidir hay que MEDIR los FPS (y llamadas de dibujo, RAM) con la animación actual y con el vídeo (`herramientas/hw_modesto.sh`). Reglas: la regla del proyecto NO permite `.mp4` (ni `.avi`) en el repositorio, así que el vídeo tendría que vivir FUERA del repo (junto al ejecutable o en `user://`, como `caras_reales.pck`; o descargarse aparte) y el juego caer a la animación del motor si no lo encuentra; además Godot reproduce `.ogv` (Theora) de forma nativa, no `.mp4` (el formato se decide con la medición). Hoy ningún código del juego reproduce vídeo y ya hay 3 `.mp4` rastreados en `marca/` (pendiente de decisión del dueño).
+7. **ESTÉTICA Y DISEÑO DE MENÚS Y DISTRIBUCIÓN — FALTA PULIR.** **FALTA PULIR EN TODOS LOS BLOQUES hechos** (cada uno se afina después). Hecho y en main (9-11): márgenes de las columnas del menú central, fila «PRÓXIMOS» en tarjetas, portadas del riel con rejilla dinámica, letra base del Tema y de los botones, diálogo «Capítulos», Ligas y clubes con escudos, aire en Estadio, aviso del partido de despedida (escudo de las Leyendas con 5 diseños y once titular con busto 3D) y foco visible en los botones de evento.
 
 ## DECISIONES PENDIENTES DEL DUEÑO (no se implementa hasta que conteste)
 - **TORNEOS DE SELECCIONES** (Mundial, Eurocopa, Copa América; hoy solo fechas informativas en `nucleo/calendario.gd`, y `Selecciones.cierre_de_temporada`): **¿se JUEGAN (con tu plantel, convocados que se van con sus selecciones) o son SOLO CALENDARIO?** Anotado el 9-11 por orden del dueño; sin respuesta no se toca.
 - **Los 3 `.mp4` de `marca/`** (`marca/nexus-digital-intro.mp4`, `marca/referencia/ea_fc25_referencia.mp4`, `marca/referencia/ejemplo-partido.mp4`, en LFS): el juego no los carga y la regla del proyecto dice «.mp4 nunca al repo»; ¿se sacan del repo?
 
 ## PULIDO (lo ya completo que se pule después; nada se borra, se afina)
+- FINAL DE TEMPORADA (10-11): pantalla ÚNICA de resumen a pantalla completa (`ResumenTemporada`, hereda de `EventoPantallaCompleta`: tu puesto y el campeón de liga, copa, continental, ascensos/descensos de tu país, gala de premios y veredicto de la directiva; luego el documental). Copa y continental a medias se juegan hasta el final y se ANUNCIAN al terminar la liga, antes de la despedida (`CierreTorneos`, también dentro de `Mundo.nueva_temporada`). Orden: fin de liga → torneos pendientes → despedida → «Temporada siguiente» (gala dentro del cierre) → resumen → nueva temporada. Pruebas: banco `_probar_final_temporada` y especial `prueba_resumen_temporada`. Pulir: animación de entrada por tarjetas, sonido de gala, trofeo 3D del campeón; torneos de selecciones según la decisión del dueño.
 - Plantilla a la PES (`PlantillaPes`, `PlantillaEstilos`, `GestionOnce`) y fila «PRÓXIMOS» (`FilaProximos`): aspecto (la lleva la sesión de estética).
 - Camisetas retiradas (Historia del club y museo del estadio, `CamisetasRetiradas`, `CamisetasMuseo`): más variedad de camiseta y foco en el museo.
 - Capítulos de cada temporada (`CapitulosTemporadas`): comparar ritmo y planos con el PES.

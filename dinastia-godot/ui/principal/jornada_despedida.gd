@@ -8,6 +8,10 @@ extends RefCounted
 static func ofrecer(pr: Principal) -> void:
 	if DisplayServer.get_name() == "headless" or pr.mundo == null or pr.mundo.mi_club() == null:
 		return
+	## (10-11) FIN DE LIGA → primero se cierran y ANUNCIAN la copa y el continental que quedaban a medias (`CierreTorneos`), luego la despedida.
+	for c: Dictionary in CierreTorneos.cerrar_pendientes(pr.mundo):
+		Aviso.mostrar(pr, "titulo", "🏆", String(c["torneo"]), "%s %s%s" % [Idiomas.t("Campeón:"), (c["campeon"] as Club).nombre,
+			" · " + Idiomas.t("¡Es tu club!") if bool(c["mio"]) else ""])
 	if pr.mundo.prensa != null and (pr.mundo.prensa.despedida_anio == pr.mundo.anio or pr.mundo.prensa.despedida_ofrecida_anio == pr.mundo.anio):
 		return   ## ya se jugó o ya se ofreció esta temporada (el evento sale una sola vez, también tras guardar y cargar)
 	var leyendas := PartidoDespedida.preparar(pr.mundo)

@@ -19,9 +19,20 @@ func _nueva_temporada() -> void:
 	CapitulosTemporadas.archivar(p.mundo, p.mundo.anio, guion_doc)   ## (9-11) queda guardado en la partida: menú «Capítulos»
 	if p.mundo.mercado != null:
 		p.mundo.mercado.fichajes_temporada.clear()
+	CierreTorneos.cerrar_pendientes(p.mundo)   ## (10-11) copa y continental a medias se juegan antes de la foto
+	var foto := CierreTorneos.foto(p.mundo)
 	var resumen := p.mundo.nueva_temporada()
 	PartidoDespedida.limpiar(p.mundo)
-	if not guion_doc.is_empty():
+	## (10-11) LA PANTALLA ÚNICA DEL FINAL DE TEMPORADA (orden del dueño) y, al cerrarla, el documental de la temporada.
+	var con_pantalla := DisplayServer.get_name() != "headless"
+	if con_pantalla:
+		(func() -> void:
+			var rs := ResumenTemporada.mostrar(p, foto, resumen)
+			await rs.terminado
+			rs.queue_free()
+			if not guion_doc.is_empty():
+				documental.abrir(p, guion_doc, p._retrato)).call_deferred()
+	elif not guion_doc.is_empty():
 		(func() -> void: documental.abrir(p, guion_doc, p._retrato)).call_deferred()
 	## `mundo.nueva_temporada()` resortea los continentales por dentro
 	## (`_sortear_continentales()`, instancias NUEVAS cada vez): sin esta llamada,
@@ -43,13 +54,13 @@ func _nueva_temporada() -> void:
 		p._escribir("[color=#4caf6d]Ascienden:[/color] %s" % p._nombres(resumen["suben"]))
 		if (resumen["suben"] as Array).has(p.mundo.mi_club()):
 			Sonido.toca("ascenso")
-			Aviso.mostrar(p, "titulo", "⬆️", "¡ASCENSO!",
+			if not con_pantalla: Aviso.mostrar(p, "titulo", "⬆️", "¡ASCENSO!",
 				"Subes de categoría. Otra liga, otros rivales y otros derechos de televisión.")
 	if not resumen["bajan"].is_empty():
 		p._escribir("[color=#e05555]Descienden:[/color] %s  [color=#8ea595](la televisión les pasa de 300.000 a 58.000)[/color]" % p._nombres(resumen["bajan"]))
 		if (resumen["bajan"] as Array).has(p.mundo.mi_club()):
 			Sonido.toca("descenso")
-			Aviso.mostrar(p, "alerta", "⬇️", "DESCENSO",
+			if not con_pantalla: Aviso.mostrar(p, "alerta", "⬇️", "DESCENSO",
 				"Bajas de categoría. La televisión pasa de 300.000 a 58.000 y habrá que rehacer el plantel.")
 	## El veredicto de la directiva. Es lo unico del cierre que puede acabar con
 	## la partida, asi que va lo ultimo y con su propio color.
