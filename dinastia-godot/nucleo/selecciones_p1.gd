@@ -96,12 +96,12 @@ const RESPETA_AL_SUPLENTE := 0.70
 ## De aquí para arriba (sobre la reputación de tu club) el jugador es "figura".
 const MARGEN_FIGURA := 8
 
-## La Copa del Mundo: 32 de las 37 selecciones, cada cuatro años. El resto (2028,
-## 2032...) sale de la cuenta del HTML: `(año - 2026) % 4 === 2`.
+## La Copa del Mundo: 32 de las 37 selecciones, cada cuatro años, en los AÑOS REALES (2026, 2030, 2034…), los mismos que enseña el calendario
+## (`Calendario.torneos`). (10-11) Antes el cierre la jugaba en 2028 y 2032 (`% 4 == 2`, cuenta heredada del HTML) y no casaba con el calendario.
 const PLAZAS_COPA_DEL_MUNDO := 32
 const ANIO_BASE := 2026
 const CICLO_MUNDIAL := 4
-const RESTO_MUNDIAL := 2
+const RESTO_MUNDIAL := 0
 ## Ruido del duelo entre selecciones: ±9 sobre la fuerza. Es lo que permite que
 ## una selección de 70 elimine a una de 88 de vez en cuando, y solo de vez en cuando.
 const RUIDO_DUELO := 9

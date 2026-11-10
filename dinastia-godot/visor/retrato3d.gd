@@ -23,7 +23,9 @@ const TAM_GRANDE := 256
 ## Hasta este alto en pantalla (filas de listas: 22-30 px) el busto de pecho para
 ## arriba dejaba la cara en 6 píxeles casi negros (s3, 26-10-2026, defecto que
 ## anotó la sesión 2): ahí se encuadra la cabeza con el cuello de la camiseta.
-const ALTO_CABEZA := 40
+## (10-11, el dueño: «el corte de la cara en la alineación está mal, no se ve toda la cara») Subido de 40 a 70: las caras del campo de la plantilla
+## (68 px en un aro de 48) y de la pizarra (42) salían como busto y la cara quedaba chica y cortada arriba. El busto queda para las fichas grandes.
+const ALTO_CABEZA := 70
 ## Luminosidad mínima del fondo: con un club negro, fondo y camiseta se fundían.
 const LUZ_FONDO := 0.2
 
@@ -181,8 +183,8 @@ func _servir() -> void:
 		## De pecho para arriba, de frente (el modelo mira a +Z); en las filas de las
 		## listas, la cabeza y el cuello de la camiseta.
 		if bool(job.get("cabeza", false)):
-			_cam.position = Vector3(0.0, alto * 0.925, 0.98)
-			_cam.look_at(Vector3(0.0, alto * 0.915, 0.0), Vector3.UP)
+			_cam.position = Vector3(0.0, alto * 0.93, 1.1)   ## (10-11) algo más abierto: entran el pelo y la barbilla enteros
+			_cam.look_at(Vector3(0.0, alto * 0.912, 0.0), Vector3.UP)
 		else:
 			_cam.position = Vector3(0.0, alto * 0.915, 1.62)
 			_cam.look_at(Vector3(0.0, alto * 0.885, 0.0), Vector3.UP)
@@ -211,8 +213,8 @@ func _servir_dt(job: Dictionary) -> void:
 	if not d.is_empty():
 		var alto = float(load("res://visor/personaje_dt.gd").aspecto(job["dt"]).get("altura", 1.78))
 		if bool(job.get("cabeza", false)):
-			_cam.position = Vector3(0.0, alto * 0.925, 0.98)
-			_cam.look_at(Vector3(0.0, alto * 0.915, 0.0), Vector3.UP)
+			_cam.position = Vector3(0.0, alto * 0.93, 1.1)   ## (10-11) algo más abierto: entran el pelo y la barbilla enteros
+			_cam.look_at(Vector3(0.0, alto * 0.912, 0.0), Vector3.UP)
 		else:
 			_cam.position = Vector3(0.0, alto * 0.915, 1.62)
 			_cam.look_at(Vector3(0.0, alto * 0.885, 0.0), Vector3.UP)
