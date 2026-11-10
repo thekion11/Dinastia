@@ -397,3 +397,51 @@ func _probar_puerta_animada() -> void:
 	_comprobar(hay.size() == 1 and is_equal_approx((hay[0] as PuertaAnimada).rotation.y, PI), "cada hueco lleva su hoja animada, abierta de salida (sin cámara no se mueve)")
 	sala.free()
 	p.free()
+
+## LA CASA DEL PERSONAJE A PIE, SIN CIUDAD (10-11): el plano tiene todas sus habitaciones alcanzables caminando, paredes y muebles chocan, los muebles no tapan las puertas.
+func _probar_casa_plano() -> void:
+	_titulo("CASA DEL PERSONAJE: PLANO, COLISIÓN Y HABITACIONES ALCANZABLES")
+	CasaPlano.vaciar_cache()
+	var obst := CasaPlano.obstaculos()
+	_comprobar(obst.size() > CasaPlano.paredes().size() + 20, "hay paredes y muebles sólidos (%d cajas)" % obst.size())
+	_comprobar(CasaPlano.libre(CasaPlano.INICIO, obst), "el punto de inicio está libre")
+	_comprobar(CasaPlano.sala_en(CasaPlano.INICIO) == "Sala" and CasaPlano.sala_en(Vector2(-1, -1)) == "", "el inicio es la sala y fuera de la casa no hay habitación")
+	## Pared: caminar contra la pared del pasillo (z = 4,8; sin hueco en x = 2) se frena delante de ella.
+	var p := CasaPlano.mover(Vector2(2.0, 4.0), Vector2(2.0, 6.0), obst)
+	_comprobar(p.y < 4.8 - CasaPlano.RADIO + 0.01 and p.y > 3.9, "la pared frena al cuerpo (z %.2f)" % p.y)
+	## Hueco de puerta (x 2,5..3,5): se cruza.
+	var q := CasaPlano.mover(Vector2(3.0, 4.0), Vector2(3.0, 5.6), obst)
+	_comprobar(q.y > 5.5, "por el hueco de la puerta se pasa (z %.2f)" % q.y)
+	## Un paso enorme (tirón de fotogramas) no atraviesa la pared.
+	var t := CasaPlano.mover(Vector2(2.0, 4.0), Vector2(2.0, 8.0), obst)
+	_comprobar(t.y < 4.8, "un paso largo no atraviesa la pared (z %.2f)" % t.y)
+	## Deslizar: contra la pared de lado se avanza por el eje libre.
+	var d := CasaPlano.mover(Vector2(2.0, 4.0), Vector2(3.0, 5.0), obst)
+	_comprobar(d.x > 2.4, "contra la pared se desliza de lado (x %.2f)" % d.x)
+	## Los muebles sólidos chocan: el sofá (x 4,6, z 3,7).
+	var s := CasaPlano.mover(Vector2(4.6, 2.9), Vector2(4.6, 3.9), obst)
+	_comprobar(s.y < 3.3, "el sofá frena al cuerpo (z %.2f)" % s.y)
+	## Ninguna habitación queda aislada: su centro (o un punto libre cercano) se alcanza desde la entrada.
+	var alc := CasaPlano.alcanzables(CasaPlano.INICIO)
+	for s2: Array in CasaPlano.SALAS:
+		var c := CasaPlano.centro_de(String(s2[0]))
+		var hallado := false
+		for dx in range(-8, 9):
+			for dz in range(-8, 9):
+				var pt := c + Vector2(dx, dz) * 0.1
+				if CasaPlano.libre(pt, obst) and alc.has(CasaPlano.celda_de(pt)):
+					hallado = true
+		_comprobar(hallado, "se llega caminando a la habitación «%s»" % String(s2[0]))
+	## Las puertas de la casa no las tapa ningún mueble: cada hueco se atraviesa de lado a lado.
+	for h: Array in CasaPlano.huecos():
+		var medio := (float(h[2]) + float(h[3])) / 2.0
+		var a := Vector2(medio, float(h[1]) - 0.6) if String(h[0]) == "h" else Vector2(float(h[1]) - 0.6, medio)
+		var b := Vector2(medio, float(h[1]) + 0.6) if String(h[0]) == "h" else Vector2(float(h[1]) + 0.6, medio)
+		_comprobar(CasaPlano.libre(a, obst) and CasaPlano.libre(b, obst) and CasaPlano.mover(a, b, obst).distance_to(b) < 0.05,
+			"el hueco %s %.1f (%.1f-%.1f) se cruza" % [String(h[0]), float(h[1]), float(h[2]), float(h[3])])
+	## Cámara: nunca dentro de una pared.
+	var dist := CasaPlano.distancia_camara(Vector2(2.0, 4.5), Vector2(0, 1), 3.0, obst)
+	_comprobar(dist < 0.5, "la cámara se acerca si hay una pared detrás (%.1f m)" % dist)
+	_comprobar(CasaPlano.distancia_camara(Vector2(3.0, 1.0), Vector2(1, 0), 1.0, obst) >= 0.9, "con sitio detrás, la cámara llega a su distancia")
+	## El acceso no nombra la ciudad: con ella apagada (lo normal) lleva a la casa a pie.
+	_comprobar(not InterruptorCiudad.activa, "la ciudad está apagada")

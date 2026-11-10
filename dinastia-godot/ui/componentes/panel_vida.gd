@@ -152,7 +152,7 @@ static func _hogar(lista: VBoxContainer, p: Control, mundo: Mundo) -> void:
 	var ver := Button.new()
 	ver.text = Idiomas.t("🏡 Ver tu casa")
 	ver.custom_minimum_size = Vector2(0, 34)
-	ver.pressed.connect(func() -> void: CargaCiudad.de("CasaEscena3D").abrir(p, mundo, p.get("_bandeja")))
+	ver.pressed.connect(func() -> void: CasaAcceso.abrir(p, mundo, p.get("_bandeja") if p.get("_bandeja") != null else []))
 	lista.add_child(ver)
 	var movil := Button.new()
 	var pend := mundo.redes.pendientes() if mundo.redes != null else 0
