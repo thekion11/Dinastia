@@ -255,3 +255,40 @@ func _probar_convocatoria_seleccion() -> void:
 	var club_t: Club = mt.ligas[0].clubes[2]
 	_comprobar(FestejoExtra3D.tifos(rt, club_t, Color(club_t.color1), Color(club_t.color2)) == 2 and rt.get_child_count() == 2, "los tifos de una final: dos lonas (%s)" % club_t.nombre)
 	rt.free()
+
+## (10-11, orden del dueño) Cada club con su formación y su estilo de la vida real; regla 34: varios países.
+func _probar_estilos_club() -> void:
+	_titulo("ESTILOS DE CLUB: FORMACIÓN Y ESTILO DE LA VIDA REAL")
+	var m := Mundo.new()
+	var paises: Array[String] = ["ESP", "ITA", "ARG", "BRA", "ENG", "GER", "CHI", "JPN"]
+	m.generar(paises, 12)
+	var forms := {}
+	var estilos := {}
+	for c: Club in m.clubes.values():
+		forms[c.tactica.formacion] = true
+		estilos[EstiloClub.estilo_de(c)] = true
+	_comprobar(forms.size() >= 6 and estilos.size() >= 7, "los clubes ya no juegan todos igual: %d formaciones y %d estilos (%s)" % [forms.size(), estilos.size(), ", ".join(forms.keys())])
+	var cap: Club = null   ## el 13.º de Italia en la tabla (con la base real o la ficticia, el mismo puesto)
+	for l: Liga in m.ligas:
+		if l.pais == "ITA":
+			for c2: Club in l.clubes:
+				if EstiloClub.de(c2.nombre, "ITA", c2.rep) == ["3-5-2", "bloque"] and c2.rep >= 78:
+					cap = c2
+	_comprobar(cap != null and cap.tactica.formacion == "3-5-2" and EstiloClub.estilo_de(cap) == "bloque", "un club de Italia juega con 3 centrales y bloque medio, como el real (%s)" % (cap.nombre if cap else "—"))
+	var t := Tactica.new()
+	EstiloClub.poner(t, "4-4-2", "contra")
+	_comprobar(t.mentalidad == 0 and t.linea == 0 and t.verticalidad == 2, "«contra»: mentalidad defensiva, línea baja y vertical")
+	_comprobar(EstiloClub.de("Club Inventado", "ITA", 60) == ["3-5-2", "contra"] and EstiloClub.de("Club Inventado", "ESP", 90) == ["4-3-3", "posesion"], "sin fila: el estilo de su país según su tamaño")
+	var mio := m.ligas[0].clubes[2]
+	m.tomar_el_mando(mio.id)
+	var copia := Partida.desde_instantanea(Partida.instantanea(m))
+	var c3: Club = copia.clubes[mio.id]
+	_comprobar(c3.tactica.formacion == mio.tactica.formacion and EstiloClub.estilo_de(c3) == EstiloClub.estilo_de(mio), "el estilo se guarda y se carga")
+	var viejo := Club.new("x1", "Capitolina")   ## nombre ficticio de la tabla
+	viejo.pais = "ITA"
+	EstiloClub.aplicar_si_de_fabrica(viejo)
+	_comprobar(viejo.tactica.formacion == "3-5-2", "una partida vieja (táctica de fábrica) recupera el estilo del club")
+	viejo.tactica.formacion = "4-4-2"
+	viejo.tactica.mentalidad = 2
+	EstiloClub.aplicar_si_de_fabrica(viejo)
+	_comprobar(viejo.tactica.formacion == "4-4-2", "si la táctica se tocó, se respeta")

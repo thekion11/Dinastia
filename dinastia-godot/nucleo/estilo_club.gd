@@ -34,7 +34,8 @@ const POR_PAIS := {
 	"FRA": [["4-3-3", "vertical"], ["4-4-2", "bloque"]], "POR": [["4-3-3", "posesion"], ["4-4-2", "bloque"]],
 	"NED": [["4-3-3", "ofensivo"], ["4-3-3", "equilibrado"]], "BRA": [["4-2-3-1", "ofensivo"], ["4-4-2", "garra"]],
 	"ARG": [["4-3-3", "garra"], ["4-4-2", "garra"]], "URU": [["4-4-2", "garra"], ["4-4-2", "contra"]],
-	"MEX": [["4-3-3", "bandas"], ["4-4-2", "equilibrado"]], "USA": [["4-2-3-1", "vertical"], ["4-4-2", "directo"]],
+	"MEX": [["4-3-3", "bandas"], ["4-4-2", "equilibrado"]], "BEL": [["4-3-3", "vertical"], ["4-4-2", "bloque"]],
+	"CRO": [["4-2-3-1", "posesion"], ["4-4-2", "bloque"]], "DEN": [["4-3-3", "presion"], ["4-4-2", "vertical"]], "USA": [["4-2-3-1", "vertical"], ["4-4-2", "directo"]],
 }
 
 static var _tabla: Dictionary = {}
@@ -49,12 +50,40 @@ static func tabla() -> Dictionary:
 				_tabla = d
 	return _tabla
 
+## Con la base REAL puesta (`Datos.usar_base_real`), los clubes llevan el nombre del pack: este índice lleva cada nombre del pack al de la
+## base ficticia que ocupa el MISMO puesto en la misma liga (las dos tablas van en el mismo orden). Así la tabla de estilos solo guarda
+## nombres ficticios (regla del proyecto: lo real, solo en el pack).
+static var _alias: Dictionary = {}
+static var _alias_hecho := false
+
+static func _alias_de(nombre: String) -> String:
+	if not _alias_hecho:
+		_alias_hecho = true
+		var base: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://datos/tablas.json")) if FileAccess.file_exists("res://datos/tablas.json") else null
+		var pack: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://datos/pack_real.json")) if FileAccess.file_exists("res://datos/pack_real.json") else null
+		if base is Dictionary and pack is Dictionary and (pack as Dictionary).get("tablas") is Dictionary:
+			var tr: Dictionary = pack["tablas"]
+			for k: String in ["DATA_P1", "DATA_P2"]:
+				_emparejar(tr.get(k, []), (base as Dictionary).get(k, []))
+			var lr: Dictionary = tr.get("PAISES_LIGAS", {})
+			var lf: Dictionary = (base as Dictionary).get("PAISES_LIGAS", {})
+			for pais: String in lr:
+				if lf.has(pais):
+					_emparejar((lr[pais] as Dictionary).get("clubes", []), (lf[pais] as Dictionary).get("clubes", []))
+	return String(_alias.get(nombre, ""))
+
+static func _emparejar(reales: Array, ficticios: Array) -> void:
+	for i in mini(reales.size(), ficticios.size()):
+		_alias[String((reales[i] as Array)[0])] = String((ficticios[i] as Array)[0])
+
 ## [formación, estilo] del club (por su nombre en la tabla de ligas; `rep` y `pais` para el respaldo).
 static func de(nombre_tabla: String, pais: String, rep: int) -> Array:
 	var t := tabla()
+	if not t.has(nombre_tabla) and _alias_de(nombre_tabla) != "":
+		nombre_tabla = _alias_de(nombre_tabla)
 	if t.has(nombre_tabla):
-		var f: Array = t[nombre_tabla]
-		if f.size() >= 2 and ESTILOS.has(String(f[1])):
+		var f: Variant = t[nombre_tabla]
+		if f is Array and f.size() >= 2 and ESTILOS.has(String(f[1])):
 			return [String(f[0]), String(f[1])]
 	var par: Array = POR_PAIS.get(pais, [["4-3-3", "equilibrado"], ["4-4-2", "bloque"]])
 	return (par[0] if rep >= 80 else par[1]).duplicate()
