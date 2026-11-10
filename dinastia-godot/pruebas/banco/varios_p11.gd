@@ -55,3 +55,48 @@ func _probar_league_movimiento() -> void:
 	_comprobar(absf(float(vuelta.get("ang", 0.0))) > 2.0, "al trote y quiere volver atrás: un giro de 135-180° (%s)" % vuelta.get("nombre", ""))
 	_comprobar(LeagueMovimiento.estable(LeagueMovimiento.elegir(7.5, 0.0, 8.0)), "a toda carrera y de frente: el paso estable (no hay transición)")
 	_comprobar(absf(LeagueMovimiento.sesgo_giro(Vector2(0, -7.5), Vector2(0, 7.5)) - 0.9) < 0.001 and LeagueMovimiento.sesgo_giro(Vector2(0, -7.5), Vector2(0, -7.5)) < 0.001, "sesgo de giro rápido: máximo al dar la vuelta, nulo de frente")
+
+func _probar_visita_generada() -> void:
+	_titulo("SEGUNDO UNIFORME PROPIO GENERADO (sin visita archivada)")
+	var m := Mundo.new()
+	m.generar(["ESP", "ARG", "JPN", "GER", "BRA", "MEX"], 5821)
+	var n := 0
+	var iguales := 0
+	var distintos_disenos := {}
+	var mala := ""
+	for c: Club in m.clubes.values():
+		if not VisitaGenerada.es_basica(AspectoClub.visita(c)):
+			continue
+		n += 1
+		var v := VisitaGenerada.para(c)
+		if str(v) != str(VisitaGenerada.para(c)):
+			mala = "no es determinista: " + c.nombre
+		if str(v["c1"]) == c.color_kit1() and str(v["c2"]) == c.color_kit2() and v["camiseta"] == DisenosKit._diseno_de(c):
+			iguales += 1
+		distintos_disenos[v["camiseta"]] = true
+		if not (String(v["c1"]).begins_with("#") and String(v["pant"]).begins_with("#") and String(v["med"]).begins_with("#")):
+			mala = "colores sin # en " + c.nombre
+	_comprobar(n > 50, "hay clubes sin visita archivada que medir (%d)" % n)
+	_comprobar(mala == "", "la visita generada es determinista y bien formada (%s)" % mala)
+	_comprobar(iguales == 0, "ninguna visita es idéntica a la primera camiseta (%d de %d)" % [iguales, n])
+	_comprobar(distintos_disenos.size() >= 4, "salen varios diseños distintos (%d)" % distintos_disenos.size())
+	## La lógica de choque sigue mandando: con rival de su mismo color, la visita no se le parece.
+	var cs: Array = m.clubes.values()
+	var choques := 0
+	for i in mini(cs.size(), 60):
+		var a: Club = cs[i]
+		var b: Club = cs[(i * 7 + 3) % cs.size()]
+		if a == b:
+			continue
+		if Puente3D.chocan(Puente3D.kit(a), Puente3D.kit_visita(a, b)):
+			choques += 1
+	_comprobar(choques == 0, "la visita nunca choca con el local (%d choques)" % choques)
+	## Legibilidad a la cámara real: cada diseño fino pasa a uno que existe, y no se toca el original.
+	var validos: Array = DisenosKit.claves()
+	var rotos := []
+	for k: String in KitLegible.ANCHOS:
+		if not validos.has(KitLegible.ANCHOS[k]) or not validos.has(k):
+			rotos.append(k)
+	_comprobar(rotos.is_empty(), "los diseños anchos existen (%s)" % str(rotos))
+	var orig := {"dis": "diagonal", "cols": ["#ff0000", "#ffffff"]}
+	_comprobar(KitLegible.para_partido(orig)["dis"] == "sash" and orig["dis"] == "diagonal" and KitLegible.para_partido({"dis": "liso"})["dis"] == "liso", "el diseño fino se ensancha sin tocar el original")
