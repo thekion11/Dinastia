@@ -112,6 +112,24 @@ func _picos(mediana: int) -> void:
 	for f in 400:
 		await get_tree().process_frame
 		var ll := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+		if ll > mediana * 3 and OS.get_environment("PICOS") == "desglose":
+			## Congela ESE plano en una cámara quieta y mira qué grupos lo inflan.
+			var cam0 := get_viewport().get_camera_3d()
+			var fija := Camera3D.new()
+			fija.fov = cam0.fov
+			fija.far = cam0.far
+			add_child(fija)
+			fija.global_transform = cam0.global_transform
+			fija.make_current()
+			get_tree().paused = true
+			process_mode = Node.PROCESS_MODE_ALWAYS
+			await get_tree().process_frame
+			await get_tree().process_frame
+			var base := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+			print("   PLANO CONGELADO %s: %d llamadas" % [cam0.global_position.round(), base])
+			await _desglose(get_tree().root, base)
+			get_tree().quit()
+			return
 		if ll > mediana * 1.6:
 			var cam := get_viewport().get_camera_3d()
 			print("   PICO f%d: %d llamadas · %d objetos · %d prims · cam=%s pos=%s" % [f, ll, rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
