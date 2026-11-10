@@ -44,7 +44,7 @@ func _probar_formacion_propia() -> void:
 ## (`HumanoidBase::SelectAnim` + `GetMovementSimilarity`) sobre los datos de `datos/league_movimiento.json`.
 func _probar_league_movimiento() -> void:
 	_titulo("MOTOR LEAGUE: ARRANQUES, FRENADAS Y GIROS DEL ORIGINAL")
-	_comprobar(LeagueMovimiento.clips().size() == 98, "49 clips de movimiento del original con su espejo (%d)" % LeagueMovimiento.clips().size())
+	_comprobar(LeagueMovimiento.clips().filter(func(c): return not c.has("auto")).size() == 98 and LeagueMovimiento.clips().size() - 98 == (874 if LeagueAuto.activas else 0), "49 clips de movimiento del original con su espejo y 437 intermedias legales con el suyo (%d)" % LeagueMovimiento.clips().size())
 	_comprobar(LeagueMovimiento.rango(1.0) == 0.0 and LeagueMovimiento.rango(3.0) == 3.5 and LeagueMovimiento.rango(5.0) == 5.0 and LeagueMovimiento.rango(7.0) == 8.0, "velocidades escalonadas del original (RangeVelocity)")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, 0.0, 5.0).get("nombre", "")) == "ls_movement__idle__000_accel", "parado y quiere ir de frente: arranque recto")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, -PI / 2.0, 5.0).get("nombre", "")) == "ls_movement__idle__090_accel", "parado y quiere ir a la derecha: arranque girando 90° a la derecha")
@@ -84,3 +84,48 @@ func _probar_league_movimiento() -> void:
 			dos_pasos = c
 	_comprobar(String(dos_pasos.get("pie_sale", "")) == "D", "un clip de 2 pasos que empieza con el derecho deja el derecho para el siguiente")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, 0.0, 5.0, 0.0, NAN, "I").get("nombre", "")) == "ls_movement__idle__000_accel", "parado, el pie no cuenta (como el original)")
+
+func _probar_visita_generada() -> void:
+	_titulo("SEGUNDO UNIFORME PROPIO GENERADO (sin visita archivada)")
+	var m := Mundo.new()
+	m.generar(["ESP", "ARG", "JPN", "GER", "BRA", "MEX"], 5821)
+	var n := 0
+	var iguales := 0
+	var distintos_disenos := {}
+	var mala := ""
+	for c: Club in m.clubes.values():
+		if not VisitaGenerada.es_basica(AspectoClub.visita(c)):
+			continue
+		n += 1
+		var v := VisitaGenerada.para(c)
+		if str(v) != str(VisitaGenerada.para(c)):
+			mala = "no es determinista: " + c.nombre
+		if str(v["c1"]) == c.color_kit1() and str(v["c2"]) == c.color_kit2() and v["camiseta"] == DisenosKit._diseno_de(c):
+			iguales += 1
+		distintos_disenos[v["camiseta"]] = true
+		if not (String(v["c1"]).begins_with("#") and String(v["pant"]).begins_with("#") and String(v["med"]).begins_with("#")):
+			mala = "colores sin # en " + c.nombre
+	_comprobar(n > 50, "hay clubes sin visita archivada que medir (%d)" % n)
+	_comprobar(mala == "", "la visita generada es determinista y bien formada (%s)" % mala)
+	_comprobar(iguales == 0, "ninguna visita es idéntica a la primera camiseta (%d de %d)" % [iguales, n])
+	_comprobar(distintos_disenos.size() >= 4, "salen varios diseños distintos (%d)" % distintos_disenos.size())
+	## La lógica de choque sigue mandando: con rival de su mismo color, la visita no se le parece.
+	var cs: Array = m.clubes.values()
+	var choques := 0
+	for i in mini(cs.size(), 60):
+		var a: Club = cs[i]
+		var b: Club = cs[(i * 7 + 3) % cs.size()]
+		if a == b:
+			continue
+		if Puente3D.chocan(Puente3D.kit(a), Puente3D.kit_visita(a, b)):
+			choques += 1
+	_comprobar(choques == 0, "la visita nunca choca con el local (%d choques)" % choques)
+	## Legibilidad a la cámara real: cada diseño fino pasa a uno que existe, y no se toca el original.
+	var validos: Array = DisenosKit.claves()
+	var rotos := []
+	for k: String in KitLegible.ANCHOS:
+		if not validos.has(KitLegible.ANCHOS[k]) or not validos.has(k):
+			rotos.append(k)
+	_comprobar(rotos.is_empty(), "los diseños anchos existen (%s)" % str(rotos))
+	var orig := {"dis": "diagonal", "cols": ["#ff0000", "#ffffff"]}
+	_comprobar(KitLegible.para_partido(orig)["dis"] == "sash" and orig["dis"] == "diagonal" and KitLegible.para_partido({"dis": "liso"})["dis"] == "liso", "el diseño fino se ensancha sin tocar el original")

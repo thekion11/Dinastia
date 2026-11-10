@@ -134,6 +134,20 @@ Memoria: portada 219 MB estática (248 desde fuentes), vídeo 54 MB; menú real 
 **Lectura honesta:** trocear reparte la construcción (el anillo y la barra de la carga se siguen moviendo entre pasos) pero NO acorta el total (en llvmpipe cada fotograma extra cuesta; en un teléfono un fotograma con la carga es barato). Lo que queda como mayor congelación (~2,8 s) es el PRIMER DIBUJADO de la interfaz recién montada (compilación de shaders: en llvmpipe es LLVM; en un teléfono, el controlador de la GPU): no depende de cómo se construya, solo se puede medir en el teléfono. Si allí tampoco ayuda, `SIN_TROZOS` queda como interruptor y el cambio se revierte quitando una línea de `CargaMenu`.
 Pruebas: banco FIN. 0 fallos, `mem_menu_estadio` y `prueba_menu_ciudad_pie` 0 fallos, «pasan de 450: 0».
 
+## Impostores de cuerpo para los jugadores lejanos: propuesta con medición (10-11, noche)
+**Qué dibuja un jugador hoy** (`INFORME_JUGADORES=1`, BAJA, CHI; cámara de TV): los jugadores están a **61-72 m** de la cámara; cada uno son ~3 piezas y ~17 k triángulos a máxima calidad de malla (el cuerpo `SuperHero_Male` 12,6 k = 74 %, `CueroLejos` 2,8 k, la cara real 0,9 k, el pelo 0,4-5,8 k). Con el LOD de mallas actual quedan ~5 k triángulos por jugador (sin jugadores ni pelo: −130 k triángulos de 763 k en MEDIA).
+**Palanca barata (probada, poco útil):** subir `mesh_lod_threshold` del viewport (el esqueleto y la animación no cambian): umbral 6 → triángulos −5 % (BAJA) y −9 % (MEDIA); 16 y 40 casi no añaden (576 k / 564 k en BAJA, 692 k / 677 k en MEDIA): los cuerpos no tienen LODs bajos, el LOD satura. Llamadas sin cambio, fotograma −3 a −6 %. No justifica el cambio visual (siluetas más toscas).
+**Techo de un impostor de cuerpo** (`IMPOSTOR=30`: los jugadores a más de 30 m pierden todas sus mallas y se dibujan como una cápsula de ~60 triángulos del color de la camiseta, SIN animación; es el MÁXIMO ahorro posible, el impostor real ahorraría menos porque conservaría animación y detalle):
+| Club | Nivel | Llamadas | Triángulos | Fotograma relativo |
+|---|---|---|---|---|
+| CHI | BAJA | 316 → 277 (−12 %) | 615 k → 522 k (−15 %) | 273 → 248 ms (−9 %) |
+| CHI | MEDIA | 433 → 392 (−9 %) | 763 k → 615 k (−19 %) | 429 → 375 ms (−12 %) |
+| ESP | BAJA | 306 → 287 (−6 %) | 416 k → 367 k (−12 %) | 222 → 207 ms (−7 %) |
+| ESP | MEDIA | 497 → 476 (−4 %) | 540 k → 462 k (−14 %) | 365 → 323 ms (−11 %) |
+| ENG | BAJA | 249 → 220 (−12 %) | 366 k → 285 k (−22 %) | 227 → 205 ms (−10 %) |
+| ENG | MEDIA | 349 → 318 (−9 %) | 533 k → 410 k (−23 %) | 369 → 350 ms (−5 %) |
+**Veredicto:** el techo es ~−10 % de fotograma (−4 a −12 % llamadas, −12 a −23 % triángulos). A cambio de un cambio VISIBLE: los jugadores lejanos perderían animación (correr, regatear) y detalle. **No lo construyo sin tu OK**: es más complicado de lo que parece (el impostor tiene que conservar la animación para no verse como estatuas deslizando: malla simple con los mismos huesos y pesos, o billboards con atlas de animación por equipo) y la ganancia máxima es modesta frente a lo que ya dio quitar el MSAA (−60 %). Si se hace: detrás de una bandera apagada por defecto (`Calidad.impostores_lejanos`), solo en BAJA/MEDIA BAJA, a más de ~35 m, con la malla simple generada UNA vez (decimación con los mismos pesos de piel), medida con los 3 clubes del cuadro. Las piezas finas (ojos, cejas, pestañas) no aportan: ya se descartan por distancia.
+
 ## Lo que NO se hizo (y por qué) / siguiente
 - **La meta de ULTRA BAJA (< 130 llamadas) NO se cumple**: 198-260. No se ha recortado nada más porque lo que quita llamadas es visual y hay que decidirlo: ojos y cejas de los jugadores lejanos (81 llamadas), pelo (136), hinchas (157 llamadas / 135 k triángulos) y butacas lejanas (230 k triángulos, −12 % de fotograma). Propuesta para el dueño: en ULTRA BAJA, sin ojos/cejas/pestañas a más de 12 m de la cámara; hinchas y butacas lejanas como una sola malla por grada con menos detalle. Se aplica cuando lo apruebe el dueño (regla: no quitar nada sin decirlo).
 - Luces omni, post-proceso y gente fuera del campo no pesan en este banco: no se tocan.

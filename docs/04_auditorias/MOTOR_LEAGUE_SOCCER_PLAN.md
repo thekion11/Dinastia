@@ -415,5 +415,48 @@ en los de League y las plantillas, el derecho en la primera mitad). Efecto: al a
 pie (antes ganaba el primero de cada par espejado); la pierna que estaba en el aire sigue en el aire. Huellas iguales con
 `LS_LOCO=0/1` (tras fusionar `main` las huellas de referencia cambiaron: 0-0 y 0-1, por cambios de `main`). Coste propio de la
 locomoción: ~110-140 µs/paso.
-Sin portar todavía: las animaciones intermedias que genera `AnimCollection` (`GenerateAutoAnims`: mezcla de dos plantillas en 9
-direcciones, con sus reglas de qué es legal).
+
+### Fase 4c, parte 7: las intermedias del original (`GenerateAutoAnims`) (10-11; `LS_AUTO=0` las quita)
+`visor/league_auto.gd` copia `GenerateAutoAnims` (L animcollection.cpp). Para cada par de plantillas (de entrada y de salida) y 9
+direcciones (0, ±45, ±90, ±135, ±178°) aplica sus reglas de legalidad:
+- aceleración máxima de un escalón;
+- frenada máxima con el coseno del giro;
+- de carrera a trote, ni de espaldas ni girando mucho;
+- moviéndose, giros ≤ 90°; con carrera o trote rápido, ≤ 45°;
+- no más de media vuelta.
+Salen **437 legales + sus espejos = 874**. Sus datos (velocidades, ángulo, cuerpo de entrada y salida, pie) entran en la elección
+como los demás clips. La animación se construye solo la primera vez que se elige (como mucho una por paso, ~1-3 ms cada una):
+- cada hueso se mezcla con la curva del original (`bias` según cuadro, velocidades y cambio de movimiento, `curve(…, 0,7)`);
+- la pelvis gira hacia la nueva dirección (`angle · (bias·0,7 + orig·0,3)`, sobre la vertical del esqueleto);
+- la altura se interpola;
+- sin la inclinación hacia la curva (≤ 2°).
+Para que la elección siga siendo barata con 972 clips, la similitud de movimiento se calcula una vez por cuadrante de salida (solo
+depende de él) y no por clip.
+Medido (2 partidos de 2 × 120 s): huellas IGUALES con `LS_AUTO=0/1`; las intermedias ganan ~80 % de las elecciones; `elegir`
+~55 µs por llamada; construcción ~0,5 s repartida en el primer partido de la sesión (luego quedan en la biblioteca). Coste propio
+de la locomoción: ~110-125 µs/paso sin intermedias, ~160-190 con ellas mientras se construyen (en régimen, ~140).
+Revisado:
+- `pruebas/_sonda/captura_auto_league.tscn` (de cerca, ARG y BRA): de parado a trote girando 90° a la izquierda y su espejo a la
+  derecha; de trote a trote con el cuerpo pasando a 135°. El sentido del giro y las poses son correctos.
+- La sonda de giros en el partido: un giro de ~180° encadenado con intermedias, natural.
+Con esto la LOCOMOCIÓN del original queda portada entera para los jugadores sin balón; el portador usa los ciclos con balón
+(parte 3). Pendiente: la inclinación hacia la curva de las intermedias y llevar esta capa a C++ si el coste molesta.
+
+### ¿Gemelo C++ de la locomoción? Medición y propuesta (10-11, pendiente de OK de la líder)
+3 partidos seguidos (2 × 120 s, cronometrado dentro del paso; el 3.º ya con casi todas las intermedias construidas):
+| por paso (µs) | partido 1 | partido 2 | partido 3 |
+|---|---|---|---|
+| locomoción entera | 213 | 179 | **152** |
+| · evaluar a quién toca (cada 0,1 s) | 133 | 94 | 67 |
+| · · de eso, `elegir` (cálculo puro) | 19 | 21 | 18 |
+| · · de eso, construir intermedias (cálculo puro, una vez por sesión) | 63 | 39 | 17 |
+| · bucle por fotograma (diccionarios del jugador, AnimationPlayer, giro del modelo) | 80 | 85 | 86 |
+| paso del motor entero | ~1.610 | ~1.660 | ~1.535 |
+Lo que se puede llevar a C++ como función pura con su gemelo exacto (`elegir`, la mezcla de `LeagueAuto.construir`) es ~35 µs/paso
+en régimen (~2 % del paso) y ~0,5 s de construcción por sesión. El resto (~120 µs) es acceso a los diccionarios del jugador y
+llamadas al motor de Godot, que desde C++ siguen pasando por Variant: ganaría poco y obligaría a duplicar ~600 líneas.
+Además la extensión solo existe para Linux y Windows: en Android y Web (donde la prueba del dueño dio 5 FPS con la GPU al 100 % y
+la CPU al 0 %) correría igual el GDScript, así que el C++ no ayuda al móvil.
+**Propuesta: NO hacer el gemelo C++ ahora.** En su lugar, una mejora en GDScript que sí sirve en todas las plataformas: no revisar
+ni animar transiciones de los jugadores fuera de cámara o lejos de ella (solo visual; se puede medir con las mismas huellas). Si
+aun así hiciera falta, pasar solo `elegir` y la mezcla de las intermedias (funciones puras, copia exacta y `probar_nativo`).

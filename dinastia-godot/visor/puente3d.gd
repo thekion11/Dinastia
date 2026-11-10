@@ -96,6 +96,9 @@ static func once(jugadores: Array[Jugador]) -> Dictionary:
 ## colores al revés, y si tampoco alcanza, blanca (o casi negra si el local va
 ## de claro). El diseño del club se deja (la "x" del diseñador lleva sus
 ## colores), así que la alternativa va lisa.
+## Diseños en los que el color de adorno ocupa poco (la camiseta se lee del color principal).
+const ADORNO_CHICO := ["hombros", "canesu", "franja_pecho", "pecho_ribete", "banda_baja"]
+
 static func distancia_color(a: Color, b: Color) -> float:
 	return Vector3(a.r - b.r, a.g - b.g, a.b - b.b).length()
 
@@ -108,10 +111,14 @@ static func kit_visita(local: Club, visita: Club) -> Dictionary:
 	if not chocan(kl, kv):
 		return kv
 	## (10-11) El segundo uniforme REAL del club (colores, diseño, pantalón y medias), si lo tiene y no choca.
-	var v2 := AspectoClub.visita(visita)
+	var v2 := VisitaGenerada.para(visita)   ## el archivado si es de verdad; si es el mínimo (liso) o falta, se completa con diseño, pantalón y medias propios (determinista)
+	## Si el color de adorno del segundo uniforme es el del local, un diseño de dos colores se lee como la camiseta del local: pasa a uno de adornos pequeños (hombros).
+	if chocan(kl, {"c1": String(v2.get("c2", "#ffffff"))}) and not chocan(kl, {"c1": String(v2.get("c1", "#ffffff"))}) and String(v2.get("camiseta", "liso")) != "liso":
+		v2 = v2.duplicate()
+		v2["camiseta"] = ADORNO_CHICO[absi(hash(visita.id + "adorno")) % ADORNO_CHICO.size()]
 	if not v2.is_empty() and visita.kit_color1 == "" and visita.kit_x.is_empty():   ## el uniforme que se diseñó el jugador manda
 		var propio := {"c1": String(v2["c1"]), "c2": String(v2["c2"]), "estilo": String(v2.get("camiseta", "liso")), "img": "",
-			"x": load("res://ui/disenos_kit.gd").kit_de_club_visita(visita)}
+			"x": load("res://ui/disenos_kit.gd").kit_de_club_visita(visita, v2)}
 		if not chocan(kl, propio):
 			return propio
 	var invertido := {"c1": kv["c2"], "c2": kv["c1"], "estilo": String(kv.get("estilo", "liso")), "img": "", "x": {}}
