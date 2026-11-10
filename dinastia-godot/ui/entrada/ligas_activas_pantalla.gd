@@ -23,6 +23,7 @@ func _ready() -> void:
 	var fondo := ColorRect.new()
 	fondo.color = Tema.FONDO
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
+	fondo.mouse_filter = Control.MOUSE_FILTER_IGNORE   ## (10-11) para el guardián del foco no es una «capa»: el fondo, nada más
 	add_child(fondo)
 	var margen := MarginContainer.new()
 	margen.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -36,9 +37,9 @@ func _ready() -> void:
 	v.add_theme_constant_override("separation", 10)
 	caja.add_child(v)
 	var agregando := mundo_agregar != null
-	v.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, Idiomas.t("FIN DE TEMPORADA · LIGAS") if agregando else Idiomas.t("NUEVO JUEGO · LIGAS")))
+	v.add_child(Tema.etiqueta(EscalaTipografica.ROTULO, Tema.SUAVE, Idiomas.t("FIN DE TEMPORADA · LIGAS") if agregando else Idiomas.t("NUEVO JUEGO · LIGAS")))
 	v.add_child(Tema.etiqueta(Tema.TAM_TITULO + 6, Tema.ORO, Idiomas.t("AÑADIR LIGAS") if agregando else Idiomas.t("LIGAS ACTIVAS")))
-	var nota := Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, Idiomas.t("Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.") if agregando else Idiomas.t("Elige qué ligas se cargan en la partida. Con menos ligas arranca antes y pesa menos (útil en el móvil). Podrás añadir más al cerrar cada temporada, pero no quitarlas."))
+	var nota := Tema.etiqueta(EscalaTipografica.CUERPO, Tema.TEXTO, Idiomas.t("Añade países a tu partida: sus ligas y clubes entran en la temporada que empieza. Una vez añadidos no se pueden quitar.") if agregando else Idiomas.t("Elige qué ligas se cargan en la partida. Con menos ligas arranca antes y pesa menos (útil en el móvil). Podrás añadir más al cerrar cada temporada, pero no quitarlas."))
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(nota)
 	var atajos := HBoxContainer.new()
@@ -53,6 +54,7 @@ func _ready() -> void:
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.follow_focus = true   ## (10-11) con mando, la lista larga sigue al foco
 	v.add_child(scroll)
 	var lista := VBoxContainer.new()
 	lista.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -69,7 +71,7 @@ func _ready() -> void:
 	for g: Array in LigasActivas.por_confederacion():
 		if agregando and not (g[1] as Array).any(func(x: String) -> bool: return faltan.has(x)):
 			continue
-		lista.add_child(Tema.etiqueta(Tema.TAM_ROTULO, Tema.ORO, Idiomas.t(String(NOMBRES_CONFED[g[0]]))))
+		lista.add_child(Tema.etiqueta(EscalaTipografica.ROTULO, Tema.ORO, Idiomas.mayusculas(Idiomas.t(String(NOMBRES_CONFED[g[0]])))))
 		var flujo := HFlowContainer.new()
 		flujo.add_theme_constant_override("h_separation", 12)
 		lista.add_child(flujo)
@@ -87,7 +89,8 @@ func _ready() -> void:
 				_actualizar())
 			flujo.add_child(c)
 			_casillas[p] = c
-	_resumen = Tema.etiqueta(Tema.TAM_ROTULO, Tema.TEXTO, "")
+	_resumen = Tema.etiqueta(EscalaTipografica.CUERPO, Tema.TEXTO, "")
+	_resumen.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(_resumen)
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 10)
@@ -104,6 +107,12 @@ func _ready() -> void:
 	_continuar.pressed.connect(confirmar)
 	fila.add_child(_continuar)
 	_actualizar()
+	## (10-11, pulido con mando) Foco al entrar (la primera casilla marcada o «Continuar»), lo de detrás aislado (al añadir, la pantalla va encima
+	## de la principal) y el guardián del foco: a la vista en la lista y sin quedarse clavado en la última fila visible.
+	add_child(GuardianFoco.new(self))
+	if get_parent() is Control:
+		FocoMando.aislar_mientras(self)
+	FocoMando.enfocar.call_deferred(self)
 
 ## Los países marcados, en el orden de `LigasActivas.todos()`.
 func marcados() -> Array[String]:
@@ -119,7 +128,7 @@ func _atajo(que: String) -> void:
 		"todas":
 			lista.assign(_casillas.keys())
 		"defecto":
-			lista = LigasActivas.por_defecto(OS.has_feature("mobile"))
+			lista = LigasActivas.por_defecto(EscalaMovil.es_movil())
 	for p: String in _casillas:
 		(_casillas[p] as BaseButton).set_pressed_no_signal(lista.has(p))
 		_rotular(_casillas[p] as Button)
@@ -133,7 +142,7 @@ func _actualizar() -> void:
 	var clubes := 0
 	for p: String in m:
 		clubes += LigasActivas.clubes_de(p)
-	var movil := OS.has_feature("mobile")
+	var movil := EscalaMovil.es_movil()
 	var c := LigasActivas.coste(m, movil)
 	_resumen.text = Idiomas.t("%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria") % [m.size(), clubes, float(c["s_semana"]), float(c["gb"])] if not m.is_empty() else Idiomas.t("Elige al menos un país.")
 	if not m.is_empty() and ((movil and clubes > 400) or (not movil and clubes > 1200)):
