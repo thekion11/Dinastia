@@ -399,3 +399,47 @@ func _hud_realizacion(delta: float) -> void:
 		if c != null:
 			c.modulate.a = move_toward(c.modulate.a, 0.0 if tapa else 1.0, delta * 5.0)
 
+## El contenido del cajón de ajustes de la transmisión (antes dentro de `_montar_cajon_de_ajustes`): se llama la primera vez que se abre (`CajonAjustes.contenido`). Va en dos mitades por el tope de líneas de la capa.
+func _llenar_cajon() -> void:
+	_cajon.seccion("Transmisión")
+	_btn_camara = _cajon.boton("📷 Cámara: " + (_rig.current_name() if _rig != null else "TV"), _rotar_camara)
+	_cajon.fila([["🔍 Acercar", func() -> void: if _rig: _rig.ajustar_zoom(-3.0)],
+		["🔍 Alejar", func() -> void: if _rig: _rig.ajustar_zoom(3.0)]])
+	_cajon.boton("📸 Modo foto", func() -> void: ModoFoto.abrir(self, club, "el estadio"))
+	## RECORRER EL ESTADIO A PIE (7-10-2026): del vestuario, por el túnel, a la
+	## cancha. Solo sin partido en marcha.
+	if partido == null:
+		_cajon.boton("🚶 Recorrer el estadio (vestuario y túnel)", recorrer)
+	if partido != null:
+		_cajon.seccion("Partido")
+		_btn_modo = _cajon.boton("🎮 Controlar a mi equipo: NO", _alternar_modo_control)
+		_cajon.boton("📋 Táctica y cambios (Esc)", _abrir_panel_dt)
+		_cajon.boton("📊 Estadísticas del partido", abrir_estadisticas)
+		_cajon.boton("🎮 Controles: teclas, mando y ayudas", abrir_controles)
+		_cajon.interruptor("⚽ Motor real: el resultado se juega en el césped", _pref("motor_real", true), func(si: bool) -> void:
+			_guardar_pref("motor_real", si))
+		_cajon.fila([["⏩ Partido corto", func() -> void: _fijar_ritmo("rapido")],
+			["⏯ Normal", func() -> void: _fijar_ritmo("normal")],
+			["🐢 Largo (FC)", func() -> void: _fijar_ritmo("largo")]])
+		_btn_dificultad = _cajon.boton(_texto_dificultad(), _ciclar_dificultad_cpu)
+		var b_preset: Button = _cajon.boton(_texto_preset(), func() -> void: pass)
+		b_preset.pressed.connect(func() -> void: _ciclar_preset(b_preset))
+		_cajon.interruptor("🎯 Indicador de pase (a quién va el balón)", _pref("indicador_pase", true), func(si: bool) -> void:
+			_guardar_pref("indicador_pase", si)
+			if _motor != null:
+				_motor.indicador_pase = si)
+		_cajon.fila([["🎥 Pro: cerca", func() -> void: _fijar_pro_camara("cerca")], ["Normal", func() -> void: _fijar_pro_camara("normal")], ["Lejos", func() -> void: _fijar_pro_camara("lejos")]])
+		_btn_velocidad = _cajon.boton("⏱", _ciclar_velocidad)
+		## SIMULAR EL RESTO (28-9-2026, informe externo: "falta el botón de
+		## simular el partido entero"). Existía en la pantalla de texto, que
+		## queda oculta mientras se ve el 3D. Juega todos los minutos que
+		## faltan -descanso incluido- y vuelve al resumen.
+		_cajon.boton("⏭ Simular hasta el final", func() -> void:
+			if _motor != null:
+				_simular_resto_motor()
+				return
+			_descanso_hecho = true
+			while not partido.terminado_ya:
+				partido.simular_minuto()
+			cerrado.emit())
+	call("_llenar_cajon_2")   ## la segunda mitad vive en `estadio.gd` (capa 6)

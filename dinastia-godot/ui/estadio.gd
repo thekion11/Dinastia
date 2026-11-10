@@ -380,3 +380,40 @@ static func abrir_practica(padre: Node, m: Mundo) -> VistaEstadio:
 	padre.add_child(v)
 	v.abrir(c, 0.15, rival, Partido.new(c, rival), m.perfil_estadio_de(c))
 	return v
+
+## Segunda mitad del cajón de ajustes (En pantalla y Sonido): ver `_llenar_cajon` en `estadio_p4.gd`.
+func _llenar_cajon_2() -> void:
+	_cajon.seccion("En pantalla")
+	_cajon.interruptor("🏷 Nombres de los jugadores", PlayerSpawner.mostrar_nombres, _mostrar_nombres)
+	_cajon.interruptor("📺 Pantalla del estadio en la esquina", _pref("pantalla_esquina", true), func(si: bool) -> void:
+		_guardar_pref("pantalla_esquina", si)
+		_mini_pantalla.visible = si and _mini_pantalla.texture != null)
+	_cajon.interruptor("🗺 Radar táctico", _radar.visible, func(si: bool) -> void:
+		_radar.visible = si
+		_guardar_pref("radar", si))
+	_cajon.interruptor("📺 Rótulos de las jugadas", _pref("rotulos", true), func(si: bool) -> void:
+		_guardar_pref("rotulos", si)
+		if _rotulo_jugada != null and not si:
+			_rotulo_jugada.modulate.a = 0.0)
+	_cajon.interruptor("🎞 Viñeta de transmisión", _vineta.visible, func(si: bool) -> void:
+		_vineta.visible = si
+		_guardar_pref("vineta", si))
+	_cajon.interruptor("ℹ Ficha del estadio abajo", _pref("pie", false), func(si: bool) -> void:
+		_pie.visible = si
+		_guardar_pref("pie", si))
+	_cajon.interruptor("🎬 Presentación antes del partido", _pref("intro", true), func(si: bool) -> void:
+		_guardar_pref("intro", si))
+	_cajon.interruptor("🧒 Ceremonia completa (niños, mascota, alineaciones)", _pref("ceremonia", true), func(si: bool) -> void:
+		_guardar_pref("ceremonia", si))
+	_cajon.interruptor("🔁 Repetición de los goles", _pref("repeticiones", true), func(si: bool) -> void:
+		_guardar_pref("repeticiones", si))
+	_cajon.interruptor("⚡ Calidad automática", Calidad.adaptativa, func(si: bool) -> void:
+		Calidad.adaptativa = si)
+	_cajon.seccion("Sonido")
+	_cajon.deslizador("Grada y ambiente", float(Sonido.volumen.get(Sonido.Bus.AMBIENTE, 0.5)), func(v: float) -> void:
+		Sonido.volumen[Sonido.Bus.AMBIENTE] = v)
+	_cajon.deslizador("Efectos (balón, silbato)", float(Sonido.volumen.get(Sonido.Bus.EFECTOS, 0.8)), func(v: float) -> void:
+		Sonido.volumen[Sonido.Bus.EFECTOS] = v)
+	_cajon.deslizador("Música", Musica.volumen, func(v: float) -> void:
+		Musica.volumen = v
+		Musica.aplicar_volumen())

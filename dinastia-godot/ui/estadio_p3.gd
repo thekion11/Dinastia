@@ -186,7 +186,7 @@ func _montar_cajon_de_ajustes() -> void:
 	## volver); el usuario pidió que no estuvieran todos a la vista. Ahora en
 	## pantalla quedan el marcador, "Volver" y el ⚙, y el resto entra desde la
 	## derecha al pulsarlo (`CajonAjustes`).
-	_cajon = CajonAjustes.crear(self, "partido3d")
+	_cajon = CajonAjustes.crear(self, "partido3d", Callable(self, "_llenar_cajon"))   ## (10-11) se llena al abrirlo por primera vez (`_llenar_cajon`, en `estadio_p4.gd`)
 	var volver := Button.new()
 	volver.text = Idiomas.t("Volver")
 	volver.focus_mode = Control.FOCUS_NONE
@@ -198,81 +198,6 @@ func _montar_cajon_de_ajustes() -> void:
 	volver.offset_bottom = 54
 	volver.pressed.connect(func() -> void: cerrado.emit())
 
-	_cajon.seccion("Transmisión")
-	_btn_camara = _cajon.boton("📷 Cámara: " + (_rig.current_name() if _rig != null else "TV"), _rotar_camara)
-	_cajon.fila([["🔍 Acercar", func() -> void: if _rig: _rig.ajustar_zoom(-3.0)],
-		["🔍 Alejar", func() -> void: if _rig: _rig.ajustar_zoom(3.0)]])
-	_cajon.boton("📸 Modo foto", func() -> void: ModoFoto.abrir(self, club, "el estadio"))
-	## RECORRER EL ESTADIO A PIE (7-10-2026): del vestuario, por el túnel, a la
-	## cancha. Solo sin partido en marcha.
-	if partido == null:
-		_cajon.boton("🚶 Recorrer el estadio (vestuario y túnel)", recorrer)
-	if partido != null:
-		_cajon.seccion("Partido")
-		_btn_modo = _cajon.boton("🎮 Controlar a mi equipo: NO", _alternar_modo_control)
-		_cajon.boton("📋 Táctica y cambios (Esc)", _abrir_panel_dt)
-		_cajon.boton("📊 Estadísticas del partido", abrir_estadisticas)
-		_cajon.boton("🎮 Controles: teclas, mando y ayudas", abrir_controles)
-		_cajon.interruptor("⚽ Motor real: el resultado se juega en el césped", _pref("motor_real", true), func(si: bool) -> void:
-			_guardar_pref("motor_real", si))
-		_cajon.fila([["⏩ Partido corto", func() -> void: _fijar_ritmo("rapido")],
-			["⏯ Normal", func() -> void: _fijar_ritmo("normal")],
-			["🐢 Largo (FC)", func() -> void: _fijar_ritmo("largo")]])
-		_btn_dificultad = _cajon.boton(_texto_dificultad(), _ciclar_dificultad_cpu)
-		var b_preset: Button = _cajon.boton(_texto_preset(), func() -> void: pass)
-		b_preset.pressed.connect(func() -> void: _ciclar_preset(b_preset))
-		_cajon.interruptor("🎯 Indicador de pase (a quién va el balón)", _pref("indicador_pase", true), func(si: bool) -> void:
-			_guardar_pref("indicador_pase", si)
-			if _motor != null:
-				_motor.indicador_pase = si)
-		_cajon.fila([["🎥 Pro: cerca", func() -> void: _fijar_pro_camara("cerca")], ["Normal", func() -> void: _fijar_pro_camara("normal")], ["Lejos", func() -> void: _fijar_pro_camara("lejos")]])
-		_btn_velocidad = _cajon.boton("⏱", _ciclar_velocidad)
-		## SIMULAR EL RESTO (28-9-2026, informe externo: "falta el botón de
-		## simular el partido entero"). Existía en la pantalla de texto, que
-		## queda oculta mientras se ve el 3D. Juega todos los minutos que
-		## faltan -descanso incluido- y vuelve al resumen.
-		_cajon.boton("⏭ Simular hasta el final", func() -> void:
-			if _motor != null:
-				_simular_resto_motor()
-				return
-			_descanso_hecho = true
-			while not partido.terminado_ya:
-				partido.simular_minuto()
-			cerrado.emit())
-	_cajon.seccion("En pantalla")
-	_cajon.interruptor("🏷 Nombres de los jugadores", PlayerSpawner.mostrar_nombres, _mostrar_nombres)
-	_cajon.interruptor("📺 Pantalla del estadio en la esquina", _pref("pantalla_esquina", true), func(si: bool) -> void:
-		_guardar_pref("pantalla_esquina", si)
-		_mini_pantalla.visible = si and _mini_pantalla.texture != null)
-	_cajon.interruptor("🗺 Radar táctico", _radar.visible, func(si: bool) -> void:
-		_radar.visible = si
-		_guardar_pref("radar", si))
-	_cajon.interruptor("📺 Rótulos de las jugadas", _pref("rotulos", true), func(si: bool) -> void:
-		_guardar_pref("rotulos", si)
-		if _rotulo_jugada != null and not si:
-			_rotulo_jugada.modulate.a = 0.0)
-	_cajon.interruptor("🎞 Viñeta de transmisión", _vineta.visible, func(si: bool) -> void:
-		_vineta.visible = si
-		_guardar_pref("vineta", si))
-	_cajon.interruptor("ℹ Ficha del estadio abajo", _pref("pie", false), func(si: bool) -> void:
-		_pie.visible = si
-		_guardar_pref("pie", si))
-	_cajon.interruptor("🎬 Presentación antes del partido", _pref("intro", true), func(si: bool) -> void:
-		_guardar_pref("intro", si))
-	_cajon.interruptor("🧒 Ceremonia completa (niños, mascota, alineaciones)", _pref("ceremonia", true), func(si: bool) -> void:
-		_guardar_pref("ceremonia", si))
-	_cajon.interruptor("🔁 Repetición de los goles", _pref("repeticiones", true), func(si: bool) -> void:
-		_guardar_pref("repeticiones", si))
-	_cajon.interruptor("⚡ Calidad automática", Calidad.adaptativa, func(si: bool) -> void:
-		Calidad.adaptativa = si)
-	_cajon.seccion("Sonido")
-	_cajon.deslizador("Grada y ambiente", float(Sonido.volumen.get(Sonido.Bus.AMBIENTE, 0.5)), func(v: float) -> void:
-		Sonido.volumen[Sonido.Bus.AMBIENTE] = v)
-	_cajon.deslizador("Efectos (balón, silbato)", float(Sonido.volumen.get(Sonido.Bus.EFECTOS, 0.8)), func(v: float) -> void:
-		Sonido.volumen[Sonido.Bus.EFECTOS] = v)
-	_cajon.deslizador("Música", Musica.volumen, func(v: float) -> void:
-		Musica.volumen = v
-		Musica.aplicar_volumen())
 
 func _a_la_revision_var(minuto: int, motivo: String, anular := false, al_anular := Callable(), lineas := {}) -> void:
 	if _sala_var != null or _raiz3d == null:
