@@ -17,16 +17,16 @@ using namespace godot;
 namespace {
 
 const double SPRINT = 8.0;
-const double CONTRABANDO = 0.1 * Math_PI;
+const double CONTRABANDO = 0.1 * Math::PI;
 const double MARGEN = 0.01;
 
 // `LeagueMovimiento.cuerpo_permitido`
 double cuerpo_permitido(double ang) {
-	const double a = Math::wrapf(ang, -Math_PI, Math_PI);
-	if (std::fabs(a) < 0.125 * Math_PI) {
+	const double a = Math::wrapf(ang, -Math::PI, Math::PI);
+	if (std::fabs(a) < 0.125 * Math::PI) {
 		return 0.0;
 	}
-	return (std::fabs(a) < 0.5 * Math_PI ? 0.25 * Math_PI : 0.75 * Math_PI) * (a > 0.0 ? 1.0 : -1.0);
+	return (std::fabs(a) < 0.5 * Math::PI ? 0.25 * Math::PI : 0.75 * Math::PI) * (a > 0.0 ? 1.0 : -1.0);
 }
 
 double clampd(double v, double lo, double hi) {
@@ -37,7 +37,7 @@ double clampd(double v, double lo, double hi) {
 double sesgo_giro(const Vector2 &actual, const Vector2 &deseado) {
 	const Vector2 dn = (double)deseado.length() > 0.0001 ? deseado.normalized() : actual.normalized();
 	const double ang = (double)actual.length() > 0.0001 ? std::fabs((double)dn.angle_to(actual)) : 0.0;
-	const double por_giro = std::sin(ang - 0.5 * Math_PI) * 0.5 + 0.5;
+	const double por_giro = std::sin(ang - 0.5 * Math::PI) * 0.5 + 0.5;
 	const double por_vel = clampd((double)actual.length() / (SPRINT - 0.5), 0.0, 1.0);
 	return por_vel * por_giro * 0.9;
 }
@@ -114,7 +114,7 @@ Dictionary DinastiaNativo::league_elegir(const Array &grupos, double sp, double 
 	const double m = mira(elegido);
 	for (int64_t i = 0; i < n; i++) {
 		const Dictionary c = cuadrante[i];
-		if (String(c[k_pie]) == pie && (std::isnan(mirar) || std::fabs(Math::angle_difference(mira(c), m)) <= 0.06 * Math_PI)) {
+		if (String(c[k_pie]) == pie && (std::isnan(mirar) || std::fabs(Math::angle_difference(mira(c), m)) <= 0.06 * Math::PI)) {
 			return c;
 		}
 	}
@@ -128,17 +128,17 @@ bool DinastiaNativo::league_legal(int64_t vi, int64_t vo, double cuerpo_sale, do
 	if ((int64_t)std::round(vo * std::cos(a) - vi) < -3) {
 		return false;
 	}
-	if (vi == 3 && vo == 1 && (std::fabs(cuerpo_sale) > 0.25 * Math_PI + MARGEN || std::fabs(a) > 0.25 * Math_PI + MARGEN)) {
+	if (vi == 3 && vo == 1 && (std::fabs(cuerpo_sale) > 0.25 * Math::PI + MARGEN || std::fabs(a) > 0.25 * Math::PI + MARGEN)) {
 		return false;
 	}
-	if (vi > 0 && vo > 0 && std::fabs(a) > 0.5 * Math_PI + MARGEN) {
+	if (vi > 0 && vo > 0 && std::fabs(a) > 0.5 * Math::PI + MARGEN) {
 		return false;
 	}
-	if (vi + vo > 4 && std::fabs(a) > 0.25 * Math_PI + MARGEN) {
+	if (vi + vo > 4 && std::fabs(a) > 0.25 * Math::PI + MARGEN) {
 		return false;
 	}
-	const double delta_cuerpo = Math::wrapf(cuerpo_sale - cuerpo_ini, -Math_PI, Math_PI);
-	if (std::fabs(a + delta_cuerpo) > Math_PI + MARGEN) {
+	const double delta_cuerpo = Math::wrapf(cuerpo_sale - cuerpo_ini, -Math::PI, Math::PI);
+	if (std::fabs(a + delta_cuerpo) > Math::PI + MARGEN) {
 		return false;
 	}
 	return true;
