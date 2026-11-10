@@ -87,7 +87,7 @@ static func contexto_de(mundo: Mundo, c: Club) -> Dictionary:
 	if mundo.junta != null:
 		pres = String(mundo.junta.presidente.get("nombre", ""))
 	return {"inst": mundo.obras.niveles.duplicate() if mundo.obras != null else {}, "dentro": dentro,
-		"plantilla": pl, "titulos": titulos, "presidente": pres, "hitos": hitos, "pais": c.pais,
+		"plantilla": pl, "titulos": titulos, "presidente": pres, "hitos": hitos, "pais": c.pais, "club": c,
 		"obras": mundo.obras.obras.duplicate() if mundo.obras != null else {},
 		"gente": mundo.gente.fichas.duplicate(true) if mundo.gente != null else {},
 		## Por referencia: lo que decores en el 3D se guarda en la partida.
@@ -341,13 +341,15 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			_mod(nodo, "lampSquareTable", Vector3(cx + 0.75, sobre, cz - 0.8), 0.0)
 			if SillonOficina.poner(nodo, Vector3(cx, y0, cz + 0.25), PI) == null:   ## el sillón del Drive; sin él, el del kit
 				_mod(nodo, "chairDesk", Vector3(cx, y0, cz + 0.25), PI, true)
-			_mod(nodo, "bookcaseOpen", Vector3(caja.position.x + 0.3, y0, cz - 0.4), PI * 0.5, true)
-			_mod(nodo, "books", Vector3(caja.position.x + 0.3, y0 + 0.9, cz - 0.4), PI * 0.5)
+			if ModeloCC0.poner(nodo, "modern_wooden_cabinet", Vector3(caja.position.x + 0.45, y0, cz - 0.4), PI * 0.5, 0.7) == null:   ## CC0 en MEDIA/ALTA
+				_mod(nodo, "bookcaseOpen", Vector3(caja.position.x + 0.3, y0, cz - 0.4), PI * 0.5, true)
+				_mod(nodo, "books", Vector3(caja.position.x + 0.3, y0 + 0.9, cz - 0.4), PI * 0.5)
 			_mod(nodo, "loungeSofa", Vector3(caja.end.x - 0.55, y0, cz + 0.6), -PI * 0.5, true, null, {"carpet": c1.lerp(Color(0.15, 0.15, 0.17), 0.35)})
 			_mod(nodo, "pottedPlant", Vector3(caja.end.x - 0.45, y0, caja.position.y + 0.5), 0.0, true, 2.2)
 			_mod(nodo, "coatRackStanding", Vector3(caja.position.x + 0.45, y0, caja.end.y - 0.6), 0.0, true)
 			PiezasObra._caja(nodo, Vector3(cx, y0 + 1.7, caja.position.y + 0.05), Vector3(2.4, 1.2, 0.05), PiezasObra._mat(Color(0.95, 0.96, 0.97), 0.3), false)
 			PiezasObra._rotulo(nodo, nombre_club.to_upper(), Vector3(cx, y0 + 2.55, caja.position.y + 0.1), 0.0, 40, c1)
+			VestuarioRealista.escudo_sala(nodo, Vector3(cx + 2.0, y0 + 1.75, caja.position.y + 0.08), ctx.get("club"), 0.9)
 		"Despacho del presidente":
 			PiezasObra._caja(nodo, Vector3(cx, y0 + 0.78, cz - 0.3), Vector3(2.6, 0.1, 1.1), PiezasObra._mat(Color(0.3, 0.18, 0.1), 0.4), true)
 			PiezasObra._caja(nodo, Vector3(cx, y0 + 0.38, cz - 0.3), Vector3(2.5, 0.76, 1.0), PiezasObra._mat(Color(0.3, 0.18, 0.1), 0.4), false)
@@ -357,13 +359,14 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 				var mastil := PiezasObra._caja(nodo, Vector3(caja.position.x + 0.6 + k * 0.6, y0 + 1.2, caja.position.y + 0.5), Vector3(0.05, 2.4, 0.05), Texturas.metal(Color(0.8, 0.7, 0.3), 0.3), false)
 				mastil.name = "Mastil"
 				PiezasObra._caja(nodo, Vector3(caja.position.x + 0.85 + k * 0.6, y0 + 2.0, caja.position.y + 0.5), Vector3(0.5, 0.35, 0.02), club if k == 0 else PiezasObra._mat(c2, 0.6), false)
-			_mod(nodo, "chairModernFrameCushion", Vector3(cx - 0.6, y0, cz + 0.5), PI, true)
-			_mod(nodo, "chairModernFrameCushion", Vector3(cx + 0.6, y0, cz + 0.5), PI, true)
+			for dx in [-0.6, 0.6]:
+				if ModeloCC0.poner(nodo, "modern_arm_chair_01", Vector3(cx + dx, y0, cz + 0.55), PI, 0.85) == null: _mod(nodo, "chairModernFrameCushion", Vector3(cx + dx, y0, cz + 0.5), PI, true)
 			_mod(nodo, "loungeDesignSofa", Vector3(caja.end.x - 0.6, y0, cz + 0.4), -PI * 0.5, true, null, {"carpet": c1.lerp(Color(0.15, 0.15, 0.17), 0.35)})
-			_mod(nodo, "tableCoffeeGlass", Vector3(caja.end.x - 1.6, y0, cz + 0.4), PI * 0.5, true)
+			if ModeloCC0.poner(nodo, "modern_coffee_table_01", Vector3(caja.end.x - 1.6, y0, cz + 0.4), PI * 0.5, 0.42) == null: _mod(nodo, "tableCoffeeGlass", Vector3(caja.end.x - 1.6, y0, cz + 0.4), PI * 0.5, true)
 			_mod(nodo, "lampRoundFloor", Vector3(caja.end.x - 0.45, y0, caja.position.y + 0.5), 0.0, true)
 			_mod(nodo, "pottedPlant", Vector3(caja.position.x + 0.45, y0, caja.end.y - 0.5), 0.0, true, 2.2)
 			## (10-11, orden del dueño) sin nombres flotantes: la placa del escritorio con el nombre del presidente se quitó.
+			VestuarioRealista.escudo_sala(nodo, Vector3(cx, y0 + 1.9, caja.position.y + 0.08), ctx.get("club"), 1.2)
 		"Sala de vídeo":
 			var filas := clampi(1 + nivel("video") / 3, 1, 4)
 			PiezasObra._caja(nodo, Vector3(cx, y0 + 1.7, caja.position.y + 0.08), Vector3(caja.size.x - 1.0, 1.6, 0.06), oscuro, false)
