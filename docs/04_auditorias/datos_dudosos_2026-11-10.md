@@ -31,3 +31,45 @@ Sin verificar la temporada actual (la página 2025-26 dio 404 o no existe):
 - **MLT**: recintos emparejados por inferencia. **FRO**: temporada 2025 (año natural). **KOS**: aforos de los campos sintéticos de la página.
 - **PHI**: aforos estimados salvo dos. **SGP**: colores y fundación estimados. **HKG**: sin pareja club-estadio; «Eastern District» puede ser duplicado de «Eastern». **KGZ/TJK**: aforos de 3 y 2 clubes estimados; Panjsher figura con sede en Afganistán.
 - Nombres reales con dígitos pasados a letra (07 Vestur, B36, B68, College 1975, FC 105): los de verdad se corrigen si el dueño lo pide.
+
+---
+# SEGUNDA PASADA WEB (10-11-2026): qué quedó verificado y con qué fuente
+Solo se pudo abrir Wikipedia (en, fr, pt, es) y alguna búsqueda; RSSSF, Soccerway, Transfermarkt y las webs de las ligas NO se abrieron en ninguna pasada (siguen pendientes). «Lista» = lista de clubes de la liga. Todo lo no citado aquí (colores, fundaciones, apodos, medias) sigue de memoria.
+
+## Lista VERIFICADA y corregida en el CSV
+- **MOZ** — wiki portuguesa, Moçambola 2026: lista de 14 verificada (4 clubes quitados y 4 añadidos); aforos sin fuente.
+- **GUI** — wiki francesa 2024-25: lista de 14 (4 quitados, 4 añadidos); estadios y aforos sin fuente.
+- **MAD** — wiki francesa 2025-26: lista de 16 (7 quitados, 7 añadidos); aforo de Fosa 7.000 verificado; resto sin fuente.
+- **TOG** — wiki francesa 2025-26 (esbozo con fuentes débiles): lista de 14 (6 quitados, 4 añadidos); aforos de Kara y Agoè verificados.
+- **BEN** — wiki en/fr 2025-26 / 2026-27: lista de 18 (1 quitado, 1 añadido); aforos de Coton, Loto-Popo y Buffles según la wiki francesa.
+- **NCA** — wiki es/en 2025-26: lista de 10 (Ocotal fuera, Real Madriz dentro); estadios y aforos verificados.
+- **PAN** — wiki es, Apertura 2025: lista de 12 (Chiriquí fuera, Umecit dentro); estadios y aforos verificados (el «Club Deportivo del Este» del CSV probablemente es Potros del Este).
+- **COD** — wiki en, Linafoot 2025-26: los 16 clubes del CSV están en la lista de 31; sin estadios ni aforos.
+- **MDA** — wiki en, Super Liga 2025-26: lista y aforos verificados (parejas club-estadio ya no son inferidas).
+- **MKD** — wiki en 2025-26: lista y parejas club-estadio verificadas por ciudad y nombre.
+- **ZIM** — wiki en 2026: los 18 clubes verificados; 6 aforos corregidos con «List of football stadiums in Zimbabwe».
+- **GAB** — wiki en 2025-26: 13 de 14 clubes y sus estadios verificados; CF Mounana (14.º) NO confirmado.
+- **KUW** — wiki en: 12 clubes verificados; los 12 aforos corregidos con la lista de estadios (aviso «necesita más citas»).
+- **ISL** — wiki en 2026: 12 clubes verificados; aforos de FH y Breiðablik corregidos.
+- **AND** — wiki en 2025-26: 10 clubes verificados (la liga tiene 10 desde 2024-25; el aviso de «unos 8» era erróneo); aforos de 5 clubes según la federación.
+- **GIB** — wiki en: 11 clubes verificados; la fuente no da estadio por club.
+- **NAM** — wiki en 2024-25: 16 clubes y estadios compartidos verificados.
+- **HON** — wiki en 2025-26: estadios y aforos de 9 clubes verificados.
+- **NZL** — wiki en 2025: los 11 clubes juegan las ligas regionales (la National League es un play-off, no hay lista fija); parques verificados.
+- **PLE** — wiki en: 12 clubes y ciudades verificados (última temporada jugada 2022-23; 2023-24 cancelada).
+- **SUR** — wiki en: los 12 clubes están en la lista de 2023; estadios de 5 clubes verificados.
+- **HAI** — wiki en 2025-26: los 17 clubes aparecen en la caja de equipos; Racing des Gonaïves probable pero no confirmado.
+- **CUW** — wiki en: los 11 clubes coinciden con la lista (la ficha dice 10).
+- **TRI** — wiki en 2024-25: los 12 clubes están en la tabla (AC Port of Spain, 13.º, no añadido).
+- **OMA** — wiki en: lista 2024-25 confirmada; no hay lista 2025-26.
+
+## SIGUE DUDOSO tras la segunda pasada
+- **MLI**: la wiki francesa dice que la liga actual tiene 14 participantes (el CSV tiene 18, lista de 2021-22); campeón 2026 Djoliba.
+- **BFA**: falta Rahimo FC (campeón 2025 y 2026) y AS Douanes (2023-24 ya está); sin lista actual.
+- **CPV**: toda la lista (solo se verificaron campeones: Académico do Mindelo 2022, Palmeira 2023 y 2025, Boavista 2024, que el CSV no recoge del todo).
+- **LBY**: lista actual; aforos de Trípoli (fuente 4.000, CSV 50.000) y Tahaddy (fuente 55.000, CSV 10.000); falta Al-Anwar.
+- **CGO**: la temporada 2024-25 se anuló; solo AC Léopards y AS Otohô verificados.
+- **TOG**: aforo de Togo-Port y Dynamic (CSV 20.000, fuente 8.500).
+- **HON**: Policía Nacional, Platense y Génesis en la lista 2025-26. **TRI**: aforo 27.000 de La Horquetta y Jabloteh (sospechoso).
+- **BEN**: el ficticio de Coton aún dice «Parakou» pero juega en Ouidah. **GIB**: posible fusión Magpies/Calpe City; Manchester 62 desapareció en 2026.
+- Colores, fundaciones, apodos y medias: de memoria en TODOS los países de las tandas 2-5. Pendiente: abrir RSSSF, Soccerway y webs de ligas.

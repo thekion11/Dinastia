@@ -62,7 +62,7 @@ Grenoble||cuartos||||||
 Haras El Hodoud||banda||||||
 Hibernian||banda||||||
 Holstein Kiel||banda||||||
-Huesca||liso||||||
+Huesca||franjas||||||
 Ipswich||aro||||||
 Irapuato||mitad||||||
 Jong AZ||banda||||||
@@ -70,12 +70,12 @@ Jong Ajax||franjas||||||
 Juve Stabia||cuartos||||||
 Juventude||cuartos||||||
 Kaiserslautern||franjas||||||
-Karlsruhe||cuartos||||||
+Karlsruhe||chevron||||||
 Kilmarnock||cuartos||||||
 Konyaspor||banda||||||
 Las Palmas||aro||||||
 Lausanne-Sport||mitad||||||
-Leganés||chevron||||||
+Leganés||cruz||||||
 Leicester||mitad||||||
 Leixões||aro||||||
 Lokomotiva||banda||||||
@@ -114,27 +114,27 @@ Pescara||mitad||||||
 Ponte Preta||aro||||||
 Portimonense||franjas||||||
 Portsmouth||aro||||||
-Q.P.R.||cruz||||||
+Q.P.R.||rombos||||||
 RKC Waalwijk||banda||||||
 Racing Santander||aro||||||
 Randers||franjas||||||
-Real Sociedad B||rombos||||||
+Real Sociedad B||tablero||||||
 Reggiana||banda||||||
 Reims||franjas||||||
 Roda JC Kerkrade||mitad||||||
 Saint-Étienne||mitad||||||
-Sampdoria||tablero||||||
+Sampdoria||banda_h||||||
 Samsunspor||rombos||||||
 San Martín de San Juan||banda||||||
 Sarpsborg 08||banda||||||
 Sarıyer||chevron||||||
-Schalke||banda_h||||||
+Schalke||borde||||||
 Sepahan||banda||||||
 Servette||banda||||||
 Shanghai Port||franjas||||||
 Shanghai Shenhua||banda||||||
 Sheffield Utd||cruz||||||
-Sheffield Wed||borde||||||
+Sheffield Wed||interior||||||
 Silkeborg||mitad||||||
 Sion||tablero||||||
 Sivasspor||banda_h||||||
