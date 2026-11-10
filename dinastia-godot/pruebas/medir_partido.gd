@@ -143,7 +143,7 @@ func _process(_d: float) -> void:
 				en.fog_enabled = false
 				en.adjustment_enabled = false
 				en.ssao_enabled = false
-		if _n == CALENTAR and OS.get_environment("SIN_SOMBRAS") != "":
+	if _n == CALENTAR and OS.get_environment("SIN_SOMBRAS") != "":
 		## SIN_SOMBRAS=1 (19-10-2026): cuánto de lo dibujado son las sombras.
 		for l in _vista.find_children("*", "Light3D", true, false):
 			(l as Light3D).shadow_enabled = false
