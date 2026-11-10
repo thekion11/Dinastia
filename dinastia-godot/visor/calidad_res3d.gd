@@ -17,3 +17,8 @@ static func alto_pantalla() -> float:
 ## El tope de escala que impone la altura máxima (1.0 si la ventana ya cabe; nunca por debajo del mínimo posible).
 static func tope_escala(alto_px: float) -> float:
 	return 1.0 if alto_px <= ALTURA_3D_MAX else maxf(ALTURA_3D_MAX / alto_px, Calidad.ESCALA_MIN_POSIBLE)
+
+## Para las vistas 3D SECUNDARIAS a pantalla completa (casa, sorteo, rueda de prensa del prólogo): el mismo tope de altura que el partido, si la resolución automática está activa.
+static func limitar(vp: Viewport) -> void:
+	if Calidad.res3d_auto and Calidad.elegida <= Calidad.MEDIO and vp != null:
+		vp.scaling_3d_scale = minf(vp.scaling_3d_scale, tope_escala(alto_pantalla()))

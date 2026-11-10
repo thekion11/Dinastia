@@ -40,6 +40,16 @@ func _probar() -> void:
 	add_child(vp2)
 	Calidad.aplicar_viewport(vp2, Calidad.MEDIO)
 	_comprobar(is_equal_approx(vp2.scaling_3d_scale, 720.0 / 1080.0), "el viewport recibe el tope (%.3f)" % vp2.scaling_3d_scale)
+	var sub := SubViewport.new()
+	add_child(sub)
+	CalidadRes3D.limitar(sub)
+	_comprobar(is_equal_approx(sub.scaling_3d_scale, 720.0 / 1080.0), "las vistas 3D secundarias a pantalla completa (casa, sorteo, prólogo) reciben el mismo tope")
+	Calidad.res3d_auto = false
+	var sub2 := SubViewport.new()
+	add_child(sub2)
+	CalidadRes3D.limitar(sub2)
+	_comprobar(is_equal_approx(sub2.scaling_3d_scale, 1.0), "con la automática apagada no tocan nada")
+	Calidad.res3d_auto = true
 	OS.set_environment("RES3D_ALTO", alto_antes)
 	Calidad.res3d_auto = auto_antes
 	Calidad.escala_media = guardada

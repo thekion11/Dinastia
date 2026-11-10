@@ -314,6 +314,7 @@ func _construir() -> void:
 	vp.own_world_3d = true
 	vp.transparent_bg = false
 	vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
+	CalidadRes3D.limitar(vp)   ## (10-11, P1) tope de altura del 3D en móvil
 	if not Calidad.es_compatibilidad():
 		vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 	## UPDATE_ALWAYS y no el "cuando sea visible" por defecto: la física de las
