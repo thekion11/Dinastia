@@ -349,6 +349,17 @@ func _montar_luces() -> void:
 	contra.position = Vector3(0, 1.9, -1.0)
 	add_child(contra)
 
+	## (10-11) LA PARED DE PATROCINADORES SE LEE TAMBIÉN DESDE LA SALA: en el plano con los periodistas delante el fondo quedaba
+	## casi negro. Una luz ancha y suave, sin sombras, desde delante y arriba, solo sobre la pared (z = -1,6).
+	var luz_pared := SpotLight3D.new()
+	luz_pared.light_color = Color(1, 0.98, 0.95)
+	luz_pared.light_energy = 1.4
+	luz_pared.spot_range = 7.0
+	luz_pared.spot_angle = 48.0
+	luz_pared.spot_attenuation = 0.8
+	add_child(luz_pared)
+	luz_pared.look_at_from_position(Vector3(0, 3.4, 1.4), Vector3(0, 1.55, -1.6), Vector3.UP)
+
 	## LOS PERIODISTAS (14-9-2026): sin luz propia eran invisibles; un relleno
 	## tenue y frío para que se noten como siluetas, sin competir con el DT.
 	var luz_publico := OmniLight3D.new()
