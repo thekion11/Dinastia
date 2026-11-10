@@ -13,8 +13,13 @@ const PAISES_2: Array[String] = ["NED", "PER", "JPN", "KSA", "EGY", "MAR", "USA"
 const CLUBES_3 := ["B0ca Juni0rs", "R3al Madrid", "Int3r", "L1verpool", "D0rtmund", "T0ttenham", "R0ma", "R1ver Plate", "Sa0 Paulo",
 	"Guadalaj4ra", "C0lo-C0lo", "B4rcelona"]
 const PAISES_3: Array[String] = ["ARG", "ESP", "ITA", "ENG", "GER", "BRA", "MEX", "CHI"]
+## TANDA=4: la cuarta (10-11): los grandes de cada liga que aún no tenían piezas.
+const CLUBES_4 := ["Atlét1co Madrid", "Sev1lla", "C1ty de Manch.", "Juv3ntus", "Lev3rkusen", "M4rsella", "Rac1ng Club", "Ind3pendiente",
+	"Palme1ras", "C0rinthians", "M0nterrey", "F3yenoord", "PSV", "Al-1ttihad", "K4izer Chiefs", "Ol1mpia", "Mill0narios", "Al1anza Lima", "LDU Qu1to"]
+const PAISES_4: Array[String] = ["ESP", "ENG", "ITA", "GER", "FRA", "ARG", "BRA", "MEX", "NED", "KSA", "RSA", "PAR", "COL", "PER", "ECU"]
 var _m: Mundo
 var _dir := ""
+var _fija: Camera3D   ## la cámara del plano congelado: el juego puede quitársela al acabar la celebración
 
 func _esperar(s: float) -> void:
 	await get_tree().create_timer(s).timeout
@@ -31,9 +36,9 @@ func _ready() -> void:
 	cfg.save(CajonAjustes.RUTA)
 	print("pack real: ", Datos.usar_base_real(true))
 	var tanda := OS.get_environment("TANDA")
-	var clubes: Array = CLUBES_2 if tanda == "2" else (CLUBES_3 if tanda == "3" else CLUBES)
+	var clubes: Array = CLUBES_2 if tanda == "2" else (CLUBES_3 if tanda == "3" else (CLUBES_4 if tanda == "4" else CLUBES))
 	_m = Mundo.new()
-	_m.generar(PAISES_2 if tanda == "2" else (PAISES_3 if tanda == "3" else PAISES), 2026)
+	_m.generar(PAISES_2 if tanda == "2" else (PAISES_3 if tanda == "3" else (PAISES_4 if tanda == "4" else PAISES)), 2026)
 	var solo := OS.get_environment("SOLO")
 	for i in clubes.size():
 		if solo != "" and not str(i) in solo.split(","):
@@ -41,6 +46,7 @@ func _ready() -> void:
 		await _uno(i, clubes[i])
 	print("FIN")
 	get_tree().quit()
+	await get_tree().create_timer(3600.0).timeout   ## no sigue con nada más mientras sale
 
 func _uno(i: int, nombre: String) -> void:
 	var c: Club = null
@@ -65,14 +71,16 @@ func _uno(i: int, nombre: String) -> void:
 	for _f in 30:
 		await get_tree().process_frame
 		muestras.append(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
+		if OS.get_environment("PICOS") == "desglose" and muestras[-1] > _umbral(99999):
+			await _congelar()
 	muestras.sort()
 	var llamadas := muestras[15]
 	print("   llamadas min/mediana/max: %d / %d / %d" % [muestras[0], llamadas, muestras[29]])
 	print("ESTADIO %d %s (%s) %s %d %s · %d llamadas · piezas: arco=%s torres=%s costillas=%s techo_lados=%s" % [i, nombre, c.pais,
 		est.get("forma"), int(est.get("niveles", 0)), est.get("techo"), llamadas, est.has("arco"), est.get("torres_rampa", 0), est.get("costillas", 0), est.has("bandejas")] + ("  curva=%s colchon=%s" % [est.has("fachada_curva"), est.has("colchon")]))
-	get_viewport().get_texture().get_image().save_jpg("%s/%02d_%s_partido.jpg" % [_dir, i, c.pais], 0.88)
 	if OS.get_environment("PICOS") != "":
 		await _picos(llamadas)
+	get_viewport().get_texture().get_image().save_jpg("%s/%02d_%s_partido.jpg" % [_dir, i, c.pais], 0.88)
 	if OS.get_environment("DESGLOSE") != "":
 		await _desglose(vista, llamadas)
 	var aerea := Camera3D.new()
@@ -81,7 +89,10 @@ func _uno(i: int, nombre: String) -> void:
 	aerea.global_position = Vector3(-125, 72, 140)
 	aerea.look_at(Vector3(0, 8, 0), Vector3.UP)
 	aerea.make_current()
-	await _esperar(1.5)
+	for _f in 40:   ## una repetición puede quitarle la cámara: se la devuelve en cada fotograma
+		await get_tree().process_frame
+		if not aerea.current:
+			aerea.make_current()
 	get_viewport().get_texture().get_image().save_jpg("%s/%02d_%s_aerea.jpg" % [_dir, i, c.pais], 0.88)
 	vista.queue_free()
 	await _esperar(1.0)
@@ -91,6 +102,9 @@ func _desglose(raiz: Node, base: int) -> void:
 	var grupos: Array[Node3D] = []
 	_grupos(raiz, 0, grupos)
 	for g in grupos:
+		if _fija != null and not _fija.current:
+			_fija.make_current()
+			await get_tree().process_frame
 		g.visible = false
 		await get_tree().process_frame
 		await get_tree().process_frame
@@ -117,27 +131,8 @@ func _picos(mediana: int) -> void:
 	for f in n_f:
 		await get_tree().process_frame
 		var ll := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
-		if ll > mediana * (float(OS.get_environment("PICOS_UMBRAL")) if OS.get_environment("PICOS_UMBRAL") != "" else 3.0) and OS.get_environment("PICOS") == "desglose":
-			## Congela ESE plano en una cámara quieta y mira qué grupos lo inflan.
-			var cam0 := get_viewport().get_camera_3d()
-			var fija := Camera3D.new()
-			fija.fov = cam0.fov
-			fija.far = cam0.far
-			add_child(fija)
-			fija.global_transform = cam0.global_transform
-			fija.make_current()
-			get_tree().paused = true
-			process_mode = Node.PROCESS_MODE_ALWAYS
-			await get_tree().process_frame
-			await get_tree().process_frame
-			var serie: Array[int] = []
-			for _k in 12:   ## ¿el pico sigue con el plano quieto (es lo que se ve) o se va solo (es el corte de cámara)?
-				serie.append(rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
-				await get_tree().process_frame
-			var base := serie[-1]
-			print("   PLANO CONGELADO %s: %s llamadas" % [cam0.global_position.round(), serie])
-			await _desglose(get_tree().root, base)
-			get_tree().quit()
+		if ll > _umbral(mediana) and OS.get_environment("PICOS") == "desglose":
+			await _congelar()
 			return
 		if ll > mediana * 1.6:
 			var cam := get_viewport().get_camera_3d()
@@ -146,3 +141,85 @@ func _picos(mediana: int) -> void:
 		elif f % 500 == 0:
 			var cam := get_viewport().get_camera_3d()
 			print("   normal f%d: %d llamadas · %d objetos · cam=%s" % [f, ll, rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME), cam.get_path() if cam else "-"])
+
+## PICOS_UMBRAL: ≤ 10 = veces la mediana; > 10 = llamadas absolutas (cuando la mediana ya está dentro del pico).
+func _umbral(mediana: int) -> float:
+	var u := float(OS.get_environment("PICOS_UMBRAL")) if OS.get_environment("PICOS_UMBRAL") != "" else 3.0
+	return u if u > 10.0 else mediana * u
+
+## Congela ESE plano en una cámara quieta, pausa el juego y mira qué lo infla.
+func _congelar() -> void:
+	var rs := RenderingServer
+	## Congela ESE plano en una cámara quieta y mira qué grupos lo inflan.
+	var cam0 := get_viewport().get_camera_3d()
+	var fija := Camera3D.new()
+	fija.fov = cam0.fov
+	fija.far = cam0.far
+	add_child(fija)
+	fija.global_transform = cam0.global_transform
+	var pos0 := cam0.global_position.round()
+	var nombre0 := String(cam0.name)
+	fija.make_current()
+	_fija = fija
+	get_tree().paused = true
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var b0 := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+	for fg: Node in get_tree().root.find_children("FestejoGrada", "", true, false):
+		(fg as Node3D).visible = false
+		await get_tree().process_frame
+		await get_tree().process_frame
+		print("   SIN FESTEJO DE GRADA: -%d" % (b0 - rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)))
+		(fg as Node3D).visible = true
+		await get_tree().process_frame
+	for vp: Node in get_tree().root.find_children("*", "SubViewport", true, false):
+		var sv := vp as SubViewport
+		var m0 := sv.render_target_update_mode
+		sv.render_target_update_mode = SubViewport.UPDATE_DISABLED
+		await get_tree().process_frame
+		await get_tree().process_frame
+		print("   SIN SUBVIEWPORT %s: -%d" % [get_tree().root.get_path_to(sv), b0 - rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)])
+		sv.render_target_update_mode = m0
+		await get_tree().process_frame
+	var foto0 := _visibles(get_tree().root)
+	var serie: Array[int] = []
+	for _k in (int(OS.get_environment("PICOS_SERIE")) if OS.get_environment("PICOS_SERIE") != "" else 12):   ## ¿el pico sigue con el plano quieto (es lo que se ve) o se va solo (es el corte de cámara)?
+		serie.append(rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
+		await get_tree().process_frame
+	var base := serie[-1]
+	print("   PLANO CONGELADO %s %s: %s llamadas" % [nombre0, pos0, serie])
+	var foto1 := _visibles(get_tree().root)
+	for k: String in foto0:
+		if not foto1.has(k):
+			print("   SE FUE: ", k)
+	for k: String in foto1:
+		if not foto0.has(k):
+			print("   LLEGO: ", k)
+	## Los SubViewport (cartas, retratos, pantallas) dibujan su propio mundo: ¿cuánto pesan?
+	for vp: Node in get_tree().root.find_children("*", "SubViewport", true, false):
+		var sv := vp as SubViewport
+		var antes := sv.render_target_update_mode
+		sv.render_target_update_mode = SubViewport.UPDATE_DISABLED
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var d := base - rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+		sv.render_target_update_mode = antes
+		await get_tree().process_frame
+		print("   SUBVIEWPORT -%d  %s (modo %d, propio=%s)" % [d, get_tree().root.get_path_to(sv), antes, sv.own_world_3d])
+	await _desglose(get_tree().root, base)
+	get_tree().quit()
+	await get_tree().create_timer(3600.0).timeout   ## no sigue con nada más mientras sale
+
+## Rutas de los nodos visibles con algo que dibujar (3D y 2D), hasta 6 niveles.
+func _visibles(n: Node, hondo: int = 0) -> Dictionary:
+	var fuera := {}
+	for h in n.get_children():
+		var vis: bool = h.visible if (h is Node3D or h is CanvasItem) else true
+		if not vis:
+			continue
+		if hondo < 6:
+			fuera.merge(_visibles(h, hondo + 1))
+		if hondo <= 4 and (h is Node3D or h is CanvasItem):
+			fuera[String(get_tree().root.get_path_to(h))] = true
+	return fuera
