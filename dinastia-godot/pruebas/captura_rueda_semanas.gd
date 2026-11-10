@@ -14,6 +14,8 @@ func _ready() -> void:
 	var nombres: Array = OS.get_environment("CLUBES").split(",") if OS.get_environment("CLUBES") != "" else POR_DEFECTO
 	if OS.get_environment("MESA") == "0":   ## antes/después de la mesa larga (R7/R8): MESA=0 vuelve al atril
 		RuedaPrensaMesa.activa = false
+	if OS.get_environment("LUZ") == "0":
+		RuedaPrensaMesa.luz_plato = false
 	var p: Principal = load("res://escenas/principal.tscn").instantiate()
 	add_child(p)
 	await _esperar(3.0)
