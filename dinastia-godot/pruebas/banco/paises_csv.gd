@@ -200,3 +200,15 @@ func _probar_ligas_activas() -> void:
 	mb.cerrar_temporada()
 	_comprobar(mb.anio >= 2028, "la temporada con los países añadidos se juega y se cierra sin errores")
 	_comprobar(LigasActivas.faltan(mb).size() == LigasActivas.todos().size() - LigasActivas.de(mb).size(), "faltan (%d) = todos − activos" % LigasActivas.faltan(mb).size())
+
+## Todos los países (86): generar (≈2 s), una temporada entera (≈40 s) y cerrarla, con todos los torneos continentales y los de la FIFA armados.
+func _probar_ligas_activas_todos() -> void:
+	_titulo("LIGAS ACTIVAS: TODOS LOS PAÍSES, UNA TEMPORADA COMPLETA")
+	var m := Mundo.new()
+	m.generar([] as Array[String], 4244)
+	_comprobar(LigasActivas.de(m).size() == LigasActivas.todos().size() and LigasActivas.faltan(m).is_empty(), "todos los países cargados (%d, %d clubes)" % [LigasActivas.de(m).size(), m.clubes.size()])
+	m.tomar_el_mando(m.ligas[0].clubes[3].id)
+	var anio0 := m.anio
+	m.jugar_temporada()
+	m.cerrar_temporada()
+	_comprobar(m.anio == anio0 + 1 and m.continentales.size() >= 8, "una temporada completa con los torneos continentales (%s)" % str(m.continentales.keys()))
