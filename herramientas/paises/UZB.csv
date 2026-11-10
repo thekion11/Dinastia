@@ -1,0 +1,26 @@
+#seleccion=Uzbekistán
+#tier=0.4
+#globo=69.24,41.31
+#bandera=🇺🇿
+#confed=asia
+#liga=Super Liga de Uzbekistán|Super Liga Uzbeka
+#copa=Copa de Uzbekistán|Copa Uzbeka
+#nombres=Aziz,Jasur,Bobur,Sardor,Rustam,Otabek,Timur,Ulugbek,Farhod,Dilshod,Shahzod,Jamshid,Akmal,Eldor
+#apellidos=Karimov,Rakhimov,Yusupov,Abdullaev,Tursunov,Nazarov,Saidov,Ismoilov,Umarov,Kholmatov,Mirzaev,Sultanov,Ergashev,Normatov
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Andijon;Andiyan Valle;#1b458f;#ffffff;46;18360;1964;los Azules del Valle;el estadio moderno del valle de Fergana;El club del este del país.
+Bunyodkor;Bunyod Taskent;#00a0e3;#ffffff;58;34800;2005;los Celestes;el gran estadio nacional de la capital;El club celeste, de los más laureados.
+Bukhara;Bujara Antigua;#1b458f;#ffd100;46;22700;1998;los de la Ruta;el estadio de la ciudad de la Ruta de la Seda;El club de la ciudad histórica de la Seda.
+Dinamo Samarqand;Dinamo Samarkand;#1b458f;#ffffff;45;13800;1945;los Dinamos;el estadio de la ciudad antigua;El club de la ciudad de las cúpulas azules.
+Mash'al;Mashal Muborak;#ffd100;#1b458f;48;11000;1989;los de la Antorcha;el estadio de la ciudad del gas;El club de la ciudad gasífera del sur.
+Nasaf;Nasaf Karshi;#ffd100;#00843d;60;21000;1986;los Amarillos;el estadio central de la ciudad del sur;El club de Qarshi, campeón de copas.
+Navbahor Namangan;Navbahor Naman;#00843d;#ffffff;52;28000;1978;los Verdes;el estadio central del valle;El club de la ciudad de los jardines del valle.
+Neftchi Fergana;Neftoil Fergana;#1b458f;#ffffff;50;20000;1986;los Petroleros;el estadio de la ciudad del valle;El club petrolero del valle de Fergana.
+OKMK (AGMK);Olmaliq Minero;#00843d;#ffd100;57;12000;1981;los Mineros;el estadio de la ciudad minera;El club de la ciudad minera, en ascenso.
+Pakhtakor;Pajtakor Taskent;#ffffff;#1b458f;66;34000;1956;los Algodoneros;el estadio central de la capital;El club más laureado del país.
+Qizilqum;Kizilkum Navoi;#ffd100;#c8102e;47;22500;1967;los del Desierto;el complejo deportivo de la ciudad industrial;El club de la ciudad industrial del desierto.
+Kokand 1912;Kokand Antiguo;#c8102e;#ffffff;49;12278;1912;los Rojos;el estadio central de la ciudad del valle;El club de la ciudad histórica del valle.
+Sogdiana;Sogdiana Yizak;#1b458f;#ffffff;42;11650;1998;los Sogdianos;el estadio de la ciudad de la estepa;El club con nombre de una antigua región.
+Surkhon;Surjon Termez;#c8102e;#ffffff;40;10600;1986;los Rojos del Sur;el estadio de la ciudad fronteriza del sur;El club de la ciudad del extremo sur.
+Lokomotiv Tashkent;Locomotora Tashk;#c8102e;#1b458f;50;8000;1951;los Ferroviarios;el estadio del club ferroviario;El club de los ferroviarios de la capital.
+Khorazm;Joresm Urgench;#00843d;#ffffff;41;13500;2003;los Verdes;el estadio de la ciudad del noroeste;El club de la antigua región de Joresm.

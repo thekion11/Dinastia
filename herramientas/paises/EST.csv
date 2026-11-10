@@ -1,0 +1,20 @@
+#seleccion=Estonia
+#tier=0.4
+#globo=24.75,59.44
+#bandera=🇪🇪
+#confed=ucl,uel
+#liga=Meistriliiga|Liga Estonia
+#copa=Copa de Estonia|Copa Estonia
+#nombres=Martin,Kristjan,Andres,Siim,Rasmus,Jaan,Marko,Tonu,Kaspar,Mihkel,Karl,Taavi,Priit,Hendrik
+#apellidos=Tamm,Saar,Sepp,Magi,Kask,Kukk,Rebane,Ilves,Pold,Koppel,Oun,Lepik,Mets,Vaher
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+FCI Levadia;Levadya Tallin;#000000;#ffffff;60;14336;1998;los Negriblancos;el gran estadio nacional de la capital;El club más laureado de la era moderna, con muchos títulos de liga.
+Flora;Floria Tallin;#ffffff;#0b8f3c;58;14336;1990;los Verdes de la Capital;el estadio nacional que comparte con otro club;Un clásico de la capital con una cantera muy reconocida.
+Kuressaare;Kuresaare Isla;#0057b8;#ffffff;44;1000;1996;los Isleños;el estadio municipal de la isla del oeste;El club de la mayor isla del país, con un campo muy pequeño.
+Narva Trans;Narva Transa;#c8102e;#ffffff;50;700;1979;los Fronterizos;el estadio de la ciudad fronteriza del este;Un club de la frontera oriental con una afición muy singular.
+Nõmme Kalju;Kaljus Nomme;#0057b8;#ffffff;52;570;1923;los Azules del Barrio;el pequeño estadio de un barrio residencial de la capital;Un club de barrio que llegó a ser campeón de liga.
+Nõmme United;Nomme Unidos;#c8102e;#000000;40;500;2018;los Rojinegros del Barrio;el campo de un barrio arbolado de la capital;Un club joven que acaba de subir a la máxima categoría.
+Paide Linnameeskond;Paide Villa;#0057b8;#ffffff;48;500;1999;los Azules del Centro;el estadio de la pequeña ciudad del interior;Un club modesto del centro del país con buena cantera.
+Tammeka;Tammeka Tamme;#0057b8;#ffffff;46;1750;1989;los Universitarios;el estadio de la ciudad universitaria del sur;El club de la segunda ciudad del país, con mucha historia.
+Vaprus;Vapruse Parnu;#c8102e;#ffffff;44;1501;1922;los Valientes;el estadio de la ciudad balnearia de la costa;Un club veraniego de la costa que ha ganado alguna copa.
+Harju JK Laagri;Laagri Harju;#c8102e;#000000;38;500;2007;los Laagrenses;el pequeño campo de un pueblo a las afueras de la capital;Un recién llegado de las afueras que sueña con asentarse.

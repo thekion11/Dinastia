@@ -28,7 +28,7 @@ func _probar() -> void:
 	Calidad.res3d_auto = false
 	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.MEDIO), 1.0), "res. 3D automática apagada: MEDIA sigue a 100 %")
 	Calidad.res3d_auto = true
-	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.MEDIO), 720.0 / 1080.0), "automática a 1080 px de alto: MEDIA al 67 % (%.3f)" % Calidad.escala_3d(Calidad.MEDIO))
+	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.MEDIO), 720.0 / 1080.0), "automática a 1080 px de alto: MEDIA al 67 %% (%.3f)" % Calidad.escala_3d(Calidad.MEDIO))
 	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.ULTRA_BAJA), 0.5), "ULTRA BAJA ya estaba más abajo (50 %): no sube")
 	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.BAJA), minf(lerpf(0.5, 1.0, 0.4), 720.0 / 1080.0)) and Calidad.escala_3d(Calidad.BAJA) <= 720.0 / 1080.0 + 0.0001, "BAJA se queda en el tope")
 	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.ALTO), 1.0) and is_equal_approx(Calidad.escala_3d(Calidad.ULTRA), 1.0), "ALTA y ULTRA no se tocan")
@@ -54,3 +54,23 @@ func _probar() -> void:
 	Calidad.res3d_auto = auto_antes
 	Calidad.escala_media = guardada
 	Calidad.escala_minimo = guardada_min
+
+	## (10-11) MODO RENDIMIENTO (E1+E2): apagado por defecto; encendido quita glow y sombra del sol de MEDIA hacia abajo y deja ALTA/ULTRA como estaban.
+	var modo_antes := Calidad.modo_rendimiento
+	Calidad.modo_rendimiento = false
+	_comprobar(Calidad.sombra_solar(Calidad.MEDIO) and ModoRendimiento.glow(Calidad.MEDIO) and Calidad.sombra_solar(Calidad.MEDIA_BAJA), "modo rendimiento apagado: MEDIA con sombra del sol y glow como siempre")
+	_comprobar(not Calidad.sombra_solar(Calidad.BAJA) and not ModoRendimiento.glow(Calidad.MINIMO) and ModoRendimiento.glow(Calidad.BAJA), "apagado: BAJA sin sol pero con glow; ULTRA BAJA sin glow (como antes)")
+	Calidad.modo_rendimiento = true
+	_comprobar(not Calidad.sombra_solar(Calidad.MEDIO) and not ModoRendimiento.glow(Calidad.MEDIO) and not ModoRendimiento.glow(Calidad.BAJA) and not Calidad.sombra_solar(Calidad.MEDIA_BAJA), "modo rendimiento: MEDIA y menores sin sombra del sol ni glow")
+	_comprobar(Calidad.sombra_solar(Calidad.ALTO) and ModoRendimiento.glow(Calidad.ALTO) and Calidad.sombra_solar(Calidad.ULTRA) and ModoRendimiento.glow(Calidad.ULTRA), "modo rendimiento: ALTA y ULTRA no se tocan")
+	_comprobar(ModoRendimiento.cesped_barato(Calidad.MEDIO) and ModoRendimiento.cesped_barato(Calidad.BAJA) and not ModoRendimiento.cesped_barato(Calidad.ALTO), "modo rendimiento: el campo usa el shader barato de MEDIA hacia abajo (E4) y ALTA no")
+	Calidad.modo_rendimiento = false
+	_comprobar(not ModoRendimiento.cesped_barato(Calidad.MEDIO), "sin el modo, el campo conserva su shader completo")
+	_comprobar(load("res://visor/cesped_barato.gdshader") is Shader, "el shader barato del campo carga")
+	Calidad.modo_rendimiento = modo_antes
+
+	## (10-11) Ahorro del menú también en MEDIA (pregunta 7 del dueño): apagado por defecto; ALTA y superiores nunca.
+	_comprobar(not Calidad.ahorro_menu_media, "el ahorro del menú en MEDIA viene apagado")
+	_comprobar(AhorroMenu.nivel_ahorra(Calidad.BAJA, false) and AhorroMenu.nivel_ahorra(Calidad.MEDIA_BAJA, false) and AhorroMenu.nivel_ahorra(Calidad.MINIMO, false), "BAJA, MEDIA BAJA y ULTRA BAJA ahorran siempre")
+	_comprobar(not AhorroMenu.nivel_ahorra(Calidad.MEDIO, false) and AhorroMenu.nivel_ahorra(Calidad.MEDIO, true), "MEDIA solo ahorra si se pide")
+	_comprobar(not AhorroMenu.nivel_ahorra(Calidad.ALTO, true) and not AhorroMenu.nivel_ahorra(Calidad.ULTRA, true), "ALTA y ULTRA nunca ahorran")

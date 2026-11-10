@@ -1,0 +1,26 @@
+#seleccion=Camerún
+#tier=0.3
+#globo=11.52,3.87
+#bandera=🇨🇲
+#confed=afr
+#liga=Elite One|Liga Camerunesa
+#copa=Copa de Camerún|Copa Camerunesa
+#nombres=Samuel,Eric,Patrick,Joseph,Paul,Emmanuel,Jean,Alain,Serge,Franck,Christian,Pierre,Georges,Roger
+#apellidos=Mbarga,Nkoulou,Etame,Fotso,Tchamba,Ndongo,Atangana,Kameni,Biyik,Onana,Ekambi,Nguemo,Mbella,Tchouaméni
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Coton Sport;Algodón Garoua;#ffffff;#009739;66;30000;1947;los Cotonniers;el estadio del norte algodonero;El gran dominador de la liga, con campeonatos de África.
+Canon Yaoundé;Cañón Yaundé;#c8102e;#ffd100;64;42500;1930;los Cañoneros;el gran estadio de la capital;El club histórico de la capital, vencedor de copas africanas.
+Union Douala;Unión Duala;#ffd100;#c8102e;60;22000;1960;los Unionistas;el estadio de la ciudad portuaria;Uno de los clubes populares de la capital económica.
+Fovu Club;Fovu Baham;#ffffff;#1b458f;56;5000;1980;los Fovu;el campo de la región del oeste;Un club de las colinas del oeste con mucha afición local.
+Colombe Sportive;Paloma de Lobo;#ffffff;#1b458f;50;5000;1962;las Palomas;el campo del sur del país;Un equipo modesto de la zona sur.
+Bamboutos FC;Bambú de Mbouda;#009739;#ffd100;52;5000;1950;los Bambúes;el estadio de las tierras altas;Un club veterano de las tierras altas del oeste.
+Les Astres;Astros de Duala;#1b458f;#ffffff;54;10000;1996;los Astros;el campo de la ciudad portuaria;Un club joven del puerto, con cantera propia.
+Dynamo Douala;Dínamo Duala;#c8102e;#ffffff;50;10000;1985;los Dínamos;el campo del barrio portuario;Un club de la ciudad económica que sube y baja.
+Victoria United;Victoria Limbe;#009739;#c8102e;48;5000;1970;los Victorianos;el estadio frente al mar;El club de la ciudad costera al pie del volcán.
+Stade Renard de Melong;Zorro de Melong;#c8102e;#000000;46;5000;1998;los Zorros;el campo de una pequeña ciudad;Un equipo pequeño que se ganó el ascenso a pulso.
+PWD Bamenda;Bamenda Unido;#1b458f;#ffd100;48;5000;1970;los Bamenda;el campo de la región noroeste;Un club histórico del noroeste del país.
+Avion Academy;Academia Cielo;#1b458f;#ffffff;44;5000;2010;los Aviadores;el campo de una academia juvenil;Una academia de formación que juega en la élite.
+Panthère du Ndé;Pantera del Ndé;#000000;#ffd100;42;5000;1965;las Panteras;el campo de la región del oeste;Un club de provincia que pelea por no bajar.
+Gazelle FC;Gacela de Garoua;#ffffff;#c8102e;44;5000;1989;las Gacelas;el campo de la ciudad del norte;El segundo club de la ciudad del algodón.
+UMS de Loum;Loum Unido;#ffffff;#009739;40;5000;1975;los Loumistas;el campo de una ciudad agrícola;Un club de la zona bananera.
+Aigle Royal de la Menoua;Águila Dschang;#1b458f;#ffd100;38;5000;1974;las Águilas;el campo de la ciudad universitaria del oeste;Un equipo de la ciudad universitaria de las montañas.

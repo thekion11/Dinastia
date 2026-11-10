@@ -11,7 +11,7 @@ func _probar() -> void:
 		m.generar(["NED"], 1234)
 		var liga: Liga = null
 		for l: Liga in m.ligas:
-			if l.pais == "NED":
+			if l.pais == "NED" and l.div == 1:   ## (10-11) desde las segundas divisiones hay otra liga NED (20 clubes, con el Jong): se mide la primera
 				liga = l
 		_comprobar(liga != null and liga.clubes.size() == 18, "%s: liga con 18 clubes (%d)" % ["real" if real else "ficticia", liga.clubes.size() if liga else 0])
 		if liga == null:

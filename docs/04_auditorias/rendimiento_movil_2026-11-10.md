@@ -238,3 +238,36 @@ Propuestas (NADA aplicado; las dos que cambian el aspecto las decide el dueño):
 - **E3. Los demás (ajuste, tonemap, debanding) NO compensan apagarlos**: dentro del ruido; se quedan.
 - E1+E2 juntos: ≈ −24 % medido en ENG. Sumado a P1 (resolución, −26…−31 %) el partido en MEDIA en móvil bajaría ≈ −45…−50 % de fotograma relativo; en una GPU limitada por relleno de píxel (la del dueño al 100 %) probablemente más, porque glow y sombras son pasadas a pantalla/atlas completos. Confirmar en el teléfono.
 Pendiente (no medido): coste del césped aislado (campo plano) y de las transparencias de la grada por separado.
+
+### Club a pie con P1 (10-11, sesión 5): −30…−34 %
+`medir_club.tscn` (15 puntos del recorrido a pie), MEDIA, 1920×1080, fotograma relativo, `RES3D_AUTO=0` → `1`: CHI 685 → 460 ms (−33 %), ESP 622 → 410 ms (−34 %), ENG 645 → 451 ms (−30 %); llamadas y triángulos iguales, vídeo −10 MB. El tope también vale en el club a pie y el estadio a pie (pasan por `VistaEstadio`).
+
+### MODO RENDIMIENTO (Ajustes; APAGADO por defecto en todas las plataformas; 10-11, orden del líder)
+`ModoRendimiento` (`visor/modo_rendimiento.gd`): interruptor «Modo rendimiento (sin brillo ni sombra del sol)», guardado en `grafica/modo_rendimiento`; de MEDIA hacia abajo quita el glow y la sombra del sol (E1+E2); ALTA y ULTRA no se tocan; 8 idiomas; prueba en `p6_resolucion3d`; banco 0 fallos. Medido en MEDIA 1280×720 (`MODO_RENDIMIENTO=0/1`):
+| Club | Fotograma sin → con | Llamadas | Triángulos |
+|---|---|---|---|
+| CHI | 450 → 354 ms (**−21 %**) | 433 → 359 | 762 k → 617 k |
+| ESP | 380 → 288 ms (**−24 %**) | 497 → 334 | 540 k → 414 k |
+| ENG | 400 → 287 ms (**−28 %**) | 350 → 283 | 534 k → 400 k |
+Capturas con la cámara real, arriba SIN el modo y abajo CON él: `docs/04_auditorias/capturas_modo_rendimiento/cmp_{CHI,ESP,ENG}.jpg`. Lo que se ve: desaparecen las sombras de los jugadores y de los objetos sobre el césped y la imagen queda algo más plana; los jugadores y el campo se leen igual.
+
+### Césped aislado (10-11, sesión 5; `EFECTO=cesped`: el campo con un material plano sin sombreado del mismo verde, MEDIA 1280×720)
+CHI 413 → 390 ms (**−5 %**), ESP 370 → 312 ms (**−15 %**), ENG 378 → 327 ms (**−13 %**); llamadas y triángulos iguales. El shader de la hierba (franjas, dibujo, ruido; en MEDIA no se monta `CespedCapas`, que solo existe en ALTA y ULTRA) cuesta entre 5 y 15 % del fotograma. **Propuesta E4** (cambia el aspecto; decide el dueño): una variante más barata del shader del campo en BAJA y MEDIA (sin el ruido de detalle, solo franjas) recortaría hasta ese 5-15 %.
+
+### Menú en MEDIA: ahorro tras interruptor (10-11, sesión 5; pregunta 7 del dueño)
+`AhorroMenu.nivel_ahorra(nivel, media_pedida)`: de MEDIA BAJA hacia abajo siempre; MEDIA solo si el jugador enciende «Ahorro en los menús también en Media» (`Calidad.ahorro_menu_media`, `grafica/ahorro_menu_media`, APAGADO por defecto; 8 idiomas); ALTA y ULTRA nunca. Con el ahorro: modo de bajo consumo del motor (repinta solo cuando algo cambia) y fondos/partículas quietos. `zz_medir_menu_gpu` (`AHORRO_MEDIA=0/1`, MEDIA, menú central quieto, fotogramas dibujados en 3 s):
+| Club | Sin ahorro | Con ahorro | Llamadas |
+|---|---|---|---|
+| CHI | 43 | **1** | 411 → 388 |
+| ESP | 45 | **1** | 408 → 407 |
+| ENG | 45 | **1** | 420 → 419 |
+Es decir, el menú deja de dibujar ~15 fotogramas por segundo de ~400 llamadas cada uno cuando no pasa nada (la GPU del móvil, al 100 % en el menú, queda casi libre). Coste: los fondos animados y las motas quedan quietos. Probado en `p6_resolucion3d`.
+
+### Modo rendimiento + E4 (césped barato) (10-11, sesión 5; orden del líder)
+`cesped_barato.gdshader`: el mismo campo (dibujo del club, franjas con brillo según el ángulo, manchas, desgaste: `cesped_comun.gdshaderinc`) SIN la brizna fina, los mechones ni el relieve (~10 llamadas a ruido por píxel y 4 `fbm` más para las normales). Va DENTRO del «Modo rendimiento» (`ModoRendimiento.cesped_barato`; apagado por defecto; de MEDIA hacia abajo). Medido, MEDIA 1280×720, sin → con el modo completo (glow + sombra solar + césped barato):
+| Club | Fotograma | Antes de E4 (solo glow + sombra) |
+|---|---|---|
+| CHI | 432 → 315 ms (**−27 %**) | −21 % |
+| ESP | 366 → 266 ms (**−27 %**) | −24 % |
+| ENG | 398 → 293 ms (**−26 %**) | −28 % |
+E4 añade poco medible (entre −2 y +6 puntos, dentro del ruido de ±4 %); el grueso sigue siendo la sombra solar y el glow. Capturas nuevas con/sin (arriba sin el modo, abajo con él): `docs/04_auditorias/capturas_modo_rendimiento/cmp_{CHI,ESP,ENG}.jpg`: sin sombras de los jugadores, sin resplandor y con el césped liso (franjas sin mechones); es un cambio de aspecto claro, por eso el modo sigue apagado por defecto.

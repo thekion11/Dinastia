@@ -376,7 +376,7 @@ func montar(club: Club, acento: Color, nivel: int = Calidad.ALTO, look_dt: Dicti
 	env.ambient_light_energy = 1.05   ## (10-11) un poco más de ambiente: la sala vista desde los periodistas quedaba casi negra
 	## Bloom suave: los focos de sala tienen que quemar un poco, o el plató se
 	## ve plano y de oficina en vez de televisado.
-	env.glow_enabled = Calidad.elegida > Calidad.MINIMO
+	env.glow_enabled = ModoRendimiento.glow(Calidad.elegida)
 	env.glow_intensity = 0.7
 	env.glow_bloom = 0.15
 	env.glow_hdr_threshold = 1.1
@@ -389,11 +389,12 @@ func montar(club: Club, acento: Color, nivel: int = Calidad.ALTO, look_dt: Dicti
 	_montar_fondo_sponsors(club, acento, clubes_competencia)
 	_montar_banderas(club)
 	_montar_luces()
-	_montar_podio()
+	if RuedaPrensaMesa.usar(): RuedaPrensaMesa.montar(self, club, _col_club1, _col_club2, RandomNumberGenerator.new())   ## (10-11) R7: mesa larga, DT sentado, jefe de prensa
+	else: _montar_podio(); RuedaPrensaExtras.montar(self, _col_club1, _col_club2)   ## atril con ramo de micrófonos, balón y focos
 	if String(contexto.get("titulo", "")) != "":
 		var tro := Trofeo3D.de_competicion(String(contexto["titulo"]), 0.28)
 		tro.name = "TrofeoAtril"
-		tro.position = Vector3(-0.3, 1.1, -0.05)
+		tro.position = Vector3(-0.3, 1.1, -0.05) if not has_meta("mesa") else Vector3(0.5, RuedaPrensaMesa.MESA_Y, -0.35)
 		add_child(tro)
 	## TU PERSONAJE 3D en el atril (13-10-2026), si lo creaste: se monta al
 	## entrar en el árbol (medir los huesos lo necesita). Si no, el retrato.
@@ -414,7 +415,7 @@ func _cortar_plano() -> void:
 func _montar_dt_3d() -> void:
 	_dt_3d_pendiente = false
 	var raiz := Node3D.new()
-	raiz.position = Vector3(0, 0.0, -0.78)
+	raiz.position = Vector3(0, 0.0, -0.78) if not has_meta("mesa") else RuedaPrensaMesa.POS_DT
 	add_child(raiz)
 	## Con los colores del club, como en la banda: el chándal o el traje que
 	## eligió el jugador salían con el azul por defecto (un «mono» azul).
@@ -423,7 +424,7 @@ func _montar_dt_3d() -> void:
 		raiz.queue_free()
 		_montar_dt({})
 		return
-	Expresion.de(raiz)
+	RuedaPrensaMesa.sentar(self, _dt_3d); Expresion.de(raiz)
 
 ## Cada pocos segundos un gesto de manos y una cara, como quien contesta.
 func _gesticular_dt(delta: float) -> void:
@@ -438,7 +439,7 @@ func _gesticular_dt(delta: float) -> void:
 	var cara: String = ["concentrado", "alegre", "neutral", "enfado"][_rng_dt.randi() % 4]
 	if load("res://visor/anim_extra.gd").asegurar_gesto_tono(ap, _dt_3d.get("esqueleto"), tono_dt) != "":   ## §2.5: el gesto de su tono
 		gesto = load("res://visor/anim_extra.gd").GESTO_TONO[tono_dt]; cara = load("res://visor/anim_extra.gd").CARA_TONO[tono_dt]; tono_dt = ""
-	if ap != null:
+	if ap != null and not RuedaPrensaMesa.gesto_sentado(self, _dt_3d):   ## sentado (R7/R8): «hablar sentado»; los gestos de pie lo levantarían
 		var lib := ap.get_animation_library("")
 		if lib != null:
 			load("res://visor/anim_extra.gd").asegurar(ap, _dt_3d.get("esqueleto"), gesto)

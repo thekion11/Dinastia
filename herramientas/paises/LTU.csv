@@ -1,0 +1,20 @@
+#seleccion=Lituania
+#tier=0.4
+#globo=25.28,54.69
+#bandera=🇱🇹
+#confed=ucl,uel
+#liga=A Lyga|Liga Lituana
+#copa=Copa de Lituania|Copa Lituana
+#nombres=Jonas,Mantas,Tomas,Darius,Rokas,Arunas,Gintaras,Lukas,Paulius,Mindaugas,Vytautas,Andrius,Egidijus,Saulius
+#apellidos=Kazlauskas,Petrauskas,Jankauskas,Butkus,Paulauskas,Urbonas,Vasiliauskas,Stankevicius,Zukauskas,Navickas,Rimkus,Grigas,Baranauskas,Sakalauskas
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Kauno Žalgiris;Kauno Zalgar;#00843d;#ffffff;60;15026;1947;los Verdiblancos;el estadio nacional de la ciudad del interior;El gran dominador del país, con una vitrina llena de ligas.
+Žalgiris;Vilnius Verde;#00843d;#ffffff;54;5067;1947;los Verdes de la Capital;el estadio federativo de la capital;El histórico club de la capital, con un gran palmarés.
+Panevėžys;Panevezys Norte;#c8102e;#ffffff;52;6600;1964;los Rojos del Norte;el estadio de la ciudad del norte;Un club que ha roto la hegemonía y ha jugado en Europa.
+Sūduva;Suduva Mariam;#c8102e;#ffffff;52;6523;1968;los Rojiblancos del Sur;el moderno estadio de la ciudad del suroeste;Un campeón veterano con muchos títulos de liga.
+Banga;Banga Gargzdas;#0057b8;#ffffff;48;2216;1966;los Azules de la Costa;el estadio de la ciudad costera del oeste;Un club de ciudad pequeña que se ha asentado en la élite.
+Hegelmann;Hegelman Raudon;#f2c200;#000000;46;490;2012;los Rubios;el diminuto campo de un pueblo cercano a la capital;Un proyecto privado de gran ambición y estadio minúsculo.
+Šiauliai;Siauliai Sol;#f2c200;#000000;44;3017;1995;los Soles;el estadio de la ciudad del norte;Un club del norte con una afición muy fiel.
+Džiugas;Dziugas Telsiai;#f2c200;#0057b8;42;2069;1923;los Telsinos;el pequeño estadio de la ciudad del oeste;Un club histórico de ciudad pequeña, recién ascendido.
+Riteriai;Riteros Vilna;#0057b8;#ffffff;40;5067;2012;los Caballeros;el estadio federativo de la capital;Un club joven de la capital con una cantera muy trabajada.
+TransINVEST;Transinvest Gal;#0057b8;#c8102e;38;1000;2002;los Transportistas;el pequeño campo de un pueblo de las afueras;Un club modesto de proyecto empresarial que lucha por mantenerse.

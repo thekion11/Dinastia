@@ -1,0 +1,24 @@
+#seleccion=Jamaica
+#tier=0.2
+#globo=-76.79,17.99
+#bandera=🇯🇲
+#confed=conc
+#liga=Premier League de Jamaica|Liga Jamaiquina
+#copa=Copa de Jamaica|Copa Jamaiquina
+#nombres=Andre,Damion,Kemar,Jermaine,Tyrone,Omar,Rohan,Dwayne,Marlon,Shane,Delano,Leon,Garfield,Junior
+#apellidos=Brown,Campbell,Williams,Henry,Clarke,Reid,Morgan,Thompson,Barrett,Walker,Francis,Bailey,Gordon,Lawrence
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Harbour View;Puerto Vista Kgn;#000000;#ffffff;58;7000;1974;los Stars del Puerto;el estadio de la costa este de la capital;El club más laureado del país, con una larga lista de ligas.
+Portmore United;Portmore Unido;#f2c200;#0b8f3c;56;3000;1982;los Reyes de Portmore;el estadio de la ciudad dormitorio;Campeón con mucha tradición reciente en torneos caribeños.
+Waterhouse;Casa del Agua;#000000;#f2c200;56;5000;1969;los Abejas de Waterhouse;el estadio de un barrio humilde de la capital;Un histórico de barrio que ha formado a muchos internacionales.
+Cavalier;Cavalier Kgn;#0a3d91;#ffffff;53;3000;1964;los Caballeros;el estadio al este de la capital;Un club veterano que aspira a volver a lo más alto.
+Arnett Gardens;Jardines Arnett;#0b8f3c;#f2c200;54;6000;1965;los Verdes del Barrio;el estadio del oeste de la capital;Un club popular de barrio con campeonatos en su historia.
+Tivoli Gardens;Jardines Tivoli;#0b8f3c;#ffffff;54;5000;1965;los Garden Boys;el estadio del oeste de la capital;Un histórico campeón de liga con una afición muy fiel.
+Montego Bay United;Montego Bahia;#0a3d91;#f2c200;52;7000;1998;los Azules de Mo Bay;el estadio de la ciudad turística del norte;El orgullo de la costa norte, con una afición apasionada.
+Mount Pleasant;Monte Agradable;#0b8f3c;#000000;50;3500;2010;los Académicos;el estadio de la costa norte;Una academia que ha subido rápido a la élite.
+Spanish Town Police;Policia Villa;#0a3d91;#c8102e;47;3500;1980;los Azules de la Ley;el estadio de la antigua capital colonial;El equipo de la policía, siempre disciplinado y ordenado.
+Racing United;Racing Portmore;#c8102e;#ffffff;46;3000;2013;los Corredores;el estadio de la ciudad dormitorio;Un club joven y ambicioso que busca hacerse un nombre.
+Chapelton Maroons;Cimarrones Cap;#c8102e;#000000;44;6000;2010;los Cimarrones;el estadio del centro de la isla;Un equipo de las montañas que pelea cada fecha.
+Dunbeholden;Dunbe Portmore;#c8102e;#f2c200;43;1500;1990;los Dunbe Boys;el complejo deportivo de la ciudad dormitorio;Un club modesto con base en un pequeño complejo deportivo.
+Molynes United;Molynes Unido;#0a3d91;#000000;40;1500;1985;los Molynes Boys;el pequeño parque de un barrio capitalino;Recién llegado a la élite, con presupuesto muy ajustado.
+Treasure Beach;Playa del Tesoro;#f2c200;#0a3d91;38;1200;2008;los Pescadores;el campo de un pueblo pesquero de la costa sur;El club más pequeño de la liga, de un pueblo de pescadores.

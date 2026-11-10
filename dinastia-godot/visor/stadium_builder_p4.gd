@@ -50,7 +50,7 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	## ángulo, brizna, manchas y desgaste (`visor/cesped.gdshader`). El dibujo
 	## del club sigue saliendo de la misma textura.
 	var sm := ShaderMaterial.new()
-	sm.shader = load("res://visor/cesped.gdshader")
+	sm.shader = load("res://visor/cesped_barato.gdshader" if ModoRendimiento.cesped_barato(Calidad.elegida) else "res://visor/cesped.gdshader")   ## (10-11) E4: sin brizna ni relieve con el modo rendimiento
 	sm.set_shader_parameter("dibujo", gmat.albedo_texture)
 	var c0: Color = tonos[0]
 	var c1: Color = tonos[1]

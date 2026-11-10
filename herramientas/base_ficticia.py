@@ -38,6 +38,7 @@ import hashlib
 import historia_clubes
 import jugadores_guino
 import estadios_reales
+import estadios_variedad
 import aspecto_clubes
 import palmares_clubes
 import liga_paises_bajos
@@ -705,6 +706,9 @@ def main():
     # quién representan sin llevar su nombre.
     fic["REALES"] = jugadores_guino.tabla_base(real["REALES"], CLUBES, limpiar)
     fic["EQUIP_REAL"] = {}
+    ## Variedad generada (10-11): los estadios sin arquitectura escrita a mano salían casi todos «rect»/«ingles»; ver `estadios_variedad.py`.
+    _aforos = {limpiar(f[0]): (f[4], f[1], f[2]) for d in real["PAISES_LIGAS"].values() for f in d["clubes"] + d.get("segunda", {}).get("clubes", [])}
+    estadios_variedad.aplicar(estadios_reales.ESTADIOS, _aforos)
     fic["ESTADIO_CLUB"] = {CLUBES[k]: v for k, v in estadios_reales.ESTADIOS.items() if k in CLUBES}
     todos = [f[0] for f in real["DATA_P1"] + real["DATA_P2"]] + \
         [f[0] for d in real["PAISES_LIGAS"].values() for f in d["clubes"] + d.get("segunda", {}).get("clubes", [])]

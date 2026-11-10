@@ -57,8 +57,8 @@ func _probar() -> void:
 		var tp := Time.get_ticks_msec()
 		o.pantalla_actual().emit_signal("terminado", (respuestas.get(k, {}) as Dictionary).duplicate(true))
 		_linea("    etapa %-10s %5d ms" % [k, Time.get_ticks_msec() - tp])
-	_comprobar(pasos == ["intro", "idioma", "modo", "pais", "config", "entrada", "personaje"],
-		"recorre las 7 etapas de la entrada (%s)" % ", ".join(pasos))
+	_comprobar(pasos == ["intro", "idioma", "modo", "ligas", "pais", "config", "entrada", "personaje"],
+		"recorre las 8 etapas de la entrada (%s)" % ", ".join(pasos))
 	_comprobar(String(_resultado.get("escena", "")) == OrquestadorMundo.PRINCIPAL and PedidoPartida.mundo_pregenerado != null,
 		"la entrada termina en Principal con la partida lista")
 	o.queue_free()

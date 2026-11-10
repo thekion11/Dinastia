@@ -1,0 +1,22 @@
+#seleccion=Islandia
+#tier=0.5
+#globo=-21.94,64.15
+#bandera=🇮🇸
+#confed=ucl,uel
+#liga=Besta deild karla|Liga Islandesa
+#copa=Copa de Islandia|Copa Islandesa
+#nombres=Gudmundur,Sigurdur,Jon,Olafur,Einar,Bjorn,Kristjan,Arnar,Halldor,Thorsteinn,Magnus,Gunnar,Helgi,Baldur
+#apellidos=Jonsson,Sigurdsson,Gudmundsson,Einarsson,Olafsson,Magnusson,Stefansson,Bjarnason,Kristjansson,Arnason,Haraldsson,Petursson,Thorsson,Gunnarsson
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Breiðablik;Breidablik Kop;#1a7a3a;#ffffff;60;3000;1950;los Verdes;el estadio de la ciudad dormitorio junto a la capital;El club que más ha crecido, con campeonatos y presencia europea.
+FH;FH Hafnarfjord;#ffffff;#000000;58;6450;1929;los Blancos del Puerto;el estadio de la ciudad portuaria al sur de la capital;Una potencia histórica con una larga racha de títulos de liga.
+Fram;Fram Reikiavik;#4aa3df;#ffffff;46;3000;1908;los Celestes;el estadio nuevo de un barrio en expansión de la capital;Un club centenario que ha vuelto a la élite con campo propio.
+KA;KA Akureyrar;#f2c200;#0057b8;47;2500;1928;los Amarillos del Norte;el estadio de la capital del norte, junto al fiordo;Representa a la ciudad del norte y tiene una afición muy fiel.
+Keflavík;Keflavik Sur;#0057b8;#ffffff;44;4000;1929;los Azules del Aeropuerto;el estadio de la ciudad del aeropuerto en la península;Un club de tradición que ya ha ganado la liga y la copa.
+KR;KR Reikjavik;#000000;#ffffff;57;2800;1899;los Rayados;el estadio del barrio histórico de la capital;El club más antiguo y laureado del país.
+Stjarnan;Stjarnan Gardar;#0057b8;#ffffff;52;1400;1960;los Estrellas;el estadio de un municipio vecino de la capital;Un club joven que sorprendió al ganar su primera liga.
+Valur;Valur Hlidar;#c8102e;#ffffff;56;2500;1911;los Rojos;el estadio del barrio de las colinas de la capital;Un grande de la capital con una larga lista de títulos.
+Víkingur Reykjavík;Vikingur Reykja;#c8102e;#000000;58;1450;1908;los Vikingos;el estadio del barrio sur de la capital;Campeón reciente, famoso por su fútbol directo y su cantera.
+ÍA;IA Akranesi;#f2c200;#000000;48;5000;1946;los Amarillos del Faro;el estadio de la ciudad pesquera al norte de la capital;Un club histórico con muchos títulos en los años noventa.
+ÍBV;IBV Eyjar;#ffffff;#000000;42;3000;1903;los Isleños;el estadio de la isla volcánica del sur;El club de las islas, con un campo batido por el viento.
+Þór Akureyri;Thor Akureyrar;#c8102e;#ffffff;40;2000;1915;los Rojos del Fiordo;el estadio del barrio alto de la capital del norte;Un club del norte que pelea por mantenerse en la máxima categoría.

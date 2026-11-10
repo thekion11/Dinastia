@@ -182,7 +182,7 @@ static func generar_mundo() -> Mundo:
 	Escudo.limpiar_cache()
 	Cara.limpiar_cache()
 	var m := Mundo.new()
-	m.generar([], 0)
+	m.generar(LigasActivas.para_generar(), 0)   ## (10-11) solo los países elegidos en «Ligas activas»
 	return m
 
 ## Lo mismo, repartido entre fotogramas (7-11, meta «< 200 ms por carga»): la pantalla sigue viva mientras se crean los ~10.000 jugadores. Se usa con `await`.
@@ -190,7 +190,7 @@ static func generar_mundo_por_trozos() -> Mundo:
 	Escudo.limpiar_cache()
 	Cara.limpiar_cache()
 	var m := Mundo.new()
-	await m.generar_por_trozos([], 0)
+	await m.generar_por_trozos(LigasActivas.para_generar(), 0)
 	return m
 
 ## Aplica todo lo elegido y deja Principal listo. Devuelve {"escena", "mundo"}.

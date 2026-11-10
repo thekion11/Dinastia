@@ -81,6 +81,9 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 	var zocalo := _mat(c1.lerp(Color(0.1, 0.1, 0.12), 0.25), 0.6)
 	var suelo := _mat(Color(0.16, 0.17, 0.19).lerp(c1, 0.18), 0.95)
 	var techo := _mat(Color(0.82, 0.83, 0.84), 0.9)
+	if VestuarioRealista.activo():   ## (10-11, sesión 7) MEDIA y ALTA: resina, yeso y madera con relieve (el azulejo y las sombras, en `_vestuario`)
+		suelo = VestuarioRealista.suelo(c1, mi.pais if mi != null else "")
+		pared = VestuarioRealista.pared(mi.pais if mi != null else "")
 	var luz := _mat_unico(Color(1, 0.98, 0.92), 0.4)
 	luz.emission_enabled = true
 	luz.emission = Color(1, 0.96, 0.88)
@@ -259,7 +262,9 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 	## Con la plantilla a mano (estadio 2.0) llevan su dorsal y su nombre; si
 	## no, solo el número. Solo en el estadio propio (en la ciudad `mi` es null
 	## y es el tuyo).
-	var madera := _mat(Color(0.55, 0.38, 0.22), 0.7)
+	var madera: StandardMaterial3D = VestuarioRealista.madera(mi.pais if mi != null else "") if VestuarioRealista.activo() else _mat(Color(0.55, 0.38, 0.22), 0.7)
+	if VestuarioRealista.activo():
+		VestuarioRealista.azulejos(nodo, x0, z_out, z_fin, c1)
 	var plantilla: Array = EdificioClub.ctx.get("plantilla", []) if (mi == null or mi.id == PersonajeDT.club_usuario) else []
 	var mats := PiezasVestuario.materiales(c1, c2)
 	var lote := PiezasVestuario.Lote.new()
@@ -300,7 +305,11 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 	## La pizarra táctica al fondo, con el dibujo de la jugada.
 	var pizarra := _mat(Color(0.95, 0.96, 0.97), 0.3)
 	_caja(nodo, Vector3(x0, 1.7, z_fin - 0.1), Vector3(3.2, 1.6, 0.06), pizarra, false)
-	_rotulo(nodo, "4-3-3\n○ → ✕", Vector3(x0, 1.75, z_fin - 0.15), PI, 46, Color(0.15, 0.2, 0.5))
+	if VestuarioRealista.activo():   ## (sesión 7) MEDIA y ALTA: la formación REAL del club dibujada, y el escudo grande en la pared
+		VestuarioRealista.pizarra(nodo, x0, z_fin, c1, c2, mi)
+		VestuarioRealista.escudo(nodo, x0, z_fin, mi)
+	else:
+		_rotulo(nodo, "4-3-3\n○ → ✕", Vector3(x0, 1.75, z_fin - 0.15), PI, 46, Color(0.15, 0.2, 0.5))
 	## La camilla del fisio y las duchas (alicatado y alcachofas) en una esquina.
 	_caja(nodo, Vector3(x0 + 3.0, 0.75, z_fin - 4.6), Vector3(0.8, 0.12, 2.0), _mat(Color(0.2, 0.35, 0.55), 0.6), true)
 	_caja(nodo, Vector3(x0 + 3.0, 0.35, z_fin - 4.6), Vector3(0.6, 0.7, 1.6), Texturas.metal(Color(0.6, 0.62, 0.64), 0.5), false)
@@ -340,6 +349,7 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 		ol.light_energy = 0.85
 		ol.light_color = Color(1, 0.95, 0.86)
 		nodo.add_child(ol)
+	VestuarioRealista.sombras(nodo, x0, zc)
 	## Fuera, sobre la fachada que da a la calle: el letrero.
 	## (Al otro lado de la entrada del club, para no pisar su pórtico.)
 	_rotulo(nodo, Idiomas.t("VESTUARIOS"), Vector3(x0 - 4.0, alto - 0.6, z_fin + 0.32), 0.0, 44, Color(1, 1, 1))

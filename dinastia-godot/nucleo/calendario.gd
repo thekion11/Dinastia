@@ -116,6 +116,42 @@ const FIJAS := {
 	"SVK": [[9, 1, "Día de la Constitución", "fiesta", "Recuerda la Constitución de 1992."]],
 	"BUL": [[3, 3, "Día de la Liberación", "fiesta", "Recuerda la liberación del dominio otomano, en 1878."]],
 	"UAE": [[12, 2, "Día Nacional", "fiesta", "Recuerda la unión de los emiratos, en 1971."]],
+	"NGA": [[10, 1, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1960."]],
+	"GHA": [[3, 6, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1957."]],
+	"SEN": [[4, 4, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1960."]],
+	"CIV": [[8, 7, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1960."]],
+	"ALG": [[11, 1, "Día de la Revolución", "fiesta", "Recuerda el inicio de la guerra de independencia, en 1954."]],
+	"TUN": [[3, 20, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1956."]],
+	"CMR": [[5, 20, "Fiesta Nacional", "fiesta", "Recuerda la unificación del país, en 1972."]],
+	"CAN": [[7, 1, "Día de Canadá", "fiesta", "Recuerda la Confederación de 1867."]],
+	"CRC": [[9, 15, "Día de la Independencia", "fiesta", "Recuerda la independencia de Centroamérica, en 1821."]],
+	"IRL": [[3, 17, "Día de San Patricio", "fiesta", "Fiesta nacional del país."]],
+	"WAL": [[3, 1, "Día de San David", "fiesta", "Fiesta del patrón de Gales."]],
+	"SVN": [[6, 25, "Día del Estado", "fiesta", "Recuerda la independencia de 1991."]],
+	"JOR": [[5, 25, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1946."]],
+	"CYP": [[10, 1, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1960."]],
+	"IRQ": [[10, 3, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1932."]],
+	"UZB": [[9, 1, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1991."]],
+	"FIN": [[12, 6, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1917."]],
+	"JAM": [[8, 6, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1962."]],
+	"HON": [[9, 15, "Día de la Independencia", "fiesta", "Recuerda la independencia de Centroamérica, en 1821."]],
+	"PAN": [[11, 3, "Separación de Colombia", "fiesta", "Recuerda la separación de 1903."]],
+	"NZL": [[2, 6, "Día de Waitangi", "fiesta", "Recuerda el tratado de 1840."]],
+	"MLI": [[9, 22, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1960."]],
+	"BIH": [[3, 1, "Día de la Independencia", "fiesta", "Recuerda el referéndum de independencia de 1992."]],
+	"MNE": [[5, 21, "Día de la Independencia", "fiesta", "Recuerda el referéndum de 2006."]],
+	"ISL": [[6, 17, "Día Nacional", "fiesta", "Recuerda la república, proclamada en 1944."]],
+	"EST": [[2, 24, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1918."]],
+	"KAZ": [[12, 16, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1991."]],
+	"AZE": [[5, 28, "Día de la Independencia", "fiesta", "Recuerda la república de 1918."]],
+	"BLR": [[7, 3, "Día de la Independencia", "fiesta", "Recuerda la liberación de Minsk, en 1944."]],
+	"LVA": [[11, 18, "Proclamación de la República", "fiesta", "Recuerda la independencia, en 1918."]],
+	"ALB": [[11, 28, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1912."]],
+	"MKD": [[9, 8, "Día de la Independencia", "fiesta", "Recuerda el referéndum de 1991."]],
+	"GEO": [[5, 26, "Día de la Independencia", "fiesta", "Recuerda la república de 1918."]],
+	"LTU": [[2, 16, "Día del Restablecimiento del Estado", "fiesta", "Recuerda la independencia, en 1918."]],
+	"NIR": [[3, 17, "Día de San Patricio", "fiesta", "Fiesta del patrón de Irlanda."]],
+	"LUX": [[6, 23, "Día Nacional", "fiesta", "Fiesta nacional del Gran Ducado."]],
 	"IRN": [[2, 11, "Aniversario de la Revolución", "fiesta", "Recuerda los actos de 1979."]],
 	"QAT": [[12, 18, "Día Nacional", "fiesta", "Recuerda la unificación del país, en 1878."]],
 }
@@ -126,7 +162,7 @@ const SIN_PRIMERO_DE_MAYO := ["USA", "AUS", "JPN", "ENG"]
 const SEMANA_SANTA := ["ARG", "AUS", "BOL", "BRA", "CHI", "COL", "ECU", "ENG", "ESP", "GER",
 	"ITA", "MEX", "PAR", "PER", "RSA", "URU", "VEN"]
 ## Ramadán y el fin del ayuno en el calendario del país.
-const RAMADAN := ["KSA", "EGY", "MAR"]
+const RAMADAN := ["KSA", "EGY", "MAR", "ALG", "TUN", "SEN"]
 
 var explicadas: Dictionary = {}   ## nombre -> true: el mentor ya la explicó
 var ultima_semana: int = -1

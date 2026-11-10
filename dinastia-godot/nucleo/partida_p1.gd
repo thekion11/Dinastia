@@ -79,7 +79,8 @@ static func _leer_todo(ruta: String) -> Dictionary:
 		push_warning("Partida: %s está dañado o no es una partida" % ruta)
 		return {}
 	var j := JSON.new()
-	if j.parse(crudo.get_string_from_utf8()) != OK:
+	var texto := crudo.get_string_from_utf8(); crudo = PackedByteArray()   ## (10-11) el texto sustituye a los bytes: no se tienen los dos a la vez durante el parseo
+	if j.parse(texto) != OK:
 		push_error("Partida: JSON inválido en %s: %s" % [ruta, j.get_error_message()])
 		return {}
 	return j.data if j.data is Dictionary else {}
@@ -310,8 +311,8 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"anios_en_club": m.anios_en_club, "rotacion_activa": m.rotacion_activa,
 		"bono_analisis": m.bono_analisis, "fin_partida": m.fin_partida,
 		"fondo": m.fondo.a_dic() if m.fondo != null else {},
-		"clubes": [],
-		"ligas": [],
+		"clubes": [], "ligas": [],
+		"paises_activos": LigasActivas.de(m),   ## (10-11) qué países se cargaron al empezar (y los añadidos después)
 		"copa": _copa_a_dic(m.copa),
 		"copas_mundo": CopasMundo.a_dic(m),   ## (10-11) las copas y el palmarés de todos los países
 		## Los sistemas que solo existen para TU club. Sin esto, guardar y cargar

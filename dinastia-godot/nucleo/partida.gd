@@ -275,6 +275,16 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 ## Sin estas claves no se puede reconstruir un mundo (ver `desde_instantanea`). «azar» NO está: es opcional (los guardados viejos, como `pruebas/partidas_viejas/v2_2026-10-27`, no lo traen).
 const CLAVES_IMPRESCINDIBLES := ["semilla", "anio", "semana", "clubes", "ligas", "mi_club"]
 
+## Las comprobaciones baratas de `desde_instantanea` (versión, claves y forma) sin construir nada: ¿vale la pena soltar el mundo de antes?
+static func _instantanea_buena(datos: Dictionary) -> bool:
+	if datos.is_empty() or int(datos.get("version", 0)) > VERSION:
+		return false
+	var d := PartidaArchivo.migrar(datos.duplicate(), VERSION)
+	for clave: String in CLAVES_IMPRESCINDIBLES:
+		if not d.has(clave):
+			return false
+	return d["clubes"] is Array and d["ligas"] is Array and d["mi_club"] is String
+
 static func desde_instantanea(datos: Dictionary) -> Mundo:
 	if datos.is_empty():
 		return null
@@ -354,6 +364,10 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 		m.clubes[c.id] = c
 	for d: Dictionary in datos["ligas"]:
 		m.ligas.append(_dic_a_liga(d, m))
+	if datos.get("paises_activos") is Array:   ## (10-11) partidas viejas no la traen: se deduce de las ligas
+		LigasActivas.fijar(m, datos["paises_activos"] as Array)
+	else:
+		LigasActivas.registrar(m)
 	m.copa = _dic_a_copa(datos.get("copa", {}), m)
 	CopasMundo.desde_dic(m, datos.get("copas_mundo", {}))
 	m.mercado.desde_dic(datos.get("mercado", {}))
@@ -401,10 +415,18 @@ static func _seq_de(id: String, prefijo: String, defecto: int) -> int:
 	var n := id.trim_prefix(prefijo)
 	return int(n) if id.begins_with(prefijo) and n.is_valid_int() else defecto
 
-static func cargar(nombre: String) -> Mundo:
+## `soltar_antes`: lo que quien llama quiere soltar del mundo de ANTES (p. ej. `func(): p.mundo = null`). Se llama cuando el guardado ya se leyó y se sabe bueno (huella, versión y claves) y ANTES de construir el
+## mundo nuevo (10-11, pico de RAM: con el mundo entero conviven el mundo viejo, el diccionario del JSON (~230 MB) y el mundo nuevo; así nunca coinciden los tres). Si el guardado no sirve, no se llama y el
+## mundo de antes queda como estaba. Sin esto además `LeyesPais.clubes_mundo` (estático) mantenía vivo TODO el mundo anterior hasta el final de la carga.
+static func cargar(nombre: String, soltar_antes := Callable()) -> Mundo:
 	GuardadoSegundoPlano.esperar()   ## (3-11) no leer un archivo mientras el autoguardado lo está escribiendo
 	var t0 := Time.get_ticks_msec()
-	var m := desde_instantanea(_leer_con_respaldo(ruta_de(nombre)))
+	var datos := _leer_con_respaldo(ruta_de(nombre))
+	if _instantanea_buena(datos):
+		LeyesPais.clubes_mundo = {}
+		if soltar_antes.is_valid():
+			soltar_antes.call()
+	var m := desde_instantanea(datos)
 	PartidaArchivo.ms_carga = Time.get_ticks_msec() - t0
 	return m
 

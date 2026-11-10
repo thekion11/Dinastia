@@ -1,0 +1,18 @@
+#seleccion=Canadá
+#tier=0.6
+#globo=-75.70,45.42
+#bandera=🇨🇦
+#confed=conc
+#liga=Canadian Premier League|Liga Premier Canadiense
+#copa=Canadian Championship|Campeonato Canadiense
+#nombres=Liam,Noah,Ethan,Jacob,Lucas,Mathieu,Alexandre,Olivier,Tyler,Connor,Nathan,Samuel,Jordan,Kyle
+#apellidos=Smith,Tremblay,Roy,Gagnon,MacDonald,Campbell,Bouchard,Gauthier,Morin,Fraser,Wilson,Lavoie,Murphy,Cote
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Forge FC;Forja Hamilton;#c8102e;#1b458f;58;6000;2018;los Herreros;el estadio de la ciudad del acero;El club más laureado de la liga, de la ciudad del acero.
+Cavalry FC;Jinetes Calgary;#009739;#000000;57;6000;2018;los Jinetes;el estadio de la ciudad de las praderas;El club de las praderas, siempre entre los de arriba.
+Pacific FC;Pacific Victoria;#6a1b9a;#ffffff;52;6000;2018;los del Pacífico;el estadio de la isla del oeste;El equipo de la isla del Pacífico, campeón de liga.
+HFX Wanderers FC;Errantes Halifax;#6dcff6;#1b458f;50;6500;2018;los Errantes;el estadio del puerto atlántico;El club del puerto del Atlántico, con gran ambiente.
+Atlético Ottawa;Atlético Capital;#c8102e;#000000;52;19000;2020;los Rojinegros;el gran estadio de la capital;El club de la capital, filial de espíritu europeo.
+York United FC;Unidos de York;#1b458f;#ffffff;49;4000;2018;los Unidos;el estadio de los suburbios de Toronto;Un club de los suburbios de la gran ciudad ontariana.
+Vancouver FC;Langley Costa;#000000;#c8102e;46;6500;2022;los Negros;el estadio de las afueras de Vancouver;El club más joven, de la costa del Pacífico.
+Valour FC;Valor Winnipeg;#ffd100;#6a1b9a;46;33000;2018;los Valientes;el estadio de la ciudad de las praderas del este;El club de las praderas centrales, de gran estadio.

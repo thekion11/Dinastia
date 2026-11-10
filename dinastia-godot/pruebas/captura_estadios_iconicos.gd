@@ -17,6 +17,10 @@ const PAISES_3: Array[String] = ["ARG", "ESP", "ITA", "ENG", "GER", "BRA", "MEX"
 const CLUBES_4 := ["Atlét1co Madrid", "Sev1lla", "C1ty de Manch.", "Juv3ntus", "Lev3rkusen", "M4rsella", "Rac1ng Club", "Ind3pendiente",
 	"Palme1ras", "C0rinthians", "M0nterrey", "F3yenoord", "PSV", "Al-1ttihad", "K4izer Chiefs", "Ol1mpia", "Mill0narios", "Al1anza Lima", "LDU Qu1to"]
 const PAISES_4: Array[String] = ["ESP", "ENG", "ITA", "GER", "FRA", "ARG", "BRA", "MEX", "NED", "KSA", "RSA", "PAR", "COL", "PER", "ECU"]
+## TANDA=5: estadios GENERADOS por club (`herramientas/estadios_variedad.py`, 10-11): 12 estadios de 6 países, formas y tamaños distintos, sin arquitectura escrita a mano.
+const CLUBES_5 := ["Tr4bzonspor", "S4msunspor", "R4ków Częstochowa", "J4giellonia Białystok", "M4lmö FF", "IF Elf5borg", "FC Any4ng", "Sh4nghai Shenhua",
+	"Ch3ngdu Rongcheng", "TSC B4čka Topola", "R4dnički Niš", "Ul5an HD"]
+const PAISES_5: Array[String] = ["TUR", "POL", "SWE", "KOR", "CHN", "SRB"]
 var _m: Mundo
 var _dir := ""
 var _fija: Camera3D   ## la cámara del plano congelado: el juego puede quitársela al acabar la celebración
@@ -35,10 +39,12 @@ func _ready() -> void:
 	cfg.set_value(CajonAjustes.SECCION, "intro", OS.get_environment("RECORRIDO") != "")
 	cfg.save(CajonAjustes.RUTA)
 	print("pack real: ", Datos.usar_base_real(true))
+	if OS.get_environment("ATLAS") != "":
+		VallasLed.atlas_siempre = OS.get_environment("ATLAS") != "0"
 	var tanda := OS.get_environment("TANDA")
-	var clubes: Array = CLUBES_2 if tanda == "2" else (CLUBES_3 if tanda == "3" else (CLUBES_4 if tanda == "4" else CLUBES))
+	var clubes: Array = CLUBES_5 if tanda == "5" else (CLUBES_2 if tanda == "2" else (CLUBES_3 if tanda == "3" else (CLUBES_4 if tanda == "4" else CLUBES)))
 	_m = Mundo.new()
-	_m.generar(PAISES_2 if tanda == "2" else (PAISES_3 if tanda == "3" else (PAISES_4 if tanda == "4" else PAISES)), 2026)
+	_m.generar(PAISES_5 if tanda == "5" else PAISES_2 if tanda == "2" else (PAISES_3 if tanda == "3" else (PAISES_4 if tanda == "4" else PAISES)), 2026)
 	var solo := OS.get_environment("SOLO")
 	for i in clubes.size():
 		if solo != "" and not str(i) in solo.split(","):

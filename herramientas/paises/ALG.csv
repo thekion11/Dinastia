@@ -1,0 +1,26 @@
+#seleccion=Argelia
+#tier=0.3
+#globo=3.06,36.75
+#bandera=🇩🇿
+#confed=afr
+#liga=Ligue 1 Mobilis|Liga Argelina
+#copa=Copa de Argelia|Copa Argelina
+#nombres=Mohamed,Ahmed,Karim,Riyad,Yacine,Amine,Sofiane,Ismaël,Nabil,Walid,Hichem,Bilal,Rachid,Farid
+#apellidos=Benali,Mahrez,Bennacer,Slimani,Brahimi,Belaïli,Bounedjah,Mandi,Boudaoui,Zerrouki,Benzia,Chaïbi,Atal,Hadj
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+MC Alger;Mouloudia Argel;#00843d;#e31b23;66;40000;1921;los Verdirrojos;el estadio de la capital;El club más antiguo y laureado de la capital.
+CR Belouizdad;Belouiz Capital;#e31b23;#ffffff;65;40000;1962;los Rojos;el estadio de la capital;Un grande de la capital, campeón varias veces seguidas.
+JS Kabylie;Kabilia Sport;#ffd100;#00843d;64;18000;1946;los Canarios;el estadio de las montañas de Cabilia;El orgullo de las montañas de Cabilia.
+USM Alger;Union Argel;#e31b23;#000000;64;41000;1937;los Rojinegros;el estadio de la capital;El gran rival de la capital, con una afición enorme.
+ES Sétif;Entente Setifeña;#000000;#ffffff;60;20000;1958;los Blancinegros;el estadio de las altas mesetas;El club de las altas mesetas, con títulos continentales.
+MC Oran;Mouloudia Oran;#e31b23;#ffffff;58;40000;1917;los Rojiblancos;el estadio de la ciudad del oeste;El club histórico de la ciudad del oeste.
+CS Constantine;Constantina Club;#00843d;#000000;58;43000;1898;los Verdinegros;el estadio de la ciudad de los puentes;El club de la ciudad de los puentes colgantes.
+JS Saoura;Saura Desierto;#e31b23;#ffd100;52;20000;2008;los del Desierto;el estadio de la ciudad del Sáhara;Un club joven del sur, en pleno Sáhara.
+USM Khenchela;Union Khenchela;#e31b23;#000000;48;15000;1936;los Rojinegros;el estadio de la ciudad de las montañas del Aurés;Un club de las montañas del Aurés.
+Paradou AC;Paradou Argel;#0057b8;#ffffff;50;8000;1994;los Jóvenes;el estadio de la cantera de la capital;Famoso por su academia de jóvenes talentos.
+US Biskra;Union Biskra;#e31b23;#ffffff;48;18000;1912;los del Oasis;el estadio de la puerta del desierto;El club de la puerta del desierto.
+MC El Eulma;Eulma Mouloudia;#00843d;#ffffff;47;25000;1946;los Verdes;el estadio de la ciudad del este;Un club del este, de ciudad comercial.
+ASO Chlef;Asociacion Chlef;#0057b8;#ffffff;45;20000;1947;los Azules;el estadio de la ciudad del valle;Campeón del país hace unos años, desde el valle.
+Olympique Akbou;Olimpico Akbou;#e31b23;#ffffff;42;5000;1936;los Rojos;el estadio de la ciudad de Cabilia;Un club recién llegado desde Cabilia.
+ES Mostaganem;Mostaganem Unido;#0057b8;#ffd100;40;18000;1923;los Azulgrana;el estadio de la ciudad de la costa;Un club de la costa del oeste.
+USM El Harrach;Union Harrach;#ffd100;#000000;38;8000;1935;los Amarillos;el estadio de los arrabales de la capital;Un club humilde de las afueras de la capital.
