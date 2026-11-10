@@ -7,8 +7,15 @@ extends RefCounted
 const ZOOM_MOVIL := 1.5
 const ALTO_CAMPO_MOVIL := 56
 
+static var forzar := false   ## las pruebas simulan un móvil en PC (`auditoria_gestion_movil`)
+
+## Táctil: un móvil, o una pantalla de la que se conocen los puntos por pulgada (las pruebas que simulan un teléfono). Lo usan los
+## ajustes de la gestión que dependen del tamaño real (fila de próximos, cajón de objetivos, textos en dos líneas).
+static func es_tactil() -> bool:
+	return es_movil() or PantallaMovil.dpi() > 0.0
+
 static func es_movil() -> bool:
-	return OS.has_feature("android") or OS.has_feature("ios") or (OS.has_feature("web") and DisplayServer.is_touchscreen_available())
+	return forzar or OS.has_feature("android") or OS.has_feature("ios") or (OS.has_feature("web") and DisplayServer.is_touchscreen_available())
 
 ## El zoom que toca: el guardado en las preferencias, o el del móvil si no hay y es un móvil, o 1.
 static func zoom(guardado: Variant) -> float:
@@ -72,3 +79,39 @@ static func _nodo_nuevo(n: Node) -> void:
 		var alto := alto_toque(b)
 		if alto > b.custom_minimum_size.y:
 			b.custom_minimum_size.y = alto
+		## (10-11, auditoría de gestión en el móvil) también de ANCHO: «⤢», «📅», las cabeceras «POS»/«POT» o las fichas de país
+		## medían 4-5,6 mm y se fallaban con el dedo.
+		if alto > b.custom_minimum_size.x:
+			b.custom_minimum_size.x = alto
+	elif n is LineEdit or n is HSlider:   ## los cuadros de texto y los deslizadores (6,3-6,9 mm de alto)
+		var c := n as Control
+		var alto2 := alto_toque(c)
+		if alto2 > c.custom_minimum_size.y:
+			c.custom_minimum_size.y = alto2
+	if n is Label or n is Button or n is LineEdit or n is RichTextLabel:
+		_letra.call_deferred(n)   ## diferido: el tamaño de letra se suele poner justo después de añadirlo
+
+## LA LETRA MÍNIMA EN EL MÓVIL (10-11, auditoría de gestión): ningún texto por debajo de `MIN_MM_LETRA` mm (11 pt de Apple, 12 sp de
+## Material). Con el zoom del móvil la letra normal ya mide ~2 mm, pero las de 11-12 px (cabeceras, filas, rótulos) se quedaban en
+## 1,4-1,7 mm. Se sube solo lo que no llega; `TextoQueCabe` tampoco encoge por debajo.
+const MIN_MM_LETRA := 1.8
+
+## El tamaño de letra mínimo en píxeles del control (0 si no es un móvil o no se sabe).
+static func letra_minima(c: Control) -> int:
+	var ppm := PantallaMovil.px_por_mm(c)
+	if ppm <= 0.0 or not c.is_inside_tree():
+		return 0
+	## Nunca por encima de la letra normal (`Tema.TAM_CUERPO`): si el jugador bajó el «Tamaño de la interfaz», manda su elección y solo se
+	## igualan las letras pequeñas a la normal (sin tope, a 1280×720 y 400 ppp todo pasaba a 28 px y se salía de las ventanas).
+	return mini(ceili(MIN_MM_LETRA * ppm / maxf(c.get_global_transform().get_scale().y, 0.01) - 0.05), Tema.TAM_CUERPO)
+
+static func _letra(c: Control) -> void:
+	if not is_instance_valid(c) or not c.is_inside_tree():
+		return
+	var piso := letra_minima(c)
+	if piso <= 0:
+		return
+	var claves := ["normal_font_size", "bold_font_size", "italics_font_size", "bold_italics_font_size", "mono_font_size"] if c is RichTextLabel else ["font_size"]
+	for k: String in claves:
+		if c.get_theme_font_size(k) < piso:
+			c.add_theme_font_size_override(k, piso)

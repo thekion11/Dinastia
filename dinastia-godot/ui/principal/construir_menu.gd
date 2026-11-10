@@ -97,7 +97,7 @@ func _montar_cabecera() -> VBoxContainer:
 	raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
 	raiz.add_theme_constant_override("separation", 10)
 	raiz.offset_left = 18; raiz.offset_top = 14
-	raiz.offset_right = -18; raiz.offset_bottom = -14
+	raiz.offset_right = -76 if EscalaMovil.es_tactil() else -18; raiz.offset_bottom = -14   ## (10-11) táctil: hueco para el cajón 🎯, que tapaba «⤢»
 	p.add_child(raiz)
 
 	## La cabecera con el escudo del club al lado del nombre. Es lo primero que se
@@ -418,7 +418,8 @@ func _montar_columnas(raiz: VBoxContainer) -> void:
 	## camarín, cantera, contratos-, en vez de tener siete pestañas más
 	## arriba. Es la idea que pidió el usuario mirando FC26.
 	var b_plantel := Button.new()
-	b_plantel.text = Idiomas.t("👔 Plantel y cuerpo del equipo  ▸")
+	## (10-11) táctil: el rótulo corto; con la letra legible del móvil, el largo cortaba el título de la columna («ERSTE LI»)
+	b_plantel.text = ("👔 " + Idiomas.t("Plantel") + "  ▸") if EscalaMovil.es_tactil() else Idiomas.t("👔 Plantel y cuerpo del equipo  ▸")
 	b_plantel.flat = true
 	b_plantel.add_theme_font_size_override("font_size", 11)
 	b_plantel.add_theme_color_override("font_color", p._color_de_paleta(p.COL_ACENTO))

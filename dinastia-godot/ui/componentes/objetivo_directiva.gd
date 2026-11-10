@@ -84,6 +84,9 @@ static func secundarios(m: Mundo) -> Control:
 		t.add_theme_font_size_override("font_size", Tema.letra(11))
 		t.add_theme_color_override("font_color", Tema.SUAVE)
 		t.clip_text = true
+		if EscalaMovil.es_tactil():   ## (10-11) en el móvil, el objetivo entero en dos líneas («Das Halbfinale des Kontinentalpokals er…»)
+			t.clip_text = false
+			t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		h.add_child(t)
 		var barra := ProgressBar.new()
