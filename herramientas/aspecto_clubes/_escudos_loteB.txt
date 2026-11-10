@@ -1,0 +1,95 @@
+# Lote B (QAT SWE NOR POL CZE ROU): nombre|forma|patrón|emblema|letras|esc1|esc2|esc3
+Al Sadd|escudo|liso|||#ffffff|#6b1f3a|
+Al Duhail|escudo|liso|||#c8102e|#ffffff|
+Al Rayyan|circulo|liso|estrella||#c8102e|#ffffff|
+Al Gharafa|escudo|liso|||#0072ce|#ffffff|
+Al Arabi|circulo|liso|||#c8102e|#ffffff|
+Al Wakrah|escudo|liso|||#ffd100|#0072ce|
+Qatar SC|escudo|liso|||#7b1c3a|#ffffff|
+Al Ahli|circulo|liso|||#00843d|#ffffff|
+Al Shamal|escudo|liso|||#ffd100|#000000|
+Umm Salal|escudo|liso|||#00843d|#ffffff|
+Al Khor|circulo|liso|||#ffd100|#c8102e|
+Al Shahaniya|escudo|liso|||#c8102e|#ffffff|
+Malmö FF|circulo|liso||MFF|#7ec8f2|#ffffff|
+AIK|circulo|liso|aguila||#000000|#ffd100|
+Djurgårdens IF|circulo|liso||DIF|#00a0e3|#1b458f|
+Hammarby IF|circulo|franjas||HIF|#00843d|#ffffff|
+IFK Göteborg|circulo|liso||IFK|#1b458f|#ffffff|
+IF Elfsborg|escudo|liso|||#ffd100|#000000|
+BK Häcken|circulo|liso|abeja||#ffd100|#000000|
+Mjällby AIF|circulo|liso|||#ffd100|#000000|
+Örgryte IS|circulo|liso||ÖIS|#c8102e|#1b458f|
+Kalmar FF|circulo|liso|castillo||#c8102e|#ffffff|
+IK Sirius|circulo|liso|||#1b458f|#ffffff|
+Degerfors IF|circulo|liso|||#c8102e|#ffffff|
+GAIS|circulo|liso|||#00843d|#000000|
+IF Brommapojkarna|circulo|liso|||#c8102e|#000000|
+Halmstads BK|circulo|liso|||#1b458f|#ffffff|
+Västerås SK|circulo|liso|||#00843d|#ffffff|
+Bodø/Glimt|circulo|liso||BG|#ffd100|#000000|
+Brann|circulo|liso|||#c8102e|#ffffff|
+Viking|circulo|liso|||#1b458f|#ffffff|
+Rosenborg|circulo|liso||RBK|#ffffff|#000000|
+Molde|circulo|liso|||#1b458f|#ffffff|
+Lillestrøm|circulo|liso||LSK|#ffd100|#000000|
+Tromsø|circulo|liso|||#c8102e|#ffffff|
+Sarpsborg 08|circulo|liso|||#c8102e|#ffffff|
+Fredrikstad|circulo|liso|||#ffffff|#000000|
+KFUM Oslo|circulo|liso|||#c8102e|#ffffff|
+Sandefjord|circulo|liso|||#1b458f|#ffffff|
+Aalesund|circulo|liso|||#f26522|#1b458f|
+Kristiansund|circulo|liso|||#1b458f|#ffffff|
+HamKam|circulo|liso|||#00843d|#ffffff|
+Vålerenga|circulo|liso||VIF|#1b458f|#ffffff|
+Start|circulo|liso|||#ffd100|#000000|
+Lech Poznań|ojiva|liso||KKS|#003876|#ffffff|
+Legia Warszawa|escudo|liso||LW|#006633|#ffffff|
+Jagiellonia Białystok|escudo|liso|||#ffd100|#c8102e|
+Raków Częstochowa|escudo|liso|||#c8102e|#1b458f|
+Pogoń Szczecin|escudo|liso|grifo||#1b458f|#8b1538|
+Górnik Zabrze|circulo|liso||GZ|#ffffff|#1b458f|
+Cracovia|circulo|liso||CK|#c8102e|#ffffff|
+Piast Gliwice|circulo|liso|||#1b458f|#c8102e|
+Zagłębie Lubin|escudo|liso|||#00843d|#ffd100|
+Korona Kielce|escudo|liso|corona||#ffd100|#c8102e|
+Radomiak Radom|escudo|liso|||#00843d|#ffffff|
+Widzew Łódź|escudo|liso||RTS|#c8102e|#ffffff|
+Motor Lublin|escudo|liso|||#ffd100|#1b458f|
+Lechia Gdańsk|escudo|liso|||#00843d|#ffffff|
+Arka Gdynia|escudo|liso|ancla||#ffd100|#1b458f|
+Bruk-Bet Termalica|escudo|liso|||#c8102e|#ffd100|
+GKS Katowice|escudo|liso||GKS|#00843d|#ffd100|
+Wisła Płock|escudo|liso|||#1b458f|#ffffff|
+Slavia Praha|circulo|liso|estrella||#c8102e|#ffffff|
+Sparta Praha|circulo|liso||AC|#8b1538|#ffd100|
+Viktoria Plzeň|circulo|liso||FCV|#1b458f|#c8102e|
+Baník Ostrava|circulo|liso||FCB|#1b458f|#ffffff|
+Sigma Olomouc|circulo|liso|||#1b458f|#ffd100|
+FK Mladá Boleslav|circulo|liso|||#1b458f|#ffffff|
+1. FC Slovácko|circulo|liso|||#1b458f|#ffd100|
+Hradec Králové|circulo|liso|||#c8102e|#ffffff|
+FK Jablonec|circulo|liso|||#00843d|#ffffff|
+FK Teplice|circulo|liso|||#ffd100|#ffffff|
+Bohemians 1905|circulo|liso|||#00843d|#ffffff|
+Dukla Praha|escudo|liso|estrella||#c8102e|#ffd100|
+FK Pardubice|circulo|liso|caballo||#c8102e|#ffffff|
+MFK Karviná|circulo|liso|||#c8102e|#ffffff|
+SK Dynamo České Budějovice|circulo|liso||SKD|#1b458f|#ffffff|
+Slovan Liberec|circulo|liso|||#1b458f|#ffffff|
+FCSB|escudo|liso|estrella||#c8102e|#1b458f|
+CFR Cluj|circulo|liso||CFR|#8b1538|#ffffff|
+Universitatea Craiova|escudo|liso||UC|#1b458f|#ffffff|
+Rapid București|circulo|liso||FCR|#8b1538|#ffffff|
+Dinamo București|circulo|liso|||#c8102e|#ffffff|
+Universitatea Cluj|escudo|liso||U|#ffffff|#000000|
+FC Argeș|escudo|liso|||#8b1538|#ffffff|
+Petrolul Ploiești|escudo|liso|||#ffd100|#1b458f|
+Oțelul Galați|escudo|liso|||#1b458f|#ffffff|
+Farul Constanța|escudo|liso|faro||#1b458f|#ffffff|
+Hermannstadt|escudo|liso|||#c8102e|#ffffff|
+UTA Arad|escudo|liso|||#c8102e|#ffffff|
+Csikszereda|escudo|liso|||#8b1538|#ffffff|
+Botoșani|escudo|liso|||#c8102e|#ffffff|
+Unirea Slobozia|escudo|liso|||#c8102e|#ffd100|
+Metaloglobus București|escudo|liso|||#1b458f|#ffffff|
