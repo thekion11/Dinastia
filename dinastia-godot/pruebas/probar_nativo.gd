@@ -229,6 +229,12 @@ func _probar() -> void:
 	print("cuerpos: GDScript %.1f µs, C++ %.1f µs por ronda" % [tg1 / 40.0, tc1 / 40.0])
 	motor.free()
 	raiz_c.queue_free()
+	## (10-11, paso a C++) El partido simulado de la IA entero (90 minutos) en C++: mismo marcador, estadísticas, jugadores y azar que `Partido.simular()`, en cuatro mundos.
+	var np := NativoPartido.probar(6)
+	for f: String in np["fallos"]:
+		_comprobar(false, "partido simulado en C++: " + f)
+	_comprobar(np["fallos"].is_empty() and int(np["rapidos"]) > 300, "partido simulado en C++ = GDScript en %d cruces (por la ruta nativa: %d)" % [np["cruces"], np["rapidos"]])
+	print("partido simulado completo (%d cruces, %d por la ruta nativa): GDScript %.0f µs, C++ %.0f µs por cruce" % [np["cruces"], np["rapidos"], np["t_gd_us"] / float(np["cruces"]), np["t_cpp_us"] / float(np["cruces"])])
 	_fin()
 
 func _comprobar(ok: bool, que: String) -> void:
