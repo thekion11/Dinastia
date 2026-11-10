@@ -144,7 +144,7 @@ func _probar_torneos_selecciones() -> void:
 		goles += int(rr["gl"]) + int(rr["gv"])
 	_comprobar(goles > 63, "los partidos simulados tienen goles de verdad (%d en 63 partidos; antes todos 0-0)" % goles)
 	_comprobar(t.campeon != null and t.puesto_de(t.campeon) == 0, "tiene campeón (%s)" % (t.campeon.nombre if t.campeon else "—"))
-	var otro := TorneoSelecciones.crear("Copa Africana", 2027, SeleccionesTorneos._equipos(sel, m, SeleccionesTorneos.POR_CONFED["afr"], 2027))
+	var otro := TorneoSelecciones.crear("Copa Africana", 2027, SeleccionesTorneos._equipos(sel, m, (SeleccionesTorneos.POR_CONFED["afr"] as Array).slice(0, 6), 2027))
 	otro.jugar_entero()
 	_comprobar(otro.grupos.size() == 2 and otro.campeon != null, "un torneo de 6 selecciones: 2 grupos de 3 y campeón (%s)" % (otro.campeon.nombre if otro.campeon else "—"))
 	var r := sel.cierre_de_temporada(2026)
