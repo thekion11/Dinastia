@@ -139,7 +139,7 @@ NUEVOS = [
     ("KSA", "Al-N4jma", "Unaiza Estrella", "#0b2a5b", "#ffd100", 64, 30000, "4-3-3", "equilibrado"),
     ("KSA", "Al-Kh0lood", "Rass Dorado", "#d50032", "#ffffff", 64, 5100, "4-4-2", "bloque"),
     ("EGY", "Kahr4ba Ismailia", "Electrico Canal", "#0057b8", "#ffffff", 62, 6000, "4-4-2", "garra"),
-    ("PAR", "Recolet4", "Asuncion Norte", "#0057b8", "#ffffff", 62, 6000, "4-4-2", "bloque"),
+    ("PAR", "Recolet4 (P)", "Asuncion Norte", "#0057b8", "#ffffff", 62, 6000, "4-4-2", "bloque"),
     ("PAR", "San L0renzo (P)", "Capiata FC", "#d50032", "#0057b8", 62, 6000, "4-4-2", "contra"),
     ("KOR", "FC Any4ng", "Violeta Gyeonggi", "#5b2d8e", "#ffffff", 68, 17100, "3-4-3", "vertical"),
     ("KOR", "Buche0n FC", "Gyeonggi Rojo", "#d50032", "#000000", 66, 34500, "4-4-2", "contra"),

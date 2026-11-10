@@ -88,7 +88,7 @@ V-Varen Nagasaki|clasico|liso|VVN|liso|#0057b8|#f58220|#f58220|#0057b8|#0057b8|#
 Al-Najma|circulo|liso|AN|liso|#0b2a5b|#ffd100|#ffd100|#0b2a5b|#0b2a5b|#ffd100
 Al-Kholood|ojiva|franjas|AK|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
 Kahraba Ismailia|escudo|liso|KI|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
-Recoleta|clasico|liso|REC|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Recoleta (P)|clasico|liso|RP|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
 San Lorenzo (P)|circulo|franjas|SLP|franjas|#d50032|#0057b8|#0057b8|#d50032|#d50032|#0057b8
 FC Anyang|ojiva|liso|FCA|liso|#5b2d8e|#ffffff|#ffffff|#5b2d8e|#5b2d8e|#ffffff
 Bucheon FC|escudo|liso|BFC|liso|#d50032|#000000|#000000|#d50032|#d50032|#000000
