@@ -41,3 +41,19 @@ static func _rotulo(texto: String, tam: int, color: Color) -> Label:
 	l.add_theme_font_size_override("font_size", Tema.letra(tam))
 	l.add_theme_color_override("font_color", color)
 	return l
+
+## El brazalete del capitán: una «C» en una chapa amarilla (lo usan la lista de la plantilla y su ficha).
+static func brazalete() -> Control:
+	var pc := PanelContainer.new()
+	var st := StyleBoxFlat.new()
+	st.bg_color = Color("ffd600")
+	st.set_corner_radius_all(4)
+	st.content_margin_left = 5
+	st.content_margin_right = 5
+	pc.add_theme_stylebox_override("panel", st)
+	pc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pc.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	pc.tooltip_text = Idiomas.t("Capitán")
+	var l := _rotulo("C", 12, Color(0.1, 0.1, 0.1))
+	pc.add_child(l)
+	return pc
