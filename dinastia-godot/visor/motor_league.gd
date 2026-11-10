@@ -418,21 +418,16 @@ func _mover_balon(delta: float) -> void:
 	vel_balon = dir * v0
 	cuenta_toques["toque_largo"] = int(cuenta_toques.get("toque_largo", 0)) + (1 if distancia > 3.0 else 0)
 
-## FASE 4c (10-11): CONDUCIR CON LOS CICLOS DEL ORIGINAL (visual). El que lleva el balón usa el paso con balón de League
-## (`LeagueAnim.CICLOS_CONDUCIR`) según su clase de velocidad (L velocitystate: sprint desde 6,2 m/s), al ritmo de su velocidad.
+## FASE 4c (10-11): LOCOMOCIÓN VISUAL DEL ORIGINAL (`LeagueLocomocion`): ciclos de conducir y arranques, frenadas y giros.
 func _mover_jugadores(delta: float) -> void:
 	super(delta)
-	if not fase3 or poseedor.is_empty() or float(poseedor.get("gesto_hasta", 0.0)) > t:
-		return
-	var actual := String(poseedor.get("anim_actual", ""))
-	if not (actual in ["conducir", "correr", "trotar", "conducir_ls", "conducir_ls_rapido"]):
-		return
-	var sp := Vector2((poseedor["vel"] as Vector3).x, (poseedor["vel"] as Vector3).z).length()
-	if sp < 0.5:
-		return
-	var clave := "conducir_ls_rapido" if sp >= LeagueNucleo.CAMBIO_TROTE_SPRINT else "conducir_ls"
-	var ap: AnimationPlayer = poseedor.get("anim")
-	if not is_instance_valid(ap) or not ap.has_animation(clave):
-		return
-	_anim(poseedor, clave, false)
-	ap.speed_scale = clampf(sp / float(LeagueAnim.CICLOS_CONDUCIR[clave][1]), 0.7, 1.4)
+	if fase3:
+		LeagueLocomocion.paso(self, delta)
+
+## Mientras dura un arranque, frenada o giro del original, los ciclos normales no lo pisan; un gesto de verdad sí.
+func _anim(p: Dictionary, nombre: String, gesto: bool, dur_max := 1.4) -> void:
+	if float(p.get("ls_trans_hasta", 0.0)) > t:
+		if not gesto:
+			return
+		LeagueLocomocion.cortar(p)
+	super(p, nombre, gesto, dur_max)
