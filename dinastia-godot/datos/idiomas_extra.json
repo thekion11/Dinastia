@@ -21632,6 +21632,39 @@
    "Tenir $1 jugadors sub-21 a la plantilla",
    "Mieć w kadrze $1 zawodników do lat 21",
    "Kadroda $1 U21 oyuncu bulundurmak"
+  ],
+  [
+   "^(.+) \\((.+)\\) se lleva el premio al mejor del mes en la liga\\.$",
+   "$1 ($2) wins the league's player of the month award.",
+   "$1 ($2) leva o prémio de melhor do mês na liga.",
+   "$1 ($2) remporte le prix du meilleur joueur du mois en championnat.",
+   "$1 ($2) vince il premio di miglior giocatore del mese in campionato.",
+   "$1 ($2) gewinnt die Auszeichnung zum Spieler des Monats in der Liga.",
+   "$1 ($2) s'endú el premi al millor del mes a la lliga.",
+   "$1 ($2) zdobywa nagrodę dla najlepszego zawodnika miesiąca w lidze.",
+   "$1 ($2) ligde ayın oyuncusu ödülünü kazandı."
+  ],
+  [
+   "^(.+) \\((.+)\\) se lleva el premio al mejor del mes en la liga\\. ¡Es de tu club!$",
+   "$1 ($2) wins the league's player of the month award. It's one of yours!",
+   "$1 ($2) leva o prémio de melhor do mês na liga. É do teu clube!",
+   "$1 ($2) remporte le prix du meilleur joueur du mois en championnat. C'est un de tes joueurs !",
+   "$1 ($2) vince il premio di miglior giocatore del mese in campionato. È del tuo club!",
+   "$1 ($2) gewinnt die Auszeichnung zum Spieler des Monats in der Liga. Er ist von deinem Verein!",
+   "$1 ($2) s'endú el premi al millor del mes a la lliga. És del teu club!",
+   "$1 ($2) zdobywa nagrodę dla najlepszego zawodnika miesiąca w lidze. To zawodnik Twojego klubu!",
+   "$1 ($2) ligde ayın oyuncusu ödülünü kazandı. Senin kulübünden!"
+  ],
+  [
+   "^La federación de (.+) te ofrece ser su seleccionador sin dejar tu club\\. Puedes contestar en Club › Legado\\.$",
+   "The $1 federation offers you the national team job while keeping your club. You can answer in Club › Legacy.",
+   "A federação de $1 oferece-te o cargo de selecionador sem deixares o teu clube. Podes responder em Clube › Legado.",
+   "La fédération de $1 te propose d'être son sélectionneur sans quitter ton club. Tu peux répondre dans Club › Héritage.",
+   "La federazione di $1 ti offre di diventare il suo commissario tecnico senza lasciare il tuo club. Puoi rispondere in Club › Eredità.",
+   "Der Verband von $1 bietet dir das Amt des Nationaltrainers an, ohne deinen Verein zu verlassen. Du kannst unter Verein › Vermächtnis antworten.",
+   "La federació de $1 t'ofereix ser el seu seleccionador sense deixar el teu club. Pots respondre a Club › Llegat.",
+   "Federacja $1 oferuje Ci posadę selekcjonera bez opuszczania klubu. Możesz odpowiedzieć w Klub › Dziedzictwo.",
+   "$1 federasyonu, kulübünden ayrılmadan sana milli takım hocalığını teklif ediyor. Kulüp › Miras bölümünden yanıtlayabilirsin."
   ]
  ],
  "fr": {
