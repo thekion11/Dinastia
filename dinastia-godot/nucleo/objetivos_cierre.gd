@@ -127,3 +127,13 @@ static func cerrar(m: Mundo, d: Directiva, puesto: int, campeon_liga: bool) -> D
 		d.mover_confianza(delta, "objetivos secundarios y proyecto")
 	salida["delta"] = delta
 	return salida
+
+## Lo que llama `Mundo.nueva_temporada` tras `Directiva.tras_temporada`: cierra los objetivos, anota el resultado en el resumen de la directiva y fija el paquete siguiente.
+static func al_cerrar_temporada(m: Mundo, d: Directiva, puesto: int, resumen_directiva: Dictionary) -> void:
+	var cierre := cerrar(m, d, puesto, puesto == 1)
+	resumen_directiva["secundarios"] = cierre["secundarios"]
+	resumen_directiva["proyecto"] = cierre["proyecto"]
+	resumen_directiva["delta_objetivos"] = cierre["delta"]
+	resumen_directiva["confianza"] = d.confianza
+	if not d.despedido_ya:
+		d.generar_objetivos(m, true)
