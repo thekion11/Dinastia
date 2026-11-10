@@ -1,0 +1,34 @@
+# (10-11-2026) Pantalón, medias y segundo uniforme según la ficha de Wikipedia (inglés) de cada club, temporada 2026-27 (body/shorts/socks del
+# infobox; herramientas: el comparador de la sesión 4). Solo donde el color cambia de nombre y la pieza no lleva dibujo; lo demás, en
+# docs/04_auditorias/datos_dudosos_2026-11-10.md, sección COLORES. nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed
+Augsburgo||||||#f4f4f4|#d50032|liso|#016c76|#f4f4f4
+Boca Juniors||||||#ffd100|#003f8a|liso|#ffd100|#ffffff
+Botafogo||||||#f4f4f4|#000000|liso|#000000|#f4f4f4
+Barcelona|||||#05003b|#f6c915|#a50044|liso|#f6c915|#000000
+Bahia|||||#ff0000|||||
+Banfield|||||#ffffff|#f4f4f4|#00843d|liso|#000000|#000000
+Barracas Central|||||#ffffff|#f4f4f4|#d50032|liso|#000000|#000000
+Bragantino||||||#d50032|#ffffff|liso|#000000|#000000
+Coritiba||||#000000|#dddddd|#f4f4f4|#00843d|liso|#f4f4f4|#002217
+Cagliari|||||#022249|||||
+Elche|||||#ffffff|#f4f4f4|#00843d|liso|#5f04b4|#5f04b4
+Estudiantes RC|||||#41b2f8|#f4f4f4|#d50032|liso|#f4f4f4|#004000
+Heidenheim||||#ff0000||#f4f4f4|#d50032|liso|#0000ff|#0000ff
+Hellas Verona||||||#0057b8|#ffd100|liso|#ffdc00|#0057b8
+Internacional|||||#ffffff|||||
+Lazio|||||#ffffff|#1b1f26|#75aadb|liso|#1b1f26|#ffffff
+Leipzig|||||#ff0000|||||
+Leverkusen||||||#111111|#d50032|liso|#587185|#587185
+Mirassol||||||#1b1f26|#ffd100|liso|#1b1f26|#ffffff
+Mallorca|||||#000000|#ffffff|#d50032|liso|#000000|#000000
+Niza|||||#000000|||||
+Napoli||||||#1b1f26|#199fda|liso|#1b1f26|#ffffff
+Parma|||||#000000|#0057b8|#ffd100|liso|#0057b8|#ffcf00
+Platense|||||#ffffff|#f4f4f4|#5c3a21|liso|#f4f4f4|#3e2315
+Rosario Central||||||#ffd100|#003f8a|liso|#ffd100|#ffffff
+Real Sociedad||||||#f4f4f4|#0067b1|liso|#f4f4f4|#000000
+Sassuolo|||||#000000|||||
+Sarmiento|||||#004000|||||
+St. Pauli||||#65423a||||||
+Sunderland||||||#f4f4f4|#eb172b|liso|#f4f4f4|#ff9fbf
+Wolfsburgo||||||#1b1f26|#65b32e|liso|#1b1f26|#c6d1ce

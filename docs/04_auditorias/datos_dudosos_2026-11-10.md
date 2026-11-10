@@ -73,3 +73,29 @@ Solo se pudo abrir Wikipedia (en, fr, pt, es) y alguna búsqueda; RSSSF, Soccerw
 - **HON**: Policía Nacional, Platense y Génesis en la lista 2025-26. **TRI**: aforo 27.000 de La Horquetta y Jabloteh (sospechoso).
 - **BEN**: el ficticio de Coton aún dice «Parakou» pero juega en Ouidah. **GIB**: posible fusión Magpies/Calpe City; Manchester 62 desapareció en 2026.
 - Colores, fundaciones, apodos y medias: de memoria en TODOS los países de las tandas 2-5. Pendiente: abrir RSSSF, Soccerway y webs de ligas.
+
+## COLORES (7 ligas grandes, sesión 4, 10-11-2026)
+
+**Fuente:** la ficha de Wikipedia en inglés de cada club (infobox: `body`/`shorts`/`socks` del uniforme 1 y 2, temporada 2026-27), bajada para
+los 146 clubes de ENG, ESP, ITA, GER, FRA, ARG y BRA y comparada con `ASPECTO_CLUB`. Se compara el NOMBRE del color (rojo, azul, verde,
+blanco, negro…), no el matiz: granate/rojo, azul/azul marino y celeste/azul se dan por iguales. Los colores del ESCUDO no están en la ficha: no
+se tocaron.
+
+**Lo corregido (31 clubes, 50 piezas)**, en `herramientas/aspecto_clubes/_uniformes_wikipedia.txt` (lo lee `aspecto_clubes.py`; regenerado con
+`base_ficticia.py`). Ninguna camiseta local cambió: las que no coinciden llevan dibujo de temporada (ver abajo). Cambian pantalón, medias y
+segundo uniforme:
+- **ENG**: Sunderland (visitante medias blanco → rojo).
+- **ESP**: Barcelona (local medias granate → negro, visitante medias amarillo → negro); Elche (local medias verde → blanco, visitante pantalón blanco → violeta, visitante medias blanco → violeta); Mallorca (local medias rojo → negro, visitante pantalón blanco → negro, visitante medias blanco → negro); Real Sociedad (visitante medias blanco → negro).
+- **ITA**: Cagliari (local medias rojo → azul marino); Hellas Verona (visitante pantalón azul → amarillo); Lazio (local medias azul → blanco, visitante medias negro → blanco); Napoli (visitante medias negro → blanco); Parma (local medias amarillo → negro, visitante medias azul → amarillo); Sassuolo (local medias verde → negro).
+- **GER**: Augsburgo (visitante pantalón blanco → celeste); Heidenheim (local pantalón azul → rojo, visitante pantalón blanco → azul, visitante medias blanco → azul); Leipzig (local medias blanco → rojo); Leverkusen (visitante pantalón negro → azul, visitante medias negro → azul); St. Pauli (local pantalón blanco → granate); Wolfsburgo (visitante medias negro → gris).
+- **FRA**: Niza (local medias rojo → negro).
+- **ARG**: Banfield (local medias verde → blanco, visitante pantalón blanco → negro, visitante medias blanco → negro); Barracas Central (local medias rojo → blanco, visitante pantalón blanco → negro, visitante medias blanco → negro); Boca Juniors (visitante medias amarillo → blanco); Estudiantes RC (local medias blanco → azul, visitante medias blanco → negro); Platense (local medias marrón → blanco, visitante medias blanco → marrón); Rosario Central (visitante medias amarillo → blanco); Sarmiento (local medias blanco → negro).
+- **BRA**: Bahia (local medias azul → rojo); Botafogo (visitante pantalón blanco → negro); Bragantino (visitante pantalón rojo → negro, visitante medias rojo → negro); Coritiba (local pantalón blanco → negro, local medias verde → blanco, visitante medias blanco → negro); Internacional (local medias rojo → blanco); Mirassol (visitante medias negro → blanco).
+
+**Dudoso, sin tocar** (la ficha no sirve para decidir):
+- **Camiseta local con dibujo de temporada** (rayas, mitades, degradados: el `body` de la ficha es el fondo, no el color principal): Alavés (ESP), Aldosivi (ARG), Ath. Bilbao (ESP), Athletico PR (BRA), Atl. Mineiro (BRA), Augsburgo (GER), Bahia (BRA), Banfield (ARG), Barcelona (ESP), Barracas Central (ARG), Bologna (ITA), Botafogo (BRA), Bournemouth (ENG), Bremen (GER), Brentford (ENG), Cagliari (ITA), Cristal Palace (ENG), Defensa y J. (ARG), Estudiantes RC (ARG), Genoa (ITA), Girona (ESP), Gremio (BRA), Hamburgo (GER), Hellas Verona (ITA), Instituto (ARG), Inter (ITA), Levante (ESP), Leverkusen (GER), Milan (ITA), Newcastle (ENG), Newell's (ARG), Parma (ITA), Platense (ARG), Racing Club (ARG), Remo (BRA), Sarmiento (ARG), Talleres (ARG).
+- **Camisetas sin color en la ficha**: Atalanta (ITA), Auxerre (FRA), Boca Juniors (ARG), Brest (FRA), Burnley (ENG), Celta Vigo (ESP), Central Córdoba (ARG), Como (ITA), Coritiba (BRA), Cremonese (ITA), Elche (ESP), Espanyol (ESP), Friburgo (GER), Fulham (ENG), Genoa (ITA), Gimnasia Mza (ARG), Ind. Rivadavia (ARG), Independiente (ARG), Juventus (ITA), Leeds (ENG), Lens (FRA), Levante (ESP), Lorient (FRA), Metz (FRA), Milan (ITA), Napoli (ITA), Osasuna (ESP), River Plate (ARG), Sassuolo (ITA), St. Pauli (GER), Torino (ITA), Udinese (ITA), Vasco (BRA), Wolves (ENG).
+- **Sin ficha** (la página no se encontró con ese título): Atl. Tucuman (ARG), Nottingham F. (ENG).
+- Pantalones, medias y segundas camisetas con dibujo: 266 piezas, sin tocar.
+- Los segundos uniformes de la ficha son los de ESTA temporada y cambian cada año: se tomaron solo los lisos.
+
