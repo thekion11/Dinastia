@@ -418,7 +418,7 @@ func _montar_dt_3d() -> void:
 	add_child(raiz)
 	## Con los colores del club, como en la banda: el chándal o el traje que
 	## eligió el jugador salían con el azul por defecto (un «mono» azul).
-	_dt_3d = PersonajeDT.crear(raiz, PersonajeDT.del_usuario, _col_club1, _col_club2)
+	_dt_3d = PersonajeDT.crear(raiz, PersonajeDT.del_usuario, Color.from_hsv(_col_club1.h, _col_club1.s * 0.5, minf(_col_club1.v, 0.3) * 0.9 + 0.03), _col_club2)   ## (10-11) jersey sobrio: el color del club menos saturado y más oscuro
 	if _dt_3d.is_empty():
 		raiz.queue_free()
 		_montar_dt({})
