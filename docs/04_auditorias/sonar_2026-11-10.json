@@ -3,189 +3,117 @@
  "rama": "main",
  "issues": [
   {
-   "key": "AaG-WhlMMKpzwvig-b41",
-   "rule": "pythonsecurity:S8707",
+   "key": "AaHEF3bOlzJIJnqdQya7",
+   "rule": "python:S2245",
    "severity": "MAJOR",
-   "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+   "component": "thekion11_Dinastia:herramientas/rasgos_por_pais.py",
    "project": "thekion11_Dinastia",
-   "line": 18,
-   "hash": "58e429d43a0a1f1c7610f1cc12d79a2c",
+   "line": 220,
+   "hash": "692eeb78e23e92e06c56a15c495f6391",
    "textRange": {
-    "startLine": 18,
-    "endLine": 18,
-    "startOffset": 52,
-    "endOffset": 91
+    "startLine": 220,
+    "endLine": 220,
+    "startOffset": 4,
+    "endOffset": 22
    },
-   "flows": [
-    {
-     "locations": [
-      {
-       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
-       "textRange": {
-        "startLine": 18,
-        "endLine": 18,
-        "startOffset": 52,
-        "endOffset": 91
-       },
-       "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
-      },
-      {
-       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
-       "textRange": {
-        "startLine": 18,
-        "endLine": 18,
-        "startOffset": 57,
-        "endOffset": 90
-       },
-       "msg": "This concatenation can propagate malicious content to the newly created string"
-      },
-      {
-       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
-       "textRange": {
-        "startLine": 18,
-        "endLine": 18,
-        "startOffset": 57,
-        "endOffset": 58
-       },
-       "msg": "The malicious content is concatenated into the string"
-      },
-      {
-       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
-       "textRange": {
-        "startLine": 4,
-        "endLine": 4,
-        "startOffset": 0,
-        "endOffset": 13
-       },
-       "msg": "A malicious value can be assigned to variable ‘R’"
-      },
-      {
-       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
-       "textRange": {
-        "startLine": 4,
-        "endLine": 4,
-        "startOffset": 2,
-        "endOffset": 13
-       },
-       "msg": "A malicious value was previously assigned to this data structure"
-      },
-      {
-       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
-       "textRange": {
-        "startLine": 4,
-        "endLine": 4,
-        "startOffset": 2,
-        "endOffset": 10
-       },
-       "msg": "Source: a user can craft an HTTP request with malicious content"
-      }
-     ]
-    }
-   ],
+   "flows": [],
    "status": "OPEN",
-   "message": "Path Traversal via command-line argument",
-   "effort": "30min",
-   "debt": "30min",
+   "message": "Make sure that using this pseudorandom number generator is safe here.",
+   "effort": "10min",
+   "debt": "10min",
    "author": "noreply@anthropic.com",
    "tags": [
-    "cwe"
+    "cryptography",
+    "cwe",
+    "former-hotspot"
    ],
-   "creationDate": "2026-11-09T03:20:15+0000",
-   "updateDate": "2026-11-09T03:26:48+0000",
+   "creationDate": "2026-11-10T05:43:52+0000",
+   "updateDate": "2026-11-10T06:12:41+0000",
    "type": "VULNERABILITY",
    "organization": "thekion11",
-   "cleanCodeAttribute": "COMPLETE",
-   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "cleanCodeAttribute": "TRUSTWORTHY",
+   "cleanCodeAttributeCategory": "RESPONSIBLE",
    "impacts": [
     {
      "softwareQuality": "SECURITY",
-     "severity": "HIGH"
+     "severity": "MEDIUM"
     }
    ],
    "issueStatus": "OPEN",
    "projectName": "Dinastia",
-   "internalTags": [
-    "taint"
-   ],
-   "lastChangeAnalysisUuid": "1840ec8c-e982-4ed6-a820-ee39c58adc0f",
+   "internalTags": [],
+   "lastChangeAnalysisUuid": "bb10f129-1518-4b40-9391-30357f3d816c",
    "lastChangeSource": "ANALYSIS"
   },
   {
-   "key": "AaG-WhlMMKpzwvig-b40",
-   "rule": "pythonsecurity:S8707",
-   "severity": "MAJOR",
-   "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+   "key": "AaHEF3bOlzJIJnqdQya8",
+   "rule": "python:S3516",
+   "severity": "BLOCKER",
+   "component": "thekion11_Dinastia:herramientas/rasgos_por_pais.py",
    "project": "thekion11_Dinastia",
-   "line": 58,
-   "hash": "2e6aa297d1721285b6869569d7579374",
+   "line": 234,
+   "hash": "47f3de9af82a33143787e17eca8c1ff4",
    "textRange": {
-    "startLine": 58,
-    "endLine": 58,
-    "startOffset": 0,
-    "endOffset": 21
+    "startLine": 234,
+    "endLine": 234,
+    "startOffset": 4,
+    "endOffset": 8
    },
    "flows": [
     {
      "locations": [
       {
-       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+       "component": "thekion11_Dinastia:herramientas/rasgos_por_pais.py",
        "textRange": {
-        "startLine": 58,
-        "endLine": 58,
-        "startOffset": 0,
-        "endOffset": 21
+        "startLine": 248,
+        "endLine": 248,
+        "startOffset": 4,
+        "endOffset": 12
        },
-       "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
-      },
+       "msg": "returned value"
+      }
+     ]
+    },
+    {
+     "locations": [
       {
-       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
+       "component": "thekion11_Dinastia:herramientas/rasgos_por_pais.py",
        "textRange": {
-        "startLine": 58,
-        "endLine": 58,
-        "startOffset": 5,
+        "startLine": 243,
+        "endLine": 243,
+        "startOffset": 8,
         "endOffset": 16
        },
-       "msg": "A malicious value was previously assigned to this data structure"
-      },
-      {
-       "component": "thekion11_Dinastia:herramientas/grafo_ciudad.py",
-       "textRange": {
-        "startLine": 58,
-        "endLine": 58,
-        "startOffset": 5,
-        "endOffset": 13
-       },
-       "msg": "Source: a user can craft an HTTP request with malicious content"
+       "msg": "returned value"
       }
      ]
     }
    ],
    "status": "OPEN",
-   "message": "Path Traversal via command-line argument",
-   "effort": "30min",
-   "debt": "30min",
+   "message": "Refactor this method to not always return the same value.",
+   "effort": "2min",
+   "debt": "2min",
    "author": "noreply@anthropic.com",
    "tags": [
-    "cwe"
+    "confusing",
+    "design"
    ],
-   "creationDate": "2026-11-09T03:20:15+0000",
-   "updateDate": "2026-11-09T03:26:48+0000",
-   "type": "VULNERABILITY",
+   "creationDate": "2026-11-10T05:43:52+0000",
+   "updateDate": "2026-11-10T06:12:41+0000",
+   "type": "CODE_SMELL",
    "organization": "thekion11",
-   "cleanCodeAttribute": "COMPLETE",
+   "cleanCodeAttribute": "LOGICAL",
    "cleanCodeAttributeCategory": "INTENTIONAL",
    "impacts": [
     {
-     "softwareQuality": "SECURITY",
-     "severity": "HIGH"
+     "softwareQuality": "MAINTAINABILITY",
+     "severity": "BLOCKER"
     }
    ],
    "issueStatus": "OPEN",
    "projectName": "Dinastia",
-   "internalTags": [
-    "taint"
-   ],
-   "lastChangeAnalysisUuid": "1840ec8c-e982-4ed6-a820-ee39c58adc0f",
+   "internalTags": [],
+   "lastChangeAnalysisUuid": "bb10f129-1518-4b40-9391-30357f3d816c",
    "lastChangeSource": "ANALYSIS"
   }
  ],
