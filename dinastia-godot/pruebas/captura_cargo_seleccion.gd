@@ -1,6 +1,6 @@
 extends Node
 ## Captura de los eventos de la selección (oferta del cargo y partido de un torneo) a pantalla completa (necesita pantalla: xvfb-run).
-## xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/captura_cargo_seleccion.tscn  → /tmp/sel_oferta.jpg y /tmp/sel_partido.jpg
+## xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/captura_cargo_seleccion.tscn  → /tmp/sel_oferta.jpg y /tmp/sel_partido.jpg y /tmp/sel_convocatoria.jpg
 var _n := 0
 var _p: Node
 
@@ -33,5 +33,8 @@ func _process(_d: float) -> void:
 	await get_tree().create_timer(1.2).timeout
 	get_viewport().get_texture().get_image().save_jpg("/tmp/sel_partido.jpg", 0.9)
 	ev2.queue_free()
+	JornadaSeleccion.abrir_convocatoria(_p)
+	await get_tree().create_timer(1.0).timeout
+	get_viewport().get_texture().get_image().save_jpg("/tmp/sel_convocatoria.jpg", 0.9)
 	print("CAPTURA OK")
 	get_tree().quit()

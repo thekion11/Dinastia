@@ -41,8 +41,31 @@ static func _copia(j: Jugador, sel: Club) -> Jugador:
 	c.fisico = 100
 	return c
 
-## La selección `nombre` como club, con 23 convocados. `fuerza` (la de `Selecciones.fuerza`) fija la reputación y el nivel de los que se generen.
-static func club_de(m: Mundo, nombre: String, fuerza: int, anio: int) -> Club:
+## Los jugadores de la nacionalidad de `nombre` en todo el mundo del juego (clubes y libres), del mejor al peor (hasta `tope`).
+static func candidatos(m: Mundo, nombre: String, tope: int = 0) -> Array[Jugador]:
+	var out: Array[Jugador] = []
+	var pais := codigo_de(nombre)
+	if pais == "" or m == null:
+		return out
+	for c: Club in m.clubes.values():
+		for j: Jugador in c.plantilla:
+			if j.pais == pais and j.disponible():
+				out.append(j)
+	for j2: Jugador in m.libres:
+		if j2.pais == pais and j2.disponible():
+			out.append(j2)
+	out.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr if a.ovr != b.ovr else a.id < b.id)
+	if tope > 0 and out.size() > tope:
+		out.resize(tope)
+	return out
+
+## Lo mínimo por puesto cuando la lista la eliges tú (`elegidos`): si falta, se completa con generados.
+const MINIMOS := {"POR": 2, "DEF": 6, "MED": 6, "DEL": 3}
+const MAX_CONVOCADOS := 26
+
+## La selección `nombre` como club. Sin `elegidos`: 23 convocados, los mejores por puesto. Con `elegidos` (ids, la convocatoria del seleccionador):
+## esos (hasta 26) y, si algún puesto queda por debajo de `MINIMOS`, generados. `fuerza` (la de `Selecciones.fuerza`) fija la reputación y el nivel.
+static func club_de(m: Mundo, nombre: String, fuerza: int, anio: int, elegidos: Array = []) -> Club:
 	var sel := Club.new()
 	sel.id = "sel_" + Nombres.limpiar(nombre).to_lower().replace(" ", "_").replace(".", "")
 	sel.nombre = nombre
@@ -53,46 +76,46 @@ static func club_de(m: Mundo, nombre: String, fuerza: int, anio: int) -> Club:
 	sel.color2 = String(col[1])
 	sel.estadio_aforo = 60000
 	var por_grupo := {}
-	if sel.pais != "":
-		var candidatos: Array[Jugador] = []
-		for c: Club in m.clubes.values():
-			for j: Jugador in c.plantilla:
-				if j.pais == sel.pais and j.disponible():
-					candidatos.append(j)
-		for j2: Jugador in m.libres:
-			if j2.pais == sel.pais and j2.disponible():
-				candidatos.append(j2)
-		candidatos.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr if a.ovr != b.ovr else a.id < b.id)
-		for j3: Jugador in candidatos:
-			var g := j3.pos
-			if not por_grupo.has(g):
-				por_grupo[g] = []
+	var cupos: Dictionary = CUPOS if elegidos.is_empty() else MINIMOS
+	for j3: Jugador in candidatos(m, nombre):
+		var g := j3.pos
+		if not por_grupo.has(g):
+			por_grupo[g] = []
+		if elegidos.is_empty():
 			if (por_grupo[g] as Array).size() < int(CUPOS.get(g, 0)):
 				(por_grupo[g] as Array).append(_copia(j3, sel))
-	_completar(m, sel, por_grupo, fuerza, anio)
+		elif elegidos.has(j3.id) and _total(por_grupo) < MAX_CONVOCADOS:
+			(por_grupo[g] as Array).append(_copia(j3, sel))
+	_completar(m, sel, por_grupo, fuerza, anio, cupos)
 	for g2: String in ["POR", "DEF", "MED", "DEL"]:
 		for j4: Jugador in por_grupo.get(g2, []):
 			sel.plantilla.append(j4)
 	return sel
 
+static func _total(por_grupo: Dictionary) -> int:
+	var n := 0
+	for g: String in por_grupo:
+		n += (por_grupo[g] as Array).size()
+	return n
+
 ## Completa los huecos con jugadores generados del nivel de la selección, con azar aislado (siempre los mismos para esa selección y año) y sin
 ## gastar números de jugador del mundo.
 static var _generados := {}   ## «sel_id/año/grupo/i» -> Jugador: los generados se reutilizan (el nombrador no repite nombres, y deben ser siempre los mismos)
 
-static func _completar(m: Mundo, sel: Club, por_grupo: Dictionary, fuerza: int, anio: int) -> void:
+static func _completar(m: Mundo, sel: Club, por_grupo: Dictionary, fuerza: int, anio: int, cupos: Dictionary = CUPOS) -> void:
 	var faltan := false
-	for g: String in CUPOS:
-		faltan = faltan or (por_grupo.get(g, []) as Array).size() < int(CUPOS[g])
+	for g: String in cupos:
+		faltan = faltan or (por_grupo.get(g, []) as Array).size() < int(cupos[g])
 	if not faltan:
 		return
 	var seq: int = m._seq_jugador
 	CopasMundo._aislado("sel%s%d" % [sel.id, anio], func() -> void:
-		for g: String in CUPOS:
+		for g: String in cupos:
 			if not por_grupo.has(g):
 				por_grupo[g] = []
 			var lista: Array = por_grupo[g]
 			var k := 0
-			while lista.size() < int(CUPOS[g]):
+			while lista.size() < int(cupos[g]):
 				var clave := "%s/%d/%s/%d" % [sel.id, anio, g, lista.size()]
 				if not _generados.has(clave):
 					var dem: Array = DEMARCACIONES[g]

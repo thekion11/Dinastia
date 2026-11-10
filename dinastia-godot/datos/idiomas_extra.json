@@ -7767,7 +7767,12 @@
   "Volver a la copa continental en 3 temporadas": "Return to the continental cup within 3 seasons",
   "Consolidarse: 3 temporadas seguidas sin descender": "Consolidate: 3 straight seasons without relegation",
   "Mejorar 3 puestos en la tabla en 3 temporadas": "Climb 3 places in the table within 3 seasons",
-  "Proyecto": "Project"
+  "Proyecto": "Project",
+  "Convocatoria": "Call-up",
+  "Convocados": "Called up",
+  "Listo": "Done",
+  "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "If you pick nobody, the best per position are called up. If a position is short, it is filled with young players from the country.",
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "This country has no league in the game: the squad comes from generated players."
  },
  "pt": {
   "Historia": "História",
@@ -15537,7 +15542,12 @@
   "Volver a la copa continental en 3 temporadas": "Voltar à taça continental em 3 épocas",
   "Consolidarse: 3 temporadas seguidas sin descender": "Consolidar: 3 épocas seguidas sem descer",
   "Mejorar 3 puestos en la tabla en 3 temporadas": "Subir 3 lugares na tabela em 3 épocas",
-  "Proyecto": "Projeto"
+  "Proyecto": "Projeto",
+  "Convocatoria": "Convocação",
+  "Convocados": "Convocados",
+  "Listo": "Pronto",
+  "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Sem marcar ninguém, vão os melhores por posição. Se faltar jogador numa posição, completa-se com jovens do país.",
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Este país não tem liga no jogo: a lista sai de jogadores gerados."
  },
  "patrones": [
   [
@@ -29370,7 +29380,12 @@
   "Volver a la copa continental en 3 temporadas": "Revenir en coupe continentale en 3 saisons",
   "Consolidarse: 3 temporadas seguidas sin descender": "Se consolider : 3 saisons de suite sans descendre",
   "Mejorar 3 puestos en la tabla en 3 temporadas": "Gagner 3 places au classement en 3 saisons",
-  "Proyecto": "Projet"
+  "Proyecto": "Projet",
+  "Convocatoria": "Convocation",
+  "Convocados": "Convoqués",
+  "Listo": "Terminé",
+  "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Sans cocher personne, les meilleurs par poste sont convoqués. S'il manque des joueurs à un poste, on complète avec des jeunes du pays.",
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Ce pays n'a pas de championnat dans le jeu : la liste vient de joueurs générés."
  },
  "it": {
   "Historia": "Storia",
@@ -37140,7 +37155,12 @@
   "Volver a la copa continental en 3 temporadas": "Tornare in coppa continentale in 3 stagioni",
   "Consolidarse: 3 temporadas seguidas sin descender": "Consolidarsi: 3 stagioni di fila senza retrocedere",
   "Mejorar 3 puestos en la tabla en 3 temporadas": "Salire di 3 posizioni in classifica in 3 stagioni",
-  "Proyecto": "Progetto"
+  "Proyecto": "Progetto",
+  "Convocatoria": "Convocazione",
+  "Convocados": "Convocati",
+  "Listo": "Fatto",
+  "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Senza segnare nessuno vanno i migliori per ruolo. Se in un ruolo mancano giocatori, si completa con giovani del paese.",
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Questo paese non ha un campionato nel gioco: la lista viene da giocatori generati."
  },
  "de": {
   "Historia": "Geschichte",
@@ -44910,7 +44930,12 @@
   "Volver a la copa continental en 3 temporadas": "In 3 Spielzeiten in den Kontinentalpokal zurückkehren",
   "Consolidarse: 3 temporadas seguidas sin descender": "Festigen: 3 Spielzeiten in Folge ohne Abstieg",
   "Mejorar 3 puestos en la tabla en 3 temporadas": "In 3 Spielzeiten 3 Tabellenplätze klettern",
-  "Proyecto": "Projekt"
+  "Proyecto": "Projekt",
+  "Convocatoria": "Kader-Nominierung",
+  "Convocados": "Nominiert",
+  "Listo": "Fertig",
+  "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Ohne Auswahl fahren die Besten je Position. Fehlen auf einer Position Spieler, wird mit jungen Spielern des Landes aufgefüllt.",
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Dieses Land hat keine Liga im Spiel: Der Kader besteht aus generierten Spielern."
  },
  "ca": {
   "Historia": "Història",
@@ -52680,7 +52705,12 @@
   "Volver a la copa continental en 3 temporadas": "Tornar a la copa continental en 3 temporades",
   "Consolidarse: 3 temporadas seguidas sin descender": "Consolidar-se: 3 temporades seguides sense baixar",
   "Mejorar 3 puestos en la tabla en 3 temporadas": "Millorar 3 llocs a la taula en 3 temporades",
-  "Proyecto": "Projecte"
+  "Proyecto": "Projecte",
+  "Convocatoria": "Convocatòria",
+  "Convocados": "Convocats",
+  "Listo": "Fet",
+  "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Sense marcar ningú hi van els millors per posició. Si a una posició hi falten jugadors, es completa amb joves del país.",
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Aquest país no té lliga al joc: la llista surt de jugadors generats."
  },
  "pl": {
   "Club": "Klub",
@@ -60450,7 +60480,12 @@
   "Volver a la copa continental en 3 temporadas": "Wrócić do pucharu kontynentalnego w 3 sezony",
   "Consolidarse: 3 temporadas seguidas sin descender": "Utrzymać się: 3 sezony z rzędu bez spadku",
   "Mejorar 3 puestos en la tabla en 3 temporadas": "Awansować o 3 miejsca w tabeli w 3 sezony",
-  "Proyecto": "Projekt"
+  "Proyecto": "Projekt",
+  "Convocatoria": "Powołania",
+  "Convocados": "Powołani",
+  "Listo": "Gotowe",
+  "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Bez zaznaczenia nikogo jadą najlepsi na każdej pozycji. Jeśli na pozycji brakuje graczy, uzupełnia się ją młodymi zawodnikami z kraju.",
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Ten kraj nie ma ligi w grze: kadra pochodzi z wygenerowanych zawodników."
  },
  "tr": {
   "Club": "Kulüp",
@@ -68220,6 +68255,11 @@
   "Volver a la copa continental en 3 temporadas": "3 sezonda kıta kupasına dönmek",
   "Consolidarse: 3 temporadas seguidas sin descender": "Kalıcı olmak: 3 sezon üst üste düşmemek",
   "Mejorar 3 puestos en la tabla en 3 temporadas": "3 sezonda tabloda 3 sıra yükselmek",
-  "Proyecto": "Proje"
+  "Proyecto": "Proje",
+  "Convocatoria": "Kadro çağrısı",
+  "Convocados": "Çağrılanlar",
+  "Listo": "Tamam",
+  "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Kimseyi seçmezsen her mevkinin en iyileri çağrılır. Bir mevkide eksik varsa ülkenin genç oyuncularıyla tamamlanır.",
+  "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Bu ülkenin oyunda ligi yok: kadro üretilmiş oyunculardan oluşur."
  }
 }
