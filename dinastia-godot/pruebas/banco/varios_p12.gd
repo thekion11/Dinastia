@@ -207,3 +207,33 @@ func _probar_cargo_seleccionador() -> void:
 		_comprobar(res.has("seleccionador"), "el cierre devuelve los torneos del seleccionador")
 		cargo.dimitir(m)
 		_comprobar(not cargo.activo() and cargo.sueldo == 0, "dimitir deja el cargo")
+
+func _probar_convocatoria_seleccion() -> void:
+	_titulo("LA CONVOCATORIA DEL SELECCIONADOR (hasta 26 del país en todo el mundo)")
+	var m := Mundo.new()
+	var paises: Array[String] = ["COL", "ARG", "ITA"]
+	m.generar(paises, 2026)
+	m.anio = 2028
+	m.tomar_el_mando(m.ligas[2].clubes[4].id)
+	var cargo := m.selecciones.cargo
+	cargo.ofrecer("Colombia", m.selecciones.fuerza("Colombia"), 1000)
+	cargo.responder(m, true)
+	var cands := SeleccionEquipo.candidatos(m, "Colombia", 60)
+	_comprobar(cands.size() >= 30 and cands.all(func(j: Jugador) -> bool: return j.pais == "COL"), "candidatos: los colombianos del mundo del juego (%d)" % cands.size())
+	var porteros := cands.filter(func(j: Jugador) -> bool: return j.pos == "POR")
+	var elegidos: Array[String] = [porteros[0].id]   ## solo un portero: el segundo se genera
+	for j: Jugador in cands:
+		if j.pos != "POR" and elegidos.size() < 30:
+			cargo.alternar(j.id)
+			elegidos.append(j.id)
+	cargo.alternar(porteros[0].id)
+	_comprobar(cargo.convocados.size() == SeleccionEquipo.MAX_CONVOCADOS, "no se pueden marcar más de 26 (%d)" % cargo.convocados.size())
+	var ts := cargo.torneos_del_anio(m, m.selecciones, 2028)
+	var mia := cargo.mi_equipo(ts[0])
+	var de_lista := mia.plantilla.filter(func(j: Jugador) -> bool: return cargo.convocados.has(j.id)).size()
+	var pors := mia.plantilla.filter(func(j: Jugador) -> bool: return j.pos == "POR").size()
+	_comprobar(de_lista == cargo.convocados.size(), "tu selección juega con TU lista (%d de %d)" % [de_lista, cargo.convocados.size()])
+	_comprobar(pors >= 2, "si falta un portero se completa con uno generado (%d porteros)" % pors)
+	var otro := Selecciones.new(m)
+	otro.desde_dic(JSON.parse_string(JSON.stringify(m.selecciones.a_dic())))
+	_comprobar(otro.cargo.convocados == cargo.convocados, "la convocatoria se guarda")

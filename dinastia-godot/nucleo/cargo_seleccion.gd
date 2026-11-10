@@ -16,6 +16,7 @@ var desde := 0                 ## año en que la tomaste
 var sueldo := 0                ## lo que cobras por semana (va a tu patrimonio)
 var oferta: Dictionary = {}    ## {nombre, fuerza, sueldo}
 var historial: Array = []      ## [{anio, torneo, puesto}] de tus torneos como seleccionador
+var convocados: Array[String] = []   ## tu convocatoria (ids de jugadores del mundo, hasta 26); vacía = los mejores por puesto
 var _ultima := -999            ## semana absoluta (año·60 + semana) de la última oferta
 var _listos := {}              ## «torneo/año» -> TorneoSelecciones preparados este año (no se guardan: se juegan antes del cierre)
 
@@ -86,6 +87,7 @@ func responder(m: Mundo, acepta: bool) -> String:
 	if not acepta:
 		return "Dices que no a la selección de %s. Tu club respira tranquilo." % n
 	seleccion = n
+	convocados.clear()
 	sueldo = int(oferta_previa.get("sueldo", 0))
 	desde = m.anio if m != null else 0
 	if m != null and m.prensa != null:
@@ -99,6 +101,7 @@ func dimitir(m: Mundo) -> String:
 	var n := seleccion
 	seleccion = ""
 	sueldo = 0
+	convocados.clear()
 	_listos.clear()
 	if m != null and m.prensa != null:
 		m.prensa.noticia.emit("Dejas la selección de %s" % n, "Presentas la dimisión: vuelves a dedicarte solo a tu club.")
@@ -118,16 +121,36 @@ func torneos_del_anio(m: Mundo, sel: Selecciones, anio: int) -> Array[TorneoSele
 		if t == null:
 			t = SeleccionesTorneos.continental(sel, m, clave, nom, anio)
 			_listos["%s/%d" % [nom, anio]] = t
-		if SeleccionesTorneos.equipo_en(t, seleccion) != null:
+		if _con_mi_lista(m, sel, t):
 			out.append(t)
 	if sel.toca_copa_del_mundo(anio):
 		var w := listo("Copa del Mundo", anio)
 		if w == null:
 			w = SeleccionesTorneos.mundial(sel, m, anio)
 			_listos["Copa del Mundo/%d" % anio] = w
-		if SeleccionesTorneos.equipo_en(w, seleccion) != null:
+		if _con_mi_lista(m, sel, w):
 			out.append(w)
 	return out
+
+## Pone TU convocatoria en tu selección dentro de `t` (antes de jugar nada). Devuelve si tu selección juega `t`.
+func _con_mi_lista(m: Mundo, sel: Selecciones, t: TorneoSelecciones) -> bool:
+	var mia := SeleccionesTorneos.equipo_en(t, seleccion)
+	if mia == null:
+		return false
+	if not convocados.is_empty() and t.resultados.is_empty():
+		var nueva := SeleccionEquipo.club_de(m, seleccion, sel.fuerza(seleccion), t.anio, convocados)
+		mia.plantilla = nueva.plantilla   ## mismo club (mismo id, grupo y tabla): cambia la lista
+	return true
+
+## Marca o desmarca a un jugador en tu convocatoria (máx. 26). Devuelve si quedó dentro.
+func alternar(id: String) -> bool:
+	if convocados.has(id):
+		convocados.erase(id)
+		return false
+	if convocados.size() >= SeleccionEquipo.MAX_CONVOCADOS:
+		return false
+	convocados.append(id)
+	return true
 
 ## El torneo `nombre` del año `anio` si ya se preparó (y quizá se jugó a medias), o null.
 func listo(nombre: String, anio: int) -> TorneoSelecciones:
@@ -170,7 +193,7 @@ func titulos() -> int:
 	return historial.filter(func(h: Dictionary) -> bool: return int(h["puesto"]) == 0).size()
 
 func a_dic() -> Dictionary:
-	return {"sel": seleccion, "desde": desde, "oferta": oferta, "sueldo": sueldo, "hist": historial, "ultima": _ultima}
+	return {"sel": seleccion, "desde": desde, "oferta": oferta, "sueldo": sueldo, "hist": historial, "ultima": _ultima, "conv": convocados}
 
 func desde_dic(d: Dictionary) -> void:
 	seleccion = String(d.get("sel", ""))
@@ -179,4 +202,7 @@ func desde_dic(d: Dictionary) -> void:
 	oferta = (d.get("oferta", {}) as Dictionary).duplicate()
 	historial = (d.get("hist", []) as Array).duplicate(true)
 	_ultima = int(d.get("ultima", -999))
+	convocados.clear()
+	for id in d.get("conv", []):
+		convocados.append(String(id))
 	_listos.clear()
