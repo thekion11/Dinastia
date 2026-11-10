@@ -43,6 +43,9 @@ public:
 	// `Optimizar.obstaculo_multimalla` (el bucle por instancia de un MultiMesh): los círculos de choque como PackedVector3Array [x, z, radio]. `buf` = el buffer del MultiMesh (`paso` floats por instancia).
 	PackedVector3Array obstaculos_multimalla(const Transform3D &nodo_t, const PackedFloat32Array &buf, int64_t paso, int64_t n, const AABB &base, double raiz_y, double min_alto, double max_base,
 			const Dictionary &rej, double celda_rej) const;
+	// `Partido._elegir_goleador` / `_elegir_asistente` (el sorteo ponderado de un once): índice en `once` del elegido, o -1 si no hay a quién. `r_unit` = la tirada ya hecha ([0,1)); `excluir` = el autor del gol
+	// (null en el goleador); `pesos_rol` = el multiplicador de `RolTactico.peso` de cada candidato (vacío = sin roles).
+	int64_t elegir_ponderado(const Array &once, const Dictionary &grupo_de, const Dictionary &bases, double base_def, const String &atr, const PackedFloat64Array &pesos_rol, double r_unit, Object *excluir) const;
 };
 
 } // namespace godot

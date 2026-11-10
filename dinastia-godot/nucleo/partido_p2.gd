@@ -215,28 +215,7 @@ func _tactica_de(once: Array[Jugador]) -> Tactica:
 	return local.tactica
 
 func _elegir_goleador(once: Array[Jugador]) -> Jugador:
-	if once.is_empty():
-		return null
-	var pesos: Array[float] = []
-	var total := 0.0
-	var tac := _tactica_de(once); var con_roles := tac != null and not tac.roles.is_empty()  ## sin roles, peso 1
-	for j in once:
-		var base := 0.02
-		match Datos.grupo(j.pos_e):
-			"DEL": base = 1.0
-			"MED": base = 0.42
-			"DEF": base = 0.11
-			"POR": base = 0.004
-		base *= 0.5 + float(j.atributos.get("tir", 50)) / 100.0
-		base *= RolTactico.peso(tac, j, "gol") if con_roles else 1.0
-		pesos.append(base)
-		total += base
-	var r := Azar.f() * total
-	for i in once.size():
-		r -= pesos[i]
-		if r <= 0.0:
-			return once[i]
-	return once[once.size() - 1]
+	return PartidoPonderado.goleador(self, once)
 
 ## El asistente (18-9-2026), igual de ponderado que el goleador pero por pase
 ## en vez de por remate -un mediocampista asiste mucho más que un central-.
@@ -257,34 +236,7 @@ func _elegir_goleador(once: Array[Jugador]) -> Jugador:
 ## semilla propia, derivada del propio gol (autor + minuto), es determinista
 ## sin tocar el generador compartido.
 func _elegir_asistente(once: Array[Jugador], autor: Jugador, minuto: int) -> Jugador:
-	var candidatos: Array[Jugador] = []
-	for j in once:
-		if j != autor:
-			candidatos.append(j)
-	if candidatos.is_empty():
-		return null
-	var pesos: Array[float] = []
-	var total := 0.0
-	var tac := _tactica_de(once); var con_roles := tac != null and not tac.roles.is_empty()
-	for j in candidatos:
-		var base := 0.05
-		match Datos.grupo(j.pos_e):
-			"MED": base = 1.0
-			"DEL": base = 0.55
-			"DEF": base = 0.22
-			"POR": base = 0.02
-		base *= 0.5 + float(j.atributos.get("pas", 50)) / 100.0
-		base *= RolTactico.peso(tac, j, "asist") if con_roles else 1.0
-		pesos.append(base)
-		total += base
-	var rng := RandomNumberGenerator.new()
-	rng.seed = hash(str(autor.id if autor != null else "") + "_" + str(minuto))
-	var r := rng.randf() * total
-	for i in candidatos.size():
-		r -= pesos[i]
-		if r <= 0.0:
-			return candidatos[i]
-	return candidatos[candidatos.size() - 1]
+	return PartidoPonderado.asistente(self, once, autor, minuto)
 
 func _anotar(c: Club, once: Array[Jugador], es_local: bool) -> void:
 	var autor := _elegir_goleador(once)
