@@ -17,6 +17,32 @@ static func aplicar(vista: Node) -> void:
 				en.fog_enabled = false
 				en.adjustment_enabled = false
 				en.ssao_enabled = false
+	if OS.get_environment("IMPOSTOR") != "":
+		## IMPOSTOR=<metros> (p. ej. 30): TECHO de lo que ahorraría un impostor de cuerpo: los jugadores del campo a más de esa distancia de la cámara pierden todas sus mallas (cuerpo, cara, pelo) y se dibujan como una
+		## cápsula de ~60 triángulos del color de la camiseta (sin animación). No es el impostor final (no conserva la animación ni los detalles): solo mide el máximo ahorro posible de llamadas y triángulos.
+		var cam_i := vista.get_viewport().get_camera_3d()
+		var lejos := float(OS.get_environment("IMPOSTOR"))
+		var n_i := 0
+		var cap := CapsuleMesh.new()
+		cap.radius = 0.3
+		cap.height = 1.75
+		cap.radial_segments = 6
+		cap.rings = 1
+		for f: Dictionary in vista.get("_en_campo"):
+			var nodo_i: Node = f.get("node")
+			if nodo_i == null or cam_i == null or (nodo_i as Node3D).global_position.distance_to(cam_i.global_position) < lejos:
+				continue
+			for m in nodo_i.find_children("*", "MeshInstance3D", true, false):
+				(m as MeshInstance3D).visible = false
+			var imp := MeshInstance3D.new()
+			imp.mesh = cap
+			var mat := StandardMaterial3D.new()
+			mat.albedo_color = Color(0.85, 0.25, 0.2) if n_i % 2 == 0 else Color(0.2, 0.35, 0.85)
+			imp.material_override = mat
+			imp.position = Vector3(0, 0.9, 0)
+			nodo_i.add_child(imp)
+			n_i += 1
+		print("IMPOSTOR: %d jugadores a más de %.0f m sustituidos por una cápsula" % [n_i, lejos])
 	if OS.get_environment("MESH_LOD") != "":
 		## MESH_LOD=6 (o 12, 24…): `mesh_lod_threshold` del viewport (píxeles de error admitidos al elegir el LOD de cada malla: más alto = lo lejano baja antes a mallas más simples; el esqueleto y la animación no cambian).
 		vista.get_viewport().mesh_lod_threshold = float(OS.get_environment("MESH_LOD"))
