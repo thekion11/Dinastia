@@ -117,18 +117,7 @@ func _ready() -> void:
 		if d.has("anim"):
 			PersonajeDT.gestos_banda(d)
 		semilla += 7
-		var et := Label3D.new()
-		et.text = "%s\n%s" % [nombre, Idiomas.t(puesto)]
-		## Pequeño: el personal se cruza a un metro de la cámara y a 0,004 su
-		## nombre tapaba media pantalla (etapa 1).
-		et.font_size = 26
-		et.pixel_size = 0.0022
-		et.visibility_range_end = 14.0
-		et.outline_size = 6
-		et.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-		et.position = Vector3(0, 2.15, 0)
-		et.modulate = Color(1, 0.97, 0.85)
-		raiz.add_child(et)
+		## (10-11, orden del dueño) sin nombres flotantes sobre la gente del club: se quitó el Label3D con nombre y puesto.
 		gente.append({"clave": clave, "nombre": nombre, "puesto": puesto, "planta": int(p[0]), "nodo": raiz,
 			"anim": d.get("anim"), "ruta": ruta, "i": 0, "dir": 1, "espera": 4.0 + float(semilla % 13), "quieto": false})
 

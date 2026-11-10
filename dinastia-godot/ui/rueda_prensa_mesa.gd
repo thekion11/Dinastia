@@ -55,13 +55,7 @@ static func montar(escena: Node3D, club: Club, c1: Color, c2: Color, rng: Random
 		_caja(escena, Vector3(x, 0.22, POS_DT.z - 0.04), Vector3(0.5, 0.44, 0.48), silla)
 		_caja(escena, Vector3(x, 0.78, POS_DT.z - 0.27), Vector3(0.5, 0.7, 0.06), silla)
 	_jefe_prensa(escena, rng)
-	## La luz de la mesa llega al jefe de prensa (el foco principal es del DT y él quedaba en penumbra, una silueta).
-	var luz := OmniLight3D.new()
-	luz.light_color = Color(1, 0.96, 0.9)
-	luz.light_energy = 1.1
-	luz.omni_range = 2.4
-	luz.position = Vector3(JEFE_X * 0.8, 1.7, -0.1)
-	escena.add_child(luz)
+	_atrezo(escena, club)
 	RuedaPrensaExtras.montar(escena, c1, c2, true)
 
 ## R8: el DT ENTRA por la izquierda caminando, se gira hacia la sala y se sienta, como en la referencia. Si falta
@@ -156,3 +150,95 @@ static func entrando(escena: Node) -> bool:
 		return false
 	var tw = escena.get_meta("entrada_tw")
 	return tw is Tween and (tw as Tween).is_valid() and (tw as Tween).is_running()
+
+## LO QUE HAY ENCIMA DE UNA MESA DE PRENSA DE VERDAD (10-11, «puedes hacerlo muchísimo mejor»): una placa delante de cada uno con el
+## escudo, una botella de agua y un vaso para cada uno.
+static func _atrezo(escena: Node3D, club: Club) -> void:
+	var placa := _mat(Color(0.08, 0.08, 0.1), 0.4)
+	var vidrio := StandardMaterial3D.new()
+	vidrio.albedo_color = Color(0.75, 0.88, 0.95, 0.35)
+	vidrio.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	vidrio.roughness = 0.05
+	vidrio.metallic = 0.2
+	var tapa := _mat(Color(0.1, 0.35, 0.8), 0.4)
+	var tex: Texture2D = Escudo.textura(club, 96) if club != null else null
+	for x: float in [0.0, JEFE_X]:
+		## La placa: un prisma bajo inclinado hacia la sala con el escudo pequeño.
+		var pl := _caja(escena, Vector3(x, MESA_Y + 0.05, MESA_Z + 0.3), Vector3(0.34, 0.1, 0.04), placa)
+		pl.rotation_degrees.x = -18.0
+		if tex != null:
+			var q := MeshInstance3D.new()
+			var qm := QuadMesh.new()
+			qm.size = Vector2(0.075, 0.075)
+			q.mesh = qm
+			var m := StandardMaterial3D.new()
+			m.albedo_texture = tex
+			m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+			m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+			q.material_override = m
+			q.position = Vector3(0, 0, 0.021)
+			pl.add_child(q)
+		## Botella y vaso, a la derecha de cada uno.
+		var bx := x + 0.3
+		var bot := MeshInstance3D.new()
+		var cm := CylinderMesh.new()
+		cm.top_radius = 0.032
+		cm.bottom_radius = 0.035
+		cm.height = 0.22
+		cm.radial_segments = 12
+		bot.mesh = cm
+		bot.material_override = vidrio
+		bot.position = Vector3(bx, MESA_Y + 0.11, MESA_Z - 0.05)
+		escena.add_child(bot)
+		var tp := MeshInstance3D.new()
+		var tm := CylinderMesh.new()
+		tm.top_radius = 0.016
+		tm.bottom_radius = 0.016
+		tm.height = 0.03
+		tm.radial_segments = 8
+		tp.mesh = tm
+		tp.material_override = tapa
+		tp.position = bot.position + Vector3(0, 0.125, 0)
+		escena.add_child(tp)
+		var vaso := MeshInstance3D.new()
+		var vm := CylinderMesh.new()
+		vm.top_radius = 0.035
+		vm.bottom_radius = 0.028
+		vm.height = 0.1
+		vm.radial_segments = 12
+		vaso.mesh = vm
+		vaso.material_override = vidrio
+		vaso.position = Vector3(bx + 0.1, MESA_Y + 0.05, MESA_Z + 0.08)
+		escena.add_child(vaso)
+
+## LUZ DE PLATÓ (10-11): en la referencia la sala está a oscuras y la luz cae sobre la mesa y la pared; los periodistas son SILUETAS.
+## Los periodistas pasan a la capa visual 2 y las luces de la mesa, de la pared y del DT dejan de tocarlos (máscara 1); los ilumina solo
+## el ambiente. Un foco cenital más sobre la mesa. Se llama al final de `montar()`, cuando ya están todas las luces.
+static func iluminar(escena: Node3D) -> void:
+	if not en(escena):
+		return
+	var sala = escena.get("_sala")
+	if sala is Array:
+		for d: Dictionary in sala:
+			var r := d.get("raiz") as Node3D
+			if r != null:
+				for g: Node in r.find_children("*", "GeometryInstance3D", true, false):
+					(g as GeometryInstance3D).layers = 2
+	var flash = escena.get("_flash")
+	for l: Node in escena.find_children("*", "Light3D", true, false):
+		if l != flash:
+			(l as Light3D).light_cull_mask = 1
+	## Sin luz propia para los periodistas: los ilumina solo el ambiente (cada luz de más es otra pasada de dibujo en Compatibilidad).
+	var cenital := SpotLight3D.new()
+	cenital.light_color = Color(1, 0.96, 0.88)
+	cenital.light_energy = 2.2
+	cenital.spot_range = 5.0
+	cenital.spot_angle = 52.0   ## abierto: cubre al DT y al jefe de prensa (una luz menos)
+	cenital.spot_attenuation = 1.2
+	cenital.light_cull_mask = 1
+	escena.add_child(cenital)
+	cenital.look_at_from_position(Vector3(JEFE_X * 0.5, 3.1, 0.7), Vector3(JEFE_X * 0.5, 1.0, POS_DT.z + 0.2), Vector3.UP)
+	for w: Node in escena.find_children("*", "WorldEnvironment", true, false):
+		var env := (w as WorldEnvironment).environment
+		if env != null:
+			env.ambient_light_energy = 0.5   ## la sala, en penumbra (las luces de la mesa y la pared hacen el resto)

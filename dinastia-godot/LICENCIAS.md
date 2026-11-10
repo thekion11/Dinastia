@@ -155,4 +155,4 @@ PabloFMM, CC0 (`numinia-digital-goods-data/data/avatars/numinia-avatars.json`): 
 
 
 ## Texturas PBR (10-11-2026, sesión 7)
-Texturas `assets/cc0/*` (suelos, paredes y azulejo del vestuario): **Poly Haven**, licencia **CC0** (https://polyhaven.com/license), bajadas a 1K con `herramientas/bajar_cc0.py` (rubber_tiles, hinoki_planks, patterned_terracotta_tiling, dark_wooden_planks, beige_wall_001, brick_wall_005, clay_plaster, floor_tiles_06). 🟢
+Texturas `assets/cc0/*` (suelos, paredes y azulejo del vestuario): **Poly Haven**, licencia **CC0** (https://polyhaven.com/license), bajadas a 1K con `herramientas/bajar_cc0.py` (rubber_tiles, hinoki_planks, patterned_terracotta_tiling, dark_wooden_planks, beige_wall_001, brick_wall_005, clay_plaster, floor_tiles_06, herringbone_parquet, beige_wall_002, laminate_floor_02, brushed_concrete_03, granite_tile, patterned_clay_plaster, clay_floor_001, patterned_clay_wall). 🟢

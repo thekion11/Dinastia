@@ -156,10 +156,10 @@ Torreense||borde||||||
 Tromsø||franjas||||||
 Troyes||chevron||||||
 Umm Salal||banda||||||
-VVV-Venlo||liso||||||
+VVV-Venlo||cuartos||||||
 Venados||banda_h||||||
 Vila Nova||rombos||||||
-Vitesse||cuartos||||||
+Vitesse||aro||||||
 Vizela||interior||||||
 Volos||aro||||||
 Volta Redonda||mitad||||||

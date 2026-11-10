@@ -403,7 +403,7 @@ func montar(club: Club, acento: Color, nivel: int = Calidad.ALTO, look_dt: Dicti
 	else:
 		_montar_dt(look_dt)
 		_montar_gesto_dt(look_dt)
-	_montar_camara()
+	_montar_camara(); RuedaPrensaMesa.iluminar(self)   ## (10-11) plató a oscuras, periodistas en silueta
 
 ## Corta a otro plano -mismo patrón que `SorteoEscena3D.cortar_plano()`-.
 ## Se llama sola por tiempo (ver `_process()`); no depende de que
