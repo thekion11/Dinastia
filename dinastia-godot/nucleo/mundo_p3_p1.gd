@@ -5,16 +5,22 @@ extends "res://nucleo/mundo_p2.gd"
 
 func fundar_club(nombre_club: String, pais: String, col1: String = "", col2: String = "", estadio: String = "") -> Club:
 	var candidatos: Array[Club] = []
+	## Se funda en la división MÁS BAJA del país (la Primera B de Chile; desde las segundas divisiones de 10-11, también la Segunda de ENG/ESP/ITA/GER/FRA).
+	var ultima := 1
+	for c0: Club in clubes.values():
+		if c0.pais == pais:
+			ultima = maxi(ultima, c0.division)
 	for c: Club in clubes.values():
-		if c.pais != pais:
-			continue
-		if pais == "CHI" and c.division != 2:
+		if c.pais != pais or c.division != ultima:
 			continue
 		candidatos.append(c)
 	if candidatos.is_empty():
 		return null
-	candidatos.sort_custom(func(a: Club, b: Club) -> bool: return a.rep < b.rep)
+	## El más flojo; con la misma reputación, el primero de la lista (`sort_custom` no es estable y daría uno distinto cada vez).
 	var c: Club = candidatos[0]
+	for cand: Club in candidatos:
+		if cand.rep < c.rep:
+			c = cand
 	## El nombre lo escribió el jugador, no viene de una tabla en leetspeak:
 	## no pasa por Nombres.limpiar(), que es para decensurar datos del juego,
 	## no para tocar lo que alguien tecleó a mano.
