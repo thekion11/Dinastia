@@ -214,7 +214,8 @@ func _probar_cargo_seleccionador() -> void:
 		var r: Dictionary = t.resultados.filter(func(x: Dictionary) -> bool: return x["local"] == mia or x["visita"] == mia)[0]
 		_comprobar(t.resultados.size() > antes and int(r["gl"]) == p.goles_local and int(r["gv"]) == p.goles_visita, "tu partido jugado (%s %d-%d %s) cuenta en el torneo" % [(r["local"] as Club).nombre, p.goles_local, p.goles_visita, (r["visita"] as Club).nombre])
 		var res := m.selecciones.cierre_de_temporada(m.anio)
-		_comprobar(not t.en_curso() and cargo.historial.size() == ts.size(), "el cierre termina los torneos de tu selección y los apunta (%s)" % str(cargo.historial))
+		var sin_fin := cargo.historial.filter(func(h: Dictionary) -> bool: return String(h["torneo"]) != Finalissima.NOMBRE)   ## (10-11) la Finalissima se apunta aparte si tu selección la juega
+		_comprobar(not t.en_curso() and sin_fin.size() == ts.size(), "el cierre termina los torneos de tu selección y los apunta (%s)" % str(cargo.historial))
 		_comprobar(res.has("seleccionador"), "el cierre devuelve los torneos del seleccionador")
 		cargo.dimitir(m)
 		_comprobar(not cargo.activo() and cargo.sueldo == 0, "dimitir deja el cargo")
