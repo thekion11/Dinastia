@@ -3,6 +3,7 @@ extends Node
 ##   PAR=0..2 herramientas/captura.sh res://pruebas/captura_uniformes_3d.tscn      (salida: user://uni3d_<PAR>_<n>.png → /tmp/cap)
 ## Busca en un mundo de 8 países los pares (de países distintos) cuyos uniformes locales chocan y toma los tres primeros de países nuevos.
 const PAISES: Array[String] = ["ESP", "ARG", "GER", "BRA", "FRA", "ENG", "ITA", "MEX"]
+const PAISES_B: Array[String] = ["CHI", "COL", "POR", "NED", "JPN", "URU", "KOR", "USA"]   ## ALT=1: otros 8 países y otra semilla (los cruces salen distintos)
 const ARRANQUE := 150
 var _n := 0
 var _vista: VistaEstadio
@@ -14,7 +15,8 @@ const MINUTOS := [2, 9]
 func _ready() -> void:
 	_par = int(OS.get_environment("PAR")) if OS.get_environment("PAR") != "" else 0
 	var m := Mundo.new()
-	m.generar(PAISES, 9137)
+	var alt := OS.get_environment("ALT") != ""
+	m.generar(PAISES_B if alt else PAISES, 4403 if alt else 9137)
 	var elegidos: Array = []
 	var usados := {}
 	var todos: Array[Club] = []
