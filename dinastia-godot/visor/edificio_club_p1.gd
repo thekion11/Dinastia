@@ -328,12 +328,7 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			PiezasObra._caja(nodo, Vector3(caja.end.x - 0.4, y0 + 1.0, caja.end.y - 0.8), Vector3(0.6, 2.0, 1.2), blanco, true)
 			PiezasObra._rotulo(nodo, "✚", Vector3(cx, y0 + 2.4, caja.position.y + 0.05), 0.0, 120, Color(0.85, 0.15, 0.15))
 		"Vestuario visitante":
-			var gris := PiezasObra._mat(Color(0.6, 0.62, 0.65), 0.7)
-			PiezasObra._caja(nodo, Vector3(caja.end.x - 0.35, y0 + 0.45, cz), Vector3(0.45, 0.08, caja.size.y - 0.6), madera, true)
-			PiezasObra._caja(nodo, Vector3(caja.position.x + 0.35, y0 + 0.45, cz), Vector3(0.45, 0.08, caja.size.y - 0.6), madera, true)
-			for k in int(caja.size.y / 1.0):
-				PiezasObra._caja(nodo, Vector3(caja.end.x - 0.1, y0 + 1.6, caja.position.y + 0.5 + k), Vector3(0.1, 1.2, 0.85), gris, false)
-			PiezasObra._rotulo(nodo, Idiomas.t("VISITANTE"), Vector3(cx, y0 + 2.6, caja.position.y + 0.05), 0.0, 60, Color(0.3, 0.3, 0.35))
+			SalasClub.vestuario_visitante(nodo, caja, y0, madera)   ## (10-11) amueblado: taquillas con camisetas, toallas, camilla y pizarra
 		"Oficina del DT":
 			## (21-10-2026) Muebles de verdad del catálogo común, no cajas: mesa
 			## con monitor, teclado y lámpara, sillón de despacho, estantería con
