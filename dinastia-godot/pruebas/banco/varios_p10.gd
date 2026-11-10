@@ -375,7 +375,7 @@ func _probar_escudos_realistas() -> void:
 			con_rombos += 1
 	_comprobar(con_rombos >= 1, "hay al menos un club con ese patrón en la tabla (%d)" % con_rombos)
 	var m := Mundo.new()
-	m.generar(["ESP", "ENG", "ITA", "GER", "FRA", "ARG", "BRA", "MEX"], 62)
+	m.generar(["ESP", "ENG", "ITA", "GER", "FRA", "ARG", "BRA", "MEX", "USA", "JPN"], 62)
 	var clubes := 0
 	var con_figura := 0
 	var firmas := {}
@@ -389,7 +389,7 @@ func _probar_escudos_realistas() -> void:
 			firmas["%s|%s|%s|%s|%s|%s" % [Escudo.forma_de(c), Escudo.patron_de(c), AspectoClub.emblema(c), AspectoClub.letras(c), c.color_escudo1(), c.color_escudo2()]] = true
 			if clubes % 9 == 0 and Escudo.svg_de(c).length() < 200:
 				svg_ok = false
-	_comprobar(clubes >= 100 and con_figura >= clubes - clubes / 20, "%d de %d clubes de 8 países tienen escudo con forma, figura o letras propias" % [con_figura, clubes])
+	_comprobar(clubes >= 100 and con_figura >= clubes - clubes / 20, "%d de %d clubes de 10 países tienen escudo con forma, figura o letras propias" % [con_figura, clubes])
 	_comprobar(firmas.size() >= clubes * 9 / 10, "los escudos casi no se repiten (%d distintos de %d)" % [firmas.size(), clubes])
 	_comprobar(svg_ok, "los escudos se dibujan (SVG con contenido)")
 	## Las figuras nuevas (torre de París, murciélago, gallo, carabela, toro, dragón, castillo, delfín) existen y se dibujan.
