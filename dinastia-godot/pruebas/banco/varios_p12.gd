@@ -352,6 +352,10 @@ func _probar_fecha_seleccion() -> void:
 		var otro := Selecciones.new(m)
 		otro.desde_dic(JSON.parse_string(JSON.stringify(s.a_dic())))
 		_comprobar(otro.cargo.fechas.size() == 2, "las fechas se guardan")
+	var sl := Selecciones.new(null)
+	_comprobar(FechaSeleccion.tipo_de(sl, "ucl", "afr", 2027) == "Amistoso" and FechaSeleccion.tipo_de(sl, "ucl", "ucl", 2028) == "Eliminatoria"
+		and FechaSeleccion.tipo_de(sl, "ucl", "ucl", 2026) == "Nations League" and FechaSeleccion.tipo_de(sl, "lib", "lib", 2026) == "Amistoso",
+		"el tipo de partido: amistoso, eliminatoria (antes de un Mundial) o Nations League (Europa y Concacaf)")
 
 ## PIEZAS DE ESTADIOS REALES (10-11): opcionales (sin la clave no se añade nada) y una sola malla por pieza.
 func _probar_piezas_estadio_real() -> void:

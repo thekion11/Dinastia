@@ -7792,7 +7792,8 @@
   "Tienen que quedar al menos 3 defensas.": "There must be at least 3 defenders.",
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "You already have 6 custom formations: delete one to save another.",
   "Editar posiciones": "Edit positions",
-  "Borrar esta formación": "Delete this formation"
+  "Borrar esta formación": "Delete this formation",
+  "Nations League": "Nations League"
  },
  "pt": {
   "Historia": "História",
@@ -15587,7 +15588,8 @@
   "Tienen que quedar al menos 3 defensas.": "Precisam ficar pelo menos 3 defensores.",
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Você já tem 6 formações próprias: apague uma para salvar outra.",
   "Editar posiciones": "Editar posições",
-  "Borrar esta formación": "Apagar esta formação"
+  "Borrar esta formación": "Apagar esta formação",
+  "Nations League": "Liga das Nações"
  },
  "patrones": [
   [
@@ -29478,7 +29480,8 @@
   "Tienen que quedar al menos 3 defensas.": "Il doit rester au moins 3 défenseurs.",
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Vous avez déjà 6 formations perso : supprimez-en une pour en enregistrer une autre.",
   "Editar posiciones": "Modifier les positions",
-  "Borrar esta formación": "Supprimer cette formation"
+  "Borrar esta formación": "Supprimer cette formation",
+  "Nations League": "Ligue des nations"
  },
  "it": {
   "Historia": "Storia",
@@ -37273,7 +37276,8 @@
   "Tienen que quedar al menos 3 defensas.": "Devono restare almeno 3 difensori.",
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Hai già 6 moduli personali: cancellane uno per salvarne un altro.",
   "Editar posiciones": "Modifica posizioni",
-  "Borrar esta formación": "Elimina questo modulo"
+  "Borrar esta formación": "Elimina questo modulo",
+  "Nations League": "Nations League"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45068,7 +45072,8 @@
   "Tienen que quedar al menos 3 defensas.": "Es müssen mindestens 3 Verteidiger bleiben.",
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Du hast schon 6 eigene Formationen: Lösche eine, um eine andere zu speichern.",
   "Editar posiciones": "Positionen bearbeiten",
-  "Borrar esta formación": "Diese Formation löschen"
+  "Borrar esta formación": "Diese Formation löschen",
+  "Nations League": "Nations League"
  },
  "ca": {
   "Historia": "Història",
@@ -52863,7 +52868,8 @@
   "Tienen que quedar al menos 3 defensas.": "Hi han de quedar almenys 3 defenses.",
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Ja tens 6 formacions pròpies: esborra'n una per desar-ne una altra.",
   "Editar posiciones": "Editar posicions",
-  "Borrar esta formación": "Esborrar aquesta formació"
+  "Borrar esta formación": "Esborrar aquesta formació",
+  "Nations League": "Lliga de Nacions"
  },
  "pl": {
   "Club": "Klub",
@@ -60658,7 +60664,8 @@
   "Tienen que quedar al menos 3 defensas.": "Musi zostać co najmniej 3 obrońców.",
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Masz już 6 własnych formacji: usuń jedną, aby zapisać inną.",
   "Editar posiciones": "Edytuj pozycje",
-  "Borrar esta formación": "Usuń tę formację"
+  "Borrar esta formación": "Usuń tę formację",
+  "Nations League": "Liga Narodów"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68453,6 +68460,7 @@
   "Tienen que quedar al menos 3 defensas.": "En az 3 defans oyuncusu kalmalı.",
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Zaten 6 özel dizilişin var: başka birini kaydetmek için birini sil.",
   "Editar posiciones": "Pozisyonları düzenle",
-  "Borrar esta formación": "Bu dizilişi sil"
+  "Borrar esta formación": "Bu dizilişi sil",
+  "Nations League": "Uluslar Ligi"
  }
 }
