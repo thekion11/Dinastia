@@ -160,6 +160,23 @@ func _congelar() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	await get_tree().process_frame
 	await get_tree().process_frame
+	var b0 := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+	for fg: Node in get_tree().root.find_children("FestejoGrada", "", true, false):
+		(fg as Node3D).visible = false
+		await get_tree().process_frame
+		await get_tree().process_frame
+		print("   SIN FESTEJO DE GRADA: -%d" % (b0 - rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)))
+		(fg as Node3D).visible = true
+		await get_tree().process_frame
+	for vp: Node in get_tree().root.find_children("*", "SubViewport", true, false):
+		var sv := vp as SubViewport
+		var m0 := sv.render_target_update_mode
+		sv.render_target_update_mode = SubViewport.UPDATE_DISABLED
+		await get_tree().process_frame
+		await get_tree().process_frame
+		print("   SIN SUBVIEWPORT %s: -%d" % [get_tree().root.get_path_to(sv), b0 - rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)])
+		sv.render_target_update_mode = m0
+		await get_tree().process_frame
 	var foto0 := _visibles(get_tree().root)
 	var serie: Array[int] = []
 	for _k in (int(OS.get_environment("PICOS_SERIE")) if OS.get_environment("PICOS_SERIE") != "" else 12):   ## ¿el pico sigue con el plano quieto (es lo que se ve) o se va solo (es el corte de cámara)?
