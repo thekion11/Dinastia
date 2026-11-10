@@ -11,7 +11,7 @@ static func ofrecer(pr: Principal, titulo: String, tipo := "") -> void:
 	if tipo == "":
 		tipo = TipoTitulo.de(pr.mundo, titulo)
 	_abierto = true
-	var ev := EventoCelebracion.mostrar(pr, titulo, tipo, rival_del_pasillo(pr.mundo))
+	var ev := EventoCelebracion.mostrar(pr, titulo, tipo, rival_del_pasillo(pr.mundo), TipoTitulo.equipo_seleccion(pr.mundo, titulo))   ## (10-11) con la selección, sus colores y sus jugadores
 	var op: String = await ev.elegido
 	ev.queue_free()
 	_abierto = false
