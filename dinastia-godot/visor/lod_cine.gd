@@ -21,8 +21,17 @@ static func vigilar(estadio: Node3D) -> LodCine:
 	estadio.add_child(v)
 	return v
 
+## Plano de cine = cualquier cámara del partido que NO sea la de juego (`CameraRig`) ni la de ir a pie (`ExploradorEstadio`): celebración,
+## repeticiones, gol (`CineGol`)… Esas son las que bajan al césped y encuadran las cuatro tribunas.
 static func es_cine(cam: Camera3D) -> bool:
-	return cam != null and (String(cam.name) == "CineGol" or String(cam.name).begins_with("Repeticion_"))
+	if cam == null:
+		return false
+	var p := cam.get_parent()
+	while p != null:
+		if p is CameraRig or p is ExploradorEstadio:
+			return false
+		p = p.get_parent()
+	return true
 
 func _process(_d: float) -> void:
 	if not activo:
