@@ -260,7 +260,13 @@ func _probar_eventos_fecha() -> void:
 	var copa_viva := m.copa != null and m.copa.en_curso() and m.copa.vivos.has(m.club_de_la_copa())
 	_comprobar((cuenta["copa"] == 1) == copa_viva, "la copa sale en la semana 4 si sigues vivo (%d, vivo %s)" % [cuenta["copa"], str(copa_viva)])
 	var conti := m.mi_continental()
-	_comprobar((cuenta["conti"] == 1) == (conti != null and conti.en_curso()), "el continental sale en la semana 3 si tu club juega uno (%d)" % cuenta["conti"])
+	## (10-11) Cada torneo tiene SU calendario (`FormatosConti`): sale un evento por cada semana de la vista en que le toca jugar.
+	var esperados := 0
+	if conti != null and conti.en_curso():
+		for i in EventosFecha.VISTA:
+			if conti.semanas().has(m.semana + i):
+				esperados += 1
+	_comprobar(cuenta["conti"] == esperados and esperados >= 1, "el continental sale en las semanas en que juega su torneo si tu club juega uno (%d de %d)" % [cuenta["conti"], esperados])
 	_comprobar(cuenta["mercado_cierra"] == 1, "el cierre del mercado (semana %d) sale en las 6 semanas" % Mundo.VENTANA_VERANO)
 	## La copa y el continental llevan nombre de competición y, la primera ronda, rival.
 	for s: Dictionary in sem:

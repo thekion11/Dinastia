@@ -34,11 +34,12 @@ static func jugar(m: Mundo) -> Array:
 
 static func _partido(m: Mundo, fila: Dictionary, a: Club, b: Club) -> Dictionary:
 	var p := Partido.new(a, b, true)
-	var penales: Array = []
+	var guarda := {"penales": []}   ## una lambda no puede reasignar una variable de fuera: se guarda dentro del diccionario
 	CopasMundo._aislado("supercont%d/%s" % [m.anio, String(fila["grande"])], func() -> void:
 		p.simular()
 		if p.goles_local == p.goles_visita:
-			penales = p.penales())
+			guarda["penales"] = p.penales())
+	var penales: Array = guarda["penales"]
 	var gana: Club = a
 	if p.goles_visita > p.goles_local:
 		gana = b
