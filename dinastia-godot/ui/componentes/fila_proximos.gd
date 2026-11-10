@@ -40,6 +40,12 @@ static func pintar(m: Mundo, caja: HBoxContainer, dia_hoy := 0) -> void:
 	ver.text = "📅"
 	ver.tooltip_text = Idiomas.t("Ver las próximas semanas")
 	ver.custom_minimum_size = Vector2(34, 30)
+	## Estilo propio y compacto: el del tema, en el móvil, agranda el margen de los botones (`EscalaMovil.ampliar_toque`) y estiraba toda la fila
+	## hasta sacar de la pantalla el botón «Plantel y cuerpo» (prueba especial `aud4_movil_partido`, 10-11).
+	var est := Tema.caja(Tema.TARJETA, Tema.RADIO, Tema.BORDE)
+	est.set_content_margin_all(3)
+	for estado: String in ["normal", "hover", "pressed", "focus"]:
+		ver.add_theme_stylebox_override(estado, est)
 	ver.pressed.connect(func() -> void: abrir_semanas(caja, m, dia_hoy))
 	caja.add_child(ver)
 	var primero := true
