@@ -11,16 +11,24 @@ extends RefCounted
 
 ## ESTILO POR PAÍS (sesión 7): cada país lleva sus materiales reales (texturas CC0 de Poly Haven en `assets/cc0/`, ver `herramientas/bajar_cc0.py`), para que un vestuario inglés, uno
 ## japonés y uno argentino no se vean iguales. «ing»: suelo de tablón oscuro y ladrillo visto (Reino Unido); «jap»: tablón claro de hinoki y paredes lisas (Japón y Asia oriental);
-## «lat»: baldosa de barro cocido y yeso de arcilla (España, Italia, Portugal y toda América Latina); el resto, goma deportiva y yeso beige. El azulejo del tercio bajo es el mismo en todos.
+## «lat»: baldosa de barro cocido y yeso de arcilla (España, Italia, Portugal y toda América Latina); «ale»: parqué en espiga y pared beige (centroeuropa); «nor»: laminado claro y hormigón visto (nórdico); «ara»: granito y yeso con relieve geométrico (golfo y Oriente Próximo); «afr»: suelo de arcilla y pared de arcilla con motivos (África); el resto, goma deportiva y yeso beige. El azulejo del tercio bajo es el mismo en todos.
 const ESTILOS := {
 	"ing": {"suelo": "dark_wooden_planks", "pared": "brick_wall_005", "madera": "dark_wooden_planks", "m_suelo": 1.2, "m_pared": 1.6},
 	"jap": {"suelo": "hinoki_planks", "pared": "beige_wall_001", "madera": "hinoki_planks", "m_suelo": 1.2, "m_pared": 2.0},
 	"lat": {"suelo": "patterned_terracotta_tiling", "pared": "clay_plaster", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0},
+	"ale": {"suelo": "herringbone_parquet", "pared": "beige_wall_002", "madera": "dark_wooden_planks", "m_suelo": 1.0, "m_pared": 2.0},
+	"nor": {"suelo": "laminate_floor_02", "pared": "brushed_concrete_03", "madera": "laminate_floor_02", "m_suelo": 1.2, "m_pared": 2.0},
+	"ara": {"suelo": "granite_tile", "pared": "patterned_clay_plaster", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 1.6},
+	"afr": {"suelo": "clay_floor_001", "pared": "patterned_clay_wall", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 1.6},
 	"def": {"suelo": "rubber_tiles", "pared": "beige_wall_001", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0},
 }
 const GRUPOS := {
 	"ing": ["ENG", "SCO", "WAL", "NIR", "IRL"],
 	"jap": ["JPN", "KOR", "CHN", "TWN", "HKG"],
+	"ale": ["GER", "AUT", "SUI", "NED", "BEL", "LUX", "CZE", "POL", "SVK", "HUN", "SLO", "CRO", "SRB"],
+	"nor": ["SWE", "NOR", "DEN", "FIN", "ISL"],
+	"ara": ["KSA", "UAE", "QAT", "KUW", "BHR", "OMA", "IRN", "IRQ", "JOR", "LIB", "SYR", "TUR", "EGY"],
+	"afr": ["NGA", "GHA", "SEN", "CIV", "CMR", "RSA", "ALG", "TUN", "MLI", "COD", "KEN", "TAN", "ZIM", "ZAM", "ANG"],
 	"lat": ["ESP", "ITA", "POR", "ARG", "CHI", "URU", "PAR", "BOL", "PER", "COL", "VEN", "ECU", "MEX", "BRA", "CRC", "PAN", "HON", "GUA", "SLV", "CUB", "DOM", "MAR"],
 }
 
