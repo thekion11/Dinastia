@@ -13,6 +13,10 @@ const PAISES_2: Array[String] = ["NED", "PER", "JPN", "KSA", "EGY", "MAR", "USA"
 const CLUBES_3 := ["B0ca Juni0rs", "R3al Madrid", "Int3r", "L1verpool", "D0rtmund", "T0ttenham", "R0ma", "R1ver Plate", "Sa0 Paulo",
 	"Guadalaj4ra", "C0lo-C0lo", "B4rcelona"]
 const PAISES_3: Array[String] = ["ARG", "ESP", "ITA", "ENG", "GER", "BRA", "MEX", "CHI"]
+## TANDA=4: la cuarta (10-11): los grandes de cada liga que aún no tenían piezas.
+const CLUBES_4 := ["Atlét1co Madrid", "Sev1lla", "C1ty de Manch.", "Juv3ntus", "Lev3rkusen", "M4rsella", "Rac1ng Club", "Ind3pendiente",
+	"Palme1ras", "C0rinthians", "M0nterrey", "F3yenoord", "PSV", "Al-1ttihad", "K4izer Chiefs", "Ol1mpia", "Mill0narios", "Al1anza Lima", "LDU Qu1to"]
+const PAISES_4: Array[String] = ["ESP", "ENG", "ITA", "GER", "FRA", "ARG", "BRA", "MEX", "NED", "KSA", "RSA", "PAR", "COL", "PER", "ECU"]
 var _m: Mundo
 var _dir := ""
 
@@ -31,9 +35,9 @@ func _ready() -> void:
 	cfg.save(CajonAjustes.RUTA)
 	print("pack real: ", Datos.usar_base_real(true))
 	var tanda := OS.get_environment("TANDA")
-	var clubes: Array = CLUBES_2 if tanda == "2" else (CLUBES_3 if tanda == "3" else CLUBES)
+	var clubes: Array = CLUBES_2 if tanda == "2" else (CLUBES_3 if tanda == "3" else (CLUBES_4 if tanda == "4" else CLUBES))
 	_m = Mundo.new()
-	_m.generar(PAISES_2 if tanda == "2" else (PAISES_3 if tanda == "3" else PAISES), 2026)
+	_m.generar(PAISES_2 if tanda == "2" else (PAISES_3 if tanda == "3" else (PAISES_4 if tanda == "4" else PAISES)), 2026)
 	var solo := OS.get_environment("SOLO")
 	for i in clubes.size():
 		if solo != "" and not str(i) in solo.split(","):
