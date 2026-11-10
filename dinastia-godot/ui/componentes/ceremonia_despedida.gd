@@ -14,7 +14,7 @@ static func mostrar(pr: Principal, homenajeados: Array, leyendas: Club) -> Cerem
 func _rellenar(pr: Principal, homenajeados: Array, leyendas: Club) -> void:
 	_centro.custom_minimum_size = Vector2(1000, 0)
 	_centro.add_child(etiqueta(Idiomas.t("PARTIDO DE DESPEDIDA"), 15, Tema.SUAVE))
-	_centro.add_child(etiqueta("🎖️ " + Idiomas.t("Homenaje"), 50, Tema.ORO, true, false))
+	_centro.add_child(etiqueta("🎖️ " + Idiomas.t("Homenaje"), 40, Tema.ORO, true, false))
 	var filas: Array = []
 	for h: Dictionary in homenajeados:
 		filas.append({"j": h["jugador"], "dorsal": int(h["dorsal"]), "propio": true})
@@ -23,6 +23,14 @@ func _rellenar(pr: Principal, homenajeados: Array, leyendas: Club) -> void:
 		top.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
 		for j: Jugador in top.slice(0, 3):
 			filas.append({"j": j, "dorsal": 0, "propio": false})
+	## (10-11) EL HOMENAJE EN 3D EN EL CAMPO: los homenajeados con su camiseta retirada, bajo los focos (`HomenajeCampo3D`; sin pantalla no se monta).
+	var mio := pr.mundo.mi_club() if pr.mundo != null else null
+	if homenajeados.is_empty():
+		mio = leyendas   ## sin homenajeados de tu club, las Leyendas con sus colores
+	var campo := HomenajeCampo3D.montar(filas, Color(mio.color1) if mio else Tema.ACENTO, Color(mio.color2) if mio else Color.WHITE)
+	if campo != null:
+		campo.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		_centro.add_child(campo)
 	var tarjetas := HBoxContainer.new()
 	tarjetas.alignment = BoxContainer.ALIGNMENT_CENTER
 	tarjetas.add_theme_constant_override("separation", 28)
@@ -43,7 +51,7 @@ func _tarjeta(pr: Principal, f: Dictionary) -> Control:
 	sb.border_color = Color(Tema.ORO, 0.7)
 	sb.set_border_width_all(2)
 	sb.set_corner_radius_all(10)
-	sb.set_content_margin_all(18)
+	sb.set_content_margin_all(10)
 	sb.shadow_color = Color(0, 0, 0, 0.5)
 	sb.shadow_size = 14
 	pc.add_theme_stylebox_override("panel", sb)
@@ -51,9 +59,9 @@ func _tarjeta(pr: Principal, f: Dictionary) -> Control:
 	col.add_theme_constant_override("separation", 8)
 	col.custom_minimum_size = Vector2(220, 0)
 	pc.add_child(col)
-	var r := pr._retrato(j, 170)
+	var r := pr._retrato(j, 84)
 	r.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	r.custom_minimum_size = Vector2(170, 170)
+	r.custom_minimum_size = Vector2(84, 84)
 	r.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	col.add_child(r)
 	col.add_child(etiqueta(j.nombre, 22, Tema.ORO))
