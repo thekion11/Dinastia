@@ -29,6 +29,12 @@ const PAISES := {
 	"ROU": {"tipo": "grupos", "min": 12, "vueltas": 2, "mitad": true, "g": [[6, 1], [10, 1]], "nombres": ["Play-offs de campeonato", "Play-outs del descenso"]},
 	## Serbia (16 clubes, 30 fechas): grupo del campeonato (8) y del descenso (8), una vuelta (7 fechas) y puntos enteros.
 	"SRB": {"tipo": "grupos", "min": 12, "vueltas": 2, "g": [[8, 1], [8, 1]]},
+	## Israel (14 clubes, 26 fechas): grupo del campeonato (6, ida y vuelta: 10 fechas) y del descenso (8, una vuelta: 7), puntos enteros.
+	"ISR": {"tipo": "grupos", "min": 12, "vueltas": 2, "g": [[6, 2], [8, 1]]},
+	## Eslovaquia (12 clubes, 22 fechas): grupos de campeonato y de permanencia de 6, a ida y vuelta (10 fechas).
+	"SVK": {"tipo": "grupos", "min": 10, "vueltas": 2, "g": [[6, 2], [6, 2]]},
+	## Bulgaria (16 clubes, 30 fechas): campeonato (4, 6 fechas), Conference (4, 6 fechas) y descenso (8, 7 fechas), puntos enteros.
+	"BUL": {"tipo": "grupos", "min": 12, "vueltas": 2, "g": [[4, 2], [4, 2], [8, 1]], "nombres": ["Grupo del campeonato", "Play-offs de Europa", "Grupo del descenso"]},
 	"SCO": {"tipo": "grupos", "min": 10, "vueltas": 3, "na": 6, "va": 1, "vb": 1},
 	"DEN": {"tipo": "grupos", "min": 10, "vueltas": 2, "na": 6, "va": 2, "vb": 2},
 	"SUI": {"tipo": "grupos", "min": 10, "vueltas": 3, "na": 6, "va": 1, "vb": 1},

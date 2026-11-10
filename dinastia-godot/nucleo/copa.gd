@@ -218,6 +218,14 @@ const COPAS_POR_PAIS := {
 	"SRB": [["Copa de Serbia", 1.0]],
 	"UKR": [["Copa de Ucrania", 1.0]],
 	"CHN": [["Copa de China", 1.0]],
+	"ISR": [["Copa de Israel", 1.0]],
+	"RUS": [["Copa de Rusia", 1.0]],
+	"HUN": [["Copa de Hungría", 1.0]],
+	"SVK": [["Copa de Eslovaquia", 1.0]],
+	"BUL": [["Copa de Bulgaria", 1.0]],
+	"IRN": [["Copa de Irán", 1.0]],
+	"UAE": [["Copa del Presidente", 1.0]],
+	"VEN": [["Copa Venezuela", 1.0]],
 }
 
 ## Las copas que se juegan en un país: [nombre, peso del premio]. Si el país no

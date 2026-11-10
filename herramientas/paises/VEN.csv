@@ -1,0 +1,24 @@
+#seleccion=Venezuela
+#tier=0.2
+#globo=-66.90,10.48
+#bandera=🇻🇪
+#confed=lib
+#liga=L1ga FUTVE|Liga Venezolana
+#copa=Copa Venezuela|Copa Venezuela
+#nombres=Carlos,José,Luis,Miguel,Juan,Pedro,Andrés,Jesús,Ricardo,Gabriel,Daniel,Alejandro,Freddy,Rafael
+#apellidos=González,Rodríguez,Pérez,Hernández,García,Martínez,Ramírez,Torres,Díaz,Rojas,Mendoza,Silva,Castillo,Sánchez
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Carabobo;Carabobo Norte;#c8102e;#ffffff;52;10400;1964;los Granates;el estadio de la ciudad de Valencia;El club campeón del Apertura 2026.
+Deportivo Táchira;Tachira Andino;#ffd100;#000000;52;38755;1974;los Aurinegros;el estadio de los Andes;El club de los Andes, con la mayor hinchada del país.
+Caracas;Caracas Rojo;#c8102e;#ffffff;51;23940;1967;los Rojos;el estadio olímpico de la capital;El club más laureado del país.
+Universidad Central;Univ. Capital;#ffd100;#1b458f;50;23940;1990;los Estudiantes;el estadio olímpico de la capital;El campeón defensor del país.
+Deportivo La Guaira;La Guaira Costa;#1b458f;#ffffff;49;23940;1990;los Marinos;el estadio olímpico de la capital;El club del puerto de La Guaira.
+Metropolitanos;Metropolis FC;#00843d;#ffffff;49;23940;2011;los Verdes;el estadio olímpico de la capital;Un club de la capital metropolitana.
+Monagas;Monagas Oriente;#ffd100;#000000;50;51796;1987;los Amarillos;el estadio monumental del oriente;El club del oriente, con un estadio enorme.
+Estudiantes de Mérida;Merida Andino;#c8102e;#ffffff;48;42200;1971;los Académicos;el estadio de la ciudad andina;El club de la ciudad universitaria de los Andes.
+Zamora;Zamora Llanos;#1b458f;#ffffff;49;29800;1977;los Llaneros;el estadio de los llanos;El club de los llanos.
+Rayo Zuliano;Rayo Maracaibo;#c8102e;#ffffff;47;40800;2013;los Rayos;el estadio de la ciudad del lago;El club de la ciudad del lago de Maracaibo.
+Academia Puerto Cabello;Puerto Cabello;#ffd100;#1b458f;48;2500;2002;los Académicos;el estadio de la bombonerita del puerto;El club del puerto de Puerto Cabello.
+Portuguesa;Portuguesa Sur;#c8102e;#00843d;47;18000;1972;los Rojiverdes;el estadio de los llanos;El club de los llanos del oeste.
+Trujillanos;Trujillo Andes;#ffd100;#00843d;46;25000;1975;los Amarillos;el estadio de la ciudad andina;El club de la ciudad andina que volvió a primera.
+Anzoátegui;Anzoategui Mar;#c8102e;#ffffff;46;37485;2008;los Rojos;el estadio de la ciudad costera;El club descendido de la costa oriental.

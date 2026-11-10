@@ -20,7 +20,7 @@ static var solo_dibujo := false
 ## británicas, con su subcódigo).
 const ISO := {
 	"ALB": "al", "ALG": "dz", "ANG": "ao", "ARG": "ar", "ARM": "am", "AUS": "au", "AUT": "at", "BEL": "be",
-	"BEN": "bj", "BFA": "bf", "BIH": "ba", "BOL": "bo", "BRA": "br", "BUL": "bg", "CAN": "ca", "CHI": "cl", "CHN": "cn",
+	"BEN": "bj", "BFA": "bf", "BIH": "ba", "BOL": "bo", "BRA": "br", "BUL": "bg", "CAN": "ca", "CHI": "cl", "CHN": "cn", "UAE": "ae",
 	"CIV": "ci", "CMR": "cm", "COD": "cd", "COL": "co", "CPV": "cv", "CRC": "cr", "CRO": "hr", "CUR": "cw",
 	"CZE": "cz", "DEN": "dk", "ECU": "ec", "EGY": "eg", "ENG": "gb-eng", "ESP": "es", "FIN": "fi", "FRA": "fr",
 	"GAB": "ga", "GAM": "gm", "GEO": "ge", "GER": "de", "GHA": "gh", "GRE": "gr", "GUI": "gn", "HON": "hn",
@@ -255,6 +255,11 @@ static func _pintar(img: Image, codigo: String) -> void:
 				_estrella(img, ANCHO * float(e[0]), ALTO * float(e[1]), 5.0, Color("c8102e"))
 		"QAT":
 			_franjas(img, [B, Color("8a1538")], true, [1, 2])
+		"RUS":
+			_franjas(img, [B, Color("0039a6"), Color("d52b1e")])
+		"UAE":
+			_franjas(img, [Color("00732f"), B, Color("000000")])
+			_rect(img, 0, 0, ANCHO / 4, ALTO, Color("ff0000"))
 		"CHN":
 			_franjas(img, [Color("de2910")])
 			_estrella(img, ANCHO * 0.2, ALTO * 0.3, 9.0, Color("ffde00"))

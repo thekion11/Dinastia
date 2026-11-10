@@ -1,0 +1,24 @@
+#seleccion=Israel
+#tier=0.8
+#globo=35.22,31.77
+#bandera=🇮🇱
+#confed=ucl,uel
+#liga=L1gat ha'Al|Liga Israelí
+#copa=Copa del Estado de Israel|Copa Israelí
+#nombres=David,Yossi,Daniel,Eitan,Omer,Noam,Itay,Amit,Tomer,Guy,Ido,Roi,Ron,Lior
+#apellidos=Cohen,Levi,Mizrahi,Peretz,Biton,Dahan,Avraham,Friedman,Malka,Azoulay,Katz,Goldberg,Shapira,Gabay
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Hapoel Be'er Sheva;Negev Rojo;#c8102e;#ffffff;62;16126;1949;los Rojos;el estadio del desierto;El campeón de la ciudad del desierto, con tres ligas seguidas.
+Maccabi Tel Aviv;Tel Aviv Sol;#ffd100;#1b458f;64;29400;1906;los Amarillos;el estadio compartido de la costa;El club con más ligas y campeón de la costa.
+Maccabi Haifa;Haifa Verde;#00843d;#ffffff;62;30950;1913;los Verdes;el estadio del puerto del norte;El club verde del puerto del norte.
+Hapoel Tel Aviv;Tel Aviv Rojo;#c8102e;#ffffff;58;29400;1923;los Rojos;el estadio compartido de la costa;El club rojo de la costa, de vuelta en primera.
+Beitar Jerusalem;Colina Dorada;#ffd100;#000000;58;31733;1936;los Amarillinegros;el estadio de la ciudad santa;El club con la hinchada más apasionada.
+Hapoel Haifa;Haifa Rojo;#c8102e;#ffffff;55;30950;1924;los Rojos;el estadio del puerto del norte;El club rojo del puerto.
+Maccabi Netanya;Netanya Costa;#ffd100;#000000;55;13610;1934;los Polacos;el estadio de la ciudad de la costa;El club de la costa del norte de Tel Aviv.
+Hapoel Jerusalem;Jerusalen Rojo;#c8102e;#ffffff;53;31733;1926;los Rojos;el estadio de la ciudad santa;El otro club de la ciudad santa.
+Ironi Kiryat Shmona;Galilea Norte;#1b458f;#ffd100;54;13610;2000;los del Norte;el estadio prestado de la costa;El club de la frontera norte, que juega lejos de casa.
+Bnei Sakhnin;Sakhnin Verde;#c8102e;#00843d;54;8500;1991;los Rojiverdes;el estadio de la ciudad de Galilea;El club de Galilea que ganó una copa.
+Hapoel Petah Tikva;Petah Tikva Rojo;#c8102e;#ffffff;53;11500;1934;los Rojos;el estadio de la ciudad madre;El club de la ciudad madre, de vuelta en primera.
+Ironi Tiberias;Tiberiades Lago;#1b458f;#ffffff;51;5200;1989;los del Lago;el estadio prestado de Galilea;El club del lago de Galilea.
+F.C. Ashdod;Ashdod Puerto;#c8102e;#ffd100;52;7800;1999;los del Puerto;el estadio del puerto del sur;El club del puerto del sur.
+Maccabi Bnei Reineh;Reineh Colinas;#c8102e;#ffffff;50;5200;2002;los Rojos;el estadio prestado de Galilea;Un club pequeño de Galilea.

@@ -66,6 +66,13 @@ const REGLAS := {
 	"SRB": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga serbia (ficticia): sin cupo de extracomunitarios.", "seguro": false},
 	"UKR": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga ucraniana (ficticia): sin cupo de extracomunitarios.", "seguro": false},
 	"CHN": {"plantel": 5, "cancha": 4, "criterio": "extranjero", "norma": "Liga china (ficticia): 5 extranjeros inscritos, 4 por convocatoria.", "seguro": false},
+	"ISR": {"plantel": 6, "cancha": 0, "criterio": "extranjero", "norma": "Liga israelí (ficticia): 6 extranjeros inscritos.", "seguro": false},
+	"RUS": {"plantel": 8, "cancha": 0, "criterio": "extranjero", "norma": "Liga rusa (ficticia): 8 extranjeros inscritos.", "seguro": false},
+	"HUN": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga húngara (ficticia): sin cupo de extracomunitarios.", "seguro": false},
+	"SVK": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga eslovaca (ficticia): sin cupo de extracomunitarios.", "seguro": false},
+	"BUL": {"plantel": 0, "cancha": 0, "criterio": "no_ue", "norma": "Liga búlgara (ficticia): sin cupo de extracomunitarios.", "seguro": false},
+	"UAE": {"plantel": 5, "cancha": 4, "criterio": "extranjero", "norma": "Liga emiratí (ficticia): 5 extranjeros inscritos, 4 por convocatoria.", "seguro": false},
+	"IRN": {"plantel": 4, "cancha": 3, "criterio": "extranjero", "norma": "Liga iraní (ficticia): 4 extranjeros inscritos, 3 por convocatoria.", "seguro": false},
 }
 
 ## Países de la Unión Europea (para los cupos «extracomunitarios»).

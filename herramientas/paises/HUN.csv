@@ -1,0 +1,22 @@
+#seleccion=Hungría
+#tier=0.65
+#globo=19.04,47.50
+#bandera=🇭🇺
+#confed=ucl,uel
+#liga=Nem7eti Bajnokság I|Liga Húngara
+#copa=Copa de Hungría|Copa Húngara
+#nombres=László,István,József,Gábor,Zoltán,Attila,Balázs,Dániel,Péter,Márk,Ádám,Tamás,Bence,Levente
+#apellidos=Nagy,Kovács,Tóth,Szabó,Horváth,Varga,Kiss,Molnár,Németh,Farkas,Balogh,Papp,Takács,Juhász
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Ferencváros;Ferencia Verde;#00843d;#ffffff;62;22043;1899;los Fradi;el estadio de la capital;El club más laureado del país, campeón de la liga muchas veces.
+Paks;Paks Atomico;#1b458f;#ffd100;57;6150;1952;los Atómicos;el estadio de la ciudad de la central;El club de la ciudad de la central nuclear.
+Győr;Gyor Aguila;#00843d;#ffffff;55;15600;1904;los Verdiblancos;el estadio de la ciudad del noroeste;El club del noroeste, campeón en 2013.
+Debrecen;Debrecen Rojo;#c8102e;#ffffff;57;20340;1902;los Rojiblancos;el estadio de la ciudad del este;El club del este con mejor hinchada fuera de la capital.
+Puskás Akadémia;Academia Puskas;#1b458f;#c8102e;55;3816;2007;los Aprendices;el estadio de la academia de un pueblo;La academia de un pueblo, la mejor cantera del país.
+Zalaegerszeg;Zala Verde;#1b458f;#ffffff;54;11200;1920;los Azules;el estadio de la ciudad del oeste;El club del oeste, campeón en 2002.
+Kisvárda;Kisvarda Norte;#c8102e;#ffffff;52;2850;1911;los Rojos;el estadio de la ciudad del noreste;Un club pequeño del noreste.
+Nyíregyháza;Nyiregyhaza Este;#c8102e;#ffffff;51;8150;1900;los Rojos;el estadio de la ciudad del este;El club del este que volvió a primera.
+Újpest;Ujpest Violeta;#6a1b9a;#ffffff;56;12670;1885;los Violetas;el estadio de la capital;El club violeta de la capital, campeón de Europa en los setenta.
+Diósgyőr;Diosgyor Acero;#c8102e;#ffffff;54;15325;1910;los del Acero;el estadio de la ciudad del acero;El club de la ciudad del acero.
+Kazincbarcika;Kazinc Quimica;#c8102e;#1b458f;50;4183;1946;los Rojos;el estadio prestado de la región;Un club pequeño de una ciudad química.
+MTK;Mtk Budapest;#1b458f;#ffffff;55;5014;1888;los Azules;el estadio de la capital;El club más antiguo de la capital.

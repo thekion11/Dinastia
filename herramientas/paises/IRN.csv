@@ -1,0 +1,26 @@
+#seleccion=Irán
+#tier=0.5
+#globo=51.39,35.69
+#bandera=🇮🇷
+#confed=asia
+#liga=Persian Gulf Pr0 League|Liga Iraní
+#copa=Copa de Irán|Copa Iraní
+#nombres=Mohammad,Ali,Reza,Hossein,Mehdi,Amir,Saeed,Hamed,Mojtaba,Javad,Milad,Omid,Behnam,Sajjad
+#apellidos=Rezaei,Mohammadi,Ahmadi,Hosseini,Karimi,Hashemi,Jafari,Mousavi,Ghorbani,Rahimi,Alizadeh,Moradi,Sadeghi,Akbari
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Persepolis;Persepolis Rojo;#c8102e;#ffffff;62;78116;1963;los Rojos;el estadio de la capital;El club con más hinchada del país.
+Esteghlal;Esteghlal Azul;#1b458f;#ffffff;62;78116;1945;los Azules;el estadio de la capital;El eterno rival de la capital.
+Sepahan;Sepahan Dorado;#ffd100;#000000;60;75000;1953;los Dorados;el estadio de la ciudad de Isfahán;El campeón de la ciudad histórica de Isfahán.
+Tractor;Tractor Tabriz;#c8102e;#ffffff;58;66833;1970;los Tractoristas;el estadio de la ciudad del noroeste;El club del noroeste, con una de las grandes hinchadas.
+Foolad;Foolad Ahvaz;#c8102e;#ffd100;56;30655;1971;los del Acero;el estadio de la ciudad del petróleo;El club del acero de Ahvaz.
+Gol Gohar;Gol Mina;#c8102e;#ffffff;55;9000;2006;los Rojos;el estadio de la ciudad minera;El club de una mina de hierro.
+Zob Ahan;Zob Fundicion;#c8102e;#ffffff;55;20000;1969;los del Hierro;el estadio de la ciudad del hierro;El club de la fundición de hierro.
+Malavan;Malavan Puerto;#1b458f;#ffffff;53;9000;1928;los Marineros;el estadio del puerto del Caspio;El club del puerto del mar Caspio.
+Aluminium Arak;Aluminio Arak;#1b458f;#ffffff;53;15000;1969;los Aluminios;el estadio de la ciudad del aluminio;El club de la ciudad del aluminio.
+Mes Rafsanjan;Mes Cobre;#f26522;#000000;53;10000;2001;los del Cobre;el estadio de la ciudad del cobre;El club de la ciudad del cobre.
+Chadormalou;Chador Mina;#c8102e;#ffffff;52;15000;1987;los Rojos;el estadio de la ciudad minera;Un club de una mina del desierto.
+Paykan;Paykan Tehran;#c8102e;#ffffff;52;8000;1968;los Automovilistas;el estadio de las afueras de la capital;El club de la fábrica de coches más antigua del país.
+Shams Azar;Shams Qazvin;#ffd100;#1b458f;51;15000;1990;los Amarillos;el estadio de la ciudad del norte;Un club de la ciudad de Qazvin.
+Kheybar;Kheybar Montana;#c8102e;#ffffff;50;8000;2013;los Rojos;el estadio de la ciudad de las montañas;Un club joven de las montañas de Lorestán.
+Fajr Sepasi;Fajr Shiraz;#00843d;#ffffff;51;50000;1990;los Verdes;el estadio de la ciudad de las rosas;El club de la ciudad de los poetas.
+Esteghlal Khuzestan;Esteghlal Sur;#1b458f;#ffffff;51;10000;2008;los Azules;el estadio de la ciudad del petróleo;Un club de la provincia del petróleo.
