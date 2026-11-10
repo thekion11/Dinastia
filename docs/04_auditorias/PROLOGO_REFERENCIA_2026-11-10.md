@@ -99,4 +99,4 @@ Total: unas 9-15 sesiones. El orden lo marca la orden 34: primero los pasos 3-5 
 - R6: planos para la mesa: frontal, general desde el fondo, tres cuartos (entre la mesa y la primera fila) y PLANO MEDIO del DT con los micrófonos; el ciclo alterna frontal y medio. El contraplano del periodista que pregunta se pone sobre el borde de la mesa (antes quedaba detrás del DT).
 - R9: la columna de respuestas, abajo sobre la franja de la pregunta (deja libre la mesa).
 - Antes/después (cámara real, ARG, USA y CHI): `docs/04_auditorias/rueda_prensa_antes_despues_2026-11-10.jpg`.
-- Queda R8 (entrada caminando y sentarse).
+- R8: el DT ENTRA por la izquierda caminando («caminar_formal»), se gira hacia la sala y se sienta; mientras entra, la cámara se queda en el plano frontal. Sentado, solo cambia de cara: las poses «Sitting_Enter» y «Sitting_Talking» de la biblioteca extra lo dejaban hundido bajo la mesa. Una luz propia para el jefe de prensa (quedaba en silueta). Secuencia: `docs/04_auditorias/rueda_prensa_entrada_2026-11-10.jpg`.
