@@ -113,7 +113,7 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 - MÓVIL, POR DEFECTO: «Modo rendimiento» ENCENDIDO; «Ahorro en los menús también en Media» ENCENDIDO; TOPE de 90 FPS.
 - ULTRA BAJA: NO se simplifican más hinchas, butacas ni jugadores lejanos.
 - WEB en el móvil: SÍ a las texturas comprimidas.
-- VERTICAL: DISEÑO PROPIO para el partido y los menús (no se quita).
+- VERTICAL: DISEÑO PROPIO para el partido y los menús (no se quita). HECHO en parte (sesión 8, rama `sesion8-vertical`, 10-11): lienzo de 540 px de ancho de pie (`EscalaMovil.ANCHO_VERTICAL`: letra ≥ 1,8 mm y toques de 7 mm), barra inferior en vez del riel (`MenuLateral.abajo()`), filas que se deslizan y columnas apiladas (`DisenoVertical`), contenido+ficha apilados en `PantallaMenu`, ficha de competición a 500 px, arco de botones táctil propio (`ControlesTactiles.BOTONES_V`) y cámara con el ANCHO fijo (`CamaraTactil.adaptar`). Capturas antes/después en `docs/04_auditorias/capturas_vertical/` (auditoría de gestión: 22 fallos → 3). FALTA: Ajustes (filas con casilla a la derecha se recortan), nombres del plantel cortados, el cajón 🎯 sobre el último botón del Inicio, pantallas de entrada (idioma/país/club/personaje), minijuegos y ciudad, y que el teléfono pueda girar: `project.godot` sigue con `handheld/orientation=0` (apaisado), decide el dueño pasarlo a sensor (6).
 - CABECERA COMPACTA: le gusta, se queda.
 - ICONOS: los DIBUJADOS por defecto (los emojis quedan como opción).
 - TECLADO CON MANDO (Triángulo = espacio, X = tecla): le vale.
@@ -1015,7 +1015,7 @@ Prioridad P0–P3 · estado · qué falta. Reverificar la fila antes de construi
 | M-435 | P2 | DESCARTADA (líder, 2-11; el dueño puede revertirla) | Sin gatillos analógicos para potencia de pase | LT y RT ya son modificadores del tiro y del pase en el esquema tipo FC (raso, rosca, potente, vaselina con LB): darles la potencia rompería esas combinaciones. Si se quiere, iría como esquema alternativo en Controles |
 | M-436 | P2 | PENDIENTE | Sin giroscopio para cámara en primera persona (móvil) | sin giroscopio |
 | M-438 | P2 | PENDIENTE | UI de móvil: botones pequeños. Medido el 27-10: un botón de 32 px en un teléfono apaisado (~68 mm de alto, 720 px lógicos) mide ~3 mm; al zoom máximo (140 %) ~4,2 mm; Android pide ~7,6 mm (48 dp). No se arregla con escala: a ×1,8 las pantallas de 1280 × 720 no caben. Propuesta: modo móvil con una columna (lista lateral → pestañas), botones de 64 px y el zoom por defecto a 120 % al primer arranque en móvil. Necesita probarse en un teléfono (dueño). | sin tamaño mínimo |
-| M-439 | P2 | PENDIENTE | Orientación vertical no soportada | sin vertical |
+| M-439 | P2 | PARCIAL | Orientación vertical: diseño propio hecho para menús y partido (ver «VERTICAL» arriba); falta el giro del aparato y Ajustes | sesión 8 |
 | M-440 | P2 | PENDIENTE | Sin modo una mano | sin modo una mano |
 
 ### F3 vida en 3D (40)
