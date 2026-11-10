@@ -8,7 +8,7 @@ var p: Principal
 ## Lo que la repregunta cambia sin rehacer el plató (B5).
 var _quien: Label
 var _pregunta: Label
-var _opciones: VBoxContainer
+var _opciones: Container   ## (10-11) la cruz direccional (`SelectorDireccional`): un botón hijo por opción
 var _reloj: ProgressBar
 ## Pulido (26-10, petición 8 de la sesión 2): el medio y el trato van aparte
 ## del nombre -jerarquía: quién pregunta, qué pregunta, qué contestas- y el
@@ -35,10 +35,10 @@ var _ultimo_medio := ""
 ## Lo que movió la rueda entera (con repreguntas), para el resumen final.
 var _suma := {"moral": 0, "confianza": 0, "socios": 0}
 ## Medidas en píxeles lógicos (la ventana base es 1280×720 con «expand»).
-const ANCHO_COLUMNA := 400
+const ANCHO_COLUMNA := 460   ## (10-11) más ancha: la cruz de respuestas necesita dos columnas laterales
 const ALTO_FRANJA := 108
 const MARGEN := 18
-const COL_FONDO := Color(0.035, 0.038, 0.045)
+const COL_FONDO := Color(0.03, 0.045, 0.08)
 ## Tiempo de lectura: un mínimo, y algo más por letra, con techo.
 const LECTURA_MIN := 1.5
 const LECTURA_POR_LETRA := 0.04
@@ -175,7 +175,7 @@ func _look_dt() -> Dictionary:
 ## Caja semitransparente común (columna, cabecera, franja).
 static func _caja(alfa: float, radio: int, margen: float) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.02, 0.025, 0.03, alfa)
+	sb.bg_color = Color(0.035, 0.06, 0.11, alfa)   ## (10-11) azul noche (el dueño pidió menos verde con dorado)
 	sb.set_corner_radius_all(radio)
 	sb.content_margin_left = margen; sb.content_margin_right = margen
 	sb.content_margin_top = margen * 0.7; sb.content_margin_bottom = margen * 0.7

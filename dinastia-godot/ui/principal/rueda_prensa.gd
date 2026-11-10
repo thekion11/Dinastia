@@ -305,46 +305,33 @@ func pintar_pregunta(e: Dictionary) -> void:
 	if is_instance_valid(_escena):
 		_escena.enfocar_periodista(String(e.get("periodista", "")), _lectura(pregunta))
 	if _atajos != null and _opciones != null:
-		_atajos.text = Idiomas.t("1-%d o ↑↓ + Enter · LB/RB: tono") % _opciones.get_child_count()
+		_atajos.text = Idiomas.t("Analógico o flechas para apuntar · R2/A/Enter confirma · 1-%d · LB/RB: tono") % _opciones.get_child_count()
 	if is_instance_valid(_reloj):
 		_reloj.value = 0.0
 		_reloj.modulate = Color.WHITE
 
-func _fila_opciones(e: Dictionary) -> VBoxContainer:
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 6)
-	var ops: Array = e.get("opciones", [])
-	for i in ops.size():
-		var op: Variant = ops[i]
-		var b2 := Button.new()
-		## Las opciones del guion son DICCIONARIOS -{txt, moral, confianza,
-		## socios}-, no arrays ni cadenas: `String(op)` reventaba en cada rueda
-		## de prensa y el boton se quedaba sin texto. No se veia porque la rueda
-		## no llegaba a abrirse nunca en una partida de verdad.
+## (10-11, orden del dueño: fuera el formato de lista) LAS RESPUESTAS EN CRUZ: `SelectorDireccional` -analógico/cruceta apunta, R2 o A
+## confirma, clic o toque directo- con una mini animación al elegir; la de delegar («🙋») va en el centro. Las teclas 1-9 siguen valiendo.
+func _fila_opciones(e: Dictionary) -> Container:
+	var textos: Array = []
+	for op: Variant in e.get("opciones", []):
+		## Las opciones del guion son DICCIONARIOS -{txt, moral, confianza, socios}-; se aceptan también arrays y cadenas.
 		if op is Dictionary:
-			b2.text = String((op as Dictionary).get("txt", ""))
+			textos.append(String((op as Dictionary).get("txt", "")))
 		elif op is Array:
-			b2.text = String((op as Array)[0])
+			textos.append(String((op as Array)[0]))
 		else:
-			b2.text = str(op)
-		b2.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b2.custom_minimum_size = Vector2(0, 40)
-		## Salta de línea dentro de la columna en vez de salirse de ella.
-		b2.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		## Mismo estilo que los diálogos (13-10-2026): píldora con borde dorado
-		## al pasar, numerada.
-		CuadroDialogo.respuesta(b2)
-		b2.text = "%d.  %s" % [i + 1, b2.text]
-		b2.add_theme_font_size_override("font_size", 14)
-		## «🙋 Que responda mi ayudante» (S5): se distingue del resto, dorado y
-		## con su explicación, porque no es una frase tuya sino delegar.
-		if b2.text.contains("🙋"):
-			b2.add_theme_color_override("font_color", Tema.ORO)
-			b2.add_theme_color_override("font_hover_color", Tema.ORO)
-			b2.tooltip_text = Idiomas.t("Tu ayudante contesta por ti: menos riesgo, menos protagonismo.")
-		b2.pressed.connect(func() -> void: responder(i))
-		col.add_child(b2)
-	return col
+			textos.append(str(op))
+	var sel := SelectorDireccional.crear(textos, p.COL_ACENTO)
+	sel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	for i in sel.get_child_count():
+		var b := sel.get_child(i) as Button
+		if not String(textos[i]).contains("🙋"):
+			b.text = "%d · %s" % [i + 1, b.text]
+		else:
+			b.tooltip_text = String(textos[i]) + "\n" + Idiomas.t("Tu ayudante contesta por ti: menos riesgo, menos protagonismo.")
+	sel.elegido.connect(responder)
+	return sel
 
 func tras_responder(r: Dictionary) -> void:
 	if r.is_empty():
