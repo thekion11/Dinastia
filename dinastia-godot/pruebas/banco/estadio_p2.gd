@@ -360,3 +360,35 @@ func _probar_media_firma() -> void:
 	j.atributos[ks[0]] = 60
 	var d := j.media_en("MC")
 	_comprobar(a == 60 and b == a and c > a and d == a, "media 60 → igual sin cambios → sube con un atributo a 99 (%d) → vuelve al restaurarlo (%d, %d, %d, %d)" % [c, a, b, c, d])
+
+## (10-11, rendimiento en móvil) Dentro del edificio del club (plantas distintas de la 0) no se dibuja el estadio de fuera; al volver a la 0 queda como estaba (lo que ya estaba oculto, oculto).
+func _probar_ocultar_estadio_dentro() -> void:
+	_titulo("CLUB A PIE: SIN ESTADIO DE FUERA DENTRO DEL EDIFICIO")
+	var raiz := Node3D.new()
+	var grada := Node3D.new()
+	grada.name = "Grada"
+	var apagado := Node3D.new()
+	apagado.name = "YaOculto"
+	apagado.visible = false
+	var tunel := Node3D.new()
+	tunel.name = "TunelVestuario"
+	var calle := Node3D.new()
+	calle.name = "Exterior"
+	var luz := OmniLight3D.new()
+	var explorador := Node3D.new()
+	for n: Node in [grada, apagado, tunel, calle, luz, explorador]:
+		raiz.add_child(n)
+	add_child(raiz)
+	OcultarEstadioDentro.actualizar(explorador, 0)
+	_comprobar(grada.visible and tunel.visible, "en la planta 0 no se oculta nada")
+	OcultarEstadioDentro.actualizar(explorador, -1)
+	_comprobar(not grada.visible, "en un sótano la grada no se dibuja")
+	_comprobar(tunel.visible and calle.visible and luz.visible and explorador.visible, "el edificio, la calle, las luces y el explorador siguen")
+	OcultarEstadioDentro.actualizar(explorador, 2)
+	_comprobar(not grada.visible, "subir de planta no la devuelve")
+	OcultarEstadioDentro.actualizar(explorador, 0)
+	_comprobar(grada.visible and not apagado.visible, "al volver a la planta 0 vuelve la grada y lo que ya estaba oculto sigue oculto")
+	OcultarEstadioDentro.actualizar(explorador, 1)
+	OcultarEstadioDentro.devolver(explorador)
+	_comprobar(grada.visible, "al cerrar el recorrido se devuelve el estadio")
+	raiz.queue_free()
