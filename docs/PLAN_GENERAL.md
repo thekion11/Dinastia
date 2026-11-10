@@ -98,6 +98,26 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 
 8. **LIGAS ACTIVAS** (encargo del dueño vía líder, 10-11, sesión 6; «como Football Manager») — HECHO el núcleo y la interfaz: `nucleo/ligas_activas.gd` (lista por defecto: PC todas, móvil CHI + los 5 grandes; lista guardada con la partida, deducida de las ligas en partidas viejas; `agregar` añade países al cerrar la temporada sin mover ids y vuelve a montar copas y continentales), pantalla `ui/entrada/ligas_activas_pantalla.gd` (etapa «ligas» entre modo y país; mismo componente en modo AÑADIR al cerrar la temporada, enganchado en `AccionesTemporada._ofrecer_ligas`), los 5 sitios que generan el mundo usan `LigasActivas.para_generar()`, textos en 9 idiomas, banco `_probar_ligas_activas*` (mundos de 1, 2, 5 y 86 países, guardado/carga, añadir a mitad de partida, pantalla). MEDIDO: los cupos continentales ya se reparten entre las ligas activas (5 grandes: ucl/uel/uecl de 36; CHI sola: lib de 32), así que NO hacen falta clubes «ligeros» por ahora. FALTA: que el dueño decida «mi país» en móvil antes de elegir club (hoy CHI), captura de la pantalla en móvil/portrait y su revisión, un acceso en Ajustes para añadir ligas fuera del cierre de temporada, y el coste real en el móvil (sesión 5).
 
+## RESPUESTAS DEL DUEÑO A LAS 21 PREGUNTAS (10-11 noche) — se borra cada fila al completarse
+- MOTOR NUEVO (League-Soccer): SOLO LO VISUAL; no se calibra.
+- GUARDADO DE JUGADORES con campos fijos (en vez de diccionarios): SÍ. Encargo grande: con la misma huella de igualdad y migración de las partidas guardadas.
+- COLORES DE CAMISETAS: los verifican las sesiones con búsqueda en fuentes (sesión 4: 7 ligas grandes; sesión 6: RSSSF).
+- RAMAS VIEJAS: el dueño DA PERMISO para borrarlas. Se borran solo las que tienen TODO su trabajo en `main` (comprobado commit a commit con `git cherry`); las que tengan algo propio se revisan antes. Se conservan siempre `respaldo-*`, `borrar-*` y `entregas/`.
+- `.mp4` de `marca/`: NO se sacan (son ejemplos de referencia).
+- VERSIÓN: 0.9.2, y hacer lo necesario para exportar (incluido el `.so` de Android de la extensión C++).
+- BIBLIOTECA DE CARAS (mezclas, no personas reales): SÍ, se publica en la versión pública.
+- FOTOS REALES de `caras_reales.pck`: el dueño no entendió la pregunta → se mide desde aquí (cuántas caras monta el `.pck` si está) y se le explica.
+- MUSEO: la planta extra se abre por TÍTULOS GANADOS y con un MINI EVENTO (la animación de expansión).
+- NERVIÓN y FPS en su teléfono: el dueño AÚN NO PUEDE probarlos.
+- ESTADIOS en las celebraciones: SÍ a la versión simplificada de verdad de la grada lejana / público más barato.
+- MÓVIL, POR DEFECTO: «Modo rendimiento» ENCENDIDO; «Ahorro en los menús también en Media» ENCENDIDO; TOPE de 90 FPS.
+- ULTRA BAJA: NO se simplifican más hinchas, butacas ni jugadores lejanos.
+- WEB en el móvil: SÍ a las texturas comprimidas.
+- VERTICAL: DISEÑO PROPIO para el partido y los menús (no se quita).
+- CABECERA COMPACTA: le gusta, se queda.
+- ICONOS: los DIBUJADOS por defecto (los emojis quedan como opción).
+- TECLADO CON MANDO (Triángulo = espacio, X = tecla): le vale.
+
 ## RESPUESTAS DEL DUEÑO (10-11)
 - Quitar la palabra «PES» de la interfaz: HECHO («Plantilla detallada»).
 - Estrategias rápidas en el partido: SÍ (hecho, ver abajo).

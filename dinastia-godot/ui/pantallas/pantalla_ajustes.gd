@@ -58,8 +58,8 @@ static var _fuentes: Dictionary = {}
 ## EL LÍMITE DE FOTOGRAMAS. En un portátil, dejar el juego a 300 fps calienta la
 ## máquina para dibujar la misma tabla trescientas veces por segundo. Treinta
 ## basta para una interfaz; sesenta para el estadio en 3D.
-const FPS_OPCIONES := [30, 60, 120, 0]
-var fps_elegido: int = 60
+const FPS_OPCIONES := [30, 60, 90, 120, 0]
+var fps_elegido: int = 90 if CalidadRes3D.es_movil_tactil() else 60   ## (orden 36) 90 en el móvil, 60 en PC (igual que `ConfigClubDatos.fps_defecto`)
 
 ## LAS TRES RANURAS MANUALES de `vAjustes()`. `Partida` guarda por NOMBRE desde
 ## el porte —`guardar(m, nombre)`, `listar()`, `borrar()`— y el juego solo usaba
