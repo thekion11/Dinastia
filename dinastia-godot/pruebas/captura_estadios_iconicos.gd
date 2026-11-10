@@ -74,9 +74,9 @@ func _uno(i: int, nombre: String) -> void:
 	print("   llamadas min/mediana/max: %d / %d / %d" % [muestras[0], llamadas, muestras[29]])
 	print("ESTADIO %d %s (%s) %s %d %s · %d llamadas · piezas: arco=%s torres=%s costillas=%s techo_lados=%s" % [i, nombre, c.pais,
 		est.get("forma"), int(est.get("niveles", 0)), est.get("techo"), llamadas, est.has("arco"), est.get("torres_rampa", 0), est.get("costillas", 0), est.has("bandejas")] + ("  curva=%s colchon=%s" % [est.has("fachada_curva"), est.has("colchon")]))
-	get_viewport().get_texture().get_image().save_jpg("%s/%02d_%s_partido.jpg" % [_dir, i, c.pais], 0.88)
 	if OS.get_environment("PICOS") != "":
 		await _picos(llamadas)
+	get_viewport().get_texture().get_image().save_jpg("%s/%02d_%s_partido.jpg" % [_dir, i, c.pais], 0.88)
 	if OS.get_environment("DESGLOSE") != "":
 		await _desglose(vista, llamadas)
 	var aerea := Camera3D.new()
