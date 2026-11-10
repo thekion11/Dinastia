@@ -41,12 +41,17 @@ func _slots() -> Array:
 ## --- FASE REGULAR ---------------------------------------------------------
 
 func _mitades(l: Liga) -> Array:
+	var a: Array[Club] = []
+	var b: Array[Club] = []
+	var real := ZonasLiga.de(l)   ## zonas/conferencias reales por posición del club; si no hay, por id (par/impar)
+	if not real.is_empty():
+		for c: Club in l.clubes:
+			(a if int(real[c.id]) == 0 else b).append(c)
+		return [a, b]
 	var ids: Array = []
 	for c: Club in l.clubes:
 		ids.append(c.id)
 	ids.sort()
-	var a: Array[Club] = []
-	var b: Array[Club] = []
 	for i in ids.size():
 		(a if i % 2 == 0 else b).append(_club(l, String(ids[i])))
 	return [a, b]

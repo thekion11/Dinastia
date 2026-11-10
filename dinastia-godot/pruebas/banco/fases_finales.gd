@@ -54,6 +54,12 @@ func _probar_fases_finales_argentina() -> void:
 		m.generar(["ARG", "CHI", "ESP"], semilla)
 		var l := _liga_de(m, "ARG")
 		_comprobar(l.clubes.size() == 30 and l.formato != null and l.formato.f1 == 16 and l.jornadas() == 20, "%d: 30 clubes, 16 fechas de zona y 4 de playoffs (%d en total)" % [semilla, l.jornadas()])
+		var z := ZonasLiga.de(l)
+		_comprobar(z.size() == 30 and z[l.clubes[0].id] == 0 and z[l.clubes[1].id] == 1 and z[l.clubes[2].id] == 1 and z[l.clubes[4].id] == 0, "zonas reales: el primero (Boca) en la A; el segundo y el tercero (River y Racing) en la B; el quinto (Independiente) en la A")
+		var en_a := 0
+		for id: String in z:
+			en_a += 1 if int(z[id]) == 0 else 0
+		_comprobar(en_a == 15, "15 clubes por zona (%d)" % en_a)
 		while l.jornada_actual < 16:
 			l.jugar_jornada()
 		var pj_zona := int(l.tabla_puntos[l.clubes[0].id]["pj"])
@@ -87,6 +93,11 @@ func _probar_fases_finales_mls() -> void:
 		m.generar(["USA", "CHI", "ESP"], semilla)
 		var l := _liga_de(m, "USA")
 		_comprobar(l.clubes.size() == 30 and l.formato != null and l.formato.f1 == 30 and l.jornadas() == 37, "%d: 30 clubes, 30 fechas y 7 de playoffs (%d)" % [semilla, l.jornadas()])
+		var conf := ZonasLiga.de(l)
+		var este := 0
+		for id: String in conf:
+			este += 1 if int(conf[id]) == 0 else 0
+		_comprobar(conf.size() == 30 and este == 15 and conf[l.clubes[0].id] == 0 and conf[l.clubes[1].id] == 1, "conferencias reales: 15 Este y 15 Oeste (Inter Miami en el Este, LAFC en el Oeste)")
 		while l.jornada_actual < 30:
 			l.jugar_jornada()
 		_comprobar(l.calendario[30].size() == 2, "Wild Card: 8.º contra 9.º en cada conferencia (%d partidos)" % l.calendario[30].size())
