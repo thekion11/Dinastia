@@ -21,6 +21,9 @@ var _fallos := 0
 var _clubes: Array = []
 var _resumen: Array = []
 var _alto_util: Array = []
+## Las preferencias del jugador tal como estaban: la principal las guarda (con el idioma alemán y el zoom del móvil de esta prueba) y las
+## pruebas siguientes arrancaban en alemán (`ate_atajos_menus` buscaba «Táctica» y encontraba «Taktik»). Se devuelven al terminar.
+var _prefs_antes: Variant = null
 
 func _comprobar(ok: bool, texto: String) -> void:
 	print(("  ok     " if ok else "  FALLO  ") + texto)
@@ -33,6 +36,8 @@ func _ready() -> void:
 		print("===== FIN. 0 fallos =====")
 		get_tree().quit()
 		return
+	if FileAccess.file_exists(Principal.PREFS):
+		_prefs_antes = FileAccess.get_file_as_bytes(Principal.PREFS)
 	PantallaMovil.dpi_forzado = DPI
 	EscalaMovil.forzar = true
 	if OS.get_environment("CABECERA") == "grande":   ## para las capturas del antes (y comprobar que el interruptor la devuelve)
@@ -69,7 +74,17 @@ func _ready() -> void:
 	EscalaMovil.forzar = false
 	PantallaMenu.compacta_pref = true
 	Idiomas.idioma = "es"
+	_devolver_preferencias()
 	get_tree().quit(0 if _fallos == 0 else 1)
+
+func _devolver_preferencias() -> void:
+	if _prefs_antes is PackedByteArray:
+		var f := FileAccess.open(Principal.PREFS, FileAccess.WRITE)
+		if f != null:
+			f.store_buffer(_prefs_antes)
+			f.close()
+	elif FileAccess.file_exists(Principal.PREFS):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(Principal.PREFS))
 
 ## Tres clubes de tres países distintos (el del jugador y dos más).
 func _elegir_clubes() -> void:
