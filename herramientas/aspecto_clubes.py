@@ -116,7 +116,76 @@ def filas(clubes_limpios: set):
                 fila["asientos"] = asi
             nuevo[real] = fila
     retoques(nuevo, clubes_limpios, formas, patrones, figs, abc, fallos)
+    uniformes(nuevo, kits, fallos)
     return nuevo, fallos
+
+
+def _lum(h: str) -> float:
+    r, g, b = (int(h[i:i + 2], 16) / 255.0 for i in (1, 3, 5))
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def _dist(a: str, b: str) -> float:
+    return sum((int(a[i:i + 2], 16) - int(b[i:i + 2], 16)) ** 2 for i in (1, 3, 5)) ** 0.5 / 255.0
+
+
+def visita_automatica(k1: str, k2: str) -> list:
+    """Segundo uniforme deducido del primero (contraste): camiseta clara -> oscura con el color del club; oscura -> blanca. [v1, v2]."""
+    if _lum(k1) > 0.5:
+        v1 = k2 if _lum(k2) < 0.3 else "#1b1f26"
+    else:
+        v1 = "#f4f4f4"
+    if _dist(v1, k1) < 0.45:
+        v1 = "#1b1f26" if _lum(k1) > 0.5 else "#f4f4f4"
+    return [v1, k1]
+
+
+def uniformes(nuevo: dict, kits: set, fallos: list) -> None:
+    """`_uniformes.txt`: nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed. Lo que traiga pisa la fila (uniforme base) y fija el SEGUNDO uniforme
+    (`visita`: c1, c2, camiseta, pant, med). A todo club con colores y sin segundo uniforme escrito se le deduce uno (`visita_automatica`)."""
+    ruta = os.path.join(DATOS, "_uniformes.txt")
+    if os.path.exists(ruta):
+        for n, linea in enumerate(open(ruta, encoding="utf-8").read().splitlines(), 1):
+            if not linea.strip() or linea.startswith("#"):
+                continue
+            v = [x.strip() for x in linea.split("|")]
+            v += [""] * (11 - len(v))
+            real = v[0]
+            malo = None
+            if real not in nuevo:
+                malo = "club sin fila"
+            elif v[1] and v[1] not in kits:
+                malo = "camiseta «%s»" % v[1]
+            elif v[8] and v[8] not in kits:
+                malo = "camiseta de visita «%s»" % v[8]
+            elif any(x and not HEX.match(x) for x in v[2:8] + v[9:11]):
+                malo = "color mal escrito"
+            if malo:
+                fallos.append("_uniformes.txt:%d %s: %s" % (n, real, malo))
+                continue
+            fila = nuevo[real]
+            if v[1]:
+                fila["camiseta"] = v[1]
+            k = dict(fila.get("kit", {}))
+            if v[2]:
+                k["c1"] = v[2]
+            if v[3]:
+                k["c2"] = v[3]
+            for campo, val in (("pant", v[4]), ("med", v[5])):
+                if val:
+                    k[campo] = val
+            if v[2] and v[3]:
+                k.setdefault("pant", v[3] if _lum(v[3]) < 0.35 else v[2])
+                k.setdefault("med", v[2])
+            if k:
+                fila["kit"] = k
+            if v[6] and v[7]:
+                fila["visita"] = {"c1": v[6], "c2": v[7], "camiseta": v[8] or "liso", "pant": v[9] or v[6], "med": v[10] or v[6]}
+    for real, fila in nuevo.items():
+        k = fila.get("kit", {})
+        if "visita" not in fila and k.get("c1") and k.get("c2"):
+            v1, v2 = visita_automatica(k["c1"], k["c2"])
+            fila["visita"] = {"c1": v1, "c2": v2, "camiseta": "liso", "pant": v1, "med": v1}
 
 
 def retoques(nuevo: dict, clubes_limpios: set, formas: set, patrones: set, figs: set, abc: set, fallos: list) -> None:

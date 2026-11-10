@@ -339,3 +339,82 @@ func _probar_league_nucleo() -> void:
 	_comprobar(ml.estado != "fin" and decisiones > 0 and (ml.equipos[0] as LeagueEquipo).balon_hist.size() == LeagueEquipo.HISTORIA, "MotorLeague juega (%s - %s): %d decisiones de League en 20 s" % [a.pais, b.pais, decisiones])
 	_comprobar(MotorLeague.crear() is MotorLeague == MotorLeague.activo, "la bandera elige el motor (apagada = el de siempre)")
 	raiz.queue_free()
+
+
+## UNIFORMES (10-11, encargo del dueño «uniformes y caras»): todo club con aspecto tiene su uniforme base y un SEGUNDO uniforme que contrasta; cuando el primero
+## choca con el del rival, sale el segundo REAL del club (colores, diseño, pantalón y medias) en vez del deducido. Revisado con varios países.
+func _probar_uniformes_segundo() -> void:
+	_titulo("UNIFORMES: BASE Y SEGUNDO UNIFORME POR CLUB")
+	var m := Mundo.new()
+	m.generar(["ESP", "ENG", "BRA", "JPN", "MEX", "USA", "CHI", "ARG"], 61)
+	var clubes := 0
+	var con_visita := 0
+	var con_diseno := 0
+	var choca := 0
+	var mal: Array[String] = []
+	for l: Liga in m.ligas:
+		for c: Club in l.clubes:
+			clubes += 1
+			var v := AspectoClub.visita(c)
+			if v.is_empty():
+				continue
+			con_visita += 1
+			if String(AspectoClub.fila(c).get("camiseta", "liso")) != "liso":
+				con_diseno += 1
+			var k := Puente3D.kit(c)
+			var kv := {"c1": String(v["c1"])}
+			if Puente3D.chocan(k, kv):
+				choca += 1
+				mal.append(c.nombre)
+			## Con un rival que viste IGUAL que ella, la visita sale con su segundo uniforme real.
+			var gemelo := Club.new()
+			gemelo.id = c.id + "_g"
+			gemelo.nombre = c.nombre + " G"
+			gemelo.color1 = c.color1
+			gemelo.color2 = c.color2
+			gemelo.kit_color1 = c.color_kit1()
+			gemelo.kit_color2 = c.color_kit2()
+			var usado := Puente3D.kit_visita(gemelo, c)
+			if String(usado["c1"]) != String(v["c1"]) and not mal.has(c.nombre):
+				mal.append(c.nombre + " (no usó su segundo uniforme)")
+	_comprobar(clubes > 100 and con_visita >= clubes - clubes / 10, "%d de %d clubes de 8 países tienen segundo uniforme" % [con_visita, clubes])
+	_comprobar(mal.is_empty(), "el segundo uniforme no choca con el primero y se usa cuando el rival viste igual (%d fallos%s)" % [mal.size(), "" if mal.is_empty() else ": " + str(mal.slice(0, 4))])
+	_comprobar(con_diseno >= 20, "hay clubes con diseño propio (no liso) entre ellos (%d)" % con_diseno)
+
+## LA CARA POR PAÍS (10-11, encargo «uniformes y caras», parte 2): los jugadores de nombre fijo sin foto toman la cara típica de su país (proporciones medidas en las caras
+## reales), en vez de un azar de ocho tonos y barba 0-7. Se prueba con jugadores de varios países y clubes.
+func _probar_cara_por_pais() -> void:
+	_titulo("CARA POR PAÍS PARA LOS JUGADORES SIN FOTO")
+	_comprobar(not CaraPrior.tabla().is_empty() and CaraPrior.tabla().has("*") and CaraPrior.tabla().has("JPN"), "la tabla por país está y trae JPN y la media mundial")
+	var m := Mundo.new()
+	m.generar(["JPN", "BRA", "ENG", "ESP", "KOR", "ARG"], 71)
+	var por_pais := {}
+	for c: Club in m.clubes.values():
+		for j: Jugador in c.plantilla:
+			if not j.real:
+				continue
+			var lk := Cara.look_de(j)
+			var otra := Cara.look_de(j)
+			if str(lk) != str(otra):
+				_comprobar(false, "la cara de %s es siempre la misma" % j.nombre)
+			var d: Dictionary = por_pais.get(j.pais, {"n": 0, "sin_barba": 0, "piel": 0.0, "rubios": 0})
+			d["n"] += 1
+			d["sin_barba"] += 1 if int(lk["barba"]) == 0 else 0
+			d["piel"] += float(maxi(Cara.PIELES.find(String(lk["piel"])), 0))
+			d["rubios"] += 1 if String(lk["peloC"]) == CaraPrior.PELO_HEX["rubio"] else 0
+			por_pais[j.pais] = d
+	var ok_pais := por_pais.has("JPN") and por_pais.has("BRA") and por_pais.has("ENG")
+	_comprobar(ok_pais, "hay jugadores de nombre fijo de varios países (%s)" % str(por_pais.keys()))
+	if not ok_pais:
+		return
+	var jp: Dictionary = por_pais["JPN"]
+	var br: Dictionary = por_pais["BRA"]
+	var en: Dictionary = por_pais["ENG"]
+	_comprobar(float(br["piel"]) / maxf(float(br["n"]), 1.0) > float(en["piel"]) / maxf(float(en["n"]), 1.0) + 0.3, "la piel de Brasil sale más oscura que la de Inglaterra (%.1f frente a %.1f)" % [float(br["piel"]) / float(br["n"]), float(en["piel"]) / float(en["n"])])
+	_comprobar(int(jp["rubios"]) * 20 <= int(jp["n"]), "casi ningún japonés sale rubio (%d de %d)" % [int(jp["rubios"]), int(jp["n"])])
+	var sin := 0
+	var tot := 0
+	for d: Dictionary in por_pais.values():
+		sin += int(d["sin_barba"])
+		tot += int(d["n"])
+	_comprobar(float(sin) / float(maxi(tot, 1)) > 0.4, "como en las fotos, la mayoría no lleva barba (%d de %d sin barba; antes 1 de cada 8)" % [sin, tot])

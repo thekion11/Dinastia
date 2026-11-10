@@ -42,3 +42,9 @@ static func emblema(c: Club) -> String:
 
 static func letras(c: Club) -> String:
 	return String(fila(c).get("letras", ""))
+
+## (10-11) EL SEGUNDO UNIFORME del club real ({c1, c2, camiseta, pant, med}, hex con #), o {} si la fila no lo trae. Lo usa `Puente3D.kit_visita` cuando el
+## primero choca con el del rival (antes siempre salía uno deducido al azar de los colores).
+static func visita(c: Club) -> Dictionary:
+	var v: Variant = fila(c).get("visita", {})
+	return (v as Dictionary) if v is Dictionary else {}
