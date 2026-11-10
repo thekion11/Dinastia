@@ -115,6 +115,7 @@ const PIEL_SESGO := {
 	"ESP": 2.0, "ITA": 2.2, "GER": 2.2, "ENG": 1.4, "FRA": 1.0,
 	"JPN": 2.6, "KOR": 2.6, "AUS": 2.0, "KSA": 0.9, "EGY": 0.8, "MAR": 0.9, "RSA": 0.5,
 	"POR": 2.0, "NED": 1.5, "BEL": 1.5, "CRO": 2.2, "DEN": 1.8,
+	"TUR": 2.4, "SCO": 1.8, "SUI": 1.2, "AUT": 1.6, "GRE": 2.4, "QAT": 0.9,
 }
 ## Los colores de las bufandas y gorras de la grada: los del club de casa.
 static func colores_club(raiz: Node, c1: Color, c2: Color) -> void:

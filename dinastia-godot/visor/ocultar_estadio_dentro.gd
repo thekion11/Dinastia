@@ -28,11 +28,11 @@ static func actualizar(explorador: Node3D, planta: int, zona := "", camara: Came
 	var calle := false
 	if planta != 0:
 		estadio = true
-		if ver:
+		if ver and datos.has("z_fin"):
 			calle = planta < 0 or not ventana_visible(camara, datos, planta)
-	elif ver and zona == "Vestuario":
+	elif ver and zona == "Vestuario" and datos.has("z_out"):   ## (10-11) sin la medida del túnel no se oculta nada
 		estadio = not boca_visible(camara, datos, float(datos["z_out"]))
-	elif ver and zona == "Túnel":
+	elif ver and zona == "Túnel" and datos.has("z_boca"):
 		estadio = not boca_visible(camara, datos, float(datos["z_boca"]))
 		calle = estadio
 	var clave := (1 if estadio else 0) + (2 if calle else 0)

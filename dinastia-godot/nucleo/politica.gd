@@ -58,6 +58,12 @@ const ESTRUCTURA := {
 	"BEL": ["monarquia_parlamentaria", 5, "Parlamento (y con él, el primer ministro)", "el rey"],
 	"CRO": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente de la República, con un papel más simbólico"],
 	"DEN": ["monarquia_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el rey"],
+	"TUR": ["presidencial", 5, "presidente de la República", "el presidente"],
+	"SCO": ["monarquia_parlamentaria", 5, "Parlamento (y con él, el primer ministro)", "el rey"],
+	"SUI": ["republica_parlamentaria", 4, "Parlamento (y con él, el Consejo Federal)", "un consejo de siete miembros que rota la presidencia"],
+	"AUT": ["republica_parlamentaria", 5, "Parlamento (y con él, el canciller)", "el presidente federal, con un papel más simbólico"],
+	"GRE": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente de la República, con un papel más simbólico"],
+	"QAT": ["monarquia_absoluta", 0, "", "el emir"],
 }
 
 const EXPLICA := {

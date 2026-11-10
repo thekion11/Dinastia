@@ -23,6 +23,7 @@ const NOMBRE := {
 	"JPN": "Japón", "KOR": "Corea del Sur", "KSA": "Arabia Saudita", "EGY": "Egipto",
 	"MAR": "Marruecos", "RSA": "Sudáfrica", "AUS": "Australia", "MEX": "México", "USA": "Estados Unidos",
 	"POR": "Portugal", "NED": "Holanda", "BEL": "Bélgica", "CRO": "Croacia", "DEN": "Dinamarca",
+	"TUR": "Turquía", "SCO": "Escocia", "SUI": "Suiza", "AUT": "Austria", "GRE": "Grecia", "QAT": "Catar",
 }
 
 const OFICIAL := {
@@ -37,14 +38,16 @@ const OFICIAL := {
 	"USA": "Estados Unidos de América",
 	"POR": "República Portuguesa", "NED": "Reino de los Países Bajos", "BEL": "Reino de Bélgica",
 	"CRO": "República de Croacia", "DEN": "Reino de Dinamarca",
+	"TUR": "República de Türkiye", "SCO": "Escocia, Reino Unido", "SUI": "Confederación Suiza", "AUT": "República de Austria",
+	"GRE": "República Helénica", "QAT": "Estado de Catar",
 }
 
 ## El orden de la lista: por continente, y dentro de cada uno como los ordena el juego.
 const CONTINENTES := [
 	["Sudamérica", ["CHI", "ARG", "BRA", "URU", "PAR", "BOL", "PER", "ECU", "COL", "VEN"]],
-	["Europa", ["ESP", "ENG", "ITA", "GER", "FRA", "POR", "NED", "BEL", "CRO", "DEN"]],
+	["Europa", ["ESP", "ENG", "ITA", "GER", "FRA", "POR", "NED", "BEL", "CRO", "DEN", "TUR", "SCO", "SUI", "AUT", "GRE"]],
 	["Norteamérica", ["MEX", "USA"]],
-	["Asia", ["JPN", "KOR", "KSA"]],
+	["Asia", ["JPN", "KOR", "KSA", "QAT"]],
 	["África", ["EGY", "MAR", "RSA"]],
 	["Oceanía", ["AUS"]],
 ]
@@ -131,6 +134,18 @@ const MONUMENTOS := {
 		["Anfiteatro de Pula", "coliseo", ""], ["Puente de Pelješac", "puente", "atirantado"], ["Faro de Savudrija", "faro", ""]],
 	"DEN": [["La Sirenita", "estatua", "columna"], ["Puente de Øresund", "puente", "atirantado"],
 		["Torre Redonda", "torre_reloj", ""], ["Castillo de Kronborg", "castillo", "holsten"], ["Faro de Rubjerg Knude", "faro", ""]],
+	"TUR": [["Santa Sofía", "cupula", "palacio"], ["Puente del Bósforo", "puente", "atirantado"], ["Torre de Gálata", "torre_reloj", ""],
+		["Chimeneas de Capadocia", "montana", "cono"], ["Murallas de Constantinopla", "muralla", "puerta"]],
+	"SCO": [["Castillo de Edimburgo", "castillo", "holsten"], ["Puente de Forth", "puente", "atirantado"], ["Monumento a Scott", "torre_reloj", ""],
+		["Faro de Corsewall", "faro", ""], ["Muralla de Antonino", "muralla", "puerta"]],
+	"SUI": [["Puente de la Capilla", "puente", "atirantado"], ["Castillo de Chillon", "castillo", "holsten"], ["Torre del Reloj de Berna", "torre_reloj", ""],
+		["Cascadas del Rin", "catarata", "ancha"], ["Muralla de Morat", "muralla", "puerta"]],
+	"AUT": [["Palacio de Schönbrunn", "castillo", "holsten"], ["Catedral de San Esteban", "torre_reloj", ""], ["Noria del Prater", "torre_reloj", ""],
+		["Fortaleza de Hohensalzburg", "muralla", "puerta"], ["Puente del Danubio", "puente", "atirantado"]],
+	"GRE": [["Partenón", "coliseo", ""], ["Faro de Cabo Sunion", "faro", ""], ["Puente de Rio-Antirio", "puente", "atirantado"],
+		["Torre de los Vientos", "torre_reloj", ""], ["Murallas de Rodas", "muralla", "puerta"]],
+	"QAT": [["Torre Aspire", "torre_reloj", ""], ["Puente de la Corniche", "puente", "atirantado"], ["Faro de la bahía de Doha", "faro", ""],
+		["Fuerte de Zubarah", "muralla", "puerta"], ["Museo de Arte Islámico", "castillo", "holsten"]],
 }
 
 ## Todos los países que se pueden ver en el globo, en el orden de la lista.

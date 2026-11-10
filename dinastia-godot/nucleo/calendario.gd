@@ -97,6 +97,12 @@ const FIJAS := {
 	"BEL": [[7, 21, "Fiesta Nacional de Bélgica", "fiesta", "El juramento del primer rey de los belgas, 1831."]],
 	"CRO": [[5, 30, "Día del Estado", "fiesta", "La fiesta nacional croata."]],
 	"DEN": [[6, 5, "Día de la Constitución", "fiesta", "La Constitución danesa de 1849."]],
+	"TUR": [[10, 29, "Día de la República", "fiesta", "Recuerda la proclamación de la República, en 1923."]],
+	"SCO": [[11, 30, "Día de San Andrés", "fiesta", "El patrón de Escocia: banderas azules con la cruz blanca."]],
+	"SUI": [[8, 1, "Día Nacional", "fiesta", "Recuerda el pacto de los primeros cantones, en 1291."]],
+	"AUT": [[10, 26, "Día Nacional", "fiesta", "Recuerda la neutralidad declarada en 1955."]],
+	"GRE": [[3, 25, "Día de la Independencia", "fiesta", "Recuerda el levantamiento contra el Imperio otomano, en 1821."]],
+	"QAT": [[12, 18, "Día Nacional", "fiesta", "Recuerda la unificación del país, en 1878."]],
 }
 
 ## El 1 de mayo es festivo en casi todos; donde no, su equivalente.

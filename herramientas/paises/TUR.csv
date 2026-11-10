@@ -1,0 +1,28 @@
+#seleccion=Turquía
+#tier=0.95
+#globo=32.86,39.93
+#bandera=🇹🇷
+#confed=ucl,uel
+#liga=Süp3r Lig|Liga Turca
+#copa=Copa de Turquía|Copa de Turquía
+#nombres=Mehmet,Ahmet,Mustafa,Emre,Burak,Hakan,Caner,Kerem,Yusuf,Arda,Cenk,Ozan,Baris,Volkan
+#apellidos=Yilmaz,Kaya,Demir,Sahin,Celik,Yildiz,Aydin,Ozturk,Arslan,Dogan,Kilic,Aslan,Cetin,Koc
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Galatasaray;Bósforo León;#a90432;#fdb913;78;52000;1905;los Leones;el estadio de la ciudad de los dos continentes;El club rojo y amarillo que ganó una copa europea en 2000.
+Fenerbahçe;Faro Amarillo;#002d62;#ffed00;77;45000;1907;los Canarios;el estadio del barrio de la costa asiática;El eterno rival, con la hinchada más ruidosa de la orilla asiática.
+Beşiktaş;Águilas Bósforo;#000000;#ffffff;74;42000;1903;las Águilas Negras;el estadio junto al palacio;El club más antiguo del país, con una hinchada de barrio y de protesta.
+Trabzonspor;Mar Negro SK;#7b1c3a;#69b3e7;72;40000;1967;los Tormentas;el estadio frente al mar Negro;Campeón de provincias que rompió el dominio de la gran ciudad.
+İstanbul Başakşehir;Cúpula Nueva;#f26522;#1c2c5b;66;17000;1990;los Naranjas;el estadio de la ciudad nueva;Un club joven y de ciudad nueva que llegó a ser campeón.
+Samsunspor;Costa Roja;#c8102e;#ffffff;65;33000;1965;los Cometas;el estadio del puerto del norte;Un puerto del mar Negro que volvió a primera con ruido.
+Göztepe;Izmir Amarillo;#ffd100;#c8102e;63;20000;1925;los Gozteperos;el estadio de la bahía;El club de la bahía de Esmirna, el más antiguo de la ciudad.
+Alanyaspor;Alanya Verde;#00a651;#f7941d;62;10000;1948;los Delfines;el estadio de la costa turquesa;Un club de la costa turística con jugadores de todo el mundo.
+Konyaspor;Konya Verde;#00843d;#ffffff;61;42000;1922;las Águilas de la Estepa;el estadio de la ciudad de los derviches;Campeón de copa del interior, en la ciudad de los derviches.
+Kasımpaşa;Cala Marinera;#00338d;#ffffff;60;14000;1921;los Marineros;el estadio del barrio del puerto viejo;Un barrio de la ciudad vieja que da futbolistas a la selección.
+Antalyaspor;Antalya Roja;#e30613;#ffffff;60;33000;1966;los Escorpiones;el estadio de la costa del sur;El club de la ciudad turística del Mediterráneo.
+Çaykur Rizespor;Té Dorado;#007a33;#0072ce;59;15000;1953;los del Té;el estadio de las colinas del té;El club de la región del té, con una grada inclinada sobre la bahía.
+Kayserispor;Kayseri Dorado;#ffd100;#c8102e;59;32000;1966;los Dorados;el estadio de la ciudad del volcán;El club de la ciudad del volcán dormido.
+Gaziantep FK;Pistacho FC;#c8102e;#000000;58;35000;1988;los Pistachos;el estadio de la ciudad del pistacho;Un club del sureste que vive de su cantera.
+Eyüpspor;Cuerno de Oro;#6a1b9a;#ffd100;58;7000;1928;los Violetas;el estadio del barrio del cuerno de oro;El ascenso más sonado de los barrios históricos de la ciudad.
+Kocaelispor;Kocaeli Verde;#00843d;#000000;56;14000;1966;los Tigres;el estadio del golfo;El club del golfo industrial que regresó a primera.
+Gençlerbirliği;Juventud Capital;#c8102e;#000000;56;19000;1923;los Rojinegros;el estadio de la capital;El club de la capital con una cantera famosa.
+Fatih Karagümrük;Muralla Vieja;#c8102e;#000000;57;8000;1926;los Muralleros;el estadio junto a las murallas;Un club del casco antiguo con las murallas como vecina.

@@ -178,18 +178,39 @@ static func similitud_cuerpo(c: Dictionary, dir: Vector2, mirar: float) -> float
 ## `pie`: el que toca mover («D»/«I»; "" sin preferencia). En el original, tras quedarse con el mejor cuadrante de movimiento y de
 ## cuerpo, las ordenaciones estables que vienen después (pie, cuerpo y velocidad de entrada; las dos últimas ya iguales por la
 ## consulta estricta) hacen del PIE el criterio que decide entre los que quedan (`CompareFootSimilarity`; parado, da igual).
+## Con la extensión nativa (`nativo/src/league_nativo.cpp`, `league_elegir`) la elección corre en C++ con las mismas cuentas; sin ella
+## (Android sin binario, Web, `DINASTIA_SIN_NATIVO=1`) corre `elegir_gd`. `pruebas/probar_nativo.tscn` compara las dos.
 static func elegir(sp: float, rel: float, vel_deseada: float, cuerpo := 0.0, mirar := NAN, pie := "") -> Dictionary:
 	var entra := rango(sp)
 	var deseada := rango(vel_deseada)
 	var cuerpo_q := cuerpo_permitido(cuerpo) if entra != IDLE else 0.0
+	clips()
+	var grupos: Array = _cuadrantes.get(_clave(entra, cuerpo_q), {}).values()
+	var nat := nativo()
+	if nat != null:
+		return nat.league_elegir(grupos, sp, rel, deseada, entra == IDLE, mirar, pie)
+	return elegir_gd(grupos, sp, rel, deseada, entra == IDLE, mirar, pie)
+
+static var _nat: Object = null
+static var _nat_mirado := false
+
+## La extensión, si está y ya trae la locomoción (un binario viejo no la tiene: entonces, GDScript).
+static func nativo() -> Object:
+	if not _nat_mirado:
+		_nat_mirado = true
+		var n := Nativo.obj()
+		_nat = n if n != null and n.has_method("league_elegir") else null
+	return _nat
+
+## La elección en GDScript (la referencia del C++). `grupos` = los cuadrantes de salida de la consulta estricta.
+static func elegir_gd(grupos: Array, sp: float, rel: float, deseada: float, parado: bool, mirar := NAN, pie := "") -> Dictionary:
 	var dir := Vector2(0, -1).rotated(rel)
 	var sesgo := sesgo_giro(Vector2(0, -sp), dir * deseada)
 	## La similitud de movimiento solo depende del cuadrante de salida (velocidad y dirección preferida): se calcula una vez por
 	## cuadrante de los que deja la consulta estricta (misma velocidad y mismo cuerpo de entrada), no por clip.
-	clips()
 	var cuadrante: Array = []
 	var mv := INF
-	for q: Dictionary in _cuadrantes.get(_clave(entra, cuerpo_q), {}).values():
+	for q: Dictionary in grupos:
 		var v := similitud(q, dir, deseada, sesgo) + (0.0 if bool(q["reposo1"]) else 0.001)
 		if v < mv:
 			mv = v
@@ -209,7 +230,7 @@ static func elegir(sp: float, rel: float, vel_deseada: float, cuerpo := 0.0, mir
 			if r < mc:
 				mc = r
 				elegido = c
-	if pie == "" or entra == IDLE or String(elegido["pie"]) == pie:
+	if pie == "" or parado or String(elegido["pie"]) == pie:
 		return elegido
 	## Los que miran igual que el elegido (±0,06π, `_KeepBestBodyDirectionAnims`) y empiezan con el pie que toca.
 	var mira := _mira(elegido)
