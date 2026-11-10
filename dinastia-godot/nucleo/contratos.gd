@@ -79,6 +79,17 @@ const JORNADA := {
 	"SVK": [40, "Código del Trabajo", "40 horas semanales.", true],
 	"BUL": [40, "Código del Trabajo", "40 horas semanales.", true],
 	"UAE": [48, "Ley laboral federal", "8 horas diarias y 48 semanales; en Ramadán se reducen 2 horas diarias.", true],
+## Lote de países nuevos (10-11-2026, tanda 1 de «países sin liga»): NGA, GHA, SEN, CIV, ALG, TUN, CMR, CAN, CRC, IRL.
+	"NGA": [40, "Ley del Trabajo", "40 horas semanales como referencia.", true],
+	"GHA": [40, "Ley del Trabajo de 2003", "40 horas semanales como máximo.", true],
+	"SEN": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"CIV": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"ALG": [40, "Ley sobre las relaciones de trabajo", "40 horas semanales.", true],
+	"TUN": [48, "Código del Trabajo", "De 40 a 48 horas semanales según el sector.", true],
+	"CMR": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"CAN": [40, "Código del Trabajo de Canadá", "40 horas semanales de jornada estándar; el exceso se paga como extra.", true],
+	"CRC": [48, "Código de Trabajo", "48 horas semanales de jornada diurna.", true],
+	"IRL": [48, "Ley de organización del tiempo de trabajo", "48 horas semanales de media como máximo.", true],
 	"IRN": [44, "Código del Trabajo", "44 horas semanales.", true],
 }
 

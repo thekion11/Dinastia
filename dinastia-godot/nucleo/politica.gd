@@ -78,6 +78,16 @@ const ESTRUCTURA := {
 	"SVK": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente, con un papel más simbólico"],
 	"BUL": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente, con un papel más simbólico"],
 	"UAE": ["monarquia_absoluta", 0, "", "los emires"],
+	"NGA": ["presidencial", 4, "presidente de la República", "el presidente"],
+	"GHA": ["presidencial", 4, "presidente de la República", "el presidente"],
+	"SEN": ["presidencial", 5, "presidente de la República", "el presidente"],
+	"CIV": ["presidencial", 5, "presidente de la República", "el presidente"],
+	"ALG": ["semipresidencial", 5, "presidente de la República", "el presidente"],
+	"TUN": ["semipresidencial", 5, "presidente de la República", "el presidente"],
+	"CMR": ["semipresidencial", 7, "presidente de la República", "el presidente"],
+	"CAN": ["monarquia_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el rey, con un papel simbólico"],
+	"CRC": ["presidencial", 4, "presidente de la República", "el presidente"],
+	"IRL": ["republica_parlamentaria", 5, "Parlamento (y con él, el primer ministro)", "el presidente, con un papel más simbólico"],
 	"IRN": ["presidencial", 4, "presidente de la República", "el presidente"],
 }
 

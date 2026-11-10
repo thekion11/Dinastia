@@ -225,6 +225,16 @@ const COPAS_POR_PAIS := {
 	"BUL": [["Copa de Bulgaria", 1.0]],
 	"IRN": [["Copa de Irán", 1.0]],
 	"UAE": [["Copa del Presidente", 1.0]],
+	"NGA": [["Copa Federal Nigeriana", 1.0]],
+	"GHA": [["Copa Federal Ghanesa", 1.0]],
+	"SEN": [["Copa Teranga", 1.0]],
+	"CIV": [["Copa del Marfil", 1.0]],
+	"ALG": [["Copa Argelina", 1.0]],
+	"TUN": [["Copa Tunecina", 1.0]],
+	"CMR": [["Copa Camerunesa", 1.0]],
+	"CAN": [["Campeonato Canadiense", 1.0]],
+	"CRC": [["Copa Costarricense", 1.0]],
+	"IRL": [["Copa Irlandesa", 1.0]],
 	"VEN": [["Copa Venezuela", 1.0]],
 }
 

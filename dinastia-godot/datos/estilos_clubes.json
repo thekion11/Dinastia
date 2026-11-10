@@ -4459,5 +4459,589 @@
  "Trujillo Andes": [
   "4-4-2",
   "presion"
+ ],
+ "Mouloudia Argel": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Belouiz Capital": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Kabilia Sport": [
+  "4-3-3",
+  "presion"
+ ],
+ "Union Argel": [
+  "3-5-2",
+  "directo"
+ ],
+ "Entente Setifeña": [
+  "4-4-2",
+  "garra"
+ ],
+ "Mouloudia Oran": [
+  "5-3-2",
+  "contra"
+ ],
+ "Constantina Club": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Saura Desierto": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Union Khenchela": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Paradou Argel": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Union Biskra": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Eulma Mouloudia": [
+  "3-5-2",
+  "presion"
+ ],
+ "Asociacion Chlef": [
+  "4-4-2",
+  "directo"
+ ],
+ "Olimpico Akbou": [
+  "5-3-2",
+  "garra"
+ ],
+ "Mostaganem Unido": [
+  "4-3-3",
+  "contra"
+ ],
+ "Union Harrach": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Forja Hamilton": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Jinetes Calgary": [
+  "5-3-2",
+  "bloque"
+ ],
+ "Pacific Victoria": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Errantes Halifax": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Atlético Capital": [
+  "4-4-2",
+  "directo"
+ ],
+ "Unidos de York": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Langley Costa": [
+  "4-3-3",
+  "contra"
+ ],
+ "Valor Winnipeg": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Mimosas Abiyan": [
+  "4-4-2",
+  "contra"
+ ],
+ "Africa Deportes": [
+  "5-3-2",
+  "posesion"
+ ],
+ "Stella Adjame": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Gagnoa Sporting": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Estadio Abiyan": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Sol de Yamusukro": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "San Pedro Puerto": [
+  "4-3-3",
+  "presion"
+ ],
+ "Bouake Central": [
+  "3-5-2",
+  "directo"
+ ],
+ "Racing Abiyan": [
+  "4-4-2",
+  "garra"
+ ],
+ "Williams Norte": [
+  "5-3-2",
+  "contra"
+ ],
+ "Zoman Daloa": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Canarios Gagnoa": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Sewe San Pedro": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Lys Sport Abiyan": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Algodón Garoua": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Cañón Yaundé": [
+  "3-5-2",
+  "presion"
+ ],
+ "Unión Duala": [
+  "4-4-2",
+  "directo"
+ ],
+ "Fovu Baham": [
+  "5-3-2",
+  "garra"
+ ],
+ "Paloma de Lobo": [
+  "4-3-3",
+  "contra"
+ ],
+ "Bambú de Mbouda": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Astros de Duala": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Dínamo Duala": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Victoria Limbe": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Zorro de Melong": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Bamenda Unido": [
+  "4-4-2",
+  "presion"
+ ],
+ "Academia Cielo": [
+  "5-3-2",
+  "directo"
+ ],
+ "Pantera del Ndé": [
+  "4-3-3",
+  "garra"
+ ],
+ "Gacela de Garoua": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Loum Unido": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Águila Dschang": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Saprisa Morada": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Alajuela Leones": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Heredia Florense": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Cartago Brumoso": [
+  "5-3-2",
+  "presion"
+ ],
+ "Guadalupe Norte": [
+  "4-3-3",
+  "directo"
+ ],
+ "Zeledon Sur": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Puerto Pacifico": [
+  "4-4-2",
+  "contra"
+ ],
+ "San Carlos Norte": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Sporting Capital": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Santos Caribe": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Liberia Blanca": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Grecia Cafetera": [
+  "5-3-2",
+  "equilibrado"
+ ],
+ "Kotoko Ashanti": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Corazones Roble": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Medeama Costa": [
+  "4-4-2",
+  "presion"
+ ],
+ "Aduana Estrellas": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Bechem Unido": [
+  "4-3-3",
+  "garra"
+ ],
+ "Suenos Dorados": [
+  "3-5-2",
+  "contra"
+ ],
+ "Berekum Azul": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Nsoatreman Norte": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Samartex Madera": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Karela Unida": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Ciudades Legon": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Corazon Leones": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Estrellas Santas": [
+  "4-3-3",
+  "directo"
+ ],
+ "Vision Accra": [
+  "3-5-2",
+  "garra"
+ ],
+ "Bibiani Oro": [
+  "4-4-2",
+  "contra"
+ ],
+ "Hohoe Unido": [
+  "5-3-2",
+  "posesion"
+ ],
+ "Racing Costa": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Leones de Accra": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Trebol Dublin": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Shelburn Rojo": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Bohemios Dublin": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Patricio Dublin": [
+  "5-3-2",
+  "presion"
+ ],
+ "Derry Murallas": [
+  "4-3-3",
+  "directo"
+ ],
+ "Dundalk Frontera": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Sligo Bahia": [
+  "4-4-2",
+  "contra"
+ ],
+ "Drogheda Boyne": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Galway Tribus": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Waterford Vidrio": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Enimba Aba": [
+  "4-3-3",
+  "contra"
+ ],
+ "Rios Unidos Port": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Remo Estrellas": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Estrellas Ibadan": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Pilares de Kano": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Meseta Unida": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Rangers Enugu": [
+  "4-4-2",
+  "presion"
+ ],
+ "Bendel Seguros": [
+  "5-3-2",
+  "directo"
+ ],
+ "Corazon Owerri": [
+  "4-3-3",
+  "garra"
+ ],
+ "Estrellas Lobi": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Nasarawa Unida": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Bayelsa Unida": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Guerreros Abia": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Katsina Unida": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Kwara Unida": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Tornados Niger": [
+  "5-3-2",
+  "presion"
+ ],
+ "Guerreros Kanemi": [
+  "4-3-3",
+  "directo"
+ ],
+ "Wikki Viajeros": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Estrellas Sol": [
+  "4-4-2",
+  "contra"
+ ],
+ "Barau Norteno": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Jaraaf Dakar": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Casamance Sport": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Generacion Thies": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Teungueth Sur": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Pikine Atlantico": [
+  "4-3-3",
+  "presion"
+ ],
+ "Guediawaye Norte": [
+  "3-5-2",
+  "directo"
+ ],
+ "Sacre Dakar": [
+  "4-4-2",
+  "garra"
+ ],
+ "Linguere Louga": [
+  "5-3-2",
+  "contra"
+ ],
+ "Isla de Goree": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Estadio Mbour": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Wallydan Dakar": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Ouakam Atlantico": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Aduanas Dakar": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Diambars Saly": [
+  "3-5-2",
+  "presion"
+ ],
+ "Pequena Costa": [
+  "4-4-2",
+  "directo"
+ ],
+ "Sonacos Diourbel": [
+  "5-3-2",
+  "garra"
+ ],
+ "Esperanza Tunez": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Club Africano": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Estrella Sahel": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Club Sfaxiano": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Union Monastir": [
+  "4-3-3",
+  "presion"
+ ],
+ "Union Guerdane": [
+  "3-5-2",
+  "directo"
+ ],
+ "Estadio Tunecino": [
+  "4-4-2",
+  "garra"
+ ],
+ "Asociacion Marsa": [
+  "5-3-2",
+  "contra"
+ ],
+ "Entente Zarzis": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Club Bizertino": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Juventud Kairuan": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Entente Metlaoui": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Asociacion Gabes": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Union Tataouine": [
+  "3-5-2",
+  "presion"
+ ],
+ "Olimpico Beja": [
+  "4-4-2",
+  "directo"
+ ],
+ "Gafsa Minera": [
+  "5-3-2",
+  "garra"
  ]
 }

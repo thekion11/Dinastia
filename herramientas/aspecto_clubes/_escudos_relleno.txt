@@ -1,5 +1,71 @@
 # Generado por herramientas/aspecto_relleno.py (no editar a mano): letras del escudo de los clubes que ningún lote de retoques cubrió.
+MC Alger||||MC|||
+CR Belouizdad||||CR|||
+JS Kabylie||||JS|||
+USM Alger||||USM|||
+ES Sétif||||ES|||
+MC Oran||||MC|||
+CS Constantine||||CS|||
+JS Saoura||||JS|||
+USM Khenchela||||USM|||
+Paradou AC||||PAR|||
+US Biskra||||BIS|||
+MC El Eulma||||MC|||
+ASO Chlef||||ASO|||
+Olympique Akbou||||OLY|||
+ES Mostaganem||||ES|||
+USM El Harrach||||USM|||
+Forge FC||||FOR|||
+Cavalry FC||||CAV|||
+Pacific FC||||PAC|||
+HFX Wanderers FC||||HFX|||
+Atlético Ottawa||||ATL|||
+York United FC||||YOR|||
+Vancouver FC||||VAN|||
+Valour FC||||VAL|||
 Tianjin Jinmen Tiger||||TIA|||
+ASEC Mimosas||||ASE|||
+Africa Sports||||AFR|||
+Stella Club d'Adjamé||||STE|||
+SC Gagnoa||||GAG|||
+Stade d'Abidjan||||STA|||
+SOA||||SOA|||
+San Pedro FC||||SAN|||
+Bouaké FC||||BOU|||
+Racing Club d'Abidjan||||RAC|||
+Williamsville AC||||WIL|||
+Zoman FC||||ZOM|||
+Sporting Gagnoa||||SPO|||
+Séwé Sport||||SEW|||
+Lys Sport||||LYS|||
+Coton Sport||||COT|||
+Canon Yaoundé||||CAN|||
+Union Douala||||UNI|||
+Fovu Club||||FOV|||
+Colombe Sportive||||COL|||
+Bamboutos FC||||BAM|||
+Les Astres||||LES|||
+Dynamo Douala||||DYN|||
+Victoria United||||VIC|||
+Stade Renard de Melong||||STA|||
+PWD Bamenda||||PWD|||
+Avion Academy||||AVI|||
+Panthère du Ndé||||PAN|||
+Gazelle FC||||GAZ|||
+UMS de Loum||||UMS|||
+Aigle Royal de la Menoua||||AIG|||
+Deportivo Saprissa||||DEP|||
+Liga Deportiva Alajuelense||||LIG|||
+Club Sport Herediano||||CLU|||
+Cartaginés||||CAR|||
+Asociación Deportiva Guadalupe||||ASO|||
+Pérez Zeledón||||PER|||
+Puntarenas FC||||PUN|||
+Asociación Deportiva San Carlos||||ASO|||
+Sporting FC||||SPO|||
+Santos de Guápiles||||SAN|||
+Municipal Liberia||||MUN|||
+Municipal Grecia||||MUN|||
 Sigma Olomouc||||SIG|||
 FK Mladá Boleslav||||MLA|||
 1. FC Slovácko||||FCS|||
@@ -9,7 +75,55 @@ FK Teplice||||TEP|||
 Bohemians 1905||||BOH|||
 MFK Karviná||||KAR|||
 Slovan Liberec||||SLO|||
+Asante Kotoko||||ASA|||
+Hearts of Oak||||HEA|||
+Medeama||||MED|||
+Aduana Stars||||ADU|||
+Bechem United||||BEC|||
+Dreams FC||||DRE|||
+Berekum Chelsea||||BER|||
+Nsoatreman||||NSO|||
+Samartex||||SAM|||
+Karela United||||KAR|||
+Legon Cities||||LEG|||
+Heart of Lions||||HEA|||
+Basake Holy Stars||||BAS|||
+Vision FC||||VIS|||
+Bibiani Gold Stars||||BIB|||
+Hohoe United||||HOH|||
+Racing Club Accra||||RAC|||
+Accra Lions||||ACC|||
+Shamrock Rovers||||SHA|||
+Shelbourne||||SHE|||
+Bohemians||||BOH|||
+St Patrick's Athletic||||ST|||
+Derry City||||DER|||
+Dundalk||||DUN|||
+Sligo Rovers||||SLI|||
+Drogheda United||||DRO|||
+Galway United||||GAL|||
+Waterford||||WAT|||
 Beitar Jerusalem||||BEI|||
+Enyimba||||ENY|||
+Rivers United||||RIV|||
+Remo Stars||||REM|||
+Shooting Stars||||SHO|||
+Kano Pillars||||KAN|||
+Plateau United||||PLA|||
+Enugu Rangers||||ENU|||
+Bendel Insurance||||BEN|||
+Heartland||||HEA|||
+Lobi Stars||||LOB|||
+Nasarawa United||||NAS|||
+Bayelsa United||||BAY|||
+Abia Warriors||||ABI|||
+Katsina United||||KAT|||
+Kwara United||||KWA|||
+Niger Tornadoes||||NIG|||
+El-Kanemi Warriors||||EL|||
+Wikki Tourists||||WIK|||
+Sunshine Stars||||SUN|||
+Barau FC||||BAR|||
 Brann||||BRA|||
 Viking||||VIK|||
 Molde||||MOL|||
@@ -50,6 +164,22 @@ Botoșani||||BOT|||
 Unirea Slobozia||||UNI|||
 Metaloglobus București||||MET|||
 Heart of Midlothian||||HEA|||
+Jaraaf||||JAR|||
+Casa Sports||||CAS|||
+Génération Foot||||GEN|||
+Teungueth FC||||TEU|||
+AS Pikine||||PIK|||
+Guédiawaye FC||||GUE|||
+AS Dakar Sacré-Coeur||||DAK|||
+Linguère||||LIN|||
+US Gorée||||GOR|||
+Stade de Mbour||||STA|||
+Wallidaan||||WAL|||
+US Ouakam||||OUA|||
+AS Douanes||||DOU|||
+Diambars||||DIA|||
+Mbour Petite-Côte||||MBO|||
+Sonacos||||SON|||
 IF Elfsborg||||ELF|||
 Mjällby AIF||||MJA|||
 IK Sirius||||SIR|||
@@ -58,6 +188,22 @@ GAIS||||GAI|||
 IF Brommapojkarna||||BRO|||
 Halmstads BK||||HAL|||
 Västerås SK||||VAS|||
+Espérance de Tunis||||ESP|||
+Club Africain||||CLU|||
+Étoile du Sahel||||ETO|||
+CS Sfaxien||||CS|||
+US Monastir||||MON|||
+US Ben Guerdane||||BEN|||
+Stade Tunisien||||STA|||
+AS Marsa||||MAR|||
+ES Zarzis||||ES|||
+CA Bizertin||||BIZ|||
+JS Kairouan||||JS|||
+ES Métlaoui||||ES|||
+AS Gabès||||GAB|||
+US Tataouine||||TAT|||
+Olympique Béja||||OLY|||
+EGS Gafsa||||EGS|||
 Al Jazira||||AL|||
 Shakhtar Donetsk||||SHA|||
 Charlton||||CHA|||

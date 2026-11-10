@@ -116,6 +116,16 @@ const FIJAS := {
 	"SVK": [[9, 1, "Día de la Constitución", "fiesta", "Recuerda la Constitución de 1992."]],
 	"BUL": [[3, 3, "Día de la Liberación", "fiesta", "Recuerda la liberación del dominio otomano, en 1878."]],
 	"UAE": [[12, 2, "Día Nacional", "fiesta", "Recuerda la unión de los emiratos, en 1971."]],
+	"NGA": [[10, 1, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1960."]],
+	"GHA": [[3, 6, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1957."]],
+	"SEN": [[4, 4, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1960."]],
+	"CIV": [[8, 7, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1960."]],
+	"ALG": [[11, 1, "Día de la Revolución", "fiesta", "Recuerda el inicio de la guerra de independencia, en 1954."]],
+	"TUN": [[3, 20, "Día de la Independencia", "fiesta", "Recuerda la independencia, en 1956."]],
+	"CMR": [[5, 20, "Fiesta Nacional", "fiesta", "Recuerda la unificación del país, en 1972."]],
+	"CAN": [[7, 1, "Día de Canadá", "fiesta", "Recuerda la Confederación de 1867."]],
+	"CRC": [[9, 15, "Día de la Independencia", "fiesta", "Recuerda la independencia de Centroamérica, en 1821."]],
+	"IRL": [[3, 17, "Día de San Patricio", "fiesta", "Fiesta nacional del país."]],
 	"IRN": [[2, 11, "Aniversario de la Revolución", "fiesta", "Recuerda los actos de 1979."]],
 	"QAT": [[12, 18, "Día Nacional", "fiesta", "Recuerda la unificación del país, en 1878."]],
 }
@@ -126,7 +136,7 @@ const SIN_PRIMERO_DE_MAYO := ["USA", "AUS", "JPN", "ENG"]
 const SEMANA_SANTA := ["ARG", "AUS", "BOL", "BRA", "CHI", "COL", "ECU", "ENG", "ESP", "GER",
 	"ITA", "MEX", "PAR", "PER", "RSA", "URU", "VEN"]
 ## Ramadán y el fin del ayuno en el calendario del país.
-const RAMADAN := ["KSA", "EGY", "MAR"]
+const RAMADAN := ["KSA", "EGY", "MAR", "ALG", "TUN", "SEN"]
 
 var explicadas: Dictionary = {}   ## nombre -> true: el mentor ya la explicó
 var ultima_semana: int = -1
