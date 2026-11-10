@@ -90,7 +90,13 @@ static func ventana_visible(camara: Camera3D, datos: Dictionary, planta: int) ->
 ## se dibujan todas. Se vuelve a calcular si el edificio se rehace (`EdificioClub.reconstruir`).
 static func _plantas(explorador: Node3D, planta: int, zona: String, viaje: bool) -> void:
 	var arbol := explorador.get_tree()
-	var edificio := arbol.get_first_node_in_group("edificio_club") as Node3D if arbol != null else null
+	var raiz := explorador.get_parent()
+	var edificio: Node3D = null
+	if arbol != null and raiz != null:
+		for n: Node in arbol.get_nodes_in_group("edificio_club"):   ## (10-11) el de ESTA escena (otro club cargado a la vez no cuenta)
+			if n is Node3D and raiz.is_ancestor_of(n):
+				edificio = n
+				break
 	var oculta := -99   ## -99: ninguna; 99: todas; otro: todas menos esa
 	if edificio != null and not viaje:
 		if planta != 0:
