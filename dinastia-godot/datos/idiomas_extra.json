@@ -7668,7 +7668,9 @@
   "Próximas semanas": "Coming weeks",
   "Si sigues en el torneo": "If you are still in the tournament",
   "Ver las próximas semanas": "See the coming weeks",
-  "Ronda": "Round"
+  "Ronda": "Round",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D or gamepad · Shift: run · V: first person · E: use · Esc: back",
+  "E: salir de casa": "E: leave the house"
  },
  "pt": {
   "Historia": "História",
@@ -15339,7 +15341,9 @@
   "Próximas semanas": "Próximas semanas",
   "Si sigues en el torneo": "Se continuares no torneio",
   "Ver las próximas semanas": "Ver as próximas semanas",
-  "Ronda": "Ronda"
+  "Ronda": "Ronda",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D ou controle · Shift: correr · V: primeira pessoa · E: usar · Esc: voltar",
+  "E: salir de casa": "E: sair de casa"
  },
  "patrones": [
   [
@@ -28985,7 +28989,9 @@
   "Próximas semanas": "Semaines à venir",
   "Si sigues en el torneo": "Si tu es toujours dans le tournoi",
   "Ver las próximas semanas": "Voir les semaines à venir",
-  "Ronda": "Tour"
+  "Ronda": "Tour",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D ou manette · Maj : courir · V : première personne · E : utiliser · Échap : retour",
+  "E: salir de casa": "E : sortir de la maison"
  },
  "it": {
   "Historia": "Storia",
@@ -36656,7 +36662,9 @@
   "Próximas semanas": "Prossime settimane",
   "Si sigues en el torneo": "Se sei ancora nel torneo",
   "Ver las próximas semanas": "Vedi le prossime settimane",
-  "Ronda": "Turno"
+  "Ronda": "Turno",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D o gamepad · Maiusc: correre · V: prima persona · E: usa · Esc: indietro",
+  "E: salir de casa": "E: esci di casa"
  },
  "de": {
   "Historia": "Geschichte",
@@ -44327,7 +44335,9 @@
   "Próximas semanas": "Kommende Wochen",
   "Si sigues en el torneo": "Falls du noch im Turnier bist",
   "Ver las próximas semanas": "Kommende Wochen ansehen",
-  "Ronda": "Runde"
+  "Ronda": "Runde",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D oder Gamepad · Umschalt: rennen · V: Ego-Perspektive · E: benutzen · Esc: zurück",
+  "E: salir de casa": "E: das Haus verlassen"
  },
  "ca": {
   "Historia": "Història",
@@ -51998,7 +52008,9 @@
   "Próximas semanas": "Properes setmanes",
   "Si sigues en el torneo": "Si continues al torneig",
   "Ver las próximas semanas": "Veure les properes setmanes",
-  "Ronda": "Ronda"
+  "Ronda": "Ronda",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D o comandament · Majúscules: córrer · V: primera persona · E: usar · Esc: tornar",
+  "E: salir de casa": "E: sortir de casa"
  },
  "pl": {
   "Club": "Klub",
@@ -59669,7 +59681,9 @@
   "Próximas semanas": "Najbliższe tygodnie",
   "Si sigues en el torneo": "Jeśli nadal grasz w turnieju",
   "Ver las próximas semanas": "Zobacz najbliższe tygodnie",
-  "Ronda": "Runda"
+  "Ronda": "Runda",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D lub pad · Shift: bieg · V: widok z pierwszej osoby · E: użyj · Esc: wróć",
+  "E: salir de casa": "E: wyjdź z domu"
  },
  "tr": {
   "Club": "Kulüp",
@@ -67340,6 +67354,8 @@
   "Próximas semanas": "Önümüzdeki haftalar",
   "Si sigues en el torneo": "Turnuvada kalırsan",
   "Ver las próximas semanas": "Önümüzdeki haftaları gör",
-  "Ronda": "Tur"
+  "Ronda": "Tur",
+  "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D veya kumanda · Shift: koş · V: birinci şahıs · E: kullan · Esc: geri",
+  "E: salir de casa": "E: evden çık"
  }
 }
