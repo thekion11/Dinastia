@@ -31,7 +31,7 @@ func _ready() -> void:
 	Calidad.elegida = int(OS.get_environment("CALIDAD")) if OS.get_environment("CALIDAD") != "" else Calidad.MEDIO
 	var cfg := ConfigFile.new()
 	cfg.load(CajonAjustes.RUTA)
-	cfg.set_value(CajonAjustes.SECCION, "ceremonia", false)
+	cfg.set_value(CajonAjustes.SECCION, "ceremonia", OS.get_environment("RECORRIDO") != "")   ## RECORRIDO: con la presentación
 	cfg.set_value(CajonAjustes.SECCION, "intro", false)
 	cfg.save(CajonAjustes.RUTA)
 	print("pack real: ", Datos.usar_base_real(true))
@@ -64,6 +64,11 @@ func _uno(i: int, nombre: String) -> void:
 	var vista := VistaEstadio.new()
 	add_child(vista)
 	vista.abrir(c, 0.85, rival, partido)
+	if OS.get_environment("RECORRIDO") != "":
+		await _recorrido(vista)
+		vista.queue_free()
+		await _esperar(1.0)
+		return
 	await _esperar(12.0)
 	var est := c.perfil_estadio()
 	## Mediana de 30 fotogramas: un fotograma suelto puede pillar un pico (sombras que se rehacen, carga) y dar el triple.
@@ -153,6 +158,7 @@ func _congelar() -> void:
 	## Congela ESE plano en una cámara quieta y mira qué grupos lo inflan.
 	var cam0 := get_viewport().get_camera_3d()
 	var fija := Camera3D.new()
+	fija.name = cam0.name   ## mismo nombre: `LodCine` la trata como la cámara del plano
 	fija.fov = cam0.fov
 	fija.far = cam0.far
 	add_child(fija)
@@ -165,6 +171,17 @@ func _congelar() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	await get_tree().process_frame
 	await get_tree().process_frame
+	if OS.get_environment("LODCINE") != "":
+		## Antes/después de `LodCine` en ESTE plano: llamadas y foto de cada uno.
+		for act: bool in [false, true]:
+			LodCine.activo = act
+			for _f in 4:
+				await get_tree().process_frame
+			var lcs := get_tree().root.find_children("LodCine", "", true, false)
+			print("   LODCINE %s (cám. %s, %d vigías, apagadas %s): %d llamadas" % ["SÍ" if act else "NO", get_viewport().get_camera_3d().name, lcs.size(), lcs.map(func(x): return x._apagadas.size()), rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)])
+			get_viewport().get_texture().get_image().save_jpg("%s/%s_lodcine_%s.jpg" % [_dir, OS.get_environment("SOLO"), "si" if act else "no"], 0.9)
+		get_tree().quit()
+		await get_tree().create_timer(3600.0).timeout
 	var b0 := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
 	for fg: Node in get_tree().root.find_children("FestejoGrada", "", true, false):
 		(fg as Node3D).visible = false
@@ -182,6 +199,32 @@ func _congelar() -> void:
 		print("   SIN SUBVIEWPORT %s: -%d" % [get_tree().root.get_path_to(sv), b0 - rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)])
 		sv.render_target_update_mode = m0
 		await get_tree().process_frame
+	if OS.get_environment("LOD_PRUEBA") != "":
+		## Ensayo: apagar las piezas PEQUEÑAS (< T m) que estén a más de R m de la cámara. ¿Cuánto ahorra?
+		var rt := OS.get_environment("LOD_PRUEBA").split(",")
+		var r := float(rt[0])
+		var t := float(rt[1]) if rt.size() > 1 else 8.0
+		var apagadas: Array[GeometryInstance3D] = []
+		for g: Node in get_tree().root.find_children("*", "GeometryInstance3D", true, false):
+			var gi := g as GeometryInstance3D
+			if not gi.is_visible_in_tree() or _es_persona(gi):
+				continue
+			var caja := gi.global_transform * gi.get_aabb()
+			if caja.size.length() < t and caja.get_center().distance_to(_fija.global_position) > r:
+				gi.visible = false
+				apagadas.append(gi)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		print("   LOD r=%s t=%s: %d piezas apagadas, -%d llamadas" % [r, t, apagadas.size(), b0 - rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)])
+		get_viewport().get_texture().get_image().save_jpg("%s/lod_despues.jpg" % _dir, 0.9)
+		for gi in apagadas:
+			if is_instance_valid(gi):
+				gi.visible = true
+		await get_tree().process_frame
+		await get_tree().process_frame
+		get_viewport().get_texture().get_image().save_jpg("%s/lod_antes.jpg" % _dir, 0.9)
+		get_tree().quit()
+		return
 	var foto0 := _visibles(get_tree().root)
 	var serie: Array[int] = []
 	for _k in (int(OS.get_environment("PICOS_SERIE")) if OS.get_environment("PICOS_SERIE") != "" else 12):   ## ¿el pico sigue con el plano quieto (es lo que se ve) o se va solo (es el corte de cámara)?
@@ -223,3 +266,37 @@ func _visibles(n: Node, hondo: int = 0) -> Dictionary:
 		if hondo <= 4 and (h is Node3D or h is CanvasItem):
 			fuera[String(get_tree().root.get_path_to(h))] = true
 	return fuera
+
+## Jugadores, árbitros, balón y gente animada: nunca se apagan (se notaría).
+func _es_persona(n: Node) -> bool:
+	var p := n
+	for _k in 8:
+		if p == null:
+			return false
+		if p is Skeleton3D or String(p.name).to_lower().contains("balon") or String(p.name).to_lower().contains("ball"):
+			return true
+		p = p.get_parent()
+	return false
+
+## RECORRIDO=n: n fotogramas desde que se abre el partido (presentación incluida), con el tiempo acelerado (RECORRIDO_ESCALA) para llegar al
+## descanso. Por cada cámara activa: fotogramas, mediana y máximo de llamadas; y el minuto del partido en que apareció.
+func _recorrido(vista: Node) -> void:
+	var rs := RenderingServer
+	Engine.time_scale = float(OS.get_environment("RECORRIDO_ESCALA")) if OS.get_environment("RECORRIDO_ESCALA") != "" else 6.0
+	var por_cam := {}
+	var orden: Array[String] = []
+	for f in int(OS.get_environment("RECORRIDO")):
+		await get_tree().process_frame
+		var cam := get_viewport().get_camera_3d()
+		var nombre := String(cam.get_parent().name) + "/" + String(cam.name) if cam != null else "-"
+		var ll := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+		if not por_cam.has(nombre):
+			por_cam[nombre] = []
+			orden.append(nombre)
+			print("   cámara nueva f%d: %s" % [f, nombre])
+		(por_cam[nombre] as Array).append(ll)
+	Engine.time_scale = 1.0
+	for n: String in orden:
+		var v: Array = (por_cam[n] as Array).duplicate()
+		v.sort()
+		print("   CAM %-60s %5d fotogramas · mediana %4d · máx %4d" % [n, v.size(), v[v.size() / 2], v[-1]])
