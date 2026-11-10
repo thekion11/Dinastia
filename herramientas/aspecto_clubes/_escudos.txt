@@ -204,11 +204,11 @@ Frankfurt|circulo|liso|aguila||#111111|#d50032|#ffffff
 Wolfsburgo|circulo|liso|lobo||#65b32e|#ffffff|
 Gladbach|circulo|liso|caballo||#ffffff|#00954c|#111111
 Friburgo|escudo|liso||SCF/#ffffff|#d50032|#111111|
-Stuttgart|escudo|liso|caballo||#ffffff|#d50032|
+Stuttgart|escudo|franjas|cuernos||#ffffff|#d50032|
 Hoffenheim|circulo|liso||TSG/#ffffff|#1961b5|#ffffff|
 Unión Berlín|circulo|liso||FCU/#ffd100|#d50032|#ffffff|
 Mainz|circulo|liso|ancla||#d50032|#ffffff|
-Colonia|escudo|liso|cuernos||#ffffff|#d50032|
+Colonia|circulo|liso||1FC/#ffffff|#d50032|#ffffff|
 Bremen|rombo|liso||SVW/#ffffff|#00954c|#ffffff|
 Augsburgo|clasico|franjas||FCA/#ffffff|#d50032|#00954c|
 Monaco|escudo|mitad|||#d50032|#ffffff|
