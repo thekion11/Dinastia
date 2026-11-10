@@ -7655,7 +7655,13 @@
   "Saque largo": "Long kick",
   "Parada de penaltis": "Penalty saver",
   "Salida rápida": "Quick off the line",
-  "Reflejos felinos": "Cat-like reflexes"
+  "Reflejos felinos": "Cat-like reflexes",
+  "La grada ya canta tu nombre. Ahora hay que darle motivos.": "The stands are already chanting your name. Now give them reasons.",
+  "Cada camiseta es un jugador que confía en ti. Cuida el ánimo y la charla.": "Every shirt is a player who trusts you. Look after morale and the team talk.",
+  "Al final del pasillo está el césped. Y el marcador.": "At the end of the corridor lies the pitch. And the scoreboard.",
+  "Noventa minutos que deciden una semana entera.": "Ninety minutes that decide a whole week.",
+  "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "They will set you a target. Meet it and you get time; miss it and you won't.",
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Signings, squad, stadium and finances: it all goes through here."
  },
  "pt": {
   "Historia": "História",
@@ -15313,7 +15319,13 @@
   "Saque largo": "Tiro de meta longo",
   "Parada de penaltis": "Pegador de pênaltis",
   "Salida rápida": "Saída rápida",
-  "Reflejos felinos": "Reflexos felinos"
+  "Reflejos felinos": "Reflexos felinos",
+  "La grada ya canta tu nombre. Ahora hay que darle motivos.": "A torcida já canta seu nome. Agora é preciso dar motivos.",
+  "Cada camiseta es un jugador que confía en ti. Cuida el ánimo y la charla.": "Cada camisa é um jogador que confia em você. Cuide do ânimo e da preleção.",
+  "Al final del pasillo está el césped. Y el marcador.": "No fim do corredor está o gramado. E o placar.",
+  "Noventa minutos que deciden una semana entera.": "Noventa minutos que decidem uma semana inteira.",
+  "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "Vão te dar um objetivo. Cumpra e terá tempo; falhe e não terá.",
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Contratações, elenco, estádio e finanças: tudo passa por aqui."
  },
  "patrones": [
   [
@@ -28946,7 +28958,13 @@
   "Saque largo": "Dégagement long",
   "Parada de penaltis": "Arrêteur de penalties",
   "Salida rápida": "Sortie rapide",
-  "Reflejos felinos": "Réflexes félins"
+  "Reflejos felinos": "Réflexes félins",
+  "La grada ya canta tu nombre. Ahora hay que darle motivos.": "Les tribunes scandent déjà ton nom. À toi de leur donner des raisons.",
+  "Cada camiseta es un jugador que confía en ti. Cuida el ánimo y la charla.": "Chaque maillot est un joueur qui te fait confiance. Soigne le moral et la causerie.",
+  "Al final del pasillo está el césped. Y el marcador.": "Au bout du couloir, il y a la pelouse. Et le tableau d'affichage.",
+  "Noventa minutos que deciden una semana entera.": "Quatre-vingt-dix minutes qui décident d'une semaine entière.",
+  "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "On te fixera un objectif. Atteins-le et tu auras du temps ; rate-le et non.",
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Transferts, effectif, stade et finances : tout passe par ici."
  },
  "it": {
   "Historia": "Storia",
@@ -36604,7 +36622,13 @@
   "Saque largo": "Rinvio lungo",
   "Parada de penaltis": "Para-rigori",
   "Salida rápida": "Uscita rapida",
-  "Reflejos felinos": "Riflessi felini"
+  "Reflejos felinos": "Riflessi felini",
+  "La grada ya canta tu nombre. Ahora hay que darle motivos.": "La curva canta già il tuo nome. Ora devi darle dei motivi.",
+  "Cada camiseta es un jugador que confía en ti. Cuida el ánimo y la charla.": "Ogni maglia è un giocatore che si fida di te. Cura il morale e il discorso.",
+  "Al final del pasillo está el césped. Y el marcador.": "In fondo al corridoio c'è il prato. E il tabellone.",
+  "Noventa minutos que deciden una semana entera.": "Novanta minuti che decidono un'intera settimana.",
+  "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "Ti fisseranno un obiettivo. Raggiungilo e avrai tempo; fallisci e no.",
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Mercato, rosa, stadio e finanze: passa tutto da qui."
  },
  "de": {
   "Historia": "Geschichte",
@@ -44262,7 +44286,13 @@
   "Saque largo": "Weiter Abstoß",
   "Parada de penaltis": "Elfmetertöter",
   "Salida rápida": "Schnelles Herauslaufen",
-  "Reflejos felinos": "Katzenreflexe"
+  "Reflejos felinos": "Katzenreflexe",
+  "La grada ya canta tu nombre. Ahora hay que darle motivos.": "Die Tribüne singt schon deinen Namen. Jetzt gib ihr Gründe dafür.",
+  "Cada camiseta es un jugador que confía en ti. Cuida el ánimo y la charla.": "Jedes Trikot ist ein Spieler, der dir vertraut. Achte auf Stimmung und Ansprache.",
+  "Al final del pasillo está el césped. Y el marcador.": "Am Ende des Gangs wartet der Rasen. Und die Anzeigetafel.",
+  "Noventa minutos que deciden una semana entera.": "Neunzig Minuten, die eine ganze Woche entscheiden.",
+  "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "Sie geben dir ein Ziel vor. Erreichst du es, bekommst du Zeit; sonst nicht.",
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Transfers, Kader, Stadion und Finanzen: alles läuft hier zusammen."
  },
  "ca": {
   "Historia": "Història",
@@ -51920,7 +51950,13 @@
   "Saque largo": "Servei llarg",
   "Parada de penaltis": "Aturada de penals",
   "Salida rápida": "Sortida ràpida",
-  "Reflejos felinos": "Reflexos felins"
+  "Reflejos felinos": "Reflexos felins",
+  "La grada ya canta tu nombre. Ahora hay que darle motivos.": "La grada ja canta el teu nom. Ara cal donar-li motius.",
+  "Cada camiseta es un jugador que confía en ti. Cuida el ánimo y la charla.": "Cada samarreta és un jugador que confia en tu. Cuida l'ànim i la xerrada.",
+  "Al final del pasillo está el césped. Y el marcador.": "Al final del passadís hi ha la gespa. I el marcador.",
+  "Noventa minutos que deciden una semana entera.": "Noranta minuts que decideixen una setmana sencera.",
+  "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "Et fixarà un objectiu. Compleix-lo i tindràs temps; falla'l i no.",
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Fitxatges, plantilla, estadi i finances: tot passa per aquí."
  },
  "pl": {
   "Club": "Klub",
@@ -59578,7 +59614,13 @@
   "Saque largo": "Długie wybicie",
   "Parada de penaltis": "Obrońca karnych",
   "Salida rápida": "Szybkie wyjście",
-  "Reflejos felinos": "Kocie refleksy"
+  "Reflejos felinos": "Kocie refleksy",
+  "La grada ya canta tu nombre. Ahora hay que darle motivos.": "Trybuny już śpiewają twoje imię. Teraz daj im powody.",
+  "Cada camiseta es un jugador que confía en ti. Cuida el ánimo y la charla.": "Każda koszulka to zawodnik, który ci ufa. Dbaj o morale i odprawę.",
+  "Al final del pasillo está el césped. Y el marcador.": "Na końcu korytarza jest murawa. I tablica wyników.",
+  "Noventa minutos que deciden una semana entera.": "Dziewięćdziesiąt minut, które decydują o całym tygodniu.",
+  "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "Wyznaczą ci cel. Osiągnij go, a dostaniesz czas; jeśli nie — nie.",
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Transfery, kadra, stadion i finanse: wszystko przechodzi tędy."
  },
  "tr": {
   "Club": "Kulüp",
@@ -67236,6 +67278,12 @@
   "Saque largo": "Uzun degaj",
   "Parada de penaltis": "Penaltı kurtarıcı",
   "Salida rápida": "Hızlı çıkış",
-  "Reflejos felinos": "Kedi refleksleri"
+  "Reflejos felinos": "Kedi refleksleri",
+  "La grada ya canta tu nombre. Ahora hay que darle motivos.": "Tribünler adını şimdiden haykırıyor. Şimdi onlara sebep ver.",
+  "Cada camiseta es un jugador que confía en ti. Cuida el ánimo y la charla.": "Her forma sana güvenen bir oyuncu. Morali ve konuşmayı ihmal etme.",
+  "Al final del pasillo está el césped. Y el marcador.": "Koridorun sonunda çim var. Ve skor tabelası.",
+  "Noventa minutos que deciden una semana entera.": "Bütün bir haftayı belirleyen doksan dakika.",
+  "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.": "Sana bir hedef koyacaklar. Tutturursan zamanın olur; tutturamazsan olmaz.",
+  "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.": "Transferler, kadro, stadyum ve finans: her şey buradan geçer."
  }
 }
