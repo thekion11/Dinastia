@@ -110,6 +110,13 @@ const FIJAS := {
 	"SRB": [[2, 15, "Día del Estado", "fiesta", "Recuerda el levantamiento de 1804 y la primera Constitución."]],
 	"UKR": [[8, 24, "Día de la Independencia", "fiesta", "Recuerda la declaración de independencia, en 1991."]],
 	"CHN": [[10, 1, "Día Nacional", "fiesta", "Recuerda la proclamación de la República Popular, en 1949."]],
+	"ISR": [[5, 14, "Día de la Independencia", "fiesta", "Recuerda la declaración de independencia, en 1948."]],
+	"RUS": [[6, 12, "Día de Rusia", "fiesta", "Recuerda la declaración de soberanía de 1990."]],
+	"HUN": [[8, 20, "Día de San Esteban", "fiesta", "La fiesta del fundador del Estado, con fuegos artificiales sobre el Danubio."]],
+	"SVK": [[9, 1, "Día de la Constitución", "fiesta", "Recuerda la Constitución de 1992."]],
+	"BUL": [[3, 3, "Día de la Liberación", "fiesta", "Recuerda la liberación del dominio otomano, en 1878."]],
+	"UAE": [[12, 2, "Día Nacional", "fiesta", "Recuerda la unión de los emiratos, en 1971."]],
+	"IRN": [[2, 11, "Aniversario de la Revolución", "fiesta", "Recuerda los actos de 1979."]],
 	"QAT": [[12, 18, "Día Nacional", "fiesta", "Recuerda la unificación del país, en 1878."]],
 }
 

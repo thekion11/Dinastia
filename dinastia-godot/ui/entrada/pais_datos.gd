@@ -25,6 +25,7 @@ const NOMBRE := {
 	"POR": "Portugal", "NED": "Holanda", "BEL": "Bélgica", "CRO": "Croacia", "DEN": "Dinamarca",
 	"TUR": "Turquía", "SCO": "Escocia", "SUI": "Suiza", "AUT": "Austria", "GRE": "Grecia", "QAT": "Catar",
 	"SWE": "Suecia", "NOR": "Noruega", "POL": "Polonia", "CZE": "Chequia", "ROU": "Rumanía", "SRB": "Serbia", "UKR": "Ucrania", "CHN": "China",
+	"ISR": "Israel", "RUS": "Rusia", "HUN": "Hungría", "SVK": "Eslovaquia", "BUL": "Bulgaria", "UAE": "Emiratos Árabes", "IRN": "Irán",
 }
 
 const OFICIAL := {
@@ -43,14 +44,16 @@ const OFICIAL := {
 	"GRE": "República Helénica", "QAT": "Estado de Catar",
 	"SWE": "Reino de Suecia", "NOR": "Reino de Noruega", "POL": "República de Polonia", "CZE": "República Checa", "ROU": "Rumanía",
 	"SRB": "República de Serbia", "UKR": "Ucrania", "CHN": "República Popular China",
+	"ISR": "Estado de Israel", "RUS": "Federación de Rusia", "HUN": "Hungría", "SVK": "República Eslovaca", "BUL": "República de Bulgaria",
+	"UAE": "Emiratos Árabes Unidos", "IRN": "República Islámica de Irán",
 }
 
 ## El orden de la lista: por continente, y dentro de cada uno como los ordena el juego.
 const CONTINENTES := [
 	["Sudamérica", ["CHI", "ARG", "BRA", "URU", "PAR", "BOL", "PER", "ECU", "COL", "VEN"]],
-	["Europa", ["ESP", "ENG", "ITA", "GER", "FRA", "POR", "NED", "BEL", "CRO", "DEN", "TUR", "SCO", "SUI", "AUT", "GRE", "SWE", "NOR", "POL", "CZE", "ROU", "SRB", "UKR"]],
+	["Europa", ["ESP", "ENG", "ITA", "GER", "FRA", "POR", "NED", "BEL", "CRO", "DEN", "TUR", "SCO", "SUI", "AUT", "GRE", "SWE", "NOR", "POL", "CZE", "ROU", "SRB", "UKR", "ISR", "RUS", "HUN", "SVK", "BUL"]],
 	["Norteamérica", ["MEX", "USA"]],
-	["Asia", ["JPN", "KOR", "KSA", "QAT", "CHN"]],
+	["Asia", ["JPN", "KOR", "KSA", "QAT", "CHN", "UAE", "IRN"]],
 	["África", ["EGY", "MAR", "RSA"]],
 	["Oceanía", ["AUS"]],
 ]
@@ -165,6 +168,20 @@ const MONUMENTOS := {
 		["Castillo de Lviv", "castillo", "fortaleza"], ["Puente Paton", "puente", "arco"]],
 	"CHN": [["Gran Muralla", "muralla", "puerta"], ["Torre del Tambor", "torre_reloj", "puerta"], ["Torre de la Perla Oriental", "torre_tv", "bola"],
 		["Ciudad Prohibida", "castillo", "fortaleza"], ["Puente de Danyang-Kunshan", "puente", "atirantado"]],
+	"ISR": [["Muro Occidental", "muralla", "puerta"], ["Cúpula de la Roca", "cupula", "palacio"], ["Fortaleza de Masada", "castillo", "fortaleza"],
+		["Puente de las Cuerdas", "puente", "atirantado"], ["Faro de Haifa", "faro", ""]],
+	"RUS": [["Catedral de San Basilio", "cupula", "palacio"], ["Torre Ostankino", "torre_tv", "aguja"], ["Kremlin", "castillo", "fortaleza"],
+		["Puente de la Isla Russky", "puente", "atirantado"], ["Torre Lakhta", "rascacielos", "aguja"]],
+	"HUN": [["Parlamento de Budapest", "cupula", "palacio"], ["Puente de las Cadenas", "puente", "colgante"], ["Bastión de los Pescadores", "castillo", "fortaleza"],
+		["Castillo de Buda", "castillo", "holsten"], ["Faro del Balaton", "faro", ""]],
+	"SVK": [["Castillo de Bratislava", "castillo", "fortaleza"], ["Puente SNP", "puente", "atirantado"], ["Castillo de Spiš", "castillo", "fortaleza"],
+		["Puerta de Michael", "torre_reloj", "puerta"], ["Torre de Kamzík", "torre_tv", "aguja"]],
+	"BUL": [["Catedral Alexander Nevsky", "cupula", "palacio"], ["Monasterio de Rila", "castillo", "fortaleza"], ["Fortaleza de Tsarevets", "muralla", "puerta"],
+		["Puente del Danubio", "puente", "atirantado"], ["Faro de Cabo Kaliakra", "faro", ""]],
+	"UAE": [["Burj Khalifa", "rascacielos", "aguja"], ["Gran Mezquita Sheikh Zayed", "cupula", "palacio"], ["Burj Al Arab", "rascacielos", "aguja"],
+		["Fuerte Al Jahili", "castillo", "fortaleza"], ["Puente de Sheikh Zayed", "puente", "arco"]],
+	"IRN": [["Torre Azadi", "torre_reloj", "puerta"], ["Plaza Naqsh-e Jahan", "cupula", "palacio"], ["Persépolis", "coliseo", ""],
+		["Torre Milad", "torre_tv", "aguja"], ["Puente Khaju", "puente", "arco"]],
 }
 
 ## Todos los países que se pueden ver en el globo, en el orden de la lista.

@@ -1,0 +1,26 @@
+#seleccion=Bulgaria
+#tier=0.55
+#globo=23.32,42.70
+#bandera=🇧🇬
+#confed=ucl,uel
+#liga=Efb3t Liga|Liga Búlgara
+#copa=Copa de Bulgaria|Copa Búlgara
+#nombres=Georgi,Ivan,Dimitar,Nikolay,Petar,Stefan,Aleksandar,Hristo,Todor,Kaloyan,Viktor,Martin,Kiril,Bozhidar
+#apellidos=Ivanov,Georgiev,Dimitrov,Petrov,Nikolov,Stoyanov,Todorov,Kolev,Angelov,Atanasov,Hristov,Vasilev,Yordanov,Popov
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Levski Sofia;Levski Capital;#1b458f;#ffffff;58;17688;1914;los Azules;el estadio de la capital;El club azul de la capital, campeón de la liga 2026.
+Ludogorets;Ludogorets Verde;#00843d;#ffffff;62;10423;1945;las Águilas;el estadio de la ciudad del noreste;El campeón de once ligas seguidas de una ciudad pequeña.
+CSKA 1948;Ejercito Nuevo;#c8102e;#ffffff;53;3000;1948;los Rojos;el estadio de las afueras de la capital;El club que nació de una escisión del club del ejército.
+CSKA Sofia;Ejercito Sofia;#c8102e;#ffffff;57;43230;1948;los del Ejército;el estadio nacional de la capital;El club del ejército, con la mayor hinchada del país.
+Cherno More;Mar Negro Varna;#00843d;#000000;54;6250;1913;los Marineros;el estadio del puerto de Varna;El club del puerto de Varna.
+Lokomotiv Plovdiv;Locomotora Plov.;#000000;#ffffff;54;10000;1926;los Ferroviarios;el estadio de la ciudad de las siete colinas;El club ferroviario de Plovdiv.
+Botev Plovdiv;Botev Colinas;#000000;#ffd100;55;18777;1912;los Canarios;el estadio de la ciudad de las siete colinas;El club amarillo y negro de Plovdiv.
+Slavia Sofia;Slavia Capital;#ffffff;#c8102e;52;25000;1913;los Blancos;el estadio del barrio de la capital;El club blanco de la capital.
+Arda;Arda Rodopes;#00843d;#ffffff;53;11114;1924;los Verdes;el estadio de la ciudad de los Ródope;El club de los Ródope, en ascenso.
+Beroe;Beroe Rosas;#00843d;#ffffff;52;12128;1916;los Verdes;el estadio de la ciudad de las rosas;El club de la ciudad de las rosas.
+Septemvri Sofia;Septiembre Sofia;#c8102e;#ffffff;50;11200;1955;los Rojos;el estadio compartido de la capital;Un club de barrio de la capital.
+Lokomotiv Sofia;Locomotora Sofia;#c8102e;#000000;51;11200;1929;los Ferroviarios;el estadio de los ferrocarriles de la capital;El club ferroviario de la capital.
+Spartak Varna;Espartaco Varna;#c8102e;#ffffff;50;7000;1918;los Rojos;el estadio del puerto de Varna;El otro club del puerto de Varna.
+Dobrudzha;Dobrudzha Trigo;#00843d;#ffffff;51;12500;1919;los del Trigo;el estadio de la llanura del norte;El club de la llanura del trigo.
+Montana;Montana Verde;#c8102e;#ffffff;50;7000;1921;los Rojos;el estadio de la ciudad del noroeste;El club del noroeste.
+Botev Vratsa;Botev Montes;#00843d;#ffffff;49;8935;1921;los Verdes;el estadio de la ciudad del noroeste;El club de Vratsa.

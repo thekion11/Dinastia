@@ -1,11 +1,11 @@
 extends "res://pruebas/banco/base.gd"
 ## [Banco · grupo «paises_csv»] Países importados desde una tabla (`herramientas/importar_pais.py`): TUR, SCO, SUI, AUT, GRE y QAT (sesión 6, 10-11).
 
-const ESPERADOS := {"TUR": 18, "SCO": 12, "SUI": 12, "AUT": 12, "GRE": 14, "QAT": 12, "SWE": 16, "NOR": 16, "POL": 18, "CZE": 16, "ROU": 16, "SRB": 16, "UKR": 16, "CHN": 16}
+const ESPERADOS := {"TUR": 18, "SCO": 12, "SUI": 12, "AUT": 12, "GRE": 14, "QAT": 12, "SWE": 16, "NOR": 16, "POL": 18, "CZE": 16, "ROU": 16, "SRB": 16, "UKR": 16, "CHN": 16, "ISR": 14, "RUS": 16, "HUN": 12, "SVK": 12, "BUL": 16, "UAE": 14, "IRN": 16, "VEN": 14}
 
 func _probar_paises_csv() -> void:
 	_titulo("PAÍSES DESDE UNA TABLA: TUR, SCO, SUI, AUT, GRE Y QAT")
-	var codigos: Array[String] = ["TUR", "SCO", "SUI", "AUT", "GRE", "QAT", "SWE", "NOR", "POL", "CZE", "ROU", "SRB", "UKR", "CHN", "CHI", "ESP", "POR", "DEN"]
+	var codigos: Array[String] = ["TUR", "SCO", "SUI", "AUT", "GRE", "QAT", "SWE", "NOR", "POL", "CZE", "ROU", "SRB", "UKR", "CHN", "ISR", "RUS", "HUN", "SVK", "BUL", "UAE", "IRN", "VEN", "CHI", "ESP", "POR", "DEN"]
 	var m := Mundo.new()
 	m.generar(codigos, 701)
 	for p: String in ESPERADOS:
@@ -21,7 +21,7 @@ func _probar_paises_csv() -> void:
 		var checks := {"reglas": not LeyesPais.reglas(p).is_empty(), "copa": Copa.COPAS_POR_PAIS.has(p), "política": Politica.ESTRUCTURA.has(p),
 			"jornada": Contratos.JORNADA.has(p), "fiestas": Calendario.FIJAS.has(p), "silueta": MapaPais.SILUETAS.has(p), "monumentos": PaisDatos.MONUMENTOS.has(p),
 			"oficial": PaisDatos.OFICIAL.has(p), "capital": Globo3D.CAPITAL.has(p), "globo": Globo3D.GLOBO_PAIS.has(p),
-			"bandera": (Banderas.ISO.has(p) and ResourceLoader.exists("res://assets/banderas/%s.svg" % Banderas.ISO.get(p, "xx"))) or (p == "CHN" and Banderas.textura(p) != null),
+			"bandera": (Banderas.ISO.has(p) and ResourceLoader.exists("res://assets/banderas/%s.svg" % Banderas.ISO.get(p, "xx"))) or (["CHN", "RUS", "UAE"].has(p) and Banderas.textura(p) != null),
 			"país": Paises.conocido(p)}
 		for k: String in checks:
 			if not bool(checks[k]):
@@ -35,7 +35,7 @@ func _probar_paises_csv() -> void:
 			europa = fila[1]
 		if String(fila[0]) == "Asia":
 			asia = fila[1]
-	_comprobar(["TUR", "SCO", "SUI", "AUT", "GRE", "SWE", "NOR", "POL", "CZE", "ROU", "SRB", "UKR"].all(func(p: String) -> bool: return europa.has(p)) and asia.has("QAT") and asia.has("CHN"), "se pueden elegir en la entrada (Europa y Asia)")
+	_comprobar(["TUR", "SCO", "SUI", "AUT", "GRE", "SWE", "NOR", "POL", "CZE", "ROU", "SRB", "UKR", "ISR", "RUS", "HUN", "SVK", "BUL"].all(func(p: String) -> bool: return europa.has(p)) and asia.has("QAT") and asia.has("CHN") and asia.has("UAE") and asia.has("IRN"), "se pueden elegir en la entrada (Europa y Asia)")
 	var nombres := {}
 	var repetidos := 0
 	for c: Club in m.clubes.values():
@@ -57,9 +57,9 @@ func _probar_paises_csv() -> void:
 	var europeos := 0
 	for k: String in ["ucl", "uel", "uecl"]:
 		for c: Club in plazas[k]:
-			if ["TUR", "SCO", "SUI", "AUT", "GRE", "SWE", "NOR", "POL", "CZE", "ROU", "SRB", "UKR"].has(c.pais):
+			if ["TUR", "SCO", "SUI", "AUT", "GRE", "SWE", "NOR", "POL", "CZE", "ROU", "SRB", "UKR", "ISR", "HUN", "SVK", "BUL"].has(c.pais):
 				europeos += 1
-	_comprobar(europeos >= 15, "los cinco europeos nuevos juegan competiciones de la UEFA (%d plazas)" % europeos)
+	_comprobar(europeos >= 18, "los cinco europeos nuevos juegan competiciones de la UEFA (%d plazas)" % europeos)
 	## Una temporada entera se juega: todos tienen partidos y la media de goles es normal.
 	var goles := 0
 	var partidos := 0

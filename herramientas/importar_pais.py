@@ -3,6 +3,7 @@
 
 Entrada: `herramientas/paises/<COD>.csv` (UTF-8, separador «;»). Primero líneas `#clave=valor` con los datos del país, luego una fila por club:
   #seleccion=Turquía  #tier=1.0  #globo=lon,lat  #bandera=🇹🇷  #confed=uel,uecl   (copas a las que se apunta; «asia» etc. para otras confederaciones)
+  #extra=no  (país que ya tiene sus tablas: no se escribe en paises_extra.json)
   #liga=nombre real con dígitos|nombre ficticio   #copa=nombre real|nombre ficticio   #nombres=a,b,c…   #apellidos=a,b,c…
   fila: real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño   (el nombre real va LIMPIO: el dígito de «leetspeak» lo pone el script)
 Salida (todo idempotente; se ejecuta solo, sin argumentos, y `base_ficticia.py` lo importa):
@@ -167,7 +168,10 @@ def escribir():
     r = os.path.join(DATOS, "paises_extra.json")
     ex = json.load(open(r, encoding="utf-8"))
     for p, m in PAISES.items():
-        ex["paises"][p] = fila_extra(m)
+        if m.get("extra") == "no":   ## país que ya trae sus tablas (los 24 del HTML): solo su liga y sus clubes entran
+            ex["paises"].pop(p, None)
+        else:
+            ex["paises"][p] = fila_extra(m)
     json.dump(ex, open(r, "w", encoding="utf-8", newline="\n"), ensure_ascii=False, indent=1)
     print("importar_pais:", len(PAISES), "países,", len(FILAS), "clubes", comprobar() or "sin errores")
 

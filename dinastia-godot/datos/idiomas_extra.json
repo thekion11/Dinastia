@@ -7836,7 +7836,9 @@
   "Play-outs del descenso": "Relegation play-outs",
   "Resto de la liga": "Rest of the league",
   "Resolución 3D automática (máx. 720 px de alto)": "Automatic 3D resolution (max. 720 px high)",
-  "China": "China"
+  "China": "China",
+  "Rusia": "Russia",
+  "Emiratos Árabes Unidos": "United Arab Emirates"
  },
  "pt": {
   "Historia": "História",
@@ -15675,7 +15677,9 @@
   "Play-outs del descenso": "Play-outs do descenso",
   "Resto de la liga": "Resto da liga",
   "Resolución 3D automática (máx. 720 px de alto)": "Resolução 3D automática (máx. 720 px de altura)",
-  "China": "China"
+  "China": "China",
+  "Rusia": "Rússia",
+  "Emiratos Árabes Unidos": "Emirados Árabes Unidos"
  },
  "patrones": [
   [
@@ -29621,7 +29625,9 @@
   "Play-outs del descenso": "Play-outs de la relégation",
   "Resto de la liga": "Reste du championnat",
   "Resolución 3D automática (máx. 720 px de alto)": "Résolution 3D automatique (720 px de haut max.)",
-  "China": "Chine"
+  "China": "Chine",
+  "Rusia": "Russie",
+  "Emiratos Árabes Unidos": "Émirats arabes unis"
  },
  "it": {
   "Historia": "Storia",
@@ -37460,7 +37466,9 @@
   "Play-outs del descenso": "Play-out per la retrocessione",
   "Resto de la liga": "Resto della lega",
   "Resolución 3D automática (máx. 720 px de alto)": "Risoluzione 3D automatica (max 720 px di altezza)",
-  "China": "Cina"
+  "China": "Cina",
+  "Rusia": "Russia",
+  "Emiratos Árabes Unidos": "Emirati Arabi Uniti"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45299,7 +45307,9 @@
   "Play-outs del descenso": "Abstiegs-Play-outs",
   "Resto de la liga": "Rest der Liga",
   "Resolución 3D automática (máx. 720 px de alto)": "Automatische 3D-Auflösung (max. 720 px Höhe)",
-  "China": "China"
+  "China": "China",
+  "Rusia": "Russland",
+  "Emiratos Árabes Unidos": "Vereinigte Arabische Emirate"
  },
  "ca": {
   "Historia": "Història",
@@ -53138,7 +53148,9 @@
   "Play-outs del descenso": "Play-outs del descens",
   "Resto de la liga": "Resta de la lliga",
   "Resolución 3D automática (máx. 720 px de alto)": "Resolució 3D automàtica (màx. 720 px d'alçada)",
-  "China": "Xina"
+  "China": "Xina",
+  "Rusia": "Rússia",
+  "Emiratos Árabes Unidos": "Emirats Àrabs Units"
  },
  "pl": {
   "Club": "Klub",
@@ -60977,7 +60989,9 @@
   "Play-outs del descenso": "Play-outy o utrzymanie",
   "Resto de la liga": "Reszta ligi",
   "Resolución 3D automática (máx. 720 px de alto)": "Automatyczna rozdzielczość 3D (maks. 720 px wysokości)",
-  "China": "Chiny"
+  "China": "Chiny",
+  "Rusia": "Rosja",
+  "Emiratos Árabes Unidos": "Zjednoczone Emiraty Arabskie"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68816,6 +68830,8 @@
   "Play-outs del descenso": "Küme düşme play-out'ları",
   "Resto de la liga": "Ligin geri kalanı",
   "Resolución 3D automática (máx. 720 px de alto)": "Otomatik 3D çözünürlük (en fazla 720 px yükseklik)",
-  "China": "Çin"
+  "China": "Çin",
+  "Rusia": "Rusya",
+  "Emiratos Árabes Unidos": "Birleşik Arap Emirlikleri"
  }
 }

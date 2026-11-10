@@ -72,6 +72,13 @@ const ESTRUCTURA := {
 	"SRB": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente de la República, con un papel más simbólico"],
 	"UKR": ["semipresidencial", 5, "presidente de la República", "el presidente"],
 	"CHN": ["partido_unico", 0, "", "el presidente"],
+	"ISR": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente, con un papel más simbólico"],
+	"RUS": ["semipresidencial", 6, "presidente de la República", "el presidente"],
+	"HUN": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente, con un papel más simbólico"],
+	"SVK": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente, con un papel más simbólico"],
+	"BUL": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente, con un papel más simbólico"],
+	"UAE": ["monarquia_absoluta", 0, "", "los emires"],
+	"IRN": ["presidencial", 4, "presidente de la República", "el presidente"],
 }
 
 const EXPLICA := {
