@@ -81,3 +81,30 @@ Gangwon FC|liso|#f58220|#ffffff|#f58220|#f58220|||||
 Gwangju FC|liso|#ffd100|#111111|#ffd100|#ffd100|||||
 Jeju United|liso|#f58220|#111111|#f58220|#f58220|||||
 Gimcheon|liso|#d50032|#111111|#d50032|#d50032|||||
+Bournemouth|franjas|||||||||
+Burnley|mangas_contraste|||||||||
+Sunderland|franjas|||||||||
+Alavés|franjas|||||||||
+Elche|sash|||||||||
+Levante|franjas|||||||||
+Cagliari|franjas|||||||||
+Angers|franjas|||||||||
+Vitória|franjas|||||||||
+Atl. Tucuman|franjas|||||||||
+Platense|franjas|||||||||
+Central Córdoba|franjas|||||||||
+Instituto|franjas|||||||||
+Tigre|mitad|||||||||
+Barracas Central|franjas|||||||||
+Riestra|franjas|||||||||
+Cúcuta Dep.|franjas|||||||||
+Atl. San Luis|franjas|||||||||
+FC Dallas|aros|||||||||
+Al Ittihad Alex.|franjas|||||||||
+Ghazl El Mahalla|franjas|||||||||
+Cremonese|franjas|||||||||
+Pisa|franjas|||||||||
+Gimnasia Mza|franjas|||||||||
+Estudiantes RC|franjas|||||||||
+FC Cajamarca|franjas|||||||||
+San Lorenzo (P)|mitad|||||||||

@@ -351,3 +351,96 @@ Ajax|circulo|liso|||#d2122e|#ffffff|
 PSV|circulo|liso||PSV/#ffffff|#ed1c24|#ffffff|
 Go Ahead Eagles|clasico|liso|aguila||#e30613|#ffd100|
 Feyenoord|circulo|liso||FEY/#ffffff|#e30613|#111111|
+Bournemouth|circulo|liso||AFC|||
+Burnley|escudo|liso||BFC|||
+Leeds|circulo|liso||LUFC|||
+Sunderland|circulo|franjas|torre||||
+Alavés|escudo|franjas||DA|||
+Elche|circulo|liso||ECF|||
+Levante|escudo|franjas||UDL|||
+Real Oviedo|escudo|liso|cruz||||
+Como|circulo|liso||COM|||
+Parma|escudo|cruz|||||
+Cagliari|escudo|franjas||CAG|||
+Hellas Verona|escudo|banda||HV|||
+Hamburgo|circulo|liso||HSV|||
+St. Pauli|escudo|liso||FCSP|||
+Paris FC|circulo|liso||PFC|||
+Angers|escudo|franjas||SCO|||
+Bragantino|circulo|liso|toro||||
+Mirassol|circulo|liso||MFC|||
+Vitória|escudo|franjas|leon||||
+Coritiba|escudo|liso||CFC|||
+Argentinos Jrs|circulo|liso||AAAJ|||
+Belgrano|circulo|liso||CAB|||
+Gimnasia LP|circulo|liso|lobo||||
+Atl. Tucuman|escudo|franjas||CAT|||
+Ind. Rivadavia|escudo|liso||CSIR|||
+Defensa y J.|circulo|liso|ave||||
+Platense|escudo|franjas|pez||||
+Central Córdoba|escudo|franjas||CCSE|||
+Instituto|escudo|franjas||IAC|||
+Tigre|escudo|mitad||CAT|||
+Sarmiento|circulo|liso||CAS|||
+Aldosivi|circulo|liso|pez||||
+Barracas Central|escudo|franjas||BC|||
+Riestra|escudo|franjas||CR|||
+Cúcuta Dep.|escudo|franjas||CDC|||
+Dep. Pasto|circulo|liso|montana||||
+Águilas Doradas|circulo|liso|aguila||||
+Inter Bogotá|escudo|liso||IB|||
+Sport Huancayo|escudo|liso||SH|||
+Comerciantes Unidos|escudo|liso||CU|||
+Atl. San Luis|escudo|franjas||ASL|||
+Juárez|circulo|liso||FCJ|||
+Vancouver W.|escudo|liso||VWFC|||
+Minnesota Utd|escudo|liso||MNU|||
+NY Red Bulls|circulo|liso|toro||||
+San Diego FC|escudo|liso||SDFC|||
+Real Salt Lake|escudo|liso||RSL|||
+Houston Dynamo|circulo|liso||HD|||
+FC Dallas|circulo|aro||FCD|||
+Chicago Fire|escudo|liso||CF|||
+D.C. United|circulo|liso|aguila||||
+Sporting KC|circulo|liso||SKC|||
+Toronto FC|escudo|liso||TFC|||
+Colorado Rapids|circulo|liso|montana||||
+CF Montréal|escudo|liso||CFM|||
+San Jose|escudo|liso||SJE|||
+Machida Z.|circulo|liso||FCM|||
+Kashiwa R.|circulo|liso|sol||||
+Shimizu S.|circulo|liso||SSP|||
+T. Verdy|circulo|liso||TV|||
+Al-Qadsiah|circulo|liso||QAD|||
+Neom SC|escudo|liso||NEOM|||
+Al Ittihad Alex.|escudo|franjas||ITH|||
+Petrojet|circulo|liso||PET|||
+Haras El Hodoud|escudo|liso||HRS|||
+Wadi Degla|circulo|liso||WD|||
+Ghazl El Mahalla|escudo|franjas||GM|||
+Cremonese|circulo|franjas||US|||
+Pisa|escudo|franjas||PIS|||
+Heidenheim|escudo|liso||FCH|||
+Le Havre|circulo|liso|ancla||||
+Metz|escudo|liso||FCM|||
+Chapecoense|circulo|liso||ACF|||
+Remo|escudo|liso|leon||||
+Gimnasia Mza|circulo|franjas||GEM|||
+Estudiantes RC|escudo|franjas||ERC|||
+Jaguares|circulo|liso|leon||||
+Llaneros|escudo|liso|caballo||||
+Alianza Atl. Sullana|circulo|liso||AAS|||
+FC Cajamarca|escudo|franjas||FCC|||
+Dep. Moquegua|escudo|liso||DM|||
+Juan Pablo II|circulo|liso|cruz||||
+Fagiano Okayama|circulo|liso|ave||||
+JEF United|escudo|liso||JEF|||
+Mito Hollyhock|escudo|liso||MH|||
+V-Varen Nagasaki|circulo|liso||VVN|||
+Al-Najma|circulo|liso|estrella||||
+Al-Kholood|escudo|liso||KHL|||
+Kahraba Ismailia|circulo|liso|rayo||||
+Recoleta (P)|circulo|liso||REC|||
+San Lorenzo (P)|escudo|mitad||SL|||
+FC Anyang|escudo|liso||FCA|||
+Bucheon FC|circulo|liso||BFC|||
