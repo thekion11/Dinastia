@@ -16,7 +16,7 @@ import sys
 import tempfile
 import zipfile
 
-PRESETS = sys.argv[1:] or ["WindowsLigero", "Web", "Android"]
+PRESETS = sys.argv[1:] or ["WindowsLigero", "Web", "WebMovil", "Android"]
 PROHIBIDOS = re.compile(r"(caras_reales|pack_real|creditos_fotos|reales_lista"
                         r"|tablas\.json\.bak|^pruebas/|\.md$)")
 OBLIGATORIOS = ["datos/biblioteca_caras.json", "recursos/caras_biblioteca/cara_000.jpg.import"]
