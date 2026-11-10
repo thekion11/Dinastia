@@ -1,7 +1,7 @@
 extends Node
 ## LA COHERENCIA DE LOS MENÚS PRINCIPALES (10-11-2026, PRIORITARIO 1 del plan: «estética y diseño de los menús, falta pulir»; referencia: los
 ## menús de PES 2020 / eFootball). En PC (1600×900) mide, en inicio, plantel, táctica, mercado, competiciones y club, con 2 clubes de países distintos:
-##  · ESCALA TIPOGRÁFICA: tamaños de letra distintos en el contenido (sin contar los títulos héroe ≥ `Tema.TAM_TITULO`): como mucho `MAX_TAMANOS`;
+##  · ESCALA TIPOGRÁFICA: tamaños de letra distintos en el contenido (sin contar los títulos, ≥ 18 px, como en `EscalaTipografica`): como mucho `MAX_TAMANOS`;
 ##  · REJILLA: el contenido de todas las pantallas de menú empieza en el mismo x y deja el mismo margen a la derecha;
 ##  · ESTADOS: todo lo que se pulsa tiene un estilo de foco que se ve (no vacío) y uno de pulsado;
 ##  · ESCUDOS Y CARAS: los de las filas de plantel y competiciones miden al menos `MIN_IMAGEN` px.
@@ -131,7 +131,7 @@ func _medir(et: String, raiz: Control) -> void:
 		var txt := String(t).strip_edges() if t != null else ""
 		if txt != "" and (c is Label or c is Button) and _tiene_letras(txt) and not (c is Label and txt.length() <= 3 and txt == txt.to_upper()):   ## sin las iniciales de los escudos
 			var tam := c.get_theme_font_size("font_size")
-			if tam < Tema.TAM_TITULO:
+			if tam < 18:   ## el mismo corte que `EscalaTipografica.nivel`: de 18 para arriba son títulos (también el de la cabecera compacta)
 				tamanos[tam] = int(tamanos.get(tam, 0)) + 1
 				if OS.get_environment("DEPURA") != "" and tam <= int(OS.get_environment("DEPURA")):
 					print("    DEPURA %d «%s» %s" % [tam, txt.left(30), c.get_parent().get_parent().name])
