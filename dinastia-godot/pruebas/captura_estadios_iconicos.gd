@@ -153,6 +153,8 @@ func _congelar() -> void:
 	fija.far = cam0.far
 	add_child(fija)
 	fija.global_transform = cam0.global_transform
+	var pos0 := cam0.global_position.round()
+	var nombre0 := String(cam0.name)
 	fija.make_current()
 	get_tree().paused = true
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -163,7 +165,7 @@ func _congelar() -> void:
 		serie.append(rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
 		await get_tree().process_frame
 	var base := serie[-1]
-	print("   PLANO CONGELADO %s: %s llamadas" % [cam0.global_position.round(), serie])
+	print("   PLANO CONGELADO %s %s: %s llamadas" % [nombre0, pos0, serie])
 	## Los SubViewport (cartas, retratos, pantallas) dibujan su propio mundo: ¿cuánto pesan?
 	for vp: Node in get_tree().root.find_children("*", "SubViewport", true, false):
 		var sv := vp as SubViewport
