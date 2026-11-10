@@ -190,7 +190,7 @@ func _congelar() -> void:
 		var apagadas: Array[GeometryInstance3D] = []
 		for g: Node in get_tree().root.find_children("*", "GeometryInstance3D", true, false):
 			var gi := g as GeometryInstance3D
-			if not gi.is_visible_in_tree():
+			if not gi.is_visible_in_tree() or _es_persona(gi):
 				continue
 			var caja := gi.global_transform * gi.get_aabb()
 			if caja.size.length() < t and caja.get_center().distance_to(_fija.global_position) > r:
@@ -201,7 +201,8 @@ func _congelar() -> void:
 		print("   LOD r=%s t=%s: %d piezas apagadas, -%d llamadas" % [r, t, apagadas.size(), b0 - rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)])
 		get_viewport().get_texture().get_image().save_jpg("%s/lod_despues.jpg" % _dir, 0.9)
 		for gi in apagadas:
-			gi.visible = true
+			if is_instance_valid(gi):
+				gi.visible = true
 		await get_tree().process_frame
 		await get_tree().process_frame
 		get_viewport().get_texture().get_image().save_jpg("%s/lod_antes.jpg" % _dir, 0.9)
@@ -248,3 +249,14 @@ func _visibles(n: Node, hondo: int = 0) -> Dictionary:
 		if hondo <= 4 and (h is Node3D or h is CanvasItem):
 			fuera[String(get_tree().root.get_path_to(h))] = true
 	return fuera
+
+## Jugadores, árbitros, balón y gente animada: nunca se apagan (se notaría).
+func _es_persona(n: Node) -> bool:
+	var p := n
+	for _k in 8:
+		if p == null:
+			return false
+		if p is Skeleton3D or String(p.name).to_lower().contains("balon") or String(p.name).to_lower().contains("ball"):
+			return true
+		p = p.get_parent()
+	return false
