@@ -291,7 +291,7 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 			var pantalon := color_liso if puesto == "ARB" else Color(0, 0, 0, 0)
 			## La equipación completa del club (diseñador), salvo arquero y
 			## árbitro, que visten la suya.
-			var kx: Dictionary = {} if puesto in ["POR", "ARB"] else _kit_x
+			var kx: Dictionary = {} if puesto in ["POR", "ARB"] else KitLegible.para_partido(_kit_x)   ## (10-11) trazos más anchos para la cámara real
 			if not VestidorQ.vestir_equipacion(dq, c1, c2, estilo, piel, pelo, pantalon, Color(0, 0, 0, 0), false, kx, dorsal):
 				VestidorQ.vestir(dq, c1)
 			## EL BRAZALETE DEL CAPITÁN (M-073, 21-10): el shader lo tenía pero nadie

@@ -302,8 +302,8 @@ static func kit_de_club(c: Club) -> Dictionary:
 	return base
 
 ## (10-11) La equipación del SEGUNDO uniforme del club (`AspectoClub.visita`): colores, diseño, pantalón y medias propios. Vacía si el club no lo trae.
-static func kit_de_club_visita(c: Club) -> Dictionary:
-	var v := AspectoClub.visita(c)
+static func kit_de_club_visita(c: Club, propio: Dictionary = {}) -> Dictionary:
+	var v := propio if not propio.is_empty() else AspectoClub.visita(c)
 	if v.is_empty():
 		return {}
 	var base := kit_de_club(c)

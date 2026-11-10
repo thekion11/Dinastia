@@ -204,6 +204,12 @@ const COPAS_POR_PAIS := {
 	"BEL": [["Copa de Bélgica", 1.0]],
 	"CRO": [["Copa de Croacia", 1.0]],
 	"DEN": [["Copa de Dinamarca", 1.0]],
+	"TUR": [["Copa de Turquía", 1.0]],
+	"SCO": [["Copa de Escocia", 1.0]],
+	"SUI": [["Copa de Suiza", 1.0]],
+	"AUT": [["Copa de Austria", 1.0]],
+	"GRE": [["Copa de Grecia", 1.0]],
+	"QAT": [["Copa del Emir", 1.0]],
 }
 
 ## Las copas que se juegan en un país: [nombre, peso del premio]. Si el país no

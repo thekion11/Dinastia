@@ -412,5 +412,35 @@ func _probar_ocultar_estadio_dentro() -> void:
 	cam.position = Vector3(0.0, 1.6, 40.8)
 	OcultarEstadioDentro.actualizar(explorador, 0, "Vestuario", cam, datos)
 	_comprobar(grada.visible, "pegado a la boca siempre se ve")
+	## TÚNEL y VENTANAS (sesión 7): el túnel oculta estadio y calle si no se ve la boca al campo (z_boca = 20); una planta alta conserva la calle solo con una ventana a la vista.
+	datos = {"x0": 0.0, "z_out": 40.0, "z_boca": 20.0, "z_fin": 60.0}
+	cam.position = Vector3(0.0, 1.6, 30.0)
+	cam.look_at_from_position(cam.position, Vector3(0.0, 1.6, 10.0), Vector3.UP)   ## en el túnel, hacia el campo
+	OcultarEstadioDentro.actualizar(explorador, 0, "Túnel", cam, datos)
+	_comprobar(grada.visible and calle.visible, "túnel mirando al campo: se dibuja todo")
+	cam.look_at_from_position(cam.position, Vector3(0.0, 1.6, 50.0), Vector3.UP)   ## de espaldas al campo
+	OcultarEstadioDentro.actualizar(explorador, 0, "Túnel", cam, datos)
+	_comprobar(not grada.visible and not calle.visible and tunel.visible, "túnel de espaldas al campo: sin estadio ni calle (el edificio sigue)")
+	OcultarEstadioDentro.actualizar(explorador, 0, "Campo", cam, datos)
+	_comprobar(grada.visible and calle.visible, "en el campo vuelve todo")
+	cam.position = Vector3(0.0, 5.6, 50.0)
+	cam.look_at_from_position(cam.position, Vector3(0.0, 5.6, 70.0), Vector3.UP)   ## planta 1 mirando a las ventanas del fondo (z 60,31)
+	OcultarEstadioDentro.actualizar(explorador, 1, "Despacho del presidente", cam, datos)
+	_comprobar(not grada.visible and calle.visible, "planta 1 con ventana a la vista: sin estadio, con calle")
+	cam.look_at_from_position(cam.position, Vector3(0.0, 5.6, 30.0), Vector3.UP)   ## de espaldas a las ventanas
+	OcultarEstadioDentro.actualizar(explorador, 1, "Despacho del presidente", cam, datos)
+	_comprobar(not grada.visible and not calle.visible, "planta 1 sin ventana a la vista: tampoco calle")
+	OcultarEstadioDentro.actualizar(explorador, -1, "Utilería", cam, datos)
+	_comprobar(not grada.visible and not calle.visible, "un sótano no tiene ventanas: sin calle")
 	OcultarEstadioDentro.devolver(explorador)
 	raiz.queue_free()
+
+## (10-11, arranque del menú) Los scripts que la precarga del menú compila en su hilo existen (si un script se borra o se renombra, la lista se queda coja sin que nada falle: aquí sí).
+func _probar_precarga_menu() -> void:
+	_titulo("PRECARGA: LOS SCRIPTS DEL MENÚ EXISTEN")
+	_comprobar(Precarga.SCRIPTS_MENU.size() > 20, "hay lista de scripts del menú (%d)" % Precarga.SCRIPTS_MENU.size())
+	var faltan: Array[String] = []
+	for r: String in Precarga.SCRIPTS_MENU:
+		if not ResourceLoader.exists(r):
+			faltan.append(r)
+	_comprobar(faltan.is_empty(), "todos existen (faltan: %s)" % str(faltan))

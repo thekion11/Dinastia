@@ -9,6 +9,14 @@ func _ready() -> void:
 	Calidad.elegida = Calidad.nivel_de_argumentos(Calidad.NIVEL_DEFECTO)
 	_t["motor+autoloads"] = Time.get_ticks_msec()
 	## Como la entrada real: el mundo se genera ANTES (`OrquestadorMundo`), `tomar_el_mando` sobre el club, y `Principal` lo recibe en `PedidoPartida.mundo_pregenerado` (hace el resto en `_arrancar_con`).
+	if OS.get_environment("PRECARGA") != "":
+		## PRECARGA=1: lo que ocurre con el jugador un rato en la portada y la entrada: `Precarga` compila en su hilo los scripts del menú; se espera a que acabe (`_t["portada: espera de la precarga"]`) y se monta DESPUÉS.
+		var a0 := Time.get_ticks_msec()
+		Precarga.empezar(get_tree())
+		while not Precarga.menu_listo:
+			await get_tree().process_frame
+		_t["portada: la precarga de scripts del menú tardó"] = Time.get_ticks_msec() - a0
+	var antes := _en_cache()
 	var a := Time.get_ticks_msec()
 	var m := Mundo.new()
 	var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"
@@ -25,6 +33,15 @@ func _ready() -> void:
 	a = Time.get_ticks_msec()
 	add_child(_p)
 	_t["montar el menú (_ready: construir la interfaz y arrancar la partida)"] = Time.get_ticks_msec() - a
+	if OS.get_environment("NUEVOS") != "":
+		var nuevos: Array[String] = []
+		var kb := 0
+		for r: String in _en_cache():
+			if not antes.has(r):
+				nuevos.append(r)
+				kb += FileAccess.get_file_as_string(r).length() / 1024 if FileAccess.file_exists(r) else 0
+		nuevos.sort()
+		print("NUEVOS_EN_EL_MONTAJE %d scripts (~%d KB de fuente): %s" % [nuevos.size(), kb, " ".join(nuevos)])
 	RenderingServer.frame_post_draw.connect(_dibujado)
 
 func _dibujado() -> void:
@@ -37,3 +54,19 @@ func _dibujado() -> void:
 			partes.append("%s=%d ms" % [k, _t[k]])
 		print("ARRANQUE_MENU ", " · ".join(partes), " · 30.º fotograma a los %d ms · memoria estática %d MB" % [Time.get_ticks_msec(), OS.get_static_memory_usage() / 1048576])
 		get_tree().quit()
+
+## Los .gd del proyecto que ya están en la caché de recursos (para ver cuáles carga el montaje).
+func _en_cache() -> Dictionary:
+	var r := {}
+	var pila: Array[String] = ["res://"]
+	while not pila.is_empty():
+		var d: String = pila.pop_back()
+		for f: String in DirAccess.get_files_at(d):
+			if f.ends_with(".gd") or f.ends_with(".gdc"):
+				var ruta := d.path_join(f.trim_suffix("c"))
+				if ResourceLoader.has_cached(ruta):
+					r[ruta] = true
+		for sub: String in DirAccess.get_directories_at(d):
+			if sub != ".godot" and sub != "terceros" and sub != "addons":
+				pila.append(d.path_join(sub))
+	return r

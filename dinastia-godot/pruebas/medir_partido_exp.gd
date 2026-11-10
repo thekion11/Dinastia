@@ -17,6 +17,74 @@ static func aplicar(vista: Node) -> void:
 				en.fog_enabled = false
 				en.adjustment_enabled = false
 				en.ssao_enabled = false
+	if OS.get_environment("IMPOSTOR") != "":
+		## IMPOSTOR=<metros> (p. ej. 30): TECHO de lo que ahorraría un impostor de cuerpo: los jugadores del campo a más de esa distancia de la cámara pierden todas sus mallas (cuerpo, cara, pelo) y se dibujan como una
+		## cápsula de ~60 triángulos del color de la camiseta (sin animación). No es el impostor final (no conserva la animación ni los detalles): solo mide el máximo ahorro posible de llamadas y triángulos.
+		var cam_i := vista.get_viewport().get_camera_3d()
+		var lejos := float(OS.get_environment("IMPOSTOR"))
+		var n_i := 0
+		var cap := CapsuleMesh.new()
+		cap.radius = 0.3
+		cap.height = 1.75
+		cap.radial_segments = 6
+		cap.rings = 1
+		for f: Dictionary in vista.get("_en_campo"):
+			var nodo_i: Node = f.get("node")
+			if nodo_i == null or cam_i == null or (nodo_i as Node3D).global_position.distance_to(cam_i.global_position) < lejos:
+				continue
+			for m in nodo_i.find_children("*", "MeshInstance3D", true, false):
+				(m as MeshInstance3D).visible = false
+			var imp := MeshInstance3D.new()
+			imp.mesh = cap
+			var mat := StandardMaterial3D.new()
+			mat.albedo_color = Color(0.85, 0.25, 0.2) if n_i % 2 == 0 else Color(0.2, 0.35, 0.85)
+			imp.material_override = mat
+			imp.position = Vector3(0, 0.9, 0)
+			nodo_i.add_child(imp)
+			n_i += 1
+		print("IMPOSTOR: %d jugadores a más de %.0f m sustituidos por una cápsula" % [n_i, lejos])
+	if OS.get_environment("MESH_LOD") != "":
+		## MESH_LOD=6 (o 12, 24…): `mesh_lod_threshold` del viewport (píxeles de error admitidos al elegir el LOD de cada malla: más alto = lo lejano baja antes a mallas más simples; el esqueleto y la animación no cambian).
+		vista.get_viewport().mesh_lod_threshold = float(OS.get_environment("MESH_LOD"))
+		print("MESH_LOD: mesh_lod_threshold = %.1f" % vista.get_viewport().mesh_lod_threshold)
+	if OS.get_environment("INFORME_JUGADORES") != "":
+		## INFORME_JUGADORES=1: por cada jugador del campo, las piezas visibles que dibuja (nombre, triángulos, rango de visibilidad) y su distancia a la cámara de TV.
+		var cam := vista.get_viewport().get_camera_3d()
+		var tot_pz := 0
+		var tot_tr := 0
+		var por_nombre := {}
+		var n_j := 0
+		for f: Dictionary in vista.get("_en_campo"):
+			var nodo: Node = f.get("node")
+			if nodo == null:
+				continue
+			n_j += 1
+			var d := (nodo as Node3D).global_position.distance_to(cam.global_position) if cam != null else 0.0
+			var piezas := 0
+			var tris := 0
+			for m in nodo.find_children("*", "MeshInstance3D", true, false):
+				var mi := m as MeshInstance3D
+				if not mi.is_visible_in_tree() or mi.mesh == null:
+					continue
+				var rango := mi.visibility_range_end
+				if rango > 0.0 and d > rango:
+					continue
+				piezas += 1
+				var tr := Optimizar._tris(mi.mesh)
+				tris += tr
+				var k := String(mi.name).rstrip("0123456789@")
+				if not por_nombre.has(k):
+					por_nombre[k] = Vector2.ZERO
+				por_nombre[k] += Vector2(1, tr)
+			tot_pz += piezas
+			tot_tr += tris
+			if n_j <= 3:
+				print("JUGADOR %d a %.0f m: %d piezas, %d triángulos" % [n_j, d, piezas, tris])
+		print("JUGADORES %d en el campo: %d piezas dibujables (%.1f por jugador), %d triángulos (%.0f por jugador, a máxima calidad de malla)" % [n_j, tot_pz, float(tot_pz) / maxf(n_j, 1), tot_tr, float(tot_tr) / maxf(n_j, 1)])
+		var ks := por_nombre.keys()
+		ks.sort_custom(func(a, b): return por_nombre[a].y > por_nombre[b].y)
+		for k in ks:
+			print("  PIEZA %-24s x%3d  %7d triángulos" % [k, int(por_nombre[k].x), int(por_nombre[k].y)])
 	if OS.get_environment("SIN_SOMBRA_FINOS") != "":
 		var nf := 0
 		for g in vista.find_children("*", "MeshInstance3D", true, false):

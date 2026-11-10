@@ -23,6 +23,7 @@ const NOMBRE := {
 	"JPN": "Japón", "KOR": "Corea del Sur", "KSA": "Arabia Saudita", "EGY": "Egipto",
 	"MAR": "Marruecos", "RSA": "Sudáfrica", "AUS": "Australia", "MEX": "México", "USA": "Estados Unidos",
 	"POR": "Portugal", "NED": "Holanda", "BEL": "Bélgica", "CRO": "Croacia", "DEN": "Dinamarca",
+	"TUR": "Turquía", "SCO": "Escocia", "SUI": "Suiza", "AUT": "Austria", "GRE": "Grecia", "QAT": "Catar",
 }
 
 const OFICIAL := {
@@ -37,14 +38,16 @@ const OFICIAL := {
 	"USA": "Estados Unidos de América",
 	"POR": "República Portuguesa", "NED": "Reino de los Países Bajos", "BEL": "Reino de Bélgica",
 	"CRO": "República de Croacia", "DEN": "Reino de Dinamarca",
+	"TUR": "República de Türkiye", "SCO": "Escocia, Reino Unido", "SUI": "Confederación Suiza", "AUT": "República de Austria",
+	"GRE": "República Helénica", "QAT": "Estado de Catar",
 }
 
 ## El orden de la lista: por continente, y dentro de cada uno como los ordena el juego.
 const CONTINENTES := [
 	["Sudamérica", ["CHI", "ARG", "BRA", "URU", "PAR", "BOL", "PER", "ECU", "COL", "VEN"]],
-	["Europa", ["ESP", "ENG", "ITA", "GER", "FRA", "POR", "NED", "BEL", "CRO", "DEN"]],
+	["Europa", ["ESP", "ENG", "ITA", "GER", "FRA", "POR", "NED", "BEL", "CRO", "DEN", "TUR", "SCO", "SUI", "AUT", "GRE"]],
 	["Norteamérica", ["MEX", "USA"]],
-	["Asia", ["JPN", "KOR", "KSA"]],
+	["Asia", ["JPN", "KOR", "KSA", "QAT"]],
 	["África", ["EGY", "MAR", "RSA"]],
 	["Oceanía", ["AUS"]],
 ]

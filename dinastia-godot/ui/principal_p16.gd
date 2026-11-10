@@ -13,7 +13,17 @@ func _ready() -> void:
 	Engine.max_fps = _fps_elegido
 	if ContadorFps.visible_pref:
 		ContadorFps.poner(get_tree(), true)
-	_construir()
+	## (10-11, arranque) Con la pantalla de carga encima (`CargaMenu`), el montaje va en trozos, uno por fotograma, y `Principal` no procesa nada hasta acabar (nada se toca a medias). En headless/banco o sin la
+	## carga (cualquier otro camino) es un solo paso, como siempre.
+	var en_trozos := PedidoPartida.montaje_en_trozos and DisplayServer.get_name() != "headless"
+	PedidoPartida.montaje_en_trozos = false
+	if en_trozos:
+		PedidoPartida.montaje_listo = false
+		process_mode = Node.PROCESS_MODE_DISABLED
+		await _construir_en_trozos()
+		await get_tree().process_frame
+	else:
+		_construir()
 	if PedidoPartida.mundo_a_cargar != null:
 		var cargada := PedidoPartida.mundo_a_cargar
 		PedidoPartida.mundo_a_cargar = null
@@ -27,6 +37,10 @@ func _ready() -> void:
 			_guia.quizas(modo)
 	else:
 		_partida.nueva()
+	if en_trozos:
+		process_mode = Node.PROCESS_MODE_INHERIT
+		PedidoPartida.montaje_avance = 1.0
+		PedidoPartida.montaje_listo = true
 
 ## Puentes (fase 6, paso 7): viven en `ui/principal/paneles_club.gd`.
 func _bloque_vecino(paso: int) -> void: _paneles_club._bloque_vecino(paso)
