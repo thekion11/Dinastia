@@ -16,6 +16,10 @@ func _ready() -> void:
 	_par = int(OS.get_environment("PAR")) if OS.get_environment("PAR") != "" else 0
 	var m := Mundo.new()
 	var alt := OS.get_environment("ALT") != ""
+	if OS.get_environment("NIVEL") != "":   ## NIVEL=-1 etc.: fuerza la calidad (para comparar rótulos con y sin contorno)
+		Calidad.elegida = int(OS.get_environment("NIVEL"))
+	if OS.get_environment("NOMBRES") != "":
+		PlayerSpawner.mostrar_nombres = true
 	m.generar(PAISES_B if alt else PAISES, 4403 if alt else 9137)
 	var elegidos: Array = []
 	var usados := {}
@@ -53,7 +57,7 @@ func _process(_d: float) -> void:
 	if _n < ARRANQUE or _p == null or _tomadas >= MINUTOS.size() or _p.minuto < MINUTOS[_tomadas]:
 		return
 	var img := get_viewport().get_texture().get_image()
-	img.save_png("/tmp/cap/uni3d_%d_%d.png" % [_par, _tomadas])
+	img.save_png("/tmp/cap/uni3d_%s%d_%d.png" % [OS.get_environment("ETIQ"), _par, _tomadas])
 	_tomadas += 1
 	print("captura ", _tomadas)
 	if _tomadas >= 2:
