@@ -111,7 +111,10 @@ func _grupos(n: Node, hondo: int, fuera: Array[Node3D]) -> void:
 ## PICOS=1: 400 fotogramas; los que pasan de 1,6× la mediana se cuentan con su cámara y lo que creció (objetos, primitivas).
 func _picos(mediana: int) -> void:
 	var rs := RenderingServer
-	for f in 400:
+	## PICOS_F = fotogramas a recorrer; PICOS_ESCALA acelera el partido para pasar por más planos (saque, córner, gol, repetición…).
+	Engine.time_scale = float(OS.get_environment("PICOS_ESCALA")) if OS.get_environment("PICOS_ESCALA") != "" else 1.0
+	var n_f := int(OS.get_environment("PICOS_F")) if OS.get_environment("PICOS_F") != "" else 400
+	for f in n_f:
 		await get_tree().process_frame
 		var ll := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
 		if ll > mediana * 3 and OS.get_environment("PICOS") == "desglose":
@@ -136,6 +139,6 @@ func _picos(mediana: int) -> void:
 			var cam := get_viewport().get_camera_3d()
 			print("   PICO f%d: %d llamadas · %d objetos · %d prims · cam=%s pos=%s" % [f, ll, rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
 				rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME), cam.get_path() if cam else "-", cam.global_position.round() if cam else Vector3.ZERO])
-		elif f % 50 == 0:
+		elif f % 500 == 0:
 			var cam := get_viewport().get_camera_3d()
 			print("   normal f%d: %d llamadas · %d objetos · cam=%s" % [f, ll, rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME), cam.get_path() if cam else "-"])
