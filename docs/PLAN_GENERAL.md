@@ -11,7 +11,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 > 1. **REESTRUCTURACIÓN «SOLO CLUB»** (paso 2, sesión 7, 10-11: HECHO muebles/colisiones/suelo/ascensor, ver «HECHO sesión 7» en la sección «SOLO CLUB»; FALTA la revisión del dueño y comprobar el parpadeo en un móvil real). Paso 3: medir sin ciudad con `herramientas/hw_modesto.sh`. Paso 4: decidir C/C++ solo con medidas.
 > 2. **ESTÉTICA** — FALTA PULIR. La rama `ccr-da27fb86-i59x88` ya está en `main` (comprobado el 10-11: 0 commits de diferencia). Profundidad hecha (10-11, ver PULIDO); seguir afinando.
 >
-> **DECISIONES DEL DUEÑO (no implementar sin respuesta):** (a) torneos de selecciones (Mundial, Eurocopa, Copa América): ¿se juegan o son solo calendario? (b) sacar los tres .mp4 de `marca/` del repo.
+> **DECISIONES DEL DUEÑO:** respondidas el 10-11 noche (orden 36: ver «RESPUESTAS DEL DUEÑO A LAS 21 PREGUNTAS»). Los torneos de selecciones ya se juegan (Mundial, continentales, Finalissima y Juegos Olímpicos) y los .mp4 de `marca/` se quedan.
 >
 > Al completar cada punto: se BORRA de PRIORITARIO y se anota en PULIDO. Reporta al líder en cada bloque.
 
@@ -145,10 +145,7 @@ Dinastía ya tiene casi todo el temario de la Master League (cesiones, ojeadores
 Fuentes: fourfourtwo.com (reseña PES 2020), gamesatlas.com (Master League remastered), konami.com/pes2020, pesmastery.com/?p=7515, redbull.com (guía PES 2020), manual de Konami PES 2019. Sin confirmar en PES 2020: química, flechas, objetivos y rumores (vienen de la serie en general).
 
 ## DECISIONES PENDIENTES DEL DUEÑO (no se implementa hasta que conteste)
-- **MOTOR LEAGUE-SOCCER, ACTUALIZADO (10-11 noche)**: medido por qué remata poco (plan §9): el portador decide a 20-35 m del arco y casi nunca entra en la zona de tiro del original (≈ 8 decisiones por partido), frenado por el bloque defensivo de League. Opciones: (a) seguir fiel y portar la locomoción por animaciones (grande) o (b) calibrar ya (zona de tiro, conducción, línea). Sin respuesta se sigue fiel.
-- **MOTOR LEAGUE-SOCCER** (sesión 4, 10-11): el prototipo juega partidos completos y es determinista, pero con el núcleo fiel al original remata ~5 veces menos que el de hoy (su cola de órdenes da prioridad al pase y el tiro solo sale cuando no hay animación de pase posible: eso llega con la fase 4). ¿Seguimos FIEL al original y esperamos a la fase 4, o se calibra ya (más ganas de tirar) para que se pueda probar jugando? Mientras, se sigue con la fase 3 sin tocar la calibración.
-- **TORNEOS DE SELECCIONES** (Mundial, Eurocopa, Copa América; hoy solo fechas informativas en `nucleo/calendario.gd`, y `Selecciones.cierre_de_temporada`): **¿se JUEGAN (con tu plantel, convocados que se van con sus selecciones) o son SOLO CALENDARIO?** Anotado el 9-11 por orden del dueño; sin respuesta no se toca.
-- **Los 3 `.mp4` de `marca/`** (`marca/nexus-digital-intro.mp4`, `marca/referencia/ea_fc25_referencia.mp4`, `marca/referencia/ejemplo-partido.mp4`, en LFS): el juego no los carga y la regla del proyecto dice «.mp4 nunca al repo»; ¿se sacan del repo?
+- Ninguna abierta a 10-11 noche. Las del motor League-Soccer (calibrar o no: SOLO LO VISUAL), los torneos de selecciones (ya se juegan) y los .mp4 de `marca/` (se quedan) se resolvieron con la orden 36.
 
 ## PULIDO (lo ya completo que se pule después; nada se borra, se afina)
 - TIEMPO HASTA JUGAR (10-11, sesión 5; `docs/04_auditorias/rendimiento_movil_2026-11-10.md`): hechos «Continuar» con pantalla de carga, `_sacar_los_22` en tres tiempos y el CajonAjustes perezoso (E6, −0,24 s de CPU al montar el estadio). E7 NO se aplicó: con menos de 10 fotogramas de estabilizar vuelven los tirones (con 1: 1.015 ms). E5 PENDIENTE: llevar el edificio del túnel (0,26-0,61 s) y los extras (0,24-0,50 s) a la intro solo si antes `EdificioClub.montar` y los extras se parten en pasos de ~100 ms (hoy son síncronos); verificar con capturas fotograma a fotograma de 3 estadios (uno icónico). Si no, cambia espera por un tirón de 0,5-2,5 s en el móvil.
