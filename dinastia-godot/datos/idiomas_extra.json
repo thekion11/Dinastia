@@ -7774,7 +7774,16 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "If you pick nobody, the best per position are called up. If a position is short, it is filled with young players from the country.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "This country has no league in the game: the squad comes from generated players.",
   "¡CAMPEONES CON LA SELECCIÓN!": "CHAMPIONS WITH THE NATIONAL TEAM!",
-  "Aumentar la masa social un 8 %": "Grow the member base by 8 %"
+  "Aumentar la masa social un 8 %": "Grow the member base by 8 %",
+  "EDITAR POSICIONES": "EDIT POSITIONS",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Drag each marker wherever you want: the position changes on its own depending on the zone. Keyboard or controller: Tab switches marker and the arrows move it.",
+  "Nombre de la formación": "Formation name",
+  "Restablecer": "Reset",
+  "El portero no se mueve.": "The goalkeeper does not move.",
+  "Tienen que quedar al menos 3 defensas.": "There must be at least 3 defenders.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "You already have 6 custom formations: delete one to save another.",
+  "Editar posiciones": "Edit positions",
+  "Borrar esta formación": "Delete this formation"
  },
  "pt": {
   "Historia": "História",
@@ -15551,7 +15560,16 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Sem marcar ninguém, vão os melhores por posição. Se faltar jogador numa posição, completa-se com jovens do país.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Este país não tem liga no jogo: a lista sai de jogadores gerados.",
   "¡CAMPEONES CON LA SELECCIÓN!": "CAMPEÕES COM A SELEÇÃO!",
-  "Aumentar la masa social un 8 %": "Aumentar a massa associativa em 8 %"
+  "Aumentar la masa social un 8 %": "Aumentar a massa associativa em 8 %",
+  "EDITAR POSICIONES": "EDITAR POSIÇÕES",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Arraste cada ficha para onde quiser: a posição muda sozinha conforme a zona. Teclado ou comando: Tab muda de ficha e as setas a movem.",
+  "Nombre de la formación": "Nome da formação",
+  "Restablecer": "Restaurar",
+  "El portero no se mueve.": "O goleiro não se move.",
+  "Tienen que quedar al menos 3 defensas.": "Precisam ficar pelo menos 3 defensores.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Você já tem 6 formações próprias: apague uma para salvar outra.",
+  "Editar posiciones": "Editar posições",
+  "Borrar esta formación": "Apagar esta formação"
  },
  "patrones": [
   [
@@ -29391,7 +29409,16 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Sans cocher personne, les meilleurs par poste sont convoqués. S'il manque des joueurs à un poste, on complète avec des jeunes du pays.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Ce pays n'a pas de championnat dans le jeu : la liste vient de joueurs générés.",
   "¡CAMPEONES CON LA SELECCIÓN!": "CHAMPIONS AVEC LA SÉLECTION !",
-  "Aumentar la masa social un 8 %": "Augmenter le nombre d'abonnés de 8 %"
+  "Aumentar la masa social un 8 %": "Augmenter le nombre d'abonnés de 8 %",
+  "EDITAR POSICIONES": "MODIFIER LES POSITIONS",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Faites glisser chaque pion où vous voulez : le poste change tout seul selon la zone. Clavier ou manette : Tab change de pion et les flèches le déplacent.",
+  "Nombre de la formación": "Nom de la formation",
+  "Restablecer": "Réinitialiser",
+  "El portero no se mueve.": "Le gardien ne bouge pas.",
+  "Tienen que quedar al menos 3 defensas.": "Il doit rester au moins 3 défenseurs.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Vous avez déjà 6 formations perso : supprimez-en une pour en enregistrer une autre.",
+  "Editar posiciones": "Modifier les positions",
+  "Borrar esta formación": "Supprimer cette formation"
  },
  "it": {
   "Historia": "Storia",
@@ -37168,7 +37195,16 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Senza segnare nessuno vanno i migliori per ruolo. Se in un ruolo mancano giocatori, si completa con giovani del paese.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Questo paese non ha un campionato nel gioco: la lista viene da giocatori generati.",
   "¡CAMPEONES CON LA SELECCIÓN!": "CAMPIONI CON LA NAZIONALE!",
-  "Aumentar la masa social un 8 %": "Aumentare la base di soci dell'8 %"
+  "Aumentar la masa social un 8 %": "Aumentare la base di soci dell'8 %",
+  "EDITAR POSICIONES": "MODIFICA POSIZIONI",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Trascina ogni pedina dove vuoi: il ruolo cambia da solo in base alla zona. Tastiera o controller: Tab cambia pedina e le frecce la spostano.",
+  "Nombre de la formación": "Nome del modulo",
+  "Restablecer": "Ripristina",
+  "El portero no se mueve.": "Il portiere non si sposta.",
+  "Tienen que quedar al menos 3 defensas.": "Devono restare almeno 3 difensori.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Hai già 6 moduli personali: cancellane uno per salvarne un altro.",
+  "Editar posiciones": "Modifica posizioni",
+  "Borrar esta formación": "Elimina questo modulo"
  },
  "de": {
   "Historia": "Geschichte",
@@ -44945,7 +44981,16 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Ohne Auswahl fahren die Besten je Position. Fehlen auf einer Position Spieler, wird mit jungen Spielern des Landes aufgefüllt.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Dieses Land hat keine Liga im Spiel: Der Kader besteht aus generierten Spielern.",
   "¡CAMPEONES CON LA SELECCIÓN!": "MEISTER MIT DER NATIONALMANNSCHAFT!",
-  "Aumentar la masa social un 8 %": "Die Mitgliederzahl um 8 % steigern"
+  "Aumentar la masa social un 8 %": "Die Mitgliederzahl um 8 % steigern",
+  "EDITAR POSICIONES": "POSITIONEN BEARBEITEN",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Zieh jede Figur, wohin du willst: Die Position ändert sich je nach Zone von selbst. Tastatur oder Controller: Tab wechselt die Figur, die Pfeile bewegen sie.",
+  "Nombre de la formación": "Name der Formation",
+  "Restablecer": "Zurücksetzen",
+  "El portero no se mueve.": "Der Torwart wird nicht verschoben.",
+  "Tienen que quedar al menos 3 defensas.": "Es müssen mindestens 3 Verteidiger bleiben.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Du hast schon 6 eigene Formationen: Lösche eine, um eine andere zu speichern.",
+  "Editar posiciones": "Positionen bearbeiten",
+  "Borrar esta formación": "Diese Formation löschen"
  },
  "ca": {
   "Historia": "Història",
@@ -52722,7 +52767,16 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Sense marcar ningú hi van els millors per posició. Si a una posició hi falten jugadors, es completa amb joves del país.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Aquest país no té lliga al joc: la llista surt de jugadors generats.",
   "¡CAMPEONES CON LA SELECCIÓN!": "CAMPIONS AMB LA SELECCIÓ!",
-  "Aumentar la masa social un 8 %": "Augmentar la massa social un 8 %"
+  "Aumentar la masa social un 8 %": "Augmentar la massa social un 8 %",
+  "EDITAR POSICIONES": "EDITAR POSICIONS",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Arrossega cada fitxa on vulguis: la posició canvia sola segons la zona. Teclat o comandament: Tab canvia de fitxa i les fletxes la mouen.",
+  "Nombre de la formación": "Nom de la formació",
+  "Restablecer": "Restablir",
+  "El portero no se mueve.": "El porter no es mou.",
+  "Tienen que quedar al menos 3 defensas.": "Hi han de quedar almenys 3 defenses.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Ja tens 6 formacions pròpies: esborra'n una per desar-ne una altra.",
+  "Editar posiciones": "Editar posicions",
+  "Borrar esta formación": "Esborrar aquesta formació"
  },
  "pl": {
   "Club": "Klub",
@@ -60499,7 +60553,16 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Bez zaznaczenia nikogo jadą najlepsi na każdej pozycji. Jeśli na pozycji brakuje graczy, uzupełnia się ją młodymi zawodnikami z kraju.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Ten kraj nie ma ligi w grze: kadra pochodzi z wygenerowanych zawodników.",
   "¡CAMPEONES CON LA SELECCIÓN!": "MISTRZOWIE Z REPREZENTACJĄ!",
-  "Aumentar la masa social un 8 %": "Zwiększyć liczbę członków o 8 %"
+  "Aumentar la masa social un 8 %": "Zwiększyć liczbę członków o 8 %",
+  "EDITAR POSICIONES": "EDYTUJ POZYCJE",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Przeciągnij każdy pionek, gdzie chcesz: pozycja zmienia się sama zależnie od strefy. Klawiatura lub pad: Tab zmienia pionek, a strzałki go przesuwają.",
+  "Nombre de la formación": "Nazwa formacji",
+  "Restablecer": "Przywróć",
+  "El portero no se mueve.": "Bramkarz się nie przesuwa.",
+  "Tienen que quedar al menos 3 defensas.": "Musi zostać co najmniej 3 obrońców.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Masz już 6 własnych formacji: usuń jedną, aby zapisać inną.",
+  "Editar posiciones": "Edytuj pozycje",
+  "Borrar esta formación": "Usuń tę formację"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68276,6 +68339,15 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Kimseyi seçmezsen her mevkinin en iyileri çağrılır. Bir mevkide eksik varsa ülkenin genç oyuncularıyla tamamlanır.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Bu ülkenin oyunda ligi yok: kadro üretilmiş oyunculardan oluşur.",
   "¡CAMPEONES CON LA SELECCIÓN!": "MİLLİ TAKIMLA ŞAMPİYON!",
-  "Aumentar la masa social un 8 %": "Üye sayısını %8 artırmak"
+  "Aumentar la masa social un 8 %": "Üye sayısını %8 artırmak",
+  "EDITAR POSICIONES": "POZİSYONLARI DÜZENLE",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Her pulu istediğin yere sürükle: mevki bölgeye göre kendiliğinden değişir. Klavye veya kumanda: Tab pulu değiştirir, oklar onu hareket ettirir.",
+  "Nombre de la formación": "Diziliş adı",
+  "Restablecer": "Sıfırla",
+  "El portero no se mueve.": "Kaleci hareket etmez.",
+  "Tienen que quedar al menos 3 defensas.": "En az 3 defans oyuncusu kalmalı.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Zaten 6 özel dizilişin var: başka birini kaydetmek için birini sil.",
+  "Editar posiciones": "Pozisyonları düzenle",
+  "Borrar esta formación": "Bu dizilişi sil"
  }
 }
