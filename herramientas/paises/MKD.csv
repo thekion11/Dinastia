@@ -1,0 +1,22 @@
+#seleccion=Macedonia del Norte
+#tier=0.3
+#globo=21.43,42.00
+#bandera=🇲🇰
+#confed=ucl,uel
+#liga=Primera Liga de Macedonia del Norte|Liga Macedonia
+#copa=Copa de Macedonia del Norte|Copa Macedonia
+#nombres=Aleksandar,Stefan,Nikola,Marko,Darko,Goran,Ilija,Blagoja,Filip,Dimitar,Bojan,Viktor,Kire,Zoran
+#apellidos=Stojanovski,Petrovski,Nikolovski,Trajkovski,Dimitrievski,Georgievski,Ilievski,Jovanovski,Angelovski,Markovski,Spasovski,Todorovski,Ristovski,Popovski
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Shkëndija;Shkendia Tetovo;#1d4fa8;#c8102e;60;15000;1979;los Azules de Tetovo;el estadio moderno de una ciudad del oeste del país;El club dominante de los últimos años, con ligas y presencia habitual en Europa.
+Vardar;Vardar Skopia;#c8102e;#111111;58;33011;1947;los Rojinegros;el gran estadio nacional de la capital;El club más histórico del país, con muchos títulos y de afición enorme.
+Struga;Struga Lago;#1d4fa8;#ffffff;52;4000;1962;los del Lago;el estadio junto al lago de una ciudad turística del suroeste;Un club de la ciudad del lago, que se ha asentado en la primera división.
+Rabotnički;Rabotnik Skopje;#c8102e;#ffffff;54;6000;1937;los Obreros;un estadio de la capital con tradición europea;Un histórico de la capital, fundado como club de trabajadores y varias veces campeón.
+Sileks;Sileks Kratovo;#c8102e;#111111;50;4800;1965;los Madereros;el estadio de una pequeña ciudad de montaña del este;Un club de una ciudad pequeña, campeón varias veces en los años noventa.
+Pelister;Pelistar Bitola;#c8102e;#ffffff;51;10000;1945;los Rojos de Bitola;el estadio de una gran ciudad del sur, con tradición histórica;Un histórico del sur del país, con una afición muy fiel y títulos de liga y copa.
+AP Brera;Brera Estrumica;#1d4fa8;#f5c400;48;9200;2018;los Estrumiqueños;el estadio de una ciudad del sureste, cerca de la frontera;Un club joven del sureste que ha crecido con un proyecto ambicioso.
+Tikvesh;Tikves Kavadar;#6a2c91;#ffffff;47;9000;1930;los Vinateros;el estadio de una ciudad famosa por sus viñedos;El club de la región del vino, un fijo en la mitad de la tabla.
+Shkupi;Shkupi Cair;#1d4fa8;#ffffff;46;7500;1927;los Azules de Skopje;un estadio del barrio de Čair, en la capital;Un club del barrio albanés de la capital, que ha subido peldaños en los últimos años.
+Bashkimi;Bashkimi Kuman;#c8102e;#1d4fa8;42;3500;1947;los de la Unión;un estadio de una ciudad del norte, cerca de la capital;Un club del norte del país, cuyo nombre significa unión.
+Arsimi;Arsimi Gostivar;#1d4fa8;#ffffff;40;4000;1957;los Estudiantes;un estadio municipal de una ciudad del oeste;Un club del oeste del país, cuyo nombre significa educación.
+Makedonija G.P.;Makedonia Gjorce;#f5c400;#c8102e;38;3000;1960;los Gjorcheños;un campo pequeño en un barrio periférico de la capital;Un modesto club de un barrio de la capital, el más humilde de la liga.

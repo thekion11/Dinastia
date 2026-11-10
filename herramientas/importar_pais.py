@@ -108,7 +108,9 @@ def aspecto():
             letras = "".join(c for c in n if c.isascii() and c.isalpha()).upper()[:3]
         c1, c2 = f[3], f[4]
         fi, pa = i % len(FORMAS), (i // len(FORMAS) + i) % len(PATRONES)
-        while (FORMAS[fi], PATRONES[pa], c1, c2) in usados:
+        intentos = 0
+        while (FORMAS[fi], PATRONES[pa], c1, c2) in usados and intentos < len(FORMAS) * len(PATRONES):   # (10-11) con muchos clubes de los mismos colores se agotan las 132 combinaciones: no es un bucle infinito, `aspecto_unicos.py` desempata después
+            intentos += 1
             pa = (pa + 1) % len(PATRONES)
             if pa == (i // len(FORMAS) + i) % len(PATRONES):
                 fi = (fi + 1) % len(FORMAS)

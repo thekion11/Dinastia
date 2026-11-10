@@ -1,0 +1,20 @@
+#seleccion=Georgia
+#tier=0.3
+#globo=44.80,41.72
+#bandera=🇬🇪
+#confed=ucl,uel
+#liga=Erovnuli Liga|Liga Georgiana
+#copa=Copa de Georgia|Copa Georgiana
+#nombres=Giorgi,Levan,Nika,Davit,Irakli,Zurab,Lasha,Gela,Tornike,Mamuka,Vakhtang,Beka,Shota,Otar
+#apellidos=Beridze,Kapanadze,Maisuradze,Gelashvili,Lomidze,Khutsishvili,Chkheidze,Tsiklauri,Jorbenadze,Gogoladze,Kvaratskhelia,Mchedlidze,Abashidze,Natroshvili
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Dinamo Tbilisi;Tiflis Dinarro;#0057b8;#ffffff;60;54549;1925;los Azules y Blancos;el gran estadio nacional de la capital;El club más laureado del país, con una vitrina enorme de ligas y copas.
+Dinamo Batumi;Batumi Marino;#0057b8;#ffffff;56;20000;1923;los Marineros del Mar Negro;el moderno estadio de la ciudad costera;Un club de la costa que ha llegado a pelear por el título.
+Iberia;Iberia Tiflisan;#c8102e;#ffffff;54;22754;1999;los Rojiblancos del Sur;el estadio de un barrio de la capital;Un club joven de la capital que ha crecido con una cantera ambiciosa.
+Torpedo Kutaisi;Kutaisi Torpeda;#ffffff;#000000;52;19400;1950;los Torpedos;el estadio de la ciudad del oeste;Un histórico del interior con una afición muy apasionada.
+Dila Gori;Dila Goriani;#c8102e;#ffffff;48;5000;1949;los Gigantes de Gori;el estadio de la ciudad de la fortaleza;Un club de provincias que ya ha ganado una copa nacional.
+Gagra;Gagra Tiflisa;#0057b8;#f2c200;44;2000;1990;los Gagrinos;el pequeño campo compartido de la capital;Un club con nombre de una ciudad lejana que juega en la capital.
+Rustavi;Rustavi Acero;#c8102e;#000000;44;2000;1948;los Metalúrgicos;el pequeño campo compartido de la ciudad industrial;Un club industrial que comparte campo y busca recuperar su pasado.
+Samgurali Tsqaltubo;Samgurali Tsqal;#c8102e;#ffffff;42;3500;1965;los Termales;el estadio de la ciudad balneario;Un club de una ciudad de aguas termales que lucha por su sitio.
+Meshakhte;Meshakte Tkibu;#000000;#f2c200;40;3500;1936;los Mineros;el estadio prestado de la ciudad vecina;Un club minero de provincias que juega lejos de su ciudad.
+Spaeri;Spaeri Tiflisan;#ffffff;#c8102e;38;1000;2016;los Chispas de la Capital;el diminuto campo de un barrio de la capital;El club más pequeño de la liga, de muy reciente historia.

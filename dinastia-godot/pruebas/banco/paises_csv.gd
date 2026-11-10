@@ -126,6 +126,15 @@ func _probar_pais_sin_liga_tanda2() -> void:
 	_comprobar_tanda({"WAL": [12, "Gales", "ucl"], "SVN": [10, "Eslovenia", "ucl"], "JOR": [10, "Jordania", "asia"], "CYP": [14, "Chipre", "ucl"], "IRQ": [20, "Irak", "asia"], "UZB": [16, "Uzbekistán", "asia"],
 		"FIN": [12, "Finlandia", "ucl"], "JAM": [14, "Jamaica", "conc"], "HON": [11, "Honduras", "conc"], "PAN": [12, "Panamá", "conc"], "NZL": [11, "N. Zelanda", "oce"], "MLI": [18, "Malí", "afr"]}, 1104)
 
+## (10-11) TANDA 3: 14 países de la UEFA (Bosnia, Montenegro, Islandia, Estonia, Kazajistán, Azerbaiyán, Bielorrusia, Letonia, Albania, Macedonia del Norte, Georgia, Lituania, Irlanda del Norte, Luxemburgo).
+## Listas de clubes de Wikipedia 2025-26 / 2026. Bielorrusia NO está suspendida (solo vetada como local) y entra en los torneos como cualquier otra.
+func _probar_pais_sin_liga_tanda3() -> void:
+	_titulo("PAÍSES SIN LIGA, TANDA 3: LIGA, COPA, CONFEDERACIÓN Y SELECCIÓN")
+	_comprobar_tanda({"BIH": [10, "Bosnia", "ucl"], "MNE": [10, "Montenegro", "ucl"], "ISL": [12, "Islandia", "ucl"], "EST": [10, "Estonia", "ucl"], "KAZ": [16, "Kazajistán", "ucl"], "AZE": [12, "Azerbaiyán", "ucl"],
+		"BLR": [16, "Bielorrusia", "ucl"], "LVA": [10, "Letonia", "ucl"], "ALB": [10, "Albania", "ucl"], "MKD": [12, "Macedonia del Norte", "ucl"], "GEO": [10, "Georgia", "ucl"], "LTU": [10, "Lituania", "ucl"],
+		"NIR": [12, "Irlanda del Norte", "ucl"], "LUX": [16, "Luxemburgo", "ucl"]}, 1105)
+	_comprobar(not SeleccionesTorneos.SUSPENDIDAS.has("Bielorrusia"), "Bielorrusia no está suspendida (solo vetada como local)")
+
 ## Cada país del caso [clubes, selección, copa continental]: su liga con la cantidad real de clubes, su copa continental, su copa nacional, su selección y jugadores del mundo para convocar.
 func _comprobar_tanda(casos: Dictionary, semilla: int) -> void:
 	var m := Mundo.new()

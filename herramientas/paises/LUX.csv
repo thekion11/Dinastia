@@ -1,0 +1,26 @@
+#seleccion=Luxemburgo
+#tier=0.6
+#globo=6.13,49.61
+#bandera=🇱🇺
+#confed=ucl,uel
+#liga=BGL Ligue|Liga Luxemburguesa
+#copa=Copa de Luxemburgo|Copa Luxemburguesa
+#nombres=Luc,Marc,Jean,Pol,Tom,Gilles,Yann,Laurent,Claude,Max,Dan,Alex,Tim,Sven
+#apellidos=Schmit,Weber,Muller,Hoffmann,Wagner,Thill,Reuter,Schmitz,Kremer,Steinmetz,Majerus,Back,Hansen,Kirsch
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Atert Bissen;Atert Bisen;#1d4fa8;#ffffff;40;1500;1911;los del Atert;un campo de hierba en una pequeña localidad del oeste del país;Un club de pueblo que ha subido a la élite con humildad.
+Differdange;Diferdange Mina;#c8102e;#ffffff;56;3500;2003;los Mineros;el estadio municipal de una ciudad minera del sur;Un club nacido de una fusión, con presencia europea y mucha cantera.
+Dudelange;Dudelanje Roja;#c8102e;#ffffff;60;2558;1991;los Rojos del Sur;un estadio pequeño pero moderno en una ciudad del sur;El club más exitoso de la era reciente, con liga y presencia en Europa.
+Hostert;Hostert Valle;#1d4fa8;#ffffff;42;1500;1939;los del Valle;un campo comunal en una pequeña localidad cerca de la capital;Un club de pueblo que se asienta en la primera categoría.
+Jeunesse Canach;Juventud Canach;#111111;#ffffff;38;1000;1912;los Viñateros;el campo más pequeño de la liga, en una localidad de viñedos;El club más modesto de la liga, de una aldea del valle del Mosela.
+Jeunesse Esch;Juventud Esch;#111111;#ffffff;54;4000;1907;los Blanquinegros;un estadio histórico en la segunda ciudad del país, junto a la frontera;El club con más títulos de la historia del país.
+Käerjéng;Kaerjeng Oeste;#1d4fa8;#ffffff;42;2500;1997;los del Oeste;un estadio municipal en una localidad cercana a la frontera belga;Un club joven de la comarca de Bascharage que busca consolidarse.
+Mamer;Mamer Bosque;#c8102e;#ffffff;41;2600;1932;los del Bosque;un campo municipal en una localidad al oeste de la capital;Un club de la periferia que va ganando peso en la liga.
+Mondorf-les-Bains;Mondorf Termas;#f5c400;#1d4fa8;44;3600;1920;los Termales;un estadio de una localidad termal junto al río Mosela;El club de la villa balnearia, una de las pocas ciudades termales del país.
+Progrès Niederkorn;Progreso Nieder;#c8102e;#ffffff;52;2800;1919;los Progresistas;un estadio de una pequeña localidad minera del sur;Un club pequeño que dio la sorpresa en torneos europeos.
+Racing Union Luxembourg;Racing Unión Lux;#1d4fa8;#ffffff;50;5814;2015;los Racing;el estadio más grande de la capital, con pista y tribuna cubierta;El club de la capital, nacido de la unión de dos equipos históricos.
+Rodange;Rodange Frontera;#f5c400;#c8102e;44;3400;1991;los de la Frontera;un campo municipal en una localidad pegada a las fronteras de Francia y Bélgica;Un club de la tres fronteras con presencia habitual en la primera división.
+Swift Hesperange;Veloz Hesperange;#c8102e;#1d4fa8;50;3058;1917;los Veloces;un campo a las afueras de la capital, en una ciudad dormitorio;Un club veterano que ha vuelto a su mejor nivel.
+UNA Strassen;Strassen Unido;#1d4fa8;#f5c400;46;2500;1927;los Unidos;un estadio municipal en un barrio residencial junto a la capital;Un club de la periferia de la capital que siempre pelea en la zona media.
+Union Titus Pétange;Titus Petange;#c8102e;#111111;51;2400;2006;los Titanes;un campo municipal en una ciudad del suroeste del país;Un club que ha ganado ligas y copas desde su fusión.
+Victoria Rosport;Victoria Rosbor;#c8102e;#111111;43;2500;1931;los de la Victoria;un estadio moderno en un pueblo del este, junto al río Sauer;Un club rural del este con un campo moderno y aficionados fieles.

@@ -2230,6 +2230,664 @@
     "uel"
    ],
    "BANDERA": "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
+  },
+  "ALB": {
+   "PAIS_SELECCION": "Albania",
+   "TIER_PAIS": 0.3,
+   "GLOBO_PAIS": [
+    19.82,
+    41.33
+   ],
+   "POOLS_EU": [
+    [
+     "Arben",
+     "Besnik",
+     "Ervin",
+     "Gentian",
+     "Klajdi",
+     "Ardit",
+     "Fatjon",
+     "Endrit",
+     "Altin",
+     "Redon",
+     "Dritan",
+     "Erion",
+     "Kristi",
+     "Alban"
+    ],
+    [
+     "Hoxha",
+     "Shehu",
+     "Prifti",
+     "Dervishi",
+     "Kola",
+     "Gjoka",
+     "Brahimi",
+     "Leka",
+     "Cela",
+     "Zeqiri",
+     "Marku",
+     "Rama",
+     "Basha",
+     "Doka"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇦🇱"
+  },
+  "AZE": {
+   "PAIS_SELECCION": "Azerbaiyán",
+   "TIER_PAIS": 0.5,
+   "GLOBO_PAIS": [
+    49.87,
+    40.41
+   ],
+   "POOLS_EU": [
+    [
+     "Elvin",
+     "Rashad",
+     "Tural",
+     "Vugar",
+     "Orkhan",
+     "Samir",
+     "Elnur",
+     "Farid",
+     "Kamran",
+     "Ramil",
+     "Anar",
+     "Murad",
+     "Javid",
+     "Emin"
+    ],
+    [
+     "Mammadov",
+     "Aliyev",
+     "Huseynov",
+     "Hasanov",
+     "Guliyev",
+     "Ismayilov",
+     "Abbasov",
+     "Rzayev",
+     "Mustafayev",
+     "Jafarov",
+     "Najafov",
+     "Bayramov",
+     "Valiyev",
+     "Sultanov"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇦🇿"
+  },
+  "BIH": {
+   "PAIS_SELECCION": "Bosnia",
+   "TIER_PAIS": 0.3,
+   "GLOBO_PAIS": [
+    18.41,
+    43.86
+   ],
+   "POOLS_EU": [
+    [
+     "Emir",
+     "Amar",
+     "Kenan",
+     "Adnan",
+     "Edin",
+     "Haris",
+     "Mirza",
+     "Tarik",
+     "Dino",
+     "Armin",
+     "Nermin",
+     "Samir",
+     "Almir",
+     "Denis"
+    ],
+    [
+     "Hodžić",
+     "Kovačević",
+     "Mehmedović",
+     "Babić",
+     "Delić",
+     "Hadžić",
+     "Begić",
+     "Marić",
+     "Perić",
+     "Jukić",
+     "Softić",
+     "Ibrahimović",
+     "Bilić",
+     "Tomić"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇧🇦"
+  },
+  "BLR": {
+   "PAIS_SELECCION": "Bielorrusia",
+   "TIER_PAIS": 0.3,
+   "GLOBO_PAIS": [
+    27.56,
+    53.9
+   ],
+   "POOLS_EU": [
+    [
+     "Aleksandr",
+     "Dmitri",
+     "Maksim",
+     "Andrei",
+     "Sergei",
+     "Artem",
+     "Vladislav",
+     "Ilya",
+     "Nikita",
+     "Pavel",
+     "Egor",
+     "Kirill",
+     "Vitali",
+     "Yan"
+    ],
+    [
+     "Ivanov",
+     "Kovalev",
+     "Petrov",
+     "Sidorov",
+     "Kuznetsov",
+     "Volkov",
+     "Melnik",
+     "Shevchenko",
+     "Grigoriev",
+     "Lukashevich",
+     "Kozlov",
+     "Romanov",
+     "Baranov",
+     "Zhuk"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇧🇾"
+  },
+  "EST": {
+   "PAIS_SELECCION": "Estonia",
+   "TIER_PAIS": 0.4,
+   "GLOBO_PAIS": [
+    24.75,
+    59.44
+   ],
+   "POOLS_EU": [
+    [
+     "Martin",
+     "Kristjan",
+     "Andres",
+     "Siim",
+     "Rasmus",
+     "Jaan",
+     "Marko",
+     "Tonu",
+     "Kaspar",
+     "Mihkel",
+     "Karl",
+     "Taavi",
+     "Priit",
+     "Hendrik"
+    ],
+    [
+     "Tamm",
+     "Saar",
+     "Sepp",
+     "Magi",
+     "Kask",
+     "Kukk",
+     "Rebane",
+     "Ilves",
+     "Pold",
+     "Koppel",
+     "Oun",
+     "Lepik",
+     "Mets",
+     "Vaher"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇪🇪"
+  },
+  "GEO": {
+   "PAIS_SELECCION": "Georgia",
+   "TIER_PAIS": 0.3,
+   "GLOBO_PAIS": [
+    44.8,
+    41.72
+   ],
+   "POOLS_EU": [
+    [
+     "Giorgi",
+     "Levan",
+     "Nika",
+     "Davit",
+     "Irakli",
+     "Zurab",
+     "Lasha",
+     "Gela",
+     "Tornike",
+     "Mamuka",
+     "Vakhtang",
+     "Beka",
+     "Shota",
+     "Otar"
+    ],
+    [
+     "Beridze",
+     "Kapanadze",
+     "Maisuradze",
+     "Gelashvili",
+     "Lomidze",
+     "Khutsishvili",
+     "Chkheidze",
+     "Tsiklauri",
+     "Jorbenadze",
+     "Gogoladze",
+     "Kvaratskhelia",
+     "Mchedlidze",
+     "Abashidze",
+     "Natroshvili"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇬🇪"
+  },
+  "ISL": {
+   "PAIS_SELECCION": "Islandia",
+   "TIER_PAIS": 0.5,
+   "GLOBO_PAIS": [
+    -21.94,
+    64.15
+   ],
+   "POOLS_EU": [
+    [
+     "Gudmundur",
+     "Sigurdur",
+     "Jon",
+     "Olafur",
+     "Einar",
+     "Bjorn",
+     "Kristjan",
+     "Arnar",
+     "Halldor",
+     "Thorsteinn",
+     "Magnus",
+     "Gunnar",
+     "Helgi",
+     "Baldur"
+    ],
+    [
+     "Jonsson",
+     "Sigurdsson",
+     "Gudmundsson",
+     "Einarsson",
+     "Olafsson",
+     "Magnusson",
+     "Stefansson",
+     "Bjarnason",
+     "Kristjansson",
+     "Arnason",
+     "Haraldsson",
+     "Petursson",
+     "Thorsson",
+     "Gunnarsson"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇮🇸"
+  },
+  "KAZ": {
+   "PAIS_SELECCION": "Kazajistán",
+   "TIER_PAIS": 0.5,
+   "GLOBO_PAIS": [
+    71.43,
+    51.17
+   ],
+   "POOLS_EU": [
+    [
+     "Aibek",
+     "Nurlan",
+     "Askar",
+     "Timur",
+     "Daniyar",
+     "Yerlan",
+     "Marat",
+     "Bauyrzhan",
+     "Serik",
+     "Arman",
+     "Ruslan",
+     "Zhandos",
+     "Nursultan",
+     "Dauren"
+    ],
+    [
+     "Nurgaliyev",
+     "Seitkali",
+     "Abdrakhmanov",
+     "Kasymov",
+     "Zhumabayev",
+     "Omarov",
+     "Sadykov",
+     "Tleubayev",
+     "Bekov",
+     "Utegenov",
+     "Kenzhebayev",
+     "Amirov",
+     "Zhaksylykov",
+     "Dosmukhamedov"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇰🇿"
+  },
+  "LTU": {
+   "PAIS_SELECCION": "Lituania",
+   "TIER_PAIS": 0.4,
+   "GLOBO_PAIS": [
+    25.28,
+    54.69
+   ],
+   "POOLS_EU": [
+    [
+     "Jonas",
+     "Mantas",
+     "Tomas",
+     "Darius",
+     "Rokas",
+     "Arunas",
+     "Gintaras",
+     "Lukas",
+     "Paulius",
+     "Mindaugas",
+     "Vytautas",
+     "Andrius",
+     "Egidijus",
+     "Saulius"
+    ],
+    [
+     "Kazlauskas",
+     "Petrauskas",
+     "Jankauskas",
+     "Butkus",
+     "Paulauskas",
+     "Urbonas",
+     "Vasiliauskas",
+     "Stankevicius",
+     "Zukauskas",
+     "Navickas",
+     "Rimkus",
+     "Grigas",
+     "Baranauskas",
+     "Sakalauskas"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇱🇹"
+  },
+  "LUX": {
+   "PAIS_SELECCION": "Luxemburgo",
+   "TIER_PAIS": 0.6,
+   "GLOBO_PAIS": [
+    6.13,
+    49.61
+   ],
+   "POOLS_EU": [
+    [
+     "Luc",
+     "Marc",
+     "Jean",
+     "Pol",
+     "Tom",
+     "Gilles",
+     "Yann",
+     "Laurent",
+     "Claude",
+     "Max",
+     "Dan",
+     "Alex",
+     "Tim",
+     "Sven"
+    ],
+    [
+     "Schmit",
+     "Weber",
+     "Muller",
+     "Hoffmann",
+     "Wagner",
+     "Thill",
+     "Reuter",
+     "Schmitz",
+     "Kremer",
+     "Steinmetz",
+     "Majerus",
+     "Back",
+     "Hansen",
+     "Kirsch"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇱🇺"
+  },
+  "LVA": {
+   "PAIS_SELECCION": "Letonia",
+   "TIER_PAIS": 0.4,
+   "GLOBO_PAIS": [
+    24.1,
+    56.95
+   ],
+   "POOLS_EU": [
+    [
+     "Jānis",
+     "Andris",
+     "Māris",
+     "Kristaps",
+     "Roberts",
+     "Artūrs",
+     "Edgars",
+     "Raivis",
+     "Rihards",
+     "Mārtiņš",
+     "Ivars",
+     "Aigars",
+     "Toms",
+     "Oskars"
+    ],
+    [
+     "Bērziņš",
+     "Kalniņš",
+     "Ozoliņš",
+     "Jansons",
+     "Liepiņš",
+     "Krūmiņš",
+     "Balodis",
+     "Vītols",
+     "Eglītis",
+     "Zariņš",
+     "Pētersons",
+     "Sproģis",
+     "Lācis",
+     "Siliņš"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇱🇻"
+  },
+  "MKD": {
+   "PAIS_SELECCION": "Macedonia del Norte",
+   "TIER_PAIS": 0.3,
+   "GLOBO_PAIS": [
+    21.43,
+    42.0
+   ],
+   "POOLS_EU": [
+    [
+     "Aleksandar",
+     "Stefan",
+     "Nikola",
+     "Marko",
+     "Darko",
+     "Goran",
+     "Ilija",
+     "Blagoja",
+     "Filip",
+     "Dimitar",
+     "Bojan",
+     "Viktor",
+     "Kire",
+     "Zoran"
+    ],
+    [
+     "Stojanovski",
+     "Petrovski",
+     "Nikolovski",
+     "Trajkovski",
+     "Dimitrievski",
+     "Georgievski",
+     "Ilievski",
+     "Jovanovski",
+     "Angelovski",
+     "Markovski",
+     "Spasovski",
+     "Todorovski",
+     "Ristovski",
+     "Popovski"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇲🇰"
+  },
+  "MNE": {
+   "PAIS_SELECCION": "Montenegro",
+   "TIER_PAIS": 0.3,
+   "GLOBO_PAIS": [
+    19.26,
+    42.44
+   ],
+   "POOLS_EU": [
+    [
+     "Nikola",
+     "Marko",
+     "Stefan",
+     "Luka",
+     "Vuk",
+     "Nemanja",
+     "Milos",
+     "Filip",
+     "Danilo",
+     "Aleksa",
+     "Mirko",
+     "Dusan",
+     "Petar",
+     "Bojan"
+    ],
+    [
+     "Jovanović",
+     "Radović",
+     "Vučković",
+     "Perović",
+     "Marković",
+     "Bošković",
+     "Popović",
+     "Đurović",
+     "Vujović",
+     "Raičević",
+     "Ivanović",
+     "Mijatović",
+     "Šćepanović",
+     "Kovačević"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇲🇪"
+  },
+  "NIR": {
+   "PAIS_SELECCION": "Irlanda del Norte",
+   "TIER_PAIS": 0.5,
+   "GLOBO_PAIS": [
+    -5.93,
+    54.6
+   ],
+   "POOLS_EU": [
+    [
+     "Conor",
+     "Ciaran",
+     "Declan",
+     "Niall",
+     "Padraig",
+     "Connor",
+     "Jamie",
+     "Shane",
+     "Callum",
+     "Ryan",
+     "Oisin",
+     "Cathal",
+     "Rory",
+     "Aaron"
+    ],
+    [
+     "Murphy",
+     "McCann",
+     "Doherty",
+     "Quinn",
+     "Hughes",
+     "McAleer",
+     "Gallagher",
+     "Boyle",
+     "Kelly",
+     "Mulholland",
+     "Ferguson",
+     "Campbell",
+     "McKeown",
+     "Patterson"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇬🇧"
   }
  },
  "tablas": {
@@ -2237,11 +2895,25 @@
  },
  "listas": {
   "SELECCIONES": [
+   "Albania",
+   "Azerbaiyán",
+   "Bosnia",
+   "Bielorrusia",
    "Bulgaria",
    "China",
    "Chipre",
+   "Estonia",
    "Finlandia",
+   "Georgia",
+   "Islandia",
    "Israel",
+   "Kazajistán",
+   "Lituania",
+   "Luxemburgo",
+   "Letonia",
+   "Macedonia del Norte",
+   "Montenegro",
+   "Irlanda del Norte",
    "Rumanía",
    "Rusia",
    "Eslovaquia",

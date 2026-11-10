@@ -103,6 +103,21 @@ const JORNADA := {
 	"PAN": [48, "Código de Trabajo", "48 horas semanales de jornada diurna.", true],
 	"NZL": [40, "Ley de relaciones laborales", "40 horas semanales como referencia.", true],
 	"MLI": [40, "Código del Trabajo", "40 horas semanales.", true],
+## Tanda 3 de «países sin liga» (10-11-2026): 14 países de la UEFA.
+	"BIH": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"MNE": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"ISL": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"EST": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"KAZ": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"AZE": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"BLR": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"LVA": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"ALB": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"MKD": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"GEO": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"LTU": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"NIR": [48, "Reglamento del tiempo de trabajo", "48 horas semanales de media como máximo.", true],
+	"LUX": [40, "Código del Trabajo", "40 horas semanales.", true],
 	"IRN": [44, "Código del Trabajo", "44 horas semanales.", true],
 }
 
