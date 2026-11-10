@@ -19,6 +19,7 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("hierba", "manchas", "semilla"), &DinastiaNativo::hierba);
 	ClassDB::bind_method(D_METHOD("once_asignar_libres", "ranuras", "libres", "grupo_de", "orden"), &DinastiaNativo::once_asignar_libres);
 	ClassDB::bind_method(D_METHOD("obstaculos_multimalla", "nodo_t", "buf", "paso", "n", "base", "raiz_y", "min_alto", "max_base", "rej", "celda_rej"), &DinastiaNativo::obstaculos_multimalla);
+	ClassDB::bind_method(D_METHOD("elegir_ponderado", "once", "grupo_de", "bases", "base_def", "atr", "pesos_rol", "r_unit", "excluir"), &DinastiaNativo::elegir_ponderado);
 }
 
 PackedByteArray DinastiaNativo::rampa(const PackedByteArray &src, const PackedByteArray &lut) const {

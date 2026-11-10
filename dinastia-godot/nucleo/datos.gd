@@ -262,6 +262,12 @@ func grupo(demarcacion: String) -> String:
 		posd()
 	return _grupo_de.get(demarcacion, "MED")
 
+## demarcación → grupo (el mapa entero, para la extensión nativa: `Nativo` lo lee con el mismo «MED» por defecto que `grupo()`).
+func mapa_grupos() -> Dictionary:
+	if _grupo_de.is_empty():
+		posd()
+	return _grupo_de
+
 ## Si la demarcacion es un lateral -"D.d==='LAT'" del HTML-: solo estas notan
 ## el pie habil del jugador.
 func es_lateral(demarcacion: String) -> bool:
