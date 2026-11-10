@@ -441,3 +441,22 @@ Revisado:
 - La sonda de giros en el partido: un giro de ~180° encadenado con intermedias, natural.
 Con esto la LOCOMOCIÓN del original queda portada entera para los jugadores sin balón; el portador usa los ciclos con balón
 (parte 3). Pendiente: la inclinación hacia la curva de las intermedias y llevar esta capa a C++ si el coste molesta.
+
+### ¿Gemelo C++ de la locomoción? Medición y propuesta (10-11, pendiente de OK de la líder)
+3 partidos seguidos (2 × 120 s, cronometrado dentro del paso; el 3.º ya con casi todas las intermedias construidas):
+| por paso (µs) | partido 1 | partido 2 | partido 3 |
+|---|---|---|---|
+| locomoción entera | 213 | 179 | **152** |
+| · evaluar a quién toca (cada 0,1 s) | 133 | 94 | 67 |
+| · · de eso, `elegir` (cálculo puro) | 19 | 21 | 18 |
+| · · de eso, construir intermedias (cálculo puro, una vez por sesión) | 63 | 39 | 17 |
+| · bucle por fotograma (diccionarios del jugador, AnimationPlayer, giro del modelo) | 80 | 85 | 86 |
+| paso del motor entero | ~1.610 | ~1.660 | ~1.535 |
+Lo que se puede llevar a C++ como función pura con su gemelo exacto (`elegir`, la mezcla de `LeagueAuto.construir`) es ~35 µs/paso
+en régimen (~2 % del paso) y ~0,5 s de construcción por sesión. El resto (~120 µs) es acceso a los diccionarios del jugador y
+llamadas al motor de Godot, que desde C++ siguen pasando por Variant: ganaría poco y obligaría a duplicar ~600 líneas.
+Además la extensión solo existe para Linux y Windows: en Android y Web (donde la prueba del dueño dio 5 FPS con la GPU al 100 % y
+la CPU al 0 %) correría igual el GDScript, así que el C++ no ayuda al móvil.
+**Propuesta: NO hacer el gemelo C++ ahora.** En su lugar, una mejora en GDScript que sí sirve en todas las plataformas: no revisar
+ni animar transiciones de los jugadores fuera de cámara o lejos de ella (solo visual; se puede medir con las mismas huellas). Si
+aun así hiciera falta, pasar solo `elegir` y la mezcla de las intermedias (funciones puras, copia exacta y `probar_nativo`).
