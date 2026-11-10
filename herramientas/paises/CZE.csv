@@ -1,0 +1,26 @@
+#seleccion=República Checa
+#tier=0.7
+#globo=14.42,50.08
+#bandera=🇨🇿
+#confed=ucl,uel
+#liga=F0rtuna Liga|Liga Checa
+#copa=Copa de la República Checa|Copa Checa
+#nombres=Jan,Petr,Jakub,Tomáš,Martin,Lukáš,Ondřej,Pavel,David,Michal,Filip,Vojtěch,Adam,Matěj
+#apellidos=Novák,Svoboda,Novotný,Dvořák,Černý,Procházka,Kučera,Veselý,Horák,Němec,Marek,Pospíšil,Pokorný,Hájek
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Slavia Praha;Slavia Moldava;#c8102e;#ffffff;68;19000;1892;los Rojiblancos;el estadio de la capital;El club de la capital con estrella roja en el escudo.
+Sparta Praha;Esparta Praga;#8b1538;#ffd100;68;19000;1893;los Granates;el estadio de la colina de la capital;El eterno rival de la capital.
+Viktoria Plzeň;Pilsen Victoria;#1b458f;#c8102e;64;11000;1911;los Cerveceros;el estadio de la ciudad de la cerveza;El campeón de la ciudad de la cerveza.
+Baník Ostrava;Banik Minero;#1b458f;#ffffff;60;15000;1922;los Mineros;el estadio de la ciudad minera;El club de la ciudad minera del este.
+Sigma Olomouc;Sigma Moravia;#1b458f;#ffd100;58;12000;1919;los Sigma;el estadio de la ciudad histórica;El club de la ciudad histórica de Moravia.
+FK Mladá Boleslav;Boleslav Auto;#1b458f;#ffffff;57;5000;1902;los Automovilistas;el estadio de la ciudad del automóvil;El club de la ciudad de la fábrica de coches.
+1. FC Slovácko;Slovacko Vino;#1b458f;#ffd100;56;8000;1927;los del Vino;el estadio de la región del vino;El club de la región del vino.
+Hradec Králové;Hradec Ciudad;#c8102e;#ffffff;56;9000;1905;los Rojos;el estadio de la ciudad del Elba;El club de la ciudad del río Elba.
+FK Jablonec;Jablonec Cristal;#00843d;#ffffff;57;6000;1945;los de Cristal;el estadio de la ciudad del cristal;El club de la ciudad del cristal.
+FK Teplice;Teplice Termas;#ffd100;#ffffff;55;18000;1945;los Termales;el estadio de la ciudad termal;El club de la ciudad de los balnearios.
+Bohemians 1905;Bohemios Praga;#00843d;#ffffff;54;8000;1905;los Canguros;el estadio del barrio de los canguros;El club del canguro en el escudo.
+Dukla Praha;Dukla Capital;#c8102e;#ffd100;53;8000;1958;los Militares;el estadio del barrio de la capital;El club del antiguo equipo del ejército.
+FK Pardubice;Pardubice Cuadra;#c8102e;#ffffff;53;5000;1899;los Rojos;el estadio de la ciudad de los caballos;El club de la ciudad de los caballos.
+MFK Karviná;Karvina Carbon;#c8102e;#ffffff;52;5000;1919;los Carboneros;el estadio de la cuenca del carbón;El club de la cuenca del carbón.
+SK Dynamo České Budějovice;Dinamo Bud.;#1b458f;#ffffff;53;6700;1905;los Dinamos;el estadio de la ciudad de la cerveza vieja;El club de la ciudad de la cerveza original.
+Slovan Liberec;Liberec Montana;#1b458f;#ffffff;56;9000;1958;los Azulblancos;el estadio de las montañas del norte;El club de las montañas del norte.

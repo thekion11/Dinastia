@@ -3075,5 +3075,601 @@
  "Atromeda FC": [
   "4-3-3",
   "bloque"
+ ],
+ "Puerto Oriental": [
+  "4-4-2",
+  "directo"
+ ],
+ "Flor del Este": [
+  "5-3-2",
+  "garra"
+ ],
+ "Guardia Capital": [
+  "4-3-3",
+  "contra"
+ ],
+ "Taishan Dorado": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Chengdu Pandas": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Zhejiang Verde": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Tigre Tianjin": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Henan Llanura": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Wuhan Tres Torres": [
+  "4-4-2",
+  "presion"
+ ],
+ "Costa Oeste": [
+  "5-3-2",
+  "directo"
+ ],
+ "Dalian Mar": [
+  "4-3-3",
+  "garra"
+ ],
+ "Changchun Amarillo": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Meizhou Hakka": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Shenzhen Ciudad": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Yunnan Montana": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Liaoning Hierro": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Slavia Moldava": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Esparta Praga": [
+  "5-3-2",
+  "presion"
+ ],
+ "Pilsen Victoria": [
+  "4-3-3",
+  "directo"
+ ],
+ "Banik Minero": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Sigma Moravia": [
+  "4-4-2",
+  "contra"
+ ],
+ "Boleslav Auto": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Slovacko Vino": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Hradec Ciudad": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Jablonec Cristal": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Teplice Termas": [
+  "5-3-2",
+  "equilibrado"
+ ],
+ "Bohemios Praga": [
+  "4-3-3",
+  "presion"
+ ],
+ "Dukla Capital": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Pardubice Cuadra": [
+  "4-4-2",
+  "garra"
+ ],
+ "Karvina Carbon": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Dinamo Budejovice": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Liberec Montana": [
+  "3-5-2",
+  "vertical"
+ ],
+ "Glimt Polar": [
+  "4-3-3",
+  "garra"
+ ],
+ "Brann Rojo": [
+  "3-5-2",
+  "contra"
+ ],
+ "Vikingo Sur": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Rosa Trondheim": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Molde Azul": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Lillestrom Amarillo": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Tromso Artico": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Sarpsborg Cobre": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Fredrikstad Gris": [
+  "4-3-3",
+  "directo"
+ ],
+ "Kfum Capital": [
+  "3-5-2",
+  "garra"
+ ],
+ "Sandefjord Ballena": [
+  "4-4-2",
+  "contra"
+ ],
+ "Stromsgodset Azul": [
+  "5-3-2",
+  "posesion"
+ ],
+ "Kristiansund Costa": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Hamkam Lago": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Valerenga Azul": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Haugesund Marino": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Lech Posen": [
+  "4-3-3",
+  "presion"
+ ],
+ "Legion Varsovia": [
+  "3-5-2",
+  "directo"
+ ],
+ "Jagiello Este": [
+  "4-4-2",
+  "garra"
+ ],
+ "Rakow Santuario": [
+  "5-3-2",
+  "contra"
+ ],
+ "Pogon Baltico": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Zabrze Minero": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Cracovia Antigua": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Piast Silesia": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Zaglebie Cobre": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Korona Kielce": [
+  "3-5-2",
+  "presion"
+ ],
+ "Radomiak Gris": [
+  "4-4-2",
+  "directo"
+ ],
+ "Widzew Textil": [
+  "5-3-2",
+  "garra"
+ ],
+ "Motor Este": [
+  "4-3-3",
+  "contra"
+ ],
+ "Lechia Puerto": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Arka Marina": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Termalica Aguas": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Katowice Hierro": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Wisla Petroleo": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Estrella Bucarest": [
+  "4-4-2",
+  "contra"
+ ],
+ "Cluj Ferroviario": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Craiova Univ.": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Rapid Capital": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Dinamo Capital": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Cluj Estudiantil": [
+  "5-3-2",
+  "equilibrado"
+ ],
+ "Arges Verde": [
+  "4-3-3",
+  "presion"
+ ],
+ "Petrolul Pozos": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Otelul Acero": [
+  "4-4-2",
+  "garra"
+ ],
+ "Faro Constanza": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Hermannstadt Sibiu": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Arad Azul": [
+  "3-5-2",
+  "vertical"
+ ],
+ "Csik Pastor": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Botosani Norte": [
+  "5-3-2",
+  "bloque"
+ ],
+ "Slobozia Llano": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Metaloglobus Cap.": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Estrella Roja": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Partisano": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Topola Backa": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Voivodina": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Cukaricki Capital": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Radnicki Sur": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Pazar Nuevo": [
+  "4-3-3",
+  "directo"
+ ],
+ "Mladost Montana": [
+  "3-5-2",
+  "garra"
+ ],
+ "Esparta Subotica": [
+  "4-4-2",
+  "contra"
+ ],
+ "Radnik Sur": [
+  "5-3-2",
+  "posesion"
+ ],
+ "Napredak Central": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Javor Ivanjica": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Ofk Capital": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Fap Prijepolje": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Zeleznicar Pancevo": [
+  "4-3-3",
+  "presion"
+ ],
+ "Imt Capital Nueva": [
+  "3-5-2",
+  "directo"
+ ],
+ "Malmö Celeste": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Aguila Solna": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Djurgarden Azul": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Hammarby Verde": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Gotemburgo Azul": [
+  "4-4-2",
+  "presion"
+ ],
+ "Elfsborg Amarillo": [
+  "5-3-2",
+  "directo"
+ ],
+ "Häcken Amarillo": [
+  "4-3-3",
+  "garra"
+ ],
+ "Mjallby Costero": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Norrkoping Azul": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Kalmar Rojo": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Sirio Uppsala": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Degerfors Rojo": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Gais Verde": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Chicos Bromma": [
+  "5-3-2",
+  "presion"
+ ],
+ "Halmstad Azul": [
+  "4-3-3",
+  "directo"
+ ],
+ "Vasteras Verde": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Minero Naranja": [
+  "4-3-3",
+  "contra"
+ ],
+ "Dinamo Kiev": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Metalista Jarkov": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Aurora Lugansk": [
+  "5-3-2",
+  "ofensivo"
+ ],
+ "Dnipro Primero": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Aleksandria Verde": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Kryvbas Hierro": [
+  "4-4-2",
+  "presion"
+ ],
+ "Polissia Bosque": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Obolon Capital": [
+  "4-3-3",
+  "garra"
+ ],
+ "Veres Rovno": [
+  "3-5-2",
+  "contra"
+ ],
+ "Kolos Trigo": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Lnz Cherkasi": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Rukh Leopolis": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Karpatos Leopolis": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Epicentro Podolia": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Orilla Izquierda": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Wuhan Torres": [
+  "4-4-2",
+  "presion"
+ ],
+ "Changchun Sol": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Dinamo Bud.": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Lillestrom Sol": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Sandefjord Mar": [
+  "4-4-2",
+  "contra"
+ ],
+ "Stroms Azul": [
+  "5-3-2",
+  "posesion"
+ ],
+ "Kristian Costa": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Estrella Capital": [
+  "4-4-2",
+  "contra"
+ ],
+ "Hermann Sibiu": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Metaloglobus": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Cukaricki Cap.": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Zeleznicar Panc.": [
+  "4-3-3",
+  "presion"
+ ],
+ "Imt Capital": [
+  "3-5-2",
+  "directo"
+ ],
+ "Elfsborg Sol": [
+  "5-3-2",
+  "directo"
+ ],
+ "Aleksandria": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Karpatos": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Epicentro": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Meizhou Rojo": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Korona Colinas": [
+  "3-5-2",
+  "presion"
  ]
 }

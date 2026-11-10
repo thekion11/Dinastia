@@ -7829,7 +7829,8 @@
   "Play-offs de campeonato": "Championship play-offs",
   "Play-offs de Europa": "Europe play-offs",
   "Play-outs del descenso": "Relegation play-outs",
-  "Resto de la liga": "Rest of the league"
+  "Resto de la liga": "Rest of the league",
+  "China": "China"
  },
  "pt": {
   "Historia": "História",
@@ -15661,7 +15662,8 @@
   "Play-offs de campeonato": "Play-offs do campeonato",
   "Play-offs de Europa": "Play-offs da Europa",
   "Play-outs del descenso": "Play-outs do descenso",
-  "Resto de la liga": "Resto da liga"
+  "Resto de la liga": "Resto da liga",
+  "China": "China"
  },
  "patrones": [
   [
@@ -29600,7 +29602,8 @@
   "Play-offs de campeonato": "Play-offs du championnat",
   "Play-offs de Europa": "Play-offs européens",
   "Play-outs del descenso": "Play-outs de la relégation",
-  "Resto de la liga": "Reste du championnat"
+  "Resto de la liga": "Reste du championnat",
+  "China": "Chine"
  },
  "it": {
   "Historia": "Storia",
@@ -37432,7 +37435,8 @@
   "Play-offs de campeonato": "Play-off per il campionato",
   "Play-offs de Europa": "Play-off per l'Europa",
   "Play-outs del descenso": "Play-out per la retrocessione",
-  "Resto de la liga": "Resto della lega"
+  "Resto de la liga": "Resto della lega",
+  "China": "Cina"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45264,7 +45268,8 @@
   "Play-offs de campeonato": "Meister-Play-offs",
   "Play-offs de Europa": "Europa-Play-offs",
   "Play-outs del descenso": "Abstiegs-Play-outs",
-  "Resto de la liga": "Rest der Liga"
+  "Resto de la liga": "Rest der Liga",
+  "China": "China"
  },
  "ca": {
   "Historia": "Història",
@@ -53096,7 +53101,8 @@
   "Play-offs de campeonato": "Play-offs del campionat",
   "Play-offs de Europa": "Play-offs d'Europa",
   "Play-outs del descenso": "Play-outs del descens",
-  "Resto de la liga": "Resta de la lliga"
+  "Resto de la liga": "Resta de la lliga",
+  "China": "Xina"
  },
  "pl": {
   "Club": "Klub",
@@ -60928,7 +60934,8 @@
   "Play-offs de campeonato": "Play-offy o mistrzostwo",
   "Play-offs de Europa": "Play-offy o Europę",
   "Play-outs del descenso": "Play-outy o utrzymanie",
-  "Resto de la liga": "Reszta ligi"
+  "Resto de la liga": "Reszta ligi",
+  "China": "Chiny"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68760,6 +68767,7 @@
   "Play-offs de campeonato": "Şampiyonluk play-off'ları",
   "Play-offs de Europa": "Avrupa play-off'ları",
   "Play-outs del descenso": "Küme düşme play-out'ları",
-  "Resto de la liga": "Ligin geri kalanı"
+  "Resto de la liga": "Ligin geri kalanı",
+  "China": "Çin"
  }
 }

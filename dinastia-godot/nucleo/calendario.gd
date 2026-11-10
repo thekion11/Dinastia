@@ -102,6 +102,14 @@ const FIJAS := {
 	"SUI": [[8, 1, "Día Nacional", "fiesta", "Recuerda el pacto de los primeros cantones, en 1291."]],
 	"AUT": [[10, 26, "Día Nacional", "fiesta", "Recuerda la neutralidad declarada en 1955."]],
 	"GRE": [[3, 25, "Día de la Independencia", "fiesta", "Recuerda el levantamiento contra el Imperio otomano, en 1821."]],
+	"SWE": [[6, 6, "Día Nacional", "fiesta", "Recuerda la elección del primer rey y la Constitución de 1809."]],
+	"NOR": [[5, 17, "Día de la Constitución", "fiesta", "Recuerda la Constitución de 1814: desfiles de niños por todo el país."]],
+	"POL": [[11, 11, "Día de la Independencia", "fiesta", "Recuerda la recuperación de la independencia, en 1918."]],
+	"CZE": [[10, 28, "Día de la Independencia", "fiesta", "Recuerda la creación del Estado en 1918."]],
+	"ROU": [[12, 1, "Día Nacional", "fiesta", "Recuerda la unión de las provincias, en 1918."]],
+	"SRB": [[2, 15, "Día del Estado", "fiesta", "Recuerda el levantamiento de 1804 y la primera Constitución."]],
+	"UKR": [[8, 24, "Día de la Independencia", "fiesta", "Recuerda la declaración de independencia, en 1991."]],
+	"CHN": [[10, 1, "Día Nacional", "fiesta", "Recuerda la proclamación de la República Popular, en 1949."]],
 	"QAT": [[12, 18, "Día Nacional", "fiesta", "Recuerda la unificación del país, en 1878."]],
 }
 

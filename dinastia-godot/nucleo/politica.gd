@@ -64,6 +64,14 @@ const ESTRUCTURA := {
 	"AUT": ["republica_parlamentaria", 5, "Parlamento (y con él, el canciller)", "el presidente federal, con un papel más simbólico"],
 	"GRE": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente de la República, con un papel más simbólico"],
 	"QAT": ["monarquia_absoluta", 0, "", "el emir"],
+	"SWE": ["monarquia_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el rey"],
+	"NOR": ["monarquia_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el rey"],
+	"POL": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente de la República"],
+	"CZE": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente de la República, con un papel más simbólico"],
+	"ROU": ["semipresidencial", 5, "presidente de la República", "el presidente"],
+	"SRB": ["republica_parlamentaria", 4, "Parlamento (y con él, el primer ministro)", "el presidente de la República, con un papel más simbólico"],
+	"UKR": ["semipresidencial", 5, "presidente de la República", "el presidente"],
+	"CHN": ["partido_unico", 0, "", "el presidente"],
 }
 
 const EXPLICA := {
@@ -72,6 +80,7 @@ const EXPLICA := {
 	"monarquia_parlamentaria": "El jefe de Estado es un monarca, pero no gobierna: se vota al Parlamento y la mayoría forma gobierno.",
 	"monarquia_constitucional": "Se vota al Parlamento y de él sale el gobierno, pero el rey mantiene poderes importantes.",
 	"republica_parlamentaria": "Se vota al Parlamento, y la mayoría elige al jefe del Gobierno. El presidente del país tiene un papel más simbólico.",
+	"partido_unico": "Un solo partido dirige el Estado y no hay elecciones nacionales competidas: las decisiones llegan por la vía del partido y de sus órganos.",
 	"monarquia_absoluta": "No hay elecciones nacionales: el rey concentra el poder y nombra al gobierno. Los cambios llegan por decreto.",
 }
 
