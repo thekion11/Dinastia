@@ -36,6 +36,8 @@ func _process(_d: float) -> void:
 	if _n == 8:
 		_vista.recorrer()
 		_ex = _vista._explorador
+		if OS.get_environment("SIN_OCULTAR") != "":
+			_ex.set_physics_process(false)   ## SIN_OCULTAR=1: sin `OcultarEstadioDentro` (la ocultación se hace en el _physics_process del explorador): el estado de ANTES del cambio
 	if _n < 30 or _ex == null:
 		return
 	if _i == -1:
