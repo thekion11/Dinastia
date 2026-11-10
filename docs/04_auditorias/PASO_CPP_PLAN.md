@@ -15,9 +15,10 @@ Medido en este contenedor (4 núcleos, Linux, sin pantalla). Herramientas de med
 ## 2. Lista ordenada
 1. **HECHO** — sorteo ponderado del goleador y del asistente (`elegir_ponderado`, `nativo/src/partido_nativo.cpp`; envoltorio `nucleo/partido_ponderado.gd`, que conserva `goleador_gd`/`asistente_gd`).
 2. **YA ESTABA** — once automático (`once_asignar_libres`): 313 → ~113 µs por once. Retocado: nombres de propiedad como `StringName` fijos (misma salida).
-3. Pendiente — `Partido.fuerza`/`_media_linea` (55 µs x2 por partido): llama de vuelta a GDScript (`es_ex_de`, `j.pie()`, `impulsos`); necesita pasar esos datos ya resueltos. ~5 % del partido.
-4. Pendiente — motor 3D: solo piezas geométricas estables (`_cuerpos`, `_rival_mas_cercano`, `_linea_tapada`). La IA (`_ia_equipos`, F1-F8, MotorLeague) es de las sesiones 4 y «PES 6»: NO se toca; portarla ahora chocaría con sus cambios diarios.
-5. Descartado por cifras — `_semana_del_plantel` (7 ms de 570 ms, y escribir `forma`/`pide_salir` desde C++ cuesta una llamada por propiedad); generación del mundo (única vez).
+3. **HECHO** — `MotorJugable._cuerpos` (choques por masa, `cuerpos_motor`, `nativo/src/cuerpos_nativo.cpp`; respaldo `_cuerpos_gd` en `visor/motor_jugable_p11.gd`): 199 → 40 µs por llamada; `medir_motor_cpu`: paso entero 1547 → 1300 µs (−16 %). Igualdad byte a byte (posiciones y velocidades, 40 rondas, con dos jugadores en el mismo punto) en `probar_nativo`. NO cambia la lógica del motor: es la misma función.
+4. Pendiente — `Partido.fuerza`/`_media_linea` (55 µs x2 por partido): llama de vuelta a GDScript (`es_ex_de`, `j.pie()`, `impulsos`); necesita pasar esos datos ya resueltos. ~5 % del partido.
+5. Pendiente — motor 3D: solo piezas geométricas estables (`_rival_mas_cercano` ~5 µs por llamada y sus 22 llamadas por paso, `_linea_tapada`). La IA (`_ia_equipos`, F1-F8, MotorLeague) es de las sesiones 4 y «PES 6»: NO se toca; portarla ahora chocaría con sus cambios diarios.
+6. Descartado por cifras — `_semana_del_plantel` (7 ms de 570 ms, y escribir `forma`/`pide_salir` desde C++ cuesta una llamada por propiedad); generación del mundo (única vez).
 
 ## 3. Resultados (antes/después, misma semilla)
 `zz_medir_simular` (200 partidos de un mundo entero; `DINASTIA_SIN_NATIVO=1` = todo GDScript), **huella idéntica 3660479828** en las dos:

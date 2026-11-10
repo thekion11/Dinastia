@@ -188,6 +188,47 @@ func _probar() -> void:
 						jd += 1
 	_comprobar(jc > 500 and jd == 0, "goleador/asistente: C++ = GDScript en %d sorteos, con y sin roles (distintos: %d)" % [jc, jd])
 	print("goleador: GDScript %.1f µs, C++ %.1f µs por sorteo" % [tg0 / float(jc), tc0 / float(jc)])
+	## (10-11, paso a C++) Los choques entre cuerpos del motor jugable: posiciones y velocidades iguales byte a byte tras muchas rondas, con jugadores amontonados (incluidos dos en el mismo punto).
+	var motor := MotorJugable.new()
+	var rr := RandomNumberGenerator.new()
+	rr.seed = 11
+	var raiz_c := Node3D.new()
+	add_child(raiz_c)
+	var grupos_c: Array = [[], []]
+	for g in 2:
+		for q in 22:
+			var nd := Node3D.new()
+			raiz_c.add_child(nd)
+			grupos_c[g].append({"node": nd, "vel": Vector3.ZERO, "fuerza": 0.4 + 0.5 * float(q % 5) / 4.0, "aguante": 0.5 + float(q % 3) / 4.0})
+	var cuerpos_dis := 0
+	var tc1 := 0
+	var tg1 := 0
+	for ronda in 40:
+		for q in 22:
+			var px := rr.randf_range(-3.0, 3.0)
+			var pz := rr.randf_range(-3.0, 3.0)
+			var vel := Vector3(rr.randf_range(-6, 6), 0, rr.randf_range(-6, 6))
+			if q == 5 or q == 6:   ## dos en el mismo punto: la normal sale del giro fijo
+				px = 1.0
+				pz = 1.0
+			for g in 2:
+				(grupos_c[g][q]["node"] as Node3D).position = Vector3(px, 0, pz)
+				grupos_c[g][q]["vel"] = vel
+		motor.jugadores = grupos_c[0]
+		var k0 := Time.get_ticks_usec()
+		motor._cuerpos_gd()
+		var k1 := Time.get_ticks_usec()
+		nat.cuerpos_motor(grupos_c[1], Balance.RADIO_CUERPO * 2.0)
+		var k2 := Time.get_ticks_usec()
+		tg1 += k1 - k0
+		tc1 += k2 - k1
+		for q in 22:
+			if (grupos_c[0][q]["node"] as Node3D).position != (grupos_c[1][q]["node"] as Node3D).position or var_to_bytes(grupos_c[0][q]["vel"]) != var_to_bytes(grupos_c[1][q]["vel"]):
+				cuerpos_dis += 1
+	_comprobar(cuerpos_dis == 0, "choques de cuerpos del motor: C++ = GDScript (40 rondas de 44 jugadores; distintos: %d)" % cuerpos_dis)
+	print("cuerpos: GDScript %.1f µs, C++ %.1f µs por ronda" % [tg1 / 40.0, tc1 / 40.0])
+	motor.free()
+	raiz_c.queue_free()
 	_fin()
 
 func _comprobar(ok: bool, que: String) -> void:

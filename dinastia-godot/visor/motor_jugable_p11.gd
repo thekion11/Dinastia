@@ -357,9 +357,17 @@ func _ia_celebracion(_delta: float) -> void:
 ## CUERPOS QUE NO SE ATRAVIESAN en el motor real: cada par a menos de dos
 ## radios de hombro se aparta por la línea que los une, el débil más que el
 ## fuerte (masa = fuerza), y se les quita la velocidad con que chocaban.
+## (10-11, paso a C++) Con la extensión nativa corre `cuerpos_motor` (misma aritmética); sin ella, `_cuerpos_gd`. `igualdad` en `pruebas/probar_nativo.tscn`.
 func _cuerpos() -> void:
 	if not cuerpos_activos:
 		return
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("cuerpos_motor"):
+		nat.cuerpos_motor(jugadores, RADIO_CUERPO * 2.0)
+		return
+	_cuerpos_gd()
+
+func _cuerpos_gd() -> void:
 	var minimo := RADIO_CUERPO * 2.0
 	var n := jugadores.size()
 	for i in n:
