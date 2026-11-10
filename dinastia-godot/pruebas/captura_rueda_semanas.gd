@@ -53,7 +53,8 @@ func _ready() -> void:
 			await get_tree().process_frame
 			ll.append(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
 		ll.sort()
-		print("LLAMADAS %s mesa=%s: min %d · mediana %d · máx %d" % [c.pais, RuedaPrensaMesa.activa, ll[0], ll[15], ll[29]])
+		print("LLAMADAS %s mesa=%s: min %d · mediana %d · máx %d · escenas de rueda vivas %d · SubViewport %d" % [c.pais, RuedaPrensaMesa.activa, ll[0], ll[15], ll[29],
+			get_tree().root.find_children("*", "RuedaPrensaEscena3D", true, false).size(), get_tree().root.find_children("*", "SubViewport", true, false).size()])
 		## FOTOS=n: n fotos más, cada 2,5 s (pasan por los planos de la rotación: frontal, medio, general, tres cuartos).
 		for k in int(OS.get_environment("FOTOS")) if OS.get_environment("FOTOS") != "" else 0:
 			await _esperar(2.5)
