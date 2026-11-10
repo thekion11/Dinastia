@@ -22,6 +22,11 @@ const POR_PAIS := {
 	## México: la Liga de Expansión es un circuito CERRADO (desde 2020 no hay ascenso ni descenso): bajan 0. Con 0 no se mueve nadie y la segunda
 	## división juega su liga aparte; si algún día vuelve el descenso, basta cambiar este número.
 	"MEX": {"bajan": 0, "directos": 0},
+	## Portugal: bajan 2 y suben los 2 primeros de la Liga 2. Países Bajos: sube el campeón de la Eerste Divisie y el segundo ascenso sale del
+	## playoff (aquí, de 2.º a 5.º); bajan 2. Turquía: suben los 2 primeros de la 1. Lig y el tercero sale del playoff de 3.º a 6.º; bajan 3.
+	"POR": {"bajan": 2, "directos": 2},
+	"NED": {"bajan": 2, "directos": 1, "playoff": 4},
+	"TUR": {"bajan": 3, "directos": 2, "playoff": 4},
 }
 
 static func de(pais: String) -> Dictionary:

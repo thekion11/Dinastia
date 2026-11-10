@@ -11,6 +11,7 @@ Salida (todo idempotente; se ejecuta solo, sin argumentos, y `base_ficticia.py` 
   · `datos/paises_extra.json` → `paises[COD]` (selección, nivel, globo, bandera, bolsas de nombres, confederación), conservando lo demás,
   · la historia del club (fundación, apodo, estadio, guiño) y la arquitectura del estadio según su aforo.
 Comprueba: nombres ficticios ≤16 caracteres y sin dígitos, sin repetir con ningún otro club, nombres reales sin repetir en el pack, escudos sin repetir.
+SEGUNDA DIVISIÓN: `<COD>_2.csv` con solo `#liga=real|ficticia` y sus filas (cuelga de la fila del país; las reglas de ascenso van en `reglas_ascenso.gd`).
 Para un país nuevo: copiar un CSV, rellenarlo y correr `python3 herramientas/base_ficticia.py` (que llama a este módulo)."""
 import csv
 import glob
@@ -42,10 +43,14 @@ def leer_csv(ruta):
     return meta, [f for f in filas if f[0] != "real"]
 
 
-PAISES, FILAS = {}, []
+PAISES, SEGUNDAS, FILAS = {}, {}, []
 for _ruta in sorted(glob.glob(os.path.join(AQUI, "paises", "*.csv"))):
     _m, _f = leer_csv(_ruta)
-    PAISES[_m["pais"]] = _m
+    ## `<COD>_2.csv` es la SEGUNDA división del país (mismo formato; solo `#liga` y las filas): sus clubes llevan la clave «COD_2».
+    if _m["pais"].endswith("_2"):
+        SEGUNDAS[_m["pais"][:-2]] = _m
+    else:
+        PAISES[_m["pais"]] = _m
     FILAS += [[_m["pais"]] + f[:2] + [f[2], f[3], int(f[4]), int(f[5]), int(f[6]), f[7], f[8], f[9]] for f in _f]
 # FILAS: (país, real limpio, ficticio, c1, c2, media, aforo, fundado, apodo, estadio, guiño)
 
@@ -55,6 +60,7 @@ HISTORIA = {_limpio(f[1]): (f[7], f[8], f[9], f[10]) for f in FILAS}
 ESTILOS = {f[2]: [f[7], f[8]] for f in NUEVOS}
 LIGAS_FICTICIAS = {p: m["liga"].split("|")[1] for p, m in PAISES.items()}
 COPAS_FICTICIAS = {p: m["copa"].split("|")[1] for p, m in PAISES.items()}
+LIGAS2_FICTICIAS = {p: m["liga"].split("|")[1] for p, m in SEGUNDAS.items()}
 
 
 def asegurar(real: dict) -> None:
@@ -63,6 +69,9 @@ def asegurar(real: dict) -> None:
         clubes = [[n, c1, c2, media, aforo] for p, n, _f, c1, c2, media, aforo, _fo, _e in NUEVOS if p == pais]
         real["PAISES_LIGAS"][pais] = {"liga": m["liga"].split("|")[0], "clubes": clubes}
         real["COPA_NOM"][pais] = m["copa"].split("|")[0]
+    for pais, m in SEGUNDAS.items():   ## la segunda cuelga de la fila de su país (ver `segundas_divisiones.py`)
+        clubes = [[n, c1, c2, media, aforo] for p, n, _f, c1, c2, media, aforo, _fo, _e in NUEVOS if p == pais + "_2"]
+        real["PAISES_LIGAS"][pais]["segunda"] = {"liga": m["liga"].split("|")[0], "clubes": clubes}
 
 
 def estadios():

@@ -3671,5 +3671,237 @@
  "Korona Colinas": [
   "3-5-2",
   "presion"
+ ],
+ "Haya Verde": [
+  "4-3-3",
+  "garra"
+ ],
+ "Guillermo Tilb.": [
+  "3-5-2",
+  "contra"
+ ],
+ "Velocidad GD": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Roda Minero": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Frisia Amarillo": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Condado Azul": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Almere Rojo": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Waalwijk Dorado": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Emmen Rojo": [
+  "4-3-3",
+  "directo"
+ ],
+ "Maastricht Rojo": [
+  "3-5-2",
+  "garra"
+ ],
+ "Venlo Amarillo": [
+  "4-4-2",
+  "contra"
+ ],
+ "Bosque Ducal": [
+  "5-3-2",
+  "posesion"
+ ],
+ "Dordt Verde": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Eindhoven Azul": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Helmond Negro": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Oss Rojo": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Joven Amsterdam": [
+  "4-3-3",
+  "presion"
+ ],
+ "Joven Alkmaar": [
+  "3-5-2",
+  "directo"
+ ],
+ "Joven Eindhoven": [
+  "4-4-2",
+  "garra"
+ ],
+ "Joven Utrecht": [
+  "5-3-2",
+  "contra"
+ ],
+ "Madeira Mar": [
+  "4-4-2",
+  "garra"
+ ],
+ "Faro Algarve": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Portimao Costa": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Paços Muebles": [
+  "3-5-2",
+  "vertical"
+ ],
+ "Vizela Termas": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Chaves Termas": [
+  "5-3-2",
+  "bloque"
+ ],
+ "Leiria Castillo": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Viseu Academia": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Leixoes Puerto": [
+  "4-4-2",
+  "directo"
+ ],
+ "Penafiel Duero": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Feira Norte": [
+  "4-3-3",
+  "contra"
+ ],
+ "Felgueiras Vino": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Oliveira Azeite": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Lusitania Norte": [
+  "5-3-2",
+  "ofensivo"
+ ],
+ "Torres Verde": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Tejo B": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Douro B": [
+  "4-4-2",
+  "presion"
+ ],
+ "Belem B": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Erzurum Nieve": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Esenler Rojo": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Adana Acero": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Sivas Rojo": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Hatay Granate": [
+  "4-4-2",
+  "presion"
+ ],
+ "Bodrum Costa": [
+  "5-3-2",
+  "directo"
+ ],
+ "Amed Rojo": [
+  "4-3-3",
+  "garra"
+ ],
+ "Sakarya Verde": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Manisa Uvas": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Bandirma Mar": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Corum Garbanzo": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Pendik Puerto": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Estambul Sur": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Bolu Bosque": [
+  "5-3-2",
+  "presion"
+ ],
+ "Kecioren Fuerza": [
+  "4-3-3",
+  "directo"
+ ],
+ "Sariyer Fiordo": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Serik Palma": [
+  "4-4-2",
+  "contra"
+ ],
+ "Umraniye Rojo": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Van Lago": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Igdir Monte": [
+  "3-5-2",
+  "ofensivo"
  ]
 }
