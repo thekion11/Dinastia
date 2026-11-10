@@ -2,7 +2,6 @@ extends Node
 ## (10-11, orden 36) QUÉ PESA EN EL PLANO DE CELEBRACIÓN: el estadio de cada club con la cámara a ras de césped ((-9, 2, -55) mirando al
 ## campo, la del gol medida en Mill0narios). Llamadas y triángulos del plano y lo que quita apagar cada pieza grande (tribunas, público…).
 ##   CLUBES="Mill0narios,B0ca Juni0rs,Int3r" godot --path . res://pruebas/medir_grada_cine.tscn
-const RS := RenderingServer
 func _ready() -> void:
 	Datos.usar_base_real(true)
 	Calidad.elegida = int(OS.get_environment("CALIDAD")) if OS.get_environment("CALIDAD") != "" else Calidad.MEDIO
@@ -33,8 +32,8 @@ func _ready() -> void:
 		cam.make_current()
 		for _f in 20:
 			await get_tree().process_frame
-		var ll := RS.get_rendering_info(RS.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
-		var tri := RS.get_rendering_info(RS.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME)
+		var ll := RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+		var tri := RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME)
 		print("PLANO %s: %d llamadas · %d triángulos" % [nombre, ll, tri])
 		get_viewport().get_texture().get_image().save_jpg("/tmp/grada_%s.jpg" % nombre.validate_filename(), 0.85)
 		if OS.get_environment("DESGLOSE") != "":
@@ -44,8 +43,8 @@ func _ready() -> void:
 				(h as Node3D).visible = false
 				for _f in 3:
 					await get_tree().process_frame
-				var dl := ll - RS.get_rendering_info(RS.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
-				var dt := tri - RS.get_rendering_info(RS.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME)
+				var dl := ll - RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+				var dt := tri - RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME)
 				(h as Node3D).visible = true
 				if dl >= 8 or dt >= 30000:
 					print("   -%4d llamadas  -%7d triángulos  %s [%s]" % [dl, dt, h.name, h.get_class()])
