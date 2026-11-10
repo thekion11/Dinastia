@@ -60,7 +60,8 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 - Estrategias rápidas en el partido: SÍ (hecho, ver abajo).
 - RUEDA DE PRENSA Y EVENTOS al estilo del PES (su rueda de prensa es «muchísimo mejor en lo visual» y tiene eventos): conservar los nuestros y SUMAR los suyos, adaptando su estética a la nuestra. Encargado a la 3.ª sesión (rama `sesion3-rueda-prensa`), con la selección direccional del PDF (stick, clic o toque, con mini animación).
 - COLORES: el dueño PERMITE variar la paleta («mucho verde con dorado»).
-- Siguen abiertas: pasar la rama a `main`, el prólogo en vídeo o en animación, los torneos de selecciones y los .mp4 de `marca/`.
+- PASAR A `main`: SÍ (10-11). Hecho por avance rápido de `ccr-1447f2a7-cdar0x`, con el banco en «FIN. 0 fallos».
+- Siguen abiertas: el prólogo en vídeo o en animación, los torneos de selecciones y los .mp4 de `marca/`.
 
 ## IDEAS DEL PES 2020 PARA ADAPTAR (pedido del dueño, 10-11; investigación con fuentes, sin copiar arte ni marcas)
 Dinastía ya tiene casi todo el temario de la Master League (cesiones, ojeadores, agentes y cláusulas, reconversión de puesto, capitán, vestuario, charlas, junta, informe del rival, valoraciones). Lo que falta es sobre todo MOSTRARLO. Por prioridad (★ = mucho impacto, poco esfuerzo):
