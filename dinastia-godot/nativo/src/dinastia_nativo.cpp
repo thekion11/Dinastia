@@ -214,7 +214,8 @@ PackedInt32Array DinastiaNativo::once_asignar_libres(const Dictionary &ranuras, 
 			ids_r[i].push_back(id);
 		}
 	}
-	// Cada libre, leído una sola vez.
+	// Cada libre, leído una sola vez (los nombres de propiedad, como StringName ya hechos: crearlos en cada lectura costaba la mitad del tiempo).
+	static const StringName k_pos_e("pos_e"), k_ovr("ovr"), k_pos_sec("pos_sec"), k_forma("forma"), k_moral("moral"), k_atributos("atributos");
 	std::vector<String> pos_e(n);
 	std::vector<int64_t> ovr(n);
 	std::vector<Array> sec(n);
@@ -226,14 +227,14 @@ PackedInt32Array DinastiaNativo::once_asignar_libres(const Dictionary &ranuras, 
 	std::vector<std::vector<uint8_t>> hay(n, std::vector<uint8_t>(claves.size(), 0));
 	for (int64_t k = 0; k < n; k++) {
 		Object *o = libres[k];
-		pos_e[k] = o->get("pos_e");
-		ovr[k] = int64_t(o->get("ovr"));
-		sec[k] = o->get("pos_sec");
-		fa[k] = 0.7 + 0.003 * double(int64_t(o->get("forma")));
-		fb[k] = 0.9 + 0.002 * double(int64_t(o->get("moral")));
+		pos_e[k] = o->get(k_pos_e);
+		ovr[k] = int64_t(o->get(k_ovr));
+		sec[k] = o->get(k_pos_sec);
+		fa[k] = 0.7 + 0.003 * double(int64_t(o->get(k_forma)));
+		fb[k] = 0.9 + 0.002 * double(int64_t(o->get(k_moral)));
 		por[k] = pos_e[k] == String("POR") ? 1 : 0;
 		ge[k] = grupo_de.get(pos_e[k], String(""));
-		const Dictionary attr = o->get("atributos");
+		const Dictionary attr = o->get(k_atributos);
 		for (size_t c = 0; c < claves.size(); c++) {
 			const Variant a = attr.get(claves[c], Variant());
 			if (a.get_type() != Variant::NIL) {
