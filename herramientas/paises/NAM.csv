@@ -1,0 +1,26 @@
+#seleccion=Namibia
+#tier=0.14
+#globo=17.08,-22.56
+#bandera=🇳🇦
+#confed=afr
+#liga=Namibia Premier League|Liga Namibia
+#copa=Copa Nacional de Namibia|Copa Namibia
+#nombres=Johannes,Petrus,Willem,Elia,Immanuel,Ismael,Tangeni,Itamunua,Riaan,Hendrik,Joseph,Jonas,Gideon,Lazarus
+#apellidos=Shikongo,Nghipandulwa,Amunyela,Haufiku,Kamati,Hamutenya,Nangolo,Gaweseb,Boois,Kandjii,Shilongo,Iipinge,Tjiueza,Hangula
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+African Stars;Astros Katutura;#e30613;#ffffff;62;10300;1958;los Estrellas Rojas;el gran estadio de la capital;El club más laureado, con gran afición en el barrio popular.
+United Africa Tigers;Tigres Unidos;#f58220;#000000;56;10300;1991;los Tigres;el gran estadio de la capital;Un club capitalino con varios títulos recientes.
+Blue Waters;Aguas Azules;#1d3f9e;#ffffff;54;4000;1964;los Marineros;el estadio de la ciudad portuaria de la costa;El club del puerto, con una larga rivalidad costera.
+Blue Boys;Chicos Azules;#1d3f9e;#f7d117;50;2000;1964;los Azules;el campo de la ciudad turística de la costa;El club de la costa con afición muy fiel.
+Young Africans;Jovenes Africa;#f7d117;#0b8f3c;48;5000;1980;los Jóvenes;el estadio de la ciudad del este;El equipo del este del país.
+Mighty Gunners;Artilleros;#0b8f3c;#000000;48;1000;1976;los Artilleros;el campo de la ciudad del norte;Un club del norte que pelea por el título.
+UNAM;Univer Windhoek;#1d3f9e;#e30613;46;3000;1992;los Universitarios;el estadio del campus universitario de la capital;El club de la universidad, lleno de talento joven.
+Khomas NAMPOL;Policia Khomas;#1d3f9e;#000000;47;3000;1998;los Policías;el estadio del campus universitario de la capital, compartido;El club de la policía, disciplinado y ordenado.
+Bucks Buccaneers;Bucaneros;#000000;#ffffff;44;2000;1983;los Bucaneros;el campo del barrio de la capital;Un club de barrio que ha ganado la liga.
+Eeshoke Chula Chula;Chula Frontera;#e30613;#f7d117;45;8000;2015;los Chula;el estadio de la ciudad del norte;Un club joven de la frontera norte.
+KK Palace;Palacio KK;#ffffff;#e30613;43;8000;2010;los Palaciegos;el estadio de la ciudad del norte, compartido;Un equipo del norte con proyecto en crecimiento.
+Cuca Tops;Cuca Cumbres;#f58220;#1d3f9e;40;500;2012;las Cumbres;el modesto estadio de la ciudad del noreste;Un humilde club de la ribera del río fronterizo.
+Julinho Sporting;Julinho Depor;#0b8f3c;#ffffff;39;500;2014;los Julinhos;el modesto estadio de la ciudad del noreste, compartido;Un equipo joven del noreste.
+Okahandja United;Okahandja Unido;#e30613;#000000;41;1000;2005;los Unidos;el campo de la ciudad del centro;Un club de la pequeña ciudad entre la capital y el norte.
+Ongos SC;Ongos Windhoek;#000000;#f7d117;40;10300;2016;los Ongos;el gran estadio de la capital, compartido;Un recién llegado de la capital.
+Young Brazilians;Jovenes Brasil;#f7d117;#0b8f3c;38;1000;2009;los Brasileños;el pequeño estadio de la ciudad del sur;El club más austral de la liga.

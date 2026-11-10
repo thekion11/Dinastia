@@ -1,0 +1,26 @@
+#seleccion=Congo
+#tier=0.12
+#globo=15.28,-4.27
+#bandera=🇨🇬
+#confed=afr
+#liga=Ligue 1 de la República del Congo|Liga Congolesa Brazza
+#copa=Copa del Congo Brazzaville|Copa Congolesa Brazza
+#nombres=Prince,Christ,Fabrice,Merveille,Dieudonne,Rodrigue,Gildas,Herve,Junior,Ghislain,Archange,Bienvenu,Stevy,Brice
+#apellidos=Mavoungou,Moukila,Nkounkou,Massamba,Mabiala,Ibata,Moutou,Ngoma,Loemba,Bakala,Makosso,Boungou,Kimbembe,Samba
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+AC Léopards;Leopardos Sur;#0b8f3c;#000000;50;13000;1962;los Leopardos;el estadio de la ciudad del sur del país;Histórico del interior, ganó la liga y una copa continental.
+Diables Noirs;Diablos Negros;#000000;#e30613;52;15000;1964;los Diablos;el gran estadio de la capital a orillas del río;Campeón continental y club más laureado de la capital.
+Étoile du Congo;Estrella Brazza;#e30613;#ffffff;49;15000;1950;las Estrellas Rojas;el estadio nacional de la capital;Un clásico de la capital con muchos títulos de liga.
+Inter Club;Inter Brazza;#1d3f9e;#ffffff;47;10000;1967;los Interistas;el campo municipal del barrio sur de la capital;Un club capitalino que alterna títulos y años difíciles.
+CARA Brazzaville;Cara Capital;#f7d117;#0b8f3c;46;10000;1960;los Amarillos;el estadio de los clubes de la capital;Club veterano de la capital con afición fiel.
+JS Talangaï;Talangai Juvenil;#e30613;#000000;44;5000;1978;los Jóvenes;el campo del barrio popular del norte de la capital;Un equipo de barrio que sale de la cantera.
+V Club Mokanda;Mokanda Puerto;#1d3f9e;#f7d117;45;10000;1999;los Mokanda;el estadio de la ciudad portuaria del Atlántico;Representante de la costa y del puerto petrolero.
+AS Cheminots;Ferroviarios PN;#e30613;#f7d117;46;10000;1952;los Ferroviarios;el estadio de la ciudad portuaria;El club del ferrocarril, con décadas de historia.
+AS Ponténégrine;Ponteña Negra;#000000;#ffffff;42;10000;1957;los Ponteños;el campo municipal de la ciudad portuaria;Un histórico de la costa que busca volver arriba.
+Nico-Nicoyé;Nico Nicolle;#0b8f3c;#ffffff;41;5000;1990;los Verdes;el campo de la costa petrolera;Un modesto equipo del puerto con buena cantera.
+Munisport;Munisport Costa;#ffffff;#1d3f9e;40;5000;2005;los Municipales;el campo municipal de la costa;Club ligado al ayuntamiento portuario.
+Patronage Sainte-Anne;Patronato Anita;#1d3f9e;#e30613;41;5000;1948;los Patronos;el campo de la parroquia del centro de la capital;Un club histórico nacido de un patronato juvenil.
+AS Kondzo;Kondzo Capital;#f7d117;#000000;40;5000;1985;los Kondzo;el campo del barrio sur de la capital;Un equipo de barrio ascendido varias veces.
+Saint Michel d'Ouenzé;Miguel Ouenze;#ffffff;#e30613;43;5000;1954;los Micheles;el campo del barrio obrero del norte de la capital;Un clásico de barrio con tradición copera.
+AS Otohô;Otoho Oyo;#0b8f3c;#f7d117;45;5000;1999;los Otoho;el estadio de la ciudad del norte;El club del interior que ha ganado liga y copa.
+Étoile Mbochi;Estrella Mbochi;#e30613;#0b8f3c;38;3000;2000;los Mbochi;el pequeño estadio del norte del país;Un humilde club del interior que lucha por quedarse.

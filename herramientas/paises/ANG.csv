@@ -8,19 +8,19 @@
 #nombres=Joao,Manuel,Antonio,Pedro,Paulo,Domingos,Jose,Carlos,Fernando,Mateus,Eduardo,Luis,Faustino,Gelson
 #apellidos=Silva,Santos,Fernandes,Cardoso,Gomes,Pinto,Baptista,Ferreira,Neto,Domingos,Miguel,Kiala,Quintas,Mendes
 real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
-Petróleos de Luanda;Petroleo Luandino;#f7d117;#000000;62;50000;1980;os Petroleiros;el gran estadio nacional de la capital;El club de la petrolera estatal, el más laureado del país en los últimos años.
+Petróleos de Luanda;Petroleo Luanda;#f7d117;#000000;62;50000;1980;os Petroleiros;el gran estadio nacional de la capital;El club de la petrolera estatal, el más laureado del país en los últimos años.
 Primeiro de Agosto;Primero Agosto;#e30613;#ffffff;60;20000;1977;os Militares;el estadio del ejército en la capital;El equipo de las fuerzas armadas, rival eterno en los clásicos de Luanda.
 Sagrada Esperança;Sagrada Dundo;#e30613;#ffffff;55;10000;1976;os Diamantes;el estadio de la ciudad diamantífera del noreste;Un club de la región de los diamantes con campeonatos en su historia.
 Interclube;Interclub Luanda;#1d3f9e;#ffffff;53;12000;1953;os Policiais;el estadio histórico de la capital, sede de la policía;El club de la policía, campeón del país en varias ocasiones.
-Bravos do Maquis;Bravos del Maquis;#e30613;#000000;47;4300;1992;os Bravos;el estadio de la ciudad del este;El club de la ciudad de Luena, con una afición muy fiel.
+Bravos do Maquis;Bravos Maquis;#e30613;#000000;47;4300;1992;os Bravos;el estadio de la ciudad del este;El club de la ciudad de Luena, con una afición muy fiel.
 Desportivo da Huíla;Deportivo Huila;#0b8f3c;#ffffff;51;25000;1948;os Huilanos;el gran estadio de la ciudad de la meseta del sur;El histórico del sur del país, conocido como el club de la meseta.
 Luanda City;Ciudad de Luanda;#1d3f9e;#f7d117;44;20000;2018;os Citadinos;el estadio compartido de los clubes de la capital, al sur;Un club joven de la capital con proyecto ambicioso.
 Académica do Lobito;Academica Lobito;#000000;#ffffff;50;15000;1918;os Estudantes;el estadio de la ciudad portuaria del litoral;Uno de los clubes más antiguos del país, con una gran historia.
-Recreativo do Libolo;Libolo Recreativo;#f7d117;#0b8f3c;54;5000;1942;os Gigantes do Kwanza;el pequeño estadio de la localidad del interior;Un club de pueblo que llegó a ganar ligas y copas.
+Recreativo do Libolo;Libolo Recreo;#f7d117;#0b8f3c;54;5000;1942;os Gigantes do Kwanza;el pequeño estadio de la localidad del interior;Un club de pueblo que llegó a ganar ligas y copas.
 Guelson;Guelson Kilamba;#1d3f9e;#e30613;40;20000;2016;os Guelsonenses;el estadio compartido de la capital, en el barrio de Kilamba;Un club joven de la periferia de la capital.
 Wiliete;Wilete Benguela;#e30613;#f7d117;46;35000;1953;os Ferroviários;el gran estadio de la ciudad de Benguela;El club del ferrocarril de Benguela, con tradición en la costa.
 Primeiro de Maio;Primero de Mayo;#e30613;#ffffff;49;8000;1955;os Maiatas;el estadio municipal de la ciudad de Benguela;Un histórico de la costa que ha ganado títulos.
 Lunda Sul;Lunda del Sur;#1d3f9e;#ffffff;42;7000;2012;os Lundas;el estadio de la capital de provincia del este;Un club de provincia que aspira a consolidarse.
-Kabuscorp;Kabuscorp Luandino;#f58220;#000000;52;20000;1994;os Palanca Negra;el estadio compartido de la capital, en la zona norte;Un club de empresa que fue campeón y se codea con los grandes.
-Redonda;Redonda del Bengo;#1d3f9e;#f7d117;38;5000;2019;os Redondos;el estadio municipal de la provincia vecina a la capital;Un recién llegado de la provincia de Bengo.
-São Salvador do Kongo;San Salvador Kongo;#0b8f3c;#f7d117;39;3500;1980;os Kongos;el estadio municipal de la ciudad del norte;El representante de la antigua capital del reino del Congo.
+Kabuscorp;Kabus Luanda;#f58220;#000000;52;20000;1994;os Palanca Negra;el estadio compartido de la capital, en la zona norte;Un club de empresa que fue campeón y se codea con los grandes.
+Redonda;Redonda Bengo;#1d3f9e;#f7d117;38;5000;2019;os Redondos;el estadio municipal de la provincia vecina a la capital;Un recién llegado de la provincia de Bengo.
+São Salvador do Kongo;San Salvador;#0b8f3c;#f7d117;39;3500;1980;os Kongos;el estadio municipal de la ciudad del norte;El representante de la antigua capital del reino del Congo.

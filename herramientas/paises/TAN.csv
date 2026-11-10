@@ -1,0 +1,26 @@
+#seleccion=Tanzania
+#tier=0.2
+#globo=35.74,-6.16
+#bandera=🇹🇿
+#confed=afr
+#liga=Tanzanian Premier League|Liga Tanzana
+#copa=Copa Federación de Tanzania|Copa Tanzana
+#nombres=Juma,Hamisi,Salum,Mrisho,Athumani,Rashidi,Said,Ramadhani,Kassim,Idrisa,Shabani,Mohamed,Fadhili,Abdallah
+#apellidos=Mwinyi,Massawe,Mushi,Kimaro,Mbwana,Ngowi,Mkapa,Shirima,Komba,Mtui,Mollel,Kisanga,Mrema,Makame
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Young Africans;Jovenes Africanos;#f7d117;#0b8f3c;62;60000;1935;los Yanga;el gran estadio nacional de la capital comercial;El club más laureado del país, con una afición inmensa y presencia continental.
+Simba SC;Simba Dar es Salam;#e30613;#ffffff;61;10000;1936;los Leones;el complejo municipal del centro de la capital comercial;El eterno rival de los Yanga, con un clásico que paraliza el país.
+Azam FC;Azam Chamazi;#1d3f9e;#ffffff;57;10000;2004;los Ice Cream;el estadio privado de las afueras de la capital comercial;El club de una empresa de alimentos, con instalaciones modernas.
+Singida Black Stars;Singida Estrellas;#000000;#f7d117;55;35000;2006;las Estrellas Negras;el nuevo estadio de la ciudad del centro;Un club ambicioso con fuerte inversión reciente.
+Coastal Union;Union Costera;#e30613;#1d3f9e;50;15000;1948;los Wagosi;el estadio de la ciudad portuaria del norte;Un clásico de la costa con una afición muy ruidosa.
+Dodoma Jiji;Jiji Dodoma;#0b8f3c;#f7d117;46;30000;2012;los Jiji;el estadio de la capital política del país;El club de la capital política, con gran estadio.
+Fountain Gate;Fuente Manyara;#f58220;#1d3f9e;46;10000;2015;los Manyara;el campo de la ciudad del noreste;Un joven club del norte con proyecto de ascenso rápido.
+JKT Tanzania;Servicio Nacional;#0b8f3c;#000000;47;15000;1998;los Militares;el campo del cuartel junto a la capital comercial;El club del servicio nacional, ordenado y físico.
+KMC;KMC Municipal;#1d3f9e;#f58220;47;6000;1999;los Municipales;el estadio del distrito urbano de la capital comercial;El equipo del ayuntamiento del distrito, regular en media tabla.
+Mashujaa;Heroes Kigoma;#e30613;#000000;43;20000;2018;los Héroes;el estadio junto al gran lago del oeste;Un recién llegado del oeste junto al lago.
+Mbeya City;Mbeya Ciudad;#7a1f2b;#ffffff;45;20000;2010;los Vinos de Mbeya;el estadio de la ciudad de las montañas del sur;El club de la ciudad del sur, de afición apasionada.
+Mtibwa Sugar;Mtibwa Azucar;#0b8f3c;#ffffff;48;20000;1988;los Cañeros;el estadio de la ciudad del este;El club de la fábrica de azúcar, campeón en los años noventa.
+Namungo;Namungo Lindi;#1d3f9e;#ffffff;44;20000;2005;los Ninjas;el estadio de la ciudad del sureste;Un club del sur que llegó a copas continentales.
+Pamba Jiji;Pamba Mwanza;#e30613;#ffffff;44;35000;1971;los Pamba;el gran estadio junto al lago Victoria;Un histórico del lago que vuelve a la élite.
+Tanzania Prisons;Prisiones Tanzana;#f7d117;#000000;44;20000;1970;los Guardias;el estadio de la ciudad de las montañas, compartido;El equipo del servicio penitenciario, aguerrido.
+TRA United;TRA Tabora;#1d3f9e;#f7d117;42;35000;1990;los Recaudadores;el estadio de la ciudad ferroviaria del oeste;El club de la agencia tributaria, con gran estadio.

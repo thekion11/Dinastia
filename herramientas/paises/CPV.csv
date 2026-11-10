@@ -9,14 +9,14 @@
 #apellidos=Mendes,Monteiro,Lopes,Semedo,Tavares,Fortes,Cardoso,Andrade,Moreira,Livramento,Rodrigues,Duarte,Pires,Varela
 real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
 Sporting Clube da Praia;Sporting Praia;#0b8f3c;#ffffff;62;8000;1929;os Leões;el estadio nacional en las afueras de la capital;El gran club de la capital con numerosos títulos nacionales.
-CS Mindelense;Mindelense Mindelo;#1d3f9e;#ffffff;60;5200;1919;os Fanfarrões;el estadio de la ciudad portuaria de la isla del norte;Uno de los más laureados del país, con una gran rivalidad insular.
-GD Palmeira;Palmeira Santa Maria;#f7d117;#000000;56;2000;1980;os Palmeirenses;el estadio de la isla de las playas y el aeropuerto;El club de la isla turística, campeón reciente.
+CS Mindelense;Mindelense;#1d3f9e;#ffffff;60;5200;1919;os Fanfarrões;el estadio de la ciudad portuaria de la isla del norte;Uno de los más laureados del país, con una gran rivalidad insular.
+GD Palmeira;Palmeira Sal;#f7d117;#000000;56;2000;1980;os Palmeirenses;el estadio de la isla de las playas y el aeropuerto;El club de la isla turística, campeón reciente.
 Boavista da Praia;Boavista Capital;#000000;#ffffff;52;8000;1923;os Panteras;el estadio nacional en las afueras de la capital, compartido;Un histórico de la capital que alterna títulos con sustos.
-Académico do Aeroporto;Academico Aeropuerto;#e30613;#ffffff;50;2000;1984;os Aviadores;el estadio de la isla del aeropuerto internacional;Un club de la isla del este que ha dado varios campeones.
-Académica do Porto Novo;Academica Puerto Nuevo;#000000;#ffffff;48;3000;1946;os Académicos;el estadio de la isla de los valles, en la costa sur;El club insignia de la isla montañosa del oeste.
+Académico do Aeroporto;Aeropuerto Sal;#e30613;#ffffff;50;2000;1984;os Aviadores;el estadio de la isla del aeropuerto internacional;Un club de la isla del este que ha dado varios campeones.
+Académica do Porto Novo;Puerto Nuevo;#000000;#ffffff;48;3000;1946;os Académicos;el estadio de la isla de los valles, en la costa sur;El club insignia de la isla montañosa del oeste.
 CD Travadores;Travadores Praia;#1d3f9e;#e30613;45;5000;1962;os Travadores;el estadio compartido de la capital, en las afueras;Un club del centro de la capital, de gran arraigo popular.
 Derby;Derby Mindelo;#f58220;#000000;47;5200;1930;os Derbistas;el estadio de la ciudad portuaria, compartido;El eterno rival local de los otros grandes de la isla del norte.
 Batuque;Batuque Mindelo;#e30613;#f7d117;46;5200;1939;os Batuqueiros;el estadio de la ciudad portuaria, compartido por varios;Un club con cultura de barrio, de la isla de la música.
 Onze Unidos;Once Unidos;#1d3f9e;#ffffff;42;2000;1982;os Unidos;el estadio de la isla de las salinas;Un club modesto de la isla turística con buen cartel.
-Sporting Clube do Sal Rei;Sporting Sal Real;#0b8f3c;#f7d117;40;1500;1970;os Verdes de la Isla;el pequeño estadio de la isla de las dunas;El representante de la isla de arenas blancas y camellos.
+Sporting Clube do Sal Rei;Sporting Salrei;#0b8f3c;#f7d117;40;1500;1970;os Verdes de la Isla;el pequeño estadio de la isla de las dunas;El representante de la isla de arenas blancas y camellos.
 Académica da Brava;Academica Brava;#ffffff;#1d3f9e;38;1000;1950;os Floridos;el campo de la isla de las flores;El club de la isla más pequeña y florida del archipiélago.
