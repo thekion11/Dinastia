@@ -44,7 +44,7 @@ func _probar_formacion_propia() -> void:
 ## (`HumanoidBase::SelectAnim` + `GetMovementSimilarity`) sobre los datos de `datos/league_movimiento.json`.
 func _probar_league_movimiento() -> void:
 	_titulo("MOTOR LEAGUE: ARRANQUES, FRENADAS Y GIROS DEL ORIGINAL")
-	_comprobar(LeagueMovimiento.clips().size() == 38, "19 clips de movimiento del original con su espejo (%d)" % LeagueMovimiento.clips().size())
+	_comprobar(LeagueMovimiento.clips().size() == 98, "49 clips de movimiento del original con su espejo (%d)" % LeagueMovimiento.clips().size())
 	_comprobar(LeagueMovimiento.rango(1.0) == 0.0 and LeagueMovimiento.rango(3.0) == 3.5 and LeagueMovimiento.rango(5.0) == 5.0 and LeagueMovimiento.rango(7.0) == 8.0, "velocidades escalonadas del original (RangeVelocity)")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, 0.0, 5.0).get("nombre", "")) == "ls_movement__idle__000_accel", "parado y quiere ir de frente: arranque recto")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, -PI / 2.0, 5.0).get("nombre", "")) == "ls_movement__idle__090_accel", "parado y quiere ir a la derecha: arranque girando 90° a la derecha")
@@ -55,3 +55,22 @@ func _probar_league_movimiento() -> void:
 	_comprobar(absf(float(vuelta.get("ang", 0.0))) > 2.0, "al trote y quiere volver atrás: un giro de 135-180° (%s)" % vuelta.get("nombre", ""))
 	_comprobar(LeagueMovimiento.estable(LeagueMovimiento.elegir(7.5, 0.0, 8.0)), "a toda carrera y de frente: el paso estable (no hay transición)")
 	_comprobar(absf(LeagueMovimiento.sesgo_giro(Vector2(0, -7.5), Vector2(0, 7.5)) - 0.9) < 0.001 and LeagueMovimiento.sesgo_giro(Vector2(0, -7.5), Vector2(0, -7.5)) < 0.001, "sesgo de giro rápido: máximo al dar la vuelta, nulo de frente")
+	var iguales := true
+	for k in 72:
+		var a := -PI + k * TAU / 72.0 + 0.013
+		var dir := Vector2(0, -1).rotated(a)
+		var mejor := 0.0
+		var md := -2.0
+		for f: float in LeagueMovimiento.CUERPOS:
+			if Vector2(0, -1).rotated(f * PI).dot(dir) > md:
+				md = Vector2(0, -1).rotated(f * PI).dot(dir)
+				mejor = f * PI
+		iguales = iguales and absf(LeagueMovimiento.cuerpo_permitido(a) - mejor) < 0.001
+	_comprobar(iguales, "el cuerpo permitido por umbrales da lo mismo que el del original (mayor producto escalar)")
+	## Las «angled» (cuerpo girado respecto a la marcha).
+	_comprobar(LeagueMovimiento.plantilla(LeagueMovimiento.DRIBBLE, -0.25 * PI) == ["ls_templates__dribbleD045", "ls_templates__dribbleD045_left_espejo"], "trote con el cuerpo a -45°: la plantilla y, para el otro pie, el espejo de la girada al otro lado")
+	_comprobar(LeagueMovimiento.plantilla(LeagueMovimiento.WALK, 0.75 * PI).is_empty() and LeagueMovimiento.plantilla(LeagueMovimiento.SPRINT, 0.25 * PI).is_empty(), "sin plantilla a 135° al trote rápido ni girado a toda carrera (como el original)")
+	_comprobar(LeagueMovimiento.cuerpo_posible(LeagueMovimiento.SPRINT, 0.25 * PI) == 0.0 and LeagueMovimiento.cuerpo_posible(LeagueMovimiento.WALK, -0.75 * PI) == -0.25 * PI and LeagueMovimiento.cuerpo_posible(LeagueMovimiento.IDLE, 0.75 * PI) == 0.0, "el cuerpo que admite cada velocidad (sprint de frente, trote rápido < 90°, parado de frente)")
+	_comprobar(absf(LeagueMovimiento.mirada(1.0, 0.0, 0.0) - 1.0) < 0.001 and LeagueMovimiento.mirada(1.0, 8.0, 8.0) < 0.85, "la mirada va al balón entera parado y menos a toda carrera")
+	var de_lado := LeagueMovimiento.elegir(3.5, 0.0, 3.5, 0.0, -0.25 * PI)
+	_comprobar(absf(float(de_lado.get("cuerpo_sale", 0.0)) + 0.25 * PI) < 0.2, "al trote, de frente y queriendo mirar 45° a la derecha: un clip que deja el cuerpo a -45° (%s)" % de_lado.get("nombre", ""))
