@@ -76,7 +76,7 @@ func _montar() -> void:
 	## LA CABECERA: volver, icono grande, el nombre del menú y dónde estás.
 	var cab := HBoxContainer.new()
 	cab.add_theme_constant_override("separation", 16)
-	_raiz.add_child(cab)
+	_raiz.add_child(ProfundidadUI.banda(cab, _color(2)))   ## (10-11, estética) la cabecera en una banda con sombra y filo de color
 	var volver := _boton_plano("◂  Volver", 16)
 	volver.tooltip_text = Idiomas.t("Volver al menú central (Esc)")
 	volver.custom_minimum_size = Vector2(118, 44)
@@ -94,8 +94,9 @@ func _montar() -> void:
 	t.text = String(_menu["nombre"]).to_upper()
 	t.add_theme_font_size_override("font_size", 36)
 	t.add_theme_color_override("font_color", _color(2).lightened(0.35))
-	t.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.6))
-	t.add_theme_constant_override("shadow_offset_y", 2)
+	t.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
+	t.add_theme_constant_override("shadow_offset_y", 3)
+	t.add_theme_constant_override("shadow_outline_size", 6)   ## (10-11) sombra difusa: el título se despega del fondo
 	titulos.add_child(t)
 	_titulo_sub = Label.new()
 	_titulo_sub.add_theme_font_size_override("font_size", 14)
@@ -167,6 +168,7 @@ func _boton_plano(texto: String, tam: int) -> Button:
 	b.add_theme_stylebox_override("hover", enc)
 	b.add_theme_stylebox_override("focus", enc)
 	b.add_theme_stylebox_override("pressed", enc)
+	ProfundidadUI.boton(b)   ## (10-11, estética) relieve: sombra en reposo, se hunde al pulsar
 	return b
 
 func _pestana(sub: Dictionary, i: int) -> Button:
