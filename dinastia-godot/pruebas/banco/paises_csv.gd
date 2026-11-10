@@ -116,14 +116,14 @@ func _probar_selecciones_nuevas() -> void:
 ## su confederación y sus selecciones con jugadores del mundo de verdad (antes: plantilla inventada).
 func _probar_pais_sin_liga_tanda1() -> void:
 	_titulo("PAÍSES SIN LIGA, TANDA 1: LIGA, COPA, CONFEDERACIÓN Y SELECCIÓN")
-	_comprobar_tanda({"NGA": [20, "Nigeria", "afr"], "GHA": [18, "Ghana", "afr"], "SEN": [16, "Senegal", "afr"], "CIV": [14, "Costa de Marfil", "afr"], "ALG": [16, "Argelia", "afr"],
-		"TUN": [16, "Túnez", "afr"], "CMR": [16, "Camerún", "afr"], "CAN": [8, "Canadá", "conc"], "CRC": [12, "Costa Rica", "conc"], "IRL": [10, "Irlanda", "ucl"]}, 1103)
+	_comprobar_tanda({"NGA": [20, "Nigeria", "afr"], "GHA": [18, "Ghana", "afr"], "SEN": [16, "Senegal", "afr"], "CIV": [16, "Costa de Marfil", "afr"], "ALG": [16, "Argelia", "afr"],
+		"TUN": [16, "Túnez", "afr"], "CMR": [14, "Camerún", "afr"], "CAN": [8, "Canadá", "conc"], "CRC": [10, "Costa Rica", "conc"], "IRL": [10, "Irlanda", "ucl"]}, 1103)
 
 ## (10-11) TANDA 2: las 9 selecciones que seguían con 0 convocables (Gales, Honduras, Irak, Jamaica, Jordania, Malí, N. Zelanda, Panamá, Uzbekistán) más Finlandia, Eslovenia y Chipre.
 ## Listas de clubes de Wikipedia 2025-26 (Malí: la de 2021-22, sin verificar).
 func _probar_pais_sin_liga_tanda2() -> void:
 	_titulo("PAÍSES SIN LIGA, TANDA 2: LIGA, COPA, CONFEDERACIÓN Y SELECCIÓN")
-	_comprobar_tanda({"WAL": [12, "Gales", "ucl"], "SVN": [10, "Eslovenia", "ucl"], "JOR": [10, "Jordania", "asia"], "CYP": [14, "Chipre", "ucl"], "IRQ": [20, "Irak", "asia"], "UZB": [16, "Uzbekistán", "asia"],
+	_comprobar_tanda({"WAL": [12, "Gales", "ucl"], "SVN": [9, "Eslovenia", "ucl"], "JOR": [10, "Jordania", "asia"], "CYP": [14, "Chipre", "ucl"], "IRQ": [20, "Irak", "asia"], "UZB": [16, "Uzbekistán", "asia"],
 		"FIN": [12, "Finlandia", "ucl"], "JAM": [14, "Jamaica", "conc"], "HON": [11, "Honduras", "conc"], "PAN": [12, "Panamá", "conc"], "NZL": [11, "N. Zelanda", "oce"], "MLI": [14, "Malí", "afr"]}, 1104)
 
 ## (10-11) TANDA 3: 14 países de la UEFA (Bosnia, Montenegro, Islandia, Estonia, Kazajistán, Azerbaiyán, Bielorrusia, Letonia, Albania, Macedonia del Norte, Georgia, Lituania, Irlanda del Norte, Luxemburgo).
@@ -140,15 +140,15 @@ func _probar_pais_sin_liga_tanda3() -> void:
 func _probar_pais_sin_liga_tanda4() -> void:
 	_titulo("PAÍSES SIN LIGA, TANDA 4: LIGA, COPA, CONFEDERACIÓN Y SELECCIÓN")
 	_comprobar_tanda({"THA": [16, "Tailandia", "asia"], "IDN": [18, "Indonesia", "asia"], "VIE": [14, "Vietnam", "asia"], "IND": [14, "India", "asia"], "MAS": [13, "Malasia", "asia"], "BHR": [12, "Baréin", "asia"],
-		"OMA": [12, "Omán", "asia"], "COD": [16, "RD Congo", "afr"], "BFA": [15, "Burkina Faso", "afr"], "ZAM": [18, "Zambia", "afr"], "GUI": [14, "Guinea", "afr"], "KEN": [18, "Kenia", "afr"],
+		"OMA": [14, "Omán", "asia"], "COD": [16, "RD Congo", "afr"], "BFA": [16, "Burkina Faso", "afr"], "ZAM": [18, "Zambia", "afr"], "GUI": [14, "Guinea", "afr"], "KEN": [18, "Kenia", "afr"],
 		"ARM": [10, "Armenia", "ucl"], "MDA": [8, "Moldavia", "ucl"], "ESA": [12, "El Salvador", "conc"], "GUA": [12, "Guatemala", "conc"]}, 1106)
 
 ## (10-11) TANDA 5: 33 países (UEFA pequeños, África, Asia y CARIBE/CENTROAMÉRICA). Muchas listas NO verificadas: ver docs/04_auditorias/datos_dudosos_2026-11-10.md.
 func _probar_pais_sin_liga_tanda5() -> void:
 	_titulo("PAÍSES SIN LIGA, TANDA 5: LIGA, COPA, CONFEDERACIÓN Y SELECCIÓN")
-	_comprobar_tanda({"KOS": [10, "Kosovo", "ucl"], "MLT": [12, "Malta", "ucl"], "FRO": [10, "Islas Feroe", "ucl"], "AND": [10, "Andorra", "ucl"], "GIB": [11, "Gibraltar", "ucl"], "SMR": [15, "San Marino", "ucl"], "CPV": [12, "Cabo Verde", "afr"], "GAB": [14, "Gabón", "afr"], "ANG": [16, "Angola", "afr"], "MOZ": [14, "Mozambique", "afr"], "UGA": [16, "Uganda", "afr"],
-		"TAN": [16, "Tanzania", "afr"], "LBY": [20, "Libia", "afr"], "BEN": [18, "Benín", "afr"], "TOG": [14, "Togo", "afr"], "CGO": [16, "Congo", "afr"], "ZIM": [18, "Zimbabue", "afr"], "NAM": [16, "Namibia", "afr"], "MAD": [16, "Madagascar", "afr"], "SYR": [16, "Siria", "asia"], "LBN": [12, "Líbano", "asia"], "PLE": [12, "Palestina", "asia"],
-		"KGZ": [14, "Kirguistán", "asia"], "TJK": [12, "Tayikistán", "asia"], "PHI": [11, "Filipinas", "asia"], "SGP": [8, "Singapur", "asia"], "HKG": [10, "Hong Kong", "asia"], "KUW": [12, "Kuwait", "asia"], "HAI": [18, "Haití", "conc"], "CUW": [11, "Curazao", "conc"], "TRI": [12, "Trinidad y Tobago", "conc"], "SUR": [12, "Surinam", "conc"], "NCA": [10, "Nicaragua", "conc"]}, 1107)
+	_comprobar_tanda({"KOS": [10, "Kosovo", "ucl"], "MLT": [12, "Malta", "ucl"], "FRO": [10, "Islas Feroe", "ucl"], "AND": [9, "Andorra", "ucl"], "GIB": [12, "Gibraltar", "ucl"], "SMR": [16, "San Marino", "ucl"], "CPV": [12, "Cabo Verde", "afr"], "GAB": [14, "Gabón", "afr"], "ANG": [16, "Angola", "afr"], "MOZ": [14, "Mozambique", "afr"], "UGA": [16, "Uganda", "afr"],
+		"TAN": [16, "Tanzania", "afr"], "LBY": [20, "Libia", "afr"], "BEN": [18, "Benín", "afr"], "TOG": [14, "Togo", "afr"], "CGO": [16, "Congo", "afr"], "ZIM": [18, "Zimbabue", "afr"], "NAM": [16, "Namibia", "afr"], "MAD": [16, "Madagascar", "afr"], "SYR": [16, "Siria", "asia"], "LBN": [11, "Líbano", "asia"], "PLE": [12, "Palestina", "asia"],
+		"KGZ": [14, "Kirguistán", "asia"], "TJK": [12, "Tayikistán", "asia"], "PHI": [10, "Filipinas", "asia"], "SGP": [8, "Singapur", "asia"], "HKG": [10, "Hong Kong", "asia"], "KUW": [10, "Kuwait", "asia"], "HAI": [18, "Haití", "conc"], "CUW": [10, "Curazao", "conc"], "TRI": [12, "Trinidad y Tobago", "conc"], "SUR": [11, "Surinam", "conc"], "NCA": [10, "Nicaragua", "conc"]}, 1107)
 
 ## Cada país del caso [clubes, selección, copa continental]: su liga con la cantidad real de clubes, su copa continental, su copa nacional, su selección y jugadores del mundo para convocar.
 func _comprobar_tanda(casos: Dictionary, semilla: int) -> void:

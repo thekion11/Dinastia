@@ -1,13 +1,11 @@
 # Lote M3: nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed
 Kalba|franjas|#c8102e|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|liso|#ffd100|#ffd100
-SC Poltava|mitad|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#c8102e|#ffffff
 LNZ Cherkasy|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|franjas|#ffffff|#ffffff
 Epicentr Kamianets-Podilskyi|banda|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|#ffd100|liso|#1b458f|#1b458f
 FC Kudrivka|aros|#1b458f|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|liso|#ffd100|#ffd100
 Metropolitanos|cuello_v|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#00843d|#ffffff
 Academia Puerto Cabello|franjas|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|#ffd100|liso|#ffd100|#1b458f
 Portuguesa|franjas|#00843d|#c8102e|#ffffff|#00843d|#ffffff|#00843d|liso|#00843d|#ffffff
-Trujillanos|raglan|#ffd100|#00843d|#00843d|#ffd100|#00843d|#ffd100|liso|#00843d|#00843d
 Anzoátegui|sash|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#c8102e|#ffffff
 Moreirense|liso|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|hombros|#00843d|#ffffff
 Arouca|franjas|#ffd100|#0057b8|#0057b8|#ffd100|#0057b8|#ffd100|liso|#0057b8|#0057b8

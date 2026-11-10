@@ -1,7 +1,6 @@
 # Lote M1: nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed
 Hartberg|aros|#c8102e|#ffffff|#ffffff|#c8102e|#111111|#c8102e|liso|#111111|#111111
 Altach|liso|#ffd100|#111111|#111111|#ffd100|#111111|#ffd100|liso|#111111|#111111
-Blau-Weiß Linz|franjas_finas|#0072ce|#ffffff|#ffffff|#0072ce|#ffffff|#0072ce|liso|#ffffff|#ffffff
 GAK|liso|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|banda|#ffffff|#ffffff
 WSG Tirol|aros|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
 Ried|franjas|#00843d|#ffffff|#ffffff|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff

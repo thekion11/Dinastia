@@ -1,7 +1,6 @@
 # Lote M1: nombre|butaca1|butaca2
 Hartberg|#c8102e|#ffffff
 Altach|#ffd100|#111111
-Blau-Weiß Linz|#0072ce|#ffffff
 GAK|#c8102e|#ffffff
 WSG Tirol|#111111|#ffffff
 Ried|#00843d|#ffffff

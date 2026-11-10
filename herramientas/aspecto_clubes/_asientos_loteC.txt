@@ -12,22 +12,18 @@ Radnik Surdulica|#c8102e|#ffffff
 Napredak Kruševac|#c8102e|#ffffff
 Javor-Matis|#c8102e|#ffffff
 OFK Beograd|#1b458f|#ffffff
-FAP|#1b458f|#ffd100
 Železničar Pančevo|#c8102e|#ffffff
 IMT Novi Beograd|#1b458f|#ffffff
 Shakhtar Donetsk|#f26522|#111111
 Dynamo Kyiv|#1b458f|#ffffff
 Metalist 1925 Kharkiv|#ffd100|#1b458f
 Zorya Luhansk|#111111|#ffffff
-SC Poltava|#c8102e|#ffffff
-Oleksandriya|#00843d|#ffd100
 Kryvbas Kryvyi Rih|#c8102e|#ffffff
 Polissya Zhytomyr|#00843d|#ffffff
 Obolon Kyiv|#ffd100|#1b458f
 Veres Rivne|#00843d|#ffffff
 Kolos Kovalivka|#ffd100|#00843d
 LNZ Cherkasy|#c8102e|#ffffff
-Rukh Lviv|#c8102e|#ffd100
 Karpaty Lviv|#00843d|#ffffff
 Epicentr Kamianets-Podilskyi|#ffd100|#1b458f
 FC Kudrivka|#1b458f|#ffd100

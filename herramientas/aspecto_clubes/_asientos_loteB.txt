@@ -9,7 +9,6 @@ Qatar SC|#7b1c3a|#ffffff
 Al Ahli|#00843d|#ffffff
 Al Shamal|#ffd100|#000000
 Umm Salal|#00843d|#ffffff
-Al Khor|#ffd100|#c8102e
 Al Shahaniya|#c8102e|#ffffff
 Malmö FF|#7ec8f2|#ffffff
 AIK|#000000|#ffd100
@@ -75,7 +74,6 @@ Bohemians 1905|#00843d|#ffffff
 Dukla Praha|#c8102e|#ffd100
 FK Pardubice|#c8102e|#ffffff
 MFK Karviná|#c8102e|#ffffff
-SK Dynamo České Budějovice|#1b458f|#ffffff
 Slovan Liberec|#1b458f|#ffffff
 FCSB|#c8102e|#1b458f
 CFR Cluj|#8b1538|#ffffff

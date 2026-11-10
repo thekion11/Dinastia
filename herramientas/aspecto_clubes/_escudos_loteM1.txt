@@ -1,7 +1,6 @@
 # Lote M1 (AUT, BUL, CHN, GRE, HUN, IRN): nombre|forma|patrón|emblema|letras[/color]|esc1|esc2|esc3
 Hartberg|escudo|chevron|montana|TSVH/#ffffff|#c8102e|#ffffff|#111111
 Altach|ovalo|banda|leon|SCRA/#111111|#ffd100|#111111|#ffffff
-Blau-Weiß Linz|ojiva|franjas|ancla|BW/#ffffff|#0072ce|#ffffff|#c8102e
 GAK|hex|mitad|torre|GAK/#ffffff|#c8102e|#ffffff|#111111
 WSG Tirol|cruzado|rombos|aguila|WSG/#ffffff|#111111|#ffffff|#c8102e
 Ried|laurel|aro|trebol|SVR/#ffffff|#00843d|#ffffff|#ffd100

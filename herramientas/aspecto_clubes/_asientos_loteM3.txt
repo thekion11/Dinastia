@@ -1,13 +1,11 @@
 # Lote M3: nombre|butaca1|butaca2
 Kalba|#c8102e|#ffd100
-SC Poltava|#c8102e|#ffffff
 LNZ Cherkasy|#c8102e|#ffffff
 Epicentr Kamianets-Podilskyi|#ffd100|#1b458f
 FC Kudrivka|#1b458f|#ffd100
 Metropolitanos|#00843d|#ffffff
 Academia Puerto Cabello|#ffd100|#1b458f
 Portuguesa|#00843d|#c8102e
-Trujillanos|#ffd100|#00843d
 Anzoátegui|#c8102e|#ffffff
 Moreirense|#00843d|#ffffff
 Arouca|#ffd100|#0057b8

@@ -12,13 +12,11 @@ Shakhtar Donetsk|liso|#f26522|#111111|#111111|#f26522|#111111|#f26522|liso|#1111
 Dynamo Kyiv|liso|#ffffff|#1b458f|#ffffff|#ffffff|#1b458f|#ffffff|liso|#1b458f|#1b458f
 Metalist 1925 Kharkiv|liso|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|#ffd100|liso|#1b458f|#1b458f
 Zorya Luhansk|liso|#111111|#ffffff|#111111|#111111|#ffffff|#111111|liso|#ffffff|#ffffff
-Oleksandriya|liso|#00843d|#ffd100|#00843d|#00843d|#ffd100|#00843d|liso|#ffd100|#ffd100
 Kryvbas Kryvyi Rih|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
 Polissya Zhytomyr|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
 Obolon Kyiv|liso|#ffd100|#1b458f|#1b458f|#ffd100|#1b458f|#ffd100|liso|#1b458f|#1b458f
 Veres Rivne|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
 Kolos Kovalivka|liso|#ffd100|#00843d|#00843d|#ffd100|#00843d|#ffd100|liso|#00843d|#00843d
-Rukh Lviv|liso|#c8102e|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|liso|#ffd100|#ffd100
 Karpaty Lviv|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
 Shanghai Port|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
 Shanghai Shenhua|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff

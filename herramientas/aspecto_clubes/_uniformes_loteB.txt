@@ -9,7 +9,6 @@ Qatar SC|liso|#7b1c3a|#ffffff|#7b1c3a|#7b1c3a|#ffffff|#7b1c3a|liso|#ffffff|#ffff
 Al Ahli|liso|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
 Al Shamal|liso|#ffd100|#000000|#000000|#ffd100|#000000|#ffd100|liso|#000000|#000000
 Umm Salal|liso|#00843d|#000000|#000000|#00843d|#ffffff|#00843d|liso|#ffffff|#ffffff
-Al Khor|liso|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|#ffd100|liso|#c8102e|#c8102e
 Al Shahaniya|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
 Malmö FF|liso|#7ec8f2|#ffffff|#ffffff|#7ec8f2|#ffffff|#7ec8f2|liso|#ffffff|#ffffff
 AIK|franjas|#ffd100|#000000|#000000|#000000|#000000|#ffd100|liso|#000000|#000000
@@ -75,7 +74,6 @@ Bohemians 1905|franjas|#00843d|#ffffff|#00843d|#00843d|#ffffff|#00843d|liso|#fff
 Dukla Praha|liso|#c8102e|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|liso|#ffd100|#ffd100
 FK Pardubice|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
 MFK Karviná|liso|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
-SK Dynamo České Budějovice|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
 Slovan Liberec|liso|#1b458f|#ffffff|#1b458f|#1b458f|#ffffff|#1b458f|liso|#ffffff|#ffffff
 FCSB|liso|#c8102e|#1b458f|#1b458f|#c8102e|#1b458f|#c8102e|liso|#1b458f|#1b458f
 CFR Cluj|liso|#8b1538|#ffffff|#8b1538|#8b1538|#ffffff|#8b1538|liso|#ffffff|#ffffff

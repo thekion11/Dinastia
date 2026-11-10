@@ -83,3 +83,23 @@ Accesibilidad de fuentes probada UNA vez: **RSSSF abre solo por `https://www.rss
 - **LBY** (RSSSF `tablesl/lib2026`): la liga se jugó en 4 grupos regionales con 36 clubes. 18 de los 20 del CSV figuran; se quitaron Al-Bashayr y Asaria SC y se añadieron Al-Anwar y Al-Ittihad Military SC. Aforos de Trípoli y Tahaddy: SIN fuente accesible (no se tocaron).
 - **CGO** (RSSSF `tablesk/kong2025`): el torneo 2025 no fue reconocido (sin campeón, 21 clubes en dos zonas). 10 clubes del CSV verificados; se quitaron 4 y se añadieron 4 elegidos de forma arbitraria entre los 11 de la fuente que faltaban. AS Cheminots y AS Ponténégrine no aparecen en esa lista y se mantienen. Estadios y aforos: sin fuente accesible.
 - Colores de las 7 ligas grandes: los hace la sesión 4. Colores, fundaciones y apodos del resto: de memoria.
+
+---
+# PASADA RSSSF (10-11-2026): 104 países contra la tabla final de RSSSF
+Fuente: páginas de temporada actual enlazadas desde `https://www.rsssf.org/curdom.html` (2025-26 o 2026; algunas 2026/27 en curso o 2025). Se comparó cantidad y lista de clubes de la primera división con cada CSV; solo se corrigió lo que la fuente dejaba claro. Los clubes nuevos llevan aforo, colores, fundación, estadio y media ESTIMADOS (sigue de memoria). Los 28 países base (sin CSV: CHI, ARG, BRA, URU, PAR, COL, PER, ECU, ESP, ENG, ITA, GER, FRA, BOL, JPN, KOR, KSA, EGY, MAR, RSA, AUS, MEX, USA, NED, POR, BEL, CRO, DEN) NO se tocaron: tienen datos reales propios del pack.
+
+## Corregido con la fuente (clubes quitados / añadidos)
+- **MLI** (14): quité AS Black Stars, AS Douanes Sikasso, Olympique de Messira, AS Police, CO Bamako, USC Kita, Yeelen; añadí FC Diarra, Binga, Derby Académie, Mali Coura, US Bougouni y recuperé USFAS Bamako y US Bougouba. Ya no hay elecciones «por reputación».
+- **BFA** (16): −Kiko, Royal, Koupéla, ASEC Koudougou; +Sporting des Cascades, Majestic, CFFEB, Réal du Faso, AJEB Bobo (Rahimo FC ya estaba).
+- **CIV** (16): −6, +8. **GHA** (18): −4, +4. **CMR** (14): −6, +4 (quedan 14 de la fuente). **NGA** (20): −3, +3. **ALG** (16): −3, +3. **SEN** (16): −3, +3. **TUN** (16): −2, +2. **BEN** (18): −3, +3. **TOG** (14): −1, +1. **GUI** (14): −2, +2.
+- **ANG** (16): −Guelson, Redonda; +Recreativo da Caála, FC Cabinda. **GAB** (14): −CF Mounana, +Stade Migovéen. **SMR** (16): +San Marino Academy. **FRO** (10): −2, +2. **AND** (9): −FC Pas de la Casa (se retiró). **GIB** (12): +Manchester (Gibraltar). **SVN** (9): −Domžale (disuelto).
+- **CRC** (10): −Santos de Guápiles, Municipal Grecia. **ESA** (12): −2, +2. **PAN** (12): −Club Deportivo del Este, +Unión Coclé. **TRI** (12): −3, +3. **CUW** (10): −2, +1. **VEN** (14): −Trujillanos, +Yaracuyanos.
+- **UKR** (16, temporada 2026/27 en curso): −SC Poltava, Oleksandriya, Rukh Lviv; +Bukovyna, Chornomorets, Livyi Bereh. **CZE** (16): −Dynamo České Budějovice, +Zlín. **SRB** (16): −FAP, +Radnički Kragujevac. **AUT** (12): −Blau-Weiß Linz, +Austria Lustenau. **IRL** (10): −Dundalk, +Cork City.
+- **OMA** (14): +Bahla, Samail. **KUW** (10): −Al-Sahel, Sulaibikhat. **QAT** (12): −Al Khor, +Al Siliya. **LBN** (11): −Sagesse, Bourj (retirado), +Al-Hikma. **PHI** (10, 2026/27 en curso): −One Taguig, Don Bosco Garelli, +Azkals Development. **SUR** (11, 2026/27 en curso): −Santos Nieuw Nickerie, SNL, +Coronieboys. **NAM** (16): −Blue Boys, Cuca Tops, Young Brazilians, +3.
+
+## Verificado igual (lista y cantidad coinciden)
+ALB, BUL, HUN, KGZ, MLT, SVK, UGA, AZE, GRE, ISL, LVA, NIR, TJK, BIH, HKG, KAZ, MKD, SUI, TUR, GUA, ISR, SGP, ZIM, BHR, JOR, CYP, JAM, MAS, IND, MOZ, SWE, UZB, IRQ, LUX, SCO, THA, WAL, BLR, EST, HON, UAE, IRN, VIE, NCA, TAN, LTU, RUS, IDN, KOS, MNE, POL, GEO, ROU, SYR (pie «2024/25»: posible temporada vieja), CAN (temporada 2024).
+
+## Sin cambios por ambigüedad o temporada distinta
+FIN (fuente 2025; el CSV ya tiene la lista 2026), PLE (fuente 2024, liga abandonada), ZAM (temporada de transición 2026/27 en dos grupos, 20 clubes vs 18), NZL (play-off de campeones regionales, 2025), HAI (fuente solo muestra el grupo A), MDA (2026/27 con Real Sireți en vez de Spartanii), COD (Linafoot 2025/26 por grupos, ambiguo), MAD (conferencias Norte/Sur con un club retirado), NOR (fuente 2025, 16 clubes), CHN (fuente 2025; el CSV ya tiene la lista 2026), ARM (2026/27: Sardarapat y Syunik ascendidos faltan en el CSV de 10), KEN (Murang'a Seal = Muranga SEA), CPV/LBY/CGO (pasada anterior).
+Sin página en RSSSF: ninguno de los países con CSV (todos tenían enlace en curdom).

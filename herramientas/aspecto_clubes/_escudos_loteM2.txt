@@ -12,7 +12,6 @@ Mladost Lučani|hex|escalera|corona|MLČ/#ffffff|#c8102e|#ffffff|#111111
 Radnik Surdulica|penta|aro|hacha|RS/#ffffff|#d4202b|#111111|#ffffff
 Napredak Kruševac|banderin|barras|caballo|NK/#ffffff|#c8102e|#ffffff|#111111
 Javor-Matis|laurel|cuartos|trebol|JM/#ffffff|#c8102e|#ffffff|#2e8b3a
-FAP|curvo|borde|rayo|FAP/#ffffff|#16348a|#ffd100|#ffffff
 Železničar Pančevo|arco3|tercios_h|torre|ŽP/#ffffff|#6a1b3a|#ffffff|#ffd100
 IMT Novi Beograd|rombolgo|banda_h|balon|IMT/#ffffff|#0d6e3a|#ffffff|#111111
 Thun|frances|franjas|oso|FCT/#ffffff|#c8102e|#ffffff|#ffd100
