@@ -35,12 +35,17 @@ static func abrir(p: Principal, menu: Dictionary, sub: int = -1) -> PantallaMenu
 	n.set_anchors_preset(Control.PRESET_FULL_RECT)
 	n.mouse_filter = Control.MOUSE_FILTER_STOP
 	p.add_child(n)
+	FocoMando.aislar(n)   ## (10-11) con el menú encima, la cruceta no se va a lo de detrás
 	n._montar()
 	if sub >= 0:
 		n.elegir(sub)
 	else:
 		n.portada()
+	FocoMando.enfocar.call_deferred(n)
 	return n
+
+func _exit_tree() -> void:
+	FocoMando.liberar(self)
 
 func _color(i: int) -> Color:
 	return Color(String((_menu["colores"] as Array)[i]))
@@ -384,6 +389,7 @@ func cerrar() -> void:
 	if _cerrando:
 		return
 	_cerrando = true
+	FocoMando.liberar(self)
 	_devolver_contenido()
 	cerrada.emit()
 	if is_inside_tree():
