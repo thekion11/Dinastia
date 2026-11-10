@@ -53,6 +53,7 @@ static func iniciar(ui: Control, raiz: Node3D, club: Club, es_local: bool, autor
 	n._dx = dx
 	raiz.add_child(n)
 	n._cam = Camera3D.new()
+	n._cam.name = "CineGol"   ## (10-11) `LodCine` reconoce por el nombre las cámaras de celebración
 	n._cam.fov = 38.0
 	n._cam.far = 700.0
 	raiz.add_child(n._cam)
