@@ -3,13 +3,13 @@
     "Comtal FC",
     95000
   ],
-  "aforo_medio": 21471,
-  "aforo_total": 26087562,
+  "aforo_medio": 20600,
+  "aforo_total": 28325608,
   "caras_en_biblioteca": 300,
   "caras_reales_pck_presente": false,
-  "clubes": 1215,
+  "clubes": 1375,
   "clubes_por_division": {
-    "1": 967,
+    "1": 1127,
     "2": 248
   },
   "clubes_por_pais": {
@@ -64,6 +64,9 @@
     "CRO": {
       "1": 10
     },
+    "CYP": {
+      "1": 14
+    },
     "CZE": {
       "1": 16
     },
@@ -84,6 +87,9 @@
       "1": 20,
       "2": 22
     },
+    "FIN": {
+      "1": 12
+    },
     "FRA": {
       "1": 18,
       "2": 18
@@ -98,6 +104,9 @@
     "GRE": {
       "1": 14
     },
+    "HON": {
+      "1": 11
+    },
     "HUN": {
       "1": 12
     },
@@ -107,12 +116,21 @@
     "IRN": {
       "1": 16
     },
+    "IRQ": {
+      "1": 20
+    },
     "ISR": {
       "1": 14
     },
     "ITA": {
       "1": 20,
       "2": 20
+    },
+    "JAM": {
+      "1": 14
+    },
+    "JOR": {
+      "1": 10
     },
     "JPN": {
       "1": 20
@@ -130,6 +148,9 @@
       "1": 18,
       "2": 16
     },
+    "MLI": {
+      "1": 18
+    },
     "NED": {
       "1": 18,
       "2": 20
@@ -139,6 +160,12 @@
     },
     "NOR": {
       "1": 16
+    },
+    "NZL": {
+      "1": 11
+    },
+    "PAN": {
+      "1": 12
     },
     "PAR": {
       "1": 12
@@ -180,6 +207,9 @@
     "SVK": {
       "1": 12
     },
+    "SVN": {
+      "1": 10
+    },
     "SWE": {
       "1": 16
     },
@@ -202,8 +232,14 @@
     "USA": {
       "1": 30
     },
+    "UZB": {
+      "1": 16
+    },
     "VEN": {
       "1": 14
+    },
+    "WAL": {
+      "1": 12
     }
   },
   "confederaciones_clubes": [
@@ -232,6 +268,7 @@
     "Catar": 300,
     "Chile": 774,
     "China": 400,
+    "Chipre": 350,
     "Colombia": 535,
     "Corea": 292,
     "Costa Rica": 302,
@@ -244,30 +281,32 @@
     "Emiratos": 350,
     "Escocia": 308,
     "Eslovaquia": 309,
+    "Eslovenia": 257,
     "España": 1024,
+    "Finlandia": 300,
     "Francia": 883,
-    "Gales": 0,
+    "Gales": 303,
     "Ghana": 465,
     "Grecia": 358,
     "Holanda": 880,
-    "Honduras": 0,
+    "Honduras": 276,
     "Hungría": 306,
     "Inglaterra": 997,
-    "Irak": 0,
+    "Irak": 500,
     "Irlanda": 254,
     "Irán": 401,
     "Israel": 357,
     "Italia": 900,
-    "Jamaica": 0,
+    "Jamaica": 354,
     "Japón": 477,
-    "Jordania": 0,
-    "Malí": 0,
+    "Jordania": 253,
+    "Malí": 454,
     "Marruecos": 395,
     "México": 769,
-    "N. Zelanda": 0,
+    "N. Zelanda": 293,
     "Nigeria": 520,
     "Noruega": 422,
-    "Panamá": 0,
+    "Panamá": 304,
     "Paraguay": 313,
     "Perú": 423,
     "Polonia": 461,
@@ -284,42 +323,42 @@
     "Túnez": 406,
     "Ucrania": 405,
     "Uruguay": 457,
-    "Uzbekistán": 0,
+    "Uzbekistán": 400,
     "Venezuela": 368
   },
-  "copas_nacionales_nombres": 60,
-  "escudos_con_patron_o_letras": 988,
-  "escudos_firmas_distintas_en_aspecto": 1066,
-  "estadio_efectivo_firmas_distintas": 1213,
-  "estadio_efectivo_nucleo_distinto": 582,
+  "copas_nacionales_nombres": 72,
+  "escudos_con_patron_o_letras": 1148,
+  "escudos_firmas_distintas_en_aspecto": 1226,
+  "estadio_efectivo_firmas_distintas": 1373,
+  "estadio_efectivo_nucleo_distinto": 641,
   "estadio_efectivo_por_forma": {
-    "asimetrico": 65,
+    "asimetrico": 76,
     "caldera": 6,
-    "cuenco": 127,
-    "dos": 35,
-    "estrecho": 92,
-    "herradura": 70,
-    "ingles": 198,
-    "oval": 174,
-    "principal": 80,
-    "rect": 368
+    "cuenco": 139,
+    "dos": 47,
+    "estrecho": 107,
+    "herradura": 77,
+    "ingles": 225,
+    "oval": 191,
+    "principal": 99,
+    "rect": 408
   },
   "estadio_efectivo_repetidos_en_liga": 0,
-  "filas_ASPECTO_CLUB": 1215,
-  "filas_ESTADIO_CLUB": 1215,
-  "filas_HISTORIA_CLUBES": 1215,
-  "filas_con_asientos": 1098,
-  "filas_con_uniforme_visitante": 1153,
+  "filas_ASPECTO_CLUB": 1375,
+  "filas_ESTADIO_CLUB": 1375,
+  "filas_HISTORIA_CLUBES": 1375,
+  "filas_con_asientos": 1258,
+  "filas_con_uniforme_visitante": 1313,
   "idiomas": -1,
-  "jugadores_en_clubes": 30375,
+  "jugadores_en_clubes": 34375,
   "jugadores_por_posicion": {
-    "DEF": 9720,
-    "DEL": 7514,
-    "MED": 9496,
-    "POR": 3645
+    "DEF": 11000,
+    "DEL": 8474,
+    "MED": 10776,
+    "POR": 4125
   },
   "libres_en_mercado": -1,
-  "ligas": 72,
+  "ligas": 84,
   "ligas_detalle": [
     [
       "CHI",
@@ -627,6 +666,66 @@
       16
     ],
     [
+      "CYP",
+      1,
+      14
+    ],
+    [
+      "FIN",
+      1,
+      12
+    ],
+    [
+      "HON",
+      1,
+      11
+    ],
+    [
+      "IRQ",
+      1,
+      20
+    ],
+    [
+      "JAM",
+      1,
+      14
+    ],
+    [
+      "JOR",
+      1,
+      10
+    ],
+    [
+      "MLI",
+      1,
+      18
+    ],
+    [
+      "NZL",
+      1,
+      11
+    ],
+    [
+      "PAN",
+      1,
+      12
+    ],
+    [
+      "SVN",
+      1,
+      10
+    ],
+    [
+      "UZB",
+      1,
+      16
+    ],
+    [
+      "WAL",
+      1,
+      12
+    ],
+    [
       "ARG",
       2,
       36
@@ -683,11 +782,11 @@
     ]
   ],
   "ligas_por_division": {
-    "1": 60,
+    "1": 72,
     "2": 12
   },
-  "nacionalidades_de_jugadores": 114,
-  "ovr_medio": 54.0,
+  "nacionalidades_de_jugadores": 118,
+  "ovr_medio": 52.8,
   "paises": [
     "CHI",
     "ARG",
@@ -748,7 +847,19 @@
     "IRL",
     "NGA",
     "SEN",
-    "TUN"
+    "TUN",
+    "CYP",
+    "FIN",
+    "HON",
+    "IRQ",
+    "JAM",
+    "JOR",
+    "MLI",
+    "NZL",
+    "PAN",
+    "SVN",
+    "UZB",
+    "WAL"
   ],
   "paises_con_fase_final_de_liga": [
     "EGY",
@@ -767,18 +878,18 @@
     "ARG",
     "USA"
   ],
-  "paises_con_liga": 60,
+  "paises_con_liga": 72,
   "paises_con_reglas_de_ascenso": false,
-  "perfiles_de_estadio_distintos": 562,
+  "perfiles_de_estadio_distintos": 615,
   "plazas_mundial_48": 48,
-  "selecciones": 69,
+  "selecciones": 72,
   "selecciones_por_confederacion": {
     "afr": 11,
     "asia": 11,
     "conc": 7,
     "lib": 14,
     "oce": 2,
-    "ucl": 28
+    "ucl": 31
   },
   "selecciones_sin_torneo_continental": [
     "Rusia"
@@ -798,6 +909,6 @@
     "mundial",
     "interc"
   ],
-  "uniformes_con_kit_propio": 1175,
-  "uniformes_firmas_distintas_en_aspecto": 693
+  "uniformes_con_kit_propio": 1335,
+  "uniformes_firmas_distintas_en_aspecto": 771
 }
