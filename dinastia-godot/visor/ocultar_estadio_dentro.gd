@@ -9,9 +9,12 @@ extends RefCounted
 const CONSERVAR := ["TunelVestuario", "Exterior", "Fachada"]
 const META := "estadio_oculto_dentro"
 
-## Llamar cada vez que se refresca la zona del recorrido (barato: solo actúa al entrar o salir de las plantas interiores).
-static func actualizar(explorador: Node3D, planta: int) -> void:
-	var dentro := planta != 0
+## Llamar cada vez que se refresca la zona del recorrido (barato: solo actúa al entrar o salir).
+## OCLUSIÓN POR SALA EN LA PLANTA 0 (10-11, sesión 7): el vestuario es una sala cerrada; el estadio solo se ve por la boca del túnel. Con `zona` = «Vestuario» y la
+## cámara mirando a otra parte (la boca del túnel, el plano z = `datos.z_out`, fuera del cuerpo de visión), el estadio también se oculta, y vuelve en cuanto la boca
+## entra en el campo de visión: no desaparece nada que se viera. `camara` y `datos` (los del explorador) son opcionales; sin ellos, como antes.
+static func actualizar(explorador: Node3D, planta: int, zona := "", camara: Camera3D = null, datos: Dictionary = {}) -> void:
+	var dentro := planta != 0 or (zona == "Vestuario" and camara != null and not datos.is_empty() and not boca_visible(camara, datos))
 	var ocultos: Dictionary = explorador.get_meta(META, {})
 	if dentro == not ocultos.is_empty():
 		return
@@ -27,6 +30,29 @@ static func actualizar(explorador: Node3D, planta: int) -> void:
 		explorador.set_meta(META, ocultos)
 	else:
 		devolver(explorador)
+
+## ¿Alguna parte de la boca del túnel (la abertura del vestuario hacia el campo) cae dentro del campo de visión de `camara`? Rejilla de 0,6 m sobre la abertura
+## y, si la cámara está a menos de 1,5 m del plano de la boca, siempre sí (la rejilla podría quedar entre dos puntos).
+static func boca_visible(camara: Camera3D, datos: Dictionary) -> bool:
+	if not camara.is_inside_tree():
+		return true
+	var x0: float = datos["x0"]
+	var z := float(datos["z_out"])
+	var pos: Vector3 = camara.position
+	if absf(pos.z - z) < 1.5:
+		return true
+	var medio := TunelMedidas.MEDIO + 0.5   ## con margen para los marcos
+	var padre := camara.get_parent() as Node3D
+	var x := -medio
+	while x <= medio + 0.01:
+		var y := 0.0
+		while y <= TunelMedidas.ALTO + 0.5:
+			var q := Vector3(x0 + x, y, z)
+			if camara.is_position_in_frustum(padre.to_global(q) if padre != null else q):
+				return true
+			y += 0.6
+		x += 0.6
+	return false
 
 ## Deja el estadio como estaba (también al cerrar el recorrido).
 static func devolver(explorador: Node3D) -> void:

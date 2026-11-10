@@ -3,7 +3,7 @@ extends "res://visor/explorador_estadio_p1.gd"
 ## [Capa 2/2 de `explorador_estadio.gd`] _rotulos, _physics_process, _raton_en_primera_persona, _unhandled_input, _exit_tree
 
 func _rotulos() -> void:
-	OcultarEstadioDentro.actualizar(self, planta)   ## (10-11) dentro del edificio no se dibuja el estadio de fuera
+	OcultarEstadioDentro.actualizar(self, planta, String(zona_en(cuerpo.position).get("nombre", "")), camara, _datos)   ## (10-11) dentro del edificio no se dibuja el estadio de fuera (y en el vestuario, solo si se ve la boca del túnel)
 	## La puerta del club se abre sola al acercarse desde dentro.
 	if planta == 0 and _datos.has("puerta"):
 		var pl: Vector3 = _datos["puerta"]
