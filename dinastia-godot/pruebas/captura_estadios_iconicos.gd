@@ -101,10 +101,12 @@ func _desglose(raiz: Node, base: int) -> void:
 
 func _grupos(n: Node, hondo: int, fuera: Array[Node3D]) -> void:
 	for h in n.get_children():
-		if h is Node3D and h.find_children("*", "GeometryInstance3D", true, false).size() >= 15:
+		if h.find_children("*", "GeometryInstance3D", true, false).size() < 15:
+			continue
+		if h is Node3D:
 			fuera.append(h)
-			if hondo < 3:
-				_grupos(h, hondo + 1, fuera)
+		if hondo < 4:
+			_grupos(h, hondo + (1 if h is Node3D else 0), fuera)
 
 ## PICOS=1: 400 fotogramas; los que pasan de 1,6× la mediana se cuentan con su cámara y lo que creció (objetos, primitivas).
 func _picos(mediana: int) -> void:
