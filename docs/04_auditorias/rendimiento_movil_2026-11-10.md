@@ -74,6 +74,35 @@ Pantalla central del menú con la partida de un club, Compatibilidad, 1280x720, 
 **Hallazgo:** solo ULTRA BAJA activaba el modo de bajo consumo del menú (`AhorroMenu.toca()`): en BAJA, MEDIA BAJA y MEDIA el menú se repintaba entero (~400 llamadas) 46-51 veces cada 3 s con la pantalla quieta, en vez de 1.
 **Cambio hecho:** `AhorroMenu.toca()` vale ahora hasta MEDIA BAJA (bajo consumo, motas y fondos con shader de `TIME` quietos, mientras no haya 3D a la vista). Después: BAJA y MEDIA BAJA, los 3 clubes: **1 fotograma en 3 s** (−98 %). Coste visual, dicho: en BAJA y MEDIA BAJA los fondos animados del menú y las motas van quietos. MEDIA y superiores no se tocan (decisión de diseño original); en móvil MEDIA se repinta igual: el dueño decide si MEDIA en móvil también (es lo que midió con 28 FPS en el menú).
 
+## El partido en directo ya sin MSAA: lo siguiente que pesa (MEDIA, CHI, 1280x720; fotograma relativo, base 395-411 ms, 433 llamadas, 762 k triángulos)
+| Experimento | Llamadas | Fotograma | Efecto |
+|---|---|---|---|
+| sin sombra solar (2 cortes) | 360 (−73) | 345 ms | **−13 a −17 %** |
+| sin jugadores ni pelo | 375 | 366 ms | −11 % |
+| sin gente fuera del campo (suplentes, cuerpo técnico, camarógrafos…) | 386 | 386 ms | −6 % |
+| sin butacas | 417 | 396 ms | −4 % (−185 k tri) |
+| sin focos / sin fundidos / sin coches | 432 / 402 / 432 | 396 / 393 / 401 ms | −3 a −4 % cada uno |
+| sin hinchas (MultiMesh) | 429 | 407 ms | −1 % |
+| piezas finas (ojos, cejas, pestañas, pelo) sin sombra proyectada | 431 | 410 ms | **nada** (ya no se descarta por menor) |
+Lectura: tras quitar el MSAA el coste está repartido; lo único que destaca es la sombra solar (13-17 %), y es un efecto visible: se queda como propuesta para el dueño («MEDIA sin sombra en móvil» sería BAJA, que ya no la tiene; el escalón existe). Nada de lo medido se puede apagar sin que se note (hinchas, butacas, focos y coches son 1-4 % cada uno). Sin MSAA, la sombra y los personajes (22 + árbitros: ~150 llamadas) son el grueso; reducir personajes lejanos (impostores, menos huesos) es trabajo de la sesión de personajes. BAJA (sin sombra) ya está en 250-315 llamadas.
+Recordatorio: llamadas, triángulos y vídeo son comparables entre máquinas; el fotograma de llvmpipe solo vale a igual resolución en esta máquina (una repetición de «sin efectos de entorno» dio 678 ms con un parón aislado de 31 s: se descartó).
+
+## El arranque hasta el menú (2 núcleos, 4 GB, llvmpipe 1280x720; `.pck` exportado con scripts precompilados como el juego real)
+Herramientas nuevas: `pruebas/medir_arranque.tscn` (portada) y `pruebas/medir_arranque_menu.tscn` (menú real «Continuar»: `principal.tscn` con un club). Con el `.pck`: `godot --export-pack "Windows" x.pck` (quitando `pruebas/*` del filtro de exclusión solo para medir) y `godot --main-pack x.pck res://pruebas/medir_arranque.tscn`.
+| Qué | Desde fuentes (editor) | Con `.pck` precompilado |
+|---|---|---|
+| Motor + autoloads | 0,55-0,66 s | 0,53-0,56 s |
+| Montar la portada (`inicio.tscn`) | 2,9-5,2 s | **1,75-1,90 s** |
+| 1.er fotograma de la portada | 3,8-6,1 s | **2,5-2,8 s** |
+| 30.º fotograma de la portada | 6,0-7,5 s | 4,6-4,7 s |
+| Menú real: motor+autoloads (compila `Principal`) | — | ~2,0 s |
+| Menú real: instanciar y montar `Principal` | — | 2,6-3,4 s |
+| Menú real: generar mundo + tomar el mando + refrescar | — | 0,06-0,13 s |
+| Menú real: 1.er fotograma | — | **6,9-8,8 s** |
+Memoria: portada 219 MB estática (248 desde fuentes), vídeo 54 MB; menú real 372-374 MB.
+**Dónde se va:** de `Inicio._ready` solo ~340 ms (`_construir` 307 ms); el resto es cargar y COMPILAR scripts (el análisis de `compilacion_menu_2026-11-03.md`: `Principal` arrastra 830 de 886 scripts) y, en el menú real, instanciar las 17 capas de `Principal`. Generar el mundo y refrescar es despreciable (0,1 s). Quedan 2-4 s entre «refrescar» y el 1.er fotograma que NO se pueden atribuir aquí (compilación de shaders de llvmpipe, hilos de `Precarga`/`RuidosFondo`/`CompilarFondo`): en un teléfono la compilación de shaders de la GPU es otra y solo se mide allí (la «Prueba de rendimiento» de Ajustes no mide el arranque: pendiente añadirlo).
+**Propuesta (sin tocar nada aún):** (1) seguir con los cortes de familias del análisis del 3-11 (pantallas de gestión −38 MB y arranque más corto; ciudad 3D −105 MB: ahora que está apagada se corta con poco riesgo); (2) una pantalla de carga con barra mientras se instancia `Principal` (hoy el jugador ve la portada quieta 2-3 s); (3) medir el arranque en el teléfono del dueño (cronómetro en el log del primer fotograma: `Time.get_ticks_msec()` al `Inicio._ready` y al primer `frame_post_draw`).
+
 ## Lo que NO se hizo (y por qué) / siguiente
 - **La meta de ULTRA BAJA (< 130 llamadas) NO se cumple**: 198-260. No se ha recortado nada más porque lo que quita llamadas es visual y hay que decidirlo: ojos y cejas de los jugadores lejanos (81 llamadas), pelo (136), hinchas (157 llamadas / 135 k triángulos) y butacas lejanas (230 k triángulos, −12 % de fotograma). Propuesta para el dueño: en ULTRA BAJA, sin ojos/cejas/pestañas a más de 12 m de la cámara; hinchas y butacas lejanas como una sola malla por grada con menos detalle. Se aplica cuando lo apruebe el dueño (regla: no quitar nada sin decirlo).
 - Luces omni, post-proceso y gente fuera del campo no pesan en este banco: no se tocan.
