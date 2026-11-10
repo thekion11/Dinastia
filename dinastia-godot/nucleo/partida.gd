@@ -73,6 +73,8 @@ static func _dic_a_liga(d: Dictionary, m: Mundo) -> Liga:
 				l.tabla_puntos[id][k] = int(fila[k])
 	for k2: String in d.get("h2h", {}):
 		l.h2h[k2] = int(d["h2h"][k2])
+	if l.formato != null and not (d.get("ff", {}) as Dictionary).is_empty():
+		l.formato.cargar(l, d["ff"])
 	l.plazas_descenso = int(d.get("desc", 2))
 	l.puntos_victoria = int(d.get("pv", 3))
 	return l

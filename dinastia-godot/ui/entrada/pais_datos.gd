@@ -134,6 +134,18 @@ const MONUMENTOS := {
 		["Anfiteatro de Pula", "coliseo", ""], ["Puente de Pelješac", "puente", "atirantado"], ["Faro de Savudrija", "faro", ""]],
 	"DEN": [["La Sirenita", "estatua", "columna"], ["Puente de Øresund", "puente", "atirantado"],
 		["Torre Redonda", "torre_reloj", ""], ["Castillo de Kronborg", "castillo", "holsten"], ["Faro de Rubjerg Knude", "faro", ""]],
+	"TUR": [["Santa Sofía", "cupula", "palacio"], ["Puente del Bósforo", "puente", "atirantado"], ["Torre de Gálata", "torre_reloj", ""],
+		["Chimeneas de Capadocia", "montana", "cono"], ["Murallas de Constantinopla", "muralla", "puerta"]],
+	"SCO": [["Castillo de Edimburgo", "castillo", "holsten"], ["Puente de Forth", "puente", "atirantado"], ["Monumento a Scott", "torre_reloj", ""],
+		["Faro de Corsewall", "faro", ""], ["Muralla de Antonino", "muralla", "puerta"]],
+	"SUI": [["Puente de la Capilla", "puente", "atirantado"], ["Castillo de Chillon", "castillo", "holsten"], ["Torre del Reloj de Berna", "torre_reloj", ""],
+		["Cascadas del Rin", "catarata", "ancha"], ["Muralla de Morat", "muralla", "puerta"]],
+	"AUT": [["Palacio de Schönbrunn", "castillo", "holsten"], ["Catedral de San Esteban", "torre_reloj", ""], ["Noria del Prater", "torre_reloj", ""],
+		["Fortaleza de Hohensalzburg", "muralla", "puerta"], ["Puente del Danubio", "puente", "atirantado"]],
+	"GRE": [["Partenón", "coliseo", ""], ["Faro de Cabo Sunion", "faro", ""], ["Puente de Rio-Antirio", "puente", "atirantado"],
+		["Torre de los Vientos", "torre_reloj", ""], ["Murallas de Rodas", "muralla", "puerta"]],
+	"QAT": [["Torre Aspire", "torre_reloj", ""], ["Puente de la Corniche", "puente", "atirantado"], ["Faro de la bahía de Doha", "faro", ""],
+		["Fuerte de Zubarah", "muralla", "puerta"], ["Museo de Arte Islámico", "castillo", "holsten"]],
 }
 
 ## Todos los países que se pueden ver en el globo, en el orden de la lista.
