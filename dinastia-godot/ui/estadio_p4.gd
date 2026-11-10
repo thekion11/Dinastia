@@ -400,7 +400,8 @@ func _hud_realizacion(delta: float) -> void:
 			c.modulate.a = move_toward(c.modulate.a, 0.0 if tapa else 1.0, delta * 5.0)
 
 ## El contenido del cajón de ajustes de la transmisión (antes dentro de `_montar_cajon_de_ajustes`): se llama la primera vez que se abre (`CajonAjustes.contenido`). Va en dos mitades por el tope de líneas de la capa.
-func _llenar_cajon() -> void:
+func _llenar_cajon(c: CajonAjustes) -> void:
+	_cajon = c   ## si el cajón se recordó abierto, esto corre dentro de `CajonAjustes.crear`, antes de que `_montar_cajon_de_ajustes` lo asigne
 	_cajon.seccion("Transmisión")
 	_btn_camara = _cajon.boton("📷 Cámara: " + (_rig.current_name() if _rig != null else "TV"), _rotar_camara)
 	_cajon.fila([["🔍 Acercar", func() -> void: if _rig: _rig.ajustar_zoom(-3.0)],

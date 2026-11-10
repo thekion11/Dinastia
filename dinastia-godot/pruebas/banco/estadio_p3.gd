@@ -142,7 +142,7 @@ func _probar_cajon_perezoso() -> void:
 	var padre := Control.new()
 	add_child(padre)
 	var llamadas := [0]
-	var c := CajonAjustes.crear(padre, "banco_perezoso", func() -> void: llamadas[0] += 1)
+	var c := CajonAjustes.crear(padre, "banco_perezoso", func(_cj: CajonAjustes) -> void: llamadas[0] += 1)
 	_comprobar(llamadas[0] == 0, "antes del primer abrir el cajón no ha ejecutado su contenido (llamadas=%d)" % llamadas[0])
 	c.abrir(false)
 	_comprobar(llamadas[0] == 1, "al abrir ejecuta el contenido (llamadas=%d)" % llamadas[0])
@@ -150,6 +150,12 @@ func _probar_cajon_perezoso() -> void:
 	c.abrir(false)
 	_comprobar(llamadas[0] == 1, "abrirlo otra vez no lo vuelve a llenar (llamadas=%d)" % llamadas[0])
 	c.cerrar(false)   ## el cajón recuerda si quedó abierto (`ajustes.cfg`): se deja cerrado para que la prueba se pueda repetir
+	## Recordado como abierto (`ajustes.cfg`): abre DENTRO de `crear` y el contenido ya recibe su cajón (antes reventaba: «seccion en Nil»).
+	c.abrir(false)   ## (se guarda abierto)
+	var recibido := [null]
+	var e := CajonAjustes.crear(padre, "banco_perezoso", func(cj: CajonAjustes) -> void: recibido[0] = cj)
+	_comprobar(e != null and recibido[0] == e, "con el cajón recordado abierto, el contenido recibe el propio cajón")
+	e.cerrar(false)
 	var d := CajonAjustes.crear(padre, "banco_clasico")
 	d.seccion("A")
 	d.boton("b", func() -> void: pass)

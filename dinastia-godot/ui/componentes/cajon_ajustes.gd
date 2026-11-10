@@ -36,7 +36,7 @@ var _lista: VBoxContainer
 var _quieto := 0.0
 var _tween: Tween
 
-## `contenido` (10-11, tiempo hasta jugar): qué poner dentro; se ejecuta la PRIMERA vez que el cajón se abre (llenarlo cuesta ~0,24 s de CPU en un equipo modesto y casi nadie lo abre al empezar un partido).
+## `contenido(cajon)` (10-11, tiempo hasta jugar): qué poner dentro (recibe el cajón); se ejecuta la PRIMERA vez que el cajón se abre (llenarlo cuesta ~0,24 s de CPU en un equipo modesto y casi nadie lo abre al empezar un partido).
 ## Sin él, el cajón se llena como siempre desde fuera (`seccion`, `boton`…).
 static func crear(padre: Control, clave_pantalla: String, contenido := Callable()) -> CajonAjustes:
 	var c := CajonAjustes.new()
@@ -197,7 +197,7 @@ func abrir(animar: bool = true) -> void:
 	if contenido.is_valid():
 		var llenar := contenido
 		contenido = Callable()
-		llenar.call()
+		llenar.call(self)   ## se le pasa el propio cajón: si se recordó abierto, `abrir` corre DENTRO de `crear`, antes de que quien lo creó lo tenga asignado
 	abierto = true
 	_quieto = 0.0
 	_colocar(true, animar)
