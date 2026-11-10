@@ -265,7 +265,7 @@ func _probar_selecciones() -> void:
 	var antes_conti := m.continentales.size()
 
 	## Tres temporadas: cae al menos una prenómina, una fecha FIFA, un torneo
-	## continental de selecciones (par) y, a la tercera (2028), la Copa del Mundo.
+	## continental de selecciones (2027 o 2028 según la confederación) y, al cerrar la primera (2026, año real), la Copa del Mundo.
 	##
 	## Se comprueba el estado directo (`prenomina_ids`, `nomina_ids`) y no las
 	## señales: un lambda de GDScript captura las variables locales POR VALOR, no
@@ -281,8 +281,8 @@ func _probar_selecciones() -> void:
 	_comprobar(m.selecciones.resultados.size() > 0, "quedan resultados de la selección anotados")
 	_comprobar(ultimo_resumen.get("selecciones", {}).has("mundial"),
 		"nueva_temporada() devuelve el resumen de selecciones")
-	## 2026 -> 2027 -> 2028: la Copa del Mundo cae al cerrar 2028.
-	_comprobar(not m.selecciones.mundial.is_empty(), "la Copa del Mundo se jugó al llegar a 2028 (%s)" % m.selecciones.mundial.get("campeon", "?"))
+	## 2026 -> 2027 -> 2028: la Copa del Mundo cae al cerrar 2026 (los años reales, como el calendario; 10-11).
+	_comprobar(not m.selecciones.mundial.is_empty(), "la Copa del Mundo se jugó en 2026 (%s)" % m.selecciones.mundial.get("campeon", "?"))
 	_comprobar(m.continentales.size() == antes_conti,
 		"los continentales se re-sortean cada temporada con el mismo número de torneos (%d)" % m.continentales.size())
 
