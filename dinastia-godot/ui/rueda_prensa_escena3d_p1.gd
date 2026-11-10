@@ -364,7 +364,7 @@ func _montar_luces() -> void:
 	## tenue y frío para que se noten como siluetas, sin competir con el DT.
 	var luz_publico := OmniLight3D.new()
 	luz_publico.light_color = Color(0.55, 0.6, 0.7)
-	luz_publico.light_energy = 1.1
+	luz_publico.light_energy = 0.55   ## (10-11) más en penumbra: en la referencia los periodistas son siluetas y no compiten con el DT
 	luz_publico.omni_range = 4.5
 	luz_publico.position = Vector3(0, 3.2, 1.8)
 	add_child(luz_publico)
