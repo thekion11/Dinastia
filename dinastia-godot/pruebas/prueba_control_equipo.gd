@@ -311,7 +311,7 @@ func _paso_fc() -> void:
 		25:
 			_pulsar("jugar_tac_arriba", false)
 			_avanzar(1)
-			_ok(int((_motor.tacticas[0] as Dictionary).get("mentalidad", 1)) == mini(int(_dato["ment"]) + 1, 3), "FC: cruceta arriba = mentalidad más ofensiva")
+			_ok(int((_motor.tacticas[0] as Dictionary).get("mentalidad", 1)) == mini(int(_dato["ment"]) + 1, 2), "FC: cruceta arriba = mentalidad más ofensiva")
 			## Una filigrana que el jugador domina y otra que le queda grande.
 			var u := _balon_a_usuario(0.0, 0.0)
 			u["attr"]["reg"] = 0.95
