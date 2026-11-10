@@ -84,12 +84,22 @@ Arreglos:
   - al abrirlo el foco va al campo, que dibuja un marco dorado cuando está enfocado;
   - Tab sigue cambiando de ficha, y el ratón y el dedo, igual que antes;
   - el texto de ayuda lo explica, en los 9 idiomas.
+- **Capas de evento apiladas** (salió con pantalla): al cerrar la temporada se abren las cinemáticas de sorteo pendientes y los eventos
+  a pantalla completa, que van en capas de lienzo (siempre encima), pero el foco podía quedarse en un control tapado. Ahora:
+  - toda `EventoPantallaCompleta` aísla lo de debajo mientras está abierta;
+  - `FocoMando.aislar` lleva la cuenta por control, así que con dos capas apiladas lo de debajo solo vuelve a ser enfocable al cerrar
+    la última;
+  - `GuardianFoco.capa_arriba` mira primero las capas de lienzo.
+- La prueba exige además que, en una capa modal, el foco empiece DENTRO de ella, y si se pierde dice a dónde se fue.
+  `SOLO_FIN=1` lanza solo el final de temporada.
 - `GuardianFoco` respeta los controles que usan la cruceta (meta `cruceta_propia`). La prueba exige que un `Control` a secas
   dibuje su propio foco (meta `foco_visible`).
 
-Resultado: **0 fallos** en las 13 pantallas. La 1.ª parte y el banco siguen en verde.
+Resultado: **0 fallos** en las 13 pantallas, sin pantalla y con ella. La 1.ª parte y el banco siguen en verde.
 
 ## Pendiente
+- La tarjeta del tutorial plegada («💡 Táctica», abajo a la derecha) tapa en parte lo último de la lista: en el editor de formación,
+  el botón «Cancelar». La lista se puede desplazar y la tarjeta es de otro rediseño (3-11), así que no la toqué.
 - La orden dice «Triángulo / X = espacio». Con un mando de PlayStation la X es el botón que pulsa la tecla enfocada, así que solo se
   puso Triángulo. ¿Para «X» el dueño se refiere al botón X de Xbox (el Cuadrado de PlayStation, que ya borra)? Es decisión del dueño.
 - La reunión con la directiva marca la respuesta con la aguja del selector en cruz más que con el aro del foco: es su diseño
