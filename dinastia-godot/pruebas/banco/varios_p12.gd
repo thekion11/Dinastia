@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p11.gd"
-## [Capa 12 de `varios.gd`, 10-11] _probar_selector_direccional, _probar_eventos_club (rueda de prensa en cruz y eventos con diálogo)
+## [Capa 12 de `varios.gd`, 10-11] _probar_selector_direccional, _probar_eventos_club (rueda de prensa en cruz y eventos con diálogo), _probar_festejos_titulo
 
 ## LA CRUZ DE RESPUESTAS (10-11): un botón por opción, delegar al centro, el analógico apunta por direcciones y elegir emite el índice.
 func _probar_selector_direccional() -> void:
@@ -47,3 +47,33 @@ func _probar_eventos_club() -> void:
 	var mitad := EventosClub.pendiente(m)
 	_comprobar(not mitad.is_empty() and String(mitad["id"]) == "mitad", "la jornada de la mitad: el balance con el ayudante")
 	_comprobar(EventosClub.capitan(m.mi_club()) != null, "hay capitán para la escena del clásico")
+
+## CADA TÍTULO, SU FESTEJO (10-11): el tipo sale del nombre de la competición y decide la escena y los extras.
+func _probar_festejos_titulo() -> void:
+	_titulo("FESTEJOS POR TIPO DE TÍTULO")
+	for semilla: int in [11, 77]:   ## regla 34: más de un mundo y más de un club
+		var m := Mundo.new()
+		m.generar(["CHI", "ARG"], semilla)
+		m.tomar_el_mando(m.ligas[semilla % m.ligas.size()].clubes[semilla % 7].id)
+		var liga := m.liga_de(m.mi_club())
+		_comprobar(TipoTitulo.de(m, liga.nombre) == "liga", "%s: «%s» es una liga" % [m.mi_club().nombre, liga.nombre])
+		if m.copa != null:
+			_comprobar(TipoTitulo.de(m, m.copa.nombre) == "copa", "«%s» es una copa" % m.copa.nombre)
+		for k: String in m.continentales:
+			_comprobar(TipoTitulo.de(m, Continental.nombre_conti(k)) == "continental", "«%s» es continental" % Continental.nombre_conti(k))
+			break
+		_comprobar(TipoTitulo.de(m, "Supercopa de Chile") == "supercopa" and TipoTitulo.de(m, "Permanencia (interinato)") == "salvacion", "supercopa y permanencia por su nombre")
+		_comprobar(TipoTitulo.de_fin_de_liga(m) in ["", "ascenso", "salvacion"], "fin de liga: ascenso, salvación o nada")
+	var vistos := {}
+	for t: String in ["liga", "copa", "continental", "supercopa", "ascenso", "salvacion"]:
+		vistos[TipoTitulo.ESCENA[t]] = true
+		_comprobar(not TipoTitulo.extras(t).is_empty(), "%s tiene festejos extra" % t)
+	_comprobar(vistos.size() == 4, "cuatro escenas principales distintas (escenario, palco, fuegos, sobrio)")
+	_comprobar(TipoTitulo.extras("liga").has("pasillo") and not TipoTitulo.extras("ascenso").has("desfile"), "pasillo solo en liga; el ascenso es sobrio (sin desfile)")
+	var e := EscenaFestejo.new()
+	for modo: String in ["escenario", "palco", "fuegos", "sobrio", "foto", "manteo", "champan", "desfile", "pasillo"]:
+		e.poner(modo)
+		if e.con_confeti():
+			e._mover_confeti(0.1)
+	_comprobar(e._confeti.is_empty(), "el pasillo no lleva confeti (se limpia al cambiar de escena)")
+	e.free()
