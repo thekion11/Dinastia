@@ -43,8 +43,8 @@ Liverpool|escudo|liso|ave||#c8102e|#ffffff|
 Chelsea|circulo|aro|leon||#034694|#ffffff|
 Manchester Utd|circulo|aro|tridente||#d50032|#14171c|#ffd100
 City de Manch.|circulo|aro|aguila||#6caddf|#ffffff|#0a2240
-Tottenham|escudo|liso|ave||#ffffff|#132257|
-West Ham|escudo|liso|torre||#7a263a|#1bb1e7|
+Tottenham|escudo|liso|gallo||#ffffff|#132257|
+West Ham|escudo|liso|castillo||#7a263a|#1bb1e7|
 Everton FC|ovalo|liso|torre||#003399|#ffffff|
 Inter|circulo|aro||IM|#14171c|#0067b1|
 Napoli|circulo|liso||N/#ffffff|#199fda|#ffffff|
@@ -52,9 +52,9 @@ Roma|escudo|liso|lobo||#8e1f2f|#f0bc42|
 Lazio|circulo|liso|aguila||#75aadb|#ffffff|
 Fiorentina|escudo|liso|flor_lis||#5c2d91|#ffffff|
 Dortmund|circulo|liso||BVB/#14171c|#fde100|#14171c|
-Leipzig|circulo|liso|cuernos||#ffffff|#dd0741|
+Leipzig|circulo|liso|toro||#ffffff|#dd0741|
 Leverkusen|circulo|liso||B04/#ffffff|#d50032|#111111|
-Paris SG|circulo|liso|torre||#004170|#ffffff|
+Paris SG|circulo|liso|eiffel||#004170|#ffffff|
 Marsella|circulo|liso||OM/#2faee0|#ffffff|#2faee0|
 Lyon|escudo|liso|leon||#ffffff|#d50032|#0a2240
 Al-Hilal|circulo|liso|media_luna||#0038a8|#ffffff|
@@ -189,7 +189,7 @@ Guayaquil C.||||GC|||
 Cumbaya||||CU|||
 Imbabura|||leon||||
 9 de Octubre||||NO|||
-Valencia|redondeado|liso|ave||#ffffff|#111111|#ff7a00
+Valencia|redondeado|liso|murcielago||#ffffff|#111111|
 Ath. Bilbao|clasico|franjas|leon||#d50032|#ffffff|
 Real Sociedad|clasico|franjas|corona||#0067b1|#ffffff|
 Betis|escudo|franjas||RBB/#ffffff|#00954c|#ffffff|
