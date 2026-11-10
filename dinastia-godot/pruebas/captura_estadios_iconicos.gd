@@ -19,6 +19,7 @@ const CLUBES_4 := ["Atlét1co Madrid", "Sev1lla", "C1ty de Manch.", "Juv3ntus", 
 const PAISES_4: Array[String] = ["ESP", "ENG", "ITA", "GER", "FRA", "ARG", "BRA", "MEX", "NED", "KSA", "RSA", "PAR", "COL", "PER", "ECU"]
 var _m: Mundo
 var _dir := ""
+var _fija: Camera3D   ## la cámara del plano congelado: el juego puede quitársela al acabar la celebración
 
 func _esperar(s: float) -> void:
 	await get_tree().create_timer(s).timeout
@@ -101,6 +102,9 @@ func _desglose(raiz: Node, base: int) -> void:
 	var grupos: Array[Node3D] = []
 	_grupos(raiz, 0, grupos)
 	for g in grupos:
+		if _fija != null and not _fija.current:
+			_fija.make_current()
+			await get_tree().process_frame
 		g.visible = false
 		await get_tree().process_frame
 		await get_tree().process_frame
@@ -156,6 +160,7 @@ func _congelar() -> void:
 	var pos0 := cam0.global_position.round()
 	var nombre0 := String(cam0.name)
 	fija.make_current()
+	_fija = fija
 	get_tree().paused = true
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	await get_tree().process_frame
