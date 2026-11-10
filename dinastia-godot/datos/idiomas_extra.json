@@ -7793,7 +7793,8 @@
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "You already have 6 custom formations: delete one to save another.",
   "Editar posiciones": "Edit positions",
   "Borrar esta formación": "Delete this formation",
-  "Nations League": "Nations League"
+  "Nations League": "Nations League",
+  "Arrastra (ratón o dedo), A/D, la cruceta o el stick para girar la copa; rueda, W/S o stick derecho para acercar; Esc o B para cerrar": "Drag (mouse or finger), A/D, the d-pad or the stick to rotate the cup; wheel, W/S or right stick to zoom; Esc or B to close"
  },
  "pt": {
   "Historia": "História",
@@ -15589,7 +15590,8 @@
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Você já tem 6 formações próprias: apague uma para salvar outra.",
   "Editar posiciones": "Editar posições",
   "Borrar esta formación": "Apagar esta formação",
-  "Nations League": "Liga das Nações"
+  "Nations League": "Liga das Nações",
+  "Arrastra (ratón o dedo), A/D, la cruceta o el stick para girar la copa; rueda, W/S o stick derecho para acercar; Esc o B para cerrar": "Arraste (rato ou dedo), A/D, o direcional ou o stick para girar a taça; roda, W/S ou stick direito para aproximar; Esc ou B para fechar"
  },
  "patrones": [
   [
@@ -29481,7 +29483,8 @@
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Vous avez déjà 6 formations perso : supprimez-en une pour en enregistrer une autre.",
   "Editar posiciones": "Modifier les positions",
   "Borrar esta formación": "Supprimer cette formation",
-  "Nations League": "Ligue des nations"
+  "Nations League": "Ligue des nations",
+  "Arrastra (ratón o dedo), A/D, la cruceta o el stick para girar la copa; rueda, W/S o stick derecho para acercar; Esc o B para cerrar": "Glissez (souris ou doigt), A/D, la croix ou le stick pour tourner la coupe ; molette, W/S ou stick droit pour zoomer ; Échap ou B pour fermer"
  },
  "it": {
   "Historia": "Storia",
@@ -37277,7 +37280,8 @@
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Hai già 6 moduli personali: cancellane uno per salvarne un altro.",
   "Editar posiciones": "Modifica posizioni",
   "Borrar esta formación": "Elimina questo modulo",
-  "Nations League": "Nations League"
+  "Nations League": "Nations League",
+  "Arrastra (ratón o dedo), A/D, la cruceta o el stick para girar la copa; rueda, W/S o stick derecho para acercar; Esc o B para cerrar": "Trascina (mouse o dito), A/D, la croce o lo stick per girare la coppa; rotella, W/S o stick destro per avvicinare; Esc o B per chiudere"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45073,7 +45077,8 @@
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Du hast schon 6 eigene Formationen: Lösche eine, um eine andere zu speichern.",
   "Editar posiciones": "Positionen bearbeiten",
   "Borrar esta formación": "Diese Formation löschen",
-  "Nations League": "Nations League"
+  "Nations League": "Nations League",
+  "Arrastra (ratón o dedo), A/D, la cruceta o el stick para girar la copa; rueda, W/S o stick derecho para acercar; Esc o B para cerrar": "Ziehen (Maus oder Finger), A/D, Steuerkreuz oder Stick zum Drehen des Pokals; Mausrad, W/S oder rechter Stick zum Zoomen; Esc oder B zum Schließen"
  },
  "ca": {
   "Historia": "Història",
@@ -52869,7 +52874,8 @@
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Ja tens 6 formacions pròpies: esborra'n una per desar-ne una altra.",
   "Editar posiciones": "Editar posicions",
   "Borrar esta formación": "Esborrar aquesta formació",
-  "Nations League": "Lliga de Nacions"
+  "Nations League": "Lliga de Nacions",
+  "Arrastra (ratón o dedo), A/D, la cruceta o el stick para girar la copa; rueda, W/S o stick derecho para acercar; Esc o B para cerrar": "Arrossega (ratolí o dit), A/D, la creu o l'stick per girar la copa; roda, W/S o stick dret per apropar; Esc o B per tancar"
  },
  "pl": {
   "Club": "Klub",
@@ -60665,7 +60671,8 @@
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Masz już 6 własnych formacji: usuń jedną, aby zapisać inną.",
   "Editar posiciones": "Edytuj pozycje",
   "Borrar esta formación": "Usuń tę formację",
-  "Nations League": "Liga Narodów"
+  "Nations League": "Liga Narodów",
+  "Arrastra (ratón o dedo), A/D, la cruceta o el stick para girar la copa; rueda, W/S o stick derecho para acercar; Esc o B para cerrar": "Przeciągnij (mysz lub palec), A/D, krzyżak lub gałkę, aby obrócić puchar; kółko, W/S lub prawa gałka, aby przybliżyć; Esc lub B, aby zamknąć"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68461,6 +68468,7 @@
   "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Zaten 6 özel dizilişin var: başka birini kaydetmek için birini sil.",
   "Editar posiciones": "Pozisyonları düzenle",
   "Borrar esta formación": "Bu dizilişi sil",
-  "Nations League": "Uluslar Ligi"
+  "Nations League": "Uluslar Ligi",
+  "Arrastra (ratón o dedo), A/D, la cruceta o el stick para girar la copa; rueda, W/S o stick derecho para acercar; Esc o B para cerrar": "Kupayı döndürmek için sürükleyin (fare veya parmak), A/D, yön tuşları veya çubuk; yakınlaştırmak için tekerlek, W/S veya sağ çubuk; kapatmak için Esc veya B"
  }
 }
