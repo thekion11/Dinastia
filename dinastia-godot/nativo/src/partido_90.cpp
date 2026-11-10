@@ -7,6 +7,7 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include <algorithm>
+#include <cmath>
 
 using namespace godot;
 
@@ -17,10 +18,45 @@ inline double maxf_gd(double a, double b) {
 	return a > b ? a : b;
 }
 
+// El generador de azar del juego (`Azar._rng`, PCG32 de Godot). Propio: la misma aritmética que el motor, sobre su `state` (se vuelca antes de cada vuelta a GDScript y se relee después). Si la
+// autocomprobación (`pcg_coincide`) no confirma que el motor hace lo mismo, se usan las llamadas del motor (más lentas, mismo resultado).
+struct AzarNativo {
+	Ref<RandomNumberGenerator> rng;
+	bool propio = false;
+	uint64_t state = 0;
+	static constexpr uint64_t INC = (1442695040888963407ULL << 1) | 1ULL;
+	inline uint32_t rand32() {
+		const uint64_t old = state;
+		state = old * 6364136223846793005ULL + INC;
+		const uint32_t xs = uint32_t(((old >> 18) ^ old) >> 27);
+		const uint32_t rot = uint32_t(old >> 59);
+		return (xs >> rot) | (xs << ((0u - rot) & 31u));
+	}
+	inline float randf() {
+		if (!propio) {
+			return rng->randf();
+		}
+		const uint32_t e = rand32();
+		if (e == 0) {
+			return 0.0f;
+		}
+		return float(std::ldexp(double(rand32() | 0x80000001u), -32 - __builtin_clz(e)));
+	}
+	inline void entrar() {
+		if (propio) {
+			state = rng->get_state();
+		}
+	}
+	inline void salir() {
+		if (propio) {
+			rng->set_state(state);
+		}
+	}
+};
+
 struct Estado {
 	Object *p;
 	Object *ayuda;
-	Ref<RandomNumberGenerator> rng;
 	Array once_l, once_v;
 	Dictionary aportes;
 	Variant club_l, club_v;
@@ -37,16 +73,19 @@ struct Estado {
 
 } // namespace
 
-void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg, const Ref<RandomNumberGenerator> &rng) const {
+void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg, const Ref<RandomNumberGenerator> &rng, bool azar_propio) const {
 	static const StringName k_minuto("minuto"), k_term("terminado_ya"), k_fl("_fza_local"), k_fv("_fza_visita"), k_ata("ata"), k_def("def"), k_plan("_plan_aplicado");
 	static const StringName k_rem_l("remates_local"), k_rem_v("remates_visita"), k_tp_l("tiros_puerta_local"), k_tp_v("tiros_puerta_visita"), k_xg_l("xg_local"), k_xg_v("xg_visita");
 	static const StringName k_cor_l("corners_local"), k_cor_v("corners_visita"), k_fal_l("faltas_local"), k_fal_v("faltas_visita"), k_fue_l("fueras_local"), k_fue_v("fueras_visita");
 	static const StringName k_pos("posesion_local"), k_ol("once_local"), k_ov("once_visita"), k_apo("_aportes"), k_local("local"), k_visita("visita"), k_id("id"), k_pos_e("pos_e");
 
+	AzarNativo az;
+	az.rng = rng;
+	az.propio = azar_propio;
+	az.entrar();
 	Estado e;
 	e.p = p;
 	e.ayuda = ayuda;
-	e.rng = rng;
 	e.once_l = p->get(k_ol);
 	e.once_v = p->get(k_ov);
 	e.aportes = p->get(k_apo);
@@ -130,47 +169,57 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 		// _chequeo_arbitral
 		switch (tipo_arb) {
 			case 1:
-				if (rng->randf() < 0.010 * f_var) {
+				if (az.randf() < 0.010 * f_var) {
 					p->set(k_minuto, e.minuto);
+					az.salir();
 					ayuda->call("hit_tarjetero", p);
+					az.entrar();
 					refrescar();
 				}
 				break;
 			case 2:
-				if (rng->randf() < 0.008 * f_var) {
+				if (az.randf() < 0.008 * f_var) {
 					p->set(k_minuto, e.minuto);
+					az.salir();
 					ayuda->call("hit_casero", p);
+					az.entrar();
 					refrescar();
 				}
 				break;
 			case 3:
-				if (rng->randf() < 0.004 * f_var) {
+				if (az.randf() < 0.004 * f_var) {
 					p->set(k_minuto, e.minuto);
 					volcar_penal();
+					az.salir();
 					ayuda->call("hit_estricto", p);
+					az.entrar();
 					leer_penal();
 					refrescar();
 				}
 				break;
 			case 4:
-				if (rng->randf() < 0.003 * f_var) {
+				if (az.randf() < 0.003 * f_var) {
 					p->set(k_minuto, e.minuto);
+					az.salir();
 					ayuda->call("hit_figura", p);
+					az.entrar();
 				}
 				break;
 			default:
 				break;
 		}
 		// _penal_en_area
-		if (rng->randf() < p_penal) {
+		if (az.randf() < p_penal) {
 			p->set(k_minuto, e.minuto);
 			volcar_penal();
+			az.salir();
 			ayuda->call("hit_penal", p, club, once, es_local);
+			az.entrar();
 			leer_penal();
 			refrescar();
 			return;
 		}
-		const double xg = (0.09 + UtilityFunctions::pow(rng->randf(), 0.25) * 0.22) / k;
+		const double xg = (0.09 + UtilityFunctions::pow(az.randf(), 0.25) * 0.22) / k;
 		if (es_local) {
 			e.rem_l += 1;
 			e.xg_l += xg;
@@ -178,7 +227,7 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 			e.rem_v += 1;
 			e.xg_v += xg;
 		}
-		const double r = rng->randf();
+		const double r = az.randf();
 		if (r < conv) {
 			if (es_local) {
 				e.tp_l += 1;
@@ -186,14 +235,16 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 				e.tp_v += 1;
 			}
 			p->set(k_minuto, e.minuto);
+			az.salir();
 			p->call("_anotar", club, once, es_local);
+			az.entrar();
 			e.terminado = bool(p->get(k_term));
 			return;
 		}
 		// _elegir_goleador (sin roles: lo garantiza `_puede`)
 		Object *autor = nullptr;
 		if (!once.is_empty()) {
-			const int64_t i = elegir_ponderado(once, grupo_de, bases_gol, 0.02, "tir", PackedFloat64Array(), rng->randf(), nullptr);
+			const int64_t i = elegir_ponderado(once, grupo_de, bases_gol, 0.02, "tir", PackedFloat64Array(), az.randf(), nullptr);
 			if (i >= 0) {
 				autor = once[i];
 			}
@@ -224,53 +275,61 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 		e.minuto += 1;
 		if (e.hay_lesionados) {
 			p->set(k_minuto, e.minuto);
+			az.salir();
 			ayuda->call("atender", p);
+			az.entrar();
 			refrescar();
 		}
 		if (e.minuto == 60 && !plan_aplicado) {
 			plan_aplicado = true;
 			p->set(k_plan, true);
 			p->set(k_minuto, e.minuto);
+			az.salir();
 			p->call("_aplicar_plan");
+			az.entrar();
 			refrescar();
 		}
 		// La posesión se deduce de quién llega más (media móvil del 6 %, topes 22-78).
 		const double dominio = e.pl / maxf_gd(e.pl + e.pv, 0.0001);
 		const double empuje = ritmo0 ? 1.06 : 1.0;
 		e.posesion = CLAMP(e.posesion * 0.94 + dominio * 100.0 * empuje * 0.06, 22.0, 78.0);
-		if (rng->randf() < pc_l) {
+		if (az.randf() < pc_l) {
 			e.cor_l += 1;
 		}
-		if (rng->randf() < pc_v) {
+		if (az.randf() < pc_v) {
 			e.cor_v += 1;
 		}
-		if (rng->randf() < pf_l) {
+		if (az.randf() < pf_l) {
 			e.fal_l += 1;
 		}
-		if (rng->randf() < pf_v) {
+		if (az.randf() < pf_v) {
 			e.fal_v += 1;
 		}
-		if (rng->randf() < pfuera) {
+		if (az.randf() < pfuera) {
 			e.fue_l += 1;
 		}
-		if (rng->randf() < pfuera) {
+		if (az.randf() < pfuera) {
 			e.fue_v += 1;
 		}
-		if (rng->randf() < e.pl) {
+		if (az.randf() < e.pl) {
 			atacar(true);
 		}
-		if (rng->randf() < e.pv) {
+		if (az.randf() < e.pv) {
 			atacar(false);
 		}
 		// _incidencias
-		if (rng->randf() < p_amarilla) {
+		if (az.randf() < p_amarilla) {
 			p->set(k_minuto, e.minuto);
+			az.salir();
 			ayuda->call("hit_amarilla", p, casero);
+			az.entrar();
 			refrescar();
 		}
-		if (rng->randf() < p_lesion) {
+		if (az.randf() < p_lesion) {
 			p->set(k_minuto, e.minuto);
+			az.salir();
 			ayuda->call("hit_lesion", p);
+			az.entrar();
 			e.hay_lesionados = true;
 			refrescar();
 		}
@@ -279,6 +338,7 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 			break;
 		}
 	}
+	az.salir();
 	p->set(k_minuto, e.minuto);
 	p->set(k_rem_l, e.rem_l);
 	p->set(k_rem_v, e.rem_v);
@@ -293,4 +353,31 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 	p->set(k_fue_l, e.fue_l);
 	p->set(k_fue_v, e.fue_v);
 	p->set(k_pos, e.posesion);
+}
+
+// ¿Hace el motor lo mismo que `AzarNativo`? Siembra generadores del motor con varias semillas y compara 4000 tiradas y el estado final con las propias.
+bool DinastiaNativo::pcg_coincide() const {
+	const int64_t semillas[] = { 1, 4711, 20260912, 987654321012345LL, 0x7fffffffffffffffLL };
+	for (int64_t semilla : semillas) {
+		Ref<RandomNumberGenerator> a;
+		a.instantiate();
+		a->set_seed(semilla);
+		AzarNativo az;
+		az.rng = a;
+		az.propio = true;
+		az.entrar();
+		Ref<RandomNumberGenerator> b;
+		b.instantiate();
+		b->set_seed(semilla);
+		for (int i = 0; i < 4000; i++) {
+			if (az.randf() != b->randf()) {
+				return false;
+			}
+		}
+		az.salir();
+		if (a->get_state() != b->get_state()) {
+			return false;
+		}
+	}
+	return true;
 }
