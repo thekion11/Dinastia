@@ -135,14 +135,14 @@ func _probar_torneos_selecciones() -> void:
 	_comprobar(reales_arg >= 20, "son COPIAS de los reales (sus goles no cuentan en la liga) (%d)" % reales_arg)
 	_comprobar(SeleccionEquipo.club_de(m, "Senegal", sel.fuerza("Senegal"), m.anio).plantilla[5].nombre == sen.plantilla[5].nombre, "una selección sin liga se completa siempre igual (misma temporada)")
 	var t := SeleccionesTorneos.mundial(sel, m, 2026)
-	_comprobar(t.equipos.size() == 32 and t.grupos.size() == 8, "el Mundial: 32 selecciones en 8 grupos")
+	_comprobar(t.equipos.size() == 48 and t.grupos.size() == 12, "el Mundial de 2026: 48 selecciones en 12 grupos (%d en %d)" % [t.equipos.size(), t.grupos.size()])
 	t.jugar_entero()
 	var de_grupos := t.resultados.filter(func(r: Dictionary) -> bool: return String(r["fase"]).begins_with("Fase de grupos")).size()
-	_comprobar(de_grupos == 48 and t.resultados.size() == 48 + 15, "48 partidos de grupos y 15 de eliminatorias (%d en total)" % t.resultados.size())
+	_comprobar(de_grupos == 72 and t.resultados.size() == 72 + 31, "72 partidos de grupos y 31 de eliminatorias, desde dieciseisavos (%d en total)" % t.resultados.size())
 	var goles := 0
 	for rr: Dictionary in t.resultados:
 		goles += int(rr["gl"]) + int(rr["gv"])
-	_comprobar(goles > 63, "los partidos simulados tienen goles de verdad (%d en 63 partidos; antes todos 0-0)" % goles)
+	_comprobar(goles > 103, "los partidos simulados tienen goles de verdad (%d en 103 partidos; antes todos 0-0)" % goles)
 	_comprobar(t.campeon != null and t.puesto_de(t.campeon) == 0, "tiene campeón (%s)" % (t.campeon.nombre if t.campeon else "—"))
 	var otro := TorneoSelecciones.crear("Copa Africana", 2027, SeleccionesTorneos._equipos(sel, m, (SeleccionesTorneos.POR_CONFED["afr"] as Array).slice(0, 6), 2027))
 	otro.jugar_entero()
