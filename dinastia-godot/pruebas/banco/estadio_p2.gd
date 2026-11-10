@@ -432,6 +432,30 @@ func _probar_ocultar_estadio_dentro() -> void:
 	_comprobar(not grada.visible and not calle.visible, "planta 1 sin ventana a la vista: tampoco calle")
 	OcultarEstadioDentro.actualizar(explorador, -1, "Utilería", cam, datos)
 	_comprobar(not grada.visible and not calle.visible, "un sótano no tiene ventanas: sin calle")
+	## PLANTAS DEL EDIFICIO (sesión 7): cada planta cuelga de «Planta_p»; dentro de una planta solo se dibuja ella, en el túnel/vestuario ninguna, en el campo y viajando todas.
+	var edif := Node3D.new()
+	edif.add_to_group("edificio_club")
+	var pls: Dictionary = {}
+	for pp in [-1, 1, 2]:
+		var nd := Node3D.new()
+		nd.name = "Planta_%d" % pp
+		nd.set_meta("planta", pp)
+		edif.add_child(nd)
+		pls[pp] = nd
+	tunel.add_child(edif)
+	OcultarEstadioDentro.actualizar(explorador, 1, "Oficina del DT", cam, datos)
+	_comprobar(pls[1].visible and not pls[2].visible and not pls[-1].visible, "dentro de la planta 1 solo se dibuja la planta 1")
+	OcultarEstadioDentro.actualizar(explorador, 1, "Pasillo", cam, datos, true)
+	_comprobar(pls[1].visible and pls[2].visible and pls[-1].visible, "viajando en el ascensor se dibujan todas")
+	OcultarEstadioDentro.actualizar(explorador, 0, "Túnel", cam, datos)
+	_comprobar(not pls[1].visible and not pls[2].visible and not pls[-1].visible, "en el túnel no se dibuja ninguna planta")
+	OcultarEstadioDentro.actualizar(explorador, 0, "Campo", cam, datos)
+	_comprobar(pls[1].visible and pls[2].visible and pls[-1].visible, "en el campo vuelven todas (se ve la fachada)")
+	OcultarEstadioDentro.actualizar(explorador, 2, "Sala de prensa", cam, datos)
+	pls[2].visible = true
+	OcultarEstadioDentro.devolver(explorador)
+	_comprobar(pls[1].visible and pls[2].visible and pls[-1].visible, "al cerrar el recorrido se devuelven todas")
+	edif.queue_free()
 	OcultarEstadioDentro.devolver(explorador)
 	raiz.queue_free()
 
