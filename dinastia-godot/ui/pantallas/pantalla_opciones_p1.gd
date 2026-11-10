@@ -397,23 +397,36 @@ func _aire() -> Control:
 	c.custom_minimum_size = Vector2(0, 8)
 	return c
 
-## (10-11) «Cabecera compacta en el móvil» (`PantallaMenu.compacta`): solo aparece en lo táctil; encendida por defecto.
+## (10-11) «Cabecera compacta» de los menús (`PantallaMenu.compacta`): en lo táctil, encendida por defecto; en PC, apagada. Y los iconos
+## dibujados del riel y las cabeceras (`IconosUI`, prototipo; emoji por defecto).
 func _disp_cabecera() -> void:
-	if not EscalaMovil.es_tactil():
-		return
+	var tactil := EscalaMovil.es_tactil()
+	_fila_si_no("CabeceraCompacta", "Cabecera compacta en el móvil" if tactil else "Cabecera compacta de los menús",
+		"Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.",
+		PantallaMenu.compacta_pref if tactil else PantallaMenu.compacta_pc, func(v: bool) -> void:
+			if tactil:
+				PantallaMenu.compacta_pref = v
+			else:
+				PantallaMenu.compacta_pc = v)
+	_fila_si_no("IconosDibujados", "Iconos dibujados", "El riel y las cabeceras de los menús con iconos dibujados del mismo estilo en vez de emojis.",
+		IconosUI.dibujados, func(v: bool) -> void:
+			IconosUI.dibujados = v
+			IconosUI.aplicar_todos(p.get_tree()))
+
+func _fila_si_no(nombre: String, texto: String, ayuda: String, valor: bool, poner: Callable) -> void:
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(fila)
 	var et := p._texto(12, Principal.COL_TEXTO)
-	et.text = Idiomas.t("Cabecera compacta en el móvil")
+	et.text = Idiomas.t(texto)
 	et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	et.tooltip_text = Idiomas.t("Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.")
+	et.tooltip_text = Idiomas.t(ayuda)
 	fila.add_child(et)
 	var b := Button.new()
-	b.name = "CabeceraCompacta"
-	b.text = "SÍ" if PantallaMenu.compacta_pref else "NO"
+	b.name = nombre
+	b.text = "SÍ" if valor else "NO"
 	b.pressed.connect(func() -> void:
-		PantallaMenu.compacta_pref = not PantallaMenu.compacta_pref
+		poner.call(not valor)
 		p._guardar_preferencias()
 		p._refrescar())
 	fila.add_child(b)

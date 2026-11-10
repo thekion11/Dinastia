@@ -218,7 +218,7 @@ func boton_de(id: String) -> Button:
 
 func _boton_riel(texto: String, tip: String) -> Button:
 	var b := Button.new()
-	b.text = texto
+	IconosUI.en_boton(b, texto)   ## (10-11) el emoji, o el icono dibujado si está encendido en Ajustes
 	b.set_meta("_es_tip", tip)
 	b.tooltip_text = Idiomas.t(tip)
 	b.flat = true

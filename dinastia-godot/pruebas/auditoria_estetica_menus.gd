@@ -1,7 +1,7 @@
 extends Node
 ## LA COHERENCIA DE LOS MENÚS PRINCIPALES (10-11-2026, PRIORITARIO 1 del plan: «estética y diseño de los menús, falta pulir»; referencia: los
 ## menús de PES 2020 / eFootball). En PC (1600×900) mide, en inicio, plantel, táctica, mercado, competiciones y club, con 2 clubes de países distintos:
-##  · ESCALA TIPOGRÁFICA: tamaños de letra distintos en el contenido (sin contar los títulos héroe ≥ `Tema.TAM_TITULO`): como mucho `MAX_TAMANOS`;
+##  · ESCALA TIPOGRÁFICA: tamaños de letra distintos en el contenido (sin contar los títulos, ≥ 18 px, como en `EscalaTipografica`): como mucho `MAX_TAMANOS`;
 ##  · REJILLA: el contenido de todas las pantallas de menú empieza en el mismo x y deja el mismo margen a la derecha;
 ##  · ESTADOS: todo lo que se pulsa tiene un estilo de foco que se ve (no vacío) y uno de pulsado;
 ##  · ESCUDOS Y CARAS: los de las filas de plantel y competiciones miden al menos `MIN_IMAGEN` px.
@@ -33,6 +33,16 @@ func _ready() -> void:
 	add_child(_p)
 	for i in 60:
 		await get_tree().process_frame
+	## el prototipo de los iconos dibujados y la cabecera compacta en PC (las preferencias guardadas los pisan al cargar: se ponen después)
+	IconosUI.dibujados = OS.get_environment("ICONOS") == "1"
+	IconosUI.aplicar_todos(get_tree())
+	PantallaMenu.compacta_pc = OS.get_environment("COMPACTA_PC") == "1"
+	if IconosUI.dibujados:
+		var sin: Array = []
+		for e: String in IconosUI.DE_EMOJI:
+			if IconosUI.textura(e, 26) == null:
+				sin.append(e)
+		_comprobar(sin.is_empty(), "los %d iconos dibujados se rasterizan (%s sin dibujo)" % [IconosUI.DE_EMOJI.size(), str(sin)])
 	var m: Mundo = _p.mundo
 	var clubes: Array = [m.mi_club()]
 	for l: Liga in m.ligas:
@@ -65,6 +75,8 @@ func _ready() -> void:
 		if f != null:
 			f.store_buffer(_prefs_antes)
 			f.close()
+	IconosUI.dibujados = false
+	PantallaMenu.compacta_pc = false
 	get_tree().quit(0 if _fallos == 0 else 1)
 
 func _cerrar() -> void:
@@ -119,7 +131,7 @@ func _medir(et: String, raiz: Control) -> void:
 		var txt := String(t).strip_edges() if t != null else ""
 		if txt != "" and (c is Label or c is Button) and _tiene_letras(txt) and not (c is Label and txt.length() <= 3 and txt == txt.to_upper()):   ## sin las iniciales de los escudos
 			var tam := c.get_theme_font_size("font_size")
-			if tam < Tema.TAM_TITULO:
+			if tam < 18:   ## el mismo corte que `EscalaTipografica.nivel`: de 18 para arriba son títulos (también el de la cabecera compacta)
 				tamanos[tam] = int(tamanos.get(tam, 0)) + 1
 				if OS.get_environment("DEPURA") != "" and tam <= int(OS.get_environment("DEPURA")):
 					print("    DEPURA %d «%s» %s" % [tam, txt.left(30), c.get_parent().get_parent().name])
@@ -130,7 +142,7 @@ func _medir(et: String, raiz: Control) -> void:
 				sin_foco.append("%s «%s»" % [c.get_class(), txt.left(14)])
 		## escudos y caras: imágenes casi cuadradas (la fila puede estirarlas un poco en alto); cuenta el lado menor, que es lo que se ve
 		var lado := minf(c.size.x, c.size.y)
-		if c is TextureRect and (c as TextureRect).texture != null and lado >= 12.0 and lado <= 140.0 and maxf(c.size.x, c.size.y) <= lado * 1.4:
+		if c is TextureRect and not c.has_meta("icono_ui") and (c as TextureRect).texture != null and lado >= 12.0 and lado <= 140.0 and maxf(c.size.x, c.size.y) <= lado * 1.4:
 			imagenes.append(lado)
 	var lista := tamanos.keys()
 	lista.sort()

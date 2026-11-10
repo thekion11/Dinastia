@@ -56,8 +56,20 @@ título) y caras de 30 px en las filas. Los únicos 12 px que quedan son los nom
 quepan. Siguen en verde el banco, la gestión en el móvil, la navegación con mando, `mem_menu_estadio` (el menú no nombra las clases del
 partido: se reconocen por la ruta del script) y las 54 pruebas de interfaz y móvil.
 
+## Prototipo para que elija el dueño: iconos dibujados y cabecera compacta en PC
+- **`IconosUI`:** 16 iconos propios del mismo estilo para el riel lateral y la cabecera de los menús.
+  - Los 16: menú, estadio, caminar, plantel, partido, dinero, trofeo, historia, gente, carrera, operaciones, vida, editar, reglas,
+    ajustes, ciudad.
+  - Estilo: trazo de 1,8 sobre rejilla de 24, puntas redondeadas y sin relleno, como los de eFootball.
+  - El SVG va en el código y se rasteriza al tamaño justo, con caché.
+  - Dibujados para Dinastía: sin licencias de terceros, anotado en `LICENCIAS.md`.
+- **Ajustes → Pantalla:**
+  - «Iconos dibujados»: apagado por defecto (emoji); al cambiarlo, el riel cambia al momento.
+  - «Cabecera compacta de los menús» en PC: apagada por defecto; en el móvil sigue la suya, encendida.
+  - Las dos se guardan en las preferencias (`pantalla/iconos_dibujados`, `pantalla/cabecera_compacta_pc`).
+- **Prueba:** `auditoria_estetica_menus` con `ICONOS=1 COMPACTA_PC=1` comprueba que se rasterizan los 16 y repite todas las
+  comprobaciones con el prototipo encendido.
+
 ## Pendiente (propuestas, piden el visto bueno del dueño)
-- Iconos: el riel y las tarjetas mezclan emojis de distintos estilos. Unificarlos pide un juego de iconos propio (SVG de un solo trazo,
-  como los de eFootball), que es trabajo de arte.
-- La cabecera de los menús en PC sigue siendo la grande (título de 36 px). PES la tiene más baja; se podría usar la compacta también en
-  PC si el dueño lo prefiere: ya existe y se enciende con un interruptor.
+- ¿Iconos dibujados por defecto? Si el dueño los quiere, faltan los del cajón y las tarjetas de portada (hoy siguen con emoji).
+- ¿Cabecera compacta también por defecto en PC?
