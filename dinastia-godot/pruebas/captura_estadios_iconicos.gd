@@ -60,7 +60,14 @@ func _uno(i: int, nombre: String) -> void:
 	vista.abrir(c, 0.85, rival, partido)
 	await _esperar(12.0)
 	var est := c.perfil_estadio()
-	var llamadas := RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+	## Mediana de 30 fotogramas: un fotograma suelto puede pillar un pico (sombras que se rehacen, carga) y dar el triple.
+	var muestras: Array[int] = []
+	for _f in 30:
+		await get_tree().process_frame
+		muestras.append(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
+	muestras.sort()
+	var llamadas := muestras[15]
+	print("   llamadas min/mediana/max: %d / %d / %d" % [muestras[0], llamadas, muestras[29]])
 	print("ESTADIO %d %s (%s) %s %d %s · %d llamadas · piezas: arco=%s torres=%s costillas=%s techo_lados=%s" % [i, nombre, c.pais,
 		est.get("forma"), int(est.get("niveles", 0)), est.get("techo"), llamadas, est.has("arco"), est.get("torres_rampa", 0), est.get("costillas", 0), est.has("bandejas")] + ("  curva=%s colchon=%s" % [est.has("fachada_curva"), est.has("colchon")]))
 	get_viewport().get_texture().get_image().save_jpg("%s/%02d_%s_partido.jpg" % [_dir, i, c.pais], 0.88)
