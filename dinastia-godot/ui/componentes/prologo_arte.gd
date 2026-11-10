@@ -14,6 +14,27 @@ static func dibujar(ci: CanvasItem, escena: String, w: float, h: float, c1: Colo
 		"despacho": _despacho(ci, w, h, c1, c2, t, club)
 		"oficina": _oficina(ci, w, h, c1, c2, t, club)
 
+## LO QUE SE MUEVE, encima de la ilustración fija (que se pinta UNA vez por plano en una textura: medido el 10-11, dibujar el público en cada
+## cuadro costaba ~1.380 llamadas de dibujo). Aquí solo van unas pocas figuras: flashes de la grada, el equipo que camina por el túnel y el cursor del PC.
+static func dibujar_vivo(ci: CanvasItem, escena: String, w: float, h: float, t: float) -> void:
+	match escena:
+		"estadio":
+			for k in 8:
+				var fase := fmod(t * 1.3 + k * 0.37, 1.0)
+				if fase < 0.08:
+					ci.draw_circle(Vector2(fmod(k * 389.0 + t * 31.0, w), h * (0.24 + 0.1 * (k % 3))), 5.0, Color(1, 1, 1, 0.9))
+		"tunel":   ## el equipo camina hacia la luz (siluetas a contraluz)
+			var boca := Rect2(w * 0.42, h * 0.3, w * 0.16, h * 0.3)
+			for k in 4:
+				var avance := fmod(t * 0.06 + k * 0.22, 1.0)
+				var y := lerpf(h * 1.05, boca.end.y, avance)
+				var alto := lerpf(h * 0.55, boca.size.y * 0.55, avance)
+				var x := w * 0.5 + (float(k % 2) - 0.5) * lerpf(w * 0.25, boca.size.x * 0.5, avance)
+				_figura(ci, Vector2(x, y), alto, Color(0.04, 0.05, 0.06))
+		"oficina":
+			var m := Rect2(w * 0.3, h * 0.3, w * 0.4, h * 0.3)
+			ci.draw_rect(Rect2(m.position.x + m.size.x * 0.56, m.position.y + m.size.y * 0.84, 3, m.size.y * 0.07), Color(1, 1, 1, 0.5 + 0.5 * sin(t * 4.0)))
+
 # ----------------------------------------------------------------- ayudantes
 
 static func _cuad(ci: CanvasItem, a: Vector2, b: Vector2, c: Vector2, d: Vector2, ca: Color, cd: Color = Color(0, 0, 0, -1)) -> void:
@@ -105,10 +126,6 @@ static func _estadio(ci: CanvasItem, w: float, h: float, c1: Color, c2: Color, t
 		ci.draw_rect(Rect2(w * fx - 40, h * 0.02, 80, 28), Color(1, 0.97, 0.86))
 		for r in 4:
 			ci.draw_circle(Vector2(w * fx, h * 0.035), 40.0 + r * 34.0, Color(1, 0.95, 0.8, 0.07))
-	for k in 8:
-		var fase := fmod(t * 1.3 + k * 0.37, 1.0)
-		if fase < 0.08:
-			ci.draw_circle(Vector2(fmod(k * 389.0 + t * 31.0, w), h * (0.24 + 0.1 * (k % 3))), 5.0, Color(1, 1, 1, 0.9))
 	_escudo(ci, club, Rect2(w * 0.5 - h * 0.13, h * 0.3, h * 0.26, h * 0.26))
 
 static func _vestuario(ci: CanvasItem, w: float, h: float, c1: Color, c2: Color, t: float, club: Club) -> void:
@@ -153,13 +170,6 @@ static func _tunel(ci: CanvasItem, w: float, h: float, c1: Color, c2: Color, t: 
 	for izq: bool in [true, false]:
 		ci.draw_line(_en_pared(w, h, f, izq, 0.0, 0.55), _en_pared(w, h, f, izq, 1.0, 0.55), c1, 14.0)
 		ci.draw_line(_en_pared(w, h, f, izq, 0.0, 0.6), _en_pared(w, h, f, izq, 1.0, 0.6), c2, 6.0)
-	## El equipo camina hacia la luz (siluetas a contraluz).
-	for k in 4:
-		var avance := fmod(t * 0.06 + k * 0.22, 1.0)
-		var y := lerpf(h * 1.05, boca.end.y, avance)
-		var alto := lerpf(h * 0.55, boca.size.y * 0.55, avance)
-		var x := w * 0.5 + (float(k % 2) - 0.5) * lerpf(w * 0.25, boca.size.x * 0.5, avance)
-		_figura(ci, Vector2(x, y), alto, Color(0.04, 0.05, 0.06))
 
 static func _banquillo(ci: CanvasItem, w: float, h: float, c1: Color, c2: Color, t: float) -> void:
 	_cuad(ci, Vector2(0, 0), Vector2(w, 0), Vector2(w, h * 0.32), Vector2(0, h * 0.32), Color(0.12, 0.12, 0.16), Color(0.2, 0.2, 0.25))
@@ -237,8 +247,6 @@ static func _oficina(ci: CanvasItem, w: float, h: float, c1: Color, c2: Color, t
 		ci.draw_rect(Rect2(m.end.x - m.size.x * 0.4, y, m.size.x * 0.03, m.size.y * 0.07), Tema.ORO if k == 0 else Color(1, 1, 1, 0.3))
 	ci.draw_rect(Rect2(m.position.x + m.size.x * 0.04, m.position.y + m.size.y * 0.2, m.size.x * 0.5, m.size.y * 0.5), c2.lerp(c1, 0.6).darkened(0.3))
 	ci.draw_rect(Rect2(m.position.x + m.size.x * 0.04, m.position.y + m.size.y * 0.74, m.size.x * 0.5, m.size.y * 0.06), Tema.ORO)
-	var cursor := 0.5 + 0.5 * sin(t * 4.0)
-	ci.draw_rect(Rect2(m.position.x + m.size.x * 0.56, m.position.y + m.size.y * 0.84, 3, m.size.y * 0.07), Color(1, 1, 1, cursor))
 	for r in 4:
 		ci.draw_rect(m.grow(14.0 + r * 16.0), Color(0.5, 0.9, 0.6, 0.03), false, 16.0)
 	## La mesa, el teclado, la lámpara encendida, la taza y la planta.

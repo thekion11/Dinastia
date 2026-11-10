@@ -20,6 +20,10 @@ var _i := -1
 var _t := 0.0
 var _vivo := 0.0
 var _escena: Control
+## (10-11, medido) La ilustración FIJA se pinta en una TEXTURA (`_vp`) una vez por plano (y si cambia el tamaño); lo que se mueve va encima
+## (`PrologoArte.dibujar_vivo`). Dibujarla en cada cuadro costaba ~1.380 llamadas de dibujo (el público son miles de puntos).
+var _vp: SubViewport
+var _lienzo: Control
 var _titulo: Label
 var _texto: Label
 var _segmentos: Array[Button] = []
@@ -39,6 +43,21 @@ func _armar(pr: Principal) -> void:
 	_escena.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_escena.draw.connect(_dibujar)
 	_raiz.add_child(_escena)
+	_vp = SubViewport.new()
+	_vp.disable_3d = true
+	_vp.transparent_bg = false
+	_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	_escena.add_child(_vp)
+	_lienzo = Control.new()
+	_lienzo.draw.connect(_dibujar_arte)
+	_vp.add_child(_lienzo)
+	var tr := TextureRect.new()
+	tr.texture = _vp.get_texture()
+	tr.set_anchors_preset(Control.PRESET_FULL_RECT)
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.show_behind_parent = true
+	_escena.add_child(tr)
 	## La barra de fases de arriba: un tramo por plano; tocarlo salta a ese plano.
 	var barra := HBoxContainer.new()
 	barra.set_anchors_preset(Control.PRESET_TOP_WIDE)
@@ -98,6 +117,7 @@ func _ir(k: int) -> void:
 			_segmentos[n].add_theme_stylebox_override(estado, sb)
 	_escena.scale = Vector2.ONE
 	_escena.queue_redraw()
+	_repintar_arte()
 
 func _process(delta: float) -> void:
 	if _acabado or _i < 0:
@@ -107,7 +127,9 @@ func _process(delta: float) -> void:
 	_texto.visible_ratio = clampf(_t / 3.4, 0.0, 1.0)
 	## El lento acercamiento de la escena (desde el centro de la pantalla).
 	_escena.pivot_offset = _escena.size * 0.5
-	_escena.queue_redraw()   ## el haz de luz y el polvo se mueven
+	_escena.queue_redraw()   ## el haz de luz y el polvo se mueven (pocas llamadas)
+	if _vp != null and _vp.size != Vector2i(maxi(int(_escena.size.x), 64), maxi(int(_escena.size.y), 64)):
+		_repintar_arte()   ## cambió el tamaño de la ventana
 	var z := 1.0 + 0.07 * clampf(_t / SEG_POR_PLANO, 0.0, 1.0)
 	_escena.scale = Vector2(z, z)
 	if _t >= SEG_POR_PLANO:
@@ -134,19 +156,37 @@ func _terminar() -> void:
 
 # ---------------------------------------------------------------- las escenas
 
-func _dibujar() -> void:
-	if _i < 0 or _escena == null:
+## Repinta la ilustración en la textura (al cambiar de plano y unas pocas veces por segundo).
+func _repintar_arte() -> void:
+	if _vp == null or _escena == null:
 		return
-	var w := _escena.size.x
-	var h := _escena.size.y
+	var tam := Vector2i(maxi(int(_escena.size.x), 64), maxi(int(_escena.size.y), 64))
+	if _vp.size != tam:
+		_vp.size = tam
+	_lienzo.size = Vector2(tam)
+	_lienzo.queue_redraw()
+	_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+
+func _dibujar_arte() -> void:
+	if _i < 0 or _lienzo == null:
+		return
+	var w := _lienzo.size.x
+	var h := _lienzo.size.y
 	var c1 := Color(_club.color1) if _club != null else Tema.ACENTO
 	var c2 := Color(_club.color2) if _club != null else Tema.ORO
 	var oscuro := Color(0.03, 0.06, 0.04)
 	## El fondo: un degradado vertical (arriba oscuro, abajo con un toque dorado y del color del club), no un color plano.
 	var arriba := c1.lerp(oscuro, 0.9)
 	var abajo := c1.lerp(Tema.ORO, 0.16).lerp(oscuro, 0.72)
-	_escena.draw_polygon(PackedVector2Array([Vector2(0, 0), Vector2(w, 0), Vector2(w, h), Vector2(0, h)]), PackedColorArray([arriba, arriba, abajo, abajo]))
-	PrologoArte.dibujar(_escena, String(PLANOS[_i]["escena"]), w, h, c1, c2, _vivo, _club)   ## (10-11) el arte final de cada plano
+	_lienzo.draw_polygon(PackedVector2Array([Vector2(0, 0), Vector2(w, 0), Vector2(w, h), Vector2(0, h)]), PackedColorArray([arriba, arriba, abajo, abajo]))
+	PrologoArte.dibujar(_lienzo, String(PLANOS[_i]["escena"]), w, h, c1, c2, _vivo, _club)   ## (10-11) el arte final de cada plano
+
+func _dibujar() -> void:
+	if _i < 0 or _escena == null:
+		return
+	var w := _escena.size.x
+	var h := _escena.size.y
+	PrologoArte.dibujar_vivo(_escena, String(PLANOS[_i]["escena"]), w, h, _vivo)
 	## Un haz de luz que cruza despacio y motas de polvo en el aire: la escena respira aunque sea fija.
 	var bx := fmod(_vivo * 70.0, w * 1.4) - w * 0.2
 	_escena.draw_polygon(PackedVector2Array([Vector2(bx, 0), Vector2(bx + 150, 0), Vector2(bx + 150 - h * 0.3, h * 0.7), Vector2(bx - h * 0.3, h * 0.7)]),

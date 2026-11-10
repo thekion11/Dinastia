@@ -8,12 +8,11 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 > Trabaja en español, en la rama asignada, sin PR salvo orden. Lee `CLAUDE.md` y `docs/PLAN_GENERAL.md` (secciones PRIORITARIO, DECISIONES PENDIENTES y PULIDO). Antes de subir a main: banco en «FIN. 0 fallos» y líneas OK. Sin nombres de modelo en commits ni archivos. No subir .mp4 al repo.
 >
 > Pendiente, en este orden:
-> 1. **PRÓLOGO — IDEA a medir:** prólogo como vídeo ya hecho que el juego proyecta, para ver si suben los FPS (fuera del repo; medir antes y después). El arte final, el sonido y el texto ya están (ver PULIDO).
-> 2. **CASA DEL PERSONAJE** sin ciudad.
-> 3. **AVANCE DE FECHA** con eventos y varias semanas (estilo PES).
-> 4. **REESTRUCTURACIÓN «SOLO CLUB»** (paso 2): reparar el club (muebles, colisiones, parpadeo del suelo del despacho). Paso 3: medir sin ciudad con `herramientas/hw_modesto.sh`. Paso 4: decidir C/C++ solo con medidas.
-> 5. Revisar en el edificio real que las camisetas retiradas se ven en las plantas altas.
-> 6. **ESTÉTICA** (rama `ccr-da27fb86-i59x88`, fusión pendiente de la orden del dueño): profundidad de cabeceras, portadas, Ajustes y botones.
+> 1. **CASA DEL PERSONAJE** sin ciudad.
+> 2. **AVANCE DE FECHA** con eventos y varias semanas (estilo PES).
+> 3. **REESTRUCTURACIÓN «SOLO CLUB»** (paso 2): reparar el club (muebles, colisiones, parpadeo del suelo del despacho). Paso 3: medir sin ciudad con `herramientas/hw_modesto.sh`. Paso 4: decidir C/C++ solo con medidas.
+> 4. Revisar en el edificio real que las camisetas retiradas se ven en las plantas altas.
+> 5. **ESTÉTICA** (rama `ccr-da27fb86-i59x88`, fusión pendiente de la orden del dueño): profundidad de cabeceras, portadas, Ajustes y botones.
 >
 > **DECISIONES DEL DUEÑO (no implementar sin respuesta):** (a) torneos de selecciones (Mundial, Eurocopa, Copa América): ¿se juegan o son solo calendario? (b) sacar los tres .mp4 de `marca/` del repo.
 >
@@ -58,10 +57,10 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 1. **CASA DEL PERSONAJE SIN CIUDAD.** Hoy la casa caminable vive en el mundo 3D de la ciudad (`CasaEscena3D`, `ui/casa_escena3d.gd`; menú Vida → «Ver tu casa»).
 2. **AVANCE DE FECHA con eventos y varias semanas** (estilo PES 2020). Hecho: botón «Hito» y fila «PRÓXIMOS» con los escudos de los 5 siguientes partidos. FALTA: eventos en esa fila (mercado, copa, continental, fin de temporada) y varias semanas.
 
-3. **IDEA (por evaluar): el prólogo como VÍDEO ya hecho que el juego proyecta**, en lugar de la animación dibujada por el motor (`PrologoAnimado`), para ver si así mejoran los FPS. Antes de decidir hay que MEDIR los FPS (y llamadas de dibujo, RAM) con la animación actual y con el vídeo (`herramientas/hw_modesto.sh`). Reglas: la regla del proyecto NO permite `.mp4` (ni `.avi`) en el repositorio, así que el vídeo tendría que vivir FUERA del repo (junto al ejecutable o en `user://`, como `caras_reales.pck`; o descargarse aparte) y el juego caer a la animación del motor si no lo encuentra; además Godot reproduce `.ogv` (Theora) de forma nativa, no `.mp4` (el formato se decide con la medición). Hoy ningún código del juego reproduce vídeo y ya hay 3 `.mp4` rastreados en `marca/` (pendiente de decisión del dueño).
-4. **ESTÉTICA Y DISEÑO DE MENÚS Y DISTRIBUCIÓN — FALTA PULIR.** **FALTA PULIR EN TODOS LOS BLOQUES hechos** (cada uno se afina después). Hecho y en main (9-11): márgenes de las columnas del menú central, fila «PRÓXIMOS» en tarjetas, portadas del riel con rejilla dinámica, letra base del Tema y de los botones, diálogo «Capítulos», Ligas y clubes con escudos, aire en Estadio, aviso del partido de despedida (escudo de las Leyendas con 5 diseños y once titular con busto 3D) y foco visible en los botones de evento.
+3. **ESTÉTICA Y DISEÑO DE MENÚS Y DISTRIBUCIÓN — FALTA PULIR.** **FALTA PULIR EN TODOS LOS BLOQUES hechos** (cada uno se afina después). Hecho y en main (9-11): márgenes de las columnas del menú central, fila «PRÓXIMOS» en tarjetas, portadas del riel con rejilla dinámica, letra base del Tema y de los botones, diálogo «Capítulos», Ligas y clubes con escudos, aire en Estadio, aviso del partido de despedida (escudo de las Leyendas con 5 diseños y once titular con busto 3D) y foco visible en los botones de evento.
 
 ## DECISIONES PENDIENTES DEL DUEÑO (no se implementa hasta que conteste)
+- **PRÓLOGO: ¿VÍDEO O ANIMACIÓN DEL MOTOR?** MEDIDO el 10-11 (`pruebas/medir_prologo_video.tscn`, 1280x720, llvmpipe; el vídeo de prueba .ogv —Theora, lo que Godot reproduce; el .mp4 no— se hizo con ffmpeg desde las capturas y NO está en el repo). Animación del motor tras optimizarla (la ilustración fija se pinta una vez por plano en una textura; antes ~1.377 llamadas de dibujo y ~88.000 primitivas por cuadro): **~43 llamadas, ~3.000 primitivas, 438 MB**. Vídeo: 1 llamada, 2 primitivas, 451 MB (+9-13 MB) y **16 MB de archivo** fuera del repo, más el coste de decodificar en la CPU (en software no se pudo separar del resto). **Recomendación de la sesión: quedarse con la animación** (ya es barata, pesa 0 bytes, se adapta a la pantalla y a los colores del club; el vídeo no se ve con el club propio). Medir en el teléfono para cerrar.
 - **TORNEOS DE SELECCIONES** (Mundial, Eurocopa, Copa América; hoy solo fechas informativas en `nucleo/calendario.gd`, y `Selecciones.cierre_de_temporada`): **¿se JUEGAN (con tu plantel, convocados que se van con sus selecciones) o son SOLO CALENDARIO?** Anotado el 9-11 por orden del dueño; sin respuesta no se toca.
 - **Los 3 `.mp4` de `marca/`** (`marca/nexus-digital-intro.mp4`, `marca/referencia/ea_fc25_referencia.mp4`, `marca/referencia/ejemplo-partido.mp4`, en LFS): el juego no los carga y la regla del proyecto dice «.mp4 nunca al repo»; ¿se sacan del repo?
 
