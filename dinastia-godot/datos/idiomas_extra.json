@@ -7877,7 +7877,11 @@
   "Por defecto": "Default",
   "Mundo entero": "Whole world",
   "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d countries · %d clubs · ≈ %.1f s per week · ≈ %.1f GB of memory",
-  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Too much content for this device: the game will run slower and may close for lack of memory."
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Too much content for this device: the game will run slower and may close for lack of memory.",
+  "LIGAS DE LA PARTIDA": "LEAGUES IN THIS GAME",
+  "%d países cargados · %d por añadir": "%d countries loaded · %d to add",
+  "Añadir ligas": "Add leagues",
+  "Con la temporada en marcha no se pueden añadir: las copas y los torneos continentales se volverían a sortear. Se ofrece al cerrar la temporada.": "They can't be added once the season has started: the cups and continental tournaments would be redrawn. You'll be offered this when the season ends."
  },
  "pt": {
   "Historia": "História",
@@ -15757,7 +15761,11 @@
   "Por defecto": "Predefinição",
   "Mundo entero": "Mundo inteiro",
   "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memória",
-  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Conteúdo a mais para este dispositivo: o jogo ficará mais lento e pode fechar por falta de memória."
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Conteúdo a mais para este dispositivo: o jogo ficará mais lento e pode fechar por falta de memória.",
+  "LIGAS DE LA PARTIDA": "LIGAS DA PARTIDA",
+  "%d países cargados · %d por añadir": "%d países carregados · %d por adicionar",
+  "Añadir ligas": "Adicionar ligas",
+  "Con la temporada en marcha no se pueden añadir: las copas y los torneos continentales se volverían a sortear. Se ofrece al cerrar la temporada.": "Com a temporada em andamento não se podem adicionar: as taças e os torneios continentais seriam sorteados de novo. É oferecido ao fechar a temporada."
  },
  "patrones": [
   [
@@ -29744,7 +29752,11 @@
   "Por defecto": "Par défaut",
   "Mundo entero": "Monde entier",
   "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d pays · %d clubs · ≈ %.1f s par semaine · ≈ %.1f Go de mémoire",
-  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Trop de contenu pour cet appareil : la partie sera plus lente et peut se fermer faute de mémoire."
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Trop de contenu pour cet appareil : la partie sera plus lente et peut se fermer faute de mémoire.",
+  "LIGAS DE LA PARTIDA": "LIGUES DE LA PARTIE",
+  "%d países cargados · %d por añadir": "%d pays chargés · %d à ajouter",
+  "Añadir ligas": "Ajouter des ligues",
+  "Con la temporada en marcha no se pueden añadir: las copas y los torneos continentales se volverían a sortear. Se ofrece al cerrar la temporada.": "Impossible d'en ajouter en cours de saison : les coupes et les compétitions continentales seraient retirées au sort. C'est proposé à la fin de la saison."
  },
  "it": {
   "Historia": "Storia",
@@ -37624,7 +37636,11 @@
   "Por defecto": "Predefinito",
   "Mundo entero": "Mondo intero",
   "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d paesi · %d club · ≈ %.1f s a settimana · ≈ %.1f GB di memoria",
-  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Troppi contenuti per questo dispositivo: la partita sarà più lenta e potrebbe chiudersi per mancanza di memoria."
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Troppi contenuti per questo dispositivo: la partita sarà più lenta e potrebbe chiudersi per mancanza di memoria.",
+  "LIGAS DE LA PARTIDA": "CAMPIONATI DELLA PARTITA",
+  "%d países cargados · %d por añadir": "%d paesi caricati · %d da aggiungere",
+  "Añadir ligas": "Aggiungi campionati",
+  "Con la temporada en marcha no se pueden añadir: las copas y los torneos continentales se volverían a sortear. Se ofrece al cerrar la temporada.": "A stagione in corso non si possono aggiungere: coppe e tornei continentali verrebbero sorteggiati di nuovo. Viene proposto a fine stagione."
  },
  "de": {
   "Historia": "Geschichte",
@@ -45504,7 +45520,11 @@
   "Por defecto": "Standard",
   "Mundo entero": "Ganze Welt",
   "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d Länder · %d Vereine · ≈ %.1f s pro Woche · ≈ %.1f GB Speicher",
-  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Zu viel Inhalt für dieses Gerät: Das Spiel läuft langsamer und kann wegen Speichermangels beendet werden."
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Zu viel Inhalt für dieses Gerät: Das Spiel läuft langsamer und kann wegen Speichermangels beendet werden.",
+  "LIGAS DE LA PARTIDA": "LIGEN DIESES SPIELSTANDS",
+  "%d países cargados · %d por añadir": "%d Länder geladen · %d hinzufügbar",
+  "Añadir ligas": "Ligen hinzufügen",
+  "Con la temporada en marcha no se pueden añadir: las copas y los torneos continentales se volverían a sortear. Se ofrece al cerrar la temporada.": "Während der laufenden Saison geht das nicht: Pokale und Kontinentalwettbewerbe würden neu ausgelost. Es wird am Saisonende angeboten."
  },
  "ca": {
   "Historia": "Història",
@@ -53384,7 +53404,11 @@
   "Por defecto": "Per defecte",
   "Mundo entero": "Món sencer",
   "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d països · %d clubs · ≈ %.1f s per setmana · ≈ %.1f GB de memòria",
-  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Massa contingut per a aquest dispositiu: la partida anirà més lenta i pot tancar-se per manca de memòria."
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Massa contingut per a aquest dispositiu: la partida anirà més lenta i pot tancar-se per manca de memòria.",
+  "LIGAS DE LA PARTIDA": "LLIGUES DE LA PARTIDA",
+  "%d países cargados · %d por añadir": "%d països carregats · %d per afegir",
+  "Añadir ligas": "Afegir lligues",
+  "Con la temporada en marcha no se pueden añadir: las copas y los torneos continentales se volverían a sortear. Se ofrece al cerrar la temporada.": "Amb la temporada en marxa no se'n poden afegir: les copes i els tornejos continentals es tornarien a sortejar. S'ofereix en tancar la temporada."
  },
  "pl": {
   "Club": "Klub",
@@ -61264,7 +61288,11 @@
   "Por defecto": "Domyślnie",
   "Mundo entero": "Cały świat",
   "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d krajów · %d klubów · ≈ %.1f s na tydzień · ≈ %.1f GB pamięci",
-  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Za dużo zawartości jak na to urządzenie: gra będzie wolniejsza i może się zamknąć z braku pamięci."
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Za dużo zawartości jak na to urządzenie: gra będzie wolniejsza i może się zamknąć z braku pamięci.",
+  "LIGAS DE LA PARTIDA": "LIGI W TEJ ROZGRYWCE",
+  "%d países cargados · %d por añadir": "%d krajów wczytanych · %d do dodania",
+  "Añadir ligas": "Dodaj ligi",
+  "Con la temporada en marcha no se pueden añadir: las copas y los torneos continentales se volverían a sortear. Se ofrece al cerrar la temporada.": "W trakcie sezonu nie można ich dodać: puchary i turnieje kontynentalne zostałyby rozlosowane od nowa. Będzie to zaproponowane na koniec sezonu."
  },
  "tr": {
   "Club": "Kulüp",
@@ -69144,6 +69172,10 @@
   "Por defecto": "Varsayılan",
   "Mundo entero": "Tüm dünya",
   "%d países · %d clubes · ≈ %.1f s por semana · ≈ %.1f GB de memoria": "%d ülke · %d kulüp · ≈ %.1f sn/hafta · ≈ %.1f GB bellek",
-  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Bu cihaz için fazla içerik: oyun yavaşlar ve bellek yetersizliğinden kapanabilir."
+  "⚠ Mucho contenido para este dispositivo: la partida irá más lenta y puede cerrarse por falta de memoria.": "⚠ Bu cihaz için fazla içerik: oyun yavaşlar ve bellek yetersizliğinden kapanabilir.",
+  "LIGAS DE LA PARTIDA": "BU OYUNDAKİ LİGLER",
+  "%d países cargados · %d por añadir": "%d ülke yüklü · %d eklenebilir",
+  "Añadir ligas": "Lig ekle",
+  "Con la temporada en marcha no se pueden añadir: las copas y los torneos continentales se volverían a sortear. Se ofrece al cerrar la temporada.": "Sezon başladıktan sonra eklenemez: kupalar ve kıta turnuvaları yeniden çekilirdi. Sezon sonunda önerilir."
  }
 }
