@@ -9,6 +9,7 @@ Boluspor||mitad||||||
 Braunschweig||banda||||||
 Bristol City||banda||||||
 CRB||franjas||||||
+CSKA Sofia||banda||||||
 Carrarese||franjas||||||
 Ceuta||banda||||||
 Chaves||banda||||||
@@ -28,6 +29,7 @@ Ferro||banda||||||
 Fiorentina||banda||||||
 Frosinone||mitad||||||
 Fürth||banda||||||
+Gent||banda||||||
 Goiás||banda||||||
 Granada||mitad||||||
 Grasshoppers||franjas||||||
@@ -100,7 +102,7 @@ Silkeborg||mitad||||||
 Sion||tablero||||||
 Sivasspor||banda_h||||||
 Southampton||mitad||||||
-Spartak Subotica||banda||||||
+Spartak Subotica||liso||||||
 Spezia||franjas||||||
 Sport||banda||||||
 Sporting CP B||franjas||||||

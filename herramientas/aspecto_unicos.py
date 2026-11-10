@@ -42,22 +42,22 @@ def main() -> int:
                 previos[c[0]] = c[2]
     clubes = []
     for b, r in zip(base, real):
-        _, forma, patron, c1, c2, simbolo, ini, _ = b
-        clubes.append({"real": r[7], "forma": forma, "patron": patron, "c1": c1, "c2": c2, "simbolo": simbolo, "ini": ini})
-    firma = lambda c, p=None: (c["forma"], p or c["patron"], c["c1"], c["c2"], c["simbolo"], c["ini"])
-    usadas = {}
+        clubes.append({"real": r[7], "forma": b[1], "patron": b[2], "c1": b[3], "c2": b[4], "sb": (b[5], b[6]), "sr": (r[5], r[6])})
+    ## La firma tiene que ser única en la base pública (nombres ficticios) Y en el pack real (M-062 corre con el pack): mismas partes, distintas iniciales.
+    firma = lambda c, modo, p=None: (c["forma"], p or c["patron"], c["c1"], c["c2"]) + c[modo]
+    usadas = {"sb": {}, "sr": {}}
     cambios = dict(previos)
     for c in sorted(clubes, key=lambda c: (c["real"] in mutables, c["real"])):
-        f = firma(c)
-        if f in usadas:
+        if any(firma(c, m) in usadas[m] for m in usadas):
             for p in PATRONES:
-                if p != c["patron"] and firma(c, p) not in usadas:
+                if p != c["patron"] and all(firma(c, m, p) not in usadas[m] for m in usadas):
                     cambios[c["real"]] = p
-                    f = firma(c, p)
+                    c["patron"] = p
                     break
             else:
                 print("sin patrón libre para", c["real"])
-        usadas[f] = c["real"]
+        for m in usadas:
+            usadas[m][firma(c, m)] = c["real"]
     nuevos = len(cambios) - len(previos)
     with open(DESTINO, "w", encoding="utf-8", newline="\n") as fh:
         fh.write("# Generado por herramientas/aspecto_unicos.sh (no editar a mano): patrón distinto para que ningún escudo se repita (M-062).\n")
