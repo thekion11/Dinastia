@@ -38,6 +38,10 @@ func _ready() -> void:
 				h.queue_free()
 		await _esperar(1.0)
 		get_viewport().get_texture().get_image().save_jpg("%s/%d_%s.jpg" % [_dir, i, c.pais], 0.88)
+		## FOTOS=n: n fotos más, cada 2,5 s (pasan por los planos de la rotación: frontal, medio, general, tres cuartos).
+		for k in int(OS.get_environment("FOTOS")) if OS.get_environment("FOTOS") != "" else 0:
+			await _esperar(2.5)
+			get_viewport().get_texture().get_image().save_jpg("%s/%d_%s_%d.jpg" % [_dir, i, c.pais, k + 1], 0.88)
 		var esc: Node = p._rueda_pop._escena if p._rueda_pop != null else null
 		if esc != null:
 			var dt: Node3D = esc.get("_dt_3d").get("nodo") if not (esc.get("_dt_3d") as Dictionary).is_empty() else null

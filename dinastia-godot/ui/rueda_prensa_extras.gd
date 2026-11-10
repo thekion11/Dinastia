@@ -8,9 +8,10 @@ extends RefCounted
 const COLORES_MEDIOS: Array[Color] = [Color(0.85, 0.12, 0.12), Color(0.1, 0.35, 0.8), Color(0.95, 0.75, 0.1), Color(0.1, 0.6, 0.3),
 	Color(0.92, 0.92, 0.92), Color(0.55, 0.15, 0.6)]
 
-static func montar(escena: Node3D, c1: Color, c2: Color) -> void:
-	_ramo(escena)
-	_balon(escena, c1, c2)
+## `mesa`: a la altura de la mesa larga con el DT sentado (`RuedaPrensaMesa`); si no, sobre el atril.
+static func montar(escena: Node3D, c1: Color, c2: Color, mesa := false) -> void:
+	_ramo(escena, mesa)
+	_balon(escena, c1, c2, mesa)
 	if Calidad.elegida > Calidad.MINIMO:
 		_focos(escena)
 
@@ -25,12 +26,12 @@ static func _mat(c: Color, rug := 0.6, emis := 0.0) -> StandardMaterial3D:
 	return m
 
 ## Cuatro micrófonos de mano en sus soportes, apuntando a la boca del DT, cada uno con el cubo de color de su cadena.
-static func _ramo(escena: Node3D) -> void:
+static func _ramo(escena: Node3D, mesa: bool) -> void:
 	var negro := _mat(Color(0.05, 0.05, 0.06), 0.45)
-	var boca := Vector3(0, 1.58, -0.55)
+	var boca := Vector3(0, 1.17, -0.9) if mesa else Vector3(0, 1.58, -0.55)
 	var xs: Array[float] = [-0.26, -0.13, 0.13, 0.26]
 	for k in xs.size():
-		var base := Vector3(xs[k], 1.13, -0.02 - absf(xs[k]) * 0.15)
+		var base := Vector3(xs[k], 0.8, -0.42 - absf(xs[k]) * 0.15) if mesa else Vector3(xs[k], 1.13, -0.02 - absf(xs[k]) * 0.15)
 		var dir := (boca - base).normalized()
 		var mic := Node3D.new()
 		mic.name = "MicMedio%d" % k
@@ -64,7 +65,7 @@ static func _ramo(escena: Node3D) -> void:
 		mic.add_child(rejilla)
 
 ## Un balón con los colores del club sobre el atril, a la derecha del DT (en la referencia, con el escudo).
-static func _balon(escena: Node3D, c1: Color, c2: Color) -> void:
+static func _balon(escena: Node3D, c1: Color, c2: Color, mesa: bool) -> void:
 	var b := MeshInstance3D.new()
 	b.name = "BalonAtril"
 	var sm := SphereMesh.new()
@@ -80,7 +81,7 @@ static func _balon(escena: Node3D, c1: Color, c2: Color) -> void:
 	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	m.roughness = 0.45
 	b.material_override = m
-	b.position = Vector3(0.38, 1.24, -0.04)
+	b.position = Vector3(-0.55, 0.89, -0.4) if mesa else Vector3(0.38, 1.24, -0.04)
 	escena.add_child(b)
 
 ## La barra de focos sobre el atril: un tubo negro y seis focos con la boca encendida, apuntando a la mesa.

@@ -17,8 +17,15 @@ func _process(delta: float) -> void:
 		plano_activo = 2
 	elif ciclo > 5.0:
 		plano_activo = 1
+	var planos: Array = PLANOS
+	if has_meta("mesa"):
+		## R6 (10-11): con la mesa, el ciclo alterna el frontal con el PLANO MEDIO del DT (el de responder), y de vez en cuando el general
+		## y el de tres cuartos: 0-3,5 frontal · 3,5-7 medio · 7-9,5 general · 9,5-12 tres cuartos.
+		planos = RuedaPrensaMesa.PLANOS
+		ciclo = fmod(_t, 12.0)
+		plano_activo = 0 if ciclo < 3.5 else (3 if ciclo < 7.0 else (1 if ciclo < 9.5 else 2))
 	if _camara != null:
-		var d: Dictionary = PLANOS[plano_activo]
+		var d: Dictionary = planos[plano_activo]
 		var desde: Vector3 = d["pos"]
 		var hacia: Vector3 = d["mira"]
 		var fov_dest: float = d["fov"]
@@ -42,7 +49,7 @@ func _process(delta: float) -> void:
 		var at := _camara.attributes as CameraAttributesPractical
 		if at != null:
 			## En el contraplano, el foco es el periodista: sin desenfoque de fondo.
-			at.dof_blur_far_distance = 40.0 if not foco.is_empty() else _cam_pos.distance_to(Vector3(0, 1.5, -0.78)) + 0.45
+			at.dof_blur_far_distance = 40.0 if not foco.is_empty() else _cam_pos.distance_to(Vector3(0, 1.15, -0.95) if has_meta("mesa") else Vector3(0, 1.5, -0.78)) + 0.45
 			at.dof_blur_far_transition = 0.8
 	if _dt_cabeza != null:
 		## Un asentimiento apenas perceptible: sin ningún movimiento, la cabeza

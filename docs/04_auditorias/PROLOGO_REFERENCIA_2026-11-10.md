@@ -91,3 +91,12 @@ Hago R1-R5 ya; son claras y no cambian cómo se juega. R6 va después, con captu
 7. **Medir** (llamadas por plano, MÍNIMA/BAJA/MEDIA) y capturas Forward+ de cada escena — 0,5.
 
 Total: unas 9-15 sesiones. El orden lo marca la orden 34: primero los pasos 3-5 (calidad de modelos e instalaciones); después 2 y 6.
+
+## 5. Hecho en la rueda de prensa (10-11)
+
+- R1-R5: periodistas con menos luz, barra de focos, pared en damero fino (6 × 12), ramo de 4 micrófonos de medios y balón con los colores del club (`RuedaPrensaExtras`); la cámara de TV ya existía.
+- R7 (`RuedaPrensaMesa`, bandera `activa`): con el personaje 3D, MESA LARGA con el frente del color del club y el escudo, el DT SENTADO (pose «sentado»), el JEFE DE PRENSA con traje a su lado y las sillas. Sin personaje 3D (retrato) sigue el atril. Sentado, el DT solo cambia de cara (los gestos de cuerpo entero lo levantaban).
+- R6: planos para la mesa: frontal, general desde el fondo, tres cuartos (entre la mesa y la primera fila) y PLANO MEDIO del DT con los micrófonos; el ciclo alterna frontal y medio. El contraplano del periodista que pregunta se pone sobre el borde de la mesa (antes quedaba detrás del DT).
+- R9: la columna de respuestas, abajo sobre la franja de la pregunta (deja libre la mesa).
+- Antes/después (cámara real, ARG, USA y CHI): `docs/04_auditorias/rueda_prensa_antes_despues_2026-11-10.jpg`.
+- Queda R8 (entrada caminando y sentarse).
