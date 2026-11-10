@@ -24,6 +24,16 @@ func _init(p: Control) -> void:
 
 func _ready() -> void:
 	get_tree().node_added.connect(_al_entrar)
+	_repasar.call_deferred()
+
+## Lo que ya estaba montado antes que este vigilante (el riel y su cajón, la cabecera): se ajusta en su próximo dibujado.
+func _repasar() -> void:
+	if not is_instance_valid(_p):
+		return
+	for n: Node in _p.find_children("*", "", true, false):
+		if n is Label or n is Button:
+			_al_entrar(n)
+			(n as Control).queue_redraw()
 
 ## El nivel de la escala que le toca a un tamaño.
 static func nivel(tam: int) -> int:
@@ -38,7 +48,8 @@ static func nivel(tam: int) -> int:
 func _al_entrar(n: Node) -> void:
 	if (n is Label or n is Button) and is_instance_valid(_p) and _p.is_ancestor_of(n):
 		## en su PRIMER dibujado: ya tiene su tamaño (hay filas que lo ponen después de añadirse, como las del mercado)
-		(n as Control).draw.connect(_ajustar.bind(n), CONNECT_ONE_SHOT)
+		if not (n as Control).draw.is_connected(_ajustar.bind(n)):
+			(n as Control).draw.connect(_ajustar.bind(n), CONNECT_ONE_SHOT)
 
 func _ajustar(c: Control) -> void:
 	if not is_instance_valid(c) or not c.is_inside_tree() or not c.has_theme_font_size_override("font_size"):
