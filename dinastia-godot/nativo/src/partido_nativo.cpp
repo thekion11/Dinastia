@@ -8,6 +8,9 @@ using namespace godot;
 // `_elegir_goleador` y `_elegir_asistente`: peso de cada jugador = base de su línea × (0,5 + atributo/100) × (peso de su rol), sorteo con la tirada `r_unit` × total,
 // restando pesos hasta pasar de cero; si la resta no alcanza (redondeo) gana el último candidato. Devuelve el índice en `once`.
 int64_t DinastiaNativo::elegir_ponderado(const Array &once, const Dictionary &grupo_de, const Dictionary &bases, double base_def, const String &atr, const PackedFloat64Array &pesos_rol, double r_unit, Object *excluir) const {
+	static const StringName k_pos_e("pos_e");
+	static const StringName k_atributos("atributos");
+	const StringName k_atr(atr);
 	const int64_t n = once.size();
 	std::vector<double> pesos;
 	std::vector<int64_t> idx;
@@ -21,12 +24,12 @@ int64_t DinastiaNativo::elegir_ponderado(const Array &once, const Dictionary &gr
 			continue;
 		}
 		double base = base_def;
-		const String grupo = grupo_de.get(String(j->get("pos_e")), String("MED"));
+		const String grupo = grupo_de.get(String(j->get(k_pos_e)), String("MED"));
 		if (bases.has(grupo)) {
 			base = double(bases[grupo]);
 		}
-		const Dictionary atributos = j->get("atributos");
-		base *= 0.5 + double(atributos.get(atr, 50)) / 100.0;
+		const Dictionary atributos = j->get(k_atributos);
+		base *= 0.5 + double(atributos.get(String(atr), 50)) / 100.0;
 		if (con_roles) {
 			base *= pesos_rol[int64_t(idx.size())];
 		}

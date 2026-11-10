@@ -175,13 +175,14 @@ func _probar() -> void:
 					var s1 := Azar.f()
 					var w2 := Time.get_ticks_usec()
 					Azar.sembrar(1000 + jc)
+					var w2b := Time.get_ticks_usec()
 					var b1 := PartidoPonderado.goleador_gd(p, once)
 					var w3 := Time.get_ticks_usec()
 					var b2 := PartidoPonderado.asistente_gd(p, once, b1, 10 + q)
 					var s2 := Azar.f()
 					var w4 := Time.get_ticks_usec()
 					tc0 += (w1 - w0)
-					tg0 += (w3 - w2)
+					tg0 += (w3 - w2b)
 					jc += 1
 					if a1 != b1 or a2 != b2 or s1 != s2:
 						jd += 1
