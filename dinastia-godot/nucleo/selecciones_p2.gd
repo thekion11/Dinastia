@@ -362,19 +362,17 @@ func torneo_continental(anio: int) -> Dictionary:
 #  EL MUNDIAL DE CLUBES
 # ---------------------------------------------------------------------------
 
-## Corona a los campeones continentales del año y los hace jugar entre ellos.
+## Apunta a los campeones continentales de la temporada (el registro de la partida y la noticia) y los devuelve.
 ##
-## Ya no es una lista inventada, como decía el propio HTML: lo disputan los
-## campeones REALES de las seis confederaciones que sortea `Continental`, y si el
-## tuyo está ahí, lo juegas de verdad. La lista de confederaciones sale de
-## `Continental.PRINCIPALES` y no se vuelve a escribir aquí: son las mismas seis
-## copas grandes, y la segunda copa de un continente (Sudamericana, Europa
+## Los torneos de la FIFA ya no se juegan aquí: `FifaClubes` arma el Mundial de Clubes y la Copa Intercontinental al sortear la
+## temporada que empieza, con los campeones de la que se cierra, y se juegan semana a semana. La lista de confederaciones
+## sale de `Continental.PRINCIPALES`: son las mismas copas grandes, y la segunda copa de un continente (Sudamericana, Europa
 ## League) no da plaza.
-func mundial_de_clubes(anio: int) -> Dictionary:
+func anotar_campeones_continentales(anio: int) -> Array[Club]:
 	var m := _mundo()
-	if m == null:
-		return {}
 	var campeones: Array[Club] = []
+	if m == null:
+		return campeones
 	var lineas: Array[String] = []
 	for k: String in Continental.PRINCIPALES:
 		var t: Continental = m.continentales.get(k)
@@ -392,40 +390,46 @@ func mundial_de_clubes(anio: int) -> Dictionary:
 	if not lineas.is_empty():
 		noticia.emit("🌍 Campeones continentales %d" % anio,
 			" · ".join(lineas) + ". Todos ellos disputan el Mundial de Clubes.")
+	return campeones
+
+## Juega AHORA el Mundial de Clubes con los campeones continentales de la temporada, de un tirón y sin esperar al calendario.
+## En la partida no se usa (el torneo se juega en sus semanas, ver `FifaClubes`); queda para pruebas y para los casos sin calendario.
+func mundial_de_clubes(anio: int) -> Dictionary:
+	var m := _mundo()
+	if m == null:
+		return {}
+	var campeones := anotar_campeones_continentales(anio)
 	if campeones.size() < 2:
 		mundial_clubes = {}
 		return {}
-
 	var torneo := MundialClubes.new()
 	torneo.preparar(campeones)
-	var mio := m.mi_club()
-	var entro := torneo.participa(mio)
-	var relato: Array[String] = []
 	while torneo.en_curso():
-		for r: Dictionary in torneo.jugar_ronda():
-			if r["local"] != mio and r["visita"] != mio:
-				continue
-			var l: Club = r["local"]
-			var v: Club = r["visita"]
-			var penales: Array = r.get("penales", [])
-			relato.append("%s: %s %d-%d %s%s" % [
-				r["ronda"], l.nombre, int(r["gl"]), int(r["gv"]), v.nombre,
-				(" (pen %d-%d)" % [int(penales[0]), int(penales[1])]) if penales.size() == 2 else "",
-			])
-	var campeon: Club = torneo.campeon
-	if campeon == null:
+		torneo.jugar_ronda()
+	if torneo.campeon == null:
 		mundial_clubes = {}
 		return {}
+	return registrar_mundial(torneo, anio)
 
+## Deja constancia de un Mundial de Clubes ya jugado: el resumen de la pantalla de la federación, el premio de la vitrina, el
+## prestigio y la noticia. Lo llaman `FifaClubes.coronar` (cuando se juega en sus semanas) y `mundial_de_clubes` (de un tirón).
+func registrar_mundial(torneo: Continental, anio: int) -> Dictionary:
+	var m := _mundo()
+	var campeon: Club = torneo.campeon
+	if m == null or campeon == null:
+		mundial_clubes = {}
+		return {}
+	var mio := m.mi_club()
+	var entro := torneo.participa(mio)
+	var relato: Array[String] = FifaClubes.relato(torneo, mio) if entro else []
 	var eres_tu := mio != null and campeon == mio
 	mundial_clubes = {
 		"anio": anio, "campeon": campeon.nombre, "club_id": campeon.id,
 		"mio": eres_tu, "relato": relato,
 	}
 	if eres_tu:
-		## El premio ya lo cobró el club dentro del torneo. Aquí solo queda lo que
-		## no es dinero: la vitrina de la carrera y el prestigio. `sumar_trofeo`
-		## ya suma 3 de prestigio, así que se completan los 10 del HTML con 7.
+		## El premio ya lo cobró el club dentro del torneo. Aquí solo queda lo que no es dinero: la vitrina de la carrera y el
+		## prestigio. `sumar_trofeo` ya suma 3 de prestigio, así que se completan los 10 del HTML con 7.
 		if m.roles != null:
 			m.roles.sumar_trofeo("Mundial de Clubes")
 			m.roles.sumar_prestigio(PRESTIGIO_MUNDIAL_CLUBES - 3)

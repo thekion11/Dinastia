@@ -205,12 +205,11 @@ func _contexto_rueda() -> Dictionary:
 		if not m.copa.en_curso() and m.copa.campeon == mio:
 			ctx["titulo"] = m.copa.nombre
 	elif comp == "conti":
-		for k: String in m.continentales:
-			var t: Continental = m.continentales[k]
-			if t != null and t.participantes.has(mio):
-				ctx["competicion"] = Continental.nombre_conti(t.clave)
-				if t.campeon == mio:
-					ctx["titulo"] = ctx["competicion"]
+		var t: Continental = m.mi_continental()
+		if t != null:
+			ctx["competicion"] = Continental.nombre_conti(t.clave)
+			if t.campeon == mio:
+				ctx["titulo"] = ctx["competicion"]
 	else:
 		var liga := m.liga_de(mio)
 		if liga != null:

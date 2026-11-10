@@ -20,7 +20,7 @@ static func de(m: Mundo, nombre: String) -> String:
 		return "ascenso"
 	if n.contains("permanencia") or n.contains("salvaci"):
 		return "salvacion"
-	if n.contains("supercopa"):
+	if n.contains("supercopa") or n.contains("recopa"):
 		return "supercopa"
 	if m != null:
 		for l: Liga in m.ligas:

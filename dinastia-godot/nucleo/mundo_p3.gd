@@ -107,10 +107,21 @@ func partido_de_copa() -> Array:
 		return []
 	return copa.emparejamiento_de(club_de_la_copa())
 
-## El torneo continental en el que juega tu club, o null.
+## El torneo continental en el que juega tu club, o null. Si juega varios a la vez (su continental y un torneo de la FIFA, como
+## el Mundial de Clubes), el que tiene partido esta semana; si no, el de su confederación.
 func mi_continental() -> Continental:
 	var c := mi_club()
-	return Continental.de_club(continentales, c) if c != null else null
+	if c == null:
+		return null
+	for t: Continental in continentales.values():
+		if t.es_fifa() and t.participa(c) and t.toca(semana):
+			return t
+	var propio := Continental.de_club(continentales, c)
+	if propio != null and propio.es_fifa():
+		for t: Continental in continentales.values():
+			if not t.es_fifa() and t.participa(c):
+				return t
+	return propio
 
 ## El cruce continental de tu club esta semana -Libertadores, Sudamericana,
 ## Champions, Europa League, lo que le toque a tu país-, o vacio.
@@ -120,10 +131,8 @@ func mi_continental() -> Continental:
 ## -`Continental.jugar_ronda(ya_jugado)`- ya sabía recibir el partido que
 ## acabas de dirigir y no volver a simularlo; solo faltaba esta puerta.
 func partido_continental() -> Array:
-	if Continental.toca_ronda(semana) < 0:
-		return []
 	var t := mi_continental()
-	if t == null or not t.en_curso():
+	if t == null or not t.toca(semana):
 		return []
 	return t.emparejamiento_de(mi_club())
 

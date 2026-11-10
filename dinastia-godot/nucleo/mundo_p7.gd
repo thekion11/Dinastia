@@ -132,6 +132,11 @@ func nueva_temporada() -> Dictionary:
 	var sc := jugar_supercopa()
 	if not sc.is_empty():
 		resumen["supercopa"] = sc
+	## Y las SUPERCOPAS CONTINENTALES (Europa, Sudamérica, África) con los campeones del año que se cierra: tienen que
+	## jugarse ANTES de volver a sortear los continentales, que las dejaría sin campeones.
+	var scc := SupercopasConti.jugar(self)
+	if not scc.is_empty():
+		resumen["supercopas_conti"] = scc
 	## Y se reabre la pretemporada: hay una por ano.
 	amistoso_hecho = false
 	_montar_copa()

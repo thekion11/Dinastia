@@ -32,16 +32,31 @@ static func pintar(lista: VBoxContainer, copa: Copa, mio: Club) -> void:
 		var sigue := copa.vivos.has(mio) or (conti != null and conti.en_fase_de_grupos())
 		CompeticionFilas.titulo(lista, Idiomas.t("Tu club sigue en carrera.") if sigue and copa.en_curso()
 			else Idiomas.t("Tu club ya quedó fuera."), Tema.ACENTO if sigue else Tema.SUAVE, 13)
-	if conti != null and conti.por_grupos:
+	## Con la primera fase jugada, el cuadro (próxima ronda y resultados) va ANTES que las tablas: una fase de liga de 36 clubes
+	## ocupa la pantalla entera y dejaría el cuadro fuera de la vista.
+	var tablas_al_final := conti != null and conti.por_grupos and not conti.en_fase_de_grupos()
+	if conti != null and conti.por_grupos and not tablas_al_final:
 		_pintar_grupos(lista, conti, mio)
-	if copa.en_curso() and not (conti != null and conti.en_fase_de_grupos()):
+	if copa.en_curso() and conti != null and conti.en_fase_de_grupos():
+		lista.add_child(HSeparator.new())
+		CompeticionFilas.titulo(lista, Idiomas.t("PRÓXIMA FECHA  ·  %s") % ronda(copa.nombre_de_ronda()).to_upper(), Tema.SUAVE, 12)
+		for par: Array in conti.cruces_de_la_fecha():
+			CompeticionFilas.fila_partido(lista, par[0], par[1], -1, -1, mio)
+	elif copa.en_curso():
 		lista.add_child(HSeparator.new())
 		CompeticionFilas.titulo(lista, Idiomas.t("PRÓXIMA RONDA  ·  %s") % ronda(copa.nombre_de_ronda()).to_upper(), Tema.SUAVE, 12)
+		## En la vuelta de una eliminatoria a doble partido se invierte el campo.
+		var vuelta := conti != null and int(conti.hueco_actual().get("pata", 0)) == 2
 		for par: Array in copa.cruces():
-			CompeticionFilas.fila_partido(lista, par[0], par[1], -1, -1, mio)
+			if vuelta:
+				CompeticionFilas.fila_partido(lista, par[1], par[0], -1, -1, mio)
+			else:
+				CompeticionFilas.fila_partido(lista, par[0], par[1], -1, -1, mio)
 	_pintar_historial(lista, copa, mio)
+	if tablas_al_final:
+		_pintar_grupos(lista, conti, mio)
 
-## Los cuatro grupos, uno debajo de otro, con los dos que pasan marcados. Es la
+## Los grupos (o la tabla única de la fase de liga), uno debajo de otro, con los que pasan marcados. Es la
 ## misma fila de la tabla de liga, así que se lee igual.
 static func _pintar_grupos(lista: VBoxContainer, t: Continental, mio: Club) -> void:
 	for i in t.grupos.size():
@@ -56,11 +71,14 @@ static func _pintar_grupos(lista: VBoxContainer, t: Continental, mio: Club) -> v
 			puesto += 1
 			var c: Club = f["club"]
 			var dg := int(f["dif"])
-			## Los dos primeros pasan a cuartos: verde de ascenso, que es lo que
-			## significa. Antes de jugar nada no se marca: sería el sorteo.
+			## Los que pasan: verde de ascenso, que es lo que significa. En la fase de liga, los de la franja del playoff van en
+			## la zona continental (azul). Antes de jugar nada no se marca: sería el sorteo.
 			var zona := {}
-			if jugado and puesto <= 2:
-				zona = {"zona": CompeticionZonas.ASCENSO, "texto": Idiomas.t("Pasa a cuartos")}
+			var destino := t.destino_en_primera_fase(puesto)
+			if jugado and destino == "directo":
+				zona = {"zona": CompeticionZonas.ASCENSO, "texto": Idiomas.t(t.texto_de_pase())}
+			elif jugado and destino == "playoff":
+				zona = {"zona": CompeticionZonas.CONTINENTAL, "texto": Idiomas.t("Playoff")}
 			CompeticionFilas.fila_tabla(lista, puesto, c, [str(f["pj"]), str(f["gf"]), str(f["gc"]),
 				("+%d" % dg) if dg > 0 else str(dg), str(f["pts"])], c == mio, puesto % 2 == 0, zona)
 
@@ -78,8 +96,15 @@ static func _pintar_historial(lista: VBoxContainer, copa: Copa, mio: Club) -> vo
 		for r: Dictionary in (h.get("resultados", []) as Array):
 			var extra := ""
 			var pen: Array = r.get("penales", [])
-			if pen.size() >= 2:
+			if r.has("agregado"):
+				var agr: Array = r["agregado"]
+				extra = Idiomas.t("Global %d-%d") % [int(agr[0]), int(agr[1])]
+				if pen.size() >= 2:
+					extra += "  " + Idiomas.t("(%d-%d pen.)") % [int(pen[0]), int(pen[1])]
+			elif pen.size() >= 2:
 				extra = Idiomas.t("(%d-%d pen.)") % [int(pen[0]), int(pen[1])]
+			elif r.has("etiqueta"):
+				extra = Idiomas.t(String(r["etiqueta"]))
 			elif r.has("grupo") and copa is Continental:
 				extra = Idiomas.t((copa as Continental).nombre_de_grupo(int(r["grupo"])))
 			CompeticionFilas.fila_partido(lista, r["local"], r["visita"], int(r["gl"]), int(r["gv"]), mio, extra)
