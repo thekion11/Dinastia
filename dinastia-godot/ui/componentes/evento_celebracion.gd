@@ -7,6 +7,10 @@ extends EventoPantallaCompleta
 var tipo := "copa"
 var escena: EscenaFestejo
 var _botones: HBoxContainer
+var vista3d: Control = null   ## (10-11) el festejo con modelos reales (`FestejoCampo3D`), si la escena lo tiene y la calidad lo permite
+var _marco: PanelContainer
+var _club: Club
+var _titulo := ""
 
 static func mostrar(pr: Principal, titulo: String, tipo_titulo: String, rival: Club = null) -> EventoCelebracion:
 	var e := EventoCelebracion.new()
@@ -25,6 +29,8 @@ func escenas() -> Array[String]:
 
 func _rellenar(pr: Principal, titulo: String, rival: Club) -> void:
 	var club := pr.mundo.mi_club()
+	_club = club
+	_titulo = titulo
 	_centro.custom_minimum_size = Vector2(800, 0)
 	var cab := HBoxContainer.new()
 	cab.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -51,8 +57,9 @@ func _rellenar(pr: Principal, titulo: String, rival: Club) -> void:
 	_centro.add_child(marco)
 	escena = EscenaFestejo.new()
 	escena.colores(club, rival)
-	escena.poner(escenas()[0])
 	marco.add_child(escena)
+	_marco = marco
+	ver.call_deferred(escenas()[0])
 	_botones = HBoxContainer.new()
 	_botones.alignment = BoxContainer.ALIGNMENT_CENTER
 	_botones.add_theme_constant_override("separation", 8)
@@ -76,10 +83,25 @@ func _rellenar(pr: Principal, titulo: String, rival: Club) -> void:
 	fin.add_child(seguir)
 
 ## Cambia la escena (un botón por festejo) con un fundido corto.
+## (10-11) Si la escena tiene versión 3D y la calidad lo permite, se monta con los modelos reales (`FestejoCampo3D`); si no, la 2D.
 func ver(e: String) -> void:
 	if escena == null:
 		return
-	escena.poner(e)
+	if vista3d != null:
+		vista3d.queue_free()
+		vista3d = null
+	var visible_ahora: Control = escena
+	if e in FestejoCampo3D.MODOS and FestejoCampo3D.con_3d():
+		vista3d = FestejoCampo3D.crear(e, _club, _titulo, tipo in ["ascenso", "salvacion"])
+	if vista3d != null:
+		escena.visible = false
+		escena.set_process(false)
+		_marco.add_child(vista3d)
+		visible_ahora = vista3d
+	else:
+		escena.visible = true
+		escena.set_process(true)
+		escena.poner(e)
 	if not Animar.reducidas():
-		escena.modulate.a = 0.0
-		create_tween().tween_property(escena, "modulate:a", 1.0, 0.25)
+		visible_ahora.modulate.a = 0.0
+		create_tween().tween_property(visible_ahora, "modulate:a", 1.0, 0.25)

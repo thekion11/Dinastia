@@ -111,3 +111,8 @@ func _probar_festejos_titulo() -> void:
 			e._mover_confeti(0.1)
 	_comprobar(e._confeti.is_empty(), "el pasillo no lleva confeti (se limpia al cambiar de escena)")
 	e.free()
+	## (10-11) La versión 3D: sin pantalla no se monta y la escena 2D queda de respaldo; los modos 3D son principales o extras reales.
+	_comprobar(not FestejoCampo3D.con_3d() and FestejoCampo3D.crear("escenario", Mundo.new().mi_club(), "") == null, "sin pantalla, sin 3D (la escena 2D es el respaldo)")
+	for modo: String in FestejoCampo3D.MODOS:
+		_comprobar(modo in TipoTitulo.ESCENA.values() or modo in TipoTitulo.extras("liga"), "el modo 3D «%s» lo usa algún festejo" % modo)
+
