@@ -27,7 +27,12 @@ func _process(_d: float) -> void:
 		JornadaDespedida.ofrecer(_p)
 		_fase = 1
 	elif _fase == 1 and _n > 20:
-		var q := _hijo("elegido")
+		var q: Node = null   ## (10-11) solo la pregunta de la despedida: antes salen el festejo de fin de liga y los sorteos de copa, que también tienen «elegido»
+		for h in _p.get_children():
+			if h is EventoDespedida:
+				q = h
+		if q == null and _n < 700:
+			return
 		if q == null:
 			print("NO SE OFRECIÓ"); print("FIN. 1 fallos"); get_tree().quit(); return
 		q.emit_signal("elegido", "jugar")
@@ -35,6 +40,8 @@ func _process(_d: float) -> void:
 		_n = 30
 	elif _fase == 2 and _n > 50:
 		var v := _hijo("cerrado")
+		if v == null and _n < 1500:
+			return   ## el partido en directo tarda en montarse
 		if v == null:
 			print("NO ABRIÓ EL PARTIDO EN DIRECTO"); print("FIN. 1 fallos"); get_tree().quit(); return
 		v.call("_hasta_el_final")
@@ -51,6 +58,8 @@ func _process(_d: float) -> void:
 		_n = 90
 	elif _fase == 4 and _n > 110:
 		var cer := _hijo("terminado")
+		if cer == null and _n < 800:
+			return
 		print("ceremonia ", cer != null)
 		if cer != null:
 			cer.emit_signal("terminado")
