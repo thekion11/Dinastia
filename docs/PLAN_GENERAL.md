@@ -10,8 +10,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 > Pendiente, en este orden:
 > 1. **CASA DEL PERSONAJE** sin ciudad.
 > 2. **REESTRUCTURACIÓN «SOLO CLUB»** (paso 2): reparar el club (muebles, colisiones, parpadeo del suelo del despacho). Paso 3: medir sin ciudad con `herramientas/hw_modesto.sh`. Paso 4: decidir C/C++ solo con medidas.
-> 3. Revisar en el edificio real que las camisetas retiradas se ven en las plantas altas.
-> 4. **ESTÉTICA** (rama `ccr-da27fb86-i59x88`, fusión pendiente de la orden del dueño): profundidad de cabeceras, portadas, Ajustes y botones.
+> 3. **ESTÉTICA** (rama `ccr-da27fb86-i59x88`, fusión pendiente de la orden del dueño): profundidad de cabeceras, portadas, Ajustes y botones.
 >
 > **DECISIONES DEL DUEÑO (no implementar sin respuesta):** (a) torneos de selecciones (Mundial, Eurocopa, Copa América): ¿se juegan o son solo calendario? (b) sacar los tres .mp4 de `marca/` del repo.
 >
@@ -69,7 +68,7 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 - FINAL DE TEMPORADA (10-11): pantalla ÚNICA de resumen a pantalla completa (`ResumenTemporada`, hereda de `EventoPantallaCompleta`: tu puesto y el campeón de liga, copa, continental, ascensos/descensos de tu país, gala de premios y veredicto de la directiva; luego el documental). Copa y continental a medias se juegan hasta el final y se ANUNCIAN al terminar la liga, antes de la despedida (`CierreTorneos`, también dentro de `Mundo.nueva_temporada`). Orden: fin de liga → torneos pendientes → despedida → «Temporada siguiente» (gala dentro del cierre) → resumen → nueva temporada. Pruebas: banco `_probar_final_temporada` y especial `prueba_resumen_temporada`. Pulir: animación de entrada por tarjetas, sonido de gala, trofeo 3D del campeón; torneos de selecciones según la decisión del dueño.
 - Plantilla a la PES (`PlantillaPes`, `PlantillaEstilos`, `GestionOnce`) y fila «PRÓXIMOS» (`FilaProximos`): aspecto (la lleva la sesión de estética).
 - Avance de fecha con eventos (`EventosFecha`: liga, copa, continental, mercado, fin de temporada; `TarjetaEvento`, `CalendarioSemanas` de 6 semanas con botón 📅, «Hito» que para en cada evento): pulir aspecto (tarjetas de rondas futuras «probables», más detalle por día, mando) y comparar con el calendario del PES.
-- Camisetas retiradas (Historia del club y museo del estadio, `CamisetasRetiradas`, `CamisetasMuseo`): más variedad de camiseta y foco en el museo.
+- Camisetas retiradas (Historia del club y museo del estadio, `CamisetasRetiradas`, `CamisetasMuseo`): más variedad de camiseta y foco en el museo. REVISADO en el edificio real (10-11, `RETIRADAS=1 SOLO=9 captura_edificio_club.tscn`): en el museo (planta 2) se ven las camisetas enmarcadas en la pared del fondo; de lejos quedan pequeñas (pulir: más grandes o con foco). La captura del edificio ya fija la planta sin esperar al viaje del ascensor.
 - Capítulos de cada temporada (`CapitulosTemporadas`): comparar ritmo y planos con el PES.
 - Ascensor con viaje gradual (`AscensorViaje`) y puertas con marco (`PuertasClub`): animación de apertura de puertas y ascensor, muebles de las salas vacías, colisiones persona-objeto, suelo liso.
 - Partido de despedida (`PartidoDespedida`, `JornadaDespedida`): ceremonia con más fuerza, camiseta retirada visible en el estadio.

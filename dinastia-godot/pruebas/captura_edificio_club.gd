@@ -12,7 +12,7 @@ var _paso := 0
 const TODAS := [[0, "Vestuario"], [-2, "Estacionamiento"], [-1, "Utilería"], [-1, "Enfermería"],
 	[-1, "Vestuario visitante"], [1, "Oficina del DT"], [1, "Despacho del presidente"], [1, "Sala de vídeo"],
 	[2, "Sala de prensa"], [2, "Museo del club"], [1, "Pasillo"], [0, "Ascensor"]]
-## SOLO=5,6 deja solo esas salas (índices de TODAS) y SIN_AVATAR=1 esconde al jugador (para ver el mobiliario).
+## RETIRADAS=1 pone camisetas retiradas en la partida (museo). SOLO=5,6 deja solo esas salas (índices de TODAS) y SIN_AVATAR=1 esconde al jugador (para ver el mobiliario).
 var SALAS: Array = TODAS
 
 func _ready() -> void:
@@ -23,6 +23,10 @@ func _ready() -> void:
 	var m := Mundo.new()
 	m.generar(["CHI"], 77)
 	var club: Club = m.ligas[0].clubes[0]
+	if OS.get_environment("RETIRADAS") == "1":
+		m.tomar_el_mando(club.id)   ## (10-11) camisetas retiradas en la partida, para verlas en el museo del edificio real
+		m.prensa.dorsales_retirados = [{"dorsal": 7, "nombre": "Carlos Valdivia", "anio": 2027}, {"dorsal": 10, "nombre": "Iván Pizarro", "anio": 2029}, {"dorsal": 5, "nombre": "Ricardo Ledesma", "anio": 2031}]
+		set_meta("mundo", m)   ## que no se libere: `Mundo.actual()` es una referencia débil
 	PersonajeDT.club_usuario = club.id
 	var pl: Array = []
 	for j: Jugador in club.plantilla:
@@ -41,7 +45,8 @@ func _foto() -> void:
 	_imgs.append(img)
 
 func _colocar(planta: int, sala: String) -> void:
-	_ex.ir_a_planta(planta)
+	_ex.planta = planta   ## (10-11) sin el viaje gradual del ascensor (`AscensorViaje`, 1 s por planta): la foto salía antes de llegar
+	_ex.en_viaje = false
 	for z: Dictionary in _ex.zonas:
 		if int(z.get("planta", 0)) == planta and String(z["nombre"]) == sala:
 			var r: Rect2 = z["r"]
