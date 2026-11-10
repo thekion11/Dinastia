@@ -237,7 +237,7 @@ func _probar_objetivos_por_club() -> void:
 	d.confianza = 50
 	c2.saldo = 5000000
 	var r := ObjetivosCierre.cerrar(m2, d, 5, false)
-	_comprobar(int(r["delta"]) == 8 - 5 and d.confianza == 53, "cumplir la economía (+8) y fallar la cantera (−5) mueve la confianza +3 (%d)" % d.confianza)
+	_comprobar(int(r["delta"]) == 8 - 7 and d.confianza == 51, "cumplir la economía (+8) y fallar la cantera (−7: el peso 5 +25 %%) mueve la confianza +1 (%d)" % d.confianza)
 	d.proyecto = {"id": "sanear", "texto": "Sanear", "meta": 0, "temporadas": 3, "cierres": 2, "mejor_puesto": 0, "titulos": 0, "puesto_base": 5, "saldo_base": -1}
 	d.objetivos.clear()
 	var r2 := ObjetivosCierre.cerrar(m2, d, 5, false)
@@ -252,3 +252,31 @@ func _probar_objetivos_por_club() -> void:
 		(inst["directiva"] as Dictionary).erase(k)
 	var m4 := Partida.desde_instantanea(inst)
 	_comprobar(m4.directiva.objetivos.size() >= 3 and m4.directiva.meta_puesto == d.meta_puesto, "una partida vieja sin los campos nuevos abre y estrena los objetivos de su club")
+	## EN VIVO: una barra por objetivo secundario y por el proyecto, con progreso 0-100 y estado; cambia con lo que pasa (caja en rojo → en riesgo).
+	for grupo2: Array in [["BRA"], ["JPN"], ["GER"]]:
+		Partido.limpiar_contexto()
+		var m5 := Mundo.new()
+		var g5: Array[String] = []
+		g5.assign(grupo2)
+		m5.generar(g5, 33)
+		var lg: Liga = m5.ligas[0]
+		m5.tomar_el_mando(lg.clubes[lg.clubes.size() / 2].id)
+		var vivo := ObjetivosEnVivo.lista(m5, m5.directiva)
+		var rango_ok := true
+		for f: Dictionary in vivo:
+			if int(f["progreso"]) < 0 or int(f["progreso"]) > 100 or not ["cumplido", "bien", "riesgo", "perdido"].has(String(f["estado"])):
+				rango_ok = false
+		_comprobar(vivo.size() >= 2 and rango_ok, "%s: el progreso en vivo trae %d filas con progreso 0-100 y estado válido" % [grupo2[0], vivo.size()])
+		var ui := ObjetivoDirectiva.secundarios(m5)
+		_comprobar(ui != null and ui.find_children("*", "ProgressBar", true, false).size() == vivo.size(), "%s: el menú central pinta una barra por fila" % grupo2[0])
+		if ui != null:
+			ui.free()
+	var eco := {"id": "eco", "tipo": "economia", "texto": "Salir de los números rojos", "meta": 0, "peso": 8}
+	d.objetivos = [eco]
+	d.bases = {"saldo": -4000000, "socios": 0}
+	c2.saldo = -1000000
+	var peor := ObjetivosEnVivo.lista(m2, d)
+	c2.saldo = 500000
+	var mejor := ObjetivosEnVivo.lista(m2, d)
+	_comprobar(String(peor[0]["estado"]) != "cumplido" and int(peor[0]["progreso"]) < 100 and String(mejor[0]["estado"]) == "cumplido", "salir del rojo: de −1 M (%d %%) a +0,5 M (cumplido)" % int(peor[0]["progreso"]))
+	_comprobar(ObjetivosCierre.delta_de(8, true) == 8 and ObjetivosCierre.delta_de(8, false) == -10, "cumplir suma el peso y fallar resta un 25 % más (8 → +8 / −10)")

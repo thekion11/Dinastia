@@ -97,6 +97,8 @@ static func lista(mundo: Mundo, modo: String) -> Array[Dictionary]:
 		out.append({"icono": "🏆", "texto": "%s  ·  vas %dº (meta: %dº)" % [obj, puesto, meta], "hecho": jugados > 0 and puesto > 0 and puesto <= meta})
 		var conf := mundo.directiva.confianza
 		out.append({"icono": "🤝", "texto": "Confianza de la directiva: %d/100" % conf, "hecho": conf >= 50})
+		for f: Dictionary in ObjetivosEnVivo.lista(mundo, mundo.directiva):   ## (10-11) objetivos por club: cada secundario y el proyecto, con su estado
+			out.append({"icono": "🏁" if String(f["tipo"]) == "proyecto" else "🎯", "texto": "%s · %d %%" % [Idiomas.t(String(f["texto"])), int(f["progreso"])], "hecho": String(f["estado"]) == "cumplido"})
 	var par := mundo.proximo_partido()
 	if par.size() == 2:
 		var local: bool = par[0] == c

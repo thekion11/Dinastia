@@ -33,6 +33,9 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, liga: Liga, ir: C
 	var obj := ObjetivoDirectiva.fila(mundo, c, liga)   ## (10-11, idea del PES) el objetivo de la directiva con su barra de progreso
 	if obj != null:
 		raiz.add_child(obj)
+		var sec := ObjetivoDirectiva.secundarios(mundo)   ## (10-11) una barra por objetivo secundario y el proyecto
+		if sec != null:
+			raiz.add_child(sec)
 
 ## El próximo partido en una línea (lo que se ve de lunes a miércoles): rival, en casa o fuera, y cuándo.
 static func _linea_partido(c: Club, mundo: Mundo, dias: int, ir: Callable) -> Control:

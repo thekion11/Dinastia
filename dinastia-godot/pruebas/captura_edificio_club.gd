@@ -21,8 +21,10 @@ func _ready() -> void:
 		for i in OS.get_environment("SOLO").split(","):
 			SALAS.append(TODAS[int(i)])
 	var m := Mundo.new()
-	m.generar(["CHI"], 77)
-	var club: Club = m.ligas[0].clubes[0]
+	## PAIS=ESP CLUB=5: otro país y otro club (regla 34: nunca revisar con un solo equipo).
+	var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"
+	m.generar([pais], 77)
+	var club: Club = m.ligas[0].clubes[int(OS.get_environment("CLUB")) % m.ligas[0].clubes.size()]
 	if OS.get_environment("RETIRADAS") == "1":
 		m.tomar_el_mando(club.id)   ## (10-11) camisetas retiradas en la partida, para verlas en el museo del edificio real
 		m.prensa.dorsales_retirados = [{"dorsal": 7, "nombre": "Carlos Valdivia", "anio": 2027}, {"dorsal": 10, "nombre": "Iván Pizarro", "anio": 2029}, {"dorsal": 5, "nombre": "Ricardo Ledesma", "anio": 2031}]
