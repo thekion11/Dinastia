@@ -7,7 +7,8 @@ const POR_CONFED := {
 	"lib": ["Argentina", "Brasil", "Uruguay", "Colombia", "Chile", "Perú", "Ecuador", "Paraguay", "Bolivia", "Venezuela", "México", "EE.UU.", "Costa Rica", "Canadá"],
 	"ucl": ["España", "Inglaterra", "Italia", "Alemania", "Francia", "Portugal", "Holanda", "Bélgica", "Croacia", "Dinamarca",
 		"Suiza", "Austria", "Escocia", "Suecia", "Noruega", "Polonia", "Serbia", "Turquía", "Ucrania", "Gales", "Rep. Checa", "Hungría", "Grecia", "Irlanda",
-		"Rumanía", "Eslovaquia", "Bulgaria", "Israel", "Finlandia", "Eslovenia", "Chipre"],   ## (Rusia no: suspendida por la UEFA y la FIFA, solo juega amistosos; ver `SUSPENDIDAS`)
+		"Rumanía", "Eslovaquia", "Bulgaria", "Israel", "Finlandia", "Eslovenia", "Chipre",
+		"Bosnia", "Montenegro", "Islandia", "Estonia", "Kazajistán", "Azerbaiyán", "Bielorrusia", "Letonia", "Albania", "Macedonia del Norte", "Georgia", "Lituania", "Irlanda del Norte", "Luxemburgo"],   ## (Rusia no: suspendida por la UEFA y la FIFA, solo juega amistosos; ver `SUSPENDIDAS`)
 	"afr": ["Marruecos", "Senegal", "Nigeria", "Egipto", "Camerún", "Sudáfrica", "Ghana", "Costa de Marfil", "Argelia", "Túnez", "Malí"],
 	"asia": ["Japón", "Corea", "Irán", "Australia", "Arabia", "Catar", "Uzbekistán", "Jordania", "Irak", "Emiratos", "China"],
 	"conc": ["México", "EE.UU.", "Costa Rica", "Canadá", "Panamá", "Jamaica", "Honduras"],
