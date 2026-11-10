@@ -33,6 +33,7 @@ func _pintar_tactica(c: Club) -> void:
 			p._refrescar())
 		fila_f.add_child(bf)
 		i_f += 1
+	EditorFormacion.botones(p, c)   ## formaciones propias, como el «Editar posición» del PES (10-11)
 	p._lista_tactica.add_child(HSeparator.new())
 
 	## Las siete perillas, con los mismos tres niveles que usa el partido en vivo.

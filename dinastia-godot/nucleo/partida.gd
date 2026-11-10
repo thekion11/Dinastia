@@ -18,6 +18,8 @@ static func _dic_a_club(d: Dictionary) -> Club:
 	c.precio_entrada = float(d.get("precio", 6.0))
 	c.confianza = int(d.get("confianza", 50))
 	c.socios = int(d.get("socios", 0))
+	c.tactica.propias = (d.get("fprop", {}) as Dictionary).duplicate(true)   ## formaciones propias (10-11)
+	FormacionPropia.registrar_todas(c.tactica)
 	c.tactica.formacion = String(d.get("formacion", "4-3-3"))
 	c.tactica.mentalidad = int(d.get("ment", Tactica.Mentalidad.EQUILIBRADA))
 	c.tactica.presion = int(d.get("pres", Tactica.Nivel.MEDIO))
