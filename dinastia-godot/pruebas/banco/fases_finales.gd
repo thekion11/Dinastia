@@ -120,3 +120,35 @@ func _probar_fases_finales_mls() -> void:
 		_comprobar(series_ok, "las series al mejor de 3 terminan 2-0 o 2-1")
 		_comprobar(l.orden_final.size() == 30 and String(rondas[4]["c"][0]["g"]) == String(l.orden_final[0]), "%d: campeón de la MLS Cup %s" % [semilla, (l.tabla()[0]["club"] as Club).nombre])
 		_comprobar(l2.orden_final.size() == 30 and String(l2.formato.estado["rondas"][4]["c"][0]["g"]) == String(l2.orden_final[0]), "la liga recargada también coloca a su campeón primero")
+
+func _probar_fases_finales_europa() -> void:
+	_titulo("FASES FINALES · BÉLGICA, ESCOCIA, DINAMARCA, SUIZA Y AUSTRIA: GRUPOS FINALES")
+	## país, clubes, fechas de la fase regular, fechas de la fase final, partidos del grupo de arriba, ¿puntos a la mitad?
+	for caso: Array in [["BEL", 16, 30, 5, 35, true], ["SCO", 12, 33, 5, 38, false], ["DEN", 12, 22, 10, 32, false], ["SUI", 12, 33, 5, 38, false], ["AUT", 12, 22, 10, 32, false]]:
+		var pais := String(caso[0])
+		Azar.sembrar(830 + pais.length() + int(caso[1]))
+		var m := Mundo.new()
+		m.generar([pais, "CHI", "ESP"], 830 + int(caso[1]))
+		var l := _liga_de(m, pais)
+		_comprobar(l.clubes.size() == int(caso[1]) and l.formato != null and l.formato.f1 == int(caso[2]) and l.jornadas() == int(caso[2]) + int(caso[3]) and l.jornadas() <= 38,
+			"%s: %d clubes, %d fechas de fase regular y %d de grupos finales (%d en total)" % [pais, l.clubes.size(), int(caso[2]), int(caso[3]), l.jornadas()])
+		while l.jornada_actual < int(caso[2]):
+			l.jugar_jornada()
+		var g: Array = l.formato.estado["grupos"]
+		_comprobar(g[0].size() == 6 and g[0].size() + g[1].size() == int(caso[1]), "%s: 6 clubes al grupo del campeonato y %d al otro" % [pais, g[1].size()])
+		var mitad_ok := true
+		for id: String in g[0]:
+			var d: Dictionary = l.tabla_puntos[id]
+			var original := 3 * int(d["g"]) + int(d["e"])
+			mitad_ok = mitad_ok and (int(d["pts"]) == (original + 1) / 2 if bool(caso[5]) else int(d["pts"]) == original)
+		_comprobar(mitad_ok, "%s: los puntos %s" % [pais, "se parten por la mitad (hacia arriba)" if bool(caso[5]) else "se arrastran enteros"])
+		var l2 := _recargar(m, l)
+		l2.jugar_jornada()
+		l.jugar_temporada()
+		var t := l.tabla()
+		_comprobar(g[0].has((t[0]["club"] as Club).id) and (g[0] as Array).has(String(l.orden_final[0])), "%s: el campeón (%s) sale del grupo de arriba" % [pais, (t[0]["club"] as Club).nombre])
+		var bajan: Array = t.slice(t.size() - l.plazas_descenso)
+		_comprobar(bajan.all(func(f: Dictionary) -> bool: return (g[1] as Array).has((f["club"] as Club).id)), "%s: los %d que bajan salen del grupo de abajo" % [pais, l.plazas_descenso])
+		var pj := int(l.tabla_puntos[g[0][0]]["pj"])
+		_comprobar(pj == int(caso[4]), "%s: el grupo de arriba juega %d partidos (%d)" % [pais, int(caso[4]), pj])
+		_comprobar(l2.jornada_actual == int(caso[2]) + 1 and l2.formato.estado["grupos"][0] == g[0], "%s: guardar y abrir en la fase final conserva los grupos" % pais)

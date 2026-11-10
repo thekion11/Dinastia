@@ -100,6 +100,13 @@ pasa "texturas en disco (asfalto)" "godot --headless --path . res://pruebas/prob
 pasa "extensión C++ = GDScript" "godot --headless --path . res://pruebas/probar_nativo.tscn" "FIN. 0 fallos"
 pasa "caché horneada del build" "godot --headless --path . --script res://pruebas/probar_cache_horneada.gd" "FIN. 0 fallos"
 pasa "estadio y ciudad por partes" "godot --headless --path . res://pruebas/probar_por_partes.tscn" "FIN. 0 fallos"
+# 5a. CAPTURAS DE UI (10-11, sesión 6): las pantallas nuevas no las compila el banco (solo ve el núcleo y los scripts que toca); un error de argumentos en la ficha
+#     de fase final solo salió al capturar. Estas escenas construyen la pantalla real sin pantalla (`--headless`: no guardan la foto) y fallan con cualquier SCRIPT ERROR.
+BLOQUE=capturas_ui
+pasa "capturas UI: fase final de la liga (ARG, USA, EGY)" "godot --headless --path . res://pruebas/captura_fase_final.tscn" "FOTO fase_final_EGY"
+pasa "capturas UI: formatos de los torneos continentales" "godot --headless --path . res://pruebas/captura_conti_formatos.tscn" "FOTO conti_asia"
+pasa "capturas UI: selección nacional" "godot --headless --path . res://pruebas/captura_seleccion.tscn" "captura sin pantalla"
+BLOQUE=
 # 5b. Pruebas viejas que nadie lanzaba y siguen pasando (reutilizadas el 27-10, orden 14 del dueño)
 pasa "calidad adaptativa (escalones)" "godot --headless --path . res://pruebas/probar_rendimiento_adaptativo.tscn" "probar_rendimiento_adaptativo: 0 fallos"
 pasa "contador de FPS" "godot --headless --path . res://pruebas/prueba_contador_fps.tscn" "FIN CONTADOR FPS. 0 fallos"

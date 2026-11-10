@@ -53,7 +53,8 @@ func _process(_d: float) -> void:
 				scroll.scroll_vertical = int((hijo as Control).position.y) - 10
 	elif _n == 40:
 		var nombre := "fase_final_%s" % CASOS[_caso]["pais"]
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % nombre)
+		if DisplayServer.get_name() != "headless":   ## sin pantalla (`especiales.sh`) solo se comprueba que la ficha se construye sin errores
+			get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % nombre)
 		print("FOTO ", nombre, " jornada ", _liga.jornada_actual, "/", _liga.jornadas())
 		_caso += 1
 		_siguiente()

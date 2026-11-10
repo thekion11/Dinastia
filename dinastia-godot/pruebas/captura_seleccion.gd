@@ -39,6 +39,9 @@ func _process(_d: float) -> void:
 		get_tree().quit()
 
 func _guardar(ruta: String) -> void:
+	if DisplayServer.get_name() == "headless":   ## sin pantalla (`especiales.sh`): solo se comprueba que la pantalla se construye sin errores
+		print("captura sin pantalla: ", ruta)
+		return
 	var img := get_viewport().get_texture().get_image()
 	img.save_png(ruta)
 	print("captura guardada: %s (%dx%d)" % [ruta, img.get_width(), img.get_height()])
