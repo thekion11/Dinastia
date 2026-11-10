@@ -112,10 +112,12 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 		var px := (caja.position.x + 0.45) if lado < 0.0 else (caja.end.x - 0.45)
 		SalasClub.vitrina(lote, nodo, m, base, vidrio, Vector3(px, y0, pz))
 		vitrinas.append({"p": Vector3(px, y0, pz), "k": ini + k})
+		MuseoPresentacion.vitrina(lote, nodo, m, Vector3(px, y0, pz), lado, {}, false)   ## placa y charco de luz; el rótulo de arriba ya lo tiene
 		var h: Dictionary = hs[ini + k]
 		copas.append(_copa(nodo, Vector3(px, y0 + 1.0, pz), m["madera"], TrofeosReales.para_titulo(String(h.get("titulo", "")), String(ctx.get("pais", "")))))
 		PiezasObra._rotulo_ajustado(nodo, "%s · %d" % [Idiomas.t(String(h.get("titulo", ""))), int(h.get("anio", 0))],
 			Vector3(px - lado * 0.38, y0 + 1.2, pz), -lado * PI / 2.0, 14, Color(0.12, 0.12, 0.14), paso_z * 0.92)
+	MuseoPresentacion.zocalo(lote, m, caja, y0)
 	## Camisetas por década en la pared del fondo (la del ascensor queda a un lado).
 	var decadas: Array = []
 	for h: Dictionary in hs:
