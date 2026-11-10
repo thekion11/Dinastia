@@ -45,16 +45,16 @@ Encargo del dueño (vía la sesión líder): recrear estadios reales con el cons
 - **Coste** (llamadas de dibujo con la cámara del partido, opengl3, antes → después): ESP 401 → 455 (pasa a óvalo), ITA 390 → 355, FRA 437 → 409, COL 408 → 392, RSA 447 → 434. Cada pieza cuesta 1 llamada; las diferencias son ruido del partido en marcha (jugadores y cámara).
 - **Prueba**: `_probar_piezas_estadio_real` (banco) y `pruebas/captura_estadios_iconicos.tscn` (cámara real del partido + vista aérea, `SOLO=`, `CALIDAD=`).
 
-## 5. Pendiente
-
-- `niveles_lado` (altura distinta por lado: el lado vertical de la Bombonera) y esquinas una a una: necesitan tocar `_tribunas`/`_esquinas` del constructor.
-- La forma «oval» se ve rectangular por fuera (fachadas rectas): falta una fachada curva.
-- Fachada «colchón» iluminada (Allianz) y el arco inclinado sobre una tribuna lateral (Wembley) quedan por afinar con fotos de referencia.
-
 ## 6. Segunda tanda y piezas nuevas (10-11)
 
 - **Piezas**: `fachada_curva` (anillo elíptico de una malla que hace curvo por fuera al óvalo) y `colchon` (paneles con luz propia del color del club, tipo Allianz, un MultiMesh). El arco de Wembley ya se puede (`arco` con `lado` este/oeste e `inclina`), pero ningún club del juego juega en él.
 - **Tanda 2** (en `herramientas/estadios_reales.py` → `PIEZAS`, base regenerada): NED Aj4x (techo retráctil, curva), PER Univers1tario (curva), JPN Kash1ma (techo y butacas), KSA Al-H1lal (membrana y curva), EGY Al Ahly (techo occidental), MAR R4ja (pista y techo occidental), USA Atl4nta Utd (costillas y curva), AUS M3lbourne V. (colchón azul), ECU Barcel0na SC (curva); además el colchón rojo del B4yern y la curva del B4rcelona. En la base ficticia: Amstel FC, Lima Crema, Isar FC, Port Phillip, Peachtree FC, Al-Qamar, Torero GYE, Comtal FC.
 - **No entran**: Portugal (no está en el juego) y Peñarol, FC Seoul y Zamalek (tienen fila en el generador pero no son clubes del juego).
 - **Llamadas** (cámara del partido, opengl3): NED 398, PER 389, JPN 428, KSA 488, EGY 495, MAR 493, USA 252, AUS 340, ECU 394, GER 349, ESP 490.
-- **Pendiente**: la fachada curva del B4rcelona apenas se distingue desde la vista aérea (la tapan las torres de esquina); niveles por lado y esquinas una a una siguen pendientes.
+
+## 7. Tercera tanda y piezas del constructor (10-11)
+
+- **Constructor**: `niveles_lado` {"este": 1, ...} (altura de cada tribuna; `_tribuna_de`) y `esquinas_abiertas` ["sureste", ...] (esquina a esquina, grada o edificio; `esquina_abierta`). Sur = +Z, este = +X. Sin las claves, el estadio de siempre.
+- **Fachada curva**: ahora una superelipse (exponente 4, ×1,2) que envuelve también las esquinas y las puntas de las tribunas: ya no la tapan. El colchón va sobre la misma curva.
+- **Tanda 3** (en `PIEZAS`): B0ca (lado de palcos bajo y sus esquinas abiertas), R3al Madrid (costillas de acero; sin curva, que las tapaba), Int3r (11 torres), L1verpool (tribuna principal alta), D0rtmund (el muro sur de 4 bandejas y 8 pilones amarillos), T0ttenham (muro sur), R0ma/Laz1o/N4poli (pista azul y curva), R1ver Plate, Sa0 Paulo, Ars3nal, Guadalaj4ra (curva verde), C0lo-C0lo (esquinas norte abiertas).
+- **Prueba**: `_probar_piezas_estadio_real` comprueba también niveles por lado y esquinas; capturas con `TANDA=3`.

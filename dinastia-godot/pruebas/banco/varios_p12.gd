@@ -376,6 +376,20 @@ func _probar_piezas_estadio_real() -> void:
 	_comprobar(PiezasRealesEstadio.montar(r3, {"fachada_curva": {"color": "#cccccc"}, "colchon": {"color": "#dc052d", "filas": 3}}, 60.0, 80.0, 30.0, 25.0) == 2
 		and (r3.get_node("Colchon") as MultiMeshInstance3D).multimesh.instance_count == 3 * 56, "fachada curva y colchón (3 filas de 56 paneles en UNA malla)")
 	r3.free()
+	## Niveles por lado y esquinas una a una (constructor).
+	var obra := EstadioObra.new()
+	obra.est = {"niveles_lado": {"este": 4}, "esquinas_abiertas": ["suroeste"]}
+	obra.dx = 45.0
+	obra.dz = 62.0
+	obra.niveles = 1
+	obra.alto = StadiumBuilder.ALTURA_PIE + StadiumBuilder.subida_bandeja()
+	obra.fondo_trib = StadiumBuilder.fondo_tribuna(1)
+	obra.principal = -1
+	var ts := StadiumBuilder._tribunas(obra)
+	var este := StadiumBuilder._tribuna_de(obra, ts[2])
+	var oeste := StadiumBuilder._tribuna_de(obra, ts[3])
+	_comprobar(este.niv_s == 4 and oeste.niv_s == 1 and este.alto_s > oeste.alto_s * 2.0 and este.pos.x > 0.0, "niveles por lado: la tribuna este sube a 4 bandejas, la oeste sigue con 1")
+	_comprobar(StadiumBuilder.esquina_abierta(obra.est, -1.0, 1.0) and not StadiumBuilder.esquina_abierta(obra.est, 1.0, 1.0) and not StadiumBuilder.esquina_abierta({}, -1.0, 1.0), "esquinas una a una: solo la suroeste queda abierta")
 	var c := Club.new()
 	c.nombre = "Club de prueba sin fila real"
 	_comprobar(not c.perfil_estadio().has("bandejas"), "sin fila real no hay techo por lados")
