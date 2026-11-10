@@ -7837,7 +7837,9 @@
   "Resto de la liga": "Rest of the league",
   "Resolución 3D automática (máx. 720 px de alto)": "Automatic 3D resolution (max. 720 px high)",
   "China": "China",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Drag each marker wherever you want: the position changes on its own depending on the zone. With a controller or keyboard: the D-pad picks the marker, Accept grabs it, the D-pad moves it and Accept drops it."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Drag each marker wherever you want: the position changes on its own depending on the zone. With a controller or keyboard: the D-pad picks the marker, Accept grabs it, the D-pad moves it and Accept drops it.",
+  "Cabecera compacta en el móvil": "Compact header on mobile",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Menus put the title and buttons on a single line, leaving more room for what you are working on."
  },
  "pt": {
   "Historia": "História",
@@ -15677,7 +15679,9 @@
   "Resto de la liga": "Resto da liga",
   "Resolución 3D automática (máx. 720 px de alto)": "Resolução 3D automática (máx. 720 px de altura)",
   "China": "China",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Arraste cada ficha para onde quiser: a posição muda sozinha conforme a zona. Com comando ou teclado: o direcional escolhe a ficha, Aceitar agarra-a, o direcional move-a e Aceitar solta-a."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Arraste cada ficha para onde quiser: a posição muda sozinha conforme a zona. Com comando ou teclado: o direcional escolhe a ficha, Aceitar agarra-a, o direcional move-a e Aceitar solta-a.",
+  "Cabecera compacta en el móvil": "Cabeçalho compacto no telemóvel",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Os menus põem o título e os botões numa só linha, para deixar mais espaço para o que se trabalha."
  },
  "patrones": [
   [
@@ -29624,7 +29628,9 @@
   "Resto de la liga": "Reste du championnat",
   "Resolución 3D automática (máx. 720 px de alto)": "Résolution 3D automatique (720 px de haut max.)",
   "China": "Chine",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Fais glisser chaque pion où tu veux : le poste change tout seul selon la zone. À la manette ou au clavier : la croix choisit le pion, Valider le saisit, la croix le déplace et Valider le lâche."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Fais glisser chaque pion où tu veux : le poste change tout seul selon la zone. À la manette ou au clavier : la croix choisit le pion, Valider le saisit, la croix le déplace et Valider le lâche.",
+  "Cabecera compacta en el móvil": "En-tête compact sur mobile",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Les menus mettent le titre et les boutons sur une seule ligne, pour laisser plus de place à ce sur quoi tu travailles."
  },
  "it": {
   "Historia": "Storia",
@@ -37464,7 +37470,9 @@
   "Resto de la liga": "Resto della lega",
   "Resolución 3D automática (máx. 720 px de alto)": "Risoluzione 3D automatica (max 720 px di altezza)",
   "China": "Cina",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Trascina ogni pedina dove vuoi: il ruolo cambia da solo in base alla zona. Con controller o tastiera: la croce sceglie la pedina, Conferma la prende, la croce la sposta e Conferma la rilascia."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Trascina ogni pedina dove vuoi: il ruolo cambia da solo in base alla zona. Con controller o tastiera: la croce sceglie la pedina, Conferma la prende, la croce la sposta e Conferma la rilascia.",
+  "Cabecera compacta en el móvil": "Intestazione compatta su mobile",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "I menu mettono il titolo e i pulsanti su una sola riga, per lasciare più spazio a ciò su cui lavori."
  },
  "de": {
   "Historia": "Geschichte",
@@ -45304,7 +45312,9 @@
   "Resto de la liga": "Rest der Liga",
   "Resolución 3D automática (máx. 720 px de alto)": "Automatische 3D-Auflösung (max. 720 px Höhe)",
   "China": "China",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Zieh jede Marke, wohin du willst: Die Position ändert sich je nach Zone von selbst. Mit Controller oder Tastatur: Das Steuerkreuz wählt die Marke, Bestätigen greift sie, das Steuerkreuz bewegt sie und Bestätigen lässt sie los."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Zieh jede Marke, wohin du willst: Die Position ändert sich je nach Zone von selbst. Mit Controller oder Tastatur: Das Steuerkreuz wählt die Marke, Bestätigen greift sie, das Steuerkreuz bewegt sie und Bestätigen lässt sie los.",
+  "Cabecera compacta en el móvil": "Kompakte Kopfzeile auf dem Handy",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Die Menüs zeigen Titel und Schaltflächen in einer einzigen Zeile, damit mehr Platz für die Arbeit bleibt."
  },
  "ca": {
   "Historia": "Història",
@@ -53144,7 +53154,9 @@
   "Resto de la liga": "Resta de la lliga",
   "Resolución 3D automática (máx. 720 px de alto)": "Resolució 3D automàtica (màx. 720 px d'alçada)",
   "China": "Xina",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Arrossega cada fitxa on vulguis: la posició canvia sola segons la zona. Amb comandament o teclat: la creueta tria la fitxa, Acceptar l'agafa, la creueta la mou i Acceptar la deixa anar."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Arrossega cada fitxa on vulguis: la posició canvia sola segons la zona. Amb comandament o teclat: la creueta tria la fitxa, Acceptar l'agafa, la creueta la mou i Acceptar la deixa anar.",
+  "Cabecera compacta en el móvil": "Capçalera compacta al mòbil",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Els menús posen el títol i els botons en una sola línia, per deixar més lloc al que es treballa."
  },
  "pl": {
   "Club": "Klub",
@@ -60984,7 +60996,9 @@
   "Resto de la liga": "Reszta ligi",
   "Resolución 3D automática (máx. 720 px de alto)": "Automatyczna rozdzielczość 3D (maks. 720 px wysokości)",
   "China": "Chiny",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Przeciągnij każdy pionek, gdzie chcesz: pozycja zmienia się sama zależnie od strefy. Padem lub klawiaturą: krzyżak wybiera pionek, Akceptuj go chwyta, krzyżak go przesuwa, a Akceptuj puszcza."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Przeciągnij każdy pionek, gdzie chcesz: pozycja zmienia się sama zależnie od strefy. Padem lub klawiaturą: krzyżak wybiera pionek, Akceptuj go chwyta, krzyżak go przesuwa, a Akceptuj puszcza.",
+  "Cabecera compacta en el móvil": "Kompaktowy nagłówek na telefonie",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Menu pokazują tytuł i przyciski w jednej linii, by zostawić więcej miejsca na to, nad czym pracujesz."
  },
  "tr": {
   "Club": "Kulüp",
@@ -68824,6 +68838,8 @@
   "Resto de la liga": "Ligin geri kalanı",
   "Resolución 3D automática (máx. 720 px de alto)": "Otomatik 3D çözünürlük (en fazla 720 px yükseklik)",
   "China": "Çin",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Her pulu istediğin yere sürükle: mevki bölgeye göre kendiliğinden değişir. Kumanda veya klavyeyle: yön tuşları pulu seçer, Onayla onu tutar, yön tuşları taşır ve Onayla bırakır."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Her pulu istediğin yere sürükle: mevki bölgeye göre kendiliğinden değişir. Kumanda veya klavyeyle: yön tuşları pulu seçer, Onayla onu tutar, yön tuşları taşır ve Onayla bırakır.",
+  "Cabecera compacta en el móvil": "Mobilde kompakt başlık",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Menüler başlığı ve düğmeleri tek satıra koyar; böylece üzerinde çalıştığın şeye daha çok yer kalır."
  }
 }

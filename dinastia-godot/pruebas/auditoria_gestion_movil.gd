@@ -14,11 +14,13 @@ const DPI := 400.0
 const MIN_MM_LETRA := 1.8    ## 11 pt de Apple (≈ 1,8 mm) o 12 sp de Material (≈ 1,9 mm): lo más pequeño que recomiendan para leer
 const MIN_MM_TOQUE := 7.0    ## Apple 44 pt ≈ 7 mm; Material 48 dp ≈ 7,6 mm (el mismo `EscalaMovil.MIN_MM_TOQUE`)
 const PANTALLAS := ["Inicio", "Mi plantel", "Táctica", "Mercado", "Finanzas", "Clubes", "competición", "Selección", "Ajustes"]
+const MIN_ALTO_UTIL := 0.75   ## en los menús, parte del alto de la pantalla que queda para el contenido (con la cabecera grande: ~0,6)
 const EJEMPLOS := 4          ## cuántos casos se nombran por comprobación
 var _p: Node
 var _fallos := 0
 var _clubes: Array = []
 var _resumen: Array = []
+var _alto_util: Array = []
 
 func _comprobar(ok: bool, texto: String) -> void:
 	print(("  ok     " if ok else "  FALLO  ") + texto)
@@ -33,6 +35,8 @@ func _ready() -> void:
 		return
 	PantallaMovil.dpi_forzado = DPI
 	EscalaMovil.forzar = true
+	if OS.get_environment("CABECERA") == "grande":   ## para las capturas del antes (y comprobar que el interruptor la devuelve)
+		PantallaMenu.compacta_pref = false
 	Idiomas.idioma = OS.get_environment("IDIOMA") if OS.get_environment("IDIOMA") != "" else "de"
 	Idiomas._asegurar(Idiomas.idioma)
 	get_tree().root.content_scale_factor = EscalaMovil.ZOOM_MOVIL
@@ -44,6 +48,7 @@ func _ready() -> void:
 	Idiomas.idioma = OS.get_environment("IDIOMA") if OS.get_environment("IDIOMA") != "" else "de"   ## las preferencias guardadas lo pisan al cargar
 	Idiomas._asegurar(Idiomas.idioma)
 	_p.call("_refrescar")
+	PantallaMenu.compacta_pref = OS.get_environment("CABECERA") != "grande"   ## las preferencias guardadas también lo pisan
 	_p.set("_zoom_interfaz", EscalaMovil.ZOOM_MOVIL)
 	get_tree().root.content_scale_factor = EscalaMovil.ZOOM_MOVIL
 	_elegir_clubes()
@@ -57,9 +62,12 @@ func _ready() -> void:
 	print("RESUMEN (px/mm %.2f · lienzo %s · idioma %s)" % [PantallaMovil.px_por_mm(self), get_viewport().get_visible_rect().size, Idiomas.idioma])
 	for r: String in _resumen:
 		print("  " + r)
+	if not _alto_util.is_empty():
+		print("  alto útil en los menús: %s" % ", ".join(_alto_util.map(func(x: float) -> String: return "%.0f %%" % (x * 100.0))))
 	print("===== FIN. %d fallos =====" % _fallos)
 	PantallaMovil.dpi_forzado = 0.0
 	EscalaMovil.forzar = false
+	PantallaMenu.compacta_pref = true
 	Idiomas.idioma = "es"
 	get_tree().quit(0 if _fallos == 0 else 1)
 
@@ -101,6 +109,10 @@ func _auditar_pantalla(nombre: String) -> void:
 		_p.call("_abrir_competicion")
 	elif nombre != "Inicio":
 		_p.call("_ir_a_pestana", nombre)
+	if nombre == "Ajustes":   ## la categoría «Pantalla»: la del interruptor de la cabecera
+		var aj: Object = _p.get("_ui_ajustes")
+		aj.set("seccion", "pantalla")
+		aj.call("_pintar_ajustes")
 	for i in 30:
 		await get_tree().process_frame
 	await get_tree().create_timer(0.4).timeout
@@ -115,6 +127,13 @@ func _auditar_pantalla(nombre: String) -> void:
 		var dir := OS.get_environment("CAPTURA_DIR") if OS.get_environment("CAPTURA_DIR") != "" else "user://"
 		get_viewport().get_texture().get_image().save_jpg(dir.path_join("gm_%s.jpg" % nombre.replace(" ", "_").replace("í", "i").replace("ó", "o")), 0.85)
 	_medir(etiqueta, raiz)
+	if raiz is PantallaMenu:
+		var cuerpo: Control = raiz.get("_cuerpo")
+		var parte := cuerpo.size.y / get_viewport().get_visible_rect().size.y
+		_alto_util.append(parte)
+		_comprobar(parte >= MIN_ALTO_UTIL, "[%s] alto útil para el contenido: %.0f %% de la pantalla (mínimo %.0f %%, cabecera compacta %s)" % [etiqueta, parte * 100.0, MIN_ALTO_UTIL * 100.0, "SÍ" if PantallaMenu.compacta() else "NO"])
+	if nombre == "Ajustes":
+		_comprobar(not raiz.find_children("CabeceraCompacta", "Button", true, false).is_empty(), "[%s] está el interruptor «Cabecera compacta en el móvil»" % etiqueta)
 	await _cerrar_capas()
 
 ## Lo visible de `raiz` que de verdad se ve en pantalla: dentro del lienzo y no recortado del todo por una zona de desplazamiento.
