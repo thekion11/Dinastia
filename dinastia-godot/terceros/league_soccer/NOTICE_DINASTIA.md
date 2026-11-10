@@ -14,7 +14,8 @@ nombres en español y conectadas a nuestro motor; cada archivo lo indica en su c
 | `visor/league_nucleo.gd` | `src/onthepitch/ballphysics.cpp`, `AIsupport/AIfunctions.cpp`, `player/controller/elizacontroller.cpp`, `player/player.cpp`, `aitactics.hpp`, `gameplaytuning.hpp`, `velocitystate.hpp`, `teamAIcontroller.cpp` |
 | `visor/league_reglas.gd` | `src/onthepitch/gameplaytuning.hpp` |
 | `visor/league_equipo.gd` | `src/onthepitch/team.cpp`, `teamAIcontroller.cpp`, `AIsupport/AIfunctions.cpp` (AI_GetOffsideLine) |
-| `visor/motor_league.gd` | integración de lo anterior en `MotorJugable` |
+| `visor/league_sin_balon.gd` | `src/onthepitch/player/controller/strategies/offtheball/default_{def,mid,off}.cpp`, `elizacontroller.cpp`, `playercontroller.cpp`, `teamAIcontroller.cpp`, `player/humanoid/humanoid_utils.cpp` |
+| `visor/motor_league.gd`, `visor/motor_league_p1.gd` | integración de lo anterior en `MotorJugable` |
 | `assets/characters/quaternius/anims_league/league.res` | `data/media/animations/` (293 animaciones convertidas) |
 | `audio/ui/` (golpeo y palo) | `data/media/sounds/` |
 
