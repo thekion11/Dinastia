@@ -101,6 +101,54 @@ MotorLeague (D motor_league.gd)  ── hereda de ──>  MotorJugable (reglas,
 
 ---
 
-## 6. Prototipo (fase 2): cifras
+## 6. Prototipo (fase 2): cifras (10-11-2026)
 
-(se rellena con la salida de `comparar_motor_league.tscn`)
+Archivos: `visor/league_nucleo.gd` (438 l.), `visor/league_reglas.gd`, `visor/league_equipo.gd`, `visor/motor_league.gd`;
+fábrica en `ui/estadio_p5.gd` y `ui/partido_jugable.gd` (con `load()`, sin nombrar la clase: regla de memoria del menú).
+Pruebas: banco `_probar_league_nucleo` (12 comprobaciones de las fórmulas contra el original + 20 s de partido con dos clubes
+de países distintos) y `pruebas/comparar_motor_league.tscn`. Banco completo con la bandera apagada: «FIN. 0 fallos».
+
+### Partidos completos (autopiloto, 2 × 240 s, paso de 1/30 s, misma semilla y mismos onces para los dos motores)
+`N_PARTIDOS=6 MITAD=240 godot --headless --path . res://pruebas/comparar_motor_league.tscn` → «FIN. 0 fallos».
+Cruces (6 países, 12 clubes): Lautaro FC (CHI) - Núñez Athletic (ARG), Boedo AC (ARG) - Laranjeiras FC (BRA),
+Laranjeiras FC (BRA) - Iruña CF (ESP), Olívico CF (ESP) - Trafford Reds (ENG), Selhurst FC (ENG) - Tevere FC (ITA),
+Salento FC (ITA) - Rancagua Celeste (CHI).
+
+| Media por partido | Motor de siempre | MotorLeague |
+|---|---|---|
+| CPU por paso del motor (µs, sin pantalla, con los 22 nodos animados) | 1.498 | 1.920 (+28 %) |
+| Pico de un paso (µs) | 15.997 | 29.619 |
+| Goles | 4,67 | 1,33 |
+| Remates | 39,7 | 7,3 |
+| Pases / acierto | 129,7 / 80,7 % | 106,5 / 76,1 % |
+| Despejes | 4,8 | 0,5 |
+| Posesión del local | 50,5 % | 50,4 % |
+| Decisiones de League por partido | — | pase 71 · pánico 0,5 · tiro 4 · conducir 212 |
+
+**Determinismo**: el primer partido de League repetido con la misma semilla da la MISMA huella (marcador, remates, pases y
+posición final del balón al milímetro). El balón suelto y el estado de equipo van a paso fijo de 10 ms.
+
+### Partido jugable con la cámara real (carrera, calidad MÍNIMA, `medir_partido_jugable.tscn`)
+| | Motor de siempre | MotorLeague |
+|---|---|---|
+| Llamadas de dibujo / triángulos (xvfb + opengl3, 1 fotograma) | 385 / 166 k (otra toma: 624 / 352 k) | 483 / 231 k (otra toma: 652 / 336 k) |
+| Nodos / memoria de vídeo | 2.732 / 184 MB | 2.733 / 184 MB |
+| CPU del proceso por fotograma (`CPU=1`) | 10,6 ms | 10,8 ms |
+La variante no añade nada que dibujar: las llamadas cambian con dónde están los jugadores y la cámara en ese fotograma (con
+el MISMO motor varían de 385 a 624 entre dos tomas). En CPU por fotograma la diferencia (+0,2 ms) está dentro del ruido.
+
+### Hallazgos
+1. **Asimetría del original (corregida)**: `clamp(foco + side·2, −pitchHalfW, backXBound·side)` en `GetAdaptedFormationPosition`
+   solo limita bien con `side = +1`; en League los equipos cambian de campo en el descanso y se compensa, aquí no (la visita tenía
+   ~15 puntos más de posesión, comprobado invirtiendo local y visita con `INVERTIR=1`). Ahora simétrico: 50,4 %.
+2. **Remata ~5 veces menos.** En el original la cola de órdenes es pánico → pase → tiro y el muñeco ejecuta la PRIMERA que
+   tiene una animación aplicable (`HumanoidBase`, «pick the first that is applicable»). Sin ese filtro (llega con la fase 4,
+   locomoción por animaciones) el pase casi siempre gana. Pendiente de decisión del dueño (`PLAN_GENERAL.md`): esperar a la
+   fase 4 o calibrar ya.
+3. **El sorteo del tiro** es por ciclo de 10 ms en el original; aquí la decisión es cada 0,25 s y se toma el máximo de 25
+   sorteos (misma probabilidad).
+4. **Coste**: +0,4 ms por paso sin pantalla. Lo caro era el historial del balón (4 medias de hasta 600 muestras por jugador y
+   paso): pasado a sumas acumuladas (O(1)); la mezcla de tácticas por puesto se guarda y se rehace una vez por segundo. Lo que
+   queda: la situación táctica de los 11 y las probabilidades de 30 pases cada 0,25 s. Candidato a C++ en la fase 5.
+5. **Ya teníamos ideas sueltas de League** (F1-F8 de la sesión PES 6: imagen mental, roles húngaros, colocación con retardo…,
+   `terceros_ia_motor_2026-11-01.md`). La variante NO las usa en lo que sustituye: allí manda el original, traducido línea a línea.
