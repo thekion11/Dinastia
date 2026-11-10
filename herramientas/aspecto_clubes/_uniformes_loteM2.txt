@@ -1,0 +1,32 @@
+# Lote M2: nombre|camiseta|k1|k2|pant|med|v1|v2|vcam|vpant|vmed
+Ironi Kiryat Shmona|franjas|#f6d000|#1c3f94|#1c3f94|#f6d000|#ffffff|#1c3f94|liso|#1c3f94|#ffffff
+Hapoel Petah Tikva|franjas_finas|#1c4aa6|#ffffff|#ffffff|#1c4aa6|#ffffff|#1c4aa6|liso|#1c4aa6|#ffffff
+Ironi Tiberias|liso|#d4202b|#ffffff|#d4202b|#d4202b|#111111|#d4202b|liso|#111111|#111111
+F.C. Ashdod|hombros|#ffd400|#c8102e|#c8102e|#ffd400|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Maccabi Bnei Reineh|mitad|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#c8102e|#ffffff
+Orenburg|franjas_anchas|#1555b5|#ffffff|#1555b5|#ffffff|#e30613|#ffffff|liso|#e30613|#e30613
+Akron Tolyatti|banda|#0a2a6e|#f58220|#0a2a6e|#0a2a6e|#f58220|#0a2a6e|liso|#f58220|#f58220
+Falkirk|aros|#0b2a5b|#ffffff|#ffffff|#0b2a5b|#ffffff|#0b2a5b|liso|#0b2a5b|#ffffff
+Livingston|diagonal|#f6a800|#111111|#111111|#f6a800|#111111|#f6a800|liso|#f6a800|#f6a800
+Mladost Lučani|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#c8102e|#ffffff
+Radnik Surdulica|aros|#d4202b|#111111|#111111|#d4202b|#111111|#d4202b|liso|#d4202b|#111111
+Napredak Kruševac|franjas_anchas|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Javor-Matis|cuartos_v|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#2e8b3a|liso|#ffffff|#ffffff
+FAP|raglan|#16348a|#ffd100|#16348a|#16348a|#ffd100|#16348a|liso|#ffd100|#ffd100
+Železničar Pančevo|tercios_h|#6a1b3a|#ffffff|#ffffff|#6a1b3a|#ffffff|#6a1b3a|liso|#ffffff|#ffffff
+IMT Novi Beograd|franja_pecho|#0d6e3a|#ffffff|#ffffff|#0d6e3a|#ffffff|#0d6e3a|liso|#ffffff|#ffffff
+Thun|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#c8102e|#ffffff
+Winterthur|mitad|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
+Podbrezová|liso|#1c6b2a|#ffffff|#1c6b2a|#1c6b2a|#ffffff|#1c6b2a|liso|#ffffff|#ffffff
+Skalica|diagonal|#c8102e|#ffd100|#c8102e|#c8102e|#ffd100|#c8102e|liso|#ffd100|#ffd100
+Zemplín Michalovce|aros|#c8102e|#1c3f94|#1c3f94|#c8102e|#ffffff|#1c3f94|liso|#1c3f94|#1c3f94
+Komárno|franjas|#1c4aa6|#ffd100|#1c4aa6|#1c4aa6|#ffd100|#1c4aa6|liso|#ffd100|#ffd100
+Alanyaspor|franjas|#f58220|#009e49|#009e49|#f58220|#ffffff|#009e49|liso|#ffffff|#ffffff
+Kasımpaşa|franjas|#12327a|#ffffff|#ffffff|#12327a|#ffffff|#12327a|liso|#ffffff|#12327a
+Gaziantep FK|franjas|#d4202b|#111111|#111111|#d4202b|#ffffff|#d4202b|liso|#d4202b|#111111
+Eyüpspor|aros|#6a1b7a|#ffd100|#6a1b7a|#6a1b7a|#ffd100|#6a1b7a|liso|#ffd100|#ffd100
+Kocaelispor|franjas|#0a7a3a|#111111|#111111|#0a7a3a|#ffffff|#0a7a3a|liso|#0a7a3a|#111111
+Gençlerbirliği|franjas_finas|#d4202b|#111111|#111111|#d4202b|#ffffff|#d4202b|liso|#111111|#111111
+Fatih Karagümrük|franjas_anchas|#c8102e|#111111|#111111|#c8102e|#ffffff|#c8102e|liso|#111111|#111111
+Dibba|mitad|#0e7a4a|#ffffff|#ffffff|#0e7a4a|#ffffff|#0e7a4a|liso|#ffffff|#ffffff
+Al Bataeh|franjas|#7a1f2b|#ffffff|#7a1f2b|#7a1f2b|#ffffff|#7a1f2b|liso|#ffffff|#ffffff

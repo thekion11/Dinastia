@@ -1,0 +1,18 @@
+# Lote W1: nombre|butaca1|butaca2
+Red Bull Salzburg|#c8102e|#ffffff
+Sturm Graz|#111111|#ffffff
+Rapid Wien|#00843d|#ffffff
+LASK|#111111|#ffffff
+Ludogorets|#00843d|#ffffff
+Levski Sofia|#0057b8|#ffffff
+CSKA Sofia|#c8102e|#ffffff
+Botev Plovdiv|#111111|#f9e100
+Slavia Praha|#c8102e|#ffffff
+Sparta Praha|#8b0000|#f9e100
+Olympiacos|#c8102e|#ffffff
+Panathinaikos|#00843d|#ffffff
+AEK Athens|#f9e100|#111111
+PAOK|#111111|#ffffff
+Ferencváros|#00843d|#ffffff
+Persepolis|#c8102e|#ffffff
+Esteghlal|#0057b8|#ffffff

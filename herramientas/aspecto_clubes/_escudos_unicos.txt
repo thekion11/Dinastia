@@ -82,11 +82,9 @@ Portimonense||franjas||||||
 Portsmouth||mitad||||||
 Q.P.R.||franjas||||||
 Racing Santander||mitad||||||
-Radnički Niš||banda||||||
 Randers||franjas||||||
 Real Sociedad B||mitad||||||
 Reims||franjas||||||
-SC Poltava||banda||||||
 Saint-Étienne||franjas||||||
 Sampdoria||chevron||||||
 Samsunspor||rombos||||||
@@ -102,7 +100,6 @@ Silkeborg||mitad||||||
 Sion||tablero||||||
 Sivasspor||banda_h||||||
 Southampton||mitad||||||
-Spartak Subotica||liso||||||
 Spezia||franjas||||||
 Sport||banda||||||
 Sporting CP B||franjas||||||
@@ -110,7 +107,6 @@ Sporting Gijón||cuartos||||||
 St Mirren||mitad||||||
 St. Gallen||mitad||||||
 Stoke||cuartos||||||
-Sturm Graz||franjas||||||
 Swansea||banda||||||
 Südtirol||cuartos||||||
 Tianjin Jinmen Tiger||cruz||||||
@@ -123,7 +119,7 @@ Vizela||interior||||||
 Volos||aro||||||
 Volta Redonda||franjas||||||
 Watford||banda||||||
-Wolfsberger AC||mitad||||||
+Wolfsberger AC||banda||||||
 Wrexham||cuartos||||||
 Young Boys||mitad||||||
 Zhejiang FC||franjas||||||
