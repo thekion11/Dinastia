@@ -36,29 +36,41 @@ static func final_de(a: Club, b: Club, anio: int) -> TorneoSelecciones:
 		t.tabla[c.id] = {"pts": 0, "gf": 0, "gc": 0, "pj": 0}
 	return t
 
-## Juega la Finalissima de `anio` si toca y no se jugó ya. Devuelve {anio, campeon, rival, gl, gv, penales} o {}.
-static func jugar(sel: Selecciones, m: Mundo, anio: int) -> Dictionary:
+## La final de `anio` montada y SIN jugar (para jugarla en directo: `JornadaSeleccion`), o null si no toca o ya se jugó.
+static func preparar(sel: Selecciones, m: Mundo, anio: int) -> TorneoSelecciones:
 	if sel == null or m == null or not toca(anio):
-		return {}
+		return null
 	for f: Dictionary in sel.finalissimas:
 		if int(f.get("anio", 0)) == anio:
-			return {}
+			return null
 	var europa := _campeon(sel, m, "ucl", anio)
 	var america := _campeon(sel, m, "lib", anio)
 	if europa == null or america == null or europa == america:
+		return null
+	return final_de(europa, america, anio)
+
+## Apunta la final `t` ya jugada (palmarés, historial del seleccionador y noticia). Devuelve {anio, campeon, rival, gl, gv, local, penales}.
+static func registrar(sel: Selecciones, m: Mundo, t: TorneoSelecciones) -> Dictionary:
+	if t == null or t.campeon == null or t.resultados.is_empty():
 		return {}
-	var t := final_de(europa, america, anio)
-	t.jugar_entero()
 	var r: Dictionary = t.resultados[0]
-	var rival: Club = america if t.campeon == europa else europa
+	var rival: Club = r["visita"] if t.campeon == r["local"] else r["local"]
 	var pen: Array = r.get("penales", [])
-	var fila := {"anio": anio, "campeon": t.campeon.nombre, "rival": rival.nombre, "gl": int(r["gl"]), "gv": int(r["gv"]),
+	var fila := {"anio": t.anio, "campeon": t.campeon.nombre, "rival": rival.nombre, "gl": int(r["gl"]), "gv": int(r["gv"]),
 		"local": (r["local"] as Club).nombre, "penales": pen.duplicate()}
 	sel.finalissimas.push_front(fila)
 	sel.cargo.anotar(m, t)
 	var marcador := "%s %d-%d %s" % [fila["local"], fila["gl"], fila["gv"], (r["visita"] as Club).nombre]
 	if not pen.is_empty():
 		marcador += " (penaltis %d-%d)" % [int(pen[0]), int(pen[1])]
-	sel.noticia.emit("🏆 %s %d: campeón %s" % [NOMBRE, anio, fila["campeon"]],
+	sel.noticia.emit("🏆 %s %d: campeón %s" % [NOMBRE, t.anio, fila["campeon"]],
 		"El campeón de Europa y el de América, frente a frente en sede neutral: %s." % marcador)
 	return fila
+
+## Juega (simulada) la Finalissima de `anio` si toca y no se jugó ya. Devuelve la fila de `registrar` o {}.
+static func jugar(sel: Selecciones, m: Mundo, anio: int) -> Dictionary:
+	var t := preparar(sel, m, anio)
+	if t == null:
+		return {}
+	t.jugar_entero()
+	return registrar(sel, m, t)

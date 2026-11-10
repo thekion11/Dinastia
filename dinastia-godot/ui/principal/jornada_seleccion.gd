@@ -63,6 +63,12 @@ static func jugar_torneos(pr: Principal) -> void:
 		return
 	for t: TorneoSelecciones in s.cargo.torneos_del_anio(pr.mundo, s, pr.mundo.anio):
 		await _jugar_torneo(pr, t, s.cargo.mi_equipo(t))
+	## (10-11) La FINALISSIMA, si tu selección es campeona de Europa o de América: también se juega en directo (o simulada).
+	var fin := Finalissima.preparar(s, pr.mundo, pr.mundo.anio)
+	if fin != null and s.cargo.mi_equipo(fin) != null:
+		await _jugar_torneo(pr, fin, s.cargo.mi_equipo(fin))
+		fin.jugar_entero()
+		Finalissima.registrar(s, pr.mundo, fin)
 
 static func _jugar_torneo(pr: Principal, t: TorneoSelecciones, mia: Club) -> void:
 	var guard := 0

@@ -56,3 +56,21 @@ func _probar_olimpicos() -> void:
 		var otro := Selecciones.new(m)
 		otro.desde_dic(JSON.parse_string(JSON.stringify(s.a_dic())))
 		_comprobar(otro.olimpicos.size() == 1, "los Juegos se guardan con la partida")
+
+## (10-11) La Finalissima en dos pasos (como la juega la interfaz en directo): `preparar` la deja sin jugar y `registrar` la apunta una vez.
+func _probar_finalissima_directo() -> void:
+	_titulo("FINALISSIMA EN DIRECTO: PREPARAR Y REGISTRAR")
+	var m := Mundo.new()
+	m.generar(["URU", "POR"], 515)
+	m.tomar_el_mando(m.ligas[0].clubes[3].id)
+	var s := m.selecciones
+	var t := Finalissima.preparar(s, m, 2028)
+	_comprobar(t != null and t.en_curso() and t.partidos_de_la_fecha().size() == 1 and t.nombre_fase() == "Final", "preparada sin jugar: una final pendiente")
+	var par: Array = t.partidos_de_la_fecha()[0]
+	var p := Partido.new(par[0], par[1], true)
+	p.simular()
+	t.jugar_fecha(p)
+	var r: Dictionary = t.resultados[0]
+	_comprobar(not t.en_curso() and int(r["gl"]) == p.goles_local and int(r["gv"]) == p.goles_visita, "el partido jugado aparte cuenta (%s %d-%d %s)" % [(par[0] as Club).nombre, p.goles_local, p.goles_visita, (par[1] as Club).nombre])
+	var f := Finalissima.registrar(s, m, t)
+	_comprobar(not f.is_empty() and s.finalissimas.size() == 1 and Finalissima.jugar(s, m, 2028).is_empty() and Finalissima.preparar(s, m, 2028) == null, "se apunta una vez y el cierre ya no la repite (campeón %s)" % String(f.get("campeon", "")))
