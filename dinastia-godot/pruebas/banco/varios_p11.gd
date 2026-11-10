@@ -212,7 +212,11 @@ func _probar_objetivos_por_club() -> void:
 	_comprobar(metas_desc.keys().size() < 2 or metas_desc.values().min() != metas_desc.values().max(), "«Evitar el descenso» cambia con el tamaño de la liga (%s)" % str(metas_desc))
 	var esp := ObjetivosClub.plazas_continentales("ESP", 20)
 	var chi := ObjetivosClub.plazas_continentales("CHI", 16)
-	_comprobar(int(esp["elite"]) == 4 and int(chi["elite"]) == 3, "ESP da 4 plazas de Champions y CHI 3 de Libertadores (%d y %d)" % [int(esp["elite"]), int(chi["elite"])])
+	var cupo_esp := 0
+	for f: Array in FormatosConti.cupos("ucl"):
+		if f[0] == "ESP":
+			cupo_esp = int(f[1])
+	_comprobar(int(esp["elite"]) == cupo_esp and cupo_esp == 5 and int(chi["elite"]) == 3, "ESP da las 5 plazas de la Champions de 36 y CHI 3 de Libertadores (%d y %d)" % [int(esp["elite"]), int(chi["elite"])])
 	## El tamaño de la liga manda: el colista de una liga de 12, 20 o 24 con 2, 3 y 4 descensos (las ligas generadas hoy son de 16).
 	var chico := Club.new()
 	chico.pais = "ESP"

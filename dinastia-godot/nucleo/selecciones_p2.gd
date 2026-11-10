@@ -421,7 +421,9 @@ func registrar_mundial(torneo: Continental, anio: int) -> Dictionary:
 		return {}
 	var mio := m.mi_club()
 	var entro := torneo.participa(mio)
-	var relato: Array[String] = FifaClubes.relato(torneo, mio) if entro else []
+	var relato: Array[String] = []
+	if entro:
+		relato = FifaClubes.relato(torneo, mio)
 	var eres_tu := mio != null and campeon == mio
 	mundial_clubes = {
 		"anio": anio, "campeon": campeon.nombre, "club_id": campeon.id,
