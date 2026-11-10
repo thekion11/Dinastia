@@ -511,6 +511,381 @@
     "uel"
    ],
    "BANDERA": "🇨🇭"
+  },
+  "CHN": {
+   "PAIS_SELECCION": "China",
+   "TIER_PAIS": 1.0,
+   "GLOBO_PAIS": [
+    116.4,
+    39.9
+   ],
+   "POOLS_EU": [
+    [
+     "Wei",
+     "Lei",
+     "Jun",
+     "Hao",
+     "Peng",
+     "Tao",
+     "Bin",
+     "Yang",
+     "Chen",
+     "Long",
+     "Kai",
+     "Ming",
+     "Qiang",
+     "Feng"
+    ],
+    [
+     "Wang",
+     "Li",
+     "Zhang",
+     "Liu",
+     "Chen",
+     "Yang",
+     "Huang",
+     "Zhao",
+     "Wu",
+     "Zhou",
+     "Xu",
+     "Sun",
+     "Ma",
+     "Zhu"
+    ]
+   ],
+   "CONFED": [
+    "asia"
+   ],
+   "BANDERA": "🇨🇳"
+  },
+  "CZE": {
+   "PAIS_SELECCION": "República Checa",
+   "TIER_PAIS": 0.7,
+   "GLOBO_PAIS": [
+    14.42,
+    50.08
+   ],
+   "POOLS_EU": [
+    [
+     "Jan",
+     "Petr",
+     "Jakub",
+     "Tomáš",
+     "Martin",
+     "Lukáš",
+     "Ondřej",
+     "Pavel",
+     "David",
+     "Michal",
+     "Filip",
+     "Vojtěch",
+     "Adam",
+     "Matěj"
+    ],
+    [
+     "Novák",
+     "Svoboda",
+     "Novotný",
+     "Dvořák",
+     "Černý",
+     "Procházka",
+     "Kučera",
+     "Veselý",
+     "Horák",
+     "Němec",
+     "Marek",
+     "Pospíšil",
+     "Pokorný",
+     "Hájek"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇨🇿"
+  },
+  "NOR": {
+   "PAIS_SELECCION": "Noruega",
+   "TIER_PAIS": 0.85,
+   "GLOBO_PAIS": [
+    10.75,
+    59.91
+   ],
+   "POOLS_EU": [
+    [
+     "Magnus",
+     "Henrik",
+     "Andreas",
+     "Jonas",
+     "Sander",
+     "Martin",
+     "Mathias",
+     "Kristian",
+     "Sindre",
+     "Håkon",
+     "Markus",
+     "Eirik",
+     "Tobias",
+     "Ola"
+    ],
+    [
+     "Hansen",
+     "Johansen",
+     "Olsen",
+     "Larsen",
+     "Andersen",
+     "Nilsen",
+     "Pedersen",
+     "Kristiansen",
+     "Jensen",
+     "Karlsen",
+     "Johnsen",
+     "Pettersen",
+     "Eriksen",
+     "Berg"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇳🇴"
+  },
+  "POL": {
+   "PAIS_SELECCION": "Polonia",
+   "TIER_PAIS": 0.8,
+   "GLOBO_PAIS": [
+    21.01,
+    52.23
+   ],
+   "POOLS_EU": [
+    [
+     "Piotr",
+     "Krzysztof",
+     "Tomasz",
+     "Marcin",
+     "Michał",
+     "Paweł",
+     "Jakub",
+     "Kamil",
+     "Łukasz",
+     "Adam",
+     "Bartosz",
+     "Mateusz",
+     "Dawid",
+     "Szymon"
+    ],
+    [
+     "Nowak",
+     "Kowalski",
+     "Wiśniewski",
+     "Wójcik",
+     "Kowalczyk",
+     "Kamiński",
+     "Lewandowski",
+     "Zieliński",
+     "Szymański",
+     "Woźniak",
+     "Dąbrowski",
+     "Kozłowski",
+     "Jankowski",
+     "Mazur"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇵🇱"
+  },
+  "ROU": {
+   "PAIS_SELECCION": "Rumanía",
+   "TIER_PAIS": 0.7,
+   "GLOBO_PAIS": [
+    26.1,
+    44.43
+   ],
+   "POOLS_EU": [
+    [
+     "Andrei",
+     "Alexandru",
+     "Mihai",
+     "Ionuț",
+     "Cristian",
+     "Marius",
+     "Florin",
+     "Gabriel",
+     "Daniel",
+     "Răzvan",
+     "Cătălin",
+     "Bogdan",
+     "Vlad",
+     "Sorin"
+    ],
+    [
+     "Popescu",
+     "Ionescu",
+     "Popa",
+     "Stan",
+     "Dumitru",
+     "Gheorghe",
+     "Constantin",
+     "Marin",
+     "Georgescu",
+     "Radu",
+     "Stoica",
+     "Dinu",
+     "Matei",
+     "Munteanu"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇷🇴"
+  },
+  "SRB": {
+   "PAIS_SELECCION": "Serbia",
+   "TIER_PAIS": 0.5,
+   "GLOBO_PAIS": [
+    20.46,
+    44.82
+   ],
+   "POOLS_EU": [
+    [
+     "Marko",
+     "Nikola",
+     "Stefan",
+     "Milan",
+     "Luka",
+     "Nemanja",
+     "Aleksandar",
+     "Dušan",
+     "Filip",
+     "Vladimir",
+     "Uroš",
+     "Lazar",
+     "Miloš",
+     "Đorđe"
+    ],
+    [
+     "Jovanović",
+     "Petrović",
+     "Nikolić",
+     "Marković",
+     "Đorđević",
+     "Stojanović",
+     "Ilić",
+     "Pavlović",
+     "Stanković",
+     "Todorović",
+     "Kovačević",
+     "Milošević",
+     "Vasić",
+     "Lazić"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇷🇸"
+  },
+  "SWE": {
+   "PAIS_SELECCION": "Suecia",
+   "TIER_PAIS": 0.8,
+   "GLOBO_PAIS": [
+    18.07,
+    59.33
+   ],
+   "POOLS_EU": [
+    [
+     "Erik",
+     "Lars",
+     "Anders",
+     "Johan",
+     "Karl",
+     "Nils",
+     "Oskar",
+     "Viktor",
+     "Emil",
+     "Gustav",
+     "Axel",
+     "Filip",
+     "Albin",
+     "Hampus"
+    ],
+    [
+     "Andersson",
+     "Johansson",
+     "Karlsson",
+     "Nilsson",
+     "Eriksson",
+     "Larsson",
+     "Olsson",
+     "Persson",
+     "Svensson",
+     "Gustafsson",
+     "Pettersson",
+     "Jonsson",
+     "Jansson",
+     "Lindberg"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇸🇪"
+  },
+  "UKR": {
+   "PAIS_SELECCION": "Ucrania",
+   "TIER_PAIS": 0.6,
+   "GLOBO_PAIS": [
+    30.52,
+    50.45
+   ],
+   "POOLS_EU": [
+    [
+     "Oleksandr",
+     "Andriy",
+     "Serhiy",
+     "Dmytro",
+     "Mykola",
+     "Taras",
+     "Volodymyr",
+     "Artem",
+     "Maksym",
+     "Vitaliy",
+     "Ihor",
+     "Bohdan",
+     "Yaroslav",
+     "Roman"
+    ],
+    [
+     "Shevchenko",
+     "Kovalenko",
+     "Bondarenko",
+     "Tkachenko",
+     "Kovalchuk",
+     "Kravchenko",
+     "Oliynyk",
+     "Shevchuk",
+     "Polishchuk",
+     "Lysenko",
+     "Moroz",
+     "Marchenko",
+     "Savchenko",
+     "Melnyk"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇺🇦"
   }
  },
  "tablas": {

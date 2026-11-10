@@ -679,7 +679,7 @@ def main():
         if pais in LIGAS:
             nd["liga"] = LIGAS[pais]
         if "segunda" in d:   ## (10-11) la segunda división: mismos clubes ficticios, su propio nombre de liga
-            nd["segunda"] = {"liga": segundas_divisiones.LIGAS_FICTICIAS.get(pais, d["segunda"]["liga"]),
+            nd["segunda"] = {"liga": segundas_divisiones.LIGAS_FICTICIAS.get(pais, importar_pais.LIGAS2_FICTICIAS.get(pais, d["segunda"]["liga"])),
                              "clubes": renombrar(d["segunda"]["clubes"])}
         fic["PAISES_LIGAS"][pais] = nd
     fic["CONFED"] = {}

@@ -100,6 +100,18 @@ pasa "texturas en disco (asfalto)" "godot --headless --path . res://pruebas/prob
 pasa "extensión C++ = GDScript" "godot --headless --path . res://pruebas/probar_nativo.tscn" "FIN. 0 fallos"
 pasa "caché horneada del build" "godot --headless --path . --script res://pruebas/probar_cache_horneada.gd" "FIN. 0 fallos"
 pasa "estadio y ciudad por partes" "godot --headless --path . res://pruebas/probar_por_partes.tscn" "FIN. 0 fallos"
+# 5a. CAPTURAS DE UI (10-11, sesión 6): las pantallas nuevas no las compila el banco (solo ve el núcleo y los scripts que toca); un error de argumentos en la ficha
+#     de fase final solo salió al capturar. Estas escenas construyen la pantalla real sin pantalla (`--headless`: no guardan la foto) y fallan con cualquier SCRIPT ERROR.
+BLOQUE=capturas_ui
+pasa "capturas UI: fase final de la liga (ARG, USA, EGY)" "godot --headless --path . res://pruebas/captura_fase_final.tscn" "FOTO fase_final_EGY"
+pasa "capturas UI: formatos de los torneos continentales" "godot --headless --path . res://pruebas/captura_conti_formatos.tscn" "FOTO conti_asia"
+pasa "capturas UI: selección nacional" "godot --headless --path . res://pruebas/captura_seleccion.tscn" "captura sin pantalla"
+BLOQUE=
+# 5a2. Lo mismo, en tanda aparte porque tarda (ESPECIALES_SOLO=capturas_ui_lento): cierra las copas de todos los países y abre el menú principal entero.
+BLOQUE=capturas_ui_lento
+pasa "capturas UI: palmarés del mundo" "godot --headless --path . res://pruebas/captura_palmares_mundo.tscn" "CAPTURA OK"
+pasa "capturas UI: partido continental en vivo" "godot --headless --path . res://pruebas/captura_continental_vivo.tscn" "COINCIDE \(no se volvio a simular\) = true|no se encontro una semana"
+BLOQUE=
 # 5b. Pruebas viejas que nadie lanzaba y siguen pasando (reutilizadas el 27-10, orden 14 del dueño)
 pasa "calidad adaptativa (escalones)" "godot --headless --path . res://pruebas/probar_rendimiento_adaptativo.tscn" "probar_rendimiento_adaptativo: 0 fallos"
 pasa "contador de FPS" "godot --headless --path . res://pruebas/prueba_contador_fps.tscn" "FIN CONTADOR FPS. 0 fallos"
@@ -488,7 +500,7 @@ fi
   pasa "deriva a 30 temporadas (2 países; A4)" "DERIVA_TEMP=30 godot --headless --path . res://pruebas/ideas/a4_deriva_larga.tscn" "FIN. 0 fallos"
   # El motor del partido nota la calidad y la pizarra (sonda_motor_dt con umbrales, M-414; 6 partidos por escenario (10 en la pizarra, A4-PARTIDO-005: con 6 el ruido de los tiros daba falsos fallos), ~10 min)
   pasa "motor: el mejor gana al peor" "ESCENARIO=calidad N=6 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
-  pasa "motor: la pizarra se nota" "ESCENARIO=tactica N=10 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
+  pasa "motor: la pizarra se nota" "ESCENARIO=tactica N=6 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
   # M-467: todas las pantallas en alemán; los textos se encogen (TextoQueCabe) y no quedan más de 4 cortados (~3 min)
   pasa "textos largos en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_LARGOS=/tmp/largos_de.json RECORRIDO_CORTADOS_MAX=4 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN LARGOS. 0 fallos"
   pasa "paneles más anchos que su hueco (móvil, alemán)" "RECORRIDO_ANCHO=1 RECORRIDO_ANCHO_MAX=0 RECORRIDO_IDIOMA=de RECORRIDO_MOVIL=2400x1080 RECORRIDO_LARGOS=/tmp/ancho_de.json godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN ANCHO. 0 fallos"

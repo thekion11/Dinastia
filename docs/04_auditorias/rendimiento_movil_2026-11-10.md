@@ -175,3 +175,45 @@ Cifras buenas (BAJA, `hw_modesto.sh` opengl3 llvmpipe, 0 errores en consola; `LO
 | ENG | 365,9 k → 350,3 k (−4,3 %) | 250 → 250 | 228 → 217 | 387 → 282 |
 
 Conclusión: −2…−4 % de triángulos, llamadas iguales, fotograma dentro del ruido, sin picos nuevos. Es una mejora pequeña pero sin coste visible (LOD 0 intacto; solo cambia al alejarse), por eso se queda encendida en BAJA/MEDIA BAJA (`PeloCapas._con_lods`, solo fuera de `--headless`, interruptor `LODS_CUERO=0`). Los demás grupos (cara real, `Hair*`, `PeloDrive`) NO se hornean: las mediciones por grupo anteriores a la corrección no valen y, por la forma de sus mallas (cara ~950 triángulos por pieza, `Hair*`/`PeloDrive` compartidas y pocas), se espera menos de un 2 %. Pendiente del dueño: confirmar en el teléfono si baja el tiempo de fotograma.
+
+## Precompilación de shaders del partido (10-11, sesión 5): ya existe y funciona
+Herramienta nueva `pruebas/medir_picos_partido.tscn` (tiempo real de cada fotograma desde que se abre `VistaEstadio`; `ESTAB=1` repite lo que hace el juego: `PantallaCarga.estabilizar`, 10 fotogramas dibujados DEBAJO de la carga, orden R4 del dueño del 3-11; `DOBLE=1` abre dos veces en el mismo proceso). BAJA, llvmpipe (la compilación de GLSL es real; el tiempo absoluto no vale para el teléfono):
+
+| Club | Sin estabilizar: 1.er fotograma visible | Con estabilizar (flujo real) | Mediana |
+|---|---|---|---|
+| CHI | 6.725 ms | 676 ms | 245 ms |
+| ESP | 4.487 ms | 554–639 ms | 207 ms |
+| ENG | 5.245 ms | 720 ms | 205 ms |
+
+Los tirones del primer dibujado ya se pagan debajo de la pantalla de carga (−89…−90 %); lo que queda son 1-3 fotogramas de ~2,5-3,5× la mediana y un salto de ~1,5× al lanzar el festejo. Segunda apertura en el mismo proceso (`DOBLE=1`): ~2 s en vez de ~11 s, pero eso mezcla shaders con scripts compilados y cachés estáticas (`_cache_cuero`…), no es solo compilación. Con esto, un calentador de materiales aparte no aporta: no se añade. El menú: ya medido (arranque, mismo hueco con montaje en caliente). Pendiente del dueño: repetir `medir_picos_partido` en el teléfono (el primer dibujado real depende del driver).
+
+## Perfil por fases del partido en MEDIA: píxeles contra geometría (10-11, sesión 5; 3 clubes, llvmpipe, fotograma relativo)
+Mismo partido y misma cámara, MEDIA, solo cambia lo indicado (`medir_partido.tscn`, `HW_RES`, `OCULTAR`, `OCULTAR_GRUPOS`):
+
+| Club | Base 1280×720 | A 640×360 (¼ de píxeles) | Sin césped | Sin butacas ni hinchas (triángulos) |
+|---|---|---|---|---|
+| CHI | 391 ms | 236 ms (**−40 %**) | 508 ms (+30 %) | 377 ms (−4 %; 762 k → 553 k, −27 %) |
+| ESP | 334 ms | 192 ms (**−43 %**) | 434 ms (+30 %) | 337 ms (+1 %; 540 k → 388 k, −28 %) |
+| ENG | 369 ms | 214 ms (**−42 %**) | 488 ms (+32 %) | 350 ms (−5 %; 532 k → 416 k, −22 %) |
+
+Lectura:
+1. **El coste va con los píxeles.** Con ¼ de píxeles el fotograma baja 40-43 %: modelo `fotograma ≈ 0,47·F + 0,53·F·escala²` (F = fotograma a 720p). Quitar un cuarto de los triángulos (grada) casi no mueve el tiempo (−5…+1 %): el partido está limitado por relleno de píxel, no por vértices. Por eso las rebajas de geometría (LODs, butacas) valen poco; lo que de verdad baja el tiempo es dibujar menos píxeles o hacerlos más baratos (MSAA, ya quitado: −60 %).
+2. **Sin césped el fotograma SUBE un 30 %.** No es que la hierba sea barata: al esconder el campo se ve el suelo de detrás con un material más pesado. No se puede aislar el coste del césped así; hace falta una prueba con un campo de color plano (pendiente).
+3. Sombras (−13…−17 % en MEDIA, ya medido arriba), post (nada), omni (nada), hinchas (−1 %), gente de fuera (−6 %), jugadores (−11 %) siguen como en el cuadro anterior.
+
+**Propuestas con números (nada se aplica sin OK del dueño):**
+- **P1. Resolución 3D objetivo en móvil.** Hoy MEDIA dibuja al 100 % de la pantalla del móvil: un teléfono de 2400×1080 son 2,6 Mpíx = 2,8 × 1280×720, y eso explica los 5 FPS del dueño mejor que ningún otro dato. Escala por defecto en móvil (Android/Web, `es_compatibilidad()`): 0,75 → fotograma −23 %; 0,67 → −29 %; 0,5 → −40 % (medido). Mejor que una escala fija: limitar la altura del 3D a 720 px (`escala = min(1, 720 / altura_pantalla)`), que da ~0,67 en un 1080p y 0,5 en un 1440p. Las UI y los textos siguen a resolución nativa (solo cambia el 3D). Ya existe `Calidad.escala_media` (50-100 %, elegible en Ajustes) y FSR 1.0 solo en Forward+; en compatibilidad es bilineal.
+- **P2. Sombra solar en MEDIA en móvil** apagada o a 1 corte: −13 a −17 % (ya medido; el dueño decide por la pérdida visual).
+- **P3. Césped**: medir con campo plano para ver cuánto cuesta el shader de hierba (`cesped_capas.gd`), y si cuesta, una versión más barata en BAJA/MEDIA BAJA.
+Todo esto se confirma en el teléfono: llvmpipe es solo una referencia relativa.
+
+### P1 APLICADA: resolución 3D automática (10-11, sesión 5; orden del líder)
+`CalidadRes3D` (`visor/calidad_res3d.gd`): con `Calidad.res3d_auto` activo, de ULTRA BAJA a MEDIA el 3D no pasa de 720 px de alto (`escala = min(la del nivel, 720 / alto de la ventana)`, nunca bajo 35 %); la UI sigue nativa; ALTA y ULTRA no se tocan. **Encendida por defecto solo en móvil** (`OS.has_feature("mobile")` o Web táctil); en escritorio, apagada. Interruptor en Ajustes («Resolución 3D automática (máx. 720 px de alto)», 8 idiomas; se guarda en `grafica/res3d_auto`). Pruebas: `p6_resolucion3d` (especiales) y banco 0 fallos; `RES3D_AUTO=1/0` y `RES3D_ALTO` simulan el móvil en las mediciones.
+
+MEDIA a 1920×1080 (como un móvil en horizontal), cámara real, fotograma relativo (llvmpipe):
+| Club | Apagada | Encendida (escala 0,667) | Cambio |
+|---|---|---|---|
+| CHI | 660 ms | 457 ms | **−31 %** |
+| ESP | 583 ms | 424 ms | **−27 %** |
+| ENG | 597 ms | 441 ms | **−26 %** |
+Coincide con el modelo (−29 %). Triángulos y llamadas iguales; vídeo −10 MB. Visual (captura 1080p al 100 %, jugadores y líneas): algo más suave, los jugadores y el balón se distinguen igual; en una pantalla de móvil, más pequeña, se nota menos. Alternativa si el dueño la ve borrosa: subir el tope (p. ej. 0,8 = 864 px) o FSR 1 (solo Forward+/Mobile; en compatibilidad no existe).

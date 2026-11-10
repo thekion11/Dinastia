@@ -1,0 +1,26 @@
+#seleccion=Serbia
+#tier=0.5
+#globo=20.46,44.82
+#bandera=🇷🇸
+#confed=ucl,uel
+#liga=Superl1ga de Serbia|Liga Serbia
+#copa=Copa de Serbia|Copa de Serbia
+#nombres=Marko,Nikola,Stefan,Milan,Luka,Nemanja,Aleksandar,Dušan,Filip,Vladimir,Uroš,Lazar,Miloš,Đorđe
+#apellidos=Jovanović,Petrović,Nikolić,Marković,Đorđević,Stojanović,Ilić,Pavlović,Stanković,Todorović,Kovačević,Milošević,Vasić,Lazić
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Crvena Zvezda;Estrella Roja;#c8102e;#ffffff;66;53000;1945;los Rojiblancos;el estadio de la capital llamado el Marakana;El campeón de Europa de 1991 y el club con más hinchada del país.
+Partizan;Partisano;#000000;#ffffff;62;32000;1945;los Blanquinegros;el estadio de la capital;El eterno rival de la capital, finalista europeo en 1966.
+TSC Bačka Topola;Topola Backa;#1b458f;#ffd100;55;4000;1913;los Azules;el estadio de la ciudad del norte;Un club de la llanura del norte.
+Vojvodina;Voivodina;#c8102e;#ffffff;57;15000;1914;los Voivodinos;el estadio de la ciudad del Danubio;El club de la ciudad del Danubio.
+Čukarički;Cukaricki Cap.;#ffffff;#000000;55;4000;1926;los Blancos;el estadio del barrio de la capital;El club de un barrio de la capital.
+Radnički Niš;Radnicki Sur;#c8102e;#ffffff;54;18000;1923;los Obreros;el estadio de la ciudad del sur;El club obrero de la ciudad del sur.
+Novi Pazar;Pazar Nuevo;#1b458f;#ffffff;53;12000;1928;los Azules;el estadio de la región del sur;El club de la región del sur.
+Mladost Lučani;Mladost Montana;#c8102e;#1b458f;52;8000;1953;los Jóvenes;el estadio de la ciudad pequeña;Un club pequeño de la región central.
+Spartak Subotica;Esparta Subotica;#c8102e;#ffffff;53;13000;1945;los Spartakovci;el estadio de la ciudad del norte;El club de la frontera norte.
+Radnik Surdulica;Radnik Sur;#c8102e;#ffffff;52;3000;1926;los Obreros;el estadio de la ciudad pequeña del sur;Un club de la ciudad pequeña del sur.
+Napredak Kruševac;Napredak Central;#c8102e;#ffffff;52;11000;1946;los Napredak;el estadio de la ciudad del interior;El club de la ciudad del interior.
+Javor-Matis;Javor Ivanjica;#c8102e;#ffffff;51;4000;1912;los Rojos;el estadio de la ciudad de montaña;Un club de la ciudad de montaña.
+OFK Beograd;Ofk Capital;#1b458f;#ffffff;51;5000;1911;los Romantikos;el estadio del barrio de la capital;El club romántico de la capital.
+FAP;Fap Prijepolje;#1b458f;#ffd100;50;3000;1960;los Camioneros;el estadio de la ciudad del sur;Un club modesto de la ciudad de los camiones.
+Železničar Pančevo;Zeleznicar Panc.;#c8102e;#ffffff;51;4000;1945;los Ferroviarios;el estadio de la ciudad industrial;El club ferroviario de la ciudad del Danubio.
+IMT Novi Beograd;Imt Capital;#1b458f;#ffffff;50;3500;1954;los Azules;el estadio de la capital nueva;Un club modesto de la capital.

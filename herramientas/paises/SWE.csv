@@ -1,0 +1,26 @@
+#seleccion=Suecia
+#tier=0.8
+#globo=18.07,59.33
+#bandera=🇸🇪
+#confed=ucl,uel
+#liga=Allsv3nskan|Liga Sueca
+#copa=Copa de Suecia|Copa de Suecia
+#nombres=Erik,Lars,Anders,Johan,Karl,Nils,Oskar,Viktor,Emil,Gustav,Axel,Filip,Albin,Hampus
+#apellidos=Andersson,Johansson,Karlsson,Nilsson,Eriksson,Larsson,Olsson,Persson,Svensson,Gustafsson,Pettersson,Jonsson,Jansson,Lindberg
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Malmö FF;Malmö Celeste;#7ec8f2;#ffffff;68;22000;1910;los Celestes;el estadio del sur junto al puente;El club más laureado del país, con una final de copa de Europa en 1979.
+AIK;Aguila Solna;#000000;#ffd100;64;50000;1891;los Gnagare;el estadio nacional de la capital;El club de la capital que más hinchada tiene.
+Djurgårdens IF;Djurgarden Azul;#00a0e3;#1b458f;65;33000;1891;los Azules;el estadio de la isla de los ciervos;El club de la isla, con una de las hinchadas más fieles.
+Hammarby IF;Hammarby Verde;#00843d;#ffffff;65;33000;1889;los Verdes;el estadio compartido de la capital;El club del sur de la capital, con un himno que se canta de pie.
+IFK Göteborg;Gotemburgo Azul;#1b458f;#ffffff;62;18000;1904;los Blåvitt;el estadio de la ciudad del puerto;El club que ganó dos veces la copa de la UEFA.
+IF Elfsborg;Elfsborg Sol;#ffd100;#000000;62;16000;1904;los Amarillos;el estadio de la ciudad textil;El club de la ciudad textil, campeón de 2024.
+BK Häcken;Häcken Amarillo;#ffd100;#000000;61;6500;1903;los Amarillinegros;el estadio de la isla de Hisingen;El club de una isla que ganó la liga y la copa.
+Mjällby AIF;Mjallby Costero;#ffd100;#000000;60;7000;1939;los Costeros;el estadio de la costa del sur;El club de un pueblo pequeño que fue campeón en 2025.
+IFK Norrköping;Norrkoping Azul;#1b458f;#ffffff;60;17000;1897;los Peking;el estadio de la ciudad industrial;El club de la ciudad industrial, con una larga historia.
+Kalmar FF;Kalmar Rojo;#c8102e;#ffffff;58;12000;1910;los Rojos;el estadio de la ciudad del castillo;El club de la ciudad del castillo.
+IK Sirius;Sirio Uppsala;#1b458f;#ffffff;58;9000;1907;los Sirius;el estadio de la ciudad universitaria;El club de la ciudad universitaria.
+Degerfors IF;Degerfors Rojo;#c8102e;#ffffff;55;5000;1907;los Rojos;el estadio de la ciudad del acero;Un club de una ciudad pequeña de las minas.
+GAIS;Gais Verde;#00843d;#000000;57;8000;1894;los Verdinegros;el estadio de la ciudad del puerto;El club histórico de Gotemburgo que volvió a primera.
+IF Brommapojkarna;Chicos Bromma;#c8102e;#000000;55;8000;1942;los Chicos;el estadio del oeste de la capital;El club con la mayor cantera del país.
+Halmstads BK;Halmstad Azul;#1b458f;#ffffff;55;10000;1914;los Azules;el estadio de la costa del oeste;El club de la costa que volvió a primera.
+Västerås SK;Vasteras Verde;#00843d;#ffffff;54;7000;1904;los Verdes;el estadio de la ciudad del lago;El club de la ciudad del lago.

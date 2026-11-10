@@ -95,7 +95,7 @@ func _auditar(contexto: String) -> void:
 	## Solapes con el HUD (marcador, estadísticas, ficha del jugador, estrategias): ningún botón encima de un texto.
 	for nodo: Node in _pj.find_children("*", "Control", true, false):
 		var c := nodo as Control
-		if c == null or c == _ct or not c.is_visible_in_tree() or c.size.x < 20.0 or c.get_parent() is ControlesTactiles:
+		if c == null or c == _ct or not c.is_visible_in_tree() or c.size.x < 20.0 or c.get_parent() is ControlesTactiles or c.get_viewport() != get_viewport():
 			continue
 		if not (c is Label or c is PanelContainer or c is Button):
 			continue
@@ -144,6 +144,51 @@ func _rect_visible(c: Control) -> Rect2:
 			return Rect2(r.end.x - ancho, r.position.y, ancho, r.size.y)
 	return Rect2(r.position, Vector2(minf(ancho, r.size.x), r.size.y))
 
+## (10-11) EL HUD del partido con el mismo método: letra en mm, solapes entre paneles, cuánto tapan del centro, ancho de la ficha.
+func _auditar_hud(contexto: String) -> void:
+	var mm := PantallaMovil.px_por_mm(self)
+	var lienzo := get_viewport().get_visible_rect().size
+	var paneles: Array = []
+	for nodo: Node in _pj.find_children("*", "Control", true, false):
+		var c := nodo as Control
+		if c == null or c == _ct or not c.is_visible_in_tree() or c.modulate.a < 0.05 or c.get_parent() is ControlesTactiles:
+			continue
+		if c.get_viewport() != get_viewport():
+			continue   ## lo que se dibuja en otra ventana (el videomarcador del estadio, en 3D)
+		var r := _rect_visible(c)
+		if r.size.x >= lienzo.x * 0.9 and r.size.y >= lienzo.y * 0.9:
+			continue
+		if c is Label and (c as Label).text.strip_edges() != "":
+			var alto := float((c as Label).get_theme_font_size("font_size")) * c.get_global_transform().get_scale().y / mm
+			_comprobar(alto >= HudTactil.MIN_MM, "[%s] la letra de «%s» mide %.1f mm (mínimo %.1f)" % [contexto, (c as Label).text.left(20).replace("\n", " "), alto, HudTactil.MIN_MM])
+		if (c is PanelContainer or c is ProgressBar or (c is Label and (c as Label).text.strip_edges() != "")) and c.get_parent() == _pj:
+			paneles.append([c, r])   ## (las etiquetas sueltas del HUD también: el aviso grande)
+	for i in paneles.size():
+		for j in range(i + 1, paneles.size()):
+			var a: Rect2 = paneles[i][1]
+			var b: Rect2 = paneles[j][1]
+			_comprobar(not a.grow(-2.0).intersects(b.grow(-2.0)), "[%s] el HUD no se pisa: %s y %s" % [contexto, (paneles[i][0] as Control).name, (paneles[j][0] as Control).name])
+	var tapado := 0
+	var total := 0
+	for x in range(int(lienzo.x / 3.0), int(lienzo.x * 2.0 / 3.0), 8):
+		for y in range(int(lienzo.y * 0.15), int(lienzo.y * (0.75 if lienzo.y > lienzo.x else 1.0)), 8):
+			total += 1
+			for pr: Array in paneles:
+				if pr[0] == _pj._banner:
+					continue   ## el aviso grande («Saque de banda», «¡GOL!») va en el centro a propósito y dura ~2 s
+				if (pr[1] as Rect2).has_point(Vector2(x, y)):
+					tapado += 1
+					break
+	var pct := 100.0 * float(tapado) / maxf(1.0, float(total))
+	print("  [%s] HUD sobre el tercio central: %.1f %%" % [contexto, pct])
+	_comprobar(pct <= 4.0, "[%s] el HUD casi no tapa el centro del juego (%.1f %%, máximo 4)" % [contexto, pct])
+	var ficha: Control = _pj._hud_abajo[0] if not _pj._hud_abajo.is_empty() else null
+	if ficha != null:
+		var fr := ficha.get_global_rect()
+		print("  [%s] ficha del jugador: %.0f %% del ancho, %.1f × %.1f mm" % [contexto, 100.0 * fr.size.x / lienzo.x, fr.size.x / mm, fr.size.y / mm])
+		## (en vertical el nombre, con letra legible, ya mide ~30 mm de un teléfono de ~68 mm de ancho: hasta el 45 %)
+		_comprobar(fr.size.x / lienzo.x <= (0.45 if lienzo.y > lienzo.x else 0.30), "[%s] la ficha del jugador no ocupa de más (%.0f %% del ancho)" % [contexto, 100.0 * fr.size.x / lienzo.x])
+
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 20:
@@ -159,11 +204,16 @@ func _process(_d: float) -> void:
 	var pasos := {70: "con", 80: "banda", 90: "sin"}
 	if _n in [70, 80, 90]:
 		ControlesTactiles.contexto_forzado = String(pasos[_n])
+	if _n == 90:   ## el aviso grande y la barra de potencia, a la vista para medirlos
+		_pj._mostrar_banner("Saque de banda")
+		_pj._barra.visible = true
 	if _n in [74, 84, 94]:
 		_auditar(String(pasos[_n - 4]))
+		_auditar_hud(String(pasos[_n - 4]))
 		_foto(String(pasos[_n - 4]))
 	if _n == 100:
 		ControlesTactiles.contexto_forzado = ""
+		_pj._barra.visible = false
 		_p0 = _pj.motor.pos(_pj.motor.usuario)
 		var c0 := _ct.centro_reposo()
 		_toque(0, c0, true)

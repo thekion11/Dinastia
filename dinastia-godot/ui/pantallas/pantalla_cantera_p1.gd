@@ -32,7 +32,8 @@ func _pintar_palmares_mundial(s: Selecciones) -> void:
 		var mio := bool(s.mundial_clubes.get("mio", false))
 		p._dato("Campeón", "%s (%d)" % [String(s.mundial_clubes.get("campeon", "—")), int(s.mundial_clubes.get("anio", 0))],
 			Principal.COL_ORO if mio else Principal.COL_TEXTO, p._lista_seleccion)
-		var relato := String(s.mundial_clubes.get("relato", ""))
+		var rel: Variant = s.mundial_clubes.get("relato", "")   ## una lista de líneas (`FifaClubes.relato`) o, en partidas viejas, un texto
+		var relato := "\n".join(rel) if rel is Array else String(rel)
 		if relato != "":
 			var r := p._texto(11, Principal.COL_ORO if mio else Principal.COL_SUAVE)
 			r.text = CompeticionInfo.visibles_en(relato)
