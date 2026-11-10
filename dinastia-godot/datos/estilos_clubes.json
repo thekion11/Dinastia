@@ -2235,5 +2235,293 @@
  "Aube Azul": [
   "5-3-2",
   "contra"
+ ],
+ "Carlos Casares": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Floresta Blanca": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Gallo Tres Rojo": [
+  "4-3-3",
+  "presion"
+ ],
+ "Isidro Casanova": [
+  "3-5-2",
+  "directo"
+ ],
+ "Mar del Plata FC": [
+  "4-4-2",
+  "garra"
+ ],
+ "Villa Crespo": [
+  "5-3-2",
+  "contra"
+ ],
+ "Rafaela Crema": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Adrogue Tricolor": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Paternal Funebre": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Resistencia FC": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Munro Verde": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Sabalero Santafe": [
+  "3-5-2",
+  "presion"
+ ],
+ "Nunez Villa": [
+  "4-4-2",
+  "directo"
+ ],
+ "Puerto Madryn FC": [
+  "5-3-2",
+  "garra"
+ ],
+ "Maipu Mendoza": [
+  "4-3-3",
+  "contra"
+ ],
+ "Caseros Pincha": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Caballito Verde": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Jujuy Lobo": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Tomba Mendoza": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Santiago Gaucho": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Mitre Santiago": [
+  "4-4-2",
+  "presion"
+ ],
+ "Mataderos Torito": [
+  "5-3-2",
+  "directo"
+ ],
+ "Parana Patron": [
+  "4-3-3",
+  "garra"
+ ],
+ "Cervecero Sur": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Cordoba Celeste": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Sanjuanino Verde": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Tucuman Santo": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Los Polvorines": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Gasolero Sur": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Ezeiza Tricolor": [
+  "5-3-2",
+  "presion"
+ ],
+ "Campana Naranja": [
+  "4-3-3",
+  "directo"
+ ],
+ "Ribera Entrerrio": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Bolivar Buenos": [
+  "4-4-2",
+  "contra"
+ ],
+ "Moron Gallo": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Lomas Milrayitas": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Sarandi Fiscal": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Coelho Mineiro": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Sao Joao del Rei": [
+  "5-3-2",
+  "equilibrado"
+ ],
+ "Dragao Goiano": [
+  "4-3-3",
+  "presion"
+ ],
+ "Ilha Azul": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Ribeirao Pantera": [
+  "4-4-2",
+  "garra"
+ ],
+ "Fortaleza Vozao": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Maceio Galo": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Tigre Catarina": [
+  "3-5-2",
+  "vertical"
+ ],
+ "Pantanal FC": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Leao do Pici": [
+  "5-3-2",
+  "bloque"
+ ],
+ "Esmeralda Goiana": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Serra Gaucha": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Tigre do Vale": [
+  "4-4-2",
+  "directo"
+ ],
+ "Ponta Grossa FC": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Belem Papao": [
+  "4-3-3",
+  "contra"
+ ],
+ "Campinas Macaca": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Recife Leao": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Goias Tigre": [
+  "5-3-2",
+  "ofensivo"
+ ],
+ "Aco Fluminense": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Manaus Onca": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Potros Azules": [
+  "4-4-2",
+  "presion"
+ ],
+ "Baja Perla": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Caribe Delfin": [
+  "4-3-3",
+  "garra"
+ ],
+ "Bajio Toro": [
+  "3-5-2",
+  "contra"
+ ],
+ "Sinaloa Dorado": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Fresa Verde": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Tapatio Felino": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Plata Minera": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Monarca Morelia": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Filial Tapatia": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Altos de Jalisco": [
+  "4-3-3",
+  "directo"
+ ],
+ "Jaiba Tampico": [
+  "3-5-2",
+  "garra"
+ ],
+ "Yucatan Venado": [
+  "4-4-2",
+  "contra"
+ ],
+ "Alebrije Oaxaca": [
+  "5-3-2",
+  "posesion"
+ ],
+ "Tabasco Pumas": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Tiburon Jarocho": [
+  "4-2-3-1",
+  "ofensivo"
  ]
 }

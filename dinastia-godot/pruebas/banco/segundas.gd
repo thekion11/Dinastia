@@ -91,7 +91,8 @@ func _probar_segundas_reglas() -> void:
 	## Reglas por país: los cinco grandes tienen las suyas y los demás no.
 	for pais in ["ENG", "ESP", "ITA", "GER", "FRA"]:
 		_comprobar(ReglasAscenso.tiene(pais) and int(ReglasAscenso.de(pais)["directos"]) == 2, "%s tiene reglas reales (2 directos)" % pais)
-	_comprobar(not ReglasAscenso.tiene("CHI") and not ReglasAscenso.tiene("ARG"), "Chile y Argentina usan las reglas generales")
+	_comprobar(not ReglasAscenso.tiene("CHI") and ReglasAscenso.tiene("ARG") and ReglasAscenso.tiene("BRA") and ReglasAscenso.tiene("MEX"), "Chile usa las reglas generales; Argentina, Brasil y México tienen las suyas")
+	_comprobar(int(ReglasAscenso.de("MEX")["bajan"]) == 0, "México: circuito cerrado, no baja nadie")
 	_comprobar(int(ReglasAscenso.de("GER")["bajan"]) == 2 and ReglasAscenso.de("GER").get("relegacion", false), "Alemania: bajan 2 y el 16.º juega la promoción")
 	## La promoción real (GER/FRA) sobre dos tablas inventadas: el 16.º contra el 3.º, y los que bajan y suben son los mismos.
 	var t1: Array = []
@@ -153,3 +154,39 @@ func _probar_segundas_cinco_grandes() -> void:
 		if esperado.has(l.pais):
 			var n: int = esperado[l.pais][0 if l.division() == 1 else 1]
 			_comprobar(l.clubes.size() == n, "%s división %d sigue con %d clubes (%d)" % [l.pais, l.division(), n, l.clubes.size()])
+
+## Argentina, Brasil y México (paso 4): sus segundas y sus reglas propias (México, sin ascensos ni descensos).
+func _probar_segundas_latinoamerica() -> void:
+	_titulo("SEGUNDAS DIVISIONES: ARGENTINA, BRASIL Y MÉXICO")
+	var esperado := {"ARG": [30, 36, 2, 2], "BRA": [20, 20, 4, 4], "MEX": [18, 16, 0, 0]}
+	var paises: Array[String] = []
+	for p: String in esperado:
+		paises.append(p)
+	var m := Mundo.new()
+	m.generar(paises, 621)
+	for pais: String in esperado:
+		var l1: Liga = null
+		var l2: Liga = null
+		for l: Liga in m.ligas:
+			if l.pais == pais and l.division() == 1:
+				l1 = l
+			elif l.pais == pais and l.division() == 2:
+				l2 = l
+		_comprobar(l1 != null and l2 != null and l1.clubes.size() == esperado[pais][0] and l2.clubes.size() == esperado[pais][1], "%s: %d en Primera y %d en la segunda (%d y %d)" % [pais, esperado[pais][0], esperado[pais][1], l1.clubes.size() if l1 else 0, l2.clubes.size() if l2 else 0])
+		_comprobar(l2 != null and l2.jornadas() <= 38, "%s: la segunda no alarga la temporada (%d jornadas)" % [pais, l2.jornadas() if l2 else 0])
+	m.tomar_el_mando(_club_de(m, "BRA", 1).id)
+	var guard := 0
+	while m.temporada_en_curso() and guard < 80:
+		m.avanzar_semana()
+		guard += 1
+	_comprobar(guard <= 38, "la temporada con las tres sigue en 38 semanas o menos (%d)" % guard)
+	var resumen := m.nueva_temporada()
+	for pais: String in esperado:
+		var suben := (resumen["suben"] as Array).filter(func(c: Club) -> bool: return c.pais == pais).size()
+		var bajan := (resumen["bajan"] as Array).filter(func(c: Club) -> bool: return c.pais == pais).size()
+		_comprobar(suben == esperado[pais][2] and bajan == esperado[pais][3], "%s: suben %d y bajan %d (esperado %d y %d)" % [pais, suben, bajan, esperado[pais][2], esperado[pais][3]])
+	for l: Liga in m.ligas:
+		if esperado.has(l.pais):
+			var n: int = esperado[l.pais][0 if l.division() == 1 else 1]
+			_comprobar(l.clubes.size() == n, "%s división %d sigue con %d clubes (%d)" % [l.pais, l.division(), n, l.clubes.size()])
+	_comprobar(not (resumen.get("playoff_ascenso", {}) as Dictionary).is_empty(), "el segundo ascenso de Argentina sale del playoff")

@@ -13,7 +13,8 @@ liga, de memoria; revisar si se puede).
 # país -> (nombre real de la liga con dígitos, nombre ficticio, clubes que tiene la liga REAL)
 LIGA2 = {"ENG": ("Championsh1p", "Liga de Plata ING", 24), "ESP": ("Segunda D1visión", "Liga de Plata ESP", 22),
          "ITA": ("Ser1e B", "Liga de Plata ITA", 20), "GER": ("2. Bund3sliga", "Liga de Plata GER", 18),
-         "FRA": ("L1gue 2", "Liga de Plata FRA", 18)}
+         "FRA": ("L1gue 2", "Liga de Plata FRA", 18), "ARG": ("Primera Nac1onal", "Liga de Plata ARG", 36),
+         "BRA": ("Sér1e B", "Liga de Plata BRA", 20), "MEX": ("L1ga de Expans1ón", "Liga de Plata MEX", 16)}
 
 # (país, nombre del pack, nombre ficticio, color 1, color 2, media, aforo, formación, estilo)
 NUEVOS = [
@@ -194,6 +195,90 @@ _EST = ["bloque", "equilibrado", "presion", "directo", "garra", "contra", "poses
 for _i, _f in enumerate(DATOS3):
     NUEVOS.append((_f[0], _leet(_f[1]), _f[2], _f[3], _f[4], _f[5], _f[6], _FORM[_i % 8], _EST[_i % 9]))
     HISTORIA[_f[1]] = (_f[7], _f[8], _f[9], _f[10])
+
+# ---- Paso 4 (ARG, BRA, MEX). DUDAS GRANDES (sin red, de memoria): las plantillas de 2026 de estas tres ligas son las menos seguras de todas;
+# ARG juega por zonas en la vida real y aquí es una sola liga de 36 a una vuelta; fundado = None donde no lo sé.
+DATOS4 = [
+    # ---- Argentina, Primera Nacional (36)
+    ("ARG", "Agropecuario", "Carlos Casares", "#d50032", "#ffffff", 56, 12000, None, "los Pampas", "el Ciudad de Carlos Casares", "Un club de pueblo pampeano que llegó a Primera."),
+    ("ARG", "All Boys", "Floresta Blanca", "#ffffff", "#000000", 60, 16000, None, "el Albo", "el Islas Malvinas", "El club del barrio de Floresta."),
+    ("ARG", "Almagro", "Gallo Tres Rojo", "#0057b8", "#ffffff", 58, 13000, None, "el Tricolor", "el Tres de Febrero", "Un club de Caseros con grada ruidosa."),
+    ("ARG", "Almirante Brown", "Isidro Casanova", "#ffd100", "#00843d", 56, 8000, None, "los Mirasoles", "el Fragata Sarmiento", "El club del oeste del Gran Buenos Aires."),
+    ("ARG", "Alvarado", "Mar del Plata FC", "#d50032", "#ffffff", 56, 5000, None, "los Torpedos", "el José María Minella", "Un club costero que juega en una cancha mundialista."),
+    ("ARG", "Atlanta", "Villa Crespo", "#ffd100", "#0057b8", 60, 14000, None, "los Bohemios", "el Don León Kolbowski", "El club bohemio de Villa Crespo."),
+    ("ARG", "Atlético Rafaela", "Rafaela Crema", "#5ab4e5", "#ffffff", 58, 10000, None, "la Crema", "el Nuevo Monumental", "Un club santafesino de ciudad lechera."),
+    ("ARG", "Brown de Adrogué", "Adrogue Tricolor", "#ffffff", "#d50032", 56, 7000, None, "el Tricolor del Sur", "el Lorenzo Arandilla", "Un club del sur del Gran Buenos Aires."),
+    ("ARG", "Chacarita", "Paternal Funebre", "#d50032", "#000000", 60, 25000, None, "los Funebreros", "el Chacarita", "Un club con hinchada de cementerio y mucha fiesta."),
+    ("ARG", "Chaco For Ever", "Resistencia FC", "#d50032", "#000000", 56, 20000, None, "el Lobo Chaqueño", "el Juan Alberto García", "El club de la capital chaqueña."),
+    ("ARG", "Colegiales", "Munro Verde", "#00843d", "#ffffff", 52, 6000, None, "los Tricolores de Munro", "el Libertarios", "Un club chico del conurbano."),
+    ("ARG", "Colón", "Sabalero Santafe", "#d50032", "#000000", 66, 40000, None, "los Sabaleros", "el Brigadier López", "Campeón de liga hace poco y ahora peleando la vuelta."),
+    ("ARG", "Defensores de Belgrano", "Nunez Villa", "#000000", "#ffffff", 54, 6000, None, "los Dragones", "el Juan Pasquale", "Un club de barrio en Núñez."),
+    ("ARG", "Deportivo Madryn", "Puerto Madryn FC", "#0057b8", "#ffffff", 54, 8000, None, "los Aurinegros del Sur", "el Abel Sastre", "El club patagónico de la costa."),
+    ("ARG", "Deportivo Maipú", "Maipu Mendoza", "#d50032", "#ffffff", 54, 10000, None, "el Cruzado", "el Omar Higinio Sperdutti", "Un club mendocino de uva y pasión."),
+    ("ARG", "Estudiantes Buenos Aires", "Caseros Pincha", "#d50032", "#ffffff", 54, 5000, None, "los Pincharratas", "el República de Mataderos", "Un club chico del oeste bonaerense."),
+    ("ARG", "Ferro", "Caballito Verde", "#00843d", "#ffffff", 62, 24000, None, "el Verdolaga", "el Arquitecto Ricardo Etcheverri", "Uno de los clubes con más historia del oeste."),
+    ("ARG", "Gimnasia de Jujuy", "Jujuy Lobo", "#ffffff", "#0057b8", 56, 23000, None, "el Lobo Jujeño", "el 23 de Agosto", "El club de la provincia más al norte."),
+    ("ARG", "Godoy Cruz", "Tomba Mendoza", "#0057b8", "#ffffff", 66, 29000, None, "el Tomba", "el Malvinas Argentinas", "El Tomba, que sube y baja con la bodega por emblema."),
+    ("ARG", "Güemes", "Santiago Gaucho", "#d50032", "#ffffff", 56, 14000, None, "el Gaucho", "el Arturo Miranda", "Un club santiagueño con camiseta de gaucho."),
+    ("ARG", "Mitre", "Mitre Santiago", "#ffd100", "#000000", 56, 15000, None, "el Aurinegro", "el estadio municipal", "Un club del norte con historia de copa."),
+    ("ARG", "Nueva Chicago", "Mataderos Torito", "#00843d", "#000000", 58, 22000, None, "el Torito", "el República de Mataderos", "El Torito del barrio de los mataderos."),
+    ("ARG", "Patronato", "Parana Patron", "#d50032", "#000000", 60, 20000, None, "los Patrones", "el Presbítero Bartolomé Grella", "Un club entrerriano que sorprendió en Primera."),
+    ("ARG", "Quilmes", "Cervecero Sur", "#ffffff", "#0057b8", 62, 30000, None, "el Cervecero", "el Centenario", "El club cervecero del sur del Gran Buenos Aires."),
+    ("ARG", "Racing de Córdoba", "Cordoba Celeste", "#5ab4e5", "#ffffff", 56, 20000, None, "la Academia Cordobesa", "el Miguel Sancho", "Un club cordobés de camiseta celeste."),
+    ("ARG", "San Martín de San Juan", "Sanjuanino Verde", "#00843d", "#000000", 56, 25000, None, "el Verdinegro", "el Hilario Sánchez", "Un club de la provincia de los viñedos."),
+    ("ARG", "San Martín de Tucumán", "Tucuman Santo", "#d50032", "#000000", 60, 28000, None, "el Santo", "el La Ciudadela", "El santo tucumano de camiseta roja y negra."),
+    ("ARG", "San Miguel", "Los Polvorines", "#0057b8", "#ffffff", 52, 8000, None, "los Santos de Los Polvorines", "el Malvinas", "Un club del conurbano oeste."),
+    ("ARG", "Temperley", "Gasolero Sur", "#5ab4e5", "#ffffff", 58, 12000, None, "el Gasolero", "el Alfredo Beranger", "El club del barrio de los gasoleros."),
+    ("ARG", "Tristán Suárez", "Ezeiza Tricolor", "#0057b8", "#ffd100", 52, 7000, None, "el Funebrero de Ezeiza", "el Doctor Jorge Alberto Gómez", "Un club cerca del aeropuerto."),
+    ("ARG", "Villa Dálmine", "Campana Naranja", "#f58220", "#000000", 54, 10000, None, "los Dálmatas", "el Roberto Pagan", "Un club de refinerías y puerto."),
+    ("ARG", "Gimnasia de Concepción del Uruguay", "Ribera Entrerrio", "#ffffff", "#0057b8", 52, 10000, None, "el Lobo del Uruguay", "el Manuel y Ramón Núñez", "Un club entrerriano de ribera."),
+    ("ARG", "Ciudad de Bolívar", "Bolivar Buenos", "#d50032", "#ffffff", 50, 6000, None, "los Bolivarenses", "el Ciudad de Bolívar", "Un club pampeano de ciudad chica."),
+    ("ARG", "Deportivo Morón", "Moron Gallo", "#ffffff", "#d50032", 54, 12000, None, "el Gallo", "el Nuevo Francisco Urbano", "El gallo del oeste del Gran Buenos Aires."),
+    ("ARG", "Los Andes", "Lomas Milrayitas", "#d50032", "#ffffff", 56, 15000, None, "el Milrayitas", "el Eduardo Gallardón", "El club de Lomas de Zamora."),
+    ("ARG", "Arsenal de Sarandí", "Sarandi Fiscal", "#5ab4e5", "#d50032", 58, 16000, None, "el Arse", "el Julio Humberto Grondona", "El club de Sarandí, campeón de copa internacional."),
+    # ---- Brasil, Série B (20)
+    ("BRA", "América-MG", "Coelho Mineiro", "#00843d", "#000000", 62, 19000, None, "o Coelho", "el Independência", "El conejo de Belo Horizonte."),
+    ("BRA", "Athletic-MG", "Sao Joao del Rei", "#000000", "#ffffff", 58, 8000, None, "o Furacão do Vale", "el Joaquim Portugal", "Un club mineiro de ciudad chica."),
+    ("BRA", "Atlético-GO", "Dragao Goiano", "#d50032", "#000000", 62, 12000, None, "o Dragão", "el Antônio Accioly", "El dragón de Goiânia."),
+    ("BRA", "Avaí", "Ilha Azul", "#0057b8", "#ffffff", 62, 17000, None, "o Leão da Ilha", "la Ressacada", "El león de Florianópolis."),
+    ("BRA", "Botafogo-SP", "Ribeirao Pantera", "#d50032", "#ffffff", 58, 15000, None, "a Pantera", "el Santa Cruz", "Un club paulista del interior."),
+    ("BRA", "Ceará", "Fortaleza Vozao", "#000000", "#ffffff", 64, 63000, None, "o Vozão", "el Castelão", "El club grande de la costa nordestina."),
+    ("BRA", "CRB", "Maceio Galo", "#d50032", "#ffffff", 60, 20000, None, "o Galo de Campina", "el Rei Pelé", "El club de Maceió."),
+    ("BRA", "Criciúma", "Tigre Catarina", "#ffd100", "#000000", 62, 19000, None, "o Tigre", "el Heriberto Hülse", "El tigre del sur de Santa Catarina."),
+    ("BRA", "Cuiabá", "Pantanal FC", "#00843d", "#ffd100", 62, 44000, None, "o Dourado", "la Arena Pantanal", "Un club del Mato Grosso que llegó a Primera."),
+    ("BRA", "Fortaleza", "Leao do Pici", "#0057b8", "#d50032", 66, 63000, None, "o Leão do Pici", "el Castelão", "El león del Pici, campeón del nordeste."),
+    ("BRA", "Goiás", "Esmeralda Goiana", "#00843d", "#ffffff", 62, 28000, None, "o Esmeraldino", "la Serrinha", "El esmeralda de Goiânia."),
+    ("BRA", "Juventude", "Serra Gaucha", "#00843d", "#ffffff", 58, 19000, None, "o Papo", "el Alfredo Jaconi", "Un club gaucho de la sierra."),
+    ("BRA", "Novorizontino", "Tigre do Vale", "#ffd100", "#000000", 60, 14000, None, "o Tigre do Vale", "el Jorge Ismael de Biasi", "Un club paulista chico."),
+    ("BRA", "Operário-PR", "Ponta Grossa FC", "#000000", "#ffffff", 58, 12000, None, "o Fantasma", "el Germano Krüger", "El fantasma de Ponta Grossa."),
+    ("BRA", "Paysandu", "Belem Papao", "#5ab4e5", "#ffffff", 60, 35000, None, "o Papão da Curuzu", "el Mangueirão", "Un club de Belém con grada enorme."),
+    ("BRA", "Ponte Preta", "Campinas Macaca", "#000000", "#ffffff", 62, 20000, None, "a Macaca", "el Moisés Lucarelli", "Uno de los clubes más antiguos del país."),
+    ("BRA", "Sport", "Recife Leao", "#d50032", "#000000", 66, 32000, None, "o Leão da Ilha do Retiro", "la Ilha do Retiro", "El león de Recife."),
+    ("BRA", "Vila Nova", "Goias Tigre", "#d50032", "#ffffff", 58, 15000, None, "o Tigrão", "el Onésio Brasileiro Alvarenga", "Un club goiano de camiseta roja."),
+    ("BRA", "Volta Redonda", "Aco Fluminense", "#ffd100", "#000000", 54, 12000, None, "o Voltaço", "el Raulino de Oliveira", "El club de la ciudad del acero."),
+    ("BRA", "Amazonas", "Manaus Onca", "#ffd100", "#00843d", 56, 42000, None, "a Onça-Pintada", "la Arena da Amazônia", "Un club del corazón del Amazonas."),
+    # ---- México, Liga de Expansión (16)
+    ("MEX", "Atlante", "Potros Azules", "#d50032", "#0057b8", 60, 24000, None, "los Potros", "el Ciudad de los Deportes", "Un club tradicional de la capital."),
+    ("MEX", "Atlético La Paz", "Baja Perla", "#ffd100", "#0057b8", 52, 5000, None, "los Pargos", "el Arturo C. Nahl", "Un club de Baja California."),
+    ("MEX", "Cancún", "Caribe Delfin", "#5ab4e5", "#ffffff", 52, 17000, None, "los Cancunenses", "el Andrés Quintana Roo", "El club turístico de la costa."),
+    ("MEX", "Celaya", "Bajio Toro", "#d50032", "#ffffff", 52, 12000, None, "los Toros", "el Miguel Alemán", "Un club guanajuatense."),
+    ("MEX", "Dorados", "Sinaloa Dorado", "#ffd100", "#000000", 54, 20000, None, "los Dorados", "el Banorte", "El club de Culiacán."),
+    ("MEX", "Irapuato", "Fresa Verde", "#d50032", "#ffffff", 52, 30000, None, "los Freseros", "el Sergio León Chávez", "El club de las fresas."),
+    ("MEX", "Leones Negros", "Tapatio Felino", "#000000", "#ffd100", 56, 20000, None, "los Leones", "el Jalisco", "El club universitario de Guadalajara."),
+    ("MEX", "Mineros de Zacatecas", "Plata Minera", "#d50032", "#ffffff", 52, 20000, None, "los Mineros", "el Carlos Vega Villalba", "Un club del altiplano minero."),
+    ("MEX", "Morelia", "Monarca Morelia", "#ffd100", "#d50032", 58, 14000, None, "los Monarcas", "el Morelos", "El regreso de los Monarcas."),
+    ("MEX", "Tapatío", "Filial Tapatia", "#d50032", "#ffffff", 54, 8000, None, "los Tapatíos", "el Akron", "Un club de la cantera rojiblanca."),
+    ("MEX", "Tepatitlán", "Altos de Jalisco", "#0057b8", "#ffffff", 50, 8000, None, "los Alteños", "el Gregorio Trinidad Sánchez", "Un club de los Altos de Jalisco."),
+    ("MEX", "Tampico Madero", "Jaiba Tampico", "#5ab4e5", "#ffffff", 56, 19000, None, "las Jaibas", "el Tamaulipas", "Las Jaibas del golfo."),
+    ("MEX", "Venados", "Yucatan Venado", "#d50032", "#ffffff", 54, 15000, None, "los Venados", "el Carlos Iturralde", "El venado de Mérida."),
+    ("MEX", "Alebrijes de Oaxaca", "Alebrije Oaxaca", "#ffd100", "#000000", 52, 12000, None, "los Alebrijes", "el Tecnológico de Oaxaca", "El alebrije de colores de Oaxaca."),
+    ("MEX", "Pumas Tabasco", "Tabasco Pumas", "#0057b8", "#ffd100", 52, 12000, None, "los Pumas del Sureste", "el Olímpico de Villahermosa", "El filial de los Pumas en el trópico."),
+    ("MEX", "Racing Veracruz", "Tiburon Jarocho", "#d50032", "#ffffff", 52, 20000, None, "los Tiburones", "el Luis Pirata Fuente", "El club del puerto de Veracruz."),
+]
+for _i, _f in enumerate(DATOS4):
+    NUEVOS.append((_f[0], _leet(_f[1]), _f[2], _f[3], _f[4], _f[5], _f[6], _FORM[_i % 8], _EST[_i % 9]))
+    _h = {"fundado": _f[7], "apodo": _f[8], "estadio": _f[9].strip(), "guino": _f[10]}
+    HISTORIA[_f[1]] = tuple(_h.values())
 
 CLUBES = {_limpio(f[1]): f[2] for f in NUEVOS}
 ESTILOS = {f[2]: [f[7], f[8]] for f in NUEVOS}
