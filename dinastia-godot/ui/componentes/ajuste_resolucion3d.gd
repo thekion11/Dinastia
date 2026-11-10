@@ -4,6 +4,15 @@ extends RefCounted
 ## (FSR en Forward+/Mobile, bilineal en Compatibilidad). En Alta y Ultra siempre es 100 % y no se muestra el control.
 static func crear(p: Object) -> void:
 	var nivel := Calidad.elegida
+	if nivel <= Calidad.MEDIO:   ## (10-11, P1) el interruptor de la resolución automática (máx. 720 px de alto) vale de ULTRA BAJA a MEDIA; en el móvil viene encendido
+		var ca := CheckButton.new()
+		ca.text = Idiomas.t("Resolución 3D automática (máx. 720 px de alto)")
+		ca.button_pressed = Calidad.res3d_auto
+		ca.toggled.connect(func(on: bool) -> void:
+			Calidad.res3d_auto = on
+			Calidad.guardar()
+			Calidad.aplicar_viewport(p.get_viewport(), Calidad.elegida))
+		p._lista_ajustes.add_child(ca)
 	if nivel > Calidad.MEDIO or nivel == Calidad.BAJA or nivel == Calidad.MEDIA_BAJA:   ## BAJA y MEDIA BAJA derivan de las dos escalas que se eligen en ULTRA BAJA y MEDIA
 		return
 	var minimo := nivel <= Calidad.MINIMO

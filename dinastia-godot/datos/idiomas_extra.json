@@ -7817,7 +7817,8 @@
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sun shadow on, no anti-aliasing and 3D at a slightly lower resolution than Medium",
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "No heavy effects and no anti-aliasing on phones and web: maximum smoothness",
   "Cargando…": "Loading…",
-  "Preparando tu club…": "Getting your club ready…"
+  "Preparando tu club…": "Getting your club ready…",
+  "Resolución 3D automática (máx. 720 px de alto)": "Automatic 3D resolution (max. 720 px high)"
  },
  "pt": {
   "Historia": "História",
@@ -15637,7 +15638,8 @@
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sombra do sol sim, sem suavização e com o 3D em resolução um pouco menor que em Média",
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sem efeitos pesados e sem suavização em celular e web: máxima fluidez",
   "Cargando…": "Carregando…",
-  "Preparando tu club…": "Preparando o seu clube…"
+  "Preparando tu club…": "Preparando o seu clube…",
+  "Resolución 3D automática (máx. 720 px de alto)": "Resolução 3D automática (máx. 720 px de altura)"
  },
  "patrones": [
   [
@@ -29564,7 +29566,8 @@
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombre du soleil oui, sans anticrénelage et avec la 3D à une résolution un peu plus basse qu'en Moyenne",
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sans effets lourds et sans anticrénelage sur téléphone et web : fluidité maximale",
   "Cargando…": "Chargement…",
-  "Preparando tu club…": "Préparation de votre club…"
+  "Preparando tu club…": "Préparation de votre club…",
+  "Resolución 3D automática (máx. 720 px de alto)": "Résolution 3D automatique (720 px de haut max.)"
  },
  "it": {
   "Historia": "Storia",
@@ -37384,7 +37387,8 @@
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombra del sole sì, senza antialiasing e con il 3D a una risoluzione un po' più bassa che in Media",
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Senza effetti pesanti e senza antialiasing su telefono e web: massima fluidità",
   "Cargando…": "Caricamento…",
-  "Preparando tu club…": "Preparazione del tuo club…"
+  "Preparando tu club…": "Preparazione del tuo club…",
+  "Resolución 3D automática (máx. 720 px de alto)": "Risoluzione 3D automatica (max 720 px di altezza)"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45204,7 +45208,8 @@
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sonnenschatten ja, ohne Kantenglättung und mit 3D in etwas geringerer Auflösung als bei Mittel",
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ohne aufwendige Effekte und ohne Kantenglättung auf Handy und Web: maximale Flüssigkeit",
   "Cargando…": "Laden …",
-  "Preparando tu club…": "Dein Verein wird vorbereitet …"
+  "Preparando tu club…": "Dein Verein wird vorbereitet …",
+  "Resolución 3D automática (máx. 720 px de alto)": "Automatische 3D-Auflösung (max. 720 px Höhe)"
  },
  "ca": {
   "Historia": "Història",
@@ -53024,7 +53029,8 @@
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombra del sol sí, sense suavitzat i amb el 3D a una resolució una mica menor que a Mitjana",
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sense efectes pesats i sense suavitzat en mòbil i web: màxima fluïdesa",
   "Cargando…": "Carregant…",
-  "Preparando tu club…": "Preparant el teu club…"
+  "Preparando tu club…": "Preparant el teu club…",
+  "Resolución 3D automática (máx. 720 px de alto)": "Resolució 3D automàtica (màx. 720 px d'alçada)"
  },
  "pl": {
   "Club": "Klub",
@@ -60844,7 +60850,8 @@
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Cień słońca tak, bez wygładzania i z 3D w nieco niższej rozdzielczości niż w Średnim",
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Bez ciężkich efektów i bez wygładzania na telefonie i w przeglądarce: maksymalna płynność",
   "Cargando…": "Ładowanie…",
-  "Preparando tu club…": "Przygotowywanie twojego klubu…"
+  "Preparando tu club…": "Przygotowywanie twojego klubu…",
+  "Resolución 3D automática (máx. 720 px de alto)": "Automatyczna rozdzielczość 3D (maks. 720 px wysokości)"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68664,6 +68671,7 @@
   "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Güneş gölgesi var, kenar yumuşatma yok ve 3D, Orta'dan biraz daha düşük çözünürlükte",
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ağır efekt yok, telefon ve web'de kenar yumuşatma yok: azami akıcılık",
   "Cargando…": "Yükleniyor…",
-  "Preparando tu club…": "Kulübün hazırlanıyor…"
+  "Preparando tu club…": "Kulübün hazırlanıyor…",
+  "Resolución 3D automática (máx. 720 px de alto)": "Otomatik 3D çözünürlük (en fazla 720 px yükseklik)"
  }
 }
