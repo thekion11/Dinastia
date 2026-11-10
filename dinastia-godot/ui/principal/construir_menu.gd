@@ -408,7 +408,11 @@ func _montar_columnas(raiz: VBoxContainer) -> void:
 	b_plantel.add_theme_font_size_override("font_size", 11)
 	b_plantel.add_theme_color_override("font_color", p._color_de_paleta(p.COL_ACENTO))
 	b_plantel.pressed.connect(func() -> void: p._abrir_hub("plantel"))
-	p._ultima_caja_columna.add_child(b_plantel)
+	## (10-11) En la fila del TÍTULO de su columna (junto a «⤢»), no al pie: en el móvil (2400x1080 = 480 px lógicos de alto) cada botón del pie sube
+	## a 49 px por el margen táctil y este quedaba 30-37 px por debajo de la pantalla (prueba especial `aud4_movil_partido`). La fila ya mide eso.
+	var cab_col := p._ultima_caja_columna.get_child(0) as HBoxContainer
+	cab_col.add_child(b_plantel)
+	cab_col.move_child(b_plantel, cab_col.get_child_count() - 2)
 	p._guia.nodos["plantel"] = b_plantel
 	var caja_reg := p._bloque(der, "LO QUE VA PASANDO", 1.0)
 	p._registro = RichTextLabel.new()
