@@ -9,11 +9,59 @@ extends RefCounted
 ##   · en ALTA, SOMBRAS en las luces del techo (el resto de la iluminación y el SSAO los pone `Calidad`/`Ambience`).
 ## SIN_VESTUARIO_REAL=1 lo apaga para medir el «antes». Con calidad menor que MEDIA no hace nada.
 
+## ESTILO POR PAÍS (sesión 7): cada país lleva sus materiales reales (texturas CC0 de Poly Haven en `assets/cc0/`, ver `herramientas/bajar_cc0.py`), para que un vestuario inglés, uno
+## japonés y uno argentino no se vean iguales. «ing»: suelo de tablón oscuro y ladrillo visto (Reino Unido); «jap»: tablón claro de hinoki y paredes lisas (Japón y Asia oriental);
+## «lat»: baldosa de barro cocido y yeso de arcilla (España, Italia, Portugal y toda América Latina); el resto, goma deportiva y yeso beige. El azulejo del tercio bajo es el mismo en todos.
+const ESTILOS := {
+	"ing": {"suelo": "dark_wooden_planks", "pared": "brick_wall_005", "madera": "dark_wooden_planks", "m_suelo": 1.2, "m_pared": 1.6},
+	"jap": {"suelo": "hinoki_planks", "pared": "beige_wall_001", "madera": "hinoki_planks", "m_suelo": 1.2, "m_pared": 2.0},
+	"lat": {"suelo": "patterned_terracotta_tiling", "pared": "clay_plaster", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0},
+	"def": {"suelo": "rubber_tiles", "pared": "beige_wall_001", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0},
+}
+const GRUPOS := {
+	"ing": ["ENG", "SCO", "WAL", "NIR", "IRL"],
+	"jap": ["JPN", "KOR", "CHN", "TWN", "HKG"],
+	"lat": ["ESP", "ITA", "POR", "ARG", "CHI", "URU", "PAR", "BOL", "PER", "COL", "VEN", "ECU", "MEX", "BRA", "CRC", "PAN", "HON", "GUA", "SLV", "CUB", "DOM", "MAR"],
+}
+
+static func estilo_de(pais: String) -> String:
+	for k: String in GRUPOS:
+		if (GRUPOS[k] as Array).has(pais):
+			return k
+	return "def"
+
+## Material PBR con las tres texturas de `assets/cc0/<id>/` (null si faltan: se usa el procedural de antes). `metros`: lo que mide un lado de la textura.
+static func _pbr(ident: String, metros: float, tinte := Color.WHITE) -> StandardMaterial3D:
+	var base := "res://assets/cc0/%s/" % ident
+	if not ResourceLoader.exists(base + "diff.jpg"):
+		return null
+	var m := StandardMaterial3D.new()
+	m.albedo_texture = load(base + "diff.jpg") as Texture2D
+	m.albedo_color = tinte
+	if ResourceLoader.exists(base + "nor.jpg"):
+		m.normal_enabled = true
+		m.normal_texture = load(base + "nor.jpg") as Texture2D
+		m.normal_scale = 0.8
+	if ResourceLoader.exists(base + "rough.jpg"):
+		m.roughness_texture = load(base + "rough.jpg") as Texture2D
+		m.roughness = 1.0
+	m.uv1_triplanar = true
+	m.uv1_world_triplanar = true
+	m.uv1_scale = Vector3.ONE / metros
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	return m
+
 static func activo() -> bool:
 	return Calidad.elegida >= Calidad.MEDIA and OS.get_environment("SIN_VESTUARIO_REAL") == ""
 
 ## Suelo de resina: gris azulado con un toque del club, semibrillante, con grano fino.
-static func suelo(c1: Color) -> StandardMaterial3D:
+static func suelo(c1: Color, pais := "") -> StandardMaterial3D:
+	var e: Dictionary = ESTILOS[estilo_de(pais)]
+	var real := _pbr(String(e["suelo"]), float(e["m_suelo"]))
+	if real != null:
+		real.clearcoat_enabled = true
+		real.clearcoat = 0.25
+		return real
 	var m := (Texturas.hormigon(Color(0.27, 0.28, 0.3).lerp(c1, 0.05), 41).duplicate() as StandardMaterial3D)
 	m.roughness = 0.42
 	m.roughness_texture = null
@@ -25,7 +73,11 @@ static func suelo(c1: Color) -> StandardMaterial3D:
 	return m
 
 ## Yeso pintado.
-static func pared() -> StandardMaterial3D:
+static func pared(pais := "") -> StandardMaterial3D:
+	var e: Dictionary = ESTILOS[estilo_de(pais)]
+	var real := _pbr(String(e["pared"]), float(e["m_pared"]))
+	if real != null:
+		return real
 	var m := (Texturas.hormigon(Color(0.9, 0.89, 0.86), 29).duplicate() as StandardMaterial3D)
 	m.albedo_texture = null   ## el ruido del hormigón en una pared pintada parecía granito
 	m.detail_enabled = false
@@ -84,8 +136,10 @@ static func azulejo() -> StandardMaterial3D:
 	return m
 
 ## Madera de los bancos.
-static func madera() -> StandardMaterial3D:
-	return Texturas.madera(Color(0.55, 0.38, 0.22), 0.5)
+static func madera(pais := "") -> StandardMaterial3D:
+	var e: Dictionary = ESTILOS[estilo_de(pais)]
+	var real := _pbr(String(e["madera"]), 1.0)
+	return real if real != null else Texturas.madera(Color(0.55, 0.38, 0.22), 0.5)
 
 ## El tercio bajo de las paredes con azulejo y cenefa del club. Las pieles de pintura van a x ± (VEST_MEDIO − 0.02) (0,04 de grueso): el azulejo, de 2 cm, se pega por dentro.
 ## `caja` es `TunelVestuario._caja(nodo, centro, tamaño, material, sólido)`.
