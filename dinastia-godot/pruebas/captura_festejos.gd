@@ -44,8 +44,8 @@ func _ready() -> void:
 				ev.ver(e)
 				await _esperar(1.6)
 				var llamadas := RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
-				print("  %s/%s: %s · %d llamadas de dibujo · %d jugadores 3D" % [tipo, e, "3D" if ev.vista3d != null else "2D", llamadas,
-					(ev.vista3d as FestejoCampo3D).jugadores if ev.vista3d != null else 0])
+				print("  %s/%s: %s · %d llamadas de dibujo · %d jugadores 3D · %d tifos" % [tipo, e, "3D" if ev.vista3d != null else "2D", llamadas,
+					(ev.vista3d as FestejoCampo3D).jugadores if ev.vista3d != null else 0, (ev.vista3d as FestejoCampo3D).tifos if ev.vista3d != null else 0])
 				get_viewport().get_texture().get_image().save_jpg("%s/%d_%s_%s_%s.jpg" % [dir, n, club.pais, tipo, e], 0.85)
 			var op := [""]
 			ev.elegido.connect(func(o: String) -> void: op[0] = o)

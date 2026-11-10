@@ -24,13 +24,15 @@ var _sin_copa := false   ## ascenso y salvación: sin trofeo
 var _bus: Node3D   ## desfile (FestejoExtra3D)
 var _caminan: Array[Node3D] = []   ## pasillo: el campeón que cruza
 var _rival: Club
+var _con_tifos := false   ## finales (copa, continental, supercopa, selección): tifos en la grada
+var tifos := 0   ## lonas montadas (lo lee la prueba)
 var jugadores := 0   ## cuántos modelos 3D se montaron (lo lee la prueba)
 
 ## ¿Se usa el 3D? No en calidad mínima (ahí la escena 2D es el respaldo).
 static func con_3d() -> bool:
 	return DisplayServer.get_name() != "headless" and Calidad.elegida > Calidad.MINIMO
 
-static func crear(m: String, club: Club, titulo: String, sin_copa := false, rival: Club = null) -> FestejoCampo3D:
+static func crear(m: String, club: Club, titulo: String, sin_copa := false, rival: Club = null, con_tifos := false) -> FestejoCampo3D:
 	if DisplayServer.get_name() == "headless" or club == null:
 		return null
 	var h := FestejoCampo3D.new()
@@ -43,6 +45,7 @@ static func crear(m: String, club: Club, titulo: String, sin_copa := false, riva
 	h.add_child(h._vp)
 	h._sin_copa = sin_copa
 	h._rival = rival
+	h._con_tifos = con_tifos
 	h._montar(club, titulo)
 	return h
 
@@ -65,12 +68,15 @@ func _montar(club: Club, titulo: String) -> void:
 	_vp.add_child(raiz)
 	var fuera := modo in ["champan", "desfile"]   ## vestuario y calle: sin césped ni grada
 	if fuera:
-		env.background_color = Color(0.55, 0.42, 0.36) if modo == "desfile" else Color(0.1, 0.1, 0.12)
+		env.background_color = Color(0.36, 0.42, 0.58) if modo == "desfile" else Color(0.1, 0.1, 0.12)   ## (10-11) cielo de tarde azulado: el anaranjado claro se quemaba con el brillo
+		env.glow_enabled = false
 		env.ambient_light_energy = 0.9
 	else:
 		_cesped(raiz)
 		_grada(raiz, c1, c2)
 		_focos(raiz)
+		if _con_tifos:
+			tifos = FestejoExtra3D.tifos(raiz, club, c1, c2)
 	if modo not in ["sobrio", "champan", "desfile"]:
 		_papelitos(raiz)
 	_copa = Trofeo3D.de_competicion(titulo, 0.9)
@@ -100,6 +106,10 @@ func _montar(club: Club, titulo: String) -> void:
 		(spawner as Node).queue_free()
 	if modo == "fuegos":
 		_cohetes(raiz, c1, c2)
+	if modo == "pasillo":   ## (10-11) el más caro (15 jugadores): sin sombras de los focos, que duplicaban el dibujo de cada modelo
+		for n in raiz.get_children():
+			if n is Light3D:
+				(n as Light3D).shadow_enabled = false
 	_cam = Camera3D.new()
 	_cam.fov = 40.0
 	_vp.add_child(_cam)

@@ -94,7 +94,7 @@ func ver(e: String) -> void:
 		vista3d = null
 	var visible_ahora: Control = escena
 	if e in FestejoCampo3D.MODOS and FestejoCampo3D.con_3d():
-		vista3d = FestejoCampo3D.crear(e, _club, _titulo, tipo in ["ascenso", "salvacion"], _rival)
+		vista3d = FestejoCampo3D.crear(e, _club, _titulo, tipo in ["ascenso", "salvacion"], _rival, tipo in ["copa", "continental", "supercopa", "seleccion"])   ## tifos en las finales
 	if vista3d != null:
 		escena.visible = false
 		escena.set_process(false)
