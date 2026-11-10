@@ -1,0 +1,119 @@
+# Lote C (SRB UKR CHN ISR RUS HUN SVK BUL): nombre|forma|patrón|emblema|letras[/color]|esc1|esc2|esc3
+Crvena Zvezda|escudo|franjas|estrella||#c8102e|#ffffff|
+Partizan|circulo|franjas||P|#111111|#ffffff|
+TSC Bačka Topola|clasico|liso||TSC|#1b458f|#ffd100|
+Vojvodina|escudo|mitad||V|#c8102e|#ffffff|
+Čukarički|escudo|liso||C|#ffffff|#111111|
+Radnički Niš|circulo|liso||RN|#c8102e|#ffffff|
+Novi Pazar|escudo|liso|media_luna||#1b458f|#ffffff|
+Mladost Lučani|escudo|mitad||ML|#c8102e|#1b458f|
+Spartak Subotica|escudo|liso||S|#c8102e|#ffffff|
+Radnik Surdulica|circulo|liso||R|#c8102e|#ffffff|
+Napredak Kruševac|escudo|liso||N|#c8102e|#ffffff|
+Javor-Matis|circulo|liso||J|#c8102e|#ffffff|
+OFK Beograd|escudo|franjas||OFK|#1b458f|#ffffff|
+FAP|circulo|liso||FAP|#1b458f|#ffd100|
+Železničar Pančevo|escudo|liso||ZP|#c8102e|#ffffff|
+IMT Novi Beograd|circulo|liso||IMT|#1b458f|#ffffff|
+Shakhtar Donetsk|escudo|liso|||#f26522|#111111|
+Dynamo Kyiv|escudo|liso||D|#ffffff|#1b458f|
+Metalist 1925 Kharkiv|circulo|liso||M|#ffd100|#1b458f|
+Zorya Luhansk|escudo|liso|estrella||#111111|#ffffff|
+SC Poltava|circulo|liso||SCP|#c8102e|#ffffff|
+Oleksandriya|escudo|liso||O|#00843d|#ffd100|
+Kryvbas Kryvyi Rih|circulo|liso||K|#c8102e|#ffffff|
+Polissya Zhytomyr|escudo|liso||P|#00843d|#ffffff|
+Obolon Kyiv|escudo|liso||O|#ffd100|#1b458f|
+Veres Rivne|circulo|liso||V|#00843d|#ffffff|
+Kolos Kovalivka|escudo|liso||K|#ffd100|#00843d|
+LNZ Cherkasy|circulo|liso||LNZ|#c8102e|#ffffff|
+Rukh Lviv|escudo|liso|leon||#c8102e|#ffd100|
+Karpaty Lviv|circulo|liso|leon||#00843d|#ffffff|
+Epicentr Kamianets-Podilskyi|escudo|liso||E|#ffd100|#1b458f|
+FC Kudrivka|escudo|liso||K|#1b458f|#ffd100|
+Shanghai Port|circulo|liso||SIPG|#c8102e|#ffffff|
+Shanghai Shenhua|circulo|liso||SH|#1b458f|#ffffff|
+Beijing Guoan|circulo|liso||BG|#00843d|#ffd100|
+Shandong Taishan|circulo|liso|montana||#f26522|#ffffff|
+Chengdu Rongcheng|circulo|liso||CR|#c8102e|#ffffff|
+Zhejiang FC|circulo|liso||ZJ|#00843d|#ffffff|
+Tianjin Jinmen Tiger|escudo|liso|||#1b458f|#ffffff|
+Henan FC|circulo|liso||HN|#c8102e|#ffd100|
+Wuhan Three Towns|circulo|liso|torre||#c8102e|#ffd100|
+Qingdao West Coast|circulo|liso||QW|#c8102e|#ffffff|
+Dalian Yingbo|circulo|liso||DY|#1b458f|#ffffff|
+Qingdao Hainiu|circulo|liso||QH|#c8102e|#ffffff|
+Chongqing Tonglianglong|circulo|liso|dragon||#c8102e|#1b458f|
+Shenzhen Peng City|circulo|liso||SZ|#c8102e|#ffd100|
+Yunnan Yukun|circulo|liso||YY|#00843d|#ffffff|
+Liaoning Tieren|circulo|liso||LN|#c8102e|#ffffff|
+Hapoel Be'er Sheva|circulo|liso||HBS|#c8102e|#ffffff|
+Maccabi Tel Aviv|circulo|liso|estrella||#ffd100|#1b458f|
+Maccabi Haifa|circulo|liso||MH|#00843d|#ffffff|
+Hapoel Tel Aviv|circulo|liso|estrella||#c8102e|#ffffff|
+Beitar Jerusalem|circulo|liso|||#ffd100|#111111|
+Hapoel Haifa|circulo|liso||HH|#c8102e|#ffffff|
+Maccabi Netanya|circulo|liso||MN|#ffd100|#111111|
+Hapoel Jerusalem|circulo|liso||HJ|#c8102e|#ffffff|
+Ironi Kiryat Shmona|circulo|liso||IKS|#1b458f|#ffd100|
+Bnei Sakhnin|circulo|mitad||BS|#c8102e|#00843d|
+Hapoel Petah Tikva|circulo|liso||PT|#c8102e|#ffffff|
+Ironi Tiberias|circulo|liso||IT|#1b458f|#ffffff|
+F.C. Ashdod|circulo|liso||FCA|#c8102e|#ffd100|
+Maccabi Bnei Reineh|circulo|liso||MBR|#c8102e|#ffffff|
+Zenit Saint Petersburg|circulo|liso||Z|#0057b8|#ffffff|
+Krasnodar|escudo|liso|toro||#00843d|#111111|
+Spartak Moscow|rombo|liso||S|#c8102e|#ffffff|
+CSKA Moscow|escudo|liso|estrella||#c8102e|#1b458f|
+Lokomotiv Moscow|escudo|liso||L|#00843d|#c8102e|
+Dynamo Moscow|escudo|liso||D|#1b458f|#ffffff|
+Rubin Kazan|circulo|liso||R|#8b1538|#ffffff|
+Akhmat Grozny|circulo|liso||A|#00843d|#ffffff|
+Rostov|escudo|liso||R|#ffd100|#1b458f|
+Baltika Kaliningrad|circulo|liso||B|#1b458f|#ffffff|
+Krylia Sovetov Samara|circulo|liso||KS|#c8102e|#ffffff|
+Orenburg|circulo|liso||O|#1b458f|#ffffff|
+Pari Nizhny Novgorod|circulo|liso||PNN|#00a0e3|#ffffff|
+Dynamo Makhachkala|escudo|liso||D|#00a0e3|#ffffff|
+Sochi|circulo|liso||S|#00a0e3|#c8102e|
+Akron Tolyatti|circulo|liso||A|#c8102e|#ffffff|
+Ferencváros|escudo|liso||FTC|#00843d|#ffffff|
+Paks|circulo|liso||P|#1b458f|#ffd100|
+Győr|escudo|liso||G|#00843d|#ffffff|
+Debrecen|escudo|liso||D|#c8102e|#ffffff|
+Puskás Akadémia|circulo|liso||PA|#1b458f|#c8102e|
+Zalaegerszeg|circulo|liso||ZTE|#1b458f|#ffffff|
+Kisvárda|circulo|liso||K|#c8102e|#ffffff|
+Nyíregyháza|circulo|liso||N|#c8102e|#ffffff|
+Újpest|escudo|liso||UTE|#6a1b9a|#ffffff|
+Diósgyőr|escudo|liso||DVTK|#c8102e|#ffffff|
+Kazincbarcika|circulo|liso||K|#c8102e|#1b458f|
+MTK|escudo|liso||MTK|#1b458f|#ffffff|
+Slovan Bratislava|escudo|liso||S|#00a0e3|#ffffff|
+Spartak Trnava|escudo|liso||S|#c8102e|#111111|
+DAC Dunajská Streda|escudo|liso||DAC|#ffd100|#c8102e|
+Žilina|escudo|liso||MSK|#c8102e|#ffffff|
+Ružomberok|escudo|liso||MFK|#ffffff|#c8102e|
+Podbrezová|circulo|liso||P|#c8102e|#111111|
+Trenčín|escudo|liso|castillo||#ffffff|#c8102e|
+Košice|escudo|liso||K|#1b458f|#ffd100|
+Tatran Prešov|escudo|liso||T|#c8102e|#111111|
+Skalica|circulo|liso||S|#c8102e|#ffffff|
+Zemplín Michalovce|circulo|liso||ZM|#c8102e|#1b458f|
+Komárno|circulo|liso||K|#1b458f|#ffffff|
+Levski Sofia|escudo|liso|leon||#1b458f|#ffffff|
+Ludogorets|escudo|liso|aguila||#00843d|#ffffff|
+CSKA 1948|escudo|liso|estrella||#c8102e|#ffffff|
+CSKA Sofia|escudo|liso|estrella||#c8102e|#ffffff|
+Cherno More|circulo|liso|ancla||#00843d|#111111|
+Lokomotiv Plovdiv|escudo|liso||L|#111111|#ffffff|
+Botev Plovdiv|escudo|liso||B|#111111|#ffd100|
+Slavia Sofia|escudo|liso||S|#ffffff|#c8102e|
+Arda|circulo|liso||A|#00843d|#ffffff|
+Beroe|circulo|liso||B|#00843d|#ffffff|
+Septemvri Sofia|circulo|liso||S|#c8102e|#ffffff|
+Lokomotiv Sofia|escudo|liso||L|#c8102e|#111111|
+Spartak Varna|circulo|liso||S|#c8102e|#ffffff|
+Dobrudzha|circulo|liso||D|#00843d|#ffffff|
+Montana|circulo|liso||M|#c8102e|#ffffff|
+Botev Vratsa|circulo|liso||B|#00843d|#ffffff|

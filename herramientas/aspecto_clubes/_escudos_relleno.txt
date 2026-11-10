@@ -1,0 +1,149 @@
+# Generado por herramientas/aspecto_relleno.py (no editar a mano): letras del escudo de los clubes que ningún lote de retoques cubrió.
+Hartberg||||HAR|||
+Altach||||ALT|||
+Blau-Weiß Linz||||BLA|||
+GAK||||GAK|||
+WSG Tirol||||WSG|||
+Ried||||RIE|||
+Tianjin Jinmen Tiger||||TIA|||
+Sigma Olomouc||||SIG|||
+FK Mladá Boleslav||||MLA|||
+1. FC Slovácko||||FCS|||
+Hradec Králové||||HRA|||
+FK Jablonec||||JAB|||
+FK Teplice||||TEP|||
+Bohemians 1905||||BOH|||
+MFK Karviná||||KAR|||
+Slovan Liberec||||SLO|||
+Panathinaikos||||PAN|||
+Levadiakos||||LEV|||
+Panserraikos||||PAN|||
+Panetolikos||||PAN|||
+AEL||||AEL|||
+Kifisia||||KIF|||
+Mes Rafsanjan||||MES|||
+Chadormalou||||CHA|||
+Paykan||||PAY|||
+Shams Azar||||SHA|||
+Kheybar||||KHE|||
+Fajr Sepasi||||FAJ|||
+Beitar Jerusalem||||BEI|||
+Brann||||BRA|||
+Viking||||VIK|||
+Molde||||MOL|||
+Tromsø||||TRO|||
+Sarpsborg 08||||SAR|||
+Fredrikstad||||FRE|||
+KFUM Oslo||||KFU|||
+Sandefjord||||SAN|||
+Aalesund||||AAL|||
+Kristiansund||||KRI|||
+HamKam||||HAM|||
+Start||||STA|||
+Jagiellonia Białystok||||JAG|||
+Raków Częstochowa||||RAK|||
+Piast Gliwice||||PIA|||
+Zagłębie Lubin||||ZAG|||
+Radomiak Radom||||RAD|||
+Motor Lublin||||MOT|||
+Lechia Gdańsk||||LEC|||
+Bruk-Bet Termalica||||BRU|||
+Wisła Płock||||WIS|||
+Al Sadd||||AL|||
+Al Duhail||||AL|||
+Al Gharafa||||AL|||
+Al Arabi||||AL|||
+Al Wakrah||||AL|||
+Qatar SC||||QAT|||
+Al Ahli||||AL|||
+Al Shamal||||AL|||
+Umm Salal||||UMM|||
+Al Khor||||AL|||
+Al Shahaniya||||AL|||
+Dinamo București||||DIN|||
+FC Argeș||||ARG|||
+Petrolul Ploiești||||PET|||
+Oțelul Galați||||OTE|||
+Hermannstadt||||HER|||
+UTA Arad||||UTA|||
+Csikszereda||||CSI|||
+Botoșani||||BOT|||
+Unirea Slobozia||||UNI|||
+Metaloglobus București||||MET|||
+Celtic||||CEL|||
+Heart of Midlothian||||HEA|||
+Falkirk||||FAL|||
+Livingston||||LIV|||
+Thun||||THU|||
+Winterthur||||WIN|||
+IF Elfsborg||||ELF|||
+Mjällby AIF||||MJA|||
+IK Sirius||||SIR|||
+Degerfors IF||||DEG|||
+GAIS||||GAI|||
+IF Brommapojkarna||||BRO|||
+Halmstads BK||||HAL|||
+Västerås SK||||VAS|||
+Alanyaspor||||ALA|||
+Kasımpaşa||||KAS|||
+Gaziantep FK||||GAZ|||
+Eyüpspor||||EYU|||
+Kocaelispor||||KOC|||
+Gençlerbirliği||||GEN|||
+Fatih Karagümrük||||FAT|||
+Esenler Erokspor||||ESE|||
+Keçiörengücü||||KEC|||
+Serikspor||||SER|||
+Ümraniyespor||||UMR|||
+Vanspor||||VAN|||
+Iğdır||||IGD|||
+Al Jazira||||AL|||
+Dibba||||DIB|||
+Al Bataeh||||AL|||
+Kalba||||KAL|||
+Shakhtar Donetsk||||SHA|||
+Metropolitanos||||MET|||
+Academia Puerto Cabello||||ACA|||
+Portuguesa||||POR|||
+Trujillanos||||TRU|||
+Anzoátegui||||ANZ|||
+Moreirense||||MOR|||
+Arouca||||ARO|||
+Estrela Amadora||||EST|||
+AVS||||AVS|||
+Alverca||||ALV|||
+Tondela||||TON|||
+Westerlo||||WES|||
+OH Lovaina||||OH|||
+Sint-Truiden||||SIN|||
+Zulte Waregem||||ZUL|||
+Dender||||DEN|||
+La Louvière||||LA|||
+Gorica||||GOR|||
+Istra 1961||||IST|||
+Varaždin||||VAR|||
+Slaven Belupo||||SLA|||
+Vukovar 1991||||VUK|||
+Viborg||||VIB|||
+Sønderjyske||||SND|||
+Vejle||||VEJ|||
+Fredericia||||FRE|||
+Charlton||||CHA|||
+Alvarado||||ALV|||
+Chaco For Ever||||CHA|||
+Colegiales||||COL|||
+Deportivo Maipú||||DEP|||
+Estudiantes Buenos Aires||||EST|||
+Güemes||||GUE|||
+Patronato||||PAT|||
+Racing de Córdoba||||RAC|||
+San Miguel||||SAN|||
+Tristán Suárez||||TRI|||
+Villa Dálmine||||VIL|||
+Gimnasia de Concepción del Uruguay||||GIM|||
+Ciudad de Bolívar||||CIU|||
+Deportivo Morón||||DEP|||
+Los Andes||||LOS|||
+Tepatitlán||||TEP|||
+Pumas Tabasco||||PUM|||
+Racing Veracruz||||RAC|||

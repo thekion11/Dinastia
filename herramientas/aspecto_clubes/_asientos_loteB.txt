@@ -1,0 +1,95 @@
+# Lote B: nombre|butaca1|butaca2
+Al Sadd|#6b1f3a|#ffffff
+Al Duhail|#c8102e|#ffffff
+Al Rayyan|#c8102e|#ffffff
+Al Gharafa|#0072ce|#ffffff
+Al Arabi|#c8102e|#ffffff
+Al Wakrah|#ffd100|#0072ce
+Qatar SC|#7b1c3a|#ffffff
+Al Ahli|#00843d|#ffffff
+Al Shamal|#ffd100|#000000
+Umm Salal|#00843d|#ffffff
+Al Khor|#ffd100|#c8102e
+Al Shahaniya|#c8102e|#ffffff
+Malmö FF|#7ec8f2|#ffffff
+AIK|#000000|#ffd100
+Djurgårdens IF|#00a0e3|#1b458f
+Hammarby IF|#00843d|#ffffff
+IFK Göteborg|#1b458f|#ffffff
+IF Elfsborg|#ffd100|#000000
+BK Häcken|#ffd100|#000000
+Mjällby AIF|#ffd100|#000000
+Örgryte IS|#c8102e|#1b458f
+Kalmar FF|#c8102e|#ffffff
+IK Sirius|#1b458f|#ffffff
+Degerfors IF|#c8102e|#ffffff
+GAIS|#00843d|#000000
+IF Brommapojkarna|#c8102e|#000000
+Halmstads BK|#1b458f|#ffffff
+Västerås SK|#00843d|#ffffff
+Bodø/Glimt|#ffd100|#000000
+Brann|#c8102e|#ffffff
+Viking|#1b458f|#ffffff
+Rosenborg|#000000|#ffffff
+Molde|#1b458f|#ffffff
+Lillestrøm|#ffd100|#000000
+Tromsø|#c8102e|#ffffff
+Sarpsborg 08|#c8102e|#ffffff
+Fredrikstad|#000000|#ffffff
+KFUM Oslo|#c8102e|#ffffff
+Sandefjord|#1b458f|#ffffff
+Aalesund|#f26522|#1b458f
+Kristiansund|#1b458f|#ffffff
+HamKam|#00843d|#ffffff
+Vålerenga|#1b458f|#ffffff
+Start|#ffd100|#000000
+Lech Poznań|#003876|#ffffff
+Legia Warszawa|#006633|#ffffff
+Jagiellonia Białystok|#ffd100|#c8102e
+Raków Częstochowa|#c8102e|#1b458f
+Pogoń Szczecin|#1b458f|#8b1538
+Górnik Zabrze|#1b458f|#ffffff
+Cracovia|#c8102e|#ffffff
+Piast Gliwice|#1b458f|#c8102e
+Zagłębie Lubin|#00843d|#ffd100
+Korona Kielce|#ffd100|#c8102e
+Radomiak Radom|#00843d|#ffffff
+Widzew Łódź|#c8102e|#ffffff
+Motor Lublin|#ffd100|#1b458f
+Lechia Gdańsk|#00843d|#ffffff
+Arka Gdynia|#ffd100|#1b458f
+Bruk-Bet Termalica|#c8102e|#ffd100
+GKS Katowice|#00843d|#ffd100
+Wisła Płock|#1b458f|#ffffff
+Slavia Praha|#c8102e|#ffffff
+Sparta Praha|#8b1538|#ffd100
+Viktoria Plzeň|#1b458f|#c8102e
+Baník Ostrava|#1b458f|#ffffff
+Sigma Olomouc|#1b458f|#ffd100
+FK Mladá Boleslav|#1b458f|#ffffff
+1. FC Slovácko|#1b458f|#ffd100
+Hradec Králové|#c8102e|#ffffff
+FK Jablonec|#00843d|#ffffff
+FK Teplice|#ffd100|#ffffff
+Bohemians 1905|#00843d|#ffffff
+Dukla Praha|#c8102e|#ffd100
+FK Pardubice|#c8102e|#ffffff
+MFK Karviná|#c8102e|#ffffff
+SK Dynamo České Budějovice|#1b458f|#ffffff
+Slovan Liberec|#1b458f|#ffffff
+FCSB|#c8102e|#1b458f
+CFR Cluj|#8b1538|#ffffff
+Universitatea Craiova|#1b458f|#ffffff
+Rapid București|#8b1538|#ffffff
+Dinamo București|#c8102e|#ffffff
+Universitatea Cluj|#000000|#ffffff
+FC Argeș|#8b1538|#ffffff
+Petrolul Ploiești|#ffd100|#1b458f
+Oțelul Galați|#1b458f|#ffffff
+Farul Constanța|#1b458f|#ffffff
+Hermannstadt|#c8102e|#ffffff
+UTA Arad|#c8102e|#ffffff
+Csikszereda|#8b1538|#ffffff
+Botoșani|#c8102e|#ffffff
+Unirea Slobozia|#c8102e|#ffd100
+Metaloglobus București|#1b458f|#ffffff

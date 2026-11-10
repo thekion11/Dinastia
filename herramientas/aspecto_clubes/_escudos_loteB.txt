@@ -19,7 +19,7 @@ IFK Göteborg|circulo|liso||IFK|#1b458f|#ffffff|
 IF Elfsborg|escudo|liso|||#ffd100|#000000|
 BK Häcken|circulo|liso|abeja||#ffd100|#000000|
 Mjällby AIF|circulo|liso|||#ffd100|#000000|
-Örgryte IS|circulo|liso||ÖIS|#c8102e|#1b458f|
+Örgryte IS|circulo|liso||OIS|#c8102e|#1b458f|
 Kalmar FF|circulo|liso|castillo||#c8102e|#ffffff|
 IK Sirius|circulo|liso|||#1b458f|#ffffff|
 Degerfors IF|circulo|liso|||#c8102e|#ffffff|
@@ -47,7 +47,7 @@ Lech Poznań|ojiva|liso||KKS|#003876|#ffffff|
 Legia Warszawa|escudo|liso||LW|#006633|#ffffff|
 Jagiellonia Białystok|escudo|liso|||#ffd100|#c8102e|
 Raków Częstochowa|escudo|liso|||#c8102e|#1b458f|
-Pogoń Szczecin|escudo|liso|grifo||#1b458f|#8b1538|
+Pogoń Szczecin|escudo|liso|leon||#1b458f|#8b1538|
 Górnik Zabrze|circulo|liso||GZ|#ffffff|#1b458f|
 Cracovia|circulo|liso||CK|#c8102e|#ffffff|
 Piast Gliwice|circulo|liso|||#1b458f|#c8102e|
@@ -86,7 +86,7 @@ Universitatea Cluj|escudo|liso||U|#ffffff|#000000|
 FC Argeș|escudo|liso|||#8b1538|#ffffff|
 Petrolul Ploiești|escudo|liso|||#ffd100|#1b458f|
 Oțelul Galați|escudo|liso|||#1b458f|#ffffff|
-Farul Constanța|escudo|liso|faro||#1b458f|#ffffff|
+Farul Constanța|escudo|liso|ancla||#1b458f|#ffffff|
 Hermannstadt|escudo|liso|||#c8102e|#ffffff|
 UTA Arad|escudo|liso|||#c8102e|#ffffff|
 Csikszereda|escudo|liso|||#8b1538|#ffffff|
