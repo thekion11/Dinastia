@@ -148,8 +148,32 @@ Pruebas: banco FIN. 0 fallos, `mem_menu_estadio` y `prueba_menu_ciudad_pie` 0 fa
 | ENG | MEDIA | 349 → 318 (−9 %) | 533 k → 410 k (−23 %) | 369 → 350 ms (−5 %) |
 **Veredicto:** el techo es ~−10 % de fotograma (−4 a −12 % llamadas, −12 a −23 % triángulos). A cambio de un cambio VISIBLE: los jugadores lejanos perderían animación (correr, regatear) y detalle. **No lo construyo sin tu OK**: es más complicado de lo que parece (el impostor tiene que conservar la animación para no verse como estatuas deslizando: malla simple con los mismos huesos y pesos, o billboards con atlas de animación por equipo) y la ganancia máxima es modesta frente a lo que ya dio quitar el MSAA (−60 %). Si se hace: detrás de una bandera apagada por defecto (`Calidad.impostores_lejanos`), solo en BAJA/MEDIA BAJA, a más de ~35 m, con la malla simple generada UNA vez (decimación con los mismos pesos de piel), medida con los 3 clubes del cuadro. Las piezas finas (ojos, cejas, pestañas) no aportan: ya se descartan por distancia.
 
+## Arranque, quinta parte: ¿precompilar los shaders del menú en la portada? Medido: NO ayuda (10-11, noche)
+Petición del líder: precompilar los shaders del menú mientras el jugador está en la portada. Antes de hacerlo se midió si el primer dibujado del menú es de verdad compilación (`medir_carga_menu`, ESP club 5, 2 núcleos, llvmpipe, con la precarga hecha):
+| Prueba | Mayor hueco entre fotogramas con la carga puesta | Total hasta quitar la carga |
+|---|---|---|
+| Prueba anterior (sin portada dibujada antes) | 2,7-3,0 s | 5,8-6,2 s |
+| **Con la portada real dibujada antes de pulsar (`PORTADA=1`, como en el juego)** | **1,9-2,0 s** | **3,8-4,1 s** |
+| Segundo montaje del menú en el mismo proceso, con TODO caliente (shaders, fuentes, texturas, scripts; `DOBLE=1`) | 2,2-2,3 s | 4,5 s |
+| Vistas 3D del menú (SubViewports) desactivadas durante la carga (`SIN_SUBVIEWPORT=1`) | 1,9-2,0 s (igual) | igual |
+**Lectura:** (1) la portada que ya está en pantalla en el juego real «calienta» fuentes y variantes de shader: el tiempo desde que se pulsa hasta el menú es ~4,0 s, no los 5,8-6,2 s de la prueba anterior, que no dibujaba ninguna interfaz antes; (2) el segundo montaje, con todo ya caliente, NO es más rápido (2,2-2,3 s): el hueco restante no es compilación de shaders ni primer uso de recursos, así que precompilar shaders en la portada no lo quitaría; (3) tampoco son las vistas 3D. `Principal.arrancar_con` entero son ~160 ms. No he podido atribuir los ~2 s a una función (es el primer dibujado/layout de ~1.060 objetos y 500 llamadas de dibujo en un rasterizador por software, que en un teléfono con GPU real puede ser mucho menos: solo se sabe midiendo allí). **No se añade ningún precalentado de shaders** (no mejora y gastaría memoria).
+
 ## Lo que NO se hizo (y por qué) / siguiente
 - **La meta de ULTRA BAJA (< 130 llamadas) NO se cumple**: 198-260. No se ha recortado nada más porque lo que quita llamadas es visual y hay que decidirlo: ojos y cejas de los jugadores lejanos (81 llamadas), pelo (136), hinchas (157 llamadas / 135 k triángulos) y butacas lejanas (230 k triángulos, −12 % de fotograma). Propuesta para el dueño: en ULTRA BAJA, sin ojos/cejas/pestañas a más de 12 m de la cámara; hinchas y butacas lejanas como una sola malla por grada con menos detalle. Se aplica cuando lo apruebe el dueño (regla: no quitar nada sin decirlo).
 - Luces omni, post-proceso y gente fuera del campo no pesan en este banco: no se tocan.
 - Falta medir en el teléfono del dueño (Compatibilidad real, GPU móvil): llvmpipe no es una GPU de móvil; sobre todo MSAA en GPUs de teselas (resolución en memoria de tesela) podría pesar menos que aquí. La «Prueba de rendimiento» de Ajustes mide cada escala con y sin MSAA en el propio teléfono: con su informe se confirma o se revierte para MEDIA.
 - Texto de Ajustes: la frase de ULTRA BAJA dice «sin sombras ni suavizado»; BAJA y MEDIA BAJA (y MEDIA en móvil) ahora tampoco suavizan: ajustar la frase de cada nivel (`Idiomas.t` + `sumar_traducciones.py`) cuando el selector de 7 niveles se termine (paso 3 de `calidad_7_niveles_2026-11-06.md`, sesión que lo lleva).
+
+## LODs de malla para pelo/cara construidos en ejecución (10-11, sesión 5)
+Experimento `LODS_RUNTIME=1` (`dinastia-godot/pruebas/medir_partido_exp.gd`, apagado por defecto): a `Cuero*`, `Hair*`, `PeloDrive*`, `CaraReal*` se les generan LODs con `ImporterMesh.generate_lods(25, 60)`. El cuerpo ya trae 8 LODs del importador. Medido con `hw_modesto.sh` (opengl3, llvmpipe), 3 clubes de 3 países:
+
+| Nivel / país | Triángulos antes → después | Llamadas | Fotograma (relativo) |
+|---|---|---|---|
+| BAJA CHI | 612 k → 563 k (−8 %) | 316 → 303 | 252 → 274 ms |
+| MEDIA CHI | 762 k → 685 k (−10 %) | 433 → 419 | 405 → 388 ms |
+| BAJA ESP | 416 k → 388 k (−7 %) | 305 → 299 | 211 → 214 ms |
+| MEDIA ESP | 540 k → 505 k (−6 %) | 497 → 491 | 344 → 346 ms |
+| BAJA ENG | 367 k → 324 k (−12 %) | 249 → 241 | 221 → 225 ms |
+| MEDIA ENG | 534 k → 473 k (−11 %) | 350 → 341 | 358 → 358 ms |
+
+Conclusión: −6…−12 % de triángulos, −2 % de llamadas, tiempo de fotograma sin cambio medible (llvmpipe no está limitada por vértices). Generarlos en ejecución es caro (picos de 400–975 ms al montar), así que NO se activa. Si se quiere, hay que hornearlos fuera de línea (como `herramientas/hornear_publico*.gd`) y confirmar en el teléfono; queda como pendiente del dueño. No se cambió nada por defecto.
