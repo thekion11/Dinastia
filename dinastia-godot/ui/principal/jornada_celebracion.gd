@@ -14,7 +14,7 @@ static func ofrecer(pr: Principal, titulo: String, tipo := "") -> void:
 	if tipo == "":
 		tipo = TipoTitulo.de(pr.mundo, titulo)
 	if _abierto:
-		_cola.append([titulo, tipo])
+		_cola.append([titulo, tipo, pr.mundo])   ## con su mundo: si se carga otra partida, no se festeja un título ajeno
 		return
 	_abierto = true
 	var ev := EventoCelebracion.mostrar(pr, titulo, tipo, rival_del_pasillo(pr.mundo), TipoTitulo.equipo_seleccion(pr.mundo, titulo))   ## (10-11) con la selección, sus colores y sus jugadores
@@ -26,9 +26,22 @@ static func ofrecer(pr: Principal, titulo: String, tipo := "") -> void:
 	_abierto = false
 	if op == "vuelta":
 		pr._vistas._ver_vuelta_olimpica(titulo)
-	elif not _cola.is_empty() and is_instance_valid(pr):
+		## (10-11) Los festejos en cola esperan a que termine la vuelta olímpica (la vista del estadio se cierra) y salen después.
+		while not _cola.is_empty() and is_instance_valid(pr) and _hay_vista_3d(pr):
+			await pr.get_tree().create_timer(0.5).timeout
+	while not _cola.is_empty() and is_instance_valid(pr):
 		var sig: Array = _cola.pop_front()
-		await ofrecer(pr, String(sig[0]), String(sig[1]))
+		if sig[2] == pr.mundo:
+			await ofrecer(pr, String(sig[0]), String(sig[1]))
+			break
+
+## ¿Hay una vista 3D abierta (la vuelta olímpica en el estadio)? Por el nombre de la clase, sin nombrarla (memoria del menú).
+static func _hay_vista_3d(pr: Principal) -> bool:
+	for h in pr.get_children():
+		var sc := h.get_script() as Script
+		if sc != null and String(sc.get_global_name()) == "VistaEstadio":
+			return true
+	return false
 
 ## Al terminar la liga: ascenso o salvación (si tocan), una vez por temporada.
 static func fin_de_liga(pr: Principal) -> void:
