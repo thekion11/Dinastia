@@ -34,8 +34,9 @@ func _sin_apoyo(lote: PiezasVestuario.Lote, sala: Rect2) -> int:
 	var apoyada: Array = []
 	for p: Array in piezas:
 		var a: AABB = p[0]
-		apoyada.append(a.position.y <= 0.06 or a.position.x <= sala.position.x - 0.1 or a.end.x >= sala.end.x + 0.1
-			or a.position.z <= sala.position.y - 0.1 or a.end.z >= sala.end.y + 0.1)
+		## (10-11) Pegada a la pared = apoyada: zócalo, carteles y gallardetes del museo van a 6-10 cm por fuera del plano de la pared (antes el margen era de 10 cm y no los contaba).
+		apoyada.append(a.position.y <= 0.06 or a.position.x <= sala.position.x - 0.05 or a.end.x >= sala.end.x + 0.05
+			or a.position.z <= sala.position.y - 0.05 or a.end.z >= sala.end.y + 0.05)
 	var cambio := true
 	while cambio:
 		cambio = false

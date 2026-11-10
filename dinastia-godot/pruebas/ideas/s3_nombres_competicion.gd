@@ -108,9 +108,19 @@ func _pasada(idioma: String) -> void:
 	var res: Array = []
 	for x: String in prohibidos:
 		res.append(RegEx.create_from_string("\\Q%s\\E(?! de Clubes)" % x))
+	## (10-11) Un nombre VISIBLE puede empezar por uno prohibido («Copa Intercontinental de Campeones» es el nombre ficticio del Mundial de Clubes y empieza por «Copa Intercontinental»,
+	## el torneo real): antes de buscar los prohibidos se quitan los nombres visibles de los ficticios, más largos.
+	var visibles: Array[String] = []
+	for k: String in CompeticionInfo.FICTICIOS:
+		visibles.append(Idiomas.t(String(CompeticionInfo.FICTICIOS[k])))
+		visibles.append(String(CompeticionInfo.FICTICIOS[k]))   ## y el castellano crudo (algún texto de la prueba no pasa por `Idiomas.t`)
+	visibles.sort_custom(func(a: String, b: String) -> bool: return a.length() > b.length())
 	for t: String in textos:
+		var limpio := t
+		for v: String in visibles:
+			limpio = limpio.replace(v, "")
 		for k in prohibidos.size():
-			if (res[k] as RegEx).search(t) != null:
+			if (res[k] as RegEx).search(limpio) != null:
 				malos.append("«%s» en «%s»" % [prohibidos[k], t.left(90)])
 	for k: String in CompeticionInfo.FICTICIOS:
 		var v := Idiomas.t(String(CompeticionInfo.FICTICIOS[k]))

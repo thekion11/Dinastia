@@ -53,7 +53,7 @@ func _probar() -> void:
 	var etiquetas: Array = ed.find_children("*", "Label3D", true, false)
 	var cajas: Array[Dictionary] = []
 	for l: Label3D in etiquetas:
-		if not l.is_visible_in_tree() or l.text.length() < 8:
+		if not l.visible or l.text.length() < 8:   ## (10-11) `visible` propio, no `is_visible_in_tree()`: la oclusión por plantas apaga las ramas de las otras plantas y no quedaba ningún rótulo que medir
 			continue
 		var ab := l.global_transform * l.get_aabb()
 		cajas.append({"l": l, "ab": ab})
@@ -72,6 +72,9 @@ func _probar() -> void:
 	for cc in cajas:
 		anchos.append((cc["ab"] as AABB).size.length())
 	anchos.sort()
+	_comprobar(not anchos.is_empty(), "hay rótulos que medir (%d)" % anchos.size())
+	if anchos.is_empty():
+		return
 	print("  (info) tamaños de rótulo: mín %.2f máx %.2f" % [anchos[0], anchos[-1]])
 	print("  (info) %d rótulos medidos, %d pares que se pisan %s" % [cajas.size(), pisados, ejemplo])
 	if pisados > 0:
@@ -122,7 +125,9 @@ func _probar() -> void:
 			for l: Label3D in ed2.find_children("*", "Label3D", true, false):
 				if l.text.begins_with(Idiomas.t("Museo ampliado · %d títulos").split("%")[0]):
 					restos += 1
-		await get_tree().create_timer(5.0).timeout   ## la animación corta termina sola (~4 s) aunque el jugador esté fuera
+		## La animación termina sola aunque el jugador esté fuera: 0,5 + copas x PASO + 1,5 + 0,8 s (con 36 vitrinas ~8 s; antes eran pocas copas y bastaban 5 s).
+		var n_copas := (anim2.get("copas") as Array).size() if anim2 != null else 0
+		await get_tree().create_timer(2.8 + MuseoAmpliadoAnim.PASO * float(n_copas) + 1.0).timeout
 		restos = 0
 		for l: Label3D in ed2.find_children("*", "Label3D", true, false):
 			if l.text.begins_with(Idiomas.t("Museo ampliado · %d títulos").split("%")[0]):

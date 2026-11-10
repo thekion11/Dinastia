@@ -117,7 +117,7 @@ func _probar_pelo_y_cara() -> void:
 		piezas.append(String(h.name))
 	_comprobar(ancla != null and ancla.bone_name == "Head" and piezas == ["Hair_SimpleParted", "Hair_Beard", "Eyebrows_Regular"], "tupé con barba: peinado, barba y cejas en el hueso de la cabeza %s" % str(piezas))
 	var cejas := ancla.get_node_or_null("Eyebrows_Regular") as MeshInstance3D
-	_comprobar(cejas != null and cejas.visibility_range_end == PeloQ.DIST_CEJAS, "las cejas 3D solo de cerca (%d m)" % PeloQ.DIST_CEJAS)
+	_comprobar(cejas != null and is_equal_approx(cejas.visibility_range_end, PeloQ.DIST_CEJAS * Calidad.lod_cabeza()), "las cejas 3D solo de cerca (%d m × el factor de la calidad %.2f)" % [PeloQ.DIST_CEJAS, Calidad.lod_cabeza()])
 	## Puesto en reposo, cada peinado tiene que caer SOBRE la cabeza (el moño venía
 	## en centímetros y girado: salía flotando al costado).
 	var cabeza := esq.get_bone_global_rest(esq.find_bone("Head"))

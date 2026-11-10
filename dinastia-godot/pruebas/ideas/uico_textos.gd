@@ -92,7 +92,9 @@ func _probar_con_espera() -> void:
 	var col := VBoxContainer.new()
 	add_child(col)
 	var liga := m.liga_de(m.mi_club())
-	TablaCompeticion.pintar(col, m, liga, m.mi_club(), {"suave": Tema.SUAVE, "texto": Tema.TEXTO,
+	## (10-11) `pintar` elige entre la tabla de liga, un cuadro de copa o un grupo continental según la semana (con los continentales de formato real a la 4.ª semana toca el continental):
+	## aquí se prueba la TABLA DE LIGA, así que se pide directamente.
+	TablaCompeticion._pintar_tabla_liga(col, m, liga, m.mi_club(), {"suave": Tema.SUAVE, "texto": Tema.TEXTO,
 		"acento": Tema.ACENTO, "verde": Tema.BIEN, "rojo": Tema.MAL, "oro": Tema.ORO, "escala": 1.0})
 	var con_zona := 0
 	for l2 in col.find_children("*", "Label", true, false):
