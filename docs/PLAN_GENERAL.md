@@ -61,7 +61,8 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 - RUEDA DE PRENSA Y EVENTOS al estilo del PES (su rueda de prensa es «muchísimo mejor en lo visual» y tiene eventos): conservar los nuestros y SUMAR los suyos, adaptando su estética a la nuestra. Encargado a la 3.ª sesión (rama `sesion3-rueda-prensa`), con la selección direccional del PDF (stick, clic o toque, con mini animación).
 - COLORES: el dueño PERMITE variar la paleta («mucho verde con dorado»).
 - PASAR A `main`: SÍ (10-11). Hecho por avance rápido de `ccr-1447f2a7-cdar0x`, con el banco en «FIN. 0 fallos».
-- Siguen abiertas: el prólogo en vídeo o en animación, los torneos de selecciones y los .mp4 de `marca/`.
+- PRÓLOGO: el dueño se QUEDA CON LA ANIMACIÓN DEL MOTOR (10-11), tras ver las cifras (≈43 llamadas de dibujo y 0 bytes, frente a 1 llamada, 16 MB y la decodificación en la CPU del vídeo). Para enseñarla: `pruebas/grabar_prologo.tscn` con `--write-movie` (fuera del repo).
+- Siguen abiertas: los torneos de selecciones y los .mp4 de `marca/`.
 
 ## IDEAS DEL PES 2020 PARA ADAPTAR (pedido del dueño, 10-11; investigación con fuentes, sin copiar arte ni marcas)
 Dinastía ya tiene casi todo el temario de la Master League (cesiones, ojeadores, agentes y cláusulas, reconversión de puesto, capitán, vestuario, charlas, junta, informe del rival, valoraciones). Lo que falta es sobre todo MOSTRARLO. Por prioridad (★ = mucho impacto, poco esfuerzo):
@@ -80,7 +81,6 @@ Dinastía ya tiene casi todo el temario de la Master League (cesiones, ojeadores
 Fuentes: fourfourtwo.com (reseña PES 2020), gamesatlas.com (Master League remastered), konami.com/pes2020, pesmastery.com/?p=7515, redbull.com (guía PES 2020), manual de Konami PES 2019. Sin confirmar en PES 2020: química, flechas, objetivos y rumores (vienen de la serie en general).
 
 ## DECISIONES PENDIENTES DEL DUEÑO (no se implementa hasta que conteste)
-- **PRÓLOGO: ¿VÍDEO O ANIMACIÓN DEL MOTOR?** MEDIDO el 10-11 (`pruebas/medir_prologo_video.tscn`, 1280x720, llvmpipe; el vídeo de prueba .ogv —Theora, lo que Godot reproduce; el .mp4 no— se hizo con ffmpeg desde las capturas y NO está en el repo). Animación del motor tras optimizarla (la ilustración fija se pinta una vez por plano en una textura; antes ~1.377 llamadas de dibujo y ~88.000 primitivas por cuadro): **~43 llamadas, ~3.000 primitivas, 438 MB**. Vídeo: 1 llamada, 2 primitivas, 451 MB (+9-13 MB) y **16 MB de archivo** fuera del repo, más el coste de decodificar en la CPU (en software no se pudo separar del resto). **Recomendación de la sesión: quedarse con la animación** (ya es barata, pesa 0 bytes, se adapta a la pantalla y a los colores del club; el vídeo no se ve con el club propio). Medir en el teléfono para cerrar.
 - **TORNEOS DE SELECCIONES** (Mundial, Eurocopa, Copa América; hoy solo fechas informativas en `nucleo/calendario.gd`, y `Selecciones.cierre_de_temporada`): **¿se JUEGAN (con tu plantel, convocados que se van con sus selecciones) o son SOLO CALENDARIO?** Anotado el 9-11 por orden del dueño; sin respuesta no se toca.
 - **Los 3 `.mp4` de `marca/`** (`marca/nexus-digital-intro.mp4`, `marca/referencia/ea_fc25_referencia.mp4`, `marca/referencia/ejemplo-partido.mp4`, en LFS): el juego no los carga y la regla del proyecto dice «.mp4 nunca al repo»; ¿se sacan del repo?
 
