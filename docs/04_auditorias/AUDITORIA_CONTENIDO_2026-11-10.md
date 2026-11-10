@@ -122,3 +122,6 @@ Verificado en Wikipedia (2025-26): THA, IDN, VIE, IND, MAS, BHR (sin estadios po
 
 ## Segunda pasada web (10-11)
 Corregidas las listas de MOZ, GUI, MAD, TOG, BEN, NCA y PAN y varios aforos (KUW, ZIM, ISL, AND). Cifras tras ello: 135 países, 147 ligas, 2.206 clubes, 55.150 jugadores en clubes. Qué quedó verificado y con qué fuente: `datos_dudosos_2026-11-10.md`.
+
+## Tercera pasada (10-11)
+MLI a 14 clubes, BFA con Rahimo FC, CPV/LBY/CGO corregidas con RSSSF. Cifras: 135 países, 147 ligas, 2.203 clubes, 55.075 jugadores en clubes. Detalle y fuentes: `datos_dudosos_2026-11-10.md`.

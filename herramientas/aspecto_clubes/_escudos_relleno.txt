@@ -105,6 +105,7 @@ Royal FC||||ROY|||
 Vitesse FC||||VIT|||
 AS Koupéla||||KOU|||
 ASEC Koudougou||||ASE|||
+Rahimo FC||||RAH|||
 Al-Muharraq||||AL|||
 Al-Riffa||||AL|||
 Al-Khaldiya||||AL|||
@@ -161,12 +162,12 @@ V Club Mokanda||||VCL|||
 AS Cheminots||||CHE|||
 AS Ponténégrine||||PON|||
 Nico-Nicoyé||||NIC|||
-Munisport||||MUN|||
+JS Poto-Poto||||JS|||
 Patronage Sainte-Anne||||PAT|||
-AS Kondzo||||KON|||
-Saint Michel d'Ouenzé||||SAI|||
+FC Nathaly's||||NAT|||
+ACJM Pointe-Noire||||ACJ|||
 AS Otohô||||OTO|||
-Étoile Mbochi||||ETO|||
+FC Racine||||RAC|||
 Tianjin Jinmen Tiger||||TIA|||
 ASEC Mimosas||||ASE|||
 Africa Sports||||AFR|||
@@ -214,18 +215,18 @@ AS Simba||||SIM|||
 CS Manika||||CS|||
 Blessing FC||||BLE|||
 New JAK||||NEW|||
-Sporting Clube da Praia||||SPO|||
+SC África Show||||AFR|||
 CS Mindelense||||CS|||
 GD Palmeira||||GD|||
 Boavista da Praia||||BOA|||
 Académico do Aeroporto||||ACA|||
 Académica do Porto Novo||||ACA|||
-CD Travadores||||TRA|||
-Derby||||DER|||
-Batuque||||BAT|||
+Cutelinho FC||||CUT|||
+UD Santo Crucifixo||||SAN|||
+CD Benfica Brava||||BEN|||
 Onze Unidos||||ONZ|||
-Sporting Clube do Sal Rei||||SPO|||
-Académica da Brava||||ACA|||
+SC Atlético Nicolau||||ATL|||
+CD Scorpion Vermelho||||SCO|||
 Deportivo Saprissa||||DEP|||
 Liga Deportiva Alajuelense||||LIG|||
 Club Sport Herediano||||CLU|||
@@ -623,7 +624,7 @@ Al-Hilal Benghazi||||AL|||
 Al-Tahaddy||||AL|||
 Asswehly SC||||ASS|||
 Al-Ittihad Misrata||||AL|||
-Al-Bashayr||||AL|||
+Al-Anwar||||AL|||
 Al-Madina Tripoli||||AL|||
 Abu Salem SC||||ABU|||
 Libyan Stadium SC||||LIB|||
@@ -634,7 +635,7 @@ Al-Ta'awon||||AL|||
 Al-Sadaqa||||AL|||
 Al-Khums SC||||AL|||
 Olympic Azzaweya||||OLY|||
-Asaria SC||||ASA|||
+Al-Ittihad Military SC||||AL|||
 Kauno Žalgiris||||KAU|||
 Žalgiris||||ZAL|||
 Panevėžys||||PAN|||
@@ -729,14 +730,10 @@ AS Olympique de Messira||||OLY|||
 AS Police||||POL|||
 AS Real Bamako||||REA|||
 CO Bamako||||CO|||
-CS Duguwolofila||||CS|||
 Djoliba AC||||DJO|||
-LC Bamako||||LC|||
 Stade Malien||||STA|||
 AS Onze Créateurs||||ONZ|||
-US Bougouba||||BOU|||
 USC Kita||||USC|||
-USFAS Bamako||||USF|||
 Yeelen Olympique||||YEE|||
 Hamrun Spartans||||HAM|||
 Valletta||||VAL|||
