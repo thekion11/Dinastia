@@ -65,7 +65,7 @@ Dinastía ya tiene casi todo el temario de la Master League (cesiones, ojeadores
 6. ESCENAS de diálogo a pantalla completa en hitos (fichaje estrella, despido, ascenso) con 3 respuestas (`EventoPantallaCompleta`).
 7. Informe de ojeador con RANGOS de atributos que se afinan con las semanas.
 8. Pantalla de PLAN DE JUEGO con 2 instrucciones de ataque y 2 de defensa.
-9. Brazalete del capitán visible en ficha y pizarra.
+9. HECHO (10-11) en la lista de la plantilla: la «C» amarilla del capitán (`PlantillaHabilidades.brazalete`). Falta: en la pizarra de Táctica.
 10. Premios MENSUALES (jugador del mes).
 11. Revisar el alcance del editor de la partida.
 12. Logo del patrocinador en la sala de prensa y en el resumen de temporada.

@@ -371,6 +371,8 @@ func _fila(j: Jugador) -> Button:
 	nombre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nombre.clip_text = true
 	fila.add_child(nombre)
+	if j.capitan:   ## (10-11) el brazalete del capitán, como en el PES
+		fila.add_child(PlantillaHabilidades.brazalete())
 	fila.add_child(FlechaForma.etiqueta(j))   ## (10-11) la flecha de forma, como la «condición» del PES
 	fila.add_child(_etiqueta(str(j.ovr), 14, Tema.TEXTO))
 	b.pressed.connect(func() -> void: _elegir(j))
