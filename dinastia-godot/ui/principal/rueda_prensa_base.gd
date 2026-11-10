@@ -35,7 +35,7 @@ var _ultimo_medio := ""
 ## Lo que movió la rueda entera (con repreguntas), para el resumen final.
 var _suma := {"moral": 0, "confianza": 0, "socios": 0}
 ## Medidas en píxeles lógicos (la ventana base es 1280×720 con «expand»).
-const ANCHO_COLUMNA := 460   ## (10-11) más ancha: la cruz de respuestas necesita dos columnas laterales
+const ANCHO_COLUMNA := 420   ## (10-11) más ancha: la cruz de respuestas necesita dos columnas laterales
 const ALTO_FRANJA := 108
 const MARGEN := 18
 const COL_FONDO := Color(0.03, 0.045, 0.08)
