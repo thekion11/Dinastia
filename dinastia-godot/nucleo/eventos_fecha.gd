@@ -99,6 +99,13 @@ static func _nombre_ronda(vivos: int) -> String:
 		32: return Idiomas.t("Dieciseisavos")
 	return Idiomas.t("Ronda")
 
+## El nombre de un partido futuro del torneo continental (según su hueco en el calendario).
+static func _nombre_hueco(h: Dictionary) -> String:
+	match String(h.get("t", "")):
+		"ko": return _nombre_ronda(int(h.get("vivos", 0)))
+		"po": return Idiomas.t("Playoff")
+	return Idiomas.t("Ronda")
+
 static func _con_rival(e: Dictionary, par: Array, mio: Club) -> void:
 	if par.size() == 2:
 		e["local"] = par[0] == mio
@@ -122,13 +129,17 @@ static func _de_copa(m: Mundo, w: int) -> Array:
 
 static func _de_conti(m: Mundo, mio: Club, w: int) -> Array:
 	var t := m.mi_continental()
-	if t == null or Continental.toca_ronda(w) < 0 or not t.en_curso():
+	if t == null or not t.en_curso():
 		return []
-	var idx := _rondas_antes(m, w, false)
+	## El hueco de ESE torneo que cae en la semana `w` (cada torneo tiene su calendario) y cuántos quedan antes.
+	var k := t.semanas().find(w)
+	if k < 0 or k < t.ronda or k >= t.huecos().size():
+		return []
+	var idx := k - t.ronda
 	var grupos := t.en_fase_de_grupos()
-	if not grupos and (not t.vivos.has(mio) or (t.vivos.size() >> idx) < 2):
+	if not grupos and not t.vivos.has(mio):
 		return []
-	var ronda := t.nombre_de_ronda() if idx == 0 else (Idiomas.t("Ronda") if grupos else _nombre_ronda(t.vivos.size() >> idx))
+	var ronda := t.nombre_de_ronda() if idx == 0 else _nombre_hueco(t.huecos()[k])
 	var e := _ev("conti", DIA_PARTIDO, 3, Idiomas.t("Continental"), "%s · %s" % [t.nombre, ronda])
 	if idx == 0:
 		var par := t.emparejamiento_de(mio)

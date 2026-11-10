@@ -76,9 +76,20 @@ func _probar_copas_mundo() -> void:
 	_comprobar(Partida.guardar(m, "_prueba_copas_mundo"), "se guarda")
 	var m2 := Partida.cargar("_prueba_copas_mundo")
 	_comprobar(m2 != null and m2.copas_otras.size() == m.copas_otras.size() and m2.palmares_mundo.size() == m.palmares_mundo.size(), "y se carga con sus copas y su palmarés")
+	## Cuántas supercopas toca jugar: los países (menos el tuyo) cuyo campeón de liga no ganó también la copa principal. Con
+	## unos campeones u otros, esa cuenta cambia: la prueba no puede exigir «al menos una» a ciegas.
+	var esperadas := 0
+	for pais: String in m.campeones_liga_otros:
+		if pais == mio.pais:
+			continue
+		for cp: Copa in m.copas_otras:
+			if String(cp.get_meta("pais", "")) == pais:
+				if cp.campeon != null and cp.campeon != m.campeones_liga_otros[pais]:
+					esperadas += 1
+				break
 	m.nueva_temporada()
 	var supers := m.palmares_mundo.filter(func(t: Dictionary) -> bool: return String(t["torneo"]) == "Supercopa" and int(t["anio"]) == m.anio).size()
-	_comprobar(supers >= 1, "al empezar la temporada se juegan las supercopas de los demás países (%d)" % supers)
+	_comprobar(supers == esperadas, "al empezar la temporada se juegan las supercopas de los demás países (%d de %d)" % [supers, esperadas])
 	_comprobar(m.copas_otras.all(func(cp: Copa) -> bool: return cp.campeon == null and cp.en_curso()), "y se sortean copas nuevas")
 	Partida.borrar("_prueba_copas_mundo")
 

@@ -371,7 +371,7 @@ func _pintar_conti(c: Club) -> void:
 		var t: Continental = p.mundo.continentales[k]
 		var propia := t == mia
 		var cab := p._texto(13, p.COL_ACENTO if propia else Principal.COL_SUAVE)
-		var estado := ("campeón: " + t.campeon.nombre) if t.campeon != null else t.nombre_de_ronda()
+		var estado := ("campeón: " + t.campeon.nombre) if t.campeon != null else Idiomas.t(t.nombre_de_ronda())
 		cab.text = "%s%s  —  %s" % ["> " if propia else "   ", Continental.nombre_conti(k), estado]
 		p._lista_conti.add_child(cab)
 		if not propia:
@@ -381,7 +381,7 @@ func _pintar_conti(c: Club) -> void:
 				var g := p._texto(11, Principal.COL_SUAVE)
 				g.text = "  " + t.nombre_de_grupo(i)
 				p._lista_conti.add_child(g)
-				for fila: Dictionary in t.tabla_de_grupo(i):
+				for fila: Dictionary in t.filas_con_puesto(i, c, 9):
 					var club: Club = fila["club"]
 					var l := p._texto(12, p.COL_ACENTO if club == c else Principal.COL_TEXTO)
 					l.text = Idiomas.t("    %s  ·  %d pts") % [club.nombre, int(fila.get("pts", 0))]

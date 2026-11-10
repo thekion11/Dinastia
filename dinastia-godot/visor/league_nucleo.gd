@@ -27,6 +27,8 @@ const CORTO := 0
 const LARGO := 1
 const ALTO := 2
 const TIRO := 3
+## Radio de la zona de tiro alrededor del punto a 7 m de la línea (L: 16 m). EXPERIMENTO (no es el original): LS_ZONA_TIRO=24.
+static var ZONA_TIRO := float(OS.get_environment("LS_ZONA_TIRO")) if OS.get_environment("LS_ZONA_TIRO") != "" else 16.0
 
 static func normalizado(v: float, a: float, b: float) -> float:   ## bluntmath NormalizedClamp
 	return clampf((v - a) / (b - a), 0.0, 1.0) if b != a else 0.0
@@ -229,7 +231,7 @@ static func decidir(yo: Dictionary, companeros: Array, rivales: Array, mov_balon
 		cola.append(mejor)
 	## ¿Tiro? (L: tres puntos del arco, el mejor; ganas = sqrt(odds) + azar).
 	var dist_arco := normalizado((Vector2(MEDIO_LARGO * -lado, 0.0) - pos).length(), 0.0, 32.0)
-	var ideal := curva(1.0 - normalizado((Vector2((MEDIO_LARGO - 7.0) * -lado, 0.0) - pos).length(), 0.0, 16.0), 1.0)
+	var ideal := curva(1.0 - normalizado((Vector2((MEDIO_LARGO - 7.0) * -lado, 0.0) - pos).length(), 0.0, ZONA_TIRO), 1.0)
 	if ideal > 0.1:
 		var mejor_y := 0.0
 		var odds_t := odds_pase(pos + mov * 0.12, Vector2((MEDIO_LARGO + 1.0) * -lado, 0.0), TIRO, rivales, 3.0)

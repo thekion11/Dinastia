@@ -93,14 +93,21 @@ func _ideas_a_partido() -> void:
 	club.tactica.mentalidad = Tactica.Mentalidad.DEFENSIVA
 	club.tactica.linea = Tactica.Nivel.BAJO
 	club.tactica.plan_perdiendo = "ofensivo"
+	## Con la plantilla en pie: tras varias temporadas jugadas por otras secciones, lesiones y sanciones pueden dejar a un
+	## equipo sin once y el partido se da por terminado antes del 60' (y este bucle no acabaría nunca).
+	for j: Jugador in club.plantilla + cl[6].plantilla:
+		j.lesion = 0
+		j.suspension = 0
 	var p4 := Partido.new(club, cl[6])
 	p4.preparar()
 	## El marcador se fuerza justo antes del 60 (y no al empezar): si no, el local
 	## puede empatar antes y el plan, con razón, no se activa.
-	while p4.minuto < 59:
+	var vueltas := 0
+	while p4.minuto < 59 and not p4.terminado_ya and vueltas < 400:
 		p4.simular_minuto()
+		vueltas += 1
 	p4.goles_visita = p4.goles_local + 2
-	while p4.minuto < 61:
+	while p4.minuto < 61 and not p4.terminado_ya:
 		p4.simular_minuto()
 	_comprobar(club.tactica.mentalidad == Tactica.Mentalidad.OFENSIVA and club.tactica.linea == Tactica.Nivel.ALTO, "perdiendo a los 60' el plan cambia la mentalidad a ofensiva y adelanta la línea (378)")
 	## Modo «solo resultado» (371): avanzar semanas sin ver partidos deja la tabla coherente.

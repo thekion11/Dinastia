@@ -225,8 +225,8 @@ func _datos_pantalla_estadio(local: Club, comp: String = "liga") -> Dictionary:
 		if conti.en_fase_de_grupos():
 			for gi in conti.grupos.size():
 				if (conti.grupos[gi] as Array).has(local) or (conti.grupos[gi] as Array).has(p.mundo.mi_club()):
-					d["titulo_tabla"] = "GRUPO " + conti.nombre_de_grupo(gi).to_upper()
-					for f: Dictionary in conti.tabla_de_grupo(gi):
+					d["titulo_tabla"] = conti.nombre_de_grupo(gi).to_upper()
+					for f: Dictionary in conti.filas_con_puesto(gi, local, 10):
 						var cg: Club = f["club"]
 						d["tabla"].append({"id": cg.id, "nombre": cg.nombre, "pts": int(f["pts"]), "pj": int(f["pj"]), "dif": int(f["dif"])})
 					break

@@ -24,11 +24,8 @@ Fuentes: lectura de los datos y el código del juego (solo lectura) e investigac
 | Copas nacionales | 28 copas en 25 países; PAR, ECU y BOL con nombre genérico; **solo se juega la copa de tu país** | las de los 107 países nuevos; que se jueguen las de todos los países (simuladas) |
 | Supercopas nacionales | solo la de tu país (un partido) | las del resto (España, Italia, Alemania, Francia, Portugal, Brasil, Argentina…) |
 | Segunda copa (copa de liga) | ENG, ARG y JPN alternan una por año | jugar las dos el mismo año; Taça da Liga, Scottish League Cup, J.League Cup… |
-| Continentales | 8 torneos con un formato único simplificado (16 clubes, 4 grupos) | formatos reales: Champions, Europa League y Conference con fase de liga de 36; Libertadores con 32 en grupos más previas; Sudamericana; Concachampions; Leagues Cup; AFC Elite y Two; CAF Champions y Confederación; OFC |
-| Supercopas continentales | ninguna | Supercopa de Europa, Recopa Sudamericana, Supercopa CAF |
-| Mundial de Clubes | 6 campeones, siempre simulado y no jugable | formato de 32 (8 grupos de 4), jugable si participa tu club |
-| Copa Intercontinental FIFA | no existe | derbi de las Américas, Challenger Cup y final con el campeón de Europa |
 | Mundial de selecciones | se «simula» por fuerza, sin partidos; 32 de 37 selecciones | 48 selecciones (2026), partidos de verdad |
+| Continentales de clubes (HECHO 10-11, sesión 6: formatos reales, supercopas, Mundial de Clubes de 32 y Copa Intercontinental) | — | solo Leagues Cup y las previas de la Libertadores |
 | Eurocopa, Copa América, Copa Oro, Copa Africana, Copa de Asia, Oceanía | solo se sortea el puesto de tu país; en el calendario, solo fechas | torneos jugados |
 | Nations League (UEFA y CONCACAF), eliminatorias, Finalissima, Juegos Olímpicos | no existen | todos |
 | Incoherencia | el calendario muestra el Mundial en 2026 y 2030, pero el cierre de temporada lo juega en 2028 y 2032 | unificar |

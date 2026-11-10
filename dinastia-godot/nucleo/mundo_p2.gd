@@ -301,8 +301,10 @@ func _montar_copa() -> void:
 func _sortear_continentales() -> void:
 	if copa == null:
 		_montar_copa()
+	var previos := continentales   ## los del año que se cierra: sus campeones disputan los torneos de la FIFA que empiezan
 	continentales = Continental.sortear(clubes.values(), ligas,
 		copa.campeon if copa != null else null)
+	FifaClubes.sumar(self, previos)
 
 ## Arranca tu carrera en un club: fija el objetivo que te pone la directiva.
 ##

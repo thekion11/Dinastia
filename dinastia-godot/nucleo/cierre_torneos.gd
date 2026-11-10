@@ -28,14 +28,16 @@ static func cerrar_pendientes(m: Mundo) -> Array:
 		if not t.en_curso():
 			continue
 		var guard2 := 0
-		while t.en_curso() and guard2 < 20:
+		while t.en_curso() and guard2 < 40:
 			t.jugar_ronda()
 			guard2 += 1
 		if t.campeon == null:
 			continue
 		var nom := Continental.nombre_conti(t.clave)
 		cerrados.append({"torneo": nom, "campeon": t.campeon, "mio": t.campeon == mio})
-		if t.campeon == mio and m.logros != null:
+		if t.es_fifa():
+			FifaClubes.coronar(m, t)
+		elif t.campeon == mio and m.logros != null:
 			m.logros.celebrar_titulo(nom)   ## el continental se celebra al coronarse (la copa la celebra el cierre de siempre)
 	if m.prensa != null:
 		for c: Dictionary in cerrados:

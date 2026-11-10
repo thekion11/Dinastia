@@ -92,7 +92,10 @@ func cierre_de_temporada(anio: int) -> Dictionary:
 	var resumen := {}
 	residencias()
 	resumen["torneo"] = torneo_continental(anio)
-	resumen["clubes"] = mundial_de_clubes(anio)
+	## (10-11) El Mundial de Clubes se juega en las primeras semanas de la temporada que empieza (`FifaClubes`): aquí solo se
+	## apuntan los campeones continentales de la que acaba, que son los que lo disputarán.
+	anotar_campeones_continentales(anio)
+	resumen["clubes"] = mundial_clubes.duplicate()
 	resumen["mundial"] = copa_del_mundo(anio) if toca_copa_del_mundo(anio) else {}
 	resumen["seleccionador"] = cargo.cerrar_listos(_mundo())   ## (10-11) los torneos de la selección que diriges
 	return resumen
