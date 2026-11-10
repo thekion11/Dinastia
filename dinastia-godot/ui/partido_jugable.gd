@@ -225,7 +225,7 @@ func _montar(duracion_mitad: float) -> void:
 	var balon = load("res://visor/stadium_builder.gd").spawn_ball(_raiz, Vector3(0, 0.11, 0), cb)
 	if _camarografos != null:
 		_camarografos.balon = balon
-	motor = load("res://visor/motor_jugable.gd").new()
+	motor = load("res://visor/motor_league.gd").crear()   ## (10-11) fábrica: con MOTOR_LEAGUE=1 el prototipo de League-Soccer; si no, el de siempre
 	add_child(motor); ControlesTactiles.poner(self); VidaApp.poner(self)   ## M-433: stick y botones en el teléfono
 	motor.duracion_mitad = duracion_mitad; GestoTecnico.fijar_clima(motor, String(perfil.get("clima", "")))   ## el clima pesa en el juego
 	motor.preparar(lista, balon, yo.id if yo != null else "", hash(local.id + visita.id))
