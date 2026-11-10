@@ -547,6 +547,7 @@ estadios_reales.ESTADIOS.update(ligas_completas.estadios())
 # Segundas divisiones (10-11-2026, orden 35): sus clubes reales con su cantidad real, en `segundas_divisiones.py`.
 CLUBES.update(segundas_divisiones.CLUBES)
 estadios_reales.ESTADIOS.update(segundas_divisiones.estadios())
+historia_clubes.H.update(segundas_divisiones.HISTORIA)
 historia_clubes.H.update(liga_paises_bajos.HISTORIA)
 historia_clubes.CLASICOS.extend(liga_paises_bajos.CLASICOS)
 

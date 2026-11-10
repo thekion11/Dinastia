@@ -17,18 +17,18 @@ LIGA2 = {"ENG": ("Championsh1p", "Liga de Plata ING", 24)}
 NUEVOS = [
     # ---- Inglaterra, Championship 2025-26 (24)
     ("ENG", "B1rmingham City", "Brummie Azul", "#0057b8", "#ffffff", 70, 29400, "4-3-3", "presion"),
-    ("ENG", "Blackb0urn", "Ewood Mitades", "#0057b8", "#ffffff", 68, 31400, "4-4-2", "directo"),
+    ("ENG", "Bl4ckburn", "Ewood Mitades", "#0057b8", "#ffffff", 68, 31400, "4-4-2", "directo"),
     ("ENG", "Br1stol City", "Avon Petirrojos", "#d50032", "#ffffff", 68, 27000, "4-2-3-1", "equilibrado"),
     ("ENG", "Charlt0n", "Valley Rojo", "#d50032", "#ffffff", 67, 27100, "4-4-2", "bloque"),
     ("ENG", "C0ventry", "Sky Celeste", "#5ab4e5", "#ffffff", 71, 32600, "4-2-3-1", "posesion"),
     ("ENG", "D3rby County", "Carnero Pride", "#ffffff", "#000000", 68, 33600, "4-4-2", "directo"),
-    ("ENG", "Hu1l City", "Tigre Humber", "#f5a81c", "#000000", 68, 25600, "4-2-3-1", "vertical"),
-    ("ENG", "1pswich", "Orwell Azules", "#0057b8", "#ffffff", 72, 29800, "4-2-3-1", "equilibrado"),
+    ("ENG", "Hull C1ty", "Tigre Humber", "#f5a81c", "#000000", 68, 25600, "4-2-3-1", "vertical"),
+    ("ENG", "Ipsw1ch", "Orwell Azules", "#0057b8", "#ffffff", 72, 29800, "4-2-3-1", "equilibrado"),
     ("ENG", "Le1cester", "Soar Zorros", "#0057b8", "#ffffff", 73, 32300, "4-3-3", "contra"),
     ("ENG", "M1ddlesbrough", "Tees Rojo", "#d50032", "#ffffff", 70, 34000, "3-4-3", "ofensivo"),
     ("ENG", "M1llwall", "Leones Docks", "#0b2a5b", "#ffffff", 67, 20100, "4-4-2", "garra"),
     ("ENG", "Norw1ch", "Canario Wensum", "#ffd100", "#00843d", 70, 27200, "4-3-3", "posesion"),
-    ("ENG", "0xford United", "Oxon Amarillo", "#ffd100", "#0b2a5b", 66, 12500, "4-2-3-1", "presion"),
+    ("ENG", "Oxf0rd United", "Oxon Amarillo", "#ffd100", "#0b2a5b", 66, 12500, "4-2-3-1", "presion"),
     ("ENG", "P0rtsmouth", "Solent Azul", "#0057b8", "#ffffff", 68, 20800, "4-4-2", "garra"),
     ("ENG", "Pr3ston", "Deepdale Blanco", "#ffffff", "#0b2a5b", 67, 23400, "4-4-2", "bloque"),
     ("ENG", "Q.P.R.", "Loftus Aros", "#0057b8", "#ffffff", 66, 18400, "4-3-3", "posesion"),
@@ -41,6 +41,34 @@ NUEVOS = [
     ("ENG", "W. Br0m", "Zorzal Azul", "#0b2a5b", "#ffffff", 69, 26900, "4-2-3-1", "equilibrado"),
     ("ENG", "Wr3xham", "Dragon Gales", "#d50032", "#ffffff", 68, 13300, "4-4-2", "presion"),
 ]
+
+# Historia con guiño (fundado, apodo, estadio, guiño), clave = nombre real limpio. Lo lee `historia_clubes.H` (base_ficticia.py).
+HISTORIA = {
+    "Birmingham City": (1875, "los Blues", "St Andrew's", "El club de la segunda ciudad de Inglaterra, con una grada que no se rinde ni en la categoría de plata."),
+    "Blackburn": (1875, "los Rovers", "Ewood Park", "Fundador de la liga y campeón inglés en los noventa gracias al dinero de un mecenas."),
+    "Bristol City": (1894, "los Robins", "Ashton Gate", "Un club del suroeste que sube y baja con el mismo orgullo de ciudad portuaria."),
+    "Charlton": (1905, "los Addicks", "The Valley", "Volvió a su estadio tras años de exilio, con los hinchas organizados para recuperarlo."),
+    "Coventry": (1883, "los Sky Blues", "la Arena de Coventry", "Del cielo azul de los ochenta a vagar por el país sin estadio propio; ahora vuelve."),
+    "Derby County": (1884, "los Rams", "Pride Park", "Campeón inglés con un entrenador de leyenda, y desde entonces vive de esa memoria."),
+    "Hull City": (1904, "los Tigers", "el estadio del estuario", "Un tigre amarillo y negro en un puerto del norte que nunca fue de grandes ligas."),
+    "Ipswich": (1878, "los Tractor Boys", "Portman Road", "El club de la campiña que ganó una copa continental con una plantilla de pueblo."),
+    "Leicester": (1884, "los Foxes", "el King Power", "Ganó la liga con una probabilidad de cinco mil contra uno y nadie lo olvida."),
+    "Middlesbrough": (1876, "el Boro", "el Riverside", "El club del río Tees, siempre a un paso de la gloria y a otro del barro."),
+    "Millwall": (1885, "los Leones", "The Den", "Nació en los muelles y juega como si todavía tuviera que defenderlos."),
+    "Norwich": (1902, "los Canarios", "Carrow Road", "El club amarillo del este, famoso por su juego limpio y sus subidas y bajadas."),
+    "Oxford United": (1893, "los Yellows", "el Kassam", "Campeón de una copa de liga en los ochenta y hoy un equipo de ciudad universitaria."),
+    "Portsmouth": (1898, "los Pompey", "Fratton Park", "El club naval, con la grada que más ruido hace en la costa sur."),
+    "Preston": (1880, "los Lilywhites", "Deepdale", "Campeón invicto en la primera liga de la historia, hace más de un siglo."),
+    "Q.P.R.": (1882, "los Hoops", "Loftus Road", "Un estadio chico en el oeste de Londres con camiseta de aros azules y blancos."),
+    "Sheffield Utd": (1889, "los Blades", "Bramall Lane", "Comparte ciudad con su rival eterno y juega en el campo de fútbol profesional más antiguo."),
+    "Sheffield Wed": (1867, "los Owls", "Hillsborough", "Uno de los clubes más antiguos del mundo, con un búho como emblema."),
+    "Southampton": (1885, "los Saints", "St Mary's", "El club del puerto que forma jugadores para media Europa."),
+    "Stoke": (1863, "los Potters", "el Bet365", "Alfareros en la cuna de la cerámica, con fama de campo duro en invierno."),
+    "Swansea": (1912, "los Swans", "el Liberty", "El club galés que jugó en la liga inglesa y se hizo famoso por tocar el balón."),
+    "Watford": (1881, "los Hornets", "Vicarage Road", "Una avispa amarilla que sube y baja entre divisiones desde hace décadas."),
+    "W. Brom": (1878, "los Baggies", "The Hawthorns", "Un club de las Midlands del Oeste con un zorzal por escudo y mucha historia de copa."),
+    "Wrexham": (1864, "los Red Dragons", "el Racecourse", "El club profesional más antiguo de Gales, renacido en los últimos años."),
+}
 
 # Nombre real limpio (sin dígitos) -> ficticio; `base_ficticia.py` lo suma a `CLUBES`.
 UNLEET = {"0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "8": "b", "9": "g"}
@@ -94,7 +122,8 @@ def estadios():
 
 def aspecto():
     """Líneas de `aspecto_clubes/ligas_completas.txt`: nombre|forma|patrón|siglas|camiseta|k1|k2|pantalón|medias|esc1|esc2."""
-    formas = ["escudo", "clasico", "circulo", "ojiva"]
+    formas = ["escudo", "clasico", "circulo", "ojiva", "penta", "hex", "cruzado", "banderin"]
+    patrones = ["liso", "banda", "franjas", "mitad", "aro", "cruz", "chevron"]
     sal = []
     for i, f in enumerate(NUEVOS):
         n = _limpio(f[1])
@@ -103,7 +132,8 @@ def aspecto():
             letras = "".join(c for c in n if c.isascii() and c.isalpha()).upper()[:3]
         franjas = i % 3 == 0
         c1, c2 = f[3], f[4]
-        sal.append("|".join([n, formas[i % 4], "franjas" if franjas else "liso", letras, "franjas" if franjas else "liso",
+        ## El escudo de cada club es único (prueba M-062): forma por i % 8 y patrón desplazado según el grupo de ocho.
+        sal.append("|".join([n, formas[i % 8], patrones[(i // 8 + i) % 7], letras, "franjas" if franjas else "liso",
                              c1, c2, c2, c1, c1, c2]))
     return sal
 

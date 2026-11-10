@@ -161,6 +161,13 @@ func _fuentes_de_liga(paises: Array[String]) -> Array:
 				"pais": pais,
 				"clubes": d.get("clubes", []),
 			})
+	## (10-11) Las SEGUNDAS divisiones de los países que las traen (`PAISES_LIGAS[país].segunda`), al final para no mover los ids de los clubes
+	## de las primeras. La de Chile ya viene arriba (su Primera B).
+	if pl != null:
+		for pais2: String in pl:
+			var seg: Dictionary = (pl[pais2] as Dictionary).get("segunda", {})
+			if quiere.call(pais2) and not seg.is_empty():
+				salida.append({"nombre": Nombres.de_tabla(String(seg.get("liga", pais2))), "pais": pais2, "clubes": seg.get("clubes", []), "division": 2})
 	return salida
 
 ## Una fila de club es [nombre, color1, color2, reputacion, aforo].
@@ -200,6 +207,8 @@ func generar(paises: Array[String] = [], semilla_partida: int = 0) -> void:
 	_generar_inicio(semilla_partida)
 	for f: Dictionary in _fuentes_de_liga(paises):
 		var liga := Liga.new(f["nombre"], f["pais"], int(f.get("division", 1)))
+		if liga.division() == 1 and ReglasAscenso.tiene(liga.pais):
+			liga.plazas_descenso = int(ReglasAscenso.de(liga.pais)["bajan"])   ## (10-11) los descensos reales del país
 		for fila: Array in f["clubes"]:
 			_generar_club(liga, f, fila)
 		liga.preparar()
@@ -214,6 +223,8 @@ func generar_por_trozos(paises: Array[String] = [], semilla_partida: int = 0, ms
 	var t0 := Time.get_ticks_usec()
 	for f: Dictionary in _fuentes_de_liga(paises):
 		var liga := Liga.new(f["nombre"], f["pais"], int(f.get("division", 1)))
+		if liga.division() == 1 and ReglasAscenso.tiene(liga.pais):
+			liga.plazas_descenso = int(ReglasAscenso.de(liga.pais)["bajan"])   ## (10-11) los descensos reales del país
 		for fila: Array in f["clubes"]:
 			_generar_club(liga, f, fila)
 			if arbol != null and float(Time.get_ticks_usec() - t0) / 1000.0 >= ms_trozo:
