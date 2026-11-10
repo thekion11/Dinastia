@@ -110,3 +110,6 @@ Dinastía ofrece más **gestión** y más **amplitud** de lo que PES 2020 ofreci
 - Documentos del proyecto: `docs/04_auditorias/AUDITORIA_CONTENIDO_2026-11-10.md`, `PRUEBA_DUENO_MOVIL_2026-11-03.md`, `MOTOR_LEAGUE_SOCCER_PLAN.md`, `rendimiento_120fps.md`, `IA_PARTIDO_BITACORA.md`, `calidad_7_niveles_2026-11-06.md`, `docs/PLAN_GENERAL.md`.
 
 Nota sobre las fuentes: las reseñas de FourFourTwo, GamesRadar y GameSpot se abrieron solo en parte (texto truncado); lo que se cita de ellas viene de los resúmenes de búsqueda. Los datos de licencias detallados de PES 2020 son [C].
+
+## Cifras finales tras la tanda 5 (10-11)
+Mundo generado: 135 países, 147 ligas, 2.208 clubes, 55.200 jugadores, 135 selecciones, 2.206 estadios con firma visual distinta. Frente a PES 2020 (unas 30 ligas licenciadas y selecciones sin licencia) el alcance en cantidad es mayor, pero la profundidad (datos verificados, caras, licencias) sigue siendo menor; los datos de las ligas pequeñas son en parte de memoria (ver `datos_dudosos_2026-11-10.md`).

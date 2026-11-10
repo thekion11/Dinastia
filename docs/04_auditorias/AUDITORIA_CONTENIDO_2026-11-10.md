@@ -116,3 +116,6 @@ Tanda 3 (10-11, noche): 14 países de la UEFA (BIH, MNE, ISL, EST, KAZ, AZE, BLR
 ## Tanda 4 de países (10-11)
 +16 países (THA, IDN, VIE, IND, MAS, BHR, OMA, COD, BFA, ZAM, GUI, KEN, ARM, MDA, ESA, GUA): ahora **102 países, 114 ligas, 1.762 clubes, 44.050 jugadores, 102 selecciones**; estadios repetidos en una misma liga: 0. Elegidos por peso (selecciones y ranking), empezando por Asia y África.
 Verificado en Wikipedia (2025-26): THA, IDN, VIE, IND, MAS, BHR (sin estadios por club), ZAM, KEN, ARM, ESA, GUA. NO verificado: OMA (lista 2024-25), BFA y GUI (2021-22), MDA (parejas club-estadio inferidas), COD (16 de 31 clubes, aforos estimados). Colores, fundaciones y apodos: de memoria.
+
+## Tanda 5 de países (10-11) — cifras finales medidas
++33 países (KOS, MLT, FRO, AND, GIB, SMR, CPV, GAB, ANG, MOZ, UGA, TAN, LBY, BEN, TOG, CGO, ZIM, NAM, MAD, SYR, LBN, PLE, KGZ, TJK, PHI, SGP, HKG, KUW, HAI, CUW, TRI, SUR, NCA). Medido con `medir_contenido`: **135 países, 147 ligas, 2.208 clubes, 55.200 jugadores en clubes, 135 selecciones** (confederaciones: UEFA 53, África 29, Asia 27, CONCACAF 14, CONMEBOL 14, Oceanía 2), 150 nacionalidades de jugadores, 2.206 firmas visuales de estadio distintas, 0 estadios repetidos en una misma liga, mínimo 200 convocables por selección. Lo no verificado: `datos_dudosos_2026-11-10.md`.
