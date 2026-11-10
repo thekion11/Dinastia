@@ -55,6 +55,22 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 
 1. **ESTÉTICA Y DISEÑO DE MENÚS Y DISTRIBUCIÓN — FALTA PULIR.** **FALTA PULIR EN TODOS LOS BLOQUES hechos** (cada uno se afina después). Hecho y en main (9-11): márgenes de las columnas del menú central, fila «PRÓXIMOS» en tarjetas, portadas del riel con rejilla dinámica, letra base del Tema y de los botones, diálogo «Capítulos», Ligas y clubes con escudos, aire en Estadio, aviso del partido de despedida (escudo de las Leyendas con 5 diseños y once titular con busto 3D) y foco visible en los botones de evento.
 
+## IDEAS DEL PES 2020 PARA ADAPTAR (pedido del dueño, 10-11; investigación con fuentes, sin copiar arte ni marcas)
+Dinastía ya tiene casi todo el temario de la Master League (cesiones, ojeadores, agentes y cláusulas, reconversión de puesto, capitán, vestuario, charlas, junta, informe del rival, valoraciones). Lo que falta es sobre todo MOSTRARLO. Por prioridad (★ = mucho impacto, poco esfuerzo):
+1. ★ HECHO (10-11): FLECHA DE FORMA de 5 estados junto a cada jugador en la plantilla (`FlechaForma`, desde `Jugador.forma`). Falta: ponerla también en la pizarra de Táctica y en el once del partido.
+2. ★ QUÍMICA DE LÍNEA visible en la alineación (0-100, desde los grupos del vestuario, años juntos e idioma), con líneas verdes/rojas entre jugadores en la plantilla. Si suma algo al motor, con bandera (el motor es del dueño/sesión del partido).
+3. ★ ESTRATEGIAS RÁPIDAS en el partido: 4 botones grandes (ataque total, defensa, presión, contra) con enfriamiento, en mando y móvil (solo interfaz; fuente: PES Mastery). Necesita OK del dueño (orden 23: el partido es suyo).
+4. OBJETIVOS de la directiva con barra de progreso visible (puesto, copa, beneficio).
+5. RUMORES y «último día» del mercado con ofertas relámpago.
+6. ESCENAS de diálogo a pantalla completa en hitos (fichaje estrella, despido, ascenso) con 3 respuestas (`EventoPantallaCompleta`).
+7. Informe de ojeador con RANGOS de atributos que se afinan con las semanas.
+8. Pantalla de PLAN DE JUEGO con 2 instrucciones de ataque y 2 de defensa.
+9. Brazalete del capitán visible en ficha y pizarra.
+10. Premios MENSUALES (jugador del mes).
+11. Revisar el alcance del editor de la partida.
+12. Logo del patrocinador en la sala de prensa y en el resumen de temporada.
+Fuentes: fourfourtwo.com (reseña PES 2020), gamesatlas.com (Master League remastered), konami.com/pes2020, pesmastery.com/?p=7515, redbull.com (guía PES 2020), manual de Konami PES 2019. Sin confirmar en PES 2020: química, flechas, objetivos y rumores (vienen de la serie en general).
+
 ## DECISIONES PENDIENTES DEL DUEÑO (no se implementa hasta que conteste)
 - **PRÓLOGO: ¿VÍDEO O ANIMACIÓN DEL MOTOR?** MEDIDO el 10-11 (`pruebas/medir_prologo_video.tscn`, 1280x720, llvmpipe; el vídeo de prueba .ogv —Theora, lo que Godot reproduce; el .mp4 no— se hizo con ffmpeg desde las capturas y NO está en el repo). Animación del motor tras optimizarla (la ilustración fija se pinta una vez por plano en una textura; antes ~1.377 llamadas de dibujo y ~88.000 primitivas por cuadro): **~43 llamadas, ~3.000 primitivas, 438 MB**. Vídeo: 1 llamada, 2 primitivas, 451 MB (+9-13 MB) y **16 MB de archivo** fuera del repo, más el coste de decodificar en la CPU (en software no se pudo separar del resto). **Recomendación de la sesión: quedarse con la animación** (ya es barata, pesa 0 bytes, se adapta a la pantalla y a los colores del club; el vídeo no se ve con el club propio). Medir en el teléfono para cerrar.
 - **TORNEOS DE SELECCIONES** (Mundial, Eurocopa, Copa América; hoy solo fechas informativas en `nucleo/calendario.gd`, y `Selecciones.cierre_de_temporada`): **¿se JUEGAN (con tu plantel, convocados que se van con sus selecciones) o son SOLO CALENDARIO?** Anotado el 9-11 por orden del dueño; sin respuesta no se toca.
