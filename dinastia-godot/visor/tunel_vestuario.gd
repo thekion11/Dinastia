@@ -195,6 +195,7 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 	_vestuario(nodo, x0, z_out, z_fin, c1, c2, pared, suelo, techo, luz, horm, nombre, mi)
 	await StadiumBuilder._fase("tunel_vestuario")
 	EdificioClub.montar(nodo, x0, z_out, z_fin, c1, c2, horm, luz, nombre)
+	InteriorOculto.vigilar(nodo, z_boca)
 	await StadiumBuilder._fase("tunel_edificio_club")
 	## La gente del club, cada uno en su puesto (solo en el estadio propio).
 	if mi == null or mi.id == PersonajeDT.club_usuario:

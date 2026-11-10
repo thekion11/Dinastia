@@ -389,6 +389,28 @@ PIEZAS.update({
     "Guadalajara": {"fachada_curva": {"color": "#4f7d3a"}},
     "Colo-Colo": {"esquinas_abiertas": ["noreste", "noroeste"], "fachada_curva": {"color": "#c9c4b8"}},
 })
+# 10-11, CUARTA TANDA: los grandes de cada liga que aún no tenían piezas (uno o dos por liga).
+PIEZAS.update({
+    "Atlético Madrid": {"techo": "membrana", "techoCol": "#f2f2f2", "fachada_curva": {"color": "#c8ccd2"}, "asientos": ["#cb3524", "#f2f2f2"]},
+    "Sevilla": {"fachadaCol": "#d8d2c4", "asiento3": "#d50032", "asientoP": "sectores"},
+    "City de Manch.": {"torres_rampa": 8, "torres_col": "#dfe3e6", "techoCol": "#e6e6e6", "asientos": ["#6cabdd", "#f2f2f2"]},
+    "Juventus": {"costillas": 24, "costillas_col": "#e8e8e8", "techoCol": "#f2f2f2", "pantalla": "dos"},
+    "Leverkusen": {"techo": "total", "fachadaCol": "#e32221", "techoCol": "#e8e8e8"},
+    "Marsella": {"techo": "membrana", "techoCol": "#f4f4f4", "fachada_curva": {"color": "#e8eef3"}, "asientos": ["#2faee0", "#f2f2f2"]},
+    "Racing Club": {"fachada_curva": {"color": "#bcc6cf"}, "asientos": ["#75aadb", "#f2f2f2"], "asientoP": "franjas"},
+    "Independiente": {"techoCol": "#e8e8e8", "asientos": ["#d50032", "#f2f2f2"]},
+    "Palmeiras": {"costillas": 48, "costillas_col": "#c9cfd4", "asientos": ["#006437", "#f2f2f2"]},
+    "Corinthians": {"techo": "parcial", "techo_lados": ["este", "oeste"], "techoCol": "#e8e8e8"},
+    "Monterrey": {"fachada_curva": {"color": "#7d8186"}, "techoCol": "#d9d9d9"},
+    "Feyenoord": {"fachada_curva": {"color": "#8c8f93"}, "asientos": ["#e30613", "#f2f2f2"]},
+    "PSV": {"techoCol": "#e6e6e6", "asientos": ["#ed1c24", "#f2f2f2"]},
+    "Al-ittihad": {"fachada_curva": {"color": "#c9a54a"}},
+    "Kaizer Chiefs": {"fachada_curva": {"color": "#b5703a"}, "asientos": ["#ffc72c", "#111111"]},
+    "Olimpia": {"asientos": ["#f2f2f2", "#111111"], "asientoP": "franjas"},
+    "Millonarios": {"asientos": ["#1e3a8a", "#f2f2f2"]},
+    "Alianza Lima": {"asientos": ["#1e2b5c", "#f2f2f2"], "asientoP": "franjas"},
+    "LDU Quito": {"techo_lados": ["oeste"], "asientos": ["#f2f2f2", "#c8102e"]},
+})
 PIEZAS["Bayern Múnich"]["colchon"] = {"color": "#dc052d", "filas": 5}   # el colchón iluminado
 PIEZAS["Barcelona"]["fachada_curva"] = {"color": "#d9d9d9"}   # el óvalo se ve curvo por fuera
 for _k, _v in PIEZAS.items():
