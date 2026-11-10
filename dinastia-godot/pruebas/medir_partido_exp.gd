@@ -126,3 +126,30 @@ static func aplicar(vista: Node) -> void:
 				(g as GeometryInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 				nf += 1
 		print("SIN_SOMBRA_FINOS: %d piezas sin sombra" % nf)
+
+## EFECTO=glow|niebla|ajuste|ssao|ssr|tonemap|debanding|fxaa|brillo|cielo (uno solo; varios separados por coma): apaga ESE efecto de la cadena de MEDIA y nada más, para la tabla por efecto de `rendimiento_movil_2026-11-10.md`.
+## DIAG_ENTORNO=1 escribe qué trae el Environment y el viewport.
+static func efecto(vista: Node) -> void:
+	var lista := OS.get_environment("EFECTO").split(",", false)
+	var vp: Viewport = vista.get_viewport()
+	for we in vista.find_children("*", "WorldEnvironment", true, false):
+		var en: Environment = (we as WorldEnvironment).environment
+		if en == null:
+			continue
+		if OS.get_environment("DIAG_ENTORNO") != "":
+			print("ENTORNO %s: glow=%s niebla=%s ajuste=%s ssao=%s ssr=%s tonemap=%d fondo=%d ambiente=%d | vp msaa=%d fxaa=%d debanding=%s escala=%.2f" % [
+				we.name, en.glow_enabled, en.fog_enabled, en.adjustment_enabled, en.ssao_enabled, en.ssr_enabled, en.tonemap_mode, en.background_mode, en.ambient_light_source,
+				vp.msaa_3d, vp.screen_space_aa, vp.use_debanding, vp.scaling_3d_scale])
+		for e in lista:
+			match e:
+				"glow": en.glow_enabled = false
+				"niebla": en.fog_enabled = false
+				"ajuste": en.adjustment_enabled = false
+				"ssao": en.ssao_enabled = false
+				"ssr": en.ssr_enabled = false
+				"tonemap": en.tonemap_mode = Environment.TONE_MAPPER_LINEAR
+				"cielo": en.background_mode = Environment.BG_COLOR
+	for e in lista:
+		match e:
+			"debanding": vp.use_debanding = false
+			"fxaa": vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED

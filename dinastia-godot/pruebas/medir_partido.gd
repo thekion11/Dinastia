@@ -64,6 +64,8 @@ func _process(_d: float) -> void:
 	## encendidos durante toda la muestra (lo peor de un gol del local).
 	if _n == CALENTAR - 4 and OS.get_environment("FESTEJO") != "":
 		FestejoGrada.lanzar(_vista.get("_raiz3d"), Color(0.8, 0.1, 0.1), Color(1, 1, 1), "salida", 600.0)
+	if _n == CALENTAR - 15 and (OS.get_environment("EFECTO") != "" or OS.get_environment("DIAG_ENTORNO") != ""):
+		MedirPartidoExp.efecto(_vista)   ## 15 fotogramas ANTES de medir: apagar un efecto recompila shaders y ese tirón no debe entrar en la muestra
 	if _n < CALENTAR:
 		return
 	if (_n == CALENTAR or _n == CALENTAR + 50) and OS.get_environment("DIAG_OCLU") != "":

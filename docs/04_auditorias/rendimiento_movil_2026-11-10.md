@@ -217,3 +217,24 @@ MEDIA a 1920×1080 (como un móvil en horizontal), cámara real, fotograma relat
 | ESP | 583 ms | 424 ms | **−27 %** |
 | ENG | 597 ms | 441 ms | **−26 %** |
 Coincide con el modelo (−29 %). Triángulos y llamadas iguales; vídeo −10 MB. Visual (captura 1080p al 100 %, jugadores y líneas): algo más suave, los jugadores y el balón se distinguen igual; en una pantalla de móvil, más pequeña, se nota menos. Alternativa si el dueño la ve borrosa: subir el tope (p. ej. 0,8 = 864 px) o FSR 1 (solo Forward+/Mobile; en compatibilidad no existe).
+
+## Coste por EFECTO de la cadena de MEDIA (10-11, sesión 5; 3 clubes, 1280×720 llvmpipe, fotograma relativo; ruido ≈ ±4 %)
+Qué trae MEDIA en Compatibilidad (`DIAG_ENTORNO=1`): **glow SÍ, ajuste de color SÍ, tonemap ACES SÍ, debanding SÍ**; niebla, SSAO, SSR y FXAA NO están encendidos (coste 0); MSAA ya apagado (−60 %, hecho antes); sombra solar encendida. Cada fila apaga UN efecto (`EFECTO=…`, 15 fotogramas antes de medir para que recompilar no entre en la muestra):
+
+| Efecto apagado | CHI (base 450) | ESP (base 386) | ENG (base 397) | Lectura |
+|---|---|---|---|---|
+| **sombra solar** (2 cortes) | −20 % | −17 % | −21 % | **el mayor** (ya en P2) |
+| **glow** | −10 % | −7 % | −12 % | **el segundo**; cambia el aspecto (brillo de focos/luces) |
+| ajuste de color | −3 % | +3 % | −2 % | ruido |
+| tonemap ACES → lineal | −3 % | +5 % | −1 % | ruido |
+| debanding | 0 % | 0 % | −4 % | ruido |
+| glow+ajuste+tonemap+debanding juntos | 458→406 (−11 %) | 384→339 (−12 %) | 421→379 (−10 %) | = el glow solo |
+| ídem + sombra solar | (tirón de recompilar) | (ídem) | 321 (−24 %) | casi aditivo |
+| butacas+hinchas (transparencias y MultiMesh de la grada) | −4 % | +1 % | −5 % | ruido (medido arriba) |
+
+Propuestas (NADA aplicado; las dos que cambian el aspecto las decide el dueño):
+- **E1. Glow apagado en MEDIA en móvil/Compatibilidad: −7…−12 %.** Cambia el aspecto (se pierde el resplandor de focos y luces); se puede dejar solo en ALTA. Interruptor ya existente en el WorldEnvironment (`glow_enabled`), por nivel.
+- **E2. Sombra solar en MEDIA en móvil: −17…−21 %** (es la P2 de arriba).
+- **E3. Los demás (ajuste, tonemap, debanding) NO compensan apagarlos**: dentro del ruido; se quedan.
+- E1+E2 juntos: ≈ −24 % medido en ENG. Sumado a P1 (resolución, −26…−31 %) el partido en MEDIA en móvil bajaría ≈ −45…−50 % de fotograma relativo; en una GPU limitada por relleno de píxel (la del dueño al 100 %) probablemente más, porque glow y sombras son pasadas a pantalla/atlas completos. Confirmar en el teléfono.
+Pendiente (no medido): coste del césped aislado (campo plano) y de las transparencias de la grada por separado.
