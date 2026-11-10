@@ -8,6 +8,9 @@ const RUTA := "res://datos/rasgos_pais.json"
 const MIN_JUGADORES := 12   ## con menos caras medidas, el país usa la media mundial
 const PELO_HEX := {"negro": "#1a1a1a", "castano_oscuro": "#3d2a19", "castano": "#6b4a2a", "rubio": "#c8a05a", "claro_o_canoso": "#b9b5ad", "pelirrojo": "#8a3b1f"}
 const CORTES_RIZADOS := ["corto", "fade", "rapado", "afro", "rizado", "undercut"]
+## La piel MEDIDA en una foto o en la malla 3D sale más oscura que el tono de dibujo de `Cara.PIELES`: se calibra por luminancia (mismas constantes que `rasgos_por_pais.py`).
+const FOTO_OSCURA := 0.20
+const FOTO_CLARA := 0.68
 static var _tabla: Dictionary = {}
 static var _listo := false
 
@@ -76,3 +79,17 @@ static func barba(base: Dictionary, j: Jugador, f: Dictionary = {}) -> void:
 	var claves: Array = (f["barba"] as Dictionary).keys()
 	var pesos: Array = claves.map(func(k: String) -> float: return float((f["barba"] as Dictionary)[k]))
 	base["barba"] = int(claves[_elegir(pesos, _u(j, "prior_barba"))])
+
+## El índice de `Cara.PIELES` que corresponde a un color de piel medido en foto (calibrado por luminancia).
+static func tono_de_foto(hexa: String) -> int:
+	var oscuro := Color(Cara.PIELES[Cara.PIELES.size() - 1]).get_luminance()
+	var claro := Color(Cara.PIELES[0]).get_luminance()
+	var l := oscuro + (Color(hexa).get_luminance() - FOTO_OSCURA) * (claro - oscuro) / (FOTO_CLARA - FOTO_OSCURA)
+	var mejor := 0
+	var dmin := 99.0
+	for i in Cara.PIELES.size():
+		var d := absf(Color(Cara.PIELES[i]).get_luminance() - l)
+		if d < dmin:
+			dmin = d
+			mejor = i
+	return mejor
