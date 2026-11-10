@@ -260,7 +260,7 @@ func _entorno() -> void:
 	e.ssao_enabled = Calidad.elegida > Calidad.MINIMO
 	e.ssao_radius = 1.2
 	e.ssao_intensity = 1.6
-	e.glow_enabled = Calidad.elegida > Calidad.MINIMO
+	e.glow_enabled = ModoRendimiento.glow(Calidad.elegida)
 	e.glow_intensity = 0.35
 	e.fog_enabled = true
 	e.fog_light_color = Color(0.78, 0.8, 0.84)

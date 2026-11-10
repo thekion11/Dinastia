@@ -7818,7 +7818,9 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "No heavy effects and no anti-aliasing on phones and web: maximum smoothness",
   "Cargando…": "Loading…",
   "Preparando tu club…": "Getting your club ready…",
-  "Resolución 3D automática (máx. 720 px de alto)": "Automatic 3D resolution (max. 720 px high)"
+  "Resolución 3D automática (máx. 720 px de alto)": "Automatic 3D resolution (max. 720 px high)",
+  "Modo rendimiento (sin brillo ni sombra del sol)": "Performance mode (no glow, no sun shadow)",
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Removes the glow and the sun shadow at Medium quality and below to gain smoothness. Changes the look; applied when the stadium opens."
  },
  "pt": {
   "Historia": "História",
@@ -15639,7 +15641,9 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sem efeitos pesados e sem suavização em celular e web: máxima fluidez",
   "Cargando…": "Carregando…",
   "Preparando tu club…": "Preparando o seu clube…",
-  "Resolución 3D automática (máx. 720 px de alto)": "Resolução 3D automática (máx. 720 px de altura)"
+  "Resolución 3D automática (máx. 720 px de alto)": "Resolução 3D automática (máx. 720 px de altura)",
+  "Modo rendimiento (sin brillo ni sombra del sol)": "Modo desempenho (sem brilho nem sombra do sol)",
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Remove o brilho e a sombra do sol na qualidade Média e inferiores para ganhar fluidez. Muda o aspeto; aplica-se ao abrir o estádio."
  },
  "patrones": [
   [
@@ -29567,7 +29571,9 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sans effets lourds et sans anticrénelage sur téléphone et web : fluidité maximale",
   "Cargando…": "Chargement…",
   "Preparando tu club…": "Préparation de votre club…",
-  "Resolución 3D automática (máx. 720 px de alto)": "Résolution 3D automatique (720 px de haut max.)"
+  "Resolución 3D automática (máx. 720 px de alto)": "Résolution 3D automatique (720 px de haut max.)",
+  "Modo rendimiento (sin brillo ni sombra del sol)": "Mode performance (sans halo ni ombre du soleil)",
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Retire le halo et l'ombre du soleil en qualité Moyenne et inférieure pour gagner en fluidité. Change l'aspect ; appliqué à l'ouverture du stade."
  },
  "it": {
   "Historia": "Storia",
@@ -37388,7 +37394,9 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Senza effetti pesanti e senza antialiasing su telefono e web: massima fluidità",
   "Cargando…": "Caricamento…",
   "Preparando tu club…": "Preparazione del tuo club…",
-  "Resolución 3D automática (máx. 720 px de alto)": "Risoluzione 3D automatica (max 720 px di altezza)"
+  "Resolución 3D automática (máx. 720 px de alto)": "Risoluzione 3D automatica (max 720 px di altezza)",
+  "Modo rendimiento (sin brillo ni sombra del sol)": "Modalità prestazioni (senza bagliore né ombra del sole)",
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Toglie il bagliore e l'ombra del sole in qualità Media e inferiori per guadagnare fluidità. Cambia l'aspetto; si applica all'apertura dello stadio."
  },
  "de": {
   "Historia": "Geschichte",
@@ -45209,7 +45217,9 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ohne aufwendige Effekte und ohne Kantenglättung auf Handy und Web: maximale Flüssigkeit",
   "Cargando…": "Laden …",
   "Preparando tu club…": "Dein Verein wird vorbereitet …",
-  "Resolución 3D automática (máx. 720 px de alto)": "Automatische 3D-Auflösung (max. 720 px Höhe)"
+  "Resolución 3D automática (máx. 720 px de alto)": "Automatische 3D-Auflösung (max. 720 px Höhe)",
+  "Modo rendimiento (sin brillo ni sombra del sol)": "Leistungsmodus (ohne Leuchten und Sonnenschatten)",
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Entfernt Leuchten und Sonnenschatten bei Mittel und darunter für mehr Flüssigkeit. Ändert das Aussehen; gilt beim Öffnen des Stadions."
  },
  "ca": {
   "Historia": "Història",
@@ -53030,7 +53040,9 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sense efectes pesats i sense suavitzat en mòbil i web: màxima fluïdesa",
   "Cargando…": "Carregant…",
   "Preparando tu club…": "Preparant el teu club…",
-  "Resolución 3D automática (máx. 720 px de alto)": "Resolució 3D automàtica (màx. 720 px d'alçada)"
+  "Resolución 3D automática (máx. 720 px de alto)": "Resolució 3D automàtica (màx. 720 px d'alçada)",
+  "Modo rendimiento (sin brillo ni sombra del sol)": "Mode rendiment (sense resplendor ni ombra del sol)",
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Treu el resplendor i l'ombra del sol en qualitat Mitjana i inferiors per guanyar fluïdesa. Canvia l'aspecte; s'aplica en obrir l'estadi."
  },
  "pl": {
   "Club": "Klub",
@@ -60851,7 +60863,9 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Bez ciężkich efektów i bez wygładzania na telefonie i w przeglądarce: maksymalna płynność",
   "Cargando…": "Ładowanie…",
   "Preparando tu club…": "Przygotowywanie twojego klubu…",
-  "Resolución 3D automática (máx. 720 px de alto)": "Automatyczna rozdzielczość 3D (maks. 720 px wysokości)"
+  "Resolución 3D automática (máx. 720 px de alto)": "Automatyczna rozdzielczość 3D (maks. 720 px wysokości)",
+  "Modo rendimiento (sin brillo ni sombra del sol)": "Tryb wydajności (bez poświaty i cienia słońca)",
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Usuwa poświatę i cień słońca w jakości Średniej i niższych, by zyskać płynność. Zmienia wygląd; stosowane po otwarciu stadionu."
  },
  "tr": {
   "Club": "Kulüp",
@@ -68672,6 +68686,8 @@
   "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ağır efekt yok, telefon ve web'de kenar yumuşatma yok: azami akıcılık",
   "Cargando…": "Yükleniyor…",
   "Preparando tu club…": "Kulübün hazırlanıyor…",
-  "Resolución 3D automática (máx. 720 px de alto)": "Otomatik 3D çözünürlük (en fazla 720 px yükseklik)"
+  "Resolución 3D automática (máx. 720 px de alto)": "Otomatik 3D çözünürlük (en fazla 720 px yükseklik)",
+  "Modo rendimiento (sin brillo ni sombra del sol)": "Performans modu (parlama ve güneş gölgesi yok)",
+  "Quita el resplandor y la sombra del sol en calidad Media y menores para ganar fluidez. Cambia el aspecto; se aplica al abrir el estadio.": "Akıcılık için Orta ve altı kalitede parlamayı ve güneş gölgesini kaldırır. Görünümü değiştirir; stadyum açılırken uygulanır."
  }
 }

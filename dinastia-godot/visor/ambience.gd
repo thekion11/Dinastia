@@ -69,7 +69,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	env.sky = sky
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
 	env.ambient_light_sky_contribution = 1.0
-	env.glow_enabled = nivel > Calidad.MINIMO   ## (4-11) MÍNIMO: sin resplandor (pasada de pantalla completa)
+	env.glow_enabled = ModoRendimiento.glow(nivel)   ## (4-11) MÍNIMO: sin resplandor (pasada de pantalla completa)
 	env.glow_intensity = 0.5 + oscuro * 0.5
 	## EL UMBRAL, QUE FALTABA (23-9-2026). Se quedaba en 1.0, o sea que
 	## cualquier blanco puro entraba entero al bloom -incluidas las rayas de cal
