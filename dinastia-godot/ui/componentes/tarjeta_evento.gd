@@ -48,13 +48,21 @@ static func crear(e: Dictionary, siguiente: bool, ancho := 0) -> PanelContainer:
 	var color_arriba := Tema.oro() if (siguiente or tipo_copa) else Tema.SUAVE
 	col.add_child(Tema.etiqueta(Tema.TAM_ROTULO, color_arriba, String(e["etiqueta"]).to_upper() if e["tipo"] != "liga" else String(e["etiqueta"])))
 	var texto := String(e["texto"])
-	var abajo := Tema.etiqueta(Tema.TAM_ROTULO + 1, Tema.TEXTO, texto if ancho > 0 else _corto(texto))
-	if ancho > 0:
+	## (10-11, auditoría de gestión en el móvil) En el móvil no hay tooltip con el texto entero: en vez de recortarlo («Kondor-Pokal · Gru…»)
+	## baja a una segunda línea, con un ancho fijo para que la fila no se estire.
+	var movil := ancho <= 0 and EscalaMovil.es_tactil() and texto.length() > LARGO_FILA
+	var abajo := Tema.etiqueta(Tema.TAM_ROTULO + 1, Tema.TEXTO, texto if (ancho > 0 or movil) else _corto(texto))
+	if ancho > 0 or movil:
 		abajo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	if movil:
+		abajo.max_lines_visible = 2
+		abajo.custom_minimum_size.x = ANCHO_MOVIL
 	col.add_child(abajo)
 	tarjeta.tooltip_text = texto + ("\n" + Idiomas.t("Si sigues en el torneo") if probable else "")
 	return tarjeta
 
 ## Texto recortado para que la fila quepa en pantallas angostas.
+const LARGO_FILA := 18
+const ANCHO_MOVIL := 132.0
 static func _corto(texto: String) -> String:
-	return texto if texto.length() <= 18 else texto.substr(0, 17) + "…"
+	return texto if texto.length() <= LARGO_FILA else texto.substr(0, LARGO_FILA - 1) + "…"

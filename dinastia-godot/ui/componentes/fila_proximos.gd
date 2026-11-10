@@ -3,6 +3,7 @@ extends RefCounted
 ## LA FILA DE LOS PRÓXIMOS PARTIDOS (9-11, idea del PES 2020: en el inicio de Master League, abajo, una fila de escudos con lo que viene).
 ## Debajo de la tira de días: los próximos N eventos de tu club (liga, copa, continental, mercado, fin de temporada; 10-11) y un botón 📅 con la vista de varias semanas.
 const CUANTOS := 5
+const CUANTOS_MOVIL := 4
 
 ## Los próximos partidos de liga de `m.mi_club()`, desde la jornada que toca: [{jornada, rival, local}].
 static func datos(m: Mundo, cuantos := CUANTOS) -> Array:
@@ -29,7 +30,9 @@ static func datos(m: Mundo, cuantos := CUANTOS) -> Array:
 static func pintar(m: Mundo, caja: HBoxContainer, dia_hoy := 0) -> void:
 	for h in caja.get_children():
 		h.queue_free()
-	var lista := EventosFecha.proximos(m, dia_hoy, CUANTOS)
+	## (10-11, auditoría de gestión en el móvil) en el móvil, con la letra mínima legible y los textos enteros en dos líneas, caben 4 sin
+	## ensanchar la pantalla (con 5, la fila sacaba por la derecha el dinero, la fecha y la última tarjeta)
+	var lista := EventosFecha.proximos(m, dia_hoy, CUANTOS_MOVIL if EscalaMovil.es_tactil() else CUANTOS)
 	if lista.is_empty():
 		return
 	caja.add_theme_constant_override("separation", 6)

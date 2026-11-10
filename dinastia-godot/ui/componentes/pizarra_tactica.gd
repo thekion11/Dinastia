@@ -23,7 +23,7 @@ static func pintar(raiz: Control, c: Club, ficha: Callable) -> void:
 	var slots: Array = (forms[c.tactica.formacion] as Dictionary)["s"]
 	var once := c.once()
 	var campo := CampoDibujado.new()
-	campo.custom_minimum_size = Vector2(0, ALTO)
+	campo.custom_minimum_size = Vector2(0, alto_para(slots))
 	campo.clip_contents = true
 	raiz.add_child(campo)
 	for i in slots.size():
@@ -44,6 +44,21 @@ static func pintar(raiz: Control, c: Club, ficha: Callable) -> void:
 		f.offset_top = -38
 		f.offset_bottom = 40
 		campo.add_child(f)
+
+## (10-11, auditoría de gestión en el móvil) El alto del campo: `ALTO`, o más si dos fichas casi en la misma columna quedarían a menos de
+## `ALTO_FICHA` en vertical (en un 4-2-3-1 el DC y el MCO estaban a ~52 px y la ficha mide 78: el nombre de uno quedaba bajo la cara
+## del otro y se tocaba el que no era). Con tope `ALTO_MAX`.
+const ALTO_FICHA := 82.0
+const ALTO_MAX := 680
+static func alto_para(slots: Array) -> int:
+	var hueco := INF
+	for i in slots.size():
+		for k in range(i + 1, slots.size()):
+			if absf(float(slots[i][1]) - float(slots[k][1])) < 14.0:
+				hueco = minf(hueco, absf(clampf(float(slots[i][2]) / 100.0, 0.0, 1.0) - clampf(float(slots[k][2]) / 100.0, 0.0, 1.0)) * 0.76)
+	if hueco == INF or hueco <= 0.0:
+		return ALTO
+	return clampi(ceili(ALTO_FICHA / hueco), ALTO, ALTO_MAX)
 
 static func _ficha_jugador(j: Jugador, puesto: String, natural: bool, c: Club, ficha: Callable) -> Control:
 	var caja := VBoxContainer.new()
